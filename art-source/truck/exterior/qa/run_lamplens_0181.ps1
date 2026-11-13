@@ -1,6 +1,6 @@
 # 0181: rebuild tractor + trailer prefabs from the exports, install into WorldC, render lamp evidence, optional EditMode tests.
 param([string]$Tag = 'after', [switch]$SkipBuild, [switch]$Tests, [string[]]$Tiers = @('High', 'Low'),
-      [string]$Cams = 'trailer-34,truck-rear34,chase,lamp-trailer,lamp-truck')
+      [string]$Cams = 'trailer-34,truck-rear34,chase,lamp-trailer,lamp-truck,plate-trailer,plate-truck-bobtail')
 $ErrorActionPreference = 'Stop'
 $wt = 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\lamplens-0181'
 $out = "$wt\artifacts\lamplens-0181\$Tag"

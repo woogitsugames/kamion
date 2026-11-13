@@ -141,6 +141,17 @@ namespace Game.Tests
         static float Probe(string expr) => TruckPaintProbe.Read(TruckPaintProbe.BuildProbeShader("(" + expr + ").xxx"), 1f, false, true, out _);
 
         [Test]
+        public void Shader_LensFade_IsZeroAtNyquist_AndFullFromFourPixelsPerPeriod()
+        {
+            // Review s20 P1-1: pattern contrast vs pixels per period (pitch / footprint).
+            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) Assert.Ignore("GPU readback requires a graphics device");
+            Assert.That(Probe("KamionLensFade(1.0, 2.0)"), Is.EqualTo(0f).Within(1e-3f), "2 px / period");
+            Assert.That(Probe("KamionLensFade(1.0, 1.5)"), Is.EqualTo(0f).Within(1e-3f), "1.5 px / period");
+            Assert.That(Probe("KamionLensFade(1.0, 3.0)"), Is.EqualTo(0.5f).Within(1e-2f), "3 px / period");
+            Assert.That(Probe("KamionLensFade(1.0, 4.0)"), Is.EqualTo(1f).Within(1e-3f), "4 px / period");
+        }
+
+        [Test]
         public void Shader_NoLensFrame_LeavesTheLampUntouched()
         {
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) Assert.Ignore("GPU readback requires a graphics device");

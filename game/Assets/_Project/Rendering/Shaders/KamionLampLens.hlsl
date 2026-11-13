@@ -27,7 +27,32 @@ struct KamionLens
     half plate;     // PLATE: illumination falloff 0..1
 };
 
-half KamionLensFade(float fw, float pitch) { return (half)saturate(2.0 - 3.0 * fw / pitch); }
+// Review s20 P1-1: full contrast only from >= 4 px per period, zero at <= 2 px (Nyquist); the old 2 - 3 fw / p kept full
+// contrast down to 3 px and ~50 % at 2 px (pixel chequerboard on High at 2 m, moire on Low).
+half KamionLensFade(float fw, float pitch) { return (half)saturate(pitch / (2.0 * fw) - 1.0); }
+
+// Review s20 P1-2: the lens chambers of a combination lamp are adjacent texels in one atlas island; on the Low atlas
+// (1/4 of High) bilinear filtering pulled the neighbouring chamber's colour into the chamber (red wedge in the amber
+// chamber, beige patch in the reverse lamp). The lens frame (uv1) and uv0 are both affine over a planar lens, so the
+// Jacobian d(uv0)/d(q) follows from screen derivatives: the atlas lookup is clamped to the chamber, inset by 1.5 texels
+// of the sampled mip. Not for the plate (its text must stay where it is) and not where q jumps (2x2 quad on a lens edge).
+float2 KamionLensInsetUV(float2 uv0, float2 uv1, float2 texSize)
+{
+    float W = floor(uv1.x);
+    if (W < 0.5 || floor(uv1.y) >= 5.0 * 256.0) return uv0;
+    float2 q = (frac(uv1) - 0.02) / 0.96;
+    float2 dqx = ddx(q), dqy = ddy(q);
+    if (max(max(abs(dqx.x), abs(dqx.y)), max(abs(dqy.x), abs(dqy.y))) > 0.25) return uv0;
+    float det = dqx.x * dqy.y - dqx.y * dqy.x;
+    if (abs(det) < 1e-10) return uv0;
+    float2 dux = ddx(uv0), duy = ddy(uv0);
+    float2 ju = (dux * dqy.y - duy * dqx.y) / det;     // d uv0 / d q.x
+    float2 jv = (duy * dqx.x - dux * dqy.x) / det;     // d uv0 / d q.y
+    float foot = max(max(length(dux * texSize), length(duy * texSize)), 1.0);   // texels per pixel (mip footprint)
+    float2 m = min(1.5 * foot / max(float2(length(ju * texSize), length(jv * texSize)), 1e-3), 0.45);
+    float2 qc = clamp(q, m, 1.0 - m);
+    return uv0 + ju * (qc.x - q.x) + jv * (qc.y - q.y);
+}
 
 KamionLens KamionLensEval(float2 uv1)
 {
@@ -42,7 +67,7 @@ KamionLens KamionLensEval(float2 uv1)
     float2 q = saturate((frac(uv1) - 0.02) / 0.96);
     float2 hs = 0.5 * size;
     float2 p = (q - 0.5) * size;                       // millimetres from the lens centre
-    float fw = max(max(fwidth(p.x), fwidth(p.y)), 1e-4);   // pixel footprint in millimetres
+    float fw = max(length(float2(fwidth(p.x), fwidth(p.y))), 1e-4);   // pixel footprint in millimetres (skew-safe)
     float S = min(hs.x, hs.y);
     L.style = (half)style;
 
@@ -60,7 +85,7 @@ KamionLens KamionLensEval(float2 uv1)
     float edge = min(hs.x - abs(p.x), hs.y - abs(p.y));
     float bw = min(3.0, 0.3 * S);
     half fB = KamionLensFade(fw, 2.0 * bw);
-    half border = lerp(1.0, (half)smoothstep(0.0, bw, edge), fB);
+    half border = lerp(1.0, (half)smoothstep(-0.5 * fw, bw + 0.5 * fw, edge), fB);   // edge widened by the footprint
 
     if (style > 3.5)
     {
@@ -81,14 +106,17 @@ KamionLens KamionLensEval(float2 uv1)
     {
         // Fresnel: emitter cluster on the axis, 3 mm rings.
         float r = length(p);
-        half ring = (half)frac(r / 3.0);
+        // Triangle wave, not the true sawtooth: the sawtooth's step is a harmonic series that stepped into concentric moire
+        // even when the 3 mm period itself was resolved (review s20 P1-1).
+        half ring = (half)(1.0 - abs(2.0 * frac(r / 3.0) - 1.0));
         half fR = KamionLensFade(fw, 3.0);
         half fH = KamionLensFade(fw, S);
         float sig = 0.30 * S;
         half hot = (half)exp(-r * r / (2.0 * sig * sig));
         s = lerp(0.26, 0.14 + 0.86 * hot, fH) * lerp(1.0, 0.65 + 0.60 * ring, fR);
         L.slope = (half2)(p / max(r, 1e-3)) * ((ring - 0.5) * 0.25 * fR);
-        L.shade = 0.85 * lerp(1.0, 0.78 + 0.38 * ring, fR) * (1.0 + 0.35 * fH * (half)exp(-r * r / (2.0 * 2.5 * 2.5)));
+        // Centre boss of the Fresnel lens fades with the rings (review s20 P1-2: a bright dot stayed after the rings were gone).
+        L.shade = 0.85 * lerp(1.0, 0.78 + 0.38 * ring, fR) * (1.0 + 0.35 * fR * (half)exp(-r * r / (2.0 * 2.5 * 2.5)));
         far = 1.0 - fH;
     }
     else if (style > 1.5)
@@ -109,7 +137,8 @@ KamionLens KamionLensEval(float2 uv1)
         s = lerp(0.30, 0.12 + 0.88 * led, fL) * lerp(1.0, 0.70 + 0.45 * fl, fF);
         half2 axis = wide ? half2(1, 0) : half2(0, 1);
         L.slope = axis * (half)(-8.0 * t * 0.07) * fF;
-        L.shade = lerp(1.0, 0.80 + 0.30 * fl, fF) * (1.0 + 0.4 * fL * (half)exp(-(c * c + lb * lb) / (2.0 * 1.5 * 1.5)));
+        half fD = KamionLensFade(fw, 6.0);              // the 1.5 mm die needs ~4 px of its own
+        L.shade = lerp(1.0, 0.80 + 0.30 * fl, fF) * (1.0 + 0.4 * fL * fD * (half)exp(-(c * c + lb * lb) / (2.0 * 1.5 * 1.5)));
         far = 1.0 - fL;
     }
     else
@@ -120,9 +149,11 @@ KamionLens KamionLensEval(float2 uv1)
         float2 c = (frac(q * n) - 0.5) * cs;
         float r = length(c);
         float rc = 0.46 * min(cs.x, cs.y);                       // cup radius
-        half led = (half)(0.75 * exp(-r * r / (2.0 * 4.5 * 4.5)) + 0.25 * exp(-r * r / (2.0 * 1.6 * 1.6)));
+        half fD = KamionLensFade(fw, 6.4);                       // the 1.6 mm die needs ~4 px of its own
+        half led = (half)(0.75 * exp(-r * r / (2.0 * 4.5 * 4.5)) + 0.25 * fD * exp(-r * r / (2.0 * 1.6 * 1.6)));
         half fL = KamionLensFade(fw, min(cs.x, cs.y));
-        half cup = 1.0 - (half)smoothstep(rc - 1.5, rc + 1.0, r);  // 1 inside the cup, 0 on the carrier between cups
+        // Cup rim widened by the pixel footprint: a sharper rim than a pixel stepped into lumpy 'egg' cups on Low.
+        half cup = 1.0 - (half)smoothstep(rc - 1.5 - fw, rc + 1.0 + fw, r);  // 1 inside the cup, 0 on the carrier
         half dish = (half)saturate(1.0 - r / rc);                  // 0 rim .. 1 emitter
         float2 m = frac(p / 3.5) - 0.5;
         float2 pm = 1.0 - 4.0 * m * m;
@@ -132,7 +163,7 @@ KamionLens KamionLensEval(float2 uv1)
         L.slope = (half2)(-8.0 * m * pm.yx) * (0.06 * fP);
         // Unlit: metallised cups read lighter towards the rim (they mirror the sky), the carrier darker, the die a dot.
         L.shade = lerp(1.0, 0.80 + 0.36 * pil, fP) * lerp(1.0, lerp(0.80, 1.08 - 0.16 * dish, cup), fL)
-                * (1.0 + 0.5 * fL * (half)exp(-r * r / (2.0 * 1.6 * 1.6)));
+                * (1.0 + 0.5 * fL * fD * (half)exp(-r * r / (2.0 * 1.6 * 1.6)));
         far = 1.0 - fL;
     }
     s = saturate(s);

@@ -1307,6 +1307,11 @@ namespace Game.Editor.Setup
             // (truck frame z -11.33), the tractor combination lamp at the frame end under the trailer front.
             QL("lamp-trailer", new Vector3(-1.75f, 1.20f, -13.2f), new Vector3(-0.50f, 0.90f, -11.33f), 30f, "0181: trailer left combination lamp + number plate, 2 m (lens structure, plate lamp).");
             QL("lamp-truck", new Vector3(-1.75f, 1.05f, -2.75f), new Vector3(-0.90f, 0.82f, -0.85f), 30f, "0181: tractor left combination lamp + rear fog lamp, 2 m (lens structure).");
+            // ADR 0181 r2 (review s20 P1-3): plate evidence at 3-6 m. The trailer plate from behind the trailer; the tractor plate
+            // (right of the frame end, under the trailer when coupled) on a bobtail tractor - VisualQaRunner hides the trailer
+            // for ids ending in "-bobtail".
+            QL("plate-trailer", new Vector3(0.70f, 1.35f, -15.6f), new Vector3(0f, 0.85f, -11.45f), 35f, "0181 r2: trailer rear, number plate + plate lamp, 4.2 m.");
+            QL("plate-truck-bobtail", new Vector3(0.25f, 1.05f, -4.3f), new Vector3(0.20f, 0.75f, -0.85f), 40f, "0181 r2: tractor without trailer from behind, rear plate + plate lamp + both combination lamps, 3.5 m.");
             QL("truck-34r", new Vector3(6.4f, 1.9f, 10.2f), new Vector3(0f, 1.6f, 1.8f), 45f, "r10: TRAKT front 3/4, passenger side (exhaust stack, aftertreatment, battery box, kerb mirror).");
         }
 

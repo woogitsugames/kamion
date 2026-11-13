@@ -81,6 +81,7 @@ Shader "Kamion/Truck Exterior"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _CMap_ST;
+            float4 _CMap_TexelSize;   // ADR 0181 r2: lens chamber inset of the atlas lookup (KamionLensInsetUV)
             float4 _PaintColor, _DecalColor, _DirtColor;
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
             float _ClearCoat, _ClearCoatRoughness, _Flake, _FlakeScale;
@@ -392,6 +393,9 @@ Shader "Kamion/Truck Exterior"
             half4 frag(Varyings i) : SV_Target
             {
                 float2 uv = i.uv01.xy;
+            #if defined(_KAMION_TRUCK_LAMPS)
+                if (_LensDetail > 0.5) uv = KamionLensInsetUV(uv, i.uv01.zw, _CMap_TexelSize.zw);
+            #endif
                 half4 c = SAMPLE_TEXTURE2D(_CMap, sampler_CMap, uv);
                 half4 m = SAMPLE_TEXTURE2D(_MMap, sampler_CMap, uv);
                 half3 nTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_NMap, sampler_CMap, uv), _NormalStrength);
@@ -431,7 +435,14 @@ Shader "Kamion/Truck Exterior"
                 KamionLens lens = KamionLensEval(i.uv01.zw);
                 if (_LensDetail < 0.5) { lens.shade = 1; lens.slope = 0; lens.hdr = 1; lens.disp = 1; }
                 albedo *= lens.shade;
-                nTS = normalize(half3(nTS.xy + lens.slope, nTS.z));
+                // ADR 0181 r2 (review s20 P2-4): the optics sit behind a smooth PMMA outer lens. Relief stays in the albedo
+                // (inner layer); the specular sees the flat outer surface - a glossy clear lens with the sky in it, which
+                // the road film below (grime, later in this pass) roughens again. Plate keeps its own normal / roughness.
+                if (_LensDetail > 0.5 && lens.style > 0.5 && lens.style < 4.5)
+                {
+                    nTS = half3(0, 0, 1);
+                    rough = min(rough, (half)0.08);
+                }
             #endif
                 half grime = m.g;
                 if (hasFrame)
