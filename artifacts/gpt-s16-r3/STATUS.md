@@ -51,3 +51,5 @@ Zapisano ablacją High/no-baked (rq_worldsun=0). To diagnostyka, nie wynik produ
 Zapisano ablacją High/no-shadows (rq_shadow=0,rq_worldsun=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
 
 Zapisano ablacją Low/zero-normal (rq_shadownormal=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
+
+Zapisano ablacją High/zero-normal (rq_shadownormal=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
