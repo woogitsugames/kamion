@@ -59,6 +59,12 @@
       "status": "WORKING_VALUE",
       "source": "constraint holds",
       "max": 5
+    },
+    {
+      "metric": "max_body_penetration_m",
+      "status": "WORKING_VALUE",
+      "source": "ADR 0165: bumper strike on the 27 cm kerb crushes the bumper cover <= 5 cm (4 Hz contact, impact ~3.5 m/s limited by the jerk ceiling); measured 0.038 m (tractor Bumper corner, t 2.88 s)",
+      "max": 0.05
     }
   ]
 }
