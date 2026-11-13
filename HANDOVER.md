@@ -1,3 +1,35 @@
+# SESJA 19 (start 2026-11-13 20:2x lokalnie; nowe konto: 5 h 0 % — reset 01:20; tydzień 0 %, Fable 0 %) — nowa sesja: czytaj TEN blok, potem „STOP S18”
+- **main** `d6a1bb8a1`. C: 733 GB. adb: S24+ RZCX60VE8ZY online, A16 RFGL34SJYDZ **offline** (USB). PHONE_RUN brak. Crony :17/:47/:07.
+- Na starcie działały jeszcze zadania w tle z s18 (regen r3 0172, import Dojlid 0179 + pytest, full.ps1 r2 0180) — nowi agenci mają na nie poczekać, nie dublować.
+- **Agenci s19 (wznowieni z live, 6):**
+| ADR | model | worktree / gałąź | live (w worktree) |
+|---|---|---|---|
+| 0170 | Fable | `horizon-0170` | `artifacts/live/horizon-0170.md` — base3 → budżet → pary after4 → testy |
+| 0172 | Fable | `p1b-0172` | `artifacts/live/p1b-0172.md` — czeka na regen r3 → after r3 → ADR §4 |
+| 0179 | Fable | `dojlidy-vis-0179` | `artifacts/live/dojlidy-vis-0179.md` — czeka na import → SBS → ADR |
+| 0180 | Fable | `tower-0180` | `artifacts/live/tower-0180.md` — czeka na full r2 → budżet → pary r2 |
+| 0181 | Fable | `lamplens-0181` | `artifacts/live/lamplens-0181.md` — before → soczewki/tablica |
+| 0182 | Opus | `dusk-0182` | `artifacts/live/dusk-0182.md` — rebuild → after3 → ADR |
+- Kolejność integracji bez zmian (patrz STOP S18). **Ostatni przydzielony ADR: 0182.**
+
+# STOP S18 (2026-11-13 ~21:3x; 5 h ~80 %, reset 23:20; tydzień 28 %, Fable 20 %) — prompt s19: `docs/owner/START-PROMPT-S19.md`
+- **main** `1d66bab2e` = origin/main. Scalone w s18: 0171, 0173, 0175, 0177, 0178, Mistral M44 r2, M52 r2. Świat w main NIE przebudowany od s17 (`93842a609`).
+- **Gałęzie w toku (wznawiać z live jako NOWYCH agentów):**
+| ADR | gałąź (sha) | stan | live |
+|---|---|---|---|
+| 0170 | `horizon-0170` (203279372) | rdzeń korony naprawiony (build 3 OK), after4 + budżet; potem krytyk | `artifacts/live/horizon-0170.md` |
+| 0172 | `p1b-0172` (7f13280f5) | 182011 wg ortofoto 2024 (DECYZJA WŁAŚCICIELA 13.11), znaki cm924; regen r2 → after.ps1 sbs/vqa/editmode | `artifacts/live/p1b-0172.md` |
+| 0179 | `dojlidy-vis-0179` (04facfae5) | hooki generatora + overrides Dojlid, build_world dojlidy → import → SBS | `artifacts/live/dojlidy-vis-0179.md` |
+| 0180 | `tower-0180` (f816f6458) | krytyk SCAL warunkowo; r2: P1 biały pas uskoku 1,8 m na SE, spans, szklenie, okna szczytu | `artifacts/live/tower-0180.md` |
+| 0181 | `lamplens-0181` (415b1edae) | NOWE: struktura soczewek lamp + podświetlenie tablicy (Fable) | `artifacts/live/lamplens-0181.md` |
+| 0182 | `dusk-0182` (f64b3f574) | NOWE: zmierzch za jasny + brud drzwi naczepy (Opus) | `artifacts/live/dusk-0182.md` |
+- **Kolejność integracji:** krytyk → scal 0170, 0180, 0172 (konflikty `generated/*` → `--ours`, `overrides.yaml` = suma bloków) → JEDNA regeneracja (`pwsh -File artifacts/lead-s17/regen.ps1`) → pytest gis → commit generated → `TruckAssetBuilder.BuildBatch` + `TrailerAssetBuilder.BuildBatch` (po 0175/0178; `SM_CabInterior_LOD0.fbx` poza gitem) → EditMode → czysty APK → `pwsh tools/perf/pso-refresh.ps1 -BeforeApk artifacts/apk/kamion-0.1.0-<sha>.apk` (nowe PSO, commit `Resources/Pso/*.graphicsstate`) → czysty APK → visual-critic SBS → gate3 A16 Low (PHONE_RUN ręcznie) → S24+ High/30 (bateria ≥ 40 %). 0179 (Dojlidy) osobno — region ≠ C.
+- **Telefony:** A16 zerwał USB 19:26 (gra mogła zostać odinstalowana); ostatnio adb nie widział żadnego urządzenia (reset demona przez Unity agentów). Sprawdzić `adb devices -l` po zatrzymaniu Unity.
+- **Decyzje właściciela otwarte:** metryka bramki „≤ 12 klatek > 40 ms / przejazd G3 A16 Low” (WORKING_VALUE, ADR 0177); odsłuch A/B audio 0176.
+- **Mistral:** otwarte #49 M51 (FIX tura 3 w toku), #50 M53 (FIX etap 2 w toku), #42 M45 (nie scalamy). Nowe bloki do wklejenia: `docs/owner/MISTRAL-FIXES-9.md` (M52-FIX-3, M47-FIX-2, M54-FIX-2, M49-FIX-2, opc. M48-FIX-2). Gałąź `research/mistral/p6-dojlidy-gates` (ze slashem) = pusty duplikat.
+- **Follow-upy P2 (niezlecone):** pasek atlasu `FAR_PLAIN_V` do 0,95 nachodzi na krawędź płyty balkonowej (LOD1 bloków/biur); ściana SE wieżowca w cieniu (kierunek słońca); maszty na dachu wieżowca.
+- **Ostatni przydzielony ADR: 0182.**
+
 # HANDOVER — kamion, SESJA 18 (start 2026-11-13 18:2x; 5 h 0 % — reset 23:20 lokalnie; tydzień 16 %, Fable 0 % — reset 16.11 19:00) — nowa sesja: czytaj TEN blok, potem „STOP S17” niżej
 
 ## STAN S18 (lider) — main `b880fc6a1`
@@ -20,6 +52,7 @@
 - 19:5x: Krytyk s18: **0175 SCAL → SCALONE `e0aee8560`** (po scaleniu w integracji: `TruckAssetBuilder.BuildBatch` + `TrailerAssetBuilder.BuildBatch`, EditMode). **0178 SCAL warunkowo** — P1 `rear_lens_*_3` ciągnika świeci jak stop → agent 0178 wznowiony: merge main, REFLEX + test, wspólny render dusk Low/High; potem scalić. P2 (lampy płaskie bez struktury soczewki, brud drzwi naczepy jak szum, zmierzch za jasny) — zadania na później. Worktree truck-regs-0175 usuwany.
 - 20:xx: **SCALONE 0178** (r2: REFLEX po 0175, bursztyn (1,0.28,0), EditMode 28/28), **SCALONE 0177** (p99: stare PSO + telemetria `DiagnosticsSampler` na głównym wątku co 2 s → `diag_poll bg`; nowe PSO g3a 85/159, g3b 78/154; A16 po: p99 33,50–33,60, klatki > 40 ms 1–12 vs 17–30 w s17; propozycja metryki „≤ 12 klatek > 40 ms/przejazd G3” WORKING_VALUE — DECYZJA WŁAŚCICIELA). Po regeneracji: `pwsh tools/perf/pso-refresh.ps1 -BeforeApk artifacts/apk/kamion-0.1.0-<sha>.apk`. **SCALONE Mistral M44 r2, M52 r2** (przegląd `REVIEW-2026-11-13-s18-mistral-fixes-r8.md`; M46/M49/M55/M48 przyjęte, M54 z erratą; nowe bloki dla Mistrala `docs/owner/MISTRAL-FIXES-9.md`: M52-FIX-3, M47-FIX-2, M54-FIX-2, M49-FIX-2, opc. M48-FIX-2; errata #40 = 17 flag; gałąź `research/mistral/p6-dojlidy-gates` (slash) = pusty duplikat do usunięcia). **0180 GOTOWE** `895fb5243` → krytyk w toku (`REVIEW-2026-11-13-s18-0180.md`). **A16 OFFLINE** (zerwał USB 19:26 przy reinstalacji; gra może być odinstalowana) — właściciel ma sprawdzić kabel/odblokowanie. W integracji: `TruckAssetBuilder.BuildBatch` + `TrailerAssetBuilder.BuildBatch` (+ `SM_CabInterior_LOD0.fbx` poza gitem).
 - 20:5x: 5 h 70 %. Usunięte worktree lamps-0178, perf-p99-0177. 0179 zawieszony 2. raz (commity c81f1309f hooki generatora, c5834b9d1 overrides Dojlid) → wznowiony. **NOWI:** 0181 `lamplens-0181` (Fable; struktura soczewek lamp + podświetlenie tablicy, live `artifacts/live/lamplens-0181.md`), 0182 `dusk-0182` (Opus; zmierzch za jasny + brud drzwi naczepy, live `artifacts/live/dusk-0182.md`). Działają: 0170, 0172, 0179, 0181, 0182, krytyk 0180. **Ostatni przydzielony ADR: 0182.**
+- 21:1x :17/:47: 5 h 77 % (reset 23:20), Fable tydz. 20 %; C: 745 GB. Krytyk 0180: SCAL warunkowo — P1 biały pionowy pas uskoku obrysu 1,8 m na SE (`REVIEW-2026-11-13-s18-0180.md`) → agent 0180 wznowiony na r2. 0170: build 3 obejrzany (skrzynka znikła), after4 + budżet w toku. 0172: regen r2 w tle. 0179: build_world dojlidy. 0181/0182: start. Mistral: #49 M51-FIX tura 3, #50 M53-FIX etap 2 — bez „gotowe”. **adb: oba telefony niewidoczne** (daemon reset — możliwe Unity agentów).
 - **Kolejność integracji:** 0170 (po krytyku) → 0175 (po P0) → [0172, 0180 jeśli gotowe] → JEDNA regeneracja (`pwsh -File artifacts/lead-s17/regen.ps1`) → pytest gis → commit generated → czysty APK → nagranie PSO (skrypt 0177) → APK → visual-critic SBS → gate3 A16 (PHONE_RUN ręcznie) → S24+ High/30.
 - **Ostatni przydzielony ADR: 0182** (patrz wpis 20:5x).
 
