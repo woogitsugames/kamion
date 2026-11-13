@@ -36,3 +36,5 @@ Zapisano after/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymag
 Zapisano after/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano after/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Nowy smoke po poprawie selekcji posesji zbiorowych: korony należące do wydłużonej grupy domów bywają >25m od centroidu, więc dobór używa także ich jawnego srcplot. Nie przesuwano drzew ani budynków. Wcześniejsza próba smoke bez pliku kamer zakończyła się błędem i nie jest dowodem; finalny zwykły render wymaga oględzin.
