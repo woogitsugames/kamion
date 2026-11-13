@@ -43,6 +43,12 @@ regionu C (inne kody znaków i tablice), a brakujące prototypy byłyby po cichu
   trasie** (ADR 0166 podawał 0, bo trasy nie było): `arrow_no_exit` Kuronia × łącznik (69,8; 384,8),
   `lane_blind_end` (94,2; 409,4) i (452,4; 424,1), 2× `lane_blind_end` na wschodniej krawędzi kafla (1024; 280–283) —
   artefakt granicy.
+- **Region C po zmianie** (import C w worktree, 17:20, `artifacts/dojlidy-import-0174/bialystok-industrial-c-import-worktree.json`
+  vs main 14:21): wszystkie 24 pozycje `bytes` (meshe Low/High, instancje, kolizja), `instances` 126 861 i
+  `prop_colliders` 2 659 identyczne; log: „street library: shared art-source”. Jedyna różnica: PBR ASTC 41 328 340 vs
+  41 639 417 B — w worktree brak zdjęcia źródłowego `Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg`, więc
+  `build_all.py` pominął warstwę `asphalt_detail_photo` (środowisko, nie ta zmiana; ta sama liczba w imporcie dojlidy
+  — w main dojlidy dostanie 41,6 MB jak C).
 - Kamery kontrolne Low i porównanie z kadrami: patrz „Wizualnie”.
 
 ## Wizualnie (Low, overcast 2340×1080 + clear 1920×1080 dla kadrów foto; `artifacts/dojlidy-import-0174/{view,sbs}`)
@@ -70,8 +76,13 @@ Obejrzane: 7 kamer trasy, 6 foto, 4 krawędzie, truck-at-gate; zestawienia foto|
 
 ## Testy
 - pytest: `tests/gis/test_region_generic_0166.py` 3/3, nowy `tests/gis/test_photo_cameras_0174.py` 2/2.
-- EditMode: nowy `WorldLibraryTests` (3; refleksja, bo asmdef testów nie referuje `Game.World.Import.Editor` — zmiana
+- EditMode 517 passed / 0 failed / 1 skipped (518). Nowy `WorldLibraryTests` 3/3 (refleksja, bo asmdef testów nie referuje `Game.World.Import.Editor` — zmiana
   asmdef należy do lidera).
+
+## Otwarte
+- Ocena `visual-critic` renderów `artifacts/dojlidy-import-0174/sbs` — subagent nie tworzy subagentów: zleca lider.
+- Rozbieżności 1–6 z „Wizualnie”; 5 przypadków spójności nawierzchni na trasie kontrolnej.
+- Kamera `ortho_tile` nie została wyrenderowana przez VisualQaRunner (brak PNG) — niezbadane.
 
 ## Konsekwencje
 - `build_world.py` zmieniony (kamery foto) → po scaleniu lider: `fidelity/run.py --region bialystok-industrial-c`
