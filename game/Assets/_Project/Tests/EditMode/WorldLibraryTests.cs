@@ -40,7 +40,7 @@ namespace Game.Tests
             Assert.NotNull(t);
             string cs = (string)t.GetField("SharedRegion").GetValue(null);
             string py = File.ReadAllText(Path.Combine(EditorTools.RepoRoot, "tools", "worldgen", "roads", "build_world.py"));
-            var m = Regex.Match(py, "^SHARED_LIBRARY_REGION\s*=\s*\"([^\"]+)\"", RegexOptions.Multiline);
+            var m = Regex.Match(py, @"^SHARED_LIBRARY_REGION\s*=\s*""([^""]+)""", RegexOptions.Multiline);
             Assert.IsTrue(m.Success, "SHARED_LIBRARY_REGION not found in build_world.py");
             Assert.AreEqual(m.Groups[1].Value, cs);
             Assert.AreEqual(C, cs);
