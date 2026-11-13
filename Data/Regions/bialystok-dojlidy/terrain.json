@@ -1,0 +1,35 @@
+{
+ "bbox": [
+  779019.0,
+  589055.0,
+  781067.0,
+  591103.0
+ ],
+ "encoding": {
+  "decode": "z_m = offset_m + value * scale_m_per_unit",
+  "dtype": "uint16 little-endian",
+  "file": "Data/raw/derived/bialystok-dojlidy/heightmap_2049.r16",
+  "offset_m": 136.0,
+  "quantisation_step_mm": 0.3967,
+  "scale_m_per_unit": 0.00039673456931410697,
+  "span_m": 26.0
+ },
+ "height_datum": "PL-EVRF2007-NH (EPSG:9651)",
+ "missing_samples": 0,
+ "node_ij_to_xy": "x = bbox.xmin + i, y = bbox.ymax - j  (row 0 = north edge)",
+ "samples": [
+  2049,
+  2049
+ ],
+ "sampling": "exact: tile nodes coincide with NMT cell centres (xllcenter at integer metres); no interpolation",
+ "sha256_r16": "eed51fa1f1822a60dd8818ce8b8a4bc92836d1225c2973e53d3bf47a563f6ede",
+ "source_crs": "EPSG:2180",
+ "source_manifest": "gugik-nmt-2025-bialystok-dojlidy",
+ "spacing_m": 1.0,
+ "stats_m": {
+  "max": 160.94,
+  "mean": 152.317,
+  "min": 137.7
+ },
+ "unity_hint": "Unity Terrain RAW import: 16-bit, Windows byte order, flip vertically (Unity row 0 = south); terrain size x/z = bbox width/height, y = span_m, position y = offset_m - origin_z"
+}

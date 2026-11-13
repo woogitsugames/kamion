@@ -70,7 +70,7 @@ namespace PhysicsRunner.Tests
             Assert.Equal(0.0, touching.Metric("max_free_flight_energy_gain_j"), 9);
         }
 
-        /// <summary>A lone tractor body dropped on its side comes to rest on its colliders, with E never growing (restitution 0).</summary>
+        /// <summary>A lone tractor body dropped on its side comes to rest on its colliders, with E = KE + PE + contact spring energy never growing (zeta 1, no restitution).</summary>
         [Fact]
         public void Body_DroppedOnSide_ComesToRest_WithoutEnergyGain()
         {
@@ -85,17 +85,28 @@ namespace PhysicsRunner.Tests
             var contact = new BodyGroundContact(BodyGroundContact.TractorColliders(tractor.Def));
             var ground = new AnalyticGround(0, SurfaceProps.FromName("dry_asphalt"));
             double E() => body.KineticEnergy + body.Mass * 9.81 * body.CenterOfMassWorld.y;
-            double e0 = E(), ePrev = e0, maxGain = 0;
+            double e0 = E(), ePrev = double.NaN, ePrevNoSpring = e0, maxGain = 0, maxGainNoSpring = 0;
+            int maxGainStep = -1;
             for (int i = 0; i < 500; i++)
             {
                 contact.Solve(body, Vec3.Zero, Vec3.Zero, 0.01, ground);
+                double eNoSpring = E(), e = eNoSpring + contact.SpringEnergy;
+                if (i > 0)
+                {
+                    if (e - ePrev > maxGain) { maxGain = e - ePrev; maxGainStep = i; }
+                    maxGainNoSpring = Math.Max(maxGainNoSpring, eNoSpring - ePrevNoSpring);
+                }
+                if (Environment.GetEnvironmentVariable("BODYE") == "1")
+                    _out.WriteLine($"{i} KE {body.KineticEnergy:F1} PE {body.Mass * 9.81 * body.CenterOfMassWorld.y:F1} spring {contact.SpringEnergy:F1} E {e:F1} n {contact.ContactCount} pen {contact.MaxPenetration * 1000:F2}");
+                ePrev = e; ePrevNoSpring = eNoSpring;
                 body.Integrate(0.01, contact.Force, contact.Torque);
-                double e = E();
-                maxGain = Math.Max(maxGain, e - ePrev);
-                ePrev = e;
             }
-            _out.WriteLine($"E0 {e0:F0} J, end {ePrev:F0} J, max step gain {maxGain:F3} J, v {body.Velocity.Magnitude:E2} m/s, w {body.AngularVelocity.Magnitude:E2} rad/s, pen {contact.MaxPenetration * 1000:F2} mm");
-            // Baumgarte push-out may add at most m*g*slop-scale energy; allow 0.1 % of m g * 1 cm.
+            _out.WriteLine($"E0 {e0:F0} J, end {ePrev:F0} J, max step gain incl. contact spring {maxGain:F3} J (step {maxGainStep}), without spring {maxGainNoSpring:F3} J, v {body.Velocity.Magnitude:E2} m/s, w {body.AngularVelocity.Magnitude:E2} rad/s, pen {contact.MaxPenetration * 1000:F2} mm");
+            // ADR 0165: the contact is a compliant spring-damper, so the conserved quantity is KE + PE + sum 0.5 k pen^2
+            // (BodyGroundContact.SpringEnergy, evaluated on the same pre-step state). KE + PE alone legitimately rises
+            // while a loaded corner spring unloads (measured +190 J/step at steps 147-149 while E_total fell 340 J/step,
+            // artifacts/phys-0165/droptest-diag.log). With the spring term the max step gain is 0.000 J. Allowance kept
+            // from ADR 0158: 0.1 % of m g * 1 cm + 1 J (numerical round-off).
             Assert.True(maxGain < body.Mass * 9.81 * 0.01 * 0.001 + 1.0, $"energy gain {maxGain} J");
             Assert.True(body.Velocity.Magnitude < 0.01, $"still moving {body.Velocity.Magnitude} m/s");
             Assert.True(contact.MaxPenetration < 0.02);

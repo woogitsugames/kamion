@@ -147,6 +147,8 @@ namespace Game.Tests
             Assert.AreEqual(40000.0, m_Body.Model.MassProps.Mass + mp.Mass, 1.0, "40 t preset = 40.0 t gross combination mass");
             Assert.IsFalse(m_Trailer.Body.automaticInertiaTensor);
             Assert.IsTrue(m_Body.Coupled);
+            // ADR 0165: the solver couples the bodies; PhysX tractor-trailer contacts are ignored (runner parity).
+            Assert.IsTrue(m_Body.IsCollisionIgnored(m_Trailer), "tractor-trailer collider pairs ignored");
         }
 
         /// <summary>Runner couple_uncouple@laden40: reverse at idle creep into the braked 40 t trailer on its legs, the jaw locks, legs up, drive off.</summary>

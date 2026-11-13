@@ -152,12 +152,16 @@ namespace Game.Core.Navigation
         /// the manoeuvre at its distance band (speed-dependent, "now" when closer than the reaction + braking distance),
         /// the street-name suffix, the roundabout exit / name, the "then" manoeuvre and the lane guidance. No allocation.
         /// </summary>
-        public static int Plan(RouteGraph g, RoutePath p, ref NavGuidance gd, float speedMs, VoiceClip[] buf)
+        public static int Plan(RouteGraph g, RoutePath p, ref NavGuidance gd, float speedMs, VoiceClip[] buf) =>
+            PlanBand(g, p, ref gd, BandFor(gd.NextM, speedMs), buf);
+
+        /// <summary>As <see cref="Plan"/>, with the distance band chosen by the caller (<see cref="NavVoiceDriver"/> tiers;
+        /// -1 = no distance sentence). No allocation.</summary>
+        public static int PlanBand(RouteGraph g, RoutePath p, ref NavGuidance gd, int band, VoiceClip[] buf)
         {
             int n = 0;
             if (buf == null || buf.Length == 0 || g == null || p == null || gd.Next < 0 || gd.Next >= p.ManCount) return 0;
             Maneuver m = p.ManType[gd.Next];
-            int band = BandFor(gd.NextM, speedMs);
             if (band >= 0 && n < buf.Length)
             {
                 byte blk = BandBlock[band];
@@ -235,31 +239,90 @@ namespace Game.Core.Navigation
     }
 
     /// <summary>
-    /// Drives <see cref="NavVoice.Plan"/> along a route: announces each manoeuvre once per distance band (a closer band
-    /// re-announces), clips go into a <see cref="NavVoiceQueue"/> without repeats. No allocation in the update loop.
+    /// Drives <see cref="NavVoice.PlanBand"/> along a route (ADR 0168): at most THREE announcements per manoeuvre -
+    /// far (2 km / 1 km / 500 m), near (300 / 200 / 100 m) and now - each said at most once. A tier is said when the distance
+    /// first falls below its trigger; only the closest due tier is said (a route that starts 150 m before a turn says
+    /// "near" only, never far + near together). Tiers are monotone per manoeuvre: distance drift back over a trigger
+    /// (projection jitter, stopping, slowing down) never repeats a sentence, and the guidance flipping back to an already
+    /// passed manoeuvre is ignored. A new route (version / reference) or <see cref="Reset"/> starts over.
+    /// Triggers depend on the speed (WORKING_VALUES): far = 2000/1000/500 m band at or below v * <see cref="FarLeadS"/>
+    /// (min 500 m), near = 300/200/100 m band at or below v * <see cref="NearLeadS"/> (min 100 m), now = max(reaction +
+    /// braking distance, <see cref="NowMinM"/>). No allocation in the update loop.
     /// </summary>
     public sealed class NavVoiceDriver
     {
+        public const int TierNone = 0, TierFar = 1, TierNear = 2, TierNow = 3;
+        /// <summary>Lead times [s] of the far / near announcement and the minimum "now" distance [m]. WORKING_VALUES (ADR 0168):
+        /// 45 s gives 500 m at 50 km/h and 1 km at 80 km/h; 15 s gives 200 m at 50 km/h and 300 m at 80 km/h.</summary>
+        public const float FarLeadS = 45f, NearLeadS = 15f, NowMinM = 30f;
+        /// <summary>Near is skipped when its trigger is closer than this to the "now" trigger [m] (two sentences back to back).</summary>
+        public const float MinTierGapM = 40f;
+
         readonly VoiceClip[] m_Buf = new VoiceClip[6];
-        int m_LastMan = -1;
-        int m_LastBand = -1;
+        RoutePath m_Path;
+        int m_Version = int.MinValue;
+        int m_Man = -1;
+        int m_Said = TierNone;
 
-        public void Reset() { m_LastMan = -1; m_LastBand = -1; }
+        /// <summary>Tier said last for the current manoeuvre (TierNone..TierNow) and how many announcements were made for it.</summary>
+        public int LastTier => m_Said;
+        public int CurrentManeuver => m_Man;
 
-        /// <summary>Plans the sentences for the current guidance state; returns how many were enqueued.</summary>
+        public void Reset() { m_Path = null; m_Version = int.MinValue; m_Man = -1; m_Said = TierNone; }
+
+        /// <summary>Far trigger [m] at this speed: 2000 / 1000 / 500.</summary>
+        public static float FarM(float speedMs)
+        {
+            float d = speedMs * FarLeadS;
+            return d >= 2000f ? 2000f : d >= 1000f ? 1000f : 500f;
+        }
+
+        /// <summary>Near trigger [m] at this speed: 300 / 200 / 100; 0 = no near tier (too close to "now").</summary>
+        public static float NearM(float speedMs)
+        {
+            float d = speedMs * NearLeadS;
+            float near = d >= 300f ? 300f : d >= 200f ? 200f : 100f;
+            return near - NowM(speedMs) >= MinTierGapM ? near : 0f;
+        }
+
+        /// <summary>"Now" trigger [m]: reaction + braking distance of the laden truck, at least <see cref="NowMinM"/>.</summary>
+        public static float NowM(float speedMs) => Mathf.Max(NavVoice.SafeAnnounceM(speedMs), NowMinM);
+
+        /// <summary>The closest tier due at distance <paramref name="distM"/> (TierNone when farther than the far trigger).</summary>
+        public static int TierFor(float distM, float speedMs)
+        {
+            if (distM <= NowM(speedMs)) return TierNow;
+            float near = NearM(speedMs);
+            if (near > 0f && distM <= near) return TierNear;
+            if (distM <= FarM(speedMs)) return TierFar;
+            return TierNone;
+        }
+
+        /// <summary>Distance band spoken for a tier: the smallest band of the tier that contains the distance.</summary>
+        public static int BandForTier(int tier, float distM)
+        {
+            switch (tier)
+            {
+                case TierFar: return distM <= 500f ? 2 : distM <= 1000f ? 1 : 0;
+                case TierNear: return distM <= 100f ? 5 : distM <= 200f ? 4 : 3;
+                case TierNow: return NavVoice.NowBand;
+                default: return -1;
+            }
+        }
+
+        /// <summary>Plans the sentences for the current guidance state; returns how many clips were enqueued.</summary>
         public int Update(RouteGraph g, RoutePath p, ref NavGuidance gd, float speedMs, NavVoiceQueue q)
         {
+            if (p == null || gd.Next < 0 || gd.Next >= p.ManCount) return 0;
+            if (!ReferenceEquals(p, m_Path) || p.Version != m_Version) { m_Path = p; m_Version = p.Version; m_Man = -1; m_Said = TierNone; }
+            if (gd.Next < m_Man) return 0;                                  // flip back to a passed manoeuvre: ignore
+            if (gd.Next > m_Man) { m_Man = gd.Next; m_Said = TierNone; }
+            int tier = TierFor(gd.NextM, speedMs);
+            if (tier <= m_Said) return 0;                                   // already said (or farther tier): no repeats
+            m_Said = tier;
+            int n = NavVoice.PlanBand(g, p, ref gd, BandForTier(tier, gd.NextM), m_Buf);
             int enq = 0;
-            if (p != null && gd.Next >= 0 && gd.Next < p.ManCount)
-            {
-                int band = NavVoice.BandFor(gd.NextM, speedMs);
-                if (band >= 0 && (gd.Next != m_LastMan || band > m_LastBand))
-                {
-                    m_LastMan = gd.Next; m_LastBand = band;
-                    int n = NavVoice.Plan(g, p, ref gd, speedMs, m_Buf);
-                    for (int i = 0; i < n; i++) if (q.Enqueue(m_Buf[i])) enq++;
-                }
-            }
+            for (int i = 0; i < n; i++) if (q.Enqueue(m_Buf[i])) enq++;
             return enq;
         }
     }

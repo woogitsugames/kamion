@@ -12,6 +12,9 @@ glazed front, flag masts, an advertising totem and a lattice mast with an oval b
       plinth_m: 0.3
       fascia: {material, height_m, overhang_m, facings}     # band under the roof edge; overhang_m > 0 = roof slab
       glass: showroom_glass                  # pane material (default; ADR 0129: sky gradient instead of black)
+      glass_lod1: hall_flashing              # optional pane material of LOD1 only (ADR 0167: a chunk whose LOD1 has
+                                             # no glass draws the panes with the frame material instead of one more
+                                             # primitive on the Low tier); mullions of such a run are not drawn
       glazing:                               # glazed runs (shopfronts, ribbon bands); z above the floor level
         - {facing: NE, span: [0, 1], z: [0.3, 3.6], pitch_m: 2.4, min_len_m: 6, margin_m: 0.6, transom_m: 2.4}
       accents:                               # wall fields in another colour
@@ -66,7 +69,7 @@ def plan(spec, materials=None):
     if not spec:
         return None
     s = {"wall": spec.get("wall", "plaster_light"), "walls": dict(spec.get("walls") or {}),
-         "glass": spec.get("glass", GLASS),
+         "glass": spec.get("glass", GLASS), "glass_lod1": spec.get("glass_lod1"),
          "plinth_m": float(spec.get("plinth_m", 0.3)), "fascia": None, "glazing": [], "accents": [], "props": [],
          "sign": dict(spec["sign"]) if spec.get("sign") else None}
     f = spec.get("fascia")
@@ -92,7 +95,7 @@ def plan(spec, materials=None):
             if bad:
                 raise ValueError(f"frontage car_row protos {bad}: expected car_<body>_<colour> / van_<colour> (life_cars)")
         s["props"].append(dict(p))
-    names = [s["wall"], s["glass"], *s["walls"].values(), *[a["material"] for a in s["accents"]],
+    names = [s["wall"], s["glass"], *([s["glass_lod1"]] if s["glass_lod1"] else []), *s["walls"].values(), *[a["material"] for a in s["accents"]],
              *[p[k] for p in s["props"] for k in ("material", "rim_material", "bar_material") if p.get(k)]]
     if s["fascia"]:
         names.append(s["fascia"]["material"])
@@ -168,10 +171,13 @@ def wall(acc, wwo, spec, a, c_, nout, L, zbot, zref, zt, u_acc, ground=None):
     us = [FK.safe_u(u, ops, L) for x in acc_here for u in x[:2]]
     d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
     for layer in (FK.L0, FK.L1):
-        FK.wall_pieces(wwo, acc, a, d, nout, L, zbot, zt, [o[:7] for o in ops], u_acc, zref, zs, us, mat_fn, layer=layer,
-                       reveal=FRAME, ground=ground)
         low = layer == FK.L1
+        gl1 = spec.get("glass_lod1") if low else None
+        FK.wall_pieces(wwo, acc, a, d, nout, L, zbot, zt, [(*o[:6], gl1 or o[6]) for o in ops], u_acc, zref, zs, us,
+                       mat_fn, layer=layer, reveal=FRAME, ground=ground)
         for (u0, u1, z0, z1, depth, _, _, g) in ops:
+            if gl1 == FRAME:                   # panes in the frame material: mullions would not show
+                continue
             n = max(1, int(round((u1 - u0) / g["pitch_m"])))
             # mullion: a post from the glass plane to the wall plane (LOD1: its front face only)
             for i in range(1, n):

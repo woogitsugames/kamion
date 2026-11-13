@@ -80,3 +80,6 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D59 | Przegub naczepy F1 (ADR 0158), 2026-11-13 s16 | **Miękki ogranicznik bez zmian, tolerancja nadmiaru ≤ 3,5°** |
 | D60 | Następny region, 2026-11-13 s16 | **Dojlidy / Krywlany** (najsilniejsze skupisko celów ciężarówek wg G2) |
 | D61 | Mistral, 2026-11-13 s16 | **Runda 7 tak** — długie sesje, w PR surowe wyjście komend zamiast tabel |
+
+## D62 — 0162: +10 draws na dojeździe do ronda Putry od Al. Tysiąclecia przyjęte (2026-11-13, s17)
+Kamera `g3b-rondo-putry-approach` 421 → 431 wywołań (Low, ok. +2 %) przez 3 rzeczywiste konstrukcje oznakowania z 2024 (5 tablic; portal P005–P008, E-1 P009, VMS P010). Pozostałe kamery −10…+3. Przyjęte bez wtapiania tablic w siatkę bramownicy; weryfikacja pomiarem A16 po wspólnej regeneracji świata.

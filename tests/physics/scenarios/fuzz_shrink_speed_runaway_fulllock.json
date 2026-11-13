@@ -61,8 +61,8 @@
     {
       "metric": "articulation_limit_excess_deg",
       "status": "WORKING_VALUE",
-      "source": "articulation inside yawLimitDeg=90 (tractor_4x2_generic.vehicle.json:305)",
-      "max": 0
+      "source": "D59 (owner, 2026-11-13) / ADR 0158 F1, ADR 0165: articulation may exceed the fifth-wheel soft yaw stop (yawLimitDeg = 90, yawStopFrequencyHz 3, tractor_4x2_generic.vehicle.json) by <= 3.5 deg; a stiffer stop (>= 4.5 Hz) breaks the 0.35 m/s jerk limit (ADR 0158 table). Measured max 3.33 deg (M34 hunt)",
+      "max": 3.5
     },
     {
       "metric": "max_fifth_wheel_error_mm",
@@ -97,9 +97,16 @@
     },
     {
       "metric": "max_body_penetration_m",
+      "status": "DERIVED",
+      "source": "ADR 0165 compliant contact (4 Hz, zeta 1 per corner effective mass): side-impact peak crush <= v/(e*omega) + n*g/omega^2 = 4.18/(e*25.1) + 2*9.81/25.1^2 = 0.061 + 0.031 = 0.092 m (v = DERIVED impact bound of this scenario, n = 2 g corner load of the lying trailer); limit 0.10 m. A real curtain-sider roof rail / cab corner crushes decimetres in a rollover (UNVERIFIED). Measured 0.090 m (trailer Body corner, t 4.12 s); ADR 0158 rigid contact: 0.0004 m",
+      "max": 0.1
+    },
+    {
+      "metric": "max_body_penetration_m",
+      "from": 10,
       "status": "WORKING_VALUE",
-      "source": "collider corners penetrate the road by <= 2 cm (Baumgarte slop 5 mm), ADR 0158",
-      "max": 0.02
+      "source": "ADR 0165: lying at rest the static sink n*g/omega^2 = 2*9.81/25.1^2 = 0.031 m; limit 0.035 m (no visible sinking of the lying trailer on a phone screen). Measured 0.030 m",
+      "max": 0.035
     },
     {
       "metric": "body_contact_s",

@@ -1344,6 +1344,9 @@ def big_tree(kit, p, z, h, key):
     wm, hm = PK.SPRITE_M["tree_a"]
     W = h * (0.85 + 0.25 * hfloat(key, "bw"))
     H = W * hm / wm
+    if H > 0.85 * h:                                         # ADR 0163: `tree_a` is now the round crown card (W / H 0.71)
+        H = 0.85 * h
+        W = H * wm / hm
     a0 = hfloat(key, "by") * 3.1416
     tr = 0.12 + 0.012 * h
     kit.box(np.asarray(p, float), np.array([math.cos(a0), math.sin(a0)]), tr, tr, z - 0.1, z + h - H * 0.86, PK.SWATCH["trunk"], top=False)
@@ -1744,6 +1747,11 @@ def build(buf, rp, zf, surf_top, report, items=None):
     trees = []                                               # ADR 0132: grown garden trees -> region instances
     canopy = rp.get("canopy")
     used = np.zeros(len(canopy), bool) if canopy is not None else None
+    # ADR 0163 (G7): when streetscape.plantings planned the greenery of the house streets, it owns the front hedge /
+    # shrub strip of every plot (rp["front_green"]: plot id -> kind) and meshes the broadleaf garden trees itself
+    # (rp["garden_trees"]: the crowns are only recorded here). Without the plan nothing below changes.
+    fgreen = rp.get("front_green")
+    gplan = rp.get("garden_trees")
     all_plots = shapely.unary_union([p["poly"] for p in plots]) if plots else Polygon()
     shapely.prepare(all_plots)
     roads_poly = rp.get("roads_poly")
@@ -1844,7 +1852,9 @@ def build(buf, rp, zf, surf_top, report, items=None):
             fr_runs = [r for r in lay["runs"] if r["front"] and np.hypot(*(r["b"] - r["a"])) > 3.0]
             hedged = None
             kit.tag = "hedge"
-            if fr_runs and plot["front_style"] in SEE_THROUGH and hfloat(key, "hedge") < HEDGE_SHARE[age] * 1.6 or \
+            if fgreen is not None:                           # ADR 0163: plantings.front_gardens builds the front greenery
+                hedged = fgreen.get(plot["id"], "none") != "none" or None
+            elif fr_runs and plot["front_style"] in SEE_THROUGH and hfloat(key, "hedge") < HEDGE_SHARE[age] * 1.6 or \
                     fr_runs and hfloat(key, "hedge") < HEDGE_SHARE[age] * 0.5:
                 hh = plot["front_h"] + (0.15 + 0.5 * hfloat(key, "hedge_h") if hfloat(key, "hedge_o") < 0.7 else -0.3)
                 for r in fr_runs:
@@ -1930,6 +1940,18 @@ def build(buf, rp, zf, surf_top, report, items=None):
                     if any(np.hypot(*(p - q)) < 1.2 for q in placed):
                         continue
                     kk = (key, "cn", round(cx_, 1), round(cy_, 1))
+                    if gplan is not None and not con_ and cr_ >= PC_R_TREE:
+                        if cnt["inst"] + cnt["small"] >= 16:
+                            continue
+                        gplan.append({"plot": plot["id"], "key": kk, "p": p, "r": cr_, "in_plot": bool(in_plot), "near": near(p),
+                                      "kind": "broadleaf", "luma": float(canopy[ci, 4]) if canopy.shape[1] > 4 else 255.0})
+                        cnt["small"] += 1
+                        used[ci] = True
+                        placed.append(p)
+                        continue
+                    if gplan is not None:                    # recorded for the density check; meshed below as before
+                        gplan.append({"plot": plot["id"], "key": kk, "p": p, "r": cr_, "in_plot": bool(in_plot), "near": near(p),
+                                      "kind": "conifer" if cr_ >= PC_R_TREE else ("thuja" if con_ else "shrub"), "meshed": True})
                     if con_ and cr_ >= PC_R_TREE:
                         if cnt["spruce"] >= 5:
                             continue

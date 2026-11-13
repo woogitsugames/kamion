@@ -4,10 +4,10 @@
  "add_grass": false,
  "pier_paint": {
   "enabled": true,
-  "color_linear": [0.253, 0.220, 0.094],
+  "color_linear": [0.146, 0.132, 0.079],
   "splash_h_m": 0.8,
   "runoff_length_scale": 0.35,
-  "confidence": "WORKING_VALUE: s12 review rejected the brown r2 shift; restore the earlier mustard pigment. Photo sRGB is not a reflectance measurement. ADR 0159: same hue, value x 0.55 - the piers stand in the shade of the deck (CC0 7204_May_2021: pier sRGB ~150/125/60 under an overcast sky; Mapillary 468026894483428: dark ochre in the deck shadow), while the clear preset lights them with a low sun (pale yellow cylinders in route-putry-approach). A baked shade until the under-deck occlusion exists."
+  "confidence": "WORKING_VALUE: s12 review rejected the brown r2 shift; restore the earlier mustard pigment. Photo sRGB is not a reflectance measurement. ADR 0159: same hue, value x 0.55 - the piers stand in the shade of the deck (CC0 7204_May_2021: pier sRGB ~150/125/60 under an overcast sky; Mapillary 468026894483428: dark ochre in the deck shadow), while the clear preset lights them with a low sun (pale yellow cylinders in route-putry-approach). A baked shade until the under-deck occlusion exists. ADR 0161 (REVIEW s16b P2: still saturated mustard, pale heads): saturation x 0.7 about the luminance, then value x 0.6 -> 0.146 / 0.132 / 0.079; the pier heads take the same paint (hero_bridge)."
  },
  "grass_budget_note": "Existing Megascans vegetation retained. Additional clumps cost +1 Low draw in paired Unity views; disabled to meet draws +0.",
  "target": {"osm_way": [1101181473, 173956078, 284022563, 606396460]},

@@ -212,7 +212,8 @@ def test_screen_and_pier_materials():
     lines, strength, duty = MT.M["noise_glass_lined"]["screen"]["stripe"]
     assert strength <= 0.12                                                  # faint lines: no raster on Low
     c = MT.M["pier_yellow"]["color"]
-    assert c[0] > c[1] > 2 * c[2] and 0.2 <= c[0] <= 0.3                     # still ochre, in the shade of the deck
+    # ADR 0161 (REVIEW s16b P2: "saturated mustard"): saturation x 0.7, value x 0.6 of the ADR 0159 paint
+    assert c[0] > c[1] > 1.5 * c[2] and 0.1 <= c[0] <= 0.2                   # still ochre, in the shade of the deck
     pm = MT.M["ramp_wall_panels"]                                            # after4: Biezenstwa ramps, not blocks
     assert pm["texture_set"] == "concrete_panels_wall" and pm.get("set_tile") is True
     assert min(pm["color"]) > max(MT.M["ramp_wall_blocks"]["color"])        # lighter than the split blocks
