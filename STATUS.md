@@ -13,3 +13,5 @@ Następny krok: `cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\reg
 - build_world dojlidy padał w `cameras()` (IndexError: kamery C zakładały ulicę Andersa na trasie). Naprawa ogólna: `cameras()` -> C: `cameras_industrial_c` (bez zmian), inne: `cameras_generic` (stacje trasy co ~300 m, ronda z góry, ortho kafla).
 - Efekt uboczny 1. przebiegu: przebudowa WSPÓLNEJ biblioteki `art-source/world/{props,textures}` zestawem znaków dojlidy -> przywrócone do main; `props_library_dir()`: region != C pisze do `Data/raw/derived/<id>/props|signs|textures` (poza git).
 - Następny krok: `Get-Content artifacts\region-0166\build_world2.log -Tail 30`
+- 24719c964: build_world dojlidy OK; QA (qa_report + landmarks D51 + ADR 0166 draft). Shared GUGiK 2061 manifests restored (sources.py nie przepisuje). Megascans/cc0 _raw skopiowane z main. W tle: rebuild dojlidy z Megascans + pytest C (artifacts/region-0166/rerun.log).
+- Następny krok: `Get-Content artifacts\region-0166\rerun.log -Tail 30`; potem `git status` (testy C przepisują pliki C -> `git checkout -- Data/Regions/bialystok-industrial-c`).
