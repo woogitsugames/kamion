@@ -68,3 +68,5 @@ Zapisano before/High-overcast; każda kamera w stats.txt. Oględziny pozostają 
 Import roof-aware-after zakończony.
 
 Zapisano after/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano after/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
