@@ -1,3 +1,38 @@
+# HANDOVER — kamion, SESJA 18 (start 2026-11-13 18:2x; 5 h 0 % — reset 23:20 lokalnie; tydzień 16 %, Fable 0 % — reset 16.11 19:00) — nowa sesja: czytaj TEN blok, potem „STOP S17” niżej
+
+## STAN S18 (lider) — main `b880fc6a1`
+- 18:2x: C: ~690 GB; A16 RFGL34SJYDZ i S24+ RZCX60VE8ZY online; PHONE_RUN brak. Crony :17/:47/:07.
+- **SCALONE:** 0171 (budynki follow-up), 0173 (determinizm generatora; jednorazowa zmiana ~21 tys. drzew podszytu). Świat w main NIE przebudowany — jedna regeneracja po 0170/0175 (+0172/0180 jeśli zdążą).
+- Usunięte worktree: audio-synth-0176, dojlidy-import-0174, bldg2-0171, determ-0173 (skrypt `artifacts/lead-s17/remove-wt.ps1` — odłącza junctiony pod Data).
+- **Agenci (7; każdy: WIP commit + push gałęzi + live po każdym kroku):**
+| ADR | zadanie | model | worktree / gałąź | live |
+|---|---|---|---|---|
+| 0170 | P1 rdzeń korony przy kamerze (czarna skrzynka p07_b) + P2 tuja/świerk | Fable | `horizon-0170` | `artifacts/live/horizon-0170.md` |
+| 0175 | P0 Low kontur/tablica naczepy (regresja?) + odblaski bez emisji | Opus | `truck-regs-0175` | `artifacts/live/truck-regs-0175.md` |
+| 0178 | lampy białe o zmierzchu — ograniczenie max(r,g,b) wszystkich grup | Opus | `lamps-0178` | `artifacts/live/lamps-0178.md` |
+| 0179 | Dojlidy wizualnie (plan 1–8 w live) | Fable | `dojlidy-vis-0179` | `artifacts/live/dojlidy-vis-0179.md` |
+| 0172 | 182011 wg ortofoto 2024 (rekomendacja; decyzja właściciela otwarta) + znaki cm924 + P2 | Fable | `p1b-0172` | `artifacts/live/p1b-0172.md` |
+| 0180 | NOWE: wieżowiec — jedna kolumna okien na szczycie, długa elewacja pasma okien (P1 z recenzji 0171) | Fable | `tower-0180` | `artifacts/live/tower-0180.md` |
+| 0177 | p99: przegląd kodu → A16 spike_probe (JEDYNY z prawem do telefonu, sam zakłada PHONE_RUN) → procedura PSO do uruchomienia PO regeneracji | Opus | `perf-p99-0177` | `artifacts/live/perf-p99-0177.md` |
+- **Kolejność integracji:** 0170 (po krytyku) → 0175 (po P0) → [0172, 0180 jeśli gotowe] → JEDNA regeneracja (`pwsh -File artifacts/lead-s17/regen.ps1`) → pytest gis → commit generated → czysty APK → nagranie PSO (skrypt 0177) → APK → visual-critic SBS → gate3 A16 (PHONE_RUN ręcznie) → S24+ High/30.
+- **Ostatni przydzielony ADR: 0180.**
+
+# HANDOVER — kamion, STOP S17 (2026-11-13 18:1x; 5 h 93 % — reset 20:10 lokalnie; tydzień 69 %, Fable 95 % — reset 14.11 17:00) — prompt s18: `docs/owner/START-PROMPT-S18.md`
+
+## STOP S17 — co dalej (nowa sesja/konto zaczyna TUTAJ)
+- **main** = `origin/main` (wypchnięty). Scalone w s17: 0161, 0162, 0163, 0165, 0166, 0167, 0168, 0169, 0174 (Dojlidy — import techniczny, wizualnie NIE gotowy), 0176 (audio), PR-y Mistrala r8 #39–#41, #43–#48; JEDNA regeneracja świata C `93842a609`; pytest gis 1060/2 xfail.
+- **Bramka 3 A16 Low (czysty APK `artifacts/apk/kamion-0.1.0-3a60019ff1.apk`, valid):** p95 33,46/33,48, **p99 ~50 ms OVER** (s16: 33,6) → zadanie 0177. Kamery 57/57, 46/46. PSS 900/926 MB.
+- **Gałęzie GOTOWE do scalenia (worktree + live `artifacts/live/<wt>.md`):** `horizon-0170` (krytyk w toku/zrobiony → `docs/reports/visual/REVIEW-2026-11-13-s17-0170.md`), `bldg2-0171` (→ `...-0171.md`), `determ-0173` (generator deterministyczny; ~21 tys. drzew podszytu przestawionych jednorazowo), `truck-regs-0175` (krytyk SCAL warunkowo; P0 Low: znikający kontur/tablica naczepy — sprawdzić regresję, stan w live).
+- **W toku (zatrzymane WIP z NASTĘPNYM KROKIEM w live):** `p1b-0172` (P1 bramki 3: 182011, cm924, P2 filary/kapa), `perf-p99-0177` (regresja p99), `lamps-0178` (białe lampy o zmierzchu), `dojlidy-vis-0179` (Fable; Dojlidy wizualnie). Wznawiać jako NOWYCH agentów z plików live.
+- **Kolejność po resecie:** krytycy 0170/0171 (jeśli brak raportów) → merge 0170 → 0171 → 0173 → 0175 (generated/* `--ours`; overrides.yaml = suma bloków) → JEDNA regeneracja (`pwsh -File artifacts/lead-s17/regen.ps1` — build_region, build_world, fidelity, export_route, import) → pytest gis → commit generated → czysty APK (drzewo CZYSTE przed buildem!) → visual-critic SBS → gate3 A16 (załóż `artifacts/locks/PHONE_RUN` ręcznie — gate3-run.ps1 go nie zakłada; agenci z Unity zrywają adb) → S24+ High/30 (bateria ≥ 40 %, < 36 °C).
+- **Mistral:** otwarte PR #42 M45 (nie scalamy), #49 M51 (M51-FIX), #50 M53 (M53-FIX) — **M51-FIX i M53-FIX wysłane Mistralowi przez właściciela 18:3x** (PR #49, #50 — po commitach „…-FIX gotowe”: krótki ponowny przegląd z obejrzeniem obrazów, potem scalić); r7 M40–M43 niezlecone (M39 pominąć — zrobione w 0168). Wzorzec: Mistral nie ogląda obrazów — przegląd zawsze z obejrzeniem próby.
+- **Właściciel:** odsłuch A/B audio 0176 (`artifacts/audio-synth-0176/ab/`, pytania w ADR 0176); decyzje D62 przyjęte.
+- **Uwagi:** incydent Anthropic (zawieszenia agentów, watchdog 600 s) — zapisywać WIP po każdym kroku, wznawiać z live; pusty nieśledzony `RouteGraph.cs` w katalogu głównym (do usunięcia przez właściciela).
+- **0177 p99 (stan, `b9ebecb77`):** p99 to próg ~19 klatek; klatki > 40 ms: s16 14/14, s17 23/22 — nadwyżka skupiona w 25–36 s okna (początek przejazdu), GPU-bound. **Hipoteza: przestarzałe kolekcje PSO** `game/Assets/_Project/Rendering/Resources/Pso/pso_Vulkan_Low_g3{a,b}.graphicsstate` (z 11.11, ADR 0113 „Otwarte 3”: nagrać po nowych treściach). Następnie: przegląd kodu 0168/0165, `spike_probe 1` na A16 (PHONE_RUN), nagranie PSO w Development (`pso_trace 90 pso_tag g3a|g3b`, wzór `artifacts/perf-low-r2/run-diag2.ps1`), gate3 2× przed/po. Propozycja: dodać do bramki licznik klatek > 40 ms obok p99 (decyzja).
+- **Werdykty krytyków (18:2x):** 0170 SCAL warunkowo (`REVIEW-2026-11-13-s17-0170.md`) — **P1 warunek: ciemny rdzeń korony przy kamerze wisi jako czarna skrzynka (`pair_g7_p07_b`)** → poprawić (nieregularny rdzeń ≥ 0,5 m za kartą / wyłączyć < 8 m) albo scalić bez pkt 4a; P2 tuja jak prostopadłościan, świerk w turkus. 0171 SCAL warunkowo (`...-0171.md`) — cm109 i EC zamknięte; P1 follow-up: wieżowiec ma pełną siatkę okien na gładkim szczycie (zdjęcie: jedna kolumna okien; długa elewacja pasma okien na bieli). → **0171 można scalić; 0170 po poprawce rdzenia.**
+- **Stany zatrzymanych (wszystko wypchnięte, NASTĘPNY KROK w live):** 0172 `6af559ec7` (182011: na ortofoto 2024 maszt z wysięgnikiem ~8,8 m, 2 głowice na wysięgniku + 1 na maszcie, osobny słupek na wysepce; dwa wysięgniki = stan 2019 sprzed przebudowy → **decyzja właściciela: świat wg 2024 (rekomendacja) czy wg zdjęcia 2019**; sondy pozy gotowe `pwsh artifacts/p1b-0172/tools/render.ps1 r1`); 0175 `94573bf23` (P0 Low nierozstrzygnięty — komendy porównania z bazą w live; białe kwadraty na boku = lampy obrysowe przesterowane → 0178); 0177 `b9ebecb77` (PSO); 0178 `61ab8aa55` (przyczyna z kodu: `TruckExterior.shader` ~409–417 emisja lamp bez ograniczenia, tylko DRL ma ograniczenie z zachowaniem barwy (ADR 0115) → ograniczać od max(r,g,b) dla wszystkich grup); 0179 `2004a6407` (nie zaczęte, plan w live).
+- **Ostatni przydzielony ADR: 0179.**
+
 # HANDOVER — kamion, SESJA 17 (start 2026-11-13 10:15; 5 h 0 %, reset 15:10 lokalnie; tydzień 39 %, Fable 63 % → agenci Opus/Sonnet, Fable oszczędnie)
 
 ## STAN S17 (lider) — main `1fab6ba82`
@@ -78,7 +113,8 @@
 - 17:3x: **0174 GOTOWE** `735406065` (WorldLibrary.Resolve — biblioteka per region; import C identyczny 24/24 bytes, 126 861 instancji; Dojlidy: build_world 441 s, import OK, Low 68,8 MB / High 197,2 MB, draws trasy 71–390; 6 kamer P11; EditMode 517/0; rozbieżności wizualne w ADR) → visual-critic `REVIEW-2026-11-13-s17-0174.md`; po scaleniu `fidelity/run.py --region bialystok-industrial-c`. 0175 zawieszony (audyt 158/158, eksport) — wznowiony; w WIP lidera d2a808b12 możliwe efekty uboczne .mat DrivingLab → agent sprawdza/cofa.
 - 17:4x: **SCALONE 0176 audio** `27f4127f8` (retarder/hamulec silnikowy/AMT/osuszacz proceduralnie; PlayMode 25/25; **właściciel: odsłuch A/B `artifacts/audio-synth-0176/ab/` (16 WAV) + pytania w ADR 0176; opcjonalnie `docs/owner/ELEVENLABS-REGEN-05.md`**). GOTOWE do scalenia po krytykach: **0170** horyzont `acaeca8ef`, **0171** budynki `299d9beb2`, **0173** determinizm `a20d60f6e` (generator deterministyczny; jednorazowo ~21 tys. drzew podszytu przestawionych), **0174** Dojlidy `735406065`, **0175** ciężarówka `94573bf23` (2 testy CarPaint czerwone w worktree — UNVERIFIED; lampy białe o zmierzchu — osobny problem renderingu). Krytycy w toku: 0170+0171, 0174, 0175. Wznowieni: 0172 (3.), 0177 (od nowa — poprzedni bez zapisu). Potem: scalenie świata (0170→0171→0173→0174, generated --ours) → JEDNA regeneracja + import → pytest → APK → krytyk → A16.
 - 17:5x: **krytyk 0175: SCAL warunkowo** (`REVIEW-2026-11-13-s17-0175.md`): High OK; **P0 Low: brak dolnego pasa konturu, tablica naczepy czarna plama** → agent 0175 sprawdza regresję vs 3a60019ff; P1 białe lampy o zmierzchu (sprzed 0175) → **nowy agent 0178 lamps** (Opus, worktree `lamps-0178`); P1 odblaski świecą same → 0175 sprawdza.
-- **Ostatni przydzielony ADR: 0178.**
+- 18:0x: **SCALONE 0174** `110c756fe` (krytyk SCAL warunkowo 1R/4P/2N — **Dojlidy: import techniczny, wizualnie NIE gotowy**; scena poza buildem). **Nowy agent 0179 dojlidy-vis** (Fable): kamery P11-094/001, landmarki Kontri + Bravilor, parking bez aut, latarnie Y, ślady opon, łąka/las, płyta lotniska.
+- **Ostatni przydzielony ADR: 0179.**
 - **Przejęcie przez nową sesję/konto:** przeczytaj ten blok → każdy wiersz tabeli: `artifacts/live/<live>.md` ma NASTĘPNY KROK; wznów jako NOWYCH agentów (nie SendMessage), gałęzie są na origin.
 - Następne: scalenia (0161 → 0162 → 0163, `generated/*` `--ours`, JEDNA regeneracja + `import-region.ps1` w main) → APK → krytyk → A16 gate3 A/B → S24+ High/30; 0165, 0166 osobno.
 

@@ -894,7 +894,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     srcs = {}
     for k in ("roads.graph.json", "terrain.json", "overrides.yaml", "generated/osm_context.json"):
         p = pipeline.REGIONS / region_id / k
-        srcs[k] = sha(p.read_bytes()) if p.exists() else None
+        # ADR 0173: hash LF-normalised text, so a CRLF checkout (worktree) and an LF checkout (main) agree
+        srcs[k] = sha(p.read_bytes().replace(b"\r\n", b"\n")) if p.exists() else None
     tm = json.loads((pipeline.REGIONS / region_id / "terrain.json").read_text(encoding="utf-8"))
     srcs["heightmap.r16 (Data/raw)"] = tm["sha256_r16"]
     manifest = {
