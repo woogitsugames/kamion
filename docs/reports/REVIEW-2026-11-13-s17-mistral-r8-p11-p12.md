@@ -115,3 +115,33 @@ Dodatkowo do porównań lotniczych: **P12-A01** (ortofoto pasów). Kadry P11-084
 - **PR #39 (P11): nie scalać w obecnej postaci** — najpierw poprawki z §2 (min. usunięcie P11-090/091/092 i przepisanie opisów). Alternatywa, jeśli Mistral nie poprawi: scalić z adnotacją w README „opisy niezweryfikowane wzrokowo — patrz REVIEW s17” i usuniętymi 3 wierszami.
 - **PR #40 (P12): można scalić** po poprawkach (1)–(3) z §3 (kafel, URL Commons, A-11a); poprawki (4)–(5) mogą pójść jako errata. Do 0166 przekazać §4 od razu (niezależnie od scalenia).
 - Nic nie scalono, nic nie skomentowano na GitHubie, nic nie scommitowano.
+
+## Ponowny przegląd po M48-FIX (s17)
+
+Gałąź `origin/research/mistral-p12-dojlidy-landmarks` @ `83cb13ec9`; `gh pr diff 40 --name-only` — 20 plików, **wszystkie** w `research/mistral/p12-dojlidy-landmarks/`. Sprawdzone niezależnie (własna transformacja GRS80→EPSG:2180, API Commons, API OSM 0.6).
+
+| # | Punkt M48-FIX | Stan | Dowód |
+|---|---|---|---|
+| 1 | Flagi `poza_kaflem` względem kafla bialystok-dojlidy [779019, 589055, 781067, 591103] | **zrobione** | przeliczone wszystkie 39 landmarków: 0 niezgodności. BISON P12-034 (780871, 590256) w kaflu; Odlewnia P12-036 (780877, 590342) w kaflu; hangar Aeroklubu P12-004 way 304300294 (778655, 590238) poza, 364 m na W; apron P12-003 poza, 340 m; pas 09R/27L P12-001 w kaflu. `landmarks.json` i `landmark-colors.json` spójne (po 17 flag `true` — komentarz PR podaje błędnie 13, dane są poprawne). |
+| 2 | Linki `File:` Commons | **zrobione** | API `pageids=` dla 5 curid zwraca dokładnie tytuły z sources.md; wszystkie 5 stron `File:` → HTTP 200. |
+| 3 | A-11a = próg zwalniający | **zrobione** | manifest P12-072 i README: „A-11a (próg zwalniający)”, przy `traffic_calming=bump`; brak „przystanku na żądanie”. |
+| 4 | Bramy Art-Glas / Zintronic | **zrobione (UNVERIFIED)** | OSM: node 2999785151 (`barrier=gate`) to jedyna brama na ogrodzeniu way 653263665; centroidy Artglas (way 210878360) i Zintronic (way 1192357612) leżą wewnątrz tego ogrodzenia. Wspólna brama jest więc prawdziwa; osobne bramy oznaczone UNVERIFIED w P12-089/090. |
+| 5 | data/ odchudzone, tools/ tylko w katalogu paczki | **zrobione** | usunięte `osm-pois/osm-east-strip/osm-hasbach/area-geom.json`; data/ ≈ 1,08 MB (oprócz 3 wymaganych plików zostały wejścia `gen_manifest.py`: `road-geom.json` 506 KB, `region-summary.json`, `typologia*.json` — uzasadnione). README opisuje odtworzenie zrzutów (API OSM `/map` + Overpass). Uwaga: `gen_manifest.py` wymaga odtworzonego `osm-pois.json` — opisane w README. |
+
+**Werdykt: PRZYJĘTA (do scalenia).** Drobna erratka, która nie blokuje: liczba flag w komentarzu PR (13 zamiast 17). Nic nie scalono, nic nie skomentowano, nic nie scommitowano.
+
+## Ponowny przegląd po M47-FIX (s17)
+
+Gałąź `origin/research/mistral-p11-dojlidy-photos` @ `b719292dd`; zdjęcia z `research/_incoming/mistral-p11-dojlidy-photos-v2/files/` (135 JPG), odrzucone obejrzane z v1. Wszystkie kadry obejrzane wzrokowo (miniatury 2×2, zbliżenia na znaki/sygnalizację). Przeliczenie kafla: `pyproj` 3.8.0, EPSG:4326→2180.
+
+**Próba losowa:** seed **4711**, 15 z 135 SOURCED (P11-006, 009, 011, 014, 036, 042, 048, 078, 080, 088, 093, 097, 115, 135, 139) — **15/15 bez błędu rażącego** (obiekt i scena zgodne z `punkt_opis`), 13/15 w pełni zgodne. Drobne: P11-115 to dom jednorodzinny piętrowy, nie „blok wielorodzinny”; P11-042 to głównie trawnik i pylon z herbem, jezdnia tylko na skraju (`typ_kadru` raczej `detal`). Kosmetyka: P11-011 kadr poprzeczny, nie „wzdłuż”; P11-097 to głównie droga rowerowa i chodnik.
+
+| # | Etap | Wynik | Dowód / uwagi |
+|---|---|---|---|
+| 1 | Próba 15 losowych | **15/15** (13 w pełni) | j.w. |
+| 2 | Nowa lista 15 do kamer kontrolnych (README §7) | **9/15 zgodne, 6/15 z błędem opisu** | **P11-026**: nie dwujezdniowa — jezdnia + pas zieleni + chodnik + droga rowerowa w lesie. **P11-027**: szeregowce/domy, nie „bloki”/„blokowisko”. **P11-043**: znak to **B-5** (zakaz wjazdu ciężarówek) z tabliczką o ruchu lokalnym, nie B-1. **P11-056**: **brak sygnalizacji** — skrzyżowanie z A-7, D-6 i tablicą ulicy, łąki. **P11-067**: **brak sygnalizacji** — przejście D-6, szyld Biedronki, parking, tablica „ul. Żurawia” na poprzecznej. **P11-128**: **brak wysepki** (jest przejście dla pieszych), budynek to urząd z flagami i szyldem nad wejściem, nie blok. Drobne, nie liczone: P11-005 „tablica kierunkowa” = znak C-2; P11-129 niebieski znak nakazu skrętu i szlaban, nie „zakaz wjazdu”. Wszystkie 15 to jednak prawdziwe kadry z poziomu jezdni, w kaflu — wybór kadrów dobry, zawyżone są opisy i kolumna „dlaczego” (dla 026/043/056/067/128). |
+| 3 | `w_kaflu_0166` (10 wierszy, seed 4711: 006, 008, 013, 035, 077, 088, 092, 110, 126, 141) | **10/10 zgodne** | dodatkowo wszystkie 150 wierszy ze współrzędnymi: 0 rozbieżności; SOURCED w kaflu 73/135 — zgodne z README. P11-151…154 bez współrzędnych (UNVERIFIED/REJECTED). |
+| 4 | REJECTED słuszne? | **tak, 8/8 + formalne** | 008 sama roślinność, 084 tablica „Plan osiedla Dojlidy”, 090–092 robot-zabawka, 124 wnętrze (uroczystość, wpis do księgi — README pisze „czytelnia”, drobne), 125 korytarz, 132 korytarz szpitala. Zgodne z decyzjami właściciela (roślinność → REJECTED, 084 → REJECTED, zbliżenia obiektów zostają `detal`). Pozostałe 8 REJECTED: licencja NC / brak GPS / PNG / poza zakresem — uzasadnione. |
+| 5 | Zakres PR | **OK** | `gh pr diff 39 --name-only`: 5 plików, wszystkie w `research/mistral/p11-dojlidy-photos/`. |
+
+**Werdykt: PRZYJĘTA Z ERRATĄ (lider może scalić).** Manifest jest teraz oparty na oglądaniu (próba losowa 15/15), kafel i odrzucenia poprawne. Błędy dotyczą szczegółów w 6 opisach z listy §7. Samokontrola `audit_20_percent.json` („31/31 OK”) była więc zawyżona. **Errata do wprowadzenia przy scaleniu** (manifest `punkt_opis` + README §7 „dlaczego”): 026 → „jezdnia jednojezdniowa, pas zieleni, chodnik i droga rowerowa, las po obu stronach”; 027 → „zabudowa szeregowa/domy”; 043 → „znak B-5 + tabliczka ruch lokalny” (cenne dla ruchu ciężarówek); 056 → „skrzyżowanie bez sygnalizacji (A-7, D-6), łąki przy lotnisku”; 067 → „skrzyżowanie z Żurawią bez sygnalizacji, przejście D-6, Biedronka”; 128 → „jezdnia z przejściem dla pieszych przy budynku urzędu, bez wysepki”; drobne: 115 „dom jednorodzinny”, 042 `typ_kadru=detal`. Dla 0166: kadry z sygnalizacją w §7 to tylko P11-014 (oraz ewentualnie P11-063). Nic nie scalono, nic nie skomentowano, nic nie scommitowano.

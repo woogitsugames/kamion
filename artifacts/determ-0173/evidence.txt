@@ -1,0 +1,30 @@
+# determ-0173 evidence (2026-11-13)
+## run1 vs run2 (same code, build_world)
+DIFF far_field_gis_cache.json 2542018 -> 2542018 B
+## run1 (main) vs run4 (ADR 0173) tree stats
+trees+shrubs 121628 -> 121616
+per proto delta {'tree_alder': -22, 'tree_birch': 90, 'tree_linden': -5, 'tree_maple': 26, 'tree_pine': 30, 'tree_shrub': -131}
+same positions 100626 only A 21002 only B 20990
+fully identical 50027
+by pass A {'edge': 18777, '4': 143, '3': 3476, '0': 84122, 'under': 12895, 'self': 1744, '1': 376, '2': 95}
+## Unity Low import x2 of identical data: Instances.asset sha256
+IMPORT1 EXIT 0 secs 549.6706095
+544C96A5ABBECADAE9D654A7CB70A9B83781998ECAFE8CA48E5081DA57A84DD9
+IMPORT2 EXIT 0 secs 522.2350386
+8536A0AB8FDBC410A8728C0DF8D41A3320D2FEC5B76CB3CF35F0F0E850235ED7
+objects 1076 / 1076
+IDENTICAL (content; fileIDs and object order ignored)
+## visual-qa WorldC Low clear x2 on the same import (pixels with channel diff > 8/255)
+pairs 48, pixel-identical (>8/255) 33
+biezenstwa-above.png: 0.018 %
+stretch-05-docks.png: 0.015 %
+fire-station-above.png: 0.013 %
+fire-station-ref7197.png: 0.002 %
+cab-mirrors-left.png: 0.001 %
+putry-above.png: 0.001 %
+dk8-dk19-exit.png: 0.001 %
+cab-gate.png: 0.001 %
+stretch-03.png: 0.001 %
+route-onramp-andersa.png: 0.001 %
+route-onramp-andersa-above.png: 0.0 %
+g3b-eye-s1482.png: 0.0 %

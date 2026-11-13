@@ -1,0 +1,108 @@
+{
+ "metoda": "census próbek: wszystkie budynky klasy z centroidem w kadrach 400x400 m (kadry landmarkowe + 6 kadrów dodatkowych na rejony mieszkalne); kolor dachu = mediana RGB w dysku r=min(sqrt(A/pi)/2, 8 m); klasyfikacja do palety nazw kolorów",
+ "klasy": {
+  "blok_wielorodzinny": {
+   "n_probkowane": 18,
+   "rozklad_kolorow": {
+    "szara": 66.7,
+    "srebrno-szara (ocynk)": 11.1,
+    "jasnoszara": 11.1,
+    "zielona": 5.6,
+    "grafitowa/ciemnoszara": 5.6
+   },
+   "mediana_rgb": [
+    123,
+    127,
+    131
+   ]
+  },
+  "dom_jednorodzinny": {
+   "n_probkowane": 745,
+   "rozklad_kolorow": {
+    "szara": 34.0,
+    "grafitowa/ciemnoszara": 14.6,
+    "srebrno-szara (ocynk)": 14.1,
+    "jasnoszara": 9.5,
+    "czerwonorudawa (rozbielona dachowka)": 8.1,
+    "czerwona/rdzawa (dachowka lub blacha lakierowana)": 6.3,
+    "zielona": 4.8,
+    "niebieska": 3.9,
+    "jasna/biała": 3.6,
+    "beżowa/kremowa": 1.1
+   },
+   "mediana_rgb": [
+    124,
+    126,
+    123
+   ]
+  },
+  "gospodarcze_i_inne": {
+   "n_probkowane": 231,
+   "rozklad_kolorow": {
+    "szara": 39.0,
+    "srebrno-szara (ocynk)": 15.6,
+    "grafitowa/ciemnoszara": 10.8,
+    "jasnoszara": 8.7,
+    "zielona": 6.9,
+    "czerwonorudawa (rozbielona dachowka)": 5.6,
+    "czerwona/rdzawa (dachowka lub blacha lakierowana)": 5.6,
+    "niebieska": 3.9,
+    "jasna/biała": 3.5,
+    "beżowa/kremowa": 0.4
+   },
+   "mediana_rgb": [
+    124,
+    126,
+    121
+   ]
+  },
+  "handlowo_usługowy": {
+   "n_probkowane": 37,
+   "rozklad_kolorow": {
+    "szara": 37.8,
+    "grafitowa/ciemnoszara": 10.8,
+    "srebrno-szara (ocynk)": 10.8,
+    "jasna/biała": 10.8,
+    "czerwonorudawa (rozbielona dachowka)": 10.8,
+    "jasnoszara": 8.1,
+    "zielona": 5.4,
+    "czerwona/rdzawa (dachowka lub blacha lakierowana)": 2.7,
+    "beżowa/kremowa": 2.7
+   },
+   "mediana_rgb": [
+    130,
+    128,
+    124
+   ]
+  },
+  "hala_przemysłowa": {
+   "n_probkowane": 21,
+   "rozklad_kolorow": {
+    "szara": 28.6,
+    "srebrno-szara (ocynk)": 23.8,
+    "jasnoszara": 19.0,
+    "jasna/biała": 14.3,
+    "zielona": 9.5,
+    "niebieska": 4.8
+   },
+   "mediana_rgb": [
+    137,
+    139,
+    141
+   ]
+  },
+  "altana_ROD": {
+   "n_probkowane": 7,
+   "rozklad_kolorow": {
+    "szara": 71.4,
+    "grafitowa/ciemnoszara": 14.3,
+    "beżowa/kremowa": 14.3
+   },
+   "mediana_rgb": [
+    106,
+    110,
+    102
+   ]
+  }
+ }
+}

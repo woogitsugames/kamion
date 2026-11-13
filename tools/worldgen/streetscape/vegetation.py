@@ -163,14 +163,21 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         if not len(P):
             return
         good, z = ok(P)
+        # ADR 0173: the attributes are drawn for EVERY candidate point (same calls, same order as before), and the
+        # clearance test only drops the tree afterwards. Before, a tree dropped by a new kerb / paved area / building
+        # skipped its draws and shifted the random stream of every later tree of the same BDOT feature or group
+        # (trees changed far outside an edited spot). Features with no dropped candidate keep their exact stream.
         for (x, y), zz, sp, g in zip(P, z, species, good):
-            if not g:
-                continue
             lo, hi = hrange if hrange and sp != "shrub" else HEIGHT[sp]
             h = rng.uniform(lo, hi) * hscale
-            out.append({"p": f"tree_{sp}", "v": int(rng.integers(0, 3)), "e": round(float(x), 2), "n": round(float(y), 2),
-                        "z": round(float(zz), 2), "h": round(float(h), 1), "yaw": round(float(rng.uniform(0, 6.2832)), 3),
-                        "lean": round(float(rng.uniform(0, 0.05)), 3), "src": src_id})
+            v = int(rng.integers(0, 3))
+            yaw = float(rng.uniform(0, 6.2832))
+            lean = float(rng.uniform(0, 0.05))
+            if not g:
+                continue
+            out.append({"p": f"tree_{sp}", "v": v, "e": round(float(x), 2), "n": round(float(y), 2),
+                        "z": round(float(zz), 2), "h": round(float(h), 1), "yaw": round(yaw, 3),
+                        "lean": round(lean, 3), "src": src_id})
             if fk:
                 out[-1]["fk"] = fk          # forest stand tree (texture mix of the forest HLOD, forest_hlod.py)
 
