@@ -104,25 +104,45 @@
    0.957,
    0.55
   ],
-  "OB_0bfe6830": [
-   4.062,
-   2.038
+  "OB_1600630d": [
+   3.6,
+   1.1
   ],
-  "OB_6bbf26a1": [
-   4.794,
-   3.275
-  ],
-  "OB_7c1f064e": [
+  "OB_287c4a39": [
    3.75,
    0.819
   ],
-  "OB_a8034096": [
+  "OB_38f28ad5": [
    3.8,
    1.194
   ],
-  "OB_f99035fb": [
-   4.794,
-   1.419
+  "OB_4d205e4f": [
+   4.325,
+   1.681
+  ],
+  "OB_4e2b750e": [
+   6.1,
+   1.8
+  ],
+  "OB_6a9707a8": [
+   2.938,
+   0.662
+  ],
+  "OB_6bbf26a1": [
+   4.606,
+   3.275
+  ],
+  "OB_8288a4df": [
+   4.275,
+   1.175
+  ],
+  "OB_df66f90d": [
+   5.0,
+   2.3
+  ],
+  "OB_e2240cee": [
+   4.4,
+   1.7
   ]
  },
  "prototypes": {
@@ -449,47 +469,72 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_OB_0bfe6830": {
+  "board_OB_1600630d": {
    "materials": [
-    "board_back",
-    "sign_OB_0bfe6830",
-    "steel_galv"
+    "sign_OB_1600630d"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_287c4a39": {
+   "materials": [
+    "sign_OB_287c4a39"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_38f28ad5": {
+   "materials": [
+    "sign_OB_38f28ad5"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_4d205e4f": {
+   "materials": [
+    "sign_OB_4d205e4f"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_4e2b750e": {
+   "materials": [
+    "sign_OB_4e2b750e"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_6a9707a8": {
+   "materials": [
+    "sign_OB_6a9707a8"
    ],
    "tris_lod0": 28,
    "tris_lod1": 28
   },
   "board_OB_6bbf26a1": {
    "materials": [
-    "board_back",
-    "sign_OB_6bbf26a1",
-    "steel_galv"
+    "sign_OB_6bbf26a1"
    ],
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_OB_7c1f064e": {
+  "board_OB_8288a4df": {
    "materials": [
-    "board_back",
-    "sign_OB_7c1f064e",
-    "steel_galv"
+    "sign_OB_8288a4df"
    ],
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_OB_a8034096": {
+  "board_OB_df66f90d": {
    "materials": [
-    "board_back",
-    "sign_OB_a8034096",
-    "steel_galv"
+    "sign_OB_df66f90d"
    ],
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_OB_f99035fb": {
+  "board_OB_e2240cee": {
    "materials": [
-    "board_back",
-    "sign_OB_f99035fb",
-    "steel_galv"
+    "sign_OB_e2240cee"
    ],
    "tris_lod0": 28,
    "tris_lod1": 28
@@ -511,13 +556,35 @@
   },
   "bus_shelter": {
    "materials": [
-    "bench_wood",
-    "shelter_glass",
-    "shelter_roof",
-    "steel_painted"
+    "shelter_glass_clear",
+    "shelter_paint"
    ],
-   "tris_lod0": 120,
-   "tris_lod1": 120
+   "tris_lod0": 618,
+   "tris_lod1": 192
+  },
+  "bus_shelter_5m": {
+   "materials": [
+    "shelter_glass_clear",
+    "shelter_paint"
+   ],
+   "tris_lod0": 558,
+   "tris_lod1": 168
+  },
+  "bus_shelter_9m": {
+   "materials": [
+    "shelter_glass_clear",
+    "shelter_paint"
+   ],
+   "tris_lod0": 678,
+   "tris_lod1": 216
+  },
+  "bus_shelter_black": {
+   "materials": [
+    "shelter_glass_clear",
+    "shelter_paint"
+   ],
+   "tris_lod0": 616,
+   "tris_lod1": 190
   },
   "cantilever_gate": {
    "materials": [
@@ -1395,6 +1462,14 @@
    "tris_lod0": 14,
    "tris_lod1": 14
   },
+  "fence_u12": {
+   "materials": [
+    "paint_ral1012",
+    "paint_ral3020"
+   ],
+   "tris_lod0": 672,
+   "tris_lod1": 88
+  },
   "gantry_footing": {
    "materials": [
     "concrete_base"
@@ -1424,17 +1499,17 @@
     "lamp_glass",
     "luminaire_housing"
    ],
-   "tris_lod0": 80,
+   "tris_lod0": 92,
    "tris_lod1": 53
   },
-  "lamp_12m": {
+  "lamp_11m": {
    "materials": [
     "furniture_footing",
     "furniture_galv",
     "lamp_glass",
     "luminaire_housing"
    ],
-   "tris_lod0": 80,
+   "tris_lod0": 92,
    "tris_lod1": 53
   },
   "lamp_8m": {
@@ -1444,7 +1519,7 @@
     "lamp_glass",
     "luminaire_housing"
    ],
-   "tris_lod0": 80,
+   "tris_lod0": 92,
    "tris_lod1": 53
   },
   "lamp_9m": {
@@ -1454,7 +1529,7 @@
     "lamp_glass",
     "luminaire_housing"
    ],
-   "tris_lod0": 80,
+   "tris_lod0": 92,
    "tris_lod1": 53
   },
   "lamp_arc_9m": {
@@ -1634,15 +1709,6 @@
    "tris_lod0": 72,
    "tris_lod1": 32
   },
-  "plate_D-15": {
-   "materials": [
-    "plate_back",
-    "sign_D-15",
-    "steel_galv"
-   ],
-   "tris_lod0": 72,
-   "tris_lod1": 32
-  },
   "plate_D-6": {
    "materials": [
     "plate_back",
@@ -1668,6 +1734,28 @@
    ],
    "tris_lod0": 1452,
    "tris_lod1": 852
+  },
+  "pylon_u5a": {
+   "materials": [
+    "paint_ral1012",
+    "paint_white_reflective"
+   ],
+   "tris_lod0": 120,
+   "tris_lod1": 60
+  },
+  "railing_u12a": {
+   "materials": [
+    "paint_ral1012"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "railing_u12a_post": {
+   "materials": [
+    "paint_ral1012"
+   ],
+   "tris_lod0": 24,
+   "tris_lod1": 12
   },
   "sign_cantilever_L8_86": {
    "materials": [
@@ -1732,12 +1820,19 @@
    "tris_lod0": 52,
    "tris_lod1": 28
   },
-  "sign_gantry_10_70": {
+  "sign_gantry_11_68": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 1072,
-   "tris_lod1": 480
+   "tris_lod0": 960,
+   "tris_lod1": 444
+  },
+  "sign_gantry_11_72": {
+   "materials": [
+    "gantry_steel"
+   ],
+   "tris_lod0": 1088,
+   "tris_lod1": 492
   },
   "sign_gantry_14_61_b6": {
    "materials": [
@@ -1745,6 +1840,20 @@
    ],
    "tris_lod0": 1008,
    "tris_lod1": 480
+  },
+  "sign_gantry_16_66": {
+   "materials": [
+    "gantry_steel"
+   ],
+   "tris_lod0": 1040,
+   "tris_lod1": 504
+  },
+  "sign_gantry_26_61": {
+   "materials": [
+    "gantry_steel"
+   ],
+   "tris_lod0": 1200,
+   "tris_lod1": 624
   },
   "sign_post": {
    "materials": [

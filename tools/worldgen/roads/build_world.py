@@ -904,7 +904,7 @@ def instance_ends(proto, nlods):
         e = [50.0, 800.0]
     elif proto.startswith(("plate_", "board_", "sign_", "signal_")):
         e = [50.0, 250.0]
-    elif proto == "bus_shelter" or proto.endswith("_gate"):
+    elif proto.startswith("bus_shelter") or proto.endswith("_gate"):      # ADR 0162: BKM 5 / 7 / 9 m, black
         e = [60.0, 300.0]
     elif proto.startswith(tuple(HERO_LOD_ENDS)):      # hero landmark assets: LOD0 / LOD1 / silhouette
         e = list(next(v for k, v in HERO_LOD_ENDS.items() if proto.startswith(k)))
