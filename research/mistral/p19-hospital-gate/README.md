@@ -90,7 +90,7 @@ Wszystkie kadry pobrane (JPG ≤1600 px, files/ w archiwum ZIP — patrz sekcja 
 | Znak B-2 (zakaz wjazdu) | obecność prawdopodobna — 2 odczyty wizyjne, symbol niejednoznaczny | oględziny | F01 | UNVERIFIED |
 | Wysokości zamocowania znaków | min. 2,00 m (w obszarze zabudowanym, na słupkach; 2,20 przy chodniku) lub 0,90–1,20 m (na/za urządzeniami BRD); nad jezdnią min. 5,00 m; od krawędzi jezdni 0,50–2,00 m | tabela 1.11 (Dz.U. str. 32) + str. 26; dokładne wysokości tej instalacji UNVERIFIED | Dz.U. | SOURCED (zakresy) |
 | Tablica izby przyjęć | prostokątna, biała z niebieskimi elementami, niepodświetlana, na słupie bramy; logo i napis instytucji — **nie odtwarzamy** | oględziny | F01 | ESTIMATED |
-| Nawierzchnia dojazdu | asfalt z łatami; krawężnik betonowy niski (~0,15 m — kotwica standardowa), przejazd płytowy; chodnik z płyt ~1,5 m (3 płyty × 0,5 m) | oględziny + kotwice | F01 | ESTIMATED |
+| Nawierzchnia dojazdu | asfalt z łatami; krawężnik betonowy niski (~0,15 m — kotwica standardowa), przejazd płytowy; chodnik przy bramie — nawierzchnia UNVERIFIED (odczyty wizyjne niespójne: płyty vs kostka; patrz sekcja 8) | oględziny + kotwice | F01 | ESTIMATED (dojazd/krawężnik) / UNVERIFIED (chodnik) |
 | Nawierzchnia za bramą | asfalt (droga wewnętrzna/plac) | oględziny + orto 2025 | F01 + GUGiK | ESTIMATED |
 | Tło — budynki szpitala | wielokondygnacyjne (min. 4), elewacja jasna/gładka, dachy płaskie/ciemne | oględziny 2 kadrów | F06+F19 | ESTIMATED |
 | Tło — zieleń | drzewa liściaste przy murze (bez liści XI) | oględziny | F01+F05/F19 | ESTIMATED |
@@ -117,7 +117,7 @@ Linia wjazdu: azymut **62,3°** — od jezdni Żurawiej (SW) na plac szpitala (N
         |    prawa strona wjazdu patrząc od ulicy (UNVERIFIED), 0,5–2,0 m od krawędzi jezdni]
         |   [lampa na słupie: 1 oprawa — UNVERIFIED]
         |   node 874174701 = skrzyżowanie z Żurawią (−7,5;−3,8); oś jezdni ~16 m S/SW
-        |   przejazd przez krawężnik płytowy; chodnik z płyt ~1,5 m
+        |   przejazd przez krawężnik płytowy; chodnik przy bramie (nawierzchnia UNVERIFIED — patrz sekcja 8)
         → X (wschód)
 ```
 
@@ -132,7 +132,9 @@ Potwierdzenia elementów szkicu: słupy (F01 ×2 odczyty + F19 daszki z daleka),
 - Wysokości i odległości (tabela 1.11, Dz.U. str. 32, PDF str. 37; Dz.U. str. 26, PDF str. 31) — cytaty w manifest.csv (P19-038/039/047).
 
 ## 8. Samokontrola 20% (seed 20261113)
-Losowanie: `random.Random(20261113).sample(wiersze_manifestu, ceil(0.2·63))` → **13 wierszy**. Dla każdego: ponowne otwarcie URL (HTTP 200), ponowna weryfikacja cytatu/strony dokumentu, ponowne OBEJRZENIE kadru i porównanie ze zdaniem „co widać”. Wyniki: **audit_20_percent.json** (i podsumowanie poniżej — uzupełniane w finalnym commicie).
+Losowanie: `random.Random(20261113).sample(wiersze_manifestu, ceil(0.2·63))` → **13 wierszy** (20,6%): P19-001, -002, -004, -005, -007, -009, -012, -024, -030, -033, -041, -054, -060. Dla każdego: ponowne otwarcie URL (HTTP 200 / ponowny eksport OSM API), ponowna weryfikacja cytatu/strony dokumentu (ekstrakt PDF), ponowne OBEJRZENIE kadru (analiza obrazu, pytania kontrolne) i porównanie ze zdaniem „co widać”.
+
+**Wynik: 11 PASS, 1 PASS z upgrade (P19-060 latarnia: UNVERIFIED→ESTIMATED — 2. niezależny odczyt), 1 KOREKTA (P19-054 chodnik: ESTIMATED→UNVERIFIED — odczyty wizyjne niespójne co do materiału: „płyty” vs „kostka brukowa”; korekta zastosowana w manifest.csv i sekcjach 5–6), 0 błędów krytycznych.** Szczegóły: **audit_20_percent.json** (z poleceniem odtwarzającym losowanie).
 
 ## 9. Luki
 - **≤1 kadr w promieniu 40 m** (tylko F01) — dozwolone źródła nie zawierają więcej kadrów bramy (Commons wyczerpane: geosearch + kategorie + katalog autora; Panoramax/KartaView: 0; Openverse: niedostępne; Mapillary: bez tokenu). Kryterium „≥12 kadrów ≤40 m" nieosiągalne — przyjęto interpretację właściciela (kadry z widoczną bramą/frontem, odległości jawnie; sekcja 4).
