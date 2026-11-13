@@ -1,0 +1,801 @@
+{
+  "cameras": [
+    {
+      "id": "g3a_eye_s0012",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        720.978,
+        -411.552,
+        143.882
+      ],
+      "look_at": [
+        701.459,
+        -446.48,
+        143.159
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=30 m (+18 m) (moved +18 m ahead of the spawn so it is not inside the truck, W-N10)",
+      "s_m": 30.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0062",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        705.276,
+        -439.447,
+        143.687
+      ],
+      "look_at": [
+        686.23,
+        -474.636,
+        143.022
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=62 m (+50 m)",
+      "s_m": 62.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0112",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        681.471,
+        -483.435,
+        143.605
+      ],
+      "look_at": [
+        662.631,
+        -518.735,
+        143.293
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=112 m (+100 m)",
+      "s_m": 112.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0162",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        657.926,
+        -527.562,
+        143.84
+      ],
+      "look_at": [
+        638.825,
+        -562.719,
+        143.151
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=162 m (+150 m)",
+      "s_m": 162.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0212",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        633.927,
+        -571.441,
+        143.563
+      ],
+      "look_at": [
+        612.693,
+        -603.182,
+        142.604
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=212 m (+200 m)",
+      "s_m": 212.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0262",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        607.187,
+        -611.456,
+        142.967
+      ],
+      "look_at": [
+        588.018,
+        -646.554,
+        142.035
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=262 m (+250 m)",
+      "s_m": 262.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0312",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        582.791,
+        -655.082,
+        142.405
+      ],
+      "look_at": [
+        563.82,
+        -690.312,
+        141.611
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=312 m (+300 m)",
+      "s_m": 312.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0362",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        556.266,
+        -693.292,
+        142.161
+      ],
+      "look_at": [
+        520.62,
+        -676.361,
+        141.68
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=362 m (+350 m)",
+      "s_m": 362.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0412",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        511.83,
+        -671.585,
+        142.227
+      ],
+      "look_at": [
+        476.672,
+        -652.482,
+        141.871
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=412 m (+400 m)",
+      "s_m": 412.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_ext34_s0040",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-A",
+      "pos": [
+        717.049,
+        -436.884,
+        143.576
+      ],
+      "look_at": [
+        718.032,
+        -416.783,
+        143.162
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=40 m (yard, hall and docks behind); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 40.0,
+      "truck_s_m": 40.0
+    },
+    {
+      "id": "g3a_ext34_s0214",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-A",
+      "pos": [
+        633.937,
+        -589.799,
+        143.153
+      ],
+      "look_at": [
+        634.906,
+        -569.698,
+        142.884
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=214 m (at the depot gate); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 214.0,
+      "truck_s_m": 214.0
+    },
+    {
+      "id": "g3a_ext34_s0338",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-A",
+      "pos": [
+        571.754,
+        -694.59,
+        141.856
+      ],
+      "look_at": [
+        572.386,
+        -674.475,
+        141.522
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=338 m (entering Rondo Bieżeństwa); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 338.0,
+      "truck_s_m": 338.0
+    },
+    {
+      "id": "g3a_rondo_bie_approach",
+      "type": "persp",
+      "kind": "rondo_eye",
+      "segment": "G3-A",
+      "pos": [
+        576.216,
+        -667.448,
+        142.293
+      ],
+      "look_at": [
+        554.676,
+        -716.554,
+        143.35
+      ],
+      "fov_deg": 65.0,
+      "note": "driver eye 30 m before the ring entry (s=326 m), looking at the ring centre (circle fit r=23.362 m)",
+      "s_m": 326.0
+    },
+    {
+      "id": "g3a_rondo_bie_above",
+      "type": "persp",
+      "kind": "rondo_above",
+      "segment": "G3-A",
+      "pos": [
+        580.924,
+        -668.222,
+        185.85
+      ],
+      "look_at": [
+        554.676,
+        -716.554,
+        142.85
+      ],
+      "fov_deg": 55.0,
+      "note": "oblique from ~45 m up, 55 m back along the approach (same idea as control_cameras putry_above / biezenstwa_above)"
+    },
+    {
+      "id": "g3b_eye_s1232",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -195.652,
+        -263.255,
+        133.727
+      ],
+      "look_at": [
+        -226.941,
+        -238.315,
+        132.447
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1232 m (+0 m)",
+      "s_m": 1232.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1282",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -234.748,
+        -232.061,
+        132.851
+      ],
+      "look_at": [
+        -265.811,
+        -206.839,
+        132.066
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1282 m (+50 m)",
+      "s_m": 1282.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1332",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -273.577,
+        -200.533,
+        132.556
+      ],
+      "look_at": [
+        -305.1,
+        -175.891,
+        132.312
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1332 m (+100 m)",
+      "s_m": 1332.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1382",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -313.001,
+        -169.756,
+        132.975
+      ],
+      "look_at": [
+        -340.451,
+        -142.97,
+        133.199
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1382 m (+150 m)",
+      "s_m": 1382.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1432",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -344.586,
+        -134.557,
+        133.854
+      ],
+      "look_at": [
+        -373.128,
+        -106.514,
+        133.782
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1432 m (+200 m)",
+      "s_m": 1432.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1482",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -380.263,
+        -99.503,
+        134.357
+      ],
+      "look_at": [
+        -409.16,
+        -71.827,
+        134.12
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1482 m (+250 m)",
+      "s_m": 1482.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1532",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -416.394,
+        -64.918,
+        134.666
+      ],
+      "look_at": [
+        -445.302,
+        -37.253,
+        134.587
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1532 m (+300 m)",
+      "s_m": 1532.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1582",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -452.451,
+        -30.257,
+        135.226
+      ],
+      "look_at": [
+        -481.395,
+        -2.634,
+        135.381
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1582 m (+350 m)",
+      "s_m": 1582.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1632",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -488.73,
+        4.168,
+        136.042
+      ],
+      "look_at": [
+        -518.071,
+        31.373,
+        136.315
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1632 m (+400 m)",
+      "s_m": 1632.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1682",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -525.421,
+        38.159,
+        137.024
+      ],
+      "look_at": [
+        -544.057,
+        70.627,
+        137.387
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1682 m (+450 m)",
+      "s_m": 1682.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_ext34_s1272",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-B",
+      "pos": [
+        -243.496,
+        -236.604,
+        132.7
+      ],
+      "look_at": [
+        -223.817,
+        -240.813,
+        132.312
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=1272 m (Andersa, 3 lanes, noise screens); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 1272.0,
+      "truck_s_m": 1272.0
+    },
+    {
+      "id": "g3b_ext34_s1482",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-B",
+      "pos": [
+        -396.557,
+        -96.111,
+        134.496
+      ],
+      "look_at": [
+        -377.41,
+        -102.306,
+        133.634
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=1482 m (Andersa, ramp to Tysiąclecia); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 1482.0,
+      "truck_s_m": 1482.0
+    },
+    {
+      "id": "g3b_ext34_s1658",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-B",
+      "pos": [
+        -524.188,
+        24.769,
+        136.647
+      ],
+      "look_at": [
+        -504.869,
+        19.132,
+        135.788
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=1658 m (approach to Rondo Putry); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 1658.0,
+      "truck_s_m": 1658.0
+    },
+    {
+      "id": "g3b_rondo_put_approach",
+      "type": "persp",
+      "kind": "rondo_eye",
+      "segment": "G3-B",
+      "pos": [
+        -515.137,
+        28.652,
+        136.74
+      ],
+      "look_at": [
+        -554.253,
+        21.455,
+        137.678
+      ],
+      "fov_deg": 65.0,
+      "note": "driver eye 30 m before the ring entry (s=1668 m), looking at the ring centre (circle fit r=33.397 m)",
+      "s_m": 1668.0
+    },
+    {
+      "id": "g3b_rondo_put_above",
+      "type": "persp",
+      "kind": "rondo_above",
+      "segment": "G3-B",
+      "pos": [
+        -509.3,
+        -10.234,
+        180.178
+      ],
+      "look_at": [
+        -554.253,
+        21.455,
+        137.178
+      ],
+      "fov_deg": 55.0,
+      "note": "oblique from ~45 m up, 55 m back along the approach (same idea as control_cameras putry_above / biezenstwa_above)"
+    },
+    {
+      "id": "g3b_rondo_putry_approach",
+      "type": "persp",
+      "kind": "photo_match",
+      "segment": "G3-B",
+      "pos": [
+        -445.395,
+        -28.767,
+        134.48
+      ],
+      "look_at": [
+        -500.466,
+        15.05,
+        137.874
+      ],
+      "fov_deg": 60.0,
+      "note": "WORKING_VALUE viewpoint for the CC0 7204_May_2021 comparison (eye ~1.6 m from the verge looking up the road to the gantry); owner/lead may move it",
+      "s_m": 1578.0
+    },
+    {
+      "id": "garden_01_a",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -636.4842522581644,
+        -485.4949577556196,
+        127.30535955027636
+      ],
+      "look_at": [
+        -667.588,
+        -456.54200000000003,
+        131.48735681391622
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Skidelska; plot bdot:da266850-1894-11ed-8e2f-b8ca3aa2e5c2; P08 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_01_b",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -634.9803777193656,
+        -438.1063682638245,
+        128.04995333476973
+      ],
+      "look_at": [
+        -667.588,
+        -456.54200000000003,
+        131.48735681391622
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Skidelska; plot bdot:da266850-1894-11ed-8e2f-b8ca3aa2e5c2; P08 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_02_a",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -423.9175661249362,
+        -712.6125994930107,
+        128.50119004220124
+      ],
+      "look_at": [
+        -453.504,
+        -728.9720000000001,
+        131.49063584344245
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Racławicka; plot bdot:2BE4B431-B45E-1BF0-E053-CC2BA8C0D140; P10 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_02_b",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -451.088484558855,
+        -761.3002992699824,
+        127.57839464715899
+      ],
+      "look_at": [
+        -453.504,
+        -728.9720000000001,
+        131.49063584344245
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Racławicka; plot bdot:2BE4B431-B45E-1BF0-E053-CC2BA8C0D140; P10 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_03_a",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -507.9536163628852,
+        -578.7772309395377,
+        129.50063369983886
+      ],
+      "look_at": [
+        -482.02799999999996,
+        -598.294,
+        133.48201674341954
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Grodzieńska; plot bdot:2BE4B431-B089-1BF0-E053-CC2BA8C0D140; P07 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_03_b",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -466.1414570573664,
+        -626.278983087011,
+        129.0648171125532
+      ],
+      "look_at": [
+        -482.02799999999996,
+        -598.294,
+        133.48201674341954
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Grodzieńska; plot bdot:2BE4B431-B089-1BF0-E053-CC2BA8C0D140; P07 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_04_a",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -478.97046327172376,
+        -464.1820848572761,
+        133.38300779828464
+      ],
+      "look_at": [
+        -484.848,
+        -485.176,
+        137.5984167287709
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Wileńska; plot bdot:2BE4B431-AD87-1BF0-E053-CC2BA8C0D140; P12 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_04_b",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -514.5709167766604,
+        -501.1608180009381,
+        131.99901035493033
+      ],
+      "look_at": [
+        -484.848,
+        -485.176,
+        137.5984167287709
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Wileńska; plot bdot:2BE4B431-AD87-1BF0-E053-CC2BA8C0D140; P12 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_05_a",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -781.6338347736016,
+        -863.419663892927,
+        132.77692092046507
+      ],
+      "look_at": [
+        -766.056,
+        -895.8299999999999,
+        137.1140860608835
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Olsztyńska; plot bdot:da81a7b3-1894-11ed-9237-b8ca3aa2e5c2; P14 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_05_b",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -729.3787015660008,
+        -894.1578332048372,
+        132.468745061241
+      ],
+      "look_at": [
+        -766.056,
+        -895.8299999999999,
+        137.1140860608835
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Olsztyńska; plot bdot:da81a7b3-1894-11ed-9237-b8ca3aa2e5c2; P14 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_06_a",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -718.979066486622,
+        -154.82201918412048,
+        131.2402070802437
+      ],
+      "look_at": [
+        -703.802,
+        -123.37599999999999,
+        135.5552027612726
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Michała Motoszko; plot bdot:2BE4B431-B2D9-1BF0-E053-CC2BA8C0D140; P17 is typological, NOT matched location/pose"
+    },
+    {
+      "id": "garden_06_b",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -674.8002773230452,
+        -108.5161384772359,
+        131.96151620715432
+      ],
+      "look_at": [
+        -703.802,
+        -123.37599999999999,
+        135.5552027612726
+      ],
+      "fov_deg": 75,
+      "note": "ADR0154 WORKING_VALUE street pose; OSM Michała Motoszko; plot bdot:2BE4B431-B2D9-1BF0-E053-CC2BA8C0D140; P17 is typological, NOT matched location/pose"
+    }
+  ]
+}

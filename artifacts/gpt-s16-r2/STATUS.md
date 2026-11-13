@@ -38,3 +38,5 @@ Zapisano after/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wy
 Zapisano after/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Nowy smoke po poprawie selekcji posesji zbiorowych: korony należące do wydłużonej grupy domów bywają >25m od centroidu, więc dobór używa także ich jawnego srcplot. Nie przesuwano drzew ani budynków. Wcześniejsza próba smoke bez pliku kamer zakończyła się błędem i nie jest dowodem; finalny zwykły render wymaga oględzin.
+
+Zachowano mały pakiet iteracjiA:6arkuszy,pozy,liczniki i uczciwyPARTIAL; bez duplikowania pełnychPNG. Dalsza korekta obejmie relację do maksymalnej wysokości rzeczywistej geometrii dachów pobliskich domów i bliższe kadry. Sam LoD1 pierwszego domu w grupie nie opisuje kalenic sąsiadów.
