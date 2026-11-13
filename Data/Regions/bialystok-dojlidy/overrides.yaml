@@ -220,7 +220,7 @@ overrides:
       - {line_epsg2180: [[780369.9, 590879.3], [780373.6, 590872.3]]}
     group_size: [3, 3]
     in_group_m: [3.0, 3.8]
-    gap_m: [30.0, 40.0]
+    gap_m: [0.5, 1.0]      # short line: a clump starts within gap_max / 2 of its beginning
     depth_m: 1.5
     rows_replace_m: 0.0
     species: {linden: 0.5, maple: 0.5}
@@ -239,7 +239,7 @@ overrides:
       - {line_epsg2180: [[780370.6, 590882.6], [780377.0, 590877.5]]}
     group_size: [5, 6]
     in_group_m: [1.5, 1.9]
-    gap_m: [30.0, 40.0]
+    gap_m: [0.5, 1.0]      # short line: a clump starts within gap_max / 2 of its beginning
     depth_m: 0.8
     rows_replace_m: 0.0
     species: {shrub: 1.0}
