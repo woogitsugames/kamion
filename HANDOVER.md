@@ -2,7 +2,31 @@
 - **main** `f48317146`. C: 723 GB. adb: A16 RFGL34SJYDZ + S24+ RZCX60VE8ZY online. Nic nie działało w tle (stare tail.exe zabite). PHONE_RUN brak.
 - Właściciel: „weź jednorazowo 20 agentów”; „M52-FIX-3 gotowe” (26aeb871f na `research/mistral-p2-surfaces-2`).
 - atlas-0184: worktree ma niezacommitowaną TYMCZASOWĄ zmianę `facade_atlas.py` (łańcuch BEFORE przerwany) — agent close-0184 przywraca.
-- **Agenci s20 (20):** tabela poniżej, aktualizowana przy starcie/końcu. **Ostatni przydzielony ADR: 0196.**
+- 22:4x **SCALONE gates-s19** (`263847db7`; GATE-2 doprecyzowane „pozycja 15 zielona, VehicleLabTests 7/7”). Crony :17 (limit/live/scalenia/HANDOVER), :47 (Mistral), :07 (ZIP-y/GPT). Wspólne zasady agentów: `docs/owner/S20-AGENT-PREAMBLE.md`.
+- **Agenci s20 (20, start 22:4x; live w `artifacts/live/<n>.md` w worktree + kopia w main):**
+| n / ADR | model | zadanie | worktree |
+|---|---|---|---|
+| critic 0181 | Opus | recenzja soczewek → `docs/reports/REVIEW-2026-11-13-s20-0181.md` | — |
+| critic 0172 | Opus | recenzja P1b → `REVIEW-…-s20-0172.md` | — |
+| horizon-0170 | Opus | domknięcie: pairs6/compare6, ADR, merge main | istniejący |
+| atlas-0184 | Opus | domknięcie: łańcuch BEFORE (TEMP w facade_atlas!), ADR §4, merge main | istniejący |
+| bollards-0183 | Opus | r2: kolor łańcucha, rząd na bruku, A/B, ADR | istniejący |
+| M52-FIX-3 | Opus | przegląd → `REVIEW-…-s20-mistral-m52-fix3.md` | — |
+| M47-FIX-2 | Opus | przegląd → `REVIEW-…-s20-mistral-m47-fix2.md` | — |
+| autopilot-0195 | Opus | autopilot prosta 0–80 + hamowanie dla bramek 1–2 | nowy |
+| lamppool-0191 | Opus | plamy światła latarni (0182 P1-4) | nowy |
+| nightwin-0192 | Opus | okna nocą, magenta, rozbłysk (0182 P2) | nowy |
+| dojbld-0185 | Fable | Rosti building_part, ogrodzenie mora, okładzina, K3 | nowy |
+| dojgreen-0186 | Fable | drzewa narożnika 063, ściana krzewów, kamera 063 (baza horizon-0170) | nowy |
+| forest-0187 | Fable | ściana lasu/horyzont, podszyt (Base horizon-0170) | nowy |
+| ddr-0188 | Fable | DDR czerwony asfalt + przejazdy | nowy |
+| hospgate-0189 | Fable | brama szpitala P11-129 | nowy |
+| tower2-0190 | Fable | wieżowiec P2: szklenie, rama szczytu, maszty GSM, skok LOD NW (merge atlas-0184) | nowy |
+| sigplate-0193 | Sonnet | tarcze sygnalizatorów, D-6 za blisko | nowy |
+| stains-0194 | Opus | plamy oleju/łaty/koleiny asfaltu | nowy |
+| dojind-0196 | Fable | zakład building_part + bramy segmentowe, zacieki, kamera krywlany_runway | nowy |
+| MISTRAL-TASKS-10 | Sonnet | zlecenia M62+ → `docs/owner/MISTRAL-TASKS-10.md` | — |
+- **Ostatni przydzielony ADR: 0196.** Kolejność integracji: krytycy 0181/0172 + domknięcia 0170/0184/0183 → scal (generated → --ours, overrides = suma) → JEDNA regeneracja → pytest → BuildBatch truck/trailer → EditMode → czysty APK → PSO → APK → gate3 A16 + gate12-phone. Nowe ADR 0185–0196 scalać po tej regeneracji (druga regeneracja).
 
 # STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
 - **main** `526daa8d2`+ (= origin/main). Scalone w s19: **0180** (wieżowiec r2), **0182** (zmierzch + brud drzwi naczepy r5), **0179** (Dojlidy), Mistral **M50** (furniture-3 3b34a98df), **M51** #49 i **M53** #50 (z erratą), FIX-9 **M54-FIX-2, M49-FIX-2, M48-FIX-2**. **Świat w main NIE przebudowany** (ostatnio `93842a609`, s17).
