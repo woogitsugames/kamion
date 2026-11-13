@@ -136,10 +136,11 @@ def test_tower_gable_is_blank_with_one_stair_column():
     # LOD1: two plain side quads + 10 x (plain piece + window) + top piece = 23 quads in the far material
     assert len(_on_wall(buf, "buildings_low", "plaster_beige__far_office", SW, 238.0)) == 46
     assert len(_on_wall(buf, "buildings", "plaster_beige", SE, -1e9)) == 0                 # the SE wall is white
-    # every column window is the clear-glass office variant (`variants: [4]`)
+    # every column window is the clear-glass white-framed office variant (`variants: [2]`, ADR 0190)
     from streetscape import facade_atlas as FA
     from streetscape import frontage as FR
-    assert all(FA.FAR_ROWS["office"][r][b_][1] == 4 for r, b_ in FR._bays("office", [4])) and FR._bays("office", [4])
+    assert b["ovr"]["facades"][0]["variants"] == [2]
+    assert all(FA.FAR_ROWS["office"][r][b_][1] == 2 for r, b_ in FR._bays("office", [2])) and FR._bays("office", [2])
 
 
 def test_tower_long_wall_has_one_band_per_storey_on_white():
@@ -180,8 +181,15 @@ def test_tower_uses_only_materials_the_generic_office_set_has():
     far = {m for m in buf.mats("buildings_low") if "__far_" in m}
     assert far == {"plaster_beige__far_office", "plaster_white__far_ribbon"}
     assert {"plaster_white", "plaster_beige"} <= set(BM.OFFICE_WALLS)
-    # LOD1 stays cheap: under 800 triangles for the whole tower (300 with the hashed facade)
-    assert sum(len(p.T) for p in buf.parts if p.layer == "buildings_low") < 800
+    # LOD1 stays cheap: under 850 triangles for the walls and roof (300 with the hashed facade; ADR 0190: + one
+    # lintel quad per band) and under 1300 with the roof masts (galvanised steel + light radomes)
+    from streetscape import frontage as FR
+    low = [p for p in buf.parts if p.layer == "buildings_low"]
+    zroof = max(float(p.V[:, 2].max()) for p in low if "__far_" in p.mat)
+    masts = sum(int((p.V[p.T][:, :, 2].min(1) > zroof - 0.5).sum()) for p in low
+                if p.mat in (FR.ROOF_MAST_MAT, FR.ROOF_PANEL_MAT))
+    total = sum(len(p.T) for p in low)
+    assert total - masts < 850 and total < 1300, (total, masts)
 
 
 def test_tower_outline_is_straightened_by_the_authored_opening():

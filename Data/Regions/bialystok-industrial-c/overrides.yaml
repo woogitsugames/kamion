@@ -2440,7 +2440,21 @@ overrides:
     #   NE gable: no open source - the SW rule, WORKING_VALUE (confidence low).
     # Materials: plaster_white / plaster_beige, plaster_white__far_ribbon and plaster_beige__far_office are all drawn
     # by chunk 6_6 already on both LODs (no new draw); the lettering on the gable is a brand - not reproduced; roof
-    # masts / antennas: not done.
+    # masts / antennas: ADR 0190 below.
+    # ADR 0190 (review REVIEW-2026-11-13-s19-0180-r2 P2-3 / P2-4 / P2-5):
+    #   SE bands: on both photos the windows under each dark line are as light as the wall, only a few panes are dark
+    #     (`glazing: light` = white blinds down / 2/3 down / clear glass, frontage.BAND_LIGHTS) and the dark thing is
+    #     a thin line over each band (`lintel_m: 0.15`, about 1/9 of the band height in the 4x crops; what it is -
+    #     a sun-shade fin or a shadow gap - is not resolved by the photos: WORKING_VALUE).
+    #   Gable column: white-framed two-pane windows with blue-grey glass = `off` variant 2 (white frame, clear glass;
+    #     r2 used variant 4, the white blind, whose grey frame read as a frame on the reveal side only);
+    #     `reveal_m: 0.06` (the photos show the frames nearly flush with the render).
+    #   Roof (both photos, seen from the south, 150 m; orthophoto 2024-05-27: clutter of light objects over the SW end
+    #     of the roof and a few along the SE edge): one tall lattice mast behind the SW gable about 0.3 of its width
+    #     from the W corner (9.5 m above the roof from the pixel ratio to the 41.8 m wall, +-15 %), a shorter lattice
+    #     mast with panel antennas at the S corner (6.5 m), four short poles with drums along the SE edge, panel
+    #     antennas at the W and E corners. Count and kinds from the photos; positions along the walls +-2 m, insets
+    #     and the antenna counts per mast: UNVERIFIED (WORKING_VALUE). Generic hardware, no operator marks.
     set:
       wall_material: plaster_beige
       ribbon: false
@@ -2448,9 +2462,18 @@ overrides:
       footprint_open_m: 3.3
       facades:
         - {facing: [SW, NE], min_len_m: 8.0, windows: column, u: 0.52, window_w_m: 2.0, sill_m: 0.9, head_m: 2.5,
-           variants: [4]}
-        - {facing: SE, min_len_m: 30.0, windows: ribbon, glazing: light, sill_m: 1.0, head_m: 2.3,
+           variants: [2], reveal_m: 0.06}
+        - {facing: SE, min_len_m: 30.0, windows: ribbon, glazing: light, sill_m: 1.0, head_m: 2.3, lintel_m: 0.15,
            wall_material: plaster_white, spans: [[0.03, 0.20], [0.30, 1.0]]}
+      roof_masts:
+        - {kind: lattice, facing: SW, u: 0.30, inset_m: 4.5, height_m: 9.5, side_m: 0.5, sectors: 3, dishes: 2}
+        - {kind: lattice, facing: SW, u: 0.90, inset_m: 2.0, height_m: 6.5, side_m: 0.4, sectors: 3, dishes: 1, aim_deg: 40}
+        - {kind: pole, facing: SE, u: 0.20, inset_m: 0.8, height_m: 3.0, dishes: 1}
+        - {kind: pole, facing: SE, u: 0.40, inset_m: 0.8, height_m: 2.6, dishes: 1, aim_deg: -60}
+        - {kind: pole, facing: SE, u: 0.58, inset_m: 0.8, height_m: 3.0, dishes: 1, aim_deg: 20}
+        - {kind: pole, facing: SE, u: 0.66, inset_m: 0.8, height_m: 2.6, dishes: 1, aim_deg: -100}
+        - {kind: pole, facing: SW, u: 0.03, inset_m: 0.5, height_m: 2.6, sectors: 2}
+        - {kind: pole, facing: SE, u: 0.97, inset_m: 0.5, height_m: 2.6, sectors: 1}
   - id: g3a-small-office-no-band
     target: {building: "bdot:2BE4B431-C926-1BF0-E053-CC2BA8C0D140"}
     reason: >-

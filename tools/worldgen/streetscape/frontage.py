@@ -466,6 +466,137 @@ def props(acc, spec, edges, zground):
     return out
 
 
+# --------------------------------------------------------------------------------------------- roof masts (ADR 0190)
+# Authored antenna structures on a flat roof (override `set.roof_masts`, an authored_override): generic cellular /
+# radio-link hardware, no operator marks.
+#
+#     roof_masts:
+#       - {kind: lattice, facing: SW, u: 0.3, inset_m: 4.0, height_m: 9.5, side_m: 0.5, sectors: 3, dishes: 1}
+#       - {kind: pole, facing: SE, u: 0.2, inset_m: 0.8, height_m: 3.0, dishes: 1, aim_deg: 30}
+#
+# Anchor: the longest wall looking to `facing`, u = fraction of it (left to right seen from outside), inset_m into
+# the roof - stable against a footprint update, no coordinates. kind: lattice (square lattice mast: 4 legs, rings,
+# one diagonal per bay and face) or pole (one tube). sectors: panel antennas (0.28 x 0.12 x 2.0 m) round the top,
+# evenly spread, the first one looking out of the wall (+ aim_deg, clockwise seen from above); dishes: radio-link drums
+# (0.6 m) below them. LOD1 keeps every structure (the roof silhouette is what is read from 150 m): thicker legs,
+# half the bays, no rings, boxes for the drums. Materials: galvanised steel and a light render the building chunk
+# draws on both LODs already (ROOF_MAST_MAT / ROOF_PANEL_MAT) - the caller's budget check, not a rule here.
+ROOF_MAST_KINDS = ("lattice", "pole")
+ROOF_MAST_MAT = "downpipe"            # galvanised grey (metal 0.7); gutters / downpipes of both LODs
+ROOF_PANEL_MAT = "plaster_white"      # light grey radomes of panels and drums
+ROOF_PANEL_M = (0.28, 0.12, 2.0)      # sector panel antenna w x d x h (typical 1.3-2.6 m panels; WORKING_VALUE)
+ROOF_DISH_M = (0.6, 0.25)             # radio-link drum diameter x depth (0.3 / 0.6 m classes; WORKING_VALUE)
+
+
+def roof_mast_specs(spec, materials=None):
+    """Validated `roof_masts` override with defaults; None when the building has none."""
+    if not spec:
+        return None
+    if materials is None:
+        from . import materials as MT
+        materials = MT.M
+    out = []
+    for r in spec:
+        kind = r.get("kind", "pole")
+        if kind not in ROOF_MAST_KINDS:
+            raise ValueError(f"roof_masts kind {kind!r}: expected one of {ROOF_MAST_KINDS}")
+        if r.get("facing") not in BEARING:
+            raise ValueError(f"roof_masts facing {r.get('facing')!r}: expected one of {sorted(BEARING)}")
+        h, u = float(r.get("height_m", 3.0)), float(r.get("u", 0.5))
+        side = float(r.get("side_m", 0.5 if kind == "lattice" else 0.09))
+        ns, nd = int(r.get("sectors", 0)), int(r.get("dishes", 0))
+        if not (1.0 <= h <= 15.0 and 0.0 <= u <= 1.0 and 0.05 <= side <= 1.2 and 0 <= ns <= 6 and 0 <= nd <= 3):
+            raise ValueError(f"roof_masts {r}: height_m 1..15, u 0..1, side_m 0.05..1.2, sectors 0..6, dishes 0..3")
+        mat, pmat = r.get("material", ROOF_MAST_MAT), r.get("panel_material", ROOF_PANEL_MAT)
+        bad = [m for m in (mat, pmat) if m not in materials]
+        if bad:
+            raise ValueError(f"roof_masts materials not in streetscape.materials.M: {bad}")
+        out.append({"kind": kind, "facing": r["facing"], "u": u, "inset_m": float(r.get("inset_m", 1.0)), "height_m": h,
+                    "side_m": side, "sectors": ns, "dishes": nd, "aim_deg": float(r.get("aim_deg", 0.0)),
+                    "material": mat, "panel_material": pmat})
+    return out
+
+
+def _roof_mast(acc, p, q, nout, z0):
+    h, s, mat, pm = p["height_m"], p["side_m"] / 2, p["material"], p["panel_material"]
+    d = np.array([-nout[1], nout[0]])
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    lattice = p["kind"] == "lattice"
+    for layer in (FK.L0, FK.L1):
+        low = layer == FK.L1
+        if lattice:
+            leg = 0.045 if low else 0.03
+            for sx in (-1, 1):
+                for sy in (-1, 1):
+                    c = np.array([*(q + d * (sx * s) + nout * (sy * s)), z0 + h / 2])
+                    acc.box(layer, mat, c, d3 * leg, n3 * leg, [0, 0, h / 2], skip=(0, 1))
+            bays = max(2, int(round(h / (1.8 if low else 0.9))))
+            w3 = np.array([0.0, 0.0, 0.05 if low else 0.025])
+            for k in range(1, bays + 1):
+                za, zb = z0 + h * (k - 1) / bays, z0 + h * k / bays
+                for ax_, ay_ in ((d, nout), (nout, d)):
+                    for sy in (-1, 1):
+                        if not low:                       # ring member of this face
+                            c = np.array([*(q + ay_ * (sy * s)), zb])
+                            acc.box(layer, mat, c, np.append(ax_ * s, 0), np.append(ay_ * 0.02, 0), [0, 0, 0.02],
+                                    skip=(0, 1, 4, 5))
+                        sg = 1 if (k + (sy > 0)) % 2 else -1
+                        p0 = np.array([*(q + ay_ * (sy * s) - ax_ * (sg * s)), za])
+                        p1 = np.array([*(q + ay_ * (sy * s) + ax_ * (sg * s)), zb])
+                        acc.quad(layer, mat, p0 - w3, p1 - w3, p1 + w3, p0 + w3)
+                        acc.quad(layer, mat, p1 - w3, p0 - w3, p0 + w3, p1 + w3)
+            acc.box(layer, mat, np.array([*q, z0 + h + 0.6]), d3 * 0.03, n3 * 0.03, [0, 0, 0.6], skip=(0,))   # spike
+        else:
+            t = max(s, 0.05) if low else s
+            acc.box(layer, mat, np.array([*q, z0 + h / 2]), d3 * t, n3 * t, [0, 0, h / 2], skip=(0,))
+        pw, pd, ph = ROOF_PANEL_M
+        base = math.atan2(nout[0], nout[1]) + math.radians(p["aim_deg"])        # bearing of the first panel
+        r = s + pd / 2 + (0.18 if lattice else 0.10)
+        ns = p["sectors"]
+        for i in range(ns):
+            b = base + (2 * math.pi * i / ns if ns != 2 else math.radians(90.0) * (i - 0.5))
+            o = np.array([math.sin(b), math.cos(b)])
+            t_ = np.array([o[1], -o[0]])
+            c = np.array([*(q + o * r), z0 + h - ph / 2 - 0.1])
+            acc.box(layer, pm, c, np.append(t_ * pw / 2, 0), np.append(o * pd / 2, 0), [0, 0, ph / 2],
+                    skip=(0,) if low else ())
+        dd, dz = ROOF_DISH_M
+        for i in range(p["dishes"]):
+            b = base + math.radians(70.0 + 115.0 * i)
+            o = np.array([math.sin(b), math.cos(b)])
+            t_ = np.array([o[1], -o[0]])
+            zc = z0 + h - (ph + 0.6 if ns else 0.45) - 0.9 * i
+            c = q + o * (s + 0.12 + dz / 2)
+            if low:
+                acc.box(layer, pm, np.array([*c, zc]), np.append(t_ * dd * 0.44, 0), np.append(o * dz / 2, 0),
+                        [0, 0, dd * 0.44], skip=(2,))
+                continue
+            ring = [np.array([*(c + t_ * (dd / 2 * math.cos(a_))), zc + dd / 2 * math.sin(a_)])
+                    for a_ in np.arange(8) * (math.pi / 4) + math.pi / 8]
+            o3 = np.append(o * dz / 2, 0.0)
+            for j in range(8):
+                a_, b_ = ring[j], ring[(j + 1) % 8]
+                acc.quad(layer, pm, b_ - o3, a_ - o3, a_ + o3, b_ + o3)                       # drum shell
+            for j in range(1, 7):                                                               # front face
+                acc.add(layer, pm, [ring[0] + o3, ring[j + 1] + o3, ring[j] + o3], [[0, 1, 2]])
+
+
+def roof_masts(acc, specs, edges, zroof):
+    """Draws the authored roof masts of one building on both LODs (zroof = roof surface level). Returns their
+    descriptions (QA report)."""
+    out = []
+    for p in specs or []:
+        an = _anchor({"facing": p["facing"], "u": p["u"], "out_m": -p["inset_m"]}, edges)
+        if an is None:
+            out.append({"kind": p["kind"], "placed": False, "reason": f"no wall faces {p['facing']}"})
+            continue
+        q, _, nout = an
+        _roof_mast(acc, p, q, nout, zroof)
+        out.append({"kind": p["kind"], "placed": True, "e": round(float(q[0]), 2), "n": round(float(q[1]), 2),
+                    "z": round(float(zroof), 2), "height_m": p["height_m"]})
+    return out
+
+
 # --------------------------------------------------------------------------------------------- office facades (ADR 0180)
 # Authored window rule per facing of an office building (override `set.facades`, an authored_override). The hashed
 # office facade is one pattern on every wall (a grid of punched windows or ribbon rows); a photographed tower has a
@@ -494,6 +625,14 @@ FACADE_GROUP = {"ribbon": "ribbon", "column": "office"}        # <wall>__far_<ki
 FACADE_PLAIN_V = (0.65, 0.85)
 RIBBON_LIGHT_M = FA.FAR_PITCH / 2      # one light of a ribbon band
 RIBBON_END_M = 0.4
+# ADR 0190: lights of a `glazing: light` band. Mapillary 177786140912399 / 178689077481862: under the dark lintel
+# line the windows of the white wall are as light as the wall, with a few dark panes. The `off` cells of the atlas
+# with white joinery: 4 = white vertical blind over the upper 2 / 3 (measured on T_facade_atlas_BaseColor: dark glass
+# up to 0.30 of the cell height, blind from 0.33), 2 = clear glass. (share %, variant, crop = fraction of the cell
+# cut off at the bottom): blind down / blind 2 / 3 down / clear glass. Shares: WORKING_VALUE (photo: mostly light).
+BAND_LIGHTS = ((62, 4, 0.36), (28, 4, 0.0), (10, 2, 0.0))
+LINTEL_PROUD_M = (0.08, 0.06)          # dark lintel line above a band: LOD0 box / LOD1 quad, proud of the wall face
+LINTEL_MAT = FRAME                     # dark sheet, drawn by every building chunk on both LODs (coping)
 
 
 def facade_rules(spec, wall, materials=None):
@@ -531,7 +670,11 @@ def facade_rules(spec, wall, materials=None):
                     "window_w_m": float(r.get("window_w_m", FA.KINDS["off"][0])),
                     "from_storey": int(r.get("from_storey", 1)),
                     "group": "office" if kind == "column" or r.get("glazing", "dark") == "light" else "ribbon",
-                    "variants": [int(v) for v in r["variants"]] if r.get("variants") else None})
+                    "variants": [int(v) for v in r["variants"]] if r.get("variants") else None,
+                    "lintel_m": float(r.get("lintel_m", 0.0)), "reveal_m": float(r.get("reveal_m", 0.12))})
+        if not 0.0 <= out[-1]["lintel_m"] <= 0.5 or not 0.02 <= out[-1]["reveal_m"] <= 0.4:
+            raise ValueError(f"facades lintel_m / reveal_m {out[-1]['lintel_m']} / {out[-1]['reveal_m']}: "
+                             "expected 0..0.5 / 0.02..0.4")
         if r.get("glazing", "dark") not in ("dark", "light"):
             raise ValueError(f"facades glazing {r.get('glazing')!r}: expected dark or light")
         if kind != "blank" and not _bays(out[-1]["group"], out[-1]["variants"]):
@@ -581,9 +724,32 @@ def facade_runs(rule, L):
     return []
 
 
+def band_lights(key, n):
+    """The n lights of one `glazing: light` band (ADR 0190): [(row, bay, crop)] - the office-row bay whose window the
+    light shows and the fraction of that window cut off at the bottom (BAND_LIGHTS), hashed per light."""
+    out = []
+    for i in range(n):
+        h, top = FA.hint(key, "light", i) % 100, 0
+        for share, var, crop in BAND_LIGHTS:
+            top += share
+            if h < top:
+                break
+        bays = _bays("office", [var])
+        out.append((*bays[FA.hint(key, "lbay", i) % len(bays)], crop))
+    return out
+
+
+def facade_lintels(rule, wins):
+    """Dark lintel line above every band / window of an authored wall (`lintel_m`, ADR 0190): [(u0, u1, z0, z1)],
+    5 cm past the run at either end."""
+    if rule["lintel_m"] <= 0.0:
+        return []
+    return [(w[0] - 0.05, w[1] + 0.05, w[3], w[3] + rule["lintel_m"]) for w in wins]
+
+
 def facade_windows(rule, L, zref, zbase, sh, zt, storeys, key, door=False):
     """Window rectangles of one authored wall, the single source of both LODs, run by run and bottom-up:
-    [(u0, u1, z0, z1, group, row, bay offset)]. door: the wall carries the entrance, so its ground floor has no band /
+    [(u0, u1, z0, z1, group, row, bay offset, lights)]; lights = band_lights() of a `glazing: light` band, else None. door: the wall carries the entrance, so its ground floor has no band /
     window (the door takes the column axis or the middle of the wall). Storeys whose window head would come within
     0.3 m of the wall top are left out (as FA.far_storeys)."""
     g = rule["group"]
@@ -595,7 +761,9 @@ def facade_windows(rule, L, zref, zbase, sh, zt, storeys, key, door=False):
             if z0 + rule["head_m"] > zt - 0.3:
                 break
             row, off = bays[FA.hint(key, i, s, "bay") % len(bays)]      # a window: that bay; a band: its first light
-            out.append((u0, u1, z0 + rule["sill_m"], z0 + rule["head_m"], g, row, off))
+            lights = (band_lights(f"{key}:{i}:{s}", ribbon_lights(u1 - u0))
+                      if rule["windows"] == "ribbon" and g == "office" else None)
+            out.append((u0, u1, z0 + rule["sill_m"], z0 + rule["head_m"], g, row, off, lights))
     return out
 
 
@@ -604,12 +772,13 @@ def facade_door_u(rule, L):
     return _column_u(rule, L)[0] if rule["windows"] == "column" else L / 2
 
 
-def far_uv(win):
+def far_uv(win, crop=0.0):
     """UV0 (far-row atlas metres) of a window rectangle on LOD1: the glazed part of its row - the run of a ribbon row
-    from its bay offset on, or the one window of an office-row bay."""
-    u0, u1, _, _, g, row, off = win
+    from its bay offset on, or the one window of an office-row bay (crop: fraction cut off at its bottom)."""
+    u0, u1, _, _, g, row, off = win[:7]
     v = FA.far_row_v(g, row)
     v0, v1 = v + FA.FAR_SILL[g], v + FA.FAR_TOP[g]
+    v0 += (v1 - v0) * crop
     if g == "ribbon":
         x0, x1 = off * FA.FAR_PITCH, off * FA.FAR_PITCH + ribbon_lights(u1 - u0) * RIBBON_LIGHT_M
     else:
@@ -623,7 +792,8 @@ def lod1_facade(acc, rule, wins, a, d, L, z0, zt):
     right - plain wall (the plain strip of the far-row atlas), then per window run a stack of plain piece / window
     quad (far_uv) / plain piece. Nothing overlaps (no z-fighting). Returns the number of quads."""
     pv0, pv1 = FACADE_PLAIN_V
-    plain = [[0.2, pv0], [1.2, pv0], [1.2, pv1], [0.2, pv1]]
+    pu0, pu1 = FA.FAR_PLAIN_U          # ADR 0184: a bay without a balcony slab edge
+    plain = [[pu0, pv0], [pu1, pv0], [pu1, pv1], [pu0, pv1]]
     mat = rule["far"]
 
     def q(u0, u1, za, zb, uv=plain):
@@ -637,10 +807,13 @@ def lod1_facade(acc, rule, wins, a, d, L, z0, zt):
         z = z0
         for w in sorted((w for w in wins if w[:2] == (u0, u1)), key=lambda w: w[2]):
             n += q(u0, u1, z, w[2])
-            k = ribbon_lights(u1 - u0) if rule["windows"] == "ribbon" and w[4] == "office" else 1
-            for i in range(k):                 # light band: the window of bay off + i of the office row per light
-                n += q(u0 + (u1 - u0) * i / k, u0 + (u1 - u0) * (i + 1) / k, w[2], w[3],
-                       far_uv((*w[:6], (w[6] + i) % FA.FAR_BAYS)))
+            if w[7]:                           # light band: one office-row window per light (band_lights)
+                k = len(w[7])
+                for i, (row, bay, crop) in enumerate(w[7]):
+                    n += q(u0 + (u1 - u0) * i / k, u0 + (u1 - u0) * (i + 1) / k, w[2], w[3],
+                           far_uv((*w[:5], row, bay), crop))
+            else:
+                n += q(u0, u1, w[2], w[3], far_uv(w))
             z = w[3]
         n += q(u0, u1, z, zt)
         u = u1
