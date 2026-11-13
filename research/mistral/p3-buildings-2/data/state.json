@@ -1,6 +1,6 @@
 {
  "task": "M53-FIX v2 (przegląd r8) — przebudowa manifestu p3-buildings-2",
- "updated": "2026-11-13 (etap 1)",
+ "updated": "2026-11-13 (etap 2 — 015, 017-026, 028-043)",
  "commit_1": "50fcc60 — wiersze 001-016+027 (co_widac, rekasygnacje 010/011/012/014, typ 037-043)",
  "etap_1_statusy": {
   "M53-001": "OK",
@@ -98,5 +98,80 @@
   "geom_rows": "/home/user/work/p3/geom_rows.json (per wiersz: way, photo, d, az, lat, lon, lod1_mh, lod1_id)",
   "vision_notes": "/home/user/work/p3/vision_notes.json (wyniki analiz per wiersz)"
  },
- "budzet_wizji": "uploads.analyze_image: limit 20 wywołań na cykl odpowiedzi; zużyty w etapie 1 (do odnowienia w następnej turze)"
+ "budzet_wizji": "uploads.analyze_image: limit 20 wywołań na cykl odpowiedzi; zużyty w etapie 1 (do odnowienia w następnej turze)",
+ "commit_2_plan": "M53-FIX etap 2: wiersze 017-043 — co_widac, rekasygnacje 019/020/021/030, statusy końcowe",
+ "etap_2_statusy": {
+  "M53-015": "ODRZUCONY",
+  "M53-017": "OK-POŚREDNIE",
+  "M53-018": "ODRZUCONY",
+  "M53-019": "OK (REKASYGNACJA → Białostoczek 21, Poczta Polska)",
+  "M53-020": "OK (zdjęcie → 20241229 112510, mural ks. Sopoćki, Białostoczek 22)",
+  "M53-021": "OK (REKASYGNACJA → Białostoczek 13A)",
+  "M53-022": "ODRZUCONY",
+  "M53-023": "ODRZUCONY",
+  "M53-024": "ODRZUCONY",
+  "M53-025": "ODRZUCONY",
+  "M53-026": "ODRZUCONY",
+  "M53-028": "ODRZUCONY",
+  "M53-029": "OK",
+  "M53-030": "OK (REKASYGNACJA → Andersa 46 JRG-2 PSP)",
+  "M53-031": "ODRZUCONY",
+  "M53-032": "ODRZUCONY",
+  "M53-033": "ODRZUCONY",
+  "M53-034": "ODRZUCONY",
+  "M53-035": "OK-POŚREDNIE",
+  "M53-036": "ODRZUCONY",
+  "M53-037": "OK-POŚREDNIE",
+  "M53-038": "OK-POŚREDNIE",
+  "M53-039": "OK-POŚREDNIE",
+  "M53-040": "OK-POŚREDNIE",
+  "M53-041": "OK-POŚREDNIE",
+  "M53-042": "OK-POŚREDNIE",
+  "M53-043": "OK-POŚREDNIE"
+ },
+ "liczniki_po_etapie_2": {
+  "OK": 12,
+  "OK-POŚREDNIE": 12,
+  "ODRZUCONY": 19,
+  "przyjęte_razem": 24,
+  "cel": "≥30 przyjętych → etap 3"
+ },
+ "kolory_po_sancheck": {
+  "zweryfikowane": [
+   "M53-013 [155,160,162]",
+   "M53-021 [159,159,156]"
+  ],
+  "odrzucone_prostokąty_trafiły_w_niebo_cień": [
+   "M53-029",
+   "M53-035",
+   "M53-037",
+   "M53-038",
+   "M53-039",
+   "M53-040",
+   "M53-041",
+   "M53-042",
+   "M53-043",
+   "M53-017",
+   "M53-030"
+  ],
+  "UNVERIFIED_do_powtórzenia_cropem": [
+   "M53-010",
+   "M53-011",
+   "M53-012",
+   "M53-014",
+   "M53-019",
+   "M53-020",
+   "M53-027",
+   "M53-029",
+   "M53-030",
+   "M53-035",
+   "M53-037-043"
+  ]
+ },
+ "etap_3_plan": [
+  "nowy cykl wizji (20 wywołań): (a) prostokąty kolorów z cropów budynku — zakaz nieba/cieni/drzew; (b) rozstrzygnięcie kondygnacji M53-011 (4 vs 6); (c) nowe wiersze M53-044+ (nowe zdjęcia Commons w AOI, każde obejrzane) do ≥30 przyjętych",
+  "audit_20_percent.json: losowanie 20% seedem jawnym (20261114); co_widac + kamera_d_m + kamera_kat_deg; audyt C = zliczenie ze zdjęcia vs LoD1 mh/2,9; kryterium wizji OBOWIĄZKOWE",
+  "ZIP mistral-p3-buildings-2-files-v2.zip (zdjęcia ≤1600 px + wycinki ortofoto + INDEX.csv) przez artifacts",
+  "komentarz w PR #50: SUROWY git diff --stat origin/main + liczniki OK/ODRZUCONY; NIE SCALAĆ"
+ ]
 }
