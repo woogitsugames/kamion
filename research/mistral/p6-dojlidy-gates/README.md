@@ -91,4 +91,4 @@ Seed jawny **20261113**, `random.Random(20261113).sample(M49-001…035, 7)` → 
 - **Mapillary**: brak tokenu w sesji — nieużyte (zgodnie z zasadami). Google Maps/Street View/Earth — nieużyte.
 - **PDF skan PFU 2015** (files/docs/PFU-2015-skan.pdf, 620 KB): transport binarny przez API gita skaziłby plik (zawartość nie jest UTF-8; push_files/create_or_update_file przenoszą treść tekstową) — skan znajduje się w archiwum ZIP artefaktu oraz pod URL-em BIP w sources.md.
 
-Manifest: 35 wierszy (M49-001…014 szerokości, M49-015…028 promienie, M49-029 RS16, M49-030 PZZ, M49-031…035 organizacja ruchu); statusy: SOURCED×8 (G07/G08 szer., RS16, PZZ, 3×org.), ESTIMATED×25, UNVERIFIED×2 (G02 szer., Myśliwska org.) + Karpińskiego jako „brak ograniczenia" UNVERIFIED.
+Manifest: 35 wierszy (M49-001…014 szerokości, M49-015…028 promienie, M49-029 RS16, M49-030 PZZ, M49-031…035 organizacja ruchu); statusy: SOURCED×7 (G07/G08 szer., RS16, PZZ, 3×org.), ESTIMATED×25, UNVERIFIED×3 (G02 szer., Myśliwska, Karpińskiego).
