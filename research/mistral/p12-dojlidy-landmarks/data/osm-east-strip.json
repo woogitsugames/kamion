@@ -1,0 +1,1415 @@
+{
+ "version": 0.6,
+ "generator": "Overpass API 0.7.62.4 2390de5a",
+ "osm3s": {
+  "timestamp_osm_base": "2026-11-13T10:15:30Z",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+ },
+ "elements": [
+  {
+   "type": "node",
+   "id": 4486801573,
+   "lat": 53.1132891,
+   "lon": 23.1985423,
+   "tags": {
+    "man_made": "chimney"
+   }
+  },
+  {
+   "type": "node",
+   "id": 4486801574,
+   "lat": 53.1142035,
+   "lon": 23.2015357,
+   "tags": {
+    "man_made": "chimney"
+   }
+  },
+  {
+   "type": "way",
+   "id": 210743945,
+   "center": {
+    "lat": 53.1161371,
+    "lon": 23.2107292
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "61",
+    "addr:street": "Dojnowska",
+    "building": "industrial",
+    "building:levels": "1",
+    "name": "PSS Społem, Zakład Produkcyjny \"Zodiak\""
+   }
+  },
+  {
+   "type": "way",
+   "id": 210743955,
+   "center": {
+    "lat": 53.110592,
+    "lon": 23.2096237
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:city:simc": "0922410",
+    "addr:country": "PL",
+    "addr:postcode": "15-565",
+    "addr:street": "Księdza Stanisława Suchowolca",
+    "addr:street:sym_ul": "21515",
+    "amenity": "place_of_worship",
+    "building": "church",
+    "church:type": "parish",
+    "deanery": "Dekanat Białystok Dojlidy",
+    "denomination": "roman_catholic",
+    "diocese": "Archidiecezja białostocka",
+    "email": "biuro@parafiansm.pl",
+    "name": "Kościół pw. Niepokalanego Serca Maryi",
+    "note": "Kaplica znajduje się w południowo-zachodniej części gmachu kościoła. Zaplanowano ją jako miejsce dla rodzin z małymi dziećmi.",
+    "parish": "Parafia Niepokalanego Serca Maryi w Białymstoku",
+    "parish:wikidata": "Q11108173",
+    "parish:wikipedia": "pl:Parafia Niepokalanego Serca Maryi w Białymstoku",
+    "phone": "+48 85 741 05 55",
+    "religion": "christian",
+    "service_times": "Su 08:00,10:00,11:30,18:00; Sep-Jun Su 13:00; Mo-Sa 06:30,18:00",
+    "start_date": "1980",
+    "website": "https://www.parafiansm.pl",
+    "wikidata": "Q11745628",
+    "wikimedia_commons": "File:Białystok,_kościół_Niepokalanego_Serca_Maryi.jpg",
+    "wikipedia": "pl:Kościół Niepokalanego Serca Maryi i Matki Bożej Ostrobramskiej w Białymstoku"
+   }
+  },
+  {
+   "type": "way",
+   "id": 210743966,
+   "center": {
+    "lat": 53.1151027,
+    "lon": 23.2157273
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "67",
+    "addr:street": "Dojnowska",
+    "building": "industrial",
+    "name": "LPG Tech"
+   }
+  },
+  {
+   "type": "way",
+   "id": 210868230,
+   "center": {
+    "lat": 53.1074068,
+    "lon": 23.2050122
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "30",
+    "addr:street": "Księdza Stanisława Suchowolca",
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221209531,
+   "center": {
+    "lat": 53.1142314,
+    "lon": 23.2002032
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221209532,
+   "center": {
+    "lat": 53.1129555,
+    "lon": 23.2005085
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source:building": "BDOT",
+    "source:geometry": "EGiB"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221209534,
+   "center": {
+    "lat": 53.1140383,
+    "lon": 23.1997606
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221209538,
+   "center": {
+    "lat": 53.1136021,
+    "lon": 23.201396
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "24",
+    "addr:street": "Dojlidy Fabryczne",
+    "building": "industrial",
+    "name": "Biaform"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221209541,
+   "center": {
+    "lat": 53.1137397,
+    "lon": 23.2002376
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221209543,
+   "center": {
+    "lat": 53.1143194,
+    "lon": 23.2009721
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221209546,
+   "center": {
+    "lat": 53.1146936,
+    "lon": 23.201144
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221211400,
+   "center": {
+    "lat": 53.1089599,
+    "lon": 23.2131035
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:country": "PL",
+    "addr:housenumber": "6",
+    "addr:postcode": "15-565",
+    "addr:street": "Księdza Aleksandra Tomkowida",
+    "amenity": "place_of_worship",
+    "building": "church",
+    "deanery": "Dekanat Białystok",
+    "denomination": "orthodox",
+    "diocese": "Diecezja białostocko-gdańska",
+    "name": "Cerkiew pw. Świętego Proroka Eliasza",
+    "operator": "Polski Autokefaliczny Kościół Prawosławny",
+    "religion": "christian",
+    "website": "https://www.dojlidy.cerkiew.pl/"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221826896,
+   "center": {
+    "lat": 53.1083144,
+    "lon": 23.2036937
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221826898,
+   "center": {
+    "lat": 53.1061215,
+    "lon": 23.2037555
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "28",
+    "addr:street": "Dojlidy Fabryczne",
+    "building": "industrial",
+    "man_made": "works",
+    "name": "Browar Dojlidy",
+    "operator": "Kompania Piwowarska",
+    "product": "beer",
+    "website": "https://www.kp.pl/browary/browar-dojlidy"
+   }
+  },
+  {
+   "type": "way",
+   "id": 221826902,
+   "center": {
+    "lat": 53.1077641,
+    "lon": 23.2035441
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 236012291,
+   "center": {
+    "lat": 53.1241961,
+    "lon": 23.2133308
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 236884752,
+   "center": {
+    "lat": 53.1119405,
+    "lon": 23.1993115
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "58",
+    "addr:street": "Niedźwiedzia",
+    "building": "warehouse",
+    "building:levels": "1",
+    "source:building": "BDOT",
+    "source:geometry": "EGiB"
+   }
+  },
+  {
+   "type": "way",
+   "id": 238738308,
+   "center": {
+    "lat": 53.1240182,
+    "lon": 23.2289978
+   },
+   "tags": {
+    "building": "industrial",
+    "building:levels": "2",
+    "roof:shape": "flat",
+    "source:building": "BDOT",
+    "source:geometry": "EGiB"
+   }
+  },
+  {
+   "type": "way",
+   "id": 240824672,
+   "center": {
+    "lat": 53.0936979,
+    "lon": 23.2176984
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:city:simc": "0922410",
+    "addr:country": "PL",
+    "addr:housenumber": "69",
+    "addr:postcode": "15-565",
+    "addr:street": "Stoczni Gdańskiej",
+    "addr:street:sym_ul": "29165",
+    "amenity": "place_of_worship",
+    "building": "church",
+    "church:type": "parish",
+    "deanery": "Dekanat Białystok Dojlidy",
+    "denomination": "roman_catholic",
+    "diocese": "Archidiecezja białostocka",
+    "email": "janchrzciciel@archibial.pl",
+    "facebook": "https://www.facebook.com/JanChrzcicielTeam",
+    "name": "Kościół pw. Świętego Jana Chrzciciela",
+    "parish": "Parafia św. Jana Chrzciciela w Białymstoku",
+    "parish:wikidata": "Q11110584",
+    "parish:wikipedia": "pl:Parafia św. Jana Chrzciciela w Białymstoku",
+    "phone": "+48 85 741 99 77",
+    "religion": "christian",
+    "service_times": "Su 07:00,09:30,11:00,18:00; Sep-Jun Su 12:30; Mo-Sa 18:00; Sep-Jun Mo-Sa 06:30",
+    "url": "http://archibial.pl/parafie/info/26-sw-jana-chrzciciela-bialystok/",
+    "website": "http://janchrzciciel.archibial.pl",
+    "wikidata": "Q111695800"
+   }
+  },
+  {
+   "type": "way",
+   "id": 252332077,
+   "center": {
+    "lat": 53.1037559,
+    "lon": 23.1939604
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "18",
+    "addr:postcode": "15-569",
+    "addr:street": "Myśliwska",
+    "building": "industrial",
+    "man_made": "works",
+    "name": "Rosti Poland"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214507,
+   "center": {
+    "lat": 53.1078485,
+    "lon": 23.2046609
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214508,
+   "center": {
+    "lat": 53.1076652,
+    "lon": 23.2048346
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214509,
+   "center": {
+    "lat": 53.1076321,
+    "lon": 23.2049825
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214510,
+   "center": {
+    "lat": 53.1072839,
+    "lon": 23.2053874
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214511,
+   "center": {
+    "lat": 53.1074196,
+    "lon": 23.2053772
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214512,
+   "center": {
+    "lat": 53.1076743,
+    "lon": 23.2049745
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214513,
+   "center": {
+    "lat": 53.1076611,
+    "lon": 23.2047586
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214514,
+   "center": {
+    "lat": 53.107621,
+    "lon": 23.2048394
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214515,
+   "center": {
+    "lat": 53.1074921,
+    "lon": 23.20548
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214516,
+   "center": {
+    "lat": 53.1073544,
+    "lon": 23.2053806
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214517,
+   "center": {
+    "lat": 53.107427,
+    "lon": 23.2054846
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214518,
+   "center": {
+    "lat": 53.1076167,
+    "lon": 23.2047675
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214519,
+   "center": {
+    "lat": 53.1072968,
+    "lon": 23.2055976
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214520,
+   "center": {
+    "lat": 53.1073585,
+    "lon": 23.2054846
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214521,
+   "center": {
+    "lat": 53.1076258,
+    "lon": 23.2049089
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214522,
+   "center": {
+    "lat": 53.1074874,
+    "lon": 23.2053681
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214523,
+   "center": {
+    "lat": 53.1075452,
+    "lon": 23.2053596
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214524,
+   "center": {
+    "lat": 53.1074331,
+    "lon": 23.2055834
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214525,
+   "center": {
+    "lat": 53.1072886,
+    "lon": 23.2054992
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214526,
+   "center": {
+    "lat": 53.1075566,
+    "lon": 23.2055665
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214527,
+   "center": {
+    "lat": 53.1073639,
+    "lon": 23.2055886
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214528,
+   "center": {
+    "lat": 53.1076368,
+    "lon": 23.2040773
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214529,
+   "center": {
+    "lat": 53.1076695,
+    "lon": 23.2049025
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214530,
+   "center": {
+    "lat": 53.1074979,
+    "lon": 23.2055778
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296214531,
+   "center": {
+    "lat": 53.1075515,
+    "lon": 23.2054693
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296215276,
+   "center": {
+    "lat": 53.10791,
+    "lon": 23.205315
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296215277,
+   "center": {
+    "lat": 53.1070776,
+    "lon": 23.2041854
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296215278,
+   "center": {
+    "lat": 53.1070722,
+    "lon": 23.2043382
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296215279,
+   "center": {
+    "lat": 53.1070728,
+    "lon": 23.2042637
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296215280,
+   "center": {
+    "lat": 53.1070661,
+    "lon": 23.2044863
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 296215281,
+   "center": {
+    "lat": 53.1070674,
+    "lon": 23.2044111
+   },
+   "tags": {
+    "building": "yes",
+    "content": "water",
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 304583594,
+   "center": {
+    "lat": 53.1155227,
+    "lon": 23.2149681
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "65B",
+    "addr:street": "Dojnowska",
+    "building": "industrial",
+    "name": "PSS \"Społem\" Zakład Przetwórstwa Mięsnego"
+   }
+  },
+  {
+   "type": "way",
+   "id": 304583599,
+   "center": {
+    "lat": 53.115641,
+    "lon": 23.2140303
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "65",
+    "addr:postcode": "15-557",
+    "addr:street": "Dojnowska",
+    "building": "industrial",
+    "industrial": "warehouse",
+    "name": "PSS Społem",
+    "source:addr": "EMUiA (emuia.gugik.gov.pl)"
+   }
+  },
+  {
+   "type": "way",
+   "id": 304583703,
+   "center": {
+    "lat": 53.1161398,
+    "lon": 23.2113498
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "61/1",
+    "addr:street": "Dojnowska",
+    "building": "industrial",
+    "industrial": "bakery",
+    "name": "Piekarnia \"Pan Bochenek\"",
+    "website": "https://www.ppmbialystok.com/piekarnia/"
+   }
+  },
+  {
+   "type": "way",
+   "id": 315456645,
+   "center": {
+    "lat": 53.1042959,
+    "lon": 23.1977273
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "11",
+    "addr:postcode": "15-569",
+    "addr:street": "Myśliwska",
+    "building": "industrial",
+    "man_made": "works",
+    "name": "Odlewnia Białystok"
+   }
+  },
+  {
+   "type": "way",
+   "id": 462209940,
+   "center": {
+    "lat": 53.0916582,
+    "lon": 23.2109932
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:city:simc": "0922410",
+    "addr:country": "PL",
+    "addr:postcode": "15-581",
+    "addr:street": "Dojlidy Górne",
+    "addr:street:sym_ul": "38085",
+    "amenity": "place_of_worship",
+    "building": "chapel",
+    "church:type": "votive",
+    "deanery": "Dekanat Białystok Dojlidy",
+    "denomination": "roman_catholic",
+    "diocese": "Archidiecezja białostocka",
+    "historic": "yes",
+    "name": "Kaplica wotywna",
+    "parish": "Parafia św. Jana Chrzciciela w Białymstoku",
+    "parish:wikidata": "Q11110584",
+    "parish:wikipedia": "pl:Parafia św. Jana Chrzciciela w Białymstoku",
+    "religion": "christian"
+   }
+  },
+  {
+   "type": "way",
+   "id": 471492583,
+   "center": {
+    "lat": 53.1047652,
+    "lon": 23.1954218
+   },
+   "tags": {
+    "building": "industrial",
+    "name": "magazyn Rosti Poland"
+   }
+  },
+  {
+   "type": "way",
+   "id": 482807268,
+   "center": {
+    "lat": 53.1148804,
+    "lon": 23.2165203
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "67",
+    "addr:street": "Dojnowska",
+    "building": "industrial",
+    "name": "LPG Tech"
+   }
+  },
+  {
+   "type": "way",
+   "id": 618614170,
+   "center": {
+    "lat": 53.1243732,
+    "lon": 23.2138578
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 618614171,
+   "center": {
+    "lat": 53.1232599,
+    "lon": 23.2125335
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 618614172,
+   "center": {
+    "lat": 53.1235313,
+    "lon": 23.2126038
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 618614173,
+   "center": {
+    "lat": 53.1239474,
+    "lon": 23.2127623
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 618614174,
+   "center": {
+    "lat": 53.1245898,
+    "lon": 23.2141159
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 618614175,
+   "center": {
+    "lat": 53.123987,
+    "lon": 23.2134846
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 658448320,
+   "center": {
+    "lat": 53.103642,
+    "lon": 23.1990384
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:city:simc": "0922410",
+    "addr:housenumber": "11",
+    "addr:postcode": "15-569",
+    "addr:street": "Franciszka Karpińskiego",
+    "building": "industrial",
+    "man_made": "works",
+    "source:addr": "gugik.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 658448323,
+   "center": {
+    "lat": 53.1035283,
+    "lon": 23.1975613
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "13",
+    "addr:postcode": "15-569",
+    "addr:street": "Myśliwska",
+    "building": "industrial",
+    "description": "Wyposażenie przemysłowe",
+    "man_made": "works",
+    "name": "Bison",
+    "official_name": "Bison S.A.",
+    "old_name": "Bison Chucks",
+    "website": "http://www.bison-chucks.pl/"
+   }
+  },
+  {
+   "type": "way",
+   "id": 674071951,
+   "center": {
+    "lat": 53.1033645,
+    "lon": 23.2022541
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:city:simc": "0922410",
+    "addr:housenumber": "1",
+    "addr:postcode": "15-569",
+    "addr:street": "Profesora Andrzeja Kalicińskiego",
+    "building": "industrial",
+    "man_made": "works",
+    "name": "Biawar",
+    "source:addr": "gugik.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 913986997,
+   "center": {
+    "lat": 53.1053345,
+    "lon": 23.2091131
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "20",
+    "addr:postcode": "15-569",
+    "addr:street": "Jacka Kuronia",
+    "building": "industrial",
+    "man_made": "works",
+    "name": "Bieldruk",
+    "product": "printing"
+   }
+  },
+  {
+   "type": "way",
+   "id": 913986998,
+   "center": {
+    "lat": 53.1042106,
+    "lon": 23.2090435
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "4",
+    "addr:street": "Świętego Proroka Eliasza",
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 956355587,
+   "center": {
+    "lat": 53.1170269,
+    "lon": 23.2128645
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 984641751,
+   "center": {
+    "lat": 53.1163981,
+    "lon": 23.2145515
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 984641752,
+   "center": {
+    "lat": 53.1163351,
+    "lon": 23.2140209
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 984641754,
+   "center": {
+    "lat": 53.1171392,
+    "lon": 23.2171055
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 984641755,
+   "center": {
+    "lat": 53.1175739,
+    "lon": 23.2170249
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1026851089,
+   "center": {
+    "lat": 53.1107109,
+    "lon": 23.2090733
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:city:simc": "0922410",
+    "addr:country": "PL",
+    "addr:postcode": "15-565",
+    "addr:street": "Księdza Stanisława Suchowolca",
+    "addr:street:sym_ul": "21515",
+    "amenity": "place_of_worship",
+    "building": "chapel",
+    "church:id": "17620",
+    "church:type": "auxiliary",
+    "deanery": "Dekanat Białystok Dojlidy",
+    "denomination": "roman_catholic",
+    "description": "na placu kościelnym",
+    "diocese": "Archidiecezja białostocka",
+    "heritage": "2",
+    "heritage:operator": "nid",
+    "name": "Kaplica pomocnicza",
+    "nid:inscription_date": "1994-05-17",
+    "nid:website": "https://zabytek.pl/pl/obiekty/zabytek?inspire_id=PL.1.9.ZIPOZ.NID_N_20_BK.71850&rejestr=rejestr-zabytkow",
+    "parish": "Parafia Niepokalanego Serca Maryi w Białymstoku",
+    "parish:wikidata": "Q11108173",
+    "parish:wikipedia": "pl:Parafia Niepokalanego Serca Maryi w Białymstoku",
+    "ref:inspire": "PL.1.9.ZIPOZ.NID_N_20_BK.71850",
+    "religion": "christian",
+    "wikidata": "Q30573732"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1107521043,
+   "center": {
+    "lat": 53.1231763,
+    "lon": 23.2074913
+   },
+   "tags": {
+    "building": "industrial",
+    "building:levels": "2",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1107521127,
+   "center": {
+    "lat": 53.1247933,
+    "lon": 23.212795
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1107521211,
+   "center": {
+    "lat": 53.1247978,
+    "lon": 23.2143606
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1107525355,
+   "center": {
+    "lat": 53.1166693,
+    "lon": 23.2238063
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1113010186,
+   "center": {
+    "lat": 53.1025563,
+    "lon": 23.223836
+   },
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1114911049,
+   "center": {
+    "lat": 53.0975542,
+    "lon": 23.2331659
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1155125339,
+   "center": {
+    "lat": 53.109762,
+    "lon": 23.1995508
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "111",
+    "addr:street": "Wiewiórcza",
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1169551409,
+   "center": {
+    "lat": 53.1023323,
+    "lon": 23.2095086
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "8",
+    "addr:street": "Świętego Proroka Eliasza",
+    "building": "industrial",
+    "man_made": "works",
+    "name": "Spod Igły i Nitki",
+    "product": "textile"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1189928007,
+   "center": {
+    "lat": 53.1201309,
+    "lon": 23.2001659
+   },
+   "tags": {
+    "building": "industrial",
+    "building:levels": "2",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1189928138,
+   "center": {
+    "lat": 53.1136319,
+    "lon": 23.1982791
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1189928139,
+   "center": {
+    "lat": 53.1139957,
+    "lon": 23.1994977
+   },
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1189928141,
+   "center": {
+    "lat": 53.1132388,
+    "lon": 23.2001356
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1189928142,
+   "center": {
+    "lat": 53.1131884,
+    "lon": 23.1997021
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source": "www.geoportal.gov.pl"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1215425740,
+   "center": {
+    "lat": 53.1150684,
+    "lon": 23.2161897
+   },
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1",
+    "source:building": "BDOT"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1280704126,
+   "center": {
+    "lat": 53.1032313,
+    "lon": 23.2096311
+   },
+   "tags": {
+    "addr:city": "Białystok",
+    "addr:housenumber": "6",
+    "addr:street": "Świętego Proroka Eliasza",
+    "building": "warehouse",
+    "name": "Polfood Logistics",
+    "office": "company"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1338298200,
+   "center": {
+    "lat": 53.1237463,
+    "lon": 23.2192606
+   },
+   "tags": {
+    "building": "industrial",
+    "building:levels": "2",
+    "source:building": "BDOT"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1338298212,
+   "center": {
+    "lat": 53.1245109,
+    "lon": 23.2195086
+   },
+   "tags": {
+    "building": "warehouse",
+    "building:levels": "1",
+    "source:building": "BDOT"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1338298219,
+   "center": {
+    "lat": 53.1240712,
+    "lon": 23.2193401
+   },
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1",
+    "source:building": "BDOT"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1341386397,
+   "center": {
+    "lat": 53.1195211,
+    "lon": 23.2002169
+   },
+   "tags": {
+    "man_made": "storage_tank"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1360711848,
+   "center": {
+    "lat": 53.106879,
+    "lon": 23.2129322
+   },
+   "tags": {
+    "content": "gas",
+    "man_made": "storage_tank",
+    "material": "metal",
+    "operator": "Orlen"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1448083662,
+   "center": {
+    "lat": 53.1224595,
+    "lon": 23.2301131
+   },
+   "tags": {
+    "building": "industrial",
+    "building:levels": "1",
+    "source:building": "BDOT",
+    "source:geometry": "EGiB"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1465437137,
+   "center": {
+    "lat": 53.1088924,
+    "lon": 23.1950855
+   },
+   "tags": {
+    "building": "industrial"
+   }
+  }
+ ]
+}
