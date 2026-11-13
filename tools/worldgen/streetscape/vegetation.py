@@ -150,6 +150,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
     forest_mix = []
     clear = forest_clearings(overrides, origin)
     crep = {"applied": [], "stale": []}
+    hit = set()
     cleared = []                            # cleared parts of the forest: sand on the orthophoto -> bare ground mask
     for f in src["bdot10k"]["OT_PTLZ_A"]:
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
@@ -157,8 +158,10 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             poly = shapely.make_valid(poly)
         full = poly                         # trees are generated on the BDOT outline and the cleared ones dropped
         cut = None                          # afterwards: the stand left standing keeps every tree (same seed stream)
-        if f["id"] in clear:
-            cut, oid = clear.pop(f["id"])
+        ck = f["id"] if f["id"] in clear else str(f["id"]).split(":")[0]     # BDOT id without the ":<part>" index
+        if ck in clear:
+            cut, oid = clear[ck]
+            hit.add(ck)
             cleared.append(shapely.make_valid(full.intersection(cut)))
             poly = shapely.make_valid(full.difference(cut))
             crep["applied"].append({"id": oid, "bdot": f["id"], "area_m2_before": round(full.area, 1),
@@ -212,7 +215,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             k = int(rng.integers(1, 4))
             P = q + rng.normal(0, 2.5, (k, 2)) * (k > 1)
             emit(P, pick(rng, [0.05, 0.3, 0.05, 0.3, 0.3, 0.0], k), rng, f"bdot:{f['id']}")
-    crep["stale"] = [{"id": oid, "bdot": bid} for bid, (_, oid) in clear.items()]
+    crep["stale"] = [{"id": oid, "bdot": bid} for bid, (_, oid) in clear.items() if bid not in hit]
     report["forest_clearings"] = crep
     report["_forest_cleared"] = cleared
     groups = _tree_group_overrides(overrides, np.asarray(origin, float))

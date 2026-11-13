@@ -468,7 +468,7 @@ def _place(src, overrides):
 
 def test_forest_clearing_removes_trees_keeps_clumps_and_reports_stale():
     ring = [[0, 0], [200, 0], [200, 200], [0, 200]]
-    src = _forest_src("F1", ring)
+    src = _forest_src("F1:0", ring)                    # BDOT ids carry a ":<part>" index, the override names the object
     ov = [{"id": "clr", "kind": "forest_clearing", "target": {"bdot": "F1"},
            "cleared_epsg2180": [[[100, -10], [210, -10], [210, 210], [100, 210]]],
            "keep_epsg2180": [[[140, 90], [160, 90], [160, 110], [140, 110]]]},
@@ -495,3 +495,10 @@ def test_region_forest_clearing_targets_a_live_bdot_polygon():
     cut, _ = clear["2BE4B432-6BC0-1BF0-E053-CC2BA8C0D140"]
     assert 4000 < cut.area < 8000                     # traced sand pit minus the three clumps (orthophoto 2024)
     assert cut.bounds[0] > 215                        # nothing west of E 215 local is cleared
+
+
+def test_region_forest_clearing_is_applied_in_the_built_region():
+    fc = _qa()["vegetation"]["forest_clearings"]
+    assert not fc["stale"], fc["stale"]
+    assert [a["id"] for a in fc["applied"]] == ["bdot-forest-6bc0-sand-clearing"]
+    assert fc["applied"][0]["trees_removed"] > 100
