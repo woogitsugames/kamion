@@ -170,14 +170,10 @@ namespace NavRunner.Tests
                         tr.Update(p, pos, hdg, v, 2f / v, ref gd);
                         int enq = drv.Update(g, p, ref gd, v, q);
                         while (q.TryDequeue(out _)) { }
-                        int m = drv.CurrentManeuver;
-                        if (m < 0) continue;
-                        if (drv.LastTier != lastTier[m])
-                        {
-                            Assert.True(drv.LastTier > lastTier[m], $"{r.id} @{kmh}: tier goes forward only");
-                            Assert.True(enq > 0 || p.ManType[m] == Maneuver.Continue, $"{r.id} @{kmh}: a new tier says something");
-                            lastTier[m] = drv.LastTier; count[m]++;
-                        }
+                        int m = gd.Next;
+                        if (enq == 0 || m < 0) continue;   // every announcement (any enqueued clip) counts
+                        Assert.True(drv.LastTier > lastTier[m], $"{r.id} @{kmh}: manoeuvre {m} tier goes forward only");
+                        lastTier[m] = drv.LastTier; count[m]++;
                     }
                     for (int k = 0; k < p.ManCount; k++)
                     {
