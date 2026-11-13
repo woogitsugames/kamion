@@ -6,7 +6,7 @@ Wszystkie daty dostępu: **2026-11-13 (UTC)**.
 
 - Wyszukiwarka: `https://freesound.org/search/?q=...` (parsing wyników server-side; filtr licencji `f=license:"..."`).
 - Strony dźwięków: `https://freesound.org/s/<id>/` — dla wszystkich pozycji odczytano na żywo: tytuł, opis autora, licencję (+URL), długość, sample rate, bit depth, format, kanały (strony renderowane; curl daje 302, HTTP 200 potwierdzony z `-L`).
-- Podglądy MP3 HQ (128 kbps): `https://cdn.freesound.org/previews/...` — pobrano 8 plików.
+- Podglądy MP3 HQ (VBR — zmierzony średni bitrate 174–191 kb/s, mediana ~182 kb/s): `https://cdn.freesound.org/previews/...` — pobrano 8 plików.
 - Warunki korzystania: https://freesound.org/help/terms/ ; how-to-credit: https://freesound.org/help/terms/#how-to-credit
 
 ### Zapytania Freesound (wyniki >0 są opisane; „0” = brak wyników dla kategorii)
