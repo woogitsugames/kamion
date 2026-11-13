@@ -24,6 +24,9 @@ namespace Game.Core.Navigation
         /// <summary>Edge flag bit6 (M27): the edge cannot be entered from the main strongly connected component in any
         /// allowed direction (the region clip cut the only connection, ADR 0150) - "poza zasięgiem"; not a destination.</summary>
         public const byte FlagOffReach = 64;
+        /// <summary>Edge flag bit7 (ADR 0164): OSM hgv:conditional with plain hour windows only (e.g. "no @ (22:00-06:00)").
+        /// Informational: the planner has no clock and never blocks on it. Other conditional values are not encoded.</summary>
+        public const byte FlagHgvTimed = 128;
         /// <summary>Node flag bit0 = boundary (edge leaves the region data), bit1 (M27) = off-reach (no directed path to
         /// the node from the main strongly connected component).</summary>
         public const byte FlagNodeBoundary = 1, FlagNodeOffReach = 2;
@@ -259,6 +262,121 @@ namespace Game.Core.Navigation
                     EdgeBounds[e] = b;
                 }
             }
+            ComputeNoReturn();
+        }
+
+        // ------------------------------------------------------------------ no-return zone (ADR 0168 / 0169)
+
+        /// <summary>Per node (runtime, not stored in the file): can be driven to from the main strongly connected component,
+        /// has no directed way back into it and leads only towards the region edge (a boundary node) - the outbound one-way
+        /// carriageways cut by the tile end at the closure 60 m before the edge (ADR 0169 audit: 26 nodes). Graphs without
+        /// boundary flags (built in code) have no such nodes: a one-way spur inside the map stays a valid destination (r5).</summary>
+        public bool[] NodeNoReturnMask = Array.Empty<bool>();
+        /// <summary>Per edge: the edge ends in the no-return zone (one-way: its end node; two-way: both ends) - same rule as
+        /// tools/worldgen/navgraph/dead_ends.py (30 edges / 2.73 km in bialystok-industrial-c).</summary>
+        public bool[] EdgeNoReturnMask = Array.Empty<bool>();
+        public bool NodeNoReturn(int node) => NodeNoReturnMask[node];
+        public bool EdgeNoReturn(int edge) => EdgeNoReturnMask[edge];
+        /// <summary>Never a destination: off-reach (M27, file flag) or no-return (computed at load).</summary>
+        public bool EdgeNotDestination(int edge) => (EdgeFlags[edge] & FlagOffReach) != 0 || EdgeNoReturnMask[edge];
+        public bool NodeNotDestination(int node) => NodeOffReach(node) || NodeNoReturnMask[node];
+
+        /// <summary>Largest strongly connected component (Kosaraju, iterative) -> forward / backward closure -> no-return
+        /// nodes that still reach a boundary node. Load time only (550 nodes: well under 1 ms).</summary>
+        void ComputeNoReturn()
+        {
+            int n = NodePos.Length, ne = EdgeFrom.Length;
+            NodeNoReturnMask = new bool[n];
+            EdgeNoReturnMask = new bool[ne];
+            if (n == 0) return;
+            // Reverse adjacency (CSR) of the node graph.
+            var rStart = new int[n + 1];
+            for (int i = 0; i < OutDirected.Length; i++) rStart[EndNode(OutDirected[i]) + 1]++;
+            for (int i = 0; i < n; i++) rStart[i + 1] += rStart[i];
+            var rAdj = new int[OutDirected.Length];
+            var fill = new int[n];
+            for (int v = 0; v < n; v++)
+                for (int k = OutStart[v]; k < OutStart[v + 1]; k++) { int w = EndNode(OutDirected[k]); rAdj[rStart[w] + fill[w]++] = v; }
+
+            // Kosaraju pass 1: finishing order on the forward graph.
+            var order = new int[n]; int oc = 0;
+            var seen = new bool[n];
+            var stackV = new int[n]; var stackK = new int[n];
+            for (int r = 0; r < n; r++)
+            {
+                if (seen[r]) continue;
+                int sp = 0; stackV[0] = r; stackK[0] = OutStart[r]; seen[r] = true;
+                while (sp >= 0)
+                {
+                    int v = stackV[sp];
+                    if (stackK[sp] < OutStart[v + 1])
+                    {
+                        int w = EndNode(OutDirected[stackK[sp]++]);
+                        if (!seen[w]) { seen[w] = true; sp++; stackV[sp] = w; stackK[sp] = OutStart[w]; }
+                    }
+                    else { order[oc++] = v; sp--; }
+                }
+            }
+            // Pass 2: components on the reverse graph in reverse finishing order.
+            var comp = new int[n];
+            for (int i = 0; i < n; i++) comp[i] = -1;
+            int nc = 0, bestComp = -1, bestSize = 0;
+            for (int oi = n - 1; oi >= 0; oi--)
+            {
+                int r = order[oi];
+                if (comp[r] >= 0) continue;
+                int size = 0, sp = 0; stackV[0] = r; comp[r] = nc;
+                while (sp >= 0)
+                {
+                    int v = stackV[sp--]; size++;
+                    for (int k = rStart[v]; k < rStart[v + 1]; k++)
+                    {
+                        int w = rAdj[k];
+                        if (comp[w] < 0) { comp[w] = nc; stackV[++sp] = w; }
+                    }
+                }
+                if (size > bestSize) { bestSize = size; bestComp = nc; }
+                nc++;
+            }
+            // Forward closure (reach) and backward closure (back) of the main component.
+            var reach = new bool[n]; var back = new bool[n];
+            for (int pass = 0; pass < 2; pass++)
+            {
+                var mark = pass == 0 ? reach : back;
+                int sp = -1;
+                for (int v = 0; v < n; v++) if (comp[v] == bestComp) { mark[v] = true; stackV[++sp] = v; }
+                while (sp >= 0)
+                {
+                    int v = stackV[sp--];
+                    int a = pass == 0 ? OutStart[v] : rStart[v], b = pass == 0 ? OutStart[v + 1] : rStart[v + 1];
+                    for (int k = a; k < b; k++)
+                    {
+                        int w = pass == 0 ? EndNode(OutDirected[k]) : rAdj[k];
+                        if (!mark[w]) { mark[w] = true; stackV[++sp] = w; }
+                    }
+                }
+            }
+            // Trap nodes that lead to the region edge: backward closure of the boundary trap nodes inside the trap set.
+            var trap = new bool[n];
+            bool any = false;
+            for (int v = 0; v < n; v++) { trap[v] = reach[v] && !back[v]; any |= trap[v]; }
+            if (!any) return;
+            int top = -1;
+            for (int v = 0; v < n; v++)
+                if (trap[v] && (NodeFlags[v] & FlagNodeBoundary) != 0) { NodeNoReturnMask[v] = true; stackV[++top] = v; }
+            while (top >= 0)
+            {
+                int v = stackV[top--];
+                for (int k = rStart[v]; k < rStart[v + 1]; k++)
+                {
+                    int w = rAdj[k];
+                    if (trap[w] && !NodeNoReturnMask[w]) { NodeNoReturnMask[w] = true; stackV[++top] = w; }
+                }
+            }
+            for (int e = 0; e < ne; e++)
+                EdgeNoReturnMask[e] = (EdgeFlags[e] & FlagOneway) != 0
+                    ? NodeNoReturnMask[EdgeTo[e]]
+                    : NodeNoReturnMask[EdgeFrom[e]] && NodeNoReturnMask[EdgeTo[e]];
         }
 
         public static int EdgeOf(int directed) => directed >> 1;
@@ -282,7 +400,7 @@ namespace Game.Core.Navigation
             float best2 = float.MaxValue;
             for (int i = 0; i < NodePos.Length; i++)
             {
-                if (NodeOffReach(i)) continue;
+                if (NodeNotDestination(i)) continue;
                 float d2 = (NodePos[i] - p).sqrMagnitude;
                 if (d2 < best2) { best2 = d2; best = i; }
             }
@@ -296,11 +414,11 @@ namespace Game.Core.Navigation
             for (int k = OutStart[node]; k < OutStart[node + 1]; k++)
             {
                 int e = OutDirected[k] >> 1;
-                if (!EdgeOffReach(e)) return EdgeName[e];
+                if (!EdgeNotDestination(e)) return EdgeName[e];
             }
             // End of a one-way spur (no outgoing edge): name of an incoming reachable edge (integration r5).
             for (int e = 0; e < EdgeTo.Length; e++)
-                if ((EdgeTo[e] == node || EdgeFrom[e] == node) && !EdgeOffReach(e)) return EdgeName[e];
+                if ((EdgeTo[e] == node || EdgeFrom[e] == node) && !EdgeNotDestination(e)) return EdgeName[e];
             return 0;
         }
 
@@ -348,7 +466,7 @@ namespace Game.Core.Navigation
             for (int e = 0; e < EdgeFrom.Length; e++)
             {
                 if (truckOnly && (EdgeFlags[e] & FlagNoTruck) != 0) continue;
-                if (mainComponentOnly && (EdgeFlags[e] & FlagOffReach) != 0) continue;
+                if (mainComponentOnly && EdgeNotDestination(e)) continue;   // M27 off-reach + ADR 0168 no-return
                 var b = EdgeBounds[e];
                 if (p.x < b.x - dist || p.x > b.z + dist || p.y < b.y - dist || p.y > b.w + dist) continue;
                 for (int k = EdgeStart[e] + 1; k < EdgeStart[e + 1]; k++)

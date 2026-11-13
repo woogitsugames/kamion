@@ -64,27 +64,28 @@ namespace NavRunner.Tests
             // Only the queue calls are inside the measured window (xUnit asserts allocate); results checked afterwards.
             var ok = new bool[12]; var outs = new VoiceClip[5];
             q.Enqueue(a); q.Clear(); q.TryDequeue(out _);   // JIT warm-up
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            ok[0] = q.Enqueue(a);
-            ok[1] = !q.Enqueue(a);   // immediate repeat dropped
-            ok[2] = q.Enqueue(b);
-            ok[3] = !q.Enqueue(b);
-            ok[4] = !q.Enqueue(a);   // repeat inside the 3-clip window dropped
-            ok[5] = q.Enqueue(c);
-            ok[6] = q.Enqueue(d);
-            ok[7] = q.Enqueue(a);    // repeat after 3 different clips allowed
-            int count = q.Count;
-            for (int i = 0; i < 5; i++) q.TryDequeue(out outs[i]);
-            ok[8] = !q.TryDequeue(out _);
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
+            int count = 0;
+            GcAllocCounter.AssertZero(() =>
+            {
+                ok[0] = q.Enqueue(a);
+                ok[1] = !q.Enqueue(a);   // immediate repeat dropped
+                ok[2] = q.Enqueue(b);
+                ok[3] = !q.Enqueue(b);
+                ok[4] = !q.Enqueue(a);   // repeat inside the 3-clip window dropped
+                ok[5] = q.Enqueue(c);
+                ok[6] = q.Enqueue(d);
+                ok[7] = q.Enqueue(a);    // repeat after 3 different clips allowed
+                count = q.Count;
+                for (int i = 0; i < 5; i++) q.TryDequeue(out outs[i]);
+                ok[8] = !q.TryDequeue(out _);
+            }, message: "voice queue allocates nothing");
             for (int i = 0; i <= 8; i++) Assert.True(ok[i], "queue step " + i);
             Assert.Equal(5, count);
             Assert.Equal(new[] { a, b, c, d, a }, outs);
-            Assert.Equal(0, bytes);
         }
 
         [Fact]
-        public void GoldenRoute_AndersaToWilenska_AnnouncesB04_1_AndB12_10()
+        public void GoldenRoute_AndersaToWilenska_AnnouncesB03_1_AndB12_10()
         {
             // G07: Andersa -> Wileńska; the third manoeuvre is Right (59°) onto Wileńska.
             var g = RouteGraph.Load(Region);
@@ -100,7 +101,7 @@ namespace NavRunner.Tests
             var queue = new NavVoiceQueue();
             var gd = new NavGuidance();
             float speed = 50f / 3.6f;   // 50 km/h
-            bool sawB04_1 = false, sawB12_10 = false;
+            bool sawB03_1 = false, sawB12_10 = false;
             for (int i = 0; i < p.Count; i++)
             {
                 Vector2 pos = p.Points[i];
@@ -111,11 +112,11 @@ namespace NavRunner.Tests
                 driver.Update(g, p, ref gd, speed, queue);
                 while (queue.TryDequeue(out var c))
                 {
-                    if (c == new VoiceClip(4, 1)) sawB04_1 = true;    // "Za trzysta metrów skręć w prawo"
+                    if (c == new VoiceClip(3, 1)) sawB03_1 = true;    // "Za dwieście metrów skręć w prawo" (near tier at 50 km/h, ADR 0168)
                     if (c == new VoiceClip(12, 10)) sawB12_10 = true;  // "w Wileńską"
                 }
             }
-            Assert.True(sawB04_1, "B04 #1 announced at the 300 m band");
+            Assert.True(sawB03_1, "B03 #1 announced at the 200 m band (near tier at 50 km/h)");
             Assert.True(sawB12_10, "B12 #10 (Wileńska) suffix announced");
         }
 
@@ -169,15 +170,15 @@ namespace NavRunner.Tests
             float speed = 50f / 3.6f;
             tr.Update(p, p.Points[0], 0f, speed, 0.1f, ref gd);
             driver.Update(g, p, ref gd, speed, queue);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < p.Count; i++)
+            GcAllocCounter.AssertZero(() =>
             {
-                tr.Update(p, p.Points[i], 0f, speed, 0.1f, ref gd);
-                driver.Update(g, p, ref gd, speed, queue);
-                while (queue.TryDequeue(out _)) { }
-            }
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.Equal(0, bytes);
+                for (int i = 0; i < p.Count; i++)
+                {
+                    tr.Update(p, p.Points[i], 0f, speed, 0.1f, ref gd);
+                    driver.Update(g, p, ref gd, speed, queue);
+                    while (queue.TryDequeue(out _)) { }
+                }
+            }, message: "tracker + voice driver + queue allocate nothing");
         }
     }
 }

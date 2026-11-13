@@ -165,6 +165,53 @@ namespace NavRunner.Tests
         }
 
         [Fact]
+        public void Synthetic_AxleLoad10Blocks_11_5Allowed_ADR0164()
+        {
+            // Szosa Knyszynska / Szosa Elcka style maxaxleload=10: the 11.5 t drive axle must detour; the 11.5 t roads of the tile pass.
+            var blocked = new RoutePlanner(Highway(mal: 1000));
+            var p = RoutePath.For(blocked.Graph);
+            Assert.Equal(PlanStatus.Ok, blocked.Plan(new Vector2(50, 0), float.NaN, new Vector2(550, 0), p));
+            Assert.True(p.Length > 700f, "detour around the 10 t axle limit");
+            for (int i = 0; i < p.DirectedCount; i++) Assert.NotEqual(1, p.Directed[i] >> 1);
+            var ok = new RoutePlanner(Highway(mal: 1150));
+            var q = RoutePath.For(ok.Graph);
+            Assert.Equal(PlanStatus.Ok, ok.Plan(new Vector2(50, 0), float.NaN, new Vector2(550, 0), q));
+            Assert.True(q.Length < 700f, "11.5 t axle limit equals the truck: straight");
+        }
+
+        [Fact]
+        public void Synthetic_HgvTimedFlag_IsInformationalOnly_ADR0164()
+        {
+            Assert.Equal(128, RouteGraph.FlagHgvTimed);
+            Assert.Equal(0, RouteGraph.FlagHgvTimed & (RouteGraph.FlagOneway | RouteGraph.FlagRoundabout | RouteGraph.FlagNoTruck | RouteGraph.FlagRestricted
+                | RouteGraph.FlagLink | RouteGraph.FlagHgvDestination | RouteGraph.FlagOffReach));
+            var planner = new RoutePlanner(Highway(extraFlags: RouteGraph.FlagHgvTimed));
+            var p = RoutePath.For(planner.Graph);
+            Assert.Equal(PlanStatus.Ok, planner.Plan(new Vector2(50, 0), float.NaN, new Vector2(550, 0), p));
+            Assert.True(p.Length < 700f, "a timed hgv ban is not a block (no clock in the planner)");
+            Assert.True(RoutePlanner.EdgeAllowed(planner.Graph, 1, false));
+        }
+
+        [Fact]
+        public void TruckAxleLoad_MatchesVehicleData_ADR0164()
+        {
+            // Drive axle laden load of the player's tractor (EBS design value, docs/VEHICLE_REFERENCE_DATA.md, WORKING_VALUE):
+            // 112 800 N / 9.80665 = 11.50 t = RoutePlanner.TruckMaxAxleLoadCt (also the Directive 96/53/EC drive-axle limit, UNVERIFIED).
+            const string rel = "game/Assets/_Project/Vehicle/Physics/Definitions/Data/tractor_4x2_generic.vehicle.json";
+            string file = null;
+            foreach (var start in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })
+                for (var d = new DirectoryInfo(start); d != null && file == null; d = d.Parent)
+                    if (File.Exists(Path.Combine(d.FullName, rel))) file = Path.Combine(d.FullName, rel);
+            Assert.NotNull(file);
+            using var doc = System.Text.Json.JsonDocument.Parse(File.ReadAllText(file));
+            double rearN = 0;
+            foreach (var a in doc.RootElement.GetProperty("axles").EnumerateArray())
+                if (a.GetProperty("name").GetString() == "rear") rearN = a.GetProperty("ladenAxleLoadN").GetDouble();
+            Assert.True(rearN > 0);
+            Assert.Equal(RoutePlanner.TruckMaxAxleLoadCt, (int)Math.Round(rearN / 9.80665 / 10.0));
+        }
+
+        [Fact]
         public void Region_LimitsLoadedAndEmptyForCurrentData()
         {
             var g = RouteGraph.Load(Region);
@@ -177,7 +224,15 @@ namespace NavRunner.Tests
                 if (g.EdgeMaxWeightC[e] != 0 || g.EdgeMaxAxleLoadC[e] != 0 || g.EdgeMaxHeightCm[e] != 0 || g.EdgeMaxLengthCm[e] != 0) limited++;
                 if ((g.EdgeFlags[e] & RouteGraph.FlagHgvDestination) != 0) hgvDest++;
             }
-            Assert.True(limited == 0, $"no numeric truck limits in this region's OSM data (maxheight=default only), got {limited}");
+            // ADR 0164: the only numeric limit in the region is maxaxleload=11.5 (= the truck's own axle limit, no route effect);
+            // before the tag pass-through (roads.graph.json / .bytes regenerated) there are none.
+            for (int e = 0; e < g.EdgeCount; e++)
+            {
+                Assert.Equal(0, g.EdgeMaxWeightC[e]); Assert.Equal(0, g.EdgeMaxHeightCm[e]); Assert.Equal(0, g.EdgeMaxLengthCm[e]);
+                Assert.True(g.EdgeMaxAxleLoadC[e] == 0 || g.EdgeMaxAxleLoadC[e] == RoutePlanner.TruckMaxAxleLoadCt, $"edge {e}: axle {g.EdgeMaxAxleLoadC[e]}");
+                Assert.True(RoutePlanner.EdgeAllowed(g, e, true) || (g.EdgeFlags[e] & RouteGraph.FlagHgvDestination) != 0);
+            }
+            Assert.True(limited == 0 || limited == 89, $"limit-tagged edges: 0 (old data) or 89 (maxaxleload=11.5), got {limited}");
             Assert.Equal(0, hgvDest);
             var planner = new RoutePlanner(g);
             var p = RoutePath.For(g);

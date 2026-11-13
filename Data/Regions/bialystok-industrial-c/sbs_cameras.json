@@ -283,17 +283,17 @@
       "pos": [
         531.5,
         -685.0,
-        140.5406
+        140.4951
       ],
       "look_at": [
-        497.2609,
-        -700.1798,
-        154.5855
+        496.3958,
+        -698.0551,
+        154.54
       ],
       "fov_deg": 73.7398,
       "segment": "G3-A",
-      "pose_confidence": "B",
-      "pose_reason": "ADR 0143 (s14): probe sbs-p143-482392-sa; anchors: near kerb line from the bottom (x 0.62) to the right edge (y 0.83) as on the photo; far pier pair and abutment within ~30 px; same richlv 2020-08-15 sequence as 320326 (ADR 0128 shift +3.3/-2.6 m, +3.4 deg, eye 0.9)",
+      "pose_confidence": "C",
+      "pose_reason": "ADR 0161 (s16): probe sbs-p161-48239274-h35; anchors: deck soffit slope at left edge, F-sign at x0.9, warehouse under the deck",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -344,19 +344,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        490.1,
-        -662.1,
-        140.7501
+        497.563,
+        -666.1715,
+        140.7155
       ],
       "look_at": [
-        455.0813,
-        -674.8459,
-        155.2839
+        462.5443,
+        -678.9174,
+        155.2493
       ],
       "fov_deg": 73.7398,
       "segment": "G3-A",
       "pose_confidence": "C",
-      "pose_reason": "ADR 0160 (s16): probe sbs-p160-12592312-cur; anchors: deck with abutment on the right, column at the left edge (x 0.05-0.15 vs photo 0.08-0.22), guardrail across the foreground (render farther than the photo)",
+      "pose_reason": "ADR 0161 (s16): probe sbs-p161-12592312-s85; anchors: viaduct pier row, link edge barrier",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -596,19 +596,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -344.6996,
-        -157.2277,
-        132.9582
+        -348.1924,
+        -157.4511,
+        132.1428
       ],
       "look_at": [
-        -307.4705,
-        -149.7665,
-        145.541
+        -310.9205,
+        -150.2064,
+        144.7255
       ],
       "fov_deg": 73.7398,
       "segment": "G3-B",
       "pose_confidence": "C",
-      "pose_reason": "J1: heading mismatch 35-40 degrees",
+      "pose_reason": "ADR 0161 (s16): probe sbs-p161-96270216-d8; anchors: lamp column at x0.62, kerb line",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -764,19 +764,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -483.6598,
-        1.5248,
-        134.3408
+        -483.0,
+        0.0,
+        134.2898
       ],
       "look_at": [
-        -519.1444,
-        -11.5388,
-        147.3862
+        -518.5325,
+        -12.9328,
+        147.3352
       ],
       "fov_deg": 73.7398,
       "segment": "G3-B",
-      "pose_confidence": "B",
-      "pose_reason": "ADR 0160 (s16): probe sbs-p160-43126325-a; anchors: viaduct deck with noise wall from (0,0.45) to (0.97,0.66) as on the photo, median kerb, D-1 post at x 0.30",
+      "pose_confidence": "C",
+      "pose_reason": "ADR 0161 (s16): probe sbs-p161-43126325-f; anchors: D-1 + A-7 assembly at x0.33, viaduct pier row, kerb line",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -806,19 +806,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -540.6402,
-        22.4286,
-        136.7608
+        -537.5,
+        13.0,
+        135.535
       ],
       "look_at": [
-        -540.3666,
-        62.0412,
-        142.3073
+        -537.5002,
+        52.6136,
+        141.0815
       ],
       "fov_deg": 58.71551,
       "segment": "G3-B",
       "pose_confidence": "C",
-      "pose_reason": "J1: heading mismatch 30-40 degrees",
+      "pose_reason": "ADR 0161 (s16): probe sbs-p161-18201194-c; anchors: signal heads at the ring, lane line convergence",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -848,19 +848,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        597.7664,
-        -618.723,
-        141.9869
+        596.65,
+        -618.7,
+        141.9969
       ],
       "look_at": [
-        620.1168,
-        -585.5872,
-        143.5611
+        619.0004,
+        -585.5642,
+        143.5712
       ],
       "fov_deg": 42.99566,
       "segment": "G3-A",
       "pose_confidence": "C",
-      "pose_reason": "ADR 0160 (s16): probe sbs-p160-cm109685-s18h; anchors: road on the right curving right, hall with red band on the left (end x 0.30), 2-storey building on the right (x 0.62-1.0)",
+      "pose_reason": "ADR 0161 (s16): probe sbs-p161-cm109685-c; anchors: footway edge, exit lawn, barrier post",
       "note": "ADR0111 Commons GPS; manually inferred heading/FOV/eye/horizon WORKING_VALUE"
     },
     {
@@ -869,19 +869,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        542.0,
-        -750.0,
-        140.8699
+        534.5,
+        -736.0,
+        140.8599
       ],
       "look_at": [
-        570.7592,
-        -777.7726,
-        142.1296
+        563.1241,
+        -763.9118,
+        142.1197
       ],
       "fov_deg": 42.99566,
       "segment": "G3-A",
-      "pose_confidence": "B",
-      "pose_reason": "ADR 0160 (s16): probe sbs-p160-cm924587-c; anchors: two EC chimneys (OSM 628899553/4) at x 0.77/0.94 (photo 0.773/0.947, 11.1 deg apart at hfov 70), pylon behind the island, viaduct at the left edge, crosswalk over the EC access road",
+      "pose_confidence": "C",
+      "pose_reason": "ADR 0161 (s16): probe sbs-p161-cm924587-c; anchors: EC access island + plantings, ring exit kerb, white building edge",
       "note": "ADR0111 Commons GPS; manually inferred heading/FOV/eye/horizon WORKING_VALUE"
     }
   ]

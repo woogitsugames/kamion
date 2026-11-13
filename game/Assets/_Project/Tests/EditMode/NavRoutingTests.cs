@@ -46,7 +46,7 @@ namespace Game.Tests
         // Known places (region metres): Kombatantów (two-way, south), Andersa = dual carriageway (two one-way edges).
         static readonly Vector2 k_Kombatantow = new Vector2(-1.7f, -897.8f);
         static readonly Vector2 k_AndersaSE = new Vector2(-172f, -298f);       // south-east-bound carriageway (edge 307)
-        static readonly Vector2 k_AndersaNW = new Vector2(-457.95f, -55.97f);  // north-west-bound carriageway at Rondo Putry (edge 49)
+        static readonly Vector2 k_AndersaNW = new Vector2(-320f, -162f);  // north-west-bound carriageway before the point of no return (edge 310; ADR 0168: edge 49 is in the no-return zone)
 
         [Test]
         public void Region_KnownRoute_KombatantowToAndersa_SouthEastCarriageway()

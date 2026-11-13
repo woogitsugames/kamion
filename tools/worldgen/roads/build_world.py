@@ -103,7 +103,10 @@ MATERIALS = {
     # bridge_fascia_red (0.30, 0.05, 0.04) read as fresh paint: sRGB R/G 1.9-2.05 and cap / asphalt luminance 1.44
     # (Low overcast) against R/G ~1.4 and ~1.2 on Mapillary 494288258686575 (cap in the shade of the screen; UNVERIFIED
     # in sun). Concrete modulation set + dark road film at the kerb (vertex_grime, CAP_COAT_GRIME). WORKING_VALUE.
-    "bridge_cap_red": {"color": [0.19, 0.04, 0.032], "rough": 0.85, "surface": "concrete",
+    # ADR 0161 (REVIEW s16b P1, 494288: "the cap reads as a running track"): x 0.62, same hue. On the frame the cap
+    # is no lighter than the asphalt (sRGB 46/35/33 vs 33/41/42, both in the shade of the screen, R/G 1.3); the render
+    # had cap / asphalt 1.5 (Low overcast 103/85/81 vs 68/67/66). WORKING_VALUE; sunlit cap UNVERIFIED.
+    "bridge_cap_red": {"color": [0.118, 0.025, 0.020], "rough": 0.85, "surface": "concrete",
                        "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0],
                        "vertex_grime": [0.07, 0.062, 0.055, 0.3]},
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",

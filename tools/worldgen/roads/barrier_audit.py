@@ -17,8 +17,12 @@ Run sources, in order:
    both cap edges) and authored guardrail runs. Ground rule runs (embankment / beside a structure)
    need the NMT and are not reconstructed here - a deck end continued by such a run is counted as
    continued in the full build, so the reconstruction can only over-count free ends.
-3. region-edge closures (the "zapory"): reimplementation of WorldEdgeBuilder.ReadExits over
-   roads.graph.json boundary nodes (ClosureSetbackM = 60 m, width clamped 3..16 m).
+
+Region-edge closures (the "zapory") are NOT audited here any more (ADR 0169): they are built by the Unity
+importer (`WorldEdgeBuilder.ReadExits` -> `ResolveClosures`), which is their only source. The Python copy of
+ReadExits that lived here reported the raw graph closures (before the importer merges them) and so kept an
+xfail alive for a defect the importer had already removed. The duplicate check is the EditMode test
+`WorldEdgeClosureDuplicateTests` on the committed graph.
 
 CLI: `uv run --project tools/worldgen python -m roads.barrier_audit --region bialystok-industrial-c`
 """
@@ -40,7 +44,6 @@ FREE_END_DZ = 0.8               # ... at a similar level
 OVERLAP_GAP_M = 0.5             # M29: parallel rows closer than this overlap
 OVERLAP_COMMON_M = 0.5          # ... with a common span longer than this
 OVERLAP_ANGLE_DEG = 25.0        # ADR 0141 r6d: headings within this are parallel
-CLOSURE_SETBACK_M = 60.0        # WorldEdgeBuilder.ClosureSetbackM
 
 
 # --------------------------------------------------------------------------------------------- runs
@@ -104,88 +107,6 @@ def load_runs(region_id: str):
         runs = deck_and_authored_runs(region_id)
         source = "reconstruction from roads.graph.json + overrides.yaml"
     return runs, source
-
-
-# --------------------------------------------------------------------------------------------- closures
-def closures_from_graph(region_id: str):
-    """Region-edge closures (the "zapory"): reimplementation of WorldEdgeBuilder.ReadExits over
-    roads.graph.json - one closure per boundary edge, setback 60 m inside, row across the road."""
-    from roads import pipeline
-    reg = pipeline.load_region(region_id)
-    ox, oy = reg["origin"]["x"], reg["origin"]["y"]
-    b = reg["bbox"]
-    bl = (b["xmin"] - ox, b["ymin"] - oy, b["xmax"] - ox, b["ymax"] - oy)
-    g = json.loads((REPO / "Data" / "Regions" / region_id / "roads.graph.json").read_text(encoding="utf-8"))
-    boundary = {n["id"] for n in g["nodes"] if n.get("boundary")}
-    at_node = {}
-    for e in g["edges"]:
-        for k in (e["from"], e["to"]):
-            at_node.setdefault(k, []).append(e)
-
-    def pts_of(e):
-        return np.array(e["geometry"], float) - np.array([ox, oy])
-
-    def attr(e, k, num=True):
-        a = e["attrs"].get(k)
-        v = a.get("v") if a else None
-        if v is None:
-            return 0.0 if num else None
-        return float(v) if num else str(v)
-
-    out = []
-    for e in g["edges"]:
-        from_b, to_b = e["from"] in boundary, e["to"] in boundary
-        if not (from_b or to_b):
-            continue
-        pts = pts_of(e)
-        if len(pts) < 2:
-            continue
-        if from_b:
-            pts = pts[::-1].copy()
-        have = float(np.hypot(*np.diff(pts, axis=0).T).sum())
-        cur, inner = e, (e["to"] if from_b else e["from"])
-        for _ in range(16):
-            if have >= CLOSURE_SETBACK_M / 0.8 or inner in boundary or len(at_node.get(inner, ())) != 2:
-                break
-            nxt = at_node[inner][0] if at_node[inner][0] is not cur else at_node[inner][1]
-            np_ = pts_of(nxt)
-            if len(np_) < 2:
-                break
-            ends_here = nxt["to"] == inner
-            if not ends_here:
-                np_ = np_[::-1].copy()
-            have += float(np.hypot(*np.diff(np_, axis=0).T).sum())
-            pts = np.vstack([np_[:-1], pts])
-            inner = nxt["from"] if ends_here else nxt["to"]
-            cur = nxt
-        width = attr(e, "width")
-        if width <= 0:
-            width = max(1.0, attr(e, "lanes")) * 3.5
-        road = attr(e, "name", num=False) or attr(e, "highway", num=False) or "road"
-        edge_pt = pts[-1]
-        if max(bl[0] - edge_pt[0], edge_pt[0] - bl[2], bl[1] - edge_pt[1], edge_pt[1] - bl[3], 0.0) > 5.0:
-            continue
-        edge_dir = edge_pt - pts[-2]
-        edge_dir /= np.hypot(*edge_dir)
-        total = float(np.hypot(*np.diff(pts, axis=0).T).sum())
-        back, acc = min(CLOSURE_SETBACK_M, total * 0.8), 0.0
-        cp, cd = edge_pt, edge_dir
-        for i in range(len(pts) - 1, 0, -1):
-            seg = float(np.hypot(*(pts[i] - pts[i - 1])))
-            if acc + seg >= back and seg > 1e-3:
-                t = (back - acc) / seg
-                cp = pts[i] + (pts[i - 1] - pts[i]) * t
-                cd = (pts[i] - pts[i - 1]) / seg
-                break
-            acc += seg
-        heading = float(np.degrees(np.arctan2(cd[0], cd[1])))
-        w = float(np.clip(width, 3.0, 16.0))
-        d = np.array([np.sin(np.radians(heading)), np.cos(np.radians(heading))])
-        row = np.array([cp - d * (w / 2.0), cp + d * (w / 2.0)])
-        out.append({"road": road, "edge_id": e["id"], "edge": [round(float(edge_pt[0]), 2), round(float(edge_pt[1]), 2)],
-                    "at": [round(float(cp[0]), 2), round(float(cp[1]), 2)], "heading": round(heading, 1),
-                    "width": round(w, 2), "row": row})
-    return out
 
 
 # --------------------------------------------------------------------------------------------- detectors
@@ -324,16 +245,9 @@ def analyze_region(region_id: str) -> dict:
     runs, run_source = load_runs(region_id)
     free = find_free_ends(runs)
     overlaps = find_overlapping_rows([{"key": r["key"], "pts": r["pts"]} for r in runs], join_zone_m=12.0)
-    closures = closures_from_graph(region_id)
-    closure_overlaps = find_overlapping_rows(closures)
-    # the known ADR 0141 edge-west doubling sits just above the 0.5 m band (0.55 / 0.94 m): report it too
-    near = find_overlapping_rows(closures, max_gap_m=1.0)
     return {"region": region_id, "run_source": run_source, "runs": len(runs),
             "deck_run_ends_free": len(free), "free_ends": free,
             "rail_row_overlaps": len(overlaps), "rail_overlaps": overlaps,
-            "closures": len(closures),
-            "closure_overlaps_lt_0_5m": len(closure_overlaps), "closure_overlaps": closure_overlaps,
-            "closure_near_duplicates_0_5_1_0m": [o for o in near if o["gap_m"] >= OVERLAP_GAP_M],
             }
 
 

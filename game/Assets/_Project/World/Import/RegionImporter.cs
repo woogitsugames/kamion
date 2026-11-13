@@ -821,7 +821,7 @@ namespace Game.World.Import
             Debug.Log(string.Format(ci, "WORLD_TERRAIN_BAND: fine fraction Low {0:P0} High {1:P0}", lowFine, highFine));
         }
 
-        static void ReadAnchor(string[] yaml, out double x, out double y, out double z)
+        internal static void ReadAnchor(string[] yaml, out double x, out double y, out double z)
         {
             x = y = z = double.NaN;
             bool inOrigin = false;

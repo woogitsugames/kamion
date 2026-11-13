@@ -1,0 +1,23 @@
+{
+ "seed": "Kamion-P7-audit-20-2026-11-13-v1",
+ "metoda": "random.Random(seed).shuffle(ids); pierwsze k pozycji",
+ "data_losowania": "2026-11-13",
+ "liczba_pozycji_w_manifeście": 7,
+ "wymagany_min_proc": 20,
+ "wielkosc_proby": 2,
+ "proby_w_procentach": 28.6,
+ "wylosowane_id": [
+  "P7-001",
+  "P7-007"
+ ],
+ "kryteria_samokontroli": [
+  "klucz/URL istnieje i odpowiada pozycji",
+  "data zdjęcia i autor zgodne z API/źródłem",
+  "współrzędne zgodne z API (tolerancja 300 m)",
+  "plik w files/ istnieje, JPG, dłuższy bok <=1600 px",
+  "licencja i autor zgodne ze źródłem",
+  "status SOURCED/ESTIMATED/UNVERIFIED uzasadniony",
+  "sezon i pora_dnia wypełnione"
+ ],
+ "wynik_samokontroli": "Wylosowane pozycje sprawdzono 2026-11-13: pliki istnieją (JPG <=1600 px), metadane zgodne z Mapillary/Commons, statusy uzasadnione; szczegóły w README.md."
+}

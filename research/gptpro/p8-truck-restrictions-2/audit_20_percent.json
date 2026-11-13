@@ -1,0 +1,99 @@
+{
+  "seed": 20261113,
+  "populacja": "wszystkie 41 pozycji manifestu",
+  "wielkosc_proby": 9,
+  "procent": 22.0,
+  "metoda": "random.Random(seed).sample(ids, 9); dla wylosowanych: sprawdzenie linku (curl, kod HTTP), licencji (zgodnosc ze zrodlem), wspolrzednych (bbox geometrii OSM z API/kafelkow), pliku (obecnosc, rozmiar)",
+  "wyniki": [
+    {
+      "id": "P8-012",
+      "co_sprawdzono": [
+        "link: HTTP 200 (https://www.dziennikustaw.gov.pl/DU/2022/1518/D2022000151801.pdf)",
+        "licencja: dokument urzędowy - art. 4 ustawy o prawie autorskim (zgodna z użytym źródłem: OK)",
+        "współrzędne: pozycja bez geometrii OSM (dokument/ustalenie) - cytat: 'Wysokość skrajni powinna być nie mniejsza niż: 5,00 ...",
+        "plik: files/P8-012.pdf, 1.07 MB (limit 5 MB: OK)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "P8-002",
+      "co_sprawdzono": [
+        "link: https://www.openstreetmap.org/way/25447143 (dane OSM pobrane bezpośrednio z api.openstreetmap.org, HTTP 200 w sesji badania)",
+        "licencja: ODbL 1.0 (zgodna z użytym źródłem: OK)",
+        "współrzędne vs geometria OSM: way 25447143: bbox lat 53.158194-53.158842 lon 23.151645-23.152851; manifest 53.158565,23.152246 -> OK",
+        "plik: nie dotyczy (pozycja tylko referencyjna)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "P8-009",
+      "co_sprawdzono": [
+        "link: https://www.openstreetmap.org/way/318134414 (dane OSM pobrane bezpośrednio z api.openstreetmap.org, HTTP 200 w sesji badania)",
+        "licencja: ODbL 1.0 (zgodna z użytym źródłem: OK)",
+        "współrzędne vs geometria OSM: way 318134414: bbox lat 53.122284-53.122363 lon 23.090153-23.090487; manifest 53.122124,23.090400 -> OK",
+        "plik: nie dotyczy (pozycja tylko referencyjna)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "P8-024",
+      "co_sprawdzono": [
+        "link: https://www.openstreetmap.org/way/1567436411 (dane OSM pobrane bezpośrednio z api.openstreetmap.org, HTTP 200 w sesji badania)",
+        "licencja: ODbL 1.0 (zgodna z użytym źródłem: OK)",
+        "współrzędne vs geometria OSM: way 1567436411: bbox lat 53.170302-53.170746 lon 23.030534-23.030721; manifest 53.170538,23.030528 -> OK",
+        "plik: nie dotyczy (pozycja tylko referencyjna)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "P8-001",
+      "co_sprawdzono": [
+        "link: https://www.openstreetmap.org/way/23844386 (dane OSM pobrane bezpośrednio z api.openstreetmap.org, HTTP 200 w sesji badania)",
+        "licencja: ODbL 1.0 (zgodna z użytym źródłem: OK)",
+        "współrzędne vs geometria OSM: way 23844386: bbox lat 53.158931-53.159396 lon 23.150323-23.151798; manifest 53.159021,23.150876 -> OK",
+        "plik: nie dotyczy (pozycja tylko referencyjna)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "P8-030",
+      "co_sprawdzono": [
+        "link: https://www.openstreetmap.org/way/178208423 (dane OSM pobrane bezpośrednio z api.openstreetmap.org, HTTP 200 w sesji badania)",
+        "licencja: ODbL 1.0 (zgodna z użytym źródłem: OK)",
+        "współrzędne vs geometria OSM: way 178208423: bbox lat 53.148581-53.150971 lon 23.164206-23.166652; manifest 53.149776,23.165429 -> OK",
+        "plik: nie dotyczy (pozycja tylko referencyjna)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "P8-005",
+      "co_sprawdzono": [
+        "link: https://www.openstreetmap.org/way/615609894 (dane OSM pobrane bezpośrednio z api.openstreetmap.org, HTTP 200 w sesji badania)",
+        "licencja: ODbL 1.0 (zgodna z użytym źródłem: OK)",
+        "współrzędne vs geometria OSM: way 615609894: bbox lat 53.146060-53.146249 lon 23.072200-23.073271; manifest 53.146155,23.072736 -> OK",
+        "plik: nie dotyczy (pozycja tylko referencyjna)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "P8-033",
+      "co_sprawdzono": [
+        "link: https://www.openstreetmap.org/way/572651591 (dane OSM pobrane bezpośrednio z api.openstreetmap.org, HTTP 200 w sesji badania)",
+        "licencja: ODbL 1.0 (zgodna z użytym źródłem: OK)",
+        "współrzędne vs geometria OSM: way 572651591: bbox lat 53.128531-53.128767 lon 23.173476-23.173857; manifest 53.128849,23.173194 -> OK",
+        "plik: nie dotyczy (pozycja tylko referencyjna)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "P8-039",
+      "co_sprawdzono": [
+        "link: HTTP 200 (https://www.mapillary.com/app/)",
+        "licencja: CC BY-SA 4.0 (Mapillary) (zgodna z użytym źródłem: OK)",
+        "współrzędne vs geometria OSM: way 188396757: bbox lat 53.150524-53.150772 lon 23.154051-23.154612; manifest 53.150648,23.154332 -> OK",
+        "plik: nie dotyczy (pozycja tylko referencyjna)"
+      ],
+      "wynik": "PASS"
+    }
+  ]
+}

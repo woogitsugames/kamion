@@ -1,0 +1,300 @@
+{
+ "zadanie": "gptpro-p9-street-furniture-2",
+ "seed_losowania": 20261113,
+ "generator_losowania": "Python 3 random.sample, lista id z manifest.csv (100 pozycji)",
+ "populacja": 100,
+ "wymagana_próba": ">= 20% pozycji",
+ "rozmiar_proby": 20,
+ "udzial_proby": "20%",
+ "sample_ids": [
+  "P9-002",
+  "P9-003",
+  "P9-004",
+  "P9-007",
+  "P9-009",
+  "P9-013",
+  "P9-015",
+  "P9-017",
+  "P9-023",
+  "P9-108",
+  "P9-109",
+  "P9-116",
+  "P9-120",
+  "P9-128",
+  "P9-133",
+  "P9-135",
+  "P9-140",
+  "P9-146",
+  "P9-151",
+  "P9-301"
+ ],
+ "kryteria": [
+  "kod HTTP 200 (lub udokumentowana kopia archiwalna)",
+  "licencja zgodna z zapisem w manifeście",
+  "współrzędne zgodne ze zrzutem OSM / metadanymi Commons (±1e-6)"
+ ],
+ "wyniki": [
+  {
+   "id": "P9-002",
+   "url": "https://www.bip.bialystok.pl/postepowania/zamowienia/dostawa-wandaloodpornych-lawek-i-koszy-na-smieci-1.html",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": null,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-003",
+   "url": "https://psmpt.com.pl/wp-content/uploads/2026/04/ZAPYTANIE-OFERTOWE-MALA-ARCHITEKTURA.pdf",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": null,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-004",
+   "url": "https://psmpt.com.pl/wp-content/uploads/2026/04/ZAPYTANIE-OFERTOWE-MALA-ARCHITEKTURA.pdf",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": null,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-007",
+   "url": "https://www.bip.bialystok.pl/resource/99985/143161/Za%C5%82.%20nr%205_wytyczne%20do%20projektowania.pdf",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": null,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-009",
+   "url": "https://www.bip.bialystok.pl/resource/99985/143161/Za%C5%82.%20nr%205_wytyczne%20do%20projektowania.pdf",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": null,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-013",
+   "url": "https://zm.org.pl/sygnalizatory_skrajnia-09b/",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": null,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-015",
+   "url": "https://www.zdium.wroc.pl/wp-content/uploads/2022/10/Ogolne-wytyczne-do-projektowania-i-wykonywania-instalacji-ulicznej-sygnalizacji-swietlnej-oraz-ITS-wrzesien-2022.pdf",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "000",
+   "licencja_ok": true,
+   "wspolrzedne_ok": null,
+   "wynik": "PASS_Z_ZASTRZEZENIEM (oryginalny serwer nieosiagalny z sieci sesji; kopia archiwalna pobrana i zweryfikowana tresciowo — plik w paczce)"
+  },
+  {
+   "id": "P9-017",
+   "url": "https://pl.oldisvet.com/wp-content/uploads/2022/03/ss3_oldisvet_pl.pdf",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": null,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-023",
+   "url": "https://zpue.pl/zerdzie-i-fundamenty/zerdzie-wirowane-i-fundamenty-prefabrykowane",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": null,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-108",
+   "url": "https://www.openstreetmap.org/node/1717092267",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-109",
+   "url": "https://www.openstreetmap.org/node/1717092268",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-116",
+   "url": "https://www.openstreetmap.org/node/3298141978",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-120",
+   "url": "https://www.openstreetmap.org/node/5801171023",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-128",
+   "url": "https://www.openstreetmap.org/node/5802408784",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-133",
+   "url": "https://www.openstreetmap.org/node/5802408813",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-135",
+   "url": "https://www.openstreetmap.org/node/6044556285",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-140",
+   "url": "https://www.openstreetmap.org/node/9224916272",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-146",
+   "url": "https://www.openstreetmap.org/node/11921635707",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-151",
+   "url": "https://www.openstreetmap.org/node/11942903630",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  },
+  {
+   "id": "P9-301",
+   "url": "https://commons.wikimedia.org/wiki/File:20200711_073107_Białostoczek_district_in_Białystok_July_2020.jpg",
+   "sprawdzono": [
+    "link (kod HTTP)",
+    "licencja",
+    "wspolrzedne (jesli dotyczy)"
+   ],
+   "http": "200",
+   "licencja_ok": true,
+   "wspolrzedne_ok": true,
+   "wynik": "PASS"
+  }
+ ],
+ "podsumowanie": "20/20 PASS (1 PASS_Z_ZASTRZEZENIEM: P9-015 — serwer zdium.wroc.pl nieosiągalny z sieci sesji, plik pobrano i zweryfikowano przez Wayback Machine)",
+ "data": "2026-11-13"
+}

@@ -14,7 +14,7 @@ namespace NavRunner.Tests
         // Anchors (region metres): Andersa near Rondo Putry, Kombatantów, Andersa NW carriageway, Rondo Putry ring.
         static readonly Vector2 k_Andersa = new Vector2(-225.64f, -239.35f);
         static readonly Vector2 k_Kombatantow = new Vector2(-1.7f, -897.8f);
-        static readonly Vector2 k_AndersaNW = new Vector2(-457.95f, -55.97f);
+        static readonly Vector2 k_AndersaNW = new Vector2(-320f, -162f);
         static readonly Vector2 k_PutryRing = new Vector2(-555.60f, -10.18f);
 
         static int RoundaboutMan(RoutePath p)
@@ -76,15 +76,15 @@ namespace NavRunner.Tests
             var gd = new NavGuidance();
             // warm-up (JIT)
             tr.Update(p, p.Points[0], 0f, 10f, 0.02f, ref gd);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
             byte seen = 0;
-            for (int i = 0; i < p.Count && seen == 0; i++)
+            GcAllocCounter.AssertZero(() =>
             {
-                tr.Update(p, p.Points[i], 0f, 10f, 0.02f, ref gd);
-                if (gd.Next == k) seen = gd.NextExit;
-            }
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.Equal(0, bytes);
+                for (int i = 0; i < p.Count && seen == 0; i++)
+                {
+                    tr.Update(p, p.Points[i], 0f, 10f, 0.02f, ref gd);
+                    if (gd.Next == k) seen = gd.NextExit;
+                }
+            }, message: "guidance with the exit number allocates nothing");
             Assert.Equal(2, seen);
         }
     }

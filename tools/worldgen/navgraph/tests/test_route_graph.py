@@ -147,8 +147,11 @@ def test_region_limit_tag_counts():
         if "maxheight" in a:
             mh_vals[str(a["maxheight"].get("v"))] = mh_vals.get(str(a["maxheight"].get("v")), 0) + 1
     assert len(graph["edges"]) == 646
-    assert counts == {"maxweight": 0, "maxweight:hgv": 0, "maxaxleload": 0, "maxheight": 2, "maxlength": 0,
-                      "hgv:conditional": 0}
+    # ADR 0164: maxaxleload (11.5 t on 89 edges = the truck's own axle limit) appears once roads.graph.json is
+    # regenerated with the pass-through; before that it is absent. Both states are valid, nothing else may differ.
+    n_axle = counts.pop("maxaxleload")
+    assert n_axle in (0, 89), n_axle
+    assert counts == {"maxweight": 0, "maxweight:hgv": 0, "maxheight": 2, "maxlength": 0, "hgv:conditional": 0}
     assert hgv_vals == {"no": 6} and mh_vals == {"default": 2}
     # In the built graph: hgv=no (and access=no / emergency_access) -> F_NO_TRUCK, maxheight=default -> no limit
     # stored, no hgv=destination.
@@ -159,8 +162,9 @@ def test_region_limit_tag_counts():
                           if attrv(e, "access") == "no" or attrv(e, "hgv") == "no" or attrv(e, "service") == "emergency_access")
     assert sum(1 for e in t["edges"] if e["flags"] & brg.F_NO_TRUCK) == expect_no_truck
     assert sum(1 for e in t["edges"] if e["flags"] & brg.F_HGV_DESTINATION) == 0
-    assert all(e["maxweight_c"] == 0 and e["maxaxleload_c"] == 0 and e["maxheight_cm"] == 0 and e["maxlength_cm"] == 0
-               for e in t["edges"])
+    assert all(e["maxweight_c"] == 0 and e["maxheight_cm"] == 0 and e["maxlength_cm"] == 0 for e in t["edges"])
+    axle = [e["maxaxleload_c"] for e in t["edges"] if e["maxaxleload_c"]]
+    assert len(axle) == n_axle and set(axle) <= {1150}, "maxaxleload=11.5 == the truck's parameter: no route effect"
 
 
 # ------------------------------------------------------------------ lanes (OSM Key:turn:lanes)
