@@ -721,3 +721,23 @@ M["paint_ral3020"] = {"color": [0.55, 0.012, 0.009], "rough": 0.5}
 for _k in ("shelter_paint", "paint_ral1012", "paint_ral3020"):
     M[_k].setdefault("sky_occ", SKY_OCC_STRUCT)
 M["shelter_glass_clear"].setdefault("sky_occ", SKY_OCC_GLASS)
+
+
+# ADR 0185 (Dojlidy, review 0179 P1; additive block, no existing entry changed):
+# - hall_wall_smooth: flat-faced sandwich panels laid horizontally (set sandwich_smooth: courses of 1.15 m, no
+#   baked streaks) with butt joints every 6 m and one tone per panel (`panel_m`, the shader of ADR 0092). The rule
+#   cladding (sandwich_ribbed sampled at the 4 m default, 10 % streak noise in the albedo) read as a grid of blocks
+#   on the north hall of the Kuronia plant (CC0 photo P11-094: 16 courses, vertical joints at the column grid).
+#   Colour = hall_wall_white (accepted in ADR 0179). `hall_wall_` prefix: wall-top TEXCOORD_1, run-off, splash zone.
+# - cladding_vertical_grey: flat panels laid vertically, 1.0 m wide (set cladding_vertical), the light silver grey
+#   office block at Kuronia 3 (CC0 photo P11-001). Not a hall_wall_* name: an office wall has no wall-top UV1 on
+#   LOD1, so the run-off layer is switched on by `runoff` like on the plaster walls. Colours WORKING_VALUE.
+M["hall_wall_smooth"] = {"color": [0.55, 0.56, 0.55], "rough": 0.45, "metal": 0.2, "texture_set": "sandwich_smooth",
+                         "set_tile": True, "tint_linear": True, "panel_m": [6.0, 1.15], "sky_occ": SKY_OCC_STRUCT}
+M["cladding_vertical_grey"] = {"color": [0.47, 0.48, 0.48], "rough": 0.45, "metal": 0.2,
+                               "texture_set": "cladding_vertical", "set_tile": True, "tint_linear": True,
+                               "runoff": True, "splash_h": 0.6, "sky_occ": SKY_OCC_STRUCT}
+for _k in ("office", "ribbon"):
+    M[f"cladding_vertical_grey__far_{_k}"] = {
+        "color": M["cladding_vertical_grey"]["color"], "rough": 0.45, "base": "cladding_vertical_grey",
+        "texture_set": "facade_far", "set_tile": True, "tint_linear": True, "sky_occ": [SKY_OCC_STRUCT_X, 0.9]}

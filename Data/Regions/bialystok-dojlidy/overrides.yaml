@@ -162,3 +162,69 @@ overrides:
       (the reference region C keeps its output byte for byte).
     confidence: high
     verify: none
+  # ================================================================ ADR 0185 (review 0179 P1/P2: buildings)
+  - id: dojlidy-lod1-base-datum
+    kind: building_rules
+    lod1_base_datum: true
+    reason: >-
+      Review 0179: the north hall of the Kuronia plant ~12 % too tall in frame P11-094, extra white blocks behind
+      the block of Kuronia 3 (P11-001). The LoD1 2024 measuredHeight is the height of the LoD1 solid above its
+      bottom face (ground_z_evrf2007 = the lowest ground of the outline: over the 329 buildings of the tile with a
+      LoD1 base the lowest NMT 2025 ground of the ring is 0.06 m below it at the median), while the generator stood
+      every building on the median ground of its outline. On sloping plots the roof was too high: median +0.22 m,
+      p95 +1.42 m, max +3.52 m; plant hall bdot:2BE4B431-BC59 +1.83 m, research building bdot:2BE4B431-C1A0
+      (18.09 m, behind Kuronia 3) +2.69 m, hall of Kuronia 2 +1.96 m. With the rule the roof is at LoD1 base +
+      height. Opt-in per region (region C keeps its output byte for byte).
+    confidence: high
+    verify: none
+  - id: rosti-west-wing
+    kind: building_part
+    name: lower west wing of the north hall of the plant at Kuronia
+    polygon_en: [[683.3, 384.1], [670.6, 389.5], [656.4, 356.2], [643.1, 361.9], [604.9, 272.7], [618.2, 267.0],
+                 [630.8, 261.6]]
+    cut_from: ["bdot:2BE4B431-BC59-1BF0-E053-CC2BA8C0D140"]
+    height_m: 13.4
+    ground_z_evrf2007: 152.06
+    function: produkcyjny
+    reason: >-
+      BDOT10k draws the whole plant as one outline with one LoD1 height (18.92 m). CC0 photo P11-094 (Rakoon): the
+      roof line of the north wall steps down at its west end (x 793 of 960; the wall ends at x 870) to a lower
+      segment in the same wall plane. 2024 orthophoto: the tall hall (roof with the smoke vents) ends on a straight
+      line parallel to the east wall; west of it lie a strip with three roof lights and the annex with the roof
+      units. The line is 11.8 m from the NW corner on the orthophoto plus ~2 m of relief displacement of the tall
+      roof edge = 13.8 m (bearing from the photo: 15-19 m) -> 13.8 m WORKING_VALUE +-2 m. Height: at the step the
+      lower wall is 180 px against 255 px of the tall wall (0.71) -> 0.71 x 18.6 m = 13.1 m above the ground there
+      (152.4) = 13.4 m above the LoD1 base 152.06, WORKING_VALUE +-1 m; the annex south of the strip is given the
+      same height (not seen from the street). The main hall keeps the building id of the BDOT10k outline.
+    confidence: medium
+    verify: owner photo session (Kuronia, north wall of the plant); height of the wing and of the annex
+    set: {typology: hall, wall_material: hall_wall_smooth, hall_bands: false, hall_windows: false}
+  - id: rosti-hall-cladding
+    target: {building: "bdot:2BE4B431-BC59-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      Photo P11-094: long flat sandwich panels laid horizontally (16 courses up the wall: 16 x 1.15 m = 18.4 m +
+      plinth = the LoD1 height), vertical joints only at the column grid; no row of small windows (wall lamps only).
+      The rule cladding read as a grid of blocks and the hashed window row does not exist (review 0179 P1).
+      Adds to rosti-hall-colour (sets of one building are merged, ADR 0185).
+    confidence: high
+    verify: none
+    set: {wall_material: hall_wall_smooth, hall_windows: false}
+  - id: kuronia3-office-block-facades
+    target: {building: "override:kuronia3-office-block"}
+    reason: >-
+      Photo P11-001 (review 0179 P1: "PRL plaster block with black window bands"): the block is clad in light
+      silver grey panels laid vertically; three tall storeys - the window bands of the long south wall have their
+      sills at 0.19 / 0.51 / 0.82 of the wall height = 2.7 / 7.2 / 11.5 m of 14 m, each band ~1.4 m high and
+      starting ~12 % in from the west corner; the west gable carries a glazed stair column at its south end and
+      otherwise small windows only (not drawn). Other walls: bands on the long ones, short ones blank
+      (not photographed, WORKING_VALUE).
+    confidence: medium
+    verify: owner photo session (Kuronia 3 from the cycle path); north and east walls
+    set:
+      storeys: 3
+      wall_material: cladding_vertical_grey
+      facades:
+        - {facing: W, max_len_m: 20.0, windows: column, u: 0.86, window_w_m: 1.8}
+        - {facing: [N, NE, E, SE, S, SW, W, NW], min_len_m: 20.0, windows: ribbon, sill_m: 2.3, head_m: 3.6,
+           spans: [[0.12, 1.0]]}
+        - {facing: [N, NE, E, SE, S, SW, W, NW], min_len_m: 0.0, windows: blank}

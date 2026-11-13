@@ -1251,6 +1251,106 @@
       "hf_ratio_albedo": 0.0255,
       "ao_mean": 1.0
     },
+    "cladding_vertical": {
+      "tile_m": [
+        3.0,
+        3.0
+      ],
+      "slots": [
+        "cladding_vertical_grey"
+      ],
+      "note": "Flat-faced vertical wall panels 1.0 m, micro-lining, shadow-gap joints, no baked streaks (ADR 0185).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.93,
+          "dir": "cladding_vertical/High",
+          "png_bytes": 96672,
+          "files": [
+            "T_cladding_vertical_BaseColor.png",
+            "T_cladding_vertical_MaskMap.png",
+            "T_cladding_vertical_Normal.png",
+            "T_cladding_vertical_Var.png"
+          ],
+          "smoothness_mean": 0.55,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 5.86,
+          "dir": "cladding_vertical/Medium",
+          "png_bytes": 39053,
+          "files": [
+            "T_cladding_vertical_BaseColor.png",
+            "T_cladding_vertical_MaskMap.png",
+            "T_cladding_vertical_Normal.png",
+            "T_cladding_vertical_Var.png"
+          ],
+          "smoothness_mean": 0.548,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 11.72,
+          "dir": "cladding_vertical/Low",
+          "png_bytes": 15604,
+          "files": [
+            "T_cladding_vertical_BaseColor.png",
+            "T_cladding_vertical_MaskMap.png",
+            "T_cladding_vertical_Normal.png",
+            "T_cladding_vertical_Var.png"
+          ],
+          "smoothness_mean": 0.544,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00629,
+        -0.0
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4874,
+        "p95": 0.5159,
+        "mean_rgb_linear": [
+          0.4989,
+          0.4989,
+          0.4989
+        ]
+      },
+      "hf_ratio_albedo": 0.0084,
+      "ao_mean": 0.993
+    },
     "concrete_blocks_split": {
       "tile_m": [
         2.0,
@@ -3885,6 +3985,106 @@
         ]
       },
       "hf_ratio_albedo": 0.0102,
+      "ao_mean": 0.993
+    },
+    "sandwich_smooth": {
+      "tile_m": [
+        3.45,
+        3.45
+      ],
+      "slots": [
+        "hall_wall_smooth"
+      ],
+      "note": "Flat-faced horizontal sandwich panels, courses 1.15 m, micro-lining, shadow-gap joints, no baked streaks (ADR 0185).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.37,
+          "dir": "sandwich_smooth/High",
+          "png_bytes": 117837,
+          "files": [
+            "T_sandwich_smooth_BaseColor.png",
+            "T_sandwich_smooth_MaskMap.png",
+            "T_sandwich_smooth_Normal.png",
+            "T_sandwich_smooth_Var.png"
+          ],
+          "smoothness_mean": 0.551,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 6.74,
+          "dir": "sandwich_smooth/Medium",
+          "png_bytes": 46428,
+          "files": [
+            "T_sandwich_smooth_BaseColor.png",
+            "T_sandwich_smooth_MaskMap.png",
+            "T_sandwich_smooth_Normal.png",
+            "T_sandwich_smooth_Var.png"
+          ],
+          "smoothness_mean": 0.548,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 13.48,
+          "dir": "sandwich_smooth/Low",
+          "png_bytes": 18751,
+          "files": [
+            "T_sandwich_smooth_BaseColor.png",
+            "T_sandwich_smooth_MaskMap.png",
+            "T_sandwich_smooth_Normal.png",
+            "T_sandwich_smooth_Var.png"
+          ],
+          "smoothness_mean": 0.545,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00629,
+        -0.0
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4885,
+        "p95": 0.5152,
+        "mean_rgb_linear": [
+          0.4982,
+          0.4982,
+          0.4982
+        ]
+      },
+      "hf_ratio_albedo": 0.0082,
       "ao_mean": 0.993
     },
     "sectional_door": {

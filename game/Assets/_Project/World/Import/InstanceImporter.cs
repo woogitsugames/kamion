@@ -670,7 +670,11 @@ namespace Game.World.Import
             ti.mipmapEnabled = true;
             ti.alphaSource = TextureImporterAlphaSource.FromInput;
             ti.alphaIsTransparency = alpha;
-            ti.mipMapsPreserveCoverage = alpha;
+            // ADR 0185: not for the welded fence mesh. Coverage-preserving mips keep ~15 % of the texels opaque at every
+            // distance, so 5 mm wires 50 mm apart drew a white moire lattice at 40 m on Low (review 0179, P11-094);
+            // with plain box mips the wires thin out and are gone where a pixel is wider than the wire pitch - the
+            // posts and the plinth stay, as on the photo.
+            ti.mipMapsPreserveCoverage = alpha && !file.StartsWith("fence_");
             ti.alphaTestReferenceValue = 0.5f;
             ti.wrapMode = clamp ? TextureWrapMode.Clamp : TextureWrapMode.Repeat;
             // Forest HLOD edge walls tile along the edge (u) but not vertically: with v repeating, the filter / mips at the
