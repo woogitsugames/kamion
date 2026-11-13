@@ -151,14 +151,15 @@ namespace UnityEngine.Profiling
     /// </summary>
     public sealed class Recorder
     {
-        static readonly Recorder s_GcAlloc = new Recorder();
+        // One recorder per thread: xUnit runs test classes in parallel and the byte counter is per thread anyway.
+        [ThreadStatic] static Recorder s_GcAlloc;
         long m_Start, m_Bytes;
         bool m_Enabled;
 
         public static Recorder Get(string samplerName)
         {
             if (samplerName != "GC.Alloc") throw new ArgumentException("nav-runner shim supports only the GC.Alloc recorder", nameof(samplerName));
-            return s_GcAlloc;
+            return s_GcAlloc ??= new Recorder();
         }
 
         public bool isValid => true;
