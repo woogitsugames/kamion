@@ -2320,3 +2320,128 @@ overrides:
       0.6 m past it, so that the generated carriageway cuts it (no sliver of yard between footway and kerb).
     confidence: high
     verify: owner photo session item 1
+  # ADR 0167 (review REVIEW-2026-11-13-s16b-final, P1 buildings of the gate-3 frames cm92458760 / cm109685822 and the
+  # tower of 177786140912399 / 178689077481862). Colours = `plaster_blue` (new, albedo read off cm92458760 against
+  # the white window frames) or existing materials; no lettering, no brand panels. All heights / z WORKING_VALUE
+  # unless a source is named.
+  - id: g3a-ec-kiosk-height
+    target: {building: "osm:way/591365138"}
+    reason: >-
+      OSM building=service, 34 m2, no BDOT10k / LoD1 record: the generator's default height 6.0 m made a windowless
+      white box in the middle of frame cm92458760. Commons photo cm92458760 (Rakoon, 2020-07-11, CC BY 3.0): a
+      half-sunk light grey chamber, ~1.6 m of wall with low grilled openings under a dark roof slab ~0.45 m (the
+      8.0 m long NW wall spans 960 px, wall 170 px, slab 50 px in the crop). Orthophoto 2024-05-27: dark flat roof,
+      footprint as OSM.
+    confidence: medium
+    verify: owner photo session (Bitwy Białostockiej / EC access road)
+    set:
+      height_m: 2.0
+      frontage:
+        wall: plaster_light
+        fascia: {material: hall_flashing, height_m: 0.45, overhang_m: 0.15}
+  - id: g3a-ec-blue-office
+    target: {building: "bdot:2BE4B431-CA0E-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      Single-storey outbuilding by the EC access road (BDOT10k "siedziba firmy lub firm", LoD1 2024 4.45 m). The
+      hashed pick gave grey render with dark ribbon windows; photo cm92458760: light blue render, a row of white
+      double windows (pitch ~3 m, sill ~1 m) on the long NE side, a darker blue end block at the street (NW) end,
+      grey plinth, dark roof edge. One blue tone for both parts (a second tone is one more draw per chunk and LOD).
+      Window frames are drawn dark (the frontage kit has one frame material). LOD1 panes in the frame material
+      (glass_lod1): the LOD1 of chunk 6_7 has no glass primitive and Low draws LOD1 only.
+    confidence: medium
+    verify: owner photo session (Bitwy Białostockiej / EC access road)
+    set:
+      frontage:
+        wall: plaster_blue
+        glass_lod1: hall_flashing
+        plinth_m: 0.5
+        fascia: {material: hall_flashing, height_m: 0.35}
+        glazing:
+          - {facing: NE, span: [0.015, 0.068], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.099, 0.152], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.182, 0.235], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.266, 0.319], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.350, 0.403], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.433, 0.486], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.517, 0.570], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.600, 0.653], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.684, 0.737], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.767, 0.820], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+          - {facing: NE, span: [0.851, 0.904], z: [1.0, 2.5], pitch_m: 0.95, min_len_m: 20.0, margin_m: 0.3}
+  - id: g3a-ec-heat-accumulator
+    target: {building: "osm:way/279896715"}
+    reason: >-
+      Heat accumulator tank of the EC (OSM building=industrial, circle of 21.8 m; no BDOT10k / LoD1 record, so it
+      was a 6 m disc). Photo cm92458760 (camera E 542 N -750, 148 m away, f = 1142 px at 1600 px width from the
+      chimney pair): the top edge is 310 +-15 px above the eye line = 40 +-2 m above the eye, i.e. ~39 m above its
+      ground. Cross-check on the orthophoto 2024-05-27: the roof is displaced ~15 m from the footprint, the roof of
+      the 41.81 m tower (LoD1 2024, bdot ...CA0F) ~14.5 m. Light grey-white shell with a blue band about 9 m under
+      the top (photo; the brand panel above the band is not reproduced), bare flat top. Shell = plaster_grey (light
+      grey, albedo 0.62), not plaster_white: the tank would be the only user of plaster_white in chunk 6_7 (one
+      draw on Low), plaster_grey is drawn there already; the band shares plaster_blue with the outbuilding.
+    confidence: medium
+    verify: owner photo session (EC from Bitwy Białostockiej); any published height of the tank
+    set:
+      height_m: 39.0
+      frontage:
+        wall: plaster_grey
+        plinth_m: 0.6
+        accents:
+          - {facing: [N, NE, E, SE, S, SW, W, NW], material: plaster_blue, z: [28.5, 30.5], min_len_m: 0.5}
+  - id: g3a-kwadrat-blue-pavilion
+    target: {building: "bdot:ffe33067-f96d-4676-9355-469cfe147783"}
+    reason: >-
+      Two-storey trade pavilion right of frame cm109685822 (BDOT10k "obiekt handlowo-usługowy", 2 storeys, LoD1
+      2024 8.57 m). The hashed pick gave beige render with punched windows; CC0 photo cm109685822 (Rakoon,
+      2021-09-04): dark slate-grey cladding with a blue cast (the wall is in shade under a clear sky), shopfront
+      glazing along the whole ground floor of the road (NW) side, a row of small windows on the upper floor, dark
+      roof edge. Glazing heights read off the photo proportions. Wall = hall_plinth (neutral grey 0.25, precast
+      concrete set; round 1 used the saturated plaster_blue, which read royal blue against the photo and was one
+      more draw in chunk 6_6); LOD1 panes in the frame material (no glass primitive in the LOD1 of chunk 6_6).
+    confidence: medium
+    verify: owner photo session item 6 (Kwadrat Park lane)
+    set:
+      frontage:
+        wall: hall_plinth
+        glass_lod1: hall_flashing
+        fascia: {material: hall_flashing, height_m: 0.5}
+        glazing:
+          - {facing: NW, span: [0.0, 1.0], z: [0.3, 3.2], pitch_m: 2.4, transom_m: 2.4, min_len_m: 20.0}
+          - {facing: [NW, SW], span: [0.0, 1.0], z: [4.9, 6.3], pitch_m: 1.5, min_len_m: 10.0, margin_m: 1.2}
+  - id: g3a-office-tower-colour
+    target: {building: "bdot:2BE4B431-CA0F-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      11-storey office tower by the Kwadrat lane (LoD1 2024 41.81 m). The hashed pick gave light grey; Mapillary
+      richlv 177786140912399 / 178689077481862 (2020-08-15) and the facade visible on the orthophoto 2024-05-27
+      show a pale yellow render. Nearest material of the office set (far-facade variant exists).
+    confidence: medium
+    verify: owner photo session item 6 (Kwadrat Park lane)
+    set: {wall_material: plaster_beige}
+  - id: g3a-ec-round-tanks
+    target: {building: "osm:way/264944879"}
+    reason: >-
+      Round storage tank inside an earth bund (OSM building=yes, circle of ~22 m; orthophoto 2024-05-27: dark flat
+      round roof, bund, service platform on the rim). building=yes fell through to the office typology: a brick
+      drum with office windows. Plain light shell, no openings. Shell colour not visible on any open photo
+      (WORKING_VALUE); the default height 6.0 m stays (roof displacement on the orthophoto 1-2 m against 14.5 m of
+      the 41.81 m tower: a low tank).
+    confidence: low
+    verify: owner photo session (EC from Bitwy Białostockiej)
+    set:
+      frontage: {wall: plaster_light, plinth_m: 0.3}
+  - id: g3a-ec-round-tanks-2
+    target: {building: "osm:way/264944878"}
+    reason: Second tank of the pair, as g3a-ec-round-tanks (the hashed pick gave a white office drum).
+    confidence: low
+    verify: owner photo session (EC from Bitwy Białostockiej)
+    set:
+      frontage: {wall: plaster_light, plinth_m: 0.3}
+  - id: g3a-fuel-station-kiosk-height
+    target: {building: "osm:way/957256518"}
+    reason: >-
+      14 m2 box beside the fuel station canopy (OSM building=yes, no BDOT10k / LoD1 record: default height 6.0 m,
+      which also made it an office with windows). Orthophoto 2024-05-27: shadow ~5 m; the 41.81 m tower (LoD1 2024)
+      casts ~62 m on the same sheet, so ~3.4 m. Below 5 m and 60 m2 it is generated as an outbuilding.
+    confidence: low
+    verify: owner photo session item 6 (Kwadrat Park lane)
+    set: {height_m: 3.4}

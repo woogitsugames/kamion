@@ -59,6 +59,9 @@ M = {
     "plaster_beige": {"color": [0.50, 0.44, 0.34], "rough": 0.9, "texture_set": "plaster"},
     "plaster_cream": {"color": [0.55, 0.48, 0.33], "rough": 0.9, "texture_set": "plaster"},
     "plaster_pastel_blue": {"color": [0.36, 0.42, 0.47], "rough": 0.9, "texture_set": "plaster"},
+    # ADR 0167: saturated light blue render / cladding of the EC outbuilding and the Kwadrat pavilion (albedo from
+    # Commons cm92458760 against its white window frames; WORKING_VALUE). Authored frontages only (no __far variant).
+    "plaster_blue": {"color": [0.09, 0.19, 0.31], "rough": 0.9, "texture_set": "plaster"},
     # set_tile (ADR 0067): the NF brick set is 1.506 m, at the shader default 4 m a course read as 20 cm (r10 r1 render)
     # ADR 0091: saturation -28 % (linear chroma about the luminance: [0.26, 0.10, 0.07] -> below; on screen -20 %), `macro` =
     # [size m, strength] of the macro tone drift (importer default for modulation sets 64 m / 0.06): lots of brick
