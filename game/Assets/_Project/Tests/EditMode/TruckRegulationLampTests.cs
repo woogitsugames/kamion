@@ -21,7 +21,7 @@ namespace Game.Tests
         const string ExtManifest = "art-source/truck/exterior/export/truck_exterior_manifest.json";
         const string TrlManifest = "art-source/truck/trailer/export/trailer_manifest.json";
         const string TmpDir = "Assets/_TestTmp_RegLamps";
-        const int Reverse = 7, FogFront = 11, Plate = 13, FogRear = 14;
+        const int Reverse = 7, FogFront = 11, Plate = 13, FogRear = 14, Reflex = 15;
 
         static Dictionary<string, object> Load(string rel) =>
             Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot, rel))));
@@ -44,9 +44,12 @@ namespace Game.Tests
         }
 
         /// <summary>Lamp-emitter vertices (uv2.y > 0) of one light group in the root frame, all meshes of the LOD0 FBX.</summary>
-        static List<Vector3> Emitters(string manifest, string tmpName, int group)
+        static List<Vector3> Emitters(string manifest, string tmpName, int group) => GroupVerts(manifest, "LOD0", tmpName, group, true);
+
+        /// <summary>Vertices of one light group (uv2.x) in the root frame; emitting = only uv2.y > 0, else only uv2.y == 0.</summary>
+        static List<Vector3> GroupVerts(string manifest, string lod, string tmpName, int group, bool emitting)
         {
-            string src = Path.Combine(EditorTools.RepoRoot, Json.Str(Json.Obj(Json.Obj(Load(manifest)["lods"])["LOD0"])["file"]));
+            string src = Path.Combine(EditorTools.RepoRoot, Json.Str(Json.Obj(Json.Obj(Load(manifest)["lods"])[lod])["file"]));
             Assert.That(File.Exists(src) && new FileInfo(src).Length > 1024, "missing FBX (or LFS pointer): " + src);
             Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, TmpDir));
             string dst = $"{TmpDir}/{tmpName}.fbx";
@@ -72,7 +75,7 @@ namespace Game.Tests
                 var v = mesh.vertices;
                 var toRoot = root.transform.worldToLocalMatrix * mf.transform.localToWorldMatrix;
                 for (int i = 0; i < v.Length; i++)
-                    if (data[i].y > 0.01f && Mathf.Abs(data[i].x - group) < 0.25f) pts.Add(toRoot.MultiplyPoint3x4(v[i]));
+                    if ((data[i].y > 0.01f) == emitting && Mathf.Abs(data[i].x - group) < 0.25f) pts.Add(toRoot.MultiplyPoint3x4(v[i]));
             }
             return pts;
         }
@@ -89,6 +92,25 @@ namespace Game.Tests
             Assert.That(fog.Exists(p => p.x < -0.3f), "a rear fog lamp must be on the driver's (left) side (R48 6.11.4.1)");
             foreach (var p in fog) Assert.That(p.y, Is.InRange(0.25f, 1.00f), "rear fog lamp height (R48 6.11.4.2)");
             Assert.That(Emitters(TrlManifest, "Trailer_LOD0", FogFront).Count, Is.EqualTo(0), "the trailer has no FRONT fog lamps (group 11)");
+        }
+
+        /// <summary>Review s17 P0: the Low tier renders LOD2 at every distance. The rear contour (R48 6.21 / R104), the class III
+        /// triangles and the reflectors must exist there, tagged REFLEX (15) and never emissive.</summary>
+        [Test]
+        public void Trailer_LOD2_KeepsRearContourAndReflectors_AsNonEmissiveReflex()
+        {
+            var groups = Json.Obj(Json.Obj(Load(TrlManifest)["shader_contract"])["light_groups"]);
+            Assert.AreEqual("REFLEX", Json.Str(groups[Reflex.ToString()]));
+            Assert.AreEqual(0, GroupVerts(TrlManifest, "LOD2", "Trailer_LOD2", Reflex, true).Count, "a retro-reflector must not emit");
+            var refl = GroupVerts(TrlManifest, "LOD2", "Trailer_LOD2", Reflex, false);
+            float zMin = float.MaxValue;
+            foreach (var p in refl) zMin = Mathf.Min(zMin, p.z);
+            var rear = refl.FindAll(p => p.z < zMin + 0.3f);
+            Assert.That(rear.Exists(p => p.x < -1.1f && p.y > 3.0f), "rear contour, left upper corner missing at LOD2");
+            Assert.That(rear.Exists(p => p.x > 1.1f && p.y > 3.0f), "rear contour, right upper corner missing at LOD2");
+            Assert.That(rear.Exists(p => p.y > 3.85f && p.x < -1.0f) && rear.Exists(p => p.y > 3.85f && p.x > 1.0f), "rear contour header missing at LOD2");
+            Assert.That(refl.Exists(p => p.y < 0.8f && Mathf.Abs(p.x) > 0.5f), "rear triangle reflectors missing at LOD2");
+            Assert.That(refl.Exists(p => Mathf.Abs(p.x) > 1.2f && p.y < 1.3f && p.z > zMin + 2f), "side reflectors missing at LOD2");
         }
 
         [Test]

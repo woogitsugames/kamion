@@ -124,3 +124,10 @@ sama liczba wywołań rysowania i tekstur; pomiar należy do lidera).
   Pomiar FBX: naczepa 984 ściany z id 15 na LOD0 i tyle samo na LOD2, 0 z maską > 0.
 - Białe kwadraty na boku ciągnika o zmierzchu (recenzja P1) to lampy obrysowe boczne `side_marker_*` (MARKER_SIDE),
   przesterowane do bieli jak wszystkie lampy — zadanie 0178, nie odblaski.
+- **Dowód s18:** `artifacts/truck-regs-0175/s18/` (WorldC, kamery `trailer-34, chase, truck-rear34`; Low/High pochmurno,
+  High zmierzch z `-TruckLamps low`; `SBS-Low-trailer-34_before_after.jpg` = Low przed ↔ po). Na Low po zmianie: pełny
+  czerwony kontur tyłu (słupki, nagłówek, dolny pas na ramie RUPD), trójkąty pod lampami, tablica widoczna (biała z
+  niebieskim polem; znaki nieczytelne przy atlasie Low 1024 — oczekiwane, P2). O zmierzchu białe kwadraty na boku
+  ciągnika zostają (lampy `MARKER_SIDE`, 0178). EditMode `s18/editmode-20261113-185224.xml`: 524 testy, 521 zielonych,
+  `TruckRegulationLampTests` 6/6 (nowy `Trailer_LOD2_KeepsRearContourAndReflectors_AsNonEmissiveReflex`); 2 czerwone
+  `CarPaintMaterialTests.DepositionChannel_…` jak w s17 (pliki nietknięte). `pytest tests/physics/test_truck_regs.py` 5/5.
