@@ -1,5 +1,5 @@
 # SESJA 19 (start 2026-11-13 20:2x lokalnie; nowe konto: 5 h 0 % — reset 01:20; tydzień 0 %, Fable 0 %) — nowa sesja: czytaj TEN blok, potem „STOP S18”
-- **main** `d6a1bb8a1`. C: 733 GB. adb: S24+ RZCX60VE8ZY online, A16 RFGL34SJYDZ **offline** (USB). PHONE_RUN brak. Crony :17/:47/:07.
+- **main** `d6a1bb8a1`. C: 733 GB. adb: S24+ RZCX60VE8ZY online, A16 RFGL34SJYDZ online od 20:26 (bateria 80 %, gra zainstalowana). PHONE_RUN brak. Crony :17/:47/:07.
 - Na starcie działały jeszcze zadania w tle z s18 (regen r3 0172, import Dojlid 0179 + pytest, full.ps1 r2 0180) — nowi agenci mają na nie poczekać, nie dublować.
 - **Agenci s19 (wznowieni z live, 6):**
 | ADR | model | worktree / gałąź | live (w worktree) |
