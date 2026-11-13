@@ -1,0 +1,270 @@
+{
+ "region": "bialystok-dojlidy",
+ "bbox": [
+  779019.0,
+  589055.0,
+  781067.0,
+  591103.0
+ ],
+ "terrain": {
+  "max": 160.94,
+  "mean": 152.317,
+  "min": 137.7,
+  "missing_samples": 0,
+  "slope_deg_p50": 2.08,
+  "slope_deg_p99": 18.32,
+  "route_ground_min_max_m": [
+   148.9,
+   159.53
+  ]
+ },
+ "graph": {
+  "nodes": 355,
+  "edges": 421,
+  "length_km": 31.33,
+  "length_by_class_m": {
+   "living_street": 864,
+   "residential": 2289,
+   "service": 13915,
+   "tertiary": 5404,
+   "tertiary_link": 88,
+   "trunk": 4463,
+   "trunk_link": 28,
+   "unclassified": 4275
+  },
+  "boundary_nodes": 32,
+  "weak_components": 5,
+  "largest_component_nodes": 346,
+  "small_components": [
+   [
+    "Bw279881972:2134212210-2984420403:0s",
+    "Bw529725120:2984420403-5145414911:0e",
+    "n2984420403"
+   ],
+   [
+    "Bw107760411:1237906236-1237908750:0e",
+    "Bw107760411:1237906236-1237908750:0s"
+   ],
+   [
+    "Bw279876738:2984420402-2134212212:0e",
+    "Bw279876738:2984420402-2134212212:0s"
+   ],
+   [
+    "Bw424083504:4235564522-8219705132:0s",
+    "n8219705132"
+   ]
+  ],
+  "strong_largest_nodes": 325,
+  "degree_hist": {
+   "1": 99,
+   "2": 54,
+   "3": 174,
+   "4": 27,
+   "5": 1
+  },
+  "dangling_non_boundary_nodes": 67,
+  "zero_length_edges": [],
+  "sharp_vertices_gt100deg": [],
+  "sharp_count": 0,
+  "bridges": 0,
+  "bridge_without_layer": [],
+  "low_confidence_counts": {
+   "lanes": 282,
+   "maxspeed": 259,
+   "surface": 65,
+   "turn:lanes": 89
+  },
+  "major_coverage_by_length_osm": {
+   "lanes": 0.943,
+   "maxspeed": 0.78,
+   "surface": 0.923,
+   "turn:lanes": 0.168
+  },
+  "major_length_m": 9983,
+  "route_coverage_by_length_osm": {
+   "lanes": 0.994,
+   "maxspeed": 1.0,
+   "surface": 1.0,
+   "turn:lanes": 0.271
+  },
+  "route_length_m": 2131.9,
+  "route_edges": 17,
+  "width_from": {
+   "bdot10k": 294
+  },
+  "bdot10k_matched_edges": 335,
+  "bdot10k_width_per_osm_lane_major_m": {
+   "p10": 2.4,
+   "p50": 3.5,
+   "p90": 3.5,
+   "n": 105
+  },
+  "width_osm_vs_bdot10k_disagree_gt2m": []
+ },
+ "buildings": {
+  "count": 406,
+  "height_source": {
+   "gugik_lod1_2024": 329,
+   "bdot10k_storeys": 8,
+   "gugik_lod2_2017": 4,
+   "default": 64,
+   "osm_levels": 1
+  },
+  "footprint_source": {
+   "bdot10k": 351,
+   "osm": 55
+  },
+  "roof_only": 3,
+  "lod1_minus_lod2_m": {
+   "n": 240,
+   "p10": -2.33,
+   "p50": -0.63,
+   "p90": -0.21
+  },
+  "height_m": {
+   "p50": 6.6,
+   "max": 24.44
+  }
+ },
+ "alignment": {
+  "method": "see tools/worldgen/qa_report.py docstring",
+  "ortho": "gugik-orto-2024-rgb-0p25-bialystok-dojlidy",
+  "edges_tested": [
+   "w977514047:7556785244-610442415",
+   "w279881972:2134212210-2984420403",
+   "w364553871:11896581798-1237906238",
+   "w691820490:5169862894-6284342133",
+   "w538810157:6592100365-13907921999",
+   "w616184917:2130929720-2130929729",
+   "w275244659:2426846625-2226083913",
+   "w552379026:2448457893-1237906228"
+  ],
+  "results": [
+   {
+    "edge": "w977514047:7556785244-610442415",
+    "name": "Adama Mickiewicza",
+    "highway": "tertiary",
+    "samples": 85,
+    "offset_median_m": 2.5,
+    "offset_iqr_m": 9.12,
+    "pavement_width_median_m": 14.5,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.34,
+    "bdot10k_width_m": 6.0,
+    "mid": [
+     780450.9,
+     589545.8
+    ]
+   },
+   {
+    "edge": "w279881972:2134212210-2984420403",
+    "name": "Konstantego Ciołkowskiego",
+    "highway": "trunk",
+    "samples": 11,
+    "offset_median_m": 0.25,
+    "offset_iqr_m": 0.25,
+    "pavement_width_median_m": 7.2,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.81,
+    "bdot10k_width_m": 7.0,
+    "mid": [
+     779056.3,
+     591079.7
+    ]
+   },
+   {
+    "edge": "w364553871:11896581798-1237906238",
+    "name": "Wiewiórcza",
+    "highway": "tertiary",
+    "samples": 12,
+    "offset_median_m": -0.12,
+    "offset_iqr_m": 7.88,
+    "pavement_width_median_m": 9.5,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.02,
+    "bdot10k_width_m": 7.0,
+    "mid": [
+     780796.6,
+     590941.7
+    ]
+   },
+   {
+    "edge": "w538810157:6592100365-13907921999",
+    "name": "Dywizjonu 303",
+    "highway": "trunk",
+    "samples": 39,
+    "offset_median_m": 0.25,
+    "offset_iqr_m": 0.25,
+    "pavement_width_median_m": 5.8,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.01,
+    "bdot10k_width_m": 7.0,
+    "mid": [
+     779163.1,
+     590264.2
+    ]
+   },
+   {
+    "edge": "w616184917:2130929720-2130929729",
+    "name": "Adama Mickiewicza",
+    "highway": "tertiary",
+    "samples": 10,
+    "offset_median_m": 9.25,
+    "offset_iqr_m": 8.31,
+    "pavement_width_median_m": 19.8,
+    "osm_lanes": 3,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.16,
+    "bdot10k_width_m": 5.0,
+    "mid": [
+     779734.8,
+     590987.8
+    ]
+   },
+   {
+    "edge": "w275244659:2426846625-2226083913",
+    "name": "Jacka Kuronia",
+    "highway": "trunk",
+    "samples": 20,
+    "offset_median_m": 0.62,
+    "offset_iqr_m": 0.41,
+    "pavement_width_median_m": 6.0,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 1.03,
+    "bdot10k_width_m": 7.0,
+    "mid": [
+     781016.6,
+     590382.1
+    ]
+   },
+   {
+    "edge": "w552379026:2448457893-1237906228",
+    "name": "Wiewiórcza",
+    "highway": "tertiary",
+    "samples": 17,
+    "offset_median_m": 0.0,
+    "offset_iqr_m": 0.25,
+    "pavement_width_median_m": 6.0,
+    "osm_lanes": 2,
+    "lanes_src": "osm",
+    "bdot10k_dist_m": 0.43,
+    "bdot10k_width_m": 6.0,
+    "mid": [
+     780287.8,
+     590992.1
+    ]
+   }
+  ]
+ },
+ "png_bytes": {
+  "bialystok-dojlidy_hillshade_roads.png": 305804,
+  "bialystok-dojlidy_buildings_height_source.png": 200720,
+  "bialystok-dojlidy_roads_confidence.png": 178206,
+  "bialystok-dojlidy_ortho_alignment.png": 252436
+ }
+}

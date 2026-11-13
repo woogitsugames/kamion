@@ -66,7 +66,11 @@ _SPR = [("sprites", "apple_a", 400, 3.4, 2.6), ("sprites", "apple_b", 400, 3.0, 
         ("sprites", "shrub_b", 300, 1.5, 1.3), ("sprites", "flowers_a", 216, 0.9, 0.6), ("sprites", "flowers_b", 216, 0.9, 0.6),
         ("sprites", "flowers_c", 216, 0.9, 0.6),
         ("tall", "thuja_a", 200, 1.0, 2.1), ("tall", "thuja_b", 200, 1.0, 2.1), ("tall", "thuja_c", 180, 0.9, 2.1),
-        ("tall", "spruce_a", 380, 3.4, 3.76), ("tall", "spruce_b", 340, 3.04, 3.76), ("tall", "tree_a", 748, 10.5, 5.9)]
+        ("tall", "spruce_a", 380, 3.4, 3.76), ("tall", "spruce_b", 340, 3.04, 3.76),
+        # ADR 0163 (G7 #13 / #14, Ebben habit): whole crowns of the garden trees instead of the one umbrella `tree_a`
+        # (10.5 x 5.9 m, W / H 1.78 - no Podlasie garden tree looks like that). Width / height of the card = the
+        # habit: linden ovate dense 0.63, maple / chestnut / fruit round dense 0.71, birch narrow open 0.44.
+        ("tall", "crown_ovoid", 264, 4.0, 6.36), ("tall", "crown_round", 300, 5.0, 7.0), ("tall", "crown_birch", 184, 3.2, 7.3)]
 SPRITE = {}                 # name -> (u0, u1) (kept for callers that only need u)
 SPRITE_ROW = {}
 SPRITE_M = {}
@@ -80,6 +84,8 @@ for _r, _n, _w, _wm, _hm in _SPR:
     _SPR_X[_n] = (_x, _w)
     _xs[_r] = _x + _w
 assert max(_xs.values()) <= N
+# `tree_a` (plots.big_tree, the rule path of regions without an orthophoto canopy) now shows the round crown
+SPRITE["tree_a"], SPRITE_ROW["tree_a"], SPRITE_M["tree_a"], _SPR_X["tree_a"] =     SPRITE["crown_round"], "tall", SPRITE_M["crown_round"], _SPR_X["crown_round"]
 THUJA_GREEN_U = 0.86         # u < this: live foliage; above: a browned (dead) stretch of the thuja row
 SOURCE = {"conifer": "unset"}
 _RAW = Path(__file__).resolve().parents[3] / "art-source" / "world" / "cc0" / "_raw" / "fir_tree_01"
@@ -692,25 +698,106 @@ def _sprites(rng, h, w):
     return c
 
 
+# ADR 0163: silhouettes of whole crowns, bottom -> top (t 0..1) -> half width (0..1). Sources: G7 #14 (Ebben habit:
+# linden ovate and dense, maple / horse chestnut round-oval and dense, birch narrow-ovate and open) and the Bialystok
+# measurements G7-T01..T04 (crown starts low: no umbrella on a bare stem).
+def _crown_hw(kind, t):
+    t = min(max(float(t), 0.0), 1.0)
+    if kind == "ovoid":                                   # widest at 0.34 of the crown height, a rounded point on top
+        return 0.30 + 0.70 * (t / 0.34) ** 0.7 if t < 0.34 else max(1.0 - ((t - 0.34) / 0.66) ** 1.9, 0.0) ** 0.62
+    if kind == "round":                                   # widest at 0.46, a flatter underside, a broad dome
+        return 0.34 + 0.66 * (t / 0.46) ** 0.6 if t < 0.46 else max(1.0 - ((t - 0.46) / 0.54) ** 2.2, 0.0) ** 0.5
+    if t < 0.45:                                          # birch: slim foot, widest in the middle, a spire
+        return 0.22 + 0.78 * (t / 0.45) ** 0.8
+    return max(1.0 - ((t - 0.45) / 0.55) ** 1.6, 0.0) ** 0.75
+
+
+_CROWN = {  # leaf rgb, clusters, leaves per cluster, cluster radius (share of width), darkest shade, opaque interior
+    "ovoid": dict(leaf=(60, 92, 42), n=260, per=34, rr=(0.07, 0.115), shade=0.36, fill=0.66, stem=(58, 48, 40), lm=0.075, lobes=0.13),
+    "round": dict(leaf=(66, 98, 46), n=290, per=34, rr=(0.065, 0.105), shade=0.38, fill=0.66, stem=(60, 50, 42), lm=0.085, lobes=0.15),
+    "birch": dict(leaf=(98, 126, 58), n=210, per=26, rr=(0.075, 0.125), shade=0.58, fill=0.0, stem=(204, 200, 188), lm=0.06, lobes=0.20),
+}
+
+
+def _crown_card(rng, h, w, kind):
+    """One whole crown (ADR 0163), foot of the crown at the bottom edge: the stem and the limbs that carry it, a dark
+    interior for the dense habits (no sky through a linden) and leaf clusters filling the habit's silhouette. Every
+    cluster is a lobe of its own depth (nearer = lighter, lit from above and from one side), the outline belongs to
+    clusters that stand proud of it, and each side wanders by `lobes` (no ball on a stick). Birch: open tiers, the
+    white stem shows, twigs droop."""
+    P = _CROWN[kind]
+    c = _rgba(h, w)
+    cx = w / 2
+    hw = w / 2 - 5
+    top, bot = 0.035 * h, 0.985 * h                        # crown spans top..bot px (y down)
+    ph = rng.uniform(0, 6.2832, 4)
+
+    def half(y, side=1):
+        t = (bot - y) / (bot - top)
+        wob = 1.0 + P["lobes"] * (0.6 * math.sin(t * 9.0 + ph[0 if side > 0 else 1]) + 0.4 * math.sin(t * 21.0 + ph[2 if side > 0 else 3]))
+        return min(hw * _crown_hw(kind, t) * wob * (1.0 - 0.5 * P["lobes"]), hw)
+    im = Image.fromarray(np.zeros((h, w, 4), np.uint8), "RGBA")
+    d = ImageDraw.Draw(im)
+    if P["fill"] > 0:                                      # the crown's own shade behind the leaves
+        ys = np.linspace(top + 0.06 * h, bot - 0.05 * h, 60)
+        pts = [(cx - half(y, -1) * P["fill"], y) for y in ys] + [(cx + half(y, 1) * P["fill"], y) for y in ys[::-1]]
+        d.polygon(pts, fill=(22, 34, 20, 255))
+    lean = rng.normal(0, 0.012) * w
+    d.line([(cx, h), (cx + lean, h * (0.16 if kind == "birch" else 0.5))], fill=P["stem"] + (255,),
+           width=max(3, int(w * (0.024 if kind == "birch" else 0.036))))
+    for k in range(8 if kind != "birch" else 12):          # limbs: steep forks (linden / maple), thin drooping twigs (birch)
+        f0 = rng.uniform(0.0, 0.45 if kind != "birch" else 0.8)
+        y0 = h - f0 * h
+        sg = -1 if k % 2 else 1
+        a = sg * (rng.uniform(0.35, 0.85) if kind != "birch" else rng.uniform(0.75, 1.3))
+        L = half(y0 - 0.15 * h, sg) * rng.uniform(0.6, 0.95)
+        d.line([(cx, y0), (cx + math.sin(a) * L, y0 - math.cos(a) * L)],
+               fill=(tuple(int(v * 0.8) for v in P["stem"]) if kind != "birch" else (74, 62, 54)) + (255,), width=max(2, int(w * 0.014)))
+    c[...] = np.asarray(im, np.float32) / np.array([1, 1, 1, 255], np.float32)
+    stamps = _leaf_stamps(rng)
+    S = _Stamper(c, stamps)
+    leaf_px = max(P["lm"] * (w / SPRITE_M["crown_" + kind][0]) * 1.5, 5.0 * SS / 2 + 2.5)
+    blobs = []
+    for i in range(P["n"]):
+        t = rng.uniform(0.0, 1.0)
+        y = bot - t * (bot - top)
+        br = rng.uniform(*P["rr"]) * w
+        sg = 1 if rng.random() < 0.5 else -1
+        proud = rng.random() < 0.34                         # skin clusters: the outline is theirs
+        x = cx + sg * half(y, sg) * (rng.uniform(0.78, 1.0) if proud else rng.uniform(0.0, 0.86))
+        x = min(max(x, br * 0.7 + 3), w - br * 0.7 - 3)
+        if kind == "birch" and (math.sin(t * 13.0 + ph[0] + sg * 1.3) > 0.78 or rng.random() < 0.08):   # bays between the tiers
+            continue
+        depth = rng.random() if not proud else rng.uniform(0.0, 0.6)       # 0 = far side of the crown
+        blobs.append((depth, x, min(max(y, br * 0.6 + 3), h - 3), br, t))
+    blobs.sort()
+    for depth, bx, by, br, t in blobs:
+        side = (bx - cx) / hw                               # light from the upper left
+        k0 = P["shade"] + (1 - P["shade"]) * (0.42 * depth + 0.38 * t + 0.20 * (0.5 - 0.5 * side))
+        for j in range(P["per"]):
+            a, r = rng.uniform(0, 6.2832), br * math.sqrt(rng.random())
+            lx, ly = bx + math.cos(a) * r, by + math.sin(a) * r * (0.8 if kind != "birch" else 1.5)
+            if not (leaf_px * 0.6 < lx < w - leaf_px * 0.6 and leaf_px * 0.6 < ly < h - 2):
+                continue
+            k = k0 * rng.uniform(0.8, 1.18) * (0.78 + 0.3 * (1 - (ly - by) / max(br, 1)) * 0.5 + 0.22 * j / P["per"])
+            col = np.array(P["leaf"], np.float32) * k + np.array([10, 4, -8], np.float32) * rng.uniform(-1, 1)
+            ang = rng.uniform(0, 6.2832) if kind != "birch" else math.pi + rng.normal(0, 0.5)     # birch leaves hang
+            S.put(int(rng.integers(len(stamps))), lx, ly, leaf_px * rng.uniform(0.75, 1.25), ang, col)
+    return c
+
+
 def _tall(rng, h, w):
     c = _rgba(h, w)
     s = w / N
-    for name in ("thuja_a", "thuja_b", "thuja_c", "spruce_a", "spruce_b", "tree_a"):
+    for name in ("thuja_a", "thuja_b", "thuja_c", "spruce_a", "spruce_b", "crown_ovoid", "crown_round", "crown_birch"):
         x0, wpx = int(round(_SPR_X[name][0] * s)), int(round(_SPR_X[name][1] * s))
         sub = c[:, x0:x0 + wpx]
         if name.startswith("thuja"):
             sub[...] = _thuja_card(rng, h, wpx, "abc".index(name[-1]))
         elif name.startswith("spruce"):
             sub[...] = _spruce_card(rng, h, wpx)
-        else:                                             # a big garden tree (walnut / linden), crown only
-            cx = wpx / 2
-            frame = []
-            for k in range(9):
-                a = -math.pi / 2 + (k - 4) * 0.30 + rng.normal(0, 0.05)
-                L = h * rng.uniform(0.5, 0.8)
-                frame.append((cx, h, cx + math.cos(a) * L * 0.8, h + math.sin(a) * L, h * 0.022))
-            blobs = _crown_blobs(rng, 0, wpx, h, 120, top=0.0, bottom=0.94, rr=(0.05, 0.09))
-            _leafy(sub, rng, 0, wpx, h, (60, 92, 44), blobs, 0.11 * wpx / SPRITE_M[name][0] * 1.6, n_per=70, frame=frame, shade=0.42)
+        else:
+            sub[...] = _crown_card(rng, h, wpx, name[6:])
     return c
 
 

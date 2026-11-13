@@ -1,0 +1,137 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0152",
+   "look_at": [
+    -812.01,
+    174.58,
+    151.608
+   ],
+   "note": "driver eye 2.5 m, control route s = 152 m of 2132 m (Dywizjonu 303)",
+   "pos": [
+    -871.95,
+    171.429,
+    153.204
+   ],
+   "route_s_m": 152.276,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0457",
+   "look_at": [
+    -507.607,
+    183.847,
+    153.203
+   ],
+   "note": "driver eye 2.5 m, control route s = 457 m of 2132 m (Dywizjonu 303)",
+   "pos": [
+    -567.506,
+    179.893,
+    153.936
+   ],
+   "route_s_m": 456.829,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0761",
+   "look_at": [
+    -211.39,
+    249.41,
+    156.769
+   ],
+   "note": "driver eye 2.5 m, control route s = 761 m of 2132 m (Dywizjonu 303)",
+   "pos": [
+    -267.51,
+    227.991,
+    156.586
+   ],
+   "route_s_m": 761.382,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1066",
+   "look_at": [
+    64.426,
+    378.295,
+    159.422
+   ],
+   "note": "driver eye 2.5 m, control route s = 1066 m of 2132 m (Jacka Kuronia)",
+   "pos": [
+    12.191,
+    348.572,
+    161.542
+   ],
+   "route_s_m": 1065.934,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1370",
+   "look_at": [
+    353.254,
+    458.878,
+    154.922
+   ],
+   "note": "driver eye 2.5 m, control route s = 1370 m of 2132 m (Jacka Kuronia)",
+   "pos": [
+    293.481,
+    456.986,
+    156.817
+   ],
+   "route_s_m": 1370.487,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1675",
+   "look_at": [
+    653.732,
+    419.492,
+    152.152
+   ],
+   "note": "driver eye 2.5 m, control route s = 1675 m of 2132 m (Jacka Kuronia)",
+   "pos": [
+    596.121,
+    435.706,
+    153.016
+   ],
+   "route_s_m": 1675.04,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1980",
+   "look_at": [
+    934.054,
+    300.62,
+    150.615
+   ],
+   "note": "driver eye 2.5 m, control route s = 1980 m of 2132 m (Jacka Kuronia)",
+   "pos": [
+    877.81,
+    321.522,
+    152.228
+   ],
+   "route_s_m": 1979.592,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 309.112,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "bialystok-dojlidy",
+ "schema": "truck-sim-pl/control-cameras/1"
+}
