@@ -74,7 +74,7 @@ Wynik końcowy (65 wierszy): 25 × VERIFIED (dokumenty), 16 × VERIFIED_WIZJA,
   wysokość ~1,3–1,5 m — nie z chodnika).
 - JPG w archiwum ≤ 1600 px (wariant `lth` z CDN KartaView).
 - Zdjęcia **nie trafiają do gita** (`files/` w `.gitignore`); archiwum
-  `mistral-p9-furniture-3-files.zip` (kadry + skany dokumentów ≤ 5 MB) — karta pobrania
+  `mistral-p9-furniture-3-files-v2.zip` (kadry + skany dokumentów) — karta pobrania
   (artefakt) podlinkowana w PR i w `sources.md` (SHA-256).
 
 ### Pokrycie typów (zdjęcia) — stan po pass B (M50-FIX), 2026-11-13
@@ -211,9 +211,9 @@ wierszy wizyjnych przywołany cytat „co widać” z uwag, dla dokumentowych �
 
 ## Pliki i archiwum
 - `files/` (ignorowane przez git w tym katalogu): kadry JPG (wariant lth ≤ 1600 px) +
-  `files/docs/` (skany urzędowe ≤ 5 MB: OPZ ZMK 331 KB, STO ZDM v09 1,1 MB, STO v07,
-  warunki ZDM 2025, zawiadomienie Glasdon 240 KB, ogłoszenie/zał. 1 wzoru, DOCX STO v03,
-  PNG rys. 7.2.1).
+  `files/docs/` (dokumenty źródłowe odczytów: OPZ ZMK 331 KB, STO ZDM v09 1,1 MB,
+  STO v03 DOCX, warunki oświetleniowe ZDM 2025 2 MB, zawiadomienie Glasdon 240 KB,
+  ogłoszenie 1,6 MB, zał. 1 wzoru ławki/kosza 1,5 MB).
 - `mistral-p9-furniture-3-files-v2.zip` — **v2 (po M50-FIX)**: WSZYSTKIE kadry
   z manifestu (65 wierszy, łącznie z brakującym w v1 kadrem 1326673717 i nowymi M50-050…065;
   Panoramax przez wsrv.nl ≤ 1600 px) + `files/docs/`; artefakt do pobrania
