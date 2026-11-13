@@ -15,8 +15,14 @@ glazed front, flag masts, an advertising totem and a lattice mast with an oval b
       glass_lod1: hall_flashing              # optional pane material of LOD1 only (ADR 0167: a chunk whose LOD1 has
                                              # no glass draws the panes with the frame material instead of one more
                                              # primitive on the Low tier); mullions of such a run are not drawn
+      frame: {material: window_frame, material_lod1: plaster_grey, width_m: 0.12}
+                                             # optional light window frame (ADR 0171): a ring around every glazed run
+                                             # and its mullions, flush with the wall on both LODs (LOD1: front faces
+                                             # only, in material_lod1 - a material the LOD1 of the chunk draws already)
       glazing:                               # glazed runs (shopfronts, ribbon bands); z above the floor level
         - {facing: NE, span: [0, 1], z: [0.3, 3.6], pitch_m: 2.4, min_len_m: 6, margin_m: 0.6, transom_m: 2.4}
+        - {facing: NW, z: [4.9, 6.3], window_m: [1.5, 1.5]}    # window_m [width, gap] (ADR 0171): the run is split
+                                             # into separate punched windows of that width, centred on the run
       accents:                               # wall fields in another colour
         - {facing: NE, span: [0, 0.3], material: <material>, z: [0, 99]}
       props:                                 # advertising structures in front of a wall (no lettering, no brands)
@@ -71,7 +77,11 @@ def plan(spec, materials=None):
     s = {"wall": spec.get("wall", "plaster_light"), "walls": dict(spec.get("walls") or {}),
          "glass": spec.get("glass", GLASS), "glass_lod1": spec.get("glass_lod1"),
          "plinth_m": float(spec.get("plinth_m", 0.3)), "fascia": None, "glazing": [], "accents": [], "props": [],
-         "sign": dict(spec["sign"]) if spec.get("sign") else None}
+         "sign": dict(spec["sign"]) if spec.get("sign") else None, "frame": None}
+    fr = spec.get("frame")
+    if fr:
+        s["frame"] = {"material": fr.get("material", RIM), "width_m": float(fr.get("width_m", 0.12))}
+        s["frame"]["material_lod1"] = fr.get("material_lod1", s["frame"]["material"])
     f = spec.get("fascia")
     if f:
         s["fascia"] = {"material": f.get("material", FRAME), "height_m": float(f.get("height_m", 1.0)),
@@ -81,7 +91,8 @@ def plan(spec, materials=None):
         sp = g.get("span", [0.0, 1.0])
         s["glazing"].append({"facing": g["facing"], "span": (float(sp[0]), float(sp[1])), "z": (float(z[0]), float(z[1])),
                              "pitch_m": float(g.get("pitch_m", 2.4)), "min_len_m": float(g.get("min_len_m", 6.0)),
-                             "margin_m": float(g.get("margin_m", 0.6)), "transom_m": g.get("transom_m")})
+                             "margin_m": float(g.get("margin_m", 0.6)), "transom_m": g.get("transom_m"),
+                             "window_m": tuple(float(x) for x in g["window_m"]) if g.get("window_m") else None})
     for a in spec.get("accents") or []:
         z = a.get("z", [0.0, 99.0])
         sp = a.get("span", [0.0, 1.0])
@@ -99,6 +110,8 @@ def plan(spec, materials=None):
              *[p[k] for p in s["props"] for k in ("material", "rim_material", "bar_material") if p.get(k)]]
     if s["fascia"]:
         names.append(s["fascia"]["material"])
+    if s["frame"]:
+        names += [s["frame"]["material"], s["frame"]["material_lod1"]]
     for k in [*s["walls"], *[g["facing"] for g in s["glazing"]], *[a["facing"] for a in s["accents"]],
               *[p["facing"] for p in s["props"]], *([s["sign"]["facing"]] if s["sign"] else []),
               *([s["fascia"]["facings"]] if s["fascia"] and s["fascia"]["facings"] != "all" else [])]:
@@ -141,7 +154,14 @@ def openings(spec, nout, L, zref, zt):
         z0, z1 = zref + g["z"][0], min(zref + g["z"][1], ztop)
         if u1 - u0 < 1.0 or z1 - z0 < 0.5 or any(o[0] < u1 and o[1] > u0 and o[2] < z1 and o[3] > z0 for o in ops):
             continue
-        ops.append((u0, u1, z0, z1, GLASS_DEPTH, "shopfront", spec["glass"], g))
+        runs = [(u0, u1)]
+        if g.get("window_m"):                  # punched windows: n x width with gaps, centred on the run
+            w, gap = g["window_m"]
+            n = int((u1 - u0 + gap) // (w + gap))
+            s0 = 0.5 * (u0 + u1) - 0.5 * (n * w + (n - 1) * gap)
+            runs = [(s0 + i * (w + gap), s0 + i * (w + gap) + w) for i in range(n)]
+        for ua, ub in runs:
+            ops.append((ua, ub, z0, z1, GLASS_DEPTH, "shopfront", spec["glass"], g))
     return ops
 
 
@@ -175,19 +195,31 @@ def wall(acc, wwo, spec, a, c_, nout, L, zbot, zref, zt, u_acc, ground=None):
         gl1 = spec.get("glass_lod1") if low else None
         FK.wall_pieces(wwo, acc, a, d, nout, L, zbot, zt, [(*o[:6], gl1 or o[6]) for o in ops], u_acc, zref, zs, us,
                        mat_fn, layer=layer, reveal=FRAME, ground=ground)
+        fr = spec.get("frame")
+        fmat = (fr["material_lod1"] if low else fr["material"]) if fr else FRAME
         for (u0, u1, z0, z1, depth, _, _, g) in ops:
-            if gl1 == FRAME:                   # panes in the frame material: mullions would not show
+            if fr:                             # light frame ring flush with the wall plane (ADR 0171)
+                w = fr["width_m"]
+                sk = (0, 1, 2, 4, 5) if low else (2,)
+                for uc, hu, zc, hz in ((u0 + w / 2, w / 2, 0.5 * (z0 + z1), (z1 - z0) / 2),
+                                       (u1 - w / 2, w / 2, 0.5 * (z0 + z1), (z1 - z0) / 2),
+                                       (0.5 * (u0 + u1), (u1 - u0) / 2 - w, z0 + w / 2, w / 2),
+                                       (0.5 * (u0 + u1), (u1 - u0) / 2 - w, z1 - w / 2, w / 2)):
+                    acc.box(layer, fmat, np.append(a + d * uc - nout * (depth / 2), zc), d3 * hu, n3 * (depth / 2),
+                            [0, 0, hz], skip=sk)
+            elif gl1 == FRAME:                 # panes in the frame material: mullions would not show
                 continue
             n = max(1, int(round((u1 - u0) / g["pitch_m"])))
             # mullion: a post from the glass plane to the wall plane (LOD1: its front face only)
             for i in range(1, n):
                 c = np.append(a + d * (u0 + (u1 - u0) * i / n) - nout * (depth / 2), 0.5 * (z0 + z1))
-                acc.box(layer, FRAME, c, d3 * 0.035, n3 * (depth / 2), [0, 0, (z1 - z0) / 2],
+                mw, mz = (fr["width_m"] / 2, (z1 - z0) / 2 - fr["width_m"]) if fr else (0.035, (z1 - z0) / 2)
+                acc.box(layer, fmat, c, d3 * mw, n3 * (depth / 2), [0, 0, mz],
                         skip=(0, 1, 2, 4, 5) if low else (0, 1, 2))
             zt_ = g.get("transom_m")
             if zt_ is not None and z0 + 0.4 < zref + zt_ < z1 - 0.4:      # transom over the door height
                 c = np.append(a + d * (0.5 * (u0 + u1)) - nout * (depth / 2), zref + zt_)
-                acc.box(layer, FRAME, c, d3 * ((u1 - u0) / 2), n3 * (depth / 2), [0, 0, 0.04],
+                acc.box(layer, fmat, c, d3 * ((u1 - u0) / 2), n3 * (depth / 2), [0, 0, 0.04],
                         skip=(0, 1, 2, 4, 5) if low else (2, 4, 5))
         if f and f["overhang_m"] > 0.0:        # roof slab over the wall: soffit + edge, mitred by overlap at the corners
             o = f["overhang_m"]

@@ -1,0 +1,77 @@
+{
+  "seed": 20261113,
+  "populacja": "wszystkie 28 pozycji manifestu (M54-001..M54-028)",
+  "wielkosc_proby": 6,
+  "procent": 21.4,
+  "metoda": "random.Random(seed=20261113).sample(ids, n); dla wylosowanych: (1) dostępność url_źródła (HTTP), (2) ponowne pobranie way z OSM API 0.6 i porównanie tagów z wartościami manifestu, (3) kontrola współrzędnych manifestu vs bbox geometrii OSM, (4) dla obserwacji foto - obecność plików i zgodność metadanych Panoramax (id, daty)",
+  "data_audytu": "2026-11-13",
+  "wyniki": [
+    {
+      "id": "M54-001",
+      "ulica_lub_obiekt": "Rondo Putry - wiadukty ul. gen. S. Maczka (DK65) nad rondem",
+      "co_sprawdzono": [
+        "link: HTTP 200 (https://www.openstreetmap.org/way/23844386)",
+        "OSM API: way 23844386 tag maxheight absent=True (manifest deklaruje brak/lokalne doprecyzowanie)",
+        "współrzędne: manifest 53.159021,23.150876; bbox way 53.158931,23.150323-53.159396,23.151798 -> W bbox",
+        "licencja: ODbL 1.0 (zgodna z deklaracją źródła)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "M54-005",
+      "ulica_lub_obiekt": "Rondo Żołnierzy Wyklętych - wiadukty DK65 (gen. N. Sulika, gen. S. Sosabowskiego) nad rondem",
+      "co_sprawdzono": [
+        "link: HTTP 200 (https://www.openstreetmap.org/way/262041391)",
+        "OSM API: way 262041391 tag maxheight absent=True (manifest deklaruje brak/lokalne doprecyzowanie)",
+        "współrzędne: manifest 53.140467,23.200722; bbox way 53.140048,23.200727-53.140386,23.201814 -> W bbox",
+        "licencja: ODbL 1.0 (zgodna z deklaracją źródła)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "M54-006",
+      "ulica_lub_obiekt": "S8 nad al. Niepodległości (Choroszcz) - mosty nad węzłem",
+      "co_sprawdzono": [
+        "link: HTTP 200 (https://www.openstreetmap.org/way/183639791)",
+        "OSM API: way 183639791 tag maxheight absent=True (manifest deklaruje brak/lokalne doprecyzowanie)",
+        "współrzędne: manifest 53.159539,22.996835; bbox way 53.159484,22.996118-53.159597,22.996759 -> W bbox",
+        "licencja: ODbL 1.0 (zgodna z deklaracją źródła)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "M54-012",
+      "ulica_lub_obiekt": "Warszawska - podstawa prawna maxweight=12 t przy hgv=no",
+      "co_sprawdzono": [
+        "link: HTTP 200 (https://www.openstreetmap.org/way/842154286)",
+        "OSM API: way 842154286 maxweight='12 t', hgv='no', goods='delivery' -> ZGODNE",
+        "współrzędne: manifest 53.126859,23.183117; bbox way 53.126730,23.182814-53.126988,23.183421 -> W bbox",
+        "licencja: ODbL 1.0 (zgodna z deklaracją źródła)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "M54-021",
+      "ulica_lub_obiekt": "S19 Krynice-Białystok Zachód - status opłat (toll:hgv)",
+      "co_sprawdzono": [
+        "link: HTTP 200 (https://etoll.mf.gov.pl/media/pmlhwkrm/pe%C5%82na-lista-odcink%C3%B3w-dr%C3%B3g-p%C5%82atn...)",
+        "OSM API: way 241580472 tag toll:hgv absent=True (manifest deklaruje brak/lokalne doprecyzowanie)",
+        "współrzędne: manifest 53.1796,23.03; bbox way 53.180392,23.033102-53.181131,23.033275 -> blisko (<550 m)",
+        "licencja: dokument urzędowy (poza ochroną prawa autorskiego - art. 4 u (zgodna z deklaracją źródła)"
+      ],
+      "wynik": "PASS"
+    },
+    {
+      "id": "M54-027",
+      "ulica_lub_obiekt": "e-TOLL - brak zmian sieci po 1.02.2026 (lista artykułów MF)",
+      "co_sprawdzono": [
+        "link: HTTP 200 (https://etoll.mf.gov.pl/artykuly/zmiany-w-systemie-e-toll-od-1-lutego-2026-r)",
+        "treść: 82 artykułów z datami na etoll.mf.gov.pl/artykuly; artykuł 'zmiany-w-systemie-e-toll-od-1-lutego-2026-r': 19-01-2026, tytuł: Zmiany w systemie e-TOLL od 1 lutego 2026 r.",
+        "treść: artykułów nowszych niż 19.01.2026: 16; z nich o odcinkach/sieci dróg płatnych: 0",
+        "treść: najnowszy artykuł na liście: (2026, 11, 10) (10.11.2026 = zwroty środków - nie dot. sieci)"
+      ],
+      "wynik": "PASS"
+    }
+  ],
+  "bledy": []
+}

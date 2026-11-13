@@ -117,3 +117,32 @@ ZADANIE:
 (6) Samokontrola: losuj 20 % z seedem; dla wierszy z rysunków wklej odczyt etykiety, dla kadrów — „co widać”.
 W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i listą zmian 1–6. NIE scalaj. Na końcu „M52-FIX gotowe” i koniec.
 ```
+
+## M51-FIX — PR #49 (zieleń osiedla): korony odbite N–S, kadry przypisane do złych ulic
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #49 (gałąź research/mistral-p10-greenery-3) — commity do TEJ gałęzi, nie nowy PR. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p10-greenery-3/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p10.md w origin/main — przeczytaj): część BIP rzetelna; korony i zdjęcia NIE.
+ZADANIE:
+(1) KORONY: crowns.geojson jest odbity lustrzanie północ–południe w każdym kaflu 1024 m (wiersz 0 obrazu to PÓŁNOC kafla: N = n0 + 1024 − wiersz·0,25). Napraw detect_crowns.py, wygeneruj ponownie i sprawdź: nałóż korony na ortofoto w 3 oknach 300×300 m (PNG do ZIP) i podaj % środków na zieleni (ExG > 0,06) — musi być > 80 %. Usuń górny limit r ≤ 6,5 m albo dodaj osobną warstwę „zwarta zieleń” (poligony masek > 6,5 m: las, skarpy, rzędy drzew) — dziś zadrzewiona skarpa przy Al. Tysiąclecia ginie. Odfiltruj nie-roślinność (zielone dachy/autobusy: kształt, wysokość jasności). Podaj datę ortofoto z metadanych WMS/GetFeatureInfo, nie z pamięci. Przelicz comparison_p10.json po poprawce.
+(2) ZDJĘCIA: reguła przypisania — kadr należy do ulicy X tylko gdy geotag ≤ 25 m od osi X ORAZ (gdy jest azymut) kamera patrzy wzdłuż X (|Δ| ≤ 30°). Azymutu NIE wolno wyznaczać „w stronę osi ulicy” (to zakłada tezę) — Commons bez GPSImgDirection = kierunek UNVERIFIED albo ustalony z treści (np. widoczny drogowskaz/budynek, opisz jak). Przelicz 18 kadrów: dziś są z Al. Tysiąclecia/Motoszko/Sokólskiej (np. M51-118 — wiata „Sokólska / Al. Tysiąclecia”, M51-117 > 400 m od Łańcuckiej). Przypisz je do prawdziwych ulic (mogą zostać jako referencja zieleni alei), a dla Skidelskiej/Wileńskiej/Łańcuckiej podaj uczciwie liczbę kadrów z wnętrza ulicy (dziś 0).
+(3) ŻYWOPŁOTY: OBEJRZYJ każdy kadr (po jednym na wywołanie; przy limicie rozłóż na tury i commituj po każdej). Dla każdego odcinka: jedno zdanie „co widać”, strona kadru, gatunek/typ, wysokość ESTIMATED z odniesieniem. Usuń odcinki, których nie widać (przegląd: M51-201, 207, 211, 213, 214, 217 — brak żywopłotu lub to ekran/barierka). M51-117 i M51-216 to ten sam plik z różnymi ulicami — ujednolić. Próg ≥ 20 odcinków tylko z obejrzanych kadrów.
+(4) KartaView: licencja w repo = CC BY-SA 4.0 (referencja, nie tekstura) — ujednolić.
+(5) Samokontrola: nowe losowanie 20 % z seedem; dla kadrów — „co widać” + ulica z OSM + odległość do osi; dla koron — % trafień w zieleń w 3 oknach.
+Nowy ZIP: mistral-p10-greenery-3-files-v2.zip (wszystkie JPG + PNG nakładek). W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i licznikami. NIE scalaj. Na końcu „M51-FIX gotowe” i koniec.
+```
+
+## M53-FIX — PR #50 (zabudowa): zły fotografowany budynek, kondygnacje i kolory nie ze zdjęć
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #50 (gałąź research/mistral-p3-buildings-2) — commity do TEJ gałęzi, nie nowy PR. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p3-buildings-2/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p3.md w origin/main — przeczytaj): MPZP (zad. 4) i systemy (zad. 2) przyjęte; manifest NIE — w próbie 10 wierszy 4 błędne, a Twój audyt 9/9 PASS był bez wizji.
+ZADANIE:
+(1) DOPASOWANIE: azymut z toru sekwencji Commons (GPS zaokrąglony do 1″) jest zawodny — nie wolno na nim opierać statusu. Dla KAŻDEGO wiersza OBEJRZYJ zdjęcie (po jednym na wywołanie; commit co ~5 wierszy) i zapisz w nowej kolumnie `co_widac` jedno zdanie: co jest w kadrze, numer/napis jeśli widać, liczba kondygnacji POLICZONA na zdjęciu, pozycja celu w kadrze (lewo/środek/prawo). Kierunek ustal z treści (napisy adresowe, charakterystyczne budynki, przecięcia ulic) i porównaj z obrysami LoD1/OSM. Przegląd obalił: M53-006 (JRG-2 nie w kadrze — park i bloki), M53-008/011/012 (kadr patrzy ~335°: widać „Zagumienna 40” i „…stoczek 29”, nie Sokólską 9 ani Białostoczek 27/34), M53-019/024 (na zdjęciu 12-kondygnacyjny punktowiec z muralem — jeden z Białostoczek 11/13A/15/17/19A, 34,6–36,2 m; nie 14 ani 18). Popraw je na budynki faktycznie widoczne albo ODRZUCONY.
+(2) KONDYGNACJE: kolumna kondygnacje_ze_zdjęcia = liczba policzona na zdjęciu; mh/2,9 i OSM tylko w osobnej kolumnie porównawczej. Audyt C ma porównywać zliczenie ze zdjęcia z LoD1.
+(3) KOLOR: usuń kolor_srgb z k-means albo licz go z ręcznie wskazanego prostokąta ŚCIANY (współrzędne px w kolumnie), bez cieni, drzew i nieba; w próbie 4/5 wartości były błędne (np. M53-013 [52,44,41] dla białego bloku, M53-029 różowawy dla białego, M53-035 „oliwkowy” dla żółtozielonego).
+(4) TYP: M53-037…043 to domy jednorodzinne/szeregowe (zdjęcie 037, M53-041 dom z poddaszem), nie „blok TBS 1999+” — popraw typ i system_wp (NIE DOTYCZY / UNVERIFIED); usuń sprzeczność z README (Wysoki Stoczek: wielka płyta u schyłku PRL). M53-027 — oceń ponownie (dom 2-kond. pasuje do Białostoczek 4, 8,31 m).
+(5) Uzupełnij do ≥ 30 przyjętych po poprawkach (nowe zdjęcia, każde obejrzane).
+(6) Samokontrola: nowe losowanie 20 % z seedem; dla każdego wiersza wklej `co_widac` + odległość i kąt kamera→obrys; kryterium wizji obowiązkowe (bez „NIE DOTYCZY”).
+Nowy ZIP: mistral-p3-buildings-2-files-v2.zip. W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i licznikami OK/ODRZUCONY. NIE scalaj. Na końcu „M53-FIX gotowe” i koniec.
+```

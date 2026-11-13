@@ -166,7 +166,18 @@ namespace Game.Editor.Audio
             lib.indicatorTock = Pair("indicator_tock", "indicator_tock_cab");
             lib.birdSparrow = Sfx("bird_sparrow");
             lib.birdTit = Sfx("bird_tit");
-            int el = ImportElevenLabs(lib);
+            // ADR 0176 (tools/audio/synth0176.py)
+            lib.retarderTone = Pair("retarder_tone_loop", "retarder_tone_cab_loop");
+            lib.retarderFlow = Pair("retarder_flow_loop", "retarder_flow_cab_loop");
+            lib.ebrakeEngage = Pair("ebrake_engage", "ebrake_engage_cab");
+            lib.ebrakeRelease = Pair("ebrake_release", "ebrake_release_cab");
+            lib.amtDisengage = Pair("amt_disengage", "amt_disengage_cab");
+            lib.amtEngage = Pair("amt_engage", "amt_engage_cab");
+            lib.amtEngageB = Pair("amt_engage_b", "amt_engage_b_cab");
+            lib.amtClutchChuff = Pair("amt_clutch_chuff", "amt_clutch_chuff_cab");
+            lib.airDryerPurgeV2 = Pair("air_dryer_purge_v2", "air_dryer_purge_v2_cab");
+            lib.airDryerPurgeV2B = Pair("air_dryer_purge_v2b", "air_dryer_purge_v2b_cab");
+            int el =ImportElevenLabs(lib);
             lib.sourceInfo = $"{man.clips.Length} engine loops + {man.sfx.Length} sfx, {man.generator}; ElevenLabs {el} clips";
             EditorUtility.SetDirty(lib);
             AssetDatabase.SaveAssets();
