@@ -73,3 +73,5 @@ Zapisano after/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wy
 Zapisano after/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano after/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Fidelity odświeżone dla końcowego generatora r2; pełny GIS może sprawdzić świeży raport.
