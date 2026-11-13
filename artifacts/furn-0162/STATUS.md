@@ -9,3 +9,6 @@
 - 09:10 build_world OK (8.9 min): wiaty 13x7 m / 7x5 m / 3 czarne (0x9 m w tej próbce), lamp_11m 164, 6 konstrukcji tablic (p40 przeniesiony na ortofoto: -475.2,-8.8), 0 stale. Testy jednostkowe 15/15 + 109 powiązanych.
 - W tle: fidelity (heavy), unity_run.ps1 (czeka na PHONE_RUN lidera: baseline Low -> import -> after Low/High + sondy + sbs).
 - NASTĘPNY KROK: `pwsh -File artifacts/furn-0162/tools/unity_run.ps1` (jeśli przerwane: -SkipBaseline), potem pary sbs i budżet.
+- 09:45 1801374: latarnie są w danych (ortofoto: stopy E -539, N 114.7..297.9 co 32-40 m, dwuramienne na zdjęciu); reguła stawiała je 1.5 m dalej, na linii ekranu (zasłonięte). Dodany authored rząd `tysiaclecia-nb-east-double-lamps` (lamp_rows.json, lamp_double_10m), zastępuje 5 lamp reguły w197904074.
+- W tle (bix6xpsch): build_world 3 + fidelity -> unity_run.ps1 (czeka na PHONE_RUN lidera; baseline Low -> import -> after).
+- NASTĘPNY KROK: po renderach `python artifacts/furn-0162/tools/budget.py` i pary sbs.
