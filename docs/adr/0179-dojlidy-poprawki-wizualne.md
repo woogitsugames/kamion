@@ -49,10 +49,21 @@ doków wychodziły na jezdnię Kuronii, kamera P11-094 patrzyła w ścianę zami
   30 153 m², 23 latarnie Y postawione (8 punktów pominiętych „carriageway”, 47 latarni reguły usuniętych), ślady opon
   168 → 68 (56 przebiegów uciętych), 1349 drzew usuniętych z łąki, auta 1091 → 1027, `tree_groups` 67 roślin / 7 kęp.
 - Import: 64 chunki, Low 97,7 MB / High 213 MB (pomiar importu #3; edytor, nie telefon).
-@@RESULTS@@
+- Iteracje s19: render #1 (build #3) → oględziny 5 par → build #4 + import + render #2 → oględziny. Kadry foto:
+  33–55 obiektów, 158–463 tys. trójkątów (szacunek edytora przed batchingiem, `Low-overcast-photo/stats.txt`).
 
 ## Wizualnie (Low, overcast, 1920×1080; pary zdjęcie | render w `artifacts/dojlidy-vis-0179/sbs/`)
-@@VISUAL@@
+Obejrzane (agent, Read na JPG) po renderze #1 i #2; ocena `visual-critic` należy do lidera.
+| Para | Zgodne | Rozbieżne |
+|---|---|---|
+| `sbs-P11-001.jpg` Kuronia 3 | wysoki jasnoszary blok po lewej z dwiema ścianami (czołowa + długa wzdłuż ulicy z oknami pasmowymi), budynek biurowy w tle, biała hala z ciemnym pasem po prawej, latarnie Y w pasie rozdziału, horyzont | brama przesuwna, znak „20”, DDR z asfaltu, dok z naczepą; zielone ogrodzenie panelowe wyższe niż na zdjęciu |
+| `sbs-P11-063.jpg` Mickiewicza/Kuronia | hala Kuronia 2 z grafitowym pasem po prawej, pas krzewów zamiast pełnego parkingu, sygnalizacja, dużo nieba | krzewy z przerwami (auta prześwitują), kępa drzew na narożniku to młode drzewka (na zdjęciu ~10 m), brak słupków z łańcuchem, biały budynek sądu przy lewej krawędzi kadru (na zdjęciu poza kadrem) |
+| `sbs-P11-056.jpg` Dywizjonu 303 | otwarta łąka bez drzew, wlot drogi bocznej z przejściem, latarnie, znak D-6 | brak wysokiej trawy i linii lasu na horyzoncie; pojedyncze samosiejki w tle |
+| `sbs-P11-094.jpg` Rosti | narożnik hali po lewej (x ≈ 220/960 wobec 205/960), jasnoszara okładzina w jednym kolorze, ściana do prawej krawędzi, przejście, latarnia | hala ~12 % wyższa w kadrze (LoD1 18,92 m dla całego obrysu), brak bram i tablicy (świadomie), znak D-6 bliżej kamery |
+| `sbs-P11-129.jpg` brama szpitala | szlaban | mur, słupy, znaki, zabudowa — nie robione (P2) |
+
+Kamery trasy (`view/route-after.jpg`): blok Kuronia 3 i szara hala Rosti widoczne z jezdni, łąka lotniska otwarta,
+brak placu betonowego, brak śladów opon na jezdni Kuronii.
 
 ## Testy
 @@TESTS@@
