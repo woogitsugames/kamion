@@ -52,6 +52,9 @@ Tests that used the old Andersa NW point (`NavRoutingTests`, `RoundaboutExitTest
 - Unity EditMode (worktree, 6000.3.28f1): **507/510 passed**, 1 skipped, 2 failed = the known main failures
   `CarPaintMaterialTests.DepositionChannel_*` (not touched here); `Nav0168Tests` 10/10, `NavRoutingTests` 15/15
   (`artifacts/nav-0168/editmode-20261113-120925.xml`).
+- Unity PlayMode, filtered `NavReachabilityServiceTests;NavHudTests`: **9/9** incl. the new
+  `Synthetic_SetPin_NoReturnTap_SnapsOutOfTheZone` (`artifacts/nav-0168/playmode-20261113-121332.xml`). The full
+  PlayMode suite was not run.
 - Mutation test (nav-runner, `artifacts/nav-0168/mutation.txt`): 6/6 mutants killed - planner entering the zone,
   snap ignoring the zone, zone without the boundary rule, voice tier repeat, ETA every frame, default policy
   ThisTruck.
