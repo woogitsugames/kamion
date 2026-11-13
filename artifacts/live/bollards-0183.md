@@ -22,3 +22,7 @@
 ## NASTĘPNY KROK (komenda)
 `Get-Content C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bollards-0183\artifacts\logs\pipeline-r2.status` (gdy przerwane: `pwsh artifacts/bollards-0183/tools/pipeline_r2.ps1 -From <build|render|editmode|ab|restore>`)
 - 22:47 build r2 OK (8 min): 8 słupków / 7 przęseł, max_step 0,025 m, PNG w derived = atlas r2 (sprawdzone bajtowo). Kamery przeliczone z instancji (`make_cameras.py`). Trwa import + Low + High r2; pytest tests/gis w tle (`artifacts/logs/pytest-gis-r2.log`).
+- 23:05 r2 Low+High wyrenderowane (`renders/r2-*`, `compare/`): rząd na bruku, czerwień ogniw czerwono-brązowa zamiast różowej (naprawione). NOWA WADA: łańcuchy znikają od ~10 m (P11-063: liny 2–3 px przy 13 m). r3 w kodzie (b6be80fe8): łańcuch klasy tworzywowej 8 mm / 30 mm, taśma LOD1 22 mm (pomiar ze zdjęcia). EditMode 511/535, 6 FAIL = brak zbudowanej ciężarówki (TruckDoorCrown, MirrorPresentation; fixture), nie dotyczy 0183.
+- W tle: pipeline krok A/B (build bez rzędu -> import -> Low/High ab-off) potem restore (build z kodem r3 + import). pytest tests/gis w tle.
+## NASTĘPNY KROK (komenda)
+po `restore done` w `artifacts/logs/pipeline-r2.status`: `uv run --project tools/worldgen python artifacts/bollards-0183/tools/make_cameras.py bialystok-dojlidy; pwsh artifacts/bollards-0183/tools/run_unity.ps1 -Steps low,high -Tag r3`
