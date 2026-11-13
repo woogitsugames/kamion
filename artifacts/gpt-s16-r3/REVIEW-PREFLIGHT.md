@@ -30,3 +30,30 @@ Overcast jest kontrolą ogólnego materiału/ambientu, lecz słabszy kontrast s�
 
 Czekam na natywne baseline i pasujące ablacje. Przed obrazami nie wydaję PASS wizualnego ani werdyktu o przyczynie. Każda późniejsza akceptacja powinna rozdzielić naprawę plam w tych kadrach od zgodności fotograficznej pozy B, od innych kamer/G3 oraz od urządzenia i przejazdu w ruchu.
 
+
+## Uzupełnienie — odczyt baseline i aktualizacji probe
+
+Obejrzano cztery obrazy `inspection/baseline`: `putry-island-1`, `putry-island-2` oraz SBS `2818555625124739` i `3970163613102941`.
+
+W obu detalach widać pojedynczy, niemal równomierny szereg jasnych krótkich czworokątów na środku zacienionego żwiru. Miejscami występują dodatkowe mniejsze plamy obok szeregu. Krawędzie są miękkie, a wzór wiąże się kierunkowo z powtarzalną konstrukcją wiaduktu. Regularność występuje również w obu SBS; nie przypomina losowej wariacji mineralnego albedo. To opis wzoru, nie rozstrzygnięcie między geometrią, rastryzacją realtime i bake.
+
+Oddzielny szeroki jasny pas przy krawężniku ma charakter granicy dużego cienia. Nie należy go automatycznie usuwać wraz ze środkowym szeregiem plam: jasny bliski skraj żwiru występuje również na fotografiach, choć przy innym świetle i pozie.
+
+Lider usunął nieużywane mutacje TwoSided/restore z probe, pozostawiając diagnostykę read-only. Wcześniejsza uwaga o przywracaniu stanu dotyczy pierwotnej wersji, nie bieżącego narzędzia. Odczytany diagnostic-report wskazuje dla profilu Low 35 m / 1 kaskadę / 1024 i bias 1/1; efektywne ustawienia ma osobno potwierdzać pipeline.txt z VQA. Werdykt pozostaje otwarty do porównania pasujących ablacji baseline / zero-bias / baked-only / no-baked / no-shadows.
+
+## Uzupełnienie — ablacje i rozdzielenie biasu
+
+Obejrzano wszystkie 10 arkuszy ablation-sheets (5 kamer × Low/High), wszystkie 6 split-bias-sheets (island-1, near i SBS 2818 × Low/High), a także pełne natywne PNG `ablations/{Low,High}-zero-normal/putry-island-1.png`.
+
+Wynik jest spójny w obu profilach:
+
+- **zero-normal usuwa regularne środkowe plamy**, zachowując duży cień pomostu i jasny skraj przy krawężniku;
+- **zero-depth pozostawia plamy**, podobnie jak no-baked;
+- baked-only nie zachowuje tego regularnego wzoru, ale zmienia również duży cień; nie jest poprawką produkcyjną;
+- no-shadows oświetla żwir niemal w całości i stanowi kontrolę, nie docelowy wygląd.
+
+To mocny dowód, że obserwowany wzór w tych kadrach zależy od **normal bias realtime shadow pass**, a nie od samego koloru żwiru. Nie ma uzasadnienia, aby na obecnym etapie dodawać hero do bake jako pierwszą poprawkę tych konkretnych plam. Globalne zero-normal nadal nie dowodzi, że wystarczy zmienić dokładnie jeden materiał — wymaga to pasującego produkcyjnego after z lokalnym opt-in.
+
+Na pokazanym żwirze, jezdni, podporach i widocznym spodzie pomostu nie zauważyłem nowego oczywistego acne w zero-normal. Crop split obejmuje przede wszystkim odbiornik; pełne island-1 uzupełnia widok spodu. Nie certyfikuje to górnej jezdni pomostu, wszystkich kątów ani zachowania w ruchu.
+
+Propozycja lokalnego `shadow_normal_bias_scale=0` wyłącznie dla istniejącego M_viaduct_concrete, przy zachowanym depth bias i bez zmiany globalnego QualityProfile, jest sensowną hipotezą minimalnej korekty. Przy ocenie implementacji należy sprawdzić: rzeczywisty caster i materiał, nietkniętą gałąź domyślną, reset opt-in po usunięciu flagi oraz wszystkie powierzchnie współdzielące materiał. Końcowy PASS pozostaje otwarty do produkcyjnych after, przeglądu regresji i testów.
