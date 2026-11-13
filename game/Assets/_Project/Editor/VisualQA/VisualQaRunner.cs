@@ -358,7 +358,7 @@ namespace Game.Editor.VisualQA
                 }
                 var wi = Game.World.WorldInstances.Last;
                 if (wi.Draws > 0)
-                    stats.AppendLine($"  {qa.id} instanced (props+trees): draws {wi.Draws}, instances {wi.Instances}, triangles {wi.Triangles / 1000}k, cells {wi.VisibleCells}, forest HLOD cells {wi.HlodCells}");
+                    stats.AppendLine($"  {qa.id} instanced (props+trees): draws {wi.Draws}, instances {wi.Instances}, triangles {wi.Triangles / 1000}k, cells {wi.VisibleCells}, forest HLOD cells {wi.HlodCells}, trianglesExact {wi.Triangles}");
                 Color32[] pixels = world;
                 if (ui)
                 {

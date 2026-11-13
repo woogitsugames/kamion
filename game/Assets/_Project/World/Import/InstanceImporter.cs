@@ -43,6 +43,18 @@ namespace Game.World.Import
         /// <summary>True for the instance field "tier": "high"; a missing or any other value = every tier.</summary>
         public static bool IsHighOnly(object tier) => tier is string s && string.Equals(s, "high", StringComparison.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// ADR 0154: explicit garden_canopy_width opt-in, only for High-only trees.
+        /// Scale both horizontal model axes equally; keep height, origin, lean and yaw.
+        /// Missing/invalid data and every legacy/Low record retain the original matrix.
+        /// </summary>
+        public static Matrix4x4 ApplyGardenCanopyWidth(Matrix4x4 source, bool highOnly, float width)
+        {
+            if (!highOnly || float.IsNaN(width) || float.IsInfinity(width) || width < 1f || width > 1.5f || width == 1f)
+                return source;
+            return source * Matrix4x4.Scale(new Vector3(width, 1f, width));
+        }
+
 
         /// <summary>
         /// Keep every pre-Fab matrix at its legacy sorted index. Runtime forest thinning uses the absolute
@@ -375,6 +387,8 @@ namespace Game.World.Import
                         if (href <= 0f) { Debug.LogWarning($"[IMPORT] {p}: no href_m in trees_meta.json"); continue; }
                         float lean = it.Get("lean") != null ? (float)Num(it.Get("lean")) : 0f;
                         m = TreeMatrix(new Vector3(e, z - 0.15f, n), yaw, lean * Mathf.Cos(yaw * 3f), lean * Mathf.Sin(yaw * 3f), (float)Num(it.Get("h")) / href);
+                        if (it.Get("garden_canopy_width") != null)
+                            m = ApplyGardenCanopyWidth(m, IsHighOnly(it.Get("tier")), (float)Num(it.Get("garden_canopy_width")));
                     }
                     else
                     {

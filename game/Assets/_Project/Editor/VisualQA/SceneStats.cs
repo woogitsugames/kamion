@@ -56,7 +56,7 @@ namespace Game.Editor.VisualQA
                 }
                 if (r.shadowCastingMode != ShadowCastingMode.Off && dist < shadowDistance) shadowDraws += m.subMeshCount * Mathf.Max(1, cascades);
             }
-            return $"{id}: objects={objects} drawsEst={draws} shadowDrawsEst={shadowDraws} trisK={tris / 1000} (estimate, before SRP batching)";
+            return $"{id}: objects={objects} drawsEst={draws} shadowDrawsEst={shadowDraws} trisK={tris / 1000} trisExact={tris} (estimate, before SRP batching)";
         }
     }
 }
