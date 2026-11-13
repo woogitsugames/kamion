@@ -806,19 +806,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -537.5,
-        13.0,
-        135.535
+        -534.5,
+        10.5,
+        135.4327
       ],
       "look_at": [
-        -537.5002,
-        52.6136,
-        141.0815
+        -534.5002,
+        50.1136,
+        140.9792
       ],
       "fov_deg": 58.71551,
       "segment": "G3-B",
       "pose_confidence": "C",
-      "pose_reason": "ADR 0161 (s16): probe sbs-p161-18201194-c; anchors: signal heads at the ring, lane line convergence",
+      "pose_reason": "ADR 0172 (s18): probe sbs-p172-18201194-s1; anchors: deck corner top-left, carriageway across the whole foreground, nose island on the right; signals differ by epoch (photo 2019 = two short masts, world = orthophoto 2024, owner decision 2026-11-13)",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -869,19 +869,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        534.5,
-        -736.0,
-        140.8599
+        533.9,
+        -737.1,
+        141.4541
       ],
       "look_at": [
-        563.1241,
-        -763.9118,
-        142.1197
+        562.319,
+        -765.2231,
+        142.6586
       ],
-      "fov_deg": 42.99566,
+      "fov_deg": 41.26883,
       "segment": "G3-A",
-      "pose_confidence": "C",
-      "pose_reason": "ADR 0161 (s16): probe sbs-p161-cm924587-c; anchors: EC access island + plantings, ring exit kerb, white building edge",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0172 (s18): probe sbs-p172-cm924587-fit; anchors: lamp column foot, A-7 post, D-6 post (GUGiK 0.08 m orthophoto) and both EC chimneys: 4-parameter resection, residuals <= 0.6 deg",
       "note": "ADR0111 Commons GPS; manually inferred heading/FOV/eye/horizon WORKING_VALUE"
     }
   ]

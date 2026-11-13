@@ -2278,9 +2278,10 @@ overrides:
     verify: owner photo session (roundabout islands)
     beds:
       - {name: EC1, plant: berberis_red, rim_m: 0.3, ring: [[778544.5, 595474.2], [778547.0, 595475.3], [778551.0, 595475.5], [778555.0, 595474.8], [778558.0, 595473.2], [778560.5, 595471.4], [778558.0, 595470.8], [778554.0, 595470.1], [778550.0, 595469.7], [778546.5, 595470.2], [778544.8, 595472.0]]}
-    # islands: [{name: ec-refuge, at: [778531.5, 595479.0], fill: paving}] - OFF (visual-critic s17 0161, P1): the paved
-    # refuge read as a podium (flat, too large, vertical sides, no dropped kerb or crossing). Back on with a dropped-kerb
-    # outline traced from the orthophoto, when a pose of confidence B exists.
+    # ADR 0161 -> OFF after visual-critic s17 0161 (P1: from the pose of confidence C the paved refuge read as a podium).
+    # ADR 0172: back ON with the resected pose of cm92458760 (confidence B): the photo foreground IS this paved island
+    # with the sign cluster on it. Still no dropped kerb at the crossings (generated kerb ring) - open.
+    islands: [{name: ec-refuge, at: [778531.5, 595479.0], fill: paving}]
   - id: kwadrat-exit-carriageway-width
     target: {edge: "w194536287:1882887381-1882954023"}
     reason: >-
@@ -2479,15 +2480,19 @@ overrides:
   - id: ec-island-f10
     kind: gate3_sign
     photo: ["commons:cm92458760"]
-    at_en: [538.95, -742.85]
-    travel_bearing_deg: 211
+    at_en: [539.1, -741.6]
+    travel_bearing_deg: 200
     lower_edge_m: 2.2
     parts: [{face: F-10-ls}]
     reason: >-
       Upright two-lane board (left turn | straight) on two posts, read by the traffic leaving the roundabout to the
-      south (west carriageway, bearing 211). Foot: its rectangular shadow (0.7 x 1.5 m, centre E 537.25 N -740.2)
-      moved back along the shadow direction by the plate-centre height 2.8 m - +-0.5 m, less certain than the single
-      posts. Plate 0.90 x 1.20 m and lower edge 2.2 m WORKING_VALUE.
+      south (west carriageway). Foot and facing from photo cm92458760 with the resected pose of ADR 0172 (E 533.9
+      N -737.1, heading 134.7, hfov 67.6 - residuals <= 0.6 deg on the lamp, the A-7 and D-6 posts and both
+      chimneys): posts at x 0.435 / 0.47 with feet 17.4 / 16.0 deg under the horizon -> 6.6 / 7.3 m from the camera,
+      0.45 m left of the axis -> E 539.1 N -741.6 (+-0.5 m), plate line at bearing ~108 -> faces bearing ~18. On the
+      orthophoto its plate shadow is the blob at E 537.4 N -739.1 (2.8 m of plate-centre height at 1.1 m per m).
+      r1 placed it from the wrong shadow at E 538.95 N -742.85: right of the column in the frame, left on the photo.
+      Plate 0.90 x 1.20 m and lower edge 2.2 m WORKING_VALUE.
     confidence: low
     verify: owner photo session (roundabout islands) - board size and arrows
   - id: ec-island-a7-c12
@@ -2531,15 +2536,16 @@ overrides:
   - id: ec-island-street-name
     kind: gate3_sign
     photo: ["commons:cm92458760"]
-    at_en: [539.55, -743.25]
-    travel_bearing_deg: 104
+    at_en: [539.25, -743.15]
+    travel_bearing_deg: 130
     lower_edge_m: 3.3
     post: galv
     parts: [{face: street_name, text: "ul. Bitwy Białostockiej"}]
     reason: >-
       Teal street-name plate "ul. Bitwy Białostockiej" (text read on photo cm92458760; the same name is the OSM name
-      of the street). In reality the plate is cantilevered from the lamp column at ~3.4 m and points south
-      (orthophoto: 1.2 m teal bar from the column towards bearing ~194). The sign assembly has a centred post, so it
-      stands on its own galvanised post 0.65 m south of the column - WORKING_VALUE until a bracket-mounted plate exists.
+      of the street). In reality the plate is cantilevered from the lamp column at ~3.4 m: on the photo (resected
+      pose) it spans 1.2 m to the right of the column, square to the view -> plate line at bearing ~220, face towards
+      ~310 (the relief-displaced teal bar on the orthophoto points to ~194). The sign assembly has a centred post, so
+      it stands on its own galvanised post 0.7 m from the column - WORKING_VALUE until a bracket-mounted plate exists.
     confidence: low
     verify: owner photo session (roundabout islands)
