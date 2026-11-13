@@ -6,30 +6,32 @@
 
 Poprawka luk paczki P3 (`research/gptpro/p3-building-typology/`), w której dopasowanie zdjęć do budynków liczono z **punktu kamery** zamiast **fotografowanego budynku** (5 z 9 sprawdzonych wysokości dotyczyło innego budynku). Niniejsza paczka: (1) ≥30 budynków widocznych z Generała Władysława Andersa, Sokólskiej, Wileńskiej, Białostoczku i Alei Tysiąclecia PP — z identyfikacją fotografowanego budynku; (2) systemy wielkiej płyty per osiedle; (3) kolory elewacji po termomodernizacji 2015–2026 dla kafla Andersa/Białostoczek; (4) tekst MPZP części os. Białostoczek z warstwą tekstową; (5) stacja paliw przy Andersa (Circle K).
 
-**Status: ZAKOŃCZONY** — manifest.csv (43 wiersze), audit_20_percent.json (9/9 PASS, 1 UWAGA), sources.md.
+**Status: W TRAKCIE (M53-FIX v2, etap 1 z 2)** — po przeglądzie `docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p3.md` manifest jest przebudowywany: każde zdjęcie oglądane przez wizję (kolumna `co_widac`), dopasowanie przez geometrię kamera→obrys + treść kadru (nie azymut toru!), kondygnacje liczone na zdjęciu, kolor tylko z prostokąta ściany. Etap 1 (commity częściowe): wiersze 001–016, 027 + poprawki typu 037–043. Etap 2: pozostałe zdjęcia, uzupełnienie do ≥30 przyjętych, nowy audyt 20%, ZIP v2.
 
-## Wynik — zadanie 1: manifest 43 wierszy
+## Wynik — zadanie 1: manifest 43 wierszy (stan przebudowy v2)
 
-- **40 budynków przyjętych**: 9 × `OK` (dowód bezpośredni) + 31 × `OK-POŚREDNIE` (dowód pośredni) — **każdy z identyfikacją FOTOGRAFOWANEGO budynku**, nie najbliższego kamerze.
-- **3 odrzucone** (`ODRZUCONY`) z uzasadnieniem: M53-009 (Olsztyńska 2 — w miejscu obiektu ogrodzenie/drzewa wg wizji; promień trafia w sąsiednią Olsztyńską 1A), M53-024 (Białostoczek 14 — zasłonięty przez Białostoczek 18 stojący przed nim na osi patrzenia), M53-027 (Białostoczek 4 — kamera na posesji obiektu, budynek poza osią patrzenia, brak potwierdzenia fotografowania).
-- Zakres ulic: Andersa (6), Sokólska (2), Białostoczek + przyległe (Radzymińska/Kozłowa/Zagumienna) (16), Al. Tysiąclecia PP (10), Wysoki Stoczek — Skidelska/Świsłocka/Wołkowyska/Kowieńska/Wileńska/Lidzka (7), odrzucone (3) — łącznie 43.
-- Wysokości: `measuredHeight` z **LoD1 GUGiK 2024 (K2)** (dopasowanie obrysu LoD1↔OSM przez IoU z rasteryzacji 0,5 m; dla 40 z 43 IoU ≥ 0,55, mediana ≈ 0,92); wyjątki: wiata i kiosk stacji (poza LoD1) — patrz zadanie 5.
-- Kondygnacje: OSM `building:levels` gdzie jest; w pozostałych **ESTIMATED** = round(mh/2,9 m) z adnotacją w kolumnie (metoda jawnie podana; audyt C sprawdza spójność mh↔kondygnacje·2,9±2 m).
-- Dachy: patrz sekcja „Dachy".
+**Ważne (przegląd r8):** azymut z toru sekwencji Commons (GPS zaokrąglony do 1″) jest zawodny i **nie może być podstawą statusu**. W v2 każdy wiersz ma obowiązkowy opis wizyjny w kolumnie `co_widac` (co w kadrze, numer/napis jeśli widać, liczba kondygnacji POLICZONA na zdjęciu, pozycja celu w kadrze: lewo/środek/prawo), a kierunek ustalany jest z treści kadru (napisy adresowe, charakterystyczne budynki, przecięcia ulic) i porównywany z obrysami LoD1/OSM.
 
-## Metoda dopasowania budynku do zdjęcia (naprawka błędu P3)
+- **Etap 1 (wiersze 001–016, 027)**: 7 × `OK` (w tym 4 rekasygnacje po napisach adresowych: M53-010→Zagumienna 9/1, M53-011→Białostoczek 29, M53-012→Zagumienna 40, M53-014→Białostoczek 4/1), 3 × `OK-POŚREDNIE` (bryła+geometria, bez napisu: M53-013/016/027), 6 × `ODRZUCONY` po wizji (M53-003/004/005/006/008/009 — cel niewidoczny w kadrze lub kadr w inną stronę), 1 × `OCZEKUJE_WIZJI` (M53-015 — identyfikacja w toku).
+- **Etap 2 (wiersze 017–026, 028–043)**: statusy przejściowe `OCZEKUJE_WIZJI` — stare dopasowanie azymutem toru nieważne; wiersze zostaną zaliczone/odrzucone po obejrzeniu zdjęć; uzupełnienie zbioru do ≥30 przyjętych.
+- Typ budynku poprawiony (polecenie przeglądu): M53-037…043 to domy jednorodzinne/szeregowe (M53-041 — dom z poddaszem), nie „blok TBS 1999+”; `system_wp` = NIE DOTYCZY. M53-027 (Białostoczek 4) — ocena ponowna: dom 2-kondygnacyjny widoczny centralnie w kadrze pasuje do obrysu (LoD1 mh 8,31 m) → `OK-POŚREDNIE`.
+- Zakres ulic: Andersa (6), Sokólska (2), Białostoczek + przyległe (Radzymińska/Kozłowa/Zagumienna) (16), Al. Tysiąclecia PP (10), Wysoki Stoczek — Skidelska/Świsłocka/Wołkowyska/Kowieńska/Wileńska/Lidzka (7) — łącznie 43.
+- Wysokości: `measuredHeight` z **LoD1 GUGiK 2024 (K2)** (dopasowanie obrysu LoD1↔OSM przez IoU z rasteryzacji 0,5 m); wyjątki: wiata i kiosk stacji (poza LoD1) — patrz zadanie 5.
+- Kondygnacje: `kondygnacje_ze_zdjęcia` = liczba POLICZONA na zdjęciu (wizja); `mh/2,9` oraz OSM `building:levels` wyłącznie w porównawczej kolumnie `kondygnacje_porównanie` (audyt C porównuje zliczenie ze zdjęcia z LoD1).
+- Dachy: kształt z ortofoto GUGiK (sekcja „Dachy”) lub z wizji (gdzie jawny na zdjęciu); kolor dachu tylko z maski ortofoto.
 
-Dla każdej pary (budynek, zdjęcie) weryfikujemy, że **fotografowany budynek** (nie najbliższy kamerze) jest tym z manifestu:
+## Metoda dopasowania budynku do zdjęcia (v2 — obowiązkowa wizja)
 
-1. **Kierunek patrzenia — azymut sekwencji z GPS EXIF**: pozycje kolejnych zdjęć tej samej sesji (Commons, Rakoon) dają azymut marszu ≈ azymut patrzenia. Wyliczono dwa warianty (baza ≥3 m / ≥15 m); gdy różnica >15°, azymut oznaczono **ZAWODNY** i obie wartości podano jawnie w `metoda_dopasowania`/`uwagach` (8 zdjęć: m.in. 20240401 110755/110805/110911/110918, 20221119 080807/080833). Kryterium w-kadrze: odchyłka dev = bearing(kamera→centroid) − azymut; pozycja w kadrze pos = 50 + dev/0,7 (HFOV 70°); przyjęto |dev| ≤ 25° (±25°) oraz d ≤ 260 m.
-2. **Ray-first-hit (FH)**: promień 400 m od kamery wg azymutu; pierwszy obrys na drodze (parametr wejścia `entry-t`, nie odległość centroidu — sortowanie po odległości centroidu dawało wyniki fałszywe). FH = fotografowany obiekt, gdy trafia w obrys celu → status `OK`.
-3. **Kamera w obrysie obiektu** (GPS zdjęcia z poziomu posesji) → status `OK`/`OK-POŚREDNIE` z adnotacją.
-4. **Opis-autora**: tytuły autorskie Commons („Generała Andersa 38A”, „LO nr XVI i ZSO nr 10”, „Tysiąclecia 10 Białystok”, „PKO BP Białystok (Tysiąclecia)”) — identyfikacja obiektu bezpośrednio (zdjęcia H. Borawskiego, CC BY-SA 3.0 — **tylko referencja**).
-5. **Zachowane wyniki analizy wizyjnej z 13.11** (sesja pierwotna): opisy brył/kadrów (wiata czerwona, kiosk biały parterowy, parterowiec z billboardem przy stacji, obiekt handlowy przy Sokólskiej, „niski obiekt usługowy na prawej krawędzi 70–80%” przy Andersa 71, elewacja Tysiąclecia 56 [131,121,97]); w bieżącej sesji odbudowy limit analizy wizyjnej — protokół w `audit_20_percent.json` (kryterium G: NIE DOTYCZY).
-6. **Porównanie bryły**: LoD1 (footprint, measuredHeight) vs. bryła na zdjęciu; spójność mh ↔ kondygnacje·2,9 m (audyt C).
-7. **Krzyżowo**: obrys LoD1 ↔ OSM way przez **IoU ≥ 0,5** (rasteryzacja 0,5 m); adres z OSM `addr:*` (pełna nazwa ulicy — prefix-match pułapka: „Andersa 46” ≠ „Hallera 46”); ortofotomapa WMS GUGiK (warstwa `Raster`) dla dachów.
+Dla KAŻDEGO wiersza manifestu zdjęcie jest oglądane przez model wizyjny (jedno zdjęcie = jedno wywołanie; commity co ~5 wierszy). Stare dopasowanie azymutem toru sekwencji zostało uznane za nieważne (przegląd r8: GPS zaokrąglony do 1″, kadr często w inną stronę niż tor marszu).
 
-**Errata P3 potwierdzona praktyką:** w rebuiltowym zbiorze najbliższy kamerze budynek byłby często innym obiektem niż fotografowany (np. dla zdjęcia 20230729 105139 najbliższy kamerze to supermarket Sokólska 9, ale w osii patrzenia leżą też Białostoczek 27 i 34; dla 20241229 112510 w osii leżą Białostoczek 18 (przed) i 14 (za nim, zasłonięty → odrzucony)). Statusy `OK`/`OK-POŚREDNIE` różnicują siłę dowodu; `ODRZUCONY` z uzasadnieniem.
+1. **`co_widac`** — jedno zdanie opisu kadru: co jest w kadrze, numer/napis adresowy jeśli widać, liczba kondygnacji POLICZONA na zdjęciu, pozycja celu w kadrze (lewo/środek/prawo).
+2. **Kierunek z treści kadru**: napisy adresowe na elewacjach (np. „ZAGUMIENNA 9/1”, „Białostoczek 29”, „4/1”), charakterystyczne budynki, przecięcia ulic, szyldy — porównanie z obrysami LoD1/OSM wokół pozycji kamery (EPSG:2180).
+3. **Geometria kamera→obrys**: dla każdego wiersza kolumny `kamera_d_m` (odległość do najbliższego punktu OBRYSU celu) i `kamera_kat_deg` (azymut do tego punktu). Azymut toru sekwencji tylko jako wskazówka pomocnicza — nigdy jako podstawa statusu.
+4. **Statusy**: `OK` = napis adresowy/tytuł autorski potwierdza obiekt; `OK-POŚREDNIE` = bryła (liczba kondygnacji, kształt dachu, kolor) i geometria kamera→obrys zgodne, brak napisu; `ODRZUCONY` = cel niewidoczny w kadrze albo kadr niezgodny z obrysem; rekasygnacja gdy w kadrze jednoznacznie widać INNY budynek (z napisem).
+5. **Porównanie bryły**: LoD1 (footprint, measuredHeight) vs liczba kondygnacji ze zdjęcia (audyt C: zliczenie ze zdjęcia vs mh/2,9).
+6. **Krzyżowo**: obrys LoD1 ↔ OSM way przez IoU ≥ 0,5 (rasteryzacja 0,5 m); adres z OSM `addr:*` (prefix-match pułapka: „Andersa 46” ≠ „Hallera 46”); ortofotomapa WMS GUGiK dla dachów.
+
+Przykłady obaleń z przeglądu potwierdzone wizją: M53-006 (w kadrze park i bloki Al. Tysiąclecia 44–60, JRG-2 poza kadrem → ODRZUCONY), M53-008/011/012 (kadr 105139 patrzy ~335° — napisy „Zagumienna 40” i „Białostoczek 29”; rekasygnacje), M53-014 (w kadrze 4-kondygnacyjny budynek z tabliczką „4/1”, nie punktowiec Białostoczek 11 → rekasygnacja na Białostoczek 4/1).
 
 ## Dachy (kształt + kolor) — metoda
 
@@ -38,7 +40,11 @@ Dla każdej pary (budynek, zdjęcie) weryfikujemy, że **fotografowany budynek**
 
 ## Zadanie 3 — kolory elewacji po termomodernizacji 2015–2026 (kafel Andersa/Białostoczek)
 
-Brak publicznie dostępnych projektów kolorystyki/STWiOR dla bloków kafla (BIP spółdzielni nie publikuje kart kolorów) → kolor elewacji **ESTIMATED sRGB** ze zdjęć (metoda: gray-world white-balance → k-means k=4 na cropie kadru w pozycji budynku (pos%, rozmiar okna z kąta bryły footprint/mh i odległości) → dominanta; reguła cienia: dominanta L<70 + klaster jasny ≥20% → klaster jasny; klaster niebo/zieleń odrzucany). Skrzyżowania weryfikacyjne: M53-036 (zachowana wizja 13.11 [131,121,97] vs wyliczone [111,100,63] — zgodność beżu) ✓; M53-011/012 pastelowy pomarańcz/beż — typowe dla Białostoczka po termomodernizacji. **UNVERIFIED**: zdjęcia zmierzchowe (stacja paliw), cropy w głębokim cieniu (M53-004/030/033/034/038), domieszka nieba (M53-017). Daty zdjęć (2020–2024) odnotowane — dla zdjęć sprzed 2023 możliwa niespójność z późniejszą termomodernizacją (adnotacja w `metoda_koloru`).
+**Metoda v2 (k-means usunięty):** po przeglądzie r8 k-means na cropie kadru dawał wartości błędne (trafiał w niebo/cienie/zieleń; np. M53-013 [52,44,41] dla białego bloku, M53-029 różowawy dla białego, M53-035 „oliwkowy” dla żółtozielonego). W v2 kolor elewacji liczony jest WYŁĄCZNIE z ręcznie wskazanego prostokąta ŚCIANY:
+- model wizyjny wskazuje prostokąt px (x0,y0,x1,y1) na czystym fragmencie ściany (bez cieni, drzew, nieba, okien i balkonów) — współrzędne zapisane w kolumnie `prostokat_sciany_px`;
+- średnia RGB prostokąta liczona niezależnym dekoderem JPEG (bez utraty); wynik w `kolor_srgb`, metoda w `metoda_koloru` = „prostokąt ściany (wizja→dekoder JPEG)”;
+- sanity-check: wartość musi być zgodna z opisem koloru z wizji (odrzucone prostokąty trafiające w niebo/prześwietlenie — wtedy prostokąt powtarzany).
+**UNVERIFIED**: zdjęcia zmierzchowe (stacja paliw M53-001/002), brak czystej ściany w kadrze, prostokąt trafiał w tło (wtedy jawnie adnotacja w `metoda_koloru`). Daty zdjęć (2020–2024) odnotowane — dla zdjęć sprzed 2023 możliwa niespójność z późniejszą termomodernizacją.
 
 ## Ustalenia — zadanie 4: MPZP części os. Białostoczek (tekst uchwały z warstwą tekstową)
 
@@ -67,7 +73,7 @@ Uogólnienie (za rozprawą doktorską cyt. we wpisie Zielone Wzgórza): rok 1990
 
 Artykuł naukowy o OWT w Białymstoku: „OWT służy inżynierom” (ba.pdl.piib.org.pl, 05.2024) — badania rozbiórki budynku OWT-67 (b. siedziba Miastoprojektu Białystok).
 
-Przypisania per budynek w `system_wp` manifestu: Białostoczek 7 i 11 → OWT-67 (etap I — kwartał Kozłowa/Białostoczek wg cytatu o najstarszych blokach); Białostoczek 14/22/Zagumienna 4/Radzymińska 1 → OWT-75 etap II (**przypisanie UNVERIFIED** — lokalizacja w etapie II wg kolejności zabudowy, brak źródła per budynek); pozostałe Białostoczek → OWT-67/75 UNVERIFIED; Tysiąclecia 10/10A → UNVERIFIED (po 1990); pozostałe Tysiąclecia → OWT (Wilk 1977); Wysoki Stoczek/Skidelska/Wileńska itd. → NIE DOTYCZY (TBS 1999+, patrz Bacieczki/Wysoki Stoczek); obiekty usługowe → NIE DOTYCZY.
+Przypisania per budynek w `system_wp` manifestu: Białostoczek 7 → OWT-67 (etap I — kwartał Kozłowa/Białostoczek wg cytatu o najstarszych blokach); Białostoczek 14/22/Zagumienna 4/Radzymińska 1 → OWT-75 etap II (**przypisanie UNVERIFIED** — brak źródła per budynek); pozostałe Białostoczek → OWT-67/75 UNVERIFIED; Tysiąclecia 10/10A → UNVERIFIED (po 1990); pozostałe Tysiąclecia → OWT (Wilk 1977); **Wysoki Stoczek — Skidelska/Świsłocka/Wołkowyska/Kowieńska/Wileńska/Lidzka: domy jednorodzinne/szeregowe → NIE DOTYCZY** (zabudowa jednorodzinna, patrz poprawka typu M53-037…043; wcześniejsze „TBS 1999+” dla tych wierszy było błędne — TBS 1999+ dotyczy Bacieczek, nie Wysokiego Stoczka); obiekty usługowe → NIE DOTYCZY.
 
 ## Zadanie 5 — stacja paliw przy Andersa (Circle K)
 
@@ -77,14 +83,16 @@ Przypisania per budynek w `system_wp` manifestu: Białostoczek 7 i 11 → OWT-67
 - **Biurowiec parterowy z billboardem na posesji naprzeciwko wylotu** (way 392226320): LoD1 mh **4,45 m** (IoU 0,997), 1 kondygnacja (OSM).
 - Zdjęcie zmierzchowe → kolory elewacji UNVERIFIED (opis wizyjny), patrz zadanie 3.
 
-## Samokontrola 20% — wynik
+## Samokontrola 20% (v2 — plan po przeglądzie)
 
-- **Seed jawnego próbkowania: 20261113**; próbkowanie `random.Random(20261113).sample(ids, ceil(0.2·43))` = **9 wierszy**: M53-001, 002, 005, 009, 012, 024, 030, 033, 041.
-- Kryteria (A dopasowanie — czy obrys/wysokość należą do budynku ze zdjęcia; B IoU LoD1↔OSM; C mh↔kondygnacje·2,9; D licencja; E JPG ≤1600 px fizycznie na kopiach `files/`; F adres; G wizja — NIE DOTYCZY, limit w sesji odbudowy).
-- **Werdykt: 9/9 PASS** (w tym PASS-DIRECT i PASS-POŚREDNIE), **1 UWAGA**: M53-033 (Tysiąclecia 50) — mh 14,86 m vs OSM 4 kondygnacje·2,9 = 11,6 m (Δ3,3 m; blok z wysokim parterem — odnotowane). Pełny protokół: `audit_20_percent.json`.
+- **Nowe losowanie 20% z jawnym seedem** (próbkowanie z pełnej listy ID po zakończeniu etapu 2; seed zostanie podany w `audit_20_percent.json`).
+- Dla każdego wylosowanego wiersza zapisywane: `co_widac` + odległość (`kamera_d_m`) i kąt (`kamera_kat_deg`) kamera→obrys.
+- **Kryterium wizji obowiązkowe** — bez „NIE DOTYCZY”: każdy wylosowany wiersz musi mieć potwierdzenie wizyjne kadru (co w kadrze, pozycja celu, policzone kondygnacje).
+- Kryteria: A dopasowanie (obrys/wysokość należą do budynku ze zdjęcia — wg wizji, nie azymutu), B IoU LoD1↔OSM, **C zliczenie kondygnacji ze zdjęcia vs LoD1 mh/2,9**, D licencja, E JPG ≤1600 px, F adres, G wizja (OBWIĄZKOWE).
+- Werdykt po etapie 2 — pełny protokół: `audit_20_percent.json`.
 
 ## Ograniczenia
 
-- Azymut patrzenia wyznaczany z toru sekwencji (GPS EXIF) — zawodny przy zmianach kierunku marszu; rozbieżne warianty podane jawnie per zdjęcie.
-- Analiza wizyjna niedostępna w sesji odbudowy (limit) — identyfikacje oparte na geometrii (FH/stożek/IoU), opisach-autora i zachowanych wynikach wizji 13.11; stąd rozróżnienie OK/OK-POŚREDNIE.
-- `files/` nie jest w gicie (`.gitignore`); zdjęcia (≤1600 px, miniatury Commons) i wycinki ortofoto w **mistral-p3-buildings-2-files.zip** (karta pobrania w PR) + INDEX.csv.
+- Azymut z toru sekwencji (GPS zaokrąglony do 1″) zawodny — w v2 wyłącznie pomocniczy; podstawą jest treść kadru (wizja) + geometria kamera→obrys.
+- Analiza wizyjna limitowana w czasie sesji — przegląd zdjęć wykonywany etapami (etap 1: 001–016, 027; etap 2: pozostałe), commity częściowe po każdym etapie.
+- `files/` nie jest w gicie (`.gitignore`); zdjęcia (≤1600 px, miniatury Commons) i wycinki ortofoto w ZIP (v2: `mistral-p3-buildings-2-files-v2.zip` — karta pobrania w PR) + INDEX.csv.
