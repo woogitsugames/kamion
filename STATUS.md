@@ -6,4 +6,5 @@
 - render_all.py: dopisane 10 warstw 0176 (+cab) → art-source/audio/generated/sfx (OK, 41 s)
 - C#: LayerMath (prawa 0176: ShaftRpm, RetarderTone/FlowGain, TonePitch, EngineBrakeReleaseLevel) + DrivelineSfx (struct, zdarzenia AMT/hamulec silnikowy)
 - biblioteka (pola 0176) + importer + hook TruckAudioController (retarder tone/flow, zdarzenia AMT/hamulec silnikowy, dryer v2) + DrivelineSfxTests (11 testów, PlayMode asm — EditMode asm nie referuje Game.Audio, asmdef = lider)
-- NASTĘPNY KROK: kompilacja + testy w Unity (slot unity-slot.ps1, bez PHONE_RUN): pwsh scripts/test.ps1 -Platform PlayMode
+- Unity: build-lab + import audio OK (69 sfx), PlayMode 25/25 (w tym DrivelineSfxTests 11/11). ADR 0176 + LICENSES zapisane
+- NASTĘPNY KROK: prompty ElevenLabs docs/owner/ELEVENLABS-REGEN-05.md, potem raport
