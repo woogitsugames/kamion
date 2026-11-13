@@ -17,3 +17,5 @@ Korekta zakresu wstępnego ray testu: mały nos gravel E534–540/N−700…−6
 Po preflight usunięto niewykorzystaną zmianę/restore natywnych casterów z probe: narzędzie jest teraz wyłącznie read-only. Ablacje użyją istniejących rq i zapiszą efektywny URP. Cel nie oznacza zaciemnienia całego żwiru — zdjęcia mają także jasny żwir na pierwszym planie. NASTĘPNY KROK: import i bazowe obrazy po generatorze.
 
 Generator bazowy zakończony bez fallback; zapisano SHA surowego świata bez dodatkowej kopii. NASTĘPNY KROK: import.ps1 -Label baseline, probe report, render before.
+
+Import baseline zakończony.
