@@ -1,0 +1,75 @@
+# ADR 0180 — wieżowiec przy Kwadracie: gładki szczyt z jedną kolumną okien, długa elewacja z pasmami okien na bieli (reguła `facades`)
+
+Status: PROPOSED na gałęzi `tower-0180` (2026-11-13, s18); nie scalone; ocena `visual-critic` wymagana (subagent nie
+uruchamia subagentów). Źródło: `docs/reports/visual/REVIEW-2026-11-13-s17-0171.md`, P1 kadrów
+`sbs-g3-a-177786140912399` / `178689077481862`: „ściana szczytowa dostała pełną siatkę ~6×12 punktowych okien. Na
+zdjęciu szczyt jest gładki, piaskowy, z jedną kolumną okien, a długa elewacja ma poziome pasma okien na bieli”.
+
+## 1. Ustalenia (zmierzone)
+
+Budynek `bdot:2BE4B431-CA0F-1BF0-E053-CC2BA8C0D140` (BDOT10k: 11 kondygnacji, „siedziba firmy”; LoD1 2024 41,81 m;
+kondygnacja 3,69 m z `storey_plan`). Obrys BDOT10k: szczyty SW / NE 16,09 / 16,41 m (azymut normalnej 208° / 28°),
+ściana SE 18,42 + 6,39 + 10,93 m z uskokami 1,8 / 1,4 m (118°), ściana NW 9,73 + 11,59 + 9,60 + 6,18 m (298°).
+Kamery SBS stoją ok. 150 m na południe: widać szczyt SW (z lewej) i ścianę SE (z prawej).
+
+Zdjęcia tylko jako referencja (Mapillary richlv 177786140912399 / 178689077481862, 2020-08-15, CC BY-SA 4.0 — w
+rejestrze `docs/LICENSES.md`; wycinki 4× z `Data/raw/mapillary`):
+
+- **Szczyt SW**: gładka piaskowa ściana, JEDNA kolumna dwudzielnych okien w białych ramach, po jednym na kondygnację
+  (9 widocznych, dolne zasłania wiata stacji), oś kolumny na 0,52 ± 0,04 szerokości ściany (pomiar w obu zdjęciach),
+  szerokość okna 2,0 ± 0,3 m i wysokość ok. 0,45 kondygnacji (stosunki pikseli do krawędzi 16,09 m i podziałki
+  kondygnacji). Napis na szczycie to marka — nie odtwarzamy.
+- **Ściana SE**: biała, na każdej kondygnacji cienka ciemna linia z oknami pod nią (11 linii; okna ok. 0,33
+  podziałki kondygnacji); każde pasmo to krótki odcinek przy narożniku południowym (0,03–0,20 długości 37 m) i długi
+  odcinek od 0,30. Uskoków obrysu BDOT (1,8 m) na zdjęciu nie widać.
+- Ściany NE i NW: brak otwartego zdjęcia.
+
+Stan po 0171 (`ribbon: false, bands: false`): ta sama siatka okien punktowych na każdej ścianie, jeden ton
+`plaster_beige` — generator biurowca nie miał pojęcia „inna elewacja na szczycie niż na ścianie długiej”.
+Przy okazji zmierzone na `T_facade_far_BaseColor.png`: „gładki” pasek atlasu dalekiej elewacji `FAR_PLAIN_V =
+(0,65; 0,95)` ma od v 0,88 krawędź płyty balkonowej pierwszego rzędu (196–206 / 255 zamiast 187) — wysoki pojedynczy
+quad to ukrywa, mały kawałek ściany między oknami pokazałby pasek.
+
+## 2. Decyzja
+
+1. **Nowy klucz override budynku `facades`** (authored_override w `overrides.yaml`, przeżywa reimport; tylko typ
+   `office` bez `frontage`): lista reguł per kierunek ściany. Pola: `facing` (jak we `frontage`, ±30°),
+   `min_len_m` / `max_len_m` (wybór krawędzi obrysu po długości — stabilne względem BDOT, bez współrzędnych),
+   `windows: ribbon | column | blank`, `sill_m` / `head_m` (nad podłogą kondygnacji), `spans` (ułamki ściany dla
+   pasm), `u` i `window_w_m` (kolumna), `wall_material`, `from_storey`. Pierwsza pasująca reguła wygrywa; ściany bez
+   reguły (uskoki 1,4–1,8 m) zostają przy regule haszowanej i kolorze budynku. Walidacja (`frontage.facade_rules`):
+   nieznany kierunek / typ / materiał bez wariantu `__far_*` / złe `spans` = błąd autora, nie cichy fallback.
+2. **Jedno źródło prostokątów dla obu LOD-ów** (`frontage.facade_windows`): LOD0 wycina je jako otwory z komórkami
+   atlasu elewacji (`buildings_mesh.authored_openings`: pasmo = komórki `off` rzędu `ribbon`, kolumna = okno rzędu
+   `office`, drzwi wejściowe pod kolumną albo w środku ściany głównej), LOD1 rysuje je jako quady atlasu dalekich
+   rzędów w gładkim pasku tego samego materiału `<ściana>__far_<rodzaj>` (`frontage.lod1_facade`: kolumny quadów bez
+   nakładania się — brak z-fightingu, bez geometrii otworów). Gładki pasek autorskich ścian: v 0,65–0,85 (pkt 1).
+3. **Pasmo biegnie od filara do filara** (0,4 m od końca krawędzi), dzielone na światła ok. 1,5 m
+   (`ribbon_lights`), zamiast rastra 3 m — krawędź 6,39 m dostaje pasmo 5,6 m, a nie 3 m.
+4. **Override wieżowca** `g3a-office-tower-colour`: `wall_material: plaster_white`; szczyty SW / NE: `column`,
+   `u: 0.52`, okno 1,8 × 1,6 m, `plaster_beige`; ściany SE / NW: `ribbon`, parapet 1,0 m, nadproże 2,3 m; krawędź SE
+   18,42 m: `spans: [[0.06, 0.40], [0.60, 1.0]]`. WORKING_VALUE: wymiary okien (szacunek z pikseli), cała elewacja NE
+   i NW (kopie przeciwległych, confidence low).
+
+Bez nowych materiałów i tekstur: `plaster_white`, `plaster_beige`, `plaster_white__far_ribbon`,
+`plaster_beige__far_office` chunk 6_6 rysuje już na obu LOD-ach (inne budynki).
+
+Odrzucone: `frontage` z listą 11 przeszkleń na ścianę (prawdziwe otwory i szkło na LOD1: nowy materiał szkła w LOD1
+chunku 6_6 i kilka tysięcy trójkątów); nowe rzędy atlasu dalekiej elewacji z jasnymi pasmami (zmiana tekstury
+wspólnej dla wszystkich bloków i biur); poprawka `FAR_PLAIN_V` w regule ogólnej (zmienia piksele wszystkich budynków
+— osobne zadanie).
+
+## 3. Walidacja
+
+@@VALIDATION@@
+
+## 4. Otwarte
+
+- Ocena `visual-critic`; zrzuty z telefonu (APK Low na A16).
+- Pasma mają ciemne (antracytowe) szklenie rzędów `ribbon`; na zdjęciu (prześwietlonym) okna są jasne, ciemna jest
+  tylko linia nad nimi. Jasne pasma wymagają nowych rzędów atlasu dalekiej elewacji.
+- Ekspozycja ściany SE (P2 recenzji 0171): kierunek słońca / ekspozycja poza zakresem.
+- Elewacje NE i NW oraz parter: bez otwartego zdjęcia (sesja zdjęciowa właściciela, pkt 6).
+- Uskoki obrysu BDOT na ścianie SE (1,8 m) dzielą długie pasmo filarami; zdjęcie pokazuje jeden odcinek.
+- `FAR_PLAIN_V` do 0,95 w regule ogólnej (pkt 1 ustaleń) — jaśniejszy pasek u góry gładkich quadów LOD1 bloków i biur.
+- `generated/` po scaleniu: przebudowa świata + powtórka SBS Low.
