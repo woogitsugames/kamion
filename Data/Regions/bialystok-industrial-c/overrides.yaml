@@ -2168,8 +2168,8 @@ overrides:
   - id: kwadrat-exit-footway
     kind: paved_area
     material: sidewalk_paving
-    polygon_en: [[591.5, -628.6], [593.0, -626.0], [600.3, -610.8], [607.3, -595.7], [611.1, -587.5], [614.4, -588.4],
-                 [610.9, -596.2], [603.6, -611.4], [596.3, -626.6], [594.6, -629.6]]
+    polygon_epsg2180: [[778586.5, 595594.4], [778588.0, 595597.0], [778595.3, 595612.2], [778602.3, 595627.3], [778606.1, 595635.5],
+                       [778609.4, 595634.6], [778605.9, 595626.8], [778598.6, 595611.6], [778591.3, 595596.4], [778589.6, 595593.4]]
     reason: >-
       Brick footway (2.6-2.8 m, yellow blocks on the photo cm109685822; the nearest existing set is sidewalk_paving)
       between that lawn and the kerb of the SW-bound carriageway. West edge traced; the east edge is drawn 0.6 m

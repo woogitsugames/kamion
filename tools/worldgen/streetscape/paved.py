@@ -2,7 +2,7 @@
 
 Sources (priority order; a higher source wins where polygons overlap):
   1. authored overrides `paved_areas` (Data/Regions/<id>/overrides.yaml) - polygons the data does not describe
-     (`kind: paved_area`, `polygon_epsg2180` or region-local `polygon_en`). `kind: unpaved_area` (ADR 0161) is the
+     (`kind: paved_area`, `polygon_epsg2180`). `kind: unpaved_area` (ADR 0161, region-local `polygon_en`) is the
      opposite: ground that the data paves but the orthophoto shows as lawn - nothing of any source is laid inside
      it, the terrain (grass) stays. An unpaved_area that removes nothing is reported stale.
   2. loading-dock aprons generated in front of dock doors (streetscape.buildings)
@@ -57,8 +57,7 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
     for o in overrides:
         if o.get("kind") != "paved_area":
             continue
-        ring = (np.asarray(o["polygon_en"], float) if "polygon_en" in o
-                else np.asarray(o["polygon_epsg2180"], float) - origin)
+        ring = np.asarray(o["polygon_epsg2180"], float) - origin
         cand.append((o["id"], Polygon(ring), o["material"], "authored_override", bool(o.get("parking"))))
     for d in docks:
         # the hero depot's apron (ADR 0071 r11): decades of trailers on the bumpers - darker, cracked, soiled concrete
