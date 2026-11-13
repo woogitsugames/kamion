@@ -1,33 +1,38 @@
-# Notatki robocze — p7-signs-2 (aktualizacja 2026-11-13, commit godzinowy #4)
+# Notatki robocze — p7-signs-2 (aktualizacja 2026-11-13, commit godzinowy #5)
 
-## Korekty i nowe ustalenia (od commitu #2)
+## Zmiany w tym commicie
 
-1. **Kadry su91 2025-10-03 NIE SĄ na korytarzu DK65.** Geotag: 53.13650/23.24966 — wieś Grabówka
-   (gmina Grabówka), ul. Jodłowa; model wizyjny potwierdza: polana z krzyżem i kamieniem pamiątkowym,
-   zero elementów drogowych. Wcześniejsza etykieta "Grabówka DK65" była błędna (wieś Grabówka ≠ osiedle
-   Grabówka przy DK65 w Białymstoku). **Brak zdjęć korytarzowych 2025/2026 na DK65/DK19/DK8 utrzymuje się.**
-2. **Seria Commons 2022-10-16 wykluczona** — ścieżki leśne (model wizyjny: las, brak jezdni).
-3. **Seria Rakoon 2024-05-30 z węzła Jurowce/Wasilków (DK8 N, 18 plików CC0)** — po triage: zdjęcia
-   przyrody/leśne, bez tablic. Wykorzystana do weryfikacji pokrycia korytarza DK8 N.
-4. **NOWA obserwacja P7-004 (SOURCED, CC0):** tablica E-1 na al. Tysiąclecia ~200 m za rondem Putry
-   (geotag 53.16095/23.15193), data 2024-05-30 12:26:44 (DateTimeOriginal = nazwa pliku — zweryfikowane):
-   "8 E 67 | Korycin 35 | Suchowola 49 | Augustów 87 | Suwałki 126 | Kaunas 243".
-   Strzałki rozbieżne między odczytami (prosto vs w prawo) → UNVERIFIED. Pierwsza w pełni czytelna
-   tablica korytarza DK8 N z 2024 w dozwolonym źródle (G3 nie dokumentował tego miejsca).
-5. **Kadry Panoramax 2019 bramownic ronda:** obecność konstrukcji potwierdzona na najazdzie północnym
-   (8176a172/74817897/d0fe5072), teksty paneli NIECZYTELNE → manifest P7-001..003 (UNVERIFIED).
-   Liczba paneli w odpowiedziach modelu mogła być sugerowana szablonem pytania → liczba paneli UNVERIFIED.
-6. **a68677d0 (2020-11-24, Maczka WB):** brak bramownicy w kadrze — spójne z geometrią
-   (bramownice Maczka W leżą za kamerą na tym azymucie). Nie wchodzi do manifestu.
-7. **Kwerendy geosearch Commons poza rondem:** DK65 SE — brak plików <4 km od korytarza;
-   Andersa E / DK19 N — serie z 2023-2024 w odległości ≥1.7 km od jezdni (zawansowane do triage, niski priorytet).
+1. **P7-005 dodany do manifestu** — bramownica PUTRY_W_GANTRY potwierdzona na kadrze Panoramax
+   stanton 844e35c7-bcd0-43e7-a8ac-16931cf7e96b z **2019-08-15 17:32:16** (EXIF; GPSImgDirection 113.34°,
+   lat/lon 53.159087/23.150860, łącznica Maczka→rondo, jazda E). Nowa data względem G3-P017..P020
+   (2019-08-04) — potwierdza istnienie bramownicy 11 dni później. Treści paneli NIECZYTELNE (2560 px,
+   kadr z ~30-60 m) → UNVERIFIED; nie zgadywano. Model wizyjny zgłosił strzałki na panelach
+   (lewo/prosto/prawo) i sygnalizację na konstrukcji — NIEPOTWIERDZONE, zaznaczono w uwagach.
+2. **Przebrany triage Commons 20240530_122501** (poprzednio błąd odczytu): GPS 53.149066/23.156008,
+   CC0, DateTimeOriginal 2024-05-30 12:25:02 — pobrany ponownie (thumb 1600px), w kolejce do wizji
+   (lokalizacja ~1,1 km SE od ronda — prawdopodobnie poza korytarzami zadania).
+3. **Skrypty gotowe**: make_audit.py (samokontrola 20%, seed `Kamion-P7-signs-2026-11-13-v1`,
+   random.Random(seed).sample — testy: sha256, rozmiar ≤1600px, status, licencja, spójność url/grupa,
+  UNVERIFIED-bez-treści) i make_zip.py (pakuje manifest+README+timeline+sources+notes+audit+files/
+   do mistral-p7-signs-2-files.zip). Audit wygenerowany tymczasowo na 5 wierszach (P7-001: OK) —
+   do regeneracji po finalnej wersji manifestu.
+4. Ograniczenie narzędzia wizyjnego (~20 wywołań na odpowiedź) — kolejne transkrypcje
+   (NB wyjazd 07820d85..390ca2c2, WB wyjście 239c71e8..13bb273f, 35224dcb/6fc62548, triage
+   Commons 2024/2025: 112303, 103324, 084848, 104925, 094758, 090715, 161011, 113359, 122501)
+   w kolejnym etapie; wyniki pójdą do manifestu jako P7-006+.
 
-## Manifest v1 (ten commit): P7-001..P7-004 (46 kolumn = schemat G3 + panoramax_id/sezon/pora_dnia)
+## Wcześniejsze ustalenia (commit #4, bez zmian)
+- Kadry su91 2025-10-03 NIE SĄ na korytarzu DK65 (wieś Grabówka, ul. Jodłowa — polana z krzyżem).
+- Seria Commons 2022-10-16 wykluczona (las). Seria Rakoon 2024-05-30 z węzła Jurowce — las/staw, bez tablic.
+- P7-004 (SOURCED, CC0): tablica E-1 al. Tysiąclecia ~200 m za rondem, 2024-05-30:
+  8 E 67 | Korycin 35 | Suchowola 49 | Augustów 87 | Suwałki 126 | Kaunas 243 (strzałki UNVERIFIED).
+- P7-001..003 (Panoramax stanton 2019-09-01, najazd N): bramownica obecna, teksty NIECZYTELNE → UNVERIFIED.
+- a68677d0 (2020-11-24): brak bramownicy w kadrze — poza manifestem.
+- Kwerendy Commons: DK65 SE brak plików <4 km; Andersa E/DK19 N serie ≥1.7 km od jezdni (niski priorytet).
 
 ## Kolejka
-- [ ] dokończyć triage Commons 2024/2025 (112303, 103324, 084848, 104925, 090715, 161011...)
-- [ ] NB wyjazd z ronda (07820d85..390ca2c2): czy jest bramownica/tablice po rondzie N
-- [ ] łącznica Maczka→rondo (844e35c7, 35224dcb, 6fc62548): wycinki górnej połowy — bramownica PUTRY_W_GANTRY?
-- [ ] 122501 (błąd odczytu pliku — ponowić)
-- [ ] audit_20_percent.json (seed: Kamion-P7-signs-2026-11-13-v1) po finalizacji manifestu
-- [ ] ZIP (python zipfile) + artifacts publish + README final + PR
+- [ ] transkrypcje wizyjne (batch 2): NB, WB, 35224dcb, 6fc62548, triage Commons 2024/2025, 122501
+- [ ] ewentualne P7-006+ do build_manifest.py + files/
+- [ ] finalny README.md + sources.md (opisać brak zdjęć ulicznych 2025-2026 ronda → stan UNVERIFIED)
+- [ ] regeneracja audit_20_percent.json na finalnym manifeście
+- [ ] make_zip.py + publikacja ZIP (artefakt) + PR (nie-draft) + surowy git diff --stat
