@@ -21,3 +21,4 @@
 - W tle: `artifacts/bollards-0183/tools/pipeline_r2.ps1` (build r2 -> import+Low+High r2 -> EditMode -> A/B bez rzędu -> restore). Status: `artifacts/logs/pipeline-r2.status`.
 ## NASTĘPNY KROK (komenda)
 `Get-Content C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bollards-0183\artifacts\logs\pipeline-r2.status` (gdy przerwane: `pwsh artifacts/bollards-0183/tools/pipeline_r2.ps1 -From <build|render|editmode|ab|restore>`)
+- 22:47 build r2 OK (8 min): 8 słupków / 7 przęseł, max_step 0,025 m, PNG w derived = atlas r2 (sprawdzone bajtowo). Kamery przeliczone z instancji (`make_cameras.py`). Trwa import + Low + High r2; pytest tests/gis w tle (`artifacts/logs/pytest-gis-r2.log`).

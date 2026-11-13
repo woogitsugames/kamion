@@ -19,7 +19,17 @@ Mistral p9, M50-056), więc reguła generatora nie ma z czego ich postawić.
    LOD0: słupek 10-kątny z kopułką, 4 ucha, każdy łańcuch jako dwie skrzyżowane karty alfa z teksturą ogniw
    (ogniwa na płask / bokiem na przemian, druga karta przesunięta o jedno ogniwo). LOD1: słupek 5-kątny, każdy
    łańcuch = jedna nieprzezroczysta taśma 12 mm (bez alfa-testu ogniw, żeby łańcuch nie znikał w mipmapach).
-   Kolizja: jedno niskie pudło na przęsło. Polityka LOD/cull = domyślna małych mebli (`InstanceImporter.Policy`:
+   Kolizja: jedno niskie pudło na przęsło.
+   **Układ atlasu (r2).** Render r1 pokazał czerwone ogniwa blado-różowe w Unity (w Blenderze czerwone). Przyczyna:
+   import świata to ASTC 6×6 + trilinear (`InstanceImporter.ImportTexture`), a granica czerwone|białe ogniwa leżała na
+   u = 160 px — w środku bloku 6×6 (160/6 niecałkowite) i tuż przy krawędzi karty, więc koder bloków i próbki
+   bilinearne mipów ≥ 2 mieszały biel z czerwienią. r2: każda granica kolorów na wielokrotności 24 px (całe bloki
+   4/6/8/12), kolumna ogniw 32 px ma po bokach 8 px przezroczystego marginesu w kolorze własnej farby (1 teksel mipa 3),
+   czerwony i biały slot stykają się na u = 192 px (krawędź teksela każdego mipa do 64 px), a taśmy LOD1 mają stały
+   UV w litej łacie 24 × 48 px (zero śladu filtra przez granicę). Układ (px): słupek 0–120, stal 120–144 (wiersze 0–48
+   łata czerwona, 48–96 biała), ogniwa czerwone 144–192, białe 192–240, 240–256 rezerwa (biel, α 0). Zużycie farby
+   na koronach ogniw 0,6 → 0,4 (na zdjęciu łańcuch czyta się jako ciemnoczerwony). Test
+   `test_atlas_r2_no_red_white_bleed` pilnuje wyrównania i koloru kolumny czerwonej w mipach 0–4. Polityka LOD/cull = domyślna małych mebli (`InstanceImporter.Policy`:
    30 / 120 m × lodBias) — bez zmian w C#.
 3. **Wymiary** (stałe w module, każda z opisem źródła):
    | wielkość | wartość | źródło |
