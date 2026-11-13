@@ -86,6 +86,21 @@ Andersa/Putry (−2 draw na tablicę).
   regionu; nieużyte do zmian (UNVERIFIED paczka).
 - 1801374: rząd latarni z ortofoto jest w świecie, ale kamera sbs ma inną pozę/odchylenie niż zdjęcie i latarnia
   z x ≈ 0,68 zdjęcia nie trafia w ten sam punkt kadru gry — do sprawdzenia po korekcie póz kamer (0161), OTWARTE.
+- Recenzja s17 (`docs/reports/visual/REVIEW-2026-11-13-s17-0162.md`, SCAL warunkowo) — poprawki i sondy r3/r4
+  (overcast, Low+High, pary `artifacts/furn-0162/pairs/probe-*-r3.jpg` i `-r4.jpg`):
+  - P1 pas 0,3 m u stopy latarni (był czarny, sRGB 15 przy maszcie 70 na High): tekstura pasa pod `steel_galv`
+    (metal 0,9) 112 → 206 (r3: 46, nadal ciemnoszary) → **232** (r4: 58 / maszt 70 High, 83 / 94 Low) — jasnoszary,
+    o krok ciemniejszy od cynku, bez ciemnej stopy jak na P1-110. ZAMKNIĘTE. Wnęka drzwiczek na LOD0 — P2, bez zmian.
+  - P1 margines VMS P010: czcionka zmniejszana do ≤ 90 % szerokości panelu; „5 MIN” / „7 MIN” mają margines. ZAMKNIĘTE.
+    LED bez emisji — P2, otwarte.
+  - P2 wiata grafitowa (`bus_shelter_black`) bez niebieskiego pasa informacyjnego (G5-020 Lipowa). ZAMKNIĘTE.
+  - P2 peron/utwardzenie pod wiatą — w 0161 (krawężnik przystankowy); brud/AO na stopach wiat — otwarte.
+- Przegląd P7 / M45: bramownica A Andersa — „675 Centrum” to 3. wiersz tej samej tablicy (nie dzielić), bez zmian.
+  Portal od północy (G3-P005..P008, 2019 P7-001 i 2024): lewa 675 Centrum / 65 Bobrowniki PL BY / 19 Lublin, środkowy
+  mały panel ↑ 675 Centrum, prawa 8 E67 Warszawa / 65 Ełk — wszystkie trzy w danych (`tysiaclecia-s-putry-portal`,
+  `lanes: [1]` = środek) i widoczne na `probe-f162-tys-portal-g3p005.jpg`. Najazd od południa (2022) bez „Centrum”.
+- **Decyzja właściciela D62**: +10 draws Low na `g3b-rondo-putry-approach` (421 → 431) za 3 prawdziwe konstrukcje
+  2024 al. Tysiąclecia — przyjęte. Dalsza redukcja (tablice scalone z bramownicą w jeden mesh) — nie robiona.
 
 ## Konsekwencje
 - Nowe prototypy i tablice = nowe siatki/tekstury; budżet Low mierzony na kamerach trasy (sekcja „Dowody”).
