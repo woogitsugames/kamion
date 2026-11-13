@@ -137,6 +137,11 @@ def test_skewed_corner_tooth_is_dropped_but_a_long_diagonal_boundary_stays():
     assert all(_diag_deg(r, front, ax) <= PL.SKEW_DROP_DEG for r in lay["runs"])
     assert any(r["front"] for r in lay["runs"])                                   # the front stays closed
     assert sum(1 for r in lay["runs"] if not r["front"]) >= 3                     # the straight sides stay
+    # ADR 0159 (review of PR #38): the two teeth are replaced by their chord - no 2 m hole in the east fence line
+    assert lay.get("teeth_bridged") == 1
+    chord = [r for r in lay["runs"] if abs(r["a"][0] - 20.0) < 1e-6 and abs(r["b"][0] - 20.0) < 1e-6
+             and {round(float(r["a"][1])), round(float(r["b"][1]))} == {10, 12}]
+    assert len(chord) == 1 and not chord[0]["front"]
     # a long diagonal side (a road clearance line), 22.4 m at 26.6 deg: kept
     diag = Polygon([(0, 0), (20, 0), (30, 20), (30, 30), (0, 30)])
     lay2 = PL.layout(_plot_with(diag), None, PL._Near())
@@ -196,7 +201,7 @@ def test_region_data_no_short_diagonal_fence_panels(region_fence_runs):
             if d > 15.0:
                 diag += 1
                 assert np.hypot(*(r["b"] - r["a"])) >= PL.STUB_M or r["front"], (p["id"], d)   # only long / gate-post-anchored
-    assert total > 500 and diag == 7
+    assert total > 500 and diag <= 7          # ADR 0159: an upper bound - the exact count moves with the region data
     r16 = [p for p in region_fence_runs if p["id"] == "bdot:2BE4B431-AD81-1BF0-E053-CC2BA8C0D140"]
     assert len(r16) == 1
     c, eu, ev = r16[0]["frame"]

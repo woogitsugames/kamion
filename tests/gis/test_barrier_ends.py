@@ -95,10 +95,9 @@ def audit():
     return BA.analyze_region(REGION_ID)
 
 
-@pytest.mark.xfail(strict=False,
-                    reason="M29: wolne końce biegów pomostowych - po regeneracji świata (world-int-s16, 2026-11-13) "
-                           "2 z 42 biegów (c:w177895177 L bridge przy E 669,4 N -781,9; c:w240542867 R approach "
-                           "przy E -739,6 N 74,1); przed poprawką 32-34. Cel 0 - osobne zadanie, potem zdjąć xfail.")
+# ADR 0159: xfail removed. The last two "free" ends (c:w177895177 L at E 669.4 N -781.9, c:w240542867 R at
+# E -739.6 N 74.1) are ends the dedup led onto the BODY of the rail of the merging deck - continued, not free
+# (barrier_audit.FREE_END_ON_RAIL_M).
 def test_no_free_deck_ends(audit):
     assert audit["deck_run_ends_free"] == 0, audit["free_ends"][:10]
 

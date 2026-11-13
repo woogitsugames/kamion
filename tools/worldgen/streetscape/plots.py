@@ -544,6 +544,7 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
     posts = [g["m"] + g["t"] * (sx * (g["w"] / 2 + 2 * g["ph"])) for g in
              ([out["gate"]] if out["gate"] is not None else []) + ([out["wicket"]] if out["wicket"] is not None else []) + out["wickets"]
              for sx in (-1.0, 1.0)]
+    teeth = []
     while True:
         drop = None
         for i, r in enumerate(out["runs"]):
@@ -552,6 +553,7 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
             if _diag_deg(r) > SKEW_DROP_DEG:                                # a clipped-corner tooth: no panel at an angle,
                 if not any(np.hypot(*(e - q)) < 0.9 for e in (r["a"], r["b"]) for q in posts):   # unless it starts on a gate post
                     drop = i
+                    teeth.append(r)
                     break
             if r["front"]:                                                  # the street front stays closed up to its corner
                 continue
@@ -566,6 +568,37 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
             break
         del out["runs"][drop]
         out["stubs_dropped"] = out.get("stubs_dropped", 0) + 1
+    # ADR 0159 (review of M30 / PR #38): dropping a tooth that joined a run at both ends left a hole in the fence line
+    # (the V of r16_drive_3: 1.14 m + 0.76 m; a 45 deg tooth: 2 m). The teeth that touch are chained and the chain is
+    # closed by its chord when the chord lies along a frame axis and both its ends meet a run that is still built -
+    # the fence line runs straight across the clipped corner instead of zigzagging or opening.
+    while teeth:
+        chain = [teeth.pop()]
+        grew = True
+        while grew:
+            grew = False
+            for r in list(teeth):
+                if any(np.hypot(*(e - q)) < 0.1 for e in (r["a"], r["b"]) for o in chain for q in (o["a"], o["b"])):
+                    chain.append(r)
+                    teeth[:] = [x for x in teeth if x is not r]
+                    grew = True
+        pts = [e for r in chain for e in (r["a"], r["b"])]
+        ends = [e for e in pts if sum(1 for q in pts if np.hypot(*(e - q)) < 0.1) == 1]
+        if len(ends) != 2:
+            continue
+        a, b = ends
+        L = float(np.hypot(*(b - a)))
+        if not 0.6 < L <= 2 * STUB_M:
+            continue
+        chord = {"style": chain[0]["style"], "h": chain[0]["h"], "a": a, "b": b, "n": chain[0]["n"], "front": chain[0]["front"]}
+        if _diag_deg(chord) > SKEW_DROP_DEG:
+            continue
+        if all(any(np.hypot(*(e - q)) < 0.7 for o in out["runs"] for q in (o["a"], o["b"])) for e in (a, b)):
+            t = (b - a) / L
+            nn = np.array([-t[1], t[0]])
+            chord["n"] = nn if float(nn @ chain[0]["n"]) >= 0 else -nn
+            out["runs"].append(chord)
+            out["teeth_bridged"] = out.get("teeth_bridged", 0) + 1
     out["segs"] = [(r["a"], r["b"]) for r in out["runs"]]
     return out
 
