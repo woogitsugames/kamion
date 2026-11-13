@@ -241,7 +241,7 @@ def runoff_uv1(runoff, ua, ub, za, zb):
     seams and smeared streaks on big halls). None when runoff is None."""
     if runoff is None:
         return None
-    zt_r, uo, ls = runoff
+    zt_r, uo, ls = runoff[:3]                     # a 4th value = block table (ADR 0196, runoff_cells)
     a = uo + ua
     sh = RUNOFF_PERIOD_M * math.floor(a / RUNOFF_PERIOD_M)
     a, b = a - sh, uo + ub - sh
@@ -257,7 +257,9 @@ def runoff_uv1(runoff, ua, ub, za, zb):
 # stretches of a wall repeat in step, and a fifth of the blocks carry short streaks only. Mesh only (TEXCOORD_1), no
 # shader or texture change. Quiet columns measured on T_parapet_runoff.png (High, 1024 px; sets_facade.parapet_runoff
 # seed 521): column mean of R + G below the drip band, max over +-0.25 m <= 0.004 (layer mean 0.017).
-RUNOFF_QUIET_U = (0.98, 2.60, 4.27, 6.61, 8.91, 10.88, 14.44, 16.20, 20.55, 23.25)
+RUNOFF_QUIET_U_ALL = (0.98, 2.60, 4.27, 6.61, 8.91, 10.88, 14.44, 16.20, 20.55, 23.25)
+# six of the ten are used (blocks of 2.3-6.1 m, mean 4 m): ten blocks cost +30 % LOD1 triangles on the Dojlidy tile
+RUNOFF_QUIET_U = (0.98, 4.27, 6.61, 10.88, 14.44, 20.55)
 RUNOFF_BLOCKS = tuple((a, (b - a) % RUNOFF_PERIOD_M) for a, b in zip(RUNOFF_QUIET_U, RUNOFF_QUIET_U[1:] + RUNOFF_QUIET_U[:1]))
 RUNOFF_SHUFFLE_DEPTH_M = 4.0   # the layer is 4 m deep (x length scale); below it the wall needs no cuts
 RUNOFF_SHORT_SHARE = 0.2       # blocks with short streaks only (length scale x 0.3)
@@ -285,10 +287,11 @@ def runoff_blocks(key, length):
     return out
 
 
-def runoff_cells(runoff, ua, ub, za, zb):
+def runoff_cells(runoff, ua, ub, za, zb, mat="hall_wall"):
     """Sub-quads of a wall quad [ua, ub] (absolute perimeter u) x [za, zb] with their run-off TEXCOORD_1:
-    [(u0, u1, z0, z1, uv1)]. Without a block table (runoff of 3 values, or None) the quad itself (runoff_uv1)."""
-    if runoff is None or len(runoff) < 4 or not runoff[3]:
+    [(u0, u1, z0, z1, uv1)]. Without a block table (runoff of 3 values, or None) the quad itself (runoff_uv1); so are
+    pieces that are not hall cladding (plinth: metres below the streaks on any hall worth looking at)."""
+    if runoff is None or len(runoff) < 4 or not runoff[3] or not str(mat).startswith("hall_wall"):
         return [(ua, ub, za, zb, runoff_uv1(runoff, ua, ub, za, zb))]
     zt_r, _uo, ls, blocks = runoff[:4]
     zs = zt_r - RUNOFF_SHUFFLE_DEPTH_M * ls * RUNOFF_LEN_MUL[1] - 0.05
@@ -452,7 +455,7 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
                 marks = sill_marks(sills, ua, ub, za, zb2, oa, ob, (zb2 - zb) / max(zt - zb, 1e-6))
             if marks is None:             # ADR 0196: the run-off block table may cut the quad (runoff_cells)
                 marks = [(q0 - u0, q1 - u0, uv1, z0_, z1_)
-                         for q0, q1, z0_, z1_, uv1 in runoff_cells(runoff, u0 + ua, u0 + ub, za, zb2)]
+                         for q0, q1, z0_, z1_, uv1 in runoff_cells(runoff, u0 + ua, u0 + ub, za, zb2, mat)]
             for c0, c1, uv1, *zz in marks:
                 z0_, z1_ = zz if zz else (za, zb2)
                 va_, vb_ = (gnd(u0 + c0), gnd(u0 + c1)) if gnd else (vref, vref)

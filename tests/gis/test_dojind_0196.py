@@ -47,7 +47,7 @@ def test_runoff_blocks_cover_the_wall_and_never_repeat_in_step():
     assert bl[0][0] == 0.0 and bl[-1][1] >= 400.0
     quiet = set(round(q, 2) for q in BM.RUNOFF_QUIET_U)
     for (a0, a1, t0, t1, mul), nxt in zip(bl, bl[1:] + [None]):
-        assert a1 - a0 == pytest.approx(abs(t1 - t0)) and 1.5 < a1 - a0 < 4.5   # unit scale: streak widths unchanged
+        assert a1 - a0 == pytest.approx(abs(t1 - t0)) and 2.2 < a1 - a0 < 6.2   # unit scale: streak widths unchanged
         assert {round(t0 % P, 2), round(t1 % P, 2)} <= quiet               # seams sit on quiet columns of the layer
         assert 0.29 < mul <= BM.RUNOFF_LEN_MUL[1]
         if nxt:
@@ -60,7 +60,7 @@ def test_runoff_blocks_cover_the_wall_and_never_repeat_in_step():
                 return (t0 + (t1 - t0) * (u - a0) / (a1 - a0)) % P
     us = np.arange(0.5, 370.0, 0.5)
     same = np.mean([abs(tex(u) - tex(u + P)) < 0.3 for u in us])
-    assert same < 0.1, same
+    assert same < 0.2, same
     short = np.mean([b[4] < 0.31 for b in bl])
     assert 0.05 < short < 0.4
 
@@ -94,7 +94,7 @@ def test_quiet_columns_match_the_layer_texture():
     H, W, _ = a.shape
     rows = np.arange(H) * 4.0 / H
     col = a[rows > 0.45, :, 0].mean(0) + a[rows > 0.45, :, 1].mean(0)
-    for q in BM.RUNOFF_QUIET_U:
+    for q in BM.RUNOFF_QUIET_U_ALL:
         i0, i1 = int((q - 0.25) / 24.0 * W), int((q + 0.25) / 24.0 * W)
         assert col[i0:i1 + 1].max() <= 0.006, q
     assert col.mean() > 0.012
