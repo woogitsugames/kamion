@@ -27,3 +27,7 @@
 - ab_run przerwany po build_furn (exit 0) w fazie B. Bazowe rendery A kompletne (base-Low-clear 49, base-probes-Low, base-sbs-Low-clear). Drzewo = HEAD + świeże wyjście build B (dach w atlasie -> 2 sloty; commit regen).
 - W TLE: `artifacts/furn-0162/tools/ab_resume_b.ps1` (tylko import + rendery B), log `artifacts/furn-0162/logs/ab_run.log`.
 - NASTĘPNY KROK: po "== done" w logu: `uv run --project tools/worldgen python artifacts/furn-0162/tools/budget.py artifacts/furn-0162/base-Low-clear artifacts/furn-0162/after-Low-clear artifacts/furn-0162/budget-low.txt`; `pwsh -File artifacts/furn-0162/tools/pairs.ps1`. Jeśli przerwane przed "== done": zwolnij slot i `pwsh -File artifacts/furn-0162/tools/ab_resume_b.ps1`.
+- 10:55 A/B czysty (after1, Low): max draws +24 g3b-rondo-putry-approach, +11 putry-above, +11 route-putry-entry-signs, +9 route-putry-approach, +10 g3b-eye-s1482; tris max +1.0 %. Przyczyna: 5 nowych tablic OB x 3 submesze + 3 konstrukcje. pytest gis: 1 fail (test_photo_matched_overrides_applied: 3 nowe bramownice) -> test poprawiony. Dodany test EditMode InstancePolicyShelterTests.
+- Redukcja: tablica OB = 1 materiał (lico + szary pas tyłu w teksturze tablicy; tył i szyny próbkują pas) -> 1 draw zamiast 3.
+- W TLE: `pwsh -File artifacts/furn-0162/tools/ab_b2.ps1` (build + import + rendery after*), log ab_run.log.
+- NASTĘPNY KROK: po "== done": `python artifacts/furn-0162/tools/budget.py artifacts/furn-0162/base-Low-clear artifacts/furn-0162/after-Low-clear artifacts/furn-0162/budget-low.txt`; pairs.ps1; EditMode testy.

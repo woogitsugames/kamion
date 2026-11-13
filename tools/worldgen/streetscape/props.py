@@ -323,13 +323,34 @@ def plate(code):
     return m, l1, None
 
 
+# ADR 0162 (budget): OB code -> v height of the plain grey back band that export.py appends under the board face in
+# the board's own texture. Face, back sheet and rails then share ONE material: 1 instanced draw per board, not 3
+# (the 3 new al. Tysiąclecia portals added 5 boards = +15 draws on the Putry approach cameras).
+BOARD_BAND = {}
+BOARD_BAND_PX = 16
+BOARD_BACK_SRGB = (126, 128, 128)        # = materials "board_back" colour 0.21/0.22/0.22 linear (ADR 0127 plain back)
+
+
 def board(code, w, h):
     m = Mesh()
     y = 0.06
+    band = BOARD_BAND.get(code) if code.startswith("OB_") else None
+    v0 = band or 0.0
     # face normal +y like the plates (the old winding showed every E-2 / gantry board's grey back to the driver)
     m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
-           uv=((1, 0), (1, 1), (0, 1), (0, 0)))   # u mirrored as on the plates
-    # overhead boards (gantries, "OB_"): plain grey sheet back (ADR 0127), other boards the plate back texture
+           uv=((1, v0), (1, 1), (0, 1), (0, v0)))   # u mirrored as on the plates
+    if band:
+        # overhead board with a back band: back sheet + rails sample the band centre (plain grey, ADR 0127)
+        buv = (0.5, band / 2)
+        m.quad(f"sign_{code}", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+               [-w / 2, y - 0.01, -h / 2], uv=(buv,) * 4)
+        tmp = Mesh()
+        for sx in (-1, 1):
+            tmp.box("rail", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)
+        for V, T, _ in zip(*tmp.prims["rail"]):
+            m.add(f"sign_{code}", V, T - T.min(), np.tile(buv, (len(V), 1)))
+        return m, m, None
+    # overhead boards (gantries, "OB_") without a band: plain grey sheet back (ADR 0127), other boards the plate back
     m.quad("board_back" if code.startswith("OB_") else "plate_back",
            [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
            [-w / 2, y - 0.01, -h / 2],

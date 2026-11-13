@@ -192,3 +192,21 @@ def test_panel_board_arrows_and_country_ovals():
     im, w, h = SG.vms_board(["CENTRUM PRZEZ:"], (3.6, 1.1))
     a = np.asarray(im.convert("RGB"), float)
     assert a.mean() < 80 and (a.min(axis=2) > 200).mean() > 0.005
+
+
+def test_overhead_board_is_one_material_with_plain_back_band():
+    """Budget: face + grey back sheet + rails of a gantry board share the board's own texture (1 draw, not 3);
+    the back samples the plain grey band under the face (ADR 0127 plain back kept)."""
+    PP.BOARD_BAND["OB_band_test"] = 0.05
+    try:
+        m, l1, _ = PP.board("OB_band_test", 4.0, 2.0)
+    finally:
+        PP.BOARD_BAND.pop("OB_band_test")
+    assert set(m.prims) == {"sign_OB_band_test"} and l1 is m
+    V, T, UV = (np.concatenate(x) for x in m.prims["sign_OB_band_test"])
+    face = V[:, 1] > 0.055
+    assert UV[face][:, 1].min() == pytest.approx(0.05)             # the face never samples the band
+    assert np.allclose(UV[~face], [0.5, 0.025])                    # back + rails: band centre
+    r, g, b = (c / 255 for c in PP.BOARD_BACK_SRGB)
+    lin = [((c + 0.055) / 1.055) ** 2.4 for c in (r, g, b)]
+    assert lin == pytest.approx([0.21, 0.22, 0.22], abs=0.01)
