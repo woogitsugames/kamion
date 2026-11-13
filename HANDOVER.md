@@ -13,6 +13,7 @@
 | 0166 | region Dojlidy/Krywlany (D60) | `region-0166` | `artifacts/live/region-0166.md` |
 | — | przegląd ZIP-ów paczki 2 (P2,P3,P5,P6,P8,P9,P10; brak P1,P4,P7) | `research/_incoming` | `docs/reports/REVIEW-2026-11-13-s16-research-pack-02.md` |
 - Mistral r7 przygotowany: `docs/owner/MISTRAL-TASKS-7.md` (M39–M43). S24+ High/30 na końcowym APK — nie zrobione.
+- **Stan agentów po zatrzymaniu (10:4x):** 0161 @ `9531c080c` — zmiany świata w kodzie, b4 w tle (`artifacts/p1-0161/tools/chain-b4.ps1`), pozy r1 wybrane tylko w live, 3 czerwone testy na b3 (gate wyjazdu, ratchet lanes — może decyzja właściciela), dotknął `furniture.py`/`hero_bridge.py` (konflikt z 0162); horyzont = nieaktualny poligon drzew BDOT → 0163. 0162 @ `02a1253f7` — kod gotowy (wiaty BKM, latarnie 11 m, tablice G3, 1801374 latarnie), A/B budżetu w tle (`ab_run.log`), draws na Putry prawdopodobnie > +0 → decyzja właściciela; zmienił `InstanceImporter.cs` (prefiks `bus_shelter`) — do akceptacji. 0163 @ `86e4cf44f` — korony kartami w plot_kit, żywopłoty 38 % (69 % tuja), iglaki 25 %, widoczne na Low; build 4 niewykonany, budżet niezmierzony (zła baza), import bazowy w tle. 0165/0166 — patrz live. Przegląd paczki 2: tylko rozpakowane do `research/_incoming/`, bez werdyktów (priorytet P6, P9, P10).
 - **Ostatni przydzielony ADR: 0166.**
 
 # HANDOVER — kamion, SESJA 16 (start 2026-11-12 22:23, nowe konto: 5 h 0 %, tydzień 0 %, Fable 0 %; reset 5 h 13.11 03:20)
