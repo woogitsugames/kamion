@@ -1,7 +1,7 @@
 # ADR 0173 — World determinism between builds: line-ending-free source hashes, no wall clock in derived data, per-candidate tree attributes
 
-Status: implemented on branch `determ-0173` (base main `3a60019ff`, 2026-11-13, s17); not merged. Python only —
-Unity import / renders NOT re-run (PHONE_RUN lock held during the work). Supersedes nothing; extends ADR 0096
+Status: implemented on branch `determ-0173` (base main `3a60019ff`, 2026-11-13, s17); not merged. Unity import +
+renders re-run twice on identical data (main world) after PHONE_RUN cleared; the new world (run4) NOT imported/rendered. Supersedes nothing; extends ADR 0096
 (PYTHONHASHSEED independence of the road stage).
 Source: reviews `docs/reports/visual/REVIEW-2026-11-13-s17-0161.md` / `-0167.md` ("rozkład drzew/impostorów różni
 się między buildami, 1–3 % pikseli", +7,5 % triangles in `stretch-05-docks`).
@@ -42,11 +42,14 @@ się między buildami, 1–3 % pikseli", +7,5 % triangles in `stretch-05-docks`)
   get new height / variant / yaw / lean, and the understorey and edge passes of such forest stands (positions drawn
   after the main pass) get new positions. Features untouched by roads / paving / buildings are bit-identical.
   After this, edits stay local. Chunk GLBs change slightly (forest HLOD / canopies derived from the trees).
-- Unity side (instance order, LOD/impostor choice) reviewed in code: import order follows the manifest chunk list,
-  landmark GLBs are sorted, no RNG in the importer. NOT verified by a render pair; if a residual 0,5–1 % pixel
-  difference between two imports of identical data remains, the next suspect is the capture timing of LOD
-  crossfade / streaming in `VisualQaRunner`.
-
+- Unity side, measured: two `import-region.ps1 -Tiers Low` of identical data give `Instances.asset` files that differ
+  byte-wise (Unity assigns random local fileIDs to sub-assets and writes them in fileID order) but are identical in
+  content: 1076/1076 objects equal after mapping fileIDs to names (`tools/worldgen/qa/compare_unity_asset.py`).
+  Two `visual-qa.ps1 -Scene WorldC -Tier Low -Lighting clear` runs on that import: 33/48 frames pixel-identical,
+  the rest ≤ 0,018 % pixels (`stretch-05-docks` 0,015 %). So the 1–3 % tree differences in the reviews are NOT
+  import or capture noise: they come from changed inputs/code between the two builds, amplified by the stream shift
+  fixed here. The +7,5 % triangles of `stretch-05-docks` were not reproduced on identical data (not measured
+  on the new world).
 ## Numbers of the one-time change (run1 = main code `3a60019ff`, run4 = this ADR; whole region)
 
 | | run1 | run4 |
@@ -58,5 +61,5 @@ się między buildami, 1–3 % pikseli", +7,5 % triangles in `stretch-05-docks`)
 | derived files differing (of 199) | — | 152 (instances + chunk GLB / HLOD bytes, sizes within ±30 B) |
 
 Two runs of the same code: 199/199 derived files byte-identical (after removing `extracted_in_s`).
-Not measured: Unity tris of `stretch-05-docks` and the render pairs — needs `scripts/import-region.ps1` +
-`visual-qa.ps1 -Scene WorldC` twice on the same data (blocked by PHONE_RUN during this work).
+Not measured: import/renders of the run4 world (one-time look change) — after merge: `build_world` +
+`import-region.ps1` + SBS/visual-critic of the forest frames. Evidence: `artifacts/determ-0173/evidence.txt`.
