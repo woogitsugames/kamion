@@ -153,7 +153,10 @@ M = {
     # cassette/plinth ratio on one face (p40: 0.34-0.38). Back to the measured 0.04 (hue of the old .068/.072/.070),
     # checked as a ratio to the plinth on 2 cameras (tools/worldgen/qa/tint_ratio.py).
     "noise_panel_dark": {"color": [0.039, 0.041, 0.040], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
-    "noise_post": {"color": [0.17, 0.21, 0.18], "rough": 0.55, "metal": 0.3},
+    # ADR 0159 (REVIEW s14-0146 / s16 P1 "slupki mietowe"): 0.17 / 0.21 / 0.18 read pale mint in clear light. Mapillary
+    # 494288258686575 (back-lit): posts near black; 810525063224609 (sunlit): mid grey with a green cast. Linear
+    # 0.05 / 0.058 / 0.054 (sRGB ~0.25). Also the paint of the deck barrier `dark_rails`. WORKING_VALUE
+    "noise_post": {"color": [0.050, 0.058, 0.054], "rough": 0.55, "metal": 0.3},
     # ADR 0139 (review s13-0127 P2): posts and rails of the tall glazed screens along al. Tysiąclecia are dark green
     # (Mapillary 1801374876712141: posts 55-80 / 66-95 / 66-100 sRGB against the sky, cassette band 33-37), not the
     # light green-grey of the Andersa / Putry barriers. Used through the zone key `post_mat`. WORKING_VALUE
@@ -377,7 +380,11 @@ M = {
     # sheet 0.17 -> 0.056. WORKING_VALUE read off Mapillary 494288258686575.
     "noise_glass_lined": {"color": [0.030, 0.042, 0.040], "rough": 0.04, "alpha": 0.10, "blend": True,
                           "shader": "car_glass", "dust": 0.75,
-                          "screen": {"horizon_sky": 0.85, "haze": 0.02, "stripe": [44.0, 0.30, 0.12],
+                          # ADR 0159 (REVIEW s14-0146 / s16 P1): at strength 0.30 the printed lines aliased into a
+                          # raster between the posts on Low - the screen read as a mesh fence (494288) and as a
+                          # light fence against the trees (810896: dark on the photo). Strength 0.30 -> 0.10
+                          # (the lines are real - Mapillary 494288258686575 - but faint). WORKING_VALUE
+                          "screen": {"horizon_sky": 0.85, "haze": 0.02, "stripe": [44.0, 0.10, 0.12],
                                      "haze_color": [0.14, 0.145, 0.145]}},
     # authored plantings (streetscape.plantings, review r6 W-N12): red berberis hedge, island bed soil / bark mulch.
     # Linear albedo WORKING_VALUE from the CC0 Bieżeństwa photo (hedge vs asphalt luminance ratio, overcast).
@@ -423,7 +430,7 @@ M = {
     "plaster_white": {"color": [0.76, 0.76, 0.74], "rough": 0.9, "texture_set": "plaster"},
     "plaster_band_grey": {"color": [0.26, 0.27, 0.27], "rough": 0.9, "texture_set": "plaster"},
     # retaining walls of the raised ramps (roads.profile.mark_walled_ramps): block-faced concrete
-    "ramp_wall_blocks": {"color": [0.34, 0.33, 0.31], "rough": 0.9, "texture_set": "concrete_blocks_split"},
+    "ramp_wall_blocks": {"color": [0.34, 0.33, 0.31], "rough": 0.9, "texture_set": "concrete_blocks_split", "set_tile": True},
     # far-field backdrop beyond the 2x2 km region border (ADR 0085, streetscape.far_field): one merged submesh per
     # cardinal sector with linear albedo in COLOR_0.rgb, window-mode flag in COLOR_0.a (1 = block/office grid,
     # 0.75 = ribbon windows, 0 = windowless wall/roof/plinth/chimney/pylon), and bay x storey coordinates in TEXCOORD_1.

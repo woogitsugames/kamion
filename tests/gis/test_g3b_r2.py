@@ -43,7 +43,10 @@ def test_viaduct_screen_is_clear_glass_with_faint_lines():
 
 def test_tysiaclecia_screen_posts_are_dark():
     dark, light = MT.M["noise_post_dark"], MT.M["noise_post"]
-    assert _lum(dark["color"]) <= 0.45 * _lum(light["color"])
+    # ADR 0159: the Andersa / Putry posts are no longer the pale mint 0.17 / 0.21 / 0.18 (REVIEW s16 P1) - both are
+    # dark now; the Tysiaclecia ones keep their green hue
+    assert _lum(dark["color"]) <= 0.10 and _lum(light["color"]) <= 0.10
+    assert dark["color"][1] / dark["color"][0] > light["color"][1] / light["color"][0]
     assert dark["color"][1] > dark["color"][0] and dark["color"][1] > dark["color"][2]       # still a green
     o = next(x for x in _overrides() if x["id"] == "andersa-ne-noise-barrier-glazed")
     zones, _ = F._noise_style_overrides([o], np.array([777995.0, 596223.0]))

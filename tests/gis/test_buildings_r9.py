@@ -109,6 +109,106 @@ def test_free_fence_stub_is_dropped_and_front_is_kept():
     assert sum(1 for r in lay2["runs"] if not r["front"]) >= 3 and not lay2.get("stubs_dropped")
 
 
+def _diag_deg(run, front, frame_ax):
+    # deviation of the run direction from the nearest frame axis (same metric as plots._diag_deg)
+    t = (run["b"] - run["a"]) / np.hypot(*(run["b"] - run["a"]))
+    return float(np.degrees(np.arccos(np.clip(max(abs(float(t @ front)), abs(float(t @ frame_ax))), 0.0, 1.0))))
+
+
+def _plot_with(poly, drive_side=1):
+    return {"key": "k", "frame": (np.array([10.0, 15.0]), np.array([1.0, 0.0]), np.array([0.0, 1.0])),
+            "front": np.array([0.0, -1.0]), "bbox": (-5.0, 5.0, -5.0, 5.0), "poly": poly,
+            "front_style": "lamella", "side_style": "boards_grey", "front_h": 1.6, "side_h": 1.9,
+            "drive_side": drive_side, "houses": ["a"], "house_pts": [np.array([10.0, 15.0])], "road_d": 3.0,
+            "foot": box(5, 10, 15, 20), "gate_kind": "swing", "steps": []}
+
+
+def test_skewed_corner_tooth_is_dropped_but_a_long_diagonal_boundary_stays():
+    """M30 / r16_drive_3: a clipped plot polygon leaves a short zigzag tooth on a side edge; joined at both ends,
+    so the free-end stub rule alone does not catch it. A tooth (shorter than STUB_M, deviating from both frame
+    axes by > SKEW_DROP_DEG) is not built; a long skewed run follows a real boundary and stays."""
+    from shapely.geometry import Polygon
+    from streetscape import plots as PL
+    front, ax = np.array([0.0, -1.0]), np.array([1.0, 0.0])
+    # east edge with a 45 deg tooth at (21, 11) - the r16_drive_3 shape
+    zig = Polygon([(0, 0), (20, 0), (20, 10), (21, 11), (20, 12), (20, 30), (0, 30)])
+    lay = PL.layout(_plot_with(zig), None, PL._Near())
+    assert lay.get("stubs_dropped", 0) >= 2
+    assert all(_diag_deg(r, front, ax) <= PL.SKEW_DROP_DEG for r in lay["runs"])
+    assert any(r["front"] for r in lay["runs"])                                   # the front stays closed
+    assert sum(1 for r in lay["runs"] if not r["front"]) >= 3                     # the straight sides stay
+    # ADR 0159 (review of PR #38): the two teeth are replaced by their chord - no 2 m hole in the east fence line
+    assert lay.get("teeth_bridged") == 1
+    chord = [r for r in lay["runs"] if abs(r["a"][0] - 20.0) < 1e-6 and abs(r["b"][0] - 20.0) < 1e-6
+             and {round(float(r["a"][1])), round(float(r["b"][1]))} == {10, 12}]
+    assert len(chord) == 1 and not chord[0]["front"]
+    # a long diagonal side (a road clearance line), 22.4 m at 26.6 deg: kept
+    diag = Polygon([(0, 0), (20, 0), (30, 20), (30, 30), (0, 30)])
+    lay2 = PL.layout(_plot_with(diag), None, PL._Near())
+    long_diag = [r for r in lay2["runs"] if _diag_deg(r, front, ax) > PL.SKEW_DROP_DEG]
+    assert len(long_diag) == 1 and np.hypot(*(long_diag[0]["b"] - long_diag[0]["a"])) > PL.STUB_M
+    assert not lay2.get("stubs_dropped")
+
+
+@pytest.fixture(scope="module")
+def region_fence_runs():
+    """The fence runs of every plot of the built region, planned from the repo data only (tracked region files,
+    a flat synthetic heightfield - Data/raw is not needed): roads -> plots -> layout."""
+    import shapely
+    from roads import pipeline
+    from roads.profile import Heightfield
+    from streetscape import buildings_mesh as BM
+    from streetscape import paved as PV
+    from streetscape import plots as PL
+    from streetscape import sources as SRC
+
+    rid = "bialystok-industrial-c"
+    region = pipeline.load_region(rid)
+    origin = (region["origin"]["x"], region["origin"]["y"])
+    tm = json.loads((pipeline.REGIONS / rid / "terrain.json").read_text(encoding="utf-8"))
+    h, w = tm["samples"][1], tm["samples"][0]
+    wd = pipeline.build(rid, hf=Heightfield(np.full((h, w), 131.0), tm["bbox"], origin))
+    road_parts = [p for p in wd.buf.parts if p.layer == "road"]
+    roads_poly = PV.road_footprint_polygon(road_parts)
+    carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
+    src = SRC.load(rid)
+    overrides = pipeline.load_overrides(rid)
+    blds = BM.load(json.loads((pipeline.REGIONS / rid / "buildings.geojson").read_text(encoding="utf-8")), origin, overrides)
+    yards = []
+    for f in src["bdot10k"]["OT_PTPL_A"]:
+        if f["props"].get("materialnawierzchni") != "grunt naturalny":
+            yards += [g for g in getattr(shapely.make_valid(PV._poly_local(f["geometry"]["coordinates"], origin)), "geoms",
+                                         [shapely.make_valid(PV._poly_local(f["geometry"]["coordinates"], origin))])
+                      if g.geom_type == "Polygon"]
+    bpoly = shapely.union_all([b["poly"] for b in blds])
+    rp = PL.region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=wd.net)
+    return rp["plots"]
+
+
+def test_region_data_no_short_diagonal_fence_panels(region_fence_runs):
+    """M30 / r16_drive_3, on the region data: no built run shorter than STUB_M deviates from the plot's frame axes
+    by more than SKEW_DROP_DEG (the clipped-corner teeth are gone); the only > 15 deg panels left are long ones
+    following a road clearance line. Measured on the repo data: 43 such panels before the rule, 7 after."""
+    from streetscape import plots as PL
+    total = diag = 0
+    for p in region_fence_runs:
+        c, eu, ev = p["frame"]
+        front = p["front"]
+        ax = ev if abs(float(front @ eu)) > 0.5 else eu
+        for r in p["lay"]["runs"]:
+            total += 1
+            d = _diag_deg(r, front, ax)
+            if d > 15.0:
+                diag += 1
+                assert np.hypot(*(r["b"] - r["a"])) >= PL.STUB_M or r["front"], (p["id"], d)   # only long / gate-post-anchored
+    assert total > 500 and diag <= 7          # ADR 0159: an upper bound - the exact count moves with the region data
+    r16 = [p for p in region_fence_runs if p["id"] == "bdot:2BE4B431-AD81-1BF0-E053-CC2BA8C0D140"]
+    assert len(r16) == 1
+    c, eu, ev = r16[0]["frame"]
+    ax = ev if abs(float(r16[0]["front"] @ eu)) > 0.5 else eu
+    assert all(_diag_deg(r, r16[0]["front"], ax) <= 15.0 for r in r16[0]["lay"]["runs"])          # r16_drive_3 itself
+
+
 def test_canopy_crowns_drive_trees_of_a_plot():
     """P1-a: crowns of the orthophoto become instances (big), kit trees (small), bushes; nothing on the house / driveway."""
     from streetscape import plots as PL

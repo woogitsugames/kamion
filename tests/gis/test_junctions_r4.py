@@ -96,12 +96,12 @@ def test_verge_strip_on_the_inside_of_a_curve_keeps_its_slope():
 
 
 class _Lin(FU.Lin):
-    def __init__(self):
-        super().__init__(MeshBuf(), lambda e, n: np.zeros(len(np.atleast_1d(e))))
+    def __init__(self, z0=0.0):
+        super().__init__(MeshBuf(), lambda e, n: np.full(len(np.atleast_1d(e)), z0))
 
 
 def _rail(n=80, tall=None, term=(True, True)):
-    lin = _Lin()
+    lin = _Lin(10.0)       # ground at the foot line (ADR 0159: terminals follow lower ground)
     P = np.column_stack([np.arange(n, dtype=float), np.zeros(n)])
     FU.guardrail(lin, P, np.full(n, 10.0), "c:test:R:bridge", tall, term)
     return lin.buf.parts
@@ -129,11 +129,18 @@ def test_guardrail_free_ends_are_turned_down_and_the_beam_is_decimated():
     z = beam.V[:, 2] - 10.0
     assert np.isclose(z.max(), S.GUARDRAIL_H)
     ends = beam.V[(beam.V[:, 0] < 0.5) | (beam.V[:, 0] > 78.5)]
-    assert np.isclose((ends[:, 2] - 10.0).max(), 0.33)                 # top of the beam at the free end
+    # ADR 0159: the end is sunk - beam top GUARDRAIL_TERMINAL_END_TOP, its bottom edge below the foot line
+    assert np.isclose((ends[:, 2] - 10.0).max(), S.GUARDRAIL_TERMINAL_END_TOP)
+    assert (ends[:, 2] - 10.0).min() < -0.15
     # 79 m straight: terminals + one straight piece, not 79 cells (12 rows x 4 kept stations at most 6)
     assert len(beam.V) <= 12 * 6
     posts = _posts(parts)[0]
-    assert posts.V[:, 0].min() >= S.GUARDRAIL_TERMINAL_M - 0.2        # no post standing above the turned-down end
+    assert posts.V[:, 0].min() >= S.GUARDRAIL_TERMINAL_M - 0.2        # full-height posts start behind the terminal
+    # ADR 0159: one short post in the middle of each terminal (the beam does not hang 4 m without a support)
+    tp = min((p for p in _posts(parts) if p.V[:, 0].min() < S.GUARDRAIL_TERMINAL_M - 0.5), key=lambda p: len(p.V))
+    assert len(tp.V) // 8 == 2
+    assert abs(tp.V[:, 0].min() - S.GUARDRAIL_TERMINAL_M / 2) < 0.2 and abs(tp.V[:, 0].max() - (79 - S.GUARDRAIL_TERMINAL_M / 2)) < 0.2
+    assert tp.V[:, 2].max() - 10.0 < S.GUARDRAIL_H - 0.25
     # ground posts every GUARDRAIL_POST_SPACING_GROUND, top just below the top edge of the beam (the beam hangs on
     # the face of the post)
     assert len(posts.V) // 8 == round((79 - 2 * S.GUARDRAIL_TERMINAL_M) / S.GUARDRAIL_POST_SPACING_GROUND) + 1

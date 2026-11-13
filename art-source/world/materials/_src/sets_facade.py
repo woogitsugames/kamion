@@ -186,6 +186,33 @@ def brick(n=1024):
     return _finish("brick", c, lum, h, rough, t, mort, extra=col_var)
 
 
+def concrete_blocks_split(n=1024):
+    """ADR 0159: split-face concrete blocks of the ramp retaining walls (Mapillary 810525063224609 / 209622370971977,
+    reference only): courses 0.5 m, blocks 1.0 m, half-bond, dark recessed joints ~25 mm, rough broken face with a
+    per-block tone. Block size read off the photos against the 3.0 m screen (WORKING_VALUE +-0.1 m). Tile 2 x 1 m."""
+    Lx, Ly = 2.0, 1.0
+    c = Ctx(n, n // 2, Lx, Ly, seed=1590)
+    X, Y = c.xy()
+    v = Ly - Y
+    course, blk = 0.5, 1.0
+    row = np.floor(v / course).astype(int)
+    xs = (X + (row % 2) * blk / 2) % Lx
+    col = np.floor(xs / blk).astype(int)
+    du = np.minimum(xs % blk, blk - xs % blk)
+    dv = np.minimum(v % course, course - v % course)
+    d = np.minimum(du, dv)
+    joint = sstep(0.022, 0.008, d)                          # 1 in the joint
+    bevel = sstep(0.07, 0.02, d) * (1 - joint)              # the broken face rolls into the joint
+    bid = row * 5 + col
+    t = hash01(bid, 1)
+    rock = noise(c, 3, 0.05, 0.25, beta=1.1)                 # split face: lumps of 5-15 cm
+    grain = noise(c, 4, c.px * 2, 0.02, beta=0.4)
+    lum = (1 + 0.20 * (t - 0.5) + 0.10 * rock + 0.05 * grain) * (1 - 0.18 * bevel) * (1 - joint) + joint * 0.42
+    h = (9e-3 * rock + 0.6e-3 * grain) * (1 - joint) - 14e-3 * joint - 5e-3 * bevel
+    rough = 0.90 + 0.05 * joint
+    return _finish("concrete_blocks_split", c, lum, h, rough, t, joint, ao_k=0.9)
+
+
 def roof_tiles(n=512):
     """S-profile roof tile courses (ADR 0091): roll pitch 0.20 m, course gauge 0.35 m - ceramic / concrete pantile and
     pressed metal tile sheet (blachodachowka module 350 mm) share it (dimensions WORKING_VALUE inside the product
@@ -618,6 +645,8 @@ FACADE_SETS = {
         note="Large-panel block: 3.0 x 2.8 m panels, sealed joints, per-panel tone."),
     "brick": dict(fn=brick, tile_m=[1.04, 1.2], slots=["brick_red", "chimney_brick"],
         note="Brick NF 250 x 65 mm, 10 mm mortar, stretcher bond, per-brick tone."),
+    "concrete_blocks_split": dict(fn=concrete_blocks_split, tile_m=[2.0, 1.0], slots=["ramp_wall_blocks"],
+        note="Split-face concrete blocks 1.0 x 0.5 m, half-bond, dark recessed joints (ramp retaining walls, ADR 0159)."),
     "roof_tiles": dict(fn=roof_tiles, tile_m=[1.4, 1.4], slots=["roof_tiles_*", "roof_metal_*"],
         note="S-profile roof tile courses, roll pitch 0.20 m, gauge 0.35 m (u along the eave, v up the slope)."),
     "curtain_folds": dict(fn=curtain_folds, tile_m=[4.8, 2.7], slots=["trailer_curtain_*"],
