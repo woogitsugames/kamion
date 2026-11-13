@@ -4,38 +4,44 @@
     "sbs-g3-a-2818555625124739": {
       "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": 2.1968,
-      "north_delta_m": -7.9288,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0160: richlv low camera: production position kept, heading from the deck VP (+9.3 deg), eye 0.9 as ADR 0143. WORKING_VALUE, not surveyed.",
+      "east_delta_m": 2.2217,
+      "north_delta_m": -7.9721,
+      "eye_height_m": 0.9,
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-28185556-cur; anchors: viaduct-deck vanishing point x 0.77 (heading 271.4), horizon 0.76, near column x 0.465",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "heading_delta_deg": 9.258,
+      "rectified_horizon_y_fraction": 0.76
     },
     "sbs-g3-a-3970163613102941": {
       "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": 3.2243,
-      "north_delta_m": -8.3676,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0160: production position kept, heading from the deck VP (+10.6 deg), eye 0.9. WORKING_VALUE, not surveyed.",
+      "east_delta_m": 3.2218,
+      "north_delta_m": -8.3543,
+      "eye_height_m": 0.9,
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-39701636-cur; anchors: deck VP x 0.93 (heading 259.3), horizon 0.77, near column x 0.505",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "heading_delta_deg": 10.598,
+      "rectified_horizon_y_fraction": 0.76
     },
     "sbs-g3-a-149248627179406": {
       "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": 1.3733,
-      "north_delta_m": -7.3135,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0160: column resection E573 N-707 (resect.py), heading from the deck VP (+10.4 deg), eye 0.9. WORKING_VALUE, not surveyed.",
+      "east_delta_m": 4.0868,
+      "north_delta_m": -11.0835,
+      "eye_height_m": 0.9,
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-14924862-f0; anchors: deck VP x 0.62 (heading 285.7), column fit (near red column x 0.2, rail from the top-left corner)",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "heading_delta_deg": 10.434,
+      "rectified_horizon_y_fraction": 0.76
     },
     "sbs-g3-a-1406533339711789": {
       "horizon_y_fraction": 0.66,
@@ -54,14 +60,16 @@
     "sbs-g3-a-177786140912399": {
       "horizon_y_fraction": 0.71,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": 0.3569,
-      "north_delta_m": -4.8093,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0160: camera 5 m from the column (570.1,-717.5) at bearing 296, heading 321, eye 0.9: the column was in the world, outside the old frame. WORKING_VALUE, not surveyed.",
+      "east_delta_m": -0.7172,
+      "north_delta_m": -9.5842,
+      "eye_height_m": 0.9,
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-17778614-p; anchors: red-banded column at x 0.15-0.35 (photo 0.15-0.35), office tower x 0.83 (photo 0.82), road curving right",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "heading_delta_deg": 7.713,
+      "rectified_horizon_y_fraction": 0.76
     },
     "sbs-g3-a-178689077481862": {
       "horizon_y_fraction": 0.71,
@@ -104,26 +112,30 @@
     "sbs-g3-a-504348097385466": {
       "horizon_y_fraction": 0.72,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": 0.7796,
-      "north_delta_m": -6.5794,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0160: production position kept, heading from the deck VP (+8.6 deg), eye 0.9. WORKING_VALUE, not surveyed.",
+      "east_delta_m": 0.7597,
+      "north_delta_m": -6.6009,
+      "eye_height_m": 0.9,
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-50434809-cur; anchors: deck VP x 0.52 (heading 296.4), distant teal post x 0.5",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "heading_delta_deg": 8.553,
+      "rectified_horizon_y_fraction": 0.76
     },
     "sbs-g3-a-201270605169291": {
       "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": 4.3238,
-      "north_delta_m": -8.1843,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0160: production position kept, heading from the deck VP (+15.0 deg), eye 0.9. WORKING_VALUE, not surveyed.",
+      "east_delta_m": 4.2999,
+      "north_delta_m": -8.1943,
+      "eye_height_m": 0.9,
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-20127060-cur; anchors: deck VP x 1.05 (heading 252.3), deck rail and soffit band as on the photo",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "heading_delta_deg": 14.962,
+      "rectified_horizon_y_fraction": 0.76
     },
     "sbs-g3-a-2948595898752384": {
       "horizon_y_fraction": 0.62,
@@ -231,14 +243,16 @@
     "sbs-g3-a-1259231227807789": {
       "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": -1.741,
-      "north_delta_m": -1.0108,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0160: production position kept, heading 250 (deck VP right of frame), eye 0.9. Guardrail still farther than on the photo; lateral position unresolved, stays C. WORKING_VALUE, not surveyed.",
+      "east_delta_m": -1.7205,
+      "north_delta_m": -0.9888,
+      "eye_height_m": 0.9,
       "pose_confidence": "C",
-      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-12592312-cur; anchors: deck with abutment on the right, column at the left edge (x 0.05-0.15 vs photo 0.08-0.22), guardrail across the foreground (render farther than the photo)",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "heading_delta_deg": 14.454,
+      "rectified_horizon_y_fraction": 0.76
     },
     "sbs-g3-a-751431972202262": {
       "horizon_y_fraction": 0.7,
@@ -452,11 +466,15 @@
     "sbs-g3-b-339463879238809": {
       "horizon_y_fraction": 0.63,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
-      "pose_confidence": "C",
-      "pose_reason": "J1: lateral offset from photographed lane",
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. ADR 0160: Mapillary SfM point lies on the bus-stop pavement 8 m NE of the carriageway the car drives on; camera moved to the right lane (1.5 m right of the trunk_link axis, 92 m from node 2840742310), heading = lane tangent, eye 1.5. WORKING_VALUE, not surveyed.",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-33946387-r92; anchors: noise wall along the right kerb, viaduct parallel on the left, gantry with green boards on the axis (x 0.48), 2-lane trunk_link w173956083",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "east_delta_m": -8.991,
+      "north_delta_m": -0.5929,
+      "eye_height_m": 1.5,
+      "heading_delta_deg": 4.758
     },
     "sbs-g3-b-468026894483428": {
       "horizon_y_fraction": 0.7,
@@ -522,19 +540,29 @@
     },
     "sbs-g3-a-cm109685822": {
       "pose_confidence": "C",
-      "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-cm109685-s18h; anchors: road on the right curving right, hall with red band on the left (end x 0.30), 2-storey building on the right (x 0.62-1.0)",
       "photometric_use": false,
       "photometric_reason": "Uncalibrated pose/masks; cm92458760 is wet pavement",
-      "eye_height_m": 1.7,
-      "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail."
+      "eye_height_m": 1.6,
+      "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail. ADR 0160: pedestrian on the west kerb of the SW-bound branch w194536287, 18 m from node 1882954023, 5 m left of its axis, heading 34 grid, hfov 70, eye 1.6. Layout matches; the foreground (grass verge + brick footway) is a world gap: the generated yard_behaton plaza covers it. Stays C until the world has the verge. WORKING_VALUE, not surveyed.",
+      "east_delta_m": -14.9214,
+      "north_delta_m": -27.833,
+      "heading_delta_deg": -2.662,
+      "horizontal_fov_deg": 70,
+      "pose_status": "WORKING_VALUE"
     },
     "sbs-g3-a-cm92458760": {
-      "pose_confidence": "C",
-      "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-cm924587-c; anchors: two EC chimneys (OSM 628899553/4) at x 0.77/0.94 (photo 0.773/0.947, 11.1 deg apart at hfov 70), pylon behind the island, viaduct at the left edge, crosswalk over the EC access road",
       "photometric_use": false,
       "photometric_reason": "Uncalibrated pose/masks; cm92458760 is wet pavement",
-      "eye_height_m": 1.7,
-      "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail."
+      "eye_height_m": 1.5,
+      "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail. ADR 0160: Commons geotag (whole-second DMS, ~150 m off) replaced by a two-chimney resection: camera at the Bitwy Bialostockiej / EC access-road junction E542 N-750, heading 134 grid, hfov 70, eye 1.5 (vehicle window). WORKING_VALUE, not surveyed.",
+      "east_delta_m": -60.2561,
+      "north_delta_m": -141.4411,
+      "heading_delta_deg": 25.338,
+      "horizontal_fov_deg": 70,
+      "pose_status": "WORKING_VALUE"
     }
   }
 }
