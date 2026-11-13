@@ -2062,3 +2062,31 @@ overrides:
     confidence: medium
     verify: owner photo session item 6 (Kwadrat Park lane)
     set: {wall_material: plaster_beige}
+  - id: g3a-ec-round-tanks
+    target: {building: "osm:way/264944879"}
+    reason: >-
+      Round storage tank inside an earth bund (OSM building=yes, circle of ~22 m; orthophoto 2024-05-27: dark flat
+      round roof, bund, service platform on the rim). building=yes fell through to the office typology: a brick
+      drum with office windows. Plain light shell, no openings. Shell colour not visible on any open photo
+      (WORKING_VALUE); the default height 6.0 m stays (roof displacement on the orthophoto 1-2 m against 14.5 m of
+      the 41.81 m tower: a low tank).
+    confidence: low
+    verify: owner photo session (EC from Bitwy Białostockiej)
+    set:
+      frontage: {wall: plaster_light, plinth_m: 0.3}
+  - id: g3a-ec-round-tanks-2
+    target: {building: "osm:way/264944878"}
+    reason: Second tank of the pair, as g3a-ec-round-tanks (the hashed pick gave a white office drum).
+    confidence: low
+    verify: owner photo session (EC from Bitwy Białostockiej)
+    set:
+      frontage: {wall: plaster_light, plinth_m: 0.3}
+  - id: g3a-fuel-station-kiosk-height
+    target: {building: "osm:way/957256518"}
+    reason: >-
+      14 m2 box beside the fuel station canopy (OSM building=yes, no BDOT10k / LoD1 record: default height 6.0 m,
+      which also made it an office with windows). Orthophoto 2024-05-27: shadow ~5 m; the 41.81 m tower (LoD1 2024)
+      casts ~62 m on the same sheet, so ~3.4 m. Below 5 m and 60 m2 it is generated as an outbuilding.
+    confidence: low
+    verify: owner photo session item 6 (Kwadrat Park lane)
+    set: {height_m: 3.4}
