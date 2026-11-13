@@ -881,12 +881,16 @@ def building_parts(blds, overrides):
         if pl.geom_type != "Polygon" or pl.area < 1.0:
             raise ValueError(f"building_part {o['id']}: polygon_en is not a simple ring")
         pl = shapely.orient_polygons(pl) if hasattr(shapely, "orient_polygons") else shapely.geometry.polygon.orient(pl)
-        for b in blds:
+        for b in list(blds):
             if b["id"] in (o.get("cut_from") or []):
                 rest = shapely.make_valid(b["poly"].difference(pl.buffer(0.05)))
-                rest = max(getattr(rest, "geoms", [rest]), key=lambda g: g.area if g.geom_type == "Polygon" else 0)
-                b["poly"] = (shapely.orient_polygons(rest) if hasattr(shapely, "orient_polygons")
-                             else shapely.geometry.polygon.orient(rest))
+                parts = sorted((g for g in getattr(rest, "geoms", [rest]) if g.geom_type == "Polygon" and g.area > 1.0),
+                               key=lambda g: -g.area)
+                parts = [shapely.orient_polygons(g) if hasattr(shapely, "orient_polygons")
+                         else shapely.geometry.polygon.orient(g) for g in parts]
+                b["poly"] = parts[0]
+                for k, g in enumerate(parts[1:], 1):       # the part splits its host: every piece stays a building
+                    out.append({**b, "id": f"{b['id']}#cut{k}", "poly": g})
         p = {"function": o.get("function"), "height_m": float(o["height_m"]), "storeys": o.get("storeys"),
              "height_source": "authored_override", "name": o.get("name")}
         s = dict(o.get("set") or {})

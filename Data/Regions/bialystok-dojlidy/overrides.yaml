@@ -1,0 +1,135 @@
+# Authored overrides of region bialystok-dojlidy (ADR 0179). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 780043, 590079) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 2024 0.25 m (Data/raw/derived/bialystok-dojlidy/ortho_0p25m.tif), BDOT10k, LoD1 2024, CC0 photos Commons / Rakoon
+# (P11-001, P11-063, P11-056, P11-094; REVIEW-2026-11-13-s17-mistral-r8-p11-p12 par. 4). No lettering, no brands.
+overrides:
+  # ---------------------------------------------------------------- landmarks P0 (photo P11-001, P11-063)
+  - id: kuronia3-office-block
+    kind: building_part
+    name: office block of the hall at Kuronia 3
+    polygon_en: [[364.2, 491.0], [372.2, 491.0], [372.2, 528.0], [364.4, 528.0]]
+    cut_from: ["bdot:27a0721d-eb46-4021-a0be-dc26db73e398"]
+    height_m: 19.0
+    storeys: 5
+    function: biurowiec
+    reason: >-
+      BDOT10k draws the hall at Kuronia 3 and its office block as one outline with the LoD1 2024 height of the hall
+      (6.01 m). CC0 photo P11-001 (Rakoon 2024-06-23): a narrow light grey block of a ground floor + 4 rows of dark
+      ribbon windows stands at the street end of the hall, its narrow end to Kuronia, the long side to the west; it
+      is the tallest object of the frame. Orthophoto 2024: lighter roof strip 7-8 m x 36 m (E 364-372, N 491-528;
+      BDOT10k has the matching steps at E 364.6 / 372.0, N 528). Height from the shadow on the hall roof: 22 m long
+      at 1.68 m of shadow per m of height (calibrated on the hall at Kuronia 2, LoD1 12.72 m, shadow 21.4 m on the
+      same sheet) = 13.1 m above the 6.01 m roof -> 19 m, WORKING_VALUE +-2 m. Footprint +-1 m (roof displaced ~3 m
+      south on the orthophoto, the BDOT10k steps taken as the ground line).
+    confidence: medium
+    verify: owner photo session (Kuronia 3 from the cycle path); number of storeys
+    set: {typology: office, wall_material: plaster_grey, ribbon: true, bands: false}
+  - id: kuronia3-hall-colour
+    target: {building: "bdot:27a0721d-eb46-4021-a0be-dc26db73e398"}
+    reason: >-
+      Photo P11-001: the low hall behind the office block is clad in the same light grey panels (the hashed pick is
+      one of four hall tones). hall_wall_white = the lightest existing hall cladding.
+    confidence: medium
+    verify: owner photo session (Kuronia 3)
+    set: {wall_material: hall_wall_white}
+  - id: kuronia2-hall-dark-band
+    target: {building: "bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"}
+    reason: >-
+      Hall at Kuronia 2 (LoD1 2024 12.72 m), the background of photo P11-063 (Rakoon 2024-06-23, from the Mickiewicza
+      crossing): light grey cladding with a dark graphite band under the roof edge on the street-corner end (the
+      band carries the company lettering, which is not reproduced). Band on the short WSW wall and on the western
+      third of the long NNW wall; heights read off the photo proportions (band ~ the upper quarter of the wall),
+      WORKING_VALUE.
+    confidence: low
+    verify: owner photo session (Kuronia / Mickiewicza corner); band extent on the Kuronia side
+    set:
+      wall_material: hall_wall_white
+      frontage:
+        wall: hall_wall_white
+        accents:
+          - {facing: SW, span: [0.0, 1.0], material: hall_flashing, z: [8.6, 11.8], min_len_m: 20.0}
+          - {facing: NW, span: [0.65, 1.0], material: hall_flashing, z: [8.6, 11.8], min_len_m: 20.0}
+  # ---------------------------------------------------------------- P11-063: corner of Mickiewicza / Kuronia
+  - id: mickiewicza-kuronia-shrub-band
+    kind: tree_groups
+    lines:
+      - {line_epsg2180: [[779985.0, 590551.0], [780010.0, 590507.0], [780034.0, 590465.0]]}
+    group_size: [10, 16]
+    in_group_m: [1.3, 2.2]
+    gap_m: [0.5, 2.0]
+    depth_m: 3.0
+    rows_replace_m: 0.0
+    species: {shrub: 1.0}
+    reason: >-
+      Photo P11-063: a dense band of tall shrubs (2-4 m) fills the strip between the east footway of Mickiewicza and
+      the car park of the court, so the car park is not seen from the crossing; the generated frame showed ~100 cars
+      there. Orthophoto 2024: dark shrub strip 4-5 m wide from E -58 N 472 to E -9 N 386 (local), with its shadow on
+      the car park lane. Axis traced +-1.5 m; plant sizes are the rule's (shrub 1.5-4 m).
+    confidence: medium
+    verify: owner photo session (Mickiewicza / Kuronia crossing)
+  - id: mickiewicza-kuronia-corner-trees
+    kind: tree_groups
+    lines:
+      - {line_epsg2180: [[780031.0, 590453.0], [780047.0, 590455.5]]}
+    group_size: [3, 4]
+    in_group_m: [3.5, 5.0]
+    gap_m: [30.0, 40.0]
+    depth_m: 2.0
+    rows_replace_m: 0.0
+    species: {maple: 0.6, linden: 0.4}
+    reason: >-
+      Photo P11-063: a clump of broadleaf trees stands at the corner in front of the hall of Kuronia 2 (centre of
+      the frame). Orthophoto 2024: three crowns at E -12..5 N 370..378 (local). Species from the crown shape.
+    confidence: medium
+    verify: owner photo session (Mickiewicza / Kuronia crossing)
+  - id: court-car-park-street-row
+    kind: depot_yard
+    no_parking_epsg2180:
+      - [[780039.0, 590465.0], [780161.0, 590521.0], [780155.0, 590534.0], [780033.0, 590478.0]]
+    reason: >-
+      Car park of the court (BDOT10k OT_KUKO_A parking, 1.6 ha). The rule filled every bay; on the 2024 orthophoto
+      the double row along Kuronia holds 3 cars and photo P11-063 shows none behind the shrubs. No rule cars in the
+      row nearest the street (14 m strip along the south edge); the rows at the building keep the rule.
+    confidence: low
+    verify: weekday occupancy (the orthophoto may be a day off)
+  # ---------------------------------------------------------------- Krywlany aerodrome (P11-056, orthophoto)
+  - id: krywlany-runway-09r-27l
+    kind: paved_area
+    material: path_asphalt
+    polygon_epsg2180: [[779019.0, 589877.4], [779846.0, 589899.5], [779880.0, 589923.5], [779937.5, 589924.5],
+                       [779938.5, 589870.8], [779019.0, 589846.6]]
+    reason: >-
+      Asphalt runway 09R/27L (OSM way 958211700: 1350 m, asphalt) with the turn pad at its 27 end. Outline from the
+      2024 orthophoto: edge lines at N -202.5 / -231.5 (local) at E -1024 and N -178 / -207.5 at E -105, asphalt
+      0.5 m outside the lines = 30 m wide; pad corner E -163 N -155.5. +-0.5 m. path_asphalt = the plain asphalt
+      set that the rules lay no parking bays or truck stands on. Runway paint (edge lines, threshold, arrows) is
+      not drawn (open).
+    confidence: high
+    verify: runway markings
+  - id: krywlany-open-meadow
+    kind: open_ground
+    polygons_en:
+      - [[-1024.0, 158.0], [-560.0, 160.0], [-466.0, 172.0], [-310.0, 200.0], [-171.0, 250.0], [18.0, -109.0],
+         [-71.0, -206.0], [-36.0, -240.0], [-112.0, -321.0], [-198.0, -350.0], [-385.0, -336.0], [-450.0, -340.0],
+         [-843.0, -455.0], [-1024.0, -500.0]]
+      - [[-1024.0, 200.0], [-600.0, 200.0], [-430.0, 214.0], [-260.0, 254.0], [-155.0, 290.0], [-290.0, 405.0],
+         [-560.0, 405.0], [-560.0, 300.0], [-780.0, 300.0], [-780.0, 400.0], [-1024.0, 400.0]]
+    reason: >-
+      Photo P11-056 (Rakoon 2023-08-14, Dywizjonu 303 looking north) and the 2024 orthophoto: the aerodrome
+      (BDOT10k OT_KUKO_A "lotnisko lub ladowisko", ring 1 = its outline inside the tile) and the meadow north of
+      Dywizjonu 303 up to the allotments (ring 2, traced +-5 m) are open grassland with no trees; the tree line is
+      the forest south of the aerodrome and the allotment gardens. The rule self-seeds birches / shrubs on BDOT
+      grassland (OT_PTTR_A), which put single trees all over the meadow in the first import (ADR 0174, item 4).
+    confidence: medium
+    verify: owner photo session (Dywizjonu 303)
+  # ---------------------------------------------------------------- life rules
+  - id: tyre-scrub-not-on-the-street
+    kind: life_rules
+    tyre_scrub_off_roads: true
+    reason: >-
+      ADR 0174 item 6: dock tyre-scrub decals (16-24 m in front of every dock door) of halls standing at the street
+      ran onto the carriageway of Kuronia and read as stains on a straight trunk road. Scrub marks belong to the
+      yard where trucks reverse onto the doors: a pass now ends before the public carriageway. Opt-in per region
+      (the reference region C keeps its output byte for byte).
+    confidence: high
+    verify: none
