@@ -128,6 +128,9 @@ COL_PYLON_STEEL = (0.27, 0.285, 0.30)
 
 
 def _sha256(path: Path) -> str:
+    if path.suffix.lower() in (".json", ".geojson", ".yaml", ".yml"):
+        # ADR 0173: git-tracked text inputs may be checked out with CRLF (worktrees) or LF (main); hash LF content
+        return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
     h = hashlib.sha256()
     with open(path, "rb") as f:
         while chunk := f.read(1 << 20):
