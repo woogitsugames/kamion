@@ -7,7 +7,8 @@ lifted LESS than the markings so they never z-fight with them:
 Patches (`decal_patch`): 0-3 per 50 m of carriageway, never on a grid: per 50 m window the count is drawn from
 (0.45, 0.30, 0.17, 0.08) (WORKING_VALUE, older industrial streets), position, length 1.2-7 m, width (a full
 lane, a wheel path 0.8-1.4 m, or a small 0.6-1.5 m square), rotation +-6 deg and age (UV1.x: 0 fresh/black ..
-1 old/grey) are hashed from the chain id + window. Bridges and roundabout rings are skipped.
+1 old/grey) are hashed from the chain id + window. Bridges and roundabout rings are skipped. ADR 0194: the count is scaled
+by road class (PATCH_RATE_CLASS) and junction approaches (JUNCTION_ZONE_M), and wheel-path repairs sit in a wheel path.
 Oil (`decal_oil`): only where vehicles stand: the 2-8 m in front of the stop position of inbound lanes at
 signalised junctions, roundabout entries and minor arms of priority junctions (gate and parking stains are
 added by streetscape.life / gate). Each stain is an irregular 9-gon 0.25-0.6 m with radial UV (centre 0.5).
@@ -25,6 +26,22 @@ from .markings import RANK, lane_layout
 
 LIFT_PATCH = 0.002
 LIFT_OIL = 0.0035
+
+# ADR 0194 (REVIEW s19-0179 P2 "ten sam brud wszędzie"): repairs follow the traffic, not a uniform rate.
+# Expected-count multiplier per Polish road class (A/S/GP: younger, heavier pavement and frequent resurfacing; Z/L/D:
+# older municipal and service streets, utility trenches) - WORKING_VALUE, judged against P11-076 (Dywizjonu 303: no
+# repairs) and P11-129 (hospital access road: several patches).
+PATCH_RATE_CLASS = {"A": 0.35, "S": 0.35, "GP": 0.55, "G": 0.85, "Z": 1.0, "L": 1.2, "D": 1.3}
+# Junction approaches carry braking / turning shear and the utility crossings: more repairs within this distance of a
+# junction-trimmed chain end, fewer mid-block (WORKING_VALUE).
+JUNCTION_ZONE_M = 30.0
+JUNCTION_BOOST = 1.8
+MIDBLOCK_RATE = 0.75
+# Wheel-path repairs sit in a wheel path of a lane: +-WHEEL_PATH_FRAC of the lane width from its centre (the same
+# 0.26 / 0.74 lane coordinate as the polished wheel paths of Kamion/World PBR _ROADWEAR); the outer (kerb-side)
+# path ruts more under heavy axles.
+WHEEL_PATH_FRAC = 0.24
+OUTER_PATH_SHARE = 0.65
 
 
 def hf(*key):
@@ -120,6 +137,18 @@ def gullies(buf, net, report):
     report["gullies"] = n
 
 
+def wheel_path_lat(c, sec, hw, key):
+    """ADR 0194: lateral offset of a wheel path of a hashed lane. Lanes are counted from the right edge strip like
+    the trench patches; on two-way roads the kerb-side path of each half is the outer one."""
+    lw = max(float(sec.lane_w), 2.0)
+    nl = max(1, int(round((2 * hw - 2 * sec.edge_strip) / lw)))
+    lane = int(hf(*key, "wl") * nl)
+    centre = -hw + sec.edge_strip + (lane + 0.5) * lw
+    outward = -1.0 if (sec.oneway or centre < 0) else 1.0        # towards the nearer kerb
+    side = outward if hf(*key, "wp") < OUTER_PATH_SHARE else -outward
+    return centre + side * WHEEL_PATH_FRAC * lw + (hf(*key, "wj") - 0.5) * 0.3
+
+
 def build(buf, net, juncs, report):
     cnt = {"patches": 0, "oil": 0}
     gullies(buf, net, cnt)
@@ -132,12 +161,18 @@ def build(buf, net, juncs, report):
         s0, s1 = c.t_a + 1.0, c.length - c.t_b - 1.0
         if s1 - s0 < 8.0:
             continue
+        cls_rate = PATCH_RATE_CLASS.get(c.section(0.5 * (s0 + s1), secs).cls, 1.0)
         for w0 in np.arange(s0, s1, 50.0):
             w1 = min(w0 + 50.0, s1)
             key = (c.id, round(float(w0), 1))
             u = hf(*key, "n")
             k = 0 if u < 0.45 else 1 if u < 0.75 else 2 if u < 0.92 else 3
-            k = int(round(k * (w1 - w0) / 50.0))
+            # ADR 0194: scale by class and by the share of the window inside a junction approach zone
+            jz = (np.clip(min(w1, s0 + JUNCTION_ZONE_M) - w0, 0, None) + np.clip(w1 - max(w0, s1 - JUNCTION_ZONE_M), 0, None))
+            jshare = min(float(jz) / max(w1 - w0, 1e-6), 1.0)
+            rate = cls_rate * (JUNCTION_BOOST * jshare + MIDBLOCK_RATE * (1.0 - jshare))
+            kf = k * rate * (w1 - w0) / 50.0
+            k = int(math.floor(kf + hf(*key, "frac")))
             for i in range(k):
                 sc = w0 + hf(*key, i, "s") * (w1 - w0)
                 if c.bridge[c.idx(sc)]:
@@ -151,14 +186,17 @@ def build(buf, net, juncs, report):
                     nl = max(1, sec.lanes)
                     lane = int(hf(*key, i, "lane") * nl)
                     lat = -hw + sec.edge_strip + (lane + 0.5) * sec.lane_w
-                elif kind < 0.7:             # wheel-path patch
+                elif kind < 0.7:             # wheel-path patch (ADR 0194: in a wheel path of a lane)
                     width = 0.8 + hf(*key, i, "w") * 0.6
                     length = 2.0 + hf(*key, i, "l") * 5.0
-                    lat = (hf(*key, i, "lat") * 2 - 1) * max(hw - 1.0, 0.2)
-                else:                        # small square pothole repair
+                    lat = wheel_path_lat(c, sec, hw, key + (i,))
+                else:                        # small square pothole repair (ADR 0194: 60 % in a wheel path)
                     width = 0.6 + hf(*key, i, "w") * 0.9
                     length = width * (0.8 + hf(*key, i, "l") * 0.8)
-                    lat = (hf(*key, i, "lat") * 2 - 1) * max(hw - 0.8, 0.2)
+                    if hf(*key, i, "inwp") < 0.6:
+                        lat = wheel_path_lat(c, sec, hw, key + (i,))
+                    else:
+                        lat = (hf(*key, i, "lat") * 2 - 1) * max(hw - 0.8, 0.2)
                 if abs(lat) + width / 2 > hw - 0.05:
                     lat = math.copysign(max(hw - 0.05 - width / 2, 0.0), lat)
                 if width > 2 * hw - 0.1:

@@ -614,6 +614,10 @@ M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "pa
 # WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
 # Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
 M["decal_oil"]["traffic_opacity_scale"] = 1.15
+# ADR 0194 (REVIEW s19-0179 P2 "jasne rozmyte splaty"): oil soaked into asphalt stays matt; the atlas cores carried
+# smoothness ~0.5 on a flat decal normal, so the overcast sky reflected off them at grazing angles. Smoothness of an old
+# stain / the freshest film (asphalt_worn = 0.09) and a coverage gamma < 1 for a denser core. WORKING_VALUE.
+M["decal_oil"]["oil_look"] = {"smooth_aged": 0.10, "smooth_fresh": 0.22, "coverage_gamma": 0.7}
 
 
 def _underdeck_pier_paint(default):

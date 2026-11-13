@@ -73,6 +73,7 @@ Shader "Kamion/World PBR"
         _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
         _DecalCells ("Decal atlas cells per side (_DECAL_ALPHA): 2 oil atlas, 1 whole UV", Float) = 2
+        _OilLook ("Oil stain (ADR 0194): x aged smoothness, y fresh smoothness, z coverage gamma, w 1 = on", Vector) = (0, 0, 1, 0)
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
         _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
         _RunoffStrength ("Parapet run-off strength", Range(0, 1)) = 0.5
@@ -105,6 +106,7 @@ Shader "Kamion/World PBR"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "../../Rendering/Shaders/KamionLampPools.hlsl"
         #include "../../Rendering/Shaders/VegetationGround.hlsl"
+        #include "../../Rendering/Shaders/KamionRoadStains.hlsl"   // ADR 0194
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
             float4 _Tint;
@@ -125,6 +127,7 @@ Shader "Kamion/World PBR"
             float4 _KerbWear;
             float4 _GroundWearExclude, _GroundGrimeBase;
             float _DripBand;
+            float4 _OilLook;          // ADR 0194 (KamionRoadStains.hlsl)
             float4 _CarPaint, _CarFlake, _PearlTint;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
             float _ShadowNormalBiasScale;
@@ -638,6 +641,7 @@ Shader "Kamion/World PBR"
                     tn = half3(0, 0, 1);
                     half oilStrength = i.uv.z > 0.0 ? i.uv.z : 1.0; // legacy/yard/bus data = 0
                     alpha = saturate(st.a * _DecalAlpha * oilStrength);
+                    KamionOilStain(_OilLook, sm.a, smooth, alpha);   // ADR 0194: absorbed oil stays matt and dark
                 }
             #endif
             #if defined(_DECAL_TYRE)
