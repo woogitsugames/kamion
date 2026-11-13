@@ -59,7 +59,7 @@ overrides:
     group_size: [10, 16]
     in_group_m: [1.3, 2.2]
     gap_m: [0.5, 2.0]
-    depth_m: 3.0
+    depth_m: 2.0
     rows_replace_m: 0.0
     species: {shrub: 1.0}
     reason: >-
@@ -67,6 +67,16 @@ overrides:
       the car park of the court, so the car park is not seen from the crossing; the generated frame showed ~100 cars
       there. Orthophoto 2024: dark shrub strip 4-5 m wide from E -58 N 472 to E -9 N 386 (local), with its shadow on
       the car park lane. Axis traced +-1.5 m; plant sizes are the rule's (shrub 1.5-4 m).
+    confidence: medium
+    verify: owner photo session (Mickiewicza / Kuronia crossing)
+  - id: mickiewicza-kuronia-shrub-strip-ground
+    kind: unpaved_area
+    polygon_en: [[-61.9, 469.8], [-12.9, 383.8], [-5.1, 388.2], [-54.1, 474.2]]
+    reason: >-
+      Ground of the shrub band above: BDOT10k draws the car park of the court (OT_KUKO_A parking) up to the footway
+      of Mickiewicza, so the strip was paved and the rule (no plant within 3 m of a paved surface) dropped the
+      shrubs - the first build kept 18 of ~60. 9 m wide strip on the traced axis (the real unpaved strip is 4-5 m
+      on the orthophoto; the extra 2 m on each side is the plant clearance, WORKING_VALUE).
     confidence: medium
     verify: owner photo session (Mickiewicza / Kuronia crossing)
   - id: mickiewicza-kuronia-corner-trees
