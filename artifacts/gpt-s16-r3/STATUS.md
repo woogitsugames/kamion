@@ -67,3 +67,5 @@ Materiałowy backup prywatny obejmuje458zweryfikowanychplików, w tym podkatalog
 Import after zakończony.
 
 Zapisano after/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano after/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
