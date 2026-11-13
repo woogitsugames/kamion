@@ -126,9 +126,10 @@ Rzeczywiste układy (liczba komór, kolejność od zewnątrz, typ optyki) potwie
 |---|---|---|
 | **390 × 145 × 70 mm** (LED 7-funkcyjna z trójkątem odblaskowym) | karta katalogowa/dystrybutor (URL w manifest, P16-301) | SOURCED |
 | **400 × 153 × 88 mm** (żarówkowa 7-funkcyjna, 12 V) | karta produktu dystrybutora (P16-302) | SOURCED (sklep) |
-| **450 × 138 × 90 mm**, odległość otworów montażowych **152 mm** (LED 7-komorowa do naczep) | sklep specjalistyczny (P16-303) | SOURCED (sklep) |
+| **450 × 138 × 90 mm**, odległość otworów montażowych **152 mm** (LED 7-komorowa do naczep) | sklep specjalistyczny (P16-303) | SOURCED (sklep; weryfikacja HTML 13.11.2026 — strona obecnie renderuje treść po stronie klienta) |
+| **450 × 138 × 72,3 mm** (LED 7-funkcyjna, 24 V) | karta produktu dystrybutora (P16-305) | SOURCED (sklep) |
 
-Wnioski dla gry: typowy zespół 7-komorowy naczepy ≈ **400 mm wysokości × ~145 mm szerokości × ~80 mm głębokości** (ESTIMATED: mediana trzech kart katalogowych 390/400/450 × 145/153/138 × 70/88/90).
+Wnioski dla gry: typowy zespół 7-komorowy naczepy ≈ **425 mm długości (montaż pionowy) × ~142 mm szerokości × ~81 mm głębokości** (ESTIMATED, P16-304: mediana czterech kart 390/400/450/450 × 145/153/138/138 × 70/88/90/72,3; zaokrąglenie dla gry: 420 × 140 × 80).
 
 ### 5.4. Wygląd lampy wyłączonej w świetle dziennym
 
