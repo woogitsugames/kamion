@@ -59,3 +59,5 @@ Zapisano ablacją Low/zero-depth (rq_shadowbias=0). To diagnostyka, nie wynik pr
 Zapisano ablacją High/zero-depth (rq_shadowbias=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
 
 Ablacje Low/High: zero-normal usuwa rząd plam, zero-depth go pozostawia; no-baked też pozostawia. Autor i critic potwierdzają kierunek, crop nie certyfikuje self-shadow konstrukcji. Kandydat: jawne shadow_normal_bias_scale=0 tylko viaduct_concrete, keyword wyłącznie istniejącego ShadowCaster PBR, zachowany depth bias. Legacy ma dokładnie dawną ścieżkę kompilacji; zero nowych materiałów/geometrii/przebiegów. Dodano 7 testów kontraktu materiału i natywnego zakresu. NASTĘPNY KROK: baseline-world.ps1 -Stage after, import, docelowe after i pełne testy.
+
+Świat after wygenerowany: 513.270614 s, bez fallback=True. NASTĘPNY KROK: import i kamery after.
