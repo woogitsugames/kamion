@@ -198,8 +198,8 @@ overrides:
       - {at_la: [4.45, 3.4], size_m: [1.5, 0.5], height_m: 1.95, cap: true}
       - {at_la: [3.9, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 2.02}
       - {at_la: [4.85, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 2.02}
-      - {at_la: [6.6, 3.4], size_m: [0.38, 0.38], height_m: 2.55}
-      - {at_la: [7.9, 3.4], size_m: [0.38, 0.38], height_m: 2.55}
+      - {at_la: [6.6, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 0.2}
+      - {at_la: [7.9, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 0.2}
     platform: {rect_la: [3.62, 2.3, 8.3, 4.5], height_m: 0.22}
     canopy: {rect_la: [3.6, 2.2, 8.3, 4.2], z_m: 2.55, thick_m: 0.2}
     faces:

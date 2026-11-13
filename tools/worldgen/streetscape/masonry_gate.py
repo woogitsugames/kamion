@@ -324,8 +324,12 @@ class Kit:
         u0 = round(u0 / 0.13) * 0.13
         u0 = min(u0, max(BRICK_BAND_M[0] - L, 0.0))
         xa, xb = u0 * BRICK_PX_M, (u0 + L) * BRICK_PX_M
-        ya = (BRICK_BAND_M[1] - BRICK_BELOW_M - z0) * BRICK_PX_M
-        yb = (BRICK_BAND_M[1] - BRICK_BELOW_M - z1) * BRICK_PX_M
+        # a face taller than the band top (piers under a canopy) reads the band whole courses lower; the damp foot
+        # of the band then sits under the ground / platform line
+        top = BRICK_BAND_M[1] - BRICK_BELOW_M
+        dz = math.ceil(max(z1 - top, 0.0) / 0.075) * 0.075
+        ya = min((top - (z0 - dz)) * BRICK_PX_M, BRICK_BAND_M[1] * BRICK_PX_M)
+        yb = max((top - (z1 - dz)) * BRICK_PX_M, 0.0)
         # seen from outside with p0 on the left, the outward normal is to the RIGHT of p0 -> p1 rotated... the quad
         # (p0 low, p1 low, p1 high, p0 high) has normal (p1-p0) x up = (dy, -dx, 0): the right-hand side of p0 -> p1
         self.quad([p0[0], p0[1], z0], [p1[0], p1[1], z0], [p1[0], p1[1], z1], [p0[0], p0[1], z1],
