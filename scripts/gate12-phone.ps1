@@ -11,8 +11,12 @@
     c25_solo         autopilot circle25 @ 25 km/h, solo, 75 s
     c50_empty        autopilot circle50 @ 40 km/h, empty combination (14.5 t), 90 s
     c50_40t          autopilot circle50 @ 40 km/h, 40 t combination, 150 s -> articulation, fifth wheel error, step cost
-  NOT automatable with the current game (manual / owner feel test, see GATE-1.md / GATE-2.md): straight 0-80 km/h,
-  braking 80->0, 12 % hill hold and hill start, kerb 8/15 cm, jackknife, reversing to the dock, descent 7 %.
+    s080_solo_1..3   autopilot straight080 (ADR 0195), solo, 70 s -> gate 1: 0->60/0->80 km/h x3 repeatability (+/-3 %),
+                                                                   stop distance 80->0, MFDD, max decel, wheel slip
+    s080_empty       autopilot straight080, empty combination (14.5 t), 80 s
+    s080_40t         autopilot straight080, 40 t combination, 120 s -> gate 2: 0->80 and emergency stop 80->0, full trailer
+  NOT automatable with the current game (manual / owner feel test, see GATE-1.md / GATE-2.md): 12 % hill hold and
+  hill start, kerb 8/15 cm, jackknife, reversing to the dock, descent 7 %.
   Telemetry CSV (persistentDataPath/telemetry/drive-*.csv, 100 Hz) is pulled after each run; analysis:
   `uv run --project tools/perf python scripts/gate12_telemetry.py <OutDir>`.
 
@@ -61,7 +65,13 @@ $A16Runs = @(
     @{ n = 'c50_solo_3';     scene = 'DrivingLab'; ap = 'circle50'; v = 40; tr = 'solo';  s = 90;  w = 25 },
     @{ n = 'c25_solo';       scene = 'DrivingLab'; ap = 'circle25'; v = 25; tr = 'solo';  s = 75;  w = 25 },
     @{ n = 'c50_empty';      scene = 'DrivingLab'; ap = 'circle50'; v = 40; tr = 'empty'; s = 90;  w = 25 },
-    @{ n = 'c50_40t';        scene = 'DrivingLab'; ap = 'circle50'; v = 40; tr = '40';    s = 150; w = 25 }
+    @{ n = 'c50_40t';        scene = 'DrivingLab'; ap = 'circle50'; v = 40; tr = '40';    s = 150; w = 25 },
+    # Straight 0-80-0 on the measurement straight (ADR 0195); sim time to the stop: solo 22 s, empty 29 s, 40 t 56 s (runner).
+    @{ n = 's080_solo_1';    scene = 'DrivingLab'; ap = 'straight080'; v = 80; tr = 'solo';  s = 70;  w = 20 },
+    @{ n = 's080_solo_2';    scene = 'DrivingLab'; ap = 'straight080'; v = 80; tr = 'solo';  s = 70;  w = 20 },
+    @{ n = 's080_solo_3';    scene = 'DrivingLab'; ap = 'straight080'; v = 80; tr = 'solo';  s = 70;  w = 20 },
+    @{ n = 's080_empty';     scene = 'DrivingLab'; ap = 'straight080'; v = 80; tr = 'empty'; s = 80;  w = 20 },
+    @{ n = 's080_40t';       scene = 'DrivingLab'; ap = 'straight080'; v = 80; tr = '40';    s = 120; w = 20 }
 )
 # S24+ (owner's phone): short set - cost on the High tier only.
 $S24Runs = @(
@@ -175,6 +185,7 @@ try {
             if ($r.scene) {
                 $want = if ($r.ap) { "autopilot=$($r.ap)" } else { 'autopilot=off' }
                 if (-not (Select-String -Path $lc -Pattern "\[LAB\] DrivingLab ready:.*$want" -Quiet)) { $rr.reasons += "no '[LAB] DrivingLab ready ... $want' in logcat" }
+                if ($r.ap -eq 'straight080' -and -not (Select-String -Path $lc -Pattern '\[AUTOPILOT\] straight080 done' -Quiet)) { $rr.reasons += "straight run did not reach the stop (no '[AUTOPILOT] straight080 done' in logcat; longer -s?)" }
                 if (-not (Get-ChildItem (Join-Path $dst 'telemetry') -Filter 'drive-*.csv' -ErrorAction SilentlyContinue)) { $rr.reasons += 'no telemetry CSV pulled' }
             }
             $bad = @(Select-String -Path $lc -Pattern 'Exception|FATAL|signal \d+ \(SIG|ANR in' -ErrorAction SilentlyContinue | Where-Object { $_.Line -notmatch '\[DIAG\]' })

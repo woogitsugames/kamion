@@ -315,6 +315,7 @@ namespace PhysicsRunner.Sim
                 }
                 case "touch": return new TouchDriver(d, s, sc.dt);
                 case "fuzz": return new FuzzDriver(d);
+                case "straightrun": return new StraightRunDriver(d, s, sc.dt);
                 default: throw new ArgumentException($"Unknown driver type '{d.type}'");
             }
         }
