@@ -597,9 +597,9 @@ CARD_STRETCH = (0.80, 1.30)       # a crown card is drawn at most this far off i
 # the thuja sprite's top standing out of the crest (2 triangles a plant). Build 4 drew High as stations per plant (two
 # shoulders + a trough per gap, 61 triangles / m): garden fronts High 12 058 -> 27 558 triangles and the stretch_04
 # frame over its 2 M cap (test_world_v31 / test_hero_bridge). High now uses the Low design with denser wall stations
-# (~16 triangles / m). WORKING_VALUE (G7 # 19: plants 0.8-1.2 m wide)
+# (~14 triangles / m). WORKING_VALUE (G7 # 19: plants 0.8-1.2 m wide)
 THUJA_PITCH_M = (1.0, 1.1)
-THUJA_WALL_PITCH_M = (1.5, 3.2)   # station pitch of the wall body: High, Low (Low as before ADR 0170)
+THUJA_WALL_PITCH_M = (2.0, 3.2)   # station pitch of the wall body: High, Low (Low as before ADR 0170); High 1.5 m left stretch_04 84 tris under 2 M
 THUJA_TIP_LOW_M = (0.50, 0.60)    # the wall's crest stands this far below the nominal height; the tips rise this far above it + 0.25
 # cross-section of a clipped thuja wall per side, foot -> shoulder: (half-thickness factor, height factor, normal out,
 # normal up, occlusion); the crest (centre line, full height) closes it. Photos G7-P11 / P12: battered sides, a
