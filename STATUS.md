@@ -1,8 +1,6 @@
-# STATUS hud-r10 (ADR 0079 — adaptacyjny układ HUD, gałąź worktree-agent-ab59e33f0c7faaa00)
-
-- GOTOWE do review/scalenia. Kod: `UI/Layout/UiScale.cs` + `UiViewport.cs` (skala wg krótszego boku + DPI, min. 1680 jednostek szerokości, safe area, wykrywanie zmiany ekranu co klatkę bez alokacji), `UI/Driving/HudLayout.cs` (czysty solver stref), `DrivingHud.cs` (strefy, panel dev zwinięty do 1 przycisku „Panel”, klaster 440x156, biegi obok pedałów), `ControlSettingsPanel.cs` (zawsze w safe area, 1/2 kolumny, przewijanie), `BootMenu.cs`, `DiagnosticsOverlay.cs` na wspólnej skali. ADR `docs/adr/0079-adaptive-hud-layout.md`, `docs/owner/FEEL-TEST.md` (Panel → Menu / Ustawienia).
-- Testy PlayMode 47/47 (HudLayoutTests 31 + ControlSettingsPanel, DrivingLabScene, StartMenuFlow, BootScene, StartMenuCapture): `artifacts/tests/playmode-20261110-214504.xml`. Solver: 6 ekranów × 1024 układy + przemiatanie proporcji 0,45…3,2 (529 920 układów) — zero nakładania, wszystko w safe area. Fold wewn. (2176x1812, nominalne 368 dpi — UNVERIFIED): prawa grupa sterowania do 26 % wysokości (było 57 %), lewa 33 % (było 55 %).
-- Zrzuty (edytor, DrivingLab, ≤ 960 px): `artifacts/hud-r10/*.png` (25 szt., skopiowane do main `artifacts/hud-r10/`).
-- Poza moją własnością: 1 linia w `game/Assets/_Project/Editor/VisualQA/VisualQaRunner.cs` (`hud.RefreshNow()` przed renderem UI). Bez zmian w ProjectSettings/Packages/asmdef. Testy w asmdef PlayMode (EditMode nie referuje Game.UI).
-- OTWARTE: brak APK/telefonu (UNVERIFIED na Foldzie i A16: `Screen.dpi`, zasięg kciuka do kolumny biegów, składanie w locie na urządzeniu); stałe skali (wykładnik 0,6; 2,8 in; 1680) = WORKING_VALUE; referencje visual-QA z HUD-em do ponownego renderu; pełny pakiet PlayMode/EditMode nie był puszczany (tylko filtr wyżej); review visual-critic po stronie lidera.
-- NASTĘPNY KROK (lider): `git merge worktree-agent-ab59e33f0c7faaa00` → `pwsh scripts/test.ps1` → `pwsh scripts/build-android.ps1 -Install -Run` na Foldzie i A16; ponowne zrzuty: `pwsh scripts/test.ps1 -Platform PlayMode -Filter HudLayoutTests`.
+# STATUS phys-0165 (ADR 0165 — podatny kontakt nadwozia, tolerancja przegubu F1 ≤ 3,5°)
+Stan: worktree utworzony z origin/main 0ce1e9704; przeczytany ADR 0158. Brak zmian w kodzie (przerwane limitem 5 h).
+Zadania w tle: brak.
+NASTĘPNY KROK: `cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\phys-0165; Get-Content tools/physics-runner/Sim/BodyGroundContact.cs` — zamienić impulsy PGS na sprężynę-tłumik (D58), zdjąć `bodyContact=false` w kerb_step_27cm_42kmh_comb; potem F1 ≤ 3,5° (D59), Unity IgnoreCollision ciągnik–naczepa, ADR 0165.
+Uwaga: brak .NET SDK w `C:\Program Files\dotnet` (tylko runtime) — kompilacja Roslynem z Unity jak agent 0164.
+Gotowe do scalenia: NIE.
