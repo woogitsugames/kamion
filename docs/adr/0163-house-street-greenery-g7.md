@@ -124,7 +124,7 @@ Build 5 (bez pkt 10) miał +1 draw na 2 kamerach trasy (`g3b_rondo_put_approach`
 chunku 1_3 rozciągnięta o ~90 m na południe przez drzewa przy domach bez posesji wzdłuż Andersa przechodziła test
 frustum. Pary: `artifacts/veg-0163/pairs/` (`pair_*` przed | po Low/High, `photo_*` zdjęcie G7 | po, `horizon_*`
 zdjęcie Mapillary | przed | po). Testy: pytest `tests/gis` (build 5) 1018 passed, 3 xfailed; `test_house_greenery_0163`
-(build 6) 26 passed; EditMode 492 / 493 passed, 1 skipped (`artifacts/tests/editmode-20261113-122223.xml`).
+(build 6) 25 passed; EditMode 492 / 493 passed, 1 skipped (`artifacts/tests/editmode-20261113-122223.xml`).
 
 ## Otwarte / WORKING_VALUE
 
