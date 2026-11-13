@@ -96,9 +96,9 @@ def audit():
 
 
 @pytest.mark.xfail(strict=False,
-                    reason="M29: wolne końce biegów pomostowych z danych repo - aktualnie 32 wg rekonstrukcji "
-                           "z roads.graph.json (pełny build ADR 0144 r7d: 34); przewidywane po poprawce: 0 "
-                           "(przejście pomost->dojazd). Lider regeneruje świat i zdejmuje xfail.")
+                    reason="M29: wolne końce biegów pomostowych - po regeneracji świata (world-int-s16, 2026-11-13) "
+                           "2 z 42 biegów (c:w177895177 L bridge przy E 669,4 N -781,9; c:w240542867 R approach "
+                           "przy E -739,6 N 74,1); przed poprawką 32-34. Cel 0 - osobne zadanie, potem zdjąć xfail.")
 def test_no_free_deck_ends(audit):
     assert audit["deck_run_ends_free"] == 0, audit["free_ends"][:10]
 
