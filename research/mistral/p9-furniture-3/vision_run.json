@@ -1,1 +1,796 @@
-PLACEHOLDER
+{
+ "zadanie": "M50-FIX pass C — uczciwy przebieg wizyjny (model wizyjny, 1 kadr = 1 wywołanie)",
+ "data": "2026-11-13",
+ "narzedzie": "tools.uploads.analyze_image (klatka Vibe/vision)",
+ "metoda": "dla każdego wiersza foto manifestu (VERIFIED_WIZJA + NOT_FOUND) oraz 23 kadrów Panoramax i kandydatów geometrycznych: pytanie o 'co widać' (1-2 zdania) + widoczność obiektu z pozycją (lewo/środek/prawo) i przybliżoną odległością; kadry bez obiektu => NOT_FOUND",
+ "limit": "20 wywołań na odpowiedź — przebieg rozłożony na tury (tury 0-2: 24 kadrów, pozostałe w kolejnych commitach)",
+ "frames": [
+  {
+   "frame": "KV-1326673445",
+   "plik": "/home/user/vtmp/M50-001.jpg",
+   "wiersze": [
+    "M50-001 latarnia"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z dwoma pasmami ruchu, otoczoną wysokimi barierami dźwiękochłonnymi po prawej stronie oraz mostem i budynkami w oddali.
+
+W kadrze widoczne są latarnie drogowe: jedna po lewej stronie, około 50 metrów od kamery, oraz kilka kolejnych w środkowej i prawej części kadru, w odległościach około 100-200 metrów."
+  },
+  {
+   "frame": "KV-993040942",
+   "plik": "/home/user/vtmp/M50-002.jpg",
+   "wiersze": [
+    "M50-002 latarnia"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z dwoma pasmami ruchu, oddzielonymi barierą z zielonymi elementami po prawej stronie. W tle widoczne są budynki i niebo bez chmur.
+
+Latarnie drogowe: widoczne są dwie latarnie po lewej stronie, około 100-150 metrów od kamery."
+  },
+  {
+   "frame": "KV-219382073",
+   "plik": "/home/user/vtmp/M50-003.jpg",
+   "wiersze": [
+    "M50-003 latarnia"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać skrzyżowanie z sygnalizacją świetlną, samochodami i znakami drogowymi.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-5062571",
+   "plik": "/home/user/vtmp/M50-004.jpg",
+   "wiersze": [
+    "M50-004 sygnalizator na maszcie/wysięgniku"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z czerwonym samochodem dostawczym, most nad jezdnią oraz sygnalizatory świetlne.
+
+Sygnalizatory świetlne:
+1. Pozycja: prawo, odległość: około 50 metrów.
+2. Pozycja: prawo, odległość: około 100 metrów."
+  },
+  {
+   "frame": "KV-219381879",
+   "plik": "/home/user/vtmp/M50-005.jpg",
+   "wiersze": [
+    "M50-005 sygnalizator na maszcie/wysięgniku"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z mostem nad nią, kilka samochodów oraz znaki drogowe.
+
+Sygnalizatory świetlne są widoczne: jeden po lewej stronie, około 50 metrów od kamery, oraz jeden po prawej stronie, około 70 metrów od kamery."
+  },
+  {
+   "frame": "KV-993066622",
+   "plik": "/home/user/vtmp/M50-006.jpg",
+   "wiersze": [
+    "M50-006 sygnalizator na maszcie/wysięgniku",
+    "M50-007 bariera U-12/U-12b"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwupasmową drogę z pasem zieleni pośrodku, otoczoną drzewami i niebieskim niebem.
+
+Na zdjęciu widoczne są:
+- Sygnalizator świetlny na maszcie po prawej stronie, około 30-40 metrów od kamery.
+- Sygnalizator świetlny na maszcie po lewej stronie, około 20-30 metrów od kamery.
+
+ŻADNA BARIERA OCHRONNA DROGOWA U-12 NIE JEST WIDOCZNA."
+  },
+  {
+   "frame": "KV-993066706",
+   "plik": "/home/user/vtmp/M50-008.jpg",
+   "wiersze": [
+    "M50-008 bariera U-12/U-12b"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwujezdniową drogę z pasami zieleni po bokach i czystym niebem.
+
+Bariera ochronna drogowa U-12 jest widoczna po lewej stronie kadru, w odległości około 5-10 metrów od kamery."
+  },
+  {
+   "frame": "KV-219381941",
+   "plik": "/home/user/vtmp/M50-009.jpg",
+   "wiersze": [
+    "M50-009 słupek blokujący U-5a"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z buspasem, po której jedzie zielono-biały autobus miejski z numerem 130 i kierunkiem "15". W tle znajdują się budynki, w tym z logo "Atlas Concorde", oraz słupy elektryczne i latarnie.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382163",
+   "plik": "/home/user/vtmp/M50-010.jpg",
+   "wiersze": [
+    "M50-010 słupek blokujący U-5a"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać białego Forda Mondeo jadącego drogą z zapalonymi światłami stopu, z tyłu widoczny jest billboard reklamowy po prawej stronie.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-1326673805",
+   "plik": "/home/user/vtmp/M50-011.jpg",
+   "wiersze": [
+    "M50-011 żerdź energetyczna"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać szeroką, dwujezdniową drogę z kilkoma pojazdami, otoczoną zielenią i niebem z chmurami.
+
+W kadrze widoczny jest słup energetyczny linii elektroenergetycznej po prawej stronie, około 100-150 metrów od kamery."
+  },
+  {
+   "frame": "KV-1326673801",
+   "plik": "/home/user/vtmp/M50-012.jpg",
+   "wiersze": [
+    "M50-012 żerdź energetyczna"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać szeroką, dwujezdniową drogę z kilkoma pojazdami, otoczoną zielenią i niebem z chmurami. Po prawej stronie znajduje się duża żółta tablica informacyjna.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-5062587",
+   "plik": "/home/user/vtmp/M50-013.jpg",
+   "wiersze": [
+    "M50-013 hydrant nadziemny"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z pasami, znak pieszy na lewo oraz pojazdy, w tym ciężarówki i samochody, na tle nieba z chmurami i zielonych drzew.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-1326673829",
+   "plik": "/home/user/vtmp/M50-014.jpg",
+   "wiersze": [
+    "M50-014 hydrant nadziemny"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z dwoma pasami ruchu, oddzieloną barierami od chodnika i ścieżki rowerowej po prawej stronie, a także latarnie uliczne oraz transparentne ekrany akustyczne.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-1326673477",
+   "plik": "/home/user/vtmp/M50-015.jpg",
+   "wiersze": [
+    "M50-015 hydrant nadziemny"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z poruszającym się po niej białym samochodem dostawczym, otoczoną barierami dźwiękochłonnymi, latarniami oraz budynkami w tle.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382225",
+   "plik": "/home/user/vtmp/M50-016.jpg",
+   "wiersze": [
+    "M50-016 szafka gazowa/telekom"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z kilkoma samochodami jadącymi w obu kierunkach, otoczoną budynkami i drzewami.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-1326673717",
+   "plik": "/home/user/vtmp/M50-017.jpg",
+   "wiersze": [
+    "M50-017 ławka"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać szeroką, dwujezdniową drogę z jednym samochodem jadącym w kierunku kamery. Po prawej stronie znajduje się stacja benzynowa z logo BP oraz budynek przystanku autobusowego.
+
+Ławka (siedzisko) jest widoczna po prawej stronie, około 20-25 metrów od kamery."
+  },
+  {
+   "frame": "KV-219382277",
+   "plik": "/home/user/vtmp/M50-018.jpg",
+   "wiersze": [
+    "M50-018 ławka"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z kilkoma samochodami jadącymi w obu kierunkach, a także dużą ciężarówkę po lewej stronie. W tle znajdują się drzewa i budynki.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-993065622",
+   "plik": "/home/user/vtmp/M50-019.jpg",
+   "wiersze": [
+    "M50-019 kosz"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwupasmową drogę z buspasem po prawej stronie, otoczoną zielenią i budynkami w tle, pod czystym, błękitnym niebem.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382231",
+   "plik": "/home/user/vtmp/M50-020.jpg",
+   "wiersze": [
+    "M50-020 kosz"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, po której jedzie samochód. Po prawej stronie znajduje się przystanek autobusowy z ludźmi.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382025",
+   "plik": "/home/user/vtmp/M50-021.jpg",
+   "wiersze": [
+    "M50-021 stojak rowerowy"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z jezdnią i chodnikiem, po której jedzie autobus. W tle znajdują się budynki mieszkalne i drzewa.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-993065846",
+   "plik": "/home/user/vtmp/M50-022.jpg",
+   "wiersze": [
+    "M50-022 stojak rowerowy"
+   ],
+   "ok": false,
+   "wynik": "Image analysis limit of 20 calls reached for this response. Work with the results you already have."
+  },
+  {
+   "frame": "KV-219382233",
+   "plik": "/home/user/vtmp/M50-023.jpg",
+   "wiersze": [
+    "M50-023 osłona drzewa"
+   ],
+   "ok": false,
+   "wynik": "Image analysis limit of 20 calls reached for this response. Work with the results you already have."
+  },
+  {
+   "frame": "KV-1326673433",
+   "plik": "/home/user/vtmp/M50-024.jpg",
+   "wiersze": [
+    "M50-024 osłona drzewa",
+    "M50-058 latarnia"
+   ],
+   "ok": false,
+   "wynik": "Image analysis limit of 20 calls reached for this response. Work with the results you already have."
+  },
+  {
+   "frame": "KV-989896430",
+   "plik": "/home/user/vtmp/M50-050.jpg",
+   "wiersze": [
+    "M50-050 hydrant nadziemny"
+   ],
+   "ok": false,
+   "wynik": "Image analysis limit of 20 calls reached for this response. Work with the results you already have."
+  },
+  {
+   "frame": "KV-993065846",
+   "plik": "/home/user/vtmp/M50-022.jpg",
+   "wiersze": [
+    "M50-022 stojak rowerowy"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwupasmową drogę z oznakowaniem prędkości 70 km/h, latarniami ulicznymi oraz stacją benzynową BP po prawej stronie.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382233",
+   "plik": "/home/user/vtmp/M50-023.jpg",
+   "wiersze": [
+    "M50-023 osłona drzewa"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, po której jedzie kilka samochodów, w tym białe auto z przodu. Po prawej stronie znajduje się przystanek autobusowy z ludźmi oraz drzewa i krzewy w tle.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-1326673433",
+   "plik": "/home/user/vtmp/M50-024.jpg",
+   "wiersze": [
+    "M50-024 osłona drzewa",
+    "M50-058 latarnia"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać rozmyte światła samochodu oraz drogę z widoczną białą linią ciągłą po lewej stronie.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-989896430",
+   "plik": "/home/user/vtmp/M50-050.jpg",
+   "wiersze": [
+    "M50-050 hydrant nadziemny"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z kilkoma pasami ruchu, sygnalizacją świetlną oraz znakami drogowymi. W tle znajdują się drzewa, budynki i ogrodzenie.
+
+Hydrant przeciwpożarowy jest widoczny po prawej stronie kadru, przy krawężniku, około 50-60 metrów od kamery."
+  },
+  {
+   "frame": "KV-5062589",
+   "plik": "/home/user/vtmp/M50-051.jpg",
+   "wiersze": [
+    "M50-051 hydrant nadziemny"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać szeroką drogę z kilkoma samochodami i ciężarówkami, otoczoną zielenią i niebieskim niebem z chmurami.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219381855",
+   "plik": "/home/user/vtmp/M50-052.jpg",
+   "wiersze": [
+    "M50-052 sygnalizator na maszcie/wysięgniku"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, most nad nią oraz kilka pojazdów, w tym samochody i ciężarówki.
+
+Sygnalizator świetlny: lewo, około 50 metrów od kamery."
+  },
+  {
+   "frame": "KV-219382063",
+   "plik": "/home/user/vtmp/M50-053.jpg",
+   "wiersze": [
+    "M50-053 sygnalizator na maszcie/wysięgniku"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać samochód jadący drogą w kierunku skrzyżowania z sygnalizacją świetlną i znakami drogowymi.
+
+Sygnalizatory świetlne:
+1. Lewo - około 50 metrów
+2. Środek - około 30 metrów
+3. Prawo - około 40 metrów"
+  },
+  {
+   "frame": "PANO-3717771d",
+   "plik": "/home/user/vtmp/3717771d.jpg",
+   "wiersze": [
+    "M50-054 sygnalizator na maszcie/wysięgniku"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z pasami, most nad nią oraz niebieskie niebo z chmurami. W tle znajdują się drzewa i zieleń.
+
+Sygnalizator świetlny jest widoczny po prawej stronie kadru, na wysięgniku nad jezdnią, w odległości około 10-15 metrów od kamery."
+  },
+  {
+   "frame": "PANO-35224dcb",
+   "plik": "/home/user/vtmp/35224dcb.jpg",
+   "wiersze": [
+    "M50-055 sygnalizator na maszcie/wysięgniku"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, most nad nią, samochody oraz sygnalizatory świetlne.
+
+Sygnalizatory świetlne:
+1. Lewo - około 50 metrów
+2. Środek - około 30 metrów
+3. Prawo - około 40 metrów"
+  },
+  {
+   "frame": "KV-219382393",
+   "plik": "/home/user/vtmp/M50-056.jpg",
+   "wiersze": [
+    "M50-056 latarnia",
+    "M50-056-NOTE słupek blokujący (niezakotwiczony w OSM)"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać ulicę z jezdnią, chodnikiem, zaparkowanymi samochodami oraz budynkami po obu stronach.
+
+W kadrze widoczna jest latarnia drogowa (słup oświetleniowy z oprawą u szczytu) po prawej stronie, około 20-25 metrów od kamery. Widoczny jest również biało-czerwony słupek blokujący (typu U-5a) przy krawędzi chodnika po prawej stronie, około 10-15 metrów od kamery."
+  },
+  {
+   "frame": "KV-219382385",
+   "plik": "/home/user/vtmp/M50-057.jpg",
+   "wiersze": [
+    "M50-057 latarnia",
+    "M50-057-NOTE słupek blokujący (niezakotwiczony w OSM)"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać skrzyżowanie z sygnalizacją, samochody, budynki oraz pieszych.
+
+- Latarnia drogowa: widoczna w środku kadru, około 30-40 metrów od kamery.
+- Biało-czerwone słupki blokujące: widoczne po prawej stronie kadru, około 10-15 metrów od kamery."
+  },
+  {
+   "frame": "KV-219381929",
+   "plik": "/home/user/vtmp/M50-059.jpg",
+   "wiersze": [
+    "M50-059 bariera U-12/U-12b"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z jadącym busem, samochodami, budynkami handlowymi i billboardami w tle.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219381925",
+   "plik": "/home/user/vtmp/M50-060.jpg",
+   "wiersze": [
+    "M50-060 bariera U-12/U-12b"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z busem jadącym w kierunku kamery, otoczoną budynkami, drzewami i znakami drogowymi.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382229",
+   "plik": "/home/user/vtmp/M50-061.jpg",
+   "wiersze": [
+    "M50-061 szafka gazowa/telekom"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z kilkoma samochodami, budynkami po lewej stronie oraz chodnikiem i przystankiem autobusowym po prawej.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-7119785",
+   "plik": "/home/user/vtmp/M50-062.jpg",
+   "wiersze": [
+    "M50-062 stojak rowerowy"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z jezdnią i chodnikiem, budynek z graffiti po prawej stronie oraz pochmurne niebo.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-7119771",
+   "plik": "/home/user/vtmp/M50-063.jpg",
+   "wiersze": [
+    "M50-063 ławka"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać rozmazany widok drogi z chmurami na niebie i zielenią po bokach.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382235",
+   "plik": "/home/user/vtmp/M50-064.jpg",
+   "wiersze": [
+    "M50-064 osłona drzewa"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma samochodami jadącymi w tym samym kierunku, otoczoną drzewami i budynkami w tle.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "PANO-6ded8ec0",
+   "plik": "/home/user/vtmp/6ded8ec0.jpg",
+   "wiersze": [
+    "M50-065 hydrant nadziemny"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, otoczoną wysokim ogrodzeniem z siatki, lampami ulicznymi oraz znakami drogowymi. W tle widoczne są budynki i zieleń.
+
+ŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "PANO-3eba62ce",
+   "plik": "/home/user/vtmp/3eba62ce.jpg",
+   "wiersze": [],
+   "ok": true,
+   "wynik": "Na zdjęciu widać skrzyżowanie dróg z sygnalizatorami świetlnymi, latarniami drogowymi oraz barierą ochronną w tle.
+
+Widoczne obiekty:
+- Latarnia drogowa: lewo (blisko), środek (daleko), prawo (blisko i daleko)
+- Sygnalizator świetlny: lewo (blisko), środek (daleko), prawo (blisko)
+- Bariera ochronna drogowa U-12: środek i prawo (daleko)"
+  },
+  {
+   "frame": "PANO-07820d85",
+   "plik": "/home/user/vtmp/07820d85.jpg",
+   "wiersze": [],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z dwoma pasami ruchu w każdą stronę, otoczoną zielenią i budynkami w tle, pod czystym niebiem.
+
+Widoczne obiekty:
+- Latarnia drogowa (słup z oprawą) – lewo, około 30 m; środek, około 50 m; prawo, około 40 m.
+- Bariera ochronna drogowa U-12 (odbojnica) – prawo, około 20 m."
+  },
+  {
+   "frame": "PANO-6fc62548",
+   "plik": "/home/user/vtmp/6fc62548.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z mostem nad nią, budynek mieszkalny w tle oraz zieleń.
+
+Obiekty widoczne:
+- Latarnia drogowa (słup z oprawą) – lewo, około 20-30 metrów.
+- Bariera ochronna drogowa U-12 (stalowa odbojnica w-beam) – środek/prawo, wzdłuż drogi."
+  },
+  {
+   "frame": "PANO-a228a704",
+   "plik": "/home/user/vtmp/a228a704.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, otoczoną wysokim ogrodzeniem z siatki i paneli akustycznych, z zielenią po obu stronach oraz lampami ulicznymi.
+
+Widoczne obiekty:
+- Latarnia drogowa (słup z oprawą) – lewo, około 50 m; środek, około 100 m; prawo, około 80 m."
+  },
+  {
+   "frame": "PANO-9ff60a64",
+   "plik": "/home/user/vtmp/9ff60a64.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, otoczoną barierami ochronnymi i transparentną osłoną akustyczną po prawej stronie, a także mostek dla pieszych w tle.
+
+Widoczne obiekty:
+- Latarnia drogowa (słup z oprawą) – lewo, około 50 m; prawo, około 30 m.
+- Bariera ochronna drogowa U-12 – lewo i prawo, wzdłuż całej drogi.
+- Osłona drzewa (kratka wokół pnia) – lewo, około 40 m."
+  },
+  {
+   "frame": "PANO-386598e7",
+   "plik": "/home/user/vtmp/386598e7.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, most nad jezdnią, bariery ochronne oraz znaki drogowe.
+
+Widoczne obiekty:
+- Latarnia drogowa (słup z oprawą) – lewo, około 50 m
+- Sygnalizator świetlny – środek, około 30 m
+- Bariera ochronna drogowa U-12 – prawo, wzdłuż drogi
+- Słup energetyczny – prawo, około 20 m"
+  },
+  {
+   "frame": "PANO-8176a172",
+   "plik": "/home/user/vtmp/8176a172.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z kilkoma pasmami ruchu, most nad jezdnią oraz bariery ochronne po obu stronach drogi.
+
+Widoczne obiekty:
+- Latarnia drogowa (słup z oprawą) – lewo, w tle, około 100-150 metrów.
+- Latarnia drogowa (słup z oprawą) – środek, w tle, około 150-200 metrów.
+- Bariera ochronna drogowa U-12 (stalowa odbojnica w-beam) – lewo i prawo, wzdłuż drogi, blisko."
+  },
+  {
+   "frame": "PANO-239c71e8",
+   "plik": "/home/user/vtmp/239c71e8.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwujezdniową drogę z barierami ochronnymi, mostem nad nią oraz transparentnymi ekranami akustycznymi po obu stronach. Na niebie są pojedyncze chmury, a w oddali widoczny jest samochód i znak drogowy.
+
+W kadrze widać:
+- Latarnia drogowa (słup z oprawą) – prawo, około 200-300 metrów.
+- Bariera ochronna drogowa U-12 (stalowa odbojnica w-beam) – lewo i prawo, wzdłuż całej drogi."
+  },
+  {
+   "frame": "PANO-7196532e",
+   "plik": "/home/user/vtmp/7196532e.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, otoczoną zielenią i transparentną barierą akustyczną po prawej stronie.
+
+Widoczne obiekty:
+- Latarnia drogowa (słup z oprawą) – lewo, około 50 m
+- Latarnia drogowa (słup z oprawą) – środek, około 100 m
+- Bariera ochronna drogowa U-12 (stalowa odbojnica w-beam) – lewo, około 30 m"
+  },
+  {
+   "frame": "PANO-844e35c7",
+   "plik": "/home/user/vtmp/844e35c7.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z kilkoma pasami ruchu, most nad jezdnią, pojazdy oraz liczne znaki drogowe i sygnalizatory świetlne.
+
+Widoczne obiekty:
+- sygnalizator świetlny: lewo (blisko, na pierwszym planie), środek (nad jezdnią, w oddali)
+- bariera ochronna drogowa U-12: lewo i prawo (wzdłuż jezdni, blisko)
+- latarnia drogowa: prawo (w tle, przy jezdni)"
+  },
+  {
+   "frame": "PANO-02830ea2",
+   "plik": "/home/user/vtmp/02830ea2.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę ekspresową z kilkoma samochodami, barierami ochronnymi oraz latarniami drogowymi po obu stronach jezdni.
+
+Obiekty widoczne:
+- Latarnia drogowa (słup z oprawą) – lewo, około 50 m; prawo, około 30 m.
+- Bariera ochronna drogowa U-12 – lewo i prawo, wzdłuż całej jezdni.
+- Osłona drzewa (kratka wokół pnia) – prawo, około 20 m."
+  },
+  {
+   "frame": "PANO-f16bbe61",
+   "plik": "/home/user/vtmp/f16bbe61.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwupasmową drogę z barierami ochronnymi po obu stronach, otoczoną transparentnymi ekranami akustycznymi, z widocznym niebem i kilkoma latarniami drogowymi w tle.
+
+Widoczne obiekty:
+- Latarnia drogowa: środek, około 100-150 metrów
+- Latarnia drogowa: lewo, około 200 metrów
+- Bariera ochronna drogowa U-12: lewo i prawo, wzdłuż całej drogi
+- Słup/żerdź energetyczny: prawo, około 50 metrów"
+  },
+  {
+   "frame": "PANO-03ec4841",
+   "plik": "/home/user/vtmp/03ec4841.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z kilkoma pasami ruchu, most nad nią oraz busa i samochody na jezdni. Widoczne są także znaki drogowe i latarnie.
+
+Obiekty widoczne na zdjęciu:
+- Latarnia drogowa: prawo, około 50 metrów.
+- Sygnalizator świetlny: środek, około 100 metrów.
+- Bariera ochronna drogowa U-12: lewo i prawo, wzdłuż całej drogi."
+  },
+  {
+   "frame": "PANO-9cf05b43",
+   "plik": "/home/user/vtmp/9cf05b43.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwupasmową drogę z barierami ochronnymi po obu stronach, otoczoną transparentnymi osłonami akustycznymi po prawej stronie oraz latarniami ulicznymi i zielenią w tle.
+
+Obiekty widoczne:
+- Latarnia drogowa (słup z oprawą) – lewo, około 50 m; środek, około 100 m; prawo, około 80 m.
+- Bariera ochronna drogowa U-12 (stalowa odbojnica w-beam) – lewo i prawo, wzdłuż całej drogi.
+- Słup/żerdź energetyczny – lewo, około 200 m."
+  },
+  {
+   "frame": "PANO-9f85aac8",
+   "plik": "/home/user/vtmp/9f85aac8.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę ekspresową z mostem, znakami drogowymi i niebem z chmurami.
+
+Obiekty widoczne:
+- Latarnia drogowa (słup z oprawą) – lewo, około 50 m; prawo, około 80 m.
+- Bariera ochronna drogowa U-12 (stalowa odbojnica w-beam) – lewo i prawo, wzdłuż jezdni.
+- Słup/żerdź energetyczny – prawo, około 100 m."
+  },
+  {
+   "frame": "PANO-8ccad44c",
+   "plik": "/home/user/vtmp/8ccad44c.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę ekspresową z dwoma pasmami ruchu, oddzielonymi barierą ochronną, z drzewami i niebem w tle.
+
+Widoczne obiekty:
+- Latarnia drogowa (słup z oprawą) - lewo, około 50-100 metrów
+- Bariera ochronna drogowa U-12 (stalowa odbojnica w-beam) - środek, wzdłuż drogi
+- Słup/żerdź energetyczny - prawo, około 20-30 metrów
+- Osłona drzewa (kratka wokół pnia) - prawo, około 10-20 metrów"
+  },
+  {
+   "frame": "PANO-6248550a",
+   "plik": "/home/user/vtmp/6248550a.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z kilkoma pasmami ruchu, most, znaki drogowe oraz niebo z chmurami.
+
+Widoczne obiekty:
+- Latarnia drogowa (słup z oprawą) – lewo, około 50-100 metrów.
+- Latarnia drogowa (słup z oprawą) – środek, około 100-150 metrów.
+- Latarnia drogowa (słup z oprawą) – prawo, około 50-100 metrów.
+- Bariera ochronna drogowa U-12 (stalowa odbojnica w-beam) – lewo i prawo, wzdłuż drogi.
+- Słup/żerdź energetyczny – prawo, około 30-50 metrów."
+  },
+  {
+   "frame": "PANO-e84d565e",
+   "plik": "/home/user/vtmp/e84d565e.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę ekspresową z kilkoma samochodami, otoczoną zielenią i niebem z pojedynczymi chmurami. Widoczne są również znaki drogowe, w tym ograniczenie prędkości do 70 km/h.
+
+Obiekty widoczne w kadrze:
+- Latarnia drogowa (słup z oprawą) - lewo, około 50-100 metrów
+- Słup/żerdź energetyczny - lewo i prawo, na całej długości drogi
+- Bariera ochronna drogowa U-12 (stalowa odbojnica in-beam) - prawo, wzdłuż drogi."
+  },
+  {
+   "frame": "PANO-b27d2652",
+   "plik": "/home/user/vtmp/b27d2652.jpg",
+   "wiersze": [
+    "extra pano — kontrola zasięgu kotwic OSM"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z dwoma pasami ruchu, otoczoną barierami ochronnymi, z niebem pełnym chmur i kilkoma znakami drogowymi oraz lampami ulicznymi.
+
+Widoczne obiekty:
+1. **Latarnia uliczna** – lewo i prawo, wzdłuż drogi, około 10-30 metrów.
+4. **Bariera ochronna U-12** – lewo i prawo, wzdłuż całej drogi, bezpośrednio przy krawężniku. Wniosek: latarnie bez kotwic OSM street_lamp w zasięgu (geo_candidates), bariery U-12 niemapowane w OSM — bez nowych wierszy manifestu."
+  },
+  {
+   "frame": "PANO-b0419ba6",
+   "plik": "/home/user/vtmp/b0419ba6.jpg",
+   "wiersze": [
+    "extra pano — kontrola zasięgu kotwic OSM"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę ekspresową z kilkoma pojazdami, otoczoną zielenią i niebem z pojedynczymi chmurami.
+
+Widoczne obiekty:
+1. **Latarnia uliczna** – lewo, około 50-100 m.
+2. **Bariera ochronna U-12** – prawo, wzdłuż całej drogi.
+3. **Szafka uliczna** – prawo, około 20-30 m.
+4. **Żerdź drogowa (delineator)** – prawo, około 30-50 m. Pozostałe obiekty: ŻADEN NIE WIDOCZNY. Wniosek: latarnia poza kryterium ≤25 m; szafka i żerdź bez kotwic OSM (geo_candidates: man_made=street_cabinet/żerdź = 0) — bez nowych wierszy manifestu."
+  },
+  {
+   "frame": "KV-993028082",
+   "plik": "/home/user/vtmp/KV-993028082.jpg",
+   "wiersze": [
+    "NEW-lamp latarnia"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z betonowymi barierami po bokach oraz jasne niebo. Po lewej stronie drogi znajduje się wysoki mur z zielonym pasem na górze i znakiem reklamowym.
+
+W kadrze widać latarnię drogową po lewej stronie, około 50-100 metrów od kamery."
+  },
+  {
+   "frame": "PANO-07820d85-FOLLOWUP",
+   "plik": "/home/user/vtmp/07820d85.jpg",
+   "wiersze": [
+    "follow-up"
+   ],
+   "ok": true,
+   "wynik": "To **ekran akustyczny** – wysoka dźwiękochłonna ściana. Jest wykonana z przezroczystego materiału (prawdopodobnie pleksiglasu lub szkła), ma około 3-4 metrów wysokości i znajduje się **po prawej stronie** jezdni, około 20 metrów od kamery."
+  },
+  {
+   "frame": "KV-993066706-FOLLOWUP",
+   "plik": "/home/user/vtmp/M50-008.jpg",
+   "wiersze": [
+    "M50-008 bariera U-12/U-12b"
+   ],
+   "ok": true,
+   "wynik": "Po lewej stronie widoczna jest **drogowa bariera ochronna U-12** – stalowa odbojnica typu *w-beam* (falista, podwójnie zagięta), zamocowana na słupkach. Jest usytuowana bezpośrednio przy krawężniku/jezdni, na wysokości ok. **0,7–0,8 m**. Odległość od kamery (pojazdu) szacuję na **5–10 m**. Nie jest to ekran akustyczny ani ogrodzenie posesji."
+  },
+  {
+   "frame": "KV-1326673433-FOLLOWUP",
+   "plik": "/home/user/vtmp/M50-024.jpg",
+   "wiersze": [
+    "M50-024 osłona drzewa",
+    "M50-058 latarnia"
+   ],
+   "ok": true,
+   "wynik": "W kadrze widoczny jest jeden rozmyty punkt świetlny u szczytu słupa po prawej stronie. Nie widać innych słupów oświetleniowych ani świecących opraw w centralnej lub lewej części kadru. Pozycja: **prawo**."
+  }
+ ]
+}
