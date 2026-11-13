@@ -84,7 +84,7 @@ U_LINK = {True: (128 * _PX, 160 * _PX), False: (160 * _PX, 192 * _PX)}       # r
 U_STRIP = {True: (194 * _PX, 222 * _PX), False: (226 * _PX, 254 * _PX)}      # red / white opaque strips (LOD1)
 
 WHITE_SRGB = (224, 223, 216)            # weathered white foil, WORKING_VALUE
-RED_SRGB = (176, 24, 22)                # RAL 3020 (FT.RAL3020_SRGB) darkened by weathering, WORKING_VALUE
+RED_SRGB = (164, 26, 26)                # RAL 3020 (FT.RAL3020_SRGB) darkened by weathering, WORKING_VALUE
 STEEL_SRGB = (150, 153, 152)
 RUST_SRGB = (132, 80, 48)
 FILM_SRGB = (140, 132, 118)
@@ -256,7 +256,6 @@ def texture():
     im[..., 3] = 255
     im[:, :112, :3] = _post_texture(rng, 112, h)
     im[:, 112:128, :3] = np.array(STEEL_SRGB, float) * (1 + 0.04 * _noise(rng, (h, 16), 1.5))[..., None]
-    y = ((1 - (np.arange(h) + 0.5) / h) * PITCHES_PER_V)[:, None]
     for red in (True, False):
         base = RED_SRGB if red else WHITE_SRGB
         c0 = int(round(U_LINK[red][0] * w))
@@ -264,8 +263,8 @@ def texture():
         im[:, c0:c0 + 32, :3] = rgb
         im[:, c0:c0 + 32, 3] = a * 255
         c1 = int(round(U_STRIP[red][0] * w)) - 2
-        strip = np.asarray(base, float) * (0.74 + 0.10 * np.cos(2 * math.pi * y))      # link rhythm, no alpha
-        im[:, c1:c1 + 32, :3] = np.broadcast_to(strip[:, None, :] if strip.ndim == 2 else strip, (h, 32, 3))
+        # flat mean colour of the lit links: a link-pitch rhythm here aliases into dashes at LOD1 distance
+        im[:, c1:c1 + 32, :3] = np.asarray(base, float) * 0.80
     return Image.fromarray(np.clip(im, 0, 255).astype(np.uint8), "RGBA")
 
 
