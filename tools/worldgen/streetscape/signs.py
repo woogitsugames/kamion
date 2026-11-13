@@ -435,7 +435,13 @@ def vms_board(lines, size_m, cols=150):
     lo = Image.new("L", (cols, rows), 0)
     d = ImageDraw.Draw(lo)
     lh = rows / (len(lines) + 0.6)
-    f = _font(max(6, int(lh * 0.82)))
+    # review s17-0162: "5 MIN" touched the right frame - the widest line must keep >= 5 % of the matrix free on
+    # both sides; shrink the font until it fits.
+    fs = max(6, int(lh * 0.82))
+    f = _font(fs)
+    while fs > 6 and max(d.textlength(t, font=f) for t in lines) > cols * 0.90:
+        fs -= 1
+        f = _font(fs)
     for i, t in enumerate(lines):
         d.text((cols * 0.05, lh * (0.35 + i)), t, font=f, fill=255)
     on = np.asarray(lo) > 110

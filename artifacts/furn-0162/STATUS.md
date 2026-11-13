@@ -35,3 +35,7 @@
 - DECYZJA WŁAŚCICIELA: +10 draws Low na g3b-rondo-putry-approach (421 -> 431) za 3 prawdziwe konstrukcje 2024 al. Tysiąclecia; para: pairs\probe-f162-tys-portal-g3p005.jpg. Dalsza redukcja = scalić tablice z bramownicą w jeden mesh (zmiana QA/walidatora tablic) — nie robione.
 - Gotowe do scalenia: TAK (z decyzją właściciela o +10 draws na jednej kamerze gate3 i akceptacją InstanceImporter.cs).
 - NASTĘPNY KROK (lider): `git merge furn-0162` (bez konfliktów z main w tools/tests), potem `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` i kamery WorldC.
+- HEAD c6f8c3b6c (pushed origin/furn-0162). Gotowe do scalenia: TAK
+- 12:05 Recenzja s17 (SCAL warunkowo): poprawki P1 pas latarni (sRGB 112 -> 206 pod steel_galv metal 0.9 = był czarny), margines VMS (czcionka zmniejszana do 90 % szerokości), P2 wiata grafitowa bez niebieskiego pasa. Testy furniture 24/24. Właściciel przyjął +10 draws.
+- W TLE: `pwsh -File artifacts/furn-0162/tools/r3.ps1` (log artifacts/furn-0162/logs/r3.log): build + import + sondy r3-probes-Low/High.
+- NASTĘPNY KROK: obejrzeć artifacts/furn-0162/r3-probes-High/{f162-lamp-door,f162-tys-vms-g3p010,f162-shelter-bus_shelter_black}.png, commit wyjść, ADR, push. Gotowe do scalenia: NIE (do czasu sond)

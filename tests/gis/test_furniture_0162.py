@@ -144,7 +144,9 @@ def test_lamp_heights_door_and_grey_base():
     band = galv[row(0.15)].mean(0)
     above = galv[row(0.6)].mean(0)
     assert np.abs(band[0] - band[2]) < 12                       # neutral grey paint
-    assert band.mean() < above.mean() - 40                      # darker than the zinc above it
+    # one step darker than the zinc above it, but light grey: under steel_galv (colour 0.42, metal 0.9) sRGB 112
+    # rendered near black (review s17-0162 P1)
+    assert 180 <= band.mean() <= above.mean() - 20
 
 
 def test_sunk_mast_keeps_grey_band_at_real_ground():
@@ -210,3 +212,21 @@ def test_overhead_board_is_one_material_with_plain_back_band():
     r, g, b = (c / 255 for c in PP.BOARD_BACK_SRGB)
     lin = [((c + 0.055) / 1.055) ** 2.4 for c in (r, g, b)]
     assert lin == pytest.approx([0.21, 0.22, 0.22], abs=0.01)
+
+
+def test_vms_text_keeps_a_margin():
+    """Review s17-0162 P1: the widest VMS line keeps the right edge of the matrix dark (no text on the frame)."""
+    lines = ["KUŹNICA 5 MIN", "SOKÓŁKA 7 MIN"]
+    im, _, _ = SG.vms_board(lines, (4.0, 1.2))
+    a = np.asarray(im.convert("L"), float)
+    W = a.shape[1]
+    assert a[:, int(W * 0.955):].max() < 150                    # only dark LEDs + the grey frame at the right
+
+
+def test_black_shelter_has_no_info_band():
+    red, black = PP.bus_shelter_bkm(3, "red")[0], PP.bus_shelter_bkm(3, "black")[0]
+    def band_quads(m):
+        UV = np.concatenate(m.prims["shelter_paint"][2])
+        u0, v0, u1, v1 = PP.SHELTER_UV_BAND
+        return int(((UV[:, 1] > v0 - 1e-3) & (UV[:, 1] < v1 + 1e-3)).sum())   # band rows only (atlas layout)
+    assert band_quads(red) > 0 and band_quads(black) == 0

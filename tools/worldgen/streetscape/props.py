@@ -514,7 +514,10 @@ def bus_shelter_bkm(modules=3, colour="red"):
             bb = [x, yr - sx * D15_RACK_W_M / 2, zr0]
             _uv_quad(mm, "shelter_paint", a, bb, [bb[0], bb[1], zr0 + D15_RACK_H_M],
                      [a[0], a[1], zr0 + D15_RACK_H_M], SHELTER_UV_D15)
-        # blue information board along the road-side roof edge (no logo, no text of a real operator)
+        # blue information board along the road-side roof edge (no logo, no text of a real operator); the older
+        # graphite shelters have none (G5-020 Lipowa photo, review s17-0162)
+        if colour == "black":
+            continue
         yf_b = y_front_edge + 0.005
         zb0 = zr(y_front_edge) - 0.02
         _uv_quad(mm, "shelter_paint", [L / 2 + 0.3, yf_b, zb0], [-L / 2 - 0.3, yf_b, zb0],

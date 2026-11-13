@@ -201,8 +201,11 @@ def _galv_grey_base(im):
     h = a.shape[0]
     z = (1 - (np.arange(h) + 0.5) / h) * 9.0
     band = (z <= 0.30)[:, None]
-    grey = np.array([112.0, 114.0, 114.0])
-    foot = np.clip(1 - z / 0.30, 0, 1)[:, None, None] * 0.25
-    paint = grey * (1 - foot) + np.array([150.0, 140.0, 120.0]) * foot
+    # The atlas multiplies material steel_galv (colour 0.42, metal 0.9): sRGB 112 there gave albedo ~0.07 and the band
+    # rendered near black (review s17-0162 P1). 208 -> ~0.26 albedo: a matt light-grey band one step darker than the
+    # galvanised shaft, like the light-grey columns of al. Tysiąclecia (P1-110). WORKING_VALUE.
+    grey = np.array([206.0, 208.0, 208.0])
+    foot = np.clip(1 - z / 0.30, 0, 1)[:, None, None] * 0.15
+    paint = grey * (1 - foot) + np.array([190.0, 182.0, 166.0]) * foot
     a = np.where(band[..., None], paint * (0.97 + 0.03 * (a / 255.0)), a)
     return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGB")
