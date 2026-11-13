@@ -1,0 +1,315 @@
+{
+ "zadanie": "M51 (p10-greenery-3) — samokontrola 20% manifestu",
+ "data": "2026-11-13",
+ "seed": 20261113,
+ "generator": "random.Random(20261113).sample(ids, ceil(0.2*n)); sort()",
+ "n_wierszy": 41,
+ "n_probek": 9,
+ "probki": [
+  "M51-001",
+  "M51-002",
+  "M51-102",
+  "M51-106",
+  "M51-109",
+  "M51-203",
+  "M51-209",
+  "M51-212",
+  "M51-218"
+ ],
+ "wyniki": [
+  {
+   "id": "M51-001",
+   "checks": {
+    "bbox": {
+     "ok": true,
+     "info": "lat/lon w bbox osiedla"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "nie dotyczy"
+    },
+    "plik_kadru": {
+     "ok": true,
+     "info": "wiersz bez kadru (BIP/korony)"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "BIP (urzędowe, art. 4 pr. aut.)"
+    },
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-002",
+   "checks": {
+    "bbox": {
+     "ok": true,
+     "info": "lat/lon w bbox osiedla"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "nie dotyczy"
+    },
+    "plik_kadru": {
+     "ok": true,
+     "info": "wiersz bez kadru (BIP/korony)"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "urzędowe (komunikat prasowy UM)"
+    },
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-102",
+   "checks": {
+    "bbox": {
+     "ok": true,
+     "info": "lat/lon w bbox osiedla"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
+    },
+    "plik_kadru": {
+     "ok": true,
+     "info": "files/c_20220725_132604.jpg istnieje"
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "info": "zgodna z metadanymi Commons: 2022-07-25"
+    },
+    "sezon_pora": {
+     "ok": true,
+     "info": "sezon+pora_dnia obecne"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-106",
+   "checks": {
+    "bbox": {
+     "ok": true,
+     "info": "lat/lon w bbox osiedla"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
+    },
+    "plik_kadru": {
+     "ok": true,
+     "info": "files/c_20220725_132659.jpg istnieje"
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "info": "zgodna z metadanymi Commons: 2022-07-25"
+    },
+    "sezon_pora": {
+     "ok": true,
+     "info": "sezon+pora_dnia obecne"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-109",
+   "checks": {
+    "bbox": {
+     "ok": true,
+     "info": "lat/lon w bbox osiedla"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
+    },
+    "plik_kadru": {
+     "ok": true,
+     "info": "files/c_20220725_132342.jpg istnieje"
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "info": "zgodna z metadanymi Commons: 2022-07-25"
+    },
+    "sezon_pora": {
+     "ok": true,
+     "info": "sezon+pora_dnia obecne"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-203",
+   "checks": {
+    "bbox": {
+     "ok": true,
+     "info": "lat/lon w bbox osiedla"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
+    },
+    "plik_kadru": {
+     "ok": true,
+     "info": "files/c_20220725_132604.jpg istnieje"
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "info": "zgodna z metadanymi Commons: 2022-07-25"
+    },
+    "sezon_pora": {
+     "ok": true,
+     "info": "sezon+pora_dnia obecne"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-209",
+   "checks": {
+    "bbox": {
+     "ok": true,
+     "info": "lat/lon w bbox osiedla"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
+    },
+    "plik_kadru": {
+     "ok": true,
+     "info": "files/c_20220725_132614.jpg istnieje"
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "info": "zgodna z metadanymi Commons: 2022-07-25"
+    },
+    "sezon_pora": {
+     "ok": true,
+     "info": "sezon+pora_dnia obecne"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-212",
+   "checks": {
+    "bbox": {
+     "ok": true,
+     "info": "lat/lon w bbox osiedla"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
+    },
+    "plik_kadru": {
+     "ok": true,
+     "info": "files/c_20220725_132426.jpg istnieje"
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "info": "zgodna z metadanymi Commons: 2022-07-25"
+    },
+    "sezon_pora": {
+     "ok": true,
+     "info": "sezon+pora_dnia obecne"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-218",
+   "checks": {
+    "bbox": {
+     "ok": true,
+     "info": "lat/lon w bbox osiedla"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
+    },
+    "plik_kadru": {
+     "ok": true,
+     "info": "files/c_20230729_105222.jpg istnieje"
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "info": "zgodna z metadanymi Commons: 2023-07-29"
+    },
+    "sezon_pora": {
+     "ok": true,
+     "info": "sezon+pora_dnia obecne"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    }
+   },
+   "pass": true
+  }
+ ],
+ "podsumowanie": {
+  "pass": 9,
+  "fail": 0
+ }
+}
