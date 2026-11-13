@@ -81,7 +81,7 @@ LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", 
                          "damper", "bellow", "hanger", "trailing_arm", "crossmember", "outrigger", "air_tank", "ebs_",
                          "air_line", "doc_tube", "coupling", "palm_", "socket_", "kingpin", "mudguard_lip",
                          "leg_xbrace", "leg_brace", "cross_shaft", "crank_shaft", "crank_holder", "leg_collar",
-                         "dock_buffer", "lamp_panel_side", "plate_lamp", "tension_", "curtain_rear_wrap",
+                         "dock_buffer", "lamp_panel_side", "tension_", "curtain_rear_wrap",
                          "curtain_front_strip", "stalk_", "sideguard_post", "lockbar",
                          "door_frame", "beam_flange", "rup_brace", "toolbox",
                          "leg_gearbox", "front_lamp", "rear_marker", "door_centre_seal", "rear_sill_face",
@@ -93,10 +93,10 @@ LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", 
 # plate are NOT dropped and NOT decimated there - they were missing on the phone tier since the trailer's first LOD2
 # (base 3a60019ff dropped contour_rear / tri_reflector too). ~400 triangles, paid for by the area-weighted collapse.
 REGS_KEEP = ("contour_", "tri_reflector", "side_marker_reflex", "front_reflex", "side_reflector", "plate_rear",
-             "plate_holder", "r70_plate")
+             "plate_holder", "r70_plate", "plate_lamp_")    # ADR 0181: a lit plate needs its lamp (R48 6.8) on Low too
 _REGS_SAMPLES = ("contour_rear_post_L", "contour_rear_header", "contour_rear_sill_0", "contour_corner_L_rh", "contour_side_-1_0",
                  "tri_reflector_L", "side_marker_reflex_-1_0", "front_reflex_-1", "side_reflector_-1", "plate_rear",
-                 "plate_holder", "r70_plate_-1")
+                 "plate_holder", "r70_plate_-1", "plate_lamp_body", "plate_lamp_lens")
 assert not [n for n in _REGS_SAMPLES if any(d in n for d in LOD2_DROP)], "regulatory part dropped at LOD2"
 
 

@@ -131,7 +131,7 @@ KamionLens KamionLensEval(float2 uv1)
         s = lerp(0.24, (0.10 + 0.90 * led) * lerp(0.75, 1.0, cup), fL) * lerp(1.0, 0.72 + 0.50 * pil, fP);
         L.slope = (half2)(-8.0 * m * pm.yx) * (0.06 * fP);
         // Unlit: metallised cups read lighter towards the rim (they mirror the sky), the carrier darker, the die a dot.
-        L.shade = lerp(1.0, 0.80 + 0.36 * pil, fP) * lerp(1.0, lerp(0.72, 1.12 - 0.22 * dish, cup), fL)
+        L.shade = lerp(1.0, 0.80 + 0.36 * pil, fP) * lerp(1.0, lerp(0.80, 1.08 - 0.16 * dish, cup), fL)
                 * (1.0 + 0.5 * fL * (half)exp(-r * r / (2.0 * 1.6 * 1.6)));
         far = 1.0 - fL;
     }
