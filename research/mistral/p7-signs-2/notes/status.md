@@ -1,42 +1,47 @@
-# Notatki robocze — p7-signs-2 (aktualizacja 2026-11-13, commit godzinowy #6)
+# Notatki robocze — p7-signs-2 (FINAL — 2026-11-13)
 
-## Zmiany w tym commicie — manifest v3 (9 wierszy, P7-006..009)
+Dziennik sesji badawczej. Wszystkie pliki robocze (harvesty, skrypty, zdjęcia źródłowe) poza repo — komplet
+danych w `mistral-p7-signs-2-files.zip` (manifest, README, sources, timeline, notes, audit + `files/`).
 
-Wyniki drugiej paczki odczytów modelu wizyjnego (budżet ~20 wywołań na odpowiedź — wymagane przejścia kontrolne):
+## Commity (gałąź research/mistral-p7-signs-2, od main 8c65107)
 
-1. **P7-006** (7196532e, 2019-08-15 17:32:44, NB za rondem): DWIE bramownice z tablicami w oddali na
-   al. Tysiąclecia za rondem (kier. węzeł S8/S19 Jurowce) — **lokalizacja poza manifestem G3, nowa**.
-   Pierwsze przejście zgłosiło czytelne treści (E77, Gdańsk 120 km) — odczyty kontrolne ich NIE
-   potwierdziły → przyjęto tylko obecność konstrukcji; treści UNVERIFIED. Odrzucone sugestie odnotowano.
-2. **P7-007/008** (35224dcb, 6fc62548, 2019-08-15 17:32:20/24): bramownica PUTRY_W_GANTRY nad wjazdem
-   Maczka→rondo — obecność potwierdzona z dwóch dodatkowych kątów; treści UNVERIFIED.
-3. **P7-009** (13bb273f, 2019-09-01 12:22:51, Maczka W ~530 m za rondem): konstrukcja z tablicami
-   obecna; TRZY odczyty wzajemnie sprzeczne (E67/16/Warszawa 43 vs E75/65 Warszawa 155/E77 Gdańsk/8)
-   → wszystkie treści odrzucone jako sugestia modelu; obecność = jedyne potwierdzenie.
-   Odkryto przy okazji: EXIF GPSImgDirection dla serii WB 2019-09-01 jest błędny (14-21° przy
-   trajektorii wyraźnie zachodniej i view:azimuth 268°) — azymut z Panoramax, EXIF odrzucony.
-4. Kandrowie negatywni: 239c71e8/781cedd1/0c07d3f9 (WB, brak tablic w kadrach), 07820d85/6ded8ec0/
-   a228a704/390ca2c2 (NB, brak tablic w kadrach), 9ff60a64 i 5f92573a (odczyty niejednoznaczne —
-   wzmianki w P7-006 i tu), Commons 122501 (geotag 1,1 km SE od ronda, jedna nieczytelna tablica
-   przydrożna — poza korytarzami).
+1. `d2160a4` — .gitignore + README (szkielet)
+2. `15efce1` — sources.md + notes/status.md
+3. `3e55e02` — timeline_andersa.md (KOMPLETNY: epoki 2019–2026)
+4. `e52a8f0` — manifest v1 (P7-001..004) + notes
+5. `4b2dc62` — manifest v2 (P7-005: PUTRY_W_GANTRY potwierdzona 2019-08-15) + notes; skrypty audit/zip
+6. `6a70fd3` — manifest v3 (P7-006..009: NB gantries poza G3, PUTRY_W_GANTRY ×2, Maczka W West) + notes
+7. `68e5954` — manifest v4 FINAL (P7-010: PUTRY_S_ADVANCE), audit_20_percent.json, README final
+8. (ten commit) — sources.md final (triage S-korytarza, praktyki 429/1920px) + notes/status.md final
 
-## Nowe odkrycie do triage'u (następna paczka): korytarz Tysiąclecia S
-Systematyczny skan geotagów Commons (meta/commons_near_new.json) wykazał nietriage'owane serie
-NA OSI korytarza Tysiąclecia południowego (dojazd od Centrum):
-- 2022-07-25 (Rakoon, 13 plików, 1323-1328xx, lat 53.155-53.157, 180-450 m od ronda),
-- 2024-04-01 (10 plików, 1107-1109xx/112303/112827, lat 53.153-53.156, 280-620 m),
-- 2024-05-30 122602 (405 m), 2024-06-26 103324 (434 m).
-Kandydaci wykluczeni po geotagach: 20241113 104925/094758, 20240219 084848, 20250208 090715,
-20241229 113359, 20250402 161011 (wszyscy >400 m od osi korytarzy). Seria 2022-10-16 pozostaje
-wykluczona (las, weryfikowane wcześniej); pliki z lat >=53.1586 na osi Andersa E sprawdzić przy okazji.
+## Przebieg prac (skrót)
 
-## Stan prac (bez zmian)
-- Skrypty gotowe: make_audit.py (seed `Kamion-P7-signs-2026-11-13-v1`), make_zip.py.
-- Po finalnym manifeście: regeneracja audit_20_percent.json, finalny README.md + sources.md, ZIP, PR (nie-draft).
+- **Wizja (model obrazowy, ~55 przejść w 4 paczkach):** pytania otwarte (bez szablonów paneli), przejścia
+  kontrolne pełnych kadrów + powiększeń. Wzajemnie sprzeczne odczyty → UNVERIFIED z pełną dokumentacją
+  (P7-006 „E77 Gdańsk 120" odrzucone; P7-009 trzy sprzeczne transkrypcje odrzucone; P7-010 trzy sprzeczne
+  transkrypcje odrzucone). Jedyny SOURCED: P7-004 (Commons CC0, 2024-05-30, podwójny zgodny odczyt).
+- **Geotriage korytarzy:** skan 323 plików Commons >2022-07-25 po odległości od osi korytarzy (≤60 m) i od
+  ronda (≤900 m) → 40 kandydatów; triage wzrokowy zamknięty — większość poza korytarzami lub bez oznakowania ronda.
+- **S-korytarz (najazd południowy):** 5 nowych kadrów Commons 2022-07-25 (181–334 m od ronda) — jedyna
+  tablica kierunkowa (132632 → P7-010, treść UNVERIFIED); 132504: zgłoszona „bramownica" NIEPOTWIERDZONA
+  (wycinki pełnej rozdzielczości negatywne) — odrzucona.
+- **EXIF:** wykryto błędny GPSImgDirection w serii WB 2019-09-01 (14–21° vs trajektoria/azymut 268°) —
+  azymuty z Panoramax, udokumentowane (P7-009). Daty EXIF = czas lokalny; przeliczenia CEST→UTC oznaczone.
+- **Ograniczenia narzędzi:** analyze_image ~20 wywołań na odpowiedź (budżet planowany w paczkach);
+  commons API/upload 429 → backoff 10/20/30 s, pauzy 4–8 s; thumb API czasem 1920 px mimo iiurlwidth=1600
+  → dodatkowe przeskalowanie w dół do ≤1600 px.
 
-## Kolejka
-- [ ] triage S-korytarza (Commons 2022-07-25, 2024-04-01, 122602, 103324) — czy widoczne bramownice/tablice najazdu S ronda
-- [ ] ewentualne P7-010+ + regeneracja manifestu/audytu
-- [ ] finalny README.md + sources.md (stan 2025-2026 ronda: UNVERIFIED)
-- [ ] make_zip.py → mistral-p7-signs-2-files.zip → publikacja artefaktem
-- [ ] PR nie-draft do main + surowy git diff --stat
+## Ostateczny stan
+
+- Manifest: **10 pozycji** (P7-001..P7-010), 46 kolumn, UTF-8 BOM, schemat G3 + panoramax_id/sezon/pora_dnia.
+- Grupy: PUTRY_N_GANTRY (3), TYSIACLECIA_N_E1 (1, SOURCED), PUTRY_W_GANTRY (3), TYSIACLECIA_NB_GANTRY (1,
+  nowa poza G3), MACZKA_W_WEST (1, poza G3), PUTRY_S_ADVANCE (1, nowa poza G3).
+- Audit 20%: seed `Kamion-P7-signs-2026-11-13-v1`, 2/10 (P7-001, P7-005), wszystkie testy OK.
+- Stan bramownic ronda 2025–2026: UNVERIFIED (brak zdjęć korytarzy ronda 2025–2026 w dozwolonych źródłach) —
+  opisane uczciwie w README.
+
+## Dostawa
+
+- ZIP `mistral-p7-signs-2-files.zip` (manifest, README, timeline, sources, notes, audit + files/ 11 zdjęć)
+  — publikowany jako artefakt przy PR.
+- PR nie-draft do main z opisem po polsku.
