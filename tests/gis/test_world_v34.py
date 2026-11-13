@@ -73,6 +73,9 @@ def test_impostors_multi_view_and_lit(meta):
     """v3.4 impostors: IMP_NF views side by side + a normal / sky-visibility map; colour under the alpha is dilated
     (no dark or light fringe), so far coverage-preserving mips show leaf colour only."""
     for name, t in meta["trees"].items():
+        if "impostor_views" not in t:        # ADR 0187: forest floor plants have no impostor (culled after LOD1)
+            assert name.startswith("tree_floor_"), name
+            continue
         n = t["impostor_views"]
         assert n >= 4, name
         require_lfs(VEG / f"impostor_{name}.png", VEG / f"impostor_{name}_n.png")
@@ -101,7 +104,9 @@ def test_hlod_edge_textures(meta):
         cov = alb[..., 3] > 0.5
         # no floating specks above the stand silhouette: the top 12 % of the texture is (nearly) empty except the
         # crowns that continue below it
-        h = alb.shape[0]
+        # ADR 0187: the rows above v_main hold the mantle strip (image top = v 1); the wall picture starts below it
+        cov = cov[int(round(alb.shape[0] * (1 - e.get("v_main", 1.0)))):]
+        h = cov.shape[0]
         top = cov[: int(h * 0.12)]
         assert top.mean() < 0.12, (mix, top.mean())
 

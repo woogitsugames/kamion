@@ -792,7 +792,8 @@ def _stand(mix, seed, w, depth, edge_row, under=True):
             x = (gx + 0.5) * w / int(w / 4.5) + rng.uniform(-2.0, 2.0)
             y = (gy + 0.5) * 4.5 + rng.uniform(-2.0, 2.0)
             s = rng.choices(sp, wt)[0]
-            out.append((s, _variant(rng, s), x % w, y, rng.uniform(*TREE_H[s]) * _dome(x % w, w, seed),
+            # the tallest domes stay inside the picture (EDGE_H): a clipped crown is a level cut in the silhouette
+            out.append((s, _variant(rng, s), x % w, y, min(rng.uniform(*TREE_H[s]) * _dome(x % w, w, seed), EDGE_H - 1.3),
                         rng.uniform(0, 2 * math.pi)))
     if under:
         names = [n for n in UNDER_SPECIES if mix != "broadleaf" or n in ("shrub", "birchyoung")]
