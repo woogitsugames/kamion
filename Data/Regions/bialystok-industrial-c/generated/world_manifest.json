@@ -9280,7 +9280,7 @@
     "z_max_evrf2007": 185.5,
     "z_min_evrf2007": 137.09
    },
-   "bytes": 10067776,
+   "bytes": 10377096,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
    "forest_cells": [],
    "id": "6_6",
@@ -9290,9 +9290,9 @@
     "sha256": "39c293bf29a9c76b78a57cf436425f302133aa81d55ba3caa21238795efdb2a2"
    },
    "low": {
-    "bytes": 3871372,
+    "bytes": 3882668,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
-    "sha256": "73a50984841ded572b6d177388bac8414a8163e68499e411b5fcd417da533d95"
+    "sha256": "6e3a87257d039018e2c5fb4c2bcb8fa4d15b23ef008917051256946bf437b680"
    },
    "materials": [
     "balcony_slab",
@@ -9342,14 +9342,13 @@
     "marking_white",
     "marking_yard",
     "paint_yellow",
-    "plaster_band_grey",
     "plaster_beige",
     "plaster_beige__far_office",
-    "plaster_beige__far_ribbon",
     "plaster_grey",
     "plaster_grey__far_office",
     "plaster_light",
     "plaster_light__far_office",
+    "plaster_slate_blue",
     "plaster_white",
     "plaster_white__far_ribbon",
     "plate_white",
@@ -9378,11 +9377,11 @@
     "yard_concrete_worn",
     "yard_slabs"
    ],
-   "sha256": "c31335a7d4f987b75991e5e43358e3f5dca4e2ac68d95e426e92b1f2b177a737",
+   "sha256": "088b36da3c4e03991b13f6bb650a7cdce52a914a8de47accf40d5f4a4584c334",
    "triangles": {
     "bridge": 9686,
-    "buildings": 19401,
-    "buildings_lod1": 2701,
+    "buildings": 23311,
+    "buildings_lod1": 2925,
     "furniture": 23013,
     "markings": 7600,
     "paved": 11853,
@@ -9404,7 +9403,7 @@
     "z_max_evrf2007": 176.46,
     "z_min_evrf2007": 133.2
    },
-   "bytes": 9606248,
+   "bytes": 9645672,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.glb",
    "forest_cells": [],
    "id": "6_7",
@@ -9414,9 +9413,9 @@
     "sha256": "140c4b3153866cad8fe5264590c3d8c98e270d2f85a34b2a2747cefccc016a4c"
    },
    "low": {
-    "bytes": 2516720,
+    "bytes": 2522656,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.low.glb",
-    "sha256": "956e477bb4768ef3385342fe822e202ee7df09e8fcbfe01340f1a41d5e56b883"
+    "sha256": "8297404363f6d9c785b0285b6240b730c91cfe1da5a7b2acfde39094e8435fae"
    },
    "materials": [
     "barrier_steel",
@@ -9476,15 +9475,16 @@
     "skylight",
     "terrain_grass",
     "verge_grass",
+    "window_frame",
     "window_sill",
     "wire",
     "yard_asphalt"
    ],
-   "sha256": "937549b72269f02c21c7634c3aa99ac91cd84b09952e1b88d496c0f9b1be00fb",
+   "sha256": "22e9b399a92a765807f39b1a82584cbe7aac0cb52595c52d8c21de23c116dff7",
    "triangles": {
     "bridge": 2611,
-    "buildings": 33270,
-    "buildings_lod1": 6283,
+    "buildings": 33710,
+    "buildings_lod1": 6393,
     "furniture": 3888,
     "markings": 1516,
     "paved": 2376,
@@ -14017,9 +14017,9 @@
   },
   "plaster_blue": {
    "color": [
-    0.09,
-    0.19,
-    0.31
+    0.12,
+    0.26,
+    0.46
    ],
    "rough": 0.9,
    "runoff": true,
@@ -14292,6 +14292,23 @@
     0.9
    ],
    "texture_set": "facade_far",
+   "tint_linear": true
+  },
+  "plaster_slate_blue": {
+   "color": [
+    0.09,
+    0.13,
+    0.2
+   ],
+   "rough": 0.9,
+   "runoff": true,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "splash_h": 1.2,
+   "texture_set": "plaster",
    "tint_linear": true
   },
   "plaster_white": {
@@ -16292,8 +16309,8 @@
  "sources_sha256": {
   "generated/osm_context.json": "27b824f9303be887c054d527e1e9e80a423cd3ecf719c628ff51b775ee6b672b",
   "heightmap.r16 (Data/raw)": "37b2d3c033a215e4ba17361ffe571088f8181feef6078ac316e75d683bcca091",
-  "overrides.yaml": "e96a2790a9569064005bb7ce025b336eda2026e5e870c93ea2b2af2f618efd6e",
-  "roads.graph.json": "0d37d43aefef84c2301309e746a40951cb000bccab0aaac9367bfcaa36ddad1f",
+  "overrides.yaml": "329b19171bbbc6e82907c546a9d574b9d7367ae410807fb6b6762df0f5505f86",
+  "roads.graph.json": "92921304bd35cf6757af1199458c61c302c11f287160b878648801dd2b7deb95",
   "terrain.json": "52ee459e40fa0aaf59ac6d53223d604c3a01dbeb7099e84c77e02d27dbb1f234"
  },
  "terrain_lods": [
