@@ -164,18 +164,33 @@ research/mistral/p12-dojlidy-landmarks/
 ├── manifest.csv         ← 95 wierszy (39 landmarków, 6 typologii, 33 wyposażenia, 17 generatorów); UTF-8 BOM, RFC 4180
 ├── sources.md           ← rejestr źródeł z licencjami i datami
 ├── audit_20_percent.json← samokontrola 20% (seed 20261113, losowanie warstwowe, 19/95 wierszy, wynik: 19 OK)
-├── .gitignore           ← files/ + nazwa ZIPa
-├── tools/               ← epsg2180.py, parse_osm.py, parse_lod1.py, match_buildings.py,
-│                          frames_colors.py, typologia_colors.py, gen_manifest.py, gen_audit.py
+├── .gitignore           ← files/, ZIP, regenerowane wyciągi/pochodne OSM (osm-*.osm/json, road-geom.json)
+├── tools/               ← epsg2180.py, parse_osm.py, parse_roads.py, parse_lod1.py,
+│                          match_buildings.py, frames_colors.py, typologia_colors.py,
+│                          gen_manifest.py, gen_audit.py
 └── data/                ← landmarks.json (39), landmark-colors.json, matched-with-roads.json,
-                           road-geom.json, region-summary.json, typologia.json, typologia-colors.json
+                           region-summary.json, typologia.json, typologia-colors.json
+                           (road-geom.json — pochodna OSM usunięta w M48-FIX-2; odtwarzanie: pkt 4)
 ```
 
-Surowe zrzuty OSM — `data/osm-pois.json`, `data/osm-east-strip.json`, `data/osm-hasbach.json`, `data/area-geom.json` — **nie są w gałęzi** (usunięte na żądanie przeglądu s17 §3: ~0,44 MB (448 760 B) surowych danych ODbL zduplikowanych w worldgenie). Odtworzenie:
+Surowe zrzuty OSM — `data/osm-pois.json`, `data/osm-east-strip.json`, `data/osm-hasbach.json`, `data/area-geom.json` — **nie są w gałęzi** (usunięte na żądanie przeglądu s17 §3: ~0,44 MB (448 760 B) surowych danych ODbL zduplikowanych w worldgenie). `data/road-geom.json` (505 723 B = 0,48 MB geometrii dróg, pochodna OSM) usunięto w M48-FIX-2 (pkt 5 M48-FIX: w data/ zostają tylko dane wymagane do odtworzenia tabel README — patrz uzasadnienie pod listą). Odtworzenie:
 
 1. `data/osm-pois.json` (+ `osm-buildings/lines/areas`): `curl -o osm-map.osm "https://api.openstreetmap.org/api/0.6/map?bbox=23.1600,53.0955,23.1980,53.1180"` → `python3 tools/parse_osm.py osm-map.osm` (wyciąg API OSM, ODbL; wymaga `tools/epsg2180.py`). Uwaga: `osm-pois.json` jest wejściem `tools/gen_manifest.py` — odtworzyć przed regeneracją `manifest.csv`.
 2. `data/osm-east-strip.json` / `data/osm-hasbach.json`: zapytanie Overpass o obiekty na wschód od kafla (browar, BIAFORM, kościół NSM, pałace, kominy), np. końcówka `https://maps.mail.ru/osm/tools/overpass/api/interpreter` z ciałem `[out:json][timeout:60]; ( nwr["building"](23.1950,53.0950,23.2300,53.1200); nwr["man_made"~"chimney|works|storage_tank|silo"](23.1950,53.0950,23.2300,53.1200); nwr["historic"](23.1900,53.1050,23.2150,53.1200); nwr["amenity"="place_of_worship"](23.1900,53.1050,23.2150,53.1200); ); out center tags;` (ODbL; serwer bywa niestabilny — retry).
 3. `data/area-geom.json`: wieloboki obszarów (landuse/ogrodzenia) z tego samego wyciągu `/api/0.6/map` (bbox jak w pkt 1; obiekty `way` z tagami landuse/barrier).
+4. `data/road-geom.json` (wejście `tools/gen_manifest.py`: najbliższa droga dla generatorów ruchu §4 — `near_road()`; przecięcia osi jezdni dla pozycji tablic wlotowych §3 — `road_cross()`; **odtworzyć przed regeneracją `manifest.csv`**): `curl -o osm-roads.osm "https://api.openstreetmap.org/api/0.6/map?bbox=23.1570,53.0920,23.2020,53.1210"` (kafel referencyjny bialystok-dojlidy + bufor ~1 km na N/W; ~36 tys. węzłów — pod limitem 50 tys. pojedynczego wyciągu) → `python3 tools/parse_roads.py osm-roads.osm` (drogi jezdne `highway=*`, bez footway/cycleway/path/steps/track/pedestrian/raceway; 818 dróg). Zweryfikowano 2026-11-13: regeneracja 1:1 z wersją usuniętą z gałęzi (818/818 dróg, geometria i atrybuty bez różnic), po czym `manifest.csv` i `audit_20_percent.json` odtworzone co do bajta.
+
+Pliki `data/` pozostawione w gałęzi — uzasadnienie (M48-FIX pkt 5): każdy jest wejściem `tools/gen_manifest.py`/`tools/gen_audit.py` i jest wymagany do odtworzenia konkretnych tabel README:
+
+| plik w `data/` | co odtwarza |
+|---|---|
+| `landmarks.json` | tabela §1 (39 landmarków): pozycje WGS84, powierzchnie, flaga `poza_kaflem` (17/39), uwagi |
+| `landmark-colors.json` | §1 kolumna „Dach (ESTIMATED z ortofoto)": próbki RGB z kadrów + nazwa koloru dachu |
+| `matched-with-roads.json` | census OSM↔LoD1↔BDOT10k (1307 budynków) stojący za §2 (statystyki klas, odległości od dróg p50/p90) i §4 (wysokości hal z LoD1) + weryfikacja wysokości w audycie |
+| `region-summary.json` | §3: przystanki z wiatami (P12-046…070 — `RS['przystanki']`), 14 grup sygnalizacji, obszary; §4: bramy zakładów (P12-080…096 — `RS['bramy']`) |
+| `typologia.json` | tabela §2 (P12-040…045): N w buforze 30 m, % bufora, mediana/p10–p90 wysokości |
+| `typologia-colors.json` | §2 kolumna „Dachy — dominujące barwy (próbki)": rozkład kolorów per klasa |
+| `road-geom.json` *(usunięty)* | §3 pozycje tablic wlotowych (`road_cross`) i §4 najbliższe drogi generatorów (`near_road`) — odtwarzalny z wyciągu OSM, patrz pkt 4 |
 
 Zdjęcia (25 kadrów ortofoto P12-A01…A26 (bez A20) + 5 zdjęć Commons) **nie trafiają do gita** (`files/` w .gitignore); paczka `mistral-p12-dojlidy-landmarks-files.zip` (SHA-256 w opisie PR) jest dostarczana poza repozytorium — patrz opis PR.
 
