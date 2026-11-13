@@ -25,6 +25,15 @@ namespace Game.Vehicle.Physics
         public Vec3 TrailerForce { get; private set; }
         public Vec3 TrailerTorque { get; private set; }
 
+        /// <summary>
+        /// Body (chassis) contact forces the host applies OUTSIDE this model — world, about each CoM — fed in by the host
+        /// before <see cref="Step"/> (ADR 0165). Used only by the fifth-wheel solve so the coupling anticipates them
+        /// (the host applies them itself; they are NOT added to <see cref="TractorForce"/>/<see cref="TrailerForce"/>).
+        /// Runner: the previous step's BodyGroundContact force; Unity: the previous step's PhysX collision impulses / dt.
+        /// Zero when there is no body contact.
+        /// </summary>
+        public Vec3 ExternalTractorForce, ExternalTractorTorque, ExternalTrailerForce, ExternalTrailerTorque;
+
         /// <summary>Coupling request: while armed, the jaw locks automatically when the kingpin enters the capture window.</summary>
         public bool CouplingArmed;
         public bool HasTrailer => Trailer != null;
@@ -141,7 +150,8 @@ namespace Game.Vehicle.Physics
                     UpdateCouplingLinks();
                 }
             }
-            FifthWheel.Solve(dt, tractorState, Tractor.MassProps, anchorA, fA, tA, trailerState, Trailer.MassProps, anchorB, fB, tB, Gravity);
+            FifthWheel.Solve(dt, tractorState, Tractor.MassProps, anchorA, fA + ExternalTractorForce, tA + ExternalTractorTorque,
+                trailerState, Trailer.MassProps, anchorB, fB + ExternalTrailerForce, tB + ExternalTrailerTorque, Gravity);
             if (FifthWheel.Coupled)
             {
                 Vec3 fc = FifthWheel.ForceOnTrailer, tc = FifthWheel.TorqueOnTrailer;

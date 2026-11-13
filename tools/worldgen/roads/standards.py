@@ -238,7 +238,8 @@ SPEED_SIGN_AFTER_JUNCTION = 30.0  # WORKING_VALUE distance; rule: a B-33 limit e
                                   # § 27 ust. 1), so the sign is repeated after every junction
 # Street lighting. PN-EN 13201-2 lighting classes do not fix geometry; WORKING_VALUE from typical
 # Polish municipal practice: galvanised conical steel columns, LED luminaire on a bracket.
-LAMP = {"GP": {"h": 12.0, "spacing": 36.0, "bracket": 1.5},
+# ADR 0162: GP 12 -> 11 m - ZDM Białystok PFU: luminaires "do 11 m" on city streets (research G5-010, SOURCED).
+LAMP = {"GP": {"h": 11.0, "spacing": 36.0, "bracket": 1.5},
         "G": {"h": 10.0, "spacing": 33.0, "bracket": 1.5},
         "Z": {"h": 9.0, "spacing": 30.0, "bracket": 1.0},
         "L": {"h": 8.0, "spacing": 30.0, "bracket": 1.0},
@@ -357,7 +358,8 @@ def surface_material(chain, sec):
 
 # Height of ground-standing props above their base (m), for "does it pierce a deck above" checks (ADR 0076).
 # Lamps carry their height in the prototype name; the rest are WORKING_VALUEs read off the prop generator.
-GROUND_PROP_H = {"signal_mast": SIGNAL_MAST_H, "signal_pole": SIGNAL_POLE_H, "sign_post": 3.6, "power_pole": 10.0,
+# ADR 0162: power_pole 10 -> 12 m = the one height of props.power_pole (mesh, wires and this check; UNVERIFIED series).
+GROUND_PROP_H = {"signal_mast": SIGNAL_MAST_H, "signal_pole": SIGNAL_POLE_H, "sign_post": 3.6, "power_pole": 12.0,
                  "pylon": 30.0, "bollard": 1.0, "bus_shelter": 2.8, "bench": 0.9, "waste_bin": 1.0,
                  "street_cabinet": 1.4, "gantry_footing": 1.0}
 

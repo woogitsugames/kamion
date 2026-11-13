@@ -140,3 +140,45 @@ namespace UnityEngine
         public static void LogError(object message) => Console.WriteLine("[error] " + message);
     }
 }
+
+namespace UnityEngine.Profiling
+{
+    /// <summary>
+    /// Stand-in for UnityEngine.Profiling.Recorder, only for the "GC.Alloc" marker (ADR 0157 / ADR 0168): the nav-runner
+    /// zero-GC tests use the same <c>GcAllocCounter</c> API as the Unity tests. Unity counts GC.Alloc samples; CoreCLR has
+    /// no per-allocation counter, so <see cref="sampleBlockCount"/> returns the allocated BYTES on the filtered thread
+    /// between enable and disable (0 = no allocation, &gt; 0 = some - the only thing the tests compare).
+    /// </summary>
+    public sealed class Recorder
+    {
+        // One recorder per thread: xUnit runs test classes in parallel and the byte counter is per thread anyway.
+        [ThreadStatic] static Recorder s_GcAlloc;
+        long m_Start, m_Bytes;
+        bool m_Enabled;
+
+        public static Recorder Get(string samplerName)
+        {
+            if (samplerName != "GC.Alloc") throw new ArgumentException("nav-runner shim supports only the GC.Alloc recorder", nameof(samplerName));
+            return s_GcAlloc ??= new Recorder();
+        }
+
+        public bool isValid => true;
+
+        public bool enabled
+        {
+            get => m_Enabled;
+            set
+            {
+                if (value == m_Enabled) return;
+                long now = GC.GetAllocatedBytesForCurrentThread();
+                if (value) { m_Start = now; m_Bytes = 0; }
+                else m_Bytes = now - m_Start;
+                m_Enabled = value;
+            }
+        }
+
+        public int sampleBlockCount => (int)Math.Min(int.MaxValue, m_Bytes);
+        public void FilterToCurrentThread() { }
+        public void CollectFromAllThreads() { }
+    }
+}
