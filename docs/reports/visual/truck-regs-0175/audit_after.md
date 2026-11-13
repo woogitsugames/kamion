@@ -49,17 +49,21 @@
 | ciągnik | tablice wyróżniające | BRAK (ciągnik siodłowy wyłączony) | brak | OK | WT §42, R70 1.2 |
 | ciągnik | osłona tylna R58 | BRAK (ciągnik siodłowy wyłączony) | brak | OK | R58 1.2 |
 | ciągnik | osłony boczne R73 | BRAK (ciągnik siodłowy wyłączony) | brak | OK | R73 2.1.4 |
-| ciągnik | lusterko kl. II kierowca | obowiązkowe | jest | OK | R46 04 15.2.1.1.2 |
-| ciągnik | kl. II pasażer | obowiązkowe | jest | OK | R46 04 15.2.1.1.2 |
-| ciągnik | kl. IV kierowca | obowiązkowe | jest | OK | R46 04 15.2.1.1.2 |
-| ciągnik | kl. IV pasażer | obowiązkowe | jest | OK | R46 04 15.2.1.1.2 |
-| ciągnik | kl. V pasażer | obowiązkowe | jest | OK | R46 04 15.2.1.1.2 |
-| ciągnik | kl. VI przód | obowiązkowe | jest | OK | R46 04 15.2.1.1.2 |
+| ciągnik | lusterko kl. II kierowca | obowiązkowe | jest | OK | R46 04 15.2.1.1.1 (tab. N3) |
+| ciągnik | kl. II pasażer | obowiązkowe | jest | OK | R46 04 15.2.1.1.1 (tab. N3) |
+| ciągnik | kl. IV kierowca | obowiązkowe | jest | OK | R46 04 15.2.1.1.1 (tab. N3) |
+| ciągnik | kl. IV pasażer | obowiązkowe | jest | OK | R46 04 15.2.1.1.1 (tab. N3) |
+| ciągnik | kl. V pasażer | obowiązkowe | jest | OK | R46 04 15.2.1.1.1 (tab. N3) |
+| ciągnik | kl. VI przód | obowiązkowe | jest | OK | R46 04 15.2.1.1.1 (tab. N3) |
 | ciągnik | kl. V: strona | pasażera (x > 0) | pasażer | OK | R46 04 |
 | ciągnik | kl. V: dolna krawędź obudowy | >= 2000 mm | 2131 mm | OK | R46 04 15.2.4 |
 | ciągnik | kl. VI: dolna krawędź | >= 2000 mm | 2822 mm | OK | R46 04 15.2.4 |
 | ciągnik | kl. II/IV: dolna krawędź (wystawanie > 250 mm) | >= 2000 mm | 2090 mm | OK | R46 04 15.2.4 |
 | ciągnik | tablica rejestracyjna przód | jest | jest | OK | rozp. rej. §33 |
+| ciągnik | płyta tablicy przód: szerokość | 520 ± 1 mm | 521 mm | OK | Dz.U. 2024 poz. 1709 zał. 12 rys. 1 (review [zm. M44-FIX], P) |
+| ciągnik | płyta tablicy przód: wysokość | 114 ± 1 mm | 114 mm | OK | Dz.U. 2024 poz. 1709 zał. 12 rys. 1 (review [zm. M44-FIX], P) |
+| ciągnik | płyta tablicy tył: szerokość | 520 ± 1 mm | 520 mm | OK | Dz.U. 2024 poz. 1709 zał. 12 rys. 1 (review [zm. M44-FIX], P) |
+| ciągnik | płyta tablicy tył: wysokość | 114 ± 1 mm | 114 mm | OK | Dz.U. 2024 poz. 1709 zał. 12 rys. 1 (review [zm. M44-FIX], P) |
 | ciągnik | tablica tył: dolna krawędź | >= 300 mm | 600 mm | OK | WT zał. 5 §2.2 (P4-149) |
 | ciągnik | tablica tył: górna krawędź | <= 1200 mm | 714 mm | OK | WT zał. 5 §2.2 (P4-149) |
 | ciągnik | miejsce na tablicę tył: szerokość | >= 520 mm | 520 mm | OK | WT zał. 5 §2.1 (P4-147) |
@@ -149,6 +153,8 @@
 | naczepa | osłony boczne R73: odstęp listew | <= 300 mm | 300 mm | OK | R73 01 |
 | naczepa | osłony boczne R73: wysokość listwy | >= 100 mm | 100 mm | OK | R73 01 |
 | naczepa | osłony boczne R73: w głąb od obrysu | <= 150 mm | 46 mm | OK | R73 01 |
+| naczepa | płyta tablicy tył: szerokość | 520 ± 1 mm | 520 mm | OK | Dz.U. 2024 poz. 1709 zał. 12 rys. 1 (review [zm. M44-FIX], P) |
+| naczepa | płyta tablicy tył: wysokość | 114 ± 1 mm | 114 mm | OK | Dz.U. 2024 poz. 1709 zał. 12 rys. 1 (review [zm. M44-FIX], P) |
 | naczepa | tablica rejestracyjna tył: dolna krawędź | >= 300 mm | 810 mm | OK | WT zał. 5 §2.2 (P4-149) |
 | naczepa | tablica rejestracyjna tył: górna krawędź | <= 1200 mm | 924 mm | OK | WT zał. 5 §2.2 (P4-149) |
 | naczepa | oświetlenie tablicy | obowiązkowe | jest | OK | R48 6.8 (P4-061) |
