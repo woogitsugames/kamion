@@ -97,13 +97,15 @@ def test_chains_hang_from_the_eyelets_and_reach_the_next_post(lod):
 
 
 def test_chain_uv_stays_inside_its_atlas_column():
-    for lod, cols in ((0, CB.U_LINK), (1, CB.U_STRIP)):
-        p = CB.bay()[lod].out()[0]
-        sel = p["V"][:, 0] > CB.POST_D_M
-        u = p["UV"][sel, 0]
-        assert u.min() >= min(c[0] for c in cols.values()) and u.max() <= max(c[1] for c in cols.values())
-        for red in (True, False):                                   # both paints are used along a bay
-            assert np.any((u > cols[red][0]) & (u < cols[red][1]))
+    p = CB.bay()[0].out()[0]                                        # LOD0: alpha cards inside the link columns
+    sel = p["V"][:, 0] > CB.POST_D_M
+    u = p["UV"][sel, 0]
+    assert u.min() >= CB.U_LINK[True][0] and u.max() <= CB.U_LINK[False][1]
+    for red in (True, False):                                       # both paints are used along a bay
+        assert np.any((u > CB.U_LINK[red][0]) & (u < CB.U_LINK[red][1]))
+    p1 = CB.bay()[1].out()[0]                                       # LOD1: strips = the two solid patches only
+    uv1 = {tuple(np.round(x, 6)) for x in p1["UV"][p1["V"][:, 0] > CB.POST_D_M]}
+    assert uv1 == {tuple(np.round(CB.UV_STRIP[r], 6)) for r in (True, False)}
     post = CB.post()[0].out()[0]
     assert post["UV"][:, 0].max() <= CB.U_STEEL + 1e-9
 
@@ -117,13 +119,41 @@ def test_atlas_regions():
     for z0, z1, red in CB.BANDS:
         px = im[row((z0 + z1) / 2), 10:100, :3].astype(float).mean(0)
         assert (px[0] > 1.8 * px[1]) == red                         # red band: R dominates; white: neutral
-    assert im[:, :128, 3].min() == 255                              # post + steel are opaque
+    assert im[:, :CB.STEEL_COL[1], 3].min() == 255                  # post + steel + strip patches are opaque
     for red in (True, False):
         c0 = int(round(CB.U_LINK[red][0] * CB.ATLAS[0]))
-        a = im[:, c0:c0 + 32, 3] / 255.0
-        assert 0.25 < a.mean() < 0.6 and a.min() == 0 and a.max() == 1     # links with holes
-        s0 = int(round(CB.U_STRIP[red][0] * CB.ATLAS[0]))
-        assert im[:, s0:s0 + 28, 3].min() == 255                    # LOD1 strip never clips away
+        c1 = int(round(CB.U_LINK[red][1] * CB.ATLAS[0]))
+        a = im[:, c0:c1, 3] / 255.0
+        assert c1 - c0 == 32 and 0.25 < a.mean() < 0.6 and a.min() == 0 and a.max() == 1     # links with holes
+        s0, s1 = CB.LINK_SLOT[red]
+        assert im[:, s0:c0, 3].max() == 0 and im[:, c1:s1, 3].max() == 0    # transparent gutters
+        r0, r1 = CB.STRIP_ROWS[red]
+        patch = im[r0:r1, CB.STEEL_COL[0]:CB.STEEL_COL[1]].astype(float)
+        assert patch[..., 3].min() == 255 and np.ptp(patch[..., :3], axis=(0, 1)).max() == 0
+        assert (patch[0, 0, 0] > 3 * patch[0, 0, 1]) == red
+
+
+def test_atlas_r2_no_red_white_bleed():
+    """r1 showed pink red links in Unity: ASTC 6x6 blocks and mip taps straddled the red | white column boundary.
+    Every colour boundary must sit on whole 4/6/8/12 px blocks, and the red link column must stay red (R > 3 G,
+    alpha-weighted, as the trilinear filter sees it) in every mip whose texel still fits inside its slot."""
+    for x in (CB.POST_COL[1], CB.STEEL_COL[1], *CB.LINK_SLOT[True], *CB.LINK_SLOT[False]):
+        assert x % CB.BLOCK_PX == 0 and all(x % k == 0 for k in (4, 6, 8, 12))
+    for r0, r1 in CB.STRIP_ROWS.values():
+        assert r0 % CB.BLOCK_PX == 0 and r1 % CB.BLOCK_PX == 0
+    assert CB.LINK_SLOT[True][1] == CB.LINK_SLOT[False][0] == 192   # one red | white boundary, texel edge of mips 0-6
+    im = np.asarray(CB.texture()).astype(float)
+    a = im[..., 3:] / 255.0
+    pm = np.concatenate([im[..., :3] * a, a], -1)                   # premultiplied, like coverage-weighted filtering
+    c0, c1 = (int(round(u * CB.ATLAS[0])) for u in CB.U_LINK[True])
+    for lvl in range(0, 5):                                         # mip 4 = 16 px texels: slot 144-192 = 3 texels
+        k = 2 ** lvl
+        mip = pm.reshape(pm.shape[0] // k, k, pm.shape[1] // k, k, 4).mean((1, 3))
+        # bilinear taps at the outermost used u of the card reach half a texel beyond it
+        lo, hi = (c0 + 1) / k - 0.5, (c1 - 1) / k + 0.5
+        cols = mip[:, int(np.floor(lo)):int(np.ceil(hi))]
+        rgb = cols[..., :3].sum((0, 1)) / max(1e-9, cols[..., 3].sum())
+        assert rgb[0] > 3 * rgb[1] and rgb[0] > 3 * rgb[2], (lvl, rgb)
     assert np.array_equal(im, np.asarray(CB.texture()))             # deterministic
 
 

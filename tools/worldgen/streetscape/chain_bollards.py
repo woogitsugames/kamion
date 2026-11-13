@@ -75,13 +75,28 @@ EYELET_M = (0.014, 0.008, 0.020)
 CHAIN_PAINT = (((0.0, True), (0.5, False)), ((0.0, False), (0.25, True)))
 
 # ------------------------------------------------------------------------------------------------ atlas layout
+# r2 (render r1: the red links read pale pink in Unity, red in Blender). The phone / editor import is ASTC 6x6 with
+# trilinear mips (InstanceImporter.ImportTexture); the r1 columns had a red | white boundary at u = 160 px, inside a
+# 6 px block (160 / 6 is not whole) and right at the card edge, so the block encoder and the bilinear taps of mips
+# 2+ mixed white into the red links. Now: every colour boundary sits on a multiple of 24 px (whole 4x4 / 6x6 / 8x8 /
+# 12x12 blocks), each link column has an 8 px transparent gutter of its own colour on both sides (one texel of mip 3),
+# the red and white slots meet on u = 192 px (a texel edge of every mip down to 64 px) and the LOD1 strips sample a
+# single solid texel patch (constant UV: no mip, no filter footprint across a boundary).
 ATLAS = (256, 512)                      # px (u, v); v up: v = 0 at the ground / chain link centre
 PITCHES_PER_V = 16                      # chain columns: the atlas height is 16 link pitches (wraps)
 _PX = 1.0 / ATLAS[0]
-U_POST = (2 * _PX, 110 * _PX)           # post wrap, 112 px
-U_STEEL = 120 * _PX                     # bare galvanised steel (eyelets), centre of a 16 px column
-U_LINK = {True: (128 * _PX, 160 * _PX), False: (160 * _PX, 192 * _PX)}       # red / white link cards (alpha)
-U_STRIP = {True: (194 * _PX, 222 * _PX), False: (226 * _PX, 254 * _PX)}      # red / white opaque strips (LOD1)
+_PY = 1.0 / ATLAS[1]
+BLOCK_PX = 24                           # common multiple of the ASTC 4 / 6 / 8 / 12 block sizes
+POST_COL = (0, 120)                     # post wrap column (px)
+STEEL_COL = (120, 144)                  # steel column; its top rows carry the two solid strip patches
+STRIP_ROWS = {True: (0, 48), False: (48, 96)}     # image rows (from the top) of the red / white LOD1 strip patches
+LINK_SLOT = {True: (144, 192), False: (192, 240)}  # red / white link slots = 8 px gutter + 32 px link column + 8 px gutter
+GUTTER_PX = 8
+U_POST = ((POST_COL[0] + 2) * _PX, (POST_COL[1] - 2) * _PX)          # post wrap, 116 px used
+U_STEEL = sum(STEEL_COL) / 2 * _PX                                   # bare galvanised steel (eyelets): V_STEEL
+V_STEEL = 0.5
+U_LINK = {red: ((a + GUTTER_PX) * _PX, (b - GUTTER_PX) * _PX) for red, (a, b) in LINK_SLOT.items()}   # alpha link cards
+UV_STRIP = {red: (U_STEEL, 1 - sum(r) / 2 * _PY) for red, r in STRIP_ROWS.items()}                   # LOD1 strips (point)
 
 WHITE_SRGB = (224, 223, 216)            # weathered white foil, WORKING_VALUE
 RED_SRGB = (164, 26, 26)                # RAL 3020 (FT.RAL3020_SRGB) darkened by weathering, WORKING_VALUE
@@ -126,7 +141,7 @@ def _post(m, seg, eyelets):
                 c = np.array([sx * (r + hx - 0.002), 0, z])
                 P = [c + [kx * hx, ky * hy, kz * hz] for kz in (-1, 1) for ky in (-1, 1) for kx in (-1, 1)]
                 for f in ((0, 2, 3, 1), (4, 5, 7, 6), (0, 1, 5, 4), (2, 6, 7, 3), (0, 4, 6, 2), (1, 3, 7, 5)):
-                    m.add(MAT, [P[i] for i in f], [(0, 1, 2), (0, 2, 3)], np.tile([U_STEEL, 0.5], (4, 1)))
+                    m.add(MAT, [P[i] for i in f], [(0, 1, 2), (0, 2, 3)], np.tile([U_STEEL, V_STEEL], (4, 1)))
 
 
 def _chains(m, n, lod0):
@@ -144,14 +159,16 @@ def _chains(m, n, lod0):
         for j in range(n):
             f = (j + 0.5) / n
             red = [c for f0, c in paint if f >= f0][-1]
-            u0, u1 = (U_LINK if lod0 else U_STRIP)[red]
-            u0, u1 = u0 + _PX, u1 - _PX
             w = (CARD_W_M if lod0 else STRIP_W_M) / 2
-            cards = ((up, 0.0), (np.tile(side, (n + 1, 1)), 1.0 / PITCHES_PER_V)) if lod0 else ((up, 0.0),)
-            for d, dv in cards:
-                m.add(MAT, [P[j] - d[j] * w, P[j] + d[j] * w, P[j + 1] + d[j + 1] * w, P[j + 1] - d[j + 1] * w],
-                      [(0, 1, 2), (0, 2, 3)],
-                      [[u0, v[j] + dv], [u1, v[j] + dv], [u1, v[j + 1] + dv], [u0, v[j + 1] + dv]])
+            if lod0:
+                u0, u1 = U_LINK[red][0] + _PX, U_LINK[red][1] - _PX
+                for d, dv in ((up, 0.0), (np.tile(side, (n + 1, 1)), 1.0 / PITCHES_PER_V)):
+                    m.add(MAT, [P[j] - d[j] * w, P[j] + d[j] * w, P[j + 1] + d[j + 1] * w, P[j + 1] - d[j + 1] * w],
+                          [(0, 1, 2), (0, 2, 3)],
+                          [[u0, v[j] + dv], [u1, v[j] + dv], [u1, v[j + 1] + dv], [u0, v[j + 1] + dv]])
+            else:                       # opaque strip: one solid texel patch, constant UV
+                m.add(MAT, [P[j] - up[j] * w, P[j] + up[j] * w, P[j + 1] + up[j + 1] * w, P[j + 1] - up[j + 1] * w],
+                      [(0, 1, 2), (0, 2, 3)], np.tile(UV_STRIP[red], (4, 1)))
 
 
 def bay():
@@ -241,7 +258,7 @@ def _link_texture(base, w, h, ss=4):
     shade = np.where(bar <= 1, 0.86, 1.0) * (1 - 0.38 * np.clip(dist, 0, 1) ** 2)       # round wire
     worn = np.clip((np.abs(yf) - (half - 2.2 * d)) / d, 0, 1) * (ring <= 1) * (bar > 1)   # paint rubbed off in the crowns
     rgb = np.asarray(base, float) * shade[..., None]
-    rgb = rgb * (1 - 0.6 * worn[..., None]) + np.array(STEEL_SRGB, float) * 0.8 * (0.6 * worn[..., None])
+    rgb = rgb * (1 - 0.4 * worn[..., None]) + np.array(STEEL_SRGB, float) * 0.8 * (0.4 * worn[..., None])   # r2: 0.6 -> 0.4
     rgb = (rgb * a[..., None]).reshape(h, ss, w, ss, 3).sum((1, 3))
     asum = a.reshape(h, ss, w, ss).sum((1, 3))
     rgb = np.where(asum[..., None] > 0, rgb / np.maximum(asum, 1)[..., None], np.asarray(base, float) * 0.8)
@@ -249,22 +266,28 @@ def _link_texture(base, w, h, ss=4):
 
 
 def texture():
-    """The `chain_bollard` atlas (RGBA, sRGB): post wrap, bare steel, red / white link cards, red / white strips."""
+    """The `chain_bollard` atlas (RGBA, sRGB): post wrap, bare steel + solid strip patches, red / white link slots."""
     rng = np.random.default_rng(183)
     w, h = ATLAS
     im = np.zeros((h, w, 4))
     im[..., 3] = 255
-    im[:, :112, :3] = _post_texture(rng, 112, h)
-    im[:, 112:128, :3] = np.array(STEEL_SRGB, float) * (1 + 0.04 * _noise(rng, (h, 16), 1.5))[..., None]
+    im[:, POST_COL[0]:POST_COL[1], :3] = _post_texture(rng, POST_COL[1] - POST_COL[0], h)
+    sw = STEEL_COL[1] - STEEL_COL[0]
+    im[:, STEEL_COL[0]:STEEL_COL[1], :3] = np.array(STEEL_SRGB, float) * (1 + 0.04 * _noise(rng, (h, sw), 1.5))[..., None]
     for red in (True, False):
-        base = RED_SRGB if red else WHITE_SRGB
-        c0 = int(round(U_LINK[red][0] * w))
-        rgb, a = _link_texture(base, 32, h)
-        im[:, c0:c0 + 32, :3] = rgb
-        im[:, c0:c0 + 32, 3] = a * 255
-        c1 = int(round(U_STRIP[red][0] * w)) - 2
+        base = np.asarray(RED_SRGB if red else WHITE_SRGB, float)
         # flat mean colour of the lit links: a link-pitch rhythm here aliases into dashes at LOD1 distance
-        im[:, c1:c1 + 32, :3] = np.asarray(base, float) * 0.80
+        r0, r1 = STRIP_ROWS[red]
+        im[r0:r1, STEEL_COL[0]:STEEL_COL[1], :3] = base * 0.80
+        a0, a1 = LINK_SLOT[red]
+        im[:, a0:a1, :3] = base * 0.80                       # gutters: own paint colour under alpha 0
+        im[:, a0:a1, 3] = 0
+        c0 = a0 + GUTTER_PX
+        rgb, a = _link_texture(base, a1 - a0 - 2 * GUTTER_PX, h)
+        im[:, c0:c0 + rgb.shape[1], :3] = rgb
+        im[:, c0:c0 + rgb.shape[1], 3] = a * 255
+    im[:, LINK_SLOT[False][1]:, :3] = np.asarray(WHITE_SRGB, float) * 0.80     # spare: white gutter, alpha 0
+    im[:, LINK_SLOT[False][1]:, 3] = 0
     return Image.fromarray(np.clip(im, 0, 255).astype(np.uint8), "RGBA")
 
 
