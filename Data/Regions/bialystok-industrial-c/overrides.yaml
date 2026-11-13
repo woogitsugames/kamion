@@ -2425,6 +2425,16 @@ overrides:
     # LOD1 (render (175,175,165) before and after the colour override); the photos show punched windows in a pale
     # yellow wall. plaster_beige__far_office is drawn by chunk 6_6 already.
     set: {wall_material: plaster_beige, ribbon: false, bands: false}
+  - id: g3a-small-office-no-band
+    target: {building: "bdot:2BE4B431-C926-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      ADR 0171 draw budget, not a photo finding: after the tower lost its hashed spandrel bands this small office
+      was the only user of plaster_band_grey in chunk 6_6 (8 triangles on LOD0 = one draw plus its shadow draw in
+      the gate-3 cameras). The band itself was a hashed pick (40 % of punched-window offices), so one wall tone is
+      as likely; no open photo shows this facade. WORKING_VALUE.
+    confidence: low
+    verify: owner photo session item 6 (Kwadrat Park lane)
+    set: {bands: false}
   - id: g3a-ec-round-tanks
     target: {building: "osm:way/264944879"}
     reason: >-
