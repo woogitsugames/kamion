@@ -939,28 +939,12 @@ def tree_dims(r, species, key, in_plot=True):
     return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
 
 
-def _shaded_card(kit, p, z, sprite, W, H, ang, occ_mid):
-    """PLT.card() as a fan of four triangles around a centre vertex whose occlusion is occ_mid: the crown card darkens
-    smoothly towards the axis of the crown (the leaves there stand in the crown's own shade) - a shaded middle with no
-    edge of its own, where a separate dark body shows its outline (review s17 0170 P1)."""
-    u0, u1, v0, v1 = PLT.PK.sprite(sprite)
-    r = np.array([math.cos(ang), math.sin(ang)])
-    d = r * (W / 2)
-    A, B = np.asarray(p) - d, np.asarray(p) + d
-    fm = 0.46                                                # the middle sits a little below half height
-    kit.tris([[*A, z], [*B, z], [*B, z + H], [*A, z + H], [p[0], p[1], z + H * fm]],
-             [[u0, v0], [u1, v0], [u1, v1], [u0, v1], [(u0 + u1) / 2, v0 + (v1 - v0) * fm]],
-             [(0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)],
-             [PLT._fol([-r[0] * 0.9, -r[1] * 0.9, 0.35]), PLT._fol([r[0] * 0.9, r[1] * 0.9, 0.35]),
-              PLT._fol([r[0] * 0.6, r[1] * 0.6, 0.8]), PLT._fol([-r[0] * 0.6, -r[1] * 0.6, 0.8]), PLT._fol([0.0, 0.0, 1.0], occ_mid)])
-
-
 def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False):
     """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
     crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
     core and leaf sprays lying on its skin, so it is a volume from every side and from above, not a paper cross.
     lite: two stem strips + `cards` crossed cards (8-10 triangles) - Low / Medium and the trees away from the street;
-    core (ADR 0170, lite trees near the street): the crown cards darken towards the axis (_shaded_card, + 2 triangles
+    core (ADR 0170, lite trees near the street): the crown cards darken towards the axis (PLT.card occ_mid, + 2 triangles
     per card) and two shoulder sprays stand in front of them (+ 4) - 10 triangles more than the plain lite tree. No
     separate dark core: build 2 had one and it showed as a box under the cards (review s17 0170 P1)."""
     p = np.asarray(p, float)
@@ -984,11 +968,8 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         wj = 0.90 + 0.20 * PLT.hfloat(key, "cw", i)          # the crown is not a ball from any side (same in full / lite)
         hj = 0.97 + 0.10 * PLT.hfloat(key, "ch", i)
         off = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.24 * r
-        if lite and core and DENSE[species] > 0.0:
-            _shaded_card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards,
-                         0.50 + 0.10 * PLT.hfloat(key, "co", i))
-        else:
-            PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards)
+        shade = 0.50 + 0.10 * PLT.hfloat(key, "co", i) if lite and core and DENSE[species] > 0.0 else None
+        PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards, occ_mid=shade)
     dense = DENSE[species]
     occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
     if lite and core and dense > 0.0:
@@ -996,7 +977,7 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         # straight lower edge; tried next in the offline preview, tools/worldgen/streetscape/preview_kit.py: dark leaf sprays
         # and smaller dark crown cards inside - every dark plane that crosses a lit card shows the straight line of
         # the crossing). No dark geometry in the lite crown: its shaded middle is the occlusion gradient of the crown
-        # cards themselves (_shaded_card above). Two lit shoulder sprays as before.
+        # cards themselves (PLT.card occ_mid). Two lit shoulder sprays as before.
         for i in range(2):
             az = a0 + 0.8 + math.pi * i
             c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.30

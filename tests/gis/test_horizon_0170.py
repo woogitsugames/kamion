@@ -54,16 +54,16 @@ def test_thuja_wall_clears_the_fences():
     assert lo - max(PLT.PK.ROW_H_M[k] for k in ("picket", "boards_brown", "concrete", "lamella")) >= 0.59
 
 
-def test_spruce_has_a_dark_core_inside_the_cards():
+def test_spruce_cards_darken_towards_the_bole_and_there_is_no_core_body():
+    """review s17 0170 P1 (g7_p03_a): the dark cone of build 2 stood out as a seam beside the camera."""
+    h = 9.0
     kit = PLT.Kit()
-    h = 10.0
     PLT.spruce(kit, np.array([0.0, 0.0]), 0.0, h, "k")
-    assert sum(len(t) for t in kit.T) == 4 * 2 + 3 * 2 + 12, "trunk + three cards + the 12-triangle core"
-    core = kit.V[-1]
-    W = 0.40 * h + 0.9
-    assert np.hypot(core[:, 0], core[:, 1]).max() <= 0.18 * W + 1e-6, "core stays well inside the silhouette cards"
-    occ = np.linalg.norm(kit.C[-1][:, :3] * 2 - 1, axis=1)
-    assert occ.max() <= 0.5, "core is in the tree's own shade"
+    assert sum(len(t) for t in kit.T) == 4 * 2 + 3 * 4, "trunk + three cards of four triangles"
+    for V, C in zip(kit.V[-3:], kit.C[-3:]):
+        occ = np.linalg.norm(C[:, :3] * 2 - 1, axis=1)
+        assert len(V) == 5 and occ[:4].min() > 0.9 and 0.4 <= occ[4] <= 0.6
+        assert np.hypot(V[4, 0], V[4, 1]) < 1e-6 and 0.3 * h < V[4, 2] < 0.45 * h
 
 
 def test_near_lite_garden_tree_has_a_shaded_middle_and_no_core_body():

@@ -1207,17 +1207,25 @@ def gate_geo(kit, g, style, h, z, key, col=None):
         col.append((m - t * (W / 2), m + t * (W / 2), z - 0.1, z + hg))
 
 
-def card(kit, p, z, sprite, W, H, ang, z_off=0.0):
+def card(kit, p, z, sprite, W, H, ang, z_off=0.0, occ_mid=None, mid=0.46):
     """Upright plant card W x H centred on p, in the vertical plane at angle ang. Foliage normals point away from the
-    plant's axis and up (ADR 0124, review 0114 P1-r8-e: crossed cards lit per card showed a seam through the crown)."""
+    plant's axis and up (ADR 0124, review 0114 P1-r8-e: crossed cards lit per card showed a seam through the crown).
+    occ_mid (ADR 0170, review s17 0170 P1): the card is a fan of four triangles around a vertex on the plant's axis at
+    `mid` of its height whose occlusion is occ_mid - the foliage darkens smoothly towards the axis (it stands in the
+    plant's own shade there): a shaded middle with no edge of its own, where a separate dark body shows its outline."""
     u0, u1, v0, v1 = PK.sprite(sprite)
     r = np.array([math.cos(ang), math.sin(ang)])
     d = r * (W / 2)
     A, B = np.asarray(p) - d, np.asarray(p) + d
-    kit.quad([[*A, z + z_off], [*B, z + z_off], [*B, z + z_off + H], [*A, z + z_off + H]],
-             [[u0, v0], [u1, v0], [u1, v1], [u0, v1]],
-             [_fol([-r[0] * 0.9, -r[1] * 0.9, 0.35]), _fol([r[0] * 0.9, r[1] * 0.9, 0.35]),
-              _fol([r[0] * 0.6, r[1] * 0.6, 0.8]), _fol([-r[0] * 0.6, -r[1] * 0.6, 0.8])])
+    P = [[*A, z + z_off], [*B, z + z_off], [*B, z + z_off + H], [*A, z + z_off + H]]
+    UV = [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]
+    C = [_fol([-r[0] * 0.9, -r[1] * 0.9, 0.35]), _fol([r[0] * 0.9, r[1] * 0.9, 0.35]),
+         _fol([r[0] * 0.6, r[1] * 0.6, 0.8]), _fol([-r[0] * 0.6, -r[1] * 0.6, 0.8])]
+    if occ_mid is None:
+        kit.quad(P, UV, C)
+        return
+    kit.tris(P + [[p[0], p[1], z + z_off + H * mid]], UV + [[(u0 + u1) / 2, v0 + (v1 - v0) * mid]],
+             [(0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)], C + [_fol([0.0, 0.0, 1.0], occ_mid)])
 
 
 def thuja(kit, p, z, h, r, key, dead=False):
@@ -1328,35 +1336,17 @@ def fruit_tree_lite(kit, p, z, h, key, r=None):
 
 def spruce(kit, p, z, h, key):
     """Blue spruce (świerk kłujący, refs P02 / P17 / P18). ADR 0124: three crossed silhouette cards of photographed
-    twigs (whorls, scalloped outline) and a trunk - 14 triangles (ADR 0114: up to 108 in drooping skirts that showed
+    twigs (whorls, scalloped outline) and a trunk - 20 triangles (ADR 0114: up to 108 in drooping skirts that showed
     their construction from above)."""
     sp = "spruce_a" if hfloat(key, "ss") < 0.5 else "spruce_b"
     W = 0.40 * h + 0.9
     a0 = hfloat(key, "sa") * 3.1416
     kit.box(np.asarray(p, float), np.array([1.0, 0.0]), 0.07, 0.07, z - 0.1, z + h * 0.14, PK.SWATCH["trunk"], top=False)
-    for i in range(3):
-        card(kit, p, z, sp, W, h * 0.96, a0 + i * math.pi / 3, z_off=h * 0.04)
     # ADR 0170 (reviews s16b P2 / s17 0163 P1-P2: "half-transparent pale cone" far away, "flat wall of cards" beside
-    # the camera): a dark 4-sided cone inside the three cards - the shaded bole side of the boughs. 12 triangles, well
-    # inside the silhouette (0.36 of the card's half width, occlusion 0.44: build 1 at 0.5 / 0.30 read as a black kite), so the scalloped outline stays the cards'.
-    v0, v1 = PK.row("thuja")
-    rb = 0.18 * W
-    span = min(2 * math.pi * rb / PK.KIT_M, PK.THUJA_GREEN_U - 0.02)
-    u0 = hfloat(key, "su") * (PK.THUJA_GREEN_U - span - 0.01)
-    V, UV, C = [], [], []
-    for f, k_ in ((0.10, 1.0), (0.50, 0.56)):
-        for j in range(5):
-            ang = a0 + 0.5 + 2 * math.pi * j / 4
-            V.append([p[0] + math.cos(ang) * rb * k_, p[1] + math.sin(ang) * rb * k_, z + f * h])
-            UV.append([u0 + span * j / 4, v0 + (v1 - v0) * (0.05 + 0.9 * f)])
-            C.append(_fol([math.cos(ang) * 0.9, math.sin(ang) * 0.9, 0.3], 0.44))
-    V.append([p[0], p[1], z + h * 0.90])
-    UV.append([u0 + span * 0.5, v0 + (v1 - v0) * 0.97])
-    C.append(_fol([0.0, 0.0, 1.0], 0.48))
-    T = []
-    for j in range(4):
-        T += [(j, j + 1, 5 + j + 1), (j, 5 + j + 1, 5 + j), (5 + j, 5 + j + 1, 10)]
-    kit.tris(V, UV, T, C)
+    # the camera): the cards darken towards the bole (occ_mid; + 6 triangles). Build 2 had a dark 4-sided cone inside
+    # the cards instead: next to the camera it stood out as a dark striped seam (review s17 0170 P1, g7_p03_a).
+    for i in range(3):
+        card(kit, p, z, sp, W, h * 0.96, a0 + i * math.pi / 3, z_off=h * 0.04, occ_mid=0.46 + 0.10 * hfloat(key, "so", i), mid=0.36)
 
 
 def big_tree(kit, p, z, h, key):
