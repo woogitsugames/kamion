@@ -125,8 +125,8 @@ P2 tuja jako rząd roślin (High stacje, Low karty czubków), świerk ciemnoziel
   `garden_fronts` High 11 756 (main 12 058), Low 6430; `stretch_04` High **1 998 856** (main 1 998 632, +224; build 5 ze
   stacjami co 1,5 m: 1 999 916 — za mały zapas). Testy plików tui (`test_house_greenery_0163`, `test_horizon_0170`,
   `test_buildings_r7/r8/r9`, `test_fire_station_r7`, `test_hero_building`): 78 pass (`logs/pytest-thuja5.log`).
-- **Testy (build 6)**: @@TESTS6@@
-- **Pętla wizualna build 6**: @@VIS6@@
+- **Testy (build 6)**: pełny `pytest tests/gis` na build 6: **1075 pass, 1 fail, 2 xfail** (1173,9 s, `artifacts/horizon-0170/logs/pytest-gis-6.log`). Jedyny fail `test_road_fidelity::test_report_not_stale` — `fidelity_qa.json` nieaktualny względem `overrides.yaml` i `roads/build_world.py` = przyczyna (b): regeneracja fidelity po scaleniu robi lider (ten sam fail w innych gałęziach s19).
+- **Pętla wizualna build 6**: render `after6` (import 22:09, WORLD_MEMORY High plots 3,8 → 3,5 MB, render_meshes 226,6 → 226,3 MB; Low bez zmian 123,1 MB) vs `after4`, pary `artifacts/horizon-0170/pairs6/` (51), statystyki `compare6-{Low,High}.tsv` (129 kamer): drawsEst, instanced draws i trisExact **identyczne** na wszystkich kamerach (trasa Low 21 338 draws / 22 758k tris, High 35 880 / 52 950k) — estymator per kamera nie rozróżnia geometrii tui frontów (także base3→after4 przy frontach High 12k→27k pokazał tylko −0,04 %), więc o budżecie tui świadczą `streetscape_qa` i WORLD_MEMORY, nie `stats.txt`. Obejrzane (after4|after6): `g7_front_thuja_2/3/5` — High wygląda teraz jak Low (rząd kolumn z kartami czubków), bez dziur i bez bryły; vs after4 High traci trochę modelowania pojedynczej rośliny z bliska (akceptowane za budżet `stretch_04`); `g7_p03_a`, `g7_p07_b` bez zmian vs after4 (build 6 dotyka tylko tui High): skrzynka w p07_b nie wraca, w p03_a zostaje cienka jasna smuga karty widzianej krawędzią (P3, otwarte). Różnice pikseli na kamerach bez zmian geometrii (kabina, niebo/chmury) = niedeterminizm renderu, nie zmiana świata.
 
 ## Otwarte / WORKING_VALUE
 
