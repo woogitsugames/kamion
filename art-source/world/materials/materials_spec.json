@@ -1251,6 +1251,106 @@
       "hf_ratio_albedo": 0.0255,
       "ao_mean": 1.0
     },
+    "concrete_blocks_split": {
+      "tile_m": [
+        2.0,
+        1.0
+      ],
+      "slots": [
+        "ramp_wall_blocks"
+      ],
+      "note": "Split-face concrete blocks 1.0 x 0.5 m, half-bond, dark recessed joints (ramp retaining walls, ADR 0159).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 1.95,
+          "dir": "concrete_blocks_split/High",
+          "png_bytes": 2428273,
+          "files": [
+            "T_concrete_blocks_split_BaseColor.png",
+            "T_concrete_blocks_split_MaskMap.png",
+            "T_concrete_blocks_split_Normal.png",
+            "T_concrete_blocks_split_Var.png"
+          ],
+          "smoothness_mean": 0.096,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1244310
+        },
+        "Medium": {
+          "res": [
+            512,
+            256
+          ],
+          "texel_mm": 3.91,
+          "dir": "concrete_blocks_split/Medium",
+          "png_bytes": 726423,
+          "files": [
+            "T_concrete_blocks_split_BaseColor.png",
+            "T_concrete_blocks_split_MaskMap.png",
+            "T_concrete_blocks_split_Normal.png",
+            "T_concrete_blocks_split_Var.png"
+          ],
+          "smoothness_mean": 0.081,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 242920
+        },
+        "Low": {
+          "res": [
+            256,
+            128
+          ],
+          "texel_mm": 7.81,
+          "dir": "concrete_blocks_split/Low",
+          "png_bytes": 192588,
+          "files": [
+            "T_concrete_blocks_split_BaseColor.png",
+            "T_concrete_blocks_split_MaskMap.png",
+            "T_concrete_blocks_split_Normal.png",
+            "T_concrete_blocks_split_Var.png"
+          ],
+          "smoothness_mean": 0.063,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 43690
+        }
+      },
+      "height_range_m": [
+        -0.03666,
+        0.03249
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.2383,
+        "p95": 0.6455,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.0072,
+      "ao_mean": 0.816
+    },
     "concrete_cast_5m_joints": {
       "tile_m": [
         10.0,
@@ -1468,6 +1568,106 @@
       },
       "hf_ratio_albedo": 0.0061,
       "ao_mean": 0.989
+    },
+    "concrete_panels_wall": {
+      "tile_m": [
+        3.0,
+        3.0
+      ],
+      "slots": [
+        "ramp_wall_panels"
+      ],
+      "note": "Precast facing panels 1.5 x 1.5 m in columns shifted by half a panel, open joints (Biezenstwa ramp walls, ADR 0159).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.93,
+          "dir": "concrete_panels_wall/High",
+          "png_bytes": 5051566,
+          "files": [
+            "T_concrete_panels_wall_BaseColor.png",
+            "T_concrete_panels_wall_MaskMap.png",
+            "T_concrete_panels_wall_Normal.png",
+            "T_concrete_panels_wall_Var.png"
+          ],
+          "smoothness_mean": 0.178,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 5.86,
+          "dir": "concrete_panels_wall/Medium",
+          "png_bytes": 1017557,
+          "files": [
+            "T_concrete_panels_wall_BaseColor.png",
+            "T_concrete_panels_wall_MaskMap.png",
+            "T_concrete_panels_wall_Normal.png",
+            "T_concrete_panels_wall_Var.png"
+          ],
+          "smoothness_mean": 0.176,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 11.72,
+          "dir": "concrete_panels_wall/Low",
+          "png_bytes": 177090,
+          "files": [
+            "T_concrete_panels_wall_BaseColor.png",
+            "T_concrete_panels_wall_MaskMap.png",
+            "T_concrete_panels_wall_Normal.png",
+            "T_concrete_panels_wall_Var.png"
+          ],
+          "smoothness_mean": 0.174,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00838,
+        0.00055
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4554,
+        "p95": 0.547,
+        "mean_rgb_linear": [
+          0.4999,
+          0.4999,
+          0.4999
+        ]
+      },
+      "hf_ratio_albedo": 0.0199,
+      "ao_mean": 0.985
     },
     "concrete_precast": {
       "tile_m": [

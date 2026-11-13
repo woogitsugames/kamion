@@ -254,6 +254,9 @@ overrides:
       pier_mat: bridge_concrete
       noise_screen: null
       cap_w: 1.0
+      # ADR 0159 after4: retaining walls of the ramps = large smooth precast panels (Mapillary 751431972202262,
+      # 1259231227807789), not the split-face blocks of the Putry ramps
+      wall_mat: ramp_wall_panels
       # ADR 0123: twin-arm lamps between the decks (orthophoto 0.08 m: column at E 554.5 N -715.5, next ones ~32 m
       # apart along the gap), none on the outer caps
       lamps: {side: median, spacing_m: 32.0, anchor_en: [554.5, -715.5]}
@@ -331,7 +334,10 @@ overrides:
           cap_w: 1.2, cap_mat: bridge_cap_red, barrier_face_m: 0.70, ramp_fascia: red,
           # ADR 0146 r2: green-grey painted posts (Mapillary 810525063224609 sunlit, 494288258686575 in shade); the
           # default barrier_steel printed diagonal stripes on the thin H flange (plan-metre UV of the W-beam set)
-          screen_post_mat: noise_post}
+          screen_post_mat: noise_post,
+          # ADR 0159 (REVIEW s14-0146 / s16 P1, 494288): painted dark deck barrier with rails under the beam instead
+          # of the galvanised W-beam with an open view under it. Rail count / heights WORKING_VALUE.
+          barrier: dark_rails}
     reason: >-
       Andersa viaduct at Rondo Putry (DK8/DK19/DK65): green deck edge, yellow-painted round piers in pairs,
       transparent noise screens on posts along the deck (CC0 photo 7204_May_2021, Rakoon; consistent with the
@@ -1667,6 +1673,82 @@ overrides:
     reason: >-
       Steel barrier on the westbound separator dk8-ramp-split-island (REVIEW s10-0095 P1-3: "na wyspie brak bariery";
       artifacts/junctions-r2/xsec/km_sheet.png, dk8_front.jpg x 960-1000 y 490-530: barrier end at the nose ~E -781, along the island centre).
+    confidence: medium
+    verify: owner drive
+  - id: andersa-link-no-guardrail
+    kind: no_guardrail
+    polygon_en: [[-438.3, -46.2], [-378.3, -104.2], [-381.7, -107.8], [-441.7, -49.8]]
+    reason: >-
+      ADR 0159 (REVIEW s16 P1 g3b-eye-s1482, REVIEW s14-0146 P2 810525): the rule "W-beam along a ground carriageway
+      beside a viaduct / walled ramp" (ADR 0110, Biezenstwa links) built 40 m of barrier along the link road way
+      173956083 beside the SE ramp of the DK8 viaduct (E -416 N -71 ... E -388 N -98; ramp wall 5-8.5 m away). Mapillary
+      810525063224609 and 209622370971977 (richlv 2020, CC BY-SA 4.0, reference only), both taken on this link road
+      looking at the ramp: kerb, 6-9 m of grass with young trees, the block wall - no barrier.
+    confidence: medium
+    verify: owner drive
+  - id: andersa-se-ramp-median-sw-barrier
+    kind: guardrail
+    # after4: replaces the zone andersa-se-ramp-median-sw-no-guardrail of the first three builds of ADR 0159 (wrong:
+    # see reason). Point order = the order of the rule run it continues (SE end first): streetscape.furniture.guardrail
+    # puts the beam face on the LEFT normal of the point order, here the SE-bound carriageway. Generated from the
+    # median-side edge of chains c:w173956078 / c:w560802655 (build after3) + 0.74 m = the offset of the rule run of
+    # the ramp cap (c:w173956078 L, generated end E -382.86 N -126.89), which is cut and led onto the NW end.
+    polyline_en: [[-308.3, -185.41], [-334.48, -163.72], [-344.58, -155.45], [-357.5, -144.94], [-361.47, -141.89],
+                  [-364.72, -139.55], [-373.96, -133.38], [-377.25, -131.09], [-383.65, -126.28]]
+    free_ends: [true, false]
+    post_spacing_m: 2.0
+    reason: >-
+      ADR 0159 after4: the grass median of the SE ramp of the DK8 viaduct carries TWO barriers. Mapillary
+      810896133189484 and 962702164479831 (richlv 2020, camera on the SE-bound carriageway, CC BY-SA 4.0, reference
+      only): kerb, ~0.5 m paved strip, then a W-beam on driven posts ~0.3 m behind the strip, running on towards the
+      nose. GUGiK orthophoto 0.08 m (crops 36 m at E -395 N -121.5 and E -360 N -148, 30 m at E -325 N -170, 24 m at
+      E -302 N -188): along the SW edge of the grass a row of post dots every 1.95-2.0 m joined by a thin line, from
+      the abutment to its end at E -307.1 N -183.4 (+-0.5 m); the NE barrier is the wider double line. The first three
+      builds read the SW row as "no rail" and removed the rule barrier there (frame 810896 lost its foreground
+      barrier). The generated median edge lies up to 2.3 m SW of the orthophoto near the nose, so the rail follows the
+      generated kerb (0.74 m behind the carriageway edge) and ends at the station of the orthophoto end.
+    confidence: medium
+    verify: owner drive
+  - id: andersa-se-ramp-median-barrier
+    kind: guardrail
+    # after4: point order reversed (NW end first). streetscape.furniture.guardrail puts the beam face on the LEFT
+    # normal of the point order; drawn from the nose the beam faced the grass and the posts the NW-bound carriageway
+    # (SBS frame 3678296072299092, build after3). The rule run of the ramp cap (c:w1101181473 R, generated end
+    # E -385.65 N -118.82, build world-int-s16) is cut and led onto the NW end.
+    polyline_en: [[-384.81, -119.36], [-306.72, -181.02]]
+    free_ends: [false, true]
+    post_spacing_m: 2.0
+    reason: >-
+      ADR 0159: barrier on the NE edge of the grass median from the end of the ramp cap to the median nose at the
+      fire-station opening. GUGiK orthophoto 0.08 m, strip rectified along E -385.65 N -118.82 -> E -302.6 N -184.4
+      (scratch tool, 22 px/m): the rail is straight, 0.1 m NE of that line, posts every 2.0 m, last post ~100.5 m
+      from the NW point (nose tip at ~104 m). The generated barrier stopped at the end of the walled ramp.
+    confidence: medium
+    verify: owner drive
+  - id: andersa-se-cyclepath-no-guardrail
+    kind: no_guardrail
+    polygon_en: [[-350.53, -165.86], [-319.73, -191.36], [-322.27, -194.44], [-353.07, -168.94]]
+    reason: >-
+      ADR 0159 after4 (REVIEW s16-world-int P1, frame 297817: "kikut bariery W"): the embankment rule built 29 m of
+      W-beam on the SW edge of the SE-bound carriageway (c:w560802655 L, E -347.1 N -171.2 ... E -325.6 N -189.1).
+      Mapillary 297817221966185 (zsolt 2017, CC BY-SA 4.0, reference only): kerb, grass, red cycle path - no barrier.
+      GUGiK orthophoto 0.08 m (crop 30 m at E -325 N -170): no rail line or post row on that edge.
+    confidence: medium
+    verify: owner drive
+  - id: biezenstwa-link-barrier-se-end
+    kind: guardrail
+    # continues the rule run c:w177861600 L (beside the viaduct; generated end E 524.18 N -683.98, build after3) along
+    # its own line; the first 10 m lie on that run, which is cut and led onto the NW end (13 points or more: a run
+    # shorter than that gets no 4 m terminal). Beam face on the LEFT normal of the point order = the link road.
+    polyline_en: [[515.39, -679.21], [524.18, -683.98], [528.05, -686.07]]
+    free_ends: [false, true]
+    beside_structure: true        # bridge mesh of the chunk, like the rule run it continues (no new primitive)
+    reason: >-
+      ADR 0159 after4 (REVIEW s16-world-int P1, frame 482392: the barrier is a short stub at the right edge, on the
+      photo it comes down to the ground beside the camera). Mapillary 482392746429891 (richlv 2020, CC BY-SA 4.0,
+      reference only): the turned-down end reaches the grass ~2 m ahead and ~2 m left of the camera. GUGiK orthophoto
+      0.08 m (crop 36 m at E 532 N -688): the rail fades out at E 528.3 N -685.5 (+-1 m), 4.4 m beyond the end of the
+      rule run. The turned-down part on the photo is longer than GUARDRAIL_TERMINAL_M (4 m): not changed here.
     confidence: medium
     verify: owner drive
   - id: dk8-ramp-split-barrier-n

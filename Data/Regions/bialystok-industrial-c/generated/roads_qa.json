@@ -11800,7 +11800,7 @@
     ]
    }
   ],
-  "nmt_nodes_replaced_under_decks": 2294,
+  "nmt_nodes_replaced_under_decks": 2325,
   "overrides_applied": [
    {
     "id": "kwadrat-park-yard-access-width",
@@ -12428,9 +12428,39 @@
     ]
    },
    {
+    "id": "andersa-se-ramp-median-sw-barrier",
+    "targets": [
+     "guardrail@-308,-185"
+    ]
+   },
+   {
+    "id": "andersa-se-ramp-median-barrier",
+    "targets": [
+     "guardrail@-385,-119"
+    ]
+   },
+   {
+    "id": "biezenstwa-link-barrier-se-end",
+    "targets": [
+     "guardrail@515,-679"
+    ]
+   },
+   {
     "id": "dk8-ramp-split-barrier-n",
     "targets": [
      "guardrail@-750,77"
+    ]
+   },
+   {
+    "id": "andersa-link-no-guardrail",
+    "targets": [
+     "rule guardrail points removed: 40"
+    ]
+   },
+   {
+    "id": "andersa-se-cyclepath-no-guardrail",
+    "targets": [
+     "rule guardrail points removed: 29"
     ]
    },
    {

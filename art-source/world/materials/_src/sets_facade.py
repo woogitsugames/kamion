@@ -186,6 +186,63 @@ def brick(n=1024):
     return _finish("brick", c, lum, h, rough, t, mort, extra=col_var)
 
 
+def concrete_blocks_split(n=1024):
+    """ADR 0159: split-face concrete blocks of the ramp retaining walls (Mapillary 810525063224609 / 209622370971977,
+    reference only): courses 0.5 m, blocks 1.0 m, half-bond, dark recessed joints ~25 mm, rough broken face with a
+    per-block tone. Block size read off the photos against the 3.0 m screen (WORKING_VALUE +-0.1 m). Tile 2 x 1 m."""
+    Lx, Ly = 2.0, 1.0
+    c = Ctx(n, n // 2, Lx, Ly, seed=1590)
+    X, Y = c.xy()
+    v = Ly - Y
+    course, blk = 0.5, 1.0
+    row = np.floor(v / course).astype(int)
+    xs = (X + (row % 2) * blk / 2) % Lx
+    col = np.floor(xs / blk).astype(int)
+    du = np.minimum(xs % blk, blk - xs % blk)
+    dv = np.minimum(v % course, course - v % course)
+    d = np.minimum(du, dv)
+    joint = sstep(0.022, 0.008, d)                          # 1 in the joint
+    bevel = sstep(0.07, 0.02, d) * (1 - joint)              # the broken face rolls into the joint
+    bid = row * 5 + col
+    t = hash01(bid, 1)
+    rock = noise(c, 3, 0.05, 0.25, beta=1.1)                 # split face: lumps of 5-15 cm
+    grain = noise(c, 4, c.px * 2, 0.02, beta=0.4)
+    lum = (1 + 0.20 * (t - 0.5) + 0.10 * rock + 0.05 * grain) * (1 - 0.18 * bevel) * (1 - joint) + joint * 0.42
+    h = (9e-3 * rock + 0.6e-3 * grain) * (1 - joint) - 14e-3 * joint - 5e-3 * bevel
+    rough = 0.90 + 0.05 * joint
+    return _finish("concrete_blocks_split", c, lum, h, rough, t, joint, ao_k=0.9)
+
+
+def concrete_panels_wall(n=1024):
+    """ADR 0159 after4: precast facing panels of a reinforced-earth retaining wall (ramps of the Biezenstwa viaduct;
+    Mapillary 751431972202262 / 1259231227807789, reference only): smooth light concrete panels in vertical columns,
+    every second column shifted by half a panel, so the horizontal joints step from column to column; open joints
+    ~20 mm, per-panel tone, faint run-off. Panel 1.5 x 1.5 m read off the photo against the 0.75 m W-beam and the
+    1.1 m railing (WORKING_VALUE +-0.2 m; the real panels are cruciform - the stepped joints are what reads from
+    the road). Tile 3 x 3 m."""
+    L = 3.0
+    c = Ctx(n, n, L, L, seed=1594)
+    X, Y = c.xy()
+    v = L - Y
+    pw = ph = 1.5
+    col = np.floor(X / pw).astype(int)
+    vs = (v + (col % 2) * ph / 2) % L
+    row = np.floor(vs / ph).astype(int)
+    du = np.minimum(X % pw, pw - X % pw)
+    dv = np.minimum(vs % ph, ph - vs % ph)
+    d = np.minimum(du, dv)
+    joint = sstep(0.014, 0.006, d)                          # 1 in the joint
+    arris = sstep(0.035, 0.014, d) * (1 - joint)            # chamfered panel edge
+    tone = hash01(col * 7 + row, 2)
+    grain = noise(c, 1, c.px * 2, 0.01, beta=0.4)
+    cloud = noise(c, 2, 0.3, 2.0)
+    lum = (1 + 0.06 * (tone - 0.5) + 0.03 * grain + 0.035 * cloud) * (1 - 0.10 * arris) * (1 - joint) + joint * 0.38
+    lum *= _streaks(c, 3, 0.07)
+    h = -8e-3 * joint - 2e-3 * arris + 0.2e-3 * grain
+    rough = 0.82 + 0.04 * grain + 0.08 * joint
+    return _finish("concrete_panels_wall", c, lum, h, rough, tone, joint)
+
+
 def roof_tiles(n=512):
     """S-profile roof tile courses (ADR 0091): roll pitch 0.20 m, course gauge 0.35 m - ceramic / concrete pantile and
     pressed metal tile sheet (blachodachowka module 350 mm) share it (dimensions WORKING_VALUE inside the product
@@ -618,6 +675,10 @@ FACADE_SETS = {
         note="Large-panel block: 3.0 x 2.8 m panels, sealed joints, per-panel tone."),
     "brick": dict(fn=brick, tile_m=[1.04, 1.2], slots=["brick_red", "chimney_brick"],
         note="Brick NF 250 x 65 mm, 10 mm mortar, stretcher bond, per-brick tone."),
+    "concrete_blocks_split": dict(fn=concrete_blocks_split, tile_m=[2.0, 1.0], slots=["ramp_wall_blocks"],
+        note="Split-face concrete blocks 1.0 x 0.5 m, half-bond, dark recessed joints (ramp retaining walls, ADR 0159)."),
+    "concrete_panels_wall": dict(fn=concrete_panels_wall, tile_m=[3.0, 3.0], slots=["ramp_wall_panels"],
+        note="Precast facing panels 1.5 x 1.5 m in columns shifted by half a panel, open joints (Biezenstwa ramp walls, ADR 0159)."),
     "roof_tiles": dict(fn=roof_tiles, tile_m=[1.4, 1.4], slots=["roof_tiles_*", "roof_metal_*"],
         note="S-profile roof tile courses, roll pitch 0.20 m, gauge 0.35 m (u along the eave, v up the slope)."),
     "curtain_folds": dict(fn=curtain_folds, tile_m=[4.8, 2.7], slots=["trailer_curtain_*"],
