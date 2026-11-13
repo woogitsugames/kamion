@@ -47,6 +47,11 @@ MIN_TREES = 8
 CANOPY_GRID_M = 12.0
 WALL_SEG_M = 6.0
 CROWN_R = 4.5
+# ADR 0187 mantle skirt: a second, low wall SKIRT_OFF_M in front of every outer wall, textured with the mantle strip
+# of the edge texture (v above "v_main" of trees_meta.json, stored upside down: v = 1 at the ground). Same mesh
+# primitive and material as the wall (no extra draw). A stand seen from the side then steps down shrub - young
+# trees - canopy instead of ending in one vertical plane.
+SKIRT_OFF_M = 3.5
 EDGE_ROW_M = 9.5          # + the 2.5 m clearance in no_forest = trees within 12 m of a road / yard stay individual
 MIX_OF_CATEGORY = {"iglasty": "conifer", "liściasty": "broadleaf", "mieszany": "mixed", None: "mixed"}
 TEX_REF = "art-source/world/vegetation/{}.png"
@@ -70,6 +75,11 @@ def bake_info():
         fh = {m: {"edge": {"w_m": 48.0, "h_m": 24.0, "z0_m": -0.3, "h_median_m": 15.0}, "canopy": {"w_m": 48.0}}
               for m in ("conifer", "mixed", "broadleaf")}
     return fh
+
+
+def edge_v_main(edge_info):
+    """v of the top of the main wall picture in forest_edge_<mix>.png (1.0 before ADR 0187: no mantle strip)."""
+    return float(edge_info.get("v_main", 1.0))
 
 
 def cell_of(e, n, half):
@@ -226,7 +236,8 @@ def build(trees, forests, no_forest, zground, half, report):
                 k = len(idx)
                 Vw += [[pts[p][0], pts[p][1], zg[p]] for p in idx] + [[pts[p][0], pts[p][1], t] for p, t in zip(idx, wtop)]
                 us = u0 + s[idx] / Wt
-                UVw += [[u, 0.0] for u in us] + [[u, (t - zg[p]) / hw[p]] for u, p, t in zip(us, idx, wtop)]
+                vm = edge_v_main(edge_info)
+                UVw += [[u, 0.0] for u in us] + [[u, vm * (t - zg[p]) / hw[p]] for u, p, t in zip(us, idx, wtop)]
                 Nw += list(n3) + list(n3)
                 for m_ in range(k - 1):
                     b0, b1, t0, t1 = base + m_, base + m_ + 1, base + k + m_, base + k + m_ + 1
@@ -234,6 +245,23 @@ def build(trees, forests, no_forest, zground, half, report):
                         Tw += [[b0, b1, t1], [b0, t1, t0]]
                     else:
                         Tw += [[b0, t1, b1], [b0, t0, t1]]
+                mantle = edge_info.get("mantle")
+                if mantle and not inner[i]:
+                    # skirt: the strip moved SKIRT_OFF_M out of the stand, mantle height scaled like the wall
+                    q = pts[idx] + nrm * SKIRT_OFF_M
+                    zq = zground(q[:, 0], q[:, 1]) + edge_info["z0_m"]
+                    hq = mantle["h_m"] * np.clip(hw[idx] / edge_info["h_m"], 0.5, 1.15)
+                    base = len(Vw)
+                    Vw += [[a[0], a[1], z_] for a, z_ in zip(q, zq)] + [[a[0], a[1], z_ + h_] for a, z_, h_ in zip(q, zq, hq)]
+                    us2 = us + 0.37
+                    UVw += [[u, 1.0] for u in us2] + [[u, vm] for u in us2]
+                    Nw += list(n3) + list(n3)
+                    for m_ in range(k - 1):
+                        b0, b1, t0, t1 = base + m_, base + m_ + 1, base + k + m_, base + k + m_ + 1
+                        if face[i] > 0:
+                            Tw += [[b0, b1, t1], [b0, t1, t0]]
+                        else:
+                            Tw += [[b0, t1, b1], [b0, t0, t1]]
                 i = j + 1
         if Tw:
             prims.append({"V": np.array(Vw), "T": np.array(Tw), "UV": np.array(UVw), "N": np.array(Nw),

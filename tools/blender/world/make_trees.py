@@ -721,11 +721,61 @@ def impostor_object(name, H, png, S):
 # the same LOD0 trees, so the silhouette (tall bare pine boles, flat clumped pine crowns, white birch stems with
 # their own crowns) is the one of the near trees. Species mixes = vegetation.MIX for the BDOT10k forest
 # categories (iglasty / mieszany / liściasty).
-FOREST_MIX = {"conifer": {"pine": 0.82, "birch": 0.12, "alder": 0.02, "maple": 0.02, "linden": 0.02},
-              "mixed": {"pine": 0.45, "birch": 0.25, "alder": 0.10, "maple": 0.10, "linden": 0.10},
+# ADR 0187: spruce in the conifer / mixed stands (same weights as streetscape/vegetation.py MIX).
+FOREST_MIX = {"conifer": {"pine": 0.64, "birch": 0.10, "alder": 0.02, "maple": 0.02, "linden": 0.02, "spruce": 0.20},
+              "mixed": {"pine": 0.36, "birch": 0.24, "alder": 0.10, "maple": 0.08, "linden": 0.08, "spruce": 0.14},
               "broadleaf": {"birch": 0.36, "alder": 0.26, "maple": 0.22, "linden": 0.16}}    # ADR 0170: no pine
-TREE_H = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0)}
+TREE_H = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0),
+          "spruce": (14, 25)}
 EDGE_W, EDGE_H, EDGE_DEPTH = 48.0, 24.0, 16.0   # edge texture covers 48 m x 24 m of stand (tileable along u)
+# ADR 0187 layout of forest_edge_<mix>.png (1024 x 512, unchanged size): rows v 0 .. EDGE_V_MAIN = the wall picture
+# (48 x 24 m), rows EDGE_V_MAIN .. 1 = the mantle strip (48 x MANTLE_H m of shrubs and young trees, no boles behind
+# it), stored upside down (v = 1 is its ground line) so that both pictures meet with their empty sky sides and
+# the mips never bleed opaque rows into the sky above the stand. streetscape/forest_hlod.py draws the strip on a
+# low skirt wall in front of the stand edge.
+EDGE_V_MAIN = 0.75
+MANTLE_H = 8.0
+# Mantle of the baked stand (same bands as streetscape/vegetation.py MANTLE): (y range in front of / inside the
+# stand edge at y = 0, plants per metre of edge, {species: (weight, h lo, h hi)}).
+MANTLE_BANDS = {
+    "conifer": [((-4.0, 0.0), 0.60, {"shrub": (0.55, 1.2, 3.0), "birchyoung": (0.20, 1.5, 3.5), "pineyoung": (0.25, 1.0, 3.0)}),
+                ((0.0, 5.0), 0.64, {"birchyoung": (0.30, 3.0, 7.0), "pineyoung": (0.28, 2.5, 6.0), "spruce": (0.24, 3.0, 9.0),
+                                    "shrub": (0.18, 2.0, 3.8)}),
+                ((5.0, 11.0), 0.28, {"spruce": (0.45, 8.0, 15.0), "birch": (0.35, 8.0, 13.0), "pine": (0.20, 9.0, 14.0)})],
+    "broadleaf": [((-4.0, 0.0), 0.60, {"shrub": (0.70, 1.2, 3.2), "birchyoung": (0.30, 1.5, 3.5)}),
+                  ((0.0, 5.0), 0.64, {"birchyoung": (0.42, 3.0, 7.0), "shrub": (0.28, 2.0, 3.8), "alder": (0.15, 4.5, 8.0),
+                                      "maple": (0.15, 4.0, 7.5)}),
+                  ((5.0, 11.0), 0.28, {"birch": (0.5, 7.0, 12.0), "alder": (0.25, 7.0, 11.0), "maple": (0.25, 6.0, 10.0)})],
+}
+MANTLE_BANDS["mixed"] = MANTLE_BANDS["conifer"]
+
+
+def _variant(rng, s, open_form=False):
+    v = rng.randrange(3)
+    if s == "spruce":
+        return 2 if open_form else v % 2
+    return v % NVAR.get(s, 3)
+
+
+def _dome(x, w, seed):
+    """Height factor of the canopy along the edge: +-9 % over 12-16 m (review s20 0170 P1-1: the top of the baked
+    wall was a level comb; real stand tops are domes of unequal height). Periodic in w."""
+    a, b = (seed % 7) * 0.9, (seed % 5) * 1.3
+    return 1.0 + 0.055 * math.sin(2 * math.pi * 3 * x / w + a) + 0.04 * math.sin(2 * math.pi * 4 * x / w + b)
+
+
+def _mantle(mix, seed, w, bands=(0, 1, 2)):
+    rng = random.Random(seed + 31)
+    out = []
+    for bi in bands:
+        (y0, y1), per_m, table = MANTLE_BANDS[mix][bi]
+        names = list(table)
+        for _ in range(int(w * per_m * (y1 - y0) / 2.6)):
+            s = rng.choices(names, [table[n][0] for n in names])[0]
+            out.append((s, _variant(rng, s, True), rng.uniform(0, w), rng.uniform(y0, y1),
+                        rng.uniform(*table[s][1:]), rng.uniform(0, 2 * math.pi)))
+    return out
+
 CANOPY_W = 48.0                                  # canopy texture tile, 48 x 48 m (tileable both ways)
 
 
@@ -742,27 +792,25 @@ def _stand(mix, seed, w, depth, edge_row, under=True):
             x = (gx + 0.5) * w / int(w / 4.5) + rng.uniform(-2.0, 2.0)
             y = (gy + 0.5) * 4.5 + rng.uniform(-2.0, 2.0)
             s = rng.choices(sp, wt)[0]
-            out.append((s, rng.randrange(3), x % w, y, rng.uniform(*TREE_H[s]), rng.uniform(0, 2 * math.pi)))
+            out.append((s, _variant(rng, s), x % w, y, rng.uniform(*TREE_H[s]) * _dome(x % w, w, seed),
+                        rng.uniform(0, 2 * math.pi)))
     if under:
-        names = list(UNDER_SPECIES)
+        names = [n for n in UNDER_SPECIES if mix != "broadleaf" or n in ("shrub", "birchyoung")]
         for _ in range(int(w * depth / UNDER_M2)):
             s = rng.choices(names, [UNDER_SPECIES[n][2] for n in names])[0]
             lo, hi = UNDER_SPECIES[s][:2]
-            out.append((s, rng.randrange(3), rng.uniform(0, w), rng.uniform(0, depth), rng.uniform(lo, hi),
+            out.append((s, _variant(rng, s, True), rng.uniform(0, w), rng.uniform(0, depth), rng.uniform(lo, hi),
                         rng.uniform(0, 2 * math.pi)))
     if edge_row:
-        for k in range(int(w / 3.0)):
-            x = (k + rng.random()) * 3.0
-            s = rng.choices(["shrub", "birch", "alder", "pine"], [0.5, 0.25, 0.1, 0.15])[0]
-            h = rng.uniform(*TREE_H[s]) * (0.5 if s != "shrub" else 1.0)
-            out.append((s, rng.randrange(3), x % w, rng.uniform(-3.0, 1.0), h, rng.uniform(0, 2 * math.pi)))
+        out += _mantle(mix, seed, w)
     return out
 
 
 # understorey of a Podlasie pine stand (WORKING_VALUE, same table as streetscape/vegetation.py UNDERSTOREY):
 # species -> (h min, h max, weight); one plant per UNDER_M2 square metres
-UNDER_SPECIES = {"shrub": (1.2, 3.5, 0.55), "pine": (3.0, 7.0, 0.2), "birch": (3.0, 8.0, 0.25)}
-UNDER_M2 = 60.0
+UNDER_SPECIES = {"shrub": (1.2, 3.5, 0.38), "spruce": (1.5, 8.0, 0.30), "birchyoung": (2.5, 7.0, 0.16),
+                 "pineyoung": (1.5, 5.0, 0.16)}
+UNDER_M2 = 30.0
 
 
 def _place_stand(trees, src, href, offsets):
@@ -888,6 +936,38 @@ def pack(stems, out_png, out_n, min_island=0, open_r=1, canopy=False):
     canopy: opaque, albedo x visibility^0.7 in one RGB texture (the canopy stays an opaque URP Lit surface)."""
     cols, nrms, alphas = [], [], []
     for stem in stems:
+        rgb, n, al = _pack_stem(stem, min_island, open_r)
+        cols.append(rgb)
+        nrms.append(n)
+        alphas.append(al)
+    _pack_write(np.concatenate(cols, 1), np.concatenate(nrms, 1), np.concatenate(alphas, 1), out_png, out_n, canopy)
+
+
+def _resize_rows(a, rows):
+    """Area-ish resample of the image rows (linear between the two nearest source rows)."""
+    h = a.shape[0]
+    y = (np.arange(rows) + 0.5) * h / rows - 0.5
+    y0 = np.clip(np.floor(y).astype(int), 0, h - 1)
+    y1 = np.clip(y0 + 1, 0, h - 1)
+    t = (y - y0).reshape((-1,) + (1,) * (a.ndim - 1))
+    return a[y0] * (1 - t) + a[y1] * t
+
+
+def pack_edge(mix, out_png, out_n):
+    """ADR 0187 edge texture: wall picture in the rows below EDGE_V_MAIN, mantle strip above it, upside down."""
+    rgb, n, al = _pack_stem(f"forest_edge_{mix}", 600, 1)
+    h = rgb.shape[0]
+    rows = int(round(h * EDGE_V_MAIN))
+    rgb, n, al = _resize_rows(rgb, rows), _resize_rows(n, rows), _resize_rows(al, rows)
+    mr, mn, ma = _pack_stem(f"forest_mantle_{mix}", 120, 1)
+    mr, mn, ma = (_resize_rows(x, h - rows)[::-1] for x in (mr, mn, ma))
+    mn = mn.copy()
+    mn[..., 1] = 1.0 - mn[..., 1]              # the picture is flipped: so is the up component of its normals
+    _pack_write(np.concatenate([rgb, mr], 0), np.concatenate([n, mn], 0), np.concatenate([al, ma], 0), out_png, out_n, False)
+
+
+def _pack_stem(stem, min_island, open_r):
+    if True:
         alb = _load(RAW / f"{stem}_alb.png")
         nrm = _load(RAW / f"{stem}_nrm.png")
         occ = _load(RAW / f"{stem}_occ.png")
@@ -903,16 +983,14 @@ def pack(stems, out_png, out_n, min_island=0, open_r=1, canopy=False):
         seed = inner if inner.any() else cov
         rgb = _dilate_colour(alb[..., :3], seed)
         n = _dilate_colour(np.concatenate([nrm[..., :2], occ[..., :1]], -1), seed)
-        cols.append(rgb)
-        nrms.append(n)
         # outside the kept coverage the alpha is 0 except a one-texel anti-aliasing ring: the soft alpha of removed
         # twigs / specks (0.1-0.45) was raised over the cut-off by the coverage-preserving mips far away and drew
         # dotted arcs along the HLOD wall tops (artifacts/vqa/abl: gone with the edge walls skipped)
         ring = np.any([_shift(cov, dy, dx) for dy, dx in N8], axis=0) & ~cov
-        alphas.append(np.where(cov, np.maximum(a, 0.5), np.where(ring, np.minimum(a, 0.45), 0.0)))
-    rgb = np.concatenate(cols, 1)
-    n = np.concatenate(nrms, 1)
-    al = np.concatenate(alphas, 1)
+        return rgb, n, np.where(cov, np.maximum(a, 0.5), np.where(ring, np.minimum(a, 0.45), 0.0))
+
+
+def _pack_write(rgb, n, al, out_png, out_n, canopy):
     if canopy:
         lin = _srgb_to_lin(rgb) * np.clip(n[..., 2:3], 0.05, 1) ** 0.7
         _save(np.concatenate([_lin_to_srgb(lin), np.ones_like(al)[..., None]], -1), out_png)
@@ -939,7 +1017,8 @@ def bake_forest(mix, src, href, seed):
     objs = _place_stand(trees, src, href, [(-EDGE_W, 0), (0, 0), (EDGE_W, 0)])
     hs = sorted(t[4] for t in trees if t[0] != "shrub" and t[4] > 8)
     h_med = hs[len(hs) // 2]
-    deep = [(s, v, x, y + EDGE_DEPTH, h, yaw) for s, v, x, y, h, yaw in _stand(mix, seed + 7, EDGE_W, 36.0, False)]
+    # the interior stays just under the front domes, so the silhouette is the front row's (ADR 0187)
+    deep = [(s, v, x, y + EDGE_DEPTH, h * 0.93, yaw) for s, v, x, y, h, yaw in _stand(mix, seed + 7, EDGE_W, 36.0, False)]
     objs += _place_stand(deep, src, href, [(-EDGE_W, 0), (0, 0), (EDGE_W, 0)])
     back = _flat("st_back", [(-60, 56, -0.5), (EDGE_W + 60, 56, -0.5), (EDGE_W + 60, 56, h_med * 0.6),
                              (-60, 56, h_med * 0.6)], (0.030, 0.032, 0.022))
@@ -952,9 +1031,23 @@ def bake_forest(mix, src, href, seed):
     render_passes(objs + [back, floor], f"forest_edge_{mix}")
     for o in objs + [back, floor]:
         bpy.data.objects.remove(o, do_unlink=True)
-    pack([f"forest_edge_{mix}"], VEG / f"forest_edge_{mix}.png", VEG / f"forest_edge_{mix}_n.png", min_island=600)
+    # mantle strip: shrubs and young trees only (bands 0, 1), other seed than the wall picture
+    mt = [(s, v, x, y, min(h, MANTLE_H - 0.9), yaw) for s, v, x, y, h, yaw in _mantle(mix, seed + 13, EDGE_W, bands=(0, 1))]
+    objs = _place_stand(mt, src, href, [(-EDGE_W, 0), (0, 0), (EDGE_W, 0)])
+    floor = _flat("st_floor", [(-60, -6, -0.05), (EDGE_W + 60, -6, -0.05), (EDGE_W + 60, 12, -0.05),
+                               (-60, 12, -0.05)], (0.045, 0.040, 0.026))
+    mres = (1024, int(round(1024 * MANTLE_H / EDGE_W)))
+    sc, cam = bake_setup(True, mres, 24)
+    cam.data.ortho_scale = EDGE_W
+    cam.location = (EDGE_W / 2, -120, MANTLE_H / 2 - 0.3)
+    cam.rotation_euler = (math.pi / 2, 0, 0)
+    render_passes(objs + [floor], f"forest_mantle_{mix}")
+    for o in objs + [floor]:
+        bpy.data.objects.remove(o, do_unlink=True)
+    pack_edge(mix, VEG / f"forest_edge_{mix}.png", VEG / f"forest_edge_{mix}_n.png")
     info["edge"] = {"png": f"forest_edge_{mix}.png", "normal_png": f"forest_edge_{mix}_n.png", "w_m": EDGE_W,
-                    "h_m": EDGE_H, "z0_m": -0.3, "h_median_m": round(h_med, 2), "trees": len(trees)}
+                    "h_m": EDGE_H, "z0_m": -0.3, "h_median_m": round(h_med, 2), "trees": len(trees),
+                    "v_main": EDGE_V_MAIN, "mantle": {"h_m": MANTLE_H, "plants": len(mt)}}
     # canopy: 48 x 48 m tile from above over the forest floor, wrapped copies at the borders
     trees = _stand(mix, seed + 1, CANOPY_W, CANOPY_W, False)
     off = [(dx, dy) for dx in (-CANOPY_W, 0, CANOPY_W) for dy in (-CANOPY_W, 0, CANOPY_W)]
