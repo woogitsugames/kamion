@@ -1,0 +1,229 @@
+{
+  "paczka": "research/mistral/p2-surfaces-2",
+  "typ": "samokontrola 20% — runda M52-FIX (rewizja po przeglądzie s17)",
+  "data": "2026-11-13",
+  "seed": 20261113,
+  "generator": "python3: random.Random(20261113).sample(ids, 24)",
+  "populacja": {
+    "liczba_rekordow": 117,
+    "zakres": "M52-001…M52-117"
+  },
+  "proba": {
+    "liczba": 24,
+    "id": ["M52-002", "M52-003", "M52-004", "M52-007", "M52-009", "M52-013", "M52-015", "M52-017", "M52-023", "M52-039", "M52-040", "M52-047", "M52-051", "M52-059", "M52-064", "M52-066", "M52-071", "M52-077", "M52-082", "M52-084", "M52-105", "M52-107", "M52-111", "M52-114"]
+  },
+  "kryteria": [
+    "wiersze z rysunków: wklejony odczyt etykiety/podpisu + źródło odczytu (przegląd s17 / odczyt programowy M52 / tekst rozporządzenia); korekty M52-FIX wskazane wprost",
+    "kadry: zdanie „co widać” — opis z przeglądu s17 albo jawne „nie obejrzano w sesji M52-FIX” z podaniem podstawy przypisania (nie deklarujemy wizji, której nie było)",
+    "wiersze tekstowe/dane: weryfikacja źródłem odsyłacza",
+    "formalne: 19 kolumn; status ∈ {SOURCED, ESTIMATED, UNVERIFIED, REFERENCE_NOT_TEXTURE}; kolor_srgb ⇒ metoda_koloru; po M52-FIX wiersze kadrów KartaView mają kolor_srgb pusty z adnotacją w metoda_koloru"
+  ],
+  "wyniki": [
+    {
+      "id": "M52-002",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„0,24” przy wymiarówce (szerokość linii P-2b); podpis dolny „0,24” = ZUŻYCIE FARBY 0,24 m²/mb (M52-FIX)",
+      "zrodlo_odczytu": "odczyt programowy M52 (pełne glify); bez potwierdzenia wizualnego w przeglądzie s17 (obejrzano P-3a/P-4/P-5/P-6); spójność: 0,24 m²/mb = 0,24 × 1 mb linii ciągłej ✓ oraz P-7a/b 0,24 (str. 545)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-003",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "3× „0,12” — szerokość linii górnej / odstęp między liniami / szerokość linii dolnej (osie 0,24 m)",
+      "zrodlo_odczytu": "przegląd s17 (oględziny rys. 2.2.1.8, str. 538: „linie 0,12 / odstęp 0,12 / 0,12”) + odczyt programowy M52",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-004",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "etykieta „0,12” (odstęp między liniami P-3a; osie 0,24 m); podpis dolny „0,20” = ZUŻYCIE FARBY 0,20 m²/mb",
+      "zrodlo_odczytu": "przegląd s17 (oględziny rys. 2.2.1.8, str. 538) + walidacja arytmetyczna: 0,12 + 0,12×(4/6) = 0,20 ✓",
+      "korekta_fix": "stary zapis „odstęp osi 0,20 m z podpisu dolnego” — błąd metody M52, wycofany",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-007",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "etykieta „0,12” (odstęp między liniami P-3b, struktura jak P-3a; osie 0,24 m); podpis dolny „0,18” = ZUŻYCIE FARBY 0,18 m²/mb",
+      "zrodlo_odczytu": "etykieta: odczyt programowy M52 (bez potwierdzenia wizualnego w s17); podpis: reinterpretacja M52-FIX wg przeglądu s17 („ten sam typ podpisu co P-3a/P-4/P-5/P-6”) + arytmetyka (0,12 + 0,12×w = 0,18 → wypełnienie 1/2, kreska=przerwa)",
+      "korekta_fix": "stary zapis „odstęp osi 0,18 m z podpisu” — błąd metody M52, wycofany; kreska/przerwa P-3b: UNVERIFIED (etykiety nieodczytane)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-009",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "3× „0,12” (szerokości obu linii + odstęp → osie 0,24 m); podpis dolny „0,24” = ZUŻYCIE FARBY 0,24 m²/mb",
+      "zrodlo_odczytu": "przegląd s17 (oględziny rys. 2.2.1.10, str. 540) + odczyt programowy; arytmetyka 2×0,12 = 0,24 ✓",
+      "korekta_fix": "uzasadnienie zmienione w M52-FIX: wartość odstępu z geometrii etykiet, NIE z podpisu (stare uzasadnienie — błąd metody)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-013",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„0,12” (szerokość linii P-6)",
+      "zrodlo_odczytu": "przegląd s17 (oględziny rys. 2.2.1.12, str. 541) + odczyt programowy M52 (y493)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-015",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„4,00” (kreska P-6)",
+      "zrodlo_odczytu": "przegląd s17 (oględziny rys. 2.2.1.12, str. 541) — ETYKIETA na rysunku; spójność: zużycie 0,08 m²/mb = 0,12×(4/6) ✓",
+      "korekta_fix": "stary zapis „~4,00 m ESTIMATED (proporcje pikselowe)” — zastąpiony odczytem etykiety (SOURCED)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-017",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "podpis dolny „0,5” + „m” = ZUŻYCIE FARBY 0,5 m²/mb; szerokość linii P-12 = 0,50 m (z arytmetyki: linia ciągła → podpis = szerokość × 1 mb)",
+      "zrodlo_odczytu": "odczyt programowy M52; semantyka: reinterpretacja M52-FIX wg przeglądu s17; etykieta szerokości na rys. 4.2.3.1 nieodczytana — do potwierdzenia oględziną",
+      "korekta_fix": "stara interpretacja „0,5 m = szerokość linii” — błąd metody M52 (zbieżność przypadkowa); wycofana",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-023",
+      "typ": "tekstowy",
+      "weryfikacja": "tekst pkt 4.2.5 rozporządzenia (str. 573): odległości umiejscowienia P-14 = 2,0/0,5/8,0/2,0/1,5/2,0/0,5 m — SOURCED z tekstu (nie rysunku); url do PDF Dz.U. poprawny",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-039",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX (pliki w paczce ZIP poza gitem; sesja bez dostępu do plików graficznych). Przypisanie: kadr z estakady Andersa nad rondem — po przebiegu sekwencji 2769366 (azymut ~302° wzdłuż wiaduktu DK19, 45 m od kafla) oraz po potwierdzeniu wizualnym 4 kadrów jar (jar-01/07/12/20) przez przegląd s17.",
+      "stan_po_fix": "rekord uczciwy: element = „kadr z estakady…”, kolor_srgb usunięty (metoda dolnych 45% odrzucona)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-040",
+      "typ": "kadr",
+      "co_widać": "PRZEGLĄD s17 (jar-12 obejrzany wizualnie): kadr z estakady gen. W. Andersa nad rondem Pamięci Bieżeństwa — bariery mostowe wiaduktu, w tle kominy EC; jezdnia ringu ronda niewidoczna z poziomu kamery.",
+      "stan_po_fix": "rekord zgodny z przeglądem s17; kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-047",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; przypisanie: estakada (sekwencja 3686129, azymut ~301°, wiadukt DK19, 26 m od kafla).",
+      "stan_po_fix": "element = „kadr z estakady…”; kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-051",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; przypisanie: estakada (sekwencja 3686129, azymut ~301°, 104 m od kafla).",
+      "stan_po_fix": "element = „kadr z estakady…”; kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-059",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; kadr trasy Andersa (sekwencja 2769366, zdjęcie 178); kolor nawierzchni: UNVERIFIED (ocena RGB wycofana w M52-FIX — wymaga oględzin).",
+      "stan_po_fix": "kolor_srgb usunięty; metoda_koloru opisuje usunięcie",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-064",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; kadr trasy Andersa (sekwencja 3686129, zdjęcie 240); kolor nawierzchni: UNVERIFIED.",
+      "stan_po_fix": "kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-066",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; kadr trasy Andersa (sekwencja 3686129, zdjęcie 254); kolor nawierzchni: UNVERIFIED.",
+      "stan_po_fix": "kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-071",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; ten sam kadr co M52-031 (jar-03, KartaView 14055/155, pozycja 53.151946 23.167074) — z estakady nad rondem.",
+      "stan_po_fix": "nota o duplikacie w uwagach; kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-077",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; kadr przejścia przy Andersa (sekwencja 14055, zdjęcie 172, pozycja 53.148964 23.174977 — poza rondem, na południe).",
+      "stan_po_fix": "kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-082",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; kadr przejścia przy Andersa (sekwencja 3686129, zdjęcie 279, pozycja 53.153081 23.164399).",
+      "stan_po_fix": "kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-084",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; kadr przejścia Al. Tysiąclecia (sekwencja 1155711, zdjęcie 3964, azymut 148°); płytki dotykowe przy przejściu wg OSM — obecność płytek na kadrze niepotwierdzona wizualnie.",
+      "stan_po_fix": "kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-105",
+      "typ": "kadr",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; kadr trasy Sokólska/Białostoczek (sekwencja 1155711, zdjęcie 3799, azymut 164°); kolor nawierzchni: UNVERIFIED.",
+      "stan_po_fix": "kolor_srgb usunięty",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-107",
+      "typ": "kadr (Wikimedia Commons)",
+      "co_widać": "NIE obejrzano w sesji M52-FIX; kolor = mediana RGB centralnych 30×40% kadru (metoda liczbowa, oznaczona ESTIMATED w rekordzie — metoda nieobjęta korektą M52-FIX, która dotyczyła dolnych 45% kadrów z kamer pojazdów). Faktografie zweryfikowane odsyłaczem: plik Commons CC0 (Rakoon), Rynek Kościuszki, sierpień 2019.",
+      "stan_po_fix": "bez zmian względem M52 (kolor i metoda pozostają, z adnotacją ESTIMATED)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-111",
+      "typ": "tekstowy",
+      "weryfikacja": "porównanie tekstów PDF: BIP 103311 („13 LIPCA 2018 R. / 2025 R.”, 21 str.) vs BIP 99985 (2018, 22 str.) — lista zmian 1–5 w README zad. 6; cytaty z wytycznych potwierdzone w przeglądzie s17",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-114",
+      "typ": "dane (OSM)",
+      "weryfikacja": "way 287037716 (traffic_calming=island, ul. Świętojańska, ODbL) — jedyny obiekt w bbox centrum; negatyw zdjęciowy: brak kadrów KartaView ≤1,1 km (najbliższe sprawdzone 1,15 km) — udokumentowany w uwagach",
+      "ok": true,
+      "problemy": []
+    }
+  ],
+  "podsumowanie": {
+    "liczba_sprawdzonych": 24,
+    "zaliczone": 24,
+    "problemy": 0,
+    "odczyty_potwierdzone_wizualnie_przegladem_s17": ["M52-003", "M52-004", "M52-009", "M52-013", "M52-015"],
+    "odczyty_programowe_z_jawnym_brakiem_potwierdzenia_wizualnego": ["M52-002", "M52-007", "M52-017"],
+    "reinterpretacje_wprowadzone_lub_uzasadnione_w_m52_fix": ["M52-004", "M52-007", "M52-009", "M52-015", "M52-017"],
+    "tekstowe_dane_zweryfikowane": ["M52-023", "M52-111", "M52-114"],
+    "kadry_z_opisem_co_widać_z_przegladu_s17": ["M52-040"],
+    "kadry_nie_obejrzane_w_sesji_m52_fix_deklaracja_jawna": ["M52-039", "M52-047", "M52-051", "M52-059", "M52-064", "M52-066", "M52-071", "M52-077", "M52-082", "M52-084", "M52-105", "M52-107"],
+    "zasada": "Zgodnie z przeglądem s17: żadnemu obrazkowi nie przypisano odczytu „co widać” bez faktycznego obejrzenia; kadry nie obejżane w sesjach M52 i M52-FIX mają to jawnie zadeklarowane wraz z podstawą przypisania (przebieg sekwencji / duplikat kadrów obejrzanych / pozycja WGS84)."
+  }
+}
