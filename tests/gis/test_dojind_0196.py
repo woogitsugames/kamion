@@ -210,7 +210,7 @@ def test_runway_camera_is_authored_and_stands_at_the_fence():
     c = next(c for c in cams if c["id"] == "krywlany_runway")
     assert c["eye_m"] == 1.7
     from shapely.geometry import LineString, Point
-    fence = LineString([(-160.8, 233.4), (24.4, -126.0)])                  # OSM barrier=fence (metal) of the aerodrome
+    fence = LineString([(188.7, -146.6), (212.8, -196.9)])                 # OSM barrier=fence (metal) of the aerodrome
     assert fence.distance(Point(*c["pos_en"])) < 1.0
     gen = DOJ / "generated" / "control_cameras.json"
     g = {x["id"]: x for x in json.loads(gen.read_text(encoding="utf-8"))["cameras"]}
@@ -218,5 +218,5 @@ def test_runway_camera_is_authored_and_stands_at_the_fence():
         pytest.skip("generated/control_cameras.json older than ADR 0196 (build_world not run)")
     k = g["krywlany_runway"]
     d = np.array(k["look_at"][:2]) - np.array(k["pos"][:2])
-    assert d[0] < -90.0 and abs(d[1]) < 25.0                               # looks west along the runway
-    assert k["fov_deg"] == 30.0
+    assert d[0] < -90.0 and abs(d[1]) < 5.0                                # looks west along the runway axis
+    assert k["fov_deg"] == 12.0 and k["look_at"][2] < k["pos"][2]

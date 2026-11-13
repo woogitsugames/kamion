@@ -24,7 +24,7 @@ if ($ok) {
     pwsh scripts/unity-slot.ps1 -Acquire -Owner dojind-0196 | Out-Null
     $ok = Step 'import' { pwsh scripts/import-region.ps1 -Region bialystok-dojlidy }
     if ($ok) {
-        $ok = Step 'vqa' { pwsh scripts/visual-qa.ps1 -Scene World_bialystok-dojlidy -Tier Low -Lighting overcast -Width 1920 -Height 1080 -Cameras 'photo_P11-001,photo_P11-063,photo_P11-056,photo_P11-094,krywlany_runway,route_s0457,route_s0761' -OutputDir "$a/$Tag-Low-overcast" }
+        $ok = Step 'vqa' { pwsh scripts/visual-qa.ps1 -Scene World_bialystok-dojlidy -Tier Low -Lighting overcast -Width 1920 -Height 1080 -Cameras 'photo_P11-063,photo_P11-094,krywlany_runway,krywlany_runway_paint,kuronia2_front,route_s0457' -OutputDir "$a/$Tag-Low-overcast" }
     }
     pwsh scripts/unity-slot.ps1 -Release -Owner dojind-0196 | Out-Null
     git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings 2>$null

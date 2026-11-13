@@ -5,14 +5,38 @@
   {
    "id": "krywlany_runway",
    "pos_en": [
-    21.1,
-    -121.0
+    205.6,
+    -184.3
    ],
-   "heading_deg": 261.0,
+   "heading_deg": 268.5,
    "eye_m": 1.7,
-   "fov_deg": 30.0,
+   "fov_deg": 12.0,
    "pitch_deg": -0.6,
-   "note": "pedestrian eye 1.7 m at the aerodrome fence of Krywlany (0.6 m inside the OSM fence line, 6 m from its corner local 24.4 -126.0), looking west along asphalt runway 09R/27L; the turn pad is 133 m away, the far end of the tile 1045 m. Line of sight over the NMT checked (terrain 3-10 cm under the ray). 30 deg lens: the runway is 0.56 deg high from here (review s19-0179: proof of the 30 153 m2 of runway)"
+   "note": "pedestrian eye 1.7 m at the east fence of the Krywlany aerodrome (0.6 m inside the OSM fence line local 188.7 -146.6 -> 212.8 -196.9, where the extended axis of asphalt runway 09R/27L crosses it), looking west along the runway: the turn pad is 311 m away, the west edge of the tile 1230 m. The fence stands 3 m above the runway end (NMT 158.3 m against 155.2 m), every point of the runway is in sight over the NMT (checked on a 10 m grid), depression 0.39-0.90 deg -> a 12 deg lens (long tele, as a spotter at the fence would use). r1 stood at the NE fence corner local 24.4 -126.0 with a 30 deg lens: the runway was a 3 px strip behind a bank (rejected by the render)"
+  },
+  {
+   "id": "krywlany_runway_paint",
+   "pos_en": [
+    -108.0,
+    -192.8
+   ],
+   "heading_deg": 268.5,
+   "eye_m": 1.7,
+   "fov_deg": 40.0,
+   "pitch_deg": -3.0,
+   "note": "QA only (not a public place): eye 1.7 m on the east end of runway 09R/27L, on its axis, looking west - shows the side stripes and the displaced-threshold arrows traced on the 2024 orthophoto"
+  },
+  {
+   "id": "kuronia2_front",
+   "pos_en": [
+    15.0,
+    360.1
+   ],
+   "heading_deg": 119.0,
+   "eye_m": 2.5,
+   "fov_deg": 40.0,
+   "pitch_deg": 3.0,
+   "note": "plant at Kuronia 2 from the pose of CC0 photo P11-005 (Commons GPS local 15.0 360.1, camera ~2.5 m per the manifest); heading: the west corner of the plant (BDOT10k vertex 47.8 337.4, bearing 125 deg) is seen 6 deg right of centre (x 875/1500, hFOV 65 deg WORKING_VALUE); compare with research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-005.jpg"
   }
  ]
 }

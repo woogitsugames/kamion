@@ -5,4 +5,5 @@
 - Testy: `tests/gis/test_dojind_0196.py` 8 passed / 2 skipped (tekstura i generated przed buildem); 0179 + 0174 zielone. ADR: `docs/adr/0196-dojlidy-zaklad-bramy-zacieki-pas.md` (bez wyników).
 - Budżet geometrii (offline, wszystkie budynki kafla): LOD0 467 487 → 476 890 (+2,0 %), LOD1 47 375 → 54 437 (+14,9 %), materiały LOD0 43 → 45, LOD1 48 → 50.
 - BRAK: render, SBS, staty kadrów A/B, pełny pytest gis, EditMode, krytyk.
-- NASTĘPNY KROK (gdy `chain.done`): `bash artifacts/dojind-0196/sbs.sh artifacts/dojind-0196/r1-Low-overcast artifacts/dojind-0196/sbs-r1` → obejrzeć sbs-P11-063/094 + `r1-Low-overcast/krywlany_runway.png`; gdy łańcuch nie działa: `pwsh -File artifacts/dojind-0196/chain.ps1 -Tag r1`.
+- r1 obejrzany: bramy i nieregularne zacieki OK (view/r1-094*.jpg), Kuronia 2 ciemna hala + jasna przybudówka (view/r1-063-crop.jpg), kamera pasa r1 odrzucona (pas = 3 px za skarpą) → r2: kamera na wsch. ogrodzeniu w osi pasa (12°), +`krywlany_runway_paint`, +`kuronia2_front` (poza P11-005). W TLE: `chain.ps1 -Tag r2`.
+- NASTĘPNY KROK (gdy `chain.done`): obejrzeć `artifacts/dojind-0196/r2-Low-overcast/{krywlany-runway,krywlany-runway-paint,kuronia2-front}.png`; SBS `bash artifacts/dojind-0196/sbs.sh artifacts/dojind-0196/r2-Low-overcast artifacts/dojind-0196/sbs-r2`.
