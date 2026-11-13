@@ -33,29 +33,36 @@ Decision:
   none and so started at full height) get 2 m terminals. This is the fix for "bariery W zaczynające się w powietrzu"
   (482392, 297817, 3970163 of REVIEW s16-world-int).
 
-## 2. 810896: median barrier of the SE ramp
+## 2. 810896 / 962702: barriers of the grass median of the SE ramp
 
 The stub of two beams of REVIEW s14-0146 was already gone after the integration (REVIEW s16-world-int: "kikut z
-after4 zamknięty"). What the frame still had wrong, read off the GUGiK orthophoto 0.08 m (crops at E -462 N -62,
-E -436 N -86, E -390 N -122, E -376 N -134, E -310 N -181; strip rectified along E -385.65 N -118.82 ->
-E -302.6 N -184.4 at 22 px/m):
+after4 zamknięty"; that review rated the frame R for "bariera na słupkach przez pierwszy plan").
 
-| What | Orthophoto / photo | Generated before |
-|---|---|---|
-| Barriers on the grass median | ONE, on the NE edge (facing the NW-bound carriageway), post dots every 2.0 m; on the SW edge a barrier only on the paved part at the abutment (to ~E -449), then kerb + 0.6 m paved strip + grass | a deck barrier (W-beam + upper beam, posts on the cap) on BOTH edges |
-| NE barrier, SE end | straight on to the median nose at the fire-station opening: last post ~100.5 m from E -385.65 N -118.82, nose tip at ~104 m | ended at E -385.65 N -118.82 (end of the walled ramp + 12 m) |
-| Photo 810896 (camera on the SE-bound carriageway) | kerb, paved strip, grass, THEN the barrier on posts, the other carriageway behind it | barrier on the near cap, grass behind it |
+**Correction (build after4).** The first three builds of this ADR read the orthophoto as "ONE barrier, on the NE edge;
+along the SW edge dots every ~1.4 m, no rail line" and removed the rule barrier of the SW cap with a `no_guardrail`
+zone. That was wrong, and it made frame 810896 worse than the integration (the foreground barrier of the photo was
+gone, the only rail stood 8 m away across the grass). Evidence, re-read for after4:
 
-Along the SW edge the strip also shows dots every ~1.4 m from ~55 m to ~97 m (small posts or kerb joints; no rail
-line): not built, UNVERIFIED.
+| What | Orthophoto 0.08 m / photo | Generated (integration) | Builds 1-3 of this ADR | after4 |
+|---|---|---|---|---|
+| SW edge of the median (facing the SE-bound carriageway) | Mapillary 810896133189484 and 962702164479831 (camera on the SE-bound carriageway): kerb, ~0.5 m paved strip, W-beam on driven posts ~0.3 m behind the strip, running on to the nose. Orthophoto (crops 36 m at E -395 N -121.5 and E -360 N -148, 30 m at E -325 N -170, 24 m at E -302 N -188): post dots every 1.95-2.0 m joined by a thin line; the row ends at E -307.1 N -183.4 (+-0.5 m) | deck barrier (W-beam + upper beam, posts on the cap) to the end of the walled ramp (E -382.9 N -126.9), nothing beyond | nothing from E -450 on | plain W-beam, posts every 2 m: rule run on the cap to E -382.9, authored rail from there to E -308.3 N -185.4 |
+| NE edge (facing the NW-bound carriageway) | wider double line with post ties every 2.0 m, straight, last post ~100.5 m from E -385.65 N -118.82 (nose tip at ~104 m) | deck barrier to E -385.65 N -118.82 | plain W-beam to the nose, but with the posts towards the carriageway | plain W-beam to the nose, beam face towards the carriageway |
 
 Decision:
-- `andersa-se-ramp-median-sw-no-guardrail` (`no_guardrail`): the SW edge of the median from E -450 to the end.
 - `roads.meshing.build_median_fills` stores the filled stations per chain side (`meta["median_fill_s"]`);
-  `guardrails` builds the barrier on that side as a plain W-beam on driven posts every 2 m (`dense`), not as the deck
-  barrier with the upper beam.
-- `andersa-se-ramp-median-barrier` (`kind: guardrail`, traced, `post_spacing_m: 2.0`, new field): from the nose
-  E -306.72 N -181.02 to E -384.81 N -119.36; the rule run of the ramp cap is cut by the dedup and led onto it.
+  `guardrails` builds the cap barrier on those sides as a plain W-beam on driven posts every 2 m (`dense`), not as
+  the deck barrier with the upper beam. Both median edges of the ramp get it.
+- `andersa-se-ramp-median-barrier` (`kind: guardrail`, `post_spacing_m: 2.0`, new field): NE edge, from the end of
+  the ramp cap E -384.81 N -119.36 to the nose E -306.72 N -181.02 (traced on the orthophoto).
+- `andersa-se-ramp-median-sw-barrier` (after4): SW edge, from the end of the rule run of the cap to the station of
+  the orthophoto end. The generated median edge lies up to 2.3 m SW of the orthophoto near the nose (the generated
+  median is wider there), so this rail is generated from the kerb of chains `c:w173956078` / `c:w560802655`
+  (0.74 m behind the carriageway edge = the offset of the rule run), not traced.
+- The zone `andersa-se-ramp-median-sw-no-guardrail` is removed.
+- Point order of an authored rail: `furniture.guardrail` puts the beam face on the LEFT normal of the point order
+  (unit test `test_beam_face_is_on_the_left_normal_of_the_point_order`). The comment of ADR 0100 in `guardrails`
+  ("road on the RIGHT of the drawing direction") was wrong and is corrected; the NE rail, drawn that way in builds
+  1-3, showed its posts to the carriageway on SBS frame 3678296072299092 and is reversed.
 
 ## 3. Last two free deck ends (M29 xfail)
 
@@ -121,6 +128,34 @@ crowns. Palette -> grey-green with a slight blue cast, darker (up to 60 / 80 / 6
   (`teeth_bridged`). The region test bound `diag == 7` became `<= 7`.
 - The comment for the PR is in `artifacts/barriers-0159/pr38-comment.md`; it is NOT posted (the repository is
   public; posting needs the owner's consent, an agent message is not one).
+
+## 10. 297817: 29 m of W-beam beside the cycle path (after4)
+
+REVIEW s16-world-int P1 "kikut bariery W bez początku (x 0,78-0,9)". The run is `c:w560802655 L embankment`
+(E -347.1 N -171.2 ... E -325.6 N -189.1), built by the embankment rule on the SW edge of the SE-bound carriageway.
+Builds 1-3 only gave it sunk terminals. Mapillary 297817221966185 (zsolt 2017): kerb, grass, red cycle path - no
+barrier; orthophoto 0.08 m (crop 30 m at E -325 N -170): no rail or post row on that edge. `overrides.yaml`
+`andersa-se-cyclepath-no-guardrail` (`no_guardrail`).
+
+## 11. 482392: end of the link barrier at Rondo Bieżeństwa (after4)
+
+The run `c:w177861600 L structure` (rule of ADR 0110, beside the viaduct) ended at E 524.18 N -683.98, 7 m ahead of
+the camera of frame 482392; on the photo the turned-down end reaches the grass ~2 m ahead and ~2 m left of the
+camera, and on the orthophoto (crop 36 m at E 532 N -688) the rail fades out at E 528.3 N -685.5 (+-1 m). Builds 1-3
+sank the terminal (it no longer starts in the air) but left the run 4.4 m short. `biezenstwa-link-barrier-se-end`
+(`kind: guardrail`): 14.4 m along the line of the rule run, the first 10 m on it (the rule run is cut and led onto
+it), free end with the 4 m terminal at E 528.05 N -686.07.
+
+## 12. Walls of the Bieżeństwa ramps (after4)
+
+`ramp_wall_blocks` is the wall material of every walled ramp, so the split-face block set of §7 also landed on the
+ramps of the Bieżeństwa viaduct (SBS frames 751431972202262, 1259231227807789), where the photos show a
+reinforced-earth wall of large smooth light panels with stepped joints. New `bridge_style` key `wall_mat`
+(`andersa-viaduct-biezenstwa-style`: `ramp_wall_panels`), material `ramp_wall_panels` 0.42 / 0.42 / 0.40 and set
+`concrete_panels_wall` (`sets_facade.py`): panels 1.5 x 1.5 m in columns, every second column shifted by half a
+panel, joints 20 mm, tile 3 x 3 m. Panel size read off 751431 against the 0.75 m W-beam and the railing
+(WORKING_VALUE +-0.2 m); the real panels are cruciform. The Bieżeństwa chunks carry no Putry wall, so the material
+replaces `ramp_wall_blocks` there one for one.
 
 ## Validation
 
