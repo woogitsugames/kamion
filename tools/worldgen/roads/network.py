@@ -292,6 +292,8 @@ def apply_edge_overrides(net: Network, edges, overrides):
                     le = le[:-1]                    # right edge strip
                 if "width" in st and not isinstance(st["width"], (list, tuple)):
                     total = max(total, float(st["width"]))   # carriageway beyond the last lane (hatching, island)
+                elif sec.width_profile:
+                    total = max(total, sec.width)            # ADR 0161: widening profile keeps its widest value
                 if not sec.oneway or len(le) < 2 or any(b - a < 2.0 for a, b in zip(le, le[1:])) or le[0] < 0:
                     if ov["id"] not in net.overrides_stale:
                         net.overrides_stale.append(ov["id"])

@@ -188,7 +188,7 @@ namespace Game.World.Import
             var shader = Shader.Find(ShaderName);
             eligible &= shader != null;
             if (eligible)
-                eligible = ValidLibrary(GlbReader.Load(Path.Combine(EditorTools.RepoRoot, "art-source", "world", "props", "street_props.glb")));
+                eligible = ValidLibrary(GlbReader.Load(WorldLibrary.Resolve(region.Region, "props", "street_props.glb")));
             if (eligible) eligible = ValidNativeLibrary(region.Instances, plate);
             if (eligible)
             {

@@ -55,8 +55,8 @@
     {
       "metric": "max_body_penetration_m",
       "status": "WORKING_VALUE",
-      "source": "lands on the suspension: chassis colliders do not reach the road (bumper bottom 0.35 m)",
-      "max": 0
+      "source": "ADR 0165: at the 1 m-drop landing (4.4 m/s, nose pitched 8 deg down, bump stops) the tractor Bumper bottom corner reaches the road and its plastic cover crushes; the ADR 0158 rigid contact touched too (2 speculative corners at t 1.46 s) but reported 0 by construction. Limit 0.05 m = same bumper-strike crush bound as kerb_step_27cm_42kmh_comb. Measured 0.025 m",
+      "max": 0.05
     },
     {
       "metric": "min_com_height_m",

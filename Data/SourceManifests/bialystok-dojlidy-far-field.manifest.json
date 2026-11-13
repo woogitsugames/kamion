@@ -1,0 +1,92 @@
+{
+  "adr": "0085-far-field-backdrop",
+  "appearance_policy": {
+    "classification": "declared function; height alone does not imply an energy plant",
+    "industrial_panel_min_height_m": 12.0,
+    "not_measured": [
+      "wall_colour",
+      "cladding_modules",
+      "glazing_band",
+      "roof_fascia"
+    ],
+    "panel_alpha": 0.25,
+    "panel_ribbon_alpha": 0.65,
+    "schema": "far-field-appearance/1",
+    "source_hall_counts": {
+      "energy": 2,
+      "industrial": 276,
+      "other": 1038
+    },
+    "source_panel_hall_count": 19,
+    "status": "WORKING_VALUE"
+  },
+  "building_height_sources": {
+    "WORKING_VALUE-bdot-storeys-typology": 136,
+    "WORKING_VALUE-osm-storeys-typology": 2199,
+    "gugik-lod1-measuredHeight": 4593,
+    "osm-height-tag-UNVERIFIED": 9
+  },
+  "feature_counts": {
+    "buildings": 6937,
+    "buildings_by_typology": {
+      "block": 1824,
+      "hall": 1316,
+      "house": 1281,
+      "office": 2516
+    },
+    "chimneys": 11,
+    "forest_polygons": 368,
+    "power_lines": 74,
+    "pylons": 161
+  },
+  "id": "bialystok-dojlidy-far-field",
+  "lod1_height_audit": {
+    "buildings": 36971,
+    "conflicting_ids": 0,
+    "duplicate_records": 0,
+    "invalid_or_missing": 0,
+    "members": 31,
+    "usable_ids": 36971
+  },
+  "region": "bialystok-dojlidy",
+  "region_inputs_sha256": {
+    "region/buildings.geojson": "d778d622e11d559e13f83347449ebb5ea1e63f74397f66ca2b7db1fba7a76c79"
+  },
+  "ring_bounds_local_m": {
+    "inner_half_m": 1024.0,
+    "outer_half_m": 4200.0
+  },
+  "schema": "truck-sim-pl/source-manifest/1",
+  "sources": [
+    {
+      "dataset": "BDOT10k powiat 2061 (m. Białystok): OT_PTLZ_A, OT_BUBD_A, OT_BUWT_P, OT_SULN_L",
+      "files": {
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_BUBD_A.gpkg": "2ac7d2004c025ed1854f1077b4e6f51b2ff8c0e056a4e2b5820c371ebe7119b8",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_BUWT_P.gpkg": "c758f8489cab8b8935f832407362a3d20b90733224e5f08780113f4b2896e029",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_PTLZ_A.gpkg": "bb4cbe19c388401ea1dbc48d3ac54fbcf6e21c48e2cfd73a3f8d9f8e5f9d9e7e",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_SULN_L.gpkg": "96a8661f6372627120a6f90d0dbc4d794e4be5997e7a9b859adbc8c20694648e"
+      },
+      "id": "gugik-bdot10k-2061",
+      "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. a Prawa geodezyjnego i kartograficznego (Dz.U. 2020 poz. 276)",
+      "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
+    },
+    {
+      "dataset": "Modele 3D budynków LoD1 (2024) powiat 2061 (m. Białystok)",
+      "files": {
+        "lod1/2061_lod1_2024.zip": "57d3e14d4620c17232eaabd85a8aa5579ed1539772945e23a3971d867901d380"
+      },
+      "id": "gugik-lod1-2024-2061",
+      "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. i Prawa geodezyjnego i kartograficznego",
+      "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
+    },
+    {
+      "dataset": "podlaskie-261108.osm.pbf (ring outside tile incl. powiat 2002)",
+      "files": {
+        "osm/podlaskie-261108.osm.pbf": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d"
+      },
+      "id": "geofabrik-osm-podlaskie-261108",
+      "license": "ODbL 1.0 (© OpenStreetMap contributors)",
+      "provider": "OpenStreetMap contributors / Geofabrik GmbH"
+    }
+  ]
+}
