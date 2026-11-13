@@ -575,6 +575,9 @@ G7 = {
                       "birch": (0.40, 0.60), "fruit": (0.75, 0.90)},        # 13 (S, Ebben); fruit: W (not in G7)
     "ceiling_m": {"linden": 24.0, "maple": 22.0, "chestnut": 22.0, "ash": 25.0, "birch": 20.0, "fruit": 8.0},   # 12
     "broadleaf_mix": {"maple": 0.25, "birch": 0.20, "linden": 0.15, "ash": 0.15, "fruit": 0.20, "chestnut": 0.05},  # 11 (W)
+    "conifer_share": 0.25,          # 8 (W, 15-40 %): the orthophoto detector finds 11 %, the photos show conifers in >= 9 of 12
+    "conifer_mix": {"spruce": 0.65, "thuja": 0.35},     # 9 (W): spruce 50 % + other 15 %, columnar thuja 35 %
+    "thuja_column_h_m": (4.0, 6.0),  # 10 (S, Ebben): columnar thuja 4-6 m high, 1-1.8 m wide
     "crown_base_per_h": 0.15,       # 7 (E): oak 3 / 18, maple 3 / 20, linden 1.3 / 7
     "crown_base_min_m": 1.3,        # 7: young trees
     "crown_base_strip_m": 1.6,      # W: a tree on open ground beside the street (no fence of its own); G7: 2.5-4 m only when pruned
@@ -583,9 +586,10 @@ G7 = {
 HABIT = {"linden": "crown_ovoid", "maple": "crown_round", "chestnut": "crown_round", "ash": "crown_round", "birch": "crown_birch"}
 DENSE = {"linden": 1.0, "maple": 1.0, "chestnut": 1.0, "ash": 0.55, "birch": 0.0}      # 14: dense / half-open / open
 TREE_H_MIN_M = 4.0
+OVATE_SHARE = 0.3                 # share of the round-habit species drawn with the ovate card (W: no two neighbours alike)
 FRUIT_R_MAX_M = 2.3               # orchard trees are the small crowns (W)
 CARD_STRETCH = (0.80, 1.30)       # a crown card is drawn at most this far off its painted width / height
-THUJA_PITCH_M = (1.6, 3.2)        # station pitch of a thuja wall: High, Low
+THUJA_PITCH_M = (1.2, 3.2)        # station pitch of a thuja wall: High, Low
 # cross-section of a clipped thuja wall per side, foot -> shoulder: (half-thickness factor, height factor, normal out,
 # normal up, occlusion); the crest (centre line, full height) closes it. Photos G7-P11 / P12: battered sides, a
 # rounded top, a dark foot.
@@ -633,7 +637,8 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
         c = a + t * s + n * (0.05 * (PLT.hfloat(key, "to", k) * 2 - 1))
         zz = zf(a + t * s) - 0.03
         up = raise_ends[0] * max(0.0, 1.0 - s / 4.0) ** 0.7 + raise_ends[1] * max(0.0, 1.0 - (L - s) / 4.0) ** 0.7
-        hh = (h + up + 0.07 * math.sin(ph0 + s * 0.8) + 0.06 * (PLT.hfloat(key, "th", k) * 2 - 1)) * (0.94 if k in (0, nb) else 1.0)
+        hh = (h + up + 0.07 * math.sin(ph0 + s * 0.8) + (0.06 if low else 0.09) * (PLT.hfloat(key, "th", k) * 2 - 1)) \
+            * (0.94 if k in (0, nb) else 1.0)
         w = thick / 2 * (1.0 + 0.08 * math.sin(ph1 + s * 1.1) + 0.06 * (PLT.hfloat(key, "tw", k) * 2 - 1)) * endf
         for sd, sg in enumerate((1.0, -1.0)):
             if k:
@@ -776,8 +781,8 @@ def front_gardens(buf, rp, zf, report, half=1024.0):
             e0, e1 = a + t * 0.35 - normal * off, b - t * 0.35 - normal * off
             line = LineString([e0, e1]).difference(forbidden)
             for seg in getattr(line, "geoms", [line]):
-                if seg.geom_type != "LineString" or seg.length < 2.0:
-                    continue
+                if seg.geom_type != "LineString" or seg.length < (3.0 if kind == "thuja" else 2.0):
+                    continue                                 # a 2 m stub of a 2.3 m thuja wall is a green cube
                 if not inner.covers(seg.buffer(thick / 2, cap_style="flat")):
                     rep["skipped"]["outside_plot"] = rep["skipped"].get("outside_plot", 0) + 1
                     continue
@@ -849,6 +854,8 @@ def tree_dims(r, species, key, in_plot=True):
     H = min(max(H, TREE_H_MIN_M if species != "fruit" else 3.5), top)
     base_min = G7["crown_base_min_m"] if in_plot else G7["crown_base_strip_m"]
     sprite = HABIT.get(species)
+    if species in ("maple", "ash", "chestnut") and PLT.hfloat(key, "g7-habit") < OVATE_SHARE:
+        sprite = "crown_ovoid"                               # a younger / shaded tree: taller than wide
     cb = max(G7["crown_base_per_h"] * H, base_min)
     if sprite is not None:
         wm, hm = PLT.PK.SPRITE_M[sprite]
@@ -862,13 +869,13 @@ def tree_dims(r, species, key, in_plot=True):
     return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
 
 
-def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3):
+def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None):
     """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
     crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
     core and leaf sprays lying on its skin, so it is a volume from every side and from above, not a paper cross.
     lite: two stem strips + `cards` crossed cards (8-10 triangles) - Low / Medium and the trees away from the street."""
     p = np.asarray(p, float)
-    sprite = HABIT[species]
+    sprite = sprite or HABIT[species]
     hc = H - cb
     a0 = PLT.hfloat(key, "ty") * 6.2832
     lean = (np.array([PLT.hfloat(key, "tlx"), PLT.hfloat(key, "tly")]) - 0.5) * 0.06 * H
@@ -884,8 +891,11 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3):
     else:
         kit.box(p, np.array([math.cos(a0), math.sin(a0)]), tr, tr, z - 0.1, zt, bark, top=False, shift=top - p)
     W = 2.0 * r * 1.06
-    for i in range(cards):
-        PLT.card(kit, cc, z + cb - 0.02 * hc, sprite, W, hc * 1.04, a0 + 0.4 + i * math.pi / cards)
+    for i in range(cards):                                   # no card repeats another: width, height and axis differ, so
+        wj = 0.90 + 0.20 * PLT.hfloat(key, "cw", i)          # the crown is not a ball from any side (same in full / lite)
+        hj = 0.97 + 0.10 * PLT.hfloat(key, "ch", i)
+        off = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.24 * r
+        PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards)
     dense = DENSE[species]
     if lite or dense <= 0.0:
         return
@@ -911,6 +921,7 @@ STRIP_REACH_M = 6.0              # a crown up to this far outside a plot belongs
 BEHIND_FENCE_M = 1.0             # ... whose stem stands at least this far inside the fence
 MOVE_MAX_M = 7.5                 # a stem is never put further than this from the crown centre the orthophoto shows
 TREE_GAP_M = 1.6                 # smallest distance between two stems
+CONIFER_R_MAX_M = 3.2            # crowns wider than this stay broadleaf when conifers are topped up to the G7 share
 STREET_REACH_M = 10.0            # only crowns this close to a carriageway are claimed: the strip seen from the street
 
 
@@ -1010,7 +1021,7 @@ def claim_street_crowns(rp, rep):
         if carriage is None or carriage.is_empty or carriage.distance(pt) > STREET_REACH_M:
             continue                                         # not a crown of the street strip (G7 # 2: <= 8-12 m of the axis)
         entry = {"key": ("g7c", round(cx, 1), round(cy, 1)), "r": r, "near": True, "kind": "conifer" if con else "broadleaf",
-                 "claimed": True}
+                 "claimed": True, "luma": float(canopy[ci, 4]) if canopy.shape[1] > 4 else 255.0}
         j = int(tree.nearest(pt))
         if polys[j].distance(pt) <= STRIP_REACH_M:
             pid = plots[j]["id"]
@@ -1055,6 +1066,18 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
     claimed = claim_street_crowns(rp, rep)
     todo = [t for t in claimed if t.get("kind") == "broadleaf"]
     extra_conifers = [t for t in claimed if t.get("kind") == "conifer"]
+    # G7 # 8: a quarter of the garden trees are conifers, but the orthophoto detector tells only the darkest ones
+    # (11 %). The darkest of the remaining small / medium crowns become spruces and columnar thujas up to that share.
+    n_con = sum(1 for t in plan if t.get("kind") == "conifer") + len(extra_conifers)
+    need = int(round(G7["conifer_share"] * (len(todo) + n_con))) - n_con
+    if need > 0:
+        cand = sorted((t for t in todo if t["r"] <= CONIFER_R_MAX_M), key=lambda t: (t.get("luma", 255.0), str(t["key"])))[:need]
+        ids = {id(t) for t in cand}
+        todo = [t for t in todo if id(t) not in ids]
+        n_col = int(round(G7["conifer_mix"]["thuja"] * len(cand)))          # the narrowest crowns are the columns
+        narrow = {id(t) for t in sorted(cand, key=lambda t: (t["r"], str(t["key"])))[:n_col]}
+        extra_conifers += [dict(t, kind="conifer", converted=True, columnar=id(t) in narrow) for t in cand]
+    rep["conifers_converted"] = max(need, 0) and sum(1 for t in extra_conifers if t.get("converted"))
     kd = None
     if region_trees:
         from scipy.spatial import cKDTree
@@ -1075,7 +1098,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
         else:
             w["fruit"] = 0.0
         sp = PLT._pick_w(sorted(w.items()), key, "g7-sp")
-        H, cb, _ = tree_dims(r, sp, key, in_plot=t["in_plot"])
+        H, cb, sprite = tree_dims(r, sp, key, in_plot=t["in_plot"])
         z = zf(p)
         kit = PLT.Kit()                                      # one part per tree: a tree that would open a new chunk
         kit.tag = "g7_garden_tree"                           # group is left out alone, not with its whole plot
@@ -1088,9 +1111,9 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
         else:
             if t["near"]:
                 kit.low = False
-                garden_tree(kit, p, z, r, H, cb, sp, key)
+                garden_tree(kit, p, z, r, H, cb, sp, key, sprite=sprite)
                 kit.low = "only"
-            garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2)
+            garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2, sprite=sprite)
         if not _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
             continue
         rep["trees"] += 1
@@ -1105,14 +1128,29 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
     for t in extra_conifers:                                 # spruces whose crowns hang over the fence (G7 # 8-10)
         p, r, key = np.asarray(t["p"], float), float(t["r"]), t["key"]
         if kd is not None and kd.query(p)[0] < 2.5:
+            rep["skipped"]["region_tree_within_2.5m"] = rep["skipped"].get("region_tree_within_2.5m", 0) + 1
             continue
         kit = PLT.Kit()
-        kit.tag = "g7_spruce"
-        h = min(3.2 + 3.4 * r, 14.0) * (0.9 + 0.2 * PLT.hfloat(key, "h"))
-        PLT.spruce(kit, p, zf(p), h, key)
+        z = zf(p)
+        columnar = bool(t.get("columnar"))
+        if columnar:                                         # Thuja occidentalis 'Smaragd' left to grow: a dark column
+            kit.tag = "g7_thuja_column"
+            lo, hi = G7["thuja_column_h_m"]
+            h = lo + (hi - lo) * PLT.hfloat(key, "h")
+            rr = (0.26 + 0.07 * h) * (0.9 + 0.3 * PLT.hfloat(key, "w"))
+            kit.low = False
+            PLT.thuja(kit, p, z, h, rr, key)
+            kit.low = "only"
+            PLT.thuja_lite(kit, p, z, h, rr, key, core=False)
+            kit.low = True
+        else:
+            kit.tag = "g7_spruce"
+            h = min(3.2 + 3.4 * r, 14.0) * (0.9 + 0.2 * PLT.hfloat(key, "h"))
+            PLT.spruce(kit, p, z, h, key)
         if _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
             rep["conifers"].append({"e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "r_m": round(r, 2), "h_m": round(h, 1),
-                                    "claimed": True})
+                                    "kind": "thuja" if columnar else "spruce", "claimed": bool(t.get("claimed")),
+                                    "converted": bool(t.get("converted"))})
     rep["claimed_crowns"] = sum(1 for t in rep["list"] if t.get("claimed")) + sum(1 for t in rep["conifers"] if t.get("claimed"))
     rep["moved_behind_fence"] = sum(1 for t in rep["list"] if t.get("moved"))
     report["garden_trees"] = rep

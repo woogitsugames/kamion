@@ -1944,7 +1944,7 @@ def build(buf, rp, zf, surf_top, report, items=None):
                         if cnt["inst"] + cnt["small"] >= 16:
                             continue
                         gplan.append({"plot": plot["id"], "key": kk, "p": p, "r": cr_, "in_plot": bool(in_plot), "near": near(p),
-                                      "kind": "broadleaf"})
+                                      "kind": "broadleaf", "luma": float(canopy[ci, 4]) if canopy.shape[1] > 4 else 255.0})
                         cnt["small"] += 1
                         used[ci] = True
                         placed.append(p)

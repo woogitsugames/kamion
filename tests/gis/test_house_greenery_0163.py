@@ -87,7 +87,7 @@ def test_thuja_wall_has_the_g7_size_and_stays_in_the_live_row():
         out[low] = kit.out()
     V, UV, T, C = out[False]
     inner = (V[:, 0] > 2.0) & (V[:, 0] < 22.0)
-    assert 2.3 - 0.2 <= V[inner][:, 2].max() - 100.0 <= 2.3 + 0.2                   # wanders +-0.13 m about the nominal height
+    assert 2.3 - 0.2 <= V[inner][:, 2].max() - 100.0 <= 2.3 + 0.2                   # wanders +-0.16 m about the nominal height
     assert 0.8 <= np.ptp(V[inner][:, 1]) <= 1.25
     assert (C[:, 3] > 0.5).all()                                                 # foliage vertices (normal + occlusion)
     occ = np.linalg.norm(C[:, :3] * 2 - 1, axis=1)
@@ -168,7 +168,8 @@ def test_tree_size_follows_g7(species):
             H, cb, sprite = PT.tree_dims(r, species, ("t", i))
             hs.append(H)
             bases.append(cb / H)
-            assert cb >= 1.3 and sprite == PT.HABIT[species]
+            assert cb >= 1.3 and sprite in (PT.HABIT[species], "crown_ovoid")
+            assert species not in ("birch", "linden") or sprite == PT.HABIT[species]
             wm, hm = PK.SPRITE_M[sprite]
             st = 2 * r / (H - cb) / (wm / hm)
             assert PT.CARD_STRETCH[0] - 0.02 <= st <= PT.CARD_STRETCH[1] + 0.02     # the card keeps its habit
@@ -219,7 +220,7 @@ def test_garden_tree_geometry_full_and_lite():
             assert V[fol][:, 2].min() - 10.0 == pytest.approx(cb, abs=0.2)        # the crown starts at the crown base ...
             assert (V[fol][:, 2].min() - 10.0) / H <= 0.33                        # ... low: no bare stem under an umbrella
             assert V[:, 2].max() - 10.0 == pytest.approx(H, rel=0.06)
-            assert np.ptp(V[fol][:, 0]) == pytest.approx(2 * R_MED, rel=0.25)     # as wide as the crown on the orthophoto
+            assert np.ptp(V[fol][:, 0]) == pytest.approx(2 * R_MED, rel=0.3)      # as wide as the crown on the orthophoto
             assert V[~fol][:, 2].min() < 10.0 and V[~fol][:, 2].max() > 10.0 + cb  # the stem reaches into the crown
         u = full.out()[1][:, 0]
         s0, s1 = PK.SPRITE[sprite]
@@ -241,11 +242,12 @@ def test_garden_trees_are_kit_geometry_on_both_tiers_with_the_g7_mix():
     rp = {"plots": [_plot("t")], "garden_trees": _crowns(600)}
     buf = _buf()
     rep = PT.garden_trees(buf, rp, lambda q: 140.0, {})
-    assert rep["trees"] == 600 and rep["skipped"] == {}
+    assert rep["trees"] + len(rep["conifers"]) == 600 and rep["skipped"] == {}
+    n = rep["trees"]
     mine = [p for p in buf.parts if p.src == "plot:t:g7-trees"]
     assert {p.layer for p in mine} == {"plots", "plots_low"}                       # Low / Medium draw them too (A16)
     assert 0 < rep["tris_low"] <= 10 * 600 and rep["tris_low"] < rep["tris_high"] <= 66 * 600
-    share = {k: v / 600 for k, v in rep["species"].items()}
+    share = {k: v / n for k, v in rep["species"].items()}
     for sp, want in PT.G7["broadleaf_mix"].items():                               # G7 # 11
         assert abs(share.get(sp, 0.0) - want) <= 0.07, (sp, share)
     assert all(t["r_m"] <= PT.FRUIT_R_MAX_M for t in rep["list"] if t["species"] == "fruit")
@@ -261,11 +263,31 @@ def test_garden_trees_are_kit_geometry_on_both_tiers_with_the_g7_mix():
         assert np.array_equal(a.V, b.V) and np.array_equal(a.T, b.T) and np.array_equal(a.COL, b.COL)
 
 
+def test_conifers_are_topped_up_to_the_g7_share_from_the_darkest_crowns():
+    """G7 # 8-10: 25 % of the garden trees are conifers (spruce / columnar thuja 4-6 m); the detector's 11 % is topped up
+    from the darkest small and medium crowns, never from the big ones."""
+    crowns = _crowns(400)
+    rng = np.random.default_rng(3)
+    for t in crowns:
+        t["luma"] = float(rng.uniform(40, 110))
+    rep = PT.garden_trees(_buf(), {"plots": [_plot("t")], "garden_trees": crowns}, lambda q: 140.0, {})
+    con = rep["conifers"]
+    assert len(con) + rep["trees"] == 400 and abs(len(con) / 400 - 0.25) <= 0.01
+    assert all(c["converted"] and c["r_m"] <= PT.CONIFER_R_MAX_M for c in con)
+    lum = {(round(float(t["p"][0]), 2), round(float(t["p"][1]), 2)): t["luma"] for t in crowns}
+    dark = np.mean([lum[(c["e"], c["n"])] for c in con])
+    assert dark < np.mean([lum[(t["e"], t["n"])] for t in rep["list"]]) - 15
+    th = [c for c in con if c["kind"] == "thuja"]
+    assert 0.2 <= len(th) / len(con) <= 0.5 and all(4.0 <= c["h_m"] <= 6.0 for c in th)
+    assert all(c["h_m"] <= 14.0 * 1.1 for c in con if c["kind"] == "spruce")
+
+
 def test_no_garden_tree_on_top_of_a_region_tree():
     crowns = _crowns(20)
     region = [{"e": float(crowns[3]["p"][0]) + 1.0, "n": float(crowns[3]["p"][1])}]
     rep = PT.garden_trees(_buf(), {"plots": [_plot("t")], "garden_trees": crowns}, lambda q: 140.0, {}, region_trees=region)
-    assert rep["skipped"]["region_tree_within_2.5m"] >= 1 and rep["trees"] == 20 - rep["skipped"]["region_tree_within_2.5m"]
+    assert rep["skipped"]["region_tree_within_2.5m"] >= 1
+    assert rep["trees"] + len(rep["conifers"]) == 20 - rep["skipped"]["region_tree_within_2.5m"]
 
 
 def test_library_instances_are_only_capped_never_widened_or_raised():
@@ -421,4 +443,6 @@ def test_region_garden_trees_match_g7_density_and_size():
     for sp, want in PT.G7["broadleaf_mix"].items():
         assert abs(share.get(sp, 0.0) - want) <= 0.08, (sp, share)
     con = len(gt["conifers"]) / (len(gt["conifers"]) + gt["trees"])
-    assert 0.08 <= con <= 0.40, con                                               # G7 # 8: 25 % (15-40); detector: 11 %
+    assert 0.20 <= con <= 0.30, con                                               # G7 # 8: 25 % (15-40); detector alone: 11 %
+    kinds = [t.get("kind") for t in gt["conifers"] if t.get("converted")]
+    assert kinds and 0.2 <= kinds.count("thuja") / len(kinds) <= 0.5              # G7 # 9: columnar thuja 35 %
