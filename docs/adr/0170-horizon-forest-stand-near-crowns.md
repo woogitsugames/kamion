@@ -60,9 +60,9 @@ w kadrze 303305 — usunięte z override; rdzeń świerka 0,5 / okluzja 0,30 czy
 rdzeń korony lite 0,26 → 0,42).
 
 - **Pas 6BC0** (`streetscape_qa.json` → `vegetation.forest_stands`): 1078 drzew okapu (było 536 przy siatce 6 m),
-  mediana 8,7 m, maks. 11,0 m (było: mediana 13,5 m, p95 17,1 m, do 23 m), `stale` 0. Kąt elewacji wierzchołków drzew w
-  azymucie bloków (± 1,5°), p90, `artifacts/horizon-0170/geom.py`: kamera 454716 — 0,1–0,5° przy dachach bloków 1,4–3,3°
-  (było 0,2–1,9°); kamera 303305 — 1,1–2,1° przy dachach 1,7–3,7° (było 1,4–3,0°, maks. do 5,4°).
+  mediana 8,7 m, maks. 11,0 m (było: okap 9–19 m, najwyższe drzewo 23 m), `stale` 0. Kąt elewacji wierzchołków drzew w
+  azymucie bloków ≥ 22 m (± 1,5°), p90 per blok, `artifacts/horizon-0170/geom.py` (dachy bloków: 1,3–3,7°):
+  454716 — 0,1–0,9° (było 0,2–1,9°); 320215 — 0,2–1,4° (było 0,7–2,4°); 303305 — 1,1–1,8° (było 1,4–3,0°).
 - **Sosny w drzewostanach liściastych** regionu: 3785 → 1118 (zostaje tylko podszyt 3–7 m w `las`).
 - **Tuja**: 24 posesje, 331 m, wysokości 2,46–3,47 m (było 2,0–2,5 m).
 - **`g7_p07_b`**: posesja `bdot:2BE4B431-B201…` ma w `garden_plan.by_plot` rodzaj `low` (pas niskich krzewów 32,3 m za
@@ -76,7 +76,7 @@ rdzeń korony lite 0,26 → 0,42).
 - Drzewa ogrodowe kitu: High 20 644 trójkąty (0163 build 6: 19 264), Low 12 698 (7366).
 - **Testy**: `pytest tests/gis` 1062 passed + 4 dopasowane do tego ADR (rdzeń świerka, wysokość tui, limit trójkątów Low
   12 000 → 13 500, `fidelity_qa` po zmianie `overrides.yaml`) — ponowny przebieg tych plików zielony; nowy
-  `tests/gis/test_horizon_0170.py` (7 testów). EditMode: patrz raport gałęzi.
+  `tests/gis/test_horizon_0170.py` (7 testów). EditMode 514 / 515 passed, 1 skipped (`artifacts/tests/editmode-20261113-173939.xml`).
 - **Pary** (`artifacts/horizon-0170/pairs/`): `horizon_crop_{Low,High}_*` (przed = świat 0163 build 6, render z main
   `artifacts/veg-0163/after6_hz`; „po” = build 2), `horizon_*` (zdjęcie | przed | po), `pair_g7_*` (baza | po, Low i High).
   Uwaga: baza w tym worktree została zaimportowana już z nową teksturą `forest_edge_broadleaf` (kolejność kroków);
