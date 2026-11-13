@@ -51,7 +51,8 @@ biegu (synchronizacja ADR 0134 nie jest dźwignią), po zmianie: dźwignia dalej
 `retarder_{ext,cab}` (zjazd 85 → 12 km/h na pełnym retarderze), `amt_{ext,cab}` (3 zmiany w górę pod obciążeniem),
 `ebrake_{ext,cab}` (dwa włączenia hamulca silnikowego), `dryer_{ext,cab}` (dwa wyłączenia sprężarki). Pytania: czy retarder
 w B nie jest za cichy (−3,6 LU vs A w scenie zewnętrznej — celowo, bo maleje z prędkością), czy fazy AMT brzmią jak skrzynia
-a nie pneumatyka, czy „łup” zamknięcia przepustnicy nie jest za mocny.
+a nie pneumatyka, czy „łup” zamknięcia przepustnicy nie jest za mocny, czy dłuższy wydmuch osuszacza (scena zewn. +3,6 LU vs A,
+słyszalny ~1,5 s zamiast ~0,3 s) nie jest za natarczywy przy postoju.
 
 ## Konsekwencje
 - Zero nowych zasobów z zewnątrz; rejestr: `docs/LICENSES.md` `audio-procedural-driveline-0176`.
