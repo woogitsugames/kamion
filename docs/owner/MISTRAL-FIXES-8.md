@@ -117,3 +117,17 @@ ZADANIE:
 (6) Samokontrola: losuj 20 % z seedem; dla wierszy z rysunków wklej odczyt etykiety, dla kadrów — „co widać”.
 W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i listą zmian 1–6. NIE scalaj. Na końcu „M52-FIX gotowe” i koniec.
 ```
+
+## M51-FIX — PR #49 (zieleń osiedla): korony odbite N–S, kadry przypisane do złych ulic
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #49 (gałąź research/mistral-p10-greenery-3) — commity do TEJ gałęzi, nie nowy PR. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p10-greenery-3/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p10.md w origin/main — przeczytaj): część BIP rzetelna; korony i zdjęcia NIE.
+ZADANIE:
+(1) KORONY: crowns.geojson jest odbity lustrzanie północ–południe w każdym kaflu 1024 m (wiersz 0 obrazu to PÓŁNOC kafla: N = n0 + 1024 − wiersz·0,25). Napraw detect_crowns.py, wygeneruj ponownie i sprawdź: nałóż korony na ortofoto w 3 oknach 300×300 m (PNG do ZIP) i podaj % środków na zieleni (ExG > 0,06) — musi być > 80 %. Usuń górny limit r ≤ 6,5 m albo dodaj osobną warstwę „zwarta zieleń” (poligony masek > 6,5 m: las, skarpy, rzędy drzew) — dziś zadrzewiona skarpa przy Al. Tysiąclecia ginie. Odfiltruj nie-roślinność (zielone dachy/autobusy: kształt, wysokość jasności). Podaj datę ortofoto z metadanych WMS/GetFeatureInfo, nie z pamięci. Przelicz comparison_p10.json po poprawce.
+(2) ZDJĘCIA: reguła przypisania — kadr należy do ulicy X tylko gdy geotag ≤ 25 m od osi X ORAZ (gdy jest azymut) kamera patrzy wzdłuż X (|Δ| ≤ 30°). Azymutu NIE wolno wyznaczać „w stronę osi ulicy” (to zakłada tezę) — Commons bez GPSImgDirection = kierunek UNVERIFIED albo ustalony z treści (np. widoczny drogowskaz/budynek, opisz jak). Przelicz 18 kadrów: dziś są z Al. Tysiąclecia/Motoszko/Sokólskiej (np. M51-118 — wiata „Sokólska / Al. Tysiąclecia”, M51-117 > 400 m od Łańcuckiej). Przypisz je do prawdziwych ulic (mogą zostać jako referencja zieleni alei), a dla Skidelskiej/Wileńskiej/Łańcuckiej podaj uczciwie liczbę kadrów z wnętrza ulicy (dziś 0).
+(3) ŻYWOPŁOTY: OBEJRZYJ każdy kadr (po jednym na wywołanie; przy limicie rozłóż na tury i commituj po każdej). Dla każdego odcinka: jedno zdanie „co widać”, strona kadru, gatunek/typ, wysokość ESTIMATED z odniesieniem. Usuń odcinki, których nie widać (przegląd: M51-201, 207, 211, 213, 214, 217 — brak żywopłotu lub to ekran/barierka). M51-117 i M51-216 to ten sam plik z różnymi ulicami — ujednolić. Próg ≥ 20 odcinków tylko z obejrzanych kadrów.
+(4) KartaView: licencja w repo = CC BY-SA 4.0 (referencja, nie tekstura) — ujednolić.
+(5) Samokontrola: nowe losowanie 20 % z seedem; dla kadrów — „co widać” + ulica z OSM + odległość do osi; dla koron — % trafień w zieleń w 3 oknach.
+Nowy ZIP: mistral-p10-greenery-3-files-v2.zip (wszystkie JPG + PNG nakładek). W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i licznikami. NIE scalaj. Na końcu „M51-FIX gotowe” i koniec.
+```
