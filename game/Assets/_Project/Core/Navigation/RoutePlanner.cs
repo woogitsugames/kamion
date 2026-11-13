@@ -188,6 +188,9 @@ namespace Game.Core.Navigation
             int ge = g.Snap(goal, SnapGoalM, out float gAlong, out Vector2 gPt, out _, truckOnly: false, mainComponentOnly: true);
             if (ge < 0) ge = g.Snap(goal, SnapGoalM, out gAlong, out gPt, out _, truckOnly: false);
             if (ge < 0) return PlanStatus.GoalOffRoad;
+            // ADR 0168: edges of the no-return zone (outbound carriageways ending at the region-edge closure) are skipped,
+            // so a goal snapped there by the fallback fails with NoPath; a truck already inside may still drive on in it.
+            bool startInTrap = g.EdgeNoReturnMask[se] || g.NodeNoReturnMask[g.EdgeFrom[se]];
 
             int gen = Gen();
             int goalState = g.DirectedCount;
@@ -250,6 +253,7 @@ namespace Game.Core.Navigation
                         extra = TurnCost(s, d);
                     }
                     if ((g.EdgeFlags[e] & RouteGraph.FlagNoTruck) != 0 && e != ge) continue;
+                    if (!startInTrap && g.EdgeNoReturnMask[e]) continue;   // ADR 0168: never route into the no-return zone
                     if (!EdgeAllowed(g, e, e == ge)) continue;   // OSM weight / height / length limits below the truck's, hgv=destination off-goal
                     if ((g.EdgeFlags[e] & RouteGraph.FlagRestricted) != 0 && e != ge && e != se) extra += RestrictedS;
                     float v = SpeedMs(g, e), len = g.GeomLength(e);

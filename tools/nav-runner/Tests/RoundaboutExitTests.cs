@@ -14,7 +14,7 @@ namespace NavRunner.Tests
         // Anchors (region metres): Andersa near Rondo Putry, Kombatantów, Andersa NW carriageway, Rondo Putry ring.
         static readonly Vector2 k_Andersa = new Vector2(-225.64f, -239.35f);
         static readonly Vector2 k_Kombatantow = new Vector2(-1.7f, -897.8f);
-        static readonly Vector2 k_AndersaNW = new Vector2(-457.95f, -55.97f);
+        static readonly Vector2 k_AndersaNW = new Vector2(-320f, -162f);
         static readonly Vector2 k_PutryRing = new Vector2(-555.60f, -10.18f);
 
         static int RoundaboutMan(RoutePath p)

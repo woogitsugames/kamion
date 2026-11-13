@@ -229,7 +229,7 @@ namespace NavRunner.Tests
         {
             var g = RouteGraph.Load(Region);
             var p = RoutePath.For(g);
-            Assert.Equal(PlanStatus.Ok, new RoutePlanner(g).Plan(new Vector2(-1.7f, -897.8f), float.NaN, new Vector2(-457.95f, -55.97f), p));   // G02
+            Assert.Equal(PlanStatus.Ok, new RoutePlanner(g).Plan(new Vector2(-1.7f, -897.8f), float.NaN, new Vector2(-320f, -162f), p));   // G02
             var tr = new RouteTracker(); var drv = new NavVoiceDriver(); var q = new NavVoiceQueue();
             var gd = new NavGuidance();
             float v = 50f / 3.6f;
@@ -283,6 +283,92 @@ namespace NavRunner.Tests
             tr.Update(p, pos0, h0, v, dt, ref gd);
             Assert.Equal(c0 + 1, tr.EtaComputations);
             Assert.Equal(NavEta.RemainingSeconds(p, gd.RouteS), gd.RemainingSeconds, 0.01);
+        }
+
+        // ------------------------------------------------------------------ no-return zone (ADR 0169 audit)
+
+        //   3 ---- 2            main SCC: two-way square 0-1-2-3
+        //   |      |
+        //   0 ---- 1 --(oneway)--> 4 --(oneway)--> 5 [boundary]   outbound carriageway cut by the tile: no-return
+        //          2 --(oneway)--> 6                               one-way spur inside the map: valid destination (r5)
+        static RouteGraph TrapGraph()
+        {
+            var g = Build(new[] { new Vector2(0, 0), new Vector2(200, 0), new Vector2(200, 200), new Vector2(0, 200),
+                                  new Vector2(400, 0), new Vector2(600, 0), new Vector2(200, 400) },
+                new (int, int, byte, string)[]
+                {
+                    (0, 1, 0, "Dolna"), (1, 2, 0, "Prawa"), (2, 3, 0, "Gorna"), (3, 0, 0, "Lewa"),
+                    (1, 4, RouteGraph.FlagOneway, "Wylotowa"), (4, 5, RouteGraph.FlagOneway, "Wylotowa"),
+                    (2, 6, RouteGraph.FlagOneway, "Slepa"),
+                });
+            g.NodeFlags[5] = RouteGraph.FlagNodeBoundary;
+            g.BuildAdjacency();
+            return g;
+        }
+
+        [Fact]
+        public void NoReturn_Synthetic_OnlyChainsToTheRegionEdge()
+        {
+            var g = TrapGraph();
+            Assert.True(g.EdgeNoReturn(4) && g.EdgeNoReturn(5), "outbound carriageway to the boundary");
+            Assert.True(g.NodeNoReturn(4) && g.NodeNoReturn(5) && !g.NodeNoReturn(1), "gate node keeps its way back");
+            Assert.False(g.EdgeNoReturn(6), "spur inside the map stays a destination (integration r5)");
+            for (int e = 0; e < 4; e++) Assert.False(g.EdgeNoReturn(e));
+            // Destination snap skips the zone; nearest destination node is not in it.
+            Assert.Equal(-1, g.Snap(new Vector2(500, 0), RoutePlanner.SnapGoalM, out _, out _, out _, mainComponentOnly: true));
+            Assert.Equal(5, g.Snap(new Vector2(500, 0), RoutePlanner.SnapGoalM, out _, out _, out _));
+            Assert.Equal(1, g.NearestMainNode(new Vector2(500, 0)));
+            Assert.Equal(System.Array.IndexOf(g.Names, "Wylotowa"), g.EdgeName[5]);
+            Assert.NotEqual(g.EdgeName[5], g.MainNameAt(1));
+            // Planner: never into the zone (fallback goal snap there -> NoPath), the spur still routes, a truck inside drives on.
+            var planner = new RoutePlanner(g); var p = RoutePath.For(g);
+            Assert.Equal(PlanStatus.NoPath, planner.Plan(new Vector2(20, 0), 90f, new Vector2(500, 0), p));
+            Assert.Equal(PlanStatus.Ok, planner.Plan(new Vector2(20, 0), 90f, new Vector2(200, 350), p));
+            Assert.Equal(PlanStatus.Ok, planner.Plan(new Vector2(300, 0), 90f, new Vector2(500, 0), p));
+            // Without the boundary flag (graphs built in code before ADR 0168 / older files) nothing changes.
+            var plain = TrapGraph(); plain.NodeFlags[5] = 0; plain.BuildAdjacency();
+            for (int e = 0; e < plain.EdgeCount; e++) Assert.False(plain.EdgeNoReturn(e));
+        }
+
+        /// <summary>Same numbers as tools/worldgen/navgraph/dead_ends.py on the committed region file (ADR 0169).</summary>
+        [Fact]
+        public void NoReturn_Region_MatchesAudit_PlannerAndSnapAvoidIt()
+        {
+            var g = RouteGraph.Load(Region);
+            int edges = 0, nodes = 0; double len = 0;
+            for (int e = 0; e < g.EdgeCount; e++) if (g.EdgeNoReturn(e)) { edges++; len += g.EdgeLength[e]; }
+            for (int i = 0; i < g.NodeCount; i++) if (g.NodeNoReturn(i)) nodes++;
+            Assert.Equal(30, edges);
+            Assert.Equal(26, nodes);
+            Assert.InRange(len, 2729.0, 2731.0);
+            // Every no-return edge: a tap on its middle never gives a destination in the zone, and the planner from
+            // Andersa SE (G01 start) never drives an edge of the zone.
+            var planner = new RoutePlanner(g); var p = RoutePath.For(g);
+            int ok = 0, noPath = 0;
+            for (int e = 0; e < g.EdgeCount; e++)
+            {
+                if (!g.EdgeNoReturn(e)) continue;
+                int mid = (g.EdgeStart[e] + g.EdgeStart[e + 1] - 1) / 2;
+                Vector2 tap = Vector2.Lerp(g.Points[mid], g.Points[mid + 1 < g.EdgeStart[e + 1] ? mid + 1 : mid], 0.5f);
+                int se = g.Snap(tap, RoutePlanner.SnapGoalM, out _, out _, out _, mainComponentOnly: true);
+                Assert.True(se < 0 || !g.EdgeNotDestination(se));
+                int nn = g.NearestMainNode(tap);
+                Assert.True(nn >= 0 && !g.NodeNoReturn(nn) && !g.NodeOffReach(nn));
+                var st = planner.Plan(new Vector2(-1.7f, -897.8f), float.NaN, tap, p);
+                if (st == PlanStatus.Ok)
+                {
+                    ok++;
+                    for (int k = 0; k < p.DirectedCount; k++) Assert.False(g.EdgeNoReturn(p.Directed[k] >> 1), $"edge {e}: route enters the zone");
+                }
+                else { Assert.Equal(PlanStatus.NoPath, st); noPath++; }
+            }
+            Assert.Equal(30, ok + noPath);
+            // Golden routes never touch the zone.
+            foreach (var r in Golden())
+            {
+                Assert.Equal(PlanStatus.Ok, planner.Plan(new Vector2((float)r.from[0], (float)r.from[1]), float.NaN, new Vector2((float)r.to[0], (float)r.to[1]), p));
+                for (int k = 0; k < p.DirectedCount; k++) Assert.False(g.EdgeNoReturn(p.Directed[k] >> 1), r.id);
+            }
         }
 
         // ------------------------------------------------------------------ helpers

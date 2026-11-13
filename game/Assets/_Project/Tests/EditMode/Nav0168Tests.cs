@@ -229,7 +229,7 @@ namespace Game.Tests
         {
             var g = RouteGraph.Load(Region);
             var p = RoutePath.For(g);
-            Assert.AreEqual(PlanStatus.Ok, new RoutePlanner(g).Plan(new Vector2(-1.7f, -897.8f), float.NaN, new Vector2(-457.95f, -55.97f), p));   // G02
+            Assert.AreEqual(PlanStatus.Ok, new RoutePlanner(g).Plan(new Vector2(-1.7f, -897.8f), float.NaN, new Vector2(-320f, -162f), p));   // G02
             var tr = new RouteTracker(); var drv = new NavVoiceDriver(); var q = new NavVoiceQueue();
             var gd = new NavGuidance();
             float v = 50f / 3.6f;

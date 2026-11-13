@@ -46,7 +46,7 @@ namespace NavRunner.Tests
 
         static readonly Vector2 k_Kombatantow = new Vector2(-1.7f, -897.8f);
         static readonly Vector2 k_AndersaSE = new Vector2(-172f, -298f);
-        static readonly Vector2 k_AndersaNW = new Vector2(-457.95f, -55.97f);
+        static readonly Vector2 k_AndersaNW = new Vector2(-320f, -162f);
 
         [Fact]
         public void Region_KnownRoute_KombatantowToAndersa_SouthEastCarriageway()
