@@ -83,5 +83,47 @@
     "M49-009/M49-023: lokalizacje doprecyzowane geodezyjnie (przecięcie service 550896624 z granicą terminala 972362712 = (767081,5; 595851,1) oraz J narożnika = node 5320426952)."
   ],
   "wnioski": "7/7 rechecków wykonanych pełną metodą (nie tylko odczyt); 6 potwierdza wartości manifestu, 1 (M49-012) doprowadził do korekty wartości w dół (5,8 -> 5,0 m) z pełnym uzasadnieniem. Odtwarzalność pomiarów promieni (deterministyczne seedy) potwierdzona na G07 bit-w-bit.",
-  "status": "OK — korekta M49-012 zastosowana; pozostałe wiersze bez zmian"
+  "fix_r8": {
+    "przegląd": "docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md (origin/main)",
+    "zmiany": [
+      {
+        "nr": 1,
+        "zakres": ["M49-010", "M49-024"],
+        "przed": "wartość 11 m / 8,3 m; way 248109974 traktowany jako wjazd na teren PZZ",
+        "po": "UNVERIFIED, wartości puste (wycofane). Way 248109974 to highway=service service=parking_aisle (potwierdzone API OSM), a jego koniec na ortofoto to pusty piaszczysty plac przy biurowcu — NIE wjazd na teren PZZ. Zbadano barrier=gate/lift_gate na granicy landuse 339398420: znaleziono 4 węzły bram od Elewatorskiej (3465917163 przez service 215126998; 3465917157/3465917161/3465917151 przez parking_aisle), ale żadna nie została zidentyfikowana jako brama drogowa PZZ na podstawie źródła — status UNVERIFIED. Recheck M49-024 z powyższego audytu (r=8,3 m) unieważniony przez przegląd r8 (mierzony łuk NIE jest wjazdem na PZZ)."
+      },
+      {
+        "nr": 2,
+        "zakres": ["M49-012", "M49-026"],
+        "przed": "teza „brama dla ciężarówek” (node 3954799626, access=no) — wartości 5,0 m / 6,0 m przy statusie częściowo uzasadnionym",
+        "po": "UNVERIFIED (wartości liczbowe pozostawione jako pomiar ortofoto, bez statusu weryfikacji). Node 3954799626 (barrier=gate, access=no) leży ~400 m od celu P6; teza „brama dla ciężarówek” bez potwierdzenia w źródle (Enea Ciepło: przetargi na dostawy autocysternami na EC Andersa 15 nie wskazują bramy). Do archiwum ZIP v2 dodano wycinek M49-G12-gate.jpg obejmujący bramę (bbox EPSG:2180: 778533,595317,778693,595477) — stary M49-G12.jpg pokazywał bbox P6 bez bramy."
+      },
+      {
+        "nr": 3,
+        "zakres": ["M49-029"],
+        "przed": "obiekt „pas wyjazdowy … kier. Zabłudów”, odległość mierzona od skrzyżowania ze Stoczni Gdańskiej, status SOURCED",
+        "po": "ESTIMATED ±50 m. Poprawiony kierunek: pas WJAZDOWY do Miasta (PFU 2020: „obsługuje ruch… na kierunku do Miasta” — DK19 biegnie NW–SE, miasto na NW). Punkt odniesienia: stały punkt kontroli — parking przy DK 19 (PFU 2015; way 1504105385, centroid 53,0969659/23,2332992). Odległość wzdłuż geometrii OSM DK19 od parkingu do pozycji WIM: 1296 m (zgodność z „ok. 1295 m” PFU 2020 <0,1%). Załącznik nr 5 (mapa lokalizacji WIM area 1) pobrany z BIP (zalaczniki zabludowska.7z → zalacznik nr 5.pdf) i dołączony do ZIP v2; odczytu współrzędnych ze skanu (OCR) nie wykonano — status ESTIMATED dopóki brak odczytu mapy."
+      },
+      {
+        "nr": 4,
+        "zakres": ["M49-031"],
+        "przed": "cytat TVP3 z tekstem oraz data wejścia w życie styczeń 2026",
+        "po": "cytat ograniczony do TYTUŁU („Dojlidy bez tranzytu ciężarówek od stycznia [wideo]” — strona pokazuje tylko tytuł, treść nieweryfikowalna); data: „styczeń 2026 wg tytułu TVP3; komunikat 19.11.2025 daty nie podaje”."
+      },
+      {
+        "nr": 5,
+        "zakres": ["M49-035"],
+        "przed": "Karpińskiego opisana jako tertiary",
+        "po": "way 275237230: highway=unclassified (potwierdzone API OSM) — poprawione w manifest.csv i README."
+      },
+      {
+        "nr": 6,
+        "zakres": ["ZIP"],
+        "przed": "ZIP v1 bez wycinków narożników R-*",
+        "po": "ZIP v2 (mistral-p6-dojlidy-gates-files-v2.zip) zawiera wycinki narożników R-G01…R-G09, R-G11…R-G14 (PNG 400×400, J±20 m — podstawa pomiaru promieni, bez nich promieni nie da się sprawdzić; R-G10 celowo pominięty, promień wycofany) oraz M49-G12-gate.jpg, docs/ (PFU 2020 docx, PFU 2015 skan, załącznik nr 5 mapa WIM) i FILES.md ze skorowidzem bboxów."
+      }
+    ],
+    "status": "OK — poprawki r8 (M49-FIX) 1–6 zastosowane"
+  },
+  "status": "OK — korekta M49-012 zastosowana; poprawki r8 (M49-FIX) dodane (patrz sekcja fix_r8)"
 }
