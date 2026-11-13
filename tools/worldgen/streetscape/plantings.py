@@ -593,14 +593,14 @@ OVATE_SHARE = 0.3                 # share of the round-habit species drawn with 
 FRUIT_R_MAX_M = 2.3               # orchard trees are the small crowns (W)
 CARD_STRETCH = (0.80, 1.30)       # a crown card is drawn at most this far off its painted width / height
 # plant pitch of a thuja wall: High, Low. Review s17 0170 P2 (the wall was one green box with a flat top; G7-P11 is a
-# row of separate columns with round tips): High - every plant is two shoulder stations (a round, uneven top) and every gap
-# between two plants a trough station - lower, narrower, darker; Low - the wall keeps its sparse stations (ADR 0132
-# budget) and every plant's tip is one card of the thuja sprite's top standing out of the crest. WORKING_VALUE
-# (G7 # 19: plants 0.8-1.2 m wide)
+# row of separate columns with round tips): the wall body keeps sparse stations and every plant's tip is one card of
+# the thuja sprite's top standing out of the crest (2 triangles a plant). Build 4 drew High as stations per plant (two
+# shoulders + a trough per gap, 61 triangles / m): garden fronts High 12 058 -> 27 558 triangles and the stretch_04
+# frame over its 2 M cap (test_world_v31 / test_hero_bridge). High now uses the Low design with denser wall stations
+# (~16 triangles / m). WORKING_VALUE (G7 # 19: plants 0.8-1.2 m wide)
 THUJA_PITCH_M = (1.0, 1.1)
-THUJA_WALL_PITCH_LOW_M = 3.2      # station pitch of the Low wall (as before ADR 0170)
-THUJA_TIP_LOW_M = (0.50, 0.60)    # Low: the wall's crest stands this far below the nominal height; the tips rise this far above it + 0.25
-THUJA_GAP_DIP_M = (0.30, 0.55)    # how far the top drops between two plants (G7-P11: 0.3-0.6 m, WORKING_VALUE)
+THUJA_WALL_PITCH_M = (1.5, 3.2)   # station pitch of the wall body: High, Low (Low as before ADR 0170)
+THUJA_TIP_LOW_M = (0.50, 0.60)    # the wall's crest stands this far below the nominal height; the tips rise this far above it + 0.25
 # cross-section of a clipped thuja wall per side, foot -> shoulder: (half-thickness factor, height factor, normal out,
 # normal up, occlusion); the crest (centre line, full height) closes it. Photos G7-P11 / P12: battered sides, a
 # rounded top, a dark foot.
@@ -633,21 +633,12 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
     prof = _THUJA_PROFILE_LOW if low else _THUJA_PROFILE
     npl = max(1, int(round(L / THUJA_PITCH_M[1 if low else 0])))              # plants
     pitch = L / npl
-    if low:                                                  # stations (s, noise index, kind)
-        nw = max(2, int(round(L / THUJA_WALL_PITCH_LOW_M)))
-        st = [(L * k / nw, k, "end" if k in (0, nw) else "wall") for k in range(nw + 1)]
-    else:                                                    # end, (shoulder, shoulder), gap, (shoulder, shoulder), ..., end
-        st = [(0.0, 0, "end")]
-        for i in range(npl):
-            if i:
-                st.append((i * pitch, i, "gap"))
-            for j, f in enumerate((0.30, 0.70)):
-                st.append(((i + f + 0.10 * (PLT.hfloat(key, "ts", i, j) - 0.5)) * pitch, i, "plant"))
-        st.append((L, npl - 1, "end"))
+    nw = max(2, int(round(L / THUJA_WALL_PITCH_M[1 if low else 0])))         # stations (s, noise index, kind)
+    st = [(L * k / nw, k, "end" if k in (0, nw) else "wall") for k in range(nw + 1)]
     nb = len(st) - 1
 
     def crest(s):                                            # nominal top of the wall at s, without the per-plant noise
-        return h + raise_ends[0] * max(0.0, 1.0 - s / 4.0) ** 0.7 + raise_ends[1] * max(0.0, 1.0 - (L - s) / 4.0) ** 0.7             + 0.07 * math.sin(ph0 + s * 0.8) - (THUJA_TIP_LOW_M[0] if low else 0.0)
+        return h + raise_ends[0] * max(0.0, 1.0 - s / 4.0) ** 0.7 + raise_ends[1] * max(0.0, 1.0 - (L - s) / 4.0) ** 0.7             + 0.07 * math.sin(ph0 + s * 0.8) - THUJA_TIP_LOW_M[0]
     v0, v1 = PLT.PK.row("thuja")
     dv = v1 - v0
     row_m = PLT.PK.ROW_H_M["thuja"]
@@ -668,14 +659,9 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
         c = a + t * s + n * (0.05 * (PLT.hfloat(key, "to", k) * 2 - 1))
         zz = zf(a + t * s) - 0.03
         # height: the wall's slow wander + the plant's own + a little per shoulder (no flat tops)
-        hh = (crest(s) + (0.06 if low else 0.11) * (PLT.hfloat(key, "th", ip) * 2 - 1)
-              + (0.07 * (PLT.hfloat(key, "tk", k) * 2 - 1) if kind == "plant" else 0.0)) * (0.94 if kind == "end" else 1.0)
+        hh = (crest(s) + (0.06 if low else 0.09) * (PLT.hfloat(key, "th", ip) * 2 - 1)) * (0.94 if kind == "end" else 1.0)
         w = thick / 2 * (1.0 + 0.08 * math.sin(ph1 + s * 1.1) + 0.06 * (PLT.hfloat(key, "tw", k) * 2 - 1)) * endf
         dip, og = 0.0, 1.0
-        if kind == "gap":
-            dip = THUJA_GAP_DIP_M[0] + (THUJA_GAP_DIP_M[1] - THUJA_GAP_DIP_M[0]) * PLT.hfloat(key, "tg", k)
-            w *= 0.80 + 0.08 * PLT.hfloat(key, "tgw", k)
-            og = 0.66                                        # the groove between two plants is in their shade
         du, s_prev = (s - s_prev) / PLT.PK.KIT_M, s
         for sd, sg in enumerate((1.0, -1.0)):
             if k:
@@ -703,23 +689,22 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
         for i in range(1, len(ring) - 1):
             T.append((ring[0], ring[i + 1], ring[i]) if not flip else (ring[0], ring[i], ring[i + 1]))
     kit.tris(V, UV, T, C)
-    if low:
-        # the plants' tips: the top of a thuja silhouette card per plant, standing in the wall's axis with its cut
-        # lower edge inside the body - a scalloped line of round, ragged tips instead of a ruled top (2 triangles a plant)
-        for i in range(npl):
-            s = (i + 0.5 + 0.2 * (PLT.hfloat(key, "cs", i) - 0.5)) * pitch
-            wc = pitch * (1.38 + 0.14 * PLT.hfloat(key, "cw", i))       # the card's column is 0.72 of its width: tips touch
-            hc_ = 0.45 + THUJA_TIP_LOW_M[1] + 0.25 * PLT.hfloat(key, "ch", i)
-            c = a + t * s + n * (0.10 * (PLT.hfloat(key, "cn", i) * 2 - 1))
-            z0 = zf(a + t * s) - 0.03 + crest(s) - 0.45                # the cut edge: 0.45 m under the wall's crest
-            u0, u1, sv0, sv1 = PLT.PK.sprite("thuja_a" if PLT.hfloat(key, "cp", i) < 0.5 else "thuja_b")
-            if PLT.hfloat(key, "cf", i) < 0.5:
-                u0, u1 = u1, u0
-            vb = sv1 - (sv1 - sv0) * 0.42                    # the round top of the card (squashed to ~0.75 : 1)
-            A, B = c - t * (wc / 2), c + t * (wc / 2)
-            kit.quad([[*A, z0], [*B, z0], [*B, z0 + hc_], [*A, z0 + hc_]], [[u0, vb], [u1, vb], [u1, sv1], [u0, sv1]],
-                     [PLT._fol([-t[0] * 0.5, -t[1] * 0.5, 0.7], 0.92), PLT._fol([t[0] * 0.5, t[1] * 0.5, 0.7], 0.92),
-                      PLT._fol([t[0] * 0.3, t[1] * 0.3, 0.9]), PLT._fol([-t[0] * 0.3, -t[1] * 0.3, 0.9])])
+    # the plants' tips: the top of a thuja silhouette card per plant, standing in the wall's axis with its cut
+    # lower edge inside the body - a scalloped line of round, ragged tips instead of a ruled top (2 triangles a plant)
+    for i in range(npl):
+        s = (i + 0.5 + 0.2 * (PLT.hfloat(key, "cs", i) - 0.5)) * pitch
+        wc = pitch * (1.38 + 0.14 * PLT.hfloat(key, "cw", i))       # the card's column is 0.72 of its width: tips touch
+        hc_ = 0.45 + THUJA_TIP_LOW_M[1] + 0.25 * PLT.hfloat(key, "ch", i)
+        c = a + t * s + n * (0.10 * (PLT.hfloat(key, "cn", i) * 2 - 1))
+        z0 = zf(a + t * s) - 0.03 + crest(s) - 0.45                # the cut edge: 0.45 m under the wall's crest
+        u0, u1, sv0, sv1 = PLT.PK.sprite("thuja_a" if PLT.hfloat(key, "cp", i) < 0.5 else "thuja_b")
+        if PLT.hfloat(key, "cf", i) < 0.5:
+            u0, u1 = u1, u0
+        vb = sv1 - (sv1 - sv0) * 0.42                    # the round top of the card (squashed to ~0.75 : 1)
+        A, B = c - t * (wc / 2), c + t * (wc / 2)
+        kit.quad([[*A, z0], [*B, z0], [*B, z0 + hc_], [*A, z0 + hc_]], [[u0, vb], [u1, vb], [u1, sv1], [u0, sv1]],
+                 [PLT._fol([-t[0] * 0.5, -t[1] * 0.5, 0.7], 0.92), PLT._fol([t[0] * 0.5, t[1] * 0.5, 0.7], 0.92),
+                  PLT._fol([t[0] * 0.3, t[1] * 0.3, 0.9]), PLT._fol([-t[0] * 0.3, -t[1] * 0.3, 0.9])])
     return L
 
 
