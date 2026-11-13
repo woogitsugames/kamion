@@ -22,3 +22,5 @@ ADR0154 opisuje źródła, WORKING_VALUE i luki zdjęć. Audyt rozszerzono o6has
 W świecie po zmianie przyjęto19posesji/34odcinki nowych żywopłotów:257.37m,3580trisHigh i3580trisLow. To wynik generatora, nie jeszcze pomiar kadru. Limit3600 nieprzekroczony. Dalej audyt i obrazy.
 
 Świat after wygenerowany: 597.4228808 s, bez fallback=True. NASTĘPNY KROK: import i kamery after.
+
+Audyt after:2151chronionych siatek i wszystkie rekordy nie-high identyczne,116drzewogrodowych zachowuje tożsamość/pozycje/tier;6bibliotek/atlasówbez zmian;32grupyposesjibeznowychmateriałów;0błędów. Delta bufórówplots High+Low łącznie7160tris, czyli3580na wariant. Generator595.7s.
