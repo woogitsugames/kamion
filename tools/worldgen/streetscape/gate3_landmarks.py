@@ -408,6 +408,10 @@ def _signals(pl, overrides, rep, carriage, islands):
         lit = str(o.get("lit", "red"))
         src = f"override:{o['id']}"
         zkw = {"z": isl.top_z(p)} if isl is not None else {}
+        if isl is not None:      # furniture.clear_carriageway works on the 2D footprint: the island is inside it
+            if not hasattr(pl, "on_authored_island"):
+                pl.on_authored_island = set()
+            pl.on_authored_island.add((round(round(float(p[0]), 3), 2), round(round(float(p[1]), 3), 2)))
         mast = "arm_bearing_deg" in o
         if mast:
             arm = _bearing_vec(o["arm_bearing_deg"])

@@ -2973,7 +2973,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.23,
+   "axis_smoothing_dev_max_m": 0.29,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -2983,16 +2983,18 @@
    "lanes": [
     1
    ],
-   "length_m": 61.7,
-   "max_grade": 0.0273,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.019,
+   "length_m": 61.9,
+   "max_grade": 0.0231,
+   "overrides": [
+    "kwadrat-exit-carriageway-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
    "width_m": [
-    4.0
+    7.7
    ],
    "width_src": [
-    "PTB2022 §17 ust.3 (>=3.50) + WORKING_VALUE"
+    "authored_override:kwadrat-exit-carriageway-width"
    ]
   },
   {
@@ -10055,8 +10057,10 @@
    "corner 1-2: kerb chamfer 1:4 over 5.9 m (width step 1.47 m)"
   ],
   "j:n1882887381": [
-   "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)",
-   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
+   "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n1882954015": [
+   "corner 3-0: kerb chamfer 1:4 over 12.9 m (width step 3.22 m)"
   ],
   "j:n1883483212": [
    "corner 1-2: no fillet fits (alpha 42 deg) -> sharp"
@@ -10254,6 +10258,83 @@
     "kind": "painted_arrow",
     "tris": 30,
     "tris_off_carriageway": 0
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-0l",
+    "kind": "painted_arrow",
+    "tris": 39,
+    "tris_off_carriageway": 1
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-0r",
+    "kind": "painted_arrow",
+    "tris": 38,
+    "tris_off_carriageway": 1
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-1l",
+    "kind": "painted_arrow",
+    "tris": 39,
+    "tris_off_carriageway": 1
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-1r",
+    "kind": "painted_arrow",
+    "tris": 39,
+    "tris_off_carriageway": 1
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-2l",
+    "kind": "painted_arrow",
+    "tris": 40,
+    "tris_off_carriageway": 0
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-2r",
+    "kind": "painted_arrow",
+    "tris": 36,
+    "tris_off_carriageway": 3
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-3l",
+    "kind": "painted_arrow",
+    "tris": 40,
+    "tris_off_carriageway": 0
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-3r",
+    "kind": "painted_arrow",
+    "tris": 35,
+    "tris_off_carriageway": 4
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-4l",
+    "kind": "painted_arrow",
+    "tris": 40,
+    "tris_off_carriageway": 0
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-4r",
+    "kind": "painted_arrow",
+    "tris": 31,
+    "tris_off_carriageway": 8
+   },
+   {
+    "built": true,
+    "id": "putry-link-p8-5r",
+    "kind": "painted_arrow",
+    "tris": 30,
+    "tris_off_carriageway": 9
    }
   ],
   "axis_smoothing_deviation_m": {
@@ -10363,14 +10444,14 @@
   "decals": {
    "gullies": 768,
    "oil": 286,
-   "patches": 316
+   "patches": 317
   },
   "emergency_signal_junctions": [
    "j:n12620261934",
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 565674,
+  "footprint_nodes": 565562,
   "fork_abreast": [
    {
     "alongside_run_m": 125.0,
@@ -11399,14 +11480,14 @@
      ]
     },
     {
-     "area_m2": 4.3,
+     "area_m2": 4.4,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "sliver",
      "xy": [
-      619.2,
-      -599.6
+      617.9,
+      -602.8
      ]
     },
     {
@@ -11587,9 +11668,16 @@
      "id": "dk8-e-split-island",
      "note": "z 140.01",
      "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 66.8,
+     "built": true,
+     "id": "putry-ring-s-nose-island",
+     "note": "z 134.41",
+     "surface": "sidewalk_paving"
     }
    ],
-   "kerb_dropped_m": 698.0,
+   "kerb_dropped_m": 697.5,
    "kerb_tris_in_fill": 0,
    "paved": {
     "merge": {
@@ -11601,7 +11689,7 @@
      "count": 7
     },
     "sliver": {
-     "area_m2": 100.9,
+     "area_m2": 101.0,
      "count": 18
     }
    },
@@ -12022,6 +12110,12 @@
     ]
    },
    {
+    "id": "kwadrat-exit-carriageway-width",
+    "targets": [
+     "w194536287:1882887381-1882954023"
+    ]
+   },
+   {
     "id": "andersa-viaduct-biezenstwa-style",
     "targets": [
      "w175157461",
@@ -12123,6 +12217,12 @@
    },
    {
     "id": "dk8-e-split-island",
+    "targets": [
+     "island"
+    ]
+   },
+   {
+    "id": "putry-ring-s-nose-island",
     "targets": [
      "island"
     ]
@@ -12416,6 +12516,72 @@
     ]
    },
    {
+    "id": "putry-link-p8-0l",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-0r",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-1l",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-1r",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-2l",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-2r",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-3l",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-3r",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-4l",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-4r",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
+    "id": "putry-link-p8-5r",
+    "targets": [
+     "painted_arrow"
+    ]
+   },
+   {
     "id": "dk8-e-split-barrier",
     "targets": [
      "guardrail@-797,55"
@@ -12491,7 +12657,7 @@
    "n100-se-arrows-clear-4": 5,
    "n10015785253-edge-line-clear": 63
   },
-  "paint_erased_in_zones_tris": 95,
+  "paint_erased_in_zones_tris": 96,
   "painted_zones": [
    {
     "area_m2": 159.3,
@@ -12846,7 +13012,7 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 49478
+   "tris": 49466
   },
   "walled_ramps": [
    {

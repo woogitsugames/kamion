@@ -263,6 +263,8 @@ def clear_carriageway(pl, carriage, zsurf, report):
         base = [it for it in items if it["p"].startswith(GROUND_PROPS)]
         if not base or not inner.contains(Point(e, n)):
             continue
+        if (e, n) in getattr(pl, "on_authored_island", ()):
+            continue        # ADR 0161: a pole authored onto a kerbed island (the island lies ON the carriageway footprint)
         q = nearest_points(carriage.boundary, Point(e, n))[0]
         v = np.array([q.x - e, q.y - n])
         L = float(np.hypot(*v))
