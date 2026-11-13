@@ -20,3 +20,5 @@ Celowany EditMode:8/8passed,0failed/skipped; skala koron zachowuje wysokość/po
 ADR0154 opisuje źródła, WORKING_VALUE i luki zdjęć. Audyt rozszerzono o6hashy bibliotek modeli/atlasu, aby potwierdzić brak ubocznej zmiany modeli i materiałów pojazdów/lasu. Generowanie after nadal w tle.
 
 W świecie po zmianie przyjęto19posesji/34odcinki nowych żywopłotów:257.37m,3580trisHigh i3580trisLow. To wynik generatora, nie jeszcze pomiar kadru. Limit3600 nieprzekroczony. Dalej audyt i obrazy.
+
+Świat after wygenerowany: 597.4228808 s, bez fallback=True. NASTĘPNY KROK: import i kamery after.
