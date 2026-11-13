@@ -1,6 +1,6 @@
 # ADR 0172 — P1 bramki 3 (b): sygnalizator 182011 na Rondzie Putry, skupisko znaków na wyspie EC (cm92458760), P2 filary
 
-Status: PROPOSED na gałęzi `p1b-0172` (2026-11-13, s18); nie scalone; ocena `visual-critic` wymagana.
+Status: ACCEPTED (2026-11-13, s20) — visual-critic SCAL warunkowo (`docs/reports/REVIEW-2026-11-13-s20-0172.md`), warunki spełnione w tym ADR; świat przebudowuje lider w integracji.
 Źródło: `docs/reports/visual/REVIEW-2026-11-13-s17-0161.md` (P1: 182011 „jeden sygnalizator na wysięgniku vs 3–4,
 kamera ~1 pas w lewo”; cm92458760 „brak skupiska znaków frontem — D-6, tablica ulicy, C-”; P2: filary/głowice
 musztardowe, kapa 494288).
@@ -91,3 +91,13 @@ Ignored), 0 nieudanych; fidelity exit 0; preflight SBS OK; 42 pary × 2 oświetl
 
 **Pary do oceny `visual-critic`:** `artifacts/p1b-0172/sbs-r5/pairs/Low-{overcast,clear}/sbs-g3-a-cm92458760.jpg`,
 `.../sbs-g3-b-182011943700132.jpg`, kadry `artifacts/p1b-0172/cmp/cm92458760-cluster-r{3,4,5}-*.jpg`.
+
+## 5. Uwaga do par SBS 182011
+Zdjęcie referencyjne w parze `sbs-g3-b-182011943700132.jpg` pochodzi z **2019**; stan z ortofoto **2024** (decyzja właściciela 13.11) to jeden maszt z łukowym wysięgnikiem (2 głowice na wysięgniku + 1 na maszcie) i osobny słupek. Różnica wobec zdjęcia jest zamierzona, nie jest błędem modelu.
+
+## 6. Otwarte (z recenzji s20, nie blokują)
+- P1: nawierzchnia azylu cm924 — szara kostka kwadratowa z widocznym kafelkowaniem; na zdjęciu czerwono-brązowa kostka prostokątna.
+- P1: wyspa ~1–2 m za szeroka w stronę kamery; brak przedniego krawężnika i pasa asfaltu w prawym dolnym rogu kadru.
+- P1: po lewej goły słup ze znakiem bokiem do kamery; na zdjęciu latarnia dwuramienna z D-3 i D-6 frontem; brak latarń dwuramiennych wzdłuż wjazdu.
+- P1: 182011 — brak strzałek na pasach i linii zatrzymania; ekran akustyczny czarny zamiast przezroczystego.
+- P2: A-7 za duży (0,9 vs ~0,72 m); C-12 widziany od tyłu = kod UNVERIFIED; D-6 zamiast D-6b i ~30 % za mały; tablica ulicy na własnym słupku (5 pionów zamiast 4); latarnia na cokole; tyły tarcz bez ramy/obejm; rabata jak murek z cegły; spód wiaduktu prawie czarny.
