@@ -1,0 +1,129 @@
+{
+  "zadanie": "M49 — samokontrola >=20% pozycji manifestu (zadanie: 'losuj >= 20% pozycji z jawnym seedem, sprawdź ponownie')",
+  "data": "2026-11-13",
+  "populacja": {
+    "plik": "manifest.csv",
+    "liczba_wierszy": 35,
+    "procent_wymagany": 20,
+    "liczba_wylosowanych": 7,
+    "procent_rzeczywisty": 20.0
+  },
+  "seed": 20261113,
+  "metoda_losowania": "Python 3, random.Random(20261113).sample([M49-001..M49-035], 7) — deterministyczne, odtwarzalne jednym poleceniem",
+  "polecenie_odtwarzajace": "python3 -c \"import random; print(sorted(random.Random(20261113).sample([f'M49-{i:03d}' for i in range(1,36)], 7)))\"",
+  "wylosowane": ["M49-001", "M49-002", "M49-009", "M49-012", "M49-021", "M49-024", "M49-030"],
+  "rechecki": [
+    {
+      "id": "M49-001",
+      "obiekt": "szerokość bramy G01 BIAZET",
+      "wartosc_w_manifeście": "12.1 ±2 m (ESTIMATED)",
+      "metoda_rechecku": "ponowne uruchomienie driveway_street_side('G01', 12126375017) na tych samych danych (orto WCS 2025 @0,05 m/px + OSM API 0.6)",
+      "wynik_rechecku": "bounded=[12.1], mediana=12.1; all=[12.1, 16.8, 17.8, 20.2, 22.3]",
+      "zgodność": "TAK — identyczna wartość 12,1 m",
+      "działania": "brak"
+    },
+    {
+      "id": "M49-002",
+      "obiekt": "szerokość bramy G02 Kwadrat Park (UNVERIFIED)",
+      "wartosc_w_manifeście": "UNVERIFIED — brak mierzalnego prześwitu bramy w geometrii OSM",
+      "metoda_rechecku": "weryfikacja OSM (way 1094472354 przez node 10024132807) + ponowny skan asfaltu wzdłuż płotu (fence-openings)",
+      "wynik_rechecku": "fence 1094472354 przechodzi przez node ciągłościem; profil asfaltu wzdłuż płotu: frac 0,8–1,0 na całej długości ±20 m (wykryty 'otwór' 27,5 m = szerokość całego przejazdu asfaltowego, nie bramy)",
+      "zgodność": "TAK — status UNVERIFIED uzasadniony; szerokość ~27,5 m to przejazd, nie brama",
+      "działania": "brak"
+    },
+    {
+      "id": "M49-009",
+      "obiekt": "szerokość wjazdu G09 Raben Żółtki",
+      "wartosc_w_manifeście": "26 ±7 m (ESTIMATED, korytarz wjazdu na teren)",
+      "metoda_rechecku": "niezależne re-pomiary profili asfaltu prostopadle do service 550896624, stacje co 5 m od granicy terminala (poligon 972362712), okno G09-warsz (0,16 m/px), ciągły run przez środek",
+      "wynik_rechecku": "d=5..60 m: 19,4 / 25,1 / 30,8 / 32,1 / 29,4 / 32,1 / 29,9 / 25,1 / 25,2 / 26,0 — zakres 19,4–32,1, mediana ~27",
+      "zgodność": "TAK — recheck (mediana ~27 m, zakres ~19–32) mieści się w 26 ±7 m",
+      "działania": "brak"
+    },
+    {
+      "id": "M49-012",
+      "obiekt": "prześwit bramy ciężarowej G12 Elektrociepłownia Białystok",
+      "wartosc_w_manifeście_przed_recheckiem": "5.8 ±1 m",
+      "metoda_rechecku": "FRESH okno WCS 60×60 m @0,1 m/px wokół bramy (niezależne pobranie, nie cache) + profil asfaltu wzdłuż fence 392226284 przez node 3954799626, stacje co 0,5 m, pas ±1 m",
+      "wynik_rechecku": "przedział asfaltu frac>=0,6 odtworzony co do stacji: s∈[−3,5;+1,0]; szerokość strict 4,5 m; z progiem 0,5 do s=+1,5: 5,0 m; frac 0,62 na s=+1,0, 0,52 na s=+1,5",
+      "zgodność": "CZĘŚCIOWA — przedział identyczny, ale wartość 5,8 m nie wynika z arytmetyki przedziału (4,5–5,5 m)",
+      "działania": "KOREKTA: wartość w manifest.csv zmieniona 5.8 -> 5.0 ±1 m z opisem rechecku w uwagach; README zaktualizowany"
+    },
+    {
+      "id": "M49-021",
+      "obiekt": "promień łuku wjazdu G07 WER",
+      "wartosc_w_manifeście": "11.8 ±2 m (ESTIMATED, narożnik prawy)",
+      "metoda_rechecku": "ponowne fit_corners('G07', J=[772521,596498,9], gate, sdir=[-0,958;0,286]) — pełny pipeline RANSAC+LSQ na cached oknie R-G07.png, deterministyczny seed",
+      "wynik_rechecku": "prawy r=11,8, c=(-0,5; 3,1), frac=0,19; lewy r=22,8, c=(2,7; -30,7), frac=0,27",
+      "zgodność": "TAK — odtworzenie bit-w-bit (identyczne r i środki); raportowany mniejszy narożnik 11,8 m",
+      "działania": "brak"
+    },
+    {
+      "id": "M49-024",
+      "obiekt": "promień łuku wjazdu G10 PZZ",
+      "wartosc_w_manifeście": "8.3 ±2 m (ESTIMATED, narożnik prawy)",
+      "metoda_rechecku": "ponowne fit_corners('G10', J=node 5161111758, sdir z geometrii Elewatorskiej (0,254; -0,967), ddir z service 248109974) — sdir/ddir odtworzone z OSM (oryginał niezapamiętany), więc dopasowanie nie bit-w-bit",
+      "wynik_rechecku": "prawy r=8,2 (c=(-8,9; -0,6)), lewy r=9,2; oryginał: prawy 8,3, lewy 9,3",
+      "zgodność": "TAK — różnica 0,1 m, znacznie poniżej ±2 m",
+      "działania": "brak"
+    },
+    {
+      "id": "M49-030",
+      "obiekt": "adres PZZ S.A.",
+      "wartosc_w_manifeście": "ul. Elewatorska 14, 15-959 Białystok (SOURCED)",
+      "metoda_rechecku": "ponowne otwarcie https://pzz.bialystok.pl/kontakt (open_url, 2026-11-13)",
+      "wynik_rechecku": "strona zawiera: 'ul. Elewatorska 14, 15-959 Białystok' oraz 'Podlaskie Zakłady Zbożowe S.A. w Białymstoku / Elewatorska 14, 15-959 Białystok'; fraza 'Zbożowa' NIE występuje na stronie",
+      "zgodność": "TAK — cytat potwierdzony; rozstrzygnięcie Elewatorska 14 utrzymane",
+      "działania": "brak"
+    }
+  ],
+  "dodatkowe_ustalenia_audytu": [
+    "Kontrola wszystkich 12 node'ów bram P6 z API OSM 0.6 (2026-11-13): współrzędne P6 były zaokrąglone (Δ 0,14–0,55 m); manifest dostał dokładne współrzędne API zamiast zaokrągleń P6. Node 3465808562 potwierdzony jako barrier=gate (brama kolejowa).",
+    "Node 3954799626 (brama ciężarowa EC) potwierdzony API: barrier=gate, access=no, (53.1508184, 23.1683736) — wcześniejsze przeliczenie z EPSG:2180 różniło się o 0,4 m; manifest skorzystał z wartości API.",
+    "M49-009/M49-023: lokalizacje doprecyzowane geodezyjnie (przecięcie service 550896624 z granicą terminala 972362712 = (767081,5; 595851,1) oraz J narożnika = node 5320426952)."
+  ],
+  "wnioski": "7/7 rechecków wykonanych pełną metodą (nie tylko odczyt); 6 potwierdza wartości manifestu, 1 (M49-012) doprowadził do korekty wartości w dół (5,8 -> 5,0 m) z pełnym uzasadnieniem. Odtwarzalność pomiarów promieni (deterministyczne seedy) potwierdzona na G07 bit-w-bit.",
+  "fix_r8": {
+    "przegląd": "docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md (origin/main)",
+    "zmiany": [
+      {
+        "nr": 1,
+        "zakres": ["M49-010", "M49-024"],
+        "przed": "wartość 11 m / 8,3 m; way 248109974 traktowany jako wjazd na teren PZZ",
+        "po": "UNVERIFIED, wartości puste (wycofane). Way 248109974 to highway=service service=parking_aisle (potwierdzone API OSM), a jego koniec na ortofoto to pusty piaszczysty plac przy biurowcu — NIE wjazd na teren PZZ. Zbadano barrier=gate/lift_gate na granicy landuse 339398420: znaleziono 4 węzły bram od Elewatorskiej (3465917163 przez service 215126998; 3465917157/3465917161/3465917151 przez parking_aisle), ale żadna nie została zidentyfikowana jako brama drogowa PZZ na podstawie źródła — status UNVERIFIED. Recheck M49-024 z powyższego audytu (r=8,3 m) unieważniony przez przegląd r8 (mierzony łuk NIE jest wjazdem na PZZ)."
+      },
+      {
+        "nr": 2,
+        "zakres": ["M49-012", "M49-026"],
+        "przed": "teza „brama dla ciężarówek” (node 3954799626, access=no) — wartości 5,0 m / 6,0 m przy statusie częściowo uzasadnionym",
+        "po": "UNVERIFIED (wartości liczbowe pozostawione jako pomiar ortofoto, bez statusu weryfikacji). Node 3954799626 (barrier=gate, access=no) leży ~400 m od celu P6; teza „brama dla ciężarówek” bez potwierdzenia w źródle (Enea Ciepło: przetargi na dostawy autocysternami na EC Andersa 15 nie wskazują bramy). Do archiwum ZIP v2 dodano wycinek M49-G12-gate.jpg obejmujący bramę (bbox EPSG:2180: 778533,595317,778693,595477) — stary M49-G12.jpg pokazywał bbox P6 bez bramy."
+      },
+      {
+        "nr": 3,
+        "zakres": ["M49-029"],
+        "przed": "obiekt „pas wyjazdowy … kier. Zabłudów”, odległość mierzona od skrzyżowania ze Stoczni Gdańskiej, status SOURCED",
+        "po": "ESTIMATED ±50 m. Poprawiony kierunek: pas WJAZDOWY do Miasta (PFU 2020: „obsługuje ruch… na kierunku do Miasta” — DK19 biegnie NW–SE, miasto na NW). Punkt odniesienia: stały punkt kontroli — parking przy DK 19 (PFU 2015; way 1504105385, centroid 53,0969659/23,2332992). Odległość wzdłuż geometrii OSM DK19 od parkingu do pozycji WIM: 1296 m (zgodność z „ok. 1295 m” PFU 2020 <0,1%). Załącznik nr 5 (mapa lokalizacji WIM area 1) pobrany z BIP (zalaczniki zabludowska.7z → zalacznik nr 5.pdf) i dołączony do ZIP v2; odczytu współrzędnych ze skanu (OCR) nie wykonano — status ESTIMATED dopóki brak odczytu mapy."
+      },
+      {
+        "nr": 4,
+        "zakres": ["M49-031"],
+        "przed": "cytat TVP3 z tekstem oraz data wejścia w życie styczeń 2026",
+        "po": "cytat ograniczony do TYTUŁU („Dojlidy bez tranzytu ciężarówek od stycznia [wideo]” — strona pokazuje tylko tytuł, treść nieweryfikowalna); data: „styczeń 2026 wg tytułu TVP3; komunikat 19.11.2025 daty nie podaje”."
+      },
+      {
+        "nr": 5,
+        "zakres": ["M49-035"],
+        "przed": "Karpińskiego opisana jako tertiary",
+        "po": "way 275237230: highway=unclassified (potwierdzone API OSM) — poprawione w manifest.csv i README."
+      },
+      {
+        "nr": 6,
+        "zakres": ["ZIP"],
+        "przed": "ZIP v1 bez wycinków narożników R-*",
+        "po": "ZIP v2 (mistral-p6-dojlidy-gates-files-v2.zip) zawiera wycinki narożników R-G01…R-G09, R-G11…R-G14 (PNG 400×400, J±20 m — podstawa pomiaru promieni, bez nich promieni nie da się sprawdzić; R-G10 celowo pominięty, promień wycofany) oraz M49-G12-gate.jpg, docs/ (PFU 2020 docx, PFU 2015 skan, załącznik nr 5 mapa WIM) i FILES.md ze skorowidzem bboxów."
+      }
+    ],
+    "status": "OK — poprawki r8 (M49-FIX) 1–6 zastosowane"
+  },
+  "status": "OK — korekta M49-012 zastosowana; poprawki r8 (M49-FIX) dodane (patrz sekcja fix_r8)"
+}
