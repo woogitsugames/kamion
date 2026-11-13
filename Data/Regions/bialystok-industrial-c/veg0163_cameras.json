@@ -1,0 +1,763 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (E,N = EPSG:2180 minus region origin; U re-seated on the collision)",
+ "cameras": [
+  {
+   "id": "g7_p01_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -537.81,
+    -601.1,
+    200.0
+   ],
+   "look_at": [
+    -518.54,
+    -624.09,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P01 Wołkowyska geotag, along Wołkowyska (a); photo files/g7-photo-01.jpg"
+  },
+  {
+   "id": "g7_p01_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -537.81,
+    -601.1,
+    200.0
+   ],
+   "look_at": [
+    -557.08,
+    -578.1,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P01 Wołkowyska geotag, along Wołkowyska (b); photo files/g7-photo-01.jpg"
+  },
+  {
+   "id": "g7_p02_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -536.65,
+    -574.94,
+    200.0
+   ],
+   "look_at": [
+    -555.99,
+    -597.88,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P02 Kowieńska geotag, along Kowieńska (a); photo files/g7-photo-02.jpg"
+  },
+  {
+   "id": "g7_p02_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -536.65,
+    -574.94,
+    200.0
+   ],
+   "look_at": [
+    -517.32,
+    -552.0,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P02 Kowieńska geotag, along Kowieńska (b); photo files/g7-photo-02.jpg"
+  },
+  {
+   "id": "g7_p03_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -543.39,
+    -560.39,
+    200.0
+   ],
+   "look_at": [
+    -520.91,
+    -580.25,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P03 Grodzieńska geotag, along Grodzieńska (a); photo files/g7-photo-03.jpg"
+  },
+  {
+   "id": "g7_p03_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -543.39,
+    -560.39,
+    200.0
+   ],
+   "look_at": [
+    -565.88,
+    -540.53,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P03 Grodzieńska geotag, along Grodzieńska (b); photo files/g7-photo-03.jpg"
+  },
+  {
+   "id": "g7_p04_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -545.1,
+    -540.19,
+    200.0
+   ],
+   "look_at": [
+    -564.33,
+    -563.22,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P04 Wileńska geotag, along Wileńska (a); photo files/g7-photo-04.jpg"
+  },
+  {
+   "id": "g7_p04_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -545.1,
+    -540.19,
+    200.0
+   ],
+   "look_at": [
+    -525.88,
+    -517.16,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P04 Wileńska geotag, along Wileńska (b); photo files/g7-photo-04.jpg"
+  },
+  {
+   "id": "g7_p05_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -541.78,
+    -533.87,
+    200.0
+   ],
+   "look_at": [
+    -561.42,
+    -556.55,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P05 Wileńska geotag, along Wileńska (a); photo files/g7-photo-05.jpg"
+  },
+  {
+   "id": "g7_p05_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -541.78,
+    -533.87,
+    200.0
+   ],
+   "look_at": [
+    -522.15,
+    -511.19,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P05 Wileńska geotag, along Wileńska (b); photo files/g7-photo-05.jpg"
+  },
+  {
+   "id": "g7_p06_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -527.42,
+    -513.41,
+    200.0
+   ],
+   "look_at": [
+    -547.06,
+    -536.09,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P06 Wileńska geotag, along Wileńska (a); photo files/g7-photo-06.jpg"
+  },
+  {
+   "id": "g7_p06_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -527.42,
+    -513.41,
+    200.0
+   ],
+   "look_at": [
+    -507.78,
+    -490.73,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P06 Wileńska geotag, along Wileńska (b); photo files/g7-photo-06.jpg"
+  },
+  {
+   "id": "g7_p07_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -530.85,
+    -512.16,
+    200.0
+   ],
+   "look_at": [
+    -507.99,
+    -531.59,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P07 Lidzka geotag, along Lidzka (a); photo files/g7-photo-07.jpg"
+  },
+  {
+   "id": "g7_p07_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -530.85,
+    -512.16,
+    200.0
+   ],
+   "look_at": [
+    -553.7,
+    -492.73,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P07 Lidzka geotag, along Lidzka (b); photo files/g7-photo-07.jpg"
+  },
+  {
+   "id": "g7_p08_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -497.36,
+    -482.78,
+    200.0
+   ],
+   "look_at": [
+    -518.34,
+    -504.23,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P08 Wileńska geotag, along Wileńska (a); photo files/g7-photo-08.jpg"
+  },
+  {
+   "id": "g7_p08_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -497.36,
+    -482.78,
+    200.0
+   ],
+   "look_at": [
+    -476.39,
+    -461.33,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P08 Wileńska geotag, along Wileńska (b); photo files/g7-photo-08.jpg"
+  },
+  {
+   "id": "g7_p09_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -382.58,
+    -725.55,
+    200.0
+   ],
+   "look_at": [
+    -354.11,
+    -716.1,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P09 Racławicka geotag, along Racławicka (a); photo files/g7-photo-09.jpg"
+  },
+  {
+   "id": "g7_p09_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -382.58,
+    -725.55,
+    200.0
+   ],
+   "look_at": [
+    -411.05,
+    -735.0,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P09 Racławicka geotag, along Racławicka (b); photo files/g7-photo-09.jpg"
+  },
+  {
+   "id": "g7_p10_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -490.16,
+    -393.38,
+    200.0
+   ],
+   "look_at": [
+    -477.61,
+    -420.63,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P10 Aleja Tysiąclecia Państwa Polskiego (nazwa OSM; sąsiedztwo Andersa) geotag, along Aleja Tysiąclecia Państwa Polskiego (a); photo files/g7-photo-10.jpg"
+  },
+  {
+   "id": "g7_p10_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -490.16,
+    -393.38,
+    200.0
+   ],
+   "look_at": [
+    -502.71,
+    -366.14,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P10 Aleja Tysiąclecia Państwa Polskiego (nazwa OSM; sąsiedztwo Andersa) geotag, along Aleja Tysiąclecia Państwa Polskiego (b); photo files/g7-photo-10.jpg"
+  },
+  {
+   "id": "g7_p11_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -423.35,
+    -795.71,
+    200.0
+   ],
+   "look_at": [
+    -430.82,
+    -824.77,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P11 Łańcucka geotag, along Łańcucka (a); photo files/g7-photo-11.jpg"
+  },
+  {
+   "id": "g7_p11_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -423.35,
+    -795.71,
+    200.0
+   ],
+   "look_at": [
+    -415.88,
+    -766.66,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P11 Łańcucka geotag, along Łańcucka (b); photo files/g7-photo-11.jpg"
+  },
+  {
+   "id": "g7_p12_a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -409.92,
+    -823.81,
+    200.0
+   ],
+   "look_at": [
+    -384.48,
+    -839.72,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P12 Łańcucka geotag, along Łańcucka (a); photo files/g7-photo-12.jpg"
+  },
+  {
+   "id": "g7_p12_b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -409.92,
+    -823.81,
+    200.0
+   ],
+   "look_at": [
+    -435.35,
+    -807.9,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "G7-P12 Łańcucka geotag, along Łańcucka (b); photo files/g7-photo-12.jpg"
+  },
+  {
+   "id": "g7_st_kowieska_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -476.06,
+    -561.76,
+    200.0
+   ],
+   "look_at": [
+    -491.21,
+    -535.87,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Kowieńska: eye level along the street axis from 12 %"
+  },
+  {
+   "id": "g7_st_kowieska_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -534.79,
+    -568.08,
+    200.0
+   ],
+   "look_at": [
+    -515.45,
+    -545.14,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Kowieńska: eye level along the street axis from 88 %"
+  },
+  {
+   "id": "g7_st_lidzka_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -581.81,
+    -446.66,
+    200.0
+   ],
+   "look_at": [
+    -560.8,
+    -468.08,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Lidzka: eye level along the street axis from 12 %"
+  },
+  {
+   "id": "g7_st_lidzka_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -534.49,
+    -505.65,
+    200.0
+   ],
+   "look_at": [
+    -557.35,
+    -486.22,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Lidzka: eye level along the street axis from 88 %"
+  },
+  {
+   "id": "g7_st_skidelska_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -591.69,
+    -543.23,
+    200.0
+   ],
+   "look_at": [
+    -613.81,
+    -522.97,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Skidelska: eye level along the street axis from 12 %"
+  },
+  {
+   "id": "g7_st_skidelska_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -609.59,
+    -410.75,
+    200.0
+   ],
+   "look_at": [
+    -629.28,
+    -433.38,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Skidelska: eye level along the street axis from 88 %"
+  },
+  {
+   "id": "g7_st_wokowyska_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -538.94,
+    -593.53,
+    200.0
+   ],
+   "look_at": [
+    -519.67,
+    -616.52,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Wołkowyska: eye level along the street axis from 12 %"
+  },
+  {
+   "id": "g7_st_wokowyska_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -465.5,
+    -648.9,
+    200.0
+   ],
+   "look_at": [
+    -485.53,
+    -671.24,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Wołkowyska: eye level along the street axis from 88 %"
+  },
+  {
+   "id": "g7_st_wisocka_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -603.81,
+    -471.17,
+    200.0
+   ],
+   "look_at": [
+    -581.79,
+    -491.55,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Świsłocka: eye level along the street axis from 12 %"
+  },
+  {
+   "id": "g7_st_wisocka_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -556.73,
+    -531.2,
+    200.0
+   ],
+   "look_at": [
+    -579.75,
+    -511.96,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Świsłocka: eye level along the street axis from 88 %"
+  },
+  {
+   "id": "g7_st_wileska_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -491.37,
+    -477.82,
+    200.0
+   ],
+   "look_at": [
+    -512.34,
+    -499.27,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Wileńska: eye level along the street axis from 12 %"
+  },
+  {
+   "id": "g7_st_wileska_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -576.53,
+    -566.56,
+    200.0
+   ],
+   "look_at": [
+    -557.89,
+    -543.05,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Wileńska: eye level along the street axis from 88 %"
+  },
+  {
+   "id": "g7_st_grodzieska_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -530.69,
+    -556.41,
+    200.0
+   ],
+   "look_at": [
+    -508.2,
+    -576.26,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Grodzieńska: eye level along the street axis from 12 %"
+  },
+  {
+   "id": "g7_st_grodzieska_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -416.31,
+    -620.0,
+    200.0
+   ],
+   "look_at": [
+    -443.85,
+    -631.91,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Grodzieńska: eye level along the street axis from 88 %"
+  },
+  {
+   "id": "g7_st_racawicka_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -389.73,
+    -697.37,
+    200.0
+   ],
+   "look_at": [
+    -401.83,
+    -669.92,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Racławicka: eye level along the street axis from 12 %"
+  },
+  {
+   "id": "g7_st_racawicka_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -402.05,
+    -738.09,
+    200.0
+   ],
+   "look_at": [
+    -423.87,
+    -758.68,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Racławicka: eye level along the street axis from 88 %"
+  },
+  {
+   "id": "g7_st_acucka_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -366.84,
+    -767.59,
+    200.0
+   ],
+   "look_at": [
+    -375.51,
+    -738.87,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Łańcucka: eye level along the street axis from 12 %"
+  },
+  {
+   "id": "g7_st_acucka_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "road",
+   "pos": [
+    -377.76,
+    -799.0,
+    200.0
+   ],
+   "look_at": [
+    -399.22,
+    -819.97,
+    199.4
+   ],
+   "fov_deg": 62.0,
+   "note": "Łańcucka: eye level along the street axis from 88 %"
+  }
+ ]
+}
