@@ -403,7 +403,7 @@ namespace Game.World.Import
                 // Optional alpha texture (road film overlays of parked cars): matt, no sky mirror.
                 Texture2D bt = null;
                 if (m.Get("texture") is string btex)
-                    bt = InstanceImporter.ImportTexture(r, Path.Combine(EditorTools.RepoRoot, "art-source", "world", "textures", btex + ".png"), clamp: false);
+                    bt = InstanceImporter.ImportTexture(r, WorldLibrary.Resolve(r.Region, "textures", btex + ".png"), clamp: false);
                 var gm = LitMaterial(path, albedo, rough, metal, bt, false, 0.5f, false, null);
                 if (bt != null)
                 {
@@ -435,7 +435,7 @@ namespace Game.World.Import
             if (tex != null || m.Get("emissive") != null)
             {
                 Texture2D t = null;
-                if (tex != null) t = InstanceImporter.ImportTexture(r, Path.Combine(EditorTools.RepoRoot, "art-source", "world", "textures", tex + ".png"), clamp: false);
+                if (tex != null) t = InstanceImporter.ImportTexture(r, WorldLibrary.Resolve(r.Region, "textures", tex + ".png"), clamp: false);
                 bool clip = m.Get("alpha_cutoff") != null;
                 Color? emission = null;
                 if (m.Get("emissive") is List<object> e)
