@@ -857,6 +857,21 @@ overrides:
       WORKING_VALUE); species from the crown shape (linden / maple); only positions are authored.
     confidence: low
     verify: tree positions on site / orthophoto
+  # ---------------------------------------------------------------- forest clearings (vegetation.forest_clearings, ADR 0163)
+  - id: bdot-forest-6bc0-sand-clearing
+    kind: forest_clearing
+    target: {bdot: "2BE4B432-6BC0-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      ADR 0163 (live p1-0161, frames 303305168125936 / 320215796381417 / 454716650857984 look W along the railway
+      towards the blocks of Bialostoczek). The BDOT10k OT_PTLZ_A polygon 2BE4B432-6BC0 (1203 generated trees, E -113..311
+      N -713..-446 local) is bare sand east of E ~ 220 local on the GUGiK 2024-05-27 orthophoto (0.25 m): a sand pit
+      with three tree clumps left standing and a tree strip along its SW edge. The cleared part is traced on the
+      orthophoto (+-2 m, artifacts/veg-0163/forest/ortho_clearing.jpg); the clumps are `keep` rings. No trees are
+      generated inside the clearing and its ground is bare soil (ground mask A). The rest of the stand is unchanged.
+    confidence: medium
+    verify: owner photo session (view W from the Andersa viaduct footway)
+    cleared_epsg2180: [[[778216.0, 595573.0], [778230.0, 595569.0], [778245.0, 595568.0], [778257.0, 595578.0], [778273.0, 595578.0], [778287.0, 595583.0], [778295.0, 595595.0], [778330.0, 595601.0], [778330.0, 595498.0], [778295.0, 595511.0], [778280.0, 595526.0], [778267.0, 595532.0], [778253.0, 595534.0], [778241.0, 595538.0], [778233.0, 595545.0], [778225.0, 595554.0], [778217.0, 595563.0]]]
+    keep_epsg2180: [[[778253.0, 595577.0], [778267.0, 595575.0], [778267.0, 595561.0], [778269.0, 595547.0], [778257.0, 595547.0], [778253.0, 595559.0]], [[778284.0, 595560.0], [778292.0, 595561.0], [778294.0, 595553.0], [778291.0, 595545.0], [778285.0, 595547.0]], [[778307.0, 595595.0], [778320.0, 595593.0], [778325.0, 595583.0], [778317.0, 595575.0], [778307.0, 595580.0]]]
   # ---------------------------------------------------------------- gaps between carriageways (roads/gores.py, ADR 0077)
   # Rule: a gap between carriageways is a kerbed island only where OSM or the orthophoto shows one. OSM has no
   # area:highway / traffic_island objects in this tile, so places the GUGiK orthophoto (WMS HighResolution 0.08 m,
