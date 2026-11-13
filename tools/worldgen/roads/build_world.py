@@ -56,6 +56,25 @@ def DEFAULT_OUT(region_id):
     return REPO / "Data" / "raw" / "derived" / region_id / "world"
 
 
+# ADR 0166: art-source/world/{props,signs,textures} (street_props.glb, props_meta.json, sign faces, furniture/plot
+# textures) is ONE shared library in git, built from the sign codes / boards of the reference region. Any other region
+# writes its own library next to its world output (Data/raw/derived/<id>/props|signs|textures, not in git) so a
+# build_world of a new region never rewrites the shared assets of region C.
+SHARED_LIBRARY_REGION = "bialystok-industrial-c"
+
+
+def props_library_dir(region_id: str, out_root: Path):
+    """None = the shared art-source library (reference region, default output only); else a per-region directory."""
+    if region_id == SHARED_LIBRARY_REGION and out_root == DEFAULT_OUT(region_id):
+        return None
+    return out_root.parent / "props"
+
+
+def props_meta_path(region_id: str, out_root: Path | None = None) -> Path:
+    d = props_library_dir(region_id, out_root or DEFAULT_OUT(region_id))
+    return (d or REPO / "art-source/world/props") / "props_meta.json"
+
+
 REPO = pipeline.REPO
 GENERATOR_VERSION = "world-c/1"
 
@@ -353,6 +372,73 @@ def surface_at(w, xy):
 
 
 def cameras(region_id, w):
+    """Control cameras. The reference region C keeps its authored, place-specific set (Andersa, Rondo Putry, Kwadrat
+    Park, fire station JRG2 ...); every other region gets a generic set derived from its own route and roundabouts
+    (ADR 0166: the C set assumes C street names and crashed on other tiles)."""
+    if region_id == SHARED_LIBRARY_REGION:
+        return cameras_industrial_c(region_id, w)
+    return cameras_generic(region_id, w)
+
+
+def cameras_generic(region_id, w):
+    """Region-agnostic control cameras: driver eye (2.5 m, rightmost lane of travel) at evenly spaced route stations,
+    each roundabout from ~40 m, one orthographic top view of the whole tile. Deterministic (sorted inputs)."""
+    P, s, eids, nodes_s, path = route_polyline(region_id, w)
+    L = float(s[-1])
+
+    def at(st):
+        st = float(np.clip(st, 0, L))
+        return np.array([np.interp(st, s, P[:, 0]), np.interp(st, s, P[:, 1])])
+
+    def lane_point(st):
+        p = at(st)
+        t = at(st + 1.0) - at(st - 1.0)
+        t /= max(np.hypot(*t), 1e-9)
+        c, cs, lat, z = surface_at(w, p)
+        sec = c.section(cs, w.net.sec_list)
+        hw = float(c.hw_at(cs))
+        tch, nch = c.line.frame(cs)
+        trav = 1 if float(np.dot(tch, t)) > 0 else -1
+        lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)
+        if getattr(sec, "lane_edges", None):
+            lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
+        q = c.line.offset_point(cs, lat_l)
+        return q, float(c.crossfall_z(cs, lat_l)), t
+
+    names = [graph_name(w, e) for e in eids]
+    cams = []
+    n = int(np.clip(round(L / 300.0), 3, 8))
+    for k in range(n):
+        st = L * (k + 0.5) / n
+        q, z, t = lane_point(st)
+        tgt = at(st + 60.0)
+        _, _, _, zt = surface_at(w, tgt)
+        i = int(np.searchsorted(s, st, side="right")) - 1
+        street = names[min(max(i, 0), len(names) - 1)] or "unnamed"
+        cams.append({"id": f"route_s{int(round(st)):04d}", "type": "persp", "fov_deg": 60.0, "route_s_m": r(st),
+                     "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 1.2)],
+                     "note": f"driver eye 2.5 m, control route s = {st:.0f} m of {L:.0f} m ({street})"})
+    # roundabouts: chains flagged roundabout, grouped by street name (unnamed rings by their own chain), max 6
+    groups = {}
+    for c in sorted((c for c in w.net.chains if c.roundabout), key=lambda c: str(c.id)):
+        nm = graph_name(w, c.edges[0][0]) or f"ring_{c.id}"
+        groups.setdefault(nm, []).append(c)
+    for k, (nm, ring) in enumerate(sorted(groups.items())[:6]):
+        ctr = np.vstack([c.line.p for c in ring]).mean(0)
+        _, _, _, zc = surface_at(w, ctr)
+        cams.append({"id": f"roundabout_{k + 1:02d}_above", "type": "persp", "fov_deg": 55.0,
+                     "pos": [r(ctr[0] + 70), r(ctr[1] + 80), r(zc + 42)], "look_at": [r(ctr[0]), r(ctr[1]), r(zc)],
+                     "note": f"roundabout from ~40 m: {nm}"})
+    bb = w.region["bbox"]
+    cx = (bb["xmin"] + bb["xmax"]) / 2 - w.origin[0]
+    cy = (bb["ymin"] + bb["ymax"]) / 2 - w.origin[1]
+    _, _, _, zc = surface_at(w, at(L / 2))
+    cams.append({"id": "ortho_tile", "type": "ortho", "center": [r(cx), r(cy)], "size_m": float(bb["width_m"]),
+                 "height": r(zc + 150), "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto"})
+    return cams
+
+
+def cameras_industrial_c(region_id, w):
     P, s, eids, nodes_s, path = route_polyline(region_id, w)
 
     def at(st):
@@ -713,7 +799,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     for it in sorted(st["instances"], key=lambda t: (t["p"], t["e"], t["n"])):
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
-    props_meta = PR.export(st["codes"], st["boards"], out_root.parent / "props" if out_root != DEFAULT_OUT(region_id) else None)
+    props_meta = PR.export(st["codes"], st["boards"], props_library_dir(region_id, out_root))
     # hero assets (art-source/world/landmarks), frame estimate: viaduct segments (ADR 0067), hero buildings (ADR 0070),
     # hero depot halls (ADR 0071)
     props_meta = {**props_meta, **hero_tris, **st.get("hero_tris", {})}
@@ -1042,7 +1128,7 @@ def budget_from_disk(region_id: str, out_root: Path | None = None):
     gen = pipeline.REGIONS / region_id / "generated"
     man = json.loads((gen / "world_manifest.json").read_text(encoding="utf-8"))
     cams = json.loads((gen / "control_cameras.json").read_text(encoding="utf-8"))["cameras"]
-    pm = json.loads((REPO / "art-source/world/props/props_meta.json").read_text(encoding="utf-8"))["prototypes"]
+    pm = json.loads(props_meta_path(region_id, out_root).read_text(encoding="utf-8"))["prototypes"]
     inst = {}
     for ch in man["chunks"]:
         ci, cj = (int(x) for x in ch["id"].split("_"))
