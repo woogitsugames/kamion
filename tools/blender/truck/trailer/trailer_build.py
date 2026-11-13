@@ -459,14 +459,13 @@ def trailer_plate_image():
     """Fictional Polish trailer plate (TRAKT plate layout, other registration)."""
     W, H = 1040, 228
     blue, yellow, k = (0.0, 0.06, 0.40), (0.95, 0.75, 0.0), (0.02, 0.02, 0.02)
-    items = [("PL", 58, 52, 52, 0, (1, 1, 1), 0.02, "CENTER"),
+    items = [("PL", 65, 52, 52, 0, (1, 1, 1), 0.02, "CENTER"),
              ("BI 8N402", 590, 112, 170, 0, (0.01, 0.01, 0.01), 0.035, "CENTER")]
-    shapes = [("band", [(8, 8), (110, 8), (110, 220), (8, 220)], blue),
-              ("b", [(0, 0), (W, 0), (W, 6), (0, 6)], k), ("b", [(0, H - 6), (W, H - 6), (W, H), (0, H)], k),
-              ("b", [(W - 6, 0), (W, 0), (W, H), (W - 6, H)], k), ("b", [(0, 0), (6, 0), (6, H), (0, H)], k)]
+    # ADR 0175: 520 x 114 mm plate, R10 corners, frame 7 mm from the edge (M.plate_frame_shapes)
+    shapes = [("band", [(20, 20), (110, 20), (110, 208), (20, 208)], blue)] + M.plate_frame_shapes(W, H, rgb=k)
     for j in range(12):
         a = 2 * math.pi * j / 12
-        sx, sy = 59 + 30 * math.cos(a), 150 + 30 * math.sin(a)
+        sx, sy = 65 + 30 * math.cos(a), 150 + 30 * math.sin(a)
         shapes.append(("star", [(sx + (6.5 if i % 2 == 0 else 2.6) * math.cos(math.pi / 2 + i * math.pi / 5),
                                  sy + (6.5 if i % 2 == 0 else 2.6) * math.sin(math.pi / 2 + i * math.pi / 5))
                                 for i in range(10)], yellow))

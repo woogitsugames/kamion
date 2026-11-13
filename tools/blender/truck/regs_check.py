@@ -92,6 +92,12 @@ def dist3(a, b):
     return (d[0] ** 2 + d[1] ** 2 + d[2] ** 2) ** 0.5
 
 
+def plate_size(r, v, nm, b):
+    src = "Dz.U. 2024 poz. 1709 zał. 12 rys. 1 (review [zm. M44-FIX], P)"
+    r.rng(v, f"płyta tablicy {nm}: szerokość", "520 ± 1 mm", src, (b[1] - b[0]) * MM, lo=519, hi=521)
+    r.rng(v, f"płyta tablicy {nm}: wysokość", "114 ± 1 mm", src, (b[5] - b[4]) * MM, lo=113, hi=115)
+
+
 def check_tractor(r, T):
     v = "ciągnik"
     half = max(abs(x) for b in T.get(r"mudflap_-?1").values() for x in b[:2])     # widest body point (mirrors excluded)
@@ -146,7 +152,7 @@ def check_tractor(r, T):
     for pat, nm in ((r"mirror_main_glass_-1", "lusterko kl. II kierowca"), (r"mirror_main_glass_1", "kl. II pasażer"),
                     (r"mirror_wide_glass_-1", "kl. IV kierowca"), (r"mirror_wide_glass_1", "kl. IV pasażer"),
                     (r"mirror_kerb_glass", "kl. V pasażer"), (r"front_mirror_glass", "kl. VI przód")):
-        r.add(v, nm, "obowiązkowe", "jest" if T.get(pat) else "brak", bool(T.get(pat)), "R46 04 15.2.1.1.2")
+        r.add(v, nm, "obowiązkowe", "jest" if T.get(pat) else "brak", bool(T.get(pat)), "R46 04 15.2.1.1.1 (tab. N3)")
     k = T.get(r"mirror_kerb_glass")
     if k:
         b = union(k.values())
@@ -158,6 +164,9 @@ def check_tractor(r, T):
             r.rng(v, nm, ">= 2000 mm", "R46 04 15.2.4", b[4] * MM, lo=2000)
     pf, pr = union(T.get(r"plate").values()), union(T.get(r"rear_plate").values())
     r.add(v, "tablica rejestracyjna przód", "jest", "jest" if pf else "brak", bool(pf), "rozp. rej. §33")
+    for nm, b_ in (("przód", pf), ("tył", pr)):
+        if b_:
+            plate_size(r, v, nm, b_)
     if pr:
         r.rng(v, "tablica tył: dolna krawędź", ">= 300 mm", "WT zał. 5 §2.2 (P4-149)", pr[4] * MM, lo=300)
         r.rng(v, "tablica tył: górna krawędź", "<= 1200 mm", "WT zał. 5 §2.2 (P4-149)", pr[5] * MM, hi=1200)
@@ -288,6 +297,7 @@ def check_trailer(r, T):
         r.add(v, "osłony boczne R73", "obowiązkowe", "brak", False, "R73 01")
     pr = union(T.get(r"plate_rear").values())
     if pr:
+        plate_size(r, v, "tył", pr)
         r.rng(v, "tablica rejestracyjna tył: dolna krawędź", ">= 300 mm", "WT zał. 5 §2.2 (P4-149)", pr[4] * MM, lo=300)
         r.rng(v, "tablica rejestracyjna tył: górna krawędź", "<= 1200 mm", "WT zał. 5 §2.2 (P4-149)", pr[5] * MM,
               hi=1200)

@@ -27,6 +27,7 @@ CAMS = {
         "bok_obrysowe": dict(loc=(-3.6, -8.4, 1.25), target=(-1.25, -7.0, 1.05), lens=50),
         "przod": dict(loc=(3.0, 6.2, 1.9), target=(0.5, 1.6, 1.9), lens=40),
         "przod_lampa": dict(loc=(1.9, 3.0, 1.55), target=(1.1, 1.6, 1.40), lens=70),
+        "tablica": dict(loc=(0.0, -13.3, 0.87), target=(0.0, -12.0, 0.87), lens=70),
     },
     "tractor": {
         "tyl": dict(loc=(0.0, -9.5, 1.3), target=(0.0, -4.5, 0.9), lens=50),
@@ -36,6 +37,8 @@ CAMS = {
         "bok_odblaski": dict(loc=(-4.2, -3.6, 0.9), target=(-1.25, -2.6, 0.6), lens=60),
         "przod": dict(loc=(0.0, 8.5, 1.9), target=(0.0, 1.4, 1.9), lens=45),
         "przod_34": dict(loc=(5.0, 6.5, 2.2), target=(0.2, 0.2, 1.8), lens=45),
+        "tablica_przod": dict(loc=(0.0, 2.7, 0.84), target=(0.0, 1.4, 0.84), lens=70),
+        "tablica_tyl": dict(loc=(0.68, -5.8, 0.66), target=(0.68, -4.5, 0.66), lens=70),
     },
 }
 
