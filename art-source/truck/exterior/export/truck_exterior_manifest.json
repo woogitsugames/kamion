@@ -10,7 +10,7 @@
      "role": "CHASSIS",
      "rig_parent": "TruckExterior_LOD0",
      "fbx_parent": "TruckExterior_LOD0",
-     "tris": 28850,
+     "tris": 28968,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Metal",
@@ -1116,10 +1116,10 @@
      "parent": "TruckExterior_LOD0"
     }
    },
-   "tris_total": 105238,
-   "tris_before_decimation": 105238,
+   "tris_total": 105356,
+   "tris_before_decimation": 105356,
    "decimate_area_budget_k": 1.0,
-   "file_bytes": 8786540,
+   "file_bytes": 8797228,
    "build_s": 2.5
   },
   "LOD1": {
@@ -1130,7 +1130,7 @@
      "role": "CHASSIS",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 13386,
+     "tris": 13431,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Metal",
@@ -1153,7 +1153,7 @@
      "role": "CAB_Body",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 17715,
+     "tris": 17714,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim",
@@ -1240,7 +1240,7 @@
      "role": "WHEEL_FL",
      "rig_parent": "STEER_FL_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 1666,
+     "tris": 1661,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1274,7 +1274,7 @@
      "role": "WHEEL_FR",
      "rig_parent": "STEER_FR_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 1668,
+     "tris": 1659,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1532,7 +1532,7 @@
      "role": "WHEEL_RL",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 2858,
+     "tris": 2843,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1566,7 +1566,7 @@
      "role": "WHEEL_RR",
      "rig_parent": "TruckExterior_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 2857,
+     "tris": 2843,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -1600,7 +1600,7 @@
      "role": "GLASS_Windscreen",
      "rig_parent": "CAB_Body_LOD1",
      "fbx_parent": "TruckExterior_LOD1",
-     "tris": 246,
+     "tris": 244,
      "materials": [
       "MI_Ext_Glass"
      ],
@@ -2209,11 +2209,11 @@
     }
    },
    "collision": {},
-   "tris_total": 43000,
-   "tris_before_decimation": 99101,
-   "decimate_area_budget_k": 129.21,
-   "file_bytes": 4091740,
-   "build_s": 3.3
+   "tris_total": 42999,
+   "tris_before_decimation": 99219,
+   "decimate_area_budget_k": 128.73,
+   "file_bytes": 4094860,
+   "build_s": 4.2
   },
   "LOD2": {
    "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD2.fbx",
@@ -2223,7 +2223,7 @@
      "role": "CHASSIS",
      "rig_parent": "TruckExterior_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 4297,
+     "tris": 4323,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Paint",
@@ -3028,11 +3028,11 @@
     }
    },
    "collision": {},
-   "tris_total": 17812,
-   "tris_before_decimation": 84313,
+   "tris_total": 17838,
+   "tris_before_decimation": 84431,
    "decimate_area_budget_k": 0.01,
-   "file_bytes": 1808860,
-   "build_s": 2.7
+   "file_bytes": 1813148,
+   "build_s": 3.5
   }
  },
  "tri_budget": {
@@ -3081,9 +3081,9 @@
   "cull": 0.006
  },
  "hidden_faces": {
-  "removed": 12188,
-  "tested": 58048,
-  "tris_before_cleanup": 131248,
+  "removed": 12189,
+  "tested": 58108,
+  "tris_before_cleanup": 131368,
   "method": "ray visibility from ~400 exterior points (3 rings x 24 azimuths, 0.3-8 m high, top views) + in-cab eye points; moving parts (doors, wheels, steering, wipers, mudflaps) tested only against themselves; glass treated as transparent"
  },
  "slots": {
@@ -3475,7 +3475,7 @@
  "shader_contract": {
   "name": "Kamion/TruckExterior (Shader Graph, URP Lit opaque; Glass = transparent; MirrorRT = unlit RT)",
   "uv0 'Atlas'": "unique atlas UV per slot (right wheels + right caliper reuse the left wheels' UVs mirrored)",
-  "uv1 'Decal'": "Paint slot only: decal atlas UV (T_Ext_Decal); (0.002, 0.002) = transparent texel elsewhere",
+  "uv1 'Decal'": "Paint slot: decal atlas UV (T_Ext_Decal); (0.002, 0.002) = transparent texel elsewhere. Lights slot (ADR 0181): lens frame, x = W_mm + u', y = style * 256 + H_mm + v' (u', v' = 0.02 + 0.96 * 0..1 across the lens; styles = lens_styles); floor(x) = 0 -> no lens",
   "uv2 'Data'": "x = light group id (light_groups), y = emissive mask (1 on lamp emitters); 0 elsewhere",
   "color 'Col'": "rgb: sRGB-encoded tint for Glass (windscreen green, lens clear), white elsewhere; a: IOR - 1 of the transparent surface (0.52 laminated glass, 0.59 polycarbonate lamp lens; 1 elsewhere). Glass shader: Fresnel F0 = ((n-1)/(n+1))^2, Schlick, smoothness 0.97 (lens 1.0); lamp lenses are real 6 mm shells (outer + inner face + rim), so they show two reflections and a lit edge",
   "textures": "T_Ext_<Slot>_C (RGB albedo sRGB, A roughness), _N (tangent normal, OpenGL +Y), _M (R AO, G dirt mask at full strength, B metallic; Paint: B = paint mask), all linear except C.rgb",
@@ -3512,6 +3512,14 @@
    "13": "PLATE",
    "14": "FOG_REAR",
    "15": "REFLEX"
+  },
+  "lens_styles": {
+   "0": "NONE",
+   "1": "PILLOW",
+   "2": "FLUTE",
+   "3": "FRESNEL",
+   "4": "REFLEX",
+   "5": "PLATE"
   },
   "light_colours_linear": {
    "DRL": [
@@ -3601,11 +3609,11 @@
     }
    },
    "Trim": {
-    "area_m2": 101.15,
-    "uv_coverage": 0.466,
+    "area_m2": 101.04,
+    "uv_coverage": 0.467,
     "px_per_m": {
      "High": 278,
-     "Medium": 69,
+     "Medium": 70,
      "Low": 35
     }
    },
@@ -3619,12 +3627,12 @@
     }
    },
    "Lights": {
-    "area_m2": 1.3,
-    "uv_coverage": 0.567,
+    "area_m2": 1.43,
+    "uv_coverage": 0.573,
     "px_per_m": {
-     "High": 1353,
-     "Medium": 338,
-     "Low": 169
+     "High": 1295,
+     "Medium": 324,
+     "Low": 162
     }
    }
   }

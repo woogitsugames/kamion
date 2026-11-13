@@ -213,7 +213,7 @@ def to_game_piece(o, gm):
         for li in p.loop_indices:
             me.uv_layers["Data"].data[li].uv = (emit, 1.0 if emit and grp != "REFLEX" else 0.0)
             me.uv_layers["Decal"].data[li].uv = pack(me.vertices[me.loops[li].vertex_index].co, style) \
-                if pack and sl == "Lights" and abs(p.normal[thin]) > 0.5 else (0.002, 0.002)
+                if pack and sl == "Lights" and A.lens_face(style, p.normal[thin]) else (0.002, 0.002)
             col.data[li].color = (1.0, 1.0, 1.0, 1.0)
     slots = []
     for sl in face_slot:

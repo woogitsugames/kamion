@@ -64,7 +64,7 @@ Shader "Kamion/Truck Exterior"
         _LampHueKnee ("Signal lamps: hue-preserving shoulder knee (max channel, exposed units)", Range(0, 2)) = 0.4
         _LampHueCeiling ("Signal lamps: hue-preserving ceiling of max(r,g,b) (0 = off)", Range(0, 4)) = 0.8
         _LensDetail ("Lamp lens optics from uv1 (ADR 0181; 0 = flat lenses)", Range(0, 1)) = 1
-        _PlateIllum ("Number plate luminance / plate lamp luminance at the top edge (ADR 0181)", Range(0, 0.1)) = 0.008
+        _PlateIllum ("Number plate luminance / plate lamp luminance at the top edge (ADR 0181)", Range(0, 0.1)) = 0.005
     }
     SubShader
     {

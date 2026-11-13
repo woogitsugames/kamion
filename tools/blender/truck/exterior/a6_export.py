@@ -515,8 +515,7 @@ def lens_style(pname, mname, grp):
 
 def lens_frame(points):
     """Lens frame from the lens vertices (vehicle frame, metres): returns (pack(co, style_name) -> uv1, thin axis).
-    Only faces of the lens plane (|normal[thin]| > 0.5) take the frame; the thin side faces of a lens box would get a
-    degenerate coordinate (constant = the gasket) - they keep the plain emission."""
+    Which faces take the frame: lens_face()."""
     lo, hi = bbox(points)
     ext = hi - lo
     thin = min(range(3), key=lambda i: ext[i])
@@ -529,6 +528,13 @@ def lens_frame(points):
         v = min(max((co[av] - lo[av]) / max(ext[av], 1e-6), 0.0), 1.0)
         return (w + 0.02 + 0.96 * u, LENS_STYLES.index(style) * 256 + h + 0.02 + 0.96 * v)
     return pack, thin
+
+
+def lens_face(style, n_thin):
+    """Faces of the lens plane and its bevels take the frame. The side faces of a lens box have a degenerate coordinate
+    (they sit on the lens edge = the gasket): right for a chamber of a combination lamp (no bright rim round it), wrong
+    for a thin marker / plate-lamp strip whose side is what one sees - FLUTE side faces keep the plain emission."""
+    return style != "FLUTE" or abs(n_thin) > 0.2
 
 
 def slot_of(pname, mname):
@@ -617,7 +623,7 @@ def to_game_piece(o, gm):
                 u = (rect[1] - co.x) / (rect[1] - rect[0])
                 v = 0.75 + 0.25 * (co.z - rect[2]) / (rect[3] - rect[2])
                 de[li].uv = (min(max(u, 0.0), 1.0), min(max(v, 0.75), 1.0))
-            elif p.index in lens_of and abs(p.normal[thin]) > 0.5:
+            elif p.index in lens_of and lens_face(lens_of[p.index], p.normal[thin]):
                 de[li].uv = pack(me.vertices[me.loops[li].vertex_index].co, lens_of[p.index])
             else:
                 de[li].uv = (0.002, 0.002)

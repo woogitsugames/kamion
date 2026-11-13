@@ -109,6 +109,19 @@ namespace Game.Editor.Setup
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>ADR 0181: number-plate luminance as a fraction of the plate lamp's lens luminance at the plate's top
+        /// edge (2 000 cd/m2 lens -> ~8 cd/m2 on a white plate; UN R4 asks for >= 2.5 cd/m2 - quoted from memory,
+        /// UNVERIFIED). WORKING_VALUE, tuned on the dusk control cameras.</summary>
+        public const float PlateIllum = 0.005f;
+
+        /// <summary>ADR 0181: lens optics parameters of a Kamion/Truck Exterior material (tractor and trailer). Set here on
+        /// every rebuild: an existing material asset keeps its serialized values when the shader default changes.</summary>
+        public static void ApplyLensSettings(Material m)
+        {
+            m.SetFloat("_LensDetail", 1f);
+            m.SetFloat("_PlateIllum", PlateIllum);
+        }
+
         // ------------------------------------------------------------------ 1. sources
 
         static void CopySources(Dictionary<string, object> ext, Dictionary<string, object> inn)
@@ -310,6 +323,7 @@ namespace Game.Editor.Setup
                     }
                     m.SetFloat("_Lamps", slot == "Lights" ? 1f : 0f);
                     if (slot == "Lights") m.EnableKeyword("_KAMION_TRUCK_LAMPS");
+                    ApplyLensSettings(m);
                     Add("MI_Ext_" + slot, m);
                 }
                 var g = Mat(dir, "MI_Ext_Glass", glass);

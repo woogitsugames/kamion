@@ -6,7 +6,7 @@
 //     uv1.x = W_mm + u',  uv1.y = style * 256 + H_mm + v',   u', v' = 0.02 + 0.96 * (0..1 across the lens)
 // W / H = lens size in whole millimetres, constant over the lens (survives interpolation and LOD decimation);
 // floor(uv1.x) == 0 -> not a lens (plain emission as before). Styles = a6_export.LENS_STYLES:
-//   1 PILLOW  multi-LED chamber behind pillow optics (indicator / tail / stop): emitters on a ~26 mm grid, 3.5 mm pillows
+//   1 PILLOW  multi-LED chamber behind pillow optics (indicator / tail / stop): emitters on a ~30 mm grid, 3.5 mm pillows
 //   2 FLUTE   marker lamp: a row of emitters along the long axis behind 2.2 mm flutes
 //   3 FRESNEL reverse / rear fog: one emitter cluster behind 3 mm Fresnel rings
 //   4 REFLEX  retro-reflector: 3 mm corner-cube array (surface only, never emits)
@@ -88,7 +88,7 @@ KamionLens KamionLensEval(float2 uv1)
         half hot = (half)exp(-r * r / (2.0 * sig * sig));
         s = lerp(0.26, 0.14 + 0.86 * hot, fH) * lerp(1.0, 0.65 + 0.60 * ring, fR);
         L.slope = (half2)(p / max(r, 1e-3)) * ((ring - 0.5) * 0.25 * fR);
-        L.shade = lerp(1.0, 0.78 + 0.38 * ring, fR) * (1.0 + 0.35 * fH * (half)exp(-r * r / (2.0 * 2.5 * 2.5)));
+        L.shade = 0.85 * lerp(1.0, 0.78 + 0.38 * ring, fR) * (1.0 + 0.35 * fH * (half)exp(-r * r / (2.0 * 2.5 * 2.5)));
         far = 1.0 - fH;
     }
     else if (style > 1.5)
@@ -114,22 +114,25 @@ KamionLens KamionLensEval(float2 uv1)
     }
     else
     {
-        // Pillow optics over an emitter grid: cells ~26 mm, one LED in a shallow reflector cup per cell.
-        float2 n = max(round(size / 26.0), 1.0);
+        // Pillow optics over an emitter grid: cells ~30 mm, one LED in a round reflector cup per cell.
+        float2 n = max(round(size / 30.0), 1.0);
         float2 cs = size / n;
         float2 c = (frac(q * n) - 0.5) * cs;
-        float r2 = dot(c, c);
-        half led = (half)exp(-r2 / (2.0 * 4.0 * 4.0));
+        float r = length(c);
+        float rc = 0.46 * min(cs.x, cs.y);                       // cup radius
+        half led = (half)(0.75 * exp(-r * r / (2.0 * 4.5 * 4.5)) + 0.25 * exp(-r * r / (2.0 * 1.6 * 1.6)));
         half fL = KamionLensFade(fw, min(cs.x, cs.y));
-        half wall = (half)smoothstep(0.0, 0.10, 1.0 - 2.0 * max(abs(c.x) / cs.x, abs(c.y) / cs.y));
+        half cup = 1.0 - (half)smoothstep(rc - 1.5, rc + 1.0, r);  // 1 inside the cup, 0 on the carrier between cups
+        half dish = (half)saturate(1.0 - r / rc);                  // 0 rim .. 1 emitter
         float2 m = frac(p / 3.5) - 0.5;
         float2 pm = 1.0 - 4.0 * m * m;
         half pil = (half)(pm.x * pm.y);
         half fP = KamionLensFade(fw, 3.5);
-        s = lerp(0.24, (0.10 + 0.90 * led) * lerp(0.6, 1.0, wall), fL) * lerp(1.0, 0.72 + 0.50 * pil, fP);
+        s = lerp(0.24, (0.10 + 0.90 * led) * lerp(0.75, 1.0, cup), fL) * lerp(1.0, 0.72 + 0.50 * pil, fP);
         L.slope = (half2)(-8.0 * m * pm.yx) * (0.06 * fP);
-        L.shade = lerp(1.0, 0.78 + 0.40 * pil, fP) * lerp(1.0, 0.70 + 0.30 * wall, fL)
-                * (1.0 + 0.5 * fL * (half)exp(-r2 / (2.0 * 1.6 * 1.6)));
+        // Unlit: metallised cups read lighter towards the rim (they mirror the sky), the carrier darker, the die a dot.
+        L.shade = lerp(1.0, 0.80 + 0.36 * pil, fP) * lerp(1.0, lerp(0.72, 1.12 - 0.22 * dish, cup), fL)
+                * (1.0 + 0.5 * fL * (half)exp(-r * r / (2.0 * 1.6 * 1.6)));
         far = 1.0 - fL;
     }
     s = saturate(s);

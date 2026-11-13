@@ -26,7 +26,7 @@ try {
     pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $t -Lighting overcast -Cameras $Cams -TruckLamps 'low,brake,hazard' -OutputDir "$out/$t-overcast-lit"
   }
   if ($Tests) {
-    pwsh scripts/test.ps1 -Platform EditMode -Filter 'Game.Tests.EditMode.TruckLampEncodingTests;Game.Tests.TruckRegulationLampTests'
+    pwsh scripts/test.ps1 -Platform EditMode -Filter 'Game.Tests.EditMode.TruckLampEncodingTests;Game.Tests.TruckRegulationLampTests;Game.Tests.TruckLampLensTests'
     Copy-Item "$wt/artifacts/tests/*.xml" $out -ErrorAction SilentlyContinue
   }
 } finally {

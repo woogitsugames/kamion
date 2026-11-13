@@ -216,6 +216,7 @@ namespace Game.Editor.Setup
                     m.SetVector("_CurtainPosts", new Vector4(3.4f, 0f, 0.22f, 0.7f));
                     m.SetFloat("_Lamps", slot == "Lights" ? 1f : 0f);
                     if (slot == "Lights") m.EnableKeyword("_KAMION_TRUCK_LAMPS");
+                    TruckAssetBuilder.ApplyLensSettings(m);   // ADR 0181
                     EditorUtility.SetDirty(m);
                     entries.Add(new TruckMaterialSet.Entry { slot = name, material = m });
                 }
