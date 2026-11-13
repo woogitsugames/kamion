@@ -8,3 +8,8 @@
 
 Następny krok: `cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\region-0166; pwsh C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1 -Acquire -Pool heavy -Owner region-0166; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-dojlidy`
 
+
+## agent #3 (2026-11-13, po incydencie API)
+- build_world dojlidy padał w `cameras()` (IndexError: kamery C zakładały ulicę Andersa na trasie). Naprawa ogólna: `cameras()` -> C: `cameras_industrial_c` (bez zmian), inne: `cameras_generic` (stacje trasy co ~300 m, ronda z góry, ortho kafla).
+- Efekt uboczny 1. przebiegu: przebudowa WSPÓLNEJ biblioteki `art-source/world/{props,textures}` zestawem znaków dojlidy -> przywrócone do main; `props_library_dir()`: region != C pisze do `Data/raw/derived/<id>/props|signs|textures` (poza git).
+- Następny krok: `Get-Content artifacts\region-0166\build_world2.log -Tail 30`
