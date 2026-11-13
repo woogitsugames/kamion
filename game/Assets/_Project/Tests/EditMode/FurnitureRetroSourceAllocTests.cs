@@ -18,6 +18,9 @@ namespace Game.Tests
         static readonly MethodInfo Initialize = T.GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Static);
         static readonly MethodInfo Begin = T.GetMethod("BeginCamera", BindingFlags.NonPublic | BindingFlags.Static);
         static readonly object[] Args = { default(ScriptableRenderContext), null };
+        static readonly object s_Zero = 0f;
+        static readonly FieldInfo s_FastRetryUntil = T.GetField("s_FastRetryUntil", BindingFlags.NonPublic | BindingFlags.Static);
+        static readonly FieldInfo s_NextFind = T.GetField("s_NextFind", BindingFlags.NonPublic | BindingFlags.Static);
         static void Frame() => Begin.Invoke(null, Args);
         static void Field(string name, object v) => T.GetField(name, BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, v);
 
@@ -41,12 +44,14 @@ namespace Game.Tests
             return lamps;
         }
 
-        static long Measure(int frames, Action before)
+        static int Measure(int frames, Action before)
         {
             for (int i = 0; i < 3; i++) { before?.Invoke(); Frame(); }   // warm-up: JIT, first discovery
-            long a = GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < frames; i++) { before?.Invoke(); Frame(); }
-            return GC.GetAllocatedBytesForCurrentThread() - a;
+            int control = GcAllocCounter.Count(() => GC.KeepAlive(new byte[64]));
+            Assert.Greater(control, 0, "control: GC.Alloc Recorder must be live");
+            int harness = before != null ? GcAllocCounter.Count(() => { for (int i = 0; i < frames; i++) before(); }) : 0;
+            int total = GcAllocCounter.Count(() => { for (int i = 0; i < frames; i++) { before?.Invoke(); Frame(); } });
+            return total - harness;
         }
 
         [Test] public void CompleteRigDoesNotAllocate()
@@ -54,9 +59,9 @@ namespace Game.Tests
             Rig(true);
             Frame();
             Assert.AreEqual(1, Shader.GetGlobalVector("_FurnitureRetroState").x);
-            long bytes = Measure(200, null);
-            Debug.Log($"[RetroAlloc] complete rig: {bytes} B / 200 frames");
-            Assert.That(() => Frame(), Is.Not.AllocatingGCMemory());
+            int allocs = Measure(200, null);
+            Debug.Log($"[RetroAlloc] complete rig: {allocs} GC.Alloc / 200 frames");
+            Assert.AreEqual(0, allocs, $"complete rig allocated {allocs} GC.Alloc / 200 frames");
         }
 
         [Test] public void IncompleteRigWithUnchangedHierarchyDoesNotRescan()
@@ -64,24 +69,24 @@ namespace Game.Tests
             Rig(false);
             Frame();
             // Past the scene-change fast retry, idle timer elapsed every frame: the old code rescanned (allocated) here.
-            Field("s_FastRetryUntil", 0f);
-            long bytes = Measure(200, () => Field("s_NextFind", 0f));
-            Debug.Log($"[RetroAlloc] incomplete rig, timer forced every frame: {bytes} B / 200 frames");
+            s_FastRetryUntil.SetValue(null, s_Zero);
+            int allocs = Measure(200, () => s_NextFind.SetValue(null, s_Zero));
+            Debug.Log($"[RetroAlloc] incomplete rig, timer forced every frame: {allocs} GC.Alloc / 200 frames");
             Assert.AreEqual(0, Shader.GetGlobalVector("_FurnitureRetroState").x);
-            Assert.That(() => Frame(), Is.Not.AllocatingGCMemory());
+            Assert.AreEqual(0, allocs, $"incomplete rig allocated {allocs} GC.Alloc / 200 frames");
         }
 
         [Test] public void NoTruckSteadyStateDoesNotAllocate()
         {
             Frame();
-            Field("s_FastRetryUntil", 0f);
+            s_FastRetryUntil.SetValue(null, s_Zero);
             Field("s_NextFind", Time.realtimeSinceStartup + 1000f);
-            long idle = Measure(200, null);
-            Debug.Log($"[RetroAlloc] no truck, between lookups: {idle} B / 200 frames");
-            Assert.That(() => Frame(), Is.Not.AllocatingGCMemory());
+            int idle = Measure(200, null);
+            Debug.Log($"[RetroAlloc] no truck, between lookups: {idle} GC.Alloc / 200 frames");
+            Assert.AreEqual(0, idle, $"no truck steady state allocated {idle} GC.Alloc / 200 frames");
             // The once-a-second lookup itself (FindAnyObjectByType): measured and logged, the bound is the 1 s timer.
-            long lookup = Measure(50, () => Field("s_NextFind", 0f));
-            Debug.Log($"[RetroAlloc] no truck, lookup forced every frame: {lookup} B / 50 lookups");
+            int lookup = Measure(50, () => s_NextFind.SetValue(null, s_Zero));
+            Debug.Log($"[RetroAlloc] no truck, lookup forced every frame: {lookup} GC.Alloc / 50 lookups");
         }
     }
 }

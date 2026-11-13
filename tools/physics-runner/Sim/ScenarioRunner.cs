@@ -13,6 +13,10 @@ namespace PhysicsRunner.Sim
         public string CsvPath;
         public string Commit = "unknown";
         public double? Duration;
+        /// <summary>Mutation switch (ADR 0158 tests only): run without the chassis-to-ground colliders, i.e. the pre-F2-fix runner.</summary>
+        public bool DisableBodyContact;
+        /// <summary>Mutation switch (ADR 0158 tests only): the old explicit gyroscopic update in <see cref="RigidBody6Dof"/>.</summary>
+        public bool ExplicitGyroscopic;
     }
 
     public sealed class CheckResult
@@ -36,6 +40,11 @@ namespace PhysicsRunner.Sim
         public double MeanStepMicros;
         public double StaticKingpinLoad;
         public double TotalMass;
+        /// <summary>Articulation (yaw) hard-stop angle from the fifth-wheel definition [deg].</summary>
+        public double ArticulationLimitDeg;
+        /// <summary>True when a NaN was seen in any body state (run aborted at that step).</summary>
+        public bool NanDetected;
+        public double NanT;
         public int CouplingEvents, UncouplingEvents, ShiftCount, RejectedShifts;
         public bool Passed { get { foreach (var c in Checks) if (!c.Passed) return false; return true; } }
         public double Metric(string name, double arg = 0, double from = 0, double to = 0) => Metrics.Compute(this, name, arg, from, to);
@@ -48,6 +57,8 @@ namespace PhysicsRunner.Sim
         public RigidBody6Dof Body = null!;
         public RigidBody6Dof TrailerBody;
         public AnalyticGround Ground = null!;
+        /// <summary>Chassis colliders vs ground (Unity: PhysX BoxColliders), ADR 0158. Null = disabled.</summary>
+        public BodyGroundContact TractorContact, TrailerContact;
         public VehicleModel Tractor => Combo.Tractor;
         public TrailerModel Trailer => Combo.Trailer;
         public IEnumerable<WheelState> AllWheels
@@ -218,12 +229,24 @@ namespace PhysicsRunner.Sim
                 ctx.TrailerBody = tb;
                 if (v0 > 0.01) trailer.InitializeMoving(v0);
             }
+            if (sc.initial.dropHeight > 0)
+            {
+                ctx.Body.Position += n * sc.initial.dropHeight;
+                if (ctx.TrailerBody != null) ctx.TrailerBody.Position += n * sc.initial.dropHeight;
+            }
             if (v0 > 0.01) tractor.InitializeMoving(v0, sc.initial.gear);
 
             bool park0 = sc.initial.parkingBrake || (sc.driver.type == "timeline" && sc.driver.keys.Length > 0 && sc.driver.keys[0].parkingBrake);
             tractor.InitParking(park0);
             if (trailer != null) trailer.Brakes.InitSpringChambers(trailer.Group);
             if (trailer != null && sc.overrides.coupled) trailer.Brakes.InitServiceChambers(trailer.Group, tractor.Air.TrailerControlLine);
+            ctx.Body.ImplicitGyroscopic = !opt.ExplicitGyroscopic;
+            if (ctx.TrailerBody != null) ctx.TrailerBody.ImplicitGyroscopic = !opt.ExplicitGyroscopic;
+            if (!opt.DisableBodyContact && sc.overrides.bodyContact)
+            {
+                ctx.TractorContact = new BodyGroundContact(BodyGroundContact.TractorColliders(tractor.Def));
+                if (trailer != null) ctx.TrailerContact = new BodyGroundContact(BodyGroundContact.TrailerColliders(trailer.Def));
+            }
             return ctx;
         }
 
@@ -291,6 +314,7 @@ namespace PhysicsRunner.Sim
                     return new PathDriver(d, wb);
                 }
                 case "touch": return new TouchDriver(d, s, sc.dt);
+                case "fuzz": return new FuzzDriver(d);
                 default: throw new ArgumentException($"Unknown driver type '{d.type}'");
             }
         }
@@ -329,8 +353,7 @@ namespace PhysicsRunner.Sim
                     tractorState = s.Body.State;
                     if (s.TrailerBody != null) trailerState = s.TrailerBody.State;
                     s.Combo.Step(dt, tractorState, trailerState, inp, s.Ground);
-                    s.Body.Integrate(dt, s.Combo.TractorForce, s.Combo.TractorTorque);
-                    s.TrailerBody?.Integrate(dt, s.Combo.TrailerForce, s.Combo.TrailerTorque);
+                    StepBodies(s, dt);
                     sw.Stop();
                     ticks += sw.ElapsedTicks;
                     t += dt;
@@ -339,7 +362,11 @@ namespace PhysicsRunner.Sim
                     var smp = MakeSample(t, s, inp);
                     if (i % every == 0 || i == steps - 1) res.Samples.Add(smp);
                     if (double.IsNaN(s.Body.Position.x) || double.IsNaN(s.Body.Velocity.x) || (s.TrailerBody != null && double.IsNaN(s.TrailerBody.Position.x)))
-                        throw new InvalidOperationException($"{sc.id}: NaN at t={t}");
+                    {
+                        // Recorded as a metric (nan_detected) instead of thrown, so fuzz runs report it as an
+                        // invariant violation rather than crashing the harness.
+                        res.NanDetected = true; res.NanT = t; break;
+                    }
                     if (sc.endCondition == "wheel_lift")
                     {
                         if (liftTime < 0 && smp.WheelsOffGround > 0) liftTime = t;
@@ -349,6 +376,7 @@ namespace PhysicsRunner.Sim
             }
             finally { csv?.Dispose(); }
             res.MeanStepMicros = steps > 0 ? ticks * 1e6 / Stopwatch.Frequency / Math.Max(1, res.Samples.Count * every) : 0;
+            res.ArticulationLimitDeg = s.Tractor.Def.fifthWheel.yawLimitDeg;
             res.CouplingEvents = s.Combo.FifthWheel.CouplingEvents;
             res.UncouplingEvents = s.Combo.FifthWheel.UncouplingEvents;
             res.ShiftCount = s.Tractor.Amt.ShiftCount;
@@ -361,6 +389,26 @@ namespace PhysicsRunner.Sim
                 res.Checks.Add(new CheckResult { Spec = c, Value = v, Passed = ok });
             }
             return res;
+        }
+
+        /// <summary>Integrates both bodies with the solver forces plus the chassis-ground contact (ADR 0158).</summary>
+        public static void StepBodies(SimContext s, double dt)
+        {
+            Vec3 f = s.Combo.TractorForce, tq = s.Combo.TractorTorque;
+            if (s.TractorContact != null)
+            {
+                s.TractorContact.Solve(s.Body, f, tq, dt, s.Ground);
+                f += s.TractorContact.Force; tq += s.TractorContact.Torque;
+            }
+            s.Body.Integrate(dt, f, tq);
+            if (s.TrailerBody == null) return;
+            f = s.Combo.TrailerForce; tq = s.Combo.TrailerTorque;
+            if (s.TrailerContact != null)
+            {
+                s.TrailerContact.Solve(s.TrailerBody, f, tq, dt, s.Ground);
+                f += s.TrailerContact.Force; tq += s.TrailerContact.Torque;
+            }
+            s.TrailerBody.Integrate(dt, f, tq);
         }
 
         static double AxleMeanZ(TrailerModel tr)
@@ -391,7 +439,7 @@ namespace PhysicsRunner.Sim
             var m = s.Tractor; var b = s.Body;
             Vec3 fwd = b.Rotation * Vec3.Forward;
             Vec3 right = b.Rotation * Vec3.Right;
-            double maxRatio = 0, sumFz = 0, minFz = double.MaxValue, rearSlip = 0;
+            double maxRatio = 0, sumFz = 0, minFz = double.MaxValue, rearSlip = 0, maxFric = 0;
             int off = 0, bit = 0;
             ulong offMask = 0;
             foreach (var w in m.Wheels)
@@ -402,6 +450,8 @@ namespace PhysicsRunner.Sim
                 if (!w.Contact || w.Fz < 500) { off++; if (bit < 64) offMask |= 1UL << bit; }
                 bit++;
                 if (w.Driven && Math.Abs(w.Vx) > 2.0) rearSlip = Math.Min(rearSlip, w.KinematicSlip * Math.Sign(w.Vx));
+                if (w.Contact && w.Fz > 500 && w.Mu > 1e-6)
+                    maxFric = Math.Max(maxFric, Math.Sqrt(w.Fx * w.Fx + w.Fy * w.Fy) / (w.Mu * w.Fz));
             }
             var smp = new Sample
             {
@@ -434,6 +484,8 @@ namespace PhysicsRunner.Sim
                     if (!w.Contact || w.Fz < 500) { off++; if (bit < 64) offMask |= 1UL << bit; }
                     bit++;
                     if (Math.Abs(w.Vx) > 2.0) tSlip = Math.Min(tSlip, w.KinematicSlip * Math.Sign(w.Vx));
+                    if (w.Contact && w.Fz > 500 && w.Mu > 1e-6)
+                        maxFric = Math.Max(maxFric, Math.Sqrt(w.Fx * w.Fx + w.Fy * w.Fy) / (w.Mu * w.Fz));
                 }
                 Vec3 tright = tb.Rotation * Vec3.Right;
                 smp.HasTrailer = true; smp.Coupled = fw.Coupled;
@@ -449,8 +501,26 @@ namespace PhysicsRunner.Sim
                 smp.KineticEnergy += tb.KineticEnergy;
             }
             smp.MinFz = minFz;
+            smp.MaxFrictionRatio = maxFric;
+            smp.PotentialEnergy = 9.81 * (b.Mass * b.CenterOfMassWorld.y + (s.TrailerBody != null ? s.TrailerBody.Mass * s.TrailerBody.CenterOfMassWorld.y : 0));
             smp.WheelsOffGround = off;
             smp.OffMask = offMask;
+            int touching = 0;
+            foreach (var w in m.Wheels) if (w.Contact) touching++;
+            if (s.Trailer != null) foreach (var w in s.Trailer.Wheels) if (w.Contact) touching++;
+            smp.WheelsTouching = touching;
+            if (s.Trailer != null && s.Trailer.LandingGearLoad > 0) smp.WheelsTouching++; // landing gear is a solver ground contact too
+            if (s.TractorContact != null) { smp.BodyContacts += s.TractorContact.ActiveContacts; smp.BodyPenetration = s.TractorContact.MaxPenetration; }
+            if (s.TrailerContact != null) { smp.BodyContacts += s.TrailerContact.ActiveContacts; smp.BodyPenetration = Math.Max(smp.BodyPenetration, s.TrailerContact.MaxPenetration); }
+            Vec3 cT = b.CenterOfMassWorld;
+            smp.ComHeightAboveGround = cT.y - s.Ground.HeightAt(cT.x, cT.z);
+            if (s.TrailerBody != null)
+            {
+                Vec3 cR = s.TrailerBody.CenterOfMassWorld;
+                smp.ComHeightAboveGround = Math.Min(smp.ComHeightAboveGround, cR.y - s.Ground.HeightAt(cR.x, cR.z));
+            }
+            double mT = b.Mass + (s.TrailerBody != null ? s.TrailerBody.Mass : 0);
+            smp.SystemVel = (b.Velocity * b.Mass + (s.TrailerBody != null ? s.TrailerBody.Velocity * s.TrailerBody.Mass : Vec3.Zero)) / mT;
             smp.TractorWheelCount = m.Wheels.Length;
             return smp;
         }

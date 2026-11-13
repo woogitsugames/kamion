@@ -1,0 +1,90 @@
+using System.Collections.Generic;
+using Game.Core.Navigation;
+using NUnit.Framework;
+using UnityEngine;
+
+namespace Game.Tests
+{
+    /// <summary>M27 / ADR 0150: reachability. The generator flags the parts of the region graph outside the main
+    /// strongly connected component of the directed graph (node flag bit1, edge flag bit6 - plain flag bits, no
+    /// format change). A tap in such a part snaps the destination pin to the nearest node of the main component and
+    /// reports <see cref="PlanStatus.GoalOffReach"/> (HUD: NavText.OffReach) instead of a later "Brak dojazdu".</summary>
+    public class NavReachabilityTests  // NavigationService (Game.UI) parts: PlayMode NavReachabilityServiceTests
+    {
+        const string Region = "bialystok-industrial-c";
+
+        //   3 ---- 2            main SCC: two-way square 0-1-2-3
+        //   |      |
+        //   0 ---- 1 --(oneway)--> 4     spur: own SCC but drivable to - NOT off-reach (integration r5)
+        //   5 ---- 6                     off-reach pair (connected only "outside the tile")
+        internal static RouteGraph BuildWithOffReach()
+        {
+            var nodes = new[] { new Vector2(0, 0), new Vector2(200, 0), new Vector2(200, 200), new Vector2(0, 200),
+                                new Vector2(400, 0), new Vector2(600, 0), new Vector2(700, 0) };
+            var nodeFlags = new byte[] { 0, 0, 0, 0, 0, RouteGraph.FlagNodeOffReach, RouteGraph.FlagNodeOffReach };
+            return Build(nodes, nodeFlags, new (int, int, byte, string)[]
+            {
+                (0, 1, 0, "Dolna"), (1, 2, 0, "Prawa"), (2, 3, 0, "Gorna"), (3, 0, 0, "Lewa"),
+                (1, 4, RouteGraph.FlagOneway, "Slepa"),
+                (5, 6, RouteGraph.FlagOffReach, "Buska"), (6, 5, RouteGraph.FlagOffReach, "Buska"),
+            });
+        }
+
+        /// <summary>Graph from straight edges between nodes (same pattern as NavRoutingTests).</summary>
+        static RouteGraph Build(Vector2[] nodes, byte[] nodeFlags, (int a, int b, byte flags, string name)[] edges)
+        {
+            var g = new RouteGraph();
+            var names = new List<string> { "" };
+            g.NodePos = nodes; g.NodeFlags = nodeFlags;
+            int n = edges.Length;
+            g.EdgeFrom = new int[n]; g.EdgeTo = new int[n]; g.EdgeLength = new float[n]; g.EdgeClass = new byte[n]; g.EdgeFlags = new byte[n];
+            g.EdgeName = new ushort[n]; g.EdgeMaxSpeed = new byte[n]; g.EdgeMaxSpeedOsm = new bool[n]; g.EdgeStart = new int[n + 1];
+            g.EdgeMaxWeightC = new ushort[n]; g.EdgeMaxAxleLoadC = new ushort[n]; g.EdgeMaxHeightCm = new ushort[n]; g.EdgeMaxLengthCm = new ushort[n];
+            var pts = new List<Vector2>();
+            for (int i = 0; i < n; i++)
+            {
+                var (a, b, f, nm) = edges[i];
+                g.EdgeFrom[i] = a; g.EdgeTo[i] = b; g.EdgeFlags[i] = f; g.EdgeClass[i] = 1;
+                if (!names.Contains(nm)) names.Add(nm);
+                g.EdgeName[i] = (ushort)names.IndexOf(nm);
+                g.EdgeStart[i] = pts.Count;
+                pts.Add(nodes[a]); pts.Add(nodes[b]);
+                g.EdgeLength[i] = Vector2.Distance(nodes[a], nodes[b]);
+            }
+            g.EdgeStart[n] = pts.Count;
+            g.Points = pts.ToArray();
+            g.Names = names.ToArray();
+            g.BuildAdjacency();
+            return g;
+        }
+
+        [Test]
+        public void Synthetic_SnapMainComponentOnly_SkipsOffReachEdges()
+        {
+            var g = BuildWithOffReach();
+            Vector2 offTap = new Vector2(650, 0);   // on Buska (off-reach), far from any main-component edge
+            int any = g.Snap(offTap, RoutePlanner.SnapGoalM, out _, out _, out _);
+            int main = g.Snap(offTap, RoutePlanner.SnapGoalM, out _, out _, out _, mainComponentOnly: true);
+            Assert.AreEqual(5, any, "plain snap finds the off-reach Buska edge");
+            Assert.IsTrue(g.EdgeOffReach(any));
+            Assert.AreEqual(-1, main, "main-component snap ignores it (no main edge within 80 m)");
+            Vector2 mainTap = new Vector2(100, 5);
+            Assert.AreEqual(0, g.Snap(mainTap, RoutePlanner.SnapGoalM, out _, out _, out _));
+            Assert.AreEqual(0, g.Snap(mainTap, RoutePlanner.SnapGoalM, out _, out _, out _, mainComponentOnly: true));
+        }
+
+        [Test]
+        public void Synthetic_Planner_NeverRoutesThroughOffReach()
+        {
+            var g = BuildWithOffReach();
+            var planner = new RoutePlanner(g);
+            var p = RoutePath.For(g);
+            // Goal tapped in the off-reach pair (disconnected from the main component): no route.
+            Assert.AreEqual(PlanStatus.NoPath, planner.Plan(new Vector2(100, 0), float.NaN, new Vector2(650, 0), p));
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(new Vector2(100, 0), float.NaN, new Vector2(150, 150), p));
+            // The one-way spur (own SCC, but reachable) is a valid destination.
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(new Vector2(20, 0), 90f, new Vector2(350, 0), p));
+        }
+
+    }
+}

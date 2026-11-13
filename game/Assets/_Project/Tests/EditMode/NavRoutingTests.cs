@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Game.Core.Navigation;
 using NUnit.Framework;
 using UnityEngine;
@@ -213,6 +215,7 @@ namespace Game.Tests
             int n = edges.Length;
             g.EdgeFrom = new int[n]; g.EdgeTo = new int[n]; g.EdgeLength = new float[n]; g.EdgeClass = new byte[n]; g.EdgeFlags = new byte[n];
             g.EdgeName = new ushort[n]; g.EdgeMaxSpeed = new byte[n]; g.EdgeMaxSpeedOsm = new bool[n]; g.EdgeStart = new int[n + 1];
+            g.EdgeMaxWeightC = new ushort[n]; g.EdgeMaxAxleLoadC = new ushort[n]; g.EdgeMaxHeightCm = new ushort[n]; g.EdgeMaxLengthCm = new ushort[n];
             var pts = new List<Vector2>();
             for (int i = 0; i < n; i++)
             {
@@ -366,6 +369,137 @@ namespace Game.Tests
             Assert.IsTrue(gd.Arrived);
         }
 
+        // ------------------------------------------------------------------ lanes (KRTG v2, OSM turn:lanes)
+
+        /// <summary>Serializes a graph to KRTG bytes (v1/v2) the way the Python generator does - for parser tests.</summary>
+        static byte[] SerializeKrtg(RouteGraph g, int version, byte[][] fwdLanes, byte[][] bwdLanes)
+        {
+            var ms = new MemoryStream();
+            var w = new BinaryWriter(ms, Encoding.UTF8);
+            w.Write((byte)'K'); w.Write((byte)'R'); w.Write((byte)'T'); w.Write((byte)'G');
+            w.Write((ushort)version);
+            w.Write((ushort)g.Names.Length);
+            foreach (var n in g.Names) { var b = Encoding.UTF8.GetBytes(n); w.Write((ushort)b.Length); w.Write(b); }
+            w.Write((uint)g.NodeCount);
+            for (int i = 0; i < g.NodeCount; i++) { w.Write(g.NodePos[i].x); w.Write(g.NodePos[i].y); w.Write(g.NodeFlags[i]); }
+            w.Write((uint)g.EdgeCount);
+            for (int e = 0; e < g.EdgeCount; e++)
+            {
+                w.Write((uint)g.EdgeFrom[e]); w.Write((uint)g.EdgeTo[e]); w.Write(g.EdgeLength[e]); w.Write(g.EdgeClass[e]);
+                w.Write(g.EdgeFlags[e]); w.Write(g.EdgeName[e]); w.Write(g.EdgeMaxSpeed[e]); w.Write((byte)(g.EdgeMaxSpeedOsm[e] ? 1 : 0));
+                w.Write((ushort)(g.EdgeStart[e + 1] - g.EdgeStart[e]));
+                if (version >= 2) { w.Write((ushort)0); w.Write((ushort)0); w.Write((ushort)0); w.Write((ushort)0); }   // truck limits (M21): none
+                for (int k = g.EdgeStart[e]; k < g.EdgeStart[e + 1]; k++) { w.Write(g.Points[k].x); w.Write(g.Points[k].y); }
+            }
+            w.Write((ushort)g.RestrFrom.Length);
+            for (int i = 0; i < g.RestrFrom.Length; i++)
+            { w.Write((uint)g.RestrFrom[i]); w.Write((uint)g.RestrVia[i]); w.Write((uint)g.RestrTo[i]); w.Write(g.RestrKind[i]); }
+            if (version >= 2)
+            {
+                int blocks = 0;
+                for (int e = 0; e < g.EdgeCount; e++) if ((fwdLanes?[e]?.Length ?? 0) + (bwdLanes?[e]?.Length ?? 0) > 0) blocks++;
+                w.Write((uint)blocks);
+                for (int e = 0; e < g.EdgeCount; e++)
+                {
+                    var f = fwdLanes?[e]; var b = bwdLanes?[e];
+                    if ((f?.Length ?? 0) + (b?.Length ?? 0) == 0) continue;
+                    w.Write((uint)e); w.Write((byte)(f?.Length ?? 0)); w.Write((byte)(b?.Length ?? 0));
+                    if (f != null) foreach (var m in f) w.Write(m);
+                    if (b != null) foreach (var m in b) w.Write(m);
+                }
+            }
+            w.Flush();
+            return ms.ToArray();
+        }
+
+        [Test]
+        public void Parse_KrtgV2LaneBlocks_V1Empty_V3Rejected()
+        {
+            var g = Square(0);
+            var fwd = new byte[g.EdgeCount][]; var bwd = new byte[g.EdgeCount][];
+            fwd[0] = new byte[] { RouteGraph.LaneLeft | RouteGraph.LaneThrough, RouteGraph.LaneThrough, RouteGraph.LaneRight };
+            bwd[0] = new byte[] { RouteGraph.LaneThrough };
+            var g2 = RouteGraph.Parse(SerializeKrtg(g, 2, fwd, bwd));
+            Assert.AreEqual(3, g2.LaneCount(0, false));
+            Assert.AreEqual(1, g2.LaneCount(0, true));
+            Assert.AreEqual(RouteGraph.LaneLeft | RouteGraph.LaneThrough, g2.LaneMask(0, false, 0));
+            Assert.AreEqual(RouteGraph.LaneRight, g2.LaneMask(0, false, 2));
+            Assert.AreEqual(RouteGraph.LaneThrough, g2.LaneMask(0, true, 0));
+            Assert.AreEqual(0, g2.LaneCount(1, false), "edges without a lane block have no lanes");
+            Assert.AreEqual(550, Region_().NodeCount, "the committed v1 file still loads");
+            var g1 = RouteGraph.Parse(SerializeKrtg(g, 1, fwd, bwd));
+            Assert.AreEqual(0, g1.LaneCount(0, false), "v1 file: no lane section");
+            Assert.Throws<System.FormatException>(() => RouteGraph.Parse(SerializeKrtg(g, 3, fwd, bwd)));
+        }
+
+        [Test]
+        public void LaneGuidance_ClassBit()
+        {
+            Assert.AreEqual(RouteGraph.LaneThrough, LaneGuidance.ClassBit(0f));
+            Assert.AreEqual(RouteGraph.LaneThrough, LaneGuidance.ClassBit(-24f));
+            Assert.AreEqual(RouteGraph.LaneSlightRight, LaneGuidance.ClassBit(30f));
+            Assert.AreEqual(RouteGraph.LaneSlightLeft, LaneGuidance.ClassBit(-45f));
+            Assert.AreEqual(RouteGraph.LaneRight, LaneGuidance.ClassBit(90f));
+            Assert.AreEqual(RouteGraph.LaneLeft, LaneGuidance.ClassBit(-135f));
+            Assert.AreEqual(RouteGraph.LaneRight, LaneGuidance.ClassBit(140f), "sharp right maps to right (OSM has no sharp)");
+            Assert.AreEqual(RouteGraph.LaneReverse, LaneGuidance.ClassBit(178f));
+        }
+
+        [Test]
+        public void Synthetic_LaneGuidanceForNextManeuver()
+        {
+            var g = Square(0);
+            var fwd = new byte[g.EdgeCount][];
+            fwd[0] = new byte[] { RouteGraph.LaneLeft | RouteGraph.LaneThrough, RouteGraph.LaneThrough, RouteGraph.LaneRight };
+            g.BuildLaneIndex(fwd, null);
+            var planner = new RoutePlanner(g);
+            var p = RoutePath.For(g);
+            // Left turn at node 1 onto Prawa: only the "left;through" lane leads left.
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(new Vector2(50, 0), 90f, new Vector2(200, 150), p));
+            Assert.AreEqual(2, p.ManCount);
+            Assert.AreEqual(Maneuver.Left, p.ManType[0]);
+            Assert.AreEqual(3, p.ManLaneCount[0]);
+            Assert.AreEqual(RouteGraph.LaneLeft, p.ManLaneCls[0]);
+            Assert.AreEqual(0b001u, p.ManLanesAllowed[0]);
+            Assert.AreEqual(0b001u, p.ManLanesRec[0], "left;through is dedicated enough (through is compatible)");
+            Assert.AreEqual(0, p.ManIn[0], "incoming directed edge = edge 0 forward");
+            // The tracker exposes it in the guidance state.
+            var tr = new RouteTracker();
+            var gd = new NavGuidance();
+            tr.Update(p, new Vector2(50, 0), 90f, 0f, 0.02f, ref gd);
+            Assert.AreEqual(0, gd.Next);
+            Assert.AreEqual(3, gd.NextLaneCount);
+            Assert.AreEqual(0b001u, gd.NextLanesAllowed);
+            Assert.AreEqual(0b001u, gd.NextLanesRec);
+            Assert.AreEqual(0, gd.NextLaneSrc);
+            // Straight through the same junction: both through lanes allowed, only the pure through lane recommended.
+            p.SetLaneGuidance(g, 0, p.ManIn[0], 0f);
+            Assert.AreEqual(RouteGraph.LaneThrough, p.ManLaneCls[0]);
+            Assert.AreEqual(0b011u, p.ManLanesAllowed[0]);
+            Assert.AreEqual(0b010u, p.ManLanesRec[0]);
+        }
+
+        [Test]
+        public void ZeroGc_LaneGuidanceInDrivingLoop()
+        {
+            var g = Square(0);
+            var fwd = new byte[g.EdgeCount][];
+            fwd[0] = new byte[] { RouteGraph.LaneLeft | RouteGraph.LaneThrough, RouteGraph.LaneThrough, RouteGraph.LaneRight };
+            g.BuildLaneIndex(fwd, null);
+            var planner = new RoutePlanner(g);
+            var p = RoutePath.For(g);
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(new Vector2(50, 0), 90f, new Vector2(200, 150), p));
+            var tr = new RouteTracker();
+            var gd = new NavGuidance();
+            tr.Update(p, new Vector2(50, 0), 90f, 5f, 0.02f, ref gd);   // warm-up (JIT)
+            Assert.AreEqual(0b001u, gd.NextLanesAllowed);
+            GcAllocCounter.AssertZero(() =>
+            {
+                for (int i = 0; i < 10; i++) planner.Plan(new Vector2(50, 0), 90f, new Vector2(200, 150), p);
+                for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[i % p.Count], 90f, 10f, 0.02f, ref gd);
+            }, message: "planning with lane guidance + tracking allocate nothing");
+        }
+
         [Test]
         public void ZeroGc_PlanAndTrack()
         {
@@ -376,12 +510,13 @@ namespace Game.Tests
             var gd = new NavGuidance();
             Vector2 a = k_Kombatantow, b = k_AndersaSE;
             Assert.AreEqual(PlanStatus.Ok, planner.Plan(a, 0f, b, p), "heading north");   // warm-up (JIT)
+            planner.Plan(b, float.NaN, a, p);
             for (int i = 0; i < 50; i++) tr.Update(p, p.Points[i % p.Count], 0f, 10f, 0.02f, ref gd);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 10; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);
-            for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[(i / 3) % p.Count] + new Vector2(1f, 0f), i * 0.5f, 10f, 0.02f, ref gd);
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.AreEqual(0, bytes, "routing / re-planning and guidance allocate nothing");
+            GcAllocCounter.AssertZero(() =>
+            {
+                for (int i = 0; i < 10; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);
+                for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[(i / 3) % p.Count] + new Vector2(1f, 0f), i * 0.5f, 10f, 0.02f, ref gd);
+            }, message: "routing / re-planning and guidance allocate nothing");
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < 20; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);

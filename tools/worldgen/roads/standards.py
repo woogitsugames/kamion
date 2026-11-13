@@ -19,6 +19,8 @@ Sources (texts read 2026-11-09):
 
 from __future__ import annotations
 
+import math
+
 # --------------------------------------------------------------------------------------------
 # Road class mapping. OSM `highway` -> Polish technical class (PTB2022 § 11). WORKING_VALUE:
 # the mapping is ours (OSM classes are functional, not technical). Urban Białystok assumed.
@@ -91,9 +93,12 @@ VERGE_SKIRT_SLOPE = 2.0              # WORKING_VALUE (ADR 0110): run per unit fa
 MEDIAN_VERGE_MAX = 3.00             # WORKING_VALUE (ADR 0110): grass strip behind a median kerb (two meet in the middle)
 FLANGE_DEPTH = 0.50                 # vertical skirt under the outer edge (hides terrain/road seams)
 TERRAIN_UNDER_ROAD = 0.35           # terrain pushed this far below the road surface inside footprint
-# Rural profile (outside built-up area), PTB2022 § 23 ust. 10 pkt 3-5: unpaved shoulder
-# 1.25 (G) / 1.00 (Z) / 0.75 (L, D) standard.
-SHOULDER_W = {"A": 1.25, "S": 1.25, "GP": 1.25, "G": 1.25, "Z": 1.00, "L": 0.75, "D": 0.75}
+# Rural profile (outside built-up area), PTB2022 § 23 ust. 10: unpaved shoulder. pkt 1: 1.25 m
+# standard next to a pas awaryjny (A/S); pkt 2: 0.75 m standard (>= 0.50 m in difficult conditions)
+# next to an opaska zewnętrzna (GP, and G/Z with a paved strip); pkt 3-5: 1.25 (G) / 1.00 (Z) /
+# 0.75 (L, D) when no paved part is designed. (Dz.U. 2025 poz. 1352 deletes the "if no paved
+# part" clause in pkt 5 only - values unchanged.)
+SHOULDER_W = {"A": 1.25, "S": 1.25, "GP": 0.75, "G": 1.25, "Z": 1.00, "L": 0.75, "D": 0.75}
 PAVED_SHOULDER = 1.00              # WORKING_VALUE: paved shoulder (pobocze utwardzone) of the rural GP profile
 PAVED_SHOULDER_MEDIAN = 0.50       # WORKING_VALUE: inner paved strip next to a grass median (no kerb)
 RURAL_MIN_SPEED = 70.0             # WORKING_VALUE: GP/G sections at >= 70 km/h without footways get the rural profile
@@ -174,9 +179,10 @@ P10_GAP = 0.50
 P10_EDGE_MAX = 0.50
 P10_WIDTH = 4.0                     # pkt 4.2.1: crossing width s = 4.0 m (>= 2.5 m in built-up areas)
 P12_W = 0.50                        # rys. 4.2.3.1: STOP line 0.5 m
-# P-11 cycle crossing: two rows of squares. UNVERIFIED against [ZNAKI-Z2] pkt 4.2.2 (not at hand): 0.4 m squares,
-# 0.4 m gaps, rows 2.0 m apart (inner edges) read off the GUGiK 0.08 m orthophoto at Rondo Putry (ADR 0093).
-P11_SQUARE, P11_GAP, P11_CLEAR = 0.40, 0.40, 2.0
+# P-11 cycle crossing: two rows of squares. [ZNAKI-Z2] rys. 4.2.2.1 (Dz.U. 2019 poz. 2311, str. 569, PDF
+# D2019000231102.pdf on isap.sejm.gov.pl): 0.5 m squares with 0.5 m gaps; pkt 4.2.2 (str. 569): crossing
+# width >= 1.8 m (one-way) / 3.0 m (two-way). Rows 2.0 m apart (inner edges) per ADR 0093.
+P11_SQUARE, P11_GAP, P11_CLEAR = 0.50, 0.50, 2.0
 P8_MIN_LANE_W = 2.5                 # ADR 0093: no arrow in a lane narrower than this (taper of a slip lane)
 P13_BASE, P13_GAP, P13_H = 0.50, 0.25, 0.70   # rys. 4.2.4.1: triangles
 P14_LEN, P14_GAP, P14_DEPTH = 0.75, 0.25, 0.50  # rys. 4.2.5.1: rectangles 0.5 deep (0.375 m2/mb)
@@ -212,10 +218,19 @@ SURFACE_OF = {"yard_paving": "paving", "yard_behaton": "paving", "sidewalk_pavin
 SIGN_H_MIN = 2.00
 SIGN_H_SIDEWALK = 2.20
 SIGN_H_OVERHEAD = 5.00
-# Sizes ("średnie" group, used on Z/G/GP streets) – WORKING_VALUE: Table 1.1 of [ZNAKI-Z1] not yet read;
-# values are common catalogue plate sizes (triangle side 900, disc 800, square 800, octagon 800 mm).
-# To be verified against Tabl. 1.1 before release.
-SIGN_SIZE = {"triangle": 0.90, "disc": 0.80, "square": 0.80, "octagon": 0.80, "diamond": 0.80}
+# Sizes, grupa wielkości "średnie" (S) of [ZNAKI-Z1] pkt 1.2.1 (Dz.U. 2019 poz. 2311, printed pp. 2-3 /
+# PDF pp. 7-8): medium on single-carriageway national and voivodeship roads — our region's DK8/DK19/DK65
+# (OSM trunk -> class GP) and DW675 are modelled single-carriageway, city streets are lower classes;
+# A-7/B-20 never smaller than medium (pkt 1.2.1). Dimensions: Tabela 1.1 (printed p. 4 / PDF p. 9) —
+# A side 900 mm, B diameter 800 mm, D base 600+150n mm (n = 0 here); Tabela 5.1 (printed p. 173 / PDF p. 178)
+# + pkt 5.2.1.1 (printed p. 180 / PDF p. 185) — D-1 side 600 mm (repeats 400 mm). B-20 octagon:
+# pkt 3.1.1 (printed p. 91 / PDF p. 96) + Tabela 3.1 (printed p. 92 / PDF p. 97) — the 800 mm is the
+# diameter of the circle INSCRIBED in the octagon, so the plate corner-to-corner = 800/cos(pi/8) mm.
+# Mesh convention (props.plate, gate3_landmarks._outline, furniture stacking): the value is the plate's bounding size -
+# disc diameter, square side, octagon corner-to-corner and DIAMOND DIAGONAL (vertices on the axes). D-1 side 600 mm
+# -> diagonal 0.60*sqrt(2) = 0.849 m (integration r4: 0.60 here would make the D-1 side 0.42 m).
+SIGN_SIZE = {"triangle": 0.90, "disc": 0.80, "square": 0.60,
+             "octagon": 0.80 / math.cos(math.pi / 8), "diamond": 0.60 * math.sqrt(2)}
 SIGN_LATERAL = 0.75         # WORKING_VALUE: plate edge 0.5-1.0 m behind the kerb face (never over the kerb)
 SIGN_POST_D = 0.0603        # Ø60.3 mm galvanised tube, standard Polish sign post (catalogue) WORKING_VALUE
 SPEED_SIGN_AFTER_JUNCTION = 30.0  # WORKING_VALUE distance; rule: a B-33 limit ends at the next junction
@@ -243,9 +258,28 @@ GUARDRAIL_H = 0.75          # top of W-beam (typical SP-05 system) WORKING_VALUE
 GUARDRAIL_POST_SPACING = 2.0
 GUARDRAIL_OFFSET = 0.60     # behind the kerb face / edge WORKING_VALUE
 GUARDRAIL_TERMINAL_M = 4    # WORKING_VALUE (ADR 0110): free ground end of a W-beam turned down to the ground over this length
+# M29 / ADR 0144 pkt 3: a deck barrier end where the road continues on the ground is not a real end. Rozporządzenie
+# w sprawie warunków technicznych, jakim powinny odpowiadać drogowe obiekty inżynierskie i ich usytuowanie, § 80:
+# "Bariery umieszczone na obiektach mostowych powinny stanowić przedłużenie barier na drodze. Jeżeli na drodze nie
+# występują bariery, to bariery z obiektu mostowego powinny być przedłużone poza obiekt mostowy na odcinkach, jakie
+# wynikają z wymagań określonych w § 262 ust. 2, i spełniać wymagania określone w § 262 ust. 4." (tekst jednolity;
+# § 262 ust. 2/4 refers to the road-public: rozporządzenie o drogach publicznych). The approach length itself is not
+# fixed by the act -> DECK_APPROACH_TRANSITION_M is WORKING_VALUE (12 m, the same approach extension the embankment
+# rule uses). A free end that really is an end must be turned down / anchored: rozporządzenie o drogach publicznych
+# § 129 ust. 6: "Bariera od strony najazdu i zakończenia powinna posiadać nachylone do powierzchni korony drogi
+# odcinki końcowe zagłębione i zakotwione poniżej poziomu gruntu lub inne zakończenia spełniające wymagania normy
+# przenoszącej normę EN 1317." Dz.U. 2019 poz. 2311 załącznik nr 4 pkt 7.1 (drogowe bariery ochronne): on obiektach
+# mostowych dopuszcza się odległość lica bariery od krawędzi pasa ruchu min. 0,50 m przy a > 0,20 m (rys. 7.3-7.9).
+# Integration r5 (2026-11-13): both acts quoted above (MTiGM 30.05.2000 on drogowe obiekty inżynierskie and MTiGM
+# 2.03.1999 on drogi publiczne) were REPEALED by § 117 of PTB 2022 (Dz.U. 2022 poz. 1518, in force 21.09.2022), which
+# has no explicit "bridge barrier continues onto the road" clause (§ 88-90: when a barrier is required, 0.50 m from
+# the hard shoulder). The quotes are historical context, not a current rule - the transition is engineering practice,
+# UNVERIFIED against GDDKiA guidelines; the zał. 4 pkt 7.1 reference was not checked by the integrator.
+DECK_APPROACH_TRANSITION_M = 12.0  # WORKING_VALUE: ground length the deck barrier is extended onto past the structure end
 GUARDRAIL_POST_SPACING_GROUND = 4.0   # WORKING_VALUE (ADR 0117): ground runs, posts every 4 m (SP-05/4 class; Mapillary
 #                                       500263111404933 / 1259231227807789: 2-4 m read by eye); decks keep 2.0 m
 CAP_GRIME = (1.0, 0.85)     # ADR 0123: road film on a bridge cap, COLOR_0.r at the kerb / at the outer edge (WORKING_VALUE)
+CAP_COAT_GRIME = (0.55, 0.2)   # ADR 0146: the same on a coated cap (bridge_style cap_mat): grit at the kerb, coat shows behind (WORKING_VALUE)
 BRIDGE_BARRIER_H = 0.98     # WORKING_VALUE (ADR 0117): top of the deck posts and of the upper box beam above the W-beam
 #                             (Mapillary 454716650857984: W-beam low, a second beam above it; 1.10 with a handrail in 0110)
 BRIDGE_BARRIER_EDGE_M = 0.40  # WORKING_VALUE: barrier post line in from the outer edge of the cap (orthophoto 0.2-0.4 m)

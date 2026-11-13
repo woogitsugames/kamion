@@ -336,6 +336,80 @@ namespace PhysicsRunner.Sim
                 }
                 // ---------------- soak ----------------
                 case "max_kinetic_energy_j": return Max(s, i0, i1, x => x.KineticEnergy);
+                case "nan_detected": return r.NanDetected ? 1 : 0;
+                case "energy_total_j": return s[i1].KineticEnergy + s[i1].PotentialEnergy;
+                case "energy_drift_j": return (s[i1].KineticEnergy + s[i1].PotentialEnergy) - (s[i0].KineticEnergy + s[i0].PotentialEnergy);
+                case "max_energy_j": return Max(s, i0, i1, x => x.KineticEnergy + x.PotentialEnergy);
+                // ---------------- free flight / chassis contact (ADR 0158) ----------------
+                // Free flight = no wheel, landing-gear or collider contact in two consecutive samples: only gravity,
+                // aero drag and internal (fifth-wheel) forces act, so E = KE + PE must not grow and the combined CoM
+                // must follow ballistics (a = g, minus drag).
+                case "free_flight_s":
+                {
+                    double tf = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (FreeFlight(s[i - 1]) && FreeFlight(s[i])) tf += s[i].T - s[i - 1].T;
+                    return tf;
+                }
+                case "max_free_flight_energy_gain_j":
+                {
+                    double m = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++)
+                        if (FreeFlight(s[i - 1]) && FreeFlight(s[i]))
+                            m = Math.Max(m, (s[i].KineticEnergy + s[i].PotentialEnergy) - (s[i - 1].KineticEnergy + s[i - 1].PotentialEnergy));
+                    return m;
+                }
+                case "max_free_flight_accel_error_ms2":
+                {
+                    // |a_com - g| over free-flight sample pairs (the remainder is aero drag, which is small at these speeds).
+                    double m = 0;
+                    var g = new Vec3(0, -9.81, 0);
+                    for (int i = Math.Max(i0, 1); i <= i1; i++)
+                        if (FreeFlight(s[i - 1]) && FreeFlight(s[i]))
+                            m = Math.Max(m, ((s[i].SystemVel - s[i - 1].SystemVel) / (s[i].T - s[i - 1].T) - g).Magnitude);
+                    return m;
+                }
+                case "max_body_penetration_m": return Max(s, i0, i1, x => x.BodyPenetration);
+                case "min_com_height_m": return Min(s, i0, i1, x => x.ComHeightAboveGround); // above the ground below each CoM (grades, kerb boxes)
+                case "body_contact_s":
+                {
+                    double tc = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (s[i].BodyContacts > 0) tc += s[i].T - s[i - 1].T;
+                    return tc;
+                }
+                case "max_tire_friction_ratio": return Max(s, i0, i1, x => x.MaxFrictionRatio);
+                case "min_air_all_bar":
+                    return Min(s, i0, i1, x => Math.Min(Math.Min(x.AirSupply, Math.Min(x.AirFront, x.AirRear)), Math.Min(x.AirPark, x.AirTrailer)));
+                case "articulation_limit_excess_deg":
+                    // How far the articulation angle ever went past the fifth-wheel yaw hard stop [deg] (must be 0).
+                    return Math.Max(0, Max(s, i0, i1, x => Math.Abs(x.Articulation)) * MathUtil.Rad2Deg - r.ArticulationLimitDeg);
+                case "max_cab_pitch_rate_dps": return MaxCabRate(s, i0, i1, r.SampleDt, x => x.CabPitch) * MathUtil.Rad2Deg;
+                case "max_cab_roll_rate_dps": return MaxCabRate(s, i0, i1, r.SampleDt, x => x.CabRoll) * MathUtil.Rad2Deg;
+                case "cab_spectrum_peak_hz":
+                case "cab_spectrum_peak_amp_dps":
+                {
+                    // Naive DFT of the cab angular-velocity component (arg 0 = pitch rate, 1 = roll rate) over the
+                    // window: dominant non-DC frequency [Hz] and its amplitude [deg/s] (2|X|/N).
+                    Func<Sample, double> sig = arg < 0.5 ? (Func<Sample, double>)(x => x.CabPitch) : x => x.CabRoll;
+                    int n = Math.Min(i1 - i0, 2048);
+                    int a = i1 - n;
+                    double dtS = r.SampleDt;
+                    int m = n - 1;
+                    double bestMag = 0; int bestK = 0;
+                    for (int k = 1; k <= m / 2; k++)
+                    {
+                        double re = 0, im = 0;
+                        for (int j = 0; j < m; j++)
+                        {
+                            double ph = -2 * Math.PI * k * j / m;
+                            double rate = (sig(s[a + 1 + j]) - sig(s[a + j])) / dtS;
+                            re += rate * Math.Cos(ph); im += rate * Math.Sin(ph);
+                        }
+                        double mag = Math.Sqrt(re * re + im * im) * 2 / m;
+                        if (mag > bestMag) { bestMag = mag; bestK = k; }
+                    }
+                    if (name == "cab_spectrum_peak_hz") return bestK / (m * dtS);
+                    return bestMag * MathUtil.Rad2Deg;
+                }
                 case "max_roll_rate_proxy_deg":
                     // Peak-to-peak body roll in the window (oscillation growth detector).
                     return (Max(s, i0, i1, x => x.Roll) - Min(s, i0, i1, x => x.Roll)) * MathUtil.Rad2Deg;
@@ -343,6 +417,15 @@ namespace PhysicsRunner.Sim
                     throw new ArgumentException($"Unknown metric '{name}'");
             }
         }
+
+        static double MaxCabRate(List<Sample> s, int a, int b, double dtS, Func<Sample, double> f)
+        {
+            double m = 0;
+            for (int i = Math.Max(a, 1); i <= b; i++) m = Math.Max(m, Math.Abs(f(s[i]) - f(s[i - 1])) / dtS);
+            return m;
+        }
+
+        static bool FreeFlight(in Sample x) => x.WheelsTouching == 0 && x.BodyContacts == 0;
 
         static double Max(List<Sample> s, int a, int b, Func<Sample, double> f)
         {

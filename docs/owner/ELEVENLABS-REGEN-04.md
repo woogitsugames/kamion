@@ -42,3 +42,6 @@ Inside the closed cab of a stationary heavy truck, the inline-six diesel idling 
 ## Po wygenerowaniu
 Agent audio: `el_regen01.py`-podobna analiza (linia, monotoniczność spadku, okres YIN), cięcie jak `el_sweepcut.py`
 (`SWEEP_ROWS` dla kab./bez obciążenia), `el_verify.py`, odsłuch A/B dla właściciela.
+
+## Wynik (ADR 0156, 2026-11-12)
+Wygenerowane 22:45–22:48. Zjazdy (C1) nie zjeżdżają: obroty najpierw rosną do 1750–2000, potem w ~1,5 s spadają do ~900, więc się nie nadają. `ENG_CAB_IDLE_STEADY (4)` wyszedł jako stałe ~1460 obr/min w kabinie z wyraźną linią i z niego są teraz komórki kabina/bez obciążenia 1200 i 1500 (linia 8 → 21 dB). Odsłuch: `artifacts/audio-regen04/ab/coast_1500_900_{before,after}.wav`.

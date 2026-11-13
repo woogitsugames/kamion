@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "reverse_grade6pct_comb",
+  "description": "Reversing the combination up a 6% ramp (dock approach) at 4 km/h target",
+  "spec": "docs/04 s6.10",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 6,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "parkingBrake": true
+  },
+  "duration": 40,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 4,
+    "steer": 0,
+    "selector": "R"
+  },
+  "checks": [
+    {
+      "metric": "min_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "ramp reversing speed bounded: SpeedFwd < 0 in reverse, |v| <= 12 km/h means min_speed_kmh >= -12",
+      "min": -12
+    },
+    {
+      "metric": "stalled",
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall",
+      "max": 0
+    },
+    {
+      "metric": "min_rpm",
+      "status": "WORKING_VALUE",
+      "source": "engine stays above idle (idle 600 rpm; bound 550 guards lugging/stall)",
+      "min": 550
+    },
+    {
+      "metric": "drift_m",
+      "status": "WORKING_VALUE",
+      "source": "makes progress up the ramp: >= 8 m displacement in 40 s at 4 km/h target (4 km/h x 40 s = 44 m theoretical, minus ramp-up)",
+      "min": 8
+    },
+    {
+      "metric": "final_z_m",
+      "status": "WORKING_VALUE",
+      "source": "heading 0, grade rises towards +z: reversing up the ramp means z decreases by >= 5 m",
+      "max": -5
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "trailer stays aligned in straight reverse: articulation << mechanical stop +/-90 deg",
+      "max": 20
+    },
+    {
+      "metric": "wheel_lift",
+      "status": "WORKING_VALUE",
+      "source": "no wheel lift on the ramp",
+      "max": 0
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

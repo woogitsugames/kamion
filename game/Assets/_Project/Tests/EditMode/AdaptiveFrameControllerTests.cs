@@ -74,6 +74,24 @@ namespace Game.Tests.EditMode
         }
 
         [Test]
+        public void UltraHasTheHighSafetyNet_Adr0152()
+        {
+            // Fold (Adreno 840, 2256x2504) with a saved Ultra/60: 66-183 ms frames when hot and nothing adapted.
+            foreach (var x in QualityProfile.Defaults())
+                if (x.name == "Ultra" || x.name == "High")
+                {
+                    Assert.AreEqual(0.70f, x.adaptiveScaleMin, 1e-4f, x.name);
+                    Assert.AreEqual(30, x.thermalFallbackFps, x.name);
+                    Assert.AreEqual(30, x.pacingFallbackFps, x.name);
+                }
+            var qp = QualityProfile.Load();
+            Assert.IsNotNull(qp);
+            Assert.IsTrue(qp.TryGet("Ultra", out var u));
+            Assert.AreEqual(0.70f, u.adaptiveScaleMin, 1e-4f, "QualityProfile.asset Ultra");
+            Assert.AreEqual(30, u.pacingFallbackFps, "QualityProfile.asset Ultra");
+        }
+
+        [Test]
         public void ChangesAtMostOncePerWindow()
         {
             var c = NewScale(); float t = 0f;
@@ -104,6 +122,16 @@ namespace Game.Tests.EditMode
             Run(c, ref t, 20f, 20f);
             Assert.Less(c.Scale, 1.0f);
             Assert.AreEqual(1.00f, Run(c, ref t, 30f, 10f), 1e-4f);
+        }
+
+        [Test]
+        public void StepsDownAtTenFps()
+        {
+            // ADR 0152: A16 High / Fold Ultra at ~10 FPS (GPU ~90-150 ms) - a 2 s window held ~20 samples < 30 and the
+            // scale stayed at 1.00 forever. Now the window grows to MinSamples and the scale reaches the floor.
+            var c = NewScale(); float t = 0f;
+            for (int i = 0; i < 200; i++) { t += 0.1f; c.AddFrame(t, 95f * c.Scale * c.Scale, 30); }
+            Assert.AreEqual(0.80f, c.Scale, 1e-4f);
         }
 
         [Test]

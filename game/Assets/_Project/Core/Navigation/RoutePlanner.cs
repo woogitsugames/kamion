@@ -2,7 +2,9 @@ using UnityEngine;
 
 namespace Game.Core.Navigation
 {
-    public enum PlanStatus : byte { Ok = 0, StartOffRoad, GoalOffRoad, NoPath, AlreadyThere }
+    /// <summary>GoalOffReach (M27): the tapped destination is in an off-reach part of the map (outside the main strongly
+    /// connected component); the pin was snapped to the nearest main-component node instead of failing with NoPath.</summary>
+    public enum PlanStatus : byte { Ok = 0, StartOffRoad, GoalOffRoad, NoPath, AlreadyThere, GoalOffReach }
 
     /// <summary>
     /// A* over directed edges of a <see cref="RouteGraph"/> (edge-based, so OSM turn restrictions and the no-U-turn rule
@@ -19,6 +21,34 @@ namespace Game.Core.Navigation
         public const float SnapStartM = 60f, SnapGoalM = 80f;
         /// <summary>Penalties [s]. WORKING_VALUES.</summary>
         public const float RightTurnS = 6f, LeftTurnS = 10f, SharpTurnS = 20f, DeadEndUTurnS = 240f, AgainstHeadingS = 300f, RestrictedS = 600f;
+
+        // Truck limits of the player's combination (tractor 4x2 + 13.6 m curtainsider, docs/VEHICLE_REFERENCE_DATA.md):
+        // GCW 40.0 t (laden40 preset; legal max 40 t per Directive 96/53/EC - quoted, UNVERIFIED), height 4.00 m (trailer
+        // roof top), combination length 16.47 m (kingpin 0.68 m ahead of the drive axle), max axle load 11.5 t (drive-axle
+        // legal max, quoted UNVERIFIED; the laden40 drive axle actually carries 10.76 t).
+        /// <summary>Max total weight of the combination [0.01 t] = 40.00 t.</summary>
+        public const int TruckMaxWeightCt = 4000;
+        /// <summary>Max axle load [0.01 t] = 11.50 t.</summary>
+        public const int TruckMaxAxleLoadCt = 1150;
+        /// <summary>Max height [cm] = 4.00 m.</summary>
+        public const int TruckMaxHeightCm = 400;
+        /// <summary>Max vehicle (combination) length [cm] = 16.47 m.</summary>
+        public const int TruckMaxLengthCm = 1647;
+
+        /// <summary>
+        /// May the truck use edge <paramref name="e"/>? An OSM limit below the truck's parameters forbids the edge
+        /// (a limit equal to the parameter is allowed); hgv=destination is allowed only as the goal edge
+        /// (<paramref name="isGoal"/>), like the no-truck access edges.
+        /// </summary>
+        public static bool EdgeAllowed(RouteGraph g, int e, bool isGoal)
+        {
+            if ((g.EdgeFlags[e] & RouteGraph.FlagHgvDestination) != 0 && !isGoal) return false;
+            if (g.EdgeMaxWeightC[e] != 0 && g.EdgeMaxWeightC[e] < TruckMaxWeightCt) return false;
+            if (g.EdgeMaxAxleLoadC[e] != 0 && g.EdgeMaxAxleLoadC[e] < TruckMaxAxleLoadCt) return false;
+            if (g.EdgeMaxHeightCm[e] != 0 && g.EdgeMaxHeightCm[e] < TruckMaxHeightCm) return false;
+            if (g.EdgeMaxLengthCm[e] != 0 && g.EdgeMaxLengthCm[e] < TruckMaxLengthCm) return false;
+            return true;
+        }
 
         readonly RouteGraph m_G;
         readonly float[] m_Cost;
@@ -136,7 +166,12 @@ namespace Game.Core.Navigation
             LastExpanded = 0;
             int se = g.Snap(start, SnapStartM, out float sAlong, out Vector2 sPt, out _);
             if (se < 0) return PlanStatus.StartOffRoad;
-            int ge = g.Snap(goal, SnapGoalM, out float gAlong, out Vector2 gPt, out _, truckOnly: false);
+            // M27: prefer an edge drivable to from the main component; an off-reach goal falls back to the plain snap
+            // and then fails with NoPath (the UI never sends such a goal - SetPin snaps the pin to the reachable part).
+            // Off-reach edges are NOT skipped in the search (integration r5): A* never reaches them from the main part
+            // anyway, and a truck starting on a one-way entry from the tile edge (off-reach) must still route out.
+            int ge = g.Snap(goal, SnapGoalM, out float gAlong, out Vector2 gPt, out _, truckOnly: false, mainComponentOnly: true);
+            if (ge < 0) ge = g.Snap(goal, SnapGoalM, out gAlong, out gPt, out _, truckOnly: false);
             if (ge < 0) return PlanStatus.GoalOffRoad;
 
             int gen = Gen();
@@ -200,6 +235,7 @@ namespace Game.Core.Navigation
                         extra = TurnCost(s, d);
                     }
                     if ((g.EdgeFlags[e] & RouteGraph.FlagNoTruck) != 0 && e != ge) continue;
+                    if (!EdgeAllowed(g, e, e == ge)) continue;   // OSM weight / height / length limits below the truck's, hgv=destination off-goal
                     if ((g.EdgeFlags[e] & RouteGraph.FlagRestricted) != 0 && e != ge && e != se) extra += RestrictedS;
                     float v = SpeedMs(g, e), len = g.GeomLength(e);
                     if (e == ge)
@@ -253,18 +289,19 @@ namespace Game.Core.Navigation
             bool rev = RouteGraph.Reversed(d);
             ushort name = g.EdgeName[e];
             byte lim = g.EdgeMaxSpeedOsm[e] ? g.EdgeMaxSpeed[e] : (byte)0;
-            p.Add(g.PointAlong(d, a), name, lim);
+            byte cls = g.EdgeClass[e];
+            p.Add(g.PointAlong(d, a), name, lim, cls);
             int k0 = g.EdgeStart[e], k1 = g.EdgeStart[e + 1] - 1;
             float len = g.PointS[k1];
             if (!rev)
             {
-                for (int k = k0; k <= k1; k++) { float s = g.PointS[k]; if (s > a && s < b) p.Add(g.Points[k], name, lim); }
+                for (int k = k0; k <= k1; k++) { float s = g.PointS[k]; if (s > a && s < b) p.Add(g.Points[k], name, lim, cls); }
             }
             else
             {
-                for (int k = k1; k >= k0; k--) { float s = len - g.PointS[k]; if (s > a && s < b) p.Add(g.Points[k], name, lim); }
+                for (int k = k1; k >= k0; k--) { float s = len - g.PointS[k]; if (s > a && s < b) p.Add(g.Points[k], name, lim, cls); }
             }
-            p.Add(g.PointAlong(d, b), name, lim);
+            p.Add(g.PointAlong(d, b), name, lim, cls);
         }
 
         // Path index where each directed edge of the route begins (filled by BuildGeometry, read by BuildManeuvers).
@@ -318,7 +355,8 @@ namespace Game.Core.Navigation
                         turn = SignedTurn(inDir, outDir);
                         nm = NameFrom(g, p, j);
                     }
-                    p.AddManeuver(m_EdgeFirstPoint[i], Maneuver.Roundabout, turn, exits, nm);
+                    p.AddManeuver(m_EdgeFirstPoint[i], Maneuver.Roundabout, turn, exits, nm, prev);
+                    p.SetLaneGuidance(g, p.ManCount - 1, prev, turn);
                     i = j;   // the exit transition belongs to this manoeuvre
                     continue;
                 }
@@ -349,9 +387,11 @@ namespace Game.Core.Navigation
                 {
                     float sum = p.ManTurn[last] + t;
                     p.ManTurn[last] = sum; p.ManType[last] = RoutePath.Classify(sum); p.ManName[last] = name;
+                    p.SetLaneGuidance(g, last, p.ManIn[last], sum);
                     continue;
                 }
-                p.AddManeuver(pt, type, t, 0, name);
+                p.AddManeuver(pt, type, t, 0, name, prev);
+                p.SetLaneGuidance(g, p.ManCount - 1, prev, t);
             }
             p.AddManeuver(p.Count - 1, Maneuver.Arrive, 0f, 0, p.DestinationName);
         }

@@ -110,10 +110,10 @@ namespace Game.Tests.EditMode
         public void Step_DoesNotAllocate()
         {
             var e = Six();
-            for (int f = 0; f < 32; f++) MirrorRefreshSchedule.Step(e, 6, 2, 1);   // warm (JIT)
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int f = 0; f < 1000; f++) MirrorRefreshSchedule.Step(e, 6, 2, 1);
-            Assert.AreEqual(0, System.GC.GetAllocatedBytesForCurrentThread() - before);
+            Game.Tests.GcAllocCounter.AssertZero(
+                () => { for (int f = 0; f < 1000; f++) MirrorRefreshSchedule.Step(e, 6, 2, 1); },
+                warmup: () => { for (int f = 0; f < 32; f++) MirrorRefreshSchedule.Step(e, 6, 2, 1); },
+                message: "MirrorRefreshSchedule.Step must not allocate");
         }
     }
 }

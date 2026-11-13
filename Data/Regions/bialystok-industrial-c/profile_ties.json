@@ -1,0 +1,20 @@
+{
+  "schema": "truck-sim-pl/profile-ties/1",
+  "adr": "docs/adr/0146-putry-andersa-world.md",
+  "frame": "local E,N (m) of region.yaml origin (EPSG:2180 777995, 596223)",
+  "ties": [
+    {
+      "id": "dk8-putry-se-ramp-twin-level",
+      "kind": "authored_override",
+      "chain_edge": "w1101181473:10076968415-1847263305",
+      "follow_edge": "w173956078:1847263293-5749429982",
+      "from_en": [-478.0, -38.0],
+      "to_en": [-356.0, -137.0],
+      "median_fill": true,
+      "reason": "South-east ramp of the DK8 viaduct over Rondo Putry. OSM tags both carriageways layer=1 down to the junction at E -340, so their NMT samples carry no weight and each carriageway got its own smooth descent: at E -395 the NW-bound one was 134.5 m, the SE-bound one 132.6 m (1.9 m apart + cap and barrier = the 3-4 m wall of SBS frame 810896133189484). Mapillary 810896133189484 (richlv 2020, CC BY-SA 4.0, reference only): both carriageways on one level, grass median with a guardrail. GUGiK orthophoto 0.08 m: grass median with lamp columns from the abutment (E -462) on; the shadow of the NE screen narrows from 2.4 m at the abutment to 0.7 m at E -382 and ends at E -372, i.e. the NW-bound carriageway is at grade there like the SE-bound one (NMT 131.7-132.1 across both at E -396). The SE-bound profile agrees with that (132.6 at E -396, on the NMT from E -388), so the NW-bound carriageway follows it.",
+      "source": "Mapillary 810896133189484; GUGiK WMS HighResolution 0.08 m (artifacts/putry-andersa/look/a_ramp.jpg, a_810896.jpg); NMT 1 m",
+      "confidence": "medium",
+      "verify": "levels of both carriageways on the ramp (no survey); kerb / slab strip and guardrail in the median instead of the generic cap"
+    }
+  ]
+}

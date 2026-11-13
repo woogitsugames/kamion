@@ -118,7 +118,9 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     # right up to the junction patch (ADR 0076: verge / kerb of one branch on the lane of the other)
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards, trims=True)
     hf = hf or P.load_heightfield(terrain_meta, REPO, origin)
-    prof = P.build_profiles(net, hf)
+    ties_f = rdir / "profile_ties.json"            # ADR 0146: authored profile ties (authored_override, own file)
+    net.profile_ties = json.loads(ties_f.read_text(encoding="utf-8")).get("ties", []) if ties_f.exists() else []
+    prof = P.build_profiles(net, hf, net.profile_ties)
     prof["walled_ramps"] = P.mark_walled_ramps(net, hf)
     # gaps between carriageways: island only where OSM / the orthophoto says so, otherwise paved (ADR 0077)
     gore_plan = GO.plan(net, juncs, overrides, origin)
@@ -132,6 +134,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     for c in net.chains:
         M.build_ribbon(buf, net, c)
         M.build_ribbon(buf, net, c, coarse=True)
+    stats["median_fills"] = M.build_median_fills(buf, net)           # ADR 0146
     for j in juncs:
         M.build_patch(buf, net, j, stats=stats["patch"])
         M.build_patch(buf, net, j, coarse=True)

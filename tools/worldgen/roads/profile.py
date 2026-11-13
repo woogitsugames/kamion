@@ -391,7 +391,7 @@ def shifted_end_heights(net, ground: dict) -> dict:
     return out
 
 
-def build_profiles(net, hf: Heightfield) -> dict:
+def build_profiles(net, hf: Heightfield, ties=None) -> dict:
     zn = node_heights(net, hf)
     stats = {}
     el_of = {c.id: elevated(net, c) for c in net.chains}
@@ -471,6 +471,36 @@ def build_profiles(net, hf: Heightfield) -> dict:
     for cid, a in adj_of.items():
         if a:
             stats[cid]["adjacent_edge"] = {"stations": len(a)}
+    # 4) authored profile ties (ADR 0146, `<region>/profile_ties.json`): a carriageway that shares its level with the
+    #    other carriageway of the same dual road where the NMT cannot say so (OSM layer >= 1 stations carry no data
+    #    weight) follows that carriageway's solved profile over the named stretch.
+    tie_stats = []
+    for tie in ties or []:
+        c = next((x for x in net.chains if any(str(e) == tie["chain_edge"] for e, _ in x.edges)), None)
+        g = next((x for x in net.chains if any(str(e) == tie["follow_edge"] for e, _ in x.edges)), None)
+        if c is None or g is None or c is g:
+            tie_stats.append({"id": tie.get("id"), "stale": True})
+            continue
+        sa = c.line.project(np.asarray(tie["from_en"], float))[0]
+        sb = c.line.project(np.asarray(tie["to_en"], float))[0]
+        sa, sb = min(sa, sb), max(sa, sb)
+        adj = dict(adj_of.get(c.id) or {})
+        before = c.z.copy()
+        n_t = 0
+        for i in np.nonzero((c.line.s >= sa) & (c.line.s <= sb))[0]:
+            s_o, _ = g.line.project(c.line.p[i])
+            if 0.0 < s_o < g.length and int(i) not in adj:
+                adj[int(i)] = float(np.interp(s_o, g.line.s, g.z))
+                n_t += 1
+        c.z, stats[c.id] = chain_profile(c, hf, zn.get(c.node_a), zn.get(c.node_b), rmin_of[c.id], el_of[c.id],
+                                         req.get(c.id), adj)
+        stats[c.id]["profile_tie"] = tie.get("id")
+        ii = np.array(sorted(k for k in adj if sa <= c.line.s[k] <= sb))
+        res = np.array([c.z[k] - adj[k] for k in ii]) if len(ii) else np.zeros(1)
+        tie_stats.append({"id": tie.get("id"), "chain": c.id, "follows": g.id, "stations": n_t,
+                          "s_from": round(float(sa), 1), "s_to": round(float(sb), 1),
+                          "dz_max_m": round(float(np.abs(c.z - before).max()), 2),
+                          "residual_max_m": round(float(np.abs(res).max()), 3)})
     for c in net.chains:
         if c.id in req:
             ii = np.array(sorted(req[c.id]))
@@ -494,7 +524,7 @@ def build_profiles(net, hf: Heightfield) -> dict:
                             "grade_limit_std": max(l[0] for l in lims),
                             "grade_limit_difficult": max(l[1] for l in lims),
                             "bridge_m": round(float(c.bridge.mean() * c.length), 1)})
-    return {"node_z": zn, "chains": stats, "crossfall_node_matches": n_match}
+    return {"node_z": zn, "chains": stats, "crossfall_node_matches": n_match, "profile_ties": tie_stats}
 
 
 def mark_walled_ramps(net, hf: Heightfield) -> list:

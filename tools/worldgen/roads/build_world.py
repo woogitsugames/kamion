@@ -3,6 +3,7 @@
 Usage (repo root, after build_region.py):
     uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
     [--context]   re-extract generated/osm_context.json from the OSM cache first
+    [--no-route-graph]   skip the GPS routing-graph rebuild (KRTG, ADR 0150 / M27) after the road export
 
 Inputs : Data/Regions/<id>/{region.yaml, roads.graph.json, terrain.json, overrides.yaml,
          generated/osm_context.json}, Data/raw/derived/<id>/heightmap_2049.r16
@@ -98,6 +99,13 @@ MATERIALS = {
     "bridge_concrete": {"color": [0.26, 0.26, 0.25], "rough": 0.85, "surface": "concrete",
                         "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0],
                         "vertex_grime": [0.165, 0.158, 0.145, 0.3]},   # t1: cap / asphalt 1.35 (Low clear), 1.46-1.50 (High overcast)
+    # ADR 0146: red-brown coat of the deck caps of the Andersa viaduct (bridge_style `cap_mat`). The flat
+    # bridge_fascia_red (0.30, 0.05, 0.04) read as fresh paint: sRGB R/G 1.9-2.05 and cap / asphalt luminance 1.44
+    # (Low overcast) against R/G ~1.4 and ~1.2 on Mapillary 494288258686575 (cap in the shade of the screen; UNVERIFIED
+    # in sun). Concrete modulation set + dark road film at the kerb (vertex_grime, CAP_COAT_GRIME). WORKING_VALUE.
+    "bridge_cap_red": {"color": [0.19, 0.04, 0.032], "rough": 0.85, "surface": "concrete",
+                       "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0],
+                       "vertex_grime": [0.07, 0.062, 0.055, 0.3]},
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
                       "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.6, 0.0]},
     # ADR 0117 (REVIEW s10-0110 P1-2, "bialy plotek"): weathered hot-dip zinc is a dull grey patina, not a mirror -
@@ -577,7 +585,19 @@ def preview_trees(region_id, w, zc, mask, out: Path):
 
 
 # --------------------------------------------------------------------------------------------
-def build(region_id: str, out_root: Path | None = None, verbose=True):
+def _route_graph_step(region_id: str, enabled: bool, log) -> None:
+    """GPS routing graph (KRTG v2) as a build_world step, right after the road export (ADR 0150 / M27):
+    rebuilds game/Assets/_Project/UI/Resources/CabDisplay/Nav/<region>_route.bytes from roads.graph.json,
+    incl. the reachability flags (off-reach components of the directed graph). Disabled by --no-route-graph."""
+    if not enabled:
+        log("route graph: skipped (--no-route-graph)")
+        return
+    from navgraph import build_route_graph as BRG
+    BRG.main(["--region", region_id])
+    log("route graph: rebuilt (KRTG, reachability flags) -> game/Assets/_Project/UI/Resources/CabDisplay/Nav/")
+
+
+def build(region_id: str, out_root: Path | None = None, verbose=True, route_graph: bool = True):
     t0 = time.time()
     log = (lambda *a: print(f"[world {time.time() - t0:6.1f}s]", *a)) if verbose else (lambda *a: None)
     # pass 1: geometry with the raw NMT -> bridge decks -> remove deck-contaminated NMT under them
@@ -762,6 +782,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         })
     log("exported", len(chunks_meta), "GLB,", sum(c["bytes"] for c in chunks_meta) // 2**20, "MiB (High), ",
         sum(c["low"]["bytes"] for c in chunks_meta) // 2**20, "MiB (Low)")
+    _route_graph_step(region_id, route_graph, log)   # ADR 0150 / M27: after the road export
 
     gen = pipeline.REGIONS / region_id / "generated"
     srcs = {}
@@ -1084,6 +1105,8 @@ def qa_report(w, mk_report, mask):
             "crossings_in_junction": mk_report.get("crossings_in_junction", []),
             "bridges": w.bridges,
             "walled_ramps": w.profiles.get("walled_ramps", []),
+            "profile_ties": w.profiles.get("profile_ties", []),          # ADR 0146
+            "median_fills": w.stats.get("median_fills", []),
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
             "fork_abreast": w.stats.get("fork_abreast", []),
@@ -1110,6 +1133,8 @@ def main():
     ap.add_argument("--context", action="store_true", help="re-extract generated/osm_context.json first")
     ap.add_argument("--budget-only", action="store_true",
                     help="recompute mesh_budget in streetscape_qa.json from the exported files (no rebuild)")
+    ap.add_argument("--no-route-graph", action="store_true",
+                    help="skip the GPS routing-graph rebuild (KRTG, ADR 0150) after the road export")
     a = ap.parse_args()
     if a.budget_only:
         gen = pipeline.REGIONS / a.region / "generated"
@@ -1128,7 +1153,7 @@ def main():
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(json.dumps(ctx, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
                      encoding="utf-8", newline="\n")
-    build(a.region)
+    build(a.region, route_graph=not a.no_route_graph)
 
 
 if __name__ == "__main__":

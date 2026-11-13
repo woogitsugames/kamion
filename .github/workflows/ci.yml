@@ -28,6 +28,27 @@ jobs:
             artifacts/physics/**/summary.md
           if-no-files-found: ignore
 
+  nav:
+    # tools/nav-runner (M35): compiles game/Assets/_Project/Core/Navigation/*.cs without Unity (Compile Include +
+    # UnityShim) and runs the xUnit suite against the real Resources/CabDisplay/Nav/<region>_route.bytes.
+    # The route .bytes files are plain text in git (not LFS), so lfs: false is fine.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { lfs: false }
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Unit tests
+        run: dotnet test tools/nav-runner/NavRunner.sln -c Release --logger "trx;LogFileName=nav.trx"
+      - name: Scenario runner (golden dump, graph report, GC)
+        run: dotnet run -c Release --project tools/nav-runner/Runner
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nav-results
+          path: tools/nav-runner/**/TestResults/*.trx
+          if-no-files-found: ignore
+
   gis:
     runs-on: ubuntu-latest
     steps:

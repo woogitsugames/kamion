@@ -1,8 +1,25 @@
 using System;
+using System.IO;
+using Game.Controls;
 using Game.Vehicle.Physics;
 
 namespace PhysicsRunner.Sim
 {
+    /// <summary>xorshift64* PRNG: explicit, stable across runtimes (unlike System.Random), so a fuzz seed is reproducible bit-for-bit.</summary>
+    public struct XorShift
+    {
+        ulong _s;
+        public XorShift(long seed) { _s = (ulong)seed ^ 0x9E3779B97F4A7C15UL; if (_s == 0) _s = 0x2545F4914F6CDD1DUL; }
+        /// <summary>Uniform in [0, 1).</summary>
+        public double Next()
+        {
+            _s ^= _s >> 12; _s ^= _s << 25; _s ^= _s >> 27;
+            return ((_s * 2685821657736338717UL) >> 11) * (1.0 / 9007199254740992.0);
+        }
+        /// <summary>Triangular in [-1, 1] (sum of two uniforms minus 1).</summary>
+        public double NextSigned() => Next() + Next() - 1.0;
+    }
+
     public interface IDriver
     {
         DriverInput Update(double t, double dt, SimContext s);
@@ -199,6 +216,92 @@ namespace PhysicsRunner.Sim
             double steer = PurePursuit.Steer(s, target, ld, _wheelbase, 0.3);
             if (_d.brakeAt >= 0 && t >= _d.brakeAt) { th = 0; br = _d.brakeLevel; }
             return new DriverInput { Throttle = th, Brake = br, Steer = steer, Selector = GearSelector.Drive, RetarderLever = _d.retarderLever };
+        }
+    }
+
+    /// <summary>
+    /// Seeded pseudo-random driver for property-based fuzz: every hold interval (uniform in
+    /// [holdMinS, holdMaxS]) a new input set is drawn — steering, throttle/brake, selector (D/N/R), retarder
+    /// lever, parking brake, manual shift requests. With touchChain the steering goes through the game's own
+    /// touch chain (TouchSteeringWheel drag -> SteeringColumn) driven by a randomly wandering thumb, exactly
+    /// like TouchDriver does for the human model. Same seed => same input sequence bit-for-bit.
+    /// </summary>
+    public sealed class FuzzDriver : IDriver
+    {
+        readonly DriverSpec _d;
+        readonly XorShift _rng;
+        readonly bool _touch;
+        TouchSteeringWheel _wheel;
+        SteeringColumn _column;
+        double _fingerMm, _fingerTarget;
+        bool _held;
+        double _nextAt;
+        double _throttle, _brake, _steer;
+        bool _parking;
+        GearSelector _selector = GearSelector.Drive;
+        int _retarder;
+        bool _manual, _shiftUp, _shiftDown;
+
+        public FuzzDriver(DriverSpec d)
+        {
+            _d = d;
+            _rng = new XorShift(d.seed);
+            _touch = d.touchChain;
+            if (_touch)
+            {
+                var feel = SteeringFeel.FromJson(File.Exists(TouchDriver.FeelPath) ? File.ReadAllText(TouchDriver.FeelPath) : null);
+                _wheel = new TouchSteeringWheel { Feel = feel, Grab = WheelGrab.Drag, HalfRangeDeg = 270f, SpeedSensitive = true };
+                _column = new SteeringColumn(feel, 540f);
+            }
+        }
+
+        void Redraw(double t)
+        {
+            _nextAt = t + _d.holdMinS + (_d.holdMaxS - _d.holdMinS) * _rng.Next();
+            _steer = _rng.NextSigned();
+            _throttle = _rng.Next() < 0.55 ? _rng.Next() : 0;
+            _brake = _throttle <= 0 && _rng.Next() < 0.30 ? _rng.Next() : 0;
+            double sel = _rng.Next();
+            _selector = sel < 0.90 ? GearSelector.Drive : sel < 0.96 ? GearSelector.Neutral : GearSelector.Reverse;
+            _retarder = _rng.Next() < 0.25 ? 1 + (int)(_rng.Next() * 3) : 0;
+            _parking = _rng.Next() < 0.06;
+            _manual = _rng.Next() < 0.20;
+            _shiftUp = _manual && _rng.Next() < 0.5;
+            _shiftDown = _manual && !_shiftUp;
+            if (_touch) _fingerTarget = 300 * (_rng.Next() - 0.5);
+        }
+
+        public DriverInput Update(double t, double dt, SimContext s)
+        {
+            if (t >= _nextAt) Redraw(t);
+            double steer = _steer;
+            if (_touch)
+            {
+                // Thumb chases a random target with a neuromuscular lag; the wheel sees only drag increments.
+                double a = 1 - Math.Exp(-dt / 0.1);
+                _fingerMm += (_fingerTarget - _fingerMm) * a;
+                var fromCentre = new UnityEngine.Vector2(0f, 200f);
+                var mm = new UnityEngine.Vector2((float)_fingerMm, 0f);
+                if (!_held) _wheel.PointerDown(fromCentre, mm); else _wheel.PointerDrag(fromCentre, mm);
+                _held = true;
+                var m = s.Tractor;
+                var fb = new VehicleFeedback
+                {
+                    ForwardSpeed = (float)m.SpeedForward, AligningTorque = (float)m.AligningTorqueTotal,
+                    RoadWheelAngleNormalized = (float)(m.Steering.Angle / Math.Max(1e-6, m.Steering.MaxAngle)),
+                    HandwheelLockDeg = _column.LockDeg,
+                };
+                var intent = default(DriverIntent);
+                _wheel.Sample((float)dt, fb, ref intent);
+                _column.Step((float)dt, intent.Steer * _column.LockDeg, intent.HandsOn, (float)(m.SpeedForward * 3.6), (float)m.AligningTorqueTotal);
+                _wheel.FollowColumn(_column.Normalized);
+                steer = _column.Normalized;
+            }
+            return new DriverInput
+            {
+                Throttle = _throttle, Brake = _brake, Steer = steer, ParkingBrake = _parking,
+                Selector = _selector, RetarderLever = _retarder, ManualMode = _manual, ShiftUp = _shiftUp, ShiftDown = _shiftDown,
+            };
         }
     }
 

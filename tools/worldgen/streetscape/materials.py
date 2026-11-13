@@ -105,7 +105,6 @@ M = {
     # back of an overhead direction board: plain grey sheet, no rivet dots at 2-8 m width (review s11-0125 P1)
     "board_back": {"color": [0.21, 0.22, 0.22], "rough": 0.6, "metal": 0.3},
     "luminaire_housing": {"color": [0.12, 0.12, 0.13], "rough": 0.5, "metal": 0.5},
-    "concrete_pole": {"color": [0.36, 0.36, 0.34], "rough": 0.9},
     "steel_painted_grey": {"color": [0.22, 0.23, 0.23], "rough": 0.6, "metal": 0.3},
     "luminaire_old": {"color": [0.30, 0.31, 0.30], "rough": 0.55, "metal": 0.2},
     "lamp_glass_sodium": {"color": [0.42, 0.33, 0.20], "rough": 0.25},

@@ -178,6 +178,56 @@ namespace Game.UI.Navigation
             d.Triangle(o - dir * r * 0.85f, o + n * r * 0.32f, o - n * r * 0.32f, fg);
         }
 
+        /// <summary>
+        /// Lane bar under the manoeuvre banner: one cell per lane of the incoming edge (OSM order, leftmost first),
+        /// an arrow per lane in its turn direction; recommended lanes in the bright banner text colour, other
+        /// allowed lanes subdued, lanes that do not lead in the manoeuvre's direction dark. Flat OEM style.
+        /// </summary>
+        public static void LaneBar(DisplayCanvas d, RouteGraph g, int laneSrc, int count, byte cls, uint allowed, uint rec,
+            float x, float y, float w, float h, in DisplayPalette.Nav pal)
+        {
+            if (count <= 0 || laneSrc < 0 || g == null) return;
+            d.Rect(x, y, w, h, pal.Box);
+            float cw = w / count;
+            int e = laneSrc >> 1;
+            bool rev = RouteGraph.Reversed(laneSrc);
+            Color32 dim = DisplayPalette.Scale(pal.BoxText, 0.3f);
+            for (int i = 0; i < count; i++)
+            {
+                float cx = x + cw * (i + 0.5f);
+                if (i > 0) d.Line(x + cw * i, y + 3f, x + cw * i, y + h - 3f, 1.5f, DisplayPalette.Scale(pal.BoxText, 0.35f), false);
+                bool isRec = (rec >> i & 1) != 0, isAllowed = (allowed >> i & 1) != 0;
+                Color32 c = isRec ? pal.BoxText : isAllowed ? pal.BoxSub : dim;
+                byte mask = g.LaneMask(e, rev, i);
+                LaneArrow(d, cx, y + h * 0.5f, Mathf.Min(cw * 0.6f, h * 0.62f), LaneAngle(mask, cls), c);
+            }
+        }
+
+        /// <summary>Screen angle of a lane arrow from its direction mask (prefers the manoeuvre's class, else the strongest turn).</summary>
+        public static float LaneAngle(byte mask, byte cls)
+        {
+            byte m = (mask & cls) != 0 ? (byte)(mask & cls) : mask;
+            if ((m & RouteGraph.LaneReverse) != 0) return 180f;
+            if ((m & RouteGraph.LaneRight) != 0) return 90f;
+            if ((m & (RouteGraph.LaneSlightRight | RouteGraph.LaneMergeToRight)) != 0) return 40f;
+            if ((m & RouteGraph.LaneThrough) != 0) return 0f;
+            if ((m & (RouteGraph.LaneSlightLeft | RouteGraph.LaneMergeToLeft)) != 0) return -40f;
+            if ((m & RouteGraph.LaneLeft) != 0) return -90f;
+            return 0f;
+        }
+
+        /// <summary>Small straight arrow centred on (cx, cy), pointing up rotated by <paramref name="angleDeg"/> (clockwise).</summary>
+        public static void LaneArrow(DisplayCanvas d, float cx, float cy, float size, float angleDeg, Color32 c)
+        {
+            float a = angleDeg * Mathf.Deg2Rad, co = Mathf.Cos(a), si = Mathf.Sin(a);
+            Vector2 R(float px, float py) => new Vector2(cx + px * co - py * si, cy + px * si + py * co);
+            float k = size / 24f;
+            Vector2 tail = R(0f, 11f * k), joint = R(0f, 0f), tip = R(0f, -11f * k);
+            d.Line(tail.x, tail.y, joint.x, joint.y, 5f * k, c, false);
+            Vector2 bl = R(-5.5f * k, 1f * k), br = R(5.5f * k, 1f * k);
+            d.Triangle(tip, bl, br, c);
+        }
+
         public static void AppendDistance(TextBuffer b, float m) => NavLayout.AppendDistance(b, m);
 
         /// <summary>

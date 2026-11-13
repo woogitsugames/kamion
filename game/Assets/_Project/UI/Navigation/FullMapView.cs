@@ -346,7 +346,8 @@ namespace Game.UI.Navigation
                 title = NavText.Destination + ": " + NavLayout.Abbreviate(dest);
                 m_B.Clear(); NavDraw.AppendDistance(m_B, Vector2.Distance(m_Nav.Position, m_Nav.PinOnRoad));
                 sub = m_B.ToString() + " " + NavText.StraightLine;
-                if (st == PlanStatus.NoPath) sub = NavText.NoPath;
+                if (st == PlanStatus.GoalOffReach) sub = NavText.OffReach;
+                else if (st == PlanStatus.NoPath) sub = NavText.NoPath;
                 else if (st == PlanStatus.StartOffRoad) sub = NavText.StartOffRoad;
                 else if (st == PlanStatus.AlreadyThere) sub = NavText.AlreadyThere;
                 pl = NavText.PlanRoute; m_PrimaryAction = PlanRoute;

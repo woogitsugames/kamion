@@ -155,8 +155,7 @@ namespace PhysicsRunner.Tests
                 {
                     var ts = s.TrailerBody != null ? s.TrailerBody.State : default;
                     s.Combo.Step(0.01, s.Body.State, ts, inp, s.Ground);
-                    s.Body.Integrate(0.01, s.Combo.TractorForce, s.Combo.TractorTorque);
-                    s.TrailerBody?.Integrate(0.01, s.Combo.TrailerForce, s.Combo.TrailerTorque);
+                    ScenarioRunner.StepBodies(s, 0.01);
                 }
                 for (int i = 0; i < 300; i++) Step();
                 long before = GC.GetAllocatedBytesForCurrentThread();

@@ -143,6 +143,15 @@ namespace Game.UI.Navigation
             SpeedMs = dt > 0f ? Mathf.Lerp(SpeedMs, v, 1f - Mathf.Exp(-dt / 0.3f)) : v;
         }
 
+        /// <summary>For tests: replace the routing graph (e.g. a synthetic one with reachability flags, M27).</summary>
+        public void SetGraphForTest(RouteGraph g)
+        {
+            m_Graph = g;
+            m_Planner = new RoutePlanner(g);
+            m_Path = RoutePath.For(g);
+            m_Tracker.Reset();
+        }
+
         /// <summary>For tests and captures: place the truck without a transform.</summary>
         public void SetPoseForTest(Vector2 pos, float headingDeg, float speedMs)
         {
@@ -161,11 +170,31 @@ namespace Game.UI.Navigation
 
         // ------------------------------------------------------------------ destination and route
 
-        /// <summary>Sets the destination pin (region metres); returns false when no road is within reach.</summary>
+        /// <summary>Sets the destination pin (region metres); returns false when no road is within reach.
+        /// M27: a tap in an off-reach part of the map (outside the main strongly connected component, ADR 0150) snaps
+        /// the pin to the nearest node of the main component and reports <see cref="PlanStatus.GoalOffReach"/> -
+        /// a clear message instead of a later "Brak dojazdu".</summary>
         public bool SetPin(Vector2 p)
         {
             if (m_Graph == null) return false;
-            int e = m_Graph.Snap(p, RoutePlanner.SnapGoalM, out _, out Vector2 on, out _);
+            int any = m_Graph.Snap(p, RoutePlanner.SnapGoalM, out _, out _, out _);
+            if (any >= 0 && m_Graph.EdgeOffReach(any))
+            {
+                // Integration r5: a reachable road within the snap radius beats the nearest reachable node.
+                int me = m_Graph.Snap(p, RoutePlanner.SnapGoalM, out _, out Vector2 mOn, out _, mainComponentOnly: true);
+                if (me >= 0)
+                {
+                    HasPin = true; Pin = p; PinOnRoad = mOn; PinName = m_Graph.EdgeName[me];
+                    LastStatus = PlanStatus.GoalOffReach;
+                    return true;
+                }
+                int n = m_Graph.NearestMainNode(p);
+                if (n < 0) { LastStatus = PlanStatus.GoalOffRoad; return false; }
+                HasPin = true; Pin = p; PinOnRoad = m_Graph.NodePos[n]; PinName = m_Graph.MainNameAt(n);
+                LastStatus = PlanStatus.GoalOffReach;
+                return true;
+            }
+            int e = m_Graph.Snap(p, RoutePlanner.SnapGoalM, out _, out Vector2 on, out _, mainComponentOnly: true);
             if (e < 0) { LastStatus = PlanStatus.GoalOffRoad; return false; }
             HasPin = true; Pin = p; PinOnRoad = on; PinName = m_Graph.EdgeName[e];
             LastStatus = PlanStatus.Ok;
@@ -183,7 +212,8 @@ namespace Game.UI.Navigation
         void Replan(bool automatic)
         {
             long t0 = System.Diagnostics.Stopwatch.GetTimestamp();
-            LastStatus = m_Planner.Plan(Position, HasPosition ? HeadingDeg : float.NaN, Pin, m_Path);
+            // Plan to the snapped point (M27: a pin redirected to the main component plans to that node, not to the off-reach tap).
+            LastStatus = m_Planner.Plan(Position, HasPosition ? HeadingDeg : float.NaN, PinOnRoad, m_Path);
             LastPlanMs = (System.Diagnostics.Stopwatch.GetTimestamp() - t0) * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
             if (automatic) { LastRerouteTime = Time.unscaledTime; RerouteCount++; }
             m_Tracker.Update(m_Path, Position, HeadingDeg, SpeedMs, 0f, ref m_Guide);

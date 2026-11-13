@@ -154,10 +154,10 @@ namespace Game.Tests.EditMode
         public void StepDue_DoesNotAllocate()
         {
             var e = Six(false);
-            for (int f = 0; f < 32; f++) MirrorRefreshSchedule.StepDue(e, 6, 2, true);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int f = 0; f < 1000; f++) MirrorRefreshSchedule.StepDue(e, 6, 2, true);
-            Assert.AreEqual(0, System.GC.GetAllocatedBytesForCurrentThread() - before);
+            Game.Tests.GcAllocCounter.AssertZero(
+                () => { for (int f = 0; f < 1000; f++) MirrorRefreshSchedule.StepDue(e, 6, 2, true); },
+                warmup: () => { for (int f = 0; f < 32; f++) MirrorRefreshSchedule.StepDue(e, 6, 2, true); },
+                message: "MirrorRefreshSchedule.StepDue must not allocate");
         }
 
         [Test]
