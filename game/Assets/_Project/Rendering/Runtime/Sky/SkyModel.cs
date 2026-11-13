@@ -698,7 +698,13 @@ namespace Game.Rendering
                                * (1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.15f, 0.6f, v)));
                     float k = t * TwilightBlueAmount * (1f - glow);
                     int idx = j * ChromaWidth + i;
-                    var c = NormaliseLum(Color.LerpUnclamped(m_Chroma[idx], blue, k));
+                    var c = Color.LerpUnclamped(m_Chroma[idx], blue, k);
+                    // r5 (review s19 P2-7): the lowest band toward the sun read salmon-magenta; at the end of civil twilight
+                    // it is orange-yellowish (B well below G). -15 % B there. WORKING_VALUE.
+                    float lowBand = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.05f, 0.3f, v));
+                    float towardSun = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(20f, 90f, gammaDeg));
+                    c.b *= 1f - 0.15f * t * lowBand * towardSun;
+                    c = NormaliseLum(c);
                     c.a = 1f;
                     m_Chroma[idx] = c;
                 }

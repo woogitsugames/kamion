@@ -221,7 +221,11 @@ namespace Game.Editor.Setup
                     // inner edge 1.135 m; door leaves (rendering layer bit 11) pivot on the hinge at |x| 1.147, y 2.6,
                     // z -12.014. Amount 0.85, non-paint (tapes, posts, lamps) x0.6. WORKING_VALUE.
                     m.SetVector("_RearGrime", slot == "Curtain" ? Vector4.zero : new Vector4(1f, -12.0f, 1.335f, 3.865f));
-                    m.SetVector("_RearGrime2", new Vector4(1.135f, 0.85f, 0.6f, 0f));
+                    // r5 (review s19 P1-1/P1-2): non-paint parts (sill, posts, RUPD beam, tapes) x0.8 - they are the dirtiest,
+                    // lamp lenses x0.35 (emission untouched); deposit = dried road spray, warm grey-brown sRGB ~(111,103,89),
+                    // max coverage 0.7. WORKING_VALUE.
+                    m.SetVector("_RearGrime2", new Vector4(1.135f, 0.85f, slot == "Lights" ? 0.35f : 0.8f, 0f));
+                    m.SetColor("_RearGrimeColor", new Color(0.16f, 0.135f, 0.10f, 0.7f));
                     m.SetVector("_RearGrime3", new Vector4(1.147f, 2.6f, -12.014f, 0f));
                     m.SetFloat("_Lamps", slot == "Lights" ? 1f : 0f);
                     if (slot == "Lights") m.EnableKeyword("_KAMION_TRUCK_LAMPS");
