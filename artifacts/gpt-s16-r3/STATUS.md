@@ -89,3 +89,5 @@ Izolacje: bridge_concrete=0 dodaje drugi szereg plam, road_asphalt=0 zmniejsza/z
 Natywna izolacja materiału deck-pair zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
 
 Deck-pair nadal nie odtwarza globalnego normal=0. Próba all-pbr sprawdzi równoważność lokalnej ścieżki shaderowej wobec globalnego biasu; dopiero wynik uzasadni dalszy dobór materiałów lub poprawkę implementacji. NASTĘPNY KROK: material-ablate.ps1 -Materials all-pbr
+
+Natywna izolacja materiału all-pbr zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
