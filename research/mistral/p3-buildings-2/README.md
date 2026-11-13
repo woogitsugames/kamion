@@ -70,7 +70,7 @@ Ustalenia (z cytatem, paragraf — pełne cytaty w `sources.md`):
 | **Białostoczek** | **OWT-67** (etap I: 905 mieszk., 5-kond. bloki) / **OWT-75** (etap II: 2784 mieszk.) | 1977–1980 | Osiedlownik „BIAŁOSTOCZEK” (cytuje prasę 1977–78); projekt: poznański Inwestprojekt; inwestor BSM |
 | **Bacieczki** | **NIE DOTYCZY — brak wielkiej płyty**: zabudowa Komunalnego TBS od 1999 (Kołłątaja 75/73 pierwszy, 3.09.1999; 10 bloków w „Bacieczkach I”; projekt: T. Koleśnik, arch. A. Makarewicz, M. Szymański) | 1999+ | Osiedlownik „TBS” (cytuje prezes KTBS E. Zyska i monografię A. Dobrońskiego) |
 | **Zielone Wzgórza** | **OWT-75** (elementy: białostocki **Fadom-II**; pierwszy blok — Rumiankowa, przeprowadzki od początku 1985) | 1984/85+ | Osiedlownik „SŁONECZNY STOK / ZIELONE WZGÓRZA / LEŚNA DOLINA” (cytuje „Współczesną” 1985) |
-| **Wysoki Stoczek** | wielka płyta („u schyłku PRL”), **nazwa systemu: UNVERIFIED** | schyłek PRL | Osiedlownik „WYSOKI STOCZEK 1.0” (2026) |
+| **Wysoki Stoczek** | **NIE DOTYCZY w zakresie paczki** — zdjęcia 037–043 pokazują domy jednorodzinne/szeregowe (poprawka typu wg przeglądu r8), nie bloki; ewentualne bloki wielkopłytowe osiedla leżą poza kadrami paczki | — (wiersze 037–043) | Osiedlownik „WYSOKI STOCZEK 1.0” (2026); typ z wizji zdjęć |
 | **Przydworcowe/Sienkiewicza** | **OWT-67** (12 bloków, w tym 11-piętrowce; projekt Inwestprojekt Białystok — Jan Prochowski; montaż BPBM od 1976) | 1972–1977 | Osiedlownik „PRZYDWORCOWE” (cytuje „Białostocką” i „Współczesną”) |
 | (kontekst) os. Tysiąclecia | elementy OWT (wszystkie wczesne osiedla BSM); 3 wieżowce 10-piętrowe przy Wesołej/Zwierzynieckiej | 1966–1974 | Osiedlownik „TYSIĄCLECIA”; H. Wilk, „Współczesna” 1977 |
 
