@@ -17,6 +17,8 @@ param(
     [string]$OutputDir,
     [ValidateSet('', 'clear', 'overcast', 'lowsun', 'dusk')] [string]$Lighting = '',
     [string]$Cameras = '',
+    # ADR 0175 evidence: force truck lamp groups on, e.g. 'rearfog,hazard,low'.
+    [string]$TruckLamps = '',
     # A7 before/after: 'off' renders without the cab fill and the cab-view lift (CabInteriorLighting).
     [ValidateSet('on', 'off')] [string]$CabFill = 'on',
     # ADR 0044 r9 A/B: 'none' renders the cab with the state the phone had before r9 (no view camera -> exterior cab state).
@@ -53,6 +55,7 @@ $qaArgs = @(
     '-qaScene', $Scene, '-qaWidth', $Width, '-qaHeight', $Height, '-qaTier', $Tier, '-qaOutput', $OutputDir)
 if ($Lighting) { $qaArgs += @('-qaLighting', $Lighting) }
 if ($Cameras) { $qaArgs += @('-qaCameras', $Cameras) }
+if ($TruckLamps) { $qaArgs += @('-qaTruckLamps', $TruckLamps) }
 if ($WbAdapt) { $qaArgs += @('-qaWbAdapt', $WbAdapt) }
 if ($NoGlass) { $qaArgs += @('-qaNoGlass', '1') }
 if ($CabFill -eq 'off') { $qaArgs += @('-qaCabFill', 'off') }

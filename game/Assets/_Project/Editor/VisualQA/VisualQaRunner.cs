@@ -179,12 +179,15 @@ namespace Game.Editor.VisualQA
                 foreach (var m in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None)) m.RenderNow();
                 // Art truck (A7): tier binding, lamp state and the cab fill for this camera (LateUpdate does not run here).
                 foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();
-                // ADR 0178 lamp-hue check: KAMION_QA_LAMPS="brake,hazard" lights the stop lamps and both indicators (flasher on).
-                string qaLamps = System.Environment.GetEnvironmentVariable("KAMION_QA_LAMPS") ?? "";
+                // ADR 0175 evidence: -qaTruckLamps rearfog,hazard,low forces lamp groups on for the render (default: solver state).
+                // ADR 0178 lamp-hue check: "brake" lights the stop lamps; KAMION_QA_LAMPS (env) is accepted as the same list.
+                string lampSet = EditorTools.Arg("-qaTruckLamps", "") + "," + (System.Environment.GetEnvironmentVariable("KAMION_QA_LAMPS") ?? "");
                 foreach (var tl in UnityEngine.Object.FindObjectsByType<TruckLights>(FindObjectsSortMode.None))
                 {
-                    if (qaLamps.Contains("brake")) tl.forceBrake = true;
-                    if (qaLamps.Contains("hazard")) { tl.indicatorLever = 2; tl.flasherLit = true; }
+                    if (lampSet.Contains("low") || lampSet.Contains("rearfog")) tl.forceLowBeam = true;
+                    if (lampSet.Contains("rearfog")) tl.rearFog = true;
+                    if (lampSet.Contains("brake")) tl.forceBrake = true;
+                    if (lampSet.Contains("hazard")) { tl.indicatorLever = 2; tl.flasherLit = true; }
                     tl.Refresh();
                 }
                 // Live cab screens (cluster, navigation, DIN) drawn from the (parked) vehicle state for this light.
