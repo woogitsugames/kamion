@@ -7,4 +7,5 @@
 - C#: LayerMath (prawa 0176: ShaftRpm, RetarderTone/FlowGain, TonePitch, EngineBrakeReleaseLevel) + DrivelineSfx (struct, zdarzenia AMT/hamulec silnikowy)
 - biblioteka (pola 0176) + importer + hook TruckAudioController (retarder tone/flow, zdarzenia AMT/hamulec silnikowy, dryer v2) + DrivelineSfxTests (11 testów, PlayMode asm — EditMode asm nie referuje Game.Audio, asmdef = lider)
 - Unity: build-lab + import audio OK (69 sfx), PlayMode 25/25 (w tym DrivelineSfxTests 11/11). ADR 0176 + LICENSES zapisane
-- NASTĘPNY KROK: prompty ElevenLabs docs/owner/ELEVENLABS-REGEN-05.md, potem raport
+- wygenerowane klipy 0176 + biblioteka commitnięte (LFS); prompty EL docs/owner/ELEVENLABS-REGEN-05.md (nic nie wysłano)
+- GOTOWE do review/merge lidera. Czeka: odsłuch właściciela artifacts/audio-synth-0176/ab/ (telefon + słuchawki)
