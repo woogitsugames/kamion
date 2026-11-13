@@ -2215,7 +2215,15 @@ overrides:
     # island putry-ring-s-nose-island (the wedge the generated lanes leave).
     at_en: [-530.4, 37.1]
     travel_bearing_deg: 350
-    arm_bearing_deg: 292
+    arm_bearing_deg: 295
+    # ADR 0172 (REVIEW s17 0161 P1 "one head on the arm vs 3-4"): GUGiK 0.08 m orthophoto 2024, crop
+    # artifacts/p1b-0172/td/hr_182arm.png - arm from the pole foot E -532.5 N 37.9 to the tip E -540.5 N 41.7 = 8.8 m
+    # at bearing 295; its shadow carries two head blobs 2.8 m apart (E -541.5 N 45.3, E -543.5 N 47.3) and the pole
+    # one low head. Heads 5.5 / 8.3 m from the pole: 2.8 m apart, the outer one 0.5 m before the tip (WORKING_VALUE,
+    # +-0.5 m: the generated pole stands 2.2 m east of the real one).
+    arm_m: 8.8
+    arm_heads_m: [5.5, 8.3]
+    pole_head: true
     lit: red
     mapillary: ["182011943700132"]
     reason: >-
@@ -2270,9 +2278,10 @@ overrides:
     verify: owner photo session (roundabout islands)
     beds:
       - {name: EC1, plant: berberis_red, rim_m: 0.3, ring: [[778544.5, 595474.2], [778547.0, 595475.3], [778551.0, 595475.5], [778555.0, 595474.8], [778558.0, 595473.2], [778560.5, 595471.4], [778558.0, 595470.8], [778554.0, 595470.1], [778550.0, 595469.7], [778546.5, 595470.2], [778544.8, 595472.0]]}
-    # islands: [{name: ec-refuge, at: [778531.5, 595479.0], fill: paving}] - OFF (visual-critic s17 0161, P1): the paved
-    # refuge read as a podium (flat, too large, vertical sides, no dropped kerb or crossing). Back on with a dropped-kerb
-    # outline traced from the orthophoto, when a pose of confidence B exists.
+    # ADR 0161 -> OFF after visual-critic s17 0161 (P1: from the pose of confidence C the paved refuge read as a podium).
+    # ADR 0172: back ON with the resected pose of cm92458760 (confidence B): the photo foreground IS this paved island
+    # with the sign cluster on it. Still no dropped kerb at the crossings (generated kerb ring) - open.
+    islands: [{name: ec-refuge, at: [778531.5, 595479.0], fill: paving}]
   - id: kwadrat-exit-carriageway-width
     target: {edge: "w194536287:1882887381-1882954023"}
     reason: >-
@@ -2489,3 +2498,90 @@ overrides:
     confidence: low
     verify: owner photo session item 6 (Kwadrat Park lane)
     set: {height_m: 3.4}
+  # ADR 0172 (REVIEW s17 0161 P1, cm92458760: "no cluster of signs facing the camera - D-6, street plate, C-").
+  # Splitter island of the south arm of Rondo Pamięci Bieżeństwa (EC access road). Post feet = start of each post
+  # shadow on the GUGiK 0.08 m orthophoto 2024 (crop artifacts/p1b-0172/td/hr_cm924z.png, 118 px/m, +-0.2 m; shadows
+  # run to the NNW at ~1.1 m per m of height). Commons cm92458760 (Rakoon 2020-07-11, CC BY 3.0, reference only)
+  # shows the same four objects on the paved island. Faces are our own schematic drawings.
+  - id: ec-island-f10
+    kind: gate3_sign
+    photo: ["commons:cm92458760"]
+    at_en: [539.1, -741.6]
+    # r5: 200 -> 190. r4 beside the photo at equal scale: plate 0.28 m wide in the view against 0.42 m on the photo
+    # (0.80 m plate -> 21 deg / 32 deg between the line of sight, bearing 131, and the plate line); the post feet give
+    # the same plate line (bearing ~100: feet 7.02 / 6.46 m away, 0.64 / 0.25 m left of the axis) -> faces bearing ~10
+    travel_bearing_deg: 190
+    lower_edge_m: 2.2
+    parts: [{face: F-10-ls}]
+    reason: >-
+      Upright two-lane board (left turn | straight) on two posts, read by the traffic leaving the roundabout to the
+      south (west carriageway). Foot and facing from photo cm92458760 with the resected pose of ADR 0172 (E 533.9
+      N -737.1, heading 134.7, hfov 67.6 - residuals <= 0.6 deg on the lamp, the A-7 and D-6 posts and both
+      chimneys): posts at x 0.435 / 0.47 with feet 17.4 / 16.0 deg under the horizon -> 6.6 / 7.3 m from the camera,
+      0.45 m left of the axis -> E 539.1 N -741.6 (+-0.5 m), plate line at bearing ~108 -> faces bearing ~18. On the
+      orthophoto its plate shadow is the blob at E 537.4 N -739.1 (2.8 m of plate-centre height at 1.1 m per m).
+      r1 placed it from the wrong shadow at E 538.95 N -742.85: right of the column in the frame, left on the photo.
+      Plate 0.80 x 0.80 m measured on the same photo (338 px at 6.75 m, see gate3_landmarks.FACE_DIM); lower edge
+      2.26 m by the same measurement -> 2.2 m.
+    confidence: low
+    verify: owner photo session (roundabout islands) - board size and arrows
+  - id: ec-island-a7-c12
+    kind: gate3_sign
+    photo: ["commons:cm92458760"]
+    at_en: [540.13, -743.7]
+    # r2 (bearing 31, square to the generated east carriageway) showed the plates edge-on from the photo pose; on the
+    # photo the 0.9 m triangle back is ~0.6 m wide from bearing 312 -> the plate normal is ~50 deg off the view: faces ~185
+    travel_bearing_deg: 5
+    # r4: heights from the photo (resected pose, post 9.07 m away, horizon from the lamp foot): disc 2.58-3.27 m,
+    # triangle 3.56-4.18 m above the ground. The assembly stacks with 5 cm gaps and a 0.9 m triangle -> lower edge 2.7 m
+    # puts the disc at 2.7-3.3 and the triangle at 3.35-4.13 m (r3 had 2.1 m: the triangle sat under the street plate,
+    # on the photo it stands above it). The 2.4 / 3.2 m read off the orthophoto shadows was ~0.6 m low.
+    lower_edge_m: 2.7
+    parts: [{face: A-7}, {face: C-12}]
+    reason: >-
+      Island-side repeater of the A-7 + C-12 pair of the northbound entry (the rule builds only the right-hand one,
+      at E 548.3 N -748.7). The photo shows both backs on one post right of the lamp column; on the orthophoto the
+      post foot is at E 540.13 N -743.7 with two plate shadows 2.4 / 3.2 m up.
+    confidence: medium
+    verify: owner photo session (roundabout islands)
+  - id: ec-island-d6
+    kind: gate3_sign
+    photo: ["commons:cm92458760"]
+    at_en: [537.16, -745.26]
+    travel_bearing_deg: 211
+    lower_edge_m: 2.2
+    parts: [{face: D-6}]
+    reason: >-
+      Crossing sign on the island at the zebra + cycle crossing of the west carriageway (photo: D-6b with a small
+      plate under it; the project has the D-6 drawing only - WORKING_VALUE). Foot E 537.16 N -745.26, diamond-shaped
+      plate shadow 2.8 m to the NNW.
+    confidence: medium
+    verify: owner photo session (roundabout islands) - D-6b and its plate
+  - id: ec-island-lamp
+    kind: gate3_lamp
+    photo: ["commons:cm92458760"]
+    at_en: [539.7, -742.6]
+    proto: lamp_10m
+    arm_bearing_deg: 300
+    reason: >-
+      Lamp column in the middle of the island (the grey column in the centre of photo cm92458760; orthophoto: column
+      leaning 3.8 m from its foot at E 539.7 N -742.6, one luminaire). The lamp rule puts no column on a splitter
+      island. Height 10 m and bracket direction WORKING_VALUE (the top is outside the photo).
+    confidence: low
+    verify: owner photo session (roundabout islands) - column type and height
+  - id: ec-island-street-name
+    kind: gate3_sign
+    photo: ["commons:cm92458760"]
+    at_en: [539.25, -743.15]
+    travel_bearing_deg: 130
+    lower_edge_m: 3.1            # r4: plate 3.11-3.33 m on the photo (column 7.9 m away); r3 had 3.3
+    post: galv
+    parts: [{face: street_name, text: "ul. Bitwy Białostockiej"}]
+    reason: >-
+      Teal street-name plate "ul. Bitwy Białostockiej" (text read on photo cm92458760; the same name is the OSM name
+      of the street). In reality the plate is cantilevered from the lamp column at ~3.4 m: on the photo (resected
+      pose) it spans 1.2 m to the right of the column, square to the view -> plate line at bearing ~220, face towards
+      ~310 (the relief-displaced teal bar on the orthophoto points to ~194). The sign assembly has a centred post, so
+      it stands on its own galvanised post 0.7 m from the column - WORKING_VALUE until a bracket-mounted plate exists.
+    confidence: low
+    verify: owner photo session (roundabout islands)
