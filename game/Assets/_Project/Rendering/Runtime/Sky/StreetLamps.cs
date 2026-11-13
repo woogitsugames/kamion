@@ -73,6 +73,7 @@ namespace Game.Rendering
         {
             s_Heads = heads ?? new Vector3[0];
             s_HeadCount = Mathf.Min(count, s_Heads.Length);
+            LampGlare.Invalidate();
         }
 
         /// <summary>EnvironmentLighting: lamps follow the sun elevation.</summary>
@@ -92,6 +93,7 @@ namespace Game.Rendering
         {
             foreach (var l in m_Lights) if (l != null) { if (Application.isPlaying) Destroy(l.gameObject); else DestroyImmediate(l.gameObject); }
             m_Lights = new Light[0];
+            LampGlare.Dispose();
             Shader.SetGlobalFloat(k_LightsOn, 0f);
             PoolCount = 0;
             Shader.SetGlobalFloat(k_PoolCount, 0f);
@@ -125,6 +127,7 @@ namespace Game.Rendering
             }
             Shader.SetGlobalFloat(k_LightsOn, n > 0 ? 1f : 0f);
             RefreshPools(cam, k);
+            LampGlare.Sync(s_Heads, s_HeadCount, s_On, k, k_Led);   // ADR 0192 lens glare
         }
 
         /// <summary>ADR 0062: analytic pools on the world surfaces (all tiers with lampPools > 0).</summary>
