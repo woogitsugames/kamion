@@ -23,6 +23,26 @@ Paczka badawcza M52. Gałąź: `research/mistral-p2-surfaces-2`. Kontynuacja / u
 > powtórzone (Panoramax + KartaView API) — wynik negatywny ze szczegółami. Kadry
 > fotograficzne nie zostały obejrzane w r2 (limit analiz obrazu sesji wyczerpany na
 > rysunkach Dz.U. — priorytet zad. 1); status koloru pozostaje UNVERIFIED.
+>
+> **M52-FIX r3 (13.11.2026)** — rewizja po przeglądzie s18
+> (`docs/reports/REVIEW-2026-11-13-s18-mistral-fixes-r8.md`). Zmiany:
+> (1) **korekta przypisania M52-103/104/105** (route/sokolska-01…03.jpg): kadry leżą na
+> **Al. Tysiąclecia Państwa Polskiego** (dojazd do skrzyżowania z Sokólską), NIE na
+> Sokólskiej; do WSZYSTKICH wierszy kadrów route/crossings (M52-053…M52-105) zastosowano
+> regułę M46 (odległość do osi ≤25 m ORAZ |Δ(azymut − kierunek odcinka)| mod 180 ≤30°) —
+> way_id + Δ wpisane w uwagi; dla wierszy sekwencji 14055 (2016) odnotowano jawnie, że
+> azymut ~357° z metadanych to artefakt magnetometru (kurs GPS sekwencji = 121–123°,
+> zgodny z osią estakady) — reguła azymutowa formalnie niespełniona, przypisanie
+> utrzymane wg pozycji (≤2,4 m od osi) + oględzin; (2) **oględziny kadrów modelem wizyjnym
+> — W TOKU** (limit ~20 analiz obrazu na odpowiedź): wykonano **24/80** (kadry
+> Jaroszówki M52-029…M52-052 — opis „co widać” + ocena elementu w uwagach manifestu);
+> route/crossings/Rynek w kolejnych turach, commit po każdej turze; (3) **P-5 spójne**:
+> rys. 2.2.1.11 przedstawia 2 pary linii (4 kanały — własny pomiar r2), 0,32 = 2 × 0,16
+> — zapis o „rozbieżności wewnętrznej rozporządzenia” WYCOFANY (M52-012 + tabela zad. 1);
+> (4) poprawki kopiuj-wklej w uwagach (M52-006, M52-014/015 zamienione, M52-027 — sprzeczne
+> zdanie r1 usunięte) + **nowy wiersz M52-118** (P-3b: kreska/przerwa 1,00/1,00 m, jak
+> M52-005 dla P-3a) — manifest ma 118 rekordów; (5) samokontrola 20% na nowym jawnym
+> seedzie — do przeprowadzenia po zakończeniu oględzin kadrów.
 
 ## Zakres (6 zadań)
 
@@ -62,8 +82,8 @@ walidacja krzyżowa z wartościami znanymi z tekstu (P-7a/b: 0,24 m; P-7c/d: 0,1
 P-10: 4,0 m — str. 567; P-11: 1,8/3,0 m — str. 569; tabela 5.3 — str. 589).
 Mapowanie stron: **PDF c2 str. N = Dz.U. str. N+525**.
 
-**Błąd metody M52 (przyznany w M52-FIX):** rysunków nie obejrzano wizualnie.
-Podpisy dolne figur („0,20”, „0,24”, „0,18”, „0,32”, „0,08”, „0,5”, „0,375”, „0,2825”)
+**Błąd metody M52 (przyznany w M52-FIX):** rysunków nie obejrzono wizualnie.
+Podpisy dolne figur („0,20”, „0,24”, „0,18”, „0,32”, „0,08”, „0,5”, „0,375”, „0,2825")
 zinterpretowano jako wymiary (odstępy osi / wysokości), a etykiety kreski/przerwy
 na rys. 2.2.1.8/2.2.1.11 pominięto i zastąpiono pomiarem pikselowym (ESTIMATED).
 
@@ -118,7 +138,7 @@ urządowego / tekst rozporządzenia), ESTIMATED (metoda z opisem), UNVERIFIED.
 | P-4 | „0,24” | podpis dolny figury | — | 2.2.1.10 | 540 | **0,24 m²/mb** | SOURCED: przegląd s17 + oględziny r2; = 2×0,12 ✓ [M52-FIX] |
 | P-5 | „0,12” ×3 | szerokości linii + odstęp | 0,12 / 0,12 / 0,12 m (osie 0,24 m) | 2.2.1.11 | 540 | — | SOURCED: odczyt programowy; **potwierdzenie wizualne s17 + oględziny r2** (rys. przedstawia 2 pary linii — 4 kanały) |
 | P-5 | „4,00” / „2,00” | **kreska / przerwa** | **4,00 m / 2,00 m** | 2.2.1.11 | 540 | — | SOURCED: etykiety, **potwierdzenie wizualne s17 + oględziny r2** (pomiar: kreska 484 px : przerwa 248 px = 2:1 ✓); zastępują ESTIMATED (~1,77 / ~0,91 m) |
-| P-5 | „0,32” | podpis dolny figury | — | 2.2.1.11 | 540 | **0,32 m²/mb** | SOURCED odczyt (przegląd s17, 2× powtórzony; r2 nie podważył); **zastrzeżenie r2**: rysunek przedstawia 4 kanały (2 pary linii) — arytmetyka etykiet (2×0,12×4/6) daje 0,16 ≠ 0,32 podpisu drukowanego: **rozbieżność wewnętrzna rozporządzenia**, odnotowana; podpis drukowany pozostaje SOURCED |
+| P-5 | „0,32” | podpis dolny figury | — | 2.2.1.11 | 540 | **0,32 m²/mb** | SOURCED odczyt (przegląd s17, 2× powtórzony; r2 nie podważył); **M52-FIX r3: spójne** — rysunek przedstawia 2 pary linii (4 kanały; pomiar r2 — M52-011), więc 0,32 = 2 × (2×0,12×4/6) = 2 × 0,16 ✓; zapis o „rozbieżności wewnętrznej rozporządzenia” wycofany (s18) |
 | P-6 | „0,12” | szerokość linii | **0,12 m** | 2.2.1.12 | 541 | — | SOURCED: odczyt programowy; **potwierdzenie wizualne s17 + oględziny r2** (27 px, ta sama skala co P-2a) |
 | P-6 | „4,00” | **kreska** | **4,00 m** | 2.2.1.12 | 541 | — | SOURCED: etykieta, **potwierdzenie wizualne s17 + oględziny r2** (pomiar: kreska 512 px : przerwa 260 px = 2:1 ✓); zastępuje ESTIMATED z proporcji pikselowych |
 | P-6 | „2,00” | **przerwa** | **2,00 m** | 2.2.1.12 | 541 | — | SOURCED: etykieta pionowa (odczyt programowy, rot −90°); potwierdzenie wizualne s17 + oględziny r2 |
@@ -146,15 +166,15 @@ urządowego / tekst rozporządzenia), ESTIMATED (metoda z opisem), UNVERIFIED.
 
 Uwagi:
 - **Dla silnika gry:** wymiary geometryczne (szerokości / odstępy / kreski / przerwy) —
-  kolumna „Wartość”; intensywność malowania — kolumna „Zużycie farby” (m²/mb; dla P-13/P-14
+  kolumna „Wartość”; intensywność malowania — kolumna „Zużycie farby" (m²/mb; dla P-13/P-14
   przy jednostce 1,00 m wartość = m² na element).
 - Adnotacja wektorowa przy rys. 2.2.1.14 (str. 542): „Wymiary w cm” — dotyczy konstrukcji
   strzałki P-6a, nie znaków P-2…P-6.
 - Konwencja szerokości w rozporządzeniu potwierdza odczyty: P-7a/b 0,24 m; P-7c/d 0,12 m
   (str. Dz.U. 545).
 - **Pozycje „do potwierdzenia oględziną” (M52-FIX) — rozstrzygnięte w r2**: podpis P-5
-  (0,32 drukowany; arytmetyka etykiet 0,16 — rozbieżność wewnętrzna rozporządzenia,
-  odnotowana), podstawa P-13 (**0,50 m**; hipoteza 0,75 wycofana), głębokość P-14
+  (**0,32 spójne — 2 pary linii: 0,32 = 2 × 0,16; zapis o rozbieżności wycofany w r3 [s18]**),
+  podstawa P-13 (**0,50 m**; hipoteza 0,75 wycofana), głębokość P-14
   (**0,50 m** — etykieta „0,5”), szerokość P-12 (**0,50 m** — etykieta „0,5”), wysokość
   P-13 (**0,70 m** — etykieta pionowa), kreska/przerwa P-3b (**1,00/1,00 m** — etykiety
   nowo odczytane), wymiary P-23 (**2,00/1,10/0,10 m** + mini), etykiety P-25
@@ -204,8 +224,9 @@ ringu, chodników ani krawężników przy rondzie.
 | 2769366 | 2019-08-25 | gpsmapper999 | 6 | 302/303° | 53.1514–53.1524, 23.1663–23.1689 |
 | 3686129 | 2021-06-23 | TMishaaa | 11 | 301/302/303° | 53.1513–53.1524, 23.1662–23.1693 |
 
-Wszystkie trzy sekwencje prowadzą wiaduktem DK19 nad rondem (2016 — od południa,
-azymut ~357°; 2019/2021 — od północnego zachodu, azymuty ~300–305°). Pełne metadane:
+Wszystkie trzy sekwencje prowadzą wiaduktem DK19 nad rondem (2016 — kurs GPS 121–123°,
+z NW na SE; zapisany w metadanych azymut ~357° to artefakt magnetometru — r3, patrz
+uwagi M52-053…057; 2019/2021 — od północnego zachodu, azymuty ~300–305°). Pełne metadane:
 manifest.csv M52-029…M52-052. Pliki: `files/jaroszowka/` w paczce ZIP (poza gitem).
 Te same ujęcia powtórzone w wierszach trasy/przejść: M52-057=jar-01, M52-062=jar-13,
 M52-068=jar-22, M52-071=jar-03, M52-075=jar-05, M52-079=jar-18, M52-080=jar-21.
@@ -351,12 +372,21 @@ Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
 - [x] Zadanie 5 — Rynek Kościuszki: płyty granitowe + kostka (SOURCED, Tofiluk 2015 +
       BIP/bialystok.pl); wymiary UNVERIFIED; kolor ESTIMATED (wartości w uwagach r2).
 - [x] Zadanie 6 — wytyczne ZDM „2018/2025”: BIP zasób 103311 + porównanie zmian vs 2018.
-- [x] manifest.csv (117 rekordów, **17 kolumn po r2**), audit_20_percent.json (24/24,
-      seed 20261113, odczyty r2 + „co widać”), sources.md (źródła M52-FIX + r2),
+- [x] manifest.csv (117 rekordów po r2 → **118 po r3**, **17 kolumn po r2**), audit_20_percent.json (24/24,
+      seed 20261113, odczyty r2 + „co widać”; **próba r3 na nowym seedzie — w kolejnej turze**), sources.md (źródła M52-FIX + r2),
       .gitignore (files/, *.zip).
-- [ ] Do wykonania w rundzie z dostępem do kadrów: oględziny kadrów trasy startowej
-      (kolor, zad. 4); kadry z poziomu ringu Jaroszówki (pozyskanie własne, np. sesja foto).
-      (Render rysunków Dz.U. z zad. 1 — **wykonany w r2**.)
+- [~] **M52-FIX r3 (s18) — W TOKU**: korekta przypisania M52-103/104/105 (Sokólska →
+      **Al. Tysiąclecia**) ✓; reguła M46 zastosowana do wszystkich wierszy route/crossings
+      (way_id + Δ w uwagach; azymut 2016 sekw. 14055 = artefakt magnetometru, odnotowany
+      jawnie) ✓; poprawki kopiuj-wklej uwag (M52-006/014/015/027) + nowy wiersz M52-118
+      (P-3b kreska/przerwa 1,00/1,00) ✓; P-5: 0,32 = 2 × 0,16 — spójne (zapis o
+      rozbieżności wycofany) ✓; **oględziny kadrów modelem wizyjnym: 24/80** (Jaroszówka
+      M52-029…052 — „co widać” + ocena elementu w uwagach; route/crossings/Rynek
+      M52-053…108 w kolejnych turach — limit ~20 analiz obrazu na odpowiedź, commit po
+      każdej turze); samokontrola 20% na nowym seedzie — po zakończeniu oględzin;
+      kolor trasy (zad. 4) — do rozstrzygnięcia oględzinami.
+- [ ] Kadry z poziomu ringu Jaroszówki (pozyskanie własne, np. sesja foto) — bez zmian
+      (wynik negatywny M52-117). (Render rysunków Dz.U. z zad. 1 — **wykonany w r2**.)
 
 ## Zasady
 
@@ -378,8 +408,8 @@ Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
 
 - `README.md` — ten plik (wyniki zadań 1–6 + statusy + opis samokontroli; rewizja
   M52-FIX + r2).
-- `manifest.csv` — pozycje M52-001…M52-117; **17 kolumn po r2** (kolor_srgb/metoda_koloru
-  usunięte — zad. 4).
+- `manifest.csv` — pozycje M52-001…M52-**118** (wiersz M52-118 dodany w M52-FIX r3); **17 kolumn
+  po r2** (kolor_srgb/metoda_koloru usunięte — zad. 4).
 - `sources.md` — pełne źródła z linkami, licencjami i datami dostępu (+ źródła rewizji
   M52-FIX i metodologia r2).
 - `audit_20_percent.json` — samokontrola 20% (seed 20261113; odczyty etykiet r2 +
