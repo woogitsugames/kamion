@@ -32,3 +32,5 @@ Przygotowano24arkusze zdjęcie|przed|po dla6ulic×4warunki (po2pozy na ulicę), 
 Zapisano after/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano after/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano after/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
