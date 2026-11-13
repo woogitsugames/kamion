@@ -14,6 +14,7 @@ Data dostępu do wszystkich źródeł elektronicznych: **2026-11-13** (chyba że
 | R150, 00 seria EN (E/ECE/TRANS/505/Rev.3/Add.149) | tekst EN | https://web.archive.org/web/20210615172144/https://unece.org/sites/default/files/2021-05/R150e.docx |
 | R148 Supl. 2 do serii 01 EN (E/ECE/TRANS/505/Rev.3/Add.147/Rev.1/Amend.2) | 01 seria — do porównania wersji | https://web.archive.org/web/20250822231149/https://unece.org/sites/default/files/2025-02/R148r1am2E.pdf |
 | R150, 01 seria + Supl. 2 + Corr.1 (E/ECE/TRANS/505/Rev.3/Add.149/Rev.1/Amend.2/Corr.1) | dokument UNECE; pobrany przez Wayback Machine z unece.org (unece.org odrzuca bezpośrednie roboty); użyty wyłącznie pomocniczo | (plik w archiwum ZIP: docs/R150-01s-Supp2-Corr1.pdf; symbol dokumentu wg rejestru UNECE) |
+| Dz.U. L 347 — formy HTML (Cellar, Accept: application/xhtml+xml) | te same teksty co PDF, ale bez sklejania kolumn tabel — **podstawa weryfikacji cytatów verbatim** (R148/R150/R48) | https://publications.europa.eu/resource/celex/42021X1719 (analogicznie 42021X1721, 42021X1718) |
 
 Uwaga: pliki PDF/DOCX urzędowe są w archiwum ZIP (`files/docs/`), nie w gicie — binaria przesyłane przez GitHub API uległyby zniekształceniu (doświadczenie z p4/M44). W repo zostają linki (powyżej) + wyciągi w manifest.
 
@@ -25,8 +26,9 @@ Licencja tekstów Dz.U.: decyzja Komisji 2011/833/UE w sprawie ponownego wykorzy
 |---|---|---|
 | Karta techniczna 7-funkcyjnej lampy LED z trójkątem (typ Rodzaj 0-071-72, zarys wymiarowy 390×145×70 mm potwierdzone w karcie; materiał PMMA/ABS+PC; IP67; ECE R148/R150/R10) | https://www.durite.co.uk/amfile/file/download/file/2276/product/448/ | materiał producenta/dystrybutora (cytowane tylko liczby) |
 | Strona produktu: wymiary 390 × 145 × 70 mm | https://jlbradshaw.ie/product/7-function-led-rear-trailer-lamp-with-triangle-reflector-12-24v-left-hand/ | dane sklepowe (tylko liczby) |
-| Strona produktu: 400 × 153 × 88 mm (wersja żarówkowa 7-funkcyjna) | https://www.amazon.de/UNITRAILER-ASP%C3%96CK-Europoint-R%C3%BCckleuchte-Funktionen/dp/B08S4555Q5 | dane sklepowe (tylko liczby) |
-| Strona produktu: 450 × 138 × 90 mm, otwory 152 mm (LED 7-komorowa do naczep) | https://convoy.eu/products/7-chamber-led-rear-lamp-with-triangular-reflector-for-krone | dane sklepowe (tylko liczby) |
+| Strona produktu: 400 × 153 × 88 mm (lampa LED 24 V, 7-funkcyjna; wcześniej Amazon — blokuje roboty, zastąpiono) | https://valeryd.com/products/rear-light-led-aspock-europoint-3-right-400x153x88-mm-24-v-4xass2-3012034 | dane sklepowe (tylko liczby) |
+| Strona produktu: 450 × 138 × 90 mm, otwory 152 mm (LED 7-komorowa do naczep; wymiar zweryfikowany w HTML 13.11.2026, obecnie treść renderowana po stronie klienta) | https://convoy.eu/products/7-chamber-led-rear-lamp-with-triangular-reflector-for-krone | dane sklepowe (tylko liczby) |
+| Strona produktu: 450 × 138 × 72,3 mm (FT-700-066, LED 7-funkcyjna 24 V) | https://www.bowerspartsonline.co.uk/lighting/rear-lighting/led-rear-combination-lights/24v-lh-led-rear-combination-trailer-light-lamp-ft700066 | dane sklepowe (tylko liczby) |
 
 ## 3. Zdjęcia (CC)
 
