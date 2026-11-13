@@ -72,6 +72,10 @@
    0.852,
    0.309
   ],
+  "G302fbfd35": [
+   0.957,
+   0.779
+  ],
   "G33c600842": [
    1.057,
    0.25
@@ -83,6 +87,10 @@
   "G390e84fe0": [
    0.657,
    0.6
+  ],
+  "G39bc737c2": [
+   0.906,
+   0.848
   ],
   "G3ae1e4f1d": [
    0.957,
@@ -369,6 +377,15 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
+  "board_G302fbfd35": {
+   "materials": [
+    "plate_back",
+    "sign_G302fbfd35",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
   "board_G33c600842": {
    "materials": [
     "plate_back",
@@ -391,6 +408,15 @@
    "materials": [
     "plate_back",
     "sign_G390e84fe0",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_G39bc737c2": {
+   "materials": [
+    "plate_back",
+    "sign_G39bc737c2",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -1458,6 +1484,13 @@
    "tris_lod0": 528,
    "tris_lod1": 240
   },
+  "sign_g3_G302fbfd35": {
+   "materials": [
+    "sign_G302fbfd35"
+   ],
+   "tris_lod0": 26,
+   "tris_lod1": 14
+  },
   "sign_g3_G33c600842": {
    "materials": [
     "sign_G33c600842"
@@ -1475,6 +1508,13 @@
   "sign_g3_G390e84fe0": {
    "materials": [
     "sign_G390e84fe0"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 16
+  },
+  "sign_g3_G39bc737c2": {
+   "materials": [
+    "sign_G39bc737c2"
    ],
    "tris_lod0": 28,
    "tris_lod1": 16
