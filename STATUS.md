@@ -1,7 +1,7 @@
 # STATUS region-0166 (ADR 0166 Dojlidy/Krywlany — przygotowanie danych)
 
-Stan: przerwane na limicie 5 h zaraz po starcie. Zrobione: worktree `.claude/worktrees/region-0166`, gałąź `region-0166` z origin/main (17c294976). Nic więcej — brak konfiguracji regionu, brak pobrań, brak zadań w tle.
+- Kafel wybrany: `bialystok-dojlidy` bbox EPSG:2180 [779019, 589055, 781067, 591103] (siatka 2048 m od kafla C, i=+1, j=-3), origin (780043, 590079). Wpis w `tools/worldgen/regions.py` (addytywny, C bez zmian).
+- Uzasadnienie (OSM 2026-11-08): w kaflu KAN, Rosti x2, Bravilor, Masterpress, Odlewnia, Bison, PSS Społem DC, BPN-T; lotnisko Krywlany wsch. (aerodrome x 778298–780302). Browar/Biawar w (+2,-3), hangary w (0,-3).
+- Data/raw = junction do main (NIE kasować zawartości; przed usunięciem worktree: `cmd /c rmdir Data\raw`).
 
-Następny krok (komenda):
-`cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\region-0166; Get-Content Data/Regions/bialystok-industrial-c/region.yaml, research/gptpro/2-next-regions/README.md, research/g10-truck-restrictions/README.md`
-potem: wyznaczyć kafel 2x2 km Dojlidy/Krywlany, utworzyć `Data/Regions/bialystok-dojlidy/region.yaml` + manifest źródeł, sprawdzić `Data/raw` (osm/gugik), `uv run tools/worldgen/build_region.py --region bialystok-dojlidy`, `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-dojlidy`, QA, lista landmarków D51, ADR 0166.
+Następny krok: `cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\region-0166; uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-dojlidy --dry-run`
