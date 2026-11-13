@@ -61,7 +61,29 @@ wspólnej dla wszystkich bloków i biur); poprawka `FAR_PLAIN_V` w regule ogóln
 
 ## 3. Walidacja
 
-@@VALIDATION@@
+Runda r1: `build_world` exit 0, import exit 0, vqa Low-clear exit 0, SBS Low clear + overcast 42 + 42 pary
+(`scripts/sbs-low-pairs.ps1`, preflight OK). Baza = ta gałąź przed zmianą, przebudowana i wyrenderowana tym samym
+łańcuchem (`artifacts/tower-0180/tools/base.ps1`). Dowody (poza gitem): `artifacts/tower-0180/` w katalogu głównym —
+`sbs-r1/pairs/Low-clear|Low-overcast`, `before-after-Low-clear|overcast.jpg` (0171 nad 0180), `tower-zoom-r1-clear-overcast.jpg`,
+`tower-ne-gable-stretch-02.jpg`, `tower-lod1-elevations-SW-SE-NW-NE.png` (podgląd programowy LOD1), `r1/budget-vs-base.txt`,
+`r1/pixel-diff-vs-base.txt`, `base/`, `tools/`, `logs/`.
+
+| Wielkość | Wynik (zmierzony) |
+|---|---|
+| draws, tier Low, 48 kamer kontrolnych | **+0 we wszystkich 48** |
+| trójkąty w kamerach | min −2,09 % (cab-grain), maks. +0,16 % (cab-materials) |
+| prymitywy LOD1 / LOD0 budynków (65 chunków, `primdiff`) | netto 0 |
+| trójkąty wieżowca | LOD0 8504 → 4076; LOD1 300 → 650 (LOD1 budynków regionu +350, ok. +0,37 %) |
+| kamery kontrolne baza → r1, piksele z \|Δ\| > 25 | stretch-02 6,1 %, kwadrat-park-gate 1,5 %, pozostałe 46 ≤ 0,76 % (mediana 0,0 %) |
+| testy | `test_buildings_0180` 10 nowych; z 0171 / 0167 / g3b_frontage / world_v31 59 zielonych; pełny `tests/gis`: 1076 zielonych + 2 czerwone w przebiegu równoległym z przebudową świata (`test_report_not_stale` — `fidelity_qa.json` odświeżone `fidelity/run.py`; `test_export_is_deterministic` — wyścig z przebudową chunku 6_6); oba powtórzone po przebudowie: zielone (`logs/pytest-determinism.log`, 4 passed; `test_road_fidelity` 9 passed) |
+
+Obejrzane (pętla wizualna): `sbs-g3-a-178689077481862` Low-clear i `177786140912399` Low-overcast oraz `stretch-02`
+(ściana NW + szczyt NE z 40 m). Szczyt: gładki, piaskowy, jedna kolumna okien po jednym na kondygnację; średni sRGB
+szczytu w słońcu (225, 211, 179) wobec zdjęcia (217, 209, 177). Ściana długa: jasna z poziomymi pasmami (krótki odcinek
+przy narożniku + długi), bez kratki; w renderze clear jest w cieniu — ściana między pasmami (158, 158, 151), zdjęcie
+w słońcu (249, 248, 246). Uskok obrysu BDOT (ściana 1,8 m zwrócona na SW) jest w renderze w słońcu i rysuje jasny
+pionowy pas na zacienionej ścianie SE — na zdjęciu (obie ściany w słońcu, biel prześwietlona) niewidoczny.
+Z-fightingu ani szczelin nie widać w żadnym z obejrzanych kadrów.
 
 ## 4. Otwarte
 
