@@ -76,6 +76,18 @@
    0.957,
    0.779
   ],
+  "G3044f8e65": [
+   0.657,
+   0.6
+  ],
+  "G30d79038f": [
+   1.057,
+   0.25
+  ],
+  "G3178a6146": [
+   0.957,
+   1.379
+  ],
   "G33c600842": [
    1.057,
    0.25
@@ -95,6 +107,10 @@
   "G3ae1e4f1d": [
    0.957,
    1.229
+  ],
+  "G3d0460cfb": [
+   0.957,
+   1.2
   ],
   "G3d34c990e": [
    0.657,
@@ -406,6 +422,33 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
+  "board_G3044f8e65": {
+   "materials": [
+    "plate_back",
+    "sign_G3044f8e65",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_G30d79038f": {
+   "materials": [
+    "plate_back",
+    "sign_G30d79038f",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_G3178a6146": {
+   "materials": [
+    "plate_back",
+    "sign_G3178a6146",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
   "board_G33c600842": {
    "materials": [
     "plate_back",
@@ -446,6 +489,15 @@
    "materials": [
     "plate_back",
     "sign_G3ae1e4f1d",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_G3d0460cfb": {
+   "materials": [
+    "plate_back",
+    "sign_G3d0460cfb",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -1771,6 +1823,27 @@
    "tris_lod0": 26,
    "tris_lod1": 14
   },
+  "sign_g3_G3044f8e65": {
+   "materials": [
+    "sign_G3044f8e65"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 16
+  },
+  "sign_g3_G30d79038f": {
+   "materials": [
+    "sign_G30d79038f"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 16
+  },
+  "sign_g3_G3178a6146": {
+   "materials": [
+    "sign_G3178a6146"
+   ],
+   "tris_lod0": 54,
+   "tris_lod1": 42
+  },
   "sign_g3_G33c600842": {
    "materials": [
     "sign_G33c600842"
@@ -1805,6 +1878,13 @@
    ],
    "tris_lod0": 30,
    "tris_lod1": 18
+  },
+  "sign_g3_G3d0460cfb": {
+   "materials": [
+    "sign_G3d0460cfb"
+   ],
+   "tris_lod0": 52,
+   "tris_lod1": 28
   },
   "sign_g3_G3d34c990e": {
    "materials": [
@@ -1899,6 +1979,13 @@
    "tris_lod1": 84
   },
   "signal_mast": {
+   "materials": [
+    "steel_galv"
+   ],
+   "tris_lod0": 170,
+   "tris_lod1": 45
+  },
+  "signal_mast_9m": {
    "materials": [
     "steel_galv"
    ],
