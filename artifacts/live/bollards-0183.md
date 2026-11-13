@@ -5,3 +5,12 @@
 - Miejsce z P11-063 (Dojlidy, Mickiewicza, wsch. krawężnik jezdni NW): rząd lokalnie (-31.7, 382.3) -> (-25.44, 369.78), 7 przęseł / 8 słupków; EPSG:2180 (780011.3, 590461.3) -> (780017.56, 590448.78). Override testowy TYLKO lokalnie (nie commitować plików Dojlid).
 ## NASTĘPNY KROK (komenda)
 `cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bollards-0183; pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner bollards-0183; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-dojlidy *> artifacts/logs/bw-dojlidy.log; pwsh scripts/unity-slot.ps1 -Release -Pool heavy -Owner bollards-0183`
+
+## Stan 2026-11-13 ~21:55 (STOP na polecenie lidera, limit)
+- Zrobione: wysokość 0,80 m (U-12c, wiersz M50-043), przęsło 1,60 m; ADR szkic `docs/adr/0183-slupki-bialo-czerwone-z-lancuchem.md` (sekcje Budżet/Dowody = placeholdery WYNIKI_*); pytest nowy 18/18, podzbiór mebli 68/68.
+- build_world dojlidy x2 OK (7,5 min), raport: 8 słupków, 7 przęseł, max_step 0,047 m. Import OK (2 min), rendery r1 Low+High obejrzane: `artifacts/bollards-0183/renders/r1-{low,high}/` (5 kamer, stats.txt).
+- LOKALNIE, NIE w gicie: `Data/Regions/bialystok-dojlidy/overrides.yaml` (test; kopia `artifacts/bollards-0183/overrides.dojlidy.chain_bollards.yaml`), zmienione `generated/*` Dojlid (nie commitować), `Data/raw/derived/bialystok-dojlidy/textures/chain_bollard.png` podmieniony ręcznie nowszym atlasem.
+- WADY z r1 do poprawy: (1) czerwone odcinki łańcucha w Unity są blado-różowe (w Blenderze czerwone) — sprawdzić kompresję/mipy atlasu 32-px kolumn (krwawienie koloru z sąsiedniej białej kolumny; dać odstęp/gutter albo szersze kolumny); (2) rząd stoi w wygenerowanym trawniku (w rzeczywistości bruk) — na High trawa Fab zakrywa dół słupka i dolny łańcuch: do dowodu przesunąć rząd testowy ~3,5 m na wschód na chodnik albo zgłosić 0179; (3) brak: porównanie z P11-063 obok siebie, A/B budżetu (import bez instancji bollard_rw), EditMode, pełny pytest tests/gis, visual-critic, kopia dowodów do MAIN, uzupełnienie ADR.
+- Nic nie działa w tle. Sloty zwolnione.
+## NASTĘPNY KROK (komenda)
+`cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bollards-0183; code tools/worldgen/streetscape/chain_bollards.py` (poprawić kolumny atlasu U_LINK/U_STRIP: gutter między czerwoną a białą) → `uv run --project tools/worldgen pytest tests/gis/test_chain_bollards_0183.py -q` → podmienić PNG (jak wyżej) → `pwsh artifacts/bollards-0183/tools/run_unity.ps1 -Steps import,low,high -Tag r2` → obejrzeć `artifacts/bollards-0183/renders/r2-*`.

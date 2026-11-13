@@ -1,0 +1,17 @@
+# ADR 0183: ready block for Data/Regions/bialystok-dojlidy/overrides.yaml (add under `overrides:`; agent 0179 / leader).
+overrides:
+  - id: mickiewicza-kuronia-chain-posts-p11-063
+    kind: chain_bollards
+    line_epsg2180: [[780011.30, 590461.30], [780016.31, 590451.28]]
+    chain: true
+    sources: ["research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg", "GUGiK orthophoto 2024 0.25 m"]
+    reason: >-
+      Owner photo P11-063 (taken from the bus-stop island of ul. Mickiewicza, looking east): 8 red-white posts with two
+      chains stand just behind the east kerb of the NW-bound carriageway (osm way 691820489 / 258564444), from the
+      post in line with the frame centre-left to the pedestrian crossing at the Kuronia corner. Kerb line read off
+      the GUGiK 2024 orthophoto (0.25 m): local E = -33.5 - 0.5 (N - 385), row 0.5 m behind it. Start: 21 deg left of
+      the white street cabinet at local (-15.5, 371.0) as seen from (-46.5, 381.8); the cabinet stands behind posts
+      5-6 in the photo and behind posts 5-6 of this line. 8 posts = 7 bays x 1.60 m (11.2 m); on the orthophoto the
+      kerb is straight for ~13 m from the start to the crossing, so one more bay may exist.
+    confidence: low
+    verify: start / end post on site (+-2 m along the kerb); the further row visible behind (smaller posts) is not placed
