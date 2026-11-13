@@ -123,9 +123,9 @@ def test_front_hedge_keeps_gate_free_stays_in_the_plot_and_is_on_low_too():
         assert not np.any((np.abs(part.V[:, 0]) < 2.5) & (part.V[:, 1] < -15.0)), "gate / driveway blocked"
         assert part.V[:, 1].min() >= -20.0 and np.abs(part.V[:, 0]).max() <= 20.0          # inside the plot, behind the fence
         assert part.V[:, 1].max() <= -20.0 + 0.6 + 1.2 + 0.1                               # gap + width (G7 # 19)
-        assert 2.0 - 0.2 <= part.V[:, 2].max() - 140.0 <= 3.0 + 0.2
+        assert 2.4 - 0.2 <= part.V[:, 2].max() - 140.0 <= 4.0 + 0.2                        # ADR 0170: 2.4-3.6 m, corner <= 4.0
     row = next(x for x in rep["list"] if x["plot"] == "t")
-    assert row["kind"] == "thuja" and 2.0 <= row["h_m"] <= 2.5 and 0.8 <= row["w_m"] <= 1.2
+    assert row["kind"] == "thuja" and 2.4 <= row["h_m"] <= 3.6 and 0.8 <= row["w_m"] <= 1.2
     assert 0.6 <= row["m"] / row["front_m"] <= 0.92                              # G7 # 21: ~80 % of the front
     assert 0 < rep["tris_low"] < rep["tris_high"]
 
@@ -258,7 +258,8 @@ def test_garden_trees_are_kit_geometry_on_both_tiers_with_the_g7_mix():
     n = rep["trees"]
     mine = [p for p in buf.parts if p.src == "plot:t:g7-trees"]
     assert {p.layer for p in mine} == {"plots", "plots_low"}                       # Low / Medium draw them too (A16)
-    assert 0 < rep["tris_low"] <= 10 * 600 and rep["tris_low"] < rep["tris_high"] <= 66 * 600
+    # ADR 0170: lite trees near the street carry a dark core + two shoulder sprays (+ 16 triangles)
+    assert 0 < rep["tris_low"] <= 26 * 600 and rep["tris_low"] < rep["tris_high"] <= 66 * 600
     share = {k: v / n for k, v in rep["species"].items()}
     for sp, want in PT.G7["broadleaf_mix"].items():                               # G7 # 11
         assert abs(share.get(sp, 0.0) - want) <= 0.07, (sp, share)

@@ -1336,6 +1336,27 @@ def spruce(kit, p, z, h, key):
     kit.box(np.asarray(p, float), np.array([1.0, 0.0]), 0.07, 0.07, z - 0.1, z + h * 0.14, PK.SWATCH["trunk"], top=False)
     for i in range(3):
         card(kit, p, z, sp, W, h * 0.96, a0 + i * math.pi / 3, z_off=h * 0.04)
+    # ADR 0170 (reviews s16b P2 / s17 0163 P1-P2: "half-transparent pale cone" far away, "flat wall of cards" beside
+    # the camera): a dark 4-sided cone inside the three cards - the shaded bole side of the boughs. 12 triangles, well
+    # inside the silhouette (<= 0.5 of the card's half width), so the scalloped outline stays the cards'.
+    v0, v1 = PK.row("thuja")
+    rb = 0.25 * W
+    span = min(2 * math.pi * rb / PK.KIT_M, PK.THUJA_GREEN_U - 0.02)
+    u0 = hfloat(key, "su") * (PK.THUJA_GREEN_U - span - 0.01)
+    V, UV, C = [], [], []
+    for f, k_ in ((0.10, 1.0), (0.50, 0.56)):
+        for j in range(5):
+            ang = a0 + 0.5 + 2 * math.pi * j / 4
+            V.append([p[0] + math.cos(ang) * rb * k_, p[1] + math.sin(ang) * rb * k_, z + f * h])
+            UV.append([u0 + span * j / 4, v0 + (v1 - v0) * (0.05 + 0.9 * f)])
+            C.append(_fol([math.cos(ang) * 0.9, math.sin(ang) * 0.9, 0.3], 0.30))
+    V.append([p[0], p[1], z + h * 0.90])
+    UV.append([u0 + span * 0.5, v0 + (v1 - v0) * 0.97])
+    C.append(_fol([0.0, 0.0, 1.0], 0.34))
+    T = []
+    for j in range(4):
+        T += [(j, j + 1, 5 + j + 1), (j, 5 + j + 1, 5 + j), (5 + j, 5 + j + 1, 10)]
+    kit.tris(V, UV, T, C)
 
 
 def big_tree(kit, p, z, h, key):

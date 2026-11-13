@@ -589,14 +589,18 @@ def _spruce_card(rng, h, w):
 
     def prof(f):
         return max((1 - f) ** 0.92 * 0.90 * (0.70 + 0.30 * abs(math.sin(f * tiers * math.pi + ph))) * (1 + 0.08 * math.sin(f * 23 + ph)) + 0.012, 0.0)
-    body = _body_mask(h, w, lambda f: prof(f) * 0.62 + 0.01, rng)
+    # ADR 0170: opaque body out to 0.74 of the outline (was 0.62: the thin scalloped rim lost its alpha coverage in the
+    # mips and the cone read half-transparent from 40 m on)
+    body = _body_mask(h, w, lambda f: prof(f) * 0.74 + 0.01, rng)
     # ADR 0159 (REVIEW s16-world-int P1, SBS 1801374 / 182011: "turkusowe polprzezroczyste stozki"): with G = B the
     # cards read turquoise in sun on Low (palette up to 72 / 96 / 94). Grey-green with a slight blue cast, darker
     # (a blue spruce among garden trees is a dark cone, not a cyan one). WORKING_VALUE
-    c[body, :3] = (18, 28, 24)
+    # ADR 0170 (review s17 0163 P2 "blady, sinawy swierk"): G7-P11 / P12 spruces are dark, saturated blue-green
+    # (shade ~ 25 / 40 / 38, lit ~ 55 / 80 / 70 on the photos, WORKING_VALUE); the 0159 palette was greyer and lighter
+    c[body, :3] = (13, 24, 19)
     c[body, 3] = 1.0
     S = _Stamper(c, st)
-    pal = [(20, 32, 26), (30, 46, 38), (44, 62, 52), (60, 80, 68)]
+    pal = [(15, 28, 22), (22, 40, 31), (32, 54, 43), (46, 70, 58)]
     n = 2600
     tl = 0.42 * w / 3.4
     for i in range(n):

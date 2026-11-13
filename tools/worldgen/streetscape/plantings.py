@@ -563,8 +563,11 @@ G7 = {
     "hedge_share": 0.40,            # 15 (E, 25-55 %): plots with a hedge >= 1.2 m along the street
     "low_share": 0.25,              # 16 (E): plots with a strip of low shrubs 0.5-1.2 m
     "thuja_of_hedges": 0.70,        # 18 (W): Thuja occidentalis 'Smaragd' / 'Brabant'; the rest broadleaf
-    "thuja_h_m": (2.0, 2.5),        # 19 (E, +-0.5 m)
-    "thuja_corner_h_m": 3.0,        # 19: up to 3.0 m on the corners, rounded
+    # 19 said 2.0-2.5 m (E, +-0.5 m). ADR 0170 (review s17 0163 P2: the wall barely cleared the fences): re-read on the
+    # two photos # 19 cites - G7-P11 thujas stand ~2.3 fence heights (1.5 m picket fence) = ~3.5 m, G7-P12 clipped
+    # wall 2.5 m rising to ~3.0 m at the corner (storey line of the house behind). WORKING_VALUE
+    "thuja_h_m": (2.4, 3.6),
+    "thuja_corner_h_m": 4.0,        # 19: taller on the corners, rounded (was 3.0 m)
     "thuja_w_m": (0.8, 1.2),        # 19
     "hedge_gap_m": (0.3, 0.6),      # 19: 0.3-1.0 m behind the fence line (skin of the hedge, not its axis)
     "broadleaf_h_m": (1.2, 1.5),    # 20 (0.8-1.5 m) cut to the part that counts as a hedge >= 1.2 m (# 15)
@@ -593,7 +596,9 @@ THUJA_PITCH_M = (1.2, 3.2)        # station pitch of a thuja wall: High, Low
 # cross-section of a clipped thuja wall per side, foot -> shoulder: (half-thickness factor, height factor, normal out,
 # normal up, occlusion); the crest (centre line, full height) closes it. Photos G7-P11 / P12: battered sides, a
 # rounded top, a dark foot.
-_THUJA_PROFILE = ((0.84, 0.00, 0.95, 0.05, 0.42), (1.00, 0.42, 1.00, 0.10, 0.80), (0.97, 0.80, 0.90, 0.35, 0.95),
+# ADR 0170: one more row at 0.21 h - walls are 2.4-3.6 m now and the 1 m twig row is still drawn about 1 : 1 on High
+_THUJA_PROFILE = ((0.84, 0.00, 0.95, 0.05, 0.42), (0.95, 0.21, 0.98, 0.07, 0.62), (1.00, 0.42, 1.00, 0.10, 0.80),
+                  (0.97, 0.80, 0.90, 0.35, 0.95),
                   (0.60, 0.955, 0.50, 0.80, 1.0))
 _THUJA_PROFILE_LOW = ((0.86, 0.00, 0.95, 0.05, 0.45), (1.00, 0.70, 1.00, 0.20, 0.90), (0.60, 0.955, 0.50, 0.80, 1.0))
 
@@ -692,7 +697,8 @@ def plan_house_greenery(rp, report=None):
     if report is not None:
         cnt = {k: sum(1 for v in kinds.values() if v == k) for k in ("thuja", "broadleaf", "low", "none")}
         report["garden_plan"] = {"source": "research/g7-street-greenery/README.md (G7 # 15-18)", "plots": len(plots),
-                                 "plots_with_front": len(order), **cnt}
+                                 "plots_with_front": len(order), **cnt,
+                                 "by_plot": {str(p["id"]): kinds[p["id"]] for p in order}}
     return kinds
 
 
@@ -883,11 +889,13 @@ def tree_dims(r, species, key, in_plot=True):
     return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
 
 
-def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None):
+def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False):
     """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
     crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
     core and leaf sprays lying on its skin, so it is a volume from every side and from above, not a paper cross.
-    lite: two stem strips + `cards` crossed cards (8-10 triangles) - Low / Medium and the trees away from the street."""
+    lite: two stem strips + `cards` crossed cards (8-10 triangles) - Low / Medium and the trees away from the street;
+    core (ADR 0170, lite trees near the street): + the dark core and two shoulder sprays (16 triangles), so a crown a
+    few metres from the camera is a body with a shaded middle, not a flat wall of one card (review s17 0163 P1)."""
     p = np.asarray(p, float)
     sprite = sprite or HABIT[species]
     hc = H - cb
@@ -911,9 +919,16 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         off = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.24 * r
         PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards)
     dense = DENSE[species]
+    occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
+    if lite and core and dense > 0.0:
+        PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=4, occ=0.26 * occ, rings=2)
+        for i in range(2):
+            az = a0 + 0.8 + math.pi * i
+            c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.30
+            PLT._skin_card(kit, c, z + cb + hc * 0.30, az, r * 1.05, hc * 0.42, "shrub_a", 0.36 + 0.14 * PLT.hfloat(key, "ut", i), occ,
+                           flip=i % 2 == 1)
     if lite or dense <= 0.0:
         return
-    occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
     # the sprays sit INSIDE the habit's silhouette (the crossed cards own the outline; sprays that reached it gave the
     # crown a flat, boxy skirt): they close the gaps between the cards from oblique views and from above
     PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=4, occ=0.26 * occ, rings=2)
@@ -1127,7 +1142,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
                 kit.low = False
                 garden_tree(kit, p, z, r, H, cb, sp, key, sprite=sprite)
                 kit.low = "only"
-            garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2, sprite=sprite)
+            garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2, sprite=sprite, core=bool(t["near"]))
         if not _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
             continue
         rep["trees"] += 1
