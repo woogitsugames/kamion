@@ -44,6 +44,7 @@ import math
 
 import numpy as np
 
+from . import facade_atlas as FA
 from . import facade_kit as FK
 
 BEARING = {"N": 0.0, "NE": 45.0, "E": 90.0, "SE": 135.0, "S": 180.0, "SW": 225.0, "W": 270.0, "NW": 315.0}
@@ -463,3 +464,164 @@ def props(acc, spec, edges, zground):
             {"flag_row": flag_row, "totem": totem, "sign_mast": sign_mast}[p["kind"]](acc, p, q, d, nout, zg)
         out.append(item)
     return out
+
+
+# --------------------------------------------------------------------------------------------- office facades (ADR 0180)
+# Authored window rule per facing of an office building (override `set.facades`, an authored_override). The hashed
+# office facade is one pattern on every wall (a grid of punched windows or ribbon rows); a photographed tower has a
+# blank gable with one stair column of windows and long walls with one window band per storey in a second wall colour:
+#
+#     facades:
+#       - {facing: [SW, NE], min_len_m: 8, windows: column, u: 0.5, window_w_m: 1.8, wall_material: plaster_beige}
+#       - {facing: SE, min_len_m: 18, max_len_m: 19, windows: ribbon, spans: [[0.06, 0.4], [0.6, 1.0]]}
+#       - {facing: [SE, NW], min_len_m: 5, windows: ribbon, sill_m: 1.0, head_m: 2.3}
+#
+# windows: ribbon (one band per storey from pier to pier of each span of the wall, in lights of ~1.5 m; spans = fractions of the wall
+# from left to right seen from outside, default the whole wall), column (one window per storey at u = fraction of the
+# wall), blank. sill_m / head_m: above the floor of each storey. The first rule that faces the wall (+-30 deg) and
+# whose length range holds the wall applies; other walls keep the hashed rule and the building's wall colour. Both
+# LODs read the same rectangles (facade_windows): LOD0 cuts them as openings with facade-atlas cells, LOD1 draws them
+# as quads of the far-row atlas inside the plain strip of the same <wall>__far_<kind> material (no opening geometry),
+# so a rule needs no material the generic office does not have.
+FACADE_WINDOWS = ("ribbon", "column", "blank")
+FACADE_GROUP = {"ribbon": "ribbon", "column": "office"}        # far-row group the windows are read from (= __far kind)
+# v range of the plain wall of the far-row atlas used by authored walls: FA.FAR_PLAIN_V runs to 0.95, where the first
+# row's balcony slab edge already starts (measured on T_facade_far_BaseColor: 187 / 255 up to v 0.85, 196-206 from
+# 0.88) - one tall quad hides that, a plain piece between two windows of every storey would show it as a stripe
+FACADE_PLAIN_V = (0.65, 0.85)
+RIBBON_LIGHT_M = FA.FAR_PITCH / 2      # one light of a ribbon band
+RIBBON_END_M = 0.4
+
+
+def facade_rules(spec, wall, materials=None):
+    """Validated `facades` override (list of rules) with defaults; None when the building has none. wall = the
+    building's wall material (a rule without wall_material keeps it)."""
+    if not spec:
+        return None
+    if materials is None:
+        from . import materials as MT
+        materials = MT.M
+    out = []
+    for r in spec:
+        kind = r.get("windows", "blank")
+        if kind not in FACADE_WINDOWS:
+            raise ValueError(f"facades windows {kind!r}: expected one of {FACADE_WINDOWS}")
+        fac = r.get("facing")
+        for n in (fac if isinstance(fac, (list, tuple)) else [fac]):
+            if n not in BEARING:
+                raise ValueError(f"facades facing {n!r}: expected one of {sorted(BEARING)}")
+        w = r.get("wall_material", wall)
+        far = f"{w}__far_{FACADE_GROUP[kind]}" if kind in FACADE_GROUP else None
+        bad = [m for m in (w, far) if m and m not in materials]
+        if bad:
+            raise ValueError(f"facades materials not in streetscape.materials.M: {bad}")
+        sill, head = float(r.get("sill_m", FA.FAR_SILL["office"])), float(r.get("head_m", FA.FAR_TOP["office"]))
+        if not 0.0 < sill < head:
+            raise ValueError(f"facades sill_m / head_m {sill} / {head}: expected 0 < sill < head")
+        u = float(r.get("u", 0.5))
+        spans = sorted((float(x0), float(x1)) for x0, x1 in r.get("spans") or [(0.0, 1.0)])
+        if not 0.0 <= u <= 1.0 or any(not 0.0 <= x0 < x1 <= 1.0 for x0, x1 in spans) or any(
+                p[1] > q[0] for p, q in zip(spans, spans[1:])):
+            raise ValueError(f"facades u {u} / spans {spans}: fractions of the wall 0..1, spans apart and ascending")
+        out.append({"facing": fac, "min_len_m": float(r.get("min_len_m", 5.0)), "max_len_m": float(r.get("max_len_m", 1e9)),
+                    "windows": kind, "wall": w, "far": far, "sill_m": sill, "head_m": head, "u": u, "spans": spans,
+                    "window_w_m": float(r.get("window_w_m", FA.KINDS["off"][0])),
+                    "from_storey": int(r.get("from_storey", 1))})
+    return out
+
+
+def ribbon_lights(length):
+    """Lights of a ribbon band of that length: about RIBBON_LIGHT_M each (half a bay = one `off` cell of the facade
+    atlas = the mullion pitch of the far ribbon rows), stretched to fill the run (1.25-1.9 m)."""
+    return int(round(length / RIBBON_LIGHT_M))
+
+
+def facade_rule(rules, nout, L):
+    """The rule of one wall edge: the first one facing it whose length range holds the edge; None = hashed facade."""
+    for r in rules or []:
+        if r["min_len_m"] <= L <= r["max_len_m"] and faces(nout, r["facing"]):
+            return r
+    return None
+
+
+def _column_u(rule, L):
+    w = min(rule["window_w_m"], L - 1.2)
+    return min(max(L * rule["u"], w / 2 + 0.6), L - w / 2 - 0.6), w
+
+
+def facade_runs(rule, L):
+    """(u0, u1) of the window runs of one authored wall: ribbon - every span of the wall, 0.4 m kept clear at the
+    wall ends (the pier at a footprint step), when at least two lights fit it (ribbon_lights: the run is divided into
+    lights of about 1.5 m, so a band runs from pier to pier whatever the wall length); column - the one window."""
+    if rule["windows"] == "ribbon":
+        out = []
+        for x0, x1 in rule["spans"]:
+            ua, ub = max(L * x0, RIBBON_END_M), min(L * x1, L - RIBBON_END_M)
+            if ribbon_lights(ub - ua) >= 2:
+                out.append((ua, ub))
+        return out
+    if rule["windows"] == "column":
+        uc, w = _column_u(rule, L)
+        return [(uc - w / 2, uc + w / 2)] if w >= 0.6 else []
+    return []
+
+
+def facade_windows(rule, L, zref, zbase, sh, zt, storeys, key, door=False):
+    """Window rectangles of one authored wall, the single source of both LODs, run by run and bottom-up:
+    [(u0, u1, z0, z1, group, row, bay offset)]. door: the wall carries the entrance, so its ground floor has no band /
+    window (the door takes the column axis or the middle of the wall). Storeys whose window head would come within
+    0.3 m of the wall top are left out (as FA.far_storeys)."""
+    g = FACADE_GROUP.get(rule["windows"])
+    out = []
+    for i, (u0, u1) in enumerate(facade_runs(rule, L)):
+        for s in range(max(rule["from_storey"] - 1, 1 if door else 0), storeys):
+            z0 = zref + zbase + s * sh
+            if z0 + rule["head_m"] > zt - 0.3:
+                break
+            out.append((u0, u1, z0 + rule["sill_m"], z0 + rule["head_m"], g,
+                        FA.hint(key, i, s, "row") % len(FA.FAR_ROWS[g]), FA.hint(key, i, s, "off") % FA.FAR_BAYS))
+    return out
+
+
+def facade_door_u(rule, L):
+    """Axis of the entrance on an authored wall: under the stair column, else the middle of the wall."""
+    return _column_u(rule, L)[0] if rule["windows"] == "column" else L / 2
+
+
+def far_uv(win):
+    """UV0 (far-row atlas metres) of a window rectangle on LOD1: the glazed part of its row - the run of a ribbon row
+    from its bay offset on, or the one window of an office-row bay."""
+    u0, u1, _, _, g, row, off = win
+    v = FA.far_row_v(g, row)
+    v0, v1 = v + FA.FAR_SILL[g], v + FA.FAR_TOP[g]
+    if g == "ribbon":
+        x0, x1 = off * FA.FAR_PITCH, off * FA.FAR_PITCH + ribbon_lights(u1 - u0) * RIBBON_LIGHT_M
+    else:
+        xc, hw = (off + 0.5) * FA.FAR_PITCH, FA.KINDS["off"][0] / 2
+        x0, x1 = xc - hw, xc + hw
+    return [[x0, v0], [x1, v0], [x1, v1], [x0, v1]]
+
+
+def lod1_facade(acc, rule, wins, a, d, L, z0, zt):
+    """LOD1 of an authored wall above the plinth (z0..zt) in the <wall>__far_<kind> material: columns from left to
+    right - plain wall (the plain strip of the far-row atlas), then per window run a stack of plain piece / window
+    quad (far_uv) / plain piece. Nothing overlaps (no z-fighting). Returns the number of quads."""
+    pv0, pv1 = FACADE_PLAIN_V
+    plain = [[0.2, pv0], [1.2, pv0], [1.2, pv1], [0.2, pv1]]
+    mat = rule["far"]
+
+    def q(u0, u1, za, zb, uv=plain):
+        if u1 - u0 < 0.02 or zb - za < 0.02:
+            return 0
+        acc.quad(FK.L1, mat, [*(a + d * u0), za], [*(a + d * u1), za], [*(a + d * u1), zb], [*(a + d * u0), zb], uv=uv)
+        return 1
+    n, u = 0, 0.0
+    for u0, u1 in sorted({w[:2] for w in wins}):
+        n += q(u, u0, z0, zt)
+        z = z0
+        for w in sorted((w for w in wins if w[:2] == (u0, u1)), key=lambda w: w[2]):
+            n += q(u0, u1, z, w[2]) + q(u0, u1, w[2], w[3], far_uv(w))
+            z = w[3]
+        n += q(u0, u1, z, zt)
+        u = u1
+    return n + q(u, L, z0, zt)

@@ -2418,13 +2418,35 @@ overrides:
     reason: >-
       11-storey office tower by the Kwadrat lane (LoD1 2024 41.81 m). The hashed pick gave light grey; Mapillary
       richlv 177786140912399 / 178689077481862 (2020-08-15) and the facade visible on the orthophoto 2024-05-27
-      show a pale yellow render. Nearest material of the office set (far-facade variant exists).
+      show a pale yellow (sand) render on the gable and a white long wall. Nearest materials of the office set
+      (far-facade variants exist).
     confidence: medium
     verify: owner photo session item 6 (Kwadrat Park lane)
-    # ADR 0171: `ribbon: false` - the hashed ribbon-window variant drew grey spandrel rows over the whole facade on
-    # LOD1 (render (175,175,165) before and after the colour override); the photos show punched windows in a pale
-    # yellow wall. plaster_beige__far_office is drawn by chunk 6_6 already.
-    set: {wall_material: plaster_beige, ribbon: false, bands: false}
+    # ADR 0171: `ribbon: false, bands: false` - no hashed ribbon rows / spandrel bands (they stay off on the walls no
+    # rule below covers: the 1.4-1.8 m jogs of the long walls).
+    # ADR 0180 (review REVIEW-2026-11-13-s17-0171 P1): `facades` - what the two Mapillary photos show of the SW gable
+    # and the SE long wall (seen from 150 m, the long wall overexposed):
+    #   SW gable (BDOT10k edge 16.09 m): smooth sand-coloured wall with ONE column of two-pane windows, one per
+    #     storey, on the middle of the wall (window axis at 0.52 +- 0.04 of the wall width measured in both photos;
+    #     window width 2.0 +- 0.3 m and height ~0.45 storey from pixel ratios against the 16.09 m edge and the storey
+    #     pitch - set 1.8 x 1.6 m, WORKING_VALUE, the atlas window is 1.5 x 1.6 m);
+    #   SE long wall (37 m in 3 edges + 2 jogs): white wall with one thin horizontal window band per storey (11 dark
+    #     lines; windows ~0.33 of the storey pitch (3.69 m) under each line - sill 1.0 m, head 2.3 m, WORKING_VALUE).
+    #     Each band is a short run by the south corner (0.03-0.20 of the 37 m) and a long run from 0.30 on: spans
+    #     [0.06, 0.40] and [0.60, 1.0] of the first footprint edge (18.42 m), +-0.05; the other edges one run each.
+    #   NE gable and NW long wall: no open photo - same rule as the opposite wall, WORKING_VALUE (confidence low).
+    # Materials: plaster_white / plaster_beige and their __far_ribbon / __far_office variants are all drawn by chunk
+    # 6_6 already on both LODs (no new draw); the lettering on the gable is a brand - not reproduced.
+    set:
+      wall_material: plaster_white
+      ribbon: false
+      bands: false
+      facades:
+        - {facing: [SW, NE], min_len_m: 8.0, windows: column, u: 0.52, window_w_m: 1.8, sill_m: 0.9, head_m: 2.5,
+           wall_material: plaster_beige}
+        - {facing: SE, min_len_m: 18.0, max_len_m: 19.0, windows: ribbon, sill_m: 1.0, head_m: 2.3,
+           spans: [[0.06, 0.40], [0.60, 1.0]]}
+        - {facing: [SE, NW], min_len_m: 5.0, windows: ribbon, sill_m: 1.0, head_m: 2.3}
   - id: g3a-small-office-no-band
     target: {building: "bdot:2BE4B431-C926-1BF0-E053-CC2BA8C0D140"}
     reason: >-
