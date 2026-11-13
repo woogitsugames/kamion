@@ -3,7 +3,7 @@
 **Projekt:** Kamion — realistyczny mobilny symulator ciężarówki z naczepą; świat Białegostoku 1:1 (OSM + GUGiK); gra komercyjna, budżet 0 zł.
 **Zadanie M49:** uzupełnienie luk po paczce research/gptpro/p6-next-regions-2 (dalej: P6) — szerokości bram wjazdowych (12 bram bez szerokości), promienie łuków wjazdu (14 bram bez promieni), dokładna pozycja RS16 (WIM Zabłudowska), adres/brama PZZ (Elewatorska vs Zbożowa), organizacja ruchu na końcówkach dojazdów (Myśliwska, Karpińskiego, Dojlidy Fabryczne, rondo Meyera, Adama Mickiewicza) z numerami dokumentów BIP/ZDM.
 **Gałąź:** research/mistral/p6-dojlidy-gates (od origin/main). **Data:** 2026-11-13. **Język:** polski.
-**Status: W TOKU** — pomiary bram UKOŃCZONE (sekcje 4–5); RS16/PZZ-adres/BIP w trakcie (sekcje 6–8).
+**Status: UKOŃCZONE** — wszystkie 4 bloki zadania domknięte (sekcje 4–8); samokontrola 20% pozycji wykonana (seed 20261113, audit_20_percent.json; jedna korekta: G12 5,8→5,0 m).
 
 ## 1. Cel
 (por. zadanie — 4 bloki: A. pomiary 14 bram P6-G01..G14; B. RS16 WIM; C. adres PZZ; D. zarządzenia organizacji ruchu)
@@ -16,8 +16,8 @@
 - Wynik = mediana dostępnych pomiarów (≥ 2 tam, gdzie to możliwe); niepewność ±1–3 m jawnie.
 - Promień łuku wjazdu (krawędź jezdni): wycinek WCS 40×40 m @ 0,1 m/px w narożniku „ulica × podjazd" (J = punkt styku osi podjazdu z osią ulicy wg OSM; kierunki z geometrii ways). Maska asfaltu (klasyfikator: max−min<16, 45<avg<235, g−r<10), erozja nie-asfaltu 0,3 m, krawędzie asfaltu w ćwiartce narożnika 14×14 m; okrąg dopasowany RANSAC (4000 iter., tol 0,3 m, r∈[1,5; 25] m) + dopasowanie algebraiczne (LSQ) na inlierach; seed jawny, deterministyczny (seed_for(name, side)). Każdy narożnik zwizualizowany mapą ASCII (piksele krawędzi vs przebieg dopasowanego okręgu) — wizualna walidacja przed akceptacją. Raportujemy mniejszy z dwóch narożników (wiążący dla pojazdu), z jawną niepewnością.
 
-## 3. Struktura (plan)
-README.md, manifest.csv, sources.md, audit_20_percent.json, files/ (orto, poza git), files/docs/ (PDF urzędowe ≤ 5 MB, w gicie).
+## 3. Struktura
+README.md, manifest.csv (35 wierszy M49-001…035), sources.md, audit_20_percent.json, .gitignore, files/ (orto JPG/PNG — poza gitem, w archiwum ZIP), files/docs/ (dokumenty urzędowe; skan PFU 2015 również w ZIP — patrz uwaga w sources.md).
 
 ## 4. Wyniki pomiarów — tabela zbiorcza (STAN: 2026-11-13)
 
@@ -36,21 +36,59 @@ Ortofotomapa: usługa WCS podaje warstwę najnowszą; wg skorowidza WFS jest to 
 | G09 | Raben Żółtki (brak w OSM) | — (P6 bez node) | ~26 ±7 | ESTIMATED | 7,3 ±2 | ESTIMATED | brak bramy w OSM; wjazd = service 550896624 z ul. Warszawskiej (node 5320426952); korytarz utwardzony na granicy terminala (profile co 5 m: 17–33 m, mediana ~25–28) — szerokość wjazdu na teren, nie pojedynczego szlabanu (szlaban: UNVERIFIED); promień = narożnik Warszawska × podjazd |
 | G10 | Podlaskie Zakłady Zbożowe (G2 w P6) | 3465808562 | ~11 ±3 | ESTIMATED | 8,3 ±2 | ESTIMATED | **BŁĄD P6:** node 3465808562 = brama na zlikwidowanym torze (way 339393639 railway=disused), nie brama drogowa. Wjazd drogowy: service 248109974 z ul. Elewatorskiej (node 5161111758); profile korytarza d=12/16/20/40/60: 10,3/7,3/14,3/11,6/13,7 → mediana ~11–12; promień = narożnik Elewatorska × service |
 | G11 | Masterpress (Kuronia 5) | 2999986083 | 7,8 ±1 | ESTIMATED | 11,7 ±2 | ESTIMATED | profile street-side d=6: 7,8; d=9: 7,7 (zbieżne); ulica bez nazwy (way 236885861) przy Kuronia 258564448 |
-| G12 | Elektrociepłownia Białystok (Andersa 15) | — (brak w OSM) | 5,8 ±1 (prześwit bramy); podjazd 13,9 ±2 | ESTIMATED | 6,0 ±1,5 | ESTIMATED | **brama dla ciężarówek** (szukana w zad. 1): node 3954799626 (EPSG:2180 778613, 595397) na service 177903959, wjazd od ul. Andersa przez trunk_link 182399965 (zjazd z ronda Pamięci Bieżeństwa 1915 r.) i ul. Bitwy Białostockiej (service 392226325); prześwit w płocie (fence 392226284): asfalt ≥0,6 w przedziale s∈[−3,5; +1,0] → ~5,5–6 m; profile podjazdu d=20: 13,9, d=25: 14,0; promień = narożnik Bitwy Białostockiej × podjazd bramy. Inne bramy EC w OSM: 3954799591 (od Bitwy — otwarcie niemierzalne, asfalt ulicy), 3954799571 (w 5,5-metrowej przerwie trawiastej — raczej nie-drogowa), gate 13528916930 access=destination (778574, 595438) |
+| G12 | Elektrociepłownia Białystok (Andersa 15) | — (brak w OSM) | 5,0 ±1 (prześwit bramy); podjazd 13,9 ±2 | ESTIMATED | 6,0 ±1,5 | ESTIMATED | **brama dla ciężarówek** (szukana w zad. 1): node 3954799626 (API OSM: barrier=gate, access=no; 53.1508184, 23.1683736; EPSG:2180 778613, 595397) na service 177903959, wjazd od ul. Andersa przez trunk_link 182399965 (zjazd z ronda Pamięci Bieżeństwa 1915 r.) i ul. Bitwy Białostockiej (service 392226325); prześwit w płocie (fence 392226284): asfalt ≥0,6 w przedziale s∈[−3,5; +1,0] → 4,5–5,5 m (recheck audytu na świeżym oknie WCS: przedział odtworzony co do stacji; wartość pierwotna 5,8 skorygowana); profile podjazdu d=20: 13,9, d=25: 14,0; promień = narożnik Bitwy Białostockiej × podjazd bramy. Inne bramy EC w OSM: 3954799591 (od Bitwy — otwarcie niemierzalne, asfalt ulicy), 3954799571 (w 5,5-metrowej przerwie trawiastej — raczej nie-drogowa), gate 13528916930 access=destination (778574, 595438) |
 | G13 | Bieldruk (Św. Proroka Eliasza 8A) | 10875232003 | 16,5 ±3 | ESTIMATED | 10,4 ±2,5 | ESTIMATED | asfalt na linii płotu s∈[−6,5; +10] (przedłużenie segmentu + forward); jasna nawierzchnia (bright 185–197) sugeruje nowy overlay; alternatywa: wąskie gardło ~12 m — nie rozstrzygnięte (wizja niedostępna); promień = narożnik Św. Proroka Eliasza (275244664) × Bieldruk |
 | G14 | Bravilor Saby (Św. Proroka Eliasza 6) | 6539179208 | 7,0 ±1 | ESTIMATED | 4,5 ±1,5 | ESTIMATED | czysty skan płotu (asph 1,0, s∈[−2,5; +4,0]; trawa ±11–13); profile 15–17 odrzucone (szeroki plac) |
 
 Szerokości G07/G08 są przeliczeniem deterministycznym z geometrii OSM (STAN: SOURCED, ODbL); wszystkie pozostające pomiary z ortofotomapy mają status ESTIMATED z metodą; brak wartości = UNVERIFIED z uzasadnieniem. Niepewność ± obejmuje GSD (0,05–0,10 m), klasyfikację „asfalt/trawa" (skrajne stacje ±0,5 m) i wybór stacji pomiarowych; dla G09/G10/G13 dodatkowo rozrzut profili (±3–7 m).
 
-## 5. Samokontrola pomiarów (wstępna, przed audit_20_percent.json)
+## 5. Kontrola jakości pomiarów (wewnętrzna; niezależna samokontrola 20% — sekcja 9)
 - Każdy promień: wizualna walidacja ASCII (nakładanie dopasowanego okręgu na piksele krawędzi asfaltu) — wszystkie 14 narożników zaakceptowane; fits o niskiej frakcji inlierów (G01: 0,16; G02: 0,20) oznaczone większą niepewnością.
 - Transformacja EPSG:2180↔WGS84: walidacja na parach z manifestu P6 (Δ<0,5 m); odwrotna z liczbą iteracji Newtona (tol 1e-4 m).
 - Źródła liczb: ortofoto GUGiK WCS (URL w sources.md), geometria OSM (API 0.6), skorowidz WFS (akt_rok/GSD). Google Maps/Street View/Earth — NIEUŻYTE. Mapillary — brak tokenu, nieużyte.
 
-## 6. RS16 WIM ul. Zabłudowska — W TOKU
-(P6: 53.088753, 23.246754 = EPSG:2180 (784259, 588808), ESTIMATED ±150 m; PFU BIP id.77056: „1295 m od stałego punktu kontroli". Do doprecyzowania z dokumentów GDDKiA/ITD/BIP/ortofoto.)
+## 6. RS16 WIM ul. Zabłudowska — ROZSTRZYGNIĘTE (SOURCED, niepewność ±25 m)
+**Pozycja: lat 53.0887980, lon 23.2466721** (EPSG:2180 E=784252,8, N=588812,8) — jezdnia DK19 (trunk way 70546087 „Szosa Zabłudowska"), kierunek Zabłudów, strona prawa, przy wjeździe serwisowym (node 14120425290, service way 1552091563; wjazd 53.0888000, 23.2466754). P6 miało ESTIMATED ±150 m.
 
-## 7. Adres PZZ (Elewatorska 14 vs ul. Zbożowa) — W TOKU
+Łańcuch dowodowy (pełne URL-e w sources.md):
+1. **PFU 2020** (BIP Białystok, sprawka ZDM-IV.271.16.2020.PR, Załącznik nr 8 — PFU 09.09.2020, plik .docx): „DK 19 na wjeździe do miasta od strony Zabłudowa oddalona jest od stałego punktu kontroli w odległości ok. 1295m"; kierunek: do miasta; strona prawa; przekrój 1×3 (pasy 2×3,5 m i 1×3,0 m); łącza internetowe z szafki sterownika sygnalizacji na skrzyżowaniu Zabłudowska × Stoczni Gdańskiej.
+2. **Skrzyżowanie odniesienia** = traffic_signals node 2075991238 (53.0968336, 23.2328571) = E 783275,7, N 589650,9. Ulica Stoczni Gdańskiej istnieje (OSM ways 280925985, 347897304 i in.); potwierdzenia niezależne: przystanek KM linia 2 „Stoczni Gdańskiej/Zabłudowska", kamera skrzyżowania, komunikat bialystok.pl z 29.10.2025 o objazdach (Stoczni Gdańskiej/Dojlidy Górne/Motylą).
+3. **Geometria OSM**: odległość wzdłuż DK19 od skrzyżowania do punktu WIM: 1287 m (prosta) / ~1289 m (po geometrii ways) / 1294,8 m (estymacja P6) — zgodność z „ok. 1295 m" < 0,5%.
+4. **PFU 2015** (starszy skan PDF, Załącznik nr 8): punkt „zlokalizowany na parkingu przy DK 19", ogrodzony, monitorowany, szafa teletechniczna na cokole betonowym; parking OSM way 1504105385 przy skrzyżowaniu (35 m od centrum).
+5. **Orto 2025 (WCS 0,1–0,25 m/px)**: przy punkcie WIM zjazd serwisowy + jasny plac żwirowy ~24×8 m (E 784205–784230, N 588797–588805) + małe obiekty ~4×3 m (E 784216–784224, N 588806–588810) — zaplecze stacji. Linii czujników i bramownicy NIE wykryto na orto (próg jasności, nic ponad szum) — pozycja opiera się na łańcuchu PFU+geometria, nie na wizualnej detekcji czujników.
 
-## 8. Organizacja ruchu (Myśliwska, Karpińskiego, Dojlidy Fabryczne, rondo Meyera, Adama Mickiewicza) — W TOKU
-(P8 znalazło komunikaty ZDM z 19.11/1.12.2025; brak numerów zarządzeń — do uzupełnienia z BIP Białystok.)
+Niepewność: **±25 m wzdłuż osi drogi**. Wycinki: files/M49-RS16-detail.jpg (okno 120 m @0,1 m/px), M49-RS16-context.jpg (400 m @0,25), M49-RS16-pad.jpg (90 m — plac zaplecza).
+
+## 7. Adres PZZ — ROZSTRZYGNIĘTE (SOURCED): ul. Elewatorska 14
+Oficjalna strona kontaktowa PZZ S.A. (https://pzz.bialystok.pl/kontakt, dostęp 2026-11-13): **„ul. Elewatorska 14, 15-959 Białystok"** oraz „Podlaskie Zakłady Zbożowe S.A. w Białymstoku / Elewatorska 14, 15-959 Białystok". KRS 0000038920. Fraza „Zbożowa" na stronie nie występuje — nazwa „ul. Zbożowa" z OSM pozostaje **niepotwierdzona rejestrowo** (UNVERIFIED), adresem oficjalnym jest Elewatorska 14. Wjazd ciężarowy na teren: od ul. Elewatorskiej przez service way 248109974 (node 5161111758) — patrz G10 (M49-010/M49-024).
+
+## 8. Organizacja ruchu — ustalenia (blok D)
+
+**Numerów zarządzeń ZDM nie publikuje się online** (ustalenie P8: rejestr organizacji ruchu prowadzi ZDM, ul. Składowa 11; do wglądu na miejscu). Dlatego poniżej dokumentuję komunikaty oficjalne (bialystok.pl, kategorie „Aktualności ZDM") z cytatami i stan OSM; brak numeru zarządzenia odnotowuję jawnie, nie zmyślając numerów.
+
+Główne źródło: **komunikat ZDM/miasta z 19.11.2025** „Zmiany w ruchu wokół ulicy Suchowolca" (bialystok.pl; autor Eliza Bilewicz-Roszkowska; kopie: bialystokonline.pl i akadera.bialystok.pl 20.11.2025, radio.jard.pl) oraz **TVP3 Białystok 10.12.2025** („Dojlidy bez tranzytu ciężarówek od stycznia").
+
+| Lokalizacja | Ograniczenie | Źródło (data, cytat ≤25 słów) | Odcinek / stan OSM 2026-11-13 | Status |
+|---|---|---|---|---|
+| **Dojlidy Fabryczne + ks. S. Suchowolca** | zakaz ruchu pojazdów >3,5 t; **wejście w życie: styczeń 2026** | komunikat 19.11.2025: „ciężarówki powyżej 3,5 t przestaną korzystać z części ul. Suchowolca oraz ul. Dojlidy Fabryczne"; TVP3 10.12.2025: „zamknięte dla ciężarówek o masie powyżej 3,5 tony… zmiany wejdą w życie w styczniu" | Dojlidy Fabryczne: hgv=no + maxweight=3.5 na 13 ways (173446727/729, 221209008/010/016/017, 229136624, 623410842, 985226457/458); Suchowolca: 210488455, 221207572/573; objazd trasowany Kuronia/Dywizjonu 303/Ciołkowskiego | SOURCED (numer zarządzenia niepublikowany; znaki montowane od XI/XII 2025) |
+| **Adama Mickiewicza** | zakaz wjazdu pojazdów **>8 t** | komunikat 19.11.2025: „na fragmencie ul. Mickiewicza – pomiędzy Kuronia a Ciołkowskiego – wprowadzony zostanie zakaz wjazdu dla pojazdów ciężarowych powyżej 8 ton" | OSM maxweight=8 na 12 ways: od skrzyż. z Jacka Kuronia/Dywizjonu 303 (53.1054, 23.1850) do skrzyż. z K. Ciołkowskiego (53.1139, 23.1787; przystanek NŻ „Mickiewicza/Ciołkowskiego", node 3682310640) — odcinek geodezyjnie zgodny z komunikatem | SOURCED |
+| **Rondo A.B. Meyera** | brak zakazu hgv samego ronda; zmiany organizacji pasów | komunikat 19.11.2025: „z wlotu od Dojlidy Fabryczne można jechać prosto z dawnego pasa do skrętu w lewo (2 pasy prosto w kierunku centrum)" | ways ronda 552379031, 623410840 (trunk) — **bez tagów hgv/maxweight**; twierdzenie P6 „rondo Meyera hgv=no" NIEAKTUALNE (zapewne dotyczyło wlotów z Dojlidy Fabryczne — tam hgv=no/maxweight=3.5) | SOURCED (zmiany pasów); „hgv=no" obalone stanem OSM |
+| **Myśliwska** | zakaz ruchu pojazdów >3,5 t (wg OSM) | brak dokumentu urzędowego online — tylko OSM: way 353943959 (Myśliwska) hgv=no, maxweight=3.5 | ways 25447110, 221209014, 279872888, 353943959, 1564083903, 1564083904 (segmenty 335052157/335052159 bez tagów) | **UNVERIFIED urzędowo** — do rozstrzygnięcia w rejestrze ZDM (Składowa 11) |
+| **Franciszka Karpińskiego (dojazd KAN)** | brak ograniczeń na samej ulicy | OSM way 275237230 (tertiary) — brak tagów hgv/maxweight; brak znalezionego zarządzenia | dojazd KAN ograniczony pośrednio przez zakaz >8 t na Mickiewicza (odc. Kuronia–Ciołkowskiego) | UNVERIFIED („brak ograniczeń" niezweryfikowany urzędowo) |
+
+Odpowiedź na pytanie z zadania „zakaz 3,5 t od XII 2025?": **znaki montowane od XI/XII 2025, ograniczenie wchodzi w życie w styczniu 2026** (TVP3 Białystok 10.12.2025).
+
+## 9. Samokontrola 20% — audit_20_percent.json
+Seed jawny **20261113**, `random.Random(20261113).sample(M49-001…035, 7)` → M49-001, -002, -009, -012, -021, -024, -030. Rechecki pełną metodą (ponowne pomiary/dopasowania, świeże okno WCS dla G12, ponowne otwarcie strony PZZ): 6/7 potwierdzonych (G07 promień odtworzony deterministycznie bit-w-bit: 11,8 m), **1 korekta: G12 prześwit 5,8→5,0 m** (przedział asfaltu s∈[−3,5;+1,0] odtworzony na niezależnym oknie; arytmetyka przedziału daje 4,5–5,5 m). Dodatkowo: współrzędne wszystkich node'ów bram zweryfikowane z API OSM (zaokrąglenia P6 0,14–0,55 m zastąpione wartościami API). Szczegóły i polecenie odtwarzające losowanie: audit_20_percent.json.
+
+## 10. Braki i ograniczenia
+- **G02 (Kwadrat Park)**: szerokość UNVERIFIED — brak mierzalnego prześwitu w geometrii OSM (fence przechodzi ciągłościem przez asfaltowany przejazd ~27,5 m); wizja tylko jakościowa (przejazd 2-pasowy, brak szlabanu). Do pomiaru potrzebna wizja lokalna/lidar.
+- **G09 (Raben Żółtki)**: brak bramy w OSM; podana szerokość to **korytarz wjazdu na teren** (~26±7 m), nie pojedynczego szlabanu; szlaban: UNVERIFIED.
+- **G13 (Bieldruk)**: alternatywa „wąskie gardło ~12 m" nierozstrzygnięta (wizja niedostępna w sesji — limit analiz obrazu); jasna nawierzchnia sugeruje nowy overlay, co podnosi niepewność do ±3 m.
+- **Dokładna data nalotu orto**: metadane GUGiK podają tylko rok (2025) i GSD — bez daty zobrazowania; pomiarów sezonowych nie da się wykluczyć (zaległy śnieg/cea nie zaobserwowana na żadnym oknie).
+- **RS16**: linii czujników/bramownicy NIE widać na orto — pozycja z łańcucha PFU+geometria (±25 m); dokładny układ linii (pomost/dół jezdni) do potwierdzenia w ITD/GDDKiA.
+- **Numery zarządzeń organizacji ruchu**: niepublikowane online (rejestr ZDM, ul. Składowa 11); Myśliwska i Karpińskiego pozostają UNVERIFIED urzędowo.
+- **Mapillary**: brak tokenu w sesji — nieużyte (zgodnie z zasadami). Google Maps/Street View/Earth — nieużyte.
+- **PDF skan PFU 2015** (files/docs/PFU-2015-skan.pdf, 620 KB): transport binarny przez API gita skaziłby plik (zawartość nie jest UTF-8; push_files/create_or_update_file przenoszą treść tekstową) — skan znajduje się w archiwum ZIP artefaktu oraz pod URL-em BIP w sources.md.
+
+Manifest: 35 wierszy (M49-001…014 szerokości, M49-015…028 promienie, M49-029 RS16, M49-030 PZZ, M49-031…035 organizacja ruchu); statusy: SOURCED×8 (G07/G08 szer., RS16, PZZ, 3×org.), ESTIMATED×25, UNVERIFIED×2 (G02 szer., Myśliwska org.) + Karpińskiego jako „brak ograniczenia" UNVERIFIED.
