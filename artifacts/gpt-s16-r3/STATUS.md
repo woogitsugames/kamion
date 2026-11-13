@@ -111,3 +111,5 @@ Zapisano after/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymag
 Zapisano after/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano after/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano after/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
