@@ -12,8 +12,13 @@
 | 0165 | podatny kontakt nadwozia D58, F1 ≤ 3,5° D59 | `phys-0165` | `artifacts/live/phys-0165.md` |
 | 0166 | region Dojlidy/Krywlany D60 (dane + QA, bez importu w main) | `region-0166` | `artifacts/live/region-0166.md` |
 | — | przegląd paczki 2 + P1 (Opus — zamiana z Sonneta na prośbę właściciela 10:3x; main bez commitów) + **paczka 03 dla Mistrala** (`docs/owner/RESEARCH-PACK-03-MISTRAL.md`, M44+; decyzja właściciela 10:2x: kolejne paczki robi Mistral zamiast GPT) | main | `docs/reports/REVIEW-2026-11-13-s16-research-pack-02.md` |
+| 0167 | P1 budynków kadrów G3 (biały prostopadłościan cm924, EC niebieski, niebieski biurowiec cm109) — **Fable** | `bldg-0167` | `artifacts/live/bldg-0167.md` |
+| 0168 | nawigacja: numer zjazdu ronda, max 3 komunikaty/manewr, ETA 1 Hz, ZeroGc na Recorder — Opus | `nav-0168` | `artifacts/live/nav-0168.md` |
+| 0169 | krawędź świata: zdublowane zapory edge-west (`WorldEdgeBuilder`), U-20/B-1, 115 krawędzi tras poza zasięgiem — **Fable** | `edge-0169` | `artifacts/live/edge-0169.md` |
+- **Właściciel 10:3x:** Fable NIE oszczędzać, działać na maksa (gdy limit się skończy, właściciel przełączy konto z wyzerowanym limitem). Ciągły zapis: agenci po każdym kroku commit + push gałęzi + live; lider HANDOVER po każdym zdarzeniu. Przegląd badań na Opusie (nie Sonnet).
+- **Przejęcie przez nową sesję/konto:** przeczytaj ten blok → każdy wiersz tabeli: `artifacts/live/<live>.md` ma NASTĘPNY KROK; wznów jako NOWYCH agentów (nie SendMessage), gałęzie są na origin.
 - Następne: scalenia (0161 → 0162 → 0163, `generated/*` `--ours`, JEDNA regeneracja + `import-region.ps1` w main) → APK → krytyk → A16 gate3 A/B → S24+ High/30; 0165, 0166 osobno.
-- **Ostatni przydzielony ADR: 0166.**
+- **Ostatni przydzielony ADR: 0169.**
 
 # HANDOVER — kamion, KONIEC S16 (2026-11-13 ~10:3x, limit 5 h) — prompt dla s17: `docs/owner/START-PROMPT-S17.md`
 
