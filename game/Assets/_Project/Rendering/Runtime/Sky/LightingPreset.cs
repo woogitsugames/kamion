@@ -179,7 +179,7 @@ namespace Game.Rendering
 
         /// <summary>
         /// Dusk (track A7, ADR 0182): the end of civil twilight, sun 6 deg below the horizon at azimuth 300 deg (summer
-        /// evening, ~40 min after sunset in Bialystok), hazy. Sky: horizontal illuminance 3.4 lx (SkyModel.CivilTwilightEndLux);
+        /// evening, ~40 min after sunset in Bialystok), hazy. Sky: horizontal illuminance 3.4 lx clear (SkyModel.CivilTwilightEndLux), 2.87 lx with this preset's haze (EditMode);
         /// zenith ~0.3-0.6 cd/m2 in the measured twilight series (Schmude, Georgia J. Science 82(1) art. 106: 13.7-13.9 mag/arcsec2 at -6 deg; hnsky.org SQM twilight fit), blue
         /// zenith from ozone absorption (SkyModel twilight chroma), warm glow only low toward the sun.
         /// Exposure (review s18 0175/0178 P2: the old dusk read as "a darker overcast day" because the table followed the
