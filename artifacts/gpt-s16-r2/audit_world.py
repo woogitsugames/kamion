@@ -25,6 +25,9 @@ if args.stage=='after':
  base=json.loads((r/'baseline-world-audit.json').read_text());fail=[]
  if base['protected']!=record['protected']:fail.append('Protected mesh changed')
  if base['non_high']!=record['non_high']:fail.append('Non-high instance records changed')
+ libraries=json.loads((r/'baseline-libraries.json').read_text())
+ changed_libraries=[file for file,value in libraries.items() if hashlib.sha256((root/file).read_bytes()).hexdigest()!=value]
+ if changed_libraries:fail.append('Prototype or atlas library changed: '+str(changed_libraries))
  if base['plots'].keys()!=record['plots'].keys():fail.append('Plot renderer groups changed')
  for key,value in base['plots'].items():
   if record['plots'].get(key,{}).get('materials')!=value['materials']:fail.append('Plot material group changed: '+key)

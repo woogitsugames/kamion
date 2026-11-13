@@ -16,3 +16,5 @@ Limit sesji dookoło10:34 13.11.2026.
 Celowany EditMode GardenCanopyWidthTests: exit0; szczegóły targeted-editmode.xml/log.
 
 Celowany EditMode:8/8passed,0failed/skipped; skala koron zachowuje wysokość/początek i pakowaniecompactTRS. Przygotowano per-kamera porównanie z ostrożnym przedziałem kwantyzacji1ktris oraz limitemLow+2%; nie będzie podpisane jako GPU/device pomiar.
+
+ADR0154 opisuje źródła, WORKING_VALUE i luki zdjęć. Audyt rozszerzono o6hashy bibliotek modeli/atlasu, aby potwierdzić brak ubocznej zmiany modeli i materiałów pojazdów/lasu. Generowanie after nadal w tle.
