@@ -166,9 +166,6 @@ Shader "Kamion/World Surface"
         #if defined(_FURNITURE_PLINTH)
             TEXTURE2D(_FurnitureMap); SAMPLER(sampler_FurnitureMap);
         #endif
-        #if defined(_FAR_FACADE)
-            #include "KamionNightWindows.hlsl"   // ADR 0192 lit windows on the far facades
-        #endif
 
             struct Attributes
             {
@@ -187,8 +184,6 @@ Shader "Kamion/World Surface"
                 half4 masks : TEXCOORD3;
             #if defined(_FAR_FACADE)
                 float2 uv1 : TEXCOORD4;
-                float3 posOS : TEXCOORD5;       // ADR 0192 window anchor
-                float3 posRel : TEXCOORD6;
             #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
@@ -208,8 +203,6 @@ Shader "Kamion/World Surface"
                 o.masks = v.color;
             #if defined(_FAR_FACADE)
                 o.uv1 = v.uv1;
-                o.posOS = v.positionOS.xyz;
-                o.posRel = v.positionOS.xyz - TransformWorldToObject(_WorldSpaceCameraPos);   // object space, camera relative
                 if (v.uv1.x <= -15.5)   // ADR 0141 skyline flag: restore the window-grid coordinate, keep it in view
                 {
                     o.uv1.x = -v.uv1.x - (v.uv1.x <= -4000.0 ? 4096.0 : 16.0);
@@ -284,7 +277,6 @@ Shader "Kamion/World Surface"
                     albedo = lerp(_FadeColor.rgb, albedo, coverage);
                 }
                 half smooth = saturate(_Smoothness + _SmoothnessVar * (det - 0.5));
-                half3 nightEm = 0;
             #if defined(_FAR_FACADE)
                 {
                     albedo *= i.masks.rgb;
@@ -328,22 +320,6 @@ Shader "Kamion/World Surface"
                     glass = lerp(glass, _GlassColor.rgb * 1.15, sub);
                     albedo = lerp(albedo, glass, pane);
                     smooth = lerp(smooth, 0.9, pane * (1.0 - sub * 0.5));
-                    // ADR 0192: lit windows (anchor = bay centre via the uv1 -> position derivatives); below ~1.5 px per bay
-                    // the mean of the lit share, as for the pane tone
-                    // no matrix here: an instanced world-to-object fetch in the fragment (int index, target 3.0) hit
-                    // D3D11 X8000; posRel is already object space
-                    float3 dRx = ddx(i.posRel), dRy = ddy(i.posRel);
-                    float2 dGx = ddx(g), dGy = ddy(g);
-                    [branch] if (_KamionWindowsLum.y > 0.5 && (float)row > 0.5)
-                    {
-                        float cls = (float)isRibbon > 0.5 ? 3.0 : 1.0;  // flats; ribbon offices (float-only path: see ADR 0192)
-                        float trn = h > 0.84 ? 0.72 : 0.62;
-                        float3 anchor = KamionNwAnchor(i.posOS, dRx, dRy, g, dGx, dGy, bay + 0.5);
-                        float3 em = KamionNightWindow(anchor, cls, trn, 0.0, (float3)albedo);
-                        float pm = cls > 2.5 ? _KamionWindows.y : _KamionWindows.x;
-                        float3 meanEm = float3(1.3, 0.95, 0.6) * (trn * pm * _KamionWindowsLum.x);
-                        nightEm = (half3)(lerp(em, meanEm, (float)sub) * (float)pane);
-                    }
                 }
             #endif
 
@@ -388,7 +364,6 @@ Shader "Kamion/World Surface"
                 color += ambient + env;
                 color += albedo * KamionLampPools(i.positionWS, n);   // ADR 0062
                 color += _Emission.rgb * (_KamionStreetLamps * _KamionExposure);
-                color += nightEm;   // ADR 0192 (far facades only)
 
                 color = KamionMixFog(color, i.fogFactor);
                 return half4(color, 1.0);
