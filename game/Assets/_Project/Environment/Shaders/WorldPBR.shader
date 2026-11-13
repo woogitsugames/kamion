@@ -95,6 +95,7 @@ Shader "Kamion/World PBR"
         [Toggle] _ZWrite ("ZWrite", Float) = 1
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 2
         [Toggle] _ReceiveShadows ("Receive shadows", Float) = 1
+        _ShadowNormalBiasScale ("Opt-in caster normal-bias scale (ADR0155)", Range(0, 1)) = 1
     }
     SubShader
     {
@@ -126,6 +127,7 @@ Shader "Kamion/World PBR"
             float _DripBand;
             float4 _CarPaint, _CarFlake, _PearlTint;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
+            float _ShadowNormalBiasScale;
         CBUFFER_END
         ENDHLSL
 
@@ -999,6 +1001,7 @@ Shader "Kamion/World PBR"
             #pragma target 3.5
             #pragma vertex ShadowVert
             #pragma fragment ShadowFrag
+            #pragma shader_feature_local_vertex _SHADOW_NORMAL_BIAS_SCALE
             #pragma multi_compile_instancing
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
             #pragma multi_compile_vertex _ _KAMION_WORLD_DETAIL
@@ -1021,7 +1024,14 @@ Shader "Kamion/World PBR"
             #else
                 float3 ld = _LightDirection;
             #endif
-                float4 cs = TransformWorldToHClip(ApplyShadowBias(pw, nw, ld));
+                float3 biasedPosition = ApplyShadowBias(pw, nw, ld);
+            #if defined(_SHADOW_NORMAL_BIAS_SCALE)
+                // Thin adjacent deck surfaces separated by normal inset left periodic light holes on the island.
+                // Preserve URP's depth offset. Other materials compile the original ApplyShadowBias path above.
+                float3 depthOnly = pw + ld * _ShadowBias.x;
+                biasedPosition = lerp(depthOnly, biasedPosition, _ShadowNormalBiasScale);
+            #endif
+                float4 cs = TransformWorldToHClip(biasedPosition);
             #if UNITY_REVERSED_Z
                 cs.z = min(cs.z, UNITY_NEAR_CLIP_VALUE);
             #else
