@@ -11,7 +11,7 @@
 | 0163 | zieleń ulic domów G7 (build 4, budżet) + horyzont BDOT (przejęty od 0161) | `veg-0163` | `artifacts/live/veg-0163.md` |
 | 0165 | podatny kontakt nadwozia D58, F1 ≤ 3,5° D59 | `phys-0165` | `artifacts/live/phys-0165.md` |
 | 0166 | region Dojlidy/Krywlany D60 (dane + QA, bez importu w main) | `region-0166` | `artifacts/live/region-0166.md` |
-| — | przegląd paczki 2 + P1 (Sonnet, main bez commitów) + **paczka 03 dla Mistrala** (`docs/owner/RESEARCH-PACK-03-MISTRAL.md`, M44+; decyzja właściciela 10:2x: kolejne paczki robi Mistral zamiast GPT) | main | `docs/reports/REVIEW-2026-11-13-s16-research-pack-02.md` |
+| — | przegląd paczki 2 + P1 (Opus — zamiana z Sonneta na prośbę właściciela 10:3x; main bez commitów) + **paczka 03 dla Mistrala** (`docs/owner/RESEARCH-PACK-03-MISTRAL.md`, M44+; decyzja właściciela 10:2x: kolejne paczki robi Mistral zamiast GPT) | main | `docs/reports/REVIEW-2026-11-13-s16-research-pack-02.md` |
 - Następne: scalenia (0161 → 0162 → 0163, `generated/*` `--ours`, JEDNA regeneracja + `import-region.ps1` w main) → APK → krytyk → A16 gate3 A/B → S24+ High/30; 0165, 0166 osobno.
 - **Ostatni przydzielony ADR: 0166.**
 
