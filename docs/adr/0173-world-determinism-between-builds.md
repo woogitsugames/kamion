@@ -1,0 +1,51 @@
+# ADR 0173 — World determinism between builds: line-ending-free source hashes, no wall clock in derived data, per-candidate tree attributes
+
+Status: implemented on branch `determ-0173` (base main `3a60019ff`, 2026-11-13, s17); not merged. Python only —
+Unity import / renders NOT re-run (PHONE_RUN lock held during the work). Supersedes nothing; extends ADR 0096
+(PYTHONHASHSEED independence of the road stage).
+Source: reviews `docs/reports/visual/REVIEW-2026-11-13-s17-0161.md` / `-0167.md` ("rozkład drzew/impostorów różni
+się między buildami, 1–3 % pikseli", +7,5 % triangles in `stretch-05-docks`).
+
+## Measurements
+
+1. **Same code, two runs (worktree, `build_world.py --region bialystok-industrial-c`, 605 s each):** the 199 files of
+   `Data/raw/derived/bialystok-industrial-c/world` (instances_*.json, GLB, HLOD, colliders) are **byte-identical**
+   (`tools/worldgen/qa/compare_world.py`), `generated/` identical. The only differing file was
+   `far_field_gis_cache.json` (`extracted_in_s` wall-clock field).
+2. **Committed files that showed as modified after a rebuild in a worktree:** four were line endings only (git
+   checkout CRLF vs generator LF, empty `git diff`). `world_manifest.json` changed two `sources_sha256` lines:
+   `overrides.yaml` and `roads.graph.json` were hashed as raw bytes, and the worktree checkout has CRLF where main has
+   LF (CRLF-stripped hash == committed hash). Content of the world did not change.
+3. **So the generator is deterministic for fixed input; the reviewed differences come from different code/input
+   between the two builds.** One mechanism made a *local* edit change trees *far away*: `vegetation.place.emit`
+   drew height / variant / yaw / lean from the feature's random stream only for trees that passed the clearance
+   test. A new kerb, paved area or building that removed one tree shifted the stream for every later tree of the
+   same BDOT feature (whole forest stand, the understorey and edge passes after it, a whole tree row / group).
+
+## Decision
+
+- `build_world` and `far_field._sha256` hash text inputs (`.json/.geojson/.yaml/.yml`) with CRLF normalised to LF:
+  the world manifest and the far-field cache key no longer depend on the checkout.
+- No wall-clock time in derived data: `extracted_in_s` removed from the far-field GIS cache (printed instead).
+- `vegetation.emit` draws the four attributes for **every candidate point** up front, in point order; the clearance
+  test only drops trees. A local edit now removes the trees on it and leaves every other tree as it was.
+- Tests (`tools/worldgen/tests/test_determinism_0173.py`, ~1 s): CRLF/LF hash equality; two `vegetation.place`
+  runs identical; a 10 × 10 m blocked patch changes no tree further than 3 m from it (fails on the old code);
+  classification of `compare_world.py` (identical / order only / content).
+- Tool: `uv run --project tools/worldgen python tools/worldgen/qa/compare_world.py <dirA> <dirB>` — byte compare of
+  two derived worlds, with order-only vs content diagnosis of instance files.
+
+## Consequences
+
+- One-time change of the look: tree attributes are drawn from the stream in a different order, so the same tree
+  positions (main pass) get new height / variant / yaw / lean once, and the understorey and edge passes of forest
+  stands (positions drawn after the main pass) get new positions. Species and tree counts per polygon are
+  unchanged by construction except where the new streams differ (numbers below). After this, edits stay local.
+- Unity side (instance order, LOD/impostor choice) reviewed in code: import order follows the manifest chunk list,
+  landmark GLBs are sorted, no RNG in the importer. NOT verified by a render pair; if a residual 0,5–1 % pixel
+  difference between two imports of identical data remains, the next suspect is the capture timing of LOD
+  crossfade / streaming in `VisualQaRunner`.
+
+## Numbers of the one-time change (run1 = main code, run3 = this ADR)
+
+(filled from `tree_stats.py` on the two derived worlds)
