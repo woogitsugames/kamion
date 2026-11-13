@@ -1,5 +1,6 @@
 # ADR 0160 — G3-A: P0 układu kadrów i kotwice pierwszego planu (pozy, tablice, znaki)
-Status: Proposed (agent g3a-0160, s16, gałąź `g3a-0160`), 2026-11-13. Do scalenia przez lidera; świat do przebudowy na main.
+Status: Proposed (agent g3a-0160, s16, gałąź `g3a-0160`), 2026-11-13. Gałąź zawiera main + `barriers-0159` @ 43d879f4b
+(ADR 0159) i świat przebudowany z obu zmian (regen2); do scalenia przez lidera po 0159 albo razem z nią.
 
 ## Kontekst
 Recenzja `docs/reports/visual/REVIEW-2026-11-13-s16-world-int.md` (D51): G3-A 5 R / 15 P / 2 N. P0: `cm109685822`,
@@ -34,7 +35,7 @@ A-7 (1528935). Pytanie: winna jest poza kamery czy świat?
 | podpora z czerwonym pasem 177786 | tak (kolumna 570,1/-717,5) | poza (heading 313 zamiast 321, kamera 5 m obok) | poza: podpora x 0,2–0,3 (zdjęcie 0,15–0,35), wieżowiec x 0,83 (0,82) |
 | bariera W + podpora 1259231 | tak / tak | poza (heading 235 → 250, eye 1,7 → 0,9) | bariera na pierwszym planie; podpora nadal poza lewą krawędzią — C |
 | tablica nazwy ronda 201270 / 3970163 / 2818555 / 149248 | tak (override north) | poza (heading SfM +9…+15° w całej serii richlv) **i** dane: punkt ADR 0125 czytany z błędnych póz | heading z VP pomostu, eye 0,9; tablica +6,2 m E (556,4/-699,4) z trzech klatek (rozrzut ≤ 1,2 m) |
-| bliska tablica z lewej 504348 | ? (override east) | nierozstrzygnięte: przy tej pozie nie pasuje żadna tablica, 149248 w tym miejscu jej nie ma | bez zmiany danych; poza C |
+| bliska tablica z lewej 504348 | tak (override east 567,1/-704,2) | poza: kamera produkcyjna miała tę tablicę na osi kadru (na zdjęciu jej tam nie ma) | sonda r4: kamera 3,5 m od tablicy wschodniej w azymucie 250, heading z VP pomostu; tablica x 0–0,16 (zdjęcie 0–0,15); B |
 | wyspy żwirowe 149248 / 2818555 / 504348 / 3970163 / 201270 | tak (`island_gravel`, ADR 0144) | poza: kamera stała na jezdni pierścienia (eye 1,7) | po korekcie jasny żwir na pierwszym planie; materiał bez zmian |
 | A-30 ×2 275528 | tak (`andersa-gantry-warning-*`) | dane: 9 m przed portalem i 8,6 m w bok = poza kadrem 90° | `at_en` z kadru czołowego (portal 15,2 m, zgodność ze światem 0,1 m): E -262,18 N -215,59 i E -255,26 N -205,84 |
 | sygnalizatory na wysięgnikach 182011 | tak (`signal_mast` n1847044961, n4075461271) | poza (J1); sondy r3 pod wiaduktem nie trafiły | nierozwiązane, C |
@@ -65,11 +66,11 @@ Kadry bez zmiany pozy oceniono jak w recenzji s16.
 | 2818555 | P | **R** | tablica x 0,55 (zdjęcie 0,56), żwir |
 | 149248 | P | **R** | fałszywa bliska tablica zniknęła, żwir, pomost |
 | 177786 | P | **R** | dominująca podpora z czerwonym pasem, wieżowiec; P2 brak bariery na pierwszym planie |
-| 504348 | P | P | żwir i pomost ok; brak bliskiej tablicy z lewej |
+| 504348 | P | **R** | (regen2 + sonda r4) bliska tablica nazwy na lewej krawędzi, pomost, żwir, łuk w prawo; P2 pomost dalej niż na zdjęciu |
 | 1259231 | P | P | bariera W na pierwszym planie; podpora poza kadrem |
 | 1398898, 178689, 320326, 482392, 500263 | R | R | bez zmian |
 | 1406533, 223210, 2948595, 303305, 309664, 320215, 454716, 751431 | P | P | bez zmian (horyzont bloków, latarnie, ściana oporowa — poza zakresem) |
-| **Razem G3-A (22)** | **5 R / 15 P / 2 N** | **10 R / 12 P / 0 N** | |
+| **Razem G3-A (22)** | **5 R / 15 P / 2 N** | **11 R / 11 P / 0 N** | regen1: 10 R / 12 P; regen2 bez regresji, +504348 |
 
 G3-B: 339463 N → P (ekran z prawej, wiadukt z lewej, portal na osi; brak strzałek na jezdni i drzew w pasie dzielącym);
 1528935 i 4312632 nowe pozy B, znaki A-7/D-1 do obejrzenia po przebudowie.
@@ -80,7 +81,37 @@ G3-B: 339463 N → P (ekran z prawej, wiadukt z lewej, portal na osi; brak strza
 - cm92458760: klomb na wyspie przy wjeździe do EC, niebieskie budynki EC, zbiornik, D-6 i tablica „ul. Bitwy Białostockiej”.
 - 339463: strzałki kierunkowe na trunk_link przed skrzyżowaniem, drzewa w pasie dzielącym.
 - 4312632: pod pomostem czarne płyty zamiast podpór i prześwitu (ekrany/ściany — 0159).
-- Pozy C do dalszej kalibracji: 504348, 1259231, 182011.
+- Pozy C do dalszej kalibracji: 1259231, 182011.
+- 149248: tablica nazwy ronda ok. 3x za duża względem zdjęcia (kamera za blisko tablicy wschodniej albo na zdjęciu widać
+  tylko tablicę północną) — do rozstrzygnięcia przy następnej kalibracji serii richlv.
+- 4312632: D-1 stoi w miejscu ze zdjęcia (x 0,33), ale tarcza widoczna niemal z boku (zdjęcie: ok. 45°) — obrót tarczy
+  przy pasie dzielącym do sprawdzenia (`travel_bearing_deg` 312,8 z osi łącznika).
+
+## Walidacja (regen2, 2026-11-13)
+Drzewo: main @ ede13f874 + `barriers-0159` @ 43d879f4b + ta gałąź; `build_world` 767 s, road consistency 65 (jak 0159),
+import 64 chunki Low+High, `sbs_pairs.py preflight` OK. Pary: `scripts/sbs-low-pairs.ps1` Low overcast + clear, 42 kadry,
+przed = `artifacts/world-int-s16/sbs`; kopie <= 960 px: `artifacts/g3a-0160/pairs-final/` (repo główne). 504348 w parach =
+render sondy r4 e35a (ta sama poza co produkcja, różnica < 2 mm, `finalize.py` + `verify_all()` bez rozbieżności).
+
+| Sprawdzenie | Wynik |
+|---|---|
+| A-30 ×2 (275528) w kadrze | tak: x 0,17 i 0,82 (zdjęcie 0,22 i 0,82), wysokość jak na zdjęciu |
+| A-7 (1528935) w kadrze | tak: x 0,54 (zdjęcie 0,61), żółty trójkąt z czerwonym obrzeżem ostrzem w dół |
+| D-1 (4312632) w kadrze | tak: x 0,33 (zdjęcie 0,33); tarcza prawie z boku — Open |
+| `test_gate3_landmarks.py` | 13 passed (w tym `test_every_gate3_sign_is_placed`) |
+| `tests/gis/test_sbs_*.py` po 504348 | 91 passed |
+| `tests/gis` całość | PYTEST_GIS |
+| EditMode | 467 / 467 passed |
+| Budżet Low-clear, kamery kontrolne vs main (world-int-s16) | max +2 draws (route-putry-approach), max +1,0 % tris (route-putry-entry-signs); vs 0159 after3: +3 draws, +0,3 % tris |
+
+Samoocena agenta, nie `visual-critic`. G3-B: 339463 P (bez zmian względem regen1), 275528 A-30 obecne, 1528935 i
+4312632 P (znaki są, układ jezdni / roślinność odbiegają).
+
+## Open
+- Ocena niezależna (`visual-critic`) 22 + 1 par z `pairs-final/`.
+- Pozy C: 1259231 (podpora poza lewą krawędzią), 182011 (sygnalizatory na wysięgnikach — w świecie, poza kadrem).
+- 149248: tablica ok. 3x za duża; 4312632: obrót tarczy D-1; cm109685822 plac `yard_behaton` zamiast trawnika
+  i chodnika; cm92458760 klomb / budynki EC (lista „Do zrobienia w świecie”).
 
 ## Konsekwencje
 - Seria richlv ma systematyczny błąd SfM heading +8…+15°; eye 0,9 jak w ADR 0143.
