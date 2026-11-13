@@ -1,0 +1,68 @@
+id: bialystok-dojlidy
+title: 'Białystok — Dojlidy/Krywlany: Kuronia / Dywizjonu 303 / SSSE + lotnisko Krywlany (wsch.)'
+status: WORKING_ASSUMPTION (ADR 0166, owner D60 chose the area; exact tile = agent proposal)
+candidate: D_dojlidy_krywlany
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 779019.0
+  ymin: 589055.0
+  xmax: 781067.0
+  ymax: 591103.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 780043.0
+  y: 590079.0
+  z: 156.96
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2061'
+products:
+  buildings.geojson: Data/Regions/bialystok-dojlidy/buildings.geojson
+  ortho.json: Data/Regions/bialystok-dojlidy/ortho.json
+  roads.graph.json: Data/Regions/bialystok-dojlidy/roads.graph.json
+  terrain.json: Data/Regions/bialystok-dojlidy/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/bialystok-dojlidy/heightmap_2049.r16
+- Data/raw/derived/bialystok-dojlidy/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+- id: gugik-nmt-2025-bialystok-dojlidy
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2025-bialystok-dojlidy.json
+  manifest_sha256: 0c587024402cdf7b1fe1f3b4408611dca8dfbfcc04674ba4eca46b2ac60b5c6c
+- id: gugik-orto-2024-rgb-0p25-bialystok-dojlidy
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-bialystok-dojlidy.json
+  manifest_sha256: a1c4315df596f285a6b1a9160e40f62e53b31494b5e6b8a134673177d747f055
+- id: gugik-bdot10k-2061
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2061.json
+  manifest_sha256: 0cf83144c852f8bc0a955c9ea3d9a00974085619e89404ced72de2e03461477e
+- id: gugik-lod1-2024-2061
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2061.json
+  manifest_sha256: e919ea35a8ae873958be41260c0aefef3256ebdf81f8a33c3fb095b958cb0c07
+- id: gugik-lod2-2017-2061
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2061.json
+  manifest_sha256: 4e3c5f476ead45508772e9ff64bd25b913318a6b10ec53ad839dc643e405d705
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-dojlidy
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region bialystok-dojlidy
