@@ -1080,6 +1080,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             bal_group = pair_[0] if FK.hfloat(key, "balg") < 0.7 else pair_[1]
         variant = {"ribbon": typ == "office" and FK.hfloat(key, "ribbon") < 0.5,
                    "drive_door": typ == "hall" and FK.hfloat(key, "drive") < 0.5, "basement": typ == "block"}
+        if typ == "office" and b["ovr"].get("ribbon") is not None:      # ADR 0171: authored window type (the far
+            variant["ribbon"] = bool(b["ovr"]["ribbon"])                # ribbon rows carry grey spandrels)
         scheme = FK.hall_scheme(key, wall) if typ == "hall" else None
         insulated = typ == "block" and (FK.hfloat(key, "etics") < 0.7 or bool(b["ovr"].get("wall_material")))
         # v3.1 horizontal bands: insulated blocks (35 %) get the window rows in the accent colour from the 1st
