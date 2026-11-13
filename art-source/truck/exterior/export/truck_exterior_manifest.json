@@ -1119,7 +1119,7 @@
    "tris_total": 105238,
    "tris_before_decimation": 105238,
    "decimate_area_budget_k": 1.0,
-   "file_bytes": 8786748,
+   "file_bytes": 8786540,
    "build_s": 2.5
   },
   "LOD1": {
@@ -2212,8 +2212,8 @@
    "tris_total": 43000,
    "tris_before_decimation": 99101,
    "decimate_area_budget_k": 129.21,
-   "file_bytes": 4091612,
-   "build_s": 3.5
+   "file_bytes": 4091740,
+   "build_s": 3.3
   },
   "LOD2": {
    "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD2.fbx",
@@ -2223,7 +2223,7 @@
      "role": "CHASSIS",
      "rig_parent": "TruckExterior_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 4201,
+     "tris": 4297,
      "materials": [
       "MI_Ext_Trim",
       "MI_Ext_Paint",
@@ -3028,11 +3028,11 @@
     }
    },
    "collision": {},
-   "tris_total": 17716,
-   "tris_before_decimation": 83917,
+   "tris_total": 17812,
+   "tris_before_decimation": 84313,
    "decimate_area_budget_k": 0.01,
-   "file_bytes": 1796940,
-   "build_s": 3.1
+   "file_bytes": 1808860,
+   "build_s": 2.7
   }
  },
  "tri_budget": {
@@ -3510,7 +3510,8 @@
    "11": "FOG",
    "12": "WORK",
    "13": "PLATE",
-   "14": "FOG_REAR"
+   "14": "FOG_REAR",
+   "15": "REFLEX"
   },
   "light_colours_linear": {
    "DRL": [
@@ -3582,6 +3583,11 @@
     1.0,
     0.03,
     0.01
+   ],
+   "REFLEX": [
+    0.0,
+    0.0,
+    0.0
    ]
   },
   "texel_density": {
@@ -3599,7 +3605,7 @@
     "uv_coverage": 0.466,
     "px_per_m": {
      "High": 278,
-     "Medium": 70,
+     "Medium": 69,
      "Low": 35
     }
    },

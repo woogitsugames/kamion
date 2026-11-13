@@ -705,8 +705,8 @@
    "tris_total": 88988,
    "tris_before_decimation": 108202,
    "decimate_area_budget_k": 422.42,
-   "file_bytes": 7274844,
-   "build_s": 6.7
+   "file_bytes": 7273996,
+   "build_s": 5.2
   },
   "LOD1": {
    "file": "art-source/truck/trailer/export/SM_Trailer_LOD1.fbx",
@@ -716,7 +716,7 @@
      "role": "CHASSIS",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 12633,
+     "tris": 12699,
      "materials": [
       "MI_Trl_Trim",
       "MI_Trl_Metal",
@@ -739,7 +739,7 @@
      "role": "CURTAIN_L",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1876,
+     "tris": 1867,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Curtain"
@@ -759,7 +759,7 @@
      "role": "CURTAIN_R",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1876,
+     "tris": 1868,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Curtain"
@@ -811,7 +811,7 @@
      "role": "DOOR_RL",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 376,
+     "tris": 372,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Paint"
@@ -843,7 +843,7 @@
      "role": "DOOR_RR",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 376,
+     "tris": 372,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Paint"
@@ -999,7 +999,7 @@
      "role": "WHEEL_1L",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1195,
+     "tris": 1189,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1033,7 +1033,7 @@
      "role": "WHEEL_1R",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1196,
+     "tris": 1190,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1067,7 +1067,7 @@
      "role": "WHEEL_2L",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1194,
+     "tris": 1188,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1101,7 +1101,7 @@
      "role": "WHEEL_2R",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1192,
+     "tris": 1186,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1135,7 +1135,7 @@
      "role": "WHEEL_3L",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1193,
+     "tris": 1185,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1162,14 +1162,14 @@
        "convention": "forward roll = positive angle about local +X"
       }
      },
-     "tyre_outer_radius_m": 0.5462,
+     "tyre_outer_radius_m": 0.5491,
      "width_m": 0.3903
     },
     "WHEEL_3R_LOD1": {
      "role": "WHEEL_3R",
      "rig_parent": "Trailer_LOD1",
      "fbx_parent": "Trailer_LOD1",
-     "tris": 1194,
+     "tris": 1187,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1385,11 +1385,11 @@
     }
    },
    "collision": {},
-   "tris_total": 24497,
+   "tris_total": 24499,
    "tris_before_decimation": 93414,
-   "decimate_area_budget_k": 67.08,
-   "file_bytes": 2142700,
-   "build_s": 6.1
+   "decimate_area_budget_k": 66.54,
+   "file_bytes": 2146268,
+   "build_s": 3.9
   },
   "LOD2": {
    "file": "art-source/truck/trailer/export/SM_Trailer_LOD2.fbx",
@@ -1399,7 +1399,7 @@
      "role": "CHASSIS",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 2894,
+     "tris": 3076,
      "materials": [
       "MI_Trl_Trim",
       "MI_Trl_Paint",
@@ -1453,7 +1453,7 @@
      "role": "CURTAIN_L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 302,
+     "tris": 212,
      "materials": [
       "MI_Trl_Curtain"
      ],
@@ -1472,7 +1472,7 @@
      "role": "CURTAIN_R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 303,
+     "tris": 212,
      "materials": [
       "MI_Trl_Curtain"
      ],
@@ -1553,7 +1553,7 @@
      "role": "LEG_L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 18,
+     "tris": 16,
      "materials": [
       "MI_Trl_Trim"
      ],
@@ -1584,7 +1584,7 @@
      "role": "LEG_R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 18,
+     "tris": 16,
      "materials": [
       "MI_Trl_Trim"
      ],
@@ -2063,11 +2063,11 @@
     }
    },
    "collision": {},
-   "tris_total": 7850,
-   "tris_before_decimation": 73706,
-   "decimate_area_budget_k": 20.61,
-   "file_bytes": 871212,
-   "build_s": 3.5
+   "tris_total": 7847,
+   "tris_before_decimation": 74162,
+   "decimate_area_budget_k": 14.47,
+   "file_bytes": 859724,
+   "build_s": 2.5
   }
  },
  "units": "metres",
@@ -2590,7 +2590,8 @@
    "11": "FOG",
    "12": "WORK",
    "13": "PLATE",
-   "14": "FOG_REAR"
+   "14": "FOG_REAR",
+   "15": "REFLEX"
   },
   "light_colours_linear": {
    "DRL": [
@@ -2662,6 +2663,11 @@
     1.0,
     0.03,
     0.01
+   ],
+   "REFLEX": [
+    0.0,
+    0.0,
+    0.0
    ]
   },
   "texel_density": {
