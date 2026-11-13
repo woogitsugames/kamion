@@ -29,3 +29,5 @@ Zapisano before/Low-overcast; każda kamera w stats.txt. Oględziny pozostają w
 Zapisano before/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano before/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano ablacją Low/baseline (). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
