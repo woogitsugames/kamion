@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading;
 using Game.Core;
 using Game.Platform;
 using UnityEngine;
@@ -66,6 +67,24 @@ namespace Game.Telemetry
         const float SensorInterval = 2f;
         const float FlushInterval = 2f;
         const float SummaryInterval = 5f;
+        /// <summary>ADR 0177: PSS period in the default (background) poll mode [s]. WORKING_VALUE.</summary>
+        public const float PssIntervalBg = 10f;
+
+        /// <summary>
+        /// ADR 0177: how the slow platform sensors are polled (launch argument <c>diag_poll</c>).
+        /// <c>bg</c> (default): battery / thermal status / headroom one per frame on consecutive frames, PSS on a background
+        /// thread every <see cref="PssIntervalBg"/> s. <c>main</c>: pre-0177 behaviour (all four, PSS included, on the main
+        /// thread in one frame every 2 s; A16: the frame after it was 5-16 of the 17-30 frames &gt; 40 ms of a gate-3 drive).
+        /// <c>off</c>: no sensor polling (A/B only).
+        /// </summary>
+        public enum PollMode { Background, Main, Off }
+        public PollMode Poll { get; private set; } = PollMode.Background;
+        int m_SensorStep;
+        float m_NextPss;
+        Thread m_PssThread;
+        AutoResetEvent m_PssWake;
+        volatile bool m_PssQuit;
+        long m_PssKbBg = -1;
 
         IPlatformServices m_Platform;
         FrameTimeStats m_Stats;
@@ -101,6 +120,44 @@ namespace Game.Telemetry
         public void Initialize(IPlatformServices platform)
         {
             m_Platform = platform ?? new DefaultPlatformServices();
+            string mode = null;
+            try { mode = m_Platform.GetLaunchArgument("diag_poll"); } catch (Exception) { }
+            Poll = mode == "main" ? PollMode.Main : mode == "off" ? PollMode.Off : PollMode.Background;
+            if (Poll == PollMode.Background) StartPssThread();
+            Debug.Log($"[DIAG] sensor poll mode={Poll} (diag_poll main|bg|off, ADR 0177)");
+        }
+
+        void StartPssThread()
+        {
+            if (m_PssThread != null) return;
+            m_PssWake = new AutoResetEvent(false);
+            m_PssThread = new Thread(PssLoop) { IsBackground = true, Name = "KamionDiagPss", Priority = System.Threading.ThreadPriority.BelowNormal };
+            m_PssThread.Start();
+        }
+
+        // ADR 0177: android.os.Debug.getPss() walks the process smaps (tens of ms with ~1 GB mapped); off the main thread.
+        void PssLoop()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            AndroidJNI.AttachCurrentThread();
+#endif
+            try
+            {
+                while (!m_PssQuit)
+                {
+                    m_PssWake.WaitOne();
+                    if (m_PssQuit) break;
+                    long? v = null;
+                    try { v = m_Platform.GetProcessPssKb(); } catch (Exception) { }
+                    Interlocked.Exchange(ref m_PssKbBg, v ?? -1);
+                }
+            }
+            finally
+            {
+#if UNITY_ANDROID && !UNITY_EDITOR
+                AndroidJNI.DetachCurrentThread();
+#endif
+            }
         }
 
         void Awake()
@@ -174,13 +231,24 @@ namespace Game.Telemetry
                 m_Snapshot.FrameIndex = m_Frame;
             }
 
-            if (now >= m_NextSensors && m_Platform != null)
+            if (m_Platform != null && Poll == PollMode.Main && now >= m_NextSensors)
             {
                 m_NextSensors = now + SensorInterval;
                 m_Snapshot.BatteryTempC = m_Platform.GetBatteryTemperatureC();
                 m_Snapshot.ThermalStatus = m_Platform.GetThermalStatus();
                 m_Snapshot.ThermalHeadroom = m_Platform.GetThermalHeadroom();
                 m_Snapshot.PssKb = m_Platform.GetProcessPssKb();
+            }
+            else if (m_Platform != null && Poll == PollMode.Background)
+            {
+                // One JNI query per frame (battery, thermal status, headroom), started one frame after the CSV flush.
+                if (m_SensorStep == 0 && now >= m_NextSensors) { m_NextSensors = now + SensorInterval; m_SensorStep = 1; }
+                else if (m_SensorStep == 1) { m_Snapshot.BatteryTempC = m_Platform.GetBatteryTemperatureC(); m_SensorStep = 2; }
+                else if (m_SensorStep == 2) { m_Snapshot.ThermalStatus = m_Platform.GetThermalStatus(); m_SensorStep = 3; }
+                else if (m_SensorStep == 3) { m_Snapshot.ThermalHeadroom = m_Platform.GetThermalHeadroom(); m_SensorStep = 0; }
+                if (now >= m_NextPss) { m_NextPss = now + PssIntervalBg; m_PssWake?.Set(); }
+                long pss = Interlocked.Read(ref m_PssKbBg);
+                m_Snapshot.PssKb = pss >= 0 ? pss : (long?)null;
             }
 
             if (now >= m_NextFlush || m_PendingCount == m_PendingFrame.Length)
@@ -272,6 +340,8 @@ namespace Game.Telemetry
 
         void OnDestroy()
         {
+            m_PssQuit = true;
+            m_PssWake?.Set();
             FlushCsv();
             m_Csv?.Dispose();
             m_Csv = null;

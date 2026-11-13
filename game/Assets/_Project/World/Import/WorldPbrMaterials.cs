@@ -603,7 +603,7 @@ namespace Game.World.Import
         // safely provide their existing texture/UV path without editing the generic prototype importer.
         static void FurnitureSignFronts(RegionImporter.Result r, Dictionary<string, object> settings)
         {
-            string meta = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "props", "props_meta.json");
+            string meta = WorldLibrary.Resolve(r.Region, "props", "props_meta.json");
             var prototypes = Obj(Obj(Parse(File.ReadAllText(meta))).Get("prototypes"));
             var faces = new HashSet<string>(StringComparer.Ordinal);
             foreach (var proto in prototypes.Values)
@@ -631,7 +631,7 @@ namespace Game.World.Import
         {
             if (id != "sign_" + face || !System.Text.RegularExpressions.Regex.IsMatch(face, @"^[A-Z][A-Za-z0-9_-]*$"))
                 throw new InvalidOperationException("Invalid explicitly flagged furniture sign face");
-            string png = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "signs", face + ".png");
+            string png = WorldLibrary.Resolve(r.Region, "signs", face + ".png");
             if (!File.Exists(png)) throw new FileNotFoundException("Flagged furniture sign texture missing", png);
             var tex = InstanceImporter.ImportTexture(r, png, clamp: true);
             var c = Arr(def.Get("color"));
@@ -669,7 +669,7 @@ namespace Game.World.Import
             string texture = detail.Get("texture") as string ?? "furniture_plinth";
             if (texture != "furniture_plinth") throw new InvalidOperationException("Unexpected furniture plinth texture");
             var scan = InstanceImporter.ImportTexture(r,
-                Path.Combine(EditorTools.RepoRoot, "art-source", "world", "textures", texture + ".png"), clamp: false);
+                WorldLibrary.Resolve(r.Region, "textures", texture + ".png"), clamp: false);
             mat.SetTexture("_FurnitureMap", scan);
             mat.SetVector("_FurnitureDetail", new Vector4(
                 Mathf.Max(0.01f, (float)Num(detail.Get("tile_m"))),

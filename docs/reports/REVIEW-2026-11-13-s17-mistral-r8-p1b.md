@@ -59,3 +59,13 @@ Przegląd ZAKOŃCZONY. Lider: wkleić blok **M46-FIX** (koniec `docs/owner/MISTR
 | P1B-004 | Olsztyńska, jezdnia (Commons CC0, z jezdni) | 53.149151, 23.151119 | UNVERIFIED | 2022-12-03, śnieg |
 
 Uwaga: kadry Al. Tysiąclecia 2018 są sprzed przebudowy 2021/22 — używać do geometrii wiaduktów/skrzyżowań, nie do oznakowania i zieleni.
+
+## Ponowny przegląd po M46-FIX (s17, commit `398d5ae3f`)
+**Werdykt: PRZYJĘTA (do scalenia).** Wszystkie punkty M46-FIX wykonane; przypisanie kadrów jest teraz zgodne z OSM i z obrazem.
+- **Zakres:** `git diff --stat origin/main...` = 5 plików, tylko `research/mistral/p1-route-photos-2/`, 404 linie — zgodne z surowym wyjściem w komentarzu PR. Manifest 48 wierszy: **32 OK / 10 ODRZUCONE / 4 DUPLIKAT_P1 / 2 REFERENCJA** (policzone, zgodne z README i PR).
+- **(1) Reguła 25 m + 30°:** opisana w README §1; kolumny `os_way_id`, `delta_azymutu_deg` są. Przeliczenie na lokalnym `podlaskie-261108.osm.pbf` (pyosmium, 40 067 ways highway w bbox 53.10–53.20 N, 23.05–23.25 E) dla **18 wierszy** (001, 002, 003, 004, 009, 010, 013, 016, 019, 022, 024, 028, 030, 033, 044, 046, 047, 048): way, odległość i Δ zgodne z manifestem co do ≤ 0,3 m / ≤ 0,4°. Najbliższe ways o Δ > 30° (łącznica 177948307 przy 001: 1,3 m/Δ 51°; Kombatantów przy 022: 1,7 m/Δ 89°; Motoszko przy 028: 6,4 m/Δ 26°, dalej niż Al. Tysiąclecia 5,7 m/Δ 2°) poprawnie odrzucone.
+- **(2) Opisy po obejrzeniu:** obejrzane **16 JPG** z ZIP v2 (001, 002, 005, 009, 013, 017, 022, 024, 028, 030, 033, 038, 044, 046, 047, 048) — 16/16 opisów zgodnych z treścią (np. 001 drogowskaz Kuźnica/Ełk + limit 70; 028 autobus 130 + billboard Metal Max + INTRAT; 030 baner „WYNAJMĘ”; 048 silos + pasiasty komin, estakada; 047 deszcz, ciężarówka, sosny). Fałszywe „przy nr 2”/„na krawędzi ringu” usunięte.
+- **(3) Luki:** luka 4 = 0/9, Batorego = 0, rondo = 0 slotów z poziomu kierowcy (sloty przedefiniowane wg OSM: ring pod estakadą, łącznice SE/NW, Bitwy); wynik negatywny z liczbami (KV 554 kadrów, Panoramax 186, Commons 586).
+- **(4) Duplikaty P1:** 034/036/037/042 → `DUPLIKAT_P1` z numerem P1 ✓. **(5)** Rakoon zamiast „Hollyfeld” ✓ (wzmianka tylko jako erratum v1); P1B-005 jakość 2 ✓ (obejrzany: silne rozmycie).
+- **Decyzje właściciela:** P1B-016 ODRZUCONE (obraz niedostępny) ✓; KV 7119871 = P1B-048 **REFERENCJA** ✓ — formalnie 2D-reguła wskazuje ring (9,6 m/Δ 29,2°, potwierdzone), ale obraz pokazuje estakadę → poprawnie nie OK. Drobiazg bez wpływu: `os_way_id` P1B-048 = ring 536419699, a `ulica` = Andersa (opisane w uwagach).
+- **(6) Audyt:** nowy seed 20261114, 10 wierszy z „co widać” + ulica OSM + Δ ✓. ZIP v2: 46 JPG (bez 016/043 — niedostępne) ✓.

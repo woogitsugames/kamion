@@ -435,6 +435,7 @@ def materials():
     P("reflex_yellow", "TRIM", (0.80, 0.55, 0.02), 0.28, spec=0.6)
     P("reflex_red", "TRIM", (0.55, 0.02, 0.015), 0.28, spec=0.6)
     P("reflex_white", "TRIM", (0.80, 0.80, 0.78), 0.28, spec=0.6)
+    P("reflex_amber", "TRIM", (0.85, 0.36, 0.02), 0.22, spec=0.6)
     # floor edge (phenolic-coated plywood) and dock buffers
     P("plywood", "TRIM", (0.10, 0.065, 0.035), 0.6)
     # R70 rear marking plates: red fluorescent / yellow retro-reflective diagonal stripes (image)
@@ -458,14 +459,13 @@ def trailer_plate_image():
     """Fictional Polish trailer plate (TRAKT plate layout, other registration)."""
     W, H = 1040, 228
     blue, yellow, k = (0.0, 0.06, 0.40), (0.95, 0.75, 0.0), (0.02, 0.02, 0.02)
-    items = [("PL", 58, 52, 52, 0, (1, 1, 1), 0.02, "CENTER"),
+    items = [("PL", 65, 52, 52, 0, (1, 1, 1), 0.02, "CENTER"),
              ("BI 8N402", 590, 112, 170, 0, (0.01, 0.01, 0.01), 0.035, "CENTER")]
-    shapes = [("band", [(8, 8), (110, 8), (110, 220), (8, 220)], blue),
-              ("b", [(0, 0), (W, 0), (W, 6), (0, 6)], k), ("b", [(0, H - 6), (W, H - 6), (W, H), (0, H)], k),
-              ("b", [(W - 6, 0), (W, 0), (W, H), (W - 6, H)], k), ("b", [(0, 0), (6, 0), (6, H), (0, H)], k)]
+    # ADR 0175: 520 x 114 mm plate, R10 corners, frame 7 mm from the edge (M.plate_frame_shapes)
+    shapes = [("band", [(20, 20), (110, 20), (110, 208), (20, 208)], blue)] + M.plate_frame_shapes(W, H, rgb=k)
     for j in range(12):
         a = 2 * math.pi * j / 12
-        sx, sy = 59 + 30 * math.cos(a), 150 + 30 * math.sin(a)
+        sx, sy = 65 + 30 * math.cos(a), 150 + 30 * math.sin(a)
         shapes.append(("star", [(sx + (6.5 if i % 2 == 0 else 2.6) * math.cos(math.pi / 2 + i * math.pi / 5),
                                  sy + (6.5 if i % 2 == 0 else 2.6) * math.sin(math.pi / 2 + i * math.pi / 5))
                                 for i in range(10)], yellow))
@@ -475,11 +475,13 @@ def trailer_plate_image():
 def r70_image():
     """Rear marking plate of a TRAILER (UN R70 class 2/4 look): retro-reflective yellow field with a fluorescent red
     border - the oblique yellow/red chevrons belong to trucks and tractors, not to trailers and semi-trailers.
-    WORKING_VALUE: border = 22 % of the plate height (R70 text not opened; plate here 565 x 110 mm)."""
+    ADR 0175: plate 565 x 200 mm (R70 annex 12 via research/gptpro/p4 + REVIEW s17 r8 p4: width 200 +30/-5 mm, total
+    length 1130-2300 mm -> 2 x 565). WORKING_VALUE: red border 40 mm = 20 % of the plate height (drawing of WT annex 10
+    / R70 not opened - 'O' in the review table)."""
     import numpy as np
-    w, h = 512, 128
+    w, h = 512, 180
     y, x = np.mgrid[0:h, 0:w]
-    bw = int(h * 0.22)
+    bw = int(h * 0.20)
     img = np.zeros((h, w, 3))
     img[:] = (0.86, 0.66, 0.03)
     # honeycomb cells of the retro-reflective sheeting (faint, reads only close up)
@@ -661,13 +663,14 @@ def frame():
         r = extrude_poly(f"side_rail_{s}", pts, LEN - 0.02, "trl_chassis", plane="XZ",
                          origin=(0, Y_FRONT - 0.01, 0), normal_sign=-1)
         r.data.shade_flat()
-        # side line marking (UN R48 6.21, UN R104 class C retro-reflective tape, yellow, 50 mm) along the rail face,
-        # interrupted only where the curtain buckles hook under the rail (90 mm gaps at the straps): the elements
-        # cover ~85 % of the body length (R48 6.21.4: >= 80 % - UNVERIFIED, regulation text not opened here)
+        # side marking (UN R48 6.21.1.2 partial contour, UN R104 class C tape, yellow, 60 mm: R48 6.21.7.5 >= 60 mm in
+        # research/gptpro/p4 P4-079, R104 50 +10/-0 mm) along the rail face, interrupted only where the curtain buckles
+        # hook under the rail (90 mm gaps at the straps): cumulative length >= 70 % of the body (R48 6.21.4.1.2,
+        # measured by tools/blender/truck/regs_check.py). The upper corner marks sit on the curtain (curtain_side)
         st = strap_positions()
         for k in range(len(st) - 1):
             box_mm(f"contour_side_{s}_{k}", s * (RAIL_OUT + 0.0008), s * (RAIL_OUT + 0.0018), st[k + 1] + 0.045,
-                   st[k] - 0.045, 1.125, 1.175, "reflex_yellow")
+                   st[k] - 0.045, 1.12, 1.18, "reflex_yellow")
         # lashing pockets under the rail lip (every ~0.6 m)
         for j in range(21):
             yy = Y_FRONT - 0.5 - j * 0.62
@@ -1026,6 +1029,17 @@ def front_wall():
         box_mm(f"stalk_lens_w_{s}", s * 1.375, s * 1.425, Y_FRONT - 0.166, Y_FRONT - 0.162, 3.905, 3.955,
                "lens_white_o")
         box_mm(f"stalk_lens_r_{s}", s * 1.375, s * 1.425, Y_FRONT - 0.238, Y_FRONT - 0.234, 3.905, 3.955, "lens_red_o")
+        # ADR 0175: front position lamp (white, UN R48 6.9: trailers wider than 1.6 m, <= 150 mm from the side, height
+        # <= 1500 mm - the lamps above are end-outline markers at 3.9 m) over a white front retro-reflector (R48 6.16:
+        # <= 150 mm from the side; 250-900 mm, up to 1500 mm where the structure leaves nothing lower - the bulkhead
+        # starts at the 1.28 m deck). One moulded unit on the bottom rail, inboard of the corner post so that it stays
+        # inside the 2.04 m front swing radius (r = 2.00 m)
+        box_mm(f"front_lamp_body_pos_{s}", s * 1.055, s * 1.17, Y_FRONT - 0.015, Y_FRONT + 0.022, 1.335, 1.445,
+               "lamp_body", bev=0.006)
+        box_mm(f"front_lamp_lens_pos_{s}", s * 1.065, s * 1.16, Y_FRONT + 0.022, Y_FRONT + 0.027, 1.395, 1.437,
+               "lens_white_o")
+        box_mm(f"front_reflex_{s}", s * 1.065, s * 1.16, Y_FRONT + 0.022, Y_FRONT + 0.026, 1.343, 1.387,
+               "reflex_white")
     part("CHASSIS", "body")
 
 
@@ -1072,7 +1086,8 @@ def rear_portal_and_doors():
     for s in (-1, 1):
         box_mm(f"rear_post_{s}", s * POST_IN, s * 1.275, yo, yo + 0.12, FLOOR + 0.02, ROOF - 0.005, "galv", bev=0.006)
         # contour marking (red) on the post faces
-        box_mm(f"contour_rear_post_{s}", s * 1.19, s * 1.24, yo - 0.0012, yo - 0.0002, FLOOR + 0.10, 3.82, "reflex_red")
+        box_mm(f"contour_rear_post_{s}", s * 1.185, s * 1.245, yo - 0.0012, yo - 0.0002, FLOOR + 0.10, 3.82,
+               "reflex_red")
         # hinge barrels on the post (4)
         for z in (1.55, 2.30, 3.05, 3.70):
             cyl(f"hinge_barrel_{s}_{z}", (s * (POST_IN + 0.012), yo - 0.014, z), 0.016, 0.085, "galv", axis="Z",
@@ -1087,12 +1102,13 @@ def rear_portal_and_doors():
         box_mm(f"rear_marker_lens_{s}", s * 1.16, s * 1.245, yo - 0.035, yo - 0.03, 3.912, 3.968, "lens_red_o")
         part("CHASSIS", "body")
     box_mm("rear_header", -POST_IN, POST_IN, yo, yo + 0.12, DOOR_Z1 + 0.01, ROOF - 0.005, "galv", bev=0.006)
-    box_mm("contour_rear_header", -1.10, 1.10, yo - 0.0012, yo - 0.0002, 3.905, 3.955, "reflex_red")
+    box_mm("contour_rear_header", -1.10, 1.10, yo - 0.0012, yo - 0.0002, 3.90, 3.96, "reflex_red")
     # lower horizontal of the rear full contour (UN R48 6.21: full contour at the rear of O3/O4 wider than 2.10 m),
-    # red on the sill face, broken at the 4 door keepers
+    # red on the sill face, broken at the 4 door keepers. ADR 0175: 60 mm tape, raised to 1.19-1.25 m so that it is
+    # more than 200 mm from the stop lamps (R48 6.21.7.3; it was 178 mm)
     xs = [-1.17, -0.90, -0.82, -0.30, -0.22, 0.22, 0.30, 0.82, 0.90, 1.17]
     for j in range(0, len(xs), 2):
-        box_mm(f"contour_rear_sill_{j}", xs[j], xs[j + 1], Y_REAR + 0.0105, Y_REAR + 0.0118, 1.17, 1.22,
+        box_mm(f"contour_rear_sill_{j}", xs[j], xs[j + 1], Y_REAR + 0.0105, Y_REAR + 0.0118, 1.19, 1.25,
                "reflex_red")
     for s, sd in ((1, "RR"), (-1, "RL")):
         part(f"DOOR_{sd}", "body")
@@ -1170,29 +1186,31 @@ def rear_lamps_and_rup():
         rod(f"rup_brace_{s}", (s * BEAM_X, yo + 0.12, 0.52), (s * BEAM_X, yo + 0.85, beam_bottom(yo + 0.85) + 0.01),
             0.025, "galv", seg=8)
         # R70 rear marking plates on the bar
-        G.plate_uv(box_mm(f"r70_plate_{s}", s * 0.60, s * 1.165, yo + 0.016, yo + 0.020, 0.43, 0.54, "r70"),
+        G.plate_uv(box_mm(f"r70_plate_{s}", s * 0.60, s * 1.165, yo + 0.016, yo + 0.020, 0.355, 0.555, "r70"),
                    facing=-1)     # normalised UV: the red border must frame the plate, not tile across it
         # lamp panel under the sill
-        box_mm(f"lamp_panel_{s}", s * 0.60, s * 1.24, yo + 0.03, yo + 0.04, 0.80, 1.08, "trl_chassis", bev=0.003)
+        box_mm(f"lamp_panel_{s}", s * 0.60, s * 1.24, yo + 0.03, yo + 0.04, 0.68, 1.08, "trl_chassis", bev=0.003)
         box_mm(f"lamp_panel_side_{s}", s * 1.23, s * 1.24, yo + 0.04, yo + 0.20, 0.80, 1.08, "trl_chassis")
     # combination lamps (LED): housing + chambers; L/R mirrored, rear fog + reverse
     part("CHASSIS", "lamps")
     for s, sd in ((-1, "L"), (1, "R")):
         x0, x1 = s * 0.66, s * 1.18
         lo, hi = min(x0, x1), max(x0, x1)
-        zc = 0.94
+        zc = 0.92           # ADR 0175: lens top 0.986 m (rear fog lamp <= 1.00 m, R48 6.11.4.2; it was 1.006)
         box_mm(f"rear_lamp_body_{sd}", lo, hi, yo - 0.045, yo + 0.03, zc - 0.085, zc + 0.085, "lamp_body", bev=0.01)
         # one continuous multi-colour lens moulding (as on real trailer combination lamps): the sections butt against
         # each other with no bezel between them and share ONE pillow-crowned outer surface; only a thin housing lip
-        # frames the whole lens. From the outside in: indicator (amber), tail/stop (red), reverse (white, right) or
-        # fog (red, left only). Section widths 30/25/25/20 % of the lens.
+        # frames the whole lens. ADR 0175, from the outside in: indicator (amber), tail, stop (red), reverse (white;
+        # two reversing lamps are mandatory on a trailer longer than 6 m, R48 6.4.2.2), rear fog (red). The reverse
+        # section (106 mm) keeps the fog lamp more than 100 mm from the stop lamp (R48 6.11.9; they used to touch).
+        # Section widths 24/17/17/22/20 % of the lens.
         la, lb = lo + 0.018, hi - 0.018
         za, zb = zc - 0.066, zc + 0.066
         box_mm(f"rear_lamp_lip_{sd}", lo + 0.008, hi - 0.008, yo - 0.052, yo - 0.044, zc - 0.074, zc + 0.074,
                "lamp_body", bev=0.003)
-        fr = [0.30, 0.25, 0.25, 0.20]
-        kinds = ["lens_amber_o", "lens_red_o", "lens_red_o", "lens_white_o" if s > 0 else "lens_red_o"]
-        names = ["ind", "tail", "stop", "rev" if s > 0 else "fog"]
+        fr = [0.24, 0.17, 0.17, 0.22, 0.20]
+        kinds = ["lens_amber_o", "lens_red_o", "lens_red_o", "lens_white_o", "lens_red_o"]
+        names = ["ind", "tail", "stop", "rev", "fog"]
         W = lb - la
         edge = 0.0
         for k, (mname, nm) in enumerate(zip(kinds, names)):
@@ -1203,7 +1221,7 @@ def rear_lamps_and_rup():
                 a, b = la + edge, la + edge + w
             edge += w
             box_mm(f"rear_lens_{nm}_{sd}", a, b, yo - 0.056, yo - 0.048, za, zb, mname, bev=0.0015, seg=1)
-            nx, nz = max(3, int(round(10 * w / (W * 0.25)))), 6
+            nx, nz = max(3, int(round(8 * w / (W * 0.25)))), 6
             rows = []
             for iz in range(nz + 1):
                 tz = iz / nz
@@ -1219,9 +1237,10 @@ def rear_lamps_and_rup():
             for j in range(3):
                 zz = zc - 0.04 + 0.04 * j
                 cyl(f"rear_led_{nm}_{sd}_{j}", ((a + b) / 2, yo - 0.0545, zz), 0.010, 0.002, mname, axis="Y", seg=12)
-        # triangular retro-reflector (red) inboard of the lamp
-        xt = s * 0.54
-        tri = [(xt - 0.075, 0.82), (xt + 0.075, 0.82), (xt, 0.95)]
+        # triangular retro-reflector (red, apex up) under the lamp. ADR 0175: outer corner 150 mm from the side
+        # (R48 6.15.4: <= 400 mm; it was 660 mm, inboard of the lamp), top 0.83 m (<= 0.90 m; it was 0.95 m)
+        xt = s * 1.05
+        tri = [(xt - 0.075, 0.70), (xt + 0.075, 0.70), (xt, 0.83)]
         extrude_poly(f"tri_reflector_{sd}", tri, 0.006, "lens_red_o", plane="XZ", origin=(0, yo + 0.026, 0),
                      normal_sign=-1).data.shade_flat()
     # number plate (fictional PL trailer plate) + plate lamp
@@ -1232,13 +1251,19 @@ def rear_lamps_and_rup():
     part("CHASSIS", "lamps")
     box_mm("plate_lamp_body", -0.06, 0.06, yo - 0.02, yo + 0.026, 0.94, 0.975, "lamp_body", bev=0.006)
     box_mm("plate_lamp_lens", -0.045, 0.045, yo - 0.012, yo + 0.01, 0.936, 0.940, "lens_white_o")
-    # side marker lamps (amber LED) on the rail, ~every 2.6 m (ECE R48 spacing <= 3 m), + amber reflectors
+    # side marker lamps (amber LED) on the rail. ADR 0175: spacing <= 3 m (R48 6.18.4.3; -4.1 -> axle 2 was 3.6 m),
+    # first 0.65 m from the front (<= 3 m), last 0.45 m from the rear (<= 1 m); the two in the bogie sit between
+    # the tyres. Each unit carries an amber retro-reflector beside the lens (R48 6.17: side reflectors mandatory,
+    # same spacing rule; height 1.03-1.06 m: 'not more than 1,200 mm if grouped with any lamp(s)', R48 rev.12 6.17
+    # in research/gptpro/p4-truck-regulations/files/P4-001.pdf) - there was one reflector per side
     for s in (-1, 1):
-        for k, yy in enumerate([Y_FRONT - 0.65, -1.4, -4.1, AXLES[1], -10.4, Y_REAR + 0.45]):
+        for k, yy in enumerate([Y_FRONT - 0.65, -1.55, -4.05, (AXLES[0] + AXLES[1]) / 2, -9.58, Y_REAR + 0.45]):
             box_mm(f"side_marker_brk_{s}_{k}", s * (RAIL_OUT - 0.06), s * (RAIL_OUT - 0.04), yy - 0.03, yy + 0.03,
                    1.03, 1.085, "galv")
             box_mm(f"side_marker_body_{s}_{k}", s * (RAIL_OUT - 0.045), s * (RAIL_OUT - 0.005), yy - 0.055,
-                   yy + 0.055, 1.025, 1.07, "lamp_body", bev=0.004)
+                   yy + 0.125, 1.025, 1.07, "lamp_body", bev=0.004)
+            box_mm(f"side_marker_reflex_{s}_{k}", s * (RAIL_OUT - 0.005), s * (RAIL_OUT - 0.0025), yy + 0.055,
+                   yy + 0.115, 1.032, 1.063, "reflex_amber")
             box_mm(f"side_marker_lens_{s}_{k}", s * (RAIL_OUT - 0.005), s * (RAIL_OUT - 0.002), yy - 0.045,
                    yy + 0.045, 1.032, 1.063, "lens_amber_o")
     part("CHASSIS", "frame")
@@ -1384,7 +1409,34 @@ def curtain_side(s, sd, hi=False):
                ysx - 0.018, ysx + 0.018, 1.14, HEM_TOP - 0.045, "galv", bev=0.0015, seg=1)
         box_mm(f"buckle_hook_{sd}_{k}", min(s * 1.205, s * (CURT_X + 0.004)), max(s * 1.205, s * (CURT_X + 0.004)),
                ysx - 0.012, ysx + 0.012, 1.075, 1.085, "galv")
-    # roller trolleys peeking under the top rail
+    # ADR 0175: upper corner marks of the partial side contour (UN R48 6.21.1.2.2.1 + 6.21.7.2: line + each upper
+    # corner described by two lines at 90 deg, each >= 250 mm; yellow class C tape for flexible substrates, 60 mm).
+    # They lie on the curtain, just inboard of the end strap (the corner post / tension pole cover the curtain's
+    # last 0.15 m): the strips are cut on the low mesh's own grid lines and sit 3 mm proud of ITS facets (the fine
+    # shape function dips below the coarse facets, a tape sampled from it showed holes)
+    part("CHASSIS", "body")       # static like the curtain; CHASSIS so that the curtain parts keep two materials
+
+    def low_x(y, z):
+        j = max(k for k in range(len(yl) - 1) if yl[k] >= y - 1e-9)
+        i = max(k for k in range(len(zl) - 1) if zl[k] <= z + 1e-9)
+        ty, tz = (yl[j] - y) / (yl[j] - yl[j + 1]), (z - zl[i]) / (zl[i + 1] - zl[i])
+        f = lambda yy, zz: soft_cap(curtain_offset(yy, zz, bays, True))     # noqa: E731
+        return ((f(yl[j], zl[i]) * (1 - ty) + f(yl[j + 1], zl[i]) * ty) * (1 - tz)
+                + (f(yl[j], zl[i + 1]) * (1 - ty) + f(yl[j + 1], zl[i + 1]) * ty) * tz)
+
+    def tape(nm, ya, yb, za, zb):
+        ya, yb = max(ya, yb), min(ya, yb)
+        cols_ = [ya] + [yc for yc in yl if yb + 1e-4 < yc < ya - 1e-4] + [yb]
+        rows_ = [za] + [zc for zc in zl if za + 1e-4 < zc < zb - 1e-4] + [zb]
+        rows = [[V((s * (CURT_X + low_x(y, z) + 0.003), y, z)) for y in cols_] for z in rows_]
+        sheet(nm, rows, "reflex_yellow", flip=(s > 0), smooth=True)
+
+    for end, d, strap in (("f", -1, straps[0]), ("r", 1, straps[-1])):
+        edge = strap + d * 0.030
+        za, zb = 3.80, 3.86
+        tape(f"contour_corner_{sd}_{end}h", edge, edge + d * 0.31, za, zb)
+        tape(f"contour_corner_{sd}_{end}v", edge, edge + d * 0.06, za - 0.25, za)
+    part(f"CURTAIN_{sd}", "curtain")
     return obs
 
 
