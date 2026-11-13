@@ -32,6 +32,48 @@ def test_build_world_hashes_lf_normalised():
     assert 'sha(p.read_bytes().replace(b"\\r\\n", b"\\n"))' in src
 
 
+def _place(blocked):
+    from types import SimpleNamespace
+
+    import numpy as np
+
+    from streetscape import vegetation as VG
+    sq = [[[0, 0], [120, 0], [120, 120], [0, 120], [0, 0]]]
+    feat = lambda i, **p: {"id": i, "props": p, "geometry": {"coordinates": sq}}  # noqa: E731
+    src = {"bdot10k": {"OT_PTLZ_A": [feat("PL.TEST.LAS.1", kategoria="mieszany", rodzaj="las")],
+                       "OT_PTRK_A": [], "OT_OIPR_P": [], "OT_OIPR_L": [], "OT_PTNZ_A": [feat("PL.TEST.NZ.1")],
+                       "OT_PTTR_A": []},
+           "osm": {"nodes": []}}
+    hf = SimpleNamespace(x0=0.0, y1=float(blocked.shape[0] - 1))
+    zc = np.zeros(blocked.shape, np.float32)
+    trees, _ = VG.place(src, (0.0, 0.0), hf, zc, blocked, {}, overrides=[])
+    return trees
+
+
+def test_vegetation_local_edit_stays_local():
+    """A small new blocked patch (kerb / paved area) only removes the trees on it: every tree further than the
+    thinning radius keeps its position, species, height, variant, yaw and lean (ADR 0173)."""
+    import numpy as np
+
+    free = np.zeros((131, 131), bool)
+    edit = free.copy()
+    edit[131 - 1 - 25:131 - 1 - 15, 15:25] = True        # rows = north (j = y1 - n), cols = east: e 15..25, n 15..25
+    a, b = _place(free), _place(edit)
+    far = lambda t: not (12.0 <= t["e"] <= 28.0 and 12.0 <= t["n"] <= 28.0)  # noqa: E731
+    key = lambda t: (t["src"], t["e"], t["n"])  # noqa: E731
+    fa = sorted((t for t in a if far(t)), key=key)
+    fb = sorted((t for t in b if far(t)), key=key)
+    assert len(a) > 200 and len(b) < len(a)
+    assert fa == fb
+
+
+def test_vegetation_two_runs_identical():
+    import numpy as np
+
+    g = np.zeros((131, 131), bool)
+    assert json.dumps(_place(g)) == json.dumps(_place(g))
+
+
 def test_compare_world_classifies(tmp_path):
     a, b = tmp_path / "a", tmp_path / "b"
     a.mkdir()

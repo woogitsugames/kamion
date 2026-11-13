@@ -132,14 +132,22 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         if not len(P):
             return
         good, z = ok(P)
-        for (x, y), zz, sp, g in zip(P, z, species, good):
+        # ADR 0173: the attributes of every candidate point are drawn up front, in the order of the points, so a tree
+        # dropped by the clearance test (a new kerb, paved area or building nearby) no longer shifts the random
+        # stream of every later tree of the same BDOT feature / group (trees changed far outside an edited spot)
+        n = len(P)
+        U = rng.uniform(0.0, 1.0, n)
+        V = rng.integers(0, 3, n)
+        YAW = rng.uniform(0, 6.2832, n)
+        LEAN = rng.uniform(0, 0.05, n)
+        for k, ((x, y), zz, sp, g) in enumerate(zip(P, z, species, good)):
             if not g:
                 continue
             lo, hi = HEIGHT[sp]
-            h = rng.uniform(lo, hi) * hscale
-            out.append({"p": f"tree_{sp}", "v": int(rng.integers(0, 3)), "e": round(float(x), 2), "n": round(float(y), 2),
-                        "z": round(float(zz), 2), "h": round(float(h), 1), "yaw": round(float(rng.uniform(0, 6.2832)), 3),
-                        "lean": round(float(rng.uniform(0, 0.05)), 3), "src": src_id})
+            h = (lo + (hi - lo) * U[k]) * hscale
+            out.append({"p": f"tree_{sp}", "v": int(V[k]), "e": round(float(x), 2), "n": round(float(y), 2),
+                        "z": round(float(zz), 2), "h": round(float(h), 1), "yaw": round(float(YAW[k]), 3),
+                        "lean": round(float(LEAN[k]), 3), "src": src_id})
             if fk:
                 out[-1]["fk"] = fk          # forest stand tree (texture mix of the forest HLOD, forest_hlod.py)
 
