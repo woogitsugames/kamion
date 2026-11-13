@@ -13,6 +13,7 @@
 - **Mistral:** właściciel: „Mistral wypuszcza na GitHub” (23:2x) — na starcie s20 `git fetch` + `gh pr list`. Do przejrzenia: **M47-FIX-2** 3da410039 (`research/mistral-p11-dojlidy-photos`, 43 opisy znaków — obejrzeć kadry), **M52-FIX-3** (`research/mistral-p2-surfaces-2`, cz. 1 1533368db — czekać na „gotowe”). Do wklejenia przez właściciela: `docs/owner/MISTRAL-FIXES-10.md` (M51-FIX-2, M53-FIX-2), `docs/owner/MISTRAL-TASKS-9.md` (M56–M61, kolejność M61→M59→M58→M56→M57→M60). #42 nie scalamy. ZIP-y w `research/_incoming/*-files-v2/v3`.
 - **Follow-upy niezlecone:** 0179 (Rosti, drzewa narożnika, kadr 063, K3, DDR, brama P11-129, kamera pasa startowego, las), 0180 P2 (NW LOD skok, rama okien szczytu, szkło SE, szczyt kremowy, maszty, SE w cieniu), 0182 P1-4 plamy latarni (rozsył/rozstaw) + P2 okna nocą/magenta/rozbłysk.
 - **Telefony:** A16 i S24+ online (A16 bateria 80 %). **Decyzje właściciela otwarte:** metryka „≤ 12 klatek > 40 ms / przejazd G3 A16 Low” (ADR 0177); odsłuch A/B audio 0176.
+- **23:4x: limit ~91 % — wszyscy agenci dostali polecenie: bezpieczny punkt, WIP + push + live z NASTĘPNYM KROKIEM, koniec. Zadania w tle mogą jeszcze działać — sprawdzić procesy po ścieżce worktree przed wznowieniem.**
 - **Fable zawieszał się (watchdog 600 s) przy długim czekaniu na łańcuchy w tle — domykanie (testy/ADR) dawać Opus.** **Ostatni przydzielony ADR: 0184.**
 
 # SESJA 19 (start 2026-11-13 20:2x lokalnie; nowe konto: 5 h 0 % — reset 01:20; tydzień 0 %, Fable 0 %) — nowa sesja: czytaj TEN blok, potem „STOP S18”
