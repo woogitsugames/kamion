@@ -26,6 +26,7 @@ from . import depot_yard as DY
 from . import hero_building as HBD
 from . import hero_depot as HD
 from . import landmarks as LM
+from . import chain_bollards as CB
 from . import gate3_landmarks as G3
 from . import life as LF
 from . import paved as PV
@@ -236,6 +237,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.clear_under_decks(pl, w.buf.parts, frep)
     FU.clear_level_carriageways(pl, w.buf.parts, frep)
     FU.lamp_rows(pl, w.buf.parts, pipeline.REGIONS / rid / "lamp_rows.json", frep)   # ADR 0133: authored rows
+    CB.apply(pl, overrides, origin, frep)                        # ADR 0183: authored rows of chain posts
     frep["poles_reseated"] = pl.reseated
     frep["pole_footing_steps"] = {"count": len(pl.seat_log), "max_m": max([r["step_m"] for r in pl.seat_log], default=0.0),
                                   "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}

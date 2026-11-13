@@ -721,3 +721,9 @@ M["paint_ral3020"] = {"color": [0.55, 0.012, 0.009], "rough": 0.5}
 for _k in ("shelter_paint", "paint_ral1012", "paint_ral3020"):
     M[_k].setdefault("sky_occ", SKY_OCC_STRUCT)
 M["shelter_glass_clear"].setdefault("sky_occ", SKY_OCC_GLASS)
+
+
+# ADR 0183 (additive): red-white blocking posts with chains (streetscape.chain_bollards) - ONE alpha-clip atlas for
+# the post, its eyelets and both chains, colours in the texture (sRGB). Satin foil / paint, no metal (WORKING_VALUE).
+M["chain_bollard"] = {"color": [1.0, 1.0, 1.0], "rough": 0.5, "texture": "chain_bollard", "alpha_cutoff": 0.5,
+                      "sky_occ": SKY_OCC_STRUCT}

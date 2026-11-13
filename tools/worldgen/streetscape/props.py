@@ -841,6 +841,8 @@ def build_all(sign_codes, boards):
     from . import life_props as LP
     P.update(LP.build_all())
     P.update(LP.build_registered())
+    from . import chain_bollards as CB          # ADR 0183: red-white posts with chains
+    P.update(CB.prototypes())
     from . import gate3_landmarks as G3          # ADR 0125: sign assemblies registered by gate3_landmarks.build
     P.update(G3.prototypes())
     return P
