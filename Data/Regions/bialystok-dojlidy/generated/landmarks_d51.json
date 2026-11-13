@@ -52,6 +52,40 @@
    "status": "check"
   },
   {
+   "area_m2": 886.5,
+   "centroid_epsg2180": [
+    778655.69,
+    590242.48
+   ],
+   "flags": [
+    "mostly_outside_tile",
+    "no_building_in_polygon"
+   ],
+   "id": "L10-hangar",
+   "in_tile_fraction": 0.0,
+   "kind": "orientation landmark (hangar)",
+   "name": "Hangar Aeroklubu Białostockiego",
+   "osm": {
+    "tags": {
+     "aeroway": "hangar",
+     "building": "hangar"
+    },
+    "version": 2,
+    "way": 304300294
+   },
+   "our_buildings": {
+    "area_m2": 0,
+    "count": 0,
+    "height_m_range": null,
+    "height_sources": [],
+    "ids": []
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [],
+   "source_research": "Mistral P12-004 (UNVERIFIED: review pending, PR #40); P6-C11 (Aeroklub way 229040230, NIE-cel)",
+   "status": "check"
+  },
+  {
    "area_m2": 28212.4,
    "centroid_epsg2180": [
     780412.94,
@@ -353,9 +387,7 @@
     779234.77,
     589946.71
    ],
-   "flags": [
-    "no_building_in_polygon"
-   ],
+   "flags": [],
    "id": "L8-krywlany",
    "in_tile_fraction": 0.608,
    "kind": "orientation landmark (airfield, east part)",
@@ -378,7 +410,37 @@
    "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
    "references": [],
    "source_research": "P6-K03/K04",
-   "status": "check"
+   "status": "ok"
+  },
+  {
+   "area_m2": 0.0,
+   "centroid_epsg2180": [
+    779261.97,
+    589869.2
+   ],
+   "flags": [],
+   "id": "L9-runway",
+   "in_tile_fraction": 1.0,
+   "kind": "orientation landmark (runway)",
+   "name": "Krywlany pas asfaltowy 09R/27L",
+   "osm": {
+    "tags": {
+     "aeroway": "runway"
+    },
+    "version": 2,
+    "way": 958211700
+   },
+   "our_buildings": {
+    "area_m2": 0,
+    "count": 0,
+    "height_m_range": null,
+    "height_sources": [],
+    "ids": []
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [],
+   "source_research": "Mistral P12-001 (UNVERIFIED: review pending, PR #40)",
+   "status": "ok"
   }
  ],
  "region": "bialystok-dojlidy",

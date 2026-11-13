@@ -106,7 +106,10 @@ def build(region_id: str) -> dict:
         rec["centroid_epsg2180"] = [round(geom.centroid.x, 2), round(geom.centroid.y, 2)]
         rec["area_m2"] = round(geom.area, 1)
         rec["in_tile_fraction"] = round(inter.area / geom.area, 3) if geom.area > 0 else (1.0 if inter.length else 0.0)
-        hits = sorted((p for p, b in bgeo if geom.area > 0 and geom.contains(b.centroid)), key=lambda p: p["id"])
+        # a building belongs to the landmark when its centroid lies inside or >= 50 % of its footprint overlaps
+        hits = sorted((p for p, b in bgeo if geom.area > 0 and geom.intersects(b)
+                       and (geom.contains(b.centroid) or geom.intersection(b).area >= 0.5 * b.area)),
+                      key=lambda p: p["id"])
         rec["our_buildings"] = {"count": len(hits), "ids": [p["id"] for p in hits][:40],
                                 "area_m2": round(sum(p["area_m2"] or 0 for p in hits), 1),
                                 "height_m_range": ([min(p["height_m"] for p in hits), max(p["height_m"] for p in hits)]
@@ -126,7 +129,7 @@ def build(region_id: str) -> dict:
         flags = []
         if rec["in_tile_fraction"] < 0.5:
             flags.append("mostly_outside_tile")
-        if geom.area > 0 and not hits:
+        if geom.area > 0 and not hits and "building" in w["tags"]:     # an OSM building with no footprint of ours
             flags.append("no_building_in_polygon")
         if rec.get("gate") and not rec["gate"]["in_graph"]:
             flags.append("gate_not_in_graph")

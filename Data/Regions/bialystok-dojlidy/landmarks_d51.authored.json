@@ -2,13 +2,97 @@
  "schema": "kamion/region-landmarks-authored/1",
  "provenance": "authored_override (ADR 0166): landmark choice for D51 recognisability from research P6 (research/_incoming/p6-next-regions-2, 2026-11-13); OSM ids verified there against api.openstreetmap.org; geometry derived by tools/worldgen/qa/region_landmarks.py",
  "landmarks": [
-  {"id": "L1-rosti", "name": "Rosti, Myśliwska 18", "kind": "factory (truck target)", "osm_way": 252332077, "gate_node": 6596800253, "source_research": "P6-K04, P6-R03, P6-G03", "references": ["research/_incoming/p6-next-regions-2/files/P6-G03.jpg (GUGiK orto 10 cm, gate)"]},
-  {"id": "L2-kan", "name": "KAN, Karpińskiego 5", "kind": "factory (truck target)", "osm_way": 471492581, "gate_node": 4656499172, "source_research": "P6-K04, P6-R04, P6-G04", "references": ["research/_incoming/p6-next-regions-2/files/P6-G04.jpg (GUGiK orto 10 cm, gate)"]},
-  {"id": "L3-odlewnia", "name": "Odlewnia Białystok, Myśliwska 11", "kind": "foundry (truck target)", "osm_way": 315456645, "source_research": "P6-C04", "references": []},
-  {"id": "L4-bravilor", "name": "Bravilor Bonamat, Kuronia 2", "kind": "factory SSSE (truck target)", "osm_way": 513010463, "gate_node": 6539179208, "source_research": "P6-C05, P6-G14", "references": ["research/_incoming/p6-next-regions-2/files/P6-G14.jpg (GUGiK orto 10 cm, gate)"]},
-  {"id": "L5-pss-dc", "name": "PSS Społem DC (Wiosenna/Ciołkowskiego)", "kind": "distribution centre (truck target)", "osm_way": 1317072247, "source_research": "P6-C06", "references": []},
-  {"id": "L6-masterpress", "name": "Masterpress, Kuronia 4", "kind": "factory (UNVERIFIED target)", "osm_way": 234838499, "gate_node": 2999986083, "source_research": "P6-K04, P6-G11", "references": ["research/_incoming/p6-next-regions-2/files/P6-G11.jpg (GUGiK orto 10 cm, gate)"]},
-  {"id": "L7-bison", "name": "BISON", "kind": "factory (UNVERIFIED target)", "osm_way": 658448323, "source_research": "P6-K04", "references": []},
-  {"id": "L8-krywlany", "name": "Lotnisko Białystok-Krywlany (EPBK)", "kind": "orientation landmark (airfield, east part)", "osm_way": 234838628, "source_research": "P6-K03/K04", "references": []}
+  {
+   "id": "L1-rosti",
+   "name": "Rosti, Myśliwska 18",
+   "kind": "factory (truck target)",
+   "osm_way": 252332077,
+   "gate_node": 6596800253,
+   "source_research": "P6-K04, P6-R03, P6-G03",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G03.jpg (GUGiK orto 10 cm, gate)"
+   ]
+  },
+  {
+   "id": "L2-kan",
+   "name": "KAN, Karpińskiego 5",
+   "kind": "factory (truck target)",
+   "osm_way": 471492581,
+   "gate_node": 4656499172,
+   "source_research": "P6-K04, P6-R04, P6-G04",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G04.jpg (GUGiK orto 10 cm, gate)"
+   ]
+  },
+  {
+   "id": "L3-odlewnia",
+   "name": "Odlewnia Białystok, Myśliwska 11",
+   "kind": "foundry (truck target)",
+   "osm_way": 315456645,
+   "source_research": "P6-C04",
+   "references": []
+  },
+  {
+   "id": "L4-bravilor",
+   "name": "Bravilor Bonamat, Kuronia 2",
+   "kind": "factory SSSE (truck target)",
+   "osm_way": 513010463,
+   "gate_node": 6539179208,
+   "source_research": "P6-C05, P6-G14",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G14.jpg (GUGiK orto 10 cm, gate)"
+   ]
+  },
+  {
+   "id": "L5-pss-dc",
+   "name": "PSS Społem DC (Wiosenna/Ciołkowskiego)",
+   "kind": "distribution centre (truck target)",
+   "osm_way": 1317072247,
+   "source_research": "P6-C06",
+   "references": []
+  },
+  {
+   "id": "L6-masterpress",
+   "name": "Masterpress, Kuronia 4",
+   "kind": "factory (UNVERIFIED target)",
+   "osm_way": 234838499,
+   "gate_node": 2999986083,
+   "source_research": "P6-K04, P6-G11",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G11.jpg (GUGiK orto 10 cm, gate)"
+   ]
+  },
+  {
+   "id": "L7-bison",
+   "name": "BISON",
+   "kind": "factory (UNVERIFIED target)",
+   "osm_way": 658448323,
+   "source_research": "P6-K04",
+   "references": []
+  },
+  {
+   "id": "L8-krywlany",
+   "name": "Lotnisko Białystok-Krywlany (EPBK)",
+   "kind": "orientation landmark (airfield, east part)",
+   "osm_way": 234838628,
+   "source_research": "P6-K03/K04",
+   "references": []
+  },
+  {
+   "id": "L9-runway",
+   "name": "Krywlany pas asfaltowy 09R/27L",
+   "kind": "orientation landmark (runway)",
+   "osm_way": 958211700,
+   "source_research": "Mistral P12-001 (UNVERIFIED: review pending, PR #40)",
+   "references": []
+  },
+  {
+   "id": "L10-hangar",
+   "name": "Hangar Aeroklubu Białostockiego",
+   "kind": "orientation landmark (hangar)",
+   "osm_way": 304300294,
+   "source_research": "Mistral P12-004 (UNVERIFIED: review pending, PR #40); P6-C11 (Aeroklub way 229040230, NIE-cel)",
+   "references": []
+  }
  ]
 }
