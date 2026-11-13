@@ -7,14 +7,24 @@ pliki niepobrane.
 
 ## Archiwum plików (zdjęcia + skany)
 
-- `mistral-p9-furniture-3-files.zip` — karta pobrania (artefakt) podlinkowana w PR.
-- SHA-256: `1b4e23a359c9dbd00bd5c3bc5249d6ecf99018592febda6f82eb0bff2f4c4b1c`
-- Zawartość: `files/frames/` (66 kadrów KartaView, wariant lth, 1280×720 ≤ 1600 px),
-  `files/docs/` (skany urzędowe ≤ 5 MB + pochodne PNG odczytów: zawiadomienie Glasdon,
-  kompozyt stopek STO, siatki stron STO, rys. 7.2.1 Dz.U., skan s. 1 OPZ; oraz DOCX STO
-  v03/2020 z warstwą tekstową).
+- `mistral-p9-furniture-3-files-v2.zip` (10,9 MB) — karta pobrania (artefakt) podlinkowana w PR.
+- SHA-256: `93075520d5d162b49a4455b354c58ff7d3d04cf21f96a25d8e01a64dde23a0ea`
+- Zawartość v2 (pełna, po M50-FIX):
+  - `files/frames/` — **wszystkie 40 kadrów** wskazanych w manifest.csv (M50-001…024 +
+    M50-050…065), jeden plik na wiersz, nazwa = id wiersza. Kadry KartaView: wariant lth,
+    1280×720 (≤ 1600 px); kadry Panoramax (M50-054/055/065): oryginały 2560×1920
+    przeskalowane do szer. 1600 px przez `https://wsrv.nl/?url=…&w=1600&output=jpg&q=85`.
+    Poprawka względem v1: dodany kadr M50-017 (foto 1326673717), brakujący w v1,
+    oraz 16 kadrów nowych wierszy M50-050…065.
+  - `files/docs/` — 7 dokumentów źródłowych (PDF/DOCX): OPZ ZMK (331 KB), STO ZDM TOS_1
+    v09/2024 (1,1 MB), STO v03/2020 DOCX, warunki oświetleniowe ZDM Białystok 2025 (2 MB),
+    zawiadomienie o wyborze oferty Glasdon (240 KB), ogłoszenie o zamówieniu (1,6 MB),
+    zał. nr 1 — wzór ławki i kosza (1,5 MB).
 - Celowo poza archiwum (tylko linki poniżej): Dz.U. 2019 poz. 2311 cz. 2 (41 MB),
   Dz.U. cz. 1 (39,7 MB), opis PAB Al. Tysiąclecia (11,7 MB).
+- v1 (`mistral-p9-furniture-3-files.zip`, SHA-256
+  `1b4e23a359c9dbd00bd5c3bc5249d6ecf99018592febda6f82eb0bff2f4c4b1c`) — zastąpiona
+  przez v2 (v1 nie zawierała kadru M50-017 i nie obejmowała wierszy M50-050…065).
 
 ## Zadanie 1 — zdjęcia
 
@@ -22,10 +32,42 @@ pliki niepobrane.
   - API: `https://api.openstreetcam.org/2.0/photo/?lat1=53.143&lng1=23.147&lat2=53.161&lng2=23.183&page=1&itemsPerPage=150`
   - Kadry w manifeście: URL-e CDN `https://cdn.kartaview.org/pr:sharp/...` (wariant lth,
     1280×720), pozycje/heading z API.
-- Panoramax — **CC BY-SA 4.0** (referencja, nie tekstura); 23 kadrów w kaflu, azymut w
-  `view:azimuth`:
+- Panoramax — **CC BY-SA 4.0** (referencja, nie tekstura); 23 kadrów w kaflu (wszystkie
+  NW narożnik, ok. 53,159°N/23,148–23,152°E, zdjęcia z auta Nexus S 2019-08-15 i
+  2019-09-01), azymut w `view:azimuth`:
   - API: `https://api.panoramax.xyz/api/search?bbox=23.147,53.143,23.183,53.161`
   - Kolekcje w kaflu (m.in. `b3131ba1-86e3-4528-a0ff-a754528bba5b`).
+  - Pełna lista 23 kadrów (id 8 znaków | view:azimuth | lat | lon | data):
+    `3eba62ce|65|53.1588361|23.1519614|2019-08-15`,
+    `07820d85|53|53.1590657|23.1519814|2019-08-15`,
+    `6fc62548|100|53.1587146|23.1517760|2019-08-15`,
+    `6ded8ec0|56|53.1594129|23.1518848|2019-08-15`,
+    `35224dcb|121|53.1588664|23.1514397|2019-08-15`,
+    `a228a704|59|53.1599485|23.1518258|2019-08-15`,
+    `3717771d|242|53.1596776|23.1514525|2019-09-01`,
+    `9ff60a64|54|53.1604169|23.1518905|2019-08-15`,
+    `386598e7|204|53.1599671|23.1515819|2019-09-01`,
+    `8176a172|194|53.1604626|23.1517099|2019-09-01`,
+    `239c71e8|268|53.1595055|23.1511271|2019-09-01`,
+    `7196532e|54|53.1609152|23.1519778|2019-08-15`,
+    `844e35c7|113|53.1590866|23.1508602|2019-08-15`,
+    `02830ea2|191|53.1608591|23.1517886|2019-09-01`,
+    `f16bbe61|274|53.1594970|23.1506714|2019-09-01`,
+    `03ec4841|101|53.1592532|23.1499917|2019-08-15`,
+    `9cf05b43|275|53.1595590|23.1498171|2019-09-01`,
+    `9f85aac8|98|53.1593321|23.1492930|2019-08-15`,
+    `8ccad44c|273|53.1596409|23.1489894|2019-09-01`,
+    `6248550a|105|53.1594072|23.1486052|2019-08-15`,
+    `e84d565e|270|53.1596952|23.1480806|2019-09-01`,
+    `b27d2652|107|53.1594763|23.1478377|2019-08-15`,
+    `b0419ba6|269|53.1596978|23.1471538|2019-09-01`.
+  - Weryfikacja wzrokowa (pass B, 2026-11-13, po 5 kadrach): `3717771d` → sygnalizator
+    na słupku widoczny w osi (VERIFIED_WIZJA, M50-054); `35224dcb` → sygnalizator
+    widoczny, ale ustawiony ZA kamerą — kotwica nie w osi (M50-055, nie liczy się do
+    kryteriów FIX); `6ded8ec0` → hydrant poza kadrem (M50-065, NOT_FOUND);
+    `6fc62548`, `07820d85` → sygnalizator niewidoczny. Pozostałe 18 kadrów sprawdzane
+    pass C (kolejna tura wizyjna) — wyniki uzupełniane w tym pliku i (jeśli znaczące)
+    w manifest.csv.
 - Mapillary — **pominięty: brak tokenu API (UNVERIFIED)**; nie użyto cudzych kluczy.
 - Wikimedia Commons / Openverse — brak kadrów z poziomu jezdni w kaflu (weryfikacja
   2026-11-13, wyszukiwanie geo „Białystok Andersa/Tysiąclecia/Sokólska/Wileńska").
