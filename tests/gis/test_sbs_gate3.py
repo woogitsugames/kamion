@@ -141,7 +141,8 @@ def test_compose_quarantines_rejected_and_unreviewed_poses(tmp_path,monkeypatch)
 
 def test_all_committed_poses_have_explicit_confidence_and_j1_is_quarantined():
     refs=sbs.read(sbs.REGION/'sbs_references.json')['references']
-    bad={'810896133189484','339463879238809','962702164479831','182011943700132','326454015490067','1406533339711789'}
+    # ADR 0160: 339463879238809 re-posed onto the trunk_link lane it was taken from (probe r92), released from J1.
+    bad={'810896133189484','962702164479831','182011943700132','326454015490067','1406533339711789'}
     for ref in refs:
         assert ref['pose_confidence'] in ('A','B','C')
         if ref['source_id'] in bad: assert ref['pose_confidence']=='C'
@@ -192,8 +193,14 @@ def test_early_route_commons_candidates_keep_licenses_and_uncertainty():
     assert len(extras)==2
     assert {r['license'] for r in extras}=={'CC0','CC BY 3.0'}
     for r in extras:
-        assert 0<r['segment_station_m']<300 and r['route_distance_m']<15
-        assert r['pose_confidence']=='C' and not r['photometric_use']
+        assert not r['photometric_use']
+    # ADR 0160: cm109685822 stays C (world verge missing) on the early route; cm92458760 was resected from the two EC
+    # chimneys to the Bitwy Bialostockiej junction - a context frame ~58 m off the driven route, pose B.
+    by={r['source_id']:r for r in extras}
+    assert by['cm109685822']['pose_confidence']=='C' and 0<by['cm109685822']['segment_station_m']<300
+    assert by['cm109685822']['route_distance_m']<15
+    assert by['cm92458760']['pose_confidence'] in ('B','C') and 40<by['cm92458760']['route_distance_m']<80
+    for r in extras:
         assert len(r['source_manifest_sha256'])==64
         assert 'no EXIF' in r['assumptions']
 
