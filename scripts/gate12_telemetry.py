@@ -172,7 +172,8 @@ def main(root):
         if rp:
             lines += ['', 'Repeatability PROXY (circle50 autopilot from rest, 3 runs; gate asks straight 0-80 x3):']
             for k, v in rp.items():
-                lines.append(f"- {k}: {['%.2f' % x for x in v['values']]} mean {v['mean']:.2f} s, max dev {100 * v['max_dev']:.2f} % -> {'PASS' if v['pass'] else 'FAIL'} (limit 3 %)")
+                dv = 'n/a' if v['max_dev'] is None else f"{100 * v['max_dev']:.2f} %"
+                lines.append(f"- {k}: {['%.2f' % x for x in v['values']]} mean {v['mean']:.2f} s, max dev {dv} -> {'PASS' if v['pass'] else 'FAIL'} (limit 3 %)")
         lines.append('')
     with open(os.path.join(root, 'gate12-summary.md'), 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
