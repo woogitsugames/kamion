@@ -1,17 +1,17 @@
-param([ValidateSet('','Low','High')][string]$OnlyTier='', [ValidateSet('','zero-bias','baked-only','no-baked','no-shadows')][string]$OnlyMode='')
+param([ValidateSet('','Low','High')][string]$OnlyTier='', [ValidateSet('','baseline','zero-bias','baked-only','no-baked','no-shadows')][string]$OnlyMode='')
 $ErrorActionPreference='Stop'
 $root='C:\Users\matma\Documents\Claude\kamion'
 $slot=Join-Path $root 'scripts/unity-slot.ps1'
-$modes=@{ 'zero-bias'='rq_shadowbias=0,rq_shadownormal=0'; 'baked-only'='rq_shadow=0'; 'no-baked'='rq_worldsun=0'; 'no-shadows'='rq_shadow=0,rq_worldsun=0' }
-$cameras='sbs-g3-a-2818555625124739,sbs-g3-a-3970163613102941,putry-island-1,putry-island-2'
+$modes=@{ 'baseline'=''; 'zero-bias'='rq_shadowbias=0,rq_shadownormal=0'; 'baked-only'='rq_shadow=0'; 'no-baked'='rq_worldsun=0'; 'no-shadows'='rq_shadow=0,rq_worldsun=0' }
+$cameras='sbs-g3-a-2818555625124739,sbs-g3-a-3970163613102941,putry-island-1,putry-island-2,putry-island-near'
 foreach($tier in $(if($OnlyTier){@($OnlyTier)}else{@('Low','High')})) {
- foreach($mode in $(if($OnlyMode){@($OnlyMode)}else{@('zero-bias','baked-only','no-baked','no-shadows')})) {
+ foreach($mode in $(if($OnlyMode){@($OnlyMode)}else{@('baseline','zero-bias','baked-only','no-baked','no-shadows')})) {
   $dest="artifacts/gpt-s16-r3/ablations/$tier-$mode"
   New-Item -ItemType Directory -Path $dest -Force | Out-Null
   & pwsh $slot -Acquire -Owner gpt-s16
   try {
    if(Test-Path "$root/artifacts/locks/PHONE_RUN"){throw 'PHONE_RUN appeared'}
-   & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting clear -Gate3 artifacts/gpt-s16-r3/qa-cameras.json -Cameras $cameras -Rq $modes[$mode] -OutputDir $dest *> "$dest.log"
+   & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting clear -Gate3 artifacts/gpt-s16-r3/diagnostic-cameras.json -Cameras $cameras -Rq $modes[$mode] -OutputDir $dest *> "$dest.log"
    if($LASTEXITCODE -ne 0){throw "Ablation failed: $tier/$mode"}
   } finally {
    git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings

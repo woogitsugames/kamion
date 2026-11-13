@@ -1,0 +1,889 @@
+{
+    "mode": "report",
+    "scenes": [
+        {
+            "tier": "Low",
+            "distance": 35.0,
+            "depthBias": 1.0,
+            "normalBias": 1.0,
+            "sunBias": 0.05000000074505806,
+            "sunNormalBias": 0.4000000059604645,
+            "resolution": 1024,
+            "cascades": 1,
+            "casters": [
+                {
+                    "path": "Chunk_5_6/bridge",
+                    "mode": "On",
+                    "shader": "Kamion/World PBR",
+                    "materials": [
+                        "M_barrier_steel",
+                        "M_bridge_concrete",
+                        "M_bridge_kerb",
+                        "M_ramp_wall_blocks",
+                        "M_road_asphalt",
+                        "M_shoulder_gravel",
+                        "M_verge_grass"
+                    ],
+                    "min": {
+                        "x": 394.95404052734377,
+                        "y": 8.115005493164063,
+                        "z": -709.1300048828125
+                    },
+                    "max": {
+                        "x": 520.7260131835938,
+                        "y": 15.473007202148438,
+                        "z": -631.8599853515625
+                    },
+                    "submeshes": 7,
+                    "triangles": 8155
+                },
+                {
+                    "path": "Chunk_6_6/bridge",
+                    "mode": "On",
+                    "shader": "Kamion/World PBR",
+                    "materials": [
+                        "M_barrier_steel",
+                        "M_bridge_concrete",
+                        "M_bridge_kerb",
+                        "M_ramp_wall_blocks",
+                        "M_road_asphalt"
+                    ],
+                    "min": {
+                        "x": 505.8909912109375,
+                        "y": 8.378005981445313,
+                        "z": -769.887939453125
+                    },
+                    "max": {
+                        "x": 681.2459716796875,
+                        "y": 15.953994750976563,
+                        "z": -678.1669921875
+                    },
+                    "submeshes": 5,
+                    "triangles": 9530
+                }
+            ],
+            "heroLods": [
+                {
+                    "path": "landmark_viaduct_biezenstwa_00/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -31.085460662841798,
+                        "y": -2.1104085445404054,
+                        "z": -20.384305953979493
+                    },
+                    "max": {
+                        "x": 37.213436126708987,
+                        "y": 2.5407555103302,
+                        "z": 22.61353874206543
+                    },
+                    "submeshes": 2,
+                    "triangles": 1064
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_00/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -31.085460662841798,
+                        "y": -2.1104085445404054,
+                        "z": -20.384305953979493
+                    },
+                    "max": {
+                        "x": 37.213436126708987,
+                        "y": 2.5407555103302,
+                        "z": 22.61353874206543
+                    },
+                    "submeshes": 2,
+                    "triangles": 420
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_00/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -31.085460662841798,
+                        "y": -2.1104087829589845,
+                        "z": -20.384305953979493
+                    },
+                    "max": {
+                        "x": 37.213436126708987,
+                        "y": 2.4707555770874025,
+                        "z": 22.58724021911621
+                    },
+                    "submeshes": 2,
+                    "triangles": 100
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_01/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.354419708251954,
+                        "y": -5.747000217437744,
+                        "z": -19.768329620361329
+                    },
+                    "max": {
+                        "x": 36.20943832397461,
+                        "y": 1.9347572326660157,
+                        "z": 30.53829574584961
+                    },
+                    "submeshes": 2,
+                    "triangles": 3364
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_01/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.354419708251954,
+                        "y": -5.747000217437744,
+                        "z": -19.768329620361329
+                    },
+                    "max": {
+                        "x": 36.20943832397461,
+                        "y": 1.9347572326660157,
+                        "z": 30.53829574584961
+                    },
+                    "submeshes": 2,
+                    "triangles": 1480
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_01/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.354419708251954,
+                        "y": -5.747000217437744,
+                        "z": -19.768329620361329
+                    },
+                    "max": {
+                        "x": 36.20943832397461,
+                        "y": 1.8647571802139283,
+                        "z": 30.53829574584961
+                    },
+                    "submeshes": 2,
+                    "triangles": 480
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_02/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -23.372379302978517,
+                        "y": -6.61899995803833,
+                        "z": -15.956327438354493
+                    },
+                    "max": {
+                        "x": 29.185436248779298,
+                        "y": 1.3747572898864747,
+                        "z": 26.60829734802246
+                    },
+                    "submeshes": 2,
+                    "triangles": 2442
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_02/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -23.372379302978517,
+                        "y": -6.61899995803833,
+                        "z": -15.956327438354493
+                    },
+                    "max": {
+                        "x": 29.185436248779298,
+                        "y": 1.3747572898864747,
+                        "z": 26.60829734802246
+                    },
+                    "submeshes": 2,
+                    "triangles": 1064
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_02/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -23.372379302978517,
+                        "y": -6.61899995803833,
+                        "z": -15.956327438354493
+                    },
+                    "max": {
+                        "x": 29.185436248779298,
+                        "y": 1.3047571182250977,
+                        "z": 26.60829734802246
+                    },
+                    "submeshes": 2,
+                    "triangles": 352
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_03/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.502382278442384,
+                        "y": -6.250999927520752,
+                        "z": -19.851329803466798
+                    },
+                    "max": {
+                        "x": 36.248443603515628,
+                        "y": 1.5027570724487305,
+                        "z": 30.412296295166017
+                    },
+                    "submeshes": 2,
+                    "triangles": 3312
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_03/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.502382278442384,
+                        "y": -6.250999927520752,
+                        "z": -19.851329803466798
+                    },
+                    "max": {
+                        "x": 36.248443603515628,
+                        "y": 1.5027570724487305,
+                        "z": 30.412296295166017
+                    },
+                    "submeshes": 2,
+                    "triangles": 1384
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_03/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.502382278442384,
+                        "y": -6.250999927520752,
+                        "z": -19.851329803466798
+                    },
+                    "max": {
+                        "x": 36.248443603515628,
+                        "y": 1.4327573776245118,
+                        "z": 30.412296295166017
+                    },
+                    "submeshes": 2,
+                    "triangles": 436
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_04/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -11.826379776000977,
+                        "y": -4.498000144958496,
+                        "z": -9.653396606445313
+                    },
+                    "max": {
+                        "x": 17.510374069213868,
+                        "y": 1.4917573928833008,
+                        "z": 20.083297729492189
+                    },
+                    "submeshes": 2,
+                    "triangles": 1052
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_04/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -11.826379776000977,
+                        "y": -4.498000144958496,
+                        "z": -9.653396606445313
+                    },
+                    "max": {
+                        "x": 17.510374069213868,
+                        "y": 1.4917573928833008,
+                        "z": 20.083297729492189
+                    },
+                    "submeshes": 2,
+                    "triangles": 488
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_04/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -11.826379776000977,
+                        "y": -4.498000144958496,
+                        "z": -9.653396606445313
+                    },
+                    "max": {
+                        "x": 17.510374069213868,
+                        "y": 1.4217572212219239,
+                        "z": 20.083297729492189
+                    },
+                    "submeshes": 2,
+                    "triangles": 136
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_05/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -22.043258666992189,
+                        "y": -1.6544084548950196,
+                        "z": -14.945709228515625
+                    },
+                    "max": {
+                        "x": 21.976295471191408,
+                        "y": 1.7917571067810059,
+                        "z": 25.42333221435547
+                    },
+                    "submeshes": 2,
+                    "triangles": 740
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_05/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -22.043258666992189,
+                        "y": -1.6544084548950196,
+                        "z": -14.960704803466797
+                    },
+                    "max": {
+                        "x": 21.984302520751954,
+                        "y": 1.7917571067810059,
+                        "z": 25.42333221435547
+                    },
+                    "submeshes": 2,
+                    "triangles": 288
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_05/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -22.043258666992189,
+                        "y": -1.6544084548950196,
+                        "z": -14.9344482421875
+                    },
+                    "max": {
+                        "x": 21.97028350830078,
+                        "y": 1.721757173538208,
+                        "z": 25.42333221435547
+                    },
+                    "submeshes": 2,
+                    "triangles": 68
+                }
+            ]
+        },
+        {
+            "tier": "High",
+            "distance": 100.0,
+            "depthBias": 0.4000000059604645,
+            "normalBias": 0.30000001192092898,
+            "sunBias": 0.05000000074505806,
+            "sunNormalBias": 0.4000000059604645,
+            "resolution": 2048,
+            "cascades": 3,
+            "casters": [
+                {
+                    "path": "Chunk_5_6/bridge",
+                    "mode": "On",
+                    "shader": "Kamion/World PBR",
+                    "materials": [
+                        "M_barrier_steel",
+                        "M_bridge_concrete",
+                        "M_bridge_kerb",
+                        "M_ramp_wall_blocks",
+                        "M_road_asphalt",
+                        "M_shoulder_gravel",
+                        "M_verge_grass"
+                    ],
+                    "min": {
+                        "x": 394.95404052734377,
+                        "y": 8.115005493164063,
+                        "z": -709.1300048828125
+                    },
+                    "max": {
+                        "x": 520.7260131835938,
+                        "y": 15.473007202148438,
+                        "z": -631.8599853515625
+                    },
+                    "submeshes": 7,
+                    "triangles": 8155
+                },
+                {
+                    "path": "Chunk_6_6/bridge",
+                    "mode": "On",
+                    "shader": "Kamion/World PBR",
+                    "materials": [
+                        "M_barrier_steel",
+                        "M_bridge_concrete",
+                        "M_bridge_kerb",
+                        "M_ramp_wall_blocks",
+                        "M_road_asphalt"
+                    ],
+                    "min": {
+                        "x": 505.8909912109375,
+                        "y": 8.378005981445313,
+                        "z": -769.887939453125
+                    },
+                    "max": {
+                        "x": 681.2459716796875,
+                        "y": 15.953994750976563,
+                        "z": -678.1669921875
+                    },
+                    "submeshes": 5,
+                    "triangles": 9530
+                }
+            ],
+            "heroLods": [
+                {
+                    "path": "landmark_viaduct_biezenstwa_00/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -31.085460662841798,
+                        "y": -2.1104085445404054,
+                        "z": -20.384305953979493
+                    },
+                    "max": {
+                        "x": 37.213436126708987,
+                        "y": 2.5407555103302,
+                        "z": 22.61353874206543
+                    },
+                    "submeshes": 2,
+                    "triangles": 1064
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_00/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -31.085460662841798,
+                        "y": -2.1104085445404054,
+                        "z": -20.384305953979493
+                    },
+                    "max": {
+                        "x": 37.213436126708987,
+                        "y": 2.5407555103302,
+                        "z": 22.61353874206543
+                    },
+                    "submeshes": 2,
+                    "triangles": 420
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_00/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -31.085460662841798,
+                        "y": -2.1104087829589845,
+                        "z": -20.384305953979493
+                    },
+                    "max": {
+                        "x": 37.213436126708987,
+                        "y": 2.4707555770874025,
+                        "z": 22.58724021911621
+                    },
+                    "submeshes": 2,
+                    "triangles": 100
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_01/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.354419708251954,
+                        "y": -5.747000217437744,
+                        "z": -19.768329620361329
+                    },
+                    "max": {
+                        "x": 36.20943832397461,
+                        "y": 1.9347572326660157,
+                        "z": 30.53829574584961
+                    },
+                    "submeshes": 2,
+                    "triangles": 3364
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_01/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.354419708251954,
+                        "y": -5.747000217437744,
+                        "z": -19.768329620361329
+                    },
+                    "max": {
+                        "x": 36.20943832397461,
+                        "y": 1.9347572326660157,
+                        "z": 30.53829574584961
+                    },
+                    "submeshes": 2,
+                    "triangles": 1480
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_01/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.354419708251954,
+                        "y": -5.747000217437744,
+                        "z": -19.768329620361329
+                    },
+                    "max": {
+                        "x": 36.20943832397461,
+                        "y": 1.8647571802139283,
+                        "z": 30.53829574584961
+                    },
+                    "submeshes": 2,
+                    "triangles": 480
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_02/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -23.372379302978517,
+                        "y": -6.61899995803833,
+                        "z": -15.956327438354493
+                    },
+                    "max": {
+                        "x": 29.185436248779298,
+                        "y": 1.3747572898864747,
+                        "z": 26.60829734802246
+                    },
+                    "submeshes": 2,
+                    "triangles": 2442
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_02/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -23.372379302978517,
+                        "y": -6.61899995803833,
+                        "z": -15.956327438354493
+                    },
+                    "max": {
+                        "x": 29.185436248779298,
+                        "y": 1.3747572898864747,
+                        "z": 26.60829734802246
+                    },
+                    "submeshes": 2,
+                    "triangles": 1064
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_02/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -23.372379302978517,
+                        "y": -6.61899995803833,
+                        "z": -15.956327438354493
+                    },
+                    "max": {
+                        "x": 29.185436248779298,
+                        "y": 1.3047571182250977,
+                        "z": 26.60829734802246
+                    },
+                    "submeshes": 2,
+                    "triangles": 352
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_03/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.502382278442384,
+                        "y": -6.250999927520752,
+                        "z": -19.851329803466798
+                    },
+                    "max": {
+                        "x": 36.248443603515628,
+                        "y": 1.5027570724487305,
+                        "z": 30.412296295166017
+                    },
+                    "submeshes": 2,
+                    "triangles": 3312
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_03/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.502382278442384,
+                        "y": -6.250999927520752,
+                        "z": -19.851329803466798
+                    },
+                    "max": {
+                        "x": 36.248443603515628,
+                        "y": 1.5027570724487305,
+                        "z": 30.412296295166017
+                    },
+                    "submeshes": 2,
+                    "triangles": 1384
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_03/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -30.502382278442384,
+                        "y": -6.250999927520752,
+                        "z": -19.851329803466798
+                    },
+                    "max": {
+                        "x": 36.248443603515628,
+                        "y": 1.4327573776245118,
+                        "z": 30.412296295166017
+                    },
+                    "submeshes": 2,
+                    "triangles": 436
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_04/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -11.826379776000977,
+                        "y": -4.498000144958496,
+                        "z": -9.653396606445313
+                    },
+                    "max": {
+                        "x": 17.510374069213868,
+                        "y": 1.4917573928833008,
+                        "z": 20.083297729492189
+                    },
+                    "submeshes": 2,
+                    "triangles": 1052
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_04/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -11.826379776000977,
+                        "y": -4.498000144958496,
+                        "z": -9.653396606445313
+                    },
+                    "max": {
+                        "x": 17.510374069213868,
+                        "y": 1.4917573928833008,
+                        "z": 20.083297729492189
+                    },
+                    "submeshes": 2,
+                    "triangles": 488
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_04/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -11.826379776000977,
+                        "y": -4.498000144958496,
+                        "z": -9.653396606445313
+                    },
+                    "max": {
+                        "x": 17.510374069213868,
+                        "y": 1.4217572212219239,
+                        "z": 20.083297729492189
+                    },
+                    "submeshes": 2,
+                    "triangles": 136
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_05/lod0",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -22.043258666992189,
+                        "y": -1.6544084548950196,
+                        "z": -14.945709228515625
+                    },
+                    "max": {
+                        "x": 21.976295471191408,
+                        "y": 1.7917571067810059,
+                        "z": 25.42333221435547
+                    },
+                    "submeshes": 2,
+                    "triangles": 740
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_05/lod1",
+                    "mode": "On",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -22.043258666992189,
+                        "y": -1.6544084548950196,
+                        "z": -14.960704803466797
+                    },
+                    "max": {
+                        "x": 21.984302520751954,
+                        "y": 1.7917571067810059,
+                        "z": 25.42333221435547
+                    },
+                    "submeshes": 2,
+                    "triangles": 288
+                },
+                {
+                    "path": "landmark_viaduct_biezenstwa_05/lod2",
+                    "mode": "Off",
+                    "shader": "",
+                    "materials": [
+                        "M_viaduct_concrete",
+                        "M_viaduct_steel [no shadows]"
+                    ],
+                    "min": {
+                        "x": -22.043258666992189,
+                        "y": -1.6544084548950196,
+                        "z": -14.9344482421875
+                    },
+                    "max": {
+                        "x": 21.97028350830078,
+                        "y": 1.721757173538208,
+                        "z": 25.42333221435547
+                    },
+                    "submeshes": 2,
+                    "triangles": 68
+                }
+            ]
+        }
+    ]
+}

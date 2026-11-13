@@ -1,0 +1,1539 @@
+{
+  "cameras": [
+    {
+      "id": "g3a_eye_s0012",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        720.978,
+        -411.552,
+        143.882
+      ],
+      "look_at": [
+        701.459,
+        -446.48,
+        143.159
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=30 m (+18 m) (moved +18 m ahead of the spawn so it is not inside the truck, W-N10)",
+      "s_m": 30.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0062",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        705.276,
+        -439.447,
+        143.687
+      ],
+      "look_at": [
+        686.23,
+        -474.636,
+        143.022
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=62 m (+50 m)",
+      "s_m": 62.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0112",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        681.471,
+        -483.435,
+        143.605
+      ],
+      "look_at": [
+        662.631,
+        -518.735,
+        143.293
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=112 m (+100 m)",
+      "s_m": 112.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0162",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        657.926,
+        -527.562,
+        143.84
+      ],
+      "look_at": [
+        638.825,
+        -562.719,
+        143.151
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=162 m (+150 m)",
+      "s_m": 162.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0212",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        633.927,
+        -571.441,
+        143.563
+      ],
+      "look_at": [
+        612.693,
+        -603.182,
+        142.604
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=212 m (+200 m)",
+      "s_m": 212.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0262",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        607.187,
+        -611.456,
+        142.967
+      ],
+      "look_at": [
+        588.018,
+        -646.554,
+        142.035
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=262 m (+250 m)",
+      "s_m": 262.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0312",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        582.791,
+        -655.082,
+        142.405
+      ],
+      "look_at": [
+        563.82,
+        -690.312,
+        141.611
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=312 m (+300 m)",
+      "s_m": 312.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0362",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        556.266,
+        -693.292,
+        142.161
+      ],
+      "look_at": [
+        520.62,
+        -676.361,
+        141.68
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=362 m (+350 m)",
+      "s_m": 362.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_eye_s0412",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-A",
+      "pos": [
+        511.83,
+        -671.585,
+        142.227
+      ],
+      "look_at": [
+        476.672,
+        -652.482,
+        141.871
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=412 m (+400 m)",
+      "s_m": 412.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3a_ext34_s0040",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-A",
+      "pos": [
+        717.049,
+        -436.884,
+        143.576
+      ],
+      "look_at": [
+        718.032,
+        -416.783,
+        143.162
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=40 m (yard, hall and docks behind); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 40.0,
+      "truck_s_m": 40.0
+    },
+    {
+      "id": "g3a_ext34_s0214",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-A",
+      "pos": [
+        633.937,
+        -589.799,
+        143.153
+      ],
+      "look_at": [
+        634.906,
+        -569.698,
+        142.884
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=214 m (at the depot gate); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 214.0,
+      "truck_s_m": 214.0
+    },
+    {
+      "id": "g3a_ext34_s0338",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-A",
+      "pos": [
+        571.754,
+        -694.59,
+        141.856
+      ],
+      "look_at": [
+        572.386,
+        -674.475,
+        141.522
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=338 m (entering Rondo Bie\u017ce\u0144stwa); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 338.0,
+      "truck_s_m": 338.0
+    },
+    {
+      "id": "g3a_rondo_bie_approach",
+      "type": "persp",
+      "kind": "rondo_eye",
+      "segment": "G3-A",
+      "pos": [
+        576.216,
+        -667.448,
+        142.293
+      ],
+      "look_at": [
+        554.676,
+        -716.554,
+        143.35
+      ],
+      "fov_deg": 65.0,
+      "note": "driver eye 30 m before the ring entry (s=326 m), looking at the ring centre (circle fit r=23.362 m)",
+      "s_m": 326.0
+    },
+    {
+      "id": "g3a_rondo_bie_above",
+      "type": "persp",
+      "kind": "rondo_above",
+      "segment": "G3-A",
+      "pos": [
+        580.924,
+        -668.222,
+        185.85
+      ],
+      "look_at": [
+        554.676,
+        -716.554,
+        142.85
+      ],
+      "fov_deg": 55.0,
+      "note": "oblique from ~45 m up, 55 m back along the approach (same idea as control_cameras putry_above / biezenstwa_above)"
+    },
+    {
+      "id": "g3b_eye_s1232",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -195.652,
+        -263.255,
+        133.727
+      ],
+      "look_at": [
+        -226.941,
+        -238.315,
+        132.447
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1232 m (+0 m)",
+      "s_m": 1232.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1282",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -234.748,
+        -232.061,
+        132.851
+      ],
+      "look_at": [
+        -265.811,
+        -206.839,
+        132.066
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1282 m (+50 m)",
+      "s_m": 1282.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1332",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -273.577,
+        -200.533,
+        132.556
+      ],
+      "look_at": [
+        -305.1,
+        -175.891,
+        132.312
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1332 m (+100 m)",
+      "s_m": 1332.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1382",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -313.001,
+        -169.756,
+        132.975
+      ],
+      "look_at": [
+        -340.451,
+        -142.97,
+        133.199
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1382 m (+150 m)",
+      "s_m": 1382.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1432",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -344.586,
+        -134.557,
+        133.854
+      ],
+      "look_at": [
+        -373.128,
+        -106.514,
+        133.782
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1432 m (+200 m)",
+      "s_m": 1432.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1482",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -380.263,
+        -99.503,
+        134.357
+      ],
+      "look_at": [
+        -409.16,
+        -71.827,
+        134.12
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1482 m (+250 m)",
+      "s_m": 1482.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1532",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -416.394,
+        -64.918,
+        134.666
+      ],
+      "look_at": [
+        -445.302,
+        -37.253,
+        134.587
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1532 m (+300 m)",
+      "s_m": 1532.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1582",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -452.451,
+        -30.257,
+        135.226
+      ],
+      "look_at": [
+        -481.395,
+        -2.634,
+        135.381
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1582 m (+350 m)",
+      "s_m": 1582.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1632",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -488.73,
+        4.168,
+        136.042
+      ],
+      "look_at": [
+        -518.071,
+        31.373,
+        136.315
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1632 m (+400 m)",
+      "s_m": 1632.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_eye_s1682",
+      "type": "persp",
+      "kind": "driver_eye",
+      "segment": "G3-B",
+      "pos": [
+        -525.421,
+        38.159,
+        137.024
+      ],
+      "look_at": [
+        -544.057,
+        70.627,
+        137.387
+      ],
+      "fov_deg": 60.0,
+      "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=1682 m (+450 m)",
+      "s_m": 1682.0,
+      "truck_s_m": null
+    },
+    {
+      "id": "g3b_ext34_s1272",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-B",
+      "pos": [
+        -243.496,
+        -236.604,
+        132.7
+      ],
+      "look_at": [
+        -223.817,
+        -240.813,
+        132.312
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=1272 m (Andersa, 3 lanes, noise screens); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 1272.0,
+      "truck_s_m": 1272.0
+    },
+    {
+      "id": "g3b_ext34_s1482",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-B",
+      "pos": [
+        -396.557,
+        -96.111,
+        134.496
+      ],
+      "look_at": [
+        -377.41,
+        -102.306,
+        133.634
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=1482 m (Andersa, ramp to Tysi\u0105clecia); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 1482.0,
+      "truck_s_m": 1482.0
+    },
+    {
+      "id": "g3b_ext34_s1658",
+      "type": "persp",
+      "kind": "exterior_3q",
+      "segment": "G3-B",
+      "pos": [
+        -524.188,
+        24.769,
+        136.647
+      ],
+      "look_at": [
+        -504.869,
+        19.132,
+        135.788
+      ],
+      "fov_deg": 50.0,
+      "note": "3/4 front-left exterior of the combination, truck centre at s=1658 m (approach to Rondo Putry); camera 14 m ahead, 9 m left, 2.2 m up",
+      "s_m": 1658.0,
+      "truck_s_m": 1658.0
+    },
+    {
+      "id": "g3b_rondo_put_approach",
+      "type": "persp",
+      "kind": "rondo_eye",
+      "segment": "G3-B",
+      "pos": [
+        -515.137,
+        28.652,
+        136.74
+      ],
+      "look_at": [
+        -554.253,
+        21.455,
+        137.678
+      ],
+      "fov_deg": 65.0,
+      "note": "driver eye 30 m before the ring entry (s=1668 m), looking at the ring centre (circle fit r=33.397 m)",
+      "s_m": 1668.0
+    },
+    {
+      "id": "g3b_rondo_put_above",
+      "type": "persp",
+      "kind": "rondo_above",
+      "segment": "G3-B",
+      "pos": [
+        -509.3,
+        -10.234,
+        180.178
+      ],
+      "look_at": [
+        -554.253,
+        21.455,
+        137.178
+      ],
+      "fov_deg": 55.0,
+      "note": "oblique from ~45 m up, 55 m back along the approach (same idea as control_cameras putry_above / biezenstwa_above)"
+    },
+    {
+      "id": "g3b_rondo_putry_approach",
+      "type": "persp",
+      "kind": "photo_match",
+      "segment": "G3-B",
+      "pos": [
+        -445.395,
+        -28.767,
+        134.48
+      ],
+      "look_at": [
+        -500.466,
+        15.05,
+        137.874
+      ],
+      "fov_deg": 60.0,
+      "note": "WORKING_VALUE viewpoint for the CC0 7204_May_2021 comparison (eye ~1.6 m from the verge looking up the road to the gantry); owner/lead may move it",
+      "s_m": 1578.0
+    },
+    {
+      "id": "sbs-g3-a-2818555625124739",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        566.9751,
+        -700.3567,
+        141.4535
+      ],
+      "look_at": [
+        529.6168,
+        -705.5124,
+        154.7867
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-3970163613102941",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        563.0025,
+        -698.2133,
+        141.4383
+      ],
+      "look_at": [
+        527.8658,
+        -711.9114,
+        154.7716
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-149248627179406",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        570.2865,
+        -703.23,
+        141.4734
+      ],
+      "look_at": [
+        532.7332,
+        -699.7689,
+        154.8066
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-1406533339711789",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        569.0004,
+        -717.8432,
+        147.5188
+      ],
+      "look_at": [
+        533.798,
+        -699.5748,
+        152.7208
+      ],
+      "fov_deg": 43.44931,
+      "segment": "G3-A",
+      "pose_confidence": "C",
+      "pose_reason": "J1: heading mismatch and sunset",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-177786140912399",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        575.6741,
+        -714.9251,
+        141.5805
+      ],
+      "look_at": [
+        548.3884,
+        -689.2242,
+        155.5432
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-178689077481862",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        575.402,
+        -719.1113,
+        141.5799
+      ],
+      "look_at": [
+        554.3904,
+        -688.0701,
+        155.5426
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-223210302566110",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        572.8356,
+        -717.4215,
+        147.5288
+      ],
+      "look_at": [
+        537.425,
+        -699.2516,
+        151.522
+      ],
+      "fov_deg": 58.07978,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-309664504075286",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        576.3565,
+        -719.322,
+        147.5342
+      ],
+      "look_at": [
+        540.8975,
+        -701.2467,
+        151.5274
+      ],
+      "fov_deg": 58.07978,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-504348097385466",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        572.9199,
+        -706.7785,
+        141.5455
+      ],
+      "look_at": [
+        537.4668,
+        -695.3638,
+        156.1325
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-201270605169291",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        558.5239,
+        -696.59,
+        141.41
+      ],
+      "look_at": [
+        526.775,
+        -716.9427,
+        154.7433
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-2948595898752384",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        537.0445,
+        -701.8343,
+        147.2755
+      ],
+      "look_at": [
+        502.0472,
+        -682.4771,
+        147.9727
+      ],
+      "fov_deg": 38.52954,
+      "segment": "G3-A",
+      "pose_confidence": "C",
+      "pose_reason": "J3: horizon now derived from two road edges; fresh render review pending",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-1398898753813071",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        553.8349,
+        -695.0346,
+        141.3645
+      ],
+      "look_at": [
+        523.5656,
+        -717.529,
+        154.6977
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-320326319617139",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        541.5,
+        -690.4,
+        140.52
+      ],
+      "look_at": [
+        507.3665,
+        -707.048,
+        153.0798
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-320326-p128; anchors: ADR 0128 probe (zenith VP pitch 18.3 deg, zebra corner anchor, eye 0.9 m), accepted by REVIEW s14-0128 (D-3 left, D-6 right on the kerbed nose); re-rendered here on the regenerated main world: viaduct fascia line and roundabout kerb as on the photo",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-482392746429891",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        531.5,
+        -685.0,
+        140.5406
+      ],
+      "look_at": [
+        497.2609,
+        -700.1798,
+        154.5855
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-482392-sa; anchors: near kerb line from the bottom (x 0.62) to the right edge (y 0.83) as on the photo; far pier pair and abutment within ~30 px; same richlv 2020-08-15 sequence as 320326 (ADR 0128 shift +3.3/-2.6 m, +3.4 deg, eye 0.9)",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-454716650857984",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        503.4986,
+        -680.9073,
+        146.6139
+      ],
+      "look_at": [
+        467.5644,
+        -664.0869,
+        151.6942
+      ],
+      "fov_deg": 52.43723,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-500263111404933",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        521.9285,
+        -679.0652,
+        141.3712
+      ],
+      "look_at": [
+        488.6164,
+        -696.7437,
+        154.7044
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-1259231227807789",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        490.0795,
+        -662.122,
+        141.5505
+      ],
+      "look_at": [
+        458.9827,
+        -683.4577,
+        154.8838
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-751431972202262",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        468.3121,
+        -650.4673,
+        141.6864
+      ],
+      "look_at": [
+        437.2327,
+        -671.8284,
+        155.0196
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-A",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-303305168125936",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        458.6177,
+        -656.6821,
+        144.2164
+      ],
+      "look_at": [
+        420.2851,
+        -645.99,
+        148.2536
+      ],
+      "fov_deg": 53.60481,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-320215796381417",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        478.4868,
+        -667.578,
+        145.4629
+      ],
+      "look_at": [
+        440.1501,
+        -656.9011,
+        149.5001
+      ],
+      "fov_deg": 53.60481,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-381800493259507",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -195.8581,
+        -264.9491,
+        133.507
+      ],
+      "look_at": [
+        -226.6861,
+        -239.9889,
+        138.6668
+      ],
+      "fov_deg": 45.70832,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-2279538078845158",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -207.8893,
+        -252.2516,
+        133.0703
+      ],
+      "look_at": [
+        -239.8961,
+        -228.4945,
+        136.412
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-837235577143499",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -215.3933,
+        -246.9523,
+        132.8904
+      ],
+      "look_at": [
+        -246.7809,
+        -222.173,
+        133.7902
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-837235-c0; anchors: U-4a chevron at its orthophoto position (overrides at_en) x 0.861 and plate height 155 px; portal west column x 584 px; predicted east column 729 vs photo beam end ~736; road vanishing point consistent with the road axis",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-3281350541967811",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -305.1459,
+        -194.2418,
+        131.647
+      ],
+      "look_at": [
+        -271.2972,
+        -213.8156,
+        140.0807
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-328135-s0; anchors: portal columns x 189/560 px (beam level) photo vs render; EC chimneys x 910/936 px (heading); horizon 0.77 kept (left kerb vanishing ~0.78)",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-275528677534382",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -251.1175,
+        -217.2239,
+        131.8
+      ],
+      "look_at": [
+        -282.8927,
+        -192.9437,
+        132.6998
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-275528-s0; anchors: portal columns x 0.295/0.753 photo vs render (14 m portal, ADR 0127); camera in the middle lane (dashes both sides) in both; beam top y 160 px photo vs 151-157 model",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-150280503737744",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -275.2184,
+        -214.0732,
+        132.4223
+      ],
+      "look_at": [
+        -244.8114,
+        -240.0619,
+        132.4223
+      ],
+      "fov_deg": 39.99889,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-150280-s0; anchors: road vanishing point (lane dash + left kerb) y 356 / x 555 px photo vs y 439 / x 514 px render before; far road end 340 vs 430 px",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-297817221966185",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -360.5239,
+        -155.2852,
+        132.7506
+      ],
+      "look_at": [
+        -325.8429,
+        -173.6116,
+        140.5845
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-297817-s0; anchors: portal columns x 571/722 px photo vs render; EC chimneys x 950 (chimney-2) / 976 (chimney-1) px",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-3678296072299092",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -315.5019,
+        -167.5627,
+        132.7372
+      ],
+      "look_at": [
+        -347.9607,
+        -144.3376,
+        135.3864
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-367829-s0; anchors: near-road vanishing point y 384 px photo vs 403 px render before (x within 6 px)",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-962702164479831",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -344.6996,
+        -157.2277,
+        132.9582
+      ],
+      "look_at": [
+        -307.4705,
+        -149.7665,
+        145.541
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "J1: heading mismatch 35-40 degrees",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-1528935774382039",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -379.212,
+        -147.8264,
+        133.7481
+      ],
+      "look_at": [
+        -344.1428,
+        -166.2582,
+        139.2633
+      ],
+      "fov_deg": 47.02098,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-810896133189484",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -395.0329,
+        -121.5031,
+        133.657
+      ],
+      "look_at": [
+        -358.0131,
+        -114.0887,
+        146.8691
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-810896-m0; anchors: photo = car on SE-bound Andersa looking ~51 deg left of the road (kerb vanishing point x ~1440 px), kerb 2.5 x eye height left of the camera, guardrail top below the horizon (eye ~1.0 m)",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-810525063224609",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -399.1564,
+        -83.5219,
+        133.7522
+      ],
+      "look_at": [
+        -436.7729,
+        -86.1001,
+        147.1068
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-326454015490067",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -402.9479,
+        -73.5125,
+        134.2353
+      ],
+      "look_at": [
+        -430.7176,
+        -46.6346,
+        144.5513
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "J1: horizon/pitch mismatch",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-209622370971977",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -430.1027,
+        -53.9543,
+        134.0943
+      ],
+      "look_at": [
+        -467.8075,
+        -53.8924,
+        147.449
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-339463879238809",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -439.5066,
+        -31.5827,
+        134.9602
+      ],
+      "look_at": [
+        -470.3537,
+        -6.6715,
+        140.241
+      ],
+      "fov_deg": 52.89337,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "J1: lateral offset from photographed lane",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-468026894483428",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -467.171,
+        -18.3307,
+        134.7391
+      ],
+      "look_at": [
+        -504.8712,
+        -18.9213,
+        148.0937
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-4312632558767412",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -485.4222,
+        -0.77,
+        135.1874
+      ],
+      "look_at": [
+        -523.1072,
+        -1.9925,
+        148.542
+      ],
+      "fov_deg": 73.7398,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-494288258686575",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -486.2645,
+        -30.6583,
+        140.1677
+      ],
+      "look_at": [
+        -513.4152,
+        -1.733,
+        145.2831
+      ],
+      "fov_deg": 31.97862,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-494288-g0; anchors: median lamp ladder x + 1/d spacing (nearest lamp ~35-40 m ahead, ~33 m pitch), lane dash line, near road vanishing point x 441 / y 687 of 1280x960 (heading = road tangent + 7.5 deg); rendered: dash slanting from the lower left, right edge line, screen receding to x ~0.2 at the far left bend as on the photo",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-182011943700132",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -540.6402,
+        22.4286,
+        136.7608
+      ],
+      "look_at": [
+        -540.3666,
+        62.0412,
+        142.3073
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "J1: heading mismatch 30-40 degrees",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-b-1801374876712141",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -548.6268,
+        90.3625,
+        137.9268
+      ],
+      "look_at": [
+        -553.4462,
+        129.9796,
+        140.6207
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r1 d3 / r2 d0; anchors: noise screen starts close at the right edge (x 0.75-1.0, top y ~0.3); wide grass median with the opposite carriageway at x 0-0.3 on the left; horizon 0.56",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "sbs-g3-a-cm109685822",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        612.6878,
+        -590.89,
+        142.3712
+      ],
+      "look_at": [
+        636.5531,
+        -558.828,
+        143.9454
+      ],
+      "fov_deg": 42.99566,
+      "segment": "G3-A",
+      "pose_confidence": "C",
+      "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+      "note": "ADR0111 Commons GPS; manually inferred heading/FOV/eye/horizon WORKING_VALUE"
+    },
+    {
+      "id": "sbs-g3-a-cm92458760",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        602.2561,
+        -608.5589,
+        142.2285
+      ],
+      "look_at": [
+        640.1341,
+        -621.352,
+        143.4883
+      ],
+      "fov_deg": 42.99566,
+      "segment": "G3-A",
+      "pose_confidence": "C",
+      "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+      "note": "ADR0111 Commons GPS; manually inferred heading/FOV/eye/horizon WORKING_VALUE"
+    },
+    {
+      "id": "putry-island-1",
+      "kind": "diagnostic",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        566.9751,
+        -700.3567,
+        141.4535
+      ],
+      "look_at": [
+        558,
+        -734,
+        140
+      ],
+      "fov_deg": 50,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "WORKING_VALUE centre island E558 N-734 from ADR0123; same before/after, not a calibrated photo pose"
+    },
+    {
+      "id": "putry-island-2",
+      "kind": "diagnostic",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        563.0025,
+        -698.2133,
+        141.4383
+      ],
+      "look_at": [
+        558,
+        -734,
+        140
+      ],
+      "fov_deg": 50,
+      "segment": "G3-A",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "WORKING_VALUE centre island E558 N-734 from ADR0123; same before/after, not a calibrated photo pose"
+    },
+    {
+      "id": "putry-island-near",
+      "kind": "diagnostic",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        573,
+        -720,
+        141.5
+      ],
+      "look_at": [
+        558,
+        -734,
+        140
+      ],
+      "fov_deg": 60,
+      "note": "WORKING_VALUE close diagnostic inside Low shadow distance, not a matched photo pose"
+    }
+  ]
+}
