@@ -1,7 +1,9 @@
 # ADR 0159 — P1 after the s16 world integration: barriers and screens at Putry / Andersa
 
 Status: PROPOSED on branch `barriers-0159` (2026-11-13, s16); not merged. Numbers in "Validation" are measured on
-the regenerated world of this branch; a visual-critic review is still required (a subagent may not start one).
+the regenerated world of this branch (build after6, on main 24de4d95c); a visual-critic review is still required (a
+subagent may not start one). Builds 1-3 are the first agent's; after4-after6 correct them after all pairs were looked
+at (§2, §10-§12).
 Source: `docs/reports/visual/REVIEW-2026-11-13-s16-0146.md` (P1), `docs/reports/WORLD-INTEGRATION-2026-11-13-s16.md`
 (P1 g3b-eye-s1482, M29 free deck ends 32 -> 2), `docs/reports/visual/REVIEW-2026-11-13-s16-world-int.md` (P1
 regressions: turquoise cones, barriers starting in the air, yellow piers), lead request (merge and review PR #38).
@@ -31,7 +33,7 @@ Decision:
   WORKING_VALUE): the end is sunk (beam top 0.12 m above the foot line, the 0.31 m section below it), one short post
   stands in the middle of each 4 m terminal, and runs of 8-12 m (too short for two 4 m terminals, which used to get
   none and so started at full height) get 2 m terminals. This is the fix for "bariery W zaczynające się w powietrzu"
-  (482392, 297817, 3970163 of REVIEW s16-world-int).
+  (482392, 297817, 3970163 of REVIEW s16-world-int). The terminals alone did not settle 482392 and 297817: §10, §11.
 
 ## 2. 810896 / 962702: barriers of the grass median of the SE ramp
 
@@ -108,7 +110,7 @@ x 0.55): a baked shade until an under-deck occlusion exists. WORKING_VALUE.
 `ramp_wall_blocks` named the texture set `concrete_blocks_split`, which did not exist (flat colour). New set in
 `art-source/world/materials/_src/sets_facade.py`: split-face blocks 1.0 x 0.5 m, half-bond, recessed joints 25 mm at
 0.42 of the block albedo, tile 2 x 1 m, `set_tile`. Block size read off the photos against the 3.0 m screen
-(WORKING_VALUE +-0.1 m).
+(WORKING_VALUE +-0.1 m). The Bieżeństwa ramps have a different wall: §12.
 
 ## 8. Turquoise cones (1801374, 182011)
 
@@ -144,7 +146,9 @@ the camera of frame 482392; on the photo the turned-down end reaches the grass ~
 camera, and on the orthophoto (crop 36 m at E 532 N -688) the rail fades out at E 528.3 N -685.5 (+-1 m). Builds 1-3
 sank the terminal (it no longer starts in the air) but left the run 4.4 m short. `biezenstwa-link-barrier-se-end`
 (`kind: guardrail`): 14.4 m along the line of the rule run, the first 10 m on it (the rule run is cut and led onto
-it), free end with the 4 m terminal at E 528.05 N -686.07.
+it), free end with the 4 m terminal at E 528.05 N -686.07. New field `beside_structure: true`: the run key ends with
+`:structure`, so the rail goes to the bridge mesh of its chunk like the rule run it continues (ADR 0110); as a
+furniture part it cost one draw call and one shadow caster on twelve cameras (build after5).
 
 ## 12. Walls of the Bieżeństwa ramps (after4)
 
@@ -159,8 +163,97 @@ replaces `ramp_wall_blocks` there one for one.
 
 ## Validation
 
-VALIDATION_PLACEHOLDER
+World of this branch = build after6 (sixth regeneration; `generated/world_manifest.json` of commit 426e2bb69),
+generator of main 24de4d95c (with ADR 0153 / 0154) + this ADR. "Before" = main: the s16 integration for the barrier
+numbers and the SBS renders (`artifacts/world-int-s16`), main with 0153 / 0154 for the Low budget
+(`artifacts/review-0154/compare-Low-clear.tsv`, columns `_a`).
+
+| What | Before (main) | After (after6) |
+|---|---|---|
+| `build_world.py` | exit 0 | exit 0, 564 s; `fallback=True` 0 |
+| road consistency findings | 65 | 65 (arrow_no_exit 7, lane_blind_end 54, marking_off_carriageway 2, obstacle_in_lane 2) |
+| terrain walls > 0.15 m | 4 | 4 (max 0.345 m) |
+| `fidelity/run.py` | exit 0 | exit 0 |
+| free deck barrier ends (`roads.barrier_audit`) | 2 (xfail) | 0 (xfail removed) |
+| W-beam built by rule, m: bridge / median / approach | 2870 / 1133 / 444 | 2870 / 1133 / 444 |
+| ... embankment / beside a structure | 482 / 570 | 453 (cycle-path run -29) / 530 (link road -40) |
+| authored rails, m | 67 | 277 (NE median 101, SW median 96, link end 14, dk8 rails 67) |
+| rule barrier removed by `no_guardrail`, m | - | 69 (2 zones: 40 + 29) |
+| runs joined onto another rail (`joined_ends`) | 9 | 12 |
+| pytest `tests/gis` | 986 passed, 4 xfailed (review of 0154) | GIS_RESULT_PLACEHOLDER |
+| Unity EditMode | 484 / 484 (review of 0154) | 484 / 484 |
+| Unity import | - | OK, 64 chunks, corridor 41 |
+
+Low budget, 48 control cameras, clear (`artifacts/barriers-0159/budget-low.txt`; draws = renderer + shadow +
+instanced, estimate before SRP batching):
+- draw calls: max +0 (five cameras at Rondo Putry -1, as in builds 1-3);
+- triangles: +0.0 ... +1.0 % on 47 cameras; **+1.3 % on `driver-andersa-to-putry`** (304k -> 308k; the baseline is
+  rounded down to 1k, the exact difference is 3.0-4.0k of ~305k). After build 3 the same camera stood at +0.7 %
+  (dark rails of the Putry decks, NE median rail); the second median barrier of after4 adds 1172 triangles to its
+  chunk 2_4 (96 m authored + 82 m of cap run, posts every 2 m; `world_manifest.json` of after3 vs after6). The barrier
+  exists; nothing was cut to get back under 1.0 %.
+- after5 had +1 / +2 draws on twelve cameras at Rondo Bieżeństwa: the 14 m link rail of §11 was a furniture part and
+  became a new `barrier_steel` primitive of chunk 6_6. `beside_structure: true` (key suffix `:structure`) puts it in
+  the bridge mesh like the rule run it continues (after6: +0).
+
+Renders looked at (Low, editor; no phone run on this branch - CLAUDE.md rule 2 stays open for the lead):
+- all 42 SBS pairs Low-clear of after3, against the photo and the integration pair (mean absolute difference to
+  the integration render computed for all 84 Low-clear / Low-overcast frames to find what moved); the frames that
+  changed between after3 and after5 / after6 again (751431, 962702, 810896, 482392, 297817, 3678296, 1259231,
+  500263, 1528935, 303305); after6 differs from after5 by < 1.1e-5 MAE on every frame (the link rail moved between
+  two meshes).
+- Result against the integration: better on 494288 (dark closed deck barrier, dark posts, no raster), 810525 /
+  209622 / 326454 (block wall, no barrier on the link road), 209622 / 468026 / 4312632 (piers in shade), 1801374 /
+  182011 (no turquoise cones), 482392 (the barrier comes down to the ground beside the camera), 297817 (no stub at
+  the cycle path), 751431 / 1259231 (panel wall), 810896 (plain W-beam on posts along the near kerb, running on
+  past the ramp end instead of ending in a terminal mid-frame), 962702 (a barrier behind the kerb, as on the photo;
+  there was none). Not worse on any of the 42.
+- Deck joins (the first probes were unreadable): `after6/probe/p159-join-e-{plan,a,b,c}.png` and
+  `p159-join-w-{plan,a,b,c}.png` - from 11 m above with the former free end in the image centre and from three
+  sides at 7-8 m. East (E 669.4 N -781.9): the rail of the merging deck swings onto the rail of the other deck at
+  the gore, no end in the air. West (E -739.6 N 74.1): the ground W-beam of the approach meets the deck barrier at
+  the first screen post. The rails that meet differ in foot height (0.66 m east, 0.57 m west) and the joining end
+  climbs that over its last 6 m.
+- Median: `after6/probe/p159-median-up.png` (both rails from above), `p159-median-sw-eye.png`,
+  `p159-median-sw-nose.png` (both terminals on the grass of the nose), `p159-median-ne-face.png`; SBS 3678296: the
+  NE rail shows its beam, not its posts, to the NW-bound carriageway.
+- Copies <= 960 px in the main checkout: `artifacts/barriers-0159/pairs/` (`Low-clear`, `Low-overcast`: 42 + 42 SBS
+  pairs of after6; `probe`: 19 probe frames + 3 sheets).
+
+Not done: an independent visual-critic review (a subagent may not start one); a phone build.
+
 
 ## Open
 
-OPEN_PLACEHOLDER
+- **482392, pier / wall on the left edge** (x 0-0.08, y 0.4-0.78; REVIEW s16-world-int P1): unchanged. It is the
+  first pier pair of the hero viaduct seen from 6 m (camera pose B); the photo has the pier further left, out of
+  frame. Pose of the frame or pier station of the hero asset - not barrier work.
+- **482392, length of the turned-down end**: on the photo the beam slopes to the ground over ~10 m;
+  `GUARDRAIL_TERMINAL_M` is 4 m for every ground terminal of the region (WORKING_VALUE). Changing it moves every
+  barrier end of the region.
+- **Edge-west closures** ("zapory"): two closure rows 0.5 / 0.9 m apart are built in C# (`WorldEdgeBuilder`), not in
+  worldgen; the xfail of the overlap audit stays (3 xfails in `tests/gis`).
+- **Bridge kerb**: `BRIDGE_KERB_H` 0.20 m (WORKING_VALUE) against ~0.3 m estimated on 494288; the photo does not
+  resolve it (UNVERIFIED), not changed.
+- **Median near the nose**: the generated median edge of the SE-bound carriageway lies up to 2.3 m SW of the
+  orthophoto at E -308 (the median is wider than the real one there). Road geometry; the SW rail follows the
+  generated kerb.
+- **NE median barrier type**: the orthophoto shows a wider double line than on the SW edge (double-sided barrier or
+  beam + spacer rail); built as a single W-beam. UNVERIFIED.
+- **Cap under the SW barrier**: on the ramp the posts stand on the 1.2 m concrete cap; photo 810896 has a ~0.5 m
+  paved strip and the posts in grass.
+- **297817** (2017) shows the median without any barrier; 810896 / 962702 (2020) and the orthophoto have both. The
+  world follows the later state, so this pair has rails where its photo has none.
+- **962702**: the pose (confidence C, "heading mismatch") stands in the median grass, so the new SW rail crosses the
+  bottom right corner instead of lying behind the kerb at y 0.8. Pose, not world.
+- **Authored rails of ADR 0100 / 0123** (`dk8-e-split-barrier`, `dk8-ramp-split-barrier`, `-n`): drawn under the
+  wording "road on the right", which is the opposite of what `guardrail()` builds (§2). Which way their beams face
+  was not checked here.
+- **Panel wall**: staggered rectangles 1.5 x 1.5 m; the real panels are cruciform (§12).
+- **Triangles on `driver-andersa-to-putry`**: +1.3 % (see Validation) - the lead decides whether the second median
+  barrier needs a cheaper post or a far LOD.
+- **Deck joins**: the joining end climbs 0.57-0.66 m over 6 m (see Validation); fine from the carriageway, visible
+  as a slope from above.
+- PR #38: the review comment is in `artifacts/barriers-0159/pr38-comment.md`, not posted (owner's consent needed).
+- The SW-edge dots "every ~1.4 m" of the first draft of this ADR were a misreading (they are the 2.0 m posts of the
+  SW barrier, §2).
