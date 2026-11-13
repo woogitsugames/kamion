@@ -1,0 +1,395 @@
+{
+ "zadanie": "M50 / research/mistral/p9-furniture-3 — samokontrola 20 % manifest.csv",
+ "seed": 20261113,
+ "metoda": "sortowanie po id; random.Random(seed).sample(ids, round(0.2*N)); N=49, próba=10",
+ "manifest_rows": 49,
+ "sample_size": 10,
+ "sample_ids": [
+  "M50-001",
+  "M50-002",
+  "M50-005",
+  "M50-009",
+  "M50-012",
+  "M50-024",
+  "M50-030",
+  "M50-033",
+  "M50-041",
+  "M50-047"
+ ],
+ "reguly": {
+  "wiersze_foto": [
+   "url http(s)",
+   "licencja",
+   "status w słowniku",
+   "WGS84 6 miejsc",
+   "sezon+pora_dnia",
+   "kierunek_deg",
+   "azymut+odległość w uwagach"
+  ],
+  "wiersze_dokumentowe": [
+   "url http(s)",
+   "licencja",
+   "status w słowniku",
+   "dokument_strona identyfikowalny (numer strony / rozdział / tabela / metryczka; karty producentów bez paginacji oznaczone nazwą sekcji)"
+  ]
+ },
+ "wyniki": [
+  {
+   "id": "M50-001",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "VERIFIED_WIZJA"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "wgs84_6miejsc": {
+     "ok": true,
+     "note": ""
+    },
+    "sezon_i_pora": {
+     "ok": true,
+     "note": ""
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "note": ""
+    },
+    "kierunek_deg": {
+     "ok": true,
+     "note": ""
+    },
+    "azymut_odleglosc_w_uwagach": {
+     "ok": true,
+     "note": ""
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-002",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "VERIFIED_WIZJA"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "wgs84_6miejsc": {
+     "ok": true,
+     "note": ""
+    },
+    "sezon_i_pora": {
+     "ok": true,
+     "note": ""
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "note": ""
+    },
+    "kierunek_deg": {
+     "ok": true,
+     "note": ""
+    },
+    "azymut_odleglosc_w_uwagach": {
+     "ok": true,
+     "note": ""
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-005",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "VERIFIED_WIZJA"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "wgs84_6miejsc": {
+     "ok": true,
+     "note": ""
+    },
+    "sezon_i_pora": {
+     "ok": true,
+     "note": ""
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "note": ""
+    },
+    "kierunek_deg": {
+     "ok": true,
+     "note": ""
+    },
+    "azymut_odleglosc_w_uwagach": {
+     "ok": true,
+     "note": ""
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-009",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "VERIFIED_WIZJA"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "wgs84_6miejsc": {
+     "ok": true,
+     "note": ""
+    },
+    "sezon_i_pora": {
+     "ok": true,
+     "note": ""
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "note": ""
+    },
+    "kierunek_deg": {
+     "ok": true,
+     "note": ""
+    },
+    "azymut_odleglosc_w_uwagach": {
+     "ok": true,
+     "note": ""
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-012",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "TO_VERIFY"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "wgs84_6miejsc": {
+     "ok": true,
+     "note": ""
+    },
+    "sezon_i_pora": {
+     "ok": true,
+     "note": ""
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "note": ""
+    },
+    "kierunek_deg": {
+     "ok": true,
+     "note": ""
+    },
+    "azymut_odleglosc_w_uwagach": {
+     "ok": true,
+     "note": ""
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-024",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "TO_VERIFY"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "wgs84_6miejsc": {
+     "ok": true,
+     "note": ""
+    },
+    "sezon_i_pora": {
+     "ok": true,
+     "note": ""
+    },
+    "data_zdjecia": {
+     "ok": true,
+     "note": ""
+    },
+    "kierunek_deg": {
+     "ok": true,
+     "note": ""
+    },
+    "azymut_odleglosc_w_uwagach": {
+     "ok": true,
+     "note": ""
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-030",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "VERIFIED"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "dokument_strona_identyfikowalny": {
+     "ok": true,
+     "note": "STO ZDM TOS_1 v03/2020, rozdz. 3 (DOCX)"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-033",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "VERIFIED"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "dokument_strona_identyfikowalny": {
+     "ok": true,
+     "note": "Dz.U. 2019 poz. 2311 cz. 2, zał. 3, s. 754"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-041",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "VERIFIED"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "dokument_strona_identyfikowalny": {
+     "ok": true,
+     "note": "Dz.U. 2019 poz. 2311 cz. 2, zał. 4, s. 843"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-047",
+   "checks": {
+    "url_zrodla_obecny": {
+     "ok": true,
+     "note": ""
+    },
+    "licencja_obecna": {
+     "ok": true,
+     "note": ""
+    },
+    "status_w_slowniku": {
+     "ok": true,
+     "note": "VERIFIED"
+    },
+    "data_dostepu": {
+     "ok": true,
+     "note": ""
+    },
+    "dokument_strona_identyfikowalny": {
+     "ok": true,
+     "note": "karta producenta bez paginacji — oznaczenie sekcji: karta „STRUNOBETONOWE WIROWANE ŻERDZIE E"
+    }
+   },
+   "pass": true
+  }
+ ],
+ "wszystkie_przedmioty_zaliczone": true
+}
