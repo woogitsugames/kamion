@@ -57,6 +57,14 @@ b5: road consistency **65**, na trasie `lane_blind_end` **1** (bez regresji wobe
   w kadrze zbyt duży i bez przejścia, poza pewnością pozy C), 494288 (kapa ciemniejsza, nie „bieżnia”), 962702,
   1259231, 482392 (filary/głowice). Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagentów).
 
+## Epoka zdjęć (przegląd paczek badawczych 02, §5 „0161”)
+Kadry 182011 (2019), 4312632 / 962702 / 1259231 / 482392 (2020) i cm92458760 (2020) są sprzed portalu C (2021) i
+przebudowy Al. Tysiąclecia (2021/22). Sprawdzone: każda zmiana świata w tym ADR ma położenie z ortofoto GUGiK
+(portal p40 — `hr_gantry.png`, sygnalizator — `hr_182a.png` z cieniem wysięgnika, P-8 / D-1, klomb, wyjazd Kwadrat),
+zdjęcie służy tylko do rozpoznania obiektu; nic nie zostało przesunięte pod zdjęcie wbrew ortofoto. Oznakowanie
+i zieleń w tych kadrach porównywać z G3 2024 / P10, nie z 2019–2020. Kadry Panoramax P1-NNN (az. w `manifest.csv`,
+kamera ~1,3–1,5 m ESTIMATED) — nowe kamery kontrolne poza zakresem 0161 (otwarte, do lidera).
+
 ## Konsekwencje
 - Pozy pewność C: przy nowych zdjęciach właściciela (D-list, brama Kwadrat) do ponownej resekcji.
 - Szerokość wyjazdu Kwadrat przy bramie (realnie szersza) czeka na zdjęcia bramy (D-list poz. 1).
