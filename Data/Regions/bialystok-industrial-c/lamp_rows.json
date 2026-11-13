@@ -97,6 +97,47 @@
         ]
       ],
       "proto_mast": "lamp_double_mast_10m"
+    },
+    {
+      "id": "tysiaclecia-nb-east-double-lamps",
+      "reason": "ADR 0162 (REVIEW s16b P1, sbs 1801374876712141: double-arm lamp x 0.68 missing). Mapillary 1801374876712141 (gpsmapper 2019, CC BY-SA 4.0, reference only): double-arm columns with arced arms on the east verge of the northbound al. Tysiąclecia, between the carriageway and the glazed noise barrier. GUGiK WMS HighResolution 0.08 m (cells c_03_08 / c_03_09): pole feet with arm shadows at N 114.7 / 146.4 / 182.4 / 219.2 / 258.4 / 297.9 (spacing 32-40 m), E -539.0 (+-0.5 m), 1.4 m in front of the barrier. The rule lamps of w197904074 stood 1.5 m further east, on the barrier line (hidden behind it on the photo pair) and out of phase. Same prototype as the DK8 median row (arc arms, luminaires 10.3 m, WORKING_VALUE).",
+      "source": "GUGiK ortho HighResolution c_03_08/c_03_09; Mapillary 1801374876712141",
+      "confidence": "medium",
+      "verify": "column height and arm reach on site",
+      "proto": "lamp_double_10m",
+      "suppress_rule_lamps": {
+        "osm_way": [
+          197904074
+        ],
+        "within_m": 14.0
+      },
+      "deck_snap_m": 0.0,
+      "points_en": [
+        [
+          -539.5,
+          114.7
+        ],
+        [
+          -539.0,
+          146.4
+        ],
+        [
+          -539.0,
+          182.4
+        ],
+        [
+          -539.0,
+          219.2
+        ],
+        [
+          -539.0,
+          258.4
+        ],
+        [
+          -539.0,
+          297.9
+        ]
+      ]
     }
   ]
 }
