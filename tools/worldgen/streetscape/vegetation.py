@@ -291,7 +291,7 @@ def garden_canopies(trees, rp, report):
         species=tree['p'].removeprefix('tree_')
         # Height relation is a working typology, not an ortho height measurement.
         required=float(plot.get('house_h') or 6.)+3.5
-        changed['h']=round(min(PLT.INST_H_M[species][1],max(float(tree['h']),required)),1)
+        changed['h']=round(max(float(tree['h']),min(PLT.INST_H_M[species][1],required)),1)
         result.append(changed)
         rows.append({'src':tree['src'],'species':species,'height_before_m':tree['h'],'height_after_m':changed['h'],'width_multiplier':width,'position':[tree['e'],tree['n']]})
     report['garden_canopies']={'source':'WORKING_VALUE width/height; P07/P08/P12 typology; original ortho positions retained','modified':len(rows),'added_instances':0,'high_only':True,'list':rows}
