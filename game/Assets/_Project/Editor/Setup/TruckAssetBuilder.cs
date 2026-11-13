@@ -1289,6 +1289,10 @@ namespace Game.Editor.Setup
             QL("truck-side", new Vector3(-9.5f, 1.7f, 1.9f), new Vector3(0f, 1.6f, 1.9f), 42f, "r10: tractor driver side, square on (door, steps, arch, tank, skirt, rear wheels, gap to the trailer).");
             QL("truck-rear34", new Vector3(-5.2f, 2.0f, -3.6f), new Vector3(-0.4f, 1.3f, 2.2f), 45f, "r10: tractor from behind the cab, driver side (tank, rear mudguard, cab back, coiled lines, trailer front).");
             QL("trailer-side", new Vector3(-11.5f, 1.8f, -6.2f), new Vector3(0f, 1.7f, -6.2f), 55f, "r10: curtainsider driver side (curtain, straps, rail, side guards, pallet box, tridem).");
+            // ADR 0181: lamp close-ups (lens structure, plate illumination). Trailer rear lamps sit 12.0 m behind the kingpin
+            // (truck frame z -11.33), the tractor combination lamp at the frame end under the trailer front.
+            QL("lamp-trailer", new Vector3(-1.75f, 1.20f, -13.2f), new Vector3(-0.50f, 0.90f, -11.33f), 30f, "0181: trailer left combination lamp + number plate, 2 m (lens structure, plate lamp).");
+            QL("lamp-truck", new Vector3(-1.75f, 1.05f, -2.75f), new Vector3(-0.90f, 0.82f, -0.85f), 30f, "0181: tractor left combination lamp + rear fog lamp, 2 m (lens structure).");
             QL("truck-34r", new Vector3(6.4f, 1.9f, 10.2f), new Vector3(0f, 1.6f, 1.8f), 45f, "r10: TRAKT front 3/4, passenger side (exhaust stack, aftertreatment, battery box, kerb mirror).");
         }
 
