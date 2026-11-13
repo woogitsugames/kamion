@@ -105,3 +105,5 @@ Guard cache wykrył dodatkowe nieaktywne _RECEIVESHADOWS_ON/_ZWRITE_ON dodane do
 Świat after wygenerowany: 543.6574765 s, bez fallback=True. NASTĘPNY KROK: import i kamery after.
 
 Import after zakończony.
+
+Zapisano after/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
