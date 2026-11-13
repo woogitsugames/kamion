@@ -27,6 +27,7 @@
 | dojind-0196 | Fable | zakład building_part + bramy segmentowe, zacieki, kamera krywlany_runway | nowy |
 | MISTRAL-TASKS-10 | Sonnet | zlecenia M62+ → `docs/owner/MISTRAL-TASKS-10.md` | — |
 - 23:0x: krytyk **0181 SCAL warunkowo** (`REVIEW-2026-11-13-s20-0181.md`: P1 aliasing High, artefakty Low, brak kamery tablicy) → agent Opus r2 w worktree lamplens-0181 (21. agent). **`docs/owner/MISTRAL-TASKS-10.md` gotowe** (M62–M69, kolejność M62→M65→M68→M63→M66→M69→M64→M67) — do przekazania właścicielowi.
+- 23:1x: przegląd **M52-FIX-3 = FIX ponownie** (tylko pkt 2 — oględziny kadrów: 10/26 błędnych, „4 niedostępne w CDN” nieprawda, 11 par duplikatów md5; pkt 1/3/4/5 OK) → blok **M52-FIX-4** w `docs/owner/MISTRAL-FIXES-11.md` do wklejenia właścicielowi. Nie scalone.
 - **Ostatni przydzielony ADR: 0196.** Kolejność integracji: krytycy 0181/0172 + domknięcia 0170/0184/0183 → scal (generated → --ours, overrides = suma) → JEDNA regeneracja → pytest → BuildBatch truck/trailer → EditMode → czysty APK → PSO → APK → gate3 A16 + gate12-phone. Nowe ADR 0185–0196 scalać po tej regeneracji (druga regeneracja).
 
 # STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
