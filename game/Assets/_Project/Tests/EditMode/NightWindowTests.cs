@@ -77,15 +77,16 @@ namespace Game.Tests
         {
             var m = LightingPreset.CreateDusk().CreateModel();
             int magenta = 0, n = 0;
+            var bad = new System.Text.StringBuilder();
             for (int gi = 0; gi <= 18; gi++)
             for (int zi = 0; zi <= 6; zi++)
             {
                 float cosT = Mathf.Sin(zi * 4f * Mathf.Deg2Rad);            // 0..24 deg above the horizon
                 var c = m.ChromaAt(cosT, gi * 10f * Mathf.Deg2Rad);
                 n++;
-                if (c.r > c.g * 1.03f && c.b > c.g * 1.03f) magenta++;
+                if (c.r > c.g * 1.03f && c.b > c.g * 1.03f) { magenta++; bad.Append($" [elev {zi * 4} gamma {gi * 10}: {c.r:F2} {c.g:F2} {c.b:F2}]"); }
             }
-            Assert.AreEqual(0, magenta, $"magenta chroma in {magenta}/{n} samples of the low dome");
+            Assert.AreEqual(0, magenta, $"magenta chroma in {magenta}/{n} samples of the low dome:{bad}");
             var h = m.ChromaAt(Mathf.Sin(2f * Mathf.Deg2Rad), 0f);
             Assert.Less(h.b, h.g, $"horizon toward the sun must be orange-yellow (B < G): {h}");
             Assert.Greater(h.r, h.g, $"horizon toward the sun warm: {h}");
