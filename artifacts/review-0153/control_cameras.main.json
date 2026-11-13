@@ -1,0 +1,395 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "driver_andersa_to_putry",
+   "look_at": [
+    -292.594,
+    -185.604,
+    131.377
+   ],
+   "note": "truck driver eye 2.5 m, right lane of Andersa (DK19/DK65) approaching Rondo Putry",
+   "pos": [
+    -203.625,
+    -250.453,
+    133.334
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "putry_above",
+   "look_at": [
+    -554.476,
+    21.445,
+    140.759
+   ],
+   "note": "Rondo Putry from ~40 m (two-level: Andersa viaduct above the ring)",
+   "pos": [
+    -484.476,
+    101.445,
+    182.759
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "kwadrat_park_gate",
+   "look_at": [
+    639.834,
+    -563.986,
+    142.18
+   ],
+   "note": "from the public road back into the Kwadrat Park depot access road (route start)",
+   "pos": [
+    608.589,
+    -608.909,
+    143.002
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk8_dk19_exit",
+   "look_at": [
+    -710.709,
+    663.642,
+    145.971
+   ],
+   "note": "Al. Tysiąclecia Państwa Polskiego northbound, DK8/DK19 exit from the city",
+   "pos": [
+    -639.05,
+    580.064,
+    146.367
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "biezenstwa_above",
+   "look_at": [
+    554.682,
+    -716.454,
+    145.815
+   ],
+   "note": "Rondo Pamięci Bieżeństwa 1915 r.",
+   "pos": [
+    504.682,
+    -761.454,
+    183.815
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 62.0,
+   "id": "photo_biezenstwa_ground",
+   "look_at": [
+    542.607,
+    -738.329,
+    148.815
+   ],
+   "note": "photo match: CC0 20201102_152339 Rondo Pamięci Bieżeństwa (approximate viewpoint)",
+   "pos": [
+    576.9,
+    -676.204,
+    141.313
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "stretch_01",
+   "look_at": [
+    693.262,
+    -464.788,
+    142.478
+   ],
+   "note": "reference stretch, driver eye 2.5 m: Kwadrat Park yard, loading docks on the right",
+   "pos": [
+    720.765,
+    -411.421,
+    143.856
+   ],
+   "route_s_m": 30.0,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "stretch_02",
+   "look_at": [
+    636.247,
+    -570.373,
+    142.515
+   ],
+   "note": "reference stretch, driver eye 2.5 m: yard road between the halls toward the gate",
+   "pos": [
+    663.358,
+    -516.839,
+    143.778
+   ],
+   "route_s_m": 150.0,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "stretch_03",
+   "look_at": [
+    583.089,
+    -654.563,
+    141.33
+   ],
+   "note": "reference stretch, driver eye 2.5 m: depot gate (lift gate) and the exit to the public road",
+   "pos": [
+    610.0,
+    -606.666,
+    143.037
+   ],
+   "route_s_m": 255.0,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "stretch_04",
+   "look_at": [
+    503.599,
+    -667.112,
+    141.156
+   ],
+   "note": "reference stretch, driver eye 2.5 m: approach to Rondo Bieżeństwa under the Andersa viaduct",
+   "pos": [
+    557.025,
+    -691.802,
+    142.114
+   ],
+   "route_s_m": 360.0,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_onramp_andersa",
+   "look_at": [
+    351.136,
+    -592.413,
+    141.794
+   ],
+   "note": "driver eye 2.5 m on the on-ramp beside the Andersa westbound ramp (r4 blocker, s 571 / 604 m)",
+   "pos": [
+    397.836,
+    -610.329,
+    142.881
+   ],
+   "route_s_m": 540.0,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_putry_approach",
+   "look_at": [
+    -509.976,
+    23.867,
+    136.129
+   ],
+   "note": "driver eye, Andersa approach to Rondo Putry: E-1 diagram, A-7 + C-12",
+   "pos": [
+    -421.784,
+    -57.522,
+    134.721
+   ],
+   "route_s_m": 1540.0,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_putry_entry_signs",
+   "look_at": [
+    -512.91,
+    26.587,
+    136.194
+   ],
+   "note": "driver eye 12 m before the Putry entry: A-7 + C-12 plates, C-9",
+   "pos": [
+    -500.072,
+    16.9,
+    136.358
+   ],
+   "route_s_m": 1648.0,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "fire_station_route",
+   "look_at": [
+    -231.271,
+    -167.131,
+    136.256
+   ],
+   "note": "driver eye 2.5 m, 60 m before the fire station JRG2 (hero asset)",
+   "pos": [
+    -230.485,
+    -233.529,
+    132.856
+   ],
+   "route_s_m": 1276.666,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "fire_station_abeam",
+   "look_at": [
+    -239.183,
+    -161.016,
+    135.756
+   ],
+   "note": "driver eye 2.5 m abeam of the fire station JRG2 (52 m right of the route)",
+   "pos": [
+    -282.345,
+    -187.804,
+    132.526
+   ],
+   "route_s_m": 1345.666,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 24.5,
+   "id": "fire_station_ref7197",
+   "look_at": [
+    -231.271,
+    -167.131,
+    137.756
+   ],
+   "note": "frame of the CC0 photo 'File:7197 May 2021 in Bialystok.jpg' (Rakoon): the arched gable from across Andersa",
+   "pos": [
+    -271.13,
+    -239.961,
+    132.856
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "fire_station_above",
+   "look_at": [
+    -227.889,
+    -154.579,
+    134.256
+   ],
+   "note": "fire station JRG2 from ~48 m: roofs, yard, fence line",
+   "pos": [
+    -333.419,
+    -176.653,
+    179.256
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "route_onramp_andersa_above",
+   "look_at": [
+    355.754,
+    -594.331,
+    140.765
+   ],
+   "note": "oblique from above-left over the on-ramp / Andersa ramp end (r4 blocker, s 571-610 m)",
+   "pos": [
+    379.632,
+    -628.077,
+    156.765
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "stretch_05_docks",
+   "look_at": [
+    628.947,
+    -489.76,
+    143.631
+   ],
+   "note": "reference stretch: Kwadrat Park loading docks (11 doors) from the yard, eye 2.5 m",
+   "pos": [
+    640.455,
+    -523.22,
+    144.131
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "g3a_eye_s0262",
+   "look_at": [
+    588.018,
+    -646.554,
+    142.035
+   ],
+   "note": "gate3: driver eye 2.5 m on the autopilot line, 40 m ahead, s=262 m (+250 m)",
+   "pos": [
+    607.187,
+    -611.456,
+    142.967
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 65.0,
+   "id": "g3a_rondo_bie_approach",
+   "look_at": [
+    554.676,
+    -716.554,
+    143.35
+   ],
+   "note": "gate3: driver eye 30 m before the ring entry (s=326 m), looking at the ring centre (circle fit r=23.362 m)",
+   "pos": [
+    576.216,
+    -667.448,
+    142.293
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "g3b_eye_s1482",
+   "look_at": [
+    -409.16,
+    -71.827,
+    134.12
+   ],
+   "note": "gate3: driver eye 2.5 m on the autopilot line, 40 m ahead, s=1482 m (+250 m)",
+   "pos": [
+    -380.263,
+    -99.503,
+    134.357
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "g3b_rondo_putry_approach",
+   "look_at": [
+    -500.466,
+    15.05,
+    137.874
+   ],
+   "note": "gate3: WORKING_VALUE viewpoint for the CC0 7204_May_2021 comparison (eye ~1.6 m from the verge looking up the road to the gantry); owner/lead may move it",
+   "pos": [
+    -445.395,
+    -28.767,
+    134.48
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    -554.476,
+    21.445
+   ],
+   "height": 260.759,
+   "id": "ortho_putry",
+   "note": "orthographic top view for overlay on the GUGiK orthophoto",
+   "size_m": 260.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "bialystok-industrial-c",
+ "schema": "truck-sim-pl/control-cameras/1"
+}
