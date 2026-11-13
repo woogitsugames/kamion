@@ -45,8 +45,28 @@ regionu C (inne kody znaków i tablice), a brakujące prototypy byłyby po cichu
   artefakt granicy.
 - Kamery kontrolne Low i porównanie z kadrami: patrz „Wizualnie”.
 
-## Wizualnie
-(uzupełniane po renderze)
+## Wizualnie (Low, overcast 2340×1080 + clear 1920×1080 dla kadrów foto; `artifacts/dojlidy-import-0174/{view,sbs}`)
+Obejrzane: 7 kamer trasy, 6 foto, 4 krawędzie, truck-at-gate; zestawienia foto|render `sbs/sbs-P11-*.jpg`.
+- **Zgodne układem (D51 „mniej więcej jak na zdjęciach”)**: P11-056 (szeroka Dywizjonu 303, boczna droga odchodząca na
+  północ i skręcająca w lewo, łąka, latarnie jednoramienne); P11-129 w kierunku 243° (brama ze szlabanem, droga
+  wewnętrzna, blok szpitala) — kierunek 63° odrzucony z renderu; P11-001 (Kuronia na wschód, DDR/chodnik z kostki,
+  wielka szara hala po prawej); trasa s1370 (Kuronia, hala z płyt warstwowych + ogrodzenie panelowe).
+- **Rozbieżności do poprawy (kolejne zadania, nie w tym imporcie)**:
+  1. latarnie: w kadrach SSSE (P11-001, 063, 094) maszty z oprawą **dwuramienną Y**, u nas jednoramienne `lamp_8m/11m`
+     (reguła rodziny latarni nie zna SSSE);
+  2. P11-001: hala Kontri (Kuronia 3) — 3–4 kondygnacje biurowca przy bramie; u nas w tym miejscu płot i daleki budynek
+     (LoD1 6,01 m wg tabeli P12 — za niski albo obrys inny) → authored_override wysokości/obrysu;
+  3. P11-063: tam, gdzie na zdjęciu pas krzewów i słupki biało-czerwone z łańcuchem, u nas otwarty parking z ~100 autami
+     (parking istnieje w OSM, ale zasłonięty zielenią) — brak żywopłotu/krzewów przy jezdni i słupków z łańcuchem;
+  4. P11-056: pojedyncze drzewa rozsiane po łące lotniska (na zdjęciu łąka otwarta, linia drzew w tle) — reguła drzew
+     dla `grass/meadow` przy lotnisku;
+  5. P11-094: kadr nie trafiony (u nas hala po prawej, na zdjęciu Rosti po lewej) — GPS Commons lub obrys Rosti
+     (ADR 0166: obrys BDOT 2× za duży); zostaje UNVERIFIED;
+  6. s1370 / P11-063: ślady opon (`tyre_scrub_tracks`, 168) na prostym odcinku trunk wyglądają jak plamy — do przeglądu
+     reguły dla regionu ≠ C.
+- Statystyki kamer (SceneStats, Low, renderScale 0,75): trasa dojlidy draws 71–390 (mediana 203), tris 95–277 k;
+  region C (bldg-0167 r2, Low clear, kamery oka kierowcy) draws 191–461, tris 180–331 k. Foto P11-001 (vFOV 40°, długi
+  widok) 466 k tris — powyżej maksimum C; do sprawdzenia na telefonie, gdy region trafi do builda.
 
 ## Testy
 - pytest: `tests/gis/test_region_generic_0166.py` 3/3, nowy `tests/gis/test_photo_cameras_0174.py` 2/2.
