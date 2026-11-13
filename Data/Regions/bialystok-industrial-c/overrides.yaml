@@ -2499,7 +2499,9 @@ overrides:
     kind: gate3_sign
     photo: ["commons:cm92458760"]
     at_en: [540.13, -743.7]
-    travel_bearing_deg: 31
+    # r2 (bearing 31, square to the generated east carriageway) showed the plates edge-on from the photo pose; on the
+    # photo the 0.9 m triangle back is ~0.6 m wide from bearing 312 -> the plate normal is ~50 deg off the view: faces ~185
+    travel_bearing_deg: 5
     lower_edge_m: 2.1
     parts: [{face: A-7}, {face: C-12}]
     reason: >-
