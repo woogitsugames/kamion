@@ -457,7 +457,7 @@ overrides:
     verify: board still standing, plate size on site
   - id: biezenstwa-street-name-north
     kind: gate3_sign
-    at_en: [550.2, -699.7]
+    at_en: [556.4, -699.4]
     travel_bearing_deg: 262
     lower_edge_m: 2.6
     post: teal
@@ -465,7 +465,11 @@ overrides:
     mapillary: ["2818555625124739", "3970163613102941", "201270605169291"]
     reason: >-
       ADR 0125: second teal name plate at the island edge, ~12 m ahead of richlv 2818555625124739 / 3970163613102941
-      (2020). Same method and accuracy as biezenstwa-street-name-east (+- 5 m, WORKING_VALUE).
+      (2020). Same method and accuracy as biezenstwa-street-name-east (+- 5 m, WORKING_VALUE). ADR 0160: the 0125
+      position was read from poses whose heading was 9-15 deg off (deck vanishing point); re-read from the ADR 0160
+      poses (eye 0.9, heading from the deck VP) with the post foot on the photo: 201270605169291 -> E 556.3 N -699.6
+      (3.7 m, x 0.12), 3970163613102941 -> E 555.8 N -699.6 (7.3 m, x 0.50), 2818555625124739 -> E 557.0 N -699.0
+      (10.1 m, x 0.56); mean E 556.4 N -699.4 (6.2 m east of the 0125 point). +- 1.5 m, WORKING_VALUE.
     confidence: low
     verify: plate position on site
   - id: biezenstwa-n-slip-nose
