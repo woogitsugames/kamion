@@ -617,7 +617,7 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
             for i in range(n):
                 um = (i + 0.5) * L / n + (2.5 if i % 2 else -2.5)
                 ops.append((um - 0.5, um + 0.5, zref + 0.15, zref + 2.25, 0.08, "door", cells("door_steel", hv("pd", i))))
-        if L > 18 and hfloat(key, "win") < 0.55:
+        if L > 18 and hfloat(key, "win") < 0.55 and variant.get("hall_windows", True):
             zw = min(zref + 3.2, ztop - 1.6)
             pitch = 6.0
             n = int((L - 6) // pitch)
@@ -866,7 +866,8 @@ def build_dock_lod1(acc, p, d, nout, u, zy, num, layer="buildings_low"):
 # ------------------------------------------------------------------------------------------- main
 def load(fc, origin, overrides, hero=None):
     ox, oy = origin
-    ovr = {o["target"]["building"]: o["set"] for o in overrides if o.get("target", {}).get("building")}
+    ovr = target_sets(overrides)
+    datum = lod1_base_datum(overrides)
     out = []
     for f in fc["features"]:
         p = f["properties"]
@@ -889,12 +890,53 @@ def load(fc, origin, overrides, hero=None):
                     pl = shapely.geometry.polygon.orient(op)
             if o.get("height_m"):             # ADR 0167: authored height (structures with no LoD1 / BDOT height)
                 p = {**p, "height_m": float(o["height_m"])}
+            if o.get("storeys"):              # ADR 0185: authored storey count (read off a photo)
+                p = {**p, "storeys": int(o["storeys"])}
             out.append({"id": bid, "poly": pl, "props": p, "ovr": o, "typ": "roof" if p.get("is_roof_only") else
                         classify(p, pl.area, o)})
-    return out + building_parts(out, overrides)
+            if datum:
+                out[-1]["lod1_datum"] = True
+    return out + building_parts(out, overrides, ovr, datum)
 
 
-def building_parts(blds, overrides):
+def target_sets(overrides):
+    """{building id: set} of the `target: {building}` overrides. ADR 0185: several overrides may target one building
+    (the regions' overrides.yaml is merged block by block from parallel branches) - their sets are merged in file
+    order, a later key replacing an earlier one (before: the last override replaced the earlier sets whole). A
+    building_part is targeted as `override:<its id>`."""
+    out = {}
+    for o in overrides:
+        bid = (o.get("target") or {}).get("building")
+        if bid:
+            out[bid] = {**out.get(bid, {}), **(o.get("set") or {})}
+    return out
+
+
+def lod1_base_datum(overrides):
+    """ADR 0185, override `kind: building_rules` / `lod1_base_datum: true` (opt-in per region). The LoD1 2024
+    `measuredHeight` is the height of the LoD1 solid above its bottom face (`ground_z_evrf2007` = the lowest ground of
+    the outline), while build() stands a building on the median ground of its outline: on a slope a large hall came
+    out 2-3.5 m taller than surveyed (bialystok-dojlidy: median +0.22 m, p95 +1.42 m, max +3.52 m over 329 buildings
+    with a LoD1 base). With the rule the roof is at LoD1 base + height."""
+    return any(o.get("kind") == "building_rules" and o.get("lod1_base_datum") for o in overrides)
+
+
+LOD1_DATUM_MIN = 0.6           # the datum rule never cuts a building below this share of its LoD1 height
+
+
+def roof_height(b, zref):
+    """Height of the roof above the reference ground zref (median ground of the outline). Default: the height of the
+    footprint data. With the LoD1 base datum rule (lod1_base_datum) and a known base level: base + height - zref."""
+    p = b["props"]
+    h = float(p.get("height_m") or 6.0)
+    base = p.get("ground_z_evrf2007")
+    if not b.get("lod1_datum") or base is None or not str(p.get("height_source", "")).startswith(
+            ("gugik_lod1", "authored_override")):
+        return h
+    return max(float(base) + h - zref, LOD1_DATUM_MIN * h, 2.5)
+
+
+def building_parts(blds, overrides, target=None, datum=False):
     """ADR 0179: authored volumes the footprint data merges into one outline (override `kind: building_part`): a
     BDOT10k hall whose office block is three times the LoD1 height of the hall gets the block as its own building.
     `polygon_en` (region-local E/N ring, traced on the orthophoto), `height_m`, optional `function` / `storeys`,
@@ -920,8 +962,19 @@ def building_parts(blds, overrides):
                     out.append({**b, "id": f"{b['id']}#cut{k}", "poly": g})
         p = {"function": o.get("function"), "height_m": float(o["height_m"]), "storeys": o.get("storeys"),
              "height_source": "authored_override", "name": o.get("name")}
-        s = dict(o.get("set") or {})
+        # ADR 0185: `target: {building: "override:<id>"}` overrides add to / replace keys of the part's own set;
+        # `ground_z_evrf2007` = level the height is measured from (with the region's lod1_base_datum rule; default:
+        # the median ground of the ring, as before)
+        s = {**(o.get("set") or {}), **((target or {}).get(f"override:{o['id']}") or {})}
+        if s.get("height_m"):
+            p["height_m"] = float(s["height_m"])
+        if s.get("storeys"):
+            p["storeys"] = int(s["storeys"])
+        if o.get("ground_z_evrf2007") is not None:
+            p["ground_z_evrf2007"] = float(o["ground_z_evrf2007"])
         out.append({"id": f"override:{o['id']}", "poly": pl, "props": p, "ovr": s, "typ": classify(p, pl.area, s)})
+        if datum:
+            out[-1]["lod1_datum"] = True
     return out
 
 
@@ -1035,7 +1088,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         zg = hf.sample(ring[:, 0], ring[:, 1])
         zref = float(np.median(zg))
         zbot = float(np.min(zg)) - 0.5
-        h = float(p.get("height_m") or 6.0)
+        h = roof_height(b, zref)
         ztop = zref + h
         key = b["id"]
         acc = Acc()
@@ -1146,6 +1199,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             bal_group = pair_[0] if FK.hfloat(key, "balg") < 0.7 else pair_[1]
         variant = {"ribbon": typ == "office" and FK.hfloat(key, "ribbon") < 0.5,
                    "drive_door": typ == "hall" and FK.hfloat(key, "drive") < 0.5, "basement": typ == "block"}
+        if typ == "hall" and b["ovr"].get("hall_windows") is False:     # ADR 0185: authored - the photographed
+            variant["hall_windows"] = False                             # hall has no row of small windows
         if typ == "office" and b["ovr"].get("ribbon") is not None:      # ADR 0171: authored window type (the far
             variant["ribbon"] = bool(b["ovr"]["ribbon"])                # ribbon rows carry grey spandrels)
         scheme = FK.hall_scheme(key, wall) if typ == "hall" else None
