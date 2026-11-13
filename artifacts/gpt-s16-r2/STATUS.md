@@ -18,3 +18,5 @@ Celowany EditMode GardenCanopyWidthTests: exit0; szczegóły targeted-editmode.x
 Celowany EditMode:8/8passed,0failed/skipped; skala koron zachowuje wysokość/początek i pakowaniecompactTRS. Przygotowano per-kamera porównanie z ostrożnym przedziałem kwantyzacji1ktris oraz limitemLow+2%; nie będzie podpisane jako GPU/device pomiar.
 
 ADR0154 opisuje źródła, WORKING_VALUE i luki zdjęć. Audyt rozszerzono o6hashy bibliotek modeli/atlasu, aby potwierdzić brak ubocznej zmiany modeli i materiałów pojazdów/lasu. Generowanie after nadal w tle.
+
+W świecie po zmianie przyjęto19posesji/34odcinki nowych żywopłotów:257.37m,3580trisHigh i3580trisLow. To wynik generatora, nie jeszcze pomiar kadru. Limit3600 nieprzekroczony. Dalej audyt i obrazy.
