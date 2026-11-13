@@ -16,6 +16,7 @@
 | 0168 | nawigacja: numer zjazdu ronda, max 3 komunikaty/manewr, ETA 1 Hz, ZeroGc na Recorder — Opus | `nav-0168` | `artifacts/live/nav-0168.md` |
 | 0169 | krawędź świata: zdublowane zapory edge-west (`WorldEdgeBuilder`), U-20/B-1, 115 krawędzi tras poza zasięgiem — **Fable** | `edge-0169` | `artifacts/live/edge-0169.md` |
 - **Właściciel 10:3x:** Fable NIE oszczędzać, działać na maksa (gdy limit się skończy, właściciel przełączy konto z wyzerowanym limitem). Ciągły zapis: agenci po każdym kroku commit + push gałęzi + live; lider HANDOVER po każdym zdarzeniu. Przegląd badań na Opusie (nie Sonnet).
+- **Mistral r8 (badania, paczka 03): `docs/owner/MISTRAL-TASKS-8-RESEARCH.md` M44–M48** (P4 przepisy, P7 tablice, luki P1, zdjęcia i landmarki Dojlidy/Krywlany); wynik: gałęzie `research/mistral-*` + PR, metadane w `research/mistral/<slug>/`. Kolejne od M49 dopisze przegląd do `RESEARCH-PACK-03-MISTRAL.md`. **R7: M39 pominąć** (robi 0168); M40 (odboje) zostaje dla Mistrala — 0165 go nie robi.
 - **Przejęcie przez nową sesję/konto:** przeczytaj ten blok → każdy wiersz tabeli: `artifacts/live/<live>.md` ma NASTĘPNY KROK; wznów jako NOWYCH agentów (nie SendMessage), gałęzie są na origin.
 - Następne: scalenia (0161 → 0162 → 0163, `generated/*` `--ours`, JEDNA regeneracja + `import-region.ps1` w main) → APK → krytyk → A16 gate3 A/B → S24+ High/30; 0165, 0166 osobno.
 - **Ostatni przydzielony ADR: 0169.**
