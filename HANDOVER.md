@@ -1,3 +1,20 @@
+# STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
+- **main** `526daa8d2`+ (= origin/main). Scalone w s19: **0180** (wieżowiec r2), **0182** (zmierzch + brud drzwi naczepy r5), **0179** (Dojlidy), Mistral **M50** (furniture-3 3b34a98df), **M51** #49 i **M53** #50 (z erratą), FIX-9 **M54-FIX-2, M49-FIX-2, M48-FIX-2**. **Świat w main NIE przebudowany** (ostatnio `93842a609`, s17).
+- **Gałęzie w toku (agenci s19 pracują do końca sesji; wznawiać jako NOWYCH z live w worktree):**
+| ADR | gałąź (sha przy STOP) | stan | live |
+|---|---|---|---|
+| 0170 | `horizon-0170` (de0ea6df8) | 4 faile pytest wyjaśnione, build 6 poprawka budżetu; Opus domyka → potem krytyk par `artifacts/horizon-0170/pairs4` | `.claude/worktrees/horizon-0170/artifacts/live/horizon-0170.md` + main `artifacts/live/horizon-0170.md` |
+| 0172 | `p1b-0172` (7e419ef4d) | r5 + ADR §4 walidacja; potem krytyk SBS | worktree `artifacts/live/p1b-0172.md` |
+| 0181 | `lamplens-0181` (e1c2c9567) | **GOTOWE** — krytyk w toku → `docs/reports/REVIEW-2026-11-13-s19-0181.md`; scalenie: konflikt `TruckExterior.shader` z 0182 = suma bloków, potem `TruckAssetBuilder.BuildBatch` + `TrailerAssetBuilder.BuildBatch` | worktree `artifacts/live/lamplens-0181.md` |
+| 0183 | `bollards-0183` (009272e77) | prototyp słupków z łańcuchem (LOD1 pas, kolor) | worktree `artifacts/live/bollards-0183.md` |
+| 0184 | `atlas-0184` (f9ab64081, OD tower-0180) | LOD1 `FAR_PLAIN_V` na płycie balkonowej + białe łaty NW wieżowca; rendery AFTER/testy w toku | worktree `artifacts/live/atlas-0184.md` |
+| — | `gates-s19` (9b4e65824) | GATE-3.md gotowy; GATE-1/2 w edytorze + komenda pomiaru telefonu (lider uruchomi po integracji) | worktree `artifacts/live/gates-s19.md` |
+- **Kolejność integracji:** krytycy (0181, 0170, 0172) → scal 0170, 0184, 0172, 0181, 0183 (`generated/*` → `--ours`, `overrides.yaml` = suma bloków) → JEDNA regeneracja (`pwsh -File artifacts/lead-s17/regen.ps1`) + `fidelity/run.py` (warunek 0179) → pytest gis → commit generated → `TruckAssetBuilder.BuildBatch` + `TrailerAssetBuilder.BuildBatch` (`SM_CabInterior_LOD0.fbx` poza gitem) → EditMode (2 znane faile `CarPaintMaterialTests.DepositionChannel_*`) → czysty APK → `pwsh tools/perf/pso-refresh.ps1 -BeforeApk artifacts/apk/kamion-0.1.0-<sha>.apk` → czysty APK → visual-critic SBS → gate3 A16 Low (PHONE_RUN ręcznie) + pomiar bramek 1–2 (komenda z `gates-s19`) → S24+ High/30 (bateria ≥ 40 %).
+- **Mistral:** właściciel: „Mistral wypuszcza na GitHub” (23:2x) — na starcie s20 `git fetch` + `gh pr list`. Do przejrzenia: **M47-FIX-2** 3da410039 (`research/mistral-p11-dojlidy-photos`, 43 opisy znaków — obejrzeć kadry), **M52-FIX-3** (`research/mistral-p2-surfaces-2`, cz. 1 1533368db — czekać na „gotowe”). Do wklejenia przez właściciela: `docs/owner/MISTRAL-FIXES-10.md` (M51-FIX-2, M53-FIX-2), `docs/owner/MISTRAL-TASKS-9.md` (M56–M61, kolejność M61→M59→M58→M56→M57→M60). #42 nie scalamy. ZIP-y w `research/_incoming/*-files-v2/v3`.
+- **Follow-upy niezlecone:** 0179 (Rosti, drzewa narożnika, kadr 063, K3, DDR, brama P11-129, kamera pasa startowego, las), 0180 P2 (NW LOD skok, rama okien szczytu, szkło SE, szczyt kremowy, maszty, SE w cieniu), 0182 P1-4 plamy latarni (rozsył/rozstaw) + P2 okna nocą/magenta/rozbłysk.
+- **Telefony:** A16 i S24+ online (A16 bateria 80 %). **Decyzje właściciela otwarte:** metryka „≤ 12 klatek > 40 ms / przejazd G3 A16 Low” (ADR 0177); odsłuch A/B audio 0176.
+- **Fable zawieszał się (watchdog 600 s) przy długim czekaniu na łańcuchy w tle — domykanie (testy/ADR) dawać Opus.** **Ostatni przydzielony ADR: 0184.**
+
 # SESJA 19 (start 2026-11-13 20:2x lokalnie; nowe konto: 5 h 0 % — reset 01:20; tydzień 0 %, Fable 0 %) — nowa sesja: czytaj TEN blok, potem „STOP S18”
 - **main** `d6a1bb8a1`. C: 733 GB. adb: S24+ RZCX60VE8ZY online, A16 RFGL34SJYDZ online od 20:26 (bateria 80 %, gra zainstalowana). PHONE_RUN brak. Crony :17/:47/:07.
 - Na starcie działały jeszcze zadania w tle z s18 (regen r3 0172, import Dojlid 0179 + pytest, full.ps1 r2 0180) — nowi agenci mają na nie poczekać, nie dublować.
