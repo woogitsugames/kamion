@@ -1999,12 +1999,14 @@ overrides:
       hashed pick gave grey render with dark ribbon windows; photo cm92458760: light blue render, a row of white
       double windows (pitch ~3 m, sill ~1 m) on the long NE side, a darker blue end block at the street (NW) end,
       grey plinth, dark roof edge. One blue tone for both parts (a second tone is one more draw per chunk and LOD).
-      Window frames are drawn dark (the frontage kit has one frame material).
+      Window frames are drawn dark (the frontage kit has one frame material). LOD1 panes in the frame material
+      (glass_lod1): the LOD1 of chunk 6_7 has no glass primitive and Low draws LOD1 only.
     confidence: medium
     verify: owner photo session (Bitwy Białostockiej / EC access road)
     set:
       frontage:
         wall: plaster_blue
+        glass_lod1: hall_flashing
         plinth_m: 0.5
         fascia: {material: hall_flashing, height_m: 0.35}
         glazing:
@@ -2027,13 +2029,15 @@ overrides:
       chimney pair): the top edge is 310 +-15 px above the eye line = 40 +-2 m above the eye, i.e. ~39 m above its
       ground. Cross-check on the orthophoto 2024-05-27: the roof is displaced ~15 m from the footprint, the roof of
       the 41.81 m tower (LoD1 2024, bdot ...CA0F) ~14.5 m. Light grey-white shell with a blue band about 9 m under
-      the top (photo; the brand panel above the band is not reproduced), bare flat top.
+      the top (photo; the brand panel above the band is not reproduced), bare flat top. Shell = plaster_grey (light
+      grey, albedo 0.62), not plaster_white: the tank would be the only user of plaster_white in chunk 6_7 (one
+      draw on Low), plaster_grey is drawn there already; the band shares plaster_blue with the outbuilding.
     confidence: medium
     verify: owner photo session (EC from Bitwy Białostockiej); any published height of the tank
     set:
       height_m: 39.0
       frontage:
-        wall: plaster_white
+        wall: plaster_grey
         plinth_m: 0.6
         accents:
           - {facing: [N, NE, E, SE, S, SW, W, NW], material: plaster_blue, z: [28.5, 30.5], min_len_m: 0.5}
@@ -2042,13 +2046,17 @@ overrides:
     reason: >-
       Two-storey trade pavilion right of frame cm109685822 (BDOT10k "obiekt handlowo-usługowy", 2 storeys, LoD1
       2024 8.57 m). The hashed pick gave beige render with punched windows; CC0 photo cm109685822 (Rakoon,
-      2021-09-04): grey-blue cladding, shopfront glazing along the whole ground floor of the road (NW) side, a row
-      of small windows on the upper floor, dark roof edge. Glazing heights read off the photo proportions.
+      2021-09-04): dark slate-grey cladding with a blue cast (the wall is in shade under a clear sky), shopfront
+      glazing along the whole ground floor of the road (NW) side, a row of small windows on the upper floor, dark
+      roof edge. Glazing heights read off the photo proportions. Wall = hall_plinth (neutral grey 0.25, precast
+      concrete set; round 1 used the saturated plaster_blue, which read royal blue against the photo and was one
+      more draw in chunk 6_6); LOD1 panes in the frame material (no glass primitive in the LOD1 of chunk 6_6).
     confidence: medium
     verify: owner photo session item 6 (Kwadrat Park lane)
     set:
       frontage:
-        wall: plaster_blue
+        wall: hall_plinth
+        glass_lod1: hall_flashing
         fascia: {material: hall_flashing, height_m: 0.5}
         glazing:
           - {facing: NW, span: [0.0, 1.0], z: [0.3, 3.2], pitch_m: 2.4, transom_m: 2.4, min_len_m: 20.0}
