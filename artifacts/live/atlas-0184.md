@@ -1,0 +1,5 @@
+# atlas-0184 (ADR 0184) — LIVE
+- Worktree `.claude/worktrees/atlas-0184`, gałąź `atlas-0184` od `origin/tower-0180` (29735d679). Junctiony Data/raw, kopie derived/cc0/_Generated(tower)/Library(main).
+- Źródło: `tools/worldgen/streetscape/facade_atlas.py` `FAR_PLAIN_V=(0.65,0.95)`, użyte w `buildings_mesh.py::lod1_wall` (quady `plain`, u 0.2..1.2). W tym u leży przęsło 0 rzędu balcony_1 (balkon): krawędź płyty malowana v 0.86..1.02 (pomiar T_facade_far_BaseColor 1024 px: 187/255 do v 0.79, 205-206 od v 0.87).
+- Plan: przenieść pasek gładki w u na przęsło bez balkonu (przęsło 1, u 4.0..5.0; czysto w v 0..1.4), v bez zmian; test; BEFORE/AFTER Low (r10_block_2..5 = LOD1 z bliska, >60 m od trasy) + High (LOD0, kontrola regresji).
+- NASTĘPNY KROK: `pwsh scripts/unity-slot.ps1 -Acquire -Owner atlas-0184; pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -Gate3 Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json -Cameras r10_block_1,r10_block_2,r10_block_3,r10_block_4,r10_block_5 -OutputDir artifacts/atlas-0184/before/Low-overcast`
