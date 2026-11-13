@@ -1,0 +1,72 @@
+{
+ "cameras": [
+  {
+   "id": "sig-mast-front",
+   "type": "persp",
+   "fov_deg": 30,
+   "pos": [
+    -615.438,
+    20.182,
+    136.1
+   ],
+   "look_at": [
+    -600.9,
+    13.5,
+    139.97
+   ],
+   "note": "ADR 0193 authored: S-1 head on a cantilever mast (junction n2629251364) from the approaching driver, 16 m",
+   "seat": "file"
+  },
+  {
+   "id": "sig-mast-back",
+   "type": "persp",
+   "fov_deg": 30,
+   "pos": [
+    -590.561,
+    12.05,
+    136.1
+   ],
+   "look_at": [
+    -600.9,
+    13.5,
+    139.97
+   ],
+   "note": "ADR 0193 authored: same head from behind (the old head showed a big white slab here)",
+   "seat": "file"
+  },
+  {
+   "id": "sig-pole-front",
+   "type": "persp",
+   "fov_deg": 28,
+   "pos": [
+    -611.278,
+    12.758,
+    136.1
+   ],
+   "look_at": [
+    -603.1,
+    9.0,
+    137.32
+   ],
+   "note": "ADR 0193 authored: pole head, 9 m",
+   "seat": "file"
+  },
+  {
+   "id": "sig-pole-34",
+   "type": "persp",
+   "fov_deg": 28,
+   "pos": [
+    -606.182,
+    14.268,
+    136.0
+   ],
+   "look_at": [
+    -603.1,
+    9.0,
+    137.32
+   ],
+   "note": "ADR 0193 authored: pole head, 3/4 from the right",
+   "seat": "file"
+  }
+ ]
+}
