@@ -86,6 +86,36 @@ namespace TruckSim.Audio
 
         public static float RetarderGain(float fill, float volume) => volume * Mathf.Pow(Mathf.Clamp01(fill), 0.9f);
 
+        // ---- ADR 0176: synthesised retarder (tone + flow) and engine-brake events; mirror tools/audio/synth0176_ab.py ----
+        /// <summary>Propshaft speed of the 0176 retarder loops at pitch 1 (tools/audio/synth0176.REF_SHAFT_RPM).</summary>
+        public const float RetarderRefShaftRpm = 1000f;
+        /// <summary>Shaft speed at which the rotor tone reaches full level (tip-speed law below it).</summary>
+        public const float RetarderToneFullRpm = 1600f;
+        public const float RetarderToneMix = 0.35f, RetarderFlowMix = 0.65f;
+
+        /// <summary>Propshaft speed [rpm] from road speed [m/s], driven-wheel radius [m] and final-drive ratio.</summary>
+        public static float ShaftRpm(float speedMs, float wheelRadius, float finalDrive) =>
+            Mathf.Abs(speedMs) / Mathf.Max(wheelRadius, 0.1f) * finalDrive * (60f / (2f * Mathf.PI));
+
+        /// <summary>
+        /// Rotor/stator blade-pass tone: grows with the fill and with the rotor tip speed (power 1.5 up to
+        /// <see cref="RetarderToneFullRpm"/>), so a full retarder at walking pace is a faint whine, not a full one.
+        /// </summary>
+        public static float RetarderToneGain(float fill, float shaftRpm, float volume) =>
+            volume * RetarderToneMix * Mathf.Pow(Mathf.Clamp01(fill), 0.8f) *
+            Mathf.Pow(Mathf.Clamp01(Mathf.Abs(shaftRpm) / RetarderToneFullRpm), 1.5f);
+
+        /// <summary>Oil churning / flow noise: amplitude ~ sqrt of the dissipated power (Retarder.Power / maxPower).</summary>
+        public static float RetarderFlowGain(float powerW, float maxPowerW, float volume) =>
+            volume * RetarderFlowMix * Mathf.Sqrt(Mathf.Clamp01(powerW / Mathf.Max(maxPowerW, 1f)));
+
+        /// <summary>Both 0176 retarder loops follow the propshaft speed (blade-pass frequency ~ shaft rpm).</summary>
+        public static float RetarderTonePitch(float shaftRpm) => Mathf.Clamp(Mathf.Abs(shaftRpm) / RetarderRefShaftRpm, 0.2f, 2.5f);
+
+        /// <summary>Exhaust back-pressure dump when the flap opens: louder at high rpm (more exhaust flow), 0.4..1 x volume.</summary>
+        public static float EngineBrakeReleaseLevel(float rpm, float volume) =>
+            volume * (0.4f + 0.6f * Mathf.Clamp01((rpm - 900f) / 1100f));
+
         /// <summary>Compressor stroke rate follows engine rpm (loop rendered at 14 strokes/s = pitch 1 at 1000 rpm).</summary>
         public static float CompressorPitch(float rpm) => Mathf.Clamp(rpm / 1000f, 0.5f, 1.8f);
 

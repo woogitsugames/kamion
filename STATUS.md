@@ -4,4 +4,5 @@
 - synth0176_ab.py OK: 16 scen A/B + 9 spektrogramów w main artifacts/audio-synth-0176/ (ab/, spec/, checks.json). Szwy pętli ratio < 1.
 - dryer v2 przestrojony (4 L/6 mm, tłumik fpk≤5.2 kHz, -40 dB/dek² nad pikiem): profil czasowy i centroid ≈ P5-006 (±1-2 dB, 5.3 vs 5.3 kHz)
 - render_all.py: dopisane 10 warstw 0176 (+cab) → art-source/audio/generated/sfx (OK, 41 s)
-- NASTĘPNY KROK: C# — LayerMath (prawa 0176), DrivelineSfx, biblioteka/importer, hook TruckAudioController
+- C#: LayerMath (prawa 0176: ShaftRpm, RetarderTone/FlowGain, TonePitch, EngineBrakeReleaseLevel) + DrivelineSfx (struct, zdarzenia AMT/hamulec silnikowy)
+- NASTĘPNY KROK: VehicleAudioLibrary pola 0176 + VehicleAudioImporter + hook TruckAudioController
