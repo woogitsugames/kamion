@@ -1,0 +1,82 @@
+{
+ "seed": 20261113,
+ "metoda": "losowanie random.seed(20261113); random.sample(13, k=4) — 4 z 13 pozycji manifest.csv (30,8% >= 20%); sprawdzenia: link HTTP, licencja na żywo, długość pomiar vs manifest",
+ "data_audytu": "2026-11-13",
+ "liczba_wylosowanych": 4,
+ "wynik": [
+  {
+   "id": "M55-001",
+   "url": "https://freesound.org/s/637922/",
+   "licencja_manifest": "CC0 (domena publiczna)",
+   "url_http": "200",
+   "link_dziala": "OK",
+   "licencja_strona": "Creative Commons 0",
+   "licencja_zgodna": "OK",
+   "dlugosc_manifest_s": 71.2,
+   "dlugosc_pomiar_s": 71.21,
+   "dlugosc_deklaracja_strony": "1:11.138",
+   "dlugosc_zgodna": "OK (roznica 0.07 s; pomiar wlasnym parserem MP3: 2967 ramek MPEG1 L3 48 kHz)"
+  },
+  {
+   "id": "M55-003",
+   "url": "https://freesound.org/s/57931/",
+   "licencja_manifest": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)",
+   "url_http": "200",
+   "link_dziala": "OK",
+   "licencja_strona": "Attribution 4.0",
+   "licencja_zgodna": "OK",
+   "dlugosc_manifest_s": 188.9,
+   "dlugosc_pomiar_s": 188.87,
+   "dlugosc_deklaracja_strony": "3:08.806",
+   "dlugosc_zgodna": "OK (roznica 0.06 s)"
+  },
+  {
+   "id": "M55-006",
+   "url": "https://freesound.org/s/659583/",
+   "licencja_manifest": "CC0 (domena publiczna)",
+   "url_http": "200",
+   "link_dziala": "OK",
+   "licencja_strona": "Creative Commons 0",
+   "licencja_zgodna": "OK",
+   "dlugosc_manifest_s": 5.7,
+   "dlugosc_pomiar_s": 5.74,
+   "dlugosc_deklaracja_strony": "0:05.674",
+   "dlugosc_zgodna": "OK (roznica 0.07 s < 1 ramka MP3; pomiar 239 ramek 48 kHz)"
+  },
+  {
+   "id": "M55-013",
+   "url": "https://commons.wikimedia.org/wiki/File:Het_voorbijrijden_van_een_AA_FORD_vrachtwagen_-_SoundCloud_-_Beeld_en_Geluid.ogg",
+   "licencja_manifest": "CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)",
+   "url_http": "200",
+   "link_dziala": "OK",
+   "licencja_strona": "CC BY-SA 3.0 (Commons API extmetadata, LicenseUrl https://creativecommons.org/licenses/by-sa/3.0)",
+   "licencja_zgodna": "OK",
+   "dlugosc_manifest_s": 47.1,
+   "dlugosc_pomiar_s": 47.06,
+   "dlugosc_deklaracja_strony": "47.06133333333333 (API imageinfo duration)",
+   "dlugosc_zgodna": "OK (pomiar Ogg granulepos 4517888 / 96000 Hz; rozmiar pliku 2811714 B zgodny bajt w bajt z API)"
+  }
+ ],
+ "dodatkowo_poza_losowaniem": {
+  "opis": "wszystkie 5 pozycji Wikimedia Commons sprawdzone przez API extmetadata w dniu dostepu",
+  "commons_licencje": [
+   {"id": "M55-009", "plik": "File:Het parkeren van een vrachtwagen - SoundCloud - Beeld en Geluid.ogg", "licencja_api": "CC BY-SA 3.0", "zgodna": "OK", "rozmiar_zgodny": "OK (4027393 B)"},
+   {"id": "M55-010", "plik": "File:Het wegrijden van een vrachtwagen - SoundCloud - Beeld en Geluid.ogg", "licencja_api": "CC BY-SA 3.0", "zgodna": "OK", "rozmiar_zgodny": "OK (2680826 B)"},
+   {"id": "M55-011", "plik": "File:HEV 3574b 2006OrionVII.ogg", "licencja_api": "CC BY-SA 2.5", "zgodna": "OK", "rozmiar_zgodny": "OK (3567926 B)"},
+   {"id": "M55-012", "plik": "File:Hokkaido chuo bus kosoku asahikawa UD P-DA66U.ogg", "licencja_api": "CC BY-SA 3.0", "zgodna": "OK", "rozmiar_zgodny": "OK (26057635 B)"},
+   {"id": "M55-013", "plik": "File:Het voorbijrijden van een AA FORD vrachtwagen - SoundCloud - Beeld en Geluid.ogg", "licencja_api": "CC BY-SA 3.0", "zgodna": "OK", "rozmiar_zgodny": "OK (2811714 B)"}
+  ]
+ },
+ "bledy_wykryte_i_naprawione": [
+  {
+   "blad": "Parser MP3 uzywal tabeli bitrate MPEG1 Layer II (32-448 kbit/s) zamiast Layer III (32-320 kbit/s); dlugosci podgladow VBR byly zaniżone o ~50% (np. 637922: 35,82 s zamiast 71,21 s)",
+   "naprawa": "Podmiana tabeli BITR_V3 na wlasciwa dla MPEG1 Layer III; wszystkie pomiary powtorzone i zgodne z deklaracjami stron (+-1 ramka)",
+   "wplyw_na_wynik": "blad wykryty PRZED budowa manifestu (auto-test MISMATCH pomiar vs strona); zadna pozycja manifestu nie zawiera zlego pomiaru"
+  }
+ ],
+ "podsumowanie": {
+  "link_http": "4/4 OK",
+  "licencje_na_zywo": "4/4 OK (plus 5/5 Commons poza proba)",
+  "dlugosci": "4/4 OK"
+ }
+}
