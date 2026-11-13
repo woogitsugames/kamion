@@ -335,7 +335,8 @@ Shader "Kamion/World Surface"
                     float2 dGx = ddx(g), dGy = ddy(g);
                     [branch] if (_KamionWindowsLum.y > 0.5 && row > 0.5)
                     {
-                        int cls = isRibbon > 0.5 ? 3 : 1;
+                        int cls = 1;                                   // flats; ribbon offices 3 (float compare: a half-selected int
+                        if ((float)isRibbon > 0.5) cls = 3;             // is a min-precision int, D3D11 bytecode error X8000)
                         half trn = (h > 0.84 ? 0.72h : 0.62h);
                         float3 anchor = KamionNwAnchor(i.posOS, dRx, dRy, g, dGx, dGy, bay + 0.5);
                         half3 em = KamionNightWindow(anchor, cls, trn, 0.0h, albedo);

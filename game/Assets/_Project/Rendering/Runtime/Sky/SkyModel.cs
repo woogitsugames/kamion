@@ -718,8 +718,8 @@ namespace Game.Rendering
         /// - a hue the clear twilight sky does not take in the low band toward the sun, where the glow runs orange to
         /// yellow to a pale green-white before the blue (the "green" band of the twilight arch). Where both R and B exceed
         /// G (magenta excess m = min(R, B) - G): in the low band toward the sun (weight `warm`) B is pulled below G
-        /// (B ≤ 0.85 G, orange-yellow); elsewhere R is pulled toward G (blue-violet instead of pink; the faint purple
-        /// light high toward the sun keeps 30 % of its excess). WORKING_VALUE, luminance restored by the caller.
+        /// (B ≤ 0.85 G, orange-yellow); elsewhere R is pulled to G (blue-violet instead of pink; the purple light has
+        /// faded by the end of civil twilight, so none of the excess is kept). WORKING_VALUE, luminance restored by the caller.
         /// </summary>
         public static Color SuppressTwilightMagenta(Color c, float warm, float t)
         {
@@ -728,7 +728,7 @@ namespace Game.Rendering
             float bWarm = Mathf.Min(c.b, 0.85f * c.g);
             c.b = Mathf.Lerp(c.b, bWarm, Mathf.Clamp01(warm * 1.6f));
             m = Mathf.Min(c.r, c.b) - c.g;
-            if (m > 0f) c.r -= 0.7f * m * t;
+            if (m > 0f) c.r -= m * t;
             return c;
         }
 
