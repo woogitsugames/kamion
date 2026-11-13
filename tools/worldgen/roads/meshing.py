@@ -642,6 +642,7 @@ def build_median_fills(buf, net):
             return np.array([q[0], q[1], float(ch.crossfall_z(s, sgn * h)) + prof[-1][1]])
 
         A, B, low = [], [], []
+        span = {}                                  # ADR 0159: filled stations per chain side (streetscape.furniture)
         for s_c in np.arange(sa, sb + 1e-6, 2.0):
             if c.interp(wc.astype(float), s_c) < 0.5:
                 continue
@@ -655,6 +656,10 @@ def build_median_fills(buf, net):
             if not (0.3 < np.hypot(*(a[:2] - b[:2])) < MEDIAN_FILL_MAX_GAP_M):
                 continue
             A.append(a); B.append(b)
+            for ch, sd, sv in ((c, "L" if sg_c > 0 else "R", float(s_c)), (g, "L" if sg_g > 0 else "R", float(s_g))):
+                lo_, hi_ = span.get((id(ch), sd), (sv, sv))
+                span[(id(ch), sd)] = (min(lo_, sv), max(hi_, sv))
+                ch.meta.setdefault("median_fill_s", {})[sd] = span[(id(ch), sd)]
             low.append(min(float(c.interp(c.meta["walled_zg"]["L" if sg_c > 0 else "R"], s_c)),
                            float(g.interp(g.meta["walled_zg"]["L" if sg_g > 0 else "R"], s_g))) - 0.5)
         if len(A) < 2:

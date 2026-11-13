@@ -1447,7 +1447,7 @@ def _stations(P, Z, top, spacing, lo, hi):
     return Q, np.interp(u, s, Z[lo:hi + 1]), Tq, np.interp(u, s, top[lo:hi + 1])
 
 
-def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, False)):
+def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, False), dense=None):
     """Steel W-beam on posts (top GUARDRAIL_H), Z = ground/surface height along P (points ~1 m apart). P is the post
     line; the road is on its LEFT normal side (beam face W_BACK + 0.083 in front of it).
 
@@ -1459,9 +1459,12 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
     W-beam + upper beam on short posts; the handrail with horizontal bars at the deck edge is a separate railing -
     hero asset / roads.meshing.build_bridge_extras).
     ADR 0144: `term_tall` = (start, end): that end of a DECK run is free (no other rail carries on from it,
-    _mark_free_deck_ends) - it is turned down like a ground end instead of stopping in the air."""
+    _mark_free_deck_ends) - it is turned down like a ground end instead of stopping in the air.
+    ADR 0159: `dense` (bool per point) = ground posts every GUARDRAIL_POST_SPACING (2 m) instead of 4 m there."""
     n = len(P)
     tall = np.zeros(n, bool) if tall is None else np.asarray(tall, bool)
+    dense = np.zeros(n, bool) if dense is None else np.asarray(dense, bool)
+    cls = tall.astype(int) * 2 + (dense & ~tall)
     first = len(lin.buf.parts)
     top = np.full(n, S.GUARDRAIL_H)
     tl = int(S.GUARDRAIL_TERMINAL_M)
@@ -1493,14 +1496,14 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
     k = lo
     while k < hi:
         kk = k
-        while kk + 1 < hi and tall[kk + 1] == tall[k]:
+        while kk + 1 < hi and cls[kk + 1] == cls[k]:
             kk += 1
         if kk > k:
             deck = bool(tall[k])
-            Q, Zq, Tq, tq = _stations(P, Z, top, S.GUARDRAIL_POST_SPACING if deck else S.GUARDRAIL_POST_SPACING_GROUND,
-                                      k, kk)
-            if not deck and k > lo and tall[k - 1]:
-                Q, Zq, Tq, tq = Q[1:], Zq[1:], Tq[1:], tq[1:]          # the boundary post is the deck post
+            Q, Zq, Tq, tq = _stations(P, Z, top, S.GUARDRAIL_POST_SPACING if deck or dense[k]
+                                      else S.GUARDRAIL_POST_SPACING_GROUND, k, kk)
+            if k > lo and (cls[k - 1] > cls[k]):
+                Q, Zq, Tq, tq = Q[1:], Zq[1:], Tq[1:], tq[1:]          # the boundary post is the deck (denser) post
             if len(Q):
                 _rail_posts(lin, Q, Zq, Tq, tq, deck, key)
             if deck:
@@ -1616,7 +1619,7 @@ GUARDRAIL_JOIN_M = 4.0      # ADR 0117: a run cut by the dedup is led onto the r
 GUARDRAIL_JOIN_BLEND = 8    # points (1 m) over which the cut end swings onto the other rail
 
 
-def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True)):
+def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), dense=None):
     """Build the parts of run P that are not within the dedup distance of a rail built before (two chains / a chain
     and an authored rail on the same separator crossed and overlapped at E -782 and on the viaduct approaches).
 
@@ -1677,11 +1680,12 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True)):
                     join(Ps, 0)
                 if kk < len(P) - 1:
                     join(Ps, -1)
-            it = {"P": Ps, "Z": Z[k:kk + 1], "key": key, "tall": tall[k:kk + 1], "term": (t0, t1)}
+            it = {"P": Ps, "Z": Z[k:kk + 1], "key": key, "tall": tall[k:kk + 1], "term": (t0, t1),
+                  "dense": None if dense is None else np.asarray(dense, bool)[k:kk + 1]}
             if queue is not None:
                 queue.append(it)
             else:
-                guardrail(lin, it["P"], it["Z"], key, it["tall"], it["term"])
+                guardrail(lin, it["P"], it["Z"], key, it["tall"], it["term"], dense=it["dense"])
             built.append(LineString(Ps))
         else:
             m["dedup_dropped_pts"] = m.get("dedup_dropped_pts", 0) + (kk - k + 1)
@@ -1830,7 +1834,8 @@ def _flush_rails(lin, m=None):
     _drop_doubled_rows(queue, m)
     _mark_free_deck_ends(queue, m)
     for it in queue:
-        guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"], it.get("term_tall", (False, False)))
+        guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"], it.get("term_tall", (False, False)),
+                  dense=it.get("dense"))
     lin.rail_queue = None
     lin.rail_runs = [{"key": it["key"], "P": np.asarray(it["P"], float), "Z": np.asarray(it["Z"], float),
                       "tall": np.zeros(len(it["P"]), bool) if it["tall"] is None else np.asarray(it["tall"], bool),
@@ -1996,7 +2001,9 @@ def guardrails(lin, net, zground, report):
         # ADR 0123: authored rails are not deduplicated against each other (two traced rails of one separator, 1.5 m
         # apart: the second was cut away by the 2.5 m ground rule) - only the rule runs give way to them
         own = []
-        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", own, m)
+        # ADR 0159: `post_spacing_m` <= 2 = posts every 2 m (read off the orthophoto), else the 4 m ground rule
+        dn = np.ones(len(P), bool) if float(o.get("post_spacing_m") or 4.0) <= 2.0 else None
+        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", own, m, dense=dn)
         # ADR 0123 b4: `free_ends: [start, end]` (drawing order), False = that end stays where it was traced, without
         # a turned-down terminal (the east end of dk8-ramp-split-barrier-n stops at the expansion joint of the ramp
         # deck: _join_free_ends swung its last 8 m onto the OTHER rail of the separator, 1.4 m away)
@@ -2012,6 +2019,18 @@ def guardrails(lin, net, zground, report):
         built.extend(own)
         net.overrides_applied.append({"id": o["id"], "targets": [f"guardrail@{P[0][0]:.0f},{P[0][1]:.0f}"]})
         m["authored"] += float(sq[-1])
+    # ADR 0159: authored `kind: no_guardrail` zones (polygon_en) - no RULE barrier inside (photo / orthophoto shows
+    # none); authored rails are not affected
+    nozones = []
+    for o in getattr(net, "authored", None) or []:
+        if o.get("kind") != "no_guardrail":
+            continue
+        Q = np.asarray(o.get("polygon_en") or [], float)
+        if Q.ndim != 2 or len(Q) < 3:
+            net.overrides_stale.append(o["id"])
+            continue
+        nozones.append((o["id"], shapely.Polygon(Q), [0]))
+    m["no_guardrail"] = 0.0
     for c in net.chains:
         if c.meta.get("absorbed"):
             continue
@@ -2085,11 +2104,24 @@ def guardrails(lin, net, zground, report):
             # obiektach inżynierskich; DECK_APPROACH_TRANSITION_M is WORKING_VALUE). The approach stations join
             # the bridge stretch in ONE run (blended offset/height), so the run end - not the deck end - is
             # where the turned-down ground terminal lands.
+            # ADR 0159: the side of a walled ramp that faces a filled grass median (roads.meshing.build_median_fills)
+            # carries a plain W-beam on posts every 2 m (orthophoto / Mapillary 810896133189484), not the deck
+            # barrier with the upper beam
+            mf = c.meta.get("median_fill_s", {}).get(side)
+            gnd = np.zeros(len(ss), bool) if mf is None else (ss >= mf[0]) & (ss <= mf[1]) & br
             tr = _approach_transition_mask(br, S.DECK_APPROACH_TRANSITION_M) & (want == 0)
             want[tr] = 5
             off[tr] = np.where(rur[tr], hw[tr] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
                                hw[tr] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
             zb[tr] = np.where(rur[tr], zg[tr] - S.CROSSFALL * S.PAVED_SHOULDER, zg[tr] + kh[tr])
+            if nozones and want.any():
+                Pw = c.line.offset_point(ss, sgn * off)
+                for _zid, zpoly, zcnt in nozones:
+                    ins = shapely.contains_xy(zpoly, Pw[:, 0], Pw[:, 1]) & (want != 0)
+                    if ins.any():
+                        want[ins] = 0
+                        zcnt[0] += int(ins.sum())
+                        m["no_guardrail"] += float(ins.sum())
             # runs: ONE rail per contiguous stretch that wants a barrier, whatever the rule (ADR 0110: the bridge
             # rail, the approach embankment rail and the median rail were separate runs at different offsets and
             # crossed / doubled where they met, REVIEW s10-0100 P1-6); the offset and the foot height blend over 9 m
@@ -2112,11 +2144,12 @@ def guardrails(lin, net, zground, report):
                         # at a junction mouth) - the post line jumped 0.5 m sideways within 1 m (zigzag); eased over 5 m
                         o_ = ndimage.uniform_filter1d(o_, 5, mode="nearest")
                     P = c.line.offset_point(ss[sl], sgn * o_)
-                    tall = want[sl] == 1
+                    tall = (want[sl] == 1) & ~gnd[sl]
+                    dn = gnd[sl].copy()
                     if sgn > 0:                          # beam faces the road: road is on the right of travel
-                        P, z_, tall = P[::-1], z_[::-1], tall[::-1]
+                        P, z_, tall, dn = P[::-1], z_[::-1], tall[::-1], dn[::-1]
                     kind = names[int(np.bincount(want[sl]).argmax())]
-                    _dedup_guardrail(lin, P, z_, f"{c.id}:{side}:{kind}", built, m, tall)
+                    _dedup_guardrail(lin, P, z_, f"{c.id}:{side}:{kind}", built, m, tall, dense=dn if dn.any() else None)
                     w3 = want[sl] == 3
                     if w3.any():
                         runs.append({"chain": c.id, "side": side, "s": [round(float(ss[k]), 1), round(float(ss[kk]), 1)],
@@ -2125,6 +2158,9 @@ def guardrails(lin, net, zground, report):
                     for q in (1, 2, 3, 4, 5):
                         m[names[q]] += float((want[sl] == q).sum())
                 k = kk + 1
+    for zid, _zp, zcnt in nozones:
+        (net.overrides_applied.append({"id": zid, "targets": [f"rule guardrail points removed: {zcnt[0]}"]})
+         if zcnt[0] else net.overrides_stale.append(zid))
     deck_flags = _flush_rails(lin, m)
     drop_parapets_at_barriers(lin.buf, lin.rail_runs, m)
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}

@@ -35,6 +35,7 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[3]
 
 FREE_END_CONTINUE_M = 2.5      # ADR 0144: a deck end with another run end this close carries on
+FREE_END_ON_RAIL_M = 0.6        # ADR 0159: ... or the body of another rail this close (the end was led onto it)
 FREE_END_DZ = 0.8               # ... at a similar level
 OVERLAP_GAP_M = 0.5             # M29: parallel rows closer than this overlap
 OVERLAP_COMMON_M = 0.5          # ... with a common span longer than this
@@ -294,6 +295,22 @@ def find_free_ends(runs, continue_m=FREE_END_CONTINUE_M, dz=FREE_END_DZ):
                     continue
                 cont = True
                 break
+            if not cont:
+                # ADR 0159: an end led ONTO the body of another rail (the dedup cut + join of two decks that merge:
+                # c:w177895177 L at E 669.4 N -781.9, c:w240542867 R at E -739.6 N 74.1) carries on along that rail -
+                # it is not an end in the air although no run END is near
+                for j, r2 in enumerate(runs):
+                    if j == i:
+                        continue
+                    Q = np.asarray(r2["pts"], float)
+                    dd = np.hypot(Q[:, 0] - p[0], Q[:, 1] - p[1])
+                    k = int(np.argmin(dd))
+                    if dd[k] > FREE_END_ON_RAIL_M:
+                        continue
+                    if Q.shape[1] > 3 and np.isfinite(p[2]) and np.isfinite(Q[k, 2]) and abs(Q[k, 2] - p[2]) > dz:
+                        continue
+                    cont = True
+                    break
             if not cont:
                 z = float(p[2]) if len(p) > 3 and np.isfinite(p[2]) else None
                 free.append({"key": r["key"], "end": name,

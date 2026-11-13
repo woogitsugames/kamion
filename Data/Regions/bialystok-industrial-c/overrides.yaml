@@ -1669,6 +1669,43 @@ overrides:
       artifacts/junctions-r2/xsec/km_sheet.png, dk8_front.jpg x 960-1000 y 490-530: barrier end at the nose ~E -781, along the island centre).
     confidence: medium
     verify: owner drive
+  - id: andersa-link-no-guardrail
+    kind: no_guardrail
+    polygon_en: [[-438.3, -46.2], [-378.3, -104.2], [-381.7, -107.8], [-441.7, -49.8]]
+    reason: >-
+      ADR 0159 (REVIEW s16 P1 g3b-eye-s1482, REVIEW s14-0146 P2 810525): the rule "W-beam along a ground carriageway
+      beside a viaduct / walled ramp" (ADR 0110, Biezenstwa links) built 40 m of barrier along the link road way
+      173956083 beside the SE ramp of the DK8 viaduct (E -416 N -71 ... E -388 N -98; ramp wall 5-8.5 m away). Mapillary
+      810525063224609 and 209622370971977 (richlv 2020, CC BY-SA 4.0, reference only), both taken on this link road
+      looking at the ramp: kerb, 6-9 m of grass with young trees, the block wall - no barrier.
+    confidence: medium
+    verify: owner drive
+  - id: andersa-se-ramp-median-sw-no-guardrail
+    kind: no_guardrail
+    polygon_en: [[-449.1, -72.9], [-379.1, -128.0], [-380.9, -130.3], [-450.9, -75.3]]
+    reason: >-
+      ADR 0159: the grass median of the SE ramp of the DK8 viaduct carries ONE barrier, on its NE edge (facing the
+      NW-bound carriageway). GUGiK orthophoto 0.08 m (rectified strip E -386 N -119 ... E -303 N -184 and crops at
+      E -436 N -86, E -390 N -122, E -376 N -134): post dots every 2.0 m along the NE edge from the abutment to the
+      median nose; along the SW edge a barrier only on the paved part at the abutment (to ~E -449), then kerb + a
+      0.6 m paved strip + grass. Mapillary 810896133189484 (taken on the SE-bound carriageway): kerb, paved strip,
+      grass, then the barrier. The generator built a deck barrier on both caps.
+    confidence: medium
+    verify: owner drive
+  - id: andersa-se-ramp-median-barrier
+    kind: guardrail
+    # drawn from the median nose to the NW (the NW-bound carriageway on the right); the rule run of the ramp cap
+    # (c:w1101181473 R, generated end E -385.65 N -118.82, build world-int-s16) is cut and led onto its NW end
+    polyline_en: [[-306.72, -181.02], [-384.81, -119.36]]
+    free_ends: [true, false]
+    post_spacing_m: 2.0
+    reason: >-
+      ADR 0159: barrier on the NE edge of the grass median from the end of the ramp cap to the median nose at the
+      fire-station opening. GUGiK orthophoto 0.08 m, strip rectified along E -385.65 N -118.82 -> E -302.6 N -184.4
+      (scratch tool, 22 px/m): the rail is straight, 0.1 m NE of that line, posts every 2.0 m, last post ~100.5 m
+      from the NW point (nose tip at ~104 m). The generated barrier stopped at the end of the walled ramp.
+    confidence: medium
+    verify: owner drive
   - id: dk8-ramp-split-barrier-n
     kind: guardrail
     # b4: carried on to the ramp deck along N 76.65 (orthophoto: rail at N 76.6-76.9). The generated island narrows to
