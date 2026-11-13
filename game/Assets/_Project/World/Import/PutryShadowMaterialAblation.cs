@@ -17,14 +17,25 @@ namespace Game.World.Import
             {
                 var names = new[] { "M_viaduct_concrete", "M_bridge_concrete", "M_road_asphalt", "M_bridge_kerb" };
                 string selected = EditorTools.Arg("-putryMaterial", "");
-                if (selected != "deck-pair" && Array.IndexOf(names, selected) < 0) throw new ArgumentException("Unknown material diagnostic");
+                if (selected != "all-pbr" && selected != "deck-pair" && Array.IndexOf(names, selected) < 0) throw new ArgumentException("Unknown material diagnostic");
+                if (selected == "all-pbr")
+                {
+                    var all = new List<string>();
+                    foreach (var guid in AssetDatabase.FindAssets("t:Material", new[] { "Assets/_Generated/World/bialystok-industrial-c/Materials" }))
+                    {
+                        string path = AssetDatabase.GUIDToAssetPath(guid);
+                        var candidate = AssetDatabase.LoadAssetAtPath<Material>(path);
+                        if (candidate != null && candidate.HasProperty(WorldShadowCasterBias.Property)) all.Add(path);
+                    }
+                    names = all.ToArray();
+                }
                 var log = new List<string>();
                 foreach (string name in names)
                 {
-                    var mat = AssetDatabase.LoadAssetAtPath<Material>($"Assets/_Generated/World/bialystok-industrial-c/Materials/{name}.mat");
+                    var mat = AssetDatabase.LoadAssetAtPath<Material>(selected == "all-pbr" ? name : $"Assets/_Generated/World/bialystok-industrial-c/Materials/{name}.mat");
                     if (mat == null || !mat.HasProperty(WorldShadowCasterBias.Property)) throw new InvalidOperationException("Unsupported diagnostic material: " + name);
                     var def = new Dictionary<string, object>();
-                    if (name == selected || (selected == "deck-pair" && (name == "M_bridge_concrete" || name == "M_road_asphalt"))) def["shadow_normal_bias_scale"] = 0.0;
+                    if (selected == "all-pbr" || name == selected || (selected == "deck-pair" && (name == "M_bridge_concrete" || name == "M_road_asphalt"))) def["shadow_normal_bias_scale"] = 0.0;
                     WorldShadowCasterBias.Apply(mat, def);
                     EditorUtility.SetDirty(mat);
                     log.Add(name + " scale=" + mat.GetFloat(WorldShadowCasterBias.Property) + " keyword=" + mat.IsKeywordEnabled(WorldShadowCasterBias.Keyword));
