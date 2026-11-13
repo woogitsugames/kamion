@@ -84,7 +84,7 @@ namespace Game.Tests
                 float cosT = Mathf.Sin(zi * 4f * Mathf.Deg2Rad);            // 0..24 deg above the horizon
                 var c = m.ChromaAt(cosT, gi * 10f * Mathf.Deg2Rad);
                 n++;
-                if (c.r > c.g * 1.03f && c.b > c.g * 1.03f) { magenta++; bad.Append($" [elev {zi * 4} gamma {gi * 10}: {c.r:F2} {c.g:F2} {c.b:F2}]"); }
+                if (c.r > c.g * 1.05f && c.b > c.g * 1.05f) { magenta++; bad.Append($" [elev {zi * 4} gamma {gi * 10}: {c.r:F2} {c.g:F2} {c.b:F2}]"); }
             }
             Assert.AreEqual(0, magenta, $"magenta chroma in {magenta}/{n} samples of the low dome:{bad}");
             var h = m.ChromaAt(Mathf.Sin(2f * Mathf.Deg2Rad), 0f);

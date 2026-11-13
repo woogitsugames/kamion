@@ -1017,8 +1017,8 @@ Shader "Kamion/World PBR"
                         float4 ts = farRows ? _KamionNightFarId_TexelSize : _KamionNightAtlasId_TexelSize;
                         int2 tx = min((int2)(auv * ts.zw), (int2)ts.zw - 1);
                         half4 id = farRows ? LOAD_TEXTURE2D(_KamionNightFarId, tx) : LOAD_TEXTURE2D(_KamionNightAtlasId, tx);
-                        int cls = (int)round(id.a * 255.0 / 32.0);
-                        [branch] if (cls > 0)
+                        float cls = round(id.a * 255.0 / 32.0);
+                        [branch] if (cls > 0.5)
                         {
                             half2 tc = farRows ? SAMPLE_TEXTURE2D(_KamionNightFarT, sampler_KamionNightAtlasT, auv).rg
                                                : SAMPLE_TEXTURE2D(_KamionNightAtlasT, sampler_KamionNightAtlasT, auv).rg;

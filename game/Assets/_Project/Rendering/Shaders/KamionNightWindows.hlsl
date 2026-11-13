@@ -37,33 +37,33 @@ float3 KamionNwAnchor(float3 base, float3 dRelX, float3 dRelY, float2 uv, float2
     return base + dRelX * a + dRelY * b;
 }
 
-half3 KamionNwColour(int cls, float u)
+half3 KamionNwColour(float cls, float u)
 {
     // linear Rec.709, luminance 1: 2700 K, 3200 K, 4000 K, 4500 K (CIE daylight / Planck locus, rounded)
     const half3 k2700 = half3(1.35, 0.93, 0.52), k3200 = half3(1.25, 0.96, 0.66), k4000 = half3(1.12, 0.99, 0.85),
                 k4500 = half3(1.07, 1.0, 0.92);
-    if (cls == 1) return u < 0.62 ? k2700 : (u < 0.88 ? k3200 : k4000);
-    if (cls == 2) return u < 0.5 ? k4000 : k2700;
-    if (cls == 3) return u < 0.8 ? k4000 : k3200;
+    if (cls < 1.5) return u < 0.62 ? k2700 : (u < 0.88 ? k3200 : k4000);
+    if (cls < 2.5) return u < 0.5 ? k4000 : k2700;
+    if (cls < 3.5) return u < 0.8 ? k4000 : k3200;
     return k4500;
 }
 
 // Emitted display colour of one window pixel. anchor: window centre (object space); cls 1 flat, 2 stairwell,
-// 3 office, 4 hall; trn: pane transmission (0 frame / wall); cov: fabric coverage (tints by the albedo there).
-half3 KamionNightWindow(float3 anchor, int cls, half trn, half cov, half3 albedo)
+// 3 office, 4 hall (float); trn: pane transmission (0 frame / wall); cov: fabric coverage (tints by the albedo there).
+half3 KamionNightWindow(float3 anchor, float cls, half trn, half cov, half3 albedo)
 {
-    if (cls <= 0 || trn <= 0.004h) return 0;
+    if (cls < 0.5 || trn <= 0.004h) return 0;   // cls is a float: an int next to half math hits D3D11 X8000 (min-precision int)
     int3 w = (int3)floor(anchor);
     uint hw = KamionNwHash(w, 11u);
     float p, inLit = 0.75, stray = 0.06;
     float3 group = float3(6.0, 2.8, 6.0);
-    if (cls == 1) p = _KamionWindows.x;
-    else if (cls == 2) { p = _KamionWindows.w; group = float3(1.0, 1.0, 1.0); inLit = 1.0; stray = 0.0; }
-    else if (cls == 3) { p = _KamionWindows.y; group = float3(20.0, 3.3, 20.0); inLit = 0.85; stray = 0.04; }
+    if (cls < 1.5) p = _KamionWindows.x;
+    else if (cls < 2.5) { p = _KamionWindows.w; group = float3(1.0, 1.0, 1.0); inLit = 1.0; stray = 0.0; }
+    else if (cls < 3.5) { p = _KamionWindows.y; group = float3(20.0, 3.3, 20.0); inLit = 0.85; stray = 0.04; }
     else { p = _KamionWindows.z; group = float3(30.0, 6.0, 30.0); inLit = 0.8; stray = 0.0; }
     // flat / floor lit with q so that the window share stays p: p = q inLit + (1 - q) stray
     float q = saturate((p - stray) / max(inLit - stray, 1e-3));
-    uint hg = KamionNwHash((int3)floor(anchor / group), 23u + (uint)cls);
+    uint hg = KamionNwHash((int3)floor(anchor / group), 23u + (uint)(cls + 0.5));
     bool lit = KamionNwU(hg) < q ? KamionNwU(hw) < inLit : KamionNwU(hw) < stray * saturate(p * 4.0);
     if (!lit) return 0;
     uint hc = KamionNwHash(w, 37u);
