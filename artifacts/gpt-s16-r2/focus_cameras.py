@@ -29,11 +29,22 @@ for index,old in enumerate(original):
  _,p,front,near=max(candidates,key=lambda c:(c[0],c[1]['id']))
  line=min(components,key=lambda l:l.distance(Point(front)));station=line.project(Point(front))
  tree=min(near,key=lambda t:np.linalg.norm(np.array([t['e'],t['n']])-np.array(p['c'])))
- target=.35*front+.65*np.array([tree['e'],tree['n']]);lookz=float(tree['z'])+float(tree['h'])*.55
+ target=.35*front+.65*np.array([tree['e'],tree['n']]);lookz=float(tree['z'])+float(tree['h'])*.55+2.0
+ origin=np.array(line.interpolate(station).coords[0]);direction=np.array(line.interpolate(min(line.length,station+1)).coords[0])-np.array(line.interpolate(max(0,station-1)).coords[0]);direction/=max(np.linalg.norm(direction),1e-6)
+ available=[]
+ for component in components:
+  for distance in np.arange(1,max(2,component.length),4):
+   point=np.array(component.interpolate(distance).coords[0]);target_distance=np.linalg.norm(point-target)
+   if 28<=target_distance<=45 and np.linalg.norm(point-front)<70 and np.max(np.abs(point))<1015:available.append(point)
+ if len(available)<2:raise ValueError('No safe full-crown street view: '+name)
  ids=[]
- for side,delta in [('a',-20),('b',20)]:
-  at=np.array(line.interpolate(np.clip(station+delta,1,max(1,line.length-1))).coords[0]);cid=f'garden_focus_{index+1:02d}_{side}';ids.append(cid)
-  cameras.append({'id':cid,'kind':'photo_match','seat':'file','pos':[float(at[0]),float(at[1]),float(hf.sample(*at))+2.2],'look_at':[float(target[0]),float(target[1]),lookz],'fov_deg':45,'note':f'ADR0154 WORKING_VALUE closer street pose; {name}; actual plot/crown; typological photo only'})
+ used=[]
+ for side,sign in [('a',-1),('b',1)]:
+  options=[point for point in available if sign*float((point-origin)@direction)>3 and all(np.linalg.norm(point-old)>10 for old in used)]
+  if not options:options=[point for point in available if all(np.linalg.norm(point-old)>10 for old in used)]
+  if not options:raise ValueError('No second separated view: '+name)
+  at=min(options,key=lambda point:abs(np.linalg.norm(point-target)-34)+.1*np.linalg.norm(point-front));used.append(at);cid=f'garden_focus_{index+1:02d}_{side}';ids.append(cid)
+  cameras.append({'id':cid,'kind':'photo_match','seat':'file','pos':[float(at[0]),float(at[1]),float(hf.sample(*at))+2.2],'look_at':[float(target[0]),float(target[1]),lookz],'fov_deg':50,'note':f'ADR0154 WORKING_VALUE closer street pose; {name}; actual plot/crown; typological photo only'})
  selected.append({**old,'plot':p['id'],'age':p['age'],'front':p['front'],'cameras':ids,'new_hedge':p['id'] in fronts,'crown_target':tree,'reference_relation':'typological only, different location and pose'})
 (r/'focus-cameras.json').write_text(json.dumps({'cameras':cameras},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 (r/'focus-streets.json').write_text(json.dumps(selected,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
