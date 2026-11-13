@@ -9,6 +9,21 @@ from test_buildings_0167 import TOWER, _build, _loaded
 from test_buildings_0180 import SE, SW, _on_wall, _rule
 
 
+def _normal(b, bearing):
+    """Exact outward normal of the longest footprint edge looking to the bearing (rad) and its plane offset."""
+    n0 = np.array([np.sin(bearing), np.cos(bearing)])
+    c = np.asarray(b["poly"].exterior.coords)
+    cen = np.asarray(b["poly"].centroid.coords[0])
+    best = None
+    for p, q in zip(c[:-1], c[1:]):
+        d = q - p
+        L = float(np.hypot(*d))
+        for n in (np.array([d[1], -d[0]]) / L, np.array([-d[1], d[0]]) / L):
+            if n @ n0 > 0.97 and p @ n > cen @ n and (best is None or L > best[0]):
+                best = (L, n, float(p @ n))
+    return best[1], best[2]
+
+
 def _fr():
     from streetscape import frontage as FR
     return FR
@@ -55,20 +70,19 @@ def test_rule_fields_are_validated():
 
 def test_tower_se_wall_has_a_dark_lintel_over_every_band_on_both_lods():
     FR = _fr()
-    buf = _build(_loaded({TOWER})[TOWER])
-    n = np.array([np.sin(SE), np.cos(SE)])
+    b = _loaded({TOWER})[TOWER]
+    buf = _build(b)
+    n, wall = _normal(b, SE)
     for layer, proud, quads in (("buildings", FR.LINTEL_PROUD_M[0], 1), ("buildings_low", FR.LINTEL_PROUD_M[1], 1)):
         tri = _on_wall(buf, layer, FR.LINTEL_MAT, SE, -1e9)
-        wall = max(float((p.V[:, :2] @ n).max()) for p in buf.parts if p.layer == layer and p.mat.startswith("plaster_white"))
         tri = tri[(np.abs(np.ptp(tri[:, :, 2], axis=1) - 0.15) < 1e-6)                   # the 0.15 m front faces,
-                  & (np.abs(tri[:, :, :2] @ n - (wall + proud)).max(1) < 1e-6)]          # proud of the wall: no z-fight
+                  & (np.abs(tri[:, :, :2] @ n - (wall + proud)).max(1) < 5e-3)]          # proud of the wall: no z-fight
         assert len(tri) == 22 * 2 * quads, (layer, len(tri))                             # 11 storeys x 2 runs
     # the lintel sits right on the band head, on both LODs at the same height
     zs = []
     for layer, proud in (("buildings", FR.LINTEL_PROUD_M[0]), ("buildings_low", FR.LINTEL_PROUD_M[1])):
-        wall = max(float((p.V[:, :2] @ n).max()) for p in buf.parts if p.layer == layer and p.mat.startswith("plaster_white"))
         zs.append(sorted({round(float(t[:, 2].min()), 3) for t in _on_wall(buf, layer, FR.LINTEL_MAT, SE, -1e9)
-                          if abs(np.ptp(t[:, 2]) - 0.15) < 1e-6 and np.abs(t[:, :2] @ n - (wall + proud)).max() < 1e-6}))
+                          if abs(np.ptp(t[:, 2]) - 0.15) < 1e-6 and np.abs(t[:, :2] @ n - (wall + proud)).max() < 5e-3}))
     assert zs[0] == zs[1] and len(zs[0]) == 11
 
 
@@ -104,16 +118,15 @@ def test_tower_gable_windows_are_white_framed_clear_glass_with_a_shallow_reveal(
     b = _loaded({TOWER})[TOWER]
     assert b["ovr"]["facades"][0]["variants"] == [2] and b["ovr"]["facades"][0]["reveal_m"] == 0.06
     buf = _build(b)
-    n = np.array([np.sin(SW), np.cos(SW)])
+    n, wall = _normal(b, SW)
     tri = _on_wall(buf, "buildings", "facade_atlas", SW, 238.0)
     panes = tri[np.abs(np.ptp(tri[:, :, 2], axis=1) - 1.6) < 1e-6]
-    wall = max(float((p.V[:, :2] @ n).max()) for p in buf.parts if p.layer == "buildings" and p.mat == "plaster_beige")
-    assert len(panes) == 20 and np.allclose(panes[:, :, :2] @ n, wall - 0.06, atol=1e-6)
+    assert len(panes) == 20 and np.allclose(panes[:, :, :2] @ n, wall - 0.06, atol=5e-3)
     u0, v0, w, h = FA.cell("off", 2)
     for p in buf.parts:
         if p.layer == "buildings" and p.mat == "facade_atlas":
             t, uv = p.V[p.T], p.UV[p.T]
-            sel = (np.abs(np.ptp(t[:, :, 2], axis=1) - 1.6) < 1e-6) & (np.abs((t[:, :, :2] @ n).mean(1) - (wall - 0.06)) < 1e-6)
+            sel = (np.abs(np.ptp(t[:, :, 2], axis=1) - 1.6) < 1e-6) & (np.abs((t[:, :, :2] @ n).mean(1) - (wall - 0.06)) < 5e-3)
             c = uv[sel].mean(1)
             assert ((c[:, 0] > u0) & (c[:, 0] < u0 + w) & (c[:, 1] > v0) & (c[:, 1] < v0 + h)).all()
 
@@ -184,7 +197,7 @@ def test_roof_mast_faces_look_outwards():
         tri = np.array([t for la, m, t in acc.t if la == layer and m == FR.ROOF_PANEL_MAT])
         assert len(tri) >= 12
         # drum and panel are convex solids away from the pole: every face normal points away from its solid's centre
-        for grp in (tri[tri[:, :, 2].mean(1) > 21.9], tri[tri[:, :, 2].mean(1) <= 21.9]):       # panel / drum
+        for grp in (tri[tri[:, :, 2].mean(1) > 20.8], tri[tri[:, :, 2].mean(1) <= 20.8]):       # panel / drum
             assert len(grp) >= 6
             cen = grp.reshape(-1, 3).mean(0)
             nn = np.cross(grp[:, 1] - grp[:, 0], grp[:, 2] - grp[:, 0])

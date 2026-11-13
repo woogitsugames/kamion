@@ -1,0 +1,205 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (E,N = EPSG:2180 minus region origin; U = EVRF2007)",
+ "cameras": [
+  {
+   "id": "t190_se_60",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    645.82,
+    -598.39,
+    152.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 60.0,
+   "note": "se wall from 60 m"
+  },
+  {
+   "id": "t190_se_200",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    769.44,
+    -664.11,
+    152.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 20.0,
+   "note": "se wall from 200 m, tele (LOD1)"
+  },
+  {
+   "id": "t190_nw_60",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    508.09,
+    -525.15,
+    152.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 60.0,
+   "note": "nw wall from 60 m"
+  },
+  {
+   "id": "t190_nw_200",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    384.47,
+    -459.43,
+    152.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 20.0,
+   "note": "nw wall from 200 m, tele (LOD1)"
+  },
+  {
+   "id": "t190_sw_60",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    540.34,
+    -630.64,
+    152.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 60.0,
+   "note": "sw wall from 60 m"
+  },
+  {
+   "id": "t190_sw_200",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    474.61,
+    -754.25,
+    152.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 20.0,
+   "note": "sw wall from 200 m, tele (LOD1)"
+  },
+  {
+   "id": "t190_ne_60",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    613.57,
+    -492.9,
+    152.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 60.0,
+   "note": "ne wall from 60 m"
+  },
+  {
+   "id": "t190_ne_200",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    679.3,
+    -369.29,
+    152.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 20.0,
+   "note": "ne wall from 200 m, tele (LOD1)"
+  },
+  {
+   "id": "t190_s_150",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    576.95,
+    -711.77,
+    142.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    165.65
+   ],
+   "fov_deg": 30.0,
+   "note": "from the south like the Mapillary photos (gable SW + wall SE)"
+  },
+  {
+   "id": "t190_roof_s",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    605.43,
+    -668.02,
+    196.37
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    184.37
+   ],
+   "fov_deg": 30.0,
+   "note": "roof masts from the south, above the roof"
+  },
+  {
+   "id": "t190_roof_w",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    470.7,
+    -590.24,
+    196.37
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    184.37
+   ],
+   "fov_deg": 30.0,
+   "note": "roof masts from the west, above the roof"
+  }
+ ]
+}
