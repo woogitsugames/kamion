@@ -1,0 +1,160 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-dojlidy",
+ "frame": "local E,N,U",
+ "cameras": [
+  {
+   "id": "forest_interior_conifer",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    600,
+    -420,
+    157.59
+   ],
+   "look_at": [
+    680,
+    -380,
+    159.5
+   ],
+   "fov_deg": 50.0
+  },
+  {
+   "id": "forest_interior_mixed",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    450,
+    -100,
+    158.38
+   ],
+   "look_at": [
+    540,
+    -90,
+    159.98
+   ],
+   "fov_deg": 50.0
+  },
+  {
+   "id": "forest_corridor",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    330,
+    -140,
+    159.33
+   ],
+   "look_at": [
+    420,
+    -380,
+    159.38
+   ],
+   "fov_deg": 50.0
+  },
+  {
+   "id": "forest_wall_meadow",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    0,
+    -60,
+    157.75
+   ],
+   "look_at": [
+    250,
+    -60,
+    161.16
+   ],
+   "fov_deg": 50.0
+  },
+  {
+   "id": "forest_wall_oblique",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    200,
+    95,
+    158.19
+   ],
+   "look_at": [
+    600,
+    60,
+    159.2
+   ],
+   "fov_deg": 50.0
+  },
+  {
+   "id": "forest_runway_west",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -100,
+    -200,
+    156.46
+   ],
+   "look_at": [
+    -600,
+    -420,
+    155.71
+   ],
+   "fov_deg": 50.0
+  },
+  {
+   "id": "forest_edge_near",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    222,
+    -50,
+    159.98
+   ],
+   "look_at": [
+    300,
+    -60,
+    160.42
+   ],
+   "fov_deg": 50.0
+  },
+  {
+   "id": "forest_edge_broadleaf",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -60,
+    -300,
+    154.86
+   ],
+   "look_at": [
+    40,
+    -420,
+    156.07
+   ],
+   "fov_deg": 50.0
+  },
+  {
+   "id": "forest_above_edge",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    120,
+    -20,
+    172.44
+   ],
+   "look_at": [
+    330,
+    -120,
+    161.72
+   ],
+   "fov_deg": 50.0
+  }
+ ]
+}

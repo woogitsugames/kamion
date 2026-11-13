@@ -34,7 +34,22 @@ ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 if "--out" in ARGV:
     VEG = Path(ARGV[ARGV.index("--out") + 1]).resolve()
 VEG.mkdir(parents=True, exist_ok=True)
-HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8}
+HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8,
+        "spruce": 21.0, "pineyoung": 5.0, "birchyoung": 6.0, "floor": 0.7}
+# ADR 0187 (forest wall): species of a Podlasie pine / spruce stand that the first six could not stand in for.
+#   spruce      Norway spruce (Picea abies): variants 0, 1 = stand form (live crown from ~0.36-0.46 H, dead stubs
+#               below), variant 2 = open-grown / young form with boughs to the ground (understorey, stand edge).
+#   pineyoung   Scots pine thicket (mlodnik, 1.5-8 m): whorls of ascending branches from the ground up. A mature
+#               pine scaled to 4 m is a bare pole with a tuft - the "stick saplings" of review s19 0179.
+#   birchyoung  young silver birch (2-8 m): slender stem, steep thin branches, foliage along the whole stem.
+#   floor       forest floor plants (bilberry / fern / seedlings, 0.4-0.9 m): a low mound of cards, no stem, no
+#               impostor (culled beyond its LOD1 distance; High tier only, vegetation.place).
+# They reuse the existing materials (bark_pine_lower, bark_pine, bark_birch, leaves_pine, leaves_birch,
+# leaves_shrub); the only new texture is leaves_spruce.png (streetscape/leaf_textures.py spruce_spray).
+NEW_SPECIES = ("spruce", "pineyoung", "birchyoung", "floor")
+NVAR = {"spruce": 3, "pineyoung": 2, "birchyoung": 2, "floor": 2}       # others: 3
+IMP_SCALE = {"pineyoung": 0.5, "birchyoung": 0.5}    # impostor views of the small trees at half resolution
+NO_IMPOSTOR = ("floor",)
 BARK = {"pine": ["bark_pine_lower", "bark_pine"], "birch": ["bark_birch"], "alder": ["bark_alder"],
         "maple": ["bark_maple"], "linden": ["bark_linden"], "shrub": ["bark_shrub"]}
 
@@ -70,6 +85,16 @@ class Geo:
             for k in range(seg):
                 a = base + i * n + k
                 F.append((a, a + 1, a + n + 1, a + n))
+
+    def quad(self, mat, a, b, c, d, uvs, n):
+        """Free quad a-b-c-d with its own UVs and one shading normal (spruce boughs, ADR 0187)."""
+        V, F, UV, N = self._p(mat)
+        base = len(V)
+        for v, uv in zip((a, b, c, d), uvs):
+            V.append(v.copy())
+            UV.append(uv)
+            N.append(n)
+        F.append((base, base + 1, base + 2, base + 3))
 
     def card(self, mat, c, normal, up, size, crown_c):
         if self.crown_height and crown_opening(c, crown_c, self.crown_height, self.crown_phase):
@@ -159,7 +184,8 @@ def grow(species, variant, lod):
                 p0 = trunk[min(int(k), 13)].lerp(trunk[min(int(k) + 1, 14)], k - int(k))
                 br = bend_path(p0, d, L, 5, rng, 0.22, gravity=-0.04)
                 if lod == 0 or L > 1.8:
-                    g.tube("bark_twig", br, [0.07 * (1 - f * 0.4) * (1 - i / 6) + 0.012 for i in range(6)],
+                    # ADR 0187: limbs carry the orange upper bark (one material less per pine at both LODs)
+                    g.tube("bark_pine", br, [0.07 * (1 - f * 0.4) * (1 - i / 6) + 0.012 for i in range(6)],
                            max(3, seg // 2))
                 # foliage clumps: 1-3 dense clusters near the limb end (sparse inside the crown)
                 for cl in range(rng.randint(2, 4)):
@@ -188,16 +214,26 @@ def grow(species, variant, lod):
                 g.tube("bark_pine_lower", [p0, p0 + Vector((math.cos(a), math.sin(a), -0.1)) * rng.uniform(0.2, 0.8)],
                        [0.025, 0.008], 3)
         return g, H
+    if species in NEW_SPECIES:
+        g.crown_height = 0                  # no crown windows (crown_opening): conifers and saplings are closed
+        return grow_0187(species, variant, lod, rng, crng, g, H), H
     # broadleaf + shrub
     if species == "shrub":
+        # ADR 0187: hazel / buckthorn clump. The stems splay less and carry leaves from 10 % of their length, with
+        # a leafy middle at the base: the old clump (cards from 25 %, wobble 0.2) left single stems standing apart
+        # with a detached ball of leaves on top (review s19 0179: crowns not joined to the stems).
         stems = rng.randint(5, 8)
-        cc = Vector((0, 0, H * 0.55))
+        cc = Vector((0, 0, H * 0.5))
         for _ in range(stems):
             a = rng.uniform(0, 2 * math.pi)
-            d = Vector((math.cos(a) * 0.4, math.sin(a) * 0.4, 1))
-            st = bend_path(Vector((0, 0, -0.1)), d, H * rng.uniform(0.8, 1.1), 5, rng, 0.2)
+            d = Vector((math.cos(a) * 0.32, math.sin(a) * 0.32, 1))
+            st = bend_path(Vector((0, 0, -0.1)), d, H * rng.uniform(0.8, 1.1), 5, rng, 0.11)
             g.tube("bark_shrub", st, [0.03 * (1 - i / 6) + 0.006 for i in range(6)], 4)
-            cards_along(st, 0.9, 10, cc, start=0.25)
+            cards_along(st, 0.9, 9, cc, start=0.10)
+        for _ in range(6 if lod == 0 else 3):
+            pc = Vector((crng.uniform(-0.45, 0.45), crng.uniform(-0.45, 0.45), H * crng.uniform(0.16, 0.42)))
+            g.card(leaf, pc, Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(0.2, 1.2))),
+                   Vector((0, 0, 1)), 1.0 * csize_k * crng.uniform(0.85, 1.15), cc)
         return g, H
     trunk_frac = {"birch": 0.30, "alder": 0.28, "maple": 0.28, "linden": 0.30}[species]
     r0 = {"birch": 0.17, "alder": 0.18, "maple": 0.22, "linden": 0.25}[species]
@@ -235,9 +271,14 @@ def grow(species, variant, lod):
             if lod == 0:
                 g.tube("bark_twig", sub, [0.03 * (1 - i / 5) + 0.006 for i in range(5)], 3)
             csz = {"birch": 0.85, "alder": 1.0, "maple": 1.05, "linden": 1.0}[species]
-            dens = {"birch": 14, "alder": 12, "maple": 14, "linden": 15}[species]
+            dens = {"birch": 10, "alder": 12, "maple": 14, "linden": 15}[species]
             cards_along(sub, csz, dens, cc, droop=0.4 if species == "birch" else 0.0, start=0.1)
-        cards_along(br, {"birch": .9, "alder": 1.0, "maple": 1.05, "linden": 1.0}[species], 6, cc, start=0.20)
+        # ADR 0187: birch limbs are leafy from the stem outwards (10 cards from 6 % of the limb; 2 fewer on every
+        # twig), so the crown is one mass on the stem instead of separate tufts at the limb ends
+        cards_along(br, {"birch": .9, "alder": 1.0, "maple": 1.05, "linden": 1.0}[species],
+                    10 if species == "birch" else 6, cc, start=0.06 if species == "birch" else 0.20)
+        if species == "birch":              # hanging twigs under the limb (Betula pendula)
+            cards_along(br, 0.9, 8, cc, droop=0.55, start=0.15)
     if species == "birch":
         # v3.1 (REVIEW r2 #7, "birches without crowns"): the white stem ran bare through the open, drooping crown
         # and read as a pole at 60-250 m. Foliage clumps hug the stem over the whole crown height.
@@ -251,6 +292,136 @@ def grow(species, variant, lod):
                 nrm = Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.6, 1.0)))
                 g.card(leaf, pc, nrm, Vector((0, 0, 1)), 1.0 * csize_k * crng.uniform(0.8, 1.2), cc)
     return g, H
+
+
+def grow_0187(species, variant, lod, rng, crng, g, H):
+    """Spruce, young pine, young birch and forest-floor plants (ADR 0187). Returns g."""
+    up_z = Vector((0, 0, 1))
+
+    def stem(z_top, n, r0, wob, mat, seg, lean=0.02):
+        ln = Vector((rng.uniform(-lean, lean), rng.uniform(-lean, lean), 1))
+        pts = bend_path(Vector((0, 0, -0.3)), ln, z_top + 0.3, n, rng, wob)
+        g.tube(mat, pts, [r0 * (1 - i / n) ** 0.9 + 0.012 for i in range(n + 1)], seg)
+
+        def at(z):
+            k = min(max((z + 0.3) / (z_top + 0.3) * n, 0.0), n - 1e-3)
+            return pts[int(k)].lerp(pts[int(k) + 1], k - int(k))
+        return at
+
+    if species == "spruce":
+        leaf = "leaves_spruce"
+        full = variant == 2
+        at = stem(H, 14, 0.25 if not full else 0.21, 0.012, "bark_pine_lower", 8 if lod == 0 else 5)
+        z0 = H * (0.05 if full else 0.36 + 0.05 * variant + rng.uniform(-0.02, 0.02))
+        rb = H * (0.185 if full else 0.150)                     # crown radius at its base: ~3.2 / 3.9 m at 21 m
+        step = H * (0.031 if lod == 0 else 0.056)
+        nb = 6 if lod == 0 else 5
+        z, a0 = z0, rng.uniform(0, 2 * math.pi)
+        while z < H * 0.955:
+            f = (z - z0) / (H - z0)
+            R = rb * (1 - f) ** 0.85
+            if not full:
+                R *= 0.6 + 0.4 * min(1.0, f / 0.18)             # the lowest live whorls of a stand tree are short
+            a0 += 2.4
+            for k in range(nb):
+                if lod == 0 and rng.random() < 0.06:
+                    continue
+                a = a0 + 2 * math.pi * k / nb + rng.uniform(-0.22, 0.22)
+                L = max(0.35, R * rng.uniform(0.82, 1.12))
+                rise = -0.42 + 0.66 * f + rng.uniform(-0.06, 0.06)     # lower boughs droop, the top ones ascend
+                p0 = at(z + rng.uniform(-0.15, 0.15) * step)
+                dh = Vector((math.cos(a), math.sin(a), 0))
+                d = (dh + Vector((0, 0, rise))).normalized()
+                tip = p0 + d * L + Vector((0, 0, 0.10 * L))            # sabre: the bough end sweeps up
+                side = Vector((-math.sin(a), math.cos(a), 0))
+                w = max(0.30, 0.40 * L) * (1.0 if lod == 0 else 1.3)
+                nout = (dh + Vector((0, 0, 0.55))).normalized()
+                b0 = p0 + d * 0.04 * L
+                g.quad(leaf, b0 - side * w, b0 + side * w, tip + side * w * 0.9, tip - side * w * 0.9,
+                       [(0, 0), (1, 0), (1, 1), (0, 1)], nout)
+                hang = max(0.45, 0.80 * L) * (1 - 0.35 * f) * (1.0 if lod == 0 else 1.25)    # curtain of hanging twigs
+                g.quad(leaf, b0, tip, tip - up_z * hang * 0.7, b0 - up_z * hang,
+                       [(0.5, 0), (0.5, 1), (1, 1), (1, 0)], nout)
+            z += step * rng.uniform(0.85, 1.15)
+        top = at(H * 0.90)
+        for k in range(2):                                             # pointed leader
+            a = a0 + k * math.pi / 2
+            sv = Vector((math.cos(a), math.sin(a), 0)) * H * 0.020
+            g.quad(leaf, top - sv, top + sv, top + sv + up_z * H * 0.105, top - sv + up_z * H * 0.105,
+                   [(0, 0), (1, 0), (1, 1), (0, 1)], (Vector((-sv.y, sv.x, 0)).normalized() * 0.4 + up_z * 0.9).normalized())
+        if not full and lod == 0:                                      # dead branch stubs under the live crown
+            for _ in range(12):
+                p0 = at(rng.uniform(H * 0.14, z0))
+                a = rng.uniform(0, 2 * math.pi)
+                g.tube("bark_pine_lower", [p0, p0 + Vector((math.cos(a), math.sin(a), -0.25)) * rng.uniform(0.4, 1.3)],
+                       [0.022, 0.007], 3)
+        return g
+    if species == "pineyoung":
+        leaf = "leaves_pine"
+        at = stem(H, 8, 0.055, 0.02, "bark_pine", 5 if lod == 0 else 4, lean=0.03)
+        cc = Vector((0, 0, H * 0.5))
+        z0 = H * (0.08 + 0.05 * variant)
+        nwh = 10 if lod == 0 else 7
+        a0 = rng.uniform(0, 2 * math.pi)
+        for wi in range(nwh):
+            f = (wi + 0.5) / nwh
+            z = z0 + (H * 0.93 - z0) * f
+            R = H * (0.34 + 0.05 * variant) * (1 - f) ** 0.72 * (0.72 + 0.28 * min(1.0, f / 0.15))
+            nb = 5
+            a0 += 1.9
+            for k in range(nb):
+                a = a0 + 2 * math.pi * k / nb + rng.uniform(-0.3, 0.3)
+                d = Vector((math.cos(a), math.sin(a), 0.55 + 0.55 * f + rng.uniform(-0.1, 0.1))).normalized()
+                L = max(0.45, R / max(math.hypot(d.x, d.y), 0.3) * rng.uniform(0.8, 1.15))
+                p0 = at(z + rng.uniform(-0.1, 0.1))
+                c = p0 + d * L * 0.52
+                sidev = Vector((-math.sin(a), math.cos(a), 0))
+                g.card(leaf, c, d.cross(sidev), d, L * 1.18 * (1.0 if lod == 0 else 1.3), cc)
+                if lod == 0:
+                    g.card(leaf, c, sidev, d, L * 1.05, cc)
+        for k in range(2):                                             # leader shoot
+            a = a0 + k * math.pi / 2
+            g.card(leaf, at(H * 0.86) + up_z * H * 0.02, Vector((math.cos(a), math.sin(a), 0)), up_z, H * 0.30, cc)
+        return g
+    if species == "birchyoung":
+        leaf = "leaves_birch"
+        csz = 1.0 if lod == 0 else 1.3
+        at = stem(H * 0.97, 8, 0.045, 0.03, "bark_birch", 5 if lod == 0 else 4, lean=0.05)
+        cc = Vector((0, 0, H * 0.6))
+        nbr = 13 if lod == 0 else 10
+        lo = 0.16 + 0.05 * variant
+        for b in range(nbr):
+            f = lo + (0.93 - lo) * (b + rng.random()) / nbr
+            rel = (f - lo) / (0.93 - lo)
+            L = H * 0.27 * max(0.3, math.sin(math.pi * (0.12 + rel * 0.8)) ** 0.7) * rng.uniform(0.8, 1.15)
+            a = rng.uniform(0, 2 * math.pi)
+            d = Vector((math.cos(a), math.sin(a), 1.0 + 0.7 * rel))
+            br = bend_path(at(f * H), d, L, 3, rng, 0.12, gravity=0.06)
+            if lod == 0:
+                g.tube("bark_birch", br, [0.016 * (1 - i / 4) + 0.005 for i in range(4)], 3)
+            for i in range(4 if lod == 0 else 3):
+                t = 0.25 + 0.75 * crng.random()
+                k = t * 3
+                q = br[min(int(k), 2)].lerp(br[min(int(k) + 1, 3)], k - int(k))
+                q = q + Vector((crng.uniform(-0.15, 0.15), crng.uniform(-0.15, 0.15), crng.uniform(-0.3, 0.1)))
+                g.card(leaf, q, Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.3, 1.0))), up_z,
+                       0.78 * csz * crng.uniform(0.8, 1.2), cc)
+        nst = 10 if lod == 0 else 6
+        for i in range(nst):                                           # foliage hugging the stem, top tuft
+            f = lo + 0.05 + (0.99 - lo - 0.05) * (i + crng.random()) / nst
+            q = at(min(f, 0.96) * H) + Vector((crng.uniform(-0.3, 0.3), crng.uniform(-0.3, 0.3), crng.uniform(-0.2, 0.2)))
+            g.card(leaf, q, Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.3, 1.0))), up_z,
+                   0.80 * csz * crng.uniform(0.8, 1.2), cc)
+        return g
+    # floor: low mound of leaf cards (bilberry, fern, seedlings); the cards dip into the ground
+    n = 7 if lod == 0 else 4
+    for i in range(n):
+        a = 2 * math.pi * i / n + rng.uniform(-0.3, 0.3)
+        r = H * rng.uniform(0.2, 0.9)
+        c = Vector((math.cos(a) * r, math.sin(a) * r, H * rng.uniform(0.28, 0.45)))
+        nrm = Vector((math.cos(a) * 0.9, math.sin(a) * 0.9, rng.uniform(0.8, 1.3)))
+        g.card("leaves_shrub", c, nrm, up_z, H * rng.uniform(1.3, 1.75) * (1.0 if lod == 0 else 1.25), Vector((0, 0, -3)))
+    return g
 
 
 def reuse_leaf_lod(g0, g1, seed):
@@ -494,10 +665,10 @@ def render_passes(objs, path_stem):
         bpy.ops.render.render(write_still=True)
 
 
-def bake_impostor(ob, name, H):
+def bake_impostor(ob, name, H, res=IMP_RES):
     """IMP_NF orthographic views of LOD0 around the tree (frame k: camera at azimuth 2 pi k / IMP_NF from -Y,
     counter-clockwise seen from above), each covering the whole crown. Returns frame height S (model metres)."""
-    sc, cam = bake_setup(True, IMP_RES, 24)
+    sc, cam = bake_setup(True, res, 24)
     for o in sc.objects:
         o.hide_render = o is not ob and o.type == "MESH"
     ob.hide_render = False
@@ -812,30 +983,41 @@ def main():
     cached = {}
     if "--reuse-bakes" in argv and (VEG / "trees_meta.json").exists():
         cached = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))
-    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub"):
-        for v in range(3):
+    rebake = set(argv[argv.index("--rebake") + 1].split(",")) if "--rebake" in argv else set()   # species
+    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES:
+        for v in range(NVAR.get(sp, 3)):
             name = f"tree_{sp}_{v}"
             if quick and name != quick:
                 continue
             g0, H = grow(sp, v, 0)
             o0 = to_object(name, g0)
             g1, _ = grow(sp, v, 1)
-            g1 = reuse_leaf_lod(g0, g1, sum(map(ord, sp)) * 31 + v)
+            if sp not in NEW_SPECIES:
+                g1 = reuse_leaf_lod(g0, g1, sum(map(ord, sp)) * 31 + v)
             o1 = to_object(name + ".lod1", g1)
             o1.hide_render = True
+            if sp in NO_IMPOSTOR:
+                objs += [o0, o1]
+                src[name] = o0
+                meta[name] = {"species": sp, "variant": v, "href_m": round(H, 2),
+                              "tris_lod0": sum(len(p.vertices) - 2 for p in o0.data.polygons),
+                              "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons)}
+                continue
             png = VEG / f"impostor_{name}.png"
             prior = cached.get("trees", {}).get(name)
-            if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists():
+            res = tuple(int(r * IMP_SCALE.get(sp, 1.0)) for r in IMP_RES)
+            if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists() and sp not in rebake:
                 half_w = max(math.hypot(v[0], v[1]) for v in o0.bound_box)
                 S = max(H * 1.05, 2.0 * half_w * 1.04 * IMP_RES[1] / IMP_RES[0])
             else:
-                S = bake_impostor(o0, name, H)
+                S = bake_impostor(o0, name, H, res)
                 # ADR0088: opening erased 1–2px photographed twig connections,
                 # leaving detached broad green islands. Keep connected pine twigs;
                 # still reject isolated specks. Non-pine and forest HLOD retain
                 # their established opening / component rules (far shimmer guard).
                 pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png",
-                     open_r=0 if sp == "pine" else 1, min_island=16 if sp == "pine" else 0)
+                     open_r=0 if sp in ("pine", "spruce", "pineyoung") else 1,
+                     min_island=16 if sp in ("pine", "spruce", "pineyoung") else 0)
             o2 = impostor_object(name, H, png, S)
             o2.hide_render = True
             objs += [o0, o1, o2]
