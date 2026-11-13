@@ -119,35 +119,81 @@ def _overrides():
 
 def test_authored_zones_and_median_rail():
     ov = {o["id"]: o for o in _overrides()}
-    for k in ("andersa-link-no-guardrail", "andersa-se-ramp-median-sw-no-guardrail"):
+    for k in ("andersa-link-no-guardrail", "andersa-se-cyclepath-no-guardrail"):
         assert ov[k]["kind"] == "no_guardrail" and len(ov[k]["polygon_en"]) >= 3 and "Mapillary" in ov[k]["reason"]
+    # after4: the zone on the SW edge of the median was wrong (810896 / 962702: a W-beam right behind the kerb)
+    assert "andersa-se-ramp-median-sw-no-guardrail" not in ov
     r = ov["andersa-se-ramp-median-barrier"]
-    assert r["kind"] == "guardrail" and r["post_spacing_m"] == 2.0 and r["free_ends"] == [True, False]
+    assert r["kind"] == "guardrail" and r["post_spacing_m"] == 2.0 and r["free_ends"] == [False, True]
     q = np.asarray(r["polyline_en"], float)
     assert 95.0 < float(np.hypot(*(q[-1] - q[0]))) < 105.0
     st = next(o for o in _overrides() if o["id"] == "andersa-viaduct-putry-style")["set"]
     assert st["barrier"] == "dark_rails"
 
 
+def _left_normal_side(q, target):
+    """True when `target` lies on the LEFT normal side of polyline q at its nearest vertex (= the beam face)."""
+    q = np.asarray(q, float)
+    k = int(np.hypot(*(q - np.asarray(target, float)).T).argmin())
+    k = min(max(k, 1), len(q) - 1)
+    d = q[k] - q[k - 1]
+    n = np.array([-d[1], d[0]])
+    return float(n @ (np.asarray(target, float) - q[k])) > 0.0
+
+
+def test_beam_face_is_on_the_left_normal_of_the_point_order():
+    lin = _Lin(0.0)
+    n = 30
+    FU.guardrail(lin, np.column_stack([np.arange(n, dtype=float), np.zeros(n)]), np.zeros(n), "c:test:R:embankment")
+    beam = _beam([p for p in lin.buf.parts if p.layer != "collision"])[0]
+    posts = [p for p in lin.buf.parts if p.layer != "collision" and float(np.ptp(p.V[:, 2])) > 0.6]
+    assert beam.V[:, 1].min() > 0.0 and min(float(p.V[:, 1].min()) for p in posts) < 0.0
+
+
+def test_median_rails_face_their_carriageways():
+    """after4: the NE rail faced the grass (drawn from the nose with "the road on the right")."""
+    ov = {o["id"]: o for o in _overrides()}
+    # a point on the NW-bound carriageway (NE of the median) / on the SE-bound one (SW of it), mid-way along the rails
+    assert _left_normal_side(ov["andersa-se-ramp-median-barrier"]["polyline_en"], (-341.0, -146.5))
+    sw = ov["andersa-se-ramp-median-sw-barrier"]
+    assert sw["kind"] == "guardrail" and sw["post_spacing_m"] == 2.0 and sw["free_ends"] == [True, False]
+    assert _left_normal_side(sw["polyline_en"], (-350.0, -156.0))
+    q = np.asarray(sw["polyline_en"], float)
+    assert 90.0 < float(np.hypot(*np.diff(q, axis=0).T).sum()) < 102.0
+    ext = ov["biezenstwa-link-barrier-se-end"]
+    assert ext["free_ends"] == [False, True] and _left_normal_side(ext["polyline_en"], (522.0, -678.0))
+    q = np.asarray(ext["polyline_en"], float)
+    assert float(np.hypot(*np.diff(q, axis=0).T).sum()) >= 13.0          # long enough for a 4 m terminal
+
+
 def test_generated_runs_respect_the_zones():
-    """On the regenerated world: no rule run inside the two zones, the median rail reaches the nose."""
+    """On the regenerated world: no rule run inside the zones, both median rails reach the nose, the rule run of the
+    SW cap is back and the link barrier at Rondo Biezenstwa ends where the orthophoto has it."""
     from shapely.geometry import Polygon
     p = ROOT / "Data/Regions" / REGION_ID / "generated/streetscape_qa.json"
     q = json.loads(p.read_text(encoding="utf-8"))["furniture"]
-    if "no_guardrail" not in q.get("guardrails_m", {}):
-        pytest.skip("world not regenerated with ADR 0159 yet")
+    runs = {}
+    for r in q.get("guardrail_runs", []):
+        runs.setdefault(r["key"], []).append(np.asarray(r["pts"], float))
+    if "authored:andersa-se-ramp-median-sw-barrier" not in runs:
+        pytest.skip("world not regenerated with ADR 0159 after4 yet")
     ov = {o["id"]: o for o in _overrides()}
-    zones = [Polygon(ov[k]["polygon_en"]) for k in ("andersa-link-no-guardrail", "andersa-se-ramp-median-sw-no-guardrail")]
+    zones = [Polygon(ov[k]["polygon_en"]) for k in ("andersa-link-no-guardrail", "andersa-se-cyclepath-no-guardrail")]
     import shapely
-    for r in q["guardrail_runs"]:
-        if r["key"].startswith("authored:"):
+    for key, parts in runs.items():
+        if key.startswith("authored:"):
             continue
-        P = np.asarray(r["pts"], float)
-        for z in zones:
-            assert not shapely.contains_xy(z, P[:, 0], P[:, 1]).any(), r["key"]
-    assert q["guardrails_m"]["no_guardrail"] >= 80
-    med = [r for r in q["guardrail_runs"] if r["key"] == "authored:andersa-se-ramp-median-barrier"]
-    assert med and sum(len(r["pts"]) for r in med) >= 95
+        for P in parts:
+            for z in zones:
+                assert not shapely.contains_xy(z, P[:, 0], P[:, 1]).any(), key
+    assert q["guardrails_m"]["no_guardrail"] >= 60
+    for key in ("authored:andersa-se-ramp-median-barrier", "authored:andersa-se-ramp-median-sw-barrier"):
+        assert sum(len(P) for P in runs[key]) >= 90, key
+    # the rule run of the SW cap of the ramp (removed by the zone of the first three builds) reaches the fill end again
+    cap = [P for k, v in runs.items() if k.startswith("c:w173956078") and k.endswith(":L:bridge") for P in v]
+    assert cap and min(float(np.hypot(*(P[:, :2] - [-383.65, -126.28]).T).min()) for P in cap) < 1.5
+    end = runs["authored:biezenstwa-link-barrier-se-end"][-1][-1]
+    assert float(np.hypot(end[0] - 528.05, end[1] + 686.07)) < 0.6
 
 
 def test_screen_and_pier_materials():
@@ -156,6 +202,11 @@ def test_screen_and_pier_materials():
     assert strength <= 0.12                                                  # faint lines: no raster on Low
     c = MT.M["pier_yellow"]["color"]
     assert c[0] > c[1] > 2 * c[2] and 0.2 <= c[0] <= 0.3                     # still ochre, in the shade of the deck
+    pm = MT.M["ramp_wall_panels"]                                            # after4: Biezenstwa ramps, not blocks
+    assert pm["texture_set"] == "concrete_panels_wall" and pm.get("set_tile") is True
+    assert min(pm["color"]) > max(MT.M["ramp_wall_blocks"]["color"])        # lighter than the split blocks
+    bz = next(o for o in _overrides() if o["id"] == "andersa-viaduct-biezenstwa-style")["set"]
+    assert bz["wall_mat"] == "ramp_wall_panels"
     m = MT.M["ramp_wall_blocks"]
     assert m["texture_set"] == "concrete_blocks_split" and m.get("set_tile") is True
     sys.path.insert(0, str(ROOT / "art-source/world/materials/_src"))
@@ -166,3 +217,9 @@ def test_screen_and_pier_materials():
     alb = np.asarray(s.albedo if hasattr(s, "albedo") else s.alb, float).mean(-1)
     joint = np.asarray(s.joint, float)
     assert alb[joint > 0.9].mean() <= 0.75 * alb[joint < 0.05].mean()        # joints at least 25 % darker than blocks
+    assert reg["concrete_panels_wall"]["tile_m"] == [3.0, 3.0]
+    s2 = F.concrete_panels_wall(256)
+    alb2 = np.asarray(s2.albedo if hasattr(s2, "albedo") else s2.alb, float).mean(-1)
+    j2 = np.asarray(s2.joint, float)
+    assert 0.01 < float((j2 > 0.5).mean()) < 0.08                            # thin joints, large panels
+    assert alb2[j2 < 0.05].std() < alb[joint < 0.05].std()                   # smooth face: less contrast than the blocks

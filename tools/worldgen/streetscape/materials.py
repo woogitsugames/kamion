@@ -431,6 +431,9 @@ M = {
     "plaster_band_grey": {"color": [0.26, 0.27, 0.27], "rough": 0.9, "texture_set": "plaster"},
     # retaining walls of the raised ramps (roads.profile.mark_walled_ramps): block-faced concrete
     "ramp_wall_blocks": {"color": [0.34, 0.33, 0.31], "rough": 0.9, "texture_set": "concrete_blocks_split", "set_tile": True},
+    # ADR 0159 after4: reinforced-earth facing panels of the Biezenstwa ramps (bridge_style `wall_mat`): smooth light
+    # precast concrete (Mapillary 751431972202262, sunlit: lighter than the split blocks). Colour WORKING_VALUE.
+    "ramp_wall_panels": {"color": [0.42, 0.42, 0.40], "rough": 0.85, "texture_set": "concrete_panels_wall", "set_tile": True},
     # far-field backdrop beyond the 2x2 km region border (ADR 0085, streetscape.far_field): one merged submesh per
     # cardinal sector with linear albedo in COLOR_0.rgb, window-mode flag in COLOR_0.a (1 = block/office grid,
     # 0.75 = ribbon windows, 0 = windowless wall/roof/plinth/chimney/pylon), and bay x storey coordinates in TEXCOORD_1.

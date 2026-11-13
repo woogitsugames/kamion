@@ -2028,7 +2028,9 @@ def guardrails(lin, net, zground, report):
     # queued so that a later join can still cancel the turned-down terminal of the rail it lands on
     lin.rail_queue = []
     # ADR 0100: authored guardrails on kerbed separators traced on the orthophoto (`kind: guardrail`, polyline_en in
-    # region-local E/N, drawn with the road on the RIGHT of the drawing direction = the face of the W-beam)
+    # region-local E/N). ADR 0159 after4: the beam face is on the LEFT normal (-dy, dx) of the drawing direction, as for
+    # every run (guardrail()); the earlier wording "road on the RIGHT" was wrong - the median rail of the Putry SE
+    # ramp, drawn that way, showed its posts to the carriageway (SBS frame 3678296072299092)
     m["authored"] = 0.0
     surf_top = None
     for o in getattr(net, "authored", None) or []:

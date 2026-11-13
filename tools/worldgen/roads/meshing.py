@@ -571,7 +571,10 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                         vtop[:, 2] -= FASCIA_BAND_H - 0.02
                     vbot = bot.copy()
                     vbot[:, 2] = np.minimum(vbot[:, 2], vtop[:, 2] - 0.05)
-                    for layer, mat in (("bridge", "ramp_wall_blocks"), ("collision", "collision_fence")):
+                    # ADR 0159 after4: bridge_style `wall_mat` (Biezenstwa ramps: large smooth precast panels,
+                    # Mapillary 751431972202262; the split-face blocks are those of the Putry ramps)
+                    for layer, mat in (("bridge", style.get("wall_mat") or "ramp_wall_blocks"),
+                                       ("collision", "collision_fence")):
                         vis = layer == "bridge"
                         _strip(buf, layer, mat, (vbot if vis else bot) + off, (vtop if vis else top) + off,
                                c.id + ":ramp_wall", both=False)
