@@ -298,7 +298,7 @@ def _uv(px, py):
 class Kit:
     """Mesh builder in region-local metres relative to the kit origin (x = east, y = north, z up above the ground)."""
 
-    def __init__(self, key):
+    def __init__(self, key, zrel=None):
         self.key = key
         self.mat = f"sign_{key}"
         self.atlas = Atlas(key)
@@ -306,10 +306,28 @@ class Kit:
         self.col = PP.Mesh()
         self.rng = _rng("mg-kit:" + key)
         self.tris = 0
+        self.zrel = zrel or (lambda p: 0.0)      # ground under a point of the kit, relative to the anchor level
+        self.dz = 0.0                            # level of the element being built (set by base())
+        self.levels = []
+
+    def base(self, pts):
+        """Stand the next elements on the lowest ground under `pts` (the brick band continues below the line)."""
+        self.dz = float(min(self.zrel(p) for p in pts))
+        self.levels.append(round(self.dz, 3))
+
+    def _add(self, V, T, UV):
+        V = np.array(V, float)
+        V[:, 2] += self.dz
+        self.m.add(self.mat, V, T, UV)
+
+    def _col(self, mat, V, T):
+        V = np.array(V, float)
+        V[:, 2] += self.dz
+        self.col.add(mat, V, T)
 
     # every quad: corners a, b, c, d counter-clockwise seen from outside (normal = (b-a) x (c-a))
     def quad(self, a, b, c, d, uvs):
-        self.m.add(self.mat, [a, b, c, d], [(0, 1, 2), (0, 2, 3)], uvs)
+        self._add([a, b, c, d], [(0, 1, 2), (0, 2, 3)], uvs)
         self.tris += 2
 
     def flat(self, a, b, c, d, name):
@@ -381,7 +399,7 @@ class Kit:
                        lambda r, z: self.rect_top(r, z, self.conc_rect(w + 0.08, d + 0.08)), bottom=True)
         else:
             self.rect_top(ring, z1, self.conc_rect(w, d))
-        self.col.box("collision_building", [c[0], c[1], z1 / 2], max(w, d) / 2, max(w, d) / 2, z1 / 2)
+        self._col("collision_building", *_col_ring(ring, z1))
         return ring
 
     def wall(self, P, h, thick, coping):
@@ -392,9 +410,10 @@ class Kit:
                 continue
             u = (b - a) / L
             n = np.array([u[1], -u[0]]) * (thick / 2)            # right of a -> b
-            k = max(1, int(math.ceil(L / 4.0)))
+            k = max(1, int(math.ceil(L / 2.1)))
             for i in range(k):
                 s0, s1 = a + u * (L * i / k), a + u * (L * (i + 1) / k)
+                self.base([s0, s1])                       # the wall steps with the ground, courses stay level
                 self.wall_face(s0 + n, s1 + n, -BRICK_BELOW_M + 0.05, h)        # right face
                 self.wall_face(s1 - n, s0 - n, -BRICK_BELOW_M + 0.05, h)        # left face
                 # coping: rowlock course 2 cm proud on both sides
@@ -405,11 +424,13 @@ class Kit:
                 self.rect_side(s0 + nn, s1 + nn, h, h + coping, rs)
                 self.rect_side(s1 - nn, s0 - nn, h, h + coping, rs)
                 self.rect_top([s0 + nn, s1 + nn, s1 - nn, s0 - nn], h + coping, rc)
-            self.col.add("collision_building", *_col_slab(a, b, thick, h + coping))
+            self.base([a, b])
+            self._col("collision_building", *_col_slab(a, b, thick, h + coping + 0.3))
         # end faces
         for p, q in ((P[0], P[1]), (P[-1], P[-2])):
             u = (p - q) / np.hypot(*(p - q))
             n = np.array([u[1], -u[0]]) * (thick / 2)
+            self.base([p])
             self.wall_face(p + n, p - n, -BRICK_BELOW_M + 0.05, h + coping)
 
     def panel(self, c, facing, w, h, z, rect, proud=0.02, back=True):
@@ -442,9 +463,9 @@ class Kit:
         V = [[c[0] + right[0] * x, c[1] + right[1] * x, z + zz] for x, zz in pts]
         UV = [_uv(x0 + (0.5 + x / size) * (x1 - x0), y0 + (0.5 - zz / size) * (y1 - y0)) for x, zz in pts]
         # pts run counter-clockwise for a viewer in front (x = viewer's right, z up): normal toward the viewer
-        self.m.add(self.mat, V, [(0, k, k + 1) for k in range(1, n - 1)], UV)
+        self._add(V, [(0, k, k + 1) for k in range(1, n - 1)], UV)
         Vb = [[v[0] - f[0] * 0.02, v[1] - f[1] * 0.02, v[2]] for v in V]
-        self.m.add(self.mat, Vb, [(0, k + 1, k) for k in range(1, n - 1)], [self.atlas.sw["back"]] * n)
+        self._add(Vb, [(0, k + 1, k) for k in range(1, n - 1)], [self.atlas.sw["back"]] * n)
         self.tris += 2 * (n - 2)
 
     def tube(self, p, z0, z1, r, name, seg=8):
@@ -453,7 +474,7 @@ class Kit:
         Vs, Ts, _ = pm.prims["p"]
         off = 0
         for V, T in zip(Vs, Ts):
-            self.m.add(self.mat, V, np.asarray(T) - off, [self.atlas.sw[name]] * len(V))
+            self._add(V, np.asarray(T) - off, [self.atlas.sw[name]] * len(V))
             off += len(V)
             self.tris += len(T)
 
@@ -523,10 +544,10 @@ def fence_cut(kits):
     return out
 
 
-def build_kit(k):
+def build_kit(k, zrel=None):
     """(lod0, lod1, collision, atlas image, tris) of one planned kit; vertices relative to the anchor, x east, y north."""
     o, fr = k["spec"], k["frame"]
-    kit = Kit(k["key"])
+    kit = Kit(k["key"], zrel)
     rel = lambda la: fr.en(la) - fr.o                                   # noqa: E731
     along = fr.right                                                     # the gate line
     for w in o.get("walls", []):
@@ -536,6 +557,7 @@ def build_kit(k):
         P = [rel(p) for p in w["line_la"]]
         for p in w.get("pillars_la", []):
             c = rel(p)
+            kit.base([c])
             j = int(np.argmin([np.hypot(*(q - c)) for q in P]))
             a, b = (P[j - 1], P[j]) if j > 0 else (P[0], P[1])
             u = (b - a) / np.hypot(*(b - a))
@@ -553,6 +575,7 @@ def build_kit(k):
                 if best is None or d_ < best[0]:
                     best = (d_, q_, u_)
             _, q_, u_ = best
+            kit.base([q_ - u_ * 1.0, q_ + u_ * 1.0])
             f = np.array([u_[1], -u_[0]])
             if f @ fr.facing(pq) < 0:
                 f = -f
@@ -567,6 +590,9 @@ def build_kit(k):
                 rect = kit.atlas.put(im)
                 cc = c0 + right * ((c_ - (cols - 1) / 2) * (pw + 0.03))
                 kit.panel(cc, f, pw, phh, float(pq.get("z_m", 1.45)) - r_ * (phh + 0.03), rect, proud=0.02, back=False)
+    # the porch (piers, step, canopy, what hangs on them, posts) is one level structure
+    porch = [rel(p["at_la"]) for p in o.get("piers", [])]
+    kit.base(porch or [np.zeros(2)])
     for p in o.get("piers", []):
         w_, d_ = p.get("size_m", [0.38, 0.38])
         kit.brick_pier(rel(p["at_la"]), along, float(w_), float(d_), float(p["height_m"]), cap=bool(p.get("cap", False)),
@@ -582,7 +608,7 @@ def build_kit(k):
                   lambda a, b, za, zb: kit.rect_side(a, b, za, zb, kit.conc_rect(float(np.hypot(*(b - a))), zb - za)),
                   lambda r, z: kit.rect_top(r, z, kit.conc_rect(abs(l1 - l0), abs(a1 - a0))))
         cx, cy = np.mean(ring, axis=0)
-        kit.col.add("collision_building", *_col_ring(ring, hp))
+        kit._col("collision_building", *_col_ring(ring, hp))
     cn = o.get("canopy")
     if cn:
         l0, a0, l1, a1 = cn["rect_la"]
@@ -611,7 +637,7 @@ def build_kit(k):
         hp = float(p.get("height_m", 3.0))
         r = float(p.get("d_m", 0.076)) / 2
         kit.tube(c, -0.05, hp, r, "galv")
-        kit.col.tube("collision_steel", [c[0], c[1], 0], [c[0], c[1], min(hp, 2.6)], 0.05, None, 4)
+        kit.col.tube("collision_steel", [c[0], c[1], kit.dz], [c[0], c[1], kit.dz + min(hp, 2.6)], 0.05, None, 4)
         if p.get("lantern"):                             # park lantern: opal bowl under a flat hood
             kit.tube(c, hp, hp + 0.30, 0.13, "glass", seg=8)
             kit.tube(c, hp + 0.30, hp + 0.36, 0.24, "roof", seg=8)
@@ -627,6 +653,7 @@ def build_kit(k):
             z = float(pt["z_m"])
             kit.flat([a[0], a[1], z - h_ / 2], [b[0], b[1], z - h_ / 2], [b[0], b[1], z + h_ / 2], [a[0], a[1], z + h_ / 2],
                      "white")
+    k["levels"] = (min(kit.levels), max(kit.levels))
     return (*kit.meshes(), kit.atlas.im, kit.tris)
 
 
@@ -658,8 +685,12 @@ def build(pl, kits, boards, report, carriage=None):
     rep = {"kits": [], "stale": []}
     for k in kits:
         fr = k["frame"]
+        z0 = float(np.asarray(pl.zsurf(np.array([fr.o[0]]), np.array([fr.o[1]])))[0])
+
+        def zrel(p, o=fr.o, z0=z0):
+            return float(np.asarray(pl.zsurf(np.array([o[0] + p[0]]), np.array([o[1] + p[1]])))[0]) - z0
         try:
-            lod0, lod1, col, im, tris = build_kit(k)
+            lod0, lod1, col, im, tris = build_kit(k, zrel)
         except (KeyError, ValueError) as e:
             rep["stale"].append(f"{k['id']}: {e}")
             continue
@@ -670,13 +701,11 @@ def build(pl, kits, boards, report, carriage=None):
         proto = f"masonry_gate_{k['key']}"
         PROTOS[proto] = (lod0, lod1, col)
         boards[k["key"]] = (ATLAS / FACE_PX_M, ATLAS / FACE_PX_M, im)
-        # seat on the lowest ground under the solids, so no pier floats (the brick band continues 0.2 m below z = 0)
-        pts = np.array(k["solids"] + [fr.o])
-        zs = np.asarray(pl.zsurf(pts[:, 0], pts[:, 1]), float)
-        z = float(np.median(zs[:-1])) if len(zs) > 1 else float(zs[-1])
+        # instance at the anchor level; every element stands on the ground under it (Kit.base)
+        z = z0
         pl.add(proto, fr.o, 0.0, z=z, src=f"override:{k['id']}")
         rep["kits"].append({"id": k["id"], "proto": proto, "anchor": [round(float(v), 1) for v in fr.o],
-                            "z": round(z, 2), "ground_range_m": round(float(zs.max() - zs.min()), 2), "tris": int(tris),
+                            "z": round(z, 2), "levels_m": [round(float(v), 2) for v in k["levels"]], "tris": int(tris),
                             "wall_m": round(float(sum(np.hypot(*np.diff(ln, axis=0).T).sum() for ln in k["wall_lines"])), 1),
                             "on_carriageway": on_road,
                             "faces": [s["face"] for s in k["spec"].get("faces", [])] +
