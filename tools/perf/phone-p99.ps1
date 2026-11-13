@@ -99,7 +99,7 @@ try {
         & $adb -s $Serial shell am force-stop $pkg | Out-Null
         L "done $name -> $dst"
     }
-    foreach ($tag in $PullPso) {
+    foreach ($tag in ($PullPso -join ',' -split ',' | Where-Object { $_ })) {
         $f = "pso_Vulkan_$($Tier)_$tag.graphicsstate"
         & $adb -s $Serial pull "/sdcard/Android/data/$pkg/files/$f" (Join-Path $OutDir $f) | Out-Null
         L "pull $f -> $(Test-Path (Join-Path $OutDir $f))"
