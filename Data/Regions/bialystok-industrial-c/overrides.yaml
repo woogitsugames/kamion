@@ -2163,8 +2163,9 @@ overrides:
     verify: owner photo session (roundabout islands)
     beds:
       - {name: EC1, plant: berberis_red, rim_m: 0.3, ring: [[778544.5, 595474.2], [778547.0, 595475.3], [778551.0, 595475.5], [778555.0, 595474.8], [778558.0, 595473.2], [778560.5, 595471.4], [778558.0, 595470.8], [778554.0, 595470.1], [778550.0, 595469.7], [778546.5, 595470.2], [778544.8, 595472.0]]}
-    islands:
-      - {name: ec-refuge, at: [778531.5, 595479.0], fill: paving}
+    # islands: [{name: ec-refuge, at: [778531.5, 595479.0], fill: paving}] - OFF (visual-critic s17 0161, P1): the paved
+    # refuge read as a podium (flat, too large, vertical sides, no dropped kerb or crossing). Back on with a dropped-kerb
+    # outline traced from the orthophoto, when a pose of confidence B exists.
   - id: kwadrat-exit-carriageway-width
     target: {edge: "w194536287:1882887381-1882954023"}
     reason: >-
