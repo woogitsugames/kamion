@@ -161,11 +161,14 @@ def test_one_card_per_fence_panel_and_foliage_normals():
     fol = C[:, 3] > 0.5
     assert fol.sum() > 40
     nrm = C[fol][:, :3] * 2 - 1
-    assert np.allclose(np.linalg.norm(nrm, axis=1), 1.0, atol=0.02) and (nrm[:, 2] > 0.2).all()       # outward AND up
+    ln = np.linalg.norm(nrm, axis=1)
+    core = ln < 0.5                                     # ADR 0170: the spruce's dark core (occlusion 0.30-0.34)
+    assert core.sum() == 11 and (ln[core] <= 0.36).all() and (nrm[core][:, 2] > 0.0).all()
+    assert np.allclose(ln[~core], 1.0, atol=0.02) and (nrm[~core][:, 2] > 0.2).all()                  # outward AND up
     th = V[:, 0] < 2.5
     assert len([t for t in T if th[t].all()]) <= 40                             # thuja: core + two cards (ADR 0114: 36-60)
     sp = (V[:, 0] > 2.5) & (V[:, 0] < 7.5)
-    assert len([t for t in T if sp[t].all()]) <= 16                             # spruce: three cards + trunk (was <= 108)
+    assert len([t for t in T if sp[t].all()]) <= 28                             # spruce: three cards + trunk + 12-triangle core (ADR 0170; was <= 108)
     top = V[th][:, 2].max()
     wide = np.ptp(V[th & (V[:, 2] > top - 0.05)][:, 0])
     assert wide > 0.5                                                           # the tip is a card (round in the texture), not a point

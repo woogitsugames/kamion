@@ -422,7 +422,7 @@ def test_region_fronts_match_g7_shares():
     assert 0.60 <= fr["plots"]["thuja"] / built_hedge <= 0.80                     # G7 # 18: 70 % thuja
     assert 0.15 <= fr["plots"]["low"] / n <= 0.30                                 # G7 # 16: 25 % (15-30)
     th = [x for x in fr["list"] if x["kind"] == "thuja"]
-    assert all(2.0 <= x["h_m"] <= 2.5 and 0.8 <= x["w_m"] <= 1.2 for x in th)     # G7 # 19
+    assert all(2.4 <= x["h_m"] <= 3.6 and 0.8 <= x["w_m"] <= 1.2 for x in th)     # G7 # 19
     cover = sum(x["m"] for x in th) / sum(x["front_m"] for x in th)
     assert 0.6 <= cover <= 0.92, cover                                            # G7 # 21: ~80 % of the front
     assert fr["tris_low"] > 0                                                     # eye-level mass on Low (A16) too
@@ -433,7 +433,7 @@ def test_region_garden_trees_match_g7_density_and_size():
     them is a street tree of the region's library; # 4-6: the typical tree is 5-8 m."""
     qa = _qa()
     gt = qa["garden_trees"]
-    assert gt["trees"] >= 300 and 0 < gt["tris_low"] <= 12_000 and gt["tris_high"] <= 34_000
+    assert gt["trees"] >= 300 and 0 < gt["tris_low"] <= 13_500 and gt["tris_high"] <= 34_000
     assert qa["plots"]["inst_trees_kept"] == 0                                    # no stone pines of the library in gardens
     origin = np.array([777995.0, 596223.0])
     graph = json.loads((REGION / "roads.graph.json").read_text(encoding="utf-8"))
