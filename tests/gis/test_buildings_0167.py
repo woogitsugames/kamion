@@ -166,7 +166,8 @@ def test_overrides_point_at_buildings_of_the_region_inside_the_frames():
     cam = cams["sbs-g3-a-cm92458760"]
     from shapely.geometry import shape
     kiosk = next(shape(f["geometry"]) for f in fc["features"] if f["id"] == KIOSK)
-    assert kiosk.distance(Point(cam["pos"][0] + ORIGIN[0], cam["pos"][1] + ORIGIN[1])) < 45.0
+    # ADR 0161 moved this camera to probe pose "c" (49.7 m from the kiosk); the kiosk stays in frame (x 0.33-0.45)
+    assert kiosk.distance(Point(cam["pos"][0] + ORIGIN[0], cam["pos"][1] + ORIGIN[1])) < 55.0
 
 
 def test_round_tanks_and_fuel_kiosk_are_plain_structures():
