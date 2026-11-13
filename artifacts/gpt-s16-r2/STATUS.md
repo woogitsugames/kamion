@@ -76,3 +76,5 @@ Zapisano after/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wy
 Zapisano after/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Wszystkie360parB mają pasujące kamery. Końcowe porównanie używa dokładnychCPUtris; szczegółyCAMERAS.md/camera-counts.json. Nowe zdjęcie|przed|po24arkusze odświeżone dlaB. Dalejpełne testy i recenzja; D51fotograficzny nadalwymaga odróżnieniaodkonkretnej poprawykoron/frontów.
+
+EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xml.
