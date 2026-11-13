@@ -492,6 +492,10 @@ Shader "Kamion/Truck Exterior"
                     if (zone > 0.001)
                     {
                         half rg = RearGrime(os, m.r) * (_IsPaint > 0.5 ? 1.0 : _RearGrime2.z);
+                        // ADR 0181 r2: on a smooth outer lens the spray dries to an even film, heavier towards the bottom
+                        // edge - the panel's deposit blobs read as camouflage patches on the reverse lens and as lumpy
+                        // LED cups (after3-5). WORKING_VALUE: 0.45..0.8 of the lens coverage over 0.75 -> 1.05 m.
+                        rg = lerp(rg, _RearGrime2.z * (0.45 + 0.35 * (1.0 - saturate((os.y - 0.75) / 0.3))), outerLens);
                         grime = lerp(grime, rg, zone);
                         rearW = zone;
                     }
