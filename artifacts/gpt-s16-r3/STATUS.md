@@ -63,3 +63,5 @@ Ablacje Low/High: zero-normal usuwa rząd plam, zero-depth go pozostawia; no-bak
 Świat after wygenerowany: 513.270614 s, bez fallback=True. NASTĘPNY KROK: import i kamery after.
 
 Materiałowy backup prywatny obejmuje458zweryfikowanychplików, w tym podkatalogProto; pierwszy zapis przerwał brak podkatalogu docelowego, poprawiono tworzenie rodziców i audyt rekurencyjny. Każdy SHA kopii zgodny z baząr2. NASTĘPNY KROK: verify-after.ps1 po zakończonym generatorze.
+
+Import after zakończony.
