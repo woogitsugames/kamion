@@ -12,6 +12,7 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import json
+import os
 import time
 from pathlib import Path
 
@@ -34,7 +35,8 @@ def sha256_of(path: Path) -> str:
 
 
 def rel(path: Path) -> str:
-    return path.resolve().relative_to(REPO_ROOT).as_posix()
+    # abspath, not resolve(): Data/raw may be a junction to the main checkout (agent worktrees)
+    return Path(os.path.abspath(path)).relative_to(REPO_ROOT).as_posix()
 
 
 def now_utc() -> str:
@@ -137,6 +139,8 @@ def ingest_dataset(dl: Downloader, meta: dict, files: list[dict]) -> dict:
             rec.update(res)
         out_files.append(rec)
     manifest = {**{k: v for k, v in meta.items() if k != "raw_subdir"}, "in_git": False, "files": out_files}
+    if "used_by" in manifest:  # shared (per-powiat) datasets keep every consumer region (ADR 0166)
+        manifest["used_by"] = sorted(set(old.get("used_by", [])) | set(manifest["used_by"]))
     if out_files:
         save_manifest(manifest)
     return manifest
