@@ -9,6 +9,7 @@
 - **Mistral:** otwarte PR #42 M45 (nie scalamy), #49 M51 (M51-FIX), #50 M53 (M53-FIX) — **właściciel ma wkleić M51-FIX i M53-FIX** z `docs/owner/MISTRAL-FIXES-8.md`; r7 M40–M43 niezlecone (M39 pominąć — zrobione w 0168). Wzorzec: Mistral nie ogląda obrazów — przegląd zawsze z obejrzeniem próby.
 - **Właściciel:** odsłuch A/B audio 0176 (`artifacts/audio-synth-0176/ab/`, pytania w ADR 0176); decyzje D62 przyjęte.
 - **Uwagi:** incydent Anthropic (zawieszenia agentów, watchdog 600 s) — zapisywać WIP po każdym kroku, wznawiać z live; pusty nieśledzony `RouteGraph.cs` w katalogu głównym (do usunięcia przez właściciela).
+- **0177 p99 (stan, `b9ebecb77`):** p99 to próg ~19 klatek; klatki > 40 ms: s16 14/14, s17 23/22 — nadwyżka skupiona w 25–36 s okna (początek przejazdu), GPU-bound. **Hipoteza: przestarzałe kolekcje PSO** `game/Assets/_Project/Rendering/Resources/Pso/pso_Vulkan_Low_g3{a,b}.graphicsstate` (z 11.11, ADR 0113 „Otwarte 3”: nagrać po nowych treściach). Następnie: przegląd kodu 0168/0165, `spike_probe 1` na A16 (PHONE_RUN), nagranie PSO w Development (`pso_trace 90 pso_tag g3a|g3b`, wzór `artifacts/perf-low-r2/run-diag2.ps1`), gate3 2× przed/po. Propozycja: dodać do bramki licznik klatek > 40 ms obok p99 (decyzja).
 - **Ostatni przydzielony ADR: 0179.**
 
 # HANDOVER — kamion, SESJA 17 (start 2026-11-13 10:15; 5 h 0 %, reset 15:10 lokalnie; tydzień 39 %, Fable 63 % → agenci Opus/Sonnet, Fable oszczędnie)
