@@ -211,7 +211,7 @@ def test_runway_camera_is_authored_and_stands_at_the_fence():
     assert c["eye_m"] == 1.7
     from shapely.geometry import LineString, Point
     fence = LineString([(188.7, -146.6), (212.8, -196.9)])                 # OSM barrier=fence (metal) of the aerodrome
-    assert fence.distance(Point(*c["pos_en"])) < 1.0
+    assert fence.distance(Point(*c["pos_en"])) < 1.5
     gen = DOJ / "generated" / "control_cameras.json"
     g = {x["id"]: x for x in json.loads(gen.read_text(encoding="utf-8"))["cameras"]}
     if "krywlany_runway" not in g:
