@@ -1,0 +1,385 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (E,N = EPSG:2180 minus region origin; U = EVRF2007)",
+ "cameras": [
+  {
+   "id": "r16_drive_3",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -411.9,
+    -699.88,
+    128.2
+   ],
+   "look_at": [
+    -415.98,
+    -700.34,
+    126.75
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0124: kerb drop of plot bdot:2BE4B431-AD81-1BF0-E053-CC2BA8C0D140 (wall, d_cw 3.19) from 3 m, eye 1.5 m"
+  },
+  {
+   "id": "p159-link-eye",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -380.26,
+    -99.5,
+    133.4
+   ],
+   "look_at": [
+    -409.0,
+    -72.0,
+    132.9
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159: link road way 173956083 at the g3b-eye-s1482 station, looking NW along the ramp wall (no guardrail zone)"
+  },
+  {
+   "id": "p159-median-nose",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -322.0,
+    -178.5,
+    132.6
+   ],
+   "look_at": [
+    -352.0,
+    -152.5,
+    131.6
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159: NW-bound carriageway beside the median nose, looking NW along the median rail"
+  },
+  {
+   "id": "p159-median-up",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -372.0,
+    -137.0,
+    137.5
+   ],
+   "look_at": [
+    -392.0,
+    -118.0,
+    132.5
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159: median fill end and both median edges from 5 m above the SE-bound carriageway"
+  },
+  {
+   "id": "p159-deck-join-e",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    660.0,
+    -772.0,
+    146.5
+   ],
+   "look_at": [
+    671.0,
+    -783.0,
+    143.8
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159: deck barrier c:w177895177 L led onto c:w175157461 L (E 669.4 N -781.9)"
+  },
+  {
+   "id": "p159-deck-join-w",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -733.0,
+    70.5,
+    143.0
+   ],
+   "look_at": [
+    -741.0,
+    74.3,
+    141.3
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159: deck barrier c:w240542867 R led onto c:w1101181473 L (E -739.6 N 74.1)"
+  },
+  {
+   "id": "p159-putry-deck",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -486.26,
+    -30.66,
+    140.37
+   ],
+   "look_at": [
+    -513.4,
+    -1.73,
+    140.6
+   ],
+   "fov_deg": 44.0,
+   "note": "ADR 0159: 494288 station at the native focal (ADR 0146 section 1), eye 1.0 m - deck barrier and screen"
+  },
+  {
+   "id": "p159-wall",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -399.16,
+    -83.52,
+    133.75
+   ],
+   "look_at": [
+    -430.0,
+    -86.0,
+    135.5
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159: ramp block wall from the 810525 station"
+  },
+  {
+   "id": "p159-spruce",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -548.63,
+    90.36,
+    137.93
+   ],
+   "look_at": [
+    -553.45,
+    129.98,
+    140.62
+   ],
+   "fov_deg": 58.7,
+   "note": "ADR 0159: 1801374 pose (garden spruces)"
+  },
+  {
+   "id": "p159-join-e-plan",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    668.09,
+    -781.19,
+    154.6
+   ],
+   "look_at": [
+    669.41,
+    -781.9,
+    143.6
+   ],
+   "fov_deg": 45.0,
+   "note": "ADR 0159 after4: former free end c:w177895177 L at E 669.41 N -781.9 (image centre), from 11 m above"
+  },
+  {
+   "id": "p159-join-e-a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    663.53,
+    -775.93,
+    145.8
+   ],
+   "look_at": [
+    669.41,
+    -781.9,
+    143.9
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159 after4: the same end from 8 m NW, NE side"
+  },
+  {
+   "id": "p159-join-e-b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    661.17,
+    -780.33,
+    145.8
+   ],
+   "look_at": [
+    669.41,
+    -781.9,
+    143.9
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159 after4: the same end from 8 m NW, SW side"
+  },
+  {
+   "id": "p159-join-e-c",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    675.58,
+    -785.2,
+    145.9
+   ],
+   "look_at": [
+    669.41,
+    -781.9,
+    143.9
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159 after4: the same end from 7 m SE"
+  },
+  {
+   "id": "p159-join-w-plan",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -738.12,
+    74.0,
+    151.5
+   ],
+   "look_at": [
+    -739.62,
+    74.08,
+    140.5
+   ],
+   "fov_deg": 45.0,
+   "note": "ADR 0159 after4: former free end c:w240542867 R at E -739.62 N 74.08 (image centre), from 11 m above"
+  },
+  {
+   "id": "p159-join-w-a",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -732.6,
+    76.6,
+    142.7
+   ],
+   "look_at": [
+    -739.62,
+    74.08,
+    140.8
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159 after4: the same end from 7 m E, N side"
+  },
+  {
+   "id": "p159-join-w-b",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -732.6,
+    71.6,
+    142.7
+   ],
+   "look_at": [
+    -739.62,
+    74.08,
+    140.8
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159 after4: the same end from 7 m E, S side"
+  },
+  {
+   "id": "p159-join-w-c",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -746.5,
+    71.5,
+    142.9
+   ],
+   "look_at": [
+    -739.62,
+    74.08,
+    140.8
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159 after4: the same end from 7 m W"
+  },
+  {
+   "id": "p159-link-end",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    533.64,
+    -686.25,
+    141.25
+   ],
+   "look_at": [
+    522.77,
+    -683.22,
+    140.2
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159 after4: SE end of the link barrier at Rondo Biezenstwa (482392), from the link road"
+  },
+  {
+   "id": "p159-median-sw-eye",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -375.86,
+    -135.78,
+    133.6
+   ],
+   "look_at": [
+    -344.6,
+    -158.0,
+    131.8
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159 after4: SW median rail from the left lane of the SE-bound carriageway, looking SE"
+  },
+  {
+   "id": "p159-median-sw-nose",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -317.9,
+    -181.33,
+    132.0
+   ],
+   "look_at": [
+    -306.5,
+    -186.5,
+    130.8
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159 after4: SE end of the SW median rail at the nose"
+  },
+  {
+   "id": "p159-median-ne-face",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -340.0,
+    -146.5,
+    132.9
+   ],
+   "look_at": [
+    -363.0,
+    -135.5,
+    132.2
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159 after4: NE median rail from the NW-bound carriageway (beam face towards the road)"
+  }
+ ]
+}
