@@ -185,8 +185,8 @@ namespace Game.Rendering
         /// Exposure (review s18 0175/0178 P2: the old dusk read as "a darker overcast day" because the table followed the
         /// twilight like a phone night mode): fixed EV100 anchored to the street lighting, not to the sky - asphalt under a
         /// road luminaire (EN 13201 M3-M5 maintained road luminance 0.5-1.0 cd/m2; StreetLamps 2500 cd at 8 m: ~1.2 cd/m2 on
-        /// asphalt albedo 0.1) lands at ~0.09 exposed (~37 % display), the twilight-lit ground at ~0.01 (~10 %), so the lamps
-        /// and the vehicle's own lamps dominate the frame. EV100 3.5 is darker than a phone's auto mode and brighter than the
+        /// asphalt albedo 0.1) lands at ~0.07 exposed (~33 % display), the twilight-lit asphalt at ~0.006 (~8 %), so the lamps
+        /// and the vehicle's own lamps dominate the frame (render loop: EV 3.5 still left light paving at ~25 %). EV100 4.0 is darker than a phone's auto mode and brighter than the
         /// photographic "night street scene" EV 7-8 (Wikipedia exposure-value table), which would black out everything not
         /// lit. ADR 0062 history: +1 deg (lamps invisible) -> -5 deg with a twilight-following exposure -> this. WORKING_VALUE.
         /// </summary>
@@ -203,7 +203,7 @@ namespace Game.Rendering
         /// <summary>ADR 0182: sun elevation of LP_Dusk (end of civil twilight).</summary>
         public const float DuskSunElevationDeg = -6f;
         /// <summary>ADR 0182: fixed camera EV100 of LP_Dusk (lamp-anchored, see <see cref="CreateDusk"/>). WORKING_VALUE.</summary>
-        public const float DuskEv100 = 3.5f;
+        public const float DuskEv100 = 4.0f;
 
         /// <summary>ADR 0108 r2 WORKING_VALUE: a separate night appearance at the existing twilight model's
         /// lower bound. This is not an astronomical night-sky fit. Extra exposure restraint darkens ambient-lit

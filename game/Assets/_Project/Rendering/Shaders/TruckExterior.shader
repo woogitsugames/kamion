@@ -283,7 +283,7 @@ Shader "Kamion/Truck Exterior"
                 float H = max(y1 - y0, 0.5);
                 // (1) wake film with an undulating top (~0.7 m features) and broad blotches (~0.3 m)
                 float topVar = 0.7 + 0.6 * KNoise(float2(lp.x * 1.4 + seed, 1.7));
-                half film = 0.58 * exp(-max(hb, 0.0) / (0.8 * topVar)) + 0.08;
+                half film = 0.80 * exp(-max(hb, 0.0) / (0.95 * topVar)) + 0.10;
                 film *= 0.8 + 0.4 * KNoise(float2(lp.x * 3.1 + seed * 2.0, lp.y * 2.3));
                 // (2) hinge posts and centre seal
                 float e = 1.0 - u;
