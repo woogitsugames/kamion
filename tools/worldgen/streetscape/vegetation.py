@@ -269,6 +269,22 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             P = P[rng.uniform(0, 1, len(P)) < 0.45]
             sp = pick(rng, [0.2, 0.35, 0.05, 0.05, 0.0, 0.35], len(P))
             emit(P, sp, rng, f"bdot:{f['id']}:self", 0.5)
+    # ADR 0179: authored open ground (override `kind: open_ground`, `polygons_en`: region-local E/N rings) - land the
+    # orthophoto / photos show mown or bare (an airfield meadow) where the BDOT grass layers self-seed trees. Rule
+    # trees inside are dropped after generation (the random streams of the features are untouched, ADR 0173);
+    # trees of authored tree_groups stay.
+    og = [o for o in overrides or [] if o.get("kind") == "open_ground"]
+    if og:
+        orep = []
+        for o in og:
+            area = shapely.union_all([shapely.make_valid(shapely.Polygon(np.asarray(r, float))) for r in o["polygons_en"]])
+            if out:
+                Q = np.array([[t["e"], t["n"]] for t in out])
+                gone = shapely.contains_xy(area, Q[:, 0], Q[:, 1])
+                gone &= np.array([not str(t.get("src", "")).startswith("override:") for t in out])
+                out = [t for t, g in zip(out, gone) if not g]
+                orep.append({"id": o["id"], "area_m2": round(area.area, 1), "trees_removed": int(gone.sum())})
+        report["open_ground"] = orep
     # thin out overlaps (< 1.8 m between trunks), deterministic order
     if out:
         P = np.array([[t["e"], t["n"]] for t in out])

@@ -224,7 +224,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     park_polys += [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_KUKO_A"]
                    if f["props"].get("rodzaj") == "parking" and f["geometry"]["type"] == "Polygon"]
     LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf, park_polys=park_polys,
-             no_parking=DY.no_parking(overrides, origin) + GT.no_parking(frep), authored_trailers=DY.dock_trailers(overrides))
+             no_parking=DY.no_parking(overrides, origin) + GT.no_parking(frep), authored_trailers=DY.dock_trailers(overrides),
+             tyre_keep_off=roads_poly.buffer(0.5) if any(o.get("kind") == "life_rules" and o.get("tyre_scrub_off_roads")
+                                                           for o in overrides) else None)   # ADR 0179
     FR.place_cars(pl, brep.get("frontage_props"), frep)         # display vehicles of authored frontages (ADR 0129)
     YW.apply(w.buf, overrides, origin, docks, paved, roads_poly, zsurf, frep)     # authored yard wear (ADR 0071 r11)
     FD.apply(w, pl, roads_poly, bpoly, paved, park_polys, route_P, frep, log, overrides=overrides, deck_at=deck_at)   # Fab Megascans (ADR 0084)
