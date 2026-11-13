@@ -3,7 +3,7 @@
 Automatycznie generowany przez `tools/docs/adr_index.py` — nie edytuj ręcznie.
 Ponowne wygenerowanie: `python3 tools/docs/adr_index.py` (z katalogu głównego repo).
 
-Liczba ADR: **146** (numery 0001–0169, z lukami — patrz raport audytu).
+Liczba ADR: **147** (numery 0001–0169, z lukami — patrz raport audytu).
 
 | Numer | Tytuł | Status | Data | Link |
 |---|---|---|---|---|
@@ -152,4 +152,5 @@ Liczba ADR: **146** (numery 0001–0169, z lukami — patrz raport audytu).
 | 0159 | P1 after the s16 world integration: barriers and screens at Putry / Andersa | PROPOSED on branch `barriers-0159` (2026-11-13, s16); not merged. Numbers in "Validation" are measured on | 2026-11-13 | [0159-barriers-screens-putry-andersa.md](0159-barriers-screens-putry-andersa.md) |
 | 0160 | G3-A: P0 układu kadrów i kotwice pierwszego planu (pozy, tablice, znaki) | Proposed (agent g3a-0160, s16, gałąź `g3a-0160`), 2026-11-13. Gałąź zawiera main + `barriers-0159` @ 43d879f4b | 2026-11-13 | [0160-g3a-p0-poses-foreground-anchors.md](0160-g3a-p0-poses-foreground-anchors.md) |
 | 0164 | tagi limitów ciężarówki w grafie dróg | Proposed (agent geo-worldgen, s16, gałąź `tags-0164`), 2026-11-13. Do scalenia przez lidera; po scaleniu lider | 2026-11-13 | [0164-tagi-limitow-ciezarowki-w-grafie-drog.md](0164-tagi-limitow-ciezarowki-w-grafie-drog.md) |
+| 0168 | Navigation: roundabout exit counting, three voice tiers, ETA at 1 Hz, no-return zone | implemented on branch `nav-0168` (2026-11-13, s17); not merged. Tests: nav-runner (xUnit) and Unity EditMode; | 2026-11-13 | [0168-nav-exit-policy-voice-tiers-eta-no-return.md](0168-nav-exit-policy-voice-tiers-eta-no-return.md) |
 | 0169 | World edge: one source of road closures, no doubled rows, sign sheeting colours, dead ends of the route graph | implemented on branch `edge-0169` (base main `47ee3f123`, 2026-11-13, s17); not merged. Editor renders only | 2026-11-13 | [0169-world-edge-one-closure-source.md](0169-world-edge-one-closure-source.md) |
