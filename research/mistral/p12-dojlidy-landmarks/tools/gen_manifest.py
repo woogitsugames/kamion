@@ -8,7 +8,10 @@ Sekcje (kolumny wspólne):
   generator_ruchu (P12-...) — zakłady/magazyny z bramami (pozycja bramy z OSM, jeśli mapowana)
 
 Wejście: data/landmarks.json, data/landmark-colors.json, data/matched-with-roads.json,
-         data/road-geom.json, data/region-summary.json, data/osm-pois.json,
+         data/road-geom.json (usunięty z gałęzi — M48-FIX-2; odtworzyć przed uruchomieniem:
+         curl "https://api.openstreetmap.org/api/0.6/map?bbox=23.1570,53.0920,23.2020,53.1210"
+         + tools/parse_roads.py — patrz README „Pliki badania” pkt 4),
+         data/region-summary.json, data/osm-pois.json (regenerowany: README pkt 1),
          data/typologia.json, data/typologia-colors.json
 Wyjście: manifest.csv (obok skryptu: research/mistral/p12-dojlidy-landmarks/manifest.csv)
 """

@@ -6,6 +6,7 @@
 // - Lights slot (_KAMION_TRUCK_LAMPS): emission = _TruckLightState[uv2.x] (RGB luminance / _TruckLightNitsScale, written by
 //   TruckLights) * _TruckLightNitsScale * uv2.y * _KamionExposure, decoded in float (EnvironmentLighting). Lamps are therefore in the same
 //   exposed units as the sun and sky: a DRL is bright, a tail lamp is a dim red by day, both read correctly at dusk.
+//   Display limits: DRL = luminance shoulder (ADR 0115); all other groups = hue-preserving max-channel shoulder (ADR 0178).
 // - Lighting: URP UniversalFragmentPBR (main light + cascaded shadows, SH ambient x AO, reflection probe / custom
 //   environment). Tyre deflection: renderers with rendering layer bit 8 (TruckVisualRig.TyreRenderingLayer, the wheel
 //   meshes, origin = wheel centre) or bit 9 (TrailerVisualRig.TyreRenderingLayer, trailer wheels) are flattened in the vertex shader at _KamionTyreFlatRadius below the wheel centre
@@ -29,6 +30,9 @@
 //   gradient only, no arch loop / streak noise).
 // - r6 (ADR 0038 addendum): coat env through KamionVehicleEnv.hlsl (analytic ground below the horizon on Low/Medium),
 //   orange-peel lobe added in alpha, fp16-safe coat GGX, curtain soiling model (_CurtainGrime, trailer object frame).
+// - ADR 0182: rear-face soiling model (_RearGrime, trailer vehicle frame) replaces the baked mask on the rear doors, the
+//   portal posts and the contour tapes (trailer object frame; door leaves = rendering layer bit 11): wake film densest at the bottom, dirt held at the hinge posts and the centre seal,
+//   gravity runoff from the header and below the hinges, per-leaf seeds (the two leaves differ). Same on every tier.
 Shader "Kamion/Truck Exterior"
 {
     Properties
@@ -58,8 +62,14 @@ Shader "Kamion/Truck Exterior"
         _CurtainGrime ("Curtain soiling model: on, bottom y, top y, rear z (object space m; 0 = off)", Vector) = (0, 1.31, 3.88, -12)
         _CurtainAxles ("Curtain soiling: axle z (object space m) x3", Vector) = (-6.39, -7.7, -9.01, 0)
         _CurtainPosts ("Curtain soiling: post pitch, first post from rear, streak strength, overall scale", Vector) = (3.4, 0, 0.22, 0.7)
+        _RearGrime ("Rear-face soiling (ADR 0182): on, rear z, door bottom y, door top y (trailer object frame m; 0 = off)", Vector) = (0, -12, 1.335, 3.865)
+        _RearGrime2 ("Rear-face soiling: door half width, amount, non-paint scale, -", Vector) = (1.135, 0.85, 0.6, 0)
+        _RearGrime3 ("Rear-face soiling: door hinge pivot |x|, y, z in the trailer frame (leaves: rendering layer bit 11)", Vector) = (1.147, 2.6, -12.014, 0)
+        _RearGrimeColor ("Rear-face deposit colour (linear) and max coverage (a) - dried road spray (ADR 0182 r5)", Color) = (0.17, 0.13, 0.08, 0.7)
         [Toggle(_KAMION_TRUCK_LAMPS)] _Lamps ("Lamp emission from uv2 (Lights slot)", Float) = 0
         _DrlHighlightShoulder ("DRL exposed HDR highlight shoulder (0 = off)", Range(0, 2)) = 0.8
+        _LampHueKnee ("Signal lamps: hue-preserving shoulder knee (max channel, exposed units)", Range(0, 2)) = 0.4
+        _LampHueCeiling ("Signal lamps: hue-preserving ceiling of max(r,g,b) (0 = off)", Range(0, 4)) = 0.8
     }
     SubShader
     {
@@ -73,8 +83,9 @@ Shader "Kamion/Truck Exterior"
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
             float _ClearCoat, _ClearCoatRoughness, _Flake, _FlakeScale;
             float _DrlHighlightShoulder;
+            float _LampHueKnee, _LampHueCeiling;
             float _CoatedBaseRoughness, _OrangePeel, _GrimeHeight, _GrimeChassis;
-            float4 _CurtainGrime, _CurtainAxles, _CurtainPosts;
+            float4 _CurtainGrime, _CurtainAxles, _CurtainPosts, _RearGrime, _RearGrime2, _RearGrime3, _RearGrimeColor;
         CBUFFER_END
         float _KamionTyreFlatRadius;          // global (TruckVisualRig: tractor physics rolling radius 0.51 m), 0 = off
         float _KamionTrailerTyreFlatRadius;   // global (TrailerVisualRig: trailer physics rolling radius 0.515 m), 0 = off
@@ -155,6 +166,19 @@ Shader "Kamion/Truck Exterior"
                 if (shoulder <= 0.0) return radiance;
                 float y = max(dot(radiance, float3(0.2126, 0.7152, 0.0722)), 0.0);
                 return radiance / (1.0 + y / max(shoulder, 1e-5));
+            }
+            // ADR 0178: hue-preserving limit for every non-DRL lamp group. The exposed radiance of a red / amber lamp at dusk is
+            // 10-100x the display range; the per-channel D23 clip (0.7 High, 1.0 Low) and the High lum-vs-sat desaturation then
+            // push the secondary channels up until the core is white. One common RGB scale bounds max(r,g,b): identity up to
+            // the knee, then a rational shoulder that approaches the ceiling. Channel ratios (chromaticity) are untouched.
+            // ceiling <= knee or <= 0 disables it. Lamp pixels only (_KAMION_TRUCK_LAMPS, uv2 group != 0). WORKING_VALUEs.
+            float3 TruckLampHueLimit(float3 radiance, float knee, float ceiling)
+            {
+                if (ceiling <= 0.0 || ceiling <= knee) return radiance;
+                float m = max(max(radiance.r, radiance.g), radiance.b);
+                float over = max(m - knee, 0.0);
+                float limited = min(m, knee) + over / (1.0 + over / (ceiling - knee));
+                return radiance * (limited / max(m, 1e-6));
             }
             float _KamionClearCoatOff;
             half4 _CabShadowLift;   // cab-view local shadow lift (CabInteriorLighting; 0 outside the cab view)
@@ -238,6 +262,73 @@ Shader "Kamion/Truck Exterior"
                     g = max(g, streak * down * _CurtainPosts.z);
                 }
                 return g * _CurtainPosts.w;
+            }
+
+            // ADR 0182 (review s18 0175 P2: the baked door dirt was one noise cloud, identical on both leaves, with a hard
+            // upper edge; the tapes were spotless; Low was paler than High). Rear-face soiling in the vehicle frame lp
+            // (trailer object frame: x right, y above the ground, z forward; rear face at _RearGrime.y). Sources, as on photos of
+            // box / curtain trailers: (1) the wake behind the box pulls the tyre spray onto the rear face - a film densest at
+            // the sill, fading up with an undulating edge; (2) dirt held along the hinge posts and the centre seal (edge
+            // vortices, rubber); (3) cavities (baked AO) under the grooves, guides and straps; (4) gravity runoff - streaks
+            // washed down from the header by rain, short dark runs under the hinge straps. Each leaf has its own seed and
+            // amount. Streaks are energy-preserving below a pixel (no shimmer, Low = High in the mean). WORKING_VALUE.
+            half RearGrime(float3 lp, half ao)
+            {
+                float y0 = _RearGrime.z, y1 = _RearGrime.w, hw = max(_RearGrime2.x, 0.3);
+                bool right = lp.x >= 0.0;
+                float seed = right ? 3.7 : 11.3;
+                half leaf = right ? 1.0 : 0.82;
+                float ax = abs(lp.x);
+                float u = saturate(ax / hw);
+                float hb = lp.y - y0;
+                float H = max(y1 - y0, 0.5);
+                // (1) wake film with an undulating top (~0.7 m features) and broad blotches (~0.3 m)
+                float topVar = 0.7 + 0.6 * KNoise(float2(lp.x * 1.4 + seed, 1.7));
+                half film = 1.05 * exp(-max(hb, 0.0) / (0.85 * topVar)) + 0.10;
+                film *= 0.8 + 0.4 * KNoise(float2(lp.x * 3.1 + seed * 2.0, lp.y * 2.3));
+                // after3 render loop: the film read as a faint gradient. Spray settles in vertical runs (water carries it down
+                // before it dries): vertically stretched modulation, ~6 cm across x ~0.6 m tall, fading out by ~1 m.
+                // Mean-preserving (noise mean 0.5); faded out when a run is under ~3 px wide (no shimmer at distance / on Low).
+                half runs = saturate(1.0 - hb / 1.1) * saturate(1.5 - fwidth(lp.x) * 16.0 * 3.0);
+                film *= 1.0 + 0.5 * (KNoise(float2(lp.x * 16.0 + seed * 3.0, lp.y * 1.6)) - 0.5) * runs;
+                // (2) hinge posts and centre seal
+                float e = 1.0 - u;
+                half edge = 0.30 * exp(-e * e / 0.006) + 0.22 * exp(-u * u / 0.0025);
+                edge *= 0.55 + 0.45 * saturate(1.0 - hb / H);
+                // (3) cavities
+                half cav = 0.45 * (1.0 - ao);
+                // (1b) review s19 P1-1: spatter - coarse droplet texture only in the last ~14 cm above the sill and below it
+                // (sill, RUPD beam, lamp housings). ~1 cm cells; replaced by its mean when a cell is under ~3 px.
+                half sw = 1.0 - smoothstep(0.0, 0.14, hb);
+                half spAa = saturate(1.5 - fwidth(lp.x) * 90.0 * 3.0);
+                half sp = lerp(0.35, smoothstep(0.45, 0.65, KNoise(lp.xy * 90.0 + seed * 7.0)), spAa);
+                film += 0.5 * sw * sp;
+                // (4) runoff (review s19 P1-3: the even 7.5 cm rhythm read as corrugated sheet / curtain). A sparse set of
+                // 7.5 cm columns carries a streak: clustered at the hinges and the centre seal, rare in the open panel,
+                // patchy along the panel (low-frequency cluster noise); length 15-70 % of the door height, broken runs,
+                // random width 0.6-2.6 cm; ~25 % are washed (lighter than their surroundings).
+                const float pitch = 0.075;
+                float col = floor(lp.x / pitch);
+                float r1 = KHash(float2(col, seed)), r2 = KHash(float2(col + 17.0, seed * 1.9)), r3 = KHash(float2(col - 5.0, seed + 5.1));
+                float r4 = KHash(float2(col + 41.0, seed * 0.7));
+                float cu = saturate((col + 0.5) * pitch / hw * (right ? 1.0 : -1.0));
+                half pCarry = (0.08 + 0.45 * smoothstep(0.78, 0.95, cu) + 0.35 * (1.0 - smoothstep(0.04, 0.16, cu)))
+                            * (0.4 + 1.2 * KNoise(float2(col * 0.31 + seed, 0.5)));
+                float w0 = 0.006 + 0.020 * r4 * r4;
+                float width = max(w0, fwidth(lp.x) * 1.5);
+                float dx = lp.x - (col + 0.25 + 0.5 * r3) * pitch;
+                half across = exp(-dx * dx / (width * width)) * (w0 / width);
+                float fromTop = y1 - lp.y;
+                float len = H * (0.15 + 0.55 * r2);
+                half fromHeader = saturate(fromTop / 0.04) * (1.0 - smoothstep(0.55 * len, len, fromTop))
+                                * smoothstep(0.22, 0.42, KNoise(float2(col * 3.7 + seed, lp.y * 5.0)));
+                half streak = step(r1, pCarry) * fromHeader * (0.22 + 0.30 * r2) * (frac(r1 * 7.31 + r3) < 0.25 ? -0.7 : 1.0);
+                // short runs below the hinge straps (every 0.75 m from 1.55 m, outer 0.22 m of each leaf)
+                float below = frac((1.52 - lp.y) / 0.75) * 0.75;
+                half hinge = step(hw - 0.22, ax) * step(lp.y, 3.68) * step(y0, lp.y) * step(0.3, r3)
+                           * (1.0 - smoothstep(0.0, 0.10 + 0.22 * r1, below)) * 0.4;
+                streak = (streak < 0.0 ? streak : max(streak, hinge)) * across;
+                return max(leaf * (film + edge + cav) + streak, 0.0) * _RearGrime2.y;
             }
 
             // GGX specular of one smooth dielectric layer for the main light (D * Vis * F * NdotL), Unity light units.
@@ -359,6 +450,28 @@ Shader "Kamion/Truck Exterior"
                     proc *= lerp(1.4, 0.85, m.r) * lerp(1.0, 0.25, exposedMetalTop);
                     grime = max(grime * 0.8, proc);
                 }
+                half rearW = 0.0;   // ADR 0182 r5: weight of the rear-face soiling (its own deposit colour and coverage cap)
+                if (_RearGrime.x > 0.5 && isTyre < 0.5)
+                {
+                    // Trailer object frame (origin on the ground below the kingpin, +Z forward), as CurtainGrime. The rear
+                    // door leaves (rendering layer bit 11) have their origin on the hinge: shift back to the trailer frame in
+                    // the closed pose (the leaf extends from its hinge toward the centre), so the dirt stays on the door
+                    // when it swings open.
+                    float3 os = TransformWorldToObject(i.positionWS);
+                    float3 nos = TransformWorldToObjectDir(float3(i.normalWS));
+                    if ((renderingLayer & (1u << 11)) != 0u)
+                        os += float3(os.x < 0.0 ? _RearGrime3.x : -_RearGrime3.x, _RearGrime3.y, _RearGrime3.z);
+                    half facing = smoothstep(0.5, 0.8, -nos.z);
+                    half zone = facing * (1.0 - smoothstep(0.15, 0.35, os.z - _RearGrime.y))
+                              * (1.0 - smoothstep(_RearGrime2.x + 0.15, _RearGrime2.x + 0.3, abs(os.x)))
+                              * smoothstep(0.25, 0.45, os.y) * (1.0 - smoothstep(_RearGrime.w + 0.15, _RearGrime.w + 0.3, os.y));
+                    if (zone > 0.001)
+                    {
+                        half rg = RearGrime(os, m.r) * (_IsPaint > 0.5 ? 1.0 : _RearGrime2.z);
+                        grime = lerp(grime, rg, zone);
+                        rearW = zone;
+                    }
+                }
                 if (_CurtainGrime.x > 0.5)
                     grime = CurtainGrime(TransformWorldToObject(i.positionWS), 1.0 - _KamionGrimeDetailOff);
                 else if (isTyre < 0.5)
@@ -371,10 +484,15 @@ Shader "Kamion/Truck Exterior"
                     grime = max(grime, 0.18 * up);
                 }
                 half dirt = saturate(grime * _Dirt * 1.8);
+                // ADR 0182 r5 (review s19 P1-1): the rear-face deposit is dried road spray - a warm grey-brown that covers
+                // (at most _RearGrimeColor.a on paint), not the neutral soot of the chassis grime. Bare metal and trim (sill,
+                // posts, RUPD beam: debug render r5 showed them in the zone at full dirt yet reading as clean aluminium - the
+                // remaining metallic lobe mirrored the bright sky) cover up to 0.9 and lose the metallic lobe faster.
+                dirt = min(dirt, lerp(1.0h, _IsPaint > 0.5 ? (half)_RearGrimeColor.a : 0.9h, rearW));
                 coat *= 1.0 - saturate(dirt * 1.5);
-                albedo = lerp(albedo, _DirtColor.rgb, dirt);
+                albedo = lerp(albedo, lerp(_DirtColor.rgb, _RearGrimeColor.rgb, rearW), dirt);
                 rough = lerp(rough, max(rough, 0.88), dirt);
-                metal *= 1.0 - dirt;
+                metal *= 1.0 - saturate(dirt * (1.0 + 0.6 * rearW));
 
                 half sgn = i.tangentWS.w;
                 half3 bit = sgn * cross(i.normalWS, i.tangentWS.xyz);
@@ -411,9 +529,12 @@ Shader "Kamion/Truck Exterior"
                 float u = (i.uv2.x + 0.5) / 16.0;
                 float3 encoded = SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(u, 0.5), 0).rgb;
                 float3 lampRadiance = TruckLampRadiance(encoded);
-                // Manifest light group 1 = DRL; all other lamp groups keep their original linear radiance.
+                // Manifest light group 1 = DRL keeps its ADR 0115 luminance shoulder (white, output <= 0.8); every other
+                // group gets the ADR 0178 max-channel hue limit, so red / amber stay red / amber instead of clipping white.
                 if (abs(i.uv2.x - 1.0) < 0.25)
                     lampRadiance = TruckDrlHighlight(lampRadiance, _DrlHighlightShoulder);
+                else
+                    lampRadiance = TruckLampHueLimit(lampRadiance, _LampHueKnee, _LampHueCeiling);
                 s.emission = (half3)(lampRadiance * saturate(i.uv2.y));
             #endif
                 // Metallic flake: per-cell random normal tilt in the base specular only, faded out where a cell is

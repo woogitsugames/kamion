@@ -178,21 +178,40 @@ namespace Game.Rendering
         }
 
         /// <summary>
-        /// Dusk (track A7): civil twilight, sun 5 deg below the horizon at azimuth 300 deg (summer evening, ~30 min after
-        /// sunset), hazy. ADR 0062 / review r8 N-20: at the old +1 deg the sky still gave ~2.4 klx, so a street lamp's
-        /// ~30 lx pool was ~1 % of the background - physically invisible (and real lamps are often still off then). At
-        /// -5 deg the sky gives ~8 lx: the lamps are on in every Polish town (astronomical clocks / twilight switches) and
-        /// their pools read at 1.5-2.5x the background. Screen brightness of the ambient-lit scene is kept (the exposure
-        /// table follows the twilight, like a phone), so the r3 G3 "2-3 EV under overcast noon" still holds. WORKING_VALUE.
+        /// Dusk (track A7, ADR 0182): the end of civil twilight, sun 6 deg below the horizon at azimuth 300 deg (summer
+        /// evening, ~40 min after sunset in Bialystok), hazy. Sky: horizontal illuminance 3.4 lx clear (SkyModel.CivilTwilightEndLux), 2.87 lx with this preset's haze (EditMode);
+        /// zenith ~0.3-0.6 cd/m2 in the measured twilight series (Schmude, Georgia J. Science 82(1) art. 106: 13.7-13.9 mag/arcsec2 at -6 deg; hnsky.org SQM twilight fit), blue
+        /// zenith from ozone absorption (SkyModel twilight chroma), warm glow only low toward the sun.
+        /// Exposure (review s18 0175/0178 P2: the old dusk read as "a darker overcast day" because the table followed the
+        /// twilight like a phone night mode): fixed EV100 anchored to the street lighting, not to the sky - asphalt under a
+        /// road luminaire (EN 13201 M3-M5 maintained road luminance 0.5-1.0 cd/m2; StreetLamps 2500 cd at 8 m: ~1.2 cd/m2 on
+        /// asphalt albedo 0.1) lands at ~0.07 exposed (~33 % display), the twilight-lit asphalt at ~0.006 (~8 %), so the lamps
+        /// and the vehicle's own lamps dominate the frame (render loop: EV 3.5 still left light paving at ~25 %; r5: 3.7 with the contrast toe below). EV100 3.7-4.0 is darker than a phone's auto mode and brighter than the
+        /// photographic "night street scene" EV 7-8 (Wikipedia exposure-value table), which would black out everything not
+        /// lit. ADR 0062 history: +1 deg (lamps invisible) -> -5 deg with a twilight-following exposure -> this. WORKING_VALUE.
         /// </summary>
         public static LightingPreset CreateDusk()
         {
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Dusk";
-            p.sunElevationDeg = -5f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
+            p.sunElevationDeg = DuskSunElevationDeg; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
+            p.autoExposure = false; p.ev100 = DuskEv100;
             p.lookSaturation = -3f;
+            // r5 (review s19 P1-4: no lamp pools on the plaza - the D23 toe lifted the sky-lit paving to 32-35 % and the
+            // shoulder compressed the pools, pool/background read ~2:1 instead of the ~6:1 of the photometry): the ADR 0080
+            // contrast toe below the pools (half-point 0.05 scene linear: sky-lit asphalt/paving ~0.005-0.02 scaled toward
+            // 0.4x, pools ~0.1 nearly kept), and EV100 3.7 so the pools and the lit vehicle gain what the toe takes from the
+            // background. WORKING_VALUE - phone check (review P1-5).
+            p.lookToe = DuskLookToe; p.lookToeP = DuskLookToeP;
             return p;
         }
+
+        /// <summary>ADR 0182: sun elevation of LP_Dusk (end of civil twilight).</summary>
+        public const float DuskSunElevationDeg = -6f;
+        /// <summary>ADR 0182: fixed camera EV100 of LP_Dusk (lamp-anchored, see <see cref="CreateDusk"/>). WORKING_VALUE.</summary>
+        public const float DuskEv100 = 3.7f;
+        /// <summary>ADR 0182 r5: contrast toe of LP_Dusk (strength, half-point scene linear). WORKING_VALUE.</summary>
+        public const float DuskLookToe = 0.6f, DuskLookToeP = 0.05f;
 
         /// <summary>ADR 0108 r2 WORKING_VALUE: a separate night appearance at the existing twilight model's
         /// lower bound. This is not an astronomical night-sky fit. Extra exposure restraint darkens ambient-lit
@@ -202,6 +221,8 @@ namespace Game.Rendering
             var p = CreateDusk();
             p.name = "LP_Night";
             p.sunElevationDeg = SkyModel.MinTwilightElevationDeg;
+            p.autoExposure = true; // ADR 0182: Night keeps the reviewed twilight-following table (dusk is fixed now)
+            p.lookToe = 0f; p.lookToeP = 0.12f; // ADR 0182 r5: the dusk contrast toe is not part of the reviewed Night look
             p.exposureCompensation = -3f; // reviewed Night appearance; preserve lamp/cab visibility.
             p.skyDisplayGain = 0.125f;
             p.skyDisplayDesaturation = 0.85f;

@@ -713,6 +713,28 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
     return ops
 
 
+def authored_openings(rule, wins, L, zref, key, door):
+    """LOD0 openings of an authored office wall (ADR 0180, frontage.facade_windows): ribbon bands and stair-column
+    windows with the facade-atlas cells of their far rows (so LOD0 and LOD1 show the same joinery), the entrance on
+    the main facade."""
+    ops = []
+    if door:
+        um = FR.facade_door_u(rule, L)
+        ops.append((um - 0.8, um + 0.8, zref + 0.15, zref + 2.4, 0.15, "door", cells("door_block", 1 + FA.hint(key, "db") % 2)))
+    for u0, u1, z0, z1, g, row, off in wins:
+        if g == "ribbon":
+            n = FR.ribbon_lights(u1 - u0)                           # one `off` cell per light, two lights per bay
+            vs = [FA.far_entry(g, row, off, i // 2)[1] for i in range(n)]
+            ops.append((u0, u1, z0, z1, 0.12, "ribbon", cells("off", *vs)))
+        elif rule["windows"] == "ribbon":                           # light band: one office-row window per light
+            n = FR.ribbon_lights(u1 - u0)
+            ops.append((u0, u1, z0, z1, 0.12, "ribbon", cells("off", *[FA.far_entry(g, row, off, i)[1] for i in range(n)])))
+        else:
+            ck, cv = FA.far_entry(g, row, off, 0)
+            ops.append((u0, u1, z0, z1, 0.12, "window", cells(ck, cv)))
+    return ops
+
+
 def docks_for(b, poly, yard, hero, zsample):
     """Dock positions along yard-facing facades of a warehouse hall."""
     out = []
@@ -860,15 +882,51 @@ def load(fc, origin, overrides, hero=None):
             o = ovr.get(f["id"], {})
             if hero and f["id"] in hero:      # replaced by an authored asset (streetscape.hero_building)
                 o = {**o, "hero_asset": hero[f["id"]]}
+            if o.get("footprint_open_m"):     # ADR 0180: authored straightening of the outline - a morphological
+                d_ = float(o["footprint_open_m"])        # opening drops protrusions narrower than 2 x d (mitred corners)
+                op = pl.buffer(-d_, join_style=2).buffer(d_, join_style=2).simplify(0.15)   # + steps under 0.15 m
+                if op.geom_type == "Polygon" and not op.is_empty:
+                    pl = shapely.geometry.polygon.orient(op)
             if o.get("height_m"):             # ADR 0167: authored height (structures with no LoD1 / BDOT height)
                 p = {**p, "height_m": float(o["height_m"])}
             out.append({"id": bid, "poly": pl, "props": p, "ovr": o, "typ": "roof" if p.get("is_roof_only") else
                         classify(p, pl.area, o)})
+    return out + building_parts(out, overrides)
+
+
+def building_parts(blds, overrides):
+    """ADR 0179: authored volumes the footprint data merges into one outline (override `kind: building_part`): a
+    BDOT10k hall whose office block is three times the LoD1 height of the hall gets the block as its own building.
+    `polygon_en` (region-local E/N ring, traced on the orthophoto), `height_m`, optional `function` / `storeys`,
+    `cut_from` (building ids whose footprint loses the ring, so the two volumes do not overlap) and `set` (the
+    keys of a `target: {building}` override). Regions without such overrides get an empty list."""
+    out = []
+    for o in overrides:
+        if o.get("kind") != "building_part":
+            continue
+        pl = shapely.make_valid(Polygon(np.asarray(o["polygon_en"], float)))
+        if pl.geom_type != "Polygon" or pl.area < 1.0:
+            raise ValueError(f"building_part {o['id']}: polygon_en is not a simple ring")
+        pl = shapely.orient_polygons(pl) if hasattr(shapely, "orient_polygons") else shapely.geometry.polygon.orient(pl)
+        for b in list(blds):
+            if b["id"] in (o.get("cut_from") or []):
+                rest = shapely.make_valid(b["poly"].difference(pl.buffer(0.05)))
+                parts = sorted((g for g in getattr(rest, "geoms", [rest]) if g.geom_type == "Polygon" and g.area > 1.0),
+                               key=lambda g: -g.area)
+                parts = [shapely.orient_polygons(g) if hasattr(shapely, "orient_polygons")
+                         else shapely.geometry.polygon.orient(g) for g in parts]
+                b["poly"] = parts[0]
+                for k, g in enumerate(parts[1:], 1):       # the part splits its host: every piece stays a building
+                    out.append({**b, "id": f"{b['id']}#cut{k}", "poly": g})
+        p = {"function": o.get("function"), "height_m": float(o["height_m"]), "storeys": o.get("storeys"),
+             "height_source": "authored_override", "name": o.get("name")}
+        s = dict(o.get("set") or {})
+        out.append({"id": f"override:{o['id']}", "poly": pl, "props": p, "ovr": s, "typ": classify(p, pl.area, s)})
     return out
 
 
 def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase, kind, pitched, zone_wall=None,
-              runoff=None, pieces=None, fkey="", balcony=False, plinth="plinth_dark", ground=None):
+              runoff=None, pieces=None, fkey="", balcony=False, plinth="plinth_dark", ground=None, authored=None):
     """LOD1 wall edge: cheap (8-14 triangles) but not a box face - plinth, window zone (office / block: far facade
     material, UV1 = (bay, storey) grid), wall above, projecting coping at the attic. runoff: as wall_with_openings
     (hall_wall_* bands get the same wall-top TEXCOORD_1 as LOD0, so the streaks do not pop at the LOD switch).
@@ -901,7 +959,12 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
         else:
             band(zbot, zpl, "hall_plinth" if typ == "hall" else plinth)
         z = zpl
-    if typ in ("office", "block") and L > 2.5:
+    if authored is not None and authored[0]["far"]:
+        # ADR 0180: authored facade (override `facades`) - the plain strip of the far material with one quad per
+        # window / band, the same rectangles LOD0 cuts as openings
+        FR.lod1_facade(acc, authored[0], authored[1], np.asarray(a, float), (np.asarray(c_, float) - a) / L, L, z, zt)
+        z = zt
+    elif typ in ("office", "block") and L > 2.5 and authored is None:
         # ADR 0081: the window zone is drawn from the storey rows of the facade_far set - one quad per chunk of
         # storeys that are consecutive rows (FA.far_plan, the plan LOD0 reads its cells from) and per 8 bays (one
         # atlas period: half-float UV), UV0 in row atlas metres; the wall left and right of the bays takes the plain
@@ -1017,6 +1080,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if front:
             wall = front["wall"]
             frontages += 1
+        # ADR 0180: authored window rule per facing of an office (override `facades`): blank gable with a stair
+        # column, one window band per storey, a second wall colour
+        facades = FR.facade_rules(b["ovr"].get("facades"), wall) if typ == "office" and not front else None
         hero = b["ovr"].get("hero")
         docks = []
         if typ == "hall" and (p.get("function") in WAREHOUSE_FUNCS or b["ovr"].get("docks")) and poly.area > 800:
@@ -1083,6 +1149,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if typ == "office" and b["ovr"].get("ribbon") is not None:      # ADR 0171: authored window type (the far
             variant["ribbon"] = bool(b["ovr"]["ribbon"])                # ribbon rows carry grey spandrels)
         scheme = FK.hall_scheme(key, wall) if typ == "hall" else None
+        if scheme and b["ovr"].get("hall_bands") is False:      # ADR 0179: authored - the photographed hall is
+            scheme = {**scheme, "low": None, "top": None}       # one cladding colour (no hashed plinth / top band)
         insulated = typ == "block" and (FK.hfloat(key, "etics") < 0.7 or bool(b["ovr"].get("wall_material")))
         # v3.1 horizontal bands: insulated blocks (35 %) get the window rows in the accent colour from the 1st
         # floor up; punched-window offices with >= 2 storeys (40 %) get darker spandrel bands between the rows
@@ -1112,7 +1180,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             d = (c_ - a) / L
             nout = np.array([d[1], -d[0]])
             nouts.append(nout)
-            lod1_main, lod1_zone = wall, None        # LOD1 colours follow what dominates the LOD0 wall (W-H4)
+            rule = FR.facade_rule(facades, nout, L)
+            wall_e = rule["wall"] if rule else wall  # wall colour of this edge (ADR 0180)
+            lod1_main, lod1_zone = wall_e, None      # LOD1 colours follow what dominates the LOD0 wall (W-H4)
+            lod1_wins = None
             lod1_pieces = None
             lod1_gfn = None
             dk = dock_edges.get(tuple(np.round(a, 2)))
@@ -1123,9 +1194,13 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 zt = min(z for _, z in prof)
             is_main = ei == main or (typ == "hall" and L > 30)
             door_z = zref + PLINTH_H["house"] + 0.15 * round(FK.hfloat(key, "plh")) if typ == "house" else None
-            ops = facade_openings(typ, L, zref, zt, storeys, f"{key}:{ei}", is_main, dk is not None,
-                                  dict(variant, balcony=bal_group if ei in bal_edges else False, main=ei == main,
-                                       door_z=door_z), sh=sh, zbase=zbase)
+            if rule:                                 # authored facade: the same rectangles on both LODs
+                lod1_wins = FR.facade_windows(rule, L, zref, zbase, sh, zt, storeys, f"{key}:{ei}", door=ei == main)
+                ops = authored_openings(rule, lod1_wins, L, zref, f"{key}:{ei}", ei == main)
+            else:
+                ops = facade_openings(typ, L, zref, zt, storeys, f"{key}:{ei}", is_main, dk is not None,
+                                      dict(variant, balcony=bal_group if ei in bal_edges else False, main=ei == main,
+                                           door_z=door_z), sh=sh, zbase=zbase)
             if dk:
                 zf = dk["yard_z"] + S.DOCK_FLOOR_H
                 for dock in dk["docks"]:
@@ -1240,7 +1315,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 gable_accent = (insulated and L < 16 and FK.hfloat(key, "gable") < 0.6 and L > 0.7 * rect_short and
                                 abs(float(d @ rect_along)) < 0.3 and not one_tone)
                 band_z = []                                            # (z0, z1) of each band
-                if bands and ei not in bal_edges and not gable_accent and typ in ("block", "office"):
+                if bands and ei not in bal_edges and not gable_accent and typ in ("block", "office") and not rule:
                     kk_ = sh / FA.FAR_ROW_H                               # sill 0.9 k, head 2.35 k / 2.5 k (facade_openings)
                     ns_ = FA.far_storeys(FA.far_groups(typ, storeys, False, variant["ribbon"], key), sh, zt - 0.3 - zref - zbase)
                     for st_ in range(ns_):
@@ -1255,7 +1330,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 elif band_z and typ == "block":
                     lod1_zone = band_mat                 # accent window rows -> accent window zone on LOD1
 
-                def plaster_mat(u0, u1, z0, z1, usplits=usplits, gable_accent=gable_accent, zpl=zpl, band_z=band_z):
+                def plaster_mat(u0, u1, z0, z1, usplits=usplits, gable_accent=gable_accent, zpl=zpl, band_z=band_z,
+                                wall=wall_e):
                     if z1 <= zpl + 1e-6:
                         return plinth
                     if gable_accent:
@@ -1356,7 +1432,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 lod1_wall(acc, typ, lod1_main, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase,
                           "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone, runoff=lod1_ro,
                           pieces=lod1_pieces, fkey=f"{key}:{ei}", balcony=bal_group if ei in bal_edges else False,
-                          plinth=plinth, ground=lod1_gfn)
+                          plinth=plinth, ground=lod1_gfn, authored=(rule, lod1_wins) if rule else None)
             if typ == "house" and LOD1_HOUSE_OPENINGS:
                 # ADR 0124 r2: the LOD1 prism of a house carries its windows and door as dark quads 5 cm proud of the
                 # wall, in a material the LOD1 of a house chunk already has (no new draw). The Low scene shows LOD1
