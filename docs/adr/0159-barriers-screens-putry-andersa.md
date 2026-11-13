@@ -180,7 +180,7 @@ numbers and the SBS renders (`artifacts/world-int-s16`), main with 0153 / 0154 f
 | authored rails, m | 67 | 277 (NE median 101, SW median 96, link end 14, dk8 rails 67) |
 | rule barrier removed by `no_guardrail`, m | - | 69 (2 zones: 40 + 29) |
 | runs joined onto another rail (`joined_ends`) | 9 | 12 |
-| pytest `tests/gis` | 986 passed, 4 xfailed (review of 0154) | GIS_RESULT_PLACEHOLDER |
+| pytest `tests/gis` | 986 passed, 4 xfailed (review of 0154) | 1001 passed, 3 xfailed (+15 passed: 12 tests of `test_barriers_0159.py`, 2 of PR #38 in `test_buildings_r9.py`, the former xfail of the free deck ends) |
 | Unity EditMode | 484 / 484 (review of 0154) | 484 / 484 |
 | Unity import | - | OK, 64 chunks, corridor 41 |
 
