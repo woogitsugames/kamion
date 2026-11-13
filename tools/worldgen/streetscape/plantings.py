@@ -29,7 +29,7 @@ import math
 import numpy as np
 import shapely
 from shapely import affinity
-from shapely.geometry import Point, Polygon
+from shapely.geometry import LineString, Point, Polygon
 
 HEDGE_H = (0.5, 0.65)       # m, clipped berberis hedge (review r7 N-4: low 0.5-0.7 m band, CC0 Bieżeństwa photo)
 BAND_M = (1.1, 1.4)         # m, width of the clipped band laid along a traced bed (r7 N-4: narrow strip, not the bed)
