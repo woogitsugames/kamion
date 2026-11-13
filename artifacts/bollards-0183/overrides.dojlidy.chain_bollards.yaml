@@ -2,7 +2,7 @@
 overrides:
   - id: mickiewicza-kuronia-chain-posts-p11-063
     kind: chain_bollards
-    line_epsg2180: [[780011.30, 590461.30], [780016.31, 590451.28]]
+    line_epsg2180: [[780014.43, 590462.87], [780019.44, 590452.85]]
     chain: true
     sources: ["research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg", "GUGiK orthophoto 2024 0.25 m"]
     reason: >-
@@ -12,6 +12,10 @@ overrides:
       the GUGiK 2024 orthophoto (0.25 m): local E = -33.5 - 0.5 (N - 385), row 0.5 m behind it. Start: 21 deg left of
       the white street cabinet at local (-15.5, 371.0) as seen from (-46.5, 381.8); the cabinet stands behind posts
       5-6 in the photo and behind posts 5-6 of this line. 8 posts = 7 bays x 1.60 m (11.2 m); on the orthophoto the
-      kerb is straight for ~13 m from the start to the crossing, so one more bay may exist.
+      kerb is straight for ~13 m from the start to the crossing, so one more bay may exist. r2: the line is moved
+      3.5 m away from the carriageway (normal 0.894, 0.447) onto the generated sidewalk_paving: in the photo the
+      posts stand on paving (granite setts strip at the kerb, concrete slabs under the posts), on the orthophoto the
+      first line [780011.30, 590461.30] -> [780016.31, 590451.28] is paved too, but the generated world has a grass
+      verge there (sidewalk polygon starts ~3 m east of it). Move back when the Dojlidy paving matches the photo.
     confidence: low
     verify: start / end post on site (+-2 m along the kerb); the further row visible behind (smaller posts) is not placed

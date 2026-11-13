@@ -14,3 +14,10 @@
 - Nic nie działa w tle. Sloty zwolnione.
 ## NASTĘPNY KROK (komenda)
 `cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bollards-0183; code tools/worldgen/streetscape/chain_bollards.py` (poprawić kolumny atlasu U_LINK/U_STRIP: gutter między czerwoną a białą) → `uv run --project tools/worldgen pytest tests/gis/test_chain_bollards_0183.py -q` → podmienić PNG (jak wyżej) → `pwsh artifacts/bollards-0183/tools/run_unity.ps1 -Steps import,low,high -Tag r2` → obejrzeć `artifacts/bollards-0183/renders/r2-*`.
+
+## s20 (2026-11-13 ~22:40) — r2
+- Atlas r2 (048f35308): granice kolorów na wielokrotnościach 24 px (bloki ASTC 4/6/8/12), kolumny ogniw 32 px z 8 px przezroczystym marginesem w kolorze farby, styk czerwone|białe na u=192 (krawędź tekseli mip 0–6), LOD1 taśmy = stały UV w litej łacie 24x48 px (bez mipów). Przyczyna r1: import ASTC 6x6 + trilinear (InstanceImporter.ImportTexture), granica 160 px w środku bloku 6x6. Zużycie ogniw 0,6->0,4. pytest 19/19 (nowy test bleed mip0-4).
+- Rząd testowy przesunięty o 3,5 m od jezdni (normalna (0,894; 0,447)) na wygenerowany chodnik: EPSG:2180 (780014.43, 590462.87) -> (780019.44, 590452.85). Ortofoto: rzeczywisty rząd stoi na nawierzchni utwardzonej na starej linii; wygenerowany świat ma tam trawnik (0179).
+- W tle: `artifacts/bollards-0183/tools/pipeline_r2.ps1` (build r2 -> import+Low+High r2 -> EditMode -> A/B bez rzędu -> restore). Status: `artifacts/logs/pipeline-r2.status`.
+## NASTĘPNY KROK (komenda)
+`Get-Content C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bollards-0183\artifacts\logs\pipeline-r2.status` (gdy przerwane: `pwsh artifacts/bollards-0183/tools/pipeline_r2.ps1 -From <build|render|editmode|ab|restore>`)
