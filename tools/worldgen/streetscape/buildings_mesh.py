@@ -891,6 +891,37 @@ def load(fc, origin, overrides, hero=None):
                 p = {**p, "height_m": float(o["height_m"])}
             out.append({"id": bid, "poly": pl, "props": p, "ovr": o, "typ": "roof" if p.get("is_roof_only") else
                         classify(p, pl.area, o)})
+    return out + building_parts(out, overrides)
+
+
+def building_parts(blds, overrides):
+    """ADR 0179: authored volumes the footprint data merges into one outline (override `kind: building_part`): a
+    BDOT10k hall whose office block is three times the LoD1 height of the hall gets the block as its own building.
+    `polygon_en` (region-local E/N ring, traced on the orthophoto), `height_m`, optional `function` / `storeys`,
+    `cut_from` (building ids whose footprint loses the ring, so the two volumes do not overlap) and `set` (the
+    keys of a `target: {building}` override). Regions without such overrides get an empty list."""
+    out = []
+    for o in overrides:
+        if o.get("kind") != "building_part":
+            continue
+        pl = shapely.make_valid(Polygon(np.asarray(o["polygon_en"], float)))
+        if pl.geom_type != "Polygon" or pl.area < 1.0:
+            raise ValueError(f"building_part {o['id']}: polygon_en is not a simple ring")
+        pl = shapely.orient_polygons(pl) if hasattr(shapely, "orient_polygons") else shapely.geometry.polygon.orient(pl)
+        for b in list(blds):
+            if b["id"] in (o.get("cut_from") or []):
+                rest = shapely.make_valid(b["poly"].difference(pl.buffer(0.05)))
+                parts = sorted((g for g in getattr(rest, "geoms", [rest]) if g.geom_type == "Polygon" and g.area > 1.0),
+                               key=lambda g: -g.area)
+                parts = [shapely.orient_polygons(g) if hasattr(shapely, "orient_polygons")
+                         else shapely.geometry.polygon.orient(g) for g in parts]
+                b["poly"] = parts[0]
+                for k, g in enumerate(parts[1:], 1):       # the part splits its host: every piece stays a building
+                    out.append({**b, "id": f"{b['id']}#cut{k}", "poly": g})
+        p = {"function": o.get("function"), "height_m": float(o["height_m"]), "storeys": o.get("storeys"),
+             "height_source": "authored_override", "name": o.get("name")}
+        s = dict(o.get("set") or {})
+        out.append({"id": f"override:{o['id']}", "poly": pl, "props": p, "ovr": s, "typ": classify(p, pl.area, s)})
     return out
 
 
@@ -1119,6 +1150,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if typ == "office" and b["ovr"].get("ribbon") is not None:      # ADR 0171: authored window type (the far
             variant["ribbon"] = bool(b["ovr"]["ribbon"])                # ribbon rows carry grey spandrels)
         scheme = FK.hall_scheme(key, wall) if typ == "hall" else None
+        if scheme and b["ovr"].get("hall_bands") is False:      # ADR 0179: authored - the photographed hall is
+            scheme = {**scheme, "low": None, "top": None}       # one cladding colour (no hashed plinth / top band)
         insulated = typ == "block" and (FK.hfloat(key, "etics") < 0.7 or bool(b["ovr"].get("wall_material")))
         # v3.1 horizontal bands: insulated blocks (35 %) get the window rows in the accent colour from the 1st
         # floor up; punched-window offices with >= 2 storeys (40 %) get darker spandrel bands between the rows

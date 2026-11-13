@@ -252,6 +252,10 @@ SIGNAL_MAST_H = 6.8         # WORKING_VALUE: cantilever mast, head >= 5.0 m over
 SIGNAL_CANTILEVER_LANES = 2 # WORKING_VALUE: approaches with >= 2 lanes get a cantilever head (ADR 0069: Mapillary
                             # p42 / p45 / p47 show curved mast arms over the 2-lane entries of Rondo Putry; was 3)
 SIGNAL_MAST_BEND_R = 1.5    # WORKING_VALUE: bend radius of the mast arm, read off p42 against the 0.36 m head
+# ADR 0172: mast prototypes by arm length (m). 6.0 = the rule mast (ADR 0069). 8.8 = the mast over the two northbound
+# lanes of the Rondo Putry ring under the Andersa viaduct, measured on the GUGiK 0.08 m orthophoto 2024 (pole foot
+# E -532.5 N 37.9, arm tip E -540.5 N 41.7, +-0.3 m; the top leans ~0.3 m from the nadir, not corrected).
+SIGNAL_MAST_ARMS = {"signal_mast": 6.0, "signal_mast_9m": 8.8}
 # Road restraint systems. GDDKiA "Wytyczne stosowania drogowych barier ochronnych na drogach krajowych"
 # (2010): barrier warranted on embankments higher than ~2 m – WORKING_VALUE until the text is read.
 GUARDRAIL_EMBANKMENT_H = 2.0

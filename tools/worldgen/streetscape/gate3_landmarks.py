@@ -8,6 +8,8 @@ must recognise the route). Everything is data in Data/Regions/<id>/overrides.yam
                         {face: U-4a}                      red / white chevron board on a traffic-island nose
                         {face: D-3} / {face: D-6} / {face: D-1}
                         {face: F-10}                      lane directions before a junction (straight | right), two posts
+                        {face: F-10-ls}                   upright lane board (left turn | straight), two posts, ADR 0172
+                        {face: C-12}                      roundabout disc (under an A-7 on a splitter island), ADR 0172
                         {face: street_name, text: "..."}  city street-name plate (teal plate, teal post)
                       Position, one of:
                         at_en: [E, N]                     region-local metres (measured on the GUGiK orthophoto)
@@ -15,7 +17,8 @@ must recognise the route). Everything is data in Data/Regions/<id>/overrides.yam
                                before the node, `offset_m` behind the kerb on that side of TRAVEL
                       `travel_bearing_deg` (compass bearing of the traffic that reads the sign; the face looks the
                       other way) is required with at_en and optional with along (default: the chain's travel).
-                      `lower_edge_m` (default 2.0 m, Tabl. 1.11 [ZNAKI-Z1]; U-4a boards stand lower), `mapillary` ids.
+                      `lower_edge_m` (default 2.0 m, Tabl. 1.11 [ZNAKI-Z1]; U-4a boards stand lower), `mapillary` ids
+                      or `photo` (ADR 0172: other open photos, "commons:<id>").
 
   kind: gate3_signal  traffic signals that the junction rule does not produce (ADR 0161: the rule skips ring arms, so
                       the signalised approaches inside the Rondo Putry ring had none). Existing prototypes only
@@ -24,7 +27,13 @@ must recognise the route). Everything is data in Data/Regions/<id>/overrides.yam
                         travel_bearing_deg        compass bearing of the traffic that reads the heads
                         arm_bearing_deg           optional: cantilever mast, arm from the pole in this direction
                                                   (the prototype arm is 6.0 m, head 5.0 m out, as the rule builds it)
+                        arm_m                     ADR 0172: arm length, a value of standards.SIGNAL_MAST_ARMS (6.0 | 8.8)
+                        arm_heads_m: [..]         ADR 0172: heads on the arm, metres from the pole (default [5.0])
+                        pole_head: false          ADR 0172: no low head on the pole (default: one, as the rule)
                         lit: red | green | off    (default red)
+
+  kind: gate3_lamp    ADR 0172: one lamp column the lamp rule does not produce (a column on a splitter island):
+                        at_en: [E, N], proto: an existing lamp_* prototype, arm_bearing_deg (bracket direction)
 
 Faces are our own schematic drawings (PIL), never pixels of a photo. Sizes are WORKING_VALUE unless a source is named.
 Stale entries (way / node not found, sign on a carriageway) are reported in streetscape QA `gate3_landmarks`, never
@@ -48,6 +57,7 @@ from . import signs as SG
 
 KIND = "gate3_sign"
 KIND_SIGNAL = "gate3_signal"      # ADR 0161
+KIND_LAMP = "gate3_lamp"          # ADR 0172
 PX_M = 420                    # texture resolution of a face, px per metre (before export resamples to 512 px width)
 SWATCH_PX = 24                # post / back colour swatches, right of the faces
 TEAL = (0, 126, 122)          # Białystok street-name plates and their posts (Mapillary 504348097385466, read by eye)
@@ -69,10 +79,18 @@ FACE_DIM = {
     # ADR 0144: 2-lane F-10 read off Mapillary 482392746429891 (plate 140 x 85 px beside its own posts 12 px wide; with
     # the 60 mm post that is ~0.7 m, a real post of this board is thicker): 0.90 x 0.55 m WORKING_VALUE
     "F-10": ("rect", 0.90, 0.55),
+    # ADR 0172: 2-lane board on the splitter island of the EC access road, measured on Commons cm92458760 with the
+    # resected pose (focal 2868 px, horizon y 1137 px from the lamp foot 8.0 m away): post feet 7.0 / 6.5 m from the
+    # camera, plate 338 px high -> 0.80 m (+-0.05); posts 0.68 m apart at 0.8 of the plate width -> 0.85 m (+-0.2).
+    # 0.80 x 0.80 m WORKING_VALUE (r1-r3 had 0.90 x 1.20 from a misread shadow: 1.5x too tall beside the photo)
+    "F-10-ls": ("rect", 0.80, 0.80),
+    # ADR 0172: C-12 under the island-side A-7. Disc 0.60 m WORKING_VALUE (the photo shows its back, narrower than
+    # the 0.9 m triangle above it)
+    "C-12": ("disc", 0.60, 0.60),
     "plate": ("rect", 0.60, 0.45),
     "street_name": ("rect", 1.00, 0.25),
 }
-TWO_POSTS = {"F-10"}          # faces carried by two posts (0.3 x plate width either side of the middle)
+TWO_POSTS = {"F-10", "F-10-ls"}          # faces carried by two posts (0.3 x plate width either side of the middle)
 PROTOS = {}                   # prototype name -> (lod0, lod1, collision), registered by build(), read by props.build_all
 
 
@@ -163,9 +181,28 @@ def draw_face(code, w_px, h_px, text=None):
         ya = 0.42 * h_px - st / 2
         d.polygon([(0.90 * w_px, ya), (0.73 * w_px, ya - 0.17 * h_px), (0.73 * w_px, ya + 0.17 * h_px)], fill=SG.WHITE)
         return im
-    if code in ("D-6", "D-1"):                           # reuse the project's own drawings (streetscape.signs)
-        src = SG.square("D-6") if code == "D-6" else SG.d1()
-        bg = Image.new("RGBA", src.size, (*(SG.BLUE if code == "D-6" else SG.YELLOW), 255))
+    if code == "F-10-ls":                                # ADR 0172: left turn | straight, dashed lane line between
+        im = Image.new("RGB", (w_px, h_px), SG.WHITE)
+        d = ImageDraw.Draw(im)
+        m = max(2, int(0.02 * w_px))
+        d.rectangle([m, m, w_px - m - 1, h_px - m - 1], fill=SG.BLUE)
+        st = 0.085 * w_px
+        cx = 0.73 * w_px                                 # right lane: straight on
+        d.rectangle([cx - st / 2, 0.36 * h_px, cx + st / 2, 0.88 * h_px], fill=SG.WHITE)
+        d.polygon([(cx, 0.12 * h_px), (cx + 0.13 * w_px, 0.38 * h_px), (cx - 0.13 * w_px, 0.38 * h_px)], fill=SG.WHITE)
+        for k in range(4):                               # lane line: four dashes
+            y0 = (0.14 + 0.20 * k) * h_px
+            d.rectangle([0.5 * w_px - st / 5, y0, 0.5 * w_px + st / 5, y0 + 0.12 * h_px], fill=SG.WHITE)
+        x0 = 0.34 * w_px                                 # left lane: stem up, then bent to the left
+        yb = 0.50 * h_px                                 # axis of the horizontal part
+        d.rectangle([x0 - st / 2, yb + st / 2, x0 + st / 2, 0.88 * h_px], fill=SG.WHITE)
+        d.pieslice([x0 - 1.5 * st, yb - st / 2, x0 + st / 2, yb + 1.5 * st], 270, 360, fill=SG.WHITE)   # rounded elbow
+        d.rectangle([0.24 * w_px, yb - st / 2, x0 - st / 2, yb + st / 2], fill=SG.WHITE)
+        d.polygon([(0.09 * w_px, yb), (0.25 * w_px, yb - 0.085 * h_px), (0.25 * w_px, yb + 0.085 * h_px)], fill=SG.WHITE)
+        return im
+    if code in ("D-6", "D-1", "C-12"):                   # reuse the project's own drawings (streetscape.signs)
+        src = SG.square("D-6") if code == "D-6" else SG.d1() if code == "D-1" else SG.c12()
+        bg = Image.new("RGBA", src.size, (*(SG.YELLOW if code == "D-1" else SG.BLUE), 255))
         return Image.alpha_composite(bg, src.convert("RGBA")).convert("RGB").resize((w_px, h_px), Image.LANCZOS)
     if code == "street_name":
         im = Image.new("RGB", (w_px, h_px), TEAL)
@@ -224,6 +261,8 @@ def _outline(shape, w, h):
         return [(-w / 2, h / 2), (w / 2, h / 2), (0.0, -h / 2)]
     if shape == "diamond":
         return [(-w / 2, 0.0), (0.0, h / 2), (w / 2, 0.0), (0.0, -h / 2)]
+    if shape == "disc":                                  # ADR 0172: 16-gon, clockwise from the left
+        return [(-w / 2 * math.cos(2 * math.pi * k / 16), h / 2 * math.sin(2 * math.pi * k / 16)) for k in range(16)]
     return [(-w / 2, -h / 2), (-w / 2, h / 2), (w / 2, h / 2), (w / 2, -h / 2)]
 
 
@@ -381,8 +420,28 @@ def build(pl, net, graph, overrides, origin, boards, report, carriage=None, isla
                              "travel_bearing_deg": round(math.degrees(math.atan2(travel[0], travel[1])) % 360, 1),
                              "mapillary": o.get("mapillary", [])})
     _signals(pl, overrides, rep, carriage, islands)
+    _lamps(pl, overrides, rep, carriage)
     report["gate3_landmarks"] = rep
     return rep
+
+
+def _lamps(pl, overrides, rep, carriage):
+    """ADR 0172: `gate3_lamp` overrides - one existing lamp_* prototype at a measured point (never on a carriageway)."""
+    for o in overrides:
+        if o.get("kind") != KIND_LAMP:
+            continue
+        try:
+            p, proto, arm = np.asarray(o["at_en"], float), str(o["proto"]), _bearing_vec(o["arm_bearing_deg"])
+        except KeyError as e:
+            rep["stale"].append(f"{o['id']}: {e}")
+            continue
+        q = off_carriageway(carriage, p) if carriage is not None else p
+        if q is None or not proto.startswith("lamp_"):
+            rep["stale"].append(f"{o['id']}: on a carriageway or not a lamp prototype ({proto})")
+            continue
+        z = pl.add(proto, q, PP_yaw(arm), src=f"override:{o['id']}")
+        rep.setdefault("lamps", []).append({"id": o["id"], "proto": proto, "at": [round(float(v), 1) for v in q],
+                                            "z": round(float(z), 2), "snapped_m": round(float(np.hypot(*(q - p))), 2)})
 
 
 def _signals(pl, overrides, rep, carriage, islands):
@@ -414,15 +473,26 @@ def _signals(pl, overrides, rep, carriage, islands):
                 pl.on_authored_island = set()
             pl.on_authored_island.add((round(round(float(p[0]), 3), 2), round(round(float(p[1]), 3), 2)))
         mast = "arm_bearing_deg" in o
+        heads = []
         if mast:
+            arm_m = float(o.get("arm_m", 6.0))
+            proto = next((k for k, v in S.SIGNAL_MAST_ARMS.items() if abs(v - arm_m) < 0.05), None)
+            heads = [float(d) for d in o.get("arm_heads_m", [5.0])]
+            if proto is None or not heads or max(heads) > arm_m or min(heads) < S.SIGNAL_MAST_BEND_R:
+                rep["stale"].append(f"{o['id']}: arm_m {arm_m} / arm_heads_m {heads} (arms: "
+                                    f"{sorted(S.SIGNAL_MAST_ARMS.values())}, heads between the bend and the tip)")
+                continue
             arm = _bearing_vec(o["arm_bearing_deg"])
-            z = pl.add("signal_mast", p, PP_yaw(arm), src=src, **zkw)
-            pl.add(f"signal_head_{lit}", p + arm * 5.0, PP_yaw(face), z=z + S.SIGNAL_MAST_H - 1.25, src=src)
+            z = pl.add(proto, p, PP_yaw(arm), src=src, **zkw)
+            for d in heads:
+                pl.add(f"signal_head_{lit}", p + arm * d, PP_yaw(face), z=z + S.SIGNAL_MAST_H - 1.25, src=src)
         else:
             z = pl.add("signal_pole", p, PP_yaw(face), src=src, **zkw)
-        pl.add(f"signal_head_{lit}", p + face * 0.15, PP_yaw(face), z=z + 2.9, src=src)
+        if o.get("pole_head", True) or not mast:
+            pl.add(f"signal_head_{lit}", p + face * 0.15, PP_yaw(face), z=z + 2.9, src=src)
         rep.setdefault("signals", []).append({"id": o["id"], "at": [round(float(v), 1) for v in p], "mast": mast,
-                                              "snapped_m": round(moved, 2), "lit": lit})
+                                              "snapped_m": round(moved, 2), "lit": lit,
+                                              **({"arm_heads_m": heads} if mast else {})})
 
 
 def PP_yaw(f):

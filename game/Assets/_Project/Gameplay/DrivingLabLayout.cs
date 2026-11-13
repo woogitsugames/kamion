@@ -61,6 +61,15 @@ namespace Game.Gameplay
         public static readonly Vector3 WetCircleCenter = new Vector3(345f, 0f, -120f);
         public const float WetCircleR = 100f;
 
+        /// <summary>
+        /// Measurement straight north of the pad (ADR 0195): 1300 m dry asphalt running east at z = StraightZ, for the
+        /// gate 1-2 autopilot straight080 (0 -> 80 km/h, hold, emergency stop 80 -> 0). The 370 m pad lane is too short for
+        /// a combination (runner: empty 400 m, 40 t 800 m from start to stop). Distance 0 at StraightStartX.
+        /// </summary>
+        public const float StraightZ = 300f, StraightX0 = -650f, StraightX1 = 650f, StraightHalfWidth = 6f, StraightStartX = -620f;
+        /// <summary>Tractor spawn point of the straight run (lane centre, heading east = +X).</summary>
+        public static Vector3 StraightStart => new Vector3(StraightStartX, 0f, StraightZ);
+
         /// <summary>Autopilot start: on the R50 circle, heading north, centre to the west (counter-clockwise, left turn).</summary>
         public static Vector3 AutopilotStart => CircleR50Center + new Vector3(CircleR50, 0f, 0f);
     }

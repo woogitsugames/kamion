@@ -120,7 +120,8 @@ def test_overrides_are_data_with_provenance():
     for o in ov:
         assert ("at_en" in o) != ("along" in o), o["id"]
         assert "travel_bearing_deg" in o or "along" in o, o["id"]
-        assert o.get("mapillary") and o.get("reason") and o.get("confidence") and o.get("verify"), o["id"]
+        # ADR 0172: a non-Mapillary open photo is named under `photo` ("commons:<id>")
+        assert (o.get("mapillary") or o.get("photo")) and o.get("reason") and o.get("confidence") and o.get("verify"), o["id"]
         G3.assembly_key(o["parts"], o.get("post", "galv"), o.get("lower_edge_m", 2.0))
 
 

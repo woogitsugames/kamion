@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "id": "straight_0_80_0",
+  "description": "Gate 1-2 straight run (ADR 0195): the game autopilot straight080 (StraightRunPilot) - settle 1 s on the brake, full throttle 0->80 km/h, hold 80 km/h 4 s, emergency brake 80->0, dry asphalt, ABS on",
+  "spec": "docs/04 s6.3, s6.5; docs/03 gate 1 (0-80 x3 +/-3 %), gate 2",
+  "variants": [
+    "solo",
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 120,
+  "driver": {
+    "type": "straightrun",
+    "targetKmh": 80
+  },
+  "checks": [
+    {
+      "metric": "rollback_m",
+      "max": 0.02,
+      "status": "WORKING_VALUE",
+      "source": "no rollback on flat"
+    },
+    {
+      "metric": "stalled",
+      "max": 0,
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 60,
+      "min": 7,
+      "max": 20,
+      "variant": "solo",
+      "status": "WORKING_VALUE",
+      "source": "same band as launch_0_80_flat (power-to-weight 368 kW / 7.5 t)"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 80,
+      "min": 12,
+      "max": 32,
+      "variant": "solo",
+      "status": "WORKING_VALUE",
+      "source": "same band as launch_0_80_flat"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 60,
+      "min": 12,
+      "max": 35,
+      "variant": "empty",
+      "status": "DERIVED",
+      "source": "same band as launch_flat_comb@empty"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 80,
+      "min": 20,
+      "max": 55,
+      "variant": "empty",
+      "status": "DERIVED",
+      "source": "same band as launch_flat_comb@empty"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 60,
+      "min": 25,
+      "max": 60,
+      "variant": "laden40",
+      "status": "DERIVED",
+      "source": "same band as launch_flat_comb@laden40"
+    },
+    {
+      "metric": "time_to_kmh",
+      "arg": 80,
+      "min": 40,
+      "max": 95,
+      "variant": "laden40",
+      "status": "DERIVED",
+      "source": "same band as launch_flat_comb@laden40"
+    },
+    {
+      "metric": "max_speed_kmh",
+      "max": 83,
+      "status": "WORKING_VALUE",
+      "source": "hold controller: overshoot after the full-throttle phase <= 3 km/h"
+    },
+    {
+      "metric": "stop_distance_m",
+      "min": 32,
+      "max": 55,
+      "variant": "solo",
+      "status": "SOURCED",
+      "source": "same band as brake_80_0_dry (solo, dry, ABS)"
+    },
+    {
+      "metric": "stop_distance_m",
+      "min": 35,
+      "max": 61.2,
+      "variant": "empty",
+      "status": "SOURCED",
+      "source": "same band as brake_80_0_dry_abs_comb: R13 Annex 4 type-0 N3 0.15 v + v^2/130 at 80 km/h"
+    },
+    {
+      "metric": "stop_distance_m",
+      "min": 35,
+      "max": 61.2,
+      "variant": "laden40",
+      "status": "SOURCED",
+      "source": "same band as brake_80_0_dry_abs_comb"
+    },
+    {
+      "metric": "mfdd_ms2",
+      "min": 5.0,
+      "max": 8.0,
+      "status": "SOURCED",
+      "source": "R13 Annex 4 MFDD, N3 type-0 minimum 5.0 m/s^2; <= mu g"
+    },
+    {
+      "metric": "max_lateral_deviation_m",
+      "max": 0.5,
+      "status": "WORKING_VALUE",
+      "source": "straight-line stability under ABS braking (brake_80_0_* limit)"
+    },
+    {
+      "metric": "rear_lock_time_s",
+      "max": 0.03,
+      "status": "WORKING_VALUE",
+      "source": "no drive-axle lock at brake onset (brake_80_0_* limit)"
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "max": 0.35,
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes"
+    },
+    {
+      "metric": "nan_detected",
+      "max": 0,
+      "status": "WORKING_VALUE",
+      "source": "no NaN"
+    },
+    {
+      "metric": "trailer_lock_time_s",
+      "max": 0.05,
+      "variant": "empty",
+      "status": "WORKING_VALUE",
+      "source": "trailer ABS 2S/2M prevents lock"
+    },
+    {
+      "metric": "trailer_lock_time_s",
+      "max": 0.05,
+      "variant": "laden40",
+      "status": "WORKING_VALUE",
+      "source": "trailer ABS 2S/2M prevents lock"
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "max": 5,
+      "variant": "empty",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift"
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "max": 5,
+      "variant": "laden40",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift"
+    },
+    {
+      "metric": "max_articulation_deg",
+      "max": 2.0,
+      "variant": "empty",
+      "status": "WORKING_VALUE",
+      "source": "no trailer swing on a straight incl. ABS stop"
+    },
+    {
+      "metric": "max_articulation_deg",
+      "max": 2.0,
+      "variant": "laden40",
+      "status": "WORKING_VALUE",
+      "source": "no trailer swing on a straight incl. ABS stop"
+    }
+  ]
+}

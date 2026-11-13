@@ -121,3 +121,38 @@ REFERENCE_ONLY (NC/ND), REFERENCE_NOT_TEXTURE (CC BY-SA — referencja, nie teks
     - Licencja: dokument wewnętrzny repozytorium (origin/main).
 14. **Panoramax API** — zapytania bbox (2026-11-13): rondo Jaroszówka → 0 kadrów;
     szeroki bbox → 6 kadrów (klaster rondo Putry). Zapis negatywu: manifest M52-117.
+
+## Źródła i metody rewizji M52-FIX r2 (13.11.2026)
+
+15. **Render stron Dz.U. (oględziny rysunków, zad. 1)** — ten sam dokument co poz. 1
+    (Dz.U. 2019 poz. 2311, zał. 2 = część c2 PDF z eli.gov.pl,
+    `https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf`).
+    Metoda r2: render stron **150 dpi** + ekstrakcja obrazów rastrowych w natywnej
+    rozdzielczości ×3. PyMuPDF niedostępny w sesji — użyto własnego parsera PDF
+    (dekompresja strumieni, dekodowanie DCTDecode/FlateDecode). Obejrzano każdy rysunek
+    z zakresu M52: P-2a/b, P-3a/b, P-4, P-5, P-6, P-7a/b/c/d, P-10 (suplement),
+    P-11, P-12, P-13, P-14, P-21a/b, P-23, P-25; odczyty etykiet zweryfikowano
+    pikselowo (proporcje kreska:przerwa, podstawa:wysokość:odstęp w skali rysunku).
+    Mapowanie stron bez zmian: PDF c2 str. N = Dz.U. str. N+525.
+16. **Panoramax API** (r2, 2026-11-13): bbox ronda Jaroszówka
+    (`https://api.panoramax.xyz/api/search?bbox=23.1620,53.1505,23.1720,53.1540`) → 0 kadrów;
+    szersze bboxy → 0; bardzo szeroki (23.13–23.20 E, 53.14–53.17 N) → 10 kadrów
+    w klastrze ~1,3 km NW od ronda (poza rondem).
+17. **KartaView API** (r2, 2026-11-13): `https://api.kartaview.org/2.0/photo/` — zapytania
+    z 2 punktów (kafl 53.1520/23.1680; środek ronda 53.1515/23.1665), promień 100/300/500 m
+    → w każdym przypadku wyłącznie 3 sekwencje estakadowe (14055, 2769366, 3686129;
+    dist 0–42 m), brak innych sekwencji; promień >500–800 m → HTTP 400; endpoint
+    POST /nearby-tracks: timeout/niezawodny; `api.openstreetcam.org`: wygasł
+    (cert mismatch + Azure 404). **Mapillary**: brak tokenu → niesprawdzony.
+    Wynik negatywny zapisany w manifeście M52-117.
+18. **Wyszukiwanie WWW** (r2, 2026-11-13, 2 zapytania) o czerwonym asfalcie na trasie
+    startowej — bez źródła; status koloru pozostaje UNVERIFIED.
+
+### Ograniczenia r2 (jawne)
+
+- Kadry fotograficzne (Jaroszówka, trasa, przejścia, Rynek) **nie zostały obejrzane w r2** —
+  limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet
+  zadania 1). Opisy kadrów: przegląd s17 (jar-01/07/12/20) + podstawy przypisania
+  (przebieg sekwencji, azymuty, pozycje).
+- Kolumny `kolor_srgb`/`metoda_koloru` usunięte ze schematu manifestu (19 → 17 kolumn);
+  wartości RGB Rynku przeniesione do uwag z adnotacją o niewiarygodności.
