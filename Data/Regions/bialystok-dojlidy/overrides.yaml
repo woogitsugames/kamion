@@ -42,10 +42,12 @@ overrides:
       WORKING_VALUE.
     confidence: low
     verify: owner photo session (Kuronia / Mickiewicza corner); band extent on the Kuronia side
+    # frontage walls cannot use hall_wall_* (runoff UV1 of the hall cladding): plaster_grey = the light grey of the
+    # office set; the hall loses the cladding ribs and roof lights of the rule hall (not seen from the street)
     set:
-      wall_material: hall_wall_white
       frontage:
-        wall: hall_wall_white
+        wall: plaster_grey
+        plinth_m: 0.6
         accents:
           - {facing: SW, span: [0.0, 1.0], material: hall_flashing, z: [8.6, 11.8], min_len_m: 20.0}
           - {facing: NW, span: [0.65, 1.0], material: hall_flashing, z: [8.6, 11.8], min_len_m: 20.0}
