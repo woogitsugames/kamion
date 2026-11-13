@@ -43,13 +43,16 @@ namespace PhysicsRunner.Sim
         /// <summary>Contact damping per collider corner [N s/m] — WORKING_VALUE, see <see cref="DefaultDamping"/>.</summary>
         public double Damping = DefaultDamping;
         /// <summary>
-        /// Defaults for new instances — WORKING_VALUE (ADR 0165; the runner CLI --body-k/--body-c changes them for a sweep).
-        /// k: a laden trailer lying on its side (largest static corner load of the suite) sinks ~1-2 cm into its panels,
-        /// the order of real sheet-metal/plastic crush; no measured crush stiffness exists for this fictional truck.
-        /// c: crushing panels and plastic bumper covers deform plastically (restitution ~0, like the PhysX default
-        /// material), so the contact is over-damped for the corner effective masses of the combination.
+        /// Defaults for new instances — WORKING_VALUE (ADR 0165; the runner CLI --body-k/--body-c changes them for a sweep;
+        /// sweep table in the ADR). No measured crush stiffness exists for this fictional truck, so the values are set by:
+        /// k = 1e6 N/m: the largest static corner load of the suite (laden trailer lying on its side, ~80 kN per corner)
+        /// crushes ~8 cm into body panels / curtain frame — the order of real sheet-metal deformation, no rigid "floor".
+        /// c = 5e4 N s/m: for the front bumper corner (effective mass ~1.5 t) that is damping ratio
+        /// c / (2 sqrt(k m)) ~ 0.65, restitution exp(-pi z / sqrt(1-z^2)) ~ 0.07 (crushing plastic + brackets do not
+        /// bounce, like the PhysX default restitution 0). Bounded above by the jerk limit of the 27 cm kerb
+        /// (max_dv_step 0.35 m/s, D58): k 4e6 or c 1e5 exceed or touch it.
         /// </summary>
-        public static double DefaultStiffness = 4.0e6, DefaultDamping = 4.0e5;
+        public static double DefaultStiffness = 1.0e6, DefaultDamping = 5.0e4;
         /// <summary>PGS iterations — WORKING_VALUE (PhysX default solverIterations is 6; 10 here, the system is tiny).</summary>
         public int Iterations = 10;
         /// <summary>Ray start above the corner [m] (= deepest penetration that is still resolved) and reach below it [m].</summary>
@@ -118,7 +121,10 @@ namespace PhysicsRunner.Sim
                 _r[c] = p - com; _n[c] = nrm;
                 Vec3 t1 = Math.Abs(nrm.x) < 0.9 ? Vec3.Cross(nrm, Vec3.Right).Normalized : Vec3.Cross(nrm, Vec3.Forward).Normalized;
                 _t1[c] = t1; _t2[c] = Vec3.Cross(nrm, t1);
-                _rhs[c] = pen * erp; // pen < 0 (above): the spring engages only for the predicted part of the step below the surface
+                // pen >= 0: implicit spring-damper target.  pen < 0 (above): free approach up to the gap this step
+                // (speculative, no tunnelling); only the predicted part below the surface feels the soft contact, so
+                // the damper never pushes a corner that is still above the road.
+                _rhs[c] = pen >= 0 ? pen * erp : pen / dt;
                 _mn[c] = EffMass(b, q, _r[c], nrm); _mt1[c] = EffMass(b, q, _r[c], t1); _mt2[c] = EffMass(b, q, _r[c], _t2[c]);
                 _soft[c] = 1.0 / (1.0 / _mn[c] + soft);
                 _jn[c] = 0; _jt1[c] = 0; _jt2[c] = 0;
@@ -161,7 +167,7 @@ namespace PhysicsRunner.Sim
             ActiveContacts = active; NormalImpulse = jnSum;
             Force = jLin / dt;
             Torque = jAng / dt;
-            if (Dbg) for (int c = 0; c < _count; c++) if (_jn[c] > 0) Console.WriteLine($"DBG body m {b.Mass:F0} r {_r[c]} rhs {_rhs[c]:F3} jn {_jn[c]:F0} jt {_jt1[c]:F0},{_jt2[c]:F0} meff {_mn[c]:F0} y {(b.Position + q * _cornersLocal[0]).y:F3}");
+            if (Dbg) for (int c = 0; c < _count; c++) if (_jn[c] > 0) Console.WriteLine($"DBG body m {b.Mass:F0} p {com + _r[c]} vcom {b.Velocity} w {b.AngularVelocity} rhs {_rhs[c]:F3} jn {_jn[c]:F0} jt {_jt1[c]:F0},{_jt2[c]:F0} meff {_mn[c]:F0}");
         }
         public static bool Dbg = Environment.GetEnvironmentVariable("BODYDBG") == "1";
 
