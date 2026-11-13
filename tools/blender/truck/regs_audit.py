@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.join(HERE, "trailer"))
 
 TRACTOR_PREFIX = ("rear_lens_", "rear_lamp_", "side_marker", "side_repeater", "marker_front", "marker_rear",
                   "indicator_", "pos_led", "lamp_lens_", "plate", "rear_plate", "mirror_", "front_mirror",
-                  "work_lamp", "reflex_", "side_reflex", "rear_reflex", "fog_led", "contour", "r70", "rup", "sideguard",
+                  "work_lamp", "reflex_", "side_reflex", "rear_reflex", "rear_fog", "fog_led", "contour", "r70", "rup", "sideguard",
                   "tri_reflector", "mudflap_")
 TRAILER_PREFIX = ("rear_lens_", "rear_lamp_body", "side_marker_lens", "side_marker_reflex", "side_reflector",
                   "front_lamp_lens", "front_pos_", "front_reflex", "stalk_lens", "rear_marker_lens", "plate_",

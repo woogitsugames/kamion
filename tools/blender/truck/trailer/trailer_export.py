@@ -58,9 +58,9 @@ MAT_SLOT = {"trl_paint": "Paint",
             "lens_red_o": "Lights", "lens_amber_o": "Lights", "lens_white_o": "Lights", "lamp_body": "Lights"}
 PRIORITY = {"roof_tarp": 0.30, "gap": 0.5, "trl_chassis": 0.7, "grease": 0.6, "flap_rubber": 0.8, "interior": 0.12,
             "plywood": 0.25}
-# same ids as the TRAKT tractor (one light controller for the combination) + PLATE
-LIGHT_GROUPS = list(A.LIGHT_GROUPS) + ["PLATE"]
-LIGHT_COLOUR = dict(A.LIGHT_COLOUR, PLATE=(1.0, 0.98, 0.95))
+# same ids as the TRAKT tractor (one light controller for the combination; 13 = PLATE, 14 = FOG_REAR, ADR 0175)
+LIGHT_GROUPS = list(A.LIGHT_GROUPS)
+LIGHT_COLOUR = dict(A.LIGHT_COLOUR)
 LIVERIES = {   # _PaintColor / _CurtainColor multiply the baked albedo (front wall 0.80, curtain 0.80, straps 0.52)
     "szary": {"_PaintColor": [0.98, 0.98, 0.97], "_PaintRoughness": 0.36, "_CurtainColor": [0.40, 0.42, 0.44],
               "label": "firanka szara, ściany białe"},
@@ -82,7 +82,8 @@ LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", 
                          "leg_xbrace", "leg_brace", "cross_shaft", "crank_shaft", "crank_holder", "leg_collar",
                          "dock_buffer", "lamp_panel_side", "plate_lamp", "tension_", "curtain_rear_wrap",
                          "curtain_front_strip", "stalk_", "side_reflector", "sideguard_post", "lockbar",
-                         "door_frame", "beam_flange", "rup_brace", "tri_reflector", "contour_rear", "toolbox",
+                         "door_frame", "beam_flange", "rup_brace", "tri_reflector", "contour_rear", "contour_corner",
+                         "side_marker_reflex", "front_reflex", "toolbox",
                          "leg_gearbox", "front_lamp", "rear_marker", "door_centre_seal", "rear_sill_face",
                          "coupler_plate", "front_cross", "crank_hub", "crank_grip", "pallet_rib",
                          "pallet_strap", "spare_hanger", "spare_clamp", "spare_rod", "spare_carrier", "spare_disc",
@@ -127,7 +128,7 @@ def light_group(oname):
     if "_rev_" in n:
         return "REVERSE"
     if "_fog_" in n:
-        return "FOG"
+        return "FOG_REAR"
     if n.startswith("side_marker_lens"):
         return "MARKER_SIDE"
     if n.startswith(("front_lamp_lens", "stalk_lens_w")):
@@ -1226,7 +1227,7 @@ def meta(tex, td, tri_pieces, meas):
             "roughness": "C.a + 0.35 * M.g * _Dirt",
             "metallic": "M.b (Trim/Metal/Lights), 0 on Paint/Curtain; * (1 - saturate(M.g * _Dirt))",
             "occlusion": "M.r",
-            "emission": "Lights: _LightState[uv2.x] * uv2.y (ids shared with the tractor + 13 = PLATE)",
+            "emission": "Lights: _LightState[uv2.x] * uv2.y (ids shared with the tractor; 13 = PLATE, 14 = FOG_REAR)",
             "_Dirt": "0 washed, 0.5 = renders, 1 = very dirty",
             "_DirtColor": list(DUST),
             "urp_lit_fallback": "stock URP Lit: _BaseMap = T_Trl_<Slot>_BaseMap[_<livery>] (_Dirt 0.5 baked), "

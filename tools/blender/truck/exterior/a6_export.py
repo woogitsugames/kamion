@@ -78,11 +78,14 @@ MAT_SLOT = {
 # B2.2: a lit LED module's chrome reflector carries scattered light round the lens: same group, 30 % emission mask
 REFL_GLOW = 0.30
 LIGHT_GROUPS = ["NONE", "DRL", "LOW_BEAM", "HIGH_BEAM", "IND_L", "IND_R", "TAIL_BRAKE", "REVERSE", "MARKER_FRONT",
-                "MARKER_SIDE", "MARKER_REAR", "FOG", "WORK"]
+                "MARKER_SIDE", "MARKER_REAR", "FOG", "WORK", "PLATE", "FOG_REAR"]
+# ADR 0175: 13 = PLATE (trailer plate lamp; the id the trailer manifest and TruckLights already used), 14 = FOG_REAR
+# (rear fog lamps of the tractor and the trailer; FOG = 11 stays the front fog / cornering lamps)
 LIGHT_COLOUR = {"DRL": (1.0, 0.97, 0.92), "LOW_BEAM": (1.0, 0.96, 0.90), "HIGH_BEAM": (1.0, 0.97, 0.94),
                 "IND_L": (1.0, 0.42, 0.02), "IND_R": (1.0, 0.42, 0.02), "TAIL_BRAKE": (1.0, 0.03, 0.01),
                 "REVERSE": (1.0, 1.0, 1.0), "MARKER_FRONT": (1.0, 0.97, 0.92), "MARKER_SIDE": (1.0, 0.42, 0.02),
-                "MARKER_REAR": (1.0, 0.03, 0.01), "FOG": (1.0, 0.95, 0.85), "WORK": (1.0, 0.98, 0.95)}
+                "MARKER_REAR": (1.0, 0.03, 0.01), "FOG": (1.0, 0.95, 0.85), "WORK": (1.0, 0.98, 0.95), "PLATE": (1.0, 0.98, 0.95),
+                "FOG_REAR": (1.0, 0.03, 0.01)}
 LIVERIES = {   # game material variants of MI_Ext_Paint (linear colours, same as the A4 render materials)
     "white": {"_PaintColor": [0.78, 0.785, 0.78], "_PaintRoughness": 0.32, "_PaintMetallic": 0.0, "_ClearCoat": 1.0,
               "_DecalColor": [0.10, 0.104, 0.11], "_DecalMetallic": 1.0, "_DecalRoughness": 0.30,
@@ -113,7 +116,7 @@ LOD2_DROP = LOD1_DROP + ("coil", "damper_", "brake_chamber", "caliper_", "tie_ro
                          "marker_front_led", "catwalk_grab", "coupling_panel",
                          "exhaust_flex", "exhaust_clamp", "exhaust_stay_arm", "proj_bezel", "pos_gasket",
                          "marker_front_gasket", "side_repeater_base", "lane_dash", "proj_shroud", "hb_led", "roof_hatch_glass",
-                         "skirt_swage", "skirt_vent", "skirt_flange", "skirt_gap")
+                         "skirt_swage", "skirt_vent", "skirt_flange", "skirt_gap", "side_reflex")
 LOD3_KEEP = ("cab_shell", "door_shell_", "door_skirt", "side_glass", "windscreen", "lower_fairing", "arch_flare",
              "side_fairing", "side_extender", "rear_guard", "fuel_tank", "adblue_tank", "battery_box", "eats_box",
              "frame_rail", "fifth_plate", "lamp_lens", "lamp_back", "drl_", "indicator_", "rear_lens", "marker_",
@@ -457,6 +460,8 @@ def light_group(pname, mname, x):
         return "MARKER_FRONT"
     if pname.startswith(("indicator_", "side_repeater")) or (pname.startswith("rear_lens") and mname == "lens_amber"):
         return "IND_L" if x < 0 else "IND_R"
+    if pname.startswith("rear_fog_lens"):
+        return "FOG_REAR"
     if pname.startswith("rear_lens"):
         return "TAIL_BRAKE" if mname == "lens_red" else "REVERSE" if mname == "lens_clear" else "NONE"
     if pname.startswith("marker_front_led"):
