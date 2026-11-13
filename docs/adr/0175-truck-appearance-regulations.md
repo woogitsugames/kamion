@@ -105,3 +105,22 @@ sama liczba wywołań rysowania i tekstur; pomiar należy do lidera).
   Skutek dla dowodu: render pokazuje, **które sekcje** świecą (grupa 14 osobno od cofania), ale nie ich barwę.
 - Scena `DrivingLab`, `DrivingLab_Meshes.asset` i prefaby `*_Graybox` zmieniają się przy każdym `build-lab.ps1`
   (przetasowanie fileID) — nie należą do tej zmiany i zostały przywrócone do stanu z bazy.
+## Uzupełnienie s18 — P0 Low (kontur/tablica naczepy) i odblaski (recenzja s17)
+
+- **Przyczyna P0 Low:** tier Low renderuje zawsze LOD2 (manifest naczepy, `tiers.Low = "LOD2 + Low textures"`), a
+  `LOD2_DROP` w `trailer_export.py` wycinał `contour_rear`, `tri_reflector` (oraz po 0175 `contour_corner`,
+  `side_marker_reflex`, `front_reflex`; `side_reflector` od początku). **Nie regresja 0175:** w bazie `3a60019ff` te same
+  wpisy; pomiar FBX w Blenderze (ściany w strefach słupków / nagłówka / progu konturu i tablicy) — baza LOD2 = LOD2 po
+  0175, kontur tyłu nieobecny w obu. Ciemnobordowe „kreski” na Low to pozostałości wypieczone w atlasie, nie taśma.
+- **Naprawa (ta gałąź):** `REGS_KEEP` w `trailer_export.py` — kontur tyłu i narożniki (R48 6.21 / R104), trójkąty
+  (R3 kl. III), odblaski boczne/przednie, tablica + uchwyt + tablice R70 nie są wycinane ani decymowane na żadnym LOD;
+  asercja w generatorze pilnuje, że żaden wpis `LOD2_DROP` ich nie łapie. Ciągnik: `side_reflex` wraca do LOD2 (24 tr.).
+  Budżet po: naczepa LOD2 7 847 / 8 000 (decymacja oddaje resztę), ciągnik LOD2 17 812 / 17 900; `check_export` PASS.
+- **Grupa 15 = `REFLEX`** (`a6_export.LIGHT_GROUPS`, wspólna z naczepą): odblaski `side_reflex_*`, `rear_reflex_*`,
+  `side_reflex_rear_*`, `side_marker_reflex_*`, `front_reflex_*`, `tri_reflector_*`, `side_reflector_*` i taśmy
+  `contour_*`. Maska emisji uv2.y = 0 zawsze, `TruckLights` nie zapisuje id 15 (piksel 15 tekstury stanu zostaje czarny):
+  odblask nigdy nie świeci sam. Wcześniej miały grupę NONE (też bez emisji) — zmiana nie zmienia obrazu, tylko oznacza
+  ściany pod przyszły człon retrorefleksji w shaderze (poza zakresem: shader `TruckExterior` należy do 0178).
+  Pomiar FBX: naczepa 984 ściany z id 15 na LOD0 i tyle samo na LOD2, 0 z maską > 0.
+- Białe kwadraty na boku ciągnika o zmierzchu (recenzja P1) to lampy obrysowe boczne `side_marker_*` (MARKER_SIDE),
+  przesterowane do bieli jak wszystkie lampy — zadanie 0178, nie odblaski.
