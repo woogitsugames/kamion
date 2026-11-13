@@ -48,7 +48,8 @@ HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.
 # leaves_shrub); the only new texture is leaves_spruce.png (streetscape/leaf_textures.py spruce_spray).
 NEW_SPECIES = ("spruce", "pineyoung", "birchyoung", "floor")
 NVAR = {"spruce": 3, "pineyoung": 2, "birchyoung": 2, "floor": 2}       # others: 3
-IMP_SCALE = {"pineyoung": 0.5, "birchyoung": 0.5}    # impostor views of the small trees at half resolution
+IMP_SCALE = {"pineyoung": 0.5}    # impostor views of the pine thicket at half resolution (a filled cone; the airy
+# young birch at half resolution left the trim polygon of ImpostorTrim over 60 % of the frame)
 NO_IMPOSTOR = ("floor",)
 BARK = {"pine": ["bark_pine_lower", "bark_pine"], "birch": ["bark_birch"], "alder": ["bark_alder"],
         "maple": ["bark_maple"], "linden": ["bark_linden"], "shrub": ["bark_shrub"]}
