@@ -192,6 +192,14 @@ def main() -> None:
         x = norm_peak(fn(), False)
         write_sfx(name + "_cab", limit(sl.cab_filter(x, False, "dash")), False, "cab", "relay")
         write_sfx(name, limit(sl.cab_filter(x, False, "relay_ext")), False, "ext", "relay")
+    # ADR 0176: retarder (tone + flow, driven by shaft rpm and dissipated power), engine-brake engage/release,
+    # AMT shift phases, air-dryer blow-down v2. No free recording covers these (review P5); synthesised.
+    import synth0176 as s76
+    for name, (fn, is_loop, prof) in s76.LAYERS.items():
+        x = norm_peak(fn(), is_loop)
+        grp = "pneumatics" if prof == "pneu" else "mech"
+        write_sfx(name, x, is_loop, "ext", grp)
+        write_sfx(s76.cab_name(name, is_loop), limit(sl.cab_filter(x, is_loop, prof)), is_loop, "cab", grp)
 
     if not args.no_previews:
         for n_ in ("tyre_concrete_loop", "tyre_cobbles_loop", "tyre_squeal_loop", "retarder_loop", "compressor_loop"):

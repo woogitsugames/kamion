@@ -2,6 +2,9 @@
 
 Sources (priority order; a higher source wins where polygons overlap):
   1. authored overrides `paved_areas` (Data/Regions/<id>/overrides.yaml) - polygons the data does not describe
+     (`kind: paved_area`, `polygon_epsg2180`). `kind: unpaved_area` (ADR 0161, region-local `polygon_en`) is the
+     opposite: ground that the data paves but the orthophoto shows as lawn - nothing of any source is laid inside
+     it, the terrain (grass) stays. An unpaved_area that removes nothing is reported stale.
   2. loading-dock aprons generated in front of dock doors (streetscape.buildings)
   3. OSM amenity=parking / area:highway with a `surface` tag
   4. BDOT10k OT_PTPL_A plac (MATERIALNAWIERZCHNI) and OT_KUKO_A parking / fuel station
@@ -90,10 +93,21 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
         cand.append((f"bdot:{f['id']}", ln.buffer(w / 2, cap_style="flat", join_style="mitre", mitre_limit=2.0),
                      mat, "bdot10k_SKRP", False))
     taken = shapely.union_all([roads_poly.buffer(0.02), buildings_poly]) if buildings_poly is not None else roads_poly
+    # ADR 0161: authored lawns. Authored paved areas keep their priority over them (an authored footway may cross
+    # an authored lawn); every data source (docks, OSM, BDOT10k) is cut by them.
+    unpaved = [(o["id"], shapely.make_valid(Polygon(np.asarray(o["polygon_en"], float) if "polygon_en" in o
+                                                    else np.asarray(o["polygon_epsg2180"], float) - origin)))
+               for o in overrides if o.get("kind") == "unpaved_area"]
+    lawn = shapely.union_all([p for _, p in unpaved]) if unpaved else None
+    removed = {cid: 0.0 for cid, _ in unpaved}
     out = []
     for cid, poly, mat, srcname, is_parking in cand:
         poly = shapely.make_valid(poly)
         g = poly.difference(taken)
+        if lawn is not None and srcname != "authored_override":
+            for uid, up in unpaved:
+                removed[uid] += g.intersection(up).area
+            g = g.difference(lawn)
         g = g.buffer(-0.05).buffer(0.05)           # drop slivers
         g = _trim_spikes(g)
         parts = [p for p in getattr(g, "geoms", [g]) if p.geom_type == "Polygon" and p.area > 3.0]
@@ -109,6 +123,9 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
         report.setdefault(srcname, [0, 0.0])
         report[srcname][0] += 1 if kept else 0
         report[srcname][1] = round(report[srcname][1] + kept, 1)
+    if unpaved:
+        report["unpaved_area"] = {uid: round(a, 1) for uid, a in removed.items()}
+        report["unpaved_area_stale"] = sorted(uid for uid, a in removed.items() if a < 1.0)
     return out
 
 

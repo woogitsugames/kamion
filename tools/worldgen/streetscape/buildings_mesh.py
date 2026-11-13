@@ -860,6 +860,8 @@ def load(fc, origin, overrides, hero=None):
             o = ovr.get(f["id"], {})
             if hero and f["id"] in hero:      # replaced by an authored asset (streetscape.hero_building)
                 o = {**o, "hero_asset": hero[f["id"]]}
+            if o.get("height_m"):             # ADR 0167: authored height (structures with no LoD1 / BDOT height)
+                p = {**p, "height_m": float(o["height_m"])}
             out.append({"id": bid, "poly": pl, "props": p, "ovr": o, "typ": "roof" if p.get("is_roof_only") else
                         classify(p, pl.area, o)})
     return out

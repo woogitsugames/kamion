@@ -114,7 +114,7 @@ namespace Game.World.Import
             else if (proto.StartsWith("sign_gantry_") || proto.StartsWith("sign_cantilever_")) e = new[] { 100f, 800f };
             else if (proto.StartsWith("board_OB_")) e = new[] { 50f, 800f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
-            else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
+            else if (proto.StartsWith("bus_shelter") || proto.EndsWith("_gate")) e = new[] { 60f, 300f };   // ADR 0162: BKM variants
             // Hero landmark assets (ADR 0067 viaduct, ADR 0070 fire station, ADR 0071 depot; art-source/world/landmarks):
             // LOD0 / LOD1 / silhouette, never culled. One line per asset family, most specific prefix first.
             else if (proto.StartsWith("landmark_depot")) e = new[] { 100f, 400f, 20000f };
@@ -140,7 +140,8 @@ namespace Game.World.Import
         public static WorldInstanceSet Build(RegionImporter.Result r, List<string> instanceFiles, out Colliders colliders)
         {
             string art = Path.Combine(EditorTools.RepoRoot, "art-source", "world");
-            var props = GlbReader.Load(Path.Combine(art, "props", "street_props.glb"));
+            var props = GlbReader.Load(WorldLibrary.Resolve(r.Region, "props", "street_props.glb"));   // ADR 0174: per-region library
+            Debug.Log($"[IMPORT] street library: {(WorldLibrary.HasRegionProps(r.Region) ? "region " + r.Region : "shared art-source")} ({WorldLibrary.Resolve(r.Region, "props", "street_props.glb")})");
             var trees = GlbReader.Load(Path.Combine(art, "vegetation", "trees.glb"));
             var impostors = GlbReader.Load(Path.Combine(art, "vegetation", "trees_lod2.glb"));
             // Authored landmark assets (ADR 0067 / 0070 / 0071): art-source/world/landmarks/<asset>/<asset>.glb,
@@ -582,7 +583,7 @@ namespace Game.World.Import
             string art = Path.Combine(EditorTools.RepoRoot, "art-source", "world");
             string png = null;
             bool sign = name.StartsWith("sign_");
-            if (sign) png = Path.Combine(art, "signs", name.Substring(5) + ".png");
+            if (sign) png = WorldLibrary.Resolve(r.Region, "signs", name.Substring(5) + ".png");
             else if (info?.BaseColorImageName != null) png = Path.Combine(art, "vegetation", info.BaseColorImageName + ".png");
             Texture2D tex = null;
             if (png != null)

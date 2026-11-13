@@ -21,7 +21,8 @@ Linear meshes (layer 'furniture' + 'collision'):
                ground falls > GUARDRAIL_EMBANKMENT_H within 4 m of the shoulder.
   noise walls  BDOT10k OT_OIKM_L ekran akustyczny + OSM wall=noise_barrier (ADR 0069): dark absorbing cassettes on a
                concrete plinth, or (authored zones from Mapillary photos) a cassette band with clear panels above.
-  walls        BDOT10k OT_BUUO_L ściana oporowa / OSM retaining_wall + pedestrian railing (U-12a) on top.
+  walls        BDOT10k OT_BUUO_L ściana oporowa / OSM retaining_wall + a galvanised two-rail balustrade on top (not
+               the yellow U-12a road panel of the ZDM standard: that one only where data shows it, ADR 0162).
   wires        BDOT10k OT_SULN_L power lines between the poles (catenary sag).
 """
 
@@ -41,6 +42,7 @@ from roads.geom import dp_keep
 from roads.meshing import bridge_cap_w, bridge_style
 
 from . import facade_atlas as FA
+from . import props as PP
 
 # ADR 0102: contact follows the pole axis rather than the lowest point around the footing. Keep collision/terrain
 # level selection: overlapping elevated ribbons and small visual holes must not move poles between road levels.
@@ -263,6 +265,8 @@ def clear_carriageway(pl, carriage, zsurf, report):
         base = [it for it in items if it["p"].startswith(GROUND_PROPS)]
         if not base or not inner.contains(Point(e, n)):
             continue
+        if (e, n) in getattr(pl, "on_authored_island", ()):
+            continue        # ADR 0161: a pole authored onto a kerbed island (the island lies ON the carriageway footprint)
         q = nearest_points(carriage.boundary, Point(e, n))[0]
         v = np.array([q.x - e, q.y - n])
         L = float(np.hypot(*v))
@@ -875,6 +879,27 @@ def signals(pl, net, juncs, report):
 
 
 # ------------------------------------------------------------------------------------------- misc points
+# ADR 0162: BKM shelter lengths in the proportion of the 2020 order (research G5, Zał. 8: 80 shelters = 44 of 3
+# modules, 29 of 2, 7 of 4 -> 55 / 36 / 9 %, SOURCED; which stop has which length is not in the data: a stable hash of
+# the stop position picks it). The older graphite shelters (G5-020, Commons, ul. Lipowa): share WORKING_VALUE.
+SHELTER_LENGTH_SHARE = (("bus_shelter", 44), ("bus_shelter_5m", 29), ("bus_shelter_9m", 7))
+SHELTER_BLACK_SHARE = 0.15
+
+
+def shelter_variant(q):
+    """Prototype of the shelter at stop position q (region-local E, N): deterministic, survives a re-import."""
+    key = f"{float(q[0]):.0f},{float(q[1]):.0f}"
+    if _h(key + ":black") % 1000 < SHELTER_BLACK_SHARE * 1000:
+        return "bus_shelter_black"
+    total = sum(w for _, w in SHELTER_LENGTH_SHARE)
+    u = _h(key + ":len") % total
+    for name, w in SHELTER_LENGTH_SHARE:
+        if u < w:
+            return name
+        u -= w
+    return "bus_shelter"
+
+
 def misc_points(pl, net, src, origin, report, codes):
     cnt = {}
     # JSON-safe source metadata only. Actual road/whole-footprint validation happens before decal emission.
@@ -901,13 +926,14 @@ def misc_points(pl, net, src, origin, report, codes):
         hw = float(c.hw_at(s))
         t, nn = c.line.frame(s)
         p = c.line.offset_point(s, sgn * (hw + max(ext, 2.2) + 1.0))
-        pl.add("bus_shelter", p, yaw_of(-nn * sgn), src="bus_stop")
-        pb = c.line.offset_point(s + (2.9 if hash(round(float(s), 1)) % 2 else -2.9), sgn * (hw + max(ext, 2.2) + 0.4))
+        proto = shelter_variant(q)
+        pl.add(proto, p, yaw_of(-nn * sgn), src="bus_stop")
+        cnt[proto] = cnt.get(proto, 0) + 1
+        half = PP.SHELTER_MODULES.get(proto, 3) * PP.SHELTER_MODULE_M / 2 + PP.SHELTER_SIDE_OVERHANG_M
+        pb = c.line.offset_point(s + (half + 0.6) * (1 if _h(f"{q[0]:.1f},{q[1]:.1f}:bin") % 2 else -1),
+                                 sgn * (hw + max(ext, 2.2) + 0.4))
         pl.add("waste_bin", pb, yaw_of(-nn * sgn), src="bus_stop:bin")
-        dn = -1 if side == "L" else 1          # traffic on this side travels +s on the right side
-        ps = c.line.offset_point(s + dn * 4.0, sgn * (hw + S.KERB_TOP_W + 0.6))
-        sign_assembly(pl, ps, -t * dn, ["D-15"], "bus_stop", sidewalk=True)
-        codes.add("D-15")
+        # ADR 0162: the D-15 stands on the shelter's own rack (BKM zał. 07c, props.bus_shelter_bkm), no extra post
         cnt["bus_stop"] = cnt.get("bus_stop", 0) + 1
     for nd in src["osm"]["nodes"]:
         t = nd["tags"]
@@ -2671,7 +2697,8 @@ def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
             hang = [(sx * PR.PYLON_ARM_L, za - PR.PYLON_INSULATOR_M) for za in PR.PYLON_ARM_Z for sx in (-1.0, 1.0)]
             hang.append((0.0, 32.0))
         else:
-            hang = [(o, 11.7) for o in (-0.8, 0.0, 0.8)]
+            # ADR 0162: from the one pole height (standards.GROUND_PROP_H, props.power_pole insulator tops at H - 0.15)
+            hang = [(o, S.GROUND_PROP_H["power_pole"] - 0.3) for o in (-0.8, 0.0, 0.8)]
         h = max(z for _, z in hang)
         for a, b in zip(P, P[1:]):
             L = float(np.hypot(*(b - a)))

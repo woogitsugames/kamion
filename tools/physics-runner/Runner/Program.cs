@@ -39,6 +39,9 @@ namespace PhysicsRunner
                 else if (args[i] == "--update-golden") updateGolden = true;
                 else if (args[i] == "--bench") bench = true;
                 else if (args[i] == "--robustness") robustness = true;
+                // ADR 0165: chassis-ground contact spring-damper sweep (defaults are the WORKING_VALUEs in BodyGroundContact).
+                else if (args[i] == "--body-hz" && i + 1 < args.Length) BodyGroundContact.DefaultHertz = double.Parse(args[++i], CultureInfo.InvariantCulture);
+                else if (args[i] == "--body-zeta" && i + 1 < args.Length) BodyGroundContact.DefaultDampingRatio = double.Parse(args[++i], CultureInfo.InvariantCulture);
             }
             if (bench) { Bench(); return 0; }
             if (robustness)

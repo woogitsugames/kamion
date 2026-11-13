@@ -1,0 +1,614 @@
+{
+ "badanie": "P12 — Dojlidy/Krywlany (D60): obiekty charakterystyczne, typologia, wyposażenie, generatory",
+ "data": "2026-11-13",
+ "metoda": "losowanie warstwowe 20% wierszy manifest.csv (kategorie: landmark/typologia/wyposażenie/generator_ruchu), python random.Random(SEED).sample; kontrola programowa pozycji (vs data/*.json), wysokości (vs GUGiK LoD1 data/matched-with-roads.json lub jawne UNVERIFIED), koloru (vs data/landmark-colors.json — próbki ortofoto) i licencji (komercyjne: ODbL, GUGiK otwarte dane, CC BY-SA, dokument urzędowy jako referencja)",
+ "seed": 20261113,
+ "populacja": {
+  "landmark": 39,
+  "typologia": 6,
+  "wyposażenie": 33,
+  "generator_ruchu": 17
+ },
+ "wylosowano": {
+  "landmark": 8,
+  "typologia": 1,
+  "wyposażenie": 7,
+  "generator_ruchu": 3
+ },
+ "razem_wylosowano": 19,
+ "razem_populacja": 95,
+ "wiersze_z_uwaga": 0,
+ "kontrole": [
+  {
+   "id": "P12-012",
+   "kategoria": "landmark",
+   "nazwa": "Inkubator Technologiczny Białostockiego Parku Naukowo-Technologicznego",
+   "status_w_manifeście": "SOURCED",
+   "kontrola": {
+    "pozycja": {
+     "oczekiwane": [
+      53.106874,
+      23.193275
+     ],
+     "w_manifestcie": [
+      "53.106874",
+      "23.193275"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "18.09",
+     "weryfikacja": "zgodna z GUGiK LoD1 measuredHeight=18.09",
+     "wynik": "OK"
+    },
+    "kolor": {
+     "weryfikacja": "próbka ortofoto: srebrno-szara (ocynk) (RGB [136, 146, 154]) — metoda: mediana RGB w dysku r<=8 m",
+     "wynik": "OK"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / GUGiK — otwarte dane (PZGiK; ortofoto WMS StandardResolution)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-002",
+   "kategoria": "landmark",
+   "nazwa": "Pas startowy trawiasty 09L/27R lotniska Krywlany (860 m)",
+   "status_w_manifeście": "SOURCED",
+   "kontrola": {
+    "pozycja": {
+     "oczekiwane": [
+      53.102241,
+      23.171011
+     ],
+     "w_manifestcie": [
+      "53.102241",
+      "23.171011"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "0",
+     "weryfikacja": "brak wysokości = jawnie UNVERIFIED/nawierzchnia (zgodnie z zasadą źródło-albo-UNVERIFIED)",
+     "wynik": "OK"
+    },
+    "kolor": {
+     "weryfikacja": "brak próbki ortofoto (płaszczyzna/maszt) — kolor jawnie UNVERIFIED",
+     "wynik": "OK"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / GUGiK — otwarte dane (PZGiK; ortofoto WMS StandardResolution)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-009",
+   "kategoria": "landmark",
+   "nazwa": "Hala Masterpress (druk przemysłowy)",
+   "status_w_manifeście": "SOURCED",
+   "kontrola": {
+    "pozycja": {
+     "oczekiwane": [
+      53.105609,
+      23.191144
+     ],
+     "w_manifestcie": [
+      "53.105609",
+      "23.191144"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "12.17",
+     "weryfikacja": "zgodna z GUGiK LoD1 measuredHeight=12.17",
+     "wynik": "OK"
+    },
+    "kolor": {
+     "weryfikacja": "próbka ortofoto: jasnoszara (RGB [161, 170, 173]) — metoda: mediana RGB w dysku r<=8 m",
+     "wynik": "OK"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / GUGiK — otwarte dane (PZGiK; ortofoto WMS StandardResolution)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-024",
+   "kategoria": "landmark",
+   "nazwa": "Dom zakonny Sióstr Służek bezhabitowych (Konstantego Ciołkowskiego 11/1)",
+   "status_w_manifeście": "SOURCED",
+   "kontrola": {
+    "pozycja": {
+     "oczekiwane": [
+      53.114142,
+      23.177087
+     ],
+     "w_manifestcie": [
+      "53.114142",
+      "23.177087"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "11.64",
+     "weryfikacja": "zgodna z GUGiK LoD1 measuredHeight=11.64",
+     "wynik": "OK"
+    },
+    "kolor": {
+     "weryfikacja": "próbka ortofoto: czerwonorudawa (rozbielona dachówka) (RGB [170, 153, 150]) — metoda: mediana RGB w dysku r<=8 m",
+     "wynik": "OK"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / GUGiK — otwarte dane (PZGiK; ortofoto WMS StandardResolution)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-001",
+   "kategoria": "landmark",
+   "nazwa": "Pas startowy asfaltowy 09R/27L lotniska Białystok-Krywlany (1350 x 30 m, ele 155 m n.p.m.)",
+   "status_w_manifeście": "SOURCED",
+   "kontrola": {
+    "pozycja": {
+     "oczekiwane": [
+      53.100906,
+      23.173246
+     ],
+     "w_manifestcie": [
+      "53.100906",
+      "23.173246"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "0",
+     "weryfikacja": "brak wysokości = jawnie UNVERIFIED/nawierzchnia (zgodnie z zasadą źródło-albo-UNVERIFIED)",
+     "wynik": "OK"
+    },
+    "kolor": {
+     "weryfikacja": "brak próbki ortofoto (płaszczyzna/maszt) — kolor jawnie UNVERIFIED",
+     "wynik": "OK"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / GUGiK — otwarte dane (PZGiK; ortofoto WMS StandardResolution)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-030",
+   "kategoria": "landmark",
+   "nazwa": "Maszty telekomunikacyjne (2 szt.) — przy Zwierzynieckiej i w strefie Żurawia",
+   "status_w_manifeście": "UNVERIFIED",
+   "kontrola": {
+    "pozycja": {
+     "oczekiwane": [
+      53.115871,
+      23.177037
+     ],
+     "w_manifestcie": [
+      "53.115871",
+      "23.177037"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "UNVERIFIED",
+     "weryfikacja": "brak wysokości = jawnie UNVERIFIED/nawierzchnia (zgodnie z zasadą źródło-albo-UNVERIFIED)",
+     "wynik": "OK"
+    },
+    "kolor": {
+     "weryfikacja": "brak próbki ortofoto (płaszczyzna/maszt) — kolor jawnie UNVERIFIED",
+     "wynik": "OK"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / GUGiK — otwarte dane (PZGiK; ortofoto WMS StandardResolution)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-005",
+   "kategoria": "landmark",
+   "nazwa": "Silo/wieża przy płycie lotniska",
+   "status_w_manifeście": "UNVERIFIED",
+   "kontrola": {
+    "pozycja": {
+     "oczekiwane": [
+      53.104809,
+      23.170474
+     ],
+     "w_manifestcie": [
+      "53.104809",
+      "23.170474"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "UNVERIFIED",
+     "weryfikacja": "brak wysokości = jawnie UNVERIFIED/nawierzchnia (zgodnie z zasadą źródło-albo-UNVERIFIED)",
+     "wynik": "OK"
+    },
+    "kolor": {
+     "weryfikacja": "próbka ortofoto: jasna/biała (RGB [240, 239, 229]) — metoda: mediana RGB w dysku r<=8 m",
+     "wynik": "OK"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / GUGiK — otwarte dane (PZGiK; ortofoto WMS StandardResolution)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-037",
+   "kategoria": "landmark",
+   "nazwa": "Kościół pw. Niepokalanego Serca Maryi w Dojlidach (poza kaflem, ~0,9 km)",
+   "status_w_manifeście": "UNVERIFIED",
+   "kontrola": {
+    "pozycja": {
+     "oczekiwane": [
+      53.110592,
+      23.209624
+     ],
+     "w_manifestcie": [
+      "53.110592",
+      "23.209624"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "UNVERIFIED",
+     "weryfikacja": "brak wysokości = jawnie UNVERIFIED/nawierzchnia (zgodnie z zasadą źródło-albo-UNVERIFIED)",
+     "wynik": "OK"
+    },
+    "kolor": {
+     "weryfikacja": "próbka ortofoto: szara (RGB [101, 114, 121]) — metoda: mediana RGB w dysku r<=8 m",
+     "wynik": "OK"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / GUGiK — otwarte dane (PZGiK; ortofoto WMS StandardResolution)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-040",
+   "kategoria": "typologia",
+   "nazwa": "Budynki handlowo-usługowe — 29 z 911 budynków bufora = 3.2%",
+   "status_w_manifeście": "ESTIMATED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.107162",
+      "23.179805"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "4.49",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "dachy: szara 37.8%, grafitowa/ciemnoszara 10.8%, srebrno-szara (ocynk) 10.8%, ja",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "GUGiK — otwarte dane (PZGiK; ortofoto WMS StandardResolution) / ODbL 1.0 (c) OpenStreetMap contributors",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-049",
+   "kategoria": "wyposażenie",
+   "nazwa": "Przystanek Mickiewicza/Ogródki Działkowe NŻ — słupek (bez wiaty)",
+   "status_w_manifeście": "SOURCED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.100103",
+      "23.188564"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "n/d (słupek)",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "UNVERIFIED",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / Radio Białystok (informacja — tylko referencja)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-071",
+   "kategoria": "wyposażenie",
+   "nazwa": "Bollardy stałe (grupa 4 szt.) — zatoka przy Żurawia/Wiewiórcza",
+   "status_w_manifeście": "ESTIMATED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.110358",
+      "23.189936"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "UNVERIFIED (typowo 0,7–1,0 m — nie pomierzono)",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "UNVERIFIED",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-047",
+   "kategoria": "wyposażenie",
+   "nazwa": "Przystanek Ciołkowskiego/Śląska NŻ — wiata",
+   "status_w_manifeście": "UNVERIFIED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.114419",
+      "23.179406"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "UNVERIFIED",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "stare: czerwona ramka + szkło; nowe (od 2026): antracyt — UNVERIFIED dla tego pr",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / Radio Białystok (informacja — tylko referencja)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-063",
+   "kategoria": "wyposażenie",
+   "nazwa": "Przystanek Mickiewicza/Wiewiórcza NŻ — wiata",
+   "status_w_manifeście": "UNVERIFIED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.111537",
+      "23.180688"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "UNVERIFIED",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "stare: czerwona ramka + szkło; nowe (od 2026): antracyt — UNVERIFIED dla tego pr",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / Radio Białystok (informacja — tylko referencja)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-078",
+   "kategoria": "wyposażenie",
+   "nazwa": "Tablice drogowe na wlocie: skrzyżowanie Ciołkowskiego/Dywizjonu 303 — nowe tablice kierunk",
+   "status_w_manifeście": "UNVERIFIED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.113261",
+      "23.175357"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "n/d (tablice na wjeździe)",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "UNVERIFIED (tablice kierunkowe błękitne/czarne wg wzoru — do potwierdzenia zdjęc",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "Dokument/komunikat urzędowy (UM Białystok) — tylko referencja",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-065",
+   "kategoria": "wyposażenie",
+   "nazwa": "Przystanek Mickiewicza/Ciołkowskiego NŻ — wiata",
+   "status_w_manifeście": "UNVERIFIED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.113709",
+      "23.178617"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "UNVERIFIED",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "stare: czerwona ramka + szkło; nowe (od 2026): antracyt — UNVERIFIED dla tego pr",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / Radio Białystok (informacja — tylko referencja)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-055",
+   "kategoria": "wyposażenie",
+   "nazwa": "Przystanek Wiewiórcza/Szpacza NŻ — słupek (bez wiaty)",
+   "status_w_manifeście": "SOURCED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.109867",
+      "23.194736"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "n/d (słupek)",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "UNVERIFIED",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / Radio Białystok (informacja — tylko referencja)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-080",
+   "kategoria": "generator_ruchu",
+   "nazwa": "Centrum logistyczno-produkcyjne KAN (magazyn 28 212 m2) — magazyn logistyczny — produkcja ",
+   "status_w_manifeście": "SOURCED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.103498",
+      "23.190006"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "15.05",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "patrz wpis landmark w sekcji landmark (dach z ortofoto GUGiK)",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / strona firmy (informacja — tylko referencja)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-089",
+   "kategoria": "generator_ruchu",
+   "nazwa": "Art-Glas (hurtownia szkła budowlanego) — hurtownia szkła — dostawy płaskiego szkła ciężaró",
+   "status_w_manifeście": "SOURCED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.110652",
+      "23.185712"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "6.31",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "patrz wpis landmark w sekcji landmark (dach z ortofoto GUGiK)",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors / strona firmy (informacja — tylko referencja)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  },
+  {
+   "id": "P12-094",
+   "kategoria": "generator_ruchu",
+   "nazwa": "Zakład produkcji przyrządów i uchwytów (BISON-BIAL, Myśliwska 13) — fabryka uchwytów tokar",
+   "status_w_manifeście": "UNVERIFIED",
+   "kontrola": {
+    "pozycja": {
+     "wartość": [
+      "53.103528",
+      "23.197561"
+     ],
+     "wynik": "OK"
+    },
+    "wysokość": {
+     "wartość": "UNVERIFIED",
+     "wynik": "OK — wartość lub jawne UNVERIFIED/n/d (reguła przestrzegona)"
+    },
+    "kolor": {
+     "wartość": "patrz wpis landmark w sekcji landmark (dach z ortofoto GUGiK)",
+     "wynik": "OK — wartość, jawne UNVERIFIED lub odsyłacz do wpisu landmark (reguła przestrzegana)"
+    },
+    "licencja": {
+     "wartość": "ODbL 1.0 (c) OpenStreetMap contributors/ strona firmy (informacja — tylko referencja)",
+     "komercyjna": true,
+     "wynik": "OK"
+    }
+   },
+   "wynik_kontroli": "OK"
+  }
+ ]
+}
