@@ -1,8 +1,9 @@
+param([string[]]$Materials=@('M_bridge_concrete','M_road_asphalt'))
 $ErrorActionPreference='Stop'
 $root='C:\Users\matma\Documents\Claude\kamion'
 $slot=Join-Path $root 'scripts/unity-slot.ps1'
 . scripts/env.ps1
-foreach($name in @('M_bridge_concrete','M_road_asphalt')) {
+foreach($name in $Materials) {
  & pwsh $slot -Acquire -Owner gpt-s16
  try {
   if(Test-Path "$root/artifacts/locks/PHONE_RUN"){throw 'PHONE_RUN appeared'}
