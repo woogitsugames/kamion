@@ -74,3 +74,5 @@ Zapisano after/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymag
 Zapisano after/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano after/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Wszystkie360parB mają pasujące kamery. Końcowe porównanie używa dokładnychCPUtris; szczegółyCAMERAS.md/camera-counts.json. Nowe zdjęcie|przed|po24arkusze odświeżone dlaB. Dalejpełne testy i recenzja; D51fotograficzny nadalwymaga odróżnieniaodkonkretnej poprawykoron/frontów.
