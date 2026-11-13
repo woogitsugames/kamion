@@ -1,0 +1,392 @@
+{
+ "landmarks": [
+  {
+   "area_m2": 13578.3,
+   "centroid_epsg2180": [
+    780628.41,
+    590265.81
+   ],
+   "flags": [
+    "no_building_in_polygon",
+    "gate_not_in_graph"
+   ],
+   "gate": {
+    "access": null,
+    "barrier": "gate",
+    "epsg2180": [
+     780583.93,
+     590206.15
+    ],
+    "in_graph": false,
+    "in_tile": true,
+    "node": 6596800253,
+    "version": 2
+   },
+   "id": "L1-rosti",
+   "in_tile_fraction": 1.0,
+   "kind": "factory (truck target)",
+   "name": "Rosti, Myśliwska 18",
+   "osm": {
+    "tags": {
+     "addr:housenumber": "18",
+     "addr:street": "Myśliwska",
+     "building": "industrial",
+     "man_made": "works",
+     "name": "Rosti Poland"
+    },
+    "version": 9,
+    "way": 252332077
+   },
+   "our_buildings": {
+    "area_m2": 0,
+    "count": 0,
+    "height_m_range": null,
+    "height_sources": [],
+    "ids": []
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G03.jpg (GUGiK orto 10 cm, gate)"
+   ],
+   "source_research": "P6-K04, P6-R03, P6-G03",
+   "status": "check"
+  },
+  {
+   "area_m2": 28212.4,
+   "centroid_epsg2180": [
+    780412.94,
+    590320.62
+   ],
+   "flags": [
+    "gate_not_in_graph"
+   ],
+   "gate": {
+    "access": "customers",
+    "barrier": "lift_gate",
+    "epsg2180": [
+     780366.06,
+     590222.77
+    ],
+    "in_graph": false,
+    "in_tile": true,
+    "node": 4656499172,
+    "version": 4
+   },
+   "id": "L2-kan",
+   "in_tile_fraction": 1.0,
+   "kind": "factory (truck target)",
+   "name": "KAN, Karpińskiego 5",
+   "osm": {
+    "tags": {
+     "addr:housenumber": "5",
+     "addr:street": "Franciszka Karpińskiego",
+     "building": "industrial",
+     "man_made": "works",
+     "name": "KAN - Centrum Logistyczno Produkcyjne - magazyn"
+    },
+    "version": 6,
+    "way": 471492581
+   },
+   "our_buildings": {
+    "area_m2": 28208.1,
+    "count": 5,
+    "height_m_range": [
+     6.0,
+     15.05
+    ],
+    "height_sources": [
+     "default",
+     "gugik_lod1_2024"
+    ],
+    "ids": [
+     "bdot:2058ad2f-0396-4582-8b60-51fb1ac011be",
+     "bdot:ed09f832-a823-11ef-b5aa-1866da21c735",
+     "bdot:ed0a1f40-a823-11ef-be46-1866da21c735",
+     "bdot:ed0a1f42-a823-11ef-9155-1866da21c735",
+     "bdot:ed0a464f-a823-11ef-84ff-1866da21c735"
+    ]
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G04.jpg (GUGiK orto 10 cm, gate)"
+   ],
+   "source_research": "P6-K04, P6-R04, P6-G04",
+   "status": "check"
+  },
+  {
+   "area_m2": 9439.1,
+   "centroid_epsg2180": [
+    780881.61,
+    590338.46
+   ],
+   "flags": [],
+   "id": "L3-odlewnia",
+   "in_tile_fraction": 1.0,
+   "kind": "foundry (truck target)",
+   "name": "Odlewnia Białystok, Myśliwska 11",
+   "osm": {
+    "tags": {
+     "addr:housenumber": "11",
+     "addr:street": "Myśliwska",
+     "building": "industrial",
+     "man_made": "works",
+     "name": "Odlewnia Białystok"
+    },
+    "version": 4,
+    "way": 315456645
+   },
+   "our_buildings": {
+    "area_m2": 9499.8,
+    "count": 1,
+    "height_m_range": [
+     13.08,
+     13.08
+    ],
+    "height_sources": [
+     "gugik_lod1_2024"
+    ],
+    "ids": [
+     "bdot:2BE4B431-BAD2-1BF0-E053-CC2BA8C0D140"
+    ]
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [],
+   "source_research": "P6-C04",
+   "status": "ok"
+  },
+  {
+   "area_m2": 11173.1,
+   "centroid_epsg2180": [
+    780175.21,
+    590415.93
+   ],
+   "flags": [
+    "gate_not_in_graph"
+   ],
+   "gate": {
+    "access": null,
+    "barrier": "gate",
+    "epsg2180": [
+     780178.81,
+     590478.13
+    ],
+    "in_graph": false,
+    "in_tile": true,
+    "node": 6539179208,
+    "version": 1
+   },
+   "id": "L4-bravilor",
+   "in_tile_fraction": 1.0,
+   "kind": "factory SSSE (truck target)",
+   "name": "Bravilor Bonamat, Kuronia 2",
+   "osm": {
+    "tags": {
+     "addr:housenumber": "2",
+     "addr:street": "Jacka Kuronia",
+     "building": "industrial",
+     "man_made": "works",
+     "name": "Bravilor Bonamat"
+    },
+    "version": 4,
+    "way": 513010463
+   },
+   "our_buildings": {
+    "area_m2": 11214.5,
+    "count": 1,
+    "height_m_range": [
+     12.72,
+     12.72
+    ],
+    "height_sources": [
+     "gugik_lod1_2024"
+    ],
+    "ids": [
+     "bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"
+    ]
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G14.jpg (GUGiK orto 10 cm, gate)"
+   ],
+   "source_research": "P6-C05, P6-G14",
+   "status": "check"
+  },
+  {
+   "area_m2": 33133.4,
+   "centroid_epsg2180": [
+    779166.25,
+    590358.58
+   ],
+   "flags": [],
+   "id": "L5-pss-dc",
+   "in_tile_fraction": 1.0,
+   "kind": "distribution centre (truck target)",
+   "name": "PSS Społem DC (Wiosenna/Ciołkowskiego)",
+   "osm": {
+    "tags": {
+     "landuse": "industrial",
+     "name": "Centrum magazynowo-dystrybucyjne PSS Społem Białystok"
+    },
+    "version": 3,
+    "way": 1317072247
+   },
+   "our_buildings": {
+    "area_m2": 6380.7,
+    "count": 1,
+    "height_m_range": [
+     6.0,
+     6.0
+    ],
+    "height_sources": [
+     "default"
+    ],
+    "ids": [
+     "osm:way/1525885366"
+    ]
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [],
+   "source_research": "P6-C06",
+   "status": "ok"
+  },
+  {
+   "area_m2": 13275.2,
+   "centroid_epsg2180": [
+    780428.44,
+    590461.93
+   ],
+   "flags": [
+    "gate_not_in_graph"
+   ],
+   "gate": {
+    "access": null,
+    "barrier": "lift_gate",
+    "epsg2180": [
+     780499.1,
+     590511.55
+    ],
+    "in_graph": false,
+    "in_tile": true,
+    "node": 2999986083,
+    "version": 1
+   },
+   "id": "L6-masterpress",
+   "in_tile_fraction": 1.0,
+   "kind": "factory (UNVERIFIED target)",
+   "name": "Masterpress, Kuronia 4",
+   "osm": {
+    "tags": {
+     "addr:housenumber": "4",
+     "addr:street": "Jacka Kuronia",
+     "building": "industrial",
+     "man_made": "works",
+     "name": "Masterpress"
+    },
+    "version": 7,
+    "way": 234838499
+   },
+   "our_buildings": {
+    "area_m2": 13071.4,
+    "count": 1,
+    "height_m_range": [
+     12.17,
+     12.17
+    ],
+    "height_sources": [
+     "gugik_lod1_2024"
+    ],
+    "ids": [
+     "bdot:dc97e256-1069-4739-be73-cdb4285e3a98"
+    ]
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G11.jpg (GUGiK orto 10 cm, gate)"
+   ],
+   "source_research": "P6-K04, P6-G11",
+   "status": "check"
+  },
+  {
+   "area_m2": 12627.5,
+   "centroid_epsg2180": [
+    780870.57,
+    590254.65
+   ],
+   "flags": [],
+   "id": "L7-bison",
+   "in_tile_fraction": 1.0,
+   "kind": "factory (UNVERIFIED target)",
+   "name": "BISON",
+   "osm": {
+    "tags": {
+     "addr:housenumber": "13",
+     "addr:street": "Myśliwska",
+     "building": "industrial",
+     "man_made": "works",
+     "name": "Bison"
+    },
+    "version": 2,
+    "way": 658448323
+   },
+   "our_buildings": {
+    "area_m2": 12313.3,
+    "count": 1,
+    "height_m_range": [
+     8.37,
+     8.37
+    ],
+    "height_sources": [
+     "gugik_lod1_2024"
+    ],
+    "ids": [
+     "bdot:2BE4B431-BAD1-1BF0-E053-CC2BA8C0D140"
+    ]
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [],
+   "source_research": "P6-K04",
+   "status": "ok"
+  },
+  {
+   "area_m2": 1012258.3,
+   "centroid_epsg2180": [
+    779234.77,
+    589946.71
+   ],
+   "flags": [
+    "no_building_in_polygon"
+   ],
+   "id": "L8-krywlany",
+   "in_tile_fraction": 0.608,
+   "kind": "orientation landmark (airfield, east part)",
+   "name": "Lotnisko Białystok-Krywlany (EPBK)",
+   "osm": {
+    "tags": {
+     "aeroway": "aerodrome",
+     "name": "Lotnisko Białystok-Krywlany"
+    },
+    "version": 33,
+    "way": 234838628
+   },
+   "our_buildings": {
+    "area_m2": 0,
+    "count": 0,
+    "height_m_range": null,
+    "height_sources": [],
+    "ids": []
+   },
+   "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
+   "references": [],
+   "source_research": "P6-K03/K04",
+   "status": "check"
+  }
+ ],
+ "region": "bialystok-dojlidy",
+ "schema": "kamion/region-landmarks/1",
+ "sources": {
+  "buildings": "Data/Regions/bialystok-dojlidy/buildings.geojson",
+  "license": "ODbL 1.0, © OpenStreetMap contributors",
+  "osm_extract": "Data/raw/osm/podlaskie-261108.osm.pbf",
+  "osm_sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d"
+ }
+}
