@@ -146,7 +146,7 @@ def test_lamp_heights_door_and_grey_base():
     assert np.abs(band[0] - band[2]) < 12                       # neutral grey paint
     # one step darker than the zinc above it, but light grey: under steel_galv (colour 0.42, metal 0.9) sRGB 112
     # rendered near black (review s17-0162 P1)
-    assert 180 <= band.mean() <= above.mean() - 20
+    assert 215 <= band.mean() <= above.mean() - 8
 
 
 def test_sunk_mast_keeps_grey_band_at_real_ground():

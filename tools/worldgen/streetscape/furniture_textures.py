@@ -202,9 +202,10 @@ def _galv_grey_base(im):
     z = (1 - (np.arange(h) + 0.5) / h) * 9.0
     band = (z <= 0.30)[:, None]
     # The atlas multiplies material steel_galv (colour 0.42, metal 0.9): sRGB 112 there gave albedo ~0.07 and the band
-    # rendered near black (review s17-0162 P1). 208 -> ~0.26 albedo: a matt light-grey band one step darker than the
-    # galvanised shaft, like the light-grey columns of al. Tysiąclecia (P1-110). WORKING_VALUE.
-    grey = np.array([206.0, 208.0, 208.0])
+    # rendered near black (review s17-0162 P1); 206 still rendered dark grey (sRGB 46 vs shaft 70, r3 High probe).
+    # 232 (~0.80 lin. vs 0.90 of the zinc): a matt light-grey band only a small step darker than the galvanised
+    # shaft, like the light-grey columns of al. Tysiąclecia (P1-110, no dark foot). WORKING_VALUE.
+    grey = np.array([232.0, 233.0, 233.0])
     foot = np.clip(1 - z / 0.30, 0, 1)[:, None, None] * 0.15
     paint = grey * (1 - foot) + np.array([190.0, 182.0, 166.0]) * foot
     a = np.where(band[..., None], paint * (0.97 + 0.03 * (a / 255.0)), a)
