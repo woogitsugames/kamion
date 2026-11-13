@@ -1,0 +1,86 @@
+{
+  "audit_type": "zgodnosc opisu kadru z obrazem (photos.csv vs niezalezne wywolanie narzedzia wizji)",
+  "date": "2026-11-13",
+  "seed": "20261113-m54fix",
+  "draw_command": "random.Random(\"20261113-m54fix\").sample([40 kadrow photos.csv], 8)",
+  "population_size": 40,
+  "population_source": "photos.csv (kolumny: id, plik, odleglosc_m, azymut_kamery, co_widac, obiekt_w_kadrze)",
+  "sample_size": 8,
+  "sample_rate": "20%",
+  "sample": [
+    "putry_35224dcb",
+    "putry_3717771d",
+    "s8_25c37bd1",
+    "s8_3c44481e",
+    "s8_3e661f95",
+    "s8_671cb8f5",
+    "s8_94dd9f98",
+    "tysiac_128187d5"
+  ],
+  "protocol": "Dla kazdego wylosowanego kadru wykonano niezalezne, ponowne wywolanie narzędzia wizji (inne pytanie niz przy pierwotnej analizie: opis 1-2 zdaniami + obecność obiektu badanego + znaki + B-16). Wynik porownano z opisem w photos.csv. Rozbieznosci rozstrzygano trzecim wywolaniem docelowym.",
+  "results": [
+    {
+      "frame": "putry_35224dcb",
+      "photos_csv": "dwupasmowa jezdnia z estakada w glebi, zaparkowane auta, sygnalizacja, znaki; obiekt: tak",
+      "audit_read": "droga z dwoma pasami, wiadukt/estakada nad jezdnia, budynki, drzewa; znaki A-7, D-6, B-35; obiekt: TAK; B-16: NIE",
+      "verdict": "PASS",
+      "notes": "opis i obecnosc obiektu zgodne; B-16 nieobecny w obu odczytach"
+    },
+    {
+      "frame": "putry_3717771d",
+      "photos_csv": "jezdnia z estakada w glebi, latarnie, zielen; niebieski znak ze strzalka w lewo; obiekt: tak",
+      "audit_read": "droga z pasami, chodnik, trawnik, wiadukt/estakada nad droga; niebieski znak kierunkowy w lewo; obiekt: TAK; B-16: NIE",
+      "verdict": "PASS",
+      "notes": "opis i obecnosc obiektu zgodne"
+    },
+    {
+      "frame": "s8_25c37bd1",
+      "photos_csv": "droga ekspresowa z barierami, drzewa, latarnie; bez znakow; obiekt: nie",
+      "audit_read": "droga ekspresowa, dwa pasy, samochod, bariery, lampy, zieleń; obiekt: NIE; znaki: brak; B-16: NIE",
+      "verdict": "PASS",
+      "notes": "zgodne"
+    },
+    {
+      "frame": "s8_3c44481e",
+      "photos_csv": "droga ekspresowa z barierami i latarniami, drzewa i budynki; bez znakow; obiekt: nie",
+      "audit_read": "droga ekspresowa z samochodami, zieleń, latarnie, bariery; obiekt: NIE; znaki: brak; B-16: NIE",
+      "verdict": "PASS",
+      "notes": "zgodne"
+    },
+    {
+      "frame": "s8_3e661f95",
+      "photos_csv": "droga ekspresowa z barierami, zielen, budynek po prawej; bez znakow; obiekt: nie",
+      "audit_read": "dwujezdniowa droga o malej intensywnosci, zieleń, budynek po prawej, tablica informacyjna w oddali; obiekt: NIE; B-16: NIE",
+      "verdict": "PASS",
+      "notes": "zgodne"
+    },
+    {
+      "frame": "s8_671cb8f5",
+      "photos_csv": "jezdnia drogi ekspresowej (dwujezdniowa, bariery, pasy awaryjne), budynki i zielen; most pod kamera niewidoczny w kadrze; obiekt: tak — kamera na obiekcie",
+      "audit_read": "pusta dwujezdniowa droga, bariery, budynki i konstrukcje, latarnie; obiekt: NIE (wizualnie); B-16: NIE",
+      "verdict": "PASS",
+      "notes": "opis kadru zgodny; rozbieznosc pola obiekt_w_kadrze pozorna: wartosc 'tak — kamera na obiekcie' jest ustaleniem GEOLOKALIZACYJNYM (pozycja kadru 53.1595791/22.996764 = punkt przeciecia S8 z al. Niepodleglosci), nie wizualnym; obraz nie przeczy (mostu nie widac, bo kamera jedzie po nim)"
+    },
+    {
+      "frame": "s8_94dd9f98",
+      "photos_csv": "droga ekspresowa z barierami i zielenia; znak ostrzegawczy o zwierzetach (sarna) z tabliczka 3,3 km; obiekt: nie",
+      "audit_read": "droga ekspresowa, samochod, bariery dzwiekochlonne, dwa znaki ostrzegawcze o zwierzetach z tabliczka odleglosci (odczyt kontrolny: '1,3 km'); obiekt: NIE; B-16: NIE",
+      "verdict": "PASS",
+      "notes": "zgodne co do rodzaju znaku (zwierzeta + tabliczka odleglosci); rozbieznosc jednej cyfry na tabliczce (3,3 vs 1,3 km) — wskazana jako drobna niepewnosc odczytu, bez wplywu na wnioski"
+    },
+    {
+      "frame": "tysiac_128187d5",
+      "photos_csv_przed_korekta": "jazda po jezdni wiaduktu z barierami ochronnymi; nad jezdnia brak obiektow; obiekt: tak — kamera na obiekcie",
+      "audit_read": "droga asfaltowa z dwoma pasami ruchu, drzewa, pojazdy, latarnie; obiekt: NIE (nie widac wiaduktu ani jazdy po moscie); B-16: NIE",
+      "tie_break_read": "kontrola docelowa (3. wywolanie): zwykle chodniki/trawniki przy jezdni (nie bariery mostowe), brak torow/nasypow/przyczolkow w kadrze, dwa pasy w kazdym kierunku z podwojna linia ciagla — jazda po ZWYKLEJ jezdni, nie po obiekcie mostowym",
+      "verdict": "FAIL->CORRECTED",
+      "notes": "audyt wykryl niezgodnosc: pierwotny opis 'jazda po wiadukcie' byl bledny (2 z 3 niezaleznych odczytow: zwykla jezdnia bez mostu w kadrze); opis w photos.csv skorygowano; licznik kadrow 'kamera na obiekcie' dla Al. Tysiaclecia zmniejszono z 8 do 7; wniosek M54-008 (nic nad jezdnia, brak ograniczenia skrajni) bez zmian — kadr pozostaje obserwacja negatywna"
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "pass": 7,
+    "fail_detected_and_corrected": 1,
+    "result": "audyt wykryl 1 bledny opis (tysiac_128187d5) i skorygowano go w photos.csv; pozostale 7 kadrow zgodne z obrazem; pole obiekt_w_kadrze dla s8_671cb8f5 oparte na geolokalizacji (wyjasnione); wszystkie wywolania niezalezne (odczynne pytania), rozbieznosc rozstrzygnieta trzecim odczytem"
+  }
+}

@@ -58,6 +58,8 @@ namespace Game.Gameplay
         [Range(0f, 1f)] public float bumpVolume = 0.8f, beeperVolume = 0.45f, gearWhineVolume = 0.10f, cabHornFactor = 0.7f;
         [Tooltip("Suspension compression rate [m/s] above which a bump thump plays (WORKING_VALUE, 0.3 s cooldown).")]
         public float bumpRateThreshold = 0.45f;
+        [Header("ADR 0176: engine-brake flap events (both sets; no recording exists). WORKING_VALUE, owner listening test")]
+        [Range(0f, 1f)] public float engineBrakeEventVolume = 0.5f, cabEngineBrakeEventFactor = 0.7f;
         [Tooltip("Industrial yard ambience level (0 = off). A future zone system sets AmbientAudio.zone / zoneLevel instead.")]
         [Range(0f, 1f)] public float ambientZoneLevel = 1f;
 
@@ -65,6 +67,11 @@ namespace Game.Gameplay
         EngineAudio m_Engine;
         AudioSource m_OneShot;
         PerspectiveLoop m_Wind, m_Squeal, m_Scrub, m_Retarder, m_Compressor, m_RetarderSynth, m_RetarderEl;
+        // ADR 0176: retarder tone + flow (procedural set), driveline event detector
+        PerspectiveLoop m_RetTone, m_RetFlow;
+        DrivelineSfx m_Drive;
+        float m_RetToneGain, m_RetFlowGain;
+        bool m_EngageAlt;
         int m_PrefVersion = -1;
         readonly PerspectiveLoop[] m_Tyre = new PerspectiveLoop[LayerMath.SurfaceCount];
         readonly float[] m_SurfaceTarget = new float[LayerMath.SurfaceCount];
@@ -116,6 +123,14 @@ namespace Game.Gameplay
         public PerspectiveLoop CompressorLoop => m_Compressor;
         public PerspectiveLoop BeeperLoop => m_Beeper;
         public AmbientAudio Ambient => m_Ambient;
+        /// <summary>ADR 0176 diagnostics: retarder loops (null without the 0176 clips) and driveline event counters.</summary>
+        public PerspectiveLoop RetarderToneLoop => m_RetTone;
+        public PerspectiveLoop RetarderFlowLoop => m_RetFlow;
+        public int EngineBrakeEngageEvents { get; private set; }
+        public int EngineBrakeReleaseEvents { get; private set; }
+        public int AmtEngageEvents { get; private set; }
+        /// <summary>The ADR 0176 driveline set plays (procedural sound set with the 0176 clips imported).</summary>
+        public bool Driveline0176 => !m_El && m_Lib != null && m_Lib.HasDriveline0176;
 
         // ---- IEngineAudioState ----
         public float Rpm => vehicle != null && vehicle.Initialized ? (float)vehicle.Model.Engine.Rpm : 0f;
@@ -176,6 +191,12 @@ namespace Game.Gameplay
             m_RetarderEl = m_Lib.elRetarder.IsValid
                 ? new PerspectiveLoop(t, "RetarderEL", m_Lib.elRetarder.ext, m_Lib.elRetarder.cab, new Vector3(0f, 0.7f, wb * 0.6f), 70, 1f)
                 : null;
+            if (m_Lib.HasDriveline0176)
+            {
+                var rp = new Vector3(0f, 0.7f, wb * 0.6f); // retarder on the gearbox output
+                m_RetTone = new PerspectiveLoop(t, "RetarderTone", m_Lib.retarderTone.ext, m_Lib.retarderTone.cab, rp, 70, 1f);
+                m_RetFlow = new PerspectiveLoop(t, "RetarderFlow", m_Lib.retarderFlow.ext, m_Lib.retarderFlow.cab, rp, 72, 1f);
+            }
             m_Compressor = new PerspectiveLoop(t, "Compressor", m_Lib.compressor.ext, m_Lib.compressor.cab, new Vector3(0.5f, 0.8f, wb + 0.5f), 80, 1f);
             if (m_Lib.ambientBed.IsValid)
             {
@@ -331,7 +352,13 @@ namespace Game.Gameplay
                 {
                     // governor cut-out: alternate the loud purge and the softer 'psst' so it never repeats identically
                     m_PurgeAlt = !m_PurgeAlt;
-                    if (m_PurgeAlt && m_Lib.airDryerPurgeB != null) PlaySet(m_Lib.elAirDryerPurgeB, m_Lib.airDryerPurgeB, m_Lib.airDryerPurgeBCab, cabView, pv * 0.9f);
+                    if (Driveline0176 && m_Lib.airDryerPurgeV2.IsValid)
+                    {
+                        // ADR 0176: physical blow-down v2, two takes alternated
+                        var pp = m_PurgeAlt && m_Lib.airDryerPurgeV2B.IsValid ? m_Lib.airDryerPurgeV2B : m_Lib.airDryerPurgeV2;
+                        Play(pp.ext, pp.cab, cabView, pv * 0.85f);
+                    }
+                    else if (m_PurgeAlt && m_Lib.airDryerPurgeB != null) PlaySet(m_Lib.elAirDryerPurgeB, m_Lib.airDryerPurgeB, m_Lib.airDryerPurgeBCab, cabView, pv * 0.9f);
                     else PlaySet(m_Lib.elAirDryerPurge, m_Lib.airDryerPurge, m_Lib.airDryerPurgeCab, cabView, pv * 0.8f);
                 }
                 bool shiftStart = (amt == AmtState.ShiftTorqueRamp || amt == AmtState.ShiftNeutral) &&
@@ -341,10 +368,13 @@ namespace Game.Gameplay
                     // AMT shift cylinder; the ElevenLabs set distinguishes up (click + clunk) and down (clunk + longer exhaust)
                     bool up = m.Amt.TargetGear > m.Amt.Gear;
                     if (up) ShiftUpEvents++; else ShiftDownEvents++;
-                    PlaySet(up ? m_Lib.elGearshiftUp : m_Lib.elGearshiftDown, m_Lib.gearshiftAir, m_Lib.gearshiftAirCab, cabView, pv * 0.6f);
+                    // ADR 0176 procedural set: the shift is heard in its phases (driveline events below) instead of one sample
+                    if (!Driveline0176) PlaySet(up ? m_Lib.elGearshiftUp : m_Lib.elGearshiftDown, m_Lib.gearshiftAir, m_Lib.gearshiftAirCab, cabView, pv * 0.6f);
                 }
             }
+            else m_Drive.Reset();
             m_PrevPark = park; m_PrevCompressor = comp; m_PrevAmt = amt; m_HasPrev = true;
+            UpdateDrivelineEvents(m, cabView, pv);
 
             // ---- flasher relay (edges queued by OnFlasherEdge from the stalk's flasher) ----
             int ev = m_RelayEdge;
@@ -354,6 +384,41 @@ namespace Game.Gameplay
                 var pair = ev > 0 ? m_Lib.indicatorTick : m_Lib.indicatorTock;
                 var elp = ev > 0 ? m_Lib.elIndicatorTick : m_Lib.elIndicatorTock;
                 PlaySet(elp, pair.ext, pair.cab, cabView, relayVolume * (cabView ? 1f : extRelayFactor));
+            }
+        }
+
+        /// <summary>
+        /// ADR 0176 one-shots from <see cref="DrivelineSfx"/>: AMT phases (sleeve out, dog clutch in, clutch actuator vent) in
+        /// the procedural set; exhaust-flap engage / back-pressure release in both sets (no recording exists), the release
+        /// level following rpm and how far the flap had closed.
+        /// </summary>
+        void UpdateDrivelineEvents(VehicleModel m, bool cabView, float pv)
+        {
+            int ev = m_Drive.Step((int)m.Amt.State, (float)m.Engine.EngineBrakeState, m.EngineBrakeCommand > 0.01);
+            if (ev == 0 || !m_Lib.HasDriveline0176) return;
+            if (Driveline0176)
+            {
+                if ((ev & DrivelineSfx.AmtDisengage) != 0) Play(m_Lib.amtDisengage.ext, m_Lib.amtDisengage.cab, cabView, pv * 0.55f);
+                if ((ev & DrivelineSfx.AmtEngage) != 0)
+                {
+                    AmtEngageEvents++;
+                    m_EngageAlt = !m_EngageAlt;
+                    var e = m_EngageAlt || !m_Lib.amtEngageB.IsValid ? m_Lib.amtEngage : m_Lib.amtEngageB;
+                    Play(e.ext, e.cab, cabView, pv * 0.6f);
+                }
+                if ((ev & DrivelineSfx.AmtClutchClosed) != 0) Play(m_Lib.amtClutchChuff.ext, m_Lib.amtClutchChuff.cab, cabView, pv * 0.45f);
+            }
+            float ebv = engineBrakeEventVolume * Mathf.Lerp(1f, cabEngineBrakeEventFactor, m_Interior);
+            if ((ev & DrivelineSfx.EbrakeEngage) != 0)
+            {
+                EngineBrakeEngageEvents++;
+                Play(m_Lib.ebrakeEngage.ext, m_Lib.ebrakeEngage.cab, cabView, ebv * 0.7f);
+            }
+            if ((ev & DrivelineSfx.EbrakeRelease) != 0)
+            {
+                EngineBrakeReleaseEvents++;
+                Play(m_Lib.ebrakeRelease.ext, m_Lib.ebrakeRelease.cab, cabView,
+                     LayerMath.EngineBrakeReleaseLevel((float)m.Engine.Rpm, ebv) * m_Drive.LastReleaseDepth);
             }
         }
 
@@ -515,15 +580,35 @@ namespace Game.Gameplay
         {
             float rpm = (float)m.Engine.Rpm;
             bool running = !m.Engine.Stalled && rpm > 300f;
-            float rg = LayerMath.RetarderGain((float)m.Retarder.Fill, retarderVolume);
-            m_RetarderGain = LayerMath.ExponentialStep(m_RetarderGain, rg, dt, 0.08f, 0.25f);
-            if (m_Retarder.Valid) m_Retarder.Set(m_RetarderGain * Mathf.Lerp(1f, cabRetarderFactor, m_Interior), LayerMath.RetarderPitch(v), m_Interior);
+            float cabRet = Mathf.Lerp(1f, cabRetarderFactor, m_Interior);
+            float fill = (float)m.Retarder.Fill;
+            if (m_RetTone != null && m_Retarder == m_RetarderSynth)
+            {
+                // ADR 0176: rotor tone ~ fill x tip speed, oil flow ~ sqrt(dissipated power), both pitched by the propshaft
+                float shaft = LayerMath.ShaftRpm(v, (float)m.WheelRadiusRef, (float)m.Def.driveline.finalDriveRatio);
+                float tg = LayerMath.RetarderToneGain(fill, shaft, retarderVolume);
+                float fg = LayerMath.RetarderFlowGain((float)m.Retarder.Power, (float)(m.Retarder.Def.maxPowerKW * 1000.0), retarderVolume);
+                m_RetToneGain = LayerMath.ExponentialStep(m_RetToneGain, tg, dt, 0.08f, 0.25f);
+                m_RetFlowGain = LayerMath.ExponentialStep(m_RetFlowGain, fg, dt, 0.08f, 0.25f);
+                float pitch = LayerMath.RetarderTonePitch(shaft);
+                m_RetTone.Set(m_RetToneGain * cabRet, pitch, m_Interior);
+                m_RetFlow.Set(m_RetFlowGain * cabRet, pitch, m_Interior);
+                m_RetarderGain = 0f;
+                if (m_Retarder.Valid) m_Retarder.Set(0f, 1f, m_Interior);
+            }
+            else
+            {
+                float rg = LayerMath.RetarderGain(fill, retarderVolume);
+                m_RetarderGain = LayerMath.ExponentialStep(m_RetarderGain, rg, dt, 0.08f, 0.25f);
+                if (m_Retarder.Valid) m_Retarder.Set(m_RetarderGain * cabRet, LayerMath.RetarderPitch(v), m_Interior);
+                if (m_RetTone != null) { m_RetToneGain = m_RetFlowGain = 0f; m_RetTone.Set(0f, 1f, m_Interior); m_RetFlow.Set(0f, 1f, m_Interior); }
+            }
             float cg = running && m.Air.CompressorLoaded ? compressorVolume : 0f;
             m_CompressorGain = LayerMath.ExponentialStep(m_CompressorGain, cg, dt, 0.15f, 0.12f);
             if (m_Compressor.Valid) m_Compressor.Set(m_CompressorGain * Mathf.Lerp(1f, cabCompressorFactor, m_Interior), LayerMath.CompressorPitch(rpm), m_Interior);
         }
 
         /// <summary>Called after a respawn: avoids one-shots for the state jump.</summary>
-        public void ResetEvents() { m_HasPrev = false; m_BrakePeak = 0f; m_BrakeHeld = 0f; m_PrevCouple = -1; m_BumpCooldown = 0.5f; }
+        public void ResetEvents() { m_Drive.Reset(); m_HasPrev = false; m_BrakePeak = 0f; m_BrakeHeld = 0f; m_PrevCouple = -1; m_BumpCooldown = 0.5f; }
     }
 }
