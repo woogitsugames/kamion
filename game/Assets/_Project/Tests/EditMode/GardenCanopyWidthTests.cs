@@ -74,7 +74,10 @@ namespace Game.Tests
                 records.AddRange(JsonUtility.FromJson<InstanceRows>(File.ReadAllText(file)).instances
                     .Where(r => r.tier == "high" && r.garden_canopy_width > 0f));
             if (records.Count == 0) Assert.Ignore("Baseline has no garden width opt-in; candidate integration check requires ADR 0154 enabled");
-            Assert.That(set.Compact, Is.True, "new garden shapes must keep compact storage for every instance");
+            Assert.That(set.matrices, Is.Empty, "new garden shapes must keep compact storage for every instance");
+            Assert.That(set.positions.Length, Is.GreaterThan(0));
+            Assert.That(set.rotations.Length, Is.EqualTo(set.Count * 4));
+            Assert.That(set.scales.Length, Is.EqualTo(set.Count * 3));
             foreach (var record in records)
             {
                 int prototype = Array.FindIndex(set.prototypes, p => p.name == record.p + "_" + record.v);

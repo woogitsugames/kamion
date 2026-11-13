@@ -52,3 +52,5 @@ Przed nowymi renderami dobrano odległość28–45m od celu korony,po2rozłączn
 Dodano test integracji natywnego importu: każdy zserializowany opt-in korony musi mieć właściwą skalęX/Y orazZ/Y w rzeczywistym WorldInstanceSet i zachować Compact. Zostanie uruchomiony na kandydacieB (na bazie bez flagi jawnie pomijany), obok8jużzielonych testów czystej transformacji. Nie jest to dowód wyglądu.
 
 Import focus-baseline zakończony.
+
+Rebaselineoff590.4s: audyt zgadza się z pierwotną bazą w2151chronionychwęzłach,grupach/trianglesplots,rekordachLow i116drzewogrodowych. ImportOK. Pierwszy render zatrzymał błąd kompilacji nowego testu integracji (Compactjestprywatne); poprawiono test na publiczne matrices/positions/rotations/scales. Nie zaliczono nieudanej próby. NASTĘPNY KROK: powtórzyćbefore4warunki,bez ponownej generacji bazy.
