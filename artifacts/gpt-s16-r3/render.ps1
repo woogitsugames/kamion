@@ -13,6 +13,11 @@ foreach($tier in $(if($OnlyTier){@($OnlyTier)}else{@('Low','High')})) {
    git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
    & pwsh $slot -Release -Owner gpt-s16
   }
+  $outer = Get-Content "artifacts/gpt-s16-r3/$Stage-$tier-$light.log" -Raw
+  if ($outer -match ' -logFile (.+?) -buildTarget ') {
+   Select-String -LiteralPath $Matches[1] -Pattern '\[RQ_PIPELINE\]' | ForEach-Object Line | Select-Object -Unique | Set-Content "artifacts/gpt-s16-r3/$Stage/$tier-$light/pipeline.txt"
+  }
+  git add -f "artifacts/gpt-s16-r3/$Stage/$tier-$light/pipeline.txt"
   Add-Content artifacts/gpt-s16-r3/STATUS.md "`nZapisano $Stage/$tier-$light; każda kamera w stats.txt. Oględziny pozostają wymagane."
   git add -f artifacts/gpt-s16-r3/STATUS.md "artifacts/gpt-s16-r3/$Stage/$tier-$light/stats.txt"
   git commit -q -m "wip(s16): render putry-shadow $Stage $tier $light"
