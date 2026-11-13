@@ -1,0 +1,69 @@
+{
+  "seed": 20261113,
+  "metoda": "random.Random(seed).sample(wiersze manifestu, 20 %) — powtórna weryfikacja: (a) ponowne obejrzenie kadru (wizja, niezależne pytanie), (b) ponowny odczyt NMPT niezależnym oknem, (c) ponowna kontrola cytatu z karty katalogowej/specyfikacji",
+  "manifest_wierszy": 75,
+  "probka_docelowa": 15,
+  "probka_wylosowane_id": [
+    "P20-023",
+    "P20-003",
+    "P20-017",
+    "P20-047",
+    "P20-002",
+    "P20-059",
+    "P20-009",
+    "P20-066",
+    "P20-073",
+    "P20-013",
+    "P20-007",
+    "P20-051",
+    "P20-004",
+    "P20-036",
+    "P20-008"
+  ],
+  "status": "CZĘŚCIOWY (commit pośredni) — weryfikacje wykonane w bieżącym cyklu; domknięcie po uzupełnieniu kadrów B (nowa tura oględzin), wtedy plik zostanie nadpisany pełnymi wynikami",
+  "weryfikacje_wykonane": [
+    {
+      "id": "P20-004",
+      "typ": "ponowny odczyt NMPT (niezależne okno)",
+      "wynik": "A1: komponent med 18,19 m vs okno kontrolne med 17,93–17,94 m",
+      "wniosek": "zgodne w granicach metody — okno zawiera krawędzie/mieszane komórki; komponent izoluje płaszczyznę dachu; wartość referencyjna 18,19 m"
+    },
+    {
+      "id": "kadr P11-094",
+      "typ": "ponowne oględziny (3 niezależne pytania)",
+      "wynik": "spójnie: 2 bramy segmentowe ~5 paneli, brak okien/pasa okien, cokół, 4 lampy, napis firmowy centralnie",
+      "wniosek": "potwierdzone"
+    },
+    {
+      "id": "kadr P11-093",
+      "typ": "rozbieżność vs P11-094",
+      "wynik": "P11-093 sugerował 'wiele okien w górnej części'; kontrola P11-094: ściana jednolita",
+      "wniosek": "sugestia odrzucona — łączenia paneli czytane jako okna; w manifeście REJECTED jako źródło okien"
+    },
+    {
+      "id": "P20-049",
+      "typ": "ponowna kontrola cytatu",
+      "wynik": "cytat zgodny z kartą: 'Szerokość światła bramy Min.: 1200 mm Maks.: 8000 mm; Wysokość światła otworu Maks.: 6000 mm'",
+      "wniosek": "potwierdzone"
+    },
+    {
+      "id": "P20-050",
+      "typ": "ponowna kontrola cytatu",
+      "wynik": "cytat zgodny ze specyfikacją: 'szerokość maksymalna - 4500mm, z kształtownikiem usztywniającym od 4500mm do 8000mm; wysokość maksymalna - 6000mm'",
+      "wniosek": "potwierdzone"
+    },
+    {
+      "id": "P20-0xx (B-F/B-M/B-E)",
+      "typ": "ponowny odczyt NMPT (okna vs komponent)",
+      "wynik": "front 10,97 / środek 11,94 / wschód 12,03 (okna) vs komponent całości 12,04 m",
+      "wniosek": "zgodne — trzy części hali B na wspólnym poziomie ±0,3 m; front nie jest wyższy"
+    }
+  ],
+  "weryfikacje_zalegle": "po oględzinach serii 2019 (B) — ponowne obejrzenie wylosowanych kadrów B i potwierdzenie opisów_co_widać; ostateczny audyt z tym samym seedem",
+  "licznik_kadrow_obejrzanych": {
+    "unikalne_w_sesji_2026_11_13": 16,
+    "z_P11_wczesniejsze": 2,
+    "cel_razem": 20,
+    "pozostalo_seria_2019_B": 14
+  }
+}
