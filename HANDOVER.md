@@ -39,6 +39,7 @@
 - 14:0x: **Mistral M45 → PR #42** (ZIP zdjęć `research/_incoming/mistral-p7-signs-2`, 11 JPG) → przegląd Opus (kontrola krzyżowa GPT P7) → `REVIEW-2026-11-13-s17-mistral-r8-p7.md`. 0167 zawieszony 4. raz (r2 łańcuch DONE 12:22) → wznowiony (Fable).
 - 14:1x: **Przegląd M47/M48:** P11 (PR #39) CZĘŚCIOWO — opisy kadrów bez oglądania (6/12 błędnych, 3 zdjęcia robota-zabawki), nie scalać; P12 (PR #40) z zastrzeżeniami — 4 poprawki. Poprawki dla Mistrala: `docs/owner/MISTRAL-FIXES-8.md` (M47-FIX, M48-FIX — właściciel wkleja do nowych sesji). Fakty przekazane 0166.
 - 14:2x: **0163 kod gotowy** `af6420ac2` (build 6: 594 drzewa ogrodowe, draws +0 na każdej kamerze Low/High, tris High +0,14 %, pytest 1019/3 xfail) — agent zawiesił się po pytest; visual-critic zlecony. Scalanie świata: 0162 → 0161 → 0163 → 0167.
+- 14:4x :47: **M46 → PR #43** (luki P1: Batorego 3 kadry, Olsztyńska 2, Brzeska/Buska 0) → przegląd Opus → `REVIEW-2026-11-13-s17-mistral-r8-p1b.md` (ZIP zdjęć jeszcze nie w Downloads). Otwarte PR: #39–#43. Gałęzie bez PR: `mistral-p6-dojlidy-gates` (M49), `mistral-p8-restrictions-3` (M54).
 - **Przejęcie przez nową sesję/konto:** przeczytaj ten blok → każdy wiersz tabeli: `artifacts/live/<live>.md` ma NASTĘPNY KROK; wznów jako NOWYCH agentów (nie SendMessage), gałęzie są na origin.
 - Następne: scalenia (0161 → 0162 → 0163, `generated/*` `--ours`, JEDNA regeneracja + `import-region.ps1` w main) → APK → krytyk → A16 gate3 A/B → S24+ High/30; 0165, 0166 osobno.
 - **Ostatni przydzielony ADR: 0169.**
