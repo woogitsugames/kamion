@@ -369,14 +369,21 @@ overrides:
     # ADR 0146: 0.6 (was 0.55; the prototype name carries decimetres and 0.55 already built `_b6` = 0.6 m; the
     # rectified frame gives 28 px at 42 px/m = 0.65 m, so the range is 0.55-0.65 m).
     beam_depth_m: 0.6
+    # ADR 0162 (research G3-P012 / P013, Mapillary kino 2024-07-26, content read only): the 2024 boards keep the 2020
+    # rows - left board over two lanes with an up arrow at each end, right board Augustów / Kuźnica PL BY / 675
+    # Centrum with an up-right arrow (the 675 shield is taped over on the 2024 frame: [UNVERIFIED] in G3). Centrum
+    # as a separate panel with a left arrow is the next portal (andersa-putry-portal-p40), not this one.
     boards:
       - lanes: [0, 1]
         size_m: [3.75, 0.82]
+        arrow: up2
         rows: [[["8", E67], Warszawa], [["65"], Ełk]]
       - lanes: [2]
         size_m: [3.8, 1.2]
-        rows: [[["8", E67], Augustów], [["19"], Kuźnica], [["675"], Centrum]]
-    mapillary: ["468708117568850", "143559297695026", "275528677534382", "1056932506043672", "3281350541967811"]
+        arrow: up_right
+        rows: [[["8", E67], Augustów], [["19"], Kuźnica PL BY], [["675"], Centrum]]
+    mapillary: ["468708117568850", "143559297695026", "275528677534382", "1056932506043672", "3281350541967811",
+                "1634385190678528"]
     reason: >-
       Overhead boards before the split of Andersa (northbound) into the viaduct (Warszawa / Ełk, OSM destination
       on way 1101181473) and the link to Rondo Putry (Augustów / Kuźnica PL/BY, way 606396463).
@@ -682,22 +689,107 @@ overrides:
     kind: sign_gantry
     osm_way: 173956083
     before_node: n2629251371
-    distance_m: 55.0
+    # ADR 0162: column feet on the GUGiK WMS HighResolution orthophoto 0.08 m (cells c_03_07 / c_04_07 / c_04_08: the
+    # lattice portal across the link 25 m ahead of the G3-P001 camera) -> 10.8 m span ~30 m before the old station.
+    distance_m: 85.0
+    columns_en: [[-479.4, -12.2], [-471.0, -5.4]]
+    # ADR 0162 (research G3-P001..P004, Mapillary kino 465521806237924, 2024-07-26; the same layout on the CC0 Commons
+    # frames G3-C001..C004, Rakoon 2021-05-03): two boards of two stacked panels each - left: 8 E67 Warszawa / 65 Ełk
+    # (up) over 675 Centrum (left); right: 8 E67 Warszawa / 65 Ełk (up) over 8 E67 Augustów / 19 Kuźnica PL BY
+    # (right). Sizes from the frame's proportions (rows 55-58 px) at an assumed 0.5 m row: WORKING_VALUE; the boards
+    # sit 0.75 m outward of the lane centres (gap ~0.2 m on the frame).
     boards:
       - lanes: [0]
-        from_osm:
-          - {way: 1101181473, refs_extra: ["8", E67]}
-          - {way: 284541843}
+        size_m: [4.4, 1.72]
+        lat_shift_m: 0.75
+        panels:
+          - {arrow: up, rows: [[["8", E67], Warszawa], [["65"], Ełk]]}
+          - {arrow: left, rows: [[["675"], Centrum]]}
       - lanes: [1]
-        from_osm:
-          - {way: 606396463, refs_extra: ["8", E67]}
-    mapillary: ["1783751488818497", "1911352299378570"]
+        size_m: [5.0, 2.3]
+        lat_shift_m: -0.75
+        panels:
+          - {arrow: up, rows: [[["8", E67], Warszawa], [["65"], Ełk]]}
+          - {arrow: right, rows: [[["8", E67], Augustów], [["19"], Kuźnica PL BY]]}
+    mapillary: ["1783751488818497", "1911352299378570", "465521806237924"]
     reason: >-
       Mapillary 1783751488818497 and 1911352299378570 (kino, 2024-07-26) show a two-column lattice portal before the
-      Rondo Putry entry with a board over each lane: left Warszawa / Ełk + Centrum (675), right Augustów / Kuźnica.
-      Station 55 m before the ring node, WORKING_VALUE (read off the photo against the lamp spacing).
-    confidence: low
+      Rondo Putry entry with a board over each lane. ADR 0162: layout and texts after research G3 (2024, content
+      only; faces are our own drawings), station from the orthophoto.
+    confidence: medium
     verify: station and board layout on site
+  # ---------------------------------------------------------------- ADR 0162: al. Tysiąclecia southbound (research G3)
+  # Three structures over the southbound carriageway before Rondo Putry, texts read off the G3 crops (Mapillary
+  # strudel 2024-08-15, CC BY-SA 4.0: content only, our own faces), positions = the gantries on the GUGiK WMS
+  # HighResolution orthophoto 0.08 m (cells c_03_08 .. c_03_11; column feet +-1 m), board sizes WORKING_VALUE from
+  # the crops' proportions at an assumed 0.5 m row.
+  - id: tysiaclecia-s-putry-e1-portal
+    kind: sign_gantry
+    osm_way: 882366262
+    before_node: n2460796468
+    distance_m: 15.3
+    columns_en: [[-561.2, 310.6], [-550.0, 310.6]]
+    boards:
+      - lanes: [0, 1]
+        size_m: [6.1, 1.8]
+        style: e1_cross
+        top: [["675"], Centrum]
+        left: [[["65"], Bobrowniki PL BY], [[], Kuźnica B. PL BY], [[], Lublin]]
+        right: [[["8", E67], Warszawa], [["65"], Ełk]]
+    mapillary: ["1217401006105441"]
+    reason: >-
+      G3-P009 (E-1, 2024-08-15, camera 21 m before the portal): Centrum at the top, Bobrowniki PL BY / Kuźnica B. PL BY /
+      Lublin to the left, 8 E67 Warszawa / 65 Ełk to the right of a crossroads diagram; exactly "Kuźnica B." without a
+      19 shield (G3 note). Portal over the southbound carriageway only (orthophoto, N 310.6).
+    confidence: medium
+    verify: board layout and portal on site
+  - id: tysiaclecia-its-vms-gantry
+    kind: sign_gantry
+    osm_way: 266084696
+    before_node: n2466608894
+    distance_m: 106.9
+    columns_en: [[-562.4, 236.0], [-536.8, 236.0]]
+    boards:
+      - lanes: [0, 1, 2]
+        size_m: [3.6, 1.1]
+        style: vms
+        lines: ["CENTRUM PRZEZ:", "TYSIĄCLECIA P.P.   5 MIN", "ŚWIĘTOKRZYSKĄ    7 MIN"]
+    mapillary: ["814105944186182"]
+    reason: >-
+      G3-P010 (ITS gantry between the E-1 and the boards at the ring, 2024-08-15): LED message sign over the southbound
+      lanes. The gantry spans both carriageways on the orthophoto (N 236.0); a board for the northbound side is not
+      documented (none placed). The message is the momentary state of the frame (travel times), a static texture here.
+    confidence: medium
+    verify: northbound board, sign size
+  - id: tysiaclecia-s-putry-portal
+    kind: sign_gantry
+    osm_way: 266084696
+    before_node: n1847044961
+    distance_m: 27.5
+    columns_en: [[-571.6, 121.2], [-556.4, 117.6]]
+    boards:
+      - lanes: [0]
+        size_m: [4.33, 1.7]
+        lat_shift_m: 0.9
+        panels:
+          - {arrow: up, rows: [[["675"], Centrum]]}
+          - {arrow: left, rows: [[["65"], Bobrowniki PL BY], [["19"], Lublin]]}
+      - lanes: [1]
+        size_m: [2.94, 0.67]
+        arrow: up
+        rows: [[["675"], Centrum]]
+      - lanes: [2]
+        size_m: [4.28, 1.19]
+        lat_shift_m: -1.1
+        arrow: right
+        rows: [[["8", E67], Warszawa], [["65"], Ełk]]
+    mapillary: ["398536382868438"]
+    reason: >-
+      G3-P005..P008 (2024-08-15, camera 25 m before the portal): left 675 Centrum (up) over 65 Bobrowniki PL BY / 19
+      Lublin (left), a separate middle 675 Centrum (up), right 8 E67 Warszawa / 65 Ełk (right). Portal columns on the
+      orthophoto 15.6 m apart (N 117.6-121.2).
+    confidence: medium
+    verify: lane assignment of the boards on site
   - id: andersa-ne-noise-barrier-glazed
     kind: noise_barrier_style
     zones:

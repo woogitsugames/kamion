@@ -139,15 +139,17 @@ def square(sym):
         d.line([(cx - 2, S * 0.46), (cx - 36, S * 0.55)], fill=BLACK, width=12)
         d.line([(cx - 2, S * 0.46), (cx + 30, S * 0.53)], fill=BLACK, width=12)
     elif sym == "D-15":
+        # ADR 0162: the D-15 pictogram is a bus in side view without lettering (wzór znaku D-15; BKM rack drawing
+        # G5-004); the old face had a front view and the word "BUS".
         d.rectangle([S * 0.16, S * 0.12, S * 0.84, S * 0.88], fill=WHITE)
-        d.rounded_rectangle([S * 0.24, S * 0.30, S * 0.76, S * 0.70], radius=14, fill=BLACK)
-        for k in range(3):
-            x = S * (0.28 + 0.16 * k)
-            d.rectangle([x, S * 0.35, x + S * 0.12, S * 0.48], fill=WHITE)
+        d.rounded_rectangle([S * 0.22, S * 0.38, S * 0.78, S * 0.62], radius=10, fill=BLACK)
+        for k in range(5):
+            x = S * (0.255 + 0.10 * k)
+            d.rectangle([x, S * 0.41, x + S * 0.075, S * 0.50], fill=WHITE)
+        d.rectangle([S * 0.745, S * 0.41, S * 0.765, S * 0.56], fill=WHITE)            # front door glass
         for x in (0.33, 0.67):
-            d.ellipse([S * x - 22, S * 0.66, S * x + 22, S * 0.74], fill=BLACK)
-        f = _font(int(S * 0.10))
-        d.text((S * 0.36, S * 0.74), "BUS", font=f, fill=BLACK)
+            d.ellipse([S * x - 26, S * 0.585, S * x + 26, S * 0.685], fill=BLACK)
+            d.ellipse([S * x - 10, S * 0.62, S * x + 10, S * 0.65], fill=WHITE)
     return im
 
 
@@ -210,7 +212,7 @@ def overhead_board(rows, row_m=0.62, size_m=None, arrows=1):
     probe = ImageDraw.Draw(_img())
     shield_w = int(rh * 0.95)
     nsh = max(len(r[0]) for r in rows)
-    tw = max(probe.textbbox((0, 0), d, font=f)[2] for _, d in rows)
+    tw = max(_dest_width(probe, d, f, _font(int(rh * 0.27)), rh) for _, d in rows)   # ADR 0162: ovals / city box
     W0 = int(rh * 0.9 + nsh * (shield_w + 12) + tw + rh * 0.6)
     H = int(rh * len(rows) + rh * 0.3)
     W = max(W0, int(float(size_m[0]) * px_m)) if size_m else W0
@@ -236,9 +238,217 @@ def overhead_board(rows, row_m=0.62, size_m=None, arrows=1):
                    font=fs, fill=BLACK if w3 else WHITE)
             x += shield_w + 12
         x = int(rh * 0.9 + nsh * (shield_w + 12) + rh * 0.15) + shift
-        bb = d.textbbox((0, 0), dest, font=f)
-        d.text((x - bb[0], y0 + rh / 2 - (bb[3] - bb[1]) / 2 - bb[1]), dest, font=f, fill=WHITE)
+        _draw_dest(d, x, y0 + rh / 2, dest, f, _font(int(rh * 0.27)), rh)          # ADR 0162
     return im, W / px_m, H / px_m
+
+
+
+# ------------------------------------------------------------------------------------------------ ADR 0162 boards
+# Direction boards read off research G3 (S8 / DK8 signs, 2024 frames; content only - Mapillary crops are CC BY-SA and
+# never used as pixels, the faces are our own drawings): stacked panels with their own arrows (↑ ← → ↗) instead of a
+# downward lane arrow, "Centrum" as blue letters in a white box (G3 P002 / P005 / P007 / P009), country codes as
+# black letters in white ovals after a border-crossing destination ("Kuźnica PL BY", P004 / P009), voivodeship road
+# shields yellow with black digits (675).
+CITY_BLUE = (0, 70, 150)
+ARROW_VEC = {"up": (0, -1), "down": (0, 1), "left": (-1, 0), "right": (1, 0), "up_right": (0.707, -0.707),
+             "up_left": (-0.707, -0.707)}
+ARROW_RIGHT_SIDE = ("right", "up_right")
+
+
+def _arrow(d, kind, cx, cy, s, col):
+    """Direction arrow of length s (px) centred at (cx, cy): stem + filled head."""
+    dx, dy = ARROW_VEC[kind]
+    tail = (cx - dx * s * 0.5, cy - dy * s * 0.5)
+    tip = (cx + dx * s * 0.5, cy + dy * s * 0.5)
+    hb = (tip[0] - dx * s * 0.42, tip[1] - dy * s * 0.42)
+    d.line([tail, hb], fill=col, width=max(6, int(s * 0.13)))
+    nx, ny = -dy, dx
+    hw = s * 0.24
+    d.polygon([tip, (hb[0] + nx * hw, hb[1] + ny * hw), (hb[0] - nx * hw, hb[1] - ny * hw)], fill=col)
+
+
+def _split_dest(dest):
+    """'Kuźnica PL/BY' / 'Kuźnica PL BY' -> ('Kuźnica', ['PL', 'BY'])."""
+    toks = dest.replace("/", " ").split()
+    codes = []
+    while toks and len(toks[-1]) == 2 and toks[-1].isalpha() and toks[-1].isupper():
+        codes.insert(0, toks.pop())
+    return " ".join(toks), codes
+
+
+def _dest_width(d, dest, f, fs, rh):
+    name, codes = _split_dest(dest)
+    w = d.textbbox((0, 0), name, font=f)[2]
+    if name.lower() == "centrum":
+        w += int(rh * 0.3)
+    return w + len(codes) * int(rh * 0.78)
+
+
+def _draw_dest(d, x, yc, dest, f, fs, rh, fg=WHITE):
+    """Destination text at x, vertically centred on yc, with the city-centre box and country ovals."""
+    name, codes = _split_dest(dest)
+    bb = d.textbbox((0, 0), name, font=f)
+    th = bb[3] - bb[1]
+    if name.lower() == "centrum":
+        pad = int(rh * 0.15)
+        d.rounded_rectangle([x, yc - rh * 0.34, x + bb[2] - bb[0] + 2 * pad, yc + rh * 0.34], radius=6, fill=WHITE)
+        d.text((x + pad - bb[0], yc - th / 2 - bb[1]), name, font=f, fill=CITY_BLUE)
+        x += bb[2] - bb[0] + 2 * pad
+    else:
+        d.text((x - bb[0], yc - th / 2 - bb[1]), name, font=f, fill=fg)
+        x += bb[2]
+    for c in codes:
+        x += int(rh * 0.08)
+        ow, oh = int(rh * 0.66), int(rh * 0.46)
+        d.ellipse([x, yc - oh / 2, x + ow, yc + oh / 2], fill=WHITE, outline=BLACK, width=3)
+        cb = d.textbbox((0, 0), c, font=fs)
+        d.text((x + ow / 2 - (cb[2] - cb[0]) / 2 - cb[0], yc - (cb[3] - cb[1]) / 2 - cb[1]), c, font=fs, fill=BLACK)
+        x += ow + int(rh * 0.04)
+    return x
+
+
+def _draw_shield(d, x, yc, r, fs, rh, shield_w):
+    e = r.upper().startswith("E")
+    w3 = r.isdigit() and len(r) == 3
+    w = int(shield_w * (1.35 if e else 1.0))
+    d.rounded_rectangle([x, yc - rh * 0.32, x + w, yc + rh * 0.32], radius=8,
+                        fill=GREEN if e else YELLOW if w3 else RED, outline=BLACK if w3 else WHITE, width=5)
+    bb = d.textbbox((0, 0), r, font=fs)
+    d.text((x + w / 2 - (bb[2] - bb[0]) / 2 - bb[0], yc - (bb[3] - bb[1]) / 2 - bb[1]), r, font=fs,
+           fill=BLACK if w3 else WHITE)
+    return w
+
+
+def panel_board(panels, size_m=None, row_m=0.62, px_m=160):
+    """Overhead board of stacked panels (one frame each, as on the G3 frames), panels = [{"rows": [(refs, dest)],
+    "arrow": up|up2|down|down2|left|right|up_right|none}]. ↑ / ← / ↓ stand left of the text, → / ↗ right of it,
+    up2 / down2 on both ends. size_m = (w, h) measured on a photo (rows fill the height). Returns (image, w_m, h_m)."""
+    nrows = sum(len(p["rows"]) for p in panels)
+    if size_m:
+        row_m = float(size_m[1]) / (nrows + 0.3 * len(panels))
+    rh = int(row_m * px_m)
+    f = _font(int(rh * 0.52))
+    fs = _font(int(rh * 0.36))
+    fo = _font(int(rh * 0.27))
+    d0 = ImageDraw.Draw(_img())
+    shield_w = int(rh * 0.95)
+
+    def shields_w(refs):
+        return sum(int(shield_w * (1.35 if r.upper().startswith("E") else 1.0)) + 12 for r in refs)
+
+    sw = max(shields_w(r[0]) for p in panels for r in p["rows"])
+    tw = max(_dest_width(d0, r[1], f, fo, rh) for p in panels for r in p["rows"])
+    left = any(p.get("arrow", "down") not in ARROW_RIGHT_SIDE + ("none",) for p in panels)
+    right = any(p.get("arrow") in ARROW_RIGHT_SIDE + ("up2", "down2") for p in panels)
+    W0 = int((rh * 0.9 if left else rh * 0.3) + sw + tw + (rh * 0.9 if right else rh * 0.3))
+    heights = [int(rh * len(p["rows"]) + rh * 0.3) for p in panels]
+    H = sum(heights)
+    W = max(W0, int(float(size_m[0]) * px_m)) if size_m else W0
+    shift = int((W - W0) / 2)
+    im = Image.new("RGBA", (W, H), (*GREEN, 255))
+    d = ImageDraw.Draw(im)
+    y0 = 0
+    for p, hp in zip(panels, heights):
+        d.rectangle([5, y0 + 5, W - 6, y0 + hp - 6], outline=WHITE, width=8)
+        kind = p.get("arrow", "down")
+        base = kind[:-1] if kind.endswith("2") else kind
+        xs = []
+        if kind != "none":
+            if kind in ARROW_RIGHT_SIDE:
+                xs = [W - int(rh * 0.5)]
+            elif kind.endswith("2"):
+                xs = [int(rh * 0.5), W - int(rh * 0.5)]
+            else:
+                xs = [int(rh * 0.5)]
+        for ax in xs:
+            _arrow(d, base, ax, y0 + hp / 2, min(rh * 0.75, hp * 0.6), WHITE)
+        for i, (refs, dest) in enumerate(p["rows"]):
+            yc = y0 + rh * 0.15 + i * rh + rh / 2
+            x = int(rh * 0.9 if left else rh * 0.3) + shift + (sw - shields_w(refs))   # shields flush to the text
+            for r in refs:
+                x += _draw_shield(d, x, yc, r, fs, rh, shield_w) + 12
+            _draw_dest(d, int(rh * 0.9 if left else rh * 0.3) + shift + sw, yc, dest, f, fo, rh)
+        y0 += hp
+    return im, W / px_m, H / px_m
+
+
+def e1_cross_board(top, left, right, size_m, px_m=160):
+    """E-1 advance board with a crossroads diagram (G3-P009, al. Tysiąclecia southbound before Rondo Putry, 2024):
+    `top` = (refs, dest) above the vertical road, `left` / `right` = [(refs, dest)] beside the cross arms. Our own
+    schematic; the real diagram's curved ramps are drawn as a plain cross with arrow heads. Returns (image, w, h)."""
+    W, H = int(size_m[0] * px_m), int(size_m[1] * px_m)
+    rh = int(H / 5.0)
+    f = _font(int(rh * 0.55))
+    fs = _font(int(rh * 0.38))
+    fo = _font(int(rh * 0.28))
+    shield_w = int(rh * 0.95)
+    im = Image.new("RGBA", (W, H), (*GREEN, 255))
+    d = ImageDraw.Draw(im)
+    d.rectangle([6, 6, W - 7, H - 7], outline=WHITE, width=9)
+    cx, cy = W * 0.5, H * 0.60
+    lw = max(10, int(rh * 0.16))
+    gap = rh * 0.22
+
+    def row_w(refs, dest):
+        return (sum(int(shield_w * (1.35 if r.upper().startswith("E") else 1)) + 12 for r in refs) or shield_w + 12)             + _dest_width(d, dest, f, fo, rh)
+    xl = max(W * 0.40, W * 0.035 + max(row_w(*r) for r in left) + rh * 0.9)     # left arm clear of the left texts
+    xr = W * 0.60
+    for s in (-1, 1):                                            # double-line roads: vertical and horizontal
+        d.line([(cx + s * gap, H - 14), (cx + s * gap, H * 0.30)], fill=WHITE, width=lw)
+        d.line([(xl, cy + s * gap), (xr, cy + s * gap)], fill=WHITE, width=lw)
+    for kind, x, y in (("up", cx, H * 0.30), ("left", xl, cy), ("right", xr, cy)):
+        _arrow(d, kind, x + ARROW_VEC[kind][0] * rh * 0.15, y + ARROW_VEC[kind][1] * rh * 0.15, rh * 0.6, WHITE)
+    refs, dest = top
+    tw = sum(int(shield_w * (1.35 if r.upper().startswith("E") else 1)) + 12 for r in refs) + _dest_width(d, dest, f, fo, rh)
+    x = int(cx - tw / 2)
+    for r in refs:
+        x += _draw_shield(d, x, rh * 0.75, r, fs, rh, shield_w) + 12
+    _draw_dest(d, x, rh * 0.75, dest, f, fo, rh)
+    y = cy - (len(left) - 1) * rh * 0.55
+    for refs, dest in left:
+        x = int(W * 0.035)
+        for r in refs:
+            x += _draw_shield(d, x, y, r, fs, rh, shield_w) + 12
+        if not refs:
+            x += shield_w + 12
+        _draw_dest(d, x, y, dest, f, fo, rh)
+        y += rh * 1.1
+    y = cy - (len(right) - 1) * rh * 0.55 + rh * 0.2
+    for refs, dest in right:
+        x = int(W * 0.63)
+        sw = sum(int(shield_w * (1.35 if r.upper().startswith("E") else 1)) + 12 for r in refs)
+        x += int(shield_w * 2.35 + 24) - sw                    # shields right-aligned in front of the names
+        for r in refs:
+            x += _draw_shield(d, x, y, r, fs, rh, shield_w) + 12
+        _draw_dest(d, x, y, dest, f, fo, rh)
+        y += rh * 1.1
+    return im, W / px_m, H / px_m
+
+
+def vms_board(lines, size_m, cols=150):
+    """Variable-message sign of the ITS gantry (G3-P010, 2024-08-15): black field, white LED dot matrix. The text is
+    the momentary message of that frame (travel times are not a game parameter), shown as a static texture.
+    Returns (image, w, h)."""
+    import numpy as np
+    W, H = int(size_m[0] * 160), int(size_m[1] * 160)
+    rows = max(8, int(round(cols * size_m[1] / size_m[0])))
+    lo = Image.new("L", (cols, rows), 0)
+    d = ImageDraw.Draw(lo)
+    lh = rows / (len(lines) + 0.6)
+    f = _font(max(6, int(lh * 0.82)))
+    for i, t in enumerate(lines):
+        d.text((cols * 0.05, lh * (0.35 + i)), t, font=f, fill=255)
+    on = np.asarray(lo) > 110
+    im = Image.new("RGBA", (W, H), (14, 14, 15, 255))
+    dd = ImageDraw.Draw(im)
+    pw, ph = W / cols, H / rows
+    r = 0.36 * min(pw, ph)
+    for yy in range(rows):
+        for xx in range(cols):
+            cxp, cyp = (xx + 0.5) * pw, (yy + 0.5) * ph
+            dd.ellipse([cxp - r, cyp - r, cxp + r, cyp + r], fill=(236, 236, 228) if on[yy, xx] else (34, 34, 36))
+    dd.rectangle([0, 0, W - 1, H - 1], outline=(60, 62, 64), width=max(4, int(H * 0.03)))
+    return im, size_m[0], size_m[1]
 
 
 def plate_back(shape=None):
