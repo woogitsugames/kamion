@@ -1,3 +1,20 @@
+# HANDOVER — kamion, SESJA 17 (start 2026-11-13 10:15; 5 h 0 %, reset 15:10 lokalnie; tydzień 39 %, Fable 63 % → agenci Opus/Sonnet, Fable oszczędnie)
+
+## STAN S17 (lider) — main `1fab6ba82`
+- 10:16: C: 823 GB, A16 RFGL34SJYDZ i S24+ RZCX60VE8ZY online, PHONE_RUN brak. Triggery CronCreate :17 / :47 / :07.
+- Nowa paczka **P1 zdjęcia trasy** (`gptpro-p1-route-photos.zip`, 141 kadrów: 50 Panoramax z poziomu kierowcy z azymutem + 91 Commons) → `research/_incoming/p1-route-photos` (poza gitem do przeglądu).
+- Agenci (nowi, z plików live; wszyscy Opus poza przeglądem):
+| ADR | zadanie | worktree / gałąź | live |
+|---|---|---|---|
+| 0161 | P1 kadrów G3 (b4 → r2 → finalize → pary → ADR; lane_blind_end klina Kwadrat) + kadry P1 Putry | `p1-0161` | `artifacts/live/p1-0161.md` |
+| 0162 | meble G5 + tablice G3 (A/B od nowa, budżet, pary) | `furn-0162` | `artifacts/live/furn-0162.md` |
+| 0163 | zieleń ulic domów G7 (build 4, budżet) + horyzont BDOT (przejęty od 0161) | `veg-0163` | `artifacts/live/veg-0163.md` |
+| 0165 | podatny kontakt nadwozia D58, F1 ≤ 3,5° D59 | `phys-0165` | `artifacts/live/phys-0165.md` |
+| 0166 | region Dojlidy/Krywlany D60 (dane + QA, bez importu w main) | `region-0166` | `artifacts/live/region-0166.md` |
+| — | przegląd paczki 2 + P1 (Sonnet, main bez commitów) + **paczka 03 dla Mistrala** (`docs/owner/RESEARCH-PACK-03-MISTRAL.md`, M44+; decyzja właściciela 10:2x: kolejne paczki robi Mistral zamiast GPT) | main | `docs/reports/REVIEW-2026-11-13-s16-research-pack-02.md` |
+- Następne: scalenia (0161 → 0162 → 0163, `generated/*` `--ours`, JEDNA regeneracja + `import-region.ps1` w main) → APK → krytyk → A16 gate3 A/B → S24+ High/30; 0165, 0166 osobno.
+- **Ostatni przydzielony ADR: 0166.**
+
 # HANDOVER — kamion, KONIEC S16 (2026-11-13 ~10:3x, limit 5 h) — prompt dla s17: `docs/owner/START-PROMPT-S17.md`
 
 ## KONIEC S16
