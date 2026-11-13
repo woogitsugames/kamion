@@ -46,44 +46,53 @@
    },
    "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
    "references": [
-    "research/_incoming/p6-next-regions-2/files/P6-G03.jpg (GUGiK orto 10 cm, gate)"
+    "research/_incoming/p6-next-regions-2/files/P6-G03.jpg (GUGiK orto 10 cm, gate)",
+    "research/_incoming/mistral-p11-dojlidy-photos/files/P11-094 (CC0 Rakoon, IX 2023; hala przy jezdni)"
    ],
    "source_research": "P6-K04, P6-R03, P6-G03",
    "status": "check"
   },
   {
-   "area_m2": 886.5,
+   "area_m2": 5204.6,
    "centroid_epsg2180": [
-    778655.69,
-    590242.48
+    780055.96,
+    590577.36
    ],
-   "flags": [
-    "mostly_outside_tile",
-    "no_building_in_polygon"
-   ],
-   "id": "L10-hangar",
-   "in_tile_fraction": 0.0,
-   "kind": "orientation landmark (hangar)",
-   "name": "Hangar Aeroklubu Białostockiego",
+   "flags": [],
+   "id": "L11-sad",
+   "in_tile_fraction": 1.0,
+   "kind": "orientation landmark (tallest building)",
+   "name": "Sąd Rejonowy, Mickiewicza 103 (najwyższy w kaflu, LoD1 24,44 m)",
    "osm": {
     "tags": {
-     "aeroway": "hangar",
-     "building": "hangar"
+     "addr:housenumber": "103",
+     "addr:street": "Adama Mickiewicza",
+     "building": "public",
+     "name": "Sąd Rejonowy w Białymstoku"
     },
     "version": 2,
-    "way": 304300294
+    "way": 484566822
    },
    "our_buildings": {
-    "area_m2": 0,
-    "count": 0,
-    "height_m_range": null,
-    "height_sources": [],
-    "ids": []
+    "area_m2": 4425.0,
+    "count": 1,
+    "height_m_range": [
+     24.44,
+     24.44
+    ],
+    "height_sources": [
+     "gugik_lod1_2024"
+    ],
+    "ids": [
+     "bdot:2BE4B431-81C3-1BF0-E053-CC2BA8C0D140"
+    ]
    },
    "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
-   "references": [],
-   "source_research": "Mistral P12-004 (UNVERIFIED: review pending, PR #40); P6-C11 (Aeroklub way 229040230, NIE-cel)",
-   "status": "check"
+   "references": [
+    "P12-P04 (CC BY-SA, tylko referencja)"
+   ],
+   "source_research": "REVIEW-2026-11-13-s17-mistral-r8-p11-p12 §4 (M48/P12-P04)",
+   "status": "ok"
   },
   {
    "area_m2": 28212.4,
@@ -240,7 +249,8 @@
    },
    "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
    "references": [
-    "research/_incoming/p6-next-regions-2/files/P6-G14.jpg (GUGiK orto 10 cm, gate)"
+    "research/_incoming/p6-next-regions-2/files/P6-G14.jpg (GUGiK orto 10 cm, gate)",
+    "research/_incoming/mistral-p11-dojlidy-photos/files/P11-063 (CC0 Rakoon, VI 2024)"
    ],
    "source_research": "P6-C05, P6-G14",
    "status": "check"
@@ -438,8 +448,10 @@
     "ids": []
    },
    "provenance": "authored (landmark choice, research P6) + derived (geometry/matches from OSM + our data)",
-   "references": [],
-   "source_research": "Mistral P12-001 (UNVERIFIED: review pending, PR #40)",
+   "references": [
+    "research/_incoming/mistral-p12-*/P12-A01 (ortofoto pasów)"
+   ],
+   "source_research": "Mistral P12-001; potwierdzone w REVIEW-2026-11-13-s17-mistral-r8-p11-p12 §4 (OSM API)",
    "status": "ok"
   }
  ],

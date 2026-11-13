@@ -27,17 +27,20 @@ założenia prawdziwe wyłącznie dla C, które wyszły przy pierwszym przebiegu
 4. **Wspólne manifesty źródeł (per powiat, np. `gugik-bdot10k-2061`) nie są przepisywane przez nowy region**, gdy ich
    treść poza `used_by` jest identyczna: `region.yaml` regionu C przypina ich sha256, więc samo dopisanie `used_by`
    unieważniało C. Nowy region zapisuje manifest i jego sha256 we własnym `region.yaml`.
-5. **Landmarki D51** jako dane: `Data/Regions/bialystok-dojlidy/landmarks_d51.authored.json` (wybór z P6 + Mistral P12
-   jako UNVERIFIED do werdyktu przeglądu) → `tools/worldgen/qa/region_landmarks.py` → `generated/landmarks_d51.json`
+5. **Landmarki D51** jako dane: `Data/Regions/bialystok-dojlidy/landmarks_d51.authored.json` (wybór z P6 + Mistral P11/P12
+   zweryfikowane w `docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p11-p12.md` §4) → `tools/worldgen/qa/region_landmarks.py` → `generated/landmarks_d51.json`
    (geometria OSM w EPSG:2180, sha256 wycinka, nasze budynki w obrysie, brama na grafie lub nie) + mapa
    `docs/reports/map/bialystok-dojlidy_landmarks.png`. Wyniki, nie zgadywanie:
    - OK: Odlewnia (13,1 m LoD1), PSS DC, BISON, lotnisko Krywlany (61 % w kaflu), pas 09R/27L.
-   - Rosti: w naszych danych brak osobnego obrysu — BDOT10k łączy halę z sąsiednią (27 205 m², 18,9 m); do
-     `authored_overrides` przy modelowaniu.
+   - Rosti: w naszych danych brak osobnego obrysu — obrys BDOT10k (27 205 m², LoD1 18,92 m) jest 2× większy od budynku
+     OSM Rosti (13 578 m²) i ma środek poza nim (łączy halę z sąsiednią); do `authored_overrides` przy modelowaniu.
    - Bramy Rosti, KAN, Bravilor, Masterpress (OSM node z P6) nie są węzłami grafu: drogi dojazdowe kończą się przed bramą
      albo brama stoi poza zmapowaną drogą — wjazdy do zleceń wymagają dociągnięcia `service` (szerokości i łuki
      UNVERIFIED, pomiar na `P6-G*.jpg`).
-   - Hangar Aeroklubu (P12-004) leży poza kaflem (P6-K03).
+   - Sąd Rejonowy Mickiewicza 103 (way 484566822, LoD1 24,44 m) — najwyższy budynek kafla, dodany jako punkt orientacyjny.
+   - Hangar Aeroklubu (way 304300294) ~360 m na zachód od kafla → usunięty z listy, zapisany jako tło (`out_of_tile_background`).
+   - Kadry kontrolne (CC0, przegląd s17 §4): P11-001 (Kuronia, wzorcowy), P11-063, P11-094, P11-056, P11-129; ortofoto
+     P12-A01; odrzucone P11-084/091/092/064. Zapisane w `control_photos`; ustawienie kamer pod te kadry = krok importu.
 
 ## Dane i QA (z naszych danych; liczby z `generated/*.json` i `docs/reports/map/bialystok-dojlidy_qa.json`)
 - Graf: 355 węzłów, 421 krawędzi, 31,3 km (trunk 4,5 km, tertiary 5,4 km, service 13,9 km); 32 węzły brzegowe.
