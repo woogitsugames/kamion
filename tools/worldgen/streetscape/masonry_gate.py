@@ -83,10 +83,10 @@ def brick_band(key="silicate"):
     off = np.where(row % 2 == 0, 0.0, blen / 2)
     col = np.floor((xx + off) / blen).astype(int)
     n_rows, n_cols = int(row.max()) + 1, int(col.max()) + 2
-    tone = 1.0 + rng.normal(0, 0.055, (n_rows, n_cols))
+    tone = 1.0 + rng.normal(0, 0.045, (n_rows, n_cols))
     tone[rng.random((n_rows, n_cols)) < 0.09] *= 0.80           # darker (wet / sooted) bricks
     tone[rng.random((n_rows, n_cols)) < 0.05] *= 1.10           # a few bleached ones
-    warm = rng.normal(0, 0.02, (n_rows, n_cols))
+    warm = rng.normal(0, 0.012, (n_rows, n_cols))
     t = tone[row, col]
     wm = warm[row, col]
     base = np.array(SILICATE, np.float32) / 255.0
@@ -542,9 +542,22 @@ def build_kit(k):
             kit.brick_pier(c, u, ps, ps, ph, cap=True)
         pq = w.get("plaques")
         if pq:
-            f = fr.facing(pq)
+            # on the wall segment nearest to at_la, on its face that looks toward `facing_deg` / the street
+            at = rel(pq["at_la"])
+            best = None
+            for a_, b_ in zip(P[:-1], P[1:]):
+                u_ = (b_ - a_) / np.hypot(*(b_ - a_))
+                t_ = float(np.clip((at - a_) @ u_, 0.0, np.hypot(*(b_ - a_))))
+                q_ = a_ + u_ * t_
+                d_ = float(np.hypot(*(at - q_)))
+                if best is None or d_ < best[0]:
+                    best = (d_, q_, u_)
+            _, q_, u_ = best
+            f = np.array([u_[1], -u_[0]])
+            if f @ fr.facing(pq) < 0:
+                f = -f
             right = np.array([-f[1], f[0]])
-            c0 = rel(pq["at_la"]) + f * (th / 2)
+            c0 = q_ + f * (th / 2)
             pw, phh = pq.get("size_m", [0.70, 0.28])
             cols, count = int(pq.get("cols", 2)), int(pq.get("count", 5))
             texts = pq.get("texts") or PLAQUE_TEXTS
@@ -553,7 +566,7 @@ def build_kit(k):
                 im = plaque(int(pw * FACE_PX_M), int(phh * FACE_PX_M), texts[i % len(texts)], f"{k['key']}:{i}")
                 rect = kit.atlas.put(im)
                 cc = c0 + right * ((c_ - (cols - 1) / 2) * (pw + 0.03))
-                kit.panel(cc, f, pw, phh, float(pq.get("z_m", 1.45)) - r_ * (phh + 0.03), rect, proud=0.015, back=False)
+                kit.panel(cc, f, pw, phh, float(pq.get("z_m", 1.45)) - r_ * (phh + 0.03), rect, proud=0.02, back=False)
     for p in o.get("piers", []):
         w_, d_ = p.get("size_m", [0.38, 0.38])
         kit.brick_pier(rel(p["at_la"]), along, float(w_), float(d_), float(p["height_m"]), cap=bool(p.get("cap", False)),
