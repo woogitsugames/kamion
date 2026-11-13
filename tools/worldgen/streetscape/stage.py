@@ -272,6 +272,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     vrep = {}
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides)
     forest_mix = vrep.pop("_forest_mix")
+    forest_cleared = vrep.pop("_forest_cleared", [])
     rep["vegetation"] = vrep
     log("trees", vrep["trees"])
     # forest HLOD cells (canopy + edge walls) replacing far stands
@@ -279,7 +280,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     half = w.region["bbox"]["width_m"] / 2
     hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep)
     log("forest hlod", vrep["forest_hlod"])
-    col = VG.ground_masks(src, origin, hf, dist, forests)
+    col = VG.ground_masks(src, origin, hf, dist, forests, forest_cleared)
     col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # no grit strip around the lawns (ADR 0114)
     # ADR 0132: grown garden trees of the house plots (orthophoto crowns) join the tree instances - same prototypes,
     # LODs and impostors as every street tree; none closer than 2.5 m to a tree the region already has there

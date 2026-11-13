@@ -446,3 +446,52 @@ def test_region_garden_trees_match_g7_density_and_size():
     assert 0.20 <= con <= 0.30, con                                               # G7 # 8: 25 % (15-40); detector alone: 11 %
     kinds = [t.get("kind") for t in gt["conifers"] if t.get("converted")]
     assert kinds and 0.2 <= kinds.count("thuja") / len(kinds) <= 0.5              # G7 # 9: columnar thuja 35 %
+
+
+# ---------------------------------------------------------------- forest clearing (horizon of 303305 / 320215 / 454716)
+def _forest_src(fid, ring):
+    empty = {k: [] for k in ("OT_PTRK_A", "OT_OIPR_P", "OT_OIPR_L", "OT_PTNZ_A", "OT_PTTR_A")}
+    return {"bdot10k": {"OT_PTLZ_A": [{"id": fid, "props": {"rodzaj": "las", "kategoria": "iglasty"},
+                                        "geometry": {"coordinates": [ring]}}], **empty},
+            "osm": {"nodes": [], "areas": []}}
+
+
+def _place(src, overrides):
+    from types import SimpleNamespace
+    from streetscape import vegetation as VG
+    hf = SimpleNamespace(x0=-10.0, y1=210.0)
+    zc = np.zeros((221, 221))
+    rep = {}
+    trees, forests = VG.place(src, (0.0, 0.0), hf, zc, np.zeros_like(zc, bool), rep, overrides)
+    return trees, forests, rep
+
+
+def test_forest_clearing_removes_trees_keeps_clumps_and_reports_stale():
+    ring = [[0, 0], [200, 0], [200, 200], [0, 200]]
+    src = _forest_src("F1", ring)
+    ov = [{"id": "clr", "kind": "forest_clearing", "target": {"bdot": "F1"},
+           "cleared_epsg2180": [[[100, -10], [210, -10], [210, 210], [100, 210]]],
+           "keep_epsg2180": [[[140, 90], [160, 90], [160, 110], [140, 110]]]},
+          {"id": "gone", "kind": "forest_clearing", "target": {"bdot": "NOPE"}, "cleared_epsg2180": [[[0, 0], [1, 0], [1, 1]]]}]
+    t0, _, _ = _place(src, [])
+    t1, forests, rep = _place(src, ov)
+    E = np.array([t["e"] for t in t1])
+    N = np.array([t["n"] for t in t1])
+    clump = (E > 141) & (E < 159) & (N > 91) & (N < 109)
+    assert not np.any((E > 103) & ~clump & ~((E > 137) & (E < 163) & (N > 87) & (N < 113))), "tree left in the clearing"
+    assert clump.sum() >= 5, "the authored keep clump must stay a stand of trees"
+    assert sum(1 for t in t0 if t["e"] < 97) == sum(1 for t in t1 if t["e"] < 97), "the stand outside must not change"
+    assert rep["forest_clearings"]["applied"][0]["area_m2_after"] < 0.6 * rep["forest_clearings"]["applied"][0]["area_m2_before"]
+    assert [s["id"] for s in rep["forest_clearings"]["stale"]] == ["gone"]
+    assert rep["_forest_cleared"] and rep["_forest_cleared"][0].area > 15000
+
+
+def test_region_forest_clearing_targets_a_live_bdot_polygon():
+    from roads import pipeline
+    from streetscape import vegetation as VG
+    ov = [o for o in pipeline.load_overrides("bialystok-industrial-c") if o.get("kind") == "forest_clearing"]
+    assert ov, "ADR 0163 forest clearing override missing"
+    clear = VG.forest_clearings(ov, (777995.0, 596223.0))
+    cut, _ = clear["2BE4B432-6BC0-1BF0-E053-CC2BA8C0D140"]
+    assert 4000 < cut.area < 8000                     # traced sand pit minus the three clumps (orthophoto 2024)
+    assert cut.bounds[0] > 215                        # nothing west of E 215 local is cleared

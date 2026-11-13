@@ -97,6 +97,27 @@ def _tree_group_overrides(overrides, origin):
     return out
 
 
+def forest_clearings(overrides, origin):
+    """Authored `kind: forest_clearing` (ADR 0163): parts of a BDOT10k OT_PTLZ_A polygon that the GUGiK orthophoto
+    shows cleared (sand, no trees). {bdot id: (cleared polygon, override id)}; `cleared_epsg2180` rings minus the
+    `keep_epsg2180` rings (tree clumps left standing inside the clearing). Keyed by the BDOT id, so it survives
+    every regeneration; a target missing from the source data is reported as stale."""
+    out = {}
+    o0 = np.asarray(origin, float)
+    for o in overrides or []:
+        if o.get("kind") != "forest_clearing":
+            continue
+        cut = shapely.union_all([shapely.make_valid(shapely.Polygon(np.asarray(r, float) - o0))
+                                 for r in o["cleared_epsg2180"]])
+        keep = [shapely.make_valid(shapely.Polygon(np.asarray(r, float) - o0)) for r in o.get("keep_epsg2180", [])]
+        if keep:
+            cut = cut.difference(shapely.union_all(keep))
+        bid = str(o["target"]["bdot"])
+        prev = out.get(bid)
+        out[bid] = (cut if prev is None else prev[0].union(cut), o["id"])
+    return out
+
+
 def place(src, origin, hf, zc, blocked, report, overrides=None):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list."""
     out = []
@@ -127,21 +148,33 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
 
     forests = []
     forest_mix = []
+    clear = forest_clearings(overrides, origin)
+    crep = {"applied": [], "stale": []}
+    cleared = []                            # cleared parts of the forest: sand on the orthophoto -> bare ground mask
     for f in src["bdot10k"]["OT_PTLZ_A"]:
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
         if not poly.is_valid:
             poly = shapely.make_valid(poly)
+        full = poly                         # trees are generated on the BDOT outline and the cleared ones dropped
+        cut = None                          # afterwards: the stand left standing keeps every tree (same seed stream)
+        if f["id"] in clear:
+            cut, oid = clear.pop(f["id"])
+            cleared.append(shapely.make_valid(full.intersection(cut)))
+            poly = shapely.make_valid(full.difference(cut))
+            crep["applied"].append({"id": oid, "bdot": f["id"], "area_m2_before": round(full.area, 1),
+                                    "area_m2_after": round(poly.area, 1)})
+        n_stand = len(out)
         kat = f["props"].get("kategoria")
         fk = {"iglasty": "conifer", "liściasty": "broadleaf"}.get(kat, "mixed")
         forests.append(poly)
         forest_mix.append((poly, fk))
         rng = np.random.default_rng(_seed(f["id"]))
         rodzaj = f["props"].get("rodzaj", "las")
-        P = _scatter(poly, SPACING.get(rodzaj, 4.5), rng)
+        P = _scatter(full, SPACING.get(rodzaj, 4.5), rng)
         sp = pick(rng, MIX.get(kat, MIX[None]), len(P))
         emit(P, sp, rng, f"bdot:{f['id']}", 0.7 if rodzaj == "zagajnik" else 1.0, fk=fk)
         if rodzaj == "las":
-            P = _scatter(poly.buffer(-2.0), UNDER_SPACING, rng)
+            P = _scatter(full.buffer(-2.0), UNDER_SPACING, rng)
             names = list(UNDERSTOREY)
             w = np.array([UNDERSTOREY[k][2] for k in names])
             sp = rng.choice(names, size=len(P), p=w / w.sum())
@@ -151,10 +184,15 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
                 lo, hi = UNDERSTOREY[t["p"][5:]][:2]
                 t["h"] = round(float(lo + (hi - lo) * ((_seed(f"{t['e']},{t['n']}") % 1000) / 999.0)), 1)
         # edge: shrubs + young deciduous along the outline
-        edge = poly.buffer(3.0).difference(poly.buffer(-5.0))
+        edge = full.buffer(3.0).difference(full.buffer(-5.0))
         P = _scatter(edge, 3.0, rng)
         sp = pick(rng, [0.0, 0.25, 0.15, 0.05, 0.0, 0.55], len(P))
         emit(P, sp, rng, f"bdot:{f['id']}:edge", 0.6, fk=fk)
+        if cut is not None and len(out) > n_stand:
+            Q = np.array([[t["e"], t["n"]] for t in out[n_stand:]])
+            gone = shapely.contains_xy(cut, Q[:, 0], Q[:, 1])
+            crep["applied"][-1]["trees_removed"] = int(gone.sum())
+            out[n_stand:] = [t for t, g in zip(out[n_stand:], gone) if not g]
     for f in src["bdot10k"]["OT_PTRK_A"]:
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
         rng = np.random.default_rng(_seed(f["id"]))
@@ -174,6 +212,9 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             k = int(rng.integers(1, 4))
             P = q + rng.normal(0, 2.5, (k, 2)) * (k > 1)
             emit(P, pick(rng, [0.05, 0.3, 0.05, 0.3, 0.3, 0.0], k), rng, f"bdot:{f['id']}")
+    crep["stale"] = [{"id": oid, "bdot": bid} for bid, (_, oid) in clear.items()]
+    report["forest_clearings"] = crep
+    report["_forest_cleared"] = cleared
     groups = _tree_group_overrides(overrides, np.asarray(origin, float))
     grep = {"lines": len(groups), "trees": 0, "groups": 0, "rows_grouped": 0}
     for f in src["bdot10k"]["OT_OIPR_L"]:
@@ -237,7 +278,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
     return out, forests
 
 
-def ground_masks(src, origin, hf, dist_road, forests):
+def ground_masks(src, origin, hf, dist_road, forests, cleared=()):
     """(H, W, 4) float32 terrain vertex colours (see module doc)."""
     H, W = hf.z.shape
     R = np.clip(dist_road / 20.0, 0, 1)
@@ -260,6 +301,7 @@ def ground_masks(src, origin, hf, dist_road, forests):
     bare_polys = [PV._poly_local(f["geometry"]["coordinates"], origin) for f in src["bdot10k"]["OT_PTNZ_A"]]
     bare_polys += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
                    if a["tags"].get("landuse") in ("construction", "brownfield")]
+    bare_polys += list(cleared)             # authored forest clearings (ADR 0163): sand on the orthophoto
     A = PV.rasterize_polys(bare_polys, hf).astype(float)
     A *= .40 + .60 * metric_patch_field(east, north, 3.5, 882)
     C = np.stack([R, G, B, A], axis=-1)
