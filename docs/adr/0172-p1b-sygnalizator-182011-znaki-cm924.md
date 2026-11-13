@@ -82,7 +82,7 @@ z 2019 r. (dwa maszty) zamierzona (§1).
 **QA danych** (`generated/streetscape_qa.json` → `furniture.gate3_landmarks`): `stale = []`; pięć obiektów wyspy EC
 i oba sygnalizatory `snapped_m = 0.0`; `top_m`: F-10 3,05, A-7 + C-12 4,18, D-6 2,85, tablica ulicy 3,40.
 
-**Testy:** `tests/gis/test_p1b_0172.py` 9/9; pytest `tests/gis` PYTEST_R5; EditMode 517/518 (1 pominięty,
+**Testy:** `tests/gis/test_p1b_0172.py` 9/9; pytest `tests/gis` 1077 passed, 2 xfailed (r5, 1177 s); EditMode 517/518 (1 pominięty,
 Ignored), 0 nieudanych; fidelity exit 0; preflight SBS OK; 42 pary × 2 oświetlenia.
 
 **Budżet Low** (48 kamer kontrolnych, r5 wobec bazy sprzed zmian, `logs/budget-low-r5.txt`): draw calle −6…+11
