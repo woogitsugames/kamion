@@ -77,6 +77,36 @@ MonoBehaviour:
   tyreScrub:
     ext: {fileID: 8300000, guid: 22d62bb26c86f7749a6b9d3a48a75615, type: 3}
     cab: {fileID: 8300000, guid: d5efe913515f89245babe9b054d2c15c, type: 3}
+  retarderTone:
+    ext: {fileID: 8300000, guid: e2509f326b4f9624a90eb29bf1d11229, type: 3}
+    cab: {fileID: 8300000, guid: 7f42e2ffb63e46245a3ca8d7252448cc, type: 3}
+  retarderFlow:
+    ext: {fileID: 8300000, guid: 927381397e866464393a7f2aaee4399f, type: 3}
+    cab: {fileID: 8300000, guid: fc855f8f358173e44b193f4bd944931e, type: 3}
+  ebrakeEngage:
+    ext: {fileID: 8300000, guid: 6dfd35b462bba5a4ca6af6defdb15a08, type: 3}
+    cab: {fileID: 8300000, guid: 772b892eecf67e5449eb3f83430f661a, type: 3}
+  ebrakeRelease:
+    ext: {fileID: 8300000, guid: 8b40005f34bf60c4b85ec3a8c1b71778, type: 3}
+    cab: {fileID: 8300000, guid: abe94c6dbe849874b983f17976e3bd8e, type: 3}
+  amtDisengage:
+    ext: {fileID: 8300000, guid: 5df5f854f1f45e24dba8439b1ce7db92, type: 3}
+    cab: {fileID: 8300000, guid: c71314d367c845f4da06192d589c87ee, type: 3}
+  amtEngage:
+    ext: {fileID: 8300000, guid: fd94c2652ec495549971ff7467dd7d4e, type: 3}
+    cab: {fileID: 8300000, guid: 9fde4b870b65e5f47ac5127d814ff250, type: 3}
+  amtEngageB:
+    ext: {fileID: 8300000, guid: 49b723cea12657445967da438d0dc1ed, type: 3}
+    cab: {fileID: 8300000, guid: 098760579646ac040aa31b05e8aae4d8, type: 3}
+  amtClutchChuff:
+    ext: {fileID: 8300000, guid: 23b66b33f6fe1d8468f1a078006ff566, type: 3}
+    cab: {fileID: 8300000, guid: 518b0f78be46c4843ada594b3897a1c0, type: 3}
+  airDryerPurgeV2:
+    ext: {fileID: 8300000, guid: 6d7cc4bdac693984dbe6ddfe0e0d6b01, type: 3}
+    cab: {fileID: 8300000, guid: fc145d71cee3f5a4c82e395c8a221c0b, type: 3}
+  airDryerPurgeV2B:
+    ext: {fileID: 8300000, guid: e2c79419bf479484f936dfed553a14dd, type: 3}
+    cab: {fileID: 8300000, guid: 038b9f0407a582b4b8d8d0d188fec109, type: 3}
   elExteriorEngine: {fileID: 11400000, guid: bc5729a9a99bd9f49867644ca1388e17, type: 2}
   elCabEngine: {fileID: 11400000, guid: 3dacf83062954de408d8cc31b40798a3, type: 2}
   elExteriorEngineBrake: {fileID: 11400000, guid: a44c5bec5a4653e46bf1980408df3df3, type: 2}
@@ -178,5 +208,5 @@ MonoBehaviour:
   elTyreSqueal:
     ext: {fileID: 8300000, guid: 834a43603d20cf544a4bb31bd8d472d6, type: 3}
     cab: {fileID: 8300000, guid: 9bb74ad85d69adc46a2b56c9fa6084d1, type: 3}
-  sourceInfo: 122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis,
+  sourceInfo: 122 engine loops + 69 sfx, tools/audio/render_all.py (procedural synthesis,
     no recordings); ElevenLabs 89 clips
