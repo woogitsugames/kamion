@@ -93,6 +93,30 @@ namespace Game.Tests
             Object.DestroyImmediate(go);
         }
 
+        /// <summary>ADR 0168: a tap on an outbound carriageway that ends at the region-edge closure (no way back) snaps the
+        /// pin out of the no-return zone like an off-reach tap.</summary>
+        [Test]
+        public void Synthetic_SetPin_NoReturnTap_SnapsOutOfTheZone()
+        {
+            var nodes = new[] { new Vector2(0, 0), new Vector2(200, 0), new Vector2(200, 200), new Vector2(0, 200),
+                                new Vector2(400, 0), new Vector2(600, 0) };
+            var g = Build(nodes, new byte[] { 0, 0, 0, 0, 0, RouteGraph.FlagNodeBoundary }, new (int, int, byte, string)[]
+            {
+                (0, 1, 0, "Dolna"), (1, 2, 0, "Prawa"), (2, 3, 0, "Gorna"), (3, 0, 0, "Lewa"),
+                (1, 4, RouteGraph.FlagOneway, "Wylotowa"), (4, 5, RouteGraph.FlagOneway, "Wylotowa"),
+            });
+            Assert.IsTrue(g.EdgeNoReturn(5));
+            var go = new GameObject("NavReachTest");
+            var nav = go.AddComponent<NavigationService>();
+            nav.SetGraphForTest(g);
+            Assert.IsTrue(nav.SetPin(new Vector2(500, 2)));
+            Assert.AreEqual(PlanStatus.GoalOffReach, nav.LastStatus);
+            Assert.AreEqual(new Vector2(200, 0), nav.PinOnRoad, "nearest node outside the zone (the gate junction)");
+            nav.SetPoseForTest(new Vector2(20, 0), 90f, 0f);
+            Assert.AreEqual(PlanStatus.Ok, nav.PlanToPin());
+            Object.DestroyImmediate(go);
+        }
+
         [Test]
         public void Region_ReachabilityFlags_AndersaRoutable_BuskaSnapped()
         {

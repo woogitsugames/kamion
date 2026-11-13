@@ -6,6 +6,10 @@
                       refs_extra}]}] (from_osm: OSM destination / destination:ref of that way, ADR 0069).
                       Optional per board `size_m: [w, h]` and per portal `beam_depth_m`, `columns_en` (measured on
                       photos / the orthophoto, ADR 0127 / 0139).
+                      ADR 0162 (research G3): per board `arrow` (up | up2 | down | down2 | left | right | up_right),
+                      `panels: [{rows, arrow}]` (stacked panels in one frame column), `style: e1_cross` (`top`,
+                      `left`, `right` rows around a crossroads diagram), `style: vms` (`lines` of an LED message
+                      sign), `lat_shift_m` (board centre moved left (+) of the lane centre, in travel terms).
                       `form: cantilever` (ADR 0069): one column on `column_side` (L / R of travel, `column_offset_m`
                       behind the carriageway side strip) and a lattice arm over the boards. Board faces are our
                       own schematic drawings (signs.overhead_board); bottom edge 5.20 m above the road
@@ -52,6 +56,12 @@ def _board_rows(graph, bd, rep, oid):
     destination / destination:ref tags of that way in the road graph (ADR 0069). Names split on ';'; refs pair with
     names from the end (fewer refs than names), all on the first row when there are more refs; `refs_extra` (E-route / DK numbers of the route
     relations, which the graph does not keep) go first on the first row."""
+    if "panels" in bd:                              # ADR 0162: stacked panels, each with its own arrow
+        return [(list(r[0]), r[1]) for pn in bd["panels"] for r in pn["rows"]]
+    if bd.get("style") == "e1_cross":
+        return [(list(bd["top"][0]), bd["top"][1])] + [(list(r[0]), r[1]) for r in bd["left"] + bd["right"]]
+    if bd.get("style") == "vms":
+        return [([], t) for t in bd["lines"]]
     if "rows" in bd:
         return [(list(r[0]), r[1]) for r in bd["rows"]]
     rows = []
@@ -114,12 +124,30 @@ def build(pl, net, graph, overrides, origin, boards, report):
                 if size:
                     key = "OB_" + hashlib.sha1(
                         repr((rows, [float(v) for v in size], len(bd["lanes"]))).encode()).hexdigest()[:8]
+                if "panels" in bd or bd.get("style") or bd.get("arrow"):     # ADR 0162 (G3 2024 frames)
+                    spec = {k: bd[k] for k in ("panels", "style", "arrow", "top", "left", "right", "lines") if k in bd}
+                    key = "OB_" + hashlib.sha1(repr((sorted(spec.items()), rows, size)).encode()).hexdigest()[:8]
                 if key not in boards:
-                    im, wm, hm = SG.overhead_board(rows, size_m=size, arrows=len(bd["lanes"]))
+                    if "panels" in bd:
+                        im, wm, hm = SG.panel_board([{"rows": [(list(r[0]), r[1]) for r in pn["rows"]],
+                                                      "arrow": pn.get("arrow", "down")} for pn in bd["panels"]],
+                                                    size_m=size)
+                    elif bd.get("style") == "e1_cross":
+                        im, wm, hm = SG.e1_cross_board((list(bd["top"][0]), bd["top"][1]),
+                                                       [(list(r[0]), r[1]) for r in bd["left"]],
+                                                       [(list(r[0]), r[1]) for r in bd["right"]], size)
+                    elif bd.get("style") == "vms":
+                        im, wm, hm = SG.vms_board(bd["lines"], size)
+                    elif bd.get("arrow"):
+                        im, wm, hm = SG.panel_board([{"rows": rows, "arrow": bd["arrow"]}], size_m=size)
+                    else:
+                        im, wm, hm = SG.overhead_board(rows, size_m=size, arrows=len(bd["lanes"]))
                     boards[key] = (round(wm, 3), round(hm, 3), im)
                 wm, hm, _ = boards[key]
                 hmax = max(hmax, hm)
                 lat = float(np.mean([cen[i] for i in bd["lanes"] if i < len(cen)]))
+                if bd.get("lat_shift_m"):              # ADR 0162: board centre off the lane centre (read on photo)
+                    lat += float(bd["lat_shift_m"]) * (1.0 if dirn > 0 else -1.0)
                 items.append((key, lat, hm))
             # ADR 0127 (review s11-0125 P2): on a portal the boards stand ON the beam - their tops BOARD_ABOVE_BEAM_M
             # above the top chord, the faces covering the 1.0 m beam (Mapillary 275528677534382 from the front,

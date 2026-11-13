@@ -46,7 +46,7 @@ namespace NavRunner.Tests
 
         static readonly Vector2 k_Kombatantow = new Vector2(-1.7f, -897.8f);
         static readonly Vector2 k_AndersaSE = new Vector2(-172f, -298f);
-        static readonly Vector2 k_AndersaNW = new Vector2(-457.95f, -55.97f);
+        static readonly Vector2 k_AndersaNW = new Vector2(-320f, -162f);
 
         [Fact]
         public void Region_KnownRoute_KombatantowToAndersa_SouthEastCarriageway()
@@ -437,11 +437,11 @@ namespace NavRunner.Tests
             var gd = new NavGuidance();
             tr.Update(p, new Vector2(50, 0), 90f, 5f, 0.02f, ref gd);
             Assert.Equal(0b001u, gd.NextLanesAllowed);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 10; i++) planner.Plan(new Vector2(50, 0), 90f, new Vector2(200, 150), p);
-            for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[i % p.Count], 90f, 10f, 0.02f, ref gd);
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.Equal(0, bytes);
+            GcAllocCounter.AssertZero(() =>
+            {
+                for (int i = 0; i < 10; i++) planner.Plan(new Vector2(50, 0), 90f, new Vector2(200, 150), p);
+                for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[i % p.Count], 90f, 10f, 0.02f, ref gd);
+            }, message: "planning with lane guidance + tracking allocate nothing");
         }
 
         [Fact]
@@ -455,11 +455,11 @@ namespace NavRunner.Tests
             Vector2 a = k_Kombatantow, b = k_AndersaSE;
             Assert.Equal(PlanStatus.Ok, planner.Plan(a, 0f, b, p));
             for (int i = 0; i < 50; i++) tr.Update(p, p.Points[i % p.Count], 0f, 10f, 0.02f, ref gd);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 10; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);
-            for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[(i / 3) % p.Count] + new Vector2(1f, 0f), i * 0.5f, 10f, 0.02f, ref gd);
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.Equal(0, bytes);
+            GcAllocCounter.AssertZero(() =>
+            {
+                for (int i = 0; i < 10; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);
+                for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[(i / 3) % p.Count] + new Vector2(1f, 0f), i * 0.5f, 10f, 0.02f, ref gd);
+            }, message: "routing / re-planning and guidance allocate nothing");
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < 20; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);

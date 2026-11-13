@@ -288,7 +288,10 @@ def test_photo_matched_overrides_applied(qa):
     lm = qa["furniture"]["landmarks"]
     assert lm["stale"] == []
     assert {g["id"] for g in lm["gantries"]} == {"andersa-putry-approach-gantry",            # + ADR 0069 (Mapillary)
-                                                 "andersa-putry-cantilever-p37", "andersa-putry-portal-p40"}
+                                                 "andersa-putry-cantilever-p37", "andersa-putry-portal-p40",
+                                                 # ADR 0162 (G3 2024 photos): al. Tysiąclecia S of rondo Putry
+                                                 "tysiaclecia-s-putry-portal", "tysiaclecia-its-vms-gantry",
+                                                 "tysiaclecia-s-putry-e1-portal"}
     assert len(lm["landmarks"]) == 2
     man = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
     ids = {o["id"] for o in man["overrides_applied"]}
@@ -315,7 +318,8 @@ def test_yards_have_trucks_and_containers(qa):
 def test_second_lamp_family_on_side_streets(qa):
     fam = qa["furniture"]["lamps"]["by_family"]
     old = sum(v for k, v in fam.items() if k.startswith("lamp_old_"))
-    assert old >= 50 and fam.get("lamp_12m", 0) > 0          # older family exists, main roads keep the modern one
+    # older family exists, main roads keep the modern one (GP 11 m since ADR 0162, ZDM PFU "do 11 m")
+    assert old >= 50 and fam.get("lamp_11m", 0) > 0
 
 
 def test_vehicle_prototypes_are_plain():

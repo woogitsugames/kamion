@@ -47,8 +47,8 @@
     {
       "metric": "articulation_limit_excess_deg",
       "status": "WORKING_VALUE",
-      "source": "M34 fuzz invariant: articulation angle stays inside the fifth-wheel yaw hard stop (yawLimitDeg = 90, tractor_4x2_generic.vehicle.json)",
-      "max": 0
+      "source": "D59 (owner, 2026-11-13) / ADR 0158 F1, ADR 0165: articulation may exceed the fifth-wheel soft yaw stop (yawLimitDeg = 90, yawStopFrequencyHz 3, tractor_4x2_generic.vehicle.json) by <= 3.5 deg; a stiffer stop (>= 4.5 Hz) breaks the 0.35 m/s jerk limit (ADR 0158 table). Measured max 3.33 deg (M34 hunt)",
+      "max": 3.5
     },
     {
       "metric": "max_fifth_wheel_error_mm",
@@ -62,9 +62,5 @@
       "source": "M34 fuzz invariant: no negative air pressure in any reservoir/line (physical impossibility)",
       "min": 0
     }
-  ],
-  "expectedFailReason": "Fuzz run violates the articulation-stop invariant (articulation_limit_excess_deg > 0, see log): full-lock steering at low speed drives the articulation past the 90 deg yaw stop. Suspected cause: FifthWheel.cs:223/280-290 soft stop penetration. Minimal repro: fuzz_shrink_articulation_stop_fulllock.",
-  "expectedFailMetrics": [
-    "articulation_limit_excess_deg"
   ]
 }

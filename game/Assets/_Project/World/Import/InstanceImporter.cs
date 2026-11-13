@@ -114,7 +114,7 @@ namespace Game.World.Import
             else if (proto.StartsWith("sign_gantry_") || proto.StartsWith("sign_cantilever_")) e = new[] { 100f, 800f };
             else if (proto.StartsWith("board_OB_")) e = new[] { 50f, 800f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
-            else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
+            else if (proto.StartsWith("bus_shelter") || proto.EndsWith("_gate")) e = new[] { 60f, 300f };   // ADR 0162: BKM variants
             // Hero landmark assets (ADR 0067 viaduct, ADR 0070 fire station, ADR 0071 depot; art-source/world/landmarks):
             // LOD0 / LOD1 / silhouette, never culled. One line per asset family, most specific prefix first.
             else if (proto.StartsWith("landmark_depot")) e = new[] { 100f, 400f, 20000f };
