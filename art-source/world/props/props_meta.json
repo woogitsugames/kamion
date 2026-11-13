@@ -80,14 +80,6 @@
    0.657,
    0.6
   ],
-  "G30d79038f": [
-   1.057,
-   0.25
-  ],
-  "G3178a6146": [
-   0.957,
-   1.379
-  ],
   "G33c600842": [
    1.057,
    0.25
@@ -95,6 +87,10 @@
   "G3518e7fb6": [
    0.807,
    1.35
+  ],
+  "G36d823cb6": [
+   1.057,
+   0.25
   ],
   "G390e84fe0": [
    0.657,
@@ -109,12 +105,16 @@
    1.229
   ],
   "G3d0460cfb": [
-   0.957,
-   1.2
+   0.857,
+   0.8
   ],
   "G3d34c990e": [
    0.657,
    0.6
+  ],
+  "G3d380d5d4": [
+   0.957,
+   1.379
   ],
   "G3ee8d02e9": [
    0.957,
@@ -431,24 +431,6 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_G30d79038f": {
-   "materials": [
-    "plate_back",
-    "sign_G30d79038f",
-    "steel_galv"
-   ],
-   "tris_lod0": 28,
-   "tris_lod1": 28
-  },
-  "board_G3178a6146": {
-   "materials": [
-    "plate_back",
-    "sign_G3178a6146",
-    "steel_galv"
-   ],
-   "tris_lod0": 28,
-   "tris_lod1": 28
-  },
   "board_G33c600842": {
    "materials": [
     "plate_back",
@@ -462,6 +444,15 @@
    "materials": [
     "plate_back",
     "sign_G3518e7fb6",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_G36d823cb6": {
+   "materials": [
+    "plate_back",
+    "sign_G36d823cb6",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -507,6 +498,15 @@
    "materials": [
     "plate_back",
     "sign_G3d34c990e",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_G3d380d5d4": {
+   "materials": [
+    "plate_back",
+    "sign_G3d380d5d4",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -1830,20 +1830,6 @@
    "tris_lod0": 28,
    "tris_lod1": 16
   },
-  "sign_g3_G30d79038f": {
-   "materials": [
-    "sign_G30d79038f"
-   ],
-   "tris_lod0": 28,
-   "tris_lod1": 16
-  },
-  "sign_g3_G3178a6146": {
-   "materials": [
-    "sign_G3178a6146"
-   ],
-   "tris_lod0": 54,
-   "tris_lod1": 42
-  },
   "sign_g3_G33c600842": {
    "materials": [
     "sign_G33c600842"
@@ -1854,6 +1840,13 @@
   "sign_g3_G3518e7fb6": {
    "materials": [
     "sign_G3518e7fb6"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 16
+  },
+  "sign_g3_G36d823cb6": {
+   "materials": [
+    "sign_G36d823cb6"
    ],
    "tris_lod0": 28,
    "tris_lod1": 16
@@ -1892,6 +1885,13 @@
    ],
    "tris_lod0": 28,
    "tris_lod1": 16
+  },
+  "sign_g3_G3d380d5d4": {
+   "materials": [
+    "sign_G3d380d5d4"
+   ],
+   "tris_lod0": 54,
+   "tris_lod1": 42
   },
   "sign_g3_G3ee8d02e9": {
    "materials": [
