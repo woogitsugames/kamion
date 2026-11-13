@@ -726,9 +726,12 @@ def authored_openings(rule, wins, L, zref, key, door):
             n = FR.ribbon_lights(u1 - u0)                           # one `off` cell per light, two lights per bay
             vs = [FA.far_entry(g, row, off, i // 2)[1] for i in range(n)]
             ops.append((u0, u1, z0, z1, 0.12, "ribbon", cells("off", *vs)))
+        elif rule["windows"] == "ribbon":                           # light band: one office-row window per light
+            n = FR.ribbon_lights(u1 - u0)
+            ops.append((u0, u1, z0, z1, 0.12, "ribbon", cells("off", *[FA.far_entry(g, row, off, i)[1] for i in range(n)])))
         else:
             ck, cv = FA.far_entry(g, row, off, 0)
-            ops.append((u0, u1, z0, z1, REVEAL_ETICS, "window", cells(ck, cv)))
+            ops.append((u0, u1, z0, z1, 0.12, "window", cells(ck, cv)))
     return ops
 
 
@@ -879,6 +882,11 @@ def load(fc, origin, overrides, hero=None):
             o = ovr.get(f["id"], {})
             if hero and f["id"] in hero:      # replaced by an authored asset (streetscape.hero_building)
                 o = {**o, "hero_asset": hero[f["id"]]}
+            if o.get("footprint_open_m"):     # ADR 0180: authored straightening of the outline - a morphological
+                d_ = float(o["footprint_open_m"])        # opening drops protrusions narrower than 2 x d (mitred corners)
+                op = pl.buffer(-d_, join_style=2).buffer(d_, join_style=2).simplify(0.15)   # + steps under 0.15 m
+                if op.geom_type == "Polygon" and not op.is_empty:
+                    pl = shapely.geometry.polygon.orient(op)
             if o.get("height_m"):             # ADR 0167: authored height (structures with no LoD1 / BDOT height)
                 p = {**p, "height_m": float(o["height_m"])}
             out.append({"id": bid, "poly": pl, "props": p, "ovr": o, "typ": "roof" if p.get("is_roof_only") else

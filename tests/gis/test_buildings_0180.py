@@ -1,12 +1,12 @@
 """ADR 0180 (review REVIEW-2026-11-13-s17-0171 P1): authored office facades - building override `facades`
 (frontage.facade_rules): the tower by the Kwadrat lane gets blank sand gables with one stair column of windows and
-white long walls with one window band per storey; both LODs draw the same rectangles; no new material."""
+a white SE wall with one band of light windows per storey, a straightened outline; both LODs draw the same rectangles; no new material."""
 import numpy as np
 import pytest
 
 from test_buildings_0167 import ORIGIN, REGION_DIR, TOWER, _build, _loaded
 
-SW, SE = np.radians(208.3), np.radians(118.2)          # bearings of the tower's gable and long wall normals (BDOT10k)
+SW, SE = np.radians(208.3), np.radians(118.3)          # bearings of the tower's gable and long wall normals (BDOT10k)
 
 
 def _tris(buf, layer, mat):
@@ -125,18 +125,21 @@ def test_lod1_facade_tiles_the_wall_without_overlap():
 
 def test_tower_gable_is_blank_with_one_stair_column():
     b = _loaded({TOWER})[TOWER]
-    assert len(b["ovr"]["facades"]) == 3 and b["ovr"]["wall_material"] == "plaster_white"
+    assert len(b["ovr"]["facades"]) == 2 and b["ovr"]["wall_material"] == "plaster_beige"
     buf = _build(b)
     # LOD0: the atlas panes on the SW gable (16.09 m) form ONE column, one window per storey (11)
     g = _panes(_on_wall(buf, "buildings", "facade_atlas", SW, 238.0), 1.6)
     d = np.array([-np.cos(SW), np.sin(SW)])                           # along the gable
     u = g[:, :, :2] @ d
-    assert len(g) == 22 and np.ptp(u) < 1.8 + 1e-6, (len(g), float(np.ptp(u)))
-    assert len({round(float(t[:, 2].min()), 2) for t in g}) == 11
-    # LOD1: two plain side quads + 11 x (plain piece + window) + top piece = 25 quads in the far material
-    assert _tris(buf, "buildings_low", "plaster_beige__far_office") == 2 * 25 * 2          # SW and NE gables
-    assert len(_on_wall(buf, "buildings_low", "plaster_beige__far_office", SW, 238.0)) == 50
-    assert len(_on_wall(buf, "buildings", "plaster_beige", SE, -1e9)) == 0                 # sand on the gables only
+    assert len(g) == 20 and np.ptp(u) < 2.0 + 1e-6, (len(g), float(np.ptp(u)))        # ground floor: the entrance
+    assert len({round(float(t[:, 2].min()), 2) for t in g}) == 10
+    # LOD1: two plain side quads + 10 x (plain piece + window) + top piece = 23 quads in the far material
+    assert len(_on_wall(buf, "buildings_low", "plaster_beige__far_office", SW, 238.0)) == 46
+    assert len(_on_wall(buf, "buildings", "plaster_beige", SE, -1e9)) == 0                 # the SE wall is white
+    # every column window is the clear-glass office variant (`variants: [4]`)
+    from streetscape import facade_atlas as FA
+    from streetscape import frontage as FR
+    assert all(FA.FAR_ROWS["office"][r][b_][1] == 4 for r, b_ in FR._bays("office", [4])) and FR._bays("office", [4])
 
 
 def test_tower_long_wall_has_one_band_per_storey_on_white():
@@ -147,9 +150,13 @@ def test_tower_long_wall_has_one_band_per_storey_on_white():
     g = _panes(_on_wall(buf, "buildings", "facade_atlas", SE, -1e9), 1.3)                  # bands 1.3 m high
     z = sorted({round(float(t[:, 2].min()), 2) for t in g})
     assert len(z) == 11 and all(abs((b_ - a_) - (z[1] - z[0])) < 0.02 for a_, b_ in zip(z, z[1:]))    # 11 storeys
+    d = np.array([-np.cos(SE), np.sin(SE)])
+    u = np.sort(np.unique(np.round(g[:, :, :2] @ d, 2)))
+    gaps = np.diff(u)
+    assert (gaps > 2.0).sum() == 1 and 3.0 < gaps.max() < 4.5       # two runs per storey: one 3.7 m pier between them
     # LOD1 window quads carry far-row UVs of the ribbon rows; plain pieces stay in the plain strip (v < 1 m)
     from streetscape import facade_atlas as FA
-    v0 = FA.far_row_v("ribbon", 0)
+    v0 = FA.far_row_v("office", 0)                 # light bands: office-row windows in the __far_ribbon material
     rows = 0
     for p in buf.parts:
         if p.layer == "buildings_low" and p.mat == "plaster_white__far_ribbon":
@@ -158,6 +165,9 @@ def test_tower_long_wall_has_one_band_per_storey_on_white():
     assert rows > 0
     m1, m0 = buf.mats("buildings_low"), buf.mats("buildings")
     assert not any(x.endswith("__far_office") and not x.startswith("plaster_beige") for x in m1)
+    for p in buf.parts:                            # no dark ribbon-row glazing on the white wall
+        if p.layer == "buildings_low" and p.mat == "plaster_white__far_ribbon":
+            assert (p.UV[:, 1] < FA.far_row_v("office_d", 0)).all()
     assert "plaster_band_grey" not in m0 and "window_frame" not in m1
 
 
@@ -170,8 +180,42 @@ def test_tower_uses_only_materials_the_generic_office_set_has():
     far = {m for m in buf.mats("buildings_low") if "__far_" in m}
     assert far == {"plaster_beige__far_office", "plaster_white__far_ribbon"}
     assert {"plaster_white", "plaster_beige"} <= set(BM.OFFICE_WALLS)
-    # LOD1 stays cheap: under 700 triangles for the whole tower (300 with the hashed facade)
-    assert sum(len(p.T) for p in buf.parts if p.layer == "buildings_low") < 700
+    # LOD1 stays cheap: under 800 triangles for the whole tower (300 with the hashed facade)
+    assert sum(len(p.T) for p in buf.parts if p.layer == "buildings_low") < 800
+
+
+def test_tower_outline_is_straightened_by_the_authored_opening():
+    import json
+    from streetscape import buildings_mesh as BM
+    b = _loaded({TOWER})[TOWER]
+    lens = sorted(float(np.hypot(*(q - p))) for p, q in zip(np.asarray(b["poly"].exterior.coords)[:-1],
+                                                             np.asarray(b["poly"].exterior.coords)[1:]))
+    assert min(lens) > 9.0 and abs(max(lens) - 37.1) < 0.2, lens      # no 1.8 m return walls, one 37 m SE wall
+    fc = json.loads((REGION_DIR / "buildings.geojson").read_text(encoding="utf-8"))
+    raw = BM.load({"features": [f for f in fc["features"] if f["id"] == TOWER]}, ORIGIN, [])[0]
+    assert len(raw["poly"].exterior.coords) - 1 == 12 and 0.0 < raw["poly"].area - b["poly"].area < 12.0
+
+
+def test_light_band_is_one_office_window_per_light_on_lod1():
+    from streetscape import frontage as FR
+
+    class Acc:
+        def __init__(self):
+            self.q = []
+
+        def quad(self, layer, mat, a, b, c, d, uv=None):
+            self.q.append(uv)
+    r = _rule(windows="ribbon", glazing="light")
+    assert r["group"] == "office" and r["far"] == "plaster_white__far_ribbon"
+    wins = FR.facade_windows(r, 10.0, 0.0, 0.45, 3.5, 5.0, 1, "k")
+    acc = Acc()
+    FR.lod1_facade(acc, r, wins, np.array([0.0, 0.0]), np.array([1.0, 0.0]), 10.0, 0.6, 5.0)
+    lights = [uv for uv in acc.q if uv[0][1] > 2.0]
+    assert len(lights) == FR.ribbon_lights(9.2) == 6 and all(abs(uv[1][0] - uv[0][0] - 1.5) < 1e-9 for uv in lights)
+    with pytest.raises(ValueError):
+        _rule(windows="ribbon", glazing="blue")
+    with pytest.raises(ValueError):
+        _rule(windows="column", variants=[99])
 
 
 def test_buildings_without_the_override_are_unchanged():

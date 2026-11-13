@@ -155,9 +155,9 @@ def test_outbuilding_windows_face_the_access_road():
 def test_tower_takes_a_material_with_a_far_facade_variant():
     from streetscape import materials as MT
     b = _loaded({TOWER})[TOWER]
-    # ADR 0180: white long walls (building colour) and sand gables (facade rule); both have far-facade variants
-    assert b["ovr"]["wall_material"] == "plaster_white" and b["typ"] == "office"
-    assert [r.get("wall_material") for r in b["ovr"]["facades"]][0] == "plaster_beige"
+    # ADR 0180: sand building colour, white SE wall (facade rule); both have far-facade variants
+    assert b["ovr"]["wall_material"] == "plaster_beige" and b["typ"] == "office"
+    assert [r.get("wall_material") for r in b["ovr"]["facades"]][1] == "plaster_white"
     assert "plaster_beige__far_office" in MT.M and "plaster_white__far_ribbon" in MT.M
     assert "plaster_blue" in MT.M and not any(k.startswith("plaster_blue__far") for k in MT.M)
 

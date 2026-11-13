@@ -2422,31 +2422,35 @@ overrides:
       (far-facade variants exist).
     confidence: medium
     verify: owner photo session item 6 (Kwadrat Park lane)
-    # ADR 0171: `ribbon: false, bands: false` - no hashed ribbon rows / spandrel bands (they stay off on the walls no
-    # rule below covers: the 1.4-1.8 m jogs of the long walls).
-    # ADR 0180 (review REVIEW-2026-11-13-s17-0171 P1): `facades` - what the two Mapillary photos show of the SW gable
-    # and the SE long wall (seen from 150 m, the long wall overexposed):
-    #   SW gable (BDOT10k edge 16.09 m): smooth sand-coloured wall with ONE column of two-pane windows, one per
-    #     storey, on the middle of the wall (window axis at 0.52 +- 0.04 of the wall width measured in both photos;
-    #     window width 2.0 +- 0.3 m and height ~0.45 storey from pixel ratios against the 16.09 m edge and the storey
-    #     pitch - set 1.8 x 1.6 m, WORKING_VALUE, the atlas window is 1.5 x 1.6 m);
-    #   SE long wall (37 m in 3 edges + 2 jogs): white wall with one thin horizontal window band per storey (11 dark
-    #     lines; windows ~0.33 of the storey pitch (3.69 m) under each line - sill 1.0 m, head 2.3 m, WORKING_VALUE).
-    #     Each band is a short run by the south corner (0.03-0.20 of the 37 m) and a long run from 0.30 on: spans
-    #     [0.06, 0.40] and [0.60, 1.0] of the first footprint edge (18.42 m), +-0.05; the other edges one run each.
-    #   NE gable and NW long wall: no open photo - same rule as the opposite wall, WORKING_VALUE (confidence low).
-    # Materials: plaster_white / plaster_beige and their __far_ribbon / __far_office variants are all drawn by chunk
-    # 6_6 already on both LODs (no new draw); the lettering on the gable is a brand - not reproduced.
+    # ADR 0171: `ribbon: false, bands: false` - no hashed ribbon rows / spandrel bands on the walls without a rule.
+    # ADR 0180 (reviews REVIEW-2026-11-13-s17-0171 P1, -s18-0180 P1 / P2): what the open sources show.
+    #   SW gable (BDOT10k edge 16.09 m; both Mapillary photos): smooth sand-coloured wall with ONE column of two-pane
+    #     white-framed windows, one per storey, axis at 0.52 +- 0.04 of the wall width; window width 2.0 +- 0.3 m and
+    #     height ~0.45 storey from pixel ratios against the 16.09 m edge and the storey pitch (set 2.0 x 1.6 m,
+    #     WORKING_VALUE). `variants: [4]`: the atlas office window with clear glass (not the blind variants).
+    #   SE long wall (photos): white, one thin horizontal band of light white-framed windows per storey (11 rows;
+    #     windows ~0.33 of the 3.69 m storey pitch: sill 1.0 m, head 2.3 m, WORKING_VALUE); each band = a short run by
+    #     the south corner (0.03-0.20 of the wall) and a long run from 0.30 on.
+    #   Outline: BDOT10k draws a 6.4 x 1.8 m protrusion on the SE wall. Neither photo shows a step in that wall and
+    #     the roof edge on the orthophoto 2024-05-27 looks straight; as a 42 m prism the 1.8 m return wall was a sunlit
+    #     white stripe over the whole height (review 0180 P1). `footprint_open_m: 3.3` drops protrusions narrower than
+    #     6.6 m (the SE wall becomes one 37 m edge). confidence medium (what the BDOT step is at ground level: unknown).
+    #   NW long wall (orthophoto 2024-05-27, building lean): pale yellow with a regular grid of punched windows (about
+    #     11 rows) - no rule: the hashed punched rows in the building colour plaster_beige.
+    #   NE gable: no open source - the SW rule, WORKING_VALUE (confidence low).
+    # Materials: plaster_white / plaster_beige, plaster_white__far_ribbon and plaster_beige__far_office are all drawn
+    # by chunk 6_6 already on both LODs (no new draw); the lettering on the gable is a brand - not reproduced; roof
+    # masts / antennas: not done.
     set:
-      wall_material: plaster_white
+      wall_material: plaster_beige
       ribbon: false
       bands: false
+      footprint_open_m: 3.3
       facades:
-        - {facing: [SW, NE], min_len_m: 8.0, windows: column, u: 0.52, window_w_m: 1.8, sill_m: 0.9, head_m: 2.5,
-           wall_material: plaster_beige}
-        - {facing: SE, min_len_m: 18.0, max_len_m: 19.0, windows: ribbon, sill_m: 1.0, head_m: 2.3,
-           spans: [[0.06, 0.40], [0.60, 1.0]]}
-        - {facing: [SE, NW], min_len_m: 5.0, windows: ribbon, sill_m: 1.0, head_m: 2.3}
+        - {facing: [SW, NE], min_len_m: 8.0, windows: column, u: 0.52, window_w_m: 2.0, sill_m: 0.9, head_m: 2.5,
+           variants: [4]}
+        - {facing: SE, min_len_m: 30.0, windows: ribbon, glazing: light, sill_m: 1.0, head_m: 2.3,
+           wall_material: plaster_white, spans: [[0.03, 0.20], [0.30, 1.0]]}
   - id: g3a-small-office-no-band
     target: {building: "bdot:2BE4B431-C926-1BF0-E053-CC2BA8C0D140"}
     reason: >-

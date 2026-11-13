@@ -484,7 +484,10 @@ def props(acc, spec, edges, zground):
 # as quads of the far-row atlas inside the plain strip of the same <wall>__far_<kind> material (no opening geometry),
 # so a rule needs no material the generic office does not have.
 FACADE_WINDOWS = ("ribbon", "column", "blank")
-FACADE_GROUP = {"ribbon": "ribbon", "column": "office"}        # far-row group the windows are read from (= __far kind)
+FACADE_GROUP = {"ribbon": "ribbon", "column": "office"}        # <wall>__far_<kind> material of the LOD1 wall; also the
+# far-row group the windows are read from, except `glazing: light` bands: white-framed windows of the `office` rows
+# side by side (one quad per light on LOD1) in the same __far_ribbon material - every __far_* material maps the same
+# far-row atlas, so the rows of another group cost no draw
 # v range of the plain wall of the far-row atlas used by authored walls: FA.FAR_PLAIN_V runs to 0.95, where the first
 # row's balcony slab edge already starts (measured on T_facade_far_BaseColor: 187 / 255 up to v 0.85, 196-206 from
 # 0.88) - one tall quad hides that, a plain piece between two windows of every storey would show it as a stripe
@@ -526,8 +529,20 @@ def facade_rules(spec, wall, materials=None):
         out.append({"facing": fac, "min_len_m": float(r.get("min_len_m", 5.0)), "max_len_m": float(r.get("max_len_m", 1e9)),
                     "windows": kind, "wall": w, "far": far, "sill_m": sill, "head_m": head, "u": u, "spans": spans,
                     "window_w_m": float(r.get("window_w_m", FA.KINDS["off"][0])),
-                    "from_storey": int(r.get("from_storey", 1))})
+                    "from_storey": int(r.get("from_storey", 1)),
+                    "group": "office" if kind == "column" or r.get("glazing", "dark") == "light" else "ribbon",
+                    "variants": [int(v) for v in r["variants"]] if r.get("variants") else None})
+        if r.get("glazing", "dark") not in ("dark", "light"):
+            raise ValueError(f"facades glazing {r.get('glazing')!r}: expected dark or light")
+        if kind != "blank" and not _bays(out[-1]["group"], out[-1]["variants"]):
+            raise ValueError(f"facades variants {out[-1]['variants']}: no such window in the far rows {out[-1]['group']!r}")
     return out
+
+
+def _bays(group, variants):
+    """(row, bay) of the far rows of a group whose window variant is one of `variants` (None = every bay)."""
+    return [(r, b) for r, row in enumerate(FA.FAR_ROWS[group]) for b, e in enumerate(row)
+            if e is not None and (variants is None or e[1] in variants)]
 
 
 def ribbon_lights(length):
@@ -571,15 +586,16 @@ def facade_windows(rule, L, zref, zbase, sh, zt, storeys, key, door=False):
     [(u0, u1, z0, z1, group, row, bay offset)]. door: the wall carries the entrance, so its ground floor has no band /
     window (the door takes the column axis or the middle of the wall). Storeys whose window head would come within
     0.3 m of the wall top are left out (as FA.far_storeys)."""
-    g = FACADE_GROUP.get(rule["windows"])
+    g = rule["group"]
+    bays = _bays(g, rule["variants"]) if rule["windows"] != "blank" else []
     out = []
     for i, (u0, u1) in enumerate(facade_runs(rule, L)):
         for s in range(max(rule["from_storey"] - 1, 1 if door else 0), storeys):
             z0 = zref + zbase + s * sh
             if z0 + rule["head_m"] > zt - 0.3:
                 break
-            out.append((u0, u1, z0 + rule["sill_m"], z0 + rule["head_m"], g,
-                        FA.hint(key, i, s, "row") % len(FA.FAR_ROWS[g]), FA.hint(key, i, s, "off") % FA.FAR_BAYS))
+            row, off = bays[FA.hint(key, i, s, "bay") % len(bays)]      # a window: that bay; a band: its first light
+            out.append((u0, u1, z0 + rule["sill_m"], z0 + rule["head_m"], g, row, off))
     return out
 
 
@@ -620,7 +636,11 @@ def lod1_facade(acc, rule, wins, a, d, L, z0, zt):
         n += q(u, u0, z0, zt)
         z = z0
         for w in sorted((w for w in wins if w[:2] == (u0, u1)), key=lambda w: w[2]):
-            n += q(u0, u1, z, w[2]) + q(u0, u1, w[2], w[3], far_uv(w))
+            n += q(u0, u1, z, w[2])
+            k = ribbon_lights(u1 - u0) if rule["windows"] == "ribbon" and w[4] == "office" else 1
+            for i in range(k):                 # light band: the window of bay off + i of the office row per light
+                n += q(u0 + (u1 - u0) * i / k, u0 + (u1 - u0) * (i + 1) / k, w[2], w[3],
+                       far_uv((*w[:6], (w[6] + i) % FA.FAR_BAYS)))
             z = w[3]
         n += q(u0, u1, z, zt)
         u = u1
