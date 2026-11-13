@@ -115,3 +115,5 @@ Zapisano after/High-clear; każda kamera w stats.txt. Oględziny pozostają wyma
 Zapisano after/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Docelowy import B: bliska kamera wyspy Low clear zapisana, bez globalnych rq override. NASTĘPNY KROK: final_details.py i pełny EditMode.
+
+Docelowy import B: bliska kamera wyspy High clear zapisana, bez globalnych rq override. NASTĘPNY KROK: final_details.py i pełny EditMode.
