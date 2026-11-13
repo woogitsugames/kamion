@@ -86,7 +86,7 @@ namespace PhysicsRunner.Sim
                 string n = wh.Name;
                 _sb.Append($"{n}_fz,{n}_fx,{n}_fy,{n}_slip,{n}_alpha_deg,{n}_comp,{n}_omega,{n}_brake_t,{n}_abs,{n}_drive_t,{n}_tire_defl,{n}_contact,{n}_p_bar,");
             }
-            _sb.Append("axle0_load,axle1_load,trailer_axles_load,step_us,config_id,commit");
+            _sb.Append("axle0_load,axle1_load,trailer_axles_load,body_pen_tractor_m,body_pen_trailer_m,body_contacts,body_deep_corner_tractor,body_deep_corner_trailer,step_us,config_id,commit");
             _w.WriteLine(_sb.ToString());
         }
 
@@ -122,7 +122,12 @@ namespace PhysicsRunner.Sim
             double a0 = 0, a1 = 0, at = 0;
             foreach (var w in m.Wheels) { WriteWheel(w); if (w.AxleIndex == 0) a0 += w.Fz; else a1 += w.Fz; }
             if (tr != null) foreach (var w in tr.Wheels) { WriteWheel(w); at += w.Fz; }
-            F(a0); F(a1); F(at); F(stepMicros);
+            F(a0); F(a1); F(at);
+            // ADR 0165: deepest chassis-collider corner below the road per body and active corner count
+            double bpt = 0, bpr = 0; int bc = 0;
+            if (s.TractorContact != null) { bpt = s.TractorContact.MaxPenetration; bc += s.TractorContact.ActiveContacts; }
+            if (s.TrailerContact != null) { bpr = s.TrailerContact.MaxPenetration; bc += s.TrailerContact.ActiveContacts; }
+            F(bpt); F(bpr); F(bc); F(s.TractorContact != null ? s.TractorContact.DeepestCorner : -1); F(s.TrailerContact != null ? s.TrailerContact.DeepestCorner : -1); F(stepMicros);
             _sb.Append(_configId); _sb.Append(','); _sb.Append(_commit);
             _w.WriteLine(_sb.ToString());
         }

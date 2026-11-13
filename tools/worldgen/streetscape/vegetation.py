@@ -29,7 +29,6 @@ import shapely
 from scipy import ndimage
 
 from . import paved as PV
-from . import plots as PLT
 from .foliage_policy import metric_patch_field, osm_tree_species
 
 SPECIES = ["pine", "birch", "alder", "maple", "linden", "shrub"]
@@ -98,6 +97,27 @@ def _tree_group_overrides(overrides, origin):
     return out
 
 
+def forest_clearings(overrides, origin):
+    """Authored `kind: forest_clearing` (ADR 0163): parts of a BDOT10k OT_PTLZ_A polygon that the GUGiK orthophoto
+    shows cleared (sand, no trees). {bdot id: (cleared polygon, override id)}; `cleared_epsg2180` rings minus the
+    `keep_epsg2180` rings (tree clumps left standing inside the clearing). Keyed by the BDOT id, so it survives
+    every regeneration; a target missing from the source data is reported as stale."""
+    out = {}
+    o0 = np.asarray(origin, float)
+    for o in overrides or []:
+        if o.get("kind") != "forest_clearing":
+            continue
+        cut = shapely.union_all([shapely.make_valid(shapely.Polygon(np.asarray(r, float) - o0))
+                                 for r in o["cleared_epsg2180"]])
+        keep = [shapely.make_valid(shapely.Polygon(np.asarray(r, float) - o0)) for r in o.get("keep_epsg2180", [])]
+        if keep:
+            cut = cut.difference(shapely.union_all(keep))
+        bid = str(o["target"]["bdot"])
+        prev = out.get(bid)
+        out[bid] = (cut if prev is None else prev[0].union(cut), o["id"])
+    return out
+
+
 def place(src, origin, hf, zc, blocked, report, overrides=None):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list."""
     out = []
@@ -128,21 +148,36 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
 
     forests = []
     forest_mix = []
+    clear = forest_clearings(overrides, origin)
+    crep = {"applied": [], "stale": []}
+    hit = set()
+    cleared = []                            # cleared parts of the forest: sand on the orthophoto -> bare ground mask
     for f in src["bdot10k"]["OT_PTLZ_A"]:
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
         if not poly.is_valid:
             poly = shapely.make_valid(poly)
+        full = poly                         # trees are generated on the BDOT outline and the cleared ones dropped
+        cut = None                          # afterwards: the stand left standing keeps every tree (same seed stream)
+        ck = f["id"] if f["id"] in clear else str(f["id"]).split(":")[0]     # BDOT id without the ":<part>" index
+        if ck in clear:
+            cut, oid = clear[ck]
+            hit.add(ck)
+            cleared.append(shapely.make_valid(full.intersection(cut)))
+            poly = shapely.make_valid(full.difference(cut))
+            crep["applied"].append({"id": oid, "bdot": f["id"], "area_m2_before": round(full.area, 1),
+                                    "area_m2_after": round(poly.area, 1)})
+        n_stand = len(out)
         kat = f["props"].get("kategoria")
         fk = {"iglasty": "conifer", "liściasty": "broadleaf"}.get(kat, "mixed")
         forests.append(poly)
         forest_mix.append((poly, fk))
         rng = np.random.default_rng(_seed(f["id"]))
         rodzaj = f["props"].get("rodzaj", "las")
-        P = _scatter(poly, SPACING.get(rodzaj, 4.5), rng)
+        P = _scatter(full, SPACING.get(rodzaj, 4.5), rng)
         sp = pick(rng, MIX.get(kat, MIX[None]), len(P))
         emit(P, sp, rng, f"bdot:{f['id']}", 0.7 if rodzaj == "zagajnik" else 1.0, fk=fk)
         if rodzaj == "las":
-            P = _scatter(poly.buffer(-2.0), UNDER_SPACING, rng)
+            P = _scatter(full.buffer(-2.0), UNDER_SPACING, rng)
             names = list(UNDERSTOREY)
             w = np.array([UNDERSTOREY[k][2] for k in names])
             sp = rng.choice(names, size=len(P), p=w / w.sum())
@@ -152,10 +187,15 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
                 lo, hi = UNDERSTOREY[t["p"][5:]][:2]
                 t["h"] = round(float(lo + (hi - lo) * ((_seed(f"{t['e']},{t['n']}") % 1000) / 999.0)), 1)
         # edge: shrubs + young deciduous along the outline
-        edge = poly.buffer(3.0).difference(poly.buffer(-5.0))
+        edge = full.buffer(3.0).difference(full.buffer(-5.0))
         P = _scatter(edge, 3.0, rng)
         sp = pick(rng, [0.0, 0.25, 0.15, 0.05, 0.0, 0.55], len(P))
         emit(P, sp, rng, f"bdot:{f['id']}:edge", 0.6, fk=fk)
+        if cut is not None and len(out) > n_stand:
+            Q = np.array([[t["e"], t["n"]] for t in out[n_stand:]])
+            gone = shapely.contains_xy(cut, Q[:, 0], Q[:, 1])
+            crep["applied"][-1]["trees_removed"] = int(gone.sum())
+            out[n_stand:] = [t for t, g in zip(out[n_stand:], gone) if not g]
     for f in src["bdot10k"]["OT_PTRK_A"]:
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
         rng = np.random.default_rng(_seed(f["id"]))
@@ -175,6 +215,9 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             k = int(rng.integers(1, 4))
             P = q + rng.normal(0, 2.5, (k, 2)) * (k > 1)
             emit(P, pick(rng, [0.05, 0.3, 0.05, 0.3, 0.3, 0.0], k), rng, f"bdot:{f['id']}")
+    crep["stale"] = [{"id": oid, "bdot": bid} for bid, (_, oid) in clear.items() if bid not in hit]
+    report["forest_clearings"] = crep
+    report["_forest_cleared"] = cleared
     groups = _tree_group_overrides(overrides, np.asarray(origin, float))
     grep = {"lines": len(groups), "trees": 0, "groups": 0, "rows_grouped": 0}
     for f in src["bdot10k"]["OT_OIPR_L"]:
@@ -238,7 +281,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
     return out, forests
 
 
-def ground_masks(src, origin, hf, dist_road, forests):
+def ground_masks(src, origin, hf, dist_road, forests, cleared=()):
     """(H, W, 4) float32 terrain vertex colours (see module doc)."""
     H, W = hf.z.shape
     R = np.clip(dist_road / 20.0, 0, 1)
@@ -261,6 +304,7 @@ def ground_masks(src, origin, hf, dist_road, forests):
     bare_polys = [PV._poly_local(f["geometry"]["coordinates"], origin) for f in src["bdot10k"]["OT_PTNZ_A"]]
     bare_polys += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
                    if a["tags"].get("landuse") in ("construction", "brownfield")]
+    bare_polys += list(cleared)             # authored forest clearings (ADR 0163): sand on the orthophoto
     A = PV.rasterize_polys(bare_polys, hf).astype(float)
     A *= .40 + .60 * metric_patch_field(east, north, 3.5, 882)
     C = np.stack([R, G, B, A], axis=-1)
@@ -269,45 +313,29 @@ def ground_masks(src, origin, hf, dist_road, forests):
     return C.astype(np.float32)
 
 
-# ADR 0154: the plot implementation is read-only; use its existing species ranges.
-def garden_canopies(trees, rp, report, parts=()):
-    """ADR0154: broader existing High garden crowns, no added instances.
+# ADR 0163 (corrects ADR 0154): ceilings of mature city trees, G7 # 12 (Ebben S01-S07, measurement G7-T03). ADR 0154
+# used birch 23 m and raised / widened the garden crowns of the tree library (x 1.2-1.35, up to 20.4 m): on their
+# sparse stems they read as stone pines (review 2026-11-13). The broadleaf garden trees of a region with an
+# orthophoto canopy are kit trees now (streetscape.plantings.garden_trees); what is left here are the rule-placed
+# instances of regions without one.
+MATURE_H_M = {"birch": 20.0, "linden": 24.0, "maple": 22.0, "pine": 24.0}
 
-    Width multipliers are WORKING_VALUE from typology P07/P08/P12:
-    maple/linden1.35, birch1.20, pine unchanged. Tree positions/radii source
-    remains the original orthophoto extraction; species are existing rules.
-    """
-    lookup = {f"plot:{p['id']}": p for p in rp.get('plots', [])}
-    # Read existing building geometry only: LoD1 height is often below a pitched
-    # ridge, and a grouped plot can contain several houses of different heights.
-    roof_tops = {}
-    for part in parts:
-        if part.layer in ('buildings', 'buildings_low', 'buildings_lod1') and len(part.V):
-            roof_tops[part.src] = max(roof_tops.get(part.src, -float('inf')), float(part.V[:, 2].max()))
-    mature_height = {'birch': 23.0, 'linden': 24.0, 'maple': 22.0}  # WORKING_VALUE, typology P07/P08/P12
-    widths = {'tree_maple': 1.35, 'tree_linden': 1.35, 'tree_birch': 1.2}
-    rows = []
-    result = []
+
+def garden_canopies(trees, rp, report, parts=()):
+    """Garden trees that are still instances of the tree library (rule path, `tier: high`): the height is capped at
+    the species ceiling of G7 # 12; nothing is widened, raised, moved or added. Other records pass through."""
+    lookup = {f"plot:{p['id']}" for p in rp.get("plots", [])}
+    rows, result = [], []
     for tree in trees:
-        plot = lookup.get(tree.get('src', '').rsplit(':', 1)[0])
-        width = widths.get(tree.get('p'))
-        if tree.get('tier') != 'high' or plot is None or width is None:
+        species = str(tree.get("p", "")).removeprefix("tree_")
+        if tree.get("tier") != "high" or tree.get("src", "").rsplit(":", 1)[0] not in lookup or species not in MATURE_H_M:
             result.append(tree)
             continue
         changed = dict(tree)
-        changed['garden_canopy_width'] = width
-        species = tree['p'].removeprefix('tree_')
-        required = float(plot.get('house_h') or 6.0) + 3.5
-        from shapely.geometry import Point
-        point = Point(tree['e'], tree['n'])
-        nearby_roofs = [roof_tops[house] for house, polygon in zip(plot.get('houses', []), plot.get('house_polys', []))
-                        if house in roof_tops and polygon.distance(point) <= 25.0]
-        roof_top = max(nearby_roofs, default=None)
-        if roof_top is not None:
-            required = max(required, roof_top - float(tree['z']) + 4.5)  # WORKING_VALUE crown clearance
-        limit = mature_height[species] if roof_top is not None else PLT.INST_H_M[species][1]
-        changed['h'] = round(max(float(tree['h']), min(limit, required)), 1)
+        changed["h"] = round(min(float(tree["h"]), MATURE_H_M[species]), 1)
         result.append(changed)
-        rows.append({'src': tree['src'], 'species': species, 'height_before_m': tree['h'], 'height_after_m': changed['h'], 'width_multiplier': width, 'position': [tree['e'], tree['n']], 'nearby_roof_top_evrf2007': roof_top})
-    report['garden_canopies'] = {'source': 'WORKING_VALUE width/height; P07/P08/P12 typology; original ortho positions retained', 'modified': len(rows), 'added_instances': 0, 'high_only': True, 'list': rows}
+        if changed["h"] != tree["h"]:
+            rows.append({"src": tree["src"], "species": species, "height_before_m": tree["h"], "height_after_m": changed["h"]})
+    report["garden_canopies"] = {"source": "G7 # 12 ceilings (research/g7-street-greenery/README.md)", "instances": len(result),
+                                 "capped": len(rows), "added_instances": 0, "widened": 0, "list": rows}
     return result

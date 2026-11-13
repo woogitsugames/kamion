@@ -1,0 +1,78 @@
+{
+  "id": "gugik-orto-2024-rgb-0p25-bialystok-dojlidy",
+  "name": "GUGiK orthophoto RGB 0.25 m, 2024-05-27, sheets covering bialystok-dojlidy",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "ORTO",
+  "region": "bialystok-dojlidy",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze",
+  "format": "GeoTIFF",
+  "crs": "EPSG:2180 (PL-1992)",
+  "resolution_m": 0.25,
+  "extent": "sheets intersecting bbox [779019.0, 589055.0, 781067.0, 591103.0]",
+  "usage_restriction": "visual reference + alignment QA only; not a game texture (docs/05 §3)",
+  "license": "GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)",
+  "license_status": "LEGAL_REVIEW_REQUIRED (statutory basis cited from secondary sources, not from ISAP text)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/build_region.py --region bialystok-dojlidy"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393455_N-34-107-C-b-3-2.tif",
+      "godlo": "N-34-107-C-b-3-2",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-bialystok-dojlidy/81427_1393455_N-34-107-C-b-3-2.tif",
+      "sha256": "c98d237cdec926a8a609f5f9c2ae6c430f8f2a59b7a9890e1b0bdcfba08c2e30",
+      "size_bytes": 46249946,
+      "downloaded_utc": "2026-11-13T09:23:06+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393456_N-34-107-C-b-3-4.tif",
+      "godlo": "N-34-107-C-b-3-4",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-bialystok-dojlidy/81427_1393456_N-34-107-C-b-3-4.tif",
+      "sha256": "a7c11de3cd8b7d8accbab151cb9d4d7eb5210f0598459a89679dfd4e18273fad",
+      "size_bytes": 41871878,
+      "downloaded_utc": "2026-11-13T09:23:24+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393457_N-34-107-C-b-4-1.tif",
+      "godlo": "N-34-107-C-b-4-1",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-bialystok-dojlidy/81427_1393457_N-34-107-C-b-4-1.tif",
+      "sha256": "11e891ee99cbd64e71f1aa991213306139da550c39150bd563a43dcd2500233e",
+      "size_bytes": 45694978,
+      "downloaded_utc": "2026-11-13T09:23:49+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393459_N-34-107-C-b-4-3.tif",
+      "godlo": "N-34-107-C-b-4-3",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-bialystok-dojlidy/81427_1393459_N-34-107-C-b-4-3.tif",
+      "sha256": "681dfb12546688f50dd6c262372621fd93dbdaa9ca2ecbc421204d7ba3dd6767",
+      "size_bytes": 42450028,
+      "downloaded_utc": "2026-11-13T09:24:20+00:00"
+    }
+  ]
+}

@@ -59,6 +59,9 @@ M = {
     "plaster_beige": {"color": [0.50, 0.44, 0.34], "rough": 0.9, "texture_set": "plaster"},
     "plaster_cream": {"color": [0.55, 0.48, 0.33], "rough": 0.9, "texture_set": "plaster"},
     "plaster_pastel_blue": {"color": [0.36, 0.42, 0.47], "rough": 0.9, "texture_set": "plaster"},
+    # ADR 0167: saturated light blue render / cladding of the EC outbuilding and the Kwadrat pavilion (albedo from
+    # Commons cm92458760 against its white window frames; WORKING_VALUE). Authored frontages only (no __far variant).
+    "plaster_blue": {"color": [0.09, 0.19, 0.31], "rough": 0.9, "texture_set": "plaster"},
     # set_tile (ADR 0067): the NF brick set is 1.506 m, at the shader default 4 m a course read as 20 cm (r10 r1 render)
     # ADR 0091: saturation -28 % (linear chroma about the luminance: [0.26, 0.10, 0.07] -> below; on screen -20 %), `macro` =
     # [size m, strength] of the macro tone drift (importer default for modulation sets 64 m / 0.06): lots of brick
@@ -694,3 +697,21 @@ M["frontage_galv"] = {"color": [0.27, 0.28, 0.285], "rough": 0.7, "sky_occ": [0.
 # ADR0153: opt-in only, preserving every existing material definition and shader.
 # The palette stores source linear colours + metal/smoothness; no new Low pass.
 M["vehicle_lod_details"] = {"color": [1.0, 1.0, 1.0], "rough": 0.6, "vehicle_lod_atlas": True}
+
+
+# ADR 0162 (furniture after research G5 / G3; additive block, no existing entry changed):
+# - shelter_paint: the BKM shelter atlas (furniture_textures.shelter_atlas: RAL 3020 / graphite frame swatches, bench
+#   wood, timetable sheet, information board, D-15 rack) - one opaque slot for the whole frame. Powder coat: matt-satin.
+# - shelter_glass_clear: tempered glass panes are clear (G5-001: "szyby ze szkła bezpiecznego"; the old shelter_glass
+#   was an opaque near-black sheet) - the noise-screen clear-sheet model, little haze, no printed lines. WORKING_VALUE.
+#   The smoked multiwall polycarbonate roof ("poliwęglan komórkowy dymiony") is a swatch of the same atlas.
+# - paint_ral1012 / paint_ral3020: U-12a / U-12 / U-5a (ZDM standard 2018, G5-010); linear values of the public sRGB
+#   conversions in furniture_textures (RAL1012_SRGB, RAL3020_SRGB), slightly weathered. WORKING_VALUE.
+M["shelter_paint"] = {"color": [1.0, 1.0, 1.0], "rough": 0.55, "texture": "bus_shelter_atlas"}
+M["shelter_glass_clear"] = {"color": [0.030, 0.040, 0.040], "rough": 0.04, "alpha": 0.10, "blend": True,
+                            "shader": "car_glass", "dust": 0.5, "screen": {"horizon_sky": 0.85, "haze": 0.03}}
+M["paint_ral1012"] = {"color": [0.52, 0.42, 0.06], "rough": 0.5}
+M["paint_ral3020"] = {"color": [0.55, 0.012, 0.009], "rough": 0.5}
+for _k in ("shelter_paint", "paint_ral1012", "paint_ral3020"):
+    M[_k].setdefault("sky_occ", SKY_OCC_STRUCT)
+M["shelter_glass_clear"].setdefault("sky_occ", SKY_OCC_GLASS)

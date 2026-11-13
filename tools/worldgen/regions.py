@@ -51,6 +51,20 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2061",
         status="WORKING_ASSUMPTION (lead), owner decision on D4 pending — see docs/map-decisions.md",
     ),
+    # ADR 0166 (owner D60): Dojlidy/Krywlany. Tile on the 2048 m lattice anchored at tile C
+    # (x = 776971 + 2048*i, y = 595199 + 2048*j); here i = +1, j = -3. Covers the SSSE Dojlidy/Krywlany
+    # cluster (KAN, Rosti, Bravilor, Masterpress, Odlewnia, Bison, PSS Społem DC, BPN-T) on Kuronia /
+    # Dywizjonu 303 and the east half of Krywlany aerodrome (both runways' 27 ends). Browar Dojlidy and
+    # Biawar fall in lattice tile (+2,-3); aeroklub hangars + rondo Wünschego in (0,-3). See ADR 0166.
+    "bialystok-dojlidy": Region(
+        id="bialystok-dojlidy",
+        title="Białystok — Dojlidy/Krywlany: Kuronia / Dywizjonu 303 / SSSE + lotnisko Krywlany (wsch.)",
+        candidate="D_dojlidy_krywlany",
+        bbox=(779019.0, 589055.0, 781067.0, 591103.0),
+        origin=(780043.0, 590079.0),
+        teryt_powiat="2061",
+        status="WORKING_ASSUMPTION (ADR 0166, owner D60 chose the area; exact tile = agent proposal)",
+    ),
 }
 
 TILE_SIZE_M = 2048.0

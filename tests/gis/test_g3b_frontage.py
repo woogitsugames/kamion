@@ -375,7 +375,9 @@ def qa():
 
 def test_world_has_the_frontage(qa):
     b = qa["buildings"]
-    assert b["frontages"] == 3
+    # 3 trade pavilions of ADR 0126/0129 + 6 authored walls of ADR 0167 (EC kiosk and outbuilding, heat accumulator,
+    # Kwadrat pavilion, two bunded round tanks: `frontage` overrides without props). Exact count on purpose.
+    assert b["frontages"] == 9
     pr = b["frontage_props"]
     assert sorted(p["kind"] for p in pr) == ["car_row", "car_row", "flag_row", "sign_mast", "totem"] and all(p["placed"] for p in pr)
     assert all(p["building"] == IDS["cars"] for p in pr)

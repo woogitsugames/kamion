@@ -73,15 +73,19 @@ def load(region):
 def route_path(graph, region):
     import analyze_candidates as ac
     g = roadgraph.to_digraph(graph)
-    cand = next(c for c in ac.CANDIDATES if c["id"] == region.candidate)
+    cand = next((c for c in ac.CANDIDATES if c["id"] == region.candidate), {"id": region.candidate})
     nodes = graph["nodes"]
 
     def near(x, y):
         return min(nodes, key=lambda n: math.hypot(n["x"] - x, n["y"] - y))["id"]
 
     # start/end = endpoints recorded by the D4 analysis (candidates.json)
-    cj = json.loads((OUT / "candidates.json").read_text(encoding="utf-8"))
-    r = next(c for c in cj["candidates"] if c["id"] == cand["id"])["route"]
+    re_f = REPO_ROOT / "Data" / "Regions" / region.id / "route_endpoints.json"  # ADR 0166 (new regions)
+    if re_f.exists():
+        r = json.loads(re_f.read_text(encoding="utf-8"))
+    else:
+        cj = json.loads((OUT / "candidates.json").read_text(encoding="utf-8"))
+        r = next(c for c in cj["candidates"] if c["id"] == cand["id"])["route"]
     s, t = near(*r["start_epsg2180"]), near(*r["end_epsg2180"])
     path = nx.shortest_path(g, s, t, weight="length")
     eids = {g[a][b]["id"] for a, b in zip(path, path[1:])}

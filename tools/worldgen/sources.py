@@ -12,6 +12,7 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import json
+import os
 import time
 from pathlib import Path
 
@@ -34,7 +35,8 @@ def sha256_of(path: Path) -> str:
 
 
 def rel(path: Path) -> str:
-    return path.resolve().relative_to(REPO_ROOT).as_posix()
+    # abspath, not resolve(): Data/raw may be a junction to the main checkout (agent worktrees)
+    return Path(os.path.abspath(path)).relative_to(REPO_ROOT).as_posix()
 
 
 def now_utc() -> str:
@@ -137,6 +139,11 @@ def ingest_dataset(dl: Downloader, meta: dict, files: list[dict]) -> dict:
             rec.update(res)
         out_files.append(rec)
     manifest = {**{k: v for k, v in meta.items() if k != "raw_subdir"}, "in_git": False, "files": out_files}
+    # ADR 0166: a shared (per-powiat) dataset already ingested for another region with identical content is NOT
+    # rewritten: its sha256 is pinned in that region's region.yaml (rewriting only "used_by" would invalidate region C).
+    # The new consumer records the manifest (and its sha256) in its own region.yaml.
+    if old and {k: v for k, v in old.items() if k != "used_by"} == {k: v for k, v in manifest.items() if k != "used_by"}:
+        return old
     if out_files:
         save_manifest(manifest)
     return manifest
