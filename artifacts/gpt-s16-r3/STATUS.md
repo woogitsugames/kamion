@@ -23,3 +23,5 @@ Import baseline zakończony.
 Zapisano before/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Natywny probe: chunk bridge On w Low i High, hero LOD0/1 On, LOD2 Off; profil Low35m/1024/1 i High100m/2048/3. To dane assetu, efektywny URP będzie z VQA. Osobny niezmienny zestaw diagnostyczny dodał kamerę bliżej głównej wyspy (wewnątrz35m), bez zmiany zestawu pełnego baseline w toku. NASTĘPNY KROK: ablate.ps1 po pełnych renderach before.
+
+Zapisano before/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
