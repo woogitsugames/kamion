@@ -1,4 +1,4 @@
-param([ValidateSet('report','two-sided','restore')][string]$Mode='report')
+param([ValidateSet('report')][string]$Mode='report')
 $ErrorActionPreference = 'Stop'
 $slot = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 & pwsh $slot -Acquire -Owner gpt-s16

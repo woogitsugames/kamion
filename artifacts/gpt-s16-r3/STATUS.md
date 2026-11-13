@@ -13,3 +13,5 @@ Dodano diagnostykę Editor-only natywnych casterów/bias/kaskad oraz odwracalną
 Korekta zakresu wstępnego ray testu: mały nos gravel E534–540/N−700…−690, nie główna wyspa E558/N−734; test nie obejmuje hero instancji. Nie dowodzi przyczyny plam na głównej wyspie. Detale kamer poprawiono przed baseline, probe rozszerzono o hero LOD/maski/material flags. NASTĘPNY KROK: końcowy generator baseline, import i natywne obrazy.
 
 Świat baseline wygenerowany: 546.121204 s, bez fallback=True. NASTĘPNY KROK: import i kamery baseline.
+
+Po preflight usunięto niewykorzystaną zmianę/restore natywnych casterów z probe: narzędzie jest teraz wyłącznie read-only. Ablacje użyją istniejących rq i zapiszą efektywny URP. Cel nie oznacza zaciemnienia całego żwiru — zdjęcia mają także jasny żwir na pierwszym planie. NASTĘPNY KROK: import i bazowe obrazy po generatorze.

@@ -10,7 +10,7 @@ using UnityEngine.Rendering;
 
 namespace Game.World.Import
 {
-    /// <summary>Editor-only ADR0155 diagnostic. Native scene ablations are not a production setting.</summary>
+    /// <summary>Read-only Editor ADR0155 diagnostic; never saves or modifies a scene.</summary>
     public static class PutryShadowProbe
     {
         [Serializable] public class Caster { public string path, mode, shader; public string[] materials; public Vector3 min, max; public int submeshes, triangles; }
@@ -22,7 +22,7 @@ namespace Game.World.Import
             try
             {
                 string mode = EditorTools.Arg("-putryMode", "report");
-                if (mode != "report" && mode != "two-sided" && mode != "restore") throw new ArgumentException("Unknown diagnostic mode");
+                if (mode != "report") throw new ArgumentException("Read-only diagnostic supports report only");
                 var report = new Report { mode = mode };
                 var scenes = new List<SceneRecord>();
                 foreach (string tier in new[] { "Low", "High" })
@@ -36,7 +36,6 @@ namespace Game.World.Import
                         if (mr.name != "bridge") continue;
                         var b = mr.bounds;
                         if (b.max.x < 500 || b.min.x > 600 || b.max.z < -750 || b.min.z > -650) continue;
-                        if (mode != "report") mr.shadowCastingMode = mode == "two-sided" ? ShadowCastingMode.TwoSided : ShadowCastingMode.On;
                         var mesh = mr.GetComponent<MeshFilter>().sharedMesh;
                         var mats = mr.sharedMaterials;
                         var names = new string[mats.Length]; for (int i = 0; i < mats.Length; i++) names[i] = mats[i] != null ? mats[i].name : "MISSING";
@@ -65,7 +64,6 @@ namespace Game.World.Import
                     if (profile == null || !profile.TryGet(tier, out var t)) throw new InvalidOperationException("Missing quality tier");
                     var sun = GameObject.Find("Sun").GetComponent<Light>();
                     scenes.Add(new SceneRecord { tier = tier, distance = t.shadowDistance, resolution = t.shadowResolution, cascades = t.shadowCascades, depthBias = t.shadowDepthBias, normalBias = t.shadowNormalBias, sunBias = sun.shadowBias, sunNormalBias = sun.shadowNormalBias, casters = list.ToArray(), heroLods = heroLods.ToArray() });
-                    if (mode != "report") EditorSceneManager.SaveScene(scene);
                 }
                 report.scenes = scenes.ToArray();
                 string output = EditorTools.Arg("-putryOutput", "../artifacts/gpt-s16-r3");
