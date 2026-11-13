@@ -1,0 +1,1206 @@
+{
+  "data": "2026-11-12",
+  "population": 152,
+  "sample_n": 31,
+  "fraction": 0.20394736842105263,
+  "seed": "Kamion-G3-s8-signs-2026-11-12-v1",
+  "method": "random.Random(seed).sample(sorted(rows,key=id),ceil(0.20*N)), bez zwracania",
+  "sample_ids": [
+    "G3-C002",
+    "G3-C003",
+    "G3-C014",
+    "G3-C016",
+    "G3-C021",
+    "G3-C024",
+    "G3-C031",
+    "G3-MC001",
+    "G3-MC007",
+    "G3-MC020",
+    "G3-MLY-S8-002",
+    "G3-MLY-S8-008",
+    "G3-MLY-S8-010",
+    "G3-MLY-S8-017",
+    "G3-MLY-S8-020",
+    "G3-MLY-S8-030",
+    "G3-MLY-S8-031",
+    "G3-MUN-005",
+    "G3-MUN-006",
+    "G3-MUN-007",
+    "G3-P008",
+    "G3-P009",
+    "G3-P010",
+    "G3-P012",
+    "G3-P015",
+    "G3-P020",
+    "MN004",
+    "MN009",
+    "MN013",
+    "MN015",
+    "MX002"
+  ],
+  "dobór": "Po dodaniu MX001–003 ponownie losowano z całej końcowej populacji152, tym samym wcześniej ustalonym seedem. Zachowano kontrole22 wspólnych ID, niezależnie sprawdzono9 nowych ID i ponownie pobrano metadane/URL wszystkich31. Pierwotna próba30/149 jest zachowana w files/G3-AUD005.json. Nie dobierano próby według wyniku.",
+  "summary": {
+    "metadata_PASS": 31,
+    "visual_PASS_before_fix": 30,
+    "visual_WARNING_before_fix": 1,
+    "visual_FAIL": 0,
+    "warning_corrected": 1,
+    "final_PASS_with_recorded_limitations": 31,
+    "licenses_confirmed_photo_records": 28,
+    "licenses_UNVERIFIED_reference_only": 3
+  },
+  "mapillary_license_check": {
+    "url": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data",
+    "http": 200,
+    "mentions_all_images": true,
+    "links_cc_by_sa_4": true,
+    "quote": "All images on Mapillary are shared under a CC-BY-SA license",
+    "checked_at": "2026-11-12T23:03:08.433809+00:00"
+  },
+  "records": [
+    {
+      "id": "G3-C002",
+      "metadata": {
+        "id": "G3-C002",
+        "source_url": "https://commons.wikimedia.org/wiki/File:7204_May_2021_in_Bia%C5%82ystok.jpg",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://commons.wikimedia.org/wiki/File:7204_May_2021_in_Bia%C5%82ystok.jpg"
+        },
+        "source_group": "commons",
+        "metadata_result": "PASS",
+        "notes": [],
+        "fresh_license": "CC0",
+        "fresh_license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "fresh_artist_html": "<a href=\"//commons.wikimedia.org/wiki/User:Rakoon\" title=\"User:Rakoon\">Rakoon</a>",
+        "fresh_capture_time": "2021-05-03 12:34:33",
+        "license_result": "PASS",
+        "fresh_lat": "53.158496",
+        "fresh_lon": "23.153233"
+      },
+      "visual": {
+        "id": "G3-C002",
+        "result": "PASS",
+        "opis": "Zapis 67[UNVERIFIED] Centrum, strzałka w lewo, żółta tarcza numeru i białe pole Centrum są zgodne z kadrem. Czarna taśma przecina numer i nazwę; zachowano uzasadnioną niepewność ostatniej cyfry. Pełny obraz pokazuje dolny lewy panel bramownicy na łącznicy Andersa przy Putry.",
+        "lokalizacja_i_kierunek": "Geotag opisano jako pozycję kamery, pozycja tarczy pozostaje UNVERIFIED. Azymut osi 317,70° odtworzony z podanych współrzędnych segmentu OSM; kadr jest zgodny z tym najazdem.",
+        "zalecane_poprawki": [],
+        "asset_sprawdzony": "files/G3-C002.jpg",
+        "url_zrodla": "https://commons.wikimedia.org/wiki/File:7204_May_2021_in_Bia%C5%82ystok.jpg",
+        "data_kontroli": "2026-11-12"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-C003",
+      "metadata": {
+        "id": "G3-C003",
+        "source_url": "https://commons.wikimedia.org/wiki/File:7204_May_2021_in_Bia%C5%82ystok.jpg",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://commons.wikimedia.org/wiki/File:7204_May_2021_in_Bia%C5%82ystok.jpg"
+        },
+        "source_group": "commons",
+        "metadata_result": "PASS",
+        "notes": [],
+        "fresh_license": "CC0",
+        "fresh_license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "fresh_artist_html": "<a href=\"//commons.wikimedia.org/wiki/User:Rakoon\" title=\"User:Rakoon\">Rakoon</a>",
+        "fresh_capture_time": "2021-05-03 12:34:33",
+        "license_result": "PASS",
+        "fresh_lat": "53.158496",
+        "fresh_lon": "23.153233"
+      },
+      "visual": {
+        "id": "G3-C003",
+        "result": "PASS",
+        "opis": "Dwa wiersze 8 E 67 Warszawa / 65 Ełk i strzałka do góry po lewej są zgodne. Tarcze 8 i 65 są czerwone, E 67 zielona. Pełny kadr potwierdza prawy górny panel tej samej bramownicy.",
+        "lokalizacja_i_kierunek": "Geotag opisano jako kamerę, pozycja tarczy UNVERIFIED; azymut osi 317,70° jest jawnym oszacowaniem z OSM.",
+        "zalecane_poprawki": [],
+        "asset_sprawdzony": "files/G3-C003.jpg",
+        "url_zrodla": "https://commons.wikimedia.org/wiki/File:7204_May_2021_in_Bia%C5%82ystok.jpg",
+        "data_kontroli": "2026-11-12"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-C014",
+      "metadata": {
+        "id": "G3-C014",
+        "source_url": "https://commons.wikimedia.org/wiki/File:20210526_163909_2021_in_Podlaskie_Voivodeship.jpg",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://commons.wikimedia.org/wiki/File:20210526_163909_2021_in_Podlaskie_Voivodeship.jpg"
+        },
+        "source_group": "commons",
+        "metadata_result": "PASS",
+        "notes": [],
+        "fresh_license": "CC0",
+        "fresh_license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "fresh_artist_html": "<a href=\"//commons.wikimedia.org/wiki/User:Rakoon\" title=\"User:Rakoon\">Rakoon</a>",
+        "fresh_capture_time": "2021-05-26 08:07:04",
+        "license_result": "PASS",
+        "fresh_lat": "53.148363",
+        "fresh_lon": "23.060901"
+      },
+      "visual": {
+        "id": "G3-C014",
+        "result": "PASS",
+        "opis": "8 E 67 Warszawa, dwie strzałki do góry na obu końcach, czerwona tarcza 8 i zielona E 67 potwierdzone. Pełny kadr pokazuje tablicę nad jezdnią i sąsiedni zjazd Porosły/Krupniki/Łyski.",
+        "lokalizacja_i_kierunek": "Współrzędne oznaczają kamerę. Sprawdzono files/G3-OSM008.json: way 360598449, segment 53.1482595,23.0611451 → 53.1483363,23.0608813, kierunek 295,84°; sens najazdu ku Warszawie jest zgodny. Różnicę godziny EXIF i nazwy pliku ujawniono w rekordzie, bez prób jej rozstrzygania wizualnie.",
+        "zalecane_poprawki": [],
+        "asset_sprawdzony": "files/G3-C014.jpg",
+        "url_zrodla": "https://commons.wikimedia.org/wiki/File:20210526_163909_2021_in_Podlaskie_Voivodeship.jpg",
+        "data_kontroli": "2026-11-12"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-C016",
+      "metadata": {
+        "id": "G3-C016",
+        "source_url": "https://commons.wikimedia.org/wiki/File:20210526_163909_2021_in_Podlaskie_Voivodeship.jpg",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://commons.wikimedia.org/wiki/File:20210526_163909_2021_in_Podlaskie_Voivodeship.jpg"
+        },
+        "source_group": "commons",
+        "metadata_result": "PASS",
+        "notes": [],
+        "fresh_license": "CC0",
+        "fresh_license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "fresh_artist_html": "<a href=\"//commons.wikimedia.org/wiki/User:Rakoon\" title=\"User:Rakoon\">Rakoon</a>",
+        "fresh_capture_time": "2021-05-26 08:07:04",
+        "license_result": "PASS",
+        "fresh_lat": "53.148363",
+        "fresh_lon": "23.060901"
+      },
+      "visual": {
+        "id": "G3-C016",
+        "result": "PASS",
+        "opis": "Potwierdzono P, LPG / GAZ, 800m i Dojazd drogą / lokalną; strzałka ukośnie w prawo, piktogram paliwa i filiżanka. Pełny kadr potwierdza prawą stronę najazdu Porosły w tym samym obrazie co C014.",
+        "lokalizacja_i_kierunek": "Tak samo jak C014: kamera, a nie tarcza, ma podane współrzędne; kierunek 295,84° jest oszacowaniem osi jezdni.",
+        "zalecane_poprawki": [
+          "Opcjonalnie doprecyzować piktogram paliwa: dwa nakładające się dystrybutory, czarny z przodu i zielony za nim; nie jest to błąd istniejącego ogólnego opisu."
+        ],
+        "asset_sprawdzony": "files/G3-C016.jpg",
+        "url_zrodla": "https://commons.wikimedia.org/wiki/File:20210526_163909_2021_in_Podlaskie_Voivodeship.jpg",
+        "data_kontroli": "2026-11-12"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-C021",
+      "metadata": {
+        "id": "G3-C021",
+        "source_url": "https://commons.wikimedia.org/wiki/File:20210526_174045_May_2021_in_Bia%C5%82ystok.jpg",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://commons.wikimedia.org/wiki/File:20210526_174045_May_2021_in_Bia%C5%82ystok.jpg"
+        },
+        "source_group": "commons",
+        "metadata_result": "PASS",
+        "notes": [],
+        "fresh_license": "CC0",
+        "fresh_license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "fresh_artist_html": "<a href=\"//commons.wikimedia.org/wiki/User:Rakoon\" title=\"User:Rakoon\">Rakoon</a>",
+        "fresh_capture_time": "2021-05-26 14:51:29",
+        "license_result": "PASS",
+        "fresh_lat": "53.150833",
+        "fresh_lon": "23.068611"
+      },
+      "visual": {
+        "id": "G3-C021",
+        "result": "PASS",
+        "auditor": "root — niezależnie od autora rekordów",
+        "visual_note": "Osobna prawa tarcza 8: czerwone tło, biała cyfra i ramka; brak strzałek. Pełny oryginał pokazuje parę 8/E67 po obu stronach jezdni przy wjeździe Białystok. Źródłowy czas EXIF zachowany mimo różnicy względem nazwy pliku.",
+        "source_url": "https://commons.wikimedia.org/wiki/File:20210526_174045_May_2021_in_Bia%C5%82ystok.jpg",
+        "location_result": "PASS w granicach zadeklarowanej metody/niepewności",
+        "position_role": "kamera; pozycja tarczy UNVERIFIED",
+        "distance_to_current_OSM_core_m_ESTIMATED": 4.4,
+        "spatial_method": "Odległość kamera–wybrane aktualne osie OSM w EPSG:2180; pomocnicza kontrola, dla historycznego układu C031 nie dowodzi położenia starej tablicy.",
+        "checked_at": "2026-11-12T23:01:34.509745+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-C024",
+      "metadata": {
+        "id": "G3-C024",
+        "source_url": "https://commons.wikimedia.org/wiki/File:7165_April_2021_in_Podlaskie_Voivodeship.jpg",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://commons.wikimedia.org/wiki/File:7165_April_2021_in_Podlaskie_Voivodeship.jpg"
+        },
+        "source_group": "commons",
+        "metadata_result": "PASS",
+        "notes": [],
+        "fresh_license": "CC0",
+        "fresh_license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "fresh_artist_html": "<a href=\"//commons.wikimedia.org/wiki/User:Rakoon\" title=\"User:Rakoon\">Rakoon</a>",
+        "fresh_capture_time": "2021-04-30 17:36:13",
+        "license_result": "PASS"
+      },
+      "visual": {
+        "id": "G3-C024",
+        "result": "PASS",
+        "opis": "Potwierdzono 8 E 67 Augustów, czerwoną tarczę 8, zieloną E 67 i korpus strzały skierowany w prawo. Pełna dostępna miniatura pokazuje rondo; sam odczyt pozostaje czytelny mimo ograniczonej rozdzielczości.",
+        "lokalizacja_i_kierunek": "Rekord jawnie zachowuje UNVERIFIED dla współrzędnych, kierunku i dokładnego punktu. Audyt nie uznaje nazwy węzła za geolokalizację potwierdzoną niezależnie na podstawie tej fotografii. Pozytywny wynik dotyczy odczytu i ujawnienia ograniczeń, nie dowodu pozycji tarczy.",
+        "zalecane_poprawki": [],
+        "asset_sprawdzony": "files/G3-C024.jpg",
+        "url_zrodla": "https://commons.wikimedia.org/wiki/File:7165_April_2021_in_Podlaskie_Voivodeship.jpg",
+        "data_kontroli": "2026-11-12"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-C031",
+      "metadata": {
+        "id": "G3-C031",
+        "source_url": "https://commons.wikimedia.org/wiki/File:20180810_112432_August_2018_in_Podlaskie_Voivodeship.jpg",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://commons.wikimedia.org/wiki/File:20180810_112432_August_2018_in_Podlaskie_Voivodeship.jpg"
+        },
+        "source_group": "commons",
+        "metadata_result": "PASS",
+        "notes": [],
+        "fresh_license": "CC0",
+        "fresh_license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "fresh_artist_html": "<a href=\"//commons.wikimedia.org/wiki/User:Rakoon\" title=\"User:Rakoon\">Rakoon</a>",
+        "fresh_capture_time": "2018-08-10 11:24:32",
+        "license_result": "PASS",
+        "fresh_lat": "53.149444",
+        "fresh_lon": "23.053611"
+      },
+      "visual": {
+        "id": "G3-C031",
+        "result": "PASS",
+        "auditor": "root — niezależnie od autora rekordów",
+        "visual_note": "Warszawa z kartuszem 8 i ↑; Krupniki oraz Łyski ze wspólną strzałką ←; Porosły - Kolonia ze strzałką →. Odstępy wokół łącznika zachowane. Obejrzano pełny kadr 960×540: ujęcie boczne starego układu2018. Heading i podtyp celowo UNVERIFIED; nie oceniano dawnego położenia znaku według nowej osi.",
+        "source_url": "https://commons.wikimedia.org/wiki/File:20180810_112432_August_2018_in_Podlaskie_Voivodeship.jpg",
+        "location_result": "PASS w granicach zadeklarowanej metody/niepewności",
+        "position_role": "kamera; pozycja tarczy UNVERIFIED",
+        "distance_to_current_OSM_core_m_ESTIMATED": 0.1,
+        "spatial_method": "Odległość kamera–wybrane aktualne osie OSM w EPSG:2180; pomocnicza kontrola, dla historycznego układu C031 nie dowodzi położenia starej tablicy.",
+        "checked_at": "2026-11-12T23:01:34.509815+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MC001",
+      "metadata": {
+        "id": "G3-MC001",
+        "source_url": "https://www.mapillary.com/app/?pKey=1354063529862825",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=1354063529862825"
+        },
+        "source_group": "city",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.152652",
+        "fresh_lon": "23.078094",
+        "fresh_author": "Janusz221",
+        "fresh_capture_time": "2026-03-10T12:45:23.632000Z",
+        "fresh_image_key": "1354063529862825",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MC001",
+        "result": "PASS",
+        "opis": "Potwierdzono wszystkie pięć wierszy: 65 Ełk; 8 E 67 Warszawa; 8 E 67 Augustów; 65 Bobrowniki PL BY; Kuźnica PL BY. Strzałki: Ełk do góry, Warszawa w lewo, dolna grupa w prawo. Dwa komplety owali PL/BY są widoczne; brak tarczy 19 przy Kuźnicy.",
+        "lokalizacja_i_kierunek": "Oryginał 5760×2880 jest panoramą 360°, a rekord właściwie pozostawia kierunek wycinka UNVERIFIED. Geotag kamery oddzielono od położenia tablicy. Osobne oszacowanie przejazdu 327,11° ma podane punkty i jest zgodne z układem wlotu. Kontrola geodezyjna na elipsoidzie daje 327,05°; różnica 0,06° mieści się w charakterze oszacowania.",
+        "zalecane_poprawki": [],
+        "asset_sprawdzony": "files/G3-MC001.jpg",
+        "url_zrodla": "https://www.mapillary.com/app/?pKey=1354063529862825",
+        "data_kontroli": "2026-11-12"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MC007",
+      "metadata": {
+        "id": "G3-MC007",
+        "source_url": "https://www.mapillary.com/app/?pKey=1027731969354042",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=1027731969354042"
+        },
+        "source_group": "city",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.147177",
+        "fresh_lon": "23.066651",
+        "fresh_author": "kino",
+        "fresh_capture_time": "2024-07-26T12:23:39.911000Z",
+        "fresh_image_key": "1027731969354042",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MC007",
+        "result": "PASS",
+        "opis": "Potwierdzono czarne 676 na żółtej tarczy. Oryginał pokazuje tarczę po lewej stronie jezdni; nie dopisano strzałki z osobnego niebieskiego znaku nad nią.",
+        "lokalizacja_i_kierunek": "Opis wjazdu Jana Pawła II ku Białemustokowi jest zgodny z dalszą bramownicą widoczną w oryginale. Współrzędne jawnie dotyczą kamery; kierunek 106,82° jest oszacowaniem z sekwencji. Niezależne obliczenie geodezyjne daje 106,78°, różnica pomijalna wobec metody.",
+        "zalecane_poprawki": [],
+        "asset_sprawdzony": "files/G3-MC007.jpg",
+        "url_zrodla": "https://www.mapillary.com/app/?pKey=1027731969354042",
+        "data_kontroli": "2026-11-12"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MC020",
+      "metadata": {
+        "id": "G3-MC020",
+        "source_url": "https://www.mapillary.com/app/?pKey=383395866246236",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=383395866246236"
+        },
+        "source_group": "city",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.154670",
+        "fresh_lon": "23.076392",
+        "fresh_author": "picturehoover",
+        "fresh_capture_time": "2020-06-27T17:52:04.002000Z",
+        "fresh_image_key": "383395866246236",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MC020",
+        "result": "WARNING",
+        "opis": "Widoczna część odczytana poprawnie: 669 Centrum; 8 E 67 Augustów; 65 Bobrowniki PL BY; Kuźnica PL BY; 8 E 67 W[UNVERIFIED dalszy tekst poza kadrem]. Układ ronda i strzałek zgodny. Nie dopisano Warszawa ani tarczy 19. Ostrzeżenie dotyczy tylko zbyt ogólnego stwierdzenia o braku odległości.",
+        "lokalizacja_i_kierunek": "Pełny kadr potwierdza najazd ku wiaduktowi i tablicę po prawej; prawa część tarczy rzeczywiście jest poza kadrem. Geotag kamery i pozycja tablicy są rozdzielone. Kierunek 155,11° jest jawnym oszacowaniem z sekwencji; kontrola geodezyjna daje 155,06°.",
+        "zalecane_poprawki": [
+          "Pole odległości: zamiast „brak na opisanej tablicy” zalecam „brak w widocznej części; prawa część tablicy UNVERIFIED”. Nie można wykluczyć elementu spoza kadru."
+        ],
+        "asset_sprawdzony": "files/G3-MC020.jpg",
+        "url_zrodla": "https://www.mapillary.com/app/?pKey=383395866246236",
+        "data_kontroli": "2026-11-12"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń",
+      "korekta": {
+        "pole": "odległości",
+        "po": "brak w widocznej części; prawa część tablicy UNVERIFIED",
+        "kontrola": "Doprecyzowanie zastosowane w finalnym records.json i CSV; nie zmieniono odczytanego tekstu."
+      }
+    },
+    {
+      "id": "G3-MLY-S8-002",
+      "metadata": {
+        "id": "G3-MLY-S8-002",
+        "source_url": "https://www.mapillary.com/app/?pKey=725709236426138&focus=photo",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=725709236426138&focus=photo"
+        },
+        "source_group": "west",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.158019",
+        "fresh_lon": "23.005430",
+        "fresh_author": "d3mol3k",
+        "fresh_capture_time": "2024-04-19T07:41:52.799000Z",
+        "fresh_image_key": "725709236426138",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MLY-S8-002",
+        "result": "PASS",
+        "odczyt_niezależny": "Choroszcz|Dzikie|Żółtki",
+        "kontrola_treści": "Zielona tablica, białe napisy, strzałka↗ po prawej przy środkowym wierszu; brak tarcz numerów i odległości.",
+        "kontrola_lokalizacji_i_kierunku": "Geotag znajduje się przy S8 na wschód od węzła Choroszcz; ruch na zachód/NW spójny z sekwencją i OSM.",
+        "współrzędne_kamery_vs_tablicy": "PASS: rekord jednoznacznie określa pozycję kamery; pozycja samej tablicy pozostaje UNVERIFIED.",
+        "geometry_plausibility": {
+          "distance_m": 1.4,
+          "osm_way_id": 1379858309,
+          "ref": "S8",
+          "name": null,
+          "azimuth_deg": 286.7
+        },
+        "wykryte_poprawki": [],
+        "asset_checked": "files/G3-MLY-S8-002.jpg"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MLY-S8-008",
+      "metadata": {
+        "id": "G3-MLY-S8-008",
+        "source_url": "https://www.mapillary.com/app/?pKey=442992931532020&focus=photo",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=442992931532020&focus=photo"
+        },
+        "source_group": "west",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.157309",
+        "fresh_lon": "23.009366",
+        "fresh_author": "d3mol3k",
+        "fresh_capture_time": "2024-04-19T07:41:44.813000Z",
+        "fresh_image_key": "442992931532020",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MLY-S8-008",
+        "result": "PASS",
+        "odczyt_niezależny": "Złotoria|P TIR|5 km",
+        "kontrola_treści": "Cztery pola 2×2: dystrybutory paliwa; parking P z małym TIR; łóżko; skrzyżowana łyżka i widelec. Dystans 5 km; bez strzałki.",
+        "kontrola_lokalizacji_i_kierunku": "Położenie na wschód od zjazdu Choroszcz jest zgodne z jazdą na zachód. Kamera jest rozróżniona od tablicy; dokładny kod zbiorczej tablicy słusznie UNVERIFIED.",
+        "współrzędne_kamery_vs_tablicy": "PASS: rekord jednoznacznie określa pozycję kamery; pozycja samej tablicy pozostaje UNVERIFIED.",
+        "geometry_plausibility": {
+          "distance_m": 1.7,
+          "osm_way_id": 1379858309,
+          "ref": "S8",
+          "name": null,
+          "azimuth_deg": 286.7
+        },
+        "wykryte_poprawki": [],
+        "asset_checked": "files/G3-MLY-S8-008.jpg"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MLY-S8-010",
+      "metadata": {
+        "id": "G3-MLY-S8-010",
+        "source_url": "https://www.mapillary.com/app/?pKey=456208566839517&focus=photo",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=456208566839517&focus=photo"
+        },
+        "source_group": "west",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.164206",
+        "fresh_lon": "22.958932",
+        "fresh_author": "d3mol3k",
+        "fresh_capture_time": "2024-04-19T07:43:13.813000Z",
+        "fresh_image_key": "456208566839517",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MLY-S8-010",
+        "result": "PASS",
+        "odczyt_niezależny": "S8 Warszawa|Tykocin|Złotoria|500 m",
+        "kontrola_treści": "Potwierdzono czerwone S8 z białymi znakami, niebieski symbol samochodu drogi ekspresowej, odgałęzienie w prawo z miniaturą B-33 o wartości 60 oraz odległość 500 m. Główny kierunek prosto. Nie ma numeru węzła.",
+        "kontrola_lokalizacji_i_kierunku": "Geotag 53.164206,22.958932 odpowiada zachodniej jezdni S8 przed Tykocinem. Źródłowy kierunek ok.270° jest spójny z osią jezdni i kierunkiem przejazdu. Kamera i nieznana pozycja tarczy są rozdzielone.",
+        "asset_checked": "work_municipal/mly_s8/deliverable_files/G3-MLY-S8-010.jpg",
+        "wykryte_poprawki": [],
+        "geometry_plausibility_ESTIMATED": {
+          "id": "G3-MLY-S8-010",
+          "distance_m": 2.8,
+          "osm_way_id": 98599908,
+          "ref": "S8",
+          "name": null,
+          "axis_azimuth_deg": 271.5
+        }
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MLY-S8-017",
+      "metadata": {
+        "id": "G3-MLY-S8-017",
+        "source_url": "https://www.mapillary.com/app/?pKey=1109500016998751&focus=photo",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=1109500016998751&focus=photo"
+        },
+        "source_group": "west",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.156933",
+        "fresh_lon": "22.876963",
+        "fresh_author": "d3mol3k",
+        "fresh_capture_time": "2024-04-19T07:45:45.813000Z",
+        "fresh_image_key": "1109500016998751",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MLY-S8-017",
+        "result": "PASS",
+        "odczyt_niezależny": "S8 Warszawa|Saniki|Rzędziany|500 m",
+        "kontrola_treści": "Niebieski symbol drogi ekspresowej przy czerwonym S8; biała główna strzałka prosto i prawa gałąź; czerwony okrąg 40 na gałęzi. Dystans 500 m sprawdzono dodatkowym powiększeniem fragmentu bez korekty lub rekonstrukcji obrazu.",
+        "kontrola_lokalizacji_i_kierunku": "Geotag na S8 przed Rzędzianami, zachodni/WSW kierunek i położenie względem następnej bramownicy są spójne. Brak numeru węzła na tablicy.",
+        "współrzędne_kamery_vs_tablicy": "PASS: rekord jednoznacznie określa pozycję kamery; pozycja samej tablicy pozostaje UNVERIFIED.",
+        "geometry_plausibility": {
+          "distance_m": 0.6,
+          "osm_way_id": 536211831,
+          "ref": "S8",
+          "name": null,
+          "azimuth_deg": 257.4
+        },
+        "wykryte_poprawki": [],
+        "asset_checked": "files/G3-MLY-S8-017.jpg"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MLY-S8-020",
+      "metadata": {
+        "id": "G3-MLY-S8-020",
+        "source_url": "https://www.mapillary.com/app/?pKey=882010093766468&focus=photo",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=882010093766468&focus=photo"
+        },
+        "source_group": "west",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.153544",
+        "fresh_lon": "22.856043",
+        "fresh_author": "d3mol3k",
+        "fresh_capture_time": "2024-04-19T07:46:21.813000Z",
+        "fresh_image_key": "882010093766468",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MLY-S8-020",
+        "result": "PASS",
+        "odczyt_niezależny": "S8 E 67|Zambrów 46|Ostrów Mazowiecka 79|Warszawa 167|Kudowa-Słone PL CZ 639",
+        "kontrola_treści": "Odczytano wszystkie cztery odległości 46 / 79 / 167 / 639, czerwone S8, zielone E67, niebieski symbol drogi ekspresowej i białe owale PL/CZ. Kudowa-Słone bez widocznych odstępów wokół łącznika. Brak strzałek.",
+        "kontrola_lokalizacji_i_kierunku": "Pozycja kamery za węzłem Rzędziany i kierunek WSW spójne z OSM i sekwencją. Bez przenoszenia odczytów z innych zdjęć.",
+        "współrzędne_kamery_vs_tablicy": "PASS: rekord jednoznacznie określa pozycję kamery; pozycja samej tablicy pozostaje UNVERIFIED.",
+        "geometry_plausibility": {
+          "distance_m": 3.2,
+          "osm_way_id": 251431132,
+          "ref": "S8",
+          "name": null,
+          "azimuth_deg": 252.5
+        },
+        "wykryte_poprawki": [],
+        "asset_checked": "files/G3-MLY-S8-020.jpg"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MLY-S8-030",
+      "metadata": {
+        "id": "G3-MLY-S8-030",
+        "source_url": "https://www.mapillary.com/app/?pKey=388980377140966&focus=photo",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=388980377140966&focus=photo"
+        },
+        "source_group": "west",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.164211",
+        "fresh_lon": "22.942318",
+        "fresh_author": "kino",
+        "fresh_capture_time": "2024-07-26T12:18:48.894000Z",
+        "fresh_image_key": "388980377140966",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MLY-S8-030",
+        "result": "PASS",
+        "odczyt_niezależny": "8 Białystok",
+        "kontrola_treści": "Na czerwonym polu jest pojedyncza 8, bez S. Z lewej strzałka ↑ i biały samochód w niebieskim polu. Bez odległości.",
+        "kontrola_lokalizacji_i_kierunku": "Dodatkowo obejrzano pełny oryginał 388980377140966.jpg; bramownica i podejście od zachodu zgadzają się z opisem. Azymut ruchu ok.92° jest odróżniony od źródłowego kierunku kadru 75.3°.",
+        "współrzędne_kamery_vs_tablicy": "PASS: rekord jednoznacznie określa pozycję kamery; pozycja samej tablicy pozostaje UNVERIFIED.",
+        "geometry_plausibility": {
+          "distance_m": 3.9,
+          "osm_way_id": 251431118,
+          "ref": "S8",
+          "name": null,
+          "azimuth_deg": 91.6
+        },
+        "wykryte_poprawki": [],
+        "asset_checked": "files/G3-MLY-S8-030.jpg"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MLY-S8-031",
+      "metadata": {
+        "id": "G3-MLY-S8-031",
+        "source_url": "https://www.mapillary.com/app/?pKey=388980377140966&focus=photo",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=388980377140966&focus=photo"
+        },
+        "source_group": "west",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.164211",
+        "fresh_lon": "22.942318",
+        "fresh_author": "kino",
+        "fresh_capture_time": "2024-07-26T12:18:48.894000Z",
+        "fresh_image_key": "388980377140966",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-MLY-S8-031",
+        "result": "PASS",
+        "odczyt_niezależny": "Tykocin|Złotoria",
+        "kontrola_treści": "Dwa wiersze białego tekstu na zielonym tle; biała strzałka↗. Bez numerów dróg, piktogramów i odległości na tym konkretnym panelu.",
+        "kontrola_lokalizacji_i_kierunku": "Ten sam pełny oryginał i geotag co 030; zielony środkowy panel prawidłowo oddzielony od niebieskiej tablicy usług po prawej.",
+        "współrzędne_kamery_vs_tablicy": "PASS: rekord jednoznacznie określa pozycję kamery; pozycja samej tablicy pozostaje UNVERIFIED.",
+        "geometry_plausibility": {
+          "distance_m": 3.9,
+          "osm_way_id": 251431118,
+          "ref": "S8",
+          "name": null,
+          "azimuth_deg": 91.6
+        },
+        "wykryte_poprawki": [],
+        "asset_checked": "files/G3-MLY-S8-031.jpg"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MUN-005",
+      "metadata": {
+        "id": "G3-MUN-005",
+        "source_url": "https://bip.bialystok.pl/resource/18323/Klasyfikacja_bezpiecze%25C5%2584stwo.pdf",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://bip.bialystok.pl/resource/18323/Klasyfikacja_bezpiecze%25C5%2584stwo.pdf"
+        },
+        "source_group": "bip",
+        "metadata_result": "PASS",
+        "notes": [
+          "Źródło urzędowe z cudzymi fotografiami: brak jasnej licencji zdjęć pozostaje UNVERIFIED. Pliku nie ma w ZIP; literalny odczyt i numer strony sprawdzane osobno."
+        ],
+        "license_result": "UNVERIFIED_RECORDED",
+        "fresh_lat": "UNVERIFIED",
+        "fresh_lon": "UNVERIFIED"
+      },
+      "visual": {
+        "id": "G3-MUN-005",
+        "result": "PASS",
+        "auditor": "root — niezależny od autora MUN",
+        "visual_note": "Potwierdzono Warszawa, czerwone 8, zielone E67, strzałkę ↑; wariant rodziny E-2 pozostaje UNVERIFIED.",
+        "pdf_page": "20, zdjęcie górne",
+        "location_result": "PASS w granicach opisu podpisu fotografii",
+        "position_role": "Dokładne współrzędne, azymut i data fotografii UNVERIFIED; zgodność opisowego miejsca z podpisem źródła potwierdzona.",
+        "license_result": "UNVERIFIED_RECORDED; tylko referencja, pliku nie ma w ZIP",
+        "checked_at": "2026-11-12T22:52:26.641955+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MUN-006",
+      "metadata": {
+        "id": "G3-MUN-006",
+        "source_url": "https://bip.bialystok.pl/resource/18323/Klasyfikacja_bezpiecze%25C5%2584stwo.pdf",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://bip.bialystok.pl/resource/18323/Klasyfikacja_bezpiecze%25C5%2584stwo.pdf"
+        },
+        "source_group": "bip",
+        "metadata_result": "PASS",
+        "notes": [
+          "Źródło urzędowe z cudzymi fotografiami: brak jasnej licencji zdjęć pozostaje UNVERIFIED. Pliku nie ma w ZIP; literalny odczyt i numer strony sprawdzane osobno."
+        ],
+        "license_result": "UNVERIFIED_RECORDED",
+        "fresh_lat": "UNVERIFIED",
+        "fresh_lon": "UNVERIFIED"
+      },
+      "visual": {
+        "id": "G3-MUN-006",
+        "result": "PASS",
+        "auditor": "root — niezależny od autora MUN",
+        "visual_note": "Potwierdzono osobną górną tarczę 8 na czerwonym tle, bez strzałki.",
+        "pdf_page": "21, zdjęcie dolne",
+        "location_result": "PASS w granicach opisu podpisu fotografii",
+        "position_role": "Dokładne współrzędne, azymut i data fotografii UNVERIFIED; zgodność opisowego miejsca z podpisem źródła potwierdzona.",
+        "license_result": "UNVERIFIED_RECORDED; tylko referencja, pliku nie ma w ZIP",
+        "checked_at": "2026-11-12T22:52:26.641959+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-MUN-007",
+      "metadata": {
+        "id": "G3-MUN-007",
+        "source_url": "https://bip.bialystok.pl/resource/18323/Klasyfikacja_bezpiecze%25C5%2584stwo.pdf",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://bip.bialystok.pl/resource/18323/Klasyfikacja_bezpiecze%25C5%2584stwo.pdf"
+        },
+        "source_group": "bip",
+        "metadata_result": "PASS",
+        "notes": [
+          "Źródło urzędowe z cudzymi fotografiami: brak jasnej licencji zdjęć pozostaje UNVERIFIED. Pliku nie ma w ZIP; literalny odczyt i numer strony sprawdzane osobno."
+        ],
+        "license_result": "UNVERIFIED_RECORDED",
+        "fresh_lat": "UNVERIFIED",
+        "fresh_lon": "UNVERIFIED"
+      },
+      "visual": {
+        "id": "G3-MUN-007",
+        "result": "PASS",
+        "auditor": "root — niezależny od autora MUN",
+        "visual_note": "Potwierdzono osobną dolną tarczę 65 na czerwonym tle, bez strzałki.",
+        "pdf_page": "21, zdjęcie dolne",
+        "location_result": "PASS w granicach opisu podpisu fotografii",
+        "position_role": "Dokładne współrzędne, azymut i data fotografii UNVERIFIED; zgodność opisowego miejsca z podpisem źródła potwierdzona.",
+        "license_result": "UNVERIFIED_RECORDED; tylko referencja, pliku nie ma w ZIP",
+        "checked_at": "2026-11-12T22:52:26.641961+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-P008",
+      "metadata": {
+        "id": "G3-P008",
+        "source_url": "https://www.mapillary.com/app/?pKey=398536382868438",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=398536382868438"
+        },
+        "source_group": "putry",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.160136",
+        "fresh_lon": "23.151701",
+        "fresh_author": "strudel",
+        "fresh_capture_time": "2024-08-15T13:02:03.053000Z",
+        "fresh_image_key": "398536382868438",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-P008",
+        "result": "PASS",
+        "odczyt_niezależny": "8 E 67 Warszawa|65 Ełk",
+        "kontrola_treści": "Samodzielny prawy panel: czerwone pola 8 i 65, zielone E67, białe litery; pozioma strzałka w prawo. Bez odległości i bez piktogramu państwa w tym panelu.",
+        "kontrola_lokalizacji_i_kierunku": "Kamera na północnym najazdzie al. Tysiąclecia; kierunek 187.27° jest zgodny z jazdą na południe. Współrzędne tablicy poprawnie pozostają UNVERIFIED.",
+        "współrzędne_kamery_vs_tablicy": "PASS: rekord jednoznacznie określa pozycję kamery; pozycja samej tablicy pozostaje UNVERIFIED.",
+        "geometry_plausibility": {
+          "distance_m": 3.8,
+          "osm_way_id": 266084696,
+          "ref": "8;19",
+          "name": "Aleja Tysiąclecia Państwa Polskiego",
+          "azimuth_deg": 189.3
+        },
+        "wykryte_poprawki": [],
+        "asset_checked": "files/G3-P008.jpg"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-P009",
+      "metadata": {
+        "id": "G3-P009",
+        "source_url": "https://www.mapillary.com/app/?pKey=1217401006105441",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=1217401006105441"
+        },
+        "source_group": "putry",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.161814",
+        "fresh_lon": "23.151879",
+        "fresh_author": "strudel",
+        "fresh_capture_time": "2024-08-15T13:01:50.943000Z",
+        "fresh_image_key": "1217401006105441",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-P009",
+        "result": "PASS",
+        "odczyt_niezależny": "675 Centrum|65 Bobrowniki PL BY|Kuźnica B. PL BY|Lublin|8 E 67 Warszawa|65 Ełk",
+        "kontrola_treści": "Dokładny skrót brzmi Kuźnica B. — wielka litera B i kropka są widoczne. Nie ma tarczy 19 przy Kuźnicy ani Lublinie. 675 ma tło żółte, 65 i 8 czerwone, E67 zielone. Dwie pary białych owali PL/BY. Schemat kieruje Centrum prosto, lewą grupę w lewo, Warszawę i Ełk w prawo.",
+        "kontrola_lokalizacji_i_kierunku": "Geotag na północnym wlocie al. Tysiąclecia do Putry, jazda na południe, jest spójny z opisem. Kierunek compass_angle 173.81° przybliża ten zwrot; błędnego przeciwnego computed_compass_angle nie użyto. Współrzędne tarczy pozostają UNVERIFIED.",
+        "asset_checked": "work_root/deliverable/files/G3-P009.jpg",
+        "wykryte_poprawki": [],
+        "geometry_plausibility_ESTIMATED": {
+          "id": "G3-P009",
+          "distance_m": 1.4,
+          "osm_way_id": 882366262,
+          "ref": "8;19",
+          "name": "Aleja Tysiąclecia Państwa Polskiego",
+          "axis_azimuth_deg": 178.9
+        }
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-P010",
+      "metadata": {
+        "id": "G3-P010",
+        "source_url": "https://www.mapillary.com/app/?pKey=814105944186182",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=814105944186182"
+        },
+        "source_group": "putry",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.161139",
+        "fresh_lon": "23.151859",
+        "fresh_author": "strudel",
+        "fresh_capture_time": "2024-08-15T13:01:55.494000Z",
+        "fresh_image_key": "814105944186182",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-P010",
+        "result": "PASS",
+        "odczyt_niezależny": "CENTRUM PRZEZ:|TYSIĄCLECIA P.P. 5 MIN|ŚWIĘTOKRZYSKĄ 7 MIN",
+        "kontrola_treści": "Potwierdzono wielkie litery, dwukropek, skrót P.P., znaki Ą/Ś/Ę i czasy 5 MIN oraz 7 MIN. Cyfrę 5 sprawdzono również w powiększeniu rzeczywistych pikseli; nie wygenerowano ani nie domalowano jej segmentów. Brak strzałek, numerów dróg i piktogramów. Rekord prawidłowo opisuje chwilowy czas przejazdu, a nie stałą odległość.",
+        "kontrola_lokalizacji_i_kierunku": "Geotag na al. Tysiąclecia, między wcześniejszą E-1 a rondem, pasuje do północnego dojazdu na południe. Kierunek ok.181° jest zgodny z jezdnią. Nie myli się pozycji kamery z pozycją tablicy.",
+        "asset_checked": "work_root/deliverable/files/G3-P010.jpg",
+        "wykryte_poprawki": [],
+        "geometry_plausibility_ESTIMATED": {
+          "id": "G3-P010",
+          "distance_m": 2.9,
+          "osm_way_id": 266084696,
+          "ref": "8;19",
+          "name": "Aleja Tysiąclecia Państwa Polskiego",
+          "axis_azimuth_deg": 184.6
+        }
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-P012",
+      "metadata": {
+        "id": "G3-P012",
+        "source_url": "https://www.mapillary.com/app/?pKey=1634385190678528",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=1634385190678528"
+        },
+        "source_group": "putry",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.156685",
+        "fresh_lon": "23.156067",
+        "fresh_author": "kino",
+        "fresh_capture_time": "2024-07-26T13:36:00.671000Z",
+        "fresh_image_key": "1634385190678528",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-P012",
+        "result": "PASS",
+        "odczyt_niezależny": "8 E 67 Warszawa|65 Ełk",
+        "kontrola_treści": "Lewy panel: dwa białe groty w górę po obu końcach; tarcze 8, 65 czerwone, E67 zielone. Wartości675 z sąsiedniego panelu nie zaliczono do badanego wiersza.",
+        "kontrola_lokalizacji_i_kierunku": "Geotag na Andersa przed rozdzieleniem; kierunek 314° odpowiada osi NW. Opis osobno rozpoznaje kamerę i nieznaną pozycję tablicy.",
+        "współrzędne_kamery_vs_tablicy": "PASS: rekord jednoznacznie określa pozycję kamery; pozycja samej tablicy pozostaje UNVERIFIED.",
+        "geometry_plausibility": {
+          "distance_m": 2.9,
+          "osm_way_id": 266084693,
+          "ref": "19;65",
+          "name": "Generała Władysława Andersa",
+          "azimuth_deg": 312.5
+        },
+        "wykryte_poprawki": [],
+        "asset_checked": "files/G3-P012.jpg"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-P015",
+      "metadata": {
+        "id": "G3-P015",
+        "source_url": "https://www.mapillary.com/app/?pKey=771725180195104",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=771725180195104"
+        },
+        "source_group": "putry",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.159511",
+        "fresh_lon": "23.146083",
+        "fresh_author": "richlv",
+        "fresh_capture_time": "2020-08-15T09:54:24Z",
+        "fresh_image_key": "771725180195104",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-P015",
+        "result": "PASS",
+        "odczyt_niezależny": "65 Bobrowniki PL BY|19 Lublin",
+        "kontrola_treści": "Lewy panel: dwie strzałki w górę; czerwone 65 i 19; PL/BY w białych owalach przy Bobrowniki. Odczyt zgodny mimo ukośnego i przechylonego kadru.",
+        "kontrola_lokalizacji_i_kierunku": "Dodatkowo obejrzano pełny oryginał 771725180195104.jpg: kamera patrzy ukośnie w lewo, tablice są po prawej. Rozróżnienie computed_compass_angle 36.5° dla kadru od jazdy ok.86–88° jest trafne; nie podstawiono kierunku jazdy jako azymutu fotografii.",
+        "współrzędne_kamery_vs_tablicy": "PASS: rekord jednoznacznie określa pozycję kamery; pozycja samej tablicy pozostaje UNVERIFIED.",
+        "geometry_plausibility": {
+          "distance_m": 0.5,
+          "osm_way_id": 257367423,
+          "ref": "8;65",
+          "name": "Generała Stanisława Maczka",
+          "azimuth_deg": 88.3
+        },
+        "wykryte_poprawki": [],
+        "asset_checked": "files/G3-P015.jpg"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "G3-P020",
+      "metadata": {
+        "id": "G3-P020",
+        "source_url": "https://www.mapillary.com/app/?pKey=2748010005509143",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=2748010005509143"
+        },
+        "source_group": "putry",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.159204",
+        "fresh_lon": "23.150241",
+        "fresh_author": "gpsmapper",
+        "fresh_capture_time": "2019-08-04T05:31:08Z",
+        "fresh_image_key": "2748010005509143",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "G3-P020",
+        "result": "PASS",
+        "odczyt_niezależny": "[UNVERIFIED: zaklejony numer] [UNVERIFIED: zaklejony napis]",
+        "kontrola_treści": "Prawy samodzielny panel ma żółte pole numeru i białe pole nazwy zaklejone pomarańczową taśmą. Fragmentaryczne ślady nie pozwalają na bezpieczny pełny odczyt. Zachowanie UNVERIFIED jest prawidłowe; nie przeniesiono nazwy ani numeru z innych zdjęć. Pozioma strzałka w prawo jest wyraźna. PASS dotyczy rzetelności zapisu braku wiedzy i nie zmienia statusu treści na SOURCED.",
+        "kontrola_lokalizacji_i_kierunku": "Geotag znajduje się na zachodniej łącznicy do ronda Putry; kierunek ESE 107.09° jest spójny z osią łącznicy. Rekord identyfikuje kamerę i pozostawia współrzędne tarczy niepotwierdzone.",
+        "asset_checked": "work_root/deliverable/files/G3-P020.jpg",
+        "wykryte_poprawki": [],
+        "geometry_plausibility_ESTIMATED": {
+          "id": "G3-P020",
+          "distance_m": 4.6,
+          "osm_way_id": 249431348,
+          "ref": "8",
+          "name": null,
+          "axis_azimuth_deg": 103.1
+        }
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "MN004",
+      "metadata": {
+        "id": "MN004",
+        "source_url": "https://www.mapillary.com/app/?pKey=876869244252986",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=876869244252986"
+        },
+        "source_group": "north",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.203779",
+        "fresh_lon": "23.153748",
+        "fresh_author": "kino",
+        "fresh_capture_time": "2024-07-26T13:40:33.562000Z",
+        "fresh_image_key": "876869244252986",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "MN004",
+        "result": "PASS",
+        "auditor": "root — niezależnie od autora rekordów",
+        "visual_note": "Augustów83, Suwałki114, Kowno(Kaunas)LT239, Wasilków7, CzarnaBiałostocka16, Sokółka34, KuźnicaPLBY51 zgodne. Nazwę Kuźnica i owale potwierdzono w pełnym oryginale sąsiedniej klatki1019361423099242; liczbę51 w głównymkadrze. Nie przeniesiono119 z dalszej tablicy.",
+        "source_url": "https://www.mapillary.com/app/?pKey=876869244252986",
+        "location_result": "PASS w granicach zadeklarowanej metody/niepewności",
+        "position_role": "kamera; pozycja tarczy UNVERIFIED",
+        "distance_to_current_OSM_core_m_ESTIMATED": 0.8,
+        "spatial_method": "Odległość kamera–wybrane aktualne osie OSM w EPSG:2180; pomocnicza kontrola, dla historycznego układu C031 nie dowodzi położenia starej tablicy.",
+        "checked_at": "2026-11-12T23:01:34.509860+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "MN009",
+      "metadata": {
+        "id": "MN009",
+        "source_url": "https://www.mapillary.com/app/?pKey=1009127457582864",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=1009127457582864"
+        },
+        "source_group": "north",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.227675",
+        "fresh_lon": "23.153849",
+        "fresh_author": "kino",
+        "fresh_capture_time": "2024-07-26T13:42:10.549000Z",
+        "fresh_image_key": "1009127457582864",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "MN009",
+        "result": "PASS",
+        "auditor": "root — niezależny od autora MN",
+        "visual_note": "Odczyt Suchowola 42, Augustów 80, Suwałki 119, Kowno (Kaunas) LT 236 zgodny. E67 potwierdzone w głównym kadrze; 119 również w większym kadrze pomocniczym.",
+        "location_result": "PASS",
+        "position_role": "kamera; pozycja tarczy UNVERIFIED",
+        "distance_to_OSM_core_m_ESTIMATED": 0.0,
+        "spatial_method": "Odległość punkt–linia po transformacji WGS84 do EPSG:2180; pomocnicza ocena zgodności geotagu z korytarzem, nie pomiar tarczy.",
+        "source_url": "https://www.mapillary.com/app/?pKey=1009127457582864",
+        "checked_at": "2026-11-12T22:52:26.641794+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "MN013",
+      "metadata": {
+        "id": "MN013",
+        "source_url": "https://www.mapillary.com/app/?pKey=3902888486700137",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=3902888486700137"
+        },
+        "source_group": "north",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.236316",
+        "fresh_lon": "23.148807",
+        "fresh_author": "strudel",
+        "fresh_capture_time": "2024-08-15T12:55:51.410000Z",
+        "fresh_image_key": "3902888486700137",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "MN013",
+        "result": "PASS",
+        "auditor": "root — niezależny od autora MN",
+        "visual_note": "Cień uniemożliwia pewny odczyt separatora i liczby; pozostawiono UNVERIFIED. Grot w lewo i widoczne fragmenty Wólka/Przedmieście zgodne.",
+        "location_result": "PASS",
+        "position_role": "kamera; pozycja tarczy UNVERIFIED",
+        "distance_to_OSM_core_m_ESTIMATED": 0.9,
+        "spatial_method": "Odległość punkt–linia po transformacji WGS84 do EPSG:2180; pomocnicza ocena zgodności geotagu z korytarzem, nie pomiar tarczy.",
+        "source_url": "https://www.mapillary.com/app/?pKey=3902888486700137",
+        "checked_at": "2026-11-12T22:52:26.641853+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "MN015",
+      "metadata": {
+        "id": "MN015",
+        "source_url": "https://www.mapillary.com/app/?pKey=380984394792296",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=380984394792296"
+        },
+        "source_group": "north",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.219069",
+        "fresh_lon": "23.155739",
+        "fresh_author": "strudel",
+        "fresh_capture_time": "2024-08-15T12:57:18.602000Z",
+        "fresh_image_key": "380984394792296",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "MN015",
+        "result": "PASS",
+        "auditor": "root — niezależnie od autora rekordów",
+        "visual_note": "Lewy panel bramownicy: 8,19 na czerwieni; E67 na zieleni; Białystok; dwie strzałki ↑. Zgodny z ujęciem południowym przy podejściu do rozdziału DK19. Osobny panel względem MN016.",
+        "source_url": "https://www.mapillary.com/app/?pKey=380984394792296",
+        "location_result": "PASS w granicach zadeklarowanej metody/niepewności",
+        "position_role": "kamera; pozycja tarczy UNVERIFIED",
+        "distance_to_current_OSM_core_m_ESTIMATED": 0.3,
+        "spatial_method": "Odległość kamera–wybrane aktualne osie OSM w EPSG:2180; pomocnicza kontrola, dla historycznego układu C031 nie dowodzi położenia starej tablicy.",
+        "checked_at": "2026-11-12T23:01:34.509892+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    },
+    {
+      "id": "MX002",
+      "metadata": {
+        "id": "MX002",
+        "source_url": "https://www.mapillary.com/app/?pKey=503886228724826",
+        "source_link": {
+          "http": 200,
+          "final_url": "https://www.mapillary.com/app/?pKey=503886228724826"
+        },
+        "source_group": "north",
+        "metadata_result": "PASS",
+        "notes": [
+          "API potwierdza klucz, autora, datę i geotag kamery; link aplikacji może wymagać JavaScript. To nie jest pozycja fizycznej tablicy."
+        ],
+        "fresh_lat": "53.324651",
+        "fresh_lon": "23.123476",
+        "fresh_author": "kino",
+        "fresh_capture_time": "2024-07-26T13:50:22.604000Z",
+        "fresh_image_key": "503886228724826",
+        "license_result": "PASS",
+        "license_evidence": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data"
+      },
+      "visual": {
+        "id": "MX002",
+        "result": "PASS",
+        "auditor": "root — niezależnie od autora rekordów",
+        "visual_note": "Czytelny pełny napis Przewalanka, białe litery na zielonym polu, brak odległości/piktogramów/strzałek. Wspólne źródło z MX003. Zakres graniczny15177m od miasta jest opisany jako ESTIMATED; nie udaje punktu wewnątrz ścisłego bufora.",
+        "source_url": "https://www.mapillary.com/app/?pKey=503886228724826",
+        "location_result": "PASS w granicach zadeklarowanej metody/niepewności",
+        "position_role": "kamera; pozycja tarczy UNVERIFIED",
+        "distance_to_current_OSM_core_m_ESTIMATED": 3.0,
+        "spatial_method": "Odległość kamera–wybrane aktualne osie OSM w EPSG:2180; pomocnicza kontrola, dla historycznego układu C031 nie dowodzi położenia starej tablicy.",
+        "checked_at": "2026-11-12T23:01:34.509944+00:00"
+      },
+      "wynik_po_korekcie": "PASS w granicach jawnie zadeklarowanych ograniczeń"
+    }
+  ],
+  "osm_audit": "files/G3-OSM006.json: osobne losowanie38/187 obiektów OSM; nie dotyczy fizycznych znaków."
+}

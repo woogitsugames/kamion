@@ -1,0 +1,65 @@
+{
+  "data": "2026-11-12T23:04:36.202532+00:00",
+  "result": "PASS",
+  "records": 152,
+  "photo_crops": 144,
+  "photo_primary_sources": {
+    "Commons": 14,
+    "Mapillary": 78
+  },
+  "photos_with_camera_geotag": 89,
+  "observations_with_camera_geotag": 140,
+  "reference_only_BIP": 8,
+  "OSM_auxiliary_records": 187,
+  "asset_files": 172,
+  "max_photo_long_side_px": 1600,
+  "all_JPEG_max_side_px": 1600,
+  "csv_encoding": "UTF-8 BOM",
+  "required_columns": [
+    "id",
+    "url_źródła",
+    "licencja",
+    "autor",
+    "data_dostępu",
+    "status",
+    "uwagi",
+    "lat",
+    "lon",
+    "kierunek_deg",
+    "droga",
+    "typ_znaku",
+    "tekst_wiersze",
+    "numery_dróg",
+    "piktogramy",
+    "data_zdjęcia",
+    "mapillary_key"
+  ],
+  "status_counts": {
+    "ESTIMATED": 38,
+    "UNVERIFIED": 16,
+    "SOURCED": 98
+  },
+  "audit_sample": 31,
+  "audit_population": 152,
+  "audit_fraction": 0.20394736842105263,
+  "checks": [
+    "Unikalność ID i komplet wymaganych pól",
+    "Zgodność CSV z JSON, kluczy z URL, autorów i geotagów z utrwalonym API",
+    "Jawne oznaczenie niepełnych transkrypcji",
+    "Licencje wszystkich144 pobranych wycinków: CC0/CC BY-SA4.0",
+    "Brak PDF i fotografii BIP o niejasnych prawach; jedyny PDF to akt normatywny",
+    "Atrybucja i SHA256 wszystkich plików files/",
+    "JPG: maksymalnie1600px; źródłowe wycinki bez generowania treści",
+    "Odtwarzalne losowanie31/152; wszystkie ponownie sprawdzone URL HTTP200",
+    "Mapa z aktualnych rekordów i właściwych geotagów",
+    "Brak tokenów, podpisanych CDN i ścieżek roboczych w dostarczonych danych",
+    "Po zapisaniu ZIP: test CRC, zgodność listy plików i limit80000000B"
+  ],
+  "archive_check": "PASS — skrypt kończy się sukcesem wyłącznie po testzip()==None i sprawdzeniu rozmiaru",
+  "limitations": [
+    "PASS kontroli nie potwierdza ukrytych lub nieczytelnych części",
+    "Współrzędne fotografii to kamera; pozycje tarcz pozostająUNVERIFIED",
+    "Nie jest to kompletna inwentaryzacja aktualnego oznakowania2026",
+    "MX002/MX003 świadomie177m poza ścisłym buforem jako ok.15km"
+  ]
+}

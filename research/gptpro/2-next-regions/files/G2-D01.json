@@ -1,0 +1,1158 @@
+{
+  "license": "ODbL 1.0 — © OpenStreetMap contributors; https://www.openstreetmap.org/copyright",
+  "author": "OpenStreetMap contributors",
+  "access_date": "2026-11-12",
+  "method": "Wybór obiektów i dróg z OSM API XML. Dla obszarów centroid w EPSG2180, dla linii środek długości, dla punktów współrzędne węzła. Geometrie nie są automatycznie bramami/całymi zakładami.",
+  "feature_count": 3998,
+  "acquisitions": [
+    {
+      "file": "city_0_0.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.04,53.08,23.1,53.12",
+      "bytes": 8886789,
+      "bbox": [
+        23.04,
+        53.08,
+        23.1,
+        53.12
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:20:11Z"
+    },
+    {
+      "file": "city_0_1a.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.04,53.12,23.07,53.16",
+      "bytes": 6950908,
+      "bbox": [
+        23.04,
+        53.12,
+        23.07,
+        53.16
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:20:17Z"
+    },
+    {
+      "file": "city_0_1ba.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.07,53.12,23.085,53.16",
+      "bytes": 7358712,
+      "bbox": [
+        23.07,
+        53.12,
+        23.085,
+        53.16
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:20:31Z"
+    },
+    {
+      "file": "city_0_1bb.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.085,53.12,23.1,53.16",
+      "bytes": 10083985,
+      "bbox": [
+        23.085,
+        53.12,
+        23.1,
+        53.16
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:20:39Z"
+    },
+    {
+      "file": "city_0_2.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.04,53.16,23.1,53.2",
+      "bytes": 7156699,
+      "bbox": [
+        23.04,
+        53.16,
+        23.1,
+        53.2
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:20:17Z"
+    },
+    {
+      "file": "city_1_0a.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.1,53.08,23.130000000000003,53.12",
+      "bytes": 11752777,
+      "bbox": [
+        23.1,
+        53.08,
+        23.130000000000003,
+        53.12
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:20:33Z"
+    },
+    {
+      "file": "city_1_0b.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.130000000000003,53.08,23.16,53.12",
+      "bytes": 11681950,
+      "bbox": [
+        23.130000000000003,
+        53.08,
+        23.16,
+        53.12
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:20:41Z"
+    },
+    {
+      "file": "city_1_1aa.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.1,53.12,23.115000000000002,53.16",
+      "bytes": 10220681,
+      "bbox": [
+        23.1,
+        53.12,
+        23.115000000000002,
+        53.16
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:21:24Z"
+    },
+    {
+      "file": "city_1_1ab.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.115000000000002,53.12,23.130000000000003,53.16",
+      "bytes": 13898428,
+      "bbox": [
+        23.115000000000002,
+        53.12,
+        23.130000000000003,
+        53.16
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:21:31Z"
+    },
+    {
+      "file": "city_1_1ba.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.130000000000003,53.12,23.145000000000003,53.16",
+      "bytes": 12940104,
+      "bbox": [
+        23.130000000000003,
+        53.12,
+        23.145000000000003,
+        53.16
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:21:46Z"
+    },
+    {
+      "file": "city_1_1bb.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.145000000000003,53.12,23.16,53.16",
+      "bytes": 16910472,
+      "bbox": [
+        23.145000000000003,
+        53.12,
+        23.16,
+        53.16
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:22:15Z"
+    },
+    {
+      "file": "city_1_2.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.1,53.16,23.16,53.2",
+      "bytes": 9993481,
+      "bbox": [
+        23.1,
+        53.16,
+        23.16,
+        53.2
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:21:12Z"
+    },
+    {
+      "file": "city_2_0a.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.16,53.08,23.189999999999998,53.12",
+      "bytes": 7159603,
+      "bbox": [
+        23.16,
+        53.08,
+        23.189999999999998,
+        53.12
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:21:24Z"
+    },
+    {
+      "file": "city_2_0b.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.189999999999998,53.08,23.22,53.12",
+      "bytes": 10213736,
+      "bbox": [
+        23.189999999999998,
+        53.08,
+        23.22,
+        53.12
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:21:31Z"
+    },
+    {
+      "file": "city_2_1aa.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.16,53.12,23.174999999999997,53.16",
+      "bytes": 13642392,
+      "bbox": [
+        23.16,
+        53.12,
+        23.174999999999997,
+        53.16
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:22:12Z"
+    },
+    {
+      "file": "city_2_1ab.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.174999999999997,53.12,23.189999999999998,53.16",
+      "bytes": 13863341,
+      "bbox": [
+        23.174999999999997,
+        53.12,
+        23.189999999999998,
+        53.16
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:22:27Z"
+    },
+    {
+      "file": "city_2_2.osm",
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.16,53.16,23.22,53.2",
+      "bytes": 13097759,
+      "bbox": [
+        23.16,
+        53.16,
+        23.22,
+        53.2
+      ],
+      "status": "OK",
+      "retrieved_at_utc": "2026-11-12T22:22:24Z"
+    },
+    {
+      "osm_id": "way/1266303350",
+      "url": "https://api.openstreetmap.org/api/0.6/way/1266303350/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:33:14.099516+00:00"
+    },
+    {
+      "osm_id": "way/268377110",
+      "url": "https://api.openstreetmap.org/api/0.6/way/268377110/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:33:23.905044+00:00"
+    },
+    {
+      "osm_id": "way/364773480",
+      "url": "https://api.openstreetmap.org/api/0.6/way/364773480/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:33:30.544007+00:00"
+    },
+    {
+      "osm_id": "way/211668519",
+      "url": "https://api.openstreetmap.org/api/0.6/way/211668519/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:33:36.638990+00:00"
+    },
+    {
+      "osm_id": "way/1374857924",
+      "url": "https://api.openstreetmap.org/api/0.6/way/1374857924/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:33:42.953262+00:00"
+    },
+    {
+      "osm_id": "way/1119592464",
+      "url": "https://api.openstreetmap.org/api/0.6/way/1119592464/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:33:50.218325+00:00"
+    },
+    {
+      "osm_id": "way/916677534",
+      "url": "https://api.openstreetmap.org/api/0.6/way/916677534/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:33:56.534841+00:00"
+    },
+    {
+      "osm_id": "way/1047661827",
+      "url": "https://api.openstreetmap.org/api/0.6/way/1047661827/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:34:02.670341+00:00"
+    },
+    {
+      "osm_id": "way/1047661815",
+      "url": "https://api.openstreetmap.org/api/0.6/way/1047661815/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:34:09.006650+00:00"
+    },
+    {
+      "osm_id": "way/461145072",
+      "url": "https://api.openstreetmap.org/api/0.6/way/461145072/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:34:16.576907+00:00"
+    },
+    {
+      "osm_id": "way/461139234",
+      "url": "https://api.openstreetmap.org/api/0.6/way/461139234/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:34:23.178429+00:00"
+    },
+    {
+      "osm_id": "way/311314992",
+      "url": "https://api.openstreetmap.org/api/0.6/way/311314992/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:34:29.279969+00:00"
+    },
+    {
+      "osm_id": "way/288909766",
+      "url": "https://api.openstreetmap.org/api/0.6/way/288909766/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:34:36.421478+00:00"
+    },
+    {
+      "osm_id": "way/1569821910",
+      "url": "https://api.openstreetmap.org/api/0.6/way/1569821910/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:34:42.862332+00:00"
+    },
+    {
+      "osm_id": "way/1569821908",
+      "url": "https://api.openstreetmap.org/api/0.6/way/1569821908/full",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:34:50.273636+00:00"
+    },
+    {
+      "osm_id": "node/4464678531",
+      "url": "https://api.openstreetmap.org/api/0.6/node/4464678531",
+      "status_code": 200,
+      "downloaded_at": "2026-11-12T22:34:57.003731+00:00"
+    },
+    {
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.22,53.11,23.235,53.16",
+      "bbox": [
+        23.22,
+        53.11,
+        23.235,
+        53.16
+      ]
+    },
+    {
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.205,53.12,23.22,53.16",
+      "bbox": [
+        23.205,
+        53.12,
+        23.22,
+        53.16
+      ]
+    },
+    {
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=23.19,53.12,23.205,53.16",
+      "bbox": [
+        23.19,
+        53.12,
+        23.205,
+        53.16
+      ]
+    },
+    {
+      "url": "https://www.openstreetmap.org/api/0.6/map?bbox=22.96,53.13,23.04,53.18",
+      "bbox": [
+        22.96,
+        53.13,
+        23.04,
+        53.18
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "G2-IC01",
+      "osm_id": "UNVERIFIED",
+      "lat": "53.104576",
+      "lon": "23.194805",
+      "geometry_source": "Średnia arytmetyczna współrzędnych EPSG2180 centroidów sześciu obiektów IC02, IC05–IC09. Punkt orientacyjny klastra, nie centroid prawnych granic SSSE ani brama.",
+      "geometry_status": "ESTIMATED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-IC02",
+      "osm_id": "way/275237239",
+      "lat": "53.106875",
+      "lon": "23.193276",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.106875,
+        "lon": 23.193276,
+        "x": 780562.694,
+        "y": 590610.817,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC03",
+      "osm_id": "way/236603303",
+      "lat": "53.158612",
+      "lon": "23.162973",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.158612,
+        "lon": 23.162973,
+        "x": 778201.41,
+        "y": 596241.942,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC04",
+      "osm_id": "way/228044443",
+      "lat": "53.141813",
+      "lon": "23.214432",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.141813,
+        "lon": 23.214432,
+        "x": 781748.629,
+        "y": 594576.547,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC05",
+      "osm_id": "way/658448323",
+      "lat": "53.103519",
+      "lon": "23.197552",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.103519,
+        "lon": 23.197552,
+        "x": 780870.57,
+        "y": 590254.655,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC06",
+      "osm_id": "way/252332077",
+      "lat": "53.103746",
+      "lon": "23.193953",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.103746,
+        "lon": 23.193953,
+        "x": 780628.411,
+        "y": 590265.815,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC07",
+      "osm_id": "way/471492581",
+      "lat": "53.104351",
+      "lon": "23.190790",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.104351,
+        "lon": 23.19079,
+        "x": 780412.94,
+        "y": 590320.616,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC08",
+      "osm_id": "way/234838499",
+      "lat": "53.105610",
+      "lon": "23.191145",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.10561,
+        "lon": 23.191145,
+        "x": 780428.438,
+        "y": 590461.93,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC09",
+      "osm_id": "way/674071951",
+      "lat": "53.103354",
+      "lon": "23.202113",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.103354,
+        "lon": 23.202113,
+        "x": 781176.714,
+        "y": 590254.226,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC10",
+      "osm_id": "way/221209538",
+      "lat": "53.113602",
+      "lon": "23.201396",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.113602,
+        "lon": 23.201396,
+        "x": 781061.823,
+        "y": 591390.277,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC11",
+      "osm_id": "way/221826898",
+      "lat": "53.106159",
+      "lon": "23.203709",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.106159,
+        "lon": 23.203709,
+        "x": 781265.116,
+        "y": 590572.205,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC12",
+      "osm_id": "way/1266303350",
+      "lat": "53.030402",
+      "lon": "23.325591",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.030402,
+        "lon": 23.325591,
+        "x": 789924.79,
+        "y": 582640.107,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC13",
+      "osm_id": "way/309692926",
+      "lat": "53.115047",
+      "lon": "23.125031",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.115047,
+        "lon": 23.125031,
+        "x": 775946.446,
+        "y": 591253.567,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC14",
+      "osm_id": "way/221526892",
+      "lat": "53.138518",
+      "lon": "23.073250",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.138518,
+        "lon": 23.07325,
+        "x": 772335.555,
+        "y": 593663.502,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC15",
+      "osm_id": "way/339398420",
+      "lat": "53.134862",
+      "lon": "23.076336",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.134862,
+        "lon": 23.076336,
+        "x": 772564.971,
+        "y": 593268.926,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC16",
+      "osm_id": "way/228040084",
+      "lat": "53.142204",
+      "lon": "23.211142",
+      "geometry_source": "Centroid budynku BIUROWEGO MPO OSM way/228040084 pod adresem 42 Pułku Piechoty 48; nie stanowisko OSKP i nie brama.",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.142204,
+        "lon": 23.211142,
+        "x": 781526.249,
+        "y": 594607.07,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC17",
+      "osm_id": "way/268377110",
+      "lat": "53.088382",
+      "lon": "23.248777",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.088382,
+        "lon": 23.248777,
+        "x": 784396.4,
+        "y": 588774.834,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC18",
+      "osm_id": "way/1329697012",
+      "lat": "53.105604",
+      "lon": "23.168921",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.105604,
+        "lon": 23.168921,
+        "x": 778942.255,
+        "y": 590374.379,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-IC19",
+      "osm_id": "relation/14517743",
+      "lat": "53.154773",
+      "lon": "23.168501",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.154773,
+        "lon": 23.168501,
+        "x": 778595.545,
+        "y": 595836.841,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL01",
+      "osm_id": "way/740775737",
+      "lat": "53.162848",
+      "lon": "23.076804",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.162848,
+        "lon": 23.076804,
+        "x": 772418.863,
+        "y": 596380.874,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL02",
+      "osm_id": "way/1083837410",
+      "lat": "53.164782",
+      "lon": "22.996301",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.164782,
+        "lon": 22.996301,
+        "x": 767029.996,
+        "y": 596292.133,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL03",
+      "osm_id": "way/1525765624",
+      "lat": "53.164932",
+      "lon": "22.991286",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.164932,
+        "lon": 22.991286,
+        "x": 766694.11,
+        "y": 596290.029,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL04",
+      "osm_id": "way/1433331151",
+      "lat": "53.162044",
+      "lon": "22.994931",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.162044,
+        "lon": 22.994931,
+        "x": 766955.52,
+        "y": 595982.757,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL05",
+      "osm_id": "way/1525431951",
+      "lat": "53.164974",
+      "lon": "22.991138",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.164974,
+        "lon": 22.991138,
+        "x": 766683.947,
+        "y": 596294.23,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL06",
+      "osm_id": "way/364773480",
+      "lat": "53.162824",
+      "lon": "22.930428",
+      "geometry_source": "WS27: bieżący rekord publicznego lokalizatora DSV, latitude 53.162824 i longitude 22.930428. Punkt operatora, nie zweryfikowana brama. WGS84 przyjęte zgodnie z geograficznym formatem lokalizatora.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 53.162859,
+        "lon": 22.930453,
+        "x": 762643.823,
+        "y": 595834.55,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL07",
+      "osm_id": "way/687816195",
+      "lat": "53.163814",
+      "lon": "23.074930",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.163814,
+        "lon": 23.07493,
+        "x": 772287.566,
+        "y": 596481.073,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL08",
+      "osm_id": "way/536228348",
+      "lat": "53.149376",
+      "lon": "23.041274",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.149376,
+        "lon": 23.041274,
+        "x": 770130.441,
+        "y": 594748.918,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL09",
+      "osm_id": "way/649108044",
+      "lat": "53.151200",
+      "lon": "23.039991",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.1512,
+        "lon": 23.039991,
+        "x": 770033.274,
+        "y": 594946.742,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL10",
+      "osm_id": "way/211668519",
+      "lat": "53.124387",
+      "lon": "23.248421",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.124387,
+        "lon": 23.248421,
+        "x": 784134.819,
+        "y": 592774.491,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL11",
+      "osm_id": "way/1374857924",
+      "lat": "53.409896",
+      "lon": "23.536062",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.409896,
+        "lon": 23.536062,
+        "x": 801344.281,
+        "y": 625679.865,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL12",
+      "osm_id": "way/1119592464",
+      "lat": "53.421509",
+      "lon": "23.548528",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.421509,
+        "lon": 23.548528,
+        "x": 802089.537,
+        "y": 627023.065,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-WL13",
+      "osm_id": "UNVERIFIED",
+      "lat": "52.842943",
+      "lon": "23.722654",
+      "geometry_source": "WS20: jawne współrzędne WGS84 w tabeli PERN, zaokrąglenie niepotrzebne; źródło zapisuje sześć miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-WL14",
+      "osm_id": "way/1551348065",
+      "lat": "53.203328",
+      "lon": "23.218137",
+      "geometry_source": "GPS magazynu z instrukcji operatora HoldCargo. OSM way/1551348065 wskazuje budynek adresu/biura 16A, około 49 m na południe; nie podmieniono GPS magazynu centroidem biura.",
+      "geometry_status": "SOURCED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-WL15",
+      "osm_id": "way/297375206",
+      "lat": "53.154168",
+      "lon": "23.031215",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.154168,
+        "lon": 23.031215,
+        "x": 769428.383,
+        "y": 595243.471,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS01",
+      "osm_id": "way/916677534",
+      "lat": "53.164913",
+      "lon": "22.935965",
+      "geometry_source": "Współrzędne podane przez źródło, zaokrąglone do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 53.165285,
+        "lon": 22.935715,
+        "x": 762980.441,
+        "y": 596123.466,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS02",
+      "osm_id": "UNVERIFIED",
+      "lat": "53.135688",
+      "lon": "22.750355",
+      "geometry_source": "Współrzędne podane przez źródło, zaokrąglone do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-RS03",
+      "osm_id": "way/1047661827",
+      "lat": "53.109715",
+      "lon": "22.587884",
+      "geometry_source": "Współrzędne podane przez źródło, zaokrąglone do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 53.109645,
+        "lon": 22.588672,
+        "x": 740110.662,
+        "y": 588719.08,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS04",
+      "osm_id": "way/1047661815",
+      "lat": "53.110246",
+      "lon": "22.586114",
+      "geometry_source": "Współrzędne podane przez źródło, zaokrąglone do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 53.110539,
+        "lon": 22.585605,
+        "x": 739900.528,
+        "y": 588808.175,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS05",
+      "osm_id": "way/461145072",
+      "lat": "53.058224",
+      "lon": "22.398749",
+      "geometry_source": "Współrzędne podane przez źródło, zaokrąglone do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 53.057974,
+        "lon": 22.398281,
+        "x": 727648.947,
+        "y": 582353.816,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS06",
+      "osm_id": "way/461139234",
+      "lat": "53.039390",
+      "lon": "22.355731",
+      "geometry_source": "Współrzędne podane przez źródło, zaokrąglone do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 53.039589,
+        "lon": 22.355092,
+        "x": 724852.397,
+        "y": 580173.868,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS07",
+      "osm_id": "way/311314992",
+      "lat": "52.947615",
+      "lon": "22.167657",
+      "geometry_source": "Współrzędne podane przez źródło, zaokrąglone do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 52.947601,
+        "lon": 22.167946,
+        "x": 712765.824,
+        "y": 569377.349,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS08",
+      "osm_id": "way/288909766",
+      "lat": "52.908332",
+      "lon": "22.093181",
+      "geometry_source": "Współrzędne podane przez źródło, zaokrąglone do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 52.909116,
+        "lon": 22.093113,
+        "x": 707925.64,
+        "y": 564879.98,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS09",
+      "osm_id": "way/1569821910",
+      "lat": "52.843206",
+      "lon": "23.171417",
+      "geometry_source": "Środek małego wieloboku OSM highway=services z nazwą Haćki Zachód; nie granice całego MOP ani brama.",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 52.843206,
+        "lon": 23.171417,
+        "x": 780807.056,
+        "y": 561224.667,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS10",
+      "osm_id": "way/1569821908",
+      "lat": "52.843532",
+      "lon": "23.174853",
+      "geometry_source": "Środek małego wieloboku OSM highway=services z nazwą Haćki Wschód; nie granice całego MOP ani brama.",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 52.843532,
+        "lon": 23.174852,
+        "x": 781036.088,
+        "y": 561274.368,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS11",
+      "osm_id": "way/926289105",
+      "lat": "53.162700",
+      "lon": "23.088856",
+      "geometry_source": "GPS parkingu podany przez Bunasta. OSM way/926289105 jest budynkiem biura, nie obrysem parkingu.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 53.162516,
+        "lon": 23.088754,
+        "x": 773219.097,
+        "y": 596389.519,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS12",
+      "osm_id": "way/237814887",
+      "lat": "53.125340",
+      "lon": "23.240154",
+      "geometry_source": "Punkt orientacyjny stacji PLUS z bbox geometrii OSM way/237814887; brama parkingu TIR UNVERIFIED.",
+      "geometry_status": "ESTIMATED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-RS13",
+      "osm_id": "way/659293954",
+      "lat": "53.142696",
+      "lon": "23.194939",
+      "geometry_source": "Współrzędne stacji z JSON-LD oficjalnej karty Shell; OSM way/659293954 jest obiektem paliwowym.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 53.142823,
+        "lon": 23.194802,
+        "x": 780430.393,
+        "y": 594611.621,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RS14",
+      "osm_id": "node/2183661960",
+      "lat": "53.221481",
+      "lon": "23.219063",
+      "geometry_source": "GPS parkingu wskazany w instrukcji HoldCargo; OSM node/2183661960 jest stacją Pronar z tagiem fuel:HGV_diesel=yes.",
+      "geometry_status": "SOURCED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-RS15",
+      "osm_id": "UNVERIFIED",
+      "lat": "UNVERIFIED",
+      "lon": "UNVERIFIED",
+      "geometry_source": "UNVERIFIED — PFU potwierdza ulicę i funkcję, brak niezależnego legalnego planu umożliwiającego dokładną geolokalizację.",
+      "geometry_status": "UNVERIFIED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-RS16",
+      "osm_id": "UNVERIFIED",
+      "lat": "UNVERIFIED",
+      "lon": "UNVERIFIED",
+      "geometry_source": "UNVERIFIED — PFU potwierdza ulicę i funkcję, brak niezależnego legalnego planu umożliwiającego dokładną geolokalizację.",
+      "geometry_status": "UNVERIFIED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-RS17",
+      "osm_id": "UNVERIFIED",
+      "lat": "UNVERIFIED",
+      "lon": "UNVERIFIED",
+      "geometry_source": "UNVERIFIED — PFU potwierdza ulicę i funkcję, brak niezależnego legalnego planu umożliwiającego dokładną geolokalizację.",
+      "geometry_status": "UNVERIFIED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-RS18",
+      "osm_id": "UNVERIFIED",
+      "lat": "53.521150",
+      "lon": "23.659573",
+      "geometry_source": "Oficjalny GeoJSON SG, coordinates w kolejności lon,lat; zaokrąglenie do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-RS19",
+      "osm_id": "UNVERIFIED",
+      "lat": "53.123998",
+      "lon": "23.890564",
+      "geometry_source": "Oficjalny GeoJSON SG, coordinates lon,lat; zaokrąglenie do 6 miejsc.",
+      "geometry_status": "SOURCED",
+      "osm_center": null
+    },
+    {
+      "id": "G2-RS20",
+      "osm_id": "node/4464678531",
+      "lat": "54.308895",
+      "lon": "23.120786",
+      "geometry_source": "Węzeł OSM node/4464678531: 54.3088951,23.1207861, zaokrąglenie do 6 miejsc; punkt granicy na jezdni w kierunku Litwy.",
+      "geometry_status": "SOURCED",
+      "osm_center": {
+        "lat": 54.308895,
+        "lon": 23.120786,
+        "x": 767957.74,
+        "y": 723916.024,
+        "method": "Węzeł OSM"
+      }
+    },
+    {
+      "id": "G2-RT01",
+      "osm_id": "way/211035276",
+      "lat": "53.146685",
+      "lon": "23.080887",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.146685,
+        "lon": 23.080887,
+        "x": 772794.154,
+        "y": 594600.159,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RT02",
+      "osm_id": "way/213915579",
+      "lat": "53.159972",
+      "lon": "23.092597",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.159972,
+        "lon": 23.092597,
+        "x": 773491.987,
+        "y": 596121.571,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    },
+    {
+      "id": "G2-RT03",
+      "osm_id": "way/687816197",
+      "lat": "53.162368",
+      "lon": "23.078646",
+      "geometry_source": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy",
+      "geometry_status": "ESTIMATED",
+      "osm_center": {
+        "lat": 53.162368,
+        "lon": 23.078646,
+        "x": 772544.937,
+        "y": 596334.531,
+        "method": "Centroid powierzchni geometrii OSM w EPSG:2180; nie punkt bramy"
+      }
+    }
+  ],
+  "routing_limits": [
+    "Niepełne relacje zakazów skrętów i oznakowanie",
+    "Brak oznaczenia zakazu w OSM nie dowodzi dozwolonego ruchu",
+    "Regionalne łączniki i prywatne bramy z polami UNVERIFIED nie są gotowymi trasami"
+  ]
+}

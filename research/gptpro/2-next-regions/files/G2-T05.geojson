@@ -1,0 +1,76 @@
+{
+  "type": "Feature",
+  "id": "G2-T05",
+  "properties": {
+    "id": "G2-T05",
+    "name": "Łyski–Warszawska–Ekranowa",
+    "bbox_epsg2180": [
+      768971,
+      593449,
+      770971,
+      595449
+    ],
+    "lat": "53.146767",
+    "lon": "23.038642",
+    "area_km2": 4.0,
+    "places": [
+      "G2-WL08",
+      "G2-WL09",
+      "G2-WL15"
+    ],
+    "count": 3,
+    "tak_count": 0,
+    "footprints": [
+      {
+        "id": "G2-WL08",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      },
+      {
+        "id": "G2-WL09",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      },
+      {
+        "id": "G2-WL15",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      }
+    ],
+    "status": "ESTIMATED",
+    "method": "Projekt badawczy: dokładny kwadrat EPSG2180 2000×2000 m; pozycja WGS84 reprezentuje środek; wybór autora.",
+    "justification": "3 cele; wszystkie długości 13,6 m wymagają potwierdzenia. Okno przesunięto 550 m na północ względem kafla 4, zachowując wspólną granicę 1450 m i ciąg dróg.",
+    "source_ids": [
+      "S164",
+      "S166"
+    ],
+    "license": "Opracowanie własne dla projektu Kamion; wykorzystanie komercyjne dozwolone. Dane źródłowe zachowują odrębne warunki wskazane w manifeście. | Punkty OSM: ODbL 1.0 — © OpenStreetMap contributors; https://www.openstreetmap.org/copyright"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          23.052714960261614,
+          53.1372898360627
+        ],
+        [
+          23.05440686819024,
+          53.155228621933134
+        ],
+        [
+          23.024562892632,
+          53.15624244273333
+        ],
+        [
+          23.02288335633117,
+          53.1383029997607
+        ],
+        [
+          23.052714960261614,
+          53.1372898360627
+        ]
+      ]
+    ]
+  }
+}
