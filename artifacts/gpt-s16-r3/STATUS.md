@@ -27,3 +27,5 @@ Natywny probe: chunk bridge On w Low i High, hero LOD0/1 On, LOD2 Off; profil Lo
 Zapisano before/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano before/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano before/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
