@@ -1,0 +1,29 @@
+"""ADR 0159: Low budget table from two visual-qa stats.txt (before, after). budget.py before after [out.txt]"""
+import re, sys
+def load(p):
+    d, cur = {}, None
+    for ln in open(p, encoding='utf-8', errors='replace'):
+        m = re.match(r'^(\S+): objects=\d+ drawsEst=(\d+) shadowDrawsEst=(\d+) trisK=(\d+)', ln)
+        if m:
+            cur = m.group(1); d[cur] = [int(m.group(2)), int(m.group(3)), int(m.group(4)), 0, 0]; continue
+        m = re.match(r'^\s+\S+ instanced.*draws (\d+), instances \d+, triangles (\d+)k', ln)
+        if m and cur:
+            d[cur][3], d[cur][4] = int(m.group(1)), int(m.group(2))
+    return d
+b, a = load(sys.argv[1]), load(sys.argv[2])
+rows = ['camera                               total draws b>a (d)   total trisK b>a (%)    renderer b>a  shadow b>a  inst.draws b>a  inst.trisK b>a']
+worst = []
+for k in sorted(a):
+    if k not in b:
+        continue
+    B, A = b[k], a[k]
+    tb, ta = B[0] + B[1] + B[3], A[0] + A[1] + A[3]
+    qb, qa = B[2] + B[4], A[2] + A[4]
+    pct = 100.0 * (qa - qb) / max(qb, 1)
+    rows.append(f'{k:36s} {tb:5d}>{ta:5d} ({ta - tb:+4d})    {qb:4d}>{qa:4d} ({pct:+5.1f} %)   {B[0]:4d}>{A[0]:4d}   {B[1]:4d}>{A[1]:4d}    {B[3]:4d}>{A[3]:4d}      {B[4]:3d}>{A[4]:3d}')
+    worst.append((ta - tb, pct, k))
+rows.append('max draws delta: %+d (%s); max tris delta: %+.1f %% (%s)' % (max(worst)[0], max(worst)[2], max(worst, key=lambda x: x[1])[1], max(worst, key=lambda x: x[1])[2]))
+out = '\n'.join(rows)
+print(out)
+if len(sys.argv) > 3:
+    open(sys.argv[3], 'w', encoding='utf-8').write(out + '\n')
