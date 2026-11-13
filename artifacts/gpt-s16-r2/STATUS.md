@@ -50,3 +50,5 @@ Przed nowymi renderami dobrano odległość28–45m od celu korony,po2rozłączn
 Świat baseline wygenerowany: 592.1205654 s, bez fallback=True. NASTĘPNY KROK: import i kamery baseline.
 
 Dodano test integracji natywnego importu: każdy zserializowany opt-in korony musi mieć właściwą skalęX/Y orazZ/Y w rzeczywistym WorldInstanceSet i zachować Compact. Zostanie uruchomiony na kandydacieB (na bazie bez flagi jawnie pomijany), obok8jużzielonych testów czystej transformacji. Nie jest to dowód wyglądu.
+
+Import focus-baseline zakończony.
