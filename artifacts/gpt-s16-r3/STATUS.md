@@ -97,3 +97,5 @@ All-PBR0 odtwarza globalne normal0 w obrazie wyspy — lokalna ścieżka shadero
 Natywna izolacja materiału M_bridge_kerb zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
 
 Natywna izolacja materiału deck-triple zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
+
+Deck-triple usuwa wzór we wszystkich5diag kadrach Low, critic potwierdza bez oczywistego nowego acne. B: jawny shadow_caster_bias.json regionu dla bridge_concrete/bridge_kerb/road_asphalt, hero flaga usunięta. Polityka odczytywana po centralnym CreateMaterialCore, obsługuje także niestandardowe fabryki PBR, reset po usunięciu pliku/wpisu.9testów łącznie, w tym policy reset/schema i natywne3materiały. NASTĘPNY KROK: odtworzyć cache eksperymentów, generator B i pełny import/QA/testy.

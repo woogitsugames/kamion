@@ -1,7 +1,7 @@
 from pathlib import Path
 from PIL import Image,ImageDraw
 r=Path(__file__).resolve().parent;dest=r/'material-ablation-sheets';dest.mkdir(exist_ok=True)
-for name in ['M_bridge_concrete','M_road_asphalt','deck-pair','all-pbr']:
+for name in ['M_bridge_concrete','M_road_asphalt','deck-pair','all-pbr','M_bridge_kerb','deck-triple']:
  for camera in ['sbs-g3-a-2818555625124739','sbs-g3-a-3970163613102941','putry-island-1','putry-island-2','putry-island-near']:
   candidate=r/'material-ablations'/f'{name}-Low'/f'{camera}.png'
   if not candidate.exists():continue
