@@ -65,7 +65,7 @@ Shader "Kamion/Truck Exterior"
         _RearGrime ("Rear-face soiling (ADR 0182): on, rear z, door bottom y, door top y (trailer object frame m; 0 = off)", Vector) = (0, -12, 1.335, 3.865)
         _RearGrime2 ("Rear-face soiling: door half width, amount, non-paint scale, -", Vector) = (1.135, 0.85, 0.6, 0)
         _RearGrime3 ("Rear-face soiling: door hinge pivot |x|, y, z in the trailer frame (leaves: rendering layer bit 11)", Vector) = (1.147, 2.6, -12.014, 0)
-        _RearGrimeColor ("Rear-face deposit colour (linear) and max coverage (a) - dried road spray (ADR 0182 r5)", Color) = (0.16, 0.135, 0.10, 0.7)
+        _RearGrimeColor ("Rear-face deposit colour (linear) and max coverage (a) - dried road spray (ADR 0182 r5)", Color) = (0.17, 0.13, 0.08, 0.7)
         [Toggle(_KAMION_TRUCK_LAMPS)] _Lamps ("Lamp emission from uv2 (Lights slot)", Float) = 0
         _DrlHighlightShoulder ("DRL exposed HDR highlight shoulder (0 = off)", Range(0, 2)) = 0.8
         _LampHueKnee ("Signal lamps: hue-preserving shoulder knee (max channel, exposed units)", Range(0, 2)) = 0.4
@@ -485,12 +485,14 @@ Shader "Kamion/Truck Exterior"
                 }
                 half dirt = saturate(grime * _Dirt * 1.8);
                 // ADR 0182 r5 (review s19 P1-1): the rear-face deposit is dried road spray - a warm grey-brown that covers
-                // (at most _RearGrimeColor.a), not the neutral soot of the chassis grime.
-                dirt = min(dirt, lerp(1.0h, (half)_RearGrimeColor.a, rearW));
+                // (at most _RearGrimeColor.a on paint), not the neutral soot of the chassis grime. Bare metal and trim (sill,
+                // posts, RUPD beam: debug render r5 showed them in the zone at full dirt yet reading as clean aluminium - the
+                // remaining metallic lobe mirrored the bright sky) cover up to 0.9 and lose the metallic lobe faster.
+                dirt = min(dirt, lerp(1.0h, _IsPaint > 0.5 ? (half)_RearGrimeColor.a : 0.9h, rearW));
                 coat *= 1.0 - saturate(dirt * 1.5);
                 albedo = lerp(albedo, lerp(_DirtColor.rgb, _RearGrimeColor.rgb, rearW), dirt);
                 rough = lerp(rough, max(rough, 0.88), dirt);
-                metal *= 1.0 - dirt;
+                metal *= 1.0 - saturate(dirt * (1.0 + 0.6 * rearW));
 
                 half sgn = i.tangentWS.w;
                 half3 bit = sgn * cross(i.normalWS, i.tangentWS.xyz);
