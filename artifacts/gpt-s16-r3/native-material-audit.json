@@ -1,0 +1,22 @@
+{
+  "baseline_materials": 458,
+  "unchanged_sha256": 455,
+  "changed": [
+    "M_bridge_concrete.mat",
+    "M_bridge_kerb.mat",
+    "M_road_asphalt.mat"
+  ],
+  "expected": [
+    "M_bridge_concrete.mat",
+    "M_bridge_kerb.mat",
+    "M_road_asphalt.mat"
+  ],
+  "added": [],
+  "unexpected": [],
+  "only_keyword_and_scale_changed": {
+    "M_bridge_concrete.mat": true,
+    "M_bridge_kerb.mat": true,
+    "M_road_asphalt.mat": true
+  },
+  "policy_sha256": "eb7beb5dbbfb0d9015bc173e2af6864c8a792fd0db267dd940298a4393fc6bbc"
+}
