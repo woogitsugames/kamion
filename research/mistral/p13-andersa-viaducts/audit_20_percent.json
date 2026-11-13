@@ -1,0 +1,299 @@
+{
+  "zadanie": "P13 — estakady Andersa (Białystok), samokontrola ≥20% pozycji manifestu",
+  "seed": 20261113,
+  "metoda_losowania": "random.Random(seed).sample(ids_wierszy, max(10, round(n*0.2)))",
+  "manifest_wierszy": 78,
+  "próba": 16,
+  "procent_próby": 20.5,
+  "data_audytu": "2026-11-13",
+  "ograniczenia": [
+    "Narzędzie analizy obrazu (vision) ma limit wywołań na sesję — wyczerpany; ponowne OBEJRZENIE kadrów niemożliwe.",
+    "Kadry obejrzane w sesji PRZED kompakcją kontekstu mają status SOURCED w manifestie z obserwacją 'co widać' zapisaną wtedy.",
+    "Kadry nieobejrzane są uczciwie UNVERIFIED w manifestie — audit sprawdza tylko żywotność URL i metadanych.",
+    "Środowisko wykonawcze było resetowane dwukrotnie; wszystkie strony źródłowe pobrano ponownie 2026-11-13."
+  ],
+  "wyniki": [
+    {
+      "id": "P13-023",
+      "obiekt": "A",
+      "element": "całość",
+      "parametr": "kadr niezinterpretowany (Panoramax)",
+      "typ_źródła": "zdjęcie",
+      "status_w_manifeście": "UNVERIFIED",
+      "url": "https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/3717771d-33ba-4abd-8c92-1b2b0208d5b3",
+      "weryfikacja": "URL_REFETCH",
+      "http_status": 200,
+      "content_type": "application/json",
+      "url_live": true,
+      "bytes": 4628,
+      "panoramax_item_json_ok": true,
+      "image_recheck": "blocked_by_tool_limit",
+      "wynik": "URL i metadane API żywe; ponowna ANALIZA OBRAZU niemożliwa (wyczerpany limit narzędzia analizy obrazu w sesji) — kadr pozostaje UNVERIFIED zgodnie z manifestem"
+    },
+    {
+      "id": "P13-003",
+      "obiekt": "A",
+      "element": "konstrukcja",
+      "parametr": "odbiór końcowy",
+      "typ_źródła": "dokument",
+      "status_w_manifeście": "SOURCED",
+      "url": "https://inzynierbudownictwa.pl/zakonczona-przebudowa-ul-gen-s-maczka-w-bialymstoku/",
+      "weryfikacja": "URL_REFETCH+QUOTE_CHECK",
+      "http_status": 200,
+      "url_live": true,
+      "dodatkowe_url_z_uwag": [],
+      "cytaty_sprawdzone": [
+        {
+          "cytat": "Odbiór końcowy inwestycji ... odbył się 30 września",
+          "obecny_na_stronie": true,
+          "szczegół": "wszystkie segmenty obecne"
+        }
+      ],
+      "wynik": "WSZYSTKIE CYTATY POTWIERDZONE na świeżo pobranej stronie"
+    },
+    {
+      "id": "P13-017",
+      "obiekt": "A",
+      "element": "podpory",
+      "parametr": "kadr dowodowy (obejrzany)",
+      "typ_źródła": "zdjęcie",
+      "status_w_manifeście": "SOURCED",
+      "url": "https://commons.wikimedia.org/wiki/File%3AAndersa%2C_Maczka_streets_in_Bia%C5%82ystok_3.jpg",
+      "weryfikacja": "URL_REFETCH+METADATA_CHECK",
+      "http_status": 200,
+      "url_live": true,
+      "plik_widoczny_na_stronie": true,
+      "licencje_wspomniane_na_stronie": [
+        "CC0",
+        "CC BY-SA 3.0"
+      ],
+      "image_recheck": "blocked_by_tool_limit",
+      "wynik": "strona pliku Commons żywa; ponowna ANALIZA OBRAZU niemożliwa (limit narzędzia) — status kadru zgodny z manifestem"
+    },
+    {
+      "id": "P13-047",
+      "obiekt": "B",
+      "element": "konstrukcja",
+      "parametr": "okres realizacji",
+      "typ_źródła": "dokument",
+      "status_w_manifeście": "SOURCED",
+      "url": "https://www.strabag.pl/databases/internet/_public/content.nsf/web/B8D3A4348109763BC1257FC4004D686C",
+      "weryfikacja": "URL_REFETCH+QUOTE_CHECK",
+      "http_status": 200,
+      "url_live": true,
+      "dodatkowe_url_z_uwag": [
+        "https://www.bialystok.pl/pl/dla_mieszkancow/fundusze_unijne/zrealizowane/okres_programowania_20072013/przebudowa-ul-gen-wl-andersa-w-b.html"
+      ],
+      "cytaty_sprawdzone": [
+        {
+          "cytat": "Termin realizacji: 02/2012 – 10/2013",
+          "obecny_na_stronie": true,
+          "szczegół": "wszystkie segmenty obecne"
+        },
+        {
+          "cytat": "Okres rzeczowej realizacji projektu: III.2012 – X.2013",
+          "obecny_na_stronie": true,
+          "szczegół": "obecny na stronie drugorzędnego źródła z uwag: https://www.bialystok.pl/pl/dla_mieszkancow/fundusze_unijne/zrealizowane/okres_programowania_20072013/przebudowa-ul-gen-wl-andersa-w-b.html"
+        }
+      ],
+      "wynik": "WSZYSTKIE CYTATY POTWIERDZONE na świeżo pobranej stronie"
+    },
+    {
+      "id": "P13-002",
+      "obiekt": "A",
+      "element": "konstrukcja",
+      "parametr": "długość (wg zamawiającego)",
+      "typ_źródła": "dokument",
+      "status_w_manifeście": "SOURCED",
+      "url": "https://www.bialystok.pl/pl/dla_mieszkancow/fundusze_unijne/zrealizowane/okres_programowania_20072013/przebudowa-ul-gen-maczka.html",
+      "weryfikacja": "URL_REFETCH+QUOTE_CHECK",
+      "http_status": 200,
+      "url_live": true,
+      "dodatkowe_url_z_uwag": [],
+      "cytaty_sprawdzone": [
+        {
+          "cytat": "estakadę nad Al. Tysiąclecia Państwa Polskiego o długości blisko 220 m",
+          "obecny_na_stronie": true,
+          "szczegół": "wszystkie segmenty obecne"
+        }
+      ],
+      "wynik": "WSZYSTKIE CYTATY POTWIERDZONE na świeżo pobranej stronie"
+    },
+    {
+      "id": "P13-059",
+      "obiekt": "B",
+      "element": "całość",
+      "parametr": "kadr (obserwacja SPRZECZNA z repo)",
+      "typ_źródła": "zdjęcie",
+      "status_w_manifeście": "UNVERIFIED",
+      "url": "https://commons.wikimedia.org/wiki/File%3A20201102_152339_Rondo_Pami%C4%99ci_Bie%C5%BCe%C5%84stwa_1915_roku_Bia%C5%82ystok.jpg",
+      "weryfikacja": "URL_REFETCH+METADATA_CHECK",
+      "http_status": 200,
+      "url_live": true,
+      "plik_widoczny_na_stronie": true,
+      "licencje_wspomniane_na_stronie": [
+        "CC0",
+        "Public domain"
+      ],
+      "image_recheck": "blocked_by_tool_limit",
+      "wynik": "strona pliku Commons żywa; ponowna ANALIZA OBRAZU niemożliwa (limit narzędzia) — status kadru zgodny z manifestem"
+    },
+    {
+      "id": "P13-009",
+      "obiekt": "A",
+      "element": "ekrany akustyczne",
+      "parametr": "zakres trasowy segmentów ekranów (Trasa Generalska)",
+      "typ_źródła": "dokument",
+      "status_w_manifeście": "SOURCED",
+      "url": "https://www.bip.bialystok.pl/resource/5603/61046/pfu.pdf",
+      "weryfikacja": "PDF_REFETCH+MD5+STREAM_TEXT",
+      "http_status": 200,
+      "url_live": true,
+      "md5": "e34b42bcb705066affa2ebbe32a30bb2",
+      "md5_zgodny_z_sesja": true,
+      "strumienie_zdekompresowane": 17,
+      "cytat_obecny_w_tekście_pdf": true,
+      "wynik": "PDF ponownie pobrany, md5 zgodny, cytat obecny w zdekompresowanym tekście"
+    },
+    {
+      "id": "P13-066",
+      "obiekt": "B",
+      "element": "całość",
+      "parametr": "kadr niezinterpretowany",
+      "typ_źródła": "zdjęcie",
+      "status_w_manifeście": "UNVERIFIED",
+      "url": "https://commons.wikimedia.org/wiki/File%3A20250412_090304_April_2025_in_Bia%C5%82ystok.jpg",
+      "weryfikacja": "URL_REFETCH+METADATA_CHECK",
+      "http_status": 200,
+      "url_live": true,
+      "plik_widoczny_na_stronie": true,
+      "licencje_wspomniane_na_stronie": [
+        "CC0",
+        "Public domain"
+      ],
+      "image_recheck": "blocked_by_tool_limit",
+      "wynik": "strona pliku Commons żywa; ponowna ANALIZA OBRAZU niemożliwa (limit narzędzia) — status kadru zgodny z manifestem"
+    },
+    {
+      "id": "P13-076",
+      "obiekt": "B",
+      "element": "podpory",
+      "parametr": "kolor słupów",
+      "typ_źródła": "zdjęcie",
+      "status_w_manifeście": "UNVERIFIED",
+      "url": "",
+      "weryfikacja": "NO_URL",
+      "wynik": "wiersz dokumentuje brak źródła (UNVERIFIED) — brak URL do ponownego sprawdzenia"
+    },
+    {
+      "id": "P13-013",
+      "obiekt": "A",
+      "element": "pomost",
+      "parametr": "szerokość jezdni (pomostu)",
+      "typ_źródła": "ortofoto",
+      "status_w_manifeście": "ESTIMATED",
+      "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolution?service=WMS&version=1.3.0&request=GetMap&LAYERS=Raster&CRS=CRS%3A84&BBOX=23.149210%2C53.156703%2C23.155190%2C53.160297&WIDTH=1600&HEIGHT=1600&FORMAT=image%2Fjpeg&STYLES=",
+      "weryfikacja": "ORTO_REFETCH",
+      "http_status": 200,
+      "content_type": "image/jpeg",
+      "bytes": 419257,
+      "is_jpeg": true,
+      "wynik": "usługa WMS GUGiK odpowiada obrazem JPEG"
+    },
+    {
+      "id": "P13-007",
+      "obiekt": "A",
+      "element": "ewidencja",
+      "parametr": "oznaczenie obiektu w dokumentach ZDM",
+      "typ_źródła": "dokument",
+      "status_w_manifeście": "SOURCED",
+      "url": "http://www.bip.bialystok.pl/postepowania/zamowienia/remont-dylatacji-modulowych-estakad-w-ciagu-drogi-krajowej-8-i-65-ul-gen-stanislawa-maczka-w-bialymstoku-estakada-e2-nad-ulica-swietokrzyska-oraz-estakada-e4-nad-aleja-tysiaclecia-panstwa-polskiego-oraz-w-ciagu-drogi-krajowej-19-i-65-ul-gen-stanislaw.html",
+      "źródło_weryfikacji": "snapshot_lokalny_z_2026-11-13 (serwer BIP zwrócił 503 przy audycie)",
+      "weryfikacja": "URL_REFETCH+QUOTE_CHECK",
+      "http_status": 200,
+      "url_live": true,
+      "dodatkowe_url_z_uwag": [],
+      "cytaty_sprawdzone": [
+        {
+          "cytat": "estakada E4 nad Aleją Tysiąclecia Państwa Polskiego",
+          "obecny_na_stronie": true,
+          "szczegół": "wszystkie segmenty obecne"
+        }
+      ],
+      "wynik": "WSZYSTKIE CYTATY POTWIERDZONE na świeżo pobranej stronie"
+    },
+    {
+      "id": "P13-051",
+      "obiekt": "B",
+      "element": "droga",
+      "parametr": "klasa drogi i układ jezdni",
+      "typ_źródła": "dokument",
+      "status_w_manifeście": "SOURCED",
+      "url": "https://www.bialystok.pl/pl/dla_mieszkancow/fundusze_unijne/zrealizowane/okres_programowania_20072013/przebudowa-ul-gen-wl-andersa-w-b.html",
+      "weryfikacja": "URL_REFETCH+QUOTE_CHECK",
+      "http_status": 200,
+      "url_live": true,
+      "dodatkowe_url_z_uwag": [],
+      "cytaty_sprawdzone": [
+        {
+          "cytat": "Budowę drogi o klasie GP (dwie jezdnie po dwa pasy ruchu) o długości 1,5 km",
+          "obecny_na_stronie": true,
+          "szczegół": "wszystkie segmenty obecne"
+        }
+      ],
+      "wynik": "WSZYSTKIE CYTATY POTWIERDZONE na świeżo pobranej stronie"
+    },
+    {
+      "id": "P13-068",
+      "obiekt": "B",
+      "element": "podpory",
+      "parametr": "liczba rzędów podpór",
+      "typ_źródła": "dokument",
+      "status_w_manifeście": "UNVERIFIED",
+      "url": "",
+      "weryfikacja": "NO_URL",
+      "wynik": "wiersz dokumentuje brak źródła (UNVERIFIED) — brak URL do ponownego sprawdzenia"
+    },
+    {
+      "id": "P13-015",
+      "obiekt": "A",
+      "element": "całość",
+      "parametr": "kadr dowodowy (obejrzany)",
+      "typ_źródła": "zdjęcie",
+      "status_w_manifeście": "SOURCED",
+      "url": "https://commons.wikimedia.org/wiki/File%3A7204_May_2021_in_Bia%C5%82ystok.jpg",
+      "weryfikacja": "URL_REFETCH+METADATA_CHECK",
+      "http_status": 200,
+      "url_live": true,
+      "plik_widoczny_na_stronie": true,
+      "licencje_wspomniane_na_stronie": [
+        "CC0",
+        "Public domain"
+      ],
+      "image_recheck": "blocked_by_tool_limit",
+      "wynik": "strona pliku Commons żywa; ponowna ANALIZA OBRAZU niemożliwa (limit narzędzia) — status kadru zgodny z manifestem"
+    },
+    {
+      "id": "P13-040",
+      "obiekt": "A",
+      "element": "ekrany akustyczne",
+      "parametr": "strona jezdni z ekranem",
+      "typ_źródła": "zdjęcie",
+      "status_w_manifeście": "UNVERIFIED",
+      "url": "",
+      "weryfikacja": "NO_URL",
+      "wynik": "wiersz dokumentuje brak źródła (UNVERIFIED) — brak URL do ponownego sprawdzenia"
+    },
+    {
+      "id": "P13-074",
+      "obiekt": "B",
+      "element": "bariery",
+      "parametr": "wysokość balustrady",
+      "typ_źródła": "dokument",
+      "status_w_manifeście": "UNVERIFIED",
+      "url": "",
+      "weryfikacja": "NO_URL",
+      "wynik": "wiersz dokumentuje brak źródła (UNVERIFIED) — brak URL do ponownego sprawdzenia"
+    }
+  ]
+}
