@@ -19,3 +19,5 @@ Po preflight usunięto niewykorzystaną zmianę/restore natywnych casterów z pr
 Generator bazowy zakończony bez fallback; zapisano SHA surowego świata bez dodatkowej kopii. NASTĘPNY KROK: import.ps1 -Label baseline, probe report, render before.
 
 Import baseline zakończony.
+
+Zapisano before/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
