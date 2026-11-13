@@ -890,18 +890,20 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3):
     if lite or dense <= 0.0:
         return
     occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
-    PLT._core(kit, cc, z + cb + hc * 0.10, r * 0.56, hc * 0.74, key, sides=5, occ=0.26 * occ, rings=3)
+    # the sprays sit INSIDE the habit's silhouette (the crossed cards own the outline; sprays that reached it gave the
+    # crown a flat, boxy skirt): they close the gaps between the cards from oblique views and from above
+    PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=5, occ=0.26 * occ, rings=3)
     n_lo, n_hi = (5, 4) if dense >= 1.0 else (3, 2)
-    for i in range(n_lo):                                    # lower tier of sprays: the skirt of the crown
+    for i in range(n_lo):                                    # lower tier of sprays
         az = a0 + 2 * math.pi * (i + 0.4 * (PLT.hfloat(key, "sj", i) - 0.5)) / n_lo
-        c = cc + np.array([math.cos(az), math.sin(az)]) * r * (0.50 + 0.08 * PLT.hfloat(key, "sd", i))
-        PLT._skin_card(kit, c, z + cb + hc * 0.03, az, r * (1.25 + 0.3 * PLT.hfloat(key, "sw", i)),
-                       hc * (0.50 + 0.10 * PLT.hfloat(key, "sh", i)), "shrub_a", 0.10 + 0.12 * PLT.hfloat(key, "st", i), occ,
+        c = cc + np.array([math.cos(az), math.sin(az)]) * r * (0.40 + 0.08 * PLT.hfloat(key, "sd", i))
+        PLT._skin_card(kit, c, z + cb + hc * (0.13 + 0.06 * PLT.hfloat(key, "sz", i)), az, r * (0.95 + 0.25 * PLT.hfloat(key, "sw", i)),
+                       hc * (0.36 + 0.08 * PLT.hfloat(key, "sh", i)), "shrub_a", 0.30 + 0.15 * PLT.hfloat(key, "st", i), occ,
                        flip=PLT.hfloat(key, "sf", i) < 0.5)
     for i in range(n_hi):                                    # upper tier: the shoulders
         az = a0 + 0.8 + 2 * math.pi * i / n_hi
-        c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.34
-        PLT._skin_card(kit, c, z + cb + hc * 0.42, az, r * 1.25, hc * 0.46, "shrub_a", 0.30 + 0.15 * PLT.hfloat(key, "ut", i), occ,
+        c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.24
+        PLT._skin_card(kit, c, z + cb + hc * 0.48, az, r * 0.95, hc * 0.34, "shrub_a", 0.42 + 0.14 * PLT.hfloat(key, "ut", i), occ,
                        flip=i % 2 == 1)
 
 
