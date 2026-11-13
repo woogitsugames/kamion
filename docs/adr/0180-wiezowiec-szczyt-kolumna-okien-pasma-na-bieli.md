@@ -112,7 +112,7 @@ Runda r2 (s19): `build_world` exit 0, import exit 0, vqa Low-clear exit 0, SBS L
 | trójkąty w kamerach | min −1,65 % (cab-grain), maks. +0,20 % (cab-materials) |
 | trójkąty wieżowca | LOD0 4553, LOD1 747 |
 | piksele \|Δ\| > 25 baza → r2 (recenzja r2) | stretch-02 5,38 %, kwadrat-park-gate 1,16 %, reszta ≤ 0,73 %; tylko kamery z wieżowcem |
-| testy | `pytest tests/gis -k "building or tower"` i EditMode — wyniki w live `artifacts/live/tower-0180.md` (s19) |
+| testy (s19) | `pytest tests/gis -k "building or tower"`: 115 passed (`logs/pytest-bldg-s19.log`); EditMode: 518, 517 passed, 0 failed, 1 skipped (`logs/editmode-s19.log`) |
 
 Wynik recenzji r2 (visual-critic, s19): **SCAL warunkowo**, brak P0 / P1 wizualnych. P1 r1 naprawione: biały
 pionowy pas na SE zniknął w obu kadrach i obu oświetleniach — luminancja wierszy ściany SE w 177786 z 237–255 (r1,
