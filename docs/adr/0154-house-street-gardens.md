@@ -1,6 +1,6 @@
 # ADR 0154 — zieleń ulic domów
 
-Status: kandydat B po recenzji statycznej; pełny GIS w toku. Fotograficzne D51 i Gate 3 pozostają PARTIAL. Gałąź `gpt-s16-r2`.
+Status: kandydat B po recenzji statycznej; pełny GIS i EditMode PASS. Fotograficzne D51 i Gate 3 pozostają PARTIAL. Gałąź `gpt-s16-r2`.
 Baza: r1 `eb718b7f8` + `origin/main` `5cca3a2f5`, merge `250f9e7b9`.
 
 ## Problem i źródła
@@ -22,7 +22,7 @@ Dwa wywołania w `stage.py` podłączają nowe funkcje. Nie edytowano dróg, ove
 Końcowy baseline B (funkcja wyłączona): 590,4 s; generator B: 593,1 s. Oba bez fallback. Po importach wykonano 90 tych samych kamer × 4 warunki: Low/High oraz clear/overcast. Autor obejrzał wszystkie 360 par w 16 arkuszach zbiorczych, wszystkie 24 arkusze zdjęcie|przed|po i duże kadry 03a/04a. Niezależny critic potwierdził lokalną poprawę koron/frontów i brak nowej blokującej regresji; pełne fotograficzne D51 pozostawia PARTIAL (parasolowe korony, nagie konary, nierówna gęstość). Dokładny zakres i ograniczenia: `REVIEW-VISUAL.md`.
 Audyt B: 2151 chronionych węzłów, 125450 rekordów nie-high, 116 tożsamości/pozycji/tier drzew ogrodowych, 32 grupy posesji i 6 bibliotek/atlasów zachowane. Zmieniono szerokość 104 koron liściastych i podniesiono 47 drzew; końcowe wysokości 11,3–20,4 m. Nowe fronty: 19 posesji, 34 odcinki, 257,37 m, +3580 tris na wariant High i Low. Zero nowych materiałów. Po cofnięciu dwóch jawnie zarejestrowanych ubocznych serializacji Unity 458/458 materiałów natywnych ma identyczny SHA256 z bazą.
 Każda kamera osobno: `CAMERAS.md` i `camera-counts.json`. Low ma delta scene draws 0, instance draws/tris/liczba instancji 0; największy dokładny wzrost łącznych tris +0,718622%. High scene draws też delta 0, maksymalny wzrost tris +0,716331%; największa suma scene+instance tris High wynosi 1 368 451. Są to estymaty widoczności CPU i liczniki zgłoszeń instancji; nie zmierzono SRP/GPU ani telefonu.
-7 nowych testów GIS przechodzi. Pełny EditMode: 484 passed, 0 failed/skipped, w tym 9 przypadków transformacji/importu i natywna kontrola 104 rekordów. Pełny GIS pozostaje w toku; wynik zostanie zapisany przed push. Telefon, ASTC, termika, migotanie i przejazd pozostają u lidera.
+7 nowych testów GIS przechodzi. Pełny EditMode: 484 passed, 0 failed/skipped, w tym 9 przypadków transformacji/importu i natywna kontrola 104 rekordów. Pełny GIS: 986 passed, 4 xfailed w 738,61 s (final-gis.log); brak porażek. Telefon, ASTC, termika, migotanie i przejazd pozostają u lidera.
 
 ## Iteracja wizualna i powtórzenie baseline
 

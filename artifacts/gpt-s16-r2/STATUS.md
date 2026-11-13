@@ -88,3 +88,5 @@ Korekta poprzedniego wpisu audytu: po pełnym EditMode wykryto2uboczne serializa
 2026-11-13T02:24:32.6389580+01:00 — Końcowe zwarte dowody spakowane (508 plików, 31,81 MiB) i skopiowane do katalogu lidera; świeże przekazanie zapisane. Pełny GIS nadal trwa. NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r2/final-gis.log -Tail 10
 
 Pełny GIS zakończony: exit 0; szczegóły GIS-STATUS.md oraz final-gis.log.
+
+Końcowy GIS 986 passed, 4 xfailed (738,61 s), EditMode 484/484. R2 gotowa do recenzji statycznej; pełny D51/Gate3 nadal PARTIAL. NASTĘPNY KROK: git push origin gpt-s16-r2, następnie gałąź r3 i merge origin/main.
