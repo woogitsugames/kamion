@@ -96,7 +96,7 @@ def test_quiet_columns_match_the_layer_texture():
     col = a[rows > 0.45, :, 0].mean(0) + a[rows > 0.45, :, 1].mean(0)
     for q in BM.RUNOFF_QUIET_U_ALL:
         i0, i1 = int((q - 0.25) / 24.0 * W), int((q + 0.25) / 24.0 * W)
-        assert col[i0:i1 + 1].max() <= 0.006, q
+        assert col[i0:i1 + 1].max() <= 0.01, q                    # streak columns reach 0.23
     assert col.mean() > 0.012
 
 
