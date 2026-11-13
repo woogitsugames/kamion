@@ -39,7 +39,7 @@ GSD = 0.25
 E0, N0, E1, N1 = 776971, 595199, 779019, 597247
 CHUNKS = [('sw.png', 595199, 776971), ('se.png', 595199, 777995),
           ('nw.png', 596223, 776971), ('ne.png', 596223, 777995)]
-EXG_TH, G_TH = 0.12, 60
+EXG_TH, EXG_TH_SOFT, G_TH = 0.12, 0.06, 60
 STREETS = ['Kowieńska', 'Lidzka', 'Skidelska', 'Wołkowyska', 'Świsłocka',
            'Wileńska', 'Grodzieńska', 'Racławicka', 'Łańcucka']
 
