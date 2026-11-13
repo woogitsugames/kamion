@@ -79,7 +79,7 @@ def test_new_faces_f10_ls_and_c12():
     assert white[240:265, 40:90].any() and not white[240:265, 300:310].any()
     lod0, *_ = G3.assembly_mesh([{"face": "F-10-ls"}], "galv", 2.2)
     V = np.concatenate([p["V"] for p in lod0.out()])
-    assert V[:, 2].max() == pytest.approx(2.2 + 1.20 + 0.05, abs=0.01)
+    assert V[:, 2].max() == pytest.approx(2.2 + 0.80 + 0.05, abs=0.01)
     disc = G3._outline("disc", 0.6, 0.6)
     assert len(disc) == 16 and all(abs(np.hypot(x, z) - 0.3) < 1e-9 for x, z in disc)
     # clockwise in (x, z), as every other outline (the face looks along +y)

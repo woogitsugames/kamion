@@ -79,9 +79,11 @@ FACE_DIM = {
     # ADR 0144: 2-lane F-10 read off Mapillary 482392746429891 (plate 140 x 85 px beside its own posts 12 px wide; with
     # the 60 mm post that is ~0.7 m, a real post of this board is thicker): 0.90 x 0.55 m WORKING_VALUE
     "F-10": ("rect", 0.90, 0.55),
-    # ADR 0172: upright 2-lane board on the splitter island of the EC access road (Commons cm92458760; GUGiK 0.08 m
-    # orthophoto: its shadow is a 0.7 x 1.5 m rectangle at ~1.1 m of shadow per m of height): 0.90 x 1.20 m WORKING_VALUE
-    "F-10-ls": ("rect", 0.90, 1.20),
+    # ADR 0172: 2-lane board on the splitter island of the EC access road, measured on Commons cm92458760 with the
+    # resected pose (focal 2868 px, horizon y 1137 px from the lamp foot 8.0 m away): post feet 7.0 / 6.5 m from the
+    # camera, plate 338 px high -> 0.80 m (+-0.05); posts 0.68 m apart at 0.8 of the plate width -> 0.85 m (+-0.2).
+    # 0.80 x 0.80 m WORKING_VALUE (r1-r3 had 0.90 x 1.20 from a misread shadow: 1.5x too tall beside the photo)
+    "F-10-ls": ("rect", 0.80, 0.80),
     # ADR 0172: C-12 under the island-side A-7. Disc 0.60 m WORKING_VALUE (the photo shows its back, narrower than
     # the 0.9 m triangle above it)
     "C-12": ("disc", 0.60, 0.60),

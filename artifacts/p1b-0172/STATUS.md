@@ -34,3 +34,7 @@ NASTĘPNY KROK gdy przerwane: `pwsh artifacts/p1b-0172/tools/regen.ps1; pwsh art
 NASTĘPNY KROK: po zakończeniu procesu 66800: `pwsh artifacts/p1b-0172/tools/after.ps1 -Tag r3 -Steps sbs,vqa_low,vqa_high,editmode`
 - 20:29 build_world r3 OK (773 s, 'done'); regen.ps1 padł w finally (osierocona konsola, EXIT 1) przed importem — slot heavy zwolniony ręcznie. W TLE: `regen.ps1 -SkipBuild` (sam import) -> after.ps1 -Tag r3, log logs/regen-r3b.log.
 NASTĘPNY KROK gdy przerwane: `pwsh artifacts/p1b-0172/tools/regen.ps1 -SkipBuild; pwsh artifacts/p1b-0172/tools/after.ps1 -Tag r3 -Steps sbs,vqa_low,vqa_high,editmode`
+- 20:45 r3 OK: import + preflight OK, SBS Low 42 pary, vqa Low/High exit 0, EditMode 517/518 (1 skipped), fidelity exit 0. Obejrzane r3 (sbs-r3/pairs + kadry 1:1): A-7/C-12 widoczne tyłem jak na zdjęciu (OK), 182011 maszt łukowy 2+1 jak na ortofoto (OK).
+  Odstaje (pomiar na zdjęciu, poza B, ogniskowa 2868 px, horyzont 1137 px): F-10-ls 0,90x1,20 -> rzeczywista ~0,80x0,80 (338 px na 6,75 m); A-7/C-12 za nisko o ~0,6 m (tarcza 2,58-3,27, trójkąt 3,56-4,18) -> lower_edge 2,7; tablica ulicy 3,3 -> 3,1.
+- r4: poprawki w gate3_landmarks.FACE_DIM + overrides.yaml + test. W TLE po pytest r3: regen r4 (log logs/regen-r4.log) -> after.ps1 -Tag r4.
+NASTĘPNY KROK gdy przerwane: `pwsh artifacts/p1b-0172/tools/regen.ps1 *> artifacts/p1b-0172/logs/regen-r4.log; pwsh artifacts/p1b-0172/tools/after.ps1 -Tag r4 -Steps sbs,vqa_low,vqa_high,editmode`, potem fidelity + pytest tests/gis, ADR §4, robocopy dowodów do main.

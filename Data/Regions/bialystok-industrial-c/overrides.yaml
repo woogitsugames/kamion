@@ -2492,7 +2492,8 @@ overrides:
       0.45 m left of the axis -> E 539.1 N -741.6 (+-0.5 m), plate line at bearing ~108 -> faces bearing ~18. On the
       orthophoto its plate shadow is the blob at E 537.4 N -739.1 (2.8 m of plate-centre height at 1.1 m per m).
       r1 placed it from the wrong shadow at E 538.95 N -742.85: right of the column in the frame, left on the photo.
-      Plate 0.90 x 1.20 m and lower edge 2.2 m WORKING_VALUE.
+      Plate 0.80 x 0.80 m measured on the same photo (338 px at 6.75 m, see gate3_landmarks.FACE_DIM); lower edge
+      2.26 m by the same measurement -> 2.2 m.
     confidence: low
     verify: owner photo session (roundabout islands) - board size and arrows
   - id: ec-island-a7-c12
@@ -2502,7 +2503,11 @@ overrides:
     # r2 (bearing 31, square to the generated east carriageway) showed the plates edge-on from the photo pose; on the
     # photo the 0.9 m triangle back is ~0.6 m wide from bearing 312 -> the plate normal is ~50 deg off the view: faces ~185
     travel_bearing_deg: 5
-    lower_edge_m: 2.1
+    # r4: heights from the photo (resected pose, post 9.07 m away, horizon from the lamp foot): disc 2.58-3.27 m,
+    # triangle 3.56-4.18 m above the ground. The assembly stacks with 5 cm gaps and a 0.9 m triangle -> lower edge 2.7 m
+    # puts the disc at 2.7-3.3 and the triangle at 3.35-4.13 m (r3 had 2.1 m: the triangle sat under the street plate,
+    # on the photo it stands above it). The 2.4 / 3.2 m read off the orthophoto shadows was ~0.6 m low.
+    lower_edge_m: 2.7
     parts: [{face: A-7}, {face: C-12}]
     reason: >-
       Island-side repeater of the A-7 + C-12 pair of the northbound entry (the rule builds only the right-hand one,
@@ -2540,7 +2545,7 @@ overrides:
     photo: ["commons:cm92458760"]
     at_en: [539.25, -743.15]
     travel_bearing_deg: 130
-    lower_edge_m: 3.3
+    lower_edge_m: 3.1            # r4: plate 3.11-3.33 m on the photo (column 7.9 m away); r3 had 3.3
     post: galv
     parts: [{face: street_name, text: "ul. Bitwy Białostockiej"}]
     reason: >-
