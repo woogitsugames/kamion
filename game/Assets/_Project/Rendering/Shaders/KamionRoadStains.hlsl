@@ -20,4 +20,31 @@ void KamionOilStain(float4 look, half atlasSmooth, inout half smooth, inout half
     alpha = pow(saturate(alpha), (half)look.z);
 }
 
+// ---- junction plates (_ROADWEAR). roads.meshing._patch_uv1 adds PLATE_EDGE_FLAG (20 m) to UV1.y of plate vertices
+// that carry lane data; legacy data (edge <= ~12 m) is unaffected. Returns 1 on a plate and restores the edge distance.
+#define KAMION_PLATE_EDGE_FLAG 20.0
+#define KAMION_PLATE_WHEEL_KEEP 0.35     // WORKING_VALUE: share of the lane-locked wheel-path contrast left on a plate
+#define KAMION_PLATE_DRIP_KEEP 0.4      // WORKING_VALUE: share of the lane-centre drip band left on a plate
+half KamionPlateWear(inout float2 w)
+{
+    half plate = step(15.0, w.y);
+    w.y -= KAMION_PLATE_EDGE_FLAG * plate;
+    return plate;
+}
+
+// ---- yard grime follows the traffic (_GRIME on paved yards; manifest "grime_traffic"). The damp / oily pools of
+// ADR 0060 were spread evenly over every yard ("ten sam brud wszędzie"). Trucks stand and manoeuvre along the walls
+// (dock aprons) and water / fines collect at the edges; the open middle of a yard is swept dry by traffic and wind.
+// Paved UV1 = (distance to the area edge m, distance to a building wall m), capped at 50 m (streetscape.paved).
+// traffic: x threshold raise in the open (cleaner), y threshold drop where busy (damper), z wall zone m, w 1 = on.
+// Returns the offset added to the pool threshold; meshes without UV1 (0, 0) and materials without data: 0.
+half KamionYardGrimeBias(float4 traffic, float2 uv1)
+{
+    if (traffic.w < 0.5 || (uv1.x <= 0.0 && uv1.y <= 0.0)) return 0.0h;
+    half nearWall = 1.0h - smoothstep(traffic.z * 0.3, traffic.z, uv1.y);
+    half nearEdge = 1.0h - smoothstep(0.3, 2.5, uv1.x);
+    half busy = max(nearWall, nearEdge);
+    return (half)traffic.x * (1.0h - busy) - (half)traffic.y * busy;
+}
+
 #endif

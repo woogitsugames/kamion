@@ -73,6 +73,7 @@ Shader "Kamion/World PBR"
         _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
         _DecalCells ("Decal atlas cells per side (_DECAL_ALPHA): 2 oil atlas, 1 whole UV", Float) = 2
+        _GrimeTraffic ("Yard grime by traffic (ADR 0194): x open raise, y busy drop, z wall zone m, w 1 = on", Vector) = (0, 0, 15, 0)
         _OilLook ("Oil stain (ADR 0194): x aged smoothness, y fresh smoothness, z coverage gamma, w 1 = on", Vector) = (0, 0, 1, 0)
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
         _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
@@ -127,7 +128,7 @@ Shader "Kamion/World PBR"
             float4 _KerbWear;
             float4 _GroundWearExclude, _GroundGrimeBase;
             float _DripBand;
-            float4 _OilLook;          // ADR 0194 (KamionRoadStains.hlsl)
+            float4 _OilLook, _GrimeTraffic;   // ADR 0194 (KamionRoadStains.hlsl)
             float4 _CarPaint, _CarFlake, _PearlTint;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
             float _ShadowNormalBiasScale;
@@ -530,12 +531,14 @@ Shader "Kamion/World PBR"
             #if defined(_ROADWEAR)
                 {
                     float2 w = i.uv.zw;
+                    half plate = KamionPlateWear(w);          // ADR 0194: junction box, wheel paths smeared by turning
                     albedo *= lerp(_AsphaltWear.x, _PaintFreshWear.w, paintFresh);
                     if (w.x > -0.5)        // (-1, 5) = no road data (junction patches, kerbs)
                     {
                         // wheel paths at ~0.25 / 0.75 of a lane: darker binder-rich, smoother
                         float lc = frac(w.x);
                         half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11);
+                        wp *= lerp(1.0h, (half)KAMION_PLATE_WHEEL_KEEP, plate);
                         // ADR0118: traffic polish darkens binder; existing macro breaks continuous bands.
                         // Traffic accumulation varies over metres (G: 2-16 m), not the sub-metre A noise.
                         // Keep the original mean modulation 0.825 while avoiding a fine grid in wheel paths.
@@ -556,6 +559,7 @@ Shader "Kamion/World PBR"
                         // oil / soot drip band between the wheel paths (lane centre 0.5 +- ~0.12), mottled, strongest where
                         // traffic queues; WORKING_VALUE darkening, the band is ~0.8 m of a 3.5 m lane
                         half drip = saturate(1.0 - abs(lc - 0.5) / 0.13) * saturate(0.45 + (macro.a - 0.5) * 2.2 + (macro.g - 0.5) * 0.8);
+                        drip *= lerp(1.0h, (half)KAMION_PLATE_DRIP_KEEP, plate);
                         albedo *= 1.0 - _DripBand * drip * (1.0 - paintFresh);
                     }
                 }
@@ -584,7 +588,8 @@ Shader "Kamion/World PBR"
                     half jfade = saturate(0.012 / max(footprint, 1e-4));             // joints resolved: full dirt
                     albedo *= 1.0 - grime.z * gv.b * lerp(0.5, 1.0, jfade);
                     half pool = macro.b * 0.65 + macro.a * 0.35 - (gv.r - 0.7) * 0.06;
-                    half wet = smoothstep(grime.y, grime.y + 0.025, pool);
+                    half thr = grime.y + KamionYardGrimeBias(_GrimeTraffic, i.uv.zw);   // ADR 0194
+                    half wet = smoothstep(thr, thr + 0.025, pool);
                     albedo *= 1.0 - grime.x * wet;
                     smooth = lerp(smooth, max(smooth, 0.62), wet * grime.w);
                 }

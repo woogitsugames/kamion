@@ -618,6 +618,13 @@ M["decal_oil"]["traffic_opacity_scale"] = 1.15
 # smoothness ~0.5 on a flat decal normal, so the overcast sky reflected off them at grazing angles. Smoothness of an old
 # stain / the freshest film (asphalt_worn = 0.09) and a coverage gamma < 1 for a denser core. WORKING_VALUE.
 M["decal_oil"]["oil_look"] = {"smooth_aged": 0.10, "smooth_fresh": 0.22, "coverage_gamma": 0.7}
+# ADR 0194: yard grime follows the traffic (paved UV1 = distance to area edge, to a building wall): damp / oily pools
+# along dock walls (trucks stand) and edges (water, fines), the open middle swept clean. Threshold offsets on the
+# ADR 0060 macro pool (0.62 = ~16 % of the area). WORKING_VALUE, judged on the chase / route_s1066 frames.
+_GRIME_TRAFFIC = {"open_clean": 0.07, "busy_damp": 0.04, "wall_zone_m": 18.0}
+for _k in ("yard_paving", "yard_concrete", "yard_slabs", "yard_asphalt", "yard_behaton", "yard_concrete_worn"):
+    if _k in M:
+        M[_k] = {**M[_k], "grime_traffic": dict(_GRIME_TRAFFIC)}
 
 
 def _underdeck_pier_paint(default):

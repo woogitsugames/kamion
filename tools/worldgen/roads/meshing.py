@@ -1125,6 +1125,13 @@ def _repair_fill(poly, zb, ph, spacing):
     return np.vstack(Vs), np.vstack(Ts)
 
 
+# ADR 0194 (REVIEW s19-0179 P2, route_s1066): inside a junction box traffic turns and weaves, so the lane-locked wheel
+# paths of the arms smear out; drawn at full strength they read as dense parallel streaks across an unmarked plate.
+# UV1.y (distance to the carriageway edge) of plate vertices with lane data carries this offset; the shader subtracts it
+# (KamionRoadStains.hlsl, KamionPlateWear). Plate edges are <= ~12 m, so > 15 m is unambiguous.
+PLATE_EDGE_FLAG = 20.0
+
+
 def _patch_uv1(net, j, V):
     """UV1 = (lane coordinate, distance to the carriageway edge) of a junction plate, in the frame of its through
     road: the widest arm and the arm opposite to it (ADR 0110, REVIEW s10-0100 P1-2). Plates had no UV1 (the exporter
@@ -1180,7 +1187,8 @@ def _patch_uv1(net, j, V):
             lc = np.abs(lat) / max(float(sec.lane_w), 2.0)
         better = (dist < score) & (dist <= hw + 0.3)
         lane[better] = np.asarray(lc, float)[better]
-        edge[better] = np.maximum(hw - dist, 0.0)[better]
+        # ADR 0194: +PLATE_EDGE_FLAG marks a junction plate (Kamion/World PBR: wheel paths spread by turning traffic)
+        edge[better] = (np.maximum(hw - dist, 0.0) + PLATE_EDGE_FLAG)[better]
         score[better] = dist[better]
     return np.column_stack([lane, edge])
 

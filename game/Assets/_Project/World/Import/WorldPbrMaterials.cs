@@ -310,6 +310,7 @@ namespace Game.World.Import
             mat.SetVector("_KerbWear", new Vector4(0f, 0f, 0.55f, 0f));
             mat.SetVector("_GroundWearExclude", Vector4.zero);
             mat.SetVector("_GroundGrimeBase", Vector4.zero);
+            mat.SetVector("_GrimeTraffic", GrimeTraffic(def));   // ADR 0194: reset/applied every import
             if (def.Get("ground_wear_exclude_local_en") is List<object> bounds && bounds.Count == 4)
                 mat.SetVector("_GroundWearExclude", new Vector4((float)Num(bounds[0]), (float)Num(bounds[1]),
                     (float)Num(bounds[2]), (float)Num(bounds[3])));
@@ -493,6 +494,15 @@ namespace Game.World.Import
             }
             EditorUtility.SetDirty(mat);
             return mat;
+        }
+
+        /// <summary>ADR 0194: manifest block "grime_traffic" (paved yards) -> _GrimeTraffic; none -> off (w 0).</summary>
+        public static Vector4 GrimeTraffic(Dictionary<string, object> def)
+        {
+            if (!(def.Get("grime_traffic") is Dictionary<string, object> gt)) return new Vector4(0f, 0f, 15f, 0f);
+            float G(string key, float fallback) => gt.Get(key) != null ? (float)Num(gt.Get(key)) : fallback;
+            return new Vector4(Mathf.Clamp(G("open_clean", 0f), 0f, 0.3f), Mathf.Clamp(G("busy_damp", 0f), 0f, 0.3f),
+                Mathf.Max(1f, G("wall_zone_m", 15f)), 1f);
         }
 
         /// <summary>ADR 0194: manifest block "oil_look" -> _OilLook (x aged smoothness, y fresh smoothness, z coverage
