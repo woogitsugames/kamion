@@ -1,77 +1,48 @@
-"""Compare every camera, keeping ordinary scene and instanced submission counts separate."""
-import argparse
-import json
-import re
+"""Every camera: exact CPU triangle counts; estimated scene draws and instance submissions."""
+import argparse,json,re,sys
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parent.parent/'gpt-s16-r1'))
+from compare_stats import read as legacy_read
 
 
-def read(path):
-    rows = {}
-    current = None
-    for line in path.read_text(encoding="utf-8-sig").splitlines():
-        match = re.match(r"(\S+): objects=(\d+) drawsEst=(\d+) shadowDrawsEst=(\d+) trisK=(\d+)", line)
-        if match:
-            current = match[1]
-            rows[current] = dict(scene_draws_est=int(match[3]), shadow_draws_est=int(match[4]),
-                                 scene_tris_k_floor=int(match[5]))
-        match = re.match(r"\s+(\S+) instanced .*draws (\d+), instances (\d+), triangles (\d+)k", line)
-        if match:
-            if match[1] not in rows:
-                raise ValueError(f"Missing scene row: {match[1]}")
-            rows[match[1]].update(instance_draws=int(match[2]), instances=int(match[3]),
-                                  instance_tris_k_floor=int(match[4]))
+def read_exact(path):
+    rows=legacy_read(path)
+    for line in path.read_text(encoding='utf-8-sig').splitlines():
+        scene=re.match(r'(\S+): .*trisExact=(\d+)',line)
+        if scene:rows[scene[1]]['scene_tris_exact']=int(scene[2])
+        inst=re.match(r'\s+(\S+) instanced .*trianglesExact (\d+)',line)
+        if inst:rows[inst[1]]['instance_tris_exact']=int(inst[2])
+    for name,row in rows.items():
+        if 'scene_tris_exact' not in row or 'instance_tris_exact' not in row:
+            raise ValueError('Exact counters absent; rerender required: '+str(path)+'/'+name)
     return rows
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("root", type=Path)
-    parser.add_argument("--after", default="after")
-    args = parser.parse_args()
-    result = {"units": "SceneStats CPU estimate; instanced draws=submission batches. trisK are truncated thousands; GPU/SRP batches unverified", "conditions": {}}
-    integrity = json.loads((args.root / "world-integrity.json").read_text())
-    if integrity["failures"]:
-        raise ValueError("World integrity failed: " + str(integrity["failures"]))
-    failures = []
-    lines = ["# Każda kamera — przed / po", "", "Tris w tysiącach, ucięte przez runner; batche instancji są zgłoszeniami CPU. Low limit +2% sprawdzony konserwatywnie z jednym przedziałem 1k dla nieznanej dokładnej delty siatek; niezmienność instancji osobno w world-integrity.json.", ""]
-    for tier in ("Low", "High"):
-        for light in ("clear", "overcast"):
-            condition = f"{tier}-{light}"
-            before = read(args.root / "before" / condition / "stats.txt")
-            after = read(args.root / args.after / condition / "stats.txt")
-            if before.keys() != after.keys():
-                raise ValueError(f"Camera sets differ: {condition}")
-            rows = []
-            lines += [f"## {condition}", "", "| Kamera | Draws sceny | Batche instancji | Tris sceny k | Tris instancji k |", "|---|---:|---:|---:|---:|"]
-            for camera in before:
-                b, a = before[camera], after[camera]
-                if b.keys() != a.keys() or "instance_draws" not in a:
-                    raise ValueError(f"Incomplete counts: {condition} {camera}")
-                delta = {k: a[k] - b[k] for k in b}
-                baseline_k = b["scene_tris_k_floor"] + b["instance_tris_k_floor"]
-                # Non-High instance data and meshes are identical (world-integrity.json),
-                # so only the scene mesh count can grow. One 1k quantization interval
-                # is a conservative upper bound on its unknown exact delta.
-                upper_percent = 100 * max(0, delta["scene_tris_k_floor"] + 1) / baseline_k if baseline_k else None
-                rows.append(dict(camera=camera, before=b, after=a, delta=delta,
-                                 triangle_growth_upper_percent=upper_percent))
-                columns = ["scene_draws_est", "instance_draws", "scene_tris_k_floor", "instance_tris_k_floor"]
-                lines.append("| " + camera + " | " + " | ".join(f"{b[k]} → {a[k]}" for k in columns) + " |")
-                if tier == "Low" and (delta["scene_draws_est"] + delta["instance_draws"] > 0
-                                      or delta["shadow_draws_est"] > 0
-                                      or delta["instance_draws"] != 0 or delta["instances"] != 0
-                                      or delta["instance_tris_k_floor"] != 0
-                                      or upper_percent is None or upper_percent > 2):
-                    failures.append(f"{condition}/{camera}")
-            result["conditions"][condition] = rows
-            lines.append("")
-    result["low_budget_failures"] = failures
-    (args.root / "camera-counts.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    (args.root / "CAMERAS.md").write_text("\n".join(lines), encoding="utf-8")
-    print(json.dumps({"cameras": {c:len(r) for c,r in result["conditions"].items()}, "low_budget_failures": failures}))
-    if failures:
-        raise SystemExit(1)
+    p=argparse.ArgumentParser();p.add_argument('root',type=Path);args=p.parse_args()
+    integrity=json.loads((args.root/'world-integrity.json').read_text())
+    if integrity['failures']:raise ValueError(integrity['failures'])
+    result={'units':'CPU scene visibility estimate and instanced submission counters; exact submitted-mesh triangle integers, not GPU/device timing or SRP batches','conditions':{}}
+    failures=[];lines=['# Każda kamera — przed / po','','Dokładne liczby trójkątów CPU. Draws sceny pozostają estymatą przed SRP; batche instancji to zgłoszenia. GPU i telefon niezmierzone.','']
+    for condition in ('Low-clear','Low-overcast','High-clear','High-overcast'):
+        before=read_exact(args.root/'before'/condition/'stats.txt');after=read_exact(args.root/'after'/condition/'stats.txt')
+        if before.keys()!=after.keys():raise ValueError('Camera sets differ: '+condition)
+        rows=[];lines += ['## '+condition,'','| Kamera | Draws sceny | Batche instancji | Shadow draws | Tris sceny | Tris instancji | Δ tris |','|---|---:|---:|---:|---:|---:|---:|']
+        for name,b in before.items():
+            a=after[name];delta={k:a[k]-b[k] for k in b}
+            baseline=b['scene_tris_exact']+b['instance_tris_exact'];total=a['scene_tris_exact']+a['instance_tris_exact']
+            percent=100*(total-baseline)/baseline if baseline else (0 if total==0 else float('inf'))
+            rows.append({'camera':name,'before':b,'after':a,'delta':delta,'triangle_growth_percent':percent})
+            fields=('scene_draws_est','instance_draws','shadow_draws_est','scene_tris_exact','instance_tris_exact')
+            lines.append('| '+name+' | '+' | '.join(f'{b[k]} → {a[k]}' for k in fields)+f' | {percent:+.4f}% |')
+            if condition.startswith('Low') and (delta['scene_draws_est']+delta['instance_draws']>0 or delta['shadow_draws_est']>0 or delta['instance_draws']!=0 or delta['instances']!=0 or delta['instance_tris_exact']!=0 or percent>2):
+                failures.append(condition+'/'+name)
+        result['conditions'][condition]=rows;lines.append('')
+    result['low_budget_failures']=failures
+    (args.root/'camera-counts.json').write_text(json.dumps(result,indent=2)+'\n')
+    (args.root/'CAMERAS.md').write_text('\n'.join(lines),encoding='utf-8')
+    print(json.dumps({'cameras':{k:len(v) for k,v in result['conditions'].items()},'low_budget_failures':failures,'max_low_triangle_growth_percent':max(x['triangle_growth_percent'] for k,v in result['conditions'].items() if k.startswith('Low') for x in v)}))
+    if failures:raise SystemExit(1)
 
 
-if __name__ == "__main__":
-    main()
+if __name__=='__main__':main()

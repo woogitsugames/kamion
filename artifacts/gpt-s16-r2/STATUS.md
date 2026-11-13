@@ -42,3 +42,5 @@ Nowy smoke po poprawie selekcji posesji zbiorowych: korony należące do wydłu�
 Zachowano mały pakiet iteracjiA:6arkuszy,pozy,liczniki i uczciwyPARTIAL; bez duplikowania pełnychPNG. Dalsza korekta obejmie relację do maksymalnej wysokości rzeczywistej geometrii dachów pobliskich domów i bliższe kadry. Sam LoD1 pierwszego domu w grupie nie opisuje kalenic sąsiadów.
 
 IteracjaB: korony odnoszą się do maksymalnegoZ pobliskiej istniejącej geometrii dachów (odczyt,bez edycji domów), nie do LoD1 pierwszego domu grupy. Prześwit4.5m i dojrzale limity birch23/linden24/maple22m toWORKING_VALUE z proporcji zdjęć. 7testówGISpassed; nowytest obejmuje wyższy dach w grupie i pomija odległy dach. Dodano odtwarzalny opt-out KAMION_GARDENS_0154=0 wyłącznie do baseline, domyślnie funkcja działa. LicznikiVQA rozszerzono addytywnie o dokładne CPUtris,bez zmiany renderu. Nowe12póz zastąpi stare pliki przy ponownym baseline/after, bez duplikowaniaPNG.
+
+Porównywarka końcowa wymaga teraz surowych dokładnych CPUtris ze SceneStats/VQA, bez kwantyzacji tysięcy. Przed i po będą zrekapturowane tym samym kodem. Nie zmienia to renderu ani interpretacji drawów jako estymaty CPU.
