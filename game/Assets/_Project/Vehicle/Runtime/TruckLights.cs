@@ -19,6 +19,8 @@ namespace Game.Vehicle.Runtime
         [Tooltip("Sun elevation (deg) below which the automatic low beam switches on")] public float autoLowBeamSunDeg = 6f;
         public bool forceLowBeam;
         public bool highBeam;
+        // ADR 0178 visual QA: stop lamps lit without a vehicle input (KAMION_QA_LAMPS=brake). Not serialized, never set in play.
+        [System.NonSerialized] public bool forceBrake;
         [Tooltip("Turn-signal lever: 0 off, -1 left, +1 right, 2 hazard (set by the gameplay layer from the stalk)")] public int indicatorLever;
         [Tooltip("Flasher relay contact closed (lamps lit); phase from the stalk's 1.5 Hz flasher")] public bool flasherLit;
         [Tooltip("Rear fog lamps (tractor: one lamp on the left; trailer: one per combination lamp). ADR 0175, light group 14")] public bool rearFog;
@@ -28,7 +30,12 @@ namespace Game.Vehicle.Runtime
         // Raw cd/m^2 WORKING_VALUEs retained from ADR 0087. ADR 0115 calibrates the displayed DRL highlight in the shader.
         // Day/night ratio remains 1 / 0.35; the source values are not measured lamp photometry.
         const float DrlNits = 1.6e5f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f, RearFogNits = 1.5e4f;
-        static readonly Color White = new Color(1f, 0.97f, 0.92f), Red = new Color(1f, 0.03f, 0.01f), Amber = new Color(1f, 0.42f, 0.02f);
+        // Linear sRGB emitter colours. ADR 0178: signal colours inside the ECE chromaticity areas within the sRGB gamut.
+        // Red (1, 0, 0): CIE x 0.640, y 0.330 - R48 red, limit towards yellow y <= 0.335 (was (1, 0.03, 0.01): y 0.339,
+        // outside, and its green clipped first at dusk). Amber (1, 0.28, 0): x 0.524, y 0.422 - amber band 0.398 <= y <= 0.429 (r2: less orange, review s18 P2)
+        // (ADR 49/00 transposition of R48; was (1, 0.42, 0.02): y 0.440, yellow-green). The white/purple z limits lie outside
+        // sRGB (UNVERIFIED in the R48 text). Display limit of the radiance: TruckExterior.shader TruckLampHueLimit.
+        public static readonly Color White = new Color(1f, 0.97f, 0.92f), Red = new Color(1f, 0f, 0f), Amber = new Color(1f, 0.28f, 0f);
 
         // Encode luminance before RGBAHalf storage: DRL160000 and high80000 exceed65504.
         // Shader decodes in float after combining this scale with scene exposure. No photometric calibration implied.
@@ -75,7 +82,7 @@ namespace Game.Vehicle.Runtime
         {
             if (m_Tex == null) return;
             bool low = LowBeamOn;
-            float brake = body != null ? (float)body.Input.Brake : 0f;
+            float brake = forceBrake ? 1f : body != null ? (float)body.Input.Brake : 0f;
             bool reverse = body != null && body.Input.Selector == GearSelector.Reverse;
             bool indL = flasherLit && (indicatorLever == -1 || indicatorLever == 2);
             bool indR = flasherLit && (indicatorLever == 1 || indicatorLever == 2);

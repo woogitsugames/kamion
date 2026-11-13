@@ -75,5 +75,47 @@ namespace Game.Tests.EditMode
             var shader=TruckPaintProbe.BuildProbeShader("TruckDrlHighlight(float3(16,15.52,14.72),0)");
             Assert.That(TruckPaintProbe.Read(shader,1f,false,true,out _),Is.EqualTo(16f).Within(0.01f));
         }
+        // ---------------------------------------------------------------- ADR 0178: lamp hue (signal colour) at dusk
+        static Vector2 Chromaticity(Color linear)
+        {
+            // Linear sRGB (D65) -> CIE XYZ (IEC 61966-2-1).
+            float x=0.4124f*linear.r+0.3576f*linear.g+0.1805f*linear.b;
+            float y=0.2126f*linear.r+0.7152f*linear.g+0.0722f*linear.b;
+            float z=0.0193f*linear.r+0.1192f*linear.g+0.9505f*linear.b;
+            float sum=x+y+z; return new Vector2(x/sum,y/sum);
+        }
+        [Test] public void SignalColoursLieInsideEceChromaticityBands()
+        {
+            Vector2 red=Chromaticity(TruckLights.Red), amber=Chromaticity(TruckLights.Amber);
+            Assert.That(red.y,Is.LessThanOrEqualTo(0.335f),"R48 red: limit towards yellow y <= 0.335");
+            Assert.That(amber.y,Is.InRange(0.398f,0.429f),"amber: 0.398 <= y <= 0.429 (towards red / towards green)");
+        }
+        static string F(float v)=>v.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+        static string Raw(Color c,float scale)=>"float3("+F(c.r*scale)+","+F(c.g*scale)+","+F(c.b*scale)+")";
+        // Exposed max-channel radiance from 0.1 (day) to 200 (brake / indicator at night).
+        [TestCase("red",0.1f)] [TestCase("red",3f)] [TestCase("red",40f)] [TestCase("red",200f)]
+        [TestCase("amber",0.1f)] [TestCase("amber",3f)] [TestCase("amber",40f)] [TestCase("amber",200f)]
+        public void LampHueLimitPreservesChannelRatiosAndBoundsMaxChannel(string colour,float scale)
+        {
+            if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null) Assert.Ignore("Actual GPU readback requires graphics device");
+            Color c=colour=="red"?TruckLights.Red:TruckLights.Amber;
+            string limited="TruckLampHueLimit("+Raw(c,scale)+", _LampHueKnee, _LampHueCeiling)";
+            float r=TruckPaintProbe.Read(TruckPaintProbe.BuildProbeShader(limited+".rrr"),1f,false,true,out _);
+            float g=TruckPaintProbe.Read(TruckPaintProbe.BuildProbeShader(limited+".ggg"),1f,false,true,out _);
+            float b=TruckPaintProbe.Read(TruckPaintProbe.BuildProbeShader(limited+".bbb"),1f,false,true,out _);
+            foreach(float v in new[]{r,g,b}) Assert.That(float.IsNaN(v)||float.IsInfinity(v),Is.False);
+            // Shader defaults: knee 0.4, ceiling 0.8. Max channel stays under the High D23 clip region and Low's 1.0.
+            Assert.That(Mathf.Max(r,Mathf.Max(g,b)),Is.LessThanOrEqualTo(0.8f+1e-4f));
+            if(scale<=0.4f) Assert.That(r,Is.EqualTo(c.r*scale).Within(1e-4f),"identity below the knee (day look unchanged)");
+            Assert.That(g,Is.EqualTo(r*c.g/c.r).Within(1e-4f),"green/red ratio (hue) preserved");
+            Assert.That(b,Is.EqualTo(r*c.b/c.r).Within(1e-4f),"blue/red ratio (hue) preserved");
+            Assert.That(r,Is.GreaterThan(0.75f*Mathf.Min(scale,0.8f)),"lamp stays bright (no over-darkening)");
+        }
+        [Test] public void LampHueLimitDisabledPreservesRadiance()
+        {
+            if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null) Assert.Ignore("Actual GPU readback requires graphics device");
+            var shader=TruckPaintProbe.BuildProbeShader("TruckLampHueLimit(float3(20,5,0),0.4,0)");
+            Assert.That(TruckPaintProbe.Read(shader,1f,false,true,out _),Is.EqualTo(20f).Within(0.01f));
+        }
     }
 }
