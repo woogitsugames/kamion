@@ -73,6 +73,8 @@ namespace PhysicsRunner.Sim
         public int ActiveContacts { get; private set; }
         /// <summary>Deepest corner penetration found at the start of this step [m] (0 when none).</summary>
         public double MaxPenetration { get; private set; }
+        /// <summary>Index of the deepest corner this step (8 per collider box, in collider order); -1 when none is below the road.</summary>
+        public int DeepestCorner { get; private set; } = -1;
         /// <summary>Total normal impulse this step [N s].</summary>
         public double NormalImpulse { get; private set; }
         /// <summary>Elastic energy stored in the corner springs at the start of this step, sum 0.5 k pen^2 [J].</summary>
@@ -103,7 +105,7 @@ namespace PhysicsRunner.Sim
         /// </summary>
         public void Solve(RigidBody6Dof b, Vec3 force, Vec3 torque, double dt, IGroundQuery ground)
         {
-            Force = Vec3.Zero; Torque = Vec3.Zero; _count = 0; ActiveContacts = 0; MaxPenetration = 0; NormalImpulse = 0; SpringEnergy = 0;
+            Force = Vec3.Zero; Torque = Vec3.Zero; _count = 0; ActiveContacts = 0; MaxPenetration = 0; DeepestCorner = -1; NormalImpulse = 0; SpringEnergy = 0;
             Quat q = b.Rotation;
             Vec3 com = b.CenterOfMassWorld;
             Vec3 down = new Vec3(0, -1, 0);
@@ -131,7 +133,7 @@ namespace PhysicsRunner.Sim
                 _sc[c] = 1.0 / (dt * kc);
                 _soft[c] = 1.0 / (1.0 / _mn[c] + _sc[c]);
                 _jn[c] = 0; _jt1[c] = 0; _jt2[c] = 0;
-                if (pen > MaxPenetration) MaxPenetration = pen;
+                if (pen > MaxPenetration) { MaxPenetration = pen; DeepestCorner = i; }
                 if (pen > 0) SpringEnergy += 0.5 * k * pen * pen;
             }
             if (_count == 0) return;
