@@ -55,6 +55,21 @@ dostało tylko 257 m żywopłotów. Pomiary G7 pokazują inny obraz ulic domów:
 7. Młode drzewka na palikach przy Andersa (G7 #24): **nie dodane** — gęstość ma status UNVERIFIED, a przy jezdni
    nie ma grupy kitu (nowe wywołania rysowania na kamerach trasy).
 
+8. **Horyzont kadrów 303305 / 320215 / 454716 (z live p1-0161): wycinka w poligonie lasu BDOT `2BE4B432-6BC0`.**
+   Poligon OT_PTLZ_A (1203 drzewa generatora, E −113…311, N −713…−446) na ortofoto GUGiK 2024-05-27 jest na wschód od
+   E ≈ 220 piaskownią: gołym piaskiem z trzema kępami drzew i pasem drzew wzdłuż krawędzi SW. Nowy rodzaj
+   `authored_overrides` — `kind: forest_clearing` (`overrides.yaml`, `bdot-forest-6bc0-sand-clearing`, klucz = id BDOT,
+   przeżywa reimport; brak celu → `forest_clearings.stale` w `streetscape_qa.json`): pierścienie `cleared_epsg2180`
+   minus `keep_epsg2180` (kępy), odrysowane na ortofoto ±2 m (`artifacts/veg-0163/forest/ortho_clearing.jpg`).
+   `vegetation.place` generuje drzewostan jak dotąd na pełnym obrysie BDOT i dopiero potem usuwa drzewa z wycinki —
+   reszta lasu zachowuje każde drzewo (ten sam strumień losowy); HLOD lasu i maska dna lasu dostają obrys przycięty,
+   wycinka dostaje maskę gołej ziemi (kanał A). Reszta tego lasu (sosny 21–23 m na zachód od E 220) zostaje — jest
+   na ortofoto.
+9. **Klomb EC (`ec-access-plantings`, gałąź p1-0161, nie ta gałąź).** Ortofoto HR (`artifacts/p1-0161/td/hr_klomb.png`)
+   i zdjęcie cm92458760 pokazują jedną zwartą masę niskich czerwonobrązowych krzewów, która wypełnia prawie całą
+   soczewkę wyspy (~16 × 4,5 m), nie pas 1,2 m. `plantings.build` już obsługuje `band_m: 0` (pełny klomb) — do dopisania
+   w `beds` EC1 przy scalaniu p1-0161 (tu nie zmieniane, żeby nie konfliktować).
+
 Zmiany poza plikami roślinności (addytywne, bez planu zachowanie bez zmian): `plots.build` czyta `rp["front_green"]` /
 `rp["garden_trees"]` (nie buduje własnego żywopłotu frontowego, zapisuje korony liściaste zamiast je meshować) i
 `plots.big_tree` ogranicza wysokość karty; `stage.py` — trzy wywołania i flaga ablacji `KAMION_GARDENS_0163=0`
