@@ -21,12 +21,13 @@ namespace Game.Vehicle.Runtime
         public bool highBeam;
         [Tooltip("Turn-signal lever: 0 off, -1 left, +1 right, 2 hazard (set by the gameplay layer from the stalk)")] public int indicatorLever;
         [Tooltip("Flasher relay contact closed (lamps lit); phase from the stalk's 1.5 Hz flasher")] public bool flasherLit;
+        [Tooltip("Rear fog lamps (tractor: one lamp on the left; trailer: one per combination lamp). ADR 0175, light group 14")] public bool rearFog;
 
         // Group ids (truck_exterior_manifest.json shader_contract.light_groups).
-        const int DRL = 1, LOW = 2, HIGH = 3, IND_L = 4, IND_R = 5, TAIL_BRAKE = 6, REVERSE = 7, MARKER_F = 8, MARKER_S = 9, MARKER_R = 10, FOG = 11, WORK = 12, PLATE = 13;
+        const int DRL = 1, LOW = 2, HIGH = 3, IND_L = 4, IND_R = 5, TAIL_BRAKE = 6, REVERSE = 7, MARKER_F = 8, MARKER_S = 9, MARKER_R = 10, FOG = 11, WORK = 12, PLATE = 13, FOG_REAR = 14;
         // Raw cd/m^2 WORKING_VALUEs retained from ADR 0087. ADR 0115 calibrates the displayed DRL highlight in the shader.
         // Day/night ratio remains 1 / 0.35; the source values are not measured lamp photometry.
-        const float DrlNits = 1.6e5f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f;
+        const float DrlNits = 1.6e5f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f, RearFogNits = 1.5e4f;
         static readonly Color White = new Color(1f, 0.97f, 0.92f), Red = new Color(1f, 0.03f, 0.01f), Amber = new Color(1f, 0.42f, 0.02f);
 
         // Encode luminance before RGBAHalf storage: DRL160000 and high80000 exceed65504.
@@ -79,7 +80,7 @@ namespace Game.Vehicle.Runtime
             bool indL = flasherLit && (indicatorLever == -1 || indicatorLever == 2);
             bool indR = flasherLit && (indicatorLever == 1 || indicatorLever == 2);
             uint hash = (low ? 1u : 0u) | (highBeam ? 2u : 0u) | (reverse ? 4u : 0u) | ((uint)(Mathf.Clamp01(brake) * 31f) << 3)
-                        | (indL ? 256u : 0u) | (indR ? 512u : 0u);
+                        | (indL ? 256u : 0u) | (indR ? 512u : 0u) | (rearFog ? 1024u : 0u);
             if (hash == m_LastHash) return;
             m_LastHash = hash;
 
@@ -97,6 +98,8 @@ namespace Game.Vehicle.Runtime
             m_Px[IND_L] = indL ? Amber * IndicatorNits : Color.clear;
             m_Px[IND_R] = indR ? Amber * IndicatorNits : Color.clear;
             m_Px[REVERSE] = reverse ? White * ReverseNits : Color.clear;
+            // Rear fog lamps (UN R48 6.11): red, only with the dipped beam / front fog on (6.11.7.1); WORKING_VALUE luminance.
+            m_Px[FOG_REAR] = rearFog && low ? Red * RearFogNits : Color.clear;
             for (int i = 0; i < m_Px.Length; i++) m_Px[i] *= 1f / NitsPerEncodedUnit;
             m_Tex.SetPixels(m_Px);
             m_Tex.Apply(false);

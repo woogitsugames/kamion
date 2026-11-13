@@ -179,7 +179,15 @@ namespace Game.Editor.VisualQA
                 foreach (var m in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None)) m.RenderNow();
                 // Art truck (A7): tier binding, lamp state and the cab fill for this camera (LateUpdate does not run here).
                 foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();
-                foreach (var tl in UnityEngine.Object.FindObjectsByType<TruckLights>(FindObjectsSortMode.None)) tl.Refresh();
+                // ADR 0175 evidence: -qaTruckLamps rearfog,hazard,low forces lamp groups on for the render (default: solver state).
+                string lampSet = EditorTools.Arg("-qaTruckLamps", "");
+                foreach (var tl in UnityEngine.Object.FindObjectsByType<TruckLights>(FindObjectsSortMode.None))
+                {
+                    if (lampSet.Contains("low") || lampSet.Contains("rearfog")) tl.forceLowBeam = true;
+                    if (lampSet.Contains("rearfog")) tl.rearFog = true;
+                    if (lampSet.Contains("hazard")) { tl.indicatorLever = 2; tl.flasherLit = true; }
+                    tl.Refresh();
+                }
                 // Live cab screens (cluster, navigation, DIN) drawn from the (parked) vehicle state for this light.
                 foreach (var vb in UnityEngine.Object.FindObjectsByType<VehicleBody>(FindObjectsSortMode.None))
                 {
