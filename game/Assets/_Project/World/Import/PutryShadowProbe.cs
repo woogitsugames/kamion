@@ -14,7 +14,7 @@ namespace Game.World.Import
     public static class PutryShadowProbe
     {
         [Serializable] public class Caster { public string path, mode, shader; public string[] materials; public Vector3 min, max; public int submeshes, triangles; }
-        [Serializable] public class SceneRecord { public string tier; public float distance, depthBias, normalBias, sunBias, sunNormalBias; public int resolution, cascades; public Caster[] casters; }
+        [Serializable] public class SceneRecord { public string tier; public float distance, depthBias, normalBias, sunBias, sunNormalBias; public int resolution, cascades; public Caster[] casters, heroLods; }
         [Serializable] public class Report { public string mode; public SceneRecord[] scenes; }
         public static void RunBatch()
         {
@@ -43,10 +43,28 @@ namespace Game.World.Import
                         list.Add(new Caster { path = mr.transform.parent.name + "/" + mr.name, mode = mr.shadowCastingMode.ToString(), shader = mats.Length > 0 && mats[0] != null ? mats[0].shader.name : "MISSING", materials = names, min = b.min, max = b.max, submeshes = mesh.subMeshCount, triangles = mesh.triangles.Length / 3 });
                     }
                     if (list.Count == 0) throw new InvalidOperationException("No Putry bridge casters found");
+                    var heroLods = new List<Caster>();
+                    var set = root.GetComponent<WorldInstances>().set;
+                    foreach (var proto in set.prototypes)
+                    {
+                        if (!proto.name.StartsWith("landmark_viaduct_biezenstwa", StringComparison.Ordinal)) continue;
+                        for (int lod = 0; lod < proto.lods.Length; lod++)
+                        {
+                            var mesh = proto.lods[lod]; if (mesh == null) continue;
+                            int start = proto.materialStart[lod];
+                            var names = new string[mesh.subMeshCount];
+                            for (int i = 0; i < names.Length; i++)
+                            {
+                                int mi = start + i;
+                                names[i] = set.materials[mi].name + (Array.IndexOf(set.noShadowMaterials, mi) >= 0 ? " [no shadows]" : "");
+                            }
+                            heroLods.Add(new Caster { path = proto.name + "/lod" + lod, mode = (proto.shadowLodMask & (1 << lod)) != 0 ? "On" : "Off", materials = names, min = mesh.bounds.min, max = mesh.bounds.max, submeshes = mesh.subMeshCount, triangles = mesh.triangles.Length / 3 });
+                        }
+                    }
                     var profile = QualityProfile.Load();
                     if (profile == null || !profile.TryGet(tier, out var t)) throw new InvalidOperationException("Missing quality tier");
                     var sun = GameObject.Find("Sun").GetComponent<Light>();
-                    scenes.Add(new SceneRecord { tier = tier, distance = t.shadowDistance, resolution = t.shadowResolution, cascades = t.shadowCascades, depthBias = t.shadowDepthBias, normalBias = t.shadowNormalBias, sunBias = sun.shadowBias, sunNormalBias = sun.shadowNormalBias, casters = list.ToArray() });
+                    scenes.Add(new SceneRecord { tier = tier, distance = t.shadowDistance, resolution = t.shadowResolution, cascades = t.shadowCascades, depthBias = t.shadowDepthBias, normalBias = t.shadowNormalBias, sunBias = sun.shadowBias, sunNormalBias = sun.shadowNormalBias, casters = list.ToArray(), heroLods = heroLods.ToArray() });
                     if (mode != "report") EditorSceneManager.SaveScene(scene);
                 }
                 report.scenes = scenes.ToArray();
