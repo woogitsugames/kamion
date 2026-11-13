@@ -272,7 +272,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     if hero_keepout:
         blocked |= PV.rasterize_polys(hero_keepout, hf)
     vrep = {}
-    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides)
+    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask)
     forest_mix = vrep.pop("_forest_mix")
     forest_cleared = vrep.pop("_forest_cleared", [])
     rep["vegetation"] = vrep

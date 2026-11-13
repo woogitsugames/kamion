@@ -398,6 +398,13 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
                     j.signalized = True
             j.emergency_signals = (not j.signalized) and any(
                 math.hypot(p["e"] - j.center[0], p["n"] - j.center[1]) < r for p in emerg)
+        # ADR 0186: authored node override `set: {signalized: false | true}` - a junction the proximity rule above
+        # gets wrong (a U-turn gap 20 m before the stop line of the next junction is not signal-controlled itself)
+        for n in j.nodes:
+            ov = net.nodes[n].get("override", {})
+            if "signalized" in ov:
+                j.signalized = bool(ov["signalized"])
+                j.emergency_signals = False
     for j in juncs:
         for i, a in enumerate(j.arms):
             if a.end == "a":

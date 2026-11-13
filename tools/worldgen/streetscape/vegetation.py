@@ -94,8 +94,28 @@ def _tree_group_overrides(overrides, origin):
         if o.get("kind") != "tree_groups":
             continue
         prm = {**TREE_GROUP_DEFAULTS, **{k: v for k, v in o.items() if k in TREE_GROUP_DEFAULTS}}
-        for k, ln in enumerate(o["lines"]):
+        for k, ln in enumerate(o.get("lines", [])):
             out.append((shapely.LineString(np.asarray(ln["line_epsg2180"], float) - origin), prm, f"override:{o['id']}:{k}"))
+    return out
+
+
+def _tree_point_overrides(overrides):
+    """ADR 0186: `points_en` of an authored `kind: tree_groups` - stems traced one by one from the orthophoto
+    (region-local [E, N] or [E, N, height m]); `species` as for the lines (one species per override, drawn by the
+    id), `height_m: [lo, hi]` for points without their own height (default: the species range). The stems are only
+    refused on a road / paved surface / building itself, not within the 3 m rule clearance: a traced tree stands
+    where the orthophoto shows it, e.g. on a lawn island between two footways."""
+    out = []
+    for o in overrides or []:
+        if o.get("kind") != "tree_groups" or not o.get("points_en"):
+            continue
+        sp = o.get("species") or TREE_GROUP_DEFAULTS["species"]
+        hr = o.get("height_m")
+        if hr is not None and not (0 < float(hr[0]) <= float(hr[1])):
+            raise ValueError(f"tree_groups {o['id']}: height_m must be [lo, hi] with 0 < lo <= hi")
+        out.append((np.asarray([q[:2] for q in o["points_en"]], float),
+                    [float(q[2]) if len(q) > 2 else None for q in o["points_en"]],
+                    sp, tuple(float(v) for v in hr) if hr is not None else None, f"override:{o['id']}:points"))
     return out
 
 
@@ -149,8 +169,9 @@ def forest_stands(overrides):
     return out
 
 
-def place(src, origin, hf, zc, blocked, report, overrides=None):
-    """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list."""
+def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
+    """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list.
+    hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems."""
     out = []
     H, W = zc.shape
 
@@ -308,6 +329,30 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         emit(P, [gsp[g] for g in G], rng, key)
         grep["trees"] += len(out) - n0
         grep["groups"] += int(G.max()) + 1 if len(G) else 0
+    tpts = _tree_point_overrides(overrides)
+    if tpts:
+        grep["points"], grep["points_refused"] = 0, []
+        for P, hs, spw, hr, key in tpts:
+            rng = np.random.default_rng(_seed(key))
+            names = list(spw)
+            w = np.array([spw[k] for k in names], float)
+            sp = str(rng.choice(names, p=w / w.sum()))
+            i = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
+            j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
+            free = ~(hard if hard is not None else blocked)[j, i]
+            for (x, y), zz, h0, g in zip(P, zc[j, i], hs, free):
+                lo, hi = hr if hr and sp != "shrub" else HEIGHT[sp]
+                h = h0 if h0 is not None else float(rng.uniform(lo, hi))
+                v = int(rng.integers(0, 3))
+                yaw = float(rng.uniform(0, 6.2832))
+                lean = float(rng.uniform(0, 0.05))
+                if not g:
+                    grep["points_refused"].append({"src": key, "at": [round(float(x), 1), round(float(y), 1)]})
+                    continue
+                out.append({"p": f"tree_{sp}", "v": v, "e": round(float(x), 2), "n": round(float(y), 2),
+                            "z": round(float(zz), 2), "h": round(float(h), 1), "yaw": round(yaw, 3),
+                            "lean": round(lean, 3), "src": key})
+                grep["points"] += 1
     report["tree_groups"] = grep
     for nd in src["osm"]["nodes"]:
         if nd["tags"].get("natural") == "tree":
@@ -345,9 +390,13 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         from scipy.spatial import cKDTree
         tree = cKDTree(P)
         keep = np.ones(len(P), bool)
+        auth = np.array([str(t.get("src", "")).endswith(":points") for t in out])     # ADR 0186: traced stems stay
         for i, j in sorted(tree.query_pairs(1.8)):
             if keep[i] and keep[j]:
-                keep[j] = False
+                if auth[j] and not auth[i]:
+                    keep[i] = False
+                else:
+                    keep[j] = False
         out = [t for t, k in zip(out, keep) if k]
     cnt = {}
     for t in out:

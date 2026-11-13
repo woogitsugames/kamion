@@ -91,9 +91,19 @@ SPECIES = {
                      sprig=0.34, sprig_wh=((0.16, 0.28), (0.12, 0.22))),
     "thuja": dict(tex="thuja", h=(1.6, 2.2), plant=(0.6, 0.8), bulge=0.10, dome=0.24, gap_p=0.09, sigma=0.27,
                   sprig=0.40, sprig_wh=((0.12, 0.2), (0.12, 0.2))),
+    # ADR 0186: unclipped roadside thicket (dogwood / ninebark / willow scrub grown into one mass, CC0 photo P11-063
+    # Mickiewicza / Kuronia): no missing plants (a closed wall, nothing shows through), bushes 1.1-1.7 m apart as
+    # 0.4 m lumps of the side, a rounded shoulder and a crown that rises and falls by ~ +-0.4 m, long loose shoots.
+    # Hornbeam leaf textures (the largest broadleaf of the hedge set). Height from the bed (`height_m`), else 2.2-3.0 m.
+    # WORKING_VALUE (read off the photo, not surveyed).
+    "thicket": dict(tex="hornbeam", h=(2.2, 3.0), plant=(1.1, 1.7), bulge=0.40, dome=0.32, gap_p=0.0, sigma=0.42,
+                    sprig=0.26, sprig_wh=((0.35, 0.65), (0.30, 0.60)), prof="thicket"),
 }
 # cross-sections (inset m, height share, bulge share), foot first
 PROFILES = {
+    # ADR 0186: a grown bush mass - belly at 0.3-0.5 h, shoulder rounded over the upper 0.9 m of the plan
+    "thicket": [(0.0, -0.05, 0.3), (-0.10, 0.28, 0.9), (-0.04, 0.52, 1.0), (0.16, 0.74, 0.9), (0.45, 0.89, 0.6),
+                (0.90, 1.0, 0.3)],
     "box": [(-0.04, -0.03, 0.2), (0.0, 0.45, 0.8), (0.05, 0.86, 1.0), (0.14, 0.97, 0.7), (0.24, 1.0, 0.4)],
     "cushion": [(-0.03, -0.03, 0.2), (-0.04, 0.32, 0.8), (0.0, 0.62, 1.0), (0.09, 0.84, 0.9), (0.22, 0.95, 0.6),
                 (0.40, 1.0, 0.3)],
