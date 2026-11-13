@@ -1417,7 +1417,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                                 signs.append(FK.sign_instance(code, a, d, nout, (o[0] + o[1]) / 2, o[3] + 1.05,
                                                               f"{key}:{ei}"))
                                 signed = True
-                    if L > 8:
+                    # ADR 0190: authored `downpipes: false` - a tower with roof drains inside (no pipes on the
+                    # photographed walls); the hashed rule puts one at either end of every edge, so two collinear
+                    # footprint edges show a pair of pipes in the middle of a wall
+                    if L > 8 and b["ovr"].get("downpipes", True):
                         for u in (0.35, L - 0.35):
                             FK.downpipe(acc, a, d, nout, u, zbot + 0.4, zt - 0.4, hopper=True)
                 elif typ == "house":

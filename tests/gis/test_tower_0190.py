@@ -170,6 +170,22 @@ def test_tower_roof_carries_the_authored_masts_on_both_lods():
     assert not any(m.startswith("frontage_") or m == "window_frame" for m in buf.mats("buildings_low"))
 
 
+def test_tower_has_no_external_downpipes():
+    """ADR 0190: the pair of galvanised pipes 0.7 m apart in the NW wall and the pairs at the corners (ADR 0184 par. 4)
+    are gone on both LODs - every `downpipe` triangle of the tower is a roof mast now."""
+    FR = _fr()
+    b = _loaded({TOWER})[TOWER]
+    assert b["ovr"]["downpipes"] is False
+    buf = _build(b)
+    zwall = max(float(p.V[:, 2].max()) for p in buf.parts if p.layer == "buildings_low" and "__far_" in p.mat)
+    for layer in ("buildings", "buildings_low"):
+        for p in buf.parts:
+            if p.layer == layer and p.mat == FR.ROOF_MAST_MAT:
+                tri = p.V[p.T]
+                below = tri[tri[:, :, 2].min(1) < zwall - 0.5]          # AC brackets, the entrance canopy: small
+                assert len(below) == 0 or float(np.ptp(below[:, :, 2], axis=1).max()) < 3.0, layer   # no pipe run
+
+
 def test_roof_mast_faces_look_outwards():
     FR = _fr()
 

@@ -2455,10 +2455,16 @@ overrides:
     #     mast with panel antennas at the S corner (6.5 m), four short poles with drums along the SE edge, panel
     #     antennas at the W and E corners. Count and kinds from the photos; positions along the walls +-2 m, insets
     #     and the antenna counts per mast: UNVERIFIED (WORKING_VALUE). Generic hardware, no operator marks.
+    #   Downpipes: the hashed office rule hangs one 0.35 m from either end of every footprint edge over 8 m - on
+    #     this outline 8 pipes: a pair at every corner and a pair 0.7 m apart in the NW wall where two collinear
+    #     BDOT edges meet (the "white vertical lines" of ADR 0184 par. 4, camera a184_tower_n; galvanised steel reads
+    #     white). Both photos show the SW and SE walls and the S corner without external pipes (flat roof behind an
+    #     attic: inside drains); NW / NE: no open photo, the same assumed (WORKING_VALUE). `downpipes: false`.
     set:
       wall_material: plaster_beige
       ribbon: false
       bands: false
+      downpipes: false
       footprint_open_m: 3.3
       facades:
         - {facing: [SW, NE], min_len_m: 8.0, windows: column, u: 0.52, window_w_m: 2.0, sill_m: 0.9, head_m: 2.5,
