@@ -201,6 +201,7 @@ def to_game_piece(o, gm):
                   if slot_of(names[p.material_index] if p.material_index < len(names) else "") == "Lights"]
     pack, thin = A.lens_frame([me.vertices[i].co for p in lens_faces for i in p.vertices]) \
         if style != "NONE" and lens_faces else (None, 0)
+    A.store_lens_frame(o, pack, [style])
     for p in me.polygons:
         mn = names[p.material_index] if p.material_index < len(names) else ""
         sl = slot_of(mn)
@@ -718,6 +719,7 @@ def export_lod(lod, master, a, manifest, coll):
         k = A.decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={0: 60, 1: 24, 2: 8}[lod],
                               lights_min={0: 0.9, 1: 0.5, 2: 0.2}[lod], keep_wheel_centres=lod >= 2,
                               keep=REGS_KEEP)
+    print(f"  LOD{lod}: lens uv1 re-packed on {A.refit_lens_uv1(pieces)} loops (ADR 0181 r2)")
     fr = frames()
     parts = join_parts(pieces)
     sfx = f"_LOD{lod}"
@@ -1191,6 +1193,7 @@ def main():
     tri_pieces = sum(tris_of(o) for o in srcs)
     print(f"pieces: {len(srcs)}, tris {tri_pieces}")
     unwrap_atlases(srcs)
+    A.fit_lens_atlas(srcs)
     baked = bake_atlases(srcs, high, hi_curt, a)
     tex = compose_textures(baked, a.out)
     meas = measure(srcs)

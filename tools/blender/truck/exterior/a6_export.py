@@ -527,7 +527,84 @@ def lens_frame(points):
         u = min(max((co[au] - lo[au]) / max(ext[au], 1e-6), 0.0), 1.0)
         v = min(max((co[av] - lo[av]) / max(ext[av], 1e-6), 0.0), 1.0)
         return (w + 0.02 + 0.96 * u, LENS_STYLES.index(style) * 256 + h + 0.02 + 0.96 * v)
+    pack.frame = [lo[au], lo[av], ext[au], ext[av], au, av]
     return pack, thin
+
+
+def store_lens_frame(o, pack, styles):
+    """ADR 0181 r2: keep the lens frame + dominant style on the piece (copies carry ID props into every LOD)."""
+    if pack is None or not styles:
+        return
+    st = max(set(styles), key=list(styles).count)
+    o["lens_frame"] = list(pack.frame) + [float(LENS_STYLES.index(st))]
+
+
+def fit_lens_atlas(pieces, tol=4e-4):
+    """ADR 0181 r2 (review s20 P1-2): after the atlas unwrap, fit uv0 (Atlas) = A . (u, v, 1) over the lens loops of each
+    piece (u, v = lens frame 0..1). Stored only when the lens is one affine island (max residual < tol ~ 0.4 texel of
+    a 1024 atlas), so refit_lens_uv1 can put decimated LOD vertices back into their own chamber of the atlas (Low = LOD2:
+    a red wedge of the neighbouring chamber appeared in the amber one). Returns (fitted, skipped)."""
+    fitted = skipped = 0
+    for o in pieces:
+        fr = o.get("lens_frame")
+        if fr is None or o.type != "MESH" or "Atlas" not in o.data.uv_layers:
+            continue
+        me = o.data
+        de, at = me.uv_layers["Decal"].data, me.uv_layers["Atlas"].data
+        rows, rhs = [], []
+        for li in range(len(me.loops)):
+            x, y = de[li].uv
+            if x < 1.0:
+                continue
+            rows.append((((x % 1.0) - 0.02) / 0.96, ((y % 1.0) - 0.02) / 0.96, 1.0))
+            rhs.append(tuple(at[li].uv))
+        if len(rows) < 3:
+            continue
+        M, R = np.array(rows), np.array(rhs)
+        coef, *_ = np.linalg.lstsq(M, R, rcond=None)
+        res = float(np.abs(M @ coef - R).max())
+        if res < tol:
+            o["lens_atlas"] = [float(c) for c in coef.T.flatten()]   # (au, av, a0, bu, bv, b0)
+            fitted += 1
+        else:
+            skipped += 1
+    print(f"  fit_lens_atlas: {fitted} lenses affine, {skipped} not (kept as decimated)")
+    return fitted, skipped
+
+
+def refit_lens_uv1(pieces):
+    """ADR 0181 r2 (review s20 P1-2): collapse decimation slides lens vertices in the lens plane and interpolates uv1,
+    so on LOD1/LOD2 the frame stopped being affine (egg-shaped LED cups on Low = LOD2). Re-pack uv1 of every lens loop
+    (floor(uv1.x) >= 1) from the decimated vertex position with the LOD0 frame. Returns the number of loops re-packed."""
+    n, dmax = 0, 0.0
+    for o in pieces:
+        fr = o.get("lens_frame")
+        if fr is None or o.type != "MESH" or "Decal" not in o.data.uv_layers:
+            continue
+        lo_u, lo_v, ex_u, ex_v, au, av, st = list(fr)
+        au, av, st = int(au), int(av), int(st)
+        w = int(min(max(round(ex_u * 1000.0), 1), 1023))
+        h = int(min(max(round(ex_v * 1000.0), 1), 255))
+        me = o.data
+        de = me.uv_layers["Decal"].data
+        aff = o.get("lens_atlas")
+        at = me.uv_layers["Atlas"].data if aff is not None and "Atlas" in me.uv_layers else None
+        for li, lp in enumerate(me.loops):
+            if de[li].uv[0] < 1.0:
+                continue
+            co = me.vertices[lp.vertex_index].co
+            u = min(max((co[au] - lo_u) / max(ex_u, 1e-6), 0.0), 1.0)
+            v = min(max((co[av] - lo_v) / max(ex_v, 1e-6), 0.0), 1.0)
+            new = (w + 0.02 + 0.96 * u, st * 256 + h + 0.02 + 0.96 * v)
+            dmax = max(dmax, abs(new[0] - de[li].uv[0]), abs(new[1] - de[li].uv[1]))
+            de[li].uv = new
+            if at is not None:
+                at[li].uv = (aff[0] * u + aff[1] * v + aff[2], aff[3] * u + aff[4] * v + aff[5])
+            n += 1
+    # A frame / transform mismatch would show as shifts of whole millimetres; decimation drift is a fraction of the lens.
+    print(f"  refit_lens_uv1: {n} loops, max shift {dmax:.3f} (frame units: W/H mm + 0..1)")
+    assert dmax < 2.0, "lens frame does not match the piece (transform applied after to_game_piece?)"
+    return n
 
 
 def lens_face(style, n_thin):
@@ -600,6 +677,7 @@ def to_game_piece(o, gm):
             if st != "NONE":
                 lens_of[p.index] = st
     pack, thin = lens_frame([me.vertices[i].co for pi in lens_of for i in me.polygons[pi].vertices])         if lens_of else (None, 0)
+    store_lens_frame(o, pack, list(lens_of.values()))
     for p in me.polygons:
         mn = names[p.material_index] if p.material_index < len(names) else ""
         sl = slot_of(o.name, mn)
@@ -1947,6 +2025,9 @@ def lod_pieces(master, lod, coll):
         c = copy_object(o, f"{o.name}__L{lod}", coll)
         c["part"] = o["part"]
         c["slots"] = list(o.get("slots", []))
+        for kk in ("lens_frame", "lens_atlas"):         # ADR 0181 r2: refit_lens_uv1 after decimation
+            if kk in o:
+                c[kk] = list(o[kk])
         if lod == 3:
             p = c["part"]
             if p.startswith(("DOOR_", "WIPER_")):
@@ -2048,6 +2129,7 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
         ratio = decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={1: 40, 2: 16, 3: 8}[lod],
                                 lights_min={1: 0.5, 2: 0.15, 3: 0.1}[lod], round_seg=ROUND_SEGMENTS.get(lod, 0),
                                 keep=NO_DECIMATE_FAR if lod >= 2 else (), grid_lod=lod if lod in (1, 2) else 0)
+        print(f"  LOD{lod}: lens uv1 re-packed on {refit_lens_uv1(pieces)} loops (ADR 0181 r2)")
     by_part = {}
     for o in master:
         by_part.setdefault(o["part"], []).append(o)
@@ -2780,6 +2862,7 @@ def main():
     removed, tested = remove_hidden(pieces)
     print(f"pieces: {len(pieces)}, tris {tri_pieces} -> {sum(tris_of(o) for o in pieces)}")
     unwrap_atlases(pieces)
+    fit_lens_atlas(pieces)
     baked = bake_atlases(pieces, high, a)
     tex = compose_textures(baked, decal, a.out)
     for o in high:

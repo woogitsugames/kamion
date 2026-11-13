@@ -430,6 +430,7 @@ Shader "Kamion/Truck Exterior"
                     metal = lerp(metal, _DecalMetallic, d.a);
                     rough = lerp(rough, _DecalRoughness, d.a);
                 }
+                half outerLens = 0;   // ADR 0181 r2: smooth outer lens (excluded from the gloss-trim env term below)
             #if defined(_KAMION_TRUCK_LAMPS)
                 // ADR 0181: lens optics under the dirt film - gasket, pillow / flute / Fresnel relief, emitter cups, reflex cubes.
                 KamionLens lens = KamionLensEval(i.uv01.zw);
@@ -442,6 +443,7 @@ Shader "Kamion/Truck Exterior"
                 {
                     nTS = half3(0, 0, 1);
                     rough = min(rough, (half)0.08);
+                    outerLens = 1;
                 }
             #endif
                 half grime = m.g;
@@ -513,7 +515,9 @@ Shader "Kamion/Truck Exterior"
                 dirt = min(dirt, lerp(1.0h, _IsPaint > 0.5 ? (half)_RearGrimeColor.a : 0.9h, rearW));
                 coat *= 1.0 - saturate(dirt * 1.5);
                 albedo = lerp(albedo, lerp(_DirtColor.rgb, _RearGrimeColor.rgb, rearW), dirt);
-                rough = lerp(rough, max(rough, 0.88), dirt);
+                // ADR 0181 r2: on the smooth outer lens the road film is a haze (0.4), not a matte crust - with 0.88 the
+                // deposit mask's hard edges turned into gloss / matte camouflage patches on the reverse and fog lenses.
+                rough = lerp(rough, max(rough, lerp((half)0.88, (half)0.4, outerLens)), dirt);
                 metal *= 1.0 - saturate(dirt * (1.0 + 0.6 * rearW));
 
                 half sgn = i.tangentWS.w;
@@ -581,7 +585,9 @@ Shader "Kamion/Truck Exterior"
                 // Low analytic cube and the High capture (no instanced trees / props) put open sky where a parked truck's
                 // near-horizon reflections see buildings, trees and ground. Own env term for these pixels: Schlick F,
                 // AO, horizon occlusion and a near-horizon obstruction; URP keeps the direct light (sun highlight).
-                half glossTrim = (1.0 - _IsPaint) * (1.0 - isTyre) * (1.0 - saturate(metal * 2.0)) * (1.0 - smoothstep(0.22, 0.32, rough));
+                half glossTrim = (1.0 - _IsPaint) * (1.0 - isTyre) * (1.0 - saturate(metal * 2.0)) * (1.0 - smoothstep(0.22, 0.32, rough)) * (1.0 - outerLens);
+                // ^ a clear lens is not the black PC-ABS trim this term was made for: with its street-level obstruction (0.3)
+                //   the reverse / fog lenses turned black at dusk (after3); the lens keeps the URP probe reflection.
                 if (glossTrim > 0.001) s.occlusion = m.r * (1.0 - glossTrim);
                 half4 col = UniversalFragmentPBR(input, s);
                 if (glossTrim > 0.001)
