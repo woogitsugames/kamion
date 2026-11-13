@@ -75,3 +75,5 @@ Zapisano after/High-clear; każda kamera w stats.txt. Oględziny pozostają wyma
 Zapisano after/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Fidelity odświeżone dla końcowego generatora r2; pełny GIS może sprawdzić świeży raport.
+
+EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xml.
