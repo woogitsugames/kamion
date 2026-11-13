@@ -53,14 +53,17 @@ namespace Game.World.Import
             if (material == null || !material.HasProperty(Property)) return;
             float scale = 1f;
             if (definition != null && definition.TryGetValue("shadow_normal_bias_scale", out var value)) TryScale(value, out scale);
+            bool changed = false;
             // Avoid serializing a new default property into every unrelated cached material.
-            if (material.GetFloat(Property) != scale) material.SetFloat(Property, scale);
+            if (material.GetFloat(Property) != scale) { material.SetFloat(Property, scale); changed = true; }
             bool enabled = scale < 1f;
             if (material.IsKeywordEnabled(Keyword) != enabled)
             {
+                changed = true;
                 if (enabled) material.EnableKeyword(Keyword);
                 else material.DisableKeyword(Keyword);
             }
+            if (changed) UnityEditor.EditorUtility.SetDirty(material);
         }
     }
 }
