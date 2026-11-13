@@ -96,12 +96,12 @@ def test_verge_strip_on_the_inside_of_a_curve_keeps_its_slope():
 
 
 class _Lin(FU.Lin):
-    def __init__(self):
-        super().__init__(MeshBuf(), lambda e, n: np.zeros(len(np.atleast_1d(e))))
+    def __init__(self, z0=0.0):
+        super().__init__(MeshBuf(), lambda e, n: np.full(len(np.atleast_1d(e)), z0))
 
 
 def _rail(n=80, tall=None, term=(True, True)):
-    lin = _Lin()
+    lin = _Lin(10.0)       # ground at the foot line (ADR 0159: terminals follow lower ground)
     P = np.column_stack([np.arange(n, dtype=float), np.zeros(n)])
     FU.guardrail(lin, P, np.full(n, 10.0), "c:test:R:bridge", tall, term)
     return lin.buf.parts

@@ -1493,6 +1493,21 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
             hi = n - tl
             if tl >= 4:
                 term_posts.append(n - 1 - tl // 2)
+    # ADR 0159 (SBS 482392: the terminal of a run on a kerb ended over a verge that falls away from the road): the
+    # foot line of a ground terminal follows the ground under it when that lies lower (up to TERMINAL_GROUND_DROP_M),
+    # fully at the end, not at all at the inner post
+    if tl and (lo > 0 or hi < n):
+        Z = np.asarray(Z, float).copy()
+        try:
+            zg_ = np.asarray(lin.z(P), float)
+        except Exception:                                   # noqa: BLE001 - a Lin without a ground sampler (tests)
+            zg_ = np.full(n, np.nan)
+        for idx, w in ((np.arange(0, lo + 1), np.linspace(1.0, 0.0, lo + 1)) if lo > 0 else (None, None),
+                       (np.arange(hi - 1, n), np.linspace(0.0, 1.0, n - hi + 1)) if hi < n else (None, None)):
+            if idx is None or tall[idx].any():
+                continue
+            dz = np.clip(Z[idx] - zg_[idx], 0.0, TERMINAL_GROUND_DROP_M)
+            Z[idx] -= np.where(np.isfinite(dz), dz, 0.0) * w
     d = np.gradient(P, axis=0)
     d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
     nrm = np.column_stack([-d[:, 1], d[:, 0]])
@@ -1613,6 +1628,7 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
 POST_MAT = "barrier_steel"
 # ADR 0159: painted deck barrier (bridge_style `barrier: dark_rails`). The material is the paint of the screen posts
 # of the same deck (no new material = no new draw call in the bridge chunk). Rails: (bottom, top) above the cap, m.
+TERMINAL_GROUND_DROP_M = 0.8     # WORKING_VALUE (ADR 0159): a terminal follows the ground at most this far below its foot line
 DARK_BARRIER_MAT = "noise_post"
 DARK_BARRIER_RAILS = ((0.08, 0.20), (0.25, 0.37))     # WORKING_VALUE: closes the 0.44 m under the W-beam to 5-8 cm slots
 GUARDRAIL_DEDUP_M = 1.0     # ADR 0100 (REVIEW s10-0095 P1-10): a run within this of an already built rail is not built twice

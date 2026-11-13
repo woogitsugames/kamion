@@ -23,12 +23,12 @@ pytestmark = pytest.mark.unit
 
 
 class _Lin(FU.Lin):
-    def __init__(self):
-        super().__init__(MeshBuf(), lambda e, n: np.zeros(len(np.atleast_1d(e))))
+    def __init__(self, z0=0.0):
+        super().__init__(MeshBuf(), lambda e, n: np.full(len(np.atleast_1d(e)), z0))
 
 
-def _rail(n, **kw):
-    lin = _Lin()
+def _rail(n, ground=10.0, **kw):
+    lin = _Lin(ground)
     P = np.column_stack([np.arange(n, dtype=float), np.zeros(n)])
     FU.guardrail(lin, P, np.full(n, 10.0), kw.pop("key", "c:test:R:embankment"), **kw)
     return lin.buf.parts
@@ -48,6 +48,20 @@ def test_short_run_gets_short_terminals_instead_of_ends_in_the_air():
     assert np.isclose(z.max(), S.GUARDRAIL_H)
     assert np.isclose((ends[:, 2] - 10.0).max(), S.GUARDRAIL_TERMINAL_END_TOP)
     assert (ends[:, 2] - 10.0).min() < 0.0                      # the section at the end is sunk below the foot line
+
+
+def test_terminal_follows_ground_that_lies_lower_than_the_foot_line():
+    """482392: a run on a kerb whose verge falls away - the terminal end goes down with the ground (capped)."""
+    def end_top(ground):
+        b = _beam(_rail(30, ground=ground, term=(True, True)))[0]
+        e = b.V[b.V[:, 0] < 0.5]
+        return float(e[:, 2].max())
+    assert np.isclose(end_top(10.0), 10.0 + S.GUARDRAIL_TERMINAL_END_TOP)
+    assert np.isclose(end_top(9.6), 9.6 + S.GUARDRAIL_TERMINAL_END_TOP)
+    assert np.isclose(end_top(5.0), 10.0 - FU.TERMINAL_GROUND_DROP_M + S.GUARDRAIL_TERMINAL_END_TOP)   # capped
+    # the full-height part of the run is not lowered
+    b = _beam(_rail(30, ground=9.6, term=(True, True)))[0]
+    assert np.isclose(b.V[:, 2].max(), 10.0 + S.GUARDRAIL_H)
 
 
 def test_dense_ground_posts_every_two_metres():
