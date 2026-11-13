@@ -66,7 +66,8 @@ def test_post_dimensions():
     r = np.hypot(V[:, 0], V[:, 1]).max()
     assert r == pytest.approx(CB.POST_D_M / 2, abs=1e-9)
     assert 0.06 <= CB.POST_D_M <= 0.11                              # task range for the tube
-    assert 0.8 <= CB.POST_H_M <= 1.0
+    assert 0.6 <= CB.POST_H_M <= 0.8                                # U-12c (research row M50-043)
+    assert CB.BAY_M == pytest.approx(2.0 * CB.POST_H_M)             # P11-063: bay = 2.0 post heights
     assert V[:, 2].max() == pytest.approx(CB.POST_H_M + CB.CAP_RISE_M)
     assert V[:, 2].min() < 0                                        # buried foot: no gap on uneven paving
     assert [b[2] for b in CB.BANDS] == [False, True, False, True, False]      # white at the ground and at the top
@@ -90,7 +91,7 @@ def test_chains_hang_from_the_eyelets_and_reach_the_next_post(lod):
     assert chain[:, 0].max() == pytest.approx(CB.BAY_M - CB.POST_D_M / 2 - CB.EYELET_M[0] + 0.002, abs=0.02)
     assert chain[:, 2].max() == pytest.approx(CB.CHAIN_Z_M[0], abs=0.02)
     lowest = CB.CHAIN_Z_M[1] - CB.CHAIN_SAG_M[1]
-    assert chain[:, 2].min() == pytest.approx(lowest, abs=0.02) and lowest > 0.25      # clear of the ground
+    assert chain[:, 2].min() == pytest.approx(lowest, abs=0.02) and lowest > 0.20      # clear of the ground
     mid = chain[np.abs(chain[:, 0] - CB.BAY_M / 2) < 0.02]
     assert mid[:, 2].max() == pytest.approx(CB.CHAIN_Z_M[0] - CB.CHAIN_SAG_M[0], abs=0.02)
 
@@ -136,7 +137,7 @@ def test_material_and_export_wiring():
 # ---------------------------------------------------------------------------------------------- rows
 def test_walk_keeps_every_bay_at_bay_length_on_the_line():
     from shapely.geometry import LineString, Point
-    P = [[0, 0], [7.3, 0], [9.0, 4.0], [9.0, 11.0]]
+    P = [[0, 0], [7.3, 0], [9.0, 4.0], [9.0, 11.3]]
     Q = CB.walk(P)
     d = np.hypot(*np.diff(Q, axis=0).T)
     assert np.allclose(d, CB.BAY_M)
@@ -146,26 +147,27 @@ def test_walk_keeps_every_bay_at_bay_length_on_the_line():
     assert np.allclose(Q[0], P[0])
 
 
-@pytest.mark.parametrize("length,posts", [(0.4, 2), (2.0, 2), (2.9, 2), (3.1, 3), (14.0, 8)])
-def test_walk_rounds_the_row_to_whole_bays(length, posts):
-    assert len(CB.walk([[0, 0], [length, 0]])) == posts
+@pytest.mark.parametrize("bays,posts", [(0.2, 2), (1.0, 2), (1.45, 2), (1.55, 3), (7.0, 8)])
+def test_walk_rounds_the_row_to_whole_bays(bays, posts):
+    assert len(CB.walk([[0, 0], [bays * CB.BAY_M, 0]])) == posts
 
 
 def test_apply_places_bays_and_a_closing_post():
-    o = {"id": "row", "kind": "chain_bollards", "line_epsg2180": [[100.0, 200.0], [100.0, 206.0]]}
+    o = {"id": "row", "kind": "chain_bollards", "line_epsg2180": [[100.0, 200.0], [100.0, 200.0 + 3 * CB.BAY_M]]}
     pl, rep = _Placer(), {}
     CB.apply(pl, [o, {"id": "x", "kind": "depot_yard"}], (100.0, 200.0), rep)
     assert [i["p"] for i in pl.items] == [CB.PROTO_BAY] * 3 + [CB.PROTO_POST]
-    assert [(i["e"], i["n"]) for i in pl.items] == [(0.0, 0.0), (0.0, 2.0), (0.0, 4.0), (0.0, 6.0)]
+    assert np.allclose([(i["e"], i["n"]) for i in pl.items], [(0.0, k * CB.BAY_M) for k in range(4)])
     assert all(i["yaw"] == pytest.approx(math.pi / 2) for i in pl.items)   # local +x (the chain) points north
     assert pl.items[0]["src"] == "override:row:0:0"
     assert rep["chain_bollards"]["applied"] == [
-        {"id": "row", "line": 0, "posts": 4, "bays": 3, "length_m": 6.0, "end_shift_m": 0.0, "max_step_m": 0.0}]
+        {"id": "row", "line": 0, "posts": 4, "bays": 3, "length_m": round(3 * CB.BAY_M, 2), "end_shift_m": 0.0, "max_step_m": 0.0}]
 
 
 def test_apply_lines_posts_only_step_and_stale():
+    B = CB.BAY_M
     ov = [{"id": "two", "kind": "chain_bollards", "chain": False,
-           "lines": [{"line_epsg2180": [[0, 0], [4, 0]]}, {"line_epsg2180": [[0, 5], [3, 5]]}]},
+           "lines": [{"line_epsg2180": [[0, 0], [2 * B, 0]]}, {"line_epsg2180": [[0, 5], [1.5 * B, 5]]}]},
           {"id": "bad", "kind": "chain_bollards", "line_epsg2180": [[1.0, 1.0]]},
           {"id": "none", "kind": "chain_bollards"}]
     pl, rep = _Placer(), {}
@@ -173,8 +175,8 @@ def test_apply_lines_posts_only_step_and_stale():
     assert {i["p"] for i in pl.items} == {CB.PROTO_POST} and len(pl.items) == 3 + 3
     r = rep["chain_bollards"]
     assert [a["bays"] for a in r["applied"]] == [0, 0]
-    assert r["applied"][0]["max_step_m"] == pytest.approx(0.1)      # 5 % ground x 2 m bay
-    assert r["applied"][1]["end_shift_m"] == pytest.approx(1.0)     # 3 m line -> 2 bays, 1 m past the end
+    assert r["applied"][0]["max_step_m"] == pytest.approx(0.05 * B)  # 5 % ground x one bay
+    assert r["applied"][1]["end_shift_m"] == pytest.approx(0.5 * B)   # 1.5 bays of line -> 2 bays, half a bay past the end
     assert len(r["stale"]) == 2 and r["stale"][0].startswith("bad:0") and r["stale"][1].startswith("none")
 
 

@@ -20,8 +20,9 @@ Placement: override `kind: chain_bollards` in Data/Regions/<id>/overrides.yaml (
 The row is walked from its first point with posts exactly BAY_M apart (chord), all on the authored line; the last post
 may pass the end of the line by less than BAY_M / 2 (the mesh of a bay has one length). A gap = two rows.
 
-Dimensions: nothing in research G5 (ZDM standard 2018) covers this post, so every number below is WORKING_VALUE read
-from P11-063 (proportions against the post height) or a common tube / chain class, and says so.
+Dimensions: the height comes from the U-12c row of research p9 (M50-043); the Białystok documents of research G5 do
+not cover this post, so everything else is WORKING_VALUE read from P11-063 as a proportion of the post height, or a
+common tube / chain class, and says so.
 """
 
 from __future__ import annotations
@@ -41,23 +42,28 @@ PROTO_BAY = "bollard_rw_chain"
 PROTO_POST = "bollard_rw"
 
 # ------------------------------------------------------------------------------------------------ dimensions
-POST_D_M = 0.0603       # WORKING_VALUE: the galvanised Ø60.3 mm tube of the ZDM U-12a posts (research G5-010); P11-063
-#                         shows a post ~1/16 of its height wide (4-5 px of 72) = 0.06 m, no closer reading possible
-POST_H_M = 1.00         # WORKING_VALUE: height above the paving. P11-063 has no object of known size at the row; the
-#                         bay / height ratio below is measured, the absolute scale is not
+POST_D_M = 0.0603       # WORKING_VALUE: the galvanised Ø60.3 mm tube of the ZDM U-12a posts (research G5-010). P11-063:
+#                         the post is 4-5 px wide and 75 px tall = 5-7 % of its height (0.045-0.055 m at 0.80 m)
+POST_H_M = 0.80         # Blocking posts U-12c are 0.6-0.8 m high, red-white (research/mistral/p9-furniture-3/manifest.csv
+#                         row M50-043, quoting Dz.U. 2019 poz. 2311, zał. 4, p. 847; the act itself was not re-read
+#                         here). P11-063 fits the upper bound: the nearest post is 75 px tall at f = 1230 px (ASSUMED,
+#                         ~66 deg across 1600 px) -> 13.1 m away for 0.80 m; the east kerb of the NW-bound carriageway
+#                         of ul. Mickiewicza is 13.5-15 m from the photo position on the GUGiK 2024 orthophoto (the
+#                         position itself is good to a few metres). 0.90 m fits equally well: WORKING_VALUE
 POST_BURIED_M = 0.15    # mesh below the origin (uneven ground), not the real foundation depth
-CAP_RISE_M = 0.012      # shallow domed cap, WORKING_VALUE
-BAY_M = 2.00            # WORKING_VALUE: P11-063, four posts at x 630 / 750 / 858 / 965 px, 75 -> 63 px tall; with a
-#                         phone lens of ~66 deg across 1600 px (f = 1230 px, ASSUMED) the row is 16-20 m away and
-#                         3 bays measure 5.9 m -> 1.98 m per bay. Bay / post height = 2.0 holds for any focal length
-#                         within +-10 %
-# bands from the ground up (z0, z1, red?) - P11-063, post 2 of the crop at 4x: white 30 px, red 60, white 70, red 60,
-# white 60 of 280 px from the top
-BANDS = ((0.00, 0.22, False), (0.22, 0.43, True), (0.43, 0.68, False), (0.68, 0.89, True), (0.89, 1.00, False))
-CHAIN_Z_M = (0.94, 0.46)   # eyelet heights of the upper / lower chain (P11-063: 0.95 and 0.46 of the post), WORKING_VALUE
-CHAIN_SAG_M = (0.18, 0.16)  # mid-span sag (P11-063: 50 and 45 px of a 280 px post), WORKING_VALUE
+CAP_RISE_M = 0.010      # shallow domed cap, WORKING_VALUE
+BAY_M = 1.60            # WORKING_VALUE = 2.0 x post height. P11-063: posts at x 630 / 750 / 858 / 965 px, 75 -> 63 px
+#                         tall; three bays measure 5.9 post heights whatever the focal length (+-10 %)
+# bands as fractions of the post height from the ground up (z0, z1, red?) - P11-063, post 2 of the crop at 4x, from
+# the top: white 30 px, red 60, white 70, red 60, white 60 of 280 px
+BANDS = tuple((round(a * POST_H_M, 4), round(b * POST_H_M, 4), r) for a, b, r in
+              ((0.00, 0.22, False), (0.22, 0.43, True), (0.43, 0.68, False), (0.68, 0.89, True), (0.89, 1.00, False)))
+# eyelet heights of the upper / lower chain and their mid-span sag, P11-063: 0.94 / 0.46 and 0.18 / 0.16 of the post
+# height (50 and 45 px of a 280 px post). WORKING_VALUE
+CHAIN_Z_M = (round(0.94 * POST_H_M, 3), round(0.46 * POST_H_M, 3))
+CHAIN_SAG_M = (round(0.18 * POST_H_M, 3), round(0.16 * POST_H_M, 3))
 # Chain: 6 mm long-link steel chain class, pitch 42 mm, outer width 24 mm. UNVERIFIED (catalogue values from memory,
-# no document in the repository); in the photo the chain is 1-2 px wide, which only bounds it to 2-4 cm.
+# no document in the repository); in the photo the chain is 1-2 px wide, which only bounds it to 1-3 cm.
 LINK_WIRE_M = 0.006
 LINK_PITCH_M = 0.042
 LINK_W_M = 0.024
@@ -182,7 +188,7 @@ def _post_texture(rng, w, h):
     ang = ((np.arange(w) + 0.5) / w * 2 * math.pi)[None, :]
     white, red = np.array(WHITE_SRGB, float), np.array(RED_SRGB, float)
     # foil edges are cut by hand: each band boundary wanders a few mm around the post
-    wob = 0.004 * np.sin(ang * 2 + 1.3) + 0.0025 * np.sin(ang * 5 + 0.4)
+    wob = 0.0025 * np.sin(ang * 2 + 1.3) + 0.0012 * np.sin(ang * 5 + 0.4)
     is_red = np.zeros((h, w), bool)
     for k, (z0, z1, r) in enumerate(BANDS):
         if r:
@@ -191,16 +197,16 @@ def _post_texture(rng, w, h):
     rgb = rgb * (1 + 0.025 * _noise(rng, (h, w), 1.2))[..., None]
     rgb = rgb * (1 + 0.05 * np.cos(ang - 2.2))[..., None]                   # one side bleached by the sun
     # road film at the foot, heavier on one side (splash comes from the carriageway side)
-    film = np.clip(1 - z / 0.22, 0, 1) ** 1.5 * (0.5 + 0.5 * np.sin(ang / 2 + 0.6) ** 2) * 0.6
+    film = np.clip(1 - z / 0.20, 0, 1) ** 1.5 * (0.5 + 0.5 * np.sin(ang / 2 + 0.6) ** 2) * 0.6
     film = film * np.clip(1 + 0.35 * _noise(rng, (h, w), 3.0), 0.3, 1.5)
     rgb = rgb * (1 - film[..., None]) + np.array(FILM_SRGB, float) * film[..., None]
     # chips down to the zinc: bumper height and the foil edges, not all over
     steel = np.array(STEEL_SRGB, float)
     edges = [b[0] for b in BANDS[1:]]
-    for k in range(16):
-        zc = rng.choice(edges) + rng.normal(0, 0.012) if k < 9 else rng.uniform(0.30, 0.62)
+    for k in range(11):
+        zc = rng.choice(edges) + rng.normal(0, 0.012) if k < 6 else rng.uniform(0.28, 0.60)
         ac = rng.uniform(0, 2 * math.pi)
-        rz, ra = rng.uniform(0.002, 0.007), rng.uniform(0.05, 0.22)
+        rz, ra = rng.uniform(0.0015, 0.009), rng.uniform(0.03, 0.12)       # short vertical scrapes, not dots
         da = np.abs((ang - ac + math.pi) % (2 * math.pi) - math.pi)
         mk = np.clip(1.4 - np.sqrt(((z - zc) / rz) ** 2 + (da / ra) ** 2), 0, 1)
         mk = np.clip(mk * 3, 0, 1)[..., None]
