@@ -2354,6 +2354,8 @@ overrides:
       frontage:
         wall: plaster_blue
         glass_lod1: hall_flashing
+        # ADR 0171: white double-window frames (photo) on both LODs; LOD1 in plaster_grey (drawn by chunk 6_7 already)
+        frame: {material: window_frame, material_lod1: plaster_grey, width_m: 0.12}
         plinth_m: 0.5
         fascia: {material: hall_flashing, height_m: 0.35}
         glazing:
@@ -2402,12 +2404,15 @@ overrides:
     verify: owner photo session item 6 (Kwadrat Park lane)
     set:
       frontage:
-        wall: hall_plinth
+        # ADR 0171 (review s17-0167 P1): hall_plinth read beige-grey on the sunlit side wall -> plaster_slate_blue;
+        # the upper floor is a row of separate windows (1.5 m, gaps 1.5 m), not a continuous band
+        wall: plaster_slate_blue
         glass_lod1: hall_flashing
         fascia: {material: hall_flashing, height_m: 0.5}
         glazing:
           - {facing: NW, span: [0.0, 1.0], z: [0.3, 3.2], pitch_m: 2.4, transom_m: 2.4, min_len_m: 20.0}
-          - {facing: [NW, SW], span: [0.0, 1.0], z: [4.9, 6.3], pitch_m: 1.5, min_len_m: 10.0, margin_m: 1.2}
+          - {facing: [NW, SW], span: [0.0, 1.0], z: [4.9, 6.3], pitch_m: 1.5, min_len_m: 10.0, margin_m: 1.2,
+             window_m: [1.5, 1.5]}
   - id: g3a-office-tower-colour
     target: {building: "bdot:2BE4B431-CA0F-1BF0-E053-CC2BA8C0D140"}
     reason: >-
@@ -2416,7 +2421,20 @@ overrides:
       show a pale yellow render. Nearest material of the office set (far-facade variant exists).
     confidence: medium
     verify: owner photo session item 6 (Kwadrat Park lane)
-    set: {wall_material: plaster_beige}
+    # ADR 0171: `ribbon: false` - the hashed ribbon-window variant drew grey spandrel rows over the whole facade on
+    # LOD1 (render (175,175,165) before and after the colour override); the photos show punched windows in a pale
+    # yellow wall. plaster_beige__far_office is drawn by chunk 6_6 already.
+    set: {wall_material: plaster_beige, ribbon: false, bands: false}
+  - id: g3a-small-office-no-band
+    target: {building: "bdot:2BE4B431-C926-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      ADR 0171 draw budget, not a photo finding: after the tower lost its hashed spandrel bands this small office
+      was the only user of plaster_band_grey in chunk 6_6 (8 triangles on LOD0 = one draw plus its shadow draw in
+      the gate-3 cameras). The band itself was a hashed pick (40 % of punched-window offices), so one wall tone is
+      as likely; no open photo shows this facade. WORKING_VALUE.
+    confidence: low
+    verify: owner photo session item 6 (Kwadrat Park lane)
+    set: {bands: false}
   - id: g3a-ec-round-tanks
     target: {building: "osm:way/264944879"}
     reason: >-

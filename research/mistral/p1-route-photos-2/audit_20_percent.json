@@ -1,0 +1,95 @@
+{
+  "opis": "Samokontrola 20% paczki P1B po poprawkach M46-FIX: losowo wybrane 10 z 48 wierszy manifest.csv (20,8%). Dla każdego wylosowanego wiersza: zdanie co widać na obrazie (weryfikacja obrazu modelem wizyjnym w sesji 2026-11-13), przypisanie do ulicy wg reguły (dystans do osi way OSM ≤25 m ORAZ |azymut kamery − azymut odcinka| (mod 180°) ≤30°, wybór najbliższej/better współliniowej osi) i delta azymutu. Sprawdzano PRZYPISANIE i TREŚĆ ZDJĘCIA, nie tylko zgodność metadanych z API.",
+  "data": "2026-11-13",
+  "seed": 20261114,
+  "metoda_losowania": "jawny seed 20261114; LCG x=(x*1103515245+12345) mod 2^31; tasowanie Fisher-Yates na indeksach 0..47; pierwsze 10 wierszy z 48",
+  "reguła_przypisania": "kadr należy do ulicy X tylko gdy odległość do osi way X ≤ 25 m ORAZ |azymut kamery − kierunek odcinka X| (mod 180°) ≤ 30°; jeśli bliżej (lub lepiej współliniowa) jest inna ulica — przypisanie do niej; kadry Commons bez azymutu EXIF: przypisanie wyłącznie po odległości, delta=UNVERIFIED; uwzględniono poziomy (ring ronda leży pod estakadą Andersa — reguła 2D nie odróżnia wysokości)",
+  "wylosowane_wiersze": [
+    "P1B-005", "P1B-015", "P1B-019", "P1B-038", "P1B-023",
+    "P1B-035", "P1B-003", "P1B-010", "P1B-013", "P1B-034"
+  ],
+  "wyniki": [
+    {
+      "id": "P1B-003",
+      "co_widać": "Dwujezdniowa arteria (pas rozdzielony barierą) przy wlocie bocznej ulicy; słupy wysokiego napięcia, drogowskazy z nazwami miejscowości, limit 70.",
+      "ulica_z_OSM": "Generała Władysława Andersa (way 560802661, trunk)",
+      "dystans_do_osi_m": 1.6,
+      "delta_azymutu_deg": 1.1,
+      "przypisanie": "PASS — obraz pokazuje arterię Andersa, nie wlot Batorego (Batorego 12–21 m, Δ~75° — poza regułą)"
+    },
+    {
+      "id": "P1B-005",
+      "co_widać": "Ulica przy blokach mieszkalnych; zaparkowany niebieski samochód, drzewa bez liści; silne rozmycie ruchu (kadr z okna jadącego pojazdu).",
+      "ulica_z_OSM": "Olsztyńska (way 363758822, residential)",
+      "dystans_do_osi_m": 21.1,
+      "delta_azymutu_deg": "UNVERIFIED (Commons bez EXIF GPSImgDirection — przypisanie po odległości)",
+      "przypisanie": "PASS — przypisanie po odległości ≤25 m zgodne; jakość obniżona do 2 (M46-FIX: silne rozmycie ruchu)"
+    },
+    {
+      "id": "P1B-010",
+      "co_widać": "Jezdnia estakady z metalowymi barierami po obu stronach i podwójnymi latarniami; nie widać ronda ani ringu (ring leży pod estakadą).",
+      "ulica_z_OSM": "Generała Władysława Andersa — estakada nad rondem (way 177895177, trunk, bridge=viaduct)",
+      "dystans_do_osi_m": 5.1,
+      "delta_azymutu_deg": 1.0,
+      "przypisanie": "PASS — M46-FIX: kadr jest na estakadzie Andersa, nie na wlocie ronda (poprzedni opis wycofany)"
+    },
+    {
+      "id": "P1B-013",
+      "co_widać": "Jezdnia estakady z barierami i latarniami; pojazdy w kadrze, w tle konstrukcja wiaduktu/estakady; ringu nie widać.",
+      "ulica_z_OSM": "Generała Władysława Andersa — estakada nad rondem (way 177895177)",
+      "dystans_do_osi_m": 5.6,
+      "delta_azymutu_deg": 0.6,
+      "przypisanie": "PASS — kandydat ring (12,4 m, Δ 9,6°) odpada jako dalszy; poprzedni opis „jezdnia ronda” nieprawdziwy"
+    },
+    {
+      "id": "P1B-015",
+      "co_widać": "Jezdnia estakady z barierami; po lewej słup linii energetycznej, zieleń w tle; ringu nie widać.",
+      "ulica_z_OSM": "Generała Władysława Andersa — estakada nad rondem (way 177895177)",
+      "dystans_do_osi_m": 2.6,
+      "delta_azymutu_deg": 0.3,
+      "przypisanie": "PASS — weryfikacja obrazu potwierdza estakadę, nie „wylot Andersa w NW”"
+    },
+    {
+      "id": "P1B-019",
+      "co_widać": "Dojazd do łukowego wiaduktu kolejowego z 1955 r. — drogowskazy „Centrum”, „676 Supraśl”, „Wysokie Maz.”, znaki pod wiaduktem.",
+      "ulica_z_OSM": "Aleja Tysiąclecia Państwa Polskiego (way 946729190, secondary)",
+      "dystans_do_osi_m": 0.1,
+      "delta_azymutu_deg": 1.4,
+      "przypisanie": "PASS — M46-FIX: kadr z Al. Tysiąclecia, nie z ul. Białostoczek (Białostoczek Δ~71° — poza regułą)"
+    },
+    {
+      "id": "P1B-023",
+      "co_widać": "Skrzyżowanie z sygnalizacją; po lewej stacja paliw Circle K z tablicami cen, billboard INTERIA.PL, zatoka autobusowa.",
+      "ulica_z_OSM": "Aleja Tysiąclecia Państwa Polskiego (way 236107504, secondary)",
+      "dystans_do_osi_m": 3.4,
+      "delta_azymutu_deg": 3.5,
+      "przypisanie": "PASS — M46-FIX: kadr z Al. Tysiąclecia (kierowca mija wlot Kombatantów), nie z ul. Kombatantów (Δ~85° — poza regułą)"
+    },
+    {
+      "id": "P1B-034",
+      "co_widać": "Rondo pod estakadą/wiaduktem widziane z chodnika przy przejściu; budynki przemysłowe w tle, osoba w kadrzie, jesienne liście na krzewach.",
+      "ulica_z_OSM": "niewskazana wg reguły (brak azymutu EXIF); najbliższe osie: łącznica Andersa SE (way 177895172, 10,6 m) i ring ronda (way 177895161, 13,9 m)",
+      "dystans_do_osi_m": 10.6,
+      "delta_azymutu_deg": "UNVERIFIED (Commons bez EXIF GPSImgDirection)",
+      "przypisanie": "PASS z zastrzeżeniem — status DUPLIKAT_P1 (= P1-004); obraz potwierdza rondo pod wiaduktem (przydatna referencja, ale plik już w P1)"
+    },
+    {
+      "id": "P1B-035",
+      "co_widać": "Fragment elewacji budynku z oknem, tabliczką „1” i rynną — bez perspektywy ulicy; wartość referencyjna ograniczona.",
+      "ulica_z_OSM": "Sitarska (way 238709156, tertiary)",
+      "dystans_do_osi_m": 2.5,
+      "delta_azymutu_deg": "UNVERIFIED (Commons bez EXIF GPSImgDirection)",
+      "przypisanie": "PASS — status REFERENCJA; lokalizacja potwierdzona EXIF i nazwą pliku"
+    },
+    {
+      "id": "P1B-038",
+      "co_widać": "Jezdnia wielopasmowej arterii; autobus komunikacji miejskiej (130/15) w kadrze, bloki mieszkalne w tle, mokra jezdnia.",
+      "ulica_z_OSM": "Aleja Tysiąclecia Państwa Polskiego (way 946729183, secondary)",
+      "dystans_do_osi_m": 5.8,
+      "delta_azymutu_deg": 0.1,
+      "przypisanie": "PASS — M46-FIX: kadr z Al. Tysiąclecia, nie z Grodzieńskiej (Grodzieńska Δ~88° — poza regułą); status ODRZUCONE (nie wypełnia luki sezonu)"
+    }
+  ],
+  "podsumowanie": "Przypisanie do ulicy i treść obrazu: 10/10 PASS (w tym 4 wiersze z korektą M46-FIX potwierdzoną obrazem: 010/013 estakada, 019 Al. Tysiąclecia, 038 Al. Tysiąclecia). Wszystkie 10 wylosowanych obrazów obejrzano modelem wizyjnym w tej sesji; żaden wiersz nie wymagał korekty po audycie. Zgodność metadanych z API źródeł sprawdzono dodatkowo przy pobieraniu (wszystkie 38 kadrów KV + 10 Commons: lat/lon/azymut/data/autor zgodne).",
+  "uwagi": "P1B-016 i P1B-043 mają obrazy trwale niedostępne (Azure BlobNotFound, sprawdzono CDN i storage1–5) — nie brały udziału w losowaniu obrazu; P1B-048 (nowy, KV 7119871) obejrzano i oceniono jako REFERENCJA wg decyzji lidera."
+}

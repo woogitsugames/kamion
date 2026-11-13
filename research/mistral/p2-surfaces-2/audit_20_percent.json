@@ -1,0 +1,292 @@
+{
+  "paczka": "research/mistral/p2-surfaces-2",
+  "typ": "samokontrola 20% — runda M52-FIX r2 (oględziny renderu Dz.U. po przeglądzie s17)",
+  "data": "2026-11-13",
+  "seed": 20261113,
+  "generator": "python3: random.Random(20261113).sample(ids, 24) — ten sam seed i próba co r1",
+  "populacja": {
+    "liczba_rekordow": 117,
+    "zakres": "M52-001…M52-117"
+  },
+  "proba": {
+    "liczba": 24,
+    "id": [
+      "M52-002",
+      "M52-003",
+      "M52-004",
+      "M52-007",
+      "M52-009",
+      "M52-013",
+      "M52-015",
+      "M52-017",
+      "M52-023",
+      "M52-039",
+      "M52-040",
+      "M52-047",
+      "M52-051",
+      "M52-059",
+      "M52-064",
+      "M52-066",
+      "M52-071",
+      "M52-077",
+      "M52-082",
+      "M52-084",
+      "M52-105",
+      "M52-107",
+      "M52-111",
+      "M52-114"
+    ]
+  },
+  "kryteria": [
+    "wiersze z rysunków: wklejony odczyt etykiety/podpisu z oględzin r2 (render 150 dpi + rastry natywne ×3; PyMuPDF niedostępny — własny parser PDF) + weryfikacja pikselowa proporcji",
+    "kadry: zdanie „co widać” (opis z przeglądu s17) albo jawne „nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U.” + podstawy przypisania",
+    "wiersze tekstowe: weryfikacja źródłem",
+    "schemat manifestu: 17 kolumn (kolor_srgb/metoda_koloru usunięte w r2 — zad. 4)"
+  ],
+  "wyniki": [
+    {
+      "id": "M52-002",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„0,24” przy wymiarówce = szerokość linii P-2b; podpis dolny „0,24 m²/mb” = ZUŻYCIE FARBY",
+      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny): potwierdzone na obrazie; pomiar pikselowy: 61 px = 2×27 px linii P-2a (spójna skala rysunku); arytmetyka 0,24×1 mb ✓; walidacja P-7a/b 0,24 (str. 545)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-003",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„0,12” ×3 (szerokości linii górnej/dolnej + kreski linii przerywanej); na rys. także „4,00” (kreska) i „2,00” (przerwa)",
+      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; pomiar: kreska 512 px : przerwa 260 px = 2:1 ✓; podpis „0,20 m²/mb” = 0,12+0,12×4/6 ✓",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-004",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„0,12” = odstęp między liniami P-3a (osie 0,24 m)",
+      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; podpis figury „0,20 m²/mb” spójny arytmetycznie (0,12+0,12×4/6)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-007",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„0,12” ×3 + „1,00” + „1,00” (NOWE w r2: kreska/przerwa linii przerywanej P-3b); podpis „0,18 m²/mb”",
+      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny): etykiety „1,00”/„1,00” odczytane po raz pierwszy; pomiar pikselowy kreska 125 px : przerwa 130 px ≈ 1:1 ✓; uzasadnia podpis 0,18 = 0,12+0,12×(1/2)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-009",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„0,12” ×3: 2 linie ciągłe 0,12+0,12 i odstęp (kanał) 0,12; podpis „0,24 m²/mb”",
+      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; kanały 27/33/27 px; arytmetyka 0,24 = 2×0,12 ✓",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-013",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„0,12” = szerokość linii P-6",
+      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; pomiar 27 px — ta sama skala rysunku co P-2a",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-015",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„2,00” (etykieta pionowa, rot −90°) = przerwa linii przerywanej P-6",
+      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; pomiar: kreska 512 px : przerwa 260 px = 2:1 ✓ spójne z etykietami 4,00/2,00; podpis „0,08 m²/mb” = 0,12×4/6 ✓",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-017",
+      "typ": "rysunkowy",
+      "odczyt_etykiety": "„0,5” przy strzałce wymiarowej = szerokość linii P-12 (0,50 m); podpis dolny „0,5 m²/mb” = ZUŻYCIE",
+      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny): etykieta JEST na rys. 4.2.3.1 — rozstrzyga pozycję „do potwierdzenia oględziną” z r1; arytmetyka 0,50×1 mb = 0,5 m²/mb ✓; tekst s. 572: linia ≥1,5 m od skrajnej szyny",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-023",
+      "typ": "tekstowy",
+      "weryfikacja": "tekst s. 573: odległości umiejscowienia P-14 — 2,0 / 0,5 / 8,0 / 2,0 / 1,5 / 2,0 / 0,5 m",
+      "zrodlo": "tekst rozporządzenia (Dz.U. 2019 poz. 2311, zał. 2, pkt 4.2.5); r2: etykiety rys. 0,75/0,25/0,5 potwierdzają geometrię prostokąta (0,75×0,50 = 0,375 m²/szt. podpisu ✓)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-039",
+      "typ": "kadr",
+      "co_widac": "kadry Jaroszówki: jezdnia estakady Andersa nad rondem Pamięci Bieżeństwa z barierami mostowymi (wg przeglądu s17 i przebiegu sekwencji)",
+      "identyfikacja": "jar-11 — sekwencja estakadowa (KartaView, azymut wzdłuż osi wiaduktu DK19)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-040",
+      "typ": "kadr",
+      "co_widac": "Jezdnia estakady gen. Władysława Andersa nad rondem Pamięci Bieżeństwa; w kadrze bariery mostowe wiaduktu, latarnie dwuramienne, w tle kominy EC (opis z przeglądu s17 — jar-12/M52-040)",
+      "identyfikacja": "jar-12 — POTWIERDZONY WIZUALNIE przeglądem s17",
+      "oględziny": "opis z przeglądu s17",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-047",
+      "typ": "kadr",
+      "co_widac": "j.w. — przypisanie po przebiegu sekwencji; nie obejrzano w r2 (limit analiz obrazu)",
+      "identyfikacja": "jar-19 — sekwencja estakadowa (azymut ~300°, pozycja na osi wiaduktu)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-051",
+      "typ": "kadr",
+      "co_widac": "j.w. — przypisanie po przebiegu sekwencji; nie obejrzano w r2 (limit analiz obrazu)",
+      "identyfikacja": "jar-23 — sekwencja estakadowa (azymut ~302°)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-059",
+      "typ": "kadr",
+      "co_widac": "nie obejrzano w r2 — limit analiz obrazu; podstawy przypisania: pozycja WGS84 + azymut + metadane sekwencji KartaView; kolor nawierzchni: UNVERIFIED (kolumny kolor_srgb usunięte)",
+      "identyfikacja": "kadr trasy startowej (Andersa/Al. Tysiąclecia — pozycja przy jezdni DK19)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-064",
+      "typ": "kadr",
+      "co_widac": "j.w.",
+      "identyfikacja": "kadr trasy startowej (Al. Tysiąclecia)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-066",
+      "typ": "kadr",
+      "co_widac": "j.w.",
+      "identyfikacja": "kadr trasy startowej (Sokólska/okolice)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-071",
+      "typ": "kadr",
+      "co_widac": "ujęcie z estakady Andersa nad rondem (jar-03) — przypisanie po przebiegu sekwencji; nie obejrzano w r2 (limit analiz obrazu)",
+      "identyfikacja": "jar-03 — DUPLIKAT ujęcia z estakady (KartaView, sekwencja estakadowa)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-077",
+      "typ": "kadr",
+      "co_widac": "nie obejrzano w r2 — limit analiz obrazu; przypisanie po pozycji/azymucie; kolor: UNVERIFIED",
+      "identyfikacja": "kadr trasy startowej",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-082",
+      "typ": "kadr",
+      "co_widac": "j.w.",
+      "identyfikacja": "kadr trasy startowej (Sokólska)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-084",
+      "typ": "kadr",
+      "co_widac": "nie obejrzano w r2 — limit analiz obrazu; przypisanie po pozycji przy przejściu (OSM: crossing/tactile_paving — kontekst)",
+      "identyfikacja": "kadr przejścia dla pieszych (skrzyżowanie Al. Tysiąclecia/Sokólska)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-105",
+      "typ": "kadr",
+      "co_widac": "j.w.",
+      "identyfikacja": "kadr przejścia dla pieszych",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-107",
+      "typ": "kadr",
+      "co_widac": "nie obejrzano w r2 — limit analiz obrazu; źródło: Wikimedia Commons (CC0), pozycja placu; mediana RGB centralnych 30×40% kadru przeniesiona do uwag manifestu z adnotacją o niewiarygodności metodologicznej; nawierzchnia SOURCED (Tofiluk 2015: płyty granitowe + kostka)",
+      "identyfikacja": "zdjęcie Commons — Rynek Kościuszki (widok ogólny placu)",
+      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-111",
+      "typ": "tekstowy",
+      "weryfikacja": "porównanie PDF wytycznych ZDM 2018 vs „2018/2025” (BIP zasoby 99308/103311): oznaczenie wersji, tytuł sekcji rowerowej, nowe punkty 17/18/19/24/27–28, monitoring sieci, 21 vs 22 str.",
+      "zrodlo": "oba PDF porównane tekstowo w M52; cytaty (płytki, azyle, włazy) potwierdzone w przeglądzie s17 — bez zmian w r2",
+      "ok": true,
+      "problemy": []
+    },
+    {
+      "id": "M52-114",
+      "typ": "tekstowy",
+      "weryfikacja": "azyl: wytyczne ZDM 2025 (BIP 103311, str. 20) „Na wyspie dzielącej na środku jezdni należy wydzielić przejazd rowerowy”; OSM: 1 obiekt traffic_calming=island (Świętojańska)",
+      "zrodlo": "SOURCED (wytyczne) + OSM ODbL (kontekst); cytaty potwierdzone w przeglądzie s17 — bez zmian w r2",
+      "ok": true,
+      "problemy": []
+    }
+  ],
+  "podsumowanie": {
+    "sprawdzone": 24,
+    "problemy_formalne": 0,
+    "rozbior": {
+      "odczyty_etykiet_z_oględzin_r2": [
+        "M52-002",
+        "M52-003",
+        "M52-004",
+        "M52-007",
+        "M52-009",
+        "M52-013",
+        "M52-015",
+        "M52-017"
+      ],
+      "tekstowe": [
+        "M52-023",
+        "M52-111",
+        "M52-114"
+      ],
+      "kadry_z_opisem_s17": [
+        "M52-040"
+      ],
+      "kadry_nie_obejrzane_r2_deklaracja_jawna": [
+        "M52-039",
+        "M52-047",
+        "M52-051",
+        "M52-059",
+        "M52-064",
+        "M52-066",
+        "M52-071",
+        "M52-077",
+        "M52-082",
+        "M52-084",
+        "M52-105",
+        "M52-107"
+      ]
+    },
+    "notka": "Kadry nie zostały obejrzane w r2 (limit 20 analiz obrazu na odpowiedź wyczerpany na rysunkach Dz.U. — priorytet zad. 1); rysunki Dz.U. obejrzone kompletne (P-2a…P-25 z zakresu M52 + suplement P-10)."
+  }
+}

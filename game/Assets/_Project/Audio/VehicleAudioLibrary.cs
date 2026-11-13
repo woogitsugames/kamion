@@ -36,6 +36,19 @@ namespace TruckSim.Audio
         [Tooltip("ADR 0145: tyre scrub in tight slow turns (procedural placeholder, tools/audio/sfx_layers.tyre_scrub_loop).")]
         public PerspectivePair tyreScrub;
 
+        [Header("ADR 0176: synthesised driveline layers (tools/audio/synth0176.py; no free recording exists)")]
+        [Tooltip("Retarder rotor blade-pass tone and oil-flow loops at 1000 rpm propshaft (pitch = shaft rpm / 1000).")]
+        public PerspectivePair retarderTone, retarderFlow;
+        [Tooltip("Exhaust-flap engine brake: flap closes (engage) / back-pressure dump when it opens (release).")]
+        public PerspectivePair ebrakeEngage, ebrakeRelease;
+        [Tooltip("AMT shift phases: sleeve out (neutral), dog clutch in (two takes), clutch actuator vent.")]
+        public PerspectivePair amtDisengage, amtEngage, amtEngageB, amtClutchChuff;
+        [Tooltip("Air-dryer blow-down v2 (physical vessel blow-down envelope), two takes alternated.")]
+        public PerspectivePair airDryerPurgeV2, airDryerPurgeV2B;
+
+        /// <summary>The ADR 0176 layers are imported.</summary>
+        public bool HasDriveline0176 => retarderTone.IsValid && retarderFlow.IsValid && amtEngage.IsValid;
+
         [Header("ElevenLabs layers (ADR 0137; game/Assets/_Project/Audio/ElevenLabs/el_manifest.json)")]
         public EngineSoundBank elExteriorEngine, elCabEngine, elExteriorEngineBrake, elCabEngineBrake;
         public PerspectivePair elEngineStart, elEngineStop, elIdleClatter, elRetarder, elTurboWastegate;

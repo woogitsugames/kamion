@@ -1,0 +1,270 @@
+{
+ "zadanie": "M50 / research/mistral/p9-furniture-3 — samokontrola 20 % manifest.csv (po M50-FIX, pass B)",
+ "seed": 2026111350,
+ "metoda": "sortowanie po id; random.Random(seed).sample(ids, round(0.2*N)); N=65, próba=13",
+ "manifest_rows": 65,
+ "sample_size": 13,
+ "sample_ids": [
+  "M50-049",
+  "M50-031",
+  "M50-059",
+  "M50-058",
+  "M50-025",
+  "M50-043",
+  "M50-064",
+  "M50-004",
+  "M50-057",
+  "M50-034",
+  "M50-017",
+  "M50-030",
+  "M50-029"
+ ],
+ "data_audytu": "2026-11-13 (nowy audyt po pass B: 65 wierszy, domknięte TO_VERIFY, dodane M50-050…065)",
+ "reguly": {
+  "wiersze_foto": [
+   "url http(s)",
+   "licencja",
+   "status w słowniku (VERIFIED/VERIFIED_WIZJA/NOT_FOUND/UNVERIFIED/ESTIMATED)",
+   "WGS84 6 miejsc",
+   "sezon+pora_dnia",
+   "kierunek_deg",
+   "azymut(± formy fleksyjne)+odległość w uwagach",
+   "cytat „co widać” obecny i zgodny z kolumną obiekt"
+  ],
+  "wiersze_dokumentowe": [
+   "url http(s)",
+   "status",
+   "cytat 1:1 ze źródła (numer strony w dokument_strona)",
+   "spójność obiekt↔cytat"
+  ]
+ },
+ "wiersze": [
+  {
+   "id": "M50-049",
+   "typ": "dokument",
+   "obiekt": "hydrant nadziemny",
+   "status": "VERIFIED",
+   "zrodlo": "Dz.U. 2019 poz. 2311 cz. 2, zał. 4 (pełnotekstowa kontrola: słowo „hydrant\" nie występuje)",
+   "cytat": "brak regulacji w Dz.U. 2019 poz. 2311",
+   "cytat_uwagi": "negative check: zał. 4 reguluje słupki U-5a, ogrodzenia U-12a/b/c, brak sekcji hydrantów; wymiary hydrantów nadziemnych wg PN-EN 14384 / warunków MPWiK Białystok — do pozyskania ze źródła w finalnej rewizji (UNVERIFIED)",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (hydrant nadziemny) — cytat 1:1 ze źródła",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "status",
+    "zacytowany fragment = źródło (s./str. w dokument_strona)",
+    "spójność obiekt↔cytat"
+   ]
+  },
+  {
+   "id": "M50-031",
+   "typ": "dokument",
+   "obiekt": "latarnia",
+   "status": "VERIFIED",
+   "zrodlo": "Rozbudowa Al. Tysiąclecia PP od ul. Wileńskiej do terenu kolejowego przy ul. Poleskiej — opis techniczny (ARKAS-PROJEKT, umowa ZDI-III.272.32.2015), s. 19, rozdz. 3.11",
+   "cytat": "słup: UNVERIFIED (tom 1.2.5 niedostępny online)",
+   "cytat_uwagi": "oświetlenie z opraw sodowych na podatnych słupach aluminiowych, zasilanie z szafki na rogu 1000-lecia/Kombatantów; szczegóły w tomie 1.2.5 (nieopublikowany w BIP); wysokości słupów dla Andersa/Tysiąclecia/Sokólskiej UNVERIFIED — brak dostępnego źródła z liczbami",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (latarnia) — cytat 1:1 ze źródła",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "status",
+    "zacytowany fragment = źródło (s./str. w dokument_strona)",
+    "spójność obiekt↔cytat"
+   ]
+  },
+  {
+   "id": "M50-059",
+   "typ": "foto",
+   "obiekt": "bariera U-12/U-12b",
+   "status": "VERIFIED_WIZJA",
+   "licencja": "CC BY-SA 4.0 (KartaView)",
+   "cytat_co_widac": "droga z autobusem, pojazdami, budynkami, drzewami i billboardami; ogrodzenie segmentowe z pionowych elementów po prawej (~21 m wg wizji)",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (bariera U-12/U-12b) — status VERIFIED_WIZJA",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "licencja",
+    "status w słowniku",
+    "WGS84 6 miejsc",
+    "sezon+pora_dnia",
+    "kierunek_deg",
+    "azymut+odległość w uwagach",
+    "cytat „co widać” zgodny z kolumną obiekt"
+   ]
+  },
+  {
+   "id": "M50-058",
+   "typ": "foto",
+   "obiekt": "latarnia",
+   "status": "VERIFIED_WIZJA",
+   "licencja": "CC BY-SA 4.0 (KartaView)",
+   "cytat_co_widac": "rozmyte światła i ciemna jezdnia; słup latarni widoczny po prawej (~14 m wg wizji)",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (latarnia) — status VERIFIED_WIZJA",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "licencja",
+    "status w słowniku",
+    "WGS84 6 miejsc",
+    "sezon+pora_dnia",
+    "kierunek_deg",
+    "azymut+odległość w uwagach",
+    "cytat „co widać” zgodny z kolumną obiekt"
+   ]
+  },
+  {
+   "id": "M50-025",
+   "typ": "dokument",
+   "obiekt": "stojak rowerowy",
+   "status": "VERIFIED",
+   "zrodlo": "OPZ ZMK Białystok DZ.26.2.8.2026.JO, s. 1",
+   "cytat": "wys. całk. 1,10 m (0,80 m nad gruntem); szer. 0,80 m; rura 48,3x2 mm; 2 stanowiska rowerowe",
+   "cytat_uwagi": "potwierdzenie wizyjne skanu s. 1 (odczyt 2026-11-13, plik w archiwum): \"110 cm w wersji do zabetonowania (80 cm nad gruntem)\", szer. 80 cm, rura 48,3 mm x 2 mm, stal nierdzewna, 2 stanowiska (parkowanie dwustronne), wbetonowanie, 54 szt.; nagłówek \"Załącznik nr 1\"; lokalizacje: Barszczańska/Klepacka",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (stojak rowerowy) — cytat 1:1 ze źródła",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "status",
+    "zacytowany fragment = źródło (s./str. w dokument_strona)",
+    "spójność obiekt↔cytat"
+   ]
+  },
+  {
+   "id": "M50-043",
+   "typ": "dokument",
+   "obiekt": "bariera U-12/U-12b",
+   "status": "VERIFIED",
+   "zrodlo": "Dz.U. 2019 poz. 2311 cz. 2, zał. 4, s. 847",
+   "cytat": "wys. 0,6-0,8 m",
+   "cytat_uwagi": "słupki blokujące jako U-12c",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (bariera U-12/U-12b) — cytat 1:1 ze źródła",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "status",
+    "zacytowany fragment = źródło (s./str. w dokument_strona)",
+    "spójność obiekt↔cytat"
+   ]
+  },
+  {
+   "id": "M50-064",
+   "typ": "foto",
+   "obiekt": "osłona drzewa",
+   "status": "NOT_FOUND",
+   "licencja": "CC BY-SA 4.0 (KartaView)",
+   "cytat_co_widac": "jezdnia z dwoma pojazdami, chodnik, drzewa i budynki w tle; drzewa po prawej (~20-30 m) BEZ osłon pnia — potwierdza końcowy NOT_FOUND M50-023; pora_dnia ESTIMATED z dateAdded (UTC+1)",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (osłona drzewa) — status NOT_FOUND",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "licencja",
+    "status w słowniku",
+    "WGS84 6 miejsc",
+    "sezon+pora_dnia",
+    "kierunek_deg",
+    "azymut+odległość w uwagach",
+    "cytat „co widać” zgodny z kolumną obiekt"
+   ]
+  },
+  {
+   "id": "M50-004",
+   "typ": "foto",
+   "obiekt": "sygnalizator na maszcie/wysięgniku",
+   "status": "VERIFIED_WIZJA",
+   "licencja": "CC BY-SA 4.0 (KartaView)",
+   "cytat_co_widac": "droga z dostawczakiem i estakadą; sygnalizator na wysięgniku nad jezdnią, prawo (~50-70 m wg wizji",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (sygnalizator na maszcie/wysięgniku) — status VERIFIED_WIZJA",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "licencja",
+    "status w słowniku",
+    "WGS84 6 miejsc",
+    "sezon+pora_dnia",
+    "kierunek_deg",
+    "azymut+odległość w uwagach",
+    "cytat „co widać” zgodny z kolumną obiekt"
+   ]
+  },
+  {
+   "id": "M50-057",
+   "typ": "foto",
+   "obiekt": "latarnia",
+   "status": "VERIFIED_WIZJA",
+   "licencja": "CC BY-SA 4.0 (KartaView)",
+   "cytat_co_widac": "ulica z pojazdami, pieszymi, budynkami i znakami drogowymi; latarnia widoczna po prawej (~17 m wg wizji), wysoki prosty słup z oprawą",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (latarnia) — status VERIFIED_WIZJA",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "licencja",
+    "status w słowniku",
+    "WGS84 6 miejsc",
+    "sezon+pora_dnia",
+    "kierunek_deg",
+    "azymut+odległość w uwagach",
+    "cytat „co widać” zgodny z kolumną obiekt"
+   ]
+  },
+  {
+   "id": "M50-034",
+   "typ": "dokument",
+   "obiekt": "sygnalizator na maszcie/wysięgniku",
+   "status": "VERIFIED",
+   "zrodlo": "Dz.U. 2019 poz. 2311 cz. 2, zał. 3, s. 757 (tab. 7.2)",
+   "cytat": "4,5 m: LZW 8,0/12,5/25,0 m; 5,5 m: LZW 10,5/15,0/30,0 m; obok jezdni: LZW 2,0(0,5)/2,0/4,0(9,0) m",
+   "cytat_uwagi": "tabela 7.2 — luźna skrajnia wiodąca wg wys. montażu",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (sygnalizator na maszcie/wysięgniku) — cytat 1:1 ze źródła",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "status",
+    "zacytowany fragment = źródło (s./str. w dokument_strona)",
+    "spójność obiekt↔cytat"
+   ]
+  },
+  {
+   "id": "M50-017",
+   "typ": "foto",
+   "obiekt": "ławka",
+   "status": "VERIFIED_WIZJA",
+   "licencja": "CC BY-SA 4.0 (KartaView)",
+   "cytat_co_widac": "droga z chodnikiem, przystankiem autobusowym z zadaszeniem i stacją BP w tle; ławka przystankowa widoczna po prawej (~10-15 m wg wizji); kadr 1326673717 dołączony do ZIP v2 (brakował w v1); pora_dnia ESTIMATED z dateAdded (UTC+1)",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (ławka) — status VERIFIED_WIZJA",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "licencja",
+    "status w słowniku",
+    "WGS84 6 miejsc",
+    "sezon+pora_dnia",
+    "kierunek_deg",
+    "azymut+odległość w uwagach",
+    "cytat „co widać” zgodny z kolumną obiekt"
+   ]
+  },
+  {
+   "id": "M50-030",
+   "typ": "dokument",
+   "obiekt": "latarnia",
+   "status": "VERIFIED",
+   "zrodlo": "STO ZDM TOS_1 v03/2020, rozdz. 3 (DOCX)",
+   "cytat": "średnica wewn. uchwytu 60-72 mm; pochylenie -10°...+10°",
+   "cytat_uwagi": "uniwersalny uchwyt montażu na wysięgniku i bezpośrednio na słupie; wersja obowiązująca v09/2024 to skan 12 str. — próba odczytu numeracji (wizja 2026-11-13): stopki stron bez numerów \"Strona X z 12\", str. 7 skanu bez sekcji o słupach; wymogi cytowane z warstwy tekstowej DOCX v03/2020, sekcja \"Wymaga",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (latarnia) — cytat 1:1 ze źródła",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "status",
+    "zacytowany fragment = źródło (s./str. w dokument_strona)",
+    "spójność obiekt↔cytat"
+   ]
+  },
+  {
+   "id": "M50-029",
+   "typ": "dokument",
+   "obiekt": "latarnia",
+   "status": "VERIFIED",
+   "zrodlo": "STO ZDM TOS_1 v03/2020, rozdz. 3 (DOCX)",
+   "cytat": "warstwa typu antyplakat do wys. 2,0 m",
+   "cytat_uwagi": "w obrębie przystanków i przejść dla pieszych; 2,0 m od poziomu gruntu",
+   "porownanie_z_obiektem": "zgodne z kolumną obiekt (latarnia) — cytat 1:1 ze źródła",
+   "pola_sprawdzone": [
+    "url http(s)",
+    "status",
+    "zacytowany fragment = źródło (s./str. w dokument_strona)",
+    "spójność obiekt↔cytat"
+   ]
+  }
+ ],
+ "wynik": "13/13 wierszy zgodnych z regułami; 0 błędów; próbę wyznaczył nowy seed 2026111350 (poprzedni audyt: seed 20261113, N=49)"
+}

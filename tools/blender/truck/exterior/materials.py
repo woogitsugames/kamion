@@ -439,22 +439,41 @@ def make_sidewall_image(kind):
     return render_text_texture(f"sidewall_{kind}", items, W, H, shapes=shapes)
 
 
+def plate_frame_shapes(W, H, ppm=2.0, inset_mm=7.0, line_mm=2.0, corner_mm=10.0, rgb=(0.02, 0.02, 0.02), n=6):
+    """Outline of a Polish single-row plate (ADR 0175): 520 x 114 mm plate with R10 corners and the black frame
+    7 mm from the edge (dimension labels of drawing 1, annex 12, Dz.U. 2024 poz. 1709 - REVIEW s17 r8 p4 [zm. M44-FIX],
+    confidence P). The frame's line width (2 mm) is a WORKING_VALUE. The plate meshes stay rectangular: the four
+    corner wedges outside R10 are painted in the dark holder colour. Shapes never overlap (they share one plane)."""
+    out = []
+    R = corner_mm * ppm
+    i0, i1 = inset_mm * ppm, (inset_mm + line_mm) * ppm
+    r0, r1 = max(R - i0, 0.5), max(R - i1, 0.25)
+    for cx, cy, a0, sq in ((R, R, math.pi, (0, 0)), (W - R, R, 1.5 * math.pi, (W, 0)),
+                           (W - R, H - R, 0.0, (W, H)), (R, H - R, 0.5 * math.pi, (0, H))):
+        arc = [a0 + 0.5 * math.pi * k / n for k in range(n + 1)]
+        for a, b in zip(arc, arc[1:]):
+            pa = [(cx + r * math.cos(t), cy + r * math.sin(t)) for r in (R, r0, r1) for t in (a, b)]
+            out.append(("corner", [sq, pa[0], pa[1]], rgb))                       # wedge outside the R10 corner
+            out.append(("frame", [pa[2], pa[3], pa[5], pa[4]], rgb))              # frame arc
+    for x0, y0, x1, y1 in ((R, i0, W - R, i1), (R, H - i1, W - R, H - i0), (i0, R, i1, H - R),
+                           (W - i1, R, W - i0, H - R)):
+        out.append(("frame", [(x0, y0), (x1, y0), (x1, y1), (x0, y1)], rgb))
+    return out
+
+
 def make_plate_image():
-    """Polish-style EU plate (fictional registration; PL plate 520 x 114 mm, WORKING_VALUE: verify the
-    PL regulation on number plates). Font is Inter, not the regulatory plate typeface (UNVERIFIED look)."""
+    """Polish-style EU plate (fictional registration; single-row PL plate 520 x 114 mm, R10 corners, frame 7 mm
+    from the edge - ADR 0175, see plate_frame_shapes). Font is Inter, not the regulatory plate typeface
+    (UNVERIFIED look)."""
     W, H = 1040, 228
     blue = (0.0, 0.06, 0.40)
     yellow = (0.95, 0.75, 0.0)
-    items = [("PL", 58, 52, 52, 0, (1, 1, 1), 0.02, "CENTER"),
+    items = [("PL", 65, 52, 52, 0, (1, 1, 1), 0.02, "CENTER"),
              ("BI 4K271", 590, 112, 170, 0, (0.01, 0.01, 0.01), 0.035, "CENTER")]
-    shapes = [("band", [(8, 8), (110, 8), (110, 220), (8, 220)], blue),
-              ("border", [(0, 0), (W, 0), (W, 6), (0, 6)], (0.02, 0.02, 0.02)),
-              ("border", [(0, H - 6), (W, H - 6), (W, H), (0, H)], (0.02, 0.02, 0.02)),
-              ("border", [(W - 6, 0), (W, 0), (W, H), (W - 6, H)], (0.02, 0.02, 0.02)),
-              ("border", [(0, 0), (6, 0), (6, H), (0, H)], (0.02, 0.02, 0.02))]
+    shapes = [("band", [(20, 20), (110, 20), (110, 208), (20, 208)], blue)] + plate_frame_shapes(W, H)
     for k in range(12):  # EU stars
         a = 2 * math.pi * k / 12
-        sx, sy = 59 + 30 * math.cos(a), 150 + 30 * math.sin(a)
+        sx, sy = 65 + 30 * math.cos(a), 150 + 30 * math.sin(a)
         star = []
         for j in range(10):
             r = 6.5 if j % 2 == 0 else 2.6

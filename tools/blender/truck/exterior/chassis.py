@@ -221,6 +221,10 @@ def equipment():
         for y in (-1.55, -2.60):
             box_mm(f"side_marker_{s}_{y}", s * (CAB_HALF_W - 0.012), s * (CAB_HALF_W + 0.002), y - 0.05, y + 0.05,
                    0.41, 0.44, "lens_amber", bev=0.003)
+            # ADR 0175: amber side retro-reflector beside each marker lamp (R48 6.17.4: 250-900 mm high, first
+            # <= 3 m from the front - here 2.86 m - then <= 3 m apart); a reflector, not in a light group
+            box_mm(f"side_reflex_{s}_{y}", s * (CAB_HALF_W - 0.012), s * (CAB_HALF_W + 0.001), y + 0.06, y + 0.13,
+                   0.41, 0.44, "lens_amber", bev=0.002)
         for y in (-1.5, -2.5):
             box_mm(f"fairing_brk_{s}_{y}", s * FRAME_HALF_W, s * (CAB_HALF_W - 0.03), y - 0.02, y + 0.02, 0.40,
                    0.44, "chassis")
@@ -453,12 +457,27 @@ def fifth_wheel_and_rear():
                bev=0.016, seg=3)
         box_mm(f"rear_lamp_bezel_{s}", s * 0.735, s * 1.17, Y_END - 0.041, Y_END - 0.030, 0.748, 0.892, "plastic",
                bev=0.004)
-        for k, (a, b_, m_) in enumerate(((1.035, 1.160, "lens_amber"), (0.880, 1.0335, "lens_red"),
-                                         (0.800, 0.8785, "lens_clear"), (0.745, 0.7985, "lens_red"))):
+        # ADR 0175 (UN R48): the red retro-reflector (non-triangular, class IA - triangles are trailer-only) moved
+        # from the inboard end to between tail / stop and reverse: its outer edge is now 348 mm from the vehicle side
+        # (R48 6.14.4.1: <= 400 mm; it was 476 mm). It is a reflector, not a lamp: own name, no light group.
+        for k, (a, b_, m_) in enumerate(((1.035, 1.160, "lens_amber"), (0.9285, 1.0335, "lens_red"),
+                                         (0.745, 0.8785, "lens_clear"))):
             box_mm(f"rear_lens_{s}_{k}", s * a, s * b_, Y_END - 0.052, Y_END - 0.038, 0.757, 0.883, m_, bev=0.005,
                    seg=3)
+        box_mm(f"rear_reflex_{s}", s * 0.880, s * 0.927, Y_END - 0.052, Y_END - 0.038, 0.757, 0.883, "lens_red",
+               bev=0.005, seg=3)
+        # amber side retro-reflector on the housing's outboard end, under the side marker (R48 6.17 / WT par. 12
+        # ust. 1 pkt 11: side reflectors are mandatory on a semi-trailer tractor; last one <= 1 m from the rear)
+        box_mm(f"side_reflex_rear_{s}", s * 1.183, s * 1.189, Y_END - 0.012, Y_END + 0.04, 0.752, 0.790, "lens_amber",
+               bev=0.002)
         box_mm(f"side_marker_rear_{s}", s * 1.183, s * 1.190, Y_END - 0.012, Y_END + 0.04, 0.80, 0.84, "lens_amber",
                bev=0.002)
+    # ADR 0175: rear fog lamp (R48 6.11: mandatory, 1-2; a single one on the driver's side = left in Poland), its
+    # own small housing on the bracket inboard of the left combination lamp: 238 mm from the stop lamp (> 100 mm,
+    # R48 6.11.9), lens 0.775-0.865 m (250-1000 mm). Light group FOG_REAR.
+    box_mm("rear_fog_body", -0.700, -0.570, Y_END - 0.030, Y_END + 0.05, 0.765, 0.875, "plastic_satin", bev=0.012,
+           seg=3)
+    box_mm("rear_fog_lens", -0.690, -0.580, Y_END - 0.040, Y_END - 0.028, 0.775, 0.865, "lens_red", bev=0.005, seg=3)
     G.plate_uv(box_mm("rear_plate", 0.42, 0.94, Y_END - 0.03, Y_END - 0.02, 0.60, 0.714, "plate"), -1)
     box_mm("trailer_socket_brk", -0.20, 0.20, Y_END - 0.01, Y_END + 0.02, 0.86, 0.94, "chassis")
 

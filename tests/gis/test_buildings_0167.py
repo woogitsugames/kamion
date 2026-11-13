@@ -96,12 +96,14 @@ def test_tank_is_tall_light_and_banded_on_both_lods():
 
 def test_authored_walls_and_glazing_on_both_lods_without_a_glass_primitive_on_lod1():
     got = _loaded({OFFICE, PAVILION})
-    for bid, wall, n_min in ((OFFICE, "plaster_blue", 9), (PAVILION, "hall_plinth", 2)):
+    for bid, wall, n_min in ((OFFICE, "plaster_blue", 9), (PAVILION, "plaster_slate_blue", 2)):       # ADR 0171: wall colour
         buf = _build(got[bid])
         for layer in ("buildings", "buildings_low"):
             m = buf.mats(layer)
             assert wall in m
-            assert not any("__far_" in x or x in ("plaster_beige", "plaster_grey") for x in m), (bid, layer, m)
+            # ADR 0171: the LOD1 window frames of the outbuilding are plaster_grey (drawn by chunk 6_7 already)
+            ok = ("plaster_grey",) if (bid, layer) == (OFFICE, "buildings_low") else ()
+            assert not any("__far_" in x or x in ("plaster_beige", "plaster_grey") for x in m if x not in ok), (bid, layer, m)
         assert "plaster_blue" not in buf.mats("buildings_low") or bid == OFFICE
         panes = [p for p in buf.parts if p.layer == "buildings" and p.mat == "showroom_glass"]
         assert sum(len(p.T) for p in panes) >= 2 * n_min
@@ -130,7 +132,9 @@ def test_lod1_of_the_two_chunks_gets_no_material_it_did_not_draw_before():
     buildings may add plaster_blue (chunk 6_7) only because the tank no longer brings plaster_white there."""
     got = _loaded({OFFICE, PAVILION, TANK, KIOSK})
     m = {k: _build(b).mats("buildings_low") for k, b in got.items()}
-    assert m[PAVILION] <= {"hall_plinth", "hall_flashing", "plinth_dark", "roof_membrane", "downpipe"}, m[PAVILION]
+    # ADR 0171: the pavilion wall is plaster_slate_blue (+1 in chunk 6_6), paid by the tower leaving
+    # plaster_beige__far_ribbon for plaster_beige__far_office, which that chunk draws already (test_buildings_0171)
+    assert m[PAVILION] <= {"plaster_slate_blue", "hall_flashing", "plinth_dark", "roof_membrane", "downpipe"}, m[PAVILION]
     assert m[KIOSK] <= {"plaster_light", "hall_flashing", "plinth_dark", "roof_membrane", "downpipe"}, m[KIOSK]
     new_67 = (m[OFFICE] | m[TANK]) - {"plaster_grey", "hall_flashing", "plinth_dark", "roof_membrane", "downpipe"}
     assert new_67 == {"plaster_blue"}, new_67
