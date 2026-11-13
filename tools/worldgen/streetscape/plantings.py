@@ -712,6 +712,9 @@ def _corner_ends(run, runs):
     return tuple(out)
 
 
+GROUP_GROW_M = 8.0                # a plot-kit group may grow this far (E / N) past the plot geometry it already holds
+
+
 def _emit(buf, kit, groups, half, src, rep, strict=True):
     """Add the kit's High / Low variants to the plot layers, merged into the chunk groups the plots already have.
     strict: geometry that would open a new (chunk, layer) group - one more draw call - is not built."""
@@ -726,6 +729,17 @@ def _emit(buf, kit, groups, half, src, rep, strict=True):
             if any((layer, *cell) not in groups for cell in cells):
                 rep["skipped"]["new_renderer_group"] = rep["skipped"].get("new_renderer_group", 0) + 1
                 return False
+            # ... nor geometry that stretches a group's bounds far beyond the plots it holds: the group would then
+            # pass the frustum test of cameras that never saw it (route frames g3b_rondo_put_approach /
+            # g3b_ext34_s1658: +1 draw from a tree 90 m off the plots of its chunk)
+            tri = o[0][o[2]]
+            tc = np.floor(np.column_stack((centers[:, 0] + half, half - centers[:, 1])) / CHUNK_M).astype(int)
+            for cell in cells:
+                lo, hi = groups[(layer, *cell)]
+                V = tri[np.all(tc == cell, axis=1)].reshape(-1, 3)
+                if np.any(V[:, :2].min(axis=0) < lo[:2] - GROUP_GROW_M) or np.any(V[:, :2].max(axis=0) > hi[:2] + GROUP_GROW_M):
+                    rep["skipped"]["group_bounds_growth"] = rep["skipped"].get("group_bounds_growth", 0) + 1
+                    return False
     for layer, o in outs:
         if o is not None:
             buf.add(layer, "plot_kit", o[0], o[1], o[2], src=src, COL=o[3])

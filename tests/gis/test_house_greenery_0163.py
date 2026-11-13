@@ -158,6 +158,18 @@ def test_nothing_is_built_into_a_new_renderer_group():
     assert not buf.parts and out["trees"] == 0 and out["skipped"]["new_renderer_group"] == 1
 
 
+def test_a_tree_far_off_the_plots_of_its_chunk_does_not_stretch_the_group():
+    """Budget (route frames g3b_rondo_put_approach / g3b_ext34_s1658, build 5: +1 draw on Low): a garden tree may grow a
+    chunk group only GROUP_GROW_M past the plot kit it holds, else the group passes the frustum test of new cameras."""
+    buf = _buf()                                       # plot kit within E / N -20..20
+    near = {"plot": "t", "key": ("k", 1), "p": np.array([8.0, -12.0]), "r": 2.0, "in_plot": True, "near": True, "kind": "broadleaf"}
+    far = dict(near, key=("k", 2), p=np.array([8.0, -60.0]))
+    rp = {"plots": [], "garden_trees": [near, far]}
+    out = PT.garden_trees(buf, rp, lambda q: 140.0, {})
+    assert out["trees"] == 1 and out["skipped"]["group_bounds_growth"] == 1
+    assert out["list"][0]["n"] == -12.0
+
+
 @pytest.mark.parametrize("species", ["linden", "maple", "chestnut", "ash", "birch"])
 def test_tree_size_follows_g7(species):
     """G7 # 4, 6, 7, 12, 13: the typical garden tree (crown radius 1.5-2.55 m) is 5-8 m, the crown starts low, no tree
