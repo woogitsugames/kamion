@@ -58,3 +58,5 @@ Rebaselineoff590.4s: audyt zgadza się z pierwotną bazą w2151chronionychwęzł
 Zapisano before/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano before/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano before/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
