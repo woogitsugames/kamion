@@ -113,6 +113,24 @@ namespace Game.Tests
             Assert.That(refl.Exists(p => Mathf.Abs(p.x) > 1.2f && p.y < 1.3f && p.z > zMin + 2f), "side reflectors missing at LOD2");
         }
 
+        /// <summary>Review s18 0178 P1: the tractor's red rear retro-reflector (rear_reflex_*, formerly the rear_lens_*_3
+        /// strip in TAIL_BRAKE) is REFLEX (15), never emissive, and no stop / tail emitter covers its span.</summary>
+        [Test]
+        public void Tractor_RearReflector_IsNonEmissiveReflex_NotTailBrake()
+        {
+            Assert.AreEqual(0, GroupVerts(ExtManifest, "LOD0", "TruckExterior_LOD0", Reflex, true).Count, "a retro-reflector must not emit");
+            var refl = GroupVerts(ExtManifest, "LOD0", "TruckExterior_LOD0", Reflex, false);
+            float zMin = float.MaxValue;
+            foreach (var p in refl) zMin = Mathf.Min(zMin, p.z);
+            var lampBand = refl.FindAll(p => p.z < zMin + 0.3f && p.y > 0.74f && p.y < 0.90f && Mathf.Abs(p.x) > 0.86f && Mathf.Abs(p.x) < 0.94f);
+            Assert.That(lampBand.Exists(p => p.x < 0f) && lampBand.Exists(p => p.x > 0f), "rear reflector in each combination lamp (REFLEX)");
+            const int TailBrake = 6;
+            var tail = Emitters(ExtManifest, "TruckExterior_LOD0", TailBrake);
+            Assert.That(tail.Count, Is.GreaterThan(0), "tail / stop emitters exist");
+            Assert.That(tail.Exists(p => Mathf.Abs(p.x) > 0.89f && Mathf.Abs(p.x) < 0.92f && p.y > 0.76f && p.y < 0.88f), Is.False,
+                "a TAIL_BRAKE emitter lies inside the reflector span (|x| 0.880-0.927 m)");
+        }
+
         [Test]
         public void Tractor_HasOneRearFogLamp_OnTheDriverSide()
         {
