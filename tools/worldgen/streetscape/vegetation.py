@@ -107,8 +107,8 @@ def _tree_point_overrides(overrides):
     where the orthophoto shows it, e.g. on a lawn island between two footways."""
     out = []
     for o in overrides or []:
-        if o.get("kind") != "tree_groups" or not o.get("points_en"):
-            continue
+        if o.get("kind") != "tree_groups" or not o.get("points_en") or o.get("form") == "kit":
+            continue                        # form kit: meshed by streetscape.plantings.authored_trees
         sp = o.get("species") or TREE_GROUP_DEFAULTS["species"]
         hr = o.get("height_m")
         if hr is not None and not (0 < float(hr[0]) <= float(hr[1])):
@@ -384,6 +384,14 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
                 out = [t for t, g in zip(out, gone) if not g]
                 orep.append({"id": o["id"], "area_m2": round(area.area, 1), "trees_removed": int(gone.sum())})
         report["open_ground"] = orep
+    # ADR 0186: no rule tree within 2.5 m of the stem of an authored kit tree (plantings.authored_trees)
+    kpts = [q[:2] for o in overrides or [] if o.get("kind") == "tree_groups" and o.get("form") == "kit"
+            for q in o.get("points_en", [])]
+    if kpts and out:
+        from scipy.spatial import cKDTree as _KD
+        dk, _ = _KD(np.asarray(kpts, float)).query(np.array([[t["e"], t["n"]] for t in out]))
+        report["tree_groups"]["rule_trees_at_kit_stems"] = int((dk < 2.5).sum())
+        out = [t for t, d in zip(out, dk) if d >= 2.5]
     # thin out overlaps (< 1.8 m between trunks), deterministic order
     if out:
         P = np.array([[t["e"], t["n"]] for t in out])

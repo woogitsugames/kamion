@@ -96,8 +96,11 @@ SPECIES = {
     # 0.4 m lumps of the side, a rounded shoulder and a crown that rises and falls by ~ +-0.4 m, long loose shoots.
     # Hornbeam leaf textures (the largest broadleaf of the hedge set). Height from the bed (`height_m`), else 2.2-3.0 m.
     # WORKING_VALUE (read off the photo, not surveyed).
-    "thicket": dict(tex="hornbeam", h=(2.2, 3.0), plant=(1.1, 1.7), bulge=0.40, dome=0.32, gap_p=0.0, sigma=0.42,
-                    sprig=0.26, sprig_wh=((0.35, 0.65), (0.30, 0.60)), prof="thicket"),
+    # r2 (first render: read as a clipped hedge with a 0.6 m leaf pattern and a dark skirting): leaf tile x 3 (sprays
+    # of leaves, no pattern at 60 m), shell down to 4 % of the height, crown relief +-0.5 m, shoots 0.5-1.1 m.
+    "thicket": dict(tex="hornbeam", h=(2.2, 3.0), plant=(1.3, 1.9), bulge=0.45, dome=0.50, gap_p=0.0, sigma=0.45,
+                    sprig=0.55, sprig_wh=((0.60, 1.20), (0.55, 1.05)), prof="thicket", tile_scale=3.0, foot=0.04,
+                    ring_step=0.7, fill=(2.0, 1.1), top_sprigs=0.8),      # a mass 10 x coarser than a clipped hedge: ~70 tris / m2
 }
 # cross-sections (inset m, height share, bulge share), foot first
 PROFILES = {
@@ -204,9 +207,12 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     perimeter (thin / missing plants), a lumpy crown and loose shoot cards on the top edge, sides and top."""
     from .hedge_textures import HEDGE_TILE_M
     S = species(plant)
+    HEDGE_TILE_M = HEDGE_TILE_M * S.get("tile_scale", 1.0)     # ADR 0186: thicket - sprays of leaves, not a leaf pattern
     core_m, shell_m, sprig_m = hedge_mats(plant)
     h = h if h is not None else S["h"][0] + _h(key, "h") * (S["h"][1] - S["h"][0])
-    R = _ccw_ring(poly.buffer(0), 0.3)
+    if S.get("ring_step"):                 # coarse mass: drop the arc vertices of the buffered bed outline
+        poly = poly.simplify(0.25)
+    R = _ccw_ring(poly.buffer(0), S.get("ring_step", 0.3))
     if len(R) < 3:
         return 0
     N = _ring_normals(R)
@@ -253,7 +259,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     nt += strip(core, core_m, np.column_stack([np.tile(per[cs], len(core)),
                                                np.concatenate([np.full(nc, f * h) for _, f, _ in prof])]))
     try:
-        P2, Tt = _fill(core[-1][0], 1.0)
+        P2, Tt = _fill(core[-1][0], S.get("fill", (1.0, 0.6))[0])
         zt = zground(P2[:, 0], P2[:, 1])
         z2 = (zt + _local_top_height(P2, top_xy, top_h) - 0.5 * S["dome"] * h - SHELL_D if local_top
               else zt + h * (1.0 - 0.6 * S["dome"]) - SHELL_D)
@@ -263,7 +269,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     except Exception:
         pass
     # shell: open foot; UV in shell tiles with a per-hedge offset / rotation (no aligned repeats between beds)
-    sprof = [(0.02, SHELL_FOOT, 0.6)] + prof[1:]
+    sprof = [(0.02, S.get("foot", SHELL_FOOT), 0.6)] + prof[1:]
     shell = rings(R, hl, sprof)
     uo, vo = _h(key, "uo"), _h(key, "vo")
     nt += strip(shell, shell_m, np.column_stack([
@@ -271,7 +277,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
         np.concatenate([(z - zg) / HEDGE_TILE_M + vo for _, z in shell])]))
     stop = shell[-1][0]
     try:
-        P2, Tt = _fill(stop, 0.6)
+        P2, Tt = _fill(stop, S.get("fill", (1.0, 0.6))[1])
         zt = zground(P2[:, 0], P2[:, 1])
         z2 = np.empty(len(P2))
         z2[:n] = shell[-1][1]
@@ -288,7 +294,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
         buf.add("furniture", shell_m, np.column_stack([P2, z2]), UVt, Tt, src=src)
         nt += len(Tt)
         if len(P2) > n:            # loose shoots on the crown, ~1.4 per m2 (fill spacing 0.6 m)
-            sel = np.array([j for j in range(len(P2) - n) if _h(key, "tc", j) < 0.45], int)
+            sel = np.array([j for j in range(len(P2) - n) if _h(key, "tc", j) < S.get("top_sprigs", 0.45)], int)
             if len(sel):
                 a2 = np.array([_h(key, "ta", j) * 6.283 for j in sel])
                 nt += _sprig_cards(buf, sprig_m, P2[n:][sel], np.column_stack([np.cos(a2), np.sin(a2)]),
@@ -996,6 +1002,46 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.24
         PLT._skin_card(kit, c, z + cb + hc * 0.48, az, r * 0.95, hc * 0.34, "shrub_a", 0.42 + 0.14 * PLT.hfloat(key, "ut", i), occ,
                        flip=i % 2 == 1)
+
+
+def authored_trees(buf, overrides, zf, report, half=1024.0):
+    """ADR 0186: grown broadleaf trees of an authored `kind: tree_groups` with `form: kit` - `points_en` rows
+    [E, N, height m, crown diameter m] traced from the orthophoto / a photo, meshed as plot-kit garden trees (ADR 0163:
+    dense crown of crossed habit cards on every tier), not as instances of the region's tree library, whose crowns
+    of 3-6 leaf clumps on a bare stem read as saplings at 10 m (review s19 0179 P1). Species by `species` weights
+    (maple / linden / chestnut / ash / birch), drawn per stem; crown base 0.22 H (`crown_base_m` overrides). High:
+    full tree, Low / Medium: the near-street lite tree (3 cards + shaded middle). May open a plot-kit group in a
+    chunk that has none (one draw call): the trees are authored, they are never left out."""
+    rep = {"trees": 0, "tris_high": 0, "tris_low": 0, "skipped": {}, "list": []}
+    groups = None
+    for o in overrides or []:
+        if o.get("kind") != "tree_groups" or o.get("form") != "kit":
+            continue
+        spw = o.get("species") or {"maple": 1.0}
+        if any(s not in HABIT for s in spw):
+            raise ValueError(f"tree_groups {o['id']}: form kit knows {sorted(HABIT)}")
+        for k, q in enumerate(o.get("points_en", [])):
+            if len(q) < 4:
+                raise ValueError(f"tree_groups {o['id']}: form kit needs [E, N, height m, crown diameter m]")
+            p, H, r = np.asarray(q[:2], float), float(q[2]), float(q[3]) / 2.0
+            key = ("authored-tree", o["id"], k)
+            sp = PLT._pick_w(sorted(spw.items()), key, "sp")
+            cb = float(o.get("crown_base_m", 0.22 * H))
+            z = zf(p)
+            kit = PLT.Kit()
+            kit.tag = "authored_tree"
+            kit.low = False
+            garden_tree(kit, p, z, r, H, cb, sp, key)
+            kit.low = "only"
+            garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3, core=True)
+            if groups is None:
+                groups = _garden_groups(buf, half)
+            _emit(buf, kit, groups, half, f"override:{o['id']}:kit", rep, strict=False)
+            rep["trees"] += 1
+            rep["list"].append({"id": o["id"], "e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "h_m": H,
+                                "crown_m": round(2 * r, 2), "crown_base_m": round(cb, 2), "species": sp})
+    report["authored_trees"] = rep
+    return rep
 
 
 STRIP_REACH_M = 6.0              # a crown up to this far outside a plot belongs to a tree of that garden (plots.STREET_STRIP_M)

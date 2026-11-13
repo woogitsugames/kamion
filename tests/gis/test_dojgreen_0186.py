@@ -54,6 +54,31 @@ def test_thicket_is_a_closed_mass_on_the_ground():
     assert V[:, 2].min() < 0.0                   # the core goes into the ground, no floating foot
     assert 2.6 < V[:, 2].max() < 3.8
     assert st["tris"] < 3500                     # 15 m of thicket; the 2 x 8 shrub instances it replaces: ~6 000
+    assert PT.SPECIES["berberis_red"].get("tile_scale") is None and PT.SPECIES["privet"].get("foot") is None
+
+
+def test_kit_trees_are_dense_crowns_on_both_tiers():
+    from streetscape import plantings as PT
+    ov = [{"id": "c", "kind": "tree_groups", "form": "kit", "points_en": [[5.0, 5.0, 10.5, 7.5], [11.0, 6.0, 6.0, 3.4]],
+           "species": {"maple": 1.0}}]
+
+    class B(_Buf):
+        parts = []
+
+        def add(self, layer, mat, V, UV, T, src="", **kw):
+            self.tris[layer] = self.tris.get(layer, 0) + len(T)
+            self.V.append(np.asarray(V, float))
+    buf, rep = B(), {}
+    PT.authored_trees(buf, ov, lambda p: 100.0, rep, half=1024.0)
+    at = rep["authored_trees"]
+    assert at["trees"] == 2 and at["tris_low"] > 0 and at["tris_high"] > at["tris_low"]
+    V = np.vstack(buf.V)
+    assert V[:, 2].min() < 100.0 and 110.0 < V[:, 2].max() < 112.0       # stem into the ground, top ~10.5 m
+    assert V[:, 0].max() - V[:, 0].min() > 7.0                           # crown of the grown tree ~7.5 m wide
+    from streetscape import vegetation as VG
+    assert VG._tree_point_overrides(ov) == []                            # not also an instance of the tree library
+    PT.authored_trees(B(), [{"id": "l", "kind": "tree_groups", "lines": []}], lambda p: 0.0, rep)
+    assert rep["authored_trees"]["trees"] == 0
 
 
 def test_tree_points_keep_their_place_and_height():
@@ -74,13 +99,15 @@ def test_dojlidy_data_and_report():
     assert band["kind"] == "plantings" and len(band["beds"]) >= 5
     assert all(b["plant"] == "thicket" and 2.0 <= b["height_m"] <= 3.3 for b in band["beds"])
     trees = ov["mickiewicza-kuronia-corner-trees"]
-    assert 3 <= len(trees["points_en"]) <= 4 and all(9.0 <= p[2] <= 11.0 for p in trees["points_en"])
+    assert trees["form"] == "kit" and 3 <= len(trees["points_en"]) <= 6
+    assert sum(1 for p in trees["points_en"] if 9.0 <= p[2] <= 11.0 and 5.5 <= p[3] <= 8.0) >= 2      # the grown ones
     assert ov["mickiewicza-u-turn-not-signalised"]["set"] == {"signalized": False}
     for o in ov.values():
         assert o.get("reason") and o.get("confidence"), o["id"]
     rep = json.loads((DOJ / "generated" / "streetscape_qa.json").read_text(encoding="utf-8"))
-    tg = rep["vegetation"]["tree_groups"]
-    assert tg["points"] == len(trees["points_en"]) and not tg["points_refused"]
+    at = rep["authored_trees"]
+    assert at["trees"] == len(trees["points_en"]) and not at["skipped"]
+    assert at["tris_low"] <= 40 * at["trees"] and at["tris_high"] <= 400 * at["trees"]
     assert rep["plantings"]["hedges"] == len(band["beds"]) and not rep["plantings"]["stale"]
     man = json.loads((DOJ / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
     assert not man.get("overrides_stale")

@@ -296,6 +296,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         PT.garden_trees(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2, region_trees=trees)
         log("garden trees", {k: v for k, v in rep["garden_trees"].items() if k not in ("list", "conifers")})
         ptrees = VG.garden_canopies(ptrees, plot_plan, rep)
+    if any(o.get("kind") == "tree_groups" and o.get("form") == "kit" for o in overrides or []):     # ADR 0186
+        PT.authored_trees(w.buf, overrides, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2)
+        log("authored trees", {k: v for k, v in rep["authored_trees"].items() if k != "list"})
     rep["plots"]["inst_trees_kept"] = len(ptrees)
     for t_ in ptrees:
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
