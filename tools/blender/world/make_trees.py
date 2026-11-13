@@ -552,7 +552,7 @@ def impostor_object(name, H, png, S):
 # categories (iglasty / mieszany / liściasty).
 FOREST_MIX = {"conifer": {"pine": 0.82, "birch": 0.12, "alder": 0.02, "maple": 0.02, "linden": 0.02},
               "mixed": {"pine": 0.45, "birch": 0.25, "alder": 0.10, "maple": 0.10, "linden": 0.10},
-              "broadleaf": {"pine": 0.08, "birch": 0.32, "alder": 0.25, "maple": 0.20, "linden": 0.15}}
+              "broadleaf": {"birch": 0.36, "alder": 0.26, "maple": 0.22, "linden": 0.16}}    # ADR 0170: no pine
 TREE_H = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0)}
 EDGE_W, EDGE_H, EDGE_DEPTH = 48.0, 24.0, 16.0   # edge texture covers 48 m x 24 m of stand (tileable along u)
 CANOPY_W = 48.0                                  # canopy texture tile, 48 x 48 m (tileable both ways)
@@ -847,7 +847,12 @@ def main():
     if quick:
         return
     href = {k: v["href_m"] for k, v in meta.items()}
-    forest = cached.get("forest_hlod") or {mix: bake_forest(mix, src, href, 1000 + i) for i, mix in enumerate(FOREST_MIX)}
+    # --rebake-forest <mix>[,<mix>]: with --reuse-bakes, bake only these HLOD mixes again (ADR 0170), keep the rest
+    redo = set(argv[argv.index("--rebake-forest") + 1].split(",")) if "--rebake-forest" in argv else set()
+    forest = dict(cached.get("forest_hlod") or {})
+    for i, mix in enumerate(FOREST_MIX):
+        if mix not in forest or mix in redo:
+            forest[mix] = bake_forest(mix, src, href, 1000 + i)
     for fn, sel in (("trees.glb", [o for o in objs if not o.name.endswith(".lod2")]),
                     ("trees_lod2.glb", [o for o in objs if o.name.endswith(".lod2")])):
         for o in bpy.context.scene.objects:

@@ -70,6 +70,8 @@ Shader "Kamion/Truck Exterior"
         _DrlHighlightShoulder ("DRL exposed HDR highlight shoulder (0 = off)", Range(0, 2)) = 0.8
         _LampHueKnee ("Signal lamps: hue-preserving shoulder knee (max channel, exposed units)", Range(0, 2)) = 0.4
         _LampHueCeiling ("Signal lamps: hue-preserving ceiling of max(r,g,b) (0 = off)", Range(0, 4)) = 0.8
+        _LensDetail ("Lamp lens optics from uv1 (ADR 0181; 0 = flat lenses)", Range(0, 1)) = 1
+        _PlateIllum ("Number plate luminance / plate lamp luminance at the top edge (ADR 0181)", Range(0, 0.1)) = 0.005
     }
     SubShader
     {
@@ -79,11 +81,13 @@ Shader "Kamion/Truck Exterior"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _CMap_ST;
+            float4 _CMap_TexelSize;   // ADR 0181 r2: lens chamber inset of the atlas lookup (KamionLensInsetUV)
             float4 _PaintColor, _DecalColor, _DirtColor;
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
             float _ClearCoat, _ClearCoatRoughness, _Flake, _FlakeScale;
             float _DrlHighlightShoulder;
             float _LampHueKnee, _LampHueCeiling;
+            float _LensDetail, _PlateIllum;   // ADR 0181
             float _CoatedBaseRoughness, _OrangePeel, _GrimeHeight, _GrimeChassis;
             float4 _CurtainGrime, _CurtainAxles, _CurtainPosts, _RearGrime, _RearGrime2, _RearGrime3, _RearGrimeColor;
         CBUFFER_END
@@ -145,6 +149,7 @@ Shader "Kamion/Truck Exterior"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "KamionVehicleEnv.hlsl"
             #include "KamionToeParity.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionLampLens.hlsl"   // ADR 0181 lens optics (Lights slot, uv1 lens frame)
 
             TEXTURE2D(_CMap); SAMPLER(sampler_CMap);
             TEXTURE2D(_NMap);
@@ -388,6 +393,9 @@ Shader "Kamion/Truck Exterior"
             half4 frag(Varyings i) : SV_Target
             {
                 float2 uv = i.uv01.xy;
+            #if defined(_KAMION_TRUCK_LAMPS)
+                if (_LensDetail > 0.5) uv = KamionLensInsetUV(uv, i.uv01.zw, _CMap_TexelSize.zw);
+            #endif
                 half4 c = SAMPLE_TEXTURE2D(_CMap, sampler_CMap, uv);
                 half4 m = SAMPLE_TEXTURE2D(_MMap, sampler_CMap, uv);
                 half3 nTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_NMap, sampler_CMap, uv), _NormalStrength);
@@ -422,6 +430,22 @@ Shader "Kamion/Truck Exterior"
                     metal = lerp(metal, _DecalMetallic, d.a);
                     rough = lerp(rough, _DecalRoughness, d.a);
                 }
+                half outerLens = 0;   // ADR 0181 r2: smooth outer lens (excluded from the gloss-trim env term below)
+            #if defined(_KAMION_TRUCK_LAMPS)
+                // ADR 0181: lens optics under the dirt film - gasket, pillow / flute / Fresnel relief, emitter cups, reflex cubes.
+                KamionLens lens = KamionLensEval(i.uv01.zw);
+                if (_LensDetail < 0.5) { lens.shade = 1; lens.slope = 0; lens.hdr = 1; lens.disp = 1; }
+                albedo *= lens.shade;
+                // ADR 0181 r2 (review s20 P2-4): the optics sit behind a smooth PMMA outer lens. Relief stays in the albedo
+                // (inner layer); the specular sees the flat outer surface - a glossy clear lens with the sky in it, which
+                // the road film below (grime, later in this pass) roughens again. Plate keeps its own normal / roughness.
+                if (_LensDetail > 0.5 && lens.style > 0.5 && lens.style < 4.5)
+                {
+                    nTS = half3(0, 0, 1);
+                    rough = min(rough, (half)0.2);   // 0.08 mirrored the low-res probe as camouflage patches (after4)
+                    outerLens = 1;
+                }
+            #endif
                 half grime = m.g;
                 if (hasFrame)
                 {
@@ -468,6 +492,10 @@ Shader "Kamion/Truck Exterior"
                     if (zone > 0.001)
                     {
                         half rg = RearGrime(os, m.r) * (_IsPaint > 0.5 ? 1.0 : _RearGrime2.z);
+                        // ADR 0181 r2: on a smooth outer lens the spray dries to an even film, heavier towards the bottom
+                        // edge - the panel's deposit blobs read as camouflage patches on the reverse lens and as lumpy
+                        // LED cups (after3-5). WORKING_VALUE: 0.45..0.8 of the lens coverage over 0.75 -> 1.05 m.
+                        rg = lerp(rg, _RearGrime2.z * (0.45 + 0.35 * (1.0 - saturate((os.y - 0.75) / 0.3))), outerLens);
                         grime = lerp(grime, rg, zone);
                         rearW = zone;
                     }
@@ -491,7 +519,9 @@ Shader "Kamion/Truck Exterior"
                 dirt = min(dirt, lerp(1.0h, _IsPaint > 0.5 ? (half)_RearGrimeColor.a : 0.9h, rearW));
                 coat *= 1.0 - saturate(dirt * 1.5);
                 albedo = lerp(albedo, lerp(_DirtColor.rgb, _RearGrimeColor.rgb, rearW), dirt);
-                rough = lerp(rough, max(rough, 0.88), dirt);
+                // ADR 0181 r2: on the smooth outer lens the road film is a haze (0.4), not a matte crust - with 0.88 the
+                // deposit mask's hard edges turned into gloss / matte camouflage patches on the reverse and fog lenses.
+                rough = lerp(rough, max(rough, lerp((half)0.88, (half)0.4, outerLens)), dirt);
                 metal *= 1.0 - saturate(dirt * (1.0 + 0.6 * rearW));
 
                 half sgn = i.tangentWS.w;
@@ -534,7 +564,12 @@ Shader "Kamion/Truck Exterior"
                 if (abs(i.uv2.x - 1.0) < 0.25)
                     lampRadiance = TruckDrlHighlight(lampRadiance, _DrlHighlightShoulder);
                 else
-                    lampRadiance = TruckLampHueLimit(lampRadiance, _LampHueKnee, _LampHueCeiling);
+                {
+                    // ADR 0181: emitter structure in exposed radiance before the limit, residual contrast after it; the
+                    // number plate re-emits the plate lamp diffusely (its dirty albedo x falloff from the lamp above).
+                    if (lens.style > 4.5) lampRadiance *= albedo * (_PlateIllum * lens.plate);
+                    lampRadiance = TruckLampHueLimit(lampRadiance * lens.hdr, _LampHueKnee, _LampHueCeiling) * lens.disp;
+                }
                 s.emission = (half3)(lampRadiance * saturate(i.uv2.y));
             #endif
                 // Metallic flake: per-cell random normal tilt in the base specular only, faded out where a cell is
@@ -554,7 +589,9 @@ Shader "Kamion/Truck Exterior"
                 // Low analytic cube and the High capture (no instanced trees / props) put open sky where a parked truck's
                 // near-horizon reflections see buildings, trees and ground. Own env term for these pixels: Schlick F,
                 // AO, horizon occlusion and a near-horizon obstruction; URP keeps the direct light (sun highlight).
-                half glossTrim = (1.0 - _IsPaint) * (1.0 - isTyre) * (1.0 - saturate(metal * 2.0)) * (1.0 - smoothstep(0.22, 0.32, rough));
+                half glossTrim = (1.0 - _IsPaint) * (1.0 - isTyre) * (1.0 - saturate(metal * 2.0)) * (1.0 - smoothstep(0.22, 0.32, rough)) * (1.0 - outerLens);
+                // ^ a clear lens is not the black PC-ABS trim this term was made for: with its street-level obstruction (0.3)
+                //   the reverse / fog lenses turned black at dusk (after3); the lens keeps the URP probe reflection.
                 if (glossTrim > 0.001) s.occlusion = m.r * (1.0 - glossTrim);
                 half4 col = UniversalFragmentPBR(input, s);
                 if (glossTrim > 0.001)

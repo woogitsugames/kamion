@@ -2,7 +2,45 @@
 - **main** `f48317146`. C: 723 GB. adb: A16 RFGL34SJYDZ + S24+ RZCX60VE8ZY online. Nic nie działało w tle (stare tail.exe zabite). PHONE_RUN brak.
 - Właściciel: „weź jednorazowo 20 agentów”; „M52-FIX-3 gotowe” (26aeb871f na `research/mistral-p2-surfaces-2`).
 - atlas-0184: worktree ma niezacommitowaną TYMCZASOWĄ zmianę `facade_atlas.py` (łańcuch BEFORE przerwany) — agent close-0184 przywraca.
-- **Agenci s20 (20):** tabela poniżej, aktualizowana przy starcie/końcu. **Ostatni przydzielony ADR: 0196.**
+- 22:4x **SCALONE gates-s19** (`263847db7`; GATE-2 doprecyzowane „pozycja 15 zielona, VehicleLabTests 7/7”). Crony :17 (limit/live/scalenia/HANDOVER), :47 (Mistral), :07 (ZIP-y/GPT). Wspólne zasady agentów: `docs/owner/S20-AGENT-PREAMBLE.md`.
+- **Agenci s20 (20, start 22:4x; live w `artifacts/live/<n>.md` w worktree + kopia w main):**
+| n / ADR | model | zadanie | worktree |
+|---|---|---|---|
+| critic 0181 | Opus | recenzja soczewek → `docs/reports/REVIEW-2026-11-13-s20-0181.md` | — |
+| critic 0172 | Opus | recenzja P1b → `REVIEW-…-s20-0172.md` | — |
+| horizon-0170 | Opus | domknięcie: pairs6/compare6, ADR, merge main | istniejący |
+| atlas-0184 | Opus | domknięcie: łańcuch BEFORE (TEMP w facade_atlas!), ADR §4, merge main | istniejący |
+| bollards-0183 | Opus | r2: kolor łańcucha, rząd na bruku, A/B, ADR | istniejący |
+| M52-FIX-3 | Opus | przegląd → `REVIEW-…-s20-mistral-m52-fix3.md` | — |
+| M47-FIX-2 | Opus | przegląd → `REVIEW-…-s20-mistral-m47-fix2.md` | — |
+| autopilot-0195 | Opus | autopilot prosta 0–80 + hamowanie dla bramek 1–2 | nowy |
+| lamppool-0191 | Opus | plamy światła latarni (0182 P1-4) | nowy |
+| nightwin-0192 | Opus | okna nocą, magenta, rozbłysk (0182 P2) | nowy |
+| dojbld-0185 | Fable | Rosti building_part, ogrodzenie mora, okładzina, K3 | nowy |
+| dojgreen-0186 | Fable | drzewa narożnika 063, ściana krzewów, kamera 063 (baza horizon-0170) | nowy |
+| forest-0187 | Fable | ściana lasu/horyzont, podszyt (Base horizon-0170) | nowy |
+| ddr-0188 | Fable | DDR czerwony asfalt + przejazdy | nowy |
+| hospgate-0189 | Fable | brama szpitala P11-129 | nowy |
+| tower2-0190 | Fable | wieżowiec P2: szklenie, rama szczytu, maszty GSM, skok LOD NW (merge atlas-0184) | nowy |
+| sigplate-0193 | Sonnet | tarcze sygnalizatorów, D-6 za blisko | nowy |
+| stains-0194 | Opus | plamy oleju/łaty/koleiny asfaltu | nowy |
+| dojind-0196 | Fable | zakład building_part + bramy segmentowe, zacieki, kamera krywlany_runway | nowy |
+| MISTRAL-TASKS-10 | Sonnet | zlecenia M62+ → `docs/owner/MISTRAL-TASKS-10.md` | — |
+- 23:0x: krytyk **0181 SCAL warunkowo** (`REVIEW-2026-11-13-s20-0181.md`: P1 aliasing High, artefakty Low, brak kamery tablicy) → agent Opus r2 w worktree lamplens-0181 (21. agent). **`docs/owner/MISTRAL-TASKS-10.md` gotowe** (M62–M69, kolejność M62→M65→M68→M63→M66→M69→M64→M67) — do przekazania właścicielowi.
+- 23:1x: przegląd **M52-FIX-3 = FIX ponownie** (tylko pkt 2 — oględziny kadrów: 10/26 błędnych, „4 niedostępne w CDN” nieprawda, 11 par duplikatów md5; pkt 1/3/4/5 OK) → blok **M52-FIX-4** w `docs/owner/MISTRAL-FIXES-11.md` do wklejenia właścicielowi. Nie scalone.
+- 23:2x: przegląd **M47-FIX-2 = FIX ponownie** (audyt znaków 13/27 błędnych kodów: D-6 jako A-16, zmyślone STOP/B-2/B-9/D-40, P11-108 B-5 opisany jako B-2; nasz błąd s18: STOP w P11-120 jest) → blok **M47-FIX-3** dopisany do `docs/owner/MISTRAL-FIXES-11.md`. Plik kompletny (M52-FIX-4 + M47-FIX-3) — do wklejenia właścicielowi.
+- 23:3x: krytyk **0172 SCAL warunkowo** (`REVIEW-2026-11-13-s20-0172.md`; warunki = ADR „Otwarte” + uwaga zdjęcie 2019 → zrobione 718192bf2) → **SCALONE 0172** do main (generated = ours). pytest plików 0172/0161/landmarks: 29 pass, 2 fail = stary świat w Data/raw/derived (znikną po regeneracji). Worktree p1b-0172 do usunięcia (dowody już w main). Właściciel: **MISTRAL-TASKS-9 (M56–M61) zlecone** Mistralowi. Uwaga: `uv run pytest` w main pada (trampoline) — używać `uv run --project tools/worldgen python -m pytest`.
+- 23:4x: worktree p1b-0172 usunięty. **0170 GOTOWE** `6d4e89566` (pytest 1075/1 stale fidelity/2 xfail, stretch_04 High 1 998 856 ≤ 2 M, merge main OK) → krytyk 0170 w toku (`REVIEW-…-s20-0170.md`), potem scalenie. Właściciel pytał o FIXES-11 vs TASKS-10: oba zlecić, najpierw FIXES-11.
+- 23:5x: właściciel zlecił Mistralowi **całe MISTRAL-FIXES-11** (M52-FIX-4, M47-FIX-3) oraz z TASKS-10 **M62** (brama/mur szpitala P11-129) i **M63** (zakład z dominantą + bramy segmentowe P11-094/063). Reszta TASKS-10 (M64–M69) — później, przypomnieć właścicielowi. :47 śledzi gałęzie M62/M63 — wyniki przekazać agentom hospgate-0189 / dojind-0196 (albo następcom).
+- 00:0x: krytyk **0170 SCAL warunkowo** (`REVIEW-2026-11-13-s20-0170.md`: warunki = regeneracja+fidelity, pomiar A16 Low; P1-1 las = palisada pni/płaski wierzch, brak wystających topoli; P1-2 korony/świerk przy kamerze płaskie — przekazane forest-0187) → **SCALONE 0170** `a4d2a1782`. Worktree horizon-0170 do usunięcia.
+- 00:1x: tydzień **91 %** (5 h 76 %) → STOP do agentów, potem ODWOŁANY (właściciel użył banked reset). **NOWA ZASADA WŁAŚCICIELA: maks. 3 agentów równocześnie; agentów s20 po zakończeniu NIE wznawiać; działających nie zabijać; trigger wybudzania musi działać** (crony :07/:17/:47 sesyjne — nowa sesja musi je założyć od nowa). 0184: łańcuch BEFORE w tle (PID 37008, `artifacts/logs/before-chain.status`), f664550d7. 0195: `autopilot-0195` b6a09c9a6 — runner 39/39 (solo 0–80 13,60 s, 40 t 47,52 s, droga 80→0 35,7–40,5 m), Unity testy w tle; nowa prosta 1300 m w scenie DrivingLab (wspólna scena — decyzja lidera przy scaleniu).
+- 00:2x: **0191 GOTOWE** `lamppool-0191` 05a53a44e (plamy latarni z rzeczywistych opraw, draws/tris +0 na 6 kamerach Low/High, ~+32 ALU/px Low UNVERIFIED, flaga `lampPoolSpecular` High/Ultra, profil rev 113→191; EditMode 543/546 — 2 znane CarPaint; zmienia `WorldInstances.cs`, `ProjectSetup.cs`; dodał `night` do visual-qa.ps1). Problem: łukowe latarnie w override Kwadrat Park (`face` w overrides.yaml C) świecą na plac → naczepa ciemniejsza. **KOLEJKA krytyków (start gdy < 3 agentów):** 0191, potem kolejne gotowe.
+- 00:4x: **SCALONE 0195** `ea6fdf840` (autopilot prosta 0–80–0; edytor: solo 13,67 s / 35,6 m, pusty 20,68 s / 39,5 m, 40 t 47,80 s / 40,8 m; PlayMode 8/8, runner 274 zielone; scena DrivingLab przegenerowana z prostą 1300 m + kamera `lab-straight`). Worktree usunięty. Pomiar telefonu po integracji: `pwsh scripts/gate12-phone.ps1 -Apk <apk> -UseExistingLock -Only s080_solo_1,s080_solo_2,s080_solo_3,s080_empty,s080_40t` → `gate12_telemetry.py` → zastąpić PROXY w GATE-1/2.
+- 01:0x: właściciel **zresetował limit tygodniowy** → 5 h 0 % (reset 03:50), tydzień 0 %, Fable 0 %. Zasada „maks. 3 agentów, nie wznawiać skończonych” nadal obowiązuje (do odwołania przez właściciela).
+- 01:3x: właściciel „M47-FIX-3 gotowe” → lider sprawdził de06eedf9: wszystkie 14 wierszy z bloku zgodne (108 = B-5 z „ważne dla P8”, 120 STOP przywrócony, A-16 usunięte całkowicie, 082/085 way_id) → **SCALONE M47-FIX-2+3** `caa352d5d`. Errata: P11-131 punkt_opis zaczyna się „Żurawia —” przy ulica=UNVERIFIED (drobne). Wiersze z pkt (2) nie oglądane przez lidera (zasady odczytu przyjęte na słowo). Czekamy: M52-FIX-4, M62, M63.
+- 01:4x: **SCALONE 0184** `7d4463285` (LOD1 pasek gładki poza płytą balkonu; Low LOD1 jasne łaty znikły — lider obejrzał hi_d_p; draws/tris +0; EditMode 517/518, pytest 1080/1 stale). Worktree usunięty. Otwarte → przekazane tower2-0190: `frontage.lod1_facade` → `FA.FAR_PLAIN_U`, białe łaty NW wieżowca i kreski narożnika. **Do wspólnej regeneracji brakuje: 0181 (after6 w toku), 0183 (r3 w toku).**
+- 02:0x: **SCALONE 0181** `b823e3c49` (r2 po krytyku: aliasing High usunięty, kubki Low okrągłe — z-fight klosza, brud na soczewkach, uv1 po decymacji; kamery plate-trailer/plate-truck-bobtail; testy lamp 46/46; budżety LOD2 bez zmian; lider obejrzał crops6 — ponowny krytyk pominięty z powodu limitu 3 agentów). Otwarte: rogi komór na Low (odcienie), stop vs pozycyjne nierozróżnialne o zmierzchu (limiter 0178), rozlew światła tablicy, pomarańczowe kreski obudowy. Worktree usunięty. **W integracji: TruckAssetBuilder.BuildBatch + TrailerAssetBuilder.BuildBatch + WorldTruckInstaller.InstallBatch.** Do regeneracji brakuje tylko 0183.
+- **Ostatni przydzielony ADR: 0196.** Kolejność integracji: krytycy 0181/0172 + domknięcia 0170/0184/0183 → scal (generated → --ours, overrides = suma) → JEDNA regeneracja → pytest → BuildBatch truck/trailer → EditMode → czysty APK → PSO → APK → gate3 A16 + gate12-phone. Nowe ADR 0185–0196 scalać po tej regeneracji (druga regeneracja).
 
 # STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
 - **main** `526daa8d2`+ (= origin/main). Scalone w s19: **0180** (wieżowiec r2), **0182** (zmierzch + brud drzwi naczepy r5), **0179** (Dojlidy), Mistral **M50** (furniture-3 3b34a98df), **M51** #49 i **M53** #50 (z erratą), FIX-9 **M54-FIX-2, M49-FIX-2, M48-FIX-2**. **Świat w main NIE przebudowany** (ostatnio `93842a609`, s17).

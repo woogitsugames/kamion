@@ -454,8 +454,14 @@ namespace PhysicsRunner.Sim
             return Math.Sqrt(dx * dx + dz * dz);
         }
 
+        /// <summary>
+        /// Brake onset: the first rising edge of the brake pedal (released -> applied). A pedal already applied at the
+        /// first sample (settle before a launch, ADR 0195 straight run) is not an onset; when the pedal is never released
+        /// the first applied sample is used (unchanged for the brake_* scenarios, which all start released).
+        /// </summary>
         static int FirstBrake(List<Sample> s)
         {
+            for (int i = 1; i < s.Count; i++) if (s[i].BrakeIn > 0.05 && s[i - 1].BrakeIn <= 0.05) return i;
             for (int i = 0; i < s.Count; i++) if (s[i].BrakeIn > 0.05) return i;
             return -1;
         }
