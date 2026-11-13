@@ -213,3 +213,48 @@ overrides:
         lantern: true
         faces: [{face: C-2, z_m: 2.62, size_m: 0.6}, {face: B-33_20, z_m: 1.98, size_m: 0.6}]
         plate: {z_m: 1.55, size_m: [0.42, 0.14]}
+    boom: {at_la: [3.35, -0.8], toward: left, replace_radius_m: 8.0}
+  - id: zurawia-hospital-gate-greenery
+    kind: tree_groups
+    lines:
+      - {line_epsg2180: [[780369.9, 590879.3], [780373.6, 590872.3]]}
+    group_size: [3, 3]
+    in_group_m: [3.0, 3.8]
+    gap_m: [30.0, 40.0]
+    depth_m: 1.5
+    rows_replace_m: 0.0
+    species: {linden: 0.5, maple: 0.5}
+    reason: >-
+      Photo P11-129: behind the wall left of the gate stands a dense dark mass of tall conifers (thuja, 8-10 m) and
+      shrubs that hides the three-storey ward block; without it the generated frame is dominated by that block
+      (render r1, ADR 0189). The region has no thuja / spruce tree prototype (HEIGHT: pine, birch, alder, maple,
+      linden, shrub), so the screen is the nearest existing plants: tall shrubs right behind the wall and a clump
+      of broadleaf trees behind them (the HighResolution orthophoto shows tree crowns at local 328-340 780-800).
+      Species WORKING_VALUE; replace by columnar conifers when a prototype exists.
+    confidence: low
+    verify: conifer prototype (thuja / spruce); research task M62
+  - id: zurawia-hospital-gate-shrubs
+    kind: tree_groups
+    lines:
+      - {line_epsg2180: [[780370.6, 590882.6], [780377.0, 590877.5]]}
+    group_size: [5, 6]
+    in_group_m: [1.5, 1.9]
+    gap_m: [30.0, 40.0]
+    depth_m: 0.8
+    rows_replace_m: 0.0
+    species: {shrub: 1.0}
+    reason: >-
+      Tall shrubs right behind the wall of the hospital gate, the lower part of the green screen described in
+      zurawia-hospital-gate-greenery (photo P11-129). WORKING_VALUE.
+    confidence: low
+    verify: conifer prototype (thuja / spruce); research task M62
+  - id: zurawia-gatehouse
+    target: {building: "bdot:8243ac9d-5800-466d-861f-c4aad27247c5"}
+    reason: >-
+      Gatehouse of the hospital gate (BDOT10k "budynek gospodarczy", LoD1 3.33 m, 37 m2). The rule made it a shed:
+      a blank beige box right behind the porch (REVIEW s19 0179: "pusty bezowy prostopadloscian bez otworow -
+      placeholder"). A gatehouse has a door and windows; grey render separates it from the white canopy of the
+      porch. Facade not visible on photo P11-129 (WORKING_VALUE).
+    confidence: low
+    verify: research task M62; owner photo session
+    set: {typology: office, wall_material: plaster_grey, bands: false}

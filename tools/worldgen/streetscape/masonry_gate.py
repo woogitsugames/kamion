@@ -15,6 +15,8 @@ street. Faces look along +a (toward the street) unless `facing_deg` (compass) is
   faces    [{face: B-20 | C-2 | B-33_<n> | B-2, at_la, z_m (centre), size_m, facing_deg?, fade?}]   plate on masonry
   boards   [{board: <name of BOARDS>, at_la, z_m, size_m: [w, h], facing_deg?}]
   posts    [{at_la, height_m, lantern: true|false, faces: [{face, z_m, size_m}], plate: {z_m, size_m}}]
+  boom     {at_la, toward: left | right, replace_radius_m}  the rule `lift_gate` prototype with its housing at at_la
+           and the boom across the drive; OSM lift gates within replace_radius_m (default 8 m) are replaced by it
   fence_cut_m   the rule fence (furniture.fences) is cut within this distance of the walls (default 1.2 m)
 
 The whole kit is ONE prototype with ONE material (own 1024 px atlas: brick, coping, concrete, plaques, sign faces):
@@ -704,10 +706,20 @@ def build(pl, kits, boards, report, carriage=None):
         # instance at the anchor level; every element stands on the ground under it (Kit.base)
         z = z0
         pl.add(proto, fr.o, 0.0, z=z, src=f"override:{k['id']}")
+        replaced = 0
+        bm = k["spec"].get("boom")
+        if bm:                                   # the gate's own boom instead of the OSM node's (housing side from the photo)
+            rr = float(bm.get("replace_radius_m", 8.0))
+            keep = [it for it in pl.items if not (it["p"] == "lift_gate" and
+                                                  math.hypot(it["e"] - fr.o[0], it["n"] - fr.o[1]) < rr)]
+            replaced = len(pl.items) - len(keep)
+            pl.items[:] = keep
+            d = fr.right * (-1.0 if bm.get("toward", "left") == "left" else 1.0)     # prototype +x = along the boom
+            pl.add("lift_gate", fr.en(bm["at_la"]), math.atan2(d[1], d[0]), src=f"override:{k['id']}:boom")
         rep["kits"].append({"id": k["id"], "proto": proto, "anchor": [round(float(v), 1) for v in fr.o],
                             "z": round(z, 2), "levels_m": [round(float(v), 2) for v in k["levels"]], "tris": int(tris),
                             "wall_m": round(float(sum(np.hypot(*np.diff(ln, axis=0).T).sum() for ln in k["wall_lines"])), 1),
-                            "on_carriageway": on_road,
+                            "on_carriageway": on_road, "lift_gates_replaced": replaced,
                             "faces": [s["face"] for s in k["spec"].get("faces", [])] +
                                      [s["face"] for p in k["spec"].get("posts", []) for s in p.get("faces", [])]})
     report["masonry_gates"] = rep
