@@ -432,6 +432,19 @@ def cameras_generic(region_id, w):
         cams.append({"id": f"roundabout_{k + 1:02d}_above", "type": "persp", "fov_deg": 55.0,
                      "pos": [r(ctr[0] + 70), r(ctr[1] + 80), r(zc + 42)], "look_at": [r(ctr[0]), r(ctr[1]), r(zc)],
                      "note": f"roundabout from ~40 m: {nm}"})
+    # ADR 0174: cameras matched to accepted reference photos (authored_override, optional per region)
+    ph_f = pipeline.REGIONS / region_id / "control_cameras_photo.authored.json"
+    if ph_f.exists():
+        for e in json.loads(ph_f.read_text(encoding="utf-8"))["cameras"]:
+            p = np.array(e["pos_en"], dtype=float)
+            hd = math.radians(float(e["heading_deg"]))
+            d = np.array([math.sin(hd), math.cos(hd)])
+            _, _, _, zp = surface_at(w, p)
+            eye = float(zp) + float(e.get("eye_m", 1.6))
+            tgt = p + 100.0 * d
+            cams.append({"id": e["id"], "type": "persp", "fov_deg": float(e.get("fov_deg", 40.0)),
+                         "pos": [r(p[0]), r(p[1]), r(eye)], "look_at": [r(tgt[0]), r(tgt[1]), r(eye)],
+                         "note": f"photo match {e['photo']} (heading {e['heading_deg']} deg: {e['basis']})"})
     bb = w.region["bbox"]
     cx = (bb["xmin"] + bb["xmax"]) / 2 - w.origin[0]
     cy = (bb["ymin"] + bb["ymax"]) / 2 - w.origin[1]
@@ -881,7 +894,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     srcs = {}
     for k in ("roads.graph.json", "terrain.json", "overrides.yaml", "generated/osm_context.json"):
         p = pipeline.REGIONS / region_id / k
-        srcs[k] = sha(p.read_bytes()) if p.exists() else None
+        # ADR 0173: hash LF-normalised text, so a CRLF checkout (worktree) and an LF checkout (main) agree
+        srcs[k] = sha(p.read_bytes().replace(b"\r\n", b"\n")) if p.exists() else None
     tm = json.loads((pipeline.REGIONS / region_id / "terrain.json").read_text(encoding="utf-8"))
     srcs["heightmap.r16 (Data/raw)"] = tm["sha256_r16"]
     manifest = {

@@ -128,6 +128,9 @@ COL_PYLON_STEEL = (0.27, 0.285, 0.30)
 
 
 def _sha256(path: Path) -> str:
+    if path.suffix.lower() in (".json", ".geojson", ".yaml", ".yml"):
+        # ADR 0173: git-tracked text inputs may be checked out with CRLF (worktrees) or LF (main); hash LF content
+        return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
     h = hashlib.sha256()
     with open(path, "rb") as f:
         while chunk := f.read(1 << 20):
@@ -789,7 +792,6 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         "half_m": half,
         "ring_max_m": RING_MAX_M,
         "sources_sha256": sources_sha,
-        "extracted_in_s": round(time.time() - t0, 2),
         "forests": forests,
         "buildings": buildings,
         "lod1_height_audit": lod1_audit,
@@ -802,6 +804,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         "pylons": pylons,
         "power_lines": power_lines,
     }
+    # ADR 0173: no wall-clock time in the cache (byte-identical derived world between two runs); time goes to stdout
+    print(f"[far_field] GIS extraction {time.time() - t0:.1f} s")
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_text(json.dumps(data, ensure_ascii=False, sort_keys=True), encoding="utf-8", newline="\n")
     return data

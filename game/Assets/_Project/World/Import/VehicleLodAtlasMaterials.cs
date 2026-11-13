@@ -37,9 +37,8 @@ namespace Game.World.Import
             mat.shaderKeywords = Array.Empty<string>();
             mat.EnableKeyword("_UV_MESH0");
             mat.enableInstancing = true;
-            var dir = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "textures");
-            var albedo = InstanceImporter.ImportTexture(region, Path.Combine(dir, "vehicle_lod_details_BaseColor.png"), true);
-            var mask = InstanceImporter.ImportTexture(region, Path.Combine(dir, "vehicle_lod_details_MaskMap.png"), true, true);
+            var albedo = InstanceImporter.ImportTexture(region, WorldLibrary.Resolve(region.Region, "textures", "vehicle_lod_details_BaseColor.png"), true);
+            var mask = InstanceImporter.ImportTexture(region, WorldLibrary.Resolve(region.Region, "textures", "vehicle_lod_details_MaskMap.png"), true, true);
             mat.SetTexture("_BaseMap", albedo);
             mat.SetTexture("_MaskMap", mask);
             if (!WorldPbrMaterials.Imported.Contains(albedo)) WorldPbrMaterials.Imported.Add(albedo);

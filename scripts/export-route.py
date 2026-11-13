@@ -40,8 +40,14 @@ def main() -> int:
     rdir = REPO / "Data" / "Regions" / a.region
     region = yaml.safe_load((rdir / "region.yaml").read_text(encoding="utf-8"))
     graph = json.loads((rdir / "roads.graph.json").read_text(encoding="utf-8"))
-    cand = json.loads((REPO / "docs/reports/map/candidates.json").read_text(encoding="utf-8"))
-    route = next(c for c in cand["candidates"] if c["id"] == region["candidate"])["route"]
+    # ADR 0166/0174: a region with authored route ends (route_endpoints.json) uses them, like build_world.route_polyline;
+    # otherwise the D4 candidate route (region C).
+    re_f = rdir / "route_endpoints.json"
+    if re_f.exists():
+        route = json.loads(re_f.read_text(encoding="utf-8"))
+    else:
+        cand = json.loads((REPO / "docs/reports/map/candidates.json").read_text(encoding="utf-8"))
+        route = next(c for c in cand["candidates"] if c["id"] == region["candidate"])["route"]
     ox, oy = region["origin"]["x"], region["origin"]["y"]
 
     def nearest(xy):
@@ -70,7 +76,7 @@ def main() -> int:
         "schema": "truck-sim-pl/route/1",
         "region": a.region,
         "route": "start",
-        "note": "Depot gate (Kwadrat Park) -> DK8/DK19; centre of the rightmost lane of the generated carriageways (roads.route, ADR 0076)",
+        "note": (route["description"] if re_f.exists() else "Depot gate (Kwadrat Park) -> DK8/DK19") + "; centre of the rightmost lane of the generated carriageways (roads.route, ADR 0076)",
         "frame": "region-local metres, E = x - origin.x, N = y - origin.y (EPSG:2180)",
         "length_m": round(float(s[-1]), 2),
         "step_m": a.step,
