@@ -1742,6 +1742,7 @@ overrides:
     # shorter than that gets no 4 m terminal). Beam face on the LEFT normal of the point order = the link road.
     polyline_en: [[515.39, -679.21], [524.18, -683.98], [528.05, -686.07]]
     free_ends: [false, true]
+    beside_structure: true        # bridge mesh of the chunk, like the rule run it continues (no new primitive)
     reason: >-
       ADR 0159 after4 (REVIEW s16-world-int P1, frame 482392: the barrier is a short stub at the right edge, on the
       photo it comes down to the ground beside the camera). Mapillary 482392746429891 (richlv 2020, CC BY-SA 4.0,

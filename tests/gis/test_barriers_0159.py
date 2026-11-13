@@ -150,6 +150,16 @@ def test_beam_face_is_on_the_left_normal_of_the_point_order():
     assert beam.V[:, 1].min() > 0.0 and min(float(p.V[:, 1].min()) for p in posts) < 0.0
 
 
+def test_structure_keyed_run_goes_to_the_bridge_mesh():
+    """after5: an authored rail that continues a "beside a viaduct" run must not add a furniture primitive."""
+    n = 16
+    P = np.column_stack([np.arange(n, dtype=float), np.zeros(n)])
+    for key, layer in (("authored:x", "furniture"), ("authored:x:structure", "bridge")):
+        lin = _Lin(0.0)
+        FU.guardrail(lin, P, np.zeros(n), key, term=(False, True))
+        assert {p.layer for p in lin.buf.parts if p.layer != "collision"} == {layer}, key
+
+
 def test_median_rails_face_their_carriageways():
     """after4: the NE rail faced the grass (drawn from the nose with "the road on the right")."""
     ov = {o["id"]: o for o in _overrides()}
@@ -162,6 +172,7 @@ def test_median_rails_face_their_carriageways():
     assert 90.0 < float(np.hypot(*np.diff(q, axis=0).T).sum()) < 102.0
     ext = ov["biezenstwa-link-barrier-se-end"]
     assert ext["free_ends"] == [False, True] and _left_normal_side(ext["polyline_en"], (522.0, -678.0))
+    assert ext["beside_structure"] is True                              # bridge mesh, as the rule run it continues
     q = np.asarray(ext["polyline_en"], float)
     assert float(np.hypot(*np.diff(q, axis=0).T).sum()) >= 13.0          # long enough for a 4 m terminal
 
@@ -175,8 +186,8 @@ def test_generated_runs_respect_the_zones():
     runs = {}
     for r in q.get("guardrail_runs", []):
         runs.setdefault(r["key"], []).append(np.asarray(r["pts"], float))
-    if "authored:andersa-se-ramp-median-sw-barrier" not in runs:
-        pytest.skip("world not regenerated with ADR 0159 after4 yet")
+    if "authored:biezenstwa-link-barrier-se-end:structure" not in runs:
+        pytest.skip("world not regenerated with ADR 0159 after6 yet")
     ov = {o["id"]: o for o in _overrides()}
     zones = [Polygon(ov[k]["polygon_en"]) for k in ("andersa-link-no-guardrail", "andersa-se-cyclepath-no-guardrail")]
     import shapely
@@ -192,7 +203,7 @@ def test_generated_runs_respect_the_zones():
     # the rule run of the SW cap of the ramp (removed by the zone of the first three builds) reaches the fill end again
     cap = [P for k, v in runs.items() if k.startswith("c:w173956078") and k.endswith(":L:bridge") for P in v]
     assert cap and min(float(np.hypot(*(P[:, :2] - [-383.65, -126.28]).T).min()) for P in cap) < 1.5
-    end = runs["authored:biezenstwa-link-barrier-se-end"][-1][-1]
+    end = runs["authored:biezenstwa-link-barrier-se-end:structure"][-1][-1]
     assert float(np.hypot(end[0] - 528.05, end[1] + 686.07)) < 0.6
 
 

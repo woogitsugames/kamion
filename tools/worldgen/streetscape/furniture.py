@@ -2062,12 +2062,17 @@ def guardrails(lin, net, zground, report):
         own = []
         # ADR 0159: `post_spacing_m` <= 2 = posts every 2 m (read off the orthophoto), else the 4 m ground rule
         dn = np.ones(len(P), bool) if float(o.get("post_spacing_m") or 4.0) <= 2.0 else None
-        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", own, m, dense=dn)
+        # ADR 0159 after5: `beside_structure: true` = the rail continues a run of the "beside a viaduct" rule: its key
+        # ends with ":structure", so it goes to the bridge mesh of its chunk like that run (ADR 0110). As a furniture
+        # part the 14 m of biezenstwa-link-barrier-se-end were a new barrier_steel primitive of chunk 6_6 (+1 draw,
+        # +1 shadow caster on twelve control cameras).
+        akey = f"authored:{o['id']}" + (":structure" if o.get("beside_structure") else "")
+        _dedup_guardrail(lin, P, Z, akey, own, m, dense=dn)
         # ADR 0123 b4: `free_ends: [start, end]` (drawing order), False = that end stays where it was traced, without
         # a turned-down terminal (the east end of dk8-ramp-split-barrier-n stops at the expansion joint of the ramp
         # deck: _join_free_ends swung its last 8 m onto the OTHER rail of the separator, 1.4 m away)
         fe = o.get("free_ends")
-        mine = [it for it in lin.rail_queue if it["key"] == f"authored:{o['id']}"]
+        mine = [it for it in lin.rail_queue if it["key"] == akey]
         if fe and mine:
             for it, e_, keep_ in ((mine[0], 0, fe[0]), (mine[-1], -1, fe[1])):
                 if not keep_:

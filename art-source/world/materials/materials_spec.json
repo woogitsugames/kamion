@@ -1569,6 +1569,106 @@
       "hf_ratio_albedo": 0.0061,
       "ao_mean": 0.989
     },
+    "concrete_panels_wall": {
+      "tile_m": [
+        3.0,
+        3.0
+      ],
+      "slots": [
+        "ramp_wall_panels"
+      ],
+      "note": "Precast facing panels 1.5 x 1.5 m in columns shifted by half a panel, open joints (Biezenstwa ramp walls, ADR 0159).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.93,
+          "dir": "concrete_panels_wall/High",
+          "png_bytes": 5051566,
+          "files": [
+            "T_concrete_panels_wall_BaseColor.png",
+            "T_concrete_panels_wall_MaskMap.png",
+            "T_concrete_panels_wall_Normal.png",
+            "T_concrete_panels_wall_Var.png"
+          ],
+          "smoothness_mean": 0.178,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 5.86,
+          "dir": "concrete_panels_wall/Medium",
+          "png_bytes": 1017557,
+          "files": [
+            "T_concrete_panels_wall_BaseColor.png",
+            "T_concrete_panels_wall_MaskMap.png",
+            "T_concrete_panels_wall_Normal.png",
+            "T_concrete_panels_wall_Var.png"
+          ],
+          "smoothness_mean": 0.176,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 11.72,
+          "dir": "concrete_panels_wall/Low",
+          "png_bytes": 177090,
+          "files": [
+            "T_concrete_panels_wall_BaseColor.png",
+            "T_concrete_panels_wall_MaskMap.png",
+            "T_concrete_panels_wall_Normal.png",
+            "T_concrete_panels_wall_Var.png"
+          ],
+          "smoothness_mean": 0.174,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00838,
+        0.00055
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4554,
+        "p95": 0.547,
+        "mean_rgb_linear": [
+          0.4999,
+          0.4999,
+          0.4999
+        ]
+      },
+      "hf_ratio_albedo": 0.0199,
+      "ao_mean": 0.985
+    },
     "concrete_precast": {
       "tile_m": [
         6.0,
