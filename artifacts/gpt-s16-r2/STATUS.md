@@ -30,3 +30,5 @@ Import baseline zakończony.
 Zapisano before/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano before/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano before/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
