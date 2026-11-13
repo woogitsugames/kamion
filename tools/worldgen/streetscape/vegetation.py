@@ -270,7 +270,7 @@ def ground_masks(src, origin, hf, dist_road, forests):
 
 
 # ADR 0154: the plot implementation is read-only; use its existing species ranges.
-def garden_canopies(trees, rp, report):
+def garden_canopies(trees, rp, report, parts=()):
     """ADR0154: broader existing High garden crowns, no added instances.
 
     Width multipliers are WORKING_VALUE from typology P07/P08/P12:
@@ -278,6 +278,13 @@ def garden_canopies(trees, rp, report):
     remains the original orthophoto extraction; species are existing rules.
     """
     lookup = {f"plot:{p['id']}": p for p in rp.get('plots', [])}
+    # Read existing building geometry only: LoD1 height is often below a pitched
+    # ridge, and a grouped plot can contain several houses of different heights.
+    roof_tops = {}
+    for part in parts:
+        if part.layer in ('buildings', 'buildings_low', 'buildings_lod1') and len(part.V):
+            roof_tops[part.src] = max(roof_tops.get(part.src, -float('inf')), float(part.V[:, 2].max()))
+    mature_height = {'birch': 23.0, 'linden': 24.0, 'maple': 22.0}  # WORKING_VALUE, typology P07/P08/P12
     widths = {'tree_maple': 1.35, 'tree_linden': 1.35, 'tree_birch': 1.2}
     rows = []
     result = []
@@ -291,8 +298,16 @@ def garden_canopies(trees, rp, report):
         changed['garden_canopy_width'] = width
         species = tree['p'].removeprefix('tree_')
         required = float(plot.get('house_h') or 6.0) + 3.5
-        changed['h'] = round(max(float(tree['h']), min(PLT.INST_H_M[species][1], required)), 1)
+        from shapely.geometry import Point
+        point = Point(tree['e'], tree['n'])
+        nearby_roofs = [roof_tops[house] for house, polygon in zip(plot.get('houses', []), plot.get('house_polys', []))
+                        if house in roof_tops and polygon.distance(point) <= 25.0]
+        roof_top = max(nearby_roofs, default=None)
+        if roof_top is not None:
+            required = max(required, roof_top - float(tree['z']) + 4.5)  # WORKING_VALUE crown clearance
+        limit = mature_height[species] if roof_top is not None else PLT.INST_H_M[species][1]
+        changed['h'] = round(max(float(tree['h']), min(limit, required)), 1)
         result.append(changed)
-        rows.append({'src': tree['src'], 'species': species, 'height_before_m': tree['h'], 'height_after_m': changed['h'], 'width_multiplier': width, 'position': [tree['e'], tree['n']]})
+        rows.append({'src': tree['src'], 'species': species, 'height_before_m': tree['h'], 'height_after_m': changed['h'], 'width_multiplier': width, 'position': [tree['e'], tree['n']], 'nearby_roof_top_evrf2007': roof_top})
     report['garden_canopies'] = {'source': 'WORKING_VALUE width/height; P07/P08/P12 typology; original ortho positions retained', 'modified': len(rows), 'added_instances': 0, 'high_only': True, 'list': rows}
     return result

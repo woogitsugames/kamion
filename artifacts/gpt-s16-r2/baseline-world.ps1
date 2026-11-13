@@ -4,11 +4,13 @@ $root='C:\Users\matma\Documents\Claude\kamion'
 $slot=Join-Path $root 'scripts/unity-slot.ps1'
 & pwsh $slot -Acquire -Pool heavy -MaxSlots 3 -Owner gpt-s16
 $timer=[Diagnostics.Stopwatch]::StartNew()
+$previousGardenFlag=$env:KAMION_GARDENS_0154
+$env:KAMION_GARDENS_0154=if($Stage -eq 'baseline'){'0'}else{'1'}
 try {
  & uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> "artifacts/gpt-s16-r2/$Stage-world.log"
  if ($LASTEXITCODE -ne 0) { throw "World generation failed: $Stage" }
  if (Select-String -LiteralPath "artifacts/gpt-s16-r2/$Stage-world.log" -SimpleMatch 'fallback=True' -Quiet) { throw 'Material fallback detected' }
-} finally { & pwsh $slot -Release -Pool heavy -Owner gpt-s16 }
+} finally { $env:KAMION_GARDENS_0154=$previousGardenFlag; & pwsh $slot -Release -Pool heavy -Owner gpt-s16 }
 $timer.Stop()
 Copy-Item Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json "artifacts/gpt-s16-r2/$Stage-streetscape-qa.json"
 Copy-Item Data/Regions/bialystok-industrial-c/generated/world_manifest.json "artifacts/gpt-s16-r2/$Stage-world-manifest.json"

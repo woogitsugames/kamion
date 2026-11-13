@@ -76,3 +76,19 @@ def test_canopy_adjustment_never_shortens_an_existing_mature_tree():
     tree = {'p': 'tree_birch', 'v': 1, 'h': 20.0, 'e': 0.0, 'n': 0.0, 'z': 140.0, 'src': 'plot:test:canopy', 'tier': 'high'}
     result = garden_canopies([tree], rp, {})
     assert result[0]['h'] == 20.0
+
+
+def test_crown_height_reads_nearby_roof_geometry_instead_of_group_first_lod1():
+    from types import SimpleNamespace
+    _, rp = fixture()
+    plot = rp['plots'][0]
+    plot['houses'] = ['near-roof', 'distant-roof']
+    plot['house_polys'] = [plot['foot'], Polygon([(100, 100), (110, 100), (110, 110), (100, 110)])]
+    parts = [SimpleNamespace(layer='buildings', src='near-roof', V=np.array([[0., 0., 156.]])),
+             SimpleNamespace(layer='buildings', src='distant-roof', V=np.array([[100., 100., 200.]]))]
+    tree = {'p': 'tree_maple', 'v': 2, 'h': 11., 'e': 0., 'n': 0., 'z': 140., 'src': 'plot:test:canopy', 'tier': 'high'}
+    report = {}
+    result = garden_canopies([tree], rp, report, parts=parts)
+    assert result[0]['h'] == 20.5
+    assert result[0]['z'] == tree['z']
+    assert report['garden_canopies']['list'][0]['nearby_roof_top_evrf2007'] == 156.

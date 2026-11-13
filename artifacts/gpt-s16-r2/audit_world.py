@@ -4,7 +4,7 @@ from pathlib import Path
 r=Path(__file__).resolve().parent;root=r.parents[1]
 sys.path.insert(0,str(r.parent/'gpt-s16-r1'))
 from audit_glb import load,digest,tris
-p=argparse.ArgumentParser();p.add_argument('stage',choices=['baseline','after']);args=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('stage',choices=['baseline','after','verify-baseline']);args=p.parse_args()
 m=json.loads((root/'Data/Regions/bialystok-industrial-c/generated/world_manifest.json').read_text())
 record={'protected':{},'plots':{},'non_high':{},'gardens':[]}
 for chunk in m['chunks']:
@@ -35,4 +35,9 @@ if args.stage=='after':
  if identity(base['gardens'])!=identity(record['gardens']):fail.append('Garden identity/placement/tier changed')
  result={'protected_meshes':len(base['protected']),'non_high_instances':sum(x['count'] for x in record['non_high'].values()),'garden_instances':len(record['gardens']),'plot_groups':len(record['plots']),'plot_tri_delta':sum(x['tris'] for x in record['plots'].values())-sum(x['tris'] for x in base['plots'].values()),'failures':fail}
  (r/'world-integrity.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result));assert not fail,fail
+elif args.stage=='verify-baseline':
+ base=json.loads((r/'baseline-world-audit.json').read_text())
+ for field in ('protected','plots','non_high','gardens'):
+  assert base[field]==record[field], 'Regenerated ablation baseline differs: '+field
+ print('Ablation baseline matches original protected meshes, plot groups/triangles, Low records and garden records')
 else:print(json.dumps({'protected_meshes':len(record['protected']),'non_high_chunks':len(record['non_high']),'garden_instances':len(record['gardens']),'plot_groups':len(record['plots'])}))

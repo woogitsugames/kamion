@@ -1,12 +1,13 @@
 """Reference | before | after for six real streets; references are explicitly typological."""
-import json
+import argparse,json
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont
 r=Path(__file__).resolve().parent;root=r.parents[1]
 streets=json.loads((r/'street-views.json').read_text(encoding='utf-8-sig'))
 refs={x['reference']:x for x in json.loads((r/'reference-provenance.json').read_text(encoding='utf-8-sig'))}
 font=ImageFont.truetype('C:/Windows/Fonts/arial.ttf',12);title=ImageFont.truetype('C:/Windows/Fonts/arial.ttf',15)
-for condition in ('Low-clear','Low-overcast','High-clear','High-overcast'):
+parser=argparse.ArgumentParser();parser.add_argument('--condition',choices=['Low-clear','Low-overcast','High-clear','High-overcast']);args=parser.parse_args()
+for condition in ([args.condition] if args.condition else ('Low-clear','Low-overcast','High-clear','High-overcast')):
  out=r/'photo-pairs'/condition;out.mkdir(parents=True,exist_ok=True)
  for index,street in enumerate(streets):
   ref=refs[street['reference']];photo=Image.open(root/ref['file']).convert('RGB');photo.thumbnail((312,260),Image.Resampling.LANCZOS)
