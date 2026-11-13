@@ -17,13 +17,15 @@
 float4 _KamionWindows;      // share of lit windows: x flat, y office, z hall, w stairwell (already x switch-on)
 float4 _KamionWindowsLum;   // x mean lit-window luminance x exposure (display units), y > 0 = on
 
-uint KamionNwHash(int3 c, uint salt)
+// Float hash (Hoskins "hash without sine", 3 -> 1) of a lattice cell: no integer ops - Kamion/World Surface compiles at
+// target 3.0, where uint math next to half code hit D3D11 X8000 (min-precision int). Cells are wrapped to +-4096 first
+// so frac() keeps its precision.
+float KamionNwHash(float3 cell, float salt)
 {
-    uint h = (uint)c.x * 73856093u ^ (uint)c.y * 19349663u ^ (uint)c.z * 83492791u ^ salt * 2654435761u;
-    h ^= h >> 16; h *= 2246822519u; h ^= h >> 13; h *= 3266489917u; h ^= h >> 16;
-    return h;
+    float3 p3 = frac((fmod(cell, 4096.0) + salt * float3(17.13, 31.71, 47.37)) * float3(0.1031, 0.1030, 0.0973));
+    p3 += dot(p3, p3.yzx + 33.33);
+    return frac((p3.x + p3.y) * p3.z);
 }
-float KamionNwU(uint h) { return (h & 0xFFFFFFu) * (1.0 / 16777216.0); }
 
 // Position (space of `base`) of the UV point c, from a pixel at uv; dRel* = screen derivatives of a camera-relative
 // position (precise), dUv* of the UV. Degenerate (edge-on) triangles keep the pixel's own position.
@@ -53,8 +55,8 @@ half3 KamionNwColour(float cls, float u)
 half3 KamionNightWindow(float3 anchor, float cls, half trn, half cov, half3 albedo)
 {
     if (cls < 0.5 || trn <= 0.004h) return 0;   // cls is a float: an int next to half math hits D3D11 X8000 (min-precision int)
-    int3 w = (int3)floor(anchor);
-    uint hw = KamionNwHash(w, 11u);
+    float3 w = floor(anchor);
+    float hw = KamionNwHash(w, 1.0);
     float p, inLit = 0.75, stray = 0.06;
     float3 group = float3(6.0, 2.8, 6.0);
     if (cls < 1.5) p = _KamionWindows.x;
@@ -63,12 +65,11 @@ half3 KamionNightWindow(float3 anchor, float cls, half trn, half cov, half3 albe
     else { p = _KamionWindows.z; group = float3(30.0, 6.0, 30.0); inLit = 0.8; stray = 0.0; }
     // flat / floor lit with q so that the window share stays p: p = q inLit + (1 - q) stray
     float q = saturate((p - stray) / max(inLit - stray, 1e-3));
-    uint hg = KamionNwHash((int3)floor(anchor / group), 23u + (uint)(cls + 0.5));
-    bool lit = KamionNwU(hg) < q ? KamionNwU(hw) < inLit : KamionNwU(hw) < stray * saturate(p * 4.0);
+    float hg = KamionNwHash(floor(anchor / group), 2.0 + cls);
+    bool lit = hg < q ? hw < inLit : hw < stray * saturate(p * 4.0);
     if (!lit) return 0;
-    uint hc = KamionNwHash(w, 37u);
-    half3 c = KamionNwColour(cls, KamionNwU(hc));
-    half k = 0.55h + 0.9h * (half)KamionNwU(hc >> 7);
+    half3 c = KamionNwColour(cls, KamionNwHash(w, 7.0));
+    half k = 0.55h + 0.9h * (half)KamionNwHash(w, 9.0);
     // fabric in front of the lamp passes its own colour (red drapes glow red), normalised to luminance 1
     half la = max(dot(albedo, half3(0.2126h, 0.7152h, 0.0722h)), 0.02h);
     half3 tint = lerp(half3(1, 1, 1), clamp(albedo / la, 0.0h, 2.5h), cov * 0.8h);
