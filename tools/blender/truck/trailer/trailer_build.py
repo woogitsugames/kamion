@@ -1230,7 +1230,10 @@ def rear_lamps_and_rup():
                     x = a + (b - a) * ix / nx
                     tx = (x - la) / W            # crown over the WHOLE lens, continuous across the sections
                     crown = 0.004 * math.sin(math.pi * tx) ** 0.6 * math.sin(math.pi * tz) ** 0.6
-                    row.append(V((x, yo - 0.0562 - crown, za + 0.002 + (zb - za - 0.004) * tz)))
+                    # ADR 0181 r2 (review s20 P1-2): 1.5 mm proud of the lens box front (yo - 0.056). At 0.2 mm the sheet
+                    # z-fought the box face near its edges: two lens frames interleaved (lumpy LED cups on Low) and the
+                    # neighbouring box bevel showed through (red wedge in the amber chamber).
+                    row.append(V((x, yo - 0.0575 - crown, za + 0.002 + (zb - za - 0.004) * tz)))
                 rows.append(row)
             sheet(f"rear_lens_{nm}_{sd}_face", rows, mname, flip=False, smooth=True)
             # LED emitters seen through the lens

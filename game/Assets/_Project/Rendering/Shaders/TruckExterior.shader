@@ -442,7 +442,7 @@ Shader "Kamion/Truck Exterior"
                 if (_LensDetail > 0.5 && lens.style > 0.5 && lens.style < 4.5)
                 {
                     nTS = half3(0, 0, 1);
-                    rough = min(rough, (half)0.08);
+                    rough = min(rough, (half)0.2);   // 0.08 mirrored the low-res probe as camouflage patches (after4)
                     outerLens = 1;
                 }
             #endif
