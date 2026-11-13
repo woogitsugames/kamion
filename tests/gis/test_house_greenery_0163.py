@@ -179,7 +179,7 @@ def test_tree_size_follows_g7(species):
         assert H <= PT.G7["ceiling_m"][species] and 0.14 <= cb / H <= 0.2
     assert PT.G7["ceiling_m"]["birch"] == 20.0
     H, cb, _ = PT.tree_dims(R_MED, species, ("s", 1), in_plot=False)
-    assert cb >= 2.0                                                              # pruned over the footway
+    assert cb >= 1.6                                                              # open ground beside the street
 
 
 def test_crown_cards_have_the_habit_of_the_species():

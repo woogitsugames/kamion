@@ -577,7 +577,7 @@ G7 = {
     "broadleaf_mix": {"maple": 0.25, "birch": 0.20, "linden": 0.15, "ash": 0.15, "fruit": 0.20, "chestnut": 0.05},  # 11 (W)
     "crown_base_per_h": 0.15,       # 7 (E): oak 3 / 18, maple 3 / 20, linden 1.3 / 7
     "crown_base_min_m": 1.3,        # 7: young trees
-    "crown_base_strip_m": 2.0,      # W: a tree in front of the fence is pruned over the footway (G7: 2.5-4 m when pruned)
+    "crown_base_strip_m": 1.6,      # W: a tree on open ground beside the street (no fence of its own); G7: 2.5-4 m only when pruned
 }
 # habit -> crown card of the plot kit atlas (plot_kit._crown_card): ovate dense / round dense / narrow open (G7 # 14)
 HABIT = {"linden": "crown_ovoid", "maple": "crown_round", "chestnut": "crown_round", "ash": "crown_round", "birch": "crown_birch"}
