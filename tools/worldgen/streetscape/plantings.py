@@ -553,85 +553,414 @@ def _garden_groups(buf, half):
             groups[key] = (lo, hi)
     return groups
 
-def _inside_garden_groups(output, layer, groups, half):
-    V, _, T, _ = output
-    centers = V[T].mean(axis=1)
-    cells = np.floor(np.column_stack((centers[:, 0] + half, half - centers[:, 1])) / CHUNK_M).astype(int)
-    for cell in sorted(set(map(tuple, cells))):
-        bounds = groups.get((layer, *cell))
-        if bounds is None:
-            return False
-        vertices = V[T[np.all(cells == cell, axis=1)]].reshape(-1, 3)
-        if np.any(vertices < bounds[0] - 1e-05) or np.any(vertices > bounds[1] + 1e-05):
-            return False
+
+# ------------------------------------------------------------------------------------------------------------------
+# ADR 0163: greenery of the house streets by the G7 measurements (research/g7-street-greenery/README.md, table
+# "Parametry dla generatora"; # = row of that table, S / E / W = SOURCED / ESTIMATED / WORKING_VALUE there).
+# Corrects ADR 0154 (crowns of the region's tree library scaled to 11-20 m read as stone pines on a bare stem and
+# were not drawn on Low at all).
+G7 = {
+    "hedge_share": 0.40,            # 15 (E, 25-55 %): plots with a hedge >= 1.2 m along the street
+    "low_share": 0.25,              # 16 (E): plots with a strip of low shrubs 0.5-1.2 m
+    "thuja_of_hedges": 0.70,        # 18 (W): Thuja occidentalis 'Smaragd' / 'Brabant'; the rest broadleaf
+    "thuja_h_m": (2.0, 2.5),        # 19 (E, +-0.5 m)
+    "thuja_corner_h_m": 3.0,        # 19: up to 3.0 m on the corners, rounded
+    "thuja_w_m": (0.8, 1.2),        # 19
+    "hedge_gap_m": (0.3, 0.6),      # 19: 0.3-1.0 m behind the fence line (skin of the hedge, not its axis)
+    "broadleaf_h_m": (1.2, 1.5),    # 20 (0.8-1.5 m) cut to the part that counts as a hedge >= 1.2 m (# 15)
+    "broadleaf_w_m": (0.5, 0.8),    # 20
+    "low_h_m": (0.5, 1.2),          # 16
+    "front_cover": 0.80,            # 21 (W): share of the front a hedge covers (the rest: gate, wicket, driveway)
+    "crown_w_per_h": {"linden": (0.50, 0.60), "maple": (0.65, 0.75), "chestnut": (0.60, 0.80), "ash": (0.70, 0.80),
+                      "birch": (0.40, 0.60), "fruit": (0.75, 0.90)},        # 13 (S, Ebben); fruit: W (not in G7)
+    "ceiling_m": {"linden": 24.0, "maple": 22.0, "chestnut": 22.0, "ash": 25.0, "birch": 20.0, "fruit": 8.0},   # 12
+    "broadleaf_mix": {"maple": 0.25, "birch": 0.20, "linden": 0.15, "ash": 0.15, "fruit": 0.20, "chestnut": 0.05},  # 11 (W)
+    "crown_base_per_h": 0.15,       # 7 (E): oak 3 / 18, maple 3 / 20, linden 1.3 / 7
+    "crown_base_min_m": 1.3,        # 7: young trees
+    "crown_base_strip_m": 2.0,      # W: a tree in front of the fence is pruned over the footway (G7: 2.5-4 m when pruned)
+}
+# habit -> crown card of the plot kit atlas (plot_kit._crown_card): ovate dense / round dense / narrow open (G7 # 14)
+HABIT = {"linden": "crown_ovoid", "maple": "crown_round", "chestnut": "crown_round", "ash": "crown_round", "birch": "crown_birch"}
+DENSE = {"linden": 1.0, "maple": 1.0, "chestnut": 1.0, "ash": 0.55, "birch": 0.0}      # 14: dense / half-open / open
+TREE_H_MIN_M = 4.0
+FRUIT_R_MAX_M = 2.3               # orchard trees are the small crowns (W)
+CARD_STRETCH = (0.80, 1.30)       # a crown card is drawn at most this far off its painted width / height
+THUJA_PITCH_M = (1.6, 3.2)        # station pitch of a thuja wall: High, Low
+# cross-section of a clipped thuja wall per side, foot -> shoulder: (half-thickness factor, height factor, normal out,
+# normal up, occlusion); the crest (centre line, full height) closes it. Photos G7-P11 / P12: battered sides, a
+# rounded top, a dark foot.
+_THUJA_PROFILE = ((0.84, 0.00, 0.95, 0.05, 0.42), (1.00, 0.42, 1.00, 0.10, 0.80), (0.97, 0.80, 0.90, 0.35, 0.95),
+                  (0.60, 0.955, 0.50, 0.80, 1.0))
+_THUJA_PROFILE_LOW = ((0.86, 0.00, 0.95, 0.05, 0.45), (1.00, 0.70, 1.00, 0.20, 0.90), (0.60, 0.955, 0.50, 0.80, 1.0))
+
+
+def _fold(v, step, lo, hi, d):
+    """next value of a ping-pong walk in [lo, hi]: adjacent stretches of a row mirror at the vertex, so a row that
+    does not tile never shows a seam"""
+    if not lo <= v + d * step <= hi:
+        d = -d
+    return min(max(v + d * step, lo), hi), d
+
+
+def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0, 0.0)):
+    """Clipped thuja wall a -> b (n: unit normal towards the street), G7 # 19, photos G7-P11 / P12: the foliage row of
+    the kit atlas (`thuja`, 1 m of twigs in v, drawn 1 : 1 on High), a battered side with a rounded top, stations whose
+    height / thickness / axis wander, ends narrowed and capped. raise_ends: extra height (m) at a / b that fades over
+    4 m - the taller, rounded corner plants. Returns the length built (m)."""
+    L = float(np.hypot(*(b - a)))
+    if L < 1.5:
+        return 0.0
+    t = (b - a) / L
+    prof = _THUJA_PROFILE_LOW if low else _THUJA_PROFILE
+    nb = max(2, int(round(L / THUJA_PITCH_M[1 if low else 0])))
+    v0, v1 = PLT.PK.row("thuja")
+    dv = v1 - v0
+    row_m = PLT.PK.ROW_H_M["thuja"]
+    ulo, uhi = 0.02, PLT.PK.THUJA_GREEN_U - 0.03             # the live stretch of the row
+    ph0, ph1 = PLT.hfloat(key, "tp0") * 6.2832, PLT.hfloat(key, "tp1") * 6.2832
+    pts = [(thick / 2 * kw, h * kh) for kw, kh, *_ in prof] + [(0.0, h)]
+    vs, vv, dd = [0.04], 0.04, 1
+    for i in range(1, len(pts)):
+        arc = math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])
+        vv, dd = _fold(vv, min(arc / row_m / (1.9 if low else 1.0), 0.90), 0.04, 0.96, dd)
+        vs.append(vv)
+    mp = len(pts)                                            # vertices per side and station
+    V, UV, C = [], [], []
+    us = [[ulo + (uhi - ulo) * PLT.hfloat(key, "tu", sd), 1] for sd in range(2)]
+    for k in range(nb + 1):
+        s = L * k / nb
+        endf = 0.62 if k in (0, nb) else 1.0
+        c = a + t * s + n * (0.05 * (PLT.hfloat(key, "to", k) * 2 - 1))
+        zz = zf(a + t * s) - 0.03
+        up = raise_ends[0] * max(0.0, 1.0 - s / 4.0) ** 0.7 + raise_ends[1] * max(0.0, 1.0 - (L - s) / 4.0) ** 0.7
+        hh = (h + up + 0.07 * math.sin(ph0 + s * 0.8) + 0.06 * (PLT.hfloat(key, "th", k) * 2 - 1)) * (0.94 if k in (0, nb) else 1.0)
+        w = thick / 2 * (1.0 + 0.08 * math.sin(ph1 + s * 1.1) + 0.06 * (PLT.hfloat(key, "tw", k) * 2 - 1)) * endf
+        for sd, sg in enumerate((1.0, -1.0)):
+            if k:
+                us[sd][0], us[sd][1] = _fold(us[sd][0], L / nb / PLT.PK.KIT_M, ulo, uhi, us[sd][1])
+            for i in range(mp):
+                if i < len(prof):
+                    kw, kh, no, nu, occ = prof[i]
+                else:
+                    kw, kh, no, nu, occ = 0.0, 1.0, 0.0, 1.0, 1.0
+                q = c + n * (sg * w * kw)
+                V.append([q[0], q[1], zz + hh * kh])
+                UV.append([us[sd][0], v0 + dv * vs[i]])
+                C.append(PLT._fol([n[0] * sg * no, n[1] * sg * no, nu], occ))
+    m = 2 * mp
+    T = []
+    for k in range(nb):
+        for sd in range(2):
+            b0, b1 = k * m + sd * mp, (k + 1) * m + sd * mp
+            for i in range(mp - 1):
+                q = (b0 + i, b1 + i, b1 + i + 1, b0 + i + 1)
+                T += [(q[0], q[1], q[2]), (q[0], q[2], q[3])] if sd == 0 else [(q[1], q[0], q[3]), (q[1], q[3], q[2])]
+    for o, flip in ((0, False), (nb * m, True)):             # end caps: a fan over the two half profiles
+        ring = [o + i for i in range(mp)] + [o + mp + i for i in range(mp - 2, -1, -1)]
+        for i in range(1, len(ring) - 1):
+            T.append((ring[0], ring[i + 1], ring[i]) if not flip else (ring[0], ring[i], ring[i + 1]))
+    kit.tris(V, UV, T, C)
+    return L
+
+
+def plan_house_greenery(rp, report=None):
+    """ADR 0163: decide, before plots.build, what grows along the street front of every house plot and take the
+    broadleaf garden trees over from plots.build. Shares are quotas over the plots that have a street front (G7 # 15 -
+    18), not coin flips: 40 % hedge >= 1.2 m (70 % of them thuja), 25 % a strip of low shrubs, 35 % fence only.
+    Low hedges / shrubs go to the see-through fences first (behind a wall nobody sees them)."""
+    plots = rp.get("plots", [])
+    front = [p for p in plots if any(r["front"] and np.linalg.norm(r["b"] - r["a"]) > 3.0 for r in p["lay"]["runs"])]
+    order = sorted(front, key=lambda p: (PLT.hfloat(p["key"], "g7-front"), str(p["id"])))
+    n_hedge = int(round(G7["hedge_share"] * len(order)))
+    n_low = int(round(G7["low_share"] * len(order)))
+    kinds = {p["id"]: "none" for p in plots}
+    hedge = order[:n_hedge]
+    n_thuja = int(round(G7["thuja_of_hedges"] * n_hedge))
+    by_fence = sorted(hedge, key=lambda p: (p["front_style"] in PLT.SEE_THROUGH, PLT.hfloat(p["key"], "g7-hedge"), str(p["id"])))
+    for k, p in enumerate(by_fence):                         # opaque fences first: only a thuja shows above them
+        kinds[p["id"]] = "thuja" if k < n_thuja else "broadleaf"
+    rest = sorted(order[n_hedge:], key=lambda p: (p["front_style"] not in PLT.SEE_THROUGH, PLT.hfloat(p["key"], "g7-low"), str(p["id"])))
+    for p in rest[:n_low]:
+        kinds[p["id"]] = "low"
+    rp["front_green"] = kinds
+    rp["garden_trees"] = []
+    if report is not None:
+        cnt = {k: sum(1 for v in kinds.values() if v == k) for k in ("thuja", "broadleaf", "low", "none")}
+        report["garden_plan"] = {"source": "research/g7-street-greenery/README.md (G7 # 15-18)", "plots": len(plots),
+                                 "plots_with_front": len(order), **cnt}
+    return kinds
+
+
+def _corner_ends(run, runs):
+    """(at a, at b): True where another front run of the plot meets this end at an angle - a street corner"""
+    out = []
+    ta = (run["b"] - run["a"]) / max(np.linalg.norm(run["b"] - run["a"]), 1e-9)
+    for end in (run["a"], run["b"]):
+        hit = False
+        for o in runs:
+            if o is run:
+                continue
+            to = (o["b"] - o["a"]) / max(np.linalg.norm(o["b"] - o["a"]), 1e-9)
+            if abs(float(ta @ to)) < 0.75 and min(np.linalg.norm(o["a"] - end), np.linalg.norm(o["b"] - end)) < 2.5:
+                hit = True
+        out.append(hit)
+    return tuple(out)
+
+
+def _emit(buf, kit, groups, half, src, rep, strict=True):
+    """Add the kit's High / Low variants to the plot layers, merged into the chunk groups the plots already have.
+    strict: geometry that would open a new (chunk, layer) group - one more draw call - is not built."""
+    high, low = kit.out(), kit.out(low=True)
+    outs = [(PLT.KIT_LAYER, high), (PLT.KIT_LAYER_LOW, low)]
+    if strict:
+        for layer, o in outs:
+            if o is None:
+                continue
+            centers = o[0][o[2]].mean(axis=1)
+            cells = set(map(tuple, np.floor(np.column_stack((centers[:, 0] + half, half - centers[:, 1])) / CHUNK_M).astype(int)))
+            if any((layer, *cell) not in groups for cell in cells):
+                rep["skipped"]["new_renderer_group"] = rep["skipped"].get("new_renderer_group", 0) + 1
+                return False
+    for layer, o in outs:
+        if o is not None:
+            buf.add(layer, "plot_kit", o[0], o[1], o[2], src=src, COL=o[3])
+            rep["tris_high" if layer == PLT.KIT_LAYER else "tris_low"] += len(o[2])
     return True
 
-def front_gardens(buf, rp, zf, report, half=1024.0, triangle_limit=3600):
-    """ADR0154: selected missing street hedges, merged into existing plot groups.
 
-    WORKING_VALUE: additional share .70, inset .80m, thickness .65m,
-    height fence+.2..+.45m (1.2..2m), based on typology P08/P12.
-    No claim of surveyed hedge positions. OSM hedges remain handled separately.
-    Gate/door/drive keepouts and original renderer bounds are hard constraints.
-    """
+def front_gardens(buf, rp, zf, report, half=1024.0):
+    """ADR 0163 (replaces the ADR 0154 fronts): the planned front greenery of the house plots (plan_house_greenery) -
+    clipped thuja walls 2.0-2.5 m (3 m on corners), low broadleaf hedges, strips of low shrubs - merged into the plots'
+    own chunk groups on both chunk variants (High, and Low / Medium: the mass at eye level A16 was missing).
+    Gates, wickets, driveways, door zones and the house are keep-outs; nothing is built outside the plot."""
+    kinds = rp.get("front_green") or {}
     groups = _garden_groups(buf, half)
-    rep = {'source': 'WORKING_VALUE; photos P08/P12, docs/refs/posesje-bialystok.md', 'plots': 0, 'segments': 0, 'm': 0.0, 'tris_high': 0, 'tris_low': 0, 'triangle_limit': triangle_limit, 'list': [], 'skipped': {}}
-
-    def skip(reason):
-        rep['skipped'][reason] = rep['skipped'].get(reason, 0) + 1
-    selected = set()
-    for plot in sorted(rp.get('plots', []), key=lambda p: PLT.hfloat(p['key'], 'adr0154-priority')):
-        key = plot['key']
-        lay = plot['lay']
-        age = plot['age']
-        runs = [x for x in lay['runs'] if x['front'] and np.linalg.norm(x['b'] - x['a']) > 3.0]
-        old_hedge = bool(runs) and (plot['front_style'] in PLT.SEE_THROUGH and PLT.hfloat(key, 'hedge') < PLT.HEDGE_SHARE[age] * 1.6 or PLT.hfloat(key, 'hedge') < PLT.HEDGE_SHARE[age] * 0.5)
-        if not runs or old_hedge or plot['front_style'] not in PLT.SEE_THROUGH:
+    rep = {"source": "research/g7-street-greenery/README.md (G7 # 15-21); positions are rule, not survey",
+           "plots": {"thuja": 0, "broadleaf": 0, "low": 0}, "segments": 0, "m": {"thuja": 0.0, "broadleaf": 0.0}, "front_m": 0.0,
+           "shrubs": 0, "tris_high": 0, "tris_low": 0, "heights_m": [], "widths_m": [], "list": [], "skipped": {}}
+    for plot in rp.get("plots", []):
+        kind = kinds.get(plot["id"], "none")
+        if kind == "none":
             continue
-        if PLT.hfloat(key, 'adr0154-front') >= 0.7:
-            continue
-        blocked = [plot['foot'].buffer(1.0)] + list(plot.get('door_zones') or [])
-        if plot.get('hard') is not None:
-            blocked.append(plot['hard'].buffer(0.5))
-        gates = ([lay['gate']] if lay.get('gate') is not None else []) + ([lay['wicket']] if lay.get('wicket') is not None else []) + list(lay.get('wickets') or [])
+        key, lay = plot["key"], plot["lay"]
+        runs = [x for x in lay["runs"] if x["front"] and np.linalg.norm(x["b"] - x["a"]) > 3.0]
+        blocked = [plot["foot"].buffer(1.0)] + list(plot.get("door_zones") or [])
+        if plot.get("hard") is not None and not plot["hard"].is_empty:
+            blocked.append(plot["hard"].buffer(0.5))
+        gates = ([lay["gate"]] if lay.get("gate") is not None else []) + ([lay["wicket"]] if lay.get("wicket") is not None else []) \
+            + list(lay.get("wickets") or [])
         for gate in gates:
-            m, n = (np.asarray(gate['m']), np.asarray(gate['n']))
-            blocked.append(LineString([m - n * 5, m + n * 3]).buffer(gate['w'] / 2 + 0.65, cap_style='flat'))
+            m, n = np.asarray(gate["m"]), np.asarray(gate["n"])
+            blocked.append(LineString([m - n * 5, m + n * 3]).buffer(gate["w"] / 2 + 0.65, cap_style="flat"))
         forbidden = shapely.union_all(blocked)
-        h = min(2.0, max(1.2, plot['front_h'] + 0.2 + 0.25 * PLT.hfloat(key, 'adr0154-height')))
-        for run in runs:
-            a, b = (np.asarray(run['a']), np.asarray(run['b']))
-            normal = np.asarray(run['n'])
-            t = (b - a) / np.linalg.norm(b - a)
-            line = LineString([a + t * 0.4 - normal * 0.8, b - t * 0.4 - normal * 0.8]).difference(forbidden)
-            for segment in getattr(line, 'geoms', [line]):
-                if segment.geom_type != 'LineString' or segment.length < 2.0:
+        inner = plot["poly"].buffer(-0.08)
+        if kind == "thuja":
+            h = G7["thuja_h_m"][0] + (G7["thuja_h_m"][1] - G7["thuja_h_m"][0]) * PLT.hfloat(key, "g7-th")
+            thick = G7["thuja_w_m"][0] + (G7["thuja_w_m"][1] - G7["thuja_w_m"][0]) * PLT.hfloat(key, "g7-tw")
+        elif kind == "broadleaf":
+            h = G7["broadleaf_h_m"][0] + (G7["broadleaf_h_m"][1] - G7["broadleaf_h_m"][0]) * PLT.hfloat(key, "g7-bh")
+            thick = G7["broadleaf_w_m"][0] + (G7["broadleaf_w_m"][1] - G7["broadleaf_w_m"][0]) * PLT.hfloat(key, "g7-bw")
+        else:
+            h, thick = 0.0, 0.9
+        gap = G7["hedge_gap_m"][0] + (G7["hedge_gap_m"][1] - G7["hedge_gap_m"][0]) * PLT.hfloat(key, "g7-gap")
+        off = gap + thick / 2
+        kit = PLT.Kit()
+        built, front_m = 0.0, 0.0
+        for ri, run in enumerate(runs):
+            a, b = np.asarray(run["a"], float), np.asarray(run["b"], float)
+            normal = np.asarray(run["n"], float)
+            L = float(np.linalg.norm(b - a))
+            t = (b - a) / L
+            front_m += L
+            corner = _corner_ends(run, runs)
+            e0, e1 = a + t * 0.35 - normal * off, b - t * 0.35 - normal * off
+            line = LineString([e0, e1]).difference(forbidden)
+            for seg in getattr(line, "geoms", [line]):
+                if seg.geom_type != "LineString" or seg.length < 2.0:
                     continue
-                if not plot['poly'].buffer(-0.1).covers(segment.buffer(0.45, cap_style='flat')):
-                    skip('outside_plot')
+                if not inner.covers(seg.buffer(thick / 2, cap_style="flat")):
+                    rep["skipped"]["outside_plot"] = rep["skipped"].get("outside_plot", 0) + 1
                     continue
-                q0, q1 = (np.asarray(segment.coords[0]), np.asarray(segment.coords[-1]))
-                kit = PLT.Kit()
-                kit.tag = 'garden_front_0154'
-                length = PLT.hedge(kit, q0, q1, normal, zf, h, (key, 'adr0154', round(float(q0[0]), 2), round(float(q0[1]), 2)), thick=0.65)
-                high, low = (kit.out(), kit.out(low=True))
-                if high is None or low is None:
-                    continue
-                if rep['tris_low'] + len(low[2]) > triangle_limit:
-                    skip('triangle_limit')
-                    continue
-                if not _inside_garden_groups(high, PLT.KIT_LAYER, groups, half) or not _inside_garden_groups(low, PLT.KIT_LAYER_LOW, groups, half):
-                    skip('renderer_bounds')
-                    continue
-                for layer, output in [(PLT.KIT_LAYER, high), (PLT.KIT_LAYER_LOW, low)]:
-                    buf.add(layer, 'plot_kit', output[0], output[1], output[2], src=f"plot:{plot['id']}:garden-front-0154", COL=output[3])
-                rep['segments'] += 1
-                rep['m'] += length
-                rep['tris_high'] += len(high[2])
-                rep['tris_low'] += len(low[2])
-                selected.add(plot['id'])
-                rep['list'].append({'plot': plot['id'], 'a': q0.tolist(), 'b': q1.tolist(), 'height_m': h, 'length_m': length, 'tris_low': len(low[2]), 'source': 'WORKING_VALUE'})
-    rep['plots'] = len(selected)
-    rep['m'] = round(rep['m'], 2)
-    report['garden_fronts'] = rep
+                q0, q1 = np.asarray(seg.coords[0]), np.asarray(seg.coords[-1])
+                hk = (key, "g7", ri, round(float(q0[0]), 2), round(float(q0[1]), 2))
+                if kind == "thuja":
+                    extra = max(G7["thuja_corner_h_m"] - h, 0.0) * (0.6 + 0.4 * PLT.hfloat(key, "g7-corner"))
+                    ends = (extra if corner[0] and np.linalg.norm(q0 - e0) < 0.5 else 0.0,
+                            extra if corner[1] and np.linalg.norm(q1 - e1) < 0.5 else 0.0)
+                    kit.tag, kit.low = "g7_thuja_hedge", False
+                    length = thuja_hedge(kit, q0, q1, normal, zf, h, hk, thick=thick, raise_ends=ends)
+                    kit.low = "only"
+                    thuja_hedge(kit, q0, q1, normal, zf, h, hk, thick=thick, low=True, raise_ends=ends)
+                    kit.low = True
+                    rep["m"]["thuja"] += length
+                elif kind == "broadleaf":
+                    kit.tag = "g7_broadleaf_hedge"
+                    length = PLT.hedge(kit, q0, q1, normal, zf, h, hk, thick=thick)
+                    rep["m"]["broadleaf"] += length
+                else:                                        # forsythia, berberis, spirea: single low shrubs with gaps
+                    length = float(np.linalg.norm(q1 - q0))
+                    tt = (q1 - q0) / length
+                    s, k, n_here = 0.5 + 0.8 * PLT.hfloat(hk, "s0"), 0, 0
+                    while s < length - 0.4:
+                        k += 1
+                        hs = G7["low_h_m"][0] + (G7["low_h_m"][1] - G7["low_h_m"][0]) * PLT.hfloat(hk, "sh", k)
+                        r = 0.42 + 0.34 * PLT.hfloat(hk, "sr", k) + 0.15 * hs
+                        pnt = q0 + tt * s + normal * (0.25 * (PLT.hfloat(hk, "so", k) - 0.5))
+                        s += 2 * r * (0.85 + 1.5 * PLT.hfloat(hk, "sp", k) ** 2)
+                        if PLT.hfloat(hk, "sg", k) < 0.12:
+                            continue
+                        red = PLT.hfloat(hk, "sc", k) < 0.14
+                        kit.tag, kit.low = "g7_low_shrub", False
+                        PLT.bush(kit, pnt, zf(pnt), r, hs, (hk, "b", k), red=red, cards=4)
+                        kit.low = "only"
+                        PLT.bush_lite(kit, pnt, zf(pnt), r, hs, (hk, "b", k), red=red)
+                        kit.low = True
+                        n_here += 1
+                    rep["shrubs"] += n_here
+                    length = length if n_here else 0.0
+                if length:
+                    built += length
+                    rep["segments"] += 1
+        if not built:
+            continue
+        if not _emit(buf, kit, groups, half, f"plot:{plot['id']}:g7-front", rep):
+            continue
+        rep["plots"][kind] += 1
+        rep["front_m"] += front_m
+        if kind != "low":
+            rep["heights_m"].append(round(h, 2))
+            rep["widths_m"].append(round(thick, 2))
+        rep["list"].append({"plot": plot["id"], "kind": kind, "m": round(built, 1), "front_m": round(front_m, 1),
+                            "h_m": round(h, 2), "w_m": round(thick, 2)})
+    rep["m"] = {k: round(v, 1) for k, v in rep["m"].items()}
+    rep["front_m"] = round(rep["front_m"], 1)
+    report["garden_fronts"] = rep
+    return rep
+
+
+def tree_dims(r, species, key, in_plot=True):
+    """(H, crown base height, crown card name or None for an orchard tree) of a garden tree whose crown radius r the
+    orthophoto shows. H = D / (crown width per height of the species, G7 # 13) clamped to the species ceiling (# 12);
+    crown base 0.15 H but >= 1.3 m (# 7); H is nudged so the crown card is drawn within CARD_STRETCH of its habit."""
+    D = 2.0 * float(r)
+    lo, hi = G7["crown_w_per_h"][species]
+    H = D / (lo + (hi - lo) * PLT.hfloat(key, "g7-wh"))
+    top = G7["ceiling_m"][species]
+    H = min(max(H, TREE_H_MIN_M if species != "fruit" else 3.5), top)
+    base_min = G7["crown_base_min_m"] if in_plot else G7["crown_base_strip_m"]
+    sprite = HABIT.get(species)
+    cb = max(G7["crown_base_per_h"] * H, base_min)
+    if sprite is not None:
+        wm, hm = PLT.PK.SPRITE_M[sprite]
+        for _ in range(3):
+            st = D / max(H - cb, 0.5) / (wm / hm)
+            if st > CARD_STRETCH[1]:
+                H = min(cb + D / (CARD_STRETCH[1] * wm / hm), top)
+            elif st < CARD_STRETCH[0]:
+                H = max(cb + D / (CARD_STRETCH[0] * wm / hm), TREE_H_MIN_M)
+            cb = max(G7["crown_base_per_h"] * H, base_min)
+    return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
+
+
+def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3):
+    """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
+    crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
+    core and leaf sprays lying on its skin, so it is a volume from every side and from above, not a paper cross.
+    lite: two stem strips + `cards` crossed cards (8-10 triangles) - Low / Medium and the trees away from the street."""
+    p = np.asarray(p, float)
+    sprite = HABIT[species]
+    hc = H - cb
+    a0 = PLT.hfloat(key, "ty") * 6.2832
+    lean = (np.array([PLT.hfloat(key, "tlx"), PLT.hfloat(key, "tly")]) - 0.5) * 0.06 * H
+    top = p + lean * (cb / H)
+    cc = p + lean * (0.5 + 0.5 * cb / H)                      # axis of the crown
+    tr = (0.035 + 0.011 * H) * (0.8 if species == "birch" else 1.0)
+    bark = PLT.PK.SWATCH["concrete" if species == "birch" else "trunk"]
+    zt = z + cb + hc * (0.55 if species == "birch" else 0.22)
+    if lite:
+        for k in range(2):
+            d = np.array([math.cos(a0 + k * 1.5708), math.sin(a0 + k * 1.5708)]) * tr
+            kit.quad([[*(p - d), z - 0.1], [*(p + d), z - 0.1], [*(top + d), zt], [*(top - d), zt]], [bark] * 4)
+    else:
+        kit.box(p, np.array([math.cos(a0), math.sin(a0)]), tr, tr, z - 0.1, zt, bark, top=False, shift=top - p)
+    W = 2.0 * r * 1.06
+    for i in range(cards):
+        PLT.card(kit, cc, z + cb - 0.02 * hc, sprite, W, hc * 1.04, a0 + 0.4 + i * math.pi / cards)
+    dense = DENSE[species]
+    if lite or dense <= 0.0:
+        return
+    occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
+    PLT._core(kit, cc, z + cb + hc * 0.10, r * 0.56, hc * 0.74, key, sides=5, occ=0.26 * occ, rings=3)
+    n_lo, n_hi = (5, 4) if dense >= 1.0 else (3, 2)
+    for i in range(n_lo):                                    # lower tier of sprays: the skirt of the crown
+        az = a0 + 2 * math.pi * (i + 0.4 * (PLT.hfloat(key, "sj", i) - 0.5)) / n_lo
+        c = cc + np.array([math.cos(az), math.sin(az)]) * r * (0.50 + 0.08 * PLT.hfloat(key, "sd", i))
+        PLT._skin_card(kit, c, z + cb + hc * 0.03, az, r * (1.25 + 0.3 * PLT.hfloat(key, "sw", i)),
+                       hc * (0.50 + 0.10 * PLT.hfloat(key, "sh", i)), "shrub_a", 0.10 + 0.12 * PLT.hfloat(key, "st", i), occ,
+                       flip=PLT.hfloat(key, "sf", i) < 0.5)
+    for i in range(n_hi):                                    # upper tier: the shoulders
+        az = a0 + 0.8 + 2 * math.pi * i / n_hi
+        c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.34
+        PLT._skin_card(kit, c, z + cb + hc * 0.42, az, r * 1.25, hc * 0.46, "shrub_a", 0.30 + 0.15 * PLT.hfloat(key, "ut", i), occ,
+                       flip=i % 2 == 1)
+
+
+def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
+    """ADR 0163: mesh the broadleaf garden trees plots.build recorded from the orthophoto crowns (rp["garden_trees"])
+    into the plot kit - on every tier (ADR 0132 r4b drew them as instances of the region's tree library, High / Medium
+    only: A16 saw none). Species by the G7 mix (# 11; orchard trees among the small crowns only), size and habit by
+    tree_dims. No tree closer than 2.5 m to a tree the region already placed. The kit trees join the plots' existing
+    chunk groups: no new draw call."""
+    plan = rp.get("garden_trees") or []
+    groups = _garden_groups(buf, half)
+    rep = {"source": "crowns: GUGiK orthophoto 2024 (plot_canopy.json); habit / height: G7 # 6-7, 11-14",
+           "trees": 0, "street_strip": 0, "species": {}, "tris_high": 0, "tris_low": 0, "skipped": {}, "list": []}
+    todo = [t for t in plan if t.get("kind") == "broadleaf"]
+    kd = None
+    if region_trees:
+        from scipy.spatial import cKDTree
+        kd = cKDTree(np.array([[t_["e"], t_["n"]] for t_ in region_trees]))
+    small = sum(1 for t in todo if t["r"] < FRUIT_R_MAX_M) / max(len(todo), 1)
+    mix = G7["broadleaf_mix"]
+    for t in todo:
+        p = np.asarray(t["p"], float)
+        if kd is not None and kd.query(p)[0] < 2.5:
+            rep["skipped"]["region_tree_within_2.5m"] = rep["skipped"].get("region_tree_within_2.5m", 0) + 1
+            continue
+        r, key = float(t["r"]), t["key"]
+        w = dict(mix)
+        if r < FRUIT_R_MAX_M and small > 0:                  # orchard trees: all of their share among the small crowns;
+            w["fruit"] = min(mix["fruit"] / small, 0.9)      # the other species keep their mix among themselves
+            k = (1.0 - w["fruit"]) / (1.0 - mix["fruit"])
+            w = {s: (v * k if s != "fruit" else v) for s, v in w.items()}
+        else:
+            w["fruit"] = 0.0
+        sp = PLT._pick_w(sorted(w.items()), key, "g7-sp")
+        H, cb, _ = tree_dims(r, sp, key, in_plot=t["in_plot"])
+        z = zf(p)
+        kit = PLT.Kit()                                      # one part per tree: a tree that would open a new chunk
+        kit.tag = "g7_garden_tree"                           # group is left out alone, not with its whole plot
+        if sp == "fruit":
+            if t["near"]:
+                kit.low = False
+                PLT.fruit_tree(kit, p, z, H, key, r=r)
+                kit.low = "only"
+            PLT.fruit_tree_lite(kit, p, z, H, key, r=r)
+        else:
+            if t["near"]:
+                kit.low = False
+                garden_tree(kit, p, z, r, H, cb, sp, key)
+                kit.low = "only"
+            garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2)
+        if not _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
+            continue
+        rep["trees"] += 1
+        rep["street_strip"] += int(not t["in_plot"])
+        rep["species"][sp] = rep["species"].get(sp, 0) + 1
+        rep["list"].append({"plot": t["plot"], "e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "r_m": round(r, 2),
+                            "species": sp, "h_m": H, "crown_base_m": cb if sp != "fruit" else None,
+                            "street_strip": not t["in_plot"], "near": bool(t["near"])})
+    rep["conifers"] = [{"e": round(float(t["p"][0]), 2), "n": round(float(t["p"][1]), 2), "r_m": round(float(t["r"]), 2)}
+                       for t in plan if t.get("kind") == "conifer"]
+    report["garden_trees"] = rep
     return rep

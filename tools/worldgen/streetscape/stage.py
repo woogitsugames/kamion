@@ -246,12 +246,18 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # house plots (ADR 0107 / 0114): fences, gates and garden as chunk geometry in one material (`plot_kit`)
     def zplot(q):
         return float(np.asarray(zsurf(np.array([q[0]]), np.array([q[1]]))).ravel()[0])
+    # ADR 0163 (G7): front hedges / shrub strips and broadleaf garden trees of the house plots are planned and meshed
+    # by streetscape.plantings; KAMION_GARDENS_0163=0 reproduces the world without them (baseline ablation only)
+    gardens_0163 = os.environ.get("KAMION_GARDENS_0163", "1") != "0"
+    plot_plan.pop("front_green", None)
+    plot_plan.pop("garden_trees", None)
+    if gardens_0163:
+        PT.plan_house_greenery(plot_plan, rep)
     plots = PLT.build(w.buf, plot_plan, zplot, FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"]), rep,
                       items=pl.items)       # ADR 0124: the lamp poles of the house streets carry the overhead line
-    gardens_0154 = os.environ.get("KAMION_GARDENS_0154", "1") != "0"  # reproducible baseline ablation only
-    if gardens_0154:
+    if gardens_0163:
         PT.front_gardens(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2)
-        log("garden fronts", rep["garden_fronts"])
+        log("garden fronts", {k: v for k, v in rep["garden_fronts"].items() if k != "list"})
     log("plots", {k: v for k, v in rep["plots"].items() if k != "list"})
 
     # vegetation
@@ -283,8 +289,10 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         kd = cKDTree(np.array([[t_["e"], t_["n"]] for t_ in trees]))
         dd, _ = kd.query(np.array([[t_["e"], t_["n"]] for t_ in ptrees]))
         ptrees = [t_ for t_, d_ in zip(ptrees, dd) if d_ >= 2.5]
-    if gardens_0154:
-        ptrees = VG.garden_canopies(ptrees, plot_plan, rep, parts=w.buf.parts)
+    if gardens_0163:
+        PT.garden_trees(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2, region_trees=trees)
+        log("garden trees", {k: v for k, v in rep["garden_trees"].items() if k not in ("list", "conifers")})
+        ptrees = VG.garden_canopies(ptrees, plot_plan, rep)
     rep["plots"]["inst_trees_kept"] = len(ptrees)
     for t_ in ptrees:
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1

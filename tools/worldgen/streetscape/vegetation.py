@@ -29,7 +29,6 @@ import shapely
 from scipy import ndimage
 
 from . import paved as PV
-from . import plots as PLT
 from .foliage_policy import metric_patch_field, osm_tree_species
 
 SPECIES = ["pine", "birch", "alder", "maple", "linden", "shrub"]
@@ -269,45 +268,29 @@ def ground_masks(src, origin, hf, dist_road, forests):
     return C.astype(np.float32)
 
 
-# ADR 0154: the plot implementation is read-only; use its existing species ranges.
-def garden_canopies(trees, rp, report, parts=()):
-    """ADR0154: broader existing High garden crowns, no added instances.
+# ADR 0163 (corrects ADR 0154): ceilings of mature city trees, G7 # 12 (Ebben S01-S07, measurement G7-T03). ADR 0154
+# used birch 23 m and raised / widened the garden crowns of the tree library (x 1.2-1.35, up to 20.4 m): on their
+# sparse stems they read as stone pines (review 2026-11-13). The broadleaf garden trees of a region with an
+# orthophoto canopy are kit trees now (streetscape.plantings.garden_trees); what is left here are the rule-placed
+# instances of regions without one.
+MATURE_H_M = {"birch": 20.0, "linden": 24.0, "maple": 22.0, "pine": 24.0}
 
-    Width multipliers are WORKING_VALUE from typology P07/P08/P12:
-    maple/linden1.35, birch1.20, pine unchanged. Tree positions/radii source
-    remains the original orthophoto extraction; species are existing rules.
-    """
-    lookup = {f"plot:{p['id']}": p for p in rp.get('plots', [])}
-    # Read existing building geometry only: LoD1 height is often below a pitched
-    # ridge, and a grouped plot can contain several houses of different heights.
-    roof_tops = {}
-    for part in parts:
-        if part.layer in ('buildings', 'buildings_low', 'buildings_lod1') and len(part.V):
-            roof_tops[part.src] = max(roof_tops.get(part.src, -float('inf')), float(part.V[:, 2].max()))
-    mature_height = {'birch': 23.0, 'linden': 24.0, 'maple': 22.0}  # WORKING_VALUE, typology P07/P08/P12
-    widths = {'tree_maple': 1.35, 'tree_linden': 1.35, 'tree_birch': 1.2}
-    rows = []
-    result = []
+
+def garden_canopies(trees, rp, report, parts=()):
+    """Garden trees that are still instances of the tree library (rule path, `tier: high`): the height is capped at
+    the species ceiling of G7 # 12; nothing is widened, raised, moved or added. Other records pass through."""
+    lookup = {f"plot:{p['id']}" for p in rp.get("plots", [])}
+    rows, result = [], []
     for tree in trees:
-        plot = lookup.get(tree.get('src', '').rsplit(':', 1)[0])
-        width = widths.get(tree.get('p'))
-        if tree.get('tier') != 'high' or plot is None or width is None:
+        species = str(tree.get("p", "")).removeprefix("tree_")
+        if tree.get("tier") != "high" or tree.get("src", "").rsplit(":", 1)[0] not in lookup or species not in MATURE_H_M:
             result.append(tree)
             continue
         changed = dict(tree)
-        changed['garden_canopy_width'] = width
-        species = tree['p'].removeprefix('tree_')
-        required = float(plot.get('house_h') or 6.0) + 3.5
-        from shapely.geometry import Point
-        point = Point(tree['e'], tree['n'])
-        nearby_roofs = [roof_tops[house] for house, polygon in zip(plot.get('houses', []), plot.get('house_polys', []))
-                        if house in roof_tops and polygon.distance(point) <= 25.0]
-        roof_top = max(nearby_roofs, default=None)
-        if roof_top is not None:
-            required = max(required, roof_top - float(tree['z']) + 4.5)  # WORKING_VALUE crown clearance
-        limit = mature_height[species] if roof_top is not None else PLT.INST_H_M[species][1]
-        changed['h'] = round(max(float(tree['h']), min(limit, required)), 1)
+        changed["h"] = round(min(float(tree["h"]), MATURE_H_M[species]), 1)
         result.append(changed)
-        rows.append({'src': tree['src'], 'species': species, 'height_before_m': tree['h'], 'height_after_m': changed['h'], 'width_multiplier': width, 'position': [tree['e'], tree['n']], 'nearby_roof_top_evrf2007': roof_top})
-    report['garden_canopies'] = {'source': 'WORKING_VALUE width/height; P07/P08/P12 typology; original ortho positions retained', 'modified': len(rows), 'added_instances': 0, 'high_only': True, 'list': rows}
+        if changed["h"] != tree["h"]:
+            rows.append({"src": tree["src"], "species": species, "height_before_m": tree["h"], "height_after_m": changed["h"]})
+    report["garden_canopies"] = {"source": "G7 # 12 ceilings (research/g7-street-greenery/README.md)", "instances": len(result),
+                                 "capped": len(rows), "added_instances": 0, "widened": 0, "list": rows}
     return result
