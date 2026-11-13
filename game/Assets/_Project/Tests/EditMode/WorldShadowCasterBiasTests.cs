@@ -111,6 +111,7 @@ namespace Game.Tests
         public void NativeWorldOnlyThreeDeckMaterialsUseBiasVariant()
         {
             const string dir = "Assets/_Generated/World/bialystok-industrial-c/Materials";
+            if (!AssetDatabase.IsValidFolder(dir)) Assert.Ignore("Region not imported (run scripts/import-region.ps1 -Region bialystok-industrial-c): " + dir);
             var opted = new List<string>();
             foreach (var guid in AssetDatabase.FindAssets("t:Material", new[] { dir }))
             {
