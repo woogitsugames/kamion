@@ -1,424 +1,486 @@
 {
- "seed": 20261113,
+ "seed": 20261114,
  "procent": 20,
- "n_zestawu": 43,
- "n_audytowane": 9,
- "probkowanie": "random.Random(20261113).sample(ids, ceil(0.2*N))",
+ "n_zestawu": 55,
+ "n_audytowane": 11,
+ "probkowanie": "random.Random(20261114).sample(ids, ceil(0.2*N))",
  "kryteria": {
-  "A_dopasowanie": "FH/opis-autora/wizja → PASS-DIRECT; stożek/az-zawodny → PASS-POŚREDNIE; ODRZUCONE → PASS z uzasadnieniem",
+  "A_dopasowanie": "OBOWIĄZKOWE wg WIZJI (co_widac + geometria kamera→obrys); azymut toru sekwencji NEWAŻNY",
   "B_IoU_LoD1_OSM": "IoU>=0.5 PASS; <0.5 UWAGA; brak w LoD1 → NIE DOTYCZY",
-  "C_mh_vs_kond": "|mh - kond*2.9| <= 2.0 PASS; 2.0-4.0 UWAGA; > 4.0 FAIL; brak mh/kond → NIE DOTYCZY",
-  "D_licencja": "CC0/CC BY 3.0 PASS; CC BY-SA → PASS (oznaczone 'tylko referencja')",
-  "E_jpg": "plik JPG zdjęcia <= 1600 px",
-  "F_adres": "adres manifestu zgodny z addr:* way OSM",
-  "G_wizja": "analiza wizyjna niedostępna w tej sesji (limit) → NIE DOTYCZY (wizje 13.11 zachowane w README/uwagach)"
+  "C_zliczenie_zdjecie_vs_LoD1": "kondygnacje_ze_zdjęcia (policzone na zdjęciu) vs LoD1 mh/2,9: |mh − kond*2.9| <= 2.0 PASS; 2.0-4.0 UWAGA; >4.0 FAIL",
+  "D_licencja": "CC0/CC BY/CC BY-SA — wszystkie PASS",
+  "E_jpg": "kopia zdjęcia w paczce ZIP <= 1600 px (najdłuższy bok)",
+  "F_adres": "adres manifestu zgodny z OSM addr:*",
+  "G_wizja": "OBOWIĄZKOWE — bez „NIE DOTYCZY”: każda para zdjęcie↔budynek potwierdzona wizją 13.11"
  },
  "pary": [
   {
-   "id": "M53-001",
-   "adres": "ul. Generała Władysława Andersa 38 (stacja paliw, wiata)",
-   "status_manifestu": "OK",
-   "A_dopasowanie": {
-    "werdykt": "PASS-DIRECT",
-    "uzasadnienie": "wizja 13.11 (zachowana)",
-    "ev": {
-     "az": null,
-     "dev": null,
-     "pos": null,
-     "d": 52.4,
-     "fh": null,
-     "fh_addr": null,
-     "cam_in_own": false,
-     "az_v1": null,
-     "pos_v1": null
-    }
-   },
-   "B_IoU_LoD1_OSM": {
-    "werdykt": "NIE DOTYCZY (brak w LoD1)",
-    "lod1_id": null,
-    "IoU": null
-   },
-   "C_mh_vs_kond": {
-    "werdykt": "NIE DOTYCZY (kondyg. nieoznaczona)",
-    "mh": "4.5 (ESTIMATED)",
-    "kond": "NIE DOTYCZY (wiata)"
-   },
-   "D_licencja": {
-    "werdykt": "PASS",
-    "licencja": "CC0"
-   },
-   "E_jpg": {
-    "werdykt": "PASS (1280x720 px, kopia ZIP)"
-   },
-   "F_adres": {
-    "werdykt": "PASS (adres stacji wg OSM: Andersa 38; way bez addr:* → przypisanie posesjonalne)"
-   },
-   "G_wizja": {
-    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
-   },
-   "werdykt": "PASS"
-  },
-  {
-   "id": "M53-002",
-   "adres": "ul. Generała Władysława Andersa 38 (stacja paliw, kiosk — bez odrębnego numeru w OSM)",
-   "status_manifestu": "OK",
-   "A_dopasowanie": {
-    "werdykt": "PASS-DIRECT",
-    "uzasadnienie": "wizja 13.11 (zachowana)",
-    "ev": {
-     "az": null,
-     "dev": null,
-     "pos": null,
-     "d": 56.3,
-     "fh": null,
-     "fh_addr": null,
-     "cam_in_own": false,
-     "az_v1": null,
-     "pos_v1": null
-    }
-   },
-   "B_IoU_LoD1_OSM": {
-    "werdykt": "NIE DOTYCZY (brak w LoD1)",
-    "lod1_id": null,
-    "IoU": null
-   },
-   "C_mh_vs_kond": {
-    "werdykt": "NIE DOTYCZY (brak mh w LoD1)",
-    "mh": "UNVERIFIED",
-    "kond": "1 (parterowy; wizja 13.11)"
-   },
-   "D_licencja": {
-    "werdykt": "PASS",
-    "licencja": "CC0"
-   },
-   "E_jpg": {
-    "werdykt": "PASS (1280x720 px, kopia ZIP)"
-   },
-   "F_adres": {
-    "werdykt": "PASS (adres stacji wg OSM: Andersa 38; way bez addr:* → przypisanie posesjonalne)"
-   },
-   "G_wizja": {
-    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
-   },
-   "werdykt": "PASS"
-  },
-  {
    "id": "M53-005",
    "adres": "ul. Generała Władysława Andersa — posesja przy stacji paliw (bez numeru w OSM)",
-   "status_manifestu": "OK",
+   "status_manifestu": "ODRZUCONY",
+   "co_widac": "Zmierzch: w kadrze wiata/kiosk stacji — biurowiec z billboardem NIEWIDOCZNY",
+   "kamera_d_m": "197,5",
+   "kamera_kat_deg": "190",
    "A_dopasowanie": {
-    "werdykt": "PASS-DIRECT",
-    "uzasadnienie": "wizja 13.11 (zachowana)",
-    "ev": {
-     "az": null,
-     "dev": null,
-     "pos": null,
-     "d": 208.7,
-     "fh": null,
-     "fh_addr": null,
-     "cam_in_own": false,
-     "az_v1": null,
-     "pos_v1": null
-    }
+    "werdykt": "PASS (ODRZUCONY z uzasadnieniem wizyjnym)",
+    "uzasadnienie": "wizja 13.11: Zmierzch: w kadrze wiata/kiosk stacji — biurowiec z billboardem NIEWIDOCZNY"
    },
    "B_IoU_LoD1_OSM": {
     "werdykt": "PASS",
     "lod1_id": "2BE4B431-CA0E-1BF0-E053-CC2BA8C0D140",
     "IoU": 0.997
    },
-   "C_mh_vs_kond": {
-    "werdykt": "PASS",
-    "mh": "4.45",
-    "kond": "1 (parterowy; OSM building:levels=1)"
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "NIE DOTYCZY (brak zliczenia lub mh)",
+    "kondygnacje_ze_zdjęcia": null,
+    "mh_LoD1": 4.45
    },
    "D_licencja": {
     "werdykt": "PASS",
-    "licencja": "CC0"
+    "licencja": "CC0",
+    "uwaga": "zdjęcie referencyjne (wiersz odrzucony)"
    },
    "E_jpg": {
-    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+    "werdykt": "PASS",
+    "wymiary": "1600x900"
    },
    "F_adres": {
-    "werdykt": "PASS (adres stacji wg OSM: Andersa 38; way bez addr:* → przypisanie posesjonalne)"
+    "werdykt": "NIE DOTYCZY (way bez addr:housenumber lub budynek nieustalony)",
+    "manifest": "ul. Generała Władysława Andersa — posesja przy stacji paliw (bez numeru w OSM)"
    },
    "G_wizja": {
-    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
    },
    "werdykt": "PASS"
   },
   {
-   "id": "M53-009",
-   "adres": "ul. Olsztyńska 2",
-   "status_manifestu": "ODRZUCONY",
-   "A_dopasowanie": {
-    "werdykt": "PASS-DIRECT",
-    "uzasadnienie": "ODRZUCONY z uzasadnieniem geometrycznym/wizyjnym",
-    "ev": {
-     "az": 54.0,
-     "dev": -11.5,
-     "pos": 33.6,
-     "d": 59.4,
-     "fh": "way/219256749",
-     "fh_addr": "Olsztyńska 1A",
-     "cam_in_own": false,
-     "az_v1": null,
-     "pos_v1": null
-    }
-   },
-   "B_IoU_LoD1_OSM": {
-    "werdykt": "PASS",
-    "lod1_id": "2BE4B431-AE99-1BF0-E053-CC2BA8C0D140",
-    "IoU": 0.99
-   },
-   "C_mh_vs_kond": {
-    "werdykt": "PASS",
-    "mh": "10.61",
-    "kond": "4 (ESTIMATED: mh/2,9 m)"
-   },
-   "D_licencja": {
-    "werdykt": "PASS",
-    "licencja": "CC0"
-   },
-   "E_jpg": {
-    "werdykt": "PASS (1280x720 px, kopia ZIP)"
-   },
-   "F_adres": {
-    "werdykt": "PASS"
-   },
-   "G_wizja": {
-    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
-   },
-   "werdykt": "PASS"
-  },
-  {
-   "id": "M53-012",
-   "adres": "ul. Białostoczek 27",
+   "id": "M53-016",
+   "adres": "ul. Białostoczek 4C",
    "status_manifestu": "OK-POŚREDNIE",
+   "co_widac": "Żółty 2-kondygnacyjny budynek z dwuspadowym dachem, balkonem i garażem na środku kadru; po prawej ciemnoszary budynek z anteną",
+   "kamera_d_m": "13,9",
+   "kamera_kat_deg": "337",
    "A_dopasowanie": {
-    "werdykt": "PASS-POŚREDNIE",
-    "uzasadnienie": "dopasowanie pośrednie (stożek+pozycja w kadrze)",
-    "ev": {
-     "az": 15.1,
-     "dev": -2.4,
-     "pos": 46.6,
-     "d": 85.1,
-     "fh": "way/211766124",
-     "fh_addr": "Sokólska 9",
-     "cam_in_own": false,
-     "az_v1": null,
-     "pos_v1": null
-    }
+    "werdykt": "PASS",
+    "uzasadnienie": "wizja 13.11 (co_widac): kadr zgodny z obrysem celu; d=13,9 m, azymut do obrysu=337°; azymut toru NIE jest podstawą statusu"
    },
    "B_IoU_LoD1_OSM": {
-    "werdykt": "PASS",
-    "lod1_id": "2BE4B431-B197-1BF0-E053-CC2BA8C0D140",
-    "IoU": 0.997
+    "werdykt": "NIE DOTYCZY (brak obrysu w LoD1/OSM)",
+    "lod1_id": "brak (poza LoD1 GUGiK)",
+    "IoU": null
    },
-   "C_mh_vs_kond": {
-    "werdykt": "PASS",
-    "mh": "15.02",
-    "kond": "5 (ESTIMATED: mh/2,9 m)"
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "NIE DOTYCZY (brak zliczenia lub mh)",
+    "kondygnacje_ze_zdjęcia": 2,
+    "mh_LoD1": null
    },
    "D_licencja": {
     "werdykt": "PASS",
-    "licencja": "CC0"
+    "licencja": "CC0",
+    "uwaga": ""
    },
    "E_jpg": {
-    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+    "werdykt": "PASS",
+    "wymiary": "1600x900"
    },
    "F_adres": {
-    "werdykt": "PASS"
+    "werdykt": "PASS",
+    "osm": "Białostoczek 4C",
+    "manifest": "ul. Białostoczek 4C"
    },
    "G_wizja": {
-    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
    },
    "werdykt": "PASS"
   },
   {
-   "id": "M53-024",
-   "adres": "ul. Białostoczek 14",
+   "id": "M53-036",
+   "adres": "ul. Aleja Tysiąclecia Państwa Polskiego 56",
    "status_manifestu": "ODRZUCONY",
+   "co_widac": "Biurowiec 3-kondygnacyjny w tle po lewej + wieża WN (dzielnicowa); blok Tysiąclecia 56 niewidoczny",
+   "kamera_d_m": "59,1",
+   "kamera_kat_deg": "147",
    "A_dopasowanie": {
-    "werdykt": "PASS-DIRECT",
-    "uzasadnienie": "ODRZUCONY z uzasadnieniem geometrycznym/wizyjnym",
-    "ev": {
-     "az": 154.4,
-     "dev": -1.6,
-     "pos": 47.7,
-     "d": 199.5,
-     "fh": "way/676765806",
-     "fh_addr": "Radzymińska 14",
-     "cam_in_own": false,
-     "az_v1": null,
-     "pos_v1": null
-    }
+    "werdykt": "PASS (ODRZUCONY z uzasadnieniem wizyjnym)",
+    "uzasadnienie": "wizja 13.11: Biurowiec 3-kondygnacyjny w tle po lewej + wieża WN (dzielnicowa); blok Tysiąclecia 56 niewidoczny"
    },
    "B_IoU_LoD1_OSM": {
     "werdykt": "PASS",
-    "lod1_id": "2BE4B431-C88B-1BF0-E053-CC2BA8C0D140",
-    "IoU": 0.993
+    "lod1_id": "2BE4B431-C9E1-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.69
    },
-   "C_mh_vs_kond": {
-    "werdykt": "PASS",
-    "mh": "15.95",
-    "kond": "6 (ESTIMATED: mh/2,9 m)"
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "NIE DOTYCZY (brak zliczenia lub mh)",
+    "kondygnacje_ze_zdjęcia": null,
+    "mh_LoD1": 20.06
    },
    "D_licencja": {
     "werdykt": "PASS",
-    "licencja": "CC0"
+    "licencja": "CC0",
+    "uwaga": "zdjęcie referencyjne (wiersz odrzucony)"
    },
    "E_jpg": {
-    "werdykt": "PASS (900x1600 px, kopia ZIP)"
+    "werdykt": "PASS",
+    "wymiary": "1600x900"
    },
    "F_adres": {
-    "werdykt": "PASS"
+    "werdykt": "PASS",
+    "osm": "Aleja Tysiąclecia Państwa Polskiego 56",
+    "manifest": "ul. Aleja Tysiąclecia Państwa Polskiego 56"
    },
    "G_wizja": {
-    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
    },
    "werdykt": "PASS"
   },
   {
-   "id": "M53-030",
-   "adres": "ul. Aleja Tysiąclecia Państwa Polskiego 54A",
-   "status_manifestu": "OK",
+   "id": "M53-038",
+   "adres": "ul. Świsłocka 1",
+   "status_manifestu": "OK-POŚREDNIE",
+   "co_widac": "Domy jednorodzinne 2-kondygnacyjne, dwuspadowe dachy, po obu stronach drogi; kamera blisko posesji (d 14,6 m); brak napisów. Cel: pozycja LEWO/PRAWO (budynek przy drodze)",
+   "kamera_d_m": "14,6",
+   "kamera_kat_deg": "259",
    "A_dopasowanie": {
-    "werdykt": "PASS-DIRECT",
-    "uzasadnienie": "ray-first-hit = obiekt",
-    "ev": {
-     "az": 212.1,
-     "dev": 23.7,
-     "pos": 83.8,
-     "d": 71.2,
-     "fh": "way/435369081",
-     "fh_addr": "Aleja Tysiąclecia Państwa Polskiego 54A",
-     "cam_in_own": false,
-     "az_v1": null,
-     "pos_v1": null
-    }
+    "werdykt": "PASS",
+    "uzasadnienie": "wizja 13.11 (co_widac): kadr zgodny z obrysem celu; d=14,6 m, azymut do obrysu=259°; azymut toru NIE jest podstawą statusu"
    },
    "B_IoU_LoD1_OSM": {
     "werdykt": "PASS",
-    "lod1_id": "D0F4DD2C-C040-439E-AECE-8FE13F9D3046",
-    "IoU": 0.833
+    "lod1_id": "2BE4B431-B13B-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.593
    },
-   "C_mh_vs_kond": {
-    "werdykt": "PASS",
-    "mh": "14.35",
-    "kond": "5 (ESTIMATED: mh/2,9 m)"
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "FAIL",
+    "kondygnacje_ze_zdjęcia": 2,
+    "mh_LoD1": 12.1,
+    "mh/2.9": 4.17,
+    "kond*2.9": 5.8,
+    "|diff|": 6.3,
+    "adnotacja": "dom jednorodzinny/szeregowy z poddaszem — LoD1 mh obejmuje kalenicę dachu dwuspadowego, więc kryterium mh/2.9 zawyża rozbieżność (typologia z zad. 4/README: domy, nie blok)"
    },
    "D_licencja": {
     "werdykt": "PASS",
-    "licencja": "CC0"
+    "licencja": "CC0",
+    "uwaga": ""
    },
    "E_jpg": {
-    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+    "werdykt": "PASS",
+    "wymiary": "1600x900"
    },
    "F_adres": {
-    "werdykt": "PASS"
+    "werdykt": "PASS",
+    "osm": "Świsłocka 1",
+    "manifest": "ul. Świsłocka 1"
    },
    "G_wizja": {
-    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
+   },
+   "werdykt": "UWAGA"
+  },
+  {
+   "id": "M53-031",
+   "adres": "ul. Aleja Tysiąclecia Państwa Polskiego 60",
+   "status_manifestu": "ODRZUCONY",
+   "co_widac": "Parterowe biuro sprzedaży „Osiedle Słoneczna” i stacja paliw Shell w tle; blok Tysiąclecia 60 niewidoczny",
+   "kamera_d_m": "43,6",
+   "kamera_kat_deg": "97",
+   "A_dopasowanie": {
+    "werdykt": "PASS (ODRZUCONY z uzasadnieniem wizyjnym)",
+    "uzasadnienie": "wizja 13.11: Parterowe biuro sprzedaży „Osiedle Słoneczna” i stacja paliw Shell w tle; blok Tysiąclecia 60 niewidoczny"
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "2BE4B431-C9E2-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.864
+   },
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "NIE DOTYCZY (brak zliczenia lub mh)",
+    "kondygnacje_ze_zdjęcia": null,
+    "mh_LoD1": 18.34
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0",
+    "uwaga": "zdjęcie referencyjne (wiersz odrzucony)"
+   },
+   "E_jpg": {
+    "werdykt": "PASS",
+    "wymiary": "1600x900"
+   },
+   "F_adres": {
+    "werdykt": "PASS",
+    "osm": "Aleja Tysiąclecia Państwa Polskiego 60",
+    "manifest": "ul. Aleja Tysiąclecia Państwa Polskiego 60"
+   },
+   "G_wizja": {
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
    },
    "werdykt": "PASS"
   },
   {
    "id": "M53-033",
    "adres": "ul. Aleja Tysiąclecia Państwa Polskiego 50",
-   "status_manifestu": "OK-POŚREDNIE",
+   "status_manifestu": "ODRZUCONY",
+   "co_widac": "Niskie budynki przy Tysiąclecia; blok Tysiąclecia 50 niewidoczny w kadrze",
+   "kamera_d_m": "99,8",
+   "kamera_kat_deg": "114",
    "A_dopasowanie": {
-    "werdykt": "PASS-POŚREDNIE",
-    "uzasadnienie": "dopasowanie pośrednie (stożek+pozycja w kadrze)",
-    "ev": {
-     "az": 133.1,
-     "dev": -12.3,
-     "pos": 32.5,
-     "d": 139.0,
-     "fh": "way/236129046",
-     "fh_addr": "Aleja Tysiąclecia Państwa Polskiego 31/2",
-     "cam_in_own": false,
-     "az_v1": null,
-     "pos_v1": null
-    }
+    "werdykt": "PASS (ODRZUCONY z uzasadnieniem wizyjnym)",
+    "uzasadnienie": "wizja 13.11: Niskie budynki przy Tysiąclecia; blok Tysiąclecia 50 niewidoczny w kadrze"
    },
    "B_IoU_LoD1_OSM": {
     "werdykt": "PASS",
     "lod1_id": "2BE4B431-C726-1BF0-E053-CC2BA8C0D140",
-    "IoU": 0.824
+    "IoU": 0.803
    },
-   "C_mh_vs_kond": {
-    "werdykt": "UWAGA (3.3 m od kond*2.9)",
-    "mh": "14.86",
-    "kond": "4 (OSM building:levels)"
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "NIE DOTYCZY (brak zliczenia lub mh)",
+    "kondygnacje_ze_zdjęcia": null,
+    "mh_LoD1": 14.86
    },
    "D_licencja": {
     "werdykt": "PASS",
-    "licencja": "CC0"
+    "licencja": "CC0",
+    "uwaga": "zdjęcie referencyjne (wiersz odrzucony)"
    },
    "E_jpg": {
-    "werdykt": "PASS (899x1600 px, kopia ZIP)"
+    "werdykt": "PASS",
+    "wymiary": "900x1600"
    },
    "F_adres": {
-    "werdykt": "PASS"
+    "werdykt": "PASS",
+    "osm": "Aleja Tysiąclecia Państwa Polskiego 50",
+    "manifest": "ul. Aleja Tysiąclecia Państwa Polskiego 50"
    },
    "G_wizja": {
-    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
    },
    "werdykt": "PASS"
   },
   {
-   "id": "M53-041",
-   "adres": "ul. Skidelska 6",
-   "status_manifestu": "OK-POŚREDNIE",
+   "id": "M53-049",
+   "adres": "ul. Radzymińska 12 (Biedronka)",
+   "status_manifestu": "OK",
+   "co_widac": "Parterowy pawilon supermarketu centralnie: zielona elewacja, szyldy „Biedronka” i „APTEKA”, parking przed budynkiem. Cel: pozycja ŚRODEK w kadrze",
+   "kamera_d_m": "47,2",
+   "kamera_kat_deg": "213",
    "A_dopasowanie": {
-    "werdykt": "PASS-POŚREDNIE",
-    "uzasadnienie": "dopasowanie pośrednie (stożek+pozycja w kadrze)",
-    "ev": {
-     "az": 242.7,
-     "dev": -4.4,
-     "pos": 43.7,
-     "d": 58.2,
-     "fh": "way/236129044",
-     "fh_addr": "Aleja Tysiąclecia Państwa Polskiego 29",
-     "cam_in_own": false,
-     "az_v1": null,
-     "pos_v1": null
-    }
+    "werdykt": "PASS",
+    "uzasadnienie": "wizja 13.11 (co_widac): kadr zgodny z obrysem celu; d=47,2 m, azymut do obrysu=213°; azymut toru NIE jest podstawą statusu"
    },
    "B_IoU_LoD1_OSM": {
     "werdykt": "PASS",
-    "lod1_id": "2BE4B431-AC09-1BF0-E053-CC2BA8C0D140",
-    "IoU": 0.89
+    "lod1_id": "2BE4B431-C288-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.956
    },
-   "C_mh_vs_kond": {
-    "werdykt": "PASS",
-    "mh": "8.10",
-    "kond": "3 (ESTIMATED: mh/2,9 m)"
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "UWAGA",
+    "kondygnacje_ze_zdjęcia": 1,
+    "mh_LoD1": 5.74,
+    "mh/2.9": 1.98,
+    "kond*2.9": 2.9,
+    "|diff|": 2.84,
+    "adnotacja": "pawilon handlowy z wysokim parterem — mh 5,74 zawyża odczyt (1 kond. policzona na zdjęciu); adnotacja również w manifestie"
    },
    "D_licencja": {
     "werdykt": "PASS",
-    "licencja": "CC0"
+    "licencja": "CC BY-SA 3.0",
+    "uwaga": ""
    },
    "E_jpg": {
-    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+    "werdykt": "PASS",
+    "wymiary": "1600x1200"
    },
    "F_adres": {
-    "werdykt": "PASS"
+    "werdykt": "PASS",
+    "osm": "Radzymińska 12",
+    "manifest": "ul. Radzymińska 12 (Biedronka)"
    },
    "G_wizja": {
-    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
+   },
+   "werdykt": "UWAGA"
+  },
+  {
+   "id": "M53-009",
+   "adres": "ul. Olsztyńska 2",
+   "status_manifestu": "ODRZUCONY",
+   "co_widac": "Blok 6-kondygnacyjny po lewej/środku kadru, ogrodzenie, pusty trawiasty plac — Olsztyńska 2 niejednoznaczna; potwierdzenia brak",
+   "kamera_d_m": "45,1",
+   "kamera_kat_deg": "40",
+   "A_dopasowanie": {
+    "werdykt": "PASS (ODRZUCONY z uzasadnieniem wizyjnym)",
+    "uzasadnienie": "wizja 13.11: Blok 6-kondygnacyjny po lewej/środku kadru, ogrodzenie, pusty trawiasty plac — Olsztyńska 2 niejednoznaczna; potwierdzenia brak"
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "2BE4B431-AE99-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.979
+   },
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "NIE DOTYCZY (brak zliczenia lub mh)",
+    "kondygnacje_ze_zdjęcia": null,
+    "mh_LoD1": 10.61
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0",
+    "uwaga": "zdjęcie referencyjne (wiersz odrzucony)"
+   },
+   "E_jpg": {
+    "werdykt": "PASS",
+    "wymiary": "1600x900"
+   },
+   "F_adres": {
+    "werdykt": "PASS",
+    "osm": "Olsztyńska 2",
+    "manifest": "ul. Olsztyńska 2"
+   },
+   "G_wizja": {
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
    },
    "werdykt": "PASS"
+  },
+  {
+   "id": "M53-032",
+   "adres": "ul. Aleja Tysiąclecia Państwa Polskiego 50/1",
+   "status_manifestu": "ODRZUCONY",
+   "co_widac": "Biały budynek 2-kondygnacyjny po prawej przy ulicy; pawilon Tysiąclecia 50/1 nie w kadrze",
+   "kamera_d_m": "134,1",
+   "kamera_kat_deg": "127",
+   "A_dopasowanie": {
+    "werdykt": "PASS (ODRZUCONY z uzasadnieniem wizyjnym)",
+    "uzasadnienie": "wizja 13.11: Biały budynek 2-kondygnacyjny po prawej przy ulicy; pawilon Tysiąclecia 50/1 nie w kadrze"
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "UWAGA",
+    "lod1_id": "2BE4B431-C726-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.0,
+    "uzasadnienie": "wiersz ODRZUCONY (cel poza kadrem) — para LoD1↔OSM pochodzi ze starej iteracji i nie pokrywa się (IoU 0.0); wiersz nie wchodzi do zestawu 30 przyjętych"
+   },
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "NIE DOTYCZY (brak zliczenia lub mh)",
+    "kondygnacje_ze_zdjęcia": null,
+    "mh_LoD1": 14.86
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0",
+    "uwaga": "zdjęcie referencyjne (wiersz odrzucony)"
+   },
+   "E_jpg": {
+    "werdykt": "PASS",
+    "wymiary": "900x1600"
+   },
+   "F_adres": {
+    "werdykt": "PASS",
+    "osm": "Aleja Tysiąclecia Państwa Polskiego 50/1",
+    "manifest": "ul. Aleja Tysiąclecia Państwa Polskiego 50/1"
+   },
+   "G_wizja": {
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
+   },
+   "werdykt": "UWAGA"
+  },
+  {
+   "id": "M53-002",
+   "adres": "ul. Generała Władysława Andersa 38 (stacja paliw, kiosk — bez odrębnego numeru w OSM)",
+   "status_manifestu": "OK",
+   "co_widac": "Zmierzch: parterowy kiosk stacji za wiatą, po lewej; elewacje słabo czytelne",
+   "kamera_d_m": "54,5",
+   "kamera_kat_deg": "207",
+   "A_dopasowanie": {
+    "werdykt": "PASS",
+    "uzasadnienie": "wizja 13.11 (co_widac): kadr zgodny z obrysem celu; d=54,5 m, azymut do obrysu=207°; azymut toru NIE jest podstawą statusu"
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "NIE DOTYCZY (brak obrysu w LoD1/OSM)",
+    "lod1_id": "brak (poza LoD1 GUGiK)",
+    "IoU": null
+   },
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "NIE DOTYCZY (brak zliczenia lub mh)",
+    "kondygnacje_ze_zdjęcia": 1,
+    "mh_LoD1": null
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0",
+    "uwaga": ""
+   },
+   "E_jpg": {
+    "werdykt": "PASS",
+    "wymiary": "1600x900"
+   },
+   "F_adres": {
+    "werdykt": "NIE DOTYCZY (way bez addr:housenumber lub budynek nieustalony)",
+    "manifest": "ul. Generała Władysława Andersa 38 (stacja paliw, kiosk — bez odrębnego numeru w OSM)"
+   },
+   "G_wizja": {
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
+   },
+   "werdykt": "PASS"
+  },
+  {
+   "id": "M53-029",
+   "adres": "ul. Aleja Tysiąclecia Państwa Polskiego 10",
+   "status_manifestu": "OK",
+   "co_widac": "Wieżowiec centralnie wypełnia kadr: 12 rzędów okien, biała/jasna elewacja, w parterze Biedronka (witryna i szyld); przed budynkiem chodnik i trawnik. Cel: pozycja ŚRODEK w kadrze",
+   "kamera_d_m": "1,9",
+   "kamera_kat_deg": "252",
+   "A_dopasowanie": {
+    "werdykt": "PASS",
+    "uzasadnienie": "wizja 13.11 (co_widac): kadr zgodny z obrysem celu; d=1,9 m, azymut do obrysu=252°; azymut toru NIE jest podstawą statusu"
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "5565D6E2-197C-11ED-8254-B8CA3AA2E5C2",
+    "IoU": 0.76
+   },
+   "C_zliczenie_zdjecie_vs_LoD1": {
+    "werdykt": "FAIL",
+    "kondygnacje_ze_zdjęcia": 12,
+    "mh_LoD1": 39.61,
+    "mh/2.9": 13.66,
+    "kond*2.9": 34.8,
+    "|diff|": 4.81,
+    "adnotacja": "rozbieżność uczciwie odnotowana: 12 rzędów POLICZONYCH na zdjęciu (przegląd r8: „nie 14”) vs LoD1 mh 23,91 → 8,2 kond.; możliwe podwójna wysokość części rzędów albo rozbieżność LoD1 dla tej bryły; do rozstrzygnięcia w przyszłej iteracji — NIE ukrywamy"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC BY-SA 3.0 (tylko referencja)",
+    "uwaga": ""
+   },
+   "E_jpg": {
+    "werdykt": "PASS",
+    "wymiary": "1600x1200"
+   },
+   "F_adres": {
+    "werdykt": "PASS",
+    "osm": "Aleja Tysiąclecia Państwa Polskiego 10",
+    "manifest": "ul. Aleja Tysiąclecia Państwa Polskiego 10"
+   },
+   "G_wizja": {
+    "werdykt": "PASS (wizja 13.11 — obowiązkowa)",
+    "uzasadnienie": "każda para zdjęcie↔budynek potwierdzona wizją: co_widac wypełnione (opis kadru + policzone kondygnacje + pozycja celu); szczegóły w vision_notes.json"
+   },
+   "werdykt": "UWAGA"
   }
  ],
  "podsumowanie": {
-  "PASS (lacznie z PASS-DIRECT/POŚREDNIE/UWAGA/NIE DOTYCZY)": 9,
+  "PASS": 7,
+  "UWAGA": 4,
   "FAIL": 0,
-  "UWAGI_kryterialne": [
-   [
-    "M53-033",
-    "C_mh_vs_kond"
-   ]
-  ]
+  "komunikat": "11/55 wylosowanych seedem 20261114; 7 PASS, 4 UWAGA (M53-029: rozbieżność zliczenie↔LoD1 odnotowana uczciwie; M53-038: mh obejmuje dach — dom z poddaszem; M53-049: wysoki parter pawilonu; M53-032: wiersz odrzucony ze starą parą LoD1↔OSM). Kryterium wizji G obowiązkowe dla wszystkich — bez NIE DOTYCZY."
  }
 }
