@@ -83,8 +83,25 @@ sama liczba wywołań rysowania i tekstur; pomiar należy do lidera).
 
 ## Dowody
 
-- Rendery: `artifacts/truck-regs-0175/` — `sbs/*_sbs.jpg` (źródła Blender przed/po, pochmurno), `unity/<tier>-<światło>/`
-  (kamery kontrolne DrivingLab na wyeksportowanych FBX: tył, bok, 3/4, widok z kabiny w lusterka; `High-dusk` z zapalonymi
-  grupami: pozycyjne, obrysowe, awaryjne, tylne przeciwmgłowe — `visual-qa.ps1 -TruckLamps rearfog,hazard`).
+- Rendery: `artifacts/truck-regs-0175/` — `sbs/*_sbs.jpg` (źródła Blender przed/po, pochmurno) oraz
+  `unity/WorldC-<tier>-<światło>/` (scena `WorldC`, prefaby `Tractor4x2_TRAKT` i `Trailer_Curtainsider_Art` przebudowane z
+  wyeksportowanych FBX; kamery `chase, truck-front, truck-34, truck-34r, truck-rear34, truck-side, trailer-34,
+  trailer-side, cab-mirrors-left, cab-mirrors-right`; High-overcast, Low-overcast, High-dusk z
+  `visual-qa.ps1 -TruckLamps rearfog,hazard`; `WorldC-High-dusk-lowbeam-only` = to samo bez przeciwmgłowych i awaryjnych).
+  Katalogi `unity/High-*`, `unity/Low-*` (DrivingLab) pokazują pojazdy graybox, nie model — nie są dowodem dla tego ADR.
 - `python tools/blender/truck/regs_check.py --tractor art-source/truck/regs/tractor.json --trailer art-source/truck/regs/trailer.json` → 158/158 zgodnych.
-- `pytest tests/physics/test_truck_regs.py tests/physics/test_dims_sync.py`; EditMode `TruckRegulationLampTests` — wyniki w raporcie agenta.
+- `pytest tests/physics/test_truck_regs.py` 5/5. EditMode (`artifacts/tests/editmode-20261113-172632.xml`): 520 testów,
+  517 zielonych, `TruckRegulationLampTests` 5/5; 2 czerwone to `CarPaintMaterialTests.DepositionChannel_…`
+  (`WorldPbrMaterials.Channels`, pliki nietknięte przez tę gałąź; przyczyna w tym worktree UNVERIFIED — na gałęzi
+  `dojlidy-import-0174` tego samego dnia zielone).
+- `TruckAssetBuilder` wymaga `art-source/truck/interior/export/SM_CabInterior_LOD0.fbx` (poza gitem) — w worktree skopiowany
+  z katalogu głównego (manifesty wnętrza identyczne).
+
+## Otwarte po obejrzeniu renderów (autor, nie werdykt)
+
+- O zmierzchu zapalone sekcje lamp (pozycyjne tylne 1 300 cd/m², obrysowe, przeciwmgłowe, awaryjne) są w kadrze **białe**
+  (przesterowanie do bieli zamiast czerwieni/bursztynu). Występuje już przy samych światłach mijania, czyli przed tą zmianą
+  (porównanie `WorldC-High-dusk` ↔ `WorldC-High-dusk-lowbeam-only`); dotyczy shadera/ekspozycji, poza zakresem ADR 0175.
+  Skutek dla dowodu: render pokazuje, **które sekcje** świecą (grupa 14 osobno od cofania), ale nie ich barwę.
+- Scena `DrivingLab`, `DrivingLab_Meshes.asset` i prefaby `*_Graybox` zmieniają się przy każdym `build-lab.ps1`
+  (przetasowanie fileID) — nie należą do tej zmiany i zostały przywrócone do stanu z bazy.
