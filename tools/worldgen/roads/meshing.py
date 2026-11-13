@@ -607,6 +607,8 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                     p3[2], p3[2] + S.BRIDGE_PARAPET_H, c.id + ":parapet")
 
 
+MEDIAN_FILL_SLOPE_MAX_H = 2.5    # WORKING_VALUE (ADR 0159): a fill end lower than this ends in a grass slope, not a wall
+MEDIAN_FILL_END_SLOPE = 4.0      # ... of 1 : 4
 MEDIAN_FILL_MAX_GAP_M = 14.0     # WORKING_VALUE: widest gap between the inner cap edges that is filled
 
 
@@ -679,6 +681,24 @@ def build_median_fills(buf, net):
         for k, o in ((0, -1.0), (n - 1, 1.0)):                    # end walls (both windings: seen from either side)
             a, b = A[k], B[k]
             zb = min(low[k], a[2] - 0.3, b[2] - 0.3)
+            hgt = max(a[2], b[2]) - zb
+            if hgt <= MEDIAN_FILL_SLOPE_MAX_H and n > 2:
+                # ADR 0159 (REVIEW s14-0146 P1-1 / s16 P2 "jasny klin czola wypelnienia", 810896): where the ramps
+                # come down to the ground the fill ends in a grass slope 1 : MEDIAN_FILL_END_SLOPE, not in a wall
+                # across the median (orthophoto: the grass runs on unbroken to the median nose)
+                kk = 1 if k == 0 else n - 2
+                dv = (A[k][:2] + B[k][:2]) / 2 - (A[kk][:2] + B[kk][:2]) / 2
+                dv /= max(float(np.hypot(*dv)), 1e-9)
+                run = hgt * MEDIAN_FILL_END_SLOPE
+                a2 = np.array([a[0] + dv[0] * run, a[1] + dv[1] * run, zb])
+                b2 = np.array([b[0] + dv[0] * run, b[1] + dv[1] * run, zb])
+                Vs = np.array([a, b, b2, a2])
+                Ts = np.array([[0, 1, 2], [0, 2, 3]])
+                if np.cross(Vs[1] - Vs[0], Vs[2] - Vs[0])[2] < 0:
+                    Ts = Ts[:, [0, 2, 1]]
+                buf.add("bridge", "verge_grass", Vs, Vs[:, :2].copy(), Ts, src=src + ":end_slope")
+                buf.add("collision", "collision_grass", Vs, Vs[:, :2].copy(), Ts, src=src + ":end_slope")
+                continue
             W = np.array([[a[0], a[1], zb], [b[0], b[1], zb], [b[0], b[1], b[2]], [a[0], a[1], a[2]]])
             wd = float(np.hypot(*(a[:2] - b[:2])))
             UVw = np.array([[0, 0], [wd, 0], [wd, b[2] - zb], [0, a[2] - zb]])

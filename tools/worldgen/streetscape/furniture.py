@@ -1884,7 +1884,7 @@ def _flush_rails(lin, m=None):
 PARAPET_BARRIER_MIN_M = 1.0   # ADR 0144: no generic deck balustrade within this of a road barrier (W-beam + upper beam)
 
 
-def drop_parapets_at_barriers(buf, runs, m=None):
+def drop_parapets_at_barriers(buf, runs, m=None, extra=()):
     """ADR 0144 (REVIEW s14-0123 P1-1): the generic balustrade of a deck edge (roads.meshing.build_bridge_extras, src
     "<chain>:parapet", 0.15 m in from the cap edge) and the road barrier of the same cap (posts 0.2-0.4 m in from that
     edge) are two rail systems 0.1-0.3 m apart: on p0_kerb_merge_eye the W-beam ran through the balustrade posts for
@@ -1903,6 +1903,9 @@ def drop_parapets_at_barriers(buf, runs, m=None):
         # runs are sampled every ~1 m: densify to 0.25 m so the distance to the polyline is right to a few cm
         u = np.linspace(0.0, len(P3) - 1.0, 4 * (len(P3) - 1) + 1)
         pts.append(np.column_stack([np.interp(u, np.arange(len(P3)), P3[:, d]) for d in range(3)]))
+    # ADR 0159: cap edges whose barrier is a plain ground W-beam (filled median) or is authored away (no_guardrail)
+    # do not get the generic balustrade back either (it reappeared on the SW median cap of the Putry SE ramp)
+    pts += [np.asarray(e, float) for e in extra if len(e)]
     if not pts:
         return 0
     A = np.concatenate(pts)
@@ -2069,6 +2072,7 @@ def guardrails(lin, net, zground, report):
             continue
         nozones.append((o["id"], shapely.Polygon(Q), [0]))
     m["no_guardrail"] = 0.0
+    par_extra = []
     for c in net.chains:
         if c.meta.get("absorbed"):
             continue
@@ -2149,6 +2153,18 @@ def guardrails(lin, net, zground, report):
             # barrier with the upper beam
             mf = c.meta.get("median_fill_s", {}).get(side)
             gnd = np.zeros(len(ss), bool) if mf is None else (ss >= mf[0]) & (ss <= mf[1]) & br
+            if gnd.any():
+                # a few deck stations left between the end of the fill (2 m steps) and the end of the walled ramp
+                # would stand as a stub of deck barrier with an upper beam: they follow the median rail
+                gi = np.where(gnd)[0]
+                for a_, b_, st_ in ((gi[-1] + 1, len(ss), 1), (gi[0] - 1, -1, -1)):
+                    idx = []
+                    for q in range(a_, b_, st_):
+                        if not br[q]:
+                            break
+                        idx.append(q)
+                    if 0 < len(idx) <= 8 and (not idx or (idx[-1] + st_ in (len(ss), -1) or not br[idx[-1] + st_])):
+                        gnd[idx] = True
             tr = _approach_transition_mask(br, S.DECK_APPROACH_TRANSITION_M) & (want == 0)
             want[tr] = 5
             off[tr] = np.where(rur[tr], hw[tr] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
@@ -2158,10 +2174,14 @@ def guardrails(lin, net, zground, report):
                 Pw = c.line.offset_point(ss, sgn * off)
                 for _zid, zpoly, zcnt in nozones:
                     ins = shapely.contains_xy(zpoly, Pw[:, 0], Pw[:, 1]) & (want != 0)
+                    if (ins & br).any():
+                        par_extra.append(np.column_stack([Pw[ins & br], zb[ins & br]]))
                     if ins.any():
                         want[ins] = 0
                         zcnt[0] += int(ins.sum())
                         m["no_guardrail"] += float(ins.sum())
+            if gnd.any():
+                par_extra.append(np.column_stack([c.line.offset_point(ss[gnd], sgn * off[gnd]), zb[gnd]]))
             # runs: ONE rail per contiguous stretch that wants a barrier, whatever the rule (ADR 0110: the bridge
             # rail, the approach embankment rail and the median rail were separate runs at different offsets and
             # crossed / doubled where they met, REVIEW s10-0100 P1-6); the offset and the foot height blend over 9 m
@@ -2204,7 +2224,7 @@ def guardrails(lin, net, zground, report):
         (net.overrides_applied.append({"id": zid, "targets": [f"rule guardrail points removed: {zcnt[0]}"]})
          if zcnt[0] else net.overrides_stale.append(zid))
     deck_flags = _flush_rails(lin, m)
-    drop_parapets_at_barriers(lin.buf, lin.rail_runs, m)
+    drop_parapets_at_barriers(lin.buf, lin.rail_runs, m, extra=par_extra)
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
     # ADR 0144: every built run (1 m points: E, N, foot z, deck flag) for tests/gis/test_guardrail_overlap.py
     report["guardrail_runs"] = [{"key": r["key"], "term": [bool(x) for x in r["term"]],
