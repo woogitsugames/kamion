@@ -1,6 +1,6 @@
 # ADR 0155 — plamy słońca na wyspie pod wiaduktem Putry
 
-Status: wariant B po docelowym imporcie, pełnej QA i EditMode; końcowy GIS w toku, recenzja statyczna PASS. Gałąź `gpt-s16-r3` od r2 `1f81e87ee`, po merge main `e638abf31`.
+Status: wariant B po docelowym imporcie, pełnej QA i EditMode; pełny GIS i EditMode PASS, recenzja statyczna PASS; kandydat do integracji lidera. Gałąź `gpt-s16-r3` od r2 `1f81e87ee`, po merge main `e638abf31`.
 
 ## Problem i zakres
 
@@ -28,7 +28,7 @@ Wersjonowany `Data/Regions/bialystok-industrial-c/shadow_caster_bias.json` jawni
 
 WorldPBR dodaje właściwość domyślnie 1 i lokalny keyword wyłącznie w istniejącym ShadowCaster. Bez opt-in kompiluje dawny `ApplyShadowBias` bez nowych operacji. Wariant opt-in skaluje tylko składnik normalnego insetu, zachowując dokładnie `ld * _ShadowBias.x` z zainstalowanego URP `Shadows.hlsl:533–541`. ForwardLit i DepthOnly nie mają nowego wariantu ani formuły światła. Nadal 3 przebiegi, ten sam Cull; bez nowego materiału, renderera, geometrii lub pełnoekranowego efektu. Nie zmieniono WorldSurface, QualityProfile, globalnego biasu, słońca ani bake.
 
-## Weryfikacja końcowa — GIS w toku
+## Weryfikacja końcowa
 
 9 nowych przypadków EditMode: legacy bez serializacyjnej zmiany, opt-in/reset bez zmiany pozostałych pól/passów, nieprawidłowe liczby, usunięcie wpisu/pliku regionu, zły schemat oraz natywny zakres dokładnie trzech materiałów. Pliki testowe tworzone i usuwane tylko we własnym `game/Temp`.
 
@@ -40,4 +40,4 @@ Native audit: 455/458 materiałów ma identyczny SHA; 3 wskazane różnią się 
 
 Autor obejrzał wszystkie 24 author-overviews (488 par), 26 zbliżeń (w tym dwie dodatkowe bliskie pary) oraz 8 foto. Critic obejrzał wszystkie 44 overviews, 26 zbliżeń, 8 foto i dodatkowe native PNG. PASS dotyczy statycznego usunięcia regularnego szeregu przy zachowaniu dużego cienia i jasnego brzegu; nie znaleziono nowej konkretnej regresji do poprawy. Wzory „warstwic” na asfalcie wokół Bieżeństwa występują już w baseline. Nie deklaruje się naprawy tego odrębnego problemu.
 
-Pełny EditMode B: 493 passed, 0 failed/skipped. Fidelity B zakończone exit0; pełny GIS w toku. Telefon, ASTC, GPU, termika, migotanie i acne w ruchu pozostają u lidera. Pełne fotograficzne D51/Gate3 nie są zamykane przez tę korektę.
+Pełny EditMode B: 493 passed, 0 failed/skipped. Fidelity B zakończone exit0; pełny GIS: 986 passed, 4 xfailed w 945,46 s. Po teście ponownie potwierdzono193identyczneSHAświata oraz455identycznych materiałów i3wyłączneflagi. Telefon, ASTC, GPU, termika, migotanie i acne w ruchu pozostają u lidera. Pełne fotograficzne D51/Gate3 nie są zamykane przez tę korektę.

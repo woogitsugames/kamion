@@ -1,3 +1,17 @@
+# STATUS KOŃCOWY — gpt-s16 r3 / ADR 0155
+2026-11-13T04:08:44.992143+01:00
+Gałąź gpt-s16-r3; ostatni zweryfikowany commit 7526bb1032. Gotowe do recenzji: TAK (statyczny edytor).
+R1 push eb718b7f8, R2 push1f81e87ee; R3 po źródłowej polityce3materiałów i końcowej QA.
+EditMode493/493,0failed/skipped; GIS986passed/4xfailed/945,46s; fidelityexit0; criticPASS.
+122kamer×4: delta scene/instance/shadow draws i dokładnych tris0, globalnyURPbez zmian.
+193surowe pliki identyczneSHA;455/458matów identycznych,3właściweflagitylko keyword/scale0,0nowych.
+Autor obejrzał488par,26crops,8foto; criticpełnyPASSzakresu. Telefon/GPU/ASTC/ruch i pełnyD51/Gate3 pozostają u lidera.
+Sprzątnięto2duplikatyarkuszy, cofnięto138szumówcache i eksperymenty; zero testowychplikówpolicy w game/Temp. Dowody kompaktowe, bez prywatnych materiałów/pełnychPNG w Git.
+DECYZJA: własne r1 clear-rejected0,412GB pozostało po automatycznym odrzuceniu usuwania („blocked by policy”); nie obchodzono blokady.
+NASTĘPNY KROK: git push origin gpt-s16-r3; końcowe przekazanie lidera i kopia zaktualizowanych dowodów.
+
+---
+Historia WIP (wcześniejsze hipotezy i odrzuconeA nie są stanem końcowym):
 # STATUS — gpt-s16 r3 / ADR 0155
 2026-11-13 02:31 CET. Baza r2 1f81e87ee + origin/main e638abf31; konflikty tylko wygenerowane, ours + zaplanowana regeneracja.
 R1 i R2 wypchnięte, bez merge/push main. R2 pełny GIS 986 passed / 4 xfailed, EditMode 484/484, critic PASS zakresu, D51 PARTIAL.
