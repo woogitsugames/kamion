@@ -117,3 +117,5 @@ Zapisano after/High-overcast; każda kamera w stats.txt. Oględziny pozostają w
 Docelowy import B: bliska kamera wyspy Low clear zapisana, bez globalnych rq override. NASTĘPNY KROK: final_details.py i pełny EditMode.
 
 Docelowy import B: bliska kamera wyspy High clear zapisana, bez globalnych rq override. NASTĘPNY KROK: final_details.py i pełny EditMode.
+
+EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xml.
