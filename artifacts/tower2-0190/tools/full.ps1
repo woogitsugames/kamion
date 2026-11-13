@@ -17,7 +17,7 @@ $bw = 0
 if (-not $SkipBuild) {
   if ($Tag -eq 'base') {
     if (git status --porcelain -- $src) { Mark 'ABORT: changed sources not committed'; exit 1 }
-    git checkout $BaseRef -- $src; Mark 'sources = base'
+    git checkout $BaseRef -- $src; git reset -q -- $src; Mark 'sources = base'   # index stays at HEAD: a WIP commit must not take them
   }
   pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $n
   try {
