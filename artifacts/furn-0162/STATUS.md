@@ -6,3 +6,6 @@
   U-12a / U-12 / U-5a prototypy (w danych regionu brak -> 0 sztuk), tablice: panele ze strzałkami, Centrum w białym polu, owale PL/BY,
   p40 wg 2024 (Centrum osobno ←) + kolumny z ortofoto, 3 nowe konstrukcje na al. Tysiąclecia (E-1 P009, VMS P010, portal P005-8).
 - NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis -q -k "furniture or props or signs or landmarks"` potem build_world.
+- 09:10 build_world OK (8.9 min): wiaty 13x7 m / 7x5 m / 3 czarne (0x9 m w tej próbce), lamp_11m 164, 6 konstrukcji tablic (p40 przeniesiony na ortofoto: -475.2,-8.8), 0 stale. Testy jednostkowe 15/15 + 109 powiązanych.
+- W tle: fidelity (heavy), unity_run.ps1 (czeka na PHONE_RUN lidera: baseline Low -> import -> after Low/High + sondy + sbs).
+- NASTĘPNY KROK: `pwsh -File artifacts/furn-0162/tools/unity_run.ps1` (jeśli przerwane: -SkipBaseline), potem pary sbs i budżet.
