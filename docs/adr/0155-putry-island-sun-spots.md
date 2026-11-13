@@ -1,6 +1,6 @@
 # ADR 0155 — plamy słońca na wyspie pod wiaduktem Putry
 
-Status: WIP — wariant B po rozstrzygających ablacjach; docelowy import, QA i pełne testy jeszcze wymagane. Gałąź `gpt-s16-r3` od r2 `1f81e87ee`, po merge main `e638abf31`.
+Status: wariant B po docelowym imporcie, pełnej QA i EditMode; końcowy GIS w toku, recenzja statyczna PASS. Gałąź `gpt-s16-r3` od r2 `1f81e87ee`, po merge main `e638abf31`.
 
 ## Problem i zakres
 
@@ -24,14 +24,20 @@ Izolacje materiałów: bridge_concrete=0 dawał drugi szereg, road_asphalt=0 ora
 
 Wersjonowany `Data/Regions/bialystok-industrial-c/shadow_caster_bias.json` jawnie ustawia normal-bias scale=0 tylko dla istniejących trzech materiałów. Polityka ma zakres wszystkich ich zastosowań w tym regionie; warstwa road nie rzuca cienia, bridge go rzuca. To nie jest zmiana wyłącznie pojedynczego renderera. Dlatego końcowa QA musi obejmować także pozostałe mosty. Nie skopiowano ani nie zmieniono chronionych definicji roads/*, geometrii, overrides, barier i krawężników.
 
-`RegionImporter.CreateMaterial` nakłada opcjonalną politykę po istniejącej fabryce, także dla niestandardowych materiałów PBR. `WorldShadowCasterBias` czyta plik i waliduje schemat oraz skończone wartości 0…1. Brak pliku lub wpisu przywraca skalę 1 i usuwa keyword; błędny schemat zatrzymuje import. Domyślna wartość nie jest zapisywana do niezmienionego legacy cache.
+`RegionImporter.CreateMaterial` nakłada opcjonalną politykę po istniejącej fabryce, także dla niestandardowych materiałów PBR. `WorldShadowCasterBias` czyta plik i waliduje schemat oraz skończone wartości 0…1 dopasowanych używanych wpisów. Brak pliku lub wpisu przywraca skalę 1 i usuwa keyword; błędny schemat zatrzymuje import. Domyślna wartość nie jest zapisywana do niezmienionego legacy cache.
 
 WorldPBR dodaje właściwość domyślnie 1 i lokalny keyword wyłącznie w istniejącym ShadowCaster. Bez opt-in kompiluje dawny `ApplyShadowBias` bez nowych operacji. Wariant opt-in skaluje tylko składnik normalnego insetu, zachowując dokładnie `ld * _ShadowBias.x` z zainstalowanego URP `Shadows.hlsl:533–541`. ForwardLit i DepthOnly nie mają nowego wariantu ani formuły światła. Nadal 3 przebiegi, ten sam Cull; bez nowego materiału, renderera, geometrii lub pełnoekranowego efektu. Nie zmieniono WorldSurface, QualityProfile, globalnego biasu, słońca ani bake.
 
-## Weryfikacja końcowa — w toku
+## Weryfikacja końcowa — GIS w toku
 
 9 nowych przypadków EditMode: legacy bez serializacyjnej zmiany, opt-in/reset bez zmiany pozostałych pól/passów, nieprawidłowe liczby, usunięcie wpisu/pliku regionu, zły schemat oraz natywny zakres dokładnie trzech materiałów. Pliki testowe tworzone i usuwane tylko we własnym `game/Temp`.
 
 Przed B przywrócono 458 bazowych SHA materiałów po ścisłym porównaniu zmian diagnostycznych. Guard początkowo zatrzymał dodatkowe nieaktywne `_RECEIVESHADOWS_ON`/`_ZWRITE_ON`; po obejrzeniu diff dopuszczono tylko te nowe wpisy, właściwość/keyword biasu i znany legacy SrcBlend. Przywrócenie objęło 141 plików, bez innych zmian. Końcowy audyt zachowa trzy zamierzone opt-in i cofnie wyłącznie udowodniony szum serializacji.
 
-Otwarte: generator B, import, 122 te same kamery × 4 warunki, oględziny wszystkich par i zdjęć, draws/tris per kamera, audyt surowego świata/materiałów, pełny GIS/EditMode i końcowy critic. Telefon, ASTC, GPU, migotanie i acne w ruchu pozostają u lidera; pełne fotograficzne D51/Gate3 nie są zamykane przez tę korektę.
+Końcowy generator B: 542,0 s bez fallback, import obu tierów OK. Wszystkie 193 surowe pliki świata mają identyczny SHA z bazą. 122 pasujące kamery × 4 warunki mają delta scene/instance/shadow draws oraz dokładnych tris równe 0. Globalny URP jest identyczny tekstowo przed/po; pełne tabele w CAMERAS.md i camera-counts.json. To liczniki/estymaty CPU, nie GPU/SRP.
+
+Native audit: 455/458 materiałów ma identyczny SHA; 3 wskazane różnią się tylko keyword i scale=0, bez nowych materiałów lub innych zmian właściwości. Po pełnym EditMode cofnięto 138 zweryfikowanych zapisów szumu cache, zachowując właściwą korektę. Żaden testowy plik policy nie pozostał w game/Temp. Zastąpione dwa duplikaty arkuszy usunięto; duże native PNG i prywatne kopie cache nie są w Git ani w pakiecie dla lidera.
+
+Autor obejrzał wszystkie 24 author-overviews (488 par), 26 zbliżeń (w tym dwie dodatkowe bliskie pary) oraz 8 foto. Critic obejrzał wszystkie 44 overviews, 26 zbliżeń, 8 foto i dodatkowe native PNG. PASS dotyczy statycznego usunięcia regularnego szeregu przy zachowaniu dużego cienia i jasnego brzegu; nie znaleziono nowej konkretnej regresji do poprawy. Wzory „warstwic” na asfalcie wokół Bieżeństwa występują już w baseline. Nie deklaruje się naprawy tego odrębnego problemu.
+
+Pełny EditMode B: 493 passed, 0 failed/skipped. Fidelity B zakończone exit0; pełny GIS w toku. Telefon, ASTC, GPU, termika, migotanie i acne w ruchu pozostają u lidera. Pełne fotograficzne D51/Gate3 nie są zamykane przez tę korektę.
