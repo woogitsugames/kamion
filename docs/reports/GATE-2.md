@@ -48,7 +48,7 @@ Symulator: `artifacts/physics/20261113-215728/summary.md` (kopia `C:\Users\matma
 | Sprzęganie / odpinanie 40 t | `couple_uncouple@laden40`, `couple_offset_left_18cm@laden40`, `couple_miss_25cm@laden40` | uderzenie 44,7 kN, nacisk 0,97× stat.; przesunięcie 18 cm → sprzęga (102,8 kN); 25 cm → nie sprzęga | ≤ 150 kN |
 
 ADR fizyki od szkicu 9.11 (stan w main): 0134 (feel ciężarówki, D53 domyślnie 24 t), 0149 i 0151 (kierowanie r2/r3, lejek/pełzanie siodła), 0158 (energia w locie, F1/F2), 0165 (podatny kontakt nadwozia, D58), 0176 (synteza retarder/hamulec silnikowy/AMT — audio).
-Pozycje 13 (floating origin, streaming) i 15 (kierunek sterowania we wszystkich wejściach) — 15 zielone w `VehicleLabTests`; 13 sprawdzane tylko pośrednio przejazdami gate3 (`suspiciousLines: 0`), bez osobnego scenariusza.
+Pozycje 13 (floating origin, streaming) i 15 (kierunek sterowania we wszystkich wejściach) — pozycja 15 zielona w `VehicleLabTests` (7/7 testów pass); 13 sprawdzane tylko pośrednio przejazdami gate3 (`suspiciousLines: 0`), bez osobnego scenariusza.
 
 ## Pomiar na telefonie (plan; uruchamia lider po integracji)
 
