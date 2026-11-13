@@ -67,7 +67,7 @@ Zakazane źródła (Google Maps / Street View / Earth / 3D Tiles) **nie były u�
 | P12-P05-palac-hasbacha.jpg | Wikimedia Commons (curid 21441453) | Mariag36 | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Pa%C5%82ac_Hasbacha_w_Bia%C5%82ymstoku.jpg |
 | P12-A01..P12-A26.jpg | ortofoto GUGiK (WMS) | GUGiK | otwarte dane (komercyjne OK) | https://mapy.geoportal.gov.pl/wss/service/PZGiK/ORTO/WMS/StandardResolution |
 
-Kadry ortofoto: 26 szt., 800×800 px (0,5 m/px, obszar 400×400 m), JPEG. Zdjęcia Commons przeskalowane do ≤ 1600 px przy pobieraniu (Openverse/Commons API, 2026-11-13; Commons API ograniczał liczbę zapytań — HTTP 429).
+Kadry ortofoto: 25 szt. (P12-A01…A26 bez A20), 800×800 px (0,5 m/px, obszar 400×400 m), JPEG. Zdjęcia Commons przeskalowane do ≤ 1600 px przy pobieraniu (Openverse/Commons API, 2026-11-13; Commons API ograniczał liczbę zapytań — HTTP 429).
 
 ## 6. Zdjęcia uliczne — dostępność
 

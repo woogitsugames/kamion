@@ -172,6 +172,6 @@ research/mistral/p12-dojlidy-landmarks/
                            typologia-colors.json, osm-east-strip.json, osm-hasbach.json, area-geom.json
 ```
 
-Zdjęcia (26 kadrów ortofoto + 5 zdjęć Commons) **nie trafiają do gita** (`files/` w .gitignore); paczka `mistral-p12-dojlidy-landmarks-files.zip` (SHA-256 w opisie PR) jest dostarczana poza repozytorium — patrz opis PR.
+Zdjęcia (25 kadrów ortofoto P12-A01…A26 (bez A20) + 5 zdjęć Commons) **nie trafiają do gita** (`files/` w .gitignore); paczka `mistral-p12-dojlidy-landmarks-files.zip` (SHA-256 w opisie PR) jest dostarczana poza repozytorium — patrz opis PR.
 
 Dokument powiązany: `research/gptpro/2-next-regions/README.md` (D60), `research/g5-street-furniture/README.md` i `research/g7-street-greenery/README.md` (format), `research/g10-truck-restrictions/` (zakazy i korytarz tranzytu).
