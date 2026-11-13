@@ -6,23 +6,27 @@ overrides:
   # ---------------------------------------------------------------- landmarks P0 (photo P11-001, P11-063)
   - id: kuronia3-office-block
     kind: building_part
-    name: office block of the hall at Kuronia 3
-    polygon_en: [[364.2, 491.0], [372.2, 491.0], [372.2, 528.0], [364.4, 528.0]]
+    name: tall west block of the hall at Kuronia 3
+    polygon_en: [[322.9, 495.2], [369.6, 491.9], [372.2, 491.7], [372.0, 527.7], [364.6, 528.2], [364.1, 520.5],
+                 [357.1, 520.9], [329.4, 507.5], [323.8, 507.8]]
     cut_from: ["bdot:27a0721d-eb46-4021-a0be-dc26db73e398"]
-    height_m: 19.0
-    storeys: 5
+    height_m: 14.0
+    storeys: 4
     function: biurowiec
     reason: >-
-      BDOT10k draws the hall at Kuronia 3 and its office block as one outline with the LoD1 2024 height of the hall
-      (6.01 m). CC0 photo P11-001 (Rakoon 2024-06-23): a narrow light grey block of a ground floor + 4 rows of dark
-      ribbon windows stands at the street end of the hall, its narrow end to Kuronia, the long side to the west; it
-      is the tallest object of the frame. Orthophoto 2024: lighter roof strip 7-8 m x 36 m (E 364-372, N 491-528;
-      BDOT10k has the matching steps at E 364.6 / 372.0, N 528). Height from the shadow on the hall roof: 22 m long
-      at 1.68 m of shadow per m of height (calibrated on the hall at Kuronia 2, LoD1 12.72 m, shadow 21.4 m on the
-      same sheet) = 13.1 m above the 6.01 m roof -> 19 m, WORKING_VALUE +-2 m. Footprint +-1 m (roof displaced ~3 m
-      south on the orthophoto, the BDOT10k steps taken as the ground line).
+      BDOT10k draws the hall at Kuronia 3 as one outline with the LoD1 2024 height 6.01 m. CC0 photo P11-001
+      (Rakoon 2024-06-23, from the gate west of the hall): the west end of the complex is a tall light grey block,
+      the tallest object of the frame - a west face ~11 m wide (two window rows, a dock with a canopy on the ground
+      floor) and a long south face along Kuronia with three rows of ribbon windows that ends at a glazed stair
+      strip. Bearings from the camera (local 253.9 475.8, heading 90 deg, f = 753 px at 960 px): corner between the
+      two faces 75.7 deg = BDOT10k vertex 322.9 495.2 (75.6 deg); end of the south face 83 deg = the lighter roof
+      strip E 364-372 of the 2024 orthophoto (83.2 deg). The block is therefore the BDOT10k outline west of
+      E 372.2 (s18 first drew only the 8 m roof strip, which rendered as a slab facing the camera - rejected by the
+      side-by-side). Height: the trailer at the dock (4.0 m) is 155 px against 555 px of wall in the 2.5x crop
+      = 14.3 m; from the pixel angle at 72 m 13 m -> 14 m WORKING_VALUE +-1.5 m (the shadow estimate of 19 m is
+      dropped). Storeys: dock floor + 3 window rows.
     confidence: medium
-    verify: owner photo session (Kuronia 3 from the cycle path); number of storeys
+    verify: owner photo session (Kuronia 3 from the cycle path); height
     set: {typology: office, wall_material: plaster_grey, ribbon: true, bands: false}
   - id: kuronia3-hall-colour
     target: {building: "bdot:27a0721d-eb46-4021-a0be-dc26db73e398"}
@@ -51,22 +55,35 @@ overrides:
         accents:
           - {facing: SW, span: [0.0, 1.0], material: hall_flashing, z: [8.6, 11.8], min_len_m: 20.0}
           - {facing: NW, span: [0.65, 1.0], material: hall_flashing, z: [8.6, 11.8], min_len_m: 20.0}
+  - id: rosti-hall-colour
+    target: {building: "bdot:2BE4B431-BC59-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      Photo P11-094 (Rakoon, Kuronia looking SW at the north hall of the plant): the hall is clad in light silver
+      grey sandwich panels in one colour up to the roof edge (the wall sign is not reproduced). The hashed pick was
+      ivory with a red band under the roof. hall_wall_white = the lightest existing hall cladding; hall_bands
+      false = no hashed plinth / top band.
+    confidence: high
+    verify: none
+    set: {wall_material: hall_wall_white, hall_bands: false}
   # ---------------------------------------------------------------- P11-063: corner of Mickiewicza / Kuronia
   - id: mickiewicza-kuronia-shrub-band
     kind: tree_groups
     lines:
-      - {line_epsg2180: [[779985.0, 590551.0], [780010.0, 590507.0], [780034.0, 590465.0]]}
-    group_size: [10, 16]
-    in_group_m: [1.3, 2.2]
-    gap_m: [0.5, 2.0]
-    depth_m: 2.0
+      - {line_epsg2180: [[779986.1, 590551.6], [780011.1, 590507.6], [780035.1, 590465.6]]}
+      - {line_epsg2180: [[779983.9, 590550.4], [780008.9, 590506.4], [780032.9, 590464.4]]}
+    group_size: [16, 24]
+    in_group_m: [1.9, 2.5]
+    gap_m: [0.2, 0.8]
+    depth_m: 0.6
     rows_replace_m: 0.0
     species: {shrub: 1.0}
     reason: >-
       Photo P11-063: a dense band of tall shrubs (2-4 m) fills the strip between the east footway of Mickiewicza and
       the car park of the court, so the car park is not seen from the crossing; the generated frame showed ~100 cars
       there. Orthophoto 2024: dark shrub strip 4-5 m wide from E -58 N 472 to E -9 N 386 (local), with its shadow on
-      the car park lane. Axis traced +-1.5 m; plant sizes are the rule's (shrub 1.5-4 m).
+      the car park lane. Axis traced +-1.5 m; plant sizes are the rule's (shrub 1.5-4 m). Two rows 2.6 m apart
+      (axis +-1.3 m), plants 1.9-2.5 m apart: the first import (one row, 1.3-2.2 m) lost every second plant to the
+      1.8 m trunk thinning and read as single bushes with the cars between them.
     confidence: medium
     verify: owner photo session (Mickiewicza / Kuronia crossing)
   - id: mickiewicza-kuronia-shrub-strip-ground

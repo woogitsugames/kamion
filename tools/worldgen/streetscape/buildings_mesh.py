@@ -1114,6 +1114,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if typ == "office" and b["ovr"].get("ribbon") is not None:      # ADR 0171: authored window type (the far
             variant["ribbon"] = bool(b["ovr"]["ribbon"])                # ribbon rows carry grey spandrels)
         scheme = FK.hall_scheme(key, wall) if typ == "hall" else None
+        if scheme and b["ovr"].get("hall_bands") is False:      # ADR 0179: authored - the photographed hall is
+            scheme = {**scheme, "low": None, "top": None}       # one cladding colour (no hashed plinth / top band)
         insulated = typ == "block" and (FK.hfloat(key, "etics") < 0.7 or bool(b["ovr"].get("wall_material")))
         # v3.1 horizontal bands: insulated blocks (35 %) get the window rows in the accent colour from the 1st
         # floor up; punched-window offices with >= 2 storeys (40 %) get darker spandrel bands between the rows

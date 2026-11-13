@@ -442,8 +442,10 @@ def cameras_generic(region_id, w):
             _, _, _, zp = surface_at(w, p)
             eye = float(zp) + float(e.get("eye_m", 1.6))
             tgt = p + 100.0 * d
+            # ADR 0179: optional pitch_deg (phone frames are tilted up; a level camera cuts a tall hall at 40 m)
+            zt = eye + 100.0 * math.tan(math.radians(float(e.get("pitch_deg", 0.0))))
             cams.append({"id": e["id"], "type": "persp", "fov_deg": float(e.get("fov_deg", 40.0)),
-                         "pos": [r(p[0]), r(p[1]), r(eye)], "look_at": [r(tgt[0]), r(tgt[1]), r(eye)],
+                         "pos": [r(p[0]), r(p[1]), r(eye)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt)],
                          "note": f"photo match {e['photo']} (heading {e['heading_deg']} deg: {e['basis']})"})
     bb = w.region["bbox"]
     cx = (bb["xmin"] + bb["xmax"]) / 2 - w.origin[0]
