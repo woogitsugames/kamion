@@ -85,3 +85,5 @@ Natywna izolacja materiału M_bridge_concrete zapisana; to ablacją cache, nie f
 Natywna izolacja materiału M_road_asphalt zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
 
 Izolacje: bridge_concrete=0 dodaje drugi szereg plam, road_asphalt=0 zmniejsza/zmienia wzór, lecz go nie usuwa. Następna rozstrzygająca próba: obie sąsiednie powierzchnie pomostu razem=0 (bez hero). NASTĘPNY KROK: material-ablate.ps1 -Materials deck-pair
+
+Natywna izolacja materiału deck-pair zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
