@@ -25,8 +25,11 @@ namespace Game.World
             public Vector3 localPos;
             [Tooltip("Heading of the road towards the region edge (degrees clockwise from north)")]
             public float headingDeg;
+            [Tooltip("Width of the closed road [m]")]
             public float widthM;
             public string road;
+            [Tooltip("Length of the barrier row across the road [m]; 0 = road width + 5 m (ADR 0169: merged / cut rows)")]
+            public float spanM;
         }
 
         /// <summary>Union of the chunk rectangles (scenes imported before ADR 0082 have no WorldBoundary component).</summary>
