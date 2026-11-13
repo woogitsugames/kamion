@@ -13,11 +13,18 @@ REFERENCE_ONLY (NC/ND), REFERENCE_NOT_TEXTURE (CC BY-SA — referencja, nie teks
    - ELI: https://eli.gov.pl/eli/DU/2019/2311/1
    - PDF (zał. 2, znaki poziome — część c2): https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf
    - PDF (tekst gł. + zał. 1 — część c1): https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c1.pdf
+   - HTML ELI (api.sejm.gov.pl): https://api.sejm.gov.pl/eli/acts/DU/2019/2311/text.html —
+     załączniki w HTML oznaczone „patrz oryginał” (tekst zał. 2 niedostępny w HTML; odczyt
+     2026-11-13, sesja M52-FIX).
    - Licencja: dokument urzędowy (Dz.U.), domena publiczna / wolne wykorzystanie.
    - Mapowanie stron: PDF c2 str. N = Dz.U. str. N+525 (PDF s.1 = Dz.U. s.526).
-   - Rysunki zał. 2 są rastrowe; wymiary odczytane z rysunków metodą programową
-     (binaryzacja + identyfikacja glifów + weryfikacja skali z rysunków o znanych wymiarach
-     z tekstu: P-7 — 0,24/0,12 m; P-10 — przejście 4,0 m; P-11 — 1,8/3,0 m; tabela 5.3 — P-21).
+   - Rysunki zał. 2 są rastrowe; w M52 odczyt programowy (binaryzacja + identyfikacja glifów +
+     walidacja skali z wartości znanych z tekstu). **M52-FIX: semantyka podpisów dolnych
+     (zużycie farby m²/mb) i etykiety „4,00”/„2,00” (kreska/przerwa) ustalone na podstawie
+     odczytów wizualnych przeglądu s17 (poz. 13) + walidacji arytmetycznej.**
+   - Uwaga M52-FIX: PDF c2 (41 MB) nie został ponownie pobrany w sesji rewizji (brak dostępu
+     do pobrania binarnego w środowisku sesji); nowe renderowanie i oględziny rysunków —
+     zalecane w rundzie z dostępem do PDF.
 
 ### BIP Białystok (zadania 3, 5, 6)
 
@@ -48,7 +55,7 @@ REFERENCE_ONLY (NC/ND), REFERENCE_NOT_TEXTURE (CC BY-SA — referencja, nie teks
 
 ## Zdjęcia (zadania 2–5)
 
-### KartaView (OpenStreetCam) — kadry z poziomu jezdni
+### KartaView (OpenStreetCam) — kadry z kamer pojazdów
 
 7. **KartaView (dawniej OpenStreetCam) — zdjęcia: API + CDN** — licencja **CC BY-SA 4.0**
    → w projekcie komercyjnym: REFERENCE_NOT_TEXTURE (referencja kolorystyczna/geometryczna,
@@ -61,6 +68,9 @@ REFERENCE_ONLY (NC/ND), REFERENCE_NOT_TEXTURE (CC BY-SA — referencja, nie teks
      - https://kartaview.org/sequence/3686129 (2021-06-23, user TMishaaa) — Jaroszówka, Andersa, Tysiąclecia/Sokólska;
      - https://kartaview.org/sequence/1155711 (2018-03-23, user telenavdrives) — trasa startowa (kontekst).
    - Kadry przekadrowane do ≤1600 px; pola: data, azymut (heading), pozycja WGS84 — patrz manifest.
+   - **M52-FIX: wszystkie sekwencje Jaroszówki prowadzą estakadą Andersa (wiaduktem DK19) nad
+     rondem Pamięci Bieżeństwa** (potwierdzenie wizualne przeglądu s17 dla jar-01/07/12/20);
+     endpoint nearby-photos (POST) niedostępny w sesji rewizji.
 
 ### Wikimedia Commons (zadanie 5 — Rynek Kościuszki)
 
@@ -84,10 +94,30 @@ REFERENCE_ONLY (NC/ND), REFERENCE_NOT_TEXTURE (CC BY-SA — referencja, nie teks
 
 ### Źródła sprawdzone i odrzucone / niedostępne
 
-- **Panoramax**: 0 zdjęć przy kaflu Jaroszówka (najbliższe ~1,5 km, DK8 na północy) —
-  sprawdzone, odnotowane; brak materiału do zadań 2–4.
+- **Panoramax** — M52: 0 zdjęć przy kaflu Jaroszówka; **M52-FIX (2026-11-13, API)**:
+  bbox ronda (23.1620–23.1720 E, 53.1505–53.1540 N — całe rondo + wloty + ring) → **0 kadrów**;
+  szerszy bbox (~3,2 × 2,1 km) → 6 kadrów w klastrze rondo Putry (~1,2 km od kafla — inne
+  skrzyżowanie). Zapytanie: `https://api.panoramax.xyz/api/search?bbox=23.1620,53.1505,23.1720,53.1540`.
+  Wynik negatywny zapisany w manifeście jako M52-117.
 - **Mapillary**: brak tokenu API w środowisku → pominięte; ewentualne użycie = UNVERIFIED.
 - **Google Maps / Street View / Earth / 3D Tiles**: zakazane (zasady paczki) — niewykorzystane.
-- **Blogi / portale branżowe (tioman.pl itp.)**: źródła wtórne, odrzucone jako
-  niepotwierdzające (wymiary znaków P-* tylko z Dz.U.).
+- **Blogi / portale branżowe (tioman.pl itp.)**: źródła wtórne, odrzucone jako niepotwierdzające
+  (wymiary znaków P-* tylko z Dz.U.). **M52-FIX: tioman.pl (linia warunkowego zatrzymania)**
+  użyty wyłącznie do kontroli krzyżowej hipotez reinterpretacji P-12/P-13/P-14 — nie stanowi
+  podstawy żadnego statusu.
 - Wszystkie PDF urzędowe użyte w analizie ≤5 MB; JPG ≤1600 px.
+
+## Źródła rewizji M52-FIX (13.11.2026)
+
+13. **Przegląd s17 — `docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md`**
+    (repozytorium, origin/main) — **źródło odczytów wizualnych** użytych w rewizji:
+    - rysunki zał. 2 (oględziny): 2.2.1.8 (s. 538) — P-3a: linie 0,12 / odstęp 0,12 / 0,12,
+      kreska 4,00, przerwa 2,00, podpis „0,20 m²/mb”; 2.2.1.10 (s. 540) — P-4: 0,12×3,
+      podpis 0,24; 2.2.1.11 (s. 540) — P-5: 0,12×3, kreska 4,00 / przerwa 2,00, podpis 0,32;
+      2.2.1.12 (s. 541) — P-6: 0,12, kreska 4,00, przerwa 2,00, podpis 0,08;
+    - kadry Jaroszówki (oględziny jar-01/07/12/20): estakada Andersa nad rondem — bariery
+      mostowe, kominy EC w tle, latarnie dwuramienne;
+    - wytyczne ZDM 2025 i wymogi (płytki, wyspy) — cytaty potwierdzone.
+    - Licencja: dokument wewnętrzny repozytorium (origin/main).
+14. **Panoramax API** — zapytania bbox (2026-11-13): rondo Jaroszówka → 0 kadrów;
+    szeroki bbox → 6 kadrów (klaster rondo Putry). Zapis negatywu: manifest M52-117.
