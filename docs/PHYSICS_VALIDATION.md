@@ -301,6 +301,14 @@ implicit gyroscopic update (the explicit one gained +136 % KE in a 30 s torque-f
 ≤ 0.15 %. `kerb_step_27cm_42kmh_comb` runs without colliders for now: its bumper corner strikes the road (dv 0.755 m/s;
 Unity PlayMode on the same event 0.968 m/s), which is a decision for the leader (ADR 0158 Open 1).
 
+### 6f. Straight run 0–80–0 autopilot for gates 1–2 (ADR 0195, 2026-11-13)
+`StraightRunPilot` (Vehicle/Physics/Pilots) drives only the pedals, selector and wheel: brake 1 s → full throttle to 80 km/h →
+PI hold 4 s → full brake to a stop. The same source drives the runner (`straightrun`, scenario `straight_0_80_0`, solo/empty/laden40,
+39/39 checks) and the game (`autopilot=straight080`, fixed step, new 1300 m measurement straight in DrivingLab, z = 300).
+Runner → Unity editor: 0–80 13.60 → 13.67 s / 20.54 → 20.68 s / 47.52 → 47.80 s; 80→0 35.69 → 35.62 m / 39.49 → 39.45 m /
+40.52 → 40.78 m; MFDD 7.0–7.5 m/s², no wheel lock, lateral ≤ 4 mm; solo ×3 0.00 %. `Metrics.FirstBrake` is now the first
+rising edge of the pedal (unchanged for all `brake_*` scenarios). Phone numbers: `gate12-phone.ps1 -Only s080_*` (leader).
+
 ## 7. Known gaps / not modelled
 
 - **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.

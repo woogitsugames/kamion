@@ -420,4 +420,33 @@ namespace PhysicsRunner.Sim
             return new DriverInput { Throttle = th, Brake = br, Steer = steer, Selector = GearSelector.Drive };
         }
     }
+
+    /// <summary>
+    /// Gate 1-2 straight run (ADR 0195): the game's own <see cref="StraightRunPilot"/> (same source as the Unity autopilot
+    /// straight080): settle, full throttle 0 -> target, hold, emergency brake to a stop.
+    /// </summary>
+    public sealed class StraightRunDriver : IDriver
+    {
+        public readonly StraightRunPilot Pilot = new StraightRunPilot();
+        bool _begun;
+        readonly double _dt;
+
+        public StraightRunDriver(DriverSpec d, SimContext s, double dt)
+        {
+            _dt = dt;
+            if (d.targetKmh > 0) Pilot.TargetKmh = d.targetKmh;
+            if (d.holdLength > 0 && d.holdLength != 20) Pilot.HoldSeconds = d.holdLength;
+            Pilot.Wheelbase = s.Tractor.Def.axles[0].positionZ - s.Tractor.Def.axles[1].positionZ;
+            Pilot.MaxRoadWheelAngle = s.Tractor.Steering.MaxAngle;
+        }
+
+        public DriverInput Update(double t, double dt, SimContext s)
+        {
+            Vec3 p = s.Body.Position, f = s.Body.Rotation * Vec3.Forward;
+            if (!_begun) { _begun = true; Pilot.Begin(p.x, p.z, f.x, f.z, _dt); }
+            var input = new DriverInput();
+            Pilot.Step(dt, p.x, p.z, f.x, f.z, s.Tractor.SpeedForward, ref input);
+            return input;
+        }
+    }
 }

@@ -33,6 +33,10 @@ GRID = "#e4e3dd"
 WHEEL_KEYS = ("fz", "fx", "fy", "slip", "alpha_deg", "comp", "omega", "brake_t", "p_bar")
 
 
+RUNNER_ONLY_COLUMNS = ("air_park_bar", "air_yellow_bar", "clutch_temp_c", "retarder_power_kw", "trailer_a_lat",
+                       "trailer_roll_deg", "trailer_yaw_rate_dps")
+
+
 def load(path: Path) -> tuple[dict[str, np.ndarray], dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as f:
         rows = list(csv.reader(f))
@@ -45,6 +49,11 @@ def load(path: Path) -> tuple[dict[str, np.ndarray], dict[str, str]]:
             cols[name] = np.array([float(v) for v in vals])
         except ValueError:
             meta[name] = vals[0] if vals else ""
+    # Columns of the .NET runner that the Unity recorder (VehicleTelemetryRecorder) does not write: empty (NaN) series,
+    # so Unity / phone CSVs plot with the same layout (ADR 0195).
+    n = len(body)
+    for name in RUNNER_ONLY_COLUMNS:
+        cols.setdefault(name, np.full(n, np.nan))
     return cols, meta
 
 

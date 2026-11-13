@@ -200,6 +200,7 @@ namespace Game.Editor.Setup
             BuildDock(world, marks, signs, dockMats);
             BuildHill(world, signs, s_Asphalt, ramp, curb);
             BuildWetPad(ground, marks, signs, wet);
+            BuildStraight(ground, marks, signs);
 
             SaveMeshes();
 
@@ -246,6 +247,7 @@ namespace Game.Editor.Setup
             Qa(qa, "lab-dock", new Vector3(L.DockBay0X + 8f, 9f, L.DockFaceZ - 48f), new Vector3(L.DockBay0X + 8f, 1.5f, L.DockFaceZ), 50f, "Loading dock: 5 bays, 1.20 m dock height, bumpers, guide lines.");
             Qa(qa, "lab-coupling-bay", L.CouplingKingpin + new Vector3(-14f, 7f, -22f), L.CouplingKingpin + new Vector3(0f, 0f, 0f), 50f, "Coupling bay markings (trailer parked here in the Solo preset).");
             Qa(qa, "lab-hill", new Vector3(L.HillStartX - 40f, 22f, L.HillZ - 60f), new Vector3(L.HillStartX + 300f, 15f, L.HillZ), 50f, "7 % hill road (600 m, 42 m high), barriers, turning plateau.");
+            Qa(qa, "lab-straight", new Vector3(L.StraightStartX - 25f, 9f, L.StraightZ - 18f), new Vector3(L.StraightStartX + 120f, 0f, L.StraightZ), 50f, "Measurement straight (1300 m, ADR 0195): start line, edge lines, 50 m marks, distance signs.");
             Qa(qa, "lab-wet", new Vector3(L.WetX0 - 10f, 30f, L.WetZ0 - 30f), L.WetCircleCenter, 55f, "Wet skid pad with the R100 circle (jackknife demo).");
             Qa(qa, "lab-obstacles", new Vector3(L.ObstacleX - 20f, 12f, L.Curb8Z - 22f), new Vector3(L.ObstacleX, 0f, L.RutsStartZ), 50f, "Obstacle lane: 8/15 cm platforms, speed bump, ruts, side curbs.");
             Qa(qa, "lab-ramps", new Vector3(20f, 6f, L.RampStartZ - 18f), new Vector3((L.Ramp6X + L.Ramp12X) * 0.5f, 1f, L.RampStartZ + 30f), 50f, "6 % and 12 % ramps with plateau.");
@@ -405,6 +407,23 @@ namespace Game.Editor.Setup
         }
 
         /// <summary>7 % ramp (600 m, rising east), turning plateau 120 × 120 m on top, concrete barriers along both edges.</summary>
+        /// <summary>Measurement straight north of the pad (ADR 0195): asphalt slab, edge lines, distance marks every 50 m, signs every 100 m.</summary>
+        static void BuildStraight(Transform ground, Transform marks, Transform signs)
+        {
+            float len = L.StraightX1 - L.StraightX0, midX = (L.StraightX0 + L.StraightX1) * 0.5f, w = L.StraightHalfWidth * 2f + 2f;
+            Solid(ground, "Straight_Asphalt_1300m", MeshGen.Slab(new Vector3(len, 1f, w), 4f, "Straight"), new Vector3(midX, -0.5f, L.StraightZ), s_Asphalt, SurfaceKind.DryAsphalt);
+            Paint(marks, "Straight_Edge_N", new Vector3(midX, 0, L.StraightZ + L.StraightHalfWidth), new Vector3(len, 0, 0.15f), s_Paint);
+            Paint(marks, "Straight_Edge_S", new Vector3(midX, 0, L.StraightZ - L.StraightHalfWidth), new Vector3(len, 0, 0.15f), s_Paint);
+            for (int d = 0; L.StraightStartX + d <= L.StraightX1 - 10f; d += 50)
+            {
+                bool major = d % 100 == 0;
+                float x = L.StraightStartX + d;
+                Paint(marks, $"Straight_{d}m", new Vector3(x, 0, L.StraightZ), new Vector3(major ? 0.40f : 0.12f, 0, L.StraightHalfWidth * 2f), s_Paint);
+                if (major) Sign(signs, $"{d} m", new Vector3(x, 0, L.StraightZ - L.StraightHalfWidth - 2.2f), 90f, 1.6f);
+            }
+            Sign(signs, "PROSTA POMIAROWA 0–80–0 km/h", new Vector3(L.StraightStartX - 6f, 0, L.StraightZ + L.StraightHalfWidth + 3.5f), 90f, 4.6f);
+        }
+
         static void BuildHill(Transform world, Transform signs, Material asphalt, Material concrete, Material barrier)
         {
             var hill = Group(world, "HillRoad_7pct");
