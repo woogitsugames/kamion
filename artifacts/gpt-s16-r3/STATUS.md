@@ -1,14 +1,15 @@
 # STATUS KOŃCOWY — gpt-s16 r3 / ADR 0155
-2026-11-13T04:08:44.992143+01:00
-Gałąź gpt-s16-r3; ostatni zweryfikowany commit 7526bb1032. Gotowe do recenzji: TAK (statyczny edytor).
-R1 push eb718b7f8, R2 push1f81e87ee; R3 po źródłowej polityce3materiałów i końcowej QA.
-EditMode493/493,0failed/skipped; GIS986passed/4xfailed/945,46s; fidelityexit0; criticPASS.
-122kamer×4: delta scene/instance/shadow draws i dokładnych tris0, globalnyURPbez zmian.
-193surowe pliki identyczneSHA;455/458matów identycznych,3właściweflagitylko keyword/scale0,0nowych.
-Autor obejrzał488par,26crops,8foto; criticpełnyPASSzakresu. Telefon/GPU/ASTC/ruch i pełnyD51/Gate3 pozostają u lidera.
-Sprzątnięto2duplikatyarkuszy, cofnięto138szumówcache i eksperymenty; zero testowychplikówpolicy w game/Temp. Dowody kompaktowe, bez prywatnych materiałów/pełnychPNG w Git.
-DECYZJA: własne r1 clear-rejected0,412GB pozostało po automatycznym odrzuceniu usuwania („blocked by policy”); nie obchodzono blokady.
-NASTĘPNY KROK: git push origin gpt-s16-r3; końcowe przekazanie lidera i kopia zaktualizowanych dowodów.
+2026-11-13T04:09:44.420239+01:00
+Gałąź gpt-s16-r3; zweryfikowany i wypchnięty commit 4ff1774f0f. Gotowe do recenzji: TAK (statyczny edytor).
+R1 wypchnięta: eb718b7f8; R2: 1f81e87ee; R3: regionalna polityka 3 materiałów i pełna końcowa QA.
+EditMode 493/493, 0 failed/skipped; GIS 986 passed, 4 xfailed, 945,46 s; fidelity exit 0; critic PASS.
+122 kamery × 4 warunki: delta scene/instance/shadow draws i dokładnych tris = 0; globalny URP bez zmian.
+193 surowe pliki identyczne SHA; 455/458 materiałów identycznych, 3 właściwe flagi tylko keyword/scale=0, zero nowych.
+Autor obejrzał 488 par, 26 zbliżeń i 8 foto; critic PASS zakresu. Telefon, GPU, ASTC, ruch i pełne D51/Gate3 pozostają u lidera.
+Sprzątnięto 2 duplikaty arkuszy, cofnięto 138 szumów cache i wcześniejsze eksperymenty; zero testowych plików policy w game/Temp.
+Dowody są kompaktowe, bez prywatnych materiałów i pełnych PNG w Git.
+DECYZJA: własne r1 clear-rejected (0,412 GB) pozostało po automatycznym odrzuceniu usuwania („blocked by policy”); nie obchodzono blokady.
+NASTĘPNY KROK: końcowe przekazanie i kopia dowodów; lider recenzuje i integruje r1 → r2 → r3 oraz mierzy telefony.
 
 ---
 Historia WIP (wcześniejsze hipotezy i odrzuconeA nie są stanem końcowym):
