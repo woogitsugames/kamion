@@ -109,7 +109,12 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     prep = {}
     truck_zone = shapely.union_all([b["poly"].buffer(40.0) for b in blds if b["typ"] == "hall"] +
                                    [d["apron"].buffer(10.0) for d in docks])
-    paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep, truck_zone=truck_zone)
+    # ADR 0188: cycle tracks from OSM (planned on the network in roads.pipeline.build)
+    from . import cycleways as CY
+    cyc_items = getattr(w.net, "cycle_items", [])
+    cyc_rep = dict(getattr(w.net, "cycle_report", {}))
+    paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep, truck_zone=truck_zone,
+                       cycle={"cands": CY.candidates(cyc_items), "bdot_replaced": cyc_rep.get("bdot_replaced", [])})
     rep["paved_m2_by_source"] = prep
     # house plots (ADR 0114): lawn / driveway / path are paved-area items of their own list (yard life, wear and
     # gate logic keep reading `paved` only)
@@ -119,6 +124,10 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     pz = PV.paved_heights(hf, road_z, rmask, pmask)
     shapely.prepare(roads_poly)
     PV.build_meshes(w.buf, paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
+    if cyc_items:
+        CY.paint(w.buf, cyc_items, PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")]), cyc_rep)
+    rep["cycleways"] = cyc_rep
+    log("cycleways", {k: v for k, v in cyc_rep.items() if k != "bdot_replaced"})
     # ADR 0124 r2: the ground of the house plots reads the ROAD height on the nodes of the road footprint (the yards
     # above read the smoothed terrain there). A driveway that comes down from a plot 0.3-0.5 m above the street ended
     # 15-20 cm over the lowered kerb, and the terrain showed under that lip as a wedge of grass (`r16_kerb_0`).

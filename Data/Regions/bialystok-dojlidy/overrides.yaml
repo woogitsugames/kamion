@@ -162,3 +162,15 @@ overrides:
       (the reference region C keeps its output byte for byte).
     confidence: high
     verify: none
+  # ---------------------------------------------------------------- cycle tracks (ADR 0188)
+  - id: kuronia-ddr-north-of-footway
+    kind: cycleway
+    target: {osm_way: [212811563]}
+    cycle_side: away
+    reason: >-
+      Photo P11-001 (Kuronia 3, looking east along the path north of the carriageway): the red asphalt cycle track
+      is the half AWAY from the carriageway, the block-paved footway is the half beside the verge. OSM only says
+      segregated=yes (cycleway:surface=asphalt, footway:surface=paving_stones); the rule puts the track on the road
+      side. BDOT10k gives the 5.0 m total width of this path.
+    confidence: high
+    verify: none

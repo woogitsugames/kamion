@@ -39,6 +39,16 @@ M = {
     "yard_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "path_asphalt": {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
     "cycle_red": {"color": [0.20, 0.06, 0.05], "rough": 0.88, "surface": "asphalt", "texture_set": "paving_red"},
+    # ADR 0188: red asphalt of cycle tracks. Set `asphalt_tint` = the asphalt_worn scan as a neutral modulation map
+    # (engine albedo = 2 x colour x map): the normal, roughness, cracks and grime are those of the grey asphalt, only
+    # the colour differs. Colours are photo ratios against the carriageway asphalt in the SAME owner photo, applied to
+    # road_asphalt [0.081, 0.08, 0.079] (linear): P11-001 Kuronia track 1.57 / 1.29 / 1.07 (weathered, nearly grey -
+    # no saturated red), P11-056 Dywizjonu 303 crossing 2.65 / 1.71 / 1.71 (thin red surfacing, small distant sample,
+    # taken 10 % lower). WORKING_VALUE (two photos, uncalibrated camera).
+    "cycle_asphalt_red": {"color": [0.127, 0.103, 0.085], "rough": 0.9, "surface": "asphalt",
+                          "texture_set": "asphalt_tint", "uv": "planar"},
+    "cycle_crossing_red": {"color": [0.193, 0.123, 0.121], "rough": 0.88, "surface": "asphalt",
+                           "texture_set": "asphalt_tint", "uv": "planar", "decal": True, "depth_offset_m": 0.003},
     # buildings
     "hall_wall_grey": {"color": [0.46, 0.47, 0.46], "rough": 0.5, "metal": 0.2, "texture_set": "sandwich_ribbed"},
     "hall_wall_silver": {"color": [0.40, 0.42, 0.43], "rough": 0.45, "metal": 0.4, "texture_set": "sandwich_ribbed"},

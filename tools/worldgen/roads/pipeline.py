@@ -112,6 +112,14 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
         polys += [Polygon(np.array(o["polygon_epsg2180"]) - np.array(origin)) for o in overrides if o.get("kind") == "paved_area"]
         yards = shapely.union_all([shapely.make_valid(p) for p in polys])
         shapely.prepare(yards)
+    # ADR 0188: cycle tracks (OSM) planned once on the network; markings (P-11 + red crossing), the kerb drops of
+    # build_world and the streetscape stage (surfaces, paint) all read net.cycle_items
+    from streetscape import cycleways as CY
+    net.cycle_report = {}
+    net.cycle_items = CY.plan(CY.load(region_id), origin, overrides,
+                              src["bdot10k"]["OT_SKRP_L"] if ss.exists() else [],
+                              [LineString(c.line.p) for c in net.chains], net.cycle_report)
+    net.overrides_stale += net.cycle_report.get("overrides_stale", [])
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards)
     juncs = J.build_junctions(net, pts)
     # second pass now that the junction trims are known: side profiles beside another carriageway are checked

@@ -487,6 +487,11 @@ SCAN_SETS = {
         flat_m=1.5, flat_k=0.4, hue_keep=0.6, segment={"joint_quantile": 0.16},
         period_fix=[{"axis": 0, "search_m": (0.2, 0.45), "period_m": 0.353}])),
     # modulation sets (engine albedo = 2 x manifest colour x map)
+    # ADR 0188: asphalt_worn's scan and parameters with the hue removed -> coloured asphalt (red cycle tracks and
+    # crossings) keeps the grey asphalt's normal / roughness / AO; 1024 px: a 2-3 m strip seen from the cab
+    "asphalt_tint": (["asphalt_04"], lambda: tiling_from_scan(
+        "asphalt_tint", "asphalt_04", target=0.5, hue=NEUTRAL, out_L=4.04, out_n=1024, seed=6311,
+        flat_m=0.35, flat_k=0.95, hue_keep=0.0, ao_gamma=0.0, rough_add=-0.03, modulation=True)),
     "plaster": (["painted_plaster_wall"], lambda: tiling_from_scan(
         "plaster", "painted_plaster_wall", target=0.5, hue=NEUTRAL, out_L=2.0, out_n=1024, seed=6318,
         # ADR 0094 (review s9 P1-2): the scan is a weathered, repainted wall - its cream / white paint patches of
@@ -517,6 +522,10 @@ SCAN_ONLY_META = {
                              slots=["(not assigned yet) sidewalk slabs 35x35 cm, older footways"],
                              note="Square concrete sidewalk slabs (plyty chodnikowe 35x35x5), scan scaled from ~0.30 m "
                                   "to 0.35 m slabs (WORKING_VALUE). Var.G = slab id from the scan's displacement."),
+    "asphalt_tint": dict(kind="modulation_set", target=0.5, uv="world_xy_planar", tile_m=[4.04, 4.04],
+                         slots=["cycle_asphalt_red", "cycle_crossing_red"],
+                         note="ADR 0188: the asphalt_worn scan (asphalt_04) as a neutral modulation map (mean 0.5 per "
+                              "channel); colour from the manifest. Same height / roughness / AO as asphalt_worn."),
     "bark_pine": dict(kind="modulation_set", target=0.5, uv="mesh_uv0_metres (u around, v up)",
                       slots=["(not assigned) tree trunks - vegetation is the world-builder's scope (ADR 0060)"],
                       note="Plated pine bark, neutral modulation map (mean 0.5 per channel); colour from the manifest."),

@@ -728,7 +728,10 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     def _plot_side_edit(net):
         hk = PLT.apply_house_kerbs(net, plot_plan["plots"])
         log(f"house-street kerbs {PLT.HOUSE_KERB_M} m: {len(hk)} chains, {round(sum(hk.values()))} m of kerb")
-        return PLT.apply_drops(net, plot_plan["drops"])
+        from streetscape import cycleways as CY          # ADR 0188: kerbs lowered where a cycle track crosses
+        cyd = CY.crossing_drops(net, getattr(net, "cycle_items", []))
+        log(f"cycle track kerb drops: {len(cyd)}")
+        return PLT.apply_drops(net, plot_plan["drops"] + cyd)
     w = pipeline.build(region_id, hf=hf, side_edit=_plot_side_edit)
     w.plot_plan = plot_plan
     log(f"kerb drops applied: {w.stats.get('side_edit')}")
@@ -1267,6 +1270,8 @@ def main():
         from streetscape import sources as SSRC
         if not (pipeline.REGIONS / a.region / "generated" / "streetscape_sources.json").exists():
             SSRC.write(a.region, SSRC.extract(reg))
+        from streetscape import cycleways as CY          # ADR 0188: generated/osm_cycleways.json
+        CY.write(a.region, CY.extract(reg))
     build(a.region, route_graph=not a.no_route_graph)
 
 

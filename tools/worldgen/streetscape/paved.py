@@ -37,7 +37,8 @@ OSM_SURFACE = {"asphalt": "yard_asphalt", "paving_stones": "yard_paving", "concr
                "sett": "yard_paving", "grass_paver": "yard_gravel"}
 PATH_SURFACE = {"kostka prefabrykowana": "sidewalk_paving", "masa bitumiczna": "path_asphalt", "beton": "yard_concrete",
                 "płyty betonowe": "yard_slabs"}
-EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red"}       # paving blocks need an edging restraint
+# paving blocks need an edging restraint; asphalt paths and cycle tracks are laid between concrete edgings too (ADR 0188)
+EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red", "cycle_asphalt_red"}
 CELL = 4.0
 
 
@@ -53,12 +54,15 @@ def _poly_local(coords, origin):
 KUKO_NOT_A_SURFACE = ("lotnisko lub lądowisko",)
 
 
-def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, truck_zone=None):
+def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, truck_zone=None, cycle=None):
     """Return [{id, poly (local), mat, source, parking}] without overlaps, in priority order.
 
     truck_zone: polygon around halls / dock aprons; block-paved BDOT yards (> 800 m2) touching it are laid
     with I-shaped interlocking blocks (behaton, `yard_behaton`) as Polish truck yards are, while car parks and
-    footways keep rectangular blocks."""
+    footways keep rectangular blocks.
+    cycle: {"cands": cycleways.candidates(...), "bdot_replaced": [...]} (ADR 0188) - cycle tracks built from OSM; they
+    come right after the dock aprons (a mapped track is a precise line, a yard is a blob) and the BDOT10k path lines
+    that describe the same paths are not laid a second time."""
     cand = []
     for o in overrides:
         if o.get("kind") != "paved_area":
@@ -68,6 +72,8 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
     for d in docks:
         # the hero depot's apron (ADR 0071 r11): decades of trailers on the bumpers - darker, cracked, soiled concrete
         cand.append((d["id"], d["apron"], "yard_concrete_worn" if d.get("hero") else "yard_concrete", "dock_apron", False))
+    cand += list((cycle or {}).get("cands", []))
+    bdot_replaced = set((cycle or {}).get("bdot_replaced", []))
     osm_park = [a for a in src["osm"]["areas"] if a["tags"].get("amenity") == "parking" or "area:highway" in a["tags"]]
     for a in osm_park:
         if a["tags"].get("surface") in OSM_SURFACE:
@@ -91,6 +97,8 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
             cand.append((f"osm:{a['osm_type']}/{a['osm_id']}:{a['part']}", _poly_local(a["geometry"]["coordinates"], origin),
                          "yard_asphalt", "osm(default surface)", a["tags"].get("amenity") == "parking"))
     for f in src["bdot10k"]["OT_SKRP_L"]:
+        if f["id"] in bdot_replaced:
+            continue
         pr = f["props"]
         mat = PATH_SURFACE.get(pr.get("materialnawierzchni"))
         if pr.get("rodzaj") == "droga dla rowerów":

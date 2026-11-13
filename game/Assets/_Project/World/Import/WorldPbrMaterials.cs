@@ -319,7 +319,10 @@ namespace Game.World.Import
                 mat.SetVector("_KerbWear", new Vector4(Mathf.Clamp01(K("joint_dirt", 0f)),
                     Mathf.Clamp01(K("mineral_film", 0f)), Mathf.Clamp01(K("film_threshold", 0.55f)), 1f));
             }
-            bool asphalt = setName == "asphalt_worn" || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
+            // ADR 0188: asphalt_tint = the asphalt_worn scan as a neutral modulation set (coloured asphalt: red cycle tracks);
+            // it takes every asphalt layer of asphalt_worn (grime, cracks, photo detail) so only the colour differs
+            bool wornAsphalt = setName == "asphalt_worn" || setName == "asphalt_tint";
+            bool asphalt = wornAsphalt || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
             if (id == "road_asphalt" || id == "road_asphalt_new")
             {
                 mat.EnableKeyword("_ROADWEAR");
@@ -331,7 +334,7 @@ namespace Game.World.Import
             // ADR 0060 (review r7 N-2): dirty joints and damp / oily hollows on yards and footways (not on carriageways:
             // their wear comes from _ROADWEAR). WORKING_VALUE, judged against the CC0 Bieżeństwa / Andersa photos.
             if (setName == "behaton_i_grey" || setName == "paving_20x10_grey" || setName == "concrete_cast_5m_joints"
-                || setName == "concrete_slab_3x1.5" || (setName == "asphalt_worn" && id != "road_asphalt"))
+                || setName == "concrete_slab_3x1.5" || (wornAsphalt && id != "road_asphalt"))
             {
                 bool blocks = setName == "behaton_i_grey" || setName == "paving_20x10_grey";
                 mat.EnableKeyword("_GRIME");
@@ -347,7 +350,7 @@ namespace Game.World.Import
                 }
             }
             // ADR 0071 r11: manifest "cracks": strength = the 16 m crack layer on a non-asphalt set (worn dock apron)
-            if (setName == "asphalt_worn" || def.Get("cracks") != null)
+            if (wornAsphalt || def.Get("cracks") != null)
             {
                 var cm = Layer(r, "asphalt_cracks_layer", "T_asphalt_cracks_layer_Mask.png", false, false);
                 var cn = Layer(r, "asphalt_cracks_layer", "T_asphalt_cracks_layer_Normal.png", false, true);

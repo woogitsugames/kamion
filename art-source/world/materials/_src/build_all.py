@@ -344,7 +344,7 @@ def main():
         for t, fi in info["files"].items():
             fi["astc"] = ASTC[t]
             fi["gpu_bytes_astc_mips"] = int(gpu_estimate(fi, t))
-        entry = {"tile_m": None, "slots": meta["slots"], "note": meta["note"], "uv": meta["uv"], "kind": meta["kind"],
+        entry = {"tile_m": meta.get("tile_m"), "slots": meta["slots"], "note": meta["note"], "uv": meta["uv"], "kind": meta["kind"],
                  "albedo_target_mean_lum_linear": meta["target"]}
         _scan_entry(entry, s, True)
         entry.update(info)
