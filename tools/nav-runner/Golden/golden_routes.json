@@ -53,12 +53,12 @@
     -897.8
    ],
    "to": [
-    -457.95,
-    -55.97
+    -320.0,
+    -162.0
    ],
-   "because": "Kombatantow -> Andersa, jezdnia NW: przejazd przez pas dzielacy Andersa (krawedz 97) ma flage no-truck, wiec trasa zawraca na Rondzie Pamieci Biezenstwa (zjazd 4.); bez flagi no-truck 1706 m zamiast 3785 m (sprawdzone r6, test NoTruckMedian_ForcesRoundaboutDetour)",
-   "lengthM": 3785.1,
-   "costS": 320.2,
+   "because": "Kombatantow -> Andersa, jezdnia NW przed punktem bez powrotu (-340, -149; ADR 0168/0169 - dalej jednokierunkowa jezdnia wylotowa konczy sie zapora na krawedzi regionu, cel nie moze tam lezec): przejazd przez pas dzielacy Andersa (krawedz 97) ma flage no-truck, wiec trasa zawraca na Rondzie Pamieci Biezenstwa (zjazd 4.); test NoTruckMedian_ForcesRoundaboutDetour",
+   "lengthM": 3608.8,
+   "costS": 309,
    "maneuvers": [
     {
      "type": "SlightLeft",
@@ -88,12 +88,6 @@
      "type": "Roundabout",
      "turnDeg": -178.5,
      "exit": 4,
-     "street": "Generała Władysława Andersa"
-    },
-    {
-     "type": "SlightLeft",
-     "turnDeg": -1.2,
-     "exit": 0,
      "street": "Generała Władysława Andersa"
     },
     {
@@ -844,18 +838,18 @@
   },
   {
    "id": "G21",
-   "label": "Skidelska->Maczka",
+   "label": "Skidelska->lacznik Andersa/Maczka",
    "from": [
     -604.61,
     -525.9
    ],
    "to": [
-    -691.45,
-    64.19
+    -361.45,
+    -118.74
    ],
-   "because": "Skidelska -> Maczka",
-   "lengthM": 3496.7,
-   "costS": 326.6,
+   "because": "Skidelska -> lacznik z Andersa NW w strone Maczka (ADR 0168/0169: dawny cel na jezdni zachodniej Maczka lezy w strefie bez powrotu - wylotowa jezdnia konczy sie zapora, przeciwna jest wjazdowa off-reach); cel przesuniety na ostatni odcinek przed punktem bez powrotu",
+   "lengthM": 3123.8,
+   "costS": 303.6,
    "maneuvers": [
     {
      "type": "Left",
@@ -888,16 +882,16 @@
      "street": "Generała Władysława Andersa"
     },
     {
-     "type": "SlightLeft",
-     "turnDeg": -1.2,
+     "type": "SlightRight",
+     "turnDeg": 8.5,
      "exit": 0,
-     "street": "Generała Władysława Andersa"
+     "street": ""
     },
     {
      "type": "Arrive",
      "turnDeg": 0,
      "exit": 0,
-     "street": "Generała Stanisława Maczka"
+     "street": ""
     }
    ]
   },

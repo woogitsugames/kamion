@@ -178,7 +178,7 @@ namespace Game.UI.Navigation
         {
             if (m_Graph == null) return false;
             int any = m_Graph.Snap(p, RoutePlanner.SnapGoalM, out _, out _, out _);
-            if (any >= 0 && m_Graph.EdgeOffReach(any))
+            if (any >= 0 && m_Graph.EdgeNotDestination(any))   // M27 off-reach or ADR 0168 no-return zone
             {
                 // Integration r5: a reachable road within the snap radius beats the nearest reachable node.
                 int me = m_Graph.Snap(p, RoutePlanner.SnapGoalM, out _, out Vector2 mOn, out _, mainComponentOnly: true);
