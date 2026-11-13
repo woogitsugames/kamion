@@ -19,10 +19,10 @@ Bloomu w projekcie nie ma (docs/06 §2, `LookDevAssets`: bloom wyłączony) i ta
    `_LampHueCeiling` = 0,8 (WORKING_VALUE; 0 wyłącza). Ceiling 0,8 > clip High 0,7 → rdzeń lampy osiąga 100 % kanału
    dominującego na High; na Low ~90 % (sRGB 0,8). Bursztyn przy 0,8 ma luminancję 0,31 — poniżej progu desaturacji.
    Dzień: lampa poniżej kolana (ogon 1,3 kcd/m² w słońcu) — bez zmian.
-2. **Barwy w obszarach ECE (w gamucie sRGB)** — `TruckLights.Red = (1, 0, 0)`, `Amber = (1, 0.25, 0)` (liniowe sRGB).
+2. **Barwy w obszarach ECE (w gamucie sRGB)** — `TruckLights.Red = (1, 0, 0)`, `Amber = (1, 0.28, 0)` (r2; r1 miał 0.25) (liniowe sRGB).
    - Czerwony: CIE x 0,640, y 0,330; R48 granica w stronę żółci y ≤ 0,335 (cytat granicy: dokument GRE
      ECE/TRANS/WP.29/GRE/2006/25 przytaczający definicje R48). Stary (1, 0.03, 0.01): y 0,339 — poza.
-   - Bursztyn: x 0,533, y 0,415; pasmo 0,398 ≤ y ≤ 0,429 (Australian Design Rule 49/00, transpozycja wymagań uznanych
+   - Bursztyn: x 0,524, y 0,422 (r2, mniej pomarańczowy — recenzja s18 P2; r1 0,25: y 0,415); pasmo 0,398 ≤ y ≤ 0,429 (Australian Design Rule 49/00, transpozycja wymagań uznanych
      za równoważne R48). Stary (1, 0.42, 0.02): y 0,440 — za żółto-zielony.
    - Granice „w stronę bieli/purpury” (z ≤ 0,007/0,008) leżą poza gamutem sRGB — UNVERIFIED w tekście R48, nieosiągalne.
    Tekst samego R48 nie został w tej sesji odczytany — liczby oznaczone jako cytowane pośrednio.
@@ -52,3 +52,15 @@ przebiegów, wariantów, słów kluczowych. Czas GPU na A16: UNVERIFIED (pomiar 
   (ścieżka 0115 bez zmian). Bez bloomu (projekt go nie ma).
 - Otwarte: (a) pasek odblasku ciągnika świeci jak stop — eksport (0175); (b) soczewki mają płaskie, jednolite
   wypełnienie (brak struktury LED/gradientu) — osobne zadanie wyglądu lamp, nie barwy.
+
+## Runda 2 (recenzja s18 0178: SCAL warunkowo, P1 odblask)
+- Scalony main z 0175: pasek odblasku ciągnika to teraz `rear_reflex_{s}` (REFLEX 15, maska 0) — `rear_lens_*_3`
+  już nie istnieje, więc `a6_export.py` nie wymagał zmiany. Nowy test EditMode
+  `Tractor_RearReflector_IsNonEmissiveReflex_NotTailBrake` (REFLEX bez emisji, odblask w każdej lampie, brak emitera
+  TAIL_BRAKE w jego zakresie |x| 0,880–0,927 m). Wymuszanie lamp QA ujednolicone: `-qaTruckLamps` (0175) + `brake`.
+- Przebudowa lokalna (TruckAssetBuilder, TrailerAssetBuilder, WorldTruckInstaller; `_Generated` poza gitem — lider
+  regeneruje w main). Render dusk High/Low `trailer-34`, `truck-rear34`, `chase`, ze stopem+awaryjnymi i bez
+  (`artifacts/lamps-0178/r2/`): odblask ciemnoczerwony, nieświecący; stop czerwony; kierunkowskaz bursztynowy;
+  kontur naczepy odblaskowy bez emisji. EditMode (TruckLampEncodingTests + TruckRegulationLampTests): 28/28.
+- Nie zrobione (P2): podświetlenie tablicy naczepy o zmierzchu — na kadrze tablica nie wygląda na podświetloną;
+  wymaga sprawdzenia grupy PLATE w eksporcie naczepy i progu `autoLowBeamSunDeg` (osobne zadanie).
