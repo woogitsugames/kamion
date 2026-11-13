@@ -55,9 +55,22 @@
 - 14:4x :17: 5 h **86 %** (reset 15:10), tydzień 53 %, Fable 74 %; C: 862 GB; cleanup 2,0 GB. W toku: gate3 A16 (A, potem B) + 1 agent przeglądu Mistrala PR #44–#48. Najnowsze ZIP-y Mistrala w Downloads to te z 14:11 (P2/P5/P9) — już rozpakowane.
 - 14:5x: **Przegląd Mistral #44–#48 gotowy** (`docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md`): #46 M49 bramy Dojlidy częściowo (G10 PZZ i G12 EC odrzucone; zakazy 3,5 t Dojlidy Fabryczne/Suchowolca, 8 t Mickiewicza potwierdzone); #44 M54 po drobnej poprawce (brak B-16 → skrajnia 4,50/5,00 m w grafie; Al. Tysiąclecia nad linią 6 bez ograniczenia; e-TOLL tylko S8 Rzędziany–Choroszcz); #45 M50 dokumenty tak, zdjęcia nie; #47 M55 audio przyjąć (retarder/jake brake/AMT/osuszacz — brak w wolnych źródłach po 3 paczkach → synteza lub własne nagranie); #48 M52 zad. 1 odrzucone (P-3a/P-5/P-6: kreska 4,00 m, przerwa 2,00 m, linia 0,12 m). Bloki M49/M50/M52/M54/M55-FIX w `docs/owner/MISTRAL-FIXES-8.md`. Wzorzec: Mistral nie ogląda obrazów.
 - 15:0x: **Właściciel zlecił Mistralowi wszystkie bloki FIX** z `docs/owner/MISTRAL-FIXES-8.md` (M44, M46, M47, M48, M49, M50, M52, M54, M55) — poprawki przyjdą jako nowe commity w tych samych PR (#39–#48); trigger :47 ma sprawdzać `gh pr view <nr> --json commits` i po komentarzu „…-FIX gotowe” zlecić ponowny krótki przegląd (Opus) tylko poprawionych punktów, potem scalić przyjęte PR (metadane; zdjęcia poza gitem). Gate3 A16 w toku.
+- 15:3x: **gate3 A16 Low na APK dirty (nieważny formalnie):** A 29,86 fps p95 33,46 p99 33,68 GPU p95 34,52 PSS 889 MB kamery 57/57; B p95 33,45 **p99 49,9 (OVER)** max 83 ms GPU p95 34,53 PSS 907 MB kamery 46/46 (wyniki `artifacts/gate3/20261113-142719`, `-150244`). W tle: czysty APK z HEAD + powtórka A+B (`artifacts/lead-s17/build-apk2.log`, `gate3b-{A,B}.log`, `gate3b.status`). Nie uruchamiać Unity/adb w tym czasie.
+- **15:4x RESET LIMITU** (5 h 2 %, reset 20:10 lokalnie; tydzień 54 %, Fable 74 %). Czysty APK **`artifacts/apk/kamion-0.1.0-3a60019ff1.apk`** (217,7 MB); gate3 A16 Low A+B w toku (`artifacts/lead-s17/gate3c-{A,B}.log`, `gate3c.status`). PR #40 (M48) po M48-FIX: PRZYJĘTY → scalić po pomiarze. **Nowi agenci (ADR 0170–0176):**
+| ADR | zadanie | model | worktree / live |
+|---|---|---|---|
+| 0170 | horyzont/las Białostoczka, korony przy kamerze, tuja, świerk | Fable | `horizon-0170` |
+| 0171 | budynki follow-up: cm109 bok, niebieski EC, okna EC, wieżowiec override | Fable | `bldg2-0171` |
+| 0172 | P1 bramki 3: 182011 sygnalizatory+poza, znaki cm924, kapa/filary/podpora/flagi/kostka | Opus | `p1b-0172` |
+| 0173 | determinizm świata między buildami (drzewa/impostory, +7,5 % docks) | Opus | `determ-0173` |
+| 0174 | import Dojlid do Unity (biblioteka props per region), kamery Low | Opus | `dojlidy-import-0174` |
+| 0175 | zgodność ciężarówki z przepisami (tabela M44/P4) | Fable | `truck-regs-0175` |
+| 0176 | synteza audio: retarder, hamulec silnikowy, AMT, osuszacz | Opus | `audio-synth-0176` |
+(live: `artifacts/live/<worktree>.md`; wszystkie z main 3a60019ff, pushują gałęzie.)
+- **Ostatni przydzielony ADR: 0176.**
+- 16:0x: Mistral oddał poprawki: M44 (#41), M47 (#39, ZIP v2), M48 (#40 — już PRZYJĘTY), M49 (#46, ZIP v2), M52 (#48), M54 (#44, ZIP v2) — ZIP-y v2 w `research/_incoming/mistral-*-v2/`. Ponowne przeglądy w toku: #39, #41, #44, #46. **#48: NADAL DO POPRAWY w 2 punktach (P-3b kreska 1,00/przerwa 1,00 m; P-13 trójkąt podstawa 0,50, wysokość 0,70, odstęp 0,25 — odczytane z rysunków przez nasz przegląd)** → lider scala z erratą `research/mistral/p2-surfaces-2/REVIEW-NOTE.md` (bez kolejnej rundy). Scalanie PR po pomiarze A16.
 - **Przejęcie przez nową sesję/konto:** przeczytaj ten blok → każdy wiersz tabeli: `artifacts/live/<live>.md` ma NASTĘPNY KROK; wznów jako NOWYCH agentów (nie SendMessage), gałęzie są na origin.
 - Następne: scalenia (0161 → 0162 → 0163, `generated/*` `--ours`, JEDNA regeneracja + `import-region.ps1` w main) → APK → krytyk → A16 gate3 A/B → S24+ High/30; 0165, 0166 osobno.
-- **Ostatni przydzielony ADR: 0169.**
 
 # HANDOVER — kamion, KONIEC S16 (2026-11-13 ~10:3x, limit 5 h) — prompt dla s17: `docs/owner/START-PROMPT-S17.md`
 
