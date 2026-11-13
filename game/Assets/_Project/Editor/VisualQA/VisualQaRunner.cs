@@ -212,6 +212,7 @@ namespace Game.Editor.VisualQA
                 var lamps = lampsHost != null ? lampsHost.GetComponent<StreetLamps>() : null;
                 if (lamps != null) lamps.RefreshLights(cam);
                 Debug.Log("[QA] street lamps: " + StreetLamps.Diagnostics);
+                if (StreetLamps.PoolCount > 0) Debug.Log($"[QA] lamp pools {cam.name} @ {cam.transform.position}: " + StreetLamps.PoolDiagnostics);
                 // -qaCabFill off: A/B frames without the cab fill and the cab-view lift (A7 before/after).
                 if (EditorTools.Arg("-qaCabFill", "on") == "off")
                 {

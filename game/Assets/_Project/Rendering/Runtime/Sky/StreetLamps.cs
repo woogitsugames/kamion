@@ -76,6 +76,21 @@ namespace Game.Rendering
 
         public static string Diagnostics => $"lamps on {s_On:F2}, glass materials {s_Glass.Count}, heads {s_HeadCount}, pools {PoolCount}";
 
+        /// <summary>ADR 0191: the chosen pools (head xyz, weight | arm x z, sodium, road optic) for QA logs. Allocates.</summary>
+        public static string PoolDiagnostics
+        {
+            get
+            {
+                var sb = new System.Text.StringBuilder();
+                for (int i = 0; i < PoolCount; i++)
+                {
+                    Vector4 p = s_PoolPos[i], a = s_PoolAxis[i];
+                    sb.Append(System.FormattableString.Invariant($"[{p.x:F1} {p.y:F1} {p.z:F1} w{p.w:F2} | {a.x:F2} {a.y:F2} s{a.z:F0} r{a.w:F0}] "));
+                }
+                return sb.ToString();
+            }
+        }
+
         public static bool IsLampGlass(Material m) => m != null && m.name.StartsWith("M_lamp_glass");
 
         /// <summary>Called by the world for each lamp-glass material copy it draws with.</summary>
