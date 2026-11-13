@@ -29,9 +29,14 @@ DRIVABLE = {
     "secondary", "secondary_link", "tertiary", "tertiary_link", "unclassified",
     "residential", "living_street", "service",
 }
+# ADR 0164: truck-limit tags beyond maxweight/maxheight/hgv. They must reach roads.graph.json (and from there KRTG v2,
+# navgraph/build_route_graph.py) - dropping them silently made the GPS route a 11.5 t drive axle over maxaxleload=10 roads.
+# Every tag here must also be extracted by osm_extract.ROAD_TAGS (test_truck_tags_0164 keeps both lists in sync).
+TRUCK_LIMIT_TAGS = ("maxaxleload", "maxlength", "maxweight:hgv", "hgv:conditional", "maxgvweightrating:hgv")
 RAW_TAGS = ("name", "ref", "lanes", "lanes:forward", "lanes:backward", "turn:lanes", "turn:lanes:forward",
             "turn:lanes:backward", "maxspeed", "oneway", "junction", "surface", "bridge", "tunnel", "layer",
-            "width", "maxweight", "maxheight", "hgv", "access", "service", "destination", "destination:ref", "int_ref")
+            "width", "maxweight", "maxheight", "hgv", "access", "service", "destination", "destination:ref", "int_ref",
+            *TRUCK_LIMIT_TAGS)
 GRAPH_SCHEMA = "truck-sim-pl/road-graph/1"
 # BDOT10k MATERIALNAWIERZCHNI -> OSM surface (used only when OSM has no surface tag)
 BDOT_SURFACE = {"masa bitumiczna": "asphalt", "kostka prefabrykowana": "paving_stones", "beton": "concrete",
@@ -107,7 +112,8 @@ def edge_attrs(tags: dict, length_m: float) -> dict:
         a["layer"] = _a(int(_num(tags["layer"])), "osm", "high")
     if tags.get("width") and _num(tags["width"]):
         a["width"] = _a(_num(tags["width"]), "osm", "medium")
-    for k in ("junction", "maxweight", "maxheight", "hgv", "access", "service", "destination", "destination:ref"):
+    for k in ("junction", "maxweight", "maxheight", "hgv", "access", "service", "destination", "destination:ref",
+              *TRUCK_LIMIT_TAGS):
         if tags.get(k):
             a[k] = _a(tags[k], "osm", "high")
     return a

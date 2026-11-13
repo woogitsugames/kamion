@@ -38,7 +38,10 @@ service=driveway: allowed only as first / last edge), bit4 *_link, bit5 (v2) hgv
 destination edge), bit6 (M27) off-reach (cannot be entered from the main strongly connected component in any allowed
 direction - the region clip can cut the only connection, e.g. Olsztyńska/Buska; destinations there are snapped). Both new
 flags are plain bits of the existing flag bytes: no format version change, readers that mask only their own bits
-(v1/v2) are unaffected. hgv:conditional is not encoded (no such tags in the region data; UNVERIFIED).
+(v1/v2) are unaffected. bit7 (ADR 0164) = hgv:conditional with only simple hour conditions ("no @ (22:00-06:00)"):
+informational, the planner has no clock and does not block on it; other conditional values are not encoded, they are
+listed in the build report (t["hgv_conditional_unparsed"]). The region data has no hgv:conditional tag (UNVERIFIED for
+other regions).
 Classes: 0 service / living_street / track, 1 residential / unclassified / tertiary, 2 secondary, 3 trunk / primary.
 maxspeed_src: 0 default (pipeline default, UNVERIFIED), 1 OSM.
 The readers (parse here and RouteGraph.Parse in C#) accept version 1 (no limit fields, no lane section) and 2.
@@ -153,6 +156,7 @@ CLASS = {
     "primary": 3, "primary_link": 3, "trunk": 3, "trunk_link": 3, "motorway": 3, "motorway_link": 3,
 }
 F_ONEWAY, F_ROUNDABOUT, F_NO_TRUCK, F_RESTRICTED, F_LINK, F_HGV_DESTINATION = 1, 2, 4, 8, 16, 32
+F_HGV_TIMED = 128     # edge flag bit7 (ADR 0164): hgv:conditional with simple hour conditions only (informational)
 F_OFF_REACH = 64      # edge flag bit6: cannot be entered from the main SCC in any allowed direction (M27)
 NF_OFF_REACH = 2      # node flag bit1 (bit0 = boundary): no directed path from the main SCC - "poza zasięgiem"
 NO_TRUCK_ACCESS = {"no"}
@@ -176,6 +180,29 @@ def parse_weight_t(v) -> float | None:
         return None
     x = float(m.group(1).replace(",", "."))
     return x / 1000.0 if m.group(2) and m.group(2).startswith("k") else x
+
+
+_COND_ITEM = re.compile(r"\s*(no|destination)\s*@\s*\(?\s*(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})\s*\)?\s*")
+
+
+def parse_hgv_conditional(v) -> list | None:
+    """OSM hgv:conditional -> [(value, start_min, end_min), ...] when EVERY item is a plain hour window, else None.
+
+    Accepts "no @ (22:00-06:00)" and "no @ 22:00-06:00; destination @ (06:00-08:00)". Days ("Mo-Fr"), dates, weights,
+    "yes @ ..." and anything else is not parsed (None) - the caller logs it instead of guessing (ADR 0164).
+    """
+    if v is None or not str(v).strip():
+        return None
+    out = []
+    for item in str(v).split(";"):
+        m = _COND_ITEM.fullmatch(item.lower())
+        if not m:
+            return None
+        h0, m0, h1, m1 = int(m.group(2)), int(m.group(3)), int(m.group(4)), int(m.group(5))
+        if h0 > 24 or h1 > 24 or m0 > 59 or m1 > 59:
+            return None
+        out.append((m.group(1), h0 * 60 + m0, h1 * 60 + m1))
+    return out
 
 
 def parse_length_m(v) -> float | None:
@@ -336,6 +363,7 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
 
     edges = []
     skipped = 0
+    cond_unparsed: list = []
     for e in sorted(graph["edges"], key=lambda e: e["id"]):
         hw = attr(e, "highway", "service")
         cls = CLASS.get(hw)
@@ -378,6 +406,12 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
         except (TypeError, ValueError):
             ms = 0
         ms_src = 1 if attr_src(e, "maxspeed") == "osm" else 0
+        cond = osm_attr(e, "hgv:conditional")
+        if cond:
+            if parse_hgv_conditional(cond) is not None:
+                flags |= F_HGV_TIMED
+            else:
+                cond_unparsed.append((e["id"], str(cond)))
         mw = parse_weight_t(osm_attr(e, "maxweight:hgv"))
         if mw is None:
             mw = parse_weight_t(osm_attr(e, "maxweight"))
@@ -412,7 +446,7 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
                 restr.append((f, via, t, 0 if kind.startswith("no_") else 1))
     restr = sorted(set(restr))
     t = {"names": names, "nodes": nodes, "edges": edges, "restrictions": restr, "unmapped_restrictions": unmapped,
-         "skipped_edges": skipped}
+         "skipped_edges": skipped, "hgv_conditional_unparsed": cond_unparsed}
     t["reachability"] = mark_reachability(t)
     return t
 
@@ -699,6 +733,12 @@ def main(argv=None) -> int:
           f"names {len(t['names'])}, "
           f"restrictions {len(t['restrictions'])} (OSM relations {len(rows)}, unmapped {len(t['unmapped_restrictions'])}), "
           f"limit-tagged edges {limited}, hgv=destination {hgv_dest}, lane blocks {lane_blocks} (with turn directions {lane_dir})")
+    timed = sum(1 for e in t["edges"] if e["flags"] & F_HGV_TIMED)
+    if timed or t["hgv_conditional_unparsed"]:
+        print(f"hgv:conditional: {timed} edges with simple hour windows (flag only), "
+              f"{len(t['hgv_conditional_unparsed'])} not parsed (not encoded):")
+        for eid, val in t["hgv_conditional_unparsed"]:
+            print(f"  UNPARSED hgv:conditional {eid}: {val!r}")
     r = t["reachability"]
     print(f"reachability: {r['components']} strongly connected components (directed, one-way respected); "
           f"main component {r['main_nodes']} nodes / {r['main_edges']} edges; "

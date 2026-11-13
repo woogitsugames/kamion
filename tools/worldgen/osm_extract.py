@@ -33,6 +33,8 @@ ROAD_TAGS = (
     "turn:lanes", "turn:lanes:forward", "turn:lanes:backward", "oneway", "junction",
     "surface", "bridge", "tunnel", "layer", "maxweight", "maxheight", "hgv", "access",
     "width", "sidewalk", "lit", "destination", "destination:ref", "int_ref", "service",
+    # ADR 0164: truck limits (kept in sync with roadgraph.TRUCK_LIMIT_TAGS)
+    "maxaxleload", "maxlength", "maxweight:hgv", "hgv:conditional", "maxgvweightrating:hgv",
 )
 AREA_KEYS_LANDUSE = {"industrial", "railway", "commercial", "retail", "farmyard", "construction"}
 POINT_KEYS = {
