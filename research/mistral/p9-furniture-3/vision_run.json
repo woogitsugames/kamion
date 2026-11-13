@@ -1,0 +1,227 @@
+{
+ "zadanie": "M50-FIX pass C — uczciwy przebieg wizyjny (model wizyjny, 1 kadr = 1 wywołanie)",
+ "data": "2026-11-13",
+ "narzedzie": "tools.uploads.analyze_image (klatka Vibe/vision)",
+ "metoda": "dla każdego wiersza foto manifestu (VERIFIED_WIZJA + NOT_FOUND) oraz 23 kadrów Panoramax i kandydatów geometrycznych: pytanie o 'co widać' (1-2 zdania) + widoczność obiektu z pozycją (lewo/środek/prawo) i przybliżoną odległością; kadry bez obiektu => NOT_FOUND",
+ "limit": "20 wywołań na odpowiedź — przebieg rozłożony na tury (tury 0-2: 24 kadrów, pozostałe w kolejnych commitach)",
+ "frames": [
+  {
+   "frame": "KV-1326673445",
+   "plik": "/home/user/vtmp/M50-001.jpg",
+   "wiersze": [
+    "M50-001 latarnia"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z dwoma pasmami ruchu, otoczoną wysokimi barierami dźwiękochłonnymi po prawej stronie oraz mostem i budynkami w oddali.\n\nW kadrze widoczne są latarnie drogowe: jedna po lewej stronie, około 50 metrów od kamery, oraz kilka kolejnych w środkowej i prawej części kadru, w odległościach około 100-200 metrów."
+  },
+  {
+   "frame": "KV-993040942",
+   "plik": "/home/user/vtmp/M50-002.jpg",
+   "wiersze": [
+    "M50-002 latarnia"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z dwoma pasmami ruchu, oddzielonymi barierą z zielonymi elementami po prawej stronie. W tle widoczne są budynki i niebo bez chmur.\n\nLatarnie drogowe: widoczne są dwie latarnie po lewej stronie, około 100-150 metrów od kamery."
+  },
+  {
+   "frame": "KV-219382073",
+   "plik": "/home/user/vtmp/M50-003.jpg",
+   "wiersze": [
+    "M50-003 latarnia"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać skrzyżowanie z sygnalizacją świetlną, samochodami i znakami drogowymi.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-5062571",
+   "plik": "/home/user/vtmp/M50-004.jpg",
+   "wiersze": [
+    "M50-004 sygnalizator na maszcie/wysięgniku"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z czerwonym samochodem dostawczym, most nad jezdnią oraz sygnalizatory świetlne.\n\nSygnalizatory świetlne:\n1. Pozycja: prawo, odległość: około 50 metrów.\n2. Pozycja: prawo, odległość: około 100 metrów."
+  },
+  {
+   "frame": "KV-219381879",
+   "plik": "/home/user/vtmp/M50-005.jpg",
+   "wiersze": [
+    "M50-005 sygnalizator na maszcie/wysięgniku"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z mostem nad nią, kilka samochodów oraz znaki drogowe.\n\nSygnalizatory świetlne są widoczne: jeden po lewej stronie, około 50 metrów od kamery, oraz jeden po prawej stronie, około 70 metrów od kamery."
+  },
+  {
+   "frame": "KV-993066622",
+   "plik": "/home/user/vtmp/M50-006.jpg",
+   "wiersze": [
+    "M50-006 sygnalizator na maszcie/wysięgniku",
+    "M50-007 bariera U-12/U-12b"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwupasmową drogę z pasem zieleni pośrodku, otoczoną drzewami i niebieskim niebem.\n\nNa zdjęciu widoczne są:\n- Sygnalizator świetlny na maszcie po prawej stronie, około 30-40 metrów od kamery.\n- Sygnalizator świetlny na maszcie po lewej stronie, około 20-30 metrów od kamery.\n\nŻADNA BARIERA OCHRONNA DROGOWA U-12 NIE JEST WIDOCZNA."
+  },
+  {
+   "frame": "KV-993066706",
+   "plik": "/home/user/vtmp/M50-008.jpg",
+   "wiersze": [
+    "M50-008 bariera U-12/U-12b"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwujezdniową drogę z pasami zieleni po bokach i czystym niebem.\n\nBariera ochronna drogowa U-12 jest widoczna po lewej stronie kadru, w odległości około 5-10 metrów od kamery."
+  },
+  {
+   "frame": "KV-219381941",
+   "plik": "/home/user/vtmp/M50-009.jpg",
+   "wiersze": [
+    "M50-009 słupek blokujący U-5a"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z buspasem, po której jedzie zielono-biały autobus miejski z numerem 130 i kierunkiem \"15\". W tle znajdują się budynki, w tym z logo \"Atlas Concorde\", oraz słupy elektryczne i latarnie.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382163",
+   "plik": "/home/user/vtmp/M50-010.jpg",
+   "wiersze": [
+    "M50-010 słupek blokujący U-5a"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać białego Forda Mondeo jadącego drogą z zapalonymi światłami stopu, z tyłu widoczny jest billboard reklamowy po prawej stronie.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-1326673805",
+   "plik": "/home/user/vtmp/M50-011.jpg",
+   "wiersze": [
+    "M50-011 żerdź energetyczna"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać szeroką, dwujezdniową drogę z kilkoma pojazdami, otoczoną zielenią i niebem z chmurami.\n\nW kadrze widoczny jest słup energetyczny linii elektroenergetycznej po prawej stronie, około 100-150 metrów od kamery."
+  },
+  {
+   "frame": "KV-1326673801",
+   "plik": "/home/user/vtmp/M50-012.jpg",
+   "wiersze": [
+    "M50-012 żerdź energetyczna"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać szeroką, dwujezdniową drogę z kilkoma pojazdami, otoczoną zielenią i niebem z chmurami. Po prawej stronie znajduje się duża żółta tablica informacyjna.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-5062587",
+   "plik": "/home/user/vtmp/M50-013.jpg",
+   "wiersze": [
+    "M50-013 hydrant nadziemny"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z pasami, znak pieszy na lewo oraz pojazdy, w tym ciężarówki i samochody, na tle nieba z chmurami i zielonych drzew.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-1326673829",
+   "plik": "/home/user/vtmp/M50-014.jpg",
+   "wiersze": [
+    "M50-014 hydrant nadziemny"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, szeroką drogę z dwoma pasmami ruchu, oddzieloną barierami od chodnika i ścieżki rowerowej po prawej stronie, a także latarnie uliczne oraz transparentne ekrany akustyczne.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-1326673477",
+   "plik": "/home/user/vtmp/M50-015.jpg",
+   "wiersze": [
+    "M50-015 hydrant nadziemny"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z poruszającym się po niej białym samochodem dostawczym, otoczoną barierami dźwiękochłonnymi, latarniami oraz budynkami w tle.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382225",
+   "plik": "/home/user/vtmp/M50-016.jpg",
+   "wiersze": [
+    "M50-016 szafka gazowa/telekom"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z kilkoma samochodami jadącymi w obu kierunkach, otoczoną budynkami i drzewami.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-1326673717",
+   "plik": "/home/user/vtmp/M50-017.jpg",
+   "wiersze": [
+    "M50-017 ławka"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać szeroką, dwujezdniową drogę z jednym samochodem jadącym w kierunku kamery. Po prawej stronie znajduje się stacja benzynowa z logo BP oraz budynek przystanku autobusowego.\n\nŁawka (siedzisko) jest widoczna po prawej stronie, około 20-25 metrów od kamery."
+  },
+  {
+   "frame": "KV-219382277",
+   "plik": "/home/user/vtmp/M50-018.jpg",
+   "wiersze": [
+    "M50-018 ławka"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z kilkoma samochodami jadącymi w obu kierunkach, a także dużą ciężarówkę po lewej stronie. W tle znajdują się drzewa i budynki.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-993065622",
+   "plik": "/home/user/vtmp/M50-019.jpg",
+   "wiersze": [
+    "M50-019 kosz"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać pustą, dwupasmową drogę z buspasem po prawej stronie, otoczoną zielenią i budynkami w tle, pod czystym, błękitnym niebem.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382231",
+   "plik": "/home/user/vtmp/M50-020.jpg",
+   "wiersze": [
+    "M50-020 kosz"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z dwoma pasmami ruchu, po której jedzie samochód. Po prawej stronie znajduje się przystanek autobusowy z ludźmi.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-219382025",
+   "plik": "/home/user/vtmp/M50-021.jpg",
+   "wiersze": [
+    "M50-021 stojak rowerowy"
+   ],
+   "ok": true,
+   "wynik": "Na zdjęciu widać drogę z jezdnią i chodnikiem, po której jedzie autobus. W tle znajdują się budynki mieszkalne i drzewa.\n\nŻADEN NIE WIDOCZNY."
+  },
+  {
+   "frame": "KV-993065846",
+   "plik": "/home/user/vtmp/M50-022.jpg",
+   "wiersze": [
+    "M50-022 stojak rowerowy"
+   ],
+   "ok": false,
+   "wynik": "Image analysis limit of 20 calls reached for this response. Work with the results you already have."
+  },
+  {
+   "frame": "KV-219382233",
+   "plik": "/home/user/vtmp/M50-023.jpg",
+   "wiersze": [
+    "M50-023 osłona drzewa"
+   ],
+   "ok": false,
+   "wynik": "Image analysis limit of 20 calls reached for this response. Work with the results you already have."
+  },
+  {
+   "frame": "KV-1326673433",
+   "plik": "/home/user/vtmp/M50-024.jpg",
+   "wiersze": [
+    "M50-024 osłona drzewa",
+    "M50-058 latarnia"
+   ],
+   "ok": false,
+   "wynik": "Image analysis limit of 20 calls reached for this response. Work with the results you already have."
+  },
+  {
+   "frame": "KV-989896430",
+   "plik": "/home/user/vtmp/M50-050.jpg",
+   "wiersze": [
+    "M50-050 hydrant nadziemny"
+   ],
+   "ok": false,
+   "wynik": "Image analysis limit of 20 calls reached for this response. Work with the results you already have."
+  }
+ ]
+}
