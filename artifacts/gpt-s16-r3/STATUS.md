@@ -123,3 +123,5 @@ EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xm
 Docelowy B: pełny EditMode493/493,0failed/skipped. Wszystkie122kamery×4 mają delta scene/instance/shadow draws0 i dokładne tris0; globalny URP identyczny tekstowo. Po ścisłym cleanup455/458matów identycznych SHA, tylko3polityki różnią się wyłącznie keyword/scale0, zero nowych. Cofnięto138szumów cache, zachowując właściwą korektę. NASTĘPNY KROK: oględziny kompletów obrazów i końcowycritic; fidelity/GIS czekają na slotheavy.
 
 Fidelity odświeżone dla końcowego generatora r3 B; pełny GIS może sprawdzić świeży raport.
+
+Autor obejrzał wszystkie24author-overviews(488par),26crops i8foto. Critic końcowy PASS zakresu statycznego B; brak nowej konkretnej regresji do poprawy. FIDexit0, pełnyGIS już działa w slocieheavy. Usunięto2zastąpione duplikaty arkuszy materiałowych; dowody diagnostyczne i końcowe pozostają. NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r3/final-gis.log -Tail 5
