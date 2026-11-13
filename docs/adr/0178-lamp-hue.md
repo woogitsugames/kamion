@@ -41,3 +41,14 @@ przebiegów, wariantów, słów kluczowych. Czas GPU na A16: UNVERIFIED (pomiar 
 - Visual QA WorldC High i Low, `-Lighting dusk`, kamery truck-rear34/34/34r/side/front, trailer-34, przed/po, z
   wymuszonym stopem i światłami awaryjnymi (`KAMION_QA_LAMPS=brake,hazard`, VisualQaRunner). Dowody i pomiar ROI:
   `artifacts/lamps-0178/`.
+
+## Wynik (2026-11-13, edytor RTX 5070, nie telefon)
+- EditMode `TruckLampEncodingTests`: 21/21 passed, 0 skipped (testy GPU wykonane).
+- Piksele lamp (zmiana > 60 RGB między przed/po), liczba pikseli z min(RGB) ≥ 230 przed → po:
+  High rear34 2425 → 0, trailer-34 4285 → 0, front 884 → 0, side 509 → 0; Low rear34 1937 → 0, trailer-34 3518 → 0
+  (wszystkie 12 kadrów → 0). Mediana nasycenia lamp 0,00 → 0,76–0,94. `artifacts/lamps-0178/hue-metrics.json`,
+  `sheet-rear-lamp.png`.
+- Oglądane PNG: stop i obrysowe tylne czerwone, kierunkowskazy i boczne obrysowe bursztynowe, DRL i mijania białe
+  (ścieżka 0115 bez zmian). Bez bloomu (projekt go nie ma).
+- Otwarte: (a) pasek odblasku ciągnika świeci jak stop — eksport (0175); (b) soczewki mają płaskie, jednolite
+  wypełnienie (brak struktury LED/gradientu) — osobne zadanie wyglądu lamp, nie barwy.
