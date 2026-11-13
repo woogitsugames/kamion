@@ -1,33 +1,37 @@
 # ADR 0155 — plamy słońca na wyspie pod wiaduktem Putry
 
-Status: WIP / diagnoza; gałąź gpt-s16-r3. Baza: r2 1f81e87ee, origin/main e638abf31.
+Status: WIP — wariant B po rozstrzygających ablacjach; docelowy import, QA i pełne testy jeszcze wymagane. Gałąź `gpt-s16-r3` od r2 `1f81e87ee`, po merge main `e638abf31`.
 
-ADR 0144 punkt otwarty 7 opisuje jasne plamy na żwirze w clear, w ujęciach 2818555625124739 i 3970163613102941. Zdjęcia repo richlv (2020-08-15, CC BY-SA 4.0) mają przybliżone pozy klasy B; nie są kalibracją fotometryczną ani potwierdzeniem identycznego słońca.
+## Problem i zakres
 
-Zakres przestrzenny wynika z konkretnych referencji ADR 0144: wyspa E≈558/N≈−734 i `viaduct_biezenstwa` na Andersa. Zachowujemy tytuł zlecenia „Putry”, ale nie przenosimy cech innego obiektu DK8/Putry na ten wiadukt. Obejrzane 4312632558767412 dotyczy innego obiektu i nie uzasadnia tutaj żadnych paneli.
+ADR [0144](0144-junctions-r7.md), punkt otwarty 7, opisuje regularne jasne plamy na żwirze w clear w ujęciach 2818555625124739 i 3970163613102941. Zakres przestrzenny tych referencji to wyspa E≈558/N≈−734 oraz `viaduct_biezenstwa` na Andersa. Zachowano tytuł „Putry” ze zlecenia, ale nie przeniesiono cech innego wiaduktu DK8/Putry. Zdjęcie 4312632558767412 dotyczy innego obiektu i nie uzasadnia tutaj paneli.
 
-Najpierw odtwarzamy generator i baseline na scalonej bazie. Porównamy Low i High, clear i overcast; do wszystkich kamer kontrolnych/G3 dodano SBS i dwa zbliżenia wyspy. Geometria dróg, overrides, bariery i pozostałe chronione obszary są poza zakresem edycji.
+Dwa zdjęcia richlv, 2020-08-15, CC BY-SA 4.0, z repo mają zweryfikowane SHA256 (`reference-provenance.json`). Pozy są klasy B; nie ma pomiarowego dopasowania słońca, albedo ani obiektywu. Zdjęcia pokazują szeroki cień i jasny skraj żwiru: celem nie jest zaciemnienie całej wyspy. Bez Google i bez tekstur ze zdjęć.
 
-Inspekcja źródłowa: warstwa bridge już rzuca cień (On), road go nie rzuca. ShadowCaster WorldSurface ma Cull Back; generowane spody mogą mieć normalne w dół. Świat korzysta również z WorldSkyBake/KamionFarShadow poza kaskadami. To hipotezy, nie potwierdzona przyczyna. Wstępne promienie po GLB znajdują powierzchnie skierowane do światła nad większością próbek wyspy, więc sama dwustronność nie gwarantuje naprawy.
+## Baseline i diagnoza
 
-Plan: pasujące rendery i ablacje istniejącymi rq_shadowbias/rq_shadownormal/rq_shadow, inspekcja natywnych casterów; potem najmniejsza potwierdzona korekta, bez nowych przebiegów Low, bez udawanej ciemnej farby lub zamykania rzeczywistej szczeliny bez źródła.
+Baseline generator 544,6 s, import Low/High OK, 122 kamery × clear/overcast × Low/High. Zapisano hashe 193 surowych plików świata zamiast kopii dużego katalogu. Read-only probe potwierdził chunk bridge On, hero LOD0/1 On, LOD2 Off. Efektywny URP w `pipeline.txt`: Low 35 m / 1024 / 1 kaskada / bias 1/1; High 100 m / 2048 / 3 kaskady / bias 0,4/0,3. Bounds prototypu nie oznaczają aktywnego LOD.
 
-## Baseline i granice diagnostyki
+Pierwszy ray test obejmował mały północny nos żwirowy i nie uwzględniał hero; jest jawnie ograniczoną diagnostyką, nie wyjaśnieniem plam na głównej wyspie. Dodano osobną kamerę blisko głównej wyspy, wewnątrz zasięgu Low. Baseline ukazuje regularny szereg krótkich jasnych czworokątów; niezależny critic potwierdził obraz.
 
-Generator baseline 544,6 s, import obu tierów OK; 193 surowe pliki zapisane jako SHA256. Read-only probe potwierdził `bridge` On i hero LOD0/1 On, LOD2 Off. Profile mają Low 35m/1024/1, bias 1/1; High 100m/2048/3, bias 0,4/0,3. Efektywne wartości z VQA są osobno zapisywane jako `pipeline.txt`. Lokalnych bounds prototypu nie przedstawia się jako aktywnego LOD.
+14 warunków globalnych (7 trybów × Low/High), po 5 pasujących kadrów: baseline, oba bias=0, normal=0, depth=0, sam wypiek, bez wypieku, oba rodzaje cienia wyłączone. `rq_shadow=0` nadal zachowuje baked shadow, więc nie jest kontrolą „wszystkie cienie off”. Normal=0 usuwa szereg; depth=0 i no-baked zachowują go. Globalna ablacja jest dowodem zależności od normal bias realtime, nie poprawką produkcyjną.
 
-Pierwszy ray test obejmował jedynie mały północny nos żwirowy, nie główną wyspę, i pomijał instancje hero. Wystarcza jako ograniczona diagnostyka geometrii tego nosa, nie jako wyjaśnienie docelowych plam. Te ograniczenia i korekta są jawne w `island-rays.json` oraz STATUS.
+A: flagowanie samego hero `viaduct_concrete` nie usuwało plam. Odrzucono tę lokalizację mimo pełnego EditMode 491/491; testy kodu nie dowodzą celu wizualnego. Zachowano zwartą parę odrzuconej próby, a źródłową flagę hero usunięto.
 
-Baseline obrazy pokazują regularny rząd jasnych prostokątnych plam na żwirze. Próby są rozdzielone: zero bias, wyłącznie wypiek (`rq_shadow=0`), bez wypieku (`rq_worldsun=0`) oraz oba wyłączone. Osobna bliska kamera obejmuje główną wyspę w zasięgu Low. Zdjęcia zawierają zarówno szeroki cień, jak i jasny żwir na pierwszym planie; celem nie jest zaciemnienie całego materiału.
+Izolacje materiałów: bridge_concrete=0 dawał drugi szereg, road_asphalt=0 oraz bridge_kerb=0 osobno nie usuwały całości, para beton/asfalt nie wystarczała. All-PBR=0 odtworzyło globalne normal=0, potwierdzając lokalną ścieżkę shadera. Dopiero spójny zestaw **bridge_concrete + road_asphalt + bridge_kerb** usuwa szereg we wszystkich pięciu kadrach Low, zachowując duży cień i jasny skraj. Każda późniejsza próba resetuje wszystkie 139 wspieranych PBR przed wyborem podzbioru. Critic obejrzał 5 arkuszy i 2 pełne PNG zestawu; nie zauważył nowego oczywistego acne. To nie jest jeszcze końcowy PASS B/High/ruchu.
 
-## Ablacje i kandydat korekty
+## Rozwiązanie B
 
-14 warunków diagnostycznych (7 trybów × Low/High), po 5 tych samych kadrów: baseline, oba bias=0, normal=0, depth=0, sam wypiek, bez wypieku, oba rodzaje cienia wyłączone. Efektywny URP zapisano w każdym `pipeline.txt`. Niezależny critic obejrzał wszystkie 10 pełnych arkuszy bazowych ablacji, 6 arkuszy rozdzielonych biasów i 2 natywne pełne kadry normal=0.
+Wersjonowany `Data/Regions/bialystok-industrial-c/shadow_caster_bias.json` jawnie ustawia normal-bias scale=0 tylko dla istniejących trzech materiałów. Polityka ma zakres wszystkich ich zastosowań w tym regionie; warstwa road nie rzuca cienia, bridge go rzuca. To nie jest zmiana wyłącznie pojedynczego renderera. Dlatego końcowa QA musi obejmować także pozostałe mosty. Nie skopiowano ani nie zmieniono chronionych definicji roads/*, geometrii, overrides, barier i krawężników.
 
-Normal=0 usuwa regularny rząd plam w obu profilach; depth=0 i no-baked pozostawiają go. To dowód zależności obrazu od biasu normalnych w realtime, nie od koloru kamienia ani samego wypieku. Nie przyjęto zmiany bake, globalnego QualityProfile, kierunku słońca, geometrii pomostu czy szczeliny. Brak oczywistego nowego acne w ocenionych ablacjach nie zastępuje pełnej oceny docelowego materiału.
+`RegionImporter.CreateMaterial` nakłada opcjonalną politykę po istniejącej fabryce, także dla niestandardowych materiałów PBR. `WorldShadowCasterBias` czyta plik i waliduje schemat oraz skończone wartości 0…1. Brak pliku lub wpisu przywraca skalę 1 i usuwa keyword; błędny schemat zatrzymuje import. Domyślna wartość nie jest zapisywana do niezmienionego legacy cache.
 
-Kandydat: tylko istniejące `viaduct_concrete` ma jawne `shadow_normal_bias_scale: 0.0`. `WorldShadowCasterBias.Apply` obsługuje skończoną liczbę 0…1; brak/zła wartość daje 1 i wyłącza keyword, także przy ponownym użyciu materiału. Nie zapisuje domyślnej wartości do niezmienionych cache innych materiałów.
+WorldPBR dodaje właściwość domyślnie 1 i lokalny keyword wyłącznie w istniejącym ShadowCaster. Bez opt-in kompiluje dawny `ApplyShadowBias` bez nowych operacji. Wariant opt-in skaluje tylko składnik normalnego insetu, zachowując dokładnie `ld * _ShadowBias.x` z zainstalowanego URP `Shadows.hlsl:533–541`. ForwardLit i DepthOnly nie mają nowego wariantu ani formuły światła. Nadal 3 przebiegi, ten sam Cull; bez nowego materiału, renderera, geometrii lub pełnoekranowego efektu. Nie zmieniono WorldSurface, QualityProfile, globalnego biasu, słońca ani bake.
 
-WorldPBR dodaje właściwość domyślnie 1 i lokalny keyword wyłącznie w istniejącym ShadowCaster. Bez opt-in shader kompiluje dawny `ApplyShadowBias` bez dodatkowych operacji. W wariancie opt-in skaluje tylko składnik offsetu normalnego, zachowując dokładnie składnik głębokości `ld * _ShadowBias.x` z zainstalowanego URP (Shadows.hlsl:533–541). ForwardLit i DepthOnly nie mają nowego wariantu ani zmienionej formuły oświetlenia. Nadal 3 przebiegi; nie dodano materiału, renderera ani geometrii. Nie twierdzimy, że zmierzono koszt GPU.
+## Weryfikacja końcowa — w toku
 
-7 nowych testów EditMode sprawdza brak serializacyjnej zmiany legacy, opt-in/usunięcie flagi przy zachowaniu innych pól i liczby passów, odrzucenie NaN/infinity/out-of-range w ponownie używanym materiale oraz docelowy zakres natywny (wyłącznie M_viaduct_concrete). Pełne testy i docelowe after pozostają w toku; kandydat nie ma jeszcze końcowego PASS.
+9 nowych przypadków EditMode: legacy bez serializacyjnej zmiany, opt-in/reset bez zmiany pozostałych pól/passów, nieprawidłowe liczby, usunięcie wpisu/pliku regionu, zły schemat oraz natywny zakres dokładnie trzech materiałów. Pliki testowe tworzone i usuwane tylko we własnym `game/Temp`.
+
+Przed B przywrócono 458 bazowych SHA materiałów po ścisłym porównaniu zmian diagnostycznych. Guard początkowo zatrzymał dodatkowe nieaktywne `_RECEIVESHADOWS_ON`/`_ZWRITE_ON`; po obejrzeniu diff dopuszczono tylko te nowe wpisy, właściwość/keyword biasu i znany legacy SrcBlend. Przywrócenie objęło 141 plików, bez innych zmian. Końcowy audyt zachowa trzy zamierzone opt-in i cofnie wyłącznie udowodniony szum serializacji.
+
+Otwarte: generator B, import, 122 te same kamery × 4 warunki, oględziny wszystkich par i zdjęć, draws/tris per kamera, audyt surowego świata/materiałów, pełny GIS/EditMode i końcowy critic. Telefon, ASTC, GPU, migotanie i acne w ruchu pozostają u lidera; pełne fotograficzne D51/Gate3 nie są zamykane przez tę korektę.

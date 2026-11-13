@@ -13,7 +13,8 @@ R3 etap: $Step
 R3 GOTOWE DO RECENZJI: NIE — docelowy after, pełne testy i końcowy critic wymagają zamknięcia.
 R3 baseline544,6s bez fallback, import obu tierów OK, 122kamery×4; 193 surowe pliki świata porównywane hashami, bez kopii całego świata.
 R3 14ablacji×5ujęć potwierdziło normal bias realtime: normal=0 usuwa wzór, depth=0/no-baked zachowują. Niezależny critic potwierdził obserwację, nie końcowy produkt.
-Kandydat: tylko istniejący viaduct_concrete shadow_normal_bias_scale=0; lokalny wariant istniejącego ShadowCaster PBR, depth bias zachowany; bez nowych passów/materiałów/geometrii i bez zmiany QualityProfile.
+Iteracja A (tylko hero) odrzucona wizualnie mimo491testów. B: jawny plik shadow_caster_bias.json dla bridge_concrete/bridge_kerb/road_asphalt; deck-triple usuwa wzór w5diagnostycznych kadrachLow, critic potwierdza kierunek.
+B wymaga docelowych renderów High/Low i wszystkich mostów; bez nowych passów/materiałów/geometrii, bez zmiany globalnego QualityProfile/biasu.
 NASTĘPNY KROK: $NextCommand
 Sprzątanie: usunięte zastąpione szkice i nieużyta mutacja probe; narzędzie jest read-only. Dowody kompaktowe, pełne PNG lokalne, bez kopiowania dużych katalogów świata.
 DECYZJA: własne r1 clear-rejected 0,412GB pozostało po automatycznym odrzuceniu usuwania („blocked by policy”); bez obchodzenia blokady.
