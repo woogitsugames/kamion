@@ -89,6 +89,27 @@ bryłę pod kartą). Pkt 3 i 5 — tuja jest ścianą nad płotem (`g7_front_thu
 Przegląd M51 (`REVIEW-2026-11-13-s17-mistral-r8-p10.md` §5): `crowns.geojson` z PR 49 nie jest tu używany — las to
 powierzchnia poligonu BDOT + pomiar ze zdjęcia / ortofoto, nie punkty koron.
 
+## Walidacja poprawek po recenzji s17 (build 4, s18/s19)
+
+Zakres: P1 rdzeń korony lite i świerka (bryła rdzenia usunięta, karty ciemnieją ku osi — `plots.card(occ_mid)`),
+P2 tuja jako rząd roślin (High stacje, Low karty czubków), świerk ciemnozielony (B ≈ 0,6 G, WORKING_VALUE).
+
+- **Budżet** (edytor, clear, 129 kamer + 52 kamery horyzontu; baza `base3` = kod `c5aae4e99` plików
+  `plantings.py` / `plots.py` / `plot_kit.py`, czyli build 2 po scaleniu main; „po” `after4` = build 4, ten sam worktree;
+  `artifacts/horizon-0170/compare4-{Low,High}.tsv`, `compare4hz-*`): `drawsEst` **+0** i draws instancjonowane **+0** na
+  każdej kamerze Low i High (trasa Low 21 338 / 11 510, High 35 880 / 22 143). Trójkąty: trasa Low 22 761k → 22 758k,
+  High 52 957k → 52 950k; kamery G7 Low 14 443k → 14 431k, High 34 897k → 34 868k; maks. na kamerze +0,02 %
+  (`g7_p08_b` Low). Względem main sprzed 0170 obowiązuje więc budżet z sekcji „Wyniki” (trasa Low maks. +0,51 %).
+- **Pętla wizualna** (`artifacts/horizon-0170/pairs4/`, 87 plików, baza | po, Low i High):
+  `g7_p07_b` — ciemna bryła pod koroną zniknęła na Low i High, korona czyta się jako listowie; `g7_p03_a` — szeroki
+  ciemny pas (stożek-rdzeń świerka) zniknął; `g7_front_thuja_2/3/5` — tuja to rząd kolumn z czubkami nad płotem
+  zamiast prostopadłościanu; świerk (`g7_p07_b`, `g7_front_thuja_3`, `g7_p11_a`) ciemnozielony, kryjący. Pary
+  horyzontu bez zmian względem build 2 (ten sam kod lasu).
+- **Zostaje (P3, do oceny `visual-critic`)**: w `g7_p03_a` (kamera ~2 m od świerka) karta ustawiona krawędzią do
+  kamery daje cienką jaśniejszą pionową smugę na osi, a dół kart ma prostą poziomą krawędź; korona 2 m od kamery
+  (`g7_p07_b`, lewa strona) pokazuje rozciągnięte teksele. To ograniczenie kart z bliska (patrz „Otwarte”).
+- **Testy**: @@TESTS@@
+
 ## Otwarte / WORKING_VALUE
 
 - Wysokość pasa 6BC0 z jednego zdjęcia (± 1,3 m); GUGiK NMPT / „Modele 3D drzew” nie są pobrane — po ingestii zastąpić
