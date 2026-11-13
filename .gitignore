@@ -54,3 +54,16 @@ tools/worldgen/.venv/
 
 # ElevenLabs raw WAVs (owner downloads; never in git)
 art-source/audio/elevenlabs/
+
+# binaria paczek GPT Pro / Mistral — lokalnie, poza gitem (s17, przegląd research pack 02)
+research/gptpro/p*/files/*.jpg
+research/gptpro/p*/files/*.jpeg
+research/gptpro/p*/files/*.png
+research/gptpro/p*/files/*.mp3
+research/gptpro/p*/files/*.ogg
+research/gptpro/p*/files/*.opus
+research/gptpro/p*/files/*.wav
+research/gptpro/p*/files/*.csv
+research/gptpro/9-audio-refs/files/
+research/_incoming/
+research/mistral/*/files/

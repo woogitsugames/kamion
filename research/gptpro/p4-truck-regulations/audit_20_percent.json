@@ -1,0 +1,174 @@
+{
+  "seed": 20261113,
+  "metoda_losowania": "python3 random.seed(20261113); random.sample(ids, 33) — 33/161 = 20,5% wszystkich pozycji manifestu",
+  "data_audytu": "2026-11-13",
+  "zakres": "dla każdego wylosowanego id: (a) weryfikacja wartości/cytatu greppem w lokalnych pełnych tekstach źródłowych (pobranych z URL_źródła), (b) obecność pliku w files/ dla pozycji plikowych, (c) kontrola spójności pól manifestu (status, url, licencja). Wayback Machine offline oraz EUR-Lex za WAF w dniu audytu — linki wayback/eur-lex zweryfikowano pośrednio: plik pobrany wcześniej z danego URL istnieje lokalnie i jego treść zgadza się z manifestem; linki api.sejm.gov.pl sprawdzone live (HTTP 200).",
+  "pozycje": [
+    {
+      "id": "P4-003",
+      "sprawdzono": "plik R58 OJ; nagłówek \"Regulation No 58\" w tekstie źródłowym (podwójne spacje ekstrakcji)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-004",
+      "sprawdzono": "plik R73 OJ; nagłówek \"Regulation No 73\"",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-005",
+      "sprawdzono": "plik R104 OJ; nagłówek \"Regulation No 104\"",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-008",
+      "sprawdzono": "plik rozp. o tablicach (HTML); §26 \"jednorzędowe\" obecne (10 trafień)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-013",
+      "sprawdzono": "R48 tab. kolorów: \"Side -marker lamp: Amber\" (2 trafienia; łącznik z artefaktem spacji)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-014",
+      "sprawdzono": "R48 5.15: \"White or yellow to the side\" (1 trafienie)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-017",
+      "sprawdzono": "R48 6.9.4.1: \"400 mm\" (19 trafień w R48)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-019",
+      "sprawdzono": "R48 6.10.4.2: \"not less than 350 mm\" (2 trafienia)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-025",
+      "sprawdzono": "R48 6.5.4.1: \"400 mm\"",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-029",
+      "sprawdzono": "R48 6.7.4.2.1: \"nor more than 1,500 mm\" (4 trafienia)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-034",
+      "sprawdzono": "R48 6.4.7.1: \"reverse gear\" (3 trafienia)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-035",
+      "sprawdzono": "R48 6.11: \"One or two\" (3 trafienia, kontekst przeciwmgłowych)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-043",
+      "sprawdzono": "R48 6.13.5: kąt 80° (3 trafienia)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-046",
+      "sprawdzono": "R48 6.17.1 obecny (2 trafienia)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-067",
+      "sprawdzono": "R48 6.15.3: \"apex of the triangle\" (1 trafienie)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-073",
+      "sprawdzono": "R48 6.21: \"tractor\" (7 trafień, kontekst wyjątków)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-077",
+      "sprawdzono": "R48 6.21.7.3: \"greater than 200 mm\" — potwierdzone pełnym kontekstem (podwójne spacje)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-078",
+      "sprawdzono": "R48 6.21.7.4: \"01 series of amendments\" + \"Regulation No. 70\" — potwierdzone",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-079",
+      "sprawdzono": "R48 6.21.7.5: \"at least 60 mm in width\" — potwierdzone (podwójne spacje)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-086",
+      "sprawdzono": "R46 15.2.4.2 obecny (4 trafienia)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-092",
+      "sprawdzono": "R58 16.3: \"more than 100 mm shorter on either side\" — potwierdzone pełnym kontekstem",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-094",
+      "sprawdzono": "R58 7.1: \"section height of at least 120 mm\" — potwierdzone; promień 2,5 mm też obecny",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-101",
+      "sprawdzono": "R73 12.9: \"950 mm\" (2 trafienia)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-112",
+      "sprawdzono": "96/53 zał. I 1.7: \"15,65\" (1 trafienie)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-118",
+      "sprawdzono": "96/53: \"maksymalnie 1 tonę i maksymalnie 2 tony\" (paliwa alternatywne/bezemisyjne) — potwierdzone",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-125",
+      "sprawdzono": "WT zał. 4: \"tabliczkę znamionową\" (1 trafienie)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-128",
+      "sprawdzono": "WT §11.1: \"błotniki\" (1 trafienie)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-130",
+      "sprawdzono": "WT §11.1: \"trójkąt\" (1 trafienie)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-132",
+      "sprawdzono": "WT: \"klin\" 0 trafień w całym tekście — potwierdzone stwierdzenie negatywne",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-142",
+      "sprawdzono": "WT zał. 10: \"obrzeżem\" (1 trafienie, kontekst tablic wyróżniających)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-150",
+      "sprawdzono": "WT zał. 5: \"30°\" (1 trafienie)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-151",
+      "sprawdzono": "rozp. tablice §26: \"jednorzędowe\" (10 trafień)",
+      "wynik": "OK"
+    },
+    {
+      "id": "P4-159",
+      "sprawdzono": "WT §42: \"załączniku nr 10\" (1 trafienie)",
+      "wynik": "OK"
+    }
+  ],
+  "podsumowanie": "33/33 pozycji OK (100%). Błędy wymagające korekty: 0. Uwaga: 7 pozycji wymagało grepa z uwzględnieniem artefaktów ekstrakcji (podwójne spacje, rozdzielone łączniki) — treść potwierdzona."
+}
