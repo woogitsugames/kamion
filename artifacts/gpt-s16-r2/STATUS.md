@@ -12,3 +12,5 @@ Referencje6ulic są typologiczne: repo nie pokrywa fotograficznie bocznych ulic 
 Telefon/GPUruch/ASTC: UNVERIFIED, lider. Nie dotykam telefonów ani main.
 DECYZJA sprzątanie: clear-rejected r1(0.412GB) pozostał po blokadzie automatycznego przeglądu usuwania; bez obchodzenia blokady.
 Limit sesji dookoło10:34 13.11.2026.
+
+Celowany EditMode GardenCanopyWidthTests: exit0; szczegóły targeted-editmode.xml/log.

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0,0467905">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="483" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.046791" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1596" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-s16/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="483" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.039942" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="33968" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1597" name="Game" fullname="Game" runstate="Runnable" testcasecount="483" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.037675" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1598" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="483" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.035457" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1162" name="GardenCanopyWidthTests" fullname="Game.Tests.GardenCanopyWidthTests" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.029720" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1171" name="BroaderCrownKeepsVerticalAxisAndCompactInstanceStorage" fullname="Game.Tests.GardenCanopyWidthTests.BroaderCrownKeepsVerticalAxisAndCompactInstanceStorage" methodname="BroaderCrownKeepsVerticalAxisAndCompactInstanceStorage" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" seed="908816462" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.016192" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1170" name="LegacyOrInvalidWidthKeepsExactMatrix" fullname="Game.Tests.GardenCanopyWidthTests.LegacyOrInvalidWidthKeepsExactMatrix" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.003521" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1163" name="LegacyOrInvalidWidthKeepsExactMatrix(False,1.35f)" fullname="Game.Tests.GardenCanopyWidthTests.LegacyOrInvalidWidthKeepsExactMatrix(False,1.35f)" methodname="LegacyOrInvalidWidthKeepsExactMatrix" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" seed="789675514" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.000912" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1164" name="LegacyOrInvalidWidthKeepsExactMatrix(True,1.0f)" fullname="Game.Tests.GardenCanopyWidthTests.LegacyOrInvalidWidthKeepsExactMatrix(True,1.0f)" methodname="LegacyOrInvalidWidthKeepsExactMatrix" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" seed="1538250166" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.000088" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1165" name="LegacyOrInvalidWidthKeepsExactMatrix(True,0.0f)" fullname="Game.Tests.GardenCanopyWidthTests.LegacyOrInvalidWidthKeepsExactMatrix(True,0.0f)" methodname="LegacyOrInvalidWidthKeepsExactMatrix" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" seed="214576326" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.000038" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1166" name="LegacyOrInvalidWidthKeepsExactMatrix(True,-1.0f)" fullname="Game.Tests.GardenCanopyWidthTests.LegacyOrInvalidWidthKeepsExactMatrix(True,-1.0f)" methodname="LegacyOrInvalidWidthKeepsExactMatrix" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" seed="1084673996" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.000032" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1167" name="LegacyOrInvalidWidthKeepsExactMatrix(True,1.51f)" fullname="Game.Tests.GardenCanopyWidthTests.LegacyOrInvalidWidthKeepsExactMatrix(True,1.51f)" methodname="LegacyOrInvalidWidthKeepsExactMatrix" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" seed="1943696695" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.000030" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1168" name="LegacyOrInvalidWidthKeepsExactMatrix(True,float.NaN)" fullname="Game.Tests.GardenCanopyWidthTests.LegacyOrInvalidWidthKeepsExactMatrix(True,float.NaN)" methodname="LegacyOrInvalidWidthKeepsExactMatrix" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" seed="1851528981" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.000212" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1169" name="LegacyOrInvalidWidthKeepsExactMatrix(True,float.PositiveInfinity)" fullname="Game.Tests.GardenCanopyWidthTests.LegacyOrInvalidWidthKeepsExactMatrix(True,float.PositiveInfinity)" methodname="LegacyOrInvalidWidthKeepsExactMatrix" classname="Game.Tests.GardenCanopyWidthTests" runstate="Runnable" seed="64480621" result="Passed" start-time="2026-11-13 00:07:50Z" end-time="2026-11-13 00:07:50Z" duration="0.000043" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
