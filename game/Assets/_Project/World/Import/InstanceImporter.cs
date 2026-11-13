@@ -141,6 +141,7 @@ namespace Game.World.Import
         {
             string art = Path.Combine(EditorTools.RepoRoot, "art-source", "world");
             var props = GlbReader.Load(WorldLibrary.Resolve(r.Region, "props", "street_props.glb"));   // ADR 0174: per-region library
+            Debug.Log($"[IMPORT] street library: {(WorldLibrary.HasRegionProps(r.Region) ? "region " + r.Region : "shared art-source")} ({WorldLibrary.Resolve(r.Region, "props", "street_props.glb")})");
             var trees = GlbReader.Load(Path.Combine(art, "vegetation", "trees.glb"));
             var impostors = GlbReader.Load(Path.Combine(art, "vegetation", "trees_lod2.glb"));
             // Authored landmark assets (ADR 0067 / 0070 / 0071): art-source/world/landmarks/<asset>/<asset>.glb,
