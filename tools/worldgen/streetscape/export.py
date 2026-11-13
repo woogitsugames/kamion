@@ -171,6 +171,10 @@ def export(codes, boards, out_dir=None):
         sign_png[c] = SG.png_bytes(SG.weather(im.resize((256, 256), SG.Image.LANCZOS), c))
         mats[f"sign_{c}"] = {"color": [1, 1, 1], "rough": 0.45, "texture_png": sign_png[c], "alpha_cutoff": 0.5}
     for c, (w, h, im) in sorted(boards.items()):
+        if c.startswith("MG"):         # ADR 0189: masonry gate kit atlas (brick, concrete, plaques, faces) - native
+            sign_png[c] = SG.png_bytes(im.convert("RGB"))      # resolution, its own wear, matt like masonry
+            mats[f"sign_{c}"] = {"color": [1, 1, 1], "rough": 0.85, "texture_png": sign_png[c]}
+            continue
         ww = 512
         hh = max(32, int(round(ww * im.size[1] / im.size[0])))
         face = SG.weather(im.resize((ww, hh), SG.Image.LANCZOS), c, 0.7)

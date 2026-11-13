@@ -843,4 +843,6 @@ def build_all(sign_codes, boards):
     P.update(LP.build_registered())
     from . import gate3_landmarks as G3          # ADR 0125: sign assemblies registered by gate3_landmarks.build
     P.update(G3.prototypes())
+    from . import masonry_gate as MG            # ADR 0189: brick gate kits registered by masonry_gate.build
+    P.update(MG.prototypes())
     return P

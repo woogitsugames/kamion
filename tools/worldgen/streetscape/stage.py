@@ -28,6 +28,7 @@ from . import hero_depot as HD
 from . import landmarks as LM
 from . import gate3_landmarks as G3
 from . import life as LF
+from . import masonry_gate as MG
 from . import paved as PV
 from . import plantings as PT
 from . import plots as PLT
@@ -201,7 +202,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.bridge_median_lamps(pl, w.net, frep)          # ADR 0123: twin-arm lamps between the decks (bridge_style `lamps`)
     lin = FU.Lin(w.buf, zsurf)
     # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
-    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep,
+    mg_kits = MG.plan(overrides)                 # ADR 0189: brick gate kits; the rule fence is cut at their walls
+    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes) + MG.fence_cut(mg_kits)), frep,
               styles=FU.fence_styles(overrides), net=w.net)
     def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
@@ -233,6 +235,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     G3.build(pl, w.net, graph, overrides, origin, boards, frep, carriage=carriage,   # ADR 0125 gate 3 signs
              islands=[i for i in getattr(getattr(w, "gore_plan", None), "islands", []) if i.built])   # ADR 0128
+    if mg_kits:
+        MG.build(pl, mg_kits, boards, frep, carriage=carriage)
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     FU.clear_narrow_islands(pl, w.buf.parts, w.net, frep)        # ADR 0093: no lamp on a separation < ~2 m
     FU.clear_under_decks(pl, w.buf.parts, frep)

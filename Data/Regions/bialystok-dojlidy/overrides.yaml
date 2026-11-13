@@ -162,3 +162,54 @@ overrides:
       (the reference region C keeps its output byte for byte).
     confidence: high
     verify: none
+  # ---------------------------------------------------------------- hospital gate, Żurawia 14 (photo P11-129, ADR 0189)
+  - id: zurawia-hospital-gate
+    kind: masonry_gate
+    anchor: {at_en: [327.1, 808.4], enter_bearing_deg: 242.0, osm_node_tag: "barrier=lift_gate"}
+    reason: >-
+      CC0 photo P11-129 (Rakoon, Commons, 2019-11-10; read at 1600 px, signs from the frame itself, not from the P11
+      manifest): the drive into the hospital grounds passes between (left) a grey sand-lime brick wall with square
+      pillars under concrete caps and a block of five dark red enamel name plates next to the gate pillar, and
+      (right) a brick porch - a wide pier with two short piers on it and slender piers under a flat white concrete
+      canopy with a dark sheet roof, on a concrete step. On the wide pier: a sun-faded B-20 STOP and a blue board
+      (white text) under it; on a lamp post beside it C-2 (bent arrow = right turn after the sign) over B-33 "20"
+      and a small white plate; between the slender piers a blue admissions board with a yellow header. The boom of
+      the lift gate (OSM node, rule prototype) stays where OSM has it. Plate and board texts are neutral words - no
+      name or emblem of the real institution (CLAUDE.md rule 8). Position: gate frame on the generated drive
+      (OSM ways 883955523 / 73881452, bearing 242 deg at the lift_gate node). Left wall end = end of the OSM
+      barrier way (local 328.5 805.4) and of the wall line on the GUGiK HighResolution orthophoto (328.3 806.8);
+      its first 4 m are kept straight along the gate line as on the photo (two bays seen frontally), the OSM way
+      curves 1-1.5 m earlier. The porch stands 3.4 m toward the street: in the data the drive runs 20 deg off the
+      real axis, which puts the real porch position inside the BDOT10k outline of the gatehouse (bdot:8243ac9d).
+      Sizes from the photo, WORKING_VALUE (UNVERIFIED until research task M62): wall 23 courses = 1.75 m + rowlock
+      coping, pillars 0.38 m at ~2 m, wide pier 1.5 x 0.5 x 1.95 m, canopy underside 2.55 m, STOP 0.8 m, discs 0.6 m.
+    confidence: medium
+    verify: research task M62 (wall material and extent, pillar spacing, porch plan, sign sizes); owner photo session
+    fence_cut_m: 1.5
+    walls:
+      - line_la: [[-3.6, 0.0], [-7.7, 0.3], [-9.3, 1.6], [-10.1, 3.6], [-10.3, 4.4], [-17.1, 4.2]]
+        height_m: 1.75
+        thick_m: 0.25
+        coping_m: 0.12
+        pillar_m: 0.38
+        pillars_la: [[-3.6, 0.0], [-5.65, 0.15], [-7.7, 0.3], [-10.3, 4.4], [-13.7, 4.3], [-17.1, 4.2]]
+        plaques: {at_la: [-4.62, 0.08], cols: 2, count: 5, size_m: [0.70, 0.28], z_m: 1.47}
+    piers:
+      - {at_la: [4.45, 3.4], size_m: [1.5, 0.5], height_m: 1.95, cap: true}
+      - {at_la: [3.9, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 2.02}
+      - {at_la: [4.85, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 2.02}
+      - {at_la: [6.6, 3.4], size_m: [0.38, 0.38], height_m: 2.55}
+      - {at_la: [7.9, 3.4], size_m: [0.38, 0.38], height_m: 2.55}
+    platform: {rect_la: [3.62, 2.3, 8.3, 4.5], height_m: 0.22}
+    canopy: {rect_la: [3.6, 2.2, 8.3, 4.2], z_m: 2.55, thick_m: 0.2}
+    faces:
+      - {face: B-20, at_la: [4.5, 3.65], z_m: 1.72, size_m: 0.8, fade: 0.8}
+    boards:
+      - {board: entry_rules, at_la: [4.5, 3.66], z_m: 1.02, size_m: [0.8, 0.42]}
+      - {board: admissions, at_la: [7.25, 3.45], z_m: 1.6, size_m: [0.75, 0.95]}
+    posts:
+      - at_la: [3.3, 2.7]
+        height_m: 3.9
+        lantern: true
+        faces: [{face: C-2, z_m: 2.62, size_m: 0.6}, {face: B-33_20, z_m: 1.98, size_m: 0.6}]
+        plate: {z_m: 1.55, size_m: [0.42, 0.14]}
