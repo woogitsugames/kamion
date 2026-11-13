@@ -86,3 +86,5 @@ Autor obejrzał wszystkie360par w16zbiorczych arkuszach oraz24arkusze foto|przed
 Korekta poprzedniego wpisu audytu: po pełnym EditMode wykryto2uboczne serializacje _SrcBlend nieużywanych legacy M_car_dirt_1/2; pierwszy assert zatrzymał audyt, więc poprzednia liczba458identycznych nie była jeszcze końcowym wynikiem. Przywrócono tylko2pliki z własnej kopii r1 po sprawdzeniu pełnego SHA256 z baząr2. Teraz458/458identycznych,0nowych. Różnice jawne w native-cleanup-ledger.json. 416obrazów≤960px,autorobejrzał360par+24foto,criticPASSzakresu/PARTIALD51.
 
 2026-11-13T02:24:32.6389580+01:00 — Końcowe zwarte dowody spakowane (508 plików, 31,81 MiB) i skopiowane do katalogu lidera; świeże przekazanie zapisane. Pełny GIS nadal trwa. NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r2/final-gis.log -Tail 10
+
+Pełny GIS zakończony: exit 0; szczegóły GIS-STATUS.md oraz final-gis.log.
