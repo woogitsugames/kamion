@@ -71,8 +71,12 @@ Source: review `docs/reports/REVIEW-2026-11-13-s16-mistral-r5.md` (#31: "zdublow
   8060). Colliders 36 -> 34.
 - EditMode full: 500 total, 497 passed, 2 failed, 1 skipped. The 2 failures are
   `CarPaintMaterialTests.DepositionChannel_*` (known on main, not this branch). All `WorldEdge*` cases pass.
-- pytest: `tests/gis/test_barrier_ends.py` 8 passed (no xfail left); navgraph tests incl. `test_dead_ends.py`:
-  see the pytest line in the final report of the branch.
+- pytest `tests/gis/test_road_fidelity.py tests/gis/test_barrier_ends.py tests/gis/test_barriers_0159.py
+  tools/worldgen/navgraph/tests`: 82 passed, 1 xfailed (the xfail is in `test_road_fidelity.py`, not from this
+  branch). `fidelity/run.py` rerun: only the input hash of `barrier_audit.py` changed in `fidelity_qa.json`.
+  The full `tests/gis` / `tests/gate3` set was NOT run.
+- PlayMode `Game.Tests.WorldEdgeRecoveryTests` on the rebuilt WorldC: 3 total, 3 passed (ray at each of the 34
+  closures hits its collider at 5.2 - 6.2 m).
 - Budget, Low, editor estimate (`stats.txt`), before = importer of main on the same scene:
 
 | camera | draws before -> after | shadow casters | tris |
@@ -123,7 +127,7 @@ Measured on the committed `bialystok-industrial-c_route.bytes` (550 nodes, 646 e
 ## Risks / open
 
 1. `WorldBoundary.closures` has 34 entries instead of 36 and the centres of 10 closures moved along their row.
-   `WorldEdgeRecoveryTests` (PlayMode, ray at each closure): result in the final report of the branch.
+   `WorldEdgeRecoveryTests` (PlayMode) passes; the rest of the PlayMode suite was not run.
 2. Scenes imported before this ADR keep the old layout until `import-region` or `RebuildEdgeBatch` runs.
 3. `ClosureTrimAlongM`, `ClosureCornerClearM` and all sign dimensions are WORKING_VALUE; the U-20 text is UNVERIFIED.
 4. The corner rule is skipped when one road axis lies behind the other row (not present in this region); `Build`
