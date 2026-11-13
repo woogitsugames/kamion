@@ -1,0 +1,224 @@
+{
+ "paczka": "research/mistral/p2-surfaces-2",
+ "data": "2026-11-13",
+ "seed": 20261113,
+ "generator": "python3 random.Random(SEED).sample(ids, k) — deterministycznie, jawny seed",
+ "populacja": {
+  "liczba_rekordow": 116,
+  "kolumny": 19
+ },
+ "proba": {
+  "rozmiar": 24,
+  "procent": 20,
+  "wybrane_id": [
+   "M52-002",
+   "M52-003",
+   "M52-004",
+   "M52-007",
+   "M52-009",
+   "M52-013",
+   "M52-015",
+   "M52-017",
+   "M52-023",
+   "M52-039",
+   "M52-040",
+   "M52-047",
+   "M52-051",
+   "M52-059",
+   "M52-064",
+   "M52-066",
+   "M52-071",
+   "M52-077",
+   "M52-082",
+   "M52-084",
+   "M52-104",
+   "M52-107",
+   "M52-110",
+   "M52-113"
+  ]
+ },
+ "kryteria": [
+  "url_źródła niepuste",
+  "data_dostępu niepusta",
+  "status ∈ {SOURCED, ESTIMATED, UNVERIFIED, REFERENCE_NOT_TEXTURE}",
+  "ESTIMATED ⇒ metoda_koloru lub uwagi niepuste",
+  "UNVERIFIED ⇒ uwagi niepuste (uzasadnienie)",
+  "kolor_srgb niepuste ⇒ metoda_koloru niepusta"
+ ],
+ "wyniki": [
+  {
+   "id": "M52-002",
+   "status": "SOURCED",
+   "url_źródła": "https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-003",
+   "status": "SOURCED",
+   "url_źródła": "https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-004",
+   "status": "SOURCED",
+   "url_źródła": "https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-007",
+   "status": "SOURCED",
+   "url_źródła": "https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-009",
+   "status": "SOURCED",
+   "url_źródła": "https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-013",
+   "status": "SOURCED",
+   "url_źródła": "https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-015",
+   "status": "ESTIMATED",
+   "url_źródła": "https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-017",
+   "status": "SOURCED",
+   "url_źródła": "https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-023",
+   "status": "SOURCED",
+   "url_źródła": "https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-039",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/2769366",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-040",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/2769366",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-047",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/3686129",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-051",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/3686129",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-059",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/2769366",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-064",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/3686129",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-066",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/3686129",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-071",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/14055",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-077",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/14055",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-082",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/3686129",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-084",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/1155711",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-104",
+   "status": "REFERENCE_NOT_TEXTURE",
+   "url_źródła": "https://kartaview.org/sequence/1155711",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-107",
+   "status": "SOURCED",
+   "url_źródła": "https://commons.wikimedia.org/wiki/File:6323_Rynek_Kosciuszki_in_Bialystok,_August_2019.jpg",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-110",
+   "status": "SOURCED",
+   "url_źródła": "https://www.bip.bialystok.pl/resource/103311/Za%C5%82.+nr+5_Wytyczne+do+projektowania.pdf",
+   "ok": true,
+   "problemy": []
+  },
+  {
+   "id": "M52-113",
+   "status": "SOURCED",
+   "url_źródła": "https://www.bip.bialystok.pl/resource/103311/Za%C5%82.+nr+5_Wytyczne+do+projektowania.pdf",
+   "ok": true,
+   "problemy": []
+  }
+ ],
+ "podsumowanie": {
+  "sprawdzone": 24,
+  "zaliczone": 24,
+  "niezaliczone": 0,
+  "kontekst": "wszystkie rekordy przechodzą pełny ten sam zbiór kryteriów (proba 20% to samokontrola)"
+ }
+}

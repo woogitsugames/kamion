@@ -96,17 +96,134 @@ Uwagi:
 
 ---
 
+---
+
+## Zadanie 2 — Jaroszówka (kafl startowy): kadry z poziomu jezdni
+
+Kafl startowy (ok. 53,152 N, 23,168 E) to **rondo Pamięci Bieżeństwa 1915 r.** (DK19 /
+ul. Generała Władysława Andersa, północ Białegostoku). Pozyskano **24 kadry** (wymóg: ≥10)
+z poziomu jezdni (kamery pojazdów, KartaView), wszystkie ≤1600 px, z datą, azymutem (EXIF
+`heading` z API KartaView) i pozycją WGS84. Licencja KartaView: CC BY-SA 4.0 → status
+REFERENCE_NOT_TEXTURE (referencja, nie tekstura).
+
+| Sekwencja | Data | Autor | Kadry | Azymuty (ok.) | Pozycje (N, E) |
+|---|---|---|---|---|---|
+| 14055 | 2016-08-24 | ziozzzzz | 7 | 357/358/359° | 53.1512–53.1523, 23.1662–23.1689 |
+| 2769366 | 2019-08-25 | gpsmapper999 | 6 | 302/303° | 53.1514–53.1524, 23.1663–23.1689 |
+| 3686129 | 2021-06-23 | TMishaaa | 11 | 301/302/303° | 53.1513–53.1524, 23.1662–23.1693 |
+
+Odległości kadrów od kafla: 23–127 m. Pełne metadane (id, sekwencja, indeks, lat/lon, data,
+azymut, kolor pasa jezdni): manifest.csv M52-029…M52-052. Kadry z 2016 (azymut ~357°)
+obejmują wjazd na rondo od południa; kadry z 2019/2021 (azymuty ~300–305°) — jezdnię,
+krawężniki i linie od strony północno-zachodniej. Wszystkie pliki: `files/jaroszowka/`
+w paczce ZIP (poza gitem).
+
+---
+
+## Zadanie 3 — Azyle, płytki dotykowe, ścieki i wpusty (Białystok)
+
+### Azyle (wyspy dzielące)
+- **Wymóg projektowy (SOURCED)**: wytyczne ZDM 2025 (BIP zasób 103311, str. 20):
+  „Na wyspie dzielącej na środku jezdni należy wydzielić przejazd rowerowy”.
+- **Występowanie (UNVERIFIED)**: w zbadanym obszarze centrum OSM wskazuje jeden obiekt
+  `traffic_calming=island` — ul. Świętojańska (way 287037716, 53,12497 N 23,16656 E;
+  ODbL, dane referencyjne). Brak kadrów KartaView w promieniu ~1,1 km od tego obiektu
+  (najbliższe sprawdzone kadry: 1,15 km) → **brak potwierdzenia zdjęciowego**; wymiary i
+  materiał azylów: UNVERIFIED.
+
+### Płytki dotykowe (układ rzędów)
+- **SOURCED** (wytyczne ZDM 2025, pkt II.2 — zejścia/rampy): obszar ostrzegawczy =
+  **1 rząd płytek gładkich + 2 rzędy płytek profilowanych (guzowatych)**.
+- Wymiary pojedynczych płytek: UNVERIFIED (źródło nie podaje).
+- Kontekst OSM (bbox centrum, ODbL): 177 węzłów `tactile=yes` na 680 przejść; 10 przy
+  trasie startowej, głównie skrzyżowanie Al. Tysiąclecia/Sokólska (53,1506–53,1509 N,
+  23,1544–23,1550 E). Kadry przejść (z częścią z płytkami): M52-083…M52-105.
+
+### Ścieki przykrawężnikowe i wpusty
+- **Wymogi (SOURCED)**: wytyczne ZDM 2025, pkt III.11–III.13 — włazy żeliwne wg PN-EN 124,
+  projektowane **w osi pasa ruchu**; studnie w jezdni z obróbką brukarską wg rys. nr 3 wytycznych.
+- Konkretne wymiary wpustów: UNVERIFIED. Przykłady obiektów inżynierskich przy krawężnikach
+  widoczne na kadrach `files/crossings/` (M52-083+).
+
+---
+
+## Zadanie 4 — Kolor dróg i pasów rowerowych na trasie startowej
+
+**Wynik (ESTIMATED, analiza 77 kadrów KartaView z lat 2016–2021): na żadnym z kadrów
+nie stwierdzono czerwonego asfaltu ani czerwonego malowanego pasa rowerowego** na badanych
+odcinkach trasy startowej. Frakcja pikseli „czerwonych” w pasie jezdni < 0,8% (próg
+detekcji R>G+B w medianie RGB dolnych 45% kadru); sygnały niebieskie w górnej części
+kadrów = niebo (y≈277/900), nie nawierzchnia.
+
+| Ulica | Odcinek badany kadrami | Kolor jezdni | Droga rowerowa | Status |
+|---|---|---|---|---|
+| Andersa (DK19) | 53,1488–53,1545 N, 23,1605–23,1754 E | szary asfalt (RGB ~[73–90]) | wydzielona droga rowerowa poza jezdnią (OSM `bicycle=no`); kolor na kadrach nierozstrzygnięty | ESTIMATED |
+| Al. Tysiąclecia | przy skrzyż. z Sokólską | szary asfalt | `use_sidepath`; 1 odcinek `cycleway:right=share_busway` (buspas) | ESTIMATED |
+| Sokólska (Białostoczek) | przy Al. Tysiąclecia | szary asfalt | `use_sidepath` | ESTIMATED |
+| Wileńska | — | brak kadrów ≤60 m (najbliższy 348 m) | — | UNVERIFIED |
+
+Metodologia: mediany RGB pasa jezdni + frakcje pikseli czerwonych/niebieskich per kolumna
+(analiza własna, NumPy/PIL). Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
+Dane OSM: ODbL (tylko referencja organizacyjna, nie tekstura).
+
+---
+
+## Zadanie 5 — Rynek Kościuszki: nawierzchnia
+
+**Rodzaj nawierzchni (SOURCED): płyty granitowe + kostka granitowa (bruk)**.
+- Tofiluk W. (2015), *Central square in Białystok — changes…*, CEE 2015;19(4):121–131,
+  DOI 10.1515/ceer-2015-0058: rynek = granitowe płyty i kostka brukowa; przebudowa
+  2006–2009; projekt (konkurs SARP): Zenon Zabagło; otwarcie: 7.08.2009
+  (bialystok.pl, „Dekada Rynku Kościuszki”).
+- Wymiary płyt: **UNVERIFIED** — żródło nie podaje; fotogrametria ze zdjęć bez punktów
+  odniesienia uznana za niewiarygodną (nie ryzykujemy liczby).
+- Kolor (ESTIMATED, metoda: mediana RGB centralnych 30×40% kadru, 3 zdjęcia Commons):
+  [142, 125, 121] (CC0), [128, 135, 146] (CC0), [170, 171, 173] (CC BY 3.0 pl — referencja). Balans bieli zmienny
+  między kadrami — traktować jako orientacyjny.
+- Kadry: M52-106…M52-108 (pliki `files/rynek/` w paczce ZIP).
+
+---
+
+## Zadanie 6 — Aktualne wytyczne ZDM/ZDiT Białystok
+
+- **Aktualna wersja: „Wytyczne do projektowania dokumentacji projektowej budowy, rozbudowy
+  i przebudowy ulic w Białymstoku”, oznaczona „13 LIPCA 2018 R. / 2025 R.”** — BIP Białystok,
+  zasób 103311 (PDF, 21 stron, 1,6 MB):
+  https://www.bip.bialystok.pl/resource/103311/Za%C5%82.+nr+5_Wytyczne+do+projektowania.pdf
+- Stara wersja (13.07.2018): BIP zasób 99308; kopia z SWW: zasób 99985 (22 strony).
+- **Zmiany 2025 vs 2018 (SOURCED — porównanie tekstów obu PDF)**:
+  1. oznaczenie wersji „13 LIPCA 2018 R. / 2025 R.”;
+  2. tytuł sekcji rowerowej → „WYTYCZNE PROJEKTOWANIA I BUDOWY DRÓG DLA ROWERÓW – LOKALIZACJA”;
+  3. nowe punkty w Wymaganiach ogólnych: 17 (wizualizacje przy koncepcjach), 18 (mapy
+     podziału działek w wersji numerycznej), 19 (dokumentacja cyfrowa, edytowalna:
+     dwg/dxf/word/excel), 24 (konsultacje rozwiązań technologicznych i materiałowych),
+     27–28 (wersja robocza do zatwierdzenia; obowiązkowo: tabela robót ziemnych, wykaz
+     zjazdów, przekroje normalne);
+  4. uzbrojenie terenu: monitoring wizyjny wykonanych sieci;
+  5. objętość: 21 vs 22 strony.
+
+---
+
+## Samokontrola 20% (jawny seed)
+
+- Populacja: 116 rekordów manifestu (M52-001…M52-116).
+- Próba: **24 rekordy** (⌈20%⌉), wybrane deterministycznie: `random.Random(20261113).sample(ids, 24)`.
+- Kryteria (pełna lista w `audit_20_percent.json`): url_źródła i data_dostępu niepuste;
+  status ∈ {SOURCED, ESTIMATED, UNVERIFIED, REFERENCE_NOT_TEXTURE}; ESTIMATED ⇒ metoda/uwagi;
+  UNVERIFIED ⇒ uzasadnienie; kolor_srgb ⇒ metoda_koloru.
+- Wynik: **24/24 zaliczone**, 0 problemów.
+
 ## Status prac (aktualizowany)
 
 - [x] Gałąź utworzona z najnowszego `origin/main` (53e57d5).
 - [x] PDF Dz.U. 2019 poz. 2311 część c2 pobrany z eli.gov.pl; ekstrakcja tekstu i rysunków.
 - [x] Zadanie 1 — odczyt wymiarów z rysunków (tabela powyżej).
-- [ ] Zadanie 2 — zdjęcia Jaroszówka (≥10 kadrów z datą i azymutem).
-- [ ] Zadanie 3 — azyle, płytki dotykowe, ścieki/wpusty (Białystok).
-- [ ] Zadanie 4 — kolor dróg/pasów rowerowych na trasie startowej.
-- [ ] Zadanie 5 — Rynek Kościuszki (nawierzchnia).
-- [ ] Zadanie 6 — katalog standardów ZDM/ZDiT Białystok.
-- [ ] manifest.csv, audit_20_percent.json — na końcu.
+- [x] Zadanie 2 — zdjęcia Jaroszówka: 24 kadry (3 sekwencje, daty + azymuty + WGS84).
+- [x] Zadanie 3 — azyle (wymóg SOURCED / występowanie UNVERIFIED), płytki dotykowe (układ rzędów SOURCED), ścieki/wpusty (wymogi SOURCED).
+- [x] Zadanie 4 — kolor dróg/pasów rowerowych: brak czerwieni na 77 kadrach (ESTIMATED); Wileńska UNVERIFIED (brak kadrów).
+- [x] Zadanie 5 — Rynek Kościuszki: płyty granitowe + kostka (SOURCED, Tofiluk 2015 + BIP/bialystok.pl); wymiary UNVERIFIED; kolor ESTIMATED.
+- [x] Zadanie 6 — wytyczne ZDM „2018/2025”: BIP zasób 103311 + porównanie zmian vs 2018.
+- [x] manifest.csv (116 rekordów), audit_20_percent.json (24/24, seed 20261113).
 
 ## Zasady
 
@@ -122,7 +239,7 @@ Uwagi:
 
 ## Pliki
 
-- `README.md` — ten plik (tabela wyników zadania 1 + statusy).
+- `README.md` — ten plik (wyniki zadań 1–6 + statusy + opis samokontroli).
 - `manifest.csv` — pozycje M52-001… (kolumny jak w `research/gptpro/p2-surfaces/manifest.csv`).
 - `sources.md` — pełne źródła z linkami, licencjami i datami dostępu.
 - `audit_20_percent.json` — samokontrola 20% (jawny seed).
