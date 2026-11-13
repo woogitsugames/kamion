@@ -1249,8 +1249,9 @@ def rear_lamps_and_rup():
     pl = box_mm("plate_rear", -0.26, 0.26, yo + 0.018, yo + 0.026, 0.81, 0.924, "plate")
     G.plate_uv(pl, facing=-1)
     part("CHASSIS", "lamps")
-    box_mm("plate_lamp_body", -0.06, 0.06, yo - 0.02, yo + 0.026, 0.94, 0.975, "lamp_body", bev=0.006)
-    box_mm("plate_lamp_lens", -0.045, 0.045, yo - 0.012, yo + 0.01, 0.936, 0.940, "lens_white_o")
+    # ADR 0181: LED strip plate lamp 230 mm wide (was 90 mm: a 520 mm plate cannot be lit evenly from a 90 mm source)
+    box_mm("plate_lamp_body", -0.13, 0.13, yo - 0.02, yo + 0.026, 0.94, 0.975, "lamp_body", bev=0.006)
+    box_mm("plate_lamp_lens", -0.115, 0.115, yo - 0.012, yo + 0.01, 0.936, 0.940, "lens_white_o")
     # side marker lamps (amber LED) on the rail. ADR 0175: spacing <= 3 m (R48 6.18.4.3; -4.1 -> axle 2 was 3.6 m),
     # first 0.65 m from the front (<= 3 m), last 0.45 m from the rear (<= 1 m); the two in the bogie sit between
     # the tyres. Each unit carries an amber retro-reflector beside the lens (R48 6.17: side reflectors mandatory,

@@ -63,6 +63,8 @@ Shader "Kamion/Truck Exterior"
         _DrlHighlightShoulder ("DRL exposed HDR highlight shoulder (0 = off)", Range(0, 2)) = 0.8
         _LampHueKnee ("Signal lamps: hue-preserving shoulder knee (max channel, exposed units)", Range(0, 2)) = 0.4
         _LampHueCeiling ("Signal lamps: hue-preserving ceiling of max(r,g,b) (0 = off)", Range(0, 4)) = 0.8
+        _LensDetail ("Lamp lens optics from uv1 (ADR 0181; 0 = flat lenses)", Range(0, 1)) = 1
+        _PlateIllum ("Number plate luminance / plate lamp luminance at the top edge (ADR 0181)", Range(0, 0.1)) = 0.008
     }
     SubShader
     {
@@ -77,6 +79,7 @@ Shader "Kamion/Truck Exterior"
             float _ClearCoat, _ClearCoatRoughness, _Flake, _FlakeScale;
             float _DrlHighlightShoulder;
             float _LampHueKnee, _LampHueCeiling;
+            float _LensDetail, _PlateIllum;   // ADR 0181
             float _CoatedBaseRoughness, _OrangePeel, _GrimeHeight, _GrimeChassis;
             float4 _CurtainGrime, _CurtainAxles, _CurtainPosts;
         CBUFFER_END
@@ -138,6 +141,7 @@ Shader "Kamion/Truck Exterior"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "KamionVehicleEnv.hlsl"
             #include "KamionToeParity.hlsl"
+            #include "Assets/_Project/Rendering/Shaders/KamionLampLens.hlsl"   // ADR 0181 lens optics (Lights slot, uv1 lens frame)
 
             TEXTURE2D(_CMap); SAMPLER(sampler_CMap);
             TEXTURE2D(_NMap);
@@ -348,6 +352,13 @@ Shader "Kamion/Truck Exterior"
                     metal = lerp(metal, _DecalMetallic, d.a);
                     rough = lerp(rough, _DecalRoughness, d.a);
                 }
+            #if defined(_KAMION_TRUCK_LAMPS)
+                // ADR 0181: lens optics under the dirt film - gasket, pillow / flute / Fresnel relief, emitter cups, reflex cubes.
+                KamionLens lens = KamionLensEval(i.uv01.zw);
+                if (_LensDetail < 0.5) { lens.shade = 1; lens.slope = 0; lens.hdr = 1; lens.disp = 1; }
+                albedo *= lens.shade;
+                nTS = normalize(half3(nTS.xy + lens.slope, nTS.z));
+            #endif
                 half grime = m.g;
                 if (hasFrame)
                 {
@@ -433,7 +444,12 @@ Shader "Kamion/Truck Exterior"
                 if (abs(i.uv2.x - 1.0) < 0.25)
                     lampRadiance = TruckDrlHighlight(lampRadiance, _DrlHighlightShoulder);
                 else
-                    lampRadiance = TruckLampHueLimit(lampRadiance, _LampHueKnee, _LampHueCeiling);
+                {
+                    // ADR 0181: emitter structure in exposed radiance before the limit, residual contrast after it; the
+                    // number plate re-emits the plate lamp diffusely (its dirty albedo x falloff from the lamp above).
+                    if (lens.style > 4.5) lampRadiance *= albedo * (_PlateIllum * lens.plate);
+                    lampRadiance = TruckLampHueLimit(lampRadiance * lens.hdr, _LampHueKnee, _LampHueCeiling) * lens.disp;
+                }
                 s.emission = (half3)(lampRadiance * saturate(i.uv2.y));
             #endif
                 // Metallic flake: per-cell random normal tilt in the base specular only, faded out where a cell is

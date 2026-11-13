@@ -483,12 +483,59 @@ def light_group(pname, mname, x):
         return "FOG"
     if pname.startswith("work_lamp_lens"):
         return "WORK"
+    if pname.startswith("numlamp_lens") or pname == "rear_plate":
+        return "PLATE"       # ADR 0181: the plate lamp and the plate face it illuminates (lens style PLATE)
     return "NONE"
+
+
+# ADR 0181: lens-local frame of a lamp lens in uv1 ('Decal', unused outside the Paint slot; float32 on device: the
+# player's vertex compression mask leaves TexCoord1 uncompressed). uv1.x = W_mm + u', uv1.y = style * 256 + H_mm + v'
+# with W / H the lens size in whole millimetres (1..1023 / 1..255), u', v' = 0.02 + 0.96 * (0..1 across the lens; v up,
+# or forward for a lens that faces down). The integer part is constant over a lens, so it survives interpolation and
+# LOD decimation; floor(uv1.x) == 0 (the 0.002 default) = no lens. The shader (Kamion/Truck Exterior, Lights slot)
+# builds the optics pattern in millimetres from it: chamber gasket, LED emitters, pillow / flute / Fresnel optics,
+# corner-cube reflex, illuminated number plate.
+LENS_STYLES = ["NONE", "PILLOW", "FLUTE", "FRESNEL", "REFLEX", "PLATE"]
+
+
+def lens_style(pname, mname, grp):
+    """Tractor pieces -> lens style name (Lights-slot faces only)."""
+    if grp == "REFLEX":
+        return "REFLEX"
+    if grp == "PLATE":
+        return "PLATE" if pname == "rear_plate" else "FLUTE"
+    if mname not in ("lens_amber", "lens_red", "lens_clear"):
+        return "NONE"        # LED emitters, DRL guides, projector / reflector parts keep their plain emission
+    if pname.startswith("rear_fog_lens") or grp == "REVERSE":
+        return "FRESNEL"
+    if pname.startswith("rear_lens"):
+        return "PILLOW"
+    return "FLUTE" if grp != "NONE" else "NONE"     # side markers, cab-back markers, side repeaters
+
+
+def lens_frame(points):
+    """Lens frame from the lens vertices (vehicle frame, metres): returns (pack(co, style_name) -> uv1, thin axis).
+    Only faces of the lens plane (|normal[thin]| > 0.5) take the frame; the thin side faces of a lens box would get a
+    degenerate coordinate (constant = the gasket) - they keep the plain emission."""
+    lo, hi = bbox(points)
+    ext = hi - lo
+    thin = min(range(3), key=lambda i: ext[i])
+    au, av = {0: (1, 2), 1: (0, 2), 2: (0, 1)}[thin]
+    w = int(min(max(round(ext[au] * 1000.0), 1), 1023))
+    h = int(min(max(round(ext[av] * 1000.0), 1), 255))
+
+    def pack(co, style):
+        u = min(max((co[au] - lo[au]) / max(ext[au], 1e-6), 0.0), 1.0)
+        v = min(max((co[av] - lo[av]) / max(ext[av], 1e-6), 0.0), 1.0)
+        return (w + 0.02 + 0.96 * u, LENS_STYLES.index(style) * 256 + h + 0.02 + 0.96 * v)
+    return pack, thin
 
 
 def slot_of(pname, mname):
     if mname == "lens_clear":
-        return "Lights" if pname.startswith("rear_lens") else "Glass"
+        return "Lights" if pname.startswith(("rear_lens", "numlamp_lens")) else "Glass"
+    if mname == "plate" and pname == "rear_plate":
+        return "Lights"      # ADR 0181: the rear plate is lit by the plate lamp (emission lives in the Lights slot)
     return MAT_SLOT.get(mname, "Trim")
 
 
@@ -538,6 +585,15 @@ def to_game_piece(o, gm):
     # lenses hard-coated polycarbonate 1.59 (the lens catches a stronger, crisper reflection than the windscreen)
     ior_of = {"glass": 1.52, "glass_tint": 1.52, "lens_clear": 1.59}
     face_slot = []
+    # ADR 0181: lens frame over the Lights-slot faces of the piece that carry a lens style
+    lens_of = {}
+    for p in me.polygons:
+        mn = names[p.material_index] if p.material_index < len(names) else ""
+        if slot_of(o.name, mn) == "Lights":
+            st = lens_style(o.name, mn, light_group(o.name, mn, p.center.x))
+            if st != "NONE":
+                lens_of[p.index] = st
+    pack, thin = lens_frame([me.vertices[i].co for pi in lens_of for i in me.polygons[pi].vertices])         if lens_of else (None, 0)
     for p in me.polygons:
         mn = names[p.material_index] if p.material_index < len(names) else ""
         sl = slot_of(o.name, mn)
@@ -561,6 +617,8 @@ def to_game_piece(o, gm):
                 u = (rect[1] - co.x) / (rect[1] - rect[0])
                 v = 0.75 + 0.25 * (co.z - rect[2]) / (rect[3] - rect[2])
                 de[li].uv = (min(max(u, 0.0), 1.0), min(max(v, 0.75), 1.0))
+            elif p.index in lens_of and abs(p.normal[thin]) > 0.5:
+                de[li].uv = pack(me.vertices[me.loops[li].vertex_index].co, lens_of[p.index])
             else:
                 de[li].uv = (0.002, 0.002)
     at = me.uv_layers["Atlas"].data
@@ -2612,7 +2670,9 @@ def contract(tex, td):
     return {
         "name": "Kamion/TruckExterior (Shader Graph, URP Lit opaque; Glass = transparent; MirrorRT = unlit RT)",
         "uv0 'Atlas'": "unique atlas UV per slot (right wheels + right caliper reuse the left wheels' UVs mirrored)",
-        "uv1 'Decal'": "Paint slot only: decal atlas UV (T_Ext_Decal); (0.002, 0.002) = transparent texel elsewhere",
+        "uv1 'Decal'": "Paint slot: decal atlas UV (T_Ext_Decal); (0.002, 0.002) = transparent texel elsewhere. Lights "
+                       "slot (ADR 0181): lens frame, x = W_mm + u', y = style * 256 + H_mm + v' (u', v' = 0.02 + 0.96 * "
+                       "0..1 across the lens; styles = lens_styles); floor(x) = 0 -> no lens",
         "uv2 'Data'": "x = light group id (light_groups), y = emissive mask (1 on lamp emitters); 0 elsewhere",
         "color 'Col'": "rgb: sRGB-encoded tint for Glass (windscreen green, lens clear), white elsewhere; a: IOR - 1 of "
                        "the transparent surface (0.52 laminated glass, 0.59 polycarbonate lamp lens; 1 elsewhere). "
@@ -2640,6 +2700,7 @@ def contract(tex, td):
                                       "(0.80, 0.86, 0.84, 0.22), smoothness 0.95"},
         "_DirtColor": list(DUST),
         "light_groups": {i: g for i, g in enumerate(LIGHT_GROUPS)},
+        "lens_styles": {i: g for i, g in enumerate(LENS_STYLES)},
         "light_colours_linear": LIGHT_COLOUR,
         "texel_density": td,
     }
