@@ -392,7 +392,8 @@ overrides:
     verify: board layout and portal height on site
   - id: andersa-gantry-warning-right
     kind: gate3_sign
-    along: {osm_way: 266084693, before_node: n12620261934, distance_m: 46.0, side: R}
+    at_en: [-255.26, -205.84]
+    travel_bearing_deg: 307
     parts: [{face: A-30, plate: "wyjazd\nstraży"}]
     mapillary: ["468708117568850", "275528677534382"]
     reason: >-
@@ -400,17 +401,48 @@ overrides:
       (richlv 468708117568850, 2020; grobin 275528677534382, 2019 - the D51 review read the silhouettes as D-1).
       OSM has emergency traffic signals of the fire station exit 20 m further (node at -278,-197), so the plate
       text is the generic "wyjazd straży"; the real plate carries a pictogram that cannot be read. 7 m before the
-      portal: WORKING_VALUE read off the 2020 frame.
+      portal: WORKING_VALUE read off the 2020 frame. ADR 0160 (REVIEW s16 P1, A-30 out of the 275528 frame): the 0125
+      point stood 9 m before the portal and 8.6 m right of the camera axis, outside the 90 deg frame. Re-read on the
+      rectified grobin 2019 frame with the ADR 0140 pose (portal columns x 0.295 / 0.753 = 15.2 m depth at the 14 m
+      beam, matching the world within 0.1 m): triangle 0.044 of the width at x 0.82 -> 0.9 m side at 10.2 m depth,
+      6.5 m right of the axis -> E -255.26 N -205.84 (5 m before the portal). WORKING_VALUE.
     confidence: low
     verify: sign code and plate on site
   - id: andersa-gantry-warning-left
     kind: gate3_sign
-    along: {osm_way: 266084693, before_node: n12620261934, distance_m: 46.0, side: L}
+    at_en: [-262.18, -215.59]
+    travel_bearing_deg: 307
     parts: [{face: A-30, plate: "wyjazd\nstraży"}]
     mapillary: ["468708117568850", "275528677534382"]
-    reason: Same sign repeated on the median side (both photos). ADR 0125.
+    reason: >-
+      Same sign repeated on the median side (both photos). ADR 0125. ADR 0160: re-read on grobin 275528677534382 as the
+      right one (triangle 0.046 of the width at x 0.223 -> 9.8 m depth, 5.4 m left of the axis) -> E -262.18 N -215.59.
     confidence: low
     verify: sign code and plate on site
+  - id: andersa-slip-merge-a7
+    kind: gate3_sign
+    along: {osm_way: 268473388, before_node: n1847044938, distance_m: 11.0, side: R, offset_m: 2.0}
+    parts: [{face: A-7}]
+    mapillary: ["1528935774382039"]
+    reason: >-
+      ADR 0160 (REVIEW s16 G3-B P1): give-way triangle on the right verge where the slip w268473388 merges into
+      Andersa; OSM has no give_way node there, so the junction rule does not place it. Read off strudel 2024 with
+      the ADR 0160 pose (slip right lane): triangle 0.033 of the width at x 0.61 -> 23.6 m at 7.4 deg right of the
+      axis -> 11 m before the merge node, ~2.6 m behind the kerb (offset 2.0 m, WORKING_VALUE).
+    confidence: low
+    verify: sign on site, distance to the merge
+  - id: andersa-link-median-d1
+    kind: gate3_sign
+    along: {osm_way: 173956083, before_node: n2629251371, distance_m: 71.6, side: L, offset_m: 0.6}
+    parts: [{face: D-1}]
+    mapillary: ["4312632558767412"]
+    reason: >-
+      ADR 0160 (REVIEW s16 G3-B P1): main-road diamond on the median kerb of the trunk_link under the Andersa
+      viaduct (richlv 2020; the same post carries an A-7 turned to another flow, not modelled). Post foot x 0.295 /
+      y 0.828 of the rectified frame with the ADR 0160 probe pose (eye 0.9, heading tangent - 63) -> 23.9 m along
+      the link from node 1852129066; the post stands ~0.5 m behind the median kerb (offset 0.6 m). WORKING_VALUE.
+    confidence: low
+    verify: sign on site
   - id: andersa-elewatorska-island-u4a
     kind: gate3_sign
     at_en: [-219.9, -234.75]
@@ -463,7 +495,7 @@ overrides:
     verify: board still standing, plate size on site
   - id: biezenstwa-street-name-north
     kind: gate3_sign
-    at_en: [550.2, -699.7]
+    at_en: [556.4, -699.4]
     travel_bearing_deg: 262
     lower_edge_m: 2.6
     post: teal
@@ -471,7 +503,11 @@ overrides:
     mapillary: ["2818555625124739", "3970163613102941", "201270605169291"]
     reason: >-
       ADR 0125: second teal name plate at the island edge, ~12 m ahead of richlv 2818555625124739 / 3970163613102941
-      (2020). Same method and accuracy as biezenstwa-street-name-east (+- 5 m, WORKING_VALUE).
+      (2020). Same method and accuracy as biezenstwa-street-name-east (+- 5 m, WORKING_VALUE). ADR 0160: the 0125
+      position was read from poses whose heading was 9-15 deg off (deck vanishing point); re-read from the ADR 0160
+      poses (eye 0.9, heading from the deck VP) with the post foot on the photo: 201270605169291 -> E 556.3 N -699.6
+      (3.7 m, x 0.12), 3970163613102941 -> E 555.8 N -699.6 (7.3 m, x 0.50), 2818555625124739 -> E 557.0 N -699.0
+      (10.1 m, x 0.56); mean E 556.4 N -699.4 (6.2 m east of the 0125 point). +- 1.5 m, WORKING_VALUE.
     confidence: low
     verify: plate position on site
   - id: biezenstwa-n-slip-nose
