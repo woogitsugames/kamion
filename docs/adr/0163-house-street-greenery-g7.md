@@ -1,6 +1,7 @@
 # ADR 0163 — zieleń ulic domów wg pomiarów G7 (korekta ADR 0154)
 
-Status: PROPOSED na gałęzi `veg-0163` (2026-11-13, s16); nie scalone. Liczby w „Weryfikacja” zmierzone na świecie
+Status: PROPOSED na gałęzi `veg-0163` (2026-11-13, s16/s17); nie scalone. Tabela generatora z buildu 3; rendery,
+budżet i testy z buildu 6 (sekcja „Rendery i budżet”). Liczby zmierzone na świecie
 zregenerowanym na tej gałęzi (build 3, baza `origin/main` ff9777e2d). Telefon: NIE mierzony (robi lider). Recenzja
 `visual-critic` jeszcze wymagana (subagent nie uruchamia subagentów).
 Źródła: `research/g7-street-greenery/README.md` (tabela „Parametry dla generatora”, dalej „G7 #n”), recenzja
@@ -70,6 +71,11 @@ dostało tylko 257 m żywopłotów. Pomiary G7 pokazują inny obraz ulic domów:
    soczewkę wyspy (~16 × 4,5 m), nie pas 1,2 m. `plantings.build` już obsługuje `band_m: 0` (pełny klomb) — do dopisania
    w `beds` EC1 przy scalaniu p1-0161 (tu nie zmieniane, żeby nie konfliktować).
 
+10. **Grupa chunku nie rośnie dalej niż 8 m poza kit posesji, który już ma (`plantings._emit`, `GROUP_GROW_M`).** Drzewo,
+   które rozciągnęłoby granice grupy `plots` / `plots_low` dalej, nie powstaje (`skipped.group_bounds_growth`: 49 drzew
+   w buildzie 6, głównie przy domach bez wygenerowanej posesji wzdłuż Andersa). Bez tego grupa przechodziła test frustum
+   kamer, które jej wcześniej nie widziały (+1 draw).
+
 Zmiany poza plikami roślinności (addytywne, bez planu zachowanie bez zmian): `plots.build` czyta `rp["front_green"]` /
 `rp["garden_trees"]` (nie buduje własnego żywopłotu frontowego, zapisuje korony liściaste zamiast je meshować) i
 `plots.big_tree` ogranicza wysokość karty; `stage.py` — trzy wywołania i flaga ablacji `KAMION_GARDENS_0163=0`
@@ -101,7 +107,24 @@ pnia 5, środek nad jezdnią 10, brak wolnego gruntu 11, nowa grupa rysowania 4,
 Estymata kadru generatora (`mesh_budget`, wszystkie kamery): High max +0,87 % (`route_onramp_andersa`), najcięższy kadr
 `stretch_04` 1 979 137 → 1 995 291 (< 2,0 M); Low max +0,03 %.
 
-Rendery, budżet edytora, testy: patrz sekcja „Rendery i budżet” (uzupełniana po imporcie).
+### Rendery i budżet (build 6 = stan gałęzi)
+
+Build 6 różni się od 3 dobiciem iglaków, wycinką lasu (pkt 8) i regułą `GROUP_GROW_M` (pkt 10): 594 drzewa liściaste
+kitu + 192 iglaki (24,4 %), H mediana 5,73 m (p10 3,8, p90 11,4; ≥ 12 m 9,3 %); 7 ulic G7: 7,6 / 100 m ≤ 8 m, 11,5 ≤ 12 m;
+fronty bez zmian (tuja 24, liściasty 11, niskie 23 posesje; 331 m tui). Trójkąty: drzewa ogrodowe High 19 264 / Low 7366,
+fronty 12 058 / 5214. Wycinka: 121 drzew usuniętych, poligon 22 490 → 20 412 m², `stale` = 0.
+
+Edytor (`artifacts/veg-0163/compare-{Low,High}.tsv`, 129 kamer, baza = świat zbudowany z `origin/main` ff9777e2d w tym
+samym worktree, clear): **draws (drawsEst) +0 na każdej kamerze** Low i High (trasa: Low 21 316 → 21 316, High
+35 845 → 35 845); tris max: trasa Low +0,20 % (`edge-north`), High +0,08 %; kamery G7 Low +0,52 % (`g7_st_skidelska_2`),
+High +0,14 %. Draws instancjonowane (rekwizyty + drzewa): suma trasy Low 11 785 → 11 742, ale 12 kamer trasy +1…+3
+(`cab-mirror-front` 190 → 193, `truck-front` 81 → 83, `g3b_rondo_put_approach` 135 → 137) — przetasowanie komórek
+instancji przy usunięciu instancji biblioteki z ogrodów i wycince, nie nowe grupy; do sprawdzenia na telefonie.
+Build 5 (bez pkt 10) miał +1 draw na 2 kamerach trasy (`g3b_rondo_put_approach`, `g3b_ext34_s1658`): grupa `plots`
+chunku 1_3 rozciągnięta o ~90 m na południe przez drzewa przy domach bez posesji wzdłuż Andersa przechodziła test
+frustum. Pary: `artifacts/veg-0163/pairs/` (`pair_*` przed | po Low/High, `photo_*` zdjęcie G7 | po, `horizon_*`
+zdjęcie Mapillary | przed | po). Testy: pytest `tests/gis` (build 5) 1018 passed, 3 xfailed; `test_house_greenery_0163`
+(build 6) 26 passed; EditMode 492 / 493 passed, 1 skipped (`artifacts/tests/editmode-20261113-122223.xml`).
 
 ## Otwarte / WORKING_VALUE
 
@@ -120,4 +143,9 @@ Rendery, budżet edytora, testy: patrz sekcja „Rendery i budżet” (uzupełni
 - Młode drzewa Al. Tysiąclecia (P10-301…313, średnio ~5 / 100 m, 74 drzewa Strabag) i mieszanka przydrożna Andersa
   (Łaska 2015: klon jesionolistny, klon zwyczajny, głóg) — poza zakresem (drzewa przydrożne biblioteki, nie ulice domów);
   otwarte dla zadania drzew przydrożnych.
+- Horyzont 303305 / 320215 / 454716: po wycince pas na zachód od E ≈ 220 (prawdziwy wg ortofoto) nadal zasłania bloki
+  Białostoczka; na zdjęciach drzewa są niższe niż bloki. Wysokości `zadrzewienie` (9–19 m) i pozy tych kadrów
+  (różnica wysokości kamery: zdjęcie z jezdni, render z wiaduktu) — WORKING_VALUE, otwarte.
+- Klomb EC1: `band_m: 0` do dopisania przy scalaniu p1-0161 (pkt 9).
+- Recenzja `visual-critic`: niewykonana (subagent nie uruchamia subagentów) — lider.
 - Telefon (A16 Low): nie mierzony.
