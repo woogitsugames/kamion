@@ -283,8 +283,13 @@ Shader "Kamion/Truck Exterior"
                 float H = max(y1 - y0, 0.5);
                 // (1) wake film with an undulating top (~0.7 m features) and broad blotches (~0.3 m)
                 float topVar = 0.7 + 0.6 * KNoise(float2(lp.x * 1.4 + seed, 1.7));
-                half film = 0.80 * exp(-max(hb, 0.0) / (0.95 * topVar)) + 0.10;
+                half film = 1.05 * exp(-max(hb, 0.0) / (0.85 * topVar)) + 0.10;
                 film *= 0.8 + 0.4 * KNoise(float2(lp.x * 3.1 + seed * 2.0, lp.y * 2.3));
+                // after3 render loop: the film read as a faint gradient. Spray settles in vertical runs (water carries it down
+                // before it dries): vertically stretched modulation, ~6 cm across x ~0.6 m tall, fading out by ~1 m.
+                // Mean-preserving (noise mean 0.5); faded out when a run is under ~3 px wide (no shimmer at distance / on Low).
+                half runs = saturate(1.0 - hb / 1.1) * saturate(1.5 - fwidth(lp.x) * 16.0 * 3.0);
+                film *= 1.0 + 0.5 * (KNoise(float2(lp.x * 16.0 + seed * 3.0, lp.y * 1.6)) - 0.5) * runs;
                 // (2) hinge posts and centre seal
                 float e = 1.0 - u;
                 half edge = 0.30 * exp(-e * e / 0.006) + 0.22 * exp(-u * u / 0.0025);
