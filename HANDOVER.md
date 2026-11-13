@@ -5,7 +5,7 @@
 |---|---|---|---|
 | 0170 | `horizon-0170` (de0ea6df8) | 4 faile pytest wyjaśnione, build 6 poprawka budżetu; Opus domyka → potem krytyk par `artifacts/horizon-0170/pairs4` | `.claude/worktrees/horizon-0170/artifacts/live/horizon-0170.md` + main `artifacts/live/horizon-0170.md` |
 | 0172 | `p1b-0172` (7e419ef4d) | r5 + ADR §4 walidacja; potem krytyk SBS | worktree `artifacts/live/p1b-0172.md` |
-| 0181 | `lamplens-0181` (e1c2c9567) | **GOTOWE** — krytyk w toku → `docs/reports/REVIEW-2026-11-13-s19-0181.md`; scalenie: konflikt `TruckExterior.shader` z 0182 = suma bloków, potem `TruckAssetBuilder.BuildBatch` + `TrailerAssetBuilder.BuildBatch` | worktree `artifacts/live/lamplens-0181.md` |
+| 0181 | `lamplens-0181` (e1c2c9567) | **GOTOWE** — krytyk s19 zawieszony (watchdog) bez raportu → uruchomić visual-critic ponownie (`artifacts/lamplens-0181/sheet-*.jpg`, before/after) → `docs/reports/REVIEW-2026-11-13-s19-0181.md`; scalenie: konflikt `TruckExterior.shader` z 0182 = suma bloków, potem `TruckAssetBuilder.BuildBatch` + `TrailerAssetBuilder.BuildBatch` | worktree `artifacts/live/lamplens-0181.md` |
 | 0183 | `bollards-0183` (009272e77) | prototyp słupków z łańcuchem (LOD1 pas, kolor) | worktree `artifacts/live/bollards-0183.md` |
 | 0184 | `atlas-0184` (f9ab64081, OD tower-0180) | LOD1 `FAR_PLAIN_V` na płycie balkonowej + białe łaty NW wieżowca; rendery AFTER/testy w toku | worktree `artifacts/live/atlas-0184.md` |
 | — | `gates-s19` (9b4e65824) | GATE-3.md gotowy; GATE-1/2 w edytorze + komenda pomiaru telefonu (lider uruchomi po integracji) | worktree `artifacts/live/gates-s19.md` |
