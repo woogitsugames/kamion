@@ -107,3 +107,5 @@ Guard cache wykrył dodatkowe nieaktywne _RECEIVESHADOWS_ON/_ZWRITE_ON dodane do
 Import after zakończony.
 
 Zapisano after/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano after/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
