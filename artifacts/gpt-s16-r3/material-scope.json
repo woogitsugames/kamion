@@ -1,0 +1,17 @@
+{
+  "policy_sha256": "eb7beb5dbbfb0d9015bc173e2af6864c8a792fd0db267dd940298a4393fc6bbc",
+  "chunk_material_node_uses": {
+    "road_asphalt": {
+      "road": 70,
+      "bridge": 16
+    },
+    "bridge_concrete": {
+      "bridge": 16,
+      "road": 8
+    },
+    "bridge_kerb": {
+      "bridge": 16
+    }
+  },
+  "note": "Material slots in raw chunk nodes, not renderer draws; native shadow flags must also be checked. No geometry parsed or modified."
+}
