@@ -125,21 +125,21 @@ Wybór **wyłącznie** spośród kadrów: (a) obejrzanych (§4), (b) `typ_kadru`
 
 | # | id | miejsce | dlaczego |
 |---|---|---|---|
-| 1 | P11-001 | Kuronia — SSSE, hala „Contri" z bramą wjazdową | wzorcowy kadr strefy: jezdnia, znaki (zakaz wjazdu, 20), latarnie, hala; rozpoznawalny wjazd |
+| 1 | P11-001 | Kuronia — SSSE, hala „Contri" z bramą wjazdową | wzorcowy kadr strefy: jezdnia, znak B-33 (20 km/h), latarnie, hala; rozpoznawalny wjazd |
 | 2 | P11-002 | Kuronia — hala „Masterpress" | kadr wzdłuż jezdni z poziomu ~2,5 m — najbliższy perspektywie kierowcy |
-| 3 | P11-005 | Kuronia — hala „Bravilor Bonamat" | poprzeczny kadr na jezdnię z tablicą kierunkową; poziom ~2,5 m |
+| 3 | P11-005 | Kuronia — hala „Bravilor Bonamat" | poprzeczny kadr na jezdnię ze znakiem C-2 (nakaz jazdy w prawo); poziom ~2,5 m |
 | 4 | P11-014 | Mickiewicza — sygnalizacja świetlna | jedyny kadr z sygnalizacją na osi N–S kafla; poziom ~2,5 m |
-| 5 | P11-026 | Mickiewicza — dwujezdniowa z pasem zieleni | charakterystyczny przekrój drogi głównej kafla |
-| 6 | P11-027 | Wiewiórcza — blokowisko z kostką brukową | kadr osiedlowy północy kafla, czytelna zabudowa |
-| 7 | P11-043 | wlot ul. Kormoranów | tablica ulicy + znak B-1: jednoznaczny punkt nawigacyjny |
-| 8 | P11-056 | Dywizjonu 303 — skrzyżowanie z sygnalizacją przy krawędzi lotniska | sygnalizacja + otwarta przestrzeń lotniska; poziom ~2,5 m |
+| 5 | P11-026 | Mickiewicza — jednojezdniowa z pasem zieleni | charakterystyczny przekrój drogi głównej kafla |
+| 6 | P11-027 | Wiewiórcza — zabudowa szeregowa z kostką brukową | kadr osiedlowy północy kafla, czytelna zabudowa |
+| 7 | P11-043 | wlot ul. Kormoranów | tablica ulicy + znak B-5 (zakaz wjazdu ciężarówek, z tabliczką o ruchu lokalnym): jednoznaczny punkt nawigacyjny |
+| 8 | P11-056 | Dywizjonu 303 — skrzyżowanie przy krawędzi lotniska (bez sygnalizacji) | A-7 + D-6 + otwarta przestrzeń lotniska; poziom ~2,5 m |
 | 9 | P11-063 | Mickiewicza — hala „Bravilor" przy jezdni | narożnik Kuronia × Mickiewicza: brama SSSE od północy |
-| 10 | P11-066 | Wiewiórcza — zakaz wjazdu ciężarówek + STOP | znaki istotne dla ruchu ciężarówki, czytelne w kadrze |
-| 11 | P11-067 | Wiewiórcza — skrzyżowanie z sygnalizacją i sklepem | sygnalizacja + rozpoznawalny szyld sklepu; kadr poprzeczny |
+| 10 | P11-066 | Wiewiórcza — B-5 (zakaz wjazdu ciężarówek) + B-20 STOP | znaki istotne dla ruchu ciężarówki, czytelne w kadrze |
+| 11 | P11-067 | Wiewiórcza — skrzyżowanie ze sklepem przy Żurawiej (bez sygnalizacji) | D-6 + D-18 + rozpoznawalny szyld sklepu; kadr poprzeczny |
 | 12 | P11-077 | Dywizjonu 303 × Mickiewicza — pasy do skrętu przy Sądzie | węzeł Sądu Rejonowego z przystankiem; poziom ~2,5 m |
 | 13 | P11-094 | Kuronia — hala Rosti przy jezdni | szara hala Rosti (prost. z v1: to nie brama browaru); charakterystyczna bryła |
-| 14 | P11-128 | Borsucza — jezdnia z wysepką | wysepka + przejście dla pieszych + blok: czytelny kadr osiedlowy |
-| 15 | P11-129 | Żurawia — wjazd na teren szpitala | brama z tablicami, znaki (STOP, zakaz wjazdu, 20); jesień |
+| 14 | P11-128 | Borsucza — gmach urzędu przy jezdni | przejście dla pieszych + A-16 + D-18 + gmach Starostwa z flagami: czytelny kadr osiedlowy |
+| 15 | P11-129 | Żurawia — wjazd na teren szpitala | brama z tablicami i szlabanem (biało-czerwone ramię), znaki (B-20 STOP, B-33 — 20 km/h, nakaz jazdy w prawo C-1/C-2); jesień |
 
 Wszystkie 15: `w_kaflu_0166`=true, `typ_kadru`=widok, obejrzone 2026-11-13.
 
@@ -151,21 +151,21 @@ Losowanie bez zwracania `random.Random(20261113).sample(id_wierszy, ceil(0.2·15
 |---|---|---|
 | P11-003 | SOURCED | Widać halę z szyldem „Contri" z bramą wjazdową i budką ochrony za ogrodzeniem; w kadrze fragment jezdni i chodnika. |
 | P11-004 | SOURCED | Widać jezdnię dwukierunkową z wydzielonym chodnikiem, ogrodzenie z siatki i budynki przemysłowe w tle. |
-| P11-005 | SOURCED | Widać jezdnię i halę z szyldem „Bravilor Bonamat"; tablicę kierunkową (strzałka w prawo) i roślinność. |
+| P11-005 | SOURCED | Widać jezdnię i halę z szyldem „Bravilor Bonamat"; znak C-2 (nakaz jazdy w prawo za znakiem) i roślinność. |
 | P11-008 | REJECTED | Widać wyłącznie roślinność (drzewa, krzewy, trawa z kwiatami) — jezdni brak w kadrze (REJECTED). |
-| P11-013 | SOURCED | Widać jezdnię dwupasmową ze znakami (przejście dla pieszych, ustąp pierwszeństwa), latarnie i zieleń. |
+| P11-013 | SOURCED | Widać jezdnię dwupasmową ze znakami (A-16 i D-6 przejście dla pieszych, niebieski znak okrągły — znak nieczytelny), latarnie i zieleń. |
 | P11-014 | SOURCED | Widać jezdnię z pasami ruchu, sygnalizację świetlną, latarnie, pojazdy i drzewa. |
 | P11-017 | SOURCED | Widać jezdnię dwukierunkową z wysepką oraz budynek z szyldem „CYPRYS". |
 | P11-018 | SOURCED | Widać nowy gmach Archiwum Państwowego z szyldem i flagą, za ogrodzeniem i trawnikiem. |
 | P11-025 | SOURCED | Widać jezdnię dwupasmową z wydzielonym chodnikiem, latarnie, drzewa i krzewy. |
 | P11-029 | SOURCED | Widać jezdnię dwukierunkową, ogrodzenie z bramą i tablicę z cenami paliwa. |
 | P11-034 | SOURCED | Widać jezdnię, budynki przemysłowe i plac z paletami oraz maszty z flagami. |
-| P11-037 | SOURCED | Widać ogrodzenie placu budowy z szyldami (m.in. „Starostwo Powiatowe", „budimex") i znak zakazu wjazdu. |
+| P11-037 | SOURCED | Widać ogrodzenie placu budowy z szyldami (m.in. „Starostwo Powiatowe", „budimex") i znak D-1 (droga z pierwszeństwem). |
 | P11-046 | SOURCED | Widać bramę wjazdową z siatki, plac budowy z koparką i budynek wielokondygnacyjny w tle. |
-| P11-067 | SOURCED | Widać skrzyżowanie z sygnalizacją świetlną, budynki mieszkalne i szyld sklepu „Biedronka". |
+| P11-067 | SOURCED | Widać skrzyżowanie bez sygnalizacji świetlnej (wg M47-FIX-2), budynki mieszkalne, szyld sklepu „Biedronka" i znaki D-6/D-18. |
 | P11-077 | SOURCED | Widać jezdnię dwupasmową z pasami do skrętu, przystanek autobusowy i budynek biurowy (Sąd Rejonowy). |
-| P11-078 | SOURCED | Widać wlot na rondo z nakazem jazdy dookoła ronda; jezdnie, chodnik, znaki i latarnie. |
-| P11-079 | SOURCED | Widać jezdnię dwukierunkową z pasem rowerowym, znaki (m.in. 70 km/h) i ogrodzenie z banerami. |
+| P11-078 | SOURCED | Widać wlot na rondo; jezdnie, chodnik, znaki (m.in. B-33 — 20 km/h, A-16) i latarnie. |
+| P11-079 | SOURCED | Widać jezdnię dwukierunkową z pasem rowerowym, znaki (m.in. B-2, B-33 — 70 km/h, nakaz jazdy w lewo C-3/C-4) i ogrodzenie z banerami. |
 | P11-086 | SOURCED | Widać jezdnię dwupasmową z pasem rozdziału zieleni, bariery ochronne, latarnie i pojazdy. |
 | P11-088 | SOURCED | Widać jezdnię przy rondzie oraz budynek z logo McDonald's i billboard. |
 | P11-094 | SOURCED | Widać jezdnię i szarą halę z szyldem „Rosti" — to hala Rosti, nie brama browaru. |
@@ -173,10 +173,10 @@ Losowanie bez zwracania `random.Random(20261113).sample(id_wierszy, ceil(0.2·15
 | P11-112 | SOURCED | Widać jezdnię, dom z ogrodzeniem, zaparkowane pojazdy i latarnię. |
 | P11-118 | SOURCED | Widać jezdnię oraz dom z czerwonym dachem za ogrodzeniem, latarnie i drzewa. |
 | P11-125 | REJECTED | Widać wnętrze gmachu — korytarz z posadzką w szachownicę, kolumny, drzwi i tablicę informacyjną (REJECTED). |
-| P11-128 | SOURCED | Widać jezdnię dwukierunkową z wysepką, blok wielorodzinny, chodnik, latarnie i znaki. |
+| P11-128 | SOURCED | Widać jezdnię dwukierunkową, budynek urzędu (Starostwo Powiatowe) z flagami, przejście dla pieszych, chodnik, latarnie i znaki (A-16, D-18). |
 | P11-130 | REJECTED | Wiersz dokumentacyjny: wg manifestu kadr z serii szpitala tymczasowego przy Żurawiej — oryginał PNG; pliku nie ma w ZIP v2. |
 | P11-132 | REJECTED | Widać wnętrze szpitala tymczasowego — korytarz z drzwiami, balustradą, gaśnicą i znakami ewakuacyjnymi (REJECTED). |
-| P11-143 | SOURCED | Widać budynek WSWFiT z czerwoną elewacją i szyldem, za taśmą ostrzegawczą; latarnia i drzewa. |
+| P11-143 | SOURCED | Widać budynek WSWFiT z czerwoną elewacją i szyldem, za szlabanem (biało-czerwone ramię); latarnia i drzewa. |
 | P11-144 | SOURCED | Widać pałac Lubomirskich od strony parku — dwukondygnacyjny gmach z parkingiem przed budynkiem. |
 | P11-151 | REJECTED | Wiersz referencyjny: wg sources.md zdjęcie „Lotnisko na Krywlanach" — brak geolokalizacji, tylko referencja. |
 | P11-152 | REJECTED | Wiersz referencyjny: wg sources.md zdjęcie „Dojlidy Białystok" z Openverse — brak geolokalizacji, tylko referencja. |

@@ -59,7 +59,7 @@
    "status": "SOURCED",
    "typ_kadru": "widok",
    "w_kaflu_0166": "true",
-   "co_widac": "Widać jezdnię i halę z szyldem „Bravilor Bonamat”; tablicę kierunkową (strzałka w prawo) i roślinność.",
+   "co_widac": "Widać jezdnę i halę z szyldem „Bravilor Bonamat”; znak C-2 (nakaz jazdy w prawo za znakiem) i roślinność.",
    "zgodne_z_manifestem": true,
    "url_status": "200",
    "dystans_m": 5.6,
@@ -89,7 +89,7 @@
    "status": "SOURCED",
    "typ_kadru": "widok",
    "w_kaflu_0166": "false",
-   "co_widac": "Widać jezdnię dwupasmową ze znakami (przejście dla pieszych, ustąp pierwszeństwa), latarnie i zieleń.",
+   "co_widac": "Widać jezdnię dwupasmową ze znakami (A-16 przejście dla pieszych, D-6 przejście dla pieszych, niebieski znak okrągły — znak nieczytelny), latarnie i zieleń.",
    "zgodne_z_manifestem": true,
    "url_status": "200",
    "dystans_m": 1.5,
@@ -208,7 +208,7 @@
    "status": "SOURCED",
    "typ_kadru": "detal",
    "w_kaflu_0166": "true",
-   "co_widac": "Widać ogrodzenie placu budowy z szyldami (m.in. „Starostwo Powiatowe”, „budimex”) i znak zakazu wjazdu.",
+   "co_widac": "Widać ogrodzenie placu budowy z szyldami (m.in. „Starostwo Powiatowe”, „budimex”) i znak D-1 (droga z pierwszeństwem).",
    "zgodne_z_manifestem": true,
    "url_status": "200",
    "dystans_m": 21.6,
@@ -242,7 +242,7 @@
    "status": "SOURCED",
    "typ_kadru": "widok",
    "w_kaflu_0166": "true",
-   "co_widac": "Widać skrzyżowanie z sygnalizacją świetlną, budynki mieszkalne i szyld sklepu „Biedronka”.",
+   "co_widac": "Widać skrzyżowanie bez sygnalizacji świetlnej (wg M47-FIX-2), budynki mieszkalne, szyld sklepu „Biedronka” i znaki D-6/D-18.",
    "zgodne_z_manifestem": true,
    "url_status": "200",
    "dystans_m": 0.7,
@@ -276,7 +276,7 @@
    "status": "SOURCED",
    "typ_kadru": "widok",
    "w_kaflu_0166": "false",
-   "co_widac": "Widać wlot na rondo z nakazem jazdy dookoła ronda; jezdnie, chodnik, znaki i latarnie.",
+   "co_widac": "Widać wlot na rondo; jezdnie, chodnik, znaki (m.in. B-33 — 20 km/h, A-16) i latarnie.",
    "zgodne_z_manifestem": true,
    "url_status": "200",
    "dystans_m": 9.4,
@@ -293,7 +293,7 @@
    "status": "SOURCED",
    "typ_kadru": "widok",
    "w_kaflu_0166": "false",
-   "co_widac": "Widać jezdnię dwukierunkową z pasem rowerowym, znaki (m.in. 70 km/h) i ogrodzenie z banerami.",
+   "co_widac": "Widać jezdnię dwukierunkową z pasem rowerowym, znaki (m.in. B-2, B-33 — 70 km/h, nakaz jazdy w lewo — C-3/C-4) i ogrodzenie z banerami.",
    "zgodne_z_manifestem": true,
    "url_status": "200",
    "dystans_m": 22.0,
@@ -408,7 +408,7 @@
   },
   {
    "id": "P11-125",
-   "ulica": "Adama Mickiewicza",
+   "ulica": "UNVERIFIED",
    "status": "REJECTED",
    "typ_kadru": "-",
    "w_kaflu_0166": "true",
@@ -425,7 +425,7 @@
    "status": "SOURCED",
    "typ_kadru": "widok",
    "w_kaflu_0166": "true",
-   "co_widac": "Widać jezdnię dwukierunkową z wysepką, blok wielorodzinny, chodnik, latarnie i znaki.",
+   "co_widac": "Widać jezdnię dwukierunkową, budynek urzędu (Starostwo Powiatowe) z flagami, przejście dla pieszych, chodnik, latarnie i znaki (A-16, D-18).",
    "zgodne_z_manifestem": true,
    "url_status": "200",
    "dystans_m": 4.1,
@@ -451,7 +451,7 @@
   },
   {
    "id": "P11-132",
-   "ulica": "Żurawia",
+   "ulica": "UNVERIFIED",
    "status": "REJECTED",
    "typ_kadru": "-",
    "w_kaflu_0166": "true",
@@ -464,11 +464,11 @@
   },
   {
    "id": "P11-143",
-   "ulica": "Księdza Stanisława Suchowolca",
+   "ulica": "UNVERIFIED",
    "status": "SOURCED",
    "typ_kadru": "detal",
    "w_kaflu_0166": "false",
-   "co_widac": "Widać budynek WSWFiT z czerwoną elewacją i szyldem, za taśmą ostrzegawczą; latarnia i drzewa.",
+   "co_widac": "Widać budynek WSWFiT z czerwoną elewacją i szyldem, za szlabanem (biało-czerwone ramię); latarnia i drzewa.",
    "zgodne_z_manifestem": true,
    "url_status": "200",
    "dystans_m": 145.1,
@@ -481,7 +481,7 @@
   },
   {
    "id": "P11-144",
-   "ulica": "Księdza Stanisława Suchowolca",
+   "ulica": "UNVERIFIED",
    "status": "SOURCED",
    "typ_kadru": "detal",
    "w_kaflu_0166": "false",
@@ -528,5 +528,194 @@
   "zgodne_z_manifestem": 31,
   "pliki_sourced_sprawdzone": 25,
   "wynik": "31/31 OK"
+ },
+ "m47_fix_2": {
+  "data": "2026-11-13",
+  "zakres": "pełny audyt wzmianek o znakach drogowych w całym manifeście (wg recenzji s17/s18 i oględzin wszystkich 45 kadrów ze wzmianką znaku; kody wg Dz.U. 2019 poz. 2310 t.j.)",
+  "poprawione_opisy_znakow": 43,
+  "usuniete_zmyslone_znaki": [
+   "P11-001 zakaz wjazdu",
+   "P11-002 zakaz wjazdu",
+   "P11-013 ustąp (A-7)",
+   "P11-030 zakaz wjazdu",
+   "P11-037 zakaz wjazdu",
+   "P11-039 ustąp",
+   "P11-043 B-1 (zamieniony na B-5 z tabliczką)",
+   "P11-054 zakaz wjazdu rowerów",
+   "P11-056 sygnalizacja",
+   "P11-057 zakaz skrętu w lewo + zakręt",
+   "P11-067 sygnalizacja",
+   "P11-068 sygnalizacja",
+   "P11-069 zakaz wjazdu",
+   "P11-076 znaki",
+   "P11-078 zakaz zawracania + nakaz dookoła ronda",
+   "P11-081 zakaz wjazdu z wyjątkiem rowerów + nakaz skrętu w lewo",
+   "P11-096 znaki",
+   "P11-104 znaki",
+   "P11-105 znaki",
+   "P11-110 znak drogowy",
+   "P11-120 zakaz wjazdu + STOP",
+   "P11-128 wysepka + zakaz postoju",
+   "P11-129 zakaz wjazdu",
+   "P11-143 taśma ostrzegawcza (to szlaban)"
+  ],
+  "dodane_kody_znakow": [
+   "P11-001 B-33",
+   "P11-002 D-1 + tablica 12t",
+   "P11-005 C-2",
+   "P11-013 A-16, D-6",
+   "P11-014 B-36",
+   "P11-022 A-7, B-2",
+   "P11-030 znak nieczytelny",
+   "P11-037 D-1",
+   "P11-039 B-33, D-40, A-16, B-36",
+   "P11-041 D-18",
+   "P11-043 B-5",
+   "P11-054 C-13, C-1/C-2",
+   "P11-056 A-7, D-6",
+   "P11-057 A-30",
+   "P11-063 C-1/C-2",
+   "P11-066 B-5, B-20",
+   "P11-067 D-6, D-18",
+   "P11-068 A-7, D-6, D-40",
+   "P11-070 tablica kierunkowa",
+   "P11-071 D-18",
+   "P11-073 D-6, B-9, A-7",
+   "P11-078 B-33, A-16",
+   "P11-079 B-2, B-33, C-3/C-4",
+   "P11-081 C-12",
+   "P11-086 B-2, A-16, 678",
+   "P11-087 B-20",
+   "P11-089 znaki nieczytelne",
+   "P11-105 tablica strzałkowa",
+   "P11-106 D-6",
+   "P11-108 D-6, B-2",
+   "P11-120 B-36",
+   "P11-122 znaki nieczytelne",
+   "P11-126 D-18",
+   "P11-128 A-16, D-18",
+   "P11-129 B-20, B-33, C-1/C-2, szlaban",
+   "P11-131 B-2, B-35",
+   "P11-143 szlaban"
+  ],
+  "errata_pozostale": [
+   "P11-026 droga jednojezdniowa (nie dwujezdniowa)",
+   "P11-027 zabudowa szeregowa (nie bloki)",
+   "P11-042 typ_kadru: detal",
+   "P11-115 dom jednorodzinny (nie blok)"
+  ],
+  "ulica_d_gt_25m": {
+   "P11-082": {
+    "bylo": "Rondo Artura Hasbacha",
+    "jest": "Myśliwska",
+    "d_m": 26.3
+   },
+   "P11-085": {
+    "bylo": "Rondo Artura Hasbacha",
+    "jest": "Myśliwska",
+    "d_m": 25.3
+   },
+   "P11-090": {
+    "bylo": "Jacka Kuronia",
+    "jest": "UNVERIFIED",
+    "d_m": 45.8
+   },
+   "P11-091": {
+    "bylo": "Jacka Kuronia",
+    "jest": "UNVERIFIED",
+    "d_m": 39.6
+   },
+   "P11-120": {
+    "bylo": "Jacka Kuronia",
+    "jest": "UNVERIFIED",
+    "d_m": 374.5
+   },
+   "P11-121": {
+    "bylo": "Jacka Kuronia",
+    "jest": "UNVERIFIED",
+    "d_m": 297.1
+   },
+   "P11-122": {
+    "bylo": "Jacka Kuronia",
+    "jest": "UNVERIFIED",
+    "d_m": 48.9
+   },
+   "P11-123": {
+    "bylo": "Jacka Kuronia",
+    "jest": "UNVERIFIED",
+    "d_m": 69.6
+   },
+   "P11-124": {
+    "bylo": "Adama Mickiewicza",
+    "jest": "UNVERIFIED",
+    "d_m": 44.3
+   },
+   "P11-125": {
+    "bylo": "Adama Mickiewicza",
+    "jest": "UNVERIFIED",
+    "d_m": 80.1
+   },
+   "P11-126": {
+    "bylo": "Adama Mickiewicza",
+    "jest": "UNVERIFIED",
+    "d_m": 79.1
+   },
+   "P11-131": {
+    "bylo": "Żurawia",
+    "jest": "UNVERIFIED",
+    "d_m": 217.3
+   },
+   "P11-132": {
+    "bylo": "Żurawia",
+    "jest": "UNVERIFIED",
+    "d_m": 79.4
+   },
+   "P11-133": {
+    "bylo": "Dywizjonu 303",
+    "jest": "UNVERIFIED",
+    "d_m": 168.1
+   },
+   "P11-134": {
+    "bylo": "Dywizjonu 303",
+    "jest": "UNVERIFIED",
+    "d_m": 220.5
+   },
+   "P11-135": {
+    "bylo": "Dywizjonu 303",
+    "jest": "UNVERIFIED",
+    "d_m": 508.7
+   },
+   "P11-136": {
+    "bylo": "Rondo Artura Hasbacha",
+    "jest": "UNVERIFIED",
+    "d_m": 40.7
+   },
+   "P11-139": {
+    "bylo": "Księdza Stanisława Suchowolca",
+    "jest": "UNVERIFIED",
+    "d_m": 45.0
+   },
+   "P11-140": {
+    "bylo": "Księdza Stanisława Suchowolca",
+    "jest": "UNVERIFIED",
+    "d_m": 26.9
+   },
+   "P11-142": {
+    "bylo": "Księdza Stanisława Suchowolca",
+    "jest": "UNVERIFIED",
+    "d_m": 177.8
+   },
+   "P11-143": {
+    "bylo": "Księdza Stanisława Suchowolca",
+    "jest": "UNVERIFIED",
+    "d_m": 145.1
+   },
+   "P11-144": {
+    "bylo": "Księdza Stanisława Suchowolca",
+    "jest": "UNVERIFIED",
+    "d_m": 234.6
+   }
+  },
+  "zasada": "ulica tylko gdy najbliższa nazwana droga OSM ≤ 25 m od punktu; inaczej UNVERIFIED"
  }
 }
