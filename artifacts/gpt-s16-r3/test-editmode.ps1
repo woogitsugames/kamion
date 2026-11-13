@@ -13,7 +13,7 @@ try {
 $xml = Get-ChildItem artifacts/tests -Filter 'editmode-*.xml' | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 if (-not $xml) { throw 'No EditMode result XML' }
 Copy-Item $xml.FullName artifacts/gpt-s16-r3/final-editmode.xml
-@("# EditMode — gpt-s16 r2", (Get-Date -Format o), "Exit: $result",
+@("# EditMode — gpt-s16 r3", (Get-Date -Format o), "Exit: $result",
   (Get-Content artifacts/gpt-s16-r3/final-editmode.log -Tail 3),
   'NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r3/final-editmode.xml -TotalCount 2') | Set-Content artifacts/gpt-s16-r3/EDITMODE-STATUS.md
 Add-Content artifacts/gpt-s16-r3/STATUS.md "`nEditMode zakończony: exit $result; szczegóły EDITMODE-STATUS.md i final-editmode.xml."

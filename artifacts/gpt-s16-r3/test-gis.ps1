@@ -8,7 +8,7 @@ try {
     $result = $LASTEXITCODE
 } finally { & pwsh $slot -Release -Pool heavy -Owner gpt-s16 }
 $timer.Stop()
-@("# GIS — gpt-s16 r2", (Get-Date -Format o), "Exit: $result; wall time: $($timer.Elapsed.TotalSeconds) s",
+@("# GIS — gpt-s16 r3", (Get-Date -Format o), "Exit: $result; wall time: $($timer.Elapsed.TotalSeconds) s",
   (Get-Content artifacts/gpt-s16-r3/final-gis.log -Tail 3),
   'NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r3/final-gis.log -Tail 30') | Set-Content artifacts/gpt-s16-r3/GIS-STATUS.md
 Add-Content artifacts/gpt-s16-r3/STATUS.md "`nPełny GIS zakończony: exit $result; szczegóły GIS-STATUS.md oraz final-gis.log."

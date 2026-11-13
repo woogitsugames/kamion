@@ -13,6 +13,7 @@ foreach($tier in @('Low','High')) {
   git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
   & pwsh $slot -Release -Owner gpt-s16
  }
- git add -f "$dest/stats.txt" "$dest.log"
+ Add-Content artifacts/gpt-s16-r3/STATUS.md "`nDocelowy import B: bliska kamera wyspy $tier clear zapisana, bez globalnych rq override. NASTĘPNY KROK: final_details.py i pełny EditMode."
+ git add -f artifacts/gpt-s16-r3/STATUS.md "$dest/stats.txt" "$dest.log"
  git commit -q -m "wip(s16): verify production policy in close island $tier view"
 }
