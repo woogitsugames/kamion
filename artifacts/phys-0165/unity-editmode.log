@@ -1,0 +1,38 @@
+acquired slot phys-0165 (1/4)
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\phys-0165\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\phys-0165\artifacts\logs\test-editmode-20261113-133853.log -buildTarget Android -runTests -testPlatform EditMode -testResults C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\phys-0165\artifacts\tests\editmode-20261113-133853.xml
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 54864)
+EditMode: 495 total, 469 passed, 8 failed, 13 skipped (Failed(Child)) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\phys-0165\artifacts\tests\editmode-20261113-133853.xml
+  FAILED Game.Tests.CarPaintMaterialTests.DepositionChannel_RequiresScopedYardOptInOrExistingCar("tractor_paint_blue",True,"car_grime_clean",4,True):   UV1 must survive baking only for the intended deposition materials
+  Expected: True
+  But was:  False
+
+  FAILED Game.Tests.CarPaintMaterialTests.DepositionChannel_RequiresScopedYardOptInOrExistingCar("car_paint_blue",False,"car_grime_clean",4,True):   UV1 must survive baking only for the intended deposition materials
+  Expected: True
+  But was:  False
+
+  FAILED Game.Tests.EditMode.MirrorPresentationTests.OwnTrailerSide_AppearsAtInnerGlassEdge(0,-1.0f):   build TRAKT before testing mirror presentation
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.EditMode.MirrorPresentationTests.OwnTrailerSide_AppearsAtInnerGlassEdge(1,1.0f):   build TRAKT before testing mirror presentation
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.EditMode.TruckDoorCrownTests.ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn(False):   Build canonical truck before fixture tests
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.EditMode.TruckDoorCrownTests.ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn(True):   Build canonical truck before fixture tests
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.EditMode.TruckDoorCrownTests.CanonicalPrefabTagsExactlyBothDoorsAllThreeLods:   Build canonical truck before fixture tests
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.LightPostPolicyTests.ImportedGlassSemanticIsRestrictedAndStillReceivesShadows:   canonical importer must flag only the actual hero pane material
+  Expected: 1
+  But was:  0
+
+released phys-0165
+EXIT 1
