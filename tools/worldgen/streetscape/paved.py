@@ -336,6 +336,10 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
             skip = shapely.distance(shapely.points(mid), roads_poly) < 0.6
         else:
             skip = np.zeros(n - 1, bool)
+        # ADR 0188: no edging / flange either where the area abuts its sibling strip (cycle track | footway of one
+        # segregated path: one flush edging between them is laid by cycleways.paint)
+        if item.get("skip_edge") is not None:
+            skip |= shapely.distance(shapely.points(0.5 * (P[1:] + P[:-1])), item["skip_edge"]) < 0.3
         T = []
         for r in range(len(rows) - 1):
             a0 = r * n

@@ -115,6 +115,11 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     cyc_rep = dict(getattr(w.net, "cycle_report", {}))
     paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep, truck_zone=truck_zone,
                        cycle={"cands": CY.candidates(cyc_items), "bdot_replaced": cyc_rep.get("bdot_replaced", [])})
+    _cyc = [p for p in paved if p["source"] == "osm_cycleway"]
+    for p in _cyc:          # the two strips of one way do not edge against each other (paved._edges)
+        sib = [q["poly"] for q in _cyc if q is not p and q["id"].rsplit(":", 1)[0] == p["id"].rsplit(":", 1)[0]]
+        if sib:
+            p["skip_edge"] = shapely.union_all(sib)
     rep["paved_m2_by_source"] = prep
     # house plots (ADR 0114): lawn / driveway / path are paved-area items of their own list (yard life, wear and
     # gate logic keep reading `paved` only)

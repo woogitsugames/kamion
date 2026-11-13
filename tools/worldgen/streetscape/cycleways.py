@@ -451,7 +451,7 @@ def _ribbon(buf, top, Q, w, src, layer, mat, lift, uv1y=None):
     return built
 
 
-def _resample(line: LineString, step=1.0, s0=0.0, s1=None):
+def _resample(line: LineString, step=2.0, s0=0.0, s1=None):
     s1 = line.length if s1 is None else s1
     if s1 - s0 < 0.2:
         return None
@@ -483,7 +483,7 @@ def paint(buf, items: list, carriage, report: dict):
             dash, gap = CENTRE_DASH
             s = gap / 2
             while s + dash <= mid.length:
-                rep["centre_line_m"] += _ribbon(buf, top, _resample(mid, 0.5, s, s + dash), LINE_W,
+                rep["centre_line_m"] += _ribbon(buf, top, _resample(mid, 1.0, s, s + dash), LINE_W,
                                                 f"DDR-centre@{it['id']}", "markings", "marking_white", S.MARKING_LIFT,
                                                 uv1y=0.2)
                 s += dash + gap

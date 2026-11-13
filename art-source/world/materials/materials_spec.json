@@ -386,6 +386,125 @@
       "hf_ratio_albedo": 0.1775,
       "ao_mean": 0.963
     },
+    "asphalt_tint": {
+      "tile_m": [
+        4.04,
+        4.04
+      ],
+      "slots": [
+        "cycle_asphalt_red",
+        "cycle_crossing_red"
+      ],
+      "note": "ADR 0188: the asphalt_worn scan (asphalt_04) as a neutral modulation map (mean 0.5 per channel); colour from the manifest. Same height / roughness / AO as asphalt_worn.",
+      "uv": "world_xy_planar",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "asphalt_04",
+        "source_dimensions_m": [
+          4.04,
+          4.04
+        ],
+        "assets": [
+          {
+            "id": "asphalt_04",
+            "page": "https://polyhaven.com/a/asphalt_04",
+            "authors": {
+              "Jenelle van Heerden": "Processing",
+              "Sergej Majboroda": "Photography"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.95,
+          "dir": "asphalt_tint/High",
+          "png_bytes": 6163625,
+          "files": [
+            "T_asphalt_tint_BaseColor.png",
+            "T_asphalt_tint_MaskMap.png",
+            "T_asphalt_tint_Normal.png",
+            "T_asphalt_tint_Var.png"
+          ],
+          "smoothness_mean": 0.099,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 7.89,
+          "dir": "asphalt_tint/Medium",
+          "png_bytes": 1614932,
+          "files": [
+            "T_asphalt_tint_BaseColor.png",
+            "T_asphalt_tint_MaskMap.png",
+            "T_asphalt_tint_Normal.png",
+            "T_asphalt_tint_Var.png"
+          ],
+          "smoothness_mean": 0.098,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 15.78,
+          "dir": "asphalt_tint/Low",
+          "png_bytes": 381624,
+          "files": [
+            "T_asphalt_tint_BaseColor.png",
+            "T_asphalt_tint_MaskMap.png",
+            "T_asphalt_tint_Normal.png",
+            "T_asphalt_tint_Var.png"
+          ],
+          "smoothness_mean": 0.097,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00811,
+        0.00505
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4994,
+        "p05": 0.3908,
+        "p95": 0.6415,
+        "mean_rgb_linear": [
+          0.4994,
+          0.4994,
+          0.4994
+        ]
+      },
+      "hf_ratio_albedo": 0.2167,
+      "ao_mean": 0.978
+    },
     "asphalt_worn": {
       "tile_m": [
         4.04,
