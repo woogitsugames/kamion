@@ -1,0 +1,157 @@
+{
+  "opis": "Samokontrola 20% paczki P1B: ponowna weryfikacja losowo wybranych 10 z 47 wierszy manifest.csv (21,3%)",
+  "data": "2026-11-13",
+  "seed": 20261113,
+  "metoda_losowania": "jawny seed 20261113; LCG x=(x*1103515245+12345) mod 2^31; tasowanie Fisher-Yates na indeksach 0..46; pierwsze 10 wierszy",
+  "procedura": [
+    "1. Odtworzenie losowania z jawnym seedem (reprodukowalne).",
+    "2. Dla każdego wylosowanego wiersza: ponowne pobranie metadanych ze źródła (KartaView 2.0 API photo?id=... / Wikimedia Commons extmetadata) w sesji 2026-11-13 i porównanie: lat/lon (6 dp), kierunek_deg, data_zdjęcia, autor, licencja, URL.",
+    "3. Weryfikacja obrazu modelem wizyjnym (dzień/sezon/flare/rozmycie/pojazdy/jakość) tam, gdzie plik pobrano w sesji badania."
+  ],
+  "wylosowane_wiersze": [
+    "P1B-035",
+    "P1B-043",
+    "P1B-044",
+    "P1B-008",
+    "P1B-005",
+    "P1B-017",
+    "P1B-001",
+    "P1B-034",
+    "P1B-006",
+    "P1B-022"
+  ],
+  "wyniki": [
+    {
+      "id": "P1B-001",
+      "zrodlo": "KartaView API 2.0 (id 1326673549)",
+      "api": {
+        "lat": "53.149643",
+        "lng": "23.173748",
+        "heading": "298.64",
+        "shot_date": "2021-06-23 10:34:04",
+        "autor": "TMishaaa"
+      },
+      "zgodnosc_metadanych": "PASS",
+      "weryfikacja_obrazu": "wykonana (model wizyjny): dzień, liście, poziom kierowcy, bez flar, jakość 4"
+    },
+    {
+      "id": "P1B-005",
+      "zrodlo": "Wikimedia Commons extmetadata (20221203 100904 December 2022 in Białystok.jpg)",
+      "api": {
+        "datetime": "2022-12-03 10:09:04",
+        "artist": "Rakoon",
+        "licencja": "CC0",
+        "lat": "53.149047",
+        "lng": "23.150785"
+      },
+      "zgodnosc_metadanych": "PASS (kierunek_deg=UNVERIFIED zgodnie z deklaracją - brak GPSImgDirection w EXIF)",
+      "weryfikacja_obrazu": "wykonana: drobne rozmycie, bez liści (grudzień), jakość 3"
+    },
+    {
+      "id": "P1B-006",
+      "zrodlo": "KartaView API 2.0 (id 219381785)",
+      "api": {
+        "lat": "53.164643",
+        "lng": "23.149925",
+        "heading": "143",
+        "shot_date": "2018-03-23 14:57:57",
+        "autor": "telenavdrives"
+      },
+      "zgodnosc_metadanych": "PASS",
+      "weryfikacja_obrazu": "wykonana: bez liści, drobne zanieczyszczenie obiektywu, jakość 3"
+    },
+    {
+      "id": "P1B-008",
+      "zrodlo": "KartaView API 2.0 (id 219381789)",
+      "api": {
+        "lat": "53.164346",
+        "lng": "23.150291",
+        "heading": "143",
+        "shot_date": "2018-03-23 14:57:59",
+        "autor": "telenavdrives"
+      },
+      "zgodnosc_metadanych": "PASS",
+      "weryfikacja_obrazu": "wykonana: bez liści, torowiska pod wiaduktem, jakość 4"
+    },
+    {
+      "id": "P1B-017",
+      "zrodlo": "KartaView API 2.0 (id 219382225)",
+      "api": {
+        "lat": "53.145598",
+        "lng": "23.157250",
+        "heading": "176",
+        "shot_date": "2018-03-23 15:01:37",
+        "autor": "telenavdrives"
+      },
+      "zgodnosc_metadanych": "PASS",
+      "weryfikacja_obrazu": "wykonana: bez liści, dzień, poziom kierowcy, jakość 4"
+    },
+    {
+      "id": "P1B-022",
+      "zrodlo": "KartaView API 2.0 (id 219382085)",
+      "api": {
+        "lat": "53.150738",
+        "lng": "23.154753",
+        "heading": "159",
+        "shot_date": "2018-03-23 15:00:27",
+        "autor": "telenavdrives"
+      },
+      "zgodnosc_metadanych": "PASS",
+      "weryfikacja_obrazu": "do potwierdzenia (limit wywołań modelu wizyjnego w sesji); kadr z jednorodnej sekwencji telenavdrives 2018-03-23 - sąsiednie kadry 017/018 zweryfikowane wizualnie (bez liści, dzień, kierowca)"
+    },
+    {
+      "id": "P1B-034",
+      "zrodlo": "Wikimedia Commons extmetadata (20201102 152339 Rondo Pamięci Bieżeństwa 1915 roku Białystok.jpg)",
+      "api": {
+        "datetime": "2020-11-02 15:23:39",
+        "artist": "Rakoon",
+        "licencja": "CC0",
+        "lat": "53.151944",
+        "lng": "23.168056"
+      },
+      "zgodnosc_metadanych": "PASS",
+      "weryfikacja_obrazu": "do potwierdzenia (limit wywołań modelu wizyjnego w sesji); status REFERENCJA"
+    },
+    {
+      "id": "P1B-035",
+      "zrodlo": "Wikimedia Commons extmetadata (20191109 133838 Sitarska Street in Białystok 2019.jpg)",
+      "api": {
+        "datetime": "2019-11-09 13:38:38",
+        "artist": "Rakoon",
+        "licencja": "CC0",
+        "lat": "53.140278",
+        "lng": "23.149722"
+      },
+      "zgodnosc_metadanych": "PASS",
+      "weryfikacja_obrazu": "do potwierdzenia (limit wywołań modelu wizyjnego w sesji); status REFERENCJA"
+    },
+    {
+      "id": "P1B-043",
+      "zrodlo": "KartaView API 2.0 (id 10323287)",
+      "api": {
+        "lat": "53.160213",
+        "lng": "23.106547",
+        "heading": "357.6",
+        "shot_date": "2016-10-03 08:12:25",
+        "autor": "telenavdrives"
+      },
+      "zgodnosc_metadanych": "PASS",
+      "weryfikacja_obrazu": "nie dotyczy - wiersz ODRZUCONY (sezon liściowy), plik celowo niepobierany"
+    },
+    {
+      "id": "P1B-044",
+      "zrodlo": "KartaView API 2.0 (id 1326674353)",
+      "api": {
+        "lat": "53.160244",
+        "lng": "23.106782",
+        "heading": "273.25",
+        "shot_date": "2021-06-23 10:37:51",
+        "autor": "TMishaaa"
+      },
+      "zgodnosc_metadanych": "PASS",
+      "weryfikacja_obrazu": "nie dotyczy - wiersz ODRZUCONY (sezon liściowy), plik celowo niepobierany"
+    }
+  ],
+  "podsumowanie": "Zgodność metadanych: 10/10 PASS. Weryfikacja obrazu: 5/10 wykonana w sesji badania; 3/10 do potwierdzenia przy pierwszym dostępnym limicie wywołań modelu wizyjnego (022, 034, 035); 2/10 nie dotyczy (wiersze odrzucone, plik celowo niepobierany). Znaleziono 0 rozbieżności wymagających korekty manifestu.",
+  "uwagi": "Wszystkie pliki obrazów (37 JPG) pobrano do katalogu poza repo (files/ ignorowane przez .gitignore); lokalizacja archiwum mistral-p1-route-photos-2-files.zip podana w opisie PR."
+}
