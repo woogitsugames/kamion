@@ -57,6 +57,13 @@ b5: road consistency **65**, na trasie `lane_blind_end` **1** (bez regresji wobe
   w kadrze zbyt duży i bez przejścia, poza pewnością pozy C), 494288 (kapa ciemniejsza, nie „bieżnia”), 962702,
   1259231, 482392 (filary/głowice). Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagentów).
 
+## Recenzja visual-critic (s17)
+`docs/reports/visual/REVIEW-2026-11-13-s17-0161.md`: SCAL warunkowo, 31 R / 11 P / 0 N (przed 0161: 27 / 15 / 0).
+Warunek P1: brukowany azyl przy EC (cm92458760) czytał się jak płaski cokół — za duży, pionowe boki, bez obniżonego
+krawężnika i przejścia. Decyzja: wyspa `ec-refuge` (`fill: paving` w `ec-access-plantings`) WYŁĄCZONA — wraca
+generowana wyspa jak w main; klomb berberysu zostaje. Powrót z obrysem z ortofoto i obniżonym krawężnikiem dopiero
+przy pozie cm92458760 o pewności B. Świat b7 + para cm92458760: REVIEW_B7_FILL.
+
 ## Epoka zdjęć (przegląd paczek badawczych 02, §5 „0161”)
 Kadry 182011 (2019), 4312632 / 962702 / 1259231 / 482392 (2020) i cm92458760 (2020) są sprzed portalu C (2021) i
 przebudowy Al. Tysiąclecia (2021/22). Sprawdzone: każda zmiana świata w tym ADR ma położenie z ortofoto GUGiK
