@@ -360,25 +360,67 @@ def board(code, w, h):
     return m, m, None
 
 
-def signal_head(lit):
-    """S-1 three-aspect head (Ø300 mm lenses) with a black contrast back plate and white border."""
+# Signal head variants (ADR 0193). key -> (chambers, lens diameter m, contrast back plate, lit sequence top->bottom)
+# S-1 3-chamber (vehicles) Ø300 mm is the one placed by furniture.signals; the others are prototypes for authored
+# placements. Dimensions WORKING_VALUE (catalogue practice, Mapillary p42/p45/p47): chamber pitch = Ø + 60 mm, housing
+# 170 mm deep, back plate margin 90 mm beyond the housing. Pedestrian (S-5 type) / cyclist heads: UNVERIFIED pictograms
+# are not modelled (colour discs only).
+SIGNAL_VARIANTS = {
+    "signal_head": (3, 0.30, True, ("red", "yellow", "green")),
+    "signal_head2": (2, 0.30, True, ("red", "green")),
+    "signal_head1": (1, 0.30, True, ("red",)),
+    "signal_ped": (2, 0.20, True, ("red", "green")),
+    "signal_bike": (3, 0.20, False, ("red", "yellow", "green")),
+}
+
+
+def _signal_head(lit, n=3, d=0.30, plate=True, order=("red", "yellow", "green")):
+    """Signal head, origin = centre of the housing, front (lenses) towards +y, so the stack is symmetric in z.
+
+    Layout (y): housing -0.085..0.085; contrast back plate (tarcza kontrastowa) 0.085..0.097 in FRONT of the
+    housing, black, with a retroreflective yellow-white border proud of it by 4 mm on the front face only (from behind
+    the plate is plain black, as in the field; ADR 0193: the old border box was a larger grey slab, so every head seen
+    from behind or the side carried a big white rectangle). Lenses Ø d discs facing +y, a three-piece visor
+    (top + two cheeks) over each, LOD0 only."""
     m, l1 = Mesh(), Mesh()
+    pitch = d + 0.06
+    hw = d / 2 + 0.04
+    hh = n * pitch / 2 + 0.02
+    ph = hw + (0.09 if plate else 0.0)
+    pz = hh + (0.09 if plate else 0.0)
     for mm in (m, l1):
-        mm.box("signal_housing", [0, 0.0, 0], 0.18, 0.13, 0.52)
-        mm.box("signal_backplate", [0, -0.14, 0], 0.33, 0.01, 0.68)
-        mm.box("signal_border", [0, -0.152, 0], 0.36, 0.002, 0.71)
-    for k, col in enumerate(("red", "yellow", "green")):
-        z = 0.34 - k * 0.34
+        mm.box("signal_housing", [0, 0.0, 0], hw, 0.085, hh)
+        if plate:
+            mm.box("signal_backplate", [0, 0.091, 0], ph, 0.006, pz)
+            bw, y = 0.025, 0.1005                       # border strip width, floating 3 mm above the plate face
+            for (cx, cz, sx, sz) in ((0, pz - bw / 2, ph, bw / 2), (0, -pz + bw / 2, ph, bw / 2),
+                                     (-ph + bw / 2, 0, bw / 2, pz - bw), (ph - bw / 2, 0, bw / 2, pz - bw)):
+                mm.add("signal_border", [[cx - sx, y, cz - sz], [cx + sx, y, cz - sz], [cx + sx, y, cz + sz],
+                                         [cx - sx, y, cz + sz]], [(0, 2, 1), (0, 3, 2)], [[0, 0], [1, 0], [1, 1], [0, 1]])
+    y0 = 0.101 if plate else 0.088
+    seq = order[:n] if n == len(order) else tuple(order)
+    for k in range(n):
+        col = seq[k]
+        z = (n - 1) / 2 * pitch - k * pitch
         on = col == lit
         mat = f"signal_{col}_{'on' if on else 'off'}"
-        n = 16
-        pts = [(0.15 * math.cos(2 * math.pi * i / n), 0.15 * math.sin(2 * math.pi * i / n)) for i in range(n)]
-        V = [[0, 0.135, z]] + [[x, 0.135, z + zz] for x, zz in pts]
-        T = [(0, 1 + i, 1 + (i + 1) % n) for i in range(n)]
+        N = 16
+        ang = [-2 * math.pi * i / N for i in range(N)]       # clockwise in (x, z) = normal +y
+        V = [[0, y0, z]] + [[d / 2 * math.cos(t), y0, z + d / 2 * math.sin(t)] for t in ang]
+        T = [(0, 1 + i, 1 + (i + 1) % N) for i in range(N)]
         m.add(mat, V, T)
         l1.add(mat, V, T)
-        m.box("signal_housing", [0, 0.25, z + 0.13], 0.17, 0.12, 0.01)      # visor (simplified)
+        t_, L = 0.008, 0.17                                  # visor: top slab + cheeks, projecting L from the face
+        yc = y0 - 0.003 + L / 2
+        m.box("signal_housing", [0, yc, z + d / 2 + 0.03], d / 2 + 0.03, L / 2, t_ / 2)
+        for sx in (-1, 1):
+            m.box("signal_housing", [sx * (d / 2 + 0.03), yc, z + d * 0.12], t_ / 2, L / 2 * 0.85, d / 2 * 0.85 + 0.01)
     return m, l1, None
+
+
+def signal_head(lit, variant="signal_head"):
+    n, d, plate, order = SIGNAL_VARIANTS[variant]
+    return _signal_head(lit, n, d, plate, order)
 
 
 def signal_pole(h=S.SIGNAL_POLE_H, arm=0.0):
@@ -819,7 +861,8 @@ def build_all(sign_codes, boards):
     for c, (w, h) in sorted(boards.items()):
         P[f"board_{c}"] = board(c, w, h)
     for lit in ("red", "green", "off"):          # off: emergency signals at rest (ADR 0074)
-        P[f"signal_head_{lit}"] = signal_head(lit)
+        for var in SIGNAL_VARIANTS:                   # ADR 0193: 3-chamber S-1 (placed), 2- / 1-chamber, pedestrian, cyclist
+            P[f"{var}_{lit}"] = signal_head(lit, var)
     P["signal_pole"] = signal_pole()
     P["signal_mast"] = signal_pole(S.SIGNAL_MAST_H, 6.0)
     for name, n in SHELTER_MODULES.items():          # ADR 0162: BKM 5 / 7 / 9 m red, older 7 m graphite
