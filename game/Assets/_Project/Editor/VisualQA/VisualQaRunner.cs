@@ -179,7 +179,14 @@ namespace Game.Editor.VisualQA
                 foreach (var m in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None)) m.RenderNow();
                 // Art truck (A7): tier binding, lamp state and the cab fill for this camera (LateUpdate does not run here).
                 foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();
-                foreach (var tl in UnityEngine.Object.FindObjectsByType<TruckLights>(FindObjectsSortMode.None)) tl.Refresh();
+                // ADR 0178 lamp-hue check: KAMION_QA_LAMPS="brake,hazard" lights the stop lamps and both indicators (flasher on).
+                string qaLamps = System.Environment.GetEnvironmentVariable("KAMION_QA_LAMPS") ?? "";
+                foreach (var tl in UnityEngine.Object.FindObjectsByType<TruckLights>(FindObjectsSortMode.None))
+                {
+                    if (qaLamps.Contains("brake")) tl.forceBrake = true;
+                    if (qaLamps.Contains("hazard")) { tl.indicatorLever = 2; tl.flasherLit = true; }
+                    tl.Refresh();
+                }
                 // Live cab screens (cluster, navigation, DIN) drawn from the (parked) vehicle state for this light.
                 foreach (var vb in UnityEngine.Object.FindObjectsByType<VehicleBody>(FindObjectsSortMode.None))
                 {

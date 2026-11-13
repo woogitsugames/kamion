@@ -19,6 +19,8 @@ namespace Game.Vehicle.Runtime
         [Tooltip("Sun elevation (deg) below which the automatic low beam switches on")] public float autoLowBeamSunDeg = 6f;
         public bool forceLowBeam;
         public bool highBeam;
+        // ADR 0178 visual QA: stop lamps lit without a vehicle input (KAMION_QA_LAMPS=brake). Not serialized, never set in play.
+        [System.NonSerialized] public bool forceBrake;
         [Tooltip("Turn-signal lever: 0 off, -1 left, +1 right, 2 hazard (set by the gameplay layer from the stalk)")] public int indicatorLever;
         [Tooltip("Flasher relay contact closed (lamps lit); phase from the stalk's 1.5 Hz flasher")] public bool flasherLit;
 
@@ -79,7 +81,7 @@ namespace Game.Vehicle.Runtime
         {
             if (m_Tex == null) return;
             bool low = LowBeamOn;
-            float brake = body != null ? (float)body.Input.Brake : 0f;
+            float brake = forceBrake ? 1f : body != null ? (float)body.Input.Brake : 0f;
             bool reverse = body != null && body.Input.Selector == GearSelector.Reverse;
             bool indL = flasherLit && (indicatorLever == -1 || indicatorLever == 2);
             bool indR = flasherLit && (indicatorLever == 1 || indicatorLever == 2);
