@@ -43,7 +43,19 @@ b5: road consistency **65**, na trasie `lane_blind_end` **1** (bez regresji wobe
 `test_region_gate_cannot_be_driven_round` (szlaban depot) zielony — szlaban stoi w części 4,0 m.
 
 ## Weryfikacja
-PENDING_FILL
+- Świat b5 (= b6 po zmianie samego `reason`): road consistency 65, `lane_blind_end` na trasie 1 (jak main).
+- Import Low 122,3 MB / High 264,8 MB (`WORLD_MEMORY`), 64 chunki; ImpostorTrimBake 18 impostorów; EditMode 493/493.
+- pytest `tests/gis`: PYTEST_FILL. Po drodze `test_measured_sections_have_evidence` wymagał ścieżki `xsec/` w
+  `reason` — dowody (wycinki ortofoto `hr_cm109*.png`) skopiowane do `artifacts/p1-0161/xsec/`.
+- Budżet Low (48 kamer kontrolnych, `visual-qa -Tier Low -Lighting clear`) wobec `artifacts/world-int-s16/after`:
+  draws −252 … +6 (instancing z main), trójkąty −1,47 … +2,73 %, wyjątek `stretch-05-docks` +7,51 % (instancje
+  188→220, +20 k trójkątów instancjonowanych; kamera poza strefą zmian 0161, przyczyna UNVERIFIED — prawdop. różnica
+  main/trim impostorów; baseline ma trójkąty z dokładnością 1 k). `artifacts/p1-0161/final/budget-low.txt`.
+- SBS Low overcast + clear: 42 pary x 2 (`artifacts/p1-0161/pairs/`). Obejrzane 9 kadrów P1: 339463 (P-8 widoczne,
+  portal nie zasłania), 4312632 (D-1 + A-7 na miejscu; P-8 poza kadrem przy tej pozie), 182011 (sygnalizatory na
+  pierścieniu), cm109685822 (trawnik + chodnik + jezdnia za klinem), cm92458760 (berberys + azyl — azyl wychodzi
+  w kadrze zbyt duży i bez przejścia, poza pewnością pozy C), 494288 (kapa ciemniejsza, nie „bieżnia”), 962702,
+  1259231, 482392 (filary/głowice). Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagentów).
 
 ## Konsekwencje
 - Pozy pewność C: przy nowych zdjęciach właściciela (D-list, brama Kwadrat) do ponownej resekcji.
