@@ -66,7 +66,22 @@ Kamery trasy (`view/route-after.jpg`): blok Kuronia 3 i szara hala Rosti widoczn
 brak placu betonowego, brak śladów opon na jezdni Kuronii.
 
 ## Testy
-@@TESTS@@
+- EditMode (`scripts/test.ps1 -Platform EditMode`, 21:32): 518 total, **517 passed, 0 failed**, 1 skipped (Ignored).
+- `pytest tests/gis` (pełny, 21:52, 1250 s): **1071 passed, 4 failed, 2 xfailed**; `tests/gis/test_dojlidy_0179.py`
+  (7 testów) zielone. Porażki:
+  - `test_photo_cameras_0174::test_photo_cameras_generated[bialystok-dojlidy]` — test zakładał poziomą kamerę;
+    poprawiony na `pitch_deg` (po poprawce: zielony, uruchomiony osobno).
+  - `test_world_roads::test_export_is_deterministic`, `test_world_v31::test_forest_trees_reference_their_cell`,
+    `test_road_fidelity::test_report_not_stale` — **nie z 0179**: zacommitowany `generated/*` regionu C w main jest
+    starszy niż wejścia (chunk 0_0 w main `8424bb32…`, a build w każdej gałęzi na tej bazie daje `e3ecabed…`:
+    dojlidy-vis-0179, p1b-0172, horizon-0170, gates-s19, atlas-0184), `fidelity_qa.json` nieaktualny względem
+    `overrides.yaml` / `build_world.py` (wymaga `fidelity/run.py` po scaleniu — `build_world.py` zmienia też 0179).
+  - Przebieg s18 (20:37) miał dodatkowo `test_parts_hash_independent_of_pythonhashseed` — podproces 0xC0000142
+    po śmierci sesji; w przebiegu s19 zielony.
+- Region C bez różnic: build C z pytest (kod 0179) porównany per chunk (sha256, 64 chunki) z gałęziami
+  `p1b-0172` (różne 1_3, 1_4, 2_4, 6_6 — `paved`) i `gates-s19` / `tower-0180` (różne 4_5, 6_5, 6_6, 7_5 —
+  `buildings`); zbiory rozłączne poza 6_6, gdzie każda z nich zmienia inną warstwę → 0179 nie zmienia żadnego chunku.
+  Pliki `generated/*` regionu C przepisane przez pytest zostały cofnięte (`git checkout`), nie są w commicie.
 
 ## Otwarte (follow-up)
 - **Słupki biało-czerwone z łańcuchem (P11-063, P11-001)** — brak prototypu; nowy prototyp = zmiana wspólnej
