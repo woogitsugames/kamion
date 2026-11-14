@@ -1,0 +1,1175 @@
+{
+ "pakiet": "R7 sky-weather-bialystok",
+ "data": "2026-11-14",
+ "seed": 20261114,
+ "metoda_losowania": "random.Random(20261114).sample(sorted(ids), ceil(0.2*n))",
+ "n_wierszy_manifestu": 628,
+ "n_proba": 126,
+ "udzial_pct": 20.1,
+ "n_PASS": 124,
+ "n_FAIL": 2,
+ "kadry_w_probie_obejrzane_ponownie": 8,
+ "przebieg_1": {
+  "n_PASS": 118,
+  "n_FAIL": 8,
+  "opis": "pierwszy przebieg tej samej próby: 6 FAIL w kategorii imgw_zmierzch_2014_2023 (R7-373, 377, 389, 401, 405, 415) — błąd w tools_imgw.obs_at: status 8 (brak obserwacji zachmurzenia w terminach nocnych 19–05 UTC od IV 2022) był czytany jako N = 0, co zawyżało udział N ≤ 2 latem (np. VI 44,3 → 38,1 %); poprawiono narzędzie, przeliczono out/imgw_sunset_cloud.csv i manifest; 1 FAIL R7-343 — brak procedury w audit.py (dopisano, wartość potwierdzona); 1 FAIL R7-567 — nieścisły opis kadru (poprawiony). Po dopisaniu wiersza R7-625 manifest ma 628 wierszy, więc próba została wylosowana ponownie tym samym seedem (przebieg 2); 4 nowe kadry w próbie obejrzano ponownie."
+ },
+ "uwaga": "Wynik poniżej = przebieg 2 po korektach. FAIL = stan sprzed korekty; korekty naniesiono w frames.json/manifest.csv (kolumna korekta). Liczby przeliczono niezależną ścieżką (parser pozycyjny, statistics.quantiles, astral).",
+ "dodatkowe_kontrole_poza_proba": [
+  {
+   "plik": "img/c22_20210205_170415.jpg",
+   "co": "ponownie obejrzano wycinek nieba (po 2 FAIL dotyczących gradientu jasności przy horyzoncie)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "plik": "img/c23_20231205_160127.jpg",
+   "co": "ponownie obejrzano górne 55 % panoramy",
+   "wynik": "FAIL",
+   "korekta": "jaśniejszy, bardziej niebieski pas jest nad zabudową w środkowej i prawej części, nie „po lewej”; opis poprawiony"
+  },
+  {
+   "plik": "img/pnx_f2623f76.jpg, img/c10, img/c13, img/c26, img/c27, img/c28, img/pnx_3e13253b",
+   "co": "kadry z próby przebiegu 1 (obejrzane ponownie; w przebiegu 2 w próbie pozostały: pnx_3e13253b, c13, c27, c28)",
+   "wynik": "6 PASS / 1 FAIL (c13)",
+   "korekta": "jak w FRAME_REVIEW"
+  }
+ ],
+ "wniosek_z_kontroli_kadrow": "wszystkie 3 FAIL dotyczą tego samego typu zdania: subtelnego gradientu jasności nieba przy horyzoncie o zmierzchu/nocą. Zdania o BRAKU lub OBECNOŚCI ciepłego pasa potwierdziły się w 13/13 ponownie obejrzanych kadrach.",
+ "wiersze": [
+  {
+   "id": "R7-013",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "średnie zachmurzenie ogólne — VI (1991-2020)",
+   "wartość": "4.55",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 4.550",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-015",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "średnie zachmurzenie ogólne — VIII (1991-2020)",
+   "wartość": "4.06",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 4.057",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-026",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "suma usłonecznienia — VI (1991-2020)",
+   "wartość": "259.25",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 259.252",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-028",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "suma usłonecznienia — VIII (1991-2020)",
+   "wartość": "251.42",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 251.421",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-029",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "suma usłonecznienia — IX (1991-2020)",
+   "wartość": "160.35",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 160.348",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-055",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "liczba dni z mgłą — X (1991-2020)",
+   "wartość": "6.6",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 6.600",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-063",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "liczba dni z zamgleniem — V (1991-2020)",
+   "wartość": "13.63",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 13.633",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-066",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "liczba dni z zamgleniem — VIII (1991-2020)",
+   "wartość": "18.4",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 18.400",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-075",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "średnia wilgotność względna — IV (1991-2020)",
+   "wartość": "69.84",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 69.840",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-076",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "średnia wilgotność względna — V (1991-2020)",
+   "wartość": "71.23",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 71.233",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-113",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "liczba dni z pokrywą śnieżną — III (1991-2020)",
+   "wartość": "10.03",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 10.033",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-116",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "liczba dni z pokrywą śnieżną — VI (1991-2020)",
+   "wartość": "0.0",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 0.000",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-120",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "liczba dni z pokrywą śnieżną — X (1991-2020)",
+   "wartość": "0.6",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 0.600",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-127",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "liczba dni z burzą — IV (1991-2020)",
+   "wartość": "0.77",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 0.767",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-128",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "liczba dni z burzą — V (1991-2020)",
+   "wartość": "4.43",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 4.433",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-133",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "liczba dni z burzą — X (1991-2020)",
+   "wartość": "0.27",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 0.267",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-144",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "średnie zachmurzenie ogólne — VIII (2014-2023)",
+   "wartość": "4.12",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 4.125",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-145",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "średnie zachmurzenie ogólne — IX (2014-2023)",
+   "wartość": "4.46",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 4.463",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-151",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "suma usłonecznienia — II (2014-2023)",
+   "wartość": "69.76",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 69.763",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-152",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "suma usłonecznienia — III (2014-2023)",
+   "wartość": "140.2",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 140.200",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-153",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "suma usłonecznienia — IV (2014-2023)",
+   "wartość": "210.86",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 210.860",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-154",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "suma usłonecznienia — V (2014-2023)",
+   "wartość": "260.01",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 260.012",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-155",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "suma usłonecznienia — VI (2014-2023)",
+   "wartość": "285.88",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 285.875",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-158",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "suma usłonecznienia — IX (2014-2023)",
+   "wartość": "180.05",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 180.050",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-159",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "suma usłonecznienia — X (2014-2023)",
+   "wartość": "122.7",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 122.700",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-166",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "liczba dni z mgłą — IV (2014-2023)",
+   "wartość": "1.12",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 1.125",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-173",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "liczba dni z mgłą — XI (2014-2023)",
+   "wartość": "8.0",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 8.000",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-177",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "średnia temperatura powietrza — II (2014-2023)",
+   "wartość": "-0.26",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: -0.260",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-181",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "średnia temperatura powietrza — VI (2014-2023)",
+   "wartość": "17.63",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 17.630",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-182",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "średnia temperatura powietrza — VII (2014-2023)",
+   "wartość": "18.6",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 18.600",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-183",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "średnia temperatura powietrza — VIII (2014-2023)",
+   "wartość": "18.36",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 18.360",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-185",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "średnia temperatura powietrza — X (2014-2023)",
+   "wartość": "8.28",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 8.280",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-188",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "średnia temperatura powietrza — rok (2014-2023)",
+   "wartość": "8.51",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 8.508",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-189",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "liczba dni z pokrywą śnieżną — I (2014-2023)",
+   "wartość": "18.1",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 18.100",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-196",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "liczba dni z pokrywą śnieżną — VIII (2014-2023)",
+   "wartość": "0.0",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 0.000",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-198",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "liczba dni z pokrywą śnieżną — X (2014-2023)",
+   "wartość": "0.0",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 0.000",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-201",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "liczba dni z pokrywą śnieżną — rok (2014-2023)",
+   "wartość": "50.3",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 50.300",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-209",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "widzialność w dzień (06–15 UTC), mediana — VIII",
+   "wartość": "33156",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 33156.50",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-211",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "widzialność w dzień (06–15 UTC), mediana — X",
+   "wartość": "20398",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 20398.50",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-212",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "widzialność w dzień (06–15 UTC), mediana — XI",
+   "wartość": "8906",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 8906.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-217",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "widzialność w dzień, percentyl 10 — I",
+   "wartość": "2100",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 2100.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-225",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "widzialność w dzień, percentyl 10 — IX",
+   "wartość": "11043",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 11043.10",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-226",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "widzialność w dzień, percentyl 10 — X",
+   "wartość": "4400",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 4400.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-228",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "widzialność w dzień, percentyl 10 — XII",
+   "wartość": "1700",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 1700.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-232",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "widzialność w dzień, percentyl 25 — rok",
+   "wartość": "10309",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 10308.75",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-242",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z widzialnością < 1 km — VIII",
+   "wartość": "0.0",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 0.03",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-243",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z widzialnością < 1 km — IX",
+   "wartość": "0.3",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 0.33",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-245",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z widzialnością < 1 km — XI",
+   "wartość": "3.0",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 3.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-247",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z widzialnością < 1 km — rok",
+   "wartość": "1.4",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 1.44",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-249",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z widzialnością < 1 km — V-VIII",
+   "wartość": "0.0",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 0.03",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-261",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z widzialnością < 4 km — XII",
+   "wartość": "28.0",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 27.97",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-264",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z widzialnością < 4 km — V-VIII",
+   "wartość": "0.7",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 0.75",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-272",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "mediana widzialności w dzień przy N ≥ 7 — V",
+   "wartość": "32324",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 32324.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-278",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "mediana widzialności w dzień przy N ≥ 7 — XI",
+   "wartość": "7557",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 7557.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-279",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "mediana widzialności w dzień przy N ≥ 7 — XII",
+   "wartość": "7086",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 7086.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-287",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "mediana widzialności w dzień przy N ≤ 2 — V",
+   "wartość": "33036",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 33036.50",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-289",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "mediana widzialności w dzień przy N ≤ 2 — VII",
+   "wartość": "32784",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 32784.50",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-299",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z N = 8 (całkowite zachmurzenie) — II",
+   "wartość": "48.3",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 48.26",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-329",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z N ≤ 2 — II",
+   "wartość": "11.5",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 11.45",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-330",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z N ≤ 2 — III",
+   "wartość": "18.3",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 18.26",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-334",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z N ≤ 2 — VII",
+   "wartość": "13.4",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 13.35",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-341",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "udział terminów dziennych z N ≤ 2 — XI-II",
+   "wartość": "7.2",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 7.20",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-343",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "mediana wysokości podstawy chmur przy N = 8 w dzień — rok",
+   "wartość": "240",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 240.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-359",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "średnia liczba dni z ≥ 1 terminem o widzialności < 1 km (cała doba) — XI-II",
+   "wartość": "27.4",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 27.40",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-362",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "rodzaj chmur niskich (kod CL) przy N = 8 w dzień, 3 najczęstsze — XI-II",
+   "wartość": "CL=6:42%; CL=5:37%; CL=7:14%",
+   "co_sprawdzono": "wiersz opisowy (rozkład kodów CL) — sprawdzono zgodność z out/imgw_hourly_visibility_cloud.csv",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-366",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≤ 2 w terminie najbliższym zachodu słońca — II",
+   "wartość": "16.3",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 16.3 % (n = 282)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-371",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym zachodu słońca — IV",
+   "wartość": "36.0",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 36.3 % (n = 300)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-373",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym zachodu słońca — V",
+   "wartość": "32.3",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 32.2 % (n = 301)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-377",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym zachodu słońca — VII",
+   "wartość": "35.5",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 35.5 % (n = 256)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-380",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≤ 2 w terminie najbliższym zachodu słońca — IX",
+   "wartość": "29.3",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 29.0 % (n = 300)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-381",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym zachodu słońca — IX",
+   "wartość": "31.3",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 31.3 % (n = 300)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-385",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym zachodu słońca — XI",
+   "wartość": "79.0",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 79.0 % (n = 300)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-389",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym zachodu słońca — rok",
+   "wartość": "49.8",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 49.8 % (n = 3559)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-394",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≤ 2 w terminie najbliższym końca zmierzchu cywilnego — III",
+   "wartość": "25.8",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 25.8 % (n = 310)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-401",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym końca zmierzchu cywilnego — VI",
+   "wartość": "24.4",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 24.4 % (n = 270)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-405",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym końca zmierzchu cywilnego — VIII",
+   "wartość": "23.5",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 23.1 % (n = 277)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-407",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym końca zmierzchu cywilnego — IX",
+   "wartość": "30.3",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 30.3 % (n = 300)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-415",
+   "kategoria": "imgw_zmierzch_2014_2023",
+   "przedmiot": "udział dni z N ≥ 7 w terminie najbliższym końca zmierzchu cywilnego — rok",
+   "wartość": "49.9",
+   "co_sprawdzono": "przeliczono ponownie: astral + własny parser: 49.8 % (n = 3493)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-430",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-02-21 godz. 20:00 CET (azymut w kolumnie kierunek_deg)",
+   "wartość": "-28.7",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys -28.70°, az 292.88°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-431",
+   "kategoria": "słońce",
+   "przedmiot": "wschód słońca 2026-02-21 (CET) — azymut słońca w kolumnie kierunek_deg",
+   "wartość": "06:33",
+   "co_sprawdzono": "przeliczono ponownie: astral: 06:33",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-433",
+   "kategoria": "słońce",
+   "przedmiot": "koniec zmierzchu cywilnego (−6°) 2026-02-21 (CET) — azymut słońca w kolumnie kierunek_deg",
+   "wartość": "17:26",
+   "co_sprawdzono": "przeliczono ponownie: astral: 17:26",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-435",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca w południe słoneczne 2026-02-21 (CET)",
+   "wartość": "26.4",
+   "co_sprawdzono": "przeliczono ponownie: astral: 26.43° o 11:41:00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-441",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-03-21 godz. 20:00 CET (azymut w kolumnie kierunek_deg)",
+   "wartość": "-20.5",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys -20.46°, az 300.79°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-443",
+   "kategoria": "słońce",
+   "przedmiot": "zachód słońca 2026-03-21 (CET) — azymut słońca w kolumnie kierunek_deg",
+   "wartość": "17:42",
+   "co_sprawdzono": "przeliczono ponownie: astral: 17:42",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-444",
+   "kategoria": "słońce",
+   "przedmiot": "koniec zmierzchu cywilnego (−6°) 2026-03-21 (CET) — azymut słońca w kolumnie kierunek_deg",
+   "wartość": "18:17",
+   "co_sprawdzono": "przeliczono ponownie: astral: 18:17",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-449",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-04-21 godz. 08:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "23.5",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys 23.52°, az 101.85°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-450",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-04-21 godz. 12:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "48.5",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys 48.49°, az 170.35°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-451",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-04-21 godz. 16:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "31.1",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys 31.05°, az 246.55°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-452",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-04-21 godz. 20:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "-3.8",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys -3.84°, az 295.99°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-461",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-05-21 godz. 12:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "56.8",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys 56.79°, az 169.70°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-466",
+   "kategoria": "słońce",
+   "przedmiot": "koniec zmierzchu cywilnego (−6°) 2026-05-21 (CEST) — azymut słońca w kolumnie kierunek_deg",
+   "wartość": "21:15",
+   "co_sprawdzono": "przeliczono ponownie: astral: 21:16",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-467",
+   "kategoria": "słońce",
+   "przedmiot": "koniec zmierzchu żeglarskiego (−12°) 2026-05-21 (CEST)",
+   "wartość": "22:23",
+   "co_sprawdzono": "przeliczono ponownie: astral: 22:23",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-469",
+   "kategoria": "słońce",
+   "przedmiot": "długość dnia 2026-05-21 (CEST)",
+   "wartość": "16.15",
+   "co_sprawdzono": "przeliczono ponownie: astral: 16.14 h",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-472",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-06-21 godz. 12:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "59.8",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys 59.81°, az 166.62°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-489",
+   "kategoria": "słońce",
+   "przedmiot": "koniec zmierzchu żeglarskiego (−12°) 2026-07-21 (CEST)",
+   "wartość": "22:33",
+   "co_sprawdzono": "przeliczono ponownie: astral: 22:33",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-493",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-08-21 godz. 08:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "23.0",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys 23.04°, az 100.76°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-496",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-08-21 godz. 20:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "-3.3",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys -3.34°, az 295.01°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-499",
+   "kategoria": "słońce",
+   "przedmiot": "koniec zmierzchu cywilnego (−6°) 2026-08-21 (CEST) — azymut słońca w kolumnie kierunek_deg",
+   "wartość": "20:20",
+   "co_sprawdzono": "przeliczono ponownie: astral: 20:20",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-505",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-09-21 godz. 12:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "37.3",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys 37.34°, az 173.56°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-506",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-09-21 godz. 16:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "20.7",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys 20.70°, az 240.96°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-507",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-09-21 godz. 20:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "-14.2",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys -14.23°, az 290.66°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-510",
+   "kategoria": "słońce",
+   "przedmiot": "koniec zmierzchu cywilnego (−6°) 2026-09-21 (CEST) — azymut słońca w kolumnie kierunek_deg",
+   "wartość": "19:03",
+   "co_sprawdzono": "przeliczono ponownie: astral: 19:04",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-513",
+   "kategoria": "słońce",
+   "przedmiot": "długość dnia 2026-09-21 (CEST)",
+   "wartość": "12.29",
+   "co_sprawdzono": "przeliczono ponownie: astral: 12.28 h",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-518",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-10-21 godz. 20:00 CEST (azymut w kolumnie kierunek_deg)",
+   "wartość": "-24.8",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys -24.76°, az 285.56°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-525",
+   "kategoria": "słońce",
+   "przedmiot": "czas ze słońcem na wysokości 0–10° 2026-10-21 (CEST)",
+   "wartość": "154",
+   "co_sprawdzono": "przeliczono ponownie: astral: 154 min",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-531",
+   "kategoria": "słońce",
+   "przedmiot": "zachód słońca 2026-11-21 (CET) — azymut słońca w kolumnie kierunek_deg",
+   "wartość": "15:24",
+   "co_sprawdzono": "przeliczono ponownie: astral: 15:23",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-536",
+   "kategoria": "słońce",
+   "przedmiot": "czas ze słońcem na wysokości 0–10° 2026-11-21 (CET)",
+   "wartość": "194",
+   "co_sprawdzono": "przeliczono ponownie: astral: 194 min",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-540",
+   "kategoria": "słońce",
+   "przedmiot": "wysokość słońca 2026-12-21 godz. 20:00 CET (azymut w kolumnie kierunek_deg)",
+   "wartość": "-41.4",
+   "co_sprawdzono": "przeliczono ponownie: astral: wys -41.43°, az 287.01°",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-554",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — zmierzch, niebo poza kadrem",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: cały kadr 960 px; sha256 pliku zgodne",
+   "wynik": "PASS",
+   "korekta": "zgodne; doprecyzowano: chłodna tonacja dotyczy chodnika i elewacji, piaszczysty grunt jest brunatny, dodano drzewo z rudymi liśćmi"
+  },
+  {
+   "id": "R7-555",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — po zmierzchu cywilnym",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek pasa nad zabudową (cała szer., 30–62 % wys.); sha256 pliku zgodne",
+   "wynik": "FAIL",
+   "korekta": "opis „nisko nad zabudową nieco jaśniejsze i szare” nie potwierdza się: niebo jest jednolicie ciemne, jaśniejsze tylko w poświacie wokół oprawy; opis poprawiony; wniosek (brak ciepłego pasa) bez zmian"
+  },
+  {
+   "id": "R7-559",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — mgła o zmierzchu (stacja: 400 m), St neb",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek nieba i końca ulicy (20–75 % szer., 0–60 % wys.); sha256 pliku zgodne",
+   "wynik": "PASS",
+   "korekta": "niebo jednolicie niebieskoszare, budynek zamykający ulicę blady, ciepłe okna po prawej — zgodne"
+  },
+  {
+   "id": "R7-566",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — całkowite zachmurzenie Sc op (stacja: wid. 25,9 km)",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek nieba (0–60 % szer., 0–55 % wys.); sha256 pliku zgodne",
+   "wynik": "PASS",
+   "korekta": "szare niebo o miękkiej strukturze, przy dachach po lewej jaśniejsze, bez ciepłej barwy — zgodne"
+  },
+  {
+   "id": "R7-567",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — zmierzch cywilny, całkowite zachmurzenie St neb (stacja: wid. 9 km)",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek 3× nieba nad dachami (0–60 % szer., 20–60 % wys.); sha256 pliku zgodne",
+   "wynik": "FAIL",
+   "korekta": "opis „nisko nad dachami po lewej jaśniejsze i bardziej niebieskie” nieścisły: jaśniejsza, szaroniebieska jest lewa część nieba przy poświacie latarni, reszta granatowa z fioletowym odcieniem; opis poprawiony w frames.json/manifest; wniosek (brak ciepłego pasa) bez zmian"
+  },
+  {
+   "id": "R7-578",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — opad śniegu (stacja: wid. 1070 m)",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek 3× dalszego planu (30–90 % szer., 30–65 % wys.); sha256 pliku zgodne",
+   "wynik": "PASS",
+   "korekta": "maszt i bloki w głębi jako blade zarysy, płatki śniegu widoczne — zgodne"
+  },
+  {
+   "id": "R7-579",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — zima, śnieg, niebo z cienką warstwą chmur (stacja N=7, wid. 37 km)",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek 3× dalszego planu (55–100 % szer., 35–60 % wys.); sha256 pliku zgodne",
+   "wynik": "PASS",
+   "korekta": "bloki i kominy w biało-czerwone pasy z dymem, słup kratowy, lekkie zamglenie — zgodne"
+  },
+  {
+   "id": "R7-580",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — zmierzch żeglarski, całkowite zachmurzenie Sc op, śnieg",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek górnej części kadru (20–80 % szer., 0–45 % wys.); sha256 pliku zgodne",
+   "wynik": "PASS",
+   "korekta": "niebo prawie czarne, latarnie ciepłe, śnieg na gałęziach — zgodne"
+  },
+  {
+   "id": "R7-584",
+   "kategoria": "literatura_widzialność",
+   "przedmiot": "próg kontrastu Koschmiedera",
+   "wartość": "0.02",
+   "co_sprawdzono": "ponownie otwarto PDF (pdftotext) i odszukano cytat dosłownie",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-587",
+   "kategoria": "literatura_widzialność",
+   "przedmiot": "zgodność wizualnej oceny widzialności w dzień z MOR",
+   "wartość": "0.05",
+   "co_sprawdzono": "ponownie otwarto PDF (pdftotext) i odszukano cytat dosłownie",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-594",
+   "kategoria": "literatura_CIE",
+   "przedmiot": "CIE general sky typ 2: parametry a, b, c, d, e",
+   "wartość": "a=4.0; b=-0.7; c=2; d=-1.5; e=0.15",
+   "co_sprawdzono": "ponownie odczytano tabelę rda: a=4.0; b=-0.7; c=2; d=-1.5; e=0.15",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-595",
+   "kategoria": "literatura_CIE",
+   "przedmiot": "CIE typ 2: stosunek luminancji horyzont/zenit i (wys. 15°)/zenit — sama gradacja",
+   "wartość": "0.335; 0.424",
+   "co_sprawdzono": "przeliczono z tabeli rda: 0.335; 0.424",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-597",
+   "kategoria": "literatura_CIE",
+   "przedmiot": "CIE typ 3: stosunek luminancji horyzont/zenit i (wys. 15°)/zenit — sama gradacja",
+   "wartość": "0.669; 0.703",
+   "co_sprawdzono": "przeliczono z tabeli rda: 0.669; 0.703",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-602",
+   "kategoria": "literatura_barwa_nieba",
+   "przedmiot": "barwa światła pod zachmurzeniem całkowitym: niebieszczenie, nie ocieplenie",
+   "wartość": "",
+   "co_sprawdzono": "ponownie pobrano abstrakt z OpenAlex i odszukano cytat dosłownie",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-606",
+   "kategoria": "literatura_barwa_nieba",
+   "przedmiot": "najżywsze barwy zmierzchu po stronie słońca wymagają aerozolu; dotyczy nieba BEZCHMURNEGO",
+   "wartość": "",
+   "co_sprawdzono": "ponownie pobrano abstrakt z OpenAlex i odszukano cytat dosłownie",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-619",
+   "kategoria": "rekomendacja_niebo",
+   "przedmiot": "niebo pochmurne (LP_Overcast): barwa przy horyzoncie",
+   "wartość": "neutralna szarość do lekko niebieskawej; bez ciepłego pasa na żadnej wysokości słońca ≥ 0°",
+   "co_sprawdzono": "wiersz-wniosek (WORKING_VALUE/ESTIMATED): sprawdzono, że przywołane kadry i liczby istnieją w manifeście i out/",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-623",
+   "kategoria": "rekomendacja_niebo",
+   "przedmiot": "udział wieczorów bez barwnego zmierzchu (N ≥ 7 przy końcu zmierzchu cywilnego) XI–I",
+   "wartość": "79–82",
+   "co_sprawdzono": "wiersz-wniosek (WORKING_VALUE/ESTIMATED): sprawdzono, że przywołane kadry i liczby istnieją w manifeście i out/",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-626",
+   "kategoria": "rekomendacja_słońce",
+   "przedmiot": "azymut słońca przy końcu zmierzchu cywilnego: LP_Dusk ma 300° — odpowiada dacie",
+   "wartość": "21 IV / 21 VIII (299°)",
+   "co_sprawdzono": "wiersz-wniosek (WORKING_VALUE/ESTIMATED): sprawdzono, że przywołane kadry i liczby istnieją w manifeście i out/",
+   "wynik": "PASS",
+   "korekta": ""
+  }
+ ]
+}
