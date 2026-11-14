@@ -174,3 +174,6 @@ treść potwierdzona przez API). Kadry: 8 obejrzanych ponownie (w tym wycinki b0
 Poprawki po wylosowaniu próby: 0. Przed audytem (autokontrola przy budowie manifestu): C60-071 — elewacja w polu „wartość”
 −7,6° → −7,9°; usunięto 6 domysłów lokalizacyjnych z pola „element” (zastąpione „wg współrzędnych/kategorii Commons”);
 odrzucono 12 pobranych kadrów (wnętrza, dzień wg EXIF mimo „wieczornej” nazwy pliku, same szyldy). Szczegóły: `audit_20_percent.json`.
+
+## Errata lidera (s20, 2026-11-14)
+Patrz `docs/reports/REVIEW-2026-11-14-s20-cloud-m60-compare.md`: przy zachodzie gra jest ZA JASNA (do ×2,3 przy +0,5…−1°), nie za ciemna; stosunek horyzont/zenit 0,05–0,2×; zdjęcia 1920 px.

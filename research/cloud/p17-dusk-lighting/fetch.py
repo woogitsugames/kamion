@@ -8,7 +8,7 @@ z odczekaniem (Retry-After). Ten sam url_pliku w kilku wierszach pobierany jest 
 """
 import argparse, csv, hashlib, os, sys, time, urllib.error, urllib.request
 
-UA = "kamion-research/1.0 (open-data reference collection)"
+UA = "research-fetch/1.0 (open-data reference collection)"
 
 def sha256(path):
     h = hashlib.sha256()
