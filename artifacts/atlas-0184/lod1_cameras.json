@@ -1,0 +1,187 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (E,N = EPSG:2180 minus region origin; U = EVRF2007)",
+ "cameras": [
+  {
+   "id": "a184_blk_a_p",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -908.56,
+    462.51,
+    145.91
+   ],
+   "look_at": [
+    -953.59,
+    478.21,
+    144.23
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:2BE4B431-B246-1BF0-E053-CC2BA8C0D140 h 15.12 m storeys 4, 45 m off the longest edge"
+  },
+  {
+   "id": "a184_blk_a_n",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -978.99,
+    518.55,
+    145.91
+   ],
+   "look_at": [
+    -953.59,
+    478.21,
+    144.23
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:2BE4B431-B246-1BF0-E053-CC2BA8C0D140 h 15.12 m storeys 4, 45 m off the longest edge"
+  },
+  {
+   "id": "a184_blk_b_p",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -123.57,
+    -581.73,
+    143.0
+   ],
+   "look_at": [
+    -76.48,
+    -589.2,
+    140.15
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:28632721-2d7e-11ee-92d3-480fcf3c9bd7 h 13.0 m storeys 4, 45 m off the longest edge"
+  },
+  {
+   "id": "a184_blk_b_n",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -44.32,
+    -624.39,
+    143.0
+   ],
+   "look_at": [
+    -76.48,
+    -589.2,
+    140.15
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:28632721-2d7e-11ee-92d3-480fcf3c9bd7 h 13.0 m storeys 4, 45 m off the longest edge"
+  },
+  {
+   "id": "a184_blk_c_p",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -607.55,
+    -737.42,
+    135.23
+   ],
+   "look_at": [
+    -653.64,
+    -749.62,
+    132.4
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:2BE4B431-AF4E-1BF0-E053-CC2BA8C0D140 h 13.03 m storeys 4, 45 m off the longest edge"
+  },
+  {
+   "id": "a184_blk_c_n",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -697.28,
+    -730.43,
+    135.23
+   ],
+   "look_at": [
+    -653.64,
+    -749.62,
+    132.4
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:2BE4B431-AF4E-1BF0-E053-CC2BA8C0D140 h 13.03 m storeys 4, 45 m off the longest edge"
+  },
+  {
+   "id": "a184_hi_d_p",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -293.93,
+    -654.13,
+    141.89
+   ],
+   "look_at": [
+    -234.59,
+    -728.77,
+    160.63
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:5565d6d1-197c-11ed-bb26-b8ca3aa2e5c2 h 52.26 m storeys 16, 90 m off the longest edge"
+  },
+  {
+   "id": "a184_hi_d_n",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -234.74,
+    -824.12,
+    141.89
+   ],
+   "look_at": [
+    -234.59,
+    -728.77,
+    160.63
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:5565d6d1-197c-11ed-bb26-b8ca3aa2e5c2 h 52.26 m storeys 16, 90 m off the longest edge"
+  },
+  {
+   "id": "a184_tower_p",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    660.68,
+    -574.97,
+    150.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:2BE4B431-CA0F-1BF0-E053-CC2BA8C0D140 h 41.81 m storeys 11, 80 m off the longest edge"
+  },
+  {
+   "id": "a184_tower_n",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    519.73,
+    -499.24,
+    150.56
+   ],
+   "look_at": [
+    576.95,
+    -561.77,
+    163.56
+   ],
+   "fov_deg": 50.0,
+   "note": "bdot:2BE4B431-CA0F-1BF0-E053-CC2BA8C0D140 h 41.81 m storeys 11, 80 m off the longest edge"
+  }
+ ]
+}
