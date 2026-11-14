@@ -1,8 +1,7 @@
 # STATUS — M60 (cloud p17-dusk-lighting)
 
-- 2026-11-14 krok 1: `sun.py` (NOAA/Meeus, selftest OK, tabela zmierzchu), `fetch.py`, `.gitignore`.
-  Zebrane w scratch (jeszcze nie w manifeście): TED API — przetargi LED ZDM Białystok 2023–2026 (Andersa, Maczka, Al. 1000-lecia w 281034-2023),
-  rozstaw słupów z ortofoto GUGiK (Andersa ~41,6 m n=6; Maczka ~40,4 n=6; Tysiąclecia S ~34,8 n=7; Sokólska ~32 n=5), klasy M (źródła wtórne),
-  niebo: 4,3 lx @ −6° (Fotios 2024/Muneer), zenit V (Patat 2006), okna: 50 % maks. / 6 cd/m² (Novák 2025).
-- NASTĘPNY KROK: kadry Commons (geosearch po trasie + osiedla; filtr elewacji Słońca `python3 sun.py elev <ISO>`), obejrzeć, policzyć okna;
-  potem manifest.csv + README + audit.
+- 2026-11-14: GOTOWE do przeglądu. manifest.csv 87 wierszy (niebo 24, ulica 30, okna 19, kadr 14); 24 pliki kadrów (miniatury 1920 px Commons,
+  13 113 826 B) przez `fetch.py`; README z tabelą „Do porównania z ADR 0191/0192”; audyt 18/87 (seed 20261114), 0 poprawek po losowaniu.
+- Odtworzenie: `python3 build_manifest.py` (manifest), `python3 sun.py table` (zmierzch), `python3 fetch.py` (kadry; Commons dławi - HTTP 429, skrypt ponawia).
+- Niekompletne: klasy/wysokości/CCT/próg załączania dla ulic trasy (UNVERIFIED), brak nocnych kadrów Andersa/Maczka/Putry, oryginały zdjęć niepobrane (429).
+- NASTĘPNY KROK (lider): `python3 research/cloud/p17-dusk-lighting/fetch.py` i przegląd PR.
