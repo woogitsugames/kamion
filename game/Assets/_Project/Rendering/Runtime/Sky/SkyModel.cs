@@ -744,12 +744,25 @@ namespace Game.Rendering
         /// </summary>
         public static Color SuppressTwilightMagenta(Color c, float warm, float t)
         {
+            if (t <= 0f) return c;
             float lo = Mathf.Min(c.r, c.b);
-            if (lo - c.g <= 0f || t <= 0f) return c;
-            // lift G (never lower R or B: a dome of hard orange cells next to hard blue cells turns pink again in the
-            // bilinear LUT fetch): to min(R, B) = pale / white, and in the warm band to B / 0.85 = orange-yellow
-            float g = Mathf.Lerp(lo, Mathf.Max(lo, c.b / 0.85f), Mathf.Clamp01(warm * 1.6f));
-            c.g = Mathf.Lerp(c.g, Mathf.Max(c.g, g), t);
+            if (lo - c.g > 0f)
+            {
+                // lift G (never lower R or B: a dome of hard orange cells next to hard blue cells turns pink again in the
+                // bilinear LUT fetch): to min(R, B) = pale / white, and in the warm band to B / 0.85 = orange-yellow
+                float g = Mathf.Lerp(lo, Mathf.Max(lo, c.b / 0.85f), Mathf.Clamp01(warm * 1.6f));
+                c.g = Mathf.Lerp(c.g, Mathf.Max(c.g, g), t);
+            }
+            // s20 night-int (review 0191+0192 P2-1: the low band toward the sun stayed coral, hue 0-7 deg, and the
+            // transition above it a dead neutral grey): on the warm side (R > B) the hue is held at >= 15 deg (G at least
+            // B + 0.25 (R - B): orange, not coral), and a near-neutral cell loses a little blue (B <= 0.94 G: pale
+            // yellowish, the twilight arch, not grey). Only lowers B / lifts G below B: never toward magenta. WORKING_VALUE.
+            float w = Mathf.Clamp01(warm) * t;
+            if (w > 0f && c.r > c.b)
+            {
+                c.g = Mathf.Lerp(c.g, Mathf.Max(c.g, c.b + 0.25f * (c.r - c.b)), w);
+                c.b = Mathf.Lerp(c.b, Mathf.Min(c.b, 0.94f * c.g), w);
+            }
             return c;
         }
 

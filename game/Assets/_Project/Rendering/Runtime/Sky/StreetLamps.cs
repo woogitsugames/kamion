@@ -56,9 +56,12 @@ namespace Game.Rendering
         /// <summary>
         /// s20 night-int (review 0191 P1-4): the High / Ultra lights are spots pointing down with the luminaire's cut-off
         /// (outer cone 150° = 75° from the nadir) instead of spheres - a sphere at the lens lit the arm and housing above it
-        /// from 0.1-0.5 m ("neon" arms) and nearby thujas from the side. Inner cone = soft edge. WORKING_VALUE.
+        /// from 0.1-0.5 m ("neon" arms) and nearby thujas from the side. Inner cone = soft edge. A road luminaire's spot is
+        /// tilted <see cref="SpotTiltDeg"/> toward the carriageway (its arm direction), so the cone matches the asymmetric
+        /// pool of <see cref="StreetLampOptics"/>: ~50° from the nadir behind the column (pool tail ends at ~46°), ~68°
+        /// along the road (pool ~67°, tail 74°). WORKING_VALUE.
         /// </summary>
-        public const float SpotOuterDeg = 150f, SpotInnerDeg = 110f;
+        public const float SpotOuterDeg = 140f, SpotInnerDeg = 100f, SpotTiltDeg = 20f;
         /// <summary>Upper limit of the analytic pools (size of the shader array).</summary>
         public const int MaxPools = 8;
         /// <summary>The pool focus sits this far ahead of the camera (horizontal), where the visible road is.</summary>
@@ -185,7 +188,15 @@ namespace Game.Rendering
                 if (!use) continue;
                 int hi = m_Pick[i];
                 l.transform.position = s_Heads[hi];
-                l.color = hi < s_Axes.Length && s_Axes[hi].z > 0.5f ? SodiumLightColor : k_Led;
+                Vector4 ax = hi < s_Axes.Length ? s_Axes[hi] : Vector4.zero;
+                l.color = ax.z > 0.5f ? SodiumLightColor : k_Led;
+                Vector3 dir = Vector3.down;
+                if (ax.w > 0.5f)
+                {
+                    float t = SpotTiltDeg * Mathf.Deg2Rad;
+                    dir = new Vector3(ax.x * Mathf.Sin(t), -Mathf.Cos(t), ax.y * Mathf.Sin(t));
+                }
+                l.transform.rotation = Quaternion.LookRotation(dir, Mathf.Abs(dir.z) < 0.9f ? Vector3.forward : Vector3.right);
                 l.intensity = DownIntensityCd * k / Mathf.PI * s_On;
             }
             Shader.SetGlobalFloat(k_LightsOn, n > 0 ? 1f : 0f);
