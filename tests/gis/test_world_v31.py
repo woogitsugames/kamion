@@ -129,6 +129,35 @@ def test_lod1_wall_is_not_a_box_face():
     assert tris <= 18
 
 
+def test_far_plain_strip_is_clear_of_painted_cells():
+    """ADR 0184: the plain strip LOD1 walls map beside the window bays lies on unpainted wall of the far-row atlas with
+    a 0.4 m margin (far mips): no balcony slab edge (painted FAR_V0 - 0.14 .. + 0.02 across a balcony bay +- 1.35 m),
+    no window or sill dirt run above it, the _SPLASH zone (v < 0.6) below it; lod1_wall uses exactly that strip."""
+    import numpy as np
+    from streetscape import buildings_mesh as B
+    from streetscape import facade_atlas as FA
+    m = 0.4
+    (u0, u1), (v0, v1) = FA.FAR_PLAIN_U, FA.FAR_PLAIN_V
+    assert 0.6 < v0 < v1 and v0 - m > 0 and u0 - m > 0 and u1 + m < FA.FAR_M[0]
+    group, row = FA.FAR_ORDER[0]
+    assert FA.far_row_v(group, row) == FA.FAR_V0
+    for bay, (kind, _) in enumerate(FA.FAR_ROWS[group][row]):
+        xc = (bay + 0.5) * FA.FAR_PITCH
+        if kind == "bal":                                   # slab edge + balustrade: the strip keeps clear in u
+            assert xc + 1.35 <= u0 - m or xc - 1.35 >= u1 + m
+        elif xc - FA.FAR_PITCH / 2 < u1 + m and xc + FA.FAR_PITCH / 2 > u0 - m:      # a bay the strip reaches into
+            assert v1 + m <= FA.FAR_V0 + FA.FAR_SILL[group] - 0.5      # below the dirt run under the sill
+    acc = B.Acc()
+    B.lod1_wall(acc, "block", "plaster_beige", np.array([0.0, 0.0]), np.array([20.0, 0.0]), np.array([0.0, -1.0]),
+                20.0, 99.5, 100.0, 115.6, 0.0, 5, 2.8, 1.0, "block", False, fkey="t:0", balcony=True)
+    quads = acc.d[("buildings_low", "plaster_beige__far_block")]
+    plain = [it[2] for it in quads if it[2][:, 1].max() <= v1 + 1e-6]
+    assert len(plain) == 2                                  # left and right of the bays
+    for uv in plain:
+        assert uv[:, 0].min() == pytest.approx(u0) and uv[:, 0].max() == pytest.approx(u1)
+        assert uv[:, 1].min() == pytest.approx(v0) and uv[:, 1].max() == pytest.approx(v1)
+
+
 def test_far_plan_is_shared_by_both_lods():
     """LOD0 cells and LOD1 rows come from one plan: chunks cover every storey once, rows stay inside their group,
     balcony offsets are even (balconies stack), and a LOD0 block wall opens exactly the cells of its rows."""

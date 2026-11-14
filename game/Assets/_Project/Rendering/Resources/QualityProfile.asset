@@ -60,6 +60,10 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 0
     lampPools: 4
+    lampPoolSpecular: 0
+    nightWindowsOff: 0
+    lampGlareOff: 0
+    lampFloorOff: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 0
@@ -122,6 +126,10 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 0
     lampPools: 6
+    lampPoolSpecular: 0
+    nightWindowsOff: 0
+    lampGlareOff: 0
+    lampFloorOff: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 1
@@ -184,6 +192,10 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 4
     lampPools: 8
+    lampPoolSpecular: 1
+    nightWindowsOff: 0
+    lampGlareOff: 0
+    lampFloorOff: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 1
@@ -246,6 +258,10 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 6
     lampPools: 8
+    lampPoolSpecular: 1
+    nightWindowsOff: 0
+    lampGlareOff: 0
+    lampFloorOff: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 2
@@ -261,7 +277,7 @@ MonoBehaviour:
     budgetTextureMB: 384
     budgetShadowMs: 3
     budgetStatus: UNMEASURED (no flagship attached)
-  revision: 113
+  revision: 191
   deviceRules:
   - gpuContains: Mali-G57
     modelContains: 
