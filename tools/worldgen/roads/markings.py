@@ -497,28 +497,37 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         for s_c, osm, ckind, cwid in crossings.get(c.id, []):
             hw = float(c.hw_at(s_c))
             if ckind == "P-11":
+                clear = cwid - 2 * S.P11_SQUARE            # 2.0 m (ADR 0093) or 3.0 m two-way (ADR 0188)
+                placed_red: list[bool] = []
                 if s0 + cwid / 2 + 0.5 <= s_c <= s1 - cwid / 2 - 0.5:
-                    W = 2 * hw - 2 * 0.25
-                    nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
-                    start = -(nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP) / 2
-                    clear = cwid - 2 * S.P11_SQUARE            # 2.0 m (ADR 0093) or 3.0 m two-way (ADR 0188)
-                    for row in (-1, 1):
-                        sr = s_c + row * (clear + S.P11_SQUARE) / 2
-                        for k_ in range(nsq):
-                            lat = start + k_ * (S.P11_SQUARE + S.P11_GAP) + S.P11_SQUARE / 2
-                            strip(buf, c, sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2, lat, S.P11_SQUARE, "P-11")
-                    cycle_red(buf, c, s_c - clear / 2, s_c + clear / 2, hw)
+                    _emit_p11_ribbon(buf, c, s_c, hw, clear)
                     cnt("P-11 red surfacing")
                     cnt("P-11 cycle crossing")
                     c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
                     continue
-                if _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-11", clear=cwid - 2 * S.P11_SQUARE):
+                if _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-11", clear=clear,
+                                   red_out=placed_red):
                     cnt("P-11 cycle crossing")
                     cnt("P-11 cycle crossing in junction")
+                    if placed_red:
+                        cnt("P-11 red surfacing")
                     report.setdefault("crossings_in_junction", []).append(osm)
                     c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
                     continue
-                # not placeable as P-11 (too close to the node): handled like any crossing below (moved onto the ribbon)
+                # not drapeable in the junction patch: clamp onto the carriageway ribbon if nearby;
+                # never demote a P-11 cycle crossing into a pedestrian P-10 zebra
+                if s_c < s0 + cwid / 2 + 0.5 and s0 - s_c < 8:
+                    s_c = s0 + cwid / 2 + 0.5
+                elif s_c > s1 - cwid / 2 - 0.5 and s_c - s1 < 8:
+                    s_c = s1 - cwid / 2 - 0.5
+                if s0 + cwid / 2 + 0.2 <= s_c <= s1 - cwid / 2 - 0.2:
+                    _emit_p11_ribbon(buf, c, s_c, float(c.hw_at(s_c)), clear)
+                    cnt("P-11 red surfacing")
+                    cnt("P-11 cycle crossing")
+                    c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
+                else:
+                    report.setdefault("crossings_skipped", []).append(osm)
+                continue
             half = S.P10_WIDTH / 2
             if s_c - half < s0 + 0.5 or s_c + half > s1 - 0.5:
                 # inside a junction patch (wide signalised mouths, roundabout entries: Mapillary p40 / p42 show the
@@ -633,11 +642,24 @@ def cycle_red(buf, c, s0, s1, hw):
     buf.add("markings", "cycle_crossing_red", V, V[:, :2].copy(), np.array(T), src=f"DDR-X@{c.id}")
 
 
-def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CLEAR):
-    """P-10 inside a junction patch: stripes in the chain frame at the OSM station, z = top of the patch mesh + lift.
+def _emit_p11_ribbon(buf, c, s_c, hw, clear):
+    """P-11 cycle crossing on a road ribbon: two rows of 0.5 m squares + red surfacing between them."""
+    W = 2 * hw - 2 * 0.25
+    nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
+    start = -(nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP) / 2
+    for row in (-1, 1):
+        sr = s_c + row * (clear + S.P11_SQUARE) / 2
+        for k_ in range(nsq):
+            lat = start + k_ * (S.P11_SQUARE + S.P11_GAP) + S.P11_SQUARE / 2
+            strip(buf, c, sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2, lat, S.P11_SQUARE, "P-11")
+    cycle_red(buf, c, s_c - clear / 2, s_c + clear / 2, hw)
+
+
+def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CLEAR, red_out=None):
+    """P-10/P-11 inside a junction patch: stripes/squares in the chain frame at the OSM station, z = patch + lift.
     False (nothing added) when the station is too close to the node or any vertex is off the road meshes."""
-    half = S.P10_WIDTH / 2
-    d_node = s_c if s_c < s0 else c.length - s_c
+    half = (clear + 2 * S.P11_SQUARE) / 2 if kind == "P-11" else S.P10_WIDTH / 2
+    d_node = min(s_c, c.length - s_c)
     if d_node - half < P10_NODE_CLEAR_M:
         return False
     W = 2 * hw - 2 * 0.25
@@ -658,7 +680,10 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CL
     meshes = []
     if kind == "P-11":      # cycle crossing (ADR 0093): two rows of squares instead of stripes
         nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
-        start = -(nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP) / 2
+        if nsq < 1:
+            return False
+        used_p11 = nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP
+        start = -used_p11 / 2
         for row in (-1.0, 1.0):
             sr = s_c + row * (clear + S.P11_SQUARE) / 2
             sq = np.array([sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2])
@@ -678,22 +703,31 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CL
             lv = np.tile([lat - S.P11_SQUARE / 2, lat + S.P11_SQUARE / 2], 2)
             buf.add("markings", "marking_white", V, uv, np.array([(0, 2, 3), (0, 3, 1)]), src=f"P-11J@{c.id}",
                     UV1=_paint_uv1(c, np.repeat(sq, 2), lv, "P-10"))
-        # ADR 0188: red surfacing between the rows, draped like the squares (skipped where a cell is off the plate)
+        # ADR 0188: red surfacing between the rows, stepping inward from full width to square span if kerbs interfere
         ns, nl = max(1, int(math.ceil(clear / 0.5))), max(2, int(math.ceil(2 * hw / 0.5)))
-        gs, gl = np.meshgrid(np.linspace(-clear / 2, clear / 2, ns + 1), np.linspace(-hw + 0.02, hw - 0.02, nl + 1),
-                             indexing="ij")
-        p = o + np.outer(gs.ravel(), t) + np.outer(gl.ravel(), nrm)
-        z = np.array([top_of(float(e), float(nn)) for e, nn in p])
-        if np.all(np.isfinite(z)) and np.max(np.abs(np.diff(z.reshape(ns + 1, nl + 1), axis=1))) <= P10_DRAPE_MAX_STEP_M:
-            T = []
-            for i in range(ns):
-                for j in range(nl):
-                    a = i * (nl + 1) + j
-                    T += [(a, a + nl + 1, a + nl + 2), (a, a + nl + 2, a + 1)]
-            if float(t[0] * nrm[1] - t[1] * nrm[0]) < 0:
-                T = [(a, c_, b) for a, b, c_ in T]
-            buf.add("markings", "cycle_crossing_red", np.column_stack([p, z + CYCLE_RED_LIFT]), p.copy(), np.array(T),
-                    src=f"DDR-XJ@{c.id}")
+        for lim in (hw - 0.04, hw - 0.14, min(hw - 0.04, used_p11 / 2)):
+            if lim <= 0.1:
+                continue
+            gs, gl = np.meshgrid(np.linspace(-clear / 2, clear / 2, ns + 1), np.linspace(-lim, lim, nl + 1),
+                                 indexing="ij")
+            p = o + np.outer(gs.ravel(), t) + np.outer(gl.ravel(), nrm)
+            z = np.array([top_of(float(e), float(nn)) for e, nn in p])
+            zg = z.reshape(ns + 1, nl + 1)
+            if (np.all(np.isfinite(z))
+                    and np.max(np.abs(np.diff(zg, axis=1))) <= P10_DRAPE_MAX_STEP_M
+                    and np.max(np.abs(np.diff(zg, axis=0))) <= P10_DRAPE_MAX_STEP_M):
+                T = []
+                for i in range(ns):
+                    for j in range(nl):
+                        a = i * (nl + 1) + j
+                        T += [(a, a + nl + 1, a + nl + 2), (a, a + nl + 2, a + 1)]
+                if float(t[0] * nrm[1] - t[1] * nrm[0]) < 0:
+                    T = [(a, c_, b) for a, b, c_ in T]
+                buf.add("markings", "cycle_crossing_red", np.column_stack([p, z + CYCLE_RED_LIFT]), p.copy(),
+                        np.array(T), src=f"DDR-XJ@{c.id}")
+                if red_out is not None:
+                    red_out.append(True)
+                break
         return True
     for k_ in range(n):
         lat = -used / 2 + k_ * (S.P10_STRIPE + S.P10_GAP) + S.P10_STRIPE / 2

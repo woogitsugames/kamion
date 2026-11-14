@@ -134,3 +134,90 @@ def test_region_files_and_materials():
         assert r > g >= b and r / max(b, 1e-6) < 1.8                  # weathered red-brown, not a saturated red
         assert 1.2 < (0.2126 * r + 0.7152 * g + 0.0722 * b) / grey["color"][1] < 3.0     # render-calibrated
     assert xr.get("decal") is True and "decal" not in red
+
+
+def _flat_chain():
+    from types import SimpleNamespace
+    from roads.geom import Polyline
+    from roads.network import Chain, DENSE
+
+    s_pts = np.arange(0.0, 80.0 + 1e-6, DENSE)
+    line = Polyline(np.column_stack([s_pts, np.zeros_like(s_pts)]))
+    n = len(line.s)
+    c = Chain(
+        id="c0",
+        node_a="a",
+        node_b="b",
+        edges=[(1, False)],
+        raw=line.p.copy(),
+        raw_spans=[(0.0, float(line.length), 1, False)],
+        line=line,
+        sec_idx=np.zeros(n, int),
+        hw=np.full(n, 3.5),
+        dirn=np.zeros(n, int),
+        z=np.zeros(n),
+        e=np.full(n, np.nan),
+        t_a=6.0,
+        t_b=6.0,
+    )
+    sec = SimpleNamespace(
+        cls="Z",
+        highway="tertiary",
+        maxspeed=50,
+        width=7.0,
+        lanes=2,
+        lanes_fwd=1,
+        lanes_bwd=1,
+        lane_w=3.5,
+        edge_strip=0.0,
+        oneway=False,
+        roundabout=False,
+        turn_fwd=[],
+        turn_bwd=[],
+        lane_edges=None,
+    )
+    return c, sec
+
+
+def test_p11_drape_crossing_keeps_red_when_kerb_edges_step():
+    from roads import markings as M
+    from roads.meshing import MeshBuf
+
+    c, _ = _flat_chain()
+    buf = MeshBuf()
+    red: list[bool] = []
+    # Smooth asphalt inside |n| <= 3.38 m; raised kerb / off-plate beyond hw - 0.12
+    top_of = lambda e, n: 0.0 if abs(n) <= 3.38 else float("nan")
+    ok = M._drape_crossing(buf, c, s_c=5.5, hw=3.5, s0=8.0, s1=72.0, top_of=top_of,
+                           kind="P-11", clear=3.0, red_out=red)
+    assert ok is True
+    assert red == [True]
+    mats = {p.mat for p in buf.parts}
+    assert "marking_white" in mats and "cycle_crossing_red" in mats
+
+
+def test_p11_crossing_clamps_to_ribbon_never_demotes_to_p10():
+    from types import SimpleNamespace
+    from roads import markings as M
+    from roads.meshing import MeshBuf
+
+    c, sec = _flat_chain()
+    buf = MeshBuf()
+    net = SimpleNamespace(
+        chains=[c],
+        sec_list=[sec],
+        cycle_items=[{"kind": "ddr", "line": LineString([(4.0, -10.0), (4.0, 10.0)]), "two_way": True}],
+    )
+    ctx_points = [{"kind": "highway=crossing", "osm_node": 1001, "e": 4.0, "n": 0.0, "crossing": "uncontrolled"}]
+    report: dict = {}
+    M._build_markings(buf, net, juncs=[], ctx_points=ctx_points, report=report)
+
+    counts = report.get("markings", {})
+    assert counts.get("P-11 cycle crossing") == 1
+    assert counts.get("P-11 red surfacing") == 1
+    assert "P-10 crossing" not in counts
+    srcs = [p.src for p in buf.parts]
+    assert any(s.startswith("P-11@") for s in srcs)
+    assert any(p.mat == "cycle_crossing_red" for p in buf.parts)
+    assert not any(s.startswith("P-10") for s in srcs)
+
