@@ -5,7 +5,7 @@ Kod wyjścia != 0 przy niezgodności sumy lub błędzie pobrania.
 Kadry: files/<id>.jpg; dokumenty (PDF) – files/<nazwa z URL> (jeden plik na URL, wiele wierszy)."""
 import csv, hashlib, os, sys, time, urllib.request, urllib.error
 
-UA = 'kamion-research/1.0 (open-data reference collection)'
+UA = 'research-fetch/1.0 (open-data reference collection)'
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEST = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(HERE, 'files')
 

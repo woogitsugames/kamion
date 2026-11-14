@@ -7,7 +7,7 @@ Serwery: GUGiK WMS (wycinki ortofotomapy; odpowiedz JPEG jest deterministyczna â
 Wikimedia Commons (limit zapytan: przy HTTP 429 skrypt czeka i ponawia), BIP Bialystok, eli.gov.pl."""
 import argparse, csv, hashlib, os, sys, time, urllib.error, urllib.request
 
-UA = 'kamion-research/1.0 (open-data reference collection)'
+UA = 'research-fetch/1.0 (open-data reference collection)'
 
 def get(url, tries=5):
     for a in range(tries):
