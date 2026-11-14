@@ -197,7 +197,18 @@ def edge_lines(sec, hw, dirn):
         for sg, name in ((1, "left"), (-1, "right")):       # sg in the travel frame: +1 = travel-left
             if el in (None, "both", name):
                 out.append(((d if sec.oneway else 1) * sg * (hw - sec.edge_strip + half), "P-7b"))
+    elif el in ("left", "right", "both"):
+        # ADR 0205: edge lines read off the orthophoto on a road below class GP (rural G road, no edge strip):
+        # only by authored override; narrow line (see edge_line_width) just inside the carriageway edge
+        for sg, name in ((1, "left"), (-1, "right")):
+            if el in ("both", name):
+                out.append(((d if sec.oneway else 1) * sg * (hw - S.EDGE_LINE_INSET_MINOR), "P-7b"))
     return out
+
+
+def edge_line_width(sec):
+    """0.24 m (P-7a/P-7b) on class A / S / GP; 0.12 m on lower classes, painted only by override (ADR 0205)."""
+    return S.LINE_W_WIDE if sec.cls in ("A", "S", "GP") or getattr(sec, "lane_edges", None) else S.LINE_W_NARROW
 
 
 def build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
@@ -406,7 +417,7 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         cnt("P-1 centre line")
                 for k_e, _ in enumerate(edge_lines(sec, hw, dirn)):
                     strip(buf, c, sa, sb, (lambda ss_, k_e=k_e, sec=sec, dirn=dirn:
-                                           edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0]), S.LINE_W_WIDE, "P-7b")
+                                           edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0]), edge_line_width(sec), "P-7b")
                     cnt("P-7b edge line")
             # arrows from turn:lanes at the downstream end of this section
             for tl, tdir in ((sec.turn_fwd, 1), (sec.turn_bwd, -1)):

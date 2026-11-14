@@ -167,6 +167,7 @@ BRIDGE_PIER_W = 1.2                 # WORKING_VALUE
 LINE_W_NARROW = 0.12                # rys. 2.2.1.1 / 2.2.1.2 / 2.2.1.6 (P-1a, P-1b, P-2a)
 LINE_W_WIDE = 0.24                  # rys. 2.2.1.7 (P-2b), 2.2.2.2 (P-7a); pkt 2.2.2: P-7a/P-7b 0.24 m on
                                     # dual carriageways and roads with international route numbers
+EDGE_LINE_INSET_MINOR = 0.20        # WORKING_VALUE (ADR 0205): axis of an override edge line (0.12 m) inside the edge, class < GP
 DASH = {                            # (dash, gap)
     "P-1a": (4.0, 8.0),             # rys. 2.2.1.1, roads > 70 km/h
     "P-1b": (2.0, 4.0),             # rys. 2.2.1.2, roads <= 70 km/h
