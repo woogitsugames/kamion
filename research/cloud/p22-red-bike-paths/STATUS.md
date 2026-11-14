@@ -1,10 +1,11 @@
 # STATUS — M65 (cloud p22-red-bike-paths)
 
-- [x] Overpass (maps.mail.ru) 2026-11-14T16:49Z, osm_base 2026-11-14T16:48:34Z → `overpass-result.json` (zapytanie: `overpass-query.ql`)
-- [x] `tools/inventory.py` → `inventory.json` (C: 71 odcinków, Dojlidy: 22), `tools/crossings.py` → `crossings.json`
-- [x] ortofotomapa GUGiK 5 cm (WMS HighResolution): 27 wycinków skrzyżowań (`data/ortho_clusters.json`), 64 przekroje odcinków (`data/ortho_transects.json`, `tools/transect.py`), 32 wycinki przejazdów (`data/ortho_crossings.json`, `tools/crossing_crop.py`) — obejrzane, odczyty w notatkach (do wpisania w `data/observations.json`)
-- [x] Panoramax (55 kadrów w kaflu C, 0 w Dojlidach), KartaView (C; 0 w Dojlidach) — wybrane kadry obejrzane
-- [ ] Commons (P11-001, P11-056 i kadry Dojlid): upload.wikimedia.org i API zwracają HTTP 429 (retry-after 600) od 16:52Z — ponawiać
-- [ ] manifest.csv, README.md, sources.md, fetch.py, audit_20_percent.json, PR
+Stan: **GOTOWE do przeglądu** (2026-11-14). Manifest 239 wierszy, fetch.py 133 pliki (68 794 874 B, sha256 OK), samokontrola 48 wierszy (38 PASS / 10 POPRAWIONO).
 
-NASTĘPNY KROK: `python3 -I tools/build_manifest.py` (do napisania: inventory + crossings + data/observations.json → manifest.csv), potem ponowić pobranie Commons: `curl -A 'kamion-research/1.0 (open-data reference collection)' https://upload.wikimedia.org/wikipedia/commons/8/88/20240623_142113_June_2024_in_Bia%C5%82ystok.jpg`.
+- [x] Overpass → `overpass-result.json`; `inventory.json` (C 71, Dojlidy 22), `crossings.json` (54 jezdnie + 38 wjazdów)
+- [x] ortofotomapa GUGiK 5 cm: 27 wycinków zbiorczych (17 opisanych), 64 przekroje, 32 przejazdy, 12 wjazdów — obejrzane; `data/observations.py`
+- [x] Panoramax 7 + KartaView 8 kadrów (C) — obejrzane; `data/frame_notes.py`
+- [x] manifest.csv, README.md, sources.md, fetch.py, audit_20_percent.json
+- [ ] **LUKA:** Wikimedia Commons HTTP 429 przez całą sesję → P11-001, P11-056 i kadry uliczne Dojlid nieobejrzane (README §9)
+
+NASTĘPNY KROK (gdy Commons odblokowane): pobrać `https://upload.wikimedia.org/wikipedia/commons/8/88/20240623_142113_June_2024_in_Bia%C5%82ystok.jpg` (P11-001) i plik P11-056, obejrzeć, dopisać do `data/commons_frames.json` (pola jak w `data/street_frames.json`, `src: commons`) + opis w `data/frame_notes.py`, potem `python3 -I tools/build_manifest.py && python3 -I tools/build_readme.py`.

@@ -1,0 +1,508 @@
+{
+ "seed": "random.Random(20261114).sample(ids_w_kolejności_manifestu, 48)",
+ "liczba_wierszy_manifestu": 239,
+ "próba": 48,
+ "udział": 0.201,
+ "metoda": [
+  "ponowne zapytanie OSM API 0.6 (ways.json/nodes.json) o way_id/node_id i porównanie tagów z manifestem",
+  "ponowne obejrzenie obrazów pobranych NIEZALEŻNIE przez fetch.py do czystego katalogu (nowe arkusze z linijką)",
+  "HTTP 200 dla url_źródła kadrów ulicznych",
+  "cytaty: wyszukanie w tekście strony PDF",
+  "dodatkowo: tools/crossing_profile.py (profil jasności) dla wszystkich 32 wycinków przejazdów"
+ ],
+ "wynik": {
+  "PASS": 38,
+  "POPRAWIONO": 10
+ },
+ "lista_zmian_po_audycie": [
+  "szerokości przejazdów: odczyty „na oko” zastąpione profilem jasności dla 21 węzłów (c00–c02, c05–c10, c12–c16, c18, c19, c22, c30 zmienione/uzupełnione; c17, c26, c27 → brak wartości, bo nieczytelne)",
+  "way 923506577: 4,3 → 3,8 m",
+  "way 212811558: zieleń 3,8 → 3,5 m",
+  "way 549997876: dopisany peron z wiatą",
+  "way 591358181: dopisany drugi pas czerwonej kostki",
+  "kadr Panoramax b00bbfe1: kierunek w opisie SE → SSE",
+  "status przejazdów: niepewność ±0,3 m → ±0,15 m (profil) / ±0,5 m (ukośne)"
+ ],
+ "wiersze": [
+  {
+   "id": "C65-007",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v10, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-017",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v8, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "t31: czerwonobrązowa DDR 3,2 m, chodnik 2,6 m, zieleń 1,9 m — zgodne"
+  },
+  {
+   "id": "C65-032",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v2, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-034",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v1, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "u10: jasna nawierzchnia przy zatoce to peron przystankowy z wiatą (jasny dach) — dopisano, że granica ciągu jest nieostra"
+  },
+  {
+   "id": "C65-039",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v1, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-040",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v2, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "t28: DDR 2,6 m, chodnik 1,9 m — zgodne w ±0,3 m; dopisano drugi wąski pas czerwonej kostki po zewnętrznej stronie DDR"
+  },
+  {
+   "id": "C65-048",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v2, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "t29: DDR 2,6 m, pas czerwonej kostki, chodnik 1,7 m, żółta balustrada — zgodne"
+  },
+  {
+   "id": "C65-050",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v4, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "u15: ponowny odczyt 3,75 m (było 4,3 m — odczyt w miejscu poszerzenia) → 3,8 m"
+  },
+  {
+   "id": "C65-055",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v3, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "t22: pas jasny ok. 4,0 m między buspasem a barierą, P-21 przy krawędzi — zgodne (niska pewność zachowana)"
+  },
+  {
+   "id": "C65-057",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v1, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-061",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v1, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-062",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v1, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "u18: jasna kostka 3,75 m, zieleń 3,7 m — zgodne"
+  },
+  {
+   "id": "C65-070",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v1, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "u19: same korony drzew — „niewidoczne” zgodne"
+  },
+  {
+   "id": "C65-075",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v8, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "t07: ciąg 3,1 m zgodny; pas zieleni ponownie 3,4 m (było 3,8) → 3,5 m"
+  },
+  {
+   "id": "C65-092",
+   "kategoria": "odcinek",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v7, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "t09: DDR 2,15 m, chodnik 1,7 m, zieleń 1,5 i 2,45 m — zgodne"
+  },
+  {
+   "id": "C65-095",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v13, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "c30: czerwone pole, ukośny; profil jasności: rzędy 3,3–2,65 i 0,8–0,15 m → 3,0 m (było 2,9), zebra 4,1 m dopisana"
+  },
+  {
+   "id": "C65-098",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v6, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "x02: przejazdy tylko białe, DDR czerwonobrązowa — zgodne"
+  },
+  {
+   "id": "C65-102",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v5, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-108",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v3, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "c25: tylko białe P-11, 2,55 m; zebra 3,9 m — zgodne (oko i profil)"
+  },
+  {
+   "id": "C65-111",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v5, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "c19: czerwone pole; oko przy audycie 2,7 m, profil 3,05 m (było 2,95) → przyjęto profil 3,05 m; zebra 4,1 m dopisana"
+  },
+  {
+   "id": "C65-113",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v1, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-117",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v3, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "c31: czerwone pole, wyspa; oko przy audycie 2,5 m, ale profil (rząd 2,4–1,8 + rząd zlany z zebrą) daje ok. 2,9 m — pozostawiono 2,85 m; rozrzut odczytów „na oko” ±0,4 m odnotowany w README"
+  },
+  {
+   "id": "C65-124",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v4, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-128",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v9, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "c14: tylko białe, 2,3 m (profil 2,3); zebra → 4,0 m (było 4,1)"
+  },
+  {
+   "id": "C65-130",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v4, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "c09: tylko białe, 2,8 m; zebra 3,85 m; narożniki z czerwonej kostki — zgodne"
+  },
+  {
+   "id": "C65-134",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v1, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "x20: brak P-11 na wlocie z kostki, DDR urywa się — zgodne"
+  },
+  {
+   "id": "C65-139",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v3, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "c13: tylko białe; profil 2,35 m (było 2,75) → 2,35 m; zebra 4,0 m"
+  },
+  {
+   "id": "C65-142",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v4, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "c08: czerwone pole; profil 2,65 m (było 2,8; oko przy audycie 2,3) → 2,65 m; zebra 4,1 m"
+  },
+  {
+   "id": "C65-145",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v2, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "c02: czerwone pole między rzędem kwadratów a zebrą; profil 2,5 m (było 2,7) → 2,5 m; zebra 2,6 m zgodna"
+  },
+  {
+   "id": "C65-151",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v8, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-158",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v2, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-164",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v2, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-168",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v10, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "w01: zjazd o szarej nawierzchni przecina DDR, pary P-23 po obu stronach, pasy czerwonej i żółtej kostki — zgodne"
+  },
+  {
+   "id": "C65-179",
+   "kategoria": "przejazd",
+   "sprawdzono_sieć": {
+    "osm_api": "istnieje, v2, tagi zgodne z manifestem"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "wiersz bez pliku (tylko dane OSM / obserwacja zbiorcza): ponowne zapytanie OSM API 0.6 — obiekt istnieje, tagi zgodne"
+  },
+  {
+   "id": "C65-188",
+   "kategoria": "nawierzchnia",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "200 (plik pobrany przez fetch.py, sha256 zgodne)"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "ZDM str. 19: „…musi mieć wyraźnie inny kolor” — cytat odnaleziony w tekście strony"
+  },
+  {
+   "id": "C65-190",
+   "kategoria": "nawierzchnia",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "200 (plik pobrany przez fetch.py, sha256 zgodne)"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "ZDM str. 18: „…odpowiedniej szerokości - 3,5 m” — odnaleziony"
+  },
+  {
+   "id": "C65-196",
+   "kategoria": "nawierzchnia",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "200 (plik pobrany przez fetch.py, sha256 zgodne)"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "ZDM str. 19: „…w technologii bezszwowej…” — odnaleziony"
+  },
+  {
+   "id": "C65-198",
+   "kategoria": "nawierzchnia",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "200 (plik pobrany przez fetch.py, sha256 zgodne)"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "ZDM str. 20: „…dwukierunkowego wynosi 3,0 m… 2,5m” — odnaleziony"
+  },
+  {
+   "id": "C65-201",
+   "kategoria": "nawierzchnia",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "200 (plik pobrany przez fetch.py, sha256 zgodne)"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "Dz.U. 2311 c2 str. PDF 44 = Dz.U. 569: „1,8 m – … jednokierunkowego, 3,0 m – … dwukierunkowego” — odnaleziony"
+  },
+  {
+   "id": "C65-204",
+   "kategoria": "nawierzchnia",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "usługa WMS — sprawdzona przez pobranie wycinków"
+   },
+   "obraz_ponownie_obejrzany": false,
+   "wynik": "PASS",
+   "uwagi": "obserwacja zbiorcza — spójna z wierszami odcinków po poprawkach"
+  },
+  {
+   "id": "C65-213",
+   "kategoria": "kadr",
+   "sprawdzono_sieć": {
+    "http_url_źródła": 200
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "POPRAWIONO",
+   "uwagi": "Panoramax b00bbfe1: zebra, D-6 na żółtozielonym tle, chodnik z kostki — zgodne; kierunek w opisie „południowo-wschodni” → „południowy (SSE)” (azymut API 165°)"
+  },
+  {
+   "id": "C65-214",
+   "kategoria": "kadr",
+   "sprawdzono_sieć": {
+    "http_url_źródła": 200
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "Panoramax 3717771d: zebra, chodnik z czerwonobrunatnej kostki po lewej, estakada — zgodne"
+  },
+  {
+   "id": "C65-217",
+   "kategoria": "kadr",
+   "sprawdzono_sieć": {
+    "http_url_źródła": 200
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "KartaView 219382077: rząd białych prostokątów, zebra, D-6 po prawej, brak czerwieni — zgodne"
+  },
+  {
+   "id": "C65-218",
+   "kategoria": "kadr",
+   "sprawdzono_sieć": {
+    "http_url_źródła": 200
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "KartaView 219381919: D-6b po obu stronach, P-11 i zebra, znak 8 t, autobus — zgodne"
+  },
+  {
+   "id": "C65-227",
+   "kategoria": "kadr",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "200 (plik pobrany przez fetch.py, sha256 zgodne)"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "x08: białe P-11 częściowo pod naczepą, DDR o brunatnym odcieniu — zgodne"
+  },
+  {
+   "id": "C65-230",
+   "kategoria": "kadr",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "200 (plik pobrany przez fetch.py, sha256 zgodne)"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "x17: białe P-11 + zebra, pary P-23, czerwona kostka na narożnikach — zgodne"
+  },
+  {
+   "id": "C65-235",
+   "kategoria": "kadr",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "200 (plik pobrany przez fetch.py, sha256 zgodne)"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "x22: czerwone pole z kwadratami po obu stronach, zebra obok — zgodne"
+  },
+  {
+   "id": "C65-238",
+   "kategoria": "kadr",
+   "sprawdzono_sieć": {
+    "http_url_źródła": "200 (plik pobrany przez fetch.py, sha256 zgodne)"
+   },
+   "obraz_ponownie_obejrzany": true,
+   "wynik": "PASS",
+   "uwagi": "x25: czerwone pole między kwadratami a zebrą — zgodne"
+  }
+ ]
+}

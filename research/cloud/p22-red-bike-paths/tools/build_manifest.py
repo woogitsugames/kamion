@@ -141,7 +141,7 @@ def main():
                     if zeb is not None: opis += 'Przejście dla pieszych obok ok. %s m. ' % fmt(zeb)
                     opis += 'Wyspa/pas dzielący: %s. %s' % (wys, (note[0].upper() + note[1:] + '.') if note else '')
                     szer = fmt(s) if s is not None else 'nie dotyczy'
-                    status = 'SOURCED (OSM %s: pozycja, tagi); czerwień/szerokość ESTIMATED (orto 5 cm, ±0,3 m)' % osm_base[:10]
+                    status = 'SOURCED (OSM %s: pozycja, tagi); czerwień/szerokość ESTIMATED (orto 5 cm; profil jasności ±0,15 m, przejazdy ukośne ±0,5 m)' % osm_base[:10]
                     url, sha, lic, aut, dz = crop['url'], crop['sha256'], OSM_LIC + '; wycinek: ' + ORTO_LIC, 'autorzy OpenStreetMap; GUGiK', ORTO_DATE
                     if red == 'tak' and nt:
                         uw.append('ROZBIEŻNOŚĆ OSM↔orto: czerwona powierzchnia przejazdu nieodnotowana w tagach węzła (brak crossing:markings=*/surface:colour)')
@@ -203,7 +203,8 @@ def main():
         add(kategoria='kadr', region=c['region'], lat='%.6f' % lat, lon='%.6f' % lon, kierunek_deg='nadir (północ u góry)', data_zdjęcia=ORTO_DATE,
             sezon='wiosna', pora_dnia='dzień', opis_co_widać='Ortofotomapa, wycinek %d×%d m (%s): %s' % (c['size'], c['size'], lab, FN.ORTHO[lab]),
             url_źródła='https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolution', licencja=ORTO_LIC, autor='GUGiK',
-            status='SOURCED (kadr obejrzany)', uwagi='węzły OSM przejazdów w kadrze: ' + ', '.join(str(n) for n in c['nodes']) + '; jezdnie: ' + ', '.join(c['roads']),
+            status='SOURCED (kadr obejrzany)', uwagi='węzły OSM przejazdów w kadrze: ' + ', '.join(str(n) for n in c['nodes']) + '; jezdnie: ' + ', '.join(c['roads'])
+            + ''.join('; TEN SAM PLIK (sha256) co wiersz ' + r0['id'] for r0 in rows if r0['sha256'] == c['sha256']),
             url_pliku=c['url'], sha256=c['sha256'])
 
     with open(os.path.join(HERE, 'manifest.csv'), 'w', encoding='utf-8', newline='') as f:
