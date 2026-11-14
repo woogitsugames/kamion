@@ -20,3 +20,8 @@
 - audit_20_percent.json: seed 20261114; manifest 60/60 PASS; catalog 53 → 51 PASS / 2 FAIL (B-23, F-12 - poprawione) + 4 korekty poza próbą.
 - manifest 297 wierszy (dopisany R1-297).
 - NASTĘPNY KROK: README.md + sources.md (`$EDITOR research/cloud2/traffic-signs-catalog/README.md`)
+
+## 2026-11-14 19:10 UTC — krok 5: README + sources (pakiet kompletny)
+- README.md (tabele do generatora, errata, luki), sources.md; manifest 297, catalog 265, sizes 130; samokontrola PASS 60/60 + 51/53 (2 poprawione).
+- Do sprawdzenia przez lidera: przypisanie C-1/C-2 w kadrach P11-005/063/129 (Commons 429 w tej sesji).
+- NASTĘPNY KROK: recenzja lidera (REVIEW.md) → poprawki P0/P1 w tej gałęzi; ponowna weryfikacja: `python -I research/cloud2/traffic-signs-catalog/fetch.py && python -I research/cloud2/traffic-signs-catalog/tools/audit_sample.py research/cloud2/traffic-signs-catalog`
