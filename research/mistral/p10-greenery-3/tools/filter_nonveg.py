@@ -180,16 +180,14 @@ def main():
                         for f, r in removed]}
     with open(os.path.join(base, 'nonveg_removed.geojson'), 'w', encoding='utf-8') as fo:
         json.dump(rem, fo, ensure_ascii=False)
-    g['features'] = keep
     igl = sum(1 for f in keep if f['properties']['typ'] == 'iglaste')
-    meta = g.setdefault('properties', {})
-    meta['filtr_M51-FIX-2'] = (
-        f'tools/filter_nonveg.py: usunięto {len(removed)} obiektów (reguły A/B, '
-        'patrz nonveg_removed.geojson); pozostaje '
-        f'{len(keep)} koron ({igl} iglaste / {len(keep) - igl} liściaste)')
-    g['name'] = g.get('name', '') + ' + filtr nie-roślinności M51-FIX-2'
+    # format jak w detect_crowns/poprzedniej wersji pliku: jedna korona na wiersz
+    # (minimalny diff w gicie); metadane filtra — w nonveg_removed.geojson i README
     with open(crowns_f, 'w', encoding='utf-8') as fo:
-        json.dump(g, fo, ensure_ascii=False)
+        fo.write('{"type":"FeatureCollection","features":[\n')
+        fo.write(',\n'.join(json.dumps(f, ensure_ascii=False, separators=(',', ':'))
+                             for f in keep))
+        fo.write('\n]}\n')
     print(f'zapisano: {len(keep)} koron (iglaste {igl}, liściaste {len(keep) - igl})')
 
 
