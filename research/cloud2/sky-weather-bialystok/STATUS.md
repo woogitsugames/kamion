@@ -23,3 +23,8 @@
 - Obejrzano w 960 px: 8 kadrów Panoramax (2019 droga, 2026 XI osiedle) + 26 kadrów Commons (seria CC0 z godziną; 6 odrzuconych: wnętrza/plakat/parasole).
 - `tools_twilight.py` → `out/imgw_sunset_cloud.csv` (zachmurzenie przy zachodzie i końcu zmierzchu cywilnego per miesiąc).
 - NASTĘPNY KROK: `python3 -I build_manifest.py` (manifest.csv z wierszami IMGW/słońce/kadry/literatura) → fetch.py → README → audit.
+
+## Krok 4 (koniec sesji) — pakiet zamknięty
+- manifest.csv 628 wierszy; 35 kadrów; fetch.py 84 pliki / 16,98 MB OK; audit: 126 wierszy, seed 20261114, 124 PASS / 2 FAIL (skorygowane); README, sources.md gotowe.
+- Nie zrobiono: recenzji (REVIEW.md), sprawdzenia hipotezy barwy mgły w Unity, zdjęcia rybie oko, kadrów letniego dnia pochmurnego.
+- NASTĘPNY KROK: `cd /workspace/wt/sky-weather-bialystok/research/cloud2/sky-weather-bialystok && python3 -I fetch.py && python3 -I build_manifest.py && python audit.py` (weryfikacja), potem recenzja lidera.
