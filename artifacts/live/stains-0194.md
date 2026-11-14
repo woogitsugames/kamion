@@ -1,0 +1,17 @@
+# stains-0194 (ADR 0194) — live
+- Worktree z main 3a7208f38. Diagnoza: decal_oil albedo 0.018 lin (ciemny), ale Mask.a ~0.5 w rdzeniu + płaska normalna => odbicie nieba przy kącie ślizgowym = jasne „splaty” (P11-129). Plac route_s0457: do ustalenia w renderze.
+- Render „before” w tle: artifacts/stains-0194/before/ (import dojlidy Low + C Low/High + D Low).
+- NASTĘPNY KROK: `Get-Content artifacts/stains-0194/before/run.status` → obejrzeć PNG → zmiany shadera (KamionRoadStains.hlsl) + generator.
+- Commit: KamionRoadStains.hlsl (oil: smoothness 0.10-0.22 zamiast ~0.5, coverage gamma 0.7), decals.py (gęstość łat wg klasy drogi + wloty 30 m ×1.8, łaty w koleinach), materials.py oil_look, pytest test_stains_0194 (3 OK). Brak jeszcze: WorldPbrMaterials.cs (_OilLook), EditMode.
+- Tło: render.ps1 -Tag before (build_all PBR → import dojlidy → vqa C Low/High → D Low), slot unity stains-0194.
+- NASTĘPNY KROK: `Get-Content artifacts/stains-0194/before/run.status` → po DONE edycja WorldPbrMaterials.cs + build_world C/D + render -Tag after.
+- Diagnoza plac: route-after kadr 2 = route_s1066 (płyta skrzyżowania Kuronia/Mickiewicza bez linii: koleiny ramion powtórzone na całej płycie). Fix: UV1.y płyty +20 m (flaga) → shader osłabia koleiny 0.35 / drip 0.4. Chase C: kałuże _GRIME równomierne → _GrimeTraffic (odległość od ściany/krawędzi z UV1 paved).
+- Tło: artifacts/stains-0194/regen.ps1 (build_world D+C → import D Low, C Low/High → render after). Status: artifacts/stains-0194/after/regen.status
+- NASTĘPNY KROK: `Get-Content artifacts/stains-0194/after/regen.status` → po DONE obejrzeć after vs before, pomiar luminancji plam, EditMode (`pwsh scripts/test.ps1 -Platform EditMode` w slocie unity), ADR 0194.
+- build_world Dojlidy OK 23:27: łaty 285 → 416, olej 271 (bez zmian). Trwa build C → import → render after.
+- NASTĘPNY KROK: `Get-Content artifacts/stains-0194/after/regen.status`
+- After #1 (23:57): olej P11-129b 91 → 62 kodu (asfalt 66–70) = ciemniejszy, ostrzejszy; s1066 smugi słabsze, ALE s1370 pokazał szew płyty (płyta czystsza od ramienia) → poprawka: rozmycie kolein narasta od obrysu płyty (0 → 8 m), kodowanie liniowe UV1.y = 20 + 100·spread + min(edge,1). Łaty: D 285→416, C 317→443.
+- Tło: regen.ps1 -Tag after2 (PID 2708; kolejka heavy). 
+- NASTĘPNY KROK: `Get-Content artifacts/stains-0194/after2/regen.status` → SBS s1066/s1370 → EditMode → ADR → raport.
+- Merge `origin/main` → `stains-0194` (`e6ba0c751`, 0 konfliktów, brudne pliki wyczyszczone). Potwierdzony żółto-brązowy pas w `after2/D-Low/route-s1370.png` (~5 m w głąb płyty).
+- NASTĘPNY KROK: poprawka `_patch_uv1` w `tools/worldgen/roads/meshing.py` (zasięg `d + 25.0`, kodowanie `PLATE_EDGE_FLAG` dla wszystkich wierzchołków płyty) + test w `tests/gis/test_stains_0194.py`.
