@@ -26,24 +26,24 @@ from PIL import Image, ImageDraw
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from roads import pipeline  # noqa: E402
 
-# material name prefix -> RGB (first match wins); None = not drawn
+# ground / road materials by name prefix -> RGB (first match wins). Everything else (buildings, trees, forest canopy,
+# fences, collision) is skipped: this is a view of the road layout, and canopies would hide the carriageway.
 PALETTE = (
-    ("collision", None), ("wire", None), ("fence", None), ("terrain", (96, 122, 78)), ("verge", (110, 138, 86)),
-    ("shoulder", (150, 140, 120)), ("marking_yellow", (240, 200, 40)), ("marking", (245, 245, 245)),
-    ("curb", (205, 205, 200)), ("kerb", (205, 205, 200)), ("road_asphalt", (62, 62, 66)), ("path_asphalt", (120, 96, 96)),
-    ("sidewalk", (170, 166, 158)), ("paving", (170, 166, 158)), ("pavement", (170, 166, 158)), ("bridge", (120, 130, 150)),
-    ("deck", (120, 130, 150)), ("concrete", (175, 175, 170)), ("island", (160, 150, 140)), ("cycle", (150, 80, 70)),
-    ("barrier", (230, 120, 40)), ("guardrail", (230, 120, 40)), ("noise", (60, 110, 90)), ("building", None), ("roof", None),
-    ("wall", None), ("tree", None),
+    ("terrain", (96, 122, 78)), ("verge", (110, 138, 86)), ("plot_lawn", (104, 130, 82)),
+    ("shoulder", (150, 140, 120)), ("marking_yard", (200, 200, 200)), ("marking", (245, 245, 245)),
+    ("curb", (205, 205, 200)), ("bridge_kerb", (205, 205, 200)), ("road_asphalt", (62, 62, 66)),
+    ("road_concrete", (150, 150, 146)), ("road_gravel", (150, 132, 104)), ("road_paving", (128, 122, 118)),
+    ("path_asphalt", (120, 96, 96)), ("cycle_red", (150, 80, 70)), ("sidewalk", (176, 172, 164)),
+    ("apron", (140, 134, 126)), ("yard", (134, 132, 128)), ("bridge_concrete", (120, 130, 150)),
+    ("barrier_steel", (230, 120, 40)), ("noise_panel", (40, 150, 150)),
 )
-FALLBACK = (140, 110, 150)   # unknown material: visible, so that nothing silently disappears
 
 
 def colour(name: str):
     for k, c in PALETTE:
-        if name.startswith(k) or k in name:
+        if name.startswith(k):
             return c
-    return FALLBACK
+    return None
 
 
 def read_glb(path: Path):
