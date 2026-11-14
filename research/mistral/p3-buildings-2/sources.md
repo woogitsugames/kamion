@@ -115,3 +115,10 @@ Bibliografia wpisów „Osiedlownika" wskazuje m.in.: prof. Adam Dobroński, „
 ## Zdjęcia — licencje i użycie
 
 Wszystkie zdjęcia w paczce służą jako **referencja** (identyfikacja budynku, kolor elewacji ESTIMATED); tekstur do odtworzenia z nich nie dostarczamy. NC/ND — link „tylko referencja". CC BY-SA (Commons/Borawski, KartaView, Panoramax, OSM) — „referencja, nie tekstura". Licencje komercyjnie czyste w ZIP: miniatury Commons Rakoon CC0/CC BY 3.0 (przeskalowane do ≤1600 px) oraz wycinki ortofoto GUGiK (dane publiczne).
+
+## M53-FIX-2 (14.11)
+
+- Wikimedia Commons, Rakoon, **CC0**: „20221119 074333 November 2022 in Białystok.jpg” (M53-056, ul. Olecka 10), „20221119 074412 November 2022 in Białystok.jpg” (M53-057, ul. Giżycka 5) — referencja identyfikacyjna; licencja z extmetadata Commons (dostęp 2026-11-14).
+- OSM API 0.6 (way/264944866, way/211634559, map bbox 23.1450,53.1428,23.1495,53.1452) — © współtwórcy OpenStreetMap, ODbL.
+- GUGiK UUG (services.gugik.gov.pl/uug, punkty adresowe EMUiA: Al. 1000-lecia PP 6 i 8) — dane publiczne.
+- GUGiK LoD1 2024 powiat 2061 (sha256 57d3e14d4620c17232eaabd85a8aa5579ed1539772945e23a3971d867901d380).
