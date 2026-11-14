@@ -180,8 +180,15 @@ def main() -> None:
     if "orto10" in a.extra:
         # ADR 0204: newest 0.1 m RGB orthophoto as a QA reference where the 0.25 m series is older than the roads
         # (Knyszyn: 0.25 m = 2022/2024, 0.1 m = 2025-05; ~280 MB per sheet). Reference only, never a texture.
-        o10 = pick_latest(P["ORTO"], bb, lambda r: r.get("piksel") == "0.1" and r.get("kolor") == "RGB"
-                          and r.get("uklad_xy") == "PL-1992")
+        # one flight campaign has several akt_data days (knyszyn-s: 2025-05-25 and 05-27), so group by year here
+        c10 = [r for r in P["ORTO"] if r.get("piksel") == "0.1" and r.get("kolor") == "RGB"
+               and r.get("uklad_xy") == "PL-1992"]
+        o10 = []
+        for year in sorted({r["akt_rok"] for r in c10}, reverse=True):
+            series = [r for r in c10 if r["akt_rok"] == year]
+            if covers(series, bb) > 0.9999:
+                o10 = sorted(series, key=lambda r: r["url_do_pobrania"])
+                break
         if not o10:
             sys.exit("no 0.1 m RGB orthophoto series fully covers the tile")
         ingest_dataset(dl, {

@@ -13,3 +13,29 @@ overrides:
     confidence: high
     verify: none
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35}
+  # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
+  - id: rynek-plaza-east
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180: [[761009.8, 612431.3], [761034.6, 612426.7], [761066.6, 612408.3], [761071.2, 612399.2],
+                       [761066.6, 612392.3], [761039.2, 612376.3], [761016.2, 612371.7], [761002.5, 612376.3],
+                       [760999.0, 612385.4], [761002.0, 612408.3], [761005.9, 612429.0]]
+    reason: >-
+      East half of Rynek: a paved plaza between Grodzienska (west) and the two streets of the market's east corner.
+      BDOT10k OT_PTPL_A has it as gravel (older state); the 2025 orthophoto and owner frames 20240730_190331 /
+      20250729_1825xx show light granite setts laid in arcs. Outline traced on the 2025 orthophoto, +-3 m, the two
+      lawns (north triangle, south oval) are not cut out (open). yard_paving = the closest existing set (block
+      paving); granite sett in arcs is not in the library (open, later polish).
+    confidence: medium
+    verify: owner photo of the whole plaza from a corner
+  - id: rynek-fountain-plate
+    kind: paved_area
+    material: yard_slabs
+    polygon_epsg2180: [[761031.2, 612400.4], [761040.2, 612400.4], [761040.2, 612393.4], [761031.2, 612393.4]]
+    reason: >-
+      Ground-level fountain of Rynek (owner frames: jets from a flush rectangular plate ~9 x 7 m in the sett
+      paving). Position ESTIMATED from the ring pattern of the paving on the 2025 orthophoto (centre 761035.7
+      612396.9, +-5 m); size WORKING_VALUE read off the owner frame (a child ~1 m tall beside a plate ~8-9 m wide).
+      Only the plate is laid; water jets and night lighting are not modelled (open).
+    confidence: low
+    verify: owner - where on the plaza the fountain is (which corner / distance from Grodzienska)
