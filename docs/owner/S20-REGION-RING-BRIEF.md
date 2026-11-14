@@ -9,3 +9,6 @@ Kolejność: (1) rozbudowa Białegostoku w stronę wylotu na Knyszyn, (2) droga 
 
 ## AKTUALIZACJA 2 (właściciel): zwykła droga, nie ekspresówka; budowa ekspresówki przy Knyszynie
 Trasa Białystok → Knyszyn = istniejąca zwykła droga (krajowa/wojewódzka), nie droga ekspresowa. W rejonie Knyszyna trwa budowa ekspresówki: sprawdź OSM (`highway=construction`, `construction=*`, `proposed`, objazdy, daty edycji), datę ortofoto i NMT względem robót; odtwarzaj stan bieżący przejezdny, plac budowy uproszczony (WORKING_VALUE), a rozbieżności źródeł wypisz w ADR jako pytania do właściciela.
+
+## Zdjęcia właściciela z Knyszyna
+`docs/owner/OWNER-PHOTOS-KNYSZYN.md` (pliki w research/_incoming/owner-knyszyn-photos-2026-11-14, bez EXIF/GPS; prywatność — patrz plik). Strefa budowy z żółtym oznakowaniem tymczasowym jest na kadrach 20260728_*.
