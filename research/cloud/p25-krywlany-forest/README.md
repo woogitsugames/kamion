@@ -144,3 +144,6 @@ Seed `random.Random(20261114).sample(range(277), 56)` → 56 wierszy (20,2 %); o
 ## Pliki
 
 `manifest.csv` · `files_index.csv` · `fetch.py` · `sources.md` · `audit_20_percent.json` · `data/` (BDL, CHM, kompleksy, horyzont, skorowidze, odrzucone kadry) · `tools/` (skrypty; NMPT/NMT/BDOT pobierane do katalogu roboczego, nie do gita).
+
+## Errata lidera (s20, 2026-11-14)
+Patrz `docs/reports/REVIEW-2026-11-14-s20-cloud-m68.md` §5 (errata 1–9, m.in. C68-213 pnie widoczne; K2/K3; udziały wg gatunku panującego). Atrybucja BDL do docs/LICENSES.md.

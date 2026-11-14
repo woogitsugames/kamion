@@ -11,7 +11,7 @@ istnieje tylko jako miniatura.
 """
 import csv, hashlib, os, sys, time, urllib.request, urllib.error
 
-UA = "kamion-research/1.0 (open-data reference collection)"
+UA = "research-fetch/1.0 (open-data reference collection)"
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 def get(url, tries):
