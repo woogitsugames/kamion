@@ -17,4 +17,4 @@ Kontynuujesz projekt Kamion (Unity 6000.3.28f1 URP, Białystok 1:1) w `C:\Users\
 2. Przeglądy PR (brief) i raportów Argona/sesji kodu → scalenia → JEDNA regeneracja C + Dojlid → trucks/NightWindows → EditMode → APK → A16 gate3 + zrzuty.
 3. Follow-upy gry zebrane w HANDOVER (s20): kalibracja zmierzchu/nocy (M60), światła R148 (0197), podpory Putry (0198), ściana NW wieżowca (M57), fizyka R3 (promień opony, naciski, marki w JSON), U-12b słupki (M58), pas Krywlany (M58), zieleń znaków (R1, ADR), A/B `androidBlitType` (R8), płot alpha-to-coverage (0185).
 
-**Ostatni przydzielony ADR: 0198.**
+**Ostatni przydzielony ADR: 0202.**
