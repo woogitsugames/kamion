@@ -7,7 +7,7 @@
 ## Legenda
 
 - **Źródła (skróty):** `R:<tag>:<linie>` = `docs/reports/REVIEW-2026-11-1x-<tag>.md` (np. `R:s20-0183:12` = `docs/reports/REVIEW-2026-11-14-s20-0183.md:12`); `A:<nnnn>:<linie>` = `docs/adr/<nnnn>-*.md`; `H:<linie>` = `HANDOVER.md` na `6dc816c`; `G:<n>` = `docs/reports/GATE-<n>.md`. Linie sprawdzone `grep -n`/`awk NR` na bazie.
-- **Priorytet:** P0/P1/P2 dosłownie z recenzji/ADR. `*` = recenzja/ADR nie nadaje priorytetu — nadany przez autora backlogu (wpływ na bramkę → P1, reszta P2). `↑` = źródła różnią się, wzięty najwyższy.
+- **Priorytet:** P0/P1/P2 dosłownie z recenzji/ADR. `*` = recenzja/ADR nie nadaje priorytetu — nadany przez autora backlogu (niespełniony warunek bramki z `docs/03` → P0, wpływ na bramkę/legalność → P1, reszta P2). `↑` = źródła różnią się, wzięty najwyższy.
 - **Status:** `otwarte` — brak dowodu zamknięcia; `w toku (gałąź)` — gałąź na `origin` albo zlecenie w HANDOVER; `prawdopodobnie zamknięte (dowód)` — późniejsza recenzja/ADR/HANDOVER/commit na `origin/main` mówi, że naprawione; `do weryfikacji` — późniejsze źródło sugeruje zmianę, ale bez jednoznacznego zamknięcia.
 - **Wielkość:** S ≤ ½ dnia agenta, M ≈ 1 agent-sesja, L > 1 sesji / wiele agentów (szacunek autora backlogu, `WORKING_VALUE`).
 - **Obszary:** świat C (region `bialystok-industrial-c`), Dojlidy (region `bialystok-dojlidy`), ciężarówka (model/oświetlenie zestawu), fizyka, rendering (oświetlenie, niebo, shadery, noc), audio, UI (HUD, nawigacja), perf (telefon, pomiary, GC), research (źródła, paczki Mistral/GPT, licencje).
