@@ -285,6 +285,7 @@ namespace Game.World.Import
         {
             var mat = CreateMaterialCore(r, id, m, roadAsphalt);
             WorldShadowCasterBias.ApplyRegionPolicy(mat, m, r.Region, id); // ADR0155: optional region data, no global bias change.
+            NightWindowAssets.ApplyMaterial(mat, id);   // ADR 0192: lit windows on facade_atlas and the LOD1 rows
             // ADR0098: explicit hero glazing semantic for receiver-depth bias; other materials stay off.
             if (mat != null && mat.HasProperty("_ArchitecturalGlass"))
             {

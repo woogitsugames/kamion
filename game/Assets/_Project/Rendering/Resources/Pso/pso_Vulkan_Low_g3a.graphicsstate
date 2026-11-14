@@ -51,25 +51,7 @@
                 "keywordNames": "FOG_EXP _FURNITURE_PLINTH",
                 "subShaderIndex": 0,
                 "passIndex": 1,
-                "graphicsStateInfoSet": [
-                    {
-                        "vertexLayout": 11673344174591679451,
-                        "renderPass": 11294987102597378144,
-                        "renderState": 17259535550629827284,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 1.0,
-                        "slopeDepthBias": 2.5,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": true
-                    }
-                ]
+                "graphicsStateInfoSet": []
             }
         },
         {
@@ -232,7 +214,25 @@
                 "keywordNames": "FOG_EXP",
                 "subShaderIndex": 0,
                 "passIndex": 1,
-                "graphicsStateInfoSet": []
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 13862169363310410145,
+                        "renderPass": 11294987102597378144,
+                        "renderState": 17259535550629827284,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 1.0,
+                        "slopeDepthBias": 2.5,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
             }
         },
         {
@@ -1214,6 +1214,21 @@
                         "invertProjectionMatrix": true
                     }
                 ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "984a6b09337a79677d1b4606aff7c1c2"
+            },
+            "second": {
+                "shaderName": "Kamion/World PBR",
+                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _NIGHTWIN _UV_MESH0",
+                "subShaderIndex": 0,
+                "passIndex": 1,
+                "graphicsStateInfoSet": []
             }
         },
         {
@@ -3149,39 +3164,6 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "4fce7dbd7c49ff7efaace41665bf1a82"
-            },
-            "second": {
-                "shaderName": "Kamion/World Car Glass",
-                "shaderAssetGUID": "baa43fbff0fea1749bd040c58e161bdb",
-                "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP _SCREEN_SHEET",
-                "subShaderIndex": 0,
-                "passIndex": 0,
-                "graphicsStateInfoSet": [
-                    {
-                        "vertexLayout": 14355360307497054792,
-                        "renderPass": 1555455587692101970,
-                        "renderState": 4161966877222828655,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": true
-                    }
-                ]
-            }
-        },
-        {
-            "first": {
-                "serializedVersion": "2",
                 "Hash": "4bfe09f7e90ba4bcd113d617134973cd"
             },
             "second": {
@@ -3213,6 +3195,39 @@
                         "vertexLayout": 48144718831037730,
                         "renderPass": 1555455587692101970,
                         "renderState": 7396373862984744873,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "4fce7dbd7c49ff7efaace41665bf1a82"
+            },
+            "second": {
+                "shaderName": "Kamion/World Car Glass",
+                "shaderAssetGUID": "baa43fbff0fea1749bd040c58e161bdb",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _SCREEN_SHEET",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 14355360307497054792,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 4161966877222828655,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
@@ -3901,6 +3916,56 @@
         {
             "first": {
                 "serializedVersion": "2",
+                "Hash": "54570d4918e3116a8b6f6e3e6f98a981"
+            },
+            "second": {
+                "shaderName": "Kamion/World PBR",
+                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _MAIN_LIGHT_SHADOWS _NIGHTWIN _UV_MESH0",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
                 "Hash": "5c1f4ccf62599cb1b46f5cadef2390da"
             },
             "second": {
@@ -3973,6 +4038,73 @@
                         "baseShadingRate": 0,
                         "depthBias": 1.0,
                         "slopeDepthBias": 2.5,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "a907f4380b47cdad6a2c3fc26f3a3d13"
+            },
+            "second": {
+                "shaderName": "Kamion/World PBR",
+                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _MAIN_LIGHT_SHADOWS _NIGHTWIN _SPLASH _UV_MESH0",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 14294710416514936304,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": false
+                    },
+                    {
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
                         "userBackface": false,
                         "appBackface": false,
                         "wireframe": false,

@@ -136,10 +136,11 @@ def test_tower_gable_is_blank_with_one_stair_column():
     # LOD1: two plain side quads + 10 x (plain piece + window) + top piece = 23 quads in the far material
     assert len(_on_wall(buf, "buildings_low", "plaster_beige__far_office", SW, 238.0)) == 46
     assert len(_on_wall(buf, "buildings", "plaster_beige", SE, -1e9)) == 0                 # the SE wall is white
-    # every column window is the clear-glass office variant (`variants: [4]`)
+    # every column window is the clear-glass white-framed office variant (`variants: [2]`, ADR 0190)
     from streetscape import facade_atlas as FA
     from streetscape import frontage as FR
-    assert all(FA.FAR_ROWS["office"][r][b_][1] == 4 for r, b_ in FR._bays("office", [4])) and FR._bays("office", [4])
+    assert b["ovr"]["facades"][0]["variants"] == [2]
+    assert all(FA.FAR_ROWS["office"][r][b_][1] == 2 for r, b_ in FR._bays("office", [2])) and FR._bays("office", [2])
 
 
 def test_tower_long_wall_has_one_band_per_storey_on_white():
@@ -160,7 +161,9 @@ def test_tower_long_wall_has_one_band_per_storey_on_white():
     rows = 0
     for p in buf.parts:
         if p.layer == "buildings_low" and p.mat == "plaster_white__far_ribbon":
-            assert ((p.UV[:, 1] < 1.0) | (p.UV[:, 1] >= v0 + 0.9 - 1e-6)).all()
+            vb = FA.far_row_v("balcony_1", 0)      # ADR 0190: blind lights = the white sheet of the balcony row
+            assert ((p.UV[:, 1] < 1.0) | (p.UV[:, 1] >= v0 + 0.9 - 1e-6)
+                    | ((p.UV[:, 1] > vb + 0.1) & (p.UV[:, 1] < vb + 1.0))).all()
             rows += int((p.UV[:, 1] >= v0).sum())
     assert rows > 0
     m1, m0 = buf.mats("buildings_low"), buf.mats("buildings")
@@ -180,8 +183,15 @@ def test_tower_uses_only_materials_the_generic_office_set_has():
     far = {m for m in buf.mats("buildings_low") if "__far_" in m}
     assert far == {"plaster_beige__far_office", "plaster_white__far_ribbon"}
     assert {"plaster_white", "plaster_beige"} <= set(BM.OFFICE_WALLS)
-    # LOD1 stays cheap: under 800 triangles for the whole tower (300 with the hashed facade)
-    assert sum(len(p.T) for p in buf.parts if p.layer == "buildings_low") < 800
+    # LOD1 stays cheap: under 850 triangles for the walls and roof (300 with the hashed facade; ADR 0190: + one
+    # lintel quad per band) and under 1300 with the roof masts (galvanised steel + light radomes)
+    from streetscape import frontage as FR
+    low = [p for p in buf.parts if p.layer == "buildings_low"]
+    zroof = max(float(p.V[:, 2].max()) for p in low if "__far_" in p.mat)
+    masts = sum(int((p.V[p.T][:, :, 2].min(1) > zroof - 0.5).sum()) for p in low
+                if p.mat in (FR.ROOF_MAST_MAT, FR.ROOF_PANEL_MAT))
+    total = sum(len(p.T) for p in low)
+    assert total - masts < 850 and total < 1300, (total, masts)
 
 
 def test_tower_outline_is_straightened_by_the_authored_opening():
@@ -210,8 +220,9 @@ def test_light_band_is_one_office_window_per_light_on_lod1():
     wins = FR.facade_windows(r, 10.0, 0.0, 0.45, 3.5, 5.0, 1, "k")
     acc = Acc()
     FR.lod1_facade(acc, r, wins, np.array([0.0, 0.0]), np.array([1.0, 0.0]), 10.0, 0.6, 5.0)
-    lights = [uv for uv in acc.q if uv[0][1] > 2.0]
-    assert len(lights) == FR.ribbon_lights(9.2) == 6 and all(abs(uv[1][0] - uv[0][0] - 1.5) < 1e-9 for uv in lights)
+    lights = [uv for uv in acc.q if uv[0][1] > 1.0]          # office-row windows and blinds (ADR 0190)
+    assert len(lights) == FR.ribbon_lights(9.2) == 6
+    assert all(abs(uv[1][0] - uv[0][0] - (1.5 if uv[0][1] > 20.0 else FR.BLIND_CELL[3])) < 1e-9 for uv in lights)
     with pytest.raises(ValueError):
         _rule(windows="ribbon", glazing="blue")
     with pytest.raises(ValueError):
