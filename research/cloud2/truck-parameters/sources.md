@@ -1,0 +1,52 @@
+# Źródła — R3 truck-parameters (data dostępu 2026-11-14)
+
+Pliki pobiera `fetch.py` do `files/` (poza gitem, `.gitignore`). Dokumenty producentów: tylko cytowane liczby (dane techniczne), bez redystrybucji plików; w grze bez marek.
+
+| klucz | dokument / autor | URL strony | plik w files/ | rozmiar | status prawny | wiersze manifestu |
+|---|---|---|---|---|---|---|
+| R13R3 | UNECE WP.29 (E/ECE/324/Rev.1/Add.12/Rev.3, 1996; seria 08) | https://digitallibrary.un.org/record/237462 | `R13_Add12_Rev3.pdf` | 0.5 MB | dokument urzędowy ONZ/EKG ONZ — cytat; plik poza gitem | R3-139…R3-150 (11) |
+| R13JP | UNECE / MLIT | https://www.mlit.go.jp/jidosha/un/UN_R013_02.pdf | `UN_R013_02.pdf` | 0.6 MB | dokument urzędowy ONZ/EKG ONZ — cytat; plik poza gitem (tekst równoległy EN/JA publikowany przez MLIT Japonia) | R3-151…R3-162 (6) |
+| EU9653 | Rada UE — dyrektywa 96/53/WE, tekst skonsolidowany 14.08.2019 | https://eur-lex.europa.eu/legal-content/PL/TXT/?uri=CELEX:01996L0053-20190814 | `EU_96_53_pol.pdf` | 0.5 MB | dokument urzędowy UE — decyzja Komisji 2011/833/UE (ponowne wykorzystanie); cytat | R3-001…R3-010 (10) |
+| EU740 | PE i Rada — rozporządzenie (UE) 2020/740 | https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32020R0740 | `EU_2020_740_eng.pdf` | 2.5 MB | dokument urzędowy UE — decyzja Komisji 2011/833/UE (ponowne wykorzystanie); cytat | R3-133…R3-137 (5) |
+| FMVSS121 | NHTSA — 49 CFR 571.121 (FMVSS 121), eCFR 2026-11-01 | https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-571/subpart-B/section-571.121 | `ecfr_571_121.xml` | 0.1 MB | US Government work (eCFR) — domena publiczna | R3-153…R3-153 (1) |
+| D13K500 | Volvo Trucks, fact sheet D13K500 EU6SCR v10 (2025-06-16) | https://stpi.it.volvo.com/STPIFiles/Volvo/FactSheet/D13K500_Eng_010_338550297.pdf | `D13K500_Eng_010_338550297.pdf` | 1.1 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-039…R3-051 (8) |
+| D13K460 | Volvo Trucks, fact sheet D13K460 EU6SCR v11 | https://stpi.it.volvo.com/STPIFiles/Volvo/FactSheet/D13K460_Eng_011_338836626.pdf | `D13K460_Eng_011.pdf` | 0.4 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-041…R3-042 (2) |
+| FH42T | Volvo Trucks, Model range FH 13 4x2 Tractor rear air (FH 42T 3A, GBR, 2026-09-25) | https://stpi.it.volvo.com/STPIFiles/Volvo/ModelRange/fh42t3a_gbr_eng.pdf | `volvo_fh42t3a_gbr_eng.pdf` | 0.8 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-011…R3-025 (11) |
+| AT2612 | Volvo Trucks, fact sheet AT2612 gen. G v02 (2022-02-28) | https://stpi.it.volvo.com/STPIFiles/Volvo/FactSheet/AT2612_Eng_02_324367762.pdf | `volvo_AT2612_Eng_02.pdf` | 1.4 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-068…R3-079 (12) |
+| ATO2612F | Volvo Trucks, fact sheet ATO2612F v01 (2016-03-14) | https://stpi.it.volvo.com/STPIFiles/Volvo/FactSheet/ATO2612F_Eng_01_306008981.pdf | `volvo_ATO2612F_Eng_01.pdf` | 1.3 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-080…R3-091 (12) |
+| RSS1344C | Volvo Trucks, fact sheet RSS1344C | https://stpi.it.volvo.com/STPIFiles/Volvo/FactSheet/RSS1344C_Eng_01_331202088.pdf | `volvo_RSS1344C_Eng_01.pdf` | 0.5 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-106…R3-106 (1) |
+| TRAXON | ZF Friedrichshafen, product data sheet TraXon | https://www.zf.com/public/org/Product-data-sheet_TraXon-Torque_71520.pdf | `Product-data-sheet_TraXon-Torque_71520.pdf` | 3.6 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-052…R3-067 (15) |
+| DAFXF | DAF Trucks, specyfikacja pojazdu demo 18-BLR-6 (XF 480 FTT 6x4, 2019) | https://drivers.daf.com/-/media/files/driver-challenge/18-blr-6-xf-480-ftt-specblad.pdf | `daf_xf480ftt_specblad.pdf` | 5.6 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-026…R3-104 (3) |
+| DAFCF | DAF Trucks, specyfikacja pojazdu demo 16-BLR-6 (CF 480 FAR 6x2, 2019) | https://drivers.daf.com/-/media/files/driver-challenge/16-blr-6-cf-480-far-specblad.pdf | `daf_cf480far_specblad.pdf` | 5.2 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-105…R3-105 (1) |
+| MBPT | Mercedes-Benz Powertrain, broszura Truck EURO VI | https://powertrain.mercedes-benz-trucks.com/content/dam/powertrain/files/Truck-EURO-VI-Powertrain-EN.pdf.coredownload.pdf | `mb_truck_euro_vi_powertrain_en.pdf` | 6.8 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-020…R3-103 (18) |
+| DUNLOP | Dunlop (Goodyear), Truck Tyres Technical Databook 2021 (kopia dystrybutora bigtyres.co.uk) | https://mail.bigtyres.co.uk/media/landingpages/documents/Dunlop_Truck_Tyres_Technical_Databook_2021.pdf | `dunlop_truck_databook_2021.pdf` | 7.3 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-108…R3-114 (3) |
+| BSM | Bridgestone, datasheet M-STEER 001 (kopia dystrybutora) | https://www.bigtyres.co.uk/media/landingpages/documents/bridgestone_m-steer-001_datasheet.pdf | `bridgestone_m-steer-001_datasheet.pdf` | 0.8 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-109…R3-115 (2) |
+| BSR | Bridgestone, datasheet DURAVIS R-STEER 002 (kopia dystrybutora) | https://www.bigtyres.co.uk/media/landingpages/documents/bridgestone_r-steer-002_datasheet.pdf | `bridgestone_r-steer-002_datasheet.pdf` | 1.0 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-110…R3-113 (2) |
+| BSE | Bridgestone, datasheet ECOPIA H-TRAILER 002 (kopia dystrybutora) | https://www.bigtyres.co.uk/media/landingpages/documents/bridgestone_ecopia-h-trailer-002_datasheet.pdf | `bridgestone_ecopia-h-trailer-002_datasheet.pdf` | 1.3 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-116…R3-116 (1) |
+| NOKIAN | Nokian Heavy Tyres, tire certificate 315/70 R22.5 E-Truck Drive (2022-08-03) | https://nokiantyres.studio.crasman.fi/pub/PIH/certificates/pc24/if-e-truck-drive/tire-certificate_315-70r22-5-154-150l-nokian-e-truck-drive_20220803_en_SI-1.pdf | `nokian_315_70r22_5_cert.pdf` | 0.1 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-112…R3-138 (3) |
+| KASS26 | Kässbohrer, Curtainsider series EN v5.1 (2026-04-27) | https://kaessbohrer.com/uploads/2026/4/curtainsider-series-en-v5-1-2026-04-27-145956.pdf | `kaessbohrer_curtainsider_v5_1.pdf` | 16.7 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-027…R3-038 (8) |
+| SCB | Schmitz Cargobull, broszura S.CS curtainsider semi-trailer | https://www.cargobull.com/-/media/project/scb-sites/scb-global-site/media-center-en/brochure-scs-curtainsider-semi-trailer.pdf | `scb_scs_brochure.pdf` | 6.5 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-030…R3-031 (2) |
+| KARIS | M. Karisaari, Modelling and assessment of performance based standards for high capacity vehicles, MSc Chalmers 2020:14 | https://odr.chalmers.se/items/2b98fd45-b586-4c56-8adf-40c854a1b35c | `chalmers_2020_karisaari.pdf` | 2.0 MB | praca dyplomowa, otwarty dostęp (Chalmers ODR); licencja nieokreślona — tylko cytat | R3-125…R3-131 (7) |
+| VARGH | A. Varghese, Influence of Tyre Inflation Pressure on Fuel Consumption, Vehicle Handling and Ride Quality, MSc Chalmers 2013/2014 | https://odr.chalmers.se/items/a63a7dd3-e046-49c9-8ac2-1415cf953104 | `chalmers_2014_varghese.pdf` | 3.6 MB | praca dyplomowa, otwarty dostęp (Chalmers ODR); licencja nieokreślona — tylko cytat | R3-155…R3-156 (2) |
+
+## Cytowane z wcześniejszych pakietów (nie dublowane)
+
+- `research/mistral/p4-truck-regulations` — P4-123…P4-138 (96/53/WE: wymiary, masy, naciski; WT § 3). W R3 tylko ponownie potwierdzone w tekście skonsolidowanym 01996L0053-20190814 (wiersze R3-001…R3-010).
+- `docs/VEHICLE_REFERENCE_DATA.md` S1 (D13K500), S2 (TraXon), S5 (R13 02 MLIT), S7 (Bridgestone M-STEER) — te same dokumenty otwarte ponownie; R3 dodaje do nich drugie i trzecie źródła.
+
+Przejrzane i nieużyte: Kässbohrer Curtainsider EN 2022 (zastąpiony wersją v5.1 z 2026) — usunięty z fetch.py po recenzji.
+
+## Źródła NIE pobrane (zablokowane w tej sesji — tylko link, referencja)
+
+| dokument | URL | powód |
+|---|---|---|
+| NHTSA DOT HS 812 176 — Tire rolling resistance vs Class 8 tractor-trailer stopping distance (2015) | https://www.nhtsa.gov/sites/nhtsa.gov/files/812176-tirerollresistclass8tractrtrailrstopdistperfm.pdf | HTTP 403 (Akamai) |
+| NHTSA DOT HS 809 700 — Class 8 truck tractor braking performance improvement study (2004) | https://www.nhtsa.gov/sites/nhtsa.dot.gov/files/doths809700.pdf | HTTP 403 |
+| FHWA/ROSA P — Heavy and Overweight Vehicle Brake Testing: five-axle tractor-semitrailer | https://rosap.ntl.bts.gov/view/dot/32424/dot_32424_DS1.pdf | HTTP 403 |
+| MDPI Appl. Sci. 13(9) 5336 (2023), DOI 10.3390/app13095336 — braking safety indicators tractor-semitrailer (symulacja) | https://doi.org/10.3390/app13095336 | HTTP 403 |
+| UMTRI Factbook of mechanical properties of heavy truck components (Fancher i in., 1986) | https://deepblue.lib.umich.edu/ | Cloudflare challenge (403) |
+| UN R13 nowsze serie (Rev.8+, 11 seria) | https://unece.org/transport/vehicle-regulations-wp29/standards/addenda-1958-agreement-regulations-0-20 | unece.org HTTP 403; EUR-Lex 2016/194 (OJ L 42) — strona z wyzwaniem JS, Cellar 404 |
+
+## Metoda wyszukiwania
+
+Wyszukiwarka (WebSearch) → bezpośrednie PDF producentów / urzędów; Chalmers ODR przez API DSpace (`/server/api/discover/search/objects`); EUR-Lex przez Cellar (`publications.europa.eu/resource/celex/<CELEX>` z `Accept: application/pdf`); eCFR przez API versioner (wymaga kompresji).

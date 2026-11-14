@@ -1,0 +1,4095 @@
+{
+ "n_trees_total": 2549,
+ "n_trees_within_15m_of_road_axis": 1537,
+ "n_rows": 111,
+ "n_trees_in_rows": 911,
+ "gap_m": {
+  "n": 800,
+  "p10": 4.28,
+  "p25": 5.27,
+  "median": 7.13,
+  "p75": 10.11,
+  "p90": 15.57
+ },
+ "axis_offset_m": {
+  "n": 911,
+  "p10": 4.01,
+  "p25": 5.23,
+  "median": 6.31,
+  "p75": 8.09,
+  "p90": 11.37
+ },
+ "kerb_offset_m_est": {
+  "n": 911,
+  "p10": 0.97,
+  "p25": 1.45,
+  "median": 2.47,
+  "p75": 3.96,
+  "p90": 8.09
+ },
+ "gap_m_per_row_median": {
+  "n": 111,
+  "p10": 4.57,
+  "p25": 6.66,
+  "median": 7.98,
+  "p75": 9.82,
+  "p90": 12.39
+ },
+ "rows": [
+  {
+   "way": 707452746,
+   "name": "Świętego Ojca Pio",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 37,
+   "len_m": 172.9,
+   "gap_median": 4.44,
+   "gap_min": 3.64,
+   "gap_max": 17.35,
+   "axis_offset_median": 6.51,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.26,
+   "lat": 53.1184406,
+   "lon": 23.168132,
+   "leaf_type": [
+    [
+     "broadleaved",
+     37
+    ]
+   ],
+   "tree_ids": [
+    13522496550,
+    13522496549,
+    13522496548,
+    13522496547,
+    13522496546,
+    13522496545,
+    13522496544,
+    13522496543,
+    13522496542,
+    13522496541,
+    13522496540,
+    13522496539,
+    13522496538,
+    13522496537,
+    13522496536,
+    13522496535,
+    13522496534,
+    13522496533,
+    13522496532,
+    13522496531,
+    13522496530,
+    13522496529,
+    13522496528,
+    13522496527,
+    13522496526,
+    13522496525,
+    13522496524,
+    13522496523,
+    13522496522,
+    13522496521,
+    13522496520,
+    13522496519,
+    13522496518,
+    13522496517,
+    13522496516,
+    13522496515,
+    13522496514
+   ]
+  },
+  {
+   "way": 233967307,
+   "name": "Lipowa",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 30,
+   "len_m": 244.6,
+   "gap_median": 6.87,
+   "gap_min": 6.15,
+   "gap_max": 27.15,
+   "axis_offset_median": 6.26,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.01,
+   "lat": 53.1336275,
+   "lon": 23.1513034,
+   "leaf_type": [
+    [
+     "?",
+     30
+    ]
+   ],
+   "tree_ids": [
+    3027638216,
+    3027638218,
+    3027638219,
+    3027638220,
+    3027638222,
+    3027638223,
+    3027638224,
+    3027638225,
+    3027638227,
+    3027638229,
+    3027638232,
+    3027641834,
+    3027641838,
+    3027641840,
+    3027641841,
+    3027641842,
+    3027641843,
+    3027641844,
+    3027641845,
+    3027641846,
+    3027641847,
+    3027641848,
+    3027641849,
+    3027599057,
+    3027599060,
+    3027599062,
+    3027599064,
+    3027599066,
+    3027599068,
+    3027599070
+   ]
+  },
+  {
+   "way": 249649188,
+   "name": "Świętego Ojca Pio",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 30,
+   "len_m": 125.7,
+   "gap_median": 4.4,
+   "gap_min": 3.7,
+   "gap_max": 4.8,
+   "axis_offset_median": 6.72,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.85,
+   "lat": 53.119423,
+   "lon": 23.1721854,
+   "leaf_type": [
+    [
+     "broadleaved",
+     30
+    ]
+   ],
+   "tree_ids": [
+    8926039183,
+    8926039182,
+    8926039181,
+    8926039180,
+    8926039179,
+    8926039178,
+    8926039177,
+    8926039176,
+    8926039175,
+    8926039174,
+    8926039173,
+    8926039172,
+    8926039171,
+    8926039170,
+    8926039169,
+    8926039168,
+    8926039167,
+    8926039166,
+    8926039165,
+    8926039164,
+    8926039163,
+    8926039162,
+    8926039161,
+    8926039160,
+    8926039159,
+    8926039158,
+    8926039157,
+    8926039156,
+    8926039155,
+    8926039184
+   ]
+  },
+  {
+   "way": 307638769,
+   "name": "Lipowa",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 26,
+   "len_m": 170.5,
+   "gap_median": 6.81,
+   "gap_min": 6.22,
+   "gap_max": 7.5,
+   "axis_offset_median": 5.53,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.28,
+   "lat": 53.1334192,
+   "lon": 23.1518935,
+   "leaf_type": [
+    [
+     "broadleaved",
+     26
+    ]
+   ],
+   "tree_ids": [
+    3027736379,
+    3027736378,
+    3027736375,
+    3027736373,
+    3027736372,
+    3027736370,
+    3027736368,
+    3027736367,
+    3027736365,
+    3027736363,
+    3027736362,
+    3027736360,
+    3027736357,
+    3027736356,
+    3027736355,
+    3027736352,
+    3027736350,
+    3027736349,
+    3027736345,
+    3027736343,
+    3027736341,
+    3027736336,
+    3027736334,
+    3027733732,
+    3027733728,
+    3027733725
+   ]
+  },
+  {
+   "way": 70535002,
+   "name": "Elektryczna",
+   "highway": "residential",
+   "side": "L",
+   "oneway": "yes",
+   "lanes": null,
+   "width_tag": null,
+   "n": 25,
+   "len_m": 30.3,
+   "gap_median": 1.2,
+   "gap_min": 0.1,
+   "gap_max": 6.89,
+   "axis_offset_median": 6.4,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 3.65,
+   "lat": 53.1304672,
+   "lon": 23.1722773,
+   "leaf_type": [
+    [
+     "?",
+     25
+    ]
+   ],
+   "tree_ids": [
+    2213483718,
+    2213483689,
+    2213483692,
+    2213483757,
+    2213483736,
+    2213483683,
+    2202293817,
+    2202293821,
+    2202293813,
+    2202293818,
+    2202293810,
+    2202293816,
+    2202293819,
+    2202293811,
+    2202293815,
+    2202589082,
+    2202589075,
+    2202589081,
+    2202589084,
+    2202589076,
+    2202589078,
+    2202589079,
+    2202589077,
+    2202589080,
+    2202589085
+   ]
+  },
+  {
+   "way": 208218909,
+   "name": "Pracownicza",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 20,
+   "len_m": 192.9,
+   "gap_median": 8.36,
+   "gap_min": 2.21,
+   "gap_max": 23.76,
+   "axis_offset_median": 3.97,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.22,
+   "lat": 53.1083027,
+   "lon": 23.136007,
+   "leaf_type": [
+    [
+     "broadleaved",
+     18
+    ],
+    [
+     "?",
+     2
+    ]
+   ],
+   "tree_ids": [
+    12026387662,
+    12842284852,
+    12026387664,
+    12026387669,
+    12026387668,
+    12026387670,
+    12026387673,
+    12026387675,
+    12026387676,
+    12026387678,
+    12026387679,
+    12026387680,
+    12842284851,
+    12026387681,
+    12026387682,
+    12026387683,
+    12026387684,
+    12026387687,
+    12026387693,
+    12026387694
+   ]
+  },
+  {
+   "way": 208218907,
+   "name": "Zielna",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": "5.8",
+   "n": 19,
+   "len_m": 222.7,
+   "gap_median": 12.43,
+   "gap_min": 4.1,
+   "gap_max": 24.01,
+   "axis_offset_median": 3.79,
+   "half_width": 2.9,
+   "half_width_src": "width",
+   "kerb_offset_median": 0.89,
+   "lat": 53.1083635,
+   "lon": 23.1425534,
+   "leaf_type": [
+    [
+     "?",
+     19
+    ]
+   ],
+   "tree_ids": [
+    12843241051,
+    12843241050,
+    12843241049,
+    12843241048,
+    12843241047,
+    12843241046,
+    12843241044,
+    12843241043,
+    12843241042,
+    12843241040,
+    12843241039,
+    12843241038,
+    12843241037,
+    12843241036,
+    12843241035,
+    12843241034,
+    12843241033,
+    12843241032,
+    12843241031
+   ]
+  },
+  {
+   "way": 35447634,
+   "name": "Suraska",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 18,
+   "len_m": 120.2,
+   "gap_median": 7.01,
+   "gap_min": 5.52,
+   "gap_max": 10.3,
+   "axis_offset_median": 11.44,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 8.19,
+   "lat": 53.1311759,
+   "lon": 23.1560494,
+   "leaf_type": [
+    [
+     "?",
+     18
+    ]
+   ],
+   "tree_ids": [
+    3192107774,
+    3192107776,
+    3192107780,
+    3192107781,
+    3192107782,
+    3192107783,
+    3192107785,
+    3192107789,
+    3192107796,
+    3192107800,
+    3192107803,
+    3192107805,
+    3192107807,
+    3192107808,
+    3192107809,
+    3192107810,
+    3192107811,
+    3192107812
+   ]
+  },
+  {
+   "way": 249649188,
+   "name": "Świętego Ojca Pio",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 18,
+   "len_m": 75.9,
+   "gap_median": 4.57,
+   "gap_min": 3.41,
+   "gap_max": 4.83,
+   "axis_offset_median": 6.0,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.12,
+   "lat": 53.1190248,
+   "lon": 23.1706055,
+   "leaf_type": [
+    [
+     "broadleaved",
+     18
+    ]
+   ],
+   "tree_ids": [
+    13522496513,
+    13522496512,
+    13522496511,
+    13522496510,
+    13522496509,
+    13522496508,
+    13522496507,
+    13522496506,
+    13522496505,
+    13522496504,
+    13522496503,
+    13522496502,
+    13522496501,
+    13522478800,
+    13522478799,
+    13522478798,
+    13522478797,
+    13522478796
+   ]
+  },
+  {
+   "way": 258839420,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 17,
+   "len_m": 156.9,
+   "gap_median": 8.08,
+   "gap_min": 5.93,
+   "gap_max": 28.06,
+   "axis_offset_median": 5.97,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.09,
+   "lat": 53.1360355,
+   "lon": 23.1559638,
+   "leaf_type": [
+    [
+     "broadleaved",
+     17
+    ]
+   ],
+   "tree_ids": [
+    13918474541,
+    13918474542,
+    13918474543,
+    13918474544,
+    13918474545,
+    13918474546,
+    13918474547,
+    13918474548,
+    13918474549,
+    13918474550,
+    13918474551,
+    13918474552,
+    13918474553,
+    13918474554,
+    13918474555,
+    13918474556,
+    13918474557
+   ]
+  },
+  {
+   "way": 581608908,
+   "name": "Piastowska",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 14,
+   "len_m": 129.0,
+   "gap_median": 9.9,
+   "gap_min": 6.84,
+   "gap_max": 11.95,
+   "axis_offset_median": 14.11,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 10.86,
+   "lat": 53.13066,
+   "lon": 23.1919012,
+   "leaf_type": [
+    [
+     "broadleaved",
+     14
+    ]
+   ],
+   "tree_ids": [
+    3914539168,
+    3914539169,
+    3914539170,
+    3914539171,
+    3914539172,
+    11914262605,
+    3914539173,
+    3914539174,
+    3914539175,
+    3914539176,
+    3914539177,
+    11914262606,
+    11914262607,
+    11914262608
+   ]
+  },
+  {
+   "way": 277775396,
+   "name": "Icchoka Malmeda",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": "yes",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 14,
+   "len_m": 126.7,
+   "gap_median": 10.59,
+   "gap_min": 4.75,
+   "gap_max": 16.15,
+   "axis_offset_median": 5.33,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.08,
+   "lat": 53.1337504,
+   "lon": 23.1567741,
+   "leaf_type": [
+    [
+     "broadleaved",
+     14
+    ]
+   ],
+   "tree_ids": [
+    13714200998,
+    13714200999,
+    13714201000,
+    13714212301,
+    13714212303,
+    13714212302,
+    13714212304,
+    13714212305,
+    13714212306,
+    13714212307,
+    13714212308,
+    13714212309,
+    13714212310,
+    13714212311
+   ]
+  },
+  {
+   "way": 62126503,
+   "name": "Krucza",
+   "highway": "living_street",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 13,
+   "len_m": 131.0,
+   "gap_median": 10.1,
+   "gap_min": 2.25,
+   "gap_max": 18.25,
+   "axis_offset_median": 3.77,
+   "half_width": 2.5,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.27,
+   "lat": 53.1106366,
+   "lon": 23.1339435,
+   "leaf_type": [
+    [
+     "broadleaved",
+     11
+    ],
+    [
+     "needleleaved",
+     2
+    ]
+   ],
+   "tree_ids": [
+    12026387528,
+    12026387529,
+    12026387547,
+    12026387548,
+    12026387549,
+    12026387583,
+    12026387550,
+    12026387551,
+    12286721759,
+    12026387552,
+    12026387553,
+    12026387554,
+    12286721757
+   ]
+  },
+  {
+   "way": 208218909,
+   "name": "Pracownicza",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 13,
+   "len_m": 139.5,
+   "gap_median": 8.05,
+   "gap_min": 5.79,
+   "gap_max": 26.7,
+   "axis_offset_median": 3.97,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.22,
+   "lat": 53.1082371,
+   "lon": 23.1347895,
+   "leaf_type": [
+    [
+     "broadleaved",
+     13
+    ]
+   ],
+   "tree_ids": [
+    12026387651,
+    12026387654,
+    12026387655,
+    12026387660,
+    12026387659,
+    12026387661,
+    12026387663,
+    12026387665,
+    12026387666,
+    12026387667,
+    12026387671,
+    12026387672,
+    12026387674
+   ]
+  },
+  {
+   "way": 249806838,
+   "name": "Świętego Rocha",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 13,
+   "len_m": 103.0,
+   "gap_median": 7.67,
+   "gap_min": 6.33,
+   "gap_max": 16.41,
+   "axis_offset_median": 7.69,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 4.44,
+   "lat": 53.1335901,
+   "lon": 23.1417702,
+   "leaf_type": [
+    [
+     "broadleaved",
+     13
+    ]
+   ],
+   "tree_ids": [
+    13267388746,
+    13267388747,
+    13267388748,
+    13267388749,
+    13267388750,
+    13267388751,
+    13267388752,
+    13267388753,
+    13267388754,
+    13267388755,
+    13267388756,
+    13267388757,
+    13267388758
+   ]
+  },
+  {
+   "way": 258839421,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 11,
+   "len_m": 102.6,
+   "gap_median": 10.25,
+   "gap_min": 8.64,
+   "gap_max": 12.31,
+   "axis_offset_median": 7.16,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.28,
+   "lat": 53.1361991,
+   "lon": 23.1507173,
+   "leaf_type": [
+    [
+     "broadleaved",
+     11
+    ]
+   ],
+   "tree_ids": [
+    13578146337,
+    13578146338,
+    13578146339,
+    13578146340,
+    13578146341,
+    13578146342,
+    13578146343,
+    13578146347,
+    13578146346,
+    13578146345,
+    13578146344
+   ]
+  },
+  {
+   "way": 26359486,
+   "name": "Księdza Arcybiskupa Edwarda Kisiela",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 11,
+   "len_m": 77.7,
+   "gap_median": 5.16,
+   "gap_min": 0.88,
+   "gap_max": 18.9,
+   "axis_offset_median": 14.01,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 11.26,
+   "lat": 53.1123253,
+   "lon": 23.1381981,
+   "leaf_type": [
+    [
+     "?",
+     11
+    ]
+   ],
+   "tree_ids": [
+    13344342142,
+    13344342140,
+    13344342141,
+    13344342194,
+    13344342192,
+    13344342193,
+    13344342102,
+    13344342103,
+    13344342104,
+    13344342105,
+    13344342106
+   ]
+  },
+  {
+   "way": 233967307,
+   "name": "Lipowa",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 10,
+   "len_m": 61.1,
+   "gap_median": 6.73,
+   "gap_min": 6.58,
+   "gap_max": 7.18,
+   "axis_offset_median": 6.46,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.21,
+   "lat": 53.1339601,
+   "lon": 23.1486148,
+   "leaf_type": [
+    [
+     "?",
+     10
+    ]
+   ],
+   "tree_ids": [
+    3027599046,
+    3027599047,
+    3027599049,
+    3027599050,
+    3027599051,
+    3027599052,
+    3027599054,
+    3027599055,
+    3027599056,
+    3027599058
+   ]
+  },
+  {
+   "way": 310054869,
+   "name": "Parkowa",
+   "highway": "residential",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": null,
+   "width_tag": null,
+   "n": 10,
+   "len_m": 123.1,
+   "gap_median": 13.06,
+   "gap_min": 9.25,
+   "gap_max": 23.4,
+   "axis_offset_median": 9.02,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 6.27,
+   "lat": 53.1243122,
+   "lon": 23.1693889,
+   "leaf_type": [
+    [
+     "?",
+     10
+    ]
+   ],
+   "tree_ids": [
+    3154036607,
+    3154036605,
+    3154036600,
+    3154036598,
+    3154036596,
+    3154036591,
+    3154036587,
+    3154036582,
+    3154036580,
+    3154036579
+   ]
+  },
+  {
+   "way": 23982142,
+   "name": "Mieszka I",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "no",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 10,
+   "len_m": 113.8,
+   "gap_median": 10.4,
+   "gap_min": 8.52,
+   "gap_max": 19.32,
+   "axis_offset_median": 10.29,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 7.04,
+   "lat": 53.1349352,
+   "lon": 23.187444,
+   "leaf_type": [
+    [
+     "broadleaved",
+     10
+    ]
+   ],
+   "tree_ids": [
+    10268419722,
+    10268419723,
+    10268419725,
+    10268419726,
+    10268419727,
+    10268419728,
+    10268419729,
+    10268419730,
+    10268419731,
+    10268419732
+   ]
+  },
+  {
+   "way": 26359485,
+   "name": "Zachodnia",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 10,
+   "len_m": 62.4,
+   "gap_median": 4.81,
+   "gap_min": 3.73,
+   "gap_max": 15.58,
+   "axis_offset_median": 5.89,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.64,
+   "lat": 53.112295,
+   "lon": 23.1344014,
+   "leaf_type": [
+    [
+     "broadleaved",
+     10
+    ]
+   ],
+   "tree_ids": [
+    12026387493,
+    12026387494,
+    12026387495,
+    12026387496,
+    12026387497,
+    12026387498,
+    12026387499,
+    12026387500,
+    12026387501,
+    12026387502
+   ]
+  },
+  {
+   "way": 48747331,
+   "name": "Wspólna",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 10,
+   "len_m": 93.0,
+   "gap_median": 6.89,
+   "gap_min": 5.26,
+   "gap_max": 19.9,
+   "axis_offset_median": 4.7,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.95,
+   "lat": 53.1111145,
+   "lon": 23.1342145,
+   "leaf_type": [
+    [
+     "broadleaved",
+     10
+    ]
+   ],
+   "tree_ids": [
+    12026387522,
+    12026387521,
+    12026387518,
+    12026387517,
+    12026387516,
+    12026387515,
+    12026387511,
+    12026387512,
+    12026387513,
+    12026387514
+   ]
+  },
+  {
+   "way": 330617196,
+   "name": "Kazimierza Pułaskiego",
+   "highway": "unclassified",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 10,
+   "len_m": 135.1,
+   "gap_median": 13.65,
+   "gap_min": 5.31,
+   "gap_max": 29.21,
+   "axis_offset_median": 5.37,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.12,
+   "lat": 53.1095623,
+   "lon": 23.1313643,
+   "leaf_type": [
+    [
+     "broadleaved",
+     10
+    ]
+   ],
+   "tree_ids": [
+    12026387605,
+    12026387602,
+    12026387601,
+    12026387599,
+    12026387598,
+    12026387597,
+    12026387596,
+    12026387595,
+    12026387593,
+    12026387592
+   ]
+  },
+  {
+   "way": 23844435,
+   "name": "Konstantego Kalinowskiego",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "no",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 10,
+   "len_m": 65.2,
+   "gap_median": 7.22,
+   "gap_min": 6.64,
+   "gap_max": 7.67,
+   "axis_offset_median": 4.54,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.29,
+   "lat": 53.1312962,
+   "lon": 23.1533529,
+   "leaf_type": [
+    [
+     "broadleaved",
+     10
+    ]
+   ],
+   "tree_ids": [
+    13799521432,
+    13799521431,
+    13799521430,
+    13799521429,
+    13799521428,
+    13799521427,
+    13799521426,
+    13799521425,
+    13799521424,
+    13799521423
+   ]
+  },
+  {
+   "way": 242890139,
+   "name": "Marii Skłodowskiej-Curie",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "3",
+   "width_tag": null,
+   "n": 10,
+   "len_m": 104.1,
+   "gap_median": 8.97,
+   "gap_min": 5.48,
+   "gap_max": 24.48,
+   "axis_offset_median": 5.95,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.08,
+   "lat": 53.1284995,
+   "lon": 23.1586626,
+   "leaf_type": [
+    [
+     "broadleaved",
+     10
+    ]
+   ],
+   "tree_ids": [
+    13714220097,
+    13714220098,
+    13714220099,
+    13714242909,
+    13714242910,
+    13714242911,
+    13714242912,
+    13714242913,
+    13714242914,
+    13714242915
+   ]
+  },
+  {
+   "way": 307638769,
+   "name": "Lipowa",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 9,
+   "len_m": 54.6,
+   "gap_median": 6.74,
+   "gap_min": 6.38,
+   "gap_max": 7.49,
+   "axis_offset_median": 6.23,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.98,
+   "lat": 53.1331463,
+   "lon": 23.1542971,
+   "leaf_type": [
+    [
+     "broadleaved",
+     9
+    ]
+   ],
+   "tree_ids": [
+    3027736347,
+    3027736344,
+    3027736342,
+    3027736338,
+    3027736335,
+    3027736333,
+    3027733729,
+    3027733727,
+    3027733724
+   ]
+  },
+  {
+   "way": 48747331,
+   "name": "Wspólna",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 9,
+   "len_m": 73.6,
+   "gap_median": 7.71,
+   "gap_min": 7.05,
+   "gap_max": 14.9,
+   "axis_offset_median": 4.41,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.66,
+   "lat": 53.1100031,
+   "lon": 23.134062,
+   "leaf_type": [
+    [
+     "broadleaved",
+     9
+    ]
+   ],
+   "tree_ids": [
+    12026387538,
+    12026387537,
+    12026387536,
+    12026387535,
+    12026387534,
+    12026387533,
+    12026387532,
+    12026387525,
+    12026387526
+   ]
+  },
+  {
+   "way": 175200352,
+   "name": "Księdza Aleksandra Syczewskiego",
+   "highway": "residential",
+   "side": "L",
+   "oneway": "yes",
+   "lanes": null,
+   "width_tag": null,
+   "n": 9,
+   "len_m": 47.2,
+   "gap_median": 5.4,
+   "gap_min": 3.17,
+   "gap_max": 9.8,
+   "axis_offset_median": 6.72,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 3.97,
+   "lat": 53.1414624,
+   "lon": 23.1862546,
+   "leaf_type": [
+    [
+     "?",
+     9
+    ]
+   ],
+   "tree_ids": [
+    13689496376,
+    13689496375,
+    13689496374,
+    13689496351,
+    13689496373,
+    13689496372,
+    13689496350,
+    13689496349,
+    13689496369
+   ]
+  },
+  {
+   "way": 207923551,
+   "name": "Akademicka",
+   "highway": "residential",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": null,
+   "width_tag": null,
+   "n": 9,
+   "len_m": 87.0,
+   "gap_median": 8.64,
+   "gap_min": 6.47,
+   "gap_max": 24.38,
+   "axis_offset_median": 5.95,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 3.2,
+   "lat": 53.1297185,
+   "lon": 23.1601957,
+   "leaf_type": [
+    [
+     "broadleaved",
+     9
+    ]
+   ],
+   "tree_ids": [
+    13724956549,
+    13724956547,
+    13724956548,
+    13724956546,
+    13724956541,
+    13724956545,
+    13724956542,
+    13724956543,
+    13724956544
+   ]
+  },
+  {
+   "way": 233967307,
+   "name": "Lipowa",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 8,
+   "len_m": 47.6,
+   "gap_median": 6.74,
+   "gap_min": 6.6,
+   "gap_max": 7.08,
+   "axis_offset_median": 5.71,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.46,
+   "lat": 53.1335223,
+   "lon": 23.1512568,
+   "leaf_type": [
+    [
+     "?",
+     8
+    ]
+   ],
+   "tree_ids": [
+    3027638209,
+    3027638210,
+    3027638211,
+    3027638212,
+    3027638213,
+    3027638214,
+    3027638215,
+    3027638217
+   ]
+  },
+  {
+   "way": 28804995,
+   "name": "Brukowa",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 8,
+   "len_m": 56.8,
+   "gap_median": 7.98,
+   "gap_min": 7.12,
+   "gap_max": 10.12,
+   "axis_offset_median": 10.99,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 8.24,
+   "lat": 53.1318539,
+   "lon": 23.1466636,
+   "leaf_type": [
+    [
+     "?",
+     8
+    ]
+   ],
+   "tree_ids": [
+    3150821695,
+    3150821694,
+    3150821693,
+    3150821690,
+    3150821687,
+    3150821685,
+    3150821684,
+    3150821683
+   ]
+  },
+  {
+   "way": 23982142,
+   "name": "Mieszka I",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "no",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 8,
+   "len_m": 81.2,
+   "gap_median": 9.02,
+   "gap_min": 8.25,
+   "gap_max": 28.32,
+   "axis_offset_median": 9.38,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 6.13,
+   "lat": 53.1343035,
+   "lon": 23.1906344,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ],
+    [
+     "?",
+     1
+    ]
+   ],
+   "tree_ids": [
+    6505948604,
+    6505949482,
+    6505949483,
+    6505949484,
+    6505949485,
+    6505949486,
+    6505949487,
+    6505949488
+   ]
+  },
+  {
+   "way": 175485710,
+   "name": "Tadeusza Mazowieckiego",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 8,
+   "len_m": 69.7,
+   "gap_median": 9.79,
+   "gap_min": 9.05,
+   "gap_max": 11.0,
+   "axis_offset_median": 4.94,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.69,
+   "lat": 53.1351726,
+   "lon": 23.1534601,
+   "leaf_type": [
+    [
+     "broadleaved",
+     8
+    ]
+   ],
+   "tree_ids": [
+    7840161834,
+    7840161833,
+    7840161832,
+    7840161831,
+    7840161830,
+    7840161829,
+    7840161828,
+    7840161827
+   ]
+  },
+  {
+   "way": 242890135,
+   "name": "Legionowa",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 8,
+   "len_m": 66.6,
+   "gap_median": 7.54,
+   "gap_min": 4.73,
+   "gap_max": 23.03,
+   "axis_offset_median": 4.99,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.74,
+   "lat": 53.1286329,
+   "lon": 23.1539079,
+   "leaf_type": [
+    [
+     "broadleaved",
+     8
+    ]
+   ],
+   "tree_ids": [
+    10657293444,
+    10657293445,
+    10657293446,
+    10657293447,
+    10657293449,
+    10657293450,
+    10657293451,
+    10657293452
+   ]
+  },
+  {
+   "way": 62126503,
+   "name": "Krucza",
+   "highway": "living_street",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 8,
+   "len_m": 66.5,
+   "gap_median": 7.02,
+   "gap_min": 3.01,
+   "gap_max": 24.25,
+   "axis_offset_median": 8.73,
+   "half_width": 2.5,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 6.23,
+   "lat": 53.1107559,
+   "lon": 23.1327572,
+   "leaf_type": [
+    [
+     "broadleaved",
+     8
+    ]
+   ],
+   "tree_ids": [
+    12026387563,
+    12026387562,
+    12026387561,
+    12026387560,
+    12026387559,
+    12026387558,
+    12026387555,
+    12286721760
+   ]
+  },
+  {
+   "way": 556077477,
+   "name": "Wspólna",
+   "highway": "residential",
+   "side": "P",
+   "oneway": "no",
+   "lanes": null,
+   "width_tag": null,
+   "n": 8,
+   "len_m": 67.5,
+   "gap_median": 8.27,
+   "gap_min": 6.47,
+   "gap_max": 15.12,
+   "axis_offset_median": 4.28,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.53,
+   "lat": 53.1086354,
+   "lon": 23.1342685,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ],
+    [
+     "?",
+     1
+    ]
+   ],
+   "tree_ids": [
+    12026387634,
+    12026387635,
+    12026387628,
+    12026387627,
+    12026387626,
+    12026387625,
+    12026387623,
+    12838596273
+   ]
+  },
+  {
+   "way": 556077477,
+   "name": "Wspólna",
+   "highway": "residential",
+   "side": "L",
+   "oneway": "no",
+   "lanes": null,
+   "width_tag": null,
+   "n": 8,
+   "len_m": 108.3,
+   "gap_median": 15.45,
+   "gap_min": 4.02,
+   "gap_max": 26.66,
+   "axis_offset_median": 5.17,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 2.42,
+   "lat": 53.1073906,
+   "lon": 23.1344672,
+   "leaf_type": [
+    [
+     "broadleaved",
+     8
+    ]
+   ],
+   "tree_ids": [
+    12026387646,
+    12026387647,
+    12026387645,
+    12026387644,
+    12026387643,
+    12026387638,
+    12026387637,
+    12026387636
+   ]
+  },
+  {
+   "way": 1365781189,
+   "name": "Władysława Liniarskiego",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": "no",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 8,
+   "len_m": 31.6,
+   "gap_median": 4.54,
+   "gap_min": 3.63,
+   "gap_max": 5.59,
+   "axis_offset_median": 7.04,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.17,
+   "lat": 53.1324009,
+   "lon": 23.1553131,
+   "leaf_type": [
+    [
+     "broadleaved",
+     8
+    ]
+   ],
+   "tree_ids": [
+    12070488021,
+    12070488020,
+    12070488019,
+    12070488018,
+    12070488017,
+    12070488016,
+    12070488015,
+    12070488014
+   ]
+  },
+  {
+   "way": 249649177,
+   "name": "Czesława Miłosza",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 8,
+   "len_m": 93.8,
+   "gap_median": 11.9,
+   "gap_min": 4.54,
+   "gap_max": 24.1,
+   "axis_offset_median": 6.46,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.58,
+   "lat": 53.121153,
+   "lon": 23.1782205,
+   "leaf_type": [
+    [
+     "broadleaved",
+     8
+    ]
+   ],
+   "tree_ids": [
+    12115193103,
+    12115193104,
+    12115193105,
+    12115193106,
+    12115193108,
+    12115193109,
+    12115193111,
+    12115193112
+   ]
+  },
+  {
+   "way": 208218907,
+   "name": "Zielna",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": "5.8",
+   "n": 8,
+   "len_m": 56.0,
+   "gap_median": 7.12,
+   "gap_min": 4.04,
+   "gap_max": 16.39,
+   "axis_offset_median": 4.29,
+   "half_width": 2.9,
+   "half_width_src": "width",
+   "kerb_offset_median": 1.39,
+   "lat": 53.1083043,
+   "lon": 23.1426238,
+   "leaf_type": [
+    [
+     "?",
+     8
+    ]
+   ],
+   "tree_ids": [
+    12843240911,
+    12843240910,
+    12843240909,
+    12843240907,
+    12843240908,
+    12843240906,
+    12843240905,
+    12843240904
+   ]
+  },
+  {
+   "way": 39935048,
+   "name": "Władysława Reymonta",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 8,
+   "len_m": 94.3,
+   "gap_median": 14.59,
+   "gap_min": 8.24,
+   "gap_max": 17.04,
+   "axis_offset_median": 4.6,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.85,
+   "lat": 53.1323688,
+   "lon": 23.12258,
+   "leaf_type": [
+    [
+     "broadleaved",
+     8
+    ]
+   ],
+   "tree_ids": [
+    13705338642,
+    13705338641,
+    13705338640,
+    13705338639,
+    13705338638,
+    13705338637,
+    13705338635,
+    13705338636
+   ]
+  },
+  {
+   "way": 251428910,
+   "name": "Marii Skłodowskiej-Curie",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "4",
+   "width_tag": null,
+   "n": 8,
+   "len_m": 63.7,
+   "gap_median": 8.99,
+   "gap_min": 4.95,
+   "gap_max": 18.17,
+   "axis_offset_median": 5.44,
+   "half_width": 6.5,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": -1.06,
+   "lat": 53.1275846,
+   "lon": 23.159842,
+   "leaf_type": [
+    [
+     "broadleaved",
+     8
+    ]
+   ],
+   "tree_ids": [
+    13714242917,
+    13714242918,
+    13714242921,
+    13714242920,
+    13714242923,
+    13714242922,
+    13714242924,
+    13714242925
+   ]
+  },
+  {
+   "way": 211649990,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "5",
+   "width_tag": null,
+   "n": 8,
+   "len_m": 56.4,
+   "gap_median": 7.86,
+   "gap_min": 5.14,
+   "gap_max": 12.61,
+   "axis_offset_median": 8.01,
+   "half_width": 8.125,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": -0.11,
+   "lat": 53.1357545,
+   "lon": 23.1601719,
+   "leaf_type": [
+    [
+     "broadleaved",
+     8
+    ]
+   ],
+   "tree_ids": [
+    13929126846,
+    13929126847,
+    13929126848,
+    13929126849,
+    13929126850,
+    13929126851,
+    13929126852,
+    13929126853
+   ]
+  },
+  {
+   "way": 277775396,
+   "name": "Icchoka Malmeda",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 7,
+   "len_m": 44.3,
+   "gap_median": 7.43,
+   "gap_min": 5.86,
+   "gap_max": 9.12,
+   "axis_offset_median": 12.74,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 9.49,
+   "lat": 53.1336589,
+   "lon": 23.157032,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ]
+   ],
+   "tree_ids": [
+    13912293904,
+    13912443194,
+    13912293905,
+    13912443195,
+    13912293906,
+    13912293907,
+    13912293908
+   ]
+  },
+  {
+   "way": 264215492,
+   "name": "Piastowska",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 7,
+   "len_m": 49.7,
+   "gap_median": 9.32,
+   "gap_min": 4.85,
+   "gap_max": 10.88,
+   "axis_offset_median": 14.67,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 9.79,
+   "lat": 53.1318254,
+   "lon": 23.1930728,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ]
+   ],
+   "tree_ids": [
+    3914539179,
+    3914539180,
+    3914539181,
+    3914539183,
+    3914539185,
+    3914539186,
+    3914539187
+   ]
+  },
+  {
+   "way": 249486628,
+   "name": "Kawaleryjska",
+   "highway": "unclassified",
+   "side": "P",
+   "oneway": null,
+   "lanes": "4",
+   "width_tag": null,
+   "n": 7,
+   "len_m": 50.6,
+   "gap_median": 8.66,
+   "gap_min": 3.94,
+   "gap_max": 11.4,
+   "axis_offset_median": 9.93,
+   "half_width": 6.5,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.43,
+   "lat": 53.1089776,
+   "lon": 23.1462961,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ]
+   ],
+   "tree_ids": [
+    6763732950,
+    6763732949,
+    6763732948,
+    6763732947,
+    6763732946,
+    6763732945,
+    6763732944
+   ]
+  },
+  {
+   "way": 261467964,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "5",
+   "width_tag": null,
+   "n": 7,
+   "len_m": 36.9,
+   "gap_median": 5.79,
+   "gap_min": 4.68,
+   "gap_max": 8.95,
+   "axis_offset_median": 10.09,
+   "half_width": 8.125,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.97,
+   "lat": 53.1362787,
+   "lon": 23.1533222,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ]
+   ],
+   "tree_ids": [
+    8462765046,
+    8462765047,
+    8462765048,
+    8462765049,
+    8462765050,
+    8462765051,
+    8462765052
+   ]
+  },
+  {
+   "way": 649680668,
+   "name": "Klepacka",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": "3",
+   "width_tag": null,
+   "n": 7,
+   "len_m": 46.4,
+   "gap_median": 8.04,
+   "gap_min": 6.03,
+   "gap_max": 8.75,
+   "axis_offset_median": 12.3,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 7.42,
+   "lat": 53.1147146,
+   "lon": 23.0926263,
+   "leaf_type": [
+    [
+     "?",
+     7
+    ]
+   ],
+   "tree_ids": [
+    10864787470,
+    10864787478,
+    10864787479,
+    10864787494,
+    10864787493,
+    10864787492,
+    10864787488
+   ]
+  },
+  {
+   "way": 26359485,
+   "name": "Zachodnia",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 7,
+   "len_m": 48.2,
+   "gap_median": 3.95,
+   "gap_min": 1.39,
+   "gap_max": 28.78,
+   "axis_offset_median": 10.84,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 7.59,
+   "lat": 53.1114941,
+   "lon": 23.1322361,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ],
+    [
+     "needleleaved",
+     2
+    ]
+   ],
+   "tree_ids": [
+    12026371439,
+    12026371438,
+    12026371447,
+    12026371448,
+    12026371449,
+    12026371450,
+    12026371451
+   ]
+  },
+  {
+   "way": 45852008,
+   "name": "Dzielna",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 7,
+   "len_m": 82.6,
+   "gap_median": 9.86,
+   "gap_min": 4.95,
+   "gap_max": 26.72,
+   "axis_offset_median": 6.94,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 4.19,
+   "lat": 53.1134083,
+   "lon": 23.1350009,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ]
+   ],
+   "tree_ids": [
+    12026387475,
+    12026387476,
+    12026387478,
+    12026387477,
+    12026387481,
+    12026387482,
+    12026387483
+   ]
+  },
+  {
+   "way": 208218907,
+   "name": "Zielna",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": "5.8",
+   "n": 7,
+   "len_m": 79.9,
+   "gap_median": 10.82,
+   "gap_min": 6.24,
+   "gap_max": 27.33,
+   "axis_offset_median": 3.7,
+   "half_width": 2.9,
+   "half_width_src": "width",
+   "kerb_offset_median": 0.8,
+   "lat": 53.1079631,
+   "lon": 23.1407157,
+   "leaf_type": [
+    [
+     "?",
+     7
+    ]
+   ],
+   "tree_ids": [
+    12843240901,
+    12843240700,
+    12843240699,
+    12843240698,
+    12843240697,
+    12843240696,
+    12843240695
+   ]
+  },
+  {
+   "way": 235194058,
+   "name": "Częstochowska",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": null,
+   "width_tag": null,
+   "n": 7,
+   "len_m": 31.6,
+   "gap_median": 5.28,
+   "gap_min": 4.78,
+   "gap_max": 5.67,
+   "axis_offset_median": 5.28,
+   "half_width": 3.5,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.78,
+   "lat": 53.1348253,
+   "lon": 23.1519328,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ]
+   ],
+   "tree_ids": [
+    13672455328,
+    13672455327,
+    13672455326,
+    13672455325,
+    13672455324,
+    13672455323,
+    13672455322
+   ]
+  },
+  {
+   "way": 258839420,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 7,
+   "len_m": 63.9,
+   "gap_median": 11.16,
+   "gap_min": 7.59,
+   "gap_max": 12.5,
+   "axis_offset_median": 5.67,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 0.79,
+   "lat": 53.1360214,
+   "lon": 23.1541765,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ]
+   ],
+   "tree_ids": [
+    13918474564,
+    13918474565,
+    13918474563,
+    13918474562,
+    13918474566,
+    13918474561,
+    13918474560
+   ]
+  },
+  {
+   "way": 211649990,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "5",
+   "width_tag": null,
+   "n": 7,
+   "len_m": 55.0,
+   "gap_median": 7.34,
+   "gap_min": 5.68,
+   "gap_max": 14.17,
+   "axis_offset_median": 8.97,
+   "half_width": 8.125,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 0.84,
+   "lat": 53.1353224,
+   "lon": 23.1615118,
+   "leaf_type": [
+    [
+     "broadleaved",
+     7
+    ]
+   ],
+   "tree_ids": [
+    13929126854,
+    13929126855,
+    13929126856,
+    13929126857,
+    13929126858,
+    13929126859,
+    13929126860
+   ]
+  },
+  {
+   "way": 263565376,
+   "name": "Mikołaja Kopernika",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "4",
+   "width_tag": null,
+   "n": 6,
+   "len_m": 39.4,
+   "gap_median": 7.94,
+   "gap_min": 6.16,
+   "gap_max": 9.89,
+   "axis_offset_median": 11.69,
+   "half_width": 6.5,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 5.19,
+   "lat": 53.1235795,
+   "lon": 23.122562,
+   "leaf_type": [
+    [
+     "?",
+     6
+    ]
+   ],
+   "tree_ids": [
+    2268570683,
+    2268570682,
+    2268570685,
+    2268570684,
+    2268570679,
+    2268570681
+   ]
+  },
+  {
+   "way": 233967307,
+   "name": "Lipowa",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 6,
+   "len_m": 34.1,
+   "gap_median": 6.82,
+   "gap_min": 6.6,
+   "gap_max": 7.03,
+   "axis_offset_median": 5.84,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.59,
+   "lat": 53.1337642,
+   "lon": 23.1497891,
+   "leaf_type": [
+    [
+     "?",
+     6
+    ]
+   ],
+   "tree_ids": [
+    3027638228,
+    3027638230,
+    3027641833,
+    3027641835,
+    3027641836,
+    3027641837
+   ]
+  },
+  {
+   "way": 40906208,
+   "name": "Lipowa",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "1",
+   "width_tag": null,
+   "n": 6,
+   "len_m": 37.1,
+   "gap_median": 6.95,
+   "gap_min": 5.06,
+   "gap_max": 9.93,
+   "axis_offset_median": 11.39,
+   "half_width": 1.625,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 9.77,
+   "lat": 53.1342058,
+   "lon": 23.146794,
+   "leaf_type": [
+    [
+     "?",
+     6
+    ]
+   ],
+   "tree_ids": [
+    3027599069,
+    3027599067,
+    3027599065,
+    3027599063,
+    3027599061,
+    3027599059
+   ]
+  },
+  {
+   "way": 207923562,
+   "name": "Marii Skłodowskiej-Curie",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": "no",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 6,
+   "len_m": 40.7,
+   "gap_median": 7.99,
+   "gap_min": 6.15,
+   "gap_max": 10.58,
+   "axis_offset_median": 7.9,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.02,
+   "lat": 53.1303216,
+   "lon": 23.156009,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    7182480260,
+    7182480247,
+    7182480246,
+    7182480245,
+    7182480244,
+    7182480243
+   ]
+  },
+  {
+   "way": 822340226,
+   "name": "Legionowa",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 6,
+   "len_m": 42.6,
+   "gap_median": 8.23,
+   "gap_min": 6.68,
+   "gap_max": 10.23,
+   "axis_offset_median": 7.03,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.15,
+   "lat": 53.1282973,
+   "lon": 23.1529431,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    10657293453,
+    10657293454,
+    10657293455,
+    10657293456,
+    10657293457,
+    10657293459
+   ]
+  },
+  {
+   "way": 812884344,
+   "name": null,
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 6,
+   "len_m": 28.9,
+   "gap_median": 5.74,
+   "gap_min": 4.72,
+   "gap_max": 6.57,
+   "axis_offset_median": 11.24,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 8.49,
+   "lat": 53.1146879,
+   "lon": 23.0936432,
+   "leaf_type": [
+    [
+     "?",
+     6
+    ]
+   ],
+   "tree_ids": [
+    10864787552,
+    10864787553,
+    10864787556,
+    10864787557,
+    10864787562,
+    10864787561
+   ]
+  },
+  {
+   "way": 48747331,
+   "name": "Wspólna",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 6,
+   "len_m": 51.3,
+   "gap_median": 9.97,
+   "gap_min": 6.27,
+   "gap_max": 14.52,
+   "axis_offset_median": 6.14,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 3.39,
+   "lat": 53.1099883,
+   "lon": 23.1339188,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    12026387540,
+    12026387542,
+    12026387541,
+    12026387543,
+    12026387544,
+    12026387545
+   ]
+  },
+  {
+   "way": 45852008,
+   "name": "Dzielna",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 6,
+   "len_m": 43.7,
+   "gap_median": 9.33,
+   "gap_min": 3.34,
+   "gap_max": 14.05,
+   "axis_offset_median": 5.52,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 2.77,
+   "lat": 53.1126806,
+   "lon": 23.1346173,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    12026371467,
+    12026387489,
+    12026387490,
+    12026387491,
+    12026387470,
+    12026387488
+   ]
+  },
+  {
+   "way": 556077477,
+   "name": "Wspólna",
+   "highway": "residential",
+   "side": "P",
+   "oneway": "no",
+   "lanes": null,
+   "width_tag": null,
+   "n": 6,
+   "len_m": 61.7,
+   "gap_median": 10.81,
+   "gap_min": 7.56,
+   "gap_max": 19.43,
+   "axis_offset_median": 4.74,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.99,
+   "lat": 53.1076154,
+   "lon": 23.1345581,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    12026387648,
+    12026387649,
+    12026387642,
+    12026387641,
+    12026387640,
+    12026387639
+   ]
+  },
+  {
+   "way": 330617196,
+   "name": "Kazimierza Pułaskiego",
+   "highway": "unclassified",
+   "side": "L",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 6,
+   "len_m": 44.7,
+   "gap_median": 8.15,
+   "gap_min": 4.39,
+   "gap_max": 16.8,
+   "axis_offset_median": 10.76,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 7.51,
+   "lat": 53.1097081,
+   "lon": 23.131487,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    12026387608,
+    12026387609,
+    12026387610,
+    12026387611,
+    12026387612,
+    12026387613
+   ]
+  },
+  {
+   "way": 556077477,
+   "name": "Wspólna",
+   "highway": "residential",
+   "side": "L",
+   "oneway": "no",
+   "lanes": null,
+   "width_tag": null,
+   "n": 6,
+   "len_m": 48.4,
+   "gap_median": 8.42,
+   "gap_min": 6.28,
+   "gap_max": 16.95,
+   "axis_offset_median": 4.9,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 2.15,
+   "lat": 53.1086687,
+   "lon": 23.1341344,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    12026387633,
+    12026387632,
+    12026387630,
+    12026387629,
+    12026387631,
+    12026387624
+   ]
+  },
+  {
+   "way": 208218909,
+   "name": "Pracownicza",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 6,
+   "len_m": 51.9,
+   "gap_median": 12.11,
+   "gap_min": 6.24,
+   "gap_max": 13.66,
+   "axis_offset_median": 3.98,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.23,
+   "lat": 53.1083101,
+   "lon": 23.1346412,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    12026387650,
+    12026387652,
+    12026387653,
+    12026387656,
+    12026387657,
+    12026387658
+   ]
+  },
+  {
+   "way": 723184438,
+   "name": "Władysława Liniarskiego",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": "3",
+   "width_tag": null,
+   "n": 6,
+   "len_m": 22.1,
+   "gap_median": 4.5,
+   "gap_min": 3.95,
+   "gap_max": 5.07,
+   "axis_offset_median": 6.2,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.32,
+   "lat": 53.1316688,
+   "lon": 23.1553451,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    12087916188,
+    12087916189,
+    12087916190,
+    12087916191,
+    12087916192,
+    12087916193
+   ]
+  },
+  {
+   "way": 26360554,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 6,
+   "len_m": 84.0,
+   "gap_median": 16.4,
+   "gap_min": 13.66,
+   "gap_max": 22.76,
+   "axis_offset_median": 8.4,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.53,
+   "lat": 53.135759,
+   "lon": 23.1472862,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    13578146348,
+    13578146349,
+    13578146350,
+    13578146351,
+    13578146352,
+    13578146353
+   ]
+  },
+  {
+   "way": 39935048,
+   "name": "Władysława Reymonta",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 6,
+   "len_m": 68.6,
+   "gap_median": 11.61,
+   "gap_min": 6.66,
+   "gap_max": 24.94,
+   "axis_offset_median": 4.18,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.43,
+   "lat": 53.1309181,
+   "lon": 23.1250142,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    13705338650,
+    13705338651,
+    13705338649,
+    13705338648,
+    13705338647,
+    13705338646
+   ]
+  },
+  {
+   "way": 39935048,
+   "name": "Władysława Reymonta",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 6,
+   "len_m": 54.5,
+   "gap_median": 8.5,
+   "gap_min": 6.39,
+   "gap_max": 20.25,
+   "axis_offset_median": 3.45,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 0.7,
+   "lat": 53.1301719,
+   "lon": 23.1264172,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    13705338661,
+    13705338660,
+    13705338659,
+    13705338658,
+    13705338652,
+    13705338653
+   ]
+  },
+  {
+   "way": 216945120,
+   "name": "Marii Skłodowskiej-Curie",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "3",
+   "width_tag": null,
+   "n": 6,
+   "len_m": 39.3,
+   "gap_median": 8.01,
+   "gap_min": 6.59,
+   "gap_max": 8.73,
+   "axis_offset_median": 6.37,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.49,
+   "lat": 53.1288316,
+   "lon": 23.158221,
+   "leaf_type": [
+    [
+     "broadleaved",
+     6
+    ]
+   ],
+   "tree_ids": [
+    13714220089,
+    13714220094,
+    13714220093,
+    13714220092,
+    13714220095,
+    13714220096
+   ]
+  },
+  {
+   "way": 992024261,
+   "name": "Świętego Rocha",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 5,
+   "len_m": 47.0,
+   "gap_median": 9.2,
+   "gap_min": 8.0,
+   "gap_max": 20.58,
+   "axis_offset_median": 5.69,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 2.94,
+   "lat": 53.1342388,
+   "lon": 23.1389366,
+   "leaf_type": [
+    [
+     "broadleaved",
+     3
+    ],
+    [
+     "?",
+     2
+    ]
+   ],
+   "tree_ids": [
+    2282660213,
+    2282660235,
+    13918452834,
+    13918452835,
+    13918452836
+   ]
+  },
+  {
+   "way": 261468661,
+   "name": "Krakowska",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 5,
+   "len_m": 37.6,
+   "gap_median": 9.0,
+   "gap_min": 5.95,
+   "gap_max": 13.65,
+   "axis_offset_median": 13.03,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 9.78,
+   "lat": 53.1326253,
+   "lon": 23.1466091,
+   "leaf_type": [
+    [
+     "?",
+     5
+    ]
+   ],
+   "tree_ids": [
+    3150821711,
+    3150821709,
+    3150821706,
+    3150821705,
+    3150821704
+   ]
+  },
+  {
+   "way": 23982142,
+   "name": "Mieszka I",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "no",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 5,
+   "len_m": 38.6,
+   "gap_median": 9.68,
+   "gap_min": 9.08,
+   "gap_max": 10.19,
+   "axis_offset_median": 10.22,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 6.97,
+   "lat": 53.1335756,
+   "lon": 23.1914925,
+   "leaf_type": [
+    [
+     "?",
+     5
+    ]
+   ],
+   "tree_ids": [
+    6505948606,
+    6505948607,
+    6505948608,
+    6505948609,
+    6505948610
+   ]
+  },
+  {
+   "way": 1123136544,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "4",
+   "width_tag": null,
+   "n": 5,
+   "len_m": 47.0,
+   "gap_median": 10.52,
+   "gap_min": 4.93,
+   "gap_max": 21.06,
+   "axis_offset_median": 10.22,
+   "half_width": 6.5,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.72,
+   "lat": 53.136289,
+   "lon": 23.1541207,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    8462765042,
+    8462765041,
+    8462765040,
+    8462765044,
+    8462765045
+   ]
+  },
+  {
+   "way": 1145074864,
+   "name": "Legionowa",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 5,
+   "len_m": 40.4,
+   "gap_median": 9.48,
+   "gap_min": 7.43,
+   "gap_max": 14.05,
+   "axis_offset_median": 5.54,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 0.67,
+   "lat": 53.1283795,
+   "lon": 23.1538531,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    10657292356,
+    10657292355,
+    10657292354,
+    10657292353,
+    10657292352
+   ]
+  },
+  {
+   "way": 48747331,
+   "name": "Wspólna",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 5,
+   "len_m": 27.4,
+   "gap_median": 6.91,
+   "gap_min": 5.76,
+   "gap_max": 7.85,
+   "axis_offset_median": 3.79,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.04,
+   "lat": 53.111609,
+   "lon": 23.1341584,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    12286721750,
+    12026387510,
+    12026387509,
+    12026387508,
+    12026387504
+   ]
+  },
+  {
+   "way": 208218909,
+   "name": "Pracownicza",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 5,
+   "len_m": 30.6,
+   "gap_median": 8.14,
+   "gap_min": 5.63,
+   "gap_max": 8.71,
+   "axis_offset_median": 3.79,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.04,
+   "lat": 53.1082241,
+   "lon": 23.138416,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    12026387688,
+    12026387689,
+    12026387690,
+    12026387691,
+    12026387695
+   ]
+  },
+  {
+   "way": 723184438,
+   "name": "Władysława Liniarskiego",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "3",
+   "width_tag": null,
+   "n": 5,
+   "len_m": 18.6,
+   "gap_median": 4.62,
+   "gap_min": 4.5,
+   "gap_max": 4.91,
+   "axis_offset_median": 7.41,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.54,
+   "lat": 53.1316738,
+   "lon": 23.1551416,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    12070488040,
+    12070488039,
+    12070488038,
+    12070488037,
+    12070488036
+   ]
+  },
+  {
+   "way": 208218900,
+   "name": "Ułańska",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 5,
+   "len_m": 31.4,
+   "gap_median": 7.93,
+   "gap_min": 6.59,
+   "gap_max": 8.96,
+   "axis_offset_median": 3.88,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.13,
+   "lat": 53.1072753,
+   "lon": 23.1395935,
+   "leaf_type": [
+    [
+     "?",
+     5
+    ]
+   ],
+   "tree_ids": [
+    12843240683,
+    12843240682,
+    12843240680,
+    12843240679,
+    12843240678
+   ]
+  },
+  {
+   "way": 249806838,
+   "name": "Świętego Rocha",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 5,
+   "len_m": 26.4,
+   "gap_median": 6.59,
+   "gap_min": 5.66,
+   "gap_max": 7.59,
+   "axis_offset_median": 7.09,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.84,
+   "lat": 53.1338071,
+   "lon": 23.1437285,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    13267388771,
+    13267388772,
+    13267388770,
+    13267388769,
+    13267388768
+   ]
+  },
+  {
+   "way": 253827863,
+   "name": "Częstochowska",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 5,
+   "len_m": 18.5,
+   "gap_median": 4.42,
+   "gap_min": 4.18,
+   "gap_max": 5.51,
+   "axis_offset_median": 6.28,
+   "half_width": 3.5,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 2.78,
+   "lat": 53.134014,
+   "lon": 23.151925,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    13672455313,
+    13672455314,
+    13672455315,
+    13672455316,
+    13672455317
+   ]
+  },
+  {
+   "way": 253827863,
+   "name": "Częstochowska",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 5,
+   "len_m": 21.0,
+   "gap_median": 4.96,
+   "gap_min": 4.73,
+   "gap_max": 6.32,
+   "axis_offset_median": 6.59,
+   "half_width": 3.5,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 3.09,
+   "lat": 53.1340677,
+   "lon": 23.1517523,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    13672455333,
+    13672455332,
+    13672455331,
+    13672455330,
+    13672455329
+   ]
+  },
+  {
+   "way": 207923551,
+   "name": "Akademicka",
+   "highway": "residential",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": null,
+   "width_tag": null,
+   "n": 5,
+   "len_m": 27.5,
+   "gap_median": 6.24,
+   "gap_min": 6.08,
+   "gap_max": 8.96,
+   "axis_offset_median": 6.18,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 3.43,
+   "lat": 53.130319,
+   "lon": 23.1594648,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    13724956550,
+    13724956554,
+    13724956551,
+    13724956552,
+    13724956553
+   ]
+  },
+  {
+   "way": 258839420,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 5,
+   "len_m": 17.6,
+   "gap_median": 4.41,
+   "gap_min": 4.25,
+   "gap_max": 4.57,
+   "axis_offset_median": 7.42,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.55,
+   "lat": 53.1359919,
+   "lon": 23.1526925,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    13918478637,
+    13918478634,
+    13918478635,
+    13918478636,
+    13918478638
+   ]
+  },
+  {
+   "way": 267145040,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "4",
+   "width_tag": null,
+   "n": 5,
+   "len_m": 37.5,
+   "gap_median": 9.32,
+   "gap_min": 7.32,
+   "gap_max": 11.51,
+   "axis_offset_median": 8.91,
+   "half_width": 6.5,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.41,
+   "lat": 53.135921,
+   "lon": 23.1606769,
+   "leaf_type": [
+    [
+     "broadleaved",
+     5
+    ]
+   ],
+   "tree_ids": [
+    13929126865,
+    13929126866,
+    13929126867,
+    13929126869,
+    13929126868
+   ]
+  },
+  {
+   "way": 249634264,
+   "name": "Składowa",
+   "highway": "secondary",
+   "side": "L",
+   "oneway": "yes",
+   "lanes": "4",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 15.7,
+   "gap_median": 5.28,
+   "gap_min": 4.35,
+   "gap_max": 6.07,
+   "axis_offset_median": 7.14,
+   "half_width": 6.5,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 0.64,
+   "lat": 53.1226671,
+   "lon": 23.1220413,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    2268567845,
+    2268567838,
+    2268567841,
+    2268567843
+   ]
+  },
+  {
+   "way": 678712662,
+   "name": "Jerzego Waszyngtona",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "no",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 10.1,
+   "gap_median": 3.17,
+   "gap_min": 2.5,
+   "gap_max": 4.46,
+   "axis_offset_median": 13.23,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 8.35,
+   "lat": 53.1248802,
+   "lon": 23.153893,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    2926675601,
+    2926675500,
+    2926675603,
+    2926675604
+   ]
+  },
+  {
+   "way": 26259557,
+   "name": "Lipowa",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 19.6,
+   "gap_median": 6.0,
+   "gap_min": 5.04,
+   "gap_max": 8.57,
+   "axis_offset_median": 9.39,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 6.14,
+   "lat": 53.1343268,
+   "lon": 23.1475535,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    3027599071,
+    3027599072,
+    3027599073,
+    3027599074
+   ]
+  },
+  {
+   "way": 181808423,
+   "name": "Podleśna",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 50.2,
+   "gap_median": 16.39,
+   "gap_min": 10.42,
+   "gap_max": 23.35,
+   "axis_offset_median": 7.48,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 4.23,
+   "lat": 53.1226276,
+   "lon": 23.1670654,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    3154036565,
+    3154036564,
+    3154036563,
+    3154036562
+   ]
+  },
+  {
+   "way": 263729772,
+   "name": "Henryka Sienkiewicza",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": "no",
+   "lanes": "4",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 17.4,
+   "gap_median": 5.86,
+   "gap_min": 4.64,
+   "gap_max": 6.86,
+   "axis_offset_median": 8.78,
+   "half_width": 6.5,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.28,
+   "lat": 53.1326955,
+   "lon": 23.1605686,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    3645843760,
+    3645843762,
+    3645843765,
+    3645843768
+   ]
+  },
+  {
+   "way": 329752333,
+   "name": "Henryka Sienkiewicza",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": "no",
+   "lanes": "4",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 39.2,
+   "gap_median": 11.7,
+   "gap_min": 10.85,
+   "gap_max": 16.62,
+   "axis_offset_median": 7.08,
+   "half_width": 6.5,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 0.58,
+   "lat": 53.1335155,
+   "lon": 23.1616705,
+   "leaf_type": [
+    [
+     "?",
+     2
+    ],
+    [
+     "broadleaved",
+     2
+    ]
+   ],
+   "tree_ids": [
+    3645843898,
+    3645843792,
+    3645843789,
+    3645843785
+   ]
+  },
+  {
+   "way": 552161977,
+   "name": "Radzymińska",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 25.6,
+   "gap_median": 9.0,
+   "gap_min": 7.02,
+   "gap_max": 9.57,
+   "axis_offset_median": 9.46,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 6.21,
+   "lat": 53.1454889,
+   "lon": 23.1542419,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    3664176495,
+    3664176498,
+    3664176501,
+    3664176509
+   ]
+  },
+  {
+   "way": 69667334,
+   "name": "Warmińska",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 4,
+   "len_m": 21.9,
+   "gap_median": 4.66,
+   "gap_min": 3.29,
+   "gap_max": 13.96,
+   "axis_offset_median": 10.16,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 7.41,
+   "lat": 53.1248129,
+   "lon": 23.196718,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    4758491228,
+    4758491229,
+    4758491231,
+    4758491230
+   ]
+  },
+  {
+   "way": 42996409,
+   "name": "Stefana Kisielewskiego \"Kisiela\"",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 4,
+   "len_m": 35.3,
+   "gap_median": 14.47,
+   "gap_min": 4.66,
+   "gap_max": 16.17,
+   "axis_offset_median": 6.92,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 4.17,
+   "lat": 53.134101,
+   "lon": 23.1526938,
+   "leaf_type": [
+    [
+     "?",
+     2
+    ],
+    [
+     "broadleaved",
+     2
+    ]
+   ],
+   "tree_ids": [
+    6130395117,
+    6130395118,
+    13672455321,
+    13672455320
+   ]
+  },
+  {
+   "way": 1125443070,
+   "name": "Doktor Ireny Białówny",
+   "highway": "residential",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 29.0,
+   "gap_median": 11.02,
+   "gap_min": 6.48,
+   "gap_max": 11.49,
+   "axis_offset_median": 12.01,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 8.76,
+   "lat": 53.133389,
+   "lon": 23.1573135,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    13912222893,
+    13912222892,
+    13912222891,
+    13912222890
+   ]
+  },
+  {
+   "way": 105468547,
+   "name": "Legionowa",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 30.4,
+   "gap_median": 8.1,
+   "gap_min": 5.07,
+   "gap_max": 17.2,
+   "axis_offset_median": 6.1,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.23,
+   "lat": 53.1286144,
+   "lon": 23.15452,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    10657292351,
+    10657292350,
+    10657292348,
+    10657292347
+   ]
+  },
+  {
+   "way": 676282952,
+   "name": null,
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 4,
+   "len_m": 34.0,
+   "gap_median": 12.39,
+   "gap_min": 8.33,
+   "gap_max": 13.31,
+   "axis_offset_median": 11.74,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 8.99,
+   "lat": 53.1146424,
+   "lon": 23.0926811,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    10864787468,
+    10864787472,
+    10864787474,
+    10864787475
+   ]
+  },
+  {
+   "way": 26359485,
+   "name": "Zachodnia",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 11.4,
+   "gap_median": 3.77,
+   "gap_min": 3.63,
+   "gap_max": 3.95,
+   "axis_offset_median": 7.11,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.86,
+   "lat": 53.1120277,
+   "lon": 23.1336826,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    12026371452,
+    12026371453,
+    12026371454,
+    12026371455
+   ]
+  },
+  {
+   "way": 26359485,
+   "name": "Zachodnia",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 21.5,
+   "gap_median": 7.26,
+   "gap_min": 6.76,
+   "gap_max": 7.5,
+   "axis_offset_median": 5.18,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.93,
+   "lat": 53.1127714,
+   "lon": 23.1360114,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    13321826192,
+    13321826193,
+    13321826194,
+    13321826195
+   ]
+  },
+  {
+   "way": 48747331,
+   "name": "Wspólna",
+   "highway": "residential",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 4,
+   "len_m": 22.6,
+   "gap_median": 7.46,
+   "gap_min": 6.71,
+   "gap_max": 8.48,
+   "axis_offset_median": 4.33,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 1.58,
+   "lat": 53.1110814,
+   "lon": 23.1340723,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    12026387524,
+    12026387523,
+    12026387520,
+    12026387519
+   ]
+  },
+  {
+   "way": 236769917,
+   "name": "Czesława Miłosza",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "2",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 50.7,
+   "gap_median": 17.23,
+   "gap_min": 7.5,
+   "gap_max": 25.99,
+   "axis_offset_median": 5.78,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.53,
+   "lat": 53.1204577,
+   "lon": 23.17608,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    12115193084,
+    12115193086,
+    12115193087,
+    12115193088
+   ]
+  },
+  {
+   "way": 48747340,
+   "name": "Ułańska",
+   "highway": "residential",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": null,
+   "width_tag": null,
+   "n": 4,
+   "len_m": 38.2,
+   "gap_median": 6.91,
+   "gap_min": 3.24,
+   "gap_max": 28.0,
+   "axis_offset_median": 3.52,
+   "half_width": 2.75,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 0.77,
+   "lat": 53.1100279,
+   "lon": 23.1391674,
+   "leaf_type": [
+    [
+     "needleleaved",
+     2
+    ],
+    [
+     "broadleaved",
+     2
+    ]
+   ],
+   "tree_ids": [
+    12277682306,
+    12277682305,
+    12277682304,
+    12277682292
+   ]
+  },
+  {
+   "way": 280115659,
+   "name": "Świętego Jerzego",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": null,
+   "width_tag": null,
+   "n": 4,
+   "len_m": 36.5,
+   "gap_median": 13.64,
+   "gap_min": 7.35,
+   "gap_max": 15.53,
+   "axis_offset_median": 7.23,
+   "half_width": 3.5,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 3.73,
+   "lat": 53.1082749,
+   "lon": 23.130232,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    12838596558,
+    12838596557,
+    12838596556,
+    12838596555
+   ]
+  },
+  {
+   "way": 208218907,
+   "name": "Zielna",
+   "highway": "residential",
+   "side": "P",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": "5.8",
+   "n": 4,
+   "len_m": 64.3,
+   "gap_median": 23.52,
+   "gap_min": 15.17,
+   "gap_max": 25.6,
+   "axis_offset_median": 3.95,
+   "half_width": 2.9,
+   "half_width_src": "width",
+   "kerb_offset_median": 1.05,
+   "lat": 53.1089513,
+   "lon": 23.1435793,
+   "leaf_type": [
+    [
+     "?",
+     4
+    ]
+   ],
+   "tree_ids": [
+    12843241055,
+    12843241056,
+    12843241053,
+    12843241052
+   ]
+  },
+  {
+   "way": 249806838,
+   "name": "Świętego Rocha",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 21.9,
+   "gap_median": 6.89,
+   "gap_min": 6.42,
+   "gap_max": 8.57,
+   "axis_offset_median": 5.28,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.03,
+   "lat": 53.1336463,
+   "lon": 23.1429255,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    13267388767,
+    13267388766,
+    13267388765,
+    13267388764
+   ]
+  },
+  {
+   "way": 249806838,
+   "name": "Świętego Rocha",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": null,
+   "lanes": "2",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 26.8,
+   "gap_median": 7.5,
+   "gap_min": 5.64,
+   "gap_max": 13.68,
+   "axis_offset_median": 8.84,
+   "half_width": 3.25,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 5.59,
+   "lat": 53.1337411,
+   "lon": 23.1417997,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    13267388763,
+    13267388762,
+    13267388760,
+    13267388761
+   ]
+  },
+  {
+   "way": 650629197,
+   "name": null,
+   "highway": "living_street",
+   "side": "L",
+   "oneway": null,
+   "lanes": null,
+   "width_tag": null,
+   "n": 4,
+   "len_m": 12.2,
+   "gap_median": 3.82,
+   "gap_min": 3.76,
+   "gap_max": 4.62,
+   "axis_offset_median": 6.74,
+   "half_width": 2.5,
+   "half_width_src": "klasa",
+   "kerb_offset_median": 4.24,
+   "lat": 53.1325979,
+   "lon": 23.1499686,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    13578144536,
+    13578144538,
+    13578144535,
+    13578144539
+   ]
+  },
+  {
+   "way": 1004661421,
+   "name": "Grochowa",
+   "highway": "tertiary",
+   "side": "P",
+   "oneway": "no",
+   "lanes": "3",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 40.0,
+   "gap_median": 7.89,
+   "gap_min": 5.81,
+   "gap_max": 26.34,
+   "axis_offset_median": 7.2,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 2.33,
+   "lat": 53.1322539,
+   "lon": 23.1509769,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    13672455303,
+    13672455302,
+    13672455301,
+    13672346700
+   ]
+  },
+  {
+   "way": 253827865,
+   "name": "Częstochowska",
+   "highway": "tertiary",
+   "side": "L",
+   "oneway": null,
+   "lanes": "3",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 22.4,
+   "gap_median": 5.37,
+   "gap_min": 4.95,
+   "gap_max": 12.12,
+   "axis_offset_median": 6.51,
+   "half_width": 4.875,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 1.64,
+   "lat": 53.1339701,
+   "lon": 23.1519055,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    13672455312,
+    13672455311,
+    13672455309,
+    13672455310
+   ]
+  },
+  {
+   "way": 684434753,
+   "name": "Aleja Józefa Piłsudskiego",
+   "highway": "secondary",
+   "side": "P",
+   "oneway": "yes",
+   "lanes": "4",
+   "width_tag": null,
+   "n": 4,
+   "len_m": 28.6,
+   "gap_median": 5.71,
+   "gap_min": 5.51,
+   "gap_max": 17.41,
+   "axis_offset_median": 9.57,
+   "half_width": 6.5,
+   "half_width_src": "lanes*3.25",
+   "kerb_offset_median": 3.07,
+   "lat": 53.1362281,
+   "lon": 23.1590628,
+   "leaf_type": [
+    [
+     "broadleaved",
+     4
+    ]
+   ],
+   "tree_ids": [
+    13918477811,
+    13918477810,
+    13918477814,
+    13918477809
+   ]
+  }
+ ]
+}
