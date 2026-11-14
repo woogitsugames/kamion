@@ -1,0 +1,9 @@
+{
+ "provenance": "authored_override (ADR 0206): control route for cameras/QA = the D64 truck route Białystok -> Knyszyn (variant A, ADR 0203) inside this tile",
+ "description": "DK8/DK65 westbound: Gen. Maczka from the east tile edge (seam with bialystok-maczka, x = 774923), Gen. Kleeberga to the west tile edge (x = 772875, towards rondo Pamięci Męczeństwa Kresowian / Szosa Ełcka). Positions = route variant A of docs/reports/map/dk65_route_plan.json cut by the tile edges (km 3.583 and 5.802).",
+ "start_epsg2180": [774923.0, 596185.7],
+ "end_epsg2180": [772875.0, 595511.6],
+ "start_osm_way": 249740774,
+ "end_osm_way": 261104557,
+ "confidence": "high (OSM geometry + oneway; to be re-checked against the graph boundary nodes of roads.graph.json)"
+}
