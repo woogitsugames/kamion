@@ -75,11 +75,38 @@ przy białej na LOD0 — skok wyglądu); odciągi masztu W i drabiny kablowe (P3
 
 ## 3. Budżet (A/B, tier Low)
 
-BUDGET_PLACEHOLDER
+A = `base2`: świat przebudowany ze źródeł bazowych (a08f9935d; manifest **bit w bit = HEAD**, 64 chunki), B = r2
+(ta zmiana), ten sam łańcuch (`artifacts/tower3-0200/tools/full.ps1`): import → vqa Low clear, 52 kamery.
+
+| Wielkość | Wynik (zmierzony) |
+|---|---|
+| draws, tier Low, 52 kamery, base2 → r2 | **−2 … 0** (żadna kamera w górę; −1 / −2 = materiał `balcony_slab` maszynowni znika z chunku 6_6) |
+| trójkąty w kamerach | min +0,00 %, maks. **+0,34 %** (`cab-materials` 218 708 → 219 443); `stretch-02` +0,12 % |
+| chunk 6_6 (manifest) | `buildings` 20 698 → 21 105 (+407), `buildings_lod1` 3804 → 4539 (+735), `road_collision` +7 (przybudówka) |
+| wieżowiec (test, bez przybudówki) | LOD0 5307 → 5896, LOD1 1179 → 1886 (ściany 1238, maszty 648); przybudówka LOD0 142 / LOD1 28 |
+| nowe materiały / tekstury | 0; materiały dalekie wieżowca bez zmian (`plaster_beige__far_office`, `plaster_white__far_ribbon`) |
+| manifest poza 6_6 | zmienione także 4_5 (`paved` +1, `road_collision` +1 trójkąt), 6_5 i 7_5 (te same liczby trójkątów, inny sha) — powtarzalnie w r1 i r2; przyczyna nieustalona (hipoteza: kolejność unii obrysów po dodaniu budynku), UNVERIFIED |
+
+`artifacts/tower3-0200/r2/budget-vs-base.txt`. Telefon: niezmierzony.
 
 ## 4. Walidacja
 
-VALIDATION_PLACEHOLDER
+Łańcuch (sloty heavy / unity): base (import HEAD) → r1 → base2 (build ze źródeł bazowych) → r2: `build_world`
+exit 0, import exit 0, vqa Low-clear exit 0, kamery wieżowca (`tower_cameras.json`, 15: 4 ściany z 60 / 200 m, z
+południa, dach × 3, kierunki zdjęć 115626 / 073045 / KV 2021) Low clear + overcast i High clear, SBS Low **42 + 42
+pary**. Dowody: `artifacts/tower3-0200/` (r2, sbs-r2, logs, tools).
+
+| Punkt | Wynik (obejrzany / zmierzony) |
+|---|---|
+| NW vs 115626 | `r2/photo115626-vs-r2.jpg`: 6 grup po 5–6 skrzydeł na 11 kondygnacjach, filary w kolorze ściany, szersza przerwa w środku; Low ≡ High (`r1/z/L-nw200c.jpg` / `H-nw200c.jpg`). Różni się: ściana w renderze clear jest w cieniu (szarooliwkowa zamiast ochry), brak klimatyzatorów i drzewa, mniej drobnego sprzętu na dachu |
+| maszty vs 115626 / 073045 | maszt środkowy w 0,51 długości (zdjęcie 0,48), W w 0,92 (0,89), krótsze przy końcu NE; z SW (`r2/photo073045-vs-r2.jpg`) maszt W za lewą częścią szczytu; z południa W w ok. 0,3 szerokości szczytu (`r1/z/H-s150c.jpg`) |
+| anteny (P2-A, P2-G) | `r1/z/H-roof_s_c.jpg`: panele na wysięgnikach, szare bębny poniżej wierzchołków, różne wysokości; białych kul brak |
+| przybudówka SE | `r2/z/H-annex.jpg`: parterowa bryła z drzwiami i daszkiem na środku ściany SE, bez z-fightingu i szczeliny |
+| SE / SW bez zmian | `t190_se_200` Low: średni kolor ściany (134, 136, 132) → (133, 135, 131); piksele różne (fuzz 10 %) 0,02 % (SE), 0,01 % (SW) — maszty |
+| trasa | para `sbs-r2/pairs/Low-overcast/sbs-g3-a-178689077481862.jpg`: budynek rozpoznawalny jak przed zmianą |
+| testy | `tests/gis/test_tower_0200.py` 8 nowych; zaktualizowane liczby w `test_tower_0190`, `test_buildings_0180`, `test_buildings_0167` oraz strażnicy „region C bez building_part” w `test_dojbld_0185` / `test_dojlidy_0179` (dopuszczona dokładnie ta jedna część). Pełny `pytest tests/gis` (po `fidelity/run.py`, exit 0): **1157 passed, 3 failed, 2 xfailed** — 2 to ci strażnicy (po poprawce oba pliki + 0200: 21 passed), 1 to `test_fence_mesh_mips_do_not_preserve_coverage`, czerwony także na main (cofnięcie 0185 w e668a9588), niezwiązany. Pełnego przebiegu po poprawce strażników nie powtarzałem. EditMode: **581 total, 580 passed, 0 failed, 1 skipped** |
+
+Recenzji visual-critic nie było (agent nie tworzy subagentów) — do wykonania przez lidera na `r2/` i `sbs-r2/pairs`.
 
 ## 5. Otwarte
 

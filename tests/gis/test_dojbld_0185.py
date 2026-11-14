@@ -34,7 +34,9 @@ def test_region_c_cannot_change():
     sets = [o.get("set") or {} for o in ov]
     assert not any("hall_windows" in s or "storeys" in s or "hall_sign" in s or "hall_plinth_z" in s for s in sets)
     assert not any(s.get("wall_material") in ("hall_wall_smooth", "cladding_vertical_grey") for s in sets)
-    assert not any(o.get("kind") == "building_part" for o in ov)  # so no ground_z_evrf2007 of a part either
+    # no ground_z_evrf2007 of a part either; ADR 0200 opts region C in with one part (the tower's SE annex)
+    parts = [o for o in ov if o.get("kind") == "building_part"]
+    assert [o["id"] for o in parts] == ["g3a-office-tower-se-annex"] and "ground_z_evrf2007" not in parts[0]
 
 
 def test_sets_of_one_building_are_merged_in_file_order():
