@@ -18,3 +18,8 @@
 - Literatura: WMO CIMO Guide rozdz. 9 (MOR, 0,05), tabela 15 typów CIE (pakiet rcaiman, GPL-3), abstrakty OpenAlex (Lee 2005/2008/2017, Hulburt 1953).
 - Zdjęcia: Panoramax (56 kandydatów obejrzanych na stykówce), Commons — seria CC0 z datą i godziną w nazwie.
 - NASTĘPNY KROK: kategorie Commons „<Month> <Year> in Białystok” → wybór ≥ 20 kadrów → `files/img/` → oglądanie 960 px.
+
+## Krok 3b — zdjęcia obejrzane, parowanie ze stacją
+- Obejrzano w 960 px: 8 kadrów Panoramax (2019 droga, 2026 XI osiedle) + 26 kadrów Commons (seria CC0 z godziną; 6 odrzuconych: wnętrza/plakat/parasole).
+- `tools_twilight.py` → `out/imgw_sunset_cloud.csv` (zachmurzenie przy zachodzie i końcu zmierzchu cywilnego per miesiąc).
+- NASTĘPNY KROK: `python3 -I build_manifest.py` (manifest.csv z wierszami IMGW/słońce/kadry/literatura) → fetch.py → README → audit.
