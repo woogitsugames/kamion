@@ -10,3 +10,8 @@
 - Ustalenie: S24+ właściciela = SM-S926B, Exynos 2400 (s5e9945, repo DEVICE_MATRIX), gpuinfo: 7/8 raportów SM-S926B = Xclipse 940.
 - Ustalenie kluczowe: datasheet Arm — 2xMSAA na Mali-G57 „Automatically promoted to 4xMSAA”.
 - Następny krok: `cd /workspace/wt/mobile-gpu-a16` → źródła Unity (URP docs, Issue Tracker), Vulkan-Samples, Adreno/AMD, narzędzia (Streamline, AGI).
+
+## 2026-11-14 krok 2 — źródła technik i problemów
+- Pobrane: Unity URP docs (configure-for-better-performance, anti-aliasing, URP asset), Unity Android Player settings + ScriptReference AndroidBlitType, UnityCsReference (enum AndroidBlitType Always=0), Unity Issue Tracker JSON (UUM-147578, -137912, -28518, -107530), Khronos Vulkan-Samples (msaa, render_passes, subpasses; commit b4fb432), Qualcomm Adreno mobile best practices (md), AGI supported devices, Arm learn (Performance Studio free, Development Build), libGPUCounters README, gsmmaniak (S24+ PL = Exynos 2400).
+- NOWE w repo: ProjectSettings `androidBlitType: 0` = Always (dodatkowy blit pełnoekranowy w natywnej rozdzielczości) — kandydat nr 1.
+- Następny krok: `cd /workspace/wt/mobile-gpu-a16/research/cloud2/mobile-gpu-a16 && python3 make_manifest.py` (pisanie manifestu).
