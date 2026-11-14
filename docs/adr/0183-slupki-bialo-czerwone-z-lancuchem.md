@@ -20,6 +20,9 @@ Mistral p9, M50-056), więc reguła generatora nie ma z czego ich postawić.
    (ogniwa na płask / bokiem na przemian, druga karta przesunięta o jedno ogniwo). LOD1: słupek 5-kątny, każdy
    łańcuch = jedna nieprzezroczysta taśma 12 mm (bez alfa-testu ogniw, żeby łańcuch nie znikał w mipmapach).
    Kolizja: jedno niskie pudło na przęsło.
+   **Rdzeń łańcucha (r3b).** W LOD0 pod każdą kartą ogniw jest nieprzezroczysta wstęga o szerokości drutu (8 mm), 2 mm
+   obok płaszczyzny karty (bez z-fightingu), UV = lita łata taśm LOD1. Sama karta pokrywa ~46 % szerokości (ogniwa
+   puste w środku) i w kadrze dopasowanym do P11-063 (13 m) dolny łańcuch znikał na jasnym bruku. +2 tris na segment.
    **Układ atlasu (r2).** Render r1 pokazał czerwone ogniwa blado-różowe w Unity (w Blenderze czerwone). Przyczyna:
    import świata to ASTC 6×6 + trilinear (`InstanceImporter.ImportTexture`), a granica czerwone|białe ogniwa leżała na
    u = 160 px — w środku bloku 6×6 (160/6 niecałkowite) i tuż przy krawędzi karty, więc koder bloków i próbki
@@ -91,7 +94,26 @@ trawa Fab High zakrywała stopy słupków i dolny łańcuch. Linia przesunięta 
 nadal na nawierzchni utwardzonej według ortofoto. Rozbieżność chodnik/trawnik — do 0179.
 
 ## Budżet
-WYNIKI_BUDZET
+Prototypy (z kodu, `CB.prototypes()`): `bollard_rw_chain` LOD0 174 tris (r1/r2: 142; +32 = rdzeń r3b), LOD1 31;
+`bollard_rw` 78 / 15. Jeden materiał `chain_bollard`, atlas 256 × 512 RGBA (ASTC 6×6 na Androidzie ≈ 79 KB z mipami).
+Rząd Dojlid: 8 instancji (7 × bay + 1 × post) → 1 draw instancjonowany na prototyp i LOD.
+A/B zmierzone w Unity (statystyki visual-qa, `renders/ab-off-*/stats.txt` vs `renders/r2-*/stats.txt`; ab-off i r2
+z tego samego kodu poza rzędem; r3/r3b zmieniają tylko trójkąty łańcucha):
+
+| kamera | tier | draws inst. bez → z | instancje | tris inst. bez → z |
+|---|---|---|---|---|
+| bollards-close-5m | Low | 141 → 143 | 372 → 380 | 33 634 → 34 706 |
+| bollards-cab-20m | Low | 116 → 118 | 338 → 346 | 20 986 → 21 218 |
+| bollards-along-8m | Low | 147 → 150 | 126 → 134 | 41 277 → 42 064 |
+| photo-P11-063 | Low | 115 → 117 | 343 → 351 | 21 471 → 21 703 |
+| bollards-close-5m | High | 241 → 243 | 820 → 828 | 165 579 → 166 651 |
+| bollards-cab-20m | High | 200 → 202 | 823 → 831 | 138 253 → 139 325 |
+| bollards-along-8m | High | 286 → 288 | 430 → 436 | 115 376 → 116 424 |
+| photo-P11-063 | High | 195 → 197 | 826 → 834 | 138 212 → 139 284 |
+
+Nieinstancjonowane `drawsEst` / `trisExact` chunków identyczne w A i B (siatki chunków bez zmian). Koszt rzędu:
++2–3 draw, +8 instancji, +0,2–1,1 k tris; r3b dodaje ≤ 7 × 32 = 224 tris na rząd w LOD0. Telefon: nie mierzone
+(bez adb w tym zadaniu) — budżet `docs/06` §6 do potwierdzenia na A16 przy bramce.
 
 ## Dowody
 WYNIKI_DOWODY
