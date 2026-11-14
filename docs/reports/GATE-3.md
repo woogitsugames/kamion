@@ -105,3 +105,11 @@ pwsh scripts/gate3-run.ps1 -Serial RFGL34SJYDZ -Tier Low -Fps 30 -SkipBuild -Apk
 uv run --project tools/perf python tools/perf/p99_spikes.py --summary <ts-A> <ts-B>                                              # klatki > 40 ms
 ```
 Liczby dopisać tutaj jako „pomiar kontrolny s19” obok D57 (nie zastępują przebiegów zaliczenia).
+
+## Pomiar kontrolny s20 (2026-11-14, A16 RFGL34SJYDZ, Low/30, APK kamion-0.1.0-77cfd94bf8, czyste drzewo)
+Po integracji s20 (0170, 0172, 0181, 0184, 0191+0192, regeneracja C, PSO odświeżone).
+| odcinek | FPS | p50/p95/p99/max ms | > 50 ms | GPU p50/p95/p99 ms | CPU main p50/p99 ms | PSS MB | kamery | budżet |
+|---|---|---|---|---|---|---|---|---|
+| G3-A | 29,99 | 33,33 / 33,46 / 33,57 / 50,2 | 2 | 32,1 / 34,5 / 35,7 | 21,6 / 31,1 | 917,5 | 57/57 | OK |
+| G3-B | 29,95 | 33,33 / 33,45 / 33,62 / 50,1 | 6 | 31,3 / 34,3 / 37,1 | 21,9 / 33,5 | 877,8 | 46/46 | OK |
+Dane: `artifacts/gate3/20261114-063715`, `artifacts/gate3/20261114-071223`. GPU p50 ~31–32 ms przy 33,3 ms klatki — mały zapas na Low. Przegląd wizualny zrzutów: `docs/reports/REVIEW-2026-11-14-s20-gate3-phone.md`.
