@@ -25,3 +25,8 @@
 - audit.py → audit_20_percent.json: seed 20261114, k=27/134, ponowne POBRANIE z sieci; 26 PASS / 1 FAIL (R8-029: cytat z dwóch raportów pod jednym URL — poprawiono, + ten sam błąd w wierszu maxBoundDescriptorSets). 3 wiersze datasheet sprawdzone przez ponowne obejrzenie stron PDF (audit_manual.json).
 - Pełna kontrola wszystkich cytatów vs pliki lokalne: tylko wiersze z komórek tabel (datasheet, lista JSON) nie są dosłownym ciągiem — opisane w metodzie.
 - Następny krok: `cd /workspace/wt/mobile-gpu-a16/research/cloud2/mobile-gpu-a16` → sources.md + README.md.
+
+## 2026-11-14 krok 5 — README + sources (gotowe do recenzji)
+- README.md (specyfikacje, tabela technik, problemy Unity, ranking P1–P12 + „nie robić”, co nowe/luki), sources.md (25 źródeł + repo).
+- Wynik: 134 wiersze; audyt 26 PASS / 1 FAIL (poprawiony); fetch.py 27 plików / 9,4 MB.
+- Następny krok (lider/rendering-perf, na telefonie): `pwsh scripts/build-android.ps1` ×2 (androidBlitType 0 vs 2, ten sam versionCode) → `pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90` G3-A/G3-B (P1); RenderDoc for Arm GPUs: próbki MSAA przy msaa=2.
