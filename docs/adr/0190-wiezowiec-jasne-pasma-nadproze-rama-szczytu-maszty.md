@@ -93,8 +93,40 @@ zamianie komórki żaluzji) ma tę samą geometrię co r1 (te same liczby trójk
 
 ## 4. Walidacja
 
-VALIDATION_PLACEHOLDER
+Łańcuch (sloty heavy / unity, `artifacts/tower2-0190/tools/full.ps1`): baza i r1 na kodzie sprzed scalenia main
+(A/B budżetu), r2 po `git merge origin/main`: `build_world` exit 0 → import exit 0 → vqa Low-clear 48 kamer → kamery
+wieżowca (`tower_cameras.json`: 4 ściany z 60 m i 200 m, z południa 150 m, dach × 2, kadry krytyka telefonu
+`g3a_eye_s0012` / `s0062`) Low clear + overcast i **High clear** (LOD0) → SBS Low **42 + 42 pary**
+(`sbs-r2/pairs/Low-clear|Low-overcast`). Dowody (poza gitem): `artifacts/tower2-0190/` w katalogu głównym.
+
+| Punkt | Wynik (zmierzony / obejrzany) |
+|---|---|
+| P2-3 pasma SE — **częściowo** | `t190_se_200`, luminancja ściany 154: przeszklenie pasma baza 96 → r1 109 → **r2 121** (p90 147) na Low / LOD1; High / LOD0 **125** (p90 176 > ściana 156); overcast 125 przy ścianie 161. Najciemniejszy wiersz pasma (nadproże) 91 (Low), 59 (High). Okna nie są jaśniejsze od ściany: światła z żaluzją sięgają jej poziomu, średnią obniżają żebra blachy, ramy i 38 % świateł z ciemnym szkłem. Beżowych rolet brak. `r2/z/se200-s150.jpg`, `r2/z/LH-se60.jpg` |
+| P2-4 kolumna szczytu | biała rama po obu stronach okna, ciemne szkło; czytelna w kadrach krytyka telefonu `g3a_eye_s0012` / `s0062` na Low (LOD1) i High (`r2/z/gable-s0012-s0062.jpg`; przed: szare prostokąty bez kontrastu) oraz w `stretch-02` (`r1/z/st02-ba.jpg`). Ton szczytu w słońcu: mediana (227, 212, 180) wobec zdjęcia (216, 208, 177) |
+| P2-5 maszty | 8 struktur na obu LOD-ach, widoczne z 150 m i w parach SBS (`r2/photo-vs-r2-s150.jpg`, `r2/before-r2clear-r2overcast-s150.jpg`, `sbs-r2/pairs/Low-overcast/sbs-g3-a-178689077481862.jpg`) |
+| NW Low (LOD1) ↔ High (LOD0) | ten sam raster i ton okien, bez białych łat, bez rur (`r2/z/LH-nw60.jpg`) |
+| kreski narożnika | znikają na obu tierach (porównanie `r1/z/s150-ba.jpg`, `r1/z/st02-ba.jpg`) |
+| testy | `tests/gis/test_tower_0190.py` 10 nowych; pełny `pytest tests/gis`: **1115 passed, 2 xfailed** (`logs/pytest-gis.log`; po `fidelity/run.py`, exit 0); EditMode: EDITMODE_PLACEHOLDER |
+
+Porównanie ze zdjęciami (Mapillary 177786140912399 / 178689077481862): zgodne — sylwetka z masztami, gładki szczyt z
+jedną kolumną biało obramowanych okien, ściana SE w poziome cienkie ciemne linie z jasnymi oknami pod nimi. Różni się:
+ściana SE w renderze clear jest w cieniu (154) zamiast w słońcu (ok. 249 na zdjęciu) — kierunek słońca, poza zakresem;
+napis na szczycie (marka) nie jest odtwarzany; wysoki maszt na zdjęciu ma odciągi i więcej anten.
 
 ## 5. Otwarte
 
-OPEN_PLACEHOLDER
+- Recenzja visual-critic r2 (ten ADR jest PROPOSED do jej wyniku); zrzuty z telefonu (APK Low na A16).
+- **P2-3 do końca**: okno jaśniejsze od ściany wymaga nowej komórki atlasu (biała roleta / jasne odbicie nieba,
+  albedo ≥ ściany) w `facade_atlas` i rzędzie dalekim, albo zmiany w shaderze dalekiej elewacji — zmiana tekstur
+  wspólnych dla wszystkich budynków, osobne zadanie. Żebra blachy z 200 m dają pionowe prążki (aliasing mipów).
+- Słupki między światłami z żaluzją: LOD0 ich nie ma (komórka blachy nie ma ramy) — z bliska na High pasmo żaluzji
+  jest ciągłe na kilka świateł.
+- Maszty: pozycje ±2 m, odsunięcia, liczba anten — UNVERIFIED (sesja zdjęciowa właściciela, pkt 6); bez odciągów,
+  drabin kablowych i oświetlenia przeszkodowego.
+- Reguła ogólna biur: para rur spustowych w miejscu styku dwóch współliniowych krawędzi obrysu (inne budynki) —
+  scalić współliniowe krawędzie przed rozstawieniem rur.
+- NW: stolarka antracytowa (`office_d`, wybór haszowany) przy białej stolarce szczytów i SE — brak zdjęcia NW;
+  ewentualny override rodziny stolarki.
+- `new-agent-worktree.ps1` nie kopiuje `art-source/world/materials/<set>/<tier>/*.png` ani
+  `artifacts/sbs-gate3/rectified` — pierwszy import przebudowuje 159 zestawów PBR (ok. 90 min), a SBS nie składa par.
+- SE w cieniu w oświetleniu clear, ton szczytu (Δ ≤ 11 / kanał) — bez zmian, jak w ADR 0180.
