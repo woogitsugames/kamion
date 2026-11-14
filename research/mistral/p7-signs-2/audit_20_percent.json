@@ -1,0 +1,69 @@
+{
+  "metoda": "Losowanie warstwowe 20% pozycji manifestu deterministycznym generatorem random.Random(seed).sample(ids, k); seed jawny, run repeatowalny.",
+  "seed": "Kamion-P7-signs-2026-11-13-v1",
+  "frakcja": 0.2,
+  "liczba_pozycji_manifestu": 10,
+  "liczba_wylosowanych": 2,
+  "wylosowane_id": [
+    "P7-001",
+    "P7-005"
+  ],
+  "kontrole": [
+    {
+      "kontrola": "plik istnieje i zgadza się sha256",
+      "test": "hashlib.sha256(plik z kolumny plik) == kolumna sha256_pliku"
+    },
+    {
+      "kontrola": "kolumna status ma jedną z wartości SOURCED/ESTIMATED/UNVERIFIED",
+      "test": "r['status'] in {'SOURCED','ESTIMATED','UNVERIFIED'}"
+    },
+    {
+      "kontrola": "teksty oznaczone UNVERIFIED nie zawierają odczytanej treści",
+      "test": "r['tekst_status'] zaczyna się od 'UNVERIFIED' => tekst_wiersze zawiera '[UNVERIFIED'"
+    },
+    {
+      "kontrola": "licencja w dozwolonym zbiorze",
+      "test": "r['licencja'] in {'CC BY-SA 4.0','CC0','CC BY 4.0','CC BY-SA 3.0'}"
+    },
+    {
+      "kontrola": "url_źródła odpowiada kolumnie grupa_źródeł (panoramax/commons)",
+      "test": "(grupa=='panoramax') == ('api.panoramax.xyz' in url)"
+    },
+    {
+      "kontrola": "obraz w pliku ma dłuższy bok <= 1600 px",
+      "test": "PIL: max(im.size) <= 1600"
+    }
+  ],
+  "wyniki": [
+    {
+      "id": "P7-001",
+      "testy": {
+        "plik_istnieje": true,
+        "sha256": true,
+        "rozmiar_do_1600px": true,
+        "status_dozwolony": true,
+        "unverified_bez_tresci": true,
+        "licencja_dozwolona": true,
+        "url_grupa_spójne": true
+      },
+      "wynik_całkowity": true
+    },
+    {
+      "id": "P7-005",
+      "testy": {
+        "plik_istnieje": true,
+        "sha256": true,
+        "rozmiar_do_1600px": true,
+        "status_dozwolony": true,
+        "unverified_bez_tresci": true,
+        "licencja_dozwolona": true,
+        "url_grupa_spójne": true
+      },
+      "wynik_całkowity": true
+    }
+  ],
+  "podsumowanie": {
+    "wszystkie_testy_ok": true,
+    "data_wykonania": "2026-11-13"
+  }
+}
