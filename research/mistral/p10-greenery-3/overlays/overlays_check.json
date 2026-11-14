@@ -1,0 +1,62 @@
+{
+ "okna": [
+  {
+   "okno": "w1_skarpa",
+   "srodek_wgs84": [
+    23.1525,
+    53.1555
+   ],
+   "srodek_epsg2180_EN": [
+    777522.0,
+    595855.4
+   ],
+   "png_px": 960,
+   "skala_px_na_m": 3.2,
+   "korony_w_oknie": 67,
+   "pct_srodkow_na_zieleni_ExG>0.06": 100.0,
+   "kontrola_pct_po_odbiciu_N-S": 25.4,
+   "pokrycie_zieleni_okna_ExG>0.06_pct": 13.8,
+   "zwarta_zielen_poligony_przecinajace_okno": 28
+  },
+  {
+   "okno": "w2_max_korony",
+   "srodek_wgs84": [
+    23.146425,
+    53.154755
+   ],
+   "srodek_epsg2180_EN": [
+    777121.0,
+    595749.0
+   ],
+   "png_px": 960,
+   "skala_px_na_m": 3.2,
+   "korony_w_oknie": 439,
+   "pct_srodkow_na_zieleni_ExG>0.06": 99.8,
+   "kontrola_pct_po_odbiciu_N-S": 50.3,
+   "pokrycie_zieleni_okna_ExG>0.06_pct": 44.3,
+   "zwarta_zielen_poligony_przecinajace_okno": 7
+  },
+  {
+   "okno": "w3_max_zwarta",
+   "srodek_wgs84": [
+    23.15414,
+    53.166034
+   ],
+   "srodek_epsg2180_EN": [
+    777563.5,
+    597032.4
+   ],
+   "png_px": 960,
+   "skala_px_na_m": 3.2,
+   "korony_w_oknie": 28,
+   "pct_srodkow_na_zieleni_ExG>0.06": 100.0,
+   "kontrola_pct_po_odbiciu_N-S": 53.6,
+   "pokrycie_zieleni_okna_ExG>0.06_pct": 39.3,
+   "zwarta_zielen_poligony_przecinajace_okno": 5
+  }
+ ],
+ "koron_w_3_oknach": 534,
+ "wazony_pct_srodkow_na_zieleni": 99.8,
+ "zrodlo_obrazu": "GUGiK WMS PZGIK/ORTO StandardResolution (CC BY 4.0), north-up",
+ "generator": "research/mistral/p10-greenery-3/tools/overlays_check.py (M51-FIX-2)"
+}

@@ -30,6 +30,7 @@ Użycie:
   python3 overlays_check.py --crowns crowns.geojson \
       --compact compact_greenery.geojson --roads roads.graph.json \
       --px 1200 --out overlays [--json overlays_check.json] [--cache dir]
+      [--palette 124]   (do gita: --px 960 --palette 124)
 Wymaga numpy, Pillow; sieć do mapy.geoportal.gov.pl (ortofoto CC BY 4.0).
 """
 import argparse
@@ -93,6 +94,22 @@ def fetch_window(cx, cy, cache):
     return np.asarray(im)
 
 
+MARK_COLORS = [(255, 40, 40), (0, 220, 220), (255, 230, 0), (255, 255, 255)]
+
+
+def to_palette(im, n):
+    """Paleta: n kolorów dobranych do obrazu + czyste kolory znaczników
+    (sama kwantyzacja gubi nieliczne czerwone piksele okręgów)."""
+    base = im.quantize(colors=n, method=Image.Quantize.MEDIANCUT)
+    pal = base.getpalette()[:3 * n]
+    for c in MARK_COLORS:
+        pal += list(c)
+    pal += [0] * (768 - len(pal))
+    pimg = Image.new('P', (1, 1))
+    pimg.putpalette(pal)
+    return im.quantize(palette=pimg, dither=Image.Dither.NONE)
+
+
 def load_roads(path):
     if not path or not os.path.exists(path):
         return []
@@ -115,6 +132,8 @@ def main():
     ap.add_argument('--out', default='overlays')
     ap.add_argument('--json', default='')
     ap.add_argument('--cache', default='')
+    ap.add_argument('--palette', type=int, default=0,
+                    help='>0: zapis PNG z paletą (N kolorów ortofoto + kolory znaczników) — mały plik do gita')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -191,6 +210,8 @@ def main():
         dr.text((m + 6, m + 24), 'N', fill=(255, 255, 255, 255))
         dr.line([(m, a.px - m), (m + 50 * s, a.px - m)], fill=(255, 255, 255, 255), width=3)
         dr.text((m, a.px - m - 14), '50 m', fill=(255, 255, 255, 255))
+        if a.palette:
+            im = to_palette(im, a.palette)
         im.save(os.path.join(a.out, f'{name}.png'), optimize=True)
 
         # % środków na zieleni — natywny obraz (0,25 m), ta sama konwencja wierszy
