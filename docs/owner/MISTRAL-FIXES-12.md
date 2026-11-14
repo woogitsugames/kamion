@@ -18,3 +18,30 @@ Przegląd s20 obejrzał 14 kadrów (Commons, 1600 px, wycinki 3×) i sprawdził 
 (9) Samokontrola: nowy jawny seed, ≥ 20 % wierszy. Dla każdego wiersza z kadru porównaj opis z OBRAZEM (nie z poprzednim opisem). Wpisz liczbę zgodnych i niezgodnych.
 W komentarzu PR #53 wklej SUROWE wyjście `git diff --stat origin/main`. NIE scalaj. Na końcu „M62-FIX gotowe” i koniec.
 ```
+
+## M56-FIX — P13 estakady Andersa (`research/mistral-p13-andersa-viaducts`): nieobejrzane kadry, fałszywe SOURCED (kształt słupów A, PFU/E4, ekrany B), kierunki Panoramax
+
+Przegląd: `docs/reports/REVIEW-2026-11-14-s20-mistral-m56.md`. Przyjęte zostają: dokumenty UM Maczka/Andersa i STRABAG (P13-001–008, 046–055), długości i rozstawy z OSM (P13-010–012, 056–058), orto A (P13-013), licencje, seed audytu. Do poprawy: kadry, P13-009, kształt słupów A, ekrany B, kierunki, etykiety jezdni.
+
+```
+Repo woogitsugames/kamion, gałąź research/mistral-p13-andersa-viaducts (PR #54 otwarty — dopisz commity do tej gałęzi, NIE twórz nowego PR). Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p13-andersa-viaducts/.
+Przegląd s20 obejrzał 16 kadrów (Commons 960 px i oryginały 3840–5520 px z wycinkami, Panoramax sd) i sprawdził OSM w PBF. Nie ruszaj: P13-001–008, 010–013, 046–054, 056–058 ani seedu.
+(1) OGLĄDANIE. Obejrzyj KAŻDY z 23 kadrów OSOBNO, jeden plik na jedno wywołanie modelu wizyjnego, bez szablonu zdania. Jeśli limit się wyczerpie, ZATRZYMAJ się i wypchnij WIP — nie oznaczaj kadrów jako „obejrzanych” z pamięci sprzed kompakcji. Zdanie „co widać” pisz z obrazu, nie z repo ani z ADR.
+(2) KSZTAŁT SŁUPÓW A (P13-016, 017, 034). Słupy A są PROSTOKĄTNE Z FAZOWANYMI NAROŻAMI i mają głowicę. Nie są owalne. Widać to na oryginale 7204_May_2021 (5520 px, dolna lewa część) i na Panoramax 6fc62548 (P13-026, słup z bliska). Kolor: ochra/musztarda (opis, bez RGB). Popraw P13-034 i zdania „co widać”.
+(3) P13-009 (PFU BIP 61046) — złe przypisanie. PDF dotyczy ekranów „na ul. Gen. N. Sulika i ul. Gen. St. Sosabowskiego”, lokalizacja „Przedłużenie ulicy Wł. Andersa”. E1–E19 to numery PROPONOWANYCH EKRANÓW z „Tabeli 11.1” analizy porealizacyjnej, NIE numery estakad. Ekran „E4” nie jest estakadą E4 z BIP 2024 (P13-007). Usuń ten wiersz z obiektu A (obiekt = „inny odcinek Trasy Generalskiej”, status SOURCED tylko dla faktu istnienia PFU) i popraw README §3, tabelę A i sources.md D4 („Sulika i Maczka” → „Sulika i Sosabowskiego”).
+(4) EKRANY B (P13-059, P13-073). Konflikt rozstrzygnięty: NA ESTAKADZIE B NIE MA EKRANÓW. 20201102_152339 (CC0) pokazuje zewnętrzną krawędź pomostu NE: czerwony gzyms i stalową balustradę z poziomymi prętami (to ją pomylono z ekranem). 20210320_092717 i 092737 (CC0) pokazują zewnętrzną krawędź pomostu SW, połowę SE: czerwony gzyms, balustrada, brak ekranu. Wpisz SOURCED „brak ekranów, balustrada stalowa z poziomymi prętami” na obu pomostach, z tymi kadrami. Usuń wątek „obserwacji z sesji”.
+(5) LUKI, KTÓRE KADRY Z MANIFESTU ZAMYKAJĄ:
+  a) P13-040 (strona ekranu, jezdnia SE-bound A): 20221203_111814 (CC0, kamera 9 m na SW od osi 173985170) pokazuje ekran przezroczysty na ZEWNĘTRZNEJ (SW) krawędzi tej jezdni → SOURCED.
+  b) Strona od pasa dzielącego A: Panoramax 6fc62548 (P13-026, ref. BY-SA) pokazuje spod pomostu SW drugi pomost: od strony pasa dzielącego ciemna balustrada z poziomymi rurami, bez ekranu. Dodaj wiersz.
+  c) Połowa SE estakady B: 20210320_092717/092737 — opisz słupy (szare, czerwony pas na czole), gzyms, balustradę, przyczółek, mur rampy (gładkie duże panele). POLICZ rzędy podpór między przyczółkiem a wyspą ronda na oryginale 3840 px (wycinek). Podaj liczbę jako ESTIMATED z opisem, które słupy się zasłaniają.
+  d) Policz rzędy podpór A z kadrów ze strony SW (20221203_111814, Panoramax 03ec4841, 35224dcb) i ze strony NE (7204), osobno dla każdej jezdni, jako ESTIMATED.
+  e) Kadry BEZ obiektu: P13-024 (Panoramax 3eba62ce), P13-063 (20200711_073107), P13-066 (20250412_090304) — estakady nie widać. Oznacz „brak obiektu w kadrze” i nie licz ich jako kandydatów.
+  f) P13-060: kamera stoi przy końcu NW i patrzy na SE, a EC jest W TLE. Popraw „widziana od strony Elektrociepłowni”.
+(6) KIERUNKI PANORAMAX. Dla P13-021/023/028/029 (kolekcja 989ab5f4) wpisano EXIF GPSImgDirection z Ref = M (magnetyczny, telefon Nexus S): 14,3 / 13,1 / 17,5 / 17,3°. API `properties.view:azimuth` podaje 268 / 242 / 275 / 274°, a obraz (widok wzdłuż Maczka) to potwierdza. Wpisz azymut z API i w uwagach podaj jego źródło. Sprawdź pozostałe 7 kadrów tak samo (dziś zgodne ±0,5°).
+(7) ETYKIETY JEZDNI. A: „NW” (ways 173985172+23844386) to ruch NA NW, a pomost leży po stronie NE. „SE” (25447143+173985170) to ruch na SE, pomost po stronie SW. B: SW = 177876107, NE = 177895177 (według strony). Ujednolić: kolumna `jezdnia` = strona pomostu (NE/SW) + kierunek ruchu w nawiasie, dla A i B.
+(8) OSM — dopisz do README: way z zadania (1101181473, 173956078, 284022563, 606396460; 175157461) to rampy `layer=1` BEZ `bridge=*`. Mosty to 173985172, 23844386, 25447143, 173985170 (A) i 177876107, 177895177 (B). Pod A leży „Rondo Krzysztofa Jakuba Putry…” (ways 257367424/425/428). Dopisz też do P13-046 brakującą część cytatu STRABAG: „…sprężonej posadowionej bezpośrednio”. Dla B dodaj cytat UM Andersa: „budowę estakady na skrzyżowaniu ul. Gen. Wł. Andersa z ulicą I Armii Wojska Polskiego”.
+(9) PRZEKRÓJ B (opcjonalnie): STRABAG „dwudźwigarowa” — sprawdź na kadrach spodu pomostu (20210320_*, 20201102_*), czy przekrój ma dwa żebra (dźwigary) na pomost, czy jedną skrzynkę. Zapisz obserwację albo UNVERIFIED. Nie zgaduj.
+(10) ZIP: dołóż wycinki użyte do liczenia rzędów, w komentarzu PR podaj nazwę, rozmiar i sha256. Właściciel przekaże ZIP liderowi.
+(11) Samokontrola: nowy jawny seed, ≥ 20 % wierszy, w tym ≥ 5 wierszy z kadrów. Dla każdego kadru porównaj opis z OBRAZEM (ponowne wywołanie modelu wizyjnego, nie poprzedni opis). Dla dokumentów sprawdź też KONTEKST cytatu (czego dotyczy dokument), nie tylko jego obecność. Wpisz liczbę zgodnych i niezgodnych.
+W komentarzu PR #54 wklej SUROWE wyjście `git diff --stat origin/main`. NIE scalaj. Na końcu „M56-FIX gotowe” i koniec.
+```
