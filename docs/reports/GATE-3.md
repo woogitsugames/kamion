@@ -120,3 +120,10 @@ Dane: `artifacts/gate3/20261114-063715`, `artifacts/gate3/20261114-071223`. GPU 
 | G3-A | 29,96 | 33,54 / 33,79 / 66,8 | 3 | 23,0 | 1670 | 27,9 | 56/57 |
 | G3-B | 29,97 | 33,62 / 34,31 / 66,3 | 1 | 22,5 | 1644 | 34,5 | 46/46 |
 Thermal 0. Budżet w skrypcie dla High = 60 FPS (p95 ≤ 17 ms) → „OVER” wynika z limitu 30 FPS; GPU p50 ~23 ms oznacza, że High/60 nie jest osiągalne bez optymalizacji. Bateria 94 → 60 % (dwa odcinki). Dane: `artifacts/gate3/20261114-074426`, `artifacts/gate3/20261114-081950`.
+
+### A16 Low/30, APK kamion-0.1.0-edb5524993 (po drugiej rundzie s20: 0183/0185/0190/0196, płot z siatką), 2026-11-14
+| odcinek | FPS | p95/p99/max ms | > 50 ms | GPU p50/p95 ms | PSS MB | kamery | budżet |
+|---|---|---|---|---|---|---|---|
+| G3-A | 29,97 | 33,43 / 33,56 / 50,2 | 4 | 32,1 / 34,4 | 900,8 | 57/57 | OK |
+| G3-B | — | — | — | — | — | — | NIEZMIERZONY: instalacja APK nieudana, A16 offline w adb (19:43) — do powtórzenia |
+Dane: `artifacts/gate3/20261114-182955`.

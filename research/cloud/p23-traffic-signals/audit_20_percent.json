@@ -1,0 +1,158 @@
+{
+ "seed": 20261114,
+ "metoda": "random.Random(20261114).sample(sorted_ids, 22); ids = kolumna id w kolejności manifestu",
+ "liczba_wierszy": 108,
+ "wylosowane": [
+  "C66-004",
+  "C66-009",
+  "C66-017",
+  "C66-020",
+  "C66-031",
+  "C66-049",
+  "C66-051",
+  "C66-054",
+  "C66-056",
+  "C66-057",
+  "C66-062",
+  "C66-064",
+  "C66-065",
+  "C66-070",
+  "C66-071",
+  "C66-076",
+  "C66-079",
+  "C66-084",
+  "C66-095",
+  "C66-098",
+  "C66-099",
+  "C66-107"
+ ],
+ "udzial": 0.204,
+ "sprawdzenia": {
+  "C66-004": {
+   "co": "cytat/strona sprawdzone ponownie w warstwie tekstowej PDF (lub na renderze strony dla rysunku/tabeli); URL PDF HTTP 206; s. 715: „Ekran musi być barwy czarnej z białą obwódką, zgodnie z załączonymi rysunkami konstrukcyjnymi.” – zgodne",
+   "wynik": "OK"
+  },
+  "C66-009": {
+   "co": "render s. 804 obejrzany ponownie w zestawieniu p803_804: 1000 (800*) × 1400, 400 (320*), 40/20, R70 – zgodne",
+   "wynik": "OK"
+  },
+  "C66-017": {
+   "co": "cytat/strona sprawdzone ponownie w warstwie tekstowej PDF (lub na renderze strony dla rysunku/tabeli); URL PDF HTTP 206; s. 703: „– 300 mm dla sygnalizatora S-3, – 200 mm dla sygnalizatora S-3a.” – zgodne",
+   "wynik": "OK"
+  },
+  "C66-020": {
+   "co": "render s. 757 (tabela 7.1 rastrowa): na maszcie 2,0/2,2/2,7; podwieszone 2,5/2,5/2,7; pomocnicze 0,8/1,2/1,5 – zgodne",
+   "wynik": "OK"
+  },
+  "C66-031": {
+   "co": "kadr otwarty ponownie (960 px) i porównany z opisem; url_pliku i url_źródła HTTP 200/206",
+   "wynik": "OK"
+  },
+  "C66-049": {
+   "co": "kadr otwarty ponownie + wycinek 5× głowicy na wysięgniku",
+   "wynik": "POPRAWIONO: kształt tarczy „niepewny” → owalna (kapsuła), ESTIMATED"
+  },
+  "C66-051": {
+   "co": "kadr otwarty ponownie (960 px); linki 200/206",
+   "wynik": "POPRAWIONO: „niebo o świcie” → „niskie słońce”"
+  },
+  "C66-054": {
+   "co": "kadr otwarty ponownie (960 px) i porównany z opisem; url_pliku i url_źródła HTTP 200/206",
+   "wynik": "OK"
+  },
+  "C66-056": {
+   "co": "kadr otwarty ponownie (960 px) i porównany z opisem; url_pliku i url_źródła HTTP 200/206",
+   "wynik": "OK"
+  },
+  "C66-057": {
+   "co": "kadr otwarty ponownie (960 px) i porównany z opisem; url_pliku i url_źródła HTTP 200/206",
+   "wynik": "OK"
+  },
+  "C66-062": {
+   "co": "porównanie z wierszami kadrów/wycinkami wskazanymi w wierszu; link OSM HTTP 200 (próbka)",
+   "wynik": "OK"
+  },
+  "C66-064": {
+   "co": "wycinek 5× prawej głowicy z C66-034",
+   "wynik": "POPRAWIONO: „obwódka słabo widoczna” → bez widocznej białej obwódki"
+  },
+  "C66-065": {
+   "co": "wycinek 5× prawej głowicy z C66-035",
+   "wynik": "POPRAWIONO: „obwódka cienka” → bez widocznej białej obwódki"
+  },
+  "C66-070": {
+   "co": "wycinek K1 (C66-044) obejrzany ponownie w zestawie KL: tarcza z jasną obwódką – zgodne",
+   "wynik": "OK"
+  },
+  "C66-071": {
+   "co": "porównanie z wierszami kadrów/wycinkami wskazanymi w wierszu; link OSM HTTP 200 (próbka)",
+   "wynik": "OK"
+  },
+  "C66-076": {
+   "co": "wycinek U1 (C66-055): widok z boku, tarcza pozostaje UNVERIFIED – zgodne",
+   "wynik": "OK"
+  },
+  "C66-079": {
+   "co": "wycinek X1 (C66-061): wysięgnik poza kadrem, głowica na maszcie bez tarczy – zgodne",
+   "wynik": "OK"
+  },
+  "C66-084": {
+   "co": "wiersz UNVERIFIED – sprawdzono, że nie zawiera liczby bez źródła",
+   "wynik": "OK"
+  },
+  "C66-095": {
+   "co": "wariant zależny od C66-049 (wycinek 5×)",
+   "wynik": "POPRAWIONO: nazwa wariantu → „tarcza owalna … (kształt ESTIMATED)”"
+  },
+  "C66-098": {
+   "co": "porównanie z wierszami kadrów/wycinkami wskazanymi w wierszu; link OSM HTTP 200 (próbka)",
+   "wynik": "OK"
+  },
+  "C66-099": {
+   "co": "porównanie z wierszami kadrów/wycinkami wskazanymi w wierszu; link OSM HTTP 200 (próbka)",
+   "wynik": "OK"
+  },
+  "C66-107": {
+   "co": "porównanie z wierszami kadrów/wycinkami wskazanymi w wierszu; link OSM HTTP 200 (próbka)",
+   "wynik": "OK"
+  }
+ },
+ "poprawki": [
+  {
+   "wiersze": [
+    "C66-065",
+    "C66-035"
+   ],
+   "bylo": "tarcza czarna, obwódka cienka",
+   "jest": "tarcza czarna bez widocznej białej obwódki (wycinek 5×)"
+  },
+  {
+   "wiersze": [
+    "C66-064",
+    "C66-034",
+    "C66-092",
+    "C66-093"
+   ],
+   "bylo": "obwódka słabo widoczna; wariant „z białą obwódką” 11, „niewidoczna” 1",
+   "jest": "bez widocznej białej obwódki; warianty 10 i 2 (poprawka pociągnięta poza próbę)"
+  },
+  {
+   "wiersze": [
+    "C66-049",
+    "C66-073",
+    "C66-095"
+   ],
+   "bylo": "kształt tarczy UNVERIFIED (zaokrąglony)",
+   "jest": "owalna (kapsuła), ESTIMATED z wycinka 5×"
+  },
+  {
+   "wiersze": [
+    "C66-051"
+   ],
+   "bylo": "niebo o świcie",
+   "jest": "niskie słońce"
+  }
+ ],
+ "liczba_poprawek": 4,
+ "uwagi": "Dodatkowo fetch.py uruchomiony na czystym katalogu: 33 pliki, 74568231 B, 0 niezgodności sha256. Pierwsza próba wycinków 5× dla C66-034/035 trafiła w puste niebo (zły offset) – powtórzono z poprawnymi współrzędnymi."
+}

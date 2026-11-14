@@ -1,0 +1,22 @@
+{
+  "R8-007": {
+    "wynik": "PASS",
+    "sprawdzono": "PONOWNE obejrzenie s.1 świeżo pobranego PDF jako obrazu (Read): wiersz Architecture, pasmo 'Valhall' zaczyna się w kolumnie Mali-G57 i kończy na Immortalis-G715",
+    "korekta": ""
+  },
+  "R8-017": {
+    "wynik": "PASS",
+    "sprawdzono": "PONOWNE obejrzenie s.2 (Read, obraz): Texturing > 'Depth format with reference', kolumna Mali-G57 = x2 (Bifrost x1)",
+    "korekta": ""
+  },
+  "R8-020": {
+    "wynik": "PASS",
+    "sprawdzono": "PONOWNE obejrzenie s.1 (Read, obraz): 'FP16 / R11G11B10 accelerated blending [5]' — znaczniki ✓ od kolumny Mali-G57 w prawo; przypis 5 na s.2: 'All have float blending. Valhall adds hardware acceleration for standard blend operations'",
+    "korekta": ""
+  },
+  "R8-029": {
+    "wynik": "FAIL",
+    "sprawdzono": "automat: fragment 'maxPerStageDescriptorSamplers 500000' nie występuje w raporcie 53265 (wiersz łączył wartości z dwóch raportów, a podawał jeden URL)",
+    "korekta": "POPRAWIONO w manifeście: cytat tylko z 53265 (8388608 ×4); wartość 500000 przeniesiona do uwag z linkiem do raportu 53260 (sprawdzona tam: 'maxPerStageDescriptorSamplers 500000'). Ten sam błąd usunięty w wierszu maxBoundDescriptorSets."
+  }
+}
