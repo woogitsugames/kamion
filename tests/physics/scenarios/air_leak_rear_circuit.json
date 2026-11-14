@@ -59,8 +59,8 @@
     {
       "metric": "stop_distance_m",
       "status": "SOURCED",
-      "source": "UN R13 Annex 4 2.2: secondary braking N: s <= 0.15 v + 2 v^2/130 at 60 km/h",
-      "max": 64.4
+      "source": "UN R13 Annex 4 2.4.1: residual braking N3 laden from 40 km/h: s <= 0.15 v + (100/30) v^2/115 = 52.4 m (test from 60 km/h is harder; ADR 0201 errata, was 2 v^2/130 at 60 km/h = M2/M3)",
+      "max": 52.4
     },
     {
       "metric": "max_lateral_deviation_m",

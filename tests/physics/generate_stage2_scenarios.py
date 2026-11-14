@@ -245,7 +245,7 @@ sc("air_leak_rear_circuit", "60 km/h, circuit 2 (rear) bursts at t=3 s, then eme
    {"type": "timeline", "keys": [key(0, throttle=0.4), key(15, brake=1)]},
    [chk("low_air_warning", mn=1, source="low-pressure warning must come on"),
     chk("min_air_service_bar", mx=1.0, source="rear circuit empties"),
-    chk("stop_distance_m", mx=64.4, status=S, source=f"{R13} 2.2: secondary braking N: s <= 0.15 v + 2 v^2/130 at 60 km/h"),
+    chk("stop_distance_m", mx=52.4, status=S, source=f"{R13} 2.4.1: residual braking N3 laden from 40 km/h: s <= 0.15 v + (100/30) v^2/115 = 52.4 m (test from 60 km/h is harder; ADR 0201 errata, was 2 v^2/130 at 60 km/h = M2/M3)"),
     chk("max_lateral_deviation_m", mx=1.0, source="stable straight-line stop on the remaining circuits")],
    variants=["laden40"], initial={"speedKmh": 60}, events=[{"t": 3, "type": "leak", "circuit": 2, "lpm": 3000}])
 
