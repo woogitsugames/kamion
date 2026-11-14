@@ -112,12 +112,39 @@ def test_plate_uv1_large_plate_never_drops_into_gutter_band():
     uv1 = MS._patch_uv1(net, j, V, poly)
 
     assert (uv1[:, 1] >= MS.PLATE_EDGE_FLAG).all(), f"unflagged plate vertex: {uv1[:, 1]}"
+    # No vertex drops to -1.0 beside positive lane coords (would sawtooth wheel ruts across flare triangles)
+    assert (uv1[:, 0] > -0.5).all(), f"lane dropped to -1.0 on plate: {uv1[:, 0]}"
+    # Outer turnoff flare vertices snap smoothly to an integer lane boundary (frac=0 -> wp=drip=0) with spread=1
+    assert np.allclose(uv1[[4, 6], 0], np.rint(uv1[[4, 6], 0]), atol=1e-6), f"flare not integer lane: {uv1[[4, 6], 0]}"
+    assert (uv1[[4, 6], 1] >= MS.PLATE_EDGE_FLAG + MS.PLATE_SPREAD_SCALE + 1.0 - 1e-6).all()
     # Interior carriageway & outer flare vertices (indices 0..4, 6) must NOT land in [20.0, 20.65]
     assert (uv1[[0, 1, 2, 3, 4, 6], 1] >= MS.PLATE_EDGE_FLAG + 1.0).all(), f"gutter band leak: {uv1}"
     # 10m & 16m along east plate keep valid through-road lane coordinates
     assert (uv1[[1, 2, 3], 0] >= 0.0).all(), f"lost lane coord past 5m: {uv1[:, 0]}"
     # Genuine kerb vertex stays in gutter edge range [20.0, 20.65)
     assert MS.PLATE_EDGE_FLAG <= uv1[5, 1] < MS.PLATE_EDGE_FLAG + 0.65
+
+
+def test_road_asphalt_shoulder_strip_uses_no_roadwear_uv1():
+    """RURAL paved-shoulder / flush road_asphalt strips must use UV1=(-1, 5), never longitudinal metres along."""
+    import numpy as np
+    from roads import meshing as MS
+
+    buf = MS.MeshBuf()
+    n = 11
+    G = np.column_stack([np.linspace(0.0, 20.0, n), np.zeros(n)])
+    OUT = np.tile([0.0, -1.0], (n, 1))
+    zg = np.zeros(n)
+    params = [(MS.RURAL, 0.3, 0.0, 0.5, 0) for _ in range(n)]
+    MS._emit_strip(buf, G, OUT, zg, params, np.zeros(n), 3.5, flip=False, br=None, coarse=False, src="test")
+
+    road_parts = [p for p in buf.parts if p.mat in ("road_asphalt", "road_asphalt_new") and len(p.T)]
+    assert road_parts, "expected road_asphalt paved-shoulder strip in RURAL profile"
+    for p in road_parts:
+        assert np.allclose(p.UV1[:, 0], -1.0), f"shoulder UV1.x leaked station m: {p.UV1[:, 0]}"
+        assert np.allclose(p.UV1[:, 1], 5.0), f"shoulder UV1.y expected 5.0: {p.UV1[:, 1]}"
+    other_parts = [p for p in buf.parts if p.mat in ("shoulder_gravel", "verge_grass") and p.UV1 is not None]
+    assert any(p.UV1[:, 0].max() > 10.0 for p in other_parts), "non-road strips should keep along_m UV1.x"
 
 
 def test_assemble_preserves_plate_uv1_across_arm_seam():
