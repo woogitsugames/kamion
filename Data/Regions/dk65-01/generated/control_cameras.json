@@ -1,0 +1,165 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0105",
+   "look_at": [
+    864.99,
+    828.174,
+    122.596
+   ],
+   "note": "driver eye 2.5 m, control route s = 105 m of 632 m (Szosa Knyszyńska)",
+   "pos": [
+    922.094,
+    809.999,
+    122.808
+   ],
+   "route_s_m": 105.306,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0316",
+   "look_at": [
+    673.526,
+    915.879,
+    122.527
+   ],
+   "note": "driver eye 2.5 m, control route s = 316 m of 632 m (Szosa Knyszyńska)",
+   "pos": [
+    728.586,
+    891.991,
+    123.872
+   ],
+   "route_s_m": 315.917,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0527",
+   "look_at": [
+    482.627,
+    1004.832,
+    125.155
+   ],
+   "note": "driver eye 2.5 m, control route s = 527 m of 632 m (Szosa Knyszyńska)",
+   "pos": [
+    537.515,
+    980.53,
+    125.771
+   ],
+   "route_s_m": 526.528,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_01_above",
+   "look_at": [
+    -704.772,
+    -426.918,
+    132.383
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1151531625:10712325866-10712325886",
+   "pos": [
+    -634.772,
+    -346.918,
+    174.383
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_02_above",
+   "look_at": [
+    -717.595,
+    -421.832,
+    132.05
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1151531625:10712325872-10712325866",
+   "pos": [
+    -647.595,
+    -341.832,
+    174.05
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_03_above",
+   "look_at": [
+    -721.705,
+    -409.101,
+    131.943
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1151531625:10712325873-10712325872",
+   "pos": [
+    -651.705,
+    -329.101,
+    173.943
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_04_above",
+   "look_at": [
+    -714.933,
+    -400.383,
+    132.027
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1151531625:10712325878-10712325873",
+   "pos": [
+    -644.933,
+    -320.383,
+    174.027
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_05_above",
+   "look_at": [
+    -703.883,
+    -398.357,
+    132.457
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1151531625:10712325879-10712325878",
+   "pos": [
+    -633.883,
+    -318.357,
+    174.457
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_06_above",
+   "look_at": [
+    -695.112,
+    -412.796,
+    132.59
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1151531625:10712325886-10712325879",
+   "pos": [
+    -625.112,
+    -332.796,
+    174.59
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 271.402,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-01",
+ "schema": "truck-sim-pl/control-cameras/1"
+}
