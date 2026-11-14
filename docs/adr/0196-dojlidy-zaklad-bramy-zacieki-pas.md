@@ -16,8 +16,8 @@ Sąsiednie zadania (nie ruszane): `dojbld-0185` (bryła/okładzina hali północ
 
 ## Decyzja
 1. **Kuronia 2 = hala + 5 `building_part`** (mechanizm 0179; wpis 0179 `kuronia2-hall-dark-band` zastąpiony):
-   hala 12,72 m `hall_wall_graphite` bez pasów; blok narożny (14 × 7 m) i drugi blok frontowy (8 × 10 m) grafitowe
-   **9,0 m**; wnęka między nimi, skrzydło biurowe wzdłuż ściany SW (10,1 m głębokości z ortofoto) i przybudówka
+   hala 12,72 m `hall_wall_graphite` bez pasów; blok narożny (14 × 7 m) i drugi blok frontowy (8 × 10 m) **9,0 m**
+   jako ciemne ramy (pas górny 2,6 m i słupy narożne `hall_flashing`, ciemny parter) wokół jasnego pola z oknami; wnęka między nimi, skrzydło biurowe wzdłuż ściany SW (10,1 m głębokości z ortofoto) i przybudówka
    wzdłuż Kuronii (8,3–8,5 m) **7,2 m**: jasny tynk nad ciemnym parterem, pasmo okien na piętrze skrzydła. Obrysy =
    prostokąty z ortofoto przycięte obrysem BDOT10k. Bez nazwy, logo i tablic.
    Wysokości 9,0 / 7,2 m odczytane z proporcji w kadrach (P11-005: blok 222 px wobec 190 px przybudówki; P11-059:
@@ -42,8 +42,10 @@ Sąsiednie zadania (nie ruszane): `dojbld-0185` (bryła/okładzina hali północ
    kołowania na płycie do zawracania.
 5. **Kamera `krywlany_runway`** — nowy plik `control_cameras_place.authored.json` (kamery miejsc bez zdjęcia;
    osobny plik, żeby nie kolidować z kamerami foto innych agentów): local 21,1 / −121,0, 0,6 m za linią ogrodzenia
-   lotniska z OSM, oczy 1,7 m nad NMT, azymut 261° (wzdłuż pasa na zachód), obiektyw 30° (pas ma stąd 0,56°
-   wysokości), widoczność nad NMT sprawdzona (teren 3–10 cm pod promieniem).
+   lotniska z OSM (narożnik NE), oczy 1,7 m nad NMT, azymut 252,5°, obiektyw 14° (pas leży 145–1050 m stąd,
+   depresja 0,31–0,96°); 83 % pasa widoczne nad NMT, w sektorze kadru jedna sosna przy lewej krawędzi (sprawdzone na
+   instancjach drzew). W tym samym pliku kamery QA: `krywlany_runway_paint` (14 m nad osią pasa — dowód oznakowania)
+   i `kuronia2_front` (poza zdjęcia P11-005).
 
 ## Czy to wygląda jak trawiasto-asfaltowe lotnisko aeroklubu (OSM aeroway + ortofoto)
 - OSM: `958211700` runway 09R/27L asphalt 1350 × 30 m (oś local −1446,3 −227,2 → −115,7 −192,3 — zgodna z obrysem
@@ -52,10 +54,37 @@ Sąsiednie zadania (nie ruszane): `dojbld-0185` (bryła/okładzina hali północ
 - Ortofoto: pas trawiasty nie ma oznakowania ani znaczników — w grze zostaje łąką `open_ground` (zgodne).
   Asfalt ma pełne oznakowanie — dodane (pkt 4).
 
-## Budżet (A/B) i wyniki
-Patrz sekcja „Wyniki” niżej (uzupełniana po buildzie).
+## Budżet (A/B) — Low, overcast, 1920×1080, edytor (nie telefon)
+„Przed” = `artifacts/dojlidy-vis-0179/Low-overcast-photo/stats.txt` (0179), „po” = `r4-Low-overcast/stats.txt` (po scaleniu
+`origin/main` fd5f124a7 — różnica obejmuje też zmiany main). Szacunek edytora przed batchingiem.
+| Kadr | draws przed → po | trójkąty przed → po |
+|---|---|---|
+| photo_P11-063 | 317 → 323 (+6) | 333 897 → 342 810 (+2,7 %) |
+| photo_P11-094 | 195 → 199 (+4) | 288 046 → 292 547 (+1,6 %) |
+| photo_P11-001 | 335 → 341 (+6) | 462 860 → 471 466 (+1,9 %) |
+| photo_P11-056 | 125 → 126 (+1) | 158 580 → 159 781 (+0,8 %) |
+| krywlany_runway / _paint / kuronia2_front (nowe) | 61 / 54 / 207 | 194 853 / 119 189 / 347 683 |
+Geometria budynków całego kafla (offline, ten sam kod z wpisami 0196 i bez): LOD0 467 487 → 476 480 (+1,9 %),
+LOD1 47 375 → 54 581 (+15,2 %; z tego zacieki ≈ +6 tys., części Kuronia 2 ≈ +1,2 tys.), materiały LOD0 43 → 45,
+LOD1 48 → 50 (w chunku Kuronia 2). Farba pasa: 2 672 trójkąty w warstwie `markings`.
+Werdykt wobec `docs/06` §6 (hipoteza Samsung A: ≤ 300–400 draws, ≤ 400–600 tys. trójkątów w kadrze): wszystkie kadry
+mieszczą się; najcięższy P11-001 (341 / 471 tys.) był 335 / 463 tys. przed zmianą. +15 % trójkątów LOD1 budynków to
++7 tys. w całym kaflu (1–3 tys. w kadrze). Pomiar na telefonie: brak (bramka lidera).
+
+## Wizualnie (pętla: 4 buildy / importy / rendery; kadry obejrzane przez agenta, ocena `visual-critic` u lidera)
+| Dowód | Zgodne | Rozbieżne / otwarte |
+|---|---|---|
+| `sbs-r4/sbs-P11-005.jpg` (kamera `kuronia2_front` w pozie zdjęcia P11-005) | grafitowa hala w tle, biała przybudówka wzdłuż Kuronii, dwa ciemne bloki-ramy z jasnym polem i oknami na narożniku, długie niskie białe skrzydło z pasmem okien nad ciemnym parterem | brak czerwonej linii i daszku, tablic (świadomie), urządzeń na dachu; ramy płaskie (bez wysunięcia attyki); białe ogrodzenie panelowe z morą na pierwszym planie (zakres 0185) |
+| `sbs-r4/sbs-P11-063.jpg` | po prawej ciemna, wyższa część + niska biała zamiast jednej jasnej hali z pasem | kadr nadal przesunięty (sygnalizator w środku — zakres 0186), przez to dominanta przy krawędzi |
+| `sbs-r4/sbs-P11-094.jpg`, `view/r1-094-top-ba.jpg` | dwie bramy segmentowe na ścianie N; smugi pod attyką w nieregularnych odstępach, bez widocznych szwów | bramy bez obróbki/odbojnic; rozmiar UNVERIFIED |
+| `view/r4-runway.jpg` (`krywlany_runway`, oczy 1,7 m przy płocie, 14°) | pas = ciemna wstęga asfaltu w łące, ok. 30 px wysokości przy 1080p, las w tle | z 1,7 m oznakowania nie widać (kąt 0,3–1,0°) — tak jest też w terenie; dlatego druga kamera |
+| `view/r4-runway-paint.jpg` (`krywlany_runway_paint`, 14 m nad osią, QA) | linie boczne, strzałki progu przesuniętego w osi, płyta do zawracania | asfalt pasa ma łaty materiału `asphalt_worn` (jak place) — za „zniszczony” dla pasa z 2018 r. |
+| `view/paint_{w,mid,e}.jpg` | farba z generatora nałożona na ortofoto: poprzeczki, groty, strzałki i linie zgodne co do ~1 m | „27 L” nie rysowane |
+Odrzucone renderem: kamera pasa r1 (30°, zły azymut — pas 3 px przy krawędzi), r2 (wschodnie ogrodzenie w osi pasa —
+zasłania las między ogrodzeniem a płytą); bloki frontu jako jednolite grafitowe pudełka (r3) → ramy z jasnym polem (r4).
 
 ## Walidacja
+- Ścieżka bez tabeli zacieków w `wall_with_openings` jest dosłownie starym kodem (region C bit w bit).
 - `tests/gis/test_dojind_0196.py` (10 testów): region C bez nowych rodzajów; ścieżka bez tabeli = stary quad;
   bloki pokrywają ścianę, szwy na cichych kolumnach, ta sama kolumna tekstury co 24 m na < 10 % ściany (było 100 %);
   bramy (przypięcie, usunięcie okna reguły, błąd bez ściany); farba pasa w obrysie asfaltu, CCW, lift;
@@ -65,6 +94,12 @@ Patrz sekcja „Wyniki” niżej (uzupełniana po buildzie).
 - Wysokości części Kuronia 2, rozmiar i położenie bram: UNVERIFIED do M63 / sesji zdjęciowej właściciela.
 - Kuronia 2: czerwona linia między parterem a piętrem, czerwony daszek wejścia, urządzenia na dachu przybudówki,
   okładzina kasetonowa bloków (teraz blacha trapezowa `hall_wall_graphite`).
-- Oznaczenie „27 L” na pasie; pas trawiasty 09L/27R bez wyróżnienia w trawie (koszona murawa).
+- Oznaczenie „27 L” na pasie; pas trawiasty 09L/27R bez wyróżnienia w trawie (koszona murawa); asfalt pasa z łatami
+  `asphalt_worn` (osobny, czystszy zestaw = nowy materiał → decyzja lidera).
+- `wall_gates` przerywa build, gdy ściana pod bramą przestanie być halą (np. `building_part` 0185 z `frontage` na
+  ścianie N hali północnej) — po scaleniu z 0185 sprawdzić build; bramy są pozycyjne, więc zwykłe przecięcie obrysu
+  ich nie psuje.
+- `game/Assets/_Project/UI/Resources/CabDisplay/Nav/bialystok-dojlidy_route.bytes(.meta)` powstaje przy build_world,
+  nie jest w gicie (tak jak po 0179) — decyzja lidera.
 - `runoff_shuffle` w regionie C: jeden wpis `facade_rules` w `overrides.yaml` C przy najbliższej regeneracji lidera
   (zmieni chunki z halami > 24 m).
