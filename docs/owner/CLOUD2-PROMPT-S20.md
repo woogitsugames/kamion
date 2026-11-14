@@ -30,3 +30,8 @@ ZAPIS CIĄGŁY: po każdym kroku commit + push na gałąź pakietu i STATUS.md (
 
 NA KOŃCU każdego pakietu: commit + push, PR do main (tytuł „research(cloud2): R<n> <slug>”, w opisie: liczba wierszy, obejrzanych kadrów, wynik samokontroli i recenzji, luki, rozmiar plików do pobrania; zakończ „🤖 Generated with [Claude Code](https://claude.com/claude-code)”). NIE scalaj — scala lider po własnej recenzji. Po wszystkich PR napisz podsumowanie: numery PR, gałęzie, co niekompletne.
 ```
+
+## Dokończenie (wklej w tę samą sesję chmury #2 po 19:20)
+```
+Lider: możesz znowu uruchamiać agentów (do 10). Dokończ pakiety-drafty według ich STATUS.md: R2 (#62: ≥ 20 kadrów, dodaj ul. gen. Andersa), R4 (#64: ≥ 30 kadrów, w tym Dojlidy; opisy elewacji), R6 (#65: obejrzyj 31 pobranych kadrów i opisz). Potem recenzja (osobny agent-recenzent, jak wcześniej) dla R2, R4, R5, R6, R7, R9; popraw P0/P1. Zdejmij draft z PR po ukończeniu. W commitach stopka: „Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>” lub odpowiednia dla modelu — bez zmyślonych nazw. W nagłówkach HTTP (User-Agent) tylko ogólna nazwa klienta, bez nazw organizacji/repo. Na końcu krótkie podsumowanie PR.
+```
