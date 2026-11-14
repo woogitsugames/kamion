@@ -172,6 +172,22 @@ FAR_TOP = {"block": 2.35, "office": 2.5, "office_d": 2.5, "ribbon": 2.5, **{g: 2
 FAR_PLAIN_V = (0.65, 0.95)      # v range of the plain wall strip below the rows (above the _SPLASH zone)
 
 
+def _far_plain_u():
+    """u range (1 m) of the plain wall strip: the middle of the first bay of the first atlas row that is not a
+    balcony. ADR 0184: the strip used to sit at u 0.2..1.2 = bay 0 of the first balcony row, whose slab edge is painted
+    from v FAR_V0 - 0.14 (measured on T_facade_far_BaseColor: 187 / 255 up to v 0.79, 205-206 from v 0.87), so the top
+    third of every plain LOD1 quad of blocks and offices took the slab tone - and more of it on far mips. Under a
+    window bay the atlas is plain wall from v 0 up to the dirt run of the sill (FAR_V0 + sill - 0.5) and 1.15 m to
+    either side (slab edges of the neighbouring balcony bays end 0.15 m inside the bay)."""
+    group, row = FAR_ORDER[0]
+    bay = next(i for i, (kind, _) in enumerate(FAR_ROWS[group][row]) if kind != "bal")
+    xc = (bay + 0.5) * FAR_PITCH
+    return (xc - 0.5, xc + 0.5)
+
+
+FAR_PLAIN_U = _far_plain_u()
+
+
 def far_groups(typ, storeys, balcony=False, ribbon=False, bkey=""):
     """Row group of every storey of one wall: blocks get balcony rows on their balcony side,
     ribbon offices get ribbon rows from the 1st floor (anthracite ground floor); other offices are white-framed or

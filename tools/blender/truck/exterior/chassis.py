@@ -479,6 +479,10 @@ def fifth_wheel_and_rear():
            seg=3)
     box_mm("rear_fog_lens", -0.690, -0.580, Y_END - 0.040, Y_END - 0.028, 0.775, 0.865, "lens_red", bev=0.005, seg=3)
     G.plate_uv(box_mm("rear_plate", 0.42, 0.94, Y_END - 0.03, Y_END - 0.02, 0.60, 0.714, "plate"), -1)
+    # ADR 0181: rear registration plate lamp (R48 6.8: mandatory), an LED strip over the plate, lens facing down just
+    # behind the plate face. Light group PLATE; the plate face itself is lit in the shader (lens style PLATE).
+    box_mm("numlamp_body", 0.55, 0.81, Y_END - 0.046, Y_END - 0.02, 0.716, 0.734, "plastic_satin", bev=0.004)
+    box_mm("numlamp_lens", 0.565, 0.795, Y_END - 0.044, Y_END - 0.032, 0.7135, 0.7165, "lens_clear")
     box_mm("trailer_socket_brk", -0.20, 0.20, Y_END - 0.01, Y_END + 0.02, 0.86, 0.94, "chassis")
 
 

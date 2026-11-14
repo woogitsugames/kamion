@@ -447,6 +447,20 @@ def cameras_generic(region_id, w):
             cams.append({"id": e["id"], "type": "persp", "fov_deg": float(e.get("fov_deg", 40.0)),
                          "pos": [r(p[0]), r(p[1]), r(eye)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt)],
                          "note": f"photo match {e['photo']} (heading {e['heading_deg']} deg: {e['basis']})"})
+    # ADR 0196: place cameras that match no photo (authored_override, optional per region): a pedestrian eye at a
+    # named spot, e.g. the aerodrome fence. Height = the terrain (NMT) at the spot + eye_m.
+    pl_f = pipeline.REGIONS / region_id / "control_cameras_place.authored.json"
+    if pl_f.exists():
+        for e in json.loads(pl_f.read_text(encoding="utf-8"))["cameras"]:
+            p = np.array(e["pos_en"], dtype=float)
+            hd = math.radians(float(e["heading_deg"]))
+            d = np.array([math.sin(hd), math.cos(hd)])
+            eye = float(w.hf.sample(np.array([p[0]]), np.array([p[1]]))[0]) + float(e.get("eye_m", 1.7))
+            tgt = p + 100.0 * d
+            zt = eye + 100.0 * math.tan(math.radians(float(e.get("pitch_deg", 0.0))))
+            cams.append({"id": e["id"], "type": "persp", "fov_deg": float(e.get("fov_deg", 60.0)),
+                         "pos": [r(p[0]), r(p[1]), r(eye)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt)],
+                         "note": f"place camera: {e['note']}"})
     bb = w.region["bbox"]
     cx = (bb["xmin"] + bb["xmax"]) / 2 - w.origin[0]
     cy = (bb["ymin"] + bb["ymax"]) / 2 - w.origin[1]
