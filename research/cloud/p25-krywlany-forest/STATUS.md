@@ -12,3 +12,6 @@ NASTĘPNY KROK: dokończyć pobieranie DEM (`tools/dem_fetch.py`), policzyć CHM
 - [ ] Kadry: Panoramax 13 obejrzanych (DK19 Puszcza Knyszyńska); Commons: oryginały HTTP 429 (retry-after 600) → miniatury 1280 px, 23/42 pobrane i oglądane.
 
 NASTĘPNY KROK: dokończyć oglądanie miniatur Commons (scratch `cthumb.py`), zbudować manifest (`tools/build_manifest.py`), fetch.py, audyt, README, PR.
+- [x] 18:05 UTC — 42 kadry obejrzane i opisane (29 lokalnych, 13 DK19), manifest 277 wierszy, fetch.py przetestowany (13 oryginałów + 29 miniatur, exit 0), audyt 56 wierszy (5 poprawek opisu + poprawka URL), README, sources.md.
+
+NASTĘPNY KROK: PR do main (`mcp__github__create_pull_request`, head `research/cloud-p25-krywlany-forest`). Otwarte: oryginały Commons (HTTP 429) — po ustąpieniu limitu `python3 -I fetch.py` i uzupełnienie sha256 w manifeście.
