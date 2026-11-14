@@ -253,3 +253,7 @@ podział”).** Dokumenty (P13-004, 009, 049, 051, 054) zgodne z cytatem i konte
   Przekazanie liderowi: przez właściciela (jak ZIP Mistrala).
 
 *CC BY-SA (Commons 2013, Panoramax) = „referencja, nie tekstura”; materiały prasowe/firmowe = tylko fakty; Google nie użyto.*
+
+## Errata lidera (s20, 2026-11-14, `docs/reports/REVIEW-2026-11-14-s20-mistral-m56-fix.md`)
+- Drobne: pora roku P13-034/039; kształt słupów B w P13-076; kolejność ekran/balustrada na A ujednolicić; pozycja P13-017 niepewna; README §3 jedno zdanie do doprecyzowania. Kadry z miniatur 3840 px (oryginały 5520 px — HTTP 429).
+- Dla gry (P1): przęsło 94,8 m na pomoście SW estakady A (łańcuch `c:w173956078`) i 48,8 m na NE to błąd generatora (pominięte rzędy podpór na nawierzchni) — kadry c027/c022 pokazują 5–6 i 3–4 rzędy; naprawa: `pier_lines_en` w `viaduct_underdeck.json` (stacje WORKING_VALUE), `BLOCKED_COLS` pusty.
