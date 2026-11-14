@@ -23,6 +23,7 @@ Strony podajemy jako numer strony pliku PDF. W 2310 i 2311 cz. 1 jest on równy 
 2. Spis znaków: parser listy z 2310 (`tools/parse_list_2310.py`) i ręcznie wpisane nowelizacje. Mapowanie na rysunki opisu i rysunki konstrukcyjne 2311: `tools/parse_fig9.py` oraz ręczne uzupełnienia (C-1/C-3/C-9/C-10 kopiowane z C-5, F-3a/b, T-30a–i, znaki z nowelizacji).
 3. Tabele, które w PDF są obrazem (1.2, 1.5, 1.6, 1.8, 1.9, 5.1, 9.7.1 oraz rysunki), przepisano z rastra strony (110–300 dpi) **po obejrzeniu**. Tabele z warstwą tekstową (1.1, 1.3, 1.4, 2.1, 3.1, 4.1) porównano z rastrem.
 4. Barwy znaków: akt **nie opisuje słownie** barwy każdego znaku. Kolumny barw w `catalog.csv` to więc odczyt wizualny barwnego wzoru 2310 (status ESTIMATED, strona w kolumnie `wzór_barwny_strona`). Wyjątki opisane słownie w 2311 (T-34, B-24, D-18) mają status SOURCED.
+4a. Barwy B-24 i D-18: SOURCED dotyczy tylko elementu z cytatu (szary symbol, biały symbol pojazdu); pozostałe barwy są ESTIMATED (`status_barw`).
 5. Generatory: `tools/build_catalog.py`, `tools/build_manifest.py`. Kontrola barw generatora gry: `tools/check_generator_colors.py`. Samokontrola: `tools/audit_sample.py`.
 
 ## 3. Wyniki dla generatora znaków
@@ -45,7 +46,7 @@ Kształty i wyjątki:
 - Ukośny pas znaków uchylających: 68°, szerokość p z tab. 3.1. B-42 ma pas a/2 (s. 397).
 - **B-39**: 900×1300. **B-40, B-43, B-44**: 900×900 (R30, obwódka 10, znak wewnętrzny Ø600, cyfry 270). **C-17**: 900×1200 (s. 395–398, 404).
 - **D-1**: romb (kwadrat z przekątną poziomą), bok l z tab. 5.1. Przy powtórzeniach wzdłuż drogi bok wynosi **400** (s. 185).
-- **D-19/D-20**: 600×300. **D-42/D-43**: 1200×700. Na jednojezdniowych drogach powiatowych i gminnych dopuszcza się 1200×**600** (Dz.U. 2022 poz. 2377 s. 4).
+- **D-19/D-20**: **620×300** (pkt 5.2.19 s. 227; Dz.U. 2022 poz. 2377 s. 2). Rys. 9.4.27 podaje 600 jako wymiar wewnątrz obwódki 10 (poprawka po recenzji). **D-42/D-43**: 1200×700. Na jednojezdniowych drogach powiatowych i gminnych dopuszcza się 1200×**600** (Dz.U. 2022 poz. 2377 s. 4).
 - F nie ma tabeli. Wymiary podaje każdy rysunek, np. F-12 600×750, F-13 wys. 400 (korpus 650 + grot 200), F-22 1400×1960 (s. 481, 487).
 - **Tabliczki T** (tab. 9.7.1 s. 487), w kolejności wielkie i duże / średnie i małe: wysokość tabliczki h = **350 / 250**, wysokość cyfr d = **162 / 132**, grubość kreski gr = 27 / 22, promień naroża r = 30, odstęp obwódki c = 10. Szerokość tabliczki zależy od napisu.
 
@@ -80,13 +81,13 @@ Pomiar: geometria 45°/0°, obserwator 2°, iluminant D65. Narożniki pól toler
 | szara (powłoka kryjąca) | 0,305;0,315 | 0,350;0,360 | 0,340;0,370 | 0,295;0,325 | 0,08–0,10 | – |
 | czarna (powłoka kryjąca) | 0,300;0,270 | 0,385;0,335 | 0,345;0,395 | 0,360;0,310 | ≤ 0,02 | – |
 
-„sRGB pochodne” policzono ze środka ciężkości pola i Y = β_min folii typu 1. Jest to **dolna granica jasności**: prawdziwe folie są jaśniejsze, więc tych wartości nie należy kopiować do tekstur.
+„sRGB pochodne” policzono ze środka ciężkości pola i Y = β_min folii typu 1. Jest to **dolna granica jasności**: prawdziwe folie są jaśniejsze, więc tych wartości nie należy kopiować do tekstur. **Zielona #004930 (R1-181) leży poza polem tolerancji**: centroid pola jest poza gamą sRGB i konwersja go przycięła.
 
 **RAL:** akt nie podaje odpowiedników RAL. **PN-EN 12899-1:** norma niedostępna otwarcie (UNVERIFIED).
 
 **Kontrola barw generatora** `tools/worldgen/streetscape/signs.py` (main 81c9bae) skryptem `tools/check_generator_colors.py`:
 - czerwona, żółta, niebieska, biała i szara mieszczą się w polach tolerancji, a Y przekracza β_min.
-- **zielona (0,112,72) wychodzi poza pole** (x = 0,257 > 0,248). Pole zielonej folii leży prawie całkowicie poza gamą sRGB. Mieści się w nim tylko wąski pas przy G:B ≈ 4:3, np. (0,84,62) i (0,137,103) (ESTIMATED, sprawdzone tym samym skryptem). Dotyczy znaków E oraz F-14d–f.
+- **zielona (0,112,72) wychodzi poza pole** (x = 0,257 > 0,248). Pole zielonej folii leży prawie całkowicie poza gamą sRGB. Część wspólna pola i gamy sRGB to wąski pas przy narożniku (0,248; 0,409). Margines wewnątrz pola wynosi tam najwyżej około +0,0007 w x/y, a (0,84,62) i (0,137,103) leżą praktycznie na narożniku. Wierne odtworzenie tej zieleni w sRGB nie jest możliwe. **Wybór barwy (np. narożnik pola albo najbliższy punkt gamy) to decyzja lidera i wymaga ADR.** Dotyczy znaków E oraz F-14d–f.
 
 Odblask (tab. 1.5 i 1.6, s. 12): minimalne R' przy α = 0,2° i β1 = 5° wynosi dla folii typu 1 / typu 2 [cd/(lx·m²)]: biała 70/250, żółta 50/170, czerwona 14,5/45, zielona 9/45, niebieska 4/20, brązowa 1/12, pomarańczowa 25/100. Proporcje te nadają się do nocnej jasności lic w shaderze; folia typu 2 jest około 3,5× jaśniejsza od typu 1.
 
@@ -109,7 +110,7 @@ Folię fluorescencyjną żółto-zieloną (lub pomarańczową) dopuszcza się na
   - D: V–III / V–II / IV–I / IV, III, I.
   - F: II, I we wszystkich grupach.
   - T: V,IV / V,IV / IV,III / IV,III.
-- Napisy na tabliczkach pod znakami zakazu mają wysokość **72 lub 42 mm**, a tabliczka nie może być szersza od znaku (s. 99). Na B-39 napisy mają 102/68 i 72 mm (s. 395), na B-43 cyfry 270 mm, na D-19 napis „TAXI” 210 mm.
+- Napisy na tabliczkach pod znakami zakazu mają wysokość **72 lub 42 mm**, a tabliczka nie może być szersza od znaku (s. 99). Na B-39 napisy mają 102/68 i 72 mm (s. 395), na B-43 cyfry 270 mm, na D-19 (620×300) napis „TAXI” 210 mm.
 
 ### 3.6 Montaż (2311 pkt 1.5; tab. 1.11 w brzmieniu Dz.U. 2022 poz. 2377 s. 2)
 
@@ -189,7 +190,9 @@ Inne odległości:
 - `sizes.csv` to płaska tabela (znaki, kształt, grupa, parametr, wartość_mm, źródło). Generator wybiera grupę według klasy drogi (pkt 3.2) i bierze bok, średnicę, obrzeże i moduł; geometria piktogramu skaluje się modułem a (siatka 10×10 a).
 - `catalog.csv` daje kod, nazwę, kształt, barwy (tło / obrzeże / symbol) i strony rysunków konstrukcyjnych (rys. 9.x) do odtwarzania piktogramów **własnymi prymitywami**, bez kopiowania rastrów z aktu.
 - Montaż: wysokość dolnej krawędzi 2,00 m, a na chodniku lub nad nim 2,20 m. Odsunięcie boczne 0,5–2,0 m (generator ma 0,75). Kąt tarczy 5° w stronę jezdni. Kolejne znaki co najmniej 10, 20 lub 50 m zależnie od v_dop. Znaki ostrzegawcze według tabeli z pkt 3.6.
-- Barwy: chromatyczność z pola tolerancji (tab. 1.3), jasność ≥ β_min. Noc: stosunek R' typ 2 do typ 1 (pkt 3.3). Zieloną poprawić na kolor w polu tolerancji, np. (0,84,62) lub (0,137,103).
+- Barwy: chromatyczność z pola tolerancji (tab. 1.3), jasność ≥ β_min. Noc: stosunek R' typ 2 do typ 1 (pkt 3.3). Barwę zieloną ustala lider w ADR (patrz pkt 3.3; w sRGB nie ma punktu wyraźnie wewnątrz pola).
 - Odtworzenie wszystkiego: `python -I fetch.py && python -I tools/pdf_to_pages.py files/D20192310.pdf files/_derived/2310_p.txt && python -I tools/pdf_to_pages.py files/D20192311-c1.pdf files/_derived/2311_p.txt && python -I tools/build_catalog.py files/_derived/2310_p.txt files/_derived/2311_p.txt . && python -I tools/build_manifest.py .`
 
-Rozmiar plików pobieranych przez `fetch.py`: około 55 MB (11 PDF; główny plik 2311 cz. 1 ma 39,7 MB).
+Rozmiar plików pobieranych przez `fetch.py`: około 55 MB (11 PDF, wszystkie z sources.md; główny plik 2311 cz. 1 ma 39,7 MB).
+
+Recenzja lidera: `REVIEW.md` (FIX, P1 1–5 poprawione na tej gałęzi).

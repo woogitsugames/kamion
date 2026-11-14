@@ -95,7 +95,7 @@ F("wymiary", "D-42–D-47 - szerokość obwódki g", "l/60", "mm", "dla znaków 
 F("wymiary", "D-1 - bok znaku powtarzanego wzdłuż drogi", 400, "mm", "Wzdłuż drogi z pierwszeństwem powtarza się znaki D-1 o zmniejszonej do 400 mm długości boku", "2311", "zał. 1 pkt 5.2.1.1", 185, ksztalt="romb")
 F("wymiary", "D-42/D-43 - wymiary", "1200 × 700", "mm", "Znaki D-42 i D-43 mają wymiary: długość podstawy 1200 mm, wysokość 700 mm.", "2022/2377", "§ 1 pkt 1 lit. b (zał. 1 pkt 5.2.48.1)", 4, ksztalt="prostokąt")
 F("wymiary", "D-42/D-43 - wysokość dopuszczalna na jednojezdniowych drogach powiatowych i gminnych", 600, "mm", "Na jednojezdniowych drogach powiatowych i gminnych dopuszcza się znaki D-42 i D-43 o wysokości 600 mm.", "2022/2377", "§ 1 pkt 1 lit. b (zał. 1 pkt 5.2.48.1)", 4, uwagi="t.j. 2019 (PDF s. 244) miał 530 mm - zmienione nowelizacją 2022", ksztalt="prostokąt")
-F("wymiary", "D-19 - wymiary", "600 × 300 (R30; napis TAXI 210)", "mm", "rys. 9.4.27: 600; 300; 210; R30", "2311", "zał. 1 rys. 9.4.27", 420, metoda="odczyt wymiarów z rysunku konstrukcyjnego (raster 100 dpi)", ksztalt="prostokąt")
+F("wymiary", "D-19 - wymiary", "620 × 300 (R30; napis TAXI 210)", "mm", "Znak D-19 powinien mieć wymiary: długość podstawy 620 mm, wysokość 300 mm.", "2022/2377", "§ 1 pkt 1 lit. b (zał. 1 pkt 5.2.19); t.j. 2311 PDF s. 227", 2, ksztalt="prostokąt", uwagi="poprawka po recenzji: rys. 9.4.27 (s. 420) wymiaruje 600 wewnątrz obwódki 10 (20+16×35+20), zewnętrznie 620")
 F("wymiary", "D - znaki jednej wielkości / zmniejszone", "D-19, D-20, D-39, D-40, D-41", "", "Dotyczy to znaków: D-19, D-20, D-39, D-40 i D-41.", "2311", "zał. 1 pkt 5.1.1", 176)
 # ---------------- F (rysunki) ----------------
 F("wymiary", "F-12 - wymiary", "600 × 750", "mm", "rys. 9.6.16: 600; 750", "2311", "zał. 1 rys. 9.6.16", 481, metoda="odczyt wymiarów z rysunku konstrukcyjnego (raster 100 dpi)", ksztalt="prostokąt")
@@ -158,7 +158,7 @@ SRGB = {}
 for col, (p1, p2, p3, p4, b1, b2) in T13.items():
     cx = sum(p[0] for p in (p1, p2, p3, p4)) / 4; cy = sum(p[1] for p in (p1, p2, p3, p4)) / 4
     SRGB[col] = (cx, cy, b1, xyY_to_srgb(cx, cy, b1))
-    F("barwa_sRGB_pochodna", f"barwa {col} - sRGB z centroidu pola i β_min typu 1", "#%02X%02X%02X" % SRGB[col][3], "sRGB 8-bit",
+    F("barwa_sRGB_pochodna", f"barwa {col} - sRGB z centroidu pola i β_min typu 1" + (" (UWAGA: wynik poza polem tolerancji - centroid poza gamą sRGB)" if col == "zielona" else ""), "#%02X%02X%02X" % SRGB[col][3], "sRGB 8-bit",
       f"centroid x={cx:.3f} y={cy:.3f}, Y={b1}", "2311", "pochodna tab. 1.3", 11, status="ESTIMATED",
       metoda="obliczenie: centroid 4 narożników (x,y) z tab. 1.3, Y = β_min folii typu 1, konwersja xyY→XYZ→sRGB (D65, IEC 61966-2-1); to DOLNA granica jasności, realne folie są jaśniejsze")
 # ---------------- odblaskowość (PDF s. 12) ----------------
@@ -303,7 +303,7 @@ for g, vals in T971.items():
 for nm, ksz, dims, src in (("B-39", "prostokąt", "900×1300; R30; obwódka 9; B-35 Ø600", "rys. 9.2.47 s. 395"), ("B-40", "kwadrat", "900×900; R30; obwódka 10; symbol Ø600", "rys. 9.2.48 s. 396"),
                            ("B-43", "kwadrat", "900×900; R30; obwódka 10; B-33 Ø600; cyfry 270", "rys. 9.2.51 s. 397"), ("B-44", "kwadrat", "900×900; symbol Ø600; cyfry 270", "rys. 9.2.52 s. 398"),
                            ("C-17", "prostokąt", "900×1200; R30; obwódka 10; C-2 Ø400", "rys. 9.3.13 s. 404"), ("D-1 (powtórzenie)", "romb", "bok 400", "pkt 5.2.1.1 s. 185"),
-                           ("D-19/D-20", "prostokąt", "600×300; R30", "rys. 9.4.27/29 s. 420"), ("D-42/D-43", "prostokąt", "1200×700 (600 na jednojezdniowych powiatowych/gminnych)", "Dz.U. 2022 poz. 2377 s. 4"),
+                           ("D-19/D-20", "prostokąt", "620×300; R30 (600 wewnątrz obwódki)", "pkt 5.2.19 s. 227; Dz.U. 2022 poz. 2377 s. 2"), ("D-42/D-43", "prostokąt", "1200×700 (600 na jednojezdniowych powiatowych/gminnych)", "Dz.U. 2022 poz. 2377 s. 4"),
                            ("F-12", "prostokąt", "600×750", "rys. 9.6.16 s. 481"), ("F-13", "strzała", "wys. 400; 650 + grot 200", "rys. 9.6.17 s. 481"), ("F-22", "prostokąt", "1400×1960; R30", "rys. 9.6.30 s. 487")):
     srow(nm, ksz, "jedna", "wymiary", dims, "2311 " + src)
 with open(OUT / "sizes.csv", "w", newline="", encoding="utf-8") as f:

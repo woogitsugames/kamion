@@ -20,7 +20,7 @@ Lista zmian aktów sprawdzona w API ELI (`/eli/acts/DU/2002/1393` i `/eli/acts/D
 
 Nieużyte lub niedostępne:
 - PN-EN 12899-1 (stałe pionowe znaki drogowe): norma PKN jest płatna i niedostępna otwarcie, więc jej nie użyto. Wiersz manifestu ma status UNVERIFIED.
-- Wikimedia Commons (zdjęcia P11-005/063/129 do ponownego obejrzenia przy erracie C-1/C-2): API zwracało HTTP 429 (2026-11-14 ok. 18:55 UTC), więc niczego nie pobrano. Rozstrzygnięcie C-1/C-2 opiera się na akcie, a nie na zdjęciach.
+- Wikimedia Commons (zdjęcia P11-005/063/129 do ponownego obejrzenia przy erracie C-1/C-2): API zwracało HTTP 429 (2026-11-14, między commitami 312e478 17:26 a b03abb9 17:29 UTC), więc niczego nie pobrano. Rozstrzygnięcie C-1/C-2 opiera się na akcie, a nie na zdjęciach.
 - Google, Street View i Mapillary: nie używano.
 
 Pliki pomocnicze (poza gitem, odtwarzane): `files/_derived/*_p.txt` (pdftotext z markerami stron, `tools/pdf_to_pages.py`), `files/_derived/list2310.json`, `fig9.json`, `audit_auto.json`, `files/_view/c1c2.png` (zestawienie stron 158, 159 i 399 do rozstrzygnięcia C-1/C-2).

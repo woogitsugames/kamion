@@ -1,12 +1,15 @@
 """Pobiera akty prawne użyte w pakiecie R1 (ELI API Sejmu) do files/ i weryfikuje sha256.
 Użycie: python -I fetch.py   (exit 1 przy niezgodności lub błędzie pobierania)
-Lista plików = unikalne url_pliku z manifest.csv + akty pomocnicze (2020/862, 2021/438, 2022/2372)."""
+Lista plików = unikalne url_pliku z manifest.csv + akty pomocnicze (2020/862, 2021/433, 2021/438, 2021/2065, 2022/2372, 2026/133) - razem 11 PDF."""
 import csv, hashlib, sys, time, urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 FILES = HERE / "files"
 EXTRA = {
+    "https://api.sejm.gov.pl/eli/acts/DU/2021/433/text/O/D20210433.pdf": "bcf1b019c5cef4f6b205cbbdc867eec1eb6763cd1937fbd5369e4232a43e5764",
+    "https://api.sejm.gov.pl/eli/acts/DU/2021/2065/text/O/D20212065.pdf": "f1cdfe6e1ab0eff45ad46014dddedb167d2e7b2bf92a555fea73fe4d5b21e772",
+    "https://api.sejm.gov.pl/eli/acts/DU/2026/133/text/O/D20260133.pdf": "6c7343fd63ec1664dce4f5f4f390a164cf8ab138b69e52d6439aa8a0c03976ad",
     "https://api.sejm.gov.pl/eli/acts/DU/2020/862/text/O/D20200862.pdf": "df34e362b0bb07ec23d94272e0c8ad3e6d8e91aa1fcce4bcb361a7bb82c6d013",
     "https://api.sejm.gov.pl/eli/acts/DU/2021/438/text/O/D20210438.pdf": "f44940be53436dc661c619887b59ffeb580c6fd9f6848505e85be4be462d88d1",
     "https://api.sejm.gov.pl/eli/acts/DU/2022/2372/text/O/D20222372.pdf": "bd29ae2368f592cba38cabdde53cacd3a63b0b42170953ff9ad4c4fbba7dfc3e",

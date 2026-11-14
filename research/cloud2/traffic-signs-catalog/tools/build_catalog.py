@@ -70,8 +70,8 @@ SHAPE_EX = {
     "C-17": ("prostokąt (pionowy 900×1200)", "SOURCED", "2311 pkt 4.1.1 PDF s. 157 + rys. 9.3.13 PDF s. 404"),
     "D-1": ("romb (kwadrat obrócony o 45°)", "SOURCED", "2311 pkt 5.2.1.1 PDF s. 185: „Znaki D-1 umieszcza się tak, aby jedna przekątna była w położeniu poziomym”"),
     "D-2": ("romb (kwadrat obrócony o 45°)", "SOURCED", "2311 rys. 9.4.4 PDF s. 408"),
-    "D-19": ("prostokąt poziomy (600×300)", "SOURCED", "2311 rys. 9.4.27 PDF s. 420"),
-    "D-20": ("prostokąt poziomy (600×300)", "SOURCED", "2311 rys. 9.4.29 PDF s. 420"),
+    "D-19": ("prostokąt poziomy (620×300)", "SOURCED", "2311 pkt 5.2.19 PDF s. 227 / Dz.U. 2022 poz. 2377 PDF s. 2: „długość podstawy 620 mm, wysokość 300 mm”"),
+    "D-20": ("prostokąt poziomy (620×300)", "SOURCED", "jak D-19 (2311 pkt 5.2.19-5.2.20; rys. 9.4.29 s. 420: 600 wewnątrz obwódki)"),
     "D-42": ("prostokąt poziomy (1200×700; 1200×600 dopuszcz.)", "SOURCED", "2311 pkt 5.2.48.1 PDF s. 244 zm. Dz.U. 2022 poz. 2377 PDF s. 4"),
     "D-43": ("prostokąt poziomy (1200×700; 1200×600 dopuszcz.)", "SOURCED", "2311 pkt 5.2.48.1 PDF s. 244 zm. Dz.U. 2022 poz. 2377 PDF s. 4"),
     "F-13": ("pięciokąt - prostokąt zakończony grotem (strzała)", "SOURCED", "2311 rys. 9.6.17 PDF s. 481"),
@@ -253,7 +253,7 @@ for i, code in enumerate(order, 1):
     col = COL.get(code, CAT_COL[cat])
     if cat == "D" and code in D_WHITE_FIELD and code not in COL:
         col = ("niebieskie", "biała obwódka", "białe pole z czarnym symbolem/napisem")
-    col_status = "SOURCED" if code in VERBAL else "ESTIMATED"
+    col_status = "SOURCED (tylko element z cytatu), reszta ESTIMATED" if code in ("B-24", "D-18") else "SOURCED" if code in VERBAL else "ESTIMATED"
     col_src = VERBAL.get(code, f"odczyt wizualny barwnego wzoru ({pat}); brak słownego opisu barw w akcie")
     f9 = FIG.get(code, [])
     if code in ("C-1", "C-3", "C-9", "C-10"):
