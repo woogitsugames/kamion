@@ -6,3 +6,6 @@ Cel (wersja przejezdna, D63): jeden kafel/region przylegający do obecnych (wybi
 
 ## AKTUALIZACJA D64 (ważniejsza niż powyższy wybór odcinka)
 Kolejność: (1) rozbudowa Białegostoku w stronę wylotu na Knyszyn, (2) droga do Knyszyna, (3) Knyszyn. Pierwszy agent (0203): ustal z OSM trasę ciężarówki Białystok → Knyszyn (wypisz drogi i węzły, długość), zaplanuj podział na kafle/regiony (od obecnych regionów C/Dojlidy do granicy miasta, korytarz, Knyszyn), zapisz plan w ADR 0203, a potem zbuduj z grubsza PIERWSZY kafel Białegostoku na tej trasie (przylegający do istniejących regionów, jeśli to możliwe), przejezdny. Kolejne kafle = kolejni agenci.
+
+## AKTUALIZACJA 2 (właściciel): zwykła droga, nie ekspresówka; budowa ekspresówki przy Knyszynie
+Trasa Białystok → Knyszyn = istniejąca zwykła droga (krajowa/wojewódzka), nie droga ekspresowa. W rejonie Knyszyna trwa budowa ekspresówki: sprawdź OSM (`highway=construction`, `construction=*`, `proposed`, objazdy, daty edycji), datę ortofoto i NMT względem robót; odtwarzaj stan bieżący przejezdny, plac budowy uproszczony (WORKING_VALUE), a rozbieżności źródeł wypisz w ADR jako pytania do właściciela.
