@@ -11,3 +11,10 @@
 - Ustalenia: Dz.U. 2022/1518 NIE podaje liczbowej wysokości krawężnika jezdni (tylko § 36 ust. 3 uskok „dostosowany”, § 45 ust. 4 uskok ≤ 0,01 m, § 89 ≥ 0,12 m przy barierze); liczby 6–16 cm i ≤ 2 cm są w uchylonym Dz.U. 2016 poz. 124 (§ 43 ust. 5, § 127 ust. 10); OST: światło 10–12 cm (6/16 wyjątkowo).
 - Niedostępne przez proxy: gov.pl, archiwum.gddkia.gov.pl, web.archive.org, yadda.icm.edu.pl (403) → KTKNPiP / DSN GDDKiA oryginały = luka; zamiast tego WR-D-83-2.
 - NASTĘPNY KROK: szukanie rozstawu wpustów (BIP Białystok), kart producentów (kostka, kraty), WR-D-42 (czerwona nawierzchnia); potem `python3 research/cloud2/pavements-kerbs/frames_search.py`.
+
+## Krok 3 (2026-11-14) — manifest dokumentowy, fetch, samokontrola; PRZERWANE na polecenie lidera (limit sesji)
+- `manifest.csv`: 72 wiersze (69 SOURCED, 3 UNVERIFIED) — dokumenty + OSM. `build_manifest.py` = źródło prawdy wierszy.
+- `fetch.py` OK (11 dokumentów, 38 MB; `--frames` +31 kadrów, 30 MB). `audit_20_percent.json`: 15 PASS / 0 FAIL, seed 20261114.
+- Kadry: 31 pobranych z sha256 (`frames_selected.json`), widoki i wycinki 3× w `files/_view/` — **0 obejrzanych, 0 w manifeście**.
+- NIEZROBIONE: zad. 6 (oględziny ≥ 30 kadrów), liczby kadrów per typ, widoczność uszkodzeń asfaltu, opis czerwieni DDR, sekcja CC0, rozstaw wpustów.
+- NASTĘPNY KROK: `cd /workspace/wt/pavements-kerbs/research/cloud2/pavements-kerbs && python3 osm_fetch.py && python3 fetch.py --frames && python3 frames_select.py` (odtwarza `files/_view/F??_view.jpg` i `F??_crop3x.jpg`), potem obejrzeć każdy kadr narzędziem Read i dopisać wiersze kadrów w `build_manifest.py`; brakujące ulice: `python3 frames_kv_seq.py` (sekw. 1155711 dla Al. Tysiąclecia).
