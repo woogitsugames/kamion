@@ -10,3 +10,8 @@
 ## 2026-11-14 17:55 UTC — krok 2: catalog.csv
 - catalog.csv: 265 znaków (A 42, B 46, C 21, D 76, F 30, T 50) z nowelizacjami 2021/433, 2021/2065, 2026/133; kształt SOURCED 116 / ESTIMATED 149; barwy ESTIMATED (odczyt wzorów 2310 s. 41–50) poza 3 opisanymi słownie.
 - NASTĘPNY KROK: `python -I research/cloud2/traffic-signs-catalog/tools/build_manifest.py` (sizes.csv + manifest.csv)
+
+## 2026-11-14 18:25 UTC — krok 3: manifest.csv, sizes.csv, fetch.py
+- manifest.csv 296 wierszy (SOURCED 286, ESTIMATED 8, UNVERIFIED 2); sizes.csv 130 wierszy; fetch.py OK (11 PDF, sha256 zgodne).
+- Barwy generatora (signs.py): zielona (0,112,72) poza polem tolerancji tab. 1.3; pozostałe w polach.
+- NASTĘPNY KROK: samokontrola 20 % (`python -I tools/audit_sample.py`) + README + sources.md

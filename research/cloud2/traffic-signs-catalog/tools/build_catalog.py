@@ -276,7 +276,7 @@ for i, code in enumerate(order, 1):
                              "wielkie/duże; średnie/małe (tabl. 9.7.1)" if cat == "T" else "wg rysunku konstrukcyjnego"),
     })
 with open(out / "catalog.csv", "w", newline="", encoding="utf-8") as f:
-    w = csv.DictWriter(f, fieldnames=list(rows[0]))
+    w = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
     w.writeheader(); w.writerows(rows)
 from collections import Counter
 print(len(rows), Counter(r["kategoria"] for r in rows), Counter(r["status_kształtu"] for r in rows))
