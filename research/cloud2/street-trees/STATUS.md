@@ -16,3 +16,10 @@
 - Dz.U. 2022 poz. 1518: brak liczbowej odległości drzew od jezdni (tylko § 26 strefa bez przeszkód, § 80 skrajnia 4,50/2,50 m);
   Dz.U. 2016 poz. 124 § 53 ust. 1 i 3: pas zieleni ≥ 3,0 m, pień ≥ 3,0 m od krawędzi jezdni.
 - NASTĘPNY KROK: allometria (USDA RDS-2016-0005, publikacje EU), szkółki (tuje), fenologia, kadry.
+
+## Krok 3–5 (2026-11-14 18:40 UTC) — allometria, szkółki, fenologia, kadry
+- UTD (RDS-2016-0005) → data/utd_allometry.json (wys./korona wg klas obwodu i wieku).
+- e-katalogroslin (ZSzP): Smaragd 2,5 m × 0,7 m po 10 latach, co 0,5–0,6 m; Brabant 3,5 × 1,5 m, co 0,6–0,8 m; ligustr do 2,5 m.
+- Fenologia: Czernecki i in. 2018 (PMC6028898): leszczyna DOY 70, opad liści brzozy DOY 301 (tekst) + odczyt z Fig. 2.
+- Kadry obejrzane: 54 (KartaView 18, Panoramax 10, Commons 26); opisy w tools/frame_notes.py.
+- NASTĘPNY KROK: `uv run --with shapely --with pyproj python -I tools/build_manifest.py` → manifest.csv, potem fetch.py, audit, README.
