@@ -374,6 +374,12 @@
      "lamps": 6,
      "props": 2,
      "rule_lamps_removed": 6
+    },
+    {
+     "id": "kwadrat-park-yard-lamp-gate-face",
+     "lamps": 1,
+     "props": 0,
+     "rule_lamps_removed": 1
     }
    ],
    "stale": []
@@ -34535,6 +34541,19 @@
      "to": [
       -875.9704348619232,
       1018.3365764055187
+     ]
+    },
+    {
+     "after_m": 0.003,
+     "before_m": 0.399,
+     "from": [
+      732.0,
+      -387.0
+     ],
+     "p": "lamp_arc_9m",
+     "to": [
+      731.6766421636211,
+      -387.1339392013278
      ]
     },
     {
