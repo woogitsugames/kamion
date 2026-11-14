@@ -65,6 +65,17 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2061",
         status="WORKING_ASSUMPTION (ADR 0166, owner D60 chose the area; exact tile = agent proposal)",
     ),
+    # ADR 0205 (owner D64): first DK65 corridor tile past the Białystok city limit, lattice (-4,0) of the
+    # ADR 0203 plan (route variant A km 8.76-9.39: Szosa Knyszyńska clips the NE corner, 631 m). Powiat 2002.
+    "dk65-01": Region(
+        id="dk65-01",
+        title="DK65 korytarz 01 — Szosa Knyszyńska za granicą Białegostoku (gm. Dobrzyniewo Duże)",
+        candidate="F_dk65_corridor",
+        bbox=(768779.0, 595199.0, 770827.0, 597247.0),
+        origin=(769803.0, 596223.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0205, owner D64; tile = lattice (-4,0) of the ADR 0203 plan)",
+    ),
 }
 
 TILE_SIZE_M = 2048.0
