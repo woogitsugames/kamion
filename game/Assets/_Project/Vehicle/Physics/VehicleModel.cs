@@ -123,7 +123,7 @@ namespace Game.Vehicle.Physics
             _driven = driven.ToArray();
             _invDrivenInertiaSum = 0;
             foreach (int i in _driven) _invDrivenInertiaSum += 1.0 / Wheels[i].Inertia;
-            _wheelRadiusRef = Wheels[_driven[0]].Radius;
+            _wheelRadiusRef = Wheels[_driven[0]].RollingRadius;
 
             Forces = new AppliedForce[Wheels.Length + 1];
             Air.InitSpringChambers(Group, false);
@@ -154,7 +154,7 @@ namespace Game.Vehicle.Physics
         /// <summary>Initialise wheel speeds and drivetrain for a vehicle already moving at `speed` m/s.</summary>
         public void InitializeMoving(double speed, int gear)
         {
-            foreach (var w in Wheels) { w.Omega = speed / w.Radius; w.OmegaPrevStep = w.Omega; w.Ux = 0; w.Uy = 0; }
+            foreach (var w in Wheels) { w.Omega = speed / w.RollingRadius; w.OmegaPrevStep = w.Omega; w.Ux = 0; w.Uy = 0; }
             if (gear == 0 && speed > 0.5)
             {
                 gear = Amt.BestGearForSpeed(speed / _wheelRadiusRef, Amt.Def.downshiftRpmLight + 150);

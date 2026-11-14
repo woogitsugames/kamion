@@ -43,6 +43,7 @@ namespace PhysicsRunner.Tests
             new Variant { Id = "p4", Label = "P4: promien opony 315/80 R22.5 0.510 -> 0.546 m (srednica 1092 mm)", Mutate = d =>
             {
                 d.Tires["tire_315_80_r22_5"].radius = 0.546;
+                d.Tires["tire_315_80_r22_5"].rollingRadius = 0;   // single radius, as in the 2026-11-12 comparison (ADR 0201 split)
             } },
             new Variant { Id = "p5", Label = "P5: clutchMaxTorque 4000 -> 3400 Nm", Mutate = d =>
             {
