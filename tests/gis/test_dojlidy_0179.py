@@ -22,7 +22,8 @@ def _ov(d):
 
 
 def test_region_c_has_no_0179_overrides():
-    assert not [o["id"] for o in _ov(C) if o.get("kind") in NEW_KINDS]
+    # ADR 0200: region C opts in with exactly one building_part (the SE annex of the tower at Andersa 38)
+    assert [o["id"] for o in _ov(C) if o.get("kind") in NEW_KINDS] == ["g3a-office-tower-se-annex"]
 
 
 def test_building_part_cuts_host_and_keeps_every_piece():

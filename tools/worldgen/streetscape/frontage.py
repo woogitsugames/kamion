@@ -486,6 +486,11 @@ ROOF_MAST_MAT = "downpipe"            # galvanised grey (metal 0.7); gutters / d
 ROOF_PANEL_MAT = "plaster_white"      # light grey radomes of panels and drums
 ROOF_PANEL_M = (0.28, 0.12, 2.0)      # sector panel antenna w x d x h (typical 1.3-2.6 m panels; WORKING_VALUE)
 ROOF_DISH_M = (0.6, 0.25)             # radio-link drum diameter x depth (0.3 / 0.6 m classes; WORKING_VALUE)
+# ADR 0200 (review REVIEW-2026-11-14-s20-0190 P2-A / P2-G): a white drum on the top of a thin pole read as a garden
+# globe lamp and two panels 0.2 m from a pole as one white pipe. The drum is galvanised grey like its shroud and hangs
+# below the pole top (the pole runs on above it); panels of a pole stand off on bracket arms.
+ROOF_POLE_ARM_M = 0.32                # axis of a pole to the back of its panel antennas (bracket arm; WORKING_VALUE)
+ROOF_DISH_DROP = 0.38                 # top of the first drum of a pole without panels: this share of the pole below its top
 
 
 def roof_mast_specs(spec, materials=None):
@@ -505,15 +510,18 @@ def roof_mast_specs(spec, materials=None):
         h, u = float(r.get("height_m", 3.0)), float(r.get("u", 0.5))
         side = float(r.get("side_m", 0.5 if kind == "lattice" else 0.09))
         ns, nd = int(r.get("sectors", 0)), int(r.get("dishes", 0))
-        if not (1.0 <= h <= 15.0 and 0.0 <= u <= 1.0 and 0.05 <= side <= 1.2 and 0 <= ns <= 6 and 0 <= nd <= 3):
-            raise ValueError(f"roof_masts {r}: height_m 1..15, u 0..1, side_m 0.05..1.2, sectors 0..6, dishes 0..3")
+        ph, dm = float(r.get("panel_h_m", ROOF_PANEL_M[2])), float(r.get("dish_m", ROOF_DISH_M[0]))
+        if not (1.0 <= h <= 15.0 and 0.0 <= u <= 1.0 and 0.05 <= side <= 1.2 and 0 <= ns <= 6 and 0 <= nd <= 3
+                and 0.8 <= ph <= 2.7 and ph < h and 0.3 <= dm <= 1.2):
+            raise ValueError(f"roof_masts {r}: height_m 1..15, u 0..1, side_m 0.05..1.2, sectors 0..6, dishes 0..3, "
+                             "panel_h_m 0.8..2.7 (under height_m), dish_m 0.3..1.2")
         mat, pmat = r.get("material", ROOF_MAST_MAT), r.get("panel_material", ROOF_PANEL_MAT)
         bad = [m for m in (mat, pmat) if m not in materials]
         if bad:
             raise ValueError(f"roof_masts materials not in streetscape.materials.M: {bad}")
         out.append({"kind": kind, "facing": r["facing"], "u": u, "inset_m": float(r.get("inset_m", 1.0)), "height_m": h,
                     "side_m": side, "sectors": ns, "dishes": nd, "aim_deg": float(r.get("aim_deg", 0.0)),
-                    "material": mat, "panel_material": pmat})
+                    "material": mat, "panel_material": pmat, "panel_h_m": ph, "dish_m": dm})
     return out
 
 
@@ -529,7 +537,9 @@ def _roof_mast(acc, p, q, nout, z0):
             for sx in (-1, 1):
                 for sy in (-1, 1):
                     c = np.array([*(q + d * (sx * s) + nout * (sy * s)), z0 + h / 2])
-                    acc.box(layer, mat, c, d3 * leg, n3 * leg, [0, 0, h / 2], skip=(0, 1))
+                    # LOD1 (ADR 0200): only the two faces of a leg that look out of the mast
+                    acc.box(layer, mat, c, d3 * leg, n3 * leg, [0, 0, h / 2],
+                            skip=(0, 1, 2 if sy > 0 else 3, 4 if sx > 0 else 5) if low else (0, 1))
             bays = max(2, int(round(h / (1.8 if low else 0.9))))
             w3 = np.array([0.0, 0.0, 0.05 if low else 0.025])
             for k in range(1, bays + 1):
@@ -543,15 +553,19 @@ def _roof_mast(acc, p, q, nout, z0):
                         sg = 1 if (k + (sy > 0)) % 2 else -1
                         p0 = np.array([*(q + ay_ * (sy * s) - ax_ * (sg * s)), za])
                         p1 = np.array([*(q + ay_ * (sy * s) + ax_ * (sg * s)), zb])
-                        acc.quad(layer, mat, p0 - w3, p1 - w3, p1 + w3, p0 + w3)
-                        acc.quad(layer, mat, p1 - w3, p0 - w3, p0 + w3, p1 + w3)
+                        # LOD1 (ADR 0200): the diagonal of a face is drawn from outside the mast only
+                        out_ = float(np.cross(p1 - p0, w3)[:2] @ (ay_ * sy))
+                        if not low or out_ > 0:
+                            acc.quad(layer, mat, p0 - w3, p1 - w3, p1 + w3, p0 + w3)
+                        if not low or out_ <= 0:
+                            acc.quad(layer, mat, p1 - w3, p0 - w3, p0 + w3, p1 + w3)
             acc.box(layer, mat, np.array([*q, z0 + h + 0.6]), d3 * 0.03, n3 * 0.03, [0, 0, 0.6], skip=(0,))   # spike
         else:
             t = max(s, 0.05) if low else s
             acc.box(layer, mat, np.array([*q, z0 + h / 2]), d3 * t, n3 * t, [0, 0, h / 2], skip=(0,))
-        pw, pd, ph = ROOF_PANEL_M
+        pw, pd, ph = ROOF_PANEL_M[0], ROOF_PANEL_M[1], p.get("panel_h_m", ROOF_PANEL_M[2])
         base = math.atan2(nout[0], nout[1]) + math.radians(p["aim_deg"])        # bearing of the first panel
-        r = s + pd / 2 + (0.18 if lattice else 0.10)
+        r = s + pd / 2 + (0.18 if lattice else ROOF_POLE_ARM_M)
         ns = p["sectors"]
         for i in range(ns):
             b = base + (2 * math.pi * i / ns if ns != 2 else math.radians(90.0) * (i - 0.5))
@@ -560,15 +574,20 @@ def _roof_mast(acc, p, q, nout, z0):
             c = np.array([*(q + o * r), z0 + h - ph / 2 - 0.1])
             acc.box(layer, pm, c, np.append(t_ * pw / 2, 0), np.append(o * pd / 2, 0), [0, 0, ph / 2],
                     skip=(0,) if low else ())
-        dd, dz = ROOF_DISH_M
+            if not lattice and not low:               # two bracket arms from the pole to the back of the panel
+                for za in (c[2] - ph * 0.3, c[2] + ph * 0.3):
+                    acc.box(layer, mat, np.array([*(q + o * (r / 2)), za]), np.append(o * (r / 2), 0),
+                            np.append(t_ * 0.02, 0), [0, 0, 0.02])
+        dd, dz = p.get("dish_m", ROOF_DISH_M[0]), ROOF_DISH_M[1]
         for i in range(p["dishes"]):
             b = base + math.radians(70.0 + 115.0 * i)
             o = np.array([math.sin(b), math.cos(b)])
             t_ = np.array([o[1], -o[0]])
-            zc = z0 + h - (ph + 0.6 if ns else 0.45) - 0.9 * i
+            zc = z0 + h - (ph + 0.6 if ns else ROOF_DISH_DROP * h + dd / 2) - 0.9 * i
             c = q + o * (s + 0.12 + dz / 2)
+            dmat = mat                                # ADR 0200: the drum is galvanised grey, not a white radome
             if low:
-                acc.box(layer, pm, np.array([*c, zc]), np.append(t_ * dd * 0.44, 0), np.append(o * dz / 2, 0),
+                acc.box(layer, dmat, np.array([*c, zc]), np.append(t_ * dd * 0.44, 0), np.append(o * dz / 2, 0),
                         [0, 0, dd * 0.44], skip=(2,))
                 continue
             ring = [np.array([*(c + t_ * (dd / 2 * math.cos(a_))), zc + dd / 2 * math.sin(a_)])
@@ -576,9 +595,9 @@ def _roof_mast(acc, p, q, nout, z0):
             o3 = np.append(o * dz / 2, 0.0)
             for j in range(8):
                 a_, b_ = ring[j], ring[(j + 1) % 8]
-                acc.quad(layer, pm, b_ - o3, a_ - o3, a_ + o3, b_ + o3)                       # drum shell
+                acc.quad(layer, dmat, b_ - o3, a_ - o3, a_ + o3, b_ + o3)                       # drum shell
             for j in range(1, 7):                                                               # front face
-                acc.add(layer, pm, [ring[0] + o3, ring[j + 1] + o3, ring[j] + o3], [[0, 1, 2]])
+                acc.add(layer, dmat, [ring[0] + o3, ring[j + 1] + o3, ring[j] + o3], [[0, 1, 2]])
 
 
 def roof_masts(acc, specs, edges, zroof):
@@ -678,7 +697,24 @@ def facade_rules(spec, wall, materials=None):
                     "from_storey": int(r.get("from_storey", 1)),
                     "group": "office" if kind == "column" or r.get("glazing", "dark") == "light" else "ribbon",
                     "variants": [int(v) for v in r["variants"]] if r.get("variants") else None,
-                    "lintel_m": float(r.get("lintel_m", 0.0)), "reveal_m": float(r.get("reveal_m", 0.12))})
+                    "lintel_m": float(r.get("lintel_m", 0.0)), "reveal_m": float(r.get("reveal_m", 0.12)),
+                    "light_m": float(r.get("light_m", RIBBON_LIGHT_M)), "sashes": int(r.get("light_sashes", 2)),
+                    "mix": tuple(int(x) for x in r["light_mix"]) if r.get("light_mix") else None,
+                    # ADR 0200: authored entrance - True: this wall carries the door, False: it never does (the
+                    # entrance is in an annex); None: the door goes to the main facade (edge nearest a road)
+                    "door": None if r.get("door") is None else bool(r["door"])})
+        light = r.get("glazing", "dark") == "light" and kind == "ribbon"
+        if r.get("far_kind"):                # ADR 0200: far-row material of the LOD1 wall (every __far_* maps the
+            far = f"{w}__far_{r['far_kind']}"            # same atlas) - one the chunk draws already costs no draw
+            if not light or far not in materials:
+                raise ValueError(f"facades far_kind {r['far_kind']!r}: a `glazing: light` band only, material {far}")
+            out[-1]["far"] = far
+        if (not light and any(k in r for k in ("light_m", "light_sashes", "light_mix"))) or not (
+                0.6 <= out[-1]["light_m"] <= 2.5) or out[-1]["sashes"] not in (1, 2) or (
+                out[-1]["mix"] is not None and (len(out[-1]["mix"]) != len(BAND_LIGHTS) or sum(out[-1]["mix"]) != 100
+                                                or min(out[-1]["mix"]) < 0)):
+            raise ValueError(f"facades light_m / light_sashes / light_mix {r}: `glazing: light` bands only; "
+                             "0.6..2.5 m, 1 or 2 sashes, three shares (blind, blind 2/3 down, clear glass) = 100")
         if not 0.0 <= out[-1]["lintel_m"] <= 0.5 or not 0.02 <= out[-1]["reveal_m"] <= 0.4:
             raise ValueError(f"facades lintel_m / reveal_m {out[-1]['lintel_m']} / {out[-1]['reveal_m']}: "
                              "expected 0..0.5 / 0.02..0.4")
@@ -695,10 +731,11 @@ def _bays(group, variants):
             if e is not None and (variants is None or e[1] in variants)]
 
 
-def ribbon_lights(length):
+def ribbon_lights(length, light_m=RIBBON_LIGHT_M):
     """Lights of a ribbon band of that length: about RIBBON_LIGHT_M each (half a bay = one `off` cell of the facade
-    atlas = the mullion pitch of the far ribbon rows), stretched to fill the run (1.25-1.9 m)."""
-    return int(round(length / RIBBON_LIGHT_M))
+    atlas = the mullion pitch of the far ribbon rows), stretched to fill the run (1.25-1.9 m). light_m: authored
+    width of one light of a `glazing: light` band (ADR 0200)."""
+    return int(round(length / light_m))
 
 
 def facade_rule(rules, nout, L):
@@ -722,7 +759,7 @@ def facade_runs(rule, L):
         out = []
         for x0, x1 in rule["spans"]:
             ua, ub = max(L * x0, RIBBON_END_M), min(L * x1, L - RIBBON_END_M)
-            if ribbon_lights(ub - ua) >= 2:
+            if ribbon_lights(ub - ua, rule.get("light_m", RIBBON_LIGHT_M)) >= 2:
                 out.append((ua, ub))
         return out
     if rule["windows"] == "column":
@@ -731,14 +768,20 @@ def facade_runs(rule, L):
     return []
 
 
-def band_lights(key, n):
+def band_lights(key, n, mix=None, sashes=2):
     """The n lights of one `glazing: light` band (ADR 0190): [(row, bay, crop)] - the office-row bay whose window the
-    light shows and the fraction of that window cut off at the bottom (BAND_LIGHTS), hashed per light."""
+    light shows and the fraction of that window cut off at the bottom (BAND_LIGHTS), hashed per light. mix: authored
+    shares of the three kinds of light (rule `light_mix`, ADR 0200) instead of those of BAND_LIGHTS. sashes 1 (rule
+    `light_sashes`): a light is one sash of a two-sash window - lights 2k and 2k + 1 are the two sashes of one hashed
+    window (LOD1 draws the pair as one quad)."""
+    if sashes == 1:
+        pairs = band_lights(key, (n + 1) // 2, mix)
+        return [pairs[i // 2] for i in range(n)]
     out = []
     for i in range(n):
         h, top = FA.hint(key, "light", i) % 100, 0
-        for share, var, crop in BAND_LIGHTS:
-            top += share
+        for k, (share, var, crop) in enumerate(BAND_LIGHTS):
+            top += mix[k] if mix else share
             if h < top:
                 break
         if var is None:
@@ -790,7 +833,8 @@ def facade_windows(rule, L, zref, zbase, sh, zt, storeys, key, door=False):
             if z0 + rule["head_m"] > zt - 0.3:
                 break
             row, off = bays[FA.hint(key, i, s, "bay") % len(bays)]      # a window: that bay; a band: its first light
-            lights = (band_lights(f"{key}:{i}:{s}", ribbon_lights(u1 - u0))
+            lights = (band_lights(f"{key}:{i}:{s}", ribbon_lights(u1 - u0, rule.get("light_m", RIBBON_LIGHT_M)),
+                                  rule.get("mix"), rule.get("sashes", 2))
                       if rule["windows"] == "ribbon" and g == "office" else None)
             out.append((u0, u1, z0 + rule["sill_m"], z0 + rule["head_m"], g, row, off, lights))
     return out
@@ -801,9 +845,16 @@ def facade_door_u(rule, L):
     return _column_u(rule, L)[0] if rule["windows"] == "column" else L / 2
 
 
-def far_uv(win, crop=0.0):
+def sash_half(i, sashes):
+    """Which half of a two-sash window cell light i of a band shows (rule `light_sashes: 1`, ADR 0200: one sash per
+    light, left and right halves in turn so every light keeps a frame on both sides); None = the whole window."""
+    return None if sashes != 1 else i % 2
+
+
+def far_uv(win, crop=0.0, half=None):
     """UV0 (far-row atlas metres) of a window rectangle on LOD1: the glazed part of its row - the run of a ribbon row
-    from its bay offset on, or the one window of an office-row bay (crop: fraction cut off at its bottom)."""
+    from its bay offset on, or the one window of an office-row bay (crop: fraction cut off at its bottom; half: 0 / 1
+    = only its left / right sash)."""
     u0, u1, _, _, g, row, off = win[:7]
     v = FA.far_row_v(g, row)
     v0, v1 = v + FA.FAR_SILL[g], v + FA.FAR_TOP[g]
@@ -813,6 +864,8 @@ def far_uv(win, crop=0.0):
     else:
         xc, hw = (off + 0.5) * FA.FAR_PITCH, FA.KINDS["off"][0] / 2
         x0, x1 = xc - hw, xc + hw
+        if half is not None:
+            x0, x1 = (x0, xc) if half == 0 else (xc, x1)
     return [[x0, v0], [x1, v0], [x1, v1], [x0, v1]]
 
 
@@ -838,9 +891,13 @@ def lod1_facade(acc, rule, wins, a, d, L, z0, zt):
             n += q(u0, u1, z, w[2])
             if w[7]:                           # light band: one office-row window per light (band_lights)
                 k = len(w[7])
-                for i, (row, bay, crop) in enumerate(w[7]):
-                    n += q(u0 + (u1 - u0) * i / k, u0 + (u1 - u0) * (i + 1) / k, w[2], w[3],
-                           blind_far_uv(bay) if row == BLIND_ROW else far_uv((*w[:5], row, bay), crop))
+                step = 2 if rule.get("sashes", 2) == 1 else 1      # ADR 0200: two sashes = one window quad
+                for i in range(0, k, step):
+                    row, bay, crop = w[7][i]
+                    j = min(i + step, k)
+                    n += q(u0 + (u1 - u0) * i / k, u0 + (u1 - u0) * j / k, w[2], w[3],
+                           blind_far_uv(bay) if row == BLIND_ROW else
+                           far_uv((*w[:5], row, bay), crop, 0 if step == 2 and j - i == 1 else None))
             else:
                 n += q(u0, u1, w[2], w[3], far_uv(w))
             z = w[3]

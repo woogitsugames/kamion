@@ -162,7 +162,8 @@ def test_tower_roof_carries_the_authored_masts_on_both_lods():
     FR = _fr()
     b = _loaded({TOWER})[TOWER]
     specs = b["ovr"]["roof_masts"]
-    assert len(specs) == 8 and sum(s["kind"] == "lattice" for s in specs) == 2
+    # ADR 0200: + the middle mast (11 m) and the lattice masts of the N and E corners
+    assert len(specs) == 10 and sum(s["kind"] == "lattice" for s in specs) == 5
     buf = _build(b)
     low_walls = [p for p in buf.parts if p.layer == "buildings_low" and "__far_" in p.mat]
     zwall = max(float(p.V[:, 2].max()) for p in low_walls)
@@ -175,11 +176,11 @@ def test_tower_roof_carries_the_authored_masts_on_both_lods():
         assert len(V) > 300, (layer, len(V))
         assert shapely.contains_xy(hull, V[:, 0], V[:, 1]).all()     # nothing hangs out over the street
         tops[layer] = float(V[:, 2].max())
-        # the two lattice masts and the six poles: tops cluster at 8 distinct plan positions
+        # the five lattice masts and the five poles: tops cluster at 10 distinct plan positions
         top_pts = {(round(float(x), 0), round(float(y), 0)) for x, y, z in V if z > zwall + 1.8}
-        assert len(top_pts) >= 8, (layer, len(top_pts))
+        assert len(top_pts) >= 10, (layer, len(top_pts))
     assert tops["buildings"] == pytest.approx(tops["buildings_low"])                    # same silhouette height
-    assert tops["buildings"] == pytest.approx(zwall - 0.3 + 9.5 + 1.2, abs=0.4)          # tall mast + spike
+    assert tops["buildings"] == pytest.approx(zwall - 0.3 + 11.0 + 1.2, abs=0.4)         # middle mast + spike (ADR 0200)
     # no material the tower did not draw before (galvanised steel + white render, both LODs)
     assert FR.ROOF_MAST_MAT in buf.mats("buildings") and FR.ROOF_MAST_MAT in buf.mats("buildings_low")
     assert not any(m.startswith("frontage_") or m == "window_frame" for m in buf.mats("buildings_low"))
@@ -225,10 +226,15 @@ def test_roof_mast_faces_look_outwards():
     out = FR.roof_masts(acc, spec, edges, 20.0)
     assert out[0]["placed"] and out[0]["n"] == pytest.approx(1.0) and out[0]["e"] == pytest.approx(5.0)
     for layer in ("buildings", "buildings_low"):
-        tri = np.array([t for la, m, t in acc.t if la == layer and m == FR.ROOF_PANEL_MAT])
-        assert len(tri) >= 12
+        # ADR 0200: the drum is galvanised like the pole and hangs below the panel; the panel is the light radome
+        pan = np.array([t for la, m, t in acc.t if la == layer and m == FR.ROOF_PANEL_MAT])
+        gal = np.array([t for la, m, t in acc.t if la == layer and m == FR.ROOF_MAST_MAT])
+        drum = gal[np.abs(gal.mean(1)[:, 1] - 1.0) > 0.12]                                   # off the pole axis (n = 1)
+        if layer == "buildings":                                    # LOD0 bracket arms: thin, between pole and panel
+            drum = drum[np.ptp(drum[:, :, 2], axis=1) > 0.05]
+        assert len(pan) >= 10 and float(drum[:, :, 2].max()) < float(pan[:, :, 2].min()) + 1e-6
         # drum and panel are convex solids away from the pole: every face normal points away from its solid's centre
-        for grp in (tri[tri[:, :, 2].mean(1) > 20.8], tri[tri[:, :, 2].mean(1) <= 20.8]):       # panel / drum
+        for grp in (pan, drum):
             assert len(grp) >= 6
             cen = grp.reshape(-1, 3).mean(0)
             nn = np.cross(grp[:, 1] - grp[:, 0], grp[:, 2] - grp[:, 0])
