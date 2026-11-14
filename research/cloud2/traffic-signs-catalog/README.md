@@ -196,3 +196,6 @@ Inne odległości:
 Rozmiar plików pobieranych przez `fetch.py`: około 55 MB (11 PDF, wszystkie z sources.md; główny plik 2311 cz. 1 ma 39,7 MB).
 
 Recenzja lidera: `REVIEW.md` (FIX, P1 1–5 poprawione na tej gałęzi).
+
+## Errata lidera (s20, 2026-11-14)
+Patrz `docs/reports/REVIEW-2026-11-14-s20-cloud2-r1.md` — errata obowiązuje przed użyciem danych.

@@ -119,3 +119,6 @@ P1 i P2 nie zmieniają treści ani profilu jakości — zgodne z wnioskiem ADR 0
 2. Zmiany profilu tylko w `QualityProfile`/`ProjectSetup` (generator), z override `rq_*` do A/B — jak w ADR 0106/0136.
 3. Przy nowej treści roślinności: przycinać geometrię do alfy (ImpostorTrim jako wzór), nie dokładać discard/A2C na duże powierzchnie.
 4. Nie włączać na Low: depth/opaque texture, soft shadows, FXAA, HDR, DoF Bokeh.
+
+## Errata lidera (s20, 2026-11-14)
+Patrz `docs/reports/REVIEW-2026-11-14-s20-cloud2-r8.md` — errata obowiązuje przed użyciem danych.

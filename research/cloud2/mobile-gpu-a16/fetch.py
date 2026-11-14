@@ -20,7 +20,7 @@ import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
-UA = "Mozilla/5.0 (research fetch; kamion R8)"
+UA = "Mozilla/5.0 (research fetch)"
 
 
 def sha256(path):
