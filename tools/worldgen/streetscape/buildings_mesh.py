@@ -799,11 +799,14 @@ def authored_openings(rule, wins, L, zref, key, door):
             ops.append((u0, u1, z0, z1, rv, "ribbon", cells("off", *vs)))
         elif lights:                                                # light band (ADR 0190): one office-row window
             rects = []                                              # per light, cropped as on LOD1 (FR.band_lights)
-            for lrow, lbay, crop in lights:
+            for li_, (lrow, lbay, crop) in enumerate(lights):
                 if lrow == FR.BLIND_ROW:
                     rects.append(FR.blind_rect(lbay))
                     continue
                 cu, cv_, cw, ch = FA.cell(*FA.FAR_ROWS[g][lrow][lbay])
+                half = FR.sash_half(li_, rule.get("sashes", 2))        # ADR 0200: one sash per light
+                if half is not None:
+                    cu, cw = cu + half * cw / 2, cw / 2
                 rects.append((cu, cv_ + ch * crop, cw, ch * (1.0 - crop)))
             ops.append((u0, u1, z0, z1, rv, "ribbon", ("atlas", rects, 0.0, 1.0, 0.0, 1.0)))
         else:
@@ -962,7 +965,10 @@ def load(fc, origin, overrides, hero=None):
                 o = {**o, "hero_asset": hero[f["id"]]}
             if o.get("footprint_open_m"):     # ADR 0180: authored straightening of the outline - a morphological
                 d_ = float(o["footprint_open_m"])        # opening drops protrusions narrower than 2 x d (mitred corners)
-                op = pl.buffer(-d_, join_style=2).buffer(d_, join_style=2).simplify(0.15)   # + steps under 0.15 m
+                # + steps under 0.15 m; ADR 0200 `footprint_simplify_m`: authored tolerance - near-collinear edges
+                # of one photographed wall become one edge (a facade rule sees the whole wall)
+                op = pl.buffer(-d_, join_style=2).buffer(d_, join_style=2).simplify(
+                    float(o.get("footprint_simplify_m", 0.15)))
                 if op.geom_type == "Polygon" and not op.is_empty:
                     pl = shapely.geometry.polygon.orient(op)
             if o.get("height_m"):             # ADR 0167: authored height (structures with no LoD1 / BDOT height)
