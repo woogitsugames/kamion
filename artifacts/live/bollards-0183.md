@@ -26,3 +26,10 @@
 - W tle: pipeline krok A/B (build bez rzędu -> import -> Low/High ab-off) potem restore (build z kodem r3 + import). pytest tests/gis w tle.
 ## NASTĘPNY KROK (komenda)
 po `restore done` w `artifacts/logs/pipeline-r2.status`: `uv run --project tools/worldgen python artifacts/bollards-0183/tools/make_cameras.py bialystok-dojlidy; pwsh artifacts/bollards-0183/tools/run_unity.ps1 -Steps low,high -Tag r3`
+
+## s20 wznowienie (2026-11-14 ~16:40)
+- Pipeline r2 dokończony przed przerwą: A/B ab-off (Low+High), restore = build z kodem r3 + import (świat z rzędem). r3 Low/High wyrenderowane; EditMode 511/535, 6 FAIL (TruckDoorCrown x3, MirrorPresentation x2, LightPostPolicy x1 = fixture ciężarówki, nie 0183). pytest gis 1084 pass / 3 fail (industrial-c: road_fidelity stale, export determinism, forest cell — dane industrial-c na wspólnym Data/raw, równolegle 3 buildy industrial-c innych agentów).
+- A/B (ab-off vs z rzędem): +2..3 draw instancjonowane, +8 instancji, +0,2..1,1k tris; draws/tris chunków identyczne.
+- Kamera dopasowana do P11-063 (`bollards-photo-13m`, 13 m, hfov 66°): dolny łańcuch ginie na jasnym bruku -> r3b: nieprzezroczysty rdzeń łańcucha (szer. drutu, łata lita, 2 mm od karty). W tle: `pipeline_r3b.ps1` (build -> import+Low+High r3b), pytest chain.
+## NASTĘPNY KROK (komenda)
+`Get-Content artifacts/logs/pipeline-r3b.status` -> po PIPELINE DONE obejrzeć `renders/r3b-*/bollards-photo-13m.png`, potem merge origin/main (generated --ours), ADR WYNIKI_*, robocopy, KONIEC.
