@@ -330,7 +330,11 @@ def route_polyline(region_id, w):
     def nearest(xy):
         return min(graph["nodes"], key=lambda n: math.hypot(n["x"] - xy[0], n["y"] - xy[1]))["id"]
     g = roadgraph.to_digraph(graph)
-    path = nx.shortest_path(g, nearest(route["start_epsg2180"]), nearest(route["end_epsg2180"]), weight="length")
+    # ADR 0204: optional via points (authored) - the truck route follows the numbered road, not the shortest street
+    stops = [nearest(p) for p in [route["start_epsg2180"], *route.get("via_epsg2180", []), route["end_epsg2180"]]]
+    path = [stops[0]]
+    for a, b in zip(stops, stops[1:]):
+        path += nx.shortest_path(g, a, b, weight="length")[1:]
     edges = {e["id"]: e for e in graph["edges"]}
     pts, eids, nodes_s = [], [], {}
     ox, oy = w.origin

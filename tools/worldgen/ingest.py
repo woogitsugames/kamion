@@ -96,7 +96,7 @@ def main() -> None:
     ap.add_argument("--region", required=True)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--refresh-index", action="store_true")
-    ap.add_argument("--with", dest="extra", nargs="*", default=[], choices=["nmpt", "trees", "lidar"])
+    ap.add_argument("--with", dest="extra", nargs="*", default=[], choices=["nmpt", "trees", "lidar", "orto10"])
     a = ap.parse_args()
     region = regions.get(a.region)
     dl = Downloader(dry_run=a.dry_run)
@@ -177,6 +177,22 @@ def main() -> None:
             "index_service": gi.INDEX_SERVICES["NMPT"][0], "format": "ARC/INFO ASCII GRID",
             "crs": "EPSG:2180", "vertical_crs": "PL-EVRF2007-NH", **LIC_GUGIK, "used_by": [used_by],
         }, sheet_files(nmpt))
+    if "orto10" in a.extra:
+        # ADR 0204: newest 0.1 m RGB orthophoto as a QA reference where the 0.25 m series is older than the roads
+        # (Knyszyn: 0.25 m = 2022/2024, 0.1 m = 2025-05; ~280 MB per sheet). Reference only, never a texture.
+        o10 = pick_latest(P["ORTO"], bb, lambda r: r.get("piksel") == "0.1" and r.get("kolor") == "RGB"
+                          and r.get("uklad_xy") == "PL-1992")
+        if not o10:
+            sys.exit("no 0.1 m RGB orthophoto series fully covers the tile")
+        ingest_dataset(dl, {
+            "id": f"gugik-orto-{o10[0]['akt_rok']}-rgb-0p10-{region.id}",
+            "name": f"GUGiK orthophoto RGB 0.1 m, {o10[0]['akt_data']}, sheets covering {region.id}",
+            "provider": "Główny Urząd Geodezji i Kartografii", "product": "ORTO", "region": region.id,
+            "index_service": gi.INDEX_SERVICES["ORTO"][0], "format": "GeoTIFF", "crs": "EPSG:2180 (PL-1992)",
+            "resolution_m": 0.1, "extent": f"sheets intersecting bbox {list(bb)}",
+            "usage_restriction": "visual reference + alignment QA only; not a game texture (docs/05 §3)",
+            **LIC_GUGIK, "used_by": [f"road network QA of {region.id} (ADR 0204)"],
+        }, sheet_files(o10))
     if "trees" in a.extra:
         ingest_dataset(dl, {
             "id": f"gugik-trees3d-2023-{t}", "name": f"GUGiK 3D tree models LoD1 (2023), powiat {t}",

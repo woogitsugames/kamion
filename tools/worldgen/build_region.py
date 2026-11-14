@@ -202,7 +202,10 @@ def main() -> None:
 
     # --- road graph
     print("[build] road graph")
-    graph = roadgraph.build(layers["roads"], layers["points"], region.bbox, bdot_roads=bdot_roads)
+    gf_path = out_dir / "graph_filter.authored.json"      # ADR 0204: authored_override, optional per region
+    gf = json.loads(gf_path.read_text(encoding="utf-8")) if gf_path.exists() else {}
+    graph = roadgraph.build(layers["roads"], layers["points"], region.bbox, bdot_roads=bdot_roads,
+                            drop_service=gf.get("drop_service", ()), drop_ways=gf.get("drop_osm_ways", ()))
     for n in graph["nodes"]:
         zz = terrain.sample(z, region.bbox, n["x"], n["y"])
         n["z_terrain"] = None if np.isnan(zz) else round(zz, 2)

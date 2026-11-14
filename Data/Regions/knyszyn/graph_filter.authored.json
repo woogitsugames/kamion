@@ -1,0 +1,7 @@
+{
+ "provenance": "authored_override (ADR 0204): ways left out of the drivable road graph of this region",
+ "drop_service": ["driveway"],
+ "drop_osm_ways": [],
+ "reason": "OSM maps every house driveway on Tykocka / Grodzienska as highway=service + service=driveway (16-37 m, one every ~12 m). As graph junctions they overlapped and the junction generator left an ~80 m hole in the DW671 carriageway (plan view artifacts/knyszyn-0204/plan/knyszyn/r1/tykocka_gap.jpg). Driveways are private entrances: the plot generator lays dropped kerbs and drives instead (ADR 0114).",
+ "verify": "none (generator limitation; revisit when junctions closer than ~15 m are supported)"
+}
