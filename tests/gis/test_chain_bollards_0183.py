@@ -45,7 +45,7 @@ def _V(mesh):
 # ---------------------------------------------------------------------------------------------- prototypes
 def test_library_has_both_prototypes_with_one_material():
     P = PP.build_all(set(), {})
-    for name in (CB.PROTO_BAY, CB.PROTO_POST):
+    for name in (CB.PROTO_BAY, CB.PROTO_BAY_B, CB.PROTO_POST):
         lod0, lod1, col = P[name]
         assert {p["mat"] for p in lod0.out()} == {CB.MAT}          # one material = one instanced draw per LOD
         assert {p["mat"] for p in lod1.out()} == {CB.MAT}
@@ -82,8 +82,11 @@ def test_post_dimensions():
     r = np.hypot(V[:, 0], V[:, 1]).max()
     assert r == pytest.approx(CB.POST_D_M / 2, abs=1e-9)
     assert 0.06 <= CB.POST_D_M <= 0.11                              # task range for the tube
-    assert 0.6 <= CB.POST_H_M <= 0.8                                # U-12c (research row M50-043)
-    assert CB.BAY_M == pytest.approx(2.0 * CB.POST_H_M)             # P11-063: bay = 2.0 post heights
+    # ADR 0202: chain fence U-12b (Dz.U. 2019 poz. 2311 zal. 4, p. 843): 1.10 m high, posts 1.5 or 2.0 m apart, bands
+    # of 25 cm with the lowest white. (ADR 0183 asserted the U-12c range 0.6-0.8 m and bay = 2 x height here.)
+    assert CB.POST_H_M == pytest.approx(1.10)
+    assert CB.BAY_M == pytest.approx(2.00)                          # orthophoto 0.05 m: 1.90-2.04 m (cloud M58)
+    assert [round(b[1] - b[0], 3) for b in CB.BANDS] == [0.25, 0.25, 0.25, 0.25, 0.10]
     assert V[:, 2].max() == pytest.approx(CB.POST_H_M + CB.CAP_RISE_M)
     assert V[:, 2].min() < 0                                        # buried foot: no gap on uneven paving
     assert [b[2] for b in CB.BANDS] == [False, True, False, True, False]      # white at the ground and at the top
@@ -119,7 +122,7 @@ def test_chain_uv_stays_inside_its_atlas_column():
     assert {round(float(x), 6) for x in p["UV"][sel & core, 1]} == {round(CB.UV_STRIP[r][1], 6) for r in (True, False)}
     u = p["UV"][sel & ~core, 0]
     assert u.min() >= CB.U_LINK[True][0] and u.max() <= CB.U_LINK[False][1]
-    for red in (True, False):                                       # both paints are used along a bay
+    for red in (True, False):                                       # one bay carries one chain of each colour
         assert np.any((u > CB.U_LINK[red][0]) & (u < CB.U_LINK[red][1]))
     p1 = CB.bay()[1].out()[0]                                       # LOD1: strips = the two solid patches only
     uv1 = {tuple(np.round(x, 6)) for x in p1["UV"][p1["V"][:, 0] > CB.POST_D_M]}
@@ -204,7 +207,7 @@ def test_apply_places_bays_and_a_closing_post():
     o = {"id": "row", "kind": "chain_bollards", "line_epsg2180": [[100.0, 200.0], [100.0, 200.0 + 3 * CB.BAY_M]]}
     pl, rep = _Placer(), {}
     CB.apply(pl, [o, {"id": "x", "kind": "depot_yard"}], (100.0, 200.0), rep)
-    assert [i["p"] for i in pl.items] == [CB.PROTO_BAY] * 3 + [CB.PROTO_POST]
+    assert [i["p"] for i in pl.items] == [CB.PROTO_BAY, CB.PROTO_BAY_B, CB.PROTO_BAY, CB.PROTO_POST]   # ADR 0202
     assert np.allclose([(i["e"], i["n"]) for i in pl.items], [(0.0, k * CB.BAY_M) for k in range(4)])
     assert all(i["yaw"] == pytest.approx(math.pi / 2) for i in pl.items)   # local +x (the chain) points north
     assert pl.items[0]["src"] == "override:row:0:0"
@@ -232,3 +235,53 @@ def test_no_override_no_report():
     rep = {}
     CB.apply(_Placer(), [{"id": "x", "kind": "depot_yard"}], (0.0, 0.0), rep)
     assert rep == {}
+
+
+# ---------------------------------------------------------------------------------------------- ADR 0202
+def _chain_colours(mesh):
+    """(upper red?, lower red?) of a bay's LOD1 strips; each chain must be ONE colour from post to post."""
+    p = mesh.out()[0]
+    sel = p["V"][:, 0] > CB.POST_D_M
+    z, uv = p["V"][sel, 2], np.round(p["UV"][sel], 6)
+    split = (CB.CHAIN_Z_M[0] - CB.CHAIN_SAG_M[0] + CB.CHAIN_Z_M[1]) / 2
+    out = []
+    for m in (z > split, z <= split):
+        cols = {tuple(x) for x in uv[m]}
+        assert len(cols) == 1, cols
+        out.append(cols == {tuple(np.round(CB.UV_STRIP[True], 6))})
+    return tuple(out)
+
+
+def test_0202_each_chain_is_one_colour_and_bays_alternate():
+    a = _chain_colours(CB.bay(CB.PROTO_BAY)[1])
+    b = _chain_colours(CB.bay(CB.PROTO_BAY_B)[1])
+    assert a == (True, False) and b == (False, True)                # upper / lower in opposite phase, swapped next bay
+    split = (CB.CHAIN_Z_M[0] - CB.CHAIN_SAG_M[0] + CB.CHAIN_Z_M[1]) / 2
+    for proto in (CB.PROTO_BAY, CB.PROTO_BAY_B):                    # LOD0 link cards: the same colours as LOD1
+        p = CB.bay(proto)[0].out()[0]
+        sel = (p["V"][:, 0] > CB.POST_D_M) & ~np.isclose(p["UV"][:, 0], CB.U_STEEL)
+        up = p["V"][sel, 2] > split
+        for m, red in zip((up, ~up), CB.CHAIN_PAINT[proto]):
+            u = p["UV"][sel][m, 0]
+            assert u.min() >= CB.U_LINK[red][0] and u.max() <= CB.U_LINK[red][1]
+    o = {"id": "row", "kind": "chain_bollards", "first_upper": "white", "line_epsg2180": [[0.0, 0.0], [0.0, 3 * CB.BAY_M]]}
+    pl, rep = _Placer(), {}
+    CB.apply(pl, [o, dict(o, id="bad", first_upper="blue")], (0.0, 0.0), rep)
+    assert [i["p"] for i in pl.items] == [CB.PROTO_BAY_B, CB.PROTO_BAY, CB.PROTO_BAY_B, CB.PROTO_POST]
+    assert rep["chain_bollards"]["stale"] == ["bad: first_upper 'blue', expected red or white"]
+
+
+def test_0202_dojlidy_row_is_the_m58_line():
+    import yaml
+    ov = yaml.safe_load((ROOT / "Data/Regions/bialystok-dojlidy/overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    rows = [o for o in ov if o.get("kind") == "chain_bollards"]
+    assert [o["id"] for o in rows] == ["mickiewicza-kuronia-chain-posts-p11-063"]
+    P = np.asarray(rows[0]["line_epsg2180"], float)
+    assert np.hypot(*(P[1] - P[0])) == pytest.approx(14.0, abs=0.02)        # cloud M58: 13.99 m (C58-012 -> C58-013)
+    Q = CB.walk(P)
+    assert len(Q) == 8 and np.hypot(*(Q[-1] - P[-1])) < 0.02                # 8 posts, 7 bays of 2.0 m
+    # two of the five posts the s20 review measured on the 0.05 m orthophoto lie on the line
+    d = (P[1] - P[0]) / np.hypot(*(P[1] - P[0]))
+    for q in ([780014.20, 590459.92], [780016.90, 590452.60]):
+        r = np.asarray(q) - P[0]
+        assert abs(r[0] * d[1] - r[1] * d[0]) < 0.15

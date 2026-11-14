@@ -1,12 +1,15 @@
-"""ADR 0183: red-white blocking posts with two chains ("słupki biało-czerwone z łańcuchem") and their authored rows.
+"""ADR 0183 / 0202: red-white chain fence U-12b ("ogrodzenie łańcuchowe": posts with two chains) and its authored rows.
 
 What photo P11-063 shows (Wikimedia Commons, CC0, Rakoon 2024-06-23) (Dojlidy, Kuronia; research/_incoming/mistral-p11-dojlidy-photos-v2/files):
 a row of slim round steel posts in red-white bands along the edge of a paved area, two chains from post to post
-(one under the cap, one at mid height), both hanging in a shallow arc, painted in long red and white stretches.
+(one under the cap, one at mid height), both hanging in an arc; each chain is ONE colour within a bay, the colour
+changes from bay to bay and the upper and lower chain are in opposite phase (ADR 0202, research cloud p15 C58-010).
 
 Prototypes (library street_props.glb, ONE material `chain_bollard` = one alpha-clip atlas, so a row is one instanced
 draw per prototype and LOD):
-  bollard_rw_chain   a post at the origin + the two chains of one bay, running along local +x to the next post
+  bollard_rw_chain   a post at the origin + the two chains of one bay (upper red, lower white), running along local
+                     +x to the next post
+  bollard_rw_chain_b the same bay with the colours swapped (upper white, lower red); a row alternates the two
   bollard_rw         the post alone (closes a row; rows with `chain: false`)
 LOD0 = 10-sided post, eyelets, chains as crossed alpha cards with a link texture; LOD1 = 5-sided post, each chain one
 narrow opaque strip. Collision: one low box per bay.
@@ -16,13 +19,16 @@ Placement: override `kind: chain_bollards` in Data/Regions/<id>/overrides.yaml (
     kind: chain_bollards
     line_epsg2180: [[x, y], ...]          # one row; or  lines: [{line_epsg2180: [...]}, ...]  for several
     chain: true                            # false = posts only
+    first_upper: red                       # colour of the upper chain of the first bay (default red); then alternating
     reason / sources / confidence / verify # as every override
 The row is walked from its first point with posts exactly BAY_M apart (chord), all on the authored line; the last post
 may pass the end of the line by less than BAY_M / 2 (the mesh of a bay has one length). A gap = two rows.
 
-Dimensions: the height comes from the U-12c row of research p9 (M50-043); the Białystok documents of research G5 do
-not cover this post, so everything else is WORKING_VALUE read from P11-063 as a proportion of the post height, or a
-common tube / chain class, and says so.
+Dimensions (ADR 0202): the device is the chain fence U-12b, not the blocking post U-12c that ADR 0183 assumed. Height,
+bay and bands follow Dz.U. 2019 poz. 2311, zał. 4 pkt 5.4, p. 843 (quoted in docs/reports/REVIEW-2026-11-14-s20-cloud-m58.md
+par. 4, read there from api.sejm.gov.pl ELI D20192311-c2.pdf; not re-read here) and agree with the measurements of
+research/cloud/p15-dojlidy-details (C58-001...018). Everything else is WORKING_VALUE read from P11-063, or a common
+tube / chain class, and says so.
 """
 
 from __future__ import annotations
@@ -39,27 +45,27 @@ from . import props as PP
 KIND = "chain_bollards"
 MAT = "chain_bollard"
 PROTO_BAY = "bollard_rw_chain"
+PROTO_BAY_B = "bollard_rw_chain_b"      # ADR 0202: the bay with swapped chain colours
 PROTO_POST = "bollard_rw"
 
 # ------------------------------------------------------------------------------------------------ dimensions
 POST_D_M = 0.0603       # WORKING_VALUE: the galvanised Ø60.3 mm tube of the ZDM U-12a posts (research G5-010). P11-063:
-#                         the post is 4-5 px wide and 75 px tall = 5-7 % of its height (0.045-0.055 m at 0.80 m)
-POST_H_M = 0.80         # Blocking posts U-12c are 0.6-0.8 m high, red-white (research/mistral/p9-furniture-3/manifest.csv
-#                         row M50-043, quoting Dz.U. 2019 poz. 2311, zał. 4, p. 847; the act itself was not re-read
-#                         here). P11-063 fits the upper bound: the nearest post is 75 px tall at f = 1230 px (ASSUMED,
-#                         ~66 deg across 1600 px) -> 13.1 m away for 0.80 m; the east kerb of the NW-bound carriageway
-#                         of ul. Mickiewicza is 13.5-15 m from the photo position on the GUGiK 2024 orthophoto (the
-#                         position itself is good to a few metres). 0.90 m fits equally well: WORKING_VALUE
+#                         the post is 4-5 px wide and 72 px tall = 5-7 % of its height (cloud M58: 0.06-0.075 m)
+POST_H_M = 1.10         # U-12b: "Wysokość tych ogrodzeń powinna wynosić 1,10 m" (Dz.U. 2019 poz. 2311 zał. 4, p. 843, via the
+#                         s20 review of cloud M58). Measured: 1.17 m (pinhole, P11-063 + orthophoto bay) and 1.19 m
+#                         (shadow, orthophoto 0.05 m), ESTIMATED; the regulation value is inside their error. ADR 0183
+#                         had 0.80 m from the U-12c rule (blocking posts) - the wrong device
 POST_BURIED_M = 0.15    # mesh below the origin (uneven ground), not the real foundation depth
 CAP_RISE_M = 0.010      # shallow domed cap, WORKING_VALUE
-BAY_M = 1.60            # WORKING_VALUE = 2.0 x post height. P11-063: posts at x 630 / 750 / 858 / 965 px, 75 -> 63 px
-#                         tall; three bays measure 5.9 post heights whatever the focal length (+-10 %)
-# bands as fractions of the post height from the ground up (z0, z1, red?) - P11-063, post 2 of the crop at 4x, from
-# the top: white 30 px, red 60, white 70, red 60, white 60 of 280 px
-BANDS = tuple((round(a * POST_H_M, 4), round(b * POST_H_M, 4), r) for a, b, r in
-              ((0.00, 0.22, False), (0.22, 0.43, True), (0.43, 0.68, False), (0.68, 0.89, True), (0.89, 1.00, False)))
+BAY_M = 2.00            # U-12b: "Rozstaw słupków powinien wynosić 1,5 m lub 2,0 m" (same page). Orthophoto 0.05 m: 2.04 / 1.91 /
+#                         1.96 m (cloud M58), re-measured in the review 1.90 / 2.04 / 1.93 m. Bay / height = 1.82 here
+#                         against ~1.7 in P11-063 (the posts measure 1.17-1.19 m, the rule says 1.10 m)
+# bands from the ground up (z0, z1, red?): the rule recommends red-white bands of 25 cm, the lowest white; P11-063:
+# five bands, the top white one short (~0.12 m) = what is left of 1.10 m
+BANDS = ((0.00, 0.25, False), (0.25, 0.50, True), (0.50, 0.75, False), (0.75, 1.00, True), (1.00, POST_H_M, False))
 # eyelet heights of the upper / lower chain and their mid-span sag, P11-063: 0.94 / 0.46 and 0.18 / 0.16 of the post
-# height (50 and 45 px of a 280 px post). WORKING_VALUE
+# height (50 and 45 px of a 280 px post) -> 1.03 / 0.51 m and 0.20 / 0.18 m; cloud M58 measures 1.10 / 0.56 m and
+# 0.17-0.25 m. The rule's "strzałka ugięcia do 0,10 m" is not what hangs there: the photo wins. WORKING_VALUE
 CHAIN_Z_M = (round(0.94 * POST_H_M, 3), round(0.46 * POST_H_M, 3))
 CHAIN_SAG_M = (round(0.18 * POST_H_M, 3), round(0.16 * POST_H_M, 3))
 # Chain (r3): render r2 lost both chains beyond ~10 m while in P11-063 they read as solid ropes. Measured there: the
@@ -74,9 +80,11 @@ CORE_OFFSET_M = 0.0025     # LOD0 opaque core ribbon beside the link card (r3b),
 CARD_EPS_M = 0.001         # r4: front / back copies of every chain quad, 1 mm off the chain axis
 STRIP_W_M = 0.022          # LOD1 opaque strip: the apparent width in P11-063 (0.021-0.032 m), lower bound
 EYELET_M = (0.014, 0.008, 0.020)
-# colour of the chain along a bay (start fraction -> red?), upper / lower. P11-063: red and white stretches of about
-# 1-2 m that do not line up with the posts; one fixed pattern per bay is WORKING_VALUE
-CHAIN_PAINT = (((0.0, True), (0.5, False)), ((0.0, False), (0.25, True)))
+# colour of the two chains of a bay (upper red?, lower red?) per prototype. P11-063 (all seven bays, crops in
+# artifacts/dojfix-0202/view/p063-posts-{a,b}.jpg) and P11-076: a chain is one colour from post to post, the next bay
+# has the other colour, upper and lower chain in opposite phase; the northmost bay of the Mickiewicza row has the red
+# chain on top. (The rule recommends grey or 25 cm red-white pieces; the street has whole bays - cloud M58 C58-010.)
+CHAIN_PAINT = {PROTO_BAY: (True, False), PROTO_BAY_B: (False, True)}
 
 # ------------------------------------------------------------------------------------------------ atlas layout
 # r2 (render r1: the red links read pale pink in Unity, red in Blender). The phone / editor import is ASTC 6x6 with
@@ -108,6 +116,10 @@ RED_SRGB = (164, 26, 26)                # RAL 3020 (FT.RAL3020_SRGB) darkened by
 # brighter than the paving around it. WORKING_VALUE
 CHAIN_RED_SRGB = (120, 20, 22)
 CHAIN_WHITE_SRGB = (238, 237, 231)
+# solid patch of the LOD0 core ribbon / LOD1 strips relative to the chain paint. ADR 0202: a whole bay is white now and
+# render r2 (close-4m, Low and High) lost the white chain on the footway paving - its core (0.80 x white) rendered
+# ~150 sRGB against paving ~143 while the link cards around it were ~250. White core = the paint itself; red keeps 0.80
+STRIP_SHADE = {True: 0.80, False: 0.97}
 STEEL_SRGB = (150, 153, 152)
 RUST_SRGB = (132, 80, 48)
 FILM_SRGB = (140, 132, 118)
@@ -166,12 +178,12 @@ def _quad2(m, Q, uv, eps):
     m.add(MAT, Q - nrm * eps, [(0, 2, 1), (0, 3, 2)], uv)
 
 
-def _chains(m, n, lod0):
+def _chains(m, n, lod0, paint):
     r = POST_D_M / 2
     x0 = r + EYELET_M[0] - 0.002
     L = BAY_M - 2 * x0
     vscale = 1.0 / (PITCHES_PER_V * LINK_PITCH_M)
-    for z_att, sag, paint in zip(CHAIN_Z_M, CHAIN_SAG_M, CHAIN_PAINT):
+    for z_att, sag, red in zip(CHAIN_Z_M, CHAIN_SAG_M, paint):
         x, dz, slope, s = catenary(L, sag, n)
         P = np.column_stack([x0 + x, np.zeros(n + 1), z_att + dz])
         tl = np.sqrt(1 + slope ** 2)
@@ -179,8 +191,6 @@ def _chains(m, n, lod0):
         side = np.tile([0.0, 1.0, 0.0], (n + 1, 1))
         v = s * vscale
         for j in range(n):
-            f = (j + 0.5) / n
-            red = [c for f0, c in paint if f >= f0][-1]
             w = (CARD_W_M if lod0 else STRIP_W_M) / 2
             if lod0:
                 u0, u1 = U_LINK[red][0] + _PX, U_LINK[red][1] - _PX
@@ -200,13 +210,14 @@ def _chains(m, n, lod0):
                            np.tile(UV_STRIP[red], (4, 1)), CARD_EPS_M)
 
 
-def bay():
-    """Post at the origin + both chains to the next post at local x = BAY_M (that post is the next instance)."""
+def bay(proto=PROTO_BAY):
+    """Post at the origin + both chains to the next post at local x = BAY_M (that post is the next instance).
+    proto: PROTO_BAY (upper chain red, lower white) or PROTO_BAY_B (swapped)."""
     m, l1, col = PP.Mesh(), PP.Mesh(), PP.Mesh()
     _post(m, 10, True)
-    _chains(m, 8, True)
+    _chains(m, 8, True, CHAIN_PAINT[proto])
     _post(l1, 5, False)
-    _chains(l1, 4, False)
+    _chains(l1, 4, False, CHAIN_PAINT[proto])
     col.box("collision_steel", [BAY_M / 2, 0, POST_H_M / 2], BAY_M / 2 + 0.04, 0.04, POST_H_M / 2)
     return m, l1, col
 
@@ -220,7 +231,7 @@ def post():
 
 
 def prototypes():
-    return {PROTO_BAY: bay(), PROTO_POST: post()}
+    return {PROTO_BAY: bay(PROTO_BAY), PROTO_BAY_B: bay(PROTO_BAY_B), PROTO_POST: post()}
 
 
 # ------------------------------------------------------------------------------------------------ texture
@@ -307,7 +318,7 @@ def texture():
         base = np.asarray(CHAIN_RED_SRGB if red else CHAIN_WHITE_SRGB, float)
         # flat mean colour of the lit links: a link-pitch rhythm here aliases into dashes at LOD1 distance
         r0, r1 = STRIP_ROWS[red]
-        im[r0:r1, STEEL_COL[0]:STEEL_COL[1], :3] = base * 0.80
+        im[r0:r1, STEEL_COL[0]:STEEL_COL[1], :3] = base * STRIP_SHADE[red]
         a0, a1 = LINK_SLOT[red]
         im[:, a0:a1, :3] = base * 0.80                       # gutters: own paint colour under alpha 0
         im[:, a0:a1, 3] = 0
@@ -371,7 +382,8 @@ def lines_of(o, origin):
 
 
 def apply(pl, overrides, origin, report):
-    """Places the rows of every `kind: chain_bollards` override. Each bay instance stands at its post (origin on the
+    """Places the rows of every `kind: chain_bollards` override. Bays alternate PROTO_BAY / PROTO_BAY_B from the first
+    post (`first_upper: white` starts with the swapped one). Each bay instance stands at its post (origin on the
     ground there, Placer seat) with local +x toward the next post; the bay is level, so the chain meets the next post
     `step` higher or lower than its eyelet where the ground rises - reported per row (max_step_m)."""
     rep = {"applied": [], "stale": []}
@@ -379,6 +391,11 @@ def apply(pl, overrides, origin, report):
         if o.get("kind") != KIND:
             continue
         chain = bool(o.get("chain", True))
+        first = str(o.get("first_upper", "red"))
+        if first not in ("red", "white"):
+            rep["stale"].append(f"{o.get('id')}: first_upper {first!r}, expected red or white")
+            continue
+        bays = (PROTO_BAY, PROTO_BAY_B) if first == "red" else (PROTO_BAY_B, PROTO_BAY)
         lines = lines_of(o, origin)
         if not lines:
             rep["stale"].append(f"{o.get('id')}: no line_epsg2180")
@@ -391,7 +408,7 @@ def apply(pl, overrides, origin, report):
             for k, q in enumerate(Q):
                 last = k == len(Q) - 1
                 d = Q[k] - Q[k - 1] if last else Q[k + 1] - Q[k]
-                proto = PROTO_BAY if chain and not last else PROTO_POST
+                proto = bays[k % 2] if chain and not last else PROTO_POST
                 zs.append(pl.add(proto, q, math.atan2(d[1], d[0]), src=f"override:{o['id']}:{li}:{k}", group=KIND))
             rep["applied"].append({
                 "id": o["id"], "line": li, "posts": len(Q), "bays": len(Q) - 1 if chain else 0,
