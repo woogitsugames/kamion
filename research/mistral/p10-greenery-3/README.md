@@ -111,3 +111,10 @@ Razem z **G7-P01…P12** (wiosna 2024, ulice osiedla: Wołkowyska, Kowieńska, G
 4. **Kierunek kamery UNVERIFIED** we wszystkich kadrach Commons (brak GPSImgDirection); jedyny opisany z treści: lokalizacja M51-118 (wiat „353 SOKÓŁSKA / AL. TYSIĄCLECIA").
 5. **Wiersze odcinków z wnętrza kwartałów (8/21: 221, 222, 226–231)** leżą poza progiem 25 m od osi nazwanych ulic; po M51-FIX-2 tylko jeden z nich (228) jest liczony jako pas krzewów — reszta to rabaty lub zadrzewienia.
 6. **Próg żywopłotów ≥ 20 niespełniony (13)** — patrz Zadanie 2.
+
+## Errata lidera (s20, 2026-11-14, `docs/reports/REVIEW-2026-11-14-s20-mistral-m51-fix2.md`)
+- JPG w ZIP v3 mają 1920 px (dokumenty piszą 1600).
+- `sources.md` nieaktualny: KartaView = CC BY-SA (nie CC BY); liczniki licencji 65/4 (nie 51/3); seed samokontroli z FIX-2.
+- `hedge_viewings.json`: wiążące pole `zywoplot_m51_fix2` (stare `zywoplot` historyczne).
+- Losowa samokontrola 20 % nie powtórzona po FIX-2 (zmienione wiersze obejrzane osobno). Próg żywopłotów 13/20 niespełniony (zgłoszone uczciwie).
+- Dla gry: klasa „rabata przyblokowa” i typy żywopłotu = WORKING_VALUE (ADR 0163); `filter_nonveg.py` do przeniesienia do worldgen (0170). Kafel przy Al. Tysiąclecia — dla Dojlid tylko metoda/typologia.
