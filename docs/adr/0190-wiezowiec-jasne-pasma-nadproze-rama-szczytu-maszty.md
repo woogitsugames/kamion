@@ -15,14 +15,15 @@ Budynek `bdot:2BE4B431-CA0F-1BF0-E053-CC2BA8C0D140` (11 kondygnacji, 41,81 m). R
   Pomiar atlasu (`T_facade_atlas_BaseColor`): komórka `off` 4 — ciemne szkło do 0,30 wysokości, biała żaluzja (163)
   od 0,33; `off` 2 — biała rama (199), szkło 36–117; `off` 0 — beż 145. Atlas dalekich rzędów: ściana 187, żaluzja 172.
 - **Kolumna szczytu (P2-4).** r2 użyło `variants: [4]` opisanego jako „czyste szkło” — to biała żaluzja w szarej
-  ramie. Rama „tylko po prawej” w `stretch-02` to ościeże 0,12 m widziane pod kątem (jedno ościeże zasłonięte), nie
-  rama okna. „Jasne kwadraciki pod 2 oknami NE” to jednostki klimatyzacji z zestawu elewacji (`facade_kit`, komórka
-  `ac`) — na zdjęciu szczytu SW też wiszą dwie pod oknami 4. i 5. od góry; zostają.
+  ramie (pomiar komórek atlasu), na zacienionej ścianie bez kontrastu. Przyczyna „ramy tylko po prawej” w `stretch-02`
+  (kadr Low) nie została ustalona — nie odtwarzałem jej na r2; po zmianie na komórkę `off` 2 rama jest po obu stronach
+  w `stretch-02` i w kadrach krytyka telefonu. „Jasne kwadraciki pod 2 oknami NE” to jednostki klimatyzacji z zestawu
+  elewacji (`facade_kit`, komórka `ac`, LOD0) — na zdjęciu szczytu SW też wiszą dwie pod oknami 4. i 5. od góry; zostają.
 - **Ton szczytu.** Zdjęcia: mediana sRGB szczytu (216, 208, 177) w 5 polach (213–218 / 204–211 / 172–184); render r1
   (225, 211, 179). Różnica ≤ 9 na kanał — mniejsza niż rozrzut między polami zdjęcia; `plaster_beige` bez zmian
   (wspólny materiał wielu budynków).
-- **„Skok LOD NW”.** Tier Low rysuje wyłącznie LOD1 budynków (`chunk_*.low.glb` nie zawiera warstwy `buildings`),
-  LOD0 jest tylko na High — recenzja r2 oglądała więc w obu obrazach LOD1. Kamera `stretch-02` stoi w (663, −517),
+- **„Skok LOD NW”.** Tier Low dostaje LOD0 budynków tylko w chunkach do 60 m od trasy startowej
+  (`RegionImporter.LowBuildingsLod0M`), poza tym LOD1; który LOD pokazywały kadry recenzji r2 — nie ustalałem. Kamera `stretch-02` stoi w (663, −517),
   wieżowiec w (577, −562): patrzy z ENE i widzi szczyt NE oraz ścianę **SE**, nie NW (tak samo `a184_tower_p` z ADR
   0184 = SE, `a184_tower_n` = NW). „Kod kreskowy z beżowymi roletami” to pasma SE (komórka `off` 0) — usunięte
   razem z P2-3. Podgląd programowy obu LOD-ów (`artifacts/tower2-0190/tools/elev2.py`, `elev-base.jpg`) i rendery
@@ -57,7 +58,8 @@ Budynek `bdot:2BE4B431-CA0F-1BF0-E053-CC2BA8C0D140` (11 kondygnacji, 41,81 m). R
    z-fightingu), materiał `hall_flashing` (okapnik attyki — rysowany już na obu LOD-ach). Wieżowiec: 0,15 m. Czym
    jest ta linia (żaluzja przeciwsłoneczna czy cień szczeliny) — ze zdjęć nie wynika: WORKING_VALUE.
 3. **Kolumna szczytu:** `variants: [2]` (biała rama, czyste szkło), `reveal_m: 0.06` (nowe pole reguły; domyślnie
-   0,12) — rama jest w komórce atlasu po obu stronach, a płytkie ościeże nie zasłania jej z ukosa.
+   0,12; dotyczy tylko LOD0) — na zdjęciach ramy są niemal w licu tynku. Obejrzane na High z 60 m
+   (`r2/z/LH-sw60-gable.jpg`): rama po obu stronach, wąski cień ościeża.
 4. **Override `roof_masts`** (authored_override, przeżywa reimport; `frontage.roof_mast_specs` / `roof_masts`):
    lista struktur `{kind: lattice | pole, facing, u, inset_m, height_m, side_m, sectors, dishes, aim_deg}`
    zakotwiczonych do ściany o danym kierunku (ułamek długości + odsunięcie w głąb dachu — bez współrzędnych).
@@ -96,17 +98,20 @@ zamianie komórki żaluzji) ma tę samą geometrię co r1 (te same liczby trójk
 Łańcuch (sloty heavy / unity, `artifacts/tower2-0190/tools/full.ps1`): baza i r1 na kodzie sprzed scalenia main
 (A/B budżetu), r2 po `git merge origin/main`: `build_world` exit 0 → import exit 0 → vqa Low-clear 48 kamer → kamery
 wieżowca (`tower_cameras.json`: 4 ściany z 60 m i 200 m, z południa 150 m, dach × 2, kadry krytyka telefonu
-`g3a_eye_s0012` / `s0062`) Low clear + overcast i **High clear** (LOD0) → SBS Low **42 + 42 pary**
+`g3a_eye_s0012` / `s0062`) Low clear + overcast i **High clear** → SBS Low **42 + 42 pary**
 (`sbs-r2/pairs/Low-clear|Low-overcast`). Dowody (poza gitem): `artifacts/tower2-0190/` w katalogu głównym.
 
 | Punkt | Wynik (zmierzony / obejrzany) |
 |---|---|
-| P2-3 pasma SE — **częściowo** | `t190_se_200`, luminancja ściany 154: przeszklenie pasma baza 96 → r1 109 → **r2 121** (p90 147) na Low / LOD1; High / LOD0 **125** (p90 176 > ściana 156); overcast 125 przy ścianie 161. Najciemniejszy wiersz pasma (nadproże) 91 (Low), 59 (High). Okna nie są jaśniejsze od ściany: światła z żaluzją sięgają jej poziomu, średnią obniżają żebra blachy, ramy i 38 % świateł z ciemnym szkłem. Beżowych rolet brak. `r2/z/se200-s150.jpg`, `r2/z/LH-se60.jpg` |
-| P2-4 kolumna szczytu | biała rama po obu stronach okna, ciemne szkło; czytelna w kadrach krytyka telefonu `g3a_eye_s0012` / `s0062` na Low (LOD1) i High (`r2/z/gable-s0012-s0062.jpg`; przed: szare prostokąty bez kontrastu) oraz w `stretch-02` (`r1/z/st02-ba.jpg`). Ton szczytu w słońcu: mediana (227, 212, 180) wobec zdjęcia (216, 208, 177) |
+| P2-3 pasma SE — **częściowo** | `t190_se_200`, luminancja ściany 154: przeszklenie pasma baza 96 → r1 109 → **r2 121** (p90 147) na Low; High **125** (p90 176 > ściana 156); overcast 125 przy ścianie 161. Najciemniejszy wiersz pasma (nadproże) 91 (Low), 59 (High). Okna nie są jaśniejsze od ściany: światła z żaluzją sięgają jej poziomu, średnią obniżają żebra blachy, ramy i 38 % świateł z ciemnym szkłem. Beżowych rolet brak. `r2/z/se200-s150.jpg`, `r2/z/LH-se60.jpg` |
+| P2-4 kolumna szczytu | biała rama po obu stronach okna, ciemne szkło; czytelna w kadrach krytyka telefonu `g3a_eye_s0012` / `s0062` na Low i High (`r2/z/gable-s0012-s0062.jpg`; przed: szare prostokąty bez kontrastu) oraz w `stretch-02` (`r1/z/st02-ba.jpg`). Ton szczytu w słońcu: mediana (227, 212, 180) wobec zdjęcia (216, 208, 177) |
 | P2-5 maszty | 8 struktur na obu LOD-ach, widoczne z 150 m i w parach SBS (`r2/photo-vs-r2-s150.jpg`, `r2/before-r2clear-r2overcast-s150.jpg`, `sbs-r2/pairs/Low-overcast/sbs-g3-a-178689077481862.jpg`) |
-| NW Low (LOD1) ↔ High (LOD0) | ten sam raster i ton okien, bez białych łat, bez rur (`r2/z/LH-nw60.jpg`) |
+| NW Low ↔ High | ten sam raster i ton okien, bez białych łat, bez rur (`r2/z/LH-nw60.jpg`) |
 | kreski narożnika | znikają na obu tierach (porównanie `r1/z/s150-ba.jpg`, `r1/z/st02-ba.jpg`) |
 | testy | `tests/gis/test_tower_0190.py` 10 nowych; pełny `pytest tests/gis`: **1115 passed, 2 xfailed** (`logs/pytest-gis.log`; po `fidelity/run.py`, exit 0); EditMode: **581 total, 580 passed, 0 failed, 1 skipped** (`logs/editmode.log`) |
+
+Który LOD rysuje dana kamera Low (chunk 6_6 leży przy trasie: LOD0 z bliska, LOD1 dalej) — nie rozdzielałem w
+kadrach; zgodność obu siatek sprawdza podgląd programowy (`elev-r2.png`: LOD0 nad LOD1) i testy.
 
 Porównanie ze zdjęciami (Mapillary 177786140912399 / 178689077481862): zgodne — sylwetka z masztami, gładki szczyt z
 jedną kolumną biało obramowanych okien, ściana SE w poziome cienkie ciemne linie z jasnymi oknami pod nimi. Różni się:
@@ -129,4 +134,6 @@ napis na szczycie (marka) nie jest odtwarzany; wysoki maszt na zdjęciu ma odci�
   ewentualny override rodziny stolarki.
 - `new-agent-worktree.ps1` nie kopiuje `art-source/world/materials/<set>/<tier>/*.png` ani
   `artifacts/sbs-gate3/rectified` — pierwszy import przebudowuje 159 zestawów PBR (ok. 90 min), a SBS nie składa par.
+- Komentarz override `g3a-office-tower-colour` w `overrides.yaml` przypisuje „ramę po jednej stronie” ościeżu —
+  to hipoteza, nie ustalenie; poprawić przy najbliższej regeneracji (zmiana pliku zmienia `sources_sha256` manifestu).
 - SE w cieniu w oświetleniu clear, ton szczytu (Δ ≤ 11 / kanał) — bez zmian, jak w ADR 0180.
