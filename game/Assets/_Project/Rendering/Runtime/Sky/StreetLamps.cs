@@ -8,7 +8,7 @@ namespace Game.Rendering
     /// (WorldInstances); this class
     /// - writes the lamp luminance into the glass materials (Kamion/World Surface _Emission, cd/m²) and the global switch
     ///   _KamionStreetLamps from the sun elevation (Polish municipal lighting runs on astronomical clocks / twilight
-    ///   switches: on around sunset; here a fade from 3° to 1° elevation, WORKING_VALUE);
+    ///   switches: ADR 0199 fade from −2° to −3.5° sun elevation, see <see cref="SwitchOnStartDeg"/>);
     /// - on tiers with <see cref="QualityProfile.Tier.streetLights"/> > 0 keeps that many real point lights at the lamp
     ///   heads nearest to the camera (re-chosen 4× a second, no allocation); since ADR 0062 they light vehicles and props
     ///   only (Kamion/World Surface ignores them and draws the analytic pools below, so nothing is lit twice);
@@ -38,7 +38,7 @@ namespace Game.Rendering
         static Vector3[] s_Heads = new Vector3[0];
         static Vector4[] s_Axes = new Vector4[0];
         static int s_HeadCount;
-        static float s_On;
+        static float s_On, s_FarFloorLux = NightFloorFarClearLux;
         static readonly int k_On = Shader.PropertyToID("_KamionStreetLamps"), k_LightsOn = Shader.PropertyToID("_KamionLampLights"),
             k_Emission = Shader.PropertyToID("_Emission"), k_PoolPos = Shader.PropertyToID("_KamionLampPos"),
             k_PoolCount = Shader.PropertyToID("_KamionLampCount"), k_PoolColor = Shader.PropertyToID("_KamionLampColor"),
@@ -53,6 +53,19 @@ namespace Game.Rendering
         public const float NightFloorLux = 1.0f;
         /// <summary>s20 night-int: the night floor fades to zero this far (horizontal, m) from the nearest chosen luminaire. WORKING_VALUE.</summary>
         public const float NightFloorReachM = 45f;
+        /// <summary>
+        /// ADR 0199 (review s20 cloud M60 §6, #57 review: between lamps and beyond lit streets it is never black - urban sky
+        /// glow): floor beyond <see cref="NightFloorReachM"/> instead of 0, clear sky / overcast (clouds reflect the city
+        /// light back), lerp by the preset's cloud cover. ESTIMATED (order of magnitude), WORKING_VALUE.
+        /// </summary>
+        public const float NightFloorFarClearLux = 0.03f, NightFloorFarOvercastLux = 0.2f;
+        /// <summary>
+        /// ADR 0199: the lamps switch on between these sun elevations (linear fade). Photos (research/cloud/p17-dusk-lighting,
+        /// review s20 cloud M60 §6): already on at −3.1° (C60-083), −3.7°, −4.1°, −5.4°; one arterial still off at −3.3°
+        /// (P17-103); Augustów switches ~10 min after sunset (≈ −1.5…−2.3°). Białystok's switching rule (clock / lux
+        /// threshold) UNVERIFIED. WORKING_VALUE.
+        /// </summary>
+        public const float SwitchOnStartDeg = -2f, SwitchOnFullDeg = -3.5f;
         /// <summary>
         /// s20 night-int (review 0191 P1-4): the High / Ultra lights are spots pointing down with the luminaire's cut-off
         /// (outer cone 150° = 75° from the nadir) instead of spheres - a sphere at the lens lit the arm and housing above it
@@ -139,10 +152,21 @@ namespace Game.Rendering
             LampGlare.Invalidate();
         }
 
-        /// <summary>EnvironmentLighting: lamps follow the sun elevation.</summary>
-        public static void SetSunElevation(float elevationDeg)
+        /// <summary>ADR 0199: 0..1 switch-on of the street lamps at a sun elevation (degrees).</summary>
+        public static float SwitchOn(float elevationDeg) => Mathf.Clamp01(Mathf.InverseLerp(SwitchOnStartDeg, SwitchOnFullDeg, elevationDeg));
+
+        /// <summary>ADR 0199: night floor beyond <see cref="NightFloorReachM"/> for a cloud cover 0..1 (lx).</summary>
+        public static float FarFloorLux(float overcast) => Mathf.Lerp(NightFloorFarClearLux, NightFloorFarOvercastLux, Mathf.Clamp01(overcast));
+
+        /// <summary>ADR 0199: far night floor of the last <see cref="SetSunElevation"/> as a share of the near floor
+        /// (the value sent in _KamionLampColor.w).</summary>
+        public static float FarFloorShare => s_FarFloorLux / NightFloorLux;
+
+        /// <summary>EnvironmentLighting: lamps follow the sun elevation; the far floor follows the cloud cover.</summary>
+        public static void SetSunElevation(float elevationDeg, float overcast = 0f)
         {
-            s_On = Mathf.Clamp01(Mathf.InverseLerp(3f, 1f, elevationDeg));
+            s_On = SwitchOn(elevationDeg);
+            s_FarFloorLux = FarFloorLux(overcast);
             Shader.SetGlobalFloat(k_On, s_On);
         }
 
@@ -241,7 +265,8 @@ namespace Game.Rendering
             Shader.SetGlobalFloat(k_PoolCount, used);
             // Same photometry as the point lights: E = I cos / d², Unity display units I·k/π (Lambert without 1/π).
             Color c = k_Led * (DownIntensityCd * exposure / Mathf.PI * s_On);
-            Shader.SetGlobalVector(k_PoolColor, new Vector4(c.r, c.g, c.b, 0f));
+            // w (ADR 0199): far night floor as a share of the near floor (KamionLampFloor in KamionLampPools.hlsl).
+            Shader.SetGlobalVector(k_PoolColor, new Vector4(c.r, c.g, c.b, s_FarFloorLux / NightFloorLux));
             bool floorOff = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.lampFloorOff;
             Color f = k_Led * (floorOff ? 0f : NightFloorLux * exposure / Mathf.PI * s_On);
             Shader.SetGlobalVector(k_PoolFloor, new Vector4(f.r, f.g, f.b, NightFloorReachM));
