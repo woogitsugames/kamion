@@ -116,11 +116,39 @@ Nieinstancjonowane `drawsEst` / `trisExact` chunków identyczne w A i B (siatki 
 (bez adb w tym zadaniu) — budżet `docs/06` §6 do potwierdzenia na A16 przy bramce.
 
 ## Dowody
-WYNIKI_DOWODY
+Dowody (kopia w main `artifacts/bollards-0183/`): rendery `renders/{r1,r2,r3,r3photo,r3b,ab-off}-{low,high}/`
+(Unity, overcast, 1920 × 1080; `stats.txt` na kamerę), zestawienia `compare/`:
+- `r1-vs-r2-*.jpg` — r1 (trawnik, różowe ogniwa) vs r2 (bruk, atlas r2): czerwień ogniw czerwono-brązowa zamiast
+  blado-różowej (ocena wzrokowa, detal 2 m Low/High).
+- `r2-photo-P11-063-side-by-side.jpg`, `r2-photo-P11-063-row-crops.jpg` — kamera ADR 0174 `photo_P11-063` stoi ~2–2,5×
+  za daleko (słupki ~30 px zamiast 60–75 px w 1600 px), łańcuchów nie da się tam ocenić → dodana kamera
+  `bollards-photo-13m` (`tools/photo_cam.py`: słupek 1 w 13,05 m, słupek 8 w 19,05 m, oko 1,5 m, hfov 66°).
+- `r3b-photo-13m-vs-P11-063.jpg` — zdjęcie / r3 Low / r3 High / r3b Low / r3b High w tym samym kadrze. r3b: górny
+  łańcuch czyta się jako ciągła lina jak na zdjęciu; dolny czerwony na jasnym bruku nadal słabszy niż na zdjęciu
+  (na zdjęciu łańcuchy są ciemne w cieniu; tu pochmurne, płaskie światło) — otwarte.
+- Rozstaw: `streetscape_qa.json → furniture.chain_bollards`: 8 słupków, 7 przęseł, 11,20 m, `end_shift_m` 0,
+  `max_step_m` 0,025.
+Testy: `tests/gis/test_chain_bollards_0183.py` 19/19 (w tym `test_atlas_r2_no_red_white_bleed`, budżet trójkątów
+≤ 180 / ≤ 40). Pełne `pytest tests/gis` (kod r2/r3, 2026-11-13): 1084 pass, 2 xfail, 3 fail — wszystkie w
+bialystok-industrial-c (`test_road_fidelity::test_report_not_stale` — fidelity_qa.json starszy niż overrides.yaml /
+build_world.py, których ta gałąź nie zmienia; `test_world_roads::test_export_is_deterministic`,
+`test_world_v31::test_forest_trees_reference_their_cell` — dane industrial-c na wspólnym junction `Data/raw`, w tym
+czasie trzy inne worktree przebudowywały industrial-c). Diff gałęzi dotyka tylko `streetscape/{chain_bollards,props,
+stage,materials,export}.py` i testu 0183. EditMode (Unity 6000.3.28f1, 2× w s20): 535, 511 pass, 13 skip, 6 fail —
+`TruckDoorCrownTests` ×3 („Build canonical truck before fixture tests”), `MirrorPresentationTests` ×2 („build TRAKT
+before testing”), `LightPostPolicyTests.ImportedGlassSemanticIsRestrictedAndStillReceivesShadows` (importer szkła
+ciężarówki) — fixture ciężarówki niezbudowanej w tym worktree, niezwiązane z 0183.
 
 ## Otwarte
 - Wysokość 0,80 vs 0,90 m i długość przęsła — do pomiaru na miejscu (właściciel) albo z drugiego zdjęcia z obiektem
   o znanym wymiarze.
-- Łańcuch: typ i wymiary ogniw UNVERIFIED.
+- Łańcuch: typ i wymiary ogniw UNVERIFIED (r3: klasa tworzywowa 8 mm z szerokości pozornej na P11-063).
+- Dolny łańcuch na jasnym bruku w kadrze 13 m słabszy niż na zdjęciu; biały łańcuch na bruku ma niski kontrast
+  (fizycznie poprawne przy pochmurnym świetle). Kolejny krok tylko po ocenie visual-critic / właściciela.
+- Świat dowodowy budowany BEZ overrides 0179 z main (gałąź sprzed nich) i z lokalnym, niezacommitowanym
+  overrides.yaml Dojlid; po wklejeniu bloku na main potrzebna regeneracja Dojlid i ponowny render.
+- Przesunięcie r2 (+3,5 m na wygenerowany chodnik) cofnąć, gdy 0179 poprawi nawierzchnię (trawnik → bruk).
+- visual-critic nieuruchomiony (agent nie tworzy subagentów) — po stronie lidera; dowody w `compare/`.
+- Telefon: koszt nie mierzony na A16 (bez adb w zadaniu).
 - Kolizja przęsła jest sztywna (ciężarówka nie zerwie łańcucha) — jak wszystkie meble; fizyka zrywania poza zakresem.
 - Rozstawienie w Dojlidach i korekta pozy `photo_P11-063` — 0179 / lider.
