@@ -22,7 +22,8 @@ rejestrze `docs/LICENSES.md`; wycinki 4× z `Data/raw/mapillary`):
 - **Ściana SE**: biała, na każdej kondygnacji cienka ciemna linia z oknami pod nią (11 linii; okna ok. 0,33
   podziałki kondygnacji); każde pasmo to krótki odcinek przy narożniku południowym (0,03–0,20 długości 37 m) i długi
   odcinek od 0,30. Uskoków obrysu BDOT (1,8 m) na zdjęciu nie widać.
-- Ściany NE i NW: brak otwartego zdjęcia.
+- Ściany NE i NW: brak otwartego zdjęcia. (s20: dla NW zdjęcia są — Commons 073045 / 105711 / 115626, patrz
+  korekta w §2 pkt 5 i ADR 0200; NE nadal bez zdjęcia.)
 
 Stan po 0171 (`ribbon: false, bands: false`): ta sama siatka okien punktowych na każdej ścianie, jeden ton
 `plaster_beige` — generator biurowca nie miał pojęcia „inna elewacja na szczycie niż na ścianie długiej”.
@@ -64,8 +65,13 @@ quad to ukrywa, mały kawałek ściany między oknami pokazałby pasek.
      `spans: [[0.03, 0.20], [0.30, 1.0]]` (krótki odcinek przy narożniku S + długie pasmo, jak na zdjęciach).
    - Szczyty SW / NE: `column`, `u: 0.52`, okno 2,0 m (było 1,8), parapet 0,9 m, nadproże 2,5 m, `variants: [4]`
      (komórka atlasu z czystym szkłem, nie rolety); ościeże okien autorskich 0,12 m (było `REVEAL_ETICS`).
-   - NW: bez reguły (ortofoto 2024-05-27, przechył budynku: bladożółta ściana z regularną siatką okien punktowych,
-     ok. 11 rzędów) = haszowane okna punktowe w kolorze budynku `plaster_beige`.
+   - NW: bez reguły (ortofoto 2024-05-27, przechył budynku: bladożółta ściana z ok. 11 rzędami krótkich ciemnych
+     kresek) = haszowane okna punktowe w kolorze budynku `plaster_beige`.
+     **Korekta (s20, ADR 0200, recenzja `docs/reports/REVIEW-2026-11-14-s20-mistral-m57.md` §6):** pierwotny zapis
+     „regularna siatka okien punktowych” był interpretacją silnie skróconego rzutu — rzędy kresek na ortofoto nie
+     odróżniają siatki od pasm ze słupkami. Trzy zdjęcia z boku (Commons 20200711_073045, 20210328_105711,
+     20210328_115626) pokazują **poziome pasma okien: 6 grup po ok. 5 skrzydeł na kondygnację**, na piaskowym tynku.
+     Kolor NW (jasny piaskowy) ortofoto i zdjęcia potwierdzają zgodnie. Reguła NW: ADR 0200.
    - Walidacja reguł: nieznane `glazing` / `variants` bez okna w rzędach grupy = błąd autora.
    - Trójkąty wieżowca r2: **LOD0 4553, LOD1 747** (r1: 4076 / 650; baza 8504 / 300).
 
