@@ -179,21 +179,24 @@ def main():
             url_źródła=d['url'], licencja=d['licencja'], autor=d['autor'], status=d['status'], uwagi=d['uwagi'],
             url_pliku=d.get('url_pliku', ''), sha256=d.get('sha256', ''), way_id=d.get('way_id', ''))
 
-    # 5. kadry uliczne
-    for f in frames:
-        pd, sez, prz, opis = FN.STREET[f['key']]
-        w = next(x for x in ways if x['way_id'] == f['_way'])
-        uw = ['najbliższy odcinek DDR: way %d (%s), odległość kamery od osi %.1f m%s' % (f['_way'], way_row[f['_way']], f['_d'], '' if f['_d'] <= 25 else ' — POZA regułą 25 m, kadr kontekstowy'),
-              'przejazd rowerowy w kadrze: ' + prz,
-              'kierunek: ' + {'panoramax': 'view:azimuth z API Panoramax (geograficzny wg API; zgodny z układem estakady/jezdni w kadrze)',
-                              'kartaview': 'pole heading z API KartaView (kurs GPS pojazdu)', 'commons': f.get('heading_method', 'UNVERIFIED')}[f['src']],
-              'CC BY-SA — referencja, nie tekstura' if 'SA' in f['license'].upper() else 'licencja swobodna']
-        if f.get('note'): uw.append(f['note'])
-        add(kategoria='kadr', region=w['region'], way_id=f['_way'], tagi_osm=json.dumps(w['tags'], ensure_ascii=False, sort_keys=True),
-            lat='%.6f' % f['lat'], lon='%.6f' % f['lon'], kierunek_deg=('%.0f' % f['heading']) if f.get('heading') is not None else 'UNVERIFIED',
-            droga_równoległa_way_id=(w['parallel'] or {}).get('way_id', ''), odległość_do_osi_jezdni_m='',
-            data_zdjęcia=f['datetime'][:10], sezon=sez, pora_dnia=pd, opis_co_widać=opis, url_źródła=f['page'], licencja=f['license'].replace('CC-BY-SA-4.0', 'CC BY-SA 4.0'),
-            autor=f['author'], status='SOURCED (kadr obejrzany)', uwagi='; '.join(uw), url_pliku=f['url'], sha256=f['sha256'])
+    # 5. kadry uliczne (Commons dopisane po audycie -> na koncu, zeby nie zmieniac id wczesniejszych wierszy)
+    def street_rows(fl):
+      for f in fl:
+          pd, sez, prz, opis = FN.STREET[f['key']]
+          w = next(x for x in ways if x['way_id'] == f['_way'])
+          uw = ['najbliższy odcinek DDR: way %d (%s), odległość kamery od osi %.1f m%s' % (f['_way'], way_row[f['_way']], f['_d'], '' if f['_d'] <= 25 else ' — POZA regułą 25 m, kadr kontekstowy'),
+                'przejazd rowerowy w kadrze: ' + prz,
+                'kierunek: ' + {'panoramax': 'view:azimuth z API Panoramax (geograficzny wg API; zgodny z układem estakady/jezdni w kadrze)',
+                                'kartaview': 'pole heading z API KartaView (kurs GPS pojazdu)', 'commons': f.get('heading_method', 'UNVERIFIED')}[f['src']],
+                'CC BY-SA — referencja, nie tekstura' if 'SA' in f['license'].upper() else 'licencja swobodna']
+          if f.get('note'): uw.append(f['note'])
+          add(kategoria='kadr', region=w['region'], way_id=f['_way'], tagi_osm=json.dumps(w['tags'], ensure_ascii=False, sort_keys=True),
+              lat='%.6f' % f['lat'], lon='%.6f' % f['lon'], kierunek_deg=('%.0f' % f['heading']) if f.get('heading') is not None else 'UNVERIFIED',
+              droga_równoległa_way_id=(w['parallel'] or {}).get('way_id', ''), odległość_do_osi_jezdni_m='',
+              data_zdjęcia=f['datetime'][:10], sezon=sez, pora_dnia=pd, opis_co_widać=opis, url_źródła=f['page'], licencja=f['license'].replace('CC-BY-SA-4.0', 'CC BY-SA 4.0'),
+              autor=f['author'], status='SOURCED (kadr obejrzany)', uwagi='; '.join(uw), url_pliku=f['url'], sha256=f['sha256'])
+
+    street_rows([f for f in frames if f['src'] != 'commons'])
 
     # 6. kadry z ortofotomapy (wycinki zbiorcze skrzyzowan)
     for lab in sorted(FN.ORTHO):
@@ -206,6 +209,8 @@ def main():
             status='SOURCED (kadr obejrzany)', uwagi='węzły OSM przejazdów w kadrze: ' + ', '.join(str(n) for n in c['nodes']) + '; jezdnie: ' + ', '.join(c['roads'])
             + ''.join('; TEN SAM PLIK (sha256) co wiersz ' + r0['id'] for r0 in rows if r0['sha256'] == c['sha256']),
             url_pliku=c['url'], sha256=c['sha256'])
+
+    street_rows([f for f in frames if f['src'] == 'commons'])
 
     with open(os.path.join(HERE, 'manifest.csv'), 'w', encoding='utf-8', newline='') as f:
         wr = csv.DictWriter(f, COLS); wr.writeheader(); wr.writerows(rows)

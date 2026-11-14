@@ -13,7 +13,7 @@ CK = 'czerwona nawierzchnia bez linii osiowej (prawdopodobnie kostka betonowa cz
 W = {
  538810153: ('t00', SZ, 2.6, 1.9, 2.5, 'jezdnia | krawężnik | zieleń | DDR | chodnik (kostka jasna)', 'linia osiowa przerywana, pary symboli P-23; DDR ciemniejsza od chodnika, nie czerwona'),
  543330143: ('t01', SZ, 2.45, 2.55, 3.1, 'jezdnia | krawężnik | zieleń | DDR | chodnik', 'linia osiowa przerywana; dojście z kostki przecina zieleń'),
- 212811563: ('t02', SZ, 2.7, 2.45, 3.3, 'jezdnia | krawężnik | zieleń | chodnik (kostka jasna) | DDR', 'DDR DALEJ od jezdni niż chodnik; linia ciągła między chodnikiem a DDR, osiowa przerywana, P-23; odcinek z kadru P11-001'),
+ 212811563: ('t02', SZ, 2.7, 2.45, 3.3, 'jezdnia | krawężnik | zieleń | chodnik (kostka jasna) | DDR', 'DDR DALEJ od jezdni niż chodnik; linia ciągła między chodnikiem a DDR, osiowa przerywana, P-23; odcinek z kadru P11-001 — kadr z poziomu pieszego (C65-240) potwierdza układ i brak jaskrawej czerwieni, ale pokazuje asfalt ciemny o lekko brunatnofioletowym odcieniu (na orto: szary)'),
  180233649: ('t03', SZ, 2.8, 2.45, 3.1, 'jezdnia | krawężnik | zieleń | chodnik | DDR', 'linia ciągła chodnik/DDR + osiowa przerywana'),
  237088754: ('t04', SZ, 2.65, 2.0, 2.4, 'jezdnia | krawężnik | pas żwirowo-trawiasty | chodnik | DDR (przekrój w 25 % długości); w 75 % długości (t05): jezdnia | krawężnik | DDR 2,55 m | chodnik 1,55 m — bez zieleni', 'dwa przekroje: t04 i t05; linia ciągła chodnik/DDR, osiowa przerywana'),
  285876996: ('t06', SZ, 2.7, 2.5, 2.8, 'jezdnia | krawężnik | zieleń | chodnik | DDR', 'linia ciągła chodnik/DDR, osiowa przerywana; OSM: highway=cycleway + foot=no, a chodnik biegnie tuż obok w jednej płaszczyźnie'),

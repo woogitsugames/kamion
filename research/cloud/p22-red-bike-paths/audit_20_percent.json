@@ -504,5 +504,14 @@
    "wynik": "PASS",
    "uwagi": "x25: czerwone pole między kwadratami a zebrą — zgodne"
   }
- ]
+ ],
+ "dopisek_po_audycie": {
+  "data": "2026-11-14T17:55Z",
+  "opis": "Po odblokowaniu thumb.php dopisano wiersze C65-240 (P11-001) i C65-241 (P11-056) — poza wylosowaną próbą (losowanie na 239 wierszach). Oba kadry obejrzane (960 px + wycinki). Porównanie z wierszami audytowanymi/ortofotomapą: C65-076 (way 212811563) — układ jezdnia|zieleń|chodnik|DDR, linie i przerwanie DDR na zjeździe (C65-170) POTWIERDZONE; kolor doprecyzowany: nie jaskrawoczerwony, ale ciemny asfalt z brunatnofioletowym odcieniem (orto: szary). C65-144 — czerwone pole przejazdu i zebra POTWIERDZONE.",
+  "zmiany": [
+   "uwagi wiersza C65-076",
+   "README §0 pkt 1, §4, §6, §9",
+   "sources.md §5"
+  ]
+ }
 }

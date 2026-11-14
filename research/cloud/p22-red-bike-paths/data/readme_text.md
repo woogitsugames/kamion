@@ -4,7 +4,7 @@ Gałąź `research/cloud-p22-red-bike-paths`. Blok: `docs/owner/MISTRAL-TASKS-10
 
 ## 0. Najważniejsze ustalenia (dla generatora nawierzchni)
 
-1. **W Dojlidach DDR NIE są z czerwonego asfaltu.** Wszystkie obejrzane odcinki przy ul. Dywizjonu 303, Kuronia, Mickiewicza, Hake, Ciołkowskiego, Karpińskiego to **szary asfalt** z białą linią osiową przerywaną i symbolami P-23, obok chodnika z jasnej kostki. Czerwone są tam wyłącznie **pola przejazdów przez wloty** (9 z 21 przecięć z jezdniami), m.in. przejazd z kadru P11-056 (wlot ul. Spadochroniarzy, C65-144). Założenie z recenzji 0179 („DDR z czerwonego asfaltu” przy Kuronia / P11-001) **nie potwierdza się na ortofotomapie 5 cm** — do rozstrzygnięcia na kadrze P11-001, którego w tej sesji nie dało się pobrać (§9).
+1. **W Dojlidach DDR NIE są z czerwonego asfaltu.** Wszystkie obejrzane odcinki przy ul. Dywizjonu 303, Kuronia, Mickiewicza, Hake, Ciołkowskiego, Karpińskiego to **szary asfalt** z białą linią osiową przerywaną i symbolami P-23, obok chodnika z jasnej kostki. Czerwone są tam wyłącznie **pola przejazdów przez wloty** (9 z 21 przecięć z jezdniami), m.in. przejazd z kadru P11-056 (wlot ul. Spadochroniarzy, C65-144). **Weryfikacja na kadrach (dopisane po odblokowaniu Commons, miniatury 1600 px): wniosek POTWIERDZONY z jednym doprecyzowaniem.** P11-001 (C65-240): DDR przy ul. Kuronia nie jest jaskrawoczerwona — to ciemny asfalt o lekko brunatnofioletowym odcieniu (cieplejszy niż jezdnia), z białą linią osiową i krawędziową; obok chodnik z szarej kostki, zjazd do bramy przerywa DDR. Dla tekstury: „ciemny asfalt z ciepłym, brunatnym odcieniem”, nie „szary neutralny” i nie „czerwony”; czy to spłowiała masa barwiona — nierozstrzygnięte. P11-056 (C65-241): przejazd przez wlot ma czerwone pole z białymi kwadratami i zebrę — zgodnie z orto; DDR zasłonięta trawą.
 2. **W regionie C czerwonobrązowy (bordowy, spłowiały) asfalt DDR występuje** — w rejonie ronda pod estakadą (Al. Tysiąclecia/Maczka/łącznice), przy ul. Bitwy Białostockiej koło ronda Pamięci Bieżeństwa i na ciągach wzdłuż estakady Andersa: 9 odcinków, ok. 1,71 km w kaflu (+ 1 spłowiały różowoszary, 270 m). Wzdłuż Al. Tysiąclecia na południe od ronda DDR są szare; ciągi pieszo-rowerowe przy ul. Andersa to jasna kostka (10 odcinków) albo wąskie pasy z czerwonej kostki (4 odcinki).
 3. **Czerwone pole przejazdu ≠ kolor DDR.** Tam, gdzie DDR jest czerwonobrązowa (rondo pod estakadą), przejazdy przez jezdnie są tylko białe (P-11); tam, gdzie DDR jest szara (Sokólska, Wileńska, Hake, wloty w Dojlidach), przejazdy mają jaskrawoczerwone pole. Standard miasta: **RAL 3020, masa chemoutwardzalna uszorstniona** (wytyczne ZDM, str. 16) — to powłoka na asfalcie jezdni.
 4. **Przez wjazdy do posesji** w Dojlidach DDR się urywa (zjazd z kostki/betonu przecina ją, P-23 po obu stronach, bez czerwieni); w C spotyka się czerwone prostokąty bez białych kwadratów na wyjazdach z parkingu/posesji (C65-153, C65-157).
@@ -47,6 +47,8 @@ Bilans (54 przecięcia DDR z jezdniami wg OSM): C — 16 czerwonych, 5 tylko bia
 
 Znaki pionowe: D-6b potwierdzony na kadrach ulicznych tylko przy rondzie pod estakadą (C65-208, C65-218, C65-221); dla pozostałych przejazdów C-13/C-16, D-6a/D-6b — **UNVERIFIED** (z ortofotomapy nieczytelne). Sygnalizacja — z tagu OSM `crossing` (maszty widoczne na orto na skrzyżowaniach x00, x12, x16, x18).
 
+Kadr P11-056 (C65-241) potwierdza z poziomu ulicy czerwone pole i zebrę przejazdu C65-144.
+
 ### 4a. Przecięcia DDR z wjazdami (38 węzłów OSM, 12 obejrzanych)
 
 {{WJAZDY}}
@@ -60,7 +62,7 @@ Znaki pionowe: D-6b potwierdzony na kadrach ulicznych tylko przy rondzie pod est
 
 ## 6. Kadry
 
-Manifest: {{LICZBY}}. Kadry uliczne obejrzane w pomniejszeniu do 960 px (+ wycinki 130–300 % dla znaków): 7 Panoramax + 8 KartaView = **15, wszystkie z regionu C**; z przejazdem rowerowym w kadrze: 3 pewne (D-6b) + 2 niepewne. Dodatkowo obejrzano 17 wycinków zbiorczych ortofotomapy (6 C, 11 Dojlidy; 15 z przejazdem), 64 przekroje odcinków, 32 wycinki przejazdów i 12 wycinków wjazdów (pliki przy wierszach `odcinek`/`przejazd`).
+Manifest: {{LICZBY}}. Kadry uliczne obejrzane w pomniejszeniu do 960 px (+ wycinki 130–300 % dla znaków): 7 Panoramax + 8 KartaView = 15 z regionu C + **2 Commons z Dojlid (P11-001, P11-056 — miniatury 1600 px)**; z przejazdem rowerowym w kadrze: 3 pewne (D-6b) + 2 niepewne. Dodatkowo obejrzano 17 wycinków zbiorczych ortofotomapy (6 C, 11 Dojlidy; 15 z przejazdem), 64 przekroje odcinków, 32 wycinki przejazdów i 12 wycinków wjazdów (pliki przy wierszach `odcinek`/`przejazd`).
 
 {{KADRY}}
 
@@ -78,7 +80,7 @@ Seed `random.Random(20261114).sample(ids, 48)` (48/239 = 20,1 %). Sprawdzono: po
 
 ## 9. Luki (uczciwie)
 
-1. **Wikimedia Commons niedostępne (HTTP 429 przez całą sesję)** → kadry **P11-001 i P11-056 NIE zostały obejrzane**, brak jakichkolwiek kadrów ulicznych z Dojlid (Panoramax i KartaView mają tam 0 zdjęć). Kryterium „≥ 10 kadrów z Dojlid, w tym P11-001 i P11-056” spełnione tylko zastępczo ortofotomapą (11 wycinków zbiorczych + przekroje). Do zrobienia przez lidera: pobrać oba pliki (adresy w `sources.md` §5) i porównać z C65-076 (way 212811563) oraz C65-144 (przejazd).
+1. **Wikimedia Commons: `upload.wikimedia.org` i API dawały HTTP 429 przez całą sesję**; na końcu udało się pobrać przez `thumb.php` tylko **miniatury 1600 px** P11-001 i P11-056 (obejrzane, C65-240/241; sha256 dotyczy miniatury, nie oryginału; licencja/autor wg manifestu p11). Pozostałych kadrów ulicznych z Dojlid nie ma (Panoramax i KartaView: 0 zdjęć) — kryterium „≥ 10 kadrów z Dojlid” spełnione tylko zastępczo ortofotomapą (11 wycinków zbiorczych + przekroje).
 2. Region C: 15 kadrów ulicznych to ujęcia z kabiny samochodu, DDR widać w nich słabo; tylko 3 pewne kadry z przejazdem rowerowym (kryterium ≥ 5 — CZĘŚCIOWO; uzupełnione ortofotomapą).
 3. Data ortofotomapy niejednoznaczna (2025-04-18 albo 2024-03-30).
 4. Szerokości wyłącznie ESTIMATED z orto; dokumentów projektowych/przetargowych BIP dla tych odcinków nie znaleziono; OSM `width` — brak.
@@ -88,4 +90,4 @@ Seed `random.Random(20261114).sample(ids, 48)` (48/239 = 20,1 %). Sprawdzono: po
 
 ## 10. Pliki
 
-`manifest.csv` (25 kolumn = kolumny bloku + `url_pliku`, `sha256`) · `fetch.py` (133 pliki, 68 794 874 B, w tym 2 PDF 29,6 MB; `--skip-pdf`) · `overpass-query.ql`, `overpass-result.json` · `inventory.json`, `crossings.json` · `data/` (indeksy wycinków, odczyty `observations.py`, opisy kadrów, cytaty) · `tools/` (geo, inventory, crossings, transect, crossing_crop, crossing_profile, build_manifest, build_readme) · `audit_20_percent.json` · `sources.md` · `STATUS.md`. Zdjęć i PDF w gicie nie ma (`.gitignore`).
+`manifest.csv` (25 kolumn = kolumny bloku + `url_pliku`, `sha256`) · `fetch.py` (135 plików, 69 393 145 B, w tym 2 PDF 29,6 MB; `--skip-pdf`) · `overpass-query.ql`, `overpass-result.json` · `inventory.json`, `crossings.json` · `data/` (indeksy wycinków, odczyty `observations.py`, opisy kadrów, cytaty) · `tools/` (geo, inventory, crossings, transect, crossing_crop, crossing_profile, build_manifest, build_readme) · `audit_20_percent.json` · `sources.md` · `STATUS.md`. Zdjęć i PDF w gicie nie ma (`.gitignore`).

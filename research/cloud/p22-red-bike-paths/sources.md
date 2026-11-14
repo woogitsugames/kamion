@@ -24,10 +24,12 @@ Data dostępu do wszystkich źródeł: 2026-11-14 (UTC). User-Agent: `kamion-res
 - `GET https://api.kartaview.org/2.0/photo/?tLeft=…` → „Restricted access!” (nieużywane). Pliki: `storage13.openstreetcam.org/.../proc/…`; dla sekwencji z 2018 r. (storage7 zwraca 502) przez `https://cdn.kartaview.org/pr:sharp/<base64 URL>` (odpowiedź deterministyczna — sha256 sprawdzone dwukrotnie).
 - Kierunek: pole `heading` (kurs GPS pojazdu).
 
-## 5. Wikimedia Commons — NIEDOSTĘPNE w tej sesji
+## 5. Wikimedia Commons — oryginały niedostępne; P11-001 i P11-056 pobrane jako miniatury 1600 px
 - `upload.wikimedia.org` i `commons.wikimedia.org/w/api.php` zwracały **HTTP 429** (`retry-after: 600`, „You are making too many requests”) nieprzerwanie od 2026-11-14T16:52Z (próby co ok. 10 min do końca sesji; adres wyjściowy współdzielony). Kadry P11-001 i P11-056 (CC0, autor Rakoon) oraz pozostałe kadry Dojlid z `research/mistral/p11-dojlidy-photos/manifest.csv` **nie zostały pobrane ani obejrzane** — patrz README §9 (luki).
 - Adresy oryginałów (do pobrania przez lidera): P11-001 `https://upload.wikimedia.org/wikipedia/commons/8/88/20240623_142113_June_2024_in_Bia%C5%82ystok.jpg`; P11-056: strona `https://commons.wikimedia.org/wiki/File:20230814_175724_August_2023_in_Bia%C5%82ystok.jpg`.
 - Openverse API (`api.openverse.org`) — HTTP 504 przy próbie.
+
+- **Dopisek (17:53Z):** `https://commons.wikimedia.org/w/thumb.php?f=<nazwa>&w=1600` odpowiedziało HTTP 200 — pobrano miniatury 1600×900 P11-001 (sha256 `ecc6d531…bc9e`, 349 546 B) i P11-056 (`8b2b2c86…00de`, 248 725 B); ten sam URL dał dwukrotnie to samo sha256. `upload.wikimedia.org` i `api.php` nadal 429, więc licencja (CC0) i autor (Rakoon) przyjęte z manifestu p11.
 
 ## 6. Dokumenty urzędowe (art. 4 pr. aut.)
 - **Dz.U. 2019 poz. 2311**, zał. nr 2 (znaki poziome), PDF część c2: `https://eli.gov.pl/api/acts/DU/2019/2311/text/I/D20192311-c2.pdf` (27 996 609 B, sha256 `8abcce24…c5d4`); pkt 4.2.2 „Przejazd dla rowerzystów” — str. Dz.U. 569–571 (= str. 44–46 PDF c2).
