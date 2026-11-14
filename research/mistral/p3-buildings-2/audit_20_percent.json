@@ -482,5 +482,20 @@
   "UWAGA": 4,
   "FAIL": 0,
   "komunikat": "11/55 wylosowanych seedem 20261114; 7 PASS, 4 UWAGA (M53-029: rozbieżność zliczenie↔LoD1 odnotowana uczciwie; M53-038: mh obejmuje dach — dom z poddaszem; M53-049: wysoki parter pawilonu; M53-032: wiersz odrzucony ze starą parą LoD1↔OSM). Kryterium wizji G obowiązkowe dla wszystkich — bez NIE DOTYCZY."
+ },
+ "errata_M53_FIX_2": {
+  "data": "2026-11-14",
+  "zrodlo": "docs/reports/REVIEW-2026-11-13-s19-mistral-m51-m53-m50v2.md §4",
+  "M53-029": {
+   "co_widac_v2": "FAIL — opis „Biedronka w parterze, chodnik i trawnik” niezgodny z obrazem (logo sieci na dachu, parter za drzewami, zdjęcie z daleka); poprawiony w manifeście",
+   "C_zliczenie": "UNVERIFIED — nad drzewami 10 pełnych rzędów + 11. częściowo, niższe kondygnacje zasłonięte; adnotacja v2 „mh 23,91” była błędna (LoD1 dla tego obrysu: mh 39,61)",
+   "A_dopasowanie": "PASS (tytuł autorski + bryła); kamera_d_m/kąt UNVERIFIED (współrzędne Commons = obiekt, nie kamera)",
+   "G_wizja": "v2 FAIL → poprawione w M53-FIX-2 (obejrzane 960 px + wycinki)"
+  },
+  "M53-049": {
+   "D_licencja": "ujednolicona: CC BY-SA 3.0 (tylko referencja)",
+   "kamera": "UNVERIFIED (współrzędne obiektu)"
+  },
+  "uwaga": "Werdykty pierwotnego losowania pozostawione bez zmian jako zapis historyczny; obowiązuje manifest.csv po M53-FIX-2"
  }
 }
