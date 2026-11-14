@@ -202,7 +202,17 @@ def test_se_annex_is_a_one_storey_part_at_the_bdot_protrusion():
     step = raw.difference(tw.buffer(0.05)).buffer(-0.3).buffer(0.3)             # what the opening cut off (no slivers)
     assert step.area > 8.0 and an.intersection(step).area > 0.9 * step.area       # the BDOT10k protrusion
     assert an.difference(raw.buffer(0.05)).area < 0.1 and 0.3 < an.intersection(tw).area < 3.0      # no gap at the wall
+    # the entrance: on the SE face of the annex, never on the SE wall of the tower (it sat half behind the annex)
+    FR = _fr()
+    ar = FR.facade_rules(got[ANNEX]["ovr"]["facades"], "plaster_beige")
+    assert ar[0]["door"] is True and ar[0]["facing"] == "SE" and ar[1]["door"] is False
+    tr = FR.facade_rules(got[TOWER]["ovr"]["facades"], "plaster_beige")
+    assert [r["door"] for r in tr] == [None, False, None]
+    assert _rule(windows="blank")["door"] is None
     buf = _build(got[ANNEX])
+    n, off = _normal(got[ANNEX], SE)
+    door = _on_wall(buf, "buildings", "facade_atlas", float(np.arctan2(n[0], n[1])), off - 0.4)
+    assert len(door) >= 2 and float(np.ptp(door[:, :, 2])) > 2.0                  # the door leaf on the SE face
     zs = np.concatenate([p.V[:, 2] for p in buf.parts if p.layer == "buildings_low"])
     assert float(zs.max()) - 100.0 < 4.6                                          # one storey (ground at 100 in tests)
     for layer in ("buildings", "buildings_low"):

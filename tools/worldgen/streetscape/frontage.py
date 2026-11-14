@@ -699,7 +699,10 @@ def facade_rules(spec, wall, materials=None):
                     "variants": [int(v) for v in r["variants"]] if r.get("variants") else None,
                     "lintel_m": float(r.get("lintel_m", 0.0)), "reveal_m": float(r.get("reveal_m", 0.12)),
                     "light_m": float(r.get("light_m", RIBBON_LIGHT_M)), "sashes": int(r.get("light_sashes", 2)),
-                    "mix": tuple(int(x) for x in r["light_mix"]) if r.get("light_mix") else None})
+                    "mix": tuple(int(x) for x in r["light_mix"]) if r.get("light_mix") else None,
+                    # ADR 0200: authored entrance - True: this wall carries the door, False: it never does (the
+                    # entrance is in an annex); None: the door goes to the main facade (edge nearest a road)
+                    "door": None if r.get("door") is None else bool(r["door"])})
         light = r.get("glazing", "dark") == "light" and kind == "ribbon"
         if r.get("far_kind"):                # ADR 0200: far-row material of the LOD1 wall (every __far_* maps the
             far = f"{w}__far_{r['far_kind']}"            # same atlas) - one the chunk draws already costs no draw

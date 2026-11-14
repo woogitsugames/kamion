@@ -1388,8 +1388,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             is_main = ei == main or (typ == "hall" and L > 30)
             door_z = zref + PLINTH_H["house"] + 0.15 * round(FK.hfloat(key, "plh")) if typ == "house" else None
             if rule:                                 # authored facade: the same rectangles on both LODs
-                lod1_wins = FR.facade_windows(rule, L, zref, zbase, sh, zt, storeys, f"{key}:{ei}", door=ei == main)
-                ops = authored_openings(rule, lod1_wins, L, zref, f"{key}:{ei}", ei == main)
+                door_ = ei == main if rule.get("door") is None else rule["door"]      # ADR 0200: authored entrance
+                lod1_wins = FR.facade_windows(rule, L, zref, zbase, sh, zt, storeys, f"{key}:{ei}", door=door_)
+                ops = authored_openings(rule, lod1_wins, L, zref, f"{key}:{ei}", door_)
                 n3_ = np.array([nout[0], nout[1], 0.0])
                 for lu0, lu1, lz0, lz1 in FR.facade_lintels(rule, lod1_wins):       # ADR 0190: dark lintel line
                     lu0, lu1 = max(lu0, 0.0), min(lu1, L)
