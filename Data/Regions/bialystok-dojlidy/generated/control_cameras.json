@@ -216,18 +216,18 @@
    "type": "persp"
   },
   {
-   "fov_deg": 12.0,
+   "fov_deg": 14.0,
    "id": "krywlany_runway",
    "look_at": [
-    105.634,
-    -186.918,
-    158.967
+    -74.272,
+    -151.071,
+    156.321
    ],
-   "note": "place camera: pedestrian eye 1.7 m at the east fence of the Krywlany aerodrome (1.0 m inside the OSM fence line local 188.7 -146.6 -> 212.8 -196.9, where the extended axis of asphalt runway 09R/27L crosses it), looking west along the runway: the turn pad is 311 m away, the west edge of the tile 1230 m. The fence stands 3 m above the runway end (NMT 158.3 m against 155.2 m), every point of the runway is in sight over the NMT (checked on a 10 m grid), depression 0.39-0.90 deg -> a 12 deg lens (long tele, as a spotter at the fence would use). r1 stood at the NE fence corner local 24.4 -126.0 with a 30 deg lens: the runway was a 3 px strip behind a bank (rejected by the render)",
+   "note": "place camera: pedestrian eye 1.7 m at the fence of the Krywlany aerodrome (0.6 m inside the OSM fence line local -160.8 233.4 -> 24.4 -126.0, 6 m from its corner), looking WSW over asphalt runway 09R/27L: the turn pad is 145 m away (bearing 240 deg), the west edge of the tile 1050 m (265 deg); depression 0.31-0.96 deg -> a 14 deg lens (long tele, as a spotter at the fence would use). 83 % of the runway is in sight over the NMT (10 m grid). Rejected by render: r1 the same spot with a 30 deg lens aimed at 261 deg (runway = a 3 px strip at the frame edge); r2 the east fence on the runway axis (local 205.6 -184.3): the wood between that fence and the turn pad hides the runway",
    "pos": [
-    205.6,
-    -184.3,
-    160.014
+    21.1,
+    -121.0,
+    157.368
    ],
    "type": "persp"
   },
@@ -251,11 +251,11 @@
    "fov_deg": 40.0,
    "id": "kuronia2_front",
    "look_at": [
-    102.462,
-    311.619,
+    94.864,
+    299.918,
     167.014
    ],
-   "note": "place camera: plant at Kuronia 2 from the pose of CC0 photo P11-005 (Commons GPS local 15.0 360.1, camera ~2.5 m per the manifest); heading: the west corner of the plant (BDOT10k vertex 47.8 337.4, bearing 125 deg) is seen 6 deg right of centre (x 875/1500, hFOV 65 deg WORKING_VALUE); compare with research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-005.jpg",
+   "note": "place camera: plant at Kuronia 2 from the pose of CC0 photo P11-005 (Commons GPS local 15.0 360.1, camera ~2.5 m per the manifest); heading 127 deg: the west corner of the plant (BDOT10k vertex 47.8 337.4) set 5 deg right of centre as in the frame (x 875/1500) by the r2 render (119 deg from the GPS bearing put it 13 deg right); compare with research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-005.jpg",
    "pos": [
     15.0,
     360.1,

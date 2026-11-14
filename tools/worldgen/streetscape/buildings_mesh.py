@@ -453,9 +453,13 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
             marks = None
             if sills is not None and kd in ("window", "ribbon") and zb2 - za > 0.15 and not str(mat).startswith("plinth"):
                 marks = sill_marks(sills, ua, ub, za, zb2, oa, ob, (zb2 - zb) / max(zt - zb, 1e-6))
-            if marks is None:             # ADR 0196: the run-off block table may cut the quad (runoff_cells)
+            if marks is None and runoff is not None and len(runoff) > 3 and runoff[3]:
+                # ADR 0196: the run-off block table cuts the quad (runoff_cells); regions without the table take the
+                # line below unchanged (bit-identical output)
                 marks = [(q0 - u0, q1 - u0, uv1, z0_, z1_)
                          for q0, q1, z0_, z1_, uv1 in runoff_cells(runoff, u0 + ua, u0 + ub, za, zb2, mat)]
+            if marks is None:
+                marks = [(ua, ub, runoff_uv1(runoff, u0 + ua, u0 + ub, za, zb2))]
             for c0, c1, uv1, *zz in marks:
                 z0_, z1_ = zz if zz else (za, zb2)
                 va_, vb_ = (gnd(u0 + c0), gnd(u0 + c1)) if gnd else (vref, vref)
