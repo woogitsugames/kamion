@@ -59,6 +59,45 @@ def sandwich_ribbed(n=2048):
     return _finish("sandwich_ribbed", c, lum, h, rough, pan, joint)
 
 
+def sandwich_smooth(n=1024):
+    """ADR 0185: flat-faced sandwich panels laid horizontally, courses of 1.15 m (cover width of the common wall
+    panel; CC0 photo P11-094: 16 courses on the 18.4 m wall), fine micro-lining, shadow-gap joints. No baked run-off
+    streaks (the parapet_runoff layer draws them per building) and no butt joints (material `panel_m`: they are
+    physical, every 6 m). Tile 3.45 x 3.45 m = three courses."""
+    L = 3.45
+    c = Ctx(n, n, L, L, seed=541)
+    X, Y = c.xy()
+    v = (L - Y)
+    pv = v % 1.15
+    pid = np.floor(v / 1.15 + 1e-6).astype(int)
+    dj = np.minimum(pv, 1.15 - pv)
+    joint = sstep(0.010, 0.004, dj)
+    rib = 0.5 + 0.5 * np.cos(2 * np.pi * (v / 0.05))                # micro-lining 50 mm, 0.3 mm deep
+    h = -0.3e-3 * rib - 6e-3 * joint
+    pan = hash01(pid, 11)
+    lum = (1.0 + 0.02 * (pan - 0.5) - 0.015 * rib + 0.012 * noise(c, 3, 0.4, 3.0)) * (1 - 0.5 * joint)
+    rough = 0.44 + 0.06 * sstep(0.5, 2.0, noise(c, 6, 0.3, 2.0)) + 0.15 * joint
+    return _finish("sandwich_smooth", c, lum, h, rough, pan, joint)
+
+
+def cladding_vertical(n=1024):
+    """ADR 0185: flat-faced wall panels laid vertically, 1.0 m cover width, shadow-gap joints (CC0 photo P11-001, the
+    office block at Kuronia 3). No baked streaks. Tile 3 x 3 m = three panels."""
+    L = 3.0
+    c = Ctx(n, n, L, L, seed=542)
+    X, Y = c.xy()
+    pu = X % 1.0
+    pid = np.floor(X / 1.0 + 1e-6).astype(int)
+    dj = np.minimum(pu, 1.0 - pu)
+    joint = sstep(0.010, 0.004, dj)
+    rib = 0.5 + 0.5 * np.cos(2 * np.pi * (X / 0.05))
+    h = -0.3e-3 * rib - 6e-3 * joint
+    pan = hash01(pid, 13)
+    lum = (1.0 + 0.025 * (pan - 0.5) - 0.015 * rib + 0.012 * noise(c, 3, 0.4, 3.0)) * (1 - 0.5 * joint)
+    rough = 0.44 + 0.06 * sstep(0.5, 2.0, noise(c, 6, 0.3, 2.0)) + 0.15 * joint
+    return _finish("cladding_vertical", c, lum, h, rough, pan, joint)
+
+
 def trapezoid_sheet(n=1024):
     """Trapezoidal sheet, vertical ribs 0.25 m pitch, 35 mm deep. Tile 2 x 2 m."""
     L = 2.0
@@ -662,6 +701,10 @@ FACADE_SETS = {
     "sandwich_ribbed": dict(fn=sandwich_ribbed, tile_m=[6.0, 6.0],
         slots=["hall_wall_grey", "hall_wall_silver", "hall_wall_white", "hall_wall_ivory", "booth_panel"],
         note="Horizontal sandwich panels 1.0 m, micro-lined face, shadow-gap joints, run-off streaks."),
+    "sandwich_smooth": dict(fn=sandwich_smooth, tile_m=[3.45, 3.45], slots=["hall_wall_smooth"],
+        note="Flat-faced horizontal sandwich panels, courses 1.15 m, micro-lining, shadow-gap joints, no baked streaks (ADR 0185)."),
+    "cladding_vertical": dict(fn=cladding_vertical, tile_m=[3.0, 3.0], slots=["cladding_vertical_grey"],
+        note="Flat-faced vertical wall panels 1.0 m, micro-lining, shadow-gap joints, no baked streaks (ADR 0185)."),
     "trapezoid_sheet": dict(fn=trapezoid_sheet, tile_m=[2.0, 2.0],
         slots=["hall_wall_graphite", "hall_wall_accent_*", "balcony_panel"],
         note="Trapezoidal sheet, vertical ribs 0.25 m pitch, 35 mm deep (T35-like, WORKING_VALUE)."),
