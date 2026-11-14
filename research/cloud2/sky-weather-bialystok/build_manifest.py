@@ -354,7 +354,7 @@ REK = [
   "WORKING_VALUE", "kadry c32 (lato, w stronę słońca), c16 (zachód, N=6), c21 (pastelowy róż), c22/c23 (N=0, słońce −7°: brak ciepłego pasa w kadrze); kierunki kadrów Commons UNVERIFIED"),
  ("rekomendacja_niebo", "udział wieczorów bez barwnego zmierzchu (N ≥ 7 przy końcu zmierzchu cywilnego) XI–I", "79–82", "%",
   "ESTIMATED", "out/imgw_sunset_cloud.csv (koniec_zm_cyw, miesiące 11, 12, 1)"),
- ("rekomendacja_niebo", "udział wieczorów pogodnych (N ≤ 2 przy końcu zmierzchu cywilnego) VI–VIII", "42–44", "%",
+ ("rekomendacja_niebo", "udział wieczorów pogodnych (N ≤ 2 przy końcu zmierzchu cywilnego) VI–VIII", "29–38", "%",
   "ESTIMATED", "out/imgw_sunset_cloud.csv (koniec_zm_cyw, miesiące 6, 7, 8)"),
  ("rekomendacja_słońce", "azymut słońca przy końcu zmierzchu cywilnego: LP_Dusk ma 300° — odpowiada dacie", "21 IV / 21 VIII (299°)", "",
   "ESTIMATED", "out/sun_table.csv: az_konca_zm_cywilnego 299,3° (21 IV) i 299,1° (21 VIII); XI–I: 238–245°; VI: 324°"),

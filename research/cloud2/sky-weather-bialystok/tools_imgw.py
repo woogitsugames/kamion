@@ -372,7 +372,8 @@ def obs_at(y: int, mo: int, d: int, hour_utc: int):
     row = _OBS_CACHE[y].get((mo, d, hour_utc))
     if row is None:
         return None
-    return {"N_okt": row["NOG"], "wid_m": row["WIDO"] if (row["WWIDO"] or "").strip() != "8" else row["WIDA"],
+    # status 8 = brak pomiaru (od IV 2022 zachmurzenia nie obserwuje się w terminach nocnych 19–05 UTC) -> pusty N
+    return {"N_okt": row["NOG"] if (row["WNOG"] or "").strip() != "8" else "", "wid_m": row["WIDO"] if (row["WWIDO"] or "").strip() != "8" else row["WIDA"],
             "ww": row["POGB"], "CL": row["CHCL"], "CL_txt": row["CHLT"], "podstawa_m": row["HPON"],
             "T_C": row["TEMP"], "RH_pct": row["WLGW"]}
 
