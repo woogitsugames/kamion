@@ -1,159 +1,45 @@
 {
-  "zadanie": "M62 — mistral-p19-hospital-gate (brama szpitala Żurawia 14, kadr P11-129)",
-  "data": "2026-11-13",
-  "seed": 20261113,
+  "zadanie": "M62-FIX — mistral-p19-hospital-gate (brama szpitala Żurawia 14, kadr P11-129)",
+  "data": "2026-11-14",
+  "seed": 20261114,
+  "poprzedni_audyt": {
+    "seed": 20261113,
+    "data": "2026-11-13",
+    "uwaga": "Poprzedni audyt (13 wierszy, 11 PASS) przepuścił błędny P19-033 (daszki „na obu słupach”) i skorygował P19-054 w złą stronę; zastąpiony niniejszym audytem. Seed 20261113 da się odtworzyć poleceniem z poprzedniej wersji pliku (git log)."
+  },
   "populacja": {
     "plik": "manifest.csv",
-    "liczba_wierszy": 63,
-    "zakres_id": "P19-001…P19-063"
+    "liczba_wierszy": 68,
+    "zakres_id": "P19-001…P19-068"
   },
-  "losowanie": "random.Random(20261113).sample(ids, ceil(0.2*63)) — 13 wierszy (20,6%)",
-  "przykladowe_polecenie": "python3 -c \"import random,math; ids=[f'P19-{i:03d}' for i in range(1,64)]; print(sorted(random.Random(20261113).sample(ids, math.ceil(0.2*63))))\"",
-  "proba": [
-    "P19-012",
-    "P19-002",
-    "P19-054",
-    "P19-009",
-    "P19-024",
-    "P19-041",
-    "P19-001",
-    "P19-030",
-    "P19-005",
-    "P19-033",
-    "P19-060",
-    "P19-007",
-    "P19-004"
-  ],
-  "kryteria": [
-    "ponowne sprawdź link (HTTP 200 / ponowna odpowiedź API)",
-    "cytat/strona: ponowna weryfikacja treści dokumentu (ekstrakt PDF)",
-    "ponownie OBEJRZYJ kadr (analiza obrazu) i porównaj ze zdaniem „co widać\""
+  "losowanie": "random.Random(20261114).sample(ids, ceil(0.2*68)) — 14 wierszy (20,6 %)",
+  "polecenie_odtwarzajace": "python3 -I -c \"import random,math; ids=[f'P19-{i:03d}' for i in range(1,69)]; print(sorted(random.Random(20261114).sample(ids, math.ceil(0.2*68))))\"",
+  "proba": ["P19-002", "P19-009", "P19-010", "P19-016", "P19-017", "P19-028", "P19-029", "P19-031", "P19-032", "P19-048", "P19-051", "P19-055", "P19-062", "P19-065"],
+  "metoda": [
+    "wiersze z kadru: NOWE wywołanie modelu wizyjnego na obrazie (świeże wycinki F01 z miniatury 3840 px: A_barrier_road, A_pillars_lamp, A_plate_ip_top; F05 960 px) i porównanie z OBRAZEM, nie z poprzednim opisem",
+    "wiersze OSM: ponowne przeliczenie z pobranego OSM API 0.6 (map?bbox=23.1880,53.1085,23.1935,53.1105; way/73881451/full) w układzie lokalnym od node 2448457849"
   ],
   "wyniki": [
-    {
-      "id": "P19-001",
-      "element": "położenie",
-      "parametr": "środek bramy (szlaban)",
-      "status_w_manifestcie_po_audycie": "SOURCED",
-      "metoda_rekontroli": "HTTP 200 node page + ponowny eksport OSM API; odczyt lat/lon węzła",
-      "wynik": "PASS",
-      "szczegoly": "node 2448457849 → 53.1094568, 23.1906473; manifest (zaokr. 53.109457, 23.190647) zgodny"
-    },
-    {
-      "id": "P19-002",
-      "element": "położenie",
-      "parametr": "azymut osi wjazdu",
-      "status_w_manifestcie_po_audycie": "ESTIMATED",
-      "metoda_rekontroli": "ponowny eksport OSM (bbox) + niezależne przeliczenie azymutu w EPSG:2180",
-      "wynik": "PASS",
-      "szczegoly": "atan2(ΔE,ΔN) dla 874174701→874174759 = 62,3°; manifest 62,3°"
-    },
-    {
-      "id": "P19-004",
-      "element": "położenie",
-      "parametr": "droga za bramą (wjazd na teren)",
-      "status_w_manifestcie_po_audycie": "SOURCED",
-      "metoda_rekontroli": "ponowny eksport OSM + pomiar d(brama→874174759)",
-      "wynik": "PASS",
-      "szczegoly": "16,4 m; manifest 16,4 m"
-    },
-    {
-      "id": "P19-005",
-      "element": "położenie",
-      "parametr": "obrys terenu szpitala",
-      "status_w_manifestcie_po_audycie": "SOURCED",
-      "metoda_rekontroli": "ponowny eksport OSM; sprawdzenie, że way 239477156 zawiera node bramy i tag amenity=hospital",
-      "wynik": "PASS",
-      "szczegoly": "zawiera 2448457849: True; amenity=hospital: True"
-    },
-    {
-      "id": "P19-007",
-      "element": "położenie",
-      "parametr": "ogrodzenie od południa, koniec przy bramie",
-      "status_w_manifestcie_po_audycie": "SOURCED",
-      "metoda_rekontroli": "ponowny eksport OSM + pozycja końca fence w układzie lokalnym",
-      "wynik": "PASS",
-      "szczegoly": "node 8220895799: x=+1,42 z=−3,02; manifest +1,42/−3,02"
-    },
-    {
-      "id": "P19-009",
-      "element": "położenie",
-      "parametr": "ulica przy bramie",
-      "status_w_manifestcie_po_audycie": "SOURCED",
-      "metoda_rekontroli": "ponowny eksport OSM + d_min way 73881451 (Żurawia) od bramy",
-      "wynik": "PASS",
-      "szczegoly": "16,4 m; manifest 16,4 m"
-    },
-    {
-      "id": "P19-012",
-      "element": "położenie",
-      "parametr": "bramka ruchu pieszego przy dojeździe",
-      "status_w_manifestcie_po_audycie": "SOURCED",
-      "metoda_rekontroli": "ponowny eksport OSM + d(node 3323248741)",
-      "wynik": "PASS",
-      "szczegoly": "32,8 m; manifest 32,8 m"
-    },
-    {
-      "id": "P19-041",
-      "element": "znak",
-      "parametr": "B-33 — wymiary",
-      "status_w_manifestcie_po_audycie": "SOURCED",
-      "metoda_rekontroli": "HTTP 200 ELI; ponowna ekstrakcja tekstu PDF c1 (str. 97/140)",
-      "wynik": "PASS",
-      "szczegoly": "tabela 3.1 (PDF 97): „duże 900/90/135/90; średnie 800/80/120/80\" oraz przypis „Nie dotyczy znaku B-20\"; PDF 140: „podaje się ją z dokładnością do 10 km/h\" — zgodne z cytatem w manifeście"
-    },
-    {
-      "id": "P19-024",
-      "element": "mur",
-      "parametr": "położenie odcinka przy bramie",
-      "status_w_manifestcie_po_audycie": "ESTIMATED",
-      "metoda_rekontroli": "PONOWNE OGLĘDZINY kadru F01 (analiza obrazu, pytanie kontrolne)",
-      "wynik": "PASS",
-      "szczegoly": "rekontr ola: „mur ceglany przylega do słupa bramy od strony przeciwnej niż portiernia — TAK\" — zgodne ze zdaniem „co widać\" (mur dochodzi do słupa bramy, portiernia po przeciwnej stronie wjazdu)"
-    },
-    {
-      "id": "P19-030",
-      "element": "słup",
-      "parametr": "wysokość",
-      "status_w_manifestcie_po_audycie": "UNVERIFIED",
-      "metoda_rekontroli": "PONOWNE OGLĘDZINY kadru F01",
-      "wynik": "PASS",
-      "szczegoly": "rekontr ola: „słupy sięgają ponad koronę muru i są zwieńczone daszkiem — TAK\" — zgodne z relacją w manifeście (wysokość liczbowa pozostaje UNVERIFIED)"
-    },
-    {
-      "id": "P19-033",
-      "element": "daszek",
-      "parametr": "obecność",
-      "status_w_manifestcie_po_audycie": "ESTIMATED",
-      "metoda_rekontroli": "PONOWNE OGLĘDZINY kadru F01",
-      "wynik": "PASS",
-      "szczegoly": "rekontr ola: „daszki na obu słupach bramy, płaskie, prostokątne — TAK\" — zgodne z „co widać\""
-    },
-    {
-      "id": "P19-060",
-      "element": "tło",
-      "parametr": "latarnia uliczna przy bramie",
-      "status_w_manifestcie_po_audycie": "ESTIMATED",
-      "metoda_rekontroli": "PONOWNE OGLĘDZINY kadru F01",
-      "wynik": "PASS + UPGRADE",
-      "szczegoly": "rekontr ola: „widoczna latarnia uliczna — TAK\"; 2. niezależny odczyt → status podniesiony UNVERIFIED→ESTIMATED (poprawka w manifeście)"
-    },
-    {
-      "id": "P19-054",
-      "element": "nawierzchnia",
-      "parametr": "chodnik przed bramą",
-      "status_w_manifestcie_po_audycie": "UNVERIFIED",
-      "metoda_rekontroli": "PONOWNE OGLĘDZINY kadru F01",
-      "wynik": "KOREKTA (zastosowana)",
-      "szczegoly": "odczyt pierwotny: „chodnik z płyt, ~1,5 m\"; rekontr ola: „kostka brukowa, szerszy niż 1,5 m\" — odczyty wizyjne niespójne → status ESTIMATED→UNVERIFIED, wartość „UNVERIFIED (odczyty niespójne: płyty vs kostka)\"; poprawka wprowadzona do manifest.csv i README (sekcje 5, 6)"
-    }
+    {"id": "P19-002", "typ": "OSM", "wynik": "ZGODNY", "szczegoly": "874174759→brama 245,5°, brama→874174701 246,2° (geogr.); w siatce EPSG:2180 ~242° (zbieżność ~3,4°)"},
+    {"id": "P19-009", "typ": "OSM", "wynik": "ZGODNY", "szczegoly": "way 73881451: maxspeed=40, hgv=no, maxweight=3.5, surface=paved; odległość prostopadła 16,4 m w kierunku ~68°"},
+    {"id": "P19-010", "typ": "OSM", "wynik": "ZGODNY", "szczegoly": "najbliższy odcinek way 236884780: 43,8 m (manifest 43,9 m; różnica w granicach przybliżenia)"},
+    {"id": "P19-016", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "ramię poziome, opuszczone w poprzek wjazdu"},
+    {"id": "P19-017", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "ramię przy górnej części obudowy napędu; ponowny odczyt ~0,9 m przy tej samej kotwicy (zakres ESTIMATED ~1,0)"},
+    {"id": "P19-028", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "filary z jasnej szarobeżowej cegły jak mur"},
+    {"id": "P19-029", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "lewy filar zadaszony szeroki, powyżej odsadzki na wysokości góry STOP węższy słup do belki"},
+    {"id": "P19-031", "typ": "OSM", "wynik": "ZGODNY", "szczegoly": "node 3000014175 = (+0,9; +3,4), node 8220895799 = (+1,2; −3,1)"},
+    {"id": "P19-032", "typ": "kadr F01", "wynik": "NIEZGODNY → POPRAWIONY", "szczegoly": "opis pomijał małą latarenkę na szczycie słupka ze znakami C-2/B-33; poprawiono P19-032, P19-047, P19-060"},
+    {"id": "P19-048", "typ": "OSM", "wynik": "NIEZGODNY (nie poprawiono)", "szczegoly": "node 14123795058 = (+13,8 E; −3,1 N); manifest: +14,0 E, −2,3 N — różnica 0,8 m na osi N. Wiersz na liście „nie ruszaj” zadania M62-FIX, więc pozostawiony; do decyzji lidera"},
+    {"id": "P19-051", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "żółta kartka na białej tabliczce pod B-33 i żółta tabliczka przy szczycie białego słupka tablicy IP"},
+    {"id": "P19-055", "typ": "kadr F01", "wynik": "ZGODNY (doprecyzowano)", "szczegoly": "za ramieniem kostka szara prostokątna, przed ramieniem asfalt z łatami i dwoma włazami; słowo „bruk” zastąpione „kostka prostokątna”"},
+    {"id": "P19-062", "typ": "kadr F05", "wynik": "ZGODNY", "szczegoly": "budynek z wielospadowymi brązowymi dachami, maszt kratowy, ogrodzenie z żółtymi ceglanymi słupkami, B-2 na bramie"},
+    {"id": "P19-065", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "biała tabliczka z czarnym napisem (widoczne „Obowiązuje…”) zaklejona żółtą kartką"}
   ],
   "podsumowanie": {
-    "wiersze_w_probie": 13,
-    "PASS": 11,
-    "PASS_z_upgrade": 1,
-    "KOREKTA": 1,
-    "bledy_krytyczne": 0,
-    "uwaga": "jedna korekta (P19-054 chodnik) i jeden upgrade (P19-060 latarnia) — oba zastosowane w manifest.csv i README; wynik spójny z lekcją P6 o niepowtarzalności odczytów wizyjnych materiałów nawierzchni"
+    "wierszy": 14,
+    "zgodne": 12,
+    "niezgodne": 2,
+    "z_kadru": {"wierszy": 9, "zgodne": 8, "niezgodne": 1},
+    "z_OSM": {"wierszy": 5, "zgodne": 4, "niezgodne": 1}
   }
 }
