@@ -26,8 +26,8 @@ TAGS = {"lanes": lambda g: "lanes" in g, "maxspeed": lambda g: "maxspeed" in g, 
         "tunnel": lambda g: g.get("tunnel", "no") != "no", "name": lambda g: "name" in g, "ref": lambda g: "ref" in g, "sidewalk*": lambda g: any(k.startswith("sidewalk") for k in g),
         "cycleway*": lambda g: any(k.startswith("cycleway") for k in g), "maxweight|hgv|maxheight": lambda g: any(k in g for k in ("maxweight", "hgv", "maxheight", "maxaxleload")),
         "shoulder*": lambda g: any(k.startswith("shoulder") for k in g), "lane_markings": lambda g: "lane_markings" in g, "smoothness": lambda g: "smoothness" in g}
-def highways():
-    d = json.load(open(raw / "highways.json"))
+def highways(src="highways"):
+    d = json.load(open(raw / f"{src}.json"))
     L = collections.defaultdict(float); N = collections.Counter(); T = collections.defaultdict(lambda: collections.defaultdict(float))
     refs = collections.defaultdict(float); vals = {k: collections.defaultdict(lambda: collections.defaultdict(float)) for k in ("lanes", "maxspeed", "surface", "lit", "width")}
     for e in d["elements"]:
@@ -41,7 +41,7 @@ def highways():
         for k in vals:
             if k in g: vals[k][c][g[k]] += s
         if g["highway"] in ("motorway", "trunk", "primary", "secondary", "motorway_link", "trunk_link") and g.get("ref"): refs[(g["highway"], g["ref"])] += s
-    res = {"zapytanie": meta("highways"), "bbox_epsg2180": [X0, Y0, X1, Y1], "klasy": {}}
+    res = {"zapytanie": meta(src), "zakres_klas": "wszystkie" if src == "highways" else "tylko motorway/trunk/primary(+link), construction, proposed (zapytanie major_wide; pelne zapytanie highways przerwane - limit sesji)", "bbox_epsg2180": [X0, Y0, X1, Y1], "klasy": {}}
     for c in sorted(L, key=lambda c: -L[c]):
         res["klasy"][c] = {"liczba_way": N[c], "dlugosc_km": round(L[c] / 1000, 2), "pokrycie_tagow_proc_dlugosci": {k: round(100 * T[c][k] / L[c], 1) for k in TAGS},
                            "wartosci_km": {k: {v: round(x / 1000, 2) for v, x in sorted(vals[k][c].items(), key=lambda q: -q[1])[:8]} for k in vals}}
@@ -66,4 +66,6 @@ def buildings():
     res = {"zapytanie": meta("buildings"), "liczba_budynkow_w_bbox": n, "pokrycie_proc": {k: round(100 * v / n, 1) for k, v in c.items()}, "liczby": dict(c), "typy_top20": dict(typ.most_common(20))}
     json.dump(res, open(out / "summary_buildings.json", "w"), ensure_ascii=False, indent=1); print(res)
 if __name__ == "__main__":
-    for a in sys.argv[1:]: globals()[a]()
+    for a in sys.argv[1:]:
+        if a == "highways_major": highways("major_wide")
+        else: globals()[a]()

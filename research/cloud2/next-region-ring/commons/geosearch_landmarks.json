@@ -1,0 +1,3580 @@
+{
+"metoda": "Wikimedia Commons list=geosearch (gscoord, gsradius=1000 m, namespace 6, gsprimary=all, gslimit=500) dla kazdego punktu z panoramax/landmarks_def.json.\nRespektuje 429 (Retry-After). Wynik: commons/geosearch_landmarks.json (url, utc, http, liczba, tytuly).",
+"slowa_kluczowe_regex": "S8|S19|DK ?8|DK ?19|DK ?65|w[eę]ze[lł]|wiadukt|estakad|obwodnic|trasa|ekran|most|tunel|droga|ulica|rondo|kleeberg|maczk|anders|genera|lodow|jurowce|porosły|choroszcz",
+"wyniki": [
+{
+"landmark": "L01",
+"nazwa": "Węzeł Choroszcz (S8)",
+"url": "https://commons.wikimedia.org/w/api.php?action=query&list=geosearch&gscoord=53.160046%7C22.993638&gsradius=1000&gsnamespace=6&gslimit=500&gsprimary=all&format=json",
+"utc": "2026-11-14T17:34:03Z",
+"http": "200",
+"liczba_plikow_r1000m": 0,
+"liczba_z_tytulem_drogowym": 0,
+"pliki": []
+},
+{
+"landmark": "L02",
+"nazwa": "Węzeł Białystok Zachód (S8/S19/DK8)",
+"url": "https://commons.wikimedia.org/w/api.php?action=query&list=geosearch&gscoord=53.156056%7C23.016674&gsradius=1000&gsnamespace=6&gslimit=500&gsprimary=all&format=json",
+"utc": "2026-11-14T17:34:08Z",
+"http": "200",
+"liczba_plikow_r1000m": 119,
+"liczba_z_tytulem_drogowym": 12,
+"pliki": [
+{
+"title": "File:20240501 141948 May 2024 in Choroszcz.jpg",
+"pageid": 148363200,
+"lat": 53.156279,
+"lon": 23.017185,
+"dist": 42.1
+},
+{
+"title": "File:20250520 152834 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735591,
+"lat": 53.156003,
+"lon": 23.01735,
+"dist": 45.5
+},
+{
+"title": "File:20230916 180552 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892566,
+"lat": 53.156349,
+"lon": 23.014851,
+"dist": 125.8
+},
+{
+"title": "File:8045 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115486920,
+"lat": 53.156461,
+"lon": 23.014184,
+"dist": 172
+},
+{
+"title": "File:20230808 123342 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899746,
+"lat": 53.1557,
+"lon": 23.01945,
+"dist": 189.3
+},
+{
+"title": "File:20250520 152857 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735597,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 197.5
+},
+{
+"title": "File:20250520 152903 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735605,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 197.5
+},
+{
+"title": "File:20250520 152900 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735601,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 197.5
+},
+{
+"title": "File:20250520 152845 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735589,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 197.5
+},
+{
+"title": "File:20250520 152849 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735594,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 197.5
+},
+{
+"title": "File:20250520 152904 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735603,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 197.5
+},
+{
+"title": "File:20230719 122808 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009149,
+"lat": 53.155667,
+"lon": 23.019746,
+"dist": 209.3
+},
+{
+"title": "File:20250520 152809 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735587,
+"lat": 53.156672,
+"lon": 23.013086,
+"dist": 248.8
+},
+{
+"title": "File:20240501 142011 May 2024 in Choroszcz.jpg",
+"pageid": 148363203,
+"lat": 53.156047,
+"lon": 23.020905,
+"dist": 282.1
+},
+{
+"title": "File:20230916 180605 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892567,
+"lat": 53.155293,
+"lon": 23.020808,
+"dist": 288.4
+},
+{
+"title": "File:20230916 180608 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892568,
+"lat": 53.155293,
+"lon": 23.020808,
+"dist": 288.4
+},
+{
+"title": "File:20240422 061245 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331413,
+"lat": 53.155455,
+"lon": 23.0209,
+"dist": 289.6
+},
+{
+"title": "File:8011 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115339840,
+"lat": 53.157423,
+"lon": 23.012815,
+"dist": 298.8
+},
+{
+"title": "File:20240422 061240 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331411,
+"lat": 53.155327,
+"lon": 23.021603,
+"dist": 338.5
+},
+{
+"title": "File:20240501 124520 May 2024 in Choroszcz.jpg",
+"pageid": 148363148,
+"lat": 53.157455,
+"lon": 23.011535,
+"dist": 376.3
+},
+{
+"title": "File:20240501 124350 May 2024 in Choroszcz.jpg",
+"pageid": 148363149,
+"lat": 53.156649,
+"lon": 23.022837,
+"dist": 416.2
+},
+{
+"title": "File:20250817 095913 August 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 173638986,
+"lat": 53.155254,
+"lon": 23.022903,
+"dist": 424.8
+},
+{
+"title": "File:20250417 135438 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715330,
+"lat": 53.154934,
+"lon": 23.022851,
+"dist": 430.3
+},
+{
+"title": "File:20250417 135440 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715333,
+"lat": 53.154934,
+"lon": 23.022851,
+"dist": 430.3
+},
+{
+"title": "File:20240501 124550 May 2024 in Choroszcz.jpg",
+"pageid": 148363150,
+"lat": 53.15798,
+"lon": 23.010835,
+"dist": 444.2
+},
+{
+"title": "File:20250211 095833 February 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 159821940,
+"lat": 53.155035,
+"lon": 23.023216,
+"dist": 450.7
+},
+{
+"title": "File:20230719 122834 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009148,
+"lat": 53.157302,
+"lon": 23.010026,
+"dist": 464.4
+},
+{
+"title": "File:20240422 061237 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331410,
+"lat": 53.154993,
+"lon": 23.023641,
+"dist": 479.3
+},
+{
+"title": "File:20240422 061234 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331409,
+"lat": 53.154993,
+"lon": 23.023641,
+"dist": 479.3
+},
+{
+"title": "File:20250417 135442 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715335,
+"lat": 53.154758,
+"lon": 23.023622,
+"dist": 485.2
+},
+{
+"title": "File:20250417 135445 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715339,
+"lat": 53.154758,
+"lon": 23.023622,
+"dist": 485.2
+},
+{
+"title": "File:20230808 123411 August 2023 in Białystok.jpg",
+"pageid": 137896760,
+"lat": 53.157292,
+"lon": 23.00966,
+"dist": 487.4
+},
+{
+"title": "File:20230808 123411 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899748,
+"lat": 53.157283,
+"lon": 23.009633,
+"dist": 488.9
+},
+{
+"title": "File:20240422 061233 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331407,
+"lat": 53.154915,
+"lon": 23.023948,
+"dist": 501.3
+},
+{
+"title": "File:20230719 122757 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009145,
+"lat": 53.154883,
+"lon": 23.02409,
+"dist": 511.4
+},
+{
+"title": "File:20250817 100004 August 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 173638995,
+"lat": 53.157349,
+"lon": 23.009281,
+"dist": 513.5
+},
+{
+"title": "File:20230808 123329 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899753,
+"lat": 53.15485,
+"lon": 23.024153,
+"dist": 516.4
+},
+{
+"title": "File:20230808 123328 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899752,
+"lat": 53.154786,
+"lon": 23.024475,
+"dist": 539
+},
+{
+"title": "File:Nowosiolki (ob Choroszcz) - wieza cisnien - ndx - 2.jpg",
+"pageid": 21089431,
+"lat": 53.1582575,
+"lon": 23.009319722222,
+"dist": 548.1
+},
+{
+"title": "File:20230915 150911 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812324,
+"lat": 53.154684,
+"lon": 23.024925,
+"dist": 570.9
+},
+{
+"title": "File:20230915 150914 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812328,
+"lat": 53.154684,
+"lon": 23.024925,
+"dist": 570.9
+},
+{
+"title": "File:Nowosiolki (ob Choroszcz) - wieza cisnien - ndx - 1.JPG",
+"pageid": 21089432,
+"lat": 53.158333333333,
+"lon": 23.008888888889,
+"dist": 577.5
+},
+{
+"title": "File:20220501 222550 Województwo podlaskie.jpg",
+"pageid": 117672690,
+"lat": 53.156755,
+"lon": 23.008069,
+"dist": 579
+},
+{
+"title": "File:Nowosiolki (ob Choroszcz) - wieza cisnien - ndx - 3.jpg",
+"pageid": 21089430,
+"lat": 53.158771388889,
+"lon": 23.009186388889,
+"dist": 583.4
+},
+{
+"title": "File:20250817 095903 August 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 173638987,
+"lat": 53.154793,
+"lon": 23.025496,
+"dist": 604.8
+},
+{
+"title": "File:20220807 180135 August 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 121577450,
+"lat": 53.154507,
+"lon": 23.025407,
+"dist": 607.2
+},
+{
+"title": "File:20240501 124307 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363142,
+"lat": 53.156258,
+"lon": 23.025781,
+"dist": 607.6
+},
+{
+"title": "File:20240501 124327 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363146,
+"lat": 53.15734,
+"lon": 23.025639,
+"dist": 614.6
+},
+{
+"title": "File:20240501 124333 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363147,
+"lat": 53.15734,
+"lon": 23.025639,
+"dist": 614.6
+},
+{
+"title": "File:20240501 124322 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363145,
+"lat": 53.15734,
+"lon": 23.025639,
+"dist": 614.6
+},
+{
+"title": "File:20240501 142110 May 2024 in Choroszcz.jpg",
+"pageid": 148363204,
+"lat": 53.155988,
+"lon": 23.026012,
+"dist": 622.7
+},
+{
+"title": "File:20250417 135449 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715341,
+"lat": 53.154429,
+"lon": 23.02561,
+"dist": 622.7
+},
+{
+"title": "File:20250417 135452 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715343,
+"lat": 53.154429,
+"lon": 23.02561,
+"dist": 622.7
+},
+{
+"title": "File:20250417 104757 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715324,
+"lat": 53.154601,
+"lon": 23.025767,
+"dist": 627.5
+},
+{
+"title": "File:20250417 104750 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715319,
+"lat": 53.154601,
+"lon": 23.025767,
+"dist": 627.5
+},
+{
+"title": "File:20250417 104749 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715313,
+"lat": 53.154601,
+"lon": 23.025767,
+"dist": 627.5
+},
+{
+"title": "File:20250417 104754 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715321,
+"lat": 53.154601,
+"lon": 23.025767,
+"dist": 627.5
+},
+{
+"title": "File:20250211 095824 February 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 159821939,
+"lat": 53.154529,
+"lon": 23.025963,
+"dist": 642.2
+},
+{
+"title": "File:20250417 104746 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715312,
+"lat": 53.15455,
+"lon": 23.025997,
+"dist": 643.8
+},
+{
+"title": "File:20240501 124246 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363143,
+"lat": 53.155601,
+"lon": 23.02637,
+"dist": 648.5
+},
+{
+"title": "File:20240501 124233 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363141,
+"lat": 53.155206,
+"lon": 23.026455,
+"dist": 659
+},
+{
+"title": "File:20250817 095858 August 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 173638988,
+"lat": 53.15464,
+"lon": 23.026484,
+"dist": 672.8
+},
+{
+"title": "File:20240422 061229 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331405,
+"lat": 53.154475,
+"lon": 23.026447,
+"dist": 674.9
+},
+{
+"title": "File:20240422 061231 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331406,
+"lat": 53.154475,
+"lon": 23.026447,
+"dist": 674.9
+},
+{
+"title": "File:20240422 061228 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331401,
+"lat": 53.154475,
+"lon": 23.026447,
+"dist": 674.9
+},
+{
+"title": "File:20250211 095820 February 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 159821938,
+"lat": 53.15445,
+"lon": 23.026563,
+"dist": 683.1
+},
+{
+"title": "File:20240422 061226 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331400,
+"lat": 53.154461,
+"lon": 23.02675,
+"dist": 694.9
+},
+{
+"title": "File:20230808 1233201 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899751,
+"lat": 53.154369,
+"lon": 23.026847,
+"dist": 703.8
+},
+{
+"title": "File:20240503 155022 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430755,
+"lat": 53.149662,
+"lon": 23.017551,
+"dist": 713.4
+},
+{
+"title": "File:20240503 155137 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430754,
+"lat": 53.149554,
+"lon": 23.016771,
+"dist": 723
+},
+{
+"title": "File:20230808 123320 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899765,
+"lat": 53.154311,
+"lon": 23.027178,
+"dist": 726.8
+},
+{
+"title": "File:20240503 154923 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430752,
+"lat": 53.149832,
+"lon": 23.020098,
+"dist": 728.8
+},
+{
+"title": "File:20240503 154652 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430750,
+"lat": 53.149866,
+"lon": 23.020427,
+"dist": 732.4
+},
+{
+"title": "File:20240503 154656 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430751,
+"lat": 53.149866,
+"lon": 23.020427,
+"dist": 732.4
+},
+{
+"title": "File:20240503 162343 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430783,
+"lat": 53.150026,
+"lon": 23.02123,
+"dist": 736.1
+},
+{
+"title": "File:20240503 162341 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430782,
+"lat": 53.150026,
+"lon": 23.02123,
+"dist": 736.1
+},
+{
+"title": "File:20240503 154632 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430746,
+"lat": 53.149891,
+"lon": 23.020707,
+"dist": 736.4
+},
+{
+"title": "File:20240503 155455 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430756,
+"lat": 53.149478,
+"lon": 23.015174,
+"dist": 738.2
+},
+{
+"title": "File:20240503 154612 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430747,
+"lat": 53.14992,
+"lon": 23.020941,
+"dist": 739.2
+},
+{
+"title": "File:20240503 154548 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430748,
+"lat": 53.149963,
+"lon": 23.021347,
+"dist": 745.7
+},
+{
+"title": "File:20230808 123319 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899760,
+"lat": 53.154247,
+"lon": 23.027508,
+"dist": 749.9
+},
+{
+"title": "File:20240503 154516 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430745,
+"lat": 53.150005,
+"lon": 23.021834,
+"dist": 755.7
+},
+{
+"title": "File:20250415 061131 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707771,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 762.9
+},
+{
+"title": "File:20250415 061114 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707786,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 762.9
+},
+{
+"title": "File:20250415 061112 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707742,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 762.9
+},
+{
+"title": "File:20250415 061120 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707749,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 762.9
+},
+{
+"title": "File:20250415 061130 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707760,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 762.9
+},
+{
+"title": "File:20250415 061124 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707759,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 762.9
+},
+{
+"title": "File:20250415 061118 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707750,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 762.9
+},
+{
+"title": "File:20240503 154446 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430744,
+"lat": 53.150048,
+"lon": 23.022238,
+"dist": 764.2
+},
+{
+"title": "File:20240503 154431 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430743,
+"lat": 53.150054,
+"lon": 23.022347,
+"dist": 767.1
+},
+{
+"title": "File:20240503 155744 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430757,
+"lat": 53.149472,
+"lon": 23.013051,
+"dist": 770.9
+},
+{
+"title": "File:20240503 154407 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430742,
+"lat": 53.150115,
+"lon": 23.022728,
+"dist": 774.2
+},
+{
+"title": "File:20240503 154306 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430740,
+"lat": 53.150277,
+"lon": 23.023307,
+"dist": 780.1
+},
+{
+"title": "File:20240503 154222 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430741,
+"lat": 53.150394,
+"lon": 23.023859,
+"dist": 791.2
+},
+{
+"title": "File:20240503 154136 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400268,
+"lat": 53.150403761,
+"lon": 23.02459359,
+"dist": 820.9
+},
+{
+"title": "File:20240503 154108 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400267,
+"lat": 53.150414985819,
+"lon": 23.024929675992,
+"dist": 834.6
+},
+{
+"title": "File:20240503 141232 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400258,
+"lat": 53.1503981946,
+"lon": 23.0250166426,
+"dist": 839.8
+},
+{
+"title": "File:20240503 142521 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400262,
+"lat": 53.149754,
+"lon": 23.023722,
+"dist": 843.8
+},
+{
+"title": "File:20220531 151105 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833907,
+"lat": 53.154447,
+"lon": 23.029061,
+"dist": 845.1
+},
+{
+"title": "File:20240501 124645 May 2024 in Choroszcz.jpg",
+"pageid": 148363157,
+"lat": 53.153287,
+"lon": 23.004837,
+"dist": 847.2
+},
+{
+"title": "File:20240503 145738 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400265,
+"lat": 53.14961,
+"lon": 23.02368,
+"dist": 855.6
+},
+{
+"title": "File:20240503 154043 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400264,
+"lat": 53.150109,
+"lon": 23.024864,
+"dist": 857.6
+},
+{
+"title": "File:20240503 141930 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400260,
+"lat": 53.149702,
+"lon": 23.023981,
+"dist": 858.3
+},
+{
+"title": "File:20240503 140830 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400256,
+"lat": 53.150454108,
+"lon": 23.0256927718,
+"dist": 865.8
+},
+{
+"title": "File:20240503 160018 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430758,
+"lat": 53.148917,
+"lon": 23.011066,
+"dist": 877.5
+},
+{
+"title": "File:20240503 140826 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400255,
+"lat": 53.1504933232,
+"lon": 23.0260260956,
+"dist": 878.3
+},
+{
+"title": "File:20240503 160142 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430759,
+"lat": 53.148754,
+"lon": 23.01043,
+"dist": 912.5
+},
+{
+"title": "File:20240503 140820 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400254,
+"lat": 53.150669,
+"lon": 23.027075,
+"dist": 916.4
+},
+{
+"title": "File:20240503 160150 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430761,
+"lat": 53.148748,
+"lon": 23.010254,
+"dist": 918.5
+},
+{
+"title": "File:20240501 124716 May 2024 in Choroszcz.jpg",
+"pageid": 148363158,
+"lat": 53.15223,
+"lon": 23.004024,
+"dist": 944.7
+},
+{
+"title": "File:20240501 124719 May 2024 in Choroszcz.jpg",
+"pageid": 148363159,
+"lat": 53.152231,
+"lon": 23.003986,
+"dist": 946.9
+},
+{
+"title": "File:20240503 162419 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430785,
+"lat": 53.15096,
+"lon": 23.028421,
+"dist": 966.8
+},
+{
+"title": "File:20230916 180519 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892565,
+"lat": 53.158429,
+"lon": 23.002531,
+"dist": 979.2
+},
+{
+"title": "File:20240503 140807 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400249,
+"lat": 53.1511253261,
+"lon": 23.028893731,
+"dist": 982.1
+},
+{
+"title": "File:20220531 151110 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833908,
+"lat": 53.154206,
+"lon": 23.031226,
+"dist": 991.9
+},
+{
+"title": "File:20240422 061217 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331402,
+"lat": 53.153739,
+"lon": 23.031096,
+"dist": 995.6
+},
+{
+"title": "File:Bocian biały Łyski.jpg",
+"pageid": 33623777,
+"lat": 53.153432777778,
+"lon": 23.0309525,
+"dist": 995.8
+},
+{
+"title": "File:20240503 140808 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400250,
+"lat": 53.1508928,
+"lon": 23.028897755,
+"dist": 997
+}
+]
+},
+{
+"landmark": "L03",
+"nazwa": "Bramownice poboru opłat na S8 (highway=toll_gantry)",
+"url": "https://commons.wikimedia.org/w/api.php?action=query&list=geosearch&gscoord=53.156832%7C23.011651&gsradius=1000&gsnamespace=6&gslimit=500&gsprimary=all&format=json",
+"utc": "2026-11-14T17:35:03Z",
+"http": "200",
+"liczba_plikow_r1000m": 0,
+"liczba_z_tytulem_drogowym": 0,
+"pliki": []
+},
+{
+"landmark": "L04",
+"nazwa": "Wiadukt ul. Podleśna nad S8 (żółto-zielony)",
+"url": "https://commons.wikimedia.org/w/api.php?action=query&list=geosearch&gscoord=53.1573%7C23.0095&gsradius=1000&gsnamespace=6&gslimit=500&gsprimary=all&format=json",
+"utc": "2026-11-14T17:35:09Z",
+"http": "200",
+"liczba_plikow_r1000m": 53,
+"liczba_z_tytulem_drogowym": 12,
+"pliki": [
+{
+"title": "File:20230808 123411 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899748,
+"lat": 53.157283,
+"lon": 23.009633,
+"dist": 9.1
+},
+{
+"title": "File:20230808 123411 August 2023 in Białystok.jpg",
+"pageid": 137896760,
+"lat": 53.157292,
+"lon": 23.00966,
+"dist": 10.7
+},
+{
+"title": "File:20250817 100004 August 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 173638995,
+"lat": 53.157349,
+"lon": 23.009281,
+"dist": 15.6
+},
+{
+"title": "File:20230719 122834 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009148,
+"lat": 53.157302,
+"lon": 23.010026,
+"dist": 35.1
+},
+{
+"title": "File:Nowosiolki (ob Choroszcz) - wieza cisnien - ndx - 2.jpg",
+"pageid": 21089431,
+"lat": 53.1582575,
+"lon": 23.009319722222,
+"dist": 107.1
+},
+{
+"title": "File:20220501 222550 Województwo podlaskie.jpg",
+"pageid": 117672690,
+"lat": 53.156755,
+"lon": 23.008069,
+"dist": 113
+},
+{
+"title": "File:20240501 124550 May 2024 in Choroszcz.jpg",
+"pageid": 148363150,
+"lat": 53.15798,
+"lon": 23.010835,
+"dist": 116.8
+},
+{
+"title": "File:Nowosiolki (ob Choroszcz) - wieza cisnien - ndx - 1.JPG",
+"pageid": 21089432,
+"lat": 53.158333333333,
+"lon": 23.008888888889,
+"dist": 121.9
+},
+{
+"title": "File:20240501 124520 May 2024 in Choroszcz.jpg",
+"pageid": 148363148,
+"lat": 53.157455,
+"lon": 23.011535,
+"dist": 136.8
+},
+{
+"title": "File:Nowosiolki (ob Choroszcz) - wieza cisnien - ndx - 3.jpg",
+"pageid": 21089430,
+"lat": 53.158771388889,
+"lon": 23.009186388889,
+"dist": 164.9
+},
+{
+"title": "File:8011 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115339840,
+"lat": 53.157423,
+"lon": 23.012815,
+"dist": 221.4
+},
+{
+"title": "File:20250520 152809 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735587,
+"lat": 53.156672,
+"lon": 23.013086,
+"dist": 249.1
+},
+{
+"title": "File:8045 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115486920,
+"lat": 53.156461,
+"lon": 23.014184,
+"dist": 325.9
+},
+{
+"title": "File:20230916 180552 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892566,
+"lat": 53.156349,
+"lon": 23.014851,
+"dist": 372.1
+},
+{
+"title": "File:20230916 180519 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892565,
+"lat": 53.158429,
+"lon": 23.002531,
+"dist": 481.3
+},
+{
+"title": "File:20230916 180518 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892564,
+"lat": 53.15847,
+"lon": 23.002168,
+"dist": 505.9
+},
+{
+"title": "File:20240501 141948 May 2024 in Choroszcz.jpg",
+"pageid": 148363200,
+"lat": 53.156279,
+"lon": 23.017185,
+"dist": 524.8
+},
+{
+"title": "File:20250520 152834 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735591,
+"lat": 53.156003,
+"lon": 23.01735,
+"dist": 542.9
+},
+{
+"title": "File:20240501 124645 May 2024 in Choroszcz.jpg",
+"pageid": 148363157,
+"lat": 53.153287,
+"lon": 23.004837,
+"dist": 543.9
+},
+{
+"title": "File:20240501 124716 May 2024 in Choroszcz.jpg",
+"pageid": 148363158,
+"lat": 53.15223,
+"lon": 23.004024,
+"dist": 671.7
+},
+{
+"title": "File:20240501 124719 May 2024 in Choroszcz.jpg",
+"pageid": 148363159,
+"lat": 53.152231,
+"lon": 23.003986,
+"dist": 673
+},
+{
+"title": "File:20230808 123342 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899746,
+"lat": 53.1557,
+"lon": 23.01945,
+"dist": 686.9
+},
+{
+"title": "File:20250520 152857 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735597,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 695.4
+},
+{
+"title": "File:20250520 152903 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735605,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 695.4
+},
+{
+"title": "File:20250520 152900 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735601,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 695.4
+},
+{
+"title": "File:20250520 152845 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735589,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 695.4
+},
+{
+"title": "File:20250520 152849 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735594,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 695.4
+},
+{
+"title": "File:20250520 152904 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735603,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 695.4
+},
+{
+"title": "File:20220713 164542 July 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 120648518,
+"lat": 53.159167,
+"lon": 22.999444,
+"dist": 701.9
+},
+{
+"title": "File:20220713 214956 July 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 120648521,
+"lat": 53.159167,
+"lon": 22.999444,
+"dist": 701.9
+},
+{
+"title": "File:20230719 122808 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009149,
+"lat": 53.155667,
+"lon": 23.019746,
+"dist": 706.9
+},
+{
+"title": "File:20240501 142011 May 2024 in Choroszcz.jpg",
+"pageid": 148363203,
+"lat": 53.156047,
+"lon": 23.020905,
+"dist": 773.1
+},
+{
+"title": "File:20230916 180605 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892567,
+"lat": 53.155293,
+"lon": 23.020808,
+"dist": 786.3
+},
+{
+"title": "File:20230916 180608 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892568,
+"lat": 53.155293,
+"lon": 23.020808,
+"dist": 786.3
+},
+{
+"title": "File:20240422 061245 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331413,
+"lat": 53.155455,
+"lon": 23.0209,
+"dist": 787.3
+},
+{
+"title": "File:20240422 061240 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331411,
+"lat": 53.155327,
+"lon": 23.021603,
+"dist": 836.3
+},
+{
+"title": "File:20240501 124350 May 2024 in Choroszcz.jpg",
+"pageid": 148363149,
+"lat": 53.156649,
+"lon": 23.022837,
+"dist": 892.2
+},
+{
+"title": "File:20240503 155744 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430757,
+"lat": 53.149472,
+"lon": 23.013051,
+"dist": 902.1
+},
+{
+"title": "File:20250817 095913 August 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 173638986,
+"lat": 53.155254,
+"lon": 23.022903,
+"dist": 922.2
+},
+{
+"title": "File:20240501 124745 May 2024 in Choroszcz.jpg",
+"pageid": 148363160,
+"lat": 53.150192,
+"lon": 23.002372,
+"dist": 922.3
+},
+{
+"title": "File:20250417 135438 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715330,
+"lat": 53.154934,
+"lon": 23.022851,
+"dist": 928.3
+},
+{
+"title": "File:20250417 135440 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715333,
+"lat": 53.154934,
+"lon": 23.022851,
+"dist": 928.3
+},
+{
+"title": "File:20240503 160018 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430758,
+"lat": 53.148917,
+"lon": 23.011066,
+"dist": 938
+},
+{
+"title": "File:20240503 155455 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430756,
+"lat": 53.149478,
+"lon": 23.015174,
+"dist": 948.5
+},
+{
+"title": "File:20250211 095833 February 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 159821940,
+"lat": 53.155035,
+"lon": 23.023216,
+"dist": 948.6
+},
+{
+"title": "File:20240503 160150 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430761,
+"lat": 53.148748,
+"lon": 23.010254,
+"dist": 952.3
+},
+{
+"title": "File:20240503 160142 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430759,
+"lat": 53.148754,
+"lon": 23.01043,
+"dist": 952.3
+},
+{
+"title": "File:20240422 061237 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331410,
+"lat": 53.154993,
+"lon": 23.023641,
+"dist": 977.1
+},
+{
+"title": "File:20240422 061234 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331409,
+"lat": 53.154993,
+"lon": 23.023641,
+"dist": 977.1
+},
+{
+"title": "File:20250417 135442 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715335,
+"lat": 53.154758,
+"lon": 23.023622,
+"dist": 983.1
+},
+{
+"title": "File:20250417 135445 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715339,
+"lat": 53.154758,
+"lon": 23.023622,
+"dist": 983.1
+},
+{
+"title": "File:20240503 155137 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430754,
+"lat": 53.149554,
+"lon": 23.016771,
+"dist": 988.4
+},
+{
+"title": "File:20240422 061233 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331407,
+"lat": 53.154915,
+"lon": 23.023948,
+"dist": 999.2
+}
+]
+},
+{
+"landmark": "L05",
+"nazwa": "Żółto-zielony obiekt nad S8 (footway wg OSM)",
+"url": "https://commons.wikimedia.org/w/api.php?action=query&list=geosearch&gscoord=53.1617%7C22.9778&gsradius=1000&gsnamespace=6&gslimit=500&gsprimary=all&format=json",
+"utc": "2026-11-14T17:35:12Z",
+"http": "200",
+"liczba_plikow_r1000m": 0,
+"liczba_z_tytulem_drogowym": 0,
+"pliki": []
+},
+{
+"landmark": "L06",
+"nazwa": "Ekran akustyczny na końcu S8 / początku DK8",
+"url": "https://commons.wikimedia.org/w/api.php?action=query&list=geosearch&gscoord=53.153492%7C23.031008&gsradius=1000&gsnamespace=6&gslimit=500&gsprimary=all&format=json",
+"utc": "2026-11-14T17:36:06Z",
+"http": "200",
+"liczba_plikow_r1000m": 149,
+"liczba_z_tytulem_drogowym": 5,
+"pliki": [
+{
+"title": "File:Bocian biały Łyski.jpg",
+"pageid": 33623777,
+"lat": 53.153432777778,
+"lon": 23.0309525,
+"dist": 7.6
+},
+{
+"title": "File:20240422 061217 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331402,
+"lat": 53.153739,
+"lon": 23.031096,
+"dist": 28.1
+},
+{
+"title": "File:20240422 061214 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331397,
+"lat": 53.153602,
+"lon": 23.031498,
+"dist": 34.9
+},
+{
+"title": "File:20220531 151110 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833908,
+"lat": 53.154206,
+"lon": 23.031226,
+"dist": 80.7
+},
+{
+"title": "File:20220531 151105 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833907,
+"lat": 53.154447,
+"lon": 23.029061,
+"dist": 167.7
+},
+{
+"title": "File:Bocian biały Łyski.jpg",
+"pageid": 33623777,
+"lat": 53.1525834,
+"lon": 23.0337405,
+"dist": 208.3
+},
+{
+"title": "File:20240503 162431 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430788,
+"lat": 53.151644,
+"lon": 23.031992,
+"dist": 215.7
+},
+{
+"title": "File:20240503 140751 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400245,
+"lat": 53.151424898,
+"lon": 23.0310982235,
+"dist": 229.9
+},
+{
+"title": "File:20240503 162500 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430800,
+"lat": 53.151485,
+"lon": 23.032032,
+"dist": 233.4
+},
+{
+"title": "File:20250415 061131 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707771,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 235.5
+},
+{
+"title": "File:20250415 061114 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707786,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 235.5
+},
+{
+"title": "File:20250415 061112 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707742,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 235.5
+},
+{
+"title": "File:20250415 061120 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707749,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 235.5
+},
+{
+"title": "File:20250415 061130 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707760,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 235.5
+},
+{
+"title": "File:20250415 061124 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707759,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 235.5
+},
+{
+"title": "File:20250415 061118 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707750,
+"lat": 53.154266,
+"lon": 23.02772,
+"dist": 235.5
+},
+{
+"title": "File:20240503 140747 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400244,
+"lat": 53.151375164,
+"lon": 23.0317106463,
+"dist": 240
+},
+{
+"title": "File:20240503 162421 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430787,
+"lat": 53.15149,
+"lon": 23.029649,
+"dist": 240.4
+},
+{
+"title": "File:20240503 162435 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430789,
+"lat": 53.1515326054,
+"lon": 23.0325623678,
+"dist": 241.3
+},
+{
+"title": "File:20240503 162439 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430790,
+"lat": 53.1517743851,
+"lon": 23.033273396,
+"dist": 243.5
+},
+{
+"title": "File:20230808 123319 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899760,
+"lat": 53.154247,
+"lon": 23.027508,
+"dist": 248
+},
+{
+"title": "File:20240503 140738 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400242,
+"lat": 53.151532976,
+"lon": 23.0328780771,
+"dist": 251
+},
+{
+"title": "File:20240503 140759 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400247,
+"lat": 53.1513134144,
+"lon": 23.029759349,
+"dist": 256.2
+},
+{
+"title": "File:20240503 140735 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400240,
+"lat": 53.151553321,
+"lon": 23.033135895,
+"dist": 258.1
+},
+{
+"title": "File:20240503 140730 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400239,
+"lat": 53.151546082,
+"lon": 23.0333786353,
+"dist": 268
+},
+{
+"title": "File:20230808 123320 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899765,
+"lat": 53.154311,
+"lon": 23.027178,
+"dist": 271.1
+},
+{
+"title": "File:20240503 140729 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400238,
+"lat": 53.1515441121,
+"lon": 23.0337245898,
+"dist": 282.4
+},
+{
+"title": "File:20230808 1233201 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899751,
+"lat": 53.154369,
+"lon": 23.026847,
+"dist": 294.1
+},
+{
+"title": "File:20240503 140807 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400249,
+"lat": 53.1511253261,
+"lon": 23.028893731,
+"dist": 298.5
+},
+{
+"title": "File:20240422 061226 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331400,
+"lat": 53.154461,
+"lon": 23.02675,
+"dist": 303.7
+},
+{
+"title": "File:20240503 140726 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400234,
+"lat": 53.1514967115,
+"lon": 23.0342425829,
+"dist": 309.4
+},
+{
+"title": "File:20250211 095820 February 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 159821938,
+"lat": 53.15445,
+"lon": 23.026563,
+"dist": 315
+},
+{
+"title": "File:20240503 162447 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430792,
+"lat": 53.15147898,
+"lon": 23.034392522,
+"dist": 317.9
+},
+{
+"title": "File:20240503 140808 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400250,
+"lat": 53.1508928,
+"lon": 23.028897755,
+"dist": 321.5
+},
+{
+"title": "File:20240422 061229 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331405,
+"lat": 53.154475,
+"lon": 23.026447,
+"dist": 323.2
+},
+{
+"title": "File:20240422 061231 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331406,
+"lat": 53.154475,
+"lon": 23.026447,
+"dist": 323.2
+},
+{
+"title": "File:20240422 061228 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331401,
+"lat": 53.154475,
+"lon": 23.026447,
+"dist": 323.2
+},
+{
+"title": "File:20240503 140725 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400235,
+"lat": 53.151444434496,
+"lon": 23.034469229589,
+"dist": 324.2
+},
+{
+"title": "File:20240503 162448 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430793,
+"lat": 53.1514578,
+"lon": 23.03455728,
+"dist": 327.4
+},
+{
+"title": "File:20250817 095858 August 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 173638988,
+"lat": 53.15464,
+"lon": 23.026484,
+"dist": 327.6
+},
+{
+"title": "File:20240503 162419 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430785,
+"lat": 53.15096,
+"lon": 23.028421,
+"dist": 330.2
+},
+{
+"title": "File:20240503 162449 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430794,
+"lat": 53.1514029376,
+"lon": 23.0347715758,
+"dist": 342
+},
+{
+"title": "File:20230719 122729 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009136,
+"lat": 53.152714,
+"lon": 23.035997,
+"dist": 343.7
+},
+{
+"title": "File:20240503 162443 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430791,
+"lat": 53.151233386,
+"lon": 23.0347414422,
+"dist": 353.6
+},
+{
+"title": "File:20250417 104746 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715312,
+"lat": 53.15455,
+"lon": 23.025997,
+"dist": 354.2
+},
+{
+"title": "File:20250211 095824 February 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 159821939,
+"lat": 53.154529,
+"lon": 23.025963,
+"dist": 355.6
+},
+{
+"title": "File:20240503 140723 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400231,
+"lat": 53.151349531355,
+"lon": 23.03497884929,
+"dist": 356.2
+},
+{
+"title": "File:20240501 124233 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363141,
+"lat": 53.155206,
+"lon": 23.026455,
+"dist": 358.5
+},
+{
+"title": "File:20240503 162451 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430795,
+"lat": 53.151452801,
+"lon": 23.0352798543,
+"dist": 364.1
+},
+{
+"title": "File:20250417 104757 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715324,
+"lat": 53.154601,
+"lon": 23.025767,
+"dist": 370.6
+},
+{
+"title": "File:20250417 104750 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715319,
+"lat": 53.154601,
+"lon": 23.025767,
+"dist": 370.6
+},
+{
+"title": "File:20250417 104749 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715313,
+"lat": 53.154601,
+"lon": 23.025767,
+"dist": 370.6
+},
+{
+"title": "File:20250417 104754 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715321,
+"lat": 53.154601,
+"lon": 23.025767,
+"dist": 370.6
+},
+{
+"title": "File:20250417 135449 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715341,
+"lat": 53.154429,
+"lon": 23.02561,
+"dist": 374.7
+},
+{
+"title": "File:20250417 135452 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715343,
+"lat": 53.154429,
+"lon": 23.02561,
+"dist": 374.7
+},
+{
+"title": "File:20240503 162452 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430796,
+"lat": 53.1514519976,
+"lon": 23.0356084249,
+"dist": 381.5
+},
+{
+"title": "File:20240503 140721 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400229,
+"lat": 53.151259453,
+"lon": 23.035395932,
+"dist": 383.7
+},
+{
+"title": "File:20240501 124246 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363143,
+"lat": 53.155601,
+"lon": 23.02637,
+"dist": 388.1
+},
+{
+"title": "File:20220807 180135 August 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 121577450,
+"lat": 53.154507,
+"lon": 23.025407,
+"dist": 390.2
+},
+{
+"title": "File:20250817 095903 August 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 173638987,
+"lat": 53.154793,
+"lon": 23.025496,
+"dist": 395
+},
+{
+"title": "File:20240503 140720 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400230,
+"lat": 53.151122465,
+"lon": 23.0355533395,
+"dist": 401.6
+},
+{
+"title": "File:20240503 140820 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400254,
+"lat": 53.150669,
+"lon": 23.027075,
+"dist": 409
+},
+{
+"title": "File:20230915 150911 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812324,
+"lat": 53.154684,
+"lon": 23.024925,
+"dist": 426.7
+},
+{
+"title": "File:20230915 150914 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812328,
+"lat": 53.154684,
+"lon": 23.024925,
+"dist": 426.7
+},
+{
+"title": "File:20240503 140718 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400228,
+"lat": 53.151125596,
+"lon": 23.0360590887,
+"dist": 427.4
+},
+{
+"title": "File:20240501 142110 May 2024 in Choroszcz.jpg",
+"pageid": 148363204,
+"lat": 53.155988,
+"lon": 23.026012,
+"dist": 433.6
+},
+{
+"title": "File:20240503 140717 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400226,
+"lat": 53.15109215,
+"lon": 23.036213101,
+"dist": 437.8
+},
+{
+"title": "File:20191109 132646 Roadworks in Podlasie November 2019.jpg",
+"pageid": 84660307,
+"lat": 53.1525,
+"lon": 23.0375,
+"dist": 446.7
+},
+{
+"title": "File:20240503 162456 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430797,
+"lat": 53.151135277,
+"lon": 23.0364597775,
+"dist": 448.1
+},
+{
+"title": "File:20240503 140716 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400227,
+"lat": 53.1510313,
+"lon": 23.0364779672,
+"dist": 456
+},
+{
+"title": "File:20230808 123328 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899752,
+"lat": 53.154786,
+"lon": 23.024475,
+"dist": 458.8
+},
+{
+"title": "File:20240501 124307 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363142,
+"lat": 53.156258,
+"lon": 23.025781,
+"dist": 464.8
+},
+{
+"title": "File:20240503 140826 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400255,
+"lat": 53.1504933232,
+"lon": 23.0260260956,
+"dist": 470.7
+},
+{
+"title": "File:20230808 123329 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899753,
+"lat": 53.15485,
+"lon": 23.024153,
+"dist": 481.4
+},
+{
+"title": "File:20230719 122757 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009145,
+"lat": 53.154883,
+"lon": 23.02409,
+"dist": 486.5
+},
+{
+"title": "File:20240503 140714 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400224,
+"lat": 53.150933489,
+"lon": 23.0369462221,
+"dist": 487.6
+},
+{
+"title": "File:20240503 140830 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400256,
+"lat": 53.150454108,
+"lon": 23.0256927718,
+"dist": 489.6
+},
+{
+"title": "File:20240422 061233 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331407,
+"lat": 53.154915,
+"lon": 23.023948,
+"dist": 496.6
+},
+{
+"title": "File:20240503 162459 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430799,
+"lat": 53.150983176,
+"lon": 23.0372205391,
+"dist": 499.4
+},
+{
+"title": "File:20240503 140713 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400223,
+"lat": 53.15088277,
+"lon": 23.037152033,
+"dist": 502
+},
+{
+"title": "File:20250417 135442 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715335,
+"lat": 53.154758,
+"lon": 23.023622,
+"dist": 512.2
+},
+{
+"title": "File:20250417 135445 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715339,
+"lat": 53.154758,
+"lon": 23.023622,
+"dist": 512.2
+},
+{
+"title": "File:20240503 140711 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400222,
+"lat": 53.1508457774,
+"lon": 23.0374135489,
+"dist": 518.7
+},
+{
+"title": "File:20240422 061237 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331410,
+"lat": 53.154993,
+"lon": 23.023641,
+"dist": 518.8
+},
+{
+"title": "File:20240422 061234 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331409,
+"lat": 53.154993,
+"lon": 23.023641,
+"dist": 518.8
+},
+{
+"title": "File:20240503 141232 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400258,
+"lat": 53.1503981946,
+"lon": 23.0250166426,
+"dist": 527.2
+},
+{
+"title": "File:20240503 154108 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400267,
+"lat": 53.150414985819,
+"lon": 23.024929675992,
+"dist": 530.4
+},
+{
+"title": "File:20250211 095833 February 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 159821940,
+"lat": 53.155035,
+"lon": 23.023216,
+"dist": 547.2
+},
+{
+"title": "File:20240503 162502 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430801,
+"lat": 53.1508585433,
+"lon": 23.037949772,
+"dist": 547.7
+},
+{
+"title": "File:20240503 154136 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400268,
+"lat": 53.150403761,
+"lon": 23.02459359,
+"dist": 548.5
+},
+{
+"title": "File:20240503 154043 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400264,
+"lat": 53.150109,
+"lon": 23.024864,
+"dist": 556.2
+},
+{
+"title": "File:20240501 124327 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363146,
+"lat": 53.15734,
+"lon": 23.025639,
+"dist": 557.9
+},
+{
+"title": "File:20240501 124333 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363147,
+"lat": 53.15734,
+"lon": 23.025639,
+"dist": 557.9
+},
+{
+"title": "File:20240501 124322 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363145,
+"lat": 53.15734,
+"lon": 23.025639,
+"dist": 557.9
+},
+{
+"title": "File:20240503 140709 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400221,
+"lat": 53.15061033,
+"lon": 23.037997251,
+"dist": 565.6
+},
+{
+"title": "File:20250417 135438 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715330,
+"lat": 53.154934,
+"lon": 23.022851,
+"dist": 567
+},
+{
+"title": "File:20250417 135440 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167715333,
+"lat": 53.154934,
+"lon": 23.022851,
+"dist": 567
+},
+{
+"title": "File:20240503 162504 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430802,
+"lat": 53.1508643606,
+"lon": 23.0383984413,
+"dist": 572.9
+},
+{
+"title": "File:20250817 095913 August 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 173638986,
+"lat": 53.155254,
+"lon": 23.022903,
+"dist": 574.9
+},
+{
+"title": "File:20240503 140708 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400220,
+"lat": 53.150656843,
+"lon": 23.0383056674,
+"dist": 579.8
+},
+{
+"title": "File:20240503 154222 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430741,
+"lat": 53.150394,
+"lon": 23.023859,
+"dist": 588.2
+},
+{
+"title": "File:20240503 140707 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400218,
+"lat": 53.150619452,
+"lon": 23.0387451562,
+"dist": 606.8
+},
+{
+"title": "File:20240503 162508 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430803,
+"lat": 53.150634229,
+"lon": 23.038768769,
+"dist": 607.3
+},
+{
+"title": "File:20240503 154306 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430740,
+"lat": 53.150277,
+"lon": 23.023307,
+"dist": 625.7
+},
+{
+"title": "File:20240503 140705 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400216,
+"lat": 53.150444084,
+"lon": 23.0389511969,
+"dist": 628.8
+},
+{
+"title": "File:20240503 141930 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400260,
+"lat": 53.149702,
+"lon": 23.023981,
+"dist": 630.2
+},
+{
+"title": "File:20240503 162511 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430804,
+"lat": 53.150762952,
+"lon": 23.039353388,
+"dist": 633.9
+},
+{
+"title": "File:20240503 142521 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400262,
+"lat": 53.149754,
+"lon": 23.023722,
+"dist": 639.4
+},
+{
+"title": "File:20240501 124350 May 2024 in Choroszcz.jpg",
+"pageid": 148363149,
+"lat": 53.156649,
+"lon": 23.022837,
+"dist": 648.1
+},
+{
+"title": "File:20240503 145738 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400265,
+"lat": 53.14961,
+"lon": 23.02368,
+"dist": 652
+},
+{
+"title": "File:20240422 061240 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331411,
+"lat": 53.155327,
+"lon": 23.021603,
+"dist": 659.5
+},
+{
+"title": "File:20240503 154407 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430742,
+"lat": 53.150115,
+"lon": 23.022728,
+"dist": 667.7
+},
+{
+"title": "File:20240503 162513 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430805,
+"lat": 53.150980463,
+"lon": 23.0401913767,
+"dist": 673
+},
+{
+"title": "File:20240503 154431 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430743,
+"lat": 53.150054,
+"lon": 23.022347,
+"dist": 692.6
+},
+{
+"title": "File:20240503 154446 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430744,
+"lat": 53.150048,
+"lon": 23.022238,
+"dist": 699
+},
+{
+"title": "File:20240422 061245 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331413,
+"lat": 53.155455,
+"lon": 23.0209,
+"dist": 708.5
+},
+{
+"title": "File:20230916 180605 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892567,
+"lat": 53.155293,
+"lon": 23.020808,
+"dist": 709
+},
+{
+"title": "File:20230916 180608 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892568,
+"lat": 53.155293,
+"lon": 23.020808,
+"dist": 709
+},
+{
+"title": "File:20240503 154516 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430745,
+"lat": 53.150005,
+"lon": 23.021834,
+"dist": 724.3
+},
+{
+"title": "File:20240501 142011 May 2024 in Choroszcz.jpg",
+"pageid": 148363203,
+"lat": 53.156047,
+"lon": 23.020905,
+"dist": 731.1
+},
+{
+"title": "File:20240503 154548 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430748,
+"lat": 53.149963,
+"lon": 23.021347,
+"dist": 754.3
+},
+{
+"title": "File:20240503 140656 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400215,
+"lat": 53.15087,
+"lon": 23.041448,
+"dist": 754.8
+},
+{
+"title": "File:Łyski, rondo (20240503).jpg",
+"pageid": 148400214,
+"lat": 53.150869,
+"lon": 23.041449,
+"dist": 754.9
+},
+{
+"title": "File:20240503 162343 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430783,
+"lat": 53.150026,
+"lon": 23.02123,
+"dist": 757.4
+},
+{
+"title": "File:20240503 162341 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430782,
+"lat": 53.150026,
+"lon": 23.02123,
+"dist": 757.4
+},
+{
+"title": "File:20240503 154612 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430747,
+"lat": 53.14992,
+"lon": 23.020941,
+"dist": 780
+},
+{
+"title": "File:20230719 122808 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009149,
+"lat": 53.155667,
+"lon": 23.019746,
+"dist": 788.9
+},
+{
+"title": "File:20240503 154632 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430746,
+"lat": 53.149891,
+"lon": 23.020707,
+"dist": 795.1
+},
+{
+"title": "File:20250520 152857 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735597,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 800.1
+},
+{
+"title": "File:20250520 152903 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735605,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 800.1
+},
+{
+"title": "File:20250520 152900 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735601,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 800.1
+},
+{
+"title": "File:20250520 152845 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735589,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 800.1
+},
+{
+"title": "File:20250520 152849 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735594,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 800.1
+},
+{
+"title": "File:20250520 152904 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735603,
+"lat": 53.155616,
+"lon": 23.019544,
+"dist": 800.1
+},
+{
+"title": "File:20230808 123342 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899746,
+"lat": 53.1557,
+"lon": 23.01945,
+"dist": 808.8
+},
+{
+"title": "File:20230808 123228 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899759,
+"lat": 53.151486,
+"lon": 23.042719,
+"dist": 812.1
+},
+{
+"title": "File:20240503 154652 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430750,
+"lat": 53.149866,
+"lon": 23.020427,
+"dist": 812.7
+},
+{
+"title": "File:20240503 154656 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430751,
+"lat": 53.149866,
+"lon": 23.020427,
+"dist": 812.7
+},
+{
+"title": "File:20240503 154923 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430752,
+"lat": 53.149832,
+"lon": 23.020098,
+"dist": 833.6
+},
+{
+"title": "File:20240503 140641 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400212,
+"lat": 53.150666,
+"lon": 23.042595,
+"dist": 834.1
+},
+{
+"title": "File:8046 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115487575,
+"lat": 53.151843,
+"lon": 23.043456,
+"dist": 850.1
+},
+{
+"title": "File:20210526 173957 2021 in Podlaskie Voivodeship.jpg",
+"pageid": 106091691,
+"lat": 53.151389,
+"lon": 23.043333,
+"dist": 854.5
+},
+{
+"title": "File:20240422 061143 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331393,
+"lat": 53.151328,
+"lon": 23.043904,
+"dist": 893
+},
+{
+"title": "File:20240422 061146 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331395,
+"lat": 53.151328,
+"lon": 23.043904,
+"dist": 893
+},
+{
+"title": "File:20240422 061149 April 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148331396,
+"lat": 53.151328,
+"lon": 23.043904,
+"dist": 893
+},
+{
+"title": "File:20250520 152834 May 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167735591,
+"lat": 53.156003,
+"lon": 23.01735,
+"dist": 952.5
+},
+{
+"title": "File:20240501 141948 May 2024 in Choroszcz.jpg",
+"pageid": 148363200,
+"lat": 53.156279,
+"lon": 23.017185,
+"dist": 972.4
+},
+{
+"title": "File:20220531 151152 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833917,
+"lat": 53.151848369495,
+"lon": 23.045530555092,
+"dist": 985.5
+},
+{
+"title": "File:20240503 155022 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430755,
+"lat": 53.149662,
+"lon": 23.017551,
+"dist": 993.3
+}
+]
+},
+{
+"landmark": "L07",
+"nazwa": "Wiadukt nad DK8 (tertiary, zach. część Trasy Generalskiej)",
+"url": "https://commons.wikimedia.org/w/api.php?action=query&list=geosearch&gscoord=53.14901%7C23.059022&gsradius=1000&gsnamespace=6&gslimit=500&gsprimary=all&format=json",
+"utc": "2026-11-14T17:36:12Z",
+"http": "200",
+"liczba_plikow_r1000m": 179,
+"liczba_z_tytulem_drogowym": 34,
+"pliki": [
+{
+"title": "File:20250415 060927 April 2025 in Podlaskie Voivodeship.jpg",
+"pageid": 167707741,
+"lat": 53.148979,
+"lon": 23.059401,
+"dist": 25.5
+},
+{
+"title": "File:8010 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115339687,
+"lat": 53.148912,
+"lon": 23.059387,
+"dist": 26.7
+},
+{
+"title": "File:20230803 151833 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135687732,
+"lat": 53.148806,
+"lon": 23.058643,
+"dist": 34
+},
+{
+"title": "File:20210317 051156 Porosły.jpg",
+"pageid": 101740123,
+"lat": 53.148889,
+"lon": 23.058333,
+"dist": 47.9
+},
+{
+"title": "File:20230808 123133 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899776,
+"lat": 53.149167,
+"lon": 23.058269,
+"dist": 53.2
+},
+{
+"title": "File:20240501 123800 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363135,
+"lat": 53.148458,
+"lon": 23.058572,
+"dist": 68.3
+},
+{
+"title": "File:20230808 123136 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899779,
+"lat": 53.149272,
+"lon": 23.057447,
+"dist": 109
+},
+{
+"title": "File:20210602 214732 June 2021 in Podlaskie Voivodeship.jpg",
+"pageid": 106260284,
+"lat": 53.148611,
+"lon": 23.060556,
+"dist": 111.5
+},
+{
+"title": "File:20210602 082733 2021 in Podlaskie Voivodeship.jpg",
+"pageid": 106260258,
+"lat": 53.148611,
+"lon": 23.060556,
+"dist": 111.5
+},
+{
+"title": "File:20220713 164226 Węzeł Porosły.jpg",
+"pageid": 120648513,
+"lat": 53.148333,
+"lon": 23.060278,
+"dist": 112.6
+},
+{
+"title": "File:8049 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115487778,
+"lat": 53.148246,
+"lon": 23.057828,
+"dist": 116.4
+},
+{
+"title": "File:20230719 122621 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009122,
+"lat": 53.148465,
+"lon": 23.060583,
+"dist": 120.5
+},
+{
+"title": "File:7161 April 2021 in Podlaskie Voivodeship.jpg",
+"pageid": 104687078,
+"lat": 53.148458408469,
+"lon": 23.060581072832,
+"dist": 120.7
+},
+{
+"title": "File:20211017 091758 October 2021 in Białystok.jpg",
+"pageid": 111267574,
+"lat": 53.148889,
+"lon": 23.060833,
+"dist": 121.5
+},
+{
+"title": "File:20220713 164205 Porosły.jpg",
+"pageid": 120648512,
+"lat": 53.148889,
+"lon": 23.060833,
+"dist": 121.5
+},
+{
+"title": "File:8050 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115487827,
+"lat": 53.147851,
+"lon": 23.059329,
+"dist": 130.5
+},
+{
+"title": "File:20210526 163909 2021 in Podlaskie Voivodeship.jpg",
+"pageid": 106091653,
+"lat": 53.148363,
+"lon": 23.060901,
+"dist": 144.5
+},
+{
+"title": "File:20211017 091649 October 2021 in Białystok.jpg",
+"pageid": 111268931,
+"lat": 53.147699376759,
+"lon": 23.059401724646,
+"dist": 147.9
+},
+{
+"title": "File:20230915 150728 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812319,
+"lat": 53.14827,
+"lon": 23.061164,
+"dist": 164.9
+},
+{
+"title": "File:20230915 150722 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812316,
+"lat": 53.14827,
+"lon": 23.061164,
+"dist": 164.9
+},
+{
+"title": "File:20230915 150730 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812321,
+"lat": 53.14827,
+"lon": 23.061164,
+"dist": 164.9
+},
+{
+"title": "File:20220413 091431 April 2022 in Białystok.jpg",
+"pageid": 117014751,
+"lat": 53.148995,
+"lon": 23.056527,
+"dist": 166.4
+},
+{
+"title": "File:20211017 091651 October 2021 in Białystok.jpg",
+"pageid": 111268930,
+"lat": 53.147593864336,
+"lon": 23.060470812573,
+"dist": 184.7
+},
+{
+"title": "File:7170 April 2021 in ul. Zaułek, Porosły, Podlaskie Voivodeship.jpg",
+"pageid": 104687099,
+"lat": 53.14795,
+"lon": 23.061257,
+"dist": 190
+},
+{
+"title": "File:20220531 151248 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833916,
+"lat": 53.148056,
+"lon": 23.061389,
+"dist": 190.2
+},
+{
+"title": "File:20230808 123141 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899763,
+"lat": 53.149319,
+"lon": 23.056025,
+"dist": 202.8
+},
+{
+"title": "File:20230915 150743 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812320,
+"lat": 53.149317,
+"lon": 23.055743,
+"dist": 221.3
+},
+{
+"title": "File:20230719 122636 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009121,
+"lat": 53.149418,
+"lon": 23.05567,
+"dist": 228.1
+},
+{
+"title": "File:20210526 145051 May 2021 in Białystok.jpg",
+"pageid": 106091695,
+"lat": 53.149167,
+"lon": 23.055556,
+"dist": 231.8
+},
+{
+"title": "File:20200520 120432 2020 na Podlasiu.jpg",
+"pageid": 90595345,
+"lat": 53.149444,
+"lon": 23.0625,
+"dist": 236.9
+},
+{
+"title": "File:BMW Breczko 1.jpg",
+"pageid": 40459467,
+"lat": 53.14856,
+"lon": 23.06259,
+"dist": 243.1
+},
+{
+"title": "File:BMW Auto-Breczko.jpg",
+"pageid": 40459466,
+"lat": 53.148485688877,
+"lon": 23.062581956825,
+"dist": 244.5
+},
+{
+"title": "File:20210602 082752 2021 in Podlaskie Voivodeship.jpg",
+"pageid": 106260257,
+"lat": 53.149444,
+"lon": 23.055278,
+"dist": 254.3
+},
+{
+"title": "File:8051 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115487909,
+"lat": 53.147939,
+"lon": 23.062463,
+"dist": 258.5
+},
+{
+"title": "File:20230719 122616 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 134937907,
+"lat": 53.14801,
+"lon": 23.062618,
+"dist": 264.3
+},
+{
+"title": "File:20230719 122640 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009133,
+"lat": 53.149459,
+"lon": 23.055045,
+"dist": 269.9
+},
+{
+"title": "File:20220504 135422 Województwo podlaskie.jpg",
+"pageid": 117672693,
+"lat": 53.148414,
+"lon": 23.054948,
+"dist": 279.7
+},
+{
+"title": "File:8052 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115487968,
+"lat": 53.147401,
+"lon": 23.062262,
+"dist": 280.5
+},
+{
+"title": "File:20220501 222324 Województwo podlaskie.jpg",
+"pageid": 117672676,
+"lat": 53.148462,
+"lon": 23.054871,
+"dist": 283.4
+},
+{
+"title": "File:20230522 203547 May 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 132438218,
+"lat": 53.147859,
+"lon": 23.062928,
+"dist": 290.2
+},
+{
+"title": "File:8048 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115487710,
+"lat": 53.148641,
+"lon": 23.054605,
+"dist": 297.4
+},
+{
+"title": "File:8009 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115339666,
+"lat": 53.147883,
+"lon": 23.063094,
+"dist": 299.1
+},
+{
+"title": "File:7160 April 2021 in Podlaskie Voivodeship.jpg",
+"pageid": 104687083,
+"lat": 53.147834,
+"lon": 23.063222,
+"dist": 309.1
+},
+{
+"title": "File:Belweder w Białymstoku 1.jpg",
+"pageid": 31360270,
+"lat": 53.14857,
+"lon": 23.06377,
+"dist": 320.4
+},
+{
+"title": "File:Hotel Belweder w Białymstoku 1.jpg",
+"pageid": 31360272,
+"lat": 53.14857,
+"lon": 23.06377,
+"dist": 320.4
+},
+{
+"title": "File:20220531 151253 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833915,
+"lat": 53.148126,
+"lon": 23.063701,
+"dist": 327.2
+},
+{
+"title": "File:20230916 180735 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892573,
+"lat": 53.149296,
+"lon": 23.053957,
+"dist": 339.3
+},
+{
+"title": "File:Kaprys Studio mody ślubnej w Białymstoku 1.jpg",
+"pageid": 31383920,
+"lat": 53.14835,
+"lon": 23.06403,
+"dist": 341.9
+},
+{
+"title": "File:Budowa S8 - Porosły.JPG",
+"pageid": 15976733,
+"lat": 53.149621135,
+"lon": 23.0539398257,
+"dist": 345.7
+},
+{
+"title": "File:20180810 112432 August 2018 in Podlaskie Voivodeship.jpg",
+"pageid": 104134845,
+"lat": 53.149444,
+"lon": 23.053611,
+"dist": 364.1
+},
+{
+"title": "File:20240503 140535 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400209,
+"lat": 53.149757,
+"lon": 23.053638,
+"dist": 368.5
+},
+{
+"title": "File:20240501 123859 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363138,
+"lat": 53.149522,
+"lon": 23.053489,
+"dist": 373.3
+},
+{
+"title": "File:20211017 085336 Porosły.jpg",
+"pageid": 111198737,
+"lat": 53.149363,
+"lon": 23.053251,
+"dist": 386.8
+},
+{
+"title": "File:20220531 151259 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833924,
+"lat": 53.148101,
+"lon": 23.06463,
+"dist": 387.4
+},
+{
+"title": "File:8053 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115865402,
+"lat": 53.147235,
+"lon": 23.064075,
+"dist": 390.5
+},
+{
+"title": "File:20211017 085343 2 Porosły.jpg",
+"pageid": 111204915,
+"lat": 53.148333,
+"lon": 23.053056,
+"dist": 404.9
+},
+{
+"title": "File:20240503 140550 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400210,
+"lat": 53.149514,
+"lon": 23.05293,
+"dist": 410.1
+},
+{
+"title": "File:20210602 185144 2021 in Podlaskie Voivodeship.jpg",
+"pageid": 106260277,
+"lat": 53.148056,
+"lon": 23.065,
+"dist": 412.5
+},
+{
+"title": "File:20211017 085343 Porosły.jpg",
+"pageid": 111204916,
+"lat": 53.147675,
+"lon": 23.053064,
+"dist": 424.2
+},
+{
+"title": "File:20230803 104310 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 138486675,
+"lat": 53.147557,
+"lon": 23.064911,
+"dist": 424.7
+},
+{
+"title": "File:20211017 085351 Porosły.jpg",
+"pageid": 111204918,
+"lat": 53.146667,
+"lon": 23.053056,
+"dist": 475.6
+},
+{
+"title": "File:20230808 123155 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137899758,
+"lat": 53.149872,
+"lon": 23.052025,
+"dist": 476.4
+},
+{
+"title": "File:20230916 180814 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892574,
+"lat": 53.147357,
+"lon": 23.06563,
+"dist": 477.5
+},
+{
+"title": "File:20230916 180816 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892575,
+"lat": 53.147357,
+"lon": 23.06563,
+"dist": 477.5
+},
+{
+"title": "File:20211017 085353 Porosły.jpg",
+"pageid": 111204920,
+"lat": 53.147222,
+"lon": 23.0525,
+"dist": 478.2
+},
+{
+"title": "File:20211017 085354 Porosły.jpg",
+"pageid": 111204919,
+"lat": 53.147222,
+"lon": 23.0525,
+"dist": 478.2
+},
+{
+"title": "File:8054 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115865500,
+"lat": 53.147009,
+"lon": 23.065429,
+"dist": 481.7
+},
+{
+"title": "File:7159 30th of April 2021 in Białystok.jpg",
+"pageid": 104683955,
+"lat": 53.147403517719,
+"lon": 23.065806254055,
+"dist": 486.4
+},
+{
+"title": "File:20230916 180729 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892572,
+"lat": 53.149779,
+"lon": 23.051758,
+"dist": 491.9
+},
+{
+"title": "File:20211017 085355 Porosły.jpg",
+"pageid": 111204924,
+"lat": 53.146389,
+"lon": 23.053056,
+"dist": 493.2
+},
+{
+"title": "File:20211017 085357 Porosły.jpg",
+"pageid": 111204925,
+"lat": 53.146389,
+"lon": 23.053056,
+"dist": 493.2
+},
+{
+"title": "File:20240503 162740 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148430806,
+"lat": 53.147267,
+"lon": 23.066002,
+"dist": 504.2
+},
+{
+"title": "File:8008 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115339620,
+"lat": 53.147928,
+"lon": 23.066487,
+"dist": 512.2
+},
+{
+"title": "File:20211227 121334 December 2021 in Białystok.jpg",
+"pageid": 113731528,
+"lat": 53.14733,
+"lon": 23.066178,
+"dist": 512.5
+},
+{
+"title": "File:20200520 102712 Podlasie road S8 enter to Bialystok.jpg",
+"pageid": 90590088,
+"lat": 53.150556,
+"lon": 23.051667,
+"dist": 519.7
+},
+{
+"title": "File:20211227 121333 December 2021 in Podlaskie Voivodeship.jpg",
+"pageid": 113731534,
+"lat": 53.14731,
+"lon": 23.066315,
+"dist": 521.8
+},
+{
+"title": "File:20220531 151306 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833919,
+"lat": 53.147222,
+"lon": 23.066389,
+"dist": 530
+},
+{
+"title": "File:20220413 091448 April 2022 in Białystok.jpg",
+"pageid": 117014753,
+"lat": 53.148056,
+"lon": 23.066944,
+"dist": 538.9
+},
+{
+"title": "File:20211017 085403 Porosły.jpg",
+"pageid": 111204936,
+"lat": 53.145556,
+"lon": 23.053333,
+"dist": 539.9
+},
+{
+"title": "File:20211017 085402 Porosły.jpg",
+"pageid": 111204929,
+"lat": 53.145556,
+"lon": 23.053333,
+"dist": 539.9
+},
+{
+"title": "File:20230803 104304 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 138486673,
+"lat": 53.147248,
+"lon": 23.066665,
+"dist": 546.1
+},
+{
+"title": "File:20220531 061249 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833887,
+"lat": 53.147228,
+"lon": 23.066773,
+"dist": 553.6
+},
+{
+"title": "File:20220713 164249 July 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 120648514,
+"lat": 53.149528,
+"lon": 23.050693,
+"dist": 558.4
+},
+{
+"title": "File:20230803 104303 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 138486672,
+"lat": 53.147213,
+"lon": 23.066845,
+"dist": 558.7
+},
+{
+"title": "File:20230915 150800 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812326,
+"lat": 53.150075,
+"lon": 23.05079,
+"dist": 561.6
+},
+{
+"title": "File:20230915 150704 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812318,
+"lat": 53.14718,
+"lon": 23.066909,
+"dist": 564
+},
+{
+"title": "File:20230915 150708 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812317,
+"lat": 53.14718,
+"lon": 23.066909,
+"dist": 564
+},
+{
+"title": "File:7158 30th of April 2021 in Białystok.jpg",
+"pageid": 104683939,
+"lat": 53.147194325708,
+"lon": 23.066935683124,
+"dist": 565.1
+},
+{
+"title": "File:20240501 123955 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363140,
+"lat": 53.150558,
+"lon": 23.050916,
+"dist": 567.3
+},
+{
+"title": "File:20220713 164250 July 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 120648515,
+"lat": 53.150066,
+"lon": 23.050641,
+"dist": 571.1
+},
+{
+"title": "File:20230915 150701 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137812313,
+"lat": 53.147137,
+"lon": 23.067146,
+"dist": 580.4
+},
+{
+"title": "File:20220501 180729 Województwo podlaskie.jpg",
+"pageid": 117672674,
+"lat": 53.146944,
+"lon": 23.067222,
+"dist": 593.1
+},
+{
+"title": "File:20220501 180731 Województwo podlaskie.jpg",
+"pageid": 117672681,
+"lat": 53.146944,
+"lon": 23.067222,
+"dist": 593.1
+},
+{
+"title": "File:7166 Porosły-Kolonia Podlaskie Voivodeship.jpg",
+"pageid": 104687091,
+"lat": 53.150483,
+"lon": 23.050418,
+"dist": 596.7
+},
+{
+"title": "File:20230803 151909 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135687731,
+"lat": 53.14705,
+"lon": 23.067402,
+"dist": 599.8
+},
+{
+"title": "File:20211017 091549 Porosły.jpg",
+"pageid": 111204968,
+"lat": 53.144444,
+"lon": 23.053889,
+"dist": 612.3
+},
+{
+"title": "File:8007 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115338896,
+"lat": 53.147503,
+"lon": 23.068043,
+"dist": 624.5
+},
+{
+"title": "File:20240501 124010 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148363139,
+"lat": 53.150533,
+"lon": 23.049919,
+"dist": 630.2
+},
+{
+"title": "File:20211017 091543 Porosły.jpg",
+"pageid": 111204969,
+"lat": 53.143889,
+"lon": 23.054444,
+"dist": 646.1
+},
+{
+"title": "File:20211017 091545 Porosły.jpg",
+"pageid": 111204964,
+"lat": 53.143889,
+"lon": 23.054444,
+"dist": 646.1
+},
+{
+"title": "File:20230803 104300 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 138486669,
+"lat": 53.146973,
+"lon": 23.068172,
+"dist": 650.9
+},
+{
+"title": "File:20211017 085511 Porosły.jpg",
+"pageid": 111204927,
+"lat": 53.143889,
+"lon": 23.054167,
+"dist": 655
+},
+{
+"title": "File:8055 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115865584,
+"lat": 53.146556,
+"lon": 23.067967,
+"dist": 656
+},
+{
+"title": "File:8006 February 2022 Porosły.jpg",
+"pageid": 115338635,
+"lat": 53.146542,
+"lon": 23.068011,
+"dist": 659.3
+},
+{
+"title": "File:20210526 174045 May 2021 in Białystok.jpg",
+"pageid": 106091697,
+"lat": 53.150833,
+"lon": 23.068611,
+"dist": 670.8
+},
+{
+"title": "File:20211017 085533 Porosły.jpg",
+"pageid": 111204933,
+"lat": 53.143611,
+"lon": 23.054444,
+"dist": 673.5
+},
+{
+"title": "File:20200619 173347 S8 in exit from Bialystok.jpg",
+"pageid": 91380767,
+"lat": 53.150833,
+"lon": 23.068889,
+"dist": 688.5
+},
+{
+"title": "File:20220531 151314 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833921,
+"lat": 53.146872,
+"lon": 23.068744,
+"dist": 690.6
+},
+{
+"title": "File:20211017 085724 Porosły.jpg",
+"pageid": 111204941,
+"lat": 53.143333,
+"lon": 23.054444,
+"dist": 701.2
+},
+{
+"title": "File:20230803 104255 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 138486670,
+"lat": 53.146789,
+"lon": 23.069151,
+"dist": 719.2
+},
+{
+"title": "File:20240817 120232 August 2024 in Białystok.jpg",
+"pageid": 151797795,
+"lat": 53.150754,
+"lon": 23.069475,
+"dist": 723.5
+},
+{
+"title": "File:8056 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115865683,
+"lat": 53.146167,
+"lon": 23.068905,
+"dist": 731
+},
+{
+"title": "File:20230803 104254 August 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 138486666,
+"lat": 53.146747,
+"lon": 23.069396,
+"dist": 736.2
+},
+{
+"title": "File:20220413 091354 April 2022 in Białystok.jpg",
+"pageid": 117014755,
+"lat": 53.146667,
+"lon": 23.069444,
+"dist": 742.3
+},
+{
+"title": "File:20240817 120310 August 2024 in Białystok.jpg",
+"pageid": 151797796,
+"lat": 53.15094,
+"lon": 23.070217,
+"dist": 776.8
+},
+{
+"title": "File:20240817 120735 August 2024 in Białystok.jpg",
+"pageid": 151797812,
+"lat": 53.148391,
+"lon": 23.070694,
+"dist": 781.4
+},
+{
+"title": "File:20240817 120939 August 2024 in Białystok.jpg",
+"pageid": 151797820,
+"lat": 53.14688,
+"lon": 23.070194,
+"dist": 781.8
+},
+{
+"title": "File:20240817 120710 August 2024 in Białystok.jpg",
+"pageid": 151797811,
+"lat": 53.148697,
+"lon": 23.070754,
+"dist": 783.2
+},
+{
+"title": "File:20240817 120708 August 2024 in Białystok.jpg",
+"pageid": 151797805,
+"lat": 53.14871,
+"lon": 23.070757,
+"dist": 783.3
+},
+{
+"title": "File:20240817 120823 August 2024 in Białystok.jpg",
+"pageid": 151797813,
+"lat": 53.148483,
+"lon": 23.070743,
+"dist": 783.8
+},
+{
+"title": "File:20230719 122554 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 134937905,
+"lat": 53.146637,
+"lon": 23.070269,
+"dist": 795.1
+},
+{
+"title": "File:20240817 120132 August 2024 in Białystok.jpg",
+"pageid": 151797792,
+"lat": 53.151127,
+"lon": 23.070441,
+"dist": 797
+},
+{
+"title": "File:20240817 120610 August 2024 in Białystok.jpg",
+"pageid": 151797803,
+"lat": 53.149466,
+"lon": 23.071017,
+"dist": 801.5
+},
+{
+"title": "File:20240817 120601 August 2024 in Białystok.jpg",
+"pageid": 151797800,
+"lat": 53.149595,
+"lon": 23.071048,
+"dist": 804.6
+},
+{
+"title": "File:20230719 122701 July 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 135009137,
+"lat": 53.150682,
+"lon": 23.047203,
+"dist": 809.8
+},
+{
+"title": "File:20211017 085740 Porosły.jpg",
+"pageid": 111204947,
+"lat": 53.142098,
+"lon": 23.055095,
+"dist": 812
+},
+{
+"title": "File:20211017 085727 Porosły.jpg",
+"pageid": 111204939,
+"lat": 53.142055,
+"lon": 23.055132,
+"dist": 815.7
+},
+{
+"title": "File:20240817 120533 August 2024 in Białystok.jpg",
+"pageid": 151797799,
+"lat": 53.14998,
+"lon": 23.071156,
+"dist": 816.3
+},
+{
+"title": "File:20240817 120113 August 2024 in Białystok.jpg",
+"pageid": 151797791,
+"lat": 53.151241,
+"lon": 23.070707,
+"dist": 817.8
+},
+{
+"title": "File:20230803 104250 August 2023 in Białystok.jpg",
+"pageid": 138486668,
+"lat": 53.146536,
+"lon": 23.070613,
+"dist": 820.5
+},
+{
+"title": "File:7172 April 2021 in Białystok PGE.jpg",
+"pageid": 104687107,
+"lat": 53.14604,
+"lon": 23.070293,
+"dist": 821
+},
+{
+"title": "File:20240817 121017 August 2024 in Białystok.jpg",
+"pageid": 151797822,
+"lat": 53.146742,
+"lon": 23.070888,
+"dist": 830.6
+},
+{
+"title": "File:20240817 120350 August 2024 in Białystok.jpg",
+"pageid": 151797797,
+"lat": 53.151113,
+"lon": 23.071013,
+"dist": 833.1
+},
+{
+"title": "File:20240503 140438 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400202,
+"lat": 53.146488,
+"lon": 23.070844,
+"dist": 836.8
+},
+{
+"title": "File:20240503 140453 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400208,
+"lat": 53.146488,
+"lon": 23.070844,
+"dist": 836.8
+},
+{
+"title": "File:20240503 140436 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400201,
+"lat": 53.146488,
+"lon": 23.070844,
+"dist": 836.8
+},
+{
+"title": "File:20240503 140437 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400200,
+"lat": 53.146488,
+"lon": 23.070844,
+"dist": 836.8
+},
+{
+"title": "File:20240503 140442 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400204,
+"lat": 53.146488,
+"lon": 23.070844,
+"dist": 836.8
+},
+{
+"title": "File:20240503 140446 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400207,
+"lat": 53.146488,
+"lon": 23.070844,
+"dist": 836.8
+},
+{
+"title": "File:20240503 140441 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400203,
+"lat": 53.146488,
+"lon": 23.070844,
+"dist": 836.8
+},
+{
+"title": "File:20240817 120428 August 2024 in Białystok.jpg",
+"pageid": 151797802,
+"lat": 53.150724,
+"lon": 23.071249,
+"dist": 837.4
+},
+{
+"title": "File:20220531 151356 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833910,
+"lat": 53.151393,
+"lon": 23.04704,
+"dist": 841.8
+},
+{
+"title": "File:20211017 085800 Porosły.jpg",
+"pageid": 111204940,
+"lat": 53.141726,
+"lon": 23.055186,
+"dist": 849.4
+},
+{
+"title": "File:20220713 164150 Porosły.jpg",
+"pageid": 120648509,
+"lat": 53.146453,
+"lon": 23.071033,
+"dist": 850
+},
+{
+"title": "File:20240817 120047 August 2024 in Białystok.jpg",
+"pageid": 151797789,
+"lat": 53.151387,
+"lon": 23.07116,
+"dist": 851.5
+},
+{
+"title": "File:20240503 140621 May 2024 in Podlaskie Voivodeship.jpg",
+"pageid": 148400213,
+"lat": 53.150574,
+"lon": 23.046488,
+"dist": 853.7
+},
+{
+"title": "File:20211017 090038 Porosły.jpg",
+"pageid": 111204948,
+"lat": 53.141667,
+"lon": 23.055278,
+"dist": 853.8
+},
+{
+"title": "File:Białystok Bacieczki, wiadukt (budowa 2013r.) 1.jpg",
+"pageid": 29678095,
+"lat": 53.15167,
+"lon": 23.07116,
+"dist": 861.8
+},
+{
+"title": "File:Podlaskie - Białystok - Białystok Bacieczki train station - station.JPG",
+"pageid": 9847590,
+"lat": 53.151277777778,
+"lon": 23.071416666667,
+"dist": 864.2
+},
+{
+"title": "File:20220501 180630 Województwo podlaskie.jpg",
+"pageid": 117672672,
+"lat": 53.151389,
+"lon": 23.046667,
+"dist": 865.3
+},
+{
+"title": "File:7167 April 2021 in Łyski, Podlaskie Voivodeship.jpg",
+"pageid": 104687095,
+"lat": 53.151016,
+"lon": 23.046457,
+"dist": 867.1
+},
+{
+"title": "File:20230803 104248 August 2023 in Białystok.jpg",
+"pageid": 138486667,
+"lat": 53.146369,
+"lon": 23.071359,
+"dist": 873.6
+},
+{
+"title": "File:Białystok Bacieczki train station 1.jpg",
+"pageid": 29678094,
+"lat": 53.15108,
+"lon": 23.07167,
+"dist": 874.3
+},
+{
+"title": "File:Podlaskie - Białystok - Białystok Bacieczki train station - building.JPG",
+"pageid": 9847507,
+"lat": 53.151322222222,
+"lon": 23.071577777778,
+"dist": 875.9
+},
+{
+"title": "File:Podlaskie - Białystok - Białystok Bacieczki train station - tracks; platform.JPG",
+"pageid": 9847544,
+"lat": 53.151252777778,
+"lon": 23.071627777778,
+"dist": 876.8
+},
+{
+"title": "File:20240817 120025 August 2024 in Białystok.jpg",
+"pageid": 151797787,
+"lat": 53.151464,
+"lon": 23.071535,
+"dist": 877.9
+},
+{
+"title": "File:20230803 104242 August 2023 in Białystok.jpg",
+"pageid": 138480170,
+"lat": 53.146366163,
+"lon": 23.0716910414,
+"dist": 894.6
+},
+{
+"title": "File:20240817 120010 August 2024 in Białystok.jpg",
+"pageid": 151797786,
+"lat": 53.151562,
+"lon": 23.071832,
+"dist": 900.1
+},
+{
+"title": "File:Białystok 2017 0010201.jpg",
+"pageid": 101863560,
+"lat": 53.144113830342,
+"lon": 23.069822253237,
+"dist": 902.9
+},
+{
+"title": "File:20211017 090138 Porosły.jpg",
+"pageid": 111204960,
+"lat": 53.141111,
+"lon": 23.055556,
+"dist": 908.2
+},
+{
+"title": "File:20230916 180709 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892570,
+"lat": 53.15087,
+"lon": 23.045658,
+"dist": 914.9
+},
+{
+"title": "File:20211017 085823 Porosły.jpg",
+"pageid": 111204943,
+"lat": 53.140992,
+"lon": 23.055367,
+"dist": 924.3
+},
+{
+"title": "File:20230916 180708 September 2023 in Podlaskie Voivodeship.jpg",
+"pageid": 137892569,
+"lat": 53.15088,
+"lon": 23.04541,
+"dist": 931.2
+},
+{
+"title": "File:8047 February 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 115487662,
+"lat": 53.150369,
+"lon": 23.045171,
+"dist": 936
+},
+{
+"title": "File:20240817 121138 August 2024 in Białystok.jpg",
+"pageid": 151797821,
+"lat": 53.146708,
+"lon": 23.07256,
+"dist": 938.4
+},
+{
+"title": "File:20210430 171420 DHL Łyski Podlaskie April 2021.jpg",
+"pageid": 104693749,
+"lat": 53.152563,
+"lon": 23.046189,
+"dist": 942.6
+},
+{
+"title": "File:Biacomex Białystok (Elewatorska 39).jpg",
+"pageid": 33674768,
+"lat": 53.14549,
+"lon": 23.07202,
+"dist": 951.1
+},
+{
+"title": "File:20210526 145138 May 2021 in Białystok.jpg",
+"pageid": 106091698,
+"lat": 53.151915,
+"lon": 23.07246,
+"dist": 952.6
+},
+{
+"title": "File:20220531 151152 May 2022 in Podlaskie Voivodeship.jpg",
+"pageid": 118833917,
+"lat": 53.151848369495,
+"lon": 23.045530555092,
+"dist": 953.4
+},
+{
+"title": "File:20240501 123545 May 2024 in Białystok.jpg",
+"pageid": 148363134,
+"lat": 53.146457,
+"lon": 23.072707,
+"dist": 955.8
+},
+{
+"title": "File:20200523 215648 May 2020, exist from Bialystok.jpg",
+"pageid": 90593582,
+"lat": 53.151944,
+"lon": 23.0725,
+"dist": 956.2
+},
+{
+"title": "File:20240817 121212 August 2024 in Białystok.jpg",
+"pageid": 151798303,
+"lat": 53.146463,
+"lon": 23.072923,
+"dist": 969.3
+},
+{
+"title": "File:20220906 150845 September 2022 in Białystok.jpg",
+"pageid": 122822474,
+"lat": 53.146111,
+"lon": 23.072778,
+"dist": 972.4
+},
+{
+"title": "File:20220413 091343 April 2022 in Białystok.jpg",
+"pageid": 117014752,
+"lat": 53.146111,
+"lon": 23.072778,
+"dist": 972.4
+},
+{
+"title": "File:20220906 150831 September 2022 in Białystok.jpg",
+"pageid": 122822407,
+"lat": 53.146111,
+"lon": 23.072778,
+"dist": 972.4
+},
+{
+"title": "File:20220501 180746 May 2022 in Białystok.jpg",
+"pageid": 117693706,
+"lat": 53.14604,
+"lon": 23.072791,
+"dist": 975.8
+},
+{
+"title": "File:20211017 085952 Porosły.jpg",
+"pageid": 111204946,
+"lat": 53.140497,
+"lon": 23.055347,
+"dist": 977.8
+},
+{
+"title": "File:20220531 061230 May 2022 in Białystok.jpg",
+"pageid": 118832339,
+"lat": 53.146142,
+"lon": 23.073085,
+"dist": 990.6
+},
+{
+"title": "File:Białystok, Poland Jul 12, 2022 10-15-50 AM.jpeg",
+"pageid": 123612636,
+"lat": 53.1520595366,
+"lon": 23.0730701513,
+"dist": 996.3
+}
+]
+}
+]
+}

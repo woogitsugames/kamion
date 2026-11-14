@@ -1,0 +1,613 @@
+{
+ "seed": 20261114,
+ "metoda_losowania": "random.Random(seed).sample(sorted(ids), ceil(len(ids)/5))",
+ "liczba_wierszy_manifestu": 371,
+ "liczba_w_probie": 75,
+ "data_utc": "2026-11-14T17:38:37Z",
+ "wynik_zbiorczy": {
+  "PASS": 74,
+  "FAIL": 1
+ },
+ "pozycje": [
+  {
+   "id": "R9-013",
+   "kategoria": "PRG",
+   "przedmiot": "Gmina Juchnowiec Kościelny (TERYT 2002052, powiat 2002) — udział w bboxie",
+   "co_sprawdzono": "ponowne przeliczenie tools/prg_and_landmarks.py z files/gugik_raw/prg_gminy.xml → wartość identyczna; kod i nazwa gminy sprawdzone w XML",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-014",
+   "kategoria": "PRG",
+   "przedmiot": "Gmina Turośń Kościelna (TERYT 2002112, powiat 2002) — udział w bboxie",
+   "co_sprawdzono": "ponowne przeliczenie tools/prg_and_landmarks.py z files/gugik_raw/prg_gminy.xml → wartość identyczna; kod i nazwa gminy sprawdzone w XML",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-032",
+   "kategoria": "OSM drogi",
+   "przedmiot": "Długość highway=motorway_link w bboxie",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-033",
+   "kategoria": "OSM drogi",
+   "przedmiot": "Długość highway=trunk w bboxie",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-038",
+   "kategoria": "OSM drogi",
+   "przedmiot": "Długość highway=proposed:motorway w bboxie",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-058",
+   "kategoria": "OSM drogi",
+   "przedmiot": "Długość wg klasy|ref: trunk_link|19",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-064",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu maxspeed na highway=motorway",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-067",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu turn:lanes* na highway=motorway",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-072",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu bridge na highway=motorway",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-073",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu lanes na highway=motorway_link",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-076",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu width na highway=motorway_link",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-077",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu turn:lanes* na highway=motorway_link",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-078",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu destination* na highway=motorway_link",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-079",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu lit na highway=motorway_link",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-091",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu layer na highway=trunk",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-092",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu bridge na highway=trunk",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-093",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu lanes na highway=trunk_link",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-094",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu maxspeed na highway=trunk_link",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-095",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu surface na highway=trunk_link",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-099",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu lit na highway=trunk_link",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-106",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu width na highway=primary",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-109",
+   "kategoria": "OSM tagi",
+   "przedmiot": "Pokrycie tagu lit na highway=primary",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-113",
+   "kategoria": "OSM budynki",
+   "przedmiot": "Liczba budynków i % z building:levels/height w bboxie",
+   "co_sprawdzono": "wiersz-luka: potwierdzono brak pliku overpass/summary_buildings.json i niepełne kafle highways",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-116",
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "tunnel pozostałe (przejścia, przepusty drogowe, service): liczba way",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-122",
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge w budowie/proponowane: liczba way",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-123",
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge na motorway(+link): liczba way",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-124",
+   "kategoria": "OSM mosty/tunele",
+   "przedmiot": "bridge kolejowe (rail + nieczynne): liczba way",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-136",
+   "kategoria": "OSM MOP/stacje",
+   "przedmiot": "highway=rest_area",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-139",
+   "kategoria": "OSM MOP/stacje",
+   "przedmiot": "highway=toll_gantry",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-145",
+   "kategoria": "OSM wyposażenie",
+   "przedmiot": "highway=speed_camera (węzły/way)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-150",
+   "kategoria": "GUGiK NMT",
+   "przedmiot": "NMT 2019 1.00 m ARC/INFO ASCII GRID — pokrycie bboxu",
+   "co_sprawdzono": "ponowne zapytanie WFS skorowidza: 64 arkuszy w warstwie (wiersz dotyczy 32 arkuszy grupy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-171",
+   "kategoria": "GUGiK ORTO",
+   "przedmiot": "ORTO 2024 0.05 m RGB — pokrycie bboxu",
+   "co_sprawdzono": "ponowne zapytanie WFS skorowidza: 860 arkuszy w warstwie (wiersz dotyczy 312 arkuszy grupy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-172",
+   "kategoria": "GUGiK ORTO",
+   "przedmiot": "ORTO 2024 0.25 m CIR — pokrycie bboxu",
+   "co_sprawdzono": "ponowne zapytanie WFS skorowidza: 860 arkuszy w warstwie (wiersz dotyczy 118 arkuszy grupy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-181",
+   "kategoria": "GUGiK NMPT",
+   "przedmiot": "NMPT warstwa skorowidza 2024 — arkuszy w bboxie",
+   "co_sprawdzono": "ponowne zapytanie WFS skorowidza: 0 arkuszy w warstwie (wiersz dotyczy 0 arkuszy grupy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-183",
+   "kategoria": "GUGiK NMT",
+   "przedmiot": "NMT warstwa skorowidza 2018 — arkuszy w bboxie",
+   "co_sprawdzono": "ponowne zapytanie WFS skorowidza: 0 arkuszy w warstwie (wiersz dotyczy 0 arkuszy grupy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-186",
+   "kategoria": "GUGiK ORTO",
+   "przedmiot": "ORTO warstwa skorowidza 2026 — arkuszy w bboxie",
+   "co_sprawdzono": "ponowne zapytanie WFS skorowidza: 0 arkuszy w warstwie (wiersz dotyczy 0 arkuszy grupy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-187",
+   "kategoria": "GUGiK mozaika",
+   "przedmiot": "Mozaika ORTO_RGB_najnowsza: pokrycie bboxu",
+   "co_sprawdzono": "ponowne uruchomienie tools/gugik_coverage.py i tools/build_manifest.py → wartość identyczna (deterministyczne z files/gugik_raw/sheets_all.csv / gugik/head_sizes_sample.json)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-189",
+   "kategoria": "GUGiK mozaika",
+   "przedmiot": "Mozaika ORTO_RGB_najnowsza_piksel<=0.10: pokrycie bboxu",
+   "co_sprawdzono": "ponowne uruchomienie tools/gugik_coverage.py i tools/build_manifest.py → wartość identyczna (deterministyczne z files/gugik_raw/sheets_all.csv / gugik/head_sizes_sample.json)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-193",
+   "kategoria": "GUGiK mozaika",
+   "przedmiot": "Mozaika NMT_1m_najnowsza: pokrycie bboxu",
+   "co_sprawdzono": "ponowne uruchomienie tools/gugik_coverage.py i tools/build_manifest.py → wartość identyczna (deterministyczne z files/gugik_raw/sheets_all.csv / gugik/head_sizes_sample.json)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-195",
+   "kategoria": "GUGiK rozmiar",
+   "przedmiot": "NMPT 0.50 m 2025: szacowany rozmiar 34 arkuszy mozaiki",
+   "co_sprawdzono": "ponowne uruchomienie tools/gugik_coverage.py i tools/build_manifest.py → wartość identyczna (deterministyczne z files/gugik_raw/sheets_all.csv / gugik/head_sizes_sample.json)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-201",
+   "kategoria": "GUGiK rozmiar",
+   "przedmiot": "NMT: szacowany rozmiar całej mozaiki (ASC)",
+   "co_sprawdzono": "ponowne uruchomienie tools/gugik_coverage.py i tools/build_manifest.py → wartość identyczna (deterministyczne z files/gugik_raw/sheets_all.csv / gugik/head_sizes_sample.json)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-203",
+   "kategoria": "GUGiK rozmiar",
+   "przedmiot": "BDOT10k powiat 2061 GPKG.zip — rozmiar",
+   "co_sprawdzono": "ponowny HEAD pliku: HTTP/1.1 200 OK; Content-Length 15594446",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-204",
+   "kategoria": "GUGiK budynki 3D",
+   "przedmiot": "Modele 3D budynków LoD1 2024, powiat 2061 (Białystok) — liczba budynków",
+   "co_sprawdzono": "ponowny HEAD pliku: HTTP/1.1 200 OK; Content-Length 12781738",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-215",
+   "kategoria": "GUGiK rozmiar",
+   "przedmiot": "Modele 3D budynków LoD1 2024, powiat 2002 — rozmiar ZIP",
+   "co_sprawdzono": "ponowny HEAD pliku: HTTP/1.1 200 OK; Content-Length 23868560",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-216",
+   "kategoria": "GUGiK budynki 3D",
+   "przedmiot": "Modele 3D budynków LoD1 2022, powiat 2002 (białostocki) — liczba budynków",
+   "co_sprawdzono": "ponowny HEAD pliku: HTTP/1.1 200 OK; Content-Length 23336745",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-217",
+   "kategoria": "GUGiK rozmiar",
+   "przedmiot": "Modele 3D budynków LoD1 2022, powiat 2002 — rozmiar ZIP",
+   "co_sprawdzono": "ponowny HEAD pliku: HTTP/1.1 200 OK; Content-Length 23336745",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-218",
+   "kategoria": "GUGiK budynki 3D",
+   "przedmiot": "Modele 3D budynków LoD2 2017, powiat 2002 (białostocki) — liczba budynków",
+   "co_sprawdzono": "ponowny HEAD pliku: HTTP/1.1 200 OK; Content-Length 34064429",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-221",
+   "kategoria": "GUGiK budynki 3D",
+   "przedmiot": "Modele 3D budynków LoD1 2025, powiat 2002 — dostępność pod wzorcem URL",
+   "co_sprawdzono": "ponowny HEAD: HTTP/1.1 404 Not Found",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-225",
+   "kategoria": "Panoramax",
+   "przedmiot": "Zdjęcia z roku 2020",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-234",
+   "kategoria": "Panoramax",
+   "przedmiot": "Sekwencja e0bfc8ac-2ffe-42fe-9d61-5144d8b42331 (2025-10-03..2025-10-03)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-235",
+   "kategoria": "Panoramax",
+   "przedmiot": "Sekwencja e9bcb8c0-8ade-4ac9-bc9f-cfa464221fd6 (2020-11-24..2020-11-24)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-245",
+   "kategoria": "Pokrycie zdjęciami",
+   "przedmiot": "Korytarz ref=(trunk_link bez ref): komórki 600 m z ≥1 zdjęciem KartaView (r=500 m)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-247",
+   "kategoria": "Pokrycie zdjęciami",
+   "przedmiot": "Korytarz ref=19: komórki 600 m z ≥1 zdjęciem KartaView (r=500 m)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-248",
+   "kategoria": "Pokrycie zdjęciami",
+   "przedmiot": "Korytarz ref=65: komórki 600 m z ≥1 zdjęciem Panoramax (r=500 m)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-255",
+   "kategoria": "Pokrycie zdjęciami",
+   "przedmiot": "Korytarz ref=8;65: komórki 600 m z ≥1 zdjęciem KartaView (r=500 m)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-259",
+   "kategoria": "Pokrycie zdjęciami",
+   "przedmiot": "Korytarz ref=669: komórki 600 m z ≥1 zdjęciem KartaView (r=500 m)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-268",
+   "kategoria": "Pokrycie zdjęciami",
+   "przedmiot": "Korytarz ref=19;65: komórki 600 m z ≥1 zdjęciem Panoramax (r=500 m)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-270",
+   "kategoria": "Pokrycie zdjęciami",
+   "przedmiot": "Korytarz ref=676: komórki 600 m z ≥1 zdjęciem Panoramax (r=500 m)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-277",
+   "kategoria": "Pokrycie zdjęciami",
+   "przedmiot": "Korytarz ref=19;676: komórki 600 m z ≥1 zdjęciem KartaView (r=500 m)",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-284",
+   "kategoria": "KartaView",
+   "przedmiot": "Liczba sekwencji przecinających korytarze",
+   "co_sprawdzono": "ponowne przeliczenie z surowego wyniku (tools/osm_analyze.py / summaries.py / photo_coverage.py) i ponowne złożenie manifestu → wartość identyczna; zapytania Overpass nie powtarzano (mirror niestabilny, 504)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-289",
+   "kategoria": "KartaView",
+   "przedmiot": "Sekwencja 25209 (dodana 2016-10-16)",
+   "co_sprawdzono": "ponowne zapytanie /2.0/sequence: countActivePhotos=33421",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-290",
+   "kategoria": "KartaView",
+   "przedmiot": "Sekwencja 1155438 (dodana 2018-03-28)",
+   "co_sprawdzono": "ponowne zapytanie /2.0/sequence: countActivePhotos=11606",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-301",
+   "kategoria": "Commons",
+   "przedmiot": "L01 Węzeł Choroszcz (S8): pliki z geotagiem w promieniu 1000 m",
+   "co_sprawdzono": "ponowne zapytanie geosearch: HTTP 429 / brak JSON — nie udało się powtórzyć",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-310",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX02: S8 — obiekt nad drogą (żółto-zielony)",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-311",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX03: S8 — dojazd do węzła Choroszcz (pas wyłączania)",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-313",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX05: Wiadukt nad S8 (ul. Podleśna wg OSM)",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-315",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX07: S8 — odcinek leśny przed końcem drogi ekspresowej (stan 2019)",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-323",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX15: Trasa Generalska — ekrany przezroczyste po obu stronach",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-325",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX17: DK8/DK19 (al. Tysiąclecia PP) — ekran trójdzielny",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-328",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX20: Węzeł Białystok Północ — widok w kierunku południowym",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "FAIL",
+   "korekta": "opis mówił „trawiasta skarpa po prawej” — na obrazie płaska łąka; poprawiono w panoramax/frames_desc.json i manifest.csv"
+  },
+  {
+   "id": "R9-329",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX21: Niebieski wiadukt łukowy — węzeł Jurowce (od północy)",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-335",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX27: S8 — węzeł Choroszcz, pas włączania (kier. zachodni)",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-336",
+   "kategoria": "kadr Panoramax",
+   "przedmiot": "PX28: S8 — odcinek otwarty przed doliną (kier. zachodni)",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R9-349",
+   "kategoria": "landmark",
+   "przedmiot": "L02 Węzeł Białystok Zachód (S8/S19/DK8)",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": "ponownie obejrzano PX06, PX07, PX25: brak wiaduktów/łącznic S19 — kadry historyczne, zgodne z uwagą"
+  },
+  {
+   "id": "R9-357",
+   "kategoria": "landmark",
+   "przedmiot": "L10 Przejazd DK8 w wykopie pod wiaduktem (tunnel=yes, 77 m)",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, ≤960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": "ponownie obejrzano PX29: wykop z murami i wiadukt nad jezdnią"
+  }
+ ]
+}

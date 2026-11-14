@@ -15,3 +15,10 @@
 - Commons geosearch: w toku (429 losowo, backoff).
 - GUGiK: szacunek rozmiaru NMT/NMPT z HEAD (gugik/head_sizes_sample.json).
 - NASTĘPNY KROK: `python3 research/cloud2/next-region-ring/tools/osm_analyze.py highways buildings` po zakończeniu ovp_tiled; potem manifest.csv + README.
+
+## 2026-11-14 ~17:45 UTC — krok 3 (ZAMKNIĘCIE na polecenie lidera — limit sesji)
+- manifest.csv 371 wierszy; 38 kadrów obejrzanych; audit 75 wierszy seed 20261114: 74 PASS / 1 FAIL (PX20 poprawiony); fetch.py OK (24,9 MB, 0 niezgodnych).
+- NIE ZEBRANO: Overpass highways (klasy < primary; 10/16 kafli) i buildings; Commons 17/24 punktów; Mapillary (brak tokenu).
+- NASTĘPNY KROK (z katalogu research/cloud2/next-region-ring):
+  `python3 tools/ovp_tiled.py highways 4 4 'way({bb})[highway];' 'out tags geom qt;' && python3 tools/ovp_tiled.py buildings 4 4 'way({bb})[building];relation({bb})[building];' 'out tags center qt;' && python3 tools/osm_analyze.py highways buildings && python3 tools/commons_landmarks.py && python3 tools/build_manifest.py && python3 tools/audit.py`
+  (potem odświeżyć README §4 i §9; w commons_landmarks.py dodać sprawdzenie klucza `error` w odpowiedzi 200)
