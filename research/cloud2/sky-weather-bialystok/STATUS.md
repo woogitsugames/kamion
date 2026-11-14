@@ -10,3 +10,11 @@
 - `tools_sun.py` → `out/sun_table.csv` (12 dat × wysokość/azymut 8/12/16/20, wschód/zachód, zmierzchy, azymuty). Kontrola krzyżowa
   z pakietem astral 3.2 (niezależna implementacja): różnice ≤ 1 min i ≤ 0,1°.
 - NASTĘPNY KROK: zdjęcia nieba — Panoramax API (bbox Białystok) + Commons API; pobranie do files/, miniatury 960 px, oglądanie.
+
+## Krok 3a — normy IMGW + literatura (częściowo)
+- `tools_normy.py` → `out/imgw_normy_1991_2020.csv` (oficjalne normy 1991–2020 z klimat.imgw.pl: temp., opad, śnieg, usłonecznienie,
+  zachmurzenie, dni pochmurne/pogodne) — zgodne z moim przeliczeniem (zachmurzenie identyczne do 0,1; usłonecznienie rok 1755,3 h).
+- `tools_imgw.py obs R M D G` — obserwacja terminowa dla godziny UTC (parowanie zdjęcie ↔ stacja).
+- Literatura: WMO CIMO Guide rozdz. 9 (MOR, 0,05), tabela 15 typów CIE (pakiet rcaiman, GPL-3), abstrakty OpenAlex (Lee 2005/2008/2017, Hulburt 1953).
+- Zdjęcia: Panoramax (56 kandydatów obejrzanych na stykówce), Commons — seria CC0 z datą i godziną w nazwie.
+- NASTĘPNY KROK: kategorie Commons „<Month> <Year> in Białystok” → wybór ≥ 20 kadrów → `files/img/` → oglądanie 960 px.

@@ -353,10 +353,36 @@ def compute_hourly():
     print("terminowe: wierszy", nrows, dict(src_kind))
 
 
+_OBS_CACHE: dict = {}
+
+
+def obs_at(y: int, mo: int, d: int, hour_utc: int):
+    """Obserwacja terminowa stacji BIAŁYSTOK dla podanej godziny UTC (lata HOURLY_YEARS). Zwraca dict lub None.
+    N = zachmurzenie ogólne [oktanty], wid = widzialność [m], ww = kod pogody bieżącej, CL = kod chmur niskich,
+    podstawa = wysokość podstawy niższej [m], T [°C], RH [%]."""
+    if y not in HOURLY_YEARS:
+        return None
+    if y not in _OBS_CACHE:
+        tab = {}
+        for r in read_zip_csv(FILES / f"t_{y}_{ST_SHORT}_s.zip", "s_t"):
+            if r and r[0] == STATION:
+                row = dict(zip(S_T_HEADER, r))
+                tab[(int(row["MC"]), int(row["DZ"]), int(row["GG"]))] = row
+        _OBS_CACHE[y] = tab
+    row = _OBS_CACHE[y].get((mo, d, hour_utc))
+    if row is None:
+        return None
+    return {"N_okt": row["NOG"], "wid_m": row["WIDO"] if (row["WWIDO"] or "").strip() != "8" else row["WIDA"],
+            "ww": row["POGB"], "CL": row["CHCL"], "CL_txt": row["CHLT"], "podstawa_m": row["HPON"],
+            "T_C": row["TEMP"], "RH_pct": row["WLGW"]}
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
     if cmd == "download":
         download()
+    elif cmd == "obs":  # python3 -I tools_imgw.py obs 2019 8 15 15
+        print(obs_at(*[int(x) for x in sys.argv[2:6]]))
     elif cmd == "compute":
         compute_monthly()
         compute_hourly()
