@@ -59,23 +59,36 @@ Mistral p9, M50-056), więc reguła generatora nie ma z czego ich postawić.
   chunku z rzędem.
 - Ogniwa jako geometria: ~70 ogniw × 2 łańcuchy na przęsło — poza budżetem dla mebla widzianego z kabiny.
 
-## Blok dla Dojlid (do wklejenia przez 0179 / lidera; nie jest w plikach regionu na tej gałęzi)
-Plik gotowy: `artifacts/bollards-0183/overrides.dojlidy.chain_bollards.yaml`.
+## Integracja (blok dla Dojlid — wkleja lider; plików regionu ta gałąź NIE zmienia)
+Na `main` istnieje już `Data/Regions/bialystok-dojlidy/overrides.yaml` (ADR 0179), na tej gałęzi go nie ma — commit
+całego pliku dałby konflikt, a `generated/*` Dojlid są poza zakresem. Lider dopisuje poniższy wpis na koniec listy
+`overrides:` w pliku z `main` (wcięcie 2 spacje), potem regeneracja Dojlid (`build_world.py --region bialystok-dojlidy`
+→ `import-region.ps1`). Ten sam wpis: `artifacts/bollards-0183/overrides.dojlidy.chain_bollards.yaml`.
 ```yaml
   - id: mickiewicza-kuronia-chain-posts-p11-063
     kind: chain_bollards
-    line_epsg2180: [[780011.30, 590461.30], [780016.31, 590451.28]]
+    line_epsg2180: [[780014.43, 590462.87], [780019.44, 590452.85]]
     chain: true
     sources: ["research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg", "GUGiK orthophoto 2024 0.25 m"]
+    reason: >-
+      Owner photo P11-063 (from the bus-stop island of ul. Mickiewicza, looking east): 8 red-white posts with two
+      chains on the paving behind the east kerb of the NW-bound carriageway (osm way 691820489 / 258564444), up to
+      the crossing at the Kuronia corner; 8 posts = 7 bays x 1.60 m. On the orthophoto the row stands on paving at
+      [780011.30, 590461.30] -> [780016.31, 590451.28]; the generated world has a grass verge there, so the line is
+      moved 3.5 m away from the carriageway onto the generated sidewalk_paving (ADR 0183 r2). Move it back when the
+      Dojlidy paving matches the photo.
     confidence: low
     verify: start / end post on site (+-2 m along the kerb); the further row visible behind (smaller posts) is not placed
 ```
-Podstawa: zdjęcie zrobione z wysepki przystankowej ul. Mickiewicza w stronę wschodnią; 8 słupków stoi tuż za
-wschodnim krawężnikiem jezdni w kierunku NW (osm way 691820489 / 258564444), do przejścia przy narożniku Kuronia.
-Linia krawężnika z ortofoto GUGiK 2024 (0,25 m): lokalnie E = −33,5 − 0,5 (N − 385), rząd 0,5 m za nią. Początek:
-21° w lewo od białej szafki przy (−15,5; 371,0) widzianej z (−46,5; 381,8) — szafka stoi na zdjęciu za słupkami 5–6.
-Pozycja kamery `photo_P11-063` (ADR 0174) ma błąd kilku metrów (szafka wypada 13° zamiast 27° od osi kadru), stąd
-`confidence: low`. Drugi, dalszy rząd widoczny na zdjęciu (mniejsze słupki) — nieumieszczony, UNVERIFIED.
+Podstawa położenia: zdjęcie z wysepki przystankowej ul. Mickiewicza w stronę wschodnią; linia krawężnika z ortofoto
+GUGiK 2024 (0,25 m): lokalnie E = −33,5 − 0,5 (N − 385). Początek: 21° w lewo od białej szafki przy (−15,5; 371,0)
+widzianej z (−46,5; 381,8) — szafka stoi na zdjęciu za słupkami 5–6. Pozycja kamery `photo_P11-063` (ADR 0174) ma błąd
+kilku metrów (szafka wypada 13° zamiast 27° od osi kadru), stąd `confidence: low`.
+**Przesunięcie r2 (+3,5 m, normalna (0,894; 0,447)):** na zdjęciu słupki stoją na płytach chodnikowych (pas kostki
+granitowej przy krawężniku), na ortofoto pierwotna linia też leży na nawierzchni utwardzonej, ale w wygenerowanym
+świecie jest tam trawnik (krawężnik → ~4 m trawy → `sidewalk_paving`; sonda trójkątów chunku 3_2). Na trawie (r1)
+trawa Fab High zakrywała stopy słupków i dolny łańcuch. Linia przesunięta stoi ~1 m w głąb wygenerowanego chodnika i
+nadal na nawierzchni utwardzonej według ortofoto. Rozbieżność chodnik/trawnik — do 0179.
 
 ## Budżet
 WYNIKI_BUDZET
