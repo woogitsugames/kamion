@@ -94,7 +94,7 @@ Kryteria: `docs/03_ETAPY_I_BRAMKI.md:22`. Raport: `docs/reports/GATE-2.md` (werd
 
 | # | Kryterium (dosłownie z `docs/03:22`) | Stan | Dowód |
 |---|---|---|---|
-| 2.1 | „pełny pakiet walidacyjny `docs/04` §6 (pusty i 40 t)” | CZĘŚCIOWO | symulator 132/132, 750 kontroli; PlayMode `CombinationLabTests` 15/15 (`GATE-2.md:17`), szczegóły `:27-48`. Telefon: §6.3 i §6.5 — pusty 0–80 20,67 s / 80→0 39,67 m; 40 t 0–80 47,79 s / 80→0 40,72 m, MFDD 7,00, błąd siodła ≤ 0,17 mm, PASS (`GATE12-PHONE…:9-10`). §6.13 (floating origin) bez osobnego scenariusza (`GATE-2.md:51`); §6.10 cofanie pod rampę poza runnerem (`docs/PHYSICS_VALIDATION.md:315`) — w tabeli GATE-2 wiersz `reverse_dock_s_maneuver_comb` (`GATE-2.md:43`) |
+| 2.1 | „pełny pakiet walidacyjny `docs/04` §6 (pusty i 40 t)” | CZĘŚCIOWO | symulator 132/132, 750 kontroli; PlayMode `CombinationLabTests` 15/15 (`GATE-2.md:17`), szczegóły `:27-48`. Telefon: §6.3 i §6.5 — pusty 0–80 20,67 s / 80→0 39,67 m; 40 t 0–80 47,79 s / 80→0 40,72 m, MFDD 7,00, błąd siodła ≤ 0,17 mm, PASS (`GATE12-PHONE…:9-10`). §6.13 (floating origin) bez osobnego scenariusza (`GATE-2.md:51`); §6.10 cofanie pod rampę „poza runnerem” wg `docs/PHYSICS_VALIDATION.md:316`, ale w GATE-2 jest wiersz `reverse_dock_s_maneuver_comb` (`GATE-2.md:43`) |
 | 2.2 | „jackknife możliwy przy błędzie kierowcy” | SPEŁNIONE (symulator) | 80,6° / 92,1° ≥ 30° (`GATE-2.md:18`); na telefonie nie sprawdzane |
 | 2.3 | „brak eksplozji solvera” | SPEŁNIONE (symulator) / CZĘŚCIOWO (telefon) | max Δv ≤ 0,35 m/s, soak 30 min NaN 0, dryf energii 1,4 J (`GATE-2.md:19`); telefon: max \|Δv\|/krok 0,074–0,077 m/s na prostej (`GATE12-PHONE…:9-10`) |
 | 2.4 | „golden telemetry w `tests/golden/`” | SPEŁNIONE | 9 plików + `tolerances.json`, `Stage2Tests.GoldenTelemetry_Matches` zielone (`GATE-2.md:20`, `GATE-1.md:61`) |
@@ -115,3 +115,85 @@ uv run --project tools/perf python scripts/gate12_telemetry.py artifacts/gate12/
 & ./scripts/gate12-phone.ps1 -Apk artifacts/apk/kamion-0.1.0-<sha>-high.apk -UseExistingLock -S24Only -S24Tier High -S24Fps 30
 ```
 Zestaw S24+ to `park_flat_solo`, `c50_solo_1`, `c50_40t` (`scripts/gate12-phone.ps1:77-81`). Feel test: właściciel wg `docs/owner/FEEL-TEST.md`, uwagi → lista zadań → wpis w `GATE-2.md` (`GATE-2.md:62-64`).
+
+---
+
+## 4. Tor A — Ciężarówka premium (bramka przed Etapem 5)
+
+Kryteria: `docs/03_ETAPY_I_BRAMKI.md:27` + checklista `docs/07_CIEZAROWKA_3D.md:44`. **Raportu bramki toru A nie ma** (brak `GATE-A*.md` w `docs/reports/`; w `docs/reports/visual/` są raporty kroków `truck-A2`…`truck-A8`, `trailer-curtainsider`). Plan `docs/plan/TRACK-A.md:7-16` ma tabelę kroków zatrzymaną na A6 („A7–A8 … później”, `:16`), choć raport A7 istnieje (`docs/reports/visual/truck-A7/README.md:1`) i A7 jest zmierzony (`docs/PERFORMANCE_BUDGETS.md:88-98`).
+
+| # | Kryterium | Stan | Dowód |
+|---|---|---|---|
+| A.1 | „checklista `docs/07` §6 zaliczona” (całość) | NIEZMIERZONE | nigdzie w repo nie ma oceny checklisty „quality-ready” (szukane `quality-ready`, `07 §6`) |
+| A.1a | wymiary i proporcje zweryfikowane | CZĘŚCIOWO | `docs/plan/TRACK-A.md:9` — wymiary `WORKING_VALUE` „do potwierdzenia zdjęciami”; research R3 chmury #2 scalony, follow-upy: promień toczenia 0,51 vs 0,521–0,528 m, naciski 65/35 vs karta (`HANDOVER.md:97`); zadanie truckdata-0201 (`HANDOVER.md:102`) |
+| A.1b | brak błędów normalnych, UV, prześwitów | NIEZMIERZONE | brak raportu kontroli dla ciężarówki |
+| A.1c | właściwe materiały | CZĘŚCIOWO | P2-8 „soczewki jako płaskie prostokąty; szary quad za przednią szybą” (`REVIEW-2026-11-14-s20-gate3-phone.md:50`, `:69`) |
+| A.1d | kabina jezdna z FPP, wskaźniki z fizyki | NIEZMIERZONE | brak raportu (D20: tylko ekran 12,3", `docs/11:37`) |
+| A.1e | lusterka użyteczne | CZĘŚCIOWO | 6 lusterek z limitem renderów per tier (`docs/PERFORMANCE_BUDGETS.md:36`); decyzja „okienka vs rozglądanie” otwarta (`GATE-2.md:70`) |
+| A.1f | światła i ich grupy działają | CZĘŚCIOWO | soczewki widoczne na telefonie, DRL + kierunkowskaz (`REVIEW-…-gate3-phone.md:50`); ADR 0197 (stop:pozycyjne) zlecone (`HANDOVER.md:95`) |
+| A.1g | LOD-y bez widocznego przeskoku | NIEZMIERZONE | „Migotania i LOD pop w ruchu nie da się ocenić ze stopklatek” (`REVIEW-…-gate3-phone.md:78`) |
+| A.1h | „zrzuty z telefonu (Samsung A Medium) i z edytora (High)” | CZĘŚCIOWO | z telefonu są kadry `truck-34_*`, `cab-*` na A16 **Low** (`REVIEW-…-gate3-phone.md:50-53`); Medium tylko z 9.11 (`docs/reports/visual/truck-A7/README.md:45-46`) |
+| A.1i | `visual-critic` PASS | NIEZMIERZONE | brak recenzji toru A jako całości (są recenzje kroków, np. `docs/reports/visual/REVIEW-2026-11-12-s12-0130-truck-r3.md`) |
+| A.1j | akceptacja właściciela | CZĘŚCIOWO | wybory: sylwetka B (D16), TRAKT (D17), koniak (D19), front `modern` (D28), pochylenie 1,5° (D29), naczepa bez pasa (D47) — `docs/11:33-36,49-50,68`; brak akceptacji gotowego modelu |
+| A.2 | „zrzuty z telefonu” | CZĘŚCIOWO | j.w. A.1h |
+| A.3 | „budżet trójkątów/draw calli/pamięci spełniony na profilu Medium (Samsung A)” | NIEZMIERZONE dla Medium | trójkąty: zewn. 82,9k/43,0k/14,5k, wnętrze 75,4k/34,9k/19,0k (`truck-A7/README.md:65`) vs hipoteza LOD0 120–250k (`docs/07:30`); draw calli ciężarówki z telefonu nie mierzono (cel „< 30 draws dla zestawu”, `docs/PERFORMANCE_BUDGETS.md:64-65`); koszt GPU własnej ciężarówki na A16 Low 4,7–5,4 ms (`docs/PERFORMANCE_BUDGETS.md:128`) |
+
+**Co blokuje zamknięcie:** (1) brak raportu bramki toru A i oceny checklisty `docs/07` §6; (2) profil: `docs/03:27` i `docs/07:44` każą Medium na Samsungu A, a D49 ustanowił A16 jako Low (`docs/11:70`) — sprzeczność do rozstrzygnięcia; (3) naczepa: A8 wykonane wizualnie (`docs/reports/visual/trailer-curtainsider/`), bez oceny bramki; (4) akceptacja właściciela.
+
+**Komendy dla lidera:**
+```
+pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High   -Lighting overcast -Cameras cab-driver,cab-dash,cab-left,cab-right,truck-34
+pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting lowsun   -Cameras cab-driver,cab-dash,cab-left,cab-right,truck-34
+#   -> artifacts/visual-qa/WorldC/<id>.png (albo -OutputDir <dir>)
+pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -Scene WorldC -QaCamera truck-34 -Tier Medium -Fps 30 -DurationSeconds 60 -Extra lighting=overcast
+pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -Scene WorldC -QaCamera cab-dash  -Tier Medium -Fps 30 -DurationSeconds 60 -Extra lighting=lowsun
+#   -> artifacts/device/RFGL34SJYDZ/<ts>/ (GPU p50, PSS, zrzut) — wzór komendy: truck-A7/README.md:17
+```
+Parametry: `scripts/visual-qa.ps1:12-19`, `scripts/device-metrics.ps1:14-30`. Draw calle/trójkąty z telefonu wymagają Frame Debuggera / Arm Performance Studio (`docs/PERFORMANCE_BUDGETS.md:74-75`) — w skryptach brak komendy.
+
+---
+
+## 5. Etap 3 — Referencyjna próbka jakości (bramka anty-slop)
+
+Kryteria: `docs/03_ETAPY_I_BRAMKI.md:31`. Raport: `docs/reports/GATE-3.md` — **ZALICZONA decyzją D57** (`:8`, `docs/11:78`), przy priorytecie D51 „rozpoznawalność > materiały” (`docs/11:72`).
+Pomiary kontrolne s20: A16 Low/30 na `77cfd94bf8` (`GATE-3.md:109-115`), S24+ High/30 na `18e368be69-high` (`:117-122`), A16 G3-A na `edb5524993` (`:124-129`). Recenzja zrzutów z telefonu: **UTRZYMANA** (`REVIEW-2026-11-14-s20-gate3-phone.md:12`; 24/24 T, `:47`).
+
+| # | Kryterium (dosłownie z `docs/03:31`) | Stan | Dowód |
+|---|---|---|---|
+| 3.1 | „porównanie side-by-side z **zdjęciami właściciela z tego miejsca** w tych samych ujęciach” | SPEŁNIONE z odstępstwem | pakiet 12 par, referencje z otwartych źródeł zamiast zdjęć właściciela (D43, `docs/11:64`), odstępstwo przyjęte D57 (`GATE-3.md:19`) |
+| 3.2 | „checklista `docs/06` §5 zaliczona” | CZĘŚCIOWO | rozpisane niżej (1 punkt SPEŁNIONY, 3 CZĘŚCIOWO, 1 NIESPEŁNIONY, wynik decyzją) |
+| 3.3 | „zmierzony koszt na Samsungu A (Medium)” | SPEŁNIONE dla Low (D49) | s20 A16 Low: G3-A 29,99 FPS, p95/p99 33,46/33,57 ms, GPU p50 32,1, PSS 917,5 MB; G3-B 29,95, 33,45/33,62, GPU p50 31,3, PSS 877,8 — budżet OK (`GATE-3.md:113-114`); `edb5524993` G3-A 29,97 FPS, p99 33,56, PSS 900,8 (`:127`). **G3-B na `edb5524993` NIEZMIERZONY** (`:128`, `HANDOVER.md:96`). Medium nie mierzone (D49: A16 Medium 21,7 FPS, `docs/11:70`) |
+| 3.4 | „oszacowany zapas dla High” | SPEŁNIONE jako oszacowanie (wynik: brak zapasu na 60 FPS) | S24+ High/30: GPU p50 23,0 / 22,5 ms, PSS 1670/1644 MB, kamery 56/57 i 46/46 (`GATE-3.md:120-121`); „High/60 nie jest osiągalne bez optymalizacji” (`:122`, `HANDOVER.md:64`). Tabela kryteriów `GATE-3.md:22` nadal mówi „tylko starsze buildy” — nieaktualne |
+| 3.5 | „**akceptacja kierunku artystycznego przez właściciela**” | SPEŁNIONE dla bramki 3 | D57 (`docs/11:78`, `GATE-3.md:23`); D51 odkłada materiały; recenzja s20: „materiały nadal ‚gra mobilna z 2016’” (`REVIEW-…-gate3-phone.md:14`), oceny materiały 4/10, zużycie 4/10 (`:76`) |
+
+Checklista `docs/06_GRAFIKA_ANTI_AI_SLOP.md:40-46` dla bramki 3:
+
+| Punkt | Stan | Dowód |
+|---|---|---|
+| 1. zestaw kamer kontrolnych | CZĘŚCIOWO | 57 + 46 kamer CAPTURED (`GATE-3.md:67`, s20 `:113-114`); z listy `docs/06:41` brak „kabina noc”, „deszcz noc” (noc/deszcz → Etap 5, `docs/plan/STAGE-3.md:30`) |
+| 2. render z edytora i zrzut z telefonu | CZĘŚCIOWO | kamery kontrolne PASS; **brak zrzutów A16 dla 42 póz par zdjęciowych** (`GATE-3.md:68`, `:96`) |
+| 3. side-by-side z referencją | SPEŁNIONE | pakiet 12 (`GATE-3.md:69`) |
+| 4. przegląd `visual-critic` | CZĘŚCIOWO | pełny zestaw 42 par FAIL (27 R / 15 P / 0 N), pakiet 12 PASS warunkowy (`GATE-3.md:70`); s20 telefon UTRZYMANA, P1 ×3: chodnik na wiszącej płycie, szew muru oporowego, postrzępione cienie na Low (`REVIEW-…-gate3-phone.md:59-62`) |
+| 5. kontrole automatyczne | NIESPEŁNIONE | ostatni raport z 10.11 FAIL (albedo, normalne/UV, obiekty vs teren), nieodświeżony (`GATE-3.md:71`) |
+| 6. wynik PASS/FAIL | ZALICZONA decyzją | `GATE-3.md:72` — punkty 2 i 5 jako dług |
+
+**Co blokuje pełne domknięcie (zaliczenie D57 stoi):**
+1. G3-B na APK `edb5524993` niezmierzony — A16 offline (`GATE-3.md:128`, `HANDOVER.md:96`).
+2. Metryka „≤ 12 klatek > 40 ms na przejazd” czeka na decyzję właściciela (`GATE-3.md:57-61`, `docs/adr/0177-perf-p99-pso-refresh.md:48-53`, `HANDOVER.md:120`); **dla przebiegów kontrolnych s20 liczba klatek > 40 ms nie jest wpisana** (tabele `GATE-3.md:111-128` mają tylko „> 50 ms”). HANDOVER podaje liczby z przebiegów PSO refresh (A 4/2, B 4/2, `HANDOVER.md:60`), nie z przebiegów kontrolnych.
+3. Punkty 2 i 5 checklisty (`GATE-3.md:96`).
+4. GPU A16 bez zapasu: GPU p95 34,5 / 34,3 ms > 33,3 ms klatki (`GATE-3.md:113-114`, `REVIEW-…-gate3-phone.md:16`); PSS zbliża się do limitu 1000 MB (§8, rozbieżność R22).
+5. Test „feelingu” na odcinku niewypełniony (`GATE-3.md:97`).
+6. Brak tagu git po bramce 3 — `docs/03:7` wymaga tagu i aktualizacji `docs/STATUS.md` i `docs/ROADMAP.md`; na origin jest tylko tag `v0.0-gate0`, `docs/STATUS.md:1` ma datę 2026-11-09, `docs/ROADMAP.md` nie istnieje.
+
+**Komendy dla lidera** (A16 odblokowany, bez Unity — „Argon/sesja kodu uruchamiają Unity → adb może padać”, `HANDOVER.md:96`; PHONE_RUN ręcznie, `GATE-3.md:100-101`):
+```
+& ./scripts/gate3-run.ps1 -Serial RFGL34SJYDZ -Segment B -Tier Low -Fps 30 -SkipBuild -Apk artifacts/apk/kamion-0.1.0-edb5524993.apk
+#   -> artifacts/gate3/<ts>/RFGL34SJYDZ/gate3-result.json + cam/*.png + drive/frametimes.csv
+uv run --project tools/perf python tools/perf/p99_spikes.py --summary 20261114-063715 20261114-071223 20261114-182955 <ts-B-edb>
+#   -> klatki > 40/45/50/60 ms na przejazd (metryka ADR 0177) dla wszystkich przebiegów s20
+pwsh scripts/gate3-evidence.ps1 -Tiers Low -Lightings overcast,lowsun -PhoneDir artifacts/gate3/20261114-063715 -Apk artifacts/apk/kamion-0.1.0-edb5524993.apk
+#   -> artifacts/gate3/evidence/gate3-evidence.md (punkt 5 checklisty; exit 0 = PASS, 1 = FAIL, 2 = błąd)
+# S24+ High 60 (tylko za zgodą właściciela; bateria >= 40 % — docs/owner/S24-HIGH-RUN.md:3-4):
+pwsh scripts/gate3-run.ps1 -Serial RZCX60VE8ZY -Segment A -Tier High -Fps 60 -WorldHigh -SkipBuild -Apk artifacts/apk/kamion-0.1.0-<sha>-high.apk
+```
+Parametry: `scripts/gate3-run.ps1:25-49`, `scripts/gate3-evidence.ps1:24-38`, `tools/perf/p99_spikes.py:1-6,14-21` (argument = znacznik czasu katalogu `artifacts/gate3/<ts>`; ścieżka bazowa na sztywno `C:\Users\matma\…\artifacts\gate3`, `:11`). Zrzuty par zdjęciowych z telefonu: `scripts/sbs-gate3.ps1:2-12` renderuje tylko w edytorze — **komendy dla zrzutów 42 póz z telefonu nie ma** (do zrobienia: pozy jako kamery bramki + `gate3-run.ps1 -CameraFilter`).
