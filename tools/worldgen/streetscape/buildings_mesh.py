@@ -1277,6 +1277,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             elif typ == "hall":
                 # plinth (concrete, up to dock floor) + cladding scheme + coping on top
                 zpl = (dk["yard_z"] + S.DOCK_FLOOR_H) if dk else zref + 0.6
+                # ADR 0185: authored plinth top (m, height datum) of a hall on a slope - the rule plinth is 0.6 m
+                # above the MEDIAN ground of the outline, i.e. 2-3 m of dark wall on the low side of a large hall
+                if not dk and b["ovr"].get("hall_plinth_z") is not None:
+                    zpl = min(float(b["ovr"]["hall_plinth_z"]), zt - 1.0)
                 zlow = FK.safe_z(zref + scheme["low"][1], ops, zpl, zt - 0.4, 0.45) if scheme["low"] else None
                 ztopb = FK.safe_z(zt - 0.4 - scheme["top"][1], ops, zpl, zt - 0.4) if scheme["top"] else None
 

@@ -32,7 +32,7 @@ def test_region_c_cannot_change():
     assert not any(x.startswith("override:") for x in t)
     assert not [o["id"] for o in ov if o.get("kind") == "building_rules"]
     sets = [o.get("set") or {} for o in ov]
-    assert not any("hall_windows" in s or "storeys" in s or "hall_sign" in s for s in sets)
+    assert not any("hall_windows" in s or "storeys" in s or "hall_sign" in s or "hall_plinth_z" in s for s in sets)
     assert not any(s.get("wall_material") in ("hall_wall_smooth", "cladding_vertical_grey") for s in sets)
     assert not any(o.get("kind") == "building_part" for o in ov)  # so no ground_z_evrf2007 of a part either
 
@@ -78,7 +78,7 @@ def test_dojlidy_buildings_after_overrides():
     # the main hall keeps the BDOT10k id (one piece) and both sets (0179 colour entry + 0185 cladding entry)
     assert not [i for i in blds if i.startswith(ROSTI + "#cut")]
     assert hall["ovr"] == {"wall_material": "hall_wall_smooth", "hall_bands": False, "hall_windows": False,
-                           "hall_sign": False}
+                           "hall_sign": False, "hall_plinth_z": 152.9}
     assert hall["poly"].intersection(wing["poly"]).area < 0.5
     assert wing["poly"].area == pytest.approx(3234, rel=0.02) and wing["typ"] == "hall"
     # wing roof 5.5 m under the hall roof (LoD1 base 152.06 + 18.92 / + 13.4)

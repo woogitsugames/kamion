@@ -198,7 +198,8 @@ overrides:
       same height (not seen from the street). The main hall keeps the building id of the BDOT10k outline.
     confidence: medium
     verify: owner photo session (Kuronia, north wall of the plant); height of the wing and of the annex
-    set: {typology: hall, wall_material: hall_wall_smooth, hall_bands: false, hall_windows: false, hall_sign: false}
+    set: {typology: hall, wall_material: hall_wall_smooth, hall_bands: false, hall_windows: false, hall_sign: false,
+          hall_plinth_z: 152.9}
   - id: rosti-hall-cladding
     target: {building: "bdot:2BE4B431-BC59-1BF0-E053-CC2BA8C0D140"}
     reason: >-
@@ -207,10 +208,14 @@ overrides:
       The rule cladding read as a grid of blocks and the hashed window row does not exist (review 0179 P1).
       hall_sign false: the rule's board (a dark blank plate under the roof edge in render r1) stands where the
       real wall carries the company sign, which is not reproduced.
+      hall_plinth_z 152.9 m: on the photo the dark plinth of the north wall is ~0.5 m high above the ground at the
+      NE corner (NMT 152.3-152.9 along the wall); the rule plinth (0.6 m above the median ground 153.9 of the
+      outline) was 2.2 m of dark wall there - measured in render r3: cladding 293 px against 284 px on the photo
+      (+3 %), but 40 px of plinth against ~10 px. WORKING_VALUE +-0.3 m.
       Adds to rosti-hall-colour (sets of one building are merged, ADR 0185).
     confidence: high
     verify: none
-    set: {wall_material: hall_wall_smooth, hall_windows: false, hall_sign: false}
+    set: {wall_material: hall_wall_smooth, hall_windows: false, hall_sign: false, hall_plinth_z: 152.9}
   - id: kuronia3-office-block-facades
     target: {building: "override:kuronia3-office-block"}
     reason: >-
