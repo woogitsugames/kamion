@@ -12030,6 +12030,20 @@
     0.0
    ]
   },
+  "chain_bollard": {
+   "alpha_cutoff": 0.5,
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "rough": 0.5,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture": "chain_bollard"
+  },
   "chimney_brick": {
    "color": [
     0.2,
@@ -12080,6 +12094,56 @@
     0.5,
     0.0
    ]
+  },
+  "cladding_vertical_grey": {
+   "color": [
+    0.33,
+    0.335,
+    0.34
+   ],
+   "metal": 0.2,
+   "rough": 0.45,
+   "runoff": true,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "splash_h": 0.6,
+   "texture_set": "cladding_vertical",
+   "tint_linear": true
+  },
+  "cladding_vertical_grey__far_office": {
+   "base": "cladding_vertical_grey",
+   "color": [
+    0.33,
+    0.335,
+    0.34
+   ],
+   "rough": 0.45,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.9
+   ],
+   "texture_set": "facade_far",
+   "tint_linear": true
+  },
+  "cladding_vertical_grey__far_ribbon": {
+   "base": "cladding_vertical_grey",
+   "color": [
+    0.33,
+    0.335,
+    0.34
+   ],
+   "rough": 0.45,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.9
+   ],
+   "texture_set": "facade_far",
+   "tint_linear": true
   },
   "collision_asphalt": {
    "collision": true,
@@ -13253,6 +13317,26 @@
     0.0
    ],
    "texture_set": "sandwich_ribbed",
+   "tint_linear": true
+  },
+  "hall_wall_smooth": {
+   "color": [
+    0.55,
+    0.56,
+    0.55
+   ],
+   "metal": 0.2,
+   "panel_m": [
+    6.0,
+    1.15
+   ],
+   "rough": 0.45,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "texture_set": "sandwich_smooth",
    "tint_linear": true
   },
   "hall_wall_white": {
