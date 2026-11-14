@@ -1,0 +1,13 @@
+tier=Low lighting=overcast msaa=2 renderScale=0.75
+krywlany-runway: objects=19 drawsEst=30 shadowDrawsEst=5 trisK=131 trisExact=131508 (estimate, before SRP batching)
+  krywlany-runway instanced (props+trees): draws 103, instances 367, triangles 109k, cells 13, forest HLOD cells 0, trianglesExact 109536
+krywlany-runway-paint: objects=28 drawsEst=54 shadowDrawsEst=0 trisK=125 trisExact=125589 (estimate, before SRP batching)
+  krywlany-runway-paint instanced (props+trees): draws 19, instances 1, triangles 7k, cells 48, forest HLOD cells 25, trianglesExact 7984
+kuronia2-front: objects=48 drawsEst=216 shadowDrawsEst=31 trisK=334 trisExact=334408 (estimate, before SRP batching)
+  kuronia2-front instanced (props+trees): draws 72, instances 46, triangles 21k, cells 158, forest HLOD cells 75, trianglesExact 21183
+photo-P11-063: objects=48 drawsEst=323 shadowDrawsEst=3 trisK=343 trisExact=343176 (estimate, before SRP batching)
+  photo-P11-063 instanced (props+trees): draws 117, instances 239, triangles 15k, cells 175, forest HLOD cells 11, trianglesExact 15838
+photo-P11-094: objects=43 drawsEst=199 shadowDrawsEst=45 trisK=292 trisExact=292393 (estimate, before SRP batching)
+  photo-P11-094 instanced (props+trees): draws 91, instances 65, triangles 16k, cells 163, forest HLOD cells 47, trianglesExact 16984
+route-s0457: objects=41 drawsEst=197 shadowDrawsEst=3 trisK=144 trisExact=144099 (estimate, before SRP batching)
+  route-s0457 instanced (props+trees): draws 55, instances 40, triangles 13k, cells 164, forest HLOD cells 44, trianglesExact 13919
