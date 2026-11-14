@@ -10,7 +10,7 @@ Autor: Vibe (GLM), data dostępu źródeł: 2026-11-13, raport po polsku.
 | Zadanie | Wynik | Status |
 |---|---|---|
 | 1. Letnie zdjęcia (VI–VIII) 9 ulic | 18 kadrów (M51-101…118) + 15 kadrów uzupełniających (M51-119…133) przypisanych do **prawdziwych ulic wg geotagu ≤25 m od osi** (aleja, Motoszko, Sokólska, Kombatantów, Andersa); kierunek **UNVERIFIED** (Commons: 0/33 plików z GPSImgDirection). **Skidelska/Wileńska/Łańcucka: 0 kadrów z wnętrza ulicy** | uczciwie — luka zdjęciowa nie została zamknięta (patrz Luki) |
-| 2. Żywopłoty ≥ 20 odcinków | **21 odcinków** (M51-204…233; M51-214 usunięty w M51-FIX-2), każdy z **obejrzanego kadru** (36 kadrów przeanalizowanych, rejestr `hedge_viewings.json`); 11 fałszywych odcinków usuniętych po obejrzeniu | gotowe (próg ≥20 spełniony) |
+| 2. Żywopłoty ≥ 20 odcinków | po M51-FIX-2: **13 odcinków żywopłotu/pasa krzewów** (+ 3 szpalery/zadrzewienia i 5 rabat ozdobnych — osobne kategorie, nieliczone); M51-214 usunięty; każdy z **obejrzanego kadru** (rejestr `hedge_viewings.json`) | **próg ≥20 NIE spełniony (13/20)** |
 | 3. Detekcja koron kafla [776971, 595199, 779019, 597247] | `crowns.geojson` — **5258 koron** po naprawie odbicia N–S; osobna warstwa `compact_greenery.geojson` (771 poligonów zwartej zieleni r>6,5 m); `%` środków na zieleń w 3 oknach 300×300 m: **100/99,8/100** (próg >80% ✓); data ortofoto **z GetFeatureInfo: 2024-05-27** | gotowe |
 | 4. Projekt zieleni Al. Tysiąclecia (Strabag 2021/22) | bez zmian — dane przetargowe i nasadzenia **SOURCED** (74 drzewa, 109 krzewów, 20 600 m² trawników, ~385 mb ekranów); **gatunki/obwody/rozstaw — UNVERIFIED** | częściowo — zgodnie z „jeśli dostępne" |
 
@@ -49,20 +49,30 @@ Autor: Vibe (GLM), data dostępu źródeł: 2026-11-13, raport po polsku.
 
 **Usunięte po obejrzeniu (11 odcinków z pierwotnych 18):** M51-201 (luźne krzewy przy płotach, nieciągłe — nie żywopłot), 202 (brak żywopłotu — kadr źródłowy obejrzany), 203 (brak), 206 (brak), 208 (duplikat pasa z M51-207 — ten sam plik), 209/210 (brak w kadrze), 211 (pomnik/krzyż, brak), 213 (barierki, brak), 216 (ten sam plik co kadr M51-117 — brak żywopłotu; ujednolicono), 217 (**ekran akustyczny obrośnięty** 3–4 m — nie żywopłot). Przegląd kazał usunąć 6 (201, 207, 211, 213, 214, 217); po niezależnym obejrzeniu każdego kadra usunięto 11, a 207 (pas swobodnych krzewów — nie ekran, zweryfikowane) i 214 **zostawiono** z opisem. **M51-FIX-2:** M51-214 **usunięty** — kadr M51-112 (Commons 20220725_123946) obejrzany ponownie: po prawej trawnik z zaparkowanymi samochodami przed blokiem, żywopłotu brak (ten sam błąd zgłoszony w s17 i s19).
 
-**Wynik — 21 odcinków (M51-204…233, bez 214):**
+**Wynik po M51-FIX-2 — 21 wierszy odcinków (M51-204…233, bez 214) w 3 kategoriach** (kolumna `obiekt` w manifeście); kategorie ustalone po obejrzeniu każdego kadra 2026-11-14 (Read na JPG z Commons, ZIP v3):
+
+| kategoria | odcinki | liczba |
+|---|---|---|
+| **żywopłot / pas krzewów** (liczony do progu) | 204, 205*, 207, 212, 215, 218, 220, 223, 224, 225, 228, 232, 233 | **13** |
+| szpaler/zadrzewienie (NIE żywopłot) | 219 (zarośla wierzbowe >3 m), 227 (rząd drzew iglastych za parkingiem), 231 (zadrzewienie >6 m za placem zabaw) | 3 |
+| rabata ozdobna (NIE żywopłot) | 221, 222 (nasadzenia przy elewacji), 226 (rabata mieszana z trawami), 229 (przedogródek: krzewy + byliny), 230 (nasadzenia przy elewacji) | 5 |
+
+Żywopłoty / pasy krzewów wg ulic:
 
 | ulica / lokalizacja | odcinki | typy | wysokości |
 |---|---|---|---|
 | Aleja Tysiąclecia PP | 204, 207, 212, 215 | liściaste ×2, pas swobodnych krzewów ×1, żywotnik ×1 | 1,2–3,0 m |
 | Michała Motoszko | 205* | liściasty | 1,0 m |
 | Sokólska | 218, 223, 224, 225 | liściaste ×2, iglaste (żywotnik) ×2 | 1,2–2,0 m |
-| Kombatantów | 232 | liściasty | 2,5–3,0 m |
-| Generała W. Andersa | 219, 220, 233 | pas swobodny ×1, luźne krzewy ×1, liściasty ×1 | 1,0–4,0 m |
-| kwartały między aleją a Andersą (poza progiem 25 m — uczciwie oznaczone) | 221, 222, 226, 227, 228, 229, 230, 231 | liściaste ×7, iglasty ×1 | 0,5–6 m |
+| Kombatantów | 232 | liściaste zarośla przy siatce (M51-FIX-2: wysokość 1,0–1,5 m, nie 2,5–3) | 1,0–1,5 m |
+| Generała W. Andersa | 220, 233 | luźne krzewy ×1, liściasty ×1 | 0,8–1,0 m |
+| wnętrze kwartału (poza progiem 25 m) | 228 | grupa swobodnych krzewów | 1,0–1,5 m |
 
 \* M51-205: geotag 27,8 m od osi Motoszko — **poza progiem 25 m**, atrybucja ESTIMATED (ujawnione w uwagach i w audycie).
 
-Razem z **G7-P01…P12** (wiosna 2024, ulice osiedla: Wołkowyska, Kowieńska, Grodzieńska, Wileńska, Lidzka, Racławicka, Łańcucka) — łącznie **33 odcinki przyuliczne/przyposesyjne**, z czego **21 letnich, wszystkie z obejrzanych kadrów** (próg ≥20 ✓).
+**Uczciwy wynik progu:** **13 odcinków żywopłotu/pasa krzewów < 20 — próg „≥ 20 odcinków” NIE jest spełniony** (z przypisaną ulicą ≤ 25 m: 11). Wcześniejsze „22” liczyło fałszywy odcinek 214, rabaty i zadrzewienia. Uwagi z przeglądu s19 nieprzeliczone w M51-FIX-2 (kadry nie były w zakresie zadania): 212 (iglaki >3 m — raczej drzewa), 215 (żywopłotu i ekranu nie widać wyraźnie), 218 (masa drzew/krzewów za ogrodzeniem, nie formowany żywopłot) — pozostają liczone, ale **UNVERIFIED co do typu**; przy ich odrzuceniu zostaje 10. Domknięcie progu wymaga nowych letnich kadrów z wnętrza ulic osiedla (Luki, p. 1).
+
+Razem z **G7-P01…P12** (wiosna 2024, ulice osiedla: Wołkowyska, Kowieńska, Grodzieńska, Wileńska, Lidzka, Racławicka, Łańcucka) — łącznie **25 odcinków żywopłotu przyulicznych/przyposesyjnych** (12 wiosennych G7 + 13 letnich M51, wszystkie z obejrzanych kadrów).
 
 ## Zadanie 3 — odtwarzalna detekcja koron (M51-FIX: rejestracja, zwarta zieleń, filtr nie-roślinności)
 
@@ -97,4 +107,5 @@ Razem z **G7-P01…P12** (wiosna 2024, ulice osiedla: Wołkowyska, Kowieńska, G
 2. **KartaView outage**: `storage7.openstreetcam.org` HTTP 502 (testy 2026-11-13, trzykrotnie) — 51 kadrów sekwencji przywlotowych niepobranych; azymuty SOURCED z metadanych API zachowane, licencja CC BY-SA 4.0 (referencja, nie tekstura).
 3. **OCR SIWZ/RDOŚ** (gatunki/obwody/rozstaw zadania 4) — skany w ZIP, do dokończenia przy dostępnym budżecie analizy obrazu.
 4. **Kierunek kamery UNVERIFIED** we wszystkich kadrach Commons (brak GPSImgDirection); jedyny opisany z treści: lokalizacja M51-118 (wiat „353 SOKÓŁSKA / AL. TYSIĄCLECIA").
-5. **Kwartalne odcinki żywopłotów (8/21)** leżą poza progiem 25 m od osi nazwanych ulic — oznaczone uczciwie w kolumnie uwagi i uwzględnione w audycie; wynikają z realnej geometrii spaceru (aleja↔Andersa), nie z błędu przypisania.
+5. **Wiersze odcinków z wnętrza kwartałów (8/21: 221, 222, 226–231)** leżą poza progiem 25 m od osi nazwanych ulic; po M51-FIX-2 tylko jeden z nich (228) jest liczony jako pas krzewów — reszta to rabaty lub zadrzewienia.
+6. **Próg żywopłotów ≥ 20 niespełniony (13)** — patrz Zadanie 2.
