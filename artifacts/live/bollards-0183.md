@@ -33,3 +33,5 @@ po `restore done` w `artifacts/logs/pipeline-r2.status`: `uv run --project tools
 - Kamera dopasowana do P11-063 (`bollards-photo-13m`, 13 m, hfov 66°): dolny łańcuch ginie na jasnym bruku -> r3b: nieprzezroczysty rdzeń łańcucha (szer. drutu, łata lita, 2 mm od karty). W tle: `pipeline_r3b.ps1` (build -> import+Low+High r3b), pytest chain.
 ## NASTĘPNY KROK (komenda)
 `Get-Content artifacts/logs/pipeline-r3b.status` -> po PIPELINE DONE obejrzeć `renders/r3b-*/bollards-photo-13m.png`, potem merge origin/main (generated --ours), ADR WYNIKI_*, robocopy, KONIEC.
+- 17:00 r3b (rdzeń łańcucha) build+import+Low+High OK; kadr 13 m: górny łańcuch ciągły jak na zdjęciu, dolny na bruku słabszy (otwarte). Merge origin/main 8b2f3a3ac bez konfliktów; pytest po merge 153/154 (1 fail = forest cell industrial-c, wspólne Data/raw). Dowody skopiowane do main `artifacts/bollards-0183/` (+ logs/). Lokalny overrides Dojlid przeniesiony do `artifacts/bollards-0183/local-overrides.dojlidy.yaml` (main ma własny plik 0179); blok do wklejenia w ADR §Integracja.
+## KONIEC

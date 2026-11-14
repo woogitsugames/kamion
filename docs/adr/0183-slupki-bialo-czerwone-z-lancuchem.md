@@ -138,6 +138,9 @@ stage,materials,export}.py` i testu 0183. EditMode (Unity 6000.3.28f1, 2× w s20
 `TruckDoorCrownTests` ×3 („Build canonical truck before fixture tests”), `MirrorPresentationTests` ×2 („build TRAKT
 before testing”), `LightPostPolicyTests.ImportedGlassSemanticIsRestrictedAndStillReceivesShadows` (importer szkła
 ciężarówki) — fixture ciężarówki niezbudowanej w tym worktree, niezwiązane z 0183.
+Po `git merge origin/main` (8b2f3a3ac, bez konfliktów): test 0183 + meble/streetscape/materiały + `test_dojlidy_0179`
++ trzy wcześniej czerwone testy industrial-c: 153 pass, 1 fail (`test_forest_trees_reference_their_cell`, komórka
+lasu `25_16` w instancjach industrial-c na wspólnym `Data/raw` — dane innego worktree, nie kod tej gałęzi).
 
 ## Otwarte
 - Wysokość 0,80 vs 0,90 m i długość przęsła — do pomiaru na miejscu (właściciel) albo z drugiego zdjęcia z obiektem
