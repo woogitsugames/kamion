@@ -161,3 +161,6 @@ Marki/szyldy/reklamy widoczne w kadrach — tylko referencja, nie odtwarzamy.
 - Średnice masztów i wymiary komory: po jednym odczycie proporcją do soczewki (±15–30 %).
 - Sezon: brak kadrów zimowych ze śniegiem i nocnych. Godzina w API KartaView bez strefy — pora dnia „dzień” z obrazu.
 - Miniatury Commons: sha256 dotyczy miniatury 1920 px serwowanej 2026-11-14 (przy ponownym wygenerowaniu po stronie Commons suma może się zmienić; wtedy porównać z sha1 oryginału z `uwagi`).
+
+## Errata lidera (s20, 2026-11-14)
+Patrz `docs/reports/REVIEW-2026-11-14-s20-cloud-m66.md` — errata obowiązuje przed użyciem danych.

@@ -119,3 +119,6 @@ Seed `random.Random(20261114).sample(ids, 16)` → 16 z 80 wierszy (20 %). Ponow
 ## 7. fetch.py
 
 `python3 -I fetch.py [--out katalog] [--skip-large]` — pobiera 33 pliki (ok. 114 MB, w tym 39,7 MB PDF Dz.U.; `--skip-large` go pomija) i weryfikuje sumy; exit ≠ 0 przy braku pliku lub niezgodności. Test w czystym katalogu (2026-11-14): 16 plików GUGiK/PAŻP/Dz.U. OK (sha256 zgodne, WMS deterministyczny), 17 plików Commons — HTTP 429 z adresu sesji.
+
+## Errata lidera (s20, 2026-11-14)
+Patrz `docs/reports/REVIEW-2026-11-14-s20-cloud-m58.md` — errata obowiązuje przed użyciem danych.

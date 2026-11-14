@@ -359,3 +359,6 @@ Seed `random.Random(20261114).sample(ids, 48)` (48/239 = 20,1 %). Sprawdzono: po
 ## 10. Pliki
 
 `manifest.csv` (25 kolumn = kolumny bloku + `url_pliku`, `sha256`) · `fetch.py` (135 plików, 69 393 145 B, w tym 2 PDF 29,6 MB; `--skip-pdf`) · `overpass-query.ql`, `overpass-result.json` · `inventory.json`, `crossings.json` · `data/` (indeksy wycinków, odczyty `observations.py`, opisy kadrów, cytaty) · `tools/` (geo, inventory, crossings, transect, crossing_crop, crossing_profile, build_manifest, build_readme) · `audit_20_percent.json` · `sources.md` · `STATUS.md`. Zdjęć i PDF w gicie nie ma (`.gitignore`).
+
+## Errata lidera (s20, 2026-11-14)
+Patrz `docs/reports/REVIEW-2026-11-14-s20-cloud-m65.md` — errata obowiązuje przed użyciem danych.
