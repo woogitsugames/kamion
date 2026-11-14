@@ -87,35 +87,41 @@ W literaturze dostępnej otwarcie (abstrakty SAE/JWEIA, rozprawa Gaylarda) **nie
 
 Każdy kadr obejrzany narzędziem wizyjnym (opis „co widać" w kolumnie `opis_co_widać` manifestu); marki widoczne na zdjęciach traktowane wyłącznie jako „marka widoczna, tylko referencja"; CC BY-SA = „referencja, nie tekstura"; NC/ND/płatne stocki = link „tylko referencja, nie pobrano". Zdjęcia wyłącznie z Wikimedia Commons (Openverse/Panoramax/KartaView: patrz §6).
 
-**Stan: 5/20 zakwalifikowanych kadrów tylnych drzwi** (P18-105, P18-107, P18-108, P18-109, P18-118); dodatkowo 15 kandydatów przeanalizowanych i odrzuconych (pełne wiersze z uzasadnieniem w `manifest.csv`, P18-101…P18-120). Dobór kolejnych kadrów trwa — kolejne commity.
+**Stan: 9/20 zakwalifikowanych kadrów tylnych drzwi** (P18-104, P18-105, P18-107, P18-108, P18-109, P18-111, P18-118, P18-121, P18-133); dodatkowo 32 kandydatów przeanalizowanych i odrzuconych (pełne wiersze z uzasadnieniem w `manifest.csv`, P18-101…P18-135). Dobór kolejnych kadrów trwa — kolejne commity. Trzy kadry zakwalifikowano po powtórnej weryfikacji (recheck) wprost na tylnych drzwiach (P18-104, P18-111, P18-121).
 
 ### 3.1 Zakwalifikowane kadry (pełne dane: `manifest.csv`)
 
 | id | Sezon | Strefy najbrudniejsze | Kształt brudu | Zacieki/skrzydło | Krycie | Kolor | Licencja / status |
 |---|---|---|---|---|---|---|---|
-| P18-105 (MB 1850 + naczepa, FULDA) | zima (styczeń) | próg → belka RUPD → dół drzwi → uszczelka → rygle | rozbryzg kropel + pionowe zacieki od zawiasów (~30% wysokości drzwi) | 3 | średnie | szary | CC0 / OK |
-| P18-107 (naczepa BANEX, PL→GR) | lato | próg → belka RUPD → dół drzwi | rozbryzg kropel | brak | słabe | szary | CC BY-SA 4.0 / REFERENCJA |
-| P18-108 (przewóz drobiu, PL, KRONE) | jesień | próg → belka RUPD → dół drzwi → rygiel → uszczelka | rozbryzg kropel + zacieki od zawiasów i krawędzi dachu (~30%) | 3 | średnie | szaro-czarny | CC BY-SA 4.0 / REFERENCJA |
-| P18-109 (Volvo FH420 + naczepa) | lato | próg → belka RUPD → dół drzwi → uszczelka → rygle | rozbryzg kropel | brak | średnie | szary | CC BY-SA 4.0 / REFERENCJA |
-| P18-118 (chłodnia + TrailerTail, drzwi otwarte) | zima (grudzień, błoto pośniegowe) | próg → belka RUPD → dół drzwi | rozbryzg kropel | brak | średnie | szary | CC BY-SA 3.0 / REFERENCJA |
+| P18-104 (MB 1850 + naczepa, FULDA) | zima (styczeń) | próg → belka RUPD → dół drzwi | rozbryzg kropel + zacieki | b.d. | średnie | szaro-czarniawy | CC0 / OK |
+| P18-105 (MB 1850 SV2 + naczepa, FULDA) | zima (styczeń) | próg → belka → dół drzwi → uszczelka → rygle | rozbryzg + pionowe zacieki od zawiasów (~30% wys. drzwi) | 3 | średnie | szary | CC0 / OK |
+| P18-107 (naczepa BANEX, PL→GR) | lato | próg → belka → dół drzwi | rozbryzg kropel | brak | słabe | szary | CC BY-SA 4.0 / REFERENCJA |
+| P18-108 (drobiówka PL, KRONE) | jesień | próg → belka → dół drzwi → rygiel → uszczelka | rozbryzg + zacieki od zawiasów i krawędzi dachu (~30%) | 3 | średnie | szaro-czarny | CC BY-SA 4.0 / REFERENCJA |
+| P18-109 (Volvo FH420 + naczepa) | lato | próg → belka → dół drzwi → uszczelka → rygle | rozbryzg kropel | brak | średnie | szary | CC BY-SA 4.0 / REFERENCJA |
+| P18-111 (tył naczepy, Berlin) | zima (grudzień, błoto pośniegowe) | próg → dół drzwi (dolna połowa) | rozbryzg + pionowe zacieki od progu (~20% wys. drzwi) | 3 | średnie | szary | CC BY-SA 4.0 / REFERENCJA |
+| P18-118 (chłodnia + TrailerTail, drzwi otwarte) | zima (grudzień, błoto pośniegowe) | próg → belka → dół drzwi | rozbryzg kropel | brak | średnie | szary | CC BY-SA 3.0 / REFERENCJA |
+| P18-121 (tył naczepy Schmitz, A419) | zima (styczeń, błoto pośniegowe) | dół drzwi → belka → próg | rozbryzg — poziome smugi i plamy | brak | słabe | brązowy | CC BY-SA 2.0 / REFERENCJA |
+| P18-133 (chłodnia Chereau) | wiosna (kwiecień) | próg → belka → dół drzwi | rozbryzg kropel | brak | słabe | szary | CC BY-SA 4.0 / REFERENCJA |
 
-Wspólny wzorzec (5 kadrów): brud koncentryczny **od dołu** (próg, belka RUPD, dół drzwi), rozbryzg kropel jako dominująca faktura; pionowe zacieki (3/skrzydło) startują od zawiasów/krawędzi dachu; górna połowa drzwi czysta. Zgodne z mechanizmem §1 (balistyka dużych cząstek nisko, entrainment drobnych nisko-średnio).
+Wspólny wzorzec (9 kadrów): brud koncentryczny **od dołu** (próg, belka RUPD, dół drzwi), rozbryzg kropel jako dominująca faktura; pionowe zacieki (3/skrzydło) startują od zawiasów/krawędzi dachu (lato/jesień) lub od progu (zima); górna połowa drzwi czysta. Kadry zimowe (pośniegowe błoto) dają osad brązowy/szary, letnie szaro-beżowy/szary. Zgodne z mechanizmem §1.
 
 ### 3.2 Kandydaci odrzuceni (przeanalizowani, z powodów)
 
-P18-101 (naczepa niskoramienna, brak drzwi), P18-102 (kadr z wystawy, drzwi niewyraźne — do ponownej oceny w audycie), P18-103 (tipper bez drzwi), P18-104 (drzwi niewyraźne w 1280 px — do audytu), P18-106 (cysterna), P18-110 (concept truck targowy — przydatny jako wzór czystego tyłu), P18-111 (zimowy tył, ale drzwi niewyraźne wg wizji — do audytu), P18-112 (oldtimer), P18-113 (cysterna), P18-114 (widok boczny), P18-115 (tył poza kadrem), P18-116 (tył kabiny bez naczepy), P18-117 (sam ciągnik, zimowy kontekst), P18-119 (bok kurtynowej — dowód bocznego brudzenia firany: 3 zacieki/skrzydło od góry, ~80% wysokości), P18-120 (bok).
+P18-101 (naczepa niskoramienna, brak drzwi), P18-102 (recheck: zderzak ciągnika bez naczepy — ale dokumentacja zimowego brudzenia belki RUPD i lamp), P18-103 (tipper bez drzwi), P18-106 (cysterna), P18-110 (concept truck targowy — wzór czystego tyłu), P18-112 (oldtimer), P18-113 (cysterna), P18-114 (bok chłodni), P18-115 (tył poza kadrem), P18-116 (tył kabiny bez naczepy), P18-117 (sam ciągnik, zimowy kontekst), P18-119 (bok kurtynowej — dowód bocznego brudzenia firany: 3 zacieki/skrzydło od góry, ~80% wysokości), P18-120 (bok), P18-122 (drzwi poza kadrem/niewyraźne), P18-123 (front), P18-124 (bok), P18-125 (bok), P18-126 (bok), P18-127 (bok), P18-128 (bok), P18-129 (bok), P18-130 (kontenery, bok), P18-131 (bok, ruch), P18-132 (bok), P18-134 (cysterna), P18-135 (bok).
 
 ## 4. Zestawienie liczbowe z kadrów
 
-**DANE CZĘŚCIOWE (n=5 zakwalifikowanych; stan na 2026-11-14, uzupełniane po sięgnięciu 20 kadrów):**
+**DANE CZĘŚCIOWE (n=9 zakwalifikowanych; stan na 2026-11-14, uzupełniane po sięgnięciu 20 kadrów):**
 
-- **Mediana liczby zacieków na skrzydło: 3** (obserwacje: 3, 3, brak, brak, brak — zacieki pojawiają się w ~2/5 kadrów; ESTIMATED z opisów wizyjnych, id kadrów: P18-105, P18-108).
-- **Odsetek kadrów z brudnym progiem: 5/5 (100%)**; **belką RUPD: 5/5 (100%)**; lampy: 0/5 (w żadnym kadrze lampa nie wskazana jako strefa brudna).
-- **Dolna część drzwi brudna: 5/5 (100%)**; uszczelka środkowa/rygle wskazane w 3/5.
-- **Typowa długość zacieków: ~30% wysokości drzwi → ESTIMATED ok. 0,8 m** (metoda: wizja podaje długość zacieków w % wysokości drzwi; przyjęto typową wysokość drzwi naczepy **2,65 m** [zakres 2,6-2,7 m]; 0,30 × 2,65 m ≈ 0,80 m; id kadrów: P18-105, P18-108).
-- **Górna granica „filmu dolnego" (jednolitego rozbryzgu): dół drzwi, tj. strefa progu/belki + dolna partia skrzydeł** — w 5/5 kadrach film nie przekracza dolnej ~1/3 drzwi; górna połowa czysta. ESTIMATED: film dolny sięga ok. 0,8-1,0 m nad próg (jak wyżej).
+- **Mediana liczby zacieków na skrzydło: 3** (policzalne zacieki w 3/9 kadrów — zawsze 3; id kadrów: P18-105, P18-108, P18-111).
+- **Odsetek kadrów z brudnym progiem: 9/9 (100%)**; **belką RUPD: 9/9 (100%)**; **dół drzwi: 9/9 (100%)**; **uszczelka/rygle: 3/9**; **lampy: 0/9** (w żadnym kadrze lampa nie wskazana jako strefa brudna).
+- **Krycie: średnie 6/9, słabe 3/9; brak kadrów z pełnym kryciem** (mocno zabrudzone tyły to rzadkość w otwartej fotografii — patrz §6).
+- **Barwa (słownie): szary/szaro-czarniawy 7/9, brązowy (pośniegowy) 1/9, szaro-czarniawy 1/9**; zimowe kadry pośniegowe wyraźnie brązowieją (P18-121), letnie pozostają szare.
+- **Typowa długość zacieków: ~20-30% wysokości drzwi → ESTIMATED ok. 0,5-0,8 m** (metoda: wizja podaje długość w % wysokości drzwi; przyjęto typową wysokość drzwi naczepy **2,65 m** [zakres 2,6-2,7 m]; 0,20 × 2,65 ≈ 0,53 m, 0,30 × 2,65 ≈ 0,80 m; id kadrów: P18-105, P18-108, P18-111).
+- **Górna granica „filmu dolnego" (jednolitego rozbryzgu): dolna część drzwi** — w 9/9 kadrach film/rozbryzg nie przekracza dolnej ~1/3 wysokości drzwi; górna połowa czysta. ESTIMATED: film dolny sięga ok. 0,5-1,0 m nad próg (jak wyżej).
+- **Sezony qualified: zima 5/9 (styczeń ×3, grudzień ×2), lato 2/9, jesień 1/9, wiosna 1/9** — reprezentacja zimowa wystarczająca do porównania barwy (§2.2).
 
-Wszystkie liczby z kadrów są **ESTIMATED** (opisy narzędzia wizyjnego na miniaturach 1280 px; proporcje pikselowe przeliczone przez model wizyjny, nie mierzone pikselowo w edytorze); nie są to pomiary.
+Wszystkie liczby z kadrów są **ESTIMATED** (opisy narzędzia wizyjnego na miniaturach 1280 px; proporcje przeliczone przez model wizyjny, nie mierzone pikselowo w edytorze); nie są to pomiary.
 
 ## 5. Pięć najlepszych kadrów dla artysty
 
