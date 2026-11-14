@@ -52,6 +52,10 @@ namespace Game.Rendering
         public static float? FsrSharpness;
         public static bool? Pacing;
         public static int? LampPools;
+        /// <summary>ADR 0191 A/B: rq_lampspec 0|1 - GGX highlight of the lamp pools.</summary>
+        public static bool? LampPoolSpec;
+        /// <summary>s20 night-int A/B: rq_glare 0|1 (lamp glare halo), rq_nightwin 0|1 (lit windows), rq_lampfloor 0|1 (night lamp-lit floor).</summary>
+        public static bool? GlareAb, NightWindowsAb, LampFloorAb;
         public static bool? WorldGi;
         public static bool? WorldSun;
         public static int? EnvCaptureInterval;
@@ -97,7 +101,7 @@ namespace Game.Rendering
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
                                   TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue || ForestHlod.HasValue ||
                                   VehicleLook.HasValue || EnvCapture.HasValue || ScaleMin.HasValue || Upscale != null ||
-                                  FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue || EnvCaptureInterval.HasValue ||
+                                  FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue || LampPoolSpec.HasValue || GlareAb.HasValue || NightWindowsAb.HasValue || LampFloorAb.HasValue || EnvCaptureInterval.HasValue ||
                                   EnvCaptureLod.HasValue || ShadowCascades.HasValue || ShadowResolution.HasValue || ShadowDepthBias.HasValue || ShadowNormalBias.HasValue || ShadowSplit1.HasValue || ShadowSplit2.HasValue || Ab != null ||
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
@@ -115,7 +119,8 @@ namespace Game.Rendering
             TreeThin = F(arg("rq_thin")); SimpleFoliage = B(arg("rq_vegshader")); ForestHlod = F(arg("rq_hlod"));
             VehicleLook = B(arg("rq_a8")); EnvCapture = I(arg("rq_envcap"));
             WorldGi = B(arg("rq_worldgi")); WorldSun = B(arg("rq_worldsun"));   // ADR 0064
-            ScaleMin = F(arg("rq_scalemin")); FsrSharpness = F(arg("rq_fsrsharp")); Pacing = B(arg("rq_pacing")); LampPools = I(arg("rq_lamppools"));
+            ScaleMin = F(arg("rq_scalemin")); FsrSharpness = F(arg("rq_fsrsharp")); Pacing = B(arg("rq_pacing")); LampPools = I(arg("rq_lamppools")); LampPoolSpec = B(arg("rq_lampspec"));
+            GlareAb = B(arg("rq_glare")); NightWindowsAb = B(arg("rq_nightwin")); LampFloorAb = B(arg("rq_lampfloor"));
             EnvCaptureInterval = I(arg("rq_envcap_iv")); EnvCaptureLod = F(arg("rq_envcap_lod"));
             ShadowCascades = I(arg("rq_shadowcasc")); ShadowResolution = I(arg("rq_shadowres"));
             ShadowDepthBias = F(arg("rq_shadowbias")); ShadowNormalBias = F(arg("rq_shadownormal"));
@@ -160,7 +165,7 @@ namespace Game.Rendering
             Upscale = string.IsNullOrEmpty(up) ? null : up.ToLowerInvariant();
             return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} dither={Dither} skydither={SkyDither} hdr={Hdr} a2c={LeafA2C} trees={Trees} " +
                          $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage} hlod={ForestHlod} a8={VehicleLook} envcap={EnvCapture} " +
-                         $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools} " +
+                         $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools} lampspec={LampPoolSpec} glare={GlareAb} nightwin={NightWindowsAb} lampfloor={LampFloorAb} " +
                          $"envcap_iv={EnvCaptureInterval} envcap_lod={EnvCaptureLod} shadowcasc={ShadowCascades} shadowres={ShadowResolution} ab={Ab} ab_period={AbPeriod} " +
                          $"mirror_cap={Game.Core.MirrorOverrides.Cap} mirror_lod={Game.Core.MirrorOverrides.LodScale} mirror_far={Game.Core.MirrorOverrides.FarClip} " +
                          $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
@@ -192,6 +197,10 @@ namespace Game.Rendering
             if (FsrSharpness.HasValue) t.fsrSharpness = FsrSharpness.Value;
             if (Pacing.HasValue && !Pacing.Value) t.pacingFallbackFps = 0;
             if (LampPools.HasValue) t.lampPools = LampPools.Value;
+            if (LampPoolSpec.HasValue) t.lampPoolSpecular = LampPoolSpec.Value;
+            if (GlareAb.HasValue) t.lampGlareOff = !GlareAb.Value;
+            if (NightWindowsAb.HasValue) t.nightWindowsOff = !NightWindowsAb.Value;
+            if (LampFloorAb.HasValue) t.lampFloorOff = !LampFloorAb.Value;
             if (EnvCaptureInterval.HasValue) t.envCaptureInterval = Math.Max(1, EnvCaptureInterval.Value);
             if (ShadowCascades.HasValue) t.shadowCascades = Math.Max(1, Math.Min(4, ShadowCascades.Value));
             if (ShadowResolution.HasValue) t.shadowResolution = ShadowResolution.Value;

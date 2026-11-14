@@ -15,7 +15,7 @@ param(
     [int]$Height = 1080,
     [ValidateSet('Low', 'Medium', 'High', 'Ultra')] [string]$Tier = 'Medium',
     [string]$OutputDir,
-    [ValidateSet('', 'clear', 'overcast', 'lowsun', 'dusk')] [string]$Lighting = '',
+    [ValidateSet('', 'clear', 'overcast', 'lowsun', 'dusk', 'night')] [string]$Lighting = '',
     [string]$Cameras = '',
     # ADR 0175 evidence: force truck lamp groups on, e.g. 'rearfog,hazard,low'.
     [string]$TruckLamps = '',

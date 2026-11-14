@@ -114,6 +114,7 @@ namespace Game.Rendering
             // Display value per cd/m^2: emissive surfaces (truck lamps, A7) are authored in physical luminance.
             Shader.SetGlobalFloat(k_Exposure, m.Exposure);
             StreetLamps.SetSunElevation(m.TrueSunElevationDeg);
+            NightWindows.Apply(m.TrueSunElevationDeg, m.Exposure);   // ADR 0192
 
             // ---- sun ----
             if (sun == null) sun = RenderSettings.sun;
@@ -194,6 +195,7 @@ namespace Game.Rendering
         {
             ApplySkyCap();
             ApplySunShadowFilter();
+            NightWindows.Reapply();
         }
 
         /// <summary>ADR 0108: the preset explicitly opts High into a smoother filter, without raising atlas size.

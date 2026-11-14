@@ -54,7 +54,8 @@ namespace Game.Rendering
             k_SkyCapOff = Shader.PropertyToID("_KamionSkyCapOff"),
             k_EnvCube = Shader.PropertyToID("_KamionVehicleEnvCube"),
             k_EnvParams = Shader.PropertyToID("_KamionVehicleEnvParams"),
-            k_Tone = Shader.PropertyToID("_KamionTone");
+            k_Tone = Shader.PropertyToID("_KamionTone"),
+            k_WindowsLum = Shader.PropertyToID("_KamionWindowsLum");
 
         GameObject m_Root;
         Camera m_Cam;
@@ -231,7 +232,7 @@ namespace Game.Rendering
             if (!RenderPipeline.SupportsRenderRequest(m_Cam, m_Request)) return;
             // r6 L4: the reflection sees the physical sky radiance, not the phone-compressed dome of the main view.
             float skyCapOff = Shader.GetGlobalFloat(k_SkyCapOff), capture = Shader.GetGlobalFloat(k_Capture);
-            Vector4 tone = Shader.GetGlobalVector(k_Tone);
+            Vector4 tone = Shader.GetGlobalVector(k_Tone), windowsLum = Shader.GetGlobalVector(k_WindowsLum);
             try
             {
                 Shader.SetGlobalFloat(k_SkyCapOff, 1f);
@@ -239,6 +240,11 @@ namespace Game.Rendering
                 // then TruckExterior/Glass apply it again. Physical sky already bypasses its display cap.
                 Shader.SetGlobalVector(k_Tone, Vector4.zero);
                 Shader.SetGlobalFloat(k_Capture, 0f);
+                // s20 night-int (review 0191+0192 P1-7): no lit windows (ADR 0192) in the cube - a lit window 20-40 m away
+                // is a few texels of the 64-128 px faces, and the box-filtered roughness mips turn it into a square soft
+                // blob on the trailer doors ("two warm ghosts"); a GGX-convolved cube would spread it far wider and dimmer.
+                // The lamp glare is skipped by its own shader (_KamionSkyCapOff).
+                Shader.SetGlobalVector(k_WindowsLum, Vector4.zero);
                 RenderPipeline.SubmitRenderRequest(m_Cam, m_Request);
             }
             finally
@@ -246,6 +252,7 @@ namespace Game.Rendering
                 Shader.SetGlobalFloat(k_Capture, capture);
                 Shader.SetGlobalFloat(k_SkyCapOff, skyCapOff);
                 Shader.SetGlobalVector(k_Tone, tone);
+                Shader.SetGlobalVector(k_WindowsLum, windowsLum);
             }
             Graphics.CopyTexture(m_FaceRT, 0, 0, m_Cube, face, 0);
             m_FacesRendered++;

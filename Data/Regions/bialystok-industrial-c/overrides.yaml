@@ -246,6 +246,22 @@ overrides:
         - {a: [49.4, 40.4], b: [52.2, 19.6], w: 0.9, tone: dark}
       oil_per_dock: [2, 5]
       grime_edges: true
+  # s20 night-int-0191-0192 (review REVIEW-2026-11-14-s20-0191-0192 P1-1): own block so the yard block stays as authored.
+  - id: kwadrat-park-yard-lamp-gate-face
+    kind: depot_yard
+    reason: >-
+      The northernmost arched column of kwadrat-park-yard (at 778727.0 595836.0, local E 731.7 N -387.1, 2.2 m west of
+      the route-start lane centre) had its arm turned west over the open yard (face 778720 595840), the only one of the
+      six; at dusk / night the ADR 0191 road-luminaire pool then lit the paving and left the lane under the trailer at
+      ~4 % luma (review P1-1). Like the other five columns on the west edge of the lane, its arm now points east-south-east
+      over the carriageway (same face offset +9.5 / -5.2 m as lamps 1-4). Orthophoto shows the column foot, not the arm
+      direction - arm direction follows the rest of the row (WORKING_VALUE). This block removes the yard block's lamp
+      (clear polygon +-1.5 m around its foot, applied after it) and places it again with the new face.
+    confidence: medium
+    verify: owner photo session item 4 (yard lamps, arm direction of the northern column)
+    clear_lamps_epsg2180: [[778725.5, 595834.5], [778728.5, 595834.5], [778728.5, 595837.5], [778725.5, 595837.5]]
+    lamps:
+      - {at: [778727.0, 595836.0], face: [778736.5, 595830.8]}
   - id: andersa-viaduct-biezenstwa-style
     kind: bridge_style
     target: {osm_way: [175157461, 177895177]}
