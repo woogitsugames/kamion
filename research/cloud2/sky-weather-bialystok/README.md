@@ -1,6 +1,6 @@
 # R7 sky-weather-bialystok — klimat światła Białegostoku: niebo, słońce, mgła
 
-Data: 2026-11-14 · gałąź `research/cloud2-sky-weather-bialystok` · wierszy manifestu: **628** (SOURCED 67, ESTIMATED 557, WORKING_VALUE 4) ·
+Data: 2026-11-14 · gałąź `research/cloud2-sky-weather-bialystok` · wierszy manifestu: **628** (SOURCED 67, ESTIMATED 556, WORKING_VALUE 5) ·
 obejrzanych kadrów: **35** w manifeście (41 pobranych i obejrzanych w 960 px, 6 odrzuconych: wnętrza/plakat) + 56 kandydatów Panoramax na stykówce ·
 samokontrola: **126 wierszy (20,1 %), seed 20261114: 124 PASS / 2 FAIL (oba skorygowane)**; przebieg 1: 118/8 — wykrył błąd narzędzia (niżej) ·
 pliki do pobrania przez `fetch.py`: 84 pliki, **16,98 MB** (sha256 zweryfikowane, exit 0).
