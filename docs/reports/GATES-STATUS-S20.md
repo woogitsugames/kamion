@@ -229,3 +229,82 @@ pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -Scene WorldC -Autop
 #   -> artifacts/device/RFGL34SJYDZ/<ts>/ (tylko trasa startowa, nie cały kafel)
 ```
 Parametry: `scripts/import-region.ps1:24-29` (brak `-SkipCopy` wymienionego w `CLAUDE.md:39`), `scripts/device-metrics.ps1:14-30`, walidator `docs/reports/WORLD-VALIDATOR-2026-11-13-mistral.md` (sekcja „Uruchomienie”).
+
+---
+
+## 7. Definition of Done (`CLAUDE.md:48`) w praktyce bramek
+
+| Element DoD | Jak jest spełniany | Braki (dowód) |
+|---|---|---|
+| „Kompiluje się na Androidzie” | czyste APK s20: `77cfd94bf8` (`HANDOVER.md:60`), `18e368be69-high` (`:64`), `edb5524993` 222,9 MB (`:89`); wcześniejszy czysty build „0 err” (`:52`) | metadane APK `dirty=False`, ale ciąg wersji w grze z „-dirty” (pliki nieśledzone w katalogu głównym, `GATE-1.md:102`) — mylące dla walidatorów `-dirty` |
+| „testy zielone” | EditMode 580/581, 0 fail (`HANDOVER.md:56`, `:88`); pytest gis 1105 pass / 2 xfail (`:50`); .NET 274/274 (`docs/adr/0195-autopilot-prosta-0-80-0.md:41`) | pełny PlayMode po integracji s20 niezgłoszony — ostatni pełny 155/163, 0 fail, 8 skip z 13.11 (`GATE-1.md:38`); po 0195 tylko podzbiór 8/8 (`HANDOVER.md:38`) |
+| „brak nowych krytycznych ostrzeżeń” | build „0 err” (`HANDOVER.md:52`) | liczba ostrzeżeń buildu s20 nie jest raportowana (ostatnia jawna: `errors=0 warnings=0`, `GATE-0.md:19`, 9.11) — NIEZMIERZONE |
+| „dowód (log/zrzut/telemetria)” | raporty cytują `artifacts/gate12/…`, `artifacts/gate3/…`, `gate3-result.json` | `artifacts/` jest poza gitem (`.gitignore:31`) — dowody istnieją tylko na komputerze lidera; agenci w chmurze nie mogą ich sprawdzić (ten raport również) |
+| „budżet wydajności nie pogorszony” | A16 Low p95/p99/PSS w budżecie we wszystkich przebiegach s20 (`GATE-3.md:113-114`, `:127`; `GATE12-PHONE…:9-13`) | GPU p95 A16 > 33,3 ms (`GATE-3.md:38`, `:113-114`); PSS rośnie (R23); S24+ High 60 FPS niespełnione (`GATE-3.md:122`); metryka > 40 ms nieraportowana dla s20 (§5) |
+| „review innego agenta” | bramka 3 s20: `REVIEW-2026-11-14-s20-gate3-phone.md`; bramka 3 D57: `docs/reports/visual/REVIEW-2026-11-13-s16b-final.md` (`GATE-3.md:70`) | brak recenzji innego agenta dla `GATE-1.md`, `GATE-2.md` (gałąź `gates-s19`) i `GATE12-PHONE-2026-11-14-A16.md` — w `docs/reports/` nie ma pliku REVIEW, który by je obejmował |
+| „docs/ADR/licencje zaktualizowane” | dopiski s20 w GATE-1/2/3 | nieaktualne: `GATE-0.md`, `docs/PERFORMANCE_BUDGETS.md:27,40,43`, `docs/STATUS.md` (2026-11-09), `docs/PHYSICS_VALIDATION.md:97,101,289,314,316`, `docs/plan/TRACK-A.md:16`, `docs/DEVICE_MATRIX.md:11`, statusy ADR 0177/0195 (R26); `docs/ROADMAP.md` nie istnieje (`docs/03:7`) |
+| „commit” | wszystko w gicie | po bramce brak tagu (`docs/03:7`): na origin tylko `v0.0-gate0` |
+
+Wniosek: DoD jest spełniane dla kodu i pomiarów A16, ale **dokumentacja bramek nie nadąża za pomiarami** (werdykty GATE-1/2 i wiersze tabel GATE-3 sprzeczne z własnymi dopiskami s20) i **brakuje recenzji innego agenta dla bramek 1–2**.
+
+---
+
+## 8. Decyzje właściciela potrzebne do zamknięcia
+
+| # | Decyzja | Odnośniki | Proponowane opcje |
+|---|---|---|---|
+| W1 | Metryka „≤ 12 klatek > 40 ms na przejazd G3” (A16 Low) | `docs/adr/0177-perf-p99-pso-refresh.md:48-53`, `GATE-3.md:57-61`, `HANDOVER.md:120` | (a) przyjąć ≤ 12/przejazd jako WORKING_VALUE (konsekwencja: przebiegi D57 miały 14/14 — byłyby nad progiem, `GATE-3.md:59`; D57 nie jest odwoływane, `:60`); (b) przyjąć wersję na minutę ~≤ 11/min (`0177:51`); (c) tylko raportować bez progu; (d) odrzucić, zostaje p99 ≤ 40 ms |
+| W2 | S24+ High 60 FPS nieosiągalne (GPU p50 ~23 ms przy limicie 30) | `GATE-3.md:120-122`, `HANDOVER.md:64`, `docs/PERFORMANCE_BUDGETS.md:13`, `docs/adr/0046-high-tier-gate3-60fps-headroom.md:16` (cel GPU p50 ≤ 12 ms), D36 (`docs/11:57`, A/B na S24+ „przed zamknięciem” — niezrobione) | (a) cel High na S24+ = 30 FPS, 60 jako opcja (zmiana `PERFORMANCE_BUDGETS.md:13` i `docs/06:52`); (b) runda optymalizacji GPU High (research R8 scalony, `HANDOVER.md:97`) + pomiar bez limitu/60 FPS — **liczba 23 ms pochodzi z przebiegu z limitem 30 FPS** (na A16 limit dodaje ~2 ms przez DVFS, `docs/adr/0106-perf-low-a16-r1.md:18`), więc wniosek „nieosiągalne” wymaga pomiaru `-Fps 60` (R25); (c) 60 FPS na S24+ w profilu Medium. Każdy przebieg S24+ wymaga zgody (`docs/owner/S24-HIGH-RUN.md:3-4`) |
+| W3 | Feel test właściciela bramki 2 (+ „koła nudne i stabilne” bramki 1) | `docs/03:18,22`, `GATE-2.md:21,62-64`, `docs/owner/FEEL-TEST.md`, `docs/PHYSICS_VALIDATION.md:325-336`, D25 (`docs/11:47`) | (a) pełny test wg `FEEL-TEST.md` na A16 (APK `edb5524993`); (b) skrócony: 4 manewry bramki z `docs/03:22`; (c) na Foldzie jak D55 (`docs/11:76`) + jeden przebieg na A16. Uwagi → zadania → wpis w GATE-2 |
+| W4 | Werdykt bramek 1 i 2 | `HANDOVER.md:60` („status bramek do decyzji właściciela”), `GATE-1.md:6`, `GATE-2.md:6` | (a) zaliczyć na podstawie telefonu s080 (0–80 ×3, 80→0) + symulator/edytor dla reszty; (b) warunkowo — po `park_flat_solo` i `c50_*` na telefonie (§2, §3); (c) pełne — dodatkowo ręczne przejazdy (krawężnik, 12 %) i feel test |
+| W5 | Zdjęcia właściciela do side-by-side | `docs/03:31` (wymóg), D41 → D43 (`docs/11:62`, `:64` — właściciel nie robi zdjęć), odstępstwo przyjęte D57 (`GATE-3.md:19`); lista ujęć `docs/owner/PHOTO-LIST.md`; zdjęcia ciężarówki `docs/07:36` | (a) ADR + zmiana `docs/03:31`: referencje z otwartych źródeł jako standard bramek dzielnic (Etap 6); (b) właściciel robi zdjęcia tylko miejsc bez pokrycia (np. pierwsze 300 m G3-A bez pary, `docs/adr/0111-sbs-evidence-confidence.md:10`); (c) zdjęcia ciężarówki dla toru A (`docs/07:36`) zamiast zdjęć ulic |
+| W6 | Akceptacja kierunku artystycznego — dalej niż D57 | D51/D57 (`docs/11:72,78`); recenzja s20: materiały 4/10, „gra mobilna z 2016” (`REVIEW-…-gate3-phone.md:14,76`); tor A: „akceptacja właściciela” (`docs/07:44`) | (a) ustalić, przed którą bramką materiały przestają być „po bramce” (propozycja: przed Etapem 5 — `docs/03:39` wymaga raportu wizualnego z telefonu); (b) osobna akceptacja modelu TRAKT (tor A) na zrzutach z telefonu |
+| W7 | Profil A16 dla toru A (Medium w `docs/03:27`, `docs/07:44` vs Low wg D49) | `docs/11:70` (D49 dotyczy bramki 3) | (a) rozszerzyć D49 na tor A (Low); (b) zostawić Medium dla toru A (A16 Medium 21,7 FPS — tylko budżet ciężarówki, nie FPS); (c) Medium mierzone na S24+ |
+| W8 | Decyzje otwarte od 9.11 | `GATE-1.md:93` (kierownica 270° vs 900°), `GATE-2.md:70` (lusterka: okienka vs rozglądanie) | wybór wariantu lub odłożenie do Etapu 5 (HUD, D52 `docs/11:73`) |
+| W9 | Rozmiar świata w APK (D24 ≤ 110 MB) | `docs/11:45`; APK `edb5524993` 222,9 MB (`HANDOVER.md:89`), udział świata niezmierzony od `docs/PERFORMANCE_BUDGETS.md:159` (R30) | decyzja dopiero po pomiarze (komenda: APK `-noWorld` jak w `PERFORMANCE_BUDGETS.md:182`); jeśli > 110 MB: (a) podnieść limit, (b) PAD/Addressables (`:191`), (c) cięcia z `:162-164` |
+| W10 | Brak zapasu GPU na A16 Low wobec dalszego wzrostu świata | `GATE-3.md:38`, D50 (`docs/11:71`: bez obniżania skali do 70 %) | (a) utrzymać D50, kolejna runda optymalizacji przed Etapem 4/5; (b) dopuścić skalę < 0,75 na Low (`docs/PERFORMANCE_BUDGETS.md:130`: 0,70 = −2,0 ms GPU) |
+
+---
+
+## 9. Spójność liczb między dokumentami
+
+Skróty: `0046…`, `0062…`, `0177…`, `0195…` = `docs/adr/<nr>-*.md`; `GATE12-PHONE…` = `docs/reports/GATE12-PHONE-2026-11-14-A16.md`; `REVIEW-…-gate3-phone.md` = `docs/reports/REVIEW-2026-11-14-s20-gate3-phone.md`; `DEVICE-RUN…` = `docs/reports/device/DEVICE-RUN-2026-11-09.md`; pozostałe pliki bez katalogu leżą w `docs/` lub `docs/reports/`.
+
+| # | Wartość A (plik:linia) | Wartość B (plik:linia) | Komentarz — co wygląda na aktualne |
+|---|---|---|---|
+| R1 | Boot A16: „❌ zablokowany telefon” (`GATE-0.md:23`); „Not measured yet” (`PERFORMANCE_BUDGETS.md:43`); „Blocked … PIN” (`STATUS.md:10`) | A16 Boot Medium 30,01 FPS, p95 33,47, p99 33,57 ms, PSS ~289 MB (`device/DEVICE-RUN-2026-11-09.md:7`); tag `v0.0-gate0` „FPS measured” | B aktualne (APK `-dirty`, `DEVICE-RUN…:14`); GATE-0/PB/STATUS do poprawy |
+| R2 | DrivingLab A16 z autopilotem „not measured — phone locked” (`PERFORMANCE_BUDGETS.md:27`, `:40`) | Medium 30,01 FPS, PSS 333 MB (`DEVICE-RUN…:8-9`); Low 30,0 FPS, PSS 385–412 MB (`GATE12-PHONE…:9-13`) | B aktualne (s20, czysty APK) |
+| R3 | Bramka 1: „SZKIC — czeka na telefon”, 0–80 telefon „❌ brak” (`GATE-1.md:6`, `:25`) | 0–80 ×3 PASS na A16 (`GATE-1.md:95-101`, `GATE12-PHONE…:15-17`, `HANDOVER.md:60`) | B aktualne; werdykt do decyzji właściciela (W4) |
+| R4 | Bramka 2: „SZKIC”, „❌ telefon” (`GATE-2.md:6`, `:17`) | s080 pusty/40 t PASS (`GATE-2.md:72-79`) | B aktualne |
+| R5 | „S24+ High na końcowym APK nie zmierzony” (`GATE-3.md:22`, `:95`) | S24+ High/30 G3-A/B zmierzone (`GATE-3.md:117-122`) | B aktualne |
+| R6 | „Na main nie ma jeszcze świeżych kolekcji PSO” (`GATE-3.md:54-55`, `:94`) | PSO odświeżone `77cfd94bf` (`HANDOVER.md:60`) | B aktualne |
+| R7 | 0–80 solo 13,60 s runner (`GATE-1.md:49`); 13.8 s (`PHYSICS_VALIDATION.md:97`, run `stage2-final`) | edytor 13,67 (`0195…:47`); telefon 13,66 (`GATE12-PHONE…:11`) | 13,60/13,67/13,66 spójne (< 0,5 %); `PHYSICS_VALIDATION.md:97` historyczne |
+| R8 | 0–80 40 t 47,52 s runner (`GATE-2.md:33`); 46.2 s (`PHYSICS_VALIDATION.md:97`) | edytor 47,80 (`0195…:49`); telefon 47,79 (`GATE12-PHONE…:9`) | PV:97 historyczne (−3 %); pozostałe spójne |
+| R9 | 80→0 solo 34,69 m `brake_80_0_dry` (`GATE-1.md:52`); 34.9 m (`PHYSICS_VALIDATION.md:101`) | 35,69 m runner `straight_0_80_0` (`0195…:35`), edytor 35,62 (`:47`), telefon 35,85 (`GATE12-PHONE…:11`) | różne scenariusze (prosta: hamowanie od 80,6 km/h, `0195…:35`); różnica ~1 m (3 %), oba w paśmie 32–55 m; w raportach podawać nazwę scenariusza |
+| R10 | 80→0 pusty 38,79 m (`GATE-2.md:35`); 38,9 Unity / 39,0 symulator (`GATE-2-draft.md:47`); 39.0 (`PHYSICS_VALIDATION.md:101`) | 39,49 runner prosta (`0195…:36`), edytor 39,45 (`:48`), telefon 39,67 (`GATE12-PHONE…:10`) | jak R9 — inny scenariusz; telefon = edytor (+0,6 %) |
+| R11 | 80→0 40 t 40,80 m (`GATE-2.md:35`); 40,6/40,5 (`GATE-2-draft.md:48`); 40.5 (`PHYSICS_VALIDATION.md:101`); test oczekuje 40,5 ±10 % (`game/Assets/_Project/Tests/PlayMode/CombinationLabTests.cs:250`) | 40,52 runner (`0195…:37`), edytor 40,78 (`:49`), telefon 40,72 (`GATE12-PHONE…:9`) | wszystkie w ±1 %; wartość odniesienia w teście z przebiegu historycznego |
+| R12 | granica 80→0 „SOURCED: UN R13 zał. 4” (`GATE-2.md:35`), „SOURCED” (`0195…:39`) | „R13 N3 type-0 figures UNVERIFIED” (`PHYSICS_VALIDATION.md:101`) | sprzeczność statusu źródła — sprawdzić, czy ktoś otworzył R13 zał. 4 (PV:101 starsze) |
+| R13 | runner 132 scenariusze / 750 kontroli (`GATE-1.md:21`, `:36`) | 107 / 550 (`PHYSICS_VALIDATION.md:289`), 98 / 482 (`:245`) | A aktualne; PV zawiera stany historyczne bez sumy bieżącej |
+| R14 | `dotnet test` 266/266 (`GATE-1.md:35`) | 274/274 z `StraightRunTests` (`0195…:41`, `HANDOVER.md:38`) | B aktualne (po 0195); GATE-1 do aktualizacji |
+| R15 | EditMode 532/535, 2 fail (`GATE-1.md:37`, `GATE-2.md:25`) | 580/581, 0 fail (`HANDOVER.md:56`, `:88`) | B aktualne |
+| R16 | „Not run in Unity or on the phone” (`PHYSICS_VALIDATION.md:314`) | przebiegi telefonu zestawu (`GATE-2.md:72-79`) | B aktualne; PV §7 nieaktualne |
+| R17 | §6.10 cofanie pod rampę „not covered by the runner” (`PHYSICS_VALIDATION.md:316`) | `reverse_dock_s_maneuver_comb@laden40` w runnerze, przegub 91,7° (`GATE-2.md:43`) | B aktualne |
+| R18 | p95 ≤ 33 ms (Samsung A), ≤ 16,6 ms (High) (`06_GRAFIKA…:53`) | p95 ≤ 34,0 ms, ≤ 17,0 ms (`PERFORMANCE_BUDGETS.md:11-13`) | skrypty bramek używają PB (`GATE-3.md:35`); docs/06 to „hipotezy startowe” (`:48`) |
+| R19 | draw calls ≤ 300–400, trójkąty ≤ 400–600 tys. (`06_GRAFIKA…:54-55`) | Low 250 / Medium 350 draws, 350 k / 550 k tris (`PERFORMANCE_BUDGETS.md:52-53`) | PB bardziej szczegółowe; uzgodnić |
+| R20 | Ultra: 30 FPS (`06_GRAFIKA…:52`) | S24+ High–Ultra 60 FPS (`PERFORMANCE_BUDGETS.md:13`) | do decyzji razem z W2 |
+| R21 | A16 Medium dla bramki 3 i toru A (`03_ETAPY…:27`, `:31`; `07_CIEZAROWKA_3D.md:44`) | A16 oficjalnie Low (D49, `11_DECYZJE…:70`; `DEVICE_MATRIX.md:5`) | B aktualne dla bramki 3; tor A — W7 |
+| R22 | A16 Medium „DK8 forest 27 FPS” (`DEVICE_MATRIX.md:5`; `PERFORMANCE_BUDGETS.md:83` 27,0 FPS) | A16 Medium 21,7 FPS (D49, `11_DECYZJE…:70`, ADR 0106) | różne widoki i daty; B (G3, 11.11) właściwe dla bramki |
+| R23 | PSS A16 G3-A: 700,7 MB (10.11, `GATE-3-draft.md:94`) → 880,2 (13.11, `GATE-3.md:32`) | 917,5 (s20, `GATE-3.md:113`), 900,8 (`:127`); limit 1000 MB (`PERFORMANCE_BUDGETS.md:12`) | trend, nie sprzeczność: zapas ~8 % |
+| R24 | GPU p95 A16 G3-A: 25,5 ms (10.11, `GATE-3-draft.md:94`) | 34,15 (13.11, `GATE-3.md:32`), 34,5 (s20, `:113`) | trend; budżet klatki 33,3 ms przekroczony przez GPU p95 |
+| R25 | S24+ High GPU p50 14,8 ms (60 FPS, `fefd804`, `0046…:10`) | 23,0 / 22,5 ms (limit 30 FPS, s20, `GATE-3.md:120-121`) | różne buildy/świat i limit; wniosek „High/60 nieosiągalne” (`GATE-3.md:122`) z pomiaru przy 30 FPS — UNVERIFIED do pomiaru `-Fps 60` (W2) |
+| R26 | ADR 0195 „kandydat … nie scalone” (`0195…:3`); ADR 0177 „propozycja” (`0177…:3`); ADR 0046/0062 „proposed … UNVERIFIED” (`0046…:3`, `0062…:3`) | 0195 SCALONE `ea6fdf840` (`HANDOVER.md:38`); 0177 „scalone w s18” (`GATE-3.md:51`) | B aktualne; statusy ADR do aktualizacji |
+| R27 | „A7–A8 … później” (`plan/TRACK-A.md:16`) | raport A7 (`visual/truck-A7/README.md:1`), pomiar A7 (`PERFORMANCE_BUDGETS.md:88-98`), katalogi `truck-A8`, `trailer-curtainsider` | B aktualne |
+| R28 | `import-region.ps1 … [-SkipCopy]` (`CLAUDE.md:39`) | brak parametru `-SkipCopy` (`scripts/import-region.ps1:24-29`) | B (skrypt) aktualne; CLAUDE.md do poprawy |
+| R29 | walidator: error 56, na trasie G3 56 (`WORLD-VALIDATOR-2026-11-13-mistral.md:9`) | error 61, na trasie 61 (`:67`) | A aktualne (korekta r6, `:8-9`); B to liczby z PR |
+| R30 | APK 122,0 MB, udział świata ≈ 71 MB (`PERFORMANCE_BUDGETS.md:158-159`); limit świata ≤ 110 MB (D24, `11_DECYZJE…:45`) | APK 219,1 MB (`HANDOVER.md:52`), 222,9 MB (`:89`) | udział świata w obecnym APK niezmierzony (W9) |
+| R31 | pamięć siatek świata ≈ 88 MB Low / ≈ 205 MB High (`PERFORMANCE_BUDGETS.md:156`) | „import OK: Low 123,0 MB / High 265,8 MB” (`HANDOVER.md:50`) | prawdopodobnie inna miara (rozmiar importu?) — do wyjaśnienia przez lidera |
+| R32 | „Target 30 FPS … WORKING_VALUE until measured”, „once Stage 0 measures” (`DEVICE_MATRIX.md:11`) | 30 FPS trzymane na A16 w każdym przebiegu bramek (`GATE-3.md:113-114`, `GATE12-PHONE…:9-13`) | B aktualne |
+
+Liczba wierszy: **32** (30 rozbieżności lub nieaktualnych wpisów + 2 trendy R23, R24).
+
+Nie znaleziono rozbieżności (sprawdzone): p95 D57 33,4 ms (`11_DECYZJE…:78`) vs 33,45 (`GATE-3.md:32-33`) — zaokrąglenie; klatki > 40 ms przebiegów D57 14/14 (`GATE-3.md:41`) = `0177…:39` = `HANDOVER.md:116`; liczby s20 A16 i S24+ w `GATE-3.md:113-121` = `HANDOVER.md:61-65` = `REVIEW-…-gate3-phone.md:16`; liczby telefonu w `GATE-1.md:99-101` = `GATE12-PHONE…:9-13` (zaokrąglenia); `VehicleLabTests` 7/7 (`GATE-2.md:51`) = 7 przypadków w pliku testu.
