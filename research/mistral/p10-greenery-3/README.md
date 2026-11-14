@@ -10,7 +10,7 @@ Autor: Vibe (GLM), data dostępu źródeł: 2026-11-13, raport po polsku.
 | Zadanie | Wynik | Status |
 |---|---|---|
 | 1. Letnie zdjęcia (VI–VIII) 9 ulic | 18 kadrów (M51-101…118) + 15 kadrów uzupełniających (M51-119…133) przypisanych do **prawdziwych ulic wg geotagu ≤25 m od osi** (aleja, Motoszko, Sokólska, Kombatantów, Andersa); kierunek **UNVERIFIED** (Commons: 0/33 plików z GPSImgDirection). **Skidelska/Wileńska/Łańcucka: 0 kadrów z wnętrza ulicy** | uczciwie — luka zdjęciowa nie została zamknięta (patrz Luki) |
-| 2. Żywopłoty ≥ 20 odcinków | **22 odcinki** (M51-204…233), każdy z **obejrzanego kadru** (36 kadrów przeanalizowanych, rejestr `hedge_viewings.json`); 11 fałszywych odcinków usuniętych po obejrzeniu | gotowe (próg ≥20 spełniony) |
+| 2. Żywopłoty ≥ 20 odcinków | **21 odcinków** (M51-204…233; M51-214 usunięty w M51-FIX-2), każdy z **obejrzanego kadru** (36 kadrów przeanalizowanych, rejestr `hedge_viewings.json`); 11 fałszywych odcinków usuniętych po obejrzeniu | gotowe (próg ≥20 spełniony) |
 | 3. Detekcja koron kafla [776971, 595199, 779019, 597247] | `crowns.geojson` — **5258 koron** po naprawie odbicia N–S; osobna warstwa `compact_greenery.geojson` (771 poligonów zwartej zieleni r>6,5 m); `%` środków na zieleń w 3 oknach 300×300 m: **100/99,8/100** (próg >80% ✓); data ortofoto **z GetFeatureInfo: 2024-05-27** | gotowe |
 | 4. Projekt zieleni Al. Tysiąclecia (Strabag 2021/22) | bez zmian — dane przetargowe i nasadzenia **SOURCED** (74 drzewa, 109 krzewów, 20 600 m² trawników, ~385 mb ekranów); **gatunki/obwody/rozstaw — UNVERIFIED** | częściowo — zgodnie z „jeśli dostępne" |
 
@@ -47,13 +47,13 @@ Autor: Vibe (GLM), data dostępu źródeł: 2026-11-13, raport po polsku.
 
 **Definicja odcinka (bez zmian):** front jednej posesji (lub jedna strona kadru) widoczny na konkretnym zdjęciu; odczyt wizualny (Vibe `analyze_image`, **jeden kadr na wywołanie**, 2026-11-13); wysokość **ESTIMATED ±0,3–0,5 m** z odniesieniem (płot 1,2–1,5 m; siatka 1,5 m; samochód ~1,4 m). **Nowe (M51-FIX): odcinek może istnieć tylko jeśli jego kadr został realnie obejrzony** — rejestr wszystkich 36 obejrzeń z werdyktem: `hedge_viewings.json`.
 
-**Usunięte po obejrzeniu (11 odcinków z pierwotnych 18):** M51-201 (luźne krzewy przy płotach, nieciągłe — nie żywopłot), 202 (brak żywopłotu — kadr źródłowy obejrzany), 203 (brak), 206 (brak), 208 (duplikat pasa z M51-207 — ten sam plik), 209/210 (brak w kadrze), 211 (pomnik/krzyż, brak), 213 (barierki, brak), 216 (ten sam plik co kadr M51-117 — brak żywopłotu; ujednolicono), 217 (**ekran akustyczny obrośnięty** 3–4 m — nie żywopłot). Przegląd kazał usunąć 6 (201, 207, 211, 213, 214, 217); po niezależnym obejrzeniu każdego kadra usunięto 11, a 207 (pas swobodnych krzewów — nie ekran, zweryfikowane) i 214 (niski strzyżony żywopłot 1,0–1,2 m) **zostawiono** z uczciwym opisem.
+**Usunięte po obejrzeniu (11 odcinków z pierwotnych 18):** M51-201 (luźne krzewy przy płotach, nieciągłe — nie żywopłot), 202 (brak żywopłotu — kadr źródłowy obejrzany), 203 (brak), 206 (brak), 208 (duplikat pasa z M51-207 — ten sam plik), 209/210 (brak w kadrze), 211 (pomnik/krzyż, brak), 213 (barierki, brak), 216 (ten sam plik co kadr M51-117 — brak żywopłotu; ujednolicono), 217 (**ekran akustyczny obrośnięty** 3–4 m — nie żywopłot). Przegląd kazał usunąć 6 (201, 207, 211, 213, 214, 217); po niezależnym obejrzeniu każdego kadra usunięto 11, a 207 (pas swobodnych krzewów — nie ekran, zweryfikowane) i 214 **zostawiono** z opisem. **M51-FIX-2:** M51-214 **usunięty** — kadr M51-112 (Commons 20220725_123946) obejrzany ponownie: po prawej trawnik z zaparkowanymi samochodami przed blokiem, żywopłotu brak (ten sam błąd zgłoszony w s17 i s19).
 
-**Wynik — 22 odcinki (M51-204…233):**
+**Wynik — 21 odcinków (M51-204…233, bez 214):**
 
 | ulica / lokalizacja | odcinki | typy | wysokości |
 |---|---|---|---|
-| Aleja Tysiąclecia PP | 204, 207, 212, 214, 215 | liściaste ×3, pas swobodnych krzewów ×1, żywotnik ×1 | 1,0–3,0 m |
+| Aleja Tysiąclecia PP | 204, 207, 212, 215 | liściaste ×2, pas swobodnych krzewów ×1, żywotnik ×1 | 1,2–3,0 m |
 | Michała Motoszko | 205* | liściasty | 1,0 m |
 | Sokólska | 218, 223, 224, 225 | liściaste ×2, iglaste (żywotnik) ×2 | 1,2–2,0 m |
 | Kombatantów | 232 | liściasty | 2,5–3,0 m |
@@ -62,7 +62,7 @@ Autor: Vibe (GLM), data dostępu źródeł: 2026-11-13, raport po polsku.
 
 \* M51-205: geotag 27,8 m od osi Motoszko — **poza progiem 25 m**, atrybucja ESTIMATED (ujawnione w uwagach i w audycie).
 
-Razem z **G7-P01…P12** (wiosna 2024, ulice osiedla: Wołkowyska, Kowieńska, Grodzieńska, Wileńska, Lidzka, Racławicka, Łańcucka) — łącznie **34 odcinki przyuliczne/przyposesyjne**, z czego **22 letnie, wszystkie z obejrzanych kadrów** (próg ≥20 ✓).
+Razem z **G7-P01…P12** (wiosna 2024, ulice osiedla: Wołkowyska, Kowieńska, Grodzieńska, Wileńska, Lidzka, Racławicka, Łańcucka) — łącznie **33 odcinki przyuliczne/przyposesyjne**, z czego **21 letnich, wszystkie z obejrzanych kadrów** (próg ≥20 ✓).
 
 ## Zadanie 3 — odtwarzalna detekcja koron (M51-FIX: rejestracja, zwarta zieleń, filtr nie-roślinności)
 
@@ -97,4 +97,4 @@ Razem z **G7-P01…P12** (wiosna 2024, ulice osiedla: Wołkowyska, Kowieńska, G
 2. **KartaView outage**: `storage7.openstreetcam.org` HTTP 502 (testy 2026-11-13, trzykrotnie) — 51 kadrów sekwencji przywlotowych niepobranych; azymuty SOURCED z metadanych API zachowane, licencja CC BY-SA 4.0 (referencja, nie tekstura).
 3. **OCR SIWZ/RDOŚ** (gatunki/obwody/rozstaw zadania 4) — skany w ZIP, do dokończenia przy dostępnym budżecie analizy obrazu.
 4. **Kierunek kamery UNVERIFIED** we wszystkich kadrach Commons (brak GPSImgDirection); jedyny opisany z treści: lokalizacja M51-118 (wiat „353 SOKÓŁSKA / AL. TYSIĄCLECIA").
-5. **Kwartalne odcinki żywopłotów (8/22)** leżą poza progiem 25 m od osi nazwanych ulic — oznaczone uczciwie w kolumnie uwagi i uwzględnione w audycie; wynikają z realnej geometrii spaceru (aleja↔Andersa), nie z błędu przypisania.
+5. **Kwartalne odcinki żywopłotów (8/21)** leżą poza progiem 25 m od osi nazwanych ulic — oznaczone uczciwie w kolumnie uwagi i uwzględnione w audycie; wynikają z realnej geometrii spaceru (aleja↔Andersa), nie z błędu przypisania.
