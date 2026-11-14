@@ -902,7 +902,9 @@
    ],
    "length_m": 46.5,
    "max_grade": 0.0257,
-   "overrides": [],
+   "overrides": [
+    "knyszynska-xsec-c"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -2592,7 +2594,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.08,
+   "axis_smoothing_dev_max_m": 0.07,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -2604,14 +2606,16 @@
    ],
    "length_m": 467.9,
    "max_grade": 0.021,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.014,
+   "overrides": [
+    "knyszynska-xsec-main"
+   ],
+   "profile_rms_vs_nmt_m": 0.015,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.5
+    6.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:knyszynska-xsec-main"
    ]
   },
   {
@@ -3156,7 +3160,9 @@
    ],
    "length_m": 79.4,
    "max_grade": 0.0112,
-   "overrides": [],
+   "overrides": [
+    "knyszynska-xsec-e"
+   ],
    "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -3432,7 +3438,9 @@
    ],
    "length_m": 28.5,
    "max_grade": 0.0171,
-   "overrides": [],
+   "overrides": [
+    "knyszynska-xsec-d"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -4032,7 +4040,7 @@
    "patches": 307
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 299772,
+  "footprint_nodes": 299546,
   "fork_abreast": [],
   "fork_shifts": [
    {
@@ -4367,6 +4375,13 @@
     "node": "n3160890674",
     "taper_m": 15.0,
     "to_hw": 2.0
+   },
+   {
+    "chain": "c:w1281925347:3993784057-2559254737",
+    "from_hw": 3.25,
+    "node": "n3993784057",
+    "taper_m": 5.7,
+    "to_hw": 3.0
    },
    {
     "chain": "c:w816196397:4881628415-14315732346",
@@ -4797,7 +4812,7 @@
    "P-1 lane line": 37,
    "P-10 crossing": 3,
    "P-13": 5,
-   "P-7b edge line": 62,
+   "P-7b edge line": 70,
    "P-8 arrow": 2,
    "P-8 skipped (lane too narrow)": 9,
    "P-8 skipped (lanes continue)": 4,
@@ -4806,7 +4821,38 @@
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 2209,
-  "overrides_applied": [],
+  "overrides_applied": [
+   {
+    "id": "knyszynska-xsec-main",
+    "targets": [
+     "w234919333:2430405905-3993784057"
+    ]
+   },
+   {
+    "id": "knyszynska-xsec-b",
+    "targets": [
+     "w1281925347:3993784057-2559254737"
+    ]
+   },
+   {
+    "id": "knyszynska-xsec-c",
+    "targets": [
+     "w1281925347:2559254737-2559254740"
+    ]
+   },
+   {
+    "id": "knyszynska-xsec-d",
+    "targets": [
+     "w623133896:2559254740-2559254743"
+    ]
+   },
+   {
+    "id": "knyszynska-xsec-e",
+    "targets": [
+     "w396566354:2559254743-1782932318"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -4823,14 +4869,16 @@
    "crossing_pairs_skipped": 28,
    "junctions": 22,
    "lines": {
+    "P-7a": 1,
+    "P-7b": 2,
     "lane": 23
    },
    "pairs": 89,
-   "unmatched": 17
+   "unmatched": 22
   },
   "verge_strips": {
    "chunks": 48,
-   "tris": 27796
+   "tris": 27792
   },
   "walled_ramps": [
    {

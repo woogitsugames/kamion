@@ -5,3 +5,6 @@
 - 11-15 00:2x: ingest OK (462 MB; NMT 2025, orto 2024, BDOT/LoD1/LoD2 powiat 2002), build_region (235 węzłów, 229 krawędzi, 460 budynków), build_world 257 s OK (ściany terenu > 0,15 m: 55, max 1,62 m — do sprawdzenia; spójność 21, 0 na trasie), export-route 632 m. W kaflu: S19/S8 (motorway 4,1 km + łącznice 2,7 km, mosty) poza trasą; brak budów w OSM.
 - W TLE: `pwsh artifacts/dk65-corridor-0205/tools/import.ps1` (import → vqa Low → vqa High), status `artifacts/dk65-corridor-0205/logs/chain.status` (koniec `IMPORT DONE r1`).
 - NASTĘPNY KROK: obejrzeć `artifacts/dk65-corridor-0205/r1/Low-clear/*.png`, porównać skrzyżowania z ortofoto, kamery authored (control_cameras_place.authored.json).
+- 00:5x: r1 import+vqa OK (WORLD_MEMORY Low 68,2 / High 165,9 MB). r2: overrides przekroju (6,0 m, linie krawędziowe; zmiana markings.py tylko przez override), 7 kamer authored; pary góra/ortofoto `artifacts/dk65-corridor-0205/r2/view/pair-*.jpg` — układ skrzyżowania, pętli i zjazdów zgodny.
+- W TLE: `pwsh artifacts/dk65-corridor-0205/tools/post.ps1` (pytest tests/gis → EditMode), koniec `POST DONE` w logs/chain.status.
+- NASTĘPNY KROK: budżet ze stats.txt, ADR 0205 (docs/adr/0205-*.md), robocopy dowodów, raport.
