@@ -25,6 +25,8 @@ float _KamionLampSpec;
 // s20 night-int (review P1-2): night floor near lamps - light from the lamps not in the analytic set, their
 // inter-reflections and the urban sky glow, as an irradiance (xyz, exposed LED units like _KamionLampColor) that fades to 0
 // at w metres (horizontal) from the nearest chosen luminaire. 0 when lamps are off or the tier sets lampFloorOff.
+// ADR 0199: beyond that the floor keeps _KamionLampColor.w × the near level (urban sky glow, 0.03 lx clear / 0.2 lx
+// overcast instead of 0).
 float4 _KamionLampFloor;
 float _KamionHeadlampOn;
 float4 _KamionHeadlampLeft, _KamionHeadlampRight, _KamionHeadlampAxisRight, _KamionHeadlampUp,
@@ -61,12 +63,13 @@ float KamionHeadlampCone(float3 positionWS, half3 normal, float3 source)
 }
 
 // s20 night-int: night floor irradiance at a point whose nearest chosen luminaire is sqrt(near2) m away (horizontal);
-// sky-facing surfaces get all of it, walls half, undersides a quarter (light from above and around). Smooth fade to 0 at
-// _KamionLampFloor.w metres, so streets away from lamps stay dark.
+// sky-facing surfaces get all of it, walls half, undersides a quarter (light from above and around). Smooth fade at
+// _KamionLampFloor.w metres down to the far level _KamionLampColor.w (ADR 0199), so streets away from lamps stay dark
+// but not black.
 float3 KamionLampFloor(float near2, half3 n)
 {
     float fade = saturate(1.0 - near2 / max(_KamionLampFloor.w * _KamionLampFloor.w, 1.0));
-    return _KamionLampFloor.rgb * (fade * fade * (0.5 + 0.5 * n.y * (n.y > 0.0 ? 1.0 : 0.5)));
+    return _KamionLampFloor.rgb * (lerp(_KamionLampColor.w, 1.0, fade * fade) * (0.5 + 0.5 * n.y * (n.y > 0.0 ? 1.0 : 0.5)));
 }
 
 // Relative intensity towards positionWS (I / I0 times the fade weight) and the unit vector to the luminaire.

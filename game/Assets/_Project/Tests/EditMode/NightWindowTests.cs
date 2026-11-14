@@ -26,9 +26,9 @@ namespace Game.Tests
         [Test]
         public void Shares_PlausibleAtDuskAndNight()
         {
-            var dusk = NightWindows.BaseShares(-6f);
-            var night = NightWindows.BaseShares(-18f);
-            Assert.That(dusk.x, Is.InRange(0.3f, 0.6f), "flats lit at the end of civil twilight");
+            var dusk = NightWindows.BaseShares(-6f, LightingPreset.DuskClockHour);
+            var night = NightWindows.BaseShares(-18f, LightingPreset.NightClockHour);
+            Assert.That(dusk.x, Is.InRange(0.2f, 0.3f), "flats lit at the end of civil twilight (ADR 0199: photo counts 6-28 %)");
             Assert.That(dusk.y, Is.GreaterThan(night.y), "offices empty later");
             Assert.That(night.x, Is.GreaterThanOrEqualTo(dusk.x), "more flats lit later");
             for (int i = 0; i < 4; i++) Assert.That(dusk[i], Is.InRange(0f, 1f));
