@@ -524,13 +524,13 @@
     "sbs-g3-b-182011943700132": {
       "horizon_y_fraction": 0.62,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. ADR 0161: ring N-bound position chosen from r1+r2 probe sheets; WORKING_VALUE, not surveyed.",
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. ADR 0161: ring N-bound position chosen from r1+r2 probe sheets; WORKING_VALUE, not surveyed. ADR 0172: review s17 'camera one lane to the left': moved 3 m east into the middle lane and 2.5 m south to stay under the deck edge (r1 / r2 probe sheets, 8 candidates); WORKING_VALUE, not surveyed.",
       "pose_confidence": "C",
-      "pose_reason": "ADR 0161 (s16): probe sbs-p161-18201194-c; anchors: signal heads at the ring, lane line convergence",
+      "pose_reason": "ADR 0172 (s18): probe sbs-p172-18201194-s1; anchors: deck corner top-left, carriageway across the whole foreground, nose island on the right; signals differ by epoch (photo 2019 = two short masts, world = orthophoto 2024, owner decision 2026-11-13)",
       "photometric_use": false,
       "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
-      "east_delta_m": 3.1402,
-      "north_delta_m": -9.4286,
+      "east_delta_m": 6.1402,
+      "north_delta_m": -11.9286,
       "eye_height_m": 1.2,
       "heading_delta_deg": -0.396
     },
@@ -562,16 +562,16 @@
       "pose_status": "WORKING_VALUE"
     },
     "sbs-g3-a-cm92458760": {
-      "pose_confidence": "C",
-      "pose_reason": "ADR 0161 (s16): probe sbs-p161-cm924587-c; anchors: EC access island + plantings, ring exit kerb, white building edge",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0172 (s18): probe sbs-p172-cm924587-fit; anchors: lamp column foot, A-7 post, D-6 post (GUGiK 0.08 m orthophoto) and both EC chimneys: 4-parameter resection, residuals <= 0.6 deg",
       "photometric_use": false,
       "photometric_reason": "Uncalibrated pose/masks; cm92458760 is wet pavement",
-      "eye_height_m": 1.5,
-      "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail. ADR 0160: Commons geotag (whole-second DMS, ~150 m off) replaced by a two-chimney resection: camera at the Bitwy Bialostockiej / EC access-road junction E542 N-750, heading 134 grid, hfov 70, eye 1.5 (vehicle window). WORKING_VALUE, not surveyed. ADR 0161: position chosen from r1 probe sheet (5 candidates) against the Commons photo; WORKING_VALUE, not surveyed.",
-      "east_delta_m": -67.7561,
-      "north_delta_m": -127.4411,
-      "heading_delta_deg": 25.616,
-      "horizontal_fov_deg": 70,
+      "eye_height_m": 2.1,
+      "note": "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail. ADR 0160: Commons geotag (whole-second DMS, ~150 m off) replaced by a two-chimney resection: camera at the Bitwy Bialostockiej / EC access-road junction E542 N-750, heading 134 grid, hfov 70, eye 1.5 (vehicle window). WORKING_VALUE, not surveyed. ADR 0161: position chosen from r1 probe sheet (5 candidates) against the Commons photo; WORKING_VALUE, not surveyed. ADR 0172: least-squares resection of E, N, heading, hfov on five anchors with known ground positions; eye 2.1 m from the lamp foot 14.6 deg under the horizon at 8.0 m (bus window); WORKING_VALUE, not surveyed.",
+      "east_delta_m": -68.3561,
+      "north_delta_m": -128.5411,
+      "heading_delta_deg": 26.038,
+      "horizontal_fov_deg": 67.6,
       "pose_status": "WORKING_VALUE"
     }
   }

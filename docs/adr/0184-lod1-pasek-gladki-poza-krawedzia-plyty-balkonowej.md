@@ -1,6 +1,6 @@
 # ADR 0184 — LOD1 bloków i biurowców: gładki pasek atlasu dalekiej elewacji poza krawędzią płyty balkonowej
 
-Status: PROPOSED (2026-11-13, s19). Źródło: ADR 0180 §1 („przy okazji zmierzone”), HANDOVER „Follow-upy P2”,
+Status: ACCEPTED (2026-11-13, s19/s20). Źródło: ADR 0180 §1 („przy okazji zmierzone”), HANDOVER „Follow-upy P2”,
 recenzja `docs/reports/REVIEW-2026-11-13-s19-0180-r2.md` P2.2 („białe łaty w LOD1 NW” wieżowca).
 
 ## 1. Ustalenia (zmierzone)
@@ -53,4 +53,22 @@ przesunięcie paska.
 
 ## 4. Walidacja
 
-WALIDACJA_PLACEHOLDER
+- Test `tests/gis/test_world_v31.py::test_far_plain_strip_is_clear_of_painted_cells` zielony. Pełny `pytest tests/gis`
+  (worktree, 19 min 37 s): 1080 passed, 2 xfailed, 1 failed — `test_road_fidelity::test_report_not_stale`
+  (raport fidelity nieaktualny względem `overrides.yaml` z ADR 0180; niezależne od tej zmiany).
+  EditMode: 518, 517 passed, 1 skipped (`artifacts/tests/editmode-20261113-220123.xml`).
+- build_world: manifest — zmienione tylko sha / bytes plików, trójkąty bez zmian.
+- Budżet (Unity, `budget-Low-overcast.txt`, `budget-High-overcast.txt`, kamery r10_block_1..5 + r10_office_2):
+  draw calle +0, trójkąty +0,00 % na każdej kamerze, Low i High. High (LOD0) piksel w piksel identyczny (AE 0).
+- BEFORE / AFTER LOD1 (Low, własne kamery `artifacts/atlas-0184/lod1_cameras.json`, chunki > 60 m od trasy; BEFORE =
+  świat zbudowany z tymczasowym starym paskiem u 0,2..1,2, niezacommitowanym): we wszystkich zmienionych obszarach
+  AFTER jest ciemniejszy o 8–17 / 255 (np. `a184_hi_d_p` overcast: 141,7 → 125,0 na 159 393 px), zgodnie z pomiarem
+  206 → 187 w §1. Cropy `artifacts/atlas-0184/crops/lod1_*_Low-overcast_before_after.jpg`: na `a184_hi_d_p` jasne
+  prostokąty marginesów i najwyższej kondygnacji znikają, ściana ma jeden ton tynku; bloki `a184_blk_*` — znikają jaśniejsze pionowe pasy przy narożnikach,
+  mniejsza skala; `a184_tower_n` — subtelne wyrównanie tonu.
+- `a184_tower_p` (wieżowiec od NW): 0 zmienionych pikseli — ściany widoczne z tej kamery idą przez
+  `frontage.lod1_facade` (§3), nie `lod1_wall`. Białe łaty z recenzji 0180 r2 P2.2 w silniku nie są tu potwierdzone
+  ani usunięte; pozostaje zalecenie z §3. Pionowe białe kreski na narożniku wieżowca (`a184_tower_n`, przed i po) —
+  inna przyczyna, otwarte.
+- Porównanie ze zdjęciem właściciela: nie dotyczy wprost (zmiana tonu tynku w LOD1); kierunek zgodny z refs —
+  jednolity tynk bez jaśniejszych pasów przy narożnikach bloków.
