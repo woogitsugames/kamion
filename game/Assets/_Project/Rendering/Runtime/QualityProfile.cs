@@ -76,6 +76,14 @@ namespace Game.Rendering
                      "a uniform-branch loop in the world shader; 0 = off, max 8)")] public int lampPools;
             [Tooltip("ADR 0191: GGX highlight of each lamp pool on the world surfaces (the long streak of a lamp on asphalt " +
                      "towards the viewer; ~12 ALU per pool on lit pixels at dusk / night only)")] public bool lampPoolSpecular;
+            [Tooltip("ADR 0192: Off = no lit windows at dusk / night (facade atlas, LOD1 rows, far facades). Inverted so tiers saved " +
+                     "before ADR 0192 keep them; cost: a uniform branch by day, one point load + one sample on window pixels by night")]
+            public bool nightWindowsOff;
+            [Tooltip("ADR 0192: Off = no glare halo around the street-lamp lenses at dusk (one additive billboard per lamp head, one draw)")]
+            public bool lampGlareOff;
+            [Tooltip("s20 night-int (review 0191 P1-2): Off = no night floor near lamps (light of the lamps outside the analytic set, " +
+                     "inter-reflections, urban sky glow; ~4 ALU per lit pixel, dusk / night only). Inverted so older tiers keep it")]
+            public bool lampFloorOff;
             [Header("Baked world lighting (ADR 0064)")]
             [Tooltip("Off = no baked sky visibility (ambient / reflection occlusion) on the world surfaces. Inverted so tiers saved before ADR 0064 keep it on")]
             public bool worldSkyVisOff;
@@ -116,7 +124,7 @@ namespace Game.Rendering
         [Tooltip("Migration revision (ProjectSetup.LoadTiers applies the changes of later revisions to an existing asset)")]
         public int revision;
         /// <summary>ADR 0062: High floor 0.70, FSR upscaling, pacing fallback, lamp pools.</summary>
-        public const int CurrentRevision = 191;   // ADR 0080: cloudQuality, ssao; ADR0098: shadow receiver stability and post noise; ADR 0106: glassFast; ADR 0113: forestFast; ADR 0191: lampPoolSpecular
+        public const int CurrentRevision = 191;   // ADR 0080: cloudQuality, ssao; ADR0098: shadow receiver stability and post noise; ADR 0106: glassFast; ADR 0113: forestFast; ADR 0191: lampPoolSpecular (s20: + ADR 0192 nightWindowsOff / lampGlareOff, lampFloorOff - inverted, no migration step)
 
         /// <summary>
         /// First-launch tier by device (no launch argument, nothing saved by the player). Rules are checked in order; a rule

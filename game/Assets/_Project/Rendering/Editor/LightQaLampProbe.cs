@@ -99,7 +99,7 @@ namespace Game.Rendering.Editor
                 exposedHeadlampColor = Shader.GetGlobalVector("_KamionHeadlampColor"),
                 exposedPoolColor = Shader.GetGlobalVector("_KamionLampColor"),
                 enabledPointLights = environment.GetComponentsInChildren<Light>()
-                    .Count(l => l.enabled && l.type == LightType.Point && l.name.StartsWith("StreetLampLight "))
+                    .Count(l => l.enabled && (l.type == LightType.Point || l.type == LightType.Spot) && l.name.StartsWith("StreetLampLight "))
             };
         }
 

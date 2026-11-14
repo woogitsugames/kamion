@@ -43,7 +43,22 @@ namespace Game.Rendering
             k_Emission = Shader.PropertyToID("_Emission"), k_PoolPos = Shader.PropertyToID("_KamionLampPos"),
             k_PoolCount = Shader.PropertyToID("_KamionLampCount"), k_PoolColor = Shader.PropertyToID("_KamionLampColor"),
             k_PoolAxis = Shader.PropertyToID("_KamionLampAxis"), k_PoolSodium = Shader.PropertyToID("_KamionLampSodium"),
-            k_PoolSpec = Shader.PropertyToID("_KamionLampSpec");
+            k_PoolSpec = Shader.PropertyToID("_KamionLampSpec"), k_PoolFloor = Shader.PropertyToID("_KamionLampFloor");
+        /// <summary>
+        /// s20 night-int (review 0191 P1-2, Mapillary night frames: the carriageway between columns is never black): horizontal
+        /// illuminance near lamps from everything the analytic set leaves out - the lamps beyond the N nearest, light
+        /// reflected by façades and paving, and the urban sky glow. ~2.5 % of the nadir of a 2500 cd lamp at 8 m (39 lx),
+        /// under the EN 13201 minimum of a lit road (Uo 0.35-0.4 of ~10-15 lx average). WORKING_VALUE.
+        /// </summary>
+        public const float NightFloorLux = 1.0f;
+        /// <summary>s20 night-int: the night floor fades to zero this far (horizontal, m) from the nearest chosen luminaire. WORKING_VALUE.</summary>
+        public const float NightFloorReachM = 45f;
+        /// <summary>
+        /// s20 night-int (review 0191 P1-4): the High / Ultra lights are spots pointing down with the luminaire's cut-off
+        /// (outer cone 150° = 75° from the nadir) instead of spheres - a sphere at the lens lit the arm and housing above it
+        /// from 0.1-0.5 m ("neon" arms) and nearby thujas from the side. Inner cone = soft edge. WORKING_VALUE.
+        /// </summary>
+        public const float SpotOuterDeg = 150f, SpotInnerDeg = 110f;
         /// <summary>Upper limit of the analytic pools (size of the shader array).</summary>
         public const int MaxPools = 8;
         /// <summary>The pool focus sits this far ahead of the camera (horizontal), where the visible road is.</summary>
@@ -118,6 +133,7 @@ namespace Game.Rendering
             s_Heads = heads ?? new Vector3[0];
             s_HeadCount = Mathf.Min(count, s_Heads.Length);
             s_Axes = axes ?? new Vector4[0];
+            LampGlare.Invalidate();
         }
 
         /// <summary>EnvironmentLighting: lamps follow the sun elevation.</summary>
@@ -137,9 +153,11 @@ namespace Game.Rendering
         {
             foreach (var l in m_Lights) if (l != null) { if (Application.isPlaying) Destroy(l.gameObject); else DestroyImmediate(l.gameObject); }
             m_Lights = new Light[0];
+            LampGlare.Dispose();
             Shader.SetGlobalFloat(k_LightsOn, 0f);
             PoolCount = 0;
             Shader.SetGlobalFloat(k_PoolCount, 0f);
+            Shader.SetGlobalVector(k_PoolFloor, Vector4.zero);
         }
 
         void LateUpdate()
@@ -165,11 +183,14 @@ namespace Game.Rendering
                 bool use = i < n && m_Pick[i] >= 0;
                 l.enabled = use;
                 if (!use) continue;
-                l.transform.position = s_Heads[m_Pick[i]];
+                int hi = m_Pick[i];
+                l.transform.position = s_Heads[hi];
+                l.color = hi < s_Axes.Length && s_Axes[hi].z > 0.5f ? SodiumLightColor : k_Led;
                 l.intensity = DownIntensityCd * k / Mathf.PI * s_On;
             }
             Shader.SetGlobalFloat(k_LightsOn, n > 0 ? 1f : 0f);
             RefreshPools(cam, k);
+            LampGlare.Sync(s_Heads, s_Axes, s_HeadCount, s_On, k, k_Led, SodiumLightColor);   // ADR 0192 lens glare, s20: colour per luminaire
         }
 
         /// <summary>ADR 0062: analytic pools on the world surfaces (all tiers with lampPools > 0).</summary>
@@ -180,6 +201,7 @@ namespace Game.Rendering
             {
                 PoolCount = 0;
                 Shader.SetGlobalFloat(k_PoolCount, 0f);
+                Shader.SetGlobalVector(k_PoolFloor, Vector4.zero);
                 return;
             }
             Vector3 fwd = cam.transform.forward; fwd.y = 0f;
@@ -209,6 +231,15 @@ namespace Game.Rendering
             // Same photometry as the point lights: E = I cos / d², Unity display units I·k/π (Lambert without 1/π).
             Color c = k_Led * (DownIntensityCd * exposure / Mathf.PI * s_On);
             Shader.SetGlobalVector(k_PoolColor, new Vector4(c.r, c.g, c.b, 0f));
+            bool floorOff = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.lampFloorOff;
+            Color f = k_Led * (floorOff ? 0f : NightFloorLux * exposure / Mathf.PI * s_On);
+            Shader.SetGlobalVector(k_PoolFloor, new Vector4(f.r, f.g, f.b, NightFloorReachM));
+        }
+
+        /// <summary>s20 night-int: colour of a sodium luminaire's light at the LED luminance (pools use the same ratio).</summary>
+        public static Color SodiumLightColor
+        {
+            get { var r = SodiumTintRatio; return new Color(k_Led.r * r.r, k_Led.g * r.g, k_Led.b * r.b, 1f); }
         }
 
         void EnsurePick(int n)
@@ -227,7 +258,10 @@ namespace Game.Rendering
                 var go = new GameObject("StreetLampLight " + i) { hideFlags = HideFlags.DontSave };
                 go.transform.SetParent(transform, false);
                 var l = go.AddComponent<Light>();
-                l.type = LightType.Point;
+                l.type = LightType.Spot;
+                l.spotAngle = SpotOuterDeg;
+                l.innerSpotAngle = SpotInnerDeg;
+                go.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
                 l.range = 30f;
                 l.color = k_Led;
                 l.shadows = LightShadows.None;

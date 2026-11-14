@@ -96,6 +96,7 @@ Shader "Kamion/World PBR"
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 2
         [Toggle] _ReceiveShadows ("Receive shadows", Float) = 1
         _ShadowNormalBiasScale ("Opt-in caster normal-bias scale (ADR0155)", Range(0, 1)) = 1
+        _NightWindows ("Night windows (_NIGHTWIN, ADR 0192): 1 facade_atlas, 2 facade_far rows", Float) = 0
     }
     SubShader
     {
@@ -128,6 +129,7 @@ Shader "Kamion/World PBR"
             float4 _CarPaint, _CarFlake, _PearlTint;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
             float _ShadowNormalBiasScale;
+            float _NightWindows;
         CBUFFER_END
         ENDHLSL
 
@@ -164,6 +166,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _VERTEX_GRIME
             #pragma shader_feature_local _CARPAINT
             #pragma shader_feature_local _PANELTONE
+            #pragma shader_feature_local _NIGHTWIN
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
@@ -179,6 +182,12 @@ Shader "Kamion/World PBR"
             TEXTURE2D(_DetailAlbedo); SAMPLER(sampler_DetailAlbedo);
             TEXTURE2D(_DetailNormal);
             TEXTURE2D(_RunoffMap);
+            #if defined(_NIGHTWIN)
+            #include "Assets/_Project/Rendering/Shaders/KamionNightWindows.hlsl"   // ADR 0192 lit windows
+            TEXTURE2D(_KamionNightAtlasId); TEXTURE2D(_KamionNightAtlasT); SAMPLER(sampler_KamionNightAtlasT);
+            TEXTURE2D(_KamionNightFarId); TEXTURE2D(_KamionNightFarT);
+            float4 _KamionNightAtlasId_TexelSize, _KamionNightFarId_TexelSize;
+            #endif
 
             #if defined(_CARPAINT)
             // ADR0089: four painted-shell film levels, including clean. Region-relative origin remains stable
@@ -214,6 +223,10 @@ Shader "Kamion/World PBR"
                 #if defined(_CARPAINT)
                 nointerpolation float2 carFilm : TEXCOORD5;
                 #endif
+                #if defined(_NIGHTWIN)
+                float3 posOS : TEXCOORD6;       // ADR 0192: window anchor (object space, camera independent)
+                float3 posRel : TEXCOORD7;      // camera-relative position: precise screen derivatives
+                #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -233,6 +246,10 @@ Shader "Kamion/World PBR"
                 o.uv = float4(v.uv0, v.uv1);
                 #if defined(_CARPAINT)
                 o.carFilm = CarInstanceFilm(float2(GetObjectToWorldMatrix()._m03, GetObjectToWorldMatrix()._m23));
+                #endif
+                #if defined(_NIGHTWIN)
+                o.posOS = v.positionOS.xyz;
+                o.posRel = p.positionWS - _WorldSpaceCameraPos;
                 #endif
                 return o;
             }
@@ -985,6 +1002,33 @@ Shader "Kamion/World PBR"
                 color += ambient + env;
                 color += KamionLampPoolsLit(pw, nw, V, r, r2, diffColor, specColor);   // street-lamp pools (ADR 0062, 0191)
 
+            #if defined(_NIGHTWIN)
+                {
+                    // ADR 0192: lit windows. Derivatives outside the branch (uniform anyway); atlas / far-row data by mode.
+                    float3x3 w2o = (float3x3)GetWorldToObjectMatrix();
+                    float3 dRx = mul(w2o, ddx(i.posRel)), dRy = mul(w2o, ddy(i.posRel));
+                    float2 dUx = ddx(um), dUy = ddy(um);
+                    [branch] if (_KamionWindowsLum.y > 0.5)
+                    {
+                        bool farRows = _NightWindows > 1.5;
+                        float2 tile = _Tile.xy;
+                        float2 wrap = floor(um / tile);
+                        float2 auv = um / tile - wrap;
+                        float4 ts = farRows ? _KamionNightFarId_TexelSize : _KamionNightAtlasId_TexelSize;
+                        int2 tx = min((int2)(auv * ts.zw), (int2)ts.zw - 1);
+                        half4 id = farRows ? LOAD_TEXTURE2D(_KamionNightFarId, tx) : LOAD_TEXTURE2D(_KamionNightAtlasId, tx);
+                        float cls = round(id.a * 255.0 / 32.0);
+                        [branch] if (cls > 0.5)
+                        {
+                            half2 tc = farRows ? SAMPLE_TEXTURE2D(_KamionNightFarT, sampler_KamionNightAtlasT, auv).rg
+                                               : SAMPLE_TEXTURE2D(_KamionNightAtlasT, sampler_KamionNightAtlasT, auv).rg;
+                            float2 c = (id.rg + wrap) * tile;
+                            float3 anchor = KamionNwAnchor(i.posOS, dRx, dRy, um, dUx, dUy, c);
+                            color += KamionNightWindow(anchor, cls, tc.r, tc.g, albedo);
+                        }
+                    }
+                }
+            #endif
                 color = KamionMixFog(color, i.fogFactor);
                 return half4(color, alpha);
             }

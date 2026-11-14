@@ -23,7 +23,7 @@ namespace Game.Tests
         public void Nadir_IsInverseSquareOfTheMountingHeight()
         {
             foreach (float h in new[] { 8f, 9f, 10f, 11f })
-                Assert.AreEqual(I0 / (h * h), E(h, 0f, 0f), 1e-3f * I0 / (h * h), $"h {h}");
+                Assert.AreEqual(StreetLampOptics.NadirFactor * I0 / (h * h), E(h, 0f, 0f), 1e-3f * I0 / (h * h), $"h {h}");
         }
 
         [Test]
@@ -33,8 +33,10 @@ namespace Game.Tests
             float along = E(h, 0f, 1.5f * h), street = E(h, 1.0f * h, 0f), house = E(h, -1.0f * h, 0f);
             Assert.Greater(along, 0.2f * E(h, 0f, 0f), "1.5 h along the road still lit");
             Assert.Greater(street, 3f * house, "carriageway side >> house side");
-            Assert.AreEqual(0f, E(h, -0.75f * h, 0f), 1e-6f, "nothing 0.75 h behind the column");
-            Assert.AreEqual(0f, E(h, 0f, 2.45f * h), 1e-6f, "footprint ends at 2.4 h along");
+            Assert.Less(E(h, -0.75f * h, 0f), 0.05f * E(h, 0f, 0f), "only the soft tail 0.75 h behind the column");
+            Assert.AreEqual(0f, E(h, -1.06f * h, 0f), 1e-6f, "nothing 1.06 h behind the column (0.7 h x tail 1.5)");
+            Assert.AreEqual(0f, E(h, 0f, 3.65f * h), 1e-6f, "footprint ends at 2.4 h x tail 1.5 along");
+            Assert.That(E(h, 0f, 2.4f * h) / E(h, 0f, 0f), Is.InRange(0.01f, 0.08f), "review P1-3: soft rim, no drawn edge at the old radius");
             Assert.Greater(E(h, 0f, 1.5f * h), E(h, 1.5f * h, 0f), "elongated along the road, not round");
         }
 
@@ -76,7 +78,7 @@ namespace Game.Tests
                 float t = Mathf.Tan(g * Mathf.Deg2Rad) * h;
                 float i = StreetLampOptics.RelativeIntensity(lamp, ArmEast, true, new Vector3(0f, 0f, t));
                 if (i > max) { max = i; gammaAtMax = g; }
-                if (g >= 68f) Assert.AreEqual(0f, i, 1e-6f, $"full cutoff at {g}°");
+                if (g >= 75f) Assert.AreEqual(0f, i, 1e-6f, $"cutoff at {g}°");
             }
             Assert.That(max, Is.InRange(1.3f, 2.5f), "peak along the road vs nadir (typical LED road optic ~2x)");
             Assert.That(gammaAtMax, Is.InRange(40f, 65f), "peak angle");
@@ -88,8 +90,8 @@ namespace Game.Tests
         {
             const float h = 10f, step = 0.2f;
             double flux = 0;
-            for (float x = -1.6f * h; x <= 1.6f * h; x += step)
-                for (float z = -2.5f * h; z <= 2.5f * h; z += step)
+            for (float x = -1.6f * h; x <= 2.4f * h; x += step)
+                for (float z = -3.7f * h; z <= 3.7f * h; z += step)
                     flux += E(h, x, z) * step * step;
             float closed = StreetLampOptics.DownwardFluxLm(I0, true);
             Assert.AreEqual(closed, (float)flux, 0.03f * closed, "numeric vs closed form");
@@ -128,6 +130,8 @@ namespace Game.Tests
             Assert.AreEqual(StreetLampOptics.StreetSideRadiusH, Def("KAMION_LAMP_RS"), 1e-6f);
             Assert.AreEqual(StreetLampOptics.HouseSideRadiusH, Def("KAMION_LAMP_RH"), 1e-6f);
             Assert.AreEqual(StreetLampOptics.SymmetricRadiusH, Def("KAMION_LAMP_RSYM"), 1e-6f);
+            Assert.AreEqual(StreetLampOptics.TailShare, Def("KAMION_LAMP_TAIL_S"), 1e-6f);
+            Assert.AreEqual(StreetLampOptics.TailRadius, Def("KAMION_LAMP_TAIL_R"), 1e-6f);
         }
 
         [Test]
