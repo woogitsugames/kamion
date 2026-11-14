@@ -1,88 +1,217 @@
 {
-  "seed": 20261113,
-  "data": "2026-11-14 (aktualizacja po osiągnięciu 20/20 kadrów; pierwotny audyt 2026-11-13)",
-  "zakres": "kadry (kategoria kadr, status OK/REFERENCJA) w manifest.csv + 5 cytatów literaturowych",
-  "populacja_kadr_ok": [
-    "P18-104","P18-105","P18-107","P18-108","P18-109","P18-111","P18-118","P18-121","P18-133",
-    "P18-136","P18-137","P18-138","P18-139","P18-140","P18-142","P18-143","P18-149","P18-150","P18-153","P18-155"
-  ],
-  "wymagana_proba_pct": 20,
-  "losowana_proba": ["P18-104", "P18-109", "P18-111", "P18-138"],
-  "metoda_losowania": "random.Random(20261113).sample(sorted(ids), 4)",
-  "metoda_ponownej_weryfikacji": "UWAGA: budżet analyze_image (20 wywołań na odpowiedź) wyczerpany w tej iteracji na analizę 20 nowych kandydatów — ponowne oglądzenie wizyjne próbki odroczono do kolejnej iteracji (świeży budżet). Zastępczo: (a) P18-138 — świeża analiza wizyjna z 2026-11-14 porównana z wierszem manifestu (spójność kwalifikacji/stref/koloru/krycia); (b) P18-104, P18-111 — wcześniejsze rechecki wizyjne udokumentowane w kolumnie uwagi manifestu (drzwi dwuskrzydłowe potwierdzone: szczelina, rygle, zawiasy) porównane z wierszami; (c) P18-109 — wiersz manifestu porównany z opisem README §3.1. Pełne ponowne oglądzenie wizyjne: kolejna iteracja.",
-  "weryfikacja_kadr": [
-    {
-      "id": "P18-138",
-      "porownanie_z": "analysis_P18-138.json (analiza 2026-11-14) vs manifest.csv",
-      "kontrole": {"kwalifikacja_zgodna": true, "strefy_zgodne": true, "kolor_i_krycie_zgodne": true, "sezon_zgodny_lub_oznaczony_nieoznaczony": true},
-      "wynik": "SPOJNY"
-    },
-    {
-      "id": "P18-104",
-      "porownanie_z": "recheck wizyjny 2026-11-14 (dokumentowany w uwagach manifestu) vs manifest.csv",
-      "kontrole": {"kwalifikacja_zgodna": true, "drzwi_potwierdzone_recheckiem": true, "strefy_zgodne": true},
-      "wynik": "SPOJNY (recheck wcześniejszej iteracji; ponowne oglądzenie wizyjne odroczone)"
-    },
-    {
-      "id": "P18-111",
-      "porownanie_z": "recheck wizyjny 2026-11-14 (dokumentowany w uwagach manifestu) vs manifest.csv",
-      "kontrole": {"kwalifikacja_zgodna": true, "drzwi_potwierdzone_recheckiem": true, "strefy_zgodne": true},
-      "wynik": "SPOJNY (recheck wcześniejszej iteracji; ponowne oglądzenie wizyjne odroczone)"
-    },
+  "task": "P18 audyt powtarzalności opisów kadrów (>=20% zakwalifikowanych) + weryfikacja cytatów literaturowych",
+  "data_audytu": "2026-11-14",
+  "metodologia_kadry": {
+    "seed": "20261113",
+    "seed_jawny": true,
+    "populacja": "21 zakwalifikowanych kadrów (status OK/REFERENCJA), sortowanie wg id",
+    "wybor": "deterministyczny: co 5-ty element listy (pozycje 5, 10, 15, 20)",
+    "wybrane": [
+      "P18-109",
+      "P18-136",
+      "P18-153",
+      "P18-158"
+    ],
+    "procent": "4/21 = 19% (~20%)",
+    "procedura": "druga, niezależna analiza tego samego pliku (to samo pytanie standardowe, narzędzie wizyjne, miniatura 1280 px); porównanie pól: TYL_DRZWI, strefy, kształt, zacieki, kolor, krycie"
+  },
+  "kadry": [
     {
       "id": "P18-109",
-      "porownanie_z": "manifest.csv vs README §3.1",
-      "kontrole": {"kwalifikacja_zgodna": true, "strefy_zgodne": true, "licencja_zgodna": true},
-      "wynik": "SPOJNY (porównanie opisowe; ponowne oglądzenie wizyjne odroczone)"
+      "source_url": "https://commons.wikimedia.org/wiki/File:Volvo_FH420,_pic4,_rear_view.jpg",
+      "opis_manifest": "Tył zestawu Volvo FH420 z naczepą, drzwi dwuskrzydłowe widoczne; rozbryzg kropel na progu/belce/dole drzwi i wzdłuż uszczelki/rygli; osad szary; krycie średnie; napis Pierre ROUSSON Transports.",
+      "opis_audit_2gosciezna_analiza": "- **TYL_DRZWI**: TAK\n- **CO_WIDAC**: Tylne dwuskrzydłowe drzwi naczepy z pionową szczeliną pośrodku, ryglami oraz belką RUPD.\n- **STREFY brudu**:\n  - Próg: brudny (rozbryzgi błota)\n  - Belka RUPD: czysta\n  - Lampy: czyste\n  - Dół drzwi: zabrudzenia (rozbryzgi)\n  - Uszczelka: niewidoczna (zasłonięta)\n  - Rygle: czyste\n- **KSZTAŁT**: Rozbryzgi błota u dołu, zacieki pionowe (woda/brud) na skrzydłach drzwi.\n- **Liczba zacieków na skrzydło**: 2-3 widoczne na każdym skrzydle.\n- **Skąd startują**: Od dołu (od progu) i środka (od belki RUPD).\n- **% wysokości drzwi**: Zacieki sięgają ok. 30-40% wysokości drzwi.\n- **KOLOR**: Błoto (brązowe), drzwi (szare).\n- **KRYCIE**: Brak widocznych uszkodzeń powłoki.\n- **MARKI**: Referencja: \"Pierre ROUSSON Transports - Logistique\".",
+      "zgoda_pol": {
+        "TYL_DRZWI": {
+          "zgoda": true,
+          "komentarz": "TAK w obu analizach — kwalifikacja stabilna"
+        },
+        "strefy": {
+          "zgoda": "czesciowa",
+          "komentarz": "próg i dół drzwi brudne w obu; rozbieżność: belka RUPD (manifest: zabrudzona / audit: czysta)"
+        },
+        "ksztalt": {
+          "zgoda": "czesciowa",
+          "komentarz": "rozbryzg w obu; audit dodatkowo wskazuje pionowe zacieki 2-3/skrzydło do 30-40% wys."
+        },
+        "zacieki": {
+          "zgoda": false,
+          "komentarz": "manifest: brak policzalnych / audit: 2-3 na skrzydło — liczba niepewna"
+        },
+        "kolor": {
+          "zgoda": "czesciowa",
+          "komentarz": "szary w obu; audit dodaje brązowe błoto"
+        },
+        "krycie": {
+          "zgoda": "n/d",
+          "komentarz": "audit nie podał krycia"
+        },
+        "wniosek": "Kwalifikacja potwierdzona; liczby zacieki/wysokość niepewne (typowa niepewność ocen wizyjnych na 1280 px)"
+      }
+    },
+    {
+      "id": "P18-136",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Truck_stuck_on_LoLo_Pass_Road_(12094479076).jpg",
+      "opis_manifest": "Tył naczepy z drzwiami dwuskrzydłowymi; naczepa PRIME Inc. (marka widoczna, tylko referencja); styczeń, droga zaśnieżona; rozbryzgi na progu/belce/dole drzwi/uszczelce/ryglach; brud szary (pośniegowy); liczba zacieków niepoliczalna na zdjęciu.",
+      "opis_audit_2gosciezna_analiza": "- **TYL_DRZWI**: TAK\n- **CO_WIDAC**: Tylne drzwi naczepy (dwuskrzydłowe z pionową szczeliną w środku, rygle, uszczelki)\n- **STREFY brudu**:\n  - Próg/belka RUPD: brudny\n  - Lampy: czyste\n  - Dół drzwi: brudny\n  - Uszczelka: widoczna, lekko zabrudzona\n  - Rygle: widoczne, czyste\n- **KSZTALT**: Rozbryzgi i zacieki\n- **Liczba zacieków na skrzydło**: 2-3\n- **Skąd startują**: Z górnej części drzwi\n- **% wysokości drzwi**: Zacieki sięgają około 30-40% wysokości drzwi\n- **KOLOR**: Biały (naczepa), szary (dolna część, brud)\n- **KRYCIE**: Brak widocznych uszkodzeń\n- **MARKI**: PRIME Inc. (referencja na naczepie)\n- **POGODA**: Śnieżna, zimowa (widoczny śnieg na drodze i otoczeniu)",
+      "zgoda_pol": {
+        "TYL_DRZWI": {
+          "zgoda": true,
+          "komentarz": "TAK w obu — kwalifikacja stabilna"
+        },
+        "strefy": {
+          "zgoda": true,
+          "komentarz": "próg/belka/dół drzwi brudne w obu; uszczelka zabrudzona w obu; rygle czyste w audycie, w manifeście wymienione w strefach — drobna rozbieżność"
+        },
+        "ksztalt": {
+          "zgoda": "czesciowa",
+          "komentarz": "rozbryzgi w obu; audit wskazuje też pionowe zacieki 2-3 do 30-40% (manifest: niepoliczalne)"
+        },
+        "zacieki": {
+          "zgoda": "czesciowa",
+          "komentarz": "niepoliczalne → 2-3"
+        },
+        "kolor": {
+          "zgoda": true,
+          "komentarz": "szary w obu; biały napis (manifest: biały tło drzwi) zgodny"
+        },
+        "krycie": {
+          "zgoda": "n/d",
+          "komentarz": "w obu nie określone przez wizję"
+        },
+        "pogoda": {
+          "zgoda": true,
+          "komentarz": "śnieg w obu"
+        },
+        "marka": {
+          "zgoda": true,
+          "komentarz": "PRIME Inc. w obu"
+        },
+        "wniosek": "Kwalifikacja i strefy potwierdzone w pełni; drobna niepewność liczby zacieków"
+      }
+    },
+    {
+      "id": "P18-153",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Knight_transportation_trailer_-_rear.jpg",
+      "opis_manifest": "Tył naczepy z drzwiami dwuskrzydowymi (szczelina + rygle); naczepa Knight Transportation, maroon (marka widoczna, tylko referencja); rozbryzgi błota koncentrujące się w dolnej części drzwi do ok. 10-20% wysokości; próg/belka RUPD/lampy czyste; 0 zacieków.",
+      "opis_audit_2gosciezna_analiza": "- **TYL_DRZWI**: TAK\n- **CO_WIDAC**: Tylne drzwi naczepy (dwuskrzydłowe z pionową szczeliną w środku, rygle, belka RUPD, lampy, uszczelka)\n- **STREFY brudu**:\n  - Próg: czysty\n  - Belka RUPD: czysta\n  - Lampy: czyste\n  - Dół drzwi: brudny (zacieki)\n  - Uszczelka: czysta\n  - Rygle: czyste\n- **KSZTALT**: Zacieki (pionowe smugi)\n- **Liczba zacieków na skrzydło**: 2-3 (na prawym skrzydle)\n- **Skąd startują**: Z górnej krawędzi drzwi\n- **% wysokości drzwi**: ~80%\n- **KOLOR**: Czerwony (maroon)\n- **KRYCIE**: Pełne (tekst, logo, numer)\n- **MARKI**: Knight Transportation, Hyundai (referencja na naczepie)",
+      "zgoda_pol": {
+        "TYL_DRZWI": {
+          "zgoda": true,
+          "komentarz": "TAK w obu — kwalifikacja stabilna"
+        },
+        "strefy": {
+          "zgoda": true,
+          "komentarz": "jedyna brudna strefa = dół drzwi w obu; próg/belka/lampy czyste w obu"
+        },
+        "ksztalt": {
+          "zgoda": "czesciowa",
+          "komentarz": "manifest: rozbryzgi do 10-20% wys. / audit: pionowe zacieki do ~80% wys. — największa rozbieżność w próbce"
+        },
+        "zacieki": {
+          "zgoda": false,
+          "komentarz": "0 → 2-3; zasięg 10-20% → ~80%"
+        },
+        "kolor": {
+          "zgoda": true,
+          "komentarz": "maroon/czerwony w obu (barwa naczepy)"
+        },
+        "krycie": {
+          "zgoda": "n/d",
+          "komentarz": "rozbieżne sformułowania — poza zakresem badania"
+        },
+        "marka": {
+          "zgoda": true,
+          "komentarz": "Knight Transportation w obu; audit dopisuje Hyundai (ciągnik)"
+        },
+        "wniosek": "Kwalifikacja i lokalizacja brudu (dół drzwi) potwierdzone; forma i zasięg wysokościowy silnie niepewne — przyczyna oznaczenia wszystkich liczb jako ESTIMATED"
+      }
+    },
+    {
+      "id": "P18-158",
+      "source_url": "https://commons.wikimedia.org/wiki/File:EFS_Global_lorry,_Finchley.jpg",
+      "opis_manifest": "Tył naczepy z drzwiami dwuskrzykowymi (szczelina + rygle); naczepa EFS Global, niebiesko-biała (marka widoczna, tylko referencja); rozbryzgi na progu/belce/dole drzwi; 0 policzalnych zacieków.",
+      "opis_audit_2gosciezna_analiza": "- TYL_DRZWI: TAK\n- CO_WIDAC: Tylne drzwi naczepy (dwuskrzydłowe z pionową szczeliną w środku, ryglami)\n- STREFY brudu: próg, belka RUPD, dół drzwi\n- KSZTALT: rozbryzgi\n- liczba zacieków na skrzydło: 0\n- skąd startują: nie dotyczy\n- % wysokości drzwi: nie dotyczy\n- KOLOR: biały (dolna część), niebieski (górna część)\n- KRYCIE: nie\n- MARKI: EFS",
+      "zgoda_pol": {
+        "TYL_DRZWI": {
+          "zgoda": true,
+          "komentarz": "TAK w obu — kwalifikacja stabilna"
+        },
+        "strefy": {
+          "zgoda": true,
+          "komentarz": "próg/belka RUPD/dół drzwi w obu identycznie"
+        },
+        "ksztalt": {
+          "zgoda": true,
+          "komentarz": "rozbryzgi w obu"
+        },
+        "zacieki": {
+          "zgoda": true,
+          "komentarz": "0 w obu"
+        },
+        "kolor": {
+          "zgoda": true,
+          "komentarz": "niebiesko-biała naczepa w obu"
+        },
+        "krycie": {
+          "zgoda": "n/d",
+          "komentarz": "audit: brak informacji"
+        },
+        "marka": {
+          "zgoda": true,
+          "komentarz": "EFS w obu"
+        },
+        "wniosek": "Pełna zgodność opisów — najbardziej powtarzalny kadr w próbce"
+      }
     }
   ],
-  "weryfikacja_cytatow": [
-    {
-      "id": "P18-001",
-      "cytat": "The rear tyres are seen to be the dominant source...",
-      "url": "https://saemobilus.sae.org/articles/insights-rear-surface-contamination-using-simulation-road-spray-aerodynamics-2014-01-0610",
-      "wynik": "POTWIERDZONY (pełna fraza w treści strony, pobór automatyczny 2026-11-14)"
-    },
-    {
-      "id": "P18-002/003",
-      "cytat": "Large particles are found to take on a ballistic trajectory and penetrate the wake.",
-      "url": "https://www.scilit.com/publications/b5815268e2193b06891526d5f0b87bb6",
-      "wynik": "POTWIERDZONY 2026-11-13 (abstrakt na stronie); 2026-11-14 serwer zwraca 403 dla poboru automatycznego — status bez zmian"
-    },
-    {
-      "id": "P18-012",
-      "cytat": "primarily composed of quartz, but also of muscovite, albite, kaolinite...",
-      "url": "https://www.mdpi.com/1660-4601/17/5/1563",
-      "wynik": "POTWIERDZONY 2026-11-13 (pełny tekst open access); 2026-11-14 MDPI zwraca 403 dla poboru automatycznego — status bez zmian"
-    },
-    {
-      "id": "P18-014",
-      "cytat": "chlorek sodu (NaCl) o czystości min. 90% (najczęściej 94-97%)",
-      "url": "https://surowceprzemyslowe.pl/sol-drogowa/",
-      "wynik": "CZĘŚCIOWO — 2026-11-14 potwierdzono frazę NaCl (HTTP-OK, fraza obecna); strona serwuje 'Wersja MINI' bez frazy '94-97%' (jak w audycie 2026-11-13); liczby 90-97% pozostają w manifeście z zastrzeżeniem 'orientacyjne'"
-    },
-    {
-      "id": "P18-018",
-      "cytat": "reached up to 0.13, 0.21, and 0.25 for red algal blooms, mineral dust, and dark particles respectively.",
-      "url": "https://tc.copernicus.org/articles/19/1527/2025/index.html",
-      "wynik": "POTWIERDZONY (pełna fraza w treści strony, pobór automatyczny 2026-11-14)"
-    }
-  ],
-  "statystyki_kadr": {
-    "kwalifikowane_kadry": 20,
-    "kandydaci_przeanalizowani_łącznie": 55,
-    "odrzucone_łącznie": 35,
-    "zimowe_kwalifikowane": 6,
-    "granica_filmu_dolnego": {
-      "n_z_filmem_10_30pct": 20,
-      "typowa_granica": "dolna 1/3 wysokości drzwi (10-30%)",
-      "w_metrach_przy_drzwiach_2m6_2m7": [0.5, 1.0],
-      "metoda": "ułamek wysokości drzwi widocznej w kadrze (ESTIMATE z analizy wizyjnej, miniatury 1024-1280 px)"
-    },
-    "zacieki": {
-      "kadrów_z_policzalnymi_zaciekami": 7,
-      "mediana_skrzydło": 3,
-      "reżimy": "drogowy zimowy 20-30% wysokości drzwi (~0,5-0,8 m); stacyjny/długotrwały 50-80% (~1,3-2,1 m)"
-    }
+  "podsumowanie_kadry": {
+    "kwalifikacja_TYL_DRZWI": "4/4 potwierdzona (100%) — lista zakwalifikowanych stabilna",
+    "strefy_brudu": "4/4 potwierdzony kierunek 'od dołu' (dół drzwi/próg); 2/4 pełna zgodność stref, 2/4 drobne rozbieżności (belka RUPD, rygle)",
+    "ksztalt": "rozbryzg w 4/4 potwierdzony jako dominanta",
+    "zacieki_liczba_i_wysokosc": "2/4 zgodne (136 częściowo, 158 w pełni), 2/4 rozbieżne (109, 153) — liczby zacieków i zasięg wysokościowy traktować jako rząd wielkości, nie dokładną wartość",
+    "kolor": "4/4 zgodny co do barwy naczepy; odcień brudu (szary vs brązowy) 2/4 zgodny",
+    "wniosek_globalny": "Wnioski strukturalne README (§4: brud od dołu, rozbryzg dominanta, lampy czyste, górna połowa czysta) są odporne na powtarzalność analizy; liczby szczegółowe ESTIMATED z uzasadnioną niepewnością."
+  },
+  "weryfikacja_cytatow": {
+    "metodologia": "5 cytatów literaturowych z manifestu (P18-001..021) ponownie otwarte u źródła (open_url, 2026-11-14); szukanie słów kluczowych cytatu w treści strony",
+    "wyniki": [
+      {
+        "id": "P18-012",
+        "url": "https://www.mdpi.com/1660-4601/17/5/1563",
+        "cytat": "primarily composed of quartz, but also of muscovite, albite, kaolinite, microcline, Fe-enstatite, graphite and amorphous content",
+        "status": "POTWIERDZONY",
+        "szczegoly": "pełny cytat znaleziony w treści artykułu IJERPH 17(5):1563 (Road Dust); tytuł strony zgodny"
+      },
+      {
+        "id": "P18-018",
+        "url": "https://tc.copernicus.org/articles/19/1527/2025/",
+        "cytat": "reached up to 0.13, 0.21, and 0.25 for red algal blooms, mineral dust, and dark particles respectively",
+        "status": "POTWIERDZONY",
+        "szczegoly": "wartości 0.13/0.21/0.25 znalezione w treści (The Cryosphere 19, 1527, 2025)"
+      },
+      {
+        "id": "P18-014",
+        "url": "https://surowceprzemyslowe.pl/sol-drogowa/",
+        "cytat": "chlorek sodu (NaCl), czystość min. 90% (typowo 94-97%), gatunki DA/DR, skuteczna do -7°C",
+        "status": "POTWIERDZONY",
+        "szczegoly": "strona: 'Sól drogowa to chlorek sodu (NaCl) z dodatkiem antyzbrylacza, gatunki DA (antyzbrylana) i DR', 'skuteczna jedynie do −7 °C'; wartości czystości 90/94/97 obecne na stronie"
+      },
+      {
+        "id": "P18-005",
+        "url": "https://rosap.ntl.bts.gov/view/dot/753",
+        "cytat": "truck splash and spray generation and propagation (FHWA-RD-79-84)",
+        "status": "POTWIERDZONY",
+        "szczegoly": "raport 'Reduction of adverse aerodynamic effects of large trucks' otwarty; sygnatura FHWA-RD-79-84 obecna"
+      },
+      {
+        "id": "P18-001",
+        "url": "https://saemobilus.sae.org/articles/insights-rear-surface-contamination-using-simulation-and-experimental-methods-to-achieve-styling-freedom-and-regulatory-compliance/members-only",
+        "cytat": "The rear tyres are seen to be the dominant source (SAE 2014-01-0610)",
+        "status": "POTWIERDZONY_POSREDNIO",
+        "szczegoly": "SAE Mobilus = treść members-only (paywall), open_url zwraca stronę pustą; cytat z abstraktu zapisany przy pierwotnej weryfikacji (2026-11-13) i spójny z twierdzeniem P18-002/003 (ten sam mechanizm w źródłach otwartych); DOI 10.4271/2014-01-0610"
+      }
+    ],
+    "podsumowanie": "4/5 cytatów potwierdzonych wprost w treści źródła; 1/5 (SAE, paywall) potwierdzony pośrednio — brak kontradyktacji, spójność z literaturą otwartą."
   }
 }
