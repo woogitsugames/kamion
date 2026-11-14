@@ -1,0 +1,287 @@
+{
+  "zadanie": "M60 — research/mistral/p17-dusk-lighting",
+  "data_audytu": "2026-11-13",
+  "seed": 20261113,
+  "metoda_losowania": "random.Random(seed).sample(ids, ceil(0.2*n))",
+  "liczba_rekordow": 109,
+  "wymagana_proba": 22,
+  "wylosowane_ids": [
+    "P17-023",
+    "P17-003",
+    "P17-107",
+    "P17-017",
+    "P17-047",
+    "P17-082",
+    "P17-002",
+    "P17-059",
+    "P17-009",
+    "P17-066",
+    "P17-106",
+    "P17-013",
+    "P17-007",
+    "P17-051",
+    "P17-097",
+    "P17-071",
+    "P17-015",
+    "P17-077",
+    "P17-040",
+    "P17-004",
+    "P17-039",
+    "P17-064"
+  ],
+  "weryfikacje": [
+    {
+      "id": "P17-023",
+      "kategoria": "niebo",
+      "element": "luminancja_zenitu",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-003",
+      "kategoria": "niebo",
+      "element": "zmierzch_nawigacyjny",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-107",
+      "kategoria": "kadr",
+      "element": "oświetlenie_ulicy",
+      "checks": {
+        "url_http_status": "429 (rate-limit Wikimedia; plik pobrany z tego URL 2026-11-13 — weryfikacja po stronie pobrania)",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "ESTIMATED",
+        "data_dostepu": "2026-11-13",
+        "kadr_pozycja_i_data": true
+      }
+    },
+    {
+      "id": "P17-017",
+      "kategoria": "niebo",
+      "element": "natężenie_oświetlenia_poziomego",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-047",
+      "kategoria": "ulica",
+      "element": "norma_PN-EN_13201-2",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-082",
+      "kategoria": "okna",
+      "element": "kadr_zapalone_okna",
+      "checks": {
+        "url_http_status": "429 (rate-limit Wikimedia; plik pobrany z tego URL 2026-11-13 — weryfikacja po stronie pobrania)",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "ESTIMATED",
+        "data_dostepu": "2026-11-13",
+        "kadr_pozycja_i_data": true
+      }
+    },
+    {
+      "id": "P17-002",
+      "kategoria": "niebo",
+      "element": "zmierzch_cywilny",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-059",
+      "kategoria": "ulica",
+      "element": "dostawy_opraw_2026",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-009",
+      "kategoria": "niebo",
+      "element": "natężenie_oświetlenia_poziomego",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-066",
+      "kategoria": "ulica",
+      "element": "rozstaw_latarni_OSM",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "ESTIMATED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-106",
+      "kategoria": "kadr",
+      "element": "oświetlenie_ulicy",
+      "checks": {
+        "url_http_status": "429 (rate-limit Wikimedia; plik pobrany z tego URL 2026-11-13 — weryfikacja po stronie pobrania)",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "ESTIMATED",
+        "data_dostepu": "2026-11-13",
+        "kadr_pozycja_i_data": true
+      }
+    },
+    {
+      "id": "P17-013",
+      "kategoria": "niebo",
+      "element": "natężenie_oświetlenia_poziomego",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-007",
+      "kategoria": "niebo",
+      "element": "niebo_zenit",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-051",
+      "kategoria": "ulica",
+      "element": "wytyczne_ZDM_Kraków",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-097",
+      "kategoria": "kadr",
+      "element": "oświetlenie_ulicy",
+      "checks": {
+        "url_http_status": "429 (rate-limit Wikimedia; plik pobrany z tego URL 2026-11-13 — weryfikacja po stronie pobrania)",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "ESTIMATED",
+        "data_dostepu": "2026-11-13",
+        "kadr_pozycja_i_data": true
+      }
+    },
+    {
+      "id": "P17-071",
+      "kategoria": "okna",
+      "element": "literatura_Nachtlichter",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13",
+        "kadr_pozycja_i_data": false
+      }
+    },
+    {
+      "id": "P17-015",
+      "kategoria": "niebo",
+      "element": "natężenie_oświetlenia_poziomego",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-077",
+      "kategoria": "okna",
+      "element": "kadr_zapalone_okna",
+      "checks": {
+        "url_http_status": "429 (rate-limit Wikimedia; plik pobrany z tego URL 2026-11-13 — weryfikacja po stronie pobrania)",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "ESTIMATED",
+        "data_dostepu": "2026-11-13",
+        "kadr_pozycja_i_data": true
+      }
+    },
+    {
+      "id": "P17-040",
+      "kategoria": "ulica",
+      "element": "norma_PN-EN_13201-2",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-004",
+      "kategoria": "niebo",
+      "element": "zmierzch_nawigacyjny",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-039",
+      "kategoria": "ulica",
+      "element": "norma_PN-EN_13201-2",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "SOURCED",
+        "data_dostepu": "2026-11-13"
+      }
+    },
+    {
+      "id": "P17-064",
+      "kategoria": "ulica",
+      "element": "rozstaw_latarni_OSM",
+      "checks": {
+        "url_http_status": "200",
+        "cytat_w_uwagach": "TAK",
+        "status_wymagany": "ESTIMATED",
+        "data_dostepu": "2026-11-13"
+      }
+    }
+  ],
+  "ograniczenia": [
+    "Analiza obrazów (liczenie okien/lamp) wykonana jednorazowym przejściem wizyjnym (model wizyjny na miniaturach <=1600 px); w tury sprawdzono 46 kadrów, limit 20 wywołan/ture uniemozliwil ponowne niezalezne obejrzenie kadrow z proby.",
+    "Dla kadrow z proby zweryfikowano: link (HTTP), licencje, autora, date EXIF, spujnosc GPS-ulica (Nominatim) i wysokosc Slonca (NOAA) — patrz manifest.csv.",
+    "Luki oznaczone UNVERIFIED nie maja URL (celowo)."
+  ]
+}
