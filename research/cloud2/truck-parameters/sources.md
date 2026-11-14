@@ -5,7 +5,7 @@ Pliki pobiera `fetch.py` do `files/` (poza gitem, `.gitignore`). Dokumenty produ
 | klucz | dokument / autor | URL strony | plik w files/ | rozmiar | status prawny | wiersze manifestu |
 |---|---|---|---|---|---|---|
 | R13R3 | UNECE WP.29 (E/ECE/324/Rev.1/Add.12/Rev.3, 1996; seria 08) | https://digitallibrary.un.org/record/237462 | `R13_Add12_Rev3.pdf` | 0.5 MB | dokument urzędowy ONZ/EKG ONZ — cytat; plik poza gitem | R3-139…R3-150 (11) |
-| R13JP | UNECE / MLIT | https://www.mlit.go.jp/jidosha/un/UN_R013_02.pdf | `UN_R013_02.pdf` | 0.6 MB | dokument urzędowy ONZ/EKG ONZ — cytat; plik poza gitem (tekst równoległy EN/JA publikowany przez MLIT Japonia) | R3-151…R3-152 (2) |
+| R13JP | UNECE / MLIT | https://www.mlit.go.jp/jidosha/un/UN_R013_02.pdf | `UN_R013_02.pdf` | 0.6 MB | dokument urzędowy ONZ/EKG ONZ — cytat; plik poza gitem (tekst równoległy EN/JA publikowany przez MLIT Japonia) | R3-151…R3-162 (6) |
 | EU9653 | Rada UE — dyrektywa 96/53/WE, tekst skonsolidowany 14.08.2019 | https://eur-lex.europa.eu/legal-content/PL/TXT/?uri=CELEX:01996L0053-20190814 | `EU_96_53_pol.pdf` | 0.5 MB | dokument urzędowy UE — decyzja Komisji 2011/833/UE (ponowne wykorzystanie); cytat | R3-001…R3-010 (10) |
 | EU740 | PE i Rada — rozporządzenie (UE) 2020/740 | https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32020R0740 | `EU_2020_740_eng.pdf` | 2.5 MB | dokument urzędowy UE — decyzja Komisji 2011/833/UE (ponowne wykorzystanie); cytat | R3-133…R3-137 (5) |
 | FMVSS121 | NHTSA — 49 CFR 571.121 (FMVSS 121), eCFR 2026-11-01 | https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-571/subpart-B/section-571.121 | `ecfr_571_121.xml` | 0.1 MB | US Government work (eCFR) — domena publiczna | R3-153…R3-153 (1) |
@@ -25,7 +25,6 @@ Pliki pobiera `fetch.py` do `files/` (poza gitem, `.gitignore`). Dokumenty produ
 | BSE | Bridgestone, datasheet ECOPIA H-TRAILER 002 (kopia dystrybutora) | https://www.bigtyres.co.uk/media/landingpages/documents/bridgestone_ecopia-h-trailer-002_datasheet.pdf | `bridgestone_ecopia-h-trailer-002_datasheet.pdf` | 1.3 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-116…R3-116 (1) |
 | NOKIAN | Nokian Heavy Tyres, tire certificate 315/70 R22.5 E-Truck Drive (2022-08-03) | https://nokiantyres.studio.crasman.fi/pub/PIH/certificates/pc24/if-e-truck-drive/tire-certificate_315-70r22-5-154-150l-nokian-e-truck-drive_20220803_en_SI-1.pdf | `nokian_315_70r22_5_cert.pdf` | 0.1 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-112…R3-138 (3) |
 | KASS26 | Kässbohrer, Curtainsider series EN v5.1 (2026-04-27) | https://kaessbohrer.com/uploads/2026/4/curtainsider-series-en-v5-1-2026-04-27-145956.pdf | `kaessbohrer_curtainsider_v5_1.pdf` | 16.7 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-027…R3-038 (8) |
-| KASS22 | Kässbohrer, Curtainsider EN (2022-09-18) | https://www.kaessbohrer.com/static/media/category/579/attachments/curtainsider-en_220918_1422_6326ff8cc2893.pdf | `kaessbohrer_curtainsider_2022.pdf` | 1.2 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | — |
 | SCB | Schmitz Cargobull, broszura S.CS curtainsider semi-trailer | https://www.cargobull.com/-/media/project/scb-sites/scb-global-site/media-center-en/brochure-scs-curtainsider-semi-trailer.pdf | `scb_scs_brochure.pdf` | 6.5 MB | dane techniczne producenta — tylko cytat liczb; plik nie do redystrybucji (poza gitem); w grze bez marek | R3-030…R3-031 (2) |
 | KARIS | M. Karisaari, Modelling and assessment of performance based standards for high capacity vehicles, MSc Chalmers 2020:14 | https://odr.chalmers.se/items/2b98fd45-b586-4c56-8adf-40c854a1b35c | `chalmers_2020_karisaari.pdf` | 2.0 MB | praca dyplomowa, otwarty dostęp (Chalmers ODR); licencja nieokreślona — tylko cytat | R3-125…R3-131 (7) |
 | VARGH | A. Varghese, Influence of Tyre Inflation Pressure on Fuel Consumption, Vehicle Handling and Ride Quality, MSc Chalmers 2013/2014 | https://odr.chalmers.se/items/a63a7dd3-e046-49c9-8ac2-1415cf953104 | `chalmers_2014_varghese.pdf` | 3.6 MB | praca dyplomowa, otwarty dostęp (Chalmers ODR); licencja nieokreślona — tylko cytat | R3-155…R3-156 (2) |
@@ -34,6 +33,8 @@ Pliki pobiera `fetch.py` do `files/` (poza gitem, `.gitignore`). Dokumenty produ
 
 - `research/mistral/p4-truck-regulations` — P4-123…P4-138 (96/53/WE: wymiary, masy, naciski; WT § 3). W R3 tylko ponownie potwierdzone w tekście skonsolidowanym 01996L0053-20190814 (wiersze R3-001…R3-010).
 - `docs/VEHICLE_REFERENCE_DATA.md` S1 (D13K500), S2 (TraXon), S5 (R13 02 MLIT), S7 (Bridgestone M-STEER) — te same dokumenty otwarte ponownie; R3 dodaje do nich drugie i trzecie źródła.
+
+Przejrzane i nieużyte: Kässbohrer Curtainsider EN 2022 (zastąpiony wersją v5.1 z 2026) — usunięty z fetch.py po recenzji.
 
 ## Źródła NIE pobrane (zablokowane w tej sesji — tylko link, referencja)
 

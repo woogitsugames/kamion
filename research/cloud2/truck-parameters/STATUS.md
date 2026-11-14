@@ -10,3 +10,5 @@
   NASTĘPNY KROK: napisać sources.md i README.md, commit + push
 - 2026-11-14 krok 4: README.md (tabela gra vs źródło, luki, co nowe), sources.md (24 dokumenty + 6 zablokowanych). Pakiet kompletny.
   NASTĘPNY KROK: czekać na recenzję lidera (REVIEW.md); poprawki P0/P1 w tej gałęzi. Odtworzenie: `python3 -I fetch.py && python3 -I build_manifest.py && python3 -I audit.py`
+- 2026-11-14 krok 5 (rewizja 2, po REVIEW.md — werdykt FIX): P1-1 (72→0 ≤ 60,9 m; 60→0 ≤ 36,7 m; 61,2 m = ekstrapolacja), P1-2 (awaryjne N /115, N3 40 km/h; resztkowe ≤ 52,4 m; errata VRD S5/PV w.6 w README), P1-3 (MLIT s. 27–28 seria 10 jako 2. źródło; seria 11 = luka), P1-4 (kolumny MEGA/STANDARD/MAXIMA). P2: marki usunięte z `przedmiot`, Karisaari = model, zastrzeżenie FMVSS 121, KASS22 usunięty, cytaty wielowartościowe, numer biegu ESTIMATED, skutek laden40. Manifest 162 wiersze; audyt 35/162 PASS.
+  NASTĘPNY KROK: czekać na ponowną recenzję lidera

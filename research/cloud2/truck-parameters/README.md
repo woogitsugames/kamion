@@ -1,8 +1,8 @@
 # R3 — parametry ciągnika 4x2 (~480 KM) + naczepy kurtynowej 13,6 m z otwartych źródeł
 
-**Data:** 2026-11-14 · **Gałąź:** `research/cloud2-truck-parameters` · **Wierszy manifestu:** 157 (142 SOURCED, 11 ESTIMATED, 4 UNVERIFIED) · **Dokumentów otwartych:** 24 (+6 zablokowanych, tylko link) · **Kadrów zdjęciowych:** 0 (pakiet liczbowy); **stron PDF obejrzanych jako obraz:** 4 (R13 s. 43, AT2612 s. 3, ATO2612F s. 3, MB Powertrain s. 29) + 3 ponowne obejrzenia w samokontroli · **Samokontrola:** 33/157 wierszy (21 %, seed 20261114) — 1. przebieg 32 PASS / 1 FAIL (R3-153, przeliczenie jednostek w kolumnie „wartość”), po korekcie **33 PASS / 0 FAIL** (`audit_20_percent.json`).
+**Data:** 2026-11-14 (rewizja 2 po recenzji `REVIEW.md`) · **Gałąź:** `research/cloud2-truck-parameters` · **Wierszy manifestu:** 162 (146 SOURCED, 12 ESTIMATED, 4 UNVERIFIED) · **Dokumentów otwartych:** 24 (+6 zablokowanych, tylko link) · **Kadrów zdjęciowych:** 0 (pakiet liczbowy); **stron PDF obejrzanych jako obraz:** 7 (R13 Rev.3 s. 43; MLIT s. 27, 28, 31; AT2612 s. 3; ATO2612F s. 3; MB s. 29) + ponowne obejrzenia w samokontroli · **Samokontrola:** rewizja 1: 33/157 (1. przebieg 32 PASS / 1 FAIL, R3-153 → poprawione); rewizja 2: 35/162 wierszy (21 %, seed 20261114) — **35 PASS / 0 FAIL** (`audit_20_percent.json`).
 
-Nie zmieniano kodu gry — tylko raport. Opisy przeznaczone do gry są bez marek: „ciągnik 4x2 klasy 13 l / 480–500 KM”, „AMT 12 OD”, „opona 315/80 R22.5”. Marki i modele występują wyłącznie w kolumnach `cytat`/`autor` jako identyfikacja źródła danych technicznych.
+Nie zmieniano kodu gry ani docs — tylko raport. Opisy do gry i kolumna `przedmiot` są bez marek (karty oznaczone „karta A/B/C/D”, „producent 2/3”). Marki i modele występują w kolumnach `cytat`, `autor`, `uwagi` i `plik` jako identyfikacja źródła danych technicznych.
 
 ## Cel i metoda
 
@@ -29,8 +29,8 @@ Ocena: **OK** = w zakresie źródeł; **poza** = poza zakresem; **brak** = brak 
 | Średnica zawracania (krawężnik) | ≈ 13,4 m (obliczona) | 13,4 m dla WB 3,7 (12,7–13,7) | R3-017, 018 | OK | — |
 | Siodło przed osią napędową | 0,68 m | 0,375 m (jedno źródło) | R3-019 | **poza** | zostaje 0,68 m (ADR 0019, limit 16,50 m) albo krótszy zwis przedni modelu |
 | Rozstaw kół przód / tył | 2,04 / 1,82 m | 2,046–2,153 / 1,802–1,910 m | R3-020, 021 | przód na granicy (−6 mm), tył OK | opcjonalnie przód 2,05–2,10 m |
-| Wysokość siodła/sworznia | 1,15 m | 0,95–1,18 m (standard 1,10–1,18) | R3-027 | OK | — |
-| **Masa własna naczepy** | **7,0 t** | **5,99–6,56 t standard; 4,98–7,81 t cała rodzina** | R3-028…031 | OK (górna część) | rozważyć 6,3–6,6 t |
+| Wysokość siodła/sworznia | 1,15 m | 0,95–1,18 m (MEGA 0,95/0,98; STANDARD 1,05–1,15; MAXIMA 1,10–1,18) | R3-027 | OK (STANDARD) | — |
+| **Masa własna naczepy** | **7,0 t** | **MEGA/STANDARD 6,24 t, MAXIMA 6,56 t; drugi producent od 5,99 t; cała rodzina 4,98–7,81 t** | R3-028…031 | OK (górna część) | rozważyć 6,2–6,6 t |
 | Sworzeń → środkowa oś naczepy | 7,70 m | 7,70 m | R3-034 | OK (dokładnie) | — |
 | Rozstaw osi tridem | 1,31 m | brak karty z liczbą; prawo 1,3 < d ≤ 1,4 m | R3-036 | OK (prawnie) | UNVERIFIED |
 | Nośność sworznia / osi naczepy | 9,88 t / 7,54 t na oś | 12 t / 27 t (3 × 9 t) | R3-032, 033 | OK | — |
@@ -42,22 +42,22 @@ Ocena: **OK** = w zakresie źródeł; **poza** = poza zakresem; **brak** = brak 
 | Obroty przy 85 km/h, 12. bieg | 1158 rpm (r 0,51) | pasmo optimum 1100–1300 rpm; z r_dyn 0,524 → 1127 rpm | R3-107, 045 | OK | — |
 | **Promień toczenia 315/80 R22.5** | **0,510 m** | **0,521–0,528 m** (obwód 3272–3319 mm, 3 karty) | R3-107…109, R3-117 | **poza (−2…−3 %)** | radius ≈ 0,52 m (kinematyka); statyczny 0,50–0,51 m tylko dla kontaktu |
 | **Promień toczenia 385/65 R22.5** | **0,515 m** | **0,520–0,526 m** | R3-114…116, R3-118 | **poza (−1…−2 %)** | radius ≈ 0,52 m |
-| Rozmiar opon prowadzących/napędowych | 315/80 R22.5 | docs/04 §2.4 wymienia 315/70 (r_dyn 0,492–0,497 m) | R3-110…113, R3-119 | niespójność dokumentacji | zdecydować (ADR): 315/80 albo 315/70 |
+| Rozmiar opon prowadzących/napędowych | 315/80 R22.5 (gra, VRD, karta ciągnika) | docs/04 §2 pkt 4 podaje przykład „315/70”; r_dyn 315/70 = 0,492–0,497 m wg R3-119 (nie z docs/04) | R3-110…113, R3-119 | niespójność dokumentacji (miękka) | ujednolicić docs/04 (ADR) |
 | Nośność / Fz0 opon | Fz0 30 / 35 kN | LI 156 = 4000 kg, 160 = 4500 kg, 164 = 5000 kg | R3-120…124 | OK | S6 w VRD → potwierdzone przez kartę |
 | **Sztywność pionowa opony** | **1,0e6 / 1,1e6 N/m** | **0,880 (315/80) / 1,033 (385/65) MN/m** (dane opon via praca dypl.) | R3-125…127 | 315/80 **poza (+14 %)**, 385/65 OK (+6 %) | 0,88e6 / 1,03e6 N/m |
-| Współczynnik sztywności bocznej | 7,0 1/rad | 7,4 (N/rad)/N | R3-128 | OK | — (jedno źródło, wartość modelowa) |
-| Relaksacja boczna / μ szczytowe | 0,50 m / 0,80 | 0,4 m / 0,8 | R3-129, 130 | OK | — |
+| Współczynnik sztywności bocznej | 7,0 1/rad | 7,4 (N/rad)/N — **wartość modelowa** z pracy dyplomowej („Used value”), nie pomiar; ta sama praca zmienia ją później na 7,6 | R3-128 | zgodne z modelem, **nie walidacja** | — |
+| Relaksacja boczna / μ szczytowe | 0,50 m / 0,80 | 0,4 m / 0,8 — **wartości modelowe** (praca później: μ 0,68) | R3-129, 130 | zgodne z modelem, **nie walidacja** | — |
 | Współczynniki MF B,C,D,E z pomiaru | Cx 1,65, Cy 1,35, Ey −0,5 | brak otwartego źródła | R3-132 | brak | pozostaje WORKING_VALUE |
 | Opór toczenia | 0,0055 / 0,0050 | klasy C3: A ≤ 4,0; B 4,1–5,0; C 5,1–6,0; D 6,1–7,0; E ≥ 7,1 N/kN | R3-133…138 | OK (klasa C / B) | — |
-| **R13 N3 typ-0** | MFDD 7,07–7,48 m/s²; 80→0: 34,9–40,5 m | **60 km/h; s ≤ 0,15v + v²/130; dm ≥ 5,0 m/s²** (→ ≤ 61,2 m z 80 km/h) | R3-139…144 | OK | VRD S5: „N3 type-0 UNVERIFIED” → teraz SOURCED (Rev.3, 1996) |
-| R13 typ-0 z podłączonym silnikiem | brak testu | 90 km/h; s ≤ 0,15v + v²/103,5; dm ≥ 4,0 | R3-142 | **brak** | scenariusz 90→0 (40 t): ≤ 91,8 m |
+| **R13 N3 typ-0 (silnik odłączony)** | MFDD 7,07–7,48 m/s²; 80→0: 34,9–40,5 m | **60 km/h; s ≤ 0,15v + v²/130 → ≤ 36,7 m; dm ≥ 5,0 m/s²** (Rev.3 s. 43 i MLIT seria 10 s. 27–28 — identyczne). 80→0 ≤ 61,2 m to tylko **ekstrapolacja** wzoru, nie wymaganie | R3-139…144, 158, 159 | OK (MFDD) | dodać próbę regulaminową 60→0 ≤ 36,7 m (40 t i solo) |
+| R13 typ-0 z podłączonym silnikiem | brak testu | v = 0,80·vmax, maks. 90 km/h; przy ogranicznik 90 → **72 km/h; s ≤ 0,15·72 + 72²/103,5 = 60,9 m**; dm ≥ 4,0 | R3-142, 160 | **brak** | scenariusz 72→0 (40 t, silnik podłączony) ≤ 60,9 m |
 | Naczepa O4 — siła hamowania | brak testu osobno | ≥ 45 % obciążenia kół (laden i unladen) | R3-145 | brak | opcjonalny test samej naczepy |
 | Ciśnienie na głowicach | 8,5 / 7,5 bar | 6,5–8,5 bar | R3-146 | OK | — |
 | Czasy zadziałania | 0,25 / 0,31 / 0,53–0,54 s | ≤ 0,6 s (oś najmniej korzystna, 75 % siłownika); głowica 75 % ≤ 0,4 s; naczepa ≤ 0,4 s od 0,65 bar | R3-147…150 | OK | — |
-| Hamulec pomocniczy / postojowy | 33,1 m z 60 km/h; 12 % | dm ≥ 2,2 m/s²; 18 % (pojazd), 12 % (zestaw) | R3-151, 152 | OK | dodać test 18 % dla ciągnika solo |
-| Droga hamowania (USA, regulacja) | ≈ 50 m z 96,6 km/h (ESTIMATED) | ≤ 250 ft (76,2 m) z 60 mph, ciągnik obciążony | R3-153 | OK | — |
+| Hamowanie awaryjne / resztkowe / postojowe | PV w.6: 33,1 m z 60 km/h, limit ≤ 64,4 m (wzór /130); park 12 % | awaryjne N: s ≤ 0,15v + 2v²/115, dm ≥ 2,2, **N3 z 40 km/h** (≤ 33,8 m); resztkowe po awarii przenoszenia N3 obciążony 40 km/h: **≤ 52,4 m, dm ≥ 1,3**; postojowe 18 % (pojazd), 12 % (zestaw) | R3-151, 152, 161, 162 | **docs źle cytują** (errata niżej); gra przechodzi z zapasem | scenariusz awarii obwodu: 40 km/h, ≤ 52,4 m; test 18 % solo |
+| Droga hamowania (USA, regulacja) | ≈ 50 m z 96,6 km/h (ESTIMATED) | ≤ 250 ft (76,2 m) z 60 mph — próba USA: ciągnik obciążony z **niehamowaną** naczepą kontrolną | R3-153 | tylko porównanie jakościowe (inne warunki niż gra: 40 t, hamowana naczepa, EBS) | — |
 | Zmierzone drogi hamowania zestawu 40 t z EBS | 34,9–40,5 m | **brak** (źródła pomiarowe 403) | R3-154 | brak | pozyskać lokalnie (NHTSA 812176) |
-| Częstotliwość własna nadwozia | 1,3 / 1,5 Hz | 1,32 Hz (symulacja, praca dypl.) | R3-155 | OK | — (jedno źródło, nie pomiar) |
+| Częstotliwość własna nadwozia | przód 1,5 / tył 1,3 / naczepa 1,5 Hz | 1,32 Hz (symulacja, praca dypl.) | R3-155 | OK | — (jedno źródło, nie pomiar) |
 | Masa nieresorowana | — | 12,05 Hz | R3-156 | brak | — |
 | Skoki zawieszenia | 0,18 / 0,20 m | brak w otwartych kartach | R3-157 | brak | WORKING_VALUE |
 
@@ -77,18 +77,28 @@ Ocena: **OK** = w zakresie źródeł; **poza** = poza zakresem; **brak** = brak 
 2. **Współczynniki Magic Formula z pomiaru** opon 22,5″ — brak w otwartym dostępie (UMTRI Deep Blue za Cloudflare; dane TNO płatne).
 3. **Rozstaw osi tridem 1,31 m** — brak karty z liczbą (tylko przedział prawny).
 4. **Częstotliwości zawieszeń i kabiny z pomiaru**, skoki zawieszeń — tylko jedna wartość symulacyjna.
-5. **UN R13 w najnowszej serii** — otwarto Rev.3 (1996, seria 08) i 02/MLIT; wartości typ-0 N3 niezmienne w tych wersjach, ale serie 09–11 nieotwarte (unece.org 403, EUR-Lex 2016/194 za wyzwaniem JS).
+5. **UN R13 seria 11** — nieotwarta (unece.org 403, EUR-Lex 2016/194 za wyzwaniem JS). Sprawdzono Rev.3 (1996, seria 08, s. 43) i tekst MLIT (seria 10, s. 27–28): liczby typ-0 N3 identyczne (R3-139…143, R3-159, R3-160).
 6. Rozkład nacisków ciągnika i położenie siodła — tylko jedna karta producenta.
 
 ## Jak używać w grze
 
 - Liczby do JSON: kolumny `wartość` / `rekomendacja` w `manifest.csv`, filtr `ocena` zaczynający się od „poza” lub „brak”. Zmiany w kodzie/danych wykonuje lider po decyzji (ADR) — ten pakiet nic nie zmienia.
-- Priorytet (moja ocena): (1) promień toczenia opon 0,52 m, (2) rozkład nacisków solo, (3) sztywność pionowa 315/80, (4) testy: pierścień 12,5/5,3 m, 90→0 z silnikiem, postój 18 % solo, (5) decyzja 315/80 vs 315/70.
-- Status do VRD: S5 typ-0 N3 → SOURCED (R3-139…141); S6 LI → potwierdzone (R3-120…123); 96/53 „text UNVERIFIED” → SOURCED (R3-001…010).
+- Priorytet (moja ocena): (1) promień toczenia opon 0,52 m, (2) rozkład nacisków solo (skutek dla laden40: przód ≈ 7,1 t przy limicie tabliczkowym 7,5 t — sprawdzić), (3) sztywność pionowa 315/80, (4) testy: 60→0 ≤ 36,7 m, 72→0 z silnikiem ≤ 60,9 m, awaria obwodu 40 km/h ≤ 52,4 m, pierścień 12,5/5,3 m, postój 18 % solo, (5) decyzja 315/80 vs 315/70.
+- Status do VRD: S5 typ-0 N3 → SOURCED (R3-139…141, R3-159); S6 LI → potwierdzone pośrednio (R3-120…123 to nośność osi z tabel /2 i /4, ESTIMATED, nie tabela LI); 96/53 „text UNVERIFIED” → SOURCED (R3-001…010).
+
+## Errata do docs (do korekty przez lidera; pakiet docs nie zmienia)
+
+- **VRD S5 i PV tabela wiersz 6 (`air_leak_rear_circuit`)** cytują hamowanie awaryjne kat. N wzorem `0.15 v + 2v²/130` z 60 km/h (limit ≤ 64,4 m). Według R13 (02, tekst EN, MLIT s. 29–30, pkt 2.2.1 i 2.2.4) dla kat. N jest `0.15 v + (2v²/115)` (dm 2,2 m/s²), a N3 badany jest z **40 km/h** (≤ 33,8 m). Mianownik /130 i 60 km/h dotyczą M2/M3. Źródło pomyłki: kolumna japońska tego PDF ma w tym miejscu „2 v2/130”. Dla symulowanej awarii obwodu właściwszy jest pkt 2.4.1 (hamowanie resztkowe): N3 obciążony, 40 km/h, ≤ 52,4 m, dm ≥ 1,3 (R3-161). Gra przechodzi obie wersje z zapasem.
+
+## Do lidera poza pakietem
+
+- W danych gry są nazwy marek: id `amt12_od_traxon_class` (plik `amt12_od_traxon_class.gearbox.json`) oraz opisy w JSON (`description` skrzyni: „ZF TraXon…”, silnika: „…Volvo D13K500 fact sheet…”). To ślad pochodzenia danych, ale stoi w sprzeczności z zasadą „bez marek” — do decyzji (przenieść provenance do VRD, id neutralne).
+- Status „N3 type-0 UNVERIFIED” w VRD S5 może być zmieniony na **SOURCED**: UN R13 Rev.3 s. 43 i MLIT (seria 10) s. 27–28, obie tabele obejrzane jako obraz (R3-139…141, R3-159).
+- Recenzja: `REVIEW.md` (werdykt FIX: P1 ×4 poprawione; P2 1–10 poprawione w manifeście/README, w tym usunięte nieużyte źródło KASS22).
 
 ## Pliki
 
-- `manifest.csv` — 157 wierszy; dodatkowe kolumny: `strona_pdf`, `plik`, `wartość_w_grze`, `źródło_w_grze`, `ocena`, `rekomendacja`. Kolumny `lat/lon/kierunek_deg` = n/d (brak kadrów). `duplikat_sha256` puste — wiele wierszy celowo cytuje ten sam dokument (sha256 w kolumnie `sha256`).
+- `manifest.csv` — 162 wiersze; dodatkowe kolumny: `strona_pdf`, `plik`, `wartość_w_grze`, `źródło_w_grze`, `ocena`, `rekomendacja`. Kolumny `lat/lon/kierunek_deg` = n/d (brak kadrów). `duplikat_sha256` puste — wiele wierszy celowo cytuje ten sam dokument (sha256 w kolumnie `sha256`).
 - `sources.md` — lista dokumentów, status prawny, źródła zablokowane.
 - `fetch.py` — pobiera 24 pliki (≈ 70 MB) do `files/` i sprawdza sha256 (exit ≠ 0 przy niezgodności).
 - `build_manifest.py` (+ `sources_def.py`, `textcheck.py`) — generuje manifest i weryfikuje cytaty.

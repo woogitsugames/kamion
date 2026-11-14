@@ -67,21 +67,21 @@ r("ciagnik_masy", "Masa własna ciągnika 4x2 (olej, woda, AdBlue, 0 l paliwa, b
 r("ciagnik_masy", "Nacisk osi przedniej ciągnika solo (bez paliwa)", "5030", "kg", "SOURCED", Q,
   "Front Axle 5030 5030 5030 5030", "FH42T", "≈4515 bez paliwa (4806 z 600 kg paliwa w z=1.8 m; 600×1.8/3.7=292 kg na przód)",
   VRD + " §Mass and geometry (static axle loads, DERIVED)", "poza zakresem (−10 %, tolerancja karty ±3 %)",
-  "przesunąć ~0.5 t mas w przód (np. engine_gearbox z=3.3→3.6 m albo cab mass 1300→1500 kg); docelowo solo: przód ≈ 5.0–5.3 t, tył ≈ 1.8–2.1 t (z paliwem)",
+  "przesunąć ~0.5 t mas w przód (np. engine_gearbox z=3.3→3.6 m albo cab mass 1300→1500 kg); docelowo solo: przód ≈ 5.0–5.3 t, tył ≈ 1.8–2.1 t (z paliwem). Skutek dla laden40: przód ≈ 7.1 t (limit tabliczkowy 7.5 t, R3-016), oś napędowa ≈ 10.3 t — sprawdzić",
   "jedno źródło (jedna karta); rozkład zależy od kabiny i zbiorników — traktować jako kierunek, nie twardą wartość")
 r("ciagnik_masy", "Nacisk osi tylnej ciągnika solo (bez paliwa)", "1815–1840", "kg", "SOURCED", Q,
   "Rear Axle 1815 1825 1835 1840", "FH42T", "≈2385 bez paliwa (2694 z paliwem)", VRD + " §Mass and geometry",
   "poza zakresem (+30 %)", "jak wyżej — rozkład gry 64/36 %, karta 73/27 %", "")
 r("ciagnik_masy", "Dop. masa całkowita ciągnika / zestawu (rejestracyjna)", "18000 / 40000", "kg", "SOURCED", Q,
-  "Gross Combination Weight 40000 44000", "FH42T", "40000", VRD + " §Load cases", "OK", "bez zmian",
+  "Gross Vehicle Weight 18000 20500 Gross Combination Weight 40000 44000", "FH42T", "40000", VRD + " §Load cases", "OK", "bez zmian",
   "karta: Plated 18000 GVW / 40000 GCW; Design 20500 / 44000")
 r("ciagnik_masy", "Dop. nacisk osi przedniej / tylnej (rejestracyjny)", "7500 / 11500", "kg", "SOURCED", Q,
-  "Front Axle 7500 7500", "FH42T", "6620 / 10760 (laden40)", VRD + " §Load cases", "OK", "bez zmian",
+  "Front Axle 7500 7500 Rear Axle 11500 13000", "FH42T", "6620 / 10760 (laden40)", VRD + " §Load cases", "OK", "bez zmian",
   "tył: 'Rear Axle 11500 13000' (plated/design)")
 r("ciagnik_geometria", "Średnica zawracania krawężnik–krawężnik (WB 3500/3600/3700/3800)", "12700 / 13100 / 13400 / 13700",
   "mm", "SOURCED", Q, "Turning Circle Diameter Kerb to Kerb 12700 13100 13400 13700", "FH42T",
   "≈13400 dla WB 3.7 (ESTIMATED, wiersz niżej)", GAME + "tractor_4x2_generic.vehicle.json steering", "OK",
-  "bez zmian", "karta: 'Turning diameters are theoretically calculated.'")
+  "bez zmian", "karta: 'Turning diameters are theoretically calculated.' (wartości obliczone, nie zmierzone)")
 r("ciagnik_geometria", "Średnica zawracania ciągnika gry (obliczona)", "13.4", "m", "ESTIMATED",
   "geometria: kąt wirtualny 40° względem osi tylnej, WB 3.70, rozstaw przód 2.04, opona 0.315: R_zew = hypot(3.70, 3.70/tan40°+1.02) + 0.1575·cos → 6.70 m",
   "", "", "13.4", GAME + "tractor_4x2_generic.vehicle.json (maxRoadWheelAngleDeg 40, Ackermann 1.0)", "OK (vs 13.4 m karty dla WB 3700)",
@@ -91,7 +91,7 @@ r("ciagnik_geometria", "Położenie siodła (EC 96/53) przed osią tylną", "375
   "poza zakresem (+305 mm; jedno źródło)",
   "zostawić 0.68 m (ADR 0019: limit 16.50 m przy zwisie przednim 1.45 m) albo skrócić zwis przedni modelu; przy 0.375 m oś napędowa dostaje ~+1 t (sprawdzić 11.5 t)",
   "wartość producenta dla jego zwisu przedniego; dla gry liczy się suma ≤ 16.50 m")
-r("ciagnik_geometria", "Rozstaw kół osi przedniej (oś 7,5–10 t, felga 22,5\")", "2046–2153", "mm", "SOURCED", Q,
+r("ciagnik_geometria", "Rozstaw kół osi przedniej (oś 7,5–10 t, felga 22,5 cala)", "2046–2153", "mm", "SOURCED", Q,
   "B = track width 2046-2153 mm", "MBPT", "2040", GAME + "tractor_4x2_generic.vehicle.json front trackWidth", "na granicy (−6 mm)",
   "opcjonalnie 2.05–2.10 m", "oś przednia ciężka 'F 7.5-F 10'")
 r("ciagnik_geometria", "Rozstaw kół osi tylnej napędowej 13 t (środki par bliźniaczych)", "1802–1910", "mm", "SOURCED", Q,
@@ -115,18 +115,18 @@ r("ciagnik_zawieszenie", "Zawieszenie kabiny (inny producent)", "4 miechy pneuma
 # ---------------- 3. Siodło i naczepa --------------------------------------------------------------------------
 r("naczepa", "Wysokość sprzęgu (siodła) naczepy kurtynowej — warianty", "950–1180", "mm", "SOURCED", Q,
   "COUPLING HEIGHT 950 mm 980 mm 1.050 mm - 1.100 mm - 1.150 mm 1.100 mm - 1.150 mm - 1.180 mm", "KASS26", "1150",
-  GAME + "tractor_4x2_generic.vehicle.json fifthWheel y / trailer kingpinHeight", "OK", "bez zmian",
-  "950/980 = wersje mega (niskie), 1100–1180 = standard")
-r("naczepa", "Masa własna naczepy kurtynowej standard (K.SCS M / X+)", "6240", "kg", "SOURCED", Q,
+  GAME + "tractor_4x2_generic.vehicle.json fifthWheel y / trailer kingpinHeight", "OK (STANDARD 1050–1150)", "bez zmian",
+  "kolumny karty: MEGA (K.SCS M) 950/980; STANDARD (K.SCS X+) 1050–1150; MAXIMA (K.SCX) 1100–1180 (nagłówek 'MEGA STANDARD MAXIMA')")
+r("naczepa", "Masa własna naczepy kurtynowej MEGA / STANDARD", "6240", "kg", "SOURCED", Q,
   "TARE WEIGHT 6.240 kg 6.240 kg 6.560 kg", "KASS26", "7000", GAME + "curtainsider_tridem_13_6.trailer.json massElements",
-  "OK (górna część zakresu 4975–7810 kg)", "rozważyć 6.3–6.6 t dla 'standard'; 7.0 t odpowiada wersji wzmocnionej",
-  "trzy pierwsze kolumny tabeli: K.SCS M, K.SCS X+, K.SCX")
+  "OK (górna część zakresu 4975–7810 kg)", "rozważyć 6.2–6.6 t; 7.0 t odpowiada wersjom cięższym (double deck 7.4–7.5 t)",
+  "kolumny: MEGA 6240, STANDARD 6240, MAXIMA 6560 kg")
 r("naczepa", "Masa własna naczepy kurtynowej — rozpiętość rodziny modeli", "5630–7810", "kg", "SOURCED", Q,
   "TARE WEIGHT 6.240 kg 6.240 kg 6.560 kg 7.400 kg 7.500 kg 5.630 kg", "KASS26", "7000", "", "OK", "",
   "maks. 7.810 kg w dalszej kolumnie (model 54 t)")
-r("naczepa", "Masa własna naczepy S.CS UNIVERSAL (od)", "5990", "kg", "SOURCED", Q,
+r("naczepa", "Masa własna naczepy kurtynowej uniwersalnej, producent 2 (od)", "5990", "kg", "SOURCED", Q,
   "The new generation starts from an unladen weight of 5,990 kg.", "SCB", "7000", "", "OK (gra cięższa o 1 t)", "j.w.", "")
-r("naczepa", "Masa własna wersji lekkiej (X-LIGHT, od)", "4975", "kg", "SOURCED", Q, "Unladen… weight from… 4,975 kg", "SCB", "7000", "",
+r("naczepa", "Masa własna naczepy kurtynowej w wersji lekkiej, producent 2 (od)", "4975", "kg", "SOURCED", Q, "Unladen… weight from… 4,975 kg", "SCB", "7000", "",
   "poza wariantem (gra nie modeluje wersji lekkiej)", "brak", "dolna granica rynku")
 r("naczepa", "Dop. nacisk zespołu osi naczepy (3 × 9 t)", "27000", "kg", "SOURCED", Q, "AXLE LOAD 27.000 kg", "KASS26",
   "22620 (laden40)", VRD + " §Load cases", "OK", "bez zmian", "w ruchu w UE limit 24 t (zał. I pkt 3.3.2) — techniczne 27 t")
@@ -139,10 +139,10 @@ r("naczepa", "Sworzeń → pierwsza oś naczepy", "6390", "mm", "ESTIMATED", "77
 r("naczepa", "Rozstaw osi w zespole trójosiowym", "1310", "mm", "UNVERIFIED",
   "nie znaleziono otwartej karty z tą liczbą; przedział prawny 1,3 < d ≤ 1,4 m potwierdzony (wiersz 96/53 pkt 3.3.2)", "", "",
   "1310", GAME + "curtainsider_tridem_13_6.trailer.json", "OK (w przedziale prawnym)", "bez zmian", "")
-r("naczepa", "Wysokość wewnętrzna (przód) naczepy standard K.SCX", "2690–2710", "mm", "SOURCED", Q,
+r("naczepa", "Wysokość wewnętrzna (przód) naczepy STANDARD", "2750–2800", "mm", "SOURCED", Q,
   "INTERNAL HEIGHT (Front) 2.900 mm - 2.950 mm 2.750 mm - 2.800 mm 2.690 mm - 2.710 mm", "KASS26",
-  "2580 pod górną listwą / ≈2660 pod łukami", VRD + " §Semi-trailer cargo bay", "nieco poniżej (−3…−4 %)",
-  "dla wizualu ok; dla ładunku 2.6–2.7 m", "kolumny: K.SCS M (mega), K.SCS X+, K.SCX")
+  "2580 pod górną listwą / ≈2660 pod łukami", VRD + " §Semi-trailer cargo bay", "poniżej (−4…−8 %)",
+  "dla ładunku rozważyć 2.70–2.75 m (górna listwa); wizual bez zmian", "kolumny: MEGA 2900–2950, STANDARD 2750–2800, MAXIMA 2690–2710 (MAXIMA ma wyższy sprzęg 1100–1180)")
 r("naczepa", "Dop. masa całkowita naczepy (rejestracyjna, standard)", "39000", "kg", "SOURCED", Q, "GROSS WEIGHT 39.000 kg", "KASS26",
   "32500 (7000 + 25500 ładunku)", VRD + " §Load cases", "OK", "bez zmian", "")
 
@@ -168,11 +168,11 @@ r("silnik", "Hamulec silnikowy (dekompresyjny + przepustnica) przy 2300 rpm", "3
 r("silnik", "Hamulec wydechowy (sama przepustnica) przy 2300 rpm", "200", "kW", "SOURCED", Q,
   "Exhaust brake effect (EPG) at 2300 rpm…200 kW", "D13K500", "nie modelowany osobno", VRD + " §Engine", "brak w grze",
   "opcjonalnie stopień 'tylko przepustnica' = 200 kW na dźwigni", "")
-r("silnik", "Moc / moment MX-13 (klasa 480 KM)", "355 kW @ 1600; 2500 Nm @ 900–1125", "kW/Nm", "SOURCED", Q,
+r("silnik", "Moc / moment silnika R6 12,9 l (klasa 480 KM, producent 2)", "355 kW @ 1600; 2500 Nm @ 900–1125", "kW/Nm", "SOURCED", Q,
   "2500 Nm at 900 – 1125 rpm (Multi-Torque)", "DAFXF", "368 kW; 2500 Nm @ 980–1270", GAME + "diesel_r6_13l_368kw.engine.json",
   "OK", "bez zmian", "karta: '355 kW/483 hp at 1600 rpm'; drugi poziom '2350 Nm at 900 – 1365 rpm'; 12.9 l")
-r("silnik", "Moc / moment OM 471 (375 kW)", "375 kW @ 1600; 2500 Nm @ 1100", "kW/Nm", "SOURCED", Q,
-  "Rated power [kW/hp] 310/422 330/449 350/476 375/510 390/530", "MBPT", "368 kW; 2500 Nm", GAME + "diesel_r6_13l_368kw.engine.json",
+r("silnik", "Moc / moment silnika R6 12,8 l 375 kW (producent 3)", "375 kW @ 1600; 2500 Nm @ 1100", "kW/Nm", "SOURCED", Q,
+  "Maximal torque [Nm] 2100 2200 2300 2500 2600", "MBPT", "368 kW; 2500 Nm", GAME + "diesel_r6_13l_368kw.engine.json",
   "OK", "bez zmian", "wiersz momentu: 'Maximal torque [Nm] 2100 2200 2300 2500 2600' przy 1100 rpm; moc przy 1600 rpm")
 r("silnik", "Hamulec silnikowy rodziny ciężkich silników R6 (maks.)", "do 480", "kW", "SOURCED", Q,
   "Powerful and dynamic engine brakes with up to 480 kW", "MBPT", "375 kW", GAME + "diesel_r6_13l_368kw.engine.json", "OK (w zakresie)",
@@ -191,30 +191,30 @@ r("retarder", "Retarder olejowy (inny producent) — moment / moc / obroty maks.
 # ---------------- 6. Skrzynia biegów i most -------------------------------------------------------------------------
 tx = ["12.92", "9.98", "7.69", "5.94", "4.57", "3.53", "2.83", "2.19", "1.68", "1.30", "1.00", "0.77"]
 for i, v in enumerate(tx, 1):
-    r("skrzynia", f"AMT 12 OD (TraXon 12TX2610) — bieg {i}", v, "-", "SOURCED", Q,
+    r("skrzynia", f"AMT 12 OD (karta A, wariant 2600 Nm) — bieg {i}", v, "-", "SOURCED", Q,
       "2610 12.92 9.98 7.69 5.94 4.57 3.53 2.83 2.19 1.68 1.30 1.00 0.77 12.03 9.29 2.64 2.04", "TRAXON", v,
       GAME + "amt12_od_traxon_class.gearbox.json forwardRatios", "OK", "bez zmian", "")
-r("skrzynia", "AMT 12 OD (TraXon) — wsteczny R1 / R2 / R3 / R4", "12.03 / 9.29 / 2.64 / 2.04", "-", "SOURCED", Q,
+r("skrzynia", "AMT 12 OD (karta A) — wsteczny R1 / R2 / R3 / R4", "12.03 / 9.29 / 2.64 / 2.04", "-", "SOURCED", Q,
   "2610 12.92 9.98 7.69 5.94 4.57 3.53 2.83 2.19 1.68 1.30 1.00 0.77 12.03 9.29 2.64 2.04", "TRAXON", "12.03 (tylko R1)",
   GAME + "amt12_od_traxon_class.gearbox.json reverseRatio", "OK", "opcjonalnie R2 = 9.29", "")
-r("skrzynia", "TraXon 12TX2610 — maks. moment wejściowy", "2600", "Nm", "SOURCED", Q, "12 TX 2610 SO max. 2,600", "TRAXON", "2500 (silnik)",
+r("skrzynia", "AMT 12 OD (karta A) — maks. moment wejściowy", "2600", "Nm", "SOURCED", Q, "12 TX 2610 SO max. 2,600", "TRAXON", "2500 (silnik)",
   "", "OK", "bez zmian", "")
 at = ["14.94", "11.73", "9.04", "7.09", "5.54", "4.35", "3.44", "2.70", "2.08", "1.63", "1.27", "1.00"]
 for i, v in enumerate(at, 1):
-    r("skrzynia_alt", f"AMT 12 direct drive (I-Shift AT2612) — bieg {i}", v, "-", "SOURCED",
+    r("skrzynia_alt", f"AMT 12 direct drive (karta B) — bieg {i}", v, "-", "SOURCED",
       QI.format(img="files/_view/at2612-3.png, s. 3"), f"Ratios AT2612 (wykres słupkowy: {' '.join(at)}; R1–R4 17.48 13.73 4.02 3.16)",
       "AT2612", tx[i - 1], GAME + "amt12_od_traxon_class.gearbox.json", "alternatywa (direct drive)", "brak (gra = OD)", "", img="at2612-3.png")
 ato = ["11.73", "9.21", "7.09", "5.57", "4.35", "3.41", "2.70", "2.12", "1.63", "1.28", "1.00", "0.78"]
 for i, v in enumerate(ato, 1):
-    r("skrzynia_alt", f"AMT 12 overdrive (I-Shift ATO2612F) — bieg {i}", v, "-", "SOURCED",
+    r("skrzynia_alt", f"AMT 12 overdrive (karta C) — bieg {i}", v, "-", "SOURCED",
       QI.format(img="files/_view/ato2612f-3.png, s. 3"), f"Ratios ATO2612F (wykres słupkowy: {' '.join(ato)}; R1–R4 13.73 10.78 3.16 2.48)",
       "ATO2612F", tx[i - 1], GAME + "amt12_od_traxon_class.gearbox.json", "OK (OD 0.77 vs 0.78)", "bez zmian", "", img="ato2612f-3.png")
 iS = ["11.639", "7.035", "4.400", "2.645", "1.599", "1.000"]
 iL = ["9.020", "5.452", "3.410", "2.050", "1.239", "0.775"]
 g330 = [x for p in zip(iS, iL) for x in p]
 for i, v in enumerate(g330, 1):
-    r("skrzynia_alt", f"AMT 12 overdrive (G 330-12) — bieg {i}", v, "-", "SOURCED",
-      "cytat z tabeli iS/iL (s. 29, obraz obejrzany: files/_view/mb29_crop.png); kolejność biegów = przeplot iS/iL (splitter) — ESTIMATED układ, liczby SOURCED",
+    r("skrzynia_alt", f"AMT 12 overdrive (karta D, 3300 Nm) — bieg {i}", v, "-", "SOURCED",
+      "cytat z tabeli iS/iL (s. 29, obraz obejrzany: files/_view/mb29_crop.png); LICZBA SOURCED, NUMER BIEGU ESTIMATED (przeplot iS1,iL1,iS2,… — tabela ma 6 kolumn × 2 wiersze); kontrola: rozpiętość 11.639/0.775 = 15.02 jak w tabeli",
       "iS 11.639 7.035 4.400 2.645 1.599 1.000 12.774 2.093 15.02", "MBPT", tx[i - 1], GAME + "amt12_od_traxon_class.gearbox.json",
       "OK (OD 0.775)", "bez zmian", "iL: 9.020 5.452 3.410 2.050 1.239 0.775; R 12.774 / 9.900", img="mb29_crop.png")
 r("most", "Przełożenie mostu — ciągnik z AMT OD 0.77 (6x4, 60 t GCM)", "3.61", "-", "SOURCED", Q, "Rear axle ratio 3.61 : 1.00", "DAFXF",
@@ -235,23 +235,23 @@ def tyre(size, src, quote, od, slr, circ, gra_r, rec, extra=""):
       quote, src, gra_r, rec, "", "", extra)
     return rd
 rd = {}
-rd["315/80 Dunlop"] = tyre("315/80 R22.5 156/150 L (Dunlop SP346)", "DUNLOP", "1084 315 502 3294 8.50 8000 13400", "1084", "502", "3294",
+rd["315/80 Dunlop"] = tyre("315/80 R22.5 156/150 L (karta: A1)", "DUNLOP", "1084 315 502 3294 8.50 8000 13400", "1084", "502", "3294",
                            "r = 0.51", GAME + "tire_315_80_r22_5.tire.json radius", "ciśn. nominalne 8,50 bar; oś pojedyncza 8000 kg, bliźniacza 13400 kg")
-rd["315/80 BS-M"] = tyre("315/80 R22.5 156/150 K (Bridgestone M-STEER 001)", "BSM", "315/80 R 22.5 156/150 K 311 1092 507 3319", "1092", "507", "3319",
+rd["315/80 BS-M"] = tyre("315/80 R22.5 156/150 K (karta: B1)", "BSM", "315/80 R 22.5 156/150 K 311 1092 507 3319", "1092", "507", "3319",
                          "r = 0.51", GAME + "tire_315_80_r22_5.tire.json radius", "obwód '@ 90 km/h (Tol. ± 2%)'")
-rd["315/80 BS-R"] = tyre("315/80 R22.5 156/150 L (Bridgestone R-STEER 002)", "BSR", "314 1077 500 3272", "1077", "500", "3272",
+rd["315/80 BS-R"] = tyre("315/80 R22.5 156/150 L (karta: B2)", "BSR", "314 1077 500 3272", "1077", "500", "3272",
                          "r = 0.51", GAME + "tire_315_80_r22_5.tire.json radius")
-rd["315/70 Dunlop"] = tyre("315/70 R22.5 154/150 L (Dunlop SP344)", "DUNLOP", "1014 315 471 3095 9.00 7500 13400", "1014", "471", "3095",
+rd["315/70 Dunlop"] = tyre("315/70 R22.5 154/150 L (karta: A2)", "DUNLOP", "1014 315 471 3095 9.00 7500 13400", "1014", "471", "3095",
                            "brak (gra używa 315/80)", "docs/04 §2.4 wymienia 315/70", "ciśn. 9,00 bar; oś 7500 / 13400 kg")
-rd["315/70 Nokian"] = tyre("315/70 R22.5 154/150 L (Nokian E-Truck Drive)", "NOKIAN", "STATIC LOADED RADIUS 474 mm", "1027", "474", "3122",
+rd["315/70 Nokian"] = tyre("315/70 R22.5 154/150 L (karta: C1)", "NOKIAN", "STATIC LOADED RADIUS 474 mm", "1027", "474", "3122",
                            "brak (gra używa 315/80)", "", "karta: 'OVERALL DIAMETER 1027 mm', 'ROLLING CIRCUMFERENCE 3122 mm'")
-rd["315/70 BS-R"] = tyre("315/70 R22.5 156/150 L (Bridgestone R-STEER 002)", "BSR", "313 1017 469 3091", "1017", "469", "3091",
+rd["315/70 BS-R"] = tyre("315/70 R22.5 156/150 L (karta: B2)", "BSR", "313 1017 469 3091", "1017", "469", "3091",
                          "brak (gra używa 315/80)", "")
-rd["385/65 Dunlop"] = tyre("385/65 R22.5 160 K (Dunlop SP346)", "DUNLOP", "1077 380 499 3293 9.00 9000", "1077", "499", "3293",
+rd["385/65 Dunlop"] = tyre("385/65 R22.5 160 K (karta: A1)", "DUNLOP", "1077 380 499 3293 9.00 9000", "1077", "499", "3293",
                            "r = 0.515", GAME + "tire_385_65_r22_5.tire.json radius", "ciśn. 9,00 bar; oś pojedyncza 9000 kg")
-rd["385/65 BS-M"] = tyre("385/65 R22.5 160 K (Bridgestone M-STEER 001)", "BSM", "385/65 R 22.5 160 K 378 1086 502 3302", "1086", "502", "3302",
+rd["385/65 BS-M"] = tyre("385/65 R22.5 160 K (karta: B1)", "BSM", "385/65 R 22.5 160 K 378 1086 502 3302", "1086", "502", "3302",
                          "r = 0.515", GAME + "tire_385_65_r22_5.tire.json radius")
-rd["385/65 BS-E"] = tyre("385/65 R22.5 160 K (Bridgestone ECOPIA H-TRAILER 002)", "BSE", "379 1078 498 3277", "1078", "498", "3277",
+rd["385/65 BS-E"] = tyre("385/65 R22.5 160 K (karta: B3)", "BSE", "379 1078 498 3277", "1078", "498", "3277",
                          "r = 0.515", GAME + "tire_385_65_r22_5.tire.json radius")
 for size, keys, gra, f in [("315/80 R22.5", ["315/80 Dunlop", "315/80 BS-M", "315/80 BS-R"], "0.510", "tire_315_80_r22_5.tire.json"),
                            ("385/65 R22.5", ["385/65 Dunlop", "385/65 BS-M", "385/65 BS-E"], "0.515", "tire_385_65_r22_5.tire.json"),
@@ -276,20 +276,20 @@ r("opony_nosnosc", "Nośność 315/70 154 vs ciśnienie (oś pojedyncza)", "5780
   "tabela 650–900 kPa co 25 kPa; 'not more than 9.0 bar should be used'")
 r("opony_sztywnosc", "Sztywność pionowa opony 315/80 R22.5 @ 850 kPa", "880.3", "kN/m", "SOURCED", Q,
   "315/80R22.5 156/150 850 39.2 880.3", "KARIS", "1000", GAME + "tire_315_80_r22_5.tire.json radialStiffness", "poza zakresem (+14 %)",
-  "rozważyć 0.88e6 N/m (dane producenta opon via praca); obecne 1.0e6 to sieczna z promienia statycznego", "tab. 7, za Nokian Tyres")
+  "rozważyć 0.88e6 N/m; obecne 1.0e6 to sieczna z promienia statycznego", "tab. 7 — praca podaje za danymi Nokian Tyres (nie własny pomiar); ważne przy ciśnieniu nominalnym")
 r("opony_sztywnosc", "Sztywność pionowa opony 385/65 R22.5 @ 900 kPa", "1033.4", "kN/m", "SOURCED", Q,
   "385/65R22.5 160 900 44.1 1033.4", "KARIS", "1100", GAME + "tire_385_65_r22_5.tire.json radialStiffness", "OK (+6 %)", "opcjonalnie 1.03e6", "")
 r("opony_sztywnosc", "Sztywność pionowa opony 315/70 R22.5 @ 900 kPa", "941.3", "kN/m", "SOURCED", Q,
   "315/70R22.5 156/150 900 39.2 941.3", "KARIS", "brak", "", "brak w grze", "", "")
 r("opony_sily", "Współczynnik sztywności bocznej (cornering coefficient) CCy0", "7.4", "(N/rad)/N", "SOURCED", Q,
-  "CCy0 Cornering coefficient [(N/rad)/N] 7.4", "KARIS", "7.0", GAME + "tire_*.tire.json corneringStiffnessPerLoad", "OK (−5 %)",
-  "bez zmian", "wartość użyta w modelu PBS (praca dyplomowa) — nie pomiar; jedno źródło")
+  "CCy0 Cornering coefficient [(N/rad)/N] 7.4", "KARIS", "7.0", GAME + "tire_*.tire.json corneringStiffnessPerLoad", "zgodne z wartością modelową (−5 %), nie walidacja",
+  "bez zmian", "MODEL, NIE POMIAR: 'Used value' tab. 6 modelu PBS (praca dyplomowa); ta sama praca zmienia później CCy0 7.4→7.6 (s. 30); jedno źródło")
 r("opony_sily", "Długość relaksacji (boczna)", "0.4", "m", "SOURCED", Q, "Lr Relaxation length [m] 0.4", "KARIS", "0.50",
-  GAME + "tire_*.tire.json relaxationLengthY", "OK (+25 %, wartość robocza w obu)", "bez zmian", "praca: 'set to standard value of 0.4'")
+  GAME + "tire_*.tire.json relaxationLengthY", "zgodne z wartością modelową (+25 %), nie walidacja", "bez zmian", "MODEL, NIE POMIAR: 'set to standard value of 0.4'")
 r("opony_sily", "Maks. współczynnik siły bocznej (sucho)", "0.8", "-", "SOURCED", Q, "uy0 Maximum lateral force coefficient [-] 0.8", "KARIS", "0.8",
-  GAME + "tire_*.tire.json peakMu", "OK", "bez zmian", "")
+  GAME + "tire_*.tire.json peakMu", "zgodne z wartością modelową, nie walidacja", "bez zmian", "MODEL, NIE POMIAR: 'Used value' tab. 6; praca zmienia później uy0 0.8→0.68 (s. 30)")
 r("opony_sily", "Gradient współczynnika tarcia z obciążeniem", "−0.2", "-", "SOURCED", Q, "ugy Maximum lateral force gradient [-] -0.2", "KARIS", "−0.08",
-  GAME + "tire_*.tire.json muLoadSensitivity", "różna definicja (nieporównywalne wprost)", "brak", "")
+  GAME + "tire_*.tire.json muLoadSensitivity", "różna definicja (nieporównywalne wprost)", "brak", "MODEL, NIE POMIAR (tab. 6)")
 r("opony_sily", "Współczynniki MF B,C,D,E dla opon ciężarowych z pomiaru", "—", "-", "UNVERIFIED",
   "nie znaleziono otwartej publikacji z dopasowaniem MF do opony 22.5\" (Deep Blue/UMTRI za Cloudflare, MDPI 403); TNO/MF-Tyre — dane płatne", "", "",
   "Cx 1.65, Cy 1.35, Ey −0.5", GAME + "tire_*.tire.json", "brak źródła", "pozostaje WORKING_VALUE", "")
@@ -302,7 +302,7 @@ r("opony_toczenie", "Klasa C, opony C3 (RRC)", "5.1–6.0", "N/kN", "SOURCED", Q
 r("opony_toczenie", "Klasa D / E, opony C3 (RRC)", "6.1–7.0 / ≥ 7.1", "N/kN", "SOURCED", Q, "6,1 ≤ RRC ≤ 7,0", "EU740", "", "", "", "", "E: 'RRC ≥ 7,1'")
 r("opony_toczenie", "Klasa A przyczepności na mokrym, opony C3 (G)", "≥ 1.25", "-", "SOURCED", Q, "1,25 ≤ G", "EU740", "wet scale 0.625",
   VRD + " §Tire (wet asphalt friction scale)", "nieporównywalne (G to indeks względny do opony wzorcowej)", "brak", "")
-r("opony_toczenie", "Etykieta UE przykładowej opony napędowej 315/70", "RR C, wet grip C, 73 dB", "-", "SOURCED", Q, "ROLLING RESISTANCE C", "NOKIAN",
+r("opony_toczenie", "Etykieta UE przykładowej opony napędowej 315/70", "RR C, wet grip C, 73 dB", "-", "SOURCED", Q, "ROLLING RESISTANCE C… WET GRIP C… NOISE 73 dB", "NOKIAN",
   "", "", "", "", "")
 
 # ---------------- 8. Hamowanie -----------------------------------------------------------------------------------
@@ -314,13 +314,13 @@ r("hamowanie", "UN R13 N3 typ-0, silnik odłączony: droga hamowania", "s ≤ 0.
 r("hamowanie", "UN R13 N3 typ-0, silnik odłączony: MFDD", "≥ 5.0", "m/s²", "SOURCED", QI.format(img="files/_view/r13p43-043.png, s. 43"),
   "dm ≥ 5.0 m/s²", "R13R3", "7.07–7.48 (80→0 sucho, ABS)", PV + " tabela, wiersz 5 brake_80_0_dry", "OK", "bez zmian",
   "status w VRD S5 był UNVERIFIED — teraz SOURCED (Rev.3); gra spełnia z zapasem", img=img_r13)
-r("hamowanie", "UN R13 N3 typ-0, silnik podłączony: prędkość / droga / MFDD", "90 km/h; s ≤ 0.15 v + v²/103.5; ≥ 4.0", "km/h; m; m/s²", "SOURCED",
-  QI.format(img="files/_view/r13p43-043.png, s. 43"), "V = 80% Vmax but not exceeding ... 90 km/h; 0.15v + v²/103.5; 4.0 m/s²", "R13R3", "brak testu 90→0", PV,
-  "brak w grze", "dodać scenariusz brake_90_0_engine_connected (40 t): s ≤ 0.15·90 + 90²/103.5 = 91.8 m", "mianownik w PDF złożony graficznie jako 'v²/103 .5' — odczyt 103,5", img=img_r13)
+r("hamowanie", "UN R13 N3 typ-0, silnik podłączony: prędkość / droga / MFDD", "v = 0.80·vmax, maks. 90 km/h; s ≤ 0.15 v + v²/103.5; ≥ 4.0", "km/h; m; m/s²", "SOURCED",
+  QI.format(img="files/_view/r13p43-043.png, s. 43"), "V = 80% Vmax but not exceeding ... 90 km/h; 0.15v + v²/103.5; 4.0 m/s²", "R13R3", "brak testu z podłączonym silnikiem", PV,
+  "brak w grze", "dodać scenariusz brake_72_0_engine_connected (40 t): v = 0.80·vmax = 0.80·90 = 72 km/h (ogranicznik 90); s ≤ 0.15·72 + 72²/103.5 = 60.9 m, dm ≥ 4.0 (90 km/h tylko gdy vmax ≥ 112.5)", "mianownik w PDF złożony graficznie jako 'v²/103 .5' — odczyt 103,5", img=img_r13)
 r("hamowanie", "UN R13: siła na pedale (M2–N3)", "≤ 70", "daN", "SOURCED", QI.format(img="files/_view/r13p43-043.png, s. 43"), "F ≤ ... 70 daN", "R13R3",
   "", "", "", "", "", img=img_r13)
-r("hamowanie", "UN R13 — droga hamowania z 80 km/h przy wymaganiu typ-0 N3", "≤ 61.2", "m", "ESTIMATED", "0.15·80 + 80²/130 = 12.0 + 49.2 (ekstrapolacja wzoru 60 km/h na 80 km/h)",
-  "", "", "34.9 / 39.0 / 40.5", PV + " wiersz 5 brake_80_0_dry (ABS)", "OK", "bez zmian", "to tolerancja już użyta w PHYSICS_VALIDATION")
+r("hamowanie", "UN R13 — droga hamowania z 80 km/h przy wymaganiu typ-0 N3 (EKSTRAPOLACJA)", "≤ 61.2", "m", "ESTIMATED", "0.15·80 + 80²/130 = 12.0 + 49.2 — ekstrapolacja wzoru dla 60 km/h; R13 NIE wymaga próby z 80 km/h",
+  "", "", "34.9 / 39.0 / 40.5", PV + " wiersz 5 brake_80_0_dry (ABS)", "OK (porównanie orientacyjne)", "dodać próbę regulaminową 60→0 (wiersz R3-158)", "to tolerancja użyta w PHYSICS_VALIDATION — nie jest wymaganiem regulaminu")
 r("hamowanie", "UN R13: naczepa (O3/O4) — min. suma sił hamowania, laden i unladen", "45", "% maks. statycznego obciążenia kół", "SOURCED", Q,
   "semi-trailer, laden and unladen : 45", "R13R3", "", "", "brak testu naczepy osobno", "opcjonalnie test 'trailer_only_braking' (zR ≥ 0.45)",
   "zał. 4 pkt 3.1.2.1; O4: 'Test conditions and performance requirements are the same as for vehicles of categories O2 and O3' (pkt 3.1.3.1)")
@@ -337,20 +337,23 @@ r("hamowanie", "UN R13 zał. 6: głowica sprzęgająca przewodu sterującego —
 r("hamowanie", "UN R13 zał. 6: naczepa — od 0,65 bar na głowicy do 75 % w siłowniku", "≤ 0.4", "s", "SOURCED", Q,
   "cent of its asymptotic value must not exceed 0.4 seconds", "R13R3", "≈0.53 od pedału (dwa opóźnienia 0.15+0.20)", VRD + " §Air brake system",
   "OK (jeśli ~0.15 s do głowicy)", "bez zmian", "")
-r("hamowanie", "UN R13 (02): hamulec pomocniczy kat. N — MFDD", "≥ 2.2", "m/s²", "SOURCED", Q, "deceleration dm = 2.2 m/s2", "R13JP", "33.1 m z 60 km/h po pęknięciu obwodu",
-  PV + " air_leak_rear_circuit", "OK", "bez zmian", "już jako S5 w VRD — potwierdzenie")
+r("hamowanie", "UN R13 (02): hamowanie awaryjne (secondary) kat. N — wzór i MFDD", "s ≤ 0.15 v + 2v²/115; dm ≥ 2.2", "m; m/s²", "SOURCED", Q,
+  "Category N: 0.15 v + (2v2/115) (the second term corresponds to a mean fully developed… deceleration dm = 2.2 m/s2)", "R13JP", "33.1 m z 60 km/h; tolerancja PV ≤ 64.4 m (wzór /130 z 60 km/h)",
+  PV + " wiersz 6 air_leak_rear_circuit", "docs źle cytują — VRD S5 i PV wiersz 6 do korekty przez lidera",
+  "N3: 40 km/h → s ≤ 0.15·40 + 2·40²/115 = 33.8 m; awarię obwodu porównywać z hamowaniem resztkowym (R3-161: ≤ 52.4 m)",
+  "pkt 2.2.1 zał. 4 (EN). Kolumna JA w tym samym miejscu ma '2 v2/130' — rozbieżność w dokumencie; EN spójny z dm 2.2. Mianownik /130 dotyczy M2/M3")
 r("hamowanie", "UN R13 (02): hamulec postojowy utrzymuje pojazd na pochyleniu", "18", "%", "SOURCED", Q, "18 per cent up or down-gradient", "R13JP",
   "12 % (zestaw, park_12pct)", PV + " wiersz 1", "OK", "dodać test 18 % dla ciągnika solo", "")
 r("hamowanie", "FMVSS 121 (USA): ciągnik 2-osiowy obciążony + niehamowana naczepa kontrolna, 60 mph (96.6 km/h)", "250", "ft (= 76.2 m, przeliczenie 0.3048)", "SOURCED", Q,
-  "60 280 310 250 310 335 235 613 720", "FMVSS121", "≈ 50 (ESTIMATED: 80→0 MFDD 7.1–7.5 → 96.6 km/h)", PV, "OK (spełnia z zapasem)", "bez zmian",
-  "kolumna (3) 'Loaded Tractors with Two Axles ... Tested with an Unbraked Control Trailer'; bobtail (6) 235 ft = 71.6 m")
+  "60 280 310 250 310 335 235 613 720", "FMVSS121", "≈ 50 (ESTIMATED: 80→0 MFDD 7.1–7.5 → 96.6 km/h)", PV, "porównanie jakościowe (inne warunki próby)", "bez zmian",
+  "ZASTRZEŻENIE: przepis USA; kolumna (3) 'Loaded Tractors with Two Axles ... Tested with an Unbraked Control Trailer' — hamuje tylko ciągnik, naczepa kontrolna niehamowana; gra: 40 t z hamowaną naczepą i EBS — nie jest to ta sama próba; bobtail (6) 235 ft = 71.6 m")
 r("hamowanie", "Zmierzone drogi hamowania 80→0 zestawu 40 t z EBS (publikacje pomiarowe)", "—", "m", "UNVERIFIED",
   "źródła pomiarowe zablokowane w tej sesji: NHTSA DOT HS 812 176 i 809 700 (403 Akamai), ROSA P dot_32424 (403), MDPI app13095336 (403) — tylko link, nie pobrano", "", "",
   "34.9–40.5 m", PV, "brak źródła", "pozyskać w sesji lokalnej (przeglądarka) — NHTSA 812176 tabele stop distance 60 mph", "")
 
 # ---------------- 9. Zawieszenie ---------------------------------------------------------------------------------
 r("zawieszenie", "Częstotliwość własna masy resorowanej (model ciężarówki, symulacja)", "1.32", "Hz", "SOURCED", Q,
-  "The first peak corresponds to the natural frequency of the sprung mass, which is 1.32 Hz", "VARGH", "1.3 (tył) / 1.5 (przód, naczepa)",
+  "The first peak corresponds to the natural frequency of the sprung mass, which is 1.32 Hz", "VARGH", "1.5 (przód) / 1.3 (tył) / 1.5 (naczepa)",
   VRD + " §Suspension", "OK", "bez zmian", "praca dyplomowa — symulacja (nie pomiar); jedno źródło")
 r("zawieszenie", "Częstotliwość własna masy nieresorowanej (model ciężarówki)", "12.05", "Hz", "SOURCED", Q,
   "The natural frequency of the un-sprung mass, which is 12.05 Hz", "VARGH", "nie wyznaczana", "", "brak w grze", "opcjonalnie sprawdzić w teście koleiny", "")
@@ -358,9 +361,27 @@ r("zawieszenie", "Ugięcia / skoki zawieszenia ciągnika i naczepy (karty)", "�
   "w otwartych kartach znaleziono tylko tolerancję wysokości: 'Height can vary ± 20 mm for leaf and ± 10 mm for air suspension' (FH 42T 3A) — skok nie podany",
   "", "", "0.18 / 0.20", VRD + " §Suspension travel", "brak źródła", "pozostaje WORKING_VALUE", "")
 
+# ---------------- 10. Uzupełnienia po recenzji (REVIEW.md) — dopisane na końcu, żeby nie zmieniać id ----------------
+r("hamowanie", "UN R13 N3 typ-0 silnik odłączony: próba regulaminowa 60→0 — maks. droga", "≤ 36.7", "m", "ESTIMATED",
+  "0.15·60 + 60²/130 = 9.0 + 27.7 = 36.7 (wzór R3-140, v = 60 km/h z R3-139)", "", "", "brak scenariusza 60→0", PV, "brak w grze",
+  "dodać scenariusz brake_60_0_dry_engine_disconnected (laden 40 t i solo): s ≤ 36.7 m, dm ≥ 5.0", "wymaganie regulaminowe (w odróżnieniu od ekstrapolacji 80 km/h, R3-144)")
+r("hamowanie", "UN R13 (seria 10, tekst MLIT) N3 typ-0: v / s / dm, silnik odłączony", "60 km/h; s ≤ 0.15v + v²/130; ≥ 5.0", "km/h; m; m/s²", "SOURCED",
+  QI.format(img="files/_view/mlit_p27_en.png i mlit_p28_en.png, s. 27–28"), "N3 … v … 60 km/h; Type-0 test with engine disconnected s ≤ 0.15v + v²/130; dm ≥ 5.0 m/s²",
+  "R13JP", "7.07–7.48 m/s²", PV + " wiersz 5", "OK", "bez zmian",
+  "drugie źródło (nowsza seria): liczby identyczne z Rev.3 s. 43 (seria 08); seria 10 wg przykładu znaku homologacji w tym dokumencie ('Regulation No. 13 with the 10 series of amendments incorporated'); serii 11 nie otwarto — luka", img="mlit_p28_en.png")
+r("hamowanie", "UN R13 (seria 10, MLIT) N3 typ-0 silnik podłączony: v / s / dm; siła na pedale", "0.80·vmax ≤ 90 km/h; s ≤ 0.15v + v²/103.5; ≥ 4.0; F ≤ 70 daN", "-", "SOURCED",
+  QI.format(img="files/_view/mlit_p28_en.png, s. 28"), "v = 0.80 vmax but not exceeding … 90 km/h; 0.15v + v²/103.5; 4.0 m/s²; F≤ 70 daN", "R13JP",
+  "", "", "", "patrz R3-142", "identyczne z Rev.3; tu mianownik złożony czytelnie jako 103.5", img="mlit_p28_en.png")
+r("hamowanie", "UN R13 (02): hamowanie resztkowe po awarii przenoszenia, N3 obciążony", "40 km/h; s ≤ 0.15v + (100/30)·v²/115 = 52.4 m; dm ≥ 1.3", "km/h; m; m/s²", "SOURCED",
+  QI.format(img="files/_view/mlit_p31_en.png, s. 31"), "N3 40 0.15v +(100/30) · (v2/115) 1.3", "R13JP",
+  "33.1 m (z 60 km/h, pęknięcie obwodu tylnego)", PV + " wiersz 6 air_leak_rear_circuit", "OK (gra z wyższej prędkości i krócej)",
+  "przestawić scenariusz na 40 km/h i limit ≤ 52.4 m (laden) — właściwy przepis dla awarii obwodu", "pkt 2.4.1 zał. 4; nieobciążony N3: 0.15v + (100/30)·v²/115, dm 1.3", img="mlit_p31_en.png")
+r("hamowanie", "UN R13 (02): prędkość próby hamulca awaryjnego N3", "40", "km/h", "SOURCED", Q, "N1: 70 km/h N2: 50 km/h N3: 40 km/h", "R13JP",
+  "60 km/h (PV wiersz 6)", PV, "docs używają złej prędkości (60 = M2/M3)", "errata VRD S5 / PV (lider)", "pkt 2.2.4 zał. 4")
+
 
 # ---------------- zapis + weryfikacja --------------------------------------------------------------------------
-IMG_PAGE = {"at2612-3.png": 3, "ato2612f-3.png": 3, "r13p43-043.png": 43, "mb29_crop.png": 29}
+IMG_PAGE = {"at2612-3.png": 3, "ato2612f-3.png": 3, "r13p43-043.png": 43, "mb29_crop.png": 29, "mlit_p28_en.png": 28, "mlit_p31_en.png": 31}
 COLS = ["id", "kategoria", "przedmiot", "wartość", "jednostka", "status", "metoda", "cytat", "url_źródła", "url_pliku", "licencja",
         "autor", "data_dostępu", "sha256", "lat", "lon", "kierunek_deg", "opis_co_widać", "duplikat_sha256", "uwagi",
         "strona_pdf", "plik", "wartość_w_grze", "źródło_w_grze", "ocena", "rekomendacja"]

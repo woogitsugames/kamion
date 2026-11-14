@@ -48,5 +48,21 @@
   "wynik": "PASS",
   "opis": "po korekcie: w źródle jest 250 (ft), 76.2 m to przeliczenie",
   "korekta": "FAIL w 1. przebiegu: kolumna 'wartość' zawierała przeliczenie 76.2 m, którego nie ma w źródle → wartość = 250, jednostka 'ft (= 76.2 m, przeliczenie)'"
+ },
+ "R3-092": {
+  "wynik": "PASS",
+  "opis": "tabela s. 29 obejrzana ponownie (wycinek ze świeżego renderu): iS kol.1 = 11.639 → bieg 1 (numer biegu = wniosek z przeplotu, liczba SOURCED)"
+ },
+ "R3-161": {
+  "wynik": "PASS",
+  "opis": "tabela pkt 2.4.1 s. 31 obejrzana ponownie: N3, v 40, laden 0.15v +(100/30)·(v²/115), dm 1.3; 0.15·40 + (100/30)·1600/115 = 52.4 m"
+ },
+ "R3-118": {
+  "wynik": "PASS",
+  "opis": "3293/2π=524.1, 3302/2π=525.5, 3277/2π=521.6 mm → 0.520–0.526 m — zgodne"
+ },
+ "R3-158": {
+  "wynik": "PASS",
+  "opis": "0.15·60 + 60²/130 = 36.7 m — zgodne"
  }
 }
