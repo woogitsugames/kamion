@@ -113,3 +113,10 @@ Po integracji s20 (0170, 0172, 0181, 0184, 0191+0192, regeneracja C, PSO odświe
 | G3-A | 29,99 | 33,33 / 33,46 / 33,57 / 50,2 | 2 | 32,1 / 34,5 / 35,7 | 21,6 / 31,1 | 917,5 | 57/57 | OK |
 | G3-B | 29,95 | 33,33 / 33,45 / 33,62 / 50,1 | 6 | 31,3 / 34,3 / 37,1 | 21,9 / 33,5 | 877,8 | 46/46 | OK |
 Dane: `artifacts/gate3/20261114-063715`, `artifacts/gate3/20261114-071223`. GPU p50 ~31–32 ms przy 33,3 ms klatki — mały zapas na Low. Przegląd wizualny zrzutów: `docs/reports/REVIEW-2026-11-14-s20-gate3-phone.md`.
+
+### S24+ (RZCX60VE8ZY, właściciela) High/30, APK kamion-0.1.0-18e368be69-high (świat High), s20 2026-11-14
+| odcinek | FPS | p95/p99/max ms | > 50 ms | GPU p50 ms | PSS MB | temp. °C | kamery |
+|---|---|---|---|---|---|---|---|
+| G3-A | 29,96 | 33,54 / 33,79 / 66,8 | 3 | 23,0 | 1670 | 27,9 | 56/57 |
+| G3-B | 29,97 | 33,62 / 34,31 / 66,3 | 1 | 22,5 | 1644 | 34,5 | 46/46 |
+Thermal 0. Budżet w skrypcie dla High = 60 FPS (p95 ≤ 17 ms) → „OVER” wynika z limitu 30 FPS; GPU p50 ~23 ms oznacza, że High/60 nie jest osiągalne bez optymalizacji. Bateria 94 → 60 % (dwa odcinki). Dane: `artifacts/gate3/20261114-074426`, `artifacts/gate3/20261114-081950`.
