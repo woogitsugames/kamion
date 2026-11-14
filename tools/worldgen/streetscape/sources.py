@@ -184,7 +184,12 @@ def extract_bdot(bbox, gpkg_zip: Path, gdir: Path) -> dict:
     tile = shapely.box(*bbox)
     out = {}
     for layer, cols in BDOT_LAYERS.items():
-        df = pyogrio.read_dataframe(extract_from_zip(gpkg_zip, f"__{layer}.gpkg", gdir), bbox=bbox)
+        try:
+            gp = extract_from_zip(gpkg_zip, f"__{layer}.gpkg", gdir)
+        except StopIteration:      # ADR 0204: a powiat without objects of a class ships no file for it (2008: OIKM_L)
+            out[layer] = []
+            continue
+        df = pyogrio.read_dataframe(gp, bbox=bbox)
         df = df.sort_values("LOKALNYID").reset_index(drop=True)
         feats = []
         for r in df.itertuples():
