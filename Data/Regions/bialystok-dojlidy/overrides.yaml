@@ -174,6 +174,25 @@ overrides:
       WORKING_VALUE (crown size on the orthophoto, shadow length not measured).
     confidence: low
     verify: GUGiK NMPT
+  - id: wood-north-of-krywlany-skatepark
+    kind: tree_stand
+    category: broadleaf
+    mantle: true
+    height_m: [8.5, 14.5]
+    spacing_m: 5.5
+    mix: {birch: 0.36, maple: 0.28, alder: 0.20, shrub: 0.16}
+    polygons_en:
+      - [[-1024.0, 790.0], [-1024.0, 810.0], [-830.0, 810.0], [-790.0, 830.0], [-690.0, 830.0], [-610.0, 850.0],
+         [-645.0, 810.0], [-670.0, 780.0], [-720.0, 795.0], [-775.0, 798.0], [-802.0, 775.0], [-815.0, 740.0],
+         [-850.0, 790.0]]
+    reason: >-
+      Photo P11-056 and 2024 orthophoto: dense deciduous shelterbelt and mature trees along the southern border of
+      ROD Zwirki i Wigury and ROD Relaks (north of the diagonal road and behind the concrete skatepark). Before this
+      stand, the meadow wood stopped abruptly at E=-815 N=740 (x ~ 25% on P11-056) and the low 4-8.5 m allotment
+      ring behind it sat lower in the valley, leaving a notch of pale haze and distant blocks between x = 25% and
+      x = 47%. Keeps >= 18 m clearance to roads and skatepark loop. Heights WORKING_VALUE matching neighbouring stands.
+    confidence: medium
+    verify: GUGiK NMPT / orthophoto 2024
   # ---------------------------------------------------------------- life rules
   - id: tyre-scrub-not-on-the-street
     kind: life_rules
