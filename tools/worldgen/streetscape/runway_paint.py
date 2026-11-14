@@ -9,11 +9,18 @@ The road marking generator only paints carriageways of the road graph; a runway 
     bars: [{s_m, width_m, half_span_m}]                       # threshold bars across the runway
     chevrons: [{s_m: [tip, tail], rows_lat_m: [...], width_m}]         # pre-threshold arrow heads (tip at s_m[0])
     arrows: {tips_s_m: [...], length_m, head_m: [length, width], shaft_w_m, towards: low | high}
+    designator: {base: low | high, stroke_m: [across, along], glyphs: [{char, s_m: [s0, s1], lat_m, width_m}]}   # ADR 0202
 
 s = metres along the axis from its first point. Everything is drawn as bands along the axis, sampled every STEP_M
 both ways and draped on the paved surface (`zsurf`) + standards.MARKING_LIFT in the road paint material
-`marking_white` on the `markings` layer (decal depth offset in the engine: no z-fighting, no new material). No
-lettering: the runway designator is not drawn. Regions without such an override get nothing.
+`marking_white` on the `markings` layer (decal depth offset in the engine: no z-fighting, no new material).
+Regions without such an override get nothing.
+
+Designator (ADR 0202): block characters built from stroke centre lines (GLYPHS), each stretched into its authored box
+s_m x width_m. `base` = the end of the axis the foot of the characters points to (a pilot reads them flying toward
+the other end; his right hand is +lat for base: high). The paint is thicker along the runway than across it
+(`stroke_m`), as stretched runway lettering is. The stroke shapes are WORKING_VALUE (drawn after the orthophoto, not
+after a quoted standard); stations, widths and stroke thickness are read off the orthophoto and quoted in the entry.
 """
 
 from __future__ import annotations
@@ -22,6 +29,8 @@ import math
 import zlib
 
 import numpy as np
+import shapely
+from shapely.geometry import LineString
 
 from roads import standards as S
 
@@ -57,6 +66,65 @@ def _band(buf, P0, t, n, s0, s1, lat_a, lat_b, zsurf, src):
     T[flip] = T[flip][:, ::-1]
     if not len(T):
         return 0
+    Z = zsurf(V2[:, 0], V2[:, 1]) + S.MARKING_LIFT
+    age = (zlib.crc32(src.encode()) % 1000) / 1000.0 * 0.98
+    buf.add("markings", MAT, np.column_stack([V2, Z]), V2.copy(), T, src=src,
+            UV1=np.column_stack([np.full(len(V2), 0.5), np.full(len(V2), 0.35 + age)]))
+    return int(len(T))
+
+
+# stroke centre lines in the unit box of a character (x to the reader's right, y from the foot up); WORKING_VALUE
+GLYPHS = {
+    "2": [[(0.0, 0.80), (0.0, 1.0), (1.0, 1.0), (1.0, 0.62), (0.0, 0.0), (1.0, 0.0)]],
+    "7": [[(0.0, 1.0), (1.0, 1.0), (0.42, 0.0)]],
+    "L": [[(0.0, 1.0), (0.0, 0.0), (1.0, 0.0)]],
+}
+
+
+def glyph_polygon(char, s0, s1, lat_c, width, stroke, base):
+    """Outline of one character in runway coordinates (s, lat): the strokes of GLYPHS[char] `stroke[0]` thick across
+    the runway and `stroke[1]` along it, filling the box s0..s1 x lat_c +- width / 2 exactly."""
+    if char not in GLYPHS:
+        raise ValueError(f"runway designator: no glyph for {char!r} (have {sorted(GLYPHS)})")
+    ta, tl = float(stroke[0]), float(stroke[1])
+    h = abs(s1 - s0)
+    # work in units of the stroke thickness so one buffer(0.5) gives both thicknesses
+    bw, bh = (width - ta) / ta, (h - tl) / tl
+    parts = [LineString([(x * bw, y * bh) for x, y in ln]).buffer(0.5, cap_style="square", join_style="mitre", mitre_limit=1.5)
+             for ln in GLYPHS[char]]
+    g = shapely.union_all(parts)
+    g = shapely.intersection(g, shapely.box(-0.5, -0.5, bw + 0.5, bh + 0.5))        # mitres stay inside the box
+    sgn = -1.0 if base == "high" else 1.0                         # base: high -> the foot is at s1, the top at s0
+    foot = max(s0, s1) if base == "high" else min(s0, s1)
+
+    def to_runway(xy):
+        x, y = xy[:, 0], xy[:, 1]
+        return np.column_stack([foot + sgn * (y + 0.5) * tl, lat_c - sgn * ((x + 0.5) * ta - width / 2)])
+    return shapely.transform(g, to_runway)
+
+
+def _polygon(buf, P0, t, n, poly_sl, zsurf, src):
+    """Polygon in (s, lat) -> triangles split on a STEP_M grid (so the paint follows the surface), CCW from above."""
+    out = []
+    x0, y0, x1, y1 = poly_sl.bounds
+    for gx in np.arange(math.floor(x0 / STEP_M) * STEP_M, x1, STEP_M):
+        for gy in np.arange(math.floor(y0 / STEP_M) * STEP_M, y1, STEP_M):
+            pc = shapely.intersection(poly_sl, shapely.box(gx, gy, gx + STEP_M, gy + STEP_M))
+            for g in getattr(pc, "geoms", [pc]):
+                if g.geom_type != "Polygon" or g.area < 1e-4:
+                    continue
+                for tr in shapely.constrained_delaunay_triangles(g).geoms:
+                    out.append(np.asarray(tr.exterior.coords)[:3])
+    if not out:
+        return 0
+    T3 = np.asarray(out, float)                                   # (m, 3, [s, lat])
+    cr = (T3[:, 1, 0] - T3[:, 0, 0]) * (T3[:, 2, 1] - T3[:, 0, 1]) - (T3[:, 1, 1] - T3[:, 0, 1]) * (T3[:, 2, 0] - T3[:, 0, 0])
+    T3 = T3[np.abs(cr) > 1e-6]
+    cr = cr[np.abs(cr) > 1e-6]
+    T3[cr < 0] = T3[cr < 0][:, [0, 2, 1]]                         # (s, lat) -> (E, N) is a rotation: CCW stays CCW
+    sl = T3.reshape(-1, 2)
+    V2 = P0 + sl[:, :1] * t + sl[:, 1:] * n
+    T = np.arange(len(V2)).reshape(-1, 3)
     Z = zsurf(V2[:, 0], V2[:, 1]) + S.MARKING_LIFT
     age = (zlib.crc32(src.encode()) % 1000) / 1000.0 * 0.98
     buf.add("markings", MAT, np.column_stack([V2, Z]), V2.copy(), T, src=src,
@@ -119,6 +187,15 @@ def build(buf, overrides, zsurf, report):
                               lambda s, tip=tip: hwid / 2 * abs(s - tip) / hl, zsurf, f"{src}:arrowhead{k}")
                 lo, hi = min(base, tail), max(base, tail)
                 tris += _band(buf, P0, t, n, lo, hi, const(-sw / 2), const(sw / 2), zsurf, f"{src}:arrowshaft{k}")
+        d = o.get("designator")
+        if d:
+            base = d.get("base", "low")
+            if base not in ("low", "high"):
+                raise ValueError(f"runway_markings {o['id']}: designator base {base!r}, expected low or high")
+            for k, g in enumerate(d["glyphs"]):
+                poly = glyph_polygon(str(g["char"]), float(g["s_m"][0]), float(g["s_m"][1]), float(g["lat_m"]),
+                                     float(g["width_m"]), d["stroke_m"], base)
+                tris += _polygon(buf, P0, t, n, poly, zsurf, f"{src}:glyph{k}:{g['char']}")
         if tris == 0:
             raise ValueError(f"runway_markings {o['id']}: nothing built")
         rep.append({"id": o["id"], "length_m": round(L, 1), "triangles": tris})
