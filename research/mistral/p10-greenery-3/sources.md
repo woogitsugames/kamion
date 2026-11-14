@@ -19,7 +19,7 @@ Data dostępu: **2026-11-13** (UTC), chyba że zaznaczono inaczej. Zakaz Google 
 - API: POST `https://api.kartaview.org/1.0/list/nearby-photos/` (lat, lng, radius) → `current_page`/`total_items`; POST `https://api.kartaview.org/1.0/sequence/photo-list/` (sequenceId) → pełne metadane (shot_date, Heading, lat/lng, lth_name 1280 px).
 - Obrazy: `https://storageN.openstreetcam.org/files/photo/…/lth/…jpg` (1280 px, ~300 KB).
 - **storage7.openstreetcam.org → HTTP 502** (outage; test 2026-11-13 14:45 UTC i 15:2x UTC) — dotyczy 142 kadrów sekwencji 1155711 z 23.03.2018 (wloty wszystkich 9 ulic, azymut Heading z API = SOURCED); metadane zachowane (`kv_wloty_test.json`, `seq_1155711.json` w ZIP).
-- Letnie sekwencje pobrane (aleja/Andersa, poza osiami 9 ulic): 10733 (2016-07-19), 14055 (2016-08-24), 2763230 (2019-08-04), 2769366 (2019-08-25), 3686129 (2021-06-23) — 51 kadrów JPG w ZIP.
+- Letnie sekwencje pobrane (aleja/Andersa, poza osiami 9 ulic): 10733 (2016-07-19), 14055 (2016-08-24), 2763230 (2019-08-04), 2769366 (2019-08-25), 3686129 (2021-06-23) — 51 kadrów JPG w ZIP v2 (**nie odtworzone w ZIP v3** — brak listy wybranych kadrów w repo; nie są źródłem żadnego wiersza manifestu).
 
 ### Panoramax — 0 wyników
 - `https://api.panoramax.xyz/api/search?bbox=23.147,53.148,23.156,23.158` — brak zdjęć (zamknięty temat, licencja CC BY-SA 4.0 nieistotna przy 0 wynikach).
@@ -39,8 +39,8 @@ Data dostępu: **2026-11-13** (UTC), chyba że zaznaczono inaczej. Zakaz Google 
 ## BIP / urzędowe (przetarg Al. Tysiąclecia, zad. 4)
 
 - Karta postępowania: `https://www.bip.bialystok.pl/postepowania/zamowienia/rozbudowa-alei-tysiaclecia-panstwa-polskiego-w-bialymstoku-od-ul-wilenskiej-do-terenu-kolejowego-przy-ul-poleskiej-wraz-z-infrastruktura-techniczna.html` (nr ZDM-X.271.16.2018.JZ; 39 załączników).
-- SIWZ.pdf (8,79 MB; **skan, 20 stron** — JPG w ZIP `files/bip/siwz_pages/`): `https://www.bip.bialystok.pl/resource/42661/SIWZ.pdf`.
-- Załączniki z 22.07.2020 (ZIP; umowa DOCX, kosztorys — skan, postanowienie RDOŚ 17 s. CCITT G4 → PNG w ZIP `files/bip/rdos_pages/`): `https://www.bip.bialystok.pl/resource/69314/Za%C5%82%C4%85czniki+22.07.2020+r..zip`.
+- SIWZ.pdf (8,79 MB; **skan, 20 stron** — JPG w ZIP v3 `bip/siwz_pages/p-01..p-20.jpg`, pdftoppm 100 dpi): `https://www.bip.bialystok.pl/resource/42661/SIWZ.pdf`.
+- Załączniki z 22.07.2020 (ZIP; umowa DOCX, kosztorys — skan, postanowienie RDOŚ 17 s. CCITT G4 → PNG w ZIP v3 `bip/rdos_pages/p-01..p-17.png`, pdftoppm 150 dpi; ZIP załączników: `bip/Zalaczniki_22.07.2020.zip`): `https://www.bip.bialystok.pl/resource/69314/Za%C5%82%C4%85czniki+22.07.2020+r..zip`.
 - Komunikat UM o otwarciu alei (74 drzewa, 109 krzewów, 20 600 m², ~385 mb ekranów): `https://www.bialystok.pl/pl/aktualnosci/aleja-tysiaclecia-panstwa-polskiego-otwarta.html` (31.01.2022).
 - Obwieszczenie MRT (droga wojewódzka 675): `https://www.gov.pl/web/rozwoj-technologia/obwieszczenie-ws-rozbudowy-ulicy-aleja-1000-lecia-panstwa-polskiego-w-bialymstoku-droga-wojewodzka-nr-675-od-ul-wilenskiej-do-terenu-kolejowego-przy-ul-poleskiej-wraz-z-infrastruktura-techniczna`.
 - Prasowe (kontekst, nie dane liczbowe): poranny.pl c4-15296431 (Strabag, X 2021); radio.bialystok.pl 209894; podlaskie24.pl 2022/01/31.
@@ -58,3 +58,9 @@ Data dostępu: **2026-11-13** (UTC), chyba że zaznaczono inaczej. Zakaz Google 
 - Dekoder CCITT G4 dla skanów RDOŚ: własny (TIFF-wrapper + libtiff/Pillow), skrypt w ZIP (`pdf_ccitt_extract.py`).
 - Ekstrakcja JPEG ze skanów SIWZ: własna (`pdftxt.py`/parser strumieni PDF), strony w ZIP.
 - Generator manifestu/audytu: `build_manifest.py`, `audit.py` (w ZIP); seed audytu: **20261113**.
+
+### M51-FIX-2 (2026-11-14)
+- Kadry Commons ponownie pobrane przez API (`action=query&prop=imageinfo&iiurlwidth=1600`, ogólny User-Agent, pauzy przy HTTP 429): 69 plików (33 `frames/` + 36 `viewings/`), licencje z `extmetadata`: 65× CC0, 4× CC BY 3.0; mapa i SHA-256: `ZAWARTOSC_v3.txt`.
+- Ortofoto do nakładek: GUGiK WMS `PZGIK/ORTO/WMS/StandardResolution` (CC BY 4.0), GetMap okien 300×300 m, 1200 px; data arkuszy ponownie z GetFeatureInfo: 2024-05-27 (4/4 arkusze).
+- Jezdnie do filtra nie-roślinności: `Data/Regions/bialystok-industrial-c/roads.graph.json` (OSM Geofabrik podlaskie, ODbL + szerokość BDOT10k). Overpass API (`overpass-api.de`, `overpass.kumi.systems`) nieosiągalny z kontenera 2026-11-14 (connection reset / timeout).
+- BIP: SIWZ.pdf i Załączniki 22.07.2020 pobrane ponownie z bip.bialystok.pl (HTTP 200).
