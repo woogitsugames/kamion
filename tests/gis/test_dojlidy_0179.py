@@ -72,8 +72,9 @@ def test_dojlidy_overrides_applied():
     assert fu["life"]["tyre_scrub_passes_cut_at_road"] > 0
     og = rep["vegetation"]["open_ground"][0]
     assert og["trees_removed"] > 500
-    tg = rep["vegetation"]["tree_groups"]          # ADR 0186: the shrub band is a plantings mass, the corner clump points
-    assert tg["trees"] + tg.get("points", 0) >= 3
+    tg = rep["vegetation"]["tree_groups"]          # ADR 0186: the shrub band is a plantings mass, the corner clump kit trees
+    at = rep.get("authored_trees") or {}
+    assert tg["trees"] + tg.get("points", 0) + at.get("trees", 0) >= 3
     assert not rep["paved_m2_by_source"].get("unpaved_area_stale")
 
 
