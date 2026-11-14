@@ -24,6 +24,7 @@ param(
     [string]$AfterApk = '',
     [switch]$SkipAfterBuild,
     [int]$Repeats = 2,
+    [string]$TraceFrom = '',   # reuse trace/ from an earlier refresh-<ts> dir (skips dev build + phone trace)
     [string]$Owner = 'pso-refresh'
 )
 $ErrorActionPreference = 'Stop'
@@ -60,16 +61,25 @@ function Build([string]$tag, [switch]$Dev) {
 function Phone([string]$apk, [string]$dir, [string]$runs, [string[]]$pull = @()) {
     $a = @('-NoProfile', '-File', 'tools/perf/phone-p99.ps1', '-Apk', $apk, '-OutDir', (Join-Path $out $dir), '-Runs', $runs, '-Owner', $Owner)
     if ($pull.Count) { $a += @('-PullPso', ($pull -join ',')) }
-    & pwsh @a | Out-Null
+    # Start-Process without a pipe: an adb server spawned by the child would otherwise hold the pipe open forever
+    Start-Process pwsh -ArgumentList $a -Wait -WindowStyle Hidden
 }
 
+if ($TraceFrom) {
+    New-Item -ItemType Directory -Force (Join-Path $out 'trace') | Out-Null
+    Copy-Item (Join-Path $TraceFrom 'trace/*') (Join-Path $out 'trace') -Recurse -Force
+    $SkipDevBuild = $true
+    L "trace reused from $TraceFrom"
+}
 # 1. development APK
+if (-not $TraceFrom) {
 if (-not $SkipDevBuild) { $DevApk = Build 'dev' -Dev } else { $DevApk = Abs $DevApk }
 if (-not (Test-Path $DevApk)) { throw "missing dev APK $DevApk" }
 
 # 2. trace on the phone
 L "trace with $DevApk"
 Phone $DevApk 'trace' 'traceA=A:pso_trace=90 pso_tag=g3a;traceB=B:pso_trace=95 pso_tag=g3b' @('g3a', 'g3b')
+}
 foreach ($tag in 'g3a', 'g3b') {
     $f = Join-Path $out "trace/pso_Vulkan_Low_$tag.graphicsstate"
     if (-not (Test-Path $f) -or (Get-Item $f).Length -lt 4096) { throw "trace $tag missing or empty ($f) - is the APK a Development build?" }
