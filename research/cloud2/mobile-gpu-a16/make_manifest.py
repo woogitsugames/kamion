@@ -161,6 +161,8 @@ def add(kat, przedmiot, wartosc, jedn, status, metoda, cytat, src, sekcja="", ur
         u, f, loc, sha, stab, lic, aut = S[src]
         r.update({"url_źródła": u, "url_pliku": f, "plik_lokalny": "files/" + loc, "sha256": sha,
                   "sha_stabilny": stab, "licencja": lic, "autor": aut})
+        if src == "DS" and r["cytat"]:
+            r["metoda"] += " — cytat = etykieta wiersza tabeli + wartość komórki w kolumnie Mali-G57 (tabela graficzna; odczyt wzrokowy s.1–2 PDF)"
     elif src in R:
         p = R[src]
         with open(os.path.join(REPO, p), "rb") as fh:
@@ -262,10 +264,12 @@ add("vulkan", "Mali-G57 MC2: maxImageDimension2D", "16384", "px", "SOURCED", "ra
     "maxImageDimension2D 16384", "GI53265", "Limits", "A16", "to samo w 53260")
 add("vulkan", "Mali-G57 MC2: maxPerStageDescriptorSamplers / SampledImages / UniformBuffers / Resources",
     "8388608 (sterownik 54.1.0); 500000 (32.1.0)", "", "SOURCED", "raporty gpuinfo 53265 i 53260, Limits",
-    "maxPerStageDescriptorSamplers 8388608 (53265); maxPerStageDescriptorSamplers 500000 (53260)", "GI53265", "Limits", "A16")
+    "maxPerStageDescriptorSamplers 8388608; maxPerStageDescriptorSampledImages 8388608; maxPerStageDescriptorUniformBuffers 8388608; maxPerStageResources 8388608",
+    "GI53265", "Limits", "A16",
+    "wartość 500000 ze starego sterownika: raport https://vulkan.gpuinfo.org/displayreport.php?id=53260 ('maxPerStageDescriptorSamplers 500000'); poprawka po audycie (R8-029 FAIL)")
 add("vulkan", "Mali-G57 MC2: maxBoundDescriptorSets", "7 (54.1.0); 4 (32.1.0)", "", "SOURCED",
-    "raporty gpuinfo 53265 / 53260", "maxBoundDescriptorSets 7 (53265); maxBoundDescriptorSets 4 (53260)", "GI53265",
-    "Limits", "A16", "4 zestawy = minimum, które URP/Unity muszą obsłużyć na starszych sterownikach")
+    "raporty gpuinfo 53265 / 53260", "maxBoundDescriptorSets 7", "GI53265",
+    "Limits", "A16", "4 ze starego sterownika: https://vulkan.gpuinfo.org/displayreport.php?id=53260 ('maxBoundDescriptorSets 4'); 4 = minimum, które URP/Unity muszą obsłużyć na starszych sterownikach; poprawka po audycie (ten sam błąd co R8-029)")
 add("vulkan", "Mali-G57 MC2: subgroup", "rozmiar 16; operacje basic vote arithmetic ballot shuffle shuffle(relative) clustered quad",
     "", "SOURCED", "raport gpuinfo 53265",
     "subgroupSize 16; subgroupSupportedOperations basic vote arithmetic ballot shuffle shuffle (relative) clustered quad partitioned_bit_nv",
@@ -381,7 +385,7 @@ add("technika", "Render pass: LOAD zamiast CLEAR — pomiar", "600,2", "MiB/s do
     "Mali (sample Arm)", "wzór kosztu: width * height * bpp/8 * FPS [MiB/s]")
 add("technika", "Render pass: clear/invalidate i Store Actions w URP", "Store Actions Auto lub Discard na słabszym mobile", "",
     "SOURCED", "Unity URP docs",
-    "On lower-end mobile platforms, set Store Actions to Auto or Discard, so that URP doesn't use memory bandwidth to copy the render targets",
+    "On lower-end mobile platforms, set Store Actions to Auto or Discard , so that URP doesn't use memory bandwidth to copy the render targets",
     "URPPERF", "Reduce how much memory URP uses", "A16", "repo URP_Low m_StoreActionsOptimization: 0 (= Auto wg kolejności opcji Auto/Discard/Store; UNVERIFIED numeracja)")
 add("technika", "URP: Native RenderPass na Vulkan", "włączyć", "", "SOURCED", "Unity URP docs",
     "Enable Native RenderPass if you use Vulkan, Metal or DirectX 12 graphics APIs, so that URP automatically reduces how often it copies render textures into and out of memory.",
@@ -565,11 +569,11 @@ add("stan", "Otwarte: ściany HLOD", "górne ~12 % atlasu puste", "%", "SOURCED"
     "Ściany HLOD: górne ~12 % atlasu puste — przycięcie w `forest_hlod.py` (mały zysk).", "A0136", "Otwarte", "A16")
 add("stan", "URP_Low: ustawienia", "renderScale 0,75; MSAA 2; HDR off; depth/opaque tex off; cienie 1024/1 kaskada/35 m twarde; SRP Batcher on",
     "", "SOURCED", "repo URP_Low.asset",
-    "m_RenderScale: 0.75 m_MSAA: 2 m_SupportsHDR: 0 m_RequireDepthTexture: 0 m_MainLightShadowmapResolution: 1024 m_ShadowCascadeCount: 1 m_ShadowDistance: 35 m_SoftShadowsSupported: 0 m_UseSRPBatcher: 1",
+    "m_RenderScale: 0.75; m_MSAA: 2; m_SupportsHDR: 0; m_RequireDepthTexture: 0; m_MainLightShadowmapResolution: 1024; m_ShadowCascadeCount: 1; m_ShadowDistance: 35; m_SoftShadowsSupported: 0; m_UseSRPBatcher: 1",
     "URPLOW", "", "A16")
 add("stan", "Mobile_Renderer: ścieżka i opcje", "Forward; Native RenderPass on; Depth Priming off; Intermediate Texture Auto", "",
     "SOURCED", "repo Mobile_Renderer.asset",
-    "m_UseNativeRenderPass: 1 m_RenderingMode: 0 m_DepthPrimingMode: 0 m_IntermediateTextureMode: 0", "MR", "", "A16")
+    "m_UseNativeRenderPass: 1; m_RenderingMode: 0; m_DepthPrimingMode: 0; m_IntermediateTextureMode: 0", "MR", "", "A16")
 add("stan", "ProjectSettings Android: Blit Type", "0 = Always (offscreen + blit co klatkę)", "", "SOURCED",
     "repo ProjectSettings.asset + enum z UnityCsReference", "androidBlitType: 0", "PS", "PlayerSettings", "A16, S24+",
     "NOWE: nie występuje w żadnym ADR/raporcie repo (grep 'blit type' 2026-11-14)")

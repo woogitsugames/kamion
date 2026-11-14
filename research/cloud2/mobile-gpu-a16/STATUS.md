@@ -19,3 +19,9 @@
 ## 2026-11-14 krok 3 — manifest
 - make_manifest.py → manifest.csv: 134 wiersze (SOURCED 117, UNVERIFIED 13, ESTIMATED 4); kategorie: technika 43, sprzęt 28, vulkan 18, stan 17, plan 16, narzędzie 6, problem 6.
 - Następny krok: `cd /workspace/wt/mobile-gpu-a16/research/cloud2/mobile-gpu-a16` → fetch.py, sources.md, audit_20_percent.json, README.md.
+
+## 2026-11-14 krok 4 — fetch.py + samokontrola
+- fetch.py: 36 plików OK lokalnie (9,4 MB); test w izolowanej kopii: PDF Arm + pliki przypięte OK, 8 stron dynamicznych CHANGED (oczekiwane, ostrzeżenie).
+- audit.py → audit_20_percent.json: seed 20261114, k=27/134, ponowne POBRANIE z sieci; 26 PASS / 1 FAIL (R8-029: cytat z dwóch raportów pod jednym URL — poprawiono, + ten sam błąd w wierszu maxBoundDescriptorSets). 3 wiersze datasheet sprawdzone przez ponowne obejrzenie stron PDF (audit_manual.json).
+- Pełna kontrola wszystkich cytatów vs pliki lokalne: tylko wiersze z komórek tabel (datasheet, lista JSON) nie są dosłownym ciągiem — opisane w metodzie.
+- Następny krok: `cd /workspace/wt/mobile-gpu-a16/research/cloud2/mobile-gpu-a16` → sources.md + README.md.
