@@ -14,3 +14,6 @@ Trasa Białystok → Knyszyn = **DK65** (potwierdził właściciel), istniejąca
 `docs/owner/OWNER-PHOTOS-KNYSZYN.md` (pliki w research/_incoming/owner-knyszyn-photos-2026-11-14, bez EXIF/GPS; prywatność — patrz plik). Strefa budowy z żółtym oznakowaniem tymczasowym jest na kadrach 20260728_*.
 
 Zdjęcia właściciela z DK65 (10, bez GPS): research/_incoming/owner-dk65-photos-2026-11-14 — opis w docs/owner/OWNER-PHOTOS-KNYSZYN.md.
+
+## AKTUALIZACJA 3 (właściciel, 23:1x): DROGI NAJPIERW
+Wersja z grubsza = **prawdziwa sieć dróg**: te same drogi co w realu, ta sama geometria osi (OSM sprawdzony z ortofoto GUGiK), liczba i szerokości pasów, skrzyżowania, ronda, wloty i zjazdy, wysepki, przejazdy, oznakowanie poziome z układu. Każde skrzyżowanie na trasie DK65 porównaj z ortofoto (zrzut obok renderu z góry) i popraw rozbieżności. Budynki = LoD1 bez szlifu, roślinność z generatora — bez poprawiania podobieństwa.
