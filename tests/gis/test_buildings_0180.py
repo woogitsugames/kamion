@@ -161,7 +161,9 @@ def test_tower_long_wall_has_one_band_per_storey_on_white():
     rows = 0
     for p in buf.parts:
         if p.layer == "buildings_low" and p.mat == "plaster_white__far_ribbon":
-            assert ((p.UV[:, 1] < 1.0) | (p.UV[:, 1] >= v0 + 0.9 - 1e-6)).all()
+            vb = FA.far_row_v("balcony_1", 0)      # ADR 0190: blind lights = the white sheet of the balcony row
+            assert ((p.UV[:, 1] < 1.0) | (p.UV[:, 1] >= v0 + 0.9 - 1e-6)
+                    | ((p.UV[:, 1] > vb + 0.1) & (p.UV[:, 1] < vb + 1.0))).all()
             rows += int((p.UV[:, 1] >= v0).sum())
     assert rows > 0
     m1, m0 = buf.mats("buildings_low"), buf.mats("buildings")
@@ -218,8 +220,9 @@ def test_light_band_is_one_office_window_per_light_on_lod1():
     wins = FR.facade_windows(r, 10.0, 0.0, 0.45, 3.5, 5.0, 1, "k")
     acc = Acc()
     FR.lod1_facade(acc, r, wins, np.array([0.0, 0.0]), np.array([1.0, 0.0]), 10.0, 0.6, 5.0)
-    lights = [uv for uv in acc.q if uv[0][1] > 2.0]
-    assert len(lights) == FR.ribbon_lights(9.2) == 6 and all(abs(uv[1][0] - uv[0][0] - 1.5) < 1e-9 for uv in lights)
+    lights = [uv for uv in acc.q if uv[0][1] > 1.0]          # office-row windows and blinds (ADR 0190)
+    assert len(lights) == FR.ribbon_lights(9.2) == 6
+    assert all(abs(uv[1][0] - uv[0][0] - (1.5 if uv[0][1] > 20.0 else FR.BLIND_CELL[3])) < 1e-9 for uv in lights)
     with pytest.raises(ValueError):
         _rule(windows="ribbon", glazing="blue")
     with pytest.raises(ValueError):

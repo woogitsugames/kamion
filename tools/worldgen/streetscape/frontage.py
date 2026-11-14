@@ -626,11 +626,18 @@ FACADE_PLAIN_V = (0.65, 0.85)
 RIBBON_LIGHT_M = FA.FAR_PITCH / 2      # one light of a ribbon band
 RIBBON_END_M = 0.4
 # ADR 0190: lights of a `glazing: light` band. Mapillary 177786140912399 / 178689077481862: under the dark lintel
-# line the windows of the white wall are as light as the wall, with a few dark panes. The `off` cells of the atlas
-# with white joinery: 4 = white vertical blind over the upper 2 / 3 (measured on T_facade_atlas_BaseColor: dark glass
-# up to 0.30 of the cell height, blind from 0.33), 2 = clear glass. (share %, variant, crop = fraction of the cell
-# cut off at the bottom): blind down / blind 2 / 3 down / clear glass. Shares: WORKING_VALUE (photo: mostly light).
-BAND_LIGHTS = ((62, 4, 0.36), (28, 4, 0.0), (10, 2, 0.0))
+# line the windows of the white wall are as light as the wall, with a few dark panes. (share %, variant, crop):
+#   variant None = white vertical blind down over the whole light. No window cell of the atlas is lighter than 172 /
+#     255 (the `off` 4 blind: 163; in the engine, Low, 112 against a wall of 153), so the blind is the lightest ribbed
+#     white surface the atlas has - the inside of the white trapezoid sheet cell `balf` 1 (202 / 255; far rows 213 against
+#     the neutral wall 187, i.e. lighter than the wall it is tinted by). BLIND_CELL: kind, variant, v range of the
+#     sheet between its rails (fractions of the cell height), width of the piece one light shows (m).
+#   variant 4 = `off` window with the blind 2 / 3 down (dark glass up to 0.30 of the cell height), 2 = clear glass;
+#     crop = fraction of the cell cut off at the bottom.
+# Shares: WORKING_VALUE (photo: mostly light).
+BAND_LIGHTS = ((62, None, 0.0), (28, 4, 0.0), (10, 2, 0.0))
+BLIND_CELL = ("balf", 1, (0.14, 0.78), 1.2)
+BLIND_ROW = -1                         # `row` of a blind light in band_lights (bay = which piece of the sheet)
 LINTEL_PROUD_M = (0.08, 0.06)          # dark lintel line above a band: LOD0 box / LOD1 quad, proud of the wall face
 LINTEL_MAT = FRAME                     # dark sheet, drawn by every building chunk on both LODs (coping)
 
@@ -734,9 +741,31 @@ def band_lights(key, n):
             top += share
             if h < top:
                 break
+        if var is None:
+            out.append((BLIND_ROW, FA.hint(key, "lbay", i) % 2, crop))
+            continue
         bays = _bays("office", [var])
         out.append((*bays[FA.hint(key, "lbay", i) % len(bays)], crop))
     return out
+
+
+def blind_rect(piece):
+    """(u0, v0, w, h) in the facade atlas (metres) of the blind a light shows on LOD0: piece 0 / 1 of BLIND_CELL."""
+    kind, var, (f0, f1), w = BLIND_CELL
+    cu, cv, cw, ch = FA.cell(kind, var)
+    return (cu + 0.1 + piece * (cw - 0.2 - w), cv + ch * f0, w, ch * (f1 - f0))
+
+
+def blind_far_uv(piece):
+    """UV0 (far-row atlas metres) of the same blind on LOD1: the balustrade front of bay 0 of the first row of its
+    balcony group (sets_buildings.facade_far pastes the cell at xc - 1.3, row floor + 0.02)."""
+    kind, var, (f0, f1), w = BLIND_CELL
+    cw, ch = FA.KINDS[kind][0], FA.KINDS[kind][1]
+    g = f"balcony_{var}"
+    bay = next(i for i, e in enumerate(FA.FAR_ROWS[g][0]) if e[0] == "bal")
+    x0 = (bay + 0.5) * FA.FAR_PITCH - 1.3 + 0.1 + piece * (cw - 0.2 - w)
+    v0 = FA.far_row_v(g, 0) + 0.02
+    return [[x0, v0 + ch * f0], [x0 + w, v0 + ch * f0], [x0 + w, v0 + ch * f1], [x0, v0 + ch * f1]]
 
 
 def facade_lintels(rule, wins):
@@ -811,7 +840,7 @@ def lod1_facade(acc, rule, wins, a, d, L, z0, zt):
                 k = len(w[7])
                 for i, (row, bay, crop) in enumerate(w[7]):
                     n += q(u0 + (u1 - u0) * i / k, u0 + (u1 - u0) * (i + 1) / k, w[2], w[3],
-                           far_uv((*w[:5], row, bay), crop))
+                           blind_far_uv(bay) if row == BLIND_ROW else far_uv((*w[:5], row, bay), crop))
             else:
                 n += q(u0, u1, w[2], w[3], far_uv(w))
             z = w[3]

@@ -730,6 +730,9 @@ def authored_openings(rule, wins, L, zref, key, door):
         elif lights:                                                # light band (ADR 0190): one office-row window
             rects = []                                              # per light, cropped as on LOD1 (FR.band_lights)
             for lrow, lbay, crop in lights:
+                if lrow == FR.BLIND_ROW:
+                    rects.append(FR.blind_rect(lbay))
+                    continue
                 cu, cv_, cw, ch = FA.cell(*FA.FAR_ROWS[g][lrow][lbay])
                 rects.append((cu, cv_ + ch * crop, cw, ch * (1.0 - crop)))
             ops.append((u0, u1, z0, z1, rv, "ribbon", ("atlas", rects, 0.0, 1.0, 0.0, 1.0)))

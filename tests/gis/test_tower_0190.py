@@ -35,12 +35,21 @@ def test_band_lights_are_hashed_white_joinery_windows():
     assert sum(s for s, _, _ in FR.BAND_LIGHTS) == 100
     li = FR.band_lights("k", 400)
     assert li == FR.band_lights("k", 400) and li != FR.band_lights("k2", 400)            # deterministic, keyed
-    var = [FA.FAR_ROWS["office"][r][b][1] for r, b, _ in li]
-    assert set(var) == {2, 4}                                                            # white frames only: no
-    assert all(c in (0.0, 0.36) for _, _, c in li)                                       # beige blind (variant 0)
-    assert all(c == 0.0 for (_, _, c), v in zip(li, var) if v == 2)
-    light = sum(1 for (_, _, c), v in zip(li, var) if v == 4 and c > 0) / len(li)
+    var = [None if r == FR.BLIND_ROW else FA.FAR_ROWS["office"][r][b][1] for r, b, _ in li]
+    assert set(var) == {None, 2, 4}                               # white blind / white frames: no beige blind (0)
+    assert all(b in (0, 1) for r, b, _ in li if r == FR.BLIND_ROW) and all(c == 0.0 for _, _, c in li)
+    light = var.count(None) / len(li)
     assert 0.5 < light < 0.75 and 0.03 < var.count(2) / len(li) < 0.2, (light, var.count(2))
+    # the blind is the inside of the white sheet cell, the same piece on both LODs (atlas metres / far-row metres)
+    kind, v_, (f0, f1), w = FR.BLIND_CELL
+    cu, cv, cw, ch = FA.cell(kind, v_)
+    for piece in (0, 1):
+        u0, v0, rw, rh = FR.blind_rect(piece)
+        assert cu + 0.05 < u0 and u0 + rw < cu + cw - 0.05 and cv < v0 and v0 + rh < cv + ch and rw == w
+        uv = FR.blind_far_uv(piece)
+        vf = FA.far_row_v(f"balcony_{v_}", 0) + 0.02
+        assert uv[1][0] - uv[0][0] == pytest.approx(w) and uv[0][1] == pytest.approx(vf + (v0 - cv))
+        assert uv[2][1] == pytest.approx(vf + (v0 - cv) + rh) and 0.2 < uv[0][0] and uv[1][0] < 2.8
 
 
 def test_far_uv_crop_cuts_the_bottom_of_the_window():
@@ -90,6 +99,7 @@ def test_tower_se_band_cells_are_the_light_variants_on_both_lods():
     from streetscape import facade_atlas as FA
     buf = _build(_loaded({TOWER})[TOWER])
     cells = {v: FA.cell("off", v) for v in range(5)}
+    cells["blind"] = FA.cell(*_fr().BLIND_CELL[:2])
     seen = set()
     for p in buf.parts:
         if p.layer != "buildings" or p.mat != "facade_atlas":
@@ -101,16 +111,21 @@ def test_tower_se_band_cells_are_the_light_variants_on_both_lods():
         for t in uv[sel]:
             c = t.mean(0)
             seen |= {v for v, (u0, v0, w, h) in cells.items() if u0 <= c[0] <= u0 + w and v0 <= c[1] <= v0 + h}
-    assert seen == {2, 4}, seen                                    # no beige blinds, no anthracite frames
+    assert seen == {2, 4, "blind"}, seen                           # no beige blinds, no anthracite frames
     # LOD1: the same windows = office rows; cropped lights start above the dark glass of the cell
-    v0 = FA.far_row_v("office", 0)
-    crops = set()
+    v0, vb = FA.far_row_v("office", 0), FA.far_row_v("balcony_1", 0)
+    n_off = n_blind = 0
     for p in buf.parts:
         if p.layer == "buildings_low" and p.mat == "plaster_white__far_ribbon":
             for q in p.UV[p.T]:
-                if q[:, 1].min() >= v0:
-                    crops.add(round(float((q[:, 1].min() - v0) % FA.FAR_ROW_H - 0.9), 3))
-    assert crops == {0.0, round(0.36 * 1.6, 3)}, crops
+                lo = float(q[:, 1].min())
+                if lo >= v0:
+                    assert round((lo - v0) % FA.FAR_ROW_H - 0.9, 3) == 0.0
+                    n_off += 1
+                elif lo >= vb:                               # blind lights: inside the balustrade front of bay 0
+                    assert vb + 0.1 < lo and float(q[:, 1].max()) < vb + 1.0 and float(q[:, 0].max()) < 2.8
+                    n_blind += 1
+    assert n_blind > n_off > 0, (n_blind, n_off)
 
 
 def test_tower_gable_windows_are_white_framed_clear_glass_with_a_shallow_reveal():

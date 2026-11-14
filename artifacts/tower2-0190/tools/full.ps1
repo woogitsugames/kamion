@@ -48,6 +48,9 @@ if ($bw -eq 0) {
         pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting $l -Gate3 (Join-Path $A 'tower_cameras.json') -Cameras $cams -OutputDir (Join-Path $A "$Tag/tower-Low-$l") *> (Join-Path $logs "$Tag-tower-$l.log")
         Mark "tower cams Low-$l exit $LASTEXITCODE"; Restore
       }
+      # High tier = LOD0 buildings near the camera (Low draws LOD1 only): the same tower cameras
+      pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting clear -Gate3 (Join-Path $A 'tower_cameras.json') -Cameras $cams -OutputDir (Join-Path $A "$Tag/tower-High-clear") *> (Join-Path $logs "$Tag-tower-High.log")
+      Mark "tower cams High-clear exit $LASTEXITCODE"; Restore
     }
   } finally { pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Owner $n; Restore }
   if ($Sbs -and $ic -eq 0) {

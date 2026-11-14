@@ -200,6 +200,46 @@
    ],
    "fov_deg": 30.0,
    "note": "roof masts from the west, above the roof"
+  },
+  {
+   "id": "g3a_eye_s0012",
+   "type": "persp",
+   "kind": "driver_eye",
+   "segment": "G3-A",
+   "pos": [
+    720.978,
+    -411.552,
+    143.882
+   ],
+   "look_at": [
+    701.459,
+    -446.48,
+    143.159
+   ],
+   "fov_deg": 60.0,
+   "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=30 m (+18 m) (moved +18 m ahead of the spawn so it is not inside the truck, W-N10)",
+   "s_m": 30.0,
+   "truck_s_m": null
+  },
+  {
+   "id": "g3a_eye_s0062",
+   "type": "persp",
+   "kind": "driver_eye",
+   "segment": "G3-A",
+   "pos": [
+    705.276,
+    -439.447,
+    143.687
+   ],
+   "look_at": [
+    686.23,
+    -474.636,
+    143.022
+   ],
+   "fov_deg": 60.0,
+   "note": "driver eye 2.5 m on the autopilot line, 40 m ahead, s=62 m (+50 m)",
+   "s_m": 62.0,
+   "truck_s_m": null
   }
  ]
 }

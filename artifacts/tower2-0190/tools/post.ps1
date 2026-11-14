@@ -5,6 +5,8 @@ $logs = "artifacts/$n/logs"; $st = "$logs/chain.status"
 function Mark($m) { "post $m $(Get-Date -Format s)" | Out-File $st -Append -Encoding utf8 }
 pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner "$n-pytest"
 try {
+  & tools/worldgen/.venv/Scripts/python.exe tools/worldgen/fidelity/run.py --region bialystok-industrial-c *> "$logs/fidelity.log"
+  Mark "fidelity exit $LASTEXITCODE"
   & tools/worldgen/.venv/Scripts/python.exe -m pytest tests/gis -q -p no:cacheprovider *> "$logs/pytest-gis.log"
   Mark "pytest gis exit $LASTEXITCODE"
 } finally { pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Pool heavy -Owner "$n-pytest" }
