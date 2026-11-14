@@ -168,7 +168,8 @@ overrides:
                  [48.3, 338.0], [47.4, 337.6], [50.7, 330.7]]
     cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
     height_m: 9.0
-    function: produkcyjny
+    storeys: 2
+    function: biurowiec
     reason: >-
       Photos P11-005 and P11-063: the west corner of the plant is a dark graphite block taller than the annexes on
       both sides of it (it carries the company board, which is not reproduced). Orthophoto 2024: a lighter roof
@@ -178,14 +179,29 @@ overrides:
       annex beside it (same distance) = 1.17 x the annex -> 9.0 m, UNVERIFIED +-1 m.
     confidence: medium
     verify: M63; owner photo session (Kuronia 2 from the Mickiewicza crossing)
-    set: {typology: hall, wall_material: hall_wall_graphite, hall_bands: false}
+    # r3 render: a solid graphite box read as a second hall, not as the front of P11-005 - the block is a dark frame
+    # (top band 2.6 m, corner piers, dark ground floor) round a light two-storey face with windows
+    set: &k2_portal
+      typology: office
+      frontage:
+        wall: plaster_white
+        plinth_m: 0.3
+        glass_lod1: hall_flashing
+        fascia: {material: hall_flashing, height_m: 2.6, facings: [N, NE, E, SE, S, SW, W, NW]}
+        accents:
+          - {facing: [N, NE, E, SE, S, SW, W, NW], span: [0.0, 1.0], material: plaster_accent_grey, z: [0.3, 3.3], min_len_m: 1.0}
+          - {facing: [SW, NW], span: [0.0, 0.1], material: hall_flashing, z: [3.3, 99.0], min_len_m: 5.0}
+          - {facing: [SW, NW], span: [0.9, 1.0], material: hall_flashing, z: [3.3, 99.0], min_len_m: 5.0}
+        glazing:
+          - {facing: [SW, NW], span: [0.16, 0.84], z: [4.0, 5.8], window_m: [1.6, 1.5], min_len_m: 5.0, margin_m: 0.8}
   - id: kuronia2-front-portal
     kind: building_part
     name: second dark block of the front of the plant at Kuronia 2 (SW wall)
     polygon_en: [[62.6, 330.5], [53.1, 325.8], [56.8, 318.1], [66.4, 322.8]]
     cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
     height_m: 9.0
-    function: produkcyjny
+    storeys: 2
+    function: biurowiec
     reason: >-
       Photos P11-005 and P11-063: a second dark graphite block of the same height stands on the SW front, separated
       from the corner block by a light bay (the frame of P11-063 reads dark - light - dark - long low light).
@@ -193,7 +209,7 @@ overrides:
       height as the corner block (UNVERIFIED).
     confidence: low
     verify: M63; owner photo session
-    set: {typology: hall, wall_material: hall_wall_graphite, hall_bands: false}
+    set: *k2_portal
   - id: kuronia2-front-bay
     kind: building_part
     name: light bay between the two dark blocks of the front at Kuronia 2

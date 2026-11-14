@@ -186,7 +186,8 @@ def test_kuronia2_is_a_dark_hall_with_low_light_annexes():
     parts = {k: b for k, b in blds.items() if k.startswith("override:kuronia2-")}
     assert len(parts) == 5
     for k in ("override:kuronia2-corner-portal", "override:kuronia2-front-portal"):
-        assert parts[k]["typ"] == "hall" and parts[k]["ovr"]["wall_material"] == "hall_wall_graphite"
+        fr = FR.plan(parts[k]["ovr"]["frontage"], MT.M)                    # dark frame round a light face
+        assert parts[k]["typ"] == "office" and fr["fascia"]["material"] == "hall_flashing"
         assert 7.2 < parts[k]["props"]["height_m"] < host["props"]["height_m"]
     for k in ("override:kuronia2-front-bay", "override:kuronia2-office-wing", "override:kuronia2-street-annex"):
         assert parts[k]["typ"] == "office" and parts[k]["props"]["height_m"] == pytest.approx(7.2)
