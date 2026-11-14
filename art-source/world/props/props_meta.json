@@ -1862,6 +1862,99 @@
    "tris_lod0": 30,
    "tris_lod1": 12
   },
+  "signal_bike_green": {
+   "materials": [
+    "signal_green_on",
+    "signal_housing",
+    "signal_red_off",
+    "signal_yellow_off"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_bike_off": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off",
+    "signal_yellow_off"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_bike_red": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_on",
+    "signal_yellow_off"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_head1_green": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 84,
+   "tris_lod1": 48
+  },
+  "signal_head1_off": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 84,
+   "tris_lod1": 48
+  },
+  "signal_head1_red": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_housing",
+    "signal_red_on"
+   ],
+   "tris_lod0": 84,
+   "tris_lod1": 48
+  },
+  "signal_head2_green": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_on",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 136,
+   "tris_lod1": 64
+  },
+  "signal_head2_off": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 136,
+   "tris_lod1": 64
+  },
+  "signal_head2_red": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_on"
+   ],
+   "tris_lod0": 136,
+   "tris_lod1": 64
+  },
   "signal_head_green": {
    "materials": [
     "signal_backplate",
@@ -1871,8 +1964,8 @@
     "signal_red_off",
     "signal_yellow_off"
    ],
-   "tris_lod0": 120,
-   "tris_lod1": 84
+   "tris_lod0": 188,
+   "tris_lod1": 80
   },
   "signal_head_off": {
    "materials": [
@@ -1883,8 +1976,8 @@
     "signal_red_off",
     "signal_yellow_off"
    ],
-   "tris_lod0": 120,
-   "tris_lod1": 84
+   "tris_lod0": 188,
+   "tris_lod1": 80
   },
   "signal_head_red": {
    "materials": [
@@ -1895,8 +1988,8 @@
     "signal_red_on",
     "signal_yellow_off"
    ],
-   "tris_lod0": 120,
-   "tris_lod1": 84
+   "tris_lod0": 188,
+   "tris_lod1": 80
   },
   "signal_mast": {
    "materials": [
@@ -1904,6 +1997,39 @@
    ],
    "tris_lod0": 170,
    "tris_lod1": 45
+  },
+  "signal_ped_green": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_on",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 136,
+   "tris_lod1": 64
+  },
+  "signal_ped_off": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 136,
+   "tris_lod1": 64
+  },
+  "signal_ped_red": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_on"
+   ],
+   "tris_lod0": 136,
+   "tris_lod1": 64
   },
   "signal_pole": {
    "materials": [
