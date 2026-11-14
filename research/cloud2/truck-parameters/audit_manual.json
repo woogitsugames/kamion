@@ -1,0 +1,52 @@
+{
+ "R3-070": {
+  "wynik": "PASS",
+  "opis": "wykres słupkowy 'Ratios AT2612' (wycinek s. 3, 150 dpi, obejrzany): biegi 1–12 = 14.94 11.73 9.04 7.09 5.54 4.35 3.44 2.70 2.08 1.63 1.27 1.00; R1–R4 17.48 13.73 4.02 3.16 — bieg 3 = 9.04 zgodny"
+ },
+ "R3-075": {
+  "wynik": "PASS",
+  "opis": "wykres słupkowy 'Ratios AT2612' (wycinek s. 3, 150 dpi, obejrzany): biegi 1–12 = 14.94 11.73 9.04 7.09 5.54 4.35 3.44 2.70 2.08 1.63 1.27 1.00; R1–R4 17.48 13.73 4.02 3.16 — bieg 8 = 2.70 zgodny"
+ },
+ "R3-094": {
+  "wynik": "PASS",
+  "opis": "tabela G 330-12 s. 29 (obejrzana): iS 11.639 7.035 4.400 2.645 1.599 1.000 | iL 9.020 5.452 3.410 2.050 1.239 0.775; przeplot iS1,iL1,iS2,iL2,… daje bieg 3 = 7.035"
+ },
+ "R3-095": {
+  "wynik": "PASS",
+  "opis": "tabela G 330-12 s. 29 (obejrzana): iS 11.639 7.035 4.400 2.645 1.599 1.000 | iL 9.020 5.452 3.410 2.050 1.239 0.775; przeplot iS1,iL1,iS2,iL2,… daje bieg 4 = 5.452"
+ },
+ "R3-098": {
+  "wynik": "PASS",
+  "opis": "tabela G 330-12 s. 29 (obejrzana): iS 11.639 7.035 4.400 2.645 1.599 1.000 | iL 9.020 5.452 3.410 2.050 1.239 0.775; przeplot iS1,iL1,iS2,iL2,… daje bieg 7 = 2.645"
+ },
+ "R3-100": {
+  "wynik": "PASS",
+  "opis": "tabela G 330-12 s. 29 (obejrzana): iS 11.639 7.035 4.400 2.645 1.599 1.000 | iL 9.020 5.452 3.410 2.050 1.239 0.775; przeplot iS1,iL1,iS2,iL2,… daje bieg 9 = 1.599"
+ },
+ "R3-102": {
+  "wynik": "PASS",
+  "opis": "tabela G 330-12 s. 29 (obejrzana): iS 11.639 7.035 4.400 2.645 1.599 1.000 | iL 9.020 5.452 3.410 2.050 1.239 0.775; przeplot iS1,iL1,iS2,iL2,… daje bieg 11 = 1.000"
+ },
+ "R3-139": {
+  "wynik": "PASS",
+  "opis": "tabela pkt 2.1.1 zał. 4 s. 43 (wycinek 150 dpi obejrzany): kolumna N3: v 60 km/h; s ≤ 0.15v + v²/130 i dm ≥ 5.0 m/s² (komórka wspólna M2–N3); silnik podłączony 90 km/h, 0.15v + v²/103.5 (wzór złożony graficznie jako 'v²/103 .5'), 4.0 m/s²; F ≤ 70 daN — v = 60 km/h zgodne"
+ },
+ "R3-140": {
+  "wynik": "PASS",
+  "opis": "tabela pkt 2.1.1 zał. 4 s. 43 (wycinek 150 dpi obejrzany): kolumna N3: v 60 km/h; s ≤ 0.15v + v²/130 i dm ≥ 5.0 m/s² (komórka wspólna M2–N3); silnik podłączony 90 km/h, 0.15v + v²/103.5 (wzór złożony graficznie jako 'v²/103 .5'), 4.0 m/s²; F ≤ 70 daN — wzór s zgodny"
+ },
+ "R3-142": {
+  "wynik": "PASS",
+  "opis": "tabela pkt 2.1.1 zał. 4 s. 43 (wycinek 150 dpi obejrzany): kolumna N3: v 60 km/h; s ≤ 0.15v + v²/130 i dm ≥ 5.0 m/s² (komórka wspólna M2–N3); silnik podłączony 90 km/h, 0.15v + v²/103.5 (wzór złożony graficznie jako 'v²/103 .5'), 4.0 m/s²; F ≤ 70 daN — 90 km/h / 103.5 / 4.0 zgodne; uwaga: zapis '103 .5' w PDF interpretowany jako 103,5 (wpisane w uwagach wiersza)",
+  "korekta": "dopisano w uwagach wiersza, że mianownik w PDF jest złożony jako 'v²/103 .5'"
+ },
+ "R3-117": {
+  "wynik": "PASS",
+  "opis": "3294/2π = 524.3 mm, 3319/2π = 528.2 mm, 3272/2π = 520.8 mm → 0.521–0.528 m — zgodne"
+ },
+ "R3-153": {
+  "wynik": "PASS",
+  "opis": "po korekcie: w źródle jest 250 (ft), 76.2 m to przeliczenie",
+  "korekta": "FAIL w 1. przebiegu: kolumna 'wartość' zawierała przeliczenie 76.2 m, którego nie ma w źródle → wartość = 250, jednostka 'ft (= 76.2 m, przeliczenie)'"
+ }
+}

@@ -316,7 +316,7 @@ r("hamowanie", "UN R13 N3 typ-0, silnik odłączony: MFDD", "≥ 5.0", "m/s²", 
   "status w VRD S5 był UNVERIFIED — teraz SOURCED (Rev.3); gra spełnia z zapasem", img=img_r13)
 r("hamowanie", "UN R13 N3 typ-0, silnik podłączony: prędkość / droga / MFDD", "90 km/h; s ≤ 0.15 v + v²/103.5; ≥ 4.0", "km/h; m; m/s²", "SOURCED",
   QI.format(img="files/_view/r13p43-043.png, s. 43"), "V = 80% Vmax but not exceeding ... 90 km/h; 0.15v + v²/103.5; 4.0 m/s²", "R13R3", "brak testu 90→0", PV,
-  "brak w grze", "dodać scenariusz brake_90_0_engine_connected (40 t): s ≤ 0.15·90 + 90²/103.5 = 91.8 m", "", img=img_r13)
+  "brak w grze", "dodać scenariusz brake_90_0_engine_connected (40 t): s ≤ 0.15·90 + 90²/103.5 = 91.8 m", "mianownik w PDF złożony graficznie jako 'v²/103 .5' — odczyt 103,5", img=img_r13)
 r("hamowanie", "UN R13: siła na pedale (M2–N3)", "≤ 70", "daN", "SOURCED", QI.format(img="files/_view/r13p43-043.png, s. 43"), "F ≤ ... 70 daN", "R13R3",
   "", "", "", "", "", img=img_r13)
 r("hamowanie", "UN R13 — droga hamowania z 80 km/h przy wymaganiu typ-0 N3", "≤ 61.2", "m", "ESTIMATED", "0.15·80 + 80²/130 = 12.0 + 49.2 (ekstrapolacja wzoru 60 km/h na 80 km/h)",
@@ -341,7 +341,7 @@ r("hamowanie", "UN R13 (02): hamulec pomocniczy kat. N — MFDD", "≥ 2.2", "m/
   PV + " air_leak_rear_circuit", "OK", "bez zmian", "już jako S5 w VRD — potwierdzenie")
 r("hamowanie", "UN R13 (02): hamulec postojowy utrzymuje pojazd na pochyleniu", "18", "%", "SOURCED", Q, "18 per cent up or down-gradient", "R13JP",
   "12 % (zestaw, park_12pct)", PV + " wiersz 1", "OK", "dodać test 18 % dla ciągnika solo", "")
-r("hamowanie", "FMVSS 121 (USA): ciągnik 2-osiowy obciążony + niehamowana naczepa kontrolna, 60 mph (96.6 km/h)", "250 ft = 76.2", "m", "SOURCED", Q,
+r("hamowanie", "FMVSS 121 (USA): ciągnik 2-osiowy obciążony + niehamowana naczepa kontrolna, 60 mph (96.6 km/h)", "250", "ft (= 76.2 m, przeliczenie 0.3048)", "SOURCED", Q,
   "60 280 310 250 310 335 235 613 720", "FMVSS121", "≈ 50 (ESTIMATED: 80→0 MFDD 7.1–7.5 → 96.6 km/h)", PV, "OK (spełnia z zapasem)", "bez zmian",
   "kolumna (3) 'Loaded Tractors with Two Axles ... Tested with an Unbraked Control Trailer'; bobtail (6) 235 ft = 71.6 m")
 r("hamowanie", "Zmierzone drogi hamowania 80→0 zestawu 40 t z EBS (publikacje pomiarowe)", "—", "m", "UNVERIFIED",
@@ -412,7 +412,7 @@ def main():
             "wartość_w_grze": x["gra"], "źródło_w_grze": x["gra_zr"], "ocena": x["ocena"], "rekomendacja": x["rek"],
         })
     with open(os.path.join(HERE, "manifest.csv"), "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=COLS)
+        w = csv.DictWriter(f, fieldnames=COLS, lineterminator="\n")
         w.writeheader()
         w.writerows(out)
     st = {}
