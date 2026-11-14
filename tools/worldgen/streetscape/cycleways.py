@@ -50,15 +50,84 @@ PATHS = ("path", "footway", "pedestrian")
 UNPAVED = {"dirt", "ground", "gravel", "compacted", "sand", "unpaved", "fine_gravel", "grass", "earth", "mud", "woodchips"}
 BLOCKS = {"paving_stones", "sett", "bricks", "paving_stones:30", "unhewn_cobblestone", "cobblestone"}
 GREY = {"grey", "gray", "black", "dark", "#000000", "#808080"}
+RED = {"red", "#ff0000", "burgundy", "maroon"}
 
+MAT_GREY = "cycle_asphalt"
 MAT_RED = "cycle_asphalt_red"
 MAT_CROSSING = "cycle_crossing_red"
-# Widths (m). No Polish source read for these in this task -> WORKING_VALUE (the usual design values: two-way track
-# 2.0 m, one-way 1.5 m, footway 2.0 m = standards.SIDEWALK_W); a region's BDOT10k SZEROKOSC wins where it exists.
-DDR_W_TWO_WAY, DDR_W_ONE_WAY = 2.0, 1.5
+
+# M65 (REVIEW-2026-11-14-s20-cloud-m65 §2.1 & §5 A): in bialystok-dojlidy ALL cycle tracks have warm-grey asphalt
+# (`cycle_asphalt`). Weathered red-brown / burgundy DDR asphalt (`cycle_asphalt_red`) appears ONLY on 11 verified OSM
+# ways in bialystok-industrial-c (9 ways around Rondo Putry + 2 ways with cycleway:both=track).
+RED_ASPHALT_WAYS = frozenset({
+    173985179, 177895175, 177903955, 238234011, 257367441,
+    282244166, 284396207, 284396209, 350559280, 591365139, 613145836,
+})
+
+# M65 (§3 & §5 C): segregated paths where the footway lies closer to the carriageway and the DDR lies on the outer side
+# (`cycle_side: away`), verified on GUGiK 0.08 m / 0.25 m 2024 orthophotos and owner photos (P11-001, P11-063).
+AWAY_WAYS = frozenset({
+    212811563, 180233649, 1534813757, 344253261,
+    257367436, 268470393, 591358181, 591365139,
+})
+
+# M65 (§2.2 & §5 B): red thermoplastic/resin surfacing (`cycle_crossing_red`) on P-11 crossings appears ONLY on 25
+# verified OSM crossing nodes (9 in Dojlidy including P11-056 Dywizjonu 303 `5825973689`, 16 in Region C). All other
+# P-11 crossings (including the entire Mickiewicza/Kuronia junction P11-063 and all 5 crossings of Rondo Putry) carry
+# white P-11 squares only, without a red field.
+P11_RED_NODES_DOJLIDY = frozenset({
+    2895147443, 2895147444, 3889955473, 5775179569, 5775179571,
+    5810311651, 5825973689, 5906745186, 6505679117,
+})
+P11_RED_NODES_C = frozenset({
+    1748446221, 1882953779, 1882953782, 2441701386, 2641555452,
+    3032448286, 5940539335, 6337303569, 6942794456, 9224916295,
+    3032448284, 8763628068, 9224916298, 6337303579, 6942794457, 6942794461,
+})
+P11_RED_NODES = P11_RED_NODES_DOJLIDY | P11_RED_NODES_C
+
+# M65 (§2.2 & §5 B): crossing nodes with NO carriageway crossing markings (`none`), plus service driveways in Dojlidy.
+P11_NONE_NODES = frozenset({4391371828, 2274001610, 2999994950, 3323249091})
+
+# M65 (§3 & §5 D): orthophoto-measured widths (m) per OSM way: (cycle_w_m, total_w_m or None).
+M65_WIDTHS: dict[int, tuple[float, float | None]] = {
+    # bialystok-dojlidy
+    180233649: (2.75, 4.55),
+    212811563: (2.60, 5.00),
+    237088754: (2.80, 4.80),
+    285876996: (2.60, None),
+    290656135: (2.60, 4.60),
+    294819728: (2.60, None),
+    538810153: (2.45, 4.45),
+    543330143: (2.55, 4.55),
+    692955707: (2.60, None),
+    692955719: (2.50, None),
+    1534813757: (2.75, 4.55),
+    # bialystok-industrial-c
+    344253261: (2.50, 4.50),
+    632802057: (2.50, 4.50),
+    173985179: (2.50, 4.50),
+    177895175: (2.50, 4.50),
+    177903955: (2.50, 4.50),
+    238234011: (2.50, 4.50),
+    257367436: (2.95, 4.95),
+    257367441: (2.50, 4.50),
+    268470393: (2.80, 4.80),
+    282244166: (2.50, 4.50),
+    284396207: (2.50, 4.50),
+    284396209: (2.50, 4.50),
+    350559280: (2.50, 4.50),
+    591358181: (2.75, 4.75),
+    591365139: (3.30, 5.10),
+    613145836: (2.50, None),
+}
+
+# Widths (m). M65 (§3 & §5 D): two-way cycle tracks in Białystok measure 2.45-2.80 m (default 2.6 m, was 2.0 m);
+# one-way 1.5 m, footway 2.0 m = standards.SIDEWALK_W; BDOT10k SZEROKOSC or M65_WIDTHS wins where available.
+DDR_W_TWO_WAY, DDR_W_ONE_WAY = 2.6, 1.5
 DDR_W_MIN, DDR_W_MAX = 1.5, 3.5
-SEG_TOTAL_DEFAULT, SEG_TOTAL_MIN = 4.0, 3.5
-SEG_CYCLE_MIN, SEG_CYCLE_MAX, SEG_FOOT_MIN = 1.5, 3.0, 1.5
+SEG_TOTAL_DEFAULT, SEG_TOTAL_MIN = 4.6, 4.1
+SEG_CYCLE_MIN, SEG_CYCLE_MAX, SEG_FOOT_MIN = 1.5, 3.3, 1.5
 BDOT_ALONG_M = 3.0          # a BDOT path line within this distance of the OSM way describes the same path
 BDOT_REPLACED_FRAC = 0.6    # ... and is replaced by the OSM-built strips when this much of it runs along cycle ways
 DIVIDER_W, DIVIDER_LIFT = S.EDGING_W, 0.01
@@ -148,9 +217,15 @@ def _surface_mat(surface, colour, cycle: bool):
         return "cycle_red" if cycle else "sidewalk_paving"
     if not cycle:
         return "path_asphalt" if surface in ("asphalt", "concrete") else "sidewalk_paving"
-    if colour and colour.lower() in GREY:
-        return "path_asphalt"
-    return MAT_RED
+    if colour:
+        c = colour.lower()
+        if c in RED:
+            return MAT_RED
+        if c in ("black", "#000000"):
+            return "path_asphalt"
+        if c in GREY:
+            return MAT_GREY
+    return MAT_GREY
 
 
 def classify(t: dict) -> dict | None:
@@ -191,8 +266,8 @@ def widths(cls: dict, tags: dict, bdot_w: float | None, ov: dict | None = None) 
     total = _num(ov.get("total_w_m")) or _num(tags.get("width")) or bdot_w or SEG_TOTAL_DEFAULT
     total = max(float(total), SEG_TOTAL_MIN)
     cw = _num(ov.get("cycle_w_m")) or _num(tags.get("cycleway:width")) or         max(total - S.SIDEWALK_W, DDR_W_TWO_WAY if cls["two_way"] else DDR_W_ONE_WAY)
-    cw = float(np.clip(cw, SEG_CYCLE_MIN, min(SEG_CYCLE_MAX, total - SEG_FOOT_MIN)))
-    return cw, total - cw
+    cw = round(float(np.clip(cw, SEG_CYCLE_MIN, min(SEG_CYCLE_MAX, total - SEG_FOOT_MIN))), 4)
+    return cw, round(total - cw, 4)
 
 
 # --------------------------------------------------------------------------------------------- plan
@@ -273,8 +348,9 @@ def plan(data: dict | None, origin, overrides: list, bdot_skrp: list, road_lines
     rtree = shapely.STRtree(road_lines) if road_lines else None
     items, skipped = [], {"shared": 0, "unpaved": 0, "override": 0}
     for w in data["ways"]:
+        wid = int(w["osm_way"])
         cls = classify(w["tags"])
-        ov = ovs.get(int(w["osm_way"]))
+        ov = ovs.get(wid)
         if cls is None or len(w["geometry"]) < 2:
             continue
         if ov is not None and ov.get("build") is False:
@@ -286,8 +362,11 @@ def plan(data: dict | None, origin, overrides: list, bdot_skrp: list, road_lines
         if cls["mat_cycle"] is None:
             skipped["unpaved"] += 1
             continue
-        if ov is not None and ov.get("colour") in ("red", "grey"):
-            cls = dict(cls, mat_cycle=MAT_RED if ov["colour"] == "red" else "path_asphalt")
+        if wid in RED_ASPHALT_WAYS and cls["mat_cycle"] == MAT_GREY:
+            cls = dict(cls, mat_cycle=MAT_RED)
+        if ov is not None and ov.get("colour") in ("red", "grey", "black"):
+            c_ov = ov["colour"]
+            cls = dict(cls, mat_cycle=MAT_RED if c_ov == "red" else ("path_asphalt" if c_ov == "black" else MAT_GREY))
         line = LineString(np.asarray(w["geometry"], float) - o)
         bw, bmat = None, None
         if btree is not None:
@@ -304,11 +383,18 @@ def plan(data: dict | None, origin, overrides: list, bdot_skrp: list, road_lines
                     best, bw, bmat = ln, bwid, bm
         if cls["kind"] == "segregated" and "footway:surface" not in w["tags"] and bmat == "masa bitumiczna":
             cls = dict(cls, mat_foot="path_asphalt")       # BDOT10k: the whole path is bituminous
-        cw, fw = widths(cls, w["tags"], bw, ov)
+        w_ov = dict(ov) if ov else {}
+        if wid in M65_WIDTHS:
+            m_cw, m_tw = M65_WIDTHS[wid]
+            w_ov.setdefault("cycle_w_m", m_cw)
+            if m_tw is not None and bw is None:
+                w_ov.setdefault("total_w_m", m_tw)
+        cw, fw = widths(cls, w["tags"], bw, w_ov)
         total = cw + fw
         side = 0.0
         if cls["kind"] == "segregated":
-            want = (ov or {}).get("cycle_side", "road")
+            default_side = "away" if wid in AWAY_WAYS else "road"
+            want = (ov or {}).get("cycle_side", default_side)
             rs = _road_side(line, road_lines, rtree)
             side = {"left": 1.0, "right": -1.0, "road": rs or 1.0, "away": -(rs or -1.0)}.get(want, rs or 1.0)
         if fw > 0:
@@ -459,6 +545,36 @@ def _resample(line: LineString, step=2.0, s0=0.0, s1=None):
     return np.array([line.interpolate(float(x)).coords[0] for x in u])
 
 
+def _on_surface_intervals(line: LineString, top, min_gap_m: float = 2.5) -> list[tuple[float, float]]:
+    """Contiguous station intervals (s0, s1) where `line` lies on the built cycle surface (splits at road/driveway cuts)."""
+    if line is None or line.length < 0.5:
+        return []
+    u = np.linspace(0.0, line.length, max(2, int(math.ceil(line.length / 0.5)) + 1))
+    P = np.array([line.interpolate(float(x)).coords[0] for x in u])
+    ok = np.isfinite(top.z(P))
+    raw: list[tuple[float, float]] = []
+    i, n = 0, len(u)
+    while i < n:
+        if not ok[i]:
+            i += 1
+            continue
+        j = i
+        while j + 1 < n and ok[j + 1]:
+            j += 1
+        if u[j] - u[i] >= 0.5:
+            raw.append((float(u[i]), float(u[j])))
+        i = j + 1
+    if not raw:
+        return [(0.0, float(line.length))]
+    merged = [raw[0]]
+    for a, b in raw[1:]:
+        if a - merged[-1][1] < min_gap_m:
+            merged[-1] = (merged[-1][0], b)
+        else:
+            merged.append((a, b))
+    return merged
+
+
 def paint(buf, items: list, carriage, report: dict):
     """Edging between DDR and footway, centre / edge lines and P-23 on the built cycle surfaces."""
     from roads.authored_paint import _drape_polygon
@@ -479,39 +595,45 @@ def paint(buf, items: list, carriage, report: dict):
         mid = _offset(line, 0.5 * (it["d_cycle"][0] + it["d_cycle"][1]))
         if mid is None:
             continue
+        spans = _on_surface_intervals(mid, top)
         if it["two_way"] and it["centre_line"] and it["w_cycle"] >= 2.0 and it["mat_cycle"] != "cycle_red":
             dash, gap = CENTRE_DASH
-            s = gap / 2
-            while s + dash <= mid.length:
-                rep["centre_line_m"] += _ribbon(buf, top, _resample(mid, 1.0, s, s + dash), LINE_W,
-                                                f"DDR-centre@{it['id']}", "markings", "marking_white", S.MARKING_LIFT,
-                                                uv1y=0.2)
-                s += dash + gap
+            for seg_a, seg_b in spans:
+                s = seg_a + gap / 2
+                while s + dash <= seg_b:
+                    rep["centre_line_m"] += _ribbon(buf, top, _resample(mid, 1.0, s, s + dash), LINE_W,
+                                                    f"DDR-centre@{it['id']}", "markings", "marking_white", S.MARKING_LIFT,
+                                                    uv1y=0.2)
+                    s += dash + gap
         if not it["p23"] or carriage is None or carriage.is_empty or it["mat_cycle"] == "cycle_red":
             continue
-        # P-23 behind every carriageway the track crosses or ends at, in the lane that leaves the crossing
+        # P-23 behind every carriageway or paved driveway cut the track crosses or ends at, in the lane leaving the cut
         lane_w = it["w_cycle"] / 2 if it["two_way"] and it["w_cycle"] >= 2.0 else it["w_cycle"]
         small = lane_w < P23["h"] + 0.3
         g = p23_glyph(small)
         gl = (P23_SMALL if small else P23)["len"]
         if lane_w < (P23_SMALL if small else P23)["h"] + 0.1:
             continue
-        for end, sgn in ((0.0, 1.0), (mid.length, -1.0)):
-            pt = mid.interpolate(end)
-            if carriage.distance(pt) > 1.5 or mid.length < 2 * (P23_AFTER_CROSSING_M + gl) + 2.0:
+        for seg_a, seg_b in spans:
+            if seg_b - seg_a < 2 * (P23_AFTER_CROSSING_M + gl) + 2.0:
                 continue
-            sa = end + sgn * P23_AFTER_CROSSING_M
-            a, b = mid.interpolate(sa), mid.interpolate(sa + sgn * gl)
-            t = np.array([b.x - a.x, b.y - a.y])
-            t /= max(float(np.hypot(*t)), 1e-9)
-            nl = np.array([-t[1], t[0]])
-            # travel direction t; in a two-way track the lane leaving the crossing is the right half (Polish traffic)
-            off = -lane_w / 2 if it["two_way"] and it["w_cycle"] >= 2.0 else 0.0
-            ring = shapely.transform(g, lambda xy: np.asarray([a.x, a.y]) + np.outer(xy[:, 0], t) +
-                                     np.outer(xy[:, 1] + off, nl))
-            n, lost = _drape_polygon(buf, top, ring, f"P-23@{it['id']}", uv1y=0.2)
-            rep["p23"] += 1 if n else 0
-            rep["p23_off_surface"] += 1 if lost and not n else 0
+            for end, sgn in ((seg_a, 1.0), (seg_b, -1.0)):
+                pt = mid.interpolate(end)
+                interior_cut = 1.5 < end < mid.length - 1.5
+                if not interior_cut and carriage.distance(pt) > 1.5:
+                    continue
+                sa = end + sgn * P23_AFTER_CROSSING_M
+                a, b = mid.interpolate(sa), mid.interpolate(sa + sgn * gl)
+                t = np.array([b.x - a.x, b.y - a.y])
+                t /= max(float(np.hypot(*t)), 1e-9)
+                nl = np.array([-t[1], t[0]])
+                # travel direction t; in a two-way track the lane leaving the crossing is the right half (Polish traffic)
+                off = -lane_w / 2 if it["two_way"] and it["w_cycle"] >= 2.0 else 0.0
+                ring = shapely.transform(g, lambda xy: np.asarray([a.x, a.y]) + np.outer(xy[:, 0], t) +
+                                         np.outer(xy[:, 1] + off, nl))
+                n, lost = _drape_polygon(buf, top, ring, f"P-23@{it['id']}", uv1y=0.2)
+                rep["p23"] += 1 if n else 0
+                rep["p23_off_surface"] += 1 if lost and not n else 0
     report.update({k: (round(v, 1) if isinstance(v, float) else v) for k, v in rep.items()})
 
 

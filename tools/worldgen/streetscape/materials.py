@@ -39,17 +39,21 @@ M = {
     "yard_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "path_asphalt": {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
     "cycle_red": {"color": [0.20, 0.06, 0.05], "rough": 0.88, "surface": "asphalt", "texture_set": "paving_red"},
-    # ADR 0188: red asphalt of cycle tracks. Set `asphalt_tint` = the asphalt_worn scan as a neutral modulation map
-    # (engine albedo = 2 x colour x map): the normal, roughness, cracks and grime are those of the grey asphalt, only
-    # the colour differs. Colours are photo ratios against the carriageway asphalt in the SAME owner photo, applied to
-    # road_asphalt [0.081, 0.08, 0.079] (linear): P11-001 Kuronia track 1.57 / 1.29 / 1.07 (weathered, nearly grey -
-    # no saturated red), P11-056 Dywizjonu 303 crossing 2.65 / 1.71 / 1.71 (thin red surfacing, small distant sample,
-    # taken 10 % lower). WORKING_VALUE (two photos, uncalibrated camera).
-    # The manifest colours are those ratios CALIBRATED IN THE RENDER (r1, Low overcast, same frames photo_P11-001 /
-    # photo_P11-056: the surface / carriageway ratio measured in the PNG, colour scaled until it equals the photo's):
-    # the nominal [0.127, 0.103, 0.085] rendered 0.84 / 0.65 / 0.49 of the carriageway (a paved strip is darkened by
-    # the ground layers a carriageway does not have), the decal [0.193, 0.123, 0.121] 3.43 / 2.04 / 1.99.
-    "cycle_asphalt_red": {"color": [0.238, 0.206, 0.184], "rough": 0.9, "surface": "asphalt",
+    # ADR 0188 (updated M65): asphalt surfaces of cycle tracks (DDR). Set `asphalt_tint` = the asphalt_worn scan as a
+    # neutral modulation map (engine albedo = 2 x colour x map): the normal, roughness, cracks and grime are those of
+    # the grey asphalt, only the colour differs.
+    # - `cycle_asphalt`: warm dark-grey asphalt of standard DDRs (all DDRs in bialystok-dojlidy including Kuronia
+    #   P11-001 and Mickiewicza/Kuronia P11-063, plus the grey DDRs in bialystok-industrial-c). Calibrated in the Low
+    #   overcast render of P11-001 against the photo's DDR / carriageway / sidewalk ratios (M65 §2.1 / §5 A: DDR sRGB
+    #   ~109/104/101 vs carriageway 87/87/88 and sidewalk 129/123/113). WORKING_VALUE.
+    # - `cycle_asphalt_red`: weathered red-brown / burgundy asphalt of the Rondo Putry / Andersa cycle tracks in
+    #   bialystok-industrial-c (11 OSM ways verified on GUGiK 0.08 m 2024 orthophoto and Mapillary, M65 §2.1 / §5 A).
+    #   WORKING_VALUE.
+    # - `cycle_crossing_red`: thin red thermoplastic / resin surfacing of the 25 verified red P-11 cycle crossings
+    #   (9 in Dojlidy including P11-056 Dywizjonu 303, 16 in Region C; M65 §2.2 / §5 B). WORKING_VALUE.
+    "cycle_asphalt": {"color": [0.160, 0.151, 0.145], "rough": 0.9, "surface": "asphalt",
+                      "texture_set": "asphalt_tint", "uv": "planar", "ground_grime": {"damp_darkening": 0.22}},
+    "cycle_asphalt_red": {"color": [0.220, 0.138, 0.130], "rough": 0.9, "surface": "asphalt",
                           "texture_set": "asphalt_tint", "uv": "planar", "ground_grime": {"damp_darkening": 0.22}},
     "cycle_crossing_red": {"color": [0.134, 0.093, 0.093], "rough": 0.88, "surface": "asphalt",
                            "texture_set": "asphalt_tint", "uv": "planar", "decal": True, "depth_offset_m": 0.003},

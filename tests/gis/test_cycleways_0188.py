@@ -22,25 +22,29 @@ def test_classify_kinds_and_materials():
     assert CY.classify({"highway": "footway"}) is None
     assert CY.classify({"highway": "path", "bicycle": "yes"}) is None              # forest path, not designated
     d = CY.classify({"highway": "cycleway", "surface": "asphalt"})
-    assert (d["kind"], d["mat_cycle"], d["mat_foot"], d["two_way"]) == ("ddr", "cycle_asphalt_red", None, True)
-    assert CY.classify({"highway": "cycleway"})["mat_cycle"] == "cycle_asphalt_red"
-    assert CY.classify({"highway": "cycleway", "surface": "asphalt", "colour": "grey"})["mat_cycle"] == "path_asphalt"
+    assert (d["kind"], d["mat_cycle"], d["mat_foot"], d["two_way"]) == ("ddr", "cycle_asphalt", None, True)
+    assert CY.classify({"highway": "cycleway"})["mat_cycle"] == "cycle_asphalt"
+    assert CY.classify({"highway": "cycleway", "surface": "asphalt", "colour": "red"})["mat_cycle"] == "cycle_asphalt_red"
+    assert CY.classify({"highway": "cycleway", "surface": "asphalt", "colour": "grey"})["mat_cycle"] == "cycle_asphalt"
+    assert CY.classify({"highway": "cycleway", "surface": "asphalt", "colour": "black"})["mat_cycle"] == "path_asphalt"
     assert CY.classify({"highway": "cycleway", "surface": "paving_stones"})["mat_cycle"] == "cycle_red"
     assert CY.classify({"highway": "cycleway", "surface": "dirt"})["mat_cycle"] is None
     assert CY.classify({"highway": "cycleway", "oneway": "yes"})["two_way"] is False
     s = CY.classify({**SEG, "cycleway:surface": "asphalt", "footway:surface": "paving_stones"})
-    assert (s["kind"], s["mat_cycle"], s["mat_foot"]) == ("segregated", "cycle_asphalt_red", "sidewalk_paving")
+    assert (s["kind"], s["mat_cycle"], s["mat_foot"]) == ("segregated", "cycle_asphalt", "sidewalk_paving")
     assert CY.classify({**SEG, "segregated": "no"})["kind"] == "shared"
     assert CY.classify({**SEG, "path": "crossing"})["crossing"] is True
 
 
 def test_widths():
+    assert CY.DDR_W_TWO_WAY == 2.6 and CY.SEG_TOTAL_DEFAULT == 4.6 and CY.SEG_TOTAL_MIN == 4.1
     ddr = CY.classify({"highway": "cycleway"})
     assert CY.widths(ddr, {}, None) == (CY.DDR_W_TWO_WAY, 0.0)
     assert CY.widths(CY.classify({"highway": "cycleway", "oneway": "yes"}), {}, None) == (CY.DDR_W_ONE_WAY, 0.0)
     assert CY.widths(ddr, {"width": "2.5 m"}, 3.0) == (2.5, 0.0)
     seg = CY.classify(SEG)
-    assert CY.widths(seg, {}, 5.0) == (3.0, 2.0)                    # Kuronia: BDOT10k 5.0 m
+    assert CY.widths(seg, {}, 5.0) == (3.0, 2.0)                    # BDOT10k 5.0 m without per-way override
+    assert CY.widths(seg, {}, 5.0, {"cycle_w_m": 2.6}) == (2.6, 2.4)  # Kuronia 212811563: M65 2.6 m DDR + 2.4 m footway
     cw, fw = CY.widths(seg, {}, 2.0)                                # BDOT 2.0 m for a segregated path: minimum total
     assert cw + fw == CY.SEG_TOTAL_MIN and cw >= CY.DDR_W_TWO_WAY and fw >= CY.SEG_FOOT_MIN
     assert CY.widths(seg, {}, None, {"total_w_m": 6.0, "cycle_w_m": 2.5}) == (2.5, 3.5)
@@ -59,19 +63,24 @@ def test_plan_side_strips_and_bdot_replacement():
     assert rep["bdot_replaced"] == ["b1"] and rep["built"] == 1 and rep["overrides_stale"] == []
     cands = CY.candidates([it])
     cyc, foot = cands[0][1], cands[1][1]
-    assert cands[0][2] == "cycle_asphalt_red" and cands[1][2] == "sidewalk_paving"
+    assert cands[0][2] == "cycle_asphalt" and cands[1][2] == "sidewalk_paving"
     assert cyc.area == pytest.approx(300.0, abs=0.5) and foot.area == pytest.approx(200.0, abs=0.5)
     assert cyc.intersection(foot).area < 1e-6
     assert cyc.centroid.y < foot.centroid.y                          # the DDR strip is the southern (road) one
     # authored override: the track is the half away from the road (photo P11-001)
-    ov = [{"id": "x", "kind": "cycleway", "target": {"osm_way": [1]}, "cycle_side": "away"},
+    ov = [{"id": "x", "kind": "cycleway", "target": {"osm_way": [1]}, "cycle_side": "away", "colour": "red"},
           {"id": "gone", "kind": "cycleway", "target": {"osm_way": [999]}}]
     rep = {}
     it2, = CY.plan(_data(SEG, way), (0, 0), ov, bdot, road, rep)
-    assert it2["side"] == 1.0 and it2["provenance"] == "authored_override"
+    assert it2["side"] == 1.0 and it2["mat_cycle"] == "cycle_asphalt_red" and it2["provenance"] == "authored_override"
     assert rep["overrides_stale"] == ["gone"] and rep["overrides_applied"] == [1]
     c2 = CY.candidates([it2])
     assert c2[0][1].centroid.y > c2[1][1].centroid.y
+    # M65 verified RED_ASPHALT_WAYS and AWAY_WAYS work automatically by OSM way ID
+    it_putry, = CY.plan(_data(SEG, way, wid=591365139), (0, 0), [], [], road, {})
+    assert it_putry["mat_cycle"] == "cycle_asphalt_red" and it_putry["side"] == 1.0 and it_putry["w_cycle"] == 3.3
+    it_kuronia, = CY.plan(_data(SEG, way, wid=212811563), (0, 0), [], bdot, road, {})
+    assert it_kuronia["mat_cycle"] == "cycle_asphalt" and it_kuronia["side"] == 1.0 and it_kuronia["w_cycle"] == 2.6
     # shared and unpaved ways are not built here
     rep = {}
     assert CY.plan(_data({**SEG, "segregated": "no"}, way), (0, 0), [], [], road, rep) == []
@@ -102,11 +111,12 @@ def test_paved_collect_lays_cycle_strips_and_drops_replaced_bdot():
     for p in out:
         mats[p["mat"]] = mats.get(p["mat"], 0.0) + p["poly"].area
         assert p["poly"].intersection(road).area < 0.5                # the road owns its surface
-    assert set(mats) == {"cycle_asphalt_red", "sidewalk_paving"}      # no second (BDOT) footway beside the track
-    assert mats["cycle_asphalt_red"] == pytest.approx(3.0 * 93, rel=0.03)
+    assert set(mats) == {"cycle_asphalt", "sidewalk_paving"}          # no second (BDOT) footway beside the track
+    assert mats["cycle_asphalt"] == pytest.approx(3.0 * 93, rel=0.03)
     assert mats["sidewalk_paving"] == pytest.approx(2.0 * 93, rel=0.03)
     assert "bdot10k_SKRP" not in prep and prep["osm_cycleway"][0] == 2
-    assert "cycle_asphalt_red" in PV.EDGED and S.SURFACE_OF["cycle_asphalt_red"] == "asphalt"
+    assert "cycle_asphalt" in PV.EDGED and "cycle_asphalt_red" in PV.EDGED
+    assert S.SURFACE_OF["cycle_asphalt"] == "asphalt" and S.SURFACE_OF["cycle_asphalt_red"] == "asphalt"
 
 
 def test_p23_glyph_dimensions():
@@ -127,13 +137,17 @@ def test_region_files_and_materials():
         d = CY.load(rid)
         assert d and d["schema"] == CY.SCHEMA and len(d["ways"]) > 10
         assert all(CY.is_cycle(w["tags"]) for w in d["ways"])
-    red, xr, grey = (BW.MATERIALS[k] for k in ("cycle_asphalt_red", "cycle_crossing_red", "road_asphalt"))
-    for m in (red, xr):
+    c_grey, red, xr, r_grey = (BW.MATERIALS[k] for k in ("cycle_asphalt", "cycle_asphalt_red", "cycle_crossing_red", "road_asphalt"))
+    for m in (c_grey, red, xr):
         assert m["texture_set"] == "asphalt_tint" and m["uv"] == "planar" and m["rough"] >= 0.85    # no plastic
         r, g, b = m["color"]
-        assert r > g >= b and r / max(b, 1e-6) < 1.8                  # weathered red-brown, not a saturated red
-        assert 1.2 < (0.2126 * r + 0.7152 * g + 0.0722 * b) / grey["color"][1] < 3.0     # render-calibrated
-    assert xr.get("decal") is True and "decal" not in red
+        assert r > g >= b and r / max(b, 1e-6) < 1.8                  # weathered, not a saturated plastic red
+        assert 1.2 < (0.2126 * r + 0.7152 * g + 0.0722 * b) / r_grey["color"][1] < 3.0     # render-calibrated
+    # M65 §5 A: Dojlidy warm-grey DDR has low R/B (< 1.2); Rondo Putry red-brown DDR has higher R/B (> 1.4)
+    assert c_grey["color"][0] / c_grey["color"][2] < 1.2
+    assert red["color"][0] / red["color"][2] > 1.4
+    assert xr.get("decal") is True and "decal" not in red and "decal" not in c_grey
+    assert len(CY.P11_RED_NODES_DOJLIDY) == 9 and len(CY.P11_RED_NODES_C) == 16 and len(CY.P11_RED_NODES) == 25
 
 
 def _flat_chain():
@@ -220,4 +234,38 @@ def test_p11_crossing_clamps_to_ribbon_never_demotes_to_p10():
     assert any(s.startswith("P-11@") for s in srcs)
     assert any(p.mat == "cycle_crossing_red" for p in buf.parts)
     assert not any(s.startswith("P-10") for s in srcs)
+
+
+def test_p11_red_surfacing_only_on_m65_verified_nodes():
+    from types import SimpleNamespace
+    from roads import markings as M
+    from roads.meshing import MeshBuf
+
+    c, sec = _flat_chain()
+    net = SimpleNamespace(
+        chains=[c],
+        sec_list=[sec],
+        cycle_items=[
+            {"kind": "ddr", "line": LineString([(20.0, -10.0), (20.0, 10.0)]), "two_way": True},
+            {"kind": "ddr", "line": LineString([(40.0, -10.0), (40.0, 10.0)]), "two_way": True},
+            {"kind": "ddr", "line": LineString([(60.0, -10.0), (60.0, 10.0)]), "two_way": True},
+        ],
+    )
+    # 5825973689 = P11-056 (verified red); 2163381053 = P11-063 (white P-11 only); 4391371828 = none
+    ctx_points = [
+        {"kind": "highway=crossing", "osm_node": 5825973689, "e": 20.0, "n": 0.0, "crossing": "traffic_signals"},
+        {"kind": "highway=crossing", "osm_node": 2163381053, "e": 40.0, "n": 0.0, "crossing": "traffic_signals"},
+        {"kind": "highway=crossing", "osm_node": 4391371828, "e": 60.0, "n": 0.0, "crossing": "uncontrolled"},
+    ]
+    buf = MeshBuf()
+    report: dict = {}
+    M._build_markings(buf, net, juncs=[], ctx_points=ctx_points, report=report)
+
+    counts = report.get("markings", {})
+    assert counts.get("P-11 cycle crossing") == 2       # 5825973689 + 2163381053 (4391371828 skipped as none)
+    assert counts.get("P-11 red surfacing") == 1        # ONLY 5825973689 gets cycle_crossing_red
+    assert report.get("crossings_p11_red_nodes") == [5825973689]
+    red_parts = [p for p in buf.parts if p.mat == "cycle_crossing_red"]
+    assert len(red_parts) == 1
+    assert np.all(red_parts[0].V[:, 0] < 30.0)          # red field only at x ≈ 20 m, none at x ≈ 40 m
 

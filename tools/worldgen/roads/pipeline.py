@@ -78,6 +78,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     ctx = json.loads((rdir / "generated" / "osm_context.json").read_text(encoding="utf-8"))
     terrain_meta = json.loads((rdir / "terrain.json").read_text(encoding="utf-8"))
     net, graph, overrides, net_stats = build_network(region_id)
+    net.region_id = region_id
     net.authored = overrides                         # painted_zone etc. read by the marking stage (ADR 0093)
     from shapely.geometry import LineString as _LS
     net.foot_lines = [(_LS(np.array(f["geometry"]) - np.array(origin)), f["highway"]) for f in ctx["footways"]

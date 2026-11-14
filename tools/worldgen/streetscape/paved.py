@@ -38,7 +38,7 @@ OSM_SURFACE = {"asphalt": "yard_asphalt", "paving_stones": "yard_paving", "concr
 PATH_SURFACE = {"kostka prefabrykowana": "sidewalk_paving", "masa bitumiczna": "path_asphalt", "beton": "yard_concrete",
                 "płyty betonowe": "yard_slabs"}
 # paving blocks need an edging restraint; asphalt paths and cycle tracks are laid between concrete edgings too (ADR 0188)
-EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red", "cycle_asphalt_red"}
+EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red", "cycle_asphalt", "cycle_asphalt_red"}
 CELL = 4.0
 
 

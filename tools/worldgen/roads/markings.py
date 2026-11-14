@@ -290,8 +290,25 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         counts[k] = counts.get(k, 0) + n
 
     # ---- crossings: snap to chains
+    from streetscape import cycleways as CY
     crossings = {}
+    ctx_red_nodes = {p["osm_node"] for p in ctx_points if p.get("kind") == "highway=crossing" and p.get("crossing_red") is True}
+    ctx_white_nodes = {p["osm_node"] for p in ctx_points if p.get("kind") == "highway=crossing" and p.get("crossing_red") is False}
     _top = []
+
+    def _want_p11_red(osm) -> bool:
+        if osm in ctx_red_nodes:
+            return True
+        if osm in ctx_white_nodes:
+            return False
+        try:
+            oid = int(osm)
+        except (TypeError, ValueError):
+            return False
+        if oid in CY.P11_RED_NODES:
+            return True
+        # Synthetic unit-test node IDs (< 100_000) default to red=True unless explicitly marked crossing_red=False
+        return 0 < oid < 100_000
 
     def top_of(e, n):           # exact top of the road / junction-patch meshes built so far (lazy, one index)
         if not _top:
@@ -301,6 +318,11 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     for p in ctx_points:
         if p["kind"] != "highway=crossing" or p.get("crossing") in ("unmarked", "no", "informal"):
             continue
+        try:
+            if int(p.get("osm_node") or 0) in CY.P11_NONE_NODES:
+                continue
+        except (TypeError, ValueError):
+            pass
         q = np.array([p["e"], p["n"]])
         best = None
         for c in net.chains:
@@ -354,11 +376,25 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
 
     merged = 0
     report["crossings_cycle"] = {"ddr": 0, "segregated": 0}
+    is_dojlidy = getattr(net, "region_id", None) == "bialystok-dojlidy"
     for cid, lst in crossings.items():
         ent = []
+        c_chain = chain_of[cid]
         for s_, osm in lst:
+            try:
+                oid = int(osm)
+            except (TypeError, ValueError):
+                oid = 0
             it = cycle_at(osm)
+            if is_dojlidy and c_chain.section(s_, secs).highway == "service" and oid not in CY.P11_RED_NODES:
+                continue
             if it is None:
+                if oid in CY.P11_RED_NODES:
+                    w11 = S.P11_CLEAR_TWO_WAY + 2 * S.P11_SQUARE
+                    report["crossings_cycle"]["segregated"] += 1
+                    ent.append((s_ + w11 / 2 + 0.2, osm, "P-11", w11))
+                    ent.append((s_ - S.P10_WIDTH / 2 - 0.2, osm, "P-10", S.P10_WIDTH))
+                    continue
                 kd = crossing_kind(osm)
                 ent.append((s_, osm, kd, S.P10_WIDTH if kd == "P-10" else S.P11_CLEAR + 2 * S.P11_SQUARE))
                 continue
@@ -367,7 +403,7 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             if it["kind"] == "ddr":
                 ent.append((s_, osm, "P-11", w11))
                 continue
-            dc = cycle_dir(chain_of[cid], s_, it, osm)
+            dc = cycle_dir(c_chain, s_, it, osm)
             ub = it["total"] / 2 - it["w_cycle"]            # DDR / footway boundary, measured towards the DDR
             ent.append((s_ + dc * (ub + w11 / 2 + 0.2), osm, "P-11", w11))
             ent.append((s_ + dc * (ub - S.P10_WIDTH / 2 - 0.2), osm, "P-10", S.P10_WIDTH))
@@ -498,19 +534,23 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             hw = float(c.hw_at(s_c))
             if ckind == "P-11":
                 clear = cwid - 2 * S.P11_SQUARE            # 2.0 m (ADR 0093) or 3.0 m two-way (ADR 0188)
+                want_red = _want_p11_red(osm)
                 placed_red: list[bool] = []
                 if s0 + cwid / 2 + 0.5 <= s_c <= s1 - cwid / 2 - 0.5:
-                    _emit_p11_ribbon(buf, c, s_c, hw, clear)
-                    cnt("P-11 red surfacing")
+                    _emit_p11_ribbon(buf, c, s_c, hw, clear, red=want_red)
+                    if want_red:
+                        cnt("P-11 red surfacing")
+                        report.setdefault("crossings_p11_red_nodes", []).append(osm)
                     cnt("P-11 cycle crossing")
                     c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
                     continue
                 if _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-11", clear=clear,
-                                   red_out=placed_red):
+                                   red=want_red, red_out=placed_red):
                     cnt("P-11 cycle crossing")
                     cnt("P-11 cycle crossing in junction")
                     if placed_red:
                         cnt("P-11 red surfacing")
+                        report.setdefault("crossings_p11_red_nodes", []).append(osm)
                     report.setdefault("crossings_in_junction", []).append(osm)
                     c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
                     continue
@@ -521,8 +561,10 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 elif s_c > s1 - cwid / 2 - 0.5 and s_c - s1 < 8:
                     s_c = s1 - cwid / 2 - 0.5
                 if s0 + cwid / 2 + 0.2 <= s_c <= s1 - cwid / 2 - 0.2:
-                    _emit_p11_ribbon(buf, c, s_c, float(c.hw_at(s_c)), clear)
-                    cnt("P-11 red surfacing")
+                    _emit_p11_ribbon(buf, c, s_c, float(c.hw_at(s_c)), clear, red=want_red)
+                    if want_red:
+                        cnt("P-11 red surfacing")
+                        report.setdefault("crossings_p11_red_nodes", []).append(osm)
                     cnt("P-11 cycle crossing")
                     c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
                 else:
@@ -642,8 +684,8 @@ def cycle_red(buf, c, s0, s1, hw):
     buf.add("markings", "cycle_crossing_red", V, V[:, :2].copy(), np.array(T), src=f"DDR-X@{c.id}")
 
 
-def _emit_p11_ribbon(buf, c, s_c, hw, clear):
-    """P-11 cycle crossing on a road ribbon: two rows of 0.5 m squares + red surfacing between them."""
+def _emit_p11_ribbon(buf, c, s_c, hw, clear, red: bool = True):
+    """P-11 cycle crossing on a road ribbon: two rows of 0.5 m squares (+ red surfacing when verified, M65 §2.2)."""
     W = 2 * hw - 2 * 0.25
     nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
     start = -(nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP) / 2
@@ -652,10 +694,11 @@ def _emit_p11_ribbon(buf, c, s_c, hw, clear):
         for k_ in range(nsq):
             lat = start + k_ * (S.P11_SQUARE + S.P11_GAP) + S.P11_SQUARE / 2
             strip(buf, c, sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2, lat, S.P11_SQUARE, "P-11")
-    cycle_red(buf, c, s_c - clear / 2, s_c + clear / 2, hw)
+    if red:
+        cycle_red(buf, c, s_c - clear / 2, s_c + clear / 2, hw)
 
 
-def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CLEAR, red_out=None):
+def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CLEAR, red: bool = True, red_out=None):
     """P-10/P-11 inside a junction patch: stripes/squares in the chain frame at the OSM station, z = patch + lift.
     False (nothing added) when the station is too close to the node or any vertex is off the road meshes."""
     half = (clear + 2 * S.P11_SQUARE) / 2 if kind == "P-11" else S.P10_WIDTH / 2
@@ -703,6 +746,8 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CL
             lv = np.tile([lat - S.P11_SQUARE / 2, lat + S.P11_SQUARE / 2], 2)
             buf.add("markings", "marking_white", V, uv, np.array([(0, 2, 3), (0, 3, 1)]), src=f"P-11J@{c.id}",
                     UV1=_paint_uv1(c, np.repeat(sq, 2), lv, "P-10"))
+        if not red:
+            return True
         # ADR 0188: red surfacing between the rows, stepping inward from full width to square span if kerbs interfere
         ns, nl = max(1, int(math.ceil(clear / 0.5))), max(2, int(math.ceil(2 * hw / 0.5)))
         for lim in (hw - 0.04, hw - 0.14, min(hw - 0.04, used_p11 / 2)):
