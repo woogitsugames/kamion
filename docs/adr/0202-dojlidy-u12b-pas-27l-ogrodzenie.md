@@ -71,7 +71,7 @@ klucza. Droga 483199985 leży poza kaflem: `streetscape_qa.json → fences.style
   `krywlany_runway` (uwaga z recenzji 0196). Nie spłaszczam: nie jest to wał z M58, a ortofoto mu nie przeczy.
 
 ## Budżet (A/B) — Low, overcast, 1920 × 1080, edytor (nie telefon)
-A = scena z `main` przed zmianą, B = r3, te same kamery (`cameras.json`). `stats.txt` w `A-Low-overcast/` i `r3-Low-overcast/`.
+A = scena z `main` przed zmianą, B = r3, kamery z `cameras.json` (w B kamery słupków stoją ~0,44 m wyżej: `cams.py` liczy oko od stopy słupka, a ta po ułożeniu bruku podniosła się z 158,63 na 159,07 m). `stats.txt` w `A-Low-overcast/` i `r3-Low-overcast/`.
 | Kadr | drawsEst A → B | trójkąty A → B | draws inst. A → B | instancje |
 |---|---|---|---|---|
 | bollards-photo-13m | 347 → 347 | 366 481 → 366 730 (+249) | 121 → 122 | 245 → 245 |
@@ -93,6 +93,8 @@ Prototypy: `bollard_rw_chain` i nowy `bollard_rw_chain_b` po 270 / 79 trójkąt�
 | `sbs/sbs-P11-063-row-photo_A_r3low_r3high.jpg` (zdjęcie / A / r3 Low / r3 High, ten sam wycinek) | 8 słupków w tych samych kolumnach kadru co na zdjęciu, pięć pasów, łańcuchy jednobarwne na przęsło z naprzemienną fazą, słupki na bruku za krawężnikiem | słupki proste (na zdjęciu kilka krzywych do ~5°); krawężnik świata biegnie 6° skośnie do rzędu (3,3 m od słupka 1, 1,6 m od słupka 8; w terenie tuż przy nim) — geometria jezdni, nie 0202 |
 | `sbs/sbs-P11-063-photo13m-r3-low.jpg` (cały kadr) | rząd w tym samym miejscu i skali | dwa maszty sygnalizacji na pierwszym planie i brak zarośli — zakres 0186 |
 | `view/r3-bollards-close-4m.jpg`, `view/r3H-bollards-close-4m.jpg` | stopy na bruku, pasy 25 cm, czerwone i białe przęsła | Low: białe przęsła czytelne z 4 m i z 20 m po rozjaśnieniu rdzenia (`view/close-4m-low-r2_r3.jpg`). High z 20 m: biały łańcuch na tle jasnego bruku jest cienki i słaby (LOD0, rdzeń 8 mm; `view/r3-row-native-low_high.jpg`) — otwarte |
+| `sbs/sbs-P11-063-authored-cam-r3-low.jpg` (kamera `photo_P11-063`, poza 0174/0186) | rząd na bruku przy jezdni, po prawej stronie kadru jak na zdjęciu | kadr nadal przesunięty i ~2× za daleko (maszty sygnalizacji w środku) — zakres 0186 |
+| `view/r3-kerb-native.jpg` | bruk dochodzi do krawężnika, bez widocznego pasa trawy | sonda `verge.py` wskazuje przy krawężniku 0,25–1,0 m trójkątów `terrain_grass` nad brukiem (skarpa terenu przy krawężniku); w renderze z 20 m niewidoczne, z bliska niesprawdzone |
 | `view/paint_27L_s.jpg`, `view/paint_09R_s.jpg`, `view/paint_27thr_s.jpg` (farba z generatora na ortofoto) | „27 L” w tych samych miejscach i w tym samym zwrocie co na ortofoto; kreska osi przez grot i poprzeczkę 09R; poprzeczki do linii krawędziowych | cyfry bez szeryfu „7”; kształt WORKING_VALUE |
 | `view/paint-A-vs-r3.jpg`, `view/r3-krywlany-runway-paint.jpg` (14 m nad osią) | „27 L” czytelne od wschodu: „2” po lewej, „7” po prawej, „L” bliżej, stopą w prawo | asfalt w łaty i idealnie biała farba — jak w recenzji 0196 |
 | `view/fence-A-vs-r3.jpg` | ogrodzenie bez zmiany (było zielone z hasha) | blada, jednolita wstęga ogrodzenia z daleka = „turkusowy pas” z recenzji 0196 |
@@ -116,7 +118,7 @@ niżej. Nie stroiłem wysokości do zdjęcia.
   szuka w `InstanceImporter.cs` linii, którą lider cofnął w `e668a9588`; na `main` też jest czerwony, ta gałąź nie
   dotyka C#. Po r3 (dane końcowe) ponownie pliki 0183, 0196, 0179, 0185: 48 passed i ten sam 1 failed.
 - Region C: `test_export_is_deterministic` zielony w pełnym przebiegu (chunki C bez zmian).
-- EditMode (`scripts/test.ps1 -Platform EditMode`, 22:26): 581 total, **580 passed, 0 failed**, 1 skipped (Ignored).
+- EditMode (`scripts/test.ps1 -Platform EditMode`, 22:26, po imporcie r2; r3 zmienia tylko atlas łańcucha): 581 total, **580 passed, 0 failed**, 1 skipped (Ignored).
 - `streetscape_qa.json → furniture.chain_bollards`: 8 słupków, 7 przęseł, 14,0 m, `end_shift_m` 0,0, `max_step_m` 0,032;
   słupki osadzone 159,07–159,16 m na `sidewalk_paving` (`probe.json`).
 - Zrzut z telefonu: brak (bez adb w zadaniu) — `docs/06` §5 pkt 2 do spełnienia przez lidera przed bramką.

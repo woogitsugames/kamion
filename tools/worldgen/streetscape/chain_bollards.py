@@ -50,7 +50,7 @@ PROTO_POST = "bollard_rw"
 
 # ------------------------------------------------------------------------------------------------ dimensions
 POST_D_M = 0.0603       # WORKING_VALUE: the galvanised Ø60.3 mm tube of the ZDM U-12a posts (research G5-010). P11-063:
-#                         the post is 4-5 px wide and 75 px tall = 5-7 % of its height (0.045-0.055 m at 0.80 m)
+#                         the post is 4-5 px wide and 72 px tall = 5-7 % of its height (cloud M58: 0.06-0.075 m)
 POST_H_M = 1.10         # U-12b: "Wysokość tych ogrodzeń powinna wynosić 1,10 m" (Dz.U. 2019 poz. 2311 zał. 4, p. 843, via the
 #                         s20 review of cloud M58). Measured: 1.17 m (pinhole, P11-063 + orthophoto bay) and 1.19 m
 #                         (shadow, orthophoto 0.05 m), ESTIMATED; the regulation value is inside their error. ADR 0183
