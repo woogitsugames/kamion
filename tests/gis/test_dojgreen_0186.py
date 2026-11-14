@@ -101,14 +101,20 @@ def test_dojlidy_data_and_report():
     trees = ov["mickiewicza-kuronia-corner-trees"]
     assert trees["form"] == "kit" and 3 <= len(trees["points_en"]) <= 6
     assert sum(1 for p in trees["points_en"] if 9.0 <= p[2] <= 11.0 and 5.5 <= p[3] <= 8.0) >= 2      # the grown ones
+    skyline = ov["kuronia-north-park-skyline-trees"]
+    assert skyline["form"] == "kit" and len(skyline["points_en"]) >= 2
+    assert ov["mickiewicza-kuronia-shrub-strip-no-rule-trees"]["kind"] == "open_ground"
     assert ov["mickiewicza-u-turn-not-signalised"]["set"] == {"signalized": False}
     for o in ov.values():
         assert o.get("reason") and o.get("confidence"), o["id"]
     rep = json.loads((DOJ / "generated" / "streetscape_qa.json").read_text(encoding="utf-8"))
     at = rep["authored_trees"]
-    assert at["trees"] == len(trees["points_en"]) and not at["skipped"]
+    kit_n = sum(len(o["points_en"]) for o in ov.values() if o.get("kind") == "tree_groups" and o.get("form") == "kit")
+    assert at["trees"] == kit_n and not at["skipped"]
     assert at["tris_low"] <= 40 * at["trees"] and at["tris_high"] <= 400 * at["trees"]
     assert rep["plantings"]["hedges"] == len(band["beds"]) and not rep["plantings"]["stale"]
+    assert any(g["id"] == "mickiewicza-kuronia-shrub-strip-no-rule-trees" and g["trees_removed"] >= 1
+               for g in rep["vegetation"]["open_ground"])
     man = json.loads((DOJ / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
     assert not man.get("overrides_stale")
 

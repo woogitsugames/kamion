@@ -194,6 +194,32 @@ overrides:
       grassland (OT_PTTR_A), which put single trees all over the meadow in the first import (ADR 0174, item 4).
     confidence: medium
     verify: owner photo session (Dywizjonu 303)
+  - id: mickiewicza-kuronia-shrub-strip-no-rule-trees
+    kind: open_ground
+    polygons_en:
+      - [[-55.0, 460.0], [-14.0, 388.0], [-5.0, 392.0], [-46.0, 465.0]]
+    reason: >-
+      BDOT10k OT_OIPR_L 2BE4B432-4884-1BF0-E053-CC2BA8C0D140:0 ("rzad drzew") runs along the Mickiewicza shrub
+      strip ([-45.7, 452.7] -> [-12.1, 385.6]); opening the strip as unpaved_area unblocked (-23.51, 407.8) and
+      spawned a lone 10.2 m library tree_maple with a bare trunk behind the bus shelter (renders B-r1 / B-r2, left
+      edge of P11-063). The 2024 orthophoto and photo P11-063 show only 2-3 m shrubs there (no tree stem in the
+      strip south of N 425). Kept after krywlany-open-meadow so open_ground[0] stays the airfield meadow.
+    confidence: high
+    verify: none
+  - id: kuronia-north-park-skyline-trees
+    kind: tree_groups
+    form: kit
+    # [E, N, height m, crown diameter m]
+    points_en: [[153.0, 453.0, 12.0, 8.0], [168.0, 459.0, 13.5, 9.0], [178.0, 462.0, 12.5, 8.5]]
+    species: {maple: 0.5, linden: 0.5}
+    reason: >-
+      GUGiK orthophoto 2024 (north lawn along ul. Kuronia behind the court car park, E 150-185 N 450-470): mature
+      broadleaf trees casting ~15 m shadows where BDOT10k has no OT_OIPR_P and the self-seed rule only placed 6 m
+      saplings. In frame P11-063 their lower trunks sit behind the 2.5-3 m thicket on the left skyline (x 148-212
+      of 1600 px) so only the rounded upper crowns show above the shrubs, matching the deciduous skyline in photo
+      P11-063. Positions +-2 m from the orthophoto; heights +-1.5 m WORKING_VALUE.
+    confidence: medium
+    verify: owner photo session (Kuronia north lawn); tree heights
   # ---------------------------------------------------------------- life rules
   - id: tyre-scrub-not-on-the-street
     kind: life_rules
