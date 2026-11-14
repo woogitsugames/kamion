@@ -983,7 +983,7 @@ Shader "Kamion/World PBR"
             #endif
                 env *= 1.0 - _SkyOcc.y * (1.0 - smoothstep(0.05, 0.45, R.y));
                 color += ambient + env;
-                color += diffColor * KamionLampPools(pw, nw);   // dusk street-lamp pools (ADR 0062)
+                color += KamionLampPoolsLit(pw, nw, V, r, r2, diffColor, specColor);   // street-lamp pools (ADR 0062, 0191)
 
                 color = KamionMixFog(color, i.fogFactor);
                 return half4(color, alpha);
