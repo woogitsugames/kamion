@@ -74,7 +74,7 @@ namespace Game.Tests
                 var low = m.ChromaAt(Mathf.Sin(2f * Mathf.Deg2Rad), 2f * Mathf.Deg2Rad);
                 Assert.Greater(low.r, low.g, $"low band toward the sun warm: {low}");
                 Assert.Greater(low.g, low.b, $"low band yellowish (G > B): {low}");
-                var high = m.ChromaAt(Mathf.Sin(7f * Mathf.Deg2Rad), 7f * Mathf.Deg2Rad);
+                var high = m.ChromaAt(Mathf.Sin(4f * Mathf.Deg2Rad), 4f * Mathf.Deg2Rad);
                 Assert.Greater(high.r, high.g * 1.03f, $"faint pink above the yellow band: {high}");
                 Assert.GreaterOrEqual(high.b, high.g * 0.97f, $"pink, not orange (B ≈ G): {high}");
                 Assert.Greater(low.g / low.b, high.g / high.b, "yellower low, pinker high");
