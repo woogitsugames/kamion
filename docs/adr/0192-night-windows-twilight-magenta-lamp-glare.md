@@ -42,3 +42,29 @@ Status: kandydat (gałąź `nightwin-0192`), nie scalone. Data: 2026-11-13 (s20)
   (Frame Debugger / „Show compiled code”), ewentualnie osobny wariant shadera.
 - Kotwica okna: ryzyko ~1e-4 na okno trafienia w krawędź siatki hasha (pojedyncze okno może się dzielić). Docelowo: seed okna w uv1 quada atlasu z generatora (przy regeneracji).
 - Pomiar A16/S24+ (frame time nocą), ocena właściciela gęstości okien i siły glare; zdjęcia Białegostoku nocą jako referencja.
+
+## Integracja s20 (night-int-0191-0192, z ADR 0191; recenzja `docs/reports/REVIEW-2026-11-14-s20-0191-0192.md`)
+- **Pozycje halo:** `LampGlare.Sync(heads, axes, …)` dostaje oprawy z ADR 0191 (środek szkła na końcu ramienia, 2 na latarnię
+  podwójną) — „Otwarte: głowy = środek bbox” zamknięte (crop `final/High-*/chase.png`: halo na końcu wysięgnika).
+- **P1-5/P1-6 barwa:** kolor halo per oprawa w kolorze wierzchołka (`axes.z` = sód → `StreetLamps.SodiumLightColor`, LED biel-ciepła);
+  `_KamionLampGlareColor` = 1. Oprawy świecą (halo + soczewka), także na Low.
+- **P1-7 duchy na drzwiach naczepy:** przyczyna = **okna nocne w kostce odbić pojazdu** (`VehicleReflectionCapture`, 64–128 px; okno
+  20–40 m = kilka tekseli, mipy szorstkości filtrowane pudełkowo → kwadratowa miękka plama; `trailer-34_envcube.png` w `r1/`). Poprawka:
+  na czas renderu kostki `_KamionWindowsLum` = 0, a `Kamion/Lamp Glare` zwija quad przy `_KamionSkyCapOff` (glare to efekt obiektywu,
+  nie radiancja sceny). r1 (z oknami w kostce): plamy na drzwiach High/Low; r2/final: brak (`final/*/trailer-34.png`).
+- **P1-8:** klatki nocne w dowodzie (`final/{Low,High}-night`).
+- **P2-1 niebo:** próba w `SuppressTwilightMagenta` (minimalny odcień 15° po ciepłej stronie, −B w szarym przejściu) — **0 zmian** w
+  pomiarze (route_putry High-dusk kolumna x 1000–1080: y450 (179,127,127) → to samo) → cofnięta. Koralowy pas y 450–480 nie pochodzi z LUT
+  kopuły; kandydat: kolor mgły horyzontu (`SkyModel.HorizonColorExposed` / far-field) — **Otwarte**.
+- **Budżet A/B** (`final` vs `final-off` = `rq_glare=0,rq_nightwin=0,rq_lampfloor=0` i vs main `artifacts/lamppool-0191/before`, ten sam świat):
+  drawsEst / shadow / tris **identyczne** na 5 kamerach × Low/High noc (np. Low chase 416 / 89 / 308 005, High trailer-34 950 / 483 / 1 305 712).
+  Poza `SceneStats`: glare +1 draw, +2 tris/oprawę (719 opraw WorldC = 1438 tris). Nowe warianty: tylko `_NIGHTWIN` (shader_feature_local,
+  WorldPBR, z 0192) + `Kamion/Lamp Glare` (1 wariant); integracja s20 nie dodaje słów kluczowych (gałęzie uniform). ALU: podłoga ~4/px,
+  ogon pul ~4/pulę. **GPU ms na A16/S24+: niezmierzone** (zakaz adb w zadaniu).
+- **Luma (`final/lum.tsv`, pas 55–95 %, p10):** noc Low chase 2,0 (0191 after1) → 10,1, route 5,4 → 12,1, gate 5,1 → 11,4, trailer-34 1,6 → 2,4
+  (cień pod naczepą); High chase 4,0 → 11,0. Udział podłogi (on vs off): Low chase p10 6,3 → 10,1, route 6,7 → 12,1. Zmierzch p50 trailer-34
+  12,5 (0191) → 16,8 Low / 20,3 High (latarnia nad pasem). Overcast p50 = after7 0192 (±0,1 pp: w dzień nic się nie zmienia).
+- **Testy:** EditMode pełny 581: 580 OK, 0 porażek, 1 pominięty (`artifacts/tests/editmode-20261114-042553.xml`); nowe `NightIntegrationTests` (6).
+- **Otwarte (s20):** koralowy pas horyzontu (P2-1); wieżowiec piętrami jednolity (P2-2, bez zmian); słup latarni łukowej na High nocą
+  świeci pomarańczowo na całej wysokości (we stożku spotu, fizycznie możliwe — do oceny na zdjęciach); tuje przy driver_andersa jasne;
+  pojazdy na Low bez światła latarń (pule tylko na świecie); pomiar GPU A16/S24+; zdjęcia nocne Białegostoku od właściciela.
