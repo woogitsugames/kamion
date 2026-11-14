@@ -8,3 +8,5 @@
   NASTĘPNY KROK: `python3 -I audit.py` (samokontrola 20 %, seed 20261114), potem sources.md i README.md
 - 2026-11-14 krok 3: samokontrola 33/157 (21 %, seed 20261114): 1. przebieg 32 PASS / 1 FAIL (R3-153 przeliczenie jednostek) → poprawione → 33 PASS / 0 FAIL; obrazy (AT2612, R13 s.43, MB s.29) ponownie obejrzane.
   NASTĘPNY KROK: napisać sources.md i README.md, commit + push
+- 2026-11-14 krok 4: README.md (tabela gra vs źródło, luki, co nowe), sources.md (24 dokumenty + 6 zablokowanych). Pakiet kompletny.
+  NASTĘPNY KROK: czekać na recenzję lidera (REVIEW.md); poprawki P0/P1 w tej gałęzi. Odtworzenie: `python3 -I fetch.py && python3 -I build_manifest.py && python3 -I audit.py`

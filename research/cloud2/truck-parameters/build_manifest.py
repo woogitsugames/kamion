@@ -329,7 +329,7 @@ r("hamowanie", "UN R13: ciśnienie w przewodach sprzęgających przy pełnym ham
   VRD + " §Air brake system", "OK", "bez zmian", "")
 r("hamowanie", "UN R13: czas zadziałania (najmniej korzystna oś)", "≤ 0.6", "s", "SOURCED", Q,
   "the braking force on the least favourably placed axle reaches the level corresponding to the prescribed performance must not exceed 0.6 seconds",
-  "R13R3", "0.25 / 0.31 / 0.53–0.54", PV + " wiersz 5 brake_response_static", "OK", "bez zmian", "pkt 5.2.1.? / zał. 4 pkt 4.1.1")
+  "R13R3", "0.25 / 0.31 / 0.53–0.54", PV + " wiersz 5 brake_response_static", "OK", "bez zmian", "zał. 4 pkt 4.1.1 (Rev.3); to samo w 02/MLIT pkt 4.1.1")
 r("hamowanie", "UN R13 zał. 6: ciśnienie w siłowniku 75 % po aktywacji 0,2 s (pojazd silnikowy)", "≤ 0.6", "s", "SOURCED", Q,
   "reaches 75 per cent of its asymptotic value shall not exceed 0.6 seconds", "R13R3", "0.25 / 0.31", PV + " brake_response_static", "OK", "bez zmian", "")
 r("hamowanie", "UN R13 zał. 6: głowica sprzęgająca przewodu sterującego — 10 % / 75 %", "0.2 / 0.4", "s", "SOURCED", Q, "10 0.2 75 0.4", "R13R3",
