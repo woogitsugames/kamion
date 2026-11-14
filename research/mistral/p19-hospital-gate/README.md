@@ -200,3 +200,10 @@ research/mistral/p19-hospital-gate/
 ├── .gitignore            (files/ + *.zip)
 └── files/                (poza gitem — w archiwum ZIP; patrz §11)
 ```
+
+## Errata lidera (s20, 2026-11-14, przegląd `docs/reports/REVIEW-2026-11-14-s20-mistral-m62-fix.md`)
+- P19-048 (lusterko): offset +13,8 / −3,1 m.
+- P19-006 / P19-007: offsety ujednolicone do +0,88 / +3,45 i +1,24 / −3,07 m.
+- F20: jezdnia asfaltowa (nie kostka).
+- P11-129 w manifeście P11: znak = C-2 (nie „C-1/C-2”).
+- W grze (siatka EPSG:2180) kierunek wjazdu = 242°; WORKING_VALUE: strony wewnętrzne muru/filarów, tył portierni, dalszy ciąg muru (na F14/F19 słupki z przęsłami — pełny mur tylko odcinek z F01), występ daszka w prawo, rozmiary znaków, odległość do B-2. Kryteria „≥ 12 kadrów bramy” i „≥ 2 niezależne odczyty” NIESPEŁNIONE (1 kadr bramy w źródłach otwartych).
