@@ -35,7 +35,7 @@ liczone w lokalnym układzie ENU (odległość punkt→odcinek). **Ortofoto:** p
 osobno — jeden plik na jedno wywołanie modelu wizyjnego**; zdania „co widać” napisano z obrazu. Commons: miniatury
 3840 px z serwera miniatur (pobranie oryginałów 4000–5520 px zwracało HTTP 429), Panoramax: `assets.hd` (2560 px)
 z API itemu. Do kształtu słupów i liczenia rzędów robiono wycinki z plików 2560–3840 px (Python + PIL) i oglądano je
-osobno (10 wycinków, ZIP §8). Kierunek Panoramax = `properties.view:azimuth` z API; Commons nie podaje kierunku →
+osobno (11 wycinków, ZIP §9). Kierunek Panoramax = `properties.view:azimuth` z API; Commons nie podaje kierunku →
 UNVERIFIED. Pozycje GPS z EXIF Commons są zaokrąglone do 1″ (~±15 m) — przy kadrach podano to w uwagach.
 
 **Ograniczenia:**
@@ -122,7 +122,7 @@ Polskiego przecięto estakadą o konstrukcji **dwudźwigarowej sprężonej posad
 | P13-059 20201102_152339 | CC0 | B, pomost NE z boku | brak ekranu NE, gzyms, słupy |
 | P13-060 20200711_072453 | CC BY | B od końca NW, EC w tle | brak ekranu, mur rampy |
 | P13-061 / 062 20210320_092717/737 | CC0 | B, połowa SE od SW | brak ekranu SW, słupy z czerwonym pasem, rzędy |
-| P13-065 20200711_073116 | CC BY | B spod pomostu (rondo) | słupy z bliska, rzędy połowy SE |
+| P13-065 20200711_073116 | CC BY | B z jezdni ronda przy pomoście | słupy z bliska, rzędy połowy SE |
 | P13-063 / 064 / 066 | CC BY / CC BY / CC0 | **brak obiektu w kadrze** | nie kandydaci |
 
 Uwaga: przegląd s20 oznaczył jako „bez obiektu” 024, 063, 066; obejrzenie wszystkich 23 kadrów dodało **020, 025, 028
@@ -211,7 +211,7 @@ i 064** (estakady nie widać albo nie widać jej jednoznacznie).
 | gzyms / kolor | czerwony | zdjęcia [P13-075] | SOURCED |
 | podpory / kolor i wygląd słupów | szare, zaokrąglone, czerwony pas na jednej ścianie | zdjęcia [P13-076] | SOURCED |
 | konstrukcja / przekrój (dwa żebra vs skrzynka) | nierozstrzygnięte | zdjęcia [P13-081] | UNVERIFIED |
-| dojazdy / lico muru rampy | duże gładkie jasnoszare panele | zdjęcia [P13-082] | SOURCED |
+| dojazdy / lico muru rampy | duże gładkie jasnoszare panele, spoiny częściowo ukośne | zdjęcia [P13-082] | SOURCED |
 | skrajnia / skrajnia pod obiektem | — (brak danych) m | dokument [P13-077] | UNVERIFIED |
 | oświetlenie / lampy między jezdniami | co ~32 m (ADR 0123) | ortofoto [P13-078] | UNVERIFIED |
 
@@ -236,13 +236,20 @@ wizyjnego** na pliku obrazu i porównanie z zapisanym opisem; dla dokumentów �
 (czego dotyczy dokument). Wynik i szczegóły: `audit_20_percent.json` (sekcja `m56_fix`; audyt z 13.11.2026 zachowany
 w sekcji `original`).
 
+**Wynik M56-FIX: 17 wierszy (20,5 %), w tym 5 wierszy kadrów (P13-017, 020, 062, 064, 065) i 4 kolejne oparte na obrazie
+(P13-031, 075, 076, 082) — wszystkie ponownie obejrzane. 15 zgodnych, 2 niezgodne (drobne, poprawione): P13-065
+(kamera stoi przy krawędzi pomostu, nie pod nim) i P13-082 (spoiny paneli rampy B częściowo ukośne, nie „prostokątny
+podział”).** Dokumenty (P13-004, 009, 049, 051, 054) zgodne z cytatem i kontekstem; OSM (P13-056/057) odtworzone.
+
 ## 9. Pliki
 
 - `README.md` — ten raport; `manifest.csv` — 83 pozycje; `sources.md` — źródła z licencjami i cytatami;
   `audit_20_percent.json` — samokontrola.
 - `files/.gitignore` + `files/README.md` — binaria poza gitem.
 - ZIP Mistrala (13.11.2026): `mistral-p13-andersa-viaducts-files.zip` (nie dotarł do lidera).
-- **ZIP M56-FIX (14.11.2026, poza gitem):** wycinki użyte do liczenia rzędów i oceny kształtu słupów — nazwa, rozmiar
-  i sha256 w `files/README.md` i w komentarzu PR #54.
+- **ZIP M56-FIX (14.11.2026, poza gitem):** `m56fix-p13-crops.zip` — 2 686 939 B, sha256
+  `c3fdca5fd73914e3ede6d591ee515a6e9812ca747e74a654240187bcd7c9829a`; 11 wycinków użytych do liczenia rzędów i oceny
+  kształtu słupów + `README.txt` (źródło i współrzędne każdego wycinka) + robocze notatki z oględzin 23 kadrów.
+  Przekazanie liderowi: przez właściciela (jak ZIP Mistrala).
 
 *CC BY-SA (Commons 2013, Panoramax) = „referencja, nie tekstura”; materiały prasowe/firmowe = tylko fakty; Google nie użyto.*
