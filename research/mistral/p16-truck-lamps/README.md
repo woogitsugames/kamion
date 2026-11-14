@@ -155,17 +155,52 @@ Znak homologacji urządzenia (nie kopiujemy cudzych znaków — opisujemy zasad�
 
 ## 6. Lampka tablicy rejestracyjnej — położenie i budowa (z kadrów)
 
-<!-- PHOTO-PLATE-SECTION: do uzupełnienia po obejrzeniu kadrów lampki tablicy -->
+**Potwierdzenie kadrów (23 obejrzane, opis w manifest, wiersze P16-201…P16-223):**
+
+- **Położenie**: we wszystkich 13 kadrach, w których lampkę widać, jest **nad tablicą rejestracyjną, centralnie** — na belce tablicy lub w belce RUPD między zespołami lamp (P16-201, P16-204, P16-205, P16-206, P16-208, P16-209, P16-216, P16-217, P16-214); warianty: **pod zderzakiem** (P16-202), **na dolnej belce między lampami** (P16-204), **poniżej zespołów lamp, nad tablicą** (P16-213).
+- **Kształt i klosz**: mały prostokąt z **bezbarwnym/przezroczystym kloszem** (wszystkie 6 kadrów lampek: P16-218…P16-223) — nigdy czerwony; wyłączona wygląda jak mlecznoszary/szklany pasek.
+- **Świecenie**: **bezbarwne/białe światło** — potwierdzone na żywo nocą (P16-219: jasne bezbarwne; P16-222: świeci nocą). Barwa zgodna z R148 §5.11 (bezbarwne, bez zmiany barwy tablicy).
+- W zespole 7-komorowym lampka bywa **komorą „REG” w obudowie lampy zespolonej** (karty katalogowe: STOP/TAIL/DI/REVERSE/FOG/REG/REFLECTOR) — wtedy nie jest osobną lampką na belce.
 
 Zasady montażu (instalacja) omówiono w p4/M44; tutaj położenie i budowa z kadrów:
 - Ciągnik N3: lampka nad tablicą w zderzaku/na belce tablicy (kable: patrz kadry P16-2xx).
 - Naczepa O4: lampka w belce RUPD (zderzak tylnej osłony) nad tablicą lub zespolona z obudową lampy zespolonej (komora „REG” 7-komorowej).
 
+*Dla gry: lampka tablicy = mały bezbarwny prostokąt nad tablicą, centralnie; świeci równomiernie białym światłem bezbarwnym (nie punktowo, nie czerwono).*
+
 ---
 
-## 7. Kadry (zdjęcia CC) —	status oglądania
+## 7. Kadry (zdjęcia CC) — status oglądania
 
-<!-- PHOTO-TABLE: do uzupełnienia: ≥15 kadrów lamp zespolonych + ≥5 lampek tablicy, każdy OBEJRZANY -->
+**Obejrzane i opisane: 23 kadry — 17 lamp zespolonych (wymóg ≥15 ✔) + 6 lampek tablicy (wymóg ≥5 ✔).**
+Obejrzane 13.11.2026 (7 kadrów: P16-201…207, sesja przed resetem środowiska, opisy utrwalone) oraz 14.11.2026 (16 kadrów: P16-208…223). Odrzucone: c04 (kamera monitoringu), c09–c15 (widoki boczne/przednie bez lamp tylnych), pozostałe niewykorzystane kadry nie weszły do manifest. Każdy kadr ma wiersz `kategoria=zdjęcie` w `manifest.csv`.
+
+| ID | Kadr | Obiekt | Licencja | Co widać (skrót) |
+|---|---|---|---|---|
+| P16-201 | `c01_2012_MAN_Conce…` | lampa zespolona | CC0 | Tył koncepcyjnej ciągnicy z naczepą (dzień, lampy wyłączone, czyste). |
+| P16-202 | `c02_2012_MAN_Conce…` | lampa zespolona | CC0 | Ten sam pojazd, drugi kadr tyłu (dzień, wyłączone, czyste). |
+| P16-203 | `c03_2012_MAN_Conce…` | lampa zespolona | CC0 | Zbliżenie na detal lampy (dzień, wyłączona, czysta). |
+| P16-204 | `c05_BHARATBENZ_Lig…` | lampa zespolona | CC0 | Tył ciężarówki lekkiej (dzień, wyłączone, czyste). |
+| P16-205 | `c06_BHARATBENZ_Lig…` | lampa zespolona | CC0 | Tył ciężarówki lekkiej, kadry osłony przeciwnajazdowej (dzień, wyłączone, czyste). |
+| P16-206 | `c07_Krone_Box_Line…` | lampa zespolona | CC0 | Tył podwozia naczepy kontenerowej (dzień, wyłączone, czyste). |
+| P16-207 | `c08_Krone_Box_Line…` | lampa zespolona | CC0 | Tył naczepy kontenerowej, drugi kadr (dzień, wyłączone, czyste). |
+| P16-208 | `c16_Container_trai…` | lampa zespolona | CC BY-SA 4.0 | Tył naczepy kontenerowej (dzień, wyłączone, czyste). |
+| P16-209 | `c17_Insulated_semi…` | lampa zespolona | CC BY-SA 4.0 | Tył naczepy izotermicznej (dzień, wyłączone, czyste). |
+| P16-210 | `c18_JP_Carrera_Ive…` | lampa zespolona | CC BY 4.0 | Tył ciągnika z naczepą (dzień, wyłączone, czyste). |
+| P16-211 | `c19_Derelict_Scani…` | lampa zespolona | CC BY-SA 2.0 | Tył zaniedbanego ciągnika z naczepą (dzień, wyłączone). |
+| P16-212 | `c20_ICR_trailer_en…` | lampa zespolona | CC BY-SA 4.0 | Tył naczepy, kadry drzwi (dzień, wyłączone). |
+| P16-213 | `c21_Semi_trailer_t…` | lampa zespolona | CC BY-SA 4.0 | Naczepa z terminalowym ciągnikiem (dzień, wyłączone). |
+| P16-214 | `c22_Volvo_FH_16_8x…` | lampa zespolona | CC0 | Ciężarówka wernakularna na wystawie (dzień, wyłączone, czyste). |
+| P16-215 | `c23_Renault_T_430_…` | lampa zespolona | CC0 | Ciężarówka w hali (dzień, wyłączone, czyste). |
+| P16-216 | `c29_Road_rail_vehi…` | lampa zespolona | CC BY-SA 4.0 | Tył pojazdu szynowo-drogowego (dzień, wyłączone, czyste). |
+| P16-217 | `c33_GAZ_Vepr_NEXT_…` | lampa zespolona | CC0 | Tył ciężarówki (dzień, wyłączone, czyste). |
+| P16-218 | `c34_20080827_DSC01…` | lampka tablicy | CC BY-SA 4.0 | Tył przyczepy kempingowej (dzień). |
+| P16-219 | `c37_Warszawa_otwar…` | lampka tablicy | CC BY-SA 3.0 pl | Pojazd nocą na moście. |
+| P16-220 | `c38_Coca_Cola_Truc…` | lampka tablicy | CC BY-SA 3.0 | Ciężarówka z naczepą nocą (kadr plenerowy). |
+| P16-221 | `c39_Baptofesto_en_…` | lampka tablicy | CC BY 4.0 | Cysterna nocą. |
+| P16-222 | `c40_Kamiono_de_tek…` | lampka tablicy | CC BY-SA 4.0 | Ciężarówka pomocy technicznej nocą. |
+| P16-223 | `c41_CMC_P350_Hybri…` | lampka tablicy | CC BY-SA 4.0 | Dostawczy pojazd (dzień, czysty). |
+
 
 Każdy kadr: typ optyki, liczba komór, kolejność funkcji od zewnątrz, widoczne pryzmaty/punkty LED, stan czysty/brudny, włączony/wyłączony, dzień/zmierzch/noc, marka widoczna (→ „tylko referencja kształtu”). Pełne opisy w `manifest.csv` (kategoria `zdjęcie`). Pliki JPG ≤1600 px w archiwum `mistral-p16-truck-lamps-files.zip` (NIE w gicie).
 
