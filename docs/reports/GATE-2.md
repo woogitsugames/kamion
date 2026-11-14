@@ -68,3 +68,12 @@ dodatkowo zjazd 7 % z retarderem, sprzęganie, scyzoryk z „ABS: USTERKA”, lu
 2. Brak feel testu 4 manewrów bramki.
 3. Przyczepność nawierzchni innych niż asfalt/beton i wiele pasm akceptacji — WORKING_VALUE (źródła w `summary.md`).
 4. Decyzja właściciela otwarta z 9.11: lusterka w kabinie jako okienka czy rozglądanie.
+
+## Pomiar telefonu s20 (2026-11-14, A16 RFGL34SJYDZ, Low/30, APK kamion-0.1.0-77cfd94bf8, czyste drzewo)
+Autopilot straight080 (ADR 0195), DrivingLab, prosta 1300 m. Pełna tabela: `docs/reports/GATE12-PHONE-2026-11-14-A16.md`, dane `artifacts/gate12/20261114-062841`.
+| przebieg | 0–60 s | 0–80 s | droga 80→0 m | MFDD m/s² | blokada kół | FPS / p99 ms | PSS MB | fizyka |
+|---|---|---|---|---|---|---|---|---|
+| solo ×3 | 10,00 | 13,66 (rozrzut 0,00 %) | 35,85 | 7,44 | 0 s | 30,0 / 33,5–33,8 | 386–412 | PASS |
+| pusty 14,5 t | 13,23 | 20,67 | 39,67 | 7,46 | 0 s | 30,0 / 33,8 | 393 | PASS |
+| 40 t | 28,24 | 47,79 | 40,72 | 7,00 | 0 s | 30,0 / 33,6 | 392 | PASS |
+Telefon = edytor w granicach < 0,1 % (edytor: solo 13,67 s / 35,6 m, 40 t 47,80 s / 40,8 m). Krok fizyki p50 ≈ 0,6 ms, p99 ≤ 0,99 ms; temperatura 25 °C. Uwaga: ciąg wersji w grze ma znacznik „-dirty” (pliki nieśledzone w katalogu głównym podczas buildu), metadane APK: dirty=False, sha zgodne. S24+ nie mierzony w tej rundzie.
