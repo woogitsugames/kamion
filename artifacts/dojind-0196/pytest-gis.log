@@ -1,0 +1,75 @@
+........................................................................ [  6%]
+........................................................................ [ 12%]
+........................................................................ [ 19%]
+........................................................................ [ 25%]
+........................................................................ [ 32%]
+........................................................................ [ 38%]
+........................................................................ [ 45%]
+........................................................................ [ 51%]
+.....................................................................x.. [ 58%]
+........F........................................F......x............... [ 64%]
+........................................................................ [ 70%]
+........................................................................ [ 77%]
+........................................................................ [ 83%]
+........................................................................ [ 90%]
+.........F.............................................................. [ 96%]
+.....................................                                    [100%]
+================================== FAILURES ===================================
+______________ test_ring_mast_survives_the_carriageway_clearing _______________
+
+qa = {'buildings': {'balconies': 3357, 'dock_facades': ['bdot:2BE4B431-4CF0-1BF0-E053-CC2BA8C0D140:docks1', 'bdot:2BE4B431-...m': 13.3, 'h_m': 1.35, 'kind': 'broadleaf', 'm': 3.0, ...}, ...], 'm': {'broadleaf': 183.7, 'thuja': 331.3}, ...}, ...}
+
+    def test_ring_mast_survives_the_carriageway_clearing(qa):
+        """The mast stands on an authored island, which lies on the carriageway footprint: clear_carriageway must keep it."""
+        world = REGION_DIR.parents[1] / "raw" / "derived" / REGION / "world"
+        files = sorted(world.glob("instances_*.json"))
+        if not files:
+            pytest.skip("derived world not on disk")
+        protos = [o["p"] for f in files for o in json.loads(f.read_text(encoding="utf-8"))["instances"]
+                  if o.get("src", "").startswith("override:putry-ring-s-approach-signal")]
+        # ADR 0172: the mast has the 8.8 m arm with two heads
+>       assert sorted(protos) == ["signal_head_red"] * 4 + ["signal_mast_9m", "signal_pole"]
+E       AssertionError: assert ['signal_head...'signal_pole'] == ['signal_head...'signal_pole']
+E         
+E         At index 3 diff: 'signal_mast' != 'signal_head_red'
+E         Right contains one more item: 'signal_pole'
+E         Use -v to get more diff
+
+tests\gis\test_p1_0161.py:157: AssertionError
+____________________________ test_report_not_stale ____________________________
+
+qa = {'adr': '0075', 'connectivity': {'missing_in_graph': [{'access': None, 'highway': 'service', 'length_in_tile_m': 33.1,...948309:1883101800-1883101801', 'dist_m': 10.5, 'junction': 'j:n1883101800', 'lane_index_from_left': 0, ...}, ...], ...}
+
+    def test_report_not_stale(qa):
+        """The report must describe the current graph, overrides, route and road generator."""
+        stale = []
+        for k, v in qa["inputs_sha256"].items():
+            p = (REGION_DIR / k) if "/" not in k else (REPO / k)
+            if not p.exists() or _sha(p) != v:
+                stale.append(k)
+>       assert not stale, f"fidelity_qa.json is stale for {stale}: rerun tools/worldgen/fidelity/run.py"
+E       AssertionError: fidelity_qa.json is stale for ['tools/worldgen/roads/build_world.py']: rerun tools/worldgen/fidelity/run.py
+E       assert not ['tools/worldgen/roads/build_world.py']
+
+tests\gis\test_road_fidelity.py:52: AssertionError
+___________________ test_forest_trees_reference_their_cell ____________________
+
+manifest = {'chunk_size_m': 256, 'chunks': [{'bounds_local_m': {'e_max': -768.0, 'e_min': -1024.0, 'n_max': 1024.0, 'n_min': 768....}}, 'sha256': '134271a54fc12b94d5bda4c6e9a89eac7eb57734a90b5ce6a33383404b10d885', ...}}, 'generator': 'world-c/1', ...}
+
+    def test_forest_trees_reference_their_cell(manifest):
+        if not WORLD.exists() or not list(WORLD.glob("instances_*.json")):
+            pytest.skip("world instances not built (Data/raw is gitignored)")
+        ids = {c["id"] for ch in manifest["chunks"] for c in ch.get("forest_cells", [])}
+        n = 0
+        for ch in manifest["chunks"]:
+            for it in json.loads((REPO / ch["instances"]["file"]).read_text(encoding="utf-8"))["instances"]:
+                if "fc" in it:
+>                   assert it["fc"] in ids and it["p"].startswith("tree_") and it.get("fk")
+E                   AssertionError: assert ('25_16' in {'0_0', '0_11', '0_12', '0_13', '0_14', '0_15', ...})
+
+tests\gis\test_world_v31.py:48: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_p1_0161.py::test_ring_mast_survives_the_carriageway_clearing
+FAILED tests/gis/test_road_fidelity.py::test_report_not_stale - AssertionErro...
+FAILED tests/gis/test_world_v31.py::test_forest_trees_reference_their_cell - ...
+3 failed, 1112 passed, 2 xfailed in 932.13s (0:15:32)

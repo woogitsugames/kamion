@@ -90,6 +90,16 @@ zasłania las między ogrodzeniem a płytą); bloki frontu jako jednolite grafit
   bramy (przypięcie, usunięcie okna reguły, błąd bez ściany); farba pasa w obrysie asfaltu, CCW, lift;
   dane Kuronia 2 (hala grafitowa + 5 części, bez nakładania, suma pól = BDOT ±40 m²), brak nazw firm w danych.
 
+- Pełny `pytest tests/gis` po scaleniu `origin/main` (14.11 17:14, 932 s): **1112 passed, 3 failed, 2 xfailed**.
+  - `test_world_v31::test_forest_trees_reference_their_cell`, `test_p1_0161::test_ring_mast_survives_the_carriageway_clearing`
+    — nieaktualna kopia `Data/raw/derived/bialystok-industrial-c` w worktree (13.11 14:16, main zregenerował C 14.11 04:54);
+    po skopiowaniu danych z main: oba pliki testów 30/30 zielone.
+  - `test_road_fidelity::test_report_not_stale` — `fidelity_qa.json` regionu C nieaktualny wobec `build_world.py`
+    (ta gałąź dodaje w nim kamery miejsc) → lider: `fidelity/run.py --region bialystok-industrial-c` po scaleniu.
+  - `test_export_is_deterministic` (region C) zielony.
+- EditMode (`scripts/test.ps1 -Platform EditMode`, 17:29): 581 total, **580 passed, 0 failed**, 1 skipped (Ignored).
+- Zrzut z telefonu: brak (bez adb w zadaniu) — `docs/06` §5 pkt 2 do spełnienia przez lidera przed bramką.
+
 ## Otwarte
 - Wysokości części Kuronia 2, rozmiar i położenie bram: UNVERIFIED do M63 / sesji zdjęciowej właściciela.
 - Kuronia 2: czerwona linia między parterem a piętrem, czerwony daszek wejścia, urządzenia na dachu przybudówki,
