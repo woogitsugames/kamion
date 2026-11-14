@@ -2,13 +2,13 @@
 
 **Gałąź:** `research/mistral-p18-trailer-soiling` (z najnowszego `origin/main` @ b67b949d, 2026-11-13)
 **Autor badania:** Vibe (Mistral), paczka M61/P18
-**Data:** 2026-11-13
+**Data:** 2026-11-13 (init), aktualizacja kadrów: 2026-11-14
 
 Badanie dla naczepy fikcyjnej BEZ MARKI: firanka 13,6 m, dwuskrzydłowe tylne drzwi (biała blacha/sklejka w ramie), belka RUPD, lampy zespolone, taśmy odblaskowe. Cel: materiał referencyjny, jak realnie wygląda zabrudzenie tyłu naczep na polskich drogach — mechanizm, strefy, barwa i faktura (lato/zima), kadr referencyjny dla artysty.
 
 **Zdjęcia NIE są w repo:** katalog `files/` jest ignorowany (`.gitignore`); archiwum **`mistral-p18-trailer-soiling-files.zip`** dostarczono poza git — nazwa, rozmiar i sha256 w opisie PR.
 
-**Status (2026-11-13):** sekcje 1-2 (literatura) kompletne; sekcje 3-5 wypełnione pierwszą iteracją analizy kadrów (24 kandydatów, 17 kwalifikujących, 4 zimowe); cel ≥20 kadrów — pozostało dołóżenie ≥3 kadrów w kolejnej iteracji (budżet analizy obrazów).
+**Status:** dokument roboczy — sekcje 1-2 (literatura) kompletne; §3-4 częściowo (5/20 zakwalifikowanych kadrów, dalsze commity); §5 po kompletacji; §6 luki.
 
 ---
 
@@ -83,44 +83,43 @@ W literaturze dostępnej otwarcie (abstrakty SAE/JWEIA, rozprawa Gaylarda) **nie
 
 ---
 
-## 3. Kadry — obejrzane i opisane (analiza wizyjna, Wikimedia Commons)
+## 3. Kadry (cel: ≥ 20) — oglądane i opisane
 
-**Zbadano 24 kandydatów** (miniatury 1280 px, Commons; każda analiza zapisana lokalnie jako `analysis_P18-1NN.json`; surowe odpowiedzi modelu wizyjnego). Status na 2026-11-13:
+Każdy kadr obejrzany narzędziem wizyjnym (opis „co widać" w kolumnie `opis_co_widać` manifestu); marki widoczne na zdjęciach traktowane wyłącznie jako „marka widoczna, tylko referencja"; CC BY-SA = „referencja, nie tekstura"; NC/ND/płatne stocki = link „tylko referencja, nie pobrano". Zdjęcia wyłącznie z Wikimedia Commons (Openverse/Panoramax/KartaView: patrz §6).
 
-- **Kwalifikują się (widoczny tył/drzwi naczepy): 17/24** — P18-101, 102, 103, 104, 107, 108, 109, 110, 111, 112, 116, 117, 118, 119, 120, 121, 122.
-  - w tym **zimowe: 4** (P18-112 z widocznym śniegiem, P18-120, P18-121, P18-122) oraz **2 kadry fabrycznie czyste** jako odniesienie kontrastowe (P18-110, P18-111 — MAN Concept/Krone) i 1 niemal czysty (P18-107, BANEX).
-- **Odrzucone: 7** (P18-105, 106 — widok boczny; P18-113 — cysterna z góry; P18-114 — brak tyłu; P18-115 — wywrotka; P18-123 — cysterna bok; P18-124 — bok).
-- **Uwaga metodologiczna (uczciwie):** budżet narzędzia analizy obrazów (20 wywołań na odpowiedź) wyczerpał się po 24 kadrach; **cel ≥20 kadrów kwalifikujących nie został jeszcze osiągnięty (17/20)**. Przygotowano dodatkowo 12 kandydatów (pobrane miniatury + metadane w stanie badania; m.in. zimowy „Semi truck in the snow Church Avenue Jan 2026", zestawy polskie: Renault T/Orlen Wichrów, Biedronka Białystok, JAS-FBG, Mlekovita, Actros) — do przeanalizowania w kolejnej iteracji.
+**Stan: 5/20 zakwalifikowanych kadrów tylnych drzwi** (P18-105, P18-107, P18-108, P18-109, P18-118); dodatkowo 15 kandydatów przeanalizowanych i odrzuconych (pełne wiersze z uzasadnieniem w `manifest.csv`, P18-101…P18-120). Dobór kolejnych kadrów trwa — kolejne commity.
 
-Wszystkie kadry: **Wikimedia Commons**, licencje CC0/CC BY/CC BY-SA/PD → **status REFERENCJA** (do patrzenia, nie do użycia jako tekstura w grze); marki widoczne na zdjęciach — wyłącznie „marka widoczna, tylko referencja". Zakaz Google Maps/Street View zachowany.
+### 3.1 Zakwalifikowane kadry (pełne dane: `manifest.csv`)
 
-Pełne dane kadrów (strefy, zacieki, krycie, barwa, licencja, autor) — wiersze `kadr` w `manifest.csv` (P18-101…P18-124).
+| id | Sezon | Strefy najbrudniejsze | Kształt brudu | Zacieki/skrzydło | Krycie | Kolor | Licencja / status |
+|---|---|---|---|---|---|---|---|
+| P18-105 (MB 1850 + naczepa, FULDA) | zima (styczeń) | próg → belka RUPD → dół drzwi → uszczelka → rygle | rozbryzg kropel + pionowe zacieki od zawiasów (~30% wysokości drzwi) | 3 | średnie | szary | CC0 / OK |
+| P18-107 (naczepa BANEX, PL→GR) | lato | próg → belka RUPD → dół drzwi | rozbryzg kropel | brak | słabe | szary | CC BY-SA 4.0 / REFERENCJA |
+| P18-108 (przewóz drobiu, PL, KRONE) | jesień | próg → belka RUPD → dół drzwi → rygiel → uszczelka | rozbryzg kropel + zacieki od zawiasów i krawędzi dachu (~30%) | 3 | średnie | szaro-czarny | CC BY-SA 4.0 / REFERENCJA |
+| P18-109 (Volvo FH420 + naczepa) | lato | próg → belka RUPD → dół drzwi → uszczelka → rygle | rozbryzg kropel | brak | średnie | szary | CC BY-SA 4.0 / REFERENCJA |
+| P18-118 (chłodnia + TrailerTail, drzwi otwarte) | zima (grudzień, błoto pośniegowe) | próg → belka RUPD → dół drzwi | rozbryzg kropel | brak | średnie | szary | CC BY-SA 3.0 / REFERENCJA |
 
-## 4. Zestawienie liczbowe z kadrów (ESTIMATED, z metodą)
+Wspólny wzorzec (5 kadrów): brud koncentryczny **od dołu** (próg, belka RUPD, dół drzwi), rozbryzg kropel jako dominująca faktura; pionowe zacieki (3/skrzydło) startują od zawiasów/krawędzi dachu; górna połowa drzwi czysta. Zgodne z mechanizmem §1 (balistyka dużych cząstek nisko, entrainment drobnych nisko-średnio).
 
-Liczby pochodzą wyłącznie z analizy kadrów i są **ESTIMATE**; metoda podana przy każdej. n = 17 kwalifikujących kadrów.
+### 3.2 Kandydaci odrzuceni (przeanalizowani, z powodów)
 
-| Parametr | Wartość | n | Metoda |
-|---|---|---|---|
-| Górna granica „filmu dolnego" — **mediana** | **0,3 wysokości drzwi ≈ 0,78–0,81 m nad jezdnią** (przy drzwiach 2,6–2,7 m) | 11 kadrów z filmem > 0 | ułamek wysokości drzwi widocznej w kadrze (ESTIMATE z analizy wizyjnej); zakres 0,1–0,8 |
-| …dla kadrów zimowych — mediana | 0,3 (max **0,8** — kadr P18-112, śnieg) | 4 | jw. |
-| Zacieki pionowe na skrzydło — mediana | **lewe: 3, prawe: 2** | 14/12 kadrów z danymi | liczenie wyraźnych pionowych śladów (ESTIMATE); zakres 0–6 |
-| Odsetek kadrów z brudnym progiem (ŚREDNIO/MOCNO) | 10/17 ≈ **59%** | 17 | ocena strefy z kadrów |
-| Odsetek z brudną belką RUPD (ŚREDNIO/MOCNO) | 14/17 ≈ **82%** | 17 | ocena strefy z kadrów — **belka maluje się najczęściej** (zgodnie z §1.2) |
-| Odsetek z brudnymi lampami | 9/17 ≈ **53%** (zawsze tylko LEKKO) | 17 | ocena strefy z kadrów — lampy brudzą się najmniej ze stref dolnych |
-| Dolna część drzwi MOCNO zabrudzona | 11/17 ≈ **65%** | 17 | ocena strefy z kadrów |
-| Górna połowa drzwi MOCNO | 1/17 ≈ 6% (tylko kadr zimowy P18-112) | 17 | potwierdza gradient z literatury (§1.2–1.3) |
-| Stan czysty (film = 0) | 3/17 (2 kadry pojazdów koncepcyjnych/prezentacyjnych + 1 świeżo umyty) | 17 | punkt odniesienia „jak wygląda czysty tył" |
+P18-101 (naczepa niskoramienna, brak drzwi), P18-102 (kadr z wystawy, drzwi niewyraźne — do ponownej oceny w audycie), P18-103 (tipper bez drzwi), P18-104 (drzwi niewyraźne w 1280 px — do audytu), P18-106 (cysterna), P18-110 (concept truck targowy — przydatny jako wzór czystego tyłu), P18-111 (zimowy tył, ale drzwi niewyraźne wg wizji — do audytu), P18-112 (oldtimer), P18-113 (cysterna), P18-114 (widok boczny), P18-115 (tył poza kadrem), P18-116 (tył kabiny bez naczepy), P18-117 (sam ciągnik, zimowy kontekst), P18-119 (bok kurtynowej — dowód bocznego brudzenia firany: 3 zacieki/skrzydło od góry, ~80% wysokości), P18-120 (bok).
 
-Wnioski: potwierdzono jakościowo rozkład z literatury — **belka RUPD i próg najbrudniejsze (59–82%), film dolny sięga medianie ~0,3 wysokości drzwi (~0,8 m), góra drzwi prawie czysta latem**; zimą film może sięgać 0,8 wysokości (P18-112). Zacieki: typowo 2–3 na skrzydło, częściej na lewym (lewe skrzydło otwierane częściej → starty brud od uchwytów mógł „rozmywać" ślady — hipoteza do weryfikacji).
+## 4. Zestawienie liczbowe z kadrów
+
+**DANE CZĘŚCIOWE (n=5 zakwalifikowanych; stan na 2026-11-14, uzupełniane po sięgnięciu 20 kadrów):**
+
+- **Mediana liczby zacieków na skrzydło: 3** (obserwacje: 3, 3, brak, brak, brak — zacieki pojawiają się w ~2/5 kadrów; ESTIMATED z opisów wizyjnych, id kadrów: P18-105, P18-108).
+- **Odsetek kadrów z brudnym progiem: 5/5 (100%)**; **belką RUPD: 5/5 (100%)**; lampy: 0/5 (w żadnym kadrze lampa nie wskazana jako strefa brudna).
+- **Dolna część drzwi brudna: 5/5 (100%)**; uszczelka środkowa/rygle wskazane w 3/5.
+- **Typowa długość zacieków: ~30% wysokości drzwi → ESTIMATED ok. 0,8 m** (metoda: wizja podaje długość zacieków w % wysokości drzwi; przyjęto typową wysokość drzwi naczepy **2,65 m** [zakres 2,6-2,7 m]; 0,30 × 2,65 m ≈ 0,80 m; id kadrów: P18-105, P18-108).
+- **Górna granica „filmu dolnego" (jednolitego rozbryzgu): dół drzwi, tj. strefa progu/belki + dolna partia skrzydeł** — w 5/5 kadrach film nie przekracza dolnej ~1/3 drzwi; górna połowa czysta. ESTIMATED: film dolny sięga ok. 0,8-1,0 m nad próg (jak wyżej).
+
+Wszystkie liczby z kadrów są **ESTIMATED** (opisy narzędzia wizyjnego na miniaturach 1280 px; proporcje pikselowe przeliczone przez model wizyjny, nie mierzone pikselowo w edytorze); nie są to pomiary.
 
 ## 5. Pięć najlepszych kadrów dla artysty
 
-1. **P18-112** (MB 1850, Sinsheim, zima, CC0) — zimowy film na **całych** drzwiach (granica 0,8), śnieg w kadrze: referencja maksymalnego zimowego samozabrudzenia.
-2. **P18-101** (LKW-Sattezug Rückseite, PD) — klasyczny film dolny + kropki rozbryzgowe na progu, czyste lampy/taśmy: „typowy dzień po deszczu".
-3. **P18-109** (Kögel, Dnipro) — mocny osad + rdza na ryglach/uchwytach: referencja „zapuszczonego" zestawu, strefy dotykowe wytarte kontrastowo.
-4. **P18-108** (Schneider) — film 0,2 wysokości drzwi + 3–4 zacieki na skrzydło: „statystyczny" profil letni (najbliższy medianie).
-5. **P18-110/111** (MAN Concept/Krone, CC0) — tył fabrycznie czysty: baza pod nakładanie zabrudzenia (odwrotność — co dokładnie jest brudzone).
+**W TRAKUJE UZUPEŁNIANIA.**
 
 ## 6. Luki i ograniczenia
 
