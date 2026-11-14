@@ -121,8 +121,8 @@ M = {
     "plate_back": {"color": [1, 1, 1], "rough": 0.5, "metal": 0.6, "texture": "plate_back"},
     "signal_housing": {"color": [0.03, 0.03, 0.03], "rough": 0.6},
     "signal_backplate": {"color": [0.02, 0.02, 0.02], "rough": 0.7},
-    # ADR 0193: retroreflective yellow-white edge of the contrast back plate (was a flat 0.7 grey slab)
-    "signal_border": {"color": [0.62, 0.55, 0.20], "rough": 0.4},
+    # ADR 0193 (M66, Dz.U. 2019 poz. 2311 zał. 3 pkt 3.3.5.6, s. 715, rys. 10.28): white border of the black contrast plate
+    "signal_border": {"color": [0.55, 0.55, 0.54], "rough": 0.4},
     "signal_red_on": {"color": [0.9, 0.05, 0.02], "rough": 0.3, "emissive": [6.0, 0.3, 0.1]},
     "signal_red_off": {"color": [0.12, 0.02, 0.02], "rough": 0.3},
     "signal_yellow_off": {"color": [0.15, 0.10, 0.02], "rough": 0.3},

@@ -360,44 +360,107 @@ def board(code, w, h):
     return m, m, None
 
 
-# Signal head variants (ADR 0193). key -> (chambers, lens diameter m, contrast back plate, lit sequence top->bottom)
-# S-1 3-chamber (vehicles) Ø300 mm is the one placed by furniture.signals; the others are prototypes for authored
-# placements. Dimensions WORKING_VALUE (catalogue practice, Mapillary p42/p45/p47): chamber pitch = Ø + 60 mm, housing
-# 170 mm deep, back plate margin 90 mm beyond the housing. Pedestrian (S-5 type) / cyclist heads: UNVERIFIED pictograms
-# are not modelled (colour discs only).
+# Signal head variants (ADR 0193, research M66 / Dz.U. 2019 poz. 2311 zał. 3 pkt 3.3.5.6 & rys. 10.28).
+# key -> (chambers, lens diameter m, contrast back plate, lit sequence top->bottom)
+# Overhead heads on mast arms (`signal_head`) carry the 0.85 x 1.40 m black contrast plate with a 40 mm white border
+# inset 20 mm from the R70 outer edge, behind the 280 mm deep housing, tilted 7 deg down toward oncoming traffic.
+# Side-mounted pole heads (`signal_head_side`) and pedestrian heads (`signal_ped`, S-5) have NO contrast plate.
 SIGNAL_VARIANTS = {
     "signal_head": (3, 0.30, True, ("red", "yellow", "green")),
+    "signal_head_side": (3, 0.30, False, ("red", "yellow", "green")),
     "signal_head2": (2, 0.30, True, ("red", "green")),
     "signal_head1": (1, 0.30, True, ("red",)),
-    "signal_ped": (2, 0.20, True, ("red", "green")),
+    "signal_ped": (2, 0.20, False, ("red", "green")),
     "signal_bike": (3, 0.20, False, ("red", "yellow", "green")),
 }
 
+SIGNAL_PLATE_W_M = 0.85              # Dz.U. rys. 10.28a: 850 x 1400 mm overhead contrast plate for S-1 (Ø300)
+SIGNAL_PLATE_H_M = 1.40
+SIGNAL_PLATE_R_M = 0.070             # R70 corner radius
+SIGNAL_BORDER_W_M = 0.040            # 40 mm white border strip
+SIGNAL_BORDER_MARGIN_M = 0.020       # 20 mm black outer margin
+SIGNAL_VISOR_L_M = 0.22              # >= 0.20 m (Dz.U. s. 709), WORKING_VALUE 0.22 m (M66)
+SIGNAL_OVERHEAD_TILT_DEG = 7.0       # 5-10 deg downward toward oncoming traffic (Dz.U. s. 755), WORKING_VALUE 7 deg
 
-def _signal_head(lit, n=3, d=0.30, plate=True, order=("red", "yellow", "green")):
-    """Signal head, origin = centre of the housing, front (lenses) towards +y, so the stack is symmetric in z.
 
-    Layout (y): housing -0.085..0.085; contrast back plate (tarcza kontrastowa) 0.085..0.097 in FRONT of the
-    housing, black, with a retroreflective yellow-white border proud of it by 4 mm on the front face only (from behind
-    the plate is plain black, as in the field; ADR 0193: the old border box was a larger grey slab, so every head seen
-    from behind or the side carried a big white rectangle). Lenses Ø d discs facing +y, a three-piece visor
-    (top + two cheeks) over each, LOD0 only."""
+def _rrect_cw(hx, hz, r, seg):
+    """Clockwise 2D rounded-rectangle perimeter in (x, z) with half-extents (hx, hz) and corner radius r."""
+    r = max(0.0, min(float(r), float(hx) - 1e-4, float(hz) - 1e-4))
+    corners = (
+        (-hx + r, hz - r, math.pi, math.pi / 2),
+        (hx - r, hz - r, math.pi / 2, 0.0),
+        (hx - r, -hz + r, 0.0, -math.pi / 2),
+        (-hx + r, -hz + r, -math.pi / 2, -math.pi),
+    )
+    pts = []
+    for cx, cz, a0, a1 in corners:
+        for k in range(seg + 1):
+            a = a0 + (a1 - a0) * k / seg
+            pts.append((cx + r * math.cos(a), cz + r * math.sin(a)))
+    return pts
+
+
+def _tilt_mesh_down(mm, deg):
+    if not deg:
+        return
+    a = math.radians(deg)
+    ca, sa = math.cos(a), math.sin(a)
+    for Vs, _, _ in mm.prims.values():
+        for V in Vs:
+            y, z = V[:, 1].copy(), V[:, 2].copy()
+            V[:, 1] = y * ca + z * sa
+            V[:, 2] = -y * sa + z * ca
+
+
+def _signal_head(lit, n=3, d=0.30, plate=True, order=("red", "yellow", "green"), tilt_deg=None):
+    """Signal head, front (lenses) towards +y, stack symmetric in z.
+
+    Layout (head frame, before tilt): housing y = -0.080..+0.200 (280 mm deep); when `plate=True`, contrast backplate
+    (tarcza kontrastowa, 0.85 x 1.40 m, R70 corners) sits at the rear plane of the chamber (y = -0.085..-0.075, BEHIND
+    the housing) so the 280 mm black housing and 220 mm visors protrude in front of the plate toward the driver, while
+    the rear of both plate and housing is black. White border (`signal_border`, 40 mm wide, inset 20 mm from the outer
+    edge) sits 3 mm proud of the plate front face (`y = -0.072`, normal +y). Overhead (`plate=True`) heads tilt 7 deg
+    downward toward oncoming traffic (+y)."""
+    if tilt_deg is None:
+        tilt_deg = SIGNAL_OVERHEAD_TILT_DEG if plate else 0.0
     m, l1 = Mesh(), Mesh()
     pitch = d + 0.06
     hw = d / 2 + 0.04
     hh = n * pitch / 2 + 0.02
-    ph = hw + (0.09 if plate else 0.0)
-    pz = hh + (0.09 if plate else 0.0)
-    for mm in (m, l1):
-        mm.box("signal_housing", [0, 0.0, 0], hw, 0.085, hh)
+    ph = SIGNAL_PLATE_W_M / 2
+    pz = SIGNAL_PLATE_H_M / 2 - (3 - n) * pitch / 2
+    yb0, yb1 = -0.085, -0.075
+    yh0, yh1 = -0.080, 0.200                             # 280 mm deep black chamber housing
+    for mm, cseg in ((m, 3), (l1, 1)):
+        mm.box("signal_housing", [0, (yh0 + yh1) / 2, 0], hw, (yh1 - yh0) / 2, hh)
         if plate:
-            mm.box("signal_backplate", [0, 0.091, 0], ph, 0.006, pz)
-            bw, y = 0.025, 0.1005                       # border strip width, floating 3 mm above the plate face
-            for (cx, cz, sx, sz) in ((0, pz - bw / 2, ph, bw / 2), (0, -pz + bw / 2, ph, bw / 2),
-                                     (-ph + bw / 2, 0, bw / 2, pz - bw), (ph - bw / 2, 0, bw / 2, pz - bw)):
-                mm.add("signal_border", [[cx - sx, y, cz - sz], [cx + sx, y, cz - sz], [cx + sx, y, cz + sz],
-                                         [cx - sx, y, cz + sz]], [(0, 2, 1), (0, 3, 2)], [[0, 0], [1, 0], [1, 1], [0, 1]])
-    y0 = 0.101 if plate else 0.088
+            outer = _rrect_cw(ph, pz, SIGNAL_PLATE_R_M, cseg)
+            K = len(outer)
+            Vf = [[0.0, yb1, 0.0]] + [[x, yb1, z] for x, z in outer]
+            Vb = [[0.0, yb0, 0.0]] + [[x, yb0, z] for x, z in outer]
+            mm.add("signal_backplate", Vf, [(0, 1 + i, 1 + (i + 1) % K) for i in range(K)])
+            mm.add("signal_backplate", Vb, [(0, 1 + (i + 1) % K, 1 + i) for i in range(K)])
+            if mm is m:
+                Vr, Tr = [], []
+                for i in range(K):
+                    (x0, z0), (x1, z1) = outer[i], outer[(i + 1) % K]
+                    o = len(Vr)
+                    Vr += [[x0, yb1, z0], [x1, yb1, z1], [x1, yb0, z1], [x0, yb0, z0]]
+                    Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2)]
+                mm.add("signal_backplate", Vr, Tr)
+            bm, bw = SIGNAL_BORDER_MARGIN_M, SIGNAL_BORDER_W_M
+            b_out = _rrect_cw(ph - bm, pz - bm, SIGNAL_PLATE_R_M - bm, cseg)
+            b_in = _rrect_cw(ph - bm - bw, pz - bm - bw, SIGNAL_PLATE_R_M - bm - bw, cseg)
+            yb = yb1 + 0.003                             # 3 mm proud of the plate front face, normal +y
+            Vb_ring, Tb_ring = [], []
+            for i in range(K):
+                j = (i + 1) % K
+                o = len(Vb_ring)
+                Vb_ring += [[b_out[i][0], yb, b_out[i][1]], [b_out[j][0], yb, b_out[j][1]],
+                            [b_in[j][0], yb, b_in[j][1]], [b_in[i][0], yb, b_in[i][1]]]
+                Tb_ring += [(o, o + 1, o + 2), (o, o + 2, o + 3)]
+            mm.add("signal_border", Vb_ring, Tb_ring)
+    y0 = yh1 + 0.003
     seq = order[:n] if n == len(order) else tuple(order)
     for k in range(n):
         col = seq[k]
@@ -410,11 +473,13 @@ def _signal_head(lit, n=3, d=0.30, plate=True, order=("red", "yellow", "green"))
         T = [(0, 1 + i, 1 + (i + 1) % N) for i in range(N)]
         m.add(mat, V, T)
         l1.add(mat, V, T)
-        t_, L = 0.008, 0.17                                  # visor: top slab + cheeks, projecting L from the face
-        yc = y0 - 0.003 + L / 2
+        t_, L = 0.008, SIGNAL_VISOR_L_M                      # visor: top slab + cheeks, projecting L = 0.22 m from the face
+        yc = yh1 + L / 2
         m.box("signal_housing", [0, yc, z + d / 2 + 0.03], d / 2 + 0.03, L / 2, t_ / 2)
         for sx in (-1, 1):
             m.box("signal_housing", [sx * (d / 2 + 0.03), yc, z + d * 0.12], t_ / 2, L / 2 * 0.85, d / 2 * 0.85 + 0.01)
+    _tilt_mesh_down(m, tilt_deg)
+    _tilt_mesh_down(l1, tilt_deg)
     return m, l1, None
 
 
@@ -860,8 +925,8 @@ def build_all(sign_codes, boards):
         P[f"plate_{c}"] = plate(c)
     for c, (w, h) in sorted(boards.items()):
         P[f"board_{c}"] = board(c, w, h)
-    for lit in ("red", "green", "off"):          # off: emergency signals at rest (ADR 0074)
-        for var in SIGNAL_VARIANTS:                   # ADR 0193: 3-chamber S-1 (placed), 2- / 1-chamber, pedestrian, cyclist
+    for lit in ("red", "yellow", "green", "off"):    # off: emergency signals at rest (ADR 0074)
+        for var in SIGNAL_VARIANTS:                   # ADR 0193: overhead S-1, side S-1, 2- / 1-chamber, pedestrian, cyclist
             P[f"{var}_{lit}"] = signal_head(lit, var)
     P["signal_pole"] = signal_pole()
     for name, arm in S.SIGNAL_MAST_ARMS.items():     # ADR 0172: signal_mast (6.0 m, rule) / signal_mast_9m (8.8 m)

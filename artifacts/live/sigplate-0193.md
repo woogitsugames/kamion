@@ -1,10 +1,12 @@
 # sigplate-0193
 - c5950cb47+ADR: głowica S-1 przebudowana, kamera P11-094 przesunięta o 10 m, testy 43/43, before-C wyrenderowane (artifacts/sigplate-0193/before-C-sheet.jpg).
-- W TLE: artifacts/sigplate-0193/run.ps1 (build_world C+dojlidy -> import -> after-C/after-D); status: run.status
-- b4ed01d93 + 5ba20690b: zacommitowano przebudowane street_props.glb/props_meta.json, oczyszczono generated/settings, scalono origin/main (props.py/materials.py czysto; props_meta/street_props tymczasowo z main do przebudowy w build_world C).
-- a77a1f96f + sheet.py: naprawiono sortowanie głębi w sheet.py (per-pixel Z-buffer 2x SSAA), zregenerowano after-heads.png (zweryfikowano wizualnie wszystkie 5 wariantów: czysty tył, zero artefaktów 3/4), pytest tests/gis/test_signal_head_0193.py = 17 passed.
-- W TLE: artifacts/sigplate-0193/run2.ps1 (heavy: build_world C+dojlidy + build_all -> unity: import Low,High + after-C2/D2 Low,High); status: run2.status.
-- after-C2 / after-D2 Low+High + gate3_signal + sbs2/*.jpg wyrenderowane i obejrzane (czysta czarna tarcza od tyłu, frontowa obwódka, D-6 ~13 m zgodny z P11-094; WORLD_MEMORY bez zmian: C Low 123.0 / High 265.9 MB, Dojlidy Low 98.2 / High 213.5 MB).
-- Testy po scaleniu z origin/main (e82773fd4): EditMode 581 total / 580 passed / 0 failed / 1 skipped; pytest tests/gis 1168 passed / 1 failed (`test_dojbld_0185.py::test_fence_mesh_mips_do_not_preserve_coverage` — niezwiązany revert z main e668a9588) / 2 xfailed; ukierunkowane (0193/0174/0179/fidelity) 35 passed / 1 xfailed.
-- ADR `docs/adr/0193-sygnalizator-tarcza-i-kamera-d6.md` zaktualizowany (PROPOSED, tabela Low/High A/B, WORLD_MEMORY, testy, ścieżki JPG/SBS).
-- NASTĘPNY KROK: KONIEC — gotowe do weryfikacji/scalenia przez lidera na gałęzi `sigplate-0193`.
+- b4ed01d93 + 5ba20690b + a77a1f96f + ff4909ba7: runda 2 (`after-C2` / `after-D2`) — naprawione sortowanie głębi w `sheet.py`, pełny pytest i EditMode.
+- Runda 3 (M66 §5, po scaleniu `origin/main` `b0d9769fc`):
+  1. Tarcza kontrastowa TYLKO na wysięgnikach (`signal_head_{green,yellow,red,off}`); dodano warianty boczne bez tarczy `signal_head_side_{green,yellow,red,off}` (`plate=False`) użyte na słupach bocznych w `furniture.py:868/874` i `gate3_landmarks.py:492`; `signal_ped_*` z `plate=False`.
+  2. Wymiary tarczy wg Dz.U. rys. 10.28a: `0.85 × 1.40 m` (`ph=0.425, pz=0.70`), czarna z narożami `R70`, biała obwódka `40 mm` (`signal_border` = kolor `marking_white` `[0.55, 0.55, 0.54]`) odsunięta o `20 mm` czarnego marginesu od krawędzi tarczy.
+  3. Tarcza kontrastowa umieszczona na tylnej płaszczyźnie komory (ZA obudową `280 mm`, `y = -0.085..-0.075` vs obudowa `-0.080..+0.200`), tył tarczy i obudowy czarny.
+  4. Daszki wydłużone do `L = 0.22 m` (≥ 0.20 m), głowice wysięgnikowe pochylone o `7°` w dół ku nadjeżdżającym.
+- `after-C3` / `after-D3` (Low + High) + `sbs3/*.jpg` wyrenderowane i zweryfikowane wizualnie (`after-heads.jpg`, `after-C-sheet-{Low,High}.jpg`, `gate3-signal-{Low,High}.jpg`, `sbs-P11-{063,094}-{Low,High}.jpg`).
+- Testy po przebudowie świata: `pytest tests/gis/test_signal_head_0193.py tests/gis/test_p1_0161.py tests/gis/test_p1b_0172.py tests/gis/test_photo_cameras_0174.py tests/gis/test_dojlidy_0179.py tests/gis/test_road_fidelity.py` = **62 passed, 1 xfailed** (`test_signal_head_0193.py` = 26 passed).
+- ADR `docs/adr/0193-sygnalizator-tarcza-i-kamera-d6.md` zaktualizowany, scommitowany i wypchnięty na `origin/sigplate-0193`.
+- NASTĘPNY KROK: KONIEC — gotowe do finałowej recenzji i scalenia przez lidera.
