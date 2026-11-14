@@ -116,6 +116,10 @@ RED_SRGB = (164, 26, 26)                # RAL 3020 (FT.RAL3020_SRGB) darkened by
 # brighter than the paving around it. WORKING_VALUE
 CHAIN_RED_SRGB = (120, 20, 22)
 CHAIN_WHITE_SRGB = (238, 237, 231)
+# solid patch of the LOD0 core ribbon / LOD1 strips relative to the chain paint. ADR 0202: a whole bay is white now and
+# render r2 (close-4m, Low and High) lost the white chain on the footway paving - its core (0.80 x white) rendered
+# ~150 sRGB against paving ~143 while the link cards around it were ~250. White core = the paint itself; red keeps 0.80
+STRIP_SHADE = {True: 0.80, False: 0.97}
 STEEL_SRGB = (150, 153, 152)
 RUST_SRGB = (132, 80, 48)
 FILM_SRGB = (140, 132, 118)
@@ -314,7 +318,7 @@ def texture():
         base = np.asarray(CHAIN_RED_SRGB if red else CHAIN_WHITE_SRGB, float)
         # flat mean colour of the lit links: a link-pitch rhythm here aliases into dashes at LOD1 distance
         r0, r1 = STRIP_ROWS[red]
-        im[r0:r1, STEEL_COL[0]:STEEL_COL[1], :3] = base * 0.80
+        im[r0:r1, STEEL_COL[0]:STEEL_COL[1], :3] = base * STRIP_SHADE[red]
         a0, a1 = LINK_SLOT[red]
         im[:, a0:a1, :3] = base * 0.80                       # gutters: own paint colour under alpha 0
         im[:, a0:a1, 3] = 0
