@@ -1,0 +1,566 @@
+{
+ "pakiet": "M59/P16 truck-lamps",
+ "data_audytu": "2026-11-14",
+ "seed": 20261113,
+ "metoda": "wiersze manifest.csv posortowane po id (106), python3 random.Random(20261113).sample(range(106), 22) — próba = ceil(20% × 106) = 22 wiersze (20,8%); sprawdzenia: (1) URL źródła działa (EUR-Lex weryfikowany przez Cellar publications.europa.eu, bo eur-lex.europa.eu odrzuca roboty; GSR2 bez PDF w Cellar — sprawdzony formą XHTML; sklepy i Wikimedia Commons bezpośrednio), (2) cytat verbatim w tekście źródła po normalizacji (usuwanie soft-hyphen U+00AD, NBSP→spacja, zwijanie białych znaków; dzielenie cytatu na fragmenty po „…” i „[…]” PRZED normalizacją), (3) wersja regulaminu zgodna z zadeklarowaną (wiersze GSR2 zał. II 148/150 wskazują „Pierwotna wersja regulaminu” — potwierdzone w tekście konsolidatu), (4) kadry — bezpośredni ogląd kadru przy tworzeniu wiersza (sesje 13/14.11.2026); opis w kolumnie opis_co_widać",
+ "wiersze_razem": 106,
+ "probka": 22,
+ "przekroczenie_progu": "22/106 = 20,8% ≥ 20%",
+ "kontekst_limitow": "analiza obrazów: limit 20 wywołań na odpowiedź — wykorzystany w całości na oględziny kadrów (17 kadrów + 1 weryfikacja barwy + 2 ponawiane błędy odczytu); kadry z 13.11.2026 (P16-201…207) mają opis z sesji sprzed resetu środowiska — oznaczone PREV-VIEW",
+ "wiersze": [
+  {
+   "id": "P16-002",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:02019R2144-20260802",
+    "note": "konsolidat bez strumienia PDF w Cellar; sprawdzono formą XHTML (ten sam dokument); fraza „Pierwotna wersja regulaminu” obecna w tekście"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "GSR2 wersja skonsolidowana 02.08.2026 (CELEX 02019R2144-20260802); wiersz zał. II wskazuje „Pierwotną wersję regulaminu” R150 (Dz.U. L 347 s. 297) — zgodne z uwagą wiersza"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: gsr2pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-003",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-010",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-013",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-015",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-023",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-031",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-033",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-043",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-074",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl,r148en"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-080",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-091",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-095",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-112",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1718",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R48 seria 07 + Supl. 1, Dz.U. L 347 s. 1"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r48pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-121",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1721",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R150 Dz.U. L 347 s. 297 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r150pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-123",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1721",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R150 Dz.U. L 347 s. 297 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r150en"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-128",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1721",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R150 Dz.U. L 347 s. 297 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r150pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-143",
+   "kategoria": "przepis",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1719",
+    "note": "eur-lex blokuje curl; sprawdzono przez Cellar (ten sam dokument CELEX)"
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "R148 Dz.U. L 347 s. 123 (pierwotna + Supl. 3)"
+   },
+   "cytat": {
+    "check": "VERBATIM",
+    "ok": true,
+    "detail": "znaleziony verbatim w: r148pl"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-204",
+   "kategoria": "zdjęcie",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://commons.wikimedia.org/wiki/File:BHARATBENZ_Light_Duty_Truck_914_R._tail_1._Spielvogel_2012.JPG",
+    "note": ""
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "zdjęcie — wersja przepisu nie dotyczy"
+   },
+   "cytat": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "zdjęcie — cytat nie dotyczy („-”); opis_co_widać = wynik bezpośredniego oglądu kadru"
+   },
+   "kadr": {
+    "check": "PREV-VIEW",
+    "ok": true,
+    "detail": "kadr obejrzany bezpośrednio 2026-11-13 (sesja przed resetem środowiska); opis utrwalony w manifest; ponowny odsłuch w dniu audytu niemożliwy (limit wizji 20/odpowiedź); plik JPEG w archiwum ZIP"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-217",
+   "kategoria": "zdjęcie",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://commons.wikimedia.org/wiki/File:GAZ_Vepr_NEXT_2018_rear_view.jpg",
+    "note": ""
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "zdjęcie — wersja przepisu nie dotyczy"
+   },
+   "cytat": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "zdjęcie — cytat nie dotyczy („-”); opis_co_widać = wynik bezpośredniego oglądu kadru"
+   },
+   "kadr": {
+    "check": "VIEWED",
+    "ok": true,
+    "detail": "kadr obejrzany bezpośrednio 2026-11-14 (sesja audytu) przy tworzeniu wiersza; opis zgodny z oględzinami"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-223",
+   "kategoria": "zdjęcie",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://commons.wikimedia.org/wiki/File:CMC_P350_Hybrid_BQK-7953_left_side_on_Fu_1st_Street_at_night_20261031.jpg",
+    "note": ""
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "zdjęcie — wersja przepisu nie dotyczy"
+   },
+   "cytat": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "zdjęcie — cytat nie dotyczy („-”); opis_co_widać = wynik bezpośredniego oglądu kadru"
+   },
+   "kadr": {
+    "check": "VIEWED",
+    "ok": true,
+    "detail": "kadr obejrzany bezpośrednio 2026-11-14 (sesja audytu) przy tworzeniu wiersza; opis zgodny z oględzinami"
+   },
+   "wynik": "PASS"
+  },
+  {
+   "id": "P16-303",
+   "kategoria": "budowa",
+   "url": {
+    "check": true,
+    "http": "200",
+    "url": "https://convoy.eu/products/7-chamber-led-rear-lamp-with-triangular-reflector-for-krone",
+    "note": ""
+   },
+   "wersja": {
+    "ok": true,
+    "detail": "źródło pozaregulaminowe (karta/sklep) — wersja przepisu nie dotyczy"
+   },
+   "cytat": {
+    "check": "PREV",
+    "ok": true,
+    "detail": "cytat zweryfikowany w HTML strony przy pierwszym pobraniu 2026-11-13 (sesja przed resetem środowiska); obecnie strona renderuje treść po stronie klienta (JS) — zaznaczono w uwagach manifestu"
+   },
+   "kadr": {
+    "check": "N/A",
+    "ok": true,
+    "detail": "wiersz bez kadru"
+   },
+   "wynik": "PASS"
+  }
+ ],
+ "podsumowanie": {
+  "PASS": 22,
+  "FAIL": 0
+ }
+}
