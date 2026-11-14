@@ -1148,9 +1148,8 @@ def _patch_uv1(net, j, V, poly=None):
     lane = np.full(len(P), -1.0)
     edge = np.full(len(P), 5.0)
     score = np.full(len(P), np.inf)
-    flagged = np.zeros(len(P), bool)
     if not j.arms:
-        return np.column_stack([lane, edge])
+        return np.column_stack([lane, np.full(len(P), PLATE_EDGE_FLAG + 1.0)])
     hws = [float(a.chain.hw_at(float(a.s(j.trims[i])))) for i, a in enumerate(j.arms)]
     i0 = int(np.argmax(hws))
     d0 = j.arms[i0].direction(float(j.trims[i0]))
@@ -1170,7 +1169,7 @@ def _patch_uv1(net, j, V, poly=None):
         d = float(j.trims[i])
         s0 = float(a.s(d))
         sec = c.section(s0, net.sec_list)
-        lo, hi = (0.0, d + 5.0) if a.end == "a" else (c.length - d - 5.0, c.length)
+        lo, hi = (0.0, d + 25.0) if a.end == "a" else (c.length - d - 25.0, c.length)
         idx = np.where((c.line.s >= lo - 1e-6) & (c.line.s <= hi + 1e-6))[0]
         if len(idx) < 2:
             continue
@@ -1196,16 +1195,16 @@ def _patch_uv1(net, j, V, poly=None):
         lane[better] = np.asarray(lc, float)[better]
         # ADR 0194: +PLATE_EDGE_FLAG marks a junction plate (Kamion/World PBR: wheel paths spread by turning traffic)
         edge[better] = np.maximum(hw - dist, 0.0)[better]
-        flagged[better] = True
         score[better] = dist[better]
-    if poly is not None and flagged.any():
+    if poly is not None:
         import shapely
         ring = shapely.LinearRing(np.asarray(poly, float)[:, :2])
         d_out = shapely.distance(shapely.points(P), ring)
         t = np.clip(d_out / PLATE_SPREAD_M, 0.0, 1.0)
         spread = t * t * (3.0 - 2.0 * t)
-        enc = PLATE_EDGE_FLAG + PLATE_SPREAD_SCALE * spread + np.minimum(edge, 1.0)
-        edge[flagged] = enc[flagged]
+        edge = PLATE_EDGE_FLAG + PLATE_SPREAD_SCALE * spread + np.minimum(edge, 1.0)
+    else:
+        edge = PLATE_EDGE_FLAG + np.minimum(edge, 1.0)
     return np.column_stack([lane, edge])
 
 

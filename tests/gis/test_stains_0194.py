@@ -54,3 +54,113 @@ def test_plate_uv1_spread_encoding_round_trips():
                 assert dec_spread == 0.0 and abs(min(max(v, 0.0), 1.0) - min(edge, 1.0)) < 1e-9
             else:
                 assert abs(dec_spread - spread) <= 1.0 / MS.PLATE_SPREAD_SCALE + 1e-9
+
+
+def test_plate_uv1_large_plate_never_drops_into_gutter_band():
+    """Large >15m junction plates must encode ALL vertices >=20.0 (never fallback 5.0) and extend arm >5m."""
+    from types import SimpleNamespace
+    import numpy as np
+    from roads import meshing as MS
+    from roads.geom import Polyline
+
+    sec = SimpleNamespace(lane_edges=None, oneway=False, roundabout=False, edge_strip=0.0, lane_w=3.5)
+
+    def make_chain(pts, hw=4.0):
+        line = Polyline(pts)
+        return SimpleNamespace(
+            line=line,
+            length=float(line.length),
+            dirn=np.zeros(len(line.p), int),
+            idx=lambda s: int(np.argmin(np.abs(line.s - float(s)))),
+            hw_at=lambda s: float(hw),
+            section=lambda s, sec_list: sec_list[0],
+        )
+
+    c_west = make_chain(np.column_stack([np.linspace(-30.0, 0.0, 61), np.zeros(61)]), hw=4.0)
+    c_east = make_chain(np.column_stack([np.linspace(0.0, 35.0, 71), np.zeros(71)]), hw=4.0)
+    c_south = make_chain(np.column_stack([np.full(41, 4.0), np.linspace(-20.0, 0.0, 41)]), hw=3.0)
+
+    def make_arm(chain, end, dir_vec):
+        return SimpleNamespace(
+            chain=chain,
+            end=end,
+            s=lambda d, ch=chain, e=end: float(d) if e == "a" else float(ch.length - d),
+            direction=lambda d, v=np.array(dir_vec, float): v,
+        )
+
+    j = SimpleNamespace(
+        arms=[
+            make_arm(c_west, "b", [-1.0, 0.0]),
+            make_arm(c_east, "a", [1.0, 0.0]),
+            make_arm(c_south, "b", [0.0, -1.0]),
+        ],
+        trims={0: 5.0, 1: 18.0, 2: 5.0},  # arm 1 trims 18m from junction centre (> 5m old bound)
+    )
+    net = SimpleNamespace(sec_list=[sec])
+    poly = np.array([
+        [-5.0, 4.0], [18.0, 4.0], [18.0, -4.0], [10.0, -10.0], [-2.0, -10.0], [-5.0, -4.0],
+    ])
+    V = np.array([
+        [-4.0, 0.0, 0.0],    # near west seam (interior)
+        [0.0, 2.0, 0.0],     # plate centre carriageway
+        [10.0, 1.5, 0.0],    # 10m along east plate (>5m old arm projection bound)
+        [16.0, 0.0, 0.0],    # 16m along east plate (still within trim=18m, <= d+25)
+        [4.0, -9.0, 0.0],    # turnoff lobe outside all arm widths (must NOT be 5.0!)
+        [10.0, 4.0, 0.0],    # genuine kerb edge (UV1.y should stay ~20.0..20.5)
+        [10.0, -9.5, 0.0],   # southern lobe vertex
+    ])
+    uv1 = MS._patch_uv1(net, j, V, poly)
+
+    assert (uv1[:, 1] >= MS.PLATE_EDGE_FLAG).all(), f"unflagged plate vertex: {uv1[:, 1]}"
+    # Interior carriageway & outer flare vertices (indices 0..4, 6) must NOT land in [20.0, 20.65]
+    assert (uv1[[0, 1, 2, 3, 4, 6], 1] >= MS.PLATE_EDGE_FLAG + 1.0).all(), f"gutter band leak: {uv1}"
+    # 10m & 16m along east plate keep valid through-road lane coordinates
+    assert (uv1[[1, 2, 3], 0] >= 0.0).all(), f"lost lane coord past 5m: {uv1[:, 0]}"
+    # Genuine kerb vertex stays in gutter edge range [20.0, 20.65)
+    assert MS.PLATE_EDGE_FLAG <= uv1[5, 1] < MS.PLATE_EDGE_FLAG + 0.65
+
+
+def test_assemble_preserves_plate_uv1_across_arm_seam():
+    """Arm-to-plate seam in assemble() must not overwrite plate UV1>=20 with arm UV1<15."""
+    from types import SimpleNamespace
+    import numpy as np
+    from roads.build_world import assemble
+
+    # Arm ribbon [x=0..10] followed by plate [x=10..20], sloping at seam x=10 to verify smooth normal sharing
+    Va = np.array([
+        [0.0, -3.5, 0.0], [0.0, 0.0, 0.0], [0.0, 3.5, 0.0],
+        [10.0, -3.5, 1.0], [10.0, 0.0, 1.0], [10.0, 3.5, 1.0],
+    ])
+    Ta = np.array([[0, 3, 4], [0, 4, 1], [1, 4, 5], [1, 5, 2]])
+    UV1a = np.array([
+        [1.0, 0.0], [0.0, 3.5], [1.0, 0.0],
+        [1.0, 0.0], [0.0, 3.5], [1.0, 0.0],
+    ])
+
+    Vp = np.array([
+        [10.0, -3.5, 1.0], [10.0, 0.0, 1.0], [10.0, 3.5, 1.0],
+        [20.0, -3.5, 1.0], [20.0, 0.0, 1.0], [20.0, 3.5, 1.0],
+    ])
+    Tp = np.array([[0, 3, 4], [0, 4, 1], [1, 4, 5], [1, 5, 2]])
+    UV1p = np.array([
+        [1.0, 20.0], [0.0, 21.0], [1.0, 20.0],
+        [1.0, 20.0], [0.0, 50.0], [1.0, 20.0],
+    ])
+
+    arm = SimpleNamespace(layer="road", mat="road_asphalt", V=Va, T=Ta, UV=Va[:, :2], UV1=UV1a, COL=None)
+    plate = SimpleNamespace(layer="road", mat="road_asphalt", V=Vp, T=Tp, UV=Vp[:, :2], UV1=UV1p, COL=None)
+    out = assemble([arm, plate], {"road"}, half=128.0)
+    prims = [p for p in out[(0, 0)]["road"] if p["mat"] == "road_asphalt"]
+    assert len(prims) == 1
+    m = prims[0]
+    tri_uv1y = m["UV1"][m["T"], 1]
+    crosses = ((tri_uv1y.min(1) < 15.0) & (tri_uv1y.max(1) >= 15.0)).any()
+    assert not crosses, f"triangle crosses arm/plate UV1 threshold: {tri_uv1y}"
+
+    seam = np.isclose(m["V"][:, 0], 10.0) & np.isclose(m["V"][:, 1], 0.0)
+    assert seam.sum() == 2, "seam vertex should split cleanly across UV1 jump"
+    assert m["UV1"][seam, 1].min() < 15.0 and m["UV1"][seam, 1].max() >= 21.0
+    # Split seam copies must still share the exact same position-welded smooth normal
+    norms = m["N"][seam]
+    assert np.allclose(norms[0], norms[1], atol=1e-6)
+    assert norms[0, 0] < -1e-3  # tilted by x=0..10 climb, not flat plate normal [0,0,1]

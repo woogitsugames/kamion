@@ -14,4 +14,5 @@
 - Tło: regen.ps1 -Tag after2 (PID 2708; kolejka heavy). 
 - NASTĘPNY KROK: `Get-Content artifacts/stains-0194/after2/regen.status` → SBS s1066/s1370 → EditMode → ADR → raport.
 - Merge `origin/main` → `stains-0194` (`e6ba0c751`, 0 konfliktów, brudne pliki wyczyszczone). Potwierdzony żółto-brązowy pas w `after2/D-Low/route-s1370.png` (~5 m w głąb płyty).
-- NASTĘPNY KROK: poprawka `_patch_uv1` w `tools/worldgen/roads/meshing.py` (zasięg `d + 25.0`, kodowanie `PLATE_EDGE_FLAG` dla wszystkich wierzchołków płyty) + test w `tests/gis/test_stains_0194.py`.
+- Fix pasów na płytach skrzyżowań: `_patch_uv1` w `meshing.py` (`d + 25.0`, kodowanie `PLATE_EDGE_FLAG` dla wszystkich wierzchołków płyty) + `assemble()` w `build_world.py` (spawanie po `(qp, UV1)` z zachowaniem gładkich normalnych `Np` na szwach ramię↔płyta). Testy: `pytest tests/gis/test_stains_0194.py tests/gis/test_unit_meshing_chunks.py -q` → 13 passed.
+- NASTĘPNY KROK: `build_world.py` (`heavy` slot) dla `bialystok-dojlidy` i `bialystok-industrial-c`, import Low/High i render `after3` (`unity` slot).

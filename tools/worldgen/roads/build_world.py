@@ -237,17 +237,32 @@ def assemble(parts, layers, half):
         COL = np.concatenate([(it[6] if it[6] is not None else np.zeros((len(it[1]), 4)))[it[4]].reshape(-1, 4)
                               for it in items]) if hasc else None
         if mat in WELD:
-            q = np.round(V * 1000).astype(np.int64)
-            u, inv = np.unique(q, axis=0, return_inverse=True)
-            inv = inv.ravel()
-            first = np.full(len(u), -1)
-            first[inv[::-1]] = np.arange(len(inv))[::-1]
-            Vw, UVw = V[first], UV[first]
-            UV1w = UV1[first] if has1 else None
-            COLw = COL[first] if hasc else None
-            T = inv.reshape(-1, 3)
-            T = T[(T[:, 0] != T[:, 1]) & (T[:, 1] != T[:, 2]) & (T[:, 0] != T[:, 2])]
-            Nw = smooth_normals(Vw, T)
+            qp = np.round(V * 1000).astype(np.int64)
+            up, inv_p = np.unique(qp, axis=0, return_inverse=True)
+            inv_p = inv_p.ravel()
+            first_p = np.full(len(up), -1)
+            first_p[inv_p[::-1]] = np.arange(len(inv_p))[::-1]
+            Tp = inv_p.reshape(-1, 3)
+            Tp = Tp[(Tp[:, 0] != Tp[:, 1]) & (Tp[:, 1] != Tp[:, 2]) & (Tp[:, 0] != Tp[:, 2])]
+            Np = smooth_normals(V[first_p], Tp)
+            if has1:
+                # Keep vertices split across UV1 jumps (e.g. arm edge -> junction plate >=20) while keeping smooth normals
+                q = np.column_stack([qp, np.round(UV1 * 1000).astype(np.int64)])
+                u, inv = np.unique(q, axis=0, return_inverse=True)
+                inv = inv.ravel()
+                first = np.full(len(u), -1)
+                first[inv[::-1]] = np.arange(len(inv))[::-1]
+                Vw, UVw = V[first], UV[first]
+                UV1w = UV1[first]
+                COLw = COL[first] if hasc else None
+                T = inv.reshape(-1, 3)
+                T = T[(T[:, 0] != T[:, 1]) & (T[:, 1] != T[:, 2]) & (T[:, 0] != T[:, 2])]
+                Nw = Np[inv_p[first]]
+            else:
+                Vw, UVw, Nw = V[first_p], UV[first_p], Np
+                UV1w = None
+                COLw = COL[first_p] if hasc else None
+                T = Tp
         else:
             ids = np.concatenate([np.full(it[4].size, it[0]) * 10_000_000 + it[4].ravel() for it in items])
             u, first, inv = np.unique(ids, return_index=True, return_inverse=True)
