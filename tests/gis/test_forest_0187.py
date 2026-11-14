@@ -84,12 +84,13 @@ def test_forest_floor_only_near_roads_and_high_tier():
 def test_library_has_the_new_prototypes():
     meta = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))
     tr = meta["trees"]
-    for sp, n in (("spruce", 3), ("pineyoung", 2), ("birchyoung", 2), ("floor", 2)):
+    for sp, n in (("spruce", 3), ("pineyoung", 1), ("birchyoung", 1), ("floor", 2)):
         for v in range(n):
             t = tr[f"tree_{sp}_{v}"]
             assert t["tris_lod1"] < t["tris_lod0"], (sp, v)
     # young trees are cheap: the understorey no longer costs a mature tree each
-    assert max(tr[f"tree_{sp}_{v}"]["tris_lod0"] for sp in ("pineyoung", "birchyoung") for v in range(2)) <= 500
+    assert max(tr[f"tree_{sp}_0"]["tris_lod0"] for sp in ("pineyoung", "birchyoung")) <= 500
+    assert "tree_pineyoung_1" not in tr and "tree_birchyoung_1" not in tr, "one variant per young species (Low draws)"
     assert max(tr[f"tree_spruce_{v}"]["tris_lod0"] for v in range(3)) <= 1000
     assert max(tr[f"tree_spruce_{v}"]["tris_lod1"] for v in range(3)) <= 520
     assert "impostor_views" not in tr["tree_floor_0"] and tr["tree_floor_0"]["tris_lod0"] <= 16
@@ -151,3 +152,22 @@ def test_tree_stand_override_is_a_low_stand_with_hlod_cells():
     assert len(cells) >= 6
     top = max(float(p["V"][:, 2].max()) for c in cells.values() for p in c["prims"] if p["mat"].startswith("forest_canopy"))
     assert 3.0 < top < 9.0, top
+
+
+def test_stand_corner_steps_down():
+    """The wall of an outer stand corner is lower than the wall along the straight edge (no full-height end cut)."""
+    trees, _ = _place(_forest_src("F1:0", RING))
+    cells = FH.build(trees, [(shapely.Polygon(RING), "conifer")], shapely.Polygon(), lambda e, n: np.zeros(len(np.atleast_1d(e))),
+                     1024.0, {})
+    tops_corner, tops_edge = [], []
+    for c in cells.values():
+        for p in c["prims"]:
+            if not p["mat"].startswith("forest_edge_"):
+                continue
+            V, UV = p["V"], p["UV"]
+            top = np.isclose(UV[:, 1], 0.75) & (V[:, 2] > 12.0)             # main wall tops (skirt tops are ~8 m)
+            for v in V[top]:
+                d_corner = min(np.hypot(v[0] - cx, v[1] - cy) for cx in (-1, 201) for cy in (-1, 201))
+                (tops_corner if d_corner < 1.0 else tops_edge if d_corner > 20.0 else []).append(v[2])
+    assert tops_corner and tops_edge
+    assert max(tops_corner) < 0.86 * np.median(tops_edge), (max(tops_corner), np.median(tops_edge))

@@ -52,6 +52,8 @@ CROWN_R = 4.5
 # primitive and material as the wall (no extra draw). A stand seen from the side then steps down shrub - young
 # trees - canopy instead of ending in one vertical plane.
 SKIRT_OFF_M = 3.5
+CORNER_COS = 0.72          # outer edge turning by more than ~44 degrees at a point = a stand corner
+CORNER_DROP = 0.80         # wall height factor at the corner (0.90 one point either side)
 EDGE_ROW_M = 9.5          # + the 2.5 m clearance in no_forest = trees within 12 m of a road / yard stay individual
 MIX_OF_CATEGORY = {"iglasty": "conifer", "liściasty": "broadleaf", "mieszany": "mixed", None: "mixed"}
 TEX_REF = "art-source/world/vegetation/{}.png"
@@ -224,6 +226,26 @@ def build(trees, forests, no_forest, zground, half, report):
                     nb = cell_of(q[0], q[1], half)
                     inner[i] = nb in hlod and nb != (ci, cj)          # tile border: outer wall
             hw = np.array([edge_info["h_m"] * h_local(p) / edge_info["h_median_m"] for p in pts])
+            # ADR 0187: where the outer stand edge turns sharply (end of a belt, corner of a block) the wall steps
+            # down, so a stand seen end-on does not finish in a full-height vertical cut ("theatre flat")
+            if nseg >= 2:
+                dv = np.diff(pts, axis=0)
+                dv /= np.maximum(np.hypot(dv[:, 0], dv[:, 1]), 1e-9)[:, None]
+                closed = float(np.hypot(*(pts[0] - pts[-1]))) < 1e-6
+                for p in range(len(pts)):
+                    a_, b_ = p - 1, p
+                    if p == 0 or p == len(pts) - 1:
+                        if not closed:
+                            continue
+                        a_, b_ = nseg - 1, 0
+                    if inner[a_] or inner[b_]:
+                        continue
+                    if float(dv[a_] @ dv[b_]) < CORNER_COS:
+                        for q, k_ in ((p, CORNER_DROP), (p - 1, 0.5 + 0.5 * CORNER_DROP), (p + 1, 0.5 + 0.5 * CORNER_DROP)):
+                            if 0 <= q < len(pts):
+                                hw[q] = min(hw[q], k_ * edge_info["h_m"] * h_local(pts[q]) / edge_info["h_median_m"])
+                if closed:
+                    hw[-1] = hw[0] = min(hw[0], hw[-1])
 
             # strips of consecutive segments of the same class and facing share their vertices
             i = 0

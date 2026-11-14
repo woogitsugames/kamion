@@ -44,7 +44,7 @@ HEIGHT = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16)
 # Prototype variants per species (make_trees.py NVAR; 3 when not listed). The variant is drawn from 0..2 for every
 # tree (unchanged random stream) and folded: spruce canopy trees take the stand forms 0 / 1, young spruce and the
 # open side of a stand take variant 2 (boughs to the ground).
-NVAR = {"pineyoung": 2, "birchyoung": 2, "floor": 2}
+NVAR = {"pineyoung": 1, "birchyoung": 1, "floor": 2}
 SPRUCE_OPEN = 2
 SPACING = {"las": 4.5, "zagajnik": 3.2, "zadrzewienie": 6.0}
 # Understorey of a Podlasie pine / mixed stand (v3.4, review r3 X4 "trunks like a fence", r4 W-H8): hazel and
@@ -356,8 +356,8 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
     # ADR 0187: authored `kind: tree_stand` - wooded land that is no BDOT10k forest (allotment gardens, a park
     # wood) but closes the horizon on the photos. `polygons_en` (region-local E/N rings, like open_ground),
     # `height_m` [lo, hi] of its trees, `mix` {species: weight}, `spacing_m`, `category` (HLOD texture mix, default
-    # broadleaf). Laid out like a forest stand (canopy grid + the two outer mantle bands, no understorey, no forest
-    # floor) and merged into forest HLOD cells far away, so it is a continuous line at any distance. Source ids start
+    # broadleaf), `mantle: true` for the two outer mantle bands of a wood (gardens end at a fence, not in a mantle).
+    # Laid out like a forest stand (canopy grid, no understorey, no forest floor) and merged into forest HLOD cells far away, so it is a continuous line at any distance. Source ids start
     # with "override:" (open_ground keeps them); the ground mask stays grass.
     trep = []
     for o in overrides or []:
@@ -377,7 +377,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             rng = np.random.default_rng(_seed(key))
             P = _scatter(poly, float(o.get("spacing_m", 6.0)), rng)
             emit(P, pick(rng, mix, len(P)), rng, key, 1.0, fk=fk, hrange=hr, spruce_v="open")
-            for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk][:2]):
+            for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk][:2] if o.get("mantle") else []):
                 band = poly.buffer(d_out).difference(poly.buffer(d_in))
                 P = _scatter(band, step, rng)
                 names = list(table)

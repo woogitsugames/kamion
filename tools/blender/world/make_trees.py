@@ -47,7 +47,10 @@ HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.
 # They reuse the existing materials (bark_pine_lower, bark_pine, bark_birch, leaves_pine, leaves_birch,
 # leaves_shrub); the only new texture is leaves_spruce.png (streetscape/leaf_textures.py spruce_spray).
 NEW_SPECIES = ("spruce", "pineyoung", "birchyoung", "floor")
-NVAR = {"spruce": 3, "pineyoung": 2, "birchyoung": 2, "floor": 2}       # others: 3
+# Variants: one per young species (a thicket is uniform; yaw and height vary per instance) - every variant costs the
+# Low tier up to three instanced draws (LOD1 bark + foliage, impostor). Build 1 with 2 + 2 young variants raised the
+# instanced draws of the forest cameras by 8-30 (artifacts/forest-0187/compare1-dojlidy-Low.tsv).
+NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2}       # others: 3
 IMP_SCALE = {"pineyoung": 0.5}    # impostor views of the pine thicket at half resolution (a filled cone; the airy
 # young birch at half resolution left the trim polygon of ImpostorTrim over 60 % of the frame)
 NO_IMPOSTOR = ("floor",)
@@ -299,10 +302,11 @@ def grow_0187(species, variant, lod, rng, crng, g, H):
     """Spruce, young pine, young birch and forest-floor plants (ADR 0187). Returns g."""
     up_z = Vector((0, 0, 1))
 
-    def stem(z_top, n, r0, wob, mat, seg, lean=0.02):
+    def stem(z_top, n, r0, wob, mat, seg, lean=0.02, hidden=False):
         ln = Vector((rng.uniform(-lean, lean), rng.uniform(-lean, lean), 1))
         pts = bend_path(Vector((0, 0, -0.3)), ln, z_top + 0.3, n, rng, wob)
-        g.tube(mat, pts, [r0 * (1 - i / n) ** 0.9 + 0.012 for i in range(n + 1)], seg)
+        if not (hidden and lod == 1):       # LOD1 of a tree that is foliage to the ground: no bark submesh (one draw)
+            g.tube(mat, pts, [r0 * (1 - i / n) ** 0.9 + 0.012 for i in range(n + 1)], seg)
 
         def at(z):
             k = min(max((z + 0.3) / (z_top + 0.3) * n, 0.0), n - 1e-3)
@@ -312,7 +316,7 @@ def grow_0187(species, variant, lod, rng, crng, g, H):
     if species == "spruce":
         leaf = "leaves_spruce"
         full = variant == 2
-        at = stem(H, 14, 0.25 if not full else 0.21, 0.012, "bark_pine_lower", 8 if lod == 0 else 5)
+        at = stem(H, 14, 0.25 if not full else 0.21, 0.012, "bark_pine_lower", 8 if lod == 0 else 5, hidden=full)
         z0 = H * (0.05 if full else 0.36 + 0.05 * variant + rng.uniform(-0.02, 0.02))
         rb = H * (0.185 if full else 0.150)                     # crown radius at its base: ~3.2 / 3.9 m at 21 m
         step = H * (0.031 if lod == 0 else 0.056)
@@ -336,10 +340,11 @@ def grow_0187(species, variant, lod, rng, crng, g, H):
                 tip = p0 + d * L + Vector((0, 0, 0.10 * L))            # sabre: the bough end sweeps up
                 side = Vector((-math.sin(a), math.cos(a), 0))
                 w = max(0.30, 0.40 * L) * (1.0 if lod == 0 else 1.3)
-                nout = (dh + Vector((0, 0, 0.55))).normalized()
-                b0 = p0 + d * 0.04 * L
+                nout = (dh + Vector((0, 0, 0.30))).normalized()      # curtain: faces out of the crown
+                ntop = (dh * 0.45 + Vector((0, 0, 1.0))).normalized()  # bough top: faces the sky (lighter tier above
+                b0 = p0 + d * 0.04 * L                                 # the dark curtain, not one flat green)
                 g.quad(leaf, b0 - side * w, b0 + side * w, tip + side * w * 0.9, tip - side * w * 0.9,
-                       [(0, 0), (1, 0), (1, 1), (0, 1)], nout)
+                       [(0, 0), (1, 0), (1, 1), (0, 1)], ntop)
                 hang = max(0.45, 0.80 * L) * (1 - 0.35 * f) * (1.0 if lod == 0 else 1.25)    # curtain of hanging twigs
                 g.quad(leaf, b0, tip, tip - up_z * hang * 0.7, b0 - up_z * hang,
                        [(0.5, 0), (0.5, 1), (1, 1), (1, 0)], nout)
@@ -359,7 +364,7 @@ def grow_0187(species, variant, lod, rng, crng, g, H):
         return g
     if species == "pineyoung":
         leaf = "leaves_pine"
-        at = stem(H, 8, 0.055, 0.02, "bark_pine", 5 if lod == 0 else 4, lean=0.03)
+        at = stem(H, 8, 0.055, 0.02, "bark_pine", 5 if lod == 0 else 4, lean=0.03, hidden=True)
         cc = Vector((0, 0, H * 0.5))
         z0 = H * (0.08 + 0.05 * variant)
         nwh = 10 if lod == 0 else 7
