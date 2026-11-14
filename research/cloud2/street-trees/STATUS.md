@@ -23,3 +23,8 @@
 - Fenologia: Czernecki i in. 2018 (PMC6028898): leszczyna DOY 70, opad liści brzozy DOY 301 (tekst) + odczyt z Fig. 2.
 - Kadry obejrzane: 54 (KartaView 18, Panoramax 10, Commons 26); opisy w tools/frame_notes.py.
 - NASTĘPNY KROK: `uv run --with shapely --with pyproj python -I tools/build_manifest.py` → manifest.csv, potem fetch.py, audit, README.
+
+## Krok 6 (2026-11-14 ~19:20 UTC) — zamknięcie na polecenie lidera (limit sesji)
+- manifest.csv 210 wierszy (tools/build_manifest.py), fetch.py 62/62 OK (33,6 MB), audit 42/42 PASS (seed 20261114, 11 kadrów + wykres obejrzane ponownie), README, sources.md.
+- Nie zrobiono: poprawka fenologii dla Białegostoku, dokumenty przetargów 2020/2023, grab/berberys, kadry z azymutem dla Dojlid.
+- NASTĘPNY KROK (po recenzji): `cd research/cloud2/street-trees && python3 -I fetch.py && uv run --with shapely --with pyproj python -I tools/build_manifest.py`
