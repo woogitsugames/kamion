@@ -85,7 +85,7 @@ A = `base2`: świat przebudowany ze źródeł bazowych (a08f9935d; manifest **bi
 | chunk 6_6 (manifest) | `buildings` 20 698 → 21 105 (+407), `buildings_lod1` 3804 → 4539 (+735), `road_collision` +7 (przybudówka) |
 | wieżowiec (test, bez przybudówki) | LOD0 5307 → 5896, LOD1 1179 → 1886 (ściany 1238, maszty 648); przybudówka LOD0 142 / LOD1 28 |
 | nowe materiały / tekstury | 0; materiały dalekie wieżowca bez zmian (`plaster_beige__far_office`, `plaster_white__far_ribbon`) |
-| manifest poza 6_6 | zmienione także 4_5 (`paved` +1, `road_collision` +1 trójkąt), 6_5 i 7_5 (te same liczby trójkątów, inny sha) — powtarzalnie w r1 i r2; przyczyna nieustalona (hipoteza: kolejność unii obrysów po dodaniu budynku), UNVERIFIED |
+| manifest poza 6_6 | zmienione także 4_5, 6_5, 7_5 (powtarzalnie w r1 i r2). Porównanie prymitywów glb z kopią bazową (main): **tylko warstwa `paved`** — 4_5: `yard_asphalt` 1578 → 1579 trójkątów (+ ta sama zmiana w `road_collision/collision_asphalt`), 17 wierzchołków w polu ok. 19 × 17 m; 6_5 i 7_5: `curb_concrete`, ten sam zbiór pozycji wierzchołków i liczba trójkątów (inna kolejność / atrybuty). Budynki, instancje, znaki, pozostały JSON chunków: bez różnic. To inna triangulacja nawierzchni placu po dodaniu obrysu przybudówki; mechanizmu w kodzie nawierzchni nie śledziłem |
 
 `artifacts/tower3-0200/r2/budget-vs-base.txt`. Telefon: niezmierzony.
 
@@ -98,7 +98,7 @@ pary**. Dowody: `artifacts/tower3-0200/` (r2, sbs-r2, logs, tools).
 
 | Punkt | Wynik (obejrzany / zmierzony) |
 |---|---|
-| NW vs 115626 | `r2/photo115626-vs-r2.jpg`: 6 grup po 5–6 skrzydeł na 11 kondygnacjach, filary w kolorze ściany, szersza przerwa w środku; Low ≡ High (`r1/z/L-nw200c.jpg` / `H-nw200c.jpg`). Różni się: ściana w renderze clear jest w cieniu (szarooliwkowa zamiast ochry), brak klimatyzatorów i drzewa, mniej drobnego sprzętu na dachu |
+| NW vs 115626 | `r2/photo115626-vs-r2.jpg`: 6 grup po 5–6 skrzydeł na 11 kondygnacjach, filary w kolorze ściany, szersza przerwa w środku; Low ≡ High (`r1/z/L-nw200c.jpg` / `H-nw200c.jpg`). W oświetleniu overcast jak na zdjęciu (`r2/photo115626-vs-r2-overcast.jpg`): układ zgodny, pary świateł z żaluzją to jasnoszare pola, nie białe plamy. Różni się: tynk w renderze jest bladobeżowy (wspólny `plaster_beige`), na zdjęciu nasycona ochra; w clear ściana jest w cieniu; brak klimatyzatorów, mniej drobnego sprzętu na dachu |
 | maszty vs 115626 / 073045 | maszt środkowy w 0,51 długości (zdjęcie 0,48), W w 0,92 (0,89), krótsze przy końcu NE; z SW (`r2/photo073045-vs-r2.jpg`) maszt W za lewą częścią szczytu; z południa W w ok. 0,3 szerokości szczytu (`r1/z/H-s150c.jpg`) |
 | anteny (P2-A, P2-G) | `r1/z/H-roof_s_c.jpg`: panele na wysięgnikach, szare bębny poniżej wierzchołków, różne wysokości; białych kul brak |
 | przybudówka SE | `r2/z/H-annex.jpg`: parterowa bryła z drzwiami i daszkiem na środku ściany SE, bez z-fightingu i szczeliny |
@@ -119,4 +119,6 @@ Recenzji visual-critic nie było (agent nie tworzy subagentów) — do wykonania
 - Przybudówka SE: wygląd ścian i wysokość (confidence low); parter szczytu SW (pas szklenia przy narożniku S, P3).
 - Odciągi masztu W, drabiny kablowe, wentylatory dachowe (P3). P2-C / P2-D / P2-E recenzji 0190 (komórka atlasu
   „jasne okno”, serie ciemnych świateł SE) — poza zakresem.
+- Ton tynku: `plaster_beige` jest wyraźnie bledszy niż ochra na 115626 / 073045 (materiał wspólny wielu budynków — wariant dla wieżowca to osobna decyzja; ADR 0190 mierzył zgodność tylko z Mapillary 2020).
+- Triangulacja `paved` zmienia się w 3 chunkach po dodaniu jednego obrysu budynku (§3) — do wyjaśnienia w generatorze nawierzchni.
 - NE: nadal bez zdjęcia (kopia reguły SW, confidence low).
