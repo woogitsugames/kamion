@@ -13,13 +13,15 @@ zieleń: ADR 0186.
 ## Ustalenia z danych (zmierzone)
 - **Poziom odniesienia LoD1.** `measuredHeight` LoD1 2024 to wysokość bryły nad jej dolną ścianą
   (`ground_z_evrf2007`); dla 329 budynków kafla z LoD1 najniższy teren obrysu (NMT 2025) leży medianowo 0,06 m poniżej
-  tej podstawy. Generator stawiał budynek na **medianie** terenu obrysu, więc na skarpie dach był za wysoko: mediana
+  tej podstawy (`artifacts/dojbld-0185/datum_stats.py`). Generator stawiał budynek na **medianie** terenu obrysu, więc na skarpie dach był za wysoko: mediana
   +0,22 m, p95 +1,42 m, max +3,52 m. Hala zakładu `bdot:2BE4B431-BC59…` +1,83 m (przy narożniku NE ściana 20,5 m
   zamiast 18,7 m = −9 %), budynek badawczy `bdot:2BE4B431-C1A0…` za blokiem Kuronia 3 (18,09 m) +2,69 m, hala
   Kuronia 2 +1,96 m. Same wysokości LoD1 są dobre — to odpowiedź na P2 „tło” i większość „12 %”.
 - **Hala zakładu, P11-094.** 16 pasów paneli na ścianie (moduł nieznany: 1,0 m → 16,5 m z cokołem, 1,15 m → 18,9 m
-  = LoD1). Pomiar w kadrze (`measure.py`, krawędź dachu → grunt przy narożniku NE, 960 px): zdjęcie 294 px, 0179
-  363 px (+23 %), dach na rzędnej LoD1 (r4) 330 px (+12 %) → 18,7 m / 1,12 = 16,7 m nad gruntem 152,3. Linia dachu ściany północnej schodzi w dół na zachodnim końcu (x 793/960; koniec ściany
+  = LoD1). Pomiar w kadrze (`measure.py`, kolumna tuż za narożnikiem NE: zdjęcie x 230, rendery x 240 z 960 px):
+  okładzina od krawędzi dachu do cokołu — zdjęcie 281 px, 0179 320 px (+14 %), dach na rzędnej LoD1 z niskim cokołem
+  (r4) 319 px (+14 %), r5 285 px (+1 %). Krawędź dachu → grunt odczytane z profilu (±5 px): zdjęcie 294, 0179 363,
+  r4 330, r5 296 → z r4: 18,7 m / 1,12 = 16,7 m nad gruntem 152,3 (liczby w `overrides.yaml` to te odczyty). Linia dachu ściany północnej schodzi w dół na zachodnim końcu (x 793/960; koniec ściany
   x 870/960) do niższego segmentu w tej samej płaszczyźnie: wysokość 180 px wobec 255 px (0,71). Ortofoto 2024: wysoka
   hala kończy się na prostej równoległej do ściany wschodniej, 11,8 m od narożnika NW + ~2 m przesunięcia radialnego
   krawędzi dachu = 13,8 m (z namiaru w kadrze 15–19 m). Rzędu małych okienek na zdjęciu nie ma (lampy).
@@ -77,10 +79,10 @@ zieleń: ADR 0186.
 - **Wizualnie** (`artifacts/dojbld-0185/sbs-r5/`; przed: `artifacts/dojlidy-vis-0179/sbs/`; przed/po bez zdjęcia: `cmp/`):
   | Para | Jest | Rozbieżne |
   |---|---|---|
-  | `sbs-P11-094.jpg` | schodek dachu i niższy segment na prawym końcu; długie poziome panele ze stykami co 6 m; brak okienek i tablicy; niski cokół; ogrodzenie = słupki bez białej kraty; ściana przy narożniku NE 296 px wobec 294 px na zdjęciu (+1 %; 0179: +23 %) | zacieki pod attyką mocniejsze niż na zdjęciu (nowy budynek); brak bram (ADR 0196); D-6 blisko kamery |
+  | `sbs-P11-094.jpg` | schodek dachu i niższy segment na prawym końcu; długie poziome panele ze stykami co 6 m; brak okienek i tablicy; niski cokół; ogrodzenie = słupki bez białej kraty; okładzina przy narożniku NE 285 px wobec 281 px na zdjęciu (+1 %; 0179: 320 px, +14 %) | zacieki pod attyką mocniejsze niż na zdjęciu (nowy budynek); brak bram (ADR 0196); D-6 blisko kamery |
   | `sbs-P11-001.jpg` | blok srebrnoszary z pionowymi panelami, trzy wąskie pasma okien na ścianie długiej, szczyt ślepy, budynek badawczy w tle niższy (rzędna LoD1) | szczyt na zdjęciu ma ciemny pas przeszklenia i dwa krótkie pasma okien; brak doku z wiatą; brama/DDR/płot (0188/0189) |
-  | 063, 056, 129b | obejrzane przed/po (`cmp/before-after-*.jpg`): hala Kuronia 2 i bloki szpitala niższe o 1–2 m (rzędna LoD1), biała krata płotów w tle zniknęła; nic nie zepsute | bez zmian względem recenzji 0179 (zakres 0186/0189/0196) |
-- **Kondygnacje po regule poziomu LoD1** (domy/biura/bloki z liczbą kondygnacji BDOT, 246): zgodność generatora z BDOT
+  | 063, 056, 129b | obejrzane pary r5 (`sbs-r5/`) i przed/po r3 (`cmp/before-after-*.jpg`): hala Kuronia 2 niższa (rzędna LoD1: −1,96 m wg `datum_stats.py`), bloki szpitala nieco niższe (UNVERIFIED ile), biała krata płotów w tle zniknęła; nic nie zepsute | bez zmian względem recenzji 0179 (zakres 0186/0189/0196) |
+- **Kondygnacje po regule poziomu LoD1** (`storey_check.py`; domy/biura/bloki z liczbą kondygnacji BDOT, 246): zgodność generatora z BDOT
   168 → 195; pogorszenie w 2 biurach (BDOT 2 → 1 i 3 → 2 kondygnacje przy 5,3 m i 8,65 m).
 - **Budżet statyczny A/B** (`budget_ab.py`, klin 120°, 13 kamer; `budget_ab.txt`): względem `origin/main` materiały w kadrze +0…+3 (max 118 → 121), trójkąty Low −0,03…+0,24 % (max 700 869), High −0,79…+0,08 % (max 1 714 298). Nowe materiały tylko w chunkach 5_1, 5_2 (blok) i 5_3, 6_2, 6_3 (hala).
 - **Unity, kadry foto Low** (`*/stats.txt`, szacunek edytora przed batchingiem; przed = 0179 build #4, między nimi
@@ -104,6 +106,8 @@ zieleń: ADR 0186.
   `mipMapsPreserveCoverage` (wraca mora) albo zlecić daleki LOD siatki jako półprzezroczystą „mgiełkę” (rendering).
 - Wysokość hali zakładu 16,9 m (kadr) wobec LoD1 18,92 m; skrzydło 12,2 m i granica 13,8 m — WORKING_VALUE; przybudówka
   za skrzydłem dostała tę samą wysokość; południowa część zakładu dzieli wysokość hali (jeden obrys BDOT).
+- Drzwi osobowe na ścianie północnej hali stoją ~1,2–1,7 m nad gruntem (próg reguły = mediana terenu + 0,15 m,
+  UNVERIFIED z kadru r5) — po obniżeniu cokołu widać to z ulicy; potrzebny próg wg terenu pod ścianą albo schody.
 - Zacieki pod attyką na `hall_wall_smooth` (siła liczona z jasności, wspólna dla hal) — za mocne dla nowej hali (P2).
 - Blok Kuronia 3: szczyt z pasem przeszklenia i krótkimi pasmami, dok z wiatą, ściany N/E nieznane (zdjęcie właściciela).
 - Reguła `lod1_base_datum` jest włączona tylko w Dojlidach; w regionie C ten sam błąd poziomu istnieje (decyzja lidera,
