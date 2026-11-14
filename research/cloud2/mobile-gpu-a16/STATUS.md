@@ -15,3 +15,7 @@
 - Pobrane: Unity URP docs (configure-for-better-performance, anti-aliasing, URP asset), Unity Android Player settings + ScriptReference AndroidBlitType, UnityCsReference (enum AndroidBlitType Always=0), Unity Issue Tracker JSON (UUM-147578, -137912, -28518, -107530), Khronos Vulkan-Samples (msaa, render_passes, subpasses; commit b4fb432), Qualcomm Adreno mobile best practices (md), AGI supported devices, Arm learn (Performance Studio free, Development Build), libGPUCounters README, gsmmaniak (S24+ PL = Exynos 2400).
 - NOWE w repo: ProjectSettings `androidBlitType: 0` = Always (dodatkowy blit pełnoekranowy w natywnej rozdzielczości) — kandydat nr 1.
 - Następny krok: `cd /workspace/wt/mobile-gpu-a16/research/cloud2/mobile-gpu-a16 && python3 make_manifest.py` (pisanie manifestu).
+
+## 2026-11-14 krok 3 — manifest
+- make_manifest.py → manifest.csv: 134 wiersze (SOURCED 117, UNVERIFIED 13, ESTIMATED 4); kategorie: technika 43, sprzęt 28, vulkan 18, stan 17, plan 16, narzędzie 6, problem 6.
+- Następny krok: `cd /workspace/wt/mobile-gpu-a16/research/cloud2/mobile-gpu-a16` → fetch.py, sources.md, audit_20_percent.json, README.md.
