@@ -83,3 +83,6 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 
 ## D62 — 0162: +10 draws na dojeździe do ronda Putry od Al. Tysiąclecia przyjęte (2026-11-13, s17)
 Kamera `g3b-rondo-putry-approach` 421 → 431 wywołań (Low, ok. +2 %) przez 3 rzeczywiste konstrukcje oznakowania z 2024 (5 tablic; portal P005–P008, E-1 P009, VMS P010). Pozostałe kamery −10…+3. Przyjęte bez wtapiania tablic w siatkę bramownicy; weryfikacja pomiarem A16 po wspólnej regeneracji świata.
+
+## D63 — Najpierw z grubsza, potem detale (2026-11-14, s20)
+Właściciel: „nie możesz z grubsza zrobić a potem detale? W takim tempie to nic nie zrobimy”. Nowe regiony (od obwodnicy S8/DK8/DK19) powstają najpierw w wersji przejezdnej z danych (drogi, teren, zabudowa LoD1, podstawowe oznakowanie z OSM, roślinność z generatora, kamery kontrolne, trasa jazdy), bez dopracowywania punktów do bramki; szlif detali w osobnych, późniejszych rundach. Limit lokalnych agentów pozostaje 4 (decyzja z tego samego dnia). Zasady jakości (docs/06, CLAUDE.md) obowiązują przy szlifie; wersja „z grubsza” musi być przejezdna, bez błędów krytycznych (dziury, latające obiekty, crash) i zmierzona na A16.
