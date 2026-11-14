@@ -54,6 +54,39 @@ Paczka badawcza M52. Gałąź: `research/mistral-p2-surfaces-2`. Kontynuacja / u
 > zaobserwowano; Wileńska bez kadrów ≤60 m (UNVERIFIED) — status M52-116: SOURCED
 > (dla jezdni z kadrów).
 
+> **M52-FIX r4 (13.11.2026)** — rewizja po przeglądzie s20
+> (`docs/reports/REVIEW-2026-11-13-s20-mistral-m52-fix3.md`). Zmiany:
+> (1) **korekta twierdzenia r3 „4 niedostępne w CDN”** — NIEPRAWDZIWE: pliki M52-071/075/077/083
+> są w paczce ZIP; M52-071 = M52-031 (cross-andersa-02 = jar-03) i M52-075 = M52-033
+> (cross-andersa-06 = jar-05) to pary bajtowo identyczne (md5), a cross-andersa-08 (M52-077)
+> i cross-andersa-14 (M52-083) również są w paczce; w r4 obejrzano **70 unikalnych plików /
+> 80 wierszy kadrów (0 niedostępnych)**; M52-077/083 = **poziom terenu** (jezdnia DK19,
+> łącznica z zebrą, budynek Mikomax), NIE „z estakady”;
+> (2) **ponowne oględziny WSZYSTKICH 80 wierszy kadrów** (jeden plik = jedno wywołanie modelu
+> wizyjnego, bez szablonu zdania) — poprawiono ~40% opisów wskazanych w s20, m.in.:
+> M52-061/062/067/068 leżą na **estakadzie** (balustrady mostowe), NIE „na poziomie terenu”;
+> M52-031/039/067 mają **przerywaną** linię pasa, nie „podwójną ciągłą”; M52-102 — strzałek,
+> przejścia i sygnalizatorów w kadrze **brak**; każdy kadr opisany według schematu:
+> (a) poziom: estakada/teren, (b) linie: osiowa + pasa (ciągła/przerywana/podwójna ciągła/brak),
+> (c) przejście w kadrze: tak/nie, (d) 1–2 obiekty charakterystyczne;
+> (3) **11 par plików bajtowo identycznych (md5 w ZIP)**: 029/057, 031/071, 033/075, 041/062,
+> 046/079, 049/080, 050/068, 059/074, 064/076, 065/072, 089/102 — każdy opis spójny w parze,
+> z jawną notką „ten sam plik co M52-xxx”;
+> (4) **sekwencje M52-036…052**: korekta „sekw. KV 14055” → faktyczne sekwencje wg kolumny
+> url_źródła (2769366 / 3686129);
+> (5) **M52-071**: przypisanie rondo 536419699 (9,6 m, Δ 29,1°) niespójne z M52-075 dla tej
+> samej sekwencji → **Andersa way 177876107 (1,6 m, Δ 55,4°)** z zapisem jak w M52-075
+> („reguła azymutowa niespełniona, azymut = artefakt…”); M52-053/055/056/057 — usunięte
+> „jezdnia estakady z barierami mostowymi” tam, gdzie kadr jest na poziomie terenu;
+> **usunięte stare wpisy „N m od osi jezdni wg OSM” (30 wierszy)** — sprzeczne z liczbami
+> M46 r3 (przyjęte w s20); M46 077/083: poziom terenu; M46 053/055: korekty;
+> (6) **M52-116**: wniosek o kolorze powtórzony po nowych oględzinach — **szary asfalt**
+> utrzymany; nowa obserwacja: za lewą barierą estakady widoczny **czerwony pas** (jar-11 =
+> M52-039, andersa-3686129-05 = M52-050/068) — wygląda na gzyms/płytę konstrukcji wiaduktu;
+> rodzaj (gzyms vs pas dzielący vs droga rowerowa) **UNVERIFIED**;
+> (7) **samokontrola 20% na nowym jawnym seedzie 20261116** — 24 wiersze; kadrów 16/16
+> ZGODNYCH (notka r4 porównana z obrazem z ZIP); patrz sekcja „Samokontrola 20% (r4)”.
+>
 ## Zakres (6 zadań)
 
 1. Wymiary znaków poziomych **z rysunków** załącznika nr 2 do rozporządzenia w sprawie
@@ -406,6 +439,28 @@ Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
   kostka, Tofiluk 2015), M52-117 (negatyw poszukiwań ringu). Szczegóły:
   `audit_20_percent.json` (nadpisany w r3; poprzednia runda r2 — w historii gita).
 
+## Samokontrola 20% (M52-FIX r4, jawny seed — po przeglądzie s20)
+
+- Populacja: **118 rekordów** manifestu (M52-001…M52-118).
+- Próba: **24 rekordy** (⌈20%⌉), deterministycznie, **nowy jawny seed**:
+  `random.Random(20261116).sample(sorted(ids), 24)` →
+  M52-001, 002, 025, 027, 028, 032, 042, 044, 047, 052, 065, 067, 073, 074, 081, 082,
+  083, 089, 098, 101, 107, 109, 110, 112.
+- Kryteria r4 (zgodnie z przeglądem s20): **kadry (16 w próbie) → porównanie NOTKI r4
+  („co widać”) z OBRAZEM z paczki ZIP** (odtworzonym z CDN KartaView / Wikimedia) przez model
+  wizyjny, **osobne wywołanie na kadr**, werdykt ZGODNY/NIEZGODNY — nie porównanie z
+  poprzednim opisem; **wiersze nie-kadrów (8) → weryfikacja statyczna źródła**
+  (PDF-y źródłowe: Dz.U. 2019 poz. 2311 c2, wytyczne ZDM 103311/99308, CEER Tofiluk 2015);
+  etykiety bitmapowe rysunków poza warstwą tekstową PDF → statycznie nierozstrzygalne
+  (zapis utrzymany na podstawie oględzin r2).
+- Wynik: **24/24 sprawdzone; kadry 16/16 ZGODNYCH, 0 NIEZGODNYCH** (032, 042, 044, 047,
+  052, 065, 067, 073, 074, 081, 082, 083, 089, 098, 101, 107 — notka r4 zgodna z obrazem
+  z ZIP); nie-kadry: 6 ZGODNYCH (001, 002, 028 częściowo, 109 z korektą proweniencji,
+  110, 112), 2 statycznie nierozstrzygalne (025, 027 — utrzymane). Korekta wykonana
+  w manifestie: **M52-109** — „konkurs SARP” wg bialystok.pl (Tofiluk 2015 nie podaje
+  organizatora; autorka: Anna Tofiluk). Szczegóły: `audit_20_percent.json` (nadpisany
+  w r4; rundy r3/r2 — w historii gita).
+
 ## Status prac (aktualizowany)
 
 - [x] Gałąź utworzona z najnowszego `origin/main` (53e57d5); M52-FIX: gałąź zaktualizowana
@@ -442,6 +497,17 @@ Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
       (M52-071/075/077/083) niedostępne w CDN KartaView — jawnie udokumentowane**;
       kolor trasy (zad. 4): **szary asfalt** — M52-116 → SOURCED ✓; samokontrola 20%
       (seed 20261114): 24/24, 0 problemów formalnych ✓.
+- [x] **M52-FIX r4 (s20) — ZAKOŃCZONE**: korekta „4 niedostępne w CDN” (071=031, 075=033
+      pary bajtowo identyczne md5; 077/083 w ZIP — poziom terenu, nie estakada) ✓;
+      ponowne oględziny 70 unikalnych plików / 80 wierszy kadrów, schemat (a)–(d), poprawione
+      ~40% opisów (061/062/067/068 estakada; 031/039/067 linia przerywana; 102 bez
+      strzałek/przejścia/sygnalizatorów; 100 chodnik po LEWEJ; 106 płyty wielkoformatowe) ✓;
+      11 par duplikatów bajtowo identycznych ze spójnymi opisami ✓; sekwencje 036–052 ✓;
+      M52-071 → Andersa way 177876107 (zapis jak M52-075) ✓; M52-053/055/056/057 — usunięta
+      „estakada” gdzie teren ✓; usunięte „N m od osi jezdni wg OSM” (30 wierszy) ✓;
+      M52-116: wniosek szary asfalt + czerwony pas za barierą UNVERIFIED ✓;
+      M52-109: proweniencja „konkurs SARP” → bialystok.pl, autorka Anna Tofiluk ✓;
+      samokontrola 20% (seed 20261116): 24/24, kadry 16/16 ZGODNY ✓.
 - [ ] Kadry z poziomu ringu Jaroszówki (pozyskanie własne, np. sesja foto) — bez zmian
       (wynik negatywny M52-117). (Render rysunków Dz.U. z zad. 1 — **wykonany w r2**.)
 
@@ -464,12 +530,15 @@ Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
 ## Pliki
 
 - `README.md` — ten plik (wyniki zadań 1–6 + statusy + opis samokontroli; rewizja
-  M52-FIX + r2).
+  M52-FIX + r2–r4).
 - `manifest.csv` — pozycje M52-001…M52-**118** (wiersz M52-118 dodany w M52-FIX r3); **17 kolumn
-  po r2** (kolor_srgb/metoda_koloru usunięte — zad. 4).
+  po r2** (kolor_srgb/metoda_koloru usunięte — zad. 4); **r4: notki ponownych oględzin we
+  wszystkich 80 wierszach kadrów** (schemat (a)–(d)) + korekty M52-109/116, sekwencje 036–052,
+  M46 053/055/071/077/083, usunięte „N m od osi” (30 wierszy).
 - `sources.md` — pełne źródła z linkami, licencjami i datami dostępu (+ źródła rewizji
   M52-FIX i metodologia r2).
-- `audit_20_percent.json` — samokontrola 20% (**r3: seed 20261114** — odczyty etykiet r2 +
-  „co widać" z oględzin r3 + ulica OSM way_id + Δ azymutu; runda r2, seed 20261113 —
-  w historii gita).
+- `audit_20_percent.json` — samokontrola 20% (**r4: seed 20261116** — notki r4 vs obraz z ZIP:
+  kadry 16/16 ZGODNY + weryfikacja statyczna 8 nie-kadrów; runda r3, seed 20261114, i r2,
+  seed 20261113 — w historii gita).
 - `.gitignore` — `files/`, `*.zip` (dodane w M52-FIX).
+

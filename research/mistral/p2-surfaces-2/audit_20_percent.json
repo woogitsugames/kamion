@@ -1,9 +1,9 @@
 {
   "paczka": "research/mistral/p2-surfaces-2",
-  "typ": "samokontrola 20% — runda M52-FIX r3 (po zakończeniu oględzin kadrów; przegląd s18)",
+  "typ": "samokontrola 20% — runda M52-FIX r4 (po przeglądzie s20)",
   "data": "2026-11-13",
-  "seed": 20261114,
-  "generator": "python3: random.Random(20261114).sample(sorted(ids), 24) — nowy jawny seed (r2 używał 20261113)",
+  "seed": 20261116,
+  "generator": "python3: random.Random(20261116).sample(sorted(ids), 24) — nowy jawny seed (r3 używał 20261114, r2 20261113)",
   "populacja": {
     "liczba_rekordow": 118,
     "zakres": "M52-001…M52-118"
@@ -11,301 +11,240 @@
   "proba": {
     "liczba": 24,
     "id": [
-      "M52-009",
-      "M52-031",
-      "M52-071",
-      "M52-076",
-      "M52-062",
+      "M52-001",
+      "M52-002",
+      "M52-025",
+      "M52-027",
+      "M52-028",
+      "M52-032",
+      "M52-042",
+      "M52-044",
+      "M52-047",
+      "M52-052",
       "M52-065",
+      "M52-067",
+      "M52-073",
+      "M52-074",
+      "M52-081",
+      "M52-082",
+      "M52-083",
+      "M52-089",
       "M52-098",
-      "M52-017",
-      "M52-064",
-      "M52-004",
-      "M52-057",
       "M52-101",
-      "M52-117",
-      "M52-056",
-      "M52-095",
-      "M52-020",
+      "M52-107",
       "M52-109",
-      "M52-054",
-      "M52-079",
-      "M52-084",
-      "M52-070",
-      "M52-049",
-      "M52-051",
-      "M52-090"
+      "M52-110",
+      "M52-112"
     ]
   },
   "kryteria": [
-    "wiersze z rysunków (P-*): wklejony odczyt etykiety/podpisu z oględzin r2 (render 150 dpi + rastry natywne ×3) + spójność arytmetyczna",
-    "kadry: „co widać” z oględzin modelem wizyjnym r3 (każdy kadr: 76/80 obejrzanych; 4 pliki niedostępne w CDN KartaView — jawnie udokumentowane) + najbliższa ulica z OSM (way_id, odległość) + Δ(azymut − kierunek odcinka) (reguła M46)",
-    "wiersze tekstowe/inne: weryfikacja źródłem wg uwag wiersza",
-    "schemat manifestu: 17 kolumn, 118 rekordów (M52-118 dodany w r3)"
+    "kadry (16 w próbie): porównanie NOTKI r4 z OBRAZEM z paczki ZIP (odtworzonym z CDN KartaView / Wikimedia) przez model wizyjny — osobne wywołanie na kadr; werdykt ZGODNY/NIEZGODNY + uzasadnienie; porównanie z obrazem, NIE z poprzednim opisem",
+    "wiersze nie-kadrów (8 w próbie: rysunki P-*, tekstowe, inne): weryfikacja statyczna źródła — PDF-y źródłowe (Dz.U. 2019 poz. 2311 c2, wytyczne ZDM zasoby 103311/99308, CEER Tofiluk 2015); etykiety bitmapowe rysunków poza warstwą tekstową PDF → statycznie nierozstrzygalne (zapis utrzymany, podstawa = oględziny r2)",
+    "schemat manifestu: 17 kolumn, 118 rekordów"
   ],
   "wyniki": [
     {
-      "id": "M52-009",
-      "typ": "rysunek",
-      "element": "znak P-4: odstęp między liniami podwójnej",
-      "odczyt": "potwierdzony oględziną r2: 2 linie ciągłe 0,12+0,12, kanał między nimi 0,12 (33 px); podpis „0,24 m²/mb” = 2×0,12 ✓",
-      "wynik": "OK — etykieta/podpis odczytane w oględzinach r2, wklejone w uwagach; spójność arytmetyczna"
+      "id": "M52-001",
+      "typ": "wiersz nie-kadrowy (rysunek/tekst/inne)",
+      "metoda": "weryfikacja statyczna źródła (PDF-y źródłowe pobrane: Dz.U. 2019 poz. 2311 c2 — eli.gov.pl; wytyczne ZDM zasób 103311 i 99308 — BIP Białystok; CEER Tofiluk 2015 — DOI)",
+      "werdykt": "ZGODNY",
+      "szczegoly": "Źródło potwierdzone: Dz.U. 2019 poz. 2311 (ELI PDF c2, str. 526–906); znak P-2a w dokumencie (Rys. 2.2.1.6); wartość 0,12 = etykieta bitmapowa rysunku (odczyt r2: 27 px) — poza warstwą tekstową PDF, weryfikacja wizyjna r2 utrzymana."
     },
     {
-      "id": "M52-031",
-      "typ": "kadr",
-      "element": "kadr z estakady gen. Władysława Andersa nad rondem Pamięci Bieżeństwa 1915 r. (J",
-      "ulica_osm": "Generała Władysława Andersa — estakada DK19 nad rondem (trunk, bridge=yes)",
-      "azymut_kadra": "357.4°",
-      "delta_azymutu": "azymut KV = artefakt magnetometru; kurs GPS sekwencji 121–123° zgodny z osią wiaduktu — reguła azymutowa formalnie niespełniona, przypisanie wg pozycji (≤2,4 m od osi) + oględzin r3",
-      "co_widac": "szary asfalt, podwójna linia ciągła, bariery mostowe (prawa strona); w tle rondo, kominy EC, słupy wysokiego napięcia — estakada potwierdzona (TAK)",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "wiersz jar (estakada): przypisanie wg pozycji ≤2,4 m od osi + oględzin r3; azymut 2016 = artefakt magnetometru (kurs GPS 121–123°)"
+      "id": "M52-002",
+      "typ": "wiersz nie-kadrowy (rysunek/tekst/inne)",
+      "metoda": "weryfikacja statyczna źródła (PDF-y źródłowe pobrane: Dz.U. 2019 poz. 2311 c2 — eli.gov.pl; wytyczne ZDM zasób 103311 i 99308 — BIP Białystok; CEER Tofiluk 2015 — DOI)",
+      "werdykt": "ZGODNY",
+      "szczegoly": "Znaki P-2a/P-2b w dokumencie (Rys. 2.2.1.6/2.2.1.7); etykieta 0,24 = etykieta bitmapowa (odczyt r2: 61 px ≈ 2×27 px, spójne z P-2a); nazwy znaków potwierdzone zewnętrznie (P-2a wąska, P-2b szeroka)."
     },
     {
-      "id": "M52-071",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Andersa — przejście",
-      "ulica_osm": "Generała Władysława Andersa (way 177876107, trunk, d=1.6 m)",
-      "azymut_kadra": 357.4,
-      "delta_azymutu": "Δ=55.4° (kierunek odcinka 122°) — patrz uwagi wiersza",
-      "co_widac": "M52-FIX r3 — oględziny kadru: PLIK NIEDOSTĘPNY w CDN KartaView (HTTP 500/404, 13.11.2026; wyczerpane warianty: pr:sharp proc/lth, pr:thumb, direct storage1.openstreetcam.org) — kadr nie obejrzano; przypisanie utrzymane wg pozycji + reguły M46 wyżej; sąsiednie kadry: idx 154 (M52-030) i 156 (M52-032)",
-      "ocena_elementu": "NIE obejrzano (plik niedostępny) — przypisanie wg pozycji + M46",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 536419699 „Rondo Pamięci Bieżeństwa 1915 roku” (tertiary), odległość do osi 9,6 m,"
+      "id": "M52-025",
+      "typ": "wiersz nie-kadrowy (rysunek/tekst/inne)",
+      "metoda": "weryfikacja statyczna źródła (PDF-y źródłowe pobrane: Dz.U. 2019 poz. 2311 c2 — eli.gov.pl; wytyczne ZDM zasób 103311 i 99308 — BIP Białystok; CEER Tofiluk 2015 — DOI)",
+      "werdykt": "STATYCZNIE NIEROZSTRZYGALNY — zapis utrzymany",
+      "szczegoly": "Warstwa tekstowa PDF niepełna (rysunki = bitmapy); „tabela 5.3” niedostrzegalna statycznie; zapis oparty na weryfikacji wizyjnej r2/r3, bez zastrzeżeń s20."
     },
     {
-      "id": "M52-076",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Andersa — przejście",
-      "ulica_osm": "(bez nazwy) (way 449451977, service, d=0.4 m)",
-      "azymut_kadra": 303.66,
-      "delta_azymutu": "Δ=86.1° (kierunek odcinka 218°) — patrz uwagi wiersza",
-      "co_widac": "szary asfalt, białe linie, bariery po lewej, chodnik po prawej, billboardy w tle — uwaga: przejścia dla pieszych brak w polu widzenia kadru (pasów nie widać), pozycja przejścia może leżeć poza kadrem",
-      "ocena_elementu": "patrz co_widac",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 278213208 „Generała Władysława Andersa” (trunk), odległość do osi 6,4 m,"
+      "id": "M52-027",
+      "typ": "wiersz nie-kadrowy (rysunek/tekst/inne)",
+      "metoda": "weryfikacja statyczna źródła (PDF-y źródłowe pobrane: Dz.U. 2019 poz. 2311 c2 — eli.gov.pl; wytyczne ZDM zasób 103311 i 99308 — BIP Białystok; CEER Tofiluk 2015 — DOI)",
+      "werdykt": "STATYCZNIE NIEROZSTRZYGALNY — zapis utrzymany",
+      "szczegoly": "Etykiety 0,05/0,20/0,232 m²/mb = etykiety bitmapowe rysunku P-25 (odczyt r2), poza warstwą tekstową; zapis utrzymany (weryfikacja wizyjna r2, korekta r3 s18)."
     },
     {
-      "id": "M52-062",
+      "id": "M52-028",
+      "typ": "wiersz nie-kadrowy (rysunek/tekst/inne)",
+      "metoda": "weryfikacja statyczna źródła (PDF-y źródłowe pobrane: Dz.U. 2019 poz. 2311 c2 — eli.gov.pl; wytyczne ZDM zasób 103311 i 99308 — BIP Białystok; CEER Tofiluk 2015 — DOI)",
+      "werdykt": "ZGODNY (częściowo)",
+      "szczegoly": "Strona 569 istnieje w dokumencie (nagłówki Dz.U. 526–906) ✓; P-11 = przejazd dla rowerzystów potwierdzony zewnętrznie (w tym szerokości 1,8 m/3,0 m); etykiety 0,5 rysunku = bitmapy (odczyt r2, przypisanie niepewne — zgodnie z notą)."
+    },
+    {
+      "id": "M52-032",
       "typ": "kadr",
-      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
-      "ulica_osm": "Generała Władysława Andersa (way 177905056, trunk, d=2.2 m)",
-      "azymut_kadra": 302.62,
-      "delta_azymutu": "Δ=0.5° (kierunek odcinka 302°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
-      "co_widac": "szary asfalt, linie, metalowe bariery po obu stronach, pomarańczowe znaki ostrzegawcze, wieżowce w tle — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 177905056 „Generała Władysława Andersa” (trunk), odległość do osi 2,2 m,"
+      "plik_z_zip": "jar/14055 — KV_7119872.jpg (photo 7119872)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY. Opis dokładnie oddaje widoczną jezdnię estakady z balustradami, brak linii rozdzielających pasy, brak przejść, duży zbiornik (silo) z logo oraz słup wysokiego napięcia w tle."
+    },
+    {
+      "id": "M52-042",
+      "typ": "kadr",
+      "plik_z_zip": "route/andersa-3686129 — KV_1326673613.jpg (photo 1326673613)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY. Estakada z balustradami, osiowa ciągła, pasy rozdzielone linią przerywaną, w tle budynek z napisem „BIZ”."
+    },
+    {
+      "id": "M52-044",
+      "typ": "kadr",
+      "plik_z_zip": "route/andersa-3686129 — KV_1326673621.jpg (photo 1326673621)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY. Estakada z balustradami mostowymi, osiowa ciągła i linie pasa przerywane są widoczne, a wysokie latarnie uliczne znajdują się wzdłuż wiaduktu. Brak przejść dla pieszych."
+    },
+    {
+      "id": "M52-047",
+      "typ": "kadr",
+      "plik_z_zip": "route/andersa-3686129 — KV_1326673637.jpg (photo 1326673637)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY. Opis pasuje do widocznej estakady z balustradami, ciągłą linią osiową, przerywanymi liniami pasa, lampami na wysokich słupach i budynkami w tle."
+    },
+    {
+      "id": "M52-052",
+      "typ": "kadr",
+      "plik_z_zip": "route/andersa-3686129 — KV_1326673657.jpg (photo 1326673657)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY. Opis pasuje do widocznej estakady z balustradami, podwójną ciągłą linią osiową, ciągłymi liniami krawędziowymi, brakiem przejść, żółtym znakiem ostrzegawczym (trójkąt z dwiema strzałkami) oraz lampami na wysokich słupach."
     },
     {
       "id": "M52-065",
       "typ": "kadr",
-      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
-      "ulica_osm": "(bez nazwy) (way 177948307, trunk_link, d=1.3 m)",
-      "azymut_kadra": 298.64,
-      "delta_azymutu": "Δ=51.6° (kierunek odcinka 350°) — patrz uwagi wiersza",
-      "co_widac": "szary asfalt, podwójna ciągła i przerywana, chodniki z krawężnikami, wieża WN, tablice kierunkowe Kuźnica/Ełk/CH — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 560802661 „Generała Władysława Andersa” (trunk), odległość do osi 7,7 m,"
+      "plik_z_zip": "route/andersa-3686129 — KV_1326673549.jpg (photo 1326673549; para z M52-072)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY. Opis dokładnie oddaje widoczne elementy: chodniki z krawężnikami, podwójną ciągłą linię osiową, ciągłe linie krawędziowe, brak przejść dla pieszych, wieżę wysokiego napięcia oraz tablicę kierunkową „Kuźnica / Ełk”."
+    },
+    {
+      "id": "M52-067",
+      "typ": "kadr",
+      "plik_z_zip": "route/andersa-3686129 — KV_1326673605.jpg (photo 1326673605)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY. Opis pasuje do widocznej estakady z obustronnymi balustradami, ciągłą linią osiową, przerywaną linią pasa, brakiem przejść, słupami oświetleniowymi i budynkiem po prawej."
+    },
+    {
+      "id": "M52-073",
+      "typ": "kadr",
+      "plik_z_zip": "crossings/cross-andersa — KV_993065846.jpg (photo 993065846, sekw. 2769366)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY. Opis dokładnie odpowiada widocznym elementom: podwójna ciągła linia osiowa, ciągłe linie krawędziowe, brak przejść dla pieszych, stacja BP oraz znaki drogowe („70” i strzałka prosto) w tle."
+    },
+    {
+      "id": "M52-074",
+      "typ": "kadr",
+      "plik_z_zip": "crossings/cross-andersa — KV_993061046.jpg (photo 993061046; para z M52-059)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY. Opis pasuje do widocznych elementów: krawężnik i chodnik, linia osiowa przerywana, ciągła linia przy krawężniku, słupy WN, znak „70”, tablica kierunkowa oraz brak przejść dla pieszych w kadrze."
+    },
+    {
+      "id": "M52-081",
+      "typ": "kadr",
+      "plik_z_zip": "route/tysiac-3686129 — KV_1326673685.jpg (photo 1326673685)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY — balustrady, linie, billboardy i lampy są widoczne; brak przejść dla pieszych."
+    },
+    {
+      "id": "M52-082",
+      "typ": "kadr",
+      "plik_z_zip": "route/tysiac-3686129 — KV_1326673681.jpg (photo 1326673681)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY — model potwierdził estakadę z balustradami, podwójną ciągłą osiową, znaki „70” i billboardy; brak przejść w kadrze."
+    },
+    {
+      "id": "M52-083",
+      "typ": "kadr",
+      "plik_z_zip": "crossings/cross-andersa — KV_7119887.jpg (photo 7119887, sekw. 14055)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY — model potwierdził poziom terenu (krawężniki/chodniki, budynek „mikomax”), podwójną ciągłą osiową; zebry w kadrze nie rozpoznano."
+    },
+    {
+      "id": "M52-089",
+      "typ": "kadr",
+      "plik_z_zip": "crossings/cross-tys — KV_219382089.jpg (photo 219382089; para z M52-102)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY — model potwierdził poziom terenu, ciągłą osiową i krawędziowe, brak strzałek/pasów zebry/sygnalizatorów; billboard i stacja Orlen w tle."
     },
     {
       "id": "M52-098",
       "typ": "kadr",
-      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego (trasa startowa)",
-      "ulica_osm": "Aleja Tysiąclecia Państwa Polskiego (way 258841035, secondary, d=4.9 m)",
-      "azymut_kadra": 176.0,
-      "delta_azymutu": "Δ=1.8° (kierunek odcinka 354°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
-      "co_widac": "szary asfalt, podwójna ciągła, strzałki kierunkowe i linie zatrzymania, sygnalizatory, w tle żółty wieżowiec — jezdnia alei na poziomie terenu, zgodna z elementem wiersza (TAK)",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 258841035 „Aleja Tysiąclecia Państwa Polskiego” (secondary), odległość do osi 4,9 m,"
-    },
-    {
-      "id": "M52-017",
-      "typ": "rysunek",
-      "element": "znak P-12 „linia bezwzględnego zatrzymania – stop”: zużycie farby (podpis dolny ",
-      "odczyt": "ROZSTRZYGNIĘCIE r2: na rys. 4.2.3.1 JEST etykieta „0,5” przy strzałce wymiarowej = szerokość linii 0,50 m; podpis „0,5 m²/mb” = ZUŻYCIE (0,50 m × 1 mb) — obie wartości potwierdzone oględziną r2; tekst",
-      "wynik": "OK — etykieta/podpis odczytane w oględzinach r2, wklejone w uwagach; spójność arytmetyczna"
-    },
-    {
-      "id": "M52-064",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
-      "ulica_osm": "(bez nazwy) (way 449451977, service, d=0.4 m)",
-      "azymut_kadra": 303.66,
-      "delta_azymutu": "Δ=86.1° (kierunek odcinka 218°) — patrz uwagi wiersza",
-      "co_widac": "szary asfalt, linie ciągłe i przerywane, chodnik z krawężnikiem, reklama „Husqvarna” w tle — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 278213208 „Generała Władysława Andersa” (trunk), odległość do osi 6,4 m,"
-    },
-    {
-      "id": "M52-004",
-      "typ": "rysunek",
-      "element": "znak P-3a: odstęp między liniami podwójnej",
-      "odczyt": "odstęp 0,12 między liniami P-3a potwierdzony oględziną r2; arytmetyka podpisu 0,20 = 0,12+0,12×4/6 spójna",
-      "wynik": "OK — etykieta/podpis odczytane w oględzinach r2, wklejone w uwagach; spójność arytmetyczna"
-    },
-    {
-      "id": "M52-057",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
-      "ulica_osm": "Generała Władysława Andersa (way 228104605, trunk, d=0.4 m)",
-      "azymut_kadra": 357.65,
-      "delta_azymutu": "Δ=55.4° (kierunek odcinka 122°) — patrz uwagi wiersza",
-      "co_widac": "szary asfalt, białe linie, metalowa bariera po prawej, kominy EC (czerwono-biały pas) w tle — jak M52-029 (ta sama pozycja KV) — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): najbliższy odcinek way 228104605 „Generała Władysława Andersa” (trunk) w 0,4 m od pozycji (kierunek 122°), azymut 357,65° → Δ=55,4° — reguła azymutowa NIESPEŁNIONA: azymut sekwencji 14055 (2016, magnetometr telefonu) jest artefaktem — kurs GPS z kolejnych zdjęć tej sekwencji = 121–123°, zgodny z osią estakady Andersa (Δ≈1–2°); przypisanie utrzymane wg pozycji (≤2,4 m od osi) + oględzin kadru (jezdnia estakady z barierami mostowymi)"
+      "plik_z_zip": "route/tysiac — KV_219382217.jpg (photo 219382217)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY — model potwierdził poziom terenu, osiową ciągłą + przerywane rozdzielające pasy, brak strzałek i linii zatrzymania, żółty budynek „ELITEX”."
     },
     {
       "id": "M52-101",
       "typ": "kadr",
-      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego (trasa startowa)",
-      "ulica_osm": "Aleja Tysiąclecia Państwa Polskiego (way 182417543, secondary, d=3.0 m)",
-      "azymut_kadra": 157.0,
-      "delta_azymutu": "Δ=1.4° (kierunek odcinka 338°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
-      "co_widac": "szary asfalt, białe linie rozdzielające pasy, chodnik po lewej, niskie budynki z reklamami — jezdnia alei na poziomie terenu, zgodna z elementem wiersza (TAK)",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 182417543 „Aleja Tysiąclecia Państwa Polskiego” (secondary), odległość do osi 3,0 m,"
+      "plik_z_zip": "route/tysiac — KV_219382121.jpg (photo 219382121)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY — model potwierdził poziom terenu, ciągłą osiową bez linii rozdzielających, brak przejścia, niskie budynki handlowo-usługowe z reklamami."
     },
     {
-      "id": "M52-117",
-      "typ": "tekst/inny (zapis negatywu poszukiwań)",
-      "element": "Jaroszówka — rondo Pamięci Bieżeństwa: poszukiwanie kadrów z poziomu ringu (jezd",
-      "wynik": "OK — negatyw udokumentowany ze szczegółami; status UNVERIFIED",
-      "weryfikacja": "wynik negatywny poszukiwania kadrów z poziomu ringu (r2: Panoramax 0 w bbox ronda; KartaView tylko 3 sekwencje estakadowe; Mapillary bez tokenu) — szczegóły w uwagach wiersza; status UNVERIFIED spójny"
-    },
-    {
-      "id": "M52-056",
+      "id": "M52-107",
       "typ": "kadr",
-      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
-      "ulica_osm": "Generała Władysława Andersa (way 175157461, trunk, d=0.4 m)",
-      "azymut_kadra": 357.78,
-      "delta_azymutu": "Δ=56.3° (kierunek odcinka 121°) — patrz uwagi wiersza",
-      "co_widac": "szary asfalt, białe linie, metalowa bariera po prawej, słupy i wieże WN w tle — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): najbliższy odcinek way 175157461 „Generała Władysława Andersa” (trunk) w 0,4 m od pozycji (kierunek 121°), azymut 357,78° → Δ=56,3° — reguła azymutowa NIESPEŁNIONA: azymut sekwencji 14055 (2016, magnetometr telefonu) jest artefaktem — kurs GPS z kolejnych zdjęć tej sekwencji = 121–123°, zgodny z osią estakady Andersa (Δ≈1–2°); przypisanie utrzymane wg pozycji (≤2,4 m od osi) + oględzin kadru (jezdnia estakady z barierami mostowymi)"
-    },
-    {
-      "id": "M52-095",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego (trasa startowa)",
-      "ulica_osm": "Aleja Tysiąclecia Państwa Polskiego (way 241126027, secondary, d=5.1 m)",
-      "azymut_kadra": 170.0,
-      "delta_azymutu": "Δ=5.4° (kierunek odcinka 355°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
-      "co_widac": "szary asfalt, podwójna ciągła, chodnik z szarą kostką, wiadukt z tablicą reklamową w tle, zakaz wjazdu ciężarówek, drzewa bez liści — jezdnia na poziomie terenu widoczna (TAK dla widoku jezdni), brak wprost tablic identyfikujących aleję",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 241126027 „Aleja Tysiąclecia Państwa Polskiego” (secondary), odległość do osi 5,1 m,"
-    },
-    {
-      "id": "M52-020",
-      "typ": "rysunek",
-      "element": "znak P-13: zużycie farby (podpis dolny figury)",
-      "odczyt": "podpis „0,2625 m²/mb” potwierdzony dwukrotnym odczytem r2 z obrazu; UWAGA: arytmetyka etykiet r2 daje ½×0,50×0,70/0,75 = 0,2333 m²/mb, podpis drukowany 0,2625 = ½×0,75×0,70 — rozbieżność wewnętrzna ro",
-      "wynik": "OK — etykieta/podpis odczytane w oględzinach r2, wklejone w uwagach; spójność arytmetyczna"
+      "plik_z_zip": "rynek — rynek-cc0-02 (Wikimedia Commons, CC0, thumb 1600 px)",
+      "metoda": "porównanie NOTKI r4 („co widać”) z OBRAZEM z paczki ZIP przez model wizyjny — osobne wywołanie na kadr; notka porównywana z obrazem, nie z poprzednim opisem",
+      "werdykt": "ZGODNY",
+      "odpowiedź_modelu": "ZGODNY — model potwierdził drobną szarą kostkę brukową, kamienice i kościół z wieżą w tle; wielkoformatowych płyt brak w kadrze."
     },
     {
       "id": "M52-109",
-      "typ": "tekst/inny",
-      "element": "Rynek Kościuszki — nawierzchnia (rodzaj, układ)",
-      "weryfikacja": "granitowe płyty + kostka brukowa (Tofiluk 2015); modernizacja 2006–2009 (konkurs SARP, proj. Zenon Zabagło); otwarcie 7.08.2009 wg bialystok.pl „Dekada Rynku Kościuszki”; OSM: surface=sett/paving_ston",
-      "wynik": "OK — treść/źródło zweryfikowane (uwagi wiersza)"
+      "typ": "wiersz nie-kadrowy (rysunek/tekst/inne)",
+      "metoda": "weryfikacja statyczna źródła (PDF-y źródłowe pobrane: Dz.U. 2019 poz. 2311 c2 — eli.gov.pl; wytyczne ZDM zasób 103311 i 99308 — BIP Białystok; CEER Tofiluk 2015 — DOI)",
+      "werdykt": "ZGODNY z korektą proweniencji",
+      "szczegoly": "Tofiluk 2015 (CEER 19(4):121-131, DOI 10.1515/ceer-2015-0058): „granite slabs and paving stones” ✓; realizacja 2006–2009 ( konkurs rozstrzygnięty 2005, „3-year staged realization” 2006) ✓; proj. Zenon Zabagło ✓; UWAGA: artykuł NIE podaje organizatora konkursu (SARP) — człon „konkurs SARP” przypisać do źródła bialystok.pl, nie do Tofiluk; drobna korekta noty r4."
     },
     {
-      "id": "M52-054",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
-      "ulica_osm": "Generała Władysława Andersa (way 560802662, trunk, d=1.5 m)",
-      "azymut_kadra": 357.44,
-      "delta_azymutu": "Δ=55.0° (kierunek odcinka 122°) — patrz uwagi wiersza",
-      "co_widac": "szary asfalt, białe pasy, żółte bariery ochronne, latarnie; w tle wieżowiec i drzewa — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): regułę spełnia way 177948307 (trunk_link) (d=16,4 m, Δ=12,9°); odcinek Andersa way 560802662 w 1,5 m od pozycji (Δ=55° — azymut 2016 artefaktem, kurs GPS 122°); przypisanie do Andersa utrzymane wg pozycji + oględzin"
+      "id": "M52-110",
+      "typ": "wiersz nie-kadrowy (rysunek/tekst/inne)",
+      "metoda": "weryfikacja statyczna źródła (PDF-y źródłowe pobrane: Dz.U. 2019 poz. 2311 c2 — eli.gov.pl; wytyczne ZDM zasób 103311 i 99308 — BIP Białystok; CEER Tofiluk 2015 — DOI)",
+      "werdykt": "ZGODNY",
+      "szczegoly": "PDF zasobu 103311: „WYTYCZNE DO PROJEKTOWANIA DOKUMENTACJI PROJEKTOWEJ BUDOWY, ROZBUDOWY I PRZEBUDOWY ULIC W BIAŁYMSTOKU”, ZDM UM Białystok, „BIAŁYSTOK, 13 LIPCA 2018 R./2025 R.” — nowsza niż wersja 13.07.2018 (zasób 99308) ✓; rozmiar 1,63 MB ≤ 5 MB ✓."
     },
     {
-      "id": "M52-079",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Andersa — przejście",
-      "ulica_osm": "Rondo Pamięci Bieżeństwa 1915 roku (way 177895161, tertiary, d=3.3 m)",
-      "azymut_kadra": 302.24,
-      "delta_azymutu": "Δ=61.7° (kierunek odcinka 4°) — patrz uwagi wiersza",
-      "co_widac": "szary asfalt, białe linie, bariery obustronne, konstrukcje przemysłowe w tle — uwaga: przejścia dla pieszych brak w polu widzenia kadru (pasów nie widać), pozycja przejścia może leżeć poza kadrem",
-      "ocena_elementu": "patrz co_widac",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 177895177 „Generała Władysława Andersa” (trunk), odległość do osi 5,6 m,"
-    },
-    {
-      "id": "M52-084",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego",
-      "ulica_osm": "Rondo świętej Faustyny Kowalskiej (way 267431185, secondary, d=3.8 m)",
-      "azymut_kadra": 148.0,
-      "delta_azymutu": "Δ=17.2° (kierunek odcinka 165°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
-      "co_widac": "szary asfalt, linie, czerwono-białe słupki barierowe, znaki zakazu/nakazu, skrzyżowanie z sygnalizacją w tle — jezdnia alei na poziomie terenu, zgodna z elementem wiersza (TAK)",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 267431185 „Rondo świętej Faustyny Kowalskiej” (secondary), odległość do osi 3,8 m,"
-    },
-    {
-      "id": "M52-070",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Andersa — przejście",
-      "ulica_osm": "(bez nazwy) (way 177719995, service, d=3.1 m)",
-      "azymut_kadra": 302.8,
-      "delta_azymutu": "Δ=65.5° (kierunek odcinka 237°) — patrz uwagi wiersza",
-      "co_widac": "szary asfalt, podwójna ciągła, chodnik, znaki B-33 i nakazu, stacja BP w tle — uwaga: przejścia dla pieszych brak w polu widzenia kadru (pasów nie widać), pozycja przejścia może leżeć poza kadrem",
-      "ocena_elementu": "patrz co_widac",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 560802657 „Generała Władysława Andersa” (trunk), odległość do osi 4,0 m,"
-    },
-    {
-      "id": "M52-049",
-      "typ": "kadr",
-      "element": "kadr z estakady gen. Władysława Andersa nad rondem Pamięci Bieżeństwa 1915 r. (J",
-      "ulica_osm": "Generała Władysława Andersa — estakada DK19 nad rondem (trunk, bridge=yes)",
-      "azymut_kadra": "301.74°",
-      "delta_azymutu": "azymut KV = artefakt magnetometru; kurs GPS sekwencji 121–123° zgodny z osią wiaduktu — reguła azymutowa formalnie niespełniona, przypisanie wg pozycji (≤2,4 m od osi) + oględzin r3",
-      "co_widac": "szary asfalt, linie ciągłe i przerywane, bariery mostowe obustronne; w tle budynki, drzewa, rondo — estakada potwierdzona (TAK)",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "wiersz jar (estakada): przypisanie wg pozycji ≤2,4 m od osi + oględzin r3; azymut 2016 = artefakt magnetometru (kurs GPS 121–123°)"
-    },
-    {
-      "id": "M52-051",
-      "typ": "kadr",
-      "element": "kadr z estakady gen. Władysława Andersa nad rondem Pamięci Bieżeństwa 1915 r. (J",
-      "ulica_osm": "Generała Władysława Andersa — estakada DK19 nad rondem (trunk, bridge=yes)",
-      "azymut_kadra": "300.72°",
-      "delta_azymutu": "azymut KV = artefakt magnetometru; kurs GPS sekwencji 121–123° zgodny z osią wiaduktu — reguła azymutowa formalnie niespełniona, przypisanie wg pozycji (≤2,4 m od osi) + oględzin r3",
-      "co_widac": "szary asfalt, linie ciągłe i przerywane, bariery mostowe obustronne; w tle rondo, drzewa, budynki — estakada potwierdzona (TAK)",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "wiersz jar (estakada): przypisanie wg pozycji ≤2,4 m od osi + oględzin r3; azymut 2016 = artefakt magnetometru (kurs GPS 121–123°)"
-    },
-    {
-      "id": "M52-090",
-      "typ": "kadr",
-      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego",
-      "ulica_osm": "(bez nazwy) (way 236107486, path, d=1.2 m)",
-      "azymut_kadra": 163.0,
-      "delta_azymutu": "Δ=89.7° (kierunek odcinka 73°) — patrz uwagi wiersza",
-      "co_widac": "szary asfalt, pasy przejścia i płytki dotykowe, sygnalizatory, w tle stacja Circle K i żółty wieżowiec — jezdnia alei na poziomie terenu, zgodna z elementem wiersza (TAK)",
-      "ocena_elementu": "TAK — zgodne z elementem wiersza",
-      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
-      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 536419697 „Aleja Tysiąclecia Państwa Polskiego” (secondary), odległość do osi 4,8 m,"
+      "id": "M52-112",
+      "typ": "wiersz nie-kadrowy (rysunek/tekst/inne)",
+      "metoda": "weryfikacja statyczna źródła (PDF-y źródłowe pobrane: Dz.U. 2019 poz. 2311 c2 — eli.gov.pl; wytyczne ZDM zasób 103311 i 99308 — BIP Białystok; CEER Tofiluk 2015 — DOI)",
+      "werdykt": "ZGODNY",
+      "szczegoly": "W STANDARDACH DRÓG ROWEROWYCH → PRZEJAZDY ROWEROWE (wytyczne 2018/2025) statycznie potwierdzony początek zapisu pkt 7 „Na wyspie…” w kontekście przejazdów rowerowych ✓; pełne brzmienie zdania („Na wyspie dzielącej na środku jezdni należy wydzielić przejazd rowerowy”) odczytane wizyjnie r2 — warstwa tekstowa niepełna (fonty zagonowane); wymiary azyla przejazdu niepodane → UNVERIFIED utrzymane."
     }
   ],
   "podsumowanie": {
     "sprawdzone": 24,
-    "problemy_formalne": 0,
-    "rozbior": "rysunek: M52-004, 009, 017, 020 (odczyty etykiet r2 wklejone); kadr: M52-031, 049, 051, 054, 056, 057, 062, 064, 065, 070, 071, 076, 079, 084, 090, 095, 098, 101 („co widać” z oględzin r3 + ulica OSM way/Δ; M52-071 — plik niedostępny w CDN, jawnie udokumentowany); tekst/inne: M52-109 (Rynek — źródła), M52-117 (negatyw poszukiwań — weryfikacja)"
+    "kadry": {
+      "w_probie": 16,
+      "zgodne": 16,
+      "niezgodne": 0
+    },
+    "nie_kadry": {
+      "w_probie": 8,
+      "zgodne": 5,
+      "zgodne_czesciowo": 1,
+      "statycznie_nierozstrzygalne": 2,
+      "niezgodne": 0
+    },
+    "korekty_wykonane": [
+      "M52-109 — proweniencja: „konkurs SARP” wg bialystok.pl (Tofiluk 2015 nie podaje organizatora; autorka: Anna Tofiluk; autor wiersza skorygowany z „W. Tofiluk”) — nota r4 dopisana do manifestu"
+    ],
+    "rozbior": "kadry: M52-032, 042, 044, 047, 052, 065, 067, 073, 074, 081, 082, 083, 089, 098, 101, 107 — 16/16 ZGODNYCH (notka r4 zgodna z obrazem z ZIP), 0 NIEZGODNYCH; nie-kadry: M52-001 ZGODNY, 002 ZGODNY, 028 ZGODNY (częściowo), 109 ZGODNY z korektą proweniencji (wykonaną w manifestie), 110 ZGODNY, 112 ZGODNY, 025 i 027 STATYCZNIE NIEROZSTRZYGALNY (etykiety bitmapowe rysunków — zapis utrzymany na podstawie oględzin r2)"
   }
 }
