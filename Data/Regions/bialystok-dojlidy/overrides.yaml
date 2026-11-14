@@ -183,7 +183,7 @@ overrides:
     polygon_en: [[683.3, 384.1], [670.6, 389.5], [656.4, 356.2], [643.1, 361.9], [604.9, 272.7], [618.2, 267.0],
                  [630.8, 261.6]]
     cut_from: ["bdot:2BE4B431-BC59-1BF0-E053-CC2BA8C0D140"]
-    height_m: 13.4
+    height_m: 12.2
     ground_z_evrf2007: 152.06
     function: produkcyjny
     reason: >-
@@ -193,8 +193,8 @@ overrides:
       line parallel to the east wall; west of it lie a strip with three roof lights and the annex with the roof
       units. The line is 11.8 m from the NW corner on the orthophoto plus ~2 m of relief displacement of the tall
       roof edge = 13.8 m (bearing from the photo: 15-19 m) -> 13.8 m WORKING_VALUE +-2 m. Height: at the step the
-      lower wall is 180 px against 255 px of the tall wall (0.71) -> 0.71 x 18.6 m = 13.1 m above the ground there
-      (152.4) = 13.4 m above the LoD1 base 152.06, WORKING_VALUE +-1 m; the annex south of the strip is given the
+      lower wall is 180 px against 255 px of the tall wall (0.71) -> 0.71 x 16.7 m (the tall wall, see rosti-hall-cladding) = 11.9 m above
+      the ground there (152.4) = 12.2 m above the LoD1 base 152.06, WORKING_VALUE +-1 m; the annex south of the strip is given the
       same height (not seen from the street). The main hall keeps the building id of the BDOT10k outline.
     confidence: medium
     verify: owner photo session (Kuronia, north wall of the plant); height of the wing and of the annex
@@ -212,10 +212,16 @@ overrides:
       NE corner (NMT 152.3-152.9 along the wall); the rule plinth (0.6 m above the median ground 153.9 of the
       outline) was 2.2 m of dark wall there - measured in render r3: cladding 293 px against 284 px on the photo
       (+3 %), but 40 px of plinth against ~10 px. WORKING_VALUE +-0.3 m.
+      height_m 16.9 (above the LoD1 base 152.06; LoD1 2024 says 18.92): with the roof at the LoD1 level (render r4)
+      the wall at the NE corner is still 330 px against 294 px on the photo (+12 %; roof edge to ground at x 230 /
+      240 of 960, artifacts/dojbld-0185/measure.py) -> 18.7 m / 1.12 = 16.7 m above the ground 152.3 there; review
+      0179 asked for 16.5-17 m. The camera distance (EXIF GPS, 42 m) would have to be 5 m off to explain the
+      difference. WORKING_VALUE +-1.2 m, lower than the survey - to be settled by an owner photo with a scale.
       Adds to rosti-hall-colour (sets of one building are merged, ADR 0185).
-    confidence: high
-    verify: none
-    set: {wall_material: hall_wall_smooth, hall_windows: false, hall_sign: false, hall_plinth_z: 152.9}
+    confidence: medium
+    verify: owner photo session (Kuronia, north wall of the plant, with a scale); wall height vs LoD1 18.92 m
+    set: {wall_material: hall_wall_smooth, hall_windows: false, hall_sign: false, hall_plinth_z: 152.9,
+          height_m: 16.9}
   - id: kuronia3-office-block-facades
     target: {building: "override:kuronia3-office-block"}
     reason: >-

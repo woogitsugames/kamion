@@ -78,11 +78,11 @@ def test_dojlidy_buildings_after_overrides():
     # the main hall keeps the BDOT10k id (one piece) and both sets (0179 colour entry + 0185 cladding entry)
     assert not [i for i in blds if i.startswith(ROSTI + "#cut")]
     assert hall["ovr"] == {"wall_material": "hall_wall_smooth", "hall_bands": False, "hall_windows": False,
-                           "hall_sign": False, "hall_plinth_z": 152.9}
+                           "hall_sign": False, "hall_plinth_z": 152.9, "height_m": 16.9}
     assert hall["poly"].intersection(wing["poly"]).area < 0.5
     assert wing["poly"].area == pytest.approx(3234, rel=0.02) and wing["typ"] == "hall"
-    # wing roof 5.5 m under the hall roof (LoD1 base 152.06 + 18.92 / + 13.4)
-    assert BM.roof_height(hall, 152.06) - BM.roof_height(wing, 152.06) == pytest.approx(5.52, abs=0.01)
+    # wing roof 4.7 m under the hall roof (LoD1 base 152.06 + 16.9 authored / + 12.2)
+    assert BM.roof_height(hall, 152.06) == pytest.approx(16.9) and BM.roof_height(wing, 152.06) == pytest.approx(12.2)
     # north wall of the tall hall: 83.4 m of the outline minus the 13.8 m wing
     from shapely.geometry import LineString
     north = LineString([(747.2, 356.6), (683.3, 384.1)])
