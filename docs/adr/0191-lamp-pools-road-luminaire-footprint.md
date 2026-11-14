@@ -49,3 +49,21 @@ sąsiad p50 28,9 m, `standards.LAMP` 30–36 m przy h 8–11 m; 698 słupów w r
 - Kamery lotnicze (putry_above) widzą tylko pule przy ognisku 30 m przed kamerą (limit 8 pul) — nie dotyczy jazdy.
 - Pojazdy nadal oświetlane symetrycznymi światłami punktowymi (High) / wcale (Low) — zgodność z rozsyłem w Truck Exterior: follow-up.
 - Pomiar GPU na A16 i S24+ (wyżej), ocena właściciela barwy sód/LED, glare opraw (P2-8), okna (P2-6) — poza zakresem.
+
+## Integracja s20 (night-int-0191-0192, z ADR 0192; recenzja `docs/reports/REVIEW-2026-11-14-s20-0191-0192.md`)
+- **Scalenie:** gałąź `night-int-0191-0192` = main + `lamppool-0191` + `nightwin-0192`; konflikty `QualityProfile.cs` / `StreetLamps.cs` = suma
+  (pola `lampPoolSpecular`, `nightWindowsOff`, `lampGlareOff`, `lampFloorOff`; **jedna migracja profilu rev 191** — nowe flagi odwrócone, bez kroku).
+  Glare (0192) bierze pozycje opraw z 0191 (`SetHeads(heads, axes, n)` = środek szkła na końcu ramienia), nie środek bbox.
+- **P1-1 (dane):** latarnia łukowa E 731,7 N −387,1 świeciła na plac → własny blok `kwadrat-park-yard-lamp-gate-face` w
+  `Data/Regions/bialystok-industrial-c/overrides.yaml` (usuwa lampę bloku placu wielokątem ±1,5 m i stawia ją z `face` +9,5/−5,2 m jak
+  lampy 1–4; yaw 1,0517 → −2,0716, oprawa 0,6 m od osi pasa). Świat C NIE przebudowany (regeneracja lidera w toku): w worktree
+  podmieniony yaw w `instances_6_5.json` (`artifacts/night-int-0191-0192/patch_instances.py` = wartość z `depot_yard.apply`) + `import-region`.
+  Pule po zmianie: `[733.9 19.4 −388.4 | 0.88 −0.48 sód]`. Następna regeneracja C da to samo z overrides.
+- **P1-3 miękki obrys:** F = (1−S)(1−ρ²)² + S/R²(1−ρ²/R²)², S = 0,25, R = 1,5 (WORKING_VALUE) — ten sam strumień w dół (6,91 klm,
+  test numeryczny), nadir 0,86·I0/h², na dawnym brzegu ~4 % szczytu, zero przy 1,5× (odcięcie wzdłuż drogi ~74°). HLSL ↔ C# (`StreetLampOptics.Footprint`).
+- **P1-2 noc Low:** podłoga nocna `_KamionLampFloor` = 1 lx (WORKING_VALUE; światło opraw spoza zestawu N pul, odbicia, łuna miejska)
+  znikająca gładko do 45 m od najbliższej wybranej oprawy (ciemno poza oświetlonymi ulicami), góra 100 % / ściany 50 % / spody 25 %;
+  ~4 ALU/px w pętli pul, flaga `lampFloorOff` (A/B `rq_lampfloor`).
+- **P1-4:** światła High/Ultra = spot w dół (stożek 140°, wewn. 100°) nachylony 20° w stronę jezdni, kolor sód/LED per oprawa — ramię i
+  obudowa nad soczewką poza stożkiem (ramię już nie „neonowe” o zmierzchu); tuje przy driver_andersa nadal jasne (oświetlone w stożku).
+- Budżet, walidacja, otwarte: sekcja „Integracja s20” w ADR 0192 (wspólny przebieg `artifacts/night-int-0191-0192/final`).
