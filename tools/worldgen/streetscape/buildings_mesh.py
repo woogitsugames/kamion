@@ -1721,7 +1721,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # LOD1 roof stays one flat polygon (an attic inset is invisible from the road and cost 1.3 MiB in Low);
             # the coping ledge (5 cm above the roof) reads as the attic rim
             roof_flat(acc, "buildings_low", poly, zeave, attic=0.0)
-            tall_office = typ == "office" and storeys >= 5          # lift / plant rooms break the box top
+            # lift / plant rooms break the box top; ADR 0200: authored `machine_rooms: false` - the photographed
+            # roof has none (masts and cable trays only)
+            tall_office = typ == "office" and storeys >= 5 and b["ovr"].get("machine_rooms", True)
             if typ == "block" or tall_office:
                 FK.machine_rooms(acc, poly, zeave, "buildings_low")
             roof_flat(acc, "collision", poly, zeave, mat="collision_building", attic=0.0)

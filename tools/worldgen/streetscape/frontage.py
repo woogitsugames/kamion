@@ -537,7 +537,9 @@ def _roof_mast(acc, p, q, nout, z0):
             for sx in (-1, 1):
                 for sy in (-1, 1):
                     c = np.array([*(q + d * (sx * s) + nout * (sy * s)), z0 + h / 2])
-                    acc.box(layer, mat, c, d3 * leg, n3 * leg, [0, 0, h / 2], skip=(0, 1))
+                    # LOD1 (ADR 0200): only the two faces of a leg that look out of the mast
+                    acc.box(layer, mat, c, d3 * leg, n3 * leg, [0, 0, h / 2],
+                            skip=(0, 1, 2 if sy > 0 else 3, 4 if sx > 0 else 5) if low else (0, 1))
             bays = max(2, int(round(h / (1.8 if low else 0.9))))
             w3 = np.array([0.0, 0.0, 0.05 if low else 0.025])
             for k in range(1, bays + 1):
@@ -551,8 +553,12 @@ def _roof_mast(acc, p, q, nout, z0):
                         sg = 1 if (k + (sy > 0)) % 2 else -1
                         p0 = np.array([*(q + ay_ * (sy * s) - ax_ * (sg * s)), za])
                         p1 = np.array([*(q + ay_ * (sy * s) + ax_ * (sg * s)), zb])
-                        acc.quad(layer, mat, p0 - w3, p1 - w3, p1 + w3, p0 + w3)
-                        acc.quad(layer, mat, p1 - w3, p0 - w3, p0 + w3, p1 + w3)
+                        # LOD1 (ADR 0200): the diagonal of a face is drawn from outside the mast only
+                        out_ = float(np.cross(p1 - p0, w3)[:2] @ (ay_ * sy))
+                        if not low or out_ > 0:
+                            acc.quad(layer, mat, p0 - w3, p1 - w3, p1 + w3, p0 + w3)
+                        if not low or out_ <= 0:
+                            acc.quad(layer, mat, p1 - w3, p0 - w3, p0 + w3, p1 + w3)
             acc.box(layer, mat, np.array([*q, z0 + h + 0.6]), d3 * 0.03, n3 * 0.03, [0, 0, 0.6], skip=(0,))   # spike
         else:
             t = max(s, 0.05) if low else s
@@ -759,10 +765,15 @@ def facade_runs(rule, L):
     return []
 
 
-def band_lights(key, n, mix=None):
+def band_lights(key, n, mix=None, sashes=2):
     """The n lights of one `glazing: light` band (ADR 0190): [(row, bay, crop)] - the office-row bay whose window the
     light shows and the fraction of that window cut off at the bottom (BAND_LIGHTS), hashed per light. mix: authored
-    shares of the three kinds of light (rule `light_mix`, ADR 0200) instead of those of BAND_LIGHTS."""
+    shares of the three kinds of light (rule `light_mix`, ADR 0200) instead of those of BAND_LIGHTS. sashes 1 (rule
+    `light_sashes`): a light is one sash of a two-sash window - lights 2k and 2k + 1 are the two sashes of one hashed
+    window (LOD1 draws the pair as one quad)."""
+    if sashes == 1:
+        pairs = band_lights(key, (n + 1) // 2, mix)
+        return [pairs[i // 2] for i in range(n)]
     out = []
     for i in range(n):
         h, top = FA.hint(key, "light", i) % 100, 0
@@ -820,7 +831,7 @@ def facade_windows(rule, L, zref, zbase, sh, zt, storeys, key, door=False):
                 break
             row, off = bays[FA.hint(key, i, s, "bay") % len(bays)]      # a window: that bay; a band: its first light
             lights = (band_lights(f"{key}:{i}:{s}", ribbon_lights(u1 - u0, rule.get("light_m", RIBBON_LIGHT_M)),
-                                  rule.get("mix"))
+                                  rule.get("mix"), rule.get("sashes", 2))
                       if rule["windows"] == "ribbon" and g == "office" else None)
             out.append((u0, u1, z0 + rule["sill_m"], z0 + rule["head_m"], g, row, off, lights))
     return out
@@ -877,10 +888,13 @@ def lod1_facade(acc, rule, wins, a, d, L, z0, zt):
             n += q(u0, u1, z, w[2])
             if w[7]:                           # light band: one office-row window per light (band_lights)
                 k = len(w[7])
-                for i, (row, bay, crop) in enumerate(w[7]):
-                    n += q(u0 + (u1 - u0) * i / k, u0 + (u1 - u0) * (i + 1) / k, w[2], w[3],
+                step = 2 if rule.get("sashes", 2) == 1 else 1      # ADR 0200: two sashes = one window quad
+                for i in range(0, k, step):
+                    row, bay, crop = w[7][i]
+                    j = min(i + step, k)
+                    n += q(u0 + (u1 - u0) * i / k, u0 + (u1 - u0) * j / k, w[2], w[3],
                            blind_far_uv(bay) if row == BLIND_ROW else
-                           far_uv((*w[:5], row, bay), crop, sash_half(i, rule.get("sashes", 2))))
+                           far_uv((*w[:5], row, bay), crop, 0 if step == 2 and j - i == 1 else None))
             else:
                 n += q(u0, u1, w[2], w[3], far_uv(w))
             z = w[3]
