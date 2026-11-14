@@ -78,13 +78,13 @@ SHAPE_EX = {
 }
 # D/F/T: odczyt proporcji z wzorów barwnych 2310 (powiększenie 200 dpi) - ESTIMATED
 VIS_SHAPE = {}
-for c in "D-3 D-4a D-4b D-5 D-6 D-6a D-6b D-9 D-10 D-18 D-21 D-35 D-35a D-36 D-36a D-54 D-55 F-7 F-20 T-6a T-6b T-6c T-6d T-7 T-27".split():
+for c in "D-3 D-4a D-4b D-5 D-6 D-6a D-6b D-9 D-10 D-21a D-18 D-21 D-35 D-35a D-36 D-36a D-54 D-55 F-7 F-20 T-6a T-6b T-6c T-6d T-7 T-27".split():
     VIS_SHAPE[c] = "kwadrat"
 for c in ("D-7 D-8 D-11 D-12 D-13 D-14 D-15 D-16 D-17 D-18a D-18b D-22 D-23 D-23a D-23b D-23c D-24 D-25 D-26 D-26a D-26b D-26c "
           "D-26d D-27 D-28 D-29 D-30 D-31 D-32 D-33 D-34 D-34a D-37 D-38 D-39 D-44 D-45 D-48 D-49 D-50 D-51 D-51a D-51b "
           "F-3 F-8 F-12 F-14a F-14b F-14c F-14d F-14e F-14f F-21 F-22 F-24 T-8 T-12 T-13 T-14 T-15 T-16 T-18 T-25a T-25b T-25c").split():
     VIS_SHAPE[c] = "prostokąt pionowy"
-for c in ("D-13a D-21a D-34b D-39a D-40 D-41 D-46 D-47 D-52 D-53 F-1 F-2 F-2a F-4 F-6 F-9 F-10 F-11 F-15 F-16 F-17 F-18 F-19 F-23 "
+for c in ("D-13a D-34b D-39a D-40 D-41 D-46 D-47 D-52 D-53 F-1 F-2 F-2a F-4 F-6 F-9 F-10 F-11 F-15 F-16 F-17 F-18 F-19 F-23 "
           "T-1 T-1a T-1b T-2 T-3 T-3a T-4 T-5 T-9 T-10 T-11 T-17 T-19 T-20 T-21 T-23a T-23b T-23c T-23d T-23e T-23f T-23g "
           "T-24 T-26 T-28 T-30 T-32 T-33").split():
     VIS_SHAPE[c] = "prostokąt poziomy"
@@ -106,6 +106,10 @@ COL = {
     "B-13a": ("białe", "czerwone obrzeże", "pomarańczowy prostokąt (tablica ADR) na czarnym podwoziu"),
     "B-14": ("białe", "czerwone obrzeże", "pomarańczowa cysterna, czarne podwozie, niebieskie fale"),
     "B-20": ("czerwone", "białe obrzeże", "biały napis STOP"),
+    "B-21": ("białe", "czerwone obrzeże", "czarny symbol + czerwony pas ukośny"),
+    "B-22": ("białe", "czerwone obrzeże", "czarny symbol + czerwony pas ukośny"),
+    "B-23": ("białe", "czerwone obrzeże", "czarny symbol + czerwony pas ukośny"),
+    "B-29": ("białe", "czerwone obrzeże", "czarny symbol + czerwony pas ukośny"),
     "B-24": ("białe", "czarna cienka obwódka", "szary symbol + czarny pas ukośny"),
     "B-25": ("białe", "czerwone obrzeże", "czerwony samochód (lewy) + czarny samochód"),
     "B-26": ("białe", "czerwone obrzeże", "czerwony samochód ciężarowy (lewy) + czarny samochód"),
@@ -119,7 +123,7 @@ COL = {
     "B-37": ("niebieskie", "czerwone obrzeże", "czerwony pas ukośny + jedna biała pionowa kreska"),
     "B-38": ("niebieskie", "czerwone obrzeże", "czerwony pas ukośny + dwie białe pionowe kreski"),
     "B-39": ("białe (tablica)", "czarna obwódka", "znak B-35 + czarny napis"),
-    "B-40": ("białe (tablica)", "czarna obwódka", "szary symbol B-35 + czarny pas ukośny"),
+    "B-40": ("białe (tablica)", "czarna obwódka", "szary symbol koła z krzyżem (jak B-36) + czarny pas ukośny"),
     "B-42": ("białe", "czarna cienka obwódka", "czarny pas ukośny"),
     "B-43": ("białe (tablica)", "czarna obwódka", "znak B-33 (czerwone obrzeże, czarne cyfry)"),
     "B-44": ("białe (tablica)", "czarna obwódka", "szary symbol B-43 + czarny pas ukośny"),
@@ -158,6 +162,8 @@ COL = {
     "F-2a": ("niebieskie", "biała obwódka", "białe napisy; czerwone koło z białym orłem"),
     "F-5": ("niebieskie", "biała obwódka", "biała strzałka i napis + znak B (białe tło, czerwone obrzeże)"),
     "F-6": ("niebieskie", "biała obwódka", "biały schemat + znak A (żółty, czerwone obrzeże)"),
+    "F-7": ("niebieskie", "biała obwódka", "białe pola + czarny schemat drogi ze strzałką"),
+    "F-12": ("niebieskie", "biała obwódka", "biały symbol pojazdu z czarnym napisem masy; biała strzałka"),
     "F-8": ("żółte", "czarna obwódka", "czarny schemat i napisy + znak B-1"),
     "F-9": ("żółte", "czarna obwódka", "czarna strzałka i napis „Objazd”"),
     "F-14a": ("niebieskie", "biała obwódka", "białe cyfry i białe pasy ukośne"),

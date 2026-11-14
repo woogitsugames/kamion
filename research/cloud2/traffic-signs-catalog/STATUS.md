@@ -15,3 +15,8 @@
 - manifest.csv 296 wierszy (SOURCED 286, ESTIMATED 8, UNVERIFIED 2); sizes.csv 130 wierszy; fetch.py OK (11 PDF, sha256 zgodne).
 - Barwy generatora (signs.py): zielona (0,112,72) poza polem tolerancji tab. 1.3; pozostałe w polach.
 - NASTĘPNY KROK: samokontrola 20 % (`python -I tools/audit_sample.py`) + README + sources.md
+
+## 2026-11-14 18:50 UTC — krok 4: samokontrola
+- audit_20_percent.json: seed 20261114; manifest 60/60 PASS; catalog 53 → 51 PASS / 2 FAIL (B-23, F-12 - poprawione) + 4 korekty poza próbą.
+- manifest 297 wierszy (dopisany R1-297).
+- NASTĘPNY KROK: README.md + sources.md (`$EDITOR research/cloud2/traffic-signs-catalog/README.md`)

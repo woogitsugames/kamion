@@ -272,6 +272,8 @@ F("tytuły_aktów", "Dz.U. 2019 poz. 2311 - tytuł", "Obwieszczenie MI z 9.09.20
   "w sprawie ogłoszenia jednolitego tekstu rozporządzenia Ministra Infrastruktury w sprawie szczegółowych warunków technicznych dla znaków i sygnałów drogowych oraz urządzeń bezpieczeństwa ruchu drogowego i warunków ich umieszczania na drogach", "2311", "tytuł", 1,
   uwagi="zał. 1 = znaki pionowe (wymiary, barwy, folie, montaż); zał. 2 poziome; zał. 3 sygnały; zał. 4 urządzenia BRD (§ 1, PDF s. 5); nowelizacje: 2020/862, 2021/438, 2021/2066, 2022/2377, 2026/132")
 
+# ---------------- dopisane po samokontroli (stałe id wcześniejszych wierszy) ----------------
+F("wymiary", "D - bok kratki białego pola s1", "s/8", "mm", "Tabela 5.1 […] s1 1/8 s", "2311", "zał. 1 pkt 5.1.1, tab. 5.1", 178, metoda="odczyt tabeli-rastra (150 dpi, audyt)")
 # ---------------- zapis ----------------
 cols = list(ROWS[0])
 with open(OUT / "manifest.csv", "w", newline="", encoding="utf-8") as f:
