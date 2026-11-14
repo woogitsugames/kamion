@@ -345,7 +345,7 @@ for label, m, col in (("pogodny dzień letni (V–VIII, N ≤ 2)", "V-VIII", "wi
               f"1000 m {100 * (1 - math.exp(-s * 1000)):.1f} %")
 REK = [
  ("rekomendacja_niebo", "niebo pochmurne (LP_Overcast): barwa przy horyzoncie", "neutralna szarość do lekko niebieskawej; bez ciepłego pasa na żadnej wysokości słońca ≥ 0°", "",
-  "WORKING_VALUE", "wniosek z 14 obejrzanych kadrów z N ≥ 7 (w tym 3 ze słońcem 1–4° nad horyzontem: R7 kadry c07, c09, c25) oraz Lee & Hernández-Andrés 2005"),
+  "WORKING_VALUE", "wniosek z 15 obejrzanych kadrów z N = 8 wg stacji (0 z ciepłym pasem; w tym 4 ze słońcem 1–4° nad horyzontem: c07, c08, c09, c25) i 2 kadrów Panoramax z XI 2026 (zachmurzenie całkowite, bez danych stacji); przy N = 7 i słońcu 1–4° (c17, c31) tylko ledwo widoczny kremowy odcień; literatura: Lee & Hernández-Andrés 2005"),
  ("rekomendacja_niebo", "niebo pochmurne: rozkład luminancji dla St neb / mgły", "CIE typ 5 (jednolite) do typu 3 (horyzont/zenit 0,67)", "",
   "WORKING_VALUE", "kadry St neb i mgły pokazują jednolitą płaszczyznę bez gradientu w zakresie kadru; typ 1 (1:3) zostawić dla grubej warstwy Ns/Sc bez mgły — do sprawdzenia na zdjęciu typu rybie oko (luka)"),
  ("rekomendacja_niebo", "zmierzch przy zachmurzeniu całkowitym: barwa nieba", "jednolity niebieskoszary → granat; bez pasa pomarańczowego/koralowego", "",
@@ -356,6 +356,8 @@ REK = [
   "ESTIMATED", "out/imgw_sunset_cloud.csv (koniec_zm_cyw, miesiące 11, 12, 1)"),
  ("rekomendacja_niebo", "udział wieczorów pogodnych (N ≤ 2 przy końcu zmierzchu cywilnego) VI–VIII", "29–38", "%",
   "ESTIMATED", "out/imgw_sunset_cloud.csv (koniec_zm_cyw, miesiące 6, 7, 8)"),
+ ("rekomendacja_niebo", "hipoteza przyczyny „koralowego pasa”: barwa mgły = średnia radiancji nieba z 32 azymutów na wys. ok. 2,9° (SkyModel.HorizonColorExposed), więc o zmierzchu ciepły sektor słońca barwi mgłę we WSZYSTKICH kierunkach", "barwę mgły o zmierzchu liczyć bez sektora słońca (np. ±60° azymutu) albo kierunkowo; warstwa zamglenia przy horyzoncie ma być szarofioletowa/niebieskoszara", "",
+  "WORKING_VALUE", "kod: game/Assets/_Project/Rendering/Runtime/Sky/SkyModel.cs:251–261 i EnvironmentLighting.cs:136 (przeczytane, nie zmieniane, nie uruchamiane); zdjęcia: c32 (szarofioletowa warstwa przy horyzoncie pod łososiowym pasem), c13/c14/c04 (brak ciepłej barwy przy N = 8); do potwierdzenia renderem — nie sprawdzono w Unity"),
  ("rekomendacja_słońce", "azymut słońca przy końcu zmierzchu cywilnego: LP_Dusk ma 300° — odpowiada dacie", "21 IV / 21 VIII (299°)", "",
   "ESTIMATED", "out/sun_table.csv: az_konca_zm_cywilnego 299,3° (21 IV) i 299,1° (21 VIII); XI–I: 238–245°; VI: 324°"),
  ("rekomendacja_słońce", "LP_Clear (słońce 42°, az. 200°) odpowiada dacie i godzinie", "6–7 IV oraz 4–6 IX, ok. 13:24–13:30 CEST", "",

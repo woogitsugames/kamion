@@ -3,18 +3,39 @@
  "data": "2026-11-14",
  "seed": 20261114,
  "metoda_losowania": "random.Random(20261114).sample(sorted(ids), ceil(0.2*n))",
- "n_wierszy_manifestu": 627,
+ "n_wierszy_manifestu": 628,
  "n_proba": 126,
  "udzial_pct": 20.1,
- "n_PASS": 125,
- "n_FAIL": 1,
- "kadry_w_probie_obejrzane_ponownie": 7,
+ "n_PASS": 124,
+ "n_FAIL": 2,
+ "kadry_w_probie_obejrzane_ponownie": 8,
  "przebieg_1": {
   "n_PASS": 118,
   "n_FAIL": 8,
-  "opis": "pierwszy przebieg tej samej próby: 6 FAIL w kategorii imgw_zmierzch_2014_2023 (R7-373, 377, 389, 401, 405, 415) — błąd w tools_imgw.obs_at: status 8 (brak obserwacji zachmurzenia w terminach nocnych 19–05 UTC od IV 2022) był czytany jako N = 0, co zawyżało udział N ≤ 2 latem (np. VI 44,3 → 38,1 %); poprawiono narzędzie, przeliczono out/imgw_sunset_cloud.csv i manifest; 1 FAIL R7-343 — brak procedury w audit.py (dopisano, wartość potwierdzona); 1 FAIL R7-567 — nieścisły opis kadru (poprawiony)."
+  "opis": "pierwszy przebieg tej samej próby: 6 FAIL w kategorii imgw_zmierzch_2014_2023 (R7-373, 377, 389, 401, 405, 415) — błąd w tools_imgw.obs_at: status 8 (brak obserwacji zachmurzenia w terminach nocnych 19–05 UTC od IV 2022) był czytany jako N = 0, co zawyżało udział N ≤ 2 latem (np. VI 44,3 → 38,1 %); poprawiono narzędzie, przeliczono out/imgw_sunset_cloud.csv i manifest; 1 FAIL R7-343 — brak procedury w audit.py (dopisano, wartość potwierdzona); 1 FAIL R7-567 — nieścisły opis kadru (poprawiony). Po dopisaniu wiersza R7-625 manifest ma 628 wierszy, więc próba została wylosowana ponownie tym samym seedem (przebieg 2); 4 nowe kadry w próbie obejrzano ponownie."
  },
  "uwaga": "Wynik poniżej = przebieg 2 po korektach. FAIL = stan sprzed korekty; korekty naniesiono w frames.json/manifest.csv (kolumna korekta). Liczby przeliczono niezależną ścieżką (parser pozycyjny, statistics.quantiles, astral).",
+ "dodatkowe_kontrole_poza_proba": [
+  {
+   "plik": "img/c22_20210205_170415.jpg",
+   "co": "ponownie obejrzano wycinek nieba (po 2 FAIL dotyczących gradientu jasności przy horyzoncie)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "plik": "img/c23_20231205_160127.jpg",
+   "co": "ponownie obejrzano górne 55 % panoramy",
+   "wynik": "FAIL",
+   "korekta": "jaśniejszy, bardziej niebieski pas jest nad zabudową w środkowej i prawej części, nie „po lewej”; opis poprawiony"
+  },
+  {
+   "plik": "img/pnx_f2623f76.jpg, img/c10, img/c13, img/c26, img/c27, img/c28, img/pnx_3e13253b",
+   "co": "kadry z próby przebiegu 1 (obejrzane ponownie; w przebiegu 2 w próbie pozostały: pnx_3e13253b, c13, c27, c28)",
+   "wynik": "6 PASS / 1 FAIL (c13)",
+   "korekta": "jak w FRAME_REVIEW"
+  }
+ ],
+ "wniosek_z_kontroli_kadrow": "wszystkie 3 FAIL dotyczą tego samego typu zdania: subtelnego gradientu jasności nieba przy horyzoncie o zmierzchu/nocą. Zdania o BRAKU lub OBECNOŚCI ciepłego pasa potwierdziły się w 13/13 ponownie obejrzanych kadrach.",
  "wiersze": [
   {
    "id": "R7-013",
@@ -62,15 +83,6 @@
    "korekta": ""
   },
   {
-   "id": "R7-038",
-   "kategoria": "imgw_obliczone_1991-2020",
-   "przedmiot": "usłonecznienie na dobę — V (1991-2020)",
-   "wartość": "8.22",
-   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 8.219",
-   "wynik": "PASS",
-   "korekta": ""
-  },
-  {
    "id": "R7-055",
    "kategoria": "imgw_obliczone_1991-2020",
    "przedmiot": "liczba dni z mgłą — X (1991-2020)",
@@ -94,6 +106,15 @@
    "przedmiot": "liczba dni z zamgleniem — VIII (1991-2020)",
    "wartość": "18.4",
    "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 18.400",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-075",
+   "kategoria": "imgw_obliczone_1991-2020",
+   "przedmiot": "średnia wilgotność względna — IV (1991-2020)",
+   "wartość": "69.84",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 69.840",
    "wynik": "PASS",
    "korekta": ""
   },
@@ -238,6 +259,15 @@
    "przedmiot": "suma usłonecznienia — X (2014-2023)",
    "wartość": "122.7",
    "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 122.700",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-166",
+   "kategoria": "imgw_obliczone_2014-2023",
+   "przedmiot": "liczba dni z mgłą — IV (2014-2023)",
+   "wartość": "1.12",
+   "co_sprawdzono": "przeliczono ponownie własnym parserem pozycyjnym: 1.125",
    "wynik": "PASS",
    "korekta": ""
   },
@@ -391,6 +421,15 @@
    "przedmiot": "widzialność w dzień, percentyl 10 — X",
    "wartość": "4400",
    "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 4400.00",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-228",
+   "kategoria": "imgw_terminowe_2014_2023",
+   "przedmiot": "widzialność w dzień, percentyl 10 — XII",
+   "wartość": "1700",
+   "co_sprawdzono": "przeliczono ponownie (statistics.quantiles inclusive / zliczenia): 1700.00",
    "wynik": "PASS",
    "korekta": ""
   },
@@ -908,15 +947,6 @@
    "korekta": ""
   },
   {
-   "id": "R7-508",
-   "kategoria": "słońce",
-   "przedmiot": "wschód słońca 2026-09-21 (CEST) — azymut słońca w kolumnie kierunek_deg",
-   "wartość": "06:11",
-   "co_sprawdzono": "przeliczono ponownie: astral: 06:12",
-   "wynik": "PASS",
-   "korekta": ""
-  },
-  {
    "id": "R7-510",
    "kategoria": "słońce",
    "przedmiot": "koniec zmierzchu cywilnego (−6°) 2026-09-21 (CEST) — azymut słońca w kolumnie kierunek_deg",
@@ -931,15 +961,6 @@
    "przedmiot": "długość dnia 2026-09-21 (CEST)",
    "wartość": "12.29",
    "co_sprawdzono": "przeliczono ponownie: astral: 12.28 h",
-   "wynik": "PASS",
-   "korekta": ""
-  },
-  {
-   "id": "R7-517",
-   "kategoria": "słońce",
-   "przedmiot": "wysokość słońca 2026-10-21 godz. 16:00 CEST (azymut w kolumnie kierunek_deg)",
-   "wartość": "9.9",
-   "co_sprawdzono": "przeliczono ponownie: astral: wys 9.91°, az 236.73°",
    "wynik": "PASS",
    "korekta": ""
   },
@@ -980,15 +1001,6 @@
    "korekta": ""
   },
   {
-   "id": "R7-539",
-   "kategoria": "słońce",
-   "przedmiot": "wysokość słońca 2026-12-21 godz. 16:00 CET (azymut w kolumnie kierunek_deg)",
-   "wartość": "-6.8",
-   "co_sprawdzono": "przeliczono ponownie: astral: wys -6.75°, az 239.36°",
-   "wynik": "PASS",
-   "korekta": ""
-  },
-  {
    "id": "R7-540",
    "kategoria": "słońce",
    "przedmiot": "wysokość słońca 2026-12-21 godz. 20:00 CET (azymut w kolumnie kierunek_deg)",
@@ -996,15 +1008,6 @@
    "co_sprawdzono": "przeliczono ponownie: astral: wys -41.43°, az 287.01°",
    "wynik": "PASS",
    "korekta": ""
-  },
-  {
-   "id": "R7-549",
-   "kategoria": "kadr",
-   "przedmiot": "niebo/horyzont — pogodnie, Cu",
-   "wartość": "",
-   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek 3× pasa horyzontu (15–85 % szer., 45–75 % wys.); sha256 pliku zgodne",
-   "wynik": "PASS",
-   "korekta": "pas białych Cu nad horyzontem, horyzont białawo-błękitny, zalesione wzniesienia niebieskawe — zgodne"
   },
   {
    "id": "R7-554",
@@ -1016,13 +1019,31 @@
    "korekta": "zgodne; doprecyzowano: chłodna tonacja dotyczy chodnika i elewacji, piaszczysty grunt jest brunatny, dodano drzewo z rudymi liśćmi"
   },
   {
-   "id": "R7-565",
+   "id": "R7-555",
    "kategoria": "kadr",
-   "przedmiot": "niebo/horyzont — całkowite zachmurzenie Sc op (stacja: wid. 22,6 km)",
+   "przedmiot": "niebo/horyzont — po zmierzchu cywilnym",
    "wartość": "",
-   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek nieba w osi ulicy (30–75 % szer., 0–65 % wys.); sha256 pliku zgodne",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek pasa nad zabudową (cała szer., 30–62 % wys.); sha256 pliku zgodne",
+   "wynik": "FAIL",
+   "korekta": "opis „nisko nad zabudową nieco jaśniejsze i szare” nie potwierdza się: niebo jest jednolicie ciemne, jaśniejsze tylko w poświacie wokół oprawy; opis poprawiony; wniosek (brak ciepłego pasa) bez zmian"
+  },
+  {
+   "id": "R7-559",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — mgła o zmierzchu (stacja: 400 m), St neb",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek nieba i końca ulicy (20–75 % szer., 0–60 % wys.); sha256 pliku zgodne",
    "wynik": "PASS",
-   "korekta": "niebo szare z ciemniejszymi płatami, jaśniejsze nisko w osi ulicy — zgodne"
+   "korekta": "niebo jednolicie niebieskoszare, budynek zamykający ulicę blady, ciepłe okna po prawej — zgodne"
+  },
+  {
+   "id": "R7-566",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — całkowite zachmurzenie Sc op (stacja: wid. 25,9 km)",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek nieba (0–60 % szer., 0–55 % wys.); sha256 pliku zgodne",
+   "wynik": "PASS",
+   "korekta": "szare niebo o miękkiej strukturze, przy dachach po lewej jaśniejsze, bez ciepłej barwy — zgodne"
   },
   {
    "id": "R7-567",
@@ -1032,15 +1053,6 @@
    "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek 3× nieba nad dachami (0–60 % szer., 20–60 % wys.); sha256 pliku zgodne",
    "wynik": "FAIL",
    "korekta": "opis „nisko nad dachami po lewej jaśniejsze i bardziej niebieskie” nieścisły: jaśniejsza, szaroniebieska jest lewa część nieba przy poświacie latarni, reszta granatowa z fioletowym odcieniem; opis poprawiony w frames.json/manifest; wniosek (brak ciepłego pasa) bez zmian"
-  },
-  {
-   "id": "R7-577",
-   "kategoria": "kadr",
-   "przedmiot": "niebo/horyzont — opad śniegu (stacja: wid. 1200 m)",
-   "wartość": "",
-   "co_sprawdzono": "PONOWNIE obejrzano obraz: cały kadr 960 px; sha256 pliku zgodne",
-   "wynik": "PASS",
-   "korekta": "trzy samochody, budynek na końcu ulicy blady, niebo ≈ jasność śniegu — zgodne"
   },
   {
    "id": "R7-578",
@@ -1061,38 +1073,56 @@
    "korekta": "bloki i kominy w biało-czerwone pasy z dymem, słup kratowy, lekkie zamglenie — zgodne"
   },
   {
-   "id": "R7-583",
+   "id": "R7-580",
+   "kategoria": "kadr",
+   "przedmiot": "niebo/horyzont — zmierzch żeglarski, całkowite zachmurzenie Sc op, śnieg",
+   "wartość": "",
+   "co_sprawdzono": "PONOWNIE obejrzano obraz: wycinek górnej części kadru (20–80 % szer., 0–45 % wys.); sha256 pliku zgodne",
+   "wynik": "PASS",
+   "korekta": "niebo prawie czarne, latarnie ciepłe, śnieg na gałęziach — zgodne"
+  },
+  {
+   "id": "R7-584",
    "kategoria": "literatura_widzialność",
-   "przedmiot": "definicja MOR (meteorological optical range): próg transmisji",
+   "przedmiot": "próg kontrastu Koschmiedera",
+   "wartość": "0.02",
+   "co_sprawdzono": "ponownie otwarto PDF (pdftotext) i odszukano cytat dosłownie",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-587",
+   "kategoria": "literatura_widzialność",
+   "przedmiot": "zgodność wizualnej oceny widzialności w dzień z MOR",
    "wartość": "0.05",
    "co_sprawdzono": "ponownie otwarto PDF (pdftotext) i odszukano cytat dosłownie",
    "wynik": "PASS",
    "korekta": ""
   },
   {
-   "id": "R7-586",
-   "kategoria": "literatura_widzialność",
-   "przedmiot": "czarny obiekt na tle horyzontu o kontraście pozornym 0,05 jest w odległości MOR",
-   "wartość": "0.05",
-   "co_sprawdzono": "ponownie otwarto PDF (pdftotext) i odszukano cytat dosłownie",
-   "wynik": "PASS",
-   "korekta": ""
-  },
-  {
-   "id": "R7-593",
+   "id": "R7-594",
    "kategoria": "literatura_CIE",
-   "przedmiot": "CIE typ 1: stosunek luminancji horyzont/zenit i (wys. 15°)/zenit — sama gradacja",
+   "przedmiot": "CIE general sky typ 2: parametry a, b, c, d, e",
+   "wartość": "a=4.0; b=-0.7; c=2; d=-1.5; e=0.15",
+   "co_sprawdzono": "ponownie odczytano tabelę rda: a=4.0; b=-0.7; c=2; d=-1.5; e=0.15",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-595",
+   "kategoria": "literatura_CIE",
+   "przedmiot": "CIE typ 2: stosunek luminancji horyzont/zenit i (wys. 15°)/zenit — sama gradacja",
    "wartość": "0.335; 0.424",
    "co_sprawdzono": "przeliczono z tabeli rda: 0.335; 0.424",
    "wynik": "PASS",
    "korekta": ""
   },
   {
-   "id": "R7-596",
+   "id": "R7-597",
    "kategoria": "literatura_CIE",
-   "przedmiot": "CIE general sky typ 3: parametry a, b, c, d, e",
-   "wartość": "a=1.1; b=-0.8; c=0; d=-1.0; e=0.0",
-   "co_sprawdzono": "ponownie odczytano tabelę rda: a=1.1; b=-0.8; c=0; d=-1.0; e=0.0",
+   "przedmiot": "CIE typ 3: stosunek luminancji horyzont/zenit i (wys. 15°)/zenit — sama gradacja",
+   "wartość": "0.669; 0.703",
+   "co_sprawdzono": "przeliczono z tabeli rda: 0.669; 0.703",
    "wynik": "PASS",
    "korekta": ""
   },
@@ -1106,46 +1136,37 @@
    "korekta": ""
   },
   {
-   "id": "R7-603",
+   "id": "R7-606",
    "kategoria": "literatura_barwa_nieba",
-   "przedmiot": "gama barw nieba pochmurnego: pastelowa",
+   "przedmiot": "najżywsze barwy zmierzchu po stronie słońca wymagają aerozolu; dotyczy nieba BEZCHMURNEGO",
    "wartość": "",
    "co_sprawdzono": "ponownie pobrano abstrakt z OpenAlex i odszukano cytat dosłownie",
    "wynik": "PASS",
    "korekta": ""
   },
   {
-   "id": "R7-605",
-   "kategoria": "literatura_barwa_nieba",
-   "przedmiot": "zenit o zmierzchu jest niebieski dzięki absorpcji ozonu (pasmo Chappuisa)",
-   "wartość": "",
-   "co_sprawdzono": "ponownie pobrano abstrakt z OpenAlex i odszukano cytat dosłownie",
-   "wynik": "PASS",
-   "korekta": ""
-  },
-  {
-   "id": "R7-612",
-   "kategoria": "licencja",
-   "przedmiot": "warunki wykorzystania danych IMGW-PIB — cel użycia",
-   "wartość": "",
-   "co_sprawdzono": "ponownie pobrano regulamin i odszukano cytat",
-   "wynik": "PASS",
-   "korekta": ""
-  },
-  {
-   "id": "R7-618",
-   "kategoria": "rekomendacja_mgła",
-   "przedmiot": "gęstość mgły wykładniczej σ — pochmurny dzień — cały rok (N ≥ 7)",
-   "wartość": "2.20e-04",
-   "co_sprawdzono": "przeliczono ponownie: V = 13620 m, σ = 2.20e-04 1/m",
-   "wynik": "PASS",
-   "korekta": ""
-  },
-  {
-   "id": "R7-622",
+   "id": "R7-619",
    "kategoria": "rekomendacja_niebo",
-   "przedmiot": "zmierzch pogodny: ciepły pas tylko w sektorze słońca",
-   "wartość": "pastelowy brzoskwiniowy/łososiowy, nad szarofioletową warstwą przy samym horyzoncie; poza sektorem słońca błękit lub różowo-liliowy pas przeciwsłoneczny",
+   "przedmiot": "niebo pochmurne (LP_Overcast): barwa przy horyzoncie",
+   "wartość": "neutralna szarość do lekko niebieskawej; bez ciepłego pasa na żadnej wysokości słońca ≥ 0°",
+   "co_sprawdzono": "wiersz-wniosek (WORKING_VALUE/ESTIMATED): sprawdzono, że przywołane kadry i liczby istnieją w manifeście i out/",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-623",
+   "kategoria": "rekomendacja_niebo",
+   "przedmiot": "udział wieczorów bez barwnego zmierzchu (N ≥ 7 przy końcu zmierzchu cywilnego) XI–I",
+   "wartość": "79–82",
+   "co_sprawdzono": "wiersz-wniosek (WORKING_VALUE/ESTIMATED): sprawdzono, że przywołane kadry i liczby istnieją w manifeście i out/",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R7-626",
+   "kategoria": "rekomendacja_słońce",
+   "przedmiot": "azymut słońca przy końcu zmierzchu cywilnego: LP_Dusk ma 300° — odpowiada dacie",
+   "wartość": "21 IV / 21 VIII (299°)",
    "co_sprawdzono": "wiersz-wniosek (WORKING_VALUE/ESTIMATED): sprawdzono, że przywołane kadry i liczby istnieją w manifeście i out/",
    "wynik": "PASS",
    "korekta": ""

@@ -43,6 +43,15 @@ FRAME_REVIEW = {
                                     "opis „nisko nad dachami po lewej jaśniejsze i bardziej niebieskie” nieścisły: jaśniejsza, szaroniebieska "
                                     "jest lewa część nieba przy poświacie latarni, reszta granatowa z fioletowym odcieniem; opis poprawiony w frames.json/manifest; "
                                     "wniosek (brak ciepłego pasa) bez zmian"),
+    "img/pnx_c1a5e40e.jpg": ("wycinek pasa nad zabudową (cała szer., 30–62 % wys.)", "FAIL",
+                             "opis „nisko nad zabudową nieco jaśniejsze i szare” nie potwierdza się: niebo jest jednolicie ciemne, jaśniejsze tylko "
+                             "w poświacie wokół oprawy; opis poprawiony; wniosek (brak ciepłego pasa) bez zmian"),
+    "img/c04_20201115_154234.jpg": ("wycinek nieba i końca ulicy (20–75 % szer., 0–60 % wys.)", "PASS",
+                                    "niebo jednolicie niebieskoszare, budynek zamykający ulicę blady, ciepłe okna po prawej — zgodne"),
+    "img/c11_20201129_113602.jpg": ("wycinek nieba (0–60 % szer., 0–55 % wys.)", "PASS",
+                                    "szare niebo o miękkiej strukturze, przy dachach po lewej jaśniejsze, bez ciepłej barwy — zgodne"),
+    "img/c30_20210114_163737.jpg": ("wycinek górnej części kadru (20–80 % szer., 0–45 % wys.)", "PASS",
+                                    "niebo prawie czarne, latarnie ciepłe, śnieg na gałęziach — zgodne"),
     "img/c26_20210208_152622.jpg": ("cały kadr 960 px", "PASS", "trzy samochody, budynek na końcu ulicy blady, niebo ≈ jasność śniegu — zgodne"),
     "img/c27_20210109_101951.jpg": ("wycinek 3× dalszego planu (30–90 % szer., 30–65 % wys.)", "PASS",
                                     "maszt i bloki w głębi jako blade zarysy, płatki śniegu widoczne — zgodne"),
@@ -390,9 +399,19 @@ def main():
                           "(R7-373, 377, 389, 401, 405, 415) — błąd w tools_imgw.obs_at: status 8 (brak obserwacji zachmurzenia w terminach "
                           "nocnych 19–05 UTC od IV 2022) był czytany jako N = 0, co zawyżało udział N ≤ 2 latem (np. VI 44,3 → 38,1 %); "
                           "poprawiono narzędzie, przeliczono out/imgw_sunset_cloud.csv i manifest; 1 FAIL R7-343 — brak procedury w audit.py "
-                          "(dopisano, wartość potwierdzona); 1 FAIL R7-567 — nieścisły opis kadru (poprawiony)."},
+                          "(dopisano, wartość potwierdzona); 1 FAIL R7-567 — nieścisły opis kadru (poprawiony). Po dopisaniu wiersza R7-625 manifest ma 628 wierszy, "
+                          "więc próba została wylosowana ponownie tym samym seedem (przebieg 2); 4 nowe kadry w próbie obejrzano ponownie."},
            "uwaga": "Wynik poniżej = przebieg 2 po korektach. FAIL = stan sprzed korekty; korekty naniesiono w frames.json/manifest.csv (kolumna korekta). "
                     "Liczby przeliczono niezależną ścieżką (parser pozycyjny, statistics.quantiles, astral).",
+           "dodatkowe_kontrole_poza_proba": [
+               {"plik": "img/c22_20210205_170415.jpg", "co": "ponownie obejrzano wycinek nieba (po 2 FAIL dotyczących gradientu jasności przy horyzoncie)",
+                "wynik": "PASS", "korekta": ""},
+               {"plik": "img/c23_20231205_160127.jpg", "co": "ponownie obejrzano górne 55 % panoramy", "wynik": "FAIL",
+                "korekta": "jaśniejszy, bardziej niebieski pas jest nad zabudową w środkowej i prawej części, nie „po lewej”; opis poprawiony"},
+               {"plik": "img/pnx_f2623f76.jpg, img/c10, img/c13, img/c26, img/c27, img/c28, img/pnx_3e13253b", "co": "kadry z próby przebiegu 1 (obejrzane ponownie; "
+                "w przebiegu 2 w próbie pozostały: pnx_3e13253b, c13, c27, c28)", "wynik": "6 PASS / 1 FAIL (c13)", "korekta": "jak w FRAME_REVIEW"}],
+           "wniosek_z_kontroli_kadrow": "wszystkie 3 FAIL dotyczą tego samego typu zdania: subtelnego gradientu jasności nieba przy horyzoncie o zmierzchu/nocą. "
+                                        "Zdania o BRAKU lub OBECNOŚCI ciepłego pasa potwierdziły się w 13/13 ponownie obejrzanych kadrach.",
            "wiersze": res}
     json.dump(out, open(HERE / "audit_20_percent.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("PASS", n_pass, "FAIL", k - n_pass, "z", k)
