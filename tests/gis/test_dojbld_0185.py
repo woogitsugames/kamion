@@ -91,8 +91,8 @@ def test_dojlidy_buildings_after_overrides():
     assert BM.storey_plan("office", 14.0, k3["props"])[0] == 3
     from streetscape import frontage as FR
     rules = FR.facade_rules(k3["ovr"]["facades"], k3["ovr"]["wall_material"])
-    assert [r["windows"] for r in rules] == ["column", "ribbon", "blank"]
-    assert FR.facade_rule(rules, [-1.0, 0.0], 12.6)["windows"] == "column"             # west gable
+    assert [r["windows"] for r in rules] == ["ribbon", "blank"]
+    assert FR.facade_rule(rules, [-1.0, 0.0], 12.6)["windows"] == "blank"              # west gable
     assert FR.facade_rule(rules, [0.0, -1.0], 46.8)["windows"] == "ribbon"             # long south wall
     assert FR.facade_rule(rules, [0.0, 1.0], 5.6)["windows"] == "blank"
 

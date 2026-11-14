@@ -217,16 +217,15 @@ overrides:
       Photo P11-001 (review 0179 P1: "PRL plaster block with black window bands"): the block is clad in light
       silver grey panels laid vertically; three tall storeys - the window bands of the long south wall have their
       sills at 0.19 / 0.51 / 0.82 of the wall height = 2.7 / 7.2 / 11.5 m of 14 m, each band ~1.4 m high and
-      starting ~12 % in from the west corner; the west gable carries a glazed stair column at its south end and
-      otherwise small windows only (not drawn). Other walls: bands on the long ones, short ones blank
-      (not photographed, WORKING_VALUE).
+      starting ~12 % in from the west corner; the west gable carries a dark glazed strip at its south end and two
+      short window bands (not drawn: render r3 put office windows with an AC unit there - the gable is blank, as
+      the review asks). Other walls: bands on the long ones, short ones blank (not photographed, WORKING_VALUE).
     confidence: medium
     verify: owner photo session (Kuronia 3 from the cycle path); north and east walls
     set:
       storeys: 3
       wall_material: cladding_vertical_grey
       facades:
-        - {facing: W, max_len_m: 20.0, windows: column, u: 0.86, window_w_m: 1.8}
         - {facing: [N, NE, E, SE, S, SW, W, NW], min_len_m: 20.0, windows: ribbon, sill_m: 2.3, head_m: 3.6,
            spans: [[0.12, 1.0]]}
         - {facing: [N, NE, E, SE, S, SW, W, NW], min_len_m: 0.0, windows: blank}
