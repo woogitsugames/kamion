@@ -100,3 +100,31 @@ Przegląd s20 przeczytał pełny tekst Spitschan 2016 (Europe PMC PMC4895134), s
 (8) AUDYT: nowy jawny seed, ≥ 20 % wierszy, w tym ≥ 8 kadrów; każdy kadr ponownie OBEJRZANY w dniu audytu (nowe wywołanie), wynik zgodne/niezgodne z liczbą. Gdy limit wywołań się wyczerpie — STOP i WIP, nie dopisuj obserwacji z pamięci.
 W komentarzu PR #57 wklej SUROWE wyjście `git diff --stat origin/main`. NIE scalaj. Na końcu „M60-FIX gotowe” i koniec.
 ```
+
+
+## M61-FIX — P18 brud tyłu naczepy (`research/mistral-p18-trailer-soiling`)
+Przegląd: `docs/reports/REVIEW-2026-11-14-s20-mistral-m61.md`.
+
+
+```
+Repo woogitsugames/kamion. Gałąź research/mistral-p18-trailer-soiling (ISTNIEJĄCA, PR #58) — dopisujesz do niej, NIE twórz nowej. Piszesz po polsku. NIE ZMIENIAJ niczego poza research/mistral/p18-trailer-soiling/.
+
+Recenzja (docs/reports/REVIEW-2026-11-14-s20-mistral-m61.md) odrzuciła kadry: opisy nie są napisane z obrazu. Poprawki:
+
+1. USUŃ z kwalifikacji (status ODRZUCONY + powód „brak dwuskrzydłowych drzwi tylnych”): P18-138 (pusta rama kontenerowa, kabina w tle, Kalifornia, sierpień — bez śniegu), P18-160 (ściana PRZEDNIA naczepy: kanistry, skrzynki gaśnic, złącza, podpory), P18-167 (solówka z windą załadowczą), P18-171 i P18-172 (malowane klapy ciężarówek z Indii; 172 = Hajdarabad, EXIF 2022-05-15), P18-111 (winda załadowcza, pkt 4), P18-150 (drzwi rolowane — może zostać jako „drzwi rolowane, brud dolnej ramy”, ale nie w statystyce drzwi dwuskrzydłowych).
+2. PRZEKWALIFIKUJ na wzorzec CZYSTY (osobna kategoria, poza statystyką brudu): P18-107, P18-162, P18-166 (+ popraw datę 166 na EXIF 2015-06-18).
+3. P18-104 i P18-105 (eksponat muzealny, ciemna grafika, pod światło): brud drzwi NIEOCENIANY. Usuń „3 zacieki/skrzydło ~30 %” z 105 — na wycinku 1920 px zacieków nie ma. Zostaw tylko „drobne jasne plamki zaschniętych kropel na zderzaku/ramie”.
+4. P18-111: to solówka z ZAMKNIĘTĄ WINDĄ ZAŁADOWCZĄ (platforma + roleta), nie drzwi dwuskrzydłowe — status ODRZUCONY jak w pkt 1 (ewentualnie „kontekst: zima, mokra jezdnia”).
+5. P18-121: kolor = SZARY (nie brązowy). Kształt: rozproszony szary film na całej wysokości obu skrzydeł + pionowe szare zacieki przy prawej krawędzi prawego skrzydła od górnego narożnika + szara dolna rama/zderzak.
+6. P18-118: drzwi są ZAMKNIĘTE, otwarte są panele aerodynamiczne. P18-139/149/153: brud = korozja i wiek (rdzawe zacieki spod zawiasów), nie spray drogowy — osobna kategoria „rdza/wiek”; 139 i 153 to ten sam pojazd (licz raz).
+7. P18-158: dopisz to, co najważniejsze — pył na CAŁEJ wysokości drzwi (napis palcem „Sigueme vamo moler” w pyle na górnej połowie prawego skrzydła), ciemne wytarte plamy dłoni przy uchwytach rygli.
+8. DOŁÓŻ ≥ 12 NOWYCH kadrów: tylne DWUSKRZYDŁOWE drzwi naczep/skrzyń W RUCHU lub zaraz po trasie, z widocznym brudem drogowym, w tym ≥ 6 zimowych (sól, błoto) i ≥ 6 z Europy (najlepiej PL/DE/CZ/LT). Źródła: Commons (np. kategorie tylnych widoków ciężarówek i naczep, naczep w Polsce, ciężarówek zimą — sprawdź nazwy kategorii), Openverse, Panoramax. Rozdzielczość ≥ 1000 px na wysokość drzwi, żeby było widać detal.
+9. Każdy opis kadru PISZESZ SAM z obrazu (pobierz, pomniejsz ≤ 960 px, wycinek drzwi i progu w 2–3×). NIE używaj narzędzia wizyjnego z pytaniem sugerującym („czy są dwuskrzydłowe drzwi?”). Zabronione szablony zdań powtarzane w wielu wierszach. W uwagach: „rozdzielczość drzwi w px”, „wycinek obejrzany: tak/nie”.
+10. Literatura: P18-002 — abstrakt mówi tylko, że duże krople mają tor balistyczny i „penetrate the wake”; nie mówi, gdzie się osadzają. Zdanie „trafiają próg i belkę” oznacz jako ekstrapolację (status ESTIMATED), nie jako treść źródła. P18-012 — próbki z Portugalii (Viana do Castelo); P18-018 — śnieg w Norwegii; oba = „kontekst, nie dane o osadzie na pojeździe”.
+11. Przelicz §4 README na NOWYM mianowniku (tylko kadry z drzwiami dwuskrzydłowymi i brudem drogowym): próg/rama, belka, lampy, film na całej wysokości (tak/nie), liczba zacieków na skrzydło (mediana, n), skąd startują, wycierki (tak/nie), kolor słownie, sezon. Kadry czyste i „rdza/wiek” osobno.
+12. Samokontrola: ≥ 20 % LOSOWO z jawnym seedem (random.Random(20261115).sample), ponownie obejrzane PRZEZ CIEBIE obrazy wylosowanych wierszy; zapisz w audit_20_percent.json, co poprawiłeś.
+13. ZIP: mistral-p18-trailer-soiling-files-v2.zip (wszystkie kadry z manifestu, JPG ≤ 1600 px); w PR nazwa, rozmiar, sha256.
+
+KRYTERIA: ≥ 20 kadrów z dwuskrzydłowymi drzwiami tylnymi i brudem drogowym (po usunięciach), ≥ 6 zimowych, ≥ 6 europejskich; 0 szablonowych opisów; statystyka bez kadrów czystych/bez drzwi.
+ODDANIE: commit + push, komentarz w PR #58 „M61-FIX gotowe” + SUROWE `git diff --stat origin/main`. NIE scalaj.
+```

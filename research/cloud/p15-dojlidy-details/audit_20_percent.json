@@ -1,0 +1,167 @@
+{
+ "zadanie": "M58 (cloud p15-dojlidy-details)",
+ "data": "2026-11-14",
+ "seed": 20261114,
+ "metoda": "random.Random(20261114).sample(lista id w kolejności manifestu, 16) — 16 z 80 wierszy = 20,0 %",
+ "próba": [
+  "C58-004",
+  "C58-009",
+  "C58-017",
+  "C58-020",
+  "C58-031",
+  "C58-049",
+  "C58-054",
+  "C58-056",
+  "C58-057",
+  "C58-062",
+  "C58-064",
+  "C58-065",
+  "C58-071",
+  "C58-072",
+  "C58-076",
+  "C58-079"
+ ],
+ "wyniki": [
+  {
+   "id": "C58-004",
+   "parametr": "przekrój słupka",
+   "co_sprawdzono": "obraz: ponownie obejrzany wycinek ×2 kadru 20240623_124644 (3 słupki); szerokość słupka ~20 px w wycinku ×2 = ~10 px w 3840 px",
+   "wynik": "PASS",
+   "zmiana": "bez zmian"
+  },
+  {
+   "id": "C58-009",
+   "parametr": "zwis łańcucha w środku przęsła",
+   "co_sprawdzono": "obraz: ponownie obejrzany wycinek P11-063 (zwis 62–65 px przy słupku 338 px → 0,21–0,22 m) oraz wycinek pierwszego planu P11-076 (zwis górnego ~75 px, dolnego ~110 px przy słupku ~520 px → 0,17 i 0,25 m)",
+   "wynik": "POPRAWIONO",
+   "zmiana": "do uwag dopisano zakres 0,17–0,25 m z drugiego kadru"
+  },
+  {
+   "id": "C58-017",
+   "parametr": "odesłanie do zał. 4",
+   "co_sprawdzono": "cytat: pdftotext strony 79 pliku D20192311-c2.pdf — zdanie „Pozostałe sposoby i zasady… (bariery, łańcuchy itp.) zostały określone w załączniku nr 4 do rozporządzenia.” obecne, nagłówek strony „– 79 –”; link API 200",
+   "wynik": "PASS",
+   "zmiana": "bez zmian"
+  },
+  {
+   "id": "C58-020",
+   "parametr": "budowa słupka i łańcucha",
+   "co_sprawdzono": "obraz: ponownie obejrzany wycinek pierwszego planu P11-076: 2 słupki, pasy biały(krótki)-czerwony-biały-czerwony-biały, górny łańcuch czerwony→biały, dolny biały→czerwony, widoczne ogniwa",
+   "wynik": "PASS",
+   "zmiana": "bez zmian"
+  },
+  {
+   "id": "C58-031",
+   "parametr": "rozporządzalne długości (AIP)",
+   "co_sprawdzono": "dokument: ponownie obejrzana tabela karty AD 4 EPBK 2-1 (render 200 dpi): 09R/27L TORA 1350/1350, LDA 900/640; link PDF 200",
+   "wynik": "PASS",
+   "zmiana": "bez zmian"
+  },
+  {
+   "id": "C58-049",
+   "parametr": "światła / oprawy przy E końcu",
+   "co_sprawdzono": "obraz: ponownie obejrzany wycinek ortofoto końca E (0,05 m/px): 6 jasnych kwadratów w odstępach ~120 px = 6,0 m, ok. 1,2–1,5 m za krawędzią nawierzchni; widoczny też ślad usuniętego oznakowania progu",
+   "wynik": "PASS",
+   "zmiana": "bez zmian"
+  },
+  {
+   "id": "C58-054",
+   "parametr": "kąt patrzenia z ul. Dywizjonu 303 (oko 2,5 m)",
+   "co_sprawdzono": "obliczenie: przeliczono depresję i rozpiętość pionową dla 4 par (d, Δz): depresja 0,25–0,45° OK; rozpiętość 0,014–0,035°, a nie „ok. 0,03°”",
+   "wynik": "POPRAWIONO",
+   "zmiana": "wartość zmieniona na zakres 0,014–0,035° (0,9–2,1′)"
+  },
+  {
+   "id": "C58-056",
+   "parametr": "wały ziemne wzdłuż pasa (NMT 2018)",
+   "co_sprawdzono": "obraz: ponownie obejrzany wycinek ortofoto 0,1 m/px na N od pasa: płaski pas rzadkiej trawy i gołej ziemi, bez cieni i skarp; link WMS 200",
+   "wynik": "PASS",
+   "zmiana": "bez zmian"
+  },
+  {
+   "id": "C58-057",
+   "parametr": "kadr z ul. Dywizjonu 303 w stronę lotniska — co widać",
+   "co_sprawdzono": "obraz: ponownie obejrzany kadr 20230814_175446 (960 px): jezdnia, pas zieleni, droga rowerowa, chodnik z kostki, zielone ogrodzenie po prawej, trawa, las, latarnie dwuramienne po lewej; strona Commons 200",
+   "wynik": "PASS",
+   "zmiana": "bez zmian"
+  },
+  {
+   "id": "C58-062",
+   "parametr": "typ",
+   "co_sprawdzono": "obraz: ponownie obejrzany wycinek narożnika ogrodzenia (20230814_174819): pewne 2 przetłoczenia (przy górze i ~0,9 m niżej), dół w trawie — wcześniejsze „3 przetłoczenia” było nadinterpretacją",
+   "wynik": "POPRAWIONO",
+   "zmiana": "uwagi: „pewne są 2 przetłoczenia…, liczba łącznie UNVERIFIED”"
+  },
+  {
+   "id": "C58-064",
+   "parametr": "wysokość",
+   "co_sprawdzono": "obraz: ten sam wycinek: rozstaw słupków 722 px, panel 485 px od linii trawy, wierzch słupka ~570 px nad linią trawy → 1,68 m i 1,97 m przy module 2,5 m (założenie); strona Commons chwilowo 429 (limit), plik potwierdzony przez API imageinfo",
+   "wynik": "PASS",
+   "zmiana": "bez zmian (założenie modułu 2,5 m pozostaje WORKING_VALUE)"
+  },
+  {
+   "id": "C58-065",
+   "parametr": "tablice i banery",
+   "co_sprawdzono": "obraz: ponownie obejrzany kadr 20230814_174936 (960 px): 2 banery na ogrodzeniu, 2 druty nad panelami; tabliczki „LOTNISKO” w tym kadrze nie da się odczytać — pochodzi z P11-080",
+   "wynik": "POPRAWIONO",
+   "zmiana": "uwagi rozdzielają źródła: banery = P11-079, tabliczka = P11-080"
+  },
+  {
+   "id": "C58-071",
+   "parametr": "proporcja rozstaw słupków / wysokość słupka",
+   "co_sprawdzono": "obraz: ponownie obejrzany wycinek P11-005: 7 czerwonych słupków; przęsła 295/370/475 px, słupki ~197/220/255 px → proporcja 1,5/1,7/1,9",
+   "wynik": "POPRAWIONO",
+   "zmiana": "wartość zmieniona z „ok. 1,7” na „1,5–1,9, śr. ok. 1,7” + opis rozrzutu"
+  },
+  {
+   "id": "C58-072",
+   "parametr": "występowanie",
+   "co_sprawdzono": "obraz: ponownie obejrzany kadr 20200726_083613 (960 px): długie żółte przęsła z czerwonymi słupkami w pasie dzielącym i przed gmachem; strona Commons 200",
+   "wynik": "PASS",
+   "zmiana": "bez zmian"
+  },
+  {
+   "id": "C58-076",
+   "parametr": "kadr — co widać",
+   "co_sprawdzono": "obraz: ponownie obejrzany kadr 20200726_082250 (960 px): 2 tablice biało-czerwone „jodełka” na wyspie ronda, turkusowe tablice ulic, hangar, wiata, ogrodzenie; strona Commons 200",
+   "wynik": "PASS",
+   "zmiana": "bez zmian"
+  },
+  {
+   "id": "C58-079",
+   "parametr": "barrier=lift_gate",
+   "co_sprawdzono": "dane: ponownie policzono węzły barrier=lift_gate w zapisanym wyciągu OSM: 17; współrzędne 7 wymienionych węzłów porównane — 2 różniły się o 1 na 6. miejscu (zaokrąglenie); API node/4656499172 = 200",
+   "wynik": "POPRAWIONO",
+   "zmiana": "poprawiono 23.191455→23.191454 i 53.106917→53.106916"
+  }
+ ],
+ "podsumowanie": {
+  "wierszy": 80,
+  "sprawdzonych": 16,
+  "PASS": 10,
+  "POPRAWIONO": 6,
+  "obrazów_ponownie_obejrzanych": 11
+ },
+ "lista_zmian": [
+  "C58-009: do uwag dopisano zakres 0,17–0,25 m z drugiego kadru",
+  "C58-054: wartość zmieniona na zakres 0,014–0,035° (0,9–2,1′)",
+  "C58-062: uwagi: „pewne są 2 przetłoczenia…, liczba łącznie UNVERIFIED”",
+  "C58-065: uwagi rozdzielają źródła: banery = P11-079, tabliczka = P11-080",
+  "C58-071: wartość zmieniona z „ok. 1,7” na „1,5–1,9, śr. ok. 1,7” + opis rozrzutu",
+  "C58-079: poprawiono 23.191455→23.191454 i 53.106917→53.106916"
+ ],
+ "uwaga": "Obrazy Commons oglądano w wersjach commons.wikimedia.org/w/thumb.php (960 px i 3840 px), bo upload.wikimedia.org zwracał HTTP 429 (Retry-After 600) przez całą sesję; oryginały identyfikuje sha1 z API. Link do jednej strony pliku (C58-064) zwrócił 429 w chwili kontroli.",
+ "obrazy_ponownie_obejrzane": [
+  "wycinek ×2 kadru 20240623_124644",
+  "wycinek pierwszego planu kadru 20200726_082324",
+  "gugik_orto_koniecE_0.05m.jpg",
+  "kadr 20230814_175446 (960 px)",
+  "wycinek narożnika ogrodzenia z 20230814_174819",
+  "kadr 20230814_174936 (960 px)",
+  "wycinek kadru 20230814_182855",
+  "kadr 20200726_083613 (960 px)",
+  "kadr 20200726_082250 (960 px)",
+  "gugik_orto_pas_N_strona_0.1m.jpg",
+  "tabela karty AD 4 EPBK 2-1 (render PDF)"
+ ]
+}

@@ -1,0 +1,714 @@
+{
+ "podsumowanie": {
+  "seed": 20261114,
+  "metoda": "random.Random(20261114).sample(range(277), 56) po indeksach wierszy manifestu (kolejność z pliku); odtworzenie: tools/audit_sample.py",
+  "wierszy_manifestu": 277,
+  "wylosowano": 56,
+  "udzial": 0.202,
+  "kadry_ponownie_obejrzane": [
+   "C149115308",
+   "C149115310",
+   "C151034273",
+   "C151034274",
+   "C151034276",
+   "C151034277",
+   "C151034278",
+   "C151034280",
+   "C151034281",
+   "C151034282",
+   "C151034286",
+   "C151034287",
+   "C93999621",
+   "C94000148",
+   "C94000344",
+   "PX24",
+   "PX30",
+   "PX35",
+   "PX37"
+  ],
+  "wiersze_poprawione_opis_kadru": [
+   "C68-195",
+   "C68-199",
+   "C68-211",
+   "C68-234",
+   "C68-255"
+  ],
+  "wiersze_poprawione_url": [
+   "C68-013",
+   "C68-019",
+   "C68-029",
+   "C68-075",
+   "C68-077",
+   "C68-079",
+   "C68-092",
+   "C68-094",
+   "C68-102",
+   "C68-108",
+   "C68-109",
+   "C68-113",
+   "C68-118",
+   "C68-122",
+   "C68-123",
+   "C68-124",
+   "C68-135",
+   "C68-139",
+   "C68-145",
+   "C68-157",
+   "C68-162",
+   "C68-163",
+   "C68-164",
+   "C68-165"
+  ],
+  "lista_zmian": [
+   "PX30: POPRAWKA: doprecyzowano znak (żółty trójkąt z jeleniem A-18b z tabliczką zamiast „znak ostrzegawczy”)",
+   "PX35: POPRAWKA: dodano świerk w drugim piętrze (widoczny na wycinku z pełnej rozdzielczości)",
+   "C149115308: POPRAWKA: dopisano dwa jasne auta z prawej",
+   "C151034278: POPRAWKA: gatunek krzewu na pierwszym planie zmieniono z „leszczyna (ESTIMATED)” na „leszczyna lub lipa — UNVERIFIED”",
+   "C151034287: POPRAWKA: skrajne drzewo po prawej ma liście jak dąb (nie klon) — zmieniono opis i pole gatunku",
+   "url_źródła wierszy CHM (wysokość/krawędź/obszar-krawędź, łącznie 109 wierszy w manifeście, 24 w próbie): wskazywał katalog opendata (HTTP 404) → zmieniono na URL arkusza NMPT N-34-107-C-b-4-3 (HTTP 206); pełna lista arkuszy w sources.md",
+   "url_źródła wierszy BDL poza LP: usunięto dopisek tekstowy z pola URL (przeniesiony do uwag)"
+  ],
+  "bdl_ponownie_pobrane": 7,
+  "nmpt_ponowne_odczyty": 4,
+  "linki_po_poprawce": {
+   "206": 24,
+   "200": 32
+  },
+  "uwagi": [
+   "Ponowny odczyt NMPT: stacja środkowa po tej samej stronie obiektu (dopasowanie po drodze i stronie, nie po wydzieleniu) — C68-075 i C68-079 trafiły w ten sam punkt.",
+   "Kod 206 = OK (zapytanie z nagłówkiem Range); 429 przy Commons = limit zapytań Wikimedia dla wspólnego adresu wyjściowego, nie błąd adresu."
+  ]
+ },
+ "wiersze": [
+  {
+   "id": "C68-013",
+   "kategoria": "obszar",
+   "element": "K2 Las Zwierzyniecki z Lasem Komunalnym",
+   "parametr": "długość krawędzi lasu widocznej z: ul. Dywizjonu 303, strona W",
+   "link_http": 206,
+   "sprawdzenie": "wiersz profilu zbiorczego — porównanie z data/chm_profile_mean.json",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-014",
+   "kategoria": "obszar",
+   "element": "K3 zadrzewienie olszowo-osikowe na N/NW od lotniska (OSM natural=scrub)",
+   "parametr": "powierzchnia obiektu OSM",
+   "link_http": 200,
+   "sprawdzenie": "HTTP OSM API 0.6 dla obiektu (istnienie, tagi)",
+   "http": 200,
+   "odczyt": [
+    "k=\"natural\" v=\"scrub\""
+   ],
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-019",
+   "kategoria": "obszar",
+   "element": "K3 zadrzewienie olszowo-osikowe na N/NW od lotniska (OSM natural=scrub)",
+   "parametr": "długość krawędzi lasu widocznej z: ul. Ciołkowskiego, strona SE",
+   "link_http": 206,
+   "sprawdzenie": "wiersz profilu zbiorczego — porównanie z data/chm_profile_mean.json",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-029",
+   "kategoria": "obszar",
+   "element": "K5 pas brzozowy między ul. Mickiewicza a E krawędzią lotniska",
+   "parametr": "długość krawędzi lasu widocznej z: granica lotniska (OSM aeroway=aerodrome), str",
+   "link_http": 206,
+   "sprawdzenie": "wiersz profilu zbiorczego — porównanie z data/chm_profile_mean.json",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-032",
+   "kategoria": "gatunek",
+   "element": "K1 Las Solnicki — wszystkie drzewostany LP w oknie",
+   "parametr": "wysokość gat. panującego, średnia ważona powierzchnią (BDL)",
+   "link_http": 200,
+   "sprawdzenie": "wiersz zbiorczy/poza LP — przeliczenie z data/*.csv",
+   "odczyt": "przeliczono w build_manifest.py z plików CSV; wartości bez zmian",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-033",
+   "kategoria": "gatunek",
+   "element": "BDL 01-08-1-09-143 -a -01 (K1/K2, LP)",
+   "parametr": "skład: udział·gatunek(wiek [lat], H [m], pierśnica [cm])",
+   "link_http": 200,
+   "sprawdzenie": "ponowne pobranie opisu taksacyjnego BDL (StandDescriptionData)",
+   "http": 200,
+   "odczyt": "9SO(162l,H26,D50) 1KL(82l,H25,D25)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-037",
+   "kategoria": "gatunek",
+   "element": "BDL 01-08-1-09-144 -c -00 (K1/K2, LP)",
+   "parametr": "skład: udział·gatunek(wiek [lat], H [m], pierśnica [cm])",
+   "link_http": 200,
+   "sprawdzenie": "ponowne pobranie opisu taksacyjnego BDL (StandDescriptionData)",
+   "http": 200,
+   "odczyt": "8SO(57l,H24,D21) 2DB(57l,H23,D20)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-046",
+   "kategoria": "gatunek",
+   "element": "BDL 01-08-1-09-152 -g -00 (K1/K2, LP)",
+   "parametr": "skład: udział·gatunek(wiek [lat], H [m], pierśnica [cm])",
+   "link_http": 200,
+   "sprawdzenie": "ponowne pobranie opisu taksacyjnego BDL (StandDescriptionData)",
+   "http": 200,
+   "odczyt": "6OL(87l,H26,D33) 3BRZ(87l,H29,D32) 1OL(69l,H23,D26)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-047",
+   "kategoria": "gatunek",
+   "element": "BDL 01-08-1-09-152 -i -00 (K1/K2, LP)",
+   "parametr": "skład: udział·gatunek(wiek [lat], H [m], pierśnica [cm])",
+   "link_http": 200,
+   "sprawdzenie": "ponowne pobranie opisu taksacyjnego BDL (StandDescriptionData)",
+   "http": 200,
+   "odczyt": "4SO(64l,H25,D28) 2BRZ(64l,H25,D26) 2DB(64l,H22,D23) 2MD(64l,H30,D33)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-048",
+   "kategoria": "gatunek",
+   "element": "BDL 01-08-1-09-152 -j -00 (K1/K2, LP)",
+   "parametr": "skład: udział·gatunek(wiek [lat], H [m], pierśnica [cm])",
+   "link_http": 200,
+   "sprawdzenie": "ponowne pobranie opisu taksacyjnego BDL (StandDescriptionData)",
+   "http": 200,
+   "odczyt": "5SO(77l,H29,D31) 3DB(77l,H28,D32) 2ŚW(77l,H31,D38)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-050",
+   "kategoria": "gatunek",
+   "element": "BDL 01-08-1-09-162 -a -00 (K1/K2, LP)",
+   "parametr": "skład: udział·gatunek(wiek [lat], H [m], pierśnica [cm])",
+   "link_http": 200,
+   "sprawdzenie": "ponowne pobranie opisu taksacyjnego BDL (StandDescriptionData)",
+   "http": 200,
+   "odczyt": "9SO(76l,H28,D36) 1DB(101l,H27,D43)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-057",
+   "kategoria": "gatunek",
+   "element": "BDL 01-08-1-09-163 -b -00 (K1/K2, LP)",
+   "parametr": "skład: udział·gatunek(wiek [lat], H [m], pierśnica [cm])",
+   "link_http": 200,
+   "sprawdzenie": "ponowne pobranie opisu taksacyjnego BDL (StandDescriptionData)",
+   "http": 200,
+   "odczyt": "4SO(65l,H26,D29) 3ŚW(65l,H27,D30) 1MD(65l,H29,D36) 1DB(65l,H23,D26) 1ŚW(50l,H18,D19)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-067",
+   "kategoria": "gatunek",
+   "element": "BDL B610110022-0424 -d -00 (poza LP, gminne)",
+   "parametr": "skład: udział·gatunek(wiek [lat], H [m], pierśnica [cm])",
+   "link_http": 200,
+   "sprawdzenie": "wiersz zbiorczy/poza LP — przeliczenie z data/*.csv",
+   "odczyt": "przeliczono w build_manifest.py z plików CSV; wartości bez zmian",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-075",
+   "kategoria": "krawędź",
+   "element": "granica lotniska, strona S: BDL B610110022-0424 -r 00",
+   "parametr": "odległość osi drogi/granicy lotniska → ściana lasu (okap koron ≥5 m): mediana",
+   "link_http": 206,
+   "sprawdzenie": "ponowny odczyt NMPT (WCS, 4×4 komórki 0,5 m) i NMT (WCS 2×2 m) w punkcie 10 m za ścianą środkowej stacji odcinka; porównanie z wartością z kafli użytych w obliczeniach",
+   "http": [
+    200,
+    200
+   ],
+   "punkt_EPSG2180": [
+    778919,
+    589496
+   ],
+   "nmpt_2025_wcs_min_max": [
+    162.8,
+    167.93
+   ],
+   "nmt_wcs_min_max": [
+    152.57,
+    152.67
+   ],
+   "chm_bezlistny_z_kafli": 10.21,
+   "chm_ulistniony_z_arkusza": 18.51,
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-077",
+   "kategoria": "krawędź",
+   "element": "granica lotniska, strona NE: BDL 01-08-1-09-149 a 99",
+   "parametr": "odległość osi drogi/granicy lotniska → ściana lasu (okap koron ≥5 m): mediana",
+   "link_http": 206,
+   "sprawdzenie": "ponowny odczyt NMPT (WCS, 4×4 komórki 0,5 m) i NMT (WCS 2×2 m) w punkcie 10 m za ścianą środkowej stacji odcinka; porównanie z wartością z kafli użytych w obliczeniach",
+   "http": [
+    200,
+    200
+   ],
+   "punkt_EPSG2180": [
+    780291,
+    589902
+   ],
+   "nmpt_2025_wcs_min_max": [
+    161.54,
+    171.77
+   ],
+   "nmt_wcs_min_max": [
+    157.74,
+    157.84
+   ],
+   "chm_bezlistny_z_kafli": 9.49,
+   "chm_ulistniony_z_arkusza": 16.57,
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-079",
+   "kategoria": "krawędź",
+   "element": "granica lotniska, strona S: PTLZ 2BE4B432-6C60",
+   "parametr": "odległość osi drogi/granicy lotniska → ściana lasu (okap koron ≥5 m): mediana",
+   "link_http": 206,
+   "sprawdzenie": "ponowny odczyt NMPT (WCS, 4×4 komórki 0,5 m) i NMT (WCS 2×2 m) w punkcie 10 m za ścianą środkowej stacji odcinka; porównanie z wartością z kafli użytych w obliczeniach",
+   "http": [
+    200,
+    200
+   ],
+   "punkt_EPSG2180": [
+    778919,
+    589496
+   ],
+   "nmpt_2025_wcs_min_max": [
+    162.8,
+    167.93
+   ],
+   "nmt_wcs_min_max": [
+    152.57,
+    152.67
+   ],
+   "chm_bezlistny_z_kafli": 10.21,
+   "chm_ulistniony_z_arkusza": 18.51,
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-092",
+   "kategoria": "wysokość",
+   "element": "ul. Ciołkowskiego, strona NW: PTLZ 2BE4B432-6C3E",
+   "parametr": "CHM (NMPT−NMT) pas 0–30 m od ściany lasu: p90",
+   "link_http": 206,
+   "sprawdzenie": "ponowny odczyt NMPT (WCS, 4×4 komórki 0,5 m) i NMT (WCS 2×2 m) w punkcie 10 m za ścianą środkowej stacji odcinka; porównanie z wartością z kafli użytych w obliczeniach",
+   "http": [
+    200,
+    200
+   ],
+   "punkt_EPSG2180": [
+    778311,
+    590656
+   ],
+   "nmpt_2025_wcs_min_max": [
+    151.62,
+    164.71
+   ],
+   "nmt_wcs_min_max": [
+    148.62,
+    148.67
+   ],
+   "chm_bezlistny_z_kafli": 14.82,
+   "chm_ulistniony_z_arkusza": 19.23,
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-094",
+   "kategoria": "wysokość",
+   "element": "ul. Ciołkowskiego, strona NW: PTLZ 146d3d47-1968",
+   "parametr": "CHM (NMPT−NMT) pas 0–30 m od ściany lasu: p90",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "24.2",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-102",
+   "kategoria": "wysokość",
+   "element": "ul. Ciołkowskiego, strona SE: PTLZ 2BE4B432-6C19",
+   "parametr": "CHM (NMPT−NMT) pas 0–30 m od ściany lasu: p90",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "21.7",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-108",
+   "kategoria": "wysokość",
+   "element": "ul. Ciołkowskiego, strona S: PTLZ 1261081e-a825",
+   "parametr": "CHM (NMPT−NMT) pas 0–30 m od ściany lasu: p90",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "21.6",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-109",
+   "kategoria": "krawędź",
+   "element": "ul. Ciołkowskiego, strona S: PTLZ 1261081e-a825",
+   "parametr": "odległość osi drogi/granicy lotniska → ściana lasu (okap koron ≥5 m): mediana",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "16.0",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-113",
+   "kategoria": "krawędź",
+   "element": "ul. Mickiewicza, strona NE: BDL 01-08-1-09-149 a 99",
+   "parametr": "odległość osi drogi/granicy lotniska → ściana lasu (okap koron ≥5 m): mediana",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "10.0",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-118",
+   "kategoria": "wysokość",
+   "element": "ul. Mickiewicza, strona NE: BDL 01-08-1-09-151 b 00",
+   "parametr": "CHM (NMPT−NMT) pas 0–30 m od ściany lasu: p90",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "27.6",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-122",
+   "kategoria": "wysokość",
+   "element": "ul. Mickiewicza, strona SW: BDL 01-08-1-09-163 a 00",
+   "parametr": "CHM (NMPT−NMT) pas 0–30 m od ściany lasu: p90",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "26.4",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-123",
+   "kategoria": "krawędź",
+   "element": "ul. Mickiewicza, strona SW: BDL 01-08-1-09-163 a 00",
+   "parametr": "odległość osi drogi/granicy lotniska → ściana lasu (okap koron ≥5 m): mediana",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "6.5",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-124",
+   "kategoria": "wysokość",
+   "element": "ul. Mickiewicza, strona SW: BDL 01-08-1-09-163 h 00",
+   "parametr": "CHM (NMPT−NMT) pas 0–30 m od ściany lasu: p90",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "24.6",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-135",
+   "kategoria": "krawędź",
+   "element": "ul. Mickiewicza, strona NE: BDL 01-08-1-09-162 b 00",
+   "parametr": "odległość osi drogi/granicy lotniska → ściana lasu (okap koron ≥5 m): mediana",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "6.5",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-139",
+   "kategoria": "krawędź",
+   "element": "ul. Mickiewicza, strona SW: BDL 01-08-1-09-163 c 00",
+   "parametr": "odległość osi drogi/granicy lotniska → ściana lasu (okap koron ≥5 m): mediana",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "7.0",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-145",
+   "kategoria": "krawędź",
+   "element": "ul. Mickiewicza, strona NE: BDL 01-08-1-09-151 a 00",
+   "parametr": "odległość osi drogi/granicy lotniska → ściana lasu (okap koron ≥5 m): mediana",
+   "link_http": 206,
+   "sprawdzenie": "porównanie z data/chm_edges.csv (ponowny odczyt wiersza odcinka)",
+   "odczyt": "47.5",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-157",
+   "kategoria": "krawędź",
+   "element": "profil poprzeczny ściany lasu — wszystkie odcinki łącznie",
+   "parametr": "CHM w odległości -1 m od okapu (− = przed lasem): mediana",
+   "link_http": 206,
+   "sprawdzenie": "przeliczenie z plików pośrednich (complexes.json / horizon_dist.json / opis kadru — patrz audyt obrazów)",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-162",
+   "kategoria": "krawędź",
+   "element": "profil poprzeczny ściany lasu — wszystkie odcinki łącznie",
+   "parametr": "CHM w odległości +5 m od okapu (− = przed lasem): mediana",
+   "link_http": 206,
+   "sprawdzenie": "przeliczenie z plików pośrednich (complexes.json / horizon_dist.json / opis kadru — patrz audyt obrazów)",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-163",
+   "kategoria": "krawędź",
+   "element": "profil poprzeczny ściany lasu — wszystkie odcinki łącznie",
+   "parametr": "CHM w odległości +8 m od okapu (− = przed lasem): mediana",
+   "link_http": 206,
+   "sprawdzenie": "przeliczenie z plików pośrednich (complexes.json / horizon_dist.json / opis kadru — patrz audyt obrazów)",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-164",
+   "kategoria": "krawędź",
+   "element": "profil poprzeczny ściany lasu — wszystkie odcinki łącznie",
+   "parametr": "CHM w odległości +12 m od okapu (− = przed lasem): mediana",
+   "link_http": 206,
+   "sprawdzenie": "przeliczenie z plików pośrednich (complexes.json / horizon_dist.json / opis kadru — patrz audyt obrazów)",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-165",
+   "kategoria": "krawędź",
+   "element": "profil poprzeczny ściany lasu — wszystkie odcinki łącznie",
+   "parametr": "CHM w odległości +20 m od okapu (− = przed lasem): mediana",
+   "link_http": 206,
+   "sprawdzenie": "przeliczenie z plików pośrednich (complexes.json / horizon_dist.json / opis kadru — patrz audyt obrazów)",
+   "wynik": "POPRAWIONO (url_źródła)"
+  },
+  {
+   "id": "C68-188",
+   "kategoria": "kadr",
+   "element": "DK19, młody bór sosnowy tuż przy poboczu",
+   "parametr": "kadr: krawędź",
+   "link_http": 200,
+   "kadr": "PX24",
+   "ponowne_obejrzenie": "Read: wycinek z pełnej rozdzielczości — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-189",
+   "kategoria": "krawędź",
+   "element": "DK19, młody bór sosnowy tuż przy poboczu",
+   "parametr": "wysokość ściany lasu z kadru",
+   "link_http": 200,
+   "kadr": "PX24",
+   "ponowne_obejrzenie": "Read: wycinek z pełnej rozdzielczości — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-195",
+   "kategoria": "horyzont",
+   "element": "DK19, kępy lasu za polem",
+   "parametr": "kształt i ton linii lasu na horyzoncie",
+   "link_http": 200,
+   "kadr": "PX30",
+   "ponowne_obejrzenie": "Read: wycinek z pełnej rozdzielczości — POPRAWKA: doprecyzowano znak (żółty trójkąt z jeleniem A-18b z tabliczką zamiast „znak ostrzegawczy”)",
+   "wynik": "POPRAWIONO"
+  },
+  {
+   "id": "C68-199",
+   "kategoria": "kadr",
+   "element": "DK19, brzozy i sosny przy rowie",
+   "parametr": "kadr: krawędź",
+   "link_http": 200,
+   "kadr": "PX35",
+   "ponowne_obejrzenie": "Read: wycinek z pełnej rozdzielczości — POPRAWKA: dodano świerk w drugim piętrze (widoczny na wycinku z pełnej rozdzielczości)",
+   "wynik": "POPRAWIONO"
+  },
+  {
+   "id": "C68-204",
+   "kategoria": "krawędź",
+   "element": "DK19, stare sosny z podszytem",
+   "parametr": "szerokość płaszcza krzewów/młodnika z kadru",
+   "link_http": 200,
+   "kadr": "PX37",
+   "ponowne_obejrzenie": "Read: wycinek z pełnej rozdzielczości — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-211",
+   "kategoria": "krawędź",
+   "element": "Mickiewicza — skraj lasu, kierunek miasto",
+   "parametr": "wysokość ściany lasu z kadru",
+   "link_http": 200,
+   "kadr": "C151034287",
+   "ponowne_obejrzenie": "Read: wycinek z pełnej rozdzielczości — POPRAWKA: skrajne drzewo po prawej ma liście jak dąb (nie klon) — zmieniono opis i pole gatunku",
+   "wynik": "POPRAWIONO"
+  },
+  {
+   "id": "C68-216",
+   "kategoria": "kadr",
+   "element": "Mickiewicza — skraj lasu z bliska (podszyt)",
+   "parametr": "kadr: detal",
+   "link_http": 200,
+   "kadr": "C151034286",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-217",
+   "kategoria": "kadr",
+   "element": "Mickiewicza — pnie przy krawędzi i młodnik",
+   "parametr": "kadr: krawędź",
+   "link_http": 200,
+   "kadr": "C151034282",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-219",
+   "kategoria": "krawędź",
+   "element": "Mickiewicza — pnie przy krawędzi i młodnik",
+   "parametr": "szerokość płaszcza krzewów/młodnika z kadru",
+   "link_http": 200,
+   "kadr": "C151034282",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-221",
+   "kategoria": "krawędź",
+   "element": "Mickiewicza — brzozy i świerki / zwarty młodnik",
+   "parametr": "wysokość ściany lasu z kadru",
+   "link_http": 200,
+   "kadr": "C151034281",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-225",
+   "kategoria": "krawędź",
+   "element": "Mickiewicza — sosny i świerki, okap nad drogą rowerową",
+   "parametr": "szerokość płaszcza krzewów/młodnika z kadru",
+   "link_http": 200,
+   "kadr": "C151034280",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-226",
+   "kategoria": "kadr",
+   "element": "Mickiewicza — przystanek w lesie, znak A-18b",
+   "parametr": "kadr: krawędź",
+   "link_http": 200,
+   "kadr": "C151034276",
+   "ponowne_obejrzenie": "Read: wycinek z pełnej rozdzielczości — zgodny (wycinek 3× znaku: A-18b + tabliczka „1,0 km” potwierdzone)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-228",
+   "kategoria": "krawędź",
+   "element": "Mickiewicza — przystanek w lesie, znak A-18b",
+   "parametr": "szerokość płaszcza krzewów/młodnika z kadru",
+   "link_http": 200,
+   "kadr": "C151034276",
+   "ponowne_obejrzenie": "Read: wycinek z pełnej rozdzielczości — zgodny (wycinek 3× znaku: A-18b + tabliczka „1,0 km” potwierdzone)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-230",
+   "kategoria": "krawędź",
+   "element": "Mickiewicza — przejście, las na skarpie",
+   "parametr": "wysokość ściany lasu z kadru",
+   "link_http": 200,
+   "kadr": "C151034274",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-233",
+   "kategoria": "kadr",
+   "element": "Las Solnicki — krzyż-pomnik w lesie (podszyt przy sośnie)",
+   "parametr": "kadr: detal",
+   "link_http": 200,
+   "kadr": "C151034273",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-234",
+   "kategoria": "kadr",
+   "element": "Las Solnicki — tablica edukacyjna zarządcy lasu",
+   "parametr": "kadr: detal",
+   "link_http": 200,
+   "kadr": "C151034278",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — POPRAWKA: gatunek krzewu na pierwszym planie zmieniono z „leszczyna (ESTIMATED)” na „leszczyna lub lipa — UNVERIFIED”",
+   "wynik": "POPRAWIONO"
+  },
+  {
+   "id": "C68-235",
+   "kategoria": "kadr",
+   "element": "Las Solnicki — tablica zarządcy w zaroślach",
+   "parametr": "kadr: detal",
+   "link_http": 200,
+   "kadr": "C151034277",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-248",
+   "kategoria": "krawędź",
+   "element": "Ciołkowskiego — świerki przy budynku i ściana lasu za jezdnią",
+   "parametr": "szerokość płaszcza krzewów/młodnika z kadru",
+   "link_http": 200,
+   "kadr": "C94000148",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-249",
+   "kategoria": "kadr",
+   "element": "Ciołkowskiego (W) — bór sosnowy po obu stronach",
+   "parametr": "kadr: krawędź",
+   "link_http": 200,
+   "kadr": "C93999621",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-255",
+   "kategoria": "kadr",
+   "element": "Ciołkowskiego — ściana Lasu Solnickiego w poprzek jezdni (lato)",
+   "parametr": "kadr: krawędź",
+   "link_http": 200,
+   "kadr": "C149115308",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — POPRAWKA: dopisano dwa jasne auta z prawej",
+   "wynik": "POPRAWIONO"
+  },
+  {
+   "id": "C68-259",
+   "kategoria": "krawędź",
+   "element": "Ciołkowskiego/Wiosenna — sosny za skrzyżowaniem (lato)",
+   "parametr": "wysokość ściany lasu z kadru",
+   "link_http": 200,
+   "kadr": "C149115310",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C68-276",
+   "kategoria": "horyzont",
+   "element": "Ciołkowskiego/Dywizjonu 303 — nowa jezdnia, niski horyzont drzew",
+   "parametr": "kształt i ton linii lasu na horyzoncie",
+   "link_http": 200,
+   "kadr": "C94000344",
+   "ponowne_obejrzenie": "Read: arkusz kontrolny (kafel 760 px) — zgodny",
+   "wynik": "PASS"
+  }
+ ]
+}

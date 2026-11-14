@@ -1,0 +1,30 @@
+# STATUS — R7 sky-weather-bialystok
+
+## Krok 1 (2026-11-14) — IMGW pobrane i przeliczone
+- `tools_imgw.py download` → 40 plików, 5,41 MB (`imgw_files.csv` z sha256); `compute` → `out/imgw_monthly_raw.csv`,
+  `out/imgw_monthly_normals.csv` (1991–2020 i 2014–2023), `out/imgw_hourly_visibility_cloud.csv` (87 613 terminów 2014–2023).
+- Uwaga: usłonecznienie ma braki od 2016 (status 8); liczniki dni ze zjawiskami IV 2022–XII 2023 = status 9 (brak pomiaru zjawisk).
+- NASTĘPNY KROK: `python3 -I tools_sun.py` (słońce NOAA) → `out/sun_table.csv`
+
+## Krok 2 — słońce (NOAA) policzone
+- `tools_sun.py` → `out/sun_table.csv` (12 dat × wysokość/azymut 8/12/16/20, wschód/zachód, zmierzchy, azymuty). Kontrola krzyżowa
+  z pakietem astral 3.2 (niezależna implementacja): różnice ≤ 1 min i ≤ 0,1°.
+- NASTĘPNY KROK: zdjęcia nieba — Panoramax API (bbox Białystok) + Commons API; pobranie do files/, miniatury 960 px, oglądanie.
+
+## Krok 3a — normy IMGW + literatura (częściowo)
+- `tools_normy.py` → `out/imgw_normy_1991_2020.csv` (oficjalne normy 1991–2020 z klimat.imgw.pl: temp., opad, śnieg, usłonecznienie,
+  zachmurzenie, dni pochmurne/pogodne) — zgodne z moim przeliczeniem (zachmurzenie identyczne do 0,1; usłonecznienie rok 1755,3 h).
+- `tools_imgw.py obs R M D G` — obserwacja terminowa dla godziny UTC (parowanie zdjęcie ↔ stacja).
+- Literatura: WMO CIMO Guide rozdz. 9 (MOR, 0,05), tabela 15 typów CIE (pakiet rcaiman, GPL-3), abstrakty OpenAlex (Lee 2005/2008/2017, Hulburt 1953).
+- Zdjęcia: Panoramax (56 kandydatów obejrzanych na stykówce), Commons — seria CC0 z datą i godziną w nazwie.
+- NASTĘPNY KROK: kategorie Commons „<Month> <Year> in Białystok” → wybór ≥ 20 kadrów → `files/img/` → oglądanie 960 px.
+
+## Krok 3b — zdjęcia obejrzane, parowanie ze stacją
+- Obejrzano w 960 px: 8 kadrów Panoramax (2019 droga, 2026 XI osiedle) + 26 kadrów Commons (seria CC0 z godziną; 6 odrzuconych: wnętrza/plakat/parasole).
+- `tools_twilight.py` → `out/imgw_sunset_cloud.csv` (zachmurzenie przy zachodzie i końcu zmierzchu cywilnego per miesiąc).
+- NASTĘPNY KROK: `python3 -I build_manifest.py` (manifest.csv z wierszami IMGW/słońce/kadry/literatura) → fetch.py → README → audit.
+
+## Krok 4 (koniec sesji) — pakiet zamknięty
+- manifest.csv 628 wierszy; 35 kadrów; fetch.py 84 pliki / 16,98 MB OK; audit: 126 wierszy, seed 20261114, 124 PASS / 2 FAIL (skorygowane); README, sources.md gotowe.
+- Nie zrobiono: recenzji (REVIEW.md), sprawdzenia hipotezy barwy mgły w Unity, zdjęcia rybie oko, kadrów letniego dnia pochmurnego.
+- NASTĘPNY KROK: `cd /workspace/wt/sky-weather-bialystok/research/cloud2/sky-weather-bialystok && python3 -I fetch.py && python3 -I build_manifest.py && python audit.py` (weryfikacja), potem recenzja lidera.
