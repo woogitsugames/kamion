@@ -29,8 +29,9 @@ Sąsiednie zadania (nie ruszane): `dojbld-0185` (bryła/okładzina hali północ
    północnej, 14,7 m i 53,8 m od narożnika NE (namiary z kadru P11-094, ±2 m; rozmiar **UNVERIFIED, M63**).
 3. **Zacieki bez powtórzeń — `kind: facade_rules`, `runoff_shuffle: true`** (opt-in na region). Tylko siatka
    (TEXCOORD_1), bez zmiany shadera i tekstury: górna strefa ściany (4 m × skala długości) jest cięta na bloki
-   warstwy między jej „cichymi” kolumnami (10 miejsc, gdzie w ±0,25 m nie ma smugi — szew nie tnie żadnej smugi;
-   zmierzone na teksturze High: maks. 0,004 przy średniej warstwy 0,017). Bloki (1,6–4,4 m) układane w kolejności
+   warstwy między jej „cichymi” kolumnami (miejsca, gdzie w ±0,25 m nie ma smugi — szew nie tnie żadnej smugi;
+   zmierzone na teksturze High: 10 takich miejsc, maks. 0,008 przy średniej warstwy 0,017; użyte 6, bo 10 bloków
+   dawało +30 % trójkątów LOD1). Bloki (2,3–6,1 m, średnio 4 m) układane w kolejności
    z hasha budynku, nigdy ten sam dwa razy z rzędu, połowa odbita lustrzanie, każdy z własną długością smug
    (× 0,65–1,25), 20 % bloków tylko z krótkimi smugami (× 0,3). Skala u = 1 (szerokości smug bez zmian). Poniżej
    strefy smug ściana zostaje jednym quadem. LOD0 i LOD1 używają tej samej tabeli.
@@ -76,8 +77,8 @@ mieszczą się; najcięższy P11-001 (341 / 471 tys.) był 335 / 463 tys. przed 
 |---|---|---|
 | `sbs-r4/sbs-P11-005.jpg` (kamera `kuronia2_front` w pozie zdjęcia P11-005) | grafitowa hala w tle, biała przybudówka wzdłuż Kuronii, dwa ciemne bloki-ramy z jasnym polem i oknami na narożniku, długie niskie białe skrzydło z pasmem okien nad ciemnym parterem | brak czerwonej linii i daszku, tablic (świadomie), urządzeń na dachu; ramy płaskie (bez wysunięcia attyki); białe ogrodzenie panelowe z morą na pierwszym planie (zakres 0185) |
 | `sbs-r4/sbs-P11-063.jpg` | po prawej ciemna, wyższa część + niska biała zamiast jednej jasnej hali z pasem | kadr nadal przesunięty (sygnalizator w środku — zakres 0186), przez to dominanta przy krawędzi |
-| `sbs-r4/sbs-P11-094.jpg`, `view/r1-094-top-ba.jpg` | dwie bramy segmentowe na ścianie N; smugi pod attyką w nieregularnych odstępach, bez widocznych szwów | bramy bez obróbki/odbojnic; rozmiar UNVERIFIED |
-| `view/r4-runway.jpg` (`krywlany_runway`, oczy 1,7 m przy płocie, 14°) | pas = ciemna wstęga asfaltu w łące, ok. 30 px wysokości przy 1080p, las w tle | z 1,7 m oznakowania nie widać (kąt 0,3–1,0°) — tak jest też w terenie; dlatego druga kamera |
+| `sbs-r4/sbs-P11-094.jpg`, `view/r4-094-{top,gates}.jpg`, `view/r1-094-top-ba.jpg` (przed / po) | dwie bramy segmentowe na ścianie N; smugi pod attyką w nieregularnych odstępach, bez widocznych szwów | bramy bez obróbki/odbojnic; rozmiar UNVERIFIED |
+| `view/r4-runway.jpg` (`krywlany_runway`, oczy 1,7 m przy płocie, 14°) | pas = ciemna wstęga asfaltu w łące (ok. 30 px wysokości przy 1080p — szacunek z pomniejszenia, niemierzone), las w tle | z 1,7 m oznakowania nie widać (kąt 0,3–1,0°) — tak jest też w terenie; dlatego druga kamera |
 | `view/r4-runway-paint.jpg` (`krywlany_runway_paint`, 14 m nad osią, QA) | linie boczne, strzałki progu przesuniętego w osi, płyta do zawracania | asfalt pasa ma łaty materiału `asphalt_worn` (jak place) — za „zniszczony” dla pasa z 2018 r. |
 | `view/paint_{w,mid,e}.jpg` | farba z generatora nałożona na ortofoto: poprzeczki, groty, strzałki i linie zgodne co do ~1 m | „27 L” nie rysowane |
 Odrzucone renderem: kamera pasa r1 (30°, zły azymut — pas 3 px przy krawędzi), r2 (wschodnie ogrodzenie w osi pasa —
@@ -86,7 +87,7 @@ zasłania las między ogrodzeniem a płytą); bloki frontu jako jednolite grafit
 ## Walidacja
 - Ścieżka bez tabeli zacieków w `wall_with_openings` jest dosłownie starym kodem (region C bit w bit).
 - `tests/gis/test_dojind_0196.py` (10 testów): region C bez nowych rodzajów; ścieżka bez tabeli = stary quad;
-  bloki pokrywają ścianę, szwy na cichych kolumnach, ta sama kolumna tekstury co 24 m na < 10 % ściany (było 100 %);
+  bloki pokrywają ścianę, szwy na cichych kolumnach, ta sama kolumna tekstury co 24 m na < 20 % ściany (było 100 %);
   bramy (przypięcie, usunięcie okna reguły, błąd bez ściany); farba pasa w obrysie asfaltu, CCW, lift;
   dane Kuronia 2 (hala grafitowa + 5 części, bez nakładania, suma pól = BDOT ±40 m²), brak nazw firm w danych.
 
@@ -96,9 +97,14 @@ zasłania las między ogrodzeniem a płytą); bloki frontu jako jednolite grafit
     po skopiowaniu danych z main: oba pliki testów 30/30 zielone.
   - `test_road_fidelity::test_report_not_stale` — `fidelity_qa.json` regionu C nieaktualny wobec `build_world.py`
     (ta gałąź dodaje w nim kamery miejsc) → lider: `fidelity/run.py --region bialystok-industrial-c` po scaleniu.
-  - `test_export_is_deterministic` (region C) zielony.
+  - `test_export_is_deterministic` zielony: build regionu C tym kodem = sha256 każdego chunku z zacommitowanego
+    manifestu main (test porównuje świeży build z manifestem sprzed buildu).
 - EditMode (`scripts/test.ps1 -Platform EditMode`, 17:29): 581 total, **580 passed, 0 failed**, 1 skipped (Ignored).
 - Zrzut z telefonu: brak (bez adb w zadaniu) — `docs/06` §5 pkt 2 do spełnienia przez lidera przed bramką.
+
+Zdjęcia właściciela: `art-source/world/refs/` nie istnieje w repo — brak; referencje = kadry CC0 P11 i ortofoto.
+Odtworzenie liczb: `artifacts/dojind-0196/ab.py` (geometria LOD0/LOD1 z wpisami 0196 i bez), `overlay.py` (farba na
+ortofoto), `chain.ps1 -Tag rN` (build → import → render), `sbs.sh`, `tests.ps1`.
 
 ## Otwarte
 - Wysokości części Kuronia 2, rozmiar i położenie bram: UNVERIFIED do M63 / sesji zdjęciowej właściciela.
