@@ -9,3 +9,7 @@ Lokalizacja (poza gitem, research/_incoming/ jest w .gitignore): `research/_inco
 - Ulica w mieście: jednojezdniowa, zabudowa 1–2 kondygnacje, słupy z liniami napowietrznymi, drzewa iglaste.
 - Droga za miastem (2026-07-28): jednojezdniowa przez pola i las; na jednym kadrze **żółte tymczasowe oznakowanie poziome i znak C-1/nakaz jazdy prosto, obok wykopy/nasypy** — strefa budowy ekspresówki (D64).
 Użycie: kafel/korytarz Knyszyn (ADR 0203+), kalibracja rynku i strefy budowy.
+
+## DK65 Białystok → Knyszyn (otrzymane 14.11.2026)
+Lokalizacja: `research/_incoming/owner-dk65-photos-2026-11-14/` — 10 JPG (1536 px), bez EXIF/GPS; daty z nazw: 2026-07-27 rano i po południu, 2026-07-28 (2 kadry pokrywają się z paczką Knyszyn: 20260728_072231/233). Właściciel: trasa = **DK65 Białystok – Knyszyn**.
+Treść (lider): jednojezdniowa droga 2×1 pas przez pola i bory sosnowe; bariery ochronne na odcinkach; liczne place budowy ekspresówki tuż przy drodze (hałdy ziemi, wykopy, koparki, piasek); znaki tymczasowe (B-33/ograniczenia na tarczach, nakaz C-? „prosto”), żółte tymczasowe oznakowanie poziome na fragmencie; latem — zboża, łąki. Kadry z wnętrza auta (kokpit, odbicia w szybie) — do SBS kadrować drogę.

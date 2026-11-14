@@ -8,7 +8,9 @@ Cel (wersja przejezdna, D63): jeden kafel/region przylegający do obecnych (wybi
 Kolejność: (1) rozbudowa Białegostoku w stronę wylotu na Knyszyn, (2) droga do Knyszyna, (3) Knyszyn. Pierwszy agent (0203): ustal z OSM trasę ciężarówki Białystok → Knyszyn (wypisz drogi i węzły, długość), zaplanuj podział na kafle/regiony (od obecnych regionów C/Dojlidy do granicy miasta, korytarz, Knyszyn), zapisz plan w ADR 0203, a potem zbuduj z grubsza PIERWSZY kafel Białegostoku na tej trasie (przylegający do istniejących regionów, jeśli to możliwe), przejezdny. Kolejne kafle = kolejni agenci.
 
 ## AKTUALIZACJA 2 (właściciel): zwykła droga, nie ekspresówka; budowa ekspresówki przy Knyszynie
-Trasa Białystok → Knyszyn = istniejąca zwykła droga (krajowa/wojewódzka), nie droga ekspresowa. W rejonie Knyszyna trwa budowa ekspresówki: sprawdź OSM (`highway=construction`, `construction=*`, `proposed`, objazdy, daty edycji), datę ortofoto i NMT względem robót; odtwarzaj stan bieżący przejezdny, plac budowy uproszczony (WORKING_VALUE), a rozbieżności źródeł wypisz w ADR jako pytania do właściciela.
+Trasa Białystok → Knyszyn = **DK65** (potwierdził właściciel), istniejąca zwykła droga, nie droga ekspresowa. W rejonie Knyszyna trwa budowa ekspresówki: sprawdź OSM (`highway=construction`, `construction=*`, `proposed`, objazdy, daty edycji), datę ortofoto i NMT względem robót; odtwarzaj stan bieżący przejezdny, plac budowy uproszczony (WORKING_VALUE), a rozbieżności źródeł wypisz w ADR jako pytania do właściciela.
 
 ## Zdjęcia właściciela z Knyszyna
 `docs/owner/OWNER-PHOTOS-KNYSZYN.md` (pliki w research/_incoming/owner-knyszyn-photos-2026-11-14, bez EXIF/GPS; prywatność — patrz plik). Strefa budowy z żółtym oznakowaniem tymczasowym jest na kadrach 20260728_*.
+
+Zdjęcia właściciela z DK65 (10, bez GPS): research/_incoming/owner-dk65-photos-2026-11-14 — opis w docs/owner/OWNER-PHOTOS-KNYSZYN.md.

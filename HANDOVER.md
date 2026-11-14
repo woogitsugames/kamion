@@ -105,6 +105,7 @@
 - 14.11 22:1x: **D64 (właściciel): Białystok (rozbudowa) → droga do Knyszyna → Knyszyn (miasto właściciela)**. Brief 0203 zaktualizowany: plan trasy i kafli + pierwszy kafel Białegostoku w stronę wylotu na Knyszyn, z grubsza. Obwodnica później.
 - 14.11 22:2x: właściciel: Białystok → Knyszyn **zwykłą drogą (nie ekspresówką)**; przy Knyszynie **budowa ekspresówki** — stan bieżący, plac budowy uproszczony, rozbieżności danych → pytania do właściciela (D64 uzupełnienie, brief zaktualizowany).
 - 14.11 22:3x: **zdjęcia właściciela z Knyszyna** (10 JPG, bez EXIF/GPS) → `research/_incoming/owner-knyszyn-photos-2026-11-14/`, opis i zasady prywatności `docs/owner/OWNER-PHOTOS-KNYSZYN.md` (rynek z fontanną, kamienice, ulica, droga z żółtym oznakowaniem tymczasowym = budowa ekspresówki). Brief 0203 uzupełniony.
+- 14.11 22:4x: trasa do Knyszyna = **DK65** (właściciel). Zdjęcia DK65 (10, bez GPS) → `research/_incoming/owner-dk65-photos-2026-11-14/`; wiele placów budowy ekspresówki przy drodze, oznakowanie tymczasowe. Brief 0203 i OWNER-PHOTOS-KNYSZYN.md zaktualizowane.
 - **Ostatni przydzielony ADR: 0203.** Kolejność integracji: krytycy 0181/0172 + domknięcia 0170/0184/0183 → scal (generated → --ours, overrides = suma) → JEDNA regeneracja → pytest → BuildBatch truck/trailer → EditMode → czysty APK → PSO → APK → gate3 A16 + gate12-phone. Nowe ADR 0185–0196 scalać po tej regeneracji (druga regeneracja).
 
 # STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
