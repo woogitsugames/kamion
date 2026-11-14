@@ -1,0 +1,68 @@
+id: dk65-01
+title: DK65 korytarz 01 — Szosa Knyszyńska za granicą Białegostoku (gm. Dobrzyniewo Duże)
+status: WORKING_ASSUMPTION (ADR 0205, owner D64; tile = lattice (-4,0) of the ADR 0203 plan)
+candidate: F_dk65_corridor
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 768779.0
+  ymin: 595199.0
+  xmax: 770827.0
+  ymax: 597247.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 769803.0
+  y: 596223.0
+  z: 138.38
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2002'
+products:
+  buildings.geojson: Data/Regions/dk65-01/buildings.geojson
+  ortho.json: Data/Regions/dk65-01/ortho.json
+  roads.graph.json: Data/Regions/dk65-01/roads.graph.json
+  terrain.json: Data/Regions/dk65-01/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/dk65-01/heightmap_2049.r16
+- Data/raw/derived/dk65-01/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+- id: gugik-nmt-2025-dk65-01
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2025-dk65-01.json
+  manifest_sha256: 7f78470e408457209d3140e363c9b38f63a5f0c2caffc67e1fddb433e094bf9d
+- id: gugik-orto-2024-rgb-0p25-dk65-01
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-dk65-01.json
+  manifest_sha256: 0212cbc229cfe63d08d48cb4c7bc4e8aa1b4c71a1265d2c0e6206cf1cceb167e
+- id: gugik-bdot10k-2002
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2002.json
+  manifest_sha256: 550a4ca928a47b0cdd25282a46ee71f8973fcb1f3fedca850a48508253edf143
+- id: gugik-lod1-2024-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2002.json
+  manifest_sha256: f1e73b0d1556eba660c75c3fe6340b8674b78b7d9f22d7495a9f3d12d441098d
+- id: gugik-lod2-2017-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2002.json
+  manifest_sha256: e6805b9986e80e66df4a55d0173e1cf65f002614bb49daece804d913421a9842
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region dk65-01
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region dk65-01
