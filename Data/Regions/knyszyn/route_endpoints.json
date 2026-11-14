@@ -1,0 +1,7 @@
+{
+ "provenance": "authored_override (ADR 0204): control route for cameras/QA = the D64 truck route inside this tile (ADR 0203 variant A, km 27.25-28.44)",
+ "description": "DK65 Obozowa northbound from the south tile edge (seam with knyszyn-s, ADR 0203 seam point 760986, 611583) -> roundabout DK65/DW671 -> DW671 Tykocka -> Rynek.",
+ "start_epsg2180": [760985.8, 611583.0],
+ "end_epsg2180": [761085.1, 612404.1],
+ "confidence": "high (graph boundary node on DK65; end = graph node nearest to the Rynek point of ADR 0203)"
+}

@@ -1,0 +1,68 @@
+id: knyszyn
+title: 'Knyszyn — miasto: Rynek, DW671, rondo DK65/DW671'
+status: WORKING_ASSUMPTION (ADR 0204, owner D64; tile = lattice (-8,8) of the ADR 0203 plan)
+candidate: K_knyszyn
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 760587.0
+  ymin: 611583.0
+  xmax: 762635.0
+  ymax: 613631.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 761611.0
+  y: 612607.0
+  z: 119.22
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2008'
+products:
+  buildings.geojson: Data/Regions/knyszyn/buildings.geojson
+  ortho.json: Data/Regions/knyszyn/ortho.json
+  roads.graph.json: Data/Regions/knyszyn/roads.graph.json
+  terrain.json: Data/Regions/knyszyn/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/knyszyn/heightmap_2049.r16
+- Data/raw/derived/knyszyn/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+- id: gugik-nmt-2022-knyszyn
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2022-knyszyn.json
+  manifest_sha256: 65f8127d0dfeaa41c90c21ec78d59c3f8cea5062bd6f4f42521b783e675ecf54
+- id: gugik-orto-2022-rgb-0p25-knyszyn
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2022-rgb-0p25-knyszyn.json
+  manifest_sha256: 738e328d7220372f00e76625542af5685b2eb989809ba72b71a4f338fd78a6d7
+- id: gugik-bdot10k-2008
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2008.json
+  manifest_sha256: 613ecb72f3b468d59604b3f8252430d1d219785825c0456b605fcf2df52f0d9c
+- id: gugik-lod1-2024-2008
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2008.json
+  manifest_sha256: f1fe2da30b4f907b9e0ef1c0b4ec394ca22725aab4fa4cf93387711ce699de8f
+- id: gugik-lod2-2017-2008
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2008.json
+  manifest_sha256: 91ea1bc66967fc49eb8127efe46fcedb56d6d53c7fc7d3386f12d2ba17eae2b8
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region knyszyn
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region knyszyn

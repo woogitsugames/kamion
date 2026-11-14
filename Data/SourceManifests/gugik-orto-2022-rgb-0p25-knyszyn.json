@@ -1,0 +1,78 @@
+{
+  "id": "gugik-orto-2022-rgb-0p25-knyszyn",
+  "name": "GUGiK orthophoto RGB 0.25 m, 2022-07-29, sheets covering knyszyn",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "ORTO",
+  "region": "knyszyn",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze",
+  "format": "GeoTIFF",
+  "crs": "EPSG:2180 (PL-1992)",
+  "resolution_m": 0.25,
+  "extent": "sheets intersecting bbox [760587.0, 611583.0, 762635.0, 613631.0]",
+  "usage_restriction": "visual reference + alignment QA only; not a game texture (docs/05 §3)",
+  "license": "GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)",
+  "license_status": "LEGAL_REVIEW_REQUIRED (statutory basis cited from secondary sources, not from ISAP text)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/build_region.py --region knyszyn"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151103_N-34-106-B-b-1-2.tif",
+      "godlo": "N-34-106-B-b-1-2",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-knyszyn/76751_1151103_N-34-106-B-b-1-2.tif",
+      "sha256": "7f83a9a31d91dd5911095e0fef4246b92ca277163137e54d05b6e0874f48f9d4",
+      "size_bytes": 46399486,
+      "downloaded_utc": "2026-11-14T22:11:16+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151107_N-34-106-B-b-1-4.tif",
+      "godlo": "N-34-106-B-b-1-4",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-knyszyn/76751_1151107_N-34-106-B-b-1-4.tif",
+      "sha256": "934e50ce88913a0fb7e2b2a0616363dfe0e295f0eb1a58d1ccddf81951ec160a",
+      "size_bytes": 44055430,
+      "downloaded_utc": "2026-11-14T22:11:31+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151109_N-34-106-B-b-2-1.tif",
+      "godlo": "N-34-106-B-b-2-1",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-knyszyn/76751_1151109_N-34-106-B-b-2-1.tif",
+      "sha256": "1b640e06709f48b1411c27a3403ecb81015284f52a79f7adb3b66ddc4533386b",
+      "size_bytes": 43803830,
+      "downloaded_utc": "2026-11-14T22:11:45+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151113_N-34-106-B-b-2-3.tif",
+      "godlo": "N-34-106-B-b-2-3",
+      "akt_data": "2022-07-29",
+      "akt_rok": "2022",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2023-02-08",
+      "local_path": "Data/raw/gugik/gugik-orto-2022-rgb-0p25-knyszyn/76751_1151113_N-34-106-B-b-2-3.tif",
+      "sha256": "6655d8ce4af911739c3f793124e460abc78a28a95756fb3102c2b80da8b2b70f",
+      "size_bytes": 53610874,
+      "downloaded_utc": "2026-11-14T22:12:02+00:00"
+    }
+  ]
+}
