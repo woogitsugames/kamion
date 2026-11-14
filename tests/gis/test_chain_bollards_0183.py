@@ -56,9 +56,25 @@ def test_library_has_both_prototypes_with_one_material():
 def test_triangle_budget():
     bay0, bay1, _ = CB.bay()
     post0, post1, _ = CB.post()
-    assert _tris(bay0) <= 180 and _tris(bay1) <= 40          # r3b: +32 tris of opaque chain core (174)
+    # r4: every chain quad two-faced (270 / 79); LOD1 strips vertical + horizontal
+    assert _tris(bay0) <= 280 and _tris(bay1) <= 80
     assert _tris(post0) <= 80 and _tris(post1) <= 16
-    assert _tris(bay1) < _tris(bay0) / 4
+    assert _tris(bay1) < _tris(bay0) / 3
+
+
+def test_chain_quads_are_two_faced():
+    """r4 (review P1-1): every chain face has a twin facing the other way, so no camera sees a back face."""
+    for lod in (0, 1):
+        p = CB.bay()[lod].out()[0]
+        V, T = p["V"], p["T"]
+        C = V[T]
+        chain = C[:, :, 0].min(1) > CB.POST_D_M
+        n = np.cross(C[:, 1] - C[:, 0], C[:, 2] - C[:, 0])
+        n = n[chain] / np.linalg.norm(n[chain], axis=1)[:, None]
+        cen = np.round(C[chain].mean(1), 3)
+        for k in range(len(n)):
+            twin = (np.abs(cen - cen[k]).max(1) <= 0.006) & ((n @ n[k]) < -0.99)
+            assert twin.any(), (lod, k)
 
 
 def test_post_dimensions():

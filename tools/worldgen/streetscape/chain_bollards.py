@@ -1,6 +1,6 @@
 """ADR 0183: red-white blocking posts with two chains ("słupki biało-czerwone z łańcuchem") and their authored rows.
 
-What the owner's photo P11-063 shows (Dojlidy, Kuronia; research/_incoming/mistral-p11-dojlidy-photos-v2/files):
+What photo P11-063 shows (Wikimedia Commons, CC0, Rakoon 2024-06-23) (Dojlidy, Kuronia; research/_incoming/mistral-p11-dojlidy-photos-v2/files):
 a row of slim round steel posts in red-white bands along the edge of a paved area, two chains from post to post
 (one under the cap, one at mid height), both hanging in a shallow arc, painted in long red and white stretches.
 
@@ -70,7 +70,8 @@ LINK_WIRE_M = 0.008
 LINK_PITCH_M = 0.042
 LINK_W_M = 0.030
 CARD_W_M = 0.034           # LOD0 card (link width + alpha margin)
-CORE_OFFSET_M = 0.002      # LOD0 opaque core ribbon beside the link card (r3b)
+CORE_OFFSET_M = 0.0025     # LOD0 opaque core ribbon beside the link card (r3b), both sides
+CARD_EPS_M = 0.001         # r4: front / back copies of every chain quad, 1 mm off the chain axis
 STRIP_W_M = 0.022          # LOD1 opaque strip: the apparent width in P11-063 (0.021-0.032 m), lower bound
 EYELET_M = (0.014, 0.008, 0.020)
 # colour of the chain along a bay (start fraction -> red?), upper / lower. P11-063: red and white stretches of about
@@ -103,6 +104,10 @@ UV_STRIP = {red: (U_STEEL, 1 - sum(r) / 2 * _PY) for red, r in STRIP_ROWS.items(
 
 WHITE_SRGB = (224, 223, 216)            # weathered white foil, WORKING_VALUE
 RED_SRGB = (164, 26, 26)                # RAL 3020 (FT.RAL3020_SRGB) darkened by weathering, WORKING_VALUE
+# r4 chain paint (review 0183 P1-1/P1-2): P11-063 shows a dark maroon chain, darker than the post bands, and a white
+# brighter than the paving around it. WORKING_VALUE
+CHAIN_RED_SRGB = (120, 20, 22)
+CHAIN_WHITE_SRGB = (238, 237, 231)
 STEEL_SRGB = (150, 153, 152)
 RUST_SRGB = (132, 80, 48)
 FILM_SRGB = (140, 132, 118)
@@ -147,6 +152,20 @@ def _post(m, seg, eyelets):
                     m.add(MAT, [P[i] for i in f], [(0, 1, 2), (0, 2, 3)], np.tile([U_STEEL, V_STEEL], (4, 1)))
 
 
+def _quad2(m, Q, uv, eps):
+    """r4: a two-faced quad. The material is double sided (alpha clip, _Cull 0) but URP Lit does not flip the normal
+    of a back face: render r3b looked at every chain from its back (local -y), N.V < 0 there, and the overcast sky's
+    Fresnel reflection turned the red links salmon (review 0183 P1-1: chain G/R 0.61-0.75 vs post 0.11-0.27). Each
+    face now has its own copy `eps` in front of the card along its own normal: from either side the nearer copy wins
+    the depth test and faces the camera."""
+    Q = np.asarray(Q, float)
+    nrm = np.cross(Q[1] - Q[0], Q[2] - Q[0])
+    nrm = nrm / max(1e-12, float(np.linalg.norm(nrm)))
+    uv = np.asarray(uv, float)
+    m.add(MAT, Q + nrm * eps, [(0, 1, 2), (0, 2, 3)], uv)
+    m.add(MAT, Q - nrm * eps, [(0, 2, 1), (0, 3, 2)], uv)
+
+
 def _chains(m, n, lod0):
     r = POST_D_M / 2
     x0 = r + EYELET_M[0] - 0.002
@@ -157,7 +176,7 @@ def _chains(m, n, lod0):
         P = np.column_stack([x0 + x, np.zeros(n + 1), z_att + dz])
         tl = np.sqrt(1 + slope ** 2)
         up = np.column_stack([-slope / tl, np.zeros(n + 1), 1 / tl])        # in the chain plane, across the chain
-        side = np.array([0.0, 1.0, 0.0])
+        side = np.tile([0.0, 1.0, 0.0], (n + 1, 1))
         v = s * vscale
         for j in range(n):
             f = (j + 0.5) / n
@@ -165,18 +184,20 @@ def _chains(m, n, lod0):
             w = (CARD_W_M if lod0 else STRIP_W_M) / 2
             if lod0:
                 u0, u1 = U_LINK[red][0] + _PX, U_LINK[red][1] - _PX
-                for d, dv in ((up, 0.0), (np.tile(side, (n + 1, 1)), 1.0 / PITCHES_PER_V)):
-                    m.add(MAT, [P[j] - d[j] * w, P[j] + d[j] * w, P[j + 1] + d[j + 1] * w, P[j + 1] - d[j + 1] * w],
-                          [(0, 1, 2), (0, 2, 3)],
-                          [[u0, v[j] + dv], [u1, v[j] + dv], [u1, v[j + 1] + dv], [u0, v[j + 1] + dv]])
-                # r3b opaque core (wire width, solid patch, 2 mm off the card plane: no z-fight): the hollow link
-                # card alone covers ~46 % and a chain 13 m away faded into light paving (P11-063 shows solid ropes)
-                c, wc = np.array([0.0, CORE_OFFSET_M, 0.0]), LINK_WIRE_M / 2
-                m.add(MAT, [P[j] - up[j] * wc + c, P[j] + up[j] * wc + c, P[j + 1] + up[j + 1] * wc + c,
-                            P[j + 1] - up[j + 1] * wc + c], [(0, 1, 2), (0, 2, 3)], np.tile(UV_STRIP[red], (4, 1)))
-            else:                       # opaque strip: one solid texel patch, constant UV
-                m.add(MAT, [P[j] - up[j] * w, P[j] + up[j] * w, P[j + 1] + up[j + 1] * w, P[j + 1] - up[j + 1] * w],
-                      [(0, 1, 2), (0, 2, 3)], np.tile(UV_STRIP[red], (4, 1)))
+                for d, dv in ((up, 0.0), (side, 1.0 / PITCHES_PER_V)):
+                    _quad2(m, [P[j] - d[j] * w, P[j] + d[j] * w, P[j + 1] + d[j + 1] * w, P[j + 1] - d[j + 1] * w],
+                           [[u0, v[j] + dv], [u1, v[j] + dv], [u1, v[j + 1] + dv], [u0, v[j + 1] + dv]], CARD_EPS_M)
+                # r3b opaque core (wire width, solid patch) on both sides, outside the card copies (no z-fight): the
+                # hollow link card alone covers ~46 % and a chain 13 m away faded into light paving
+                wc = LINK_WIRE_M / 2
+                _quad2(m, [P[j] - up[j] * wc, P[j] + up[j] * wc, P[j + 1] + up[j + 1] * wc, P[j + 1] - up[j + 1] * wc],
+                       np.tile(UV_STRIP[red], (4, 1)), CORE_OFFSET_M)
+            else:
+                # opaque strips, one solid texel patch: vertical + horizontal (r4, review P1-5: seen along the row the
+                # vertical strip alone is edge-on and the chain vanished on Low)
+                for d in (up, side):
+                    _quad2(m, [P[j] - d[j] * w, P[j] + d[j] * w, P[j + 1] + d[j + 1] * w, P[j + 1] - d[j + 1] * w],
+                           np.tile(UV_STRIP[red], (4, 1)), CARD_EPS_M)
 
 
 def bay():
@@ -283,7 +304,7 @@ def texture():
     sw = STEEL_COL[1] - STEEL_COL[0]
     im[:, STEEL_COL[0]:STEEL_COL[1], :3] = np.array(STEEL_SRGB, float) * (1 + 0.04 * _noise(rng, (h, sw), 1.5))[..., None]
     for red in (True, False):
-        base = np.asarray(RED_SRGB if red else WHITE_SRGB, float)
+        base = np.asarray(CHAIN_RED_SRGB if red else CHAIN_WHITE_SRGB, float)
         # flat mean colour of the lit links: a link-pitch rhythm here aliases into dashes at LOD1 distance
         r0, r1 = STRIP_ROWS[red]
         im[r0:r1, STEEL_COL[0]:STEEL_COL[1], :3] = base * 0.80
@@ -294,7 +315,7 @@ def texture():
         rgb, a = _link_texture(base, a1 - a0 - 2 * GUTTER_PX, h)
         im[:, c0:c0 + rgb.shape[1], :3] = rgb
         im[:, c0:c0 + rgb.shape[1], 3] = a * 255
-    im[:, LINK_SLOT[False][1]:, :3] = np.asarray(WHITE_SRGB, float) * 0.80     # spare: white gutter, alpha 0
+    im[:, LINK_SLOT[False][1]:, :3] = np.asarray(CHAIN_WHITE_SRGB, float) * 0.80     # spare: white gutter, alpha 0
     im[:, LINK_SLOT[False][1]:, 3] = 0
     return Image.fromarray(np.clip(im, 0, 255).astype(np.uint8), "RGBA")
 

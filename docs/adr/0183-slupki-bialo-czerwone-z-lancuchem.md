@@ -3,7 +3,7 @@
 Status: kandydat (gałąź `bollards-0183`), nie scalone. Data: 2026-11-13.
 
 ## Problem
-Agent 0179 (Dojlidy) znalazł na zdjęciu właściciela P11-063 (ul. Mickiewicza przy Kuronia) rząd biało-czerwonych
+Agent 0179 (Dojlidy) znalazł na zdjęciu P11-063 (Wikimedia Commons, CC0, Rakoon; w rejestrze `refs-commons` w `docs/LICENSES.md`) (ul. Mickiewicza przy Kuronia) rząd biało-czerwonych
 słupków blokujących połączonych dwoma łańcuchami. Biblioteka mebli (`street_props.glb`) ma tylko szary `bollard`
 Ø0,12 m i żółte U-12a / U-5a; OSM i BDOT10k nie opisują takich rzędów (`barrier=bollard` najbliżej 87 m — audyt
 Mistral p9, M50-056), więc reguła generatora nie ma z czego ich postawić.
@@ -74,7 +74,7 @@ całego pliku dałby konflikt, a `generated/*` Dojlid są poza zakresem. Lider d
     chain: true
     sources: ["research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg", "GUGiK orthophoto 2024 0.25 m"]
     reason: >-
-      Owner photo P11-063 (from the bus-stop island of ul. Mickiewicza, looking east): 8 red-white posts with two
+      Photo P11-063 (Wikimedia Commons, CC0, Rakoon, 2024-06-23, File:20240623_124644_June_2024_in_Białystok.jpg; from the bus-stop island of ul. Mickiewicza, looking east): 8 red-white posts with two
       chains on the paving behind the east kerb of the NW-bound carriageway (osm way 691820489 / 258564444), up to
       the crossing at the Kuronia corner; 8 posts = 7 bays x 1.60 m. On the orthophoto the row stands on paving at
       [780011.30, 590461.30] -> [780016.31, 590451.28]; the generated world has a grass verge there, so the line is
