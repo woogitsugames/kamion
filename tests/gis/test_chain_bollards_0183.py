@@ -99,7 +99,9 @@ def test_chains_hang_from_the_eyelets_and_reach_the_next_post(lod):
 def test_chain_uv_stays_inside_its_atlas_column():
     p = CB.bay()[0].out()[0]                                        # LOD0: alpha cards inside the link columns
     sel = p["V"][:, 0] > CB.POST_D_M
-    u = p["UV"][sel, 0]
+    core = np.isclose(p["UV"][:, 0], CB.U_STEEL)                  # r3b opaque core: solid patches only
+    assert {round(float(x), 6) for x in p["UV"][sel & core, 1]} == {round(CB.UV_STRIP[r][1], 6) for r in (True, False)}
+    u = p["UV"][sel & ~core, 0]
     assert u.min() >= CB.U_LINK[True][0] and u.max() <= CB.U_LINK[False][1]
     for red in (True, False):                                       # both paints are used along a bay
         assert np.any((u > CB.U_LINK[red][0]) & (u < CB.U_LINK[red][1]))

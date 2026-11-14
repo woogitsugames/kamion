@@ -70,6 +70,7 @@ LINK_WIRE_M = 0.008
 LINK_PITCH_M = 0.042
 LINK_W_M = 0.030
 CARD_W_M = 0.034           # LOD0 card (link width + alpha margin)
+CORE_OFFSET_M = 0.002      # LOD0 opaque core ribbon beside the link card (r3b)
 STRIP_W_M = 0.022          # LOD1 opaque strip: the apparent width in P11-063 (0.021-0.032 m), lower bound
 EYELET_M = (0.014, 0.008, 0.020)
 # colour of the chain along a bay (start fraction -> red?), upper / lower. P11-063: red and white stretches of about
@@ -168,6 +169,11 @@ def _chains(m, n, lod0):
                     m.add(MAT, [P[j] - d[j] * w, P[j] + d[j] * w, P[j + 1] + d[j + 1] * w, P[j + 1] - d[j + 1] * w],
                           [(0, 1, 2), (0, 2, 3)],
                           [[u0, v[j] + dv], [u1, v[j] + dv], [u1, v[j + 1] + dv], [u0, v[j + 1] + dv]])
+                # r3b opaque core (wire width, solid patch, 2 mm off the card plane: no z-fight): the hollow link
+                # card alone covers ~46 % and a chain 13 m away faded into light paving (P11-063 shows solid ropes)
+                c, wc = np.array([0.0, CORE_OFFSET_M, 0.0]), LINK_WIRE_M / 2
+                m.add(MAT, [P[j] - up[j] * wc + c, P[j] + up[j] * wc + c, P[j + 1] + up[j + 1] * wc + c,
+                            P[j + 1] - up[j + 1] * wc + c], [(0, 1, 2), (0, 2, 3)], np.tile(UV_STRIP[red], (4, 1)))
             else:                       # opaque strip: one solid texel patch, constant UV
                 m.add(MAT, [P[j] - up[j] * w, P[j] + up[j] * w, P[j + 1] + up[j + 1] * w, P[j + 1] - up[j + 1] * w],
                       [(0, 1, 2), (0, 2, 3)], np.tile(UV_STRIP[red], (4, 1)))
