@@ -121,6 +121,8 @@ clear) do maks. ok. 155 (152–161, poziom ściany). Pasma SE ciągłe (krótki 
 
 ## 4. Otwarte (P2, z recenzji r2)
 
+Kontynuacja: ADR 0190 (pasma SE, kolumna szczytu, maszty, „skok LOD NW” = pomyłka ściany, rury spustowe).
+
 - **NW: skok wyglądu LOD0 ↔ LOD1** — LOD0 = poziome rzędy haszowanych okien z beżowymi „roletami” („kod kreskowy” z
   40 m), LOD1 = siatka wysokich ciemnych okien podwójnych. Jeden wzór dla obu LOD-ów (np. reguła NW przez
   `facade_windows`); rolety ograniczyć do `variants` z czystym szkłem.

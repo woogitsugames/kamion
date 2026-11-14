@@ -864,7 +864,8 @@ def build_all(sign_codes, boards):
         for var in SIGNAL_VARIANTS:                   # ADR 0193: 3-chamber S-1 (placed), 2- / 1-chamber, pedestrian, cyclist
             P[f"{var}_{lit}"] = signal_head(lit, var)
     P["signal_pole"] = signal_pole()
-    P["signal_mast"] = signal_pole(S.SIGNAL_MAST_H, 6.0)
+    for name, arm in S.SIGNAL_MAST_ARMS.items():     # ADR 0172: signal_mast (6.0 m, rule) / signal_mast_9m (8.8 m)
+        P[name] = signal_pole(S.SIGNAL_MAST_H, arm)
     for name, n in SHELTER_MODULES.items():          # ADR 0162: BKM 5 / 7 / 9 m red, older 7 m graphite
         P[name] = bus_shelter_bkm(n, "red")
     P["bus_shelter_black"] = bus_shelter_bkm(3, "black")
@@ -884,6 +885,8 @@ def build_all(sign_codes, boards):
     from . import life_props as LP
     P.update(LP.build_all())
     P.update(LP.build_registered())
+    from . import chain_bollards as CB          # ADR 0183: red-white posts with chains
+    P.update(CB.prototypes())
     from . import gate3_landmarks as G3          # ADR 0125: sign assemblies registered by gate3_landmarks.build
     P.update(G3.prototypes())
     return P

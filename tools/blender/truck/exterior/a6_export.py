@@ -483,12 +483,142 @@ def light_group(pname, mname, x):
         return "FOG"
     if pname.startswith("work_lamp_lens"):
         return "WORK"
+    if pname.startswith("numlamp_lens") or pname == "rear_plate":
+        return "PLATE"       # ADR 0181: the plate lamp and the plate face it illuminates (lens style PLATE)
     return "NONE"
+
+
+# ADR 0181: lens-local frame of a lamp lens in uv1 ('Decal', unused outside the Paint slot; float32 on device: the
+# player's vertex compression mask leaves TexCoord1 uncompressed). uv1.x = W_mm + u', uv1.y = style * 256 + H_mm + v'
+# with W / H the lens size in whole millimetres (1..1023 / 1..255), u', v' = 0.02 + 0.96 * (0..1 across the lens; v up,
+# or forward for a lens that faces down). The integer part is constant over a lens, so it survives interpolation and
+# LOD decimation; floor(uv1.x) == 0 (the 0.002 default) = no lens. The shader (Kamion/Truck Exterior, Lights slot)
+# builds the optics pattern in millimetres from it: chamber gasket, LED emitters, pillow / flute / Fresnel optics,
+# corner-cube reflex, illuminated number plate.
+LENS_STYLES = ["NONE", "PILLOW", "FLUTE", "FRESNEL", "REFLEX", "PLATE"]
+
+
+def lens_style(pname, mname, grp):
+    """Tractor pieces -> lens style name (Lights-slot faces only)."""
+    if grp == "REFLEX":
+        return "REFLEX"
+    if grp == "PLATE":
+        return "PLATE" if pname == "rear_plate" else "FLUTE"
+    if mname not in ("lens_amber", "lens_red", "lens_clear"):
+        return "NONE"        # LED emitters, DRL guides, projector / reflector parts keep their plain emission
+    if pname.startswith("rear_fog_lens") or grp == "REVERSE":
+        return "FRESNEL"
+    if pname.startswith("rear_lens"):
+        return "PILLOW"
+    return "FLUTE" if grp != "NONE" else "NONE"     # side markers, cab-back markers, side repeaters
+
+
+def lens_frame(points):
+    """Lens frame from the lens vertices (vehicle frame, metres): returns (pack(co, style_name) -> uv1, thin axis).
+    Which faces take the frame: lens_face()."""
+    lo, hi = bbox(points)
+    ext = hi - lo
+    thin = min(range(3), key=lambda i: ext[i])
+    au, av = {0: (1, 2), 1: (0, 2), 2: (0, 1)}[thin]
+    w = int(min(max(round(ext[au] * 1000.0), 1), 1023))
+    h = int(min(max(round(ext[av] * 1000.0), 1), 255))
+
+    def pack(co, style):
+        u = min(max((co[au] - lo[au]) / max(ext[au], 1e-6), 0.0), 1.0)
+        v = min(max((co[av] - lo[av]) / max(ext[av], 1e-6), 0.0), 1.0)
+        return (w + 0.02 + 0.96 * u, LENS_STYLES.index(style) * 256 + h + 0.02 + 0.96 * v)
+    pack.frame = [lo[au], lo[av], ext[au], ext[av], au, av]
+    return pack, thin
+
+
+def store_lens_frame(o, pack, styles):
+    """ADR 0181 r2: keep the lens frame + dominant style on the piece (copies carry ID props into every LOD)."""
+    if pack is None or not styles:
+        return
+    st = max(set(styles), key=list(styles).count)
+    o["lens_frame"] = list(pack.frame) + [float(LENS_STYLES.index(st))]
+
+
+def fit_lens_atlas(pieces, tol=4e-4):
+    """ADR 0181 r2 (review s20 P1-2): after the atlas unwrap, fit uv0 (Atlas) = A . (u, v, 1) over the lens loops of each
+    piece (u, v = lens frame 0..1). Stored only when the lens is one affine island (max residual < tol ~ 0.4 texel of
+    a 1024 atlas), so refit_lens_uv1 can put decimated LOD vertices back into their own chamber of the atlas (Low = LOD2:
+    a red wedge of the neighbouring chamber appeared in the amber one). Returns (fitted, skipped)."""
+    fitted = skipped = 0
+    for o in pieces:
+        fr = o.get("lens_frame")
+        if fr is None or o.type != "MESH" or "Atlas" not in o.data.uv_layers:
+            continue
+        me = o.data
+        de, at = me.uv_layers["Decal"].data, me.uv_layers["Atlas"].data
+        rows, rhs = [], []
+        for li in range(len(me.loops)):
+            x, y = de[li].uv
+            if x < 1.0:
+                continue
+            rows.append((((x % 1.0) - 0.02) / 0.96, ((y % 1.0) - 0.02) / 0.96, 1.0))
+            rhs.append(tuple(at[li].uv))
+        if len(rows) < 3:
+            continue
+        M, R = np.array(rows), np.array(rhs)
+        coef, *_ = np.linalg.lstsq(M, R, rcond=None)
+        res = float(np.abs(M @ coef - R).max())
+        if res < tol:
+            o["lens_atlas"] = [float(c) for c in coef.T.flatten()]   # (au, av, a0, bu, bv, b0)
+            fitted += 1
+        else:
+            skipped += 1
+    print(f"  fit_lens_atlas: {fitted} lenses affine, {skipped} not (kept as decimated)")
+    return fitted, skipped
+
+
+def refit_lens_uv1(pieces):
+    """ADR 0181 r2 (review s20 P1-2): collapse decimation slides lens vertices in the lens plane and interpolates uv1,
+    so on LOD1/LOD2 the frame stopped being affine (egg-shaped LED cups on Low = LOD2). Re-pack uv1 of every lens loop
+    (floor(uv1.x) >= 1) from the decimated vertex position with the LOD0 frame. Returns the number of loops re-packed."""
+    n, dmax = 0, 0.0
+    for o in pieces:
+        fr = o.get("lens_frame")
+        if fr is None or o.type != "MESH" or "Decal" not in o.data.uv_layers:
+            continue
+        lo_u, lo_v, ex_u, ex_v, au, av, st = list(fr)
+        au, av, st = int(au), int(av), int(st)
+        w = int(min(max(round(ex_u * 1000.0), 1), 1023))
+        h = int(min(max(round(ex_v * 1000.0), 1), 255))
+        me = o.data
+        de = me.uv_layers["Decal"].data
+        aff = o.get("lens_atlas")
+        at = me.uv_layers["Atlas"].data if aff is not None and "Atlas" in me.uv_layers else None
+        for li, lp in enumerate(me.loops):
+            if de[li].uv[0] < 1.0:
+                continue
+            co = me.vertices[lp.vertex_index].co
+            u = min(max((co[au] - lo_u) / max(ex_u, 1e-6), 0.0), 1.0)
+            v = min(max((co[av] - lo_v) / max(ex_v, 1e-6), 0.0), 1.0)
+            new = (w + 0.02 + 0.96 * u, st * 256 + h + 0.02 + 0.96 * v)
+            dmax = max(dmax, abs(new[0] - de[li].uv[0]), abs(new[1] - de[li].uv[1]))
+            de[li].uv = new
+            if at is not None:
+                at[li].uv = (aff[0] * u + aff[1] * v + aff[2], aff[3] * u + aff[4] * v + aff[5])
+            n += 1
+    # A frame / transform mismatch would show as shifts of whole millimetres; decimation drift is a fraction of the lens.
+    print(f"  refit_lens_uv1: {n} loops, max shift {dmax:.3f} (frame units: W/H mm + 0..1)")
+    assert dmax < 2.0, "lens frame does not match the piece (transform applied after to_game_piece?)"
+    return n
+
+
+def lens_face(style, n_thin):
+    """Faces of the lens plane and its bevels take the frame. The side faces of a lens box have a degenerate coordinate
+    (they sit on the lens edge = the gasket): right for a chamber of a combination lamp (no bright rim round it), wrong
+    for a thin marker / plate-lamp strip whose side is what one sees - FLUTE side faces keep the plain emission."""
+    return style != "FLUTE" or abs(n_thin) > 0.2
 
 
 def slot_of(pname, mname):
     if mname == "lens_clear":
-        return "Lights" if pname.startswith("rear_lens") else "Glass"
+        return "Lights" if pname.startswith(("rear_lens", "numlamp_lens")) else "Glass"
+    if mname == "plate" and pname == "rear_plate":
+        return "Lights"      # ADR 0181: the rear plate is lit by the plate lamp (emission lives in the Lights slot)
     return MAT_SLOT.get(mname, "Trim")
 
 
@@ -538,6 +668,16 @@ def to_game_piece(o, gm):
     # lenses hard-coated polycarbonate 1.59 (the lens catches a stronger, crisper reflection than the windscreen)
     ior_of = {"glass": 1.52, "glass_tint": 1.52, "lens_clear": 1.59}
     face_slot = []
+    # ADR 0181: lens frame over the Lights-slot faces of the piece that carry a lens style
+    lens_of = {}
+    for p in me.polygons:
+        mn = names[p.material_index] if p.material_index < len(names) else ""
+        if slot_of(o.name, mn) == "Lights":
+            st = lens_style(o.name, mn, light_group(o.name, mn, p.center.x))
+            if st != "NONE":
+                lens_of[p.index] = st
+    pack, thin = lens_frame([me.vertices[i].co for pi in lens_of for i in me.polygons[pi].vertices])         if lens_of else (None, 0)
+    store_lens_frame(o, pack, list(lens_of.values()))
     for p in me.polygons:
         mn = names[p.material_index] if p.material_index < len(names) else ""
         sl = slot_of(o.name, mn)
@@ -561,6 +701,8 @@ def to_game_piece(o, gm):
                 u = (rect[1] - co.x) / (rect[1] - rect[0])
                 v = 0.75 + 0.25 * (co.z - rect[2]) / (rect[3] - rect[2])
                 de[li].uv = (min(max(u, 0.0), 1.0), min(max(v, 0.75), 1.0))
+            elif p.index in lens_of and lens_face(lens_of[p.index], p.normal[thin]):
+                de[li].uv = pack(me.vertices[me.loops[li].vertex_index].co, lens_of[p.index])
             else:
                 de[li].uv = (0.002, 0.002)
     at = me.uv_layers["Atlas"].data
@@ -1883,6 +2025,9 @@ def lod_pieces(master, lod, coll):
         c = copy_object(o, f"{o.name}__L{lod}", coll)
         c["part"] = o["part"]
         c["slots"] = list(o.get("slots", []))
+        for kk in ("lens_frame", "lens_atlas"):         # ADR 0181 r2: refit_lens_uv1 after decimation
+            if kk in o:
+                c[kk] = list(o[kk])
         if lod == 3:
             p = c["part"]
             if p.startswith(("DOOR_", "WIPER_")):
@@ -1984,6 +2129,7 @@ def export_lod(lod, master, mirrors, a, manifest, coll):
         ratio = decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={1: 40, 2: 16, 3: 8}[lod],
                                 lights_min={1: 0.5, 2: 0.15, 3: 0.1}[lod], round_seg=ROUND_SEGMENTS.get(lod, 0),
                                 keep=NO_DECIMATE_FAR if lod >= 2 else (), grid_lod=lod if lod in (1, 2) else 0)
+        print(f"  LOD{lod}: lens uv1 re-packed on {refit_lens_uv1(pieces)} loops (ADR 0181 r2)")
     by_part = {}
     for o in master:
         by_part.setdefault(o["part"], []).append(o)
@@ -2612,7 +2758,9 @@ def contract(tex, td):
     return {
         "name": "Kamion/TruckExterior (Shader Graph, URP Lit opaque; Glass = transparent; MirrorRT = unlit RT)",
         "uv0 'Atlas'": "unique atlas UV per slot (right wheels + right caliper reuse the left wheels' UVs mirrored)",
-        "uv1 'Decal'": "Paint slot only: decal atlas UV (T_Ext_Decal); (0.002, 0.002) = transparent texel elsewhere",
+        "uv1 'Decal'": "Paint slot: decal atlas UV (T_Ext_Decal); (0.002, 0.002) = transparent texel elsewhere. Lights "
+                       "slot (ADR 0181): lens frame, x = W_mm + u', y = style * 256 + H_mm + v' (u', v' = 0.02 + 0.96 * "
+                       "0..1 across the lens; styles = lens_styles); floor(x) = 0 -> no lens",
         "uv2 'Data'": "x = light group id (light_groups), y = emissive mask (1 on lamp emitters); 0 elsewhere",
         "color 'Col'": "rgb: sRGB-encoded tint for Glass (windscreen green, lens clear), white elsewhere; a: IOR - 1 of "
                        "the transparent surface (0.52 laminated glass, 0.59 polycarbonate lamp lens; 1 elsewhere). "
@@ -2640,6 +2788,7 @@ def contract(tex, td):
                                       "(0.80, 0.86, 0.84, 0.22), smoothness 0.95"},
         "_DirtColor": list(DUST),
         "light_groups": {i: g for i, g in enumerate(LIGHT_GROUPS)},
+        "lens_styles": {i: g for i, g in enumerate(LENS_STYLES)},
         "light_colours_linear": LIGHT_COLOUR,
         "texel_density": td,
     }
@@ -2713,6 +2862,7 @@ def main():
     removed, tested = remove_hidden(pieces)
     print(f"pieces: {len(pieces)}, tris {tri_pieces} -> {sum(tris_of(o) for o in pieces)}")
     unwrap_atlases(pieces)
+    fit_lens_atlas(pieces)
     baked = bake_atlases(pieces, high, a)
     tex = compose_textures(baked, decal, a.out)
     for o in high:

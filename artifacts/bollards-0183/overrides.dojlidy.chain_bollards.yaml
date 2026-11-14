@@ -1,0 +1,16 @@
+# ADR 0183: ready block for Data/Regions/bialystok-dojlidy/overrides.yaml (append under `overrides:`; leader).
+overrides:
+  - id: mickiewicza-kuronia-chain-posts-p11-063
+    kind: chain_bollards
+    line_epsg2180: [[780014.43, 590462.87], [780019.44, 590452.85]]
+    chain: true
+    sources: ["research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg", "GUGiK orthophoto 2024 0.25 m"]
+    reason: >-
+      Photo P11-063 (Wikimedia Commons, CC0, Rakoon, 2024-06-23, File:20240623_124644_June_2024_in_Białystok.jpg; from the bus-stop island of ul. Mickiewicza, looking east): 8 red-white posts with two
+      chains on the paving behind the east kerb of the NW-bound carriageway (osm way 691820489 / 258564444), up to
+      the crossing at the Kuronia corner; 8 posts = 7 bays x 1.60 m. On the orthophoto the row stands on paving at
+      [780011.30, 590461.30] -> [780016.31, 590451.28]; the generated world has a grass verge there, so the line is
+      moved 3.5 m away from the carriageway onto the generated sidewalk_paving (ADR 0183 r2). Move it back when the
+      Dojlidy paving matches the photo.
+    confidence: low
+    verify: start / end post on site (+-2 m along the kerb); the further row visible behind (smaller posts) is not placed

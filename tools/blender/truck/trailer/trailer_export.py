@@ -55,7 +55,8 @@ MAT_SLOT = {"trl_paint": "Paint",
             "curtain_pvc": "Curtain", "roof_tarp": "Curtain", "strap": "Curtain",
             "galv": "Metal", "alu_extr": "Metal", "steel_wheel": "Metal", "steel": "Metal", "satin_alu": "Metal",
             "chrome": "Metal", "hub_cast": "Metal",
-            "lens_red_o": "Lights", "lens_amber_o": "Lights", "lens_white_o": "Lights", "lamp_body": "Lights"}
+            "lens_red_o": "Lights", "lens_amber_o": "Lights", "lens_white_o": "Lights", "lamp_body": "Lights",
+            "plate": "Lights"}     # ADR 0181: the number plate is lit by the plate lamp (emission = Lights slot)
 PRIORITY = {"roof_tarp": 0.30, "gap": 0.5, "trl_chassis": 0.7, "grease": 0.6, "flap_rubber": 0.8, "interior": 0.12,
             "plywood": 0.25}
 # same ids as the TRAKT tractor (one light controller for the combination; 13 = PLATE, 14 = FOG_REAR, ADR 0175)
@@ -80,7 +81,7 @@ LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", 
                          "damper", "bellow", "hanger", "trailing_arm", "crossmember", "outrigger", "air_tank", "ebs_",
                          "air_line", "doc_tube", "coupling", "palm_", "socket_", "kingpin", "mudguard_lip",
                          "leg_xbrace", "leg_brace", "cross_shaft", "crank_shaft", "crank_holder", "leg_collar",
-                         "dock_buffer", "lamp_panel_side", "plate_lamp", "tension_", "curtain_rear_wrap",
+                         "dock_buffer", "lamp_panel_side", "tension_", "curtain_rear_wrap",
                          "curtain_front_strip", "stalk_", "sideguard_post", "lockbar",
                          "door_frame", "beam_flange", "rup_brace", "toolbox",
                          "leg_gearbox", "front_lamp", "rear_marker", "door_centre_seal", "rear_sill_face",
@@ -92,10 +93,10 @@ LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", 
 # plate are NOT dropped and NOT decimated there - they were missing on the phone tier since the trailer's first LOD2
 # (base 3a60019ff dropped contour_rear / tri_reflector too). ~400 triangles, paid for by the area-weighted collapse.
 REGS_KEEP = ("contour_", "tri_reflector", "side_marker_reflex", "front_reflex", "side_reflector", "plate_rear",
-             "plate_holder", "r70_plate")
+             "plate_holder", "r70_plate", "plate_lamp_")    # ADR 0181: a lit plate needs its lamp (R48 6.8) on Low too
 _REGS_SAMPLES = ("contour_rear_post_L", "contour_rear_header", "contour_rear_sill_0", "contour_corner_L_rh", "contour_side_-1_0",
                  "tri_reflector_L", "side_marker_reflex_-1_0", "front_reflex_-1", "side_reflector_-1", "plate_rear",
-                 "plate_holder", "r70_plate_-1")
+                 "plate_holder", "r70_plate_-1", "plate_lamp_body", "plate_lamp_lens")
 assert not [n for n in _REGS_SAMPLES if any(d in n for d in LOD2_DROP)], "regulatory part dropped at LOD2"
 
 
@@ -128,6 +129,8 @@ def light_group(oname):
     n = oname
     if n.startswith(A.REFLEX_PREFIXES):
         return "REFLEX"      # ADR 0175: retro-reflectors + conspicuity tape, id 15, emission mask 0 (never lit)
+    if n == "plate_rear":
+        return "PLATE"       # ADR 0181: plate face illuminated by the plate lamp (lens style PLATE)
     if not n.startswith(("rear_lens_", "rear_led_", "side_marker_lens", "front_lamp_lens", "stalk_lens",
                          "rear_marker_lens", "plate_lamp_lens")):
         return "NONE"
@@ -149,6 +152,19 @@ def light_group(oname):
     if n.startswith("plate_lamp_lens"):
         return "PLATE"
     return "NONE"
+
+
+def lens_style(oname, grp):
+    """ADR 0181: lens style (a6_export.LENS_STYLES) of a trailer piece; Lights-slot faces only."""
+    if grp == "REFLEX":
+        return "REFLEX"
+    if oname == "plate_rear":
+        return "PLATE"
+    if grp == "NONE" or oname.startswith("rear_led_"):
+        return "NONE"
+    if oname.startswith("rear_lens_"):
+        return "FRESNEL" if grp in ("REVERSE", "FOG_REAR") else "PILLOW"
+    return "FLUTE"           # side / front / rear markers, stalk lamps, plate lamp
 
 
 def game_materials():
@@ -180,6 +196,12 @@ def to_game_piece(o, gm):
     grp = light_group(o.name)
     gi = LIGHT_GROUPS.index(grp)
     face_slot = []
+    style = lens_style(o.name, grp)
+    lens_faces = [p for p in me.polygons
+                  if slot_of(names[p.material_index] if p.material_index < len(names) else "") == "Lights"]
+    pack, thin = A.lens_frame([me.vertices[i].co for p in lens_faces for i in p.vertices]) \
+        if style != "NONE" and lens_faces else (None, 0)
+    A.store_lens_frame(o, pack, [style])
     for p in me.polygons:
         mn = names[p.material_index] if p.material_index < len(names) else ""
         sl = slot_of(mn)
@@ -191,7 +213,8 @@ def to_game_piece(o, gm):
         emit = gi if sl == "Lights" or grp == "REFLEX" else 0
         for li in p.loop_indices:
             me.uv_layers["Data"].data[li].uv = (emit, 1.0 if emit and grp != "REFLEX" else 0.0)
-            me.uv_layers["Decal"].data[li].uv = (0.002, 0.002)
+            me.uv_layers["Decal"].data[li].uv = pack(me.vertices[me.loops[li].vertex_index].co, style) \
+                if pack and sl == "Lights" and A.lens_face(style, p.normal[thin]) else (0.002, 0.002)
             col.data[li].color = (1.0, 1.0, 1.0, 1.0)
     slots = []
     for sl in face_slot:
@@ -696,6 +719,7 @@ def export_lod(lod, master, a, manifest, coll):
         k = A.decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={0: 60, 1: 24, 2: 8}[lod],
                               lights_min={0: 0.9, 1: 0.5, 2: 0.2}[lod], keep_wheel_centres=lod >= 2,
                               keep=REGS_KEEP)
+    print(f"  LOD{lod}: lens uv1 re-packed on {A.refit_lens_uv1(pieces)} loops (ADR 0181 r2)")
     fr = frames()
     parts = join_parts(pieces)
     sfx = f"_LOD{lod}"
@@ -1169,6 +1193,7 @@ def main():
     tri_pieces = sum(tris_of(o) for o in srcs)
     print(f"pieces: {len(srcs)}, tris {tri_pieces}")
     unwrap_atlases(srcs)
+    A.fit_lens_atlas(srcs)
     baked = bake_atlases(srcs, high, hi_curt, a)
     tex = compose_textures(baked, a.out)
     meas = measure(srcs)
@@ -1246,6 +1271,9 @@ def meta(tex, td, tri_pieces, meas):
                                 "_MetallicGlossMap and _OcclusionMap = T_Trl_<Slot>_MaskMap[_<livery>] (R metal, G AO, "
                                 "B dirt, A smoothness), _BumpMap = T_Trl_<Slot>_N. Loses the dirt slider and lights.",
             "light_groups": {i: g for i, g in enumerate(LIGHT_GROUPS)},
+            "lens_styles": {i: g for i, g in enumerate(A.LENS_STYLES)},
+            "uv1 'Decal' (Lights slot, ADR 0181)": "lens frame: x = W_mm + u', y = style * 256 + H_mm + v' (see the "
+                                                   "tractor manifest); floor(x) = 0 -> no lens",
             "light_colours_linear": LIGHT_COLOUR,
             "texel_density": td,
             "texel_density_note": "no texel-density ADR in the repo yet (same open point as the tractor A6 README)",

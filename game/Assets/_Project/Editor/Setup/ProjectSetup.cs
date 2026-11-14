@@ -127,6 +127,15 @@ namespace Game.Editor.Setup
                 for (int i = 0; i < qp.tiers.Length; i++)
                     foreach (var d in defs)
                         if (string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) qp.tiers[i].forestFast = d.forestFast;
+                qp.revision = 113;
+                dirty = true;
+            }
+            if (qp.revision < 191)
+            {
+                // ADR 0191: GGX highlight of the lamp pools per tier (High / Ultra on).
+                for (int i = 0; i < qp.tiers.Length; i++)
+                    foreach (var d in defs)
+                        if (string.Equals(d.name, qp.tiers[i].name, StringComparison.OrdinalIgnoreCase)) qp.tiers[i].lampPoolSpecular = d.lampPoolSpecular;
                 qp.revision = QualityProfile.CurrentRevision;
                 dirty = true;
             }

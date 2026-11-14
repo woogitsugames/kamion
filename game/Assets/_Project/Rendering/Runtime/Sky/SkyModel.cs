@@ -161,6 +161,28 @@ namespace Game.Rendering
                 AdaptedWhite = NormaliseLum(Mul(A, AdaptedWhite));
                 for (int i = 0; i < m_Chroma.Length; i++) m_Chroma[i] = NormaliseLum(Mul(A, m_Chroma[i]));
             }
+            // ADR 0192: last, after the white-balance adaptation (which pushes a twilight dome back toward magenta)
+            if (Overcast < 1f) SuppressMagentaPass();
+        }
+
+        void SuppressMagentaPass()
+        {
+            float t = Mathf.Clamp01((0.5f - TrueSunElevationDeg) / 4f);
+            if (t <= 0f) return;
+            for (int j = 0; j < ChromaHeight; j++)
+            {
+                float v = j / (float)(ChromaHeight - 1);
+                float lowBand = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.05f, 0.3f, v));
+                for (int i = 0; i < ChromaWidth; i++)
+                {
+                    float gammaDeg = i / (float)(ChromaWidth - 1) * 180f;
+                    float towardSun = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(20f, 90f, gammaDeg));
+                    int idx = j * ChromaWidth + i;
+                    var c = NormaliseLum(SuppressTwilightMagenta(m_Chroma[idx], t * lowBand * towardSun, t));
+                    c.a = 1f;
+                    m_Chroma[idx] = c;
+                }
+            }
         }
 
         /// <summary>
@@ -709,6 +731,26 @@ namespace Game.Rendering
                     m_Chroma[idx] = c;
                 }
             }
+        }
+
+        /// <summary>
+        /// ADR 0192 (review s19 0182 P2-7, still open after r5: horizon toward the sun (143, 119, 137) sRGB, B > G):
+        /// a linear mix of the warm sunset LUT colour (R high) with the deep twilight blue (B high) passes through magenta
+        /// - a hue the clear twilight sky does not take in the low band toward the sun, where the glow runs orange to
+        /// yellow to a pale green-white before the blue (the "green" band of the twilight arch). Where both R and B exceed
+        /// G (magenta excess m = min(R, B) - G): G is lifted to min(R, B) (a pale, whitish transition, as in the twilight
+        /// arch) and in the low band toward the sun (weight `warm`) to B / 0.85 (B below G: orange-yellow). Lowering R or
+        /// B instead left hard orange cells next to hard blue ones, which the bilinear LUT fetch mixes back into pink. WORKING_VALUE, luminance restored by the caller.
+        /// </summary>
+        public static Color SuppressTwilightMagenta(Color c, float warm, float t)
+        {
+            float lo = Mathf.Min(c.r, c.b);
+            if (lo - c.g <= 0f || t <= 0f) return c;
+            // lift G (never lower R or B: a dome of hard orange cells next to hard blue cells turns pink again in the
+            // bilinear LUT fetch): to min(R, B) = pale / white, and in the warm band to B / 0.85 = orange-yellow
+            float g = Mathf.Lerp(lo, Mathf.Max(lo, c.b / 0.85f), Mathf.Clamp01(warm * 1.6f));
+            c.g = Mathf.Lerp(c.g, Mathf.Max(c.g, g), t);
+            return c;
         }
 
         /// <summary>ADR 0182 twilight chroma: how far past the 25 000 K daylight colour the blue target sits, and the
