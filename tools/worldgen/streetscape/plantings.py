@@ -98,9 +98,13 @@ SPECIES = {
     # WORKING_VALUE (read off the photo, not surveyed).
     # r2 (first render: read as a clipped hedge with a 0.6 m leaf pattern and a dark skirting): leaf tile x 3 (sprays
     # of leaves, no pattern at 60 m), shell down to 4 % of the height, crown relief +-0.5 m, shoots 0.5-1.1 m.
-    "thicket": dict(tex="hornbeam", h=(2.2, 3.0), plant=(1.3, 1.9), bulge=0.45, dome=0.50, gap_p=0.0, sigma=0.45,
-                    sprig=0.55, sprig_wh=((0.60, 1.20), (0.55, 1.05)), prof="thicket", tile_scale=3.0, foot=0.04,
-                    ring_step=0.7, fill=(2.0, 1.1), top_sprigs=0.8),      # a mass 10 x coarser than a clipped hedge: ~70 tris / m2
+    # r4 (review B-r3 P1-1 / P1-2): denser ring & interior fill + local_top + flatter dome (0.24) remove the sharp
+    # triangular "tent" peaks between perimeter and interior vertices; smaller, steeper side sprigs remove horizontal
+    # shadow shelves on High while keeping the lower 2 m closed.
+    "thicket": dict(tex="hornbeam", h=(2.2, 3.0), plant=(1.3, 1.9), bulge=0.28, dome=0.24, gap_p=0.0, sigma=0.45,
+                    sprig=0.70, sprig_wh=((0.42, 0.75), (0.38, 0.68)), prof="thicket", tile_scale=3.0, foot=0.04,
+                    ring_step=0.45, fill=(1.2, 0.75), top_sprigs=0.40, side_tilt=(0.35, 0.80), side_share=0.18,
+                    local_top=True),
 }
 # cross-sections (inset m, height share, bulge share), foot first
 PROFILES = {
@@ -311,9 +315,11 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     # clipped band: edge shoots lean further out (ADR 0060: upright cards read as a dark seam along the arris)
     etilt = (0.5, 1.1) if S.get("prof") == "clipped" else (0.2, 0.8)
     nt += _sprig_cards(buf, sprig_m, shell[-2][0][idx], N[idx], shell[-2][1][idx], (*key, "edge"), S, src, tilt=etilt)
-    # clipped band: few shoots on the side (a straight cut face, r7 N-4), cushion / box: 35 %
+    # clipped band: few shoots on the side (a straight cut face, r7 N-4), cushion / box: 35 %, thicket: steeper 18 %
+    stilt = S.get("side_tilt", (1.0, 1.35))
+    sshare = S.get("side_share", 0.12 if S.get("prof") == "clipped" else 0.35)
     nt += _sprig_cards(buf, sprig_m, shell[-3][0][idx] + N[idx] * 0.02, N[idx], shell[-3][1][idx] - 0.12 * h,
-                       (*key, "side"), S, src, tilt=(1.0, 1.35), share=0.12 if S.get("prof") == "clipped" else 0.35)
+                       (*key, "side"), S, src, tilt=stilt, share=sshare)
     if stats is not None:
         stats["tris"] = stats.get("tris", 0) + nt
     return 1
@@ -1004,36 +1010,166 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
                        flip=i % 2 == 1)
 
 
+KIT_SPECIES = set(HABIT) | {"fruit", "shrub", "berberis_red"}
+
+
+def _kit_quad(kit, center_xy, z0, z1, w, a, sp, occ_lo=0.74, occ_hi=0.98, flip=False, tilt_z=0.0, vlo_frac=0.0):
+    """2-triangle foliage card without a 4-triangle center fan (`occ_mid`), avoiding diagonal Mach-band 'X' seams."""
+    u0, u1, v0, v1 = PLT.PK.sprite(sp)
+    if flip:
+        u0, u1 = u1, u0
+    v_lo = v0 + (v1 - v0) * vlo_frac
+    c, s = math.cos(a), math.sin(a)
+    r = np.array([c, s, 0.0])
+    fn = np.array([-s, c, 0.0])
+    p0 = np.array([center_xy[0], center_xy[1], z0])
+    p1 = np.array([center_xy[0], center_xy[1], z1]) + fn * tilt_z
+    V = [p0 - r * (w * 0.5), p0 + r * (w * 0.5), p1 + r * (w * 0.5), p1 - r * (w * 0.5)]
+    UV = [[u0, v_lo], [u1, v_lo], [u1, v1], [u0, v1]]
+    C = [PLT._fol([-r[0] * 0.35, -r[1] * 0.35, 0.72], occ_lo),
+         PLT._fol([r[0] * 0.35, r[1] * 0.35, 0.72], occ_lo),
+         PLT._fol([r[0] * 0.35, r[1] * 0.35, 0.96], occ_hi),
+         PLT._fol([-r[0] * 0.35, -r[1] * 0.35, 0.96], occ_hi)]
+    kit.quad(V, UV, C)
+
+
+def _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False):
+    """Multi-lobed open crown / ground-reaching shrub for authored kit plants (ADR 0186 r4, review B-r3 P1-3).
+    Front lobes face WNW (`a_face ~ 1.25 rad`) while side/depth cards sit behind the front plane (`-0.42 r f`) at
+    +-42 deg so no edge-on card cuts through the front face in the depth buffer or creates an 'X' seam on Low."""
+    p = np.asarray(p, float)
+    a_face = 1.25 + 0.12 * (PLT.hfloat(key, "af") - 0.5)
+    s = np.array([math.cos(a_face), math.sin(a_face)])
+    f = np.array([-math.sin(a_face), math.cos(a_face)])
+
+    if sp == "berberis_red":
+        # Ground-reaching dark reddish-burgundy shrub (`shrub_b` bottom tint), no bare stem
+        occ_lo, occ_hi = 0.62, 0.86
+        _kit_quad(kit, p - s * (0.20 * r) + f * (0.12 * r), z - 0.08, z + H * 0.96, 1.75 * r,
+                  a_face - 0.08, "shrub_b", occ_lo, occ_hi, flip=False)
+        _kit_quad(kit, p + s * (0.22 * r) + f * (0.06 * r), z - 0.08, z + H * 1.02, 1.70 * r,
+                  a_face + 0.10, "shrub_b", occ_lo + 0.03, occ_hi, flip=True)
+        _kit_quad(kit, p - f * (0.35 * r), z - 0.06, z + H * 0.94, 1.65 * r,
+                  a_face + 0.68, "shrub_b", occ_lo - 0.04, occ_hi - 0.04, flip=False)
+        if not lite:
+            _kit_quad(kit, p - f * (0.35 * r), z - 0.06, z + H * 0.94, 1.65 * r,
+                      a_face - 0.68, "shrub_b", occ_lo - 0.04, occ_hi - 0.04, flip=True)
+            for i in range(3):
+                az = a_face + (i - 1) * 0.55
+                off = s * ((i - 1) * 0.30 * r) + f * (0.18 * r)
+                _kit_quad(kit, p + off, z - 0.04, z + H * (0.72 + 0.08 * (i % 2)), 1.25 * r,
+                          az, "shrub_b", occ_lo + 0.02, occ_hi, flip=(i % 2 == 1), tilt_z=0.12 * r)
+        return
+
+    bark = PLT.PK.SWATCH["trunk"]
+    if sp in ("shrub", "fruit"):
+        # Low-crowned multi-stemmed green bush / small fruit tree reaching near the ground (no 'lollipop on a stick')
+        cb_s = min(cb, 0.11 * H if sp == "fruit" else 0.06 * H)
+        hc = H - cb_s
+        tr = max(0.04, H * 0.013)
+        zt = z + cb_s + hc * 0.28
+        if lite:
+            for k in range(2):
+                d = np.array([math.cos(a_face + k * 1.5708), math.sin(a_face + k * 1.5708)]) * tr
+                kit.quad([[*(p - d), z - 0.1], [*(p + d), z - 0.1], [*(p + d), zt], [*(p - d), zt]], [bark] * 4)
+        else:
+            kit.box(p, s, tr, tr, z - 0.1, zt, bark, top=False)
+            for sgn in (-1.0, 1.0):
+                b1 = p + s * (sgn * r * 0.32)
+                kit.box(p, s, tr * 0.65, tr * 0.65, z + cb_s * 0.7, z + cb_s + hc * 0.34, bark, top=False, shift=b1 - p)
+        occ_lo, occ_hi = 0.72, 0.96
+        _kit_quad(kit, p - s * (0.22 * r) + f * (0.14 * r), z + cb_s * 0.5, z + cb_s + hc * 0.90, 1.60 * r,
+                  a_face - 0.06, "shrub_a", occ_lo, occ_hi, flip=False)
+        _kit_quad(kit, p + s * (0.20 * r) + f * (0.06 * r), z + cb_s * 0.7, z + cb_s + hc * 1.02, 1.55 * r,
+                  a_face + 0.08, "apple_b", occ_lo + 0.02, occ_hi, flip=True, vlo_frac=0.22)
+        _kit_quad(kit, p - s * (0.18 * r) - f * (0.38 * r), z + cb_s * 0.6, z + cb_s + hc * 0.94, 1.50 * r,
+                  a_face + 0.70, "shrub_a", occ_lo - 0.04, occ_hi - 0.03, flip=True)
+        _kit_quad(kit, p + s * (0.18 * r) - f * (0.38 * r), z + cb_s * 0.6, z + cb_s + hc * 0.94, 1.50 * r,
+                  a_face - 0.70, "apple_b", occ_lo - 0.04, occ_hi - 0.03, flip=False, vlo_frac=0.22)
+        if not lite:
+            for i, sgn in enumerate((-0.34, 0.0, 0.34)):
+                off = s * (sgn * r) + f * (0.20 * r)
+                _kit_quad(kit, p + off, z + cb_s + hc * 0.08, z + cb_s + hc * (0.78 + 0.12 * (i == 1)), 1.18 * r,
+                          a_face + sgn * 0.45, "shrub_a", occ_lo + 0.02, occ_hi, flip=(i % 2 == 1), tilt_z=0.10 * r)
+        return
+
+    # Mature broadleaf tree (ash / maple / linden / chestnut / birch): open, multi-lobed crown with spreading lower
+    # boughs (`apple_b` cropped above its bottom fan) and irregular upper leaders (`shrub_a`) with sky bays between lobes
+    cb = min(cb, 0.21 * H)
+    hc = H - cb
+    lean = (PLT.hfloat(key, "ln") - 0.5) * 0.14 * r
+    top_xy = p + s * lean
+    tr = (0.035 + 0.011 * H) * (0.8 if sp == "birch" else 1.0)
+    zt = z + cb + hc * 0.18
+    if lite:
+        for k in range(2):
+            d = np.array([math.cos(a_face + k * 1.5708), math.sin(a_face + k * 1.5708)]) * tr
+            kit.quad([[*(p - d), z - 0.1], [*(p + d), z - 0.1], [*(top_xy + d), zt], [*(top_xy - d), zt]], [bark] * 4)
+    else:
+        kit.box(p, s, tr, tr, z - 0.1, zt, bark, top=False, shift=top_xy - p)
+        for sgn, dz, reach in ((-1.0, 0.44, 0.42), (1.0, 0.48, 0.40)):
+            b1 = top_xy + s * (sgn * r * reach)
+            kit.box(top_xy, s, tr * 0.55, tr * 0.55, z + cb + hc * 0.12, z + cb + hc * dz, bark, top=False, shift=b1 - top_xy)
+
+    occ_lo, occ_hi = 0.72, 0.96
+    # Lower spreading boughs (wide lateral lobes, front-facing)
+    _kit_quad(kit, top_xy - s * (0.28 * r) + f * (0.16 * r), z + cb - 0.03 * hc, z + cb + hc * 0.72,
+              1.56 * r, a_face - 0.06, "apple_b", occ_lo, occ_hi - 0.02, flip=False, vlo_frac=0.22)
+    _kit_quad(kit, top_xy + s * (0.26 * r) + f * (0.10 * r), z + cb, z + cb + hc * 0.76,
+              1.52 * r, a_face + 0.08, "apple_b", occ_lo + 0.02, occ_hi, flip=True, vlo_frac=0.22)
+    # Upper irregular crown lobes (`shrub_a`: 3-lobed silhouette with natural sky bays)
+    _kit_quad(kit, top_xy - s * (0.22 * r) + f * (0.08 * r), z + cb + hc * 0.20, z + cb + hc * 1.00,
+              1.48 * r, a_face + 0.04, "shrub_a", occ_lo + 0.04, occ_hi, flip=False)
+    # Side/depth lobes placed behind the front lobes (-0.42 r f) at +-42 deg so their edges never poke through front
+    _kit_quad(kit, top_xy - s * (0.24 * r) - f * (0.42 * r), z + cb + hc * 0.04, z + cb + hc * 0.92,
+              1.50 * r, a_face + 0.72, "shrub_a", occ_lo - 0.04, occ_hi - 0.03, flip=True)
+    _kit_quad(kit, top_xy + s * (0.24 * r) - f * (0.42 * r), z + cb + hc * 0.06, z + cb + hc * 0.94,
+              1.50 * r, a_face - 0.72, "apple_b", occ_lo - 0.04, occ_hi - 0.03, flip=False, vlo_frac=0.22)
+    if not lite:
+        _kit_quad(kit, top_xy + s * (0.20 * r) + f * (0.04 * r), z + cb + hc * 0.16, z + cb + hc * 0.98,
+                  1.42 * r, a_face - 0.05, "shrub_a", occ_lo + 0.04, occ_hi, flip=True)
+        for i, (sx, fy, z_lo, z_hi, ww, sp_l) in enumerate((
+            (-0.42, 0.22, 0.06, 0.64, 1.08, "shrub_a"),
+            (0.40, 0.20, 0.10, 0.68, 1.06, "apple_b"),
+            (-0.08, 0.18, 0.28, 0.96, 1.15, "shrub_a"),
+        )):
+            off = s * (sx * r) + f * (fy * r)
+            _kit_quad(kit, top_xy + off, z + cb + hc * z_lo, z + cb + hc * z_hi, ww * r,
+                      a_face + sx * 0.35, sp_l, occ_lo + 0.03, occ_hi, flip=(i % 2 == 1),
+                      tilt_z=0.08 * r, vlo_frac=0.22 if sp_l == "apple_b" else 0.0)
+
+
 def authored_trees(buf, overrides, zf, report, half=1024.0):
-    """ADR 0186: grown broadleaf trees of an authored `kind: tree_groups` with `form: kit` - `points_en` rows
-    [E, N, height m, crown diameter m] traced from the orthophoto / a photo, meshed as plot-kit garden trees (ADR 0163:
-    dense crown of crossed habit cards on every tier), not as instances of the region's tree library, whose crowns
-    of 3-6 leaf clumps on a bare stem read as saplings at 10 m (review s19 0179 P1). Species by `species` weights
-    (maple / linden / chestnut / ash / birch), drawn per stem; crown base 0.22 H (`crown_base_m` overrides). High:
-    full tree, Low / Medium: the near-street lite tree (3 cards + shaded middle). May open a plot-kit group in a
-    chunk that has none (one draw call): the trees are authored, they are never left out."""
+    """ADR 0186: grown broadleaf trees and corner shrubs of an authored `kind: tree_groups` with `form: kit` -
+    `points_en` rows `[E, N, height m, crown diameter m[, species]]` traced from the orthophoto / a photo, meshed as
+    multi-lobed plot-kit plants on every tier (not as instances of the region's tree library, whose crowns of 3-6
+    leaf clumps on a bare stem read as saplings at 10 m; review s19 0179 P1, review B-r3 P1-3). Species from `q[4]`
+    if given, else drawn per stem from `species` weights; crown base 0.21 H (`crown_base_m` overrides). May open a
+    plot-kit group in a chunk that has none (one draw call): the trees are authored, they are never left out."""
     rep = {"trees": 0, "tris_high": 0, "tris_low": 0, "skipped": {}, "list": []}
     groups = None
     for o in overrides or []:
         if o.get("kind") != "tree_groups" or o.get("form") != "kit":
             continue
         spw = o.get("species") or {"maple": 1.0}
-        if any(s not in HABIT for s in spw):
-            raise ValueError(f"tree_groups {o['id']}: form kit knows {sorted(HABIT)}")
+        if any(s not in KIT_SPECIES for s in spw):
+            raise ValueError(f"tree_groups {o['id']}: form kit knows {sorted(KIT_SPECIES)}")
         for k, q in enumerate(o.get("points_en", [])):
             if len(q) < 4:
                 raise ValueError(f"tree_groups {o['id']}: form kit needs [E, N, height m, crown diameter m]")
             p, H, r = np.asarray(q[:2], float), float(q[2]), float(q[3]) / 2.0
             key = ("authored-tree", o["id"], k)
-            sp = PLT._pick_w(sorted(spw.items()), key, "sp")
-            cb = float(o.get("crown_base_m", 0.22 * H))
+            sp = str(q[4]) if len(q) >= 5 and q[4] else PLT._pick_w(sorted(spw.items()), key, "sp")
+            if sp not in KIT_SPECIES:
+                raise ValueError(f"tree_groups {o['id']}: unknown species {sp!r}, knows {sorted(KIT_SPECIES)}")
+            cb = float(o.get("crown_base_m", (0.0 if sp == "berberis_red" else 0.08 if sp in ("shrub", "fruit") else 0.21) * H))
             z = zf(p)
             kit = PLT.Kit()
             kit.tag = "authored_tree"
             kit.low = False
-            garden_tree(kit, p, z, r, H, cb, sp, key)
+            _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False)
             kit.low = "only"
-            garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3, core=True)
+            _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
             if groups is None:
                 groups = _garden_groups(buf, half)
             _emit(buf, kit, groups, half, f"override:{o['id']}:kit", rep, strict=False)

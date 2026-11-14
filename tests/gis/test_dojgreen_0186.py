@@ -45,21 +45,24 @@ def test_thicket_is_a_closed_mass_on_the_ground():
     S = PT.SPECIES["thicket"]
     assert S["gap_p"] == 0.0                     # no missing plants: nothing shows through
     assert max(S["plant"]) <= 1.9                # bushes closer than 2 m (review s19 0179: gaps between the balls)
+    assert S["local_top"] is True and S["ring_step"] <= 0.45 and S["dome"] <= 0.25      # review B-r3 P1-1: no tent peaks
+    assert S["side_tilt"][1] <= 0.85 and S["side_share"] <= 0.20                        # review B-r3 P1-2: no shadow shelves
     buf = _Buf()
     st = {}
     PT.hedge_mass(buf, Polygon([(0, 0), (15, 0), (15, 4.4), (0, 4.4)]), lambda x, y: np.zeros(len(np.atleast_1d(x))),
-                  ("t", 0, 0), h=2.8, plant="thicket", stats=st)
+                  ("t", 0, 0), h=2.6, plant="thicket", stats=st)
     assert set(buf.tris) == {"hedge_hornbeam", "hedge_shell_hornbeam", "hedge_sprig_hornbeam"}      # no new material
     V = np.vstack(buf.V)
     assert V[:, 2].min() < 0.0                   # the core goes into the ground, no floating foot
-    assert 2.6 < V[:, 2].max() < 3.8
-    assert st["tris"] < 3500                     # 15 m of thicket; the 2 x 8 shrub instances it replaces: ~6 000
+    assert 2.5 < V[:, 2].max() < 3.6
+    assert st["tris"] < 4200                     # 15 m of thicket; the 2 x 8 shrub instances it replaces: ~6 000
     assert PT.SPECIES["berberis_red"].get("tile_scale") is None and PT.SPECIES["privet"].get("foot") is None
 
 
 def test_kit_trees_are_dense_crowns_on_both_tiers():
     from streetscape import plantings as PT
-    ov = [{"id": "c", "kind": "tree_groups", "form": "kit", "points_en": [[5.0, 5.0, 10.5, 7.5], [11.0, 6.0, 6.0, 3.4]],
+    ov = [{"id": "c", "kind": "tree_groups", "form": "kit",
+           "points_en": [[5.0, 5.0, 10.5, 7.5], [11.0, 6.0, 6.0, 3.4], [16.0, 7.0, 2.8, 4.5, "berberis_red"]],
            "species": {"maple": 1.0}}]
 
     class B(_Buf):
@@ -71,9 +74,10 @@ def test_kit_trees_are_dense_crowns_on_both_tiers():
     buf, rep = B(), {}
     PT.authored_trees(buf, ov, lambda p: 100.0, rep, half=1024.0)
     at = rep["authored_trees"]
-    assert at["trees"] == 2 and at["tris_low"] > 0 and at["tris_high"] > at["tris_low"]
+    assert at["trees"] == 3 and at["tris_low"] > 0 and at["tris_high"] > at["tris_low"]
+    assert [x["species"] for x in at["list"]] == ["maple", "maple", "berberis_red"]
     V = np.vstack(buf.V)
-    assert V[:, 2].min() < 100.0 and 110.0 < V[:, 2].max() < 112.0       # stem into the ground, top ~10.5 m
+    assert V[:, 2].min() < 100.0 and 110.0 < V[:, 2].max() < 112.0       # stem/shrub into the ground, top ~10.5 m
     assert V[:, 0].max() - V[:, 0].min() > 7.0                           # crown of the grown tree ~7.5 m wide
     from streetscape import vegetation as VG
     assert VG._tree_point_overrides(ov) == []                            # not also an instance of the tree library
@@ -97,10 +101,16 @@ def test_dojlidy_data_and_report():
     ov = {o["id"]: o for o in _ov(DOJ)}
     band = ov["mickiewicza-kuronia-shrub-band"]
     assert band["kind"] == "plantings" and len(band["beds"]) >= 5
-    assert all(b["plant"] == "thicket" and 2.0 <= b["height_m"] <= 3.3 for b in band["beds"])
+    assert all(b["plant"] == "thicket" and 2.1 <= b["height_m"] <= 2.75 for b in band["beds"])
+    hs = [b["height_m"] for b in band["beds"]]
+    # review B-r3 P1-1: smooth height transitions along both staggered rows (T1..T15 and T16..T31)
+    assert max(abs(hs[i + 1] - hs[i]) for i in range(14)) <= 0.30
+    assert max(abs(hs[i + 1] - hs[i]) for i in range(15, len(hs) - 1)) <= 0.30
     trees = ov["mickiewicza-kuronia-corner-trees"]
     assert trees["form"] == "kit" and 3 <= len(trees["points_en"]) <= 6
     assert sum(1 for p in trees["points_en"] if 9.0 <= p[2] <= 11.0 and 5.5 <= p[3] <= 8.0) >= 2      # the grown ones
+    assert any(len(p) >= 5 and p[4] == "berberis_red" and p[2] <= 3.2 for p in trees["points_en"])    # review B-r3 P1-3
+    assert sum(1 for p in trees["points_en"] if p[2] <= 5.5) >= 3                                     # low/mid shrubs on left
     skyline = ov["kuronia-north-park-skyline-trees"]
     assert skyline["form"] == "kit" and len(skyline["points_en"]) >= 2
     assert ov["mickiewicza-kuronia-shrub-strip-no-rule-trees"]["kind"] == "open_ground"
