@@ -106,7 +106,7 @@ wieżowca (`tower_cameras.json`: 4 ściany z 60 m i 200 m, z południa 150 m, da
 | P2-5 maszty | 8 struktur na obu LOD-ach, widoczne z 150 m i w parach SBS (`r2/photo-vs-r2-s150.jpg`, `r2/before-r2clear-r2overcast-s150.jpg`, `sbs-r2/pairs/Low-overcast/sbs-g3-a-178689077481862.jpg`) |
 | NW Low (LOD1) ↔ High (LOD0) | ten sam raster i ton okien, bez białych łat, bez rur (`r2/z/LH-nw60.jpg`) |
 | kreski narożnika | znikają na obu tierach (porównanie `r1/z/s150-ba.jpg`, `r1/z/st02-ba.jpg`) |
-| testy | `tests/gis/test_tower_0190.py` 10 nowych; pełny `pytest tests/gis`: **1115 passed, 2 xfailed** (`logs/pytest-gis.log`; po `fidelity/run.py`, exit 0); EditMode: EDITMODE_PLACEHOLDER |
+| testy | `tests/gis/test_tower_0190.py` 10 nowych; pełny `pytest tests/gis`: **1115 passed, 2 xfailed** (`logs/pytest-gis.log`; po `fidelity/run.py`, exit 0); EditMode: **581 total, 580 passed, 0 failed, 1 skipped** (`logs/editmode.log`) |
 
 Porównanie ze zdjęciami (Mapillary 177786140912399 / 178689077481862): zgodne — sylwetka z masztami, gładki szczyt z
 jedną kolumną biało obramowanych okien, ściana SE w poziome cienkie ciemne linie z jasnymi oknami pod nimi. Różni się:
