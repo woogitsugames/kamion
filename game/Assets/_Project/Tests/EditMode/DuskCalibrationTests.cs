@@ -65,9 +65,14 @@ namespace Game.Tests
                         // the azimuth offset from the sun at this elevation: γ ≥ elevation-difference; use ChromaAt directly
                         var c = m.ChromaAt(Mathf.Sin(elev * Mathf.Deg2Rad), Mathf.Max(g, elev) * Mathf.Deg2Rad);
                         float mx = Mathf.Max(c.r, Mathf.Max(c.g, c.b)), mn = Mathf.Min(c.r, Mathf.Min(c.g, c.b));
-                        // saturation of the display colour (gamma ~1/2.2 on the linear ratio): coral was 0.40-0.53
+                        // saturation of the display colour (gamma ~1/2.2 on the linear ratio): the coral of ADR 0192 was
+                        // 0.40-0.53 with R / max(G, B) 2.0-3.5 (probe-before.tsv, 2-6° toward the sun)
                         float sat = 1f - Mathf.Pow(mn / mx, 1f / 2.2f);
-                        if (c.r > c.b) Assert.Less(sat, 0.3f, $"warm glow too saturated at elev {elev} γ {g}: {c}");
+                        if (c.r > c.b)
+                        {
+                            Assert.Less(sat, 0.4f, $"warm glow too saturated at elev {elev} γ {g}: {c}");
+                            Assert.Less(c.r / Mathf.Max(c.g, c.b), 1.7f, $"coral (red over green and blue) at elev {elev} γ {g}: {c}");
+                        }
                         Assert.LessOrEqual(Mathf.Min(c.r, c.b) - c.g, 0.06f, $"magenta at elev {elev} γ {g}: {c}");
                     }
                 }

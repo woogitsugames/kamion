@@ -775,10 +775,10 @@ namespace Game.Rendering
         /// normalised later). Low: pale yellow-peach (R &gt; G &gt; B; after the low-band −15 % B ≈ 22 % saturation on
         /// screen). High: faint pink (R &gt; B ≥ G; the magenta pass turns B &gt; G into a rose with G = B, ~6 %). WORKING_VALUE
         /// (R7 c32: the lowest band of a real dusk ~10 % saturation near clipping; the coral it replaces was 29-52 %).</summary>
-        public static readonly Color TwilightGlowLow = new Color(1.28f, 1.0f, 0.74f, 1f), TwilightGlowHigh = new Color(1.5f, 0.9f, 0.98f, 1f);
+        public static readonly Color TwilightGlowLow = new Color(1.38f, 1.0f, 0.62f, 1f), TwilightGlowHigh = new Color(1.65f, 0.88f, 0.97f, 1f);
         /// <summary>Elevations (degrees) between which the glow turns from <see cref="TwilightGlowLow"/> to
         /// <see cref="TwilightGlowHigh"/>. WORKING_VALUE.</summary>
-        public const float TwilightGlowPinkFromDeg = 2f, TwilightGlowPinkToDeg = 4.5f;
+        public const float TwilightGlowPinkFromDeg = 2.5f, TwilightGlowPinkToDeg = 5f;
 
         /// <summary>ADR 0199: magenta excess min(R, B) − G (luminance-1 chroma) left alone by
         /// <see cref="SuppressTwilightMagenta"/>, so a pastel pink survives (ADR 0192 test limit: 0.06). WORKING_VALUE.</summary>
