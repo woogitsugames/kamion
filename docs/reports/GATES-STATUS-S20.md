@@ -181,7 +181,7 @@ Checklista `docs/06_GRAFIKA_ANTI_AI_SLOP.md:40-46` dla bramki 3:
 1. G3-B na APK `edb5524993` niezmierzony — A16 offline (`GATE-3.md:128`, `HANDOVER.md:96`).
 2. Metryka „≤ 12 klatek > 40 ms na przejazd” czeka na decyzję właściciela (`GATE-3.md:57-61`, `docs/adr/0177-perf-p99-pso-refresh.md:48-53`, `HANDOVER.md:120`); **dla przebiegów kontrolnych s20 liczba klatek > 40 ms nie jest wpisana** (tabele `GATE-3.md:111-128` mają tylko „> 50 ms”). HANDOVER podaje liczby z przebiegów PSO refresh (A 4/2, B 4/2, `HANDOVER.md:60`), nie z przebiegów kontrolnych.
 3. Punkty 2 i 5 checklisty (`GATE-3.md:96`).
-4. GPU A16 bez zapasu: GPU p95 34,5 / 34,3 ms > 33,3 ms klatki (`GATE-3.md:113-114`, `REVIEW-…-gate3-phone.md:16`); PSS zbliża się do limitu 1000 MB (§8, rozbieżność R22).
+4. GPU A16 bez zapasu: GPU p95 34,5 / 34,3 ms > 33,3 ms klatki (`GATE-3.md:113-114`, `REVIEW-…-gate3-phone.md:16`); PSS zbliża się do limitu 1000 MB (§9, rozbieżność R23).
 5. Test „feelingu” na odcinku niewypełniony (`GATE-3.md:97`).
 6. Brak tagu git po bramce 3 — `docs/03:7` wymaga tagu i aktualizacji `docs/STATUS.md` i `docs/ROADMAP.md`; na origin jest tylko tag `v0.0-gate0`, `docs/STATUS.md:1` ma datę 2026-11-09, `docs/ROADMAP.md` nie istnieje.
 
@@ -197,3 +197,35 @@ pwsh scripts/gate3-evidence.ps1 -Tiers Low -Lightings overcast,lowsun -PhoneDir 
 pwsh scripts/gate3-run.ps1 -Serial RZCX60VE8ZY -Segment A -Tier High -Fps 60 -WorldHigh -SkipBuild -Apk artifacts/apk/kamion-0.1.0-<sha>-high.apk
 ```
 Parametry: `scripts/gate3-run.ps1:25-49`, `scripts/gate3-evidence.ps1:24-38`, `tools/perf/p99_spikes.py:1-6,14-21` (argument = znacznik czasu katalogu `artifacts/gate3/<ts>`; ścieżka bazowa na sztywno `C:\Users\matma\…\artifacts\gate3`, `:11`). Zrzuty par zdjęciowych z telefonu: `scripts/sbs-gate3.ps1:2-12` renderuje tylko w edytorze — **komendy dla zrzutów 42 póz z telefonu nie ma** (do zrobienia: pozy jako kamery bramki + `gate3-run.ps1 -CameraFilter`).
+
+---
+
+## 6. Etap 4 — Pipeline świata na 2×2 km (następna bramka)
+
+Kryteria: `docs/03_ETAPY_I_BRAMKI.md:35`. **Raportu `GATE-4.md` nie ma i bramka nie jest formalnie otwarta.** Narzędzia i dane istnieją z pracy nad bramką 3 (region `bialystok-industrial-c` = kafel 2048 × 2048 m, `docs/DATA_QA.md:22`).
+
+| # | Kryterium (dosłownie z `docs/03:35`) | Stan | Dowód |
+|---|---|---|---|
+| 4.1 | „regeneracja 2×2 km jedną komendą” | CZĘŚCIOWO | regeneracja C działa: „build_world 8,7 min, fidelity OK, import OK” (`HANDOVER.md:50`); ale lider uruchamia ją skryptem spoza gita (`artifacts/lead-s20/regen.ps1`, `HANDOVER.md:47`; wcześniej `artifacts/lead-s17/regen.ps1`, `:117`). W gicie łańcuch to 3 kroki (`CLAUDE.md:39`); `scripts/import-region.ps1 -Build` uruchamia `build_world.py` + `export-route.py` + import (`scripts/import-region.ps1:34-42`), ale nie `build_region.py`/ingest (`docs/DATA_QA.md:12-16`) |
+| 4.2 | „ręczne poprawki przeżywają reimport” | CZĘŚCIOWO (mechanizm jest, test całościowy niezmierzony) | `authored_overrides` w `Data/Regions/bialystok-industrial-c/overrides.yaml` „przeżywają reimport” wg ADR (`docs/adr/0077-junction-islands-from-osm.md:97`, `0167-budynki-p1-kadry-bramki-3.md:35`); testy gis z override'ami per funkcja (np. `tests/gis/test_barriers_0159.py`); brak jednego testu „regeneracja od zera → wszystkie override'y obecne” |
+| 4.3 | „zestaw przejeżdża całość bez wpadnięcia pod teren” | NIEZMIERZONE dla całego kafla | tylko trasa G3: `driveLog.suspiciousLines: 0` (`GATE-3.md:42`, `GATE-2.md:51`); autopilot `route` jeździ jedną trasą (`game/Assets/_Project/Gameplay/DrivingLabBootstrap.cs:208,217`), brak przejazdu całej sieci 2×2 km |
+| 4.4 | „zero dziur w kolizjach” | NIEZMIERZONE | brak raportu/testu kolizji dla całego kafla; walidator świata: 558 znalezisk, error 56, na trasie G3 56 (`docs/reports/WORLD-VALIDATOR-2026-11-13-mistral.md:9`) — nie mierzy dziur kolizji |
+| 4.5 | „odchyłka osi drogi od źródła w zadanej tolerancji” | CZĘŚCIOWO | `tools/worldgen/fidelity/run.py` + `tests/gis/test_road_fidelity.py` (`tools/worldgen/fidelity/STATUS.md:22`); „fidelity OK” po regeneracji s20 (`HANDOVER.md:50`); liczb odchyłki w raporcie bramki brak |
+| 4.6 | „raport `low_confidence`” | CZĘŚCIOWO | `tools/worldgen/qa_report.py` → `docs/reports/map/<region>_qa.json`; jawna lista `low_confidence` (`docs/DATA_QA.md:3`, `:47`); `roads_qa.json` (`docs/WORLD_GENERATION.md:37`) |
+| 4.7 | (zakres) chunki → Addressables | NIEZMIERZONE | D24: na razie bez Play Asset Delivery (`docs/11:45`); Addressables wymienione tylko jako opcja (`docs/PERFORMANCE_BUDGETS.md:164`) |
+
+**Co blokuje zamknięcie:** (1) brak `GATE-4.md` i decyzji lidera o otwarciu etapu (Etap 3 zaliczony D57, `docs/11:78`); (2) skrypt „regeneracja jedną komendą” w gicie (dziś `artifacts/lead-s20/regen.ps1` poza repo); (3) przejazd całej sieci kafla i test dziur kolizji — brak narzędzia; (4) test „override'y przeżywają pełny reimport”.
+
+**Komendy dla lidera** (pełna regeneracja wg `CLAUDE.md:39` i `docs/DATA_QA.md:12-16`):
+```
+uv run --project tools/worldgen tools/worldgen/ingest.py       --region bialystok-industrial-c
+uv run --project tools/worldgen tools/worldgen/build_region.py --region bialystok-industrial-c
+pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -Build      # build_world + export-route + import (Low,High)
+uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c
+uv run --project tools/worldgen pytest tests/gis -q                       # ostatnio 1105 pass / 2 xfail (HANDOVER.md:50)
+uv run --project tools/worldgen tools/worldgen/qa_report.py    --region bialystok-industrial-c   # -> docs/reports/map/<region>_qa.json
+uv run --project tools/worldgen tools/worldgen/validate/run.py --region bialystok-industrial-c --fail-on-error
+pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -Scene WorldC -Autopilot route -Speed 50 -Trailer 40 -Tier Low -Fps 30 -DurationSeconds 600
+#   -> artifacts/device/RFGL34SJYDZ/<ts>/ (tylko trasa startowa, nie cały kafel)
+```
+Parametry: `scripts/import-region.ps1:24-29` (brak `-SkipCopy` wymienionego w `CLAUDE.md:39`), `scripts/device-metrics.ps1:14-30`, walidator `docs/reports/WORLD-VALIDATOR-2026-11-13-mistral.md` (sekcja „Uruchomienie”).
