@@ -13,3 +13,9 @@
 - `tools/stats.py` → `data/stats.json` (OSM + buildings.geojson repo).
 - Dokumenty producentów w files/docs (płyta warstwowa, doki, bramy segmentowe).
 - NASTĘPNY KROK: `python3 research/cloud2/bialystok-building-typology/tools/commons_scan.py` → wybór i obejrzenie kadrów Commons.
+
+## Krok 3–4 (2026-11-14 ~17:50 UTC) — zamknięcie na polecenie lidera (limit sesji)
+- `data/nmpt_sample.csv` (56 budynków), `data/commons_{trasa_c,dojlidy}.json` (1170 / 351 plików), manifest 126 wierszy, fetch.py OK (16 plików, 17,8 MB), audyt 26 PASS / 0 FAIL, README z lukami.
+- Poprawka do kroku 2: godzina tamtego wpisu to ok. 17:22 UTC.
+- NIE zrobione: kadry Commons (0 obejrzanych), Dojlidy 0 kadrów, opisy elewacji, przypisanie do way OSM.
+- NASTĘPNY KROK: `python3 research/cloud2/bialystok-building-typology/tools/commons_pick.py` (pobiera 64 miniatury 1280 px i zapisuje `data/commons_picked.json`), potem obejrzeć `files/_view/c_*.jpg`, dopisać wiersze kadrów w `tools/build_manifest.py`, rozszerzyć `fetch.py` o Commons i powtórzyć audyt.
