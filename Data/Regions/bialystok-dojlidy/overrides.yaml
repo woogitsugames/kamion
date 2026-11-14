@@ -468,3 +468,19 @@ overrides:
       above the panel are not built (backlog).
     confidence: high
     verify: none
+  - id: mickiewicza-east-verge-paved-at-chain-posts
+    kind: paved_area
+    material: sidewalk_paving
+    polygon_epsg2180: [[779998.55, 590481.88], [780017.98, 590443.77], [780023.22, 590445.74], [780003.60, 590483.78]]
+    sources: ["GUGiK orthophoto 2024 0.25 m", "research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg"]
+    reason: >-
+      East side of the NW-bound carriageway of ul. Mickiewicza, 43 m north from the Kuronia crossing. Orthophoto
+      and photo P11-063: the footway is paved from the kerb on and the chain posts stand on that paving. The rules
+      built kerb -> ~4 m grass verge -> footway (BDOT10k footway line + default verge), so the chain row on its true
+      line (ADR 0202) stood in grass, its posts seated 0.2-0.4 m below the turf (artifacts/dojfix-0202/probe.json,
+      r1). The strip closes the verge between the generated kerb and the generated footway (it overlaps the
+      carriageway by 0.6 m and the footway by 0.5 m; the carriageway keeps its priority). The generated kerb runs
+      6 deg off the row (3.3 m from post 1, 1.6 m from post 8; on the street the posts stand right behind it) -
+      a road-edge matter, not corrected here.
+    confidence: medium
+    verify: owner photo session (paving pattern, kerb line)
