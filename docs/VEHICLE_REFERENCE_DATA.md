@@ -105,7 +105,7 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Engine brake actuation τ | 0.25 | s | WORKING_VALUE | |
 | Overrun limit while engine braking | 2400 | rpm | WORKING_VALUE | The AMT up-shifts at 2250 rpm in engine-brake mode |
 
-## Gearbox and driveline (`amt12_od_traxon_class.gearbox.json`)
+## Gearbox and driveline (`amt12_od_class.gearbox.json`; id was `amt12_od_traxon_class` until ADR 0201)
 
 | Parameter | Value | Unit | Status | Source / derivation |
 |---|---|---|---|---|
