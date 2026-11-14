@@ -30,3 +30,6 @@
 - README.md (specyfikacje, tabela technik, problemy Unity, ranking P1–P12 + „nie robić”, co nowe/luki), sources.md (25 źródeł + repo).
 - Wynik: 134 wiersze; audyt 26 PASS / 1 FAIL (poprawiony); fetch.py 27 plików / 9,4 MB.
 - Następny krok (lider/rendering-perf, na telefonie): `pwsh scripts/build-android.ps1` ×2 (androidBlitType 0 vs 2, ten sam versionCode) → `pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90` G3-A/G3-B (P1); RenderDoc for Arm GPUs: próbki MSAA przy msaa=2.
+
+## 2026-11-14 — recenzja (lider)
+REVIEW.md dodany (FIX lekki, P0 0 / P1 1 / P2 9). P1 poprawiony przez lidera: P11/P12 (R8-129/130) → UNVERIFIED z kontekstem ADR 0136. P2 otwarte (lista w REVIEW.md). NASTĘPNY KROK: P2 z REVIEW.md, potem `python3 -I fetch.py`.

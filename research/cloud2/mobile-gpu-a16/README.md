@@ -79,8 +79,8 @@ Weryfikacja każdej pozycji: `pwsh scripts/device-metrics.ps1 -Launch -DurationS
 | P4 | LOD1/LOD2 aut 1–2 submeshe (ADR 0153 — zaimplementowane, niezmierzone na A16) | 0,1–0,6 | UNVERIFIED: auta +1,29 ms GPU bez limitu (ADR 0136), przy limicie governor zjada większość | brak | pozwala też wrócić do cull 300 m |
 | P6 | Szyba kabiny: mieszać tylko obszar refleksu/brudu | 0,3–1,5 | UNVERIFIED: szyba 3,6–4,3 ms (0106), raster+blend ~1,2 ms | utrata części przyciemnienia | widok z kabiny = główny widok |
 | P5 | Mali Offline Compiler (G57) na shaderach świata + half w ALU-bound | 0–1,0 | UNVERIFIED (las nie jest ALU-bound — ADR 0113) | artefakty przy half pozycji | do zrobienia bez telefonu (CI) |
-| P12 | LOD bias Low ×0,6 | 1,0–1,4 | SOURCED 1,4 (ADR 0106, treść sprzed s11) | popping LOD bliżej | decyzja właściciela; powtórzyć pomiar |
-| P11 | Far clip 900 → 720 m | 0,5–0,7 | SOURCED 0,7 (ADR 0106) | bliższy horyzont | decyzja właściciela |
+| P12 | LOD bias Low ×0,6 | 0–1,4 | UNVERIFIED (ADR 0106: Δ GPU p50 1,4 ms bez limitu FPS, treść sprzed s11; przy limicie 30 FPS zysk może prawie zniknąć — por. ADR 0136 r2c 1,29→0,17 ms) | popping LOD bliżej | decyzja właściciela; powtórzyć pomiar |
+| P11 | Far clip 900 → 720 m | 0–0,7 | UNVERIFIED (ADR 0106: Δ GPU p50 0,7 ms bez limitu FPS, treść sprzed s11; przy limicie 30 FPS zysk niepewny — por. ADR 0136 r2c) | bliższy horyzont | decyzja właściciela |
 | P7 | Ściany HLOD: przyciąć puste ~12 % atlasu | 0–0,2 | UNVERIFIED (12 % z ~1,8 ms) | brak | mały |
 | P9 | Probe Blending + Box Projection off na Low | 0–0,3 | UNVERIFIED (głównie CPU) | odbicia mniej dopasowane | |
 | P10 | Additional Lights Disabled na Low (jeśli brak świateł w G3) | 0–0,3 | UNVERIFIED | ewentualne światła znikną | najpierw Frame Debugger |
