@@ -127,6 +127,11 @@ namespace Game.Tests
             {
                 Assert.AreEqual(LightingPreset.DuskClockHour, dusk.clockHour, 1e-6f);
                 Assert.AreEqual(LightingPreset.NightClockHour, night.clockHour, 1e-6f);
+                // Night keeps the reviewed EV100 of lamp-lit surfaces across the table change (old curve 0.461 lx at −8°)
+                var asset = UnityEditor.AssetDatabase.LoadAssetAtPath<LightingPreset>("Assets/_Project/Rendering/Settings/Lighting/LP_Night.asset");
+                Assert.AreEqual(night.exposureCompensation, asset.exposureCompensation, 1e-4f, "asset = factory");
+                float oldLog2 = Mathf.Log(0.4607f / SkyModel.ModelSkyLuxAtHalfDegree, 2f), newLog2 = Mathf.Log(SkyModel.TwilightFactorAt(-8f), 2f);
+                Assert.AreEqual(-3f + (newLog2 - oldLog2), night.exposureCompensation, 0.02f, "compensation = the table shift at −8°");
             }
             finally { Object.DestroyImmediate(dusk); Object.DestroyImmediate(night); }
         }

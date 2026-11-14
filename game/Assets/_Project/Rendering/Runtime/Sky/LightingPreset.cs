@@ -219,6 +219,8 @@ namespace Game.Rendering
         /// season (R7: winter az 238-245°). WORKING_VALUE.
         /// </summary>
         public const float DuskClockHour = 16f + 10f / 60f;
+        /// <summary>ADR 0108 reviewed −3 EV, ADR 0199 −0.405 EV = log2(0.461 / 0.348) for the twilight table at −8°.</summary>
+        public const float NightExposureCompensation = -3.405f;
         /// <summary>ADR 0199: clock hour of LP_Night (a late evening; the sun stays at the model's −8° floor). WORKING_VALUE.</summary>
         public const float NightClockHour = 22f;
 
@@ -238,7 +240,11 @@ namespace Game.Rendering
             p.clockHour = NightClockHour;
             p.autoExposure = true; // ADR 0182: Night keeps the reviewed twilight-following table (dusk is fixed now)
             p.lookToe = 0f; p.lookToeP = 0.12f; // ADR 0182 r5: the dusk contrast toe is not part of the reviewed Night look
-            p.exposureCompensation = -3f; // reviewed Night appearance; preserve lamp/cab visibility.
+            // reviewed Night appearance; preserve lamp/cab visibility. ADR 0199: the twilight table puts −8° at 0.348 lx
+            // (was 0.461): the auto exposure would follow by +0.405 EV and lift the lamps, pools, cab and windows (High gate:
+            // clipped paving 3 % -> 12 %). −0.405 EV more keeps the reviewed display of everything lamp-lit; the sky-lit
+            // background is that much darker on screen, as the sky is.
+            p.exposureCompensation = NightExposureCompensation;
             p.skyDisplayGain = 0.125f;
             p.skyDisplayDesaturation = 0.85f;
             p.dimColourDesaturation = 0.65f; // ADR 0108 r4: reviewed 0/.35/.65/1 appearance ablation.
