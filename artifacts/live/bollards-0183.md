@@ -35,3 +35,9 @@ po `restore done` w `artifacts/logs/pipeline-r2.status`: `uv run --project tools
 `Get-Content artifacts/logs/pipeline-r3b.status` -> po PIPELINE DONE obejrzeć `renders/r3b-*/bollards-photo-13m.png`, potem merge origin/main (generated --ours), ADR WYNIKI_*, robocopy, KONIEC.
 - 17:00 r3b (rdzeń łańcucha) build+import+Low+High OK; kadr 13 m: górny łańcuch ciągły jak na zdjęciu, dolny na bruku słabszy (otwarte). Merge origin/main 8b2f3a3ac bez konfliktów; pytest po merge 153/154 (1 fail = forest cell industrial-c, wspólne Data/raw). Dowody skopiowane do main `artifacts/bollards-0183/` (+ logs/). Lokalny overrides Dojlid przeniesiony do `artifacts/bollards-0183/local-overrides.dojlidy.yaml` (main ma własny plik 0179); blok do wklejenia w ADR §Integracja.
 ## KONIEC
+
+## r4 (2026-11-14 ~17:30) — po recenzji visual-critic (docs/reports/REVIEW-2026-11-14-s20-0183.md, SCAL WARUNKOWO)
+- P1-1 przyczyna: karty łańcucha mają normalną lokalnie +y (strona od chodnika), wszystkie kamery patrzą od jezdni = tył; URP Lit nie odwraca normalnej tyłu -> N.V<0 -> Fresnel nieba = łososiowa czerwień. Fix: każdy quad łańcucha dwustronny (kopie ±1 mm wzdłuż normalnej, rdzeń ±2,5 mm), farba łańcucha osobna: bordo (120,20,22), biel (238,237,231). P1-5: LOD1 taśma pionowa + pozioma. P2-6: P11-063 = Commons CC0 Rakoon. Tris bay 270/79. pytest 0183 20/20.
+- W tle: `pipeline_r4.ps1` (build z overrides main 0179 + blok 0183 lokalnie -> kamery -> import -> Low/High r4). Lokalny `Data/Regions/bialystok-dojlidy/overrides.yaml` = plik main + blok 0183 (NIE commitować; na końcu `git checkout --` tego pliku).
+## NASTĘPNY KROK (komenda)
+`Get-Content artifacts/logs/pipeline-r4.status`; po PIPELINE DONE: pomiar G/R łańcucha w `renders/r4-*/bollards-detail-2m.png`, porównanie z P11-063, ADR, robocopy, KONIEC.

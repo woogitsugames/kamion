@@ -13,7 +13,7 @@ t = (P[-1, :2] - P[0, :2]) / np.hypot(*(P[-1, :2] - P[0, :2]))
 nE = np.array([t[1], -t[0]])                        # toward the carriageway (row walks NW->SE; road is west)
 if nE @ np.array([-1.0, 0.0]) < 0:
     nE = -nE
-cam = P[0, :2] + nE * 12.7 - t * 3.0
+cam = P[0, :2] + nE * 12.7 - t * 3.6   # r4: 0.6 m further, a sign post hid post 5 (review P2-4)
 f = 1230.0
 a0 = math.atan2(*(P[0, :2] - cam)[::-1]); a7 = math.atan2(*(P[-1, :2] - cam)[::-1])
 # image x = 800 + f tan(yaw - a): post 1 at 630, post 8 at 1310 -> solve yaw on the mean
