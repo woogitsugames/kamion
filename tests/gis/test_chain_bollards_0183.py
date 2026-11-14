@@ -56,7 +56,7 @@ def test_library_has_both_prototypes_with_one_material():
 def test_triangle_budget():
     bay0, bay1, _ = CB.bay()
     post0, post1, _ = CB.post()
-    assert _tris(bay0) <= 160 and _tris(bay1) <= 40
+    assert _tris(bay0) <= 180 and _tris(bay1) <= 40          # r3b: +32 tris of opaque chain core (174)
     assert _tris(post0) <= 80 and _tris(post1) <= 16
     assert _tris(bay1) < _tris(bay0) / 4
 
