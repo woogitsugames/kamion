@@ -10,15 +10,14 @@ def _tris(buf, layer, mat):
     return sum(len(p.T) for p in buf.parts if p.layer == layer and p.mat == mat)
 
 
-def test_tower_is_one_tone_with_punched_window_rows_on_lod1():
+def test_tower_has_no_hashed_ribbon_rows_or_spandrel_bands():
+    # ADR 0180 replaced the punched rows of ADR 0171 on the four main walls by authored facades (test_buildings_0180);
+    # `ribbon: false, bands: false` still hold for the walls no rule covers
     b = _loaded({TOWER})[TOWER]
     assert b["ovr"]["ribbon"] is False and b["ovr"]["bands"] is False
     buf = _build(b)
-    m1 = buf.mats("buildings_low")
-    assert "plaster_beige__far_office" in m1 and not any(x.endswith("__far_ribbon") for x in m1), m1
     assert "plaster_band_grey" not in buf.mats("buildings")
-    # LOD1 budget: same triangle count as the ribbon variant (one quad per storey chunk and wall)
-    assert _tris(buf, "buildings_low", "plaster_beige__far_office") == 144
+    assert not any(x.endswith("__far_ribbon") and not x.startswith("plaster_white") for x in buf.mats("buildings_low"))
 
 
 def test_ribbon_override_is_authored_only():

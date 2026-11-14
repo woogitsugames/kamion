@@ -47,6 +47,12 @@ def _poly_local(coords, origin):
     return Polygon(rings[0], rings[1:])
 
 
+# ADR 0179: BDOT10k OT_KUKO_A "lotnisko lub lądowisko" is the land of an aerodrome (Krywlany: 57 ha of meadow with one
+# asphalt runway), not a paved surface - as a yard it became 54 ha of concrete slabs with truck stands. Its real
+# surfaces come from OT_PTPL_A or an authored `paved_area`.
+KUKO_NOT_A_SURFACE = ("lotnisko lub lądowisko",)
+
+
 def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, truck_zone=None):
     """Return [{id, poly (local), mat, source, parking}] without overlaps, in priority order.
 
@@ -74,6 +80,9 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
             m = "yard_behaton"
         cand.append((f"bdot:{f['id']}", pp, m, "bdot10k_PTPL", False))
     for f in src["bdot10k"]["OT_KUKO_A"]:
+        if f["props"].get("rodzaj") in KUKO_NOT_A_SURFACE:
+            report.setdefault("kuko_not_paved", []).append(f"bdot:{f['id']}")
+            continue
         m = "yard_asphalt" if f["props"].get("rodzaj") == "parking" else "yard_concrete"
         cand.append((f"bdot:{f['id']}", _poly_local(f["geometry"]["coordinates"], origin), m, "bdot10k_KUKO",
                      f["props"].get("rodzaj") == "parking"))

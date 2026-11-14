@@ -18,6 +18,8 @@ namespace Game.Vehicle.Runtime
         public const string ResourcesPrefix = "TRAILER/TrailerMaterials_";
         /// <summary>Rendering layer bit of the trailer wheel renderers (tractor: bit 8, TruckVisualRig.TyreRenderingLayer).</summary>
         public const uint TyreRenderingLayer = 1u << 9;
+        /// <summary>ADR 0182: rendering layer bit of the rear door leaves (Kamion/Truck Exterior rear-face soiling).</summary>
+        public const uint RearDoorRenderingLayer = 1u << 11;
 
         public TruckVisualRig.RendererList[] lods = new TruckVisualRig.RendererList[3];
         public LODGroup group;

@@ -220,11 +220,15 @@ def _tyre_offset(shape, ss, key):
     return np.where(ss > s_str, (ss - s_str) ** 2 / (2 * R), 0.0)
 
 
-def tyre_scrub(buf, docks, zsurf, report):
+def tyre_scrub(buf, docks, zsurf, report, keep_off=None):
     """Tyre-scrub decals on the dock aprons (see module docstring). UV.x = metres along the track, UV.y = 0..1
     across, UV1 = (track length, pass strength 0.6..1.4): the material fades the ends, breaks the band with noise and
-    scales its opacity by the strength. One shape per door (TYRE_SHAPES), never the same as the door beside it."""
+    scales its opacity by the strength. One shape per door (TYRE_SHAPES), never the same as the door beside it.
+    keep_off (ADR 0179, override `kind: life_rules` / `tyre_scrub_off_roads`): a polygon the tracks must not run on
+    (the public carriageway in front of a hall with no yard of its own) - a pass ends at the last sample before it,
+    and one that would be shorter than TYRE_MIN_LEN_M is not drawn. None = the rule as it was."""
     n = 0
+    cut = 0
     shapes = {}
     for dk in docks:
         p, q = (np.asarray(x, float) for x in dk["edge"])
@@ -248,6 +252,16 @@ def tyre_scrub(buf, docks, zsurf, report):
                 jit = (hf(*key, "j") - 0.5) * 0.35
                 ss = np.arange(s0, L + 0.01, 1.0 if shape == 5 else 1.5)
                 bend = _tyre_offset(shape, ss, key)
+                if keep_off is not None:
+                    Cc = base[None, :] + nout[None, :] * ss[:, None] + d[None, :] * (jit + dside * bend)[:, None]
+                    on = shapely.intersects_xy(keep_off, Cc[:, 0], Cc[:, 1])
+                    if on.any():
+                        m_ok = max(int(np.argmax(on)) - 1, 0)         # one sample (1-1.5 m) short of the kerb line
+                        cut += 1
+                        if ss[m_ok] - s0 < TYRE_MIN_LEN_M:
+                            continue
+                        ss, bend = ss[:m_ok + 1], bend[:m_ok + 1]
+                        L = float(ss[-1])
                 strength = TYRE_STRENGTH[0] + hf(*key, "strength") * (TYRE_STRENGTH[1] - TYRE_STRENGTH[0])
                 for wx in (-1.0, 1.0):
                     w = 0.30 + hf(*key, wx, "w") * 0.16
@@ -269,8 +283,12 @@ def tyre_scrub(buf, docks, zsurf, report):
                             src=f"tyre:{dk['id']}:{dock['num']}:{k}:{TYRE_SHAPES[shape]}", UV1=uv1)
                     n += 1
     report["tyre_scrub_tracks"] = n
+    if keep_off is not None:
+        report["tyre_scrub_passes_cut_at_road"] = cut
     report["tyre_scrub_shapes"] = shapes
 
+
+TYRE_MIN_LEN_M = 4.0         # WORKING_VALUE (ADR 0179): a shorter stub in front of a door reads as a stain
 
 STALL_LINE_W = 0.12          # P-1e-like solid line 0.12 m (stand boundaries on private yards, WORKING_VALUE)
 STALL_DEPTH_M = 17.5         # stand depth: tractor + 13.6 m trailer + clearance (WORKING_VALUE)
@@ -740,7 +758,7 @@ def yard_props(pl, blds, docks, sp, report):
 
 
 def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, zsurf=None, park_polys=None,
-          no_parking=None, authored_trailers=None):
+          no_parking=None, authored_trailers=None, tyre_keep_off=None):
     """no_parking: polygons (authored, streetscape.depot_yard) where no rule car bay is laid out.
     authored_trailers: see dock_trailers (streetscape.depot_yard.dock_trailers)."""
     rep = {}
@@ -749,7 +767,7 @@ def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, 
     sp = Space(union, roads_poly, bpoly, route)
     dock_trailers(pl, docks, sp, rep, authored=authored_trailers)
     if buf is not None and zsurf is not None:
-        tyre_scrub(buf, docks, zsurf, rep)
+        tyre_scrub(buf, docks, zsurf, rep, keep_off=tyre_keep_off)
     pu = shapely.union_all([shapely.make_valid(p) for p in park_polys]) if park_polys else None
     parking(pl, paved, sp, rep, buf, zsurf, pu, docks, no_parking=no_parking)
     stalls = []

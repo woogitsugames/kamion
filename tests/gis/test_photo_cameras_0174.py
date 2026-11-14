@@ -24,7 +24,9 @@ def test_photo_cameras_generated(region_id):
         de, dn = c["look_at"][0] - c["pos"][0], c["look_at"][1] - c["pos"][1]
         hd = math.degrees(math.atan2(de, dn)) % 360.0
         assert abs((hd - e["heading_deg"] + 180.0) % 360.0 - 180.0) < 0.1
-        assert c["look_at"][2] == pytest.approx(c["pos"][2])
+        # ADR 0179: optional pitch_deg (default 0 = level, as ADR 0174); look_at is 100 m ahead
+        rise = 100.0 * math.tan(math.radians(e.get("pitch_deg", 0.0)))
+        assert c["look_at"][2] == pytest.approx(c["pos"][2] + rise, abs=2e-3)
         assert 100.0 < c["pos"][2] < 250.0     # EVRF2007 heights of the tile + eye
 
 

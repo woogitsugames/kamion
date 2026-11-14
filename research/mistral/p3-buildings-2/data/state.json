@@ -1,0 +1,241 @@
+{
+ "task": "M53-FIX v2 (przegląd r8) — przebudowa manifestu p3-buildings-2",
+ "updated": "2026-11-13 (etap 3 — wiersze 044-055, kolory po sanity-checku, 30 przyjętych)",
+ "commit_1": "50fcc60 — wiersze 001-016+027 (co_widac, rekasygnacje 010/011/012/014, typ 037-043)",
+ "etap_1_statusy": {
+  "M53-001": "OK",
+  "M53-002": "OK",
+  "M53-003": "ODRZUCONY",
+  "M53-004": "ODRZUCONY",
+  "M53-005": "ODRZUCONY",
+  "M53-006": "ODRZUCONY",
+  "M53-007": "OK",
+  "M53-008": "ODRZUCONY",
+  "M53-009": "ODRZUCONY",
+  "M53-010": "OK",
+  "M53-011": "OK",
+  "M53-012": "OK",
+  "M53-013": "OK-POŚREDNIE",
+  "M53-014": "OK",
+  "M53-015": "OCZEKUJE_WIZJI",
+  "M53-016": "OK-POŚREDNIE",
+  "M53-027": "OK-POŚREDNIE"
+ },
+ "etap_2_todo": {
+  "wiersze": [
+   "M53-015",
+   "M53-017",
+   "M53-018",
+   "M53-019",
+   "M53-020",
+   "M53-021",
+   "M53-022",
+   "M53-023",
+   "M53-024",
+   "M53-025",
+   "M53-026",
+   "M53-028",
+   "M53-029",
+   "M53-030",
+   "M53-031",
+   "M53-032",
+   "M53-033",
+   "M53-034",
+   "M53-035",
+   "M53-036",
+   "M53-037",
+   "M53-038",
+   "M53-039",
+   "M53-040",
+   "M53-041",
+   "M53-042",
+   "M53-043"
+  ],
+  "zdjęcia_do_obejrzenia": [
+   "20221119 080930 November 2022 in Białystok.jpg (017, 026)",
+   "20221119 080939 November 2022 in Białystok.jpg (018 — review: FH=prawdop. Jurowiecka 50)",
+   "20221119 080519 November 2022 in Białystok.jpg (020)",
+   "20221119 080601 November 2022 in Białystok.jpg (021, 025)",
+   "20221119 080734 November 2022 in Białystok.jpg (022)",
+   "20221119 072856 November 2022 in Białystok.jpg (023)",
+   "20241229 112510 December 2024 in Białystok.jpg (019, 024 — punktowiec z muralem; kandydaci Białostoczek 11/13A/15/17/19A, mh 34,6-36,2)",
+   "20240401 110317 April 2024 in Białystok.jpg (028)",
+   "20240401 110755 April 2024 in Białystok.jpg (043)",
+   "20240401 110819 April 2024 in Białystok.jpg (037, 038)",
+   "20240401 110911 April 2024 in Białystok.jpg (039, 042)",
+   "20240401 112303 April 2024 in Białystok.jpg (040)",
+   "20240530 122453 May 2024 in Białystok.jpg (035)",
+   "20240626 103137 June 2024 in Białystok.jpg (030)",
+   "20240626 103324 June 2024 in Białystok.jpg (041 — dom z poddaszem)",
+   "20220725 125821 July 2022 in Białystok.jpg (036)",
+   "20220725 131431 July 2022 in Białystok.jpg (034)",
+   "20220725 132342 July 2022 in Białystok.jpg (032, 033)",
+   "20220725 132504 July 2022 in Białystok.jpg (031)",
+   "Tysiąclecia 10 Białystok 3.jpg (029 — zdjęcie Borawskiego, kamera ~2 m od obrysu)"
+  ],
+  "followupy": [
+   "M53-015: wycinek kadru + ponowna wizja (kandydaci: Białostoczek 6/1 az 34 d 44 / 4/1 az 13 d 24 / 8 az 19 d 77; wizja: budynek beżowo-brązowy, czerwone balkony, ~6 rzędów nad parterem)",
+   "M53-011: rozstrzygnąć kondygnacje (4 vs 6) wycinkiem; kolor — poprawny prostokąt ściany (stary trafił w niebo [150,176,212])",
+   "M53-012: kolor — poprawny prostokąt ściany (stary [137,168,213] = niebo)",
+   "M53-010: prostokąt ściany (beż)",
+   "M53-014: prostokąt ściany (stary 50,200,200,450 = prześwietlone tło [255,255,255])",
+   "M53-013: prostokąt 150,200,200,300 OK [155,160,162] — dokończony sanity z opisem (jasnoszary)"
+  ],
+  "po_etapie_2": [
+   "użycie nowych zdjęć do uzupełnienia do >=30 przyjętych (każde obejrzane)",
+   "nowy audyt 20% seedem (kryterium wizji obowiązkowe)",
+   "ZIP mistral-p3-buildings-2-files-v2.zip",
+   "komentarz w PR #50 z surowym git diff --stat origin/main + licznikami OK/ODRZUCONY"
+  ]
+ },
+ "narzedzia": {
+  "tm.py": "WGS84<->EPSG:2180 (ETRS89/Poland CS92: CM 19E, k0=0.9993, FE=500000, FN=-5300000)",
+  "geom.py": "centroid/pip/iou 0.5m/dist_point_ring/bearing",
+  "jpegdec.py": "baseline JPEG decoder; rect_mean_rgb(path,rects); crop_png(src,dst,x0,y0,x1,y1,scale=2)",
+  "lod1": "/home/user/work/gugik/lod1_aoi.json (20181 budynków; klucze UPPER; {mh, ring} w 2180)",
+  "osm": "/home/user/work/gugik/osm_ways_aoi.json (24266 building ways)",
+  "cams": "/home/user/work/p3/cams_2180.json (pozycje kamer w 2180 wg nazwy zdjęcia)",
+  "geom_rows": "/home/user/work/p3/geom_rows.json (per wiersz: way, photo, d, az, lat, lon, lod1_mh, lod1_id)",
+  "vision_notes": "/home/user/work/p3/vision_notes.json (wyniki analiz per wiersz)"
+ },
+ "budzet_wizji": "uploads.analyze_image: limit 20 wywołań na cykl odpowiedzi; zużyty w etapie 1 (do odnowienia w następnej turze)",
+ "commit_2_plan": "M53-FIX etap 2: wiersze 017-043 — co_widac, rekasygnacje 019/020/021/030, statusy końcowe",
+ "etap_2_statusy": {
+  "M53-015": "ODRZUCONY",
+  "M53-017": "OK-POŚREDNIE",
+  "M53-018": "ODRZUCONY",
+  "M53-019": "OK (REKASYGNACJA → Białostoczek 21, Poczta Polska)",
+  "M53-020": "OK (zdjęcie → 20241229 112510, mural ks. Sopoćki, Białostoczek 22)",
+  "M53-021": "OK (REKASYGNACJA → Białostoczek 13A)",
+  "M53-022": "ODRZUCONY",
+  "M53-023": "ODRZUCONY",
+  "M53-024": "ODRZUCONY",
+  "M53-025": "ODRZUCONY",
+  "M53-026": "ODRZUCONY",
+  "M53-028": "ODRZUCONY",
+  "M53-029": "OK",
+  "M53-030": "OK (REKASYGNACJA → Andersa 46 JRG-2 PSP)",
+  "M53-031": "ODRZUCONY",
+  "M53-032": "ODRZUCONY",
+  "M53-033": "ODRZUCONY",
+  "M53-034": "ODRZUCONY",
+  "M53-035": "OK-POŚREDNIE",
+  "M53-036": "ODRZUCONY",
+  "M53-037": "OK-POŚREDNIE",
+  "M53-038": "OK-POŚREDNIE",
+  "M53-039": "OK-POŚREDNIE",
+  "M53-040": "OK-POŚREDNIE",
+  "M53-041": "OK-POŚREDNIE",
+  "M53-042": "OK-POŚREDNIE",
+  "M53-043": "OK-POŚREDNIE"
+ },
+ "liczniki_po_etapie_2": {
+  "OK": 12,
+  "OK-POŚREDNIE": 12,
+  "ODRZUCONY": 19,
+  "przyjęte_razem": 24,
+  "cel": "≥30 przyjętych → etap 3"
+ },
+ "kolory_po_sancheck": {
+  "zweryfikowane": [
+   "M53-013 [155,160,162]",
+   "M53-021 [159,159,156]"
+  ],
+  "odrzucone_prostokąty_trafiły_w_niebo_cień": [
+   "M53-029",
+   "M53-035",
+   "M53-037",
+   "M53-038",
+   "M53-039",
+   "M53-040",
+   "M53-041",
+   "M53-042",
+   "M53-043",
+   "M53-017",
+   "M53-030"
+  ],
+  "UNVERIFIED_do_powtórzenia_cropem": [
+   "M53-010",
+   "M53-011",
+   "M53-012",
+   "M53-014",
+   "M53-019",
+   "M53-020",
+   "M53-027",
+   "M53-029",
+   "M53-030",
+   "M53-035",
+   "M53-037-043"
+  ]
+ },
+ "etap_3_plan": [
+  "nowy cykl wizji (20 wywołań): (a) prostokąty kolorów z cropów budynku — zakaz nieba/cieni/drzew; (b) rozstrzygnięcie kondygnacji M53-011 (4 vs 6); (c) nowe wiersze M53-044+ (nowe zdjęcia Commons w AOI, każde obejrzane) do ≥30 przyjętych",
+  "audit_20_percent.json: losowanie 20% seedem jawnym (20261114); co_widac + kamera_d_m + kamera_kat_deg; audyt C = zliczenie ze zdjęcia vs LoD1 mh/2,9; kryterium wizji OBOWIĄZKOWE",
+  "ZIP mistral-p3-buildings-2-files-v2.zip (zdjęcia ≤1600 px + wycinki ortofoto + INDEX.csv) przez artifacts",
+  "komentarz w PR #50: SUROWY git diff --stat origin/main + liczniki OK/ODRZUCONY; NIE SCALAĆ"
+ ],
+ "etap_3": {
+  "wiersze_nowe": [
+   "M53-044",
+   "M53-045",
+   "M53-046",
+   "M53-047",
+   "M53-048",
+   "M53-049",
+   "M53-050",
+   "M53-051",
+   "M53-052",
+   "M53-053",
+   "M53-054",
+   "M53-055"
+  ],
+  "statusy": {
+   "M53-044": "OK",
+   "M53-045": "OK",
+   "M53-046": "OK",
+   "M53-047": "OK",
+   "M53-048": "OK-POŚREDNIE",
+   "M53-049": "OK",
+   "M53-050": "ODRZUCONY",
+   "M53-051": "ODRZUCONY",
+   "M53-052": "ODRZUCONY",
+   "M53-053": "ODRZUCONY",
+   "M53-054": "ODRZUCONY",
+   "M53-055": "ODRZUCONY"
+  },
+  "liczniki_koncowe": {
+   "wiersze": 55,
+   "OK": 17,
+   "OK-POŚREDNIE": 13,
+   "ODRZUCONY": 25,
+   "przyjęte": 30
+  },
+  "kolory_zweryfikowane_dekoderem": {
+   "M53-013": "[155,160,162]",
+   "M53-021": "[159,159,156]",
+   "M53-014": "[232,228,228]",
+   "M53-035": "[163,194,126]"
+  },
+  "kolory_unverified_po_sanity": [
+   "M53-011",
+   "M53-012",
+   "M53-027",
+   "M53-029",
+   "M53-030",
+   "M53-044",
+   "M53-045",
+   "M53-046",
+   "M53-047",
+   "M53-049"
+  ],
+  "kondygnacje_rozstrzygniete": {
+   "M53-011": "6 rzędów (druga wizja na wycinku 13.11)"
+  },
+  "pozostale_kroki": [
+   "audyt_20_percent.json (seed 20261114)",
+   "wycinki ortofoto files/orto/",
+   "ZIP mistral-p3-buildings-2-files-v2.zip",
+   "komentarz w PR #50 z diff --stat"
+  ]
+ }
+}

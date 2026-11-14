@@ -25,7 +25,7 @@ dot. tych samych dokumentów/obiektów; tu wyłącznie nowe kadry i nowe odczyty
 
 ## Manifest
 
-`manifest.csv` — id `M50-001…M50-065` (49 wierszy pierwotnych + 16 z pass B: M50-050…M50-065); kolumny zgodne z zadaniem:
+`manifest.csv` — id `M50-001…M50-066` (49 wierszy pierwotnych + 16 z pass B: M50-050…M50-065 + 1 z pass C: M50-066); kolumny zgodne z zadaniem:
 `id, obiekt, model_wzor, wymiary_m, materiał, kolor_ral, dokument_strona, lat, lon,
 kierunek_deg, data_zdjęcia, sezon, pora_dnia, url_źródła, licencja, autor, data_dostępu,
 status, uwagi`.
@@ -59,8 +59,22 @@ bariera 993066622, szafka 219382225, latarnia 219382073 → NOT_FOUND; pozycje T
 M50-008/M50-023 domknięte drugim odczytem w pass B → NOT_FOUND). Pass B dołożył 16 nowych
 wierszy: kadry z kotwicą geometryczną OSM (kryteria FIX: odchyłka azymutu ≤ 30°,
 odległość ≤ 25 m, kotwica = node/way OSM) oraz uczciwe kadry negatywne near-miss.
-Wynik końcowy (65 wierszy): 25 × VERIFIED (dokumenty), 16 × VERIFIED_WIZJA,
+Wynik pass A/B (65 wierszy): 25 × VERIFIED (dokumenty), 16 × VERIFIED_WIZJA,
 24 × NOT_FOUND, 0 × TO_VERIFY.
+
+**M50-FIX pass C (2026-11-13, wg erraty s17 z przeglądu REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md):**
+pełny uczciwy przebieg wizyjny (63 kadry = 40 wierszy foto manifestu + 23 kadry Panoramax; **1 kadr =
+1 wywołanie** modelu wizyjnego; limit 20 wywołań/turę rozłożony na 5 tur; pełny dziennik: `vision_run.json`).
+Zastosowana errata s17: **M50-059/060 → NOT_FOUND** (na kadrach prywatne ogrodzenie prętowe posesji,
+nie bariera U-12 — potwierdzone wizyjnie w pass C), **M50-017 → NOT_FOUND** (wiata/pawilon przy BP, nie
+ławka). Nowe potwierdzenia wizyjne pass C: **M50-008 → VERIFIED_WIZJA** (stalowa odbojnica w-beam 5–10 m
+po lewej — follow-up rozróżnił od ekranu/ogrodzenia; bez kotwicy OSM — bariery U-12 niemapowane w kaflu),
+**nowy wiersz M50-066** (latarnia, kadr 993028082 z sekwencji 2769366, kotwica node 12625592983,
+19,5 m/18°). Uzupełniony ekstrakt OSM (street_lamp: +2 węzły 12073055699/9845363978) potwierdza kotwice
+M50-056/057 z pass B. Dodatkowo sprawdzono sąsiednie klatki (zapas): 219382387 (8,4 m/29°) i
+219382391 (20,7 m/10°) — latarnie zakotwiczone, nie dodane jako wiersze (typ już ma ≥ 2).
+Wynik końcowy (66 wierszy): **25 × VERIFIED (dokumenty), 15 × VERIFIED_WIZJA, 26 × NOT_FOUND,
+0 × TO_VERIFY**.
 
 ## Zdjęcia (zadanie 1) — metodologia
 
@@ -77,35 +91,37 @@ Wynik końcowy (65 wierszy): 25 × VERIFIED (dokumenty), 16 × VERIFIED_WIZJA,
   `mistral-p9-furniture-3-files-v2.zip` (kadry + skany dokumentów) — karta pobrania
   (artefakt) podlinkowana w PR i w `sources.md` (SHA-256).
 
-### Pokrycie typów (zdjęcia) — stan po pass B (M50-FIX), 2026-11-13
+### Pokrycie typów (zdjęcia) — stan po pass C (errata s17), 2026-11-13
 Kryteria FIX dla „potwierdzonego kadru”: odchyłka azymutu do obiektu od osi kamery ≤ 30°,
 odległość ≤ 25 m, obiekt zakotwiczony w node/way OSM (kotwica wskazana w uwagach manifestu).
+W pass C sprawdzono geometrycznie **917 kadrów** (7 sekwencji KartaView w kaflu+margines, w tym nowo
+odkryta sekwencja 25209 — Andersa) × 170 węzłów OSM 9 typów + 23 kadry Panoramax (view:azimuth).
 
 | Typ | Kadry potwierdzające (kotwica OSM: odchyłka / odległość) | Kadry negatywne (uczciwie) | Werdykt |
 |---|---|---|---|
-| sygnalizator | 219381855 (M50-052: node 3890183128, 1,6°/10,8 m), 219382063 (M50-053: node 9224916290, 3,5°/19,1 m), Panoramax 3717771d (M50-054: node 2629251388, 22,8°/12,0 m) + M50-004/005/006 (wizyjne, z pass A) | Panoramax 35224dcb (M50-055: sygnalizator widoczny, ale kotwica 9,1 m ZA kamerą — 152°) | **≥ 2 kadry z kotwicą** ✓ |
-| latarnia | 219382393 (M50-056: node 12073055699, 14,8°/10,3 m), 219382385 (M50-057: node 9845363978, 17,2°/17,4 m), 1326673433 (M50-058: node 12625592998, 13,7°/14,2 m; kadr niedoświetlony) | M50-003 (latarnia poza kadrem) | **≥ 2 kadry z kotwicą** ✓ |
-| bariera U-12/U-12b | 219381929 (M50-059: way 1341554978, fence_type=bars, 19,8°/20,9 m), 219381925 (M50-060: way 1341554978, 23,5°/21,7 m) | 993066622 (M50-007), 993066706, M50-008 (stalowa bariera ochronna roadrail/B-20 — NIE U-12, domknięte drugim odczytem) | **≥ 2 kadry z kotwicą** ✓ |
-| hydrant nadziemny | 989896430 (M50-050: node 12752227206, 28°/23,2 m — blisko granicy) | 5062589 (M50-051: spełnia geometrię 21,3°/14 m, ale hydrantu NIE widać), Panoramax 6ded8ec0 (M50-065: hydrant poza kadrem, 102°), M50-013/014/015 | **1 kadr z kotwicą** — drugi kandydat geometryczny negatywny (uczciwie odnotowany) |
-| ławka | 1326673717 (M50-017: ławka przystankowa, prawo ~10–15 m — bez kotwicy OSM ≤ 25 m) | 7119771 (M50-063: kadr zamazany) | **1 kadr wizyjny** — najbliższy node bench 30,6 m (poza kryterium): geometria nie pozwala na drugi |
-| kosz | — | 993065622, 219382231 (M50-019/020) | **0 kadrów** — najbliższy node waste_basket 28,7 m; typ udokumentowany BIP Glasdon (M50-044/046, VERIFIED) |
-| stojak rowerowy | — | 219382025, 993065846, 7119785 (M50-062: stojaki 19 m, ale odchyłka ~135° — poza FOV) | **0 kadrów** — geometria nie pozwala; typ udokumentowany OPZ ZMK (M50-025/026, VERIFIED) |
-| osłona drzewa | — | 219382233 (M50-023 — domknięte drugim odczytem: drzewa bez osłon), 219382235 (M50-064: jw.), 1326673433 (M50-024) | **0 kadrów** — najbliższy node tree guard 23,1 m, odchyłka 95,7°; brak w kadrach |
-| słupek U-5a | — | 219381941 (M50-009), 219382161 (M50-010: odchyłka 123°) | **0 kadrów** — najbliższy node bollard 73 m; typ udokumentowany Dz.U. (M50-040, VERIFIED) |
-| żerdź energetyczna | — | 1326673805/1326673801 (M50-011/012) | **0 kadrów** — najbliższy node power=pole 377 m; typ udokumentowany kartami producenta (M50-047/048, VERIFIED) |
-| szafka gazowa/telekom | — | 219382225 (M50-016), 219382229 (M50-061: węzeł 22 m, odchyłka 80°) | **0 kadrów** — żadna para kadr–węzeł nie spełnia kryteriów; typ wymiarowo wg STO ZDM (M50-032) |
+| sygnalizator | M50-004 (node 2629251364, 15°/0,6 m), M50-052 (3890183128, 2°/10,8 m), M50-053 (9224916290, 4°/19,1 m), M50-006 (3136871040, 11°/8,2 m), M50-054 Panoramax (2629251388, 23°/12,0 m) — 7 × VERIFIED_WIZJA | M50-055 (sygnalizatory widoczne, kotwica 9,1 m ZA kamerą — 152°) | **≥ 2 kadry z kotwicą** ✓ |
+| latarnia | M50-001 (12625592983, 24°/13,9 m), M50-056 (12073055699, 15°/10,3 m), M50-057 (9845363978, 17°/17,4 m), M50-058 (12625592998, 14°/14,2 m, kadr nocny — świecąca oprawa), M50-066 (12625592983, 18°/19,5 m) | M50-002 (latarnie widoczne ~100–150 m, kotwica 43 m/41° — poza kryterium), M50-003 | **≥ 2 kadry z kotwicą** ✓ |
+| hydrant nadziemny | M50-050 (12752227206, 28°/23,2 m) — potwierdzony też przez s17 | M50-051 (geometria OK: 21°/14 m, ale hydrantu NIE widać w kadrze — pass C), M50-013/014/015, Panoramax 6ded8ec0 (M50-065: 13,7 m ale 102° od view:azimuth) | **1 kadr z kotwicą** — drugi kandydat geometryczny negatywny (uczciwie odnotowany) |
+| bariera U-12/U-12b | M50-008 (VERIFIED_WIZJA pass C: stalowa odbojnica w-beam na słupkach, 5–10 m po lewej; **bez kotwicy OSM** — bariery U-12 niemapowane w kaflu; follow-up rozróżnił od ekranu akustycznego i ogrodzenia) | M50-007 (sygnalizatory + płot posesji), M50-059/060 (errata s17: prywatne ogrodzenie prętowe posesji) | **1 kadr wizyjny** — brak kotwic OSM dla barier drogowych w kaflu |
+| ławka | — | M50-017 (errata s17: wiatą/pawilon przy BP — model wskazał siedzisko, ale wg erraty to nie samodzielna ławka), M50-018, M50-063 | **0 kadrów** — najbliższy node bench 30,6 m; typ udokumentowany BIP Glasdon (M50-044/046, VERIFIED) |
+| kosz | — | M50-019/020 | **0 kadrów** — najbliższy node waste_basket 28,7 m; typ udokumentowany BIP Glasdon (VERIFIED) |
+| stojak rowerowy | — | M50-021/022, M50-062 (stojaki 19 m, ale odchyłka ~135° — poza FOV) | **0 kadrów** — geometria nie pozwala; typ udokumentowany OPZ ZMK (M50-025/026, VERIFIED) |
+| osłona drzewa | — | M50-023/024 (kadr nocny), M50-064 | **0 kadrów** — brak węzłów tree guard w OSM w kaflu; model wskazywał „kratki wokół pnia” na 3 kadrach Panoramax, ale bez kotwic OSM — uczciwie tylko odnotowane |
+| słupek U-5a | — | M50-009/010; na M50-056/057 widoczne biało-czerwone słupki (~10–15 m; wskazówka s17) — **bez kotwicy OSM** (barrier=bollard najbliżej 87 m), typ UNVERIFIED | **0 kadrów z kotwicą** — typ udokumentowany Dz.U. (M50-040, VERIFIED) |
+| żerdź energetyczna | — | M50-011 (słup w oddali ~100–150 m — bez potwierdzenia; węzeł power=pole najbliżej 377 m), M50-012 | **0 kadrów** — typ udokumentowany kartami producenta (M50-047/048, VERIFIED) |
+| szafka gazowa/telekom | — | M50-016, M50-061 (węzeł 22 m, odchyłka 80°) | **0 kadrów** — żadna para kadr–węzeł nie spełnia kryteriów; typ wymiarowo wg STO ZDM (M50-032) |
 
-Uczciwe podsumowanie FIX: **3 typy mają ≥ 2 kadry z kotwicą geometryczną** (sygnalizator,
-latarnia, bariera U-12), **hydrant ma 1 kadr z kotwicą** (drugi kandydat geometryczny okazał
-się negatywny — odnotowano to jawnie, bez podpisywania), **ławka ma 1 kadr wizyjny bez
-kotwicy** (najbliższa ławka OSM 30,6 m — poza kryterium FIX). Dla **kosza, stojaka
-rowerowego, osłony drzewa, słupka U-5a, żerdzi i szafki żadna para kadr–węzeł OSM w kaflu
-nie spełnia kryteriów ≤ 30°/≤ 25 m** (minimalne odległości/odchyłki podane w tabeli i w
-uwagach manifestu) — typy te są udokumentowane wierszami dokumentowymi (VERIFIED:
-Dz.U. 2311, OPZ ZMK, BIP Glasdon, karty Solbet/Gislebork) i uczciwymi kadrami negatywnymi
-NOT_FOUND. Nie podano żadnego fałszywego potwierdzenia. Panoramax: 23 kadry w kaflu
-kontrolowane odczytami wizyjnymi (potwierdzenia M50-054; kadry negatywne/za kamerą:
-M50-055/065), pozostałe — patrz `sources.md`; Mapillary pominięty (brak tokenu).
+Uczciwe podsumowanie pass C: **2 typy mają ≥ 2 kadry z kotwicą geometryczną** (sygnalizator — 7,
+latarnia — 5 z kotwicą + 1 wizyjna daleka), **hydrant i bariera U-12 mają po 1 kadrze** (kandydat
+na drugi hydrant okazał się negatywny wizyjnie; bariery U-12 nie są mapowane w OSM). Dla **ławy,
+kosza, stojaka, osłony drzewa, słupka U-5a, żerdzi i szafki żadna para kadr–węzeł OSM w kaflu
+nie spełnia kryteriów ≤ 30°/≤ 25 m** (917 kadrów KartaView + 23 Panoramax przeliczone geometrycznie;
+minimalne odległości/odchyłki w tabeli i uwagach manifestu) — typy te są udokumentowane wierszami
+dokumentowymi (VERIFIED: Dz.U. 2311, OPZ ZMK, BIP Glasdon, karty Solbet/Gislebork) i uczciwymi
+kadrami negatywnymi NOT_FOUND. Nie podano żadnego fałszywego potwierdzenia. Panoramax: wszystkie
+23 kadry w kaflu obejrzane w pass C (potwierdzenia M50-054; poza osią: M50-055/065; w pozostałych
+latarnie/sygnalizatory poza kryteriami azymut/dystans, rzekome bariery U-12 na 07820d85 to ekran
+akustyczny — follow-up); Mapillary pominięty (brak tokenu).
 
 ## Dokumenty (zadania 2–5) — kluczowe fakty
 
@@ -201,22 +217,21 @@ aprobata ITB AT-15-3690/99, AT-15-5989/2003) oraz sklep Elektriko (E12/12, kod 1
 poprzednich (P9-023) — niezależne potwierdzenie.
 
 ## Samokontrola 20 % — `audit_20_percent.json`
-Jawny seed: **2026111350** (nowy, po pass B — 20 % z 65 pozycji). Deterministyczny wybór
-(`random.Random(2026111350).sample` na 65 wierszach), dla każdej sprawdzonej pozycji:
+Jawny seed: **2026111361** (nowy, po pass C — 20 % z 66 pozycji). Deterministyczny wybór
+(`random.Random(2026111361).sample` na 66 wierszach; próba = 13), dla każdej sprawdzonej pozycji:
 obecność źródła (URL), licencja, status ze słownika, format WGS84 i komplet pól foto
 (sezon/pora_dnia) dla wierszy zdjęciowych, numer strony dla wierszy dokumentowych; dla
-wierszy wizyjnych przywołany cytat „co widać” z uwag, dla dokumentowych — cytat źródłowy
-(np. M50-033 s. 754 „4,5-5,5 m nad jezdnią”, M50-044 „17 146,20 zł brutto”, OPZ
-„110 cm w wersji do zabetonowania (80 cm nad gruntem)”). Wynik w pliku.
+wierszy wizyjnych przywołany cytat „co widać” z uwag **porównany z kolumną obiekt i statusem**
+(VERIFIED_WIZJA ⇒ obiekt widoczny; NOT_FOUND ⇒ „NIE widać”), dla dokumentowych — cytat źródłowy.
+Próba celnie objęła wiersze erraty (M50-017/059/060), nowy M50-066 i negatywy. Wynik w pliku.
 
 ## Pliki i archiwum
 - `files/` (ignorowane przez git w tym katalogu): kadry JPG (wariant lth ≤ 1600 px) +
   `files/docs/` (dokumenty źródłowe odczytów: OPZ ZMK 331 KB, STO ZDM v09 1,1 MB,
   STO v03 DOCX, warunki oświetleniowe ZDM 2025 2 MB, zawiadomienie Glasdon 240 KB,
   ogłoszenie 1,6 MB, zał. 1 wzoru ławki/kosza 1,5 MB).
-- `mistral-p9-furniture-3-files-v2.zip` — **v2 (po M50-FIX)**: WSZYSTKIE kadry
-  z manifestu (65 wierszy, łącznie z brakującym w v1 kadrem 1326673717 i nowymi M50-050…065;
-  Panoramax przez wsrv.nl ≤ 1600 px) + `files/docs/`; artefakt do pobrania
-  (SHA-256 w `sources.md`); Dz.U. cz. 2 (41 MB) i opis PAB (11,7 MB) celowo **poza
-  archiwum** — tylko linki.
+- `mistral-p9-furniture-3-files-v2.zip` — **v2 (przebudowane po pass C)**: WSZYSTKIE kadry
+  z manifestu (66 wierszy = 41 kadrów foto: M50-001…024 + M50-050…066; Panoramax przez wsrv.nl
+  ≤ 1600 px) + `files/docs/` (7 dokumentów źródłowych); artefakt do pobrania (SHA-256 w
+  `sources.md`); Dz.U. cz. 2 (41 MB) i opis PAB (11,7 MB) celowo **poza archiwum** — tylko linki.
 - Nie zmieniono niczego poza `research/mistral/p9-furniture-3/`.

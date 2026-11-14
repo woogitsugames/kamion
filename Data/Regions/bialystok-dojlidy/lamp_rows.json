@@ -1,0 +1,163 @@
+{
+ "schema": "truck-sim-pl/lamp-rows/1",
+ "adr": "docs/adr/0179-dojlidy-rozpoznawalnosc-landmarki-lotnisko.md",
+ "frame": "local E,N (m) of region.yaml origin (EPSG:2180 780043, 590079)",
+ "rows": [
+  {
+   "id": "kuronia-median-double-lamps",
+   "reason": "Jacka Kuronia (dual carriageway of the SSSE zone): one row of double-arm (Y) columns on the median, arms over both carriageways; the rule put single-arm lamps on the outer edge. CC0 photos Commons / Rakoon P11-001 (2024-06-23, from the cycle path at Kuronia 3, looking east: four Y columns in a row right of the north carriageway, i.e. on the median) and P11-094 (2023-09-03, at Mysliwska: a Y column on the strip between the carriageways in front of the hall). REVIEW-2026-11-13-s17-mistral-r8-p11-p12 par. 4: latarnie dwuramienne (Y) na wysokich masztach stalowych ~10 m (ESTIMATED z kadru).",
+   "source": "positions NOT measured: median axis = midpoint of the two OSM carriageway axes (tools/worldgen/qa/median_lamp_row.py --region bialystok-dojlidy --name \"Jacka Kuronia\" --spacing 35; first point, inside the Mickiewicza junction, dropped), spacing 35 m WORKING_VALUE (the GUGiK 0.25 m orthophoto does not resolve the poles; photo P11-001 shows a spacing of this order), phase of the row UNVERIFIED. Height: prototype lamp_double_10m (luminaires 10.3 m, measured for DK8 in ADR 0146) - WORKING_VALUE here.",
+   "confidence": "low",
+   "verify": "owner photo session: column positions, spacing and height on Kuronia; whether the row continues east of Mysliwska",
+   "proto": "lamp_double_10m",
+   "suppress_rule_lamps": {
+    "osm_way": [
+     236885858,
+     236885859,
+     236885860,
+     258564448,
+     275237232,
+     275237234,
+     275237242,
+     275244659,
+     275253388,
+     275255319,
+     275255320,
+     275256822,
+     532805224,
+     552379030,
+     691820491,
+     1540798842
+    ],
+    "within_m": 16.0
+   },
+   "deck_snap_m": 2.6,
+   "points_en": [
+    [
+     18.5,
+     362.2
+    ],
+    [
+     50.0,
+     377.5
+    ],
+    [
+     81.4,
+     392.7
+    ],
+    [
+     112.9,
+     407.9
+    ],
+    [
+     144.6,
+     423.0
+    ],
+    [
+     176.9,
+     437.6
+    ],
+    [
+     210.5,
+     448.9
+    ],
+    [
+     244.8,
+     457.3
+    ],
+    [
+     279.8,
+     462.9
+    ],
+    [
+     314.9,
+     465.7
+    ],
+    [
+     350.5,
+     464.9
+    ],
+    [
+     385.7,
+     463.1
+    ],
+    [
+     420.6,
+     461.0
+    ],
+    [
+     455.4,
+     458.9
+    ],
+    [
+     490.4,
+     456.8
+    ],
+    [
+     525.6,
+     454.4
+    ],
+    [
+     560.8,
+     450.5
+    ],
+    [
+     595.3,
+     443.5
+    ],
+    [
+     629.6,
+     434.2
+    ],
+    [
+     662.9,
+     422.0
+    ],
+    [
+     695.1,
+     408.2
+    ],
+    [
+     727.3,
+     394.4
+    ],
+    [
+     759.4,
+     380.6
+    ],
+    [
+     791.6,
+     366.5
+    ],
+    [
+     823.7,
+     352.9
+    ],
+    [
+     855.9,
+     339.2
+    ],
+    [
+     888.1,
+     325.6
+    ],
+    [
+     920.4,
+     312.0
+    ],
+    [
+     952.7,
+     301.3
+    ],
+    [
+     986.5,
+     293.2
+    ],
+    [
+     1020.3,
+     287.2
+    ]
+   ]
+  }
+ ]
+}

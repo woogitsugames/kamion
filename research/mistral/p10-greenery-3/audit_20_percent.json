@@ -1,0 +1,377 @@
+{
+ "zadanie": "M51-FIX — samokontrola 20% manifestu (nowe losowanie po naprawach)",
+ "data": "2026-11-13",
+ "seed": 20261114,
+ "generator": "random.Random(20261114).sample(ids, ceil(0.2*n)); sort()",
+ "poprzedni_seed": 20261113,
+ "n_wierszy": 60,
+ "n_probek": 12,
+ "probki": [
+  "M51-002",
+  "M51-102",
+  "M51-106",
+  "M51-113",
+  "M51-126",
+  "M51-128",
+  "M51-129",
+  "M51-130",
+  "M51-133",
+  "M51-205",
+  "M51-224",
+  "M51-301"
+ ],
+ "korony_3_okna": [
+  {
+   "okno": "w1_skarpa",
+   "srodek_wgs84": [
+    23.1525,
+    53.1555
+   ],
+   "korony_w_oknie": 68,
+   "pct_srodkow_na_zieleni_ExG>0.06": 100.0,
+   "pokrycie_zieleni_okna_ExG>0.06_pct": 13.8,
+   "zwarta_zielen_poligony_przecinajace_okno": 27
+  },
+  {
+   "okno": "w2_max_korony",
+   "srodek_wgs84": [
+    23.146425,
+    53.154755
+   ],
+   "korony_w_oknie": 439,
+   "pct_srodkow_na_zieleni_ExG>0.06": 99.8,
+   "pokrycie_zieleni_okna_ExG>0.06_pct": 44.3,
+   "zwarta_zielen_poligony_przecinajace_okno": 7
+  },
+  {
+   "okno": "w3_max_zwarta",
+   "srodek_wgs84": [
+    23.15414,
+    53.166034
+   ],
+   "korony_w_oknie": 28,
+   "pct_srodkow_na_zieleni_ExG>0.06": 100.0,
+   "pokrycie_zieleni_okna_ExG>0.06_pct": 39.3,
+   "zwarta_zielen_poligony_przecinajace_okno": 5
+  }
+ ],
+ "wyniki": [
+  {
+   "id": "M51-002",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "urzędowe (komunikat prasowy UM)"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-102",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "jezdnia alei z metalowymi barierami, kamrzyste/trawiaste skarpy, betonowy rów odwadniający, billboard BNP PARI…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Aleja Tysiąclecia Państwa Polskiego: geotag 2.7 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-106",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "ogrodzenie z drewnianych paneli i siatki przy alei, budynki mieszkalne; brak żywopłotu. Geotag 2,4 m od osi al…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Aleja Tysiąclecia Państwa Polskiego: geotag 2.4 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-113",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC BY 3.0 (referencja, nie tekstura)"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "jezdnia z autobusem, stacja Circle K, budynki handlowe (GAZ PROM), krzyż na trawniku, drzewa i krzewy w tle; b…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Sokólska: geotag 0.5 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-126",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0 1.0 (domena publiczna)"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "strumień z betonową konstrukcją, zieleń nadrzeczna; brak żywopłotu. Geotag 20,7 m od osi Andersa. Plik w paczc…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Generała Władysława Andersa: geotag 20.7 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-128",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "droga do zamkniętej bramy przy Sokólskiej, drzewa i budynek w tle; ciągły iglasty żywopłot ~1,5 m po prawej (o…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Sokólska: geotag 2.9 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-129",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "park przy Sokólskiej (graffiti WRC TAKSEA na betonowej konstrukcji); ciągły liściasty pas ~1,2 m po lewej (odc…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Sokólska: geotag 3.4 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-130",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "parking przy Kombatantów (Roto Okna Dachowe, ROCKWOOL), ogrodzenie z siatki; ciągły liściasty żywopłot 2,5-3 m…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Kombatantów: geotag 0.1 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-133",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC BY 3.0 (referencja, nie tekstura)"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "budynek z reklamą ODZIEŻ ROBOCZA ARTYKUŁY BHP; brak żywopłotu. Geotag 3,3 m od osi Kombatantów."
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Kombatantów: geotag 3.3 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-205",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "prawa strona kadru (front posesji z domem); niski żywopłot, niższy od płotu ~1,2 m; id zdjęcia: M51-104.jpg; g…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Michała Motoszko: geotag 27.8 m od osi (>25 m); ujawnione w uwagach (POZA progiem, atrybucja ESTIMATED)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED (segment przy osi ulicy)"
+    },
+    "typ_gatunek": {
+     "ok": true,
+     "info": "liściasty (gatunek nieoznaczony z kadru)"
+    },
+    "wysokosc_estimated": {
+     "ok": true,
+     "info": "1.0±0.3"
+    },
+    "id_zdjecia": {
+     "ok": true,
+     "info": "w uwagach"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-224",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "prawa strona kadru; ciągły iglasty pas ~1,5 m przy drodze do bramy posesji; id zdjęcia: files/extra_20240626_1…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Sokólska: geotag 2.9 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED (segment przy osi drogi)"
+    },
+    "typ_gatunek": {
+     "ok": true,
+     "info": "iglasty (żywotnik/tuja)"
+    },
+    "wysokosc_estimated": {
+     "ok": true,
+     "info": "1.5±0.3"
+    },
+    "id_zdjecia": {
+     "ok": true,
+     "info": "w uwagach"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-301",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC BY 4.0 (ortofoto GUGiK)"
+    },
+    "korony_3_okna": {
+     "ok": true,
+     "info": "w1_skarpa: 100.0%, w2_max_korony: 99.8%, w3_max_zwarta: 100.0% (próg >80%)"
+    }
+   },
+   "pass": true
+  }
+ ],
+ "pass_all": true
+}

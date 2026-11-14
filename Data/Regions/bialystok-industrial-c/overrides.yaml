@@ -246,6 +246,22 @@ overrides:
         - {a: [49.4, 40.4], b: [52.2, 19.6], w: 0.9, tone: dark}
       oil_per_dock: [2, 5]
       grime_edges: true
+  # s20 night-int-0191-0192 (review REVIEW-2026-11-14-s20-0191-0192 P1-1): own block so the yard block stays as authored.
+  - id: kwadrat-park-yard-lamp-gate-face
+    kind: depot_yard
+    reason: >-
+      The northernmost arched column of kwadrat-park-yard (at 778727.0 595836.0, local E 731.7 N -387.1, 2.2 m west of
+      the route-start lane centre) had its arm turned west over the open yard (face 778720 595840), the only one of the
+      six; at dusk / night the ADR 0191 road-luminaire pool then lit the paving and left the lane under the trailer at
+      ~4 % luma (review P1-1). Like the other five columns on the west edge of the lane, its arm now points east-south-east
+      over the carriageway (same face offset +9.5 / -5.2 m as lamps 1-4). Orthophoto shows the column foot, not the arm
+      direction - arm direction follows the rest of the row (WORKING_VALUE). This block removes the yard block's lamp
+      (clear polygon +-1.5 m around its foot, applied after it) and places it again with the new face.
+    confidence: medium
+    verify: owner photo session item 4 (yard lamps, arm direction of the northern column)
+    clear_lamps_epsg2180: [[778725.5, 595834.5], [778728.5, 595834.5], [778728.5, 595837.5], [778725.5, 595837.5]]
+    lamps:
+      - {at: [778727.0, 595836.0], face: [778736.5, 595830.8]}
   - id: andersa-viaduct-biezenstwa-style
     kind: bridge_style
     target: {osm_way: [175157461, 177895177]}
@@ -872,6 +888,27 @@ overrides:
     verify: owner photo session (view W from the Andersa viaduct footway)
     cleared_epsg2180: [[[778216.0, 595573.0], [778230.0, 595569.0], [778245.0, 595568.0], [778257.0, 595578.0], [778273.0, 595578.0], [778287.0, 595583.0], [778295.0, 595595.0], [778330.0, 595601.0], [778330.0, 595498.0], [778295.0, 595511.0], [778280.0, 595526.0], [778267.0, 595532.0], [778253.0, 595534.0], [778241.0, 595538.0], [778233.0, 595545.0], [778225.0, 595554.0], [778217.0, 595563.0]]]
     keep_epsg2180: [[[778253.0, 595577.0], [778267.0, 595575.0], [778267.0, 595561.0], [778269.0, 595547.0], [778257.0, 595547.0], [778253.0, 595559.0]], [[778284.0, 595560.0], [778292.0, 595561.0], [778294.0, 595553.0], [778291.0, 595545.0], [778285.0, 595547.0]], [[778307.0, 595595.0], [778320.0, 595593.0], [778325.0, 595583.0], [778317.0, 595575.0], [778307.0, 595580.0]]]
+  # ---------------------------------------------------------------- measured forest stands (vegetation.forest_stands, ADR 0170)
+  - id: bdot-forest-6bc0-young-broadleaf-stand
+    kind: forest_stand
+    target: {bdot: "2BE4B432-6BC0-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      ADR 0170 (review s17 0163 P1: the tree belt west of E ~ 220 hid the blocks of Bialostoczek in frames
+      303305168125936 / 320215796381417 / 454716650857984). BDOT10k: zadrzewienie, lisciaste. GUGiK orthophoto
+      2024-05-27 (0.25 m, artifacts/horizon-0170/ortho_belt_all.jpg): closed canopy of small crowns, self-seeded
+      broadleaf thicket on the old sand pit, no conifer crowns. Mapillary 454716650857984 (2024-07-26, CC BY-SA, same
+      season as the orthophoto): canopy top 0.3-1.0 deg above the horizon at 215-300 m from the camera (z 146.6 m,
+      39 px/deg) = 147.9-151 m a.s.l. over ground at 138-142 m -> canopy trees 7-11 m (+-1.3 m for +-0.3 deg of
+      horizon); the blocks show their upper ~60 % above it; single taller trees (a Lombardy poplar) stand out.
+      Class default was 9-19 m (broadleaf) with 8 % pines of 14-24 m at 6 m spacing. Species shares and the 4.5 m
+      spacing are WORKING_VALUE (maple stands for box elder, alder for willow / aspen: the library has neither).
+    confidence: medium
+    verify: owner photo session (view W from the Andersa viaduct footway); GUGiK NMPT / "Modele 3D drzew" when ingested
+    height_m: [6.5, 11.0]
+    spacing_m: 4.5
+    mix: {birch: 0.40, maple: 0.28, alder: 0.24, linden: 0.08}
+    # no `emergent`: a lone 14-19 m tree lifts the HLOD canopy into a tent (render 303305, build 1 of ADR 0170); the
+    # poplars of the photo stand in the roadside row, not in this stand
   # ---------------------------------------------------------------- gaps between carriageways (roads/gores.py, ADR 0077)
   # Rule: a gap between carriageways is a kerbed island only where OSM or the orthophoto shows one. OSM has no
   # area:highway / traffic_island objects in this tile, so places the GUGiK orthophoto (WMS HighResolution 0.08 m,
@@ -2215,7 +2252,15 @@ overrides:
     # island putry-ring-s-nose-island (the wedge the generated lanes leave).
     at_en: [-530.4, 37.1]
     travel_bearing_deg: 350
-    arm_bearing_deg: 292
+    arm_bearing_deg: 295
+    # ADR 0172 (REVIEW s17 0161 P1 "one head on the arm vs 3-4"): GUGiK 0.08 m orthophoto 2024, crop
+    # artifacts/p1b-0172/td/hr_182arm.png - arm from the pole foot E -532.5 N 37.9 to the tip E -540.5 N 41.7 = 8.8 m
+    # at bearing 295; its shadow carries two head blobs 2.8 m apart (E -541.5 N 45.3, E -543.5 N 47.3) and the pole
+    # one low head. Heads 5.5 / 8.3 m from the pole: 2.8 m apart, the outer one 0.5 m before the tip (WORKING_VALUE,
+    # +-0.5 m: the generated pole stands 2.2 m east of the real one).
+    arm_m: 8.8
+    arm_heads_m: [5.5, 8.3]
+    pole_head: true
     lit: red
     mapillary: ["182011943700132"]
     reason: >-
@@ -2270,9 +2315,10 @@ overrides:
     verify: owner photo session (roundabout islands)
     beds:
       - {name: EC1, plant: berberis_red, rim_m: 0.3, ring: [[778544.5, 595474.2], [778547.0, 595475.3], [778551.0, 595475.5], [778555.0, 595474.8], [778558.0, 595473.2], [778560.5, 595471.4], [778558.0, 595470.8], [778554.0, 595470.1], [778550.0, 595469.7], [778546.5, 595470.2], [778544.8, 595472.0]]}
-    # islands: [{name: ec-refuge, at: [778531.5, 595479.0], fill: paving}] - OFF (visual-critic s17 0161, P1): the paved
-    # refuge read as a podium (flat, too large, vertical sides, no dropped kerb or crossing). Back on with a dropped-kerb
-    # outline traced from the orthophoto, when a pose of confidence B exists.
+    # ADR 0161 -> OFF after visual-critic s17 0161 (P1: from the pose of confidence C the paved refuge read as a podium).
+    # ADR 0172: back ON with the resected pose of cm92458760 (confidence B): the photo foreground IS this paved island
+    # with the sign cluster on it. Still no dropped kerb at the crossings (generated kerb ring) - open.
+    islands: [{name: ec-refuge, at: [778531.5, 595479.0], fill: paving}]
   - id: kwadrat-exit-carriageway-width
     target: {edge: "w194536287:1882887381-1882954023"}
     reason: >-
@@ -2418,13 +2464,39 @@ overrides:
     reason: >-
       11-storey office tower by the Kwadrat lane (LoD1 2024 41.81 m). The hashed pick gave light grey; Mapillary
       richlv 177786140912399 / 178689077481862 (2020-08-15) and the facade visible on the orthophoto 2024-05-27
-      show a pale yellow render. Nearest material of the office set (far-facade variant exists).
+      show a pale yellow (sand) render on the gable and a white long wall. Nearest materials of the office set
+      (far-facade variants exist).
     confidence: medium
     verify: owner photo session item 6 (Kwadrat Park lane)
-    # ADR 0171: `ribbon: false` - the hashed ribbon-window variant drew grey spandrel rows over the whole facade on
-    # LOD1 (render (175,175,165) before and after the colour override); the photos show punched windows in a pale
-    # yellow wall. plaster_beige__far_office is drawn by chunk 6_6 already.
-    set: {wall_material: plaster_beige, ribbon: false, bands: false}
+    # ADR 0171: `ribbon: false, bands: false` - no hashed ribbon rows / spandrel bands on the walls without a rule.
+    # ADR 0180 (reviews REVIEW-2026-11-13-s17-0171 P1, -s18-0180 P1 / P2): what the open sources show.
+    #   SW gable (BDOT10k edge 16.09 m; both Mapillary photos): smooth sand-coloured wall with ONE column of two-pane
+    #     white-framed windows, one per storey, axis at 0.52 +- 0.04 of the wall width; window width 2.0 +- 0.3 m and
+    #     height ~0.45 storey from pixel ratios against the 16.09 m edge and the storey pitch (set 2.0 x 1.6 m,
+    #     WORKING_VALUE). `variants: [4]`: the atlas office window with clear glass (not the blind variants).
+    #   SE long wall (photos): white, one thin horizontal band of light white-framed windows per storey (11 rows;
+    #     windows ~0.33 of the 3.69 m storey pitch: sill 1.0 m, head 2.3 m, WORKING_VALUE); each band = a short run by
+    #     the south corner (0.03-0.20 of the wall) and a long run from 0.30 on.
+    #   Outline: BDOT10k draws a 6.4 x 1.8 m protrusion on the SE wall. Neither photo shows a step in that wall and
+    #     the roof edge on the orthophoto 2024-05-27 looks straight; as a 42 m prism the 1.8 m return wall was a sunlit
+    #     white stripe over the whole height (review 0180 P1). `footprint_open_m: 3.3` drops protrusions narrower than
+    #     6.6 m (the SE wall becomes one 37 m edge). confidence medium (what the BDOT step is at ground level: unknown).
+    #   NW long wall (orthophoto 2024-05-27, building lean): pale yellow with a regular grid of punched windows (about
+    #     11 rows) - no rule: the hashed punched rows in the building colour plaster_beige.
+    #   NE gable: no open source - the SW rule, WORKING_VALUE (confidence low).
+    # Materials: plaster_white / plaster_beige, plaster_white__far_ribbon and plaster_beige__far_office are all drawn
+    # by chunk 6_6 already on both LODs (no new draw); the lettering on the gable is a brand - not reproduced; roof
+    # masts / antennas: not done.
+    set:
+      wall_material: plaster_beige
+      ribbon: false
+      bands: false
+      footprint_open_m: 3.3
+      facades:
+        - {facing: [SW, NE], min_len_m: 8.0, windows: column, u: 0.52, window_w_m: 2.0, sill_m: 0.9, head_m: 2.5,
+           variants: [4]}
+        - {facing: SE, min_len_m: 30.0, windows: ribbon, glazing: light, sill_m: 1.0, head_m: 2.3,
+           wall_material: plaster_white, spans: [[0.03, 0.20], [0.30, 1.0]]}
   - id: g3a-small-office-no-band
     target: {building: "bdot:2BE4B431-C926-1BF0-E053-CC2BA8C0D140"}
     reason: >-
@@ -2463,3 +2535,90 @@ overrides:
     confidence: low
     verify: owner photo session item 6 (Kwadrat Park lane)
     set: {height_m: 3.4}
+  # ADR 0172 (REVIEW s17 0161 P1, cm92458760: "no cluster of signs facing the camera - D-6, street plate, C-").
+  # Splitter island of the south arm of Rondo Pamięci Bieżeństwa (EC access road). Post feet = start of each post
+  # shadow on the GUGiK 0.08 m orthophoto 2024 (crop artifacts/p1b-0172/td/hr_cm924z.png, 118 px/m, +-0.2 m; shadows
+  # run to the NNW at ~1.1 m per m of height). Commons cm92458760 (Rakoon 2020-07-11, CC BY 3.0, reference only)
+  # shows the same four objects on the paved island. Faces are our own schematic drawings.
+  - id: ec-island-f10
+    kind: gate3_sign
+    photo: ["commons:cm92458760"]
+    at_en: [539.1, -741.6]
+    # r5: 200 -> 190. r4 beside the photo at equal scale: plate 0.28 m wide in the view against 0.42 m on the photo
+    # (0.80 m plate -> 21 deg / 32 deg between the line of sight, bearing 131, and the plate line); the post feet give
+    # the same plate line (bearing ~100: feet 7.02 / 6.46 m away, 0.64 / 0.25 m left of the axis) -> faces bearing ~10
+    travel_bearing_deg: 190
+    lower_edge_m: 2.2
+    parts: [{face: F-10-ls}]
+    reason: >-
+      Upright two-lane board (left turn | straight) on two posts, read by the traffic leaving the roundabout to the
+      south (west carriageway). Foot and facing from photo cm92458760 with the resected pose of ADR 0172 (E 533.9
+      N -737.1, heading 134.7, hfov 67.6 - residuals <= 0.6 deg on the lamp, the A-7 and D-6 posts and both
+      chimneys): posts at x 0.435 / 0.47 with feet 17.4 / 16.0 deg under the horizon -> 6.6 / 7.3 m from the camera,
+      0.45 m left of the axis -> E 539.1 N -741.6 (+-0.5 m), plate line at bearing ~108 -> faces bearing ~18. On the
+      orthophoto its plate shadow is the blob at E 537.4 N -739.1 (2.8 m of plate-centre height at 1.1 m per m).
+      r1 placed it from the wrong shadow at E 538.95 N -742.85: right of the column in the frame, left on the photo.
+      Plate 0.80 x 0.80 m measured on the same photo (338 px at 6.75 m, see gate3_landmarks.FACE_DIM); lower edge
+      2.26 m by the same measurement -> 2.2 m.
+    confidence: low
+    verify: owner photo session (roundabout islands) - board size and arrows
+  - id: ec-island-a7-c12
+    kind: gate3_sign
+    photo: ["commons:cm92458760"]
+    at_en: [540.13, -743.7]
+    # r2 (bearing 31, square to the generated east carriageway) showed the plates edge-on from the photo pose; on the
+    # photo the 0.9 m triangle back is ~0.6 m wide from bearing 312 -> the plate normal is ~50 deg off the view: faces ~185
+    travel_bearing_deg: 5
+    # r4: heights from the photo (resected pose, post 9.07 m away, horizon from the lamp foot): disc 2.58-3.27 m,
+    # triangle 3.56-4.18 m above the ground. The assembly stacks with 5 cm gaps and a 0.9 m triangle -> lower edge 2.7 m
+    # puts the disc at 2.7-3.3 and the triangle at 3.35-4.13 m (r3 had 2.1 m: the triangle sat under the street plate,
+    # on the photo it stands above it). The 2.4 / 3.2 m read off the orthophoto shadows was ~0.6 m low.
+    lower_edge_m: 2.7
+    parts: [{face: A-7}, {face: C-12}]
+    reason: >-
+      Island-side repeater of the A-7 + C-12 pair of the northbound entry (the rule builds only the right-hand one,
+      at E 548.3 N -748.7). The photo shows both backs on one post right of the lamp column; on the orthophoto the
+      post foot is at E 540.13 N -743.7 with two plate shadows 2.4 / 3.2 m up.
+    confidence: medium
+    verify: owner photo session (roundabout islands)
+  - id: ec-island-d6
+    kind: gate3_sign
+    photo: ["commons:cm92458760"]
+    at_en: [537.16, -745.26]
+    travel_bearing_deg: 211
+    lower_edge_m: 2.2
+    parts: [{face: D-6}]
+    reason: >-
+      Crossing sign on the island at the zebra + cycle crossing of the west carriageway (photo: D-6b with a small
+      plate under it; the project has the D-6 drawing only - WORKING_VALUE). Foot E 537.16 N -745.26, diamond-shaped
+      plate shadow 2.8 m to the NNW.
+    confidence: medium
+    verify: owner photo session (roundabout islands) - D-6b and its plate
+  - id: ec-island-lamp
+    kind: gate3_lamp
+    photo: ["commons:cm92458760"]
+    at_en: [539.7, -742.6]
+    proto: lamp_10m
+    arm_bearing_deg: 300
+    reason: >-
+      Lamp column in the middle of the island (the grey column in the centre of photo cm92458760; orthophoto: column
+      leaning 3.8 m from its foot at E 539.7 N -742.6, one luminaire). The lamp rule puts no column on a splitter
+      island. Height 10 m and bracket direction WORKING_VALUE (the top is outside the photo).
+    confidence: low
+    verify: owner photo session (roundabout islands) - column type and height
+  - id: ec-island-street-name
+    kind: gate3_sign
+    photo: ["commons:cm92458760"]
+    at_en: [539.25, -743.15]
+    travel_bearing_deg: 130
+    lower_edge_m: 3.1            # r4: plate 3.11-3.33 m on the photo (column 7.9 m away); r3 had 3.3
+    post: galv
+    parts: [{face: street_name, text: "ul. Bitwy Białostockiej"}]
+    reason: >-
+      Teal street-name plate "ul. Bitwy Białostockiej" (text read on photo cm92458760; the same name is the OSM name
+      of the street). In reality the plate is cantilevered from the lamp column at ~3.4 m: on the photo (resected
+      pose) it spans 1.2 m to the right of the column, square to the view -> plate line at bearing ~220, face towards
+      ~310 (the relief-displaced teal bar on the orthophoto points to ~194). The sign assembly has a centred post, so
+      it stands on its own galvanised post 0.7 m from the column - WORKING_VALUE until a bracket-mounted plate exists.
+    confidence: low
+    verify: owner photo session (roundabout islands)

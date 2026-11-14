@@ -1,0 +1,358 @@
+{
+ "_uwagi": "Wyniki analizy zdjęć (wizja) — M53-FIX. Kamera: pozycje w cams_2180.json, geometria w cam_geom.json. Budżet analyze_image: 20/.response.",
+ "rows": {
+  "M53-001": {
+   "foto": "20200711 064958",
+   "status": "OK",
+   "co_widac": "Czerwona wiata stacji paliw po lewej (marka na czerwonym tle), zmierzch",
+   "kond_zdj": 1,
+   "pozycja": "lewo",
+   "kolor": "UNVERIFIED-zmierzch"
+  },
+  "M53-002": {
+   "foto": "20200711 064958",
+   "status": "OK",
+   "co_widac": "Parterowy kiosk stacji za wiatą, po lewej",
+   "kond_zdj": 1,
+   "pozycja": "lewo"
+  },
+  "M53-005": {
+   "foto": "20200711 064958",
+   "status": "ODRZUCONY",
+   "co_widac": "Zmierzch, kiosk/wiata stacji — biurowiec z billboardem NIEWIDOCZNY w kadrze"
+  },
+  "M53-003": {
+   "foto": "20200711 073116",
+   "status": "ODRZUCONY",
+   "co_widac": "Estakada nad rondem, dwujezdniowa arteria, niebieskie budynki przemysłowe — brak wieżowca; GPS niezgodny z treścią"
+  },
+  "M53-004": {
+   "foto": "20220725 125438",
+   "status": "ODRZUCONY",
+   "co_widac": "Zieleniec ze strumieniem i progami wodnymi — brak budynku"
+  },
+  "M53-006": {
+   "foto": "20220725 124819",
+   "status": "ODRZUCONY",
+   "co_widac": "Park z ławkami; w tle 5 bloków 4-kond. (biel/pomarańcz/niebieskawy, Al. Tysiąclecia 44-60, az 158-222) — JRG-2 poza kadrem; bloki niejednoznaczne"
+  },
+  "M53-007": {
+   "foto": "LO nr XVI...jpg",
+   "status": "OK",
+   "co_widac": "Wydłużony 3-kond. budynek szkoły, szara elewacja, płaski dach, środek kadru (tytuł autorski potwierdza LO XVI Sokólska 1)",
+   "kond_zdj": 3,
+   "pozycja": "środek"
+  },
+  "M53-008": {
+   "foto": "20230729 105139",
+   "status": "ODRZUCONY",
+   "co_widac": "Kadr patrzy ~315-345° (widać Białostoczek 29 i Zagumienną 40) — Sokólska 9 poza kadrem"
+  },
+  "M53-009": {
+   "foto": "20230729 105139",
+   "status": "ODRZUCONY",
+   "co_widac": "Blok 6-kond. po lewej/środku, ogrodzenie, pusty trawiasty plac — Olsztyńska 2 niepotwierdzona"
+  },
+  "M53-010": {
+   "foto": "20230729 105139",
+   "status": "REASSIGN->Zagumienna 9/1",
+   "co_widac": "Budynek z napisem ZAGUMIENNA 9/1 na środku: 5 rzędów okien, beż + pomarańczowe balkony; w kadrze też szyld SŁONECZNA 13 (brak w OSM)",
+   "kond_zdj": 5,
+   "pozycja": "środek",
+   "osm_way": 219256725,
+   "lod1": "2BE4B431-B0D3",
+   "mh": 15.77,
+   "az": 160,
+   "d": 106
+  },
+  "M53-011": {
+   "foto": "20230729 105139",
+   "status": "REASSIGN->Białostoczek 29",
+   "co_widac": "Budynek po prawej z napisem Białostoczek 29",
+   "osm_way": 219353929,
+   "lod1": "2BE4B431-B196",
+   "mh": 15.81,
+   "az": 345,
+   "d": 97,
+   "pozycja": "prawo",
+   "kond_zdj": "4 lub 6 (nierozstrzygnięte)"
+  },
+  "M53-012": {
+   "foto": "20230729 105139",
+   "status": "REASSIGN->Zagumienna 40",
+   "co_widac": "Budynek na środku z napisem Zagumienna 40 na szczycie",
+   "osm_way": 219353921,
+   "lod1": "2BE4B431-B199",
+   "mh": 13.91,
+   "az": 324,
+   "d": 59,
+   "pozycja": "środek",
+   "kond_zdj": 4
+  },
+  "M53-013": {
+   "foto": "20221119 080708",
+   "status": "OK",
+   "co_widac": "Jasnoszary blok z ciemnoczerwonymi balkonami po lewej (5-6 rzędów okien), drugi beżowy 4-kond. po prawej, ulica ze znakiem STOP i krzyżem",
+   "kond_zdj": "6 (wizja: 5 nad parterem)",
+   "pozycja": "lewo",
+   "rect_px": "150,200,200,300"
+  },
+  "M53-014": {
+   "foto": "20221119 080747",
+   "status": "REASSIGN->Białostoczek 4/1",
+   "co_widac": "Szary budynek z brązowymi balkonami, tabliczka 4/1 na elewacji (1. piętro), 4 rzędy okien; świerk i metalowe ogrodzenie; brak wieżowca w tle",
+   "kond_zdj": 4,
+   "pozycja": "środek",
+   "osm_way": 219824348,
+   "az": 97,
+   "d": 45,
+   "rect_px": "50,200,200,450"
+  },
+  "M53-015": {
+   "foto": "20221119 080802",
+   "status": "DO_ROZSTRZYGNIĘCIA",
+   "co_widac": "Centralnie wielopiętrowy budynek z balkonami (wizja: 6 rzędów nad parterem = 7 kondygnacji?), elewacja beżowo-brązowa, czerwone balkony; brak numeru",
+   "kond_zdj": 7,
+   "pozycja": "środek",
+   "rect_px": "450,200,550,300"
+  },
+  "M53-016": {
+   "foto": "20221119 080843",
+   "status": "OK-POŚREDNIE",
+   "co_widac": "Żółty 2-kond. budynek z dwuspadowym dachem/balkonem/garażem na środku + ciemnoszary z anteną po prawej",
+   "kond_zdj": 2,
+   "pozycja": "środek"
+  },
+  "M53-027": {
+   "foto": "20221119 080807",
+   "status": "OK",
+   "co_widac": "Dom jednorodzinny 2-kond., dwuspadowy dach, jasnobeżowa elewacja; drzewa, metalowe ogrodzenie, ulica po prawej",
+   "kond_zdj": 2,
+   "pozycja": "środek"
+  },
+  "M53-017": {
+   "foto": "20221119 080930",
+   "status": "DO_ROZSTRZYGNIĘCIA",
+   "co_widac": "Czerwony 1-kond. budynek z graffiti w środku, biały 1-kond. po prawej; w głębi po lewej wysokie bloki (10-12 wg wizji); Radzymińska 1 poza kadrem",
+   "kond_zdj": "1 (czerwony) / 1 (biały)",
+   "pozycja": "środek/prawo"
+  },
+  "M53-018": {
+   "foto": "20221119 080939",
+   "status": "DO_ROZSTRZYGNIĘCIA",
+   "co_widac": "Opuszczony ceglany/szary budynek 1-2 kond. z graffiti CREW w środku kadru; po prawej budynek z blachy falistej z graffiti; w tle drzewa i wysoki ceglany budynek po lewej; review sugeruje obiekt przy Jurowieckiej 50",
+   "kond_zdj": "1-2",
+   "pozycja": "środek",
+   "rect_px": "450,300,550,350"
+  },
+  "M53-020": {
+   "foto": "20241229 112510 (REASSIGN zdjęcia)",
+   "status": "OK",
+   "co_widac": "Punktowiec Białostoczek 22: 10 kondygnacji (mh 29,23), biała elewacja z kolorowymi panelami, mural ks. Michała Sopoćki (napis KS. MICHAŁ SOPOTKO) na ścianie szczytowej od 2. do 10. kondygnacji — lewa/centralna część kadru; na dole trawnik, chodnik, zaparkowane samochody",
+   "kond_zdj": 10,
+   "pozycja": "lewo/środek",
+   "zrodlo": "Radio Białystok 2018 + Kurier Poranny 2025 + mapa murali: mural na Białostoczku 22, naprzeciwko Sanktuarium Miłosierdzia Bożego; az 331 d 46 od kamery 20241229 — zgodne"
+  },
+  "M53-019": {
+   "foto": "20221119 080519",
+   "status": "REASSIGN->Białostoczek 21?",
+   "co_widac": "Kadr 080519: po lewej szary punktowiec 12 kond. (Białostoczek 13A), w środku beżowy 2-kond. budynek z napisami Poczta Polska i 21 (Białostoczek 21 — kamera d 1 m), po prawej czerwony punktowiec 12 kond. (Białostoczek 19A?); Białostoczek 18 poza kadrem",
+   "kond_zdj": "2 (środek)",
+   "pozycja": "środek"
+  },
+  "M53-021": {
+   "foto": "20221119 080601",
+   "status": "REASSIGN->Białostoczek 13A?",
+   "co_widac": "Trzy szare punktowce (lewo/środek/prawo), napis 13A + Piekarnia Cukiernia + EKSPRES KUCHNIA; parking; Radzymińska 14 poza kadrem (kadr patrzy ~az 200-280)",
+   "kond_zdj": "12 (wizja)",
+   "pozycja": "środek"
+  },
+  "M53-025": {
+   "foto": "20221119 080601",
+   "status": "ODRZUCONY?",
+   "co_widac": "jak 021 — trzy szare punktowce; Zagumienna 4 poza kadrem; towers niejednoznaczne (11/15/19A)",
+   "kond_zdj": 12
+  },
+  "M53-024": {
+   "foto": "20241229 112510",
+   "status": "ODRZUCONY",
+   "co_widac": "Kadr pokazuje punktowiec Białostoczek 22 z muralem; Białostoczek 14 poza kadrem",
+   "kond_zdj": 10
+  },
+  "M53-026": {
+   "foto": "20221119 080930",
+   "status": "DO_ROZSTRZYGNIĘCIA",
+   "co_widac": "jak 017; Radzymińska 1 niepotwierdzona",
+   "kond_zdj": null
+  }
+ },
+ "rect_do_weryfikacji_dekoderem": [
+  "M53-013 150,200,200,300",
+  "M53-014 50,200,200,450",
+  "M53-015 450,200,550,300"
+ ],
+ "kolor_bialostoczek29": "x0=1200,y0=200,x1=1280,y1=300 (do weryfikacji dekoderem)",
+ "kolor_zagumienna40": "x0=700,y0=150,x1=800,y1=300 (do weryfikacji dekoderem)",
+ "mural_bialostoczek_22": "MURAL ks. Sopoćki = Białostoczek 22 (Radio Białystok: 'Szczyt bloku przy ulicy Białostoczek 22 ... ozdobi wizerunek bł. ks. Michała Sopoćki'; Kurier Poranny 2025: renowacja, wieżowiec przy Radzymińskiej naprzeciwko Sanktuarium; bialystoksubiektywnie: Białostoczek 22). NIE 11/13A/15/17/19A jak sugerował przegląd.",
+ "etap_2_13_11": {
+  "M53-015": "ODRZUCONY — w kadrze wielopiętrowy blok z czerwonymi balkonami (Białostoczek 7 = M53-013), pawilon 6/1 poza kadrem",
+  "M53-017": "OK-POŚREDNIE — czerwony parterowy z graffiti środek; biały parterowy warsztatowy prawo (cel); kondygnacje: 1",
+  "M53-018": "ODRZUCONY — opuszczony ceglany budynek z graffiti CREW; zgodnie z przeglądem najpewniej Jurowiecka 50, nie Białostoczek 2/0",
+  "M53-019": "REKASYGNACJA→OK — Poczta Polska, napisy „Poczta Polska”/„21”, 2 kond., az 254 d 3,5, way 219256879, mh 7,14",
+  "M53-020": "OK — punktowiec z muralem ks. Sopoćki (źródła: Białostoczek 22), 10 rzędów okien, az 339 d 21,5, way 211766102, mh 29,23; zdjęcie 20241229 112510",
+  "M53-021": "REKASYGNACJA→OK — napis „13A”, szary punktowiec 12 rzędów, az 222 d 47,9, way 215470474, mh 34,57; kolor [159,159,156] rect 400,300,500,400 ✓ sanity-check",
+  "M53-022": "ODRZUCONY — sklep monopolowy + Lotto; cel nie w kadrze",
+  "M53-023": "ODRZUCONY — punktowce w głębi (Radzymińska/Białostoczek); Zagumienna 20 niewidoczna",
+  "M53-024": "ODRZUCONY — fragment punktowca z muralem (Białostoczek 22 = M53-020); Białostoczek 14 nieczytelny",
+  "M53-025": "ODRZUCONY — bloki w głębi niejednoznaczne; Zagumienna 4 poza kadrem",
+  "M53-026": "ODRZUCONY — niskie budynki; Radzymińska 1 niejednoznaczna",
+  "M53-028": "ODRZUCONY — dom jednorodzinny w kadrze; wieżowiec 10A poza kadrem (potwierdzenie przeglądu)",
+  "M53-029": "OK — wieżowiec 12 rzędów, Biedronka w parterze, tytuł „Tysiąclecia 10 Białystok 3”, az 358 d 2; rect koloru trafił w niebo → UNVERIFIED",
+  "M53-030": "REKASYGNACJA→OK — napis „PAŃSTWOWA STRAŻ POŻARNA” = JRG-2 Andersa 46, az 3 d 55,3, way 211035271, mh 6,55; ten sam obiekt co M53-006 (tam pozostaje ODRZUCONY)",
+  "M53-031": "ODRZUCONY — biuro „Osiedle Słoneczna” + Shell; blok 60 niewidoczny",
+  "M53-032": "ODRZUCONY — biały budynek 2-kond. po prawej; pawilon 50/1 poza kadrem",
+  "M53-033": "ODRZUCONY — blok 50 niewidoczny",
+  "M53-034": "ODRZUCONY — lokal „LETO DAROM”; blok 23 niewidoczny",
+  "M53-035": "OK-POŚREDNIE — żółtozielony biurowiec po prawej (Tysiąclecia 6), KONTEX z numerem „8” po lewej (≈ Tysiąclecia 8), az 97 d 91; wizja policzyła 11 kond. (mh/2,9=8,2 — zawyżenie odnotowane); rect koloru trafił w niebo → UNVERIFIED",
+  "M53-036": "ODRZUCONY — biurowiec 3-kond. + wieża WN; blok 56 niewidoczny",
+  "M53-037": "OK-POŚREDNIE — domy 2-kond. dwuspadowe po obu stronach drogi, cel lewo, az 233 d 44; rect w niebo → UNVERIFIED",
+  "M53-038": "OK-POŚREDNIE — domy 2-kond. dwuspadowe, az 259 d 24; rect w niebo → UNVERIFIED",
+  "M53-039": "OK-POŚREDNIE — domy 2-3-kond. dwuspadowe przy drodze, kamera d 0,5 m od obrysu; rect za ciemny (cień) → UNVERIFIED",
+  "M53-040": "OK-POŚREDNIE — dom 2-kond. szary lewo + szyld „ul. Grodzieńska”; dopasowanie niepewne (adnotacja); rect w niebo → UNVERIFIED",
+  "M53-041": "OK-POŚREDNIE — dom 2-kond. z użytkowym poddaszem (okna połaciowe), środek, az 230 d 60; rect w niebo → UNVERIFIED",
+  "M53-042": "OK-POŚREDNIE — domy 2-3-kond., cel prawo, az 287 d 37; rect za ciemny → UNVERIFIED",
+  "M53-043": "OK-POŚREDNIE — dom 2-kond. biało-czerwony, dwuspadowy, środek, d 8,6; rect ciemnoszary (cień) → UNVERIFIED"
+ },
+ "etap_3_13_11": {
+  "_uwagi": "Cykl 3 (13.11): budżet analyze_image 20/20 wykorzystany (10 kandydatów nowych zdjęć + 10 wtórnych: 011-dual, PKO, Luxmed, 7 cropów kolorów). Każde obejrzane zdjęcie dostało wiersz (044-055).",
+  "rows": {
+   "M53-044": {
+    "foto": "Tysiąclecia 10A Białystok 1.jpg",
+    "status": "OK",
+    "co_widac": "Wieżowiec centralnie, 15 rzędów okien, biała elewacja, fragmentaryczne napisy „Rog”/„t owsk”",
+    "kond_zdj": 15,
+    "pozycja": "środek",
+    "rect": [
+     250,
+     120,
+     450,
+     400
+    ],
+    "kolor": "biała (dekoder: szaroniebieskawy w cieniu — UNVERIFIED)"
+   },
+   "M53-045": {
+    "foto": "Cukiernia U Lecha w Białymstoku (Zagumienna).jpg",
+    "status": "OK",
+    "co_widac": "Parterowy pawilon: szyld „CUKIERNIA u Lecha”, numer „20”",
+    "kond_zdj": 1,
+    "pozycja": "środek",
+    "rect": [
+     250,
+     250,
+     600,
+     350
+    ],
+    "kolor": "żółta (dekoder sky-like — UNVERIFIED)"
+   },
+   "M53-046": {
+    "foto": "20200711 073045 Generała Władysława Andersa 38, Białystok.jpg",
+    "status": "OK",
+    "co_widac": "Wieżowiec biurowy, napis „BIAZET”, 12 rzędów okien, beżowa elewacja",
+    "kond_zdj": 12,
+    "pozycja": "środek",
+    "rect": [
+     350,
+     120,
+     450,
+     480
+    ],
+    "kolor": "beżowa (dekoder: chłodna jasnoszara — UNVERIFIED)"
+   },
+   "M53-047": {
+    "foto": "20201102 152422 38A Generala Andersa Street in Białystok.jpg",
+    "status": "OK",
+    "co_widac": "2-kond. budynek biurowo-usługowy, parking, brak napisów",
+    "kond_zdj": 2,
+    "pozycja": "lewo",
+    "rect": [
+     50,
+     200,
+     400,
+     400
+    ],
+    "kolor": "szara (dekoder: ciepła szarobrunatna, niejednorodna — UNVERIFIED)"
+   },
+   "M53-048": {
+    "foto": "20200711 074108 Białostoczek district of Białystok July 2020.jpg",
+    "status": "OK-POŚREDNIE",
+    "co_widac": "Blok centralnie: 6 rzędów okien, elewacja w folii remontowej (reklamy BAU/ATLAS/LIFE)",
+    "kond_zdj": 6,
+    "pozycja": "środek",
+    "kolor": "UNVERIFIED — folia remontowa"
+   },
+   "M53-049": {
+    "foto": "Biedronka in Białystok (Radzymińska 12).jpg",
+    "status": "OK",
+    "co_widac": "Parterowy pawilon supermarketu: szyldy „Biedronka”/„APTEKA”, parking",
+    "kond_zdj": 1,
+    "pozycja": "środek",
+    "rect": [
+     120,
+     250,
+     700,
+     320
+    ],
+    "kolor": "zielona (dekoder sky-like — UNVERIFIED)"
+   },
+   "M53-050": {
+    "foto": "20201229 144625 Tysiąclecia Państwa Polskiego Street in Białystok.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Parking, pawilon centralnie, kominy EC w tle; blok Tysiąclecia 4 niewidoczny"
+   },
+   "M53-051": {
+    "foto": "20201223 143208 Aleja Tysiąclecia Państwa Polskiego.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Drewniane domy (Przytorowa) + bloki w tle; BZG Tysiąclecia 2 niewidoczne"
+   },
+   "M53-052": {
+    "foto": "20210130 123910 Tysiąclecia Państwa Polskiego Street in Białystok.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Śnieg, bloki, kościół z wieżą w tle; cel (Przytorowa 3) niejednoznaczny"
+   },
+   "M53-053": {
+    "foto": "20191224 Białostoczek Bialystok ul. Kombanantow December 2019.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Pawilon 2-kond. biało-zielony z apteką/LUXMED centralnie; brak jednoznacznego way w OSM"
+   },
+   "M53-054": {
+    "foto": "PKO BP Białystok (Tysiąclecia) 1.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Biały biurowiec 3-kond. centralnie za parkingiem, brak napisów; bryła niezgodna z Tysiąclecia 6 (mh 23,91 → 8,2 kond.)"
+   },
+   "M53-055": {
+    "foto": "20201116 170222 Luxmed.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Wnętrze placówki (szyld LUXMED, wejście) — brak elewacji zewnętrznej"
+   }
+  },
+  "kolory_sanity_check": {
+   "zweryfikowane": {
+    "M53-014": "[232,228,228] rect 355,304,445,504 (crop 10,250,100,450 + off 345,54) σ=17,7",
+    "M53-035": "[163,194,126] rect 1299,154,1379,404 (crop 570,100,650,350 + off 729,54) σ=2,6"
+   },
+   "odrzucone": {
+    "M53-011": "[144,165,188] sky-like (rect 1729,354,1779,404)",
+    "M53-012": "[116,153,192] sky-like (rect 795,354,895,504)",
+    "M53-027": "niejednorodny σ=33 (rect 445,312,545,462)",
+    "M53-029": "[117,165,202] sky-like (rect 445,344,645,544)",
+    "M53-030": "[132,138,140] szara, niejednorodny σ=31 (rect 825,254,995,334)",
+    "M53-044": "[141,145,151] cienie — niespójny z „biała”",
+    "M53-045": "[178,195,209] sky-like",
+    "M53-046": "[196,197,202] chłodna jasnoszara ≠ „beżowa”",
+    "M53-047": "[122,110,99] niejednorodna σ=14",
+    "M53-049": "[190,221,248] sky-like"
+   }
+  },
+  "kondygnacje_M53-011": "druga wizja na wycinku potwierdziła 6 rzędów okien (poprzednio „4 lub 6”); mh/2,9 = 5,5"
+ }
+}

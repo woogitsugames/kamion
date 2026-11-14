@@ -48,9 +48,10 @@ namespace Game.Tests
                 // Low sun: 0.6-albedo wall facing the sun around 1.0 linear (was 2.8 → flat white).
                 float wall = 0.6f * (ml.SunNormalIlluminanceLux + 0.5f * ml.SkyHorizontalIlluminanceLux) / Mathf.PI * ml.Exposure;
                 Assert.That(wall, Is.InRange(0.45f, 0.7f), "sunlit wall at 9° sun");
-                // Dusk 2-3 EV darker on screen than overcast noon (review r3 G3).
+                // Dusk: review r3 G3 asked for 2-3 EV under overcast noon; review s18 (0175/0178 P2) found that still read as
+                // a dull day. ADR 0182: lamp-anchored exposure, ambient-lit grey 3.5-4.9 EV under overcast noon (4.4 at EV100 4).
                 float greyOver = mo.HorizontalIlluminanceLux * mo.Exposure, greyDusk = md.HorizontalIlluminanceLux * md.Exposure;
-                Assert.That(Mathf.Log(greyOver / greyDusk, 2f), Is.InRange(1.9f, 3.1f), "dusk vs overcast noon");
+                Assert.That(Mathf.Log(greyOver / greyDusk, 2f), Is.InRange(3.5f, 4.9f), "dusk vs overcast noon");
             }
             finally { Object.DestroyImmediate(clear); Object.DestroyImmediate(over); Object.DestroyImmediate(low); Object.DestroyImmediate(dusk); }
         }

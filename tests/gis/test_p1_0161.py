@@ -153,4 +153,5 @@ def test_ring_mast_survives_the_carriageway_clearing(qa):
         pytest.skip("derived world not on disk")
     protos = [o["p"] for f in files for o in json.loads(f.read_text(encoding="utf-8"))["instances"]
               if o.get("src", "").startswith("override:putry-ring-s-approach-signal")]
-    assert sorted(protos) == ["signal_head_red"] * 3 + ["signal_mast", "signal_pole"]
+    # ADR 0172: the mast has the 8.8 m arm with two heads
+    assert sorted(protos) == ["signal_head_red"] * 4 + ["signal_mast_9m", "signal_pole"]
