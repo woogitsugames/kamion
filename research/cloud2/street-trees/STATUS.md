@@ -7,3 +7,12 @@
 - Trasa C: 1 drzewo (pomnik), Dojlidy: 5 drzew bez gatunku. Szpalery: 111 rzędów / 911 drzew, odstęp mediana 7,13 m (p10 4,28; p90 15,57).
 - NASTĘPNY KROK: dokumenty UM/BIP (gatunki), Dz.U. 2022 poz. 1518, allometria (DOI), fenologia, kadry.
   `uv run --with osmium --with shapely python -I tools/osm_extract_trees.py files/osm/podlaskie.osm.pbf files/osm/`
+
+## Krok 2 (2026-11-14 17:40 UTC) — dokumenty
+- Łaska 2015 (DOI 10.1515/biorc-2015-0013) Tab. 1 i 3 pobrane (PDF, pressto.amu.edu.pl): pełna tabela 36 gatunków × 4 transekty.
+- NIK LBI.403.7.2023: „Miasto nie posiadało … kompleksowej inwentaryzacji zieleni”, „Urząd nie ewidencjonował gatunków” (s. 24, 30).
+- BIP DGK-IV.271.2.2017: zał. 2 (lista gatunków do nasadzeń w pasach drogowych, obwód pnia 14–16 cm, korona od 1,8–2,0 m, 3 paliki),
+  zał. 3 (liczba drzew w pielęgnacji per ulica: Andersa 228, Maczka 527, razem 3207 liściastych).
+- Dz.U. 2022 poz. 1518: brak liczbowej odległości drzew od jezdni (tylko § 26 strefa bez przeszkód, § 80 skrajnia 4,50/2,50 m);
+  Dz.U. 2016 poz. 124 § 53 ust. 1 i 3: pas zieleni ≥ 3,0 m, pień ≥ 3,0 m od krawędzi jezdni.
+- NASTĘPNY KROK: allometria (USDA RDS-2016-0005, publikacje EU), szkółki (tuje), fenologia, kadry.
