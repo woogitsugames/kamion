@@ -118,3 +118,6 @@ V–VII: brak nocy astronomicznej (min. wysokość −13,4° 21 VI). Presety gry
 ## Jak używać
 `python3 -I fetch.py` (pobranie + sha256) → `python3 -I tools_imgw.py compute; python3 -I tools_normy.py; python3 -I tools_sun.py; python3 -I tools_twilight.py; python3 -I tools_checks.py`
 → `python3 -I build_manifest.py` → `python audit.py` (wymaga pakietów astral, rdata). CC BY-SA (Panoramax, c32) = referencja, nie tekstura.
+
+## Errata lidera (s20, 2026-11-14)
+Patrz `docs/reports/REVIEW-2026-11-14-s20-cloud2-r7.md` — errata obowiązuje przed użyciem danych.

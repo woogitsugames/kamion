@@ -109,3 +109,6 @@ Kadry Białegostoku: 13 III gołe · 7–9 V liście młode · 20–22 V pełne 
 Szpaler: rozstaw 7 m (4,5 m dla gęstych młodych, 8 m ulice lokalne), pień 2,5 m od krawężnika (1 m w chodniku śródmieścia, ≥ 3 m przy 70 km/h albo za ścieżką); gatunek z miksu p. 1; wymiary z tabeli p. 2 wg klasy obwodu losowanej z rozkładu Łaski; młode nasadzenia z 3 palikami. Trasa C: bez dojrzałych szpalerów, tylko krótkie rzędy młodych drzew za ścieżką i masy zadrzewień za barierami. Wszystkie wartości ESTIMATED/WORKING_VALUE oznaczyć jako `default` niskiej pewności.
 
 Pliki: `manifest.csv`, `sources.md`, `fetch.py` (62 pliki, 33,6 MB, sha256), `audit_20_percent.json`, `STATUS.md`, `tools/`, `data/`. Zdjęcia i PDF w `files/` (poza gitem).
+
+## Errata lidera (s20, 2026-11-14)
+Patrz `docs/reports/REVIEW-2026-11-14-s20-cloud2-r5.md` — errata obowiązuje przed użyciem danych.
