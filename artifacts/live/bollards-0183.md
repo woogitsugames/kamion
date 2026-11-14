@@ -41,3 +41,5 @@ po `restore done` w `artifacts/logs/pipeline-r2.status`: `uv run --project tools
 - W tle: `pipeline_r4.ps1` (build z overrides main 0179 + blok 0183 lokalnie -> kamery -> import -> Low/High r4). Lokalny `Data/Regions/bialystok-dojlidy/overrides.yaml` = plik main + blok 0183 (NIE commitować; na końcu `git checkout --` tego pliku).
 ## NASTĘPNY KROK (komenda)
 `Get-Content artifacts/logs/pipeline-r4.status`; po PIPELINE DONE: pomiar G/R łańcucha w `renders/r4-*/bollards-detail-2m.png`, porównanie z P11-063, ADR, robocopy, KONIEC.
+- 17:45 r4 Low+High OK. G/R łańcucha High 0,70->0,34, Low 0,76->0,56 (słupek 0,16/0,32). Kadr 13 m: oba łańcuchy wyraźne (bordo/biel) jak na P11-063. Low wzdłuż rzędu z 8 m: łańcuch słaby, ale jest. Lokalny overrides Dojlid przywrócony (`git checkout`), kopia `artifacts/bollards-0183/local-overrides.dojlidy.r4.yaml`. Dowody skopiowane do main.
+## KONIEC

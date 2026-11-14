@@ -142,16 +142,38 @@ Po `git merge origin/main` (8b2f3a3ac, bez konfliktów): test 0183 + meble/stree
 + trzy wcześniej czerwone testy industrial-c: 153 pass, 1 fail (`test_forest_trees_reference_their_cell`, komórka
 lasu `25_16` w instancjach industrial-c na wspólnym `Data/raw` — dane innego worktree, nie kod tej gałęzi).
 
+## r4 (po recenzji visual-critic `docs/reports/REVIEW-2026-11-14-s20-0183.md`, werdykt SCAL WARUNKOWO)
+- **P1-1 różowa czerwień — przyczyna znaleziona:** karty łańcucha miały normalną lokalnie +y (strona od jezdni
+  wstecz), a wszystkie kamery dowodowe patrzą od jezdni, czyli na tył. Materiał jest dwustronny (alfa-clip, `_Cull 0`),
+  ale URP Lit nie odwraca normalnej tylnej ściany: N·V < 0 → pełny Fresnel zachmurzonego nieba (smoothness 0,5)
+  dodawał ~60–100 szarości. Poprawka: każdy quad łańcucha ma dwie kopie (±1 mm wzdłuż własnej normalnej, rdzeń
+  ±2,5 mm; bliższa wygrywa test głębi i patrzy w kamerę) + osobna farba łańcucha: bordo `CHAIN_RED_SRGB` (120,20,22),
+  biel `CHAIN_WHITE_SRGB` (238,237,231), WORKING_VALUE wg P11-063. Pomiar `tools/measure_gr.py` (detail-2m, regiony
+  z recenzji, piksele R > 1,25 G): łańcuch G/R **High 0,70 → 0,34** (77,26,26), **Low 0,76 → 0,56** (95,53,52); słupek
+  0,16 / 0,32 bez zmian. Cel ≤ 0,3: High prawie, Low nie (Low ma bledszą czerwień także na słupku — 0,32; renderScale
+  0,75 i MSAA 2 mieszają cienkie ogniwa z brukiem).
+- **P1-3 kontrast dolnego łańcucha:** w kadrze 13 m (`compare/r4-photo-13m-vs-P11-063.jpg`) oba łańcuchy czytają się
+  jak na zdjęciu — dolny bordowy, wyraźny na bruku; biel widoczna na bruku także z 2 m (P1-2 w dużej mierze usunięte).
+- **P1-5 Low wzdłuż rzędu:** taśma LOD1 = pasek pionowy + poziomy (dwustronne). Z 8 m na Low łańcuchy są, ale słabe
+  (`compare/r3b-low_r4-low_r4-high-along-8m-zoom.png`; bliskie przęsła to LOD0 widziane prawie wzdłuż) — częściowo.
+- **P2-6:** P11-063 = Wikimedia Commons, CC0, Rakoon, 2024-06-23 (`File:20240623_124644_June_2024_in_Białystok.jpg`,
+  manifest `research/mistral/p11-dojlidy-photos/manifest.csv`); poprawione w bloku override, ADR i docstringu modułu.
+- **P2-4:** kamera `bollards-photo-13m` 0,6 m dalej; słup znaku zasłania teraz inne przęsło (świat, nie 0183).
+- Budżet r4: `bollard_rw_chain` LOD0 **270** tris (r3b 174), LOD1 **79** (31); `bollard_rw` 78 / 15 bez zmian. Rząd
+  Dojlid = 7 × bay: +672 tris LOD0 względem r3b; draws i instancje bez zmian (+2–3 / +8 jak w A/B).
+- Świat r4 zbudowany z `overrides.yaml` z main (0179) + blokiem 0183 dopisanym lokalnie (kopia:
+  `artifacts/bollards-0183/local-overrides.dojlidy.r4.yaml`), po `git merge origin/main`. Rendery `renders/r4-{low,high}/`.
+- Testy: `test_chain_bollards_0183.py` 20/20 (nowy `test_chain_quads_are_two_faced`, budżet ≤ 280 / ≤ 80).
+
 ## Otwarte
 - Wysokość 0,80 vs 0,90 m i długość przęsła — do pomiaru na miejscu (właściciel) albo z drugiego zdjęcia z obiektem
   o znanym wymiarze.
 - Łańcuch: typ i wymiary ogniw UNVERIFIED (r3: klasa tworzywowa 8 mm z szerokości pozornej na P11-063).
-- Dolny łańcuch na jasnym bruku w kadrze 13 m słabszy niż na zdjęciu; biały łańcuch na bruku ma niski kontrast
-  (fizycznie poprawne przy pochmurnym świetle). Kolejny krok tylko po ocenie visual-critic / właściciela.
-- Świat dowodowy budowany BEZ overrides 0179 z main (gałąź sprzed nich) i z lokalnym, niezacommitowanym
-  overrides.yaml Dojlid; po wklejeniu bloku na main potrzebna regeneracja Dojlid i ponowny render.
+- Low: czerwień łańcucha G/R 0,56 (cel 0,3) i słaby łańcuch wzdłuż rzędu z 8 m; migotanie kart w ruchu (P1-4) —
+  ocena na A16 przy bramce. P2-1/P2-2/P2-3 (brud przy ziemi, AO stopy, nasycenie) — backlog.
+- r1–r3b budowane bez overrides 0179; r4 już z nimi (lokalnie). Po wklejeniu bloku na main: regeneracja Dojlid.
 - Przesunięcie r2 (+3,5 m na wygenerowany chodnik) cofnąć, gdy 0179 poprawi nawierzchnię (trawnik → bruk).
-- visual-critic nieuruchomiony (agent nie tworzy subagentów) — po stronie lidera; dowody w `compare/`.
+- visual-critic: r3b oceniony (SCAL WARUNKOWO); r4 do ponownej oceny przez lidera/krytyka.
 - Telefon: koszt nie mierzony na A16 (bez adb w zadaniu).
 - Kolizja przęsła jest sztywna (ciężarówka nie zerwie łańcucha) — jak wszystkie meble; fizyka zrywania poza zakresem.
 - Rozstawienie w Dojlidach i korekta pozy `photo_P11-063` — 0179 / lider.
