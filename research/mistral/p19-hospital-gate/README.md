@@ -1,169 +1,202 @@
 # mistral-p19-hospital-gate — brama szpitala (Żurawia 14, Dojlidy), kadr referencyjny P11-129
 
 **Projekt:** Kamion — realistyczny mobilny symulator ciężarówki z naczepą; świat Białegostoku 1:1 (OSM + GUGiK); gra komercyjna, budżet 0 zł.
-**Zadanie M62:** kadr referencyjny P11-129 (brama szpitala w Dojlidach) jest dziś najgorzej odwzorowany w regionie — brak muru z cegły z tablicami, ceglanych słupów z daszkiem, znaków STOP/B-33 „20”/C-2 i tablicy izby przyjęć; w tle generyczny blok. Cel: komplet danych do odtworzenia bramy rozpoznawalnej dla gracza z Białegostoku (decyzja D60, region Dojlidy).
-**Gałąź:** `research/mistral-p19-hospital-gate` (od najnowszego origin/main). **Data:** 2026-11-13. **Język:** polski.
+**Zadanie M62 (+ M62-FIX):** kadr referencyjny P11-129 (brama szpitala w Dojlidach) jest dziś najgorzej odwzorowany w regionie. Cel: komplet danych do odtworzenia bramy rozpoznawalnej dla gracza z Białegostoku (decyzja D60, region Dojlidy).
+**Gałąź:** `research/mistral-p19-hospital-gate` (PR #53). **Data:** 2026-11-13, poprawki M62-FIX 2026-11-14 (po przeglądzie `docs/reports/REVIEW-2026-11-14-s20-mistral-m62.md`; zamiast rebase scalono `origin/main` do gałęzi). **Język:** polski.
 
 ---
 
+## 0. Zmiany M62-FIX (2026-11-14) — skrót
+1. **Kierunek odwrócony i poprawiony:** ulica Żurawia leży ~16 m na **E/NE** od bramy, szpital na W/SW. Wjazd (od ulicy w głąb terenu) ma kierunek **~242°** (siatka EPSG:2180; ≈245,6° geogr.). Way 883955523 = dojazd od ulicy, way 73881452 = droga już na terenie szpitala; node 874174701 to NIE skrzyżowanie z Żurawią. Dopisano maxspeed=40.
+2. **Kadry innych obiektów usunięte z „kadrów bramy” i ze wszystkich odczytów:** F05/F06 (budynek z masztem kratowym, landuse=military na E od Żurawiej), F15/F16 (budynek z blachy innej instytucji), F19 (stalowa brama przesuwna przy budowie, 190 m na SE). Opisy F03, F12, F13, F16 napisane od nowa z obrazu. Duplikaty F22 (= F11) i F23 (= F17) usunięte. F09 (PNG) obejrzany. URL F14 poprawiony.
+3. **F01 opisany z obrazu:** mur z jasnej cegły, 5 poziomych bordowych tablic (2 + 3), filar końcowy muru bez daszka, po N dwa filary ze wspólnym daszkiem (jasna belka + ciemna blacha trapezowa). Wysokość muru policzona z warstw cegieł.
+4. **Znaki:** C-2 / B-33 „20” / tabliczka na słupku przy szlabanie; B-20 na filarze; tablica „WJAZD NA PODSTAWIE…” i „OPŁATA ZA WJAZD 3 zł” dodane; B-2 osobno w głębi terenu; wysokości ESTIMATED z kotwicą.
+5. Tablica izby przyjęć niebieska, na własnym białym słupku. Chodnik = kostka. Tło: niskie budynki i dwa kominy.
+6. **Kryterium ≥ 12 kadrów z ≥ 3 stron: NIESPEŁNIONE (1 kadr bramy: F01).**
+7. Nowa samokontrola: seed 20261114, 14 wierszy, **12 zgodnych / 2 niezgodne**.
+
 ## 1. Cel
-Ustalić z OSM/BDOT10k dokładne położenie wjazdu na teren szpitala przy ul. Żurawiej 14 (Dojlidy, Białystok) wraz z identyfikatorami obiektów, a z kadrów (Commons; Panoramax/KartaView/Openverse — patrz sekcja metody) odczytać: mur (materiał, wysokość, tablice), słupy bramy z daszkami, szlaban, znaki (B-20, B-33 „20”, C-2, prawdopodobny B-2) z wysokościami zamocowania wg Dz.U. 2019 poz. 2311, tablicę izby przyjęć, nawierzchnię przed bramą i tło za bramą — w konwencji statusów SOURCED/ESTIMATED/UNVERIFIED/REJECTED (zgodnie z research/mistral/p6-dojlidy-gates).
+Ustalić z OSM dokładne położenie wjazdu na teren szpitala przy ul. Żurawiej 14 (Dojlidy, Białystok) wraz z identyfikatorami obiektów, a z kadrów odczytać: mur (materiał, wysokość, tablice), filary i daszek, szlaban, znaki (kody wg Dz.U. 2019 poz. 2310, wymiary wg poz. 2311) z wysokościami zamocowania, tablicę izby przyjęć, nawierzchnię przed bramą i tło — w konwencji statusów SOURCED / ESTIMATED / UNVERIFIED / REJECTED.
 
 ## 2. Metoda
-- **OSM (ODbL):** eksport API 0.6 `map?bbox=23.1870,53.1070,23.1950,53.1120` (2026-11-13); transformacja WGS84→EPSG:2180 własnym modułem TM/GRS80 (zwalidowany w P6/M49 na parach kontrolnych, Δ<0,5 m); układ lokalny: środek bramy = (0,0), oś X = wschód, oś Z = północ.
-- **Kadry:** Wikimedia Commons (geosearch + kategorie + katalog Rakoon); każdy kadr pobrany przez `commons.wikimedia.org/w/thumb.php` (JPG ≤1600 px) i **OBEJRZANY** analizą obrazu (pytania tematyczne, po kilka na kadr kluczowy); liczby z wizji traktowane wyłącznie jakościowo — wymiar wymaga kotwicy (krawężnik 0,15 m, płyta chodnikowa 0,5 m, wzrost człowieka ~1,7 m, wymiary znaków z Dz.U.) lub ≥2 niezależnych odczytów (lekcja P6: wizja niepowtarzalna liczbowo). Każdy wymiar: ESTIMATED z jawną metodą albo SOURCED z dokumentem (cytat + strona).
-- **Rozporządzenie o znakach:** Dz.U. 2019 poz. 2311 (ELI), tekst + załączniki z eli.gov.pl (PDF), ekstrakcja tekstu własnym parserem; cytaty ze stronami w manifest.csv.
-- **Ortofotomapa:** GUGiK WCS `Orthoimagery_High_Resolution` (nalot 2025 wg skorowidza WFS, GSD 0,05 m) — wycinki 120×120 m i 80×80 m wokół bramy (PNG do analizy programowej + JPG); klasyfikacja pikselowa okazała się mało miarodajna (niski kontrast nalotu — asfalt/trawnik różnią się minimalnie), więc orto służy jako potwierdzenie jakościowe (droga wewnętrzna, chodnik/krawężnik wzdłuż ulicy, brak widocznej kreski szlabanu).
-- **Źródła niestosowane:** Google Maps/Street View/Earth/3D Tiles — ZAKAZ (D43), nieużyte. Mapillary — brak tokenu, nie sondowano. Panoramax — 0 wyników w bbox (API panoramax, sprawdzone). KartaView — 0 zdjęć w promieniu 5 km (kontrola pozytywna: API działa, zwraca dane w innych lokalizacjach). Openverse — API niedostępne z sesji (HTTP 504, następnie challenge Cloudflare) — 0 kadrów. BDOT10k/WFS wysokości — odcinki/pakiety PZGIK poza zasięgiem sesji (patrz sekcja 9).
-- **Licencje:** CC0 (Rakoon, 20 kadrów), CC BY 3.0 pl (Podlaski Urząd Wojewódzki — szpital tymczasowy, 6 kadrów, „referencja, nie tekstura” z atrybucją), ODbL (OSM), otwarte dane (GUGiK), dokument urzędowy (Dz.U.). Nazwy marek/instytucji z tablic NIE trafiają do opisów odtwarzanych w grze — zapisane jako „napis instytucji, nie odtwarzamy”.
+- **OSM (ODbL):** eksport API 0.6 `map?bbox=23.1870,53.1070,23.1950,53.1120` (2026-11-13); w M62-FIX ponownie `map?bbox=23.1880,53.1085,23.1935,53.1105` oraz `way/{73881451,236884785,239477156}/full` (2026-11-14). Overpass: overpass-api.de (reset połączenia) i kumi.systems (timeout) nie odpowiedziały; zapytanie o węzły z zadania wykonane na `maps.mail.ru/osm/tools/overpass`, drogi z OSM API 0.6. Układ lokalny: środek bramy (node 2448457849) = (0,0), X = wschód, Z = północ [m]. Azymuty: „geogr.” = względem północy geograficznej (przybliżenie lokalne cos φ), „EPSG:2180” = kąt w siatce PUWG 1992 (różnica ~3,4° = zbieżność południków przy λ ≈ 23,19°).
+- **Kadry:** Wikimedia Commons (geosearch r = 300 m + kategorie). Miniatury 960 px; F01 dodatkowo 3840 px do wycinków (Python + PIL, `python -I`). **Każdy kadr obejrzany OSOBNO** (jeden plik = jedno wywołanie modelu wizyjnego), zdanie „co widać” pisane z obrazu. Liczby z wizji tylko z jawną kotwicą: znak B-20 średni (koło wpisane 800 mm), znaki 600 mm, moduł warstwy cegły 75 mm (65 + 10 mm, **założenie**).
+- **Wysokość muru:** liczenie warstw cegieł na wycinkach F01 (profil jasności spoin w kolumnie pikseli + kontrola wzrokowa wycinka).
+- **Dz.U.:** kody znaków wg Dz.U. 2019 poz. 2310 (znaki i sygnały drogowe); wymiary i wysokości wg Dz.U. 2019 poz. 2311 (szczegółowe warunki techniczne dla znaków i sygnałów drogowych…); cytaty ze stronami w manifest.csv.
+- **Ortofotomapa:** GUGiK WCS (nalot 2025, GSD 0,05 m) — tylko potwierdzenie jakościowe (niski kontrast).
+- **Źródła niestosowane:** Google Maps/Street View/Earth/3D Tiles — ZAKAZ (D43), nieużyte. Mapillary — brak tokenu, nie sondowano.
+- **Licencje:** CC0 (Rakoon), CC BY 3.0 pl (Podlaski Urząd Wojewódzki — „referencja, nie tekstura”, atrybucja), ODbL (OSM), otwarte dane (GUGiK), dokument urzędowy (Dz.U.). Napisy instytucji z tablic NIE trafiają do gry — „napis instytucji, nie odtwarzamy”.
 
-## 3. Położenie wjazdu (OSM, STAN 2026-11-13)
+## 3. Położenie wjazdu (OSM, sprawdzone 2026-11-14)
 
 | Obiekt | Identyfikator OSM | Ustalenie |
 |---|---|---|
-| **Brama (szlaban)** | **node 2448457849** (barrier=lift_gate, foot=yes, fee=yes, payment:coins=yes) | **środek bramy: 53.109457, 23.190647** (WGS84, 6 miejsc); EPSG:2180 E=780370,119 N=590887,441 |
-| Azymut osi wjazdu | way 73881452 + 883955523 | **62,3°** (Żurawia→brama 62,8°; brama→szpital 62,1°) |
-| Droga dojazdowa | way 73881452 (service) | node 874174701 (na Żurawiej) → szlaban; 8,4 m |
-| Droga za bramą | way 883955523 (service) | szlaban → node 3323248759 → node 874174759; 16,4 m; dalej parking 276840492 (diagonal, 20,4 m) |
-| Obrys szpitala | **way 239477156** (amenity=hospital, Żurawia 14, loc_name „Szpital Zakaźny”, operator: Uniwersytet Medyczny) | przechodzi przez node bramy |
-| Budynek przy bramie | **way 296211509** (name=Portiernia) | narożnik przy bramie node 3000014175 (+0,68 E, +3,52 N); node 3000014181 łączy portiernię z ogrodzeniem 883955508; w ścianie skrzynka pocztowa (node 10202945270) |
-| Ogrodzenie od południa | **way 883955509** (barrier=fence) | biegnie wzdłuż granicy działki; **kończy się przy bramie** — node 8220895799 (+1,42 E, −3,02 N); w OSM brak odcinka ogrodzenia/muru między tym węzłem a osią bramy |
-| Ogrodzenie od portierni na północ | way 883955508 (barrier=fence) | od narożnika portierni (node 3000014181) na północ |
-| Ulica | way 73881451 (Żurawia, unclassified, surface=paved, **hgv=no, maxweight=3,5**) | oś jezdni ~16,4 m na S/SW od bramy; dojazd = jedyny wlot na teren szpitala od Żurawiej przy tej bramie |
-| Budynek główny za bramą | way 236884780 (building=hospital, name=A) | najbliższy punkt 43,9 m od bramy |
-| Inne przy dojeździe | node 3323248741 (barrier=gate, access=private, 32,8 m E — bramka piesza); node 14123795058 (highway=traffic_mirror, 14,2 m E) | |
-| **Mur (barrier=wall) przy bramie** | **BRAK w OSM** | ways wall 1552407068/69/70 leżą ~120 m na południe (szpital tymczasowy) — NIE są murem bramy; mur z cegły potwierdzony kadrami (sekcja 5) = luka w OSM |
+| **Brama (szlaban)** | **node 2448457849** (barrier=lift_gate, foot=yes, fee=yes, payment:coins=yes) | **środek bramy: 53.109457, 23.190647** (WGS84); EPSG:2180 E=780370,119 N=590887,441 |
+| **Kierunek wjazdu** | way 883955523 → way 73881452 | **~242°** (siatka EPSG:2180) / ≈245,6° geogr. — **od ulicy (E/NE) w głąb terenu (W/SW)**; oś 62°/242° |
+| **Dojazd od ulicy** | **way 883955523** (service) | node **874174759 (węzeł Żurawiej)** → 3323248759 (styk z footway 325708420) → szlaban; 16,4 m |
+| **Droga za bramą (teren szpitala)** | **way 73881452** (service) | szlaban → node **874174701** (−7,7; −3,4); 8,4 m. 874174701 łączy się z wewnętrznymi service **642905692** i **1552407066**. **To NIE jest skrzyżowanie z Żurawią** |
+| Obrys szpitala | way 239477156 (amenity=hospital, Żurawia 14) | przechodzi przez node bramy |
+| Portiernia | way 296211509 (name=Portiernia) | narożnik przy bramie node 3000014175 (+0,9; +3,4) — **po N / prawej stronie wjazdu** |
+| Ogrodzenie przy murze | way 883955509 (barrier=fence) | kończy się przy bramie node 8220895799 (+1,2; −3,1); biegnie na SSE (~158°), **równolegle do Żurawiej** — **po SE / lewej stronie wjazdu**; na tym odcinku stoi mur z F01 |
+| Ogrodzenie od portierni na N | way 883955508 (barrier=fence) | od node 3000014181 |
+| **Ulica** | **way 73881451** (Żurawia, unclassified, **maxspeed=40**, hgv=no, maxweight=3.5, surface=paved) | biegnie NNW–SSE; oś **~16,4 m na E/NE** od bramy (kierunek ~68° geogr.) |
+| Budynek A | way 236884780 (building=hospital, name=A) | najbliższy punkt ~43,9 m od bramy, na SW |
+| Teren na E od Żurawiej | way 236884785 (landuse=military, barrier=fence) + maszt node 8220945933 (man_made=mast, lattice) | obiekt z kadrów F05/F06 — NIE szpital |
+| Inne | node 3323248741 (barrier=gate, w ogrodzeniu way 236884785, ~32 m E); node 14123795058 (traffic_mirror, +13,8; −3,1) | |
+| **Mur (barrier=wall) przy bramie** | **BRAK w OSM** | mur widoczny tylko na F01 = luka w OSM |
 
-**Szerokość światła wjazdu: 6,6 m** (cięciwa: koniec ogrodzenia node 8220895799 → narożnik portierni node 3000014175 = 6,58 m; metoda jak P6 G07/G08, SOURCED z geometrii OSM); odczyt drugi — rzut na kierunek prostopadły do osi wjazdu: **6,1 m**. Odczyt wizyjny „3–4 m” odrzucony (niepowtarzalność modelu wizyjnego — lekcja P6). Wjazd jednokierunkowy, z szlabanem.
+**Szerokość światła wjazdu:** 6,6 m (cięciwa node 8220895799 → node 3000014175; ponowne przeliczenie: 6,51 m) / 6,1 m prostopadle — ESTIMATED (geometria OSM), nie pomiar.
 
-## 4. Kadry — inwentarz oględzin (kryterium „kadry bramy”: patrz sekcja 10)
+## 4. Kadry
 
-Wszystkie kadry pobrane (JPG ≤1600 px, files/ w archiwum ZIP — patrz sekcja 11) i **obejrzane** 2026-11-13 (analiza obrazu, pytania tematyczne). Pozycje z EXIF/API Commons; kierunek deg — UNVERIFIED (Commons nie udostępnia GPSImgDirection).
+### 4.1 Inwentarz (wszystkie obejrzane osobno 2026-11-14)
+Pozycje z geotagów Commons; kierunek kamery — UNVERIFIED, chyba że wynika z treści kadru i OSM.
 
-| Kadr | Plik (Commons) | Pozycja kamery | Odległość od bramy | Data / sezon | Licencja | Co widać (1 zdanie) | Rola |
-|---|---|---|---|---|---|---|---|
-| **F01 = P11-129** | 6739 Uniwersytecki Szpital Kliniczny… November 2019 | 53.109464, 23.190654 | **0,9 m** | 2019-11-10, jesień | CC0 (Rakoon) | brama od frontu: dwa ceglane słupy z płaskimi daszkami, szlaban biało-czerwony opuszczony, ceglany mur z tablicami, zestaw znaków (STOP, „20”, nakaz w prawo) twarzą do kamery, tablica izby przyjęć na słupie, asfalt z łatami, portiernia w kadrze, drzewa bez liści | **kadr referencyjny** — 6 niezależnych odczytów tematycznych |
-| F02 | 8858 November 2022 | 53.110204, 23.190304 | 86 m | 2022-11-03, jesień | CC0 | ulica Żurawia: jezdnia i chodnik, przystanek z wiatą, ogrodzenie terenu, latarnie | kontekst ulicy |
-| F03 | 20230814 182338 August 2023 | (EXIF w archiwum) | ~83 m | 2023-08-14, lato | CC0 | ulica/przystanek, bramy szpitala brak | kontekst (odrzut bramy) |
-| F04 | 20230814 181655 August 2023 | ~ | ~83 m | 2023-08-14, lato | CC0 | ulica/przystanek, bramy szpitala brak | kontekst |
-| F05 | 20200726 084447 Białystok July 2020 | 53.109104, 23.191705 | 81 m | 2020-07-26, lato | CC0 | brama dwuskrzydłowa + mur ceglany po **południowej** stronie Żurawiej, za nimi bloki osiedlowe | **REJECTED dla bramy szpitala** (zła strona ulicy) |
-| F06 | 8860 November 2022 | 53.109221, 23.191886 | 87 m | 2022-11-03, jesień | CC0 | zielona siatka ogrodzeniowa szpitala, budynek szpitala (białe ściany, ciemny dach), maszt antenowy | tło za bramą; ogrodzenie dalej od bramy |
-| F07 | 20230814 180637 August 2023 | ~ | ~95 m | 2023-08-14, lato | CC0 | ulica/przystanek, bramy szpitala brak | kontekst |
-| F08 | 8861 November 2022 | ~ | 119 m | 2022-11-03, jesień | CC0 | brama WORD (inny obiekt) ze znakiem STOP | odrzut (inny obiekt) |
-| F09 | Szpital tymczasowy…01.png | — | — | 2020-12-10 | CC BY 3.0 pl | **REJECTED: PNG** (poza pipeline JPG); nie oglądnieto | odrzut |
-| F10 | 20200726 084816 WORD | ~ | 132 m | 2020-07-26, lato | CC0 | WORD (inny obiekt) | odrzut |
-| F11 | Szpital tymczasowy…03.jpg | — | ~120 m S | 2020-12-10, zima | CC BY 3.0 pl | wnętrze/konferencja szpitala tymczasowego | odrzut (nie brama) |
-| F12 | 20221117 130338 | ~ | ~ | 2022-11-17, jesień | CC0 | ulica/osiedle, bramy szpitala brak | kontekst |
-| F13 | 20221117 122654 | ~ | ~ | 2022-11-17, jesień | CC0 | ulica/osiedle | kontekst |
-| F14 | 20200726 084417 Żurawia Street | 53.108217, 23.191792 | 158 m | 2020-07-26, lato | CC0 | ulica Żurawia wzdłuż, ogrodzenie terenu | kontekst ulicy |
-| F15 | 8857 November 2022 | 53.110066, 23.188321 | 170 m | 2022-11-03, jesień | CC0 | front szpitala, **ogrodzenie z siatki metalowej**, dwa samochody przed budynkiem | ogrodzenie (nie mur przy bramie) |
-| F16 | 20221117 122456 | 53.110134, 23.188270 | 176 m | 2022-11-17, jesień | CC0 | front szpitala/ulica | kontekst |
-| F17 | Szpital tymczasowy…05.jpg | — | ~120 m S | 2020-12-10 | CC BY 3.0 pl | wnętrze szpitala tymczasowego, za oknem zima | odrzut |
-| F18 | Szpital tymczasowy…06.jpg | — | ~120 m S | 2020-12-10 | CC BY 3.0 pl | konferencja/wnętrze | odrzut |
-| F19 | 20200726 084355 ul. Żurawia | 53.107934, 23.191925 | 190 m | 2020-07-26, lato | CC0 | od południa: **mur ceglany po szpitalnej stronie ulicy (wysokość ~człowieka) z tablicami (czerwona z białym napisem, żółta z czarnym)**, brama, daszki na słupach widoczne, budynki szpitala (min. 4 kondygnacje, jasne) | **2. niezależny odczyt muru i tła** |
-| F20 | 20221117 124435 | 53.110669, 23.187871 | 230 m | 2022-11-17, jesień | CC0 | ulica/ulica osiedlowa | kontekst |
-| F21 | 20221117 124436 | 53.110793, 23.187706 | 247 m | 2022-11-17, jesień | CC0 | ulica osiedlowa | kontekst |
-| F22 | Szpital tymczasowy…03.jpg | — | ~120 m S | 2020-12-10 | CC BY 3.0 pl | wnętrze szpitala tymczasowego | odrzut |
-| F23 | Szpital tymczasowy…05.jpg | — | ~120 m S | 2020-12-10 | CC BY 3.0 pl | szpital tymczasowy (za oknem zima) | odrzut |
-| F24 | Szpital tymczasowy…07.jpg | — | ~120 m S | 2020-12-10 | CC BY 3.0 pl | dwóch mężczyzn przed budynkiem szpitala tymczasowego (prasa, mikrofony) — elementów bramy szpitala brak | odrzut (tło niezwiązane z bramą) |
+| Kadr | Plik (Commons) | Odl. od bramy | Data | Licencja | Co widać (z obrazu) | Rola |
+|---|---|---|---|---|---|---|
+| **F01 = P11-129** | 6739 Uniwersytecki Szpital Kliniczny… November 2019 | 0,9 m (EXIF) | 2019-11-10 | CC0 | widok z ulicy na SW: po lewej mur z jasnej cegły z 5 bordowymi tablicami i filarem końcowym, po prawej dwa filary ze wspólnym daszkiem, STOP na filarze, słupek z C-2 i „20”, szlaban biało-czerwony z tabliczką opłaty, niebieska tablica izby przyjęć, w głębi B-2, niskie budynki i dwa kominy | **jedyny kadr bramy** |
+| F02 | 8858 November 2022 | 86 m | 2022-11-03 | CC0 | pętla autobusowa z kostki, przegubowy autobus miejski, czerwona wiata przystanku, niebieska toaleta przenośna, maszt kratowy w tle | kontekst (nie brama) |
+| F03 | 20230814 182338 August 2023 | 87 m | 2023-08-14 | CC0 | wnętrze autobusu: żółty kasownik na poręczy, niebieskie fotele | odrzut (wnętrze) |
+| F04 | 20230814 181655 August 2023 | 88 m | 2023-08-14 | CC0 | skrzyżowanie z przejściem dla pieszych, łąka, ogrodzenie z siatki, domy w tle | kontekst (nie brama) |
+| F05 | 20200726 084447 Białystok July 2020 | 81 m | 2020-07-26 | CC0 | wieloskrzydłowy budynek z brązowymi wielospadowymi dachami i masztem kratowym; ogrodzenie z żółtymi ceglanymi słupkami i stalowymi przęsłami, B-2 na bramie | **REJECTED — inny obiekt** (landuse=military, E od Żurawiej) |
+| F06 | 8860 November 2022 | 87 m | 2022-11-03 | CC0 | ten sam budynek z masztem co F05, za zieloną siatką; osoba i niebieska naczepa przy ogrodzeniu | **REJECTED — inny obiekt** |
+| F07 | 20230814 180637 August 2023 | 100 m | 2023-08-14 | CC0 | skrzyżowanie z przejściem, samochód nauki jazdy, parking, budynki | kontekst (nie brama) |
+| F08 | 8861 November 2022 | 118 m | 2022-11-03 | CC0 | budynek WORD z łukowym dachem, zielona brama stalowa, baner; znaku STOP nie widać | odrzut (inny obiekt) |
+| F09 | Szpital tymczasowy … 01.png | 124 m | 2020-12-10 | CC BY 3.0 pl | nowy biały 3-kondygnacyjny budynek z przeszklonym parterem i szerokimi schodami, plac z kostki | odrzut (inny obiekt) |
+| F10 | 20200726 084816 WORD | 131 m | 2020-07-26 | CC0 | hala WORD z napisem, maszty flagowe, ogrodzenie z zielonej siatki | odrzut (inny obiekt) |
+| F11 | Szpital tymczasowy … 03.jpg | — (brak geotagu) | 2020-12-10 | CC BY 3.0 pl | wnętrze: biurko z monitorem podglądu kamer i panelem przywoławczym | odrzut (wnętrze) |
+| F12 | 20221117 130338 | 161 m | 2022-11-17 | CC0 | korytarz przychodni: rejestracja, rząd krzeseł, drzwi gabinetów | odrzut (wnętrze) |
+| F13 | 20221117 122654 | 162 m | 2022-11-17 | CC0 | korytarz z krzesłami i wieszakiem, na końcu przeszklone drzwi wyjściowe | odrzut (wnętrze) |
+| F14 | 20200726 084417 Żurawia Street in Białystok | 158 m | 2020-07-26 | CC0 | Żurawia wzdłuż: jezdnia asfaltowa, chodnik z kostki, po lewej płot z jasnymi słupkami i wierzby, po prawej budynek z masztem | kontekst ulicy |
+| F15 | 8857 November 2022 | 169 m | 2022-11-03 | CC0 | parterowy budynek z blachy falistej z zielonymi pasami (napis innej instytucji — nie odtwarzamy), 2 samochody za siatką | **REJECTED — inny obiekt** |
+| F16 | 20221117 122456 | 176 m | 2022-11-17 | CC0 | wejście z przezroczystym daszkiem do budynku z blachy falistej z F15 | **REJECTED — inny obiekt** |
+| F17 | Szpital tymczasowy … 05.jpg | — (brak geotagu) | 2020-12-10 | CC BY 3.0 pl | sala chorych z łóżkiem, dwie osoby, za oknem śnieg | odrzut (wnętrze) |
+| F18 | Szpital tymczasowy … 06.jpg | 146 m | 2020-12-10 | CC BY 3.0 pl | pusta sala z dwoma łóżkami szpitalnymi | odrzut (wnętrze) |
+| F19 | 20200726 084355 ul. Żurawia July 2020 | 190 m | 2020-07-26 | CC0 | stalowa brama przesuwna z siatką, słupek z jasnej cegły, tablice informacyjne i żółte budowlane, koparka, biały wielokondygnacyjny budynek w budowie | **REJECTED — inny obiekt** (190 m SE) |
+| F20 | 20221117 124435 | 229 m | 2022-11-17 | CC0 | ulica osiedlowa z kostki, słup energetyczny, żywopłot z tui, znak zakazu dla ciężarówek | kontekst (nie brama) |
+| F21 | 20221117 124436 | 246 m | 2022-11-17 | CC0 | biały dom jednorodzinny, tuje, brama z kutymi elementami | kontekst (nie brama) |
+| F24 | Szpital tymczasowy … 07.jpg | — (brak geotagu) | 2020-12-10 | CC BY 3.0 pl | dwie osoby przed budynkiem, mikrofony prasy | odrzut |
 
-**Kadry „bramy” wg interpretacji zaakceptowanej przez właściciela (2026-11-13):** kadry, na których widoczna jest brama/front szpitala, z odległością jawnie w uwagach. Spełniają: **F01 (0,9 m), F06 (87 m, tło/ogrodzenie), F15 (170 m, front), F19 (190 m, mur z tablicami + brama z daleka)** — 4 kadry z 3 kierunków (front/przód, ukos z południa, front z północnego zachodu). Kadrów z odległości ≤40 m jest tylko F01 — niedobór wynika z braku materiału foto w dozwolonych źródłach (Commons jedyny; Panoramax/KartaView 0; Openverse niedostępne; Mapillary bez tokenu) — patrz sekcja 10 (luki).
+Obejrzano **22 pliki** z inwentarza (F01–F21, F24) oraz 4 dodatkowe pliki z kategorii ulicy (§4.3). F22 i F23 usunięto jako duplikaty F11 i F17.
 
-## 5. Tabela elementów — element → wymiar → metoda → źródło → status
+### 4.2 Commons geosearch r = 300 m od bramy (2026-11-14) — pełna lista: 25 plików
+Odległość [m] — plik: 0,9 — 6739 Uniwersytecki Szpital Kliniczny… (F01); 80,8 — 20200726 084447 (F05); 86,2 — 8858 (F02); 86,7 — 8860 (F06); 86,9 — 20230814 182338 (F03); 87,6 — 20230814 181655 (F04); 100,4 — 20230814 180637 (F07); 117,8 — 8861 (F08); 124,3 — Szpital tymczasowy… 01.png (F09); 130,7 — 20200726 084816 WORD (F10); 145,9 — Szpital tymczasowy… 06 (F18); 157,6 — 20200726 084417 Żurawia Street (F14); 161,0 — 20221117 130338 (F12); 162,2 — 20221117 122654 (F13); 169,4 — 8857 (F15); 173,6 — Szpital tymczasowy… 04; 175,6 — 20221117 122456 (F16); 182,5 — Szpital tymczasowy… 02; 189,6 — 20200726 084355 (F19); 229,1 — 20221117 124435 (F20); 246,2 — 20221117 124436 (F21); 255,1 — 20200726 084948 Wiewiórcza Street; 269,8 — 20200726 085300 Borsucza Street; 292,9 — 20221117 124441; 298,5 — 8856 November 2022.
+**W promieniu 40 m: 1 plik (F01).** Pliki 02, 04 (szpital tymczasowy) i 4 pliki > 250 m nie były wcześniej w inwentarzu; leżą > 170 m od bramy, więc nie mogą pokazać bramy z ≤ 40 m — nie oglądano ich.
 
-| Element | Wymiar/cecha | Metoda | Źródło | Status |
-|---|---|---|---|---|
-| Brama — środek | 53.109457, 23.190647 | node szlabanu | OSM node 2448457849 | SOURCED |
-| Brama — szerokość światła | **6,6 m** (cięciwa) / 6,1 m (prostopadle) | cięciwa koniec ogrodzenia→narożnik portierni (jak P6 G07/G08) | OSM nodes 8220895799, 3000014175 | SOURCED |
-| Brama — typ | szlaban jednostronny, ramię biało-czerwone | oględziny (2 niezależne odczyty) | F01 | ESTIMATED |
-| Mur — materiał | cegła (ceramiczna, czerwono-brązowa) | oględziny (2 odczyty) | F01 | ESTIMATED |
-| Mur — wysokość | **1,7–2,0 m** | kotwica: wzrost człowieka (F19) + relacja do znaku STOP (F01) — 2 niezależne odczyty | F01+F19 | ESTIMATED |
-| Mur — nakrywa | płaska płyta | oględziny | F01 | ESTIMATED |
-| Mur — tablice | **4** (prostokątne pionowe, czerwone tło; ≥2 potwierdzone niezależnie); wymiary UNVERIFIED | oględziny 2 kadrów | F01+F19 | ESTIMATED |
-| Słup — materiał/przekrój | cegła / prostokątny; 2 szt. | oględziny (2 odczyty) | F01 | ESTIMATED |
-| Słup — wysokość | UNVERIFIED (brak kotwicy; słup nieco ponad mur) | — | F01 | UNVERIFIED |
-| Daszek — kształt/materiał | prostokątny, płaski; beton, szary | oględziny (3 odczyty) | F01+F19 | ESTIMATED |
-| Daszek — wymiary | UNVERIFIED | — | — | UNVERIFIED |
-| Znak B-20 | obecny; średnica 900/800 mm (duży/średni; tylko te rozmiary) | oględziny (3 odczyty) + tabela 3.1 (Dz.U. str. 92) + str. 91 (koło wpisane) | F01 + Dz.U. 2019 poz. 2311 | ESTIMATED (obecność) / SOURCED (wymiary) |
-| Znak B-33 „20” | obecny, 20 km/h; średnice 900/800/600 mm | oględziny + tabela 3.1 | F01 + Dz.U. | ESTIMATED / SOURCED |
-| Znak C-2 | obecny (strzałka w prawo, najwyżej w zestawie); wymiary kategorii C: 900/600/600 mm | oględziny + tabela 1.1 (Dz.U. str. 4) | F01 + Dz.U. | ESTIMATED / SOURCED |
-| Znak B-2 (zakaz wjazdu) | obecność prawdopodobna — 2 odczyty wizyjne, symbol niejednoznaczny | oględziny | F01 | UNVERIFIED |
-| Wysokości zamocowania znaków | min. 2,00 m (w obszarze zabudowanym, na słupkach; 2,20 przy chodniku) lub 0,90–1,20 m (na/za urządzeniami BRD); nad jezdnią min. 5,00 m; od krawędzi jezdni 0,50–2,00 m | tabela 1.11 (Dz.U. str. 32) + str. 26; dokładne wysokości tej instalacji UNVERIFIED | Dz.U. | SOURCED (zakresy) |
-| Tablica izby przyjęć | prostokątna, biała z niebieskimi elementami, niepodświetlana, na słupie bramy; logo i napis instytucji — **nie odtwarzamy** | oględziny | F01 | ESTIMATED |
-| Nawierzchnia dojazdu | asfalt z łatami; krawężnik betonowy niski (~0,15 m — kotwica standardowa), przejazd płytowy; chodnik przy bramie — nawierzchnia UNVERIFIED (odczyty wizyjne niespójne: płyty vs kostka; patrz sekcja 8) | oględziny + kotwice | F01 | ESTIMATED (dojazd/krawężnik) / UNVERIFIED (chodnik) |
-| Nawierzchnia za bramą | asfalt (droga wewnętrzna/plac) | oględziny + orto 2025 | F01 + GUGiK | ESTIMATED |
-| Tło — budynki szpitala | wielokondygnacyjne (min. 4), elewacja jasna/gładka, dachy płaskie/ciemne | oględziny 2 kadrów | F06+F19 | ESTIMATED |
-| Tło — zieleń | drzewa liściaste przy murze (bez liści XI) | oględziny | F01+F05/F19 | ESTIMATED |
+### 4.3 Sprawdzone źródła i liczba wyników (2026-11-14)
+| Źródło | Zapytanie | Wynik |
+|---|---|---|
+| Commons geosearch | r = 300 m od node 2448457849 | 25 plików, ≤ 40 m: 1 (F01) |
+| Commons kategoria | `University Hospital in Białystok (Żurawia)` | 9 plików (F01, F19, szpital tymczasowy 01–07) — żaden nowy kadr bramy |
+| Commons kategoria | `Żurawia Street in Białystok` | 14 plików + 4 podkategorie. Seria Rakoon z 2019-11-10 bez geotagu: obejrzano osobno 6731 (jezdnia z latarniami, pylon parku technologicznego), 6733 (hala logistyczna z naczepami za żywopłotem), 6735 (tabliczki ul. Żurawia / ul. Borsucza, nowoczesne budynki), 6740 (skrzyżowanie z Wiewiórczą, B-5, budynek w budowie) — **żaden nie pokazuje bramy**. 6729 (skrzyżowanie z Kuronia), 6736 (Borsucza), 6741 (Wiewiórcza) — według nazw inne skrzyżowania, nie oglądano |
+| Commons wyszukiwanie | `Żurawia Białystok` (ns 6); `6737`, `6738` | 23 trafienia — wszystkie już wyżej lub poza bramą; 6737 = park technologiczny, 6738 = ul. Borsucza (kadr tuż przed F01 w serii) |
+| Commons kategoria | `Szpital tymczasowy przy ul. Żurawiej w Białymstoku` | kategoria nie istnieje (0) |
+| Panoramax | `place_position` r = 0–300 m; bbox ~300 m | 0; 0 (kontrola pozytywna w bbox Białegostoku: 5) |
+| KartaView | `photo/?lat,lng,radius=300` | 0 (kontrola pozytywna Warszawa: wyniki są) |
+| Openverse | 5 zapytań tekstowych | 1 wynik (= F01, Wikimedia); 1 × 0; 3 × HTTP 504 |
+| Mapillary | — | nie sondowano (brak tokenu) |
 
-Pełne dane (w tym pola: pozycja kamery, kierunek, odległość, licencja, autor, status, uwagi): **manifest.csv** (63 wiersze P19-001…063).
+### 4.4 Kryterium „≥ 12 obejrzanych kadrów bramy z ≥ 3 stron”
+**Kryterium niespełnione: 1 kadr bramy (F01), 1 strona (od ulicy, widok na SW).** Pozostałe kadry nie pokazują bramy P11-129. W dozwolonych źródłach nie znaleziono innych kadrów ≤ 40 m od bramy (tabela 4.3). Do uzupełnienia na miejscu (zdjęcia z ≥ 3 stron) albo z Mapillary po udostępnieniu tokenu.
+
+## 5. Tabela elementów (skrót; pełne dane w manifest.csv, 68 wierszy)
+
+Kotwice skali (ESTIMATED): **K1** = B-20 średni, koło wpisane 800 mm (Dz.U. 2019 poz. 2311, zał. 1) → ~345 px/m w płaszczyźnie filara na F01 3840 px; **K2** = C-2 i B-33 o tej samej średnicy w px → oba 600 mm → ~205 px/m na słupku znaków, podstawa przyjęta na poziomie stopy obudowy szlabanu; **K3** = moduł warstwy cegły 75 mm (założenie).
+
+| Element | Wartość | Metoda / kotwica | Status |
+|---|---|---|---|
+| Brama — środek | 53.109457, 23.190647 | node 2448457849 | SOURCED |
+| Kierunek wjazdu | ~242° (EPSG:2180) / ≈245,6° geogr., od ulicy na W/SW | geometria OSM | ESTIMATED |
+| Szerokość światła | 6,6 m (cięciwa) / 6,1 m (prostopadle) | geometria OSM | ESTIMATED (geometria OSM) |
+| Szlaban | jedno ramię biało-czerwone; napęd czerwony po N; ramię ~1,0 m | F01; K2 | ESTIMATED |
+| Mur — materiał | cegła jasna szarobeżowa (silikat / jasny klinkier — UNVERIFIED) | F01 | ESTIMATED |
+| **Mur — wysokość** | **1,80–1,95 m bez nakrywy** (24 widoczne warstwy na lewym końcu, 26 przy filarze) | K3; kontrola K1 sugeruje moduł ~80 mm → do ~2,1 m | ESTIMATED (1 kadr) |
+| Mur — nakrywa | płaska betonowa, ~0,06 m | F01; K3 | ESTIMATED |
+| Mur — tablice | **5 poziomych bordowych, 2 kolumny (2 + 3)**, ~0,65 × 0,26 m; napisy — nie odtwarzamy | F01; K3 | ESTIMATED |
+| Filar końcowy muru (SE) | cegła jasna, ~28 warstw ≈ 2,1 m + płaska nakrywa, **bez daszka** | F01; K3 | ESTIMATED |
+| Filary N (2 szt.) | cegła jasna; lewy szerszy z odsadzką; między nimi zielona siatka (furtka/przęsło) | F01 | ESTIMATED |
+| **Daszek** | **wspólny nad 2 filarami N:** jasna belka/gzyms + ciemna blacha trapezowa; spód ~2,7 m, wierzch ~3,0–3,1 m | F01; K1 | ESTIMATED |
+| B-20 STOP | na licu zadaszonego filara (N); dolna krawędź **~1,3–1,4 m** (~1,5–1,6 m gdyby duży) | F01; K1 | ESTIMATED |
+| C-2 | najwyżej na słupku przy szlabanie; dolna krawędź **~2,5 m** | F01; K2 | ESTIMATED |
+| B-33 „20” | pod C-2; dolna krawędź **~1,7 m** | F01; K2 | ESTIMATED |
+| Tabliczka pod B-33 | biała, zaklejona żółtą kartką (treść UNVERIFIED); dolna krawędź ~1,3 m | F01; K2 | ESTIMATED |
+| Tablica „WJAZD NA PODSTAWIE przepustki / skierowania / biletu wjazdowego” | niebieska, na filarze pod STOP, ~0,8 × 0,45 m, dolna krawędź ~1,0 m | F01; K1 | ESTIMATED |
+| Tabliczka „OPŁATA ZA WJAZD 3 zł” | niebieska, na ramieniu szlabanu; zgodna z OSM fee=yes | F01 | ESTIMATED |
+| B-2 | osobno, w głębi terenu (~20–30 m za bramą), własny słupek przed niskim kremowym budynkiem | F01 (odległość z perspektywy, niemierzona) | ESTIMATED |
+| Wymiary znaków (normowe) | B-20: 900/800; B-33: 900/800/600/400; C-2: 900/600/600/400 mm | Dz.U. 2019 poz. 2311, tab. 1.1 i 3.1 | SOURCED |
+| Wysokość znaków (normowa) | min. 2,00 (2,20) m w obszarze zabudowanym; 0,90–1,20 m na/za urządzeniach BRD | Dz.U. 2019 poz. 2311, tab. 1.11 | SOURCED (zakres) |
+| Tablica izby przyjęć | **niebieska z żółtym i białym napisem**, na własnym białym słupku przed prawym filarem; ~0,8 × 1,0 m, dolna krawędź ~1,3 m; napis — nie odtwarzamy | F01; K1 | ESTIMATED |
+| Oświetlenie | wysoki słup z oprawą na wysięgniku za filarem + latarenka na szczycie słupka znaków | F01 | ESTIMATED |
+| Nawierzchnia przed bramą | asfalt mokry z łatami i włazami | F01 | ESTIMATED |
+| Chodnik (lewa) | kostka betonowa szara z czerwonym pasem, krawężnik betonowy | F01 | ESTIMATED |
+| Nawierzchnia za szlabanem | kostka prostokątna szara | F01 | ESTIMATED |
+| Tło | budynki 1–2 kondygnacje, ściany beżowe/żółte/kremowe, dachy płaskie lub niskie; w głębi dwa wysokie smukłe kominy; po lewej ciemna wyższa bryła, po prawej za drzewami żółta wyższa bryła (kondygnacje nieczytelne) | F01 | ESTIMATED |
+| Zieleń | za murem kolumnowe iglaki; po prawej drzewa liściaste z resztką liści (XI) | F01 | ESTIMATED |
 
 ## 6. Szkic sytuacyjny (układ lokalny: środek bramy = (0,0); X = wschód [m]; Z = północ [m])
 
-Linia wjazdu: azymut **62,3°** — od jezdni Żurawiej (SW) na plac szpitala (NE). Światło wjazdu między słupami biegnie ~N–S (353°/173°).
+Kamera F01 stoi po stronie ulicy i patrzy na **SW** (~245°), w głąb terenu. **Lewa strona kadru = SE** (mur), **prawa = N/NW** (portiernia, filary z daszkiem, znaki).
 
 ```
-        Z (północ)
-        ↑
-        |   portiernia (way 296211509) ── narożnik 3000014175 = słup N: (+0,7; +3,5)
-        |        L-budynek: (−3,9;+1,2)…(−2,1;+15,8)
-        |   [tablica izby przyjęć na słupie bramy — słup N lub S: UNVERIFIED]
-   ─────┼──────■ szlaban (0,0), ramię wzdłuż światła (kierunek 353°) ──────────
-        |          [daszki na obu słupach]
-        |   słup S: (+1,4;−3,0) ← koniec ogrodzenia (way 883955509, node 8220895799)
-        |      \
-        |       \ mur ceglany z tablicami (kierunek SSE, wzdłuż granicy — jak fence w OSM)
-        |        \  fence 883955509: (+2,2;−4,7) → (+3,5;−6,0) → (+5,8;−6,9) → (+8,7;−6,4) …
-        |   [zestaw znaków: C-2 / B-20 / B-33-20 / (B-2?) — wspólny słupek,
-        |    prawa strona wjazdu patrząc od ulicy (UNVERIFIED), 0,5–2,0 m od krawędzi jezdni]
-        |   [lampa na słupie: 1 oprawa — UNVERIFIED]
-        |   node 874174701 = skrzyżowanie z Żurawią (−7,5;−3,8); oś jezdni ~16 m S/SW
-        |   przejazd przez krawężnik płytowy; chodnik przy bramie (nawierzchnia UNVERIFIED — patrz sekcja 8)
-        → X (wschód)
+                     Z (północ)
+                     ↑
+   teren szpitala    |   portiernia (way 296211509), narożnik 3000014175 (+0,9; +3,4)
+   (W/SW)            |   [2 filary N ze wspólnym daszkiem; STOP + tablica „WJAZD NA PODSTAWIE” na filarze;
+                     |    słupek C-2 / B-33 „20” / tabliczka przy obudowie szlabanu; tablica IP na białym słupku]
+  874174701 ●────────■ szlaban (0,0) ──────● 3323248759 (+6,7; +3,0) ──────● 874174759 (+14,9; +6,8)
+  (−7,7; −3,4)       |   way 73881452 ← | → way 883955523 (dojazd od ulicy)     ║ Żurawia (way 73881451)
+  → service 642905692|                                                          ║ biegnie NNW–SSE,
+    i 1552407066     |   filar końcowy muru (+1,2; −3,1) = node 8220895799      ║ oś ~16,4 m na E/NE
+   (teren szpitala)  |     \  mur z jasnej cegły, 5 tablic (2+3),                ║ maxspeed=40, hgv=no
+                     |      \ wzdłuż fence 883955509 na SSE (~158°),             ║
+                     |       \ równolegle do Żurawiej                            ║
+                     |                                   lusterko 14123795058 (+13,8; −3,1)
+   B-2 (osobno, ~20–30 m w głębi terenu, ESTIMATED)                              → X (wschód)
+   kierunek wjazdu: od ulicy (E/NE) → brama → teren (W/SW) = ~242° (EPSG:2180)
 ```
 
-Potwierdzenia elementów szkicu: słupy (F01 ×2 odczyty + F19 daszki z daleka), mur (F01 ×2 + F19), szlaban (F01 ×2 + node OSM), znaki (F01 ×3 odczyty), krawężnik/przejazd (F01 ×2), portiernia (F01 + way OSM), przebieg granicy (way 883955509 OSM + F01). Pozycje liczbowe z geometrii OSM (EPSG:2180); strona zestawu znaków i tablicy izby przyjęć — chirality odczytów wizyjnych niepewna → UNVERIFIED.
+Potwierdzenia: pozycje liczbowe z geometrii OSM (2026-11-14); strony (lewa/prawa) z F01 + OSM; elementy bez węzłów OSM (mur, filary, znaki, tablice) — tylko z F01.
 
-## 7. Wymiary znaków — załącznik 1 do rozporządzenia (Dz.U. 2019 poz. 2311)
-- Tabela 1.1 „Podstawowe wymiary znaków kategorii A, B, C i D (wymiary podane w mm)” (Dz.U. str. 4, PDF str. 9): kategoria B (zakaz) średnica — duże 900, średnie 800, małe 600, mini 400; kategoria C (nakaz) długość podstawy — duże 900, średnie 600, małe 600, mini 400.
-- Tabela 3.1 „Wymiary znaków zakazu i znaków uchylających zakaz (w mm)” (Dz.U. str. 92, PDF str. 97): „duże: d=900, s=90, g=135, p=90; średnie: d=800, s=80, g=120, p=80; małe: d=600, s=60, g=90, p=60; mini: d=400, s=40, g=60, p=40”; przypis: „(*) Nie dotyczy znaku B-20, który występuje tylko jako duży i średni.”
-- B-20 (Dz.U. str. 91, PDF str. 96): „wymiary średnicy dla ośmiokątnego znaku B-20 odnoszą się do średnicy koła wpisanego w ten ośmiokąt. Znak ten nie występuje w grupie znaków wielkich, natomiast na drogach, na których stosuje się znaki z grupy małych, znak B-20 powinien mieć wymiar znaku średniego.”
-- B-33 (Dz.U. str. 135, PDF str. 140): „Liczbę podaną na znaku wyraża prędkość w km/h; podaje się ją z dokładnością do 10 km/h.”
-- C-2 (Dz.U. str. 154, PDF str. 159): „Znak C-2 «nakaz jazdy w prawo za znakiem» …stosuje się w celu wskazania kierującemu obowiązku skręcenia w prawo za znakiem.”
-- Wysokości i odległości (tabela 1.11, Dz.U. str. 32, PDF str. 37; Dz.U. str. 26, PDF str. 31) — cytaty w manifest.csv (P19-038/039/047).
+## 7. Wymiary znaków — Dz.U. 2019 poz. 2311 (szczegółowe warunki techniczne), zał. 1
+- Tabela 1.1 „Podstawowe wymiary znaków kategorii A, B, C i D (wymiary podane w mm)” (Dz.U. str. 4, PDF str. 9): kategoria B (zakaz) średnica — duże 900, średnie 800, małe 600, mini 400; kategoria C (nakaz) — duże 900, średnie 600, małe 600, mini 400.
+- Tabela 3.1 „Wymiary znaków zakazu i znaków uchylających zakaz (w mm)” (Dz.U. str. 92, PDF str. 97); przypis: „(*) Nie dotyczy znaku B-20, który występuje tylko jako duży i średni.”
+- B-20 (Dz.U. str. 91, PDF str. 96): „wymiary średnicy dla ośmiokątnego znaku B-20 odnoszą się do średnicy koła wpisanego w ten ośmiokąt.”
+- B-33 (Dz.U. str. 135, PDF str. 140); C-2 (Dz.U. str. 154, PDF str. 159).
+- Wysokości i odległości: tabela 1.11 (Dz.U. str. 32, PDF str. 37); str. 26 (PDF str. 31) — manifest P19-039, P19-047.
+- Kody znaków (B-2, B-20, B-33, C-2) wg Dz.U. 2019 poz. 2310 (znaki i sygnały drogowe).
 
-## 8. Samokontrola 20% (seed 20261113)
-Losowanie: `random.Random(20261113).sample(wiersze_manifestu, ceil(0.2·63))` → **13 wierszy** (20,6%): P19-001, -002, -004, -005, -007, -009, -012, -024, -030, -033, -041, -054, -060. Dla każdego: ponowne otwarcie URL (HTTP 200 / ponowny eksport OSM API), ponowna weryfikacja cytatu/strony dokumentu (ekstrakt PDF), ponowne OBEJRZENIE kadru (analiza obrazu, pytania kontrolne) i porównanie ze zdaniem „co widać”.
+## 8. Samokontrola 20 % (nowy seed 20261114)
+Losowanie: `random.Random(20261114).sample(ids, ceil(0.2·68))` → **14 wierszy** (20,6 %): P19-002, -009, -010, -016, -017, -028, -029, -031, -032, -048, -051, -055, -062, -065. Wiersze z kadru porównano z OBRAZEM (nowe wycinki F01 z miniatury 3840 px, F05 960 px, każde osobnym wywołaniem modelu wizyjnego), wiersze OSM przeliczono ponownie.
 
-**Wynik: 11 PASS, 1 PASS z upgrade (P19-060 latarnia: UNVERIFIED→ESTIMATED — 2. niezależny odczyt), 1 KOREKTA (P19-054 chodnik: ESTIMATED→UNVERIFIED — odczyty wizyjne niespójne co do materiału: „płyty” vs „kostka brukowa”; korekta zastosowana w manifest.csv i sekcjach 5–6), 0 błędów krytycznych.** Szczegóły: **audit_20_percent.json** (z poleceniem odtwarzającym losowanie).
+**Wynik: 12 zgodnych, 2 niezgodne.** Z kadru: 9 wierszy — 8 zgodnych, 1 niezgodny (P19-032: pominięta latarenka na słupku znaków — poprawione). OSM: 5 wierszy — 4 zgodne, 1 niezgodny (P19-048: lusterko w OSM leży na +13,8 E, −3,1 N, manifest podaje −2,3 N; różnica 0,8 m; wiersz jest na liście „nie ruszaj” zadania M62-FIX, więc nie poprawiono — do decyzji lidera). Szczegóły: **audit_20_percent.json**. Poprzedni audyt (seed 20261113) zastąpiono — przepuścił błędny P19-033.
 
 ## 9. Luki
-- **≤1 kadr w promieniu 40 m** (tylko F01) — dozwolone źródła nie zawierają więcej kadrów bramy (Commons wyczerpane: geosearch + kategorie + katalog autora; Panoramax/KartaView: 0; Openverse: niedostępne; Mapillary: bez tokenu). Kryterium „≥12 kadrów ≤40 m" nieosiągalne — przyjęto interpretację właściciela (kadry z widoczną bramą/frontem, odległości jawnie; sekcja 4).
-- **Wysokość słupa i wymiary daszka/tablic: UNVERIFIED** — brak kotwic skali na dostępnych kadrach; do pomiaru na miejscu (tyczka/szkic polowy).
-- **Strona zestawu znaków (chirality): UNVERIFIED** — odczyty wizyjne nie rozstrzygają jednoznacznie lewej/prawej; pozycja słupka nie istnieje w OSM (brak node highway=traffic_sign).
-- **Mur przy bramie nie istnieje w OSM** (fence kończy się 3 m przed osią bramy; brak barrier=wall) — do dodania w przyszłej edycji OSM; w grze mur odtwarzać z kadrów (sekcja 5).
-- **Rytm przęseł/filarów muru: UNVERIFIED** — pojedynczy odczyt wizyjny, krótki widoczny odcinek.
-- **Ortofotomapa 2025 ma niski kontrast** (asfalt/trawnik ledwie rozróżnialne) — pomiar pikselowy prześwitu niemożliwy; szerokość wjazdu z geometrii OSM (2 metody, sekcja 3).
-- **BDOT10k/NMPT (wysokości budynków tła): nie pobrano** — usługi PZGIK dla Białegostoku nie odpowiadały w sesji (timeout WFS); wysokości tła z odczytów wizyjnych (kondygnacje) — do weryfikacji.
-- **Znak B-2: obecność prawdopodobna, niepewna** — nie odtwarzać bez potwierdzenia na miejscu.
-- **KartaView/Panoramax: 0 kadrów** — potwierdzone zapytaniami API (bbox/promień); kontrola pozytywna metodologii (API zwraca dane w innych lokalizacjach).
+- **1 kadr bramy (F01).** Kryterium ≥ 12 kadrów z ≥ 3 stron niespełnione (§4.4). Wszystkie wymiary mają po jednym odczycie z jednego kadru (dwa miejsca liczenia warstw muru to ten sam kadr).
+- **Moduł cegły 75 mm to założenie** — kotwica STOP daje ~80 mm; wysokość muru 1,80–1,95 m (do ~2,1 m).
+- **Rozmiar znaków tej instalacji UNVERIFIED** — kotwice K1/K2 to założenia (B-20 średni; C-2 i B-33 po 600 mm), podstawa słupka znaków niewidoczna.
+- **Mur nie istnieje w OSM** (brak barrier=wall); w grze odtwarzać z F01.
+- **Odległość B-2 od bramy** oceniona z perspektywy (~20–30 m), niemierzona; brak węzła OSM.
+- **Treść tabliczki pod B-33** zakryta (UNVERIFIED).
+- **Aktualność** (stan z 2019-11-10, m.in. opłata 3 zł) — UNVERIFIED.
+- Mapillary nie sondowano (brak tokenu).
 
 ## 10. Zgodność z kryteriami akceptacji
-- „≥12 obejrzanych kadrów bramy z ≥3 stron": **24 kadry obejrzane** (wszystkie pobrane z Commons), z tego kadry z widoczną bramą/frontem szpitala: **4** (F01, F06, F15, F19) z 3 kierunków; ≤40 m: tylko F01 — niedobór udokumentowany (sekcje 4, 9) i zaakceptowany przez właściciela (interpretacja 2026-11-13).
-- „dla muru, słupa i daszka po ≥2 niezależne odczyty wymiaru": mur wysokość — 2 odczyty (F01, F19) ✓; słup — wymiar liczbowy UNVERIFIED (przekrój/materiał: 2 odczyty) — częściowo ✗ (sekcja 9); daszek — kształt/materiał: 3 odczyty, wymiar liczbowy UNVERIFIED — częściowo ✗.
-- „wszystkie znaki z wysokością zamocowania": B-20, B-33, C-2 — SOURCED zakresy z Dz.U. (tabela 1.11) + relacje z kadru; dokładne wysokości tej instalacji UNVERIFIED (brak dalmierza na kadrach) — częściowo ✓.
-- „środek bramy z OSM/BDOT z id": node 2448457849 (+ id dróg, portierni, obrysu, ogrodzeń) ✓.
-- „brak wartości RGB z pikseli": ✓ (kolor wyłącznie opisowo).
+- „≥ 12 obejrzanych kadrów bramy z ≥ 3 stron”: **NIE — 1 kadr bramy (F01)**. Obejrzano 22 pliki, ale pozostałe 21 nie pokazuje bramy P11-129.
+- „Mur, słup, daszek: po ≥ 2 niezależne odczyty wymiaru”: **NIE** — jeden kadr; mur policzony w dwóch miejscach tego samego kadru + kontrola kotwicą STOP; filary i daszek — jeden odczyt z kotwicą.
+- „Wszystkie znaki z wysokością zamocowania”: **TAK (ESTIMATED)** — B-20, C-2, B-33, tabliczka, tablica wjazdu, tablica IP z wysokością dolnej krawędzi i jawną kotwicą; zakresy normowe osobno jako SOURCED.
+- „Środek bramy z OSM z id”: **TAK** — node 2448457849.
+- „Brak wartości RGB z pikseli”: **TAK** (kolory opisowo; piksele użyte tylko do liczenia warstw i wymiarów w px).
 
 ## 11. Pliki i archiwum
-Zdjęcia i wycinki poza gitem (`files/` w .gitignore): **ZIP `mistral-p19-hospital-gate-files.zip`** — nazwa, rozmiar i sha256 podane w opisie PR; archiwum zawiera: F01–F24 (JPG ≤1600 px), wycinki ortofotomapy (120×120 m JPG/PNG, 80×80 m PNG, kontekst 400 m JPG), eksport OSM (map.osm), skorowidz WFS, PDF-y Dz.U. 2019 poz. 2311, FILES.md ze skorowidzem i sumami kontrolnymi. Właściciel przekazuje archiwum liderowi.
+Zdjęcia i wycinki poza gitem (`files/` i `*.zip` w .gitignore). Archiwum M62-FIX: **`mistral-p19-hospital-gate-files-fix.zip`** — nazwa, rozmiar i sha256 w komentarzu PR #53. Zawiera: 22 kadry 960 px (F01–F21, F24), F01 3840 px, wycinki F01 użyte do odczytów i samokontroli, eksporty OSM (API 0.6), wyniki geosearch/kategorii Commons, Panoramax, KartaView, FILES.md z sumami sha256. Właściciel przekazuje archiwum liderowi.
 
 ## 12. Struktura
 ```
 research/mistral/p19-hospital-gate/
-├── README.md           (ten plik)
-├── manifest.csv        (63 wiersze P19-001…063; UTF-8)
-├── sources.md          (pełne URL-e źródeł + licencje + daty dostępu)
-├── audit_20_percent.json (samokontrola 20%, seed 20261113)
-├── .gitignore          (files/ + *.zip)
-└── files/              (poza gitem — w archiwum ZIP; patrz sekcja 11)
+├── README.md             (ten plik)
+├── manifest.csv          (68 wierszy P19-001…068; UTF-8)
+├── sources.md            (pełne URL-e źródeł + licencje + daty dostępu)
+├── audit_20_percent.json (samokontrola 20 %, seed 20261114)
+├── .gitignore            (files/ + *.zip)
+└── files/                (poza gitem — w archiwum ZIP; patrz §11)
 ```
