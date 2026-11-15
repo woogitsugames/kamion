@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-15",
+  "reviewer": "agent brud, read-only",
+  "result": "PASS calculation and reproducibility; present-day identification not established",
+  "checks": [
+    "source CityGML ZIP SHA256 matches recorded value",
+    "all five model objects recalculated from source",
+    "GroundSurface Z constant per object",
+    "EPSG2180 metres; always_xy maps OSM lon/lat to matching E/N",
+    "union UM parts have no area overlap",
+    "plot inspected; minimum roof is not general eaves height"
+  ],
+  "height_recomputed_m": {
+    "Rynek1": 8.73,
+    "Koscielna4": 7.01,
+    "UM_parts": [
+      14.4,
+      14.96
+    ],
+    "church": 33.43
+  },
+  "iou_recomputed": {
+    "Rynek1": 0.6727048792,
+    "Koscielna4": 0.8677867304,
+    "UM_union": 0.8778804558,
+    "church": 0.7529616639
+  },
+  "coordinator": "plot independently viewed; estimates remain historic geometry, not current survey"
+}

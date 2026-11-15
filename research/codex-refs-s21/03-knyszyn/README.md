@@ -30,7 +30,7 @@ UNVERIFIED: rzeczywista liczba i układ indywidualnych dysz, wysokość strumien
 
 ## Komunikaty UM: chronologia i wyposażenie (2 źródła tekstowe link-only)
 
-SOURCED [03-D01, UM, 2023-08-25](https://www.knyszyn.pl/asp/i-%E2%99%A5-knyszyn,239,artykul,1,5400): zrewitalizowany rynek dostępny od2020; fontanna podświetlana, nocą świeci kolorowo. W sierpniu2023 dołożono przenośny podświetlany napis „I ♥ KNYSZYN”. To potwierdza istnienie światła, ale nie liczbę reflektorów, moc ani stałą barwę. Pozycja przenośnego napisu w2026 UNVERIFIED.
+SOURCED [03-D01, UM, 2023-08-25](https://www.knyszyn.pl/asp/i-%E2%99%A5-knyszyn,239,artykul,1,5400): zrewitalizowany rynek dostępny od2020; fontanna podświetlana, nocą świeci kolorowo. W sierpniu2023 dołożono przenośny podświetlany napis „I ♥ KNYSZYN”. To potwierdza istnienie światła, ale nie liczbę reflektorów, moc ani stałą barwę. Pozycja przenośnego napisu w 2026 UNVERIFIED.
 
 SOURCED [03-D02, UM, 2022-07-21](https://www.knyszyn.pl/asp/nasz-wspolny-rynek---apel-do-mieszkancow,239,artykul,1,4982): po rewitalizacji są brukowane alejki, podświetlana fontanna, ławki i stoliki; w sezonie2022 urząd opisuje czerwone pelargonie w donicach. Nie przenosimy gatunku i koloru sezonowych nasadzeń bezwarunkowo do2026.
 
@@ -47,10 +47,41 @@ Dwa zdjęcia dołączone do komunikatu UM2023-08-25 otwarto **osobno w Chrome i 
 **Oba kadry pokazują napis, nie fontannę.** Kolory liter nie są dowodem koloru światła w fontannie. Nie wyprowadzono wysokości liter/słupów ani ich rozstawu z perspektywy; brak skali. Stała/programowalna barwa napisu i jego obecne położenie UNVERIFIED. W komunikacie D01 napis jest opisany jako przenośny.
 
 
-## Fontanna: opis projektu z grudnia2019 (03-D03)
+## Fontanna: opis projektu z grudnia 2019 (03-D03)
 
-SOURCED [Nowy Goniec Knyszyński nr12(181), grudzień2019, str8](https://www.knyszyn.pl/asp/pliki/download/goniec12.pdf): projekt przewidywał **3 rodzaje dysz**, **4 obiegi wody**, maksymalny strumień **2,5m** oraz reflektory podświetlenia. Rodzajów nie należy mylić z liczbą pojedynczych dysz. Ten sam opis przewidywał kostkę granitową na alejkach oraz nowe ławki i kosze. Numer i datę odczytano z okładki, całą stronę8 odczytano z PDF przez pypdf.
+SOURCED [Nowy Goniec Knyszyński nr 12 (181), grudzień 2019, str. 8](https://www.knyszyn.pl/asp/pliki/download/goniec12.pdf): projekt przewidywał **3 rodzaje dysz**, **4 obiegi wody**, maksymalny strumień **2,5 m** oraz reflektory podświetlenia. Rodzajów nie należy mylić z liczbą pojedynczych dysz. Ten sam opis przewidywał kostkę granitową na alejkach oraz nowe ławki i kosze. Numer i datę odczytano z okładki, całą stronę 8 odczytano z PDF przez pypdf.
 
-Są to **parametry projektowane w2019**, nie pomiar fontanny ani odbiór wyposażenia. Komunikaty UM z2022/2023 potwierdzają działającą podświetlaną fontannę, ale nie potwierdzają zgodności liczby obiegów/dysz i wysokości strumieni. Zainstalowana liczba dysz, ich rozmieszczenie, program pracy i maksymalna osiągana wysokość w2026 pozostają UNVERIFIED. Dokument nie podaje mocy/reflektorów/CCT. Do shadera i modelu używać jako warunkowego punktu odniesienia do weryfikacji, nie dowodu obecnego stanu.
+Są to **parametry projektowane w 2019**, nie pomiar fontanny ani odbiór wyposażenia. Komunikaty UM z 2022/2023 potwierdzają działającą podświetlaną fontannę, ale nie potwierdzają zgodności liczby obiegów/dysz i wysokości strumieni. Zainstalowana liczba dysz, ich rozmieszczenie, program pracy i maksymalna osiągana wysokość w 2026 pozostają UNVERIFIED. Dokument nie podaje mocy/reflektorów/CCT. Do shadera i modelu używać jako warunkowego punktu odniesienia do weryfikacji, nie dowodu obecnego stanu.
 
-PDF ma17 069 352B i pozostaje wyłącznie w `Data/raw/refs/codex-s21/03-knyszyn/goniec12.pdf`. SHA256 i lokalizacja danych w `data/goniec2019-fontanna.json`. W repo tylko parafraza z URL, bez zdjęć ani reprodukcji PDF. Źródło archiwalnej specyfikacji technicznej odrzucono przy błędzie certyfikatuTLS; nie obchodzono zabezpieczeń.
+PDF ma 17 069 352 B i pozostaje wyłącznie w `Data/raw/refs/codex-s21/03-knyszyn/goniec12.pdf`. SHA256 i lokalizacja danych w `data/goniec2019-fontanna.json`. W repo tylko parafraza z URL, bez zdjęć ani reprodukcji PDF. Źródło archiwalnej specyfikacji technicznej odrzucono przy błędzie certyfikatu TLS; nie obchodzono zabezpieczeń.
+
+
+## Wysokości i bryły: pogłębienie lokalnego LoD2 (03-M01)
+
+Nowa analiza bez pobierania danych. Lokalny ZIP: `Data/raw/gugik/lod2-2017-2008/2008_lod2_gml.zip`; SHA zgodny z manifestem źródłowym. GUGiK, CC BY 4.0. Wybrane budynki mają **aktZrodla=2016**, mimo nazwy produktu LoD2-2017. To nie jest pomiar z 2026 r. Obrysy adresowe pochodzą z lokalnego PBF OSM z 2026-11-08 (© OpenStreetMap contributors, ODbL 1.0), a nie z ewidencji gruntów.
+
+Wyniki = **ESTIMATED: obliczenia z historycznej geometrii**. Metoda: dopasowanie wielokątów GroundSurface do obrysu OSM przez pole części wspólnej / pole sumy (IoU); maksymalna wysokość RoofSurface minus mediana wysokości GroundSurface danego modelu. Układ EPSG:2180, wysokości PL-KRON86-NH. Zaokrąglenie do 0,1 m nie oznacza dokładności pomiaru 0,1 m.
+
+| Obiekt wg OSM | OSM way | IoU | Maksymalny dach nad GroundSurface |
+|---|---|---|---|
+| Rynek 1 — kandydat | 300667350 | 0,67 | ~8,7 m |
+| Kościelna 4 | 294345656 | 0,87 | ~7,0 m |
+| UM Rynek 39, dwie części LoD2 | 294345008 | 0,88 dla sumy części | ~14,4 m oraz ~15,0 m, osobne poziomy GroundSurface |
+| Kościół — kandydat | 294345650 | 0,75 | ~33,4 m |
+
+**Minimum RoofSurface nie jest wysokością okapu:** niskie połacie ganków/przybudówek mogą zaniżać tę wartość. Nie zamieniamy wysokości modelu na liczbę kondygnacji. Różnice obrysów, uproszczenia LoD2 i data źródła wykluczają traktowanie liczb jako inwentaryzacji obecnych fasad. LoD2 nie potwierdza pełnego układu lukarn i podniesionych części dachu widocznych na zdjęciach.
+
+`files/03-roof-plan-analysis.png` obejrzano po wygenerowaniu; poprawiono odstępy etykiet. Kolor oznacza wysokość, a nie kolor pokrycia. Przerywane obrysy pokazują różnice wobec OSM. Pliki `data/lod2-target-candidates.json`, `lod2-target-summary.json` i `osm-target-buildings.json` zachowują identyfikatory, atrybuty, wierzchołki i obliczenia. Wykres i podsumowanie odtwarza `tools/roof_analysis.py` (Python z matplotlib, pyproj i shapely). To analiza referencyjna; kod generatora pozostaje poza zakresem.
+
+
+## Lokalna kontrola zdjęć właściciela — wyłącznie obserwacje tekstowe
+
+Zgodnie z `docs/owner/OWNER-PHOTOS-KNYSZYN.md` lokalnie obejrzano osobno dwa dzienne kadry fontanny oraz jeden kadr fasady. W repo **nie zapisano żadnego zdjęcia, miniatury, wycinka ani embedu**. Nie przesyłano plików do usług zewnętrznych. Kadr nocny wskazany jako prywatny pominięto. Nie opisano osób i nie użyto ich jako skali. Ślad referencji, ograniczenia i porównanie z projektem zapisano wyłącznie tekstowo w `data/owner-fontanna-observations.json`. Daty z nazw pozostają UNVERIFIED (brak EXIF/GPS).
+
+SOURCED [lokalne kadry OWN-F01/F02]: fontanna ma płaską mokrą posadzkę, najwyższy pionowy strumień w centralnej strefie oraz niższe strumienie i niskie spienione wypływy. Strumienie częściowo się nakładają; **liczby pojedynczych dysz nie da się wiarygodnie policzyć**. Plac otacza szara drobna kostka o nieregularnych licach, układana w łukowe pasy. W tle ławki z brązowymi poziomymi listwami i ciemną konstrukcją, proste ciemne słupy parkowe z jasnymi głowicami/daszkami, trawniki i duże drzewa. Brak potwierdzenia gatunków drzew i rodzaju kamienia z samego kadru.
+
+**Porównanie projektu 2019:** nie stwierdzono podstaw do liczbowej rozbieżności. Trzy rodzaje mechanicznych dysz, cztery obiegi i maksymalny strumień 2,5 m pozostają UNVERIFIED dla rzeczywistej instalacji; różne wysokości lub spienienie strumieni nie dowodzą typów dysz ani obiegów. Nie ustalono działania i barwy reflektorów na podstawie kadrów dziennych. Różnica wobec samego ortofoto: kadry z ziemi potwierdzają działającą fontannę bez wystającej misy i układ kostki w łuki, czego obraz z góry nie rozstrzygał w szczegółach.
+
+SOURCED [OWN-B01]: osobny kadr pokazuje dwa pełne poziomy okien, poddasze z czerwonymi lukarnami, kremowo-szarą fasadę z poziomymi pasami i czerwonymi rurami spustowymi oraz ogrodzenie budowlane. Adres UNVERIFIED; nie przypisano tej fasady do konkretnego obrysu LoD2.
+
+Niezależna recenzja obliczeń (agent brud,15.11.2026): PASS. Odtworzono SHA źródłowegoZIP, pięć obiektów, wysokości, IoU i zgodność osi; wykres obejrzany także przez koordynatora. Szczegóły w `data/roof-peer-review.json`. Recenzja rachunków nie potwierdza aktualności geometrii ani urzędowej identyfikacji adresowej modeli.
