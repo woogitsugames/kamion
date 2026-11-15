@@ -18,3 +18,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
 - 2026-11-15 18:18 +01:00 — Orto K1: fontanna jest w zachodnim parku, a istniejący override na placu wschodnim; pozycja różni się o około 93 m (oszacowanie do weryfikacji). Build nadal czeka na slot heavy.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
+- 2026-11-15 18:23 +01:00 — Inwentaryzacja budynków w promieniu 85 m od fontanny zapisana z ID BDOT i wysokościami GUGiK; build baseline trwa.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
