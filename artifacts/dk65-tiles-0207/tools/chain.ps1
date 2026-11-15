@@ -14,6 +14,7 @@ function Step($name, $pool, [scriptblock]$b) {
   pwsh scripts/unity-slot.ps1 -Release -Pool $pool -Owner $o | Out-Null
   if ($pool -eq 'unity') { git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings 2>$null }
 }
+$Tiles = @($Tiles | ForEach-Object { $_ -split "," } | Where-Object { $_ })
 foreach ($t in $Tiles) {
   if (-not $NoWorld) {
     Step "world-$t-$Tag" heavy {

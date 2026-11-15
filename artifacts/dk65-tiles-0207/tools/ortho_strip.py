@@ -46,9 +46,10 @@ def route_polyline(region, bb, plan_path):
     rs = ROOT / "Data" / "Regions" / region / "route_start.json"
     if rs.exists():
         r = json.loads(rs.read_text(encoding="utf-8"))
-        for k in ("polyline_epsg2180", "polyline", "points_epsg2180"):
-            if k in r:
-                return np.asarray(r[k], float)[:, :2], "route_start.json"
+        if "points_en" in r:
+            import yaml
+            o = yaml.safe_load((ROOT / "Data" / "Regions" / region / "region.yaml").read_text(encoding="utf-8"))["origin"]
+            return np.asarray(r["points_en"], float)[:, :2] + [o["x"], o["y"]], "route_start.json"
     plan = json.loads(Path(plan_path).read_text(encoding="utf-8"))
     pl = plan["variants"]["A_old_road"]["polyline"]
     return clip_to_bbox(pl, bb, 30.0), "plan A polyline"
@@ -189,6 +190,47 @@ def xsec(region, plan=str(PLAN), chunk=50.0, half=12.0):
         d.line([(xx, 10), (xx, 20 if mm % 5 else 4)], fill=(255, 0, 0)); d.text((xx - 4, H + 20), str(mm), fill=(0, 0, 0))
     for k, o in enumerate(out):
         d.text((2, 20 + k * 14), f"{int(o['s0'])}", fill=(0, 0, 0))
+    (ROOT / "artifacts" / "dk65-tiles-0207" / region / "ortho").mkdir(parents=True, exist_ok=True)
     canvas.save(ROOT / "artifacts" / "dk65-tiles-0207" / region / "ortho" / "xsec.jpg", quality=92)
     (ROOT / "artifacts" / "dk65-tiles-0207" / region / "ortho" / "xsec.json").write_text(json.dumps(
         {"region": region, "route_source": src, "chunk_m": chunk, "offset_sign": "+ = right of travel", "rows": out}, indent=1), encoding="utf-8")
+
+
+def band(region, chunk=50.0, half=8.0):
+    """Dark asphalt band per chunk from the median lateral profile: threshold halfway between the axis median
+    (|lat| < 1.5 m) and the brightest shoulder level within 2.5-6 m on each side; edges where the profile first crosses
+    it walking out from the axis. Returns rows (s0, left_m, right_m, width_m, centre_m; + = left of travel)."""
+    reg = json.loads((ROOT / "Data" / "Regions" / region / "ortho.json").read_text(encoding="utf-8"))
+    bb = reg["bounds"]
+    pl, src = route_polyline(region, bb, str(PLAN))
+    ds = rasterio.open(ROOT / reg["file"]); img = ds.read()[:3].transpose(1, 2, 0); inv = ~ds.transform
+    s, P = resample(pl, 0.5)
+    t = np.gradient(P, axis=0); t /= np.linalg.norm(t, axis=1)[:, None]; nrm = np.c_[-t[:, 1], t[:, 0]]
+    lat = np.arange(half, -half - 1e-6, -0.25)
+    X = P[:, 0][None, :] + lat[:, None] * nrm[:, 0][None, :]; Y = P[:, 1][None, :] + lat[:, None] * nrm[:, 1][None, :]
+    c, r = inv * (X, Y)
+    from scipy.ndimage import map_coordinates
+    L = map_coordinates(img.astype(float).mean(axis=2), [r - 0.5, c - 0.5], order=1, mode="nearest")
+    inb = (X >= bb[0]) & (X <= bb[2]) & (Y >= bb[1]) & (Y <= bb[3])
+    ic = len(lat) // 2; out = []
+    for s0 in np.arange(0, s[-1], chunk):
+        m = (s >= s0) & (s < s0 + chunk) & inb[ic]
+        if m.sum() < 10:
+            continue
+        sub = L[:, m]; ok = np.median(sub[ic - 6:ic + 7], axis=0) > 70
+        if ok.sum() < 10:
+            out.append((float(s0), None, None, None, None)); continue
+        p = np.median(sub[:, ok], axis=1)
+        a = np.median(p[ic - 6:ic + 7])
+        res = []
+        for sign in (-1, 1):   # -1 -> towards row 0 = left
+            idx = [ic + sign * k for k in range(int(2.5 / 0.25), int(6 / 0.25))]
+            sh = max(p[i] for i in idx)
+            thr = (a + sh) / 2
+            k = ic
+            while 0 < k < len(p) - 1 and p[k] < thr:
+                k += sign
+            res.append(abs(lat[k]) - 0.125)
+        lft, rgt = res
+        out.append((float(s0), round(lft, 2), round(rgt, 2), round(lft + rgt, 2), round((lft - rgt) / 2, 2)))
+    return out
