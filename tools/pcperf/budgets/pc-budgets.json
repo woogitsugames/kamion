@@ -1,0 +1,80 @@
+{
+  "format": "kamion/pc-budgets/1",
+  "adr": "0266",
+  "status": "WORKING_VALUE",
+  "note": "Wszystkie liczby to WORKING_VALUE do decyzji właściciela (D73, ADR 0260/0266). Referencyjny PC nieustalony; maszyna deweloperska (RTX 5070) jest tylko maszyną pomiarową. Zmiana = ten plik + tabela w docs/03 + ADR.",
+  "warmupSeconds": 5,
+  "minFramesAfterWarmup": 600,
+  "referenceMachines": [],
+  "classes": {
+    "min": {
+      "label": "Min",
+      "status": "WORKING_VALUE",
+      "hardwareExample": "dyskretny GPU średniej klasy sprzed ok. 2 generacji, >= 6 GB VRAM; CPU 6 rdzeni / 12 wątków (ok. 5 lat wstecz); 16 GB RAM; SSD",
+      "resolution": [1920, 1080],
+      "targetFps": 30,
+      "tier": "Medium",
+      "checks": [
+        {"metric": "frame_ms.p50", "max": 33.3},
+        {"metric": "frame_ms.p95", "max": 36.0},
+        {"metric": "frame_ms.p99", "max": 50.0},
+        {"metric": "frames_over_pct", "threshold_ms": 66.7, "max": 0.5},
+        {"metric": "frames_over_count", "threshold_ms": 100.0, "max": 0},
+        {"metric": "process.private_mb.peak", "max": 6144},
+        {"metric": "process.gpu_dedicated_mb.peak", "max": 5120},
+        {"metric": "region_load_s.max", "max": 30.0},
+        {"metric": "draw_calls.p95", "max": 3000},
+        {"metric": "tris.p95", "max": 3000000},
+        {"metric": "gc.collections_in_window", "max": 2}
+      ]
+    },
+    "zalecany": {
+      "label": "Zalecany",
+      "status": "WORKING_VALUE",
+      "hardwareExample": "dyskretny GPU średniej klasy z poprzedniej/bieżącej generacji, >= 8 GB VRAM; CPU 6-8 rdzeni (ok. 3 lata wstecz); 16 GB RAM; SSD",
+      "resolution": [1920, 1080],
+      "targetFps": 60,
+      "tier": "High",
+      "checks": [
+        {"metric": "frame_ms.p50", "max": 16.7},
+        {"metric": "frame_ms.p95", "max": 18.5},
+        {"metric": "frame_ms.p99", "max": 25.0},
+        {"metric": "frames_over_pct", "threshold_ms": 33.3, "max": 0.5},
+        {"metric": "frames_over_count", "threshold_ms": 100.0, "max": 0},
+        {"metric": "process.private_mb.peak", "max": 8192},
+        {"metric": "process.gpu_dedicated_mb.peak", "max": 6656},
+        {"metric": "region_load_s.max", "max": 20.0},
+        {"metric": "draw_calls.p95", "max": 4000},
+        {"metric": "tris.p95", "max": 6000000},
+        {"metric": "gc.collections_in_window", "max": 2}
+      ]
+    },
+    "wysoki": {
+      "label": "Wysoki",
+      "status": "WORKING_VALUE",
+      "hardwareExample": "dyskretny GPU wyższej klasy bieżącej generacji, >= 12 GB VRAM; CPU >= 8 rdzeni (bieżąca generacja); 32 GB RAM; NVMe SSD",
+      "resolution": [2560, 1440],
+      "targetFps": 60,
+      "tier": "Ultra",
+      "checks": [
+        {"metric": "frame_ms.p50", "max": 16.7},
+        {"metric": "frame_ms.p95", "max": 18.5},
+        {"metric": "frame_ms.p99", "max": 25.0},
+        {"metric": "frames_over_pct", "threshold_ms": 33.3, "max": 0.5},
+        {"metric": "frames_over_count", "threshold_ms": 100.0, "max": 0},
+        {"metric": "process.private_mb.peak", "max": 10240},
+        {"metric": "process.gpu_dedicated_mb.peak", "max": 10240},
+        {"metric": "region_load_s.max", "max": 15.0},
+        {"metric": "draw_calls.p95", "max": 6000},
+        {"metric": "tris.p95", "max": 12000000},
+        {"metric": "gc.collections_in_window", "max": 2}
+      ]
+    }
+  },
+  "mobileSafeguard": {
+    "status": "WORKING_VALUE",
+    "note": "Zabezpieczenie mobilne (odroczone, D73) — źródło: docs/PERFORMANCE_BUDGETS.md. Nie blokuje bramek PC; dane wspólne nie mogą go przekroczyć bez ADR.",
+    "trisInView": {"Low": 350000, "Medium": 550000, "High": 1500000, "Ultra": 2000000},
+    "drawCallsBeforeBatching": {"Low": 250, "Medium": 350, "High": 800, "Ultra": 1000}
+  }
+}
