@@ -84,7 +84,10 @@ SIGN_ARM_ANGLE = 50.0       # WORKING_VALUE: angle between the arms (deg)
 SIGN_BOTTOM_Z = 1.50        # WORKING_VALUE: lower edge of the cross above the road
 BARRIERS = ("no", "half", "double_half", "full", "gate", "chain", "yes")
 OVERRIDE_KIND = "rail_crossing"      # overrides.yaml: authored facts of one level crossing (Plan._apply_override)
-OVERRIDE_KEYS = ("barrier", "light", "light_left", "bell", "saltire", "panel_margin_m")
+OVERRIDE_KEYS = ("barrier", "light", "light_left", "bell", "saltire", "panel_margin_m",
+                 # ADR 0255 (approach signs, streetscape.rail_approach): category A-D, approach speed, signs also on
+                 # the left verge, approach signs off
+                 "category", "approach_kmh", "left_side", "approach_signs")
 
 # Clearance envelope (skrajnia budowli) - simplified cross-section, (lateral m, height above top of rail m).
 # UNVERIFIED shape: 4.40 m wide between 0.4 m and 4.0 m above rail, narrowing to the overhead-line zone; replace with
@@ -351,8 +354,11 @@ class Track:
 class Plan:
     """Rail tracks and level crossings of one region in local metres (E, N)."""
 
-    def __init__(self, src: dict, origin, tile_local=None, road_poly=None, road_lines=(), overrides=()):
+    def __init__(self, src: dict, origin, tile_local=None, road_poly=None, road_lines=(), overrides=(), road_speeds=()):
         self.origin = np.asarray(origin, float)
+        self.tile_local = tile_local
+        # ADR 0255: maxspeed (km/h or None) of each road line, same order as road_lines (approach sign distances)
+        self.road_speeds = list(road_speeds) + [None] * max(0, len(road_lines) - len(road_speeds))
         self.overrides = [dict(o) for o in (overrides or ()) if o.get("kind") == OVERRIDE_KIND]
         self.ground_grid = None      # smoothed ground the profile stands on (set by conform(); build_world samples it)
         self._conform_mask = None
@@ -567,6 +573,8 @@ class Plan:
                 "sign": code, "road_width_m": round(c["road_w"], 2),
                 "panel_zone_m": [round(c["zone"][0], 2), round(c["zone"][1], 2)], "panel_triangles": n})
             self.report["markers"] += self.markers(ci, c, road_z_at)
+        from . import rail_approach as RA            # ADR 0255: A-9 / A-10, G-1, "Sygnalizacja automatyczna", U-1
+        self.report["approach"], self.report["approach_qa"] = RA.plan_all(self, road_z_at)
         self.report["triangles"] = tris
         km = sum(t.line.length for t in self.tracks) / 1000.0
         self.report["track_km"] = round(km, 3)

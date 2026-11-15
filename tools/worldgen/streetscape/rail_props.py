@@ -207,5 +207,67 @@ def place(pl, plan, zroad_at, report):
     return sum(n.values())
 
 
+# ------------------------------------------------------------------------------------------------ approach (ADR 0255)
+# U-1a / U-1b guide posts: the look (white post, black band, red rectangular reflector on U-1a, two white round
+# reflectors on U-1b) and every dimension are UNVERIFIED / WORKING_VALUE - zał. 4 of Dz.U. 2019 poz. 2311 (devices) was
+# not read. Which of the two stands on which verge is also UNVERIFIED ([R1] § 79 pkt 5 says "U-1a lub U-1b").
+U1_H_M = 1.00                 # WORKING_VALUE: top above the ground
+U1_W_M, U1_D_M = 0.12, 0.10   # WORKING_VALUE: section (across the road, along the road)
+U1_BAND_M = (0.70, 0.95)      # WORKING_VALUE: black band from / to (height above the ground)
+
+
+def delineator(code="U-1a"):
+    """Guide post U-1a / U-1b: white post with a black band and reflectors facing +y (the oncoming driver)."""
+    m, l1, col = PP.Mesh(), PP.Mesh(), PP.Mesh()
+    hw, hd = U1_W_M / 2, U1_D_M / 2
+    b0, b1 = U1_BAND_M
+    for mm, full in ((m, True), (l1, False)):
+        mm.box("paint_white_reflective", [0, 0, b0 / 2], hw, hd, b0 / 2)
+        mm.box("signal_backplate", [0, 0, (b0 + b1) / 2], hw + 0.002, hd + 0.002, (b1 - b0) / 2)
+        mm.box("paint_white_reflective", [0, 0, (b1 + U1_H_M) / 2], hw, hd, (U1_H_M - b1) / 2)
+        if not full:
+            continue
+        y = hd + 0.004
+        if code == "U-1a":
+            mm.box("paint_ral3020", [0, y, (b0 + b1) / 2], 0.02, 0.003, 0.08)
+        else:
+            for zc in (b0 + 0.07, b1 - 0.07):
+                mm.box("paint_white_reflective", [0, y, zc], 0.025, 0.003, 0.025)
+    col.box("collision_steel", [0, 0, U1_H_M / 2], hw, hd, U1_H_M / 2)
+    return m, l1, col
+
+
+def place_approach(pl, plan, zroad_at, report, boards):
+    """Approach signs of every crossing (streetscape.rail_approach): A-9 / A-10 + "Sygnalizacja automatyczna" + G-1
+    as one sign assembly each (gate3_landmarks: one prototype, one material; the face atlas goes to `boards`), U-1
+    guide posts as prototypes of this module. Returns the instance count."""
+    from . import gate3_landmarks as G3
+    from . import rail_approach as RA
+    from .furniture import yaw_of
+    items, qa = RA.plan_all(plan, zroad_at)
+    n = {}
+    for it in items:
+        if it["kind"] == "approach_sign":
+            parts = [{"face": f} for f in it["parts"]]
+            key = G3.assembly_key(parts, "galv", RA.LOWER_EDGE_M)
+            name = f"sign_g3_{key}"
+            if name not in PROTOS:
+                lod0, lod1, col, im, (wm, hm), key, _top = G3.assembly_mesh(parts, "galv", RA.LOWER_EDGE_M)
+                PROTOS[name] = (lod0, lod1, col)
+                boards[key] = (round(wm, 3), round(hm, 3), im)
+            label = "+".join(it["parts"])
+        else:
+            name = f"signal_rail_{it['code'].replace('-', '').lower()}"
+            if name not in PROTOS:
+                PROTOS[name] = delineator(it["code"])
+            label = it["code"]
+        pl.add(name, (it["e"], it["n"]), yaw_of(_vec(it["heading_deg"])),
+               src=f"rail:approach:{it['crossing']}:{it['approach']:+d}:{it['side']}:{label}")
+        n[label] = n.get(label, 0) + 1
+    report["rail_approach_devices"] = dict(sorted(n.items()))
+    report["rail_approach_qa"] = qa
+    return sum(n.values())
+
+
 def prototypes():
     return dict(PROTOS)

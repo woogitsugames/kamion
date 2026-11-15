@@ -901,15 +901,18 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         bb = w.region["bbox"]
         tile_local = shapely.box(bb["xmin"] - w.origin[0], bb["ymin"] - w.origin[1], bb["xmax"] - w.origin[0],
                                  bb["ymax"] - w.origin[1])
-        ground_lines = []
+        ground_lines, ground_kmh = [], []
         for c in w.net.chains:        # ground road centre lines (bridge stations dropped: no level crossing there)
             on = ~c.bridge if c.bridge is not None else np.ones(len(c.line.p), bool)
             for run in np.split(np.arange(len(on)), np.where(np.diff(on.astype(int)) != 0)[0] + 1):
                 if len(run) >= 2 and on[run[0]]:
                     ground_lines.append(_LS(c.line.p[run]))
+                    # ADR 0255: OSM maxspeed of the run (approach sign distances, Tabela 2.2 of Dz.U. 2019 poz. 2311)
+                    ground_kmh.append(w.net.sec_list[int(c.sec_idx[run[len(run) // 2]])].maxspeed
+                                      if c.sec_idx is not None else None)
         w.rail = RL.Plan(rsrc, w.origin, tile_local,
                          PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines,
-                         overrides=pipeline.load_overrides(region_id))
+                         overrides=pipeline.load_overrides(region_id), road_speeds=ground_kmh)
         log("rail plan:", len(w.rail.tracks), "tracks,", len(w.rail.crossings), "level crossings")
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
     if w.water is not None:

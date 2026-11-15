@@ -90,6 +90,10 @@ FACE_DIM = {
     "plate": ("rect", 0.60, 0.45),
     "street_name": ("rect", 1.00, 0.25),
 }
+# ADR 0255: approach signs of level crossings (A-9 / A-10, G-1a...G-1f, "Sygnalizacja automatyczna"), placed by the
+# rail stage (streetscape.rail_props.place_approach) with the same one-prototype-one-material assemblies
+from . import rail_signs as RS  # noqa: E402
+FACE_DIM.update(RS.FACE_DIM)
 TWO_POSTS = {"F-10", "F-10-ls"}          # faces carried by two posts (0.3 x plate width either side of the middle)
 PROTOS = {}                   # prototype name -> (lod0, lod1, collision), registered by build(), read by props.build_all
 
@@ -209,6 +213,8 @@ def draw_face(code, w_px, h_px, text=None):
         d = ImageDraw.Draw(im)
         _fit_text(d, (0, 0, w_px, h_px), text or "", SG.WHITE, int(h_px * 0.42))
         return im
+    if code in RS.FACE_DIM:                              # ADR 0255: level-crossing approach signs
+        return RS.draw(code, w_px, h_px, _fit_text)
     raise KeyError(code)
 
 
