@@ -11,3 +11,5 @@
 - NASTEPNY KROK: git merge origin/main (generated/ z main) -> pwsh artifacts/tunnel-0211/chain.ps1 -Tag r4 (w tle) -> Get-Content artifacts/tunnel-0211/chain-r4.status
 - 16:45 merge origin/main (276af6517; konflikt build_world: water lod mask + low_cut; generated C z main). chain r4 (build_world->route->import->vqa Low/High->EditMode->sweepy->pytest tests/gis) w tle.
 - NASTEPNY KROK: Get-Content artifacts/tunnel-0211/chain-r4.status ; potem obejrzec artifacts/tunnel-0211/vqa-r4 (Low i High)
+- 18:0x PRZEJECIE 3 (nowy agent). r4: build/import/vqa exit 0; EditMode przerwany (sesja padla) -> chain-tail.ps1 -Tag r4 (EditMode->sweepy->pytest) w tle; sprzatniete _TestTmp_LampLens, stary slot unity.
+- NASTEPNY KROK: Get-Content artifacts/tunnel-0211/chain-r4.status ; obejrzec artifacts/tunnel-0211/vqa-r4
