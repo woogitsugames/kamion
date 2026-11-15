@@ -118,7 +118,12 @@ def test_spacing_sets_line_positions():
     assert sec.edge_line_spacing == SPACING and sec.provenance["edge_line_spacing"] == "authored_override:x"
     lats = sorted(float(lat) for lat, _ in MK.edge_lines(sec, sec.width / 2, 1))
     assert lats == pytest.approx([-SPACING / 2, SPACING / 2])
-    # 6.9 m (D65 / ADR 0215) -> the same lines, 0.35 m of asphalt outside them
+    # 6.6 m (D66, ul. Ełcka) -> the same lines, 0.20 m of asphalt outside them: identical to the rule without the key
+    sec = _straight(6.6).sections["e"]
+    assert sorted(float(lat) for lat, _ in MK.edge_lines(sec, sec.width / 2, 1)) == pytest.approx([-3.1, 3.1])
+    sec = _straight(6.6, spacing=None).sections["e"]
+    assert sorted(float(lat) for lat, _ in MK.edge_lines(sec, sec.width / 2, 1)) == pytest.approx([-3.1, 3.1])
+    # 6.9 m (D65, superseded by D66) -> still the same lines, 0.35 m of asphalt outside them
     sec = _straight(6.9).sections["e"]
     assert sorted(float(lat) for lat, _ in MK.edge_lines(sec, sec.width / 2, 1)) == pytest.approx([-3.1, 3.1])
 
@@ -177,6 +182,83 @@ def test_dashed_span_side_follows_its_own_direction():
             "line": "P-7a"}
     buf, _ = _paint(_straight(7.6, extra=[span]))
     assert len(_edge_parts(buf, 1)) == 1 and len(_edge_parts(buf, -1)) == 2 + 20
+
+
+def _dashes(parts):
+    return [d for d in parts if d[1] - d[0] < 1.05]
+
+
+def test_dashed_span_stops_at_a_hole_in_the_chain():
+    """Review of PR #98, FIX 1: samples of the authored line that match no chain (here: the traced axis jumps 7 m off
+    a 7.6 m carriageway between x = 78 and x = 82) end the span at the hole edge. Before the fix both halves were
+    stretched to the chain ends and the whole 200 m line came out broken."""
+    span = {"id": "holed", "kind": "edge_line_dashed", "side": "left", "dash_m": [1.0, 1.0],
+            "line_en": [[60.0, 0.5], [78.0, 0.5], [80.0, 7.0], [82.0, 0.5], [100.0, 0.3]]}
+    net = _straight(7.6, extra=[span])
+    buf, rep = _paint(net)
+    ap = sorted(a["s"] for a in rep["edge_line_dashed"]["applied"])
+    assert rep["edge_line_dashed"]["stale"] == [] and len(ap) == 2
+    (a0, a1), (b0, b1) = ap
+    assert a0 == pytest.approx(60.0, abs=0.01) and b1 == pytest.approx(100.0, abs=0.01)
+    assert 74.0 <= a1 <= 78.01 and 81.99 <= b0 <= 86.0             # hole edges = last / first matched sample
+    left = _edge_parts(buf, 1)
+    dashes = _dashes(left)
+    assert dashes and all((a0 - 0.01 <= d[0] and d[1] <= a1 + 0.01) or (b0 - 0.01 <= d[0] and d[1] <= b1 + 0.01)
+                          for d in dashes), dashes                   # no dash in the hole, none outside 60-100 m
+    assert not [d for d in dashes if d[1] > 78.01 and d[0] < 81.99]
+    # the hole itself is one solid piece, like the line outside the span
+    solid = [d for d in left if d not in dashes]
+    assert len(solid) == 3 and solid[1][0] == pytest.approx(a1, abs=0.01) and solid[1][1] == pytest.approx(b0, abs=0.01)
+    assert solid[0][0] < 1.0 and solid[0][1] == pytest.approx(60.0, abs=0.01)
+    assert solid[2][0] == pytest.approx(100.0, abs=0.01) and solid[2][1] > 199.0
+    # rhythm: behind the hole the pattern restarts like at any span start (half a gap, then dash / gap)
+    after = [d for d in dashes if d[0] >= b0 - 0.01]
+    assert after[0][0] == pytest.approx(b0 + 0.5, abs=0.02)
+    assert all(n[0] - p[0] == pytest.approx(2.0, abs=0.02) for p, n in zip(after, after[1:]))
+    assert len(_edge_parts(buf, -1)) == 1                             # other side untouched
+
+
+def test_dashed_span_starting_beside_the_road_is_not_stretched():
+    """First / last point of the authored line off the carriageway: the span starts at the first matched sample
+    instead of the chain start (before the fix: 0-100 m)."""
+    span = {"id": "side", "kind": "edge_line_dashed", "side": "left", "dash_m": [1.0, 1.0],
+            "line_en": [[58.0, 8.0], [60.0, 0.5], [100.0, 0.3], [102.0, 8.0]]}
+    buf, rep = _paint(_straight(7.6, extra=[span]))
+    (s0, s1), = [a["s"] for a in rep["edge_line_dashed"]["applied"]]
+    assert 59.9 <= s0 <= 66.0 and 94.0 <= s1 <= 100.1
+    dashes = _dashes(_edge_parts(buf, 1))
+    assert dashes and min(d[0] for d in dashes) >= s0 - 0.01 and max(d[1] for d in dashes) <= s1 + 0.01
+
+
+def test_dashed_span_still_runs_through_a_junction():
+    """Two chains in a row (a side road splits the route at x = 100): the line goes on to another chain, so each span
+    reaches the chain end at the junction - no solid stub left in the junction mouth."""
+    ox, oy = ORIGIN
+    g = {"nodes": [{"id": "a", "x": ox, "y": oy}, {"id": "m", "x": ox + 100.0, "y": oy},
+                   {"id": "b", "x": ox + 200.0, "y": oy}, {"id": "s", "x": ox + 100.0, "y": oy - 80.0}],
+         "edges": [{"id": "e1", "from": "a", "to": "m", "osm_way": 1, "geometry": [[ox, oy], [ox + 100.0, oy]]},
+                   {"id": "e2", "from": "m", "to": "b", "osm_way": 1, "geometry": [[ox + 100.0, oy], [ox + 200.0, oy]]},
+                   {"id": "e3", "from": "s", "to": "m", "osm_way": 2,
+                    "geometry": [[ox + 100.0, oy - 80.0], [ox + 100.0, oy]]}]}
+    for e in g["edges"]:
+        e["attrs"] = {"highway": {"v": "secondary" if e["osm_way"] == 1 else "residential"}, "oneway": {"v": "no"},
+                      "lanes": {"v": 2}, "maxspeed": {"v": 90}}
+    span = {"id": "thru", "kind": "edge_line_dashed", "side": "left", "dash_m": [1.0, 1.0],
+            "line_en": [[60.0, 0.0], [140.0, 0.0]]}
+    ov = [{"id": "x", "target": {"osm_way": 1}, "set": {"width": 7.6, "edge_lines": "both", "edge_line_spacing": SPACING}},
+          span]
+    net = network.load(g, ORIGIN, ov)
+    rep = {}
+    spans = MK.edge_dashed_spans(net, ov, rep)
+    assert rep["edge_line_dashed"]["stale"] == [] and len(spans) == 2
+    by = {c.id: c for c in net.chains}
+    for cid, lst in spans.items():
+        (lo, hi, *_), = lst
+        c = by[cid]
+        x = sorted(float(c.line.offset_point(s, 0.0)[0]) for s in (lo, hi))
+        # one end at the authored end (60 / 140), the other at the chain end towards the junction
+        assert x[0] == pytest.approx(60.0, abs=0.01) or x[1] == pytest.approx(140.0, abs=0.01), (cid, x)
+        assert lo == pytest.approx(0.0, abs=1e-6) or hi == pytest.approx(c.length, abs=1e-6), (cid, lo, hi, c.length)
 
 
 def test_dashed_span_off_the_road_is_stale():

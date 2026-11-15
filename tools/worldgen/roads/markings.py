@@ -218,6 +218,11 @@ EDGE_LINE_MIN_INSET = 0.12   # WORKING_VALUE (ADR 0220): an authored edge_line_s
                              # inside the carriageway edge (half the 0.12 m line + 0.06 m of asphalt)
 
 
+def _other_chain(owner, i, c):
+    """True when sample i exists and lies on a chain other than c (the authored line goes on through a junction)."""
+    return 0 <= i < len(owner) and owner[i] is not None and owner[i][0] is not c
+
+
 def edge_dashed_spans(net, authored, report=None):
     """ADR 0220: authored spans where an override edge line is broken instead of solid (a bus bay, a junction mouth
     the OSM graph does not have, a section painted with short dashes):
@@ -229,7 +234,9 @@ def edge_dashed_spans(net, authored, report=None):
 
     The line is resampled every EDGE_DASHED_STEP_M; a sample belongs to the nearest chain whose carriageway it lies on
     (|lat| <= half-width + EDGE_DASHED_SNAP_M) running the same way (|cos| >= 0.8). Each run of >= 2 consecutive samples
-    on one chain is a span; where the line goes on past a run (through a junction) the span reaches that chain end.
+    on one chain is a span; where the line goes on to ANOTHER chain (through a junction) the span reaches that chain end.
+    Samples that match no chain are a hole: the span ends at the last matched sample on either side of it, the hole
+    stays solid and the dash / gap rhythm restarts behind it like at any span start (`dashed`).
     Returns {chain_id: [(s_lo, s_hi, lat_sign, dash, gap, id)]}. Nothing matched = stale (reported, never dropped)."""
     out, applied, stale = {}, [], []
     chains = [c for c in net.chains if not c.meta.get("absorbed") and len(c.line.p) >= 2]
@@ -273,9 +280,13 @@ def edge_dashed_spans(net, authored, report=None):
                 if k1 > k:
                     sa, sb = owner[k][1], owner[k1][1]
                     fwd = sb > sa
-                    if k > 0:                          # the line comes in from another chain / a junction
+                    # the span reaches the chain end only where the line really goes on to ANOTHER chain (through a
+                    # junction); samples that matched no chain (a hole: the traced axis strays off the carriageway,
+                    # the graph changed under the override) end the span at the last matched sample - the hole and
+                    # the rest of the chain stay solid (review of PR #98, FIX 1)
+                    if _other_chain(owner, k - 1, c):
                         sa = 0.0 if fwd else c.length
-                    if k1 < len(Q) - 1:                # and goes on past this chain
+                    if _other_chain(owner, k1 + 1, c):
                         sb = c.length if fwd else 0.0
                     sign = (1.0 if side == "left" else -1.0) * (1.0 if fwd else -1.0)
                     runs.append((c.id, (min(sa, sb), max(sa, sb), sign, float(dash), float(gap), o["id"])))
