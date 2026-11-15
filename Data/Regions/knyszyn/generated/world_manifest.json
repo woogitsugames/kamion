@@ -1091,10 +1091,10 @@
     "e_min": -768.0,
     "n_max": 0.0,
     "n_min": -256.0,
-    "z_max_evrf2007": 147.0,
+    "z_max_evrf2007": 147.63,
     "z_min_evrf2007": 123.45
    },
-   "bytes": 16582104,
+   "bytes": 16585232,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_4.glb",
    "forest_cells": [],
    "id": "1_4",
@@ -1104,9 +1104,9 @@
     "sha256": "59fbfaad7eb6b48a73804a10e1675de7de2eacf26b7468889d38e9c60a8aab19"
    },
    "low": {
-    "bytes": 7971864,
+    "bytes": 7962176,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_4.low.glb",
-    "sha256": "f0cd8c745dedc1418bb07d8652866ad52ca649c6fe1d79baa12fd3b0ea92b8b5"
+    "sha256": "2e509d7b07f8379fa3101494d462ca3c85651a2755ca13c238ca3ffd9b93d083"
    },
    "materials": [
     "balcony_slab",
@@ -1180,7 +1180,7 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "bfe087881307266bbf869d52a3b4e32ddc1fe5dff066dfca958ee62ad94649f6",
+   "sha256": "573ef5c783b3289c5124d9ec6ecba8648135941ddde95ba1851b456c8ad92fb3",
    "triangles": {
     "buildings": 45541,
     "buildings_lod1": 9198,
@@ -1188,8 +1188,8 @@
     "markings": 1410,
     "paved": 1791,
     "plot_ground": 13553,
-    "plots": 16934,
-    "plots_low": 12744,
+    "plots": 17062,
+    "plots_low": 12627,
     "road": 11839,
     "road_collision": 13948,
     "terrain_lod0": 136889,
@@ -1205,10 +1205,10 @@
     "e_min": -768.0,
     "n_max": -256.0,
     "n_min": -512.0,
-    "z_max_evrf2007": 144.47,
+    "z_max_evrf2007": 145.09,
     "z_min_evrf2007": 118.77
    },
-   "bytes": 15604256,
+   "bytes": 15603488,
    "file": "Data/raw/derived/knyszyn/world/chunk_1_5.glb",
    "forest_cells": [],
    "id": "1_5",
@@ -1218,9 +1218,9 @@
     "sha256": "5344a1099a7ba3979fc9cfd6018c5e9fd749110e614cbf60de949b3a58586ccf"
    },
    "low": {
-    "bytes": 7262592,
+    "bytes": 7262432,
     "file": "Data/raw/derived/knyszyn/world/chunk_1_5.low.glb",
-    "sha256": "4aa380fb2512c0a866b27f94e2ef4d0fdaf9c6e26582ce98bbc7375dcaae2bfb"
+    "sha256": "3a64b0954bcd9ed5f96538bf8f89c139103364217f53c390dc64f728d270dee5"
    },
    "materials": [
     "balcony_slab",
@@ -1287,7 +1287,7 @@
     "wood_planks_green",
     "yard_paving"
    ],
-   "sha256": "098764a1ff76b4c0fd536c4d17565200d59a5b76b16ea83ea8367a8e50a0b929",
+   "sha256": "d0faedf34e882e878489a704bfbc9ef4743888cfc77b0d3198cfac7d9326a3b3",
    "triangles": {
     "buildings": 45845,
     "buildings_lod1": 6838,
@@ -1295,8 +1295,8 @@
     "markings": 519,
     "paved": 224,
     "plot_ground": 11688,
-    "plots": 12623,
-    "plots_low": 9351,
+    "plots": 12615,
+    "plots_low": 9348,
     "road": 6228,
     "road_collision": 10181,
     "terrain_lod0": 136255,
@@ -4371,43 +4371,47 @@
  ],
  "far_field": {
   "High": {
-   "bytes": 161912,
+   "bytes": 2524512,
    "file": "Data/raw/derived/knyszyn/world/far_field.glb",
    "sectors": {
     "far_east": {
      "by_material": {
-      "far_field_buildings": 252
+      "far_field_buildings": 1499,
+      "forest_edge_mixed": 9870
      },
-     "submeshes": 1,
-     "triangles": 252,
-     "vertices": 588
+     "submeshes": 2,
+     "triangles": 11369,
+     "vertices": 14075
     },
     "far_north": {
      "by_material": {
-      "far_field_buildings": 79,
-      "forest_edge_mixed": 1688
+      "far_field_buildings": 2916,
+      "forest_edge_mixed": 8404
      },
      "submeshes": 2,
-     "triangles": 1767,
-     "vertices": 1945
+     "triangles": 11320,
+     "vertices": 15404
     },
     "far_south": {
-     "by_material": {},
-     "submeshes": 0,
-     "triangles": 0,
-     "vertices": 0
+     "by_material": {
+      "far_field_buildings": 2727,
+      "forest_edge_mixed": 8084
+     },
+     "submeshes": 2,
+     "triangles": 10811,
+     "vertices": 14621
     },
     "far_west": {
      "by_material": {
-      "far_field_buildings": 56,
-      "forest_edge_mixed": 1092
+      "far_field_buildings": 4751,
+      "forest_edge_mixed": 3200
      },
      "submeshes": 2,
-     "triangles": 1148,
-     "vertices": 1276
+     "triangles": 7951,
+     "vertices": 13711
     }
    },
-   "sha256": "2fcca9e9731cd8426bb87a706b10251fc046a0a55bb523cdcd85c89e73f8ca7f",
+   "sha256": "b4ce2eb43981fe2b5afa39b791718b458f210c7729ac65991480ff61b14376e9",
    "skyline": {
     "landmark_stack_proxies": [],
     "min_building_h_m": 24.0,
@@ -4416,47 +4420,51 @@
     "submeshes": 0,
     "triangles": 0
    },
-   "total_triangles": 3167,
-   "total_vertices": 3809
+   "total_triangles": 41451,
+   "total_vertices": 57811
   },
   "Low": {
-   "bytes": 46580,
+   "bytes": 659396,
    "file": "Data/raw/derived/knyszyn/world/far_field.low.glb",
    "sectors": {
     "far_east": {
      "by_material": {
-      "far_field_buildings": 132
+      "far_field_buildings": 596,
+      "forest_edge_mixed": 2432
      },
-     "submeshes": 1,
-     "triangles": 132,
-     "vertices": 308
+     "submeshes": 2,
+     "triangles": 3028,
+     "vertices": 4356
     },
     "far_north": {
      "by_material": {
-      "far_field_buildings": 79,
-      "forest_edge_mixed": 286
+      "far_field_buildings": 1366,
+      "forest_edge_mixed": 2038
      },
      "submeshes": 2,
-     "triangles": 365,
-     "vertices": 519
+     "triangles": 3404,
+     "vertices": 5472
     },
     "far_south": {
-     "by_material": {},
-     "submeshes": 0,
-     "triangles": 0,
-     "vertices": 0
+     "by_material": {
+      "far_field_buildings": 868,
+      "forest_edge_mixed": 1768
+     },
+     "submeshes": 2,
+     "triangles": 2636,
+     "vertices": 4084
     },
     "far_west": {
      "by_material": {
-      "far_field_buildings": 56,
-      "forest_edge_mixed": 178
+      "far_field_buildings": 1904,
+      "forest_edge_mixed": 634
      },
      "submeshes": 2,
-     "triangles": 234,
-     "vertices": 342
+     "triangles": 2538,
+     "vertices": 4892
     }
    },
-   "sha256": "58d49fe8a0c9cc3fa99c811aa2dbb49d7cd377296fda7f59e533a771f7f389fc",
+   "sha256": "47721d9e70fc151aa93211a1c36c7b87cad84c56451217873fd66721f0c24a38",
    "skyline": {
     "landmark_stack_proxies": [],
     "min_building_h_m": 24.0,
@@ -4465,8 +4473,8 @@
     "submeshes": 0,
     "triangles": 0
    },
-   "total_triangles": 731,
-   "total_vertices": 1169
+   "total_triangles": 11606,
+   "total_vertices": 18804
   }
  },
  "generator": "world-c/1",
@@ -8922,7 +8930,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "ae4237e05e9b3f00b243175b307743c03f5650c012b800e06f0f9d72f7a68f98",
   "heightmap.r16 (Data/raw)": "309c5fe6503e6ead00e5ddb4daafb1053944acb70d37c2777cc9f65c420a2f52",
-  "overrides.yaml": "97eeb1a5a674cdf712fdfd5c3f276c3096b458628f5de9ba34ffd5de9a5eca78",
+  "overrides.yaml": "3d765948bf300ee9b9c89d83ac1a878c17b12c9f00d7e6f96b17ea99a0672840",
   "roads.graph.json": "be6b3b5629f67fd533d95386a42ef220e0aecc3621ebb61105547f80ac680439",
   "terrain.json": "36279e41ff3952cd7b8963778865c082fc315ca18ddf2eb8633888428f3d821f"
  },
