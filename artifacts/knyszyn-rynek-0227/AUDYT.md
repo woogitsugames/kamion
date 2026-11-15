@@ -58,3 +58,7 @@ Rendery Low/High × clear/dusk: `artifacts/knyszyn-rynek-0227/r1/`; lokalne pary
 
 ## Fontanna — analiza animacji
 Istniejący `WorldWater.shader` jest nieprzezroczysty i przeznaczony do tafli, a dostępny `blend` importera tworzy statyczny materiał. Nie znaleziono ścieżki animowanych półprzezroczystych pionowych strumieni wyłącznie danymi `tools/worldgen`. Konieczne byłyby osobny shader, materiał i ścieżka warstwy/importu, zachowanie UV oraz test faz, stripowania i kosztu Low/High; sortowanie, migotanie i overdraw są niezweryfikowane. Obecna fontanna pozostaje sucha (`water_jets=OPEN`), także latem. Bez osobnej implementacji i walidacji nie twierdzić, że strumienie działają.
+
+## Iteracja r2 — ocena 15.11, editor
+
+Zestawienia 01–11 lokalnie: `compare/r2/High-clear/`; zdjęcia właściciela i pary poza Git. Cztery warianty Low/High × clear/dusk ukończone; ocena całości FAIL. Widoczny uskok placu fontanny zniknął w kadrach 04/05; drzewa nadal mają zbyt rzadkie korony, figura króla jest prowizoryczna, a fontanna bez strumieni. Kamera 02 zasłonięta pniem, 07 obeliskiem, 03 wymaga dopasowania alei, 08 placyku i układu zegara. Kamery 09–11 i układ ronda różnią się od fotografii. Low: maksimum drawsEst z instancjami 500→486, lecz najgorszy wzrost dla wspólnej kamery +6; High max suma trójkątów 1 258 099→1 256 983. Po scaleniu origin/main b5dca11f wymagana przebudowa.
