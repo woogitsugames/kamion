@@ -13,6 +13,13 @@ crossing (artifacts/rail-fix-s21/ortho_measure.py): track band mean sRGB (118, 1
 the band is brown and darker than the road (linear luminance ratio 0.46). The game asphalt is darker than this aged
 road (albedo 0.081), so absolute values are set against the game asphalt in the render loop, keeping the hue
 R : G : B of the orthophoto. WORKING_VALUE until an owner photo of the track exists.
+
+Render loop r1 -> r2 (rail_xing_top, artifacts/rail-fix-s21/measure_render.py + measure_ortho_rel.py): r1 gave
+track / asphalt 0.94 (High) and track / grass 0.61 against 0.44 and 0.66 on the orthophoto - the two anchors disagree
+because the game asphalt / grass ratio is 0.65 and the aged DW671 surface is 1.48. r2 darkens the stone and the
+sleepers by ~0.8 and warms the hue so the band reads darker and browner than the carriageway without going black
+against the grass. The rail box now samples rust on its sides and the whole head on top (r1: half of the side face
+sampled the polished head, the rails read as wide silver beams).
 """
 
 from __future__ import annotations
@@ -28,11 +35,11 @@ W_PX, H_PX = 512, 256
 SEED = 217
 
 # linear albedo
-BALLAST = np.array([0.054, 0.045, 0.034])      # brown crushed stone (hue of the orthophoto band)
-BALLAST_CLEAN = np.array([0.070, 0.066, 0.060])  # greyer stone on the shoulders (less brake dust / rust)
-SLEEPER = np.array([0.150, 0.140, 0.122])      # weathered prestressed concrete
+BALLAST = np.array([0.046, 0.036, 0.026])      # brown crushed stone (hue of the orthophoto band)
+BALLAST_CLEAN = np.array([0.054, 0.048, 0.040])  # greyer stone on the shoulders (less brake dust / rust)
+SLEEPER = np.array([0.128, 0.118, 0.100])      # weathered prestressed concrete
 RUST = np.array([0.040, 0.024, 0.014])         # rail web / foot, fastenings
-HEAD = np.array([0.30, 0.30, 0.31])            # running surface (polished)
+HEAD = np.array([0.20, 0.20, 0.21])            # running surface (polished)
 
 
 def _srgb(lin):
@@ -114,7 +121,7 @@ def rail_u(left, gauge_m=1.435, head_w_m=0.072):
     """u of the four ribbon edges of a rail box (outer low, outer top, inner top, inner low; lateral growing to the
     left) on the painted rail of the tile: `left` = the rail on the +lateral side of its track axis."""
     rc = (1 if left else -1) * (gauge_m / 2 + head_w_m / 2)
-    return [0.5 + (rc + d) / TEX_W_M for d in (-0.066, -0.022, 0.022, 0.066)]
+    return [0.5 + (rc + d) / TEX_W_M for d in (-0.072, -0.037, 0.037, 0.072)]
 
 
 def textures():

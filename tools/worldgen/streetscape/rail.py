@@ -736,8 +736,11 @@ class Plan:
                 out.append(mk("barrier", entry, boom_head, a, role="entry", type=bar,
                               boom_len_m=round((c["road_w"] if full else half_road) + 0.5, 2)))
                 if bar == "double_half":
-                    # exit half-barrier on the far side, closing this approach's lane for traffic leaving towards it
-                    ex = pc + drive * (dtrack + BARRIER_SETBACK) - right * (half_road + 0.5)
+                    # second half-barrier of this side of the track: on the LEFT verge, closing the opposite lane
+                    # (the exit lane of the other approach), as on Mapillary 1832769196903759 (booms on both verges
+                    # before the rails). s22: it stood on the far side at the left verge = exactly on the other
+                    # approach's entry barrier, so 4 markers gave 2 visible booms (render r1).
+                    ex = pc - drive * (dtrack + BARRIER_SETBACK) - right * (half_road + 0.5)
                     out.append(mk("barrier", ex, _heading(right), a, role="exit", type=bar,
                                   boom_len_m=round(half_road + 0.5, 2)))
         if c["bell"]:
