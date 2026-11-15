@@ -3,9 +3,9 @@
 - Gałąź `putry-ring-0198b` od `origin/piers-0198` `51f89f4c0` (PR #82). Worktree w chmurze: /workspace/wt-putry-ring.
 - Krok 1 (zrobione): pomiar wyspy na ortofoto GUGiK WMS HighResolution (0,05 m/px, 38 punktów krawężnika, ±0,3 m,
   WORKING_VALUE; plik nie jest w repo). OSM nie ma obrysu wyspy (4 drogi `junction=roundabout`).
-- Krok 2 (zrobione): generator `apron_width` (krawędzie pierścienia, 0,2–4,0 m, domyślnie reguła 2,0 m) i
+- Krok 2 (zrobione): generator `truck_apron: {width_m}` (krawędzie pierścienia, 0,2–6,0 m, jeden mechanizm z ADR 0218 / #97, domyślnie reguła 2,0 m) i
   `island_curb_radius` (węzeł, tylko narożnik wyspy); overrides regionu C: `putry-ring-island-kerb`
-  (`apron: asphalt`, `apron_width: 0.4`), `putry-ring-s-placement` jako profil (oś 0,15–0,25 m / 6,0 m przy wyspie,
+  (`apron: asphalt`, `truck_apron: {width_m: 0.4}`), `putry-ring-s-placement` jako profil (oś 0,15–0,25 m / 6,0 m przy wyspie,
   2,9 m / 7,0 m od t 0,62 jak MA-010), `putry-ring-island-nw-corner` (R 10,0).
   Krawężnik wyspy vs ortofoto: średnio 2,02 → 0,46 m, max 4,93 → 1,37 m; pole wyspy 1388 → 1679 m².
 - Krok 3 (zrobione): pomost SW — rzędy 89,0 i 109,0 m w `pier_lines_en` (86,0 / 111,0 stały 1,65 / 1,94 m od asfaltu,
@@ -20,5 +20,12 @@
 
 KONIEC (chmura). NASTĘPNY KROK (lider, maszyna z Data/raw + Unity):
 `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c`
-potem `check_piers_vs_roads.py`, `fidelity/run.py`, import-region, visual-qa (putry-above, g3b_eye_s1582,
-g3b_eye_s1632, route-putry-approach, driver-andersa-to-putry; Low i High), kadr MA-010 `au_r_s1160`, EditMode.
+potem `check_piers_vs_roads.py`, `fidelity/run.py`, import-region, visual-qa (putry_above, g3b_eye_s1582,
+g3b_eye_s1632, route_putry_approach, driver_andersa_to_putry; Low i High), kadr MA-010 `au_r_s1160`, EditMode.
+
+## FIX s22 (D7, 2026-11-15)
+- Rebase na `origin/main`, baza PR #93 = `main` (commity ADR 0198 z #82 w gałęzi; #82 do zamknięcia). Usunięte z gałęzi:
+  zmiany głównego `STATUS.md`, raport `docs/reports/REVIEW-2026-11-15-s21-cloudD-93-82-putry.md` (historia: `783774957`).
+- Jeden mechanizm z #97: `truck_apron` (`{width_m}` = samo położenie krawężnika wyspy); `apron_width` / `apron_w` usunięte.
+  `island_curb_radius` z zakresem 2–30 m. Testy: `uv run --project tools/worldgen python -m pytest tests/gis -k "putry or 0226 or 0198 or roundabout or 0218 or apron" -q`.
+- NASTĘPNY KROK (lider): scalić #93, potem #97; `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c`.

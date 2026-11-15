@@ -1,6 +1,7 @@
 """ADR 0226: centre island of Rondo Putry corrected to the GUGiK orthophoto (owner decision 2026-11-15).
 
-Generator mechanisms: `apron_width` on ring edges (distance carriageway edge -> island kerb) and the node override
+Generator mechanisms: `truck_apron: {width_m}` on ring edges (distance carriageway edge -> island kerb; the ONE
+island-strip mechanism shared with ADR 0218 / PR #97, here without material = width only) and the node override
 `island_curb_radius` (kerb return between two ring carriageways). No Data/raw, no Unity: the unit tests are instant,
 the `world` tests share the flat-ground road stage of tests/gis/conftest.py `piers_check` (about 100 s per session).
 """
@@ -37,26 +38,50 @@ def _net(set_, junction="roundabout"):
 
 
 @pytest.mark.unit
-def test_apron_width_is_read_on_ring_edges_only():
-    net, sec = _net({"apron": "asphalt", "apron_width": 0.4})
-    assert sec.roundabout and sec.apron == "asphalt" and sec.apron_w == pytest.approx(0.4)
-    assert not net.overrides_stale and "apron_width_m" in sec.provenance
-    net, sec = _net({"apron_width": 0.4}, junction=None)             # not a ring: nothing to move
-    assert sec.apron_w is None and net.overrides_stale == ["ov"]
+def _apron_w(sec):
+    return None if sec.truck_apron is None else sec.truck_apron["width_m"]
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("bad", [0.0, 0.1, -1.0, 4.5, "wide", None])
+def test_apron_width_is_read_on_ring_edges_only():
+    net, sec = _net({"apron": "asphalt", "truck_apron": {"width_m": 0.4}})
+    assert sec.roundabout and sec.apron == "asphalt"
+    assert sec.truck_apron == {"width_m": 0.4, "height_m": None, "material": None, "code": None}, "width only"
+    assert not net.overrides_stale and sec.provenance["truck_apron"] == "authored_override:ov"
+    net, sec = _net({"truck_apron": {"width_m": 0.4}}, junction=None)   # not a ring: nothing to move
+    assert sec.truck_apron is None and net.overrides_stale == ["ov"]
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("bad", [0.0, 0.1, -1.0, 6.5, "wide", None])
 def test_apron_width_outside_the_range_is_refused(bad):
-    net, sec = _net({"apron_width": bad})
-    assert sec.apron_w is None and net.overrides_stale == ["ov"], "a zero-width strip would mesh as degenerate triangles"
+    net, sec = _net({"truck_apron": {"width_m": bad}})
+    assert sec.truck_apron is None and net.overrides_stale == ["ov"], "a zero-width strip would mesh as degenerate triangles"
+    net, sec = _net({"truck_apron": bad})                             # the bare number is not the key's form
+    assert sec.truck_apron is None and net.overrides_stale == ["ov"]
 
 
 @pytest.mark.unit
 def test_default_apron_is_unchanged():
     _, sec = _net({"apron": "asphalt"})                               # ADR 0123 form, Rondo Biezenstwa
-    assert sec.apron_w is None
-    assert S.ROUNDABOUT_APRON_W == 2.0 and Nw.APRON_W_MIN == 0.2 and Nw.APRON_W_MAX == 4.0
+    assert sec.truck_apron is None
+    assert S.ROUNDABOUT_APRON_W == 2.0 and Nw.TRUCK_APRON_W == (0.2, 6.0)
+
+
+@pytest.mark.unit
+def test_one_mechanism_for_the_island_strip():
+    """REVIEW s21 #93 FIX 2: `apron_width` (first version of ADR 0226) and `truck_apron` (ADR 0218, PR #97) wrote the
+    same ISLAND side width. One key, one field, one validator: `truck_apron`."""
+    assert "apron_w" not in Nw.EdgeSection.__dataclass_fields__ and not hasattr(Nw, "APRON_W_MIN")
+    net, sec = _net({"apron_width": 0.4})
+    assert sec.truck_apron is None, "`apron_width` is not a key any more"
+    net, sec = _net({"truck_apron": {"width_m": 3.2, "height_m": 0.04, "material": "kostka_jasna"}})   # #97 form
+    assert sec.truck_apron["material"] == "sidewalk_paving" and sec.truck_apron["code"] == 8 and not net.overrides_stale
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[2]
+    hits = [str(p.relative_to(root)) for p in sorted((root / "Data/Regions").glob("*/overrides.yaml"))
+            if "apron_width" in p.read_text(encoding="utf-8")]
+    assert not hits, hits
 
 
 @pytest.mark.unit
@@ -68,6 +93,18 @@ def test_island_profile_puts_the_kerb_at_the_apron_width():
         assert prof[2][0] == prof[2][2] == w and prof[2][4] == "curb_concrete"     # kerb face at w
         assert prof[2][3] - prof[2][1] == pytest.approx(S.KERB_HEIGHT)
         assert all(abs(a[2] - a[0]) > 1e-6 or abs(a[3] - a[1]) > 1e-6 for a in prof[1:]), "no degenerate strip"
+
+
+@pytest.mark.unit
+def test_island_curb_radius_has_a_range():
+    from roads import junctions as J
+    assert J.ISLAND_CURB_R == (2.0, 30.0)
+    import yaml
+    from pathlib import Path
+    ov = yaml.safe_load((Path(__file__).resolve().parents[2]
+                         / "Data/Regions/bialystok-industrial-c/overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    vals = [o["set"]["island_curb_radius"] for o in ov if "island_curb_radius" in (o.get("set") or {})]
+    assert vals == [10.0] and all(J.ISLAND_CURB_R[0] <= v <= J.ISLAND_CURB_R[1] for v in vals)
 
 
 # ---------------------------------------------------------------- built road stage (flat ground model)
@@ -104,10 +141,11 @@ def island(world):
 
 
 def test_only_the_putry_ring_has_an_authored_apron_width(world):
-    secs = [s for s in world.net.sec_list if s.apron_w is not None]
+    secs = [s for s in world.net.sec_list if s.truck_apron is not None]
     assert {str(s.edge_id).split(":")[0].lstrip("w") for s in secs} == PUTRY_RING
-    assert all(s.roundabout and s.apron == "asphalt" and s.apron_w == pytest.approx(0.4) for s in secs)
-    other = [s for s in world.net.sec_list if s.roundabout and s.apron_w is None]
+    assert all(s.roundabout and s.apron == "asphalt" and _apron_w(s) == pytest.approx(0.4) for s in secs)
+    assert all(s.truck_apron["code"] is None for s in secs), "width only: the strip stays the `apron: asphalt` carriageway"
+    other = [s for s in world.net.sec_list if s.roundabout and s.truck_apron is None]
     assert other, "Rondo Biezenstwa keeps the rule's apron width"
     stale = set(world.net.overrides_stale)
     assert not stale & {"putry-ring-s-placement", "putry-ring-island-kerb", "putry-ring-island-nw-corner"}

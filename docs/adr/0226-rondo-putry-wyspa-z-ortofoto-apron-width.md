@@ -1,4 +1,4 @@
-# ADR 0226 — rondo Putry: krawężnik wyspy z ortofoto (`apron_width`, `island_curb_radius`) i dwa rzędy podpór pomostu SW
+# ADR 0226 — rondo Putry: krawężnik wyspy z ortofoto (`truck_apron`, `island_curb_radius`) i dwa rzędy podpór pomostu SW
 Status: Proposed (agent world-builder, s20, gałąź `putry-ring-0198b` na bazie `piers-0198` = PR #82, sesja w chmurze),
 2026-11-15. Numer 0226 (przenumerowany z roboczego 0216 w s21: 0216 zajął `summer-led-0216` — latarnie LED Knyszyn;
 0217–0220 zajęte przez PR #96/#97/#95/#98, 0221 przez budget-fix-s21; numer 0226 przydzielił lider chmury s21;
@@ -37,15 +37,18 @@ Powiązane: ADR 0198 (rzędy podpór per pomost, konflikt pomostu SW), 0123 (`ap
   ≤ 0,13 m).
 
 ## Decyzja
-1. **Generator, `roads/network.py`:** pole `set: {apron_width: <m>}` na krawędziach pierścienia = odległość krawędzi
-   jezdni od krawężnika wyspy (`Section.apron_w`; zakres 0,2–4,0 m, poza zakresem albo na krawędzi niebędącej
-   rondem → `overrides_stale`). Bez pola obowiązuje reguła 2,0 m — inne ronda bez zmian. Zero nie jest dozwolone:
-   pas o szerokości 0 dałby zdegenerowane trójkąty w siatce. Układ pasów nie jest ruszany.
+1. **Generator, `roads/network.py`:** pole `set: {truck_apron: {width_m: <m>}}` na krawędziach pierścienia =
+   odległość krawędzi jezdni od krawężnika wyspy (`EdgeSection.truck_apron`; zakres 0,2–6,0 m, poza zakresem albo na
+   krawędzi niebędącej rondem → `overrides_stale`). Bez pola obowiązuje reguła 2,0 m — inne ronda bez zmian. Zero nie
+   jest dozwolone: pas o szerokości 0 dałby zdegenerowane trójkąty w siatce. Układ pasów nie jest ruszany.
+   **To ten sam, jedyny mechanizm co opaska dla naczep z ADR 0218 (PR #97)** — patrz „FIX s22” niżej; pierwsza wersja
+   tego ADR miała osobne pole `apron_width` (`apron_w`, 0,2–4,0 m), usunięte.
 2. **Generator, `roads/junctions.py`:** pole węzła `island_curb_radius` = promień łuku krawężnika między dwiema
    jezdniami pierścienia (narożnik wyspy ronda wydłużonego). Dotyczy tylko tego narożnika; `curb_radius` zmieniałby
-   wszystkie narożniki skrzyżowania.
+   wszystkie narożniki skrzyżowania. Zakres 2–30 m (WORKING_VALUE, `junctions.ISLAND_CURB_R`); wartość spoza
+   zakresu jest odrzucana z notatką skrzyżowania (`roads_qa.json` → `junction_notes`) i zostaje reguła.
 3. **Dane, `overrides.yaml` regionu C (jawne authored_overrides, przeżywają reimport):**
-   - `putry-ring-island-kerb` (4 drogi pierścienia): `apron: asphalt`, `apron_width: 0.4` (średnia z trzech
+   - `putry-ring-island-kerb` (4 drogi pierścienia): `apron: asphalt`, `truck_apron: {width_m: 0.4}` (średnia z trzech
      zakresów);
    - `putry-ring-s-placement` (MA-010) jako profil: oś 1,2 m w lewo / 7,2 m na zachodnim końcu, 0,25 → 0,15 m / 6,0 m
      dla t 0,25–0,42, powrót do wartości MA-010 (2,9 m / 7,0 m) od t 0,62 — na wschód od nosa wyspy nic się nie
@@ -87,13 +90,34 @@ Powiązane: ADR 0198 (rzędy podpór per pomost, konflikt pomostu SW), 0123 (`ap
   1,6 m za nowym krawężnikiem wyspy (dotąd na opasce) — do przeglądu przy SBS, nie zmieniane.
 
 ## Otwarte / niezweryfikowane
-- Brak renderów i SBS (bez Unity): pętla wizualna u lidera (putry-above, g3b_eye_s1582, g3b_eye_s1632,
-  route-putry-approach, driver-andersa-to-putry; Low i High).
+- Brak renderów i SBS (bez Unity): pętla wizualna u lidera (putry_above, g3b_eye_s1582, g3b_eye_s1632,
+  route_putry_approach, driver_andersa_to_putry; Low i High).
 - Droga S: między t 0,42 a 0,62 oś przesuwa się o 2,75 m na ok. 9 m; wstęga poza płytami skrzyżowań ma tam ok. 4 m —
-  linia pasów może być na niej skośna. Sprawdzić w putry-above oraz kadr MA-010 (`au_r_s1160`: prawy pas nie może
+  linia pasów może być na niej skośna. Sprawdzić w putry_above oraz kadr MA-010 (`au_r_s1160`: prawy pas nie może
   wjeżdżać w trójkątną wysepkę).
 - Narożnik NW: krawężnik nadal do 1,4 m poza prawdziwym (promień 10 zamiast 12 m — ogranicza długość drogi N).
+  Promień `island_curb_radius` jest stawiany na krawędzi jezdni (`gutter`), a 12,0 m z ortofoto dotyczy krawężnika
+  wyspy, który leży 0,4 m dalej (`truck_apron.width_m`) — różnica ≤ 0,4 m, w granicy pomiaru (REVIEW s21 FIX 4).
+- `island_curb_radius` na węźle bez narożnika pierścień–pierścień jest ignorowany bez wpisu w `overrides_stale`
+  (nadpisania węzłów nie niosą id override'u; zmiana w `network.py` poza zakresem tego PR) — test regionu pilnuje,
+  że narożnik NW Putry dostaje R 10,0.
+- Bariery ADR 0117 przy rzędach 89,0 / 109,0 m (3,06 / 2,84 m od asfaltu): po `build_world` porównać
+  `streetscape_qa.json` → `furniture.guardrails_pier` z main i obejrzeć w `putry_above` (REVIEW s21 FIX 6).
 - Narożnik SE i wschodni krawężnik pod pomostami: niewidoczne na ortofoto, kształt z reguły (łuk 8,4 m).
 - Stacje rzędów pozostają WORKING_VALUE (słupy zasłonięte pomostami); rytm SW 32,5 / 20,0 / 26,5 m nie jest równy.
 - Pełna maska keep-out (place, działki) i `pier_cols_on_carriageway == []` — dopiero po `build_world`.
 - `test_road_fidelity.py::test_report_not_stale` pada do czasu `fidelity/run.py` z `Data/raw`.
+
+## FIX s22 (recenzja `docs/reports/REVIEW-2026-11-15-s21-code-93.md`)
+- **Rebase na `main`, baza PR = `main`.** Gałąź zawiera też 3 commity ADR 0198 (PR #82, do zamknięcia jako
+  zastąpiony). Z gałęzi usunięte: zmiany w głównym `STATUS.md` i raport recenzenta
+  `docs/reports/REVIEW-2026-11-15-s21-cloudD-93-82-putry.md` (zostaje w historii commita `783774957`).
+- **Jeden mechanizm z ADR 0218 (#97).** `apron_width` (#93) i `truck_apron` (#97) zapisywały tę samą szerokość
+  strony ISLAND w `assign_sides`. Zostaje **jeden klucz `truck_apron`, jedno pole `EdgeSection.truck_apron`, jedna
+  funkcja `network._truck_apron`**: `{width_m}` = tylko położenie krawężnika wyspy (nawierzchnia i próg z reguły
+  albo z `apron: asphalt`, ADR 0123 — rondo Putry); `{width_m, height_m, material}` = opaska z własną nawierzchnią
+  i progiem (Knyszyn, ADR 0218). Zakres szerokości wspólny 0,2–6,0 m. Bloki mechanizmu w `network.py` są na obu
+  gałęziach bajt w bajt takie same (ten PR niesie cały mechanizm, łącznie z kodami materiałów 5–8 i
+  `side_profile`), więc drugi scalany PR nie ma w nich konfliktu. Geometria ronda Putry bez zmian względem
+  pierwszej wersji (0,4 m, pas = jezdnia). Kolejność: **#93, potem #97**.
+- `island_curb_radius`: zakres 2–30 m i notatka przy odrzuceniu (FIX 3); id kamer z podkreśleniami (FIX 5).

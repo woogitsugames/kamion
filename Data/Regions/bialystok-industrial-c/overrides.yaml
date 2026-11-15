@@ -1135,13 +1135,13 @@ overrides:
       relative to the generated carriageway edge of each ring way (38 points read by eye on a 1 m grid, +-0.3 m):
       west way 257367425 +0.0..+0.45 m, north way 257367424 +0.15..+0.7 m, east way 257367428 +0.25..+0.6 m (one
       point between the decks -0.45 m, +-0.5 m). The rule's 2.0 m sett apron (standards.ROUNDABOUT_APRON_W) put
-      the island kerb 1.3-2.5 m inside the real one along the three straight sides. `apron_width: 0.4` (mean of the three ranges, WORKING_VALUE) =
+      the island kerb 1.3-2.5 m inside the real one along the three straight sides. `truck_apron: {width_m: 0.4}` (mean of the three ranges, WORKING_VALUE; the one island-strip mechanism of ADR 0218 + 0226, width only) =
       distance carriageway edge -> island kerb; `apron: asphalt` = that strip is plain carriageway (ADR 0123). The
       lane layout of the four ways is not touched here. Whether the light band is the kerb alone or a kerb with a
       narrow paved strip behind it cannot be told from above (UNVERIFIED).
     confidence: medium
     verify: owner drive / street-level photo of the island kerb (open sources only)
-    set: {apron: asphalt, apron_width: 0.4}
+    set: {apron: asphalt, truck_apron: {width_m: 0.4}}
   - id: putry-ring-island-nw-corner
     target: {node: n3890183128}
     reason: >-
