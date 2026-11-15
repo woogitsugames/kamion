@@ -88,3 +88,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/willow-study.done; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
 - 2026-11-15 20:54 +01:00 — Willow lookdev: pierwszy uruchomiony bake po poprawce ścieżek OK technicznie, ale wizualnie FAIL (pionowe kępy zamiast płaczącej korony); nie włączono do gry. Agent poprawia generator. R2 nadal w toku.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
+- 2026-11-15 20:55 +01:00 — Build_world r2 OK (992,7 s), import Unity w toku. Willow study r1 FAIL i nie wchodzi do r2.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
