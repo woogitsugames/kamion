@@ -13,3 +13,17 @@ overrides:
     confidence: low
     verify: none
     set: {lamps: false}
+  # ADR 0224 (seam QA, tools/worldgen/qa/seams.py): way 98071886 (field road, surface=compacted) crosses the seam with
+  # knyszyn-s at x = 760587 (E 760587.0, N 610278.8). knyszyn-s: BDOT10k 2008 width 5.7 m on its 1491 m piece + `lamps:
+  # false` (rural-roads-unlit, ADR 0204); here BDOT10k gives 4.5 m on the last 169 m, which the generator rejects (2.25 m
+  # per lane < 2.4) and falls back to 2 x 2.75 = 5.5 m with the lamp rule -> 0.2 m step and a lit stub at the seam.
+  - id: seam-knyszyn-s-field-road-98071886
+    target: {osm_way: [98071886]}
+    source: "knyszyn-s overrides `rural-roads-unlit` + roads.graph.json of knyszyn-s (BDOT10k 2008 width 5.7 m)"
+    reason: >-
+      Seam continuity with knyszyn-s: the same carriageway width on both sides of x = 760587 (5.7 m, the BDOT10k value
+      of the knyszyn-s piece; WORKING_VALUE for the 169 m dead-end piece in this tile, where BDOT10k says 4.5 m) and
+      no street lamps (field road in the open; OSM has no lamps or lit tag on it, knyszyn-s lists it as unlit).
+    confidence: medium
+    verify: orthophoto 0.1 m 2025 width across the road at E 760500
+    set: {width: 5.7, lamps: false}
