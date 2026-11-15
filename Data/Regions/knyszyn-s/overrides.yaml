@@ -55,3 +55,16 @@ overrides:
     confidence: high
     verify: none
     set: {lamps: false}
+  - id: lamp-policy-led-0216
+    kind: lamp_policy
+    family: led
+    cct_k: 4000
+    sources: ["docs/11_DECYZJE_WLASCICIELA.md D65 p.8", "research/dk65-knyszyn-refs/README.md (e)",
+              "research/night-lamps-s21/README.md section 4"]
+    reason: >-
+      Owner D65 p.8: street lighting on the DK65 / Knyszyn route is white LED. The older side-street poles
+      (spun concrete with an arc arm, thin grey steel) keep their shape and positions and carry a flat LED head
+      instead of the sodium one (ADR 0216). Nominal 4000 K: ZDM Bialystok tenders 2023-2024 (K69, SOURCED for
+      Bialystok streets); type, height and spacing in Knyszyn UNVERIFIED (K1) - the generator's WORKING_VALUE.
+    confidence: medium
+    verify: owner - a night photo of a Knyszyn street lamp (pole type, light colour)

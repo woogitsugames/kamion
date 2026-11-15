@@ -873,7 +873,7 @@
    "length_m": 386.2,
    "max_grade": 0.0273,
    "overrides": [
-    "dk65-carriageway-width"
+    "dk65-obozowa-south-unlit-0216"
    ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
@@ -898,7 +898,7 @@
    "length_m": 141.4,
    "max_grade": 0.0068,
    "overrides": [
-    "dk65-carriageway-width"
+    "dk65-obozowa-south-unlit-0216"
    ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
@@ -3266,7 +3266,7 @@
   "decals": {
    "gullies": 740,
    "oil": 98,
-   "patches": 195
+   "patches": 256
   },
   "emergency_signal_junctions": [],
   "footprint_nodes": 432328,
@@ -3542,6 +3542,13 @@
      "w1111506743:1134825095-1842392531",
      "w1111506749:5408160935-1134825095",
      "w305910057:7015328978-1134825095"
+    ]
+   },
+   {
+    "id": "dk65-obozowa-south-unlit-0216",
+    "targets": [
+     "w286990127:1134813637-4898926854",
+     "w286990127:2906549567-1134813637"
     ]
    }
   ],
