@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.Tests
 {
-    /// <summary>ADR 0261: Windows player defaults (tier, frame-rate cap), gamepad axis shaping, evidence-run arguments.</summary>
+    /// <summary>ADR 0261: Windows player defaults (tier, frame-rate cap), gamepad axis shaping (since the ADR 0264 merge the one pad source shapes with PadSteeringMath; same cases), evidence-run arguments.</summary>
     public class WindowsBuildTests
     {
         [Test]
@@ -26,23 +26,23 @@ namespace Game.Tests
         [Test]
         public void GamepadAxis_DeadZoneFullRangeSignAndProgressiveCurve()
         {
-            Assert.AreEqual(0f, GamepadDriverInput.ShapeAxis(0.1f, 0.12f, 1.8f));
-            Assert.AreEqual(0f, GamepadDriverInput.ShapeAxis(-0.12f, 0.12f, 1.8f));
-            Assert.AreEqual(1f, GamepadDriverInput.ShapeAxis(1f, 0.12f, 1.8f), 1e-5f);
-            Assert.AreEqual(-1f, GamepadDriverInput.ShapeAxis(-1f, 0.12f, 1.8f), 1e-5f);
-            float half = GamepadDriverInput.ShapeAxis(0.56f, 0.12f, 1.8f);   // half of the live travel
+            Assert.AreEqual(0f, PadSteeringMath.Shape(0.1f, 0.12f, 0f, 1.8f));
+            Assert.AreEqual(0f, PadSteeringMath.Shape(-0.12f, 0.12f, 0f, 1.8f));
+            Assert.AreEqual(1f, PadSteeringMath.Shape(1f, 0.12f, 0f, 1.8f), 1e-5f);
+            Assert.AreEqual(-1f, PadSteeringMath.Shape(-1f, 0.12f, 0f, 1.8f), 1e-5f);
+            float half = PadSteeringMath.Shape(0.56f, 0.12f, 0f, 1.8f);   // half of the live travel
             Assert.AreEqual(Mathf.Pow(0.5f, 1.8f), half, 1e-4f);
             Assert.Less(half, 0.5f, "progressive: half stick is less than half lock");
-            Assert.AreEqual(-half, GamepadDriverInput.ShapeAxis(-0.56f, 0.12f, 1.8f), 1e-6f);
-            Assert.AreEqual(0.5f, GamepadDriverInput.ShapeAxis(0.56f, 0.12f, 0.2f), 1e-4f, "curve below 1 is clamped to linear");
+            Assert.AreEqual(-half, PadSteeringMath.Shape(-0.56f, 0.12f, 0f, 1.8f), 1e-6f);
+            Assert.AreEqual(0.5f, PadSteeringMath.Shape(0.56f, 0.12f, 0f, 0.2f), 1e-4f, "curve below 1 is clamped to linear");
         }
 
         [Test]
         public void GamepadTrigger_DeadZoneAndFullTravel()
         {
-            Assert.AreEqual(0f, GamepadDriverInput.ShapeTrigger(0.03f, 0.04f));
-            Assert.AreEqual(1f, GamepadDriverInput.ShapeTrigger(1f, 0.04f), 1e-6f);
-            Assert.AreEqual(0.5f, GamepadDriverInput.ShapeTrigger(0.52f, 0.04f), 1e-4f);
+            Assert.AreEqual(0f, PadSteeringMath.Shape(0.03f, 0.04f, 0f, 1f));
+            Assert.AreEqual(1f, PadSteeringMath.Shape(1f, 0.04f, 0f, 1f), 1e-6f);
+            Assert.AreEqual(0.5f, PadSteeringMath.Shape(0.52f, 0.04f, 0f, 1f), 1e-4f);
         }
 
         [Test]

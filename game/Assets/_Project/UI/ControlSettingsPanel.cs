@@ -31,6 +31,9 @@ namespace Game.UI
 
         const float RowH = 66f, ColW = 700f, Pad = 40f, Edge = 20f, HeaderH = 86f, FooterH = 108f;
 
+        /// <summary>Opens the keyboard / pad bindings screen as a child of the given transform (ADR 0264); null = no PC input installed, row hidden.</summary>
+        public static Action<Transform> OpenInputBindings;
+
         public ControlSettings Settings { get; private set; }
         Action m_OnChanged, m_OnClose, m_OnCalibrate;
         Font m_Font;
@@ -154,6 +157,15 @@ namespace Game.UI
 
             // Left column: wheel + pedals
             float y = 0f;
+            // ADR 0264: PC keyboard + pad screen first (installed by Game.Gameplay.PcInputBridge). Kept away from the
+            // pedals block, which ADR 0265 extends, so the two PRs merge without a conflict.
+            if (OpenInputBindings != null)
+            {
+                Header(content, "KLAWIATURA I PAD", left, ref y);
+                var kb = TextButton(content, "Przypisania i czułość…", Vector2.zero, new Vector2(ColW, 64f), () => OpenInputBindings?.Invoke(transform));
+                PlaceTop((RectTransform)kb.transform, left, y, new Vector2(ColW, 64f));
+                y += 64f + 8f + 18f;
+            }
             Header(content, "KIEROWNICA DOTYKOWA", left, ref y);
             Segment(content, left, ref y, "Chwyt", "obrót", "przesuw", () => Settings.wheelDragGrab, v => Settings.wheelDragGrab = v);
             Stepper(content, left, ref y, "Zakres kierownicy", () => F0(Settings.wheelRangeDeg) + "°", d => Settings.wheelRangeDeg = Step(Settings.wheelRangeDeg, d, 90f, ControlSettings.RangeMin, ControlSettings.RangeMax));
