@@ -19,3 +19,7 @@ StarszyURL Id12 z lutego2025 zwraca404; aktualny odnaleziono przez oficjalny kat
 ## Reguły kategorii i znaków
 
 `regulations.csv`: 7 wpisów z §6, §80 i §81 rozporządzenia MI z09.07.2025, Dz.U.2025poz.1105. Pełne strony3,19,20 obejrzane osobno. ELI przy odczycie15.11.2026 oznacza akt jako obowiązujący, wejście27.08.2025; metadane w `data/eli-2025-1105-status.json`. Według ELI zastąpił m.in. rozporządzenie2015poz.1744 i jego wymienione zmiany. Reguły w tabeli nie przypisują kategorii konkretnym przejazdom. Brak geometrycznych wymiarów samych znaków i rogatek.
+
+## Historyczny kadr stacji
+
+05-P01: ponownie obejrzana fotografia K1-P32 z2013r. SOURCED [obraz, link w manifeście] — poprzeczna brama kratowa sieci trakcyjnej, ukośne wsporniki, podwieszenia i przewody, latarnie peronowe, ciemne podkłady i miejscowa roślinność w torowisku. Typ podkładów i uziarnienie podsypki UNVERIFIED. To 1 miniatura istniejącego kadru,0 nowych pobrań zdjęć; nie jest kadrem przejazdu ani potwierdzeniem wyglądu stacji po modernizacji2026.
