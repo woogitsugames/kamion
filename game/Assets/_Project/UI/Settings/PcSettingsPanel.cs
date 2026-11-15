@@ -307,10 +307,16 @@ namespace Game.UI.Settings
 
             WireNavigation(m_Rows);
             if (FirstItem == null) FirstItem = cancel;
+            // ADR 0265 (review #136 P2-2): this screen is the top focus owner while open, so the start menu below does not
+            // take the pad / keyboard selection back (UiFocus.RestoreIfLost) and start a scene behind it. The selection
+            // itself is still handled here (dialog, scroll into view).
+            UiFocus.Push(this, FirstItem, false);
             RefreshAll();
             if (Confirm.Pending) OpenConfirm();   // rebuilt while the countdown runs (window resized by the new mode)
             else if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(FirstItem);
         }
+
+        void OnDestroy() => UiFocus.Pop(this, true);   // the pad selection goes back to the start menu below
 
         void RefreshAll() { foreach (var r in m_Refresh) r(); }
 
