@@ -31,7 +31,9 @@ sys.path.insert(0, str(REPO / "tools/worldgen"))
 from streetscape.foliage_policy import crown_opening, leaf_lod_indices
 VEG = REPO / "art-source" / "world" / "vegetation"
 ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-if "--park-linden-study" in ARGV:
+if "--park-linden-study" in ARGV or "--park-linden-study-r2" in ARGV:
+    if "--park-linden-study" in ARGV and "--park-linden-study-r2" in ARGV:
+        raise ValueError("choose one park linden study")
     if "--out" not in ARGV or ARGV.index("--out")+1 >= len(ARGV):
         raise ValueError("--park-linden-study requires --out under this worktree's artifacts")
     study_dir = Path(ARGV[ARGV.index("--out")+1]).resolve()
@@ -250,6 +252,50 @@ def grow_park_linden(g, height, variant, lod):
     crown=V((0.,0.,height*.64)); up=V((0.,0.,1.))
     for i in indices:
         point,normal,size=cards[int(i)]
+        g.card("leaves_linden",V(point),V(normal),up,size,crown)
+    return g
+
+
+def park_linden_blueprint_r2(height, variant=0):
+    """WORKING_VALUE: fuller ellipsoidal crown; regular coverage still needs visual QA."""
+    H=float(height)
+    if not math.isfinite(H) or H <= 0:
+        raise ValueError("linden height must be positive and finite")
+    rng=random.Random(227230+int(variant))
+    trunk=[np.array(x,float)*H for x in ((0,0,-.02),(.008,-.008,.22),(.014,.005,.55),(.008,.012,.91))]
+    limbs=[]; cards=[]
+    for sector in range(12):
+        az=2*math.pi*(sector+.5)/12+rng.uniform(-.08,.08)
+        out=np.array([math.cos(az),math.sin(az),0.])
+        root=np.array([0.,0.,H*(.24+.22*(sector%4)/3)])
+        tip=root+out*(H*rng.uniform(.26,.34))+np.array([0.,0.,H*rng.uniform(.30,.42)])
+        mid=(root+tip)*.5+np.array([0.,0.,.05*H])
+        limbs.append((root,mid,tip))
+        for band in range(6):
+            for i in range(8):
+                a=2*math.pi*(sector+rng.uniform(.08,.92))/12
+                f=(band+rng.uniform(.15,.85))/6
+                zf=.25+.69*f
+                profile=max(.35,math.sqrt(max(0.,1-((zf-.60)/.39)**2)))
+                radius=H*.35*profile*rng.uniform(.25,1.)
+                point=np.array([math.cos(a)*radius,math.sin(a)*radius,zf*H])
+                normal=np.array([rng.uniform(-1,1),rng.uniform(-1,1),rng.uniform(-.7,1.)])
+                if np.linalg.norm(normal)<.1: normal=np.array([1.,0.,.5])
+                cards.append((point,normal,H*rng.uniform(.085,.125)))
+    return trunk,limbs,cards
+
+
+def grow_park_linden_r2(g, height, variant, lod):
+    """LOD1 retains half the exact cards in every sector and height band."""
+    trunk,limbs,cards=park_linden_blueprint_r2(height,variant)
+    V=lambda p: Vector(tuple(float(x) for x in p))
+    g.crown_height=0
+    g.tube("bark_linden",[V(p) for p in trunk],[.27,.21,.12,.025],seg=8 if lod==0 else 5)
+    for root,mid,tip in limbs:
+        g.tube("bark_linden",[V(root),V(mid),V(tip)],[.10,.06,.012],seg=5 if lod==0 else 3)
+    crown=V((0.,0.,height*.60)); up=V((0.,0.,1.))
+    for i,(point,normal,size) in enumerate(cards):
+        if lod and i%2: continue
         g.card("leaves_linden",V(point),V(normal),up,size,crown)
     return g
 
@@ -1305,23 +1351,26 @@ def bake_forest(mix, src, href, seed):
 
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    if "--park-linden-study" in ARGV:
+    if "--park-linden-study" in ARGV or "--park-linden-study-r2" in ARGV:
         # Isolated geometry-only prototype: no shared tree library or forest bake.
         import shutil
         source_dir = REPO / "art-source/world/vegetation"
         for name in ("bark_linden.png", "leaves_linden.png"):
             shutil.copyfile(source_dir / name, VEG / name)
+        r2 = "--park-linden-study-r2" in ARGV
+        study_name = "tree_linden_park_1" if r2 else "tree_linden_park_0"
+        study_file = "tree_linden_park_study_r2" if r2 else "tree_linden_park_study"
+        study_grow = grow_park_linden_r2 if r2 else grow_park_linden
         models=[]; info={}
         for lod in (0,1):
-            obj=to_object("tree_linden_park_0" + (".lod1" if lod else ""),
-                          grow_park_linden(Geo(),13.5,0,lod))
+            obj=to_object(study_name + (".lod1" if lod else ""), study_grow(Geo(),13.5,0,lod))
             models.append(obj)
             info[f"tris_lod{lod}"]=sum(len(p.vertices)-2 for p in obj.data.polygons)
         for obj in bpy.context.scene.objects:
             obj.select_set(obj in models)
-        bpy.ops.export_scene.gltf(filepath=str(VEG / "tree_linden_park_study.glb"),
+        bpy.ops.export_scene.gltf(filepath=str(VEG / (study_file + ".glb")),
                                   export_format="GLB", use_selection=True, export_apply=False, export_yup=True)
-        (VEG / "tree_linden_park_study.json").write_text(json.dumps(
+        (VEG / (study_file + ".json")).write_text(json.dumps(
             {"status":"WORKING_VALUE; visual and budget QA OPEN", "href_m":13.5, **info},
             indent=2)+"\n",encoding="utf-8")
         return
