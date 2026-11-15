@@ -46,3 +46,5 @@
 - NASTĘPNY KROK: `Get-Process python | ForEach-Object { $_.Threads | Group-Object ThreadState,WaitReason }; Remove-Item artifacts/knyszyn-rynek-0227/r1.done; pwsh -File artifacts/knyszyn-rynek-0227/r1.ps1` (po ustąpieniu masowego wstrzymania, w tle)
 - 2026-11-15 19:16 +01:00 — Po zatrzymaniu r1 wpięto poprawione moduły kościoła, urzędu i props do stage; poprawiono obrys placu i kamery 1–11. Testy modułów: 13 passed; brak renderu po integracji. Inne procesy pozostają Suspended.
 - NASTĘPNY KROK: `Remove-Item artifacts/knyszyn-rynek-0227/r1.done; pwsh -File artifacts/knyszyn-rynek-0227/r1.ps1` (po ustąpieniu masowego wstrzymania, uruchomić w tle)
+- 2026-11-15 19:21 +01:00 — Korekta props: 8 ławek i 5 latarni przechodzi kontrolę odległości, dodane kolizje; test 4 passed. Wznowiono r1 przez kolejkę (r1-retry.log), obserwować czy nowy proces nie zostanie wstrzymany.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-retry.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
