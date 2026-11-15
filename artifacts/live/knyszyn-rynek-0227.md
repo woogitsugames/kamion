@@ -174,3 +174,7 @@
 - 2026-11-15 22:37 +01:00 — Scalono origin/main 114658153 bez konfliktów, R7 uruchomiona (dopracowane lukarny i fix far_field). Raport fidelity C ponownie nieaktualny po zmianach dróg main, trwa pełne przeliczenie. Poprawki kierunkowo 10/11 testów modułów passed; pełny GIS nadal wymagany.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r7.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.done`
 
+
+- 2026-11-15 22:54 +01:00 — R7 build OK po scaleniu main, import Unity trwa. Pełny GIS po poprawce far_field kontynuuje >9%. Fidelity po merge przeliczone, 9 passed/1 xfailed; kierunkowo far_field 10 passed, urząd 11 passed.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r7.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/gis-r7.log -Tail 10`
+
