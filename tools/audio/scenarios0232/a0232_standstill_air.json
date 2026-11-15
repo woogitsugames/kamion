@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "id": "a0232_standstill_air",
+  "description": "40 t parked: compressor charging at raised idle, governor cut-out, parking brake release, drive off, stop, park",
+  "spec": "docs/adr/0232 (audio scenario, no physics checks)",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "parkingBrake": true
+  },
+  "duration": 60,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.0,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "N",
+        "retarderLever": 0
+      },
+      {
+        "t": 1.5,
+        "throttle": 0.14,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "N",
+        "retarderLever": 0
+      },
+      {
+        "t": 40,
+        "throttle": 0.0,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "N",
+        "retarderLever": 0
+      },
+      {
+        "t": 42.5,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 44.5,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 46,
+        "throttle": 0.45,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 51,
+        "throttle": 0.0,
+        "brake": 0.5,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 56,
+        "throttle": 0.0,
+        "brake": 0.5,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 57,
+        "throttle": 0.0,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": true,
+        "selector": "N",
+        "retarderLever": 0
+      }
+    ]
+  },
+  "checks": [],
+  "overrides": {
+    "initialAirBar": 10.95
+  }
+}
