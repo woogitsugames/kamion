@@ -4,7 +4,7 @@
 // flow E, flow N as 0.5 + 0.5 x unit vector; 0.5 / 0.5 = still water).
 //   body      : lerp(_ShallowColor, _BaseColor, shore) lit by the sky (SH) and a little sun (turbid water scatters)
 //   reflection: Fresnel (water F0 0.02) x environment
-//       Low  (no _KAMION_WORLD_DETAIL): flat normal, SH sky only, x _ReflectLow (dimmed gloss), broad dim sun sheen
+//       Low  (no _KAMION_WORLD_DETAIL): flat normal, blurred probe (one fetch) x _ReflectLow (dimmed gloss), dim sheen
 //       High (_KAMION_WORLD_DETAIL)   : two procedural ripple octaves advected along the flow, reflection probe,
 //                                       sun glint (Blinn-Phong) shadowed by the main-light shadow map
 //   sky visibility: the baked world GI (ADR 0064) dims the sky reflection under the bridge deck / along tree lines.
@@ -18,8 +18,9 @@ Shader "Kamion/World Water"
         _Reflect ("Reflection strength High", Range(0, 1)) = 0.85
         _ReflectLow ("Reflection strength Low", Range(0, 1)) = 0.55
         _FlowSpeed ("Surface drift along the flow (m/s)", Float) = 0.25
-        _RippleScale ("Ripple wavelength (m)", Float) = 1.6
-        _RippleStrength ("Ripple slope", Range(0, 0.5)) = 0.10
+        _FlowCycle ("Flow-map cycle (s)", Float) = 6.0
+        _RippleScale ("Ripple wavelength (m)", Float) = 2.4
+        _RippleStrength ("Ripple slope", Range(0, 0.5)) = 0.05
         _Smoothness ("Smoothness of the sun glint", Range(0.5, 1)) = 0.93
     }
     SubShader
@@ -46,7 +47,7 @@ Shader "Kamion/World Water"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseColor, _ShallowColor;
-                float _Reflect, _ReflectLow, _FlowSpeed, _RippleScale, _RippleStrength, _Smoothness;
+                float _Reflect, _ReflectLow, _FlowSpeed, _FlowCycle, _RippleScale, _RippleStrength, _Smoothness;
             CBUFFER_END
 
             struct Attributes
@@ -115,12 +116,18 @@ Shader "Kamion/World Water"
                 half sh = KamionFarShadow(L.shadowAttenuation, giSun, pw);
 
             #if defined(_KAMION_WORLD_DETAIL)
-                // ripples: two octaves advected along the flow (still water: slow drift), faded with distance (no
-                // shimmer below a pixel) and towards the shore (sheltered water is calmer)
-                float t = _Time.y;
-                float2 drift = (length(flow) > 0.1 ? (float2)flow : float2(0.35, 0.2)) * _FlowSpeed * t;
-                float2 p = (i.uv - drift) / _RippleScale;
-                float2 g = NoiseGrad(p) + 0.5 * NoiseGrad(p * 2.37 + float2(17.3, 5.1) - 0.6 * drift / _RippleScale);
+                // ripples: two octaves advected along the flow with the two-phase flow-map scheme (offsets stay
+                // bounded, so a flow field that turns at a confluence does not shear the pattern into seams); still
+                // water drifts slowly. Faded with distance (no shimmer below a pixel) and towards the shore.
+                float t = _Time.y / _FlowCycle;
+                float ph0 = frac(t), ph1 = frac(t + 0.5);
+                half w0 = 1.0h - abs(1.0h - 2.0h * (half)ph0);
+                float2 fl = length(flow) > 0.1 ? (float2)flow : float2(0.35, 0.2);
+                float2 off = fl * (_FlowSpeed * _FlowCycle);
+                float2 p = i.uv / _RippleScale;
+                float2 g0 = NoiseGrad(p - off * ph0 / _RippleScale) + 0.5 * NoiseGrad(p * 2.37 + float2(17.3, 5.1) - off * ph0 * (1.4 / _RippleScale));
+                float2 g1 = NoiseGrad(p - off * ph1 / _RippleScale + float2(0.43, 0.71)) + 0.5 * NoiseGrad(p * 2.37 + float2(3.7, 11.9) - off * ph1 * (1.4 / _RippleScale));
+                float2 g = g0 * w0 + g1 * (1.0h - w0);
                 float dist = length(GetCameraPositionWS() - pw);
                 half amp = _RippleStrength * (1.0 - smoothstep(25.0, 140.0, dist)) * lerp(0.45, 1.0, saturate(shore * 2.0));
                 n = normalize(half3(-g.x * amp, 1.0, -g.y * amp));    // world XZ = (E, N)
@@ -132,7 +139,7 @@ Shader "Kamion/World Water"
             #if defined(_KAMION_WORLD_DETAIL)
                 half3 env = GlossyEnvironmentReflection(R, 0.06h, 1.0h) * _Reflect;
             #else
-                half3 env = SampleSH(R) * _ReflectLow;
+                half3 env = GlossyEnvironmentReflection(R, 0.30h, 1.0h) * _ReflectLow;   // one blurred probe fetch
             #endif
                 env *= lerp(0.25h, 1.0h, giK);                           // sky hidden by the deck / trees
 

@@ -52,6 +52,7 @@ ROAD_KEEP_M = 2.0        # terrain this close to a road / paved node is not lowe
 STATION_M = 5.0
 LEVEL_PCT = 30.0
 MIN_AREA_M2 = 30.0
+FLOW_SMOOTH_M = 6.0      # gaussian sigma of the flow direction field (m)
 
 
 # ------------------------------------------------------------------------------------------------ extraction
@@ -435,7 +436,7 @@ class Plan:
         bank = np.clip(1.0 - d / 6.0, 0.0, 1.0)
         c[..., 2] = np.maximum(c[..., 2], 0.85 * bank)
         c[..., 1] = c[..., 1] * (1.0 - bank)
-        mud = np.clip(1.0 - d / 1.2, 0.0, 1.0) * 0.35
+        mud = np.clip(1.0 - d / 0.8, 0.0, 1.0) * 0.15      # thin wet line only: the orthophoto banks are green
         c[..., 3] = np.maximum(c[..., 3], mud)
         c[..., 3] = np.where(self.mask, 0.7, c[..., 3])
         return c.astype(np.float32)
@@ -502,4 +503,10 @@ class Plan:
         _, k = cKDTree(P).query(np.column_stack([self.hf.x0 + ii, self.hf.y1 - jj]))
         fe[jj, ii] = D[k, 0]
         fn[jj, ii] = D[k, 1]
-        return fe, fn
+        # smooth across the switch from one centre line to the next (confluence): no seam in the ripple advection
+        m = self._fmask.astype(float)
+        den = np.maximum(ndimage.gaussian_filter(m, FLOW_SMOOTH_M), 1e-6)
+        fe = np.where(self._fmask, ndimage.gaussian_filter(fe, FLOW_SMOOTH_M) / den, 0.0)
+        fn = np.where(self._fmask, ndimage.gaussian_filter(fn, FLOW_SMOOTH_M) / den, 0.0)
+        ln_ = np.maximum(np.hypot(fe, fn), 1e-6)
+        return np.where(self._fmask, fe / ln_, 0.0), np.where(self._fmask, fn / ln_, 0.0)
