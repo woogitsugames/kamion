@@ -1,0 +1,412 @@
+{
+ "schema": "truck-sim-pl/gpu-ab-variants/1",
+ "adr": "docs/adr/0241-gpu-ab-a16-low.md",
+ "note": "Warianty A/B GPU dla A16 Low (B-113). extras = argumenty uruchomienia (am start -e klucz wartość) czytane przez RenderOverrides / GpuAbOverrides; pusty zestaw = stan wysyłkowy. est_gpu_ms = oczekiwana zmiana GPU p50 w ms [od, do] (ujemna = zysk), null = brak liczby. Żadna wartość nie jest pomiarem tej rundy.",
+ "tier": "Low",
+ "baseline": "baseline",
+ "roles": {
+  "baseline": "stan wysyłkowy",
+  "lever": "kandydat na zmianę profilu (wymaga oceny wizualnej i decyzji)",
+  "ceiling": "wyłączenie elementu = górna granica zysku z jego optymalizacji, nie ustawienie",
+  "control": "zmiana o znanym/oczekiwanym kierunku (czułość metody, koszt włączenia)",
+  "diagnostic": "poza dozwolonym zakresem (np. D50)"
+ },
+ "variants": [
+  {
+   "id": "baseline",
+   "extras": {},
+   "role": "baseline",
+   "default": true,
+   "est_gpu_ms": [
+    0,
+    0
+   ],
+   "est_status": "REFERENCE",
+   "est_source": "stan wysyłkowy tieru (QualityProfile Low: skala 0,75, MSAA 2, post off, cienie 35 m, lodBias 0,5)",
+   "visual": "bez zmian",
+   "note": ""
+  },
+  {
+   "id": "scale-070",
+   "extras": {
+    "rq_scale": "0.7"
+   },
+   "role": "lever",
+   "default": true,
+   "est_gpu_ms": [
+    -2.0,
+    -2.0
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): skala 0,75 -> 0,70 = 2,0 ms; przy limicie 30 FPS zysk może prawie zniknąć (ADR 0136 r2c: 1,29 -> 0,17 ms, wg research/cloud2/mobile-gpu-a16/REVIEW.md P1-1)",
+   "visual": "miększe napisy bramownicy (ADR 0106 pkt 3); D50 zakazuje < 0,75 na Low -> tylko diagnostyka/decyzja właściciela",
+   "note": ""
+  },
+  {
+   "id": "scale-065",
+   "extras": {
+    "rq_scale": "0.65"
+   },
+   "role": "diagnostic",
+   "default": false,
+   "est_gpu_ms": [
+    -3.3,
+    -3.3
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): 0,75 -> 0,65 = 3,3 ms; przy limicie 30 FPS zysk może prawie zniknąć (ADR 0136 r2c: 1,29 -> 0,17 ms, wg research/cloud2/mobile-gpu-a16/REVIEW.md P1-1)",
+   "visual": "wyraźna utrata ostrości; D50",
+   "note": ""
+  },
+  {
+   "id": "scale-080",
+   "extras": {
+    "rq_scale": "0.8"
+   },
+   "role": "control",
+   "default": false,
+   "est_gpu_ms": [
+    1.8,
+    1.8
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "obliczenie: ok. 13 ms zależne od pikseli przy 0,75 (ADR 0106) x (0,8^2/0,75^2 - 1) = +1,8 ms; metoda sprawdzona na 0,70: 13 x (1 - 0,7^2/0,75^2) = 1,7 wobec zmierzonych 2,0",
+   "visual": "ostrzej (kontrola skalowania z pikselami)",
+   "note": ""
+  },
+  {
+   "id": "msaa-1",
+   "extras": {
+    "rq_msaa": "1"
+   },
+   "role": "lever",
+   "default": true,
+   "est_gpu_ms": [
+    0,
+    0
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): MSAA 2x -> 1x = 0 ms; ADR 0013 to samo; research/cloud2/mobile-gpu-a16/README.md §2 'Sprzeczność do wyjaśnienia (MSAA)' (wg datasheetu Arm 2x jest promowane do 4x)",
+   "visual": "schodki na krawędziach, A2C liści bez pokrycia; jeśli Δ = 0 także wizualnie, Low dziś nie ma MSAA (R8)",
+   "note": "rozstrzyga sprzeczność z ADR 0013 razem z RenderDoc (B-113)"
+  },
+  {
+   "id": "msaa-4",
+   "extras": {
+    "rq_msaa": "4"
+   },
+   "role": "control",
+   "default": false,
+   "est_gpu_ms": null,
+   "est_status": "UNVERIFIED",
+   "est_source": "ADR 0013: 4x w lesie DK8 na Medium +10,9 ms GPU p50 wobec 2x (61,3 vs 50,4 ms); dla Low G3-A/B brak pomiaru",
+   "visual": "gładsze krawędzie",
+   "note": "kontrola: czy 2x != 4x w sprzęcie G57"
+  },
+  {
+   "id": "depthtex-on",
+   "extras": {
+    "rq_depthtex": "1"
+   },
+   "role": "control",
+   "default": true,
+   "est_gpu_ms": [
+    0.36,
+    null
+   ],
+   "est_status": "UNVERIFIED",
+   "est_source": "research/cloud2/mobile-gpu-a16/README.md §1: jedna pełnoekranowa warstwa 1,42 Mpx >= ok. 0,36 ms przy założonym zegarze 1 GHz (zegar GPU UNVERIFIED) i §2 wiersz 'depth / opaque texture' (kopie i pasmo; MSAA + zapis głębi do +6,3 GB/s na Mali-G76). Górna granica nieznana: przy MSAA URP może zrobić osobny przebieg głębi zamiast kopii",
+   "visual": "brak (tekstura nieużywana przez shadery Low)",
+   "note": "stan wysyłkowy = off (ProjectSetup m_RequireDepthTexture false); wariant mierzy, ile kosztowałoby włączenie (np. pod SSAO/miękkie cząsteczki)"
+  },
+  {
+   "id": "opaquetex-on",
+   "extras": {
+    "rq_opaquetex": "1"
+   },
+   "role": "control",
+   "default": true,
+   "est_gpu_ms": [
+    0.36,
+    null
+   ],
+   "est_status": "UNVERIFIED",
+   "est_source": "jak depthtex-on (R8 §1/§2); kopia koloru po nieprzezroczystych, domyślnie pomniejszona przez URP - koszt może być niższy niż pełna warstwa",
+   "visual": "brak (tekstura nieużywana)",
+   "note": "stan wysyłkowy = off"
+  },
+  {
+   "id": "post-on",
+   "extras": {
+    "rq_post": "1"
+   },
+   "role": "control",
+   "default": false,
+   "est_gpu_ms": null,
+   "est_status": "UNVERIFIED",
+   "est_source": "brak izolowanego pomiaru; ADR 0106: Medium = +16 ms GPU p50 względem Low łącznie za HDR + post + skalę 0,85 + world detail + 2 kaskady",
+   "visual": "tonemapping/dithering końcowy",
+   "note": "na Low post jest wyłączony - wariant kontrolny; na Medium użyj post-off"
+  },
+  {
+   "id": "post-off",
+   "extras": {
+    "rq_post": "0"
+   },
+   "role": "lever",
+   "default": false,
+   "est_gpu_ms": null,
+   "est_status": "UNVERIFIED",
+   "est_source": "jak post-on; dotyczy tylko tierów z postem (Medium/High/Ultra). Na Low brak zmiany",
+   "visual": "brak tonemappingu (inny obraz!) - tylko diagnostyka",
+   "note": "uruchamiaj z -Tier Medium"
+  },
+  {
+   "id": "shadows-off",
+   "extras": {
+    "rq_shadow": "0"
+   },
+   "role": "ceiling",
+   "default": true,
+   "est_gpu_ms": [
+    -0.9,
+    -0.9
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): cienie (dystans 0) = 0,9 ms; przy limicie 30 FPS zysk może prawie zniknąć (ADR 0136 r2c: 1,29 -> 0,17 ms, wg research/cloud2/mobile-gpu-a16/REVIEW.md P1-1)",
+   "visual": "brak cieni dynamicznych - niedopuszczalne jako ustawienie, pułap dźwigni cieni (F7 / ADR 0240)",
+   "note": ""
+  },
+  {
+   "id": "shadow-25",
+   "extras": {
+    "rq_shadow": "25"
+   },
+   "role": "lever",
+   "default": true,
+   "est_gpu_ms": [
+    0,
+    0
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "research/cloud2/mobile-gpu-a16/README.md §2 wiersz 'cienie': 25 m / 512 px = szum pomiaru (ADR 0136 r2c)",
+   "visual": "cień kończy się 10 m bliżej",
+   "note": ""
+  },
+  {
+   "id": "shadow-50",
+   "extras": {
+    "rq_shadow": "50"
+   },
+   "role": "control",
+   "default": false,
+   "est_gpu_ms": null,
+   "est_status": "UNVERIFIED",
+   "est_source": "brak pomiaru; kontrola kierunku (dalsze cienie, ta sama mapa 1024 px)",
+   "visual": "dłuższe, mniej ostre cienie",
+   "note": "punkt odniesienia dla F7 (ADR 0240)"
+  },
+  {
+   "id": "lod-040",
+   "extras": {
+    "rq_lod": "0.4"
+   },
+   "role": "lever",
+   "default": true,
+   "est_gpu_ms": [
+    -1.4,
+    0
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "między 0 a wartością dla x0,6 (ADR 0106: LOD bias x0,6 = 1,4 ms); x0,8 nie było mierzone; przy limicie 30 FPS zysk może prawie zniknąć (ADR 0136 r2c: 1,29 -> 0,17 ms, wg research/cloud2/mobile-gpu-a16/REVIEW.md P1-1)",
+   "visual": "LOD-y przełączają się ok. 20 % bliżej",
+   "note": ""
+  },
+  {
+   "id": "lod-030",
+   "extras": {
+    "rq_lod": "0.3"
+   },
+   "role": "lever",
+   "default": true,
+   "est_gpu_ms": [
+    -1.4,
+    0
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): LOD bias x0,6 = 1,4 ms; research/cloud2/mobile-gpu-a16/README.md §4 P12: 0-1,4 UNVERIFIED przy limicie 30 FPS",
+   "visual": "popping LOD bliżej; decyzja właściciela (R8 P12)",
+   "note": ""
+  },
+  {
+   "id": "far-720",
+   "extras": {
+    "rq_far": "720"
+   },
+   "role": "lever",
+   "default": true,
+   "est_gpu_ms": [
+    -0.7,
+    0
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): far clip 900 -> 720 m = 0,7 ms; R8 §4 P11: 0-0,7 UNVERIFIED przy limicie",
+   "visual": "bliższy horyzont; decyzja właściciela (R8 P11)",
+   "note": ""
+  },
+  {
+   "id": "trees-off",
+   "extras": {
+    "rq_trees": "0"
+   },
+   "role": "ceiling",
+   "default": true,
+   "est_gpu_ms": [
+    -3.0,
+    -2.4
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): drzewa instancjonowane + HLOD = 2,4-3,0 ms (przed ADR 0113/0136; dziś mniej)",
+   "visual": "brak drzew - pułap całej roślinności, nie ustawienie",
+   "note": ""
+  },
+  {
+   "id": "impostors-off",
+   "extras": {
+    "rq_impostors": "0"
+   },
+   "role": "ceiling",
+   "default": true,
+   "est_gpu_ms": [
+    -0.5,
+    -0.5
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0136 'A/B bez limitu na G3-B': impostory 1,37 -> 0,51 ms średnio po ImpostorTrim (w oknach lasu 1,9 / 2,3 ms); G3-A ok. 0 (brak lasu)",
+   "visual": "drzewa znikają za ostatnim LOD kart - pułap, nie ustawienie",
+   "note": ""
+  },
+  {
+   "id": "hlod-walls-off",
+   "extras": {
+    "rq_hlodpart": "2"
+   },
+   "role": "ceiling",
+   "default": true,
+   "est_gpu_ms": [
+    -1.8,
+    -1.5
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): ściany HLOD lasu = 1,8 ms; ADR 0113: ściany jednoprzebiegowo -0,28 ms -> ok. 1,5 ms dziś (odejmowanie, ESTIMATED)",
+   "visual": "las bez ścian brzegowych - pułap dźwigni 'ściany HLOD' (B-113)",
+   "note": ""
+  },
+  {
+   "id": "hlod-canopy-off",
+   "extras": {
+    "rq_hlodpart": "1"
+   },
+   "role": "ceiling",
+   "default": false,
+   "est_gpu_ms": [
+    -0.9,
+    0
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): korony HLOD (URP Lit) = 0,9 ms; po ADR 0113 (Kamion/Forest Canopy) koszt niższy, niezmierzony osobno",
+   "visual": "las bez koron HLOD - pułap",
+   "note": ""
+  },
+  {
+   "id": "thin-45",
+   "extras": {
+    "rq_thin": "45"
+   },
+   "role": "lever",
+   "default": true,
+   "est_gpu_ms": [
+    -0.3,
+    -0.3
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): przerzedzanie x0,5 = 0,3 ms; przy limicie 30 FPS zysk może prawie zniknąć (ADR 0136 r2c: 1,29 -> 0,17 ms, wg research/cloud2/mobile-gpu-a16/REVIEW.md P1-1)",
+   "visual": "drzewa przerzedzane od 45 m zamiast 90 m (widoczne luki bliżej)",
+   "note": ""
+  },
+  {
+   "id": "cull-300",
+   "extras": {
+    "rq_cull": "300"
+   },
+   "role": "lever",
+   "default": false,
+   "est_gpu_ms": null,
+   "est_status": "UNVERIFIED",
+   "est_source": "brak pomiaru (cull drzew 600 -> 300 m; dalej las przejmuje HLOD do 1000 m)",
+   "visual": "pojedyncze drzewa znikają 300 m bliżej",
+   "note": ""
+  },
+  {
+   "id": "hlod-50",
+   "extras": {
+    "rq_hlod": "50"
+   },
+   "role": "lever",
+   "default": false,
+   "est_gpu_ms": null,
+   "est_status": "UNVERIFIED",
+   "est_source": "brak pomiaru (HLOD lasu od 50 m zamiast 70 m: mniej kart liści, więcej ścian)",
+   "visual": "ściana lasu bliżej kamery (ryzyko 'płotu', ADR 0113)",
+   "note": ""
+  },
+  {
+   "id": "card-025",
+   "extras": {
+    "rq_card": "0.25"
+   },
+   "role": "lever",
+   "default": false,
+   "est_gpu_ms": [
+    0,
+    0
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): karty x0,5 = 0 ms",
+   "visual": "karty liści przełączają się bliżej",
+   "note": ""
+  },
+  {
+   "id": "mirrors-off",
+   "extras": {
+    "rq_mirror_off": "1"
+   },
+   "role": "ceiling",
+   "default": false,
+   "est_gpu_ms": [
+    -1.46,
+    -0.75
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106-perf-low-a16-r1.md tabela 'Rozkład GPU klatki' (A16 Low, G3-B, bez limitu FPS, rq_ab, treść sprzed s11): lusterka (1 render/klatkę) = 0,75-1,25 ms; QualityProfile.mirrorResolutionScale (ADR 0136 r2, G3-A): lusterka 1,46 ms, x0,75 oszczędza 0,47",
+   "visual": "lusterka nie odświeżają się - NIEDOPUSZCZALNE jako ustawienie (lusterka zawsze użyteczne), tylko pułap",
+   "note": ""
+  },
+  {
+   "id": "glassfast-off",
+   "extras": {
+    "rq_glassfast": "0"
+   },
+   "role": "control",
+   "default": false,
+   "est_gpu_ms": [
+    0.9,
+    0.9
+   ],
+   "est_status": "ESTIMATED",
+   "est_source": "docs/adr/0106 Decyzja pkt 1: szybka ścieżka szyby = -0,9 ms GPU p50 (A16 Low, G3-B)",
+   "visual": "pełny model szyby (PSNR 62-82 dB wobec szybkiej)",
+   "note": "kontrola czułości metody: znana zmiana ok. 0,9 ms musi być widoczna w tabeli"
+  }
+ ]
+}

@@ -164,7 +164,7 @@ namespace Game.Tests.EditMode
             finally { RenderOverrides.AbImpostorOff = false; RenderOverrides.AbHlodPart = 0; }
         }
 
-        /// <summary>The catalogue variants built from switches that existed before ADR 0241 (scripts/gpu-ab-variants.json).</summary>
+        /// <summary>The catalogue variants built from switches that existed before ADR 0241 (tools/perf/gpu-ab-variants.json).</summary>
         [Test]
         public void ExistingSwitches_UsedByTheCatalogue_ChangeOnlyTheirField()
         {

@@ -15,7 +15,7 @@ namespace Game.Rendering
     /// The whole-run switches use the same WorldInstances hooks as the interleaved rq_ab keys impostor / hlodcanopy /
     /// hlodedge (ADR 0106) - do not combine them with those rq_ab keys in one launch.
     /// The switches that already existed (rq_scale, rq_msaa, rq_post, rq_shadow, rq_lod, rq_thin, rq_cull, rq_card,
-    /// rq_hlod, ...) stay in RenderOverrides; the variant catalogue is scripts/gpu-ab-variants.json.
+    /// rq_hlod, ...) stay in RenderOverrides; the variant catalogue is tools/perf/gpu-ab-variants.json.
     /// </summary>
     public static class GpuAbOverrides
     {
