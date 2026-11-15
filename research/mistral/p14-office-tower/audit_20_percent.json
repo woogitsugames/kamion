@@ -1,0 +1,77 @@
+{
+  "task": "P14 biurowiec Biazet (Andersa 38, Kwadrat Park), Białystok",
+  "audyt_s21": {
+    "data": "2026-11-15",
+    "wiersze_manifestu": 19,
+    "seed": 20261115,
+    "metoda_losowania": "r=random.Random(20261115); r.sample(WIEZA,5), potem r.sample(RESZTA,1); WIEZA=[P14-001,007,008,009,011,013,014,015,017,018,019] (wiersze z wieżą w kadrze), RESZTA=[P14-002..006,010,012,016]",
+    "wylosowane": [
+      "P14-001",
+      "P14-008",
+      "P14-011",
+      "P14-015",
+      "P14-017",
+      "P14-004"
+    ],
+    "wielkosc_proby": 6,
+    "procent": 31.6,
+    "kadry_z_wieza_w_probie": 5,
+    "metoda": "Każdy kadr ponownie OBEJRZANY osobnym wywołaniem (Read) na pliku z files/ albo na świeżym wycinku z niego; porównany zdanie po zdaniu z opis_co_widać. Pliki Commons, KartaView i WMS pobrane ponownie 2026-11-15 (HTTP 200; sha256 w sources.md).",
+    "wynik": {
+      "PASS": 4,
+      "FIX": 2
+    },
+    "wiersze": [
+      {
+        "id": "P14-001",
+        "plik": "files/commons/20200711_073045_crop_tower.jpg",
+        "wynik": "FIX",
+        "sprawdzone": "10 okien kolumny (policzone), 2+1+2 klimatyzatory, pas szklenia przy podstawie, szczyt po prawej i NW po lewej, napis na prawo od kolumny.",
+        "korekta": "położenie kolumny: było „nieco na lewo od środka”, pomiar w wycinku daje ok. 0,49 szerokości → „w osi”. Przy okazji P14-013: dopisano panele i krótki maszt na dalekim (N) końcu ściany NW."
+      },
+      {
+        "id": "P14-008",
+        "plik": "files/commons/20210328_105711_crop_tower.jpg",
+        "wynik": "FIX",
+        "sprawdzone": "6 grup na kondygnację, białe ramy, ochrowy tynk, parter wieży zasłonięty, brak nadbudówki.",
+        "korekta": "widoczne kondygnacje 6 → 5-6; położenie masztów 0,55/0,95 → 0,54/0,9 (ponowny pomiar)."
+      },
+      {
+        "id": "P14-011",
+        "plik": "wycinek dołu files/commons/20200711_073045_crop_tower.jpg",
+        "wynik": "PASS",
+        "sprawdzone": "pas szklenia przy podstawie w lewej i prawej części, środek za drzewem; 2 klimatyzatory przy najniższym oknie; krótki pionowy przewód; portalu nie widać."
+      },
+      {
+        "id": "P14-015",
+        "plik": "files/orto/orto_tower_80m.jpg",
+        "wynik": "PASS",
+        "sprawdzone": "4 podstawy X (N, E, środek SE, W z odciągami), cień na NW, widoczne SE i pas NE, NW niewidoczna, ok. 12 niebieskich elementów, niska bryła przy środku SE."
+      },
+      {
+        "id": "P14-017",
+        "plik": "files/kartaview/kv_993062122_crop_tower_x3.5.jpg",
+        "wynik": "PASS",
+        "sprawdzone": "wieża przy prawej krawędzi za latarnią; szczyt SW po lewej (kolumna okien, litera napisu), ściana SE po prawej z pasmami; 2 maszty; ten sam jasnożółty odcień SE i szczytu."
+      },
+      {
+        "id": "P14-004",
+        "plik": "files/kartaview/kv_7119874.jpg",
+        "wynik": "PASS",
+        "sprawdzone": "estakada, zbiornik z niebieskimi pasami przy prawej krawędzi, słup energetyczny i drzewa w środku, żółte znaki ostrzegawcze, wieży brak.",
+        "uwaga": "przy okazji poprawiono P14-002: „dwoma pasami” → „pasami (2 widoczne nad barierą)” — w 7119874 widać ich więcej."
+      }
+    ]
+  },
+  "audyt_poprzedni_m57_UNIEWAZNIONY": {
+    "powod": "Przegląd s20 (docs/reports/REVIEW-2026-11-14-s20-mistral-m57.md): opisy „zaobserwowano” dla P14-004, P14-005 i P14-017 nie odpowiadały obrazom, a etykiety element różniły się od manifestu. Zostaje tylko seed i próba jako historia; opisy usunięte.",
+    "seed": 14,
+    "metoda_losowania": "random.Random(14).sample(range(1, 19), 4)",
+    "wylosowane": [
+      "P14-004",
+      "P14-005",
+      "P14-008",
+      "P14-017"
+    ]
+  }
+}
