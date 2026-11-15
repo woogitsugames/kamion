@@ -91,6 +91,12 @@ class EdgeSection:
         return (lat + np.asarray(hw, float) - self.edge_strip) / np.maximum(self.lane_w_at(hw), 2.0)
 
 
+def lane_w_of(sec, hw):
+    """`sec.lane_w_at(hw)` (ADR 0233) for EdgeSection; plain `lane_w` for duck-typed sections of unit tests."""
+    f = getattr(sec, "lane_w_at", None)
+    return f(hw) if f is not None else sec.lane_w
+
+
 def _v(a, k, default=None):
     return a[k]["v"] if k in a and a[k]["v"] is not None else default
 

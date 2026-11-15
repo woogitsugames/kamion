@@ -13,7 +13,7 @@ import numpy as np
 
 from . import standards as S
 from .geom import ear_clip, polygon_area
-from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, side_params, side_profile
+from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, lane_w_of, side_params, side_profile
 
 
 @dataclass
@@ -112,8 +112,8 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
         lw = max(sec_mid.lane_w, 2.0)
         latv = lat.ravel()
         hwv = np.repeat(hw, len(q))
-        if sec_mid.lane_follow:
-            lw = np.maximum(sec_mid.lane_w_at(hwv), 2.0)      # ADR 0233: wheel paths follow the local lane width
+        if getattr(sec_mid, "lane_follow", False):
+            lw = np.maximum(lane_w_of(sec_mid, hwv), 2.0)      # ADR 0233: wheel paths follow the local lane width
         if secmat == "road_concrete":
             # concrete pavement (ADR 0019): UV1 = (metres along the chain, lane-scaled metres across) so the 5 m
             # sawn joints of concrete_cast_5m_joints run across the road and longitudinal joints sit on the lane
@@ -1176,8 +1176,8 @@ def _patch_uv1(net, j, V, poly=None):
         if getattr(sec, "lane_edges", None):
             return np.asarray(sec.lane_coord(lat_arr, hw_val, dir_val), float)
         if sec.oneway or sec.roundabout:
-            return (lat_arr + hw_val - sec.edge_strip) / np.maximum(sec.lane_w_at(hw_val), 2.0)
-        return np.abs(lat_arr) / np.maximum(sec.lane_w_at(hw_val), 2.0)
+            return (lat_arr + hw_val - sec.edge_strip) / np.maximum(lane_w_of(sec, hw_val), 2.0)
+        return np.abs(lat_arr) / np.maximum(lane_w_of(sec, hw_val), 2.0)
 
     for i in ref:
         a = j.arms[i]
