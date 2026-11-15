@@ -59,12 +59,13 @@ for way in (23982181, 76073122):
                 continue
             r0 = min(road)
             n_s += 1
-            over = [z - r0 for nm, tr, lo, hi in W if nm not in ROAD and not nm.startswith(("marking", "decal"))
+            over = [(z - r0, nm) for nm, tr, lo, hi in W if nm not in ROAD and not nm.startswith(("marking", "decal"))
                     and lo[0] <= x <= hi[0] and lo[1] <= y <= hi[1] for z in tri_z(tr, x, y) if 0.3 < z - r0 < 8.0]
             if over:
-                worst_over = min(worst_over, min(over))
-                if min(over) < 4.5:
-                    blocked.append((way, round(q), off, round(min(over), 2)))
+                mo = min(over)
+                worst_over = min(worst_over, mo[0])
+                if mo[0] < 4.5:
+                    blocked.append((way, round(q), off, round(float(mo[0]), 2), mo[1]))
             if fence is not None and 0 <= q <= s[-1] and abs(off) == 3.5:
                 c = fence.mean(1)
                 d = np.hypot(c[:, 0] - x, c[:, 1] - y)

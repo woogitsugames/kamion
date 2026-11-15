@@ -262,6 +262,7 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
     blend = []                                 # (polygon of the wall-top blend, line, wall-top function)
     walls_out = []
     corridor = []                              # floor of the cut between the outer walls (+ the slab footprints)
+    near_face = np.zeros(zc.shape, bool)       # cover cells next to a wall face: never left to other surfaces
     for g in groups:
         F = g["F"]
         runs = g["runs"]
@@ -354,7 +355,7 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
                         corridor.append(_strip_poly(c, ss[sl], -(hw[sl] + 4.0), lat_w[sl] - 0.05, sgn))
                     walls_out.append(_build_wall(buf, g, c, side, sgn, ss[sl], P[sl], N[sl], hw[sl], u_end[sl],
                                                  lat_w[sl], zfoot[sl], bank[sl], in_F[sl], inner, grid, zc0, lower,
-                                                 low_mask, cover_cells, clip_polys, col_polys, blend))
+                                                 low_mask, cover_cells, clip_polys, col_polys, blend, near_face))
         # ---- slab
         _build_slab(buf, g, grid, zc0, lower, cover_cells, clip_polys, col_polys, rmask)
         stats["groups"].append(gst)
@@ -363,7 +364,7 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
     in_slab = np.zeros_like(cover_cells)
     for g in groups:
         _mark_cells(in_slab, grid, g["F"].buffer(0.5))
-    excluded = cover_cells & cell_occ & ~in_slab
+    excluded = cover_cells & cell_occ & ~in_slab & ~near_face
     cover_cells &= ~excluded
     K = shapely.union_all(clip_polys).buffer(0) if clip_polys else None
     gtris = _emit_cover(buf, grid, zc0, cover_cells, K, blend)
@@ -450,7 +451,7 @@ def _upper_ground(groups, grid, zc0, oz, omask, deck, dmask):
         # only nodes below grade are filled: a node already at grade keeps its conformed height (oz / deck are per-node
         # maxima incl. kerb tops and caps and would put grass slivers above the asphalt)
         zr_f = zmin - CLEARANCE_M - SLAB_MIN_T
-        low = (out[fj, fi] - zr_f) < UPPER_MIN_M
+        low = out[fj, fi] < zmin              # below clearance + slab: not at grade (cut level or the conformed slope)
         out[fj[low], fi[low]] = np.maximum(z[low], zmin[low])
         g["upper_samples"] = int(ok.sum())
     return out
@@ -468,7 +469,7 @@ def _mark_cells(cover_cells, grid, poly):
 
 
 def _build_wall(buf, g, c, side, sgn, ss, P, N, hw, u_end, lat_w, zfoot, bank, in_F, inner, grid, zc0, lower,
-                low_mask, cover_cells, clip_polys, col_polys, blend):
+                low_mask, cover_cells, clip_polys, col_polys, blend, near_face):
     src = f"{g['id']}:{c.id}:{side}:wall"
     zr = c.zc(ss)
     soffit = zr + g["clear"]
@@ -505,7 +506,9 @@ def _build_wall(buf, g, c, side, sgn, ss, P, N, hw, u_end, lat_w, zfoot, bank, i
     T = M.grid_tris(len(ss), 2, flip=(sgn < 0))          # up-facing
     buf.add("bridge", "bridge_concrete", V, V[:, :2], T, src=src + ":footing")
     # terrain in front of the face and under the footing: below the footing
-    band = _strip_poly(c, ss, hw + u_end - 0.6, lat_w, sgn)
+    # (to 1.2 m BEHIND the face: a node there left on the bank made grass pyramids in front of the wall, r2)
+    band = _strip_poly(c, ss, hw + u_end - 0.6, lat_w + 1.2, sgn)
+    _mark_cells(near_face, grid, _strip_poly(c, ss, lat_w - 1.0, lat_w + 2.4, sgn))
     m = _poly_mask(band, grid)
     # per node: footing height of the nearest station - 0.15
     jj, ii = np.where(m)
@@ -787,12 +790,12 @@ def _cull(w, groups, instances, lift=None, under_deck=None):
     rep = {"deck_tris": 0, "instances": {}}
     Fs = [g["F"] for g in groups]
     U = shapely.union_all(Fs).buffer(0.5)
-    # surfaces at grade over the slab that the streetscape laid on the cut-level ground (paved yards, cycle paths,
-    # plot ground and their collision; r1: yard_asphalt / cycle_red 1.6-3.9 m over the tunnel road): lifted by the
-    # ground difference, vertices inside the footprint below its soffit only
-    rep["lifted_surface_vertices"] = 0
+    # surfaces that the streetscape laid on the cut-level ground inside the structure (paved yards, cycle paths,
+    # plot ground, verges of other roads and their collision; r1: yard_asphalt / cycle_red 1.6-3.9 m over the tunnel
+    # road): their triangles below the soffit go (lifting only the inside vertices made curtains at the portals, r2)
+    rep["dropped_surface_tris"] = 0
     run_ids = tuple(r["c"].id for g in groups for r in g["runs"])
-    Fl = [(g["F"].buffer(0.3), g) for g in groups]
+    Fl = [(g["F"].buffer(1.0), g) for g in groups]
     if lift is not None:
         for p in w.buf.parts:
             if (p.layer not in ("paved", "plot_ground", "collision", "road") or p.src.startswith(run_ids)
@@ -804,10 +807,12 @@ def _cull(w, groups, instances, lift=None, under_deck=None):
                     continue
                 idx = np.where(m)[0]
                 zs = np.array([g["zroad"](tuple(p.V[k, :2])) for k in idx]) + g["clear"]
-                low = p.V[idx, 2] < zs - 0.1
-                for k in idx[low]:
-                    p.V[k, 2] += lift(p.V[k, 0], p.V[k, 1])
-                rep["lifted_surface_vertices"] += int(low.sum())
+                bad_v = np.zeros(len(p.V), bool)
+                bad_v[idx[p.V[idx, 2] < zs - 0.1]] = True
+                bt = bad_v[p.T].any(axis=1)
+                if bt.any():
+                    rep["dropped_surface_tris"] += int(bt.sum())
+                    p.T = p.T[~bt]
     keep_parts = []
     for p in w.buf.parts:
         if p.layer == "bridge" and not p.src.startswith("tunnel") and p.src.endswith(TRIM_SUFFIX):
@@ -818,7 +823,8 @@ def _cull(w, groups, instances, lift=None, under_deck=None):
                 if inside.all():
                     continue
                 p.T = p.T[~inside]
-        keep_parts.append(p)
+        if len(p.T):
+            keep_parts.append(p)
     w.buf.parts[:] = keep_parts
     keep = []
     rep["lifted"] = {}
