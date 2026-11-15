@@ -142,6 +142,8 @@ jezdnia + opaska 5,0 + 3,2 = 8,2 m mieści się w 6,0–8,5 m.
 # testy (czysty Python)
 uv run --project tools/worldgen python -m pytest tests/gis -k "0218 or knyszyn" -q
 uv run --project tools/worldgen python tools/worldgen/roads/swept_path.py          # tabela §3
+# test_road_fidelity::test_report_not_stale: hash network.py w fidelity_qa.json (zachowanie bez zmian - regresja §5.2)
+uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c
 # nałożenie override na region knyszyn (dopisuje wpis do listy overrides:)
 $s = Get-Content tools/worldgen/roads/examples/knyszyn-roundabout-apron.yaml -Raw -Encoding utf8
 Add-Content Data/Regions/knyszyn/overrides.yaml -Value ("`n" + $s.Substring($s.IndexOf('  - id:')).TrimEnd()) -Encoding utf8
