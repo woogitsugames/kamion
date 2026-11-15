@@ -6,4 +6,5 @@
 - #65 SCAL z erratą (12/12 opisów, 5/5 cytatów + wynik negatywny Dz.U. 2022/1518; potwierdza ADR 0188).
 - #66 SCAL z erratą (FIX F1–F4 kompletny; 11/11 opisów; PX33 do usunięcia).
 - #99 SCAL z erratą (10/10 opisów; metoda B odtworzona; narożnik S wieżowca: brak masztu 6,5 m na KV 2019/2021).
-- NASTĘPNY KROK: PR reviews-0225 → main (tabela werdyktów + wnioski dla gry).
+- PR #105 reviews-0225 → main otwarty (8 raportów, komentarze w 8 PR).
+- NASTĘPNY KROK: lider: przejrzeć #105; scalić #62 #64 #65 #66 #99 (errata), #92 → FIX r2, zamknąć #55 #42.
