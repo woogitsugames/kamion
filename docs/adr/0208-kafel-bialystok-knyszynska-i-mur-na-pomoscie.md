@@ -69,8 +69,8 @@ batchingiem), bez telefonu — budżet urządzenia nie mierzony w tym zadaniu.
   balustrada wchodzi w pas — wycięty; mur pod wysokim pomostem — zostaje; płot na niskim pomoście — wycięty).
 - `pytest tests/gis` po scaleniu `origin/main`: **1240 ok, 3 skip, 3 xfail, 1 fail**
   (`pytest-r2.log`) — `test_road_fidelity::test_report_not_stale`: `fidelity_qa.json` regionu C ma stary hash
-  `build_world.py`. Ten sam test jest nieaktualny na `main` (hash w raporcie b9eeb00a…, plik ece4c8bc…), a gałąź
-  zmienia `build_world.py` o 5 linii (`preview_trees`, drugi powiat). Po `fidelity/run.py --region
+  `build_world.py` — gałąź zmienia ten plik o 5 linii (`preview_trees`, drugi powiat); na `main` test przechodzi
+  (9 ok, 1 xfail). Po `fidelity/run.py --region
   bialystok-industrial-c` w raporcie zmienił się tylko ten jeden hash (metryki regionu C bez zmian) i test
   przechodzi (`test_road_fidelity.py` + `test_knyszynska_0208.py`: 19 ok, 1 xfail). Pełny zestaw nie był
   powtarzany po tej zmianie.
@@ -83,12 +83,17 @@ batchingiem), bez telefonu — budżet urządzenia nie mierzony w tym zadaniu.
   2 m, przesunięcia −1,25 / 0 / +1,25 m, 4437 próbek: **0 bez kolizji jezdni, 0 przeszkód 0,3–4,5 m nad jezdnią**
   (wszystkie materiały LOD0 + `terrain_lod2`), skok kolizji na osi pasa ≤ 0,11 m / 2 m.
   `road_consistency_qa.json`: w paśmie trasy 3 `lane_blind_end` (drogi boczne) i 2 `obstacle_in_lane`
-  (`verge_grass` w pasie łańcucha 242989864 przy E 815–817, N −844 — sąsiednia łącznica, nie pas trasy; sweep
-  czysty, „Otwarte 9”); poza trasą 3 `obstacle_in_lane`, 2 `marking_off_carriageway`. `terrain_walls_qa`: 11 ścian > 0,15 m, max 0,67 m.
+  (`verge_grass` w pasie łańcucha 242989864 przy E 815–817, N −844 — 29,0 m od osi pasa trasy przy s ≈ 247 m,
+  czyli inna jezdnia w paśmie trasy; w r1 te same dwa przypadki były liczone jako poza trasą; sweep czysty,
+  „Otwarte 9”); poza trasą 3 `obstacle_in_lane`, 2 `marking_off_carriageway`. `terrain_walls_qa`: 11 ścian > 0,15 m, max 0,67 m.
 - **Szwy — geometria** (`route_sweep.py seam`, `seam_e_r2.txt`, `seam_w_r2.txt`; kolizja jezdni 0,5 m w głąb
   każdego kafla): E z kleeberga (świat z main): 13 dróg, **skok ≤ 0,03 m**; teren (`terrain_lod2`, 32 stacje)
   mediana 0,07 m, max 0,54 m. W z dk65-01 (świat z worktree `dk65-corridor-0205`, w main go nie ma): trasa
   (234919333) **0,07 m**; drogi boczne do 0,31 m (523816940), 0,19 m (196779645); teren mediana 0,15 m, max 1,28 m.
+- **Szew E — zbudowana jezdnia** (obecność `road_collision` wzdłuż y, 2 m w głąb każdego kafla): jezdnia
+  zachodnia + pas 561326924 razem 13,25 m po obu stronach; jezdnia wschodnia 11,5 m tu i 9,0 m w kleeberga
+  (ukośne zakończenie siatki przy krawędzi, pomiar zgrubny co 0,25 m). Szerokości są wyrównane w danych
+  wejściowych (test), a zbudowane przekroje zgadzają się w granicach tego pomiaru.
 - visual-qa Low overcast r1 + r2, oba regiony (`*-r2/vqa/Low-overcast/`): 8 kamer trasy knyszynska, 4 kamery
   szwów, rondo z góry; pary ortofoto | widok z góry `junctions-r1/`, `junctions-r2/` (9 punktów). Porównanie tylko
   z ortofoto — zdjęć właściciela z tego kafla nie ma w `art-source/world/refs/`.
