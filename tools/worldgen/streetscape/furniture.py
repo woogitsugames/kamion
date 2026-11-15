@@ -1070,6 +1070,9 @@ def cut_by(line, poly):
     return [p for p in getattr(g, "geoms", [g]) if p.geom_type == "LineString" and p.length > 1.0]
 
 
+_cut_by = cut_by
+
+
 def concrete_fence(lin, line, key, style_key):
     """Prefabricated concrete fence (ADR 0081, typical plot fence of the Bialystok industrial area): bays of
     S.CONCRETE_FENCE_POST between H-posts; every bay is level and steps at the posts with the ground (the plates are
@@ -1310,13 +1313,56 @@ def ramp_wall_keepout(net, r=2.5):
     return shapely.union_all(polys) if polys else None
 
 
-def fences(lin, src, origin, roads_poly, report, styles=None, net=None):
-    """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles)."""
+LOW_DECK_CLEAR_M = 1.5     # WORKING_VALUE (ADR 0208): a deck carriageway less than this above the ground beside it is a lane
+                           # a wall would stand in (the QA furniture_in_lane window is -0.3..4.5 m above the lane)
+
+
+def low_deck_keepout(lin, decks, clear=LOW_DECK_CLEAR_M):
+    """ADR 0208: plan polygon of the bridge-layer carriageway triangles that lie within `clear` of the ground beside
+    them - the deck ends at the abutments, where the width of the next way (lane gain) is already blended into the
+    deck. roads_poly is the road layer only, so a BDOT10k / OSM wall at the deck edge line was not cut there and stood
+    ~1 m high in the added lane (bialystok-maczka, E 919-926 N 30-31, ADR 0203 Otwarte 1). A wall under a deck that
+    clears it (> clear) is kept. None when nothing is that low."""
+    polys = []
+    for p in decks or []:
+        if not len(p.T):
+            continue
+        tri = p.V[p.T]
+        zg = lin.z(tri.mean(1)[:, :2])
+        low = tri[:, :, 2].min(1) - zg < clear
+        if low.any():
+            t2 = tri[low][:, :, :2]
+            q = shapely.polygons(np.concatenate([t2, t2[:, :1]], axis=1))
+            polys.extend(q[shapely.area(q) > 1e-4].tolist())
+    if not polys:
+        return None
+    return shapely.make_valid(shapely.union_all(polys, grid_size=0.01)).buffer(0.3)
+
+
+def fences(lin, src, origin, roads_poly, report, styles=None, net=None, decks=None):
+    """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles).
+    decks: bridge-layer carriageway parts (low_deck_keepout, ADR 0208)."""
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0, "retaining_on_ramp_wall_m": 0.0}
     ramp_cut = ramp_wall_keepout(net) if net is not None else None
     styles = styles or {}
     seen = set()
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
+    deck_cut = low_deck_keepout(lin, decks)
+    cut_deck = [0.0]
+
+    def cut_by(line, poly):            # the road cut, then the low deck ends (only where a part reaches one)
+        out = _cut_by(line, poly)
+        if poly is not cutter or deck_cut is None:
+            return out
+        res = []
+        for x in out:
+            if x.intersects(deck_cut):
+                y = _cut_by(x, deck_cut)
+                cut_deck[0] += x.length - sum(q.length for q in y)
+                res.extend(y)
+            else:
+                res.append(x)
+        return res
     for f in src["osm"]["ways"]:
         b = f["tags"].get("barrier")
         if b not in ("fence", "yes", "wall", "retaining_wall") or is_noise_wall(f["tags"]):
@@ -1351,6 +1397,8 @@ def fences(lin, src, origin, roads_poly, report, styles=None, net=None):
                 retaining(lin, lin.dens(sub, 1.0), f"bdot:{f['id']}")
                 n["retaining_m"] += sub.length
             n["retaining_on_ramp_wall_m"] += part.length - sum(x.length for x in cut_by(part, ramp_cut))
+    if cut_deck[0] > 0:
+        n["cut_on_low_deck_m"] = cut_deck[0]
     report["fences"] = {k: round(v) for k, v in n.items()}
     if styles:      # a styled way that is no longer in the data is reported, never silently dropped
         report["fences"]["styled_ways"] = sorted(seen)
