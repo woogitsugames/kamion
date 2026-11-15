@@ -49,3 +49,7 @@ Recenzja04/data/current-records-peer-review.json: pełne rekordy GDDKiA PASS. Sk
 ## Mapillary w przeglądarce — dwa kadry historyczne
 
 mapillary-browser-round2:2 kadry picturehoover z27.06.2020 obejrzane indywidualnie, tylko bezpieczne publiczne linki. Pierwszy przy oznaczeniu65/Obwodowa daje pobocze i nieregularne grupy drzew; drugi przy Rynku daje chodniki, schody i fasady, bez przypisania doDK65. Podkład jawnieOpenStreetMap. Oficjalna pomoc Mapillary podajeCC BY-SA4.0; pełneTerms niewczytane bezlogowania. 0API, pobrań obrazów, zapisanych zrzutów i tokenów. GPS kamery/azymuty oraz aktualność2026 UNVERIFIED; nie dowodzi robótS16. Główny manifest teraz10 rekordów.
+
+## Mapillary — drugi odcinek drzewa/bariery
+
+mapillary-browser-round3:2 kolejne indywidualnie obejrzane kadry picturehoover,27.06.2020, link-only CC BY-SA4.0 wg pomocy zround2. Ełcka: drzewa, kruszywo, trawiaste obniżenie i zjazd. Studzienna: bariery, łuk i czerwono-białe pionowe tablice; wygrodzenia2020 nie przypisano do S16 z2026. Filtr2024+ nie pokazał pokrycia w zbadanych widokach; nie twierdzimy braku nowszych zdjęć w całym korytarzu. GPS/kafle/km niepotwierdzone. Główny manifest12 rekordów,0nowych pobrań obrazów.
