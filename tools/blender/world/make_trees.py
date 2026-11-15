@@ -134,39 +134,56 @@ def bend_path(p0, d, L, n, rng, wobble, gravity=0.0):
     return pts
 
 
-def willow_leaf_atlas(size=256, seed=22027):
-    """Original prototype atlas: thin twigs and lanceolate leaves, RGBA uint8.
+def willow_leaf_tile(size, seed):
+    """One original twig study. No photo input; proportions WORKING_VALUE."""
+    rng=np.random.default_rng(seed)
+    yy,xx=np.mgrid[0:size,0:size].astype(float)
+    x=(xx+.5)/size; y=(yy+.5)/size
+    alpha=np.zeros((size,size),float)
+    # Fine central twig; varying curvature changes the silhouette of each tile.
+    stem_x=.5+rng.uniform(.015,.040)*np.sin(y*math.pi*rng.uniform(1.2,2.0))
+    stem=np.clip((.004-np.abs(x-stem_x))*size+.5,0.,1.)
+    alpha=np.maximum(alpha,stem*((y>.08)&(y<.92)))
+    count=int(rng.integers(11,15))
+    for i in range(count):
+        cy=.13+i*(.74/(count-1))+rng.uniform(-.012,.012)
+        for sign in (-1.,1.):
+            if rng.random()<.08:  # natural gaps, not a solid row on every twig
+                continue
+            cx=.5+sign*rng.uniform(.065,.14)
+            slope=sign*rng.uniform(.25,.60)
+            dx=x-cx; dy=y-cy-slope*dx
+            radius=np.sqrt((dx/rng.uniform(.07,.13))**2+(dy/rng.uniform(.023,.035))**2)
+            alpha=np.maximum(alpha,np.clip((1.-radius)*size*.025+.5,0.,1.))
+    tint=np.clip(1.+rng.normal(0.,.025,(size,size,1)),.92,1.08)
+    rgb=np.clip(np.array([79.,101.,57.])[None,None,:]*tint,0,255).astype(np.uint8)
+    return np.dstack((rgb,np.rint(alpha*255).astype(np.uint8)))
+
+
+def willow_leaf_atlas(size=512, seed=22027):
+    """Original four-variant twig atlas, RGBA uint8 (one shared material).
 
     Procedurally drawn from mathematical ellipses; no photo/scan input. The
     shape and colour are WORKING_VALUE, not a botanical or albedo measurement.
     Transparent margins reduce mip bleed and permit gaps between hanging twigs.
     """
-    if int(size) < 64:
-        raise ValueError("willow atlas size must be at least 64")
+    if int(size) < 128 or int(size)%2:
+        raise ValueError("willow atlas size must be even and at least 128")
     size=int(size)
-    rng=np.random.default_rng(seed)
-    yy,xx=np.mgrid[0:size,0:size].astype(float)
-    x=(xx+.5)/size; y=(yy+.5)/size
-    alpha=np.zeros((size,size),float)
-    # Fine, slightly bowed central twig, with margins at all four edges.
-    stem_x=.5+.028*np.sin(y*math.pi*1.5)
-    stem=np.clip((.004-np.abs(x-stem_x))*size+.5,0.,1.)
-    alpha=np.maximum(alpha,stem*((y>.08)&(y<.92)))
-    for i in range(13):
-        cy=.13+i*(.74/12.)+rng.uniform(-.008,.008)
-        for sign in (-1.,1.):
-            cx=.5+sign*rng.uniform(.075,.13)
-            slope=sign*rng.uniform(.32,.53)
-            dx=x-cx; dy=y-cy-slope*dx
-            # Narrow elongated foliage, anti-aliased by a one-pixel transition.
-            radius=np.sqrt((dx/rng.uniform(.08,.12))**2+(dy/rng.uniform(.025,.033))**2)
-            alpha=np.maximum(alpha,np.clip((1.-radius)*size*.025+.5,0.,1.))
-    rgb=np.empty((size,size,3),dtype=np.uint8)
-    # Slight deterministic, restrained within-card colour variation; WORKING_VALUE.
-    tint=np.clip(1.+rng.normal(0.,.025,(size,size,1)),.92,1.08)
-    rgb[:]=np.clip(np.array([79.,101.,57.])[None,None,:]*tint,0,255).astype(np.uint8)
-    rgba=np.dstack((rgb,np.rint(alpha*255).astype(np.uint8)))
+    cell=size//2
+    rgba=np.empty((size,size,4),dtype=np.uint8)
+    for i in range(4):
+        row,col=divmod(i,2)
+        rgba[row*cell:(row+1)*cell,col*cell:(col+1)*cell]=willow_leaf_tile(cell,seed+7919*i)
     return rgba
+
+
+def willow_card_uv(variant, mirror=False):
+    """One quarter of the shared atlas; transparent tile margins prevent bleed."""
+    row,col=divmod(int(variant)%4,2)
+    u0,u1=col*.5,(col+1)*.5
+    v0,v1=row*.5,(row+1)*.5
+    return ((u1,v1),(u0,v1),(u0,v0),(u1,v0)) if mirror else ((u0,v1),(u1,v1),(u1,v0),(u0,v0))
 
 
 def write_willow_leaf_atlas(path):
@@ -214,10 +231,11 @@ def willow_blueprint(height, variant=0):
             p = root*(1.-f)**2+2.*bend*f*(1.-f)+tip*f*f
             p = p + side*(H*rng.uniform(-.025,.025))
             drop = H*rng.uniform(.25,.52)
-            end = p + radial*(H*rng.uniform(.025,.075)) + side*(H*rng.uniform(-.025,.025))
-            end[2] = max(H*.12,p[2]-drop)
-            middle = (p+end)*.5 + radial*(H*rng.uniform(.01,.04))
-            width = H*rng.uniform(.045,.085)
+            end = p + radial*(H*rng.uniform(.01,.16)) + side*(H*rng.uniform(-.10,.10))
+            # A shared hard clamp created a flat hem (30/120 identical ends).
+            end[2] = max(H*rng.uniform(.09,.20),p[2]-drop)
+            middle = (p+end)*.5 + radial*(H*rng.uniform(.01,.045)) + side*(H*rng.uniform(-.035,.035))
+            width = H*rng.uniform(.035,.105)
             strands.append((p,middle,end,side,radial,width))
     return trunk, limbs, strands
 
@@ -245,8 +263,8 @@ def grow_willow(g, height, variant, lod):
             continue
         radial=horizontal/hnorm
         side=np.array([-radial[1],radial[0],0.])
-        for a,b in ((root,bend),(bend,tip)):
-            for across in (side,(side+np.array([0.,0.,.5]))/(1.25**.5)):
+        for band,(a,b) in enumerate(((root,bend),(bend,tip))):
+            for plane,across in enumerate((side,(side+np.array([0.,0.,.5]))/(1.25**.5))):
                 delta=across*(height*.055)
                 normal=np.cross(across,b-a)
                 norm=float(np.linalg.norm(normal))
@@ -254,22 +272,28 @@ def grow_willow(g, height, variant, lod):
                     continue
                 normal=normal/norm
                 g.quad("leaves_willow",V(a-delta),V(a+delta),V(b+delta),V(b-delta),
-                       ((0,1),(1,1),(1,0),(0,0)),V(normal))
+                       willow_card_uv(index*7+band*3+plane,mirror=(index+plane)%2==1),V(normal))
     for index,(top,middle,end,side,radial,width) in enumerate(strands):
         # LOD1 selects the same strand positions; no unrelated random redraw.
         if lod > 0 and index % 2 != 0:
             continue
-        for a,b in ((top,middle),(middle,end)):
+        angle=(((index*37)%101)/100.-.5)*.9
+        h1=side*math.cos(angle)+radial*math.sin(angle)
+        h2=side*math.cos(angle+1.05)+radial*math.sin(angle+1.05)
+        for band,(a,b) in enumerate(((top,middle),(middle,end))):
             # Two crossed, vertically hanging cards; gaps between strands remain.
-            for horizontal in (side, (side+radial)*(.5**.5)):
-                delta=horizontal*(width*.5)
+            for plane,horizontal in enumerate((h1,h2)):
+                # Taper segments asymmetrically rather than repeating rectangles.
+                a_width=width*(.48 if band==0 else .39)
+                b_width=width*(.39 if band==0 else .25)
+                da,db=horizontal*a_width,horizontal*b_width
                 normal=np.cross(horizontal,b-a)
                 norm=float(np.linalg.norm(normal))
                 if norm < 1e-8:
                     continue
                 normal=normal/norm
-                g.quad("leaves_willow", V(a-delta),V(a+delta),V(b+delta),V(b-delta),
-                       ((0,1),(1,1),(1,0),(0,0)),V(normal))
+                g.quad("leaves_willow", V(a-da),V(a+da),V(b+db),V(b-db),
+                       willow_card_uv(index*5+band*3+plane,mirror=(index+band+plane)%2==1),V(normal))
     return g
 
 
