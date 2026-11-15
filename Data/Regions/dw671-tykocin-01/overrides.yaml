@@ -30,4 +30,6 @@ overrides:
     verify: >-
       photos are 2019-2020, the orthophoto 2025 shows the same four device positions; the north-east approach is
       read from the orthophoto only. Open: guard rails and the red transverse strips before the crossing are not built.
-    set: {barrier: double_half, light: true, light_left: true, panel_margin_m: 1.5}
+      ADR 0268: guide_post red_white = the white posts with red bands along both verges of the approach on Mapillary
+      1832769196903759 (reference only).
+    set: {barrier: double_half, light: true, light_left: true, panel_margin_m: 1.5, guide_post: red_white}
