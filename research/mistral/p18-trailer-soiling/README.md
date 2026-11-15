@@ -8,7 +8,7 @@ Badanie dla naczepy fikcyjnej BEZ MARKI: firanka 13,6 m, dwuskrzydłowe tylne dr
 
 **Zdjęcia NIE są w repo:** katalog `files/` jest ignorowany; archiwum **`mistral-p18-trailer-soiling-files-v2.zip`** poza gitem — nazwa, rozmiar i sha256 w opisie PR.
 
-**Status po M61-FIX s21:** kadry z drzwiami dwuskrzydłowymi i brudem drogowym: **15** (17 z poziomem „ślad”) — kryterium ≥ 20 **niespełnione**; zimowe 3 (≥ 6 niespełnione); europejskie 3 pewne, 5–6 z zastrzeżeniami. Szczegóły i powody: §3.2 i §6. Statystyka §4 liczona tylko na tej klasie.
+**Status po M61-FIX s21:** kadry z drzwiami dwuskrzydłowymi i brudem drogowym: **15** (17 z poziomem „ślad”) — kryterium ≥ 20 **niespełnione**; zimowe 3 (≥ 6 niespełnione); europejskie 2 pewne, 5–6 z zastrzeżeniami. Bez 10 kadrów z Flickr (Openverse): 11 / 2 zimowe / 2 europejskie. Szczegóły i powody: §3.2 i §6. Statystyka §4 liczona tylko na tej klasie.
 
 ---
 
@@ -35,14 +35,14 @@ Kluczowe mechanizmy wg literatury (pełne cytaty w `manifest.csv` i `sources.md`
 | **Belka RUPD (pod progiem)** | **NAJWYŻSZA** — najbliżej jezdni, w zasięgu splash i filmu wody; maluje się pierwsza i najmocniej | jw. + spływ z błotników kół | Ekstrapolacja z literatury; potwierdzenie kadrów — patrz §3-4 |
 | **Lampy zespolone (nad progiem)** | **WYSOKA** — w strefie filmu dolnego; zabrudzenie degraduje światło i kamery | Gaylard 2019 („can compromise… sensor performance") | Udokumentowane dla lamp/kamer |
 | **Dolna część drzwi (od progu do ~40-50% wysokości)** | **WYSOKA, malejąca z wysokością** — film jednolity z aerozolu recyrkulacyjnego | JWEIA 2017 (wiry advectują spray); SAE 2016 (drobne entrained) | Udokumentowane jakościowo; liczby z kadrów — patrz §4 (ESTIMATED) |
-| **Górna połowa drzwi** | **NISKA wg literatury; kadry s21 temu przeczą** — po dłuższej trasie film jest na całej wysokości (9/13 kadrów, §4) | SAE 2016 (małe cząstki mniej entrained) | Udokumentowane pośrednio |
+| **Górna połowa drzwi** | **NISKA wg literatury; kadry s21 temu przeczą** — po dłuższej trasie film jest na całej wysokości (8/12 kadrów, §4) | SAE 2016 (małe cząstki mniej entrained) | Udokumentowane pośrednio |
 | **Uszczelka środkowa / rygle / zawiasy** | **ŚREDNIA** — zacieki startują w punktach zakłócenia przepływu i skroplin (rygle, zawiasy, narożniki); wycieki skoncentrowane na styku skrzydeł | mechanika filmu wody (Gaylard 2019); kształt z kadrów | Kształt: ESTIMATED z kadrów — §3-4 |
 | **Klamry/uchwyty/rygle (strefy dotykowe)** | **WYTARTE** — frajerski kontrast: brud wszędzie, ale uchwyty czystsze (używane przez kierowców) | brak w literaturze | ESTIMATED z kadrów — §3 |
 | **Taśmy odblaskowe (kontur)** | Brud osiada na nich jak na blasze, ale gdy są wypukłe/wytarte — jaśniejsze pasy | brak w literaturze | ESTIMATED z kadrów |
 
 ### 1.3 Rozkład zabrudzenia z wysokością
 
-W literaturze dostępnej otwarcie (abstrakty SAE/JWEIA, rozprawa Gaylarda) **nie znaleziono liczb „% pokrycia vs wysokość nad jezdnią"** dla naczep 13,6 m — schematy pokrycia w publikacjach to mapy konturowe (mocna dolna krawędź, gradient malejący z wysokością). Jakościowo: „The rear surfaces of blunt-ended vehicles… are vulnerable to the build-up of contaminants thrown up from wet road surfaces by their tyres" (Gaylard 2019). Liczbowe oszacowanie górnej granicy „filmu dolnego" dla naczepy — **ESTIMATED z kadrów, patrz §4 (z metodą)**.
+W literaturze dostępnej otwarcie (abstrakty SAE/JWEIA, rozprawa Gaylarda) **nie znaleziono liczb „% pokrycia vs wysokość nad jezdnią"** dla naczep 13,6 m — schematy pokrycia w publikacjach to mapy konturowe (mocna dolna krawędź, gradient malejący z wysokością). Jakościowo: „The rear surfaces of blunt-ended vehicles… are vulnerable to the build-up of contaminants thrown up from wet road surfaces by their tyres" (Gaylard 2019). M61-FIX s21: granicy „filmu dolnego” w metrach nie podaję — w 8/12 ocenialnych kadrów film sięga całej wysokości drzwi, w pozostałych zajmuje dolne ok. 10–33 % (ESTIMATED z kadrów, §4).
 
 ### 1.4 Wpływ prędkości i nawierzchni
 
@@ -78,7 +78,7 @@ W literaturze dostępnej otwarcie (abstrakty SAE/JWEIA, rozprawa Gaylarda) **nie
 
 ### 2.3 Implikacja artystyczna (barwa/faktura, lato vs zima)
 
-- **Lato:** spójny, jednolity film w dolnej połowie + mało zacieków; kolor szaro-beżowy z oliwkowym odcieniem; mikro-drobinki (szum) zamiast plam.
+- **Lato:** spójny, jednolity film w dolnej połowie + mało zacieków; kolor szaro-beżowy z oliwkowym odcieniem; mikro-drobinki (szum) zamiast plam. *(M61-FIX s21: „film w dolnej połowie” to opis autora M61; w kadrach s21 letni pył leży często na całej wysokości — §4.)*
 - **Zima (HIPOTEZA, UNVERIFIED na kadrach naczep — patrz §4 i §6 pkt 2):** mocniejszy kontrast — ciemnoszaro-oliwkowy film + **białe residuum solne** (po wyschnięciu) w strefach spływu + rdzawe przybłyski na elementach stalowych + szorstki piasek w dolnej strefie; zacieki liczniejsze i dłuższe (częste cykle mokro/sucho z solą).
 
 ---
@@ -111,12 +111,14 @@ Pogrubione = nowe kadry s21. Ponad recenzję s20 odrzuciłem trzy kadry, któryc
 |---|---|
 | ≥ 20 kadrów z drzwiami dwuskrzydłowymi i brudem drogowym | **NIE: 15** (17 z poziomem „ślad”) |
 | ≥ 6 zimowych | **NIE: 3** (118, 121, 176); 177 to przedwiośnie (kwiecień, roztopy) |
-| ≥ 6 europejskich | **NIE/GRANICZNIE: 3 pewne** (108 PL, 121 UK, 176 UK-ESTIMATED) + 177 (Rosja, Public Domain Mark) + 178 (kraj UNVERIFIED) = 5; z poziomem „ślad” (109, Francja) 6 |
+| ≥ 6 europejskich | **NIE: 2 pewne** (108 PL, 121 UK) + 176 (UK — ESTIMATED) + 177 (Rosja, Public Domain Mark) + 178 (kraj UNVERIFIED) = 5; z poziomem „ślad” (109, Francja) 6 |
 | ≥ 12 nowych kadrów drzwi dwuskrzydłowych z brudem | **NIE: 7** nowych w tej klasie (+ 6 nowych pomocniczych: 2 rolety, 3 konteksty, 1 nieoceniany) |
 | 0 szablonowych opisów | TAK (opisy pisane pojedynczo z obrazu) |
 | Statystyka bez kadrów czystych / bez drzwi | TAK (§4) |
 
-Dlaczego nie ma więcej: przejrzałem arkusze stykowe ok. 1 700 miniatur (Openverse: 5 serii zapytań po polsku, niemiecku, angielsku, francusku, rosyjsku, norwesku; Commons: kategorie tylnych widoków i naczep wg krajów, wyszukiwanie po tytułach, pliki autora serii z Kalifornii; Panoramax: zimowe sekwencje z Polski). Otwarte zdjęcia ciężarówek to prawie wyłącznie ujęcia z przodu i z boku; tył brudnej naczepy fotografuje się głównie wtedy, gdy ktoś napisał coś palcem w brudzie. Panoramax w Polsce zimą: w próbce sekwencji drogi lokalne bez ciężarówek w kadrze. Mapillary i KartaView nie były przeszukiwane pod tym kątem (brak wyszukiwania po treści) — to pozostaje luką.
+**Źródła nowych kadrów — uwaga:** 10 z 13 nowych kadrów pochodzi z Flickr (znalezione przez Openverse). Openverse jest dozwolony w `AGENT-RULES` p. 5 i w bloku M61-FIX, ale lista źródeł w zleceniu s21 wymienia tylko Commons, Panoramax, Mapillary, KartaView, OSM, GUGiK, ISAP, UNECE. Jeśli lider nie przyjmie Flickr/Openverse, zostaje: **11** kadrów klasy głównej, **2** zimowe (118, 121), **2** pewne europejskie (108, 121).
+
+Dlaczego nie ma więcej: obejrzałem na arkuszach stykowych ok. 1 000 miniatur (Openverse: 5 serii zapytań po polsku, niemiecku, angielsku, francusku, rosyjsku, norwesku — ok. 800 miniatur; Commons: ok. 130 miniatur z wyszukiwania i kategorii tylnych widoków oraz 20 plików autora serii z Kalifornii; Panoramax: 48 miniatur z zimowych sekwencji z Polski) oraz listy tytułów ok. 900 dalszych wyników Openverse. Pula ok. 550 plików z kategorii Commons „Trucks in snow” i naczep wg krajów (UK, Rosja, Niemcy, Finlandia, Francja, Norwegia, Polska i in.) została tylko WYLISTOWANA — miniatur w chwili otwarcia PR nie obejrzałem (throttling 429); wynik ewentualnego przeglądu dopiszę w komentarzu PR. Otwarte zdjęcia ciężarówek to prawie wyłącznie ujęcia z przodu i z boku; tył brudnej naczepy fotografuje się głównie wtedy, gdy ktoś napisał coś palcem w brudzie. Panoramax w Polsce zimą: w próbce sekwencji drogi lokalne bez ciężarówek w kadrze. Mapillary i KartaView nie były przeszukiwane pod tym kątem (brak wyszukiwania po treści) — to pozostaje luką.
 
 ### 3.3 Kandydaci odrzuceni przez M61 (P18-101…175, 44 wiersze)
 
@@ -131,16 +133,16 @@ Cechy każdego kadru odczytane ręcznie z obrazu są w `stats_frames.csv`; liczb
 | Próg / dolna rama brudne | 13/13 (n/o 2) | 15/15 (n/o 2) |
 | Belka przeciwwjazdowa / zderzak brudne | 10/11 (n/o 4) | 11/13 (n/o 4) |
 | Klosze lamp wyraźnie przybrudzone | 2/12 (n/o 3) — 108, 177 | 2/13 (n/o 4) |
-| Film na CAŁEJ wysokości drzwi | 9/13 (n/o 2) | 9/15 (n/o 2) |
+| Film na CAŁEJ wysokości drzwi | 8/12 (n/o 3) | 8/14 (n/o 3) |
 | Wycierki / napisy palcem | 5/14 (n/o 1) — 137, 158, 176, 177, 179 | 5/16 (n/o 1) |
 | Zacieki na skrzydło | mediana 0; zakres 0–10; ≥ 1 zaciek w 6/15 | mediana 0; ≥ 1 zaciek w 6/17 |
 | Zimowe (XII–II) | 3 | 3 |
-| Europa | 5 (3 pewne + Rosja/PDM + kraj UNVERIFIED) | 6 |
+| Europa | 5 (2 pewne + Rosja/PDM + 2 kraj ESTIMATED/UNVERIFIED) | 6 (3 pewne) |
 
 **Skąd startują zacieki** (6 kadrów z zaciekami): spod zawiasów i okuć rygli — 108 (rdzawe), 183, 184; od krawędzi skrzydła — 121; w dolnym pasie pod naklejkami i przy szczelinie — 178; na całej szerokości jako drobne smużenie po spływającej wodzie — 182. Długich, równych pasów przez całe drzwi nie ma w żadnym kadrze.
 
 **Dwa reżimy filmu** (zgodnie z obserwacją recenzji s20, teraz na większej próbie):
-- film na całej wysokości (9 kadrów: 108, 121, 136, 158, 176, 177, 179, 182, 183) — pojazdy po dłuższej jeździe; w 4 z nich są napisy palcem albo wycierki (158, 176, 177, 179);
+- film na całej wysokości (8 kadrów: 108, 121, 136, 158, 176, 177, 179, 182) — pojazdy po dłuższej jeździe; 183 nieoceniany (prawe skrzydło w odblasku); w 4 z nich są napisy palcem albo wycierki (158, 176, 177, 179);
 - tylko dolny pas, ok. 10–33 % wysokości (4 kadry: 118, 137, 143, 184) oraz poziom „ślad” (109, 155).
 
 **Kolor (słownie):** szary lub jasnoszary — 9/15 (118, 121, 136, 140, 143, 182, 183, 184 oraz białawoszary 137); szarobrązowy / szarobrunatny / beżowoszary — 6/15 (108, 158, 176, 177, 178, 179). Barwy ciepłe pojawiają się przy grubym filmie błotnym i pyle (176 zima w mieście, 177 roztopy na drodze z błotnistym poboczem), szarość przy cienkim filmie na białej lub jasnej blasze. Na 143 (pomarańczowe drzwi) i 158 (czerwone) barwy osadu nie da się pewnie oddzielić od lakieru.
@@ -166,14 +168,14 @@ Uzupełniająco: P18-177 (film błotny na całych drzwiach, zachlapane lampy —
 
 ## 6. Luki i ograniczenia
 
-1. **Kryteria liczbowe niespełnione**: 15 (17) zamiast ≥ 20 kadrów, 3 zimowe zamiast ≥ 6, 3 pewne europejskie (5–6 z zastrzeżeniami) zamiast ≥ 6. Z Polski jest nadal jeden kadr z brudem (108) i jeden czysty (107). Brak zimowego kadru z PL/DE/CZ/LT z drzwiami w rozdzielczości pozwalającej ocenić brud (186 — Niemcy, śnieżyca — ma ok. 150 px).
+1. **Kryteria liczbowe niespełnione**: 15 (17) zamiast ≥ 20 kadrów, 3 zimowe zamiast ≥ 6, 2 pewne europejskie (5–6 z zastrzeżeniami) zamiast ≥ 6. Z Polski jest nadal jeden kadr z brudem (108) i jeden czysty (107). Brak zimowego kadru z PL/DE/CZ/LT z drzwiami w rozdzielczości pozwalającej ocenić brud (186 — Niemcy, śnieżyca — ma ok. 150 px).
 2. **Biały osad solny na drzwiach naczepy — brak kadru** (tylko furgon 185 i niepewny 181). Zdania §2.2–2.3 o białym residuum traktować jako hipotezę z opisu chemii soli, nie jako obserwację: **UNVERIFIED**.
 3. **Barwa osadu**: nadal brak liczb CIELAB/albedo; z kadrów wynika tylko „szary przy cienkim filmie, szarobrunatny przy grubym” (ESTIMATED, n = 15, różne aparaty i światło — bez wartości RGB).
-4. **Rozkład z wysokością**: brak liczb z literatury (bez zmian). Z kadrów: film na całej wysokości w 9/13 ocenialnych — „górna połowa czysta” z wersji M61 jest **nieprawdziwa** dla pojazdów po trasie.
+4. **Rozkład z wysokością**: brak liczb z literatury (bez zmian). Z kadrów: film na całej wysokości w 8/12 ocenialnych — „górna połowa czysta” z wersji M61 jest **nieprawdziwa** dla pojazdów po trasie.
 5. **Literatura (M61-FIX pkt 10)**: P18-002 („trafiają próg i belkę”) i P18-005 („rośnie z prędkością i grubością filmu”) to ekstrapolacje autora → ESTIMATED; P18-012 (pył z Portugalii) i P18-018 (śnieg w Norwegii) to kontekst, nie dane o osadzie na pojeździe. §1 i §2 czytać z tym zastrzeżeniem (dopiski w tekście). Audyt s21: cytatu P18-004 nie dało się dziś sprawdzić (Crossref bez abstraktu), link P18-021 zwraca 403 klientowi automatycznemu — oba UNVERIFIED w dniu audytu.
 6. **Licencje nowych kadrów**: Flickr 6 × CC BY 2.0 i 3 × CC BY-SA 2.0 (sprawdzone na stronie zdjęcia: kod licencji 4 = BY, 5 = BY-SA), 3 × Commons CC BY-SA 4.0, **1 × Public Domain Mark (P18-177)** — poza listą CC0/BY/BY-SA, zostawiony jako referencja z jawnym oznaczeniem. Wszystkie BY-SA = referencja, nie tekstura.
 7. **Kraje ESTIMATED/UNVERIFIED**: 176 (UK z adresu „.co.uk”), 178 (brak danych), 179/180 (USA z kontekstu), 185 (brak), 186 (Niemcy z tytułu), 187 (UK z kontekstu).
-8. **Bias próbki**: 8 z 15 kadrów to Kalifornia latem i jesienią (sucho, pył), w większości jeden autor; kadry „z napisem palcem” są nadreprezentowane, bo właśnie takie tyły ludzie fotografują. Odsetków z §4 nie przenosić wprost na polską zimę.
+8. **Bias próbki**: 7 z 15 kadrów to Kalifornia latem i jesienią (sucho, pył), jeden autor (136, 137, 140, 158, 182, 183, 184); kadry „z napisem palcem” są nadreprezentowane, bo właśnie takie tyły ludzie fotografują. Odsetków z §4 nie przenosić wprost na polską zimę.
 9. **Rozdzielczość**: 143 (ok. 330 px drzwi), 177 (480 px), 176/179 (540–560 px) — poniżej wymaganego 1000 px; ≥ 800 px mają 108, 118, 136, 137, 182, 183, 184.
 10. **Daty**: 166 i 172 mają w opisie pliku inne daty niż w EXIF; przyjęto EXIF (odczyt własny z API Commons). Czas EXIF kadru 181 (00:29) jest niewiarygodny — pora dnia UNVERIFIED.
 

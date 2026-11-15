@@ -14,4 +14,4 @@ for name, rs in (("brud (bez poziomu ślad)", [r for r in rows if r['poziom'] ==
     print(f"  zacieki/skrzydło: mediana {statistics.median(z):g}, zakres {min(z):g}–{max(z):g}, kadrów z ≥1 zaciekiem: {sum(v > 0 for v in z)}/{len(z)}")
     print(f"  zimowe (XII–II): {sum(r['zimowy'] == 'tak' for r in rs)}")
     eu = [r for r in rs if r['europa'].startswith('tak')]
-    print(f"  Europa: {len(eu)} (pewne: {sum(r['europa'] == 'tak' for r in rs)}; + Rosja/PDM: {sum(r['europa'] == 'tak*' for r in rs)}; + kraj UNVERIFIED: {sum(r['europa'] == 'tak?' for r in rs)})")
+    print(f"  Europa: {len(eu)} (pewne: {sum(r['europa'] == 'tak' for r in rs)}; + Rosja/PDM: {sum(r['europa'] == 'tak*' for r in rs)}; + kraj ESTIMATED/UNVERIFIED: {sum(r['europa'] == 'tak?' for r in rs)})")
