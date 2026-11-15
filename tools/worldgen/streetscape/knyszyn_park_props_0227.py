@@ -29,6 +29,14 @@ LAYERS = ("buildings", "buildings_low")
 OBELISK = (760936.66, 612395.45)   # SOURCED OSM node/3047587676, identity ESTIMATED
 KING = (760959.0, 612427.0)         # ESTIMATED from GUGiK orthophoto
 FLAG = (760963.0, 612424.0)         # ESTIMATED, photo 8 / ortho
+# ESTIMATED from the 2025 orthophoto and photographs 1 and 8; the axis points
+# from the king toward the town-hall parking, not toward the fountain.
+KING_FORWARD = np.array([.58, .815], dtype=float)
+KING_FORWARD /= np.linalg.norm(KING_FORWARD)
+KING_TANGENT = np.array([KING_FORWARD[1], -KING_FORWARD[0]])
+KING_BLOCK_DISTANCE_M = 2.0         # WORKING_VALUE, photo 8
+KING_PLAZA_EPSG2180 = ((760955.5, 612433.2), (760964.8, 612428.25),
+                       (760959.0, 612417.65), (760951.75, 612423.8))
 # Candidate positions near, but outside, paths and central paving. Each is checked
 # against the authored path polygons at build time and is skipped if obstructing.
 BENCHES = ((760925., 612355.), (760930., 612365.), (760910., 612375.),
@@ -73,34 +81,36 @@ def _obelisk(acc, layer, at, z):
 
 def _king(acc, layer, at, z):
     # Stylised proxy, not a scan or a reconstruction of the artwork. The front
-    # faces the separate sundial block (-N). Dimensions are WORKING_VALUE.
-    _box(acc,layer,"plinth_grey",at,z,z+.18,1.05,.9)
-    _box(acc,layer,"plinth_grey",at,z+.18,z+1.05,.86,.73)
+    # faces the separate sundial block towards the town hall (ESTIMATED).
+    _box(acc,layer,"plinth_grey",at,z,z+.18,1.05,.9,KING_TANGENT)
+    _box(acc,layer,"plinth_grey",at,z+.18,z+1.05,.86,.73,KING_TANGENT)
     body = np.asarray(at, float)
+    def pos(x, forward): return body + KING_TANGENT*x + KING_FORWARD*forward
     bronze = "steel_painted"
     # The open silhouette is intentionally human: wide tapered cloak, a
     # narrower neck and head, and arms visible at either side of the torso.
     _frustum(acc,layer,bronze,body,z+1.05,z+2.64,1.26,.90)
-    _box(acc,layer,bronze,body,z+2.54,z+2.77,.45,.25)       # shoulders
+    _box(acc,layer,bronze,body,z+2.54,z+2.77,.45,.25,KING_TANGENT)  # shoulders
     for side in (-1, 1):
-        c = [body[0]+side*.46, body[1]-.22, z+2.15]
-        acc.box(layer,bronze,c,[.10,0,0],[0,.12,0],[-side*.055,0,.42],skip=(0,))
-    _box(acc,layer,bronze,body,z+2.72,z+2.84,.10,.10)     # neck
-    _box(acc,layer,bronze,body,z+2.82,z+3.18,.19,.17)     # head
-    _box(acc,layer,bronze,body,z+3.16,z+3.25,.22,.19)     # crown band
+        c = pos(side*.46,.22)
+        acc.box(layer,bronze,_p(c,z+2.15),np.r_[KING_TANGENT*.10,0],
+                np.r_[KING_FORWARD*.12,0],np.r_[-side*KING_TANGENT*.055,.42],skip=(0,))
+    _box(acc,layer,bronze,body,z+2.72,z+2.84,.10,.10,KING_TANGENT)  # neck
+    _box(acc,layer,bronze,body,z+2.82,z+3.18,.19,.17,KING_TANGENT)  # head
+    _box(acc,layer,bronze,body,z+3.16,z+3.25,.22,.19,KING_TANGENT)  # crown band
     # The narrow raised points make the crown readable even on the cheap LOD.
     # Keep the top at the earlier proxy's height; no emblem or lettering.
     for x in (-.15, 0., .15):
-        _box(acc,layer,bronze,body+[x,0.],z+3.25,z+3.39,.04,.16)
+        _box(acc,layer,bronze,pos(x,0),z+3.25,z+3.39,.04,.16,KING_TANGENT)
     if layer == "buildings":
         # Small projecting beard and hands add depth in the close High view.
-        _box(acc,layer,bronze,body+[0.,-.18],z+2.78,z+3.02,.12,.045)
+        _box(acc,layer,bronze,pos(0,.18),z+2.78,z+3.02,.12,.045,KING_TANGENT)
         for side in (-1, 1):
-            _box(acc,layer,bronze,body+[side*.51,-.23],z+1.72,z+1.88,.105,.13)
+            _box(acc,layer,bronze,pos(side*.51,.23),z+1.72,z+1.88,.105,.13,KING_TANGENT)
     # Separate sundial/plaque block on paving in front of figure, blank.
-    p=np.asarray(at)+[0.,-2.0]
-    _box(acc,layer,"plinth_grey",p,z,z+.75,.65,.40)
-    _box(acc,layer,"steel_painted",p+[0.,-.406],z+.22,z+.55,.45,.012)
+    p=body+KING_FORWARD*KING_BLOCK_DISTANCE_M
+    _box(acc,layer,"plinth_grey",p,z,z+.75,.65,.40,KING_TANGENT)
+    _box(acc,layer,"steel_painted",p+KING_FORWARD*.406,z+.22,z+.55,.45,.012,KING_TANGENT)
 
 
 def _flagpole(acc, layer, at, z):
@@ -153,6 +163,34 @@ def _footprint(center, tangent, toward, half_length, half_depth):
                      (half_length,half_depth),(-half_length,half_depth)]])
 
 
+def _king_plaza(acc, origin, zsurf):
+    """Estimated paved memorial forecourt, conformed to the visible ground.
+
+    GUGiK ortho supplies the outline; the narrow red border is a WORKING_VALUE
+    approximation of photo 1. No photograph is used as a texture or mesh.
+    """
+    poly = Polygon(np.asarray(KING_PLAZA_EPSG2180, float) - origin)
+    inner = poly.buffer(-.7, join_style="mitre")
+    ring = inner.difference(inner.buffer(-.12, join_style="mitre"))
+    tris = []
+    for mat, geom, offset in (("yard_paving", poly, .018), ("brick_red", ring, .023)):
+        for piece in getattr(geom, "geoms", [geom]):
+            if piece.geom_type != "Polygon" or piece.is_empty:
+                continue
+            for triangle in shapely.constrained_delaunay_triangles(piece).geoms:
+                xy = np.asarray(triangle.exterior.coords, float)[:3]
+                a, b = xy[1] - xy[0], xy[2] - xy[0]
+                if a[0]*b[1]-a[1]*b[0] < 0:
+                    xy = xy[::-1]
+                heights = np.asarray(zsurf(xy[:,0], xy[:,1]), float).reshape(-1)
+                if len(heights) != 3 or not np.isfinite(heights).all():
+                    return False
+                tris.append((mat, np.column_stack((xy, heights + offset))))
+    for mat, vertices in tris:
+        acc.add("paved", mat, vertices, [[0,1,2]])
+    return bool(tris)
+
+
 def build(buf, region, origin, overrides, zsmooth, report):
     """Build props; candidate benches/lamps stay clear of authored path polygons.
 
@@ -176,6 +214,7 @@ def build(buf, region, origin, overrides, zsmooth, report):
     def ground(p):
         return float(np.asarray(zsmooth(np.array([p[0]]),np.array([p[1]]))).ravel()[0])
 
+    result["king_plaza"] = "ESTIMATED" if _king_plaza(acc, origin, zsmooth) else "skipped_invalid_height"
     for xy, fn in ((OBELISK,_obelisk),(KING,_king),(FLAG,_flagpole)):
         p=np.asarray(xy,float)-origin; z=ground(p)
         if not math.isfinite(z):
@@ -185,8 +224,9 @@ def build(buf, region, origin, overrides, zsmooth, report):
             # Main stone shaft only; the low decorative steps remain traversable.
             _box(acc,"collision","collision_building",p,z-.1,z+3.2,.73,.73)
         elif fn is _king:
-            _box(acc,"collision","collision_building",p,z-.1,z+3.39,1.05,.90)
-            _box(acc,"collision","collision_building",p+[0.,-2.],z-.1,z+.75,.65,.40)
+            _box(acc,"collision","collision_building",p,z-.1,z+3.39,1.05,.90,KING_TANGENT)
+            _box(acc,"collision","collision_building",p+KING_FORWARD*KING_BLOCK_DISTANCE_M,
+                 z-.1,z+.75,.65,.40,KING_TANGENT)
         else:
             _box(acc,"collision","collision_steel",p,z-.1,z+7.,.065,.065)
     for kind, candidates in (("benches",BENCHES),("lamps",LAMPS)):
@@ -218,7 +258,8 @@ def build(buf, region, origin, overrides, zsmooth, report):
                 _box(acc,"collision","collision_steel",p,z-.1,z+3.95,.08,.08)
             result[kind].append({"at_epsg2180":list(xy),"distance_to_path_m":round(d,2),"confidence":"ESTIMATED"})
     # Low reuses materials already present in this chunk; High keeps the authored palette.
-    for old, new in {"bench_wood": "wood_planks", "paint_white_reflective": "plaster_white",
+    for old, new in {"bench_wood": "wood_planks", "paint_white_reflective": "plaster_light",
+                     "plaster_white": "plaster_light",
                      "plinth_grey": "plaster_grey", "steel_painted": "plinth_dark"}.items():
         parts = acc.d.pop(("buildings_low", old), [])
         if parts:

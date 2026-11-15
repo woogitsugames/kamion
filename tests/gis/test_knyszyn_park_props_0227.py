@@ -2,7 +2,7 @@
 from pathlib import Path
 
 import numpy as np
-from shapely.geometry import MultiPoint
+from shapely.geometry import MultiPoint, Polygon
 import yaml
 
 from streetscape import knyszyn_park_props_0227 as props
@@ -36,9 +36,9 @@ def test_anchors_clear_current_paths_and_geometry_is_finite():
     assert r["eagle"]=="omitted" and r["lighting"]=="no dynamic emission"
     assert len(r["benches"]) == 8 and len(r["lamps"]) == 5 and not r["refused"]
     assert all(1.2 <= x["distance_to_path_m"] <= 5.0 for x in r["benches"]+r["lamps"])
-    assert {p[0] for p in buf.parts}==set(props.LAYERS) | {"collision"}
+    assert {p[0] for p in buf.parts}==set(props.LAYERS) | {"collision", "paved"}
     low = {p[1] for p in buf.parts if p[0] == "buildings_low"}
-    assert not low & {"bench_wood", "paint_white_reflective", "plinth_grey", "steel_painted"}
+    assert not low & {"bench_wood", "paint_white_reflective", "plinth_grey", "steel_painted", "plaster_white"}
     assert {"bench_wood", "steel_painted"} <= {p[1] for p in buf.parts if p[0] == "buildings"}
     for layer,mat,v,t,src in buf.parts:
         assert np.isfinite(v).all() and t.min()>=0 and t.max()<len(v)
@@ -84,11 +84,33 @@ def test_king_proxy_has_crowned_head_and_cheaper_low_geometry():
                                         vertices[tris[:,2]]-vertices[tris[:,0]]), axis=1) > 1e-9).all()
         # Head and three separated crown tips make this a figure rather than a pillar.
         assert np.isclose(vertices[:,2].max(), 3.39)
-        tips = vertices[np.isclose(vertices[:,2], 3.39), 0]
+        tips = vertices[np.isclose(vertices[:,2], 3.39), :2] @ props.KING_TANGENT
         assert np.any(tips < -.1) and np.any(np.abs(tips) < .05) and np.any(tips > .1)
         # Arms extend forward and to both sides above the pedestal.
-        arms = vertices[(vertices[:,2] > 1.7) & (vertices[:,2] < 2.7) & (vertices[:,1] < -.3)]
-        assert arms[:,0].min() < -.4 and arms[:,0].max() > .4
+        arms = vertices[(vertices[:,2] > 1.7) & (vertices[:,2] < 2.7) &
+                        ((vertices[:,:2] @ props.KING_FORWARD) > .3)]
+        sides = arms[:,:2] @ props.KING_TANGENT
+        assert sides.min() < -.4 and sides.max() > .4
     assert outputs["buildings"] > outputs["buildings_low"]
     assert outputs["buildings"] <= 200 and outputs["buildings_low"] <= 160
+
+
+def test_memorial_forecourt_and_sundial_face_town_hall():
+    ovs=yaml.safe_load((ROOT/"Data/Regions/knyszyn/overrides.yaml").read_text(encoding="utf8"))["overrides"]
+    buf=Buffer(); r=props.build(buf,"knyszyn",ORIGIN,ovs,terrain,{})
+    assert r["king_plaza"] == "ESTIMATED"
+    plaza=Polygon(np.asarray(props.KING_PLAZA_EPSG2180)-ORIGIN).buffer(1e-7)
+    parts=[p for p in buf.parts if p[0]=="paved"]
+    assert {p[1] for p in parts} == {"yard_paving", "brick_red"}
+    for _,mat,v,t,_ in parts:
+        assert np.isfinite(v).all()
+        assert np.allclose(v[:,2], 125.018 if mat=="yard_paving" else 125.023)
+        assert all(plaza.covers(Polygon(v[tri,:2])) for tri in t)
+    # Third building-collision box is the separate sundial, aimed towards the
+    # hall. Its centre must coincide with the visible block, not the old -N position.
+    col=next(p for p in buf.parts if p[0]=="collision" and p[1]=="collision_building")
+    center=col[2][40:60,:2].mean(axis=0)
+    wanted=np.asarray(props.KING)-ORIGIN+props.KING_FORWARD*props.KING_BLOCK_DISTANCE_M
+    assert np.allclose(center,wanted)
+    assert plaza.covers(MultiPoint(col[2][40:60,:2]).convex_hull)
 
