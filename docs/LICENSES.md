@@ -563,9 +563,9 @@ Uwaga: wartości `licencja` są przepisane z manifestów pakietów, nie sprawdzo
 
 ## Pakiety research cloud2 (s21–s22) — pliki śledzone w repo, rejestr per plik (D10)
 
-Audyt maszynowy (`uv run --project tools/licenses python tools/licenses/audit.py -v`) na `main` @ `bfe10923f` (2026-11-15): 3639 zasobów, **142 bez wpisu** — wszystkie w czterech pakietach `research/cloud2/` (REVIEW s21 #103, FIX-1). Poniżej każdy plik osobno: źródło, licencja, autor. Żaden z tych plików nie trafia do buildu (zdjęcia = referencja wizualna, nie tekstura; ADR 0065).
+Audyt maszynowy (`uv run --project tools/licenses python tools/licenses/audit.py -v`) na `main` @ `bfe10923f` (2026-11-15): 3639 zasobów, **142 bez wpisu** — wszystkie w czterech pakietach katalogu research/cloud2 (REVIEW s21 #103, FIX-1). Poniżej każdy plik osobno: źródło, licencja, autor. Żaden z tych plików nie trafia do buildu (zdjęcia = referencja wizualna, nie tekstura; ADR 0065).
 
-Metoda (2026-11-15, klient HTTP `osm-research-client/1.0`):
+Metoda (2026-11-15, klient HTTP o nazwie ogólnej, bez nazwy projektu):
 - **Powiązanie plik → źródło:** sha256 pliku w repo = `sha256_w_galezi` w `files/jpg1600/INDEX.csv` pakietu albo = `sha256` wiersza `manifest.csv` (142/142 zgodne). Oryginałów nie pobierano ponownie — łańcuch kopia ≤ 1600 px → oryginał opiera się na `sha256_oryginalu` z INDEX/manifestu pakietu.
 - **Wikimedia Commons:** licencja i autor odczytane ponownie z `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=extmetadata&titles=File:…` (`LicenseShortName`, `Artist`).
 - **Panoramax:** licencja i autor odczytane ponownie z elementu STAC pod adresem z kolumny „Źródło” (`properties.license`, `providers[].name` z rolą `producer`); API zwraca identyfikator SPDX `CC-BY-SA-4.0`.
