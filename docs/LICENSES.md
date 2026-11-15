@@ -549,3 +549,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 02/europe-rear-round11/files/ER11-P01*.jpg:Jaggery, Commons/Geograph7602388, CC BY-SA2.0; zmniejszenie całego kadru i jawny crop dolnych drzwi, obie pochodne≤800px. Źródło/autor/data/oryginalnySHA w lokalnym manifeście. Jeden PENDING/AUX kadr, bez wzrostu kwalifikacjiM61; koordynator obejrzał oryginał i crop.
 
 03/fountain-active-round7:3 fotografieUrszulaCitkowska(2UM) iMartynaBielska/Onet(1), wyłącznie link-only, all rights reserved. DokładneURL obejrzane indywidualnie i niezależnie, Onet6/13 sprawdzony z podpisemKnyszyn. Bez lokalnych kopii fotografii/PDF/screenshotów; własne opisy, atrybucja i daty publikacji w manifestach.
+
+03/fountain-night-round8: EdytaRożko, NowyGoniecKnyszyńskiNr8(188),sierpień2020,s3, jedna fotografia wyłącznie link-only, all rights reserved. Ogląd w natywnym podglądziePDF przez2agentów, bez zapisu PDF/fotografii/screenshotów/cropów. Własne obserwacje, tytuł/strona i publiczny odnośnik w manifeście; brak ustalonej licencjiCC.

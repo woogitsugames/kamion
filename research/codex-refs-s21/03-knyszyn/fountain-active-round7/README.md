@@ -19,3 +19,5 @@ Snapshot oglądu: 2026-11-15T22:10:35+01:00 (Bruksela/CET). Cel: rzeczywiste str
 Serii 5400 (napis), 4982 i Gońca 2019 nie powtarzano; bombka 5501 nie jest wodą. Wyszukiwarka wskazała KOK artykuł 899 „Święto Gminy Knyszyn 2025”, lecz Chrome zwrócił ERR_CERT_DATE_INVALID; nie obchodzono ostrzeżenia, obrazu nie obejrzano/nie opisano. Trop „Knyszyn nocą w obiektywie Mariusza Olkowskiego” kierował na zmienną stronę archiwum 263, w której odczycie nie znaleziono tego tekstu; bez konkretnego kadru brak kwalifikacji nocnej.
 
 Następna luka: osobne rzeczywiste zdjęcie strug z nocną emisją i źródłowym podpisem Knyszyn. Nie przenosić planowanych dysz/obiegów z projektu 2019 do stanu wykonanego bez potwierdzenia.
+
+Późniejszy fountain-night-round8 dodał1nowy kadr nocny; nie należy do licznika3zdjęć tej porcji. Daty publikacji nie ustalają dnia pierwszego uruchomienia.
