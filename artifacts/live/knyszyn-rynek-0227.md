@@ -126,3 +126,7 @@
 - 2026-11-15 21:40 +01:00 — R4 i pełny GIS w toku (>14%). #97 OPEN, DIRTY, GIS FAILURE; orto GUGiK 2025 pokazuje stan sprzed ronda, warstwa 2026 dla punktu pusta, wymiary nowej wyspy niezweryfikowane.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r4.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r4.log -Tail 10`
 
+
+- 2026-11-15 21:45 +01:00 — R4 build i import OK, Low-clear w toku. Pełny GIS: 1410 passed, 43 skipped, 4 xfailed, 2 failed; kontrakt kamer naprawiony (3 testy passed), raport fidelity regionu C nieaktualny już na main, trwa pełne przeliczenie i test.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r4.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.done`
+
