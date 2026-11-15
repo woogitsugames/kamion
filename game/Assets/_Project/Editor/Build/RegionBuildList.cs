@@ -76,10 +76,15 @@ namespace Game.Editor.Build
                 string low = RegionScenes.ScenePathFor(id, RegionScenes.LowTier);
                 if (!sceneExists(low)) { missing?.Add(low); continue; }
                 if (!scenes.Contains(low)) scenes.Add(low);
+                // ADR 0235: the streamed tile scene goes with its region when it was imported (older imports: none).
+                string lowTile = RegionScenes.TileScenePathFor(id, RegionScenes.LowTier);
+                if (sceneExists(lowTile) && !scenes.Contains(lowTile)) scenes.Add(lowTile);
                 if (!withHigh) continue;
                 string high = RegionScenes.ScenePathFor(id, RegionScenes.HighTier);
                 if (!sceneExists(high)) { missingHigh?.Add(high); continue; }
                 if (!scenes.Contains(high)) scenes.Add(high);
+                string highTile = RegionScenes.TileScenePathFor(id, RegionScenes.HighTier);
+                if (sceneExists(highTile) && !scenes.Contains(highTile)) scenes.Add(highTile);
             }
             return scenes;
         }

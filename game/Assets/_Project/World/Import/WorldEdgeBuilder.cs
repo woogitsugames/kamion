@@ -132,6 +132,9 @@ namespace Game.World.Import
             amr.shadowCastingMode = ShadowCastingMode.Off;
             amr.lightProbeUsage = LightProbeUsage.Off;
             amr.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            // ADR 0235: the same apron cut into four sides (Apron_N/E/S/W, saved inactive) so the streamer can hide
+            // only the side where a neighbouring tile is loaded. "Apron" itself stays the default (contract ADR 0085).
+            BuildApronPieces(mesh, edge, amr.sharedMaterials, min, max, r.Dir);
 
             // ---- far-field backdrop sectors (ADR 0085) ----
             int farTris = BuildFarField(r, edge, tier, min, max);
@@ -194,6 +197,76 @@ namespace Game.World.Import
             EditorUtility.SetDirty(host);
             Debug.Log($"[IMPORT] world edge (tier {tier}): bounds E {min.x:F0}..{max.x:F0} N {min.y:F0}..{max.y:F0}, {exits.Count} roads leave the region, " +
                       $"{raw.Count} graph closures {ClosureSetbackM:F0} m inside resolved to {closures.Count} (one list: colliders = boards), in {groups.Count} render groups ({closureTris} tris), {stubs.Count} road stubs, apron {mesh.vertexCount} verts to {ApronReachM:F0} m, far-field {farTris} tris");
+        }
+
+        static readonly Streaming.TileSide[] k_ApronSides = { Streaming.TileSide.N, Streaming.TileSide.E, Streaming.TileSide.S, Streaming.TileSide.W };
+
+        /// <summary>
+        /// Splits the apron mesh by side (ADR 0235): each triangle goes to the side its centroid lies beyond
+        /// (<see cref="Streaming.EdgeSides.ApronSide"/>, corners split diagonally; the ring just inside the edge goes to the
+        /// nearest side). One sub-asset mesh per side in Meshes/world_edge_sides.asset, updated in place; objects inactive.
+        /// </summary>
+        static void BuildApronPieces(Mesh src, Transform edge, Material[] mats, Vector2 min, Vector2 max, string dir)
+        {
+            string path = $"{dir}/Meshes/world_edge_sides.asset";
+            var host = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (host == null) { host = new Mesh { name = "world_edge_sides" }; AssetDatabase.CreateAsset(host, path); }
+            var existing = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Mesh>().Where(m => m != host).ToDictionary(m => m.name, m => m);
+            var v = src.vertices;
+            var nrm = src.normals;
+            var col = src.colors32;
+            var uv0 = new List<Vector2>(); src.GetUVs(0, uv0);
+            var uv1 = new List<Vector2>(); src.GetUVs(1, uv1);
+            int subs = src.subMeshCount;
+            var tris = new int[subs][];
+            for (int k = 0; k < subs; k++) tris[k] = src.GetTriangles(k);
+            foreach (var side in k_ApronSides)
+            {
+                var remap = new Dictionary<int, int>();
+                var outTris = new List<int>[subs];
+                for (int k = 0; k < subs; k++)
+                {
+                    outTris[k] = new List<int>();
+                    var t = tris[k];
+                    for (int i = 0; i + 2 < t.Length; i += 3)
+                    {
+                        Vector3 c = (v[t[i]] + v[t[i + 1]] + v[t[i + 2]]) / 3f;
+                        var ts = Streaming.EdgeSides.ApronSide(c.x, c.z, min.x, min.y, max.x, max.y);
+                        if (ts == Streaming.TileSide.None) ts = Streaming.EdgeSides.NearestSide(c.x, c.z, min.x, min.y, max.x, max.y);
+                        if (ts != side) continue;
+                        for (int j = 0; j < 3; j++)
+                        {
+                            if (!remap.TryGetValue(t[i + j], out int ni)) { ni = remap.Count; remap.Add(t[i + j], ni); }
+                            outTris[k].Add(ni);
+                        }
+                    }
+                }
+                string name = "apron_" + side;
+                if (!existing.TryGetValue(name, out var m)) { m = new Mesh { name = name }; AssetDatabase.AddObjectToAsset(m, host); }
+                m.Clear();
+                m.indexFormat = src.indexFormat;
+                var order = new int[remap.Count];
+                foreach (var kv in remap) order[kv.Value] = kv.Key;
+                m.SetVertices(order.Select(i => v[i]).ToArray());
+                if (nrm.Length == v.Length) m.SetNormals(order.Select(i => nrm[i]).ToArray());
+                if (col.Length == v.Length) m.SetColors(order.Select(i => col[i]).ToArray());
+                if (uv0.Count == v.Length) m.SetUVs(0, order.Select(i => uv0[i]).ToArray());
+                if (uv1.Count == v.Length) m.SetUVs(1, order.Select(i => uv1[i]).ToArray());
+                m.subMeshCount = subs;
+                for (int k = 0; k < subs; k++) m.SetTriangles(outTris[k], k, false);
+                m.RecalculateBounds();
+                EditorUtility.SetDirty(m);
+                var go = new GameObject("Apron_" + side);
+                go.transform.SetParent(edge, false);
+                go.AddComponent<MeshFilter>().sharedMesh = m;
+                var mr = go.AddComponent<MeshRenderer>();
+                mr.sharedMaterials = mats;
+                mr.shadowCastingMode = ShadowCastingMode.Off;
+                mr.lightProbeUsage = LightProbeUsage.Off;
+                mr.reflectionProbeUsage = ReflectionProbeUsage.Off;
+                go.SetActive(false);
+            }
+            EditorUtility.SetDirty(host);
         }
 
         /// <summary>Node of the far-field GLB with the tall ring objects kept visible beyond the far plane (ADR 0141).</summary>

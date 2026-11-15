@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Game.Editor.Build;
 using Game.World;
 using Game.World.Streaming;
 using NUnit.Framework;
@@ -423,6 +424,37 @@ namespace Game.Tests
             open[1] = true;
             Assert.IsTrue(EdgeSides.GroupMayHide(-10f, 950f, 40f, 970f, e, n, open, 3));
             Assert.IsFalse(EdgeSides.GroupMayHide(-900f, -900f, -800f, -800f, e, n, open, 3), "group with no known closure stays");
+        }
+
+        // ------------------------------------------------------------------ scenes in the build
+
+        [Test]
+        public void TileSceneNames_AndBuildList_CarryTheTileSceneWithItsRegion()
+        {
+            Assert.AreEqual("World_dk65-04_Tile", RegionScenes.TileSceneNameFor("dk65-04"));
+            Assert.AreEqual("WorldC_High_Tile", RegionScenes.TileSceneNameFor(RegionScenes.RegionC, RegionScenes.HighTier));
+            Assert.AreEqual("Assets/_Generated/World/dk65-04/World_dk65-04_Tile.unity", RegionScenes.TileScenePathFor("dk65-04"));
+            var have = new HashSet<string>
+            {
+                RegionScenes.ScenePathFor("dk65-03"), RegionScenes.ScenePathFor("dk65-04"), RegionScenes.TileScenePathFor("dk65-04"),
+            };
+            var missing = new List<string>();
+            var scenes = RegionBuildList.ComposeScenes(new[] { "Assets/Boot.unity" }, new[] { "dk65-03", "dk65-04" }, false, have.Contains, missing);
+            CollectionAssert.AreEqual(new[] { "Assets/Boot.unity", RegionScenes.ScenePathFor("dk65-03"), RegionScenes.ScenePathFor("dk65-04"),
+                RegionScenes.TileScenePathFor("dk65-04") }, scenes, "dk65-03 imported before ADR 0235 has no tile scene: no error");
+            Assert.IsEmpty(missing);
+        }
+
+        [Test]
+        public void UnavailableTile_IsNeverLoaded_AndItsSeamStaysClosed()
+        {
+            var g = Grid(2, 1);
+            var p = new StreamingPolicy(g, new StreamingSettings());
+            p.InitResident(0);
+            p.SetUnavailable(1);
+            var cmd = new StreamCommand[8];
+            Assert.AreEqual(0, p.Decide(2000, 1024, 25f, 0f, cmd));
+            Assert.IsFalse(p.NeighborReady(0, TileSide.E));
         }
     }
 }

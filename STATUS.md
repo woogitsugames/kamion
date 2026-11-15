@@ -9,3 +9,6 @@
 - [krok 3] `WorldStreamer` (LoadSceneAsync Additive, allowSceneActivation, aktywacja chunków ≤ 2 ms/klatkę, cooking async
   `WorldCollisionCooker.BeginCook/PollCook`, szwy otwierane dopiero gdy oba kafle Ready, rebase originu w FixedUpdate),
   `RegionScenes.TileSceneNameFor`. NASTĘPNY KROK: integracja (bootstrap, safety net, kamera, autopilot) + import `_Tile`.
+- [krok 4] Import: scena `World_<id>[_High]_Tile` (WorldSceneBuilder.BuildTileScene), `Apron_N/E/S/W` (WorldEdgeBuilder),
+  sky bake na scenach `_Tile`, `RegionBuildList` dokłada `_Tile`; PlayMode `WorldStreamingPlayModeTests` (dk65-03→04).
+- NASTĘPNY KROK: ADR 0235 + PR.
