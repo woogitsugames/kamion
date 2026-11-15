@@ -108,6 +108,7 @@ import 9–10 min, visual-qa 20–35 s na tier. High tylko na ostatnim kaflu (zg
 ## Walidacja
 - `tests/gis/test_dk65_seams_0207.py` 9/9: szwy 01→02→03→04→05 (ten sam way, ta sama szerokość i linie) + jeden
   przekrój Ełckiej w 02–05 + punkty trasy na szwach < 2 m (9 testów); `tests/gis/test_edge_lines_0205.py` 4/4. Overrides: 4 + 1 + 1 + 1 zastosowane, 0 stale.
+  Pliki iterujące po regionach: `test_buildings_r9`, `test_fab_grass_surface`, `test_build_idempotence` + powyższe = 35 passed (192 s).
   Pełny `pytest tests/gis` i EditMode nie uruchamiane (zmiana = dane regionów + test; kod generatora bez zmian).
 - Pętla wizualna: pary render z góry | ortofoto `artifacts/dk65-tiles-0207/dk65-0N/r2/view/pair-top-*.jpg` (20 par),
   widoki kierowcy `low-drive-*.jpg`, `low-rev-*.jpg`, `grid-drive*.jpg`; obejrzane wszystkie 20 par (część w siatkach

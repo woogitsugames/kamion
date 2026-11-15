@@ -9,3 +9,4 @@
 - NASTĘPNY KROK: po `CHAIN DONE r2 dk65-05` w logs/chain.status: `uv run --project tools/worldgen python artifacts/dk65-tiles-0207/tools/pair.py dk65-0N r2`, obejrzeć, sekcje ADR 03–05, pytest.
 - 03:2x: 03/04/05 import + vqa Low (05 też High) OK: WORLD_MEMORY Low/High 03 50,5/131,7; 04 76,1/181,5; 05 75,5/176,5 MB. Pary góra/ortofoto obejrzane, ADR 0207 kompletny (sekcje 02–05, budżet, otwarte). pytest seams+edge 9/9.
 - KONIEC. Dla lidera: `git merge --no-ff origin/dk65-tiles-0207`; visual-critic na `artifacts/dk65-tiles-0207/dk65-0N/r2/view/`; pytania właściciela: S19 w Fastach (OSM 2025 vs orto 2024), plac budowy przy Chabrowej.
+- 03:4x: pytest plików 35 passed; ADR uzupełniony (sprzeczność szerokość/linie Ełckiej, brak etapu wody, DK65 primary vs orto). KONIEC.
