@@ -1,0 +1,38 @@
+# Authored overrides of region dk65-02 (ADR 0207). Every entry survives a re-import. Targets are OSM ways (way-level, so
+# the same entry can be repeated verbatim in the neighbouring tile that shares the way - seam continuity). Source: GUGiK
+# orthophoto 2024-05-27 0.25 m (Data/raw/derived/dk65-02/ortho_0p25m.tif) read on straightened strips along
+# route_start.json (artifacts/dk65-tiles-0207/dk65-02/ortho/strip_*.jpg, mosaic_*.jpg, xsec.jpg; reading +-0.4 m,
+# WORKING_VALUE). No lettering, no brands.
+overrides:
+  # Szosa Knyszyńska s 0-552 m: same way as the north end of dk65-01 (override knyszynska-xsec-e there: edge lines both,
+  # width as BDOT10k 6.5 m). Orthophoto here 6.4-6.6 m between the asphalt edges, solid edge lines both sides.
+  - id: dk65-02-knyszynska-396566354
+    target: {osm_way: 396566354}
+    reason: "Orthophoto s 0-552 m: asphalt 6.4-6.6 m (BDOT10k 6.5 m kept = seam with dk65-01), solid edge lines both sides."
+    confidence: medium
+    verify: owner drive
+    set: {edge_lines: both}
+  # Fasty (50 km/h) s 554-1458 m incl. the S19 viaduct crossing and the Dzikowska junction: edge lines visible on the
+  # mosaics; asphalt 6.4-7.4 m at s 700/1150/1350 (shoulders and junction mouths blur the edge) -> BDOT10k 6.5 m kept.
+  - id: dk65-02-fasty-edge-lines
+    target: {osm_way: [1321811066, 1321811065, 1442886950, 1442886949, 234919340, 716806122]}
+    reason: "Orthophoto s 554-1458 m: solid edge lines both sides; width not re-set (6.4-7.4 m read, BDOT10k 6.5 m)."
+    confidence: low
+    verify: owner drive
+    set: {edge_lines: both}
+  # Bridge over the Supraśl (way 41533342, s 1460-1546 m): railings 10.5 m apart, carriageway between kerb strips ~9 m;
+  # set 7.5 m as the transition to Ełcka (WORKING_VALUE).
+  - id: dk65-02-supraslbridge
+    target: {osm_way: 41533342}
+    reason: "Orthophoto: bridge deck 10.5 m between railings, carriageway ~9 m incl. strips; 7.5 m = Ełcka carriageway (WORKING_VALUE)."
+    confidence: low
+    verify: owner photo of the bridge
+    set: {width: 7.5, edge_lines: both}
+  # Ełcka (90 km/h) s 1548-2400 m and on in dk65-03/-04 (same ways): asphalt 7.5-8.0 m (s 1950: edges +5.0/-3.0 m from the
+  # lane line, centre line +1.0 m), edge lines ~7.5 m apart; BDOT10k 6.5 m is too narrow here.
+  - id: dk65-elcka-xsec
+    target: {osm_way: [716806121, 1024956365]}
+    reason: "Orthophoto s 1548-2400 m: asphalt 7.5-8.0 m, solid edge lines both sides ~7.5 m apart (BDOT10k 6.5 m)."
+    confidence: medium
+    verify: owner drive / owner photo of Ełcka
+    set: {width: 7.6, edge_lines: both}

@@ -1,0 +1,298 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0150",
+   "look_at": [
+    245.979,
+    -947.565,
+    124.363
+   ],
+   "note": "driver eye 2.5 m, control route s = 150 m of 2402 m (Szosa Knyszyńska)",
+   "pos": [
+    303.024,
+    -966.224,
+    126.493
+   ],
+   "route_s_m": 150.135,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0450",
+   "look_at": [
+    -37.019,
+    -847.223,
+    118.659
+   ],
+   "note": "driver eye 2.5 m, control route s = 450 m of 2402 m (Szosa Knyszyńska)",
+   "pos": [
+    19.908,
+    -866.17,
+    120.796
+   ],
+   "route_s_m": 450.406,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0751",
+   "look_at": [
+    -311.695,
+    -725.997,
+    116.768
+   ],
+   "note": "driver eye 2.5 m, control route s = 751 m of 2402 m (Szosa Knyszyńska)",
+   "pos": [
+    -256.363,
+    -749.245,
+    118.541
+   ],
+   "route_s_m": 750.676,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1051",
+   "look_at": [
+    -585.608,
+    -602.989,
+    115.427
+   ],
+   "note": "driver eye 2.5 m, control route s = 1051 m of 2402 m (Szosa Knyszyńska)",
+   "pos": [
+    -530.347,
+    -626.375,
+    116.908
+   ],
+   "route_s_m": 1050.946,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1351",
+   "look_at": [
+    -812.336,
+    -419.226,
+    116.946
+   ],
+   "note": "driver eye 2.5 m, control route s = 1351 m of 2402 m (Szosa Knyszyńska)",
+   "pos": [
+    -780.915,
+    -470.007,
+    117.258
+   ],
+   "route_s_m": 1351.217,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1651",
+   "look_at": [
+    -902.47,
+    -132.932,
+    116.064
+   ],
+   "note": "driver eye 2.5 m, control route s = 1651 m of 2402 m (unnamed)",
+   "pos": [
+    -884.096,
+    -190.04,
+    117.398
+   ],
+   "route_s_m": 1651.487,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1952",
+   "look_at": [
+    -956.526,
+    162.379,
+    115.239
+   ],
+   "note": "driver eye 2.5 m, control route s = 1952 m of 2402 m (Ełcka)",
+   "pos": [
+    -944.408,
+    103.589,
+    116.402
+   ],
+   "route_s_m": 1951.758,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2252",
+   "look_at": [
+    -1008.422,
+    458.131,
+    115.339
+   ],
+   "note": "driver eye 2.5 m, control route s = 2252 m of 2402 m (Ełcka)",
+   "pos": [
+    -996.304,
+    399.341,
+    116.685
+   ],
+   "route_s_m": 2252.028,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_south",
+   "look_at": [
+    405.9,
+    -905.9,
+    -57021.364
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 40 m: Szosa Knyszynska at the seam with dk65-01 (6.5 m, edge lines); pair = ortho/top_seam_south.jpg",
+   "pos": [
+    405.9,
+    -1005.9,
+    274.357
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_s19",
+   "look_at": [
+    -420.1,
+    -575.4,
+    -57026.42
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 930 m: S19 viaduct over Szosa Knyszynska (OSM 2025; NOT on the 2024-05-27 orthophoto - source-date conflict); pair = ortho/top_s19.jpg",
+   "pos": [
+    -420.1,
+    -675.4,
+    269.302
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_dzikowska",
+   "look_at": [
+    -740.7,
+    -414.6,
+    -57031.689
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 1290 m: junction with Dzikowska (OSM node 1197260556); pair = ortho/top_dzikowska.jpg",
+   "pos": [
+    -740.7,
+    -514.6,
+    264.032
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_bridge",
+   "look_at": [
+    -840.4,
+    -233.3,
+    -57035.558
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 1500 m: bridge (way 41533342) over the railway; pair = ortho/top_bridge.jpg",
+   "pos": [
+    -840.4,
+    -333.3,
+    260.163
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_elcka",
+   "look_at": [
+    -953.4,
+    253.1,
+    -57031.688
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 2000 m: Elcka 90 km/h, cross-section 7.6 m with edge lines; pair = ortho/top_elcka.jpg",
+   "pos": [
+    -953.4,
+    153.1,
+    264.034
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_west",
+   "look_at": [
+    -1017.3,
+    617.6,
+    -57031.737
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 2370 m: Elcka at the seam with dk65-03; pair = ortho/top_seam_west.jpg",
+   "pos": [
+    -1017.3,
+    517.6,
+    263.984
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_s19_approach",
+   "look_at": [
+    -410.551,
+    -678.813,
+    115.385
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 820 m: approach to the S19 viaduct",
+   "pos": [
+    -319.7,
+    -720.6,
+    118.003
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_bridge_approach",
+   "look_at": [
+    -850.851,
+    -337.574,
+    115.363
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 1400 m: approach to the railway bridge",
+   "pos": [
+    -806.7,
+    -427.3,
+    117.981
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rev_elcka",
+   "look_at": [
+    -988.007,
+    350.089,
+    114.061
+   ],
+   "note": "place camera: driver eye 2.5 m, against the route, route s = 2300 m: Elcka towards Bialystok",
+   "pos": [
+    -1005.2,
+    448.6,
+    116.679
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 264.162,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-02",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

@@ -112,6 +112,46 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0204, owner D64; tile = lattice (-8,7) of the ADR 0203 plan)",
     ),
+    # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
+    "dk65-02": Region(
+        id="dk65-02",
+        title="DK65 korytarz 02 — Szosa Knyszyńska / Ełcka przez Fasty (południe), most km 10,85 (gm. Dobrzyniewo Duże)",
+        candidate="F_dk65_corridor",
+        bbox=(768779.0, 597247.0, 770827.0, 599295.0),
+        origin=(769803.0, 598271.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-4,1) of the ADR 0203 plan)",
+    ),
+    # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,1) of the ADR 0203 plan, route variant A km 11.80-12.28. Powiat 2002.
+    "dk65-03": Region(
+        id="dk65-03",
+        title="DK65 korytarz 03 — Ełcka na północ od Fast (gm. Dobrzyniewo Duże)",
+        candidate="F_dk65_corridor",
+        bbox=(766731.0, 597247.0, 768779.0, 599295.0),
+        origin=(767755.0, 598271.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,1) of the ADR 0203 plan)",
+    ),
+    # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,2) of the ADR 0203 plan, route variant A km 12.28-14.36. Powiat 2002.
+    "dk65-04": Region(
+        id="dk65-04",
+        title="DK65 korytarz 04 — Ełcka przez Fasty (północ): Białostocka/Kościelna, Szkolna (gm. Dobrzyniewo Duże)",
+        candidate="F_dk65_corridor",
+        bbox=(766731.0, 599295.0, 768779.0, 601343.0),
+        origin=(767755.0, 600319.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,2) of the ADR 0203 plan)",
+    ),
+    # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,3) of the ADR 0203 plan, route variant A km 14.36-16.56. Powiat 2002.
+    "dk65-05": Region(
+        id="dk65-05",
+        title="DK65 korytarz 05 — Ełcka/Studzienna przez Dobrzyniewo Duże (gm. Dobrzyniewo Duże)",
+        candidate="F_dk65_corridor",
+        bbox=(766731.0, 601343.0, 768779.0, 603391.0),
+        origin=(767755.0, 602367.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,3) of the ADR 0203 plan)",
+    ),
 }
 
 TILE_SIZE_M = 2048.0
