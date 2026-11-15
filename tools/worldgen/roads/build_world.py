@@ -45,13 +45,14 @@ from streetscape import export as PR      # noqa: E402
 # plots (ADR 0124): the kit geometry of the house plots (fences, gates, garden plants; one material) - LOD0 / LOD1 like
 # `furniture`, a shadow caster, with a shorter range in the mirror cameras (Game.World.PlotViewCull)
 LAYERS = ("road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_low", "furniture", "plots", "plots_low", "wires",
-          "water", "collision")
+          "water", "banks", "banks_low", "collision")
 # water (ADR 0210): only regions with the opt-in water stage have it; elsewhere the layer is empty and nothing changes
+# banks / banks_low (ADR 0213): reed belt ribbons of the water stage (High / Low-Medium variant, node `banks`), same rule
 # plots_low (ADR 0132): the plot kit of the Low / Medium chunk variant (streetscape.plots.Kit.low) - written there under
 # the node name `plots`; the High GLB carries `plots` only
 NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"), ("plot_ground", "plot_ground"),
          ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"), ("plots", "plots"),
-         ("wires", "wires"), ("water", "water"), ("collision", "road_collision"))
+         ("wires", "wires"), ("water", "water"), ("banks", "banks"), ("collision", "road_collision"))
 
 
 def DEFAULT_OUT(region_id):
@@ -180,8 +181,16 @@ _GLB_MATS = None
 # brown-olive water, sRGB ~30/34/28 in the open channel). Linear albedo of the deep body, shallow tint at the shore,
 # Low: a dimmed sky gloss only; High: + two moving ripple octaves along the flow + sun glint. All WORKING_VALUE.
 WATER_MATERIALS = {
-    "water": {"color": [0.034, 0.041, 0.024], "rough": 0.08, "metal": 0.0, "shader": "water",
-              "shallow": [0.060, 0.060, 0.034], "reflect": 0.80, "reflect_low": 0.55, "flow_mps": 0.25},
+    # ADR 0213: body lit like the ground (shader), re-tuned on the orthophoto median of the open water (dk65-02 bridge
+    # 44/50/54, dk65-03 46/50/54 and 52/53/57 sRGB; water / meadow luminance ~0.3-0.4): the old 0.034 olive body gave
+    # 31/33/32 (Low) and read black from the bank. Blue of the orthophoto water is partly haze -> body kept neutral-warm.
+    "water": {"color": [0.120, 0.120, 0.115], "rough": 0.08, "metal": 0.0, "shader": "water",
+              "shallow": [0.150, 0.145, 0.115], "reflect": 0.80, "reflect_low": 0.70, "flow_mps": 0.25,
+              "flow_cycle_s": 6.0, "ripple_m": 2.4, "ripple_slope": 0.05, "smoothness": 0.93,
+              "bank_tint": [0.050, 0.065, 0.035], "bank_horizon": 0.10},
+    # ADR 0213: reed / tall-herb belt on the banks (streetscape.reeds): alpha-clip ribbons, foliage lit by COLOR_0
+    "water_reeds": {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "water_reeds", "alpha_cutoff": 0.5,
+                    "vertex_color": True, "shader": "Kamion/World PlotKit"},
 }
 
 
@@ -865,6 +874,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                                  bb["ymax"] - w.origin[1])
         w.water = WT.Plan(wsrc, w.origin, w.hf, tile_local,
                           PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]))
+        from streetscape import water_banks as WB
+        w.water.banks_doc = WB.load(region_id)          # ADR 0213 (None: banks as in ADR 0210)
         log("water plan:", len(w.water.report["bodies"]), "bodies,", w.water.report["water_nodes"], "nodes,",
             len(w.water.report["profiles"]), "centre lines")
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
@@ -945,6 +956,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
     props_meta = PR.export(st["codes"], st["boards"], props_library_dir(region_id, out_root))
+    if w.water is not None:            # ADR 0213: water_reeds.png beside the region's generated textures
+        _pd = props_library_dir(region_id, out_root)
+        w.water.export_textures((Path(_pd).parent / "textures") if _pd else (PR.ART / "textures"))
     # hero assets (art-source/world/landmarks), frame estimate: viaduct segments (ADR 0067), hero buildings (ADR 0070),
     # hero depot halls (ADR 0071)
     props_meta = {**props_meta, **hero_tris, **st.get("hero_tris", {})}
@@ -964,6 +978,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                 tri[node] = int(sum(len(p["T"]) for p in prims))
         if layers.get("plots"):
             tri["plots_low"] = int(sum(len(p["T"]) for p in layers.get("plots_low", [])))
+        if layers.get("banks"):
+            tri["banks_low"] = int(sum(len(p["T"]) for p in layers.get("banks_low", [])))
         cells = sorted((cid, c) for cid, c in st["forest_hlod"].items() if c["chunk"] == key)
         cell_meta = []
         for cid, c in cells:
@@ -983,7 +999,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
             if li >= 1:
                 glb_lo.add_mesh(f"terrain_lod{li}", prims, {"lod": li, "spacing_m": CH.LODS[li]})
         for layer, node in NODES:
-            prims = layers.get("plots_low" if layer == "plots" else layer, [])
+            prims = layers.get({"plots": "plots_low", "banks": "banks_low"}.get(layer, layer), [])
             if prims and layer != "buildings":
                 glb_lo.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
         for cid, c in cells:
@@ -1067,7 +1083,13 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         manifest["nodes"]["water"] = ("water sheet (ADR 0210): flat surface at the measured water level; UV0 = local "
                                       "metres (E, N); COLOR_0 = (shore distance / 8 m, depth / 1.5 m, flow E, flow N "
                                       "as 0.5 + 0.5 x unit vector)")
-        manifest["water"] = {k: v for k, v in w.water.report.items() if k in ("carve", "sheet", "water_nodes")}
+        manifest["water"] = {k: v for k, v in w.water.report.items() if k in ("carve", "sheet", "water_nodes", "banks", "seams")}
+        if w.water.report.get("banks"):
+            manifest["nodes"]["banks"] = ("reed / tall-herb belt on the banks (ADR 0213): alpha-clip ribbons along the shore "
+                                          "(material water_reeds, Kamion/World PlotKit, COLOR_0 = foliage normal); the "
+                                          "Low GLB carries the banks_low variant (fewer rows, 4 m segments)")
+            srcs["water_banks.json"] = sha(
+                (pipeline.REGIONS / region_id / "water_banks.json").read_bytes().replace(b"\r\n", b"\n"))
         write_json(gen / "water_qa.json", {"schema": "truck-sim-pl/water-qa/1", "region": region_id,
                                            **w.water.report})
     write_json(gen / "world_manifest.json", manifest)
@@ -1243,6 +1265,8 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
                 add("roads", sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved")))
                 if t.get("water"):            # ADR 0210 (key only in regions with water)
                     add("water", t["water"])
+                if t.get("banks"):            # ADR 0213: reed belt, chunk LOD0 / LOD1 (~ the furniture range)
+                    add("water", (t["banks"] if prof == "High" else t.get("banks_low", 0)) if d < 500 else 0)
                 add("furniture", (t.get("furniture", 0) + (t.get("plots", 0) if prof == "High" else t.get("plots_low", t.get("plots", 0)))
                                   + t.get("wires", 0)) if d < pol["furn"] else 0)
                 add("buildings", t.get("buildings", 0) if d < pol["bld"] else t.get("buildings_lod1", 0))

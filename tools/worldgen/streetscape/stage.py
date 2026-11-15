@@ -311,7 +311,13 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     rep["plots"]["inst_trees_kept"] = len(ptrees)
     for t_ in ptrees:
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
-    instances = pl.items + trees + ptrees
+    wtrees = []
+    if getattr(w, "water", None) is not None:      # ADR 0213: reed belt ribbons + willow / alder scrub on the banks
+        bank_keep = shapely.union_all([roads_poly, bpoly] + [p_["poly"] for p_ in paved]).buffer(1.0)
+        wtrees = w.water.bank_vegetation(w.buf, zground, bank_keep, trees + ptrees, blocked, rep, log)
+        for t_ in wtrees:
+            vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
+    instances = pl.items + trees + ptrees + wtrees
     hero_tris = {**hero_tris, **HBD.apply(w.buf, heroes, instances, rep, log)}      # depot halls + hero buildings
     if heroes or rep.get("hero_buildings", {}).get("stale"):
         log("hero buildings", {k: [x["id"] for x in v] for k, v in rep["hero_buildings"].items()})
