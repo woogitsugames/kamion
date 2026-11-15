@@ -1,0 +1,32 @@
+{
+  "snapshot": "2026-11-15 Europe/Brussels",
+  "access_method": "publiczny frontend Chrome CUA; nie wywoływano API Openverse",
+  "homepage": "https://openverse.org/",
+  "homepage_result": "rendered",
+  "steps": [
+    {
+      "query": "dirty semi-trailer rear doors",
+      "url": "https://openverse.org/search?q=dirty+semi-trailer+rear+doors",
+      "observed": "UI wyświetlił brak wyników. Nie otwierano żadnej fotografii i nie twierdzi się, że wyklucza to istnienie odpowiednich źródeł."
+    },
+    {
+      "action": "Zaznaczono publiczne checkboxy Zero/Attribution/Attribution-Share-Alike; pozostałych licencji nie zaznaczono.",
+      "filter_result": "Filters (3); URL license=cc0,by,by-sa"
+    },
+    {
+      "query": "muddy trailer back",
+      "url": "https://openverse.org/search?q=muddy+trailer+back&license=cc0,by,by-sa",
+      "observed": "Po Loading frontend przeszedł na stronę błędu. Pasek adresu nadal muddy trailer back, tekst błędu odwoływał się do poprzedniego dirty semi-trailer rear doors. Brak wiarygodnie ukończonej listy wyników."
+    }
+  ],
+  "final_error_text": "The content you’re looking for seems to have disappeared. Error: No results found for dirty semi-trailer rear doors",
+  "http_status": "UNVERIFIED; statusu odpowiedzi nie odczytywano, nie nazywa się tego potwierdzonym403/429",
+  "result": "STOP po błędzie frontendu; bez reload, kolejnych wariantów, API retry, logowania/CAPTCHA",
+  "individual_source_images_opened": 0,
+  "photos_observed": 0,
+  "photos_downloaded": 0,
+  "new_qualifying_frames": 0,
+  "new_vehicles": 0,
+  "screenshots_saved": 0,
+  "browser_released": "CUA completion_summary; poinformowano knyszyn"
+}

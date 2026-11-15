@@ -1,0 +1,60 @@
+{
+  "review_date": "2026-11-15",
+  "reviewer": "lampy — niezależny ogląd bez czytania observation.json przed zdjęciem",
+  "url": "https://www.flickr.com/photos/icathing/4433883530/",
+  "status": "REVIEWED_WITH_INTERPRETATION_LIMIT",
+  "method": "Jedno otwarcie publicznej fotostrony w Chrome; obraz rzeczywiście wyrenderowany i obejrzany. Bez allsizes, nawigacji do static, pobrań i zapisu screenshotów.",
+  "render": {
+    "natural_width": 1599,
+    "natural_height": 1200,
+    "basis": "DOM rzeczywiście załadowanego IMG + ogląd screenshotu strony",
+    "doors_full_extent": false,
+    "top_and_bottom": "Górny brzeg/całe zamknięcie i dolny próg poza kadrem; fotografia obcina drzwi. Wymiar całego pliku nie jest wymiarem pełnych drzwi."
+  },
+  "independent_observation": [
+    "Dwoje wysokich tylnych drzwi z centralnym stykiem; cztery pionowe pręty zamykające, poziome zawiasy przy zewnętrznych krawędziach i dolne poziome mechanizmy zamknięć.",
+    "Na ciemnoszarej powierzchni gęsta jasna drobna siatka nieregularnych, rozgałęzionych linii; w środkowej i dolnej części wyraźnie wydłuża się w pionowe jasne smugi.",
+    "U góry na obu skrzydłach ciemnoczerwone litery i ciemny napis poniżej, częściowo zlewające się z ciemniejszą strefą powierzchni. Po prawej niżej widoczne135.",
+    "Niżej trzy romboidalne uchwyty/tablice: dwa po lewej od centralnego styku, jeden po prawej. Wokół zamków i dolnych rygli ciemniejsze brunatne pionowe zacieki.",
+    "Na lewym brzegu błękitne niebo i przewody; brak widoku całego pojazdu, osi, sprzęgu, ciągnika i pełnego podwozia."
+  ],
+  "surface_interpretation": {
+    "visible": "SOURCED [ogląd]: jasna siatka linii, pionowe smugi, ciemniejsze zacieki przy okuciach.",
+    "cause": "UNVERIFIED: kadr nie rozstrzyga, czy jasna siatka jest wyschniętym nalotem/osadem, spękaną/uszkodzoną powłoką lub kombinacją procesów. Nie ma dostatecznej podstawy nazywać całości jednoznacznie filmem brudu drogowego.",
+    "excluded_inferences": [
+      "sól drogowa",
+      "śnieg/błoto pośniegowe",
+      "pora zimowa jako przyczyna śladów",
+      "utlenienie lub złuszczanie farby jako potwierdzony mechanizm",
+      "konkretna substancja osadu"
+    ]
+  },
+  "visible_metadata": {
+    "author": {
+      "value": "Bill Stilwell",
+      "handle": "icathing",
+      "status": "SOURCED: widoczny profil/podpis fotografa"
+    },
+    "license": {
+      "value": "CC BY-SA 2.0",
+      "url": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "status": "SOURCED: fotostrona pokazuje link CC BY-SA2.0; nie wnioskowano z tytułu"
+    },
+    "date_taken": {
+      "value": "2010-02-17",
+      "status": "SOURCED: widoczne Prise le17février2010; deklaracja fotostrony, bez niezależnego potwierdzenia EXIF"
+    },
+    "date_uploaded": {
+      "value": "2010-03-14",
+      "status": "SOURCED: widoczne Téléchargée le14mars2010; nie data ekspozycji"
+    },
+    "title": "Dirty"
+  },
+  "classification_limits": {
+    "vehicle_type": "UNVERIFIED: tył skrzyniowej zabudowy; nie rozstrzygnięto naczepa/przyczepa/samochód sztywny.",
+    "country_or_location": "UNVERIFIED: fotostrona i widoczny kadr nie dają potwierdzonej lokalizacji; napis/rejestracja nie zostały użyte do zgadywania.",
+    "full_doors_or_threshold_requirement": "Nie traktować obrazu1599×1200 jako dowodu pełnego tyłu lub całej wysokości drzwi.",
+    "winter_Europe_delta": 0
+  },
+  "review_conclusion": "PASS jako rzeczywiście obejrzana referencja niejednorodnej powierzchni drzwi z jasną siatką/smugami. FIX potrzebny wszędzie, gdzie opis jednoznacznie przypisuje ślady soli/brudowi drogowemu lub uszkodzonej powłoce; mechanizm nierozstrzygnięty. Brak kwalifikacji typu pojazdu, kraju i zimy."
+}

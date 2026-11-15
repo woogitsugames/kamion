@@ -132,3 +132,7 @@ Selekcja metadanych `intitle:trailer intitle:rear filetype:bitmap` zwróciła30 
 Brak nowych pobrań, brak nowych oględzin i brak wzrostu liczników. To wynik selekcji metadanych, nie opis obrazów. Dziennik `data/semitrailer-preselection-result-2026-11-15.json` wskazuje dwa selektywne snapshoty źródłowe. Dwa nieprzydatne pełne zestawy początkowych wyników (główniePDF/niepasujące obrazy) usunięto; ukończonych audytów nie zmieniano.
 
 Dalszy audyt typu istniejących P18: 02-008 autor opisuje tylko jako long lorry, więc naczepa/solówka/drawbar UNVERIFIED. 02-009 autor Commons wprost identyfikuje semi-trailer — typ SOURCED z opisu autora, nie z samego tylnego kadru. Nie wyprowadzono kategorii UE. Dwa pozytywne wzorce rozkładu brudu nie oznaczają dwóch niezależnie potwierdzonych naczep; nowe ścisłe M61 nadal0. Dowód w data/reused-p18-type-audit.json.
+
+## Zużycie i niejednoznaczna powierzchnia — dalsze obiegi
+
+Dealer-round2:2 obejrzane kadry1 naczepySchmitz, tylko link-only; łuszcząca/uszkodzona powłoka i cień nie są zatwierdzonym brudem. Flickr-recheck-round4:1 duży kadr BillStilwell, CC BY-SA2.0,1599×1200; po peer-review mechanizm jasnej siatki jest UNVERIFIED, początkową kwalifikację brudu wycofano. Typ pojazdu także niepotwierdzony. Główny manifest teraz15 rekordów=13 kadrów+2 dokumenty, w tym odrzucenia i konteksty, nie13 kwalifikowanych brudnych naczep. Nowe ścisłe M61 nadal0. Openverse-round5 i nowy obieg niemiecki/francuski nie przyniosły kwalifikacji; własne obrazy odrzuceń pozostawiono poza gitem.
