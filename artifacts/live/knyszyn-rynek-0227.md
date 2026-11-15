@@ -182,3 +182,7 @@
 - 2026-11-15 23:11 +01:00 — Pełny GIS po scaleniu i fix far_field: 1472 passed, 33 skipped, 3 xfailed, exit 0 (21:56); przywrócono wyłącznie efekty uboczne testu w generated C. R7: poprawa lukarn w obu profilach, Low nadal +6 draws/+1832 tris na wspólnych kamerach.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python artifacts/knyszyn-rynek-0227/budget-compare.py r7`
 
+
+- 2026-11-15 23:13 +01:00 — R8 uruchomiona: próba 13 pełniejszych lip w dotychczas zaakceptowanych punktach, wysokości z R7; średnice WORKING_VALUE, trzy odrzucone poza próbą. GIS dla stanu R7 1472 passed, 33 skipped, 3 xfailed; test próby 4 passed. Wymagane nowe rendery i budżet.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r8.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r8.done`
+
