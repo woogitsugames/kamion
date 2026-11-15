@@ -158,3 +158,7 @@
 - 2026-11-15 22:12 +01:00 — R6 uruchomiona: niższe lukarny CULTURE na istniejącej połaci, 10 testów modułu passed; dach nadal wymaga poprawy kalenicy. C powyżej progu. Targowica: potwierdzony plac OSM, zdjęcia dronowe potrzebne do położeń wiat.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r6.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r6.done`
 
+
+- 2026-11-15 22:18 +01:00 — R6 build trwa, pełny GIS po poprawkach >14% bez wyniku końcowego. EditMode 626 passed/2 skipped. Wiaty targowicy nadal poza światem: czekamy na ścieżkę do zdjęć dronowych potrzebnych do lokalizacji.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r6.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r6.log -Tail 10`
+
