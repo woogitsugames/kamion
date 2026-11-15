@@ -1249,6 +1249,8 @@ def _outward(j, p, tag, nxt_tag=None):
         n = np.array([-dirv[1], dirv[0]])
         return n * side
     corner = j.corners[tag[1]]
+    if getattr(corner, "out", None) is not None:      # explicit outline (compact roundabout, ADR 0218 5c)
+        return corner.out[int(round(tag[2] * (len(corner.arc) - 1)))]
     if corner.kind in ("fillet", "nose") and corner.center is not None:
         v = corner.center - p
         nv = np.hypot(*v)

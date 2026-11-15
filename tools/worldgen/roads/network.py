@@ -97,6 +97,8 @@ class EdgeSection:
     truck_apron: dict | None = None  # authored (ADR 0218 + 0226): {width_m, height_m, material, code} - strip between
                                      # the ring carriageway and the island kerb; code None = width only (surface and
                                      # lip from the rule / `apron`); field None = generator default (ROUNDABOUT_APRON_W)
+    compact: dict | None = None      # authored (ADR 0218 5c): ring of a compact roundabout built as one junction
+                                     # (roads.compact_roundabout); options dict, {} = defaults
     provenance: dict = field(default_factory=dict)
 
     def lane_w_at(self, hw):
@@ -403,6 +405,19 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 else:
                     sec.truck_apron = ta
                     sec.provenance["truck_apron"] = f"authored_override:{ov['id']}"
+            if "compact_roundabout" in st:
+                # ADR 0218 5c: the whole roundabout (ring + one-way feeders) is one junction; ring ways only
+                co_ = st["compact_roundabout"]
+                co_ = {} if co_ in (None, True) else co_
+                ok_ = isinstance(co_, dict) and set(co_) <= {"closing_r_m", "splitter_w_m", "splitter_gap_m",
+                                                              "island_fill"}
+                if not ok_ or not sec.roundabout:
+                    if ov["id"] not in net.overrides_stale:
+                        net.overrides_stale.append(ov["id"])
+                    sec.provenance["compact_roundabout_rejected"] = st["compact_roundabout"]
+                else:
+                    sec.compact = dict(co_)
+                    sec.provenance["compact_roundabout"] = f"authored_override:{ov['id']}"
             if "turn_lanes" in st:
                 sec.turn_fwd = [t for t in str(st["turn_lanes"]).split("|")] if st["turn_lanes"] else None
             if "center_offset" in st:
