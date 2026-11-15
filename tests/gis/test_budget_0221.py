@@ -27,16 +27,21 @@ def test_p23_symbol_is_cheap_and_keeps_its_shape(small):
     d = CY.P23_SMALL if small else CY.P23
     g = CY.p23_glyph(small)
     assert _tris(g) <= 200                                    # was 479 / 483 with 128-gon wheels
-    # the wheel outline stays within 4 mm of the true ellipse (32-gon: a * (1 - cos(pi / 32)) on the long axis)
     L, H, lw = d["len"], d["h"], d["line"]
     a = 0.19 * H * (L / (H / 1.75)) + lw / 2
     b = 0.19 * (H - lw) + lw / 2
-    assert a * (1 - np.cos(np.pi / (4 * CY.P23_WHEEL_QUAD_SEGS))) < 0.004
-    # painted area within 1 % of the 128-gon symbol
-    ref = affinity.scale(Point(0, 0).buffer(1.0, 32), a, b, origin=(0, 0))
-    now = affinity.scale(Point(0, 0).buffer(1.0, CY.P23_WHEEL_QUAD_SEGS), a, b, origin=(0, 0))
-    ring = lambda e: e.difference(e.buffer(-lw)).area         # noqa: E731
-    assert ring(now) == pytest.approx(ring(ref), rel=0.01)
+    now = CY._ellipse(a, b, 4 * CY.P23_WHEEL_QUAD_SEGS)
+    ref = affinity.scale(Point(0, 0).buffer(1.0, 64), a, b, origin=(0, 0))
+    # the outline turns by the same 11.25 deg at every vertex (no corners at the tight ends of the stretched wheel) ...
+    P = np.asarray(now.exterior.coords)[:-1]
+    e = np.roll(P, -1, axis=0) - P
+    ang = np.arctan2(e[:, 1], e[:, 0])
+    turn = np.degrees(np.abs((np.diff(np.concatenate([ang, ang[:1]])) + np.pi) % (2 * np.pi) - np.pi))
+    assert turn.max() <= 360 / (4 * CY.P23_WHEEL_QUAD_SEGS) + 0.5
+    # ... and stays within 11 mm (large) / 7 mm (small) of the true ellipse; painted ring area within 2 %
+    assert now.exterior.hausdorff_distance(ref.exterior) <= (0.007 if small else 0.011)
+    ring = lambda e_: e_.difference(e_.buffer(-lw)).area         # noqa: E731
+    assert ring(now) == pytest.approx(ring(ref), rel=0.02)
     assert len(g.interiors) >= 2 and g.is_valid
 
 

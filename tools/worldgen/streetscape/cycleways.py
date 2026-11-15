@@ -138,7 +138,8 @@ DIVIDER_W, DIVIDER_LIFT = S.EDGING_W, 0.01
 P23 = {"len": 2.00, "h": 1.10, "line": 0.10}
 P23_SMALL = {"len": 1.30, "h": 0.715, "line": 0.065}
 # ADR 0221: segments per quarter of a wheel outline. 32 gave 128-gons (479 triangles per symbol, 21 k in region C);
-# 8 = 32-gon, chord error <= 3.5 mm on the 1.43 m long axis of the large symbol (measured: tests/gis/test_budget_0221.py)
+# 8 = 32-gon that turns 11.25 deg at every vertex (_ellipse), outline within 11 mm of the true ellipse on the flanks of
+# the large symbol (measured: tests/gis/test_budget_0221.py)
 P23_WHEEL_QUAD_SEGS = 8
 P23_AFTER_CROSSING_M = 3.0  # WORKING_VALUE: tail of the symbol this far behind the carriageway edge
 LINE_W = S.LINE_W_NARROW    # 0.12 m
@@ -472,6 +473,16 @@ def crossing_drops(net, items: list) -> list:
 
 
 # --------------------------------------------------------------------------------------------- paint
+def _ellipse(a: float, b: float, n: int) -> Polygon:
+    """Ellipse (semi-axes a along x, b along y) as an n-gon whose outline turns by the same angle at every vertex
+    (ADR 0221): vertices where the outward normal points at 2 pi i / n. A wheel of P-23 is stretched 3 : 1, so a polygon
+    with vertices at equal parameter steps has visible corners at the two tight ends and wasted vertices on the flanks."""
+    psi = 2 * math.pi * np.arange(n) / n          # n divisible by 4: vertices on both axes, exact extents
+    c, s = np.cos(psi), np.sin(psi)
+    d = np.sqrt(a * a * c * c + b * b * s * s)
+    return Polygon(np.column_stack([a * a * c / d, b * b * s / d]))
+
+
 def p23_glyph(small: bool = True):
     """P-23 as a polygon: x = direction of travel (0 .. len), y = left (-h/2 .. h/2). A bicycle seen from the side,
     standing 'up' along the direction of travel and stretched along it: a bicycle is about 1.75 times as long as it
@@ -487,8 +498,7 @@ def p23_glyph(small: bool = True):
     parts = []
     for u in (-0.5 + r, 0.5 - r):
         cx, cy = r * H * k + lw / 2, u * (H - lw)
-        outer = affinity.translate(affinity.scale(Point(0, 0).buffer(1.0, P23_WHEEL_QUAD_SEGS), r * H * k + lw / 2, r * (H - lw) + lw / 2,
-                                                  origin=(0, 0)), cx, cy)
+        outer = affinity.translate(_ellipse(r * H * k + lw / 2, r * (H - lw) + lw / 2, 4 * P23_WHEEL_QUAD_SEGS), cx, cy)
         parts.append(outer.difference(outer.buffer(-lw)))
     hub_r, hub_f = (r * H * k + lw / 2, (-0.5 + r) * (H - lw)), (r * H * k + lw / 2, (0.5 - r) * (H - lw))
     bb, seat, head = pt(-0.04, 0.17), pt(-0.14, 0.47), pt(0.19, 0.47)
