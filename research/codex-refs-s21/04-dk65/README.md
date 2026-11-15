@@ -35,3 +35,7 @@ Osobno obejrzano3 kadry DK65, bez kopiowania zdjęć do repo ani tworzenia minia
 ## Zatoka Dobrzyniewo — ponowny przegląd K1
 
 04-O02: istniejący kadr K1-008 obejrzano indywidualnie, bez nowego pobrania ani kopii. SOURCED [obraz i data/bus-bay-review.json]: jasne boczne poszerzenie, biała linia przerywana, szary prostokątny dach przy jego końcu; po przeciwnej stronie jasny wlot. Nazwa przystanku i node14067837805 pochodzą osobno z metadanych K1/OSM. Oznakowanie pionowe, wyposażenie wiaty i stan listopadowy UNVERIFIED. Nie wykonano nowego pomiaru szerokości. To ponowne wykorzystanie jednego kadru, nie nowa fotografia.
+
+## Drzewa i skrajnia — rozdzielenie prawa od stanu terenu
+
+regulations-vegetation.csv zawiera5 wierszy z paragrafami i datowanymi źródłami ELI. Dawnego minimum3m z2016/124 nie wolno uznać za uniwersalny aktualny wzorzec DK65. Sprawdzono2022/1518 oraz zmianę2025/1352 i przepisy przejściowe; reżim konkretnej inwestycji UNVERIFIED. To wymagania, nie pomiary zdjęć. Próba BDL w jednym punkcie lasu przy04-O01 zwróciła0 rekordów obu warstw drzewostanów; gatunków nie ustalono. Brak rekordu nie dowodzi braku drzew.

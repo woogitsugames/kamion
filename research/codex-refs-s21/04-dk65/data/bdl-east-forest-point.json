@@ -1,0 +1,171 @@
+{
+  "retrieved_utc": "2026-11-15T18:38:50.139398+00:00",
+  "official_service_catalogue": "https://bdl.lasy.gov.pl/portal/uslugi-ogc",
+  "point_lat_lon": [
+    53.1857,
+    23.0256
+  ],
+  "purpose": "forest stand context east of04-O01; not identification of roadside alley trees",
+  "queries": [
+    {
+      "layer": 11,
+      "url": "https://mapserver.bdl.lasy.gov.pl/arcgis/rest/services/WMS_BDL_mapa_drzewostanow/MapServer/11/query?f=json&geometry=23.02560%2C53.18570&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=adress_forest%2Cspecies_cd%2Cpart_cd%2Cspecies_age%2Cage_class%2Cstorey_cd%2Cstand_struct_cd%2Csub_area%2Ca_year%2Cgat_grp&returnGeometry=false&resultRecordCount=5",
+      "response": {
+        "displayFieldName": "adress_forest",
+        "fieldAliases": {
+          "adress_forest": "adress_forest",
+          "species_cd": "species_cd",
+          "part_cd": "part_cd",
+          "species_age": "species_age",
+          "age_class": "age_class",
+          "storey_cd": "storey_cd",
+          "stand_struct_cd": "stand_struct_cd",
+          "sub_area": "sub_area",
+          "a_year": "a_year",
+          "gat_grp": "gat_grp"
+        },
+        "fields": [
+          {
+            "name": "adress_forest",
+            "type": "esriFieldTypeString",
+            "alias": "adress_forest",
+            "length": 25
+          },
+          {
+            "name": "species_cd",
+            "type": "esriFieldTypeString",
+            "alias": "species_cd",
+            "length": 9
+          },
+          {
+            "name": "part_cd",
+            "type": "esriFieldTypeString",
+            "alias": "part_cd",
+            "length": 3
+          },
+          {
+            "name": "species_age",
+            "type": "esriFieldTypeSmallInteger",
+            "alias": "species_age"
+          },
+          {
+            "name": "age_class",
+            "type": "esriFieldTypeString",
+            "alias": "age_class",
+            "length": 5
+          },
+          {
+            "name": "storey_cd",
+            "type": "esriFieldTypeString",
+            "alias": "storey_cd",
+            "length": 8
+          },
+          {
+            "name": "stand_struct_cd",
+            "type": "esriFieldTypeString",
+            "alias": "stand_struct_cd",
+            "length": 7
+          },
+          {
+            "name": "sub_area",
+            "type": "esriFieldTypeDouble",
+            "alias": "sub_area"
+          },
+          {
+            "name": "a_year",
+            "type": "esriFieldTypeInteger",
+            "alias": "a_year"
+          },
+          {
+            "name": "gat_grp",
+            "type": "esriFieldTypeString",
+            "alias": "gat_grp",
+            "length": 9
+          }
+        ],
+        "features": []
+      }
+    },
+    {
+      "layer": 12,
+      "url": "https://mapserver.bdl.lasy.gov.pl/arcgis/rest/services/WMS_BDL_mapa_drzewostanow/MapServer/12/query?f=json&geometry=23.02560%2C53.18570&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=adress_forest%2Cspecies_cd%2Cpart_cd%2Cspecies_age%2Cage_class%2Cstorey_cd%2Cstand_struct_cd%2Csub_area%2Ca_year%2Cgat_grp&returnGeometry=false&resultRecordCount=5",
+      "response": {
+        "displayFieldName": "adress_forest",
+        "fieldAliases": {
+          "adress_forest": "adress_forest",
+          "species_cd": "species_cd",
+          "part_cd": "part_cd",
+          "species_age": "species_age",
+          "age_class": "age_class",
+          "storey_cd": "storey_cd",
+          "stand_struct_cd": "stand_struct_cd",
+          "sub_area": "sub_area",
+          "a_year": "a_year",
+          "gat_grp": "gat_grp"
+        },
+        "fields": [
+          {
+            "name": "adress_forest",
+            "type": "esriFieldTypeString",
+            "alias": "adress_forest",
+            "length": 25
+          },
+          {
+            "name": "species_cd",
+            "type": "esriFieldTypeString",
+            "alias": "species_cd",
+            "length": 9
+          },
+          {
+            "name": "part_cd",
+            "type": "esriFieldTypeString",
+            "alias": "part_cd",
+            "length": 3
+          },
+          {
+            "name": "species_age",
+            "type": "esriFieldTypeSmallInteger",
+            "alias": "species_age"
+          },
+          {
+            "name": "age_class",
+            "type": "esriFieldTypeString",
+            "alias": "age_class",
+            "length": 5
+          },
+          {
+            "name": "storey_cd",
+            "type": "esriFieldTypeString",
+            "alias": "storey_cd",
+            "length": 8
+          },
+          {
+            "name": "stand_struct_cd",
+            "type": "esriFieldTypeString",
+            "alias": "stand_struct_cd",
+            "length": 7
+          },
+          {
+            "name": "sub_area",
+            "type": "esriFieldTypeDouble",
+            "alias": "sub_area"
+          },
+          {
+            "name": "a_year",
+            "type": "esriFieldTypeInteger",
+            "alias": "a_year"
+          },
+          {
+            "name": "gat_grp",
+            "type": "esriFieldTypeString",
+            "alias": "gat_grp",
+            "length": 9
+          }
+        ],
+        "features": []
+      }
+    }
+  ],
+  "interpretation": "Both queried stand layers returned zero features at one point. This is not evidence that no forest/trees exist, and gives no species identification. No species, age, stand spacing, or ownership inferred.",
+  "licence_status": "No nonempty feature redistributed; empty responses and own query record only. Public service access does not assign a licence."
+}
