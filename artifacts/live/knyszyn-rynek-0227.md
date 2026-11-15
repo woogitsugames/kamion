@@ -82,3 +82,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
 - 2026-11-15 20:44 +01:00 — W TYPOPLOGIA.md (TYPOLOGIA.md) zapisano 25 brył w promieniu 85 m: typ, wysokość i źródło, dach/fasada z poziomem pewności; r2 nadal buduje.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
+- 2026-11-15 20:47 +01:00 — Budżet r1 z instancjami: Low max suma drawsEst 500→493, ale na części wspólnych kamer wzrost do +12; warunek bez pogorszenia nadal FAIL. Narzędzie budget-compare.py obejmuje osobne instancje.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
