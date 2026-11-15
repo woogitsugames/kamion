@@ -13,3 +13,5 @@
 - NASTEPNY KROK: Get-Content artifacts/tunnel-0211/chain-r4.status ; potem obejrzec artifacts/tunnel-0211/vqa-r4 (Low i High)
 - 18:0x PRZEJECIE 3 (nowy agent). r4: build/import/vqa exit 0; EditMode przerwany (sesja padla) -> chain-tail.ps1 -Tag r4 (EditMode->sweepy->pytest) w tle; sprzatniete _TestTmp_LampLens, stary slot unity.
 - NASTEPNY KROK: Get-Content artifacts/tunnel-0211/chain-r4.status ; obejrzec artifacts/tunnel-0211/vqa-r4
+- 18:15 rendery r4 obejrzane (Low+High): portale OK (brak sciany trawy/piramidek, balustrada nad pasami). Bledy r4: (1) 8 m bariery W-beam w tunelu EB (regula furniture 'beside structure', klucz c:w23982181:...:L:structure), (2) pobocze trawiaste pod plyta. Poprawka: tunnels._dress_inside (trawa->shoulder_gravel 312 tris na dumpie; bariera+kolizja usuwane w F pod stropem) + test. EditMode r4: 602/603 pass (1 skipped). tunnel_sweep r4: przeswit min 4,70 m, sciana-pas min 0,69 m. Merge origin/main 7f830369c (f8bc5b37f, bez konfliktow). chain r5 (pelny) w tle.
+- NASTEPNY KROK: Get-Content artifacts/tunnel-0211/chain-r5.status ; potem obejrzec artifacts/tunnel-0211/vqa-r5 (tunnel-eb-inside: brak bariery i trawy)
