@@ -949,6 +949,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     log("verge strips in terrain", w.stats["verge_strips"])
     if w.water is not None:
         w.water.sheet(w.buf, CH.CHUNK_M, log)
+    _src_tally([p for p in w.buf.parts if not _is_verge(p)], half)
     roads = assemble([p for p in w.buf.parts if not _is_verge(p)], LAYERS, half)
     log("road chunks", len(roads))
 
@@ -1207,6 +1208,34 @@ LOD_POLICY = {
             "tree": [[35, "tris_lod1"], [400, "tris_lod2"]], "forest_hlod_m": 70, "forest_hlod_cull_m": 1000,
             "lod_bias": 0.5, "furn": 400},
 }
+
+
+def _src_tally(parts, half):
+    """Diagnostics (ADR 0221): with KAMION_SRC_TALLY=<file.json> write triangles per chunk and per
+    `layer|material|source class` of the road layers (road, bridge, markings, paved), so a budget regression can be
+    attributed to the generator stage that caused it. No effect on the build output."""
+    import os
+    import re
+    dst = os.environ.get("KAMION_SRC_TALLY")
+    if not dst:
+        return
+    out = {}
+    for p in parts:
+        if p.layer not in ("road", "bridge", "markings", "paved"):
+            continue
+        src = p.src or ""
+        if "@" in src:
+            cls = src.split("@", 1)[0]
+        else:
+            m = re.search(r":([a-z_]+)$", src)
+            cls = m.group(1) if m else re.sub(r"[0-9a-fA-F-]{6,}|\d+", "#", src)[:24]
+        c = p.V[p.T].mean(axis=1)
+        ci, cj = chunk_of(c[:, 0], c[:, 1], half)
+        for a, b in zip(ci.tolist(), cj.tolist()):
+            d = out.setdefault(f"{int(a)}_{int(b)}", {})
+            k = f"{p.layer}|{p.mat}|{cls}"
+            d[k] = d.get(k, 0) + 1
+    Path(dst).write_text(json.dumps(out, sort_keys=True, indent=0), encoding="utf-8")
 
 
 def _bbox_dist(b, p):
