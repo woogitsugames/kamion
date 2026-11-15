@@ -1,4 +1,5 @@
-# STATUS — F10 docs/gates-status-s21 (chmura D r2)
-- Krok 1: `docs/reports/GATES-STATUS-S21.md` (A16 af2570fccd G3-A/B, bramki 1–2 + 0201b, S24+, 66 scaleń s20/s21, D63–D68, korytarz DK65 w APK).
-- Krok 2: `docs/owner/BACKLOG-S21.md` — kolumna „status s21 (15.11)” dla 133 wierszy + Top 15; zamknięte 17, w toku 22, częściowo 18, bez zmian 74.
-- NASTĘPNY KROK: PR do main (REST `gh api repos/woogitsugames/kamion/pulls -f head=docs/gates-status-s21 -f base=main ...`).
+# STATUS — D11 rural-xsec-0272 (chmura D r4, ADR 0272)
+- Krok 1: reguła pobocza jako dane `tools/worldgen/roads/xsec_rules.yaml` + `roads/xsec.py`; `network.py` (override `shoulder`, tagi OSM `shoulder*`, kod pobocza w `mat`), włazy tylko przy krawężniku / poboczu utwardzonym, obrys dla toru bez pobocza (`build_world.RAIL_ZONE_EXCLUDE_MATS`).
+- Krok 2: `dw671-tykocin-01/overrides.yaml` — DW671 pobocze gruntowe + linie krawędziowe (waye 145989268, 286989055), krawędź przejazdu bez muldy. Ełcka: asfalt 8,6 → 6,76 m z reguły klasy G (ortofoto 6,5–7,1).
+- Krok 3: `tests/gis/test_rural_xsec_0272.py` 29 passed; C i Dojlidy bez zmian (SHA stron + siatka na płaskim NMT). ADR 0272, LICENSES, docs/05.
+- NASTĘPNY KROK (lider): `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region dw671-tykocin-01` → `pwsh scripts/import-region.ps1 -Region dw671-tykocin-01 -SkipCopy` → `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting clear -Cameras rail_xing_from_ne,rail_xing_close_ne,rail_xing_top -OutputDir artifacts/rural-xsec-0272/dw671-High`
