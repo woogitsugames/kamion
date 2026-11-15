@@ -1,0 +1,49 @@
+{
+  "snapshot_brussels": "2026-11-15T22:57:21+01:00 Bruksela/CET",
+  "frame_rows": 88,
+  "original_m61_frame_rows": 75,
+  "fix_added_rows": 13,
+  "unique_source_keys": 87,
+  "exact_duplicate_source_groups": [
+    [
+      "P18-144",
+      "P18-159"
+    ]
+  ],
+  "all_fix_added_frames_locally_observed": true,
+  "reviewed_frames": 23,
+  "not_reviewed_frames": 65,
+  "local_p18_jpg_available": 44,
+  "confirmed_content_candidates": [
+    "P18-158",
+    "P18-182",
+    "P18-183"
+  ],
+  "confirmed_new_fix_ge1000": [
+    "P18-182"
+  ],
+  "full_project_accepted_total": "UNVERIFIED — partial independent audit, do not turn65unreviewed into0",
+  "codex_p18_overlap": {
+    "P18-182": "CR6-001 same source/photo; union counts once",
+    "P18-183": "CR7-A01 same source/photo",
+    "P18-158": "02-009/CR7-A02 same source/photo",
+    "P18-121": "02-008 same source/photo"
+  },
+  "requirements": {
+    "user_total_frames_min": 20,
+    "fix_new_frames_min": 12,
+    "winter_min": 6,
+    "europe_min": 6,
+    "pixel_threshold": "FIX point8: new frames need>=1000px door height. Keep distinct from qualitative total20; optional stronger all>=1000 ledger also provided viaCSV.",
+    "type": "current user requires semi-trailers; vans/rigid box trucks outside strict count",
+    "source_of_requirements": [
+      "user instructions",
+      "docs/owner/MISTRAL-FIXES-12.md M61-FIX points8,9 and KRYTERIA",
+      "docs/reports/REVIEW-2026-11-14-s20-mistral-m61.md criterion3 and correction8"
+    ],
+    "fix_new_winter_min": 6,
+    "fix_new_europe_min": 6,
+    "interpretation_note": "Point8 says of the >=12 new frames >=6 winter and >=6 Europe; final criteria and user also require>=6 each in total. Keep both subset ledgers."
+  },
+  "method": "Read-only source data/reports, local images only, no photo downloads. Read13 concrete Commons metadata records in one public GET after local observation; all13FIX local frames and10original candidates personally viewed, plus existing crops121/158. Output only this newchild folder."
+}

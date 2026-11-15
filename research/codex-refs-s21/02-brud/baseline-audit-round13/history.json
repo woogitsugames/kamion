@@ -1,0 +1,27 @@
+{
+  "p18_182_first_commit": {
+    "command": [
+      "git",
+      "log",
+      "--all",
+      "-1",
+      "-S",
+      "P18-182",
+      "--format=%H%n%aI%n%cI%n%s",
+      "--",
+      "research/mistral/p18-trailer-soiling/manifest.csv"
+    ],
+    "output": "29ba270e8cced006d41b01e275e26e1455699b94\n2026-11-15T14:10:21+01:00\n2026-11-15T14:10:21+01:00\nwip(p18 M61-FIX s21): +13 nowych kadrów (7 z drzwiami dwuskrzydłowymi i brudem drogowym), literatura P18-002/005/012/018, poziom „ślad” dla 109/155, EXIF 166/172"
+  },
+  "codex_cr6_manifest_commit": {
+    "command": [
+      "git",
+      "log",
+      "-1",
+      "--format=%H%n%aI%n%cI%n%s",
+      "--",
+      "research/codex-refs-s21/02-brud/creator-round6/manifest.csv"
+    ],
+    "output": "6f34302b10a25939edb54c20ef55173ed0ca49ed\n2026-11-15T21:14:52+01:00\n2026-11-15T21:14:52+01:00\nresearch: accept independently reviewed large dirty semitrailer door reference"
+  }
+}
