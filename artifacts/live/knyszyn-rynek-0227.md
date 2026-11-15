@@ -130,3 +130,7 @@
 - 2026-11-15 21:45 +01:00 — R4 build i import OK, Low-clear w toku. Pełny GIS: 1410 passed, 43 skipped, 4 xfailed, 2 failed; kontrakt kamer naprawiony (3 testy passed), raport fidelity regionu C nieaktualny już na main, trwa pełne przeliczenie i test.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r4.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.done`
 
+
+- 2026-11-15 21:48 +01:00 — R4 4 warianty OK; pary 01–11 lokalnie. Plac ciągły, 07 na alei, ale dach portyku niewidoczny High/Low; naprawa generatora w toku. Low max +6 draws i +1704 tris na wspólnych kamerach; High max 1 229 693 tris. Raport fidelity liczy się po wznowieniu własnych procesów.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.done`
+
