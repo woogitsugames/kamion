@@ -851,7 +851,8 @@ overrides:
     boards:
       - lanes: [0, 1]
         # R2-066 frame: board 103 x 57 px between column axes 422 px apart (= the 13.4 m beam) -> 3.3 x 1.8 m (+-10 %),
-        # centre 5.2 m from the median column. By Tabela 9.5.4 five rows at d = 210 mm are 1.90 m. WORKING_VALUE.
+        # centre 5.2 m from the median column. Five rows in two groups: letters come to 184 mm (between groups V
+        # and VI of Tabela 1.8; one group of five rows at d = 210 mm would be 1.90 m by Tabela 9.5.4). WORKING_VALUE.
         size_m: [3.3, 1.8]
         lat_shift_m: -0.8
         frame: single
