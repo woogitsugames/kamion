@@ -265,6 +265,8 @@ def apply_edge_overrides(net: Network, edges, overrides):
                     sec.lanes_bwd = sec.lanes // 2
                 else:
                     sec.lanes_fwd = sec.lanes
+            if st.get("lamps") is False:
+                sec.provenance["no_lamps"] = ov["id"]      # ADR 0204: unlit rural road (streetscape.furniture.lamps)
             if "lane_width" in st:
                 sec.lane_w = float(st["lane_width"])
             if "edge_strip" in st:

@@ -39,3 +39,12 @@ overrides:
       Only the plate is laid; water jets and night lighting are not modelled (open).
     confidence: low
     verify: owner - where on the plaza the fountain is (which corner / distance from Grodzienska)
+  - id: field-roads-unlit
+    target: {osm_way: [305910057, 1111506743, 1111506749]}
+    reason: >-
+      Unclassified roads across the fields east of the town (x > 761700): no street lighting on the 2025
+      orthophoto (no columns, no shadows); the lamp rule would light them. DK65 south of the town (way 286990127)
+      is left to the rule - not verified (open).
+    confidence: medium
+    verify: none
+    set: {lamps: false}

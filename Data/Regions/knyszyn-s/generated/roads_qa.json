@@ -1,8 +1,8 @@
 {
  "chains": [
   {
-   "axis_smoothing_dev_max_m": 0.03,
-   "bridge_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.02,
+   "bridge_m": 19.0,
    "grade_limit": 0.07,
    "highway": [
     "primary"
@@ -11,41 +11,18 @@
    "lanes": [
     2
    ],
-   "length_m": 336.0,
-   "max_grade": 0.0423,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.004,
+   "length_m": 1594.6,
+   "max_grade": 0.0404,
+   "overrides": [
+    "rural-roads-unlit"
+   ],
+   "profile_rms_vs_nmt_m": 0.019,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.5,
     7.5
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.91,
-   "bridge_m": 0.0,
-   "grade_limit": 0.12,
-   "highway": [
-    "service"
-   ],
-   "id": "c:w1478765534:13566191832-13566191826",
-   "lanes": [
-    2
-   ],
-   "length_m": 94.2,
-   "max_grade": 0.0315,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.026,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    5.0
-   ],
-   "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:dk65-carriageway-width"
    ]
   },
   {
@@ -61,37 +38,16 @@
    ],
    "length_m": 826.0,
    "max_grade": 0.0546,
-   "overrides": [],
+   "overrides": [
+    "rural-roads-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
     7.5
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
-   ]
-  },
-  {
-   "axis_smoothing_dev_max_m": 0.01,
-   "bridge_m": 19.0,
-   "grade_limit": 0.07,
-   "highway": [
-    "primary"
-   ],
-   "id": "c:w286990127:2906549567-4898926854",
-   "lanes": [
-    2
-   ],
-   "length_m": 1258.6,
-   "max_grade": 0.0362,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.02,
-   "sidewalk_frac": 0.0,
-   "width_m": [
-    6.5
-   ],
-   "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:dk65-carriageway-width"
    ]
   },
   {
@@ -107,7 +63,9 @@
    ],
    "length_m": 1491.3,
    "max_grade": 0.0589,
-   "overrides": [],
+   "overrides": [
+    "rural-roads-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -124,20 +82,20 @@
  "summary": {
   "authored_paint": [],
   "axis_smoothing_deviation_m": {
-   "max": 0.907,
+   "max": 0.223,
    "p50": 0.0,
-   "p95": 0.178
+   "p95": 0.001
   },
   "bridges": [
    {
-    "chain": "c:w286990127:2906549567-4898926854",
+    "chain": "c:w1111506750:1134839226-10168944517",
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
     "piers": 0,
     "span_m": 18.5
    }
   ],
-  "chains": 5,
+  "chains": 3,
   "clearance_by_class_m": {
    "A": 5.0,
    "D": 4.5,
@@ -153,12 +111,12 @@
   "crossings_skipped": [],
   "crossings_snapped": 0,
   "decals": {
-   "gullies": 223,
-   "oil": 6,
+   "gullies": 219,
+   "oil": 3,
    "patches": 36
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 31373,
+  "footprint_nodes": 49296,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -179,9 +137,9 @@
   },
   "grade_over_limit": [],
   "junction_patches": {
-   "polar": 2
+   "polar": 1
   },
-  "junctions": 2,
+  "junctions": 1,
   "junctions_earclip": [],
   "junctions_repaired": [],
   "low_confidence": [
@@ -191,13 +149,37 @@
    "carriageway width: BDOT10k clamped to PTB2022 §17 ranges, else class standard"
   ],
   "markings": {
-   "P-1 centre line": 7,
+   "P-1 centre line": 6,
    "P-13": 1
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 140,
-  "overrides_applied": [],
+  "nmt_nodes_replaced_under_decks": 150,
+  "overrides_applied": [
+   {
+    "id": "dk65-carriageway-width",
+    "targets": [
+     "w1111506750:1134839226-10168944517",
+     "w1111506754:1134817563-1134839226",
+     "w27718745:897574813-1134817563",
+     "w286990127:2906549567-4898926854",
+     "w286990128:2408591526-2906549567",
+     "w305910042:10168944517-2408591526"
+    ]
+   },
+   {
+    "id": "rural-roads-unlit",
+    "targets": [
+     "w1111506750:1134839226-10168944517",
+     "w1111506754:1134817563-1134839226",
+     "w27718745:897574813-1134817563",
+     "w286990127:2906549567-4898926854",
+     "w286990128:2408591526-2906549567",
+     "w305910042:10168944517-2408591526",
+     "w98071886:1134817563-839431340"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -212,16 +194,16 @@
   "signalised_junctions": 0,
   "through_lines": {
    "crossing_pairs_skipped": 0,
-   "junctions": 2,
+   "junctions": 1,
    "lines": {
-    "lane": 2
+    "lane": 1
    },
-   "pairs": 2,
+   "pairs": 1,
    "unmatched": 0
   },
   "verge_strips": {
    "chunks": 20,
-   "tris": 2044
+   "tris": 1456
   },
   "walled_ramps": []
  }
