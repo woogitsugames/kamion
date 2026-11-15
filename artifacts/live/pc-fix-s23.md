@@ -26,3 +26,8 @@ Worktree: .claude/worktrees/pc-fix-s23, gałąź pc-fix-s23 (baza origin/int-pc-
 - Poza Unity refleksją: MenuInputGateTests 8/8 (bez testu GC), PcAutoTierTests 2/10 (reszta natywna).
 - Raport: docs/reports/FIX-2026-11-15-pc-fix-s23.md
 - NASTĘPNY KROK (int-pc-s23): `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter "Game.Tests.MenuInputGateTests;Game.Tests.PcAutoTierTests"` → potem `git merge --no-ff origin/pc-fix-s23`.
+
+## KONIEC (2026-11-15)
+- Gałąź pc-fix-s23 wypchnięta, ostatni commit kodu/raportu: d4062b625. Raport: docs/reports/FIX-2026-11-15-pc-fix-s23.md. Dowody: artifacts/pc-fix-s23/ (worktree + main).
+- Gotowe do scalenia w int-pc-s23: TAK po zielonych EditMode. Do potwierdzenia przez lidera: ekran przypisań tylko wskaźnikiem (#131 P2-1).
+- NASTĘPNY KROK (int-pc-s23): `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter "Game.Tests.MenuInputGateTests;Game.Tests.PcAutoTierTests"` → `git merge --no-ff origin/pc-fix-s23`.
