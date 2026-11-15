@@ -210,6 +210,7 @@ def glb_materials():
 
 
 
+RAIL_ZONE_EXCLUDE_MATS = {"shoulder_gravel", "verge_grass"}    # ADR 0272: not part of the road a level crossing spans
 WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
         "sidewalk_paving", "apron_sett"}
 
@@ -857,8 +858,12 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
             for run in np.split(np.arange(len(on)), np.where(np.diff(on.astype(int)) != 0)[0] + 1):
                 if len(run) >= 2 and on[run[0]]:
                     ground_lines.append(_LS(c.line.p[run]))
+        # ADR 0272: the crossing zone (panels, boom length, device offsets) follows the paved road, not the ground
+        # shoulder / verge / ditch of a kerbless edge - those strips are footprint too and would widen the crossing by
+        # the whole side profile. Kerbed roads have neither material in the footprint: their zone is unchanged.
         w.rail = RL.Plan(rsrc, w.origin, tile_local,
-                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines,
+                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"
+                                                     and p.mat not in RAIL_ZONE_EXCLUDE_MATS]), ground_lines,
                          overrides=pipeline.load_overrides(region_id))
         log("rail plan:", len(w.rail.tracks), "tracks,", len(w.rail.crossings), "level crossings")
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
