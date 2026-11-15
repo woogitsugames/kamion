@@ -1,0 +1,1153 @@
+{
+ "chains": [
+  {
+   "axis_smoothing_dev_max_m": 0.37,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w1473555863:13518969997-13518969984",
+   "lanes": [
+    2
+   ],
+   "length_m": 310.3,
+   "max_grade": 0.0291,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.02,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.5
+   ],
+   "width_src": [
+    "PTB2022 §17 ust.1 standard"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.14,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w1473558108:1134816414-3048959105",
+   "lanes": [
+    2
+   ],
+   "length_m": 27.0,
+   "max_grade": 0.0068,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w1473558108:13518997727-1134810961",
+   "lanes": [
+    2
+   ],
+   "length_m": 44.3,
+   "max_grade": 0.0101,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.003,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w1473558108:3048959105-13518997727",
+   "lanes": [
+    2
+   ],
+   "length_m": 149.7,
+   "max_grade": 0.0082,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.12,
+   "highway": [
+    "service"
+   ],
+   "id": "c:w1473558112:13518997727-13518997728",
+   "lanes": [
+    2
+   ],
+   "length_m": 10.5,
+   "max_grade": 0.0029,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.008,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "PTB2022 §17 ust.1 standard"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.03,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "secondary"
+   ],
+   "id": "c:w1478765548:13432353453-3047667183",
+   "lanes": [
+    2,
+    3
+   ],
+   "length_m": 164.8,
+   "max_grade": 0.0172,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.5,
+    11.0
+   ],
+   "width_src": [
+    "PTB2022 §17 ust.1 standard",
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.02,
+   "bridge_m": 0.0,
+   "grade_limit": 0.08,
+   "highway": [
+    "primary"
+   ],
+   "id": "c:w232511646:1134814357-1134832996",
+   "lanes": [
+    2
+   ],
+   "length_m": 325.0,
+   "max_grade": 0.0168,
+   "overrides": [
+    "dk65-carriageway-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    7.5
+   ],
+   "width_src": [
+    "authored_override:dk65-carriageway-width"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.08,
+   "highway": [
+    "primary"
+   ],
+   "id": "c:w232511646:1134827821-1134814357",
+   "lanes": [
+    2
+   ],
+   "length_m": 132.2,
+   "max_grade": 0.0211,
+   "overrides": [
+    "dk65-carriageway-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    7.5
+   ],
+   "width_src": [
+    "authored_override:dk65-carriageway-width"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.09,
+   "bridge_m": 0.0,
+   "grade_limit": 0.08,
+   "highway": [
+    "primary"
+   ],
+   "id": "c:w232511646:1134832996-1134811124",
+   "lanes": [
+    2
+   ],
+   "length_m": 587.4,
+   "max_grade": 0.0131,
+   "overrides": [
+    "dk65-carriageway-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.007,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    7.5
+   ],
+   "width_src": [
+    "authored_override:dk65-carriageway-width"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.08,
+   "highway": [
+    "primary"
+   ],
+   "id": "c:w232511646:3047667219-1134827821",
+   "lanes": [
+    2
+   ],
+   "length_m": 67.3,
+   "max_grade": 0.0121,
+   "overrides": [
+    "dk65-carriageway-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    7.5
+   ],
+   "width_src": [
+    "authored_override:dk65-carriageway-width"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.06,
+   "bridge_m": 0.0,
+   "grade_limit": 0.07,
+   "highway": [
+    "primary"
+   ],
+   "id": "c:w232511647:1134821394-1134824484",
+   "lanes": [
+    2
+   ],
+   "length_m": 606.7,
+   "max_grade": 0.019,
+   "overrides": [
+    "dk65-carriageway-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    7.5
+   ],
+   "width_src": [
+    "authored_override:dk65-carriageway-width"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.11,
+   "bridge_m": 0.0,
+   "grade_limit": 0.07,
+   "highway": [
+    "primary"
+   ],
+   "id": "c:w232511647:1134828656-1134832955",
+   "lanes": [
+    2
+   ],
+   "length_m": 132.1,
+   "max_grade": 0.0078,
+   "overrides": [
+    "dk65-carriageway-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.008,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    7.5
+   ],
+   "width_src": [
+    "authored_override:dk65-carriageway-width"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.04,
+   "bridge_m": 0.0,
+   "grade_limit": 0.07,
+   "highway": [
+    "primary"
+   ],
+   "id": "c:w232511647:1134832955-1134821394",
+   "lanes": [
+    2
+   ],
+   "length_m": 78.3,
+   "max_grade": 0.0047,
+   "overrides": [
+    "dk65-carriageway-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.008,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    7.5
+   ],
+   "width_src": [
+    "authored_override:dk65-carriageway-width"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.07,
+   "bridge_m": 0.0,
+   "grade_limit": 0.07,
+   "highway": [
+    "primary"
+   ],
+   "id": "c:w232511647:1134837275-1134828656",
+   "lanes": [
+    2
+   ],
+   "length_m": 59.0,
+   "max_grade": 0.0085,
+   "overrides": [
+    "dk65-carriageway-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    7.5
+   ],
+   "width_src": [
+    "authored_override:dk65-carriageway-width"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.29,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w300799857:3048872016-3048871974",
+   "lanes": [
+    2
+   ],
+   "length_m": 125.9,
+   "max_grade": 0.0104,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 1.18,
+   "bridge_m": 0.0,
+   "grade_limit": 0.12,
+   "highway": [
+    "service"
+   ],
+   "id": "c:w300808749:3048959105-3047498874",
+   "lanes": [
+    2
+   ],
+   "length_m": 88.8,
+   "max_grade": 0.0111,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.015,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "PTB2022 §17 ust.1 standard"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.2,
+   "bridge_m": 0.0,
+   "grade_limit": 0.12,
+   "highway": [
+    "service"
+   ],
+   "id": "c:w495260808:4870406345-4870406341",
+   "lanes": [
+    2
+   ],
+   "length_m": 167.7,
+   "max_grade": 0.02,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "PTB2022 §17 ust.1 standard"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.09,
+   "bridge_m": 0.0,
+   "grade_limit": 0.12,
+   "highway": [
+    "service"
+   ],
+   "id": "c:w498485790:4898928970-4898928966",
+   "lanes": [
+    2
+   ],
+   "length_m": 131.1,
+   "max_grade": 0.0152,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.011,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "PTB2022 §17 ust.1 standard"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "secondary"
+   ],
+   "id": "c:w70329870:1134842314-2906546700",
+   "lanes": [
+    2
+   ],
+   "length_m": 53.4,
+   "max_grade": 0.015,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.5
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "secondary"
+   ],
+   "id": "c:w70329870:4898928970-1134842314",
+   "lanes": [
+    2
+   ],
+   "length_m": 377.7,
+   "max_grade": 0.0117,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.5
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.25,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w978807338:9056790525-9056790523",
+   "lanes": [
+    2
+   ],
+   "length_m": 142.1,
+   "max_grade": 0.0087,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "tertiary"
+   ],
+   "id": "c:w98071065:1134822517-13518969997",
+   "lanes": [
+    2
+   ],
+   "length_m": 75.7,
+   "max_grade": 0.018,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.1
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.43,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "tertiary"
+   ],
+   "id": "c:w98071065:1134828656-1134822517",
+   "lanes": [
+    2
+   ],
+   "length_m": 62.9,
+   "max_grade": 0.0116,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.033,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.1
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.04,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "tertiary"
+   ],
+   "id": "c:w98071065:1134842139-9056790523",
+   "lanes": [
+    2
+   ],
+   "length_m": 64.6,
+   "max_grade": 0.0107,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.1
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.12,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "tertiary"
+   ],
+   "id": "c:w98071065:13518969997-1134842139",
+   "lanes": [
+    2
+   ],
+   "length_m": 416.6,
+   "max_grade": 0.0181,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.1
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "tertiary"
+   ],
+   "id": "c:w98071065:9056790523-1134814649",
+   "lanes": [
+    2
+   ],
+   "length_m": 23.2,
+   "max_grade": 0.0084,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.1
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.15,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98071213:1134810961-1134842139",
+   "lanes": [
+    2
+   ],
+   "length_m": 135.3,
+   "max_grade": 0.0219,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.007,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.67,
+   "bridge_m": 0.0,
+   "grade_limit": 0.12,
+   "highway": [
+    "service"
+   ],
+   "id": "c:w98071908:4898920661-1134842314",
+   "lanes": [
+    2
+   ],
+   "length_m": 83.4,
+   "max_grade": 0.0616,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.028,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "PTB2022 §17 ust.1 standard"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.47,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98071957:1134839334-1134814357",
+   "lanes": [
+    2
+   ],
+   "length_m": 236.1,
+   "max_grade": 0.0129,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.009,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.17,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98071966:13518993126-1134840483",
+   "lanes": [
+    2
+   ],
+   "length_m": 100.7,
+   "max_grade": 0.0273,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.16,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98071966:9056790525-9056790540",
+   "lanes": [
+    2
+   ],
+   "length_m": 227.3,
+   "max_grade": 0.0088,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.004,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.21,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "unclassified"
+   ],
+   "id": "c:w98072121:1842392508-1134832955",
+   "lanes": [
+    2
+   ],
+   "length_m": 1906.5,
+   "max_grade": 0.0746,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.017,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "tertiary"
+   ],
+   "id": "c:w98072226:1134816414-1134836218",
+   "lanes": [
+    2
+   ],
+   "length_m": 53.6,
+   "max_grade": 0.0139,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.003,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.17,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "tertiary"
+   ],
+   "id": "c:w98072226:1134821394-13518969984",
+   "lanes": [
+    2
+   ],
+   "length_m": 434.6,
+   "max_grade": 0.0261,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.021,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "tertiary"
+   ],
+   "id": "c:w98072226:13518969984-1134816414",
+   "lanes": [
+    2
+   ],
+   "length_m": 251.2,
+   "max_grade": 0.024,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.005,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    6.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "unclassified"
+   ],
+   "id": "c:w98072355:1134824484-13523625036",
+   "lanes": [
+    2
+   ],
+   "length_m": 65.3,
+   "max_grade": 0.0084,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.003,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.06,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98072382:1134840483-3048871974",
+   "lanes": [
+    2
+   ],
+   "length_m": 63.2,
+   "max_grade": 0.0326,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.008,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.06,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98072382:3048871974-1134825950",
+   "lanes": [
+    2
+   ],
+   "length_m": 69.3,
+   "max_grade": 0.0232,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.006,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.05,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98072526:1134825950-1134839334",
+   "lanes": [
+    2
+   ],
+   "length_m": 139.8,
+   "max_grade": 0.0081,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.004,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.5
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.26,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98072526:1134832996-1134825950",
+   "lanes": [
+    2
+   ],
+   "length_m": 99.5,
+   "max_grade": 0.026,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.014,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.5
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98072526:1134839334-1134842485",
+   "lanes": [
+    2
+   ],
+   "length_m": 0.4,
+   "max_grade": 0.0053,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.0,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.5
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 1.06,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "residential"
+   ],
+   "id": "c:w98072701:4870406345-1134840119",
+   "lanes": [
+    2
+   ],
+   "length_m": 327.2,
+   "max_grade": 0.0398,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.008,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+   ]
+  }
+ ],
+ "junction_notes": {
+  "j:n1134839334": [
+   "corner 0-1: no fillet fits (alpha 89 deg) -> sharp",
+   "corner 0-1: kerb line continued to the emerging lane edge (gate-type split)"
+  ]
+ },
+ "region": "knyszyn-w",
+ "schema": "truck-sim-pl/roads-qa/1",
+ "summary": {
+  "authored_paint": [],
+  "axis_smoothing_deviation_m": {
+   "max": 1.179,
+   "p50": 0.0,
+   "p95": 0.04
+  },
+  "bridges": [],
+  "chains": 42,
+  "clearance_by_class_m": {
+   "A": 5.0,
+   "D": 4.5,
+   "G": 4.5,
+   "GP": 4.5,
+   "L": 4.5,
+   "S": 5.0,
+   "Z": 4.5
+  },
+  "crossings_in_junction": [
+   9056790521,
+   3048941852,
+   3048938691,
+   9056790519,
+   9056790520,
+   9056790522
+  ],
+  "crossings_merged": 0,
+  "crossings_p11": 0,
+  "crossings_skipped": [],
+  "crossings_snapped": 8,
+  "decals": {
+   "gullies": 324,
+   "oil": 31,
+   "patches": 94
+  },
+  "emergency_signal_junctions": [],
+  "footprint_nodes": 133977,
+  "fork_abreast": [],
+  "fork_shifts": [],
+  "fork_tapers": [
+   {
+    "chain": "c:w98072526:1134825950-1134839334",
+    "from_hw": 2.75,
+    "node": "n1134825950",
+    "taper_m": 15.0,
+    "to_hw": 2.5
+   },
+   {
+    "chain": "c:w98072526:1134832996-1134825950",
+    "from_hw": 2.75,
+    "node": "n1134825950",
+    "taper_m": 15.0,
+    "to_hw": 2.5
+   },
+   {
+    "chain": "c:w98072701:1134827821-4870406345",
+    "from_hw": 2.75,
+    "node": "n4870406345",
+    "taper_m": 14.2,
+    "to_hw": 2.5
+   },
+   {
+    "chain": "c:w978807338:9056790525-9056790523",
+    "from_hw": 3.0,
+    "node": "n9056790525",
+    "taper_m": 15.0,
+    "to_hw": 2.5
+   }
+  ],
+  "gores": {
+   "gores": [],
+   "islands": [],
+   "kerb_dropped_m": 0.0,
+   "kerb_tris_in_fill": 0,
+   "paved": {},
+   "rejected": [],
+   "rule": {
+    "max_slope": 0.1,
+    "min_island_m2": 5.0,
+    "min_island_w_m": 2.0,
+    "sliver_max_len_m": 60.0,
+    "status": "WORKING_VALUE"
+   }
+  },
+  "grade_over_limit": [],
+  "junction_patches": {
+   "delaunay": 3,
+   "polar": 15,
+   "repaired": 2
+  },
+  "junctions": 20,
+  "junctions_earclip": [],
+  "junctions_repaired": [
+   "j:n1134839334",
+   "j:n1134827821"
+  ],
+  "low_confidence": [
+   "bridge deck heights interpolated between abutments (NMT = ground under deck); piers by rule",
+   "sidewalks inferred from parallel OSM footways (≤ 1.4 m from the sidewalk centre line)",
+   "kerb returns: WORKING_VALUE radii by class (standards.CURB_RADIUS)",
+   "carriageway width: BDOT10k clamped to PTB2022 §17 ranges, else class standard"
+  ],
+  "markings": {
+   "P-1 centre line": 21,
+   "P-1 lane line": 1,
+   "P-10 crossing": 8,
+   "P-10 crossing in junction": 6,
+   "P-13": 8,
+   "P-8 skipped (off carriageway)": 2
+  },
+  "markings_overlap_removed_tris": 0,
+  "median_fills": [],
+  "nmt_nodes_replaced_under_decks": 0,
+  "overrides_applied": [
+   {
+    "id": "dk65-carriageway-width",
+    "targets": [
+     "w232511646:1134814357-1134832996",
+     "w232511646:1134827821-1134814357",
+     "w232511646:1134832996-1134811124",
+     "w232511646:3047667219-1134827821",
+     "w232511647:1134811124-1134837275",
+     "w232511647:1134821394-1134824484",
+     "w232511647:1134828656-1134832955",
+     "w232511647:1134832955-1134821394",
+     "w232511647:1134837275-1134828656"
+    ]
+   }
+  ],
+  "overrides_stale": [],
+  "paint_clear_tris": {},
+  "paint_erased_in_zones_tris": 0,
+  "painted_zones": [],
+  "profile_ties": [],
+  "roundabout_junctions": 0,
+  "sides_on_carriageway_culled": {
+   "kerb_tris": 4,
+   "parts": 21,
+   "side_tris": 44
+  },
+  "signalised_junctions": 0,
+  "through_lines": {
+   "crossing_pairs_skipped": 4,
+   "junctions": 14,
+   "lines": {
+    "lane": 15
+   },
+   "pairs": 22,
+   "unmatched": 2
+  },
+  "verge_strips": {
+   "chunks": 25,
+   "tris": 7356
+  },
+  "walled_ramps": []
+ }
+}
