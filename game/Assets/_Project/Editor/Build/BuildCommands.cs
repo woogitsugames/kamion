@@ -136,11 +136,11 @@ namespace Game.Editor.Build
             scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToList();
             // Content tiers (ADR 0012): the High world scene ships only when asked for (Android: -worldHigh; Windows: unless
             // -worldLow, ADR 0261); the default APK carries the Low/Medium content only.
-            const string worldHigh = "Assets/_Generated/World/bialystok-industrial-c/WorldC_High.unity";
+            const string worldHighScene = "Assets/_Generated/World/bialystok-industrial-c/WorldC_High.unity";
             if (worldHigh)
             {
-                if (File.Exists(Path.Combine(EditorTools.ProjectRoot, worldHigh))) scenes.Add(worldHigh);
-                else Debug.LogWarning("[BUILD] -worldHigh: " + worldHigh + " missing (scripts/import-region.ps1)");
+                if (File.Exists(Path.Combine(EditorTools.ProjectRoot, worldHighScene))) scenes.Add(worldHighScene);
+                else Debug.LogWarning("[BUILD] -worldHigh: " + worldHighScene + " missing (scripts/import-region.ps1)");
             }
             // Region scenes for this build only (ADR 0229): -regions / -regionsFile, composed in memory; EditorBuildSettings
             // (git) stays Boot + DrivingLab + WorldC. No argument = the list above unchanged.
