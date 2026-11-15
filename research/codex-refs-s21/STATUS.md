@@ -1,5 +1,5 @@
 # Status codex-refs-s21
 
-2026-11-15: pakiet 01 WIP; 1 kadr pomocniczy, 0 kadrów kwalifikowanych ciągnika/naczepy, 0 link-only; przepisy R148 sprawdzone w dokumencie UNECE. Progi M59-FIX niespełnione. Pakietów 02–07 nie rozpoczęto. PR nie utworzono (próg 2 pakietów nieosiągnięty).
+Cel ciągłego researchu aktywny. Pakiet 01 WIP: 4 kadry pomocnicze obejrzane osobno, w tym 3 nowe całe kadry i 3 wycinki; 0 kwalifikowanych ciągnik/naczepa z czytelnym E. Brak kadrów link-only. Progi M59-FIX niespełnione.
 
-Następny krok: szukać oryginałów z czytelnymi oznaczeniami E na lampach ciągnika i naczepy w dozwolonych źródłach; każdy osobno obejrzeć, opisać w manifeście i pozostawić wymagania jako niespełnione do ich wykazania. Stan gałęzi: `git status --short --branch`.
+Następny krok: Commons/Openverse — tylne lampy ciągników i naczep; każdą obejrzeć i sprawdzić znaki na wycinku. Potem pakiet 02.
