@@ -1,0 +1,36 @@
+{
+  "review_date": "2026-11-15",
+  "reviewer": "Niezależny agent lampy",
+  "source": "https://bip.bialystok.pl/resource/104575/Raport%2Bza%2B2025%2Brok_do%2BBRM.pdf",
+  "method": "Osobno obejrzane istniejące lokalne cover.png i p101.png, bez nowych pobrań ani kopiowania. Porównano annual-report-2025-source.json i wiersze07-D05/07-D06 manifestu.",
+  "verdict": "PASS",
+  "cover": "Wyraźny tytuł RAPORT O STANIE MIASTA BIAŁEGOSTOKU i rok2025.",
+  "page_locator": "Drukowana strona101, dolny punkt listy pod Inne działania realizowane w celu poprawy bezpieczeństwa w ruchu drogowym i pieszym.",
+  "findings": [
+    {
+      "id": "07-D05",
+      "status": "SOURCED [wizualny odczyt s101]",
+      "street": "ks. S. Suchowolca",
+      "segment": "od ul.Plażowej do ul.K.Ciołkowskiego",
+      "reported_action": "Wprowadzenie zakazu wjazdu pojazdów ciężarowych.",
+      "match": "Zgodne z rekordem."
+    },
+    {
+      "id": "07-D06",
+      "status": "SOURCED [wizualny odczyt s101]",
+      "street": "A.Mickiewicza",
+      "segment": "od ul.J.Kuronia do ul.K.Ciołkowskiego",
+      "reported_action": "Ograniczenie tonażowe8ton.",
+      "match": "Zgodne z rekordem;8ton zapisane przy tej ulicy."
+    }
+  ],
+  "implementation_context": "Raport podaje działania realizowane, a punkt wymienia wprowadzenie zakazu. Jest to sprawozdanie za2025, nie sama zapowiedź przyszłych prac.",
+  "limits": [
+    "Nie jest to niezależna inspekcja fizycznych znaków.",
+    "Nie ustalono symboluB-5/B-18 ani znaczenia masy.",
+    "Nie dopisano tabliczek, wyłączeń ani wyjątków.",
+    "Nie ustalono aktualnego stanu prawnego lub terenowego2026-11-15.",
+    "Nie wskazano dziennej daty wdrożenia."
+  ],
+  "files_changed": "Tylko ten nowyJSON; źródłowe pliki koordynatora bez zmian."
+}
