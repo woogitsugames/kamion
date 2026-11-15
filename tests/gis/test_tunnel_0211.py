@@ -129,8 +129,10 @@ def test_cover_is_its_own_primitive_not_merged_into_the_terrain():
 
 def test_inside_the_tunnel_no_grass_verge_and_no_rule_guardrail():
     """r4 renders (tunnel_eb_inside): a grass verge under the slab and an 8 m W-beam stub of the "beside a structure"
-    rule between the tunnel walls. Inside F below the soffit: grass rows of the tunnel carriageway -> gravel, rule
-    guardrails (visual + collision) dropped; outside F, above the soffit and other chains: untouched."""
+    rule between the tunnel walls; Mapillary 111496044347413 / 1142430022898855: paved ledge at the walls. Under the
+    slab: side rows of the tunnel carriageway -> paving (visual + collision), rule guardrails dropped; in the walled cut
+    outside the slab: only the side facing the wall is paved; outside the cut, above the soffit, ":vg" strips and other
+    chains: untouched."""
     from types import SimpleNamespace as NS
     from roads.meshing import MeshBuf
 
@@ -139,24 +141,36 @@ def test_inside_the_tunnel_no_grass_verge_and_no_rule_guardrail():
         return V, V[:, :2].copy(), np.array([[0, 1, 2], [0, 2, 3]])
 
     cid = "c:w1:1-2"
-    g = {"F": shapely.box(0, -5, 20, 5), "zroad": lambda q: 100.0, "clear": 4.7, "runs": [{"c": NS(id=cid)}]}
+    g = {"F": shapely.box(0, -5, 20, 5), "zroad": lambda q: 100.0, "clear": 4.7,
+         "runs": [{"c": NS(id=cid), "inner": {"L": False, "R": True}}]}
+    cut = shapely.box(0, -5, 60, 5)
     buf = MeshBuf()
-    buf.add("road", "verge_grass", *quad(5, 99.8), src=cid + ":L:3")                 # inside: -> gravel
-    buf.add("road", "verge_grass", *quad(40, 99.8), src=cid + ":L:3")                # outside F: stays grass
+    buf.add("road", "verge_grass", *quad(5, 99.8), src=cid + ":L:3")                 # under the slab: paved
+    buf.add("road", "shoulder_gravel", *quad(5, 99.9), src=cid + ":R:2")             # under the slab, inner side: paved
+    buf.add("collision", "collision_grass", *quad(5, 99.8), src=cid + ":L:3")        # its collision surface too
+    buf.add("road", "verge_grass", *quad(40, 99.8), src=cid + ":L:3")                # walled cut, outer side: paved
+    buf.add("road", "verge_grass", *quad(40, 99.7), src=cid + ":R:3")                # walled cut, median side: stays
+    buf.add("road", "verge_grass", *quad(80, 99.8), src=cid + ":L:3")                # outside the cut: stays
     buf.add("road", "verge_grass", *quad(5, 99.8), src="c:w9:8-9:L:3")               # another chain: stays
     buf.add("road", "verge_grass", *quad(5, 99.9), src=cid + ":R:vg")                # merged-into-terrain skirt: stays
-    buf.add("bridge", "barrier_steel", *quad(8, 100.5), src=cid + ":L:structure")    # inside: dropped
+    buf.add("road", "curb_concrete", *quad(5, 100.1), src=cid + ":L:1")              # kerb: stays
+    buf.add("bridge", "barrier_steel", *quad(8, 100.5), src=cid + ":L:structure")    # under the slab: dropped
     buf.add("collision", "collision_steel", *quad(8, 100.5), src=cid + ":L:structure")
     buf.add("bridge", "barrier_steel", *quad(8, 106.0), src=cid + ":L:structure")    # above the soffit: stays
-    buf.add("bridge", "barrier_steel", *quad(40, 100.5), src=cid + ":L:median")      # outside F: stays
-    rep = TN._dress_inside(NS(buf=buf), [g])
-    assert rep == {"side_grass_to_gravel_tris": 2, "guardrail_tris": 2, "guardrail_collision_tris": 2}
+    buf.add("bridge", "barrier_steel", *quad(40, 100.5), src=cid + ":L:median")      # outside the slab: stays
+    rep = TN._dress_inside(NS(buf=buf), [g], cut)
+    assert rep == {"side_paved_tris": 6, "side_paved_collision_tris": 2, "guardrail_tris": 2, "guardrail_collision_tris": 2}
     got = sorted((p.layer, p.mat, p.src, float(p.V[p.T].mean((0, 1))[0]), float(p.V[:, 2].max())) for p in buf.parts)
     assert got == sorted([
-        ("road", "shoulder_gravel", cid + ":L:3:tunnel", 6.0, 99.8),
-        ("road", "verge_grass", cid + ":L:3", 41.0, 99.8),
+        ("road", "sidewalk_paving", cid + ":L:3:tunnel", 6.0, 99.8),
+        ("road", "sidewalk_paving", cid + ":R:2:tunnel", 6.0, 99.9),
+        ("collision", "collision_paving", cid + ":L:3:tunnel", 6.0, 99.8),
+        ("road", "sidewalk_paving", cid + ":L:3:tunnel", 41.0, 99.8),
+        ("road", "verge_grass", cid + ":R:3", 41.0, 99.7),
+        ("road", "verge_grass", cid + ":L:3", 81.0, 99.8),
         ("road", "verge_grass", "c:w9:8-9:L:3", 6.0, 99.8),
         ("road", "verge_grass", cid + ":R:vg", 6.0, 99.9),
+        ("road", "curb_concrete", cid + ":L:1", 6.0, 100.1),
         ("bridge", "barrier_steel", cid + ":L:structure", 9.0, 106.0),
         ("bridge", "barrier_steel", cid + ":L:median", 41.0, 100.5),
     ])
