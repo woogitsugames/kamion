@@ -32,3 +32,6 @@ SOURCED [07-D04, oba endpointy, pola w data/]: usługa jest publiczna, lecz brak
 ## B-131 — miejskie warunki, nadal bez rozstrzygnięcia datasetu
 
 07-D07 i licence-round2/: znaleziono publiczne warunki BIP i zarządzenie973/21. §3 i§6 trzeba oceniać łącznie; prawa pierwotne do konkretnej bazy nie zostały wykazane. Świeże metadane potwierdzają wydawcę miejskiego, ale licenseInfo nadal null, copyrightText pusty. Brak jawnego powiązania warunków z tym itemem, więc LEGAL_REVIEW_REQUIRED pozostaje. Geometrii nie pobierano. Główny manifest teraz8 rekordów.
+
+
+KartaView-licence-round3: indeks oficjalnej sekcji4 wskazuje BY-SA4.0 fotografii, oddzielnie od MIT kodu; wymagany kredyt w źródle. Bezpośrednia strona dała shell, pełny regulamin nieodczytany. To częściowa kontrola B-119, bez zdjęć i bez zatwierdzenia wcześniejszych klatek. Manifest główny:9 rekordów.
