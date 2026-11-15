@@ -416,6 +416,36 @@ namespace Game.Tests
         }
 
         [UnityTest]
+        public IEnumerator AboutPanel_FitsSafeArea([ValueSource(nameof(Devices))] Device d)
+        {
+            MakeCamera(d);
+            var p = AboutPanel.Create(m_Cam, null);
+            p.OverrideScreen(new Vector2(d.W, d.H), d.SafePx, d.Dpi);
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            CollectionAssert.IsEmpty(p.Problems, "attributions.txt loads without problems");
+            var safe = p.SafeAreaRect;
+            var bounds = new Rect(Vector2.zero, safe.rect.size);
+            Rect panel = RectIn(p.PanelRect, safe);
+            Assert.IsTrue(Contains(bounds, panel, 0.6f), $"{d.Name}: about panel {panel} outside the safe area {bounds.size}");
+            foreach (var g in p.PanelRect.GetComponentsInChildren<Graphic>(false))
+            {
+                Rect gr = RectIn(g.rectTransform, safe);
+                // Horizontally nothing may be cut; vertically the text scrolls under the mask.
+                Assert.IsTrue(gr.xMin >= panel.xMin - 1f && gr.xMax <= panel.xMax + 1f, $"{d.Name}: {g.transform.parent.name}/{g.name} {gr} cut by the panel {panel}");
+            }
+            Assert.Greater(p.ContentRect.rect.height, panel.height, $"{d.Name}: the licence texts are longer than one screen (body scrolls)");
+            foreach (string fixedName in new[] { "Title", AboutPanel.CloseLabel })
+            {
+                var t = p.PanelRect.Find(fixedName);
+                Assert.IsNotNull(t, fixedName);
+                Assert.IsTrue(Contains(panel, RectIn((RectTransform)t, safe), 1f), $"{d.Name}: {fixedName} cut");
+            }
+            Debug.Log($"[HUD-R10] about {d.Name}: panel {panel.width:F0}x{panel.height:F0}, content {p.ContentRect.rect.height:F0}");
+            UnityEngine.Object.Destroy(p.gameObject);
+        }
+
+        [UnityTest]
         public IEnumerator StartMenu_FitsSafeArea([ValueSource(nameof(Devices))] Device d)
         {
             MakeCamera(d);
