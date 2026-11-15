@@ -37,6 +37,9 @@ def test_anchors_clear_current_paths_and_geometry_is_finite():
     assert len(r["benches"]) == 8 and len(r["lamps"]) == 5 and not r["refused"]
     assert all(1.2 <= x["distance_to_path_m"] <= 5.0 for x in r["benches"]+r["lamps"])
     assert {p[0] for p in buf.parts}==set(props.LAYERS) | {"collision"}
+    low = {p[1] for p in buf.parts if p[0] == "buildings_low"}
+    assert not low & {"bench_wood", "paint_white_reflective", "plinth_grey", "steel_painted"}
+    assert {"bench_wood", "steel_painted"} <= {p[1] for p in buf.parts if p[0] == "buildings"}
     for layer,mat,v,t,src in buf.parts:
         assert np.isfinite(v).all() and t.min()>=0 and t.max()<len(v)
         assert (np.linalg.norm(np.cross(v[t[:,1]]-v[t[:,0]],v[t[:,2]]-v[t[:,0]]),axis=1)>1e-9).all()
@@ -88,3 +91,4 @@ def test_king_proxy_has_crowned_head_and_cheaper_low_geometry():
         assert arms[:,0].min() < -.4 and arms[:,0].max() > .4
     assert outputs["buildings"] > outputs["buildings_low"]
     assert outputs["buildings"] <= 200 and outputs["buildings_low"] <= 160
+

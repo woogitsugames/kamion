@@ -37,7 +37,8 @@ def test_real_footprint_builds_both_tiers_with_lod2_silhouette():
     assert result["status"] == "applied"
     assert result["height_lod2_m"] == feature["properties"]["height_lod2_2017_m"]
     assert {p[0] for p in buf.parts} == set(church.LAYERS)
-    assert {p[1] for p in buf.parts} == {"plaster_white", "roof_tiles_red", "glass"}
+    assert {p[1] for p in buf.parts if p[0] == "buildings"} == {"plaster_white", "roof_tiles_red", "glass"}
+    assert {p[1] for p in buf.parts if p[0] == "buildings_low"} == {"plaster_white", "roof_tiles_red", "plinth_dark"}
     for layer, mat, vertices, triangles, src in buf.parts:
         assert np.isfinite(vertices).all()
         assert triangles.min() >= 0 and triangles.max() < len(vertices)
@@ -107,3 +108,4 @@ def test_nave_windows_follow_real_footprint_walls():
             assert LineString([a, b]).difference(poly.boundary.buffer(1e-7)).length < 1e-6
             assert np.isclose(np.linalg.norm(b - a), 1.5)
             assert np.dot(wall_out, out) > .5
+

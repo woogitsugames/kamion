@@ -217,6 +217,12 @@ def build(buf, region, origin, overrides, zsmooth, report):
             else:
                 _box(acc,"collision","collision_steel",p,z-.1,z+3.95,.08,.08)
             result[kind].append({"at_epsg2180":list(xy),"distance_to_path_m":round(d,2),"confidence":"ESTIMATED"})
+    # Low reuses materials already present in this chunk; High keeps the authored palette.
+    for old, new in {"bench_wood": "wood_planks", "paint_white_reflective": "plaster_white",
+                     "plinth_grey": "plaster_grey", "steel_painted": "plinth_dark"}.items():
+        parts = acc.d.pop(("buildings_low", old), [])
+        if parts:
+            acc.d.setdefault(("buildings_low", new), []).extend(parts)
     acc.flush(buf,ASSET_ID)
     result.update(status="applied" if acc.d else "skipped", confidence={"obelisk_point":"SOURCED OSM; identity ESTIMATED",
                   "king_and_pole":"ESTIMATED", "dimensions":"WORKING_VALUE"})

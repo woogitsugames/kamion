@@ -33,7 +33,7 @@ def test_dry_features_stay_inside_real_paved_plate_and_are_near_flush():
     assert r["water_jets"]=="OPEN" and "dry" in r["summer_behavior"]
     assert not r["basin"] and not r["collision"] and r["triangles"]<=150
     assert {p[0] for p in buf.parts}=={"paved"}
-    assert {p[1] for p in buf.parts}=={"plinth_dark","steel_painted"}
+    assert {p[1] for p in buf.parts}=={"plinth_dark"}
     for layer,mat,v,t,src in buf.parts:
         assert np.allclose(v[:,2],125.+fountain.OFFSET_M)
         assert np.isfinite(v).all() and t.min()>=0 and t.max()<len(v)
@@ -53,3 +53,4 @@ def test_invalid_surface_heights_do_not_create_partial_geometry():
     buf=Buffer()
     r=fountain.build(buf,"knyszyn",ORIGIN,overrides(),lambda e,n:np.full_like(e,np.nan),{})
     assert r["status"]=="skipped" and "heights" in r["reason"] and not buf.parts
+

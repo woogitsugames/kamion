@@ -85,7 +85,7 @@ def build(buf, region, origin, overrides, zsurf, report):
             disc = Point(center+along*(u*length)+across*(v*width)).buffer(NOZZLE_RADIUS_M, quad_segs=2)
             if inner.covers(disc):
                 nozzles.append(disc)
-    geometry = [("plinth_dark", border)] + [("steel_painted", p) for p in nozzles]
+    geometry = [("plinth_dark", border)] + [("plinth_dark", p) for p in nozzles]
     triangles = [(mat, xy) for mat, polygon in geometry for xy in _triangles(polygon)]
     if not triangles:
         result["reason"] = "no valid border geometry"
@@ -102,5 +102,5 @@ def build(buf, region, origin, overrides, zsurf, report):
         acc.add("paved", mat, np.column_stack((xy,z)), [[0,1,2]])
     acc.flush(buf, ASSET_ID)
     result.update(status="applied", nozzle_count=len(nozzles), triangles=len(triangles),
-                  border_width_m=BORDER_M, surface_offset_m=OFFSET_M, material_count=2)
+                  border_width_m=BORDER_M, surface_offset_m=OFFSET_M, material_count=1)
     return result

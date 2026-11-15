@@ -207,6 +207,10 @@ def build(buf, region, blds, zsmooth, report):
                 if opening is not None:
                     a, c, wall_outward = opening
                     _arch(acc, layer, a, c, z + 1.8, 3.3, wall_outward)
+    # Dark low-tier window material is already present in these building chunks.
+    low_glass = acc.d.pop(("buildings_low", "glass"), [])
+    if low_glass:
+        acc.d.setdefault(("buildings_low", "plinth_dark"), []).extend(low_glass)
     acc.flush(buf, ASSET_ID)
     result.update(status="applied", height_lod2_m=round(tip-z, 2), eave_m=round(eave-z, 2),
                   height_source="GUGiK LoD2 2017", proportions="WORKING_VALUE", bounds_local=list(poly.bounds))
