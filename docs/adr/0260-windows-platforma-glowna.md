@@ -22,3 +22,6 @@ Pierwszy build Windows + jazda po Knyszynie (dowód: zrzut, log) — do zrobieni
 
 ## Otwarte
 Referencyjny PC i docelowy FPS; kolejność wejść (klawiatura / pad / kierownica FFB).
+
+## Uzupełnienie (D74)
+Klasy sprzętu PC przyjęte wg ETS2/ATS: minimalna (i5-6400/R3 1200, GTX 660/RX 460/HD 630 2 GB, 8 GB RAM, Low 1080p 30 fps WORKING_VALUE) i zalecana (i5-9600/R5 3600, GTX 1660/RX 590, 12 GB RAM, High 1080p 60 fps WORKING_VALUE). Szczegóły: docs/11 D74.

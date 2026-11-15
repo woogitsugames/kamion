@@ -52,6 +52,8 @@ namespace Game.Gameplay
         readonly DriverInputMixer m_Mixer = new DriverInputMixer();
         public readonly AutopilotDriverInput Autopilot = new AutopilotDriverInput();
         public readonly KeyboardDriverInput Keyboard = new KeyboardDriverInput();
+        /// <summary>Gamepad (ADR 0261): stick + triggers; inactive without a connected pad.</summary>
+        public readonly GamepadDriverInput Pad = new GamepadDriverInput();
         public readonly TouchSteeringWheel Wheel = new TouchSteeringWheel();
         public readonly GyroSteering Gyro = new GyroSteering();
         /// <summary>PC wheel + pedals + shifter and its force feedback (ADR 0263); null FFB backend until a native plugin exists.</summary>
@@ -130,7 +132,8 @@ namespace Game.Gameplay
             m_Mixer.Add(Autopilot);
             m_Mixer.Add(RouteDriver);
             m_Mixer.Add(Keyboard);
-            m_Mixer.Add(PcWheel.Input);   // absolute wheel: steers whenever connected (keys still override while held)
+            m_Mixer.Add(Pad);
+            m_Mixer.Add(PcWheel.Input);   // absolute wheel: steers whenever connected (keys and a deflected pad stick still override while held)
             m_Mixer.Add(Wheel);
             m_Mixer.Add(Gyro);
             m_Mixer.Add(Touch);
@@ -608,6 +611,9 @@ namespace Game.Gameplay
         /// target and writes its angle / lock as the steering command. Autopilots bypass the hand model (their own
         /// controllers are tuned on the raw command) and the column is kept at their angle for a seamless hand-over.
         /// </summary>
+        /// <summary>Right-stick look-around: full deflection = this many pixels of look drag per second (WORKING_VALUE), dead zone.</summary>
+        const float PadLookPxPerSecond = 900f, PadLookDeadZone = 0.15f;
+
         void FixedUpdate()
         {
             if (!vehicle.Initialized || UnityEngine.Physics.simulationMode != SimulationMode.FixedUpdate) return;   // scripted stepping (tests) drives Input itself
@@ -669,12 +675,19 @@ namespace Game.Gameplay
             if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, k_CamModeEvents[(int)m_LoggedCamMode]); }
             m_InputLog.TryFlush(Time.unscaledTime, intent.Throttle < 0.01f && intent.Brake < 0.01f && !intent.SteerActive);   // batched; allocates only on that frame
             var kb = UnityEngine.InputSystem.Keyboard.current;   // Android back key arrives as Escape
-            if (kb != null && kb.escapeKey.wasPressedThisFrame)
+            var pad = UnityEngine.InputSystem.Gamepad.current;   // ADR 0261: Start = menu / back, Y = next camera, right stick = look
+            if ((kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.startButton.wasPressedThisFrame))
             {
                 if (Game.UI.Navigation.FullMapView.HandleBack()) { }   // back closes the map first (ADR 0150)
                 else if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
             }
-            Game.Core.AudioCues.HornHeld = kb != null && kb.kKey.isPressed;   // horn (ADR 0142; touch button: gameplay-ui TODO)
+            if ((kb != null && kb.cKey.wasPressedThisFrame) || (pad != null && pad.buttonNorth.wasPressedThisFrame)) m_Rig.NextMode();   // C / Y: cab → chase → orbit
+            if (pad != null)
+            {
+                Vector2 look = pad.rightStick.ReadValue();
+                if (look.sqrMagnitude > PadLookDeadZone * PadLookDeadZone) m_Rig.AddLookDelta(look * (PadLookPxPerSecond * Time.unscaledDeltaTime));
+            }
+            Game.Core.AudioCues.HornHeld = (kb != null && kb.kKey.isPressed) || (pad != null && pad.rightStickButton.isPressed);   // horn (ADR 0142; touch button: gameplay-ui TODO)
             ApplyCommands(intent);
             UpdateTurnSignals(intent, fb.RoadWheelAngleNormalized);
 

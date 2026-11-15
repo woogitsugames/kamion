@@ -13,3 +13,21 @@ overrides:
     confidence: low
     verify: none
     set: {lamps: false}
+  # ADR 0217 (FIX 4): level crossing of DW671 with line 38. OSM node 1778182481 has no crossing:barrier / crossing:light,
+  # so the rule would build an unprotected crossing with G-3 crosses. Authored from open sources (no Google):
+  - id: rail-crossing-dw671-line38
+    kind: rail_crossing
+    target: {osm_node: 1778182481}
+    reason: >-
+      GUGiK orthophoto 2025 0.1 m (artifacts/rail-fix-s21/ref/ortho_0p10_crossing_60m.jpg): on the right of each
+      approach an orange drive cabinet and posts with long thin shadows, a second device on the left of each approach,
+      guard rails along both road edges, crossing panels running ~1.5-2 m past the edge lines. Mapillary
+      1569863873404925 (2020-06-23) and 828893548045009 (2019-07-03), CC BY-SA, both looking north-east from the
+      south-west approach: raised red-white booms on orange drives on the right AND on the left, a mast with two red
+      lamps on round black backboards on each side, no St Andrew's cross on the masts.
+    sources: [gugik-orto-2025-rgb-0p10-dw671-tykocin-01, "mapillary:1569863873404925", "mapillary:828893548045009"]
+    confidence: medium
+    verify: >-
+      photos are 2019-2020, the orthophoto 2025 shows the same four device positions; the north-east approach is
+      read from the orthophoto only. Open: guard rails and the red transverse strips before the crossing are not built.
+    set: {barrier: double_half, light: true, light_left: true, panel_margin_m: 1.5}

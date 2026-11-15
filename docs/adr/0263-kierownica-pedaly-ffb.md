@@ -59,6 +59,18 @@ Wymaga zgody lidera (nowy katalog `Plugins/`, ewentualnie zmiana `ProjectSetting
 - **vehicle-physics**: (a) absolutne żądanie biegu w AMT (`DriverIntent.TargetGear` → `AmtController`), dziś bootstrap zamienia `ShiftDelta` na jedno zbocze `ShiftUp/ShiftDown`, więc przeskok 4→2 zmienia o 1 bieg; (b) sprzęgło nożne (`DriverIntent.Clutch`) w trybie ręcznym; (c) mechaniczny ślad kółka (caster) i promień zataczania w `SteeringDefinition` ze źródłem — dziś FFB zna tylko ślad pneumatyczny, więc przy małym kącie znoszenia moment powrotny jest słaby (to samo dotyczy samopowrotu w ADR 0058).
 - **gameplay-ui**: kreator kalibracji (`AxisCalibrator`, `AxisAutoDetect`) i panel ustawień kierownicy (zakres, odwzorowanie, FFB) — teksty w tabelach lokalizacji; wieloczęściowe zestawy (osobne USB pedałów, np. Fanatec) wymagają drugiego `IDriverInput` „pedały” z tym samym profilem.
 
+## Scalenie z main (ADR 0261) i z #133 (ADR 0264) — agent H6, s22
+- Konflikt z 0261 w `DrivingLabBootstrap` (obie gałęzie dopisały źródło po `m_Mixer.Add(Keyboard)`): kolejność
+  **Keyboard → Pad (0261) → PcWheel.Input → Wheel (dotyk) → Gyro → Touch**. Pad 0261 jest aktywny tylko przy wychylonej
+  gałce, więc jak klawisze nadpisuje kierownicę na czas wychylenia; dotykowe koło (`TouchSteeringWheel`, zawsze
+  `SteerActive`) musi zostać za kierownicą PC. Kierownica (`Joystick`) i pad (`Gamepad`) to rozłączne klasy urządzeń
+  Input System — jedno urządzenie nie trafia do dwóch źródeł.
+- Po #133 (ADR 0264) pole `Pad` i `m_Mixer.Add(Pad)` znikają z bootstrapu; `PcInputBridge` wstawia pad i klawiaturę z
+  akcjami **przed** `Keyboard`, czyli też przed `PcWheel.Input` — ta sama zasada priorytetu. Gałąź `wheel-0263` ma już
+  w sobie scalone `gamepad-0264` (stos), żeby ten fragment i `DriverInputMixer` scaliły się bez konfliktu w kolejności
+  #133 → #132; szczegóły w komentarzu PR #132.
+- `DriverIntent.DirectSteer/Clutch/TargetGear` nie kolidują z 0261/0264 (pad i klawiatura ich nie ustawiają).
+
 ## Alternatywy odrzucone
 - Kierownica przez `SteeringColumn.Step` (model rąk) — dodaje opóźnienie i limit prędkości do fizycznego urządzenia.
 - Mapowanie wyłącznie 1:1 — 900° urządzenia nie da pełnego skrętu ciężarówki (1600°); zostaje jako opcja.
