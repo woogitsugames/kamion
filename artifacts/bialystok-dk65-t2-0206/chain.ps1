@@ -16,7 +16,7 @@ function Step($name, [scriptblock]$b) {
 $ok = $true
 if ($From -eq 'build_world') {
     pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $n | Out-Null
-    $ok = (Step 'build_world' { uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region $R }) -and
+    $ok = (Step 'build_world' { uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region $R --context }) -and
           (Step 'export_route' { uv run --project tools/worldgen python scripts/export-route.py --region $R })
     pwsh scripts/unity-slot.ps1 -Release -Pool heavy -Owner $n | Out-Null
 }
