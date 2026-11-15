@@ -1033,6 +1033,30 @@ def _kit_quad(kit, center_xy, z0, z1, w, a, sp, occ_lo=0.74, occ_hi=0.98, flip=F
     kit.quad(V, UV, C)
 
 
+def _authored_parallel_crown(kit, p, z, r, H, cb, sp, key, lite=False):
+    """Opt-in A/B: parallel whole-crown cards; flatness and alpha overdraw OPEN.
+
+    Orientation, spacing and dimensions are WORKING_VALUE, not source measurements.
+    All cards have the same azimuth and distinct depths, so their planes do not cross.
+    """
+    p = np.asarray(p, float)
+    angle = 1.25 + .12 * (PLT.hfloat(key, "af") - .5)
+    tangent = np.array([math.cos(angle), math.sin(angle)])
+    outward = np.array([-tangent[1], tangent[0]])
+    trunk_r = .035 + .011 * H
+    kit.box(p, tangent, trunk_r, trunk_r, z-.1, z+cb+(H-cb)*.22,
+            PLT.PK.SWATCH["trunk"], top=False)
+    # The foreground full card masks only geometry behind it; the shifted cards
+    # add irregular shoulders but introduce no intersecting vertical planes.
+    placements = [(0., .20, 1., 1.), (-.28, -.22, .86, .94)]
+    if not lite:
+        placements.append((.26, -.44, .82, .90))
+    for i, (side, depth, width, height) in enumerate(placements):
+        center = p + tangent*(side*r) + outward*(depth*r)
+        _kit_quad(kit, center, z+cb, z+cb+(H-cb)*height, 2*r*width,
+                  angle, HABIT[sp], occ_lo=.90, occ_hi=.98, flip=(i % 2 == 1))
+
+
 def _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False):
     """Multi-lobed open crown / ground-reaching shrub for authored kit plants (ADR 0186 r4, review B-r3 P1-3).
     Front lobes face WNW (`a_face ~ 1.25 rad`) while side/depth cards sit behind the front plane (`-0.42 r f`) at
@@ -1152,7 +1176,7 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
         if o.get("kind") != "tree_groups" or o.get("form") != "kit":
             continue
         crown_model = o.get("crown_model", "kit")
-        if crown_model not in ("kit", "garden_trial"):
+        if crown_model not in ("kit", "garden_trial", "garden_parallel_trial"):
             raise ValueError(f"tree_groups {o['id']}: unknown crown_model {crown_model!r}")
         spw = o.get("species") or {"maple": 1.0}
         if any(s not in KIT_SPECIES for s in spw):
@@ -1165,8 +1189,8 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             sp = str(q[4]) if len(q) >= 5 and q[4] else PLT._pick_w(sorted(spw.items()), key, "sp")
             if sp not in KIT_SPECIES:
                 raise ValueError(f"tree_groups {o['id']}: unknown species {sp!r}, knows {sorted(KIT_SPECIES)}")
-            if crown_model == "garden_trial" and sp not in HABIT:
-                raise ValueError(f"tree_groups {o['id']}: garden_trial does not support species {sp!r}")
+            if crown_model in ("garden_trial", "garden_parallel_trial") and sp not in HABIT:
+                raise ValueError(f"tree_groups {o['id']}: {crown_model} does not support species {sp!r}")
             cb = float(o.get("crown_base_m", (0.0 if sp == "berberis_red" else 0.08 if sp in ("shrub", "fruit") else 0.21) * H))
             z = zf(p)
             kit = PLT.Kit()
@@ -1174,11 +1198,15 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             kit.low = False
             if crown_model == "garden_trial":
                 garden_tree(kit, p, z, r, H, cb, sp, key, lite=False, cards=3)
+            elif crown_model == "garden_parallel_trial":
+                _authored_parallel_crown(kit, p, z, r, H, cb, sp, key, lite=False)
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False)
             kit.low = "only"
             if crown_model == "garden_trial":
                 garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=2, core=True)
+            elif crown_model == "garden_parallel_trial":
+                _authored_parallel_crown(kit, p, z, r, H, cb, sp, key, lite=True)
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
             if groups is None:

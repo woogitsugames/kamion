@@ -56,6 +56,29 @@ def test_invalid_model_or_species_fails():
         build(bad)
 
 
+def test_parallel_trial_has_distinct_parallel_card_planes():
+    class Kit:
+        def __init__(self): self.cards=[]; self.trunks=0
+        def quad(self, vertices, uv, colors): self.cards.append((np.asarray(vertices), uv, colors))
+        def box(self, *args, **kwargs): self.trunks+=1
+    for lite, count in ((False,3),(True,2)):
+        kit=Kit()
+        PT._authored_parallel_crown(kit,np.array([5.,5.]),100.,5.,17.,3.57,"linden",("parallel",0),lite=lite)
+        assert kit.trunks==1 and len(kit.cards)==count
+        normals=[]; centers=[]
+        for vertices,uv,colors in kit.cards:
+            normal=np.cross(vertices[1]-vertices[0],vertices[3]-vertices[0]); normal/=np.linalg.norm(normal)
+            normals.append(normal); centers.append(vertices.mean(axis=0))
+            assert len(uv)==len(colors)==4 and np.isfinite(vertices).all()
+        assert all(abs(np.dot(normals[0],n)) > 1.-1e-9 for n in normals)
+        depths=[np.dot(c,normals[0]) for c in centers]
+        assert min(abs(a-b) for i,a in enumerate(depths) for b in depths[i+1:]) > 1.
+    _,rep=build(group(crown_model="garden_parallel_trial"))
+    assert rep["trees"]==2 and rep["tris_high"]>rep["tris_low"]>0
+    assert all(x["crown_model"]=="garden_parallel_trial" for x in rep["list"])
+    assert VG._tree_point_overrides([group(crown_model="garden_parallel_trial")]) == []
+
+
 def test_r8_replaces_only_r7_accepted_stems_with_preserved_heights():
     path = Path(__file__).resolve().parents[2] / "Data/Regions/knyszyn/overrides.yaml"
     overrides = yaml.safe_load(path.read_text(encoding="utf8"))["overrides"]
@@ -66,7 +89,7 @@ def test_r8_replaces_only_r7_accepted_stems_with_preserved_heights():
                 (-697., -222.2): 15.8, (-702., -243.2): 16.9, (-685.5, -248.2): 16.,
                 (-676., -254.2): 17.8, (-661., -247.2): 15.4, (-646., -240.2): 19.9,
                 (-638., -227.2): 17.}
-    assert trial["form"] == "kit" and trial["crown_model"] == "garden_trial"
+    assert trial["form"] == "kit" and trial["crown_model"] == "garden_parallel_trial"
     assert len(trial["points_en"]) == len(expected)
     assert {(p[0], p[1]): p[2] for p in trial["points_en"]} == expected
     assert all(p[3] > 0 and p[4] == "linden" for p in trial["points_en"])
@@ -74,7 +97,9 @@ def test_r8_replaces_only_r7_accepted_stems_with_preserved_heights():
     assert rejected.get("form") != "kit"
     assert {tuple(p) for p in rejected["points_en"]} == {
         (-687., -167.2), (-702., -180.2), (-689., -205.2)}
-    other_kit = groups["rynek-near-lindens-kit-0227"]["points_en"]
+    other = groups["rynek-near-lindens-kit-0227"]
+    assert other["crown_model"] == "garden_parallel_trial"
+    other_kit = other["points_en"]
     all_kit = trial["points_en"] + other_kit
     assert all(np.linalg.norm(np.array(a[:2]) - np.array(b[:2])) >= 2.5
                for i, a in enumerate(all_kit) for b in all_kit[i + 1:])
