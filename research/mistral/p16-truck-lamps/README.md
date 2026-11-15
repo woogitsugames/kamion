@@ -10,6 +10,8 @@ Wszystkie liczby mają: punkt regulaminu + cytat (≤25 słów) + wersja przepis
 
 ---
 
+> **Poprawka s21 (2026-11-15, gałąź `research/mistral-p16-truck-lamps-fix-s21`)** wg `docs/owner/MISTRAL-FIXES-12.md` § M59-FIX: kadry obejrzane ponownie i przeklasyfikowane (§5.1–§7), errata E1–E9 (E8 → UNVERIFIED), nowy audyt. Nowych kadrów NIE dodano — kryterium 4 niespełnione.
+
 ## 1. Wersje regulaminów (co naprawdę obowiązuje)
 
 | Regulamin | Wersja UNECE (aktualna) | Wersja wiążąca w UE (GSR2, zał. II) |
@@ -19,8 +21,8 @@ Wszystkie liczby mają: punkt regulaminu + cytat (≤25 słów) + wersja przepis
 | R48 (barwy, definicje) | seria 07 + Supl. 1 | seria 07 + Supl. 1 — Dz.U. L 347 z 30.9.2021, s. 1 ([2021/1718]) |
 
 - GSR2 (02019R2144, konsolidat 02.08.2026) zał. II wiersz 148 i 150 wskazuje dla LSD i RRD **„Pierwotną wersję regulaminu”** — więc podstawą każdego wiersza manifestu jest tekst Dz.U. UE (PL), a wersje UNECE służą do rozplatania sklejonych tabel PDF.
-- Wersja UNECE 01 serii zmienia m.in. wartości kat. 1 i 11/11a kierunkowskazów (maks. 1200/600 cd), ale **kat. 2a/2b, 5, 6, 12 pozostają bez zmian** — funkcje w tyle i na boku ciężarówki/naczepy są identyczne w obu wersjach.
-- R148 zastępuje w jednym regulaminie dawne R4 (oświetlenie tablicy), R6, R7 (stop), R23, R38, R50, R77, R87, R91 (boczne pozycyjne); R150 zastępuje R3 i część R104 (odblaski) — pkt 1.1 R148 (P16-003).
+- **UNVERIFIED (E8 s21):** teza, że seria 01 zmienia kat. 1 i 11/11a kierunkowskazów (1200/600 cd), a kat. 2a/2b, 5, 6, 12 pozostają bez zmian — bez cytatu i punktu z R148r1am2E; w s21 nie sprawdzono. Wszystkie wartości pakietu pochodzą z wersji pierwotnej (Dz.U. L 347).
+- R148 zastępuje w jednym regulaminie dawne R4 (oświetlenie tablicy), R6, R7 (stop), R23, R38, R50, R77, R87, R91 (boczne pozycyjne); R150 (odblaski) „stanowi połączenie przepisów poszczególnych regulaminów ONZ nr 3, 27, 69, 70 i 104” (wprowadzenie R150, Dz.U. L 347 s. 297; E6 s21).
 
 ---
 
@@ -32,7 +34,7 @@ Tabela zbiorcza; „D” = światło opatrzone literą „D” (zespół dwóch 
 |---|---|---|---|---|---|
 | Pozycyjne tylne (R1, stałe) | 4 | 17 | 8,5 | H 45°/80° (przy <750 mm: 20°/80°); V 15°/15° (przy <750 mm: 15°/5°) | czerwona |
 | Pozycyjne tylne (R2, zmienne) | 4 | 42 | 21 | jak R1 | czerwona |
-| Obrysowe tylne górne (RM1, stałe) | 4 | 17 | nd. | H 0°/80°; V 15°/15° | czerwona |
+| Obrysowe tylne górne (RM1, stałe) | 4 | 17 | 8,5 (E1, s21; „nd.” dotyczy MR) | H 0°/80°; V 15°/15° | czerwona |
 | Stop (S1, stałe) | 60 | 260 | 130 | H 45°/45° (przy <750 mm: 20°/45°); V 15°/15° | czerwona |
 | Stop (S2, zmienne) | 60 | 730 | 365 | jak S1 | czerwona |
 | Kierunkowskaz tylny (2a, stałe) | 50 | 500 | 250 | H 45°/80° (przy <750 mm: 20°/80°); V 15°/15° | żółta samochodowa |
@@ -82,7 +84,7 @@ CIL = współczynnik światłości [mcd·lx⁻¹]; α = kąt rozbieżności (obs
 | Parametr | Wartość | Punkt |
 |---|---|---|
 | Min luminancja B w każdym punkcie pomiarowym | **≥ 2,5 cd/m²** (kat. 1a, 1b, 1c, 2a, 2b); ≥ 2,0 cd/m² (kat. 1, 2) | 5.11.3 |
-| Gradient luminancji (max/min między punktami) | **≤ 2 × B₀/cm** | 5.11.3 |
+| Gradient luminancji między dowolnymi dwoma punktami pomiaru, na cm (E7 s21: „nie może przekraczać 2 x Bo/cm”) | **≤ 2 × B₀/cm** | 5.11.3 |
 | Kąt padania światła na tablicę | **≤ 82°** (wierzchołek na skrajnej części urządzenia najdalej od tablicy) | 5.11.5 |
 | Emisja do tyłu | zabroniona (wyjątek: światło czerwone zespolone z tylnym) | 5.11.5 |
 | Barwa | bezbarwna — bez widocznej zmiany barwy tablicy | 5.11.4 |
@@ -98,111 +100,49 @@ CIL = współczynnik światłości [mcd·lx⁻¹]; α = kąt rozbieżności (obs
 
 ## 5. Budowa lamp zespolonych (tylnych) ciężarówek i naczep
 
-### 5.1. Typy optyki spotykane w lampach zespolonych
+### 5.1–5.2. Typy optyki i kolejność funkcji — z kadrów (s21)
 
-1. **Komora z odbłyśnikiem i kloszem pryzmatycznym** (klasyczna, żarówkowa): wewnętrzna paraboliczna/lustrzana komora odbłyśnika + klosz z zewnętrznym żebrowaniem/pryzmatami rozpraszającymi; w świetle dziennym widać pryzmaty i odbłyśnik.
-2. **Gładki klosz z optyką wewnętrzną** (frezowana wkładka optyczna): zewnętrzna powierzchnia gładka, „soczewki Fresnela”/lusto-klosz od wewnątrz; częste w lampach z lat 2010 (potwierdzone kadrami — manifest).
-3. **LED punktowe ze soczewkami**: 2–6 diod na komorę z indywidualnymi soczewkami; wyłączona komora widać jako ciemne punkty/soczewki.
-4. **LED liniowe ze światłowodem/paskiem**: pasek LED + prowadząca wiązka (światłowód lub lita dyfuzytka); równomierna linia światła bez punktów.
+**Przepisane w s21 wyłącznie z obejrzanych kadrów.** Z 23 kadrów M59 po obejrzeniu zostały tylko **2 pojazdy z lampami zespolonymi typu ECE z tyłu**:
+- **P16-206** (podwozie naczepy kontenerowej): lampa pozioma 4-sekcyjna w jasnej obudowie; od zewnątrz: bezbarwna sekcja z fakturą, duża czerwona sekcja z rozetą/pierścieniami optyki, dwie bezbarwne sekcje z żebrowaniem i kubkami. Klosz **nie jest gładki**. Funkcje sekcji bezbarwnych — UNVERIFIED.
+- **P16-204/205** (lekka ciężarówka, zdjęcie z fleszem): lampa pozioma, czerwone pole środkowe (plamki = odblask flesza), bezbarwne sekcje boczne z kubkami. Liczba komór i pryzmaty — nierozstrzygalne.
+- P16-201/202 to **koncept** (lampy L wtopione w zderzak, górny pas świetlny) — tylko referencja kształtu, nie typowa lampa.
+- Lampy USA (P16-208, 209, 212: po 2 okrągłe na stronę, FMVSS) i pojedyncze okrągłe (P16-216, 218) — **inne systemy, tylko kontrast**.
 
-Potwierdzenie klatkami: patrz §6 i wiersze `kategoria=zdjęcie` w `manifest.csv` (każdy typ przypisany do konkretnych, obejrzanych kadrów).
-
-### 5.2. Podział komór i kolejność funkcji
-
-Lampy tylne naczep (O4) i ciągników (N3) budowane są jako pionowe zespoły 3–7 komór w jednej obudowie. Typowa kolejność od zewnątrz do środki / od góry w zespole 7-komorowym naczepy:
-
-```
-(kierunek jazdy: przód → tył)
-od zewnątrz: [kierunkowskaz pomarańczowy] [stop/pozycyjne czerwone] [pozycyjne/stop czerwone]
-             [obrysowe górne czerwone] [przeciwmgłowe czerwone] [cofania białe] [lampka tablicy / pusty slot]
-od góry:     obrysowe górne, potem kierunkowskaz, stop, pozycyjne, przeciwmgłowe, cofania (układy różne — patrz kadry)
-```
-
-Rzeczywiste układy (liczba komór, kolejność od zewnątrz, typ optyki) potwierdzone klatkami — tabela w §6; ogólna zasada: **barwa klosza komory = barwa funkcji** (czerwona/żółta/biała), komora cofania i lampka tablicy mają klosz przezroczysty.
+**UNVERIFIED (brak kadrów):** typowa pionowa lampa 5–7-komorowa naczepy ECE, kolejność funkcji od zewnątrz, pryzmaty vs LED, wygląd włączonej lampy o zmierzchu/nocą. Poprzedni schemat „od zewnątrz: kierunkowskaz, stop, …” nie wynika z żadnego kadru — wycofany. Kryterium M59 nr 4 (≥ 15 zbliżeń lamp ECE, ≥ 4 włączone, ≥ 3 o zmierzchu) **niespełnione** — nowych kadrów w s21 nie szukano.
 
 ### 5.3. Wymiary typowej lampy 7-funkcyjnej (naczepa)
 
 | Wartość (dł. × wys. × głęb.) | Źródło | Status |
 |---|---|---|
 | **390 × 145 × 70 mm** (LED 7-funkcyjna z trójkątem odblaskowym) | karta katalogowa/dystrybutor (URL w manifest, P16-301) | SOURCED |
-| **400 × 153 × 88 mm** (żarówkowa 7-funkcyjna, 12 V) | karta produktu dystrybutora (P16-302) | SOURCED (sklep) |
+| **400 × 153 × 88 mm** (LED 7-funkcyjna, 24 V — „24 V 4xASS2”, E2 s21) | karta produktu dystrybutora (P16-302) | SOURCED (sklep) |
 | **450 × 138 × 90 mm**, odległość otworów montażowych **152 mm** (LED 7-komorowa do naczep) | sklep specjalistyczny (P16-303) | SOURCED (sklep; weryfikacja HTML 13.11.2026 — strona obecnie renderuje treść po stronie klienta) |
 | **450 × 138 × 72,3 mm** (LED 7-funkcyjna, 24 V) | karta produktu dystrybutora (P16-305) | SOURCED (sklep) |
 
-Wnioski dla gry: typowy zespół 7-komorowy naczepy ≈ **425 mm długości (montaż pionowy) × ~142 mm szerokości × ~81 mm głębokości** (ESTIMATED, P16-304: mediana czterech kart 390/400/450/450 × 145/153/138/138 × 70/88/90/72,3; zaokrąglenie dla gry: 420 × 140 × 80).
+Wnioski dla gry: typowy zespół 7-komorowy naczepy ≈ **425 mm długości (montaż pionowy) × ~142 mm szerokości × ~80 mm głębokości** (E3 s21: mediana czterech kart, 80,15 → ≈80) (ESTIMATED, P16-304: mediana czterech kart 390/400/450/450 × 145/153/138/138 × 70/88/90/72,3; zaokrąglenie dla gry: 420 × 140 × 80).
 
-### 5.4. Wygląd lampy wyłączonej w świetle dziennym
+### 5.4. Wygląd lampy wyłączonej w dzień — z kadrów (s21)
 
-- Klosz czerwonej komory: głęboki, lekko przezroczysty czerwony (czerwone komory wyglądają na ciemnoczerwone/bordowe); komora żółta (kierunkowskaz) — pomarańczowo-miodowa; komory białe (cofania, lampka tablicy) — mlecznoszare lub przezroczyste.
-- W lampach pryzmatowych widać wyraźne żebrowanie klosza i lustrzany odbłyśnik; w lampach LED widać ciemne punkty diod i soczewki; w lampach ze światłowodem — jednolita „szyna” bez punktów.
-- Zespół praktycznie zawsze jest **brudny** w realnych warunkach (film drogowy, kurz) — potwierdzone klatkami; dla gry realistyczny jest lekki nalot kurzu na dolnych krawędziach.
+- P16-206: czerwona sekcja głęboko czerwona z widocznym wzorem optyki; sekcje bezbarwne mlecznoszkliste z fakturą; czysta (wystawa).
+- P16-212: okrągłe lampy USA na zardzewiałej, brudnej belce — jedyny kadr z realnym brudem przy lampach (inny system).
+- Teza „zespół praktycznie zawsze jest brudny” — **nie wynika z kadrów** (większość to pojazdy wystawowe, czyste); UNVERIFIED.
 
-### 5.5. Oznaczenia homologacyjne na kloszu (zasada wg R148, pkt 3.3.2 + zał. 7)
+## 6. Lampka tablicy rejestracyjnej — z kadrów (s21)
 
-Znak homologacji urządzenia (nie kopiujemy cudzych znaków — opisujemy zasadę):
+Z 6 kadrów „lampek tablicy” M59 lampkę ciężarówki/naczepy pokazuje **0**. Zostają: **P16-218** (przyczepa kempingowa: wypukła osłona lampki nad tablicą w zderzaku) i **P16-219** (samochód terenowy nocą: tablica równomiernie oświetlona białym światłem z góry; sama lampka niewidoczna). 220, 222, 223 — widoki z przodu/boku (usunięte); 221 — lampki nie widać.
+Położenie „nad tablicą, centralnie” oraz „bezbarwne światło” wynika z R148 pkt 5.11 (przepis), z kadrów tylko z 218/219 (nie ciężarówki). **≥ 5 lampek tablicy ciężarówek — niespełnione** (UNVERIFIED).
 
-- **Okrąg z literą „E” + numer państwa** homologującego (np. E1…E56 — numer, nie logo producenta).
-- **Numer homologacji** (pkt 3.3.2.2), umieszczany w pobliżu okręgu (pkt 3.3.2.5.4).
-- **Symbole funkcji** wg pkt 3.2.4 (tab. 1): dla naszego zestawu: R/R1/R2 (pozycyjne), RM1/RM2 (obrysowe), S1/S2 (stop), 2a/2b (kierunkowskaz tylny), AR (cofania), F1/F2 (przeciwmgłowe), L (lampka tablicy), SM1/SM2 (boczne pozycyjne), kat. 5/6 (kierunkowskaz boczny).
-- **Numer regulaminu + „R” + 2 cyfry serii poprawek** (np. 148R–00 dla pierwotnej serii; 148R–01 dla serii 01).
-- Symbole dodatkowe: **strzałka pozioma** = strona zewnętrzna montażu (pkt 3.3.2.5.1); **„D”** = zespół dwóch świateł niezależnych (pkt 3.3.2.5.2); **„Y”** = układ współzależny; **pionowa strzałka w dół** = zmniejszony rozsył (pkt 3.3.2.5.3).
-- W lampach **zespolonych** wszystkie symbole funkcji występują łącznie w jednym znaku (zał. 7, przykłady A7-I…A7-IV).
-- Alternatywnie **niepowtarzalny identyfikator (UI)** zamiast znaku E — wysokość znaku a ≥ 8 mm (pkt 3.3.3); dane homologacji w bazie ONZ.
+## 7. Kadry — klasyfikacja po obejrzeniu w s21
 
-*Dla gry: na kloszu fikcyjnej lampy wystarczy fikcyjny „okrąg E + numer” + symbole funkcji + „148R–00”; nie odtwarzamy żadnych rzeczywistych znaków homologacji ani logotypów producentów.*
+| Grupa | Kadry |
+|---|---|
+| ECE, tył widoczny | 204, 205, 206 (+ koncept 201, 202) |
+| inne systemy / kontrast | 208, 209, 212 (FMVSS), 216 (pojedyncze okrągłe), 218 (kempingowa) |
+| lampka tablicy (nie ciężarówka) | 218, 219 |
+| lampa pozioma, tablica bez lampki | 221 |
+| **usunięte** (tyłu nie widać / nie lampa) | 203 (ramię kamery), 207, 210, 211, 213, 214, 215, 217 (pickup), 220, 222, 223 |
 
----
-
-## 6. Lampka tablicy rejestracyjnej — położenie i budowa (z kadrów)
-
-**Potwierdzenie kadrów (23 obejrzane, opis w manifest, wiersze P16-201…P16-223):**
-
-- **Położenie**: we wszystkich 13 kadrach, w których lampkę widać, jest **nad tablicą rejestracyjną, centralnie** — na belce tablicy lub w belce RUPD między zespołami lamp (P16-201, P16-204, P16-205, P16-206, P16-208, P16-209, P16-216, P16-217, P16-214); warianty: **pod zderzakiem** (P16-202), **na dolnej belce między lampami** (P16-204), **poniżej zespołów lamp, nad tablicą** (P16-213).
-- **Kształt i klosz**: mały prostokąt z **bezbarwnym/przezroczystym kloszem** (wszystkie 6 kadrów lampek: P16-218…P16-223) — nigdy czerwony; wyłączona wygląda jak mlecznoszary/szklany pasek.
-- **Świecenie**: **bezbarwne/białe światło** — potwierdzone na żywo nocą (P16-219: jasne bezbarwne; P16-222: świeci nocą). Barwa zgodna z R148 §5.11 (bezbarwne, bez zmiany barwy tablicy).
-- W zespole 7-komorowym lampka bywa **komorą „REG” w obudowie lampy zespolonej** (karty katalogowe: STOP/TAIL/DI/REVERSE/FOG/REG/REFLECTOR) — wtedy nie jest osobną lampką na belce.
-
-Zasady montażu (instalacja) omówiono w p4/M44; tutaj położenie i budowa z kadrów:
-- Ciągnik N3: lampka nad tablicą w zderzaku/na belce tablicy (kable: patrz kadry P16-2xx).
-- Naczepa O4: lampka w belce RUPD (zderzak tylnej osłony) nad tablicą lub zespolona z obudową lampy zespolonej (komora „REG” 7-komorowej).
-
-*Dla gry: lampka tablicy = mały bezbarwny prostokąt nad tablicą, centralnie; świeci równomiernie białym światłem bezbarwnym (nie punktowo, nie czerwono).*
-
----
-
-## 7. Kadry (zdjęcia CC) — status oglądania
-
-**Obejrzane i opisane: 23 kadry — 17 lamp zespolonych (wymóg ≥15 ✔) + 6 lampek tablicy (wymóg ≥5 ✔).**
-Obejrzane 13.11.2026 (7 kadrów: P16-201…207, sesja przed resetem środowiska, opisy utrwalone) oraz 14.11.2026 (16 kadrów: P16-208…223). Odrzucone: c04 (kamera monitoringu), c09–c15 (widoki boczne/przednie bez lamp tylnych), pozostałe niewykorzystane kadry nie weszły do manifest. Każdy kadr ma wiersz `kategoria=zdjęcie` w `manifest.csv`.
-
-| ID | Kadr | Obiekt | Licencja | Co widać (skrót) |
-|---|---|---|---|---|
-| P16-201 | `c01_2012_MAN_Conce…` | lampa zespolona | CC0 | Tył koncepcyjnej ciągnicy z naczepą (dzień, lampy wyłączone, czyste). |
-| P16-202 | `c02_2012_MAN_Conce…` | lampa zespolona | CC0 | Ten sam pojazd, drugi kadr tyłu (dzień, wyłączone, czyste). |
-| P16-203 | `c03_2012_MAN_Conce…` | lampa zespolona | CC0 | Zbliżenie na detal lampy (dzień, wyłączona, czysta). |
-| P16-204 | `c05_BHARATBENZ_Lig…` | lampa zespolona | CC0 | Tył ciężarówki lekkiej (dzień, wyłączone, czyste). |
-| P16-205 | `c06_BHARATBENZ_Lig…` | lampa zespolona | CC0 | Tył ciężarówki lekkiej, kadry osłony przeciwnajazdowej (dzień, wyłączone, czyste). |
-| P16-206 | `c07_Krone_Box_Line…` | lampa zespolona | CC0 | Tył podwozia naczepy kontenerowej (dzień, wyłączone, czyste). |
-| P16-207 | `c08_Krone_Box_Line…` | lampa zespolona | CC0 | Tył naczepy kontenerowej, drugi kadr (dzień, wyłączone, czyste). |
-| P16-208 | `c16_Container_trai…` | lampa zespolona | CC BY-SA 4.0 | Tył naczepy kontenerowej (dzień, wyłączone, czyste). |
-| P16-209 | `c17_Insulated_semi…` | lampa zespolona | CC BY-SA 4.0 | Tył naczepy izotermicznej (dzień, wyłączone, czyste). |
-| P16-210 | `c18_JP_Carrera_Ive…` | lampa zespolona | CC BY 4.0 | Tył ciągnika z naczepą (dzień, wyłączone, czyste). |
-| P16-211 | `c19_Derelict_Scani…` | lampa zespolona | CC BY-SA 2.0 | Tył zaniedbanego ciągnika z naczepą (dzień, wyłączone). |
-| P16-212 | `c20_ICR_trailer_en…` | lampa zespolona | CC BY-SA 4.0 | Tył naczepy, kadry drzwi (dzień, wyłączone). |
-| P16-213 | `c21_Semi_trailer_t…` | lampa zespolona | CC BY-SA 4.0 | Naczepa z terminalowym ciągnikiem (dzień, wyłączone). |
-| P16-214 | `c22_Volvo_FH_16_8x…` | lampa zespolona | CC0 | Ciężarówka wernakularna na wystawie (dzień, wyłączone, czyste). |
-| P16-215 | `c23_Renault_T_430_…` | lampa zespolona | CC0 | Ciężarówka w hali (dzień, wyłączone, czyste). |
-| P16-216 | `c29_Road_rail_vehi…` | lampa zespolona | CC BY-SA 4.0 | Tył pojazdu szynowo-drogowego (dzień, wyłączone, czyste). |
-| P16-217 | `c33_GAZ_Vepr_NEXT_…` | lampa zespolona | CC0 | Tył ciężarówki (dzień, wyłączone, czyste). |
-| P16-218 | `c34_20080827_DSC01…` | lampka tablicy | CC BY-SA 4.0 | Tył przyczepy kempingowej (dzień). |
-| P16-219 | `c37_Warszawa_otwar…` | lampka tablicy | CC BY-SA 3.0 pl | Pojazd nocą na moście. |
-| P16-220 | `c38_Coca_Cola_Truc…` | lampka tablicy | CC BY-SA 3.0 | Ciężarówka z naczepą nocą (kadr plenerowy). |
-| P16-221 | `c39_Baptofesto_en_…` | lampka tablicy | CC BY 4.0 | Cysterna nocą. |
-| P16-222 | `c40_Kamiono_de_tek…` | lampka tablicy | CC BY-SA 4.0 | Ciężarówka pomocy technicznej nocą. |
-| P16-223 | `c41_CMC_P350_Hybri…` | lampka tablicy | CC BY-SA 4.0 | Dostawczy pojazd (dzień, czysty). |
-
-
-Każdy kadr: typ optyki, liczba komór, kolejność funkcji od zewnątrz, widoczne pryzmaty/punkty LED, stan czysty/brudny, włączony/wyłączony, dzień/zmierzch/noc, marka widoczna (→ „tylko referencja kształtu”). Pełne opisy w `manifest.csv` (kategoria `zdjęcie`). Pliki JPG ≤1600 px w archiwum `mistral-p16-truck-lamps-files.zip` (NIE w gicie).
+Pliki zachowanych kadrów: `files/P16-2xx.jpg` (12 JPG, ≤ 1600 px, sha256 w `uwagi`). Usunięte kadry nie są commitowane. Dokumentów urzędowych (PDF > 5 MB) i kart producentów nie commitowano (M59-FIX 5).
 
 ---
 
