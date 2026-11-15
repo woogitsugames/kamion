@@ -66,21 +66,20 @@ def test_putry_config_has_rows_for_both_decks_of_estakada_a():
     rows = cfg["pier_lines_en"]
     assert set(rows) == {NE, SW} <= {str(x) for x in cfg["target"]["osm_way"]}
     assert len(rows[NE]) == 8, "P13-030: 7-9 rows on the NE deck"
-    assert len(rows[SW]) + len(cfg["pier_lines_en_held"][SW]) == 8, "P13-031: 7-9 rows on the SW deck"
+    assert len(rows[SW]) == 8, "P13-031: 7-9 rows on the SW deck"
+    assert not cfg.get("pier_lines_en_held"), "ADR 0216: the island rows are built, nothing is held back"
     assert "pier_lines_en" not in cfg["set"], "a flat list in `set` would be projected onto both decks"
     note = " ".join(cfg["pier_lines_note"])
-    assert "WORKING_VALUE" in note and "CONFLICT" in note
-    for pts in list(rows.values()) + list(cfg["pier_lines_en_held"].values()):
+    assert "WORKING_VALUE" in note and "ADR 0216" in note and "CONFLICT" not in note
+    for pts in rows.values():
         assert all(len(q) == 2 for q in pts)
         e = [q[0] for q in pts]
         assert e == sorted(e), "rows listed from the north-west end"
 
 
 @pytest.fixture(scope="module")
-def report():
-    import check_piers_vs_roads as K
-    rep, _ = K.check(REGION)
-    return rep
+def report(piers_check):
+    return piers_check[0]
 
 
 def _deck(report, way):
@@ -105,7 +104,7 @@ def test_rows_stand_at_the_authored_stations(report):
     np.testing.assert_allclose([r["from_nw_end_m"] for r in ne["rows"]],
                                [24.39, 48.78, 82.5, 106.0, 133.5, 155.0, 176.5, 198.0], atol=0.05)
     np.testing.assert_allclose([r["from_nw_end_m"] for r in sw["rows"]],
-                               [19.5, 40.0, 56.5, 135.5, 161.5, 187.5], atol=0.05)
+                               [19.5, 40.0, 56.5, 89.0, 109.0, 135.5, 161.5, 187.5], atol=0.05)
     assert 219.0 < ne["s_open"][1] - ne["s_open"][0] < 220.0 and 212.5 < sw["s_open"][1] - sw["s_open"][0] < 214.0
 
 
@@ -116,12 +115,15 @@ def test_ne_deck_has_no_long_span_and_no_short_pair(report):
     assert min(spans) > 20.0, spans           # was a 16.4 m pair
 
 
-def test_sw_deck_conflict_is_explicit(report):
-    """The long span of the SW deck is shorter than before (94.8 m) but NOT closed: the two island rows cannot stand
-    on the generated ring. They are listed as held and must still be blocked - when the ring geometry is corrected
-    this assertion fails on purpose: move the rows to `pier_lines_en` and update ADR 0198."""
+def test_sw_deck_conflict_is_resolved(report):
+    """ADR 0216 (was `test_sw_deck_conflict_is_explicit`, ADR 0198): the ring of Rondo Putry is corrected to the
+    orthophoto, the two island rows are built and the 79 m span of the SW deck (94.8 m by the span rule) is gone.
+    Nothing is held back any more."""
     sw = _deck(report, SW)
-    assert max(sw["spans_m"]) < 80.0, sw["spans_m"]
-    assert sorted(sw["spans_m"])[-2] < 27.0, sw["spans_m"]
-    assert len(sw["held"]) == 2
-    assert all(h["still_blocked"] for h in sw["held"]), "island rows are free now: activate them (ADR 0198)"
+    assert len(sw["rows"]) == 8 and len(sw["spans_m"]) == 9
+    assert max(sw["spans_m"]) < 35.0, sw["spans_m"]           # 32.5 m: 56.5 -> 89.0, over the west ring carriageway
+    assert min(sw["spans_m"]) > 16.0, sw["spans_m"]
+    assert not sw.get("held"), "pier_lines_en_held must stay empty (ADR 0216)"
+    island = [r for r in sw["rows"] if 60.0 < r["from_nw_end_m"] < 130.0]
+    assert [round(r["from_nw_end_m"]) for r in island] == [89, 109]
+    assert all(c["carriageway_m"] >= 2.5 and not c["keepout"] for r in island for c in r["cols"])

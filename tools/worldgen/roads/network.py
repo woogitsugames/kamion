@@ -26,6 +26,9 @@ SURFACE_MAT = {"asphalt": "road_asphalt", "asphalt_new": "road_asphalt_new", "pa
 
 # side profile families
 URBAN, ISLAND, RURAL, MEDIAN_RURAL = 0, 1, 2, 3
+# ADR 0216: accepted range of the authored `apron_width` of a roundabout edge (WORKING_VALUE). Lower bound = the
+# kerb-side gutter strip (0.2 m); upper bound = twice the rule's apron.
+APRON_W_MIN, APRON_W_MAX = 0.2, 4.0
 WALK_MATS = ["curb_concrete", "sidewalk_paving", "bridge_concrete", "verge_grass", "road_asphalt"]
 FLUSH_FILL_MAX_M = 1.5  # a flush edge strip is at most this wide (the flush mask is dilated 4 m past gap < NOSE_MIN_GAP_M)
 MAT_FLUSH_ROAD = 4      # side `mat` code: flush edge shared with another carriageway -> asphalt, no kerb (ADR 0076)
@@ -64,6 +67,10 @@ class EdgeSection:
     edge_lines: str | None = None   # painted edge lines in the direction of travel: none | left | right | both
     apron: str | None = None        # authored (ADR 0123): roundabout apron "asphalt" = no mountable sett apron, the ring
                                     # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
+    apron_w: float | None = None    # authored (ADR 0216): plan distance from the ring carriageway edge to the kerb of the
+                                    # centre island, m (None = standards.ROUNDABOUT_APRON_W). Sets where the island
+                                    # kerb stands without touching the lane layout; with `apron: asphalt` the strip
+                                    # is plain carriageway up to the kerb
     provenance: dict = field(default_factory=dict)
 
     def lane_coord(self, lat, hw, dirn=1):
@@ -319,6 +326,18 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 sec.edge_lines = str(st["edge_lines"])
             if "apron" in st:
                 sec.apron = str(st["apron"])
+            if "apron_width" in st:
+                # ADR 0216: island kerb of a roundabout measured on the orthophoto. Only on ring edges, and never
+                # below APRON_W_MIN (a zero-width strip would be meshed as degenerate triangles)
+                try:
+                    aw = float(st["apron_width"])
+                except (TypeError, ValueError):
+                    aw = float("nan")
+                if sec.roundabout and APRON_W_MIN <= aw <= APRON_W_MAX:
+                    sec.apron_w = aw
+                    sec.provenance["apron_width_m"] = f"authored_override:{ov['id']}"
+                elif ov["id"] not in net.overrides_stale:
+                    net.overrides_stale.append(ov["id"])
             if "turn_lanes" in st:
                 sec.turn_fwd = [t for t in str(st["turn_lanes"]).split("|")] if st["turn_lanes"] else None
             if "center_offset" in st:
@@ -1019,7 +1038,9 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             h[(kind == URBAN) & rural_here] = S.KERB_HEIGHT
             if c.roundabout and side == ("L" if (c.dirn > 0).mean() >= 0.5 else "R"):
                 kind[:] = ISLAND
-                w[:] = S.ROUNDABOUT_APRON_W
+                # ADR 0216: `apron_width` on the ring edges = measured distance carriageway edge -> island kerb
+                w[:] = np.array([S.ROUNDABOUT_APRON_W if net.sec_list[int(i)].apron_w is None
+                                 else net.sec_list[int(i)].apron_w for i in c.sec_idx])
                 # ADR 0123 (REVIEW s11 D51 blocker 7): `apron: asphalt` on the ring edges = the 2 m strip is carriageway
                 # (asphalt, no 4 cm lip); the island kerb, the footprint and the lane layout stay
                 mat[:] = MAT_FLUSH_ROAD if sec_mid.apron == "asphalt" else 0

@@ -44,6 +44,15 @@ def buildings_fc():
     return json.loads(p.read_text(encoding="utf-8"))
 
 
+@pytest.fixture(scope="session")
+def piers_check():
+    """(report, world) of tools/worldgen/qa/check_piers_vs_roads.py for the default region: the road stage of the
+    generator on a flat ground model. No Data/raw, no Unity; about 100 s, once per session (ADR 0198 / 0216)."""
+    sys.path.insert(0, str(REPO / "tools" / "worldgen" / "qa"))
+    import check_piers_vs_roads as K
+    return K.check(REGION_ID)
+
+
 def raw_available() -> bool:
     import sources
     for ds in ("gugik-nmt-2025-" + REGION_ID, "gugik-bdot10k-2061", "gugik-lod1-2024-2061", "gugik-lod2-2017-2061",
