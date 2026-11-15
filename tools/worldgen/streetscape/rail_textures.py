@@ -19,7 +19,8 @@ track / asphalt 0.94 (High) and track / grass 0.61 against 0.44 and 0.66 on the 
 because the game asphalt / grass ratio is 0.65 and the aged DW671 surface is 1.48. r2 darkens the stone and the
 sleepers by ~0.8 and warms the hue so the band reads darker and browner than the carriageway without going black
 against the grass. The rail box now samples rust on its sides and the whole head on top (r1: half of the side face
-sampled the polished head, the rails read as wide silver beams).
+sampled the polished head, the rails read as wide silver beams). Measured after r2 (unchanged to r5): track / asphalt
+0.81 High / 0.83 Low, track / grass 0.52 / 0.55, R : G : B 1.06 : 1 : 0.91 (orthophoto 1.09 : 1 : 0.87).
 """
 
 from __future__ import annotations
