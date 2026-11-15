@@ -1,0 +1,81 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "status": "STABLE — częściowy dowód kategorii po kilometrażu, bez mapowania do fotografii/DW671",
+  "qualified_documents": 1,
+  "photographs": 0,
+  "source": {
+    "id": "05CC6-D01",
+    "url": "https://um-monki.pl/wp-content/uploads/2025/11/SKM_C55825112014470.pdf",
+    "publisher": "Urząd Miejski w Mońkach — publiczna strona gminna",
+    "issuing_authority": "Wojewoda Podlaski / Podlaski Urząd Wojewódzki w Białymstoku",
+    "document_type": "Obwieszczenie o wydaniu decyzji ustalającej lokalizację linii kolejowej",
+    "notice_date": "2025-11-18",
+    "decision_date_mentioned": "2025-11-13",
+    "reference": "AB-IV.747.3.4.2025.BN",
+    "scope": "Linia E75 Białystok–Ełk, Odcinek2:LK38 od km istn.25+204 do km istn.61+222",
+    "pdf_pages": 17,
+    "bytes": 1659369,
+    "sha256": "0d34e8698731b1a7885f48f5717ec5dccfe8bff90bc4902b089ddb6d51c20738",
+    "local_raw": "Data/raw/refs/codex-s21/05-kolej38/crossing-category-source-round6/UM-Monki-SKM-C55825112014470.pdf",
+    "licence_handling": "Publiczny dokument urzędowy gminy/wojewody; nie przypisanoCC. W gicie tylko własny tekst/fakty i link, bez skanu."
+  },
+  "visual_review": {
+    "method": "OryginałPDF pobrany z dozwolonej publicznej gminnej domeny; render pypdfium2 i osobny lokalny view_image pełnych stron1,2,3. Pypdf nie dawał tekstu (skan). Nie użyto Chrome, mapGoogle ani mirrorów.",
+    "pages": [
+      {
+        "pdf_page": 1,
+        "printed_page": "1/17",
+        "finding": "Nagłówek organu,18listopada2025,znakAB-IV.747.3.4.2025.BN,decyzja13listopada2025 i zakres odcinkaLK38."
+      },
+      {
+        "pdf_page": 2,
+        "printed_page": "2/17",
+        "finding": "Pkt4 lit.b: wykaz projektowanych wiaduktów drogowych obejmuje km proj.29+394. Jest to projekt, nie ogląd wykonanego obiektu."
+      },
+      {
+        "pdf_page": 3,
+        "printed_page": "3/17",
+        "finding": "Pkt5 układ drogowy,place i rampy,pierwszy myślnik:rozbiórka przejazdów w km istniejącym, w tym29+522(kat.B)."
+      }
+    ],
+    "renders_outside_git": [
+      "Data/raw/refs/codex-s21/05-kolej38/crossing-category-source-round6/page-1.png",
+      "Data/raw/refs/codex-s21/05-kolej38/crossing-category-source-round6/page-2.png",
+      "Data/raw/refs/codex-s21/05-kolej38/crossing-category-source-round6/page-3.png"
+    ]
+  },
+  "claims": [
+    {
+      "claim": "LK38 km istn.29+522 oznaczono jako kat.B w wykazie przejazdów przeznaczonych do rozbiórki.",
+      "status": "SOURCED [obwieszczenie18.11.2025,s3/17,pkt5,pierwszy myślnik]",
+      "not_implied": "Nie dowodzi wykonania rozbiórki ani aktualnej kategorii/sprawności w2026."
+    },
+    {
+      "claim": "Km proj.29+394 widnieje w wykazie projektowanych wiaduktów drogowych.",
+      "status": "SOURCED [s2/17,pkt4 lit.b]",
+      "not_implied": "Nie zmienia kilometrażu istniejącego przejazdu29+522 i nie jest dowodem wykonania wiaduktu."
+    },
+    {
+      "claim": "Tożsamość przejazdu29+522 z przejazdemDW671 z kadrów05KC4-001/002.",
+      "status": "UNVERIFIED — brak oficjalnego jednoznacznego mapowania drogi i punktu."
+    },
+    {
+      "claim": "Identyfikator przejazdu PLK, znakiG-3/G-4, komplet wyposażenia, kategoria na datę zdjęć2019 oraz stan2026.",
+      "status": "UNVERIFIED — dokument i ogląd tych stron nie ustalają tych danych."
+    }
+  ],
+  "screening": {
+    "official_exact_document_search": "Nie znaleziono w publicznym indeksie oryginałuE75_2-01-PZT-000-01-OPIS_zeszyt_1.1.pdf ani02.2.pdf naPLK/portalu zakupowym.",
+    "allowed_success": "Zapytanie29+522 Knyszyn doprowadziło do publicznego obwieszczeniaUMMońki. Podobny PDFwrzesień2025 wykryty w indeksie, nie pobrany i nie liczony jako drugi dokument.",
+    "disallowed_mirror": "Niedozwolony mirror nieotwarty i niepobrany. Wykorzystano tylko nazwę dokumentu z polecenia jako trop do wyszukania oficjalnego źródła.",
+    "excluded": "Pozostałe trafienia innejDK39,statystyk i archiwów nie dotyczą tego przejazdu i nie zostały przyjęte."
+  },
+  "limits": [
+    "29+522 istniejący przejazd ≠29+394 projektowany wiadukt.",
+    "KategoriaB jest literalną informacją dokumentu2025 o istniejącym przejeździe objętym planowaną rozbiórką; nie automatyczny currentstatus ani retroaktywna klasyfikacja2019.",
+    "Bez oficjalnego mapowania nie aktualizować pola kategorii kadrówDW671.",
+    "Nie wyprowadzono IDPLK z numeru linii i kilometrażu.",
+    "Nie powielono norm kategoriiA–D i nie traktowano zakresu decyzji jako dowodu stanu wykonania."
+  ]
+}

@@ -1,6 +1,6 @@
 # 05 — Linia38: elektryfikacja i stan zastany kontra projekt — WIP
 
-Stan bieżący:14 rekordów —5 dokumentacyjnych,4 danychOSM,1orto,2 lokalne fotografie stacji oraz2link-only kadry1przejazdu DW671 z2019. KategorieA–D i stan wyposażenia2026 nadalUNVERIFIED. Źródłowe3kV DC uzupełniono z dwóch dokumentówPKP, nie wyłącznie z OSM.
+Stan bieżący:15 rekordów —6 dokumentacyjnych,4 danychOSM,1orto,2 lokalne fotografie stacji oraz2link-only kadry1przejazdu DW671 z2019. KategoriaB jest udokumentowana dla km29+522 w obwieszczeniu2025; przypisanie do konkretnych fotografii i stan wyposażenia2026 nadalUNVERIFIED. Źródłowe3kV DC uzupełniono z dwóch dokumentówPKP, nie wyłącznie z OSM.
 
 W gicie tylko odnośniki, własne parafrazy i dozwolone miniatury. BinariaPKP oraz ich rendery poza gitem.
 
@@ -54,3 +54,7 @@ SOURCED [załącznik2.12, „Załącznik2.12dane”!A351:F351]: linia38, torN, k
 SOURCED [Regulamin sieci2025/2026v45, aktualizacja12.11.2026,2.3.9ust.1,6,s24]: zelektryfikowane liniePLK są zasilane3kV DC, parametry sieci określa załącznik2.12. **Wniosek z dwóch dokumentów:3000V DC dla wskazanego elektryfikowanego odcinka linii38**, nie pomiar i nie stan chwilowego załączenia podczas robót. Oba odczyty, komórki i render strony potwierdził niezależny agent. Nie rozszerzono tego wiersza na całą linię38.
 
 Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr prędkości kolumnyG dotyczy jazdy z jednym pracującym odbierakiem i nie jest prędkością każdego pociągu. OryginalnyXLSX123617B ma pełne poprawneCRC; oba binaria/hash/render poza gitem. 2nowe rekordy dokumentacyjne,0zdjęć.
+
+## Pierwszy urzędowy punkt kategorii — obieg6
+
+[ObwieszczenieWojewody18.11.2025](crossing-category-source-round6/README.md), publiczneUMMońki, powołana decyzja13.11.2025. SOURCED[s3/17pkt5]:przejazdLK38kmistn29+522(kat.B) w wykazie planowanych rozbiórek. SOURCED[s2/17pkt4lit.b]:projektowanywiaduktkm29+394, odrębna konstrukcja/miara. Trzy skany obejrzane przez agenta i koordynatora. Nie przypisano doDW671/fotografii2019/IDPLK bez źródłowego mapowania; nie dowodzi wykonania ani obecnego statusu2026. G3/G4 i wyposażenie UNVERIFIED. 0nowychfotografii, PDF/rendery wyłącznie pozaGit. Wskazane na s3sieciLPN15kV nie są napięciem trakcyjnym.
