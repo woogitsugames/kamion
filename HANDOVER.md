@@ -131,6 +131,7 @@
 - 15.11 12:4x: właściciel: „dodaj jeszcze jednego agenta” → 5. agent **dk65-tiles2-0214** (Opus): kafle dk65-06…11 wg D65. Działa 5: 0208, 0211, 0212, 0213, 0214.
 - 15.11 13:0x: **Fable zresetowany (0 %)**, tydzień wszystkie 27 %, 5 h 4 %. Nowi agenci znów na **Fable**; działający Opus (0208, 0211–0214) zostają. Limit właściciela: 5 agentów. Kolejka w cronie :17 (D65: Ełcka, dk65-05 plac budowy, lato + LED, szlif Knyszyna).
 - 15.11 13:1x: właściciel: **limit 4 agentów** (działa 5 — nikogo nie zabijam, nowy dopiero przy < 4).
+- [15.11 10:0x] Scalono 0212 (linie krawędziowe DK65 w knyszyn/-s/-w, nowe kafle dk65-monki-01 i dw671-tykocin-01, 14 regionów). Agent 0208 stanął w nocy, więc dokończenie przejmuje nowy agent Fable w tym samym worktree. Działają: 0211, 0213, 0214 i 0208b. Prace zewnętrzne nieoddane (Argon 0194/0188/0187/0189, sesja kodu 0197/0198, GPT G3/M67/M69/M64, Mistral M63 i poprawki M57/M59/M60/M61, chmura #2 R2/R4/R6/R9) rozpisane dla dwóch nowych sesji w `docs/owner/SESSIONS-S20-B-PROMPTS.md`. Do mojego przeglądu: sigplate-0193 (KONIEC), dojgreen-0186.
 - **Ostatni przydzielony ADR: 0214.** Kolejność integracji: krytycy 0181/0172 + domknięcia 0170/0184/0183 → scal (generated → --ours, overrides = suma) → JEDNA regeneracja → pytest → BuildBatch truck/trailer → EditMode → czysty APK → PSO → APK → gate3 A16 + gate12-phone. Nowe ADR 0185–0196 scalać po tej regeneracji (druga regeneracja).
 
 # STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
