@@ -26,3 +26,8 @@ NASTĘPNY KROK: po `green-all.done` reimport + render startu regionów nieprzebu
   Logi: `artifacts/spawn-fix-0262/editmode-green.*`, `editmode-playmode-green.*`.
 - W TLE: `run-renders.ps1` (reimport Low + kamery truck-at-gate/cab-gate, 20 regionów) -> `artifacts/spawn-fix-0262/renders/<id>.status`, `renders.done`.
 NASTĘPNY KROK: obejrzeć `artifacts/spawn-fix-0262/renders/<id>/*.png`; wznowienie: `pwsh artifacts/spawn-fix-0262/run-renders.ps1 -Regions <brakujące>`
+## 15.11 krok 5 — rendery startu (w toku)
+- Obejrzane po reimporcie (Low, clear): dk65-05, bialystok-knyszynska, bialystok-maczka — zestaw na jezdni, zapory z tyłu (dk65-05 ~75 m), droga przed kabiną wolna.
+- UWAGA: pierwszy import w worktree uruchomił generator PBR `build_all.py` (521 s, poza slotem heavy) — brak tekstur PBR w kopii worktree.
+- W TLE nadal: `run-renders.ps1` -> `artifacts/spawn-fix-0262/renders/<id>.status`, `renders.done`.
+NASTĘPNY KROK: `ls artifacts/spawn-fix-0262/renders/*.status`; brakujące: `pwsh artifacts/spawn-fix-0262/run-renders.ps1 -Regions <id,...>`; potem obejrzeć PNG, uzupełnić ADR „Wyniki”, cofnąć efekty uboczne Unity, commit końcowy.
