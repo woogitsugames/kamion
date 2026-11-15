@@ -3,3 +3,5 @@
 - NASTEPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis -k rail -q` po dopisaniu tests/gis/test_rail_dk65_0223.py
 - krok 4: tests/gis/test_rail_dk65_0223.py (opt-in 5 kafli, provenance, dlugosci/przejazdy per kafel, tor vs jezdnia, szwy +-0,1 m, budzet, mapowanie A-F, override, G-2, markery poza kaflem, extract XML); pytest -k rail 83 passed.
 - NASTEPNY KROK: ADR 0223 + LICENSES, potem `uv run --project tools/worldgen python -m pytest tests/gis -q`
+- krok 5: ADR 0223 (tabela kafli, mapowanie A-F z Dz.U. 2025 poz. 1105, budzet ESTIMATED, kolejnosc scalania, komendy lidera) + LICENSES (osm-api-0.6-rail-l38).
+- NASTEPNY KROK: wynik pelnego `uv run --project tools/worldgen python -m pytest tests/gis -q`, PR (baza rail-0217).
