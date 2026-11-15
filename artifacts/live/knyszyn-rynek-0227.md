@@ -94,3 +94,7 @@
 - 2026-11-15 21:03 +01:00 — R2: build/import i cztery warianty renderów OK; wizualnie FAIL (m.in. kamery 02/07, zieleń, pomnik i suche dysze). Low: max drawsEst z instancjami 500→486, ale wspólne kadry do +6; High max 1 256 983 tris. Scalono origin/main b5dca11f, generator wymaga przebudowy.
 - NASTĘPNY KROK: `pwsh artifacts/knyszyn-rynek-0227/r3.ps1`
 
+
+- 2026-11-15 21:06 +01:00 — Uruchomiono r3 po scaleniu main: poprawione kamery 02/07, próba placu pomnika i materiałów Low. Wierzba r3 FAIL wizualnie, nie jest w grze; trwa r4. Test pomnika 6 passed.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r3.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r3.done`
+
