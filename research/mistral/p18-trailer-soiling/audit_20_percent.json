@@ -8,12 +8,12 @@
  "pokrycie_pct": 20.2,
  "metoda": "Literatura: ponowne otwarcie źródła (Crossref / strona repozytorium / nagłówki HTTP) i porównanie z cytatem. Kadry: obraz pobrany ponownie albo odczytany z files/, obejrzany osobnym wywołaniem w dniu audytu (bez narzędzia wizyjnego z pytaniem), porównany z wierszem po jego napisaniu.",
  "wynik": {
-  "PASS": 13,
-  "FIX (poprawione w manifeście)": 7,
-  "NIE OBEJRZANY (HTTP 429)": 2
+  "PASS": 14,
+  "FIX (poprawione w manifeście)": 8,
+  "NIE OBEJRZANY": 0
  },
  "kadry_w_probie": 18,
- "kadry_obejrzane_ponownie": 16,
+ "kadry_obejrzane_ponownie": 18,
  "wiersze": [
   {
    "id": "P18-004",
@@ -60,8 +60,8 @@
   {
    "id": "P18-110",
    "rodzaj": "kadr odrzucony przez M61",
-   "wynik": "NIE OBEJRZANY",
-   "co_sprawdzono_i_co_poprawiono": "Miniatura nie pobrała się (HTTP 429 w dwóch podejściach). Wiersza nie zmieniano; treść UNVERIFIED w dniu audytu."
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px, drugie podejście): naczepa koncepcyjna na targach, tył zamknięty żaluzją z poziomych lameli, lampy w kształcie L, napis ostrzegawczy; wszystko czyste. „Drobny osad biały/kurzowy na belce, progu i lampach” — nie widać. Odrzucenie słuszne; opis poprawiony."
   },
   {
    "id": "P18-118",
@@ -72,8 +72,8 @@
   {
    "id": "P18-125",
    "rodzaj": "kadr odrzucony przez M61",
-   "wynik": "NIE OBEJRZANY",
-   "co_sprawdzono_i_co_poprawiono": "Miniatura nie pobrała się (HTTP 429 w dwóch podejściach). Wiersza nie zmieniano; treść UNVERIFIED w dniu audytu."
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px, drugie podejście): czerwony ciągnik z szarą firanką na parkingu z kostki, widok z przodu i boku; tyłu nie widać — zgodne z odrzuceniem („widok boczny”)."
   },
   {
    "id": "P18-137",
@@ -148,5 +148,5 @@
    "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1024×766): białawoszary zaschnięty nalot na całych drzwiach furgonu, dziesiątki wymytych ścieżek na szybach i pod klamką — zgodne."
   }
  ],
- "uwaga": "7 poprawek: 2 × literatura (cytat/link niesprawdzalne w dniu audytu → dopisane UNVERIFIED), 3 × nieścisłość w wierszach napisanych w s21 (P18-118 krycie, P18-164 „tył w cieniu”, P18-178 zdanie o listwie), 2 × opis brudu odrzuconych kandydatów M61 niezgodny z obrazem (P18-102, P18-146). Klasa kadru nie zmieniła się w żadnym wierszu próby. Pozostałych 38 wierszy odrzuconych kandydatów M61 poza próbą NIE oglądałem (UNVERIFIED)."
+ "uwaga": "8 poprawek: 2 × literatura (cytat/link niesprawdzalne w dniu audytu → dopisane UNVERIFIED), 3 × nieścisłość w wierszach napisanych w s21 (P18-118 krycie, P18-164 „tył w cieniu”, P18-178 zdanie o listwie), 3 × opis brudu odrzuconych kandydatów M61 niezgodny z obrazem (P18-102, P18-110, P18-146). Klasa kadru nie zmieniła się w żadnym wierszu próby. P18-110 i P18-125 obejrzane w drugim podejściu (pierwsze: HTTP 429). Pozostałych 38 wierszy odrzuconych kandydatów M61 poza próbą NIE oglądałem (UNVERIFIED)."
 }

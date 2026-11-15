@@ -181,7 +181,7 @@ Uzupełniająco: P18-177 (film błotny na całych drzwiach, zachlapane lampy —
 
 ## 7. Samokontrola 20 % (s21)
 
-Seed jawny: `sorted(random.Random(20261115).sample(sorted(ids), 22))` po wszystkich 109 wierszach → 22 wiersze (20,2 %): 4 literatura, 18 kadrów. Każdy kadr z próby, którego obraz dało się pobrać, obejrzany ponownie w dniu audytu osobnym wywołaniem i porównany z wierszem. **Wynik: 13 zgodnych (PASS), 7 poprawionych (FIX), 2 nieobejrzane** (P18-110 i P18-125 — miniatury HTTP 429). Kadrów w próbie 18, obejrzanych ponownie 16. Poprawki: P18-118 (krycie zawyżone), P18-164 („tył w cieniu”), P18-178 (zdanie o dolnej listwie), P18-102 i P18-146 (opisy brudu odrzuconych kandydatów M61 niezgodne z obrazem), P18-004 i P18-021 (cytat/link niesprawdzalne dziś → UNVERIFIED). Klasa kadru nie zmieniła się w żadnym wierszu. Szczegóły: `audit_20_percent.json`.
+Seed jawny: `sorted(random.Random(20261115).sample(sorted(ids), 22))` po wszystkich 109 wierszach → 22 wiersze (20,2 %): 4 literatura, 18 kadrów. Każdy kadr z próby, którego obraz dało się pobrać, obejrzany ponownie w dniu audytu osobnym wywołaniem i porównany z wierszem. **Wynik: 14 zgodnych (PASS), 8 poprawionych (FIX), 0 nieobejrzanych** — zweryfikowane 22/109 = 20,2 %. Kadrów w próbie 18, wszystkie obejrzane ponownie (P18-110 i P18-125 w drugim podejściu po HTTP 429). Poprawki: P18-118 (krycie zawyżone), P18-164 („tył w cieniu”), P18-178 (zdanie o dolnej listwie), P18-102, P18-110 i P18-146 (opisy brudu odrzuconych kandydatów M61 niezgodne z obrazem), P18-004 i P18-021 (cytat/link niesprawdzalne dziś → UNVERIFIED). Klasa kadru nie zmieniła się w żadnym wierszu. Szczegóły: `audit_20_percent.json`.
 
 ## 8. Pliki
 
