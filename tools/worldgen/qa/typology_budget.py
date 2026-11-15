@@ -94,14 +94,12 @@ def build(rid):
     buf, rep = Buf(), {}
     BM.build(buf, blds, hf, hf.sample, yard_union, roads_poly, rep, sign_out=[])
     size = float(man.get("chunk_size_m", 256.0))
-    b0 = man["chunks"][0]["bounds_local_m"]
-    i0, j0 = (int(x) for x in man["chunks"][0]["id"].split("_"))
     ids = {}
     for ch in man["chunks"]:                      # chunk id <-> grid cell of its south-west corner
         b = ch["bounds_local_m"]
         ids[(round(b["e_min"] / size), round(b["n_min"] / size))] = ch["id"]
     per = {}
-    mats = {l: set() for l in LAYERS}
+    mats = {lay: set() for lay in LAYERS}
     pb = {}
     for layer, mat, V, T, src in buf.parts:
         if layer not in LAYERS or not len(T):
@@ -113,15 +111,15 @@ def build(rid):
         cells = np.floor(c / size).astype(int)
         for cell, n in zip(*np.unique(cells, axis=0, return_counts=True)):
             cid = ids.get((int(cell[0]), int(cell[1])), f"out:{int(cell[0])}:{int(cell[1])}")
-            per.setdefault(cid, {l: 0 for l in LAYERS})[layer] += int(n)
-    tot = {l: sum(v[l] for v in per.values()) for l in LAYERS}
-    per_b = {k: [sum(n for (l, _), n in v.items() if l == "buildings"),
-                 sum(n for (l, _), n in v.items() if l == "buildings_low"),
+            per.setdefault(cid, {lay: 0 for lay in LAYERS})[layer] += int(n)
+    tot = {lay: sum(v[lay] for v in per.values()) for lay in LAYERS}
+    per_b = {k: [sum(n for (lay, _), n in v.items() if lay == "buildings"),
+                 sum(n for (lay, _), n in v.items() if lay == "buildings_low"),
                  hashlib.sha1(repr(sorted(v.items())).encode()).hexdigest()[:10]] for k, v in sorted(pb.items())}
     return {"region": rid, "typologies": rep["typologies"], "subtypes": rep.get("subtypes"),
             "roofs_other": rep.get("roofs_other"), "pavilion_fronts": rep.get("pavilion_fronts"),
             "house_roofs": rep.get("house_roofs"), "total": tot,
-            "materials": {l: len(mats[l]) for l in LAYERS}, "per_chunk": dict(sorted(per.items())),
+            "materials": {lay: len(mats[lay]) for lay in LAYERS}, "per_chunk": dict(sorted(per.items())),
             "per_building": per_b}, man
 
 
@@ -144,8 +142,8 @@ def cameras(rid, man, per, base=None):
             d = float(np.linalg.norm(c - pos))
             if d > 1600 or (d > 200 and float(np.dot((c - pos) / d, look)) < 0.5):
                 continue
-            t = per.get(ch["id"], {l: 0 for l in LAYERS})
-            tb = (base or {}).get(ch["id"], {l: 0 for l in LAYERS})
+            t = per.get(ch["id"], {lay: 0 for lay in LAYERS})
+            tb = (base or {}).get(ch["id"], {lay: 0 for lay in LAYERS})
             k = "buildings" if d < BLD_HIGH_M else "buildings_low"
             hi += t[k]
             lo += t["buildings_low"]
@@ -179,7 +177,7 @@ def main():
         mt = {"buildings": sum(c["triangles"].get("buildings", 0) for c in man["chunks"]),
               "buildings_low": sum(c["triangles"].get("buildings_lod1", 0) for c in man["chunks"])}
         res["manifest_total"] = mt
-        res["harness_over_manifest"] = {l: round(res["total"][l] / max(mt[l], 1), 4) for l in LAYERS}
+        res["harness_over_manifest"] = {lay: round(res["total"][lay] / max(mt[lay], 1), 4) for lay in LAYERS}
     if a.out:
         Path(a.out).write_text(json.dumps(res, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
     print(json.dumps({k: v for k, v in res.items() if k not in ("per_chunk", "cameras", "per_building")}, sort_keys=True))
