@@ -62,3 +62,7 @@ Na etykiecie obudowy 01-VOL-003 czytelne E9 i grupy znaków potwierdzono niezale
 ## Tylna lampa MAN 24 V — dwa kadry link-only
 
 01-MAN-001/002: widok klosza i fizycznej etykiety tej samej galerii, bez pobrania. Odczyt etykiety niezależnie powtórzył drugi agent: E1 w okręgu przy 10R-04 7501; osobno MD E24 5884, 24Volt i moce funkcji (2/3/2/4/2/1,7 W) jako dane etykiety, nie pomiar. Szczegóły i granice w data/man-label-peer-review.json. R148 pkt3.3.4.5(b), s.11–12, dopuszcza kod modułu MD bez okręgu; sam brak okręgu nie obala tego kodu. Konkretna homologacja fotometryczna5884 i przypisanie funkcji polom nadal UNVERIFIED. Dwa kadry powiększają zbiór pomocniczy, nie liczniki potwierdzonej fotometrii, emisji ani nocy. Łącznie manifest01 ma16 kadrów:6 lokalnych i10 link-only.
+
+## Europoint — pierwszy czytelny znak tylnej lampy naczepy
+
+01-EUP-001: SOURCED [obejrzany obraz; niezależna recenzja drugiego agenta w link-only-candidates/europoint-observations.json] — E9 w okręgu,5497 oraz S1/IIIA/AR/R1 na fizycznym kloszu. Osobno E24 przy10R-06 0973. To1 pewny odczyt tylnej lampy naczepy, a nie dwa za dwa znaki. 01-EUP-002 to inny detal tej samej lampy bez odczytu E. Zastosowanie naczepowe z opisu oferty; karta TRP tego kodu dotyczy prawego wariantu, nie dowodzi napięcia i wymiarów sfotografowanego lewego. Emisja, noc i oświetlenie tablicy nadal UNVERIFIED. Nie ustalono konkretnej edycji R7/R23/R3/R148/R150 z samego numeru5497. Łącznie18 kadrów:6 lokalnych pomocniczych oraz12 link-only. Kryteria M59 nie są zamknięte.

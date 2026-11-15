@@ -65,3 +65,13 @@ SOURCED [VOL-003, obraz]: **E9 w okręgu na etykiecie obudowy**, obok transkrypc
 SOURCED [MAN-002, obraz]: **E1 w okręgu na etykiecie obudowy przy „10R-04 7501”**. Wyżej zwykły tekst „MD E24 5884”; nie dopisano niewidocznego okręgu E24. Sam odczyt 10R nie domyka homologacji fotometrycznej tylnej lampy. Czytelne moce z etykiety: SML/EOL/TAIL 2 W, DI 3 W, Stop 2 W, Reverse 4 W, Fog 2 W, License 1,7 W — dane znamionowe etykiety, bez pomiaru i bez przypisania do pól klosza. **2 dodatkowe kadry; 1 czytelny znak E1 przy 10R; 0 potwierdzonej homologacji fotometrycznej; 0 emisji/nocy/oświetlenia tablicy.**
 
 `schmitz-vignal-screening.json`: trzy obejrzane kadry LC12 LED, z czytelnym OE 1370066 na etykiecie, lecz bez pewnego wizualnego E. Oficjalna karta Vignal potwierdza 24V i przeznaczenie do przyczep/naczep Schmitz; E2 18042 z tej karty pozostaje deklaracją tekstową, a nie odczytem E2 z fotografii. Nie zwiększa liczby czytelnych znaków.
+
+## Europoint — fotometryczny znak na fizycznym kloszu
+
+`europoint-manifest.csv` i `europoint-observations.json`: 2 osobno obejrzane zdjęcia tej samej używanej lampy z oferty SCS POLAND, przód 1/5 i detal tłoczenia 3/5. Sprzedawca wskazuje lewą lampę naczepy Schmitz Aspöck Europoint, wersję europejską.
+
+SOURCED [EUP-001, obraz 2560 × 1195, naturalne powiększenie w Chrome]: **E9 w okręgu i 5497 na centralnym trójkącie klosza**. Pewne symbole **S1 / IIIA / AR / R1**; pozostałych drobnych grup nie rozstrzygnięto. Osobno po prawej **E24 w okręgu przy 10R-06 0973**. Agent lampy niezależnie obejrzał cały obraz i widok 1:1 oraz potwierdził te odczyty. Jest to obraz rzeczywistej powierzchni klosza ze śrubami, rysami i refleksami; nie szkic homologacyjny.
+
+SOURCED [tekst karty TRP/PACCAR Parts https://trp.eu/pl-pl/parts/15/103/1966241]: kod E9 5497 przypisano do Europoint II, zastosowanie przyczepy/naczepy i 24V. Karta dotyczy **prawego wariantu**; wspiera nazwę rodziny, lecz nie ustala dokładnego lewego wariantu ze zdjęcia. Napięcie tego egzemplarza pozostaje UNVERIFIED; nie przeniesiono wymiarów i dodatkowych homologacji z prawej części.
+
+**2 dodatkowe kadry; 1 czytelny fotometryczny znak E na fizycznym kloszu; 0 potwierdzonej emisji/nocy/oświetlenia tablicy.** Cztery duże okrągłe pola, cztery mniejsze okrągłe wzory i trójkąt nie są automatycznie dziewięcioma komorami funkcjonalnymi. To oddzielny licznik od poprzednich zestawów. Nie pobrano zdjęć ani nie zapisano screenshotów.
