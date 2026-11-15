@@ -68,3 +68,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 20:22 +01:00 — R1 przeszedł generację budynków (3 hero assets) i nawierzchni; proces nadal pracuje, przywrócony bez ingerencji w cudze procesy.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 20:24 +01:00 — Build_world r1 OK (958,4 s); import Unity w toku, slot unity zajęty wyłącznie przez r1.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
