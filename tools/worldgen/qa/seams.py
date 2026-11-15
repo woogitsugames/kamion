@@ -1,0 +1,625 @@
+"""ADR 0224: road cross-section across tile seams (DK65 corridor Białystok -> Knyszyn and its side tiles).
+
+For every pair of tiles that share an edge (bbox from region.yaml) the tool finds the roads that cross the shared edge
+and compares, at the seam, the cross-section the generator builds on both sides:
+
+  carriageway width (2 x half-width at the chain end, after overrides + tapers: `pipeline.build_network`), lanes and
+  lane width, edge lines (spacing axis to axis, which sides, solid/broken), centre line, side profile (rural paved
+  shoulder + gravel + ditch / kerb / sidewalk: `network.assign_sides`, first pass), lighting rule, axis position
+  (centre of the carriageway on the seam), terrain height at the axis (graph `z_terrain`, NMT) and the carriageway width
+  of the last build (`generated/roads_qa.json`, may be stale against the overrides).
+
+Every value carries its source: `derived:network` (generator code on graph + overrides of this checkout, no build),
+`generated:roads_qa` (last build_world, in git), `graph:z_terrain` (NMT at the node), `rule:ADR0220` (edge_line_spacing,
+modelled after markings.edge_lines of PR #98 when an override carries the key). Road surface height (Y of the built
+axis) is NOT in any generated/*.json - the glb chunks live in Data/raw - so the height row compares NMT at the axis.
+
+Tolerance: +-0.1 m on lengths (TOL_M), categories must be equal. Reference ranges (research K1, ADR 0212) are checked on
+the route road of the corridor seams (`REFERENCE`).
+
+  uv run --project tools/worldgen python -m tools.worldgen.qa.seams [--tiles a,b,...] [--overrides-ref <git ref>]
+        [--json out.json] [--md out.md] [--compare-ref origin/dk65-k1-0220]
+
+`--overrides-ref` reads every overrides.yaml from a git ref (the rest from the checkout); `--compare-ref` runs twice
+(checkout and ref) and marks the FAIL rows that disappear with the ref.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+
+import numpy as np
+import yaml
+
+ROOT = Path(__file__).resolve().parents[3]
+REG = ROOT / "Data" / "Regions"
+sys.path.insert(0, str(ROOT / "tools" / "worldgen"))
+
+from roads import markings as MK  # noqa: E402
+from roads import network as Nw  # noqa: E402
+from roads import standards as S  # noqa: E402
+
+TOL_M = 0.10                  # task D3: +-0.1 m
+SEAM_EPS_M = 0.05             # a chain end lies on the seam line within this distance
+MATCH_M = 5.0                 # chain ends of the same road on both sides of a seam: within this distance
+DASH_SNAP_M = 1.5             # markings.EDGE_DASHED_SNAP_M (PR #98)
+EDGE_LINE_MIN_INSET = 0.12    # markings.EDGE_LINE_MIN_INSET (PR #98, WORKING_VALUE)
+
+# Chain of task D3 (cloud D, s21). bialystok-industrial-c / -dojlidy do not touch dk65-01 (bbox, region.yaml): the
+# city tile on the east edge of dk65-01 (x = 770827) is bialystok-knyszynska.
+TILES = ["bialystok-industrial-c", "bialystok-dojlidy", "bialystok-knyszynska",
+         "dk65-01", "dk65-02", "dk65-03", "dk65-04", "dk65-05", "dk65-06", "dk65-07", "dk65-08", "dk65-09", "dk65-10",
+         "dk65-11", "knyszyn-s", "knyszyn", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01"]
+DK65_SEAMS = [("bialystok-knyszynska", "dk65-01"), ("dk65-01", "dk65-02"), ("dk65-02", "dk65-03"),
+              ("dk65-03", "dk65-04"), ("dk65-04", "dk65-05"), ("dk65-05", "dk65-06"), ("dk65-06", "dk65-07"),
+              ("dk65-07", "dk65-08"), ("dk65-08", "dk65-09"), ("dk65-09", "dk65-10"), ("dk65-10", "dk65-11"),
+              ("dk65-11", "knyszyn-s"), ("knyszyn-s", "knyszyn"), ("knyszyn", "knyszyn-w"),
+              ("knyszyn-w", "dk65-monki-01")]
+_K1 = "research K1 (research/dk65-knyszyn-refs/README.md, tabela per kafel)"
+# Expected edge-line spacing (axis to axis) of the route road at a corridor seam: (lo, hi, source).
+REFERENCE = {
+    ("bialystok-knyszynska", "dk65-01"): (6.0, 6.4, _K1 + ": km 8,8 = 6,3 m"),
+    ("dk65-01", "dk65-02"): (6.0, 6.4, _K1 + ": km 9,0 = 6,2 m, km 10,0 = 6,4 m"),
+    ("dk65-02", "dk65-03"): (6.0, 6.4, _K1 + ": km 11,5 = 6,1 m, km 12,0 = 6,1 m"),
+    ("dk65-03", "dk65-04"): (6.0, 6.4, _K1 + ": km 12,0 = 6,1 m, km 12,5 = 6,2 m"),
+    ("dk65-04", "dk65-05"): (6.0, 6.4, _K1 + ": km 14,0 = 6,2 m, km 14,5 = 6,2 m"),
+    ("dk65-05", "dk65-06"): (6.0, 6.4, _K1 + ": km 16,0 = 6,2 m, km 17,0 = 6,1 m"),
+    ("dk65-06", "dk65-07"): (6.0, 6.4, _K1 + ": km 18,0 = 6,0 m, km 19,0 = 6,4 m"),
+    ("dk65-07", "dk65-08"): (6.0, 6.4, _K1 + ": km 19,0 = 6,4 m, km 20,0 = 6,0 m"),
+    ("dk65-08", "dk65-09"): (6.0, 6.4, _K1 + ": km 21,0 = 6,25 m, km 21,65 = 6,1 m"),
+    ("dk65-09", "dk65-10"): (6.0, 6.4, _K1 + ": km 21,65 = 6,1 m, km 22,0 = 6,1 m"),
+    ("dk65-10", "dk65-11"): (6.0, 6.4, _K1 + ": km 24,0 = 6,1 m, km 24,6 = 6,0 m (mediana korytarza 6,2)"),
+    ("dk65-11", "knyszyn-s"): (6.0, 6.4, _K1 + ": km 24,6 = 6,0 m, km 25,0 = 6,1 m"),
+    ("knyszyn-s", "knyszyn"): (6.6, 7.0, _K1 + ": km 26,0 / 27,0 = 6,8 m (Obozowa); ADR 0212: 6,8 m"),
+    ("knyszyn", "knyszyn-w"): (6.6, 7.0, "ADR 0212 p.1: DK65 na Mońki 6,8 m linia-linia (ortofoto 0,1 m 2025)"),
+    ("knyszyn-w", "dk65-monki-01"): (6.6, 7.0, "ADR 0212 p.1: 6,8 m linia-linia (dk65-monki-01, 7 przekrojów)"),
+}
+SIDE_KIND = {Nw.URBAN: "krawężnik", Nw.ISLAND: "wyspa (rondo)", Nw.RURAL: "wiejski: utw. 1,00 + żwir 0,75 + rów",
+             Nw.MEDIAN_RURAL: "pas dzielący wiejski"}
+
+
+# ----------------------------------------------------------------------------------------------- tile data
+@dataclass
+class Tile:
+    id: str
+    region: dict
+    graph: dict
+    overrides: list
+    roads_qa: dict | None = None
+    ctx: dict | None = None
+    streetscape: dict | None = None
+    route_edges: set = field(default_factory=set)
+    overrides_src: str = "checkout"
+
+    @property
+    def bbox(self):
+        b = self.region["bbox"]
+        return (float(b["xmin"]), float(b["ymin"]), float(b["xmax"]), float(b["ymax"]))
+
+    @property
+    def origin(self):
+        return (float(self.region["origin"]["x"]), float(self.region["origin"]["y"]))
+
+
+def _git_show(ref: str, rel: str) -> str | None:
+    r = subprocess.run(["git", "-C", str(ROOT), "show", f"{ref}:{rel}"], capture_output=True, text=True,
+                       encoding="utf-8")
+    return r.stdout if r.returncode == 0 else None
+
+
+def load_tile(tid: str, overrides_ref: str | None = None) -> Tile:
+    d = REG / tid
+    rj = lambda p: json.loads(p.read_text(encoding="utf-8")) if p.exists() else None  # noqa: E731
+    region = yaml.safe_load((d / "region.yaml").read_text(encoding="utf-8"))
+    graph = rj(d / "roads.graph.json")
+    src = "checkout"
+    text = None
+    if overrides_ref:
+        text = _git_show(overrides_ref, f"Data/Regions/{tid}/overrides.yaml")
+        src = overrides_ref if text is not None else "checkout (brak w ref)"
+    if text is None and (d / "overrides.yaml").exists():
+        text = (d / "overrides.yaml").read_text(encoding="utf-8")
+    ov = ((yaml.safe_load(text) or {}).get("overrides") or []) if text else []
+    route = rj(d / "route_start.json")
+    return Tile(id=tid, region=region, graph=graph, overrides=ov, roads_qa=rj(d / "generated" / "roads_qa.json"),
+                ctx=rj(d / "generated" / "osm_context.json"), streetscape=rj(d / "generated" / "streetscape_sources.json"),
+                route_edges=set(route["edge"]) if route else set(), overrides_src=src)
+
+
+# ----------------------------------------------------------------------------------------------- geometry
+def shared_edge(ba, bb):
+    """Shared edge of two axis-aligned bboxes: dict(axis 'x'|'y', at, lo, hi, normal_ab) or None (corner/no contact).
+    normal_ab: unit vector pointing from tile a into tile b."""
+    ax0, ay0, ax1, ay1 = ba
+    bx0, by0, bx1, by1 = bb
+    for at, nab in ((ax1, (1.0, 0.0)) if abs(ax1 - bx0) < 1e-6 else (None, None),
+                    (ax0, (-1.0, 0.0)) if abs(ax0 - bx1) < 1e-6 else (None, None)):
+        if at is not None:
+            lo, hi = max(ay0, by0), min(ay1, by1)
+            if hi - lo > 1.0:
+                return {"axis": "x", "at": at, "lo": lo, "hi": hi, "normal_ab": nab}
+    for at, nab in ((ay1, (0.0, 1.0)) if abs(ay1 - by0) < 1e-6 else (None, None),
+                    (ay0, (0.0, -1.0)) if abs(ay0 - by1) < 1e-6 else (None, None)):
+        if at is not None:
+            lo, hi = max(ax0, bx0), min(ax1, bx1)
+            if hi - lo > 1.0:
+                return {"axis": "y", "at": at, "lo": lo, "hi": hi, "normal_ab": nab}
+    return None
+
+
+def adjacent_pairs(tiles: list[Tile]):
+    out = []
+    for i, a in enumerate(tiles):
+        for b in tiles[i + 1:]:
+            se = shared_edge(a.bbox, b.bbox)
+            if se:
+                out.append((a, b, se))
+    return out
+
+
+def _on_seam(xy, se):
+    k = 0 if se["axis"] == "x" else 1
+    return abs(xy[k] - se["at"]) <= SEAM_EPS_M and se["lo"] - SEAM_EPS_M <= xy[1 - k] <= se["hi"] + SEAM_EPS_M
+
+
+# ----------------------------------------------------------------------------------------------- network
+_NET_CACHE: dict = {}
+
+
+def build_net_cached(t: Tile):
+    """build_net memoised on (tile, overrides): the compare run rebuilds only the tiles whose overrides differ."""
+    k = (t.id, json.dumps(t.overrides, sort_keys=True, default=str), id(t.graph) if t.id.startswith("synthetic") else 0)
+    if k not in _NET_CACHE:
+        _NET_CACHE[k] = build_net(t)
+    return _NET_CACHE[k]
+
+
+def build_net(t: Tile, sides: bool = True):
+    """The generator network of a tile (graph + overrides + tapers/forks), sides assigned (first pass, no junction
+    trims). Same calls as roads.pipeline.build_network / build, without the heightfield."""
+    net = Nw.load(t.graph, t.origin, t.overrides)
+    Nw.taper_forks(net, [])
+    Nw.align_forks(net, [])
+    Nw.abreast_forks(net, [])
+    if sides:
+        from shapely.geometry import LineString, Polygon
+        import shapely
+        o = np.array(t.origin)
+        foot, walk, yards = [], [], None
+        if t.ctx:
+            foot = [LineString(np.array(f["geometry"]) - o) for f in t.ctx["footways"] if len(f["geometry"]) >= 2]
+            walk = [LineString(np.array(f["geometry"]) - o) for f in t.ctx["footways"]
+                    if f["highway"] != "path" and len(f["geometry"]) >= 2]
+        if t.streetscape:
+            src = t.streetscape
+            walk += [LineString(np.array(f["geometry"]["coordinates"]) - o) for f in src["bdot10k"]["OT_SKRP_L"]
+                     if f["props"].get("materialnawierzchni") not in (None, "grunt naturalny")]
+            polys = [Polygon(np.array(f["geometry"]["coordinates"][0]) - o) for f in src["bdot10k"]["OT_PTPL_A"]
+                     if f["props"].get("materialnawierzchni") != "grunt naturalny"]
+            polys += [Polygon(np.array(a["geometry"]["coordinates"][0]) - o) for a in src["osm"]["areas"]
+                      if a["tags"].get("amenity") == "parking"]
+            polys += [Polygon(np.array(ov["polygon_epsg2180"]) - o) for ov in t.overrides if ov.get("kind") == "paved_area"]
+            if polys:
+                yards = shapely.union_all([shapely.make_valid(p) for p in polys])
+                shapely.prepare(yards)
+        Nw.assign_sides(net, foot, built_up=True, walkways=walk, yards=yards)
+    return net
+
+
+def _ov_for(t: Tile, osm_way, key):
+    val, oid = None, None
+    for ov in t.overrides:
+        if ov.get("kind"):
+            continue
+        tg, st = ov.get("target", {}) or {}, ov.get("set", {}) or {}
+        ways = tg.get("osm_way")
+        ways = ways if isinstance(ways, list) else ([ways] if ways is not None else [])
+        if osm_way in {int(w) for w in ways} and key in st:
+            val, oid = st[key], ov["id"]
+    return val, oid
+
+
+def _dashed_sides(t: Tile, p_local, hw):
+    """{'left'|'right' in line_en direction: (override id, tangent)} of edge_line_dashed spans passing the point."""
+    out = []
+    for ov in t.overrides:
+        if ov.get("kind") != "edge_line_dashed":
+            continue
+        pts = np.asarray(ov.get("line_en") or [], float).reshape(-1, 2)
+        if len(pts) < 2:
+            continue
+        best = None
+        for a, b in zip(pts, pts[1:]):
+            ab = b - a
+            L2 = float(ab @ ab) or 1e-12
+            u = float(np.clip((p_local - a) @ ab / L2, 0, 1))
+            dist = float(np.hypot(*(a + u * ab - p_local)))
+            if best is None or dist < best[0]:
+                best = (dist, ab / np.sqrt(L2))
+        if best and best[0] <= hw + DASH_SNAP_M:
+            out.append((ov.get("side"), best[1], ov["id"]))
+    return out
+
+
+@dataclass
+class Crossing:
+    tile: str
+    chain: str
+    osm_way: int
+    highway: str
+    xy: tuple                 # EPSG:2180 point of the carriageway centre on the seam
+    on_route: bool
+    params: dict              # name -> (value, source)
+    geo: dict = field(default_factory=dict)   # chain_len_m, cos_normal (|cos| of the axis vs the seam normal)
+
+
+def crossings(t: Tile, se, net=None) -> list[Crossing]:
+    """Every generated chain end lying on the seam, with its cross-section in the a -> b travel frame
+    (L / P = left / right looking from tile a into tile b)."""
+    net = net or build_net(t)
+    o = np.array(t.origin)
+    nab = np.array(se["normal_ab"])
+    out = []
+    qa = {c["id"]: c for c in (t.roads_qa or {}).get("chains", [])}
+    for c in net.chains:
+        for end in (0, -1):
+            pg = c.line.p[end] + o
+            if not _on_seam(pg, se):
+                continue
+            s = float(c.line.s[end])
+            i_sec = int(c.sec_idx[end])
+            sec = net.sec_list[i_sec]
+            hw = float(c.hw[end])
+            tan = c.line.t[end]
+            # travel frame a -> b: chain direction agrees with nab -> chain-left = L
+            flip = float(np.dot(tan, nab)) < 0
+            P = {}
+            src_n = "derived:network"
+            P["szerokość jezdni [m]"] = (round(2 * hw, 3), src_n)
+            P["pasy × szer. pasa [m]"] = (f"{sec.lanes} × {sec.lane_w:.2f}", src_n)
+            P["opaska (edge_strip) [m]"] = (round(float(sec.edge_strip), 3), src_n)
+            # edge lines (markings.edge_lines of this checkout, + ADR 0220 edge_line_spacing when an override has it)
+            lines = MK.edge_lines(sec, hw, int(c.dirn[end]) or 1) if sec.highway in MK.MARKED else []
+            lats = sorted(float(np.asarray(lat)) for lat, _k in lines)
+            sp, sp_id = _ov_for(t, int(sec.edge_id.split(":")[0].lstrip("w")), "edge_line_spacing")
+            src_l = src_n
+            if sp is not None and lines and S.road_class(sec.highway) not in ("A", "S", "GP") and \
+                    not getattr(sec, "edge_line_spacing", None):
+                off = min(0.5 * float(sp), hw - EDGE_LINE_MIN_INSET)
+                lats = sorted(np.sign(lat) * off for lat in lats)
+                src_l = f"rule:ADR0220 ({sp_id})"
+            elif getattr(sec, "edge_line_spacing", None):
+                src_l = f"derived:network ({sec.provenance.get('edge_line_spacing', 'edge_line_spacing')})"
+            sides_present = []
+            for lat in lats:
+                left_of_chain = lat > 0
+                sides_present.append("L" if left_of_chain != flip else "P")
+            spacing = round(lats[-1] - lats[0], 3) if len(lats) == 2 else None
+            P["rozstaw linii krawędziowych [m]"] = (spacing, src_l)
+            P["szer. linii krawędziowej [m]"] = (MK.edge_line_width(sec) if lines else None, src_n)
+            dashed = {"L": "ciągła", "P": "ciągła"}
+            for side, dvec, oid in _dashed_sides(t, c.line.p[end], hw):
+                # side of the span in its own direction -> a->b frame
+                same = float(np.dot(dvec, nab)) > 0
+                k = ("L" if side == "left" else "P") if same else ("P" if side == "left" else "L")
+                dashed[k] = f"przerywana ({oid})"
+            P["linia krawędziowa L"] = (dashed["L"] if "L" in sides_present else "brak", src_n)
+            P["linia krawędziowa P"] = (dashed["P"] if "P" in sides_present else "brak", src_n)
+            # centre line (markings._build_markings rule)
+            if sec.oneway or sec.highway not in MK.MARKED or sec.width < S.SEGREGATION_MIN_CARRIAGEWAY:
+                cl = "brak"
+            elif sec.lanes >= 4:
+                cl = "P-4 podwójna ciągła"
+            else:
+                cl = "P-1a przerywana (4/8)" if (sec.maxspeed or 50) > 70 else "P-1b przerywana (2/4)"
+            P["linia środkowa"] = (cl, src_n)
+            # side profile
+            for side_c in ("L", "R"):
+                sd = (c.side or {}).get(side_c)
+                k = ("L" if side_c == "L" else "P") if not flip else ("P" if side_c == "L" else "L")
+                if not sd:
+                    P[f"pobocze {k}"] = (None, "brak (assign_sides)")
+                    continue
+                kind = SIDE_KIND.get(int(sd["kind"][end]), str(int(sd["kind"][end])))
+                if int(sd["kind"][end]) == Nw.URBAN:
+                    w = float(sd["raw"]["w"][end])
+                    kind += f" + chodnik {w:.2f}" if bool(sd["walk"][end]) and w > 0 else (
+                        " (płasko)" if float(sd["raw"]["h"][end]) < 0.05 else "")
+                P[f"pobocze {k}"] = (kind, "derived:network (assign_sides, 1. przebieg)")
+            P["oświetlenie"] = ("brak (override)" if sec.provenance.get("no_lamps") else "reguła klasy", src_n)
+            P["oś jezdni E [m]"] = (round(float(pg[0]), 3), src_n)
+            P["oś jezdni N [m]"] = (round(float(pg[1]), 3), src_n)
+            node = net.nodes.get(c.node_a if end == 0 else c.node_b, {})
+            z = node.get("z_terrain")
+            P["wys. terenu w osi Z [m]"] = (z, "graph:z_terrain (NMT " + str(t.graph.get("sources", {}).get("z_terrain")) + ")"
+                                             if z is not None else "brak (z_terrain = null na krawędzi S/E kafla)")
+            q = qa.get(c.id)
+            ws = sorted({float(w) for w in (q or {}).get("width_m") or []})
+            hit = [w for w in ws if abs(w - float(sec.width)) <= 0.011]
+            if hit:
+                gw, gsrc = hit[0], "generated:roads_qa"
+            elif len(ws) == 1:
+                gw, gsrc = ws[0], "generated:roads_qa (≠ szerokość sekcji teraz: build nieaktualny?)"
+            else:
+                gw, gsrc = None, (f"generated:roads_qa: łańcuch ma szerokości {ws}, żadna ≠ sekcji" if q else
+                                  "brak łańcucha w roads_qa")
+            P["szer. jezdni ostatni build [m]"] = (gw, gsrc)
+            geo = {"chain_len_m": round(float(c.line.s[-1]), 2), "cos_normal": round(abs(float(np.dot(tan, nab))), 3)}
+            out.append(Crossing(tile=t.id, chain=c.id, geo=geo, osm_way=int(sec.edge_id.split(":")[0].lstrip("w")),
+                                highway=sec.highway, xy=(float(pg[0]), float(pg[1])),
+                                on_route=any(e[0] in t.route_edges for e in c.edges),
+                                params=P))
+    return out
+
+
+# ----------------------------------------------------------------------------------------------- comparison
+NUMERIC = {"szerokość jezdni [m]", "opaska (edge_strip) [m]", "rozstaw linii krawędziowych [m]",
+           "szer. linii krawędziowej [m]", "wys. terenu w osi Z [m]", "szer. jezdni ostatni build [m]"}
+POSITION = ("oś jezdni E [m]", "oś jezdni N [m]")
+
+
+def match(ca: list[Crossing], cb: list[Crossing]):
+    """Pairs (a, b) by OSM way and distance on the seam; unmatched ends come back as (a, None) / (None, b)."""
+    pairs, used = [], set()
+    for a in sorted(ca, key=lambda c: (c.osm_way, c.xy)):
+        best = None
+        for j, b in enumerate(cb):
+            if j in used:
+                continue
+            d = float(np.hypot(a.xy[0] - b.xy[0], a.xy[1] - b.xy[1]))
+            score = d + (0.0 if b.osm_way == a.osm_way else 1000.0)
+            if d <= MATCH_M and (best is None or score < best[0]):
+                best = (score, j)
+        if best is None:
+            pairs.append((a, None))
+        else:
+            used.add(best[1])
+            pairs.append((a, cb[best[1]]))
+    pairs += [(None, b) for j, b in enumerate(cb) if j not in used]
+    return pairs
+
+
+STUB_M = 15.0      # a chain shorter than this at the seam (junction stub) does not carry a comparable cross-section
+OBLIQUE_COS = 0.5  # |cos(axis, seam normal)| below this: the road runs along the seam (> 60 deg off the normal)
+
+
+def _weak(c: Crossing | None):
+    if c is None:
+        return None
+    if c.geo.get("chain_len_m", 1e9) < STUB_M:
+        return f"{c.tile}: łańcuch {c.geo['chain_len_m']:.1f} m (< {STUB_M:.0f} m, kikut przy węźle)"
+    if c.geo.get("cos_normal", 1.0) < OBLIQUE_COS:
+        return f"{c.tile}: oś biegnie wzdłuż szwu (|cos| = {c.geo['cos_normal']:.2f})"
+    return None
+
+
+def compare_pair(a: Crossing | None, b: Crossing | None, tol: float = TOL_M, dropped: dict | None = None):
+    """Rows for one road crossing the seam. FAIL on a junction stub or a road running along the seam becomes UWAGA
+    (listed, but the cross-section there is not a seam of one carriageway)."""
+    rows = []
+    weak = "; ".join(w for w in (_weak(a), _weak(b)) if w)
+    if a is None or b is None:
+        x = a or b
+        other = "prawej" if a else "lewej"
+        note = "droga urywa się na szwie (brak końca łańcucha po %s stronie w ±%.0f m)" % (other, MATCH_M)
+        if dropped and x.osm_way in dropped:
+            note += f"; way wycięty z grafu w {dropped[x.osm_way]} (graph_filter.authored.json)"
+        rows.append({"param": "droga po drugiej stronie", "left": x.chain if a else None, "right": x.chain if b else None,
+                     "delta": None, "status": "UWAGA" if weak else "FAIL", "source": "derived:network",
+                     "note": note + (f"; {weak}" if weak else "")})
+        return rows
+    rows = _compare_rows(a, b, tol)
+    if weak:
+        for r in rows:
+            if r["status"] == "FAIL":
+                r["status"] = "UWAGA"
+                r["note"] = weak
+    return rows
+
+
+def _compare_rows(a: Crossing, b: Crossing, tol: float):
+    rows = []
+    for k in a.params:
+        (va, sa), (vb, sb) = a.params[k], b.params.get(k, (None, "brak"))
+        src = sa if sa == sb else f"{sa} | {sb}"
+        if k in POSITION:
+            continue
+        if k == "wys. terenu w osi Z [m]":
+            if va is None or vb is None:
+                st, d = "N/D", None
+                ya, yb = (_nmt_year(sa), _nmt_year(sb))
+                note = ("Y drogi nie ma w generated/*.json (chunki glb w Data/raw); z_terrain tylko po jednej stronie. "
+                        + (f"Oba kafle: NMT {ya} - ta sama siatka, próbka na szwie wspólna (ADR 0214 test_seam_terrain, "
+                           "wymaga Data/raw)" if ya and ya == yb else
+                           f"Różne roczniki NMT ({ya or '?'} / {yb or '?'}): możliwy skok terenu ≤ 0,5 m (ADR 0214)"))
+                rows.append({"param": k, "left": va, "right": vb, "delta": None, "status": st, "source": f"{sa} | {sb}",
+                             "note": note})
+                continue
+            else:
+                d = round(vb - va, 3)
+                st = "OK" if abs(d) <= tol else "FAIL"
+        elif k == "szer. jezdni ostatni build [m]":
+            if va is None or vb is None:
+                st, d = "N/D", None
+            else:
+                d = round(vb - va, 3)
+                st = "OK" if abs(d) <= tol else "FAIL"
+        elif k in NUMERIC:
+            if va is None and vb is None:
+                st, d = "OK", None
+            elif va is None or vb is None:
+                st, d = "FAIL", None
+            else:
+                d = round(vb - va, 3)
+                st = "OK" if abs(d) <= tol + 1e-9 else "FAIL"
+        else:
+            d = None
+            st = "OK" if _cat(va) == _cat(vb) else "FAIL"
+        rows.append({"param": k, "left": va, "right": vb, "delta": d, "status": st, "source": src})
+    dpos = round(float(np.hypot(a.xy[0] - b.xy[0], a.xy[1] - b.xy[1])), 3)
+    rows.append({"param": "położenie osi na szwie [m]", "left": [round(v, 2) for v in a.xy],
+                 "right": [round(v, 2) for v in b.xy], "delta": dpos, "status": "OK" if dpos <= tol else "FAIL",
+                 "source": "derived:network"})
+    return rows
+
+
+def _nmt_year(src: str):
+    import re
+    m = re.search(r"nmt-(\d{4})", src or "")
+    return m.group(1) if m else None
+
+
+def _cat(v):
+    """Category for comparison: the override id of a broken span is provenance, not the type."""
+    return v.split(" (")[0] if isinstance(v, str) and v.startswith("przerywana") else v
+
+
+def run(tiles: list[str] | None = None, overrides_ref: str | None = None, tol: float = TOL_M,
+        loaded: list[Tile] | None = None) -> dict:
+    ts = loaded or [load_tile(t, overrides_ref) for t in (tiles or TILES) if (REG / t / "region.yaml").exists()]
+    nets = {}
+    seams = []
+    for a, b, se in adjacent_pairs(ts):
+        for t in (a, b):
+            if t.id not in nets:
+                nets[t.id] = build_net_cached(t)
+        ca, cb = crossings(a, se, nets[a.id]), crossings(b, se, nets[b.id])
+        dropped = {}
+        for t in (a, b):
+            f = REG / t.id / "graph_filter.authored.json"
+            if f.exists():
+                for w in json.loads(f.read_text(encoding="utf-8")).get("drop_osm_ways", []):
+                    dropped[int(w)] = t.id
+        roads = []
+        for x, y in match(ca, cb):
+            rows = compare_pair(x, y, tol, dropped)
+            ref = x or y
+            road = {"osm_way": ref.osm_way, "highway": ref.highway, "chain_left": x.chain if x else None,
+                    "chain_right": y.chain if y else None, "on_route": bool((x and x.on_route) or (y and y.on_route)),
+                    "xy": [round(v, 2) for v in ref.xy], "rows": rows}
+            refr = REFERENCE.get((a.id, b.id)) or REFERENCE.get((b.id, a.id))
+            if refr and road["on_route"]:
+                lo, hi, why = refr
+                for side_name, c in (("lewa", x), ("prawa", y)):
+                    v = c.params["rozstaw linii krawędziowych [m]"][0] if c else None
+                    rows.append({"param": f"referencja rozstawu linii ({side_name}) {lo:.1f}–{hi:.1f} m",
+                                 "left": v if side_name == "lewa" else None, "right": v if side_name == "prawa" else None,
+                                 "delta": None, "status": "OK" if v is not None and lo - 1e-9 <= v <= hi + 1e-9 else "FAIL",
+                                 "source": why})
+            roads.append(road)
+        seams.append({"a": a.id, "b": b.id, "edge": se, "roads": roads,
+                      "fail": sum(r["status"] == "FAIL" for rd in roads for r in rd["rows"]),
+                      "warn": sum(r["status"] == "UWAGA" for rd in roads for r in rd["rows"]),
+                      "overrides_src": {a.id: a.overrides_src, b.id: b.overrides_src}})
+    not_adjacent = sorted({t.id for t in ts} - {s[k] for s in seams for k in ("a", "b")})
+    return {"schema": "truck-sim-pl/seams-qa/1", "tolerance_m": tol, "overrides_ref": overrides_ref,
+            "tiles": [t.id for t in ts], "not_adjacent": not_adjacent, "seams": seams,
+            "summary": {"seams": len(seams), "roads": sum(len(s["roads"]) for s in seams),
+                        "fail_rows": sum(s["fail"] for s in seams), "warn_rows": sum(s["warn"] for s in seams)}}
+
+
+def fail_keys(rep: dict) -> set:
+    return {(s["a"], s["b"], rd["osm_way"], tuple(rd["xy"]), r["param"]) for s in rep["seams"] for rd in s["roads"]
+            for r in rd["rows"] if r["status"] == "FAIL"}
+
+
+# ----------------------------------------------------------------------------------------------- output
+def _f(v):
+    if v is None:
+        return "—"
+    if isinstance(v, float):
+        return f"{v:.3f}".rstrip("0").rstrip(".") if abs(v) < 1e5 else f"{v:.2f}"
+    if isinstance(v, list):
+        return "(" + ", ".join(_f(x) for x in v) + ")"
+    return str(v).replace("|", "/")
+
+
+def _key(s, rd, r):
+    return (s["a"], s["b"], rd["osm_way"], tuple(rd["xy"]), r["param"])
+
+
+def rows_by_key(rep: dict) -> dict:
+    return {_key(s, rd, r): r for s in rep["seams"] for rd in s["roads"] for r in rd["rows"]}
+
+
+def table(rep: dict, only_fail: bool = False, only_route: bool = False, ref: dict | None = None,
+          ref_label: str = "po ref") -> str:
+    """Markdown rows (para, droga/id, parametr, lewa, prawa, delta, wynik, zrodlo); with `ref` (another run) a column
+    with that run's result and delta; only_fail keeps the rows that FAIL in either run."""
+    rk = rows_by_key(ref) if ref else None
+    cols = ["para", "droga / id", "parametr", "lewa", "prawa", "Δ", "wynik"] + ([ref_label] if rk else []) + ["źródło"]
+    hdr = "| " + " | ".join(cols) + " |\n|" + "---|" * len(cols) + "\n"
+    lines = []
+    for s in rep["seams"]:
+        for rd in s["roads"]:
+            if only_route and not rd["on_route"]:
+                continue
+            for r in rd["rows"]:
+                r2 = rk.get(_key(s, rd, r)) if rk else None
+                if only_fail and r["status"] not in ("FAIL", "UWAGA") and not (r2 and r2["status"] == "FAIL"):
+                    continue
+                road = f"w{rd['osm_way']} {rd['highway']}" + (" (trasa)" if rd["on_route"] else "")
+                cells = [f"{s['a']} / {s['b']}", road, r["param"], _f(r["left"]), _f(r["right"]), _f(r["delta"]),
+                         r["status"]]
+                if rk:
+                    cells.append("—" if r2 is None else (r2["status"] + ("" if r2["delta"] is None else f" (Δ {_f(r2['delta'])})")
+                                                          + ("" if r2["right"] == r["right"] and r2["left"] == r["left"]
+                                                             else f" [{_f(r2['left'])} / {_f(r2['right'])}]")))
+                cells.append(_f(r["source"]) + (f" — {_f(r['note'])}" if r.get("note") else ""))
+                lines.append("| " + " | ".join(cells) + " |")
+    return hdr + "\n".join(lines) + "\n"
+
+
+def summary_table(rep: dict) -> str:
+    out = "| para | szew | dróg | na trasie | FAIL | UWAGA |\n|---|---|---|---|---|---|\n"
+    for s in rep["seams"]:
+        e = s["edge"]
+        where = f"{e['axis']} = {e['at']:.0f}"
+        out += (f"| {s['a']} / {s['b']} | {where} | {len(s['roads'])} | {sum(r['on_route'] for r in s['roads'])} | "
+                f"{s['fail']} | {s['warn']} |\n")
+    return out
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--tiles", default=",".join(TILES))
+    ap.add_argument("--overrides-ref", default=None, help="read overrides.yaml from this git ref")
+    ap.add_argument("--compare-ref", default=None, help="second run with overrides from this ref; FAILs that vanish")
+    ap.add_argument("--tol", type=float, default=TOL_M)
+    ap.add_argument("--json", default=None)
+    ap.add_argument("--md", default=None, help="write the tables (FAIL + route roads) as Markdown")
+    ap.add_argument("--all-rows", action="store_true", help="print every row, not only FAIL")
+    a = ap.parse_args(argv)
+    tiles = [t for t in a.tiles.split(",") if t]
+    rep = run(tiles, a.overrides_ref, a.tol)
+    out = {"main": rep}
+    gone = None
+    if a.compare_ref:
+        rep2 = run(tiles, a.compare_ref, a.tol)
+        gone = fail_keys(rep) - fail_keys(rep2)
+        out["ref"] = rep2
+        out["fail_gone_with_ref"] = sorted([list(k[:3]) + [k[4]] for k in gone])
+        out["fail_new_with_ref"] = sorted([list(k[:3]) + [k[4]] for k in fail_keys(rep2) - fail_keys(rep)])
+    if a.json:
+        Path(a.json).write_text(json.dumps(out, ensure_ascii=False, indent=1, default=float), encoding="utf-8")
+    ref = out.get("ref")
+    lab = f"po {a.compare_ref}" if a.compare_ref else "po ref"
+    md = ("## Szwy — podsumowanie\n\n" + summary_table(rep) + "\n## FAIL\n\n" + table(rep, only_fail=True, ref=ref, ref_label=lab)
+          + "\n## Drogi trasy — wszystkie parametry\n\n" + table(rep, only_route=True, ref=ref, ref_label=lab))
+    if a.all_rows:
+        md += "\n## Wszystkie wiersze\n\n" + table(rep, ref=ref, ref_label=lab)
+    if a.md:
+        Path(a.md).write_text(md, encoding="utf-8")
+    print(md)
+    s = rep["summary"]
+    print(f"seams {s['seams']}, roads {s['roads']}, FAIL rows {s['fail_rows']}"
+          + (f", FAIL gone with {a.compare_ref}: {len(gone)}" if gone is not None else ""))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
