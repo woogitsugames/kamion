@@ -197,3 +197,24 @@ def test_culture_dormers_are_lower_on_the_existing_roof():
             assert base-.15+1.2*scale <= 13.-.08+1e-8
             placements.append(item)
         assert len(placements)>=2
+
+
+def test_dormer_front_gable_and_window_bars_face_outward():
+    for axis in (np.array([1.,0.]), np.array([-1.,0.])):
+        out=np.array([0.,1.]); center=np.zeros(2)
+        for layer,material,bars in (("buildings", "glass", 2), ("buildings_low", "plinth_dark", 1)):
+            acc=BM.Acc()
+            townhall._dormer(acc,layer,center,axis,out,10.,3.,window_material=material,roof_base=11.)
+            red=acc.d[(layer,"roof_tiles_red")]
+            gable=red[-1][0]
+            normal=np.cross(gable[1]-gable[0],gable[2]-gable[0])
+            assert normal[:2]@out > 0
+            assert np.allclose(gable[:,:2]@out,.63)
+            assert np.isclose(gable[:,2].min(),11.-.15+.90)
+            assert np.isclose(gable[:,2].max(),11.-.15+1.20)
+            window=acc.d[(layer,material)][0][0]
+            assert np.allclose(window[:,:2]@out,.556)
+            white=acc.d[(layer,"plaster_white")]
+            front_bars=[v for v,*_ in white if np.all((v[:,:2]@out)>.56)]
+            assert len(front_bars)==bars
+            assert all(np.min(v[:,:2]@out) > np.max(window[:,:2]@out) for v in front_bars)

@@ -261,9 +261,14 @@ def _dormer(acc, layer, center, axis, out, eave, rise, window_material="glass", 
     z0 = eave + rise * .25 if roof_base is None else roof_base-.15
     # Half axes in E,N,Z. The roof plane rises inward; this box partly intersects it.
     acc.box(layer, "plaster_white", _pt(center, z0+.40*scale), np.r_[axis*.57, 0],
-            np.r_[out*.55, 0], [0, 0, .50*scale], skip=(0,))
+            np.r_[out*.55, 0], [0, 0, .50*scale], skip=(0, 1))
     _face(acc, layer, window_material, center, axis, out, .64, z0+.20*scale, z0+.88*scale, .556)
-    front, back = center+out*.55, center-out*.55
+    # WORKING_VALUE: white glazing bars, sharing the plaster material; Low retains the vertical bar.
+    _face(acc, layer, "plaster_white", center, axis, out, .045, z0+.20*scale, z0+.88*scale, .565)
+    if layer != "buildings_low":
+        _face(acc, layer, "plaster_white", center, axis, out, .64, z0+.52*scale, z0+.56*scale, .566)
+    # An overhanging red front makes the gable visible from the courtyard.
+    front, back = center+out*.63, center-out*.55
     a, b, c, d = front-axis*.65, front+axis*.65, back+axis*.65, back-axis*.65
     peak0, peak1 = front, back
     # Roof is above the white box; normals checked independently of axis sign.
@@ -274,6 +279,10 @@ def _dormer(acc, layer, center, axis, out, eave, rise, window_material="glass", 
         faces = [f[::-1] for f in faces]
     for face in faces:
         acc.quad(layer, "roof_tiles_red", *face)
+    gable = np.asarray([_pt(a,za), _pt(b,za), _pt(peak0,zp)], float)
+    if np.dot(np.cross(gable[1]-gable[0], gable[2]-gable[0])[:2], out) < 0:
+        gable = gable[::-1]
+    acc.add(layer, "roof_tiles_red", gable, [[0,1,2]])
 
 
 def build(buf, region, blds, zsmooth, report):
