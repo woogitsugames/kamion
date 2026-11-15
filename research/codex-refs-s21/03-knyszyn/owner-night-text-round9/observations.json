@@ -1,0 +1,40 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "status": "STABLE — wyłącznie obserwacje tekstowe",
+  "permission_source": "docs/owner/OWNER-PHOTOS-KNYSZYN.md: wolno używać lokalnie jako referencji projektu; nie publikować ani kopiować zdjęcia do gita lub raportów publicznych.",
+  "source_file": "research/_incoming/owner-knyszyn-photos-2026-11-14/20250812_203453.jpg w głównym repo, poza gitem",
+  "prior_state": "03-knyszyn/data/owner-fontanna-observations.json oznaczał ten plik jako nieotwarty. Starego dokumentu nie zmieniono; ten zapis dokumentuje późniejsze osobne oględziny.",
+  "method": "Oryginalny istniejący plik otwarto jeden raz lokalnym view_image. Bez kopii, pomniejszania, wycinków, screenshotów, nowego pliku obrazu i wysyłania do zewnętrznych serwisów. Zapisano tylko tekst. Nie opisywano osób i nie używano ich jako skali.",
+  "source_type": "LOCAL_OWNER_REFERENCE_TEXT_ONLY",
+  "binary_files_added": 0,
+  "downloaded_images": 0,
+  "new_public_link_only_images": 0,
+  "local_frames_reviewed": 1,
+  "date_from_filename_only": "2025-08-12 20:34:53 — UNVERIFIED; nazwa nie jest EXIF",
+  "metadata_limit": "Dokumentacja właściciela mówi o wyciętym EXIF/GPS i ostrzega, że daty mogą być niepoprawne. Nie wyprowadzono daty ani GPS z nazwy. Lokalizacja ESTIMATED z treści i kontekstu właściciela.",
+  "observations": {
+    "water": "SOURCED [lokalnie obejrzany obraz]: rzeczywista wysoka pionowa struga w środku, rozpadająca się na pasma i krople; wokół niższe wypływy o różnej grubości i stopniu spienienia. Cienkie strugi miejscami wyginają się w łuki. Nie inwentaryzowano dysz ani obiegów.",
+    "colors_in_water": "SOURCED [obraz]: wysoka struga w górnej części ma fioletoworóżowe partie, niżej także niebieskie. Przy jej podstawie mocny niebieski/cyjanowy blask. Niższe wypływy po lewej i w środkowym polu świecą jaskraworóżowo/fioletowo; najbardziej po prawej widoczna struga białoniebieska. Miejscami jasne podstawy strug są prześwietlone. Barwy widoczne w samej wodzie, nie tylko jako odbicie.",
+    "reflections": "SOURCED [obraz]: na mokrych dużych ciemnych płytach osobno widoczne różowofioletowe, niebieskie i jasne odbicia. W odbiciach powtarzają się pionowe pasma; nie należy liczyć ich jako dodatkowych strug.",
+    "surfaces": "SOURCED [obraz]: płaskie pole fontanny bez podniesionej misy, prostokątne podziały płyt. Ciemny pas obrzeża i liniowy ruszt z gęstym wzorem. Drobna szara kostka w łukowych pasach wokół. Granit i dokładny przekrój odwodnienia UNVERIFIED.",
+    "surroundings": "SOURCED [obraz]: duże drzewa o ciemnych koronach; ciemne proste słupy parkowe z jasnymi ciepłymi głowicami pod daszkiem. Brązowe listwowe ławki na ciemnych podporach i donice z roślinnością. Za trawnikiem ulica i niska jasna zabudowa; po prawej widoczna biała elewacja z dwoma poziomami okien i małym balkonem, obok kremowo-szara bryła. Dachy częściowo zasłonięte, adresy i pełna liczba kondygnacji UNVERIFIED. W głębi przeszklona wiata z prostokątnymi podziałami; nie przypisano numeru przystanku.",
+    "lighting_context": "SOURCED [obraz]: niebo ciemnoniebieskie, oprawy parkowe i podświetlenie wody widocznie jasne. Dokładna pora nocy/zmierzchu i parametry ekspozycji UNVERIFIED."
+  },
+  "limits": [
+    "Bez liczbowej inwentaryzacji strug; nie liczba fizycznych dysz.",
+    "Nie wyprowadzono wysokości w metrach, programu sterownika, kanałów LED ani wartości RGB.",
+    "Część pola jest zasłonięta, a strugi i odbicia nakładają się.",
+    "Biała jasność może wynikać z prześwietlenia; nie dowodzi osobnego białego kanału.",
+    "Stan oraz identyczność programu w 2026 UNVERIFIED.",
+    "Zdjęcie prywatne nie do redystrybucji; żaden raport nie zawiera obrazu, wycinka, miniatury lub embedu."
+  ],
+  "date_exif_check": {
+    "checked_date": "2026-11-15",
+    "method": "Pillow read-only: wyłącznie pobranie trzech wskazanych tagów daty z istniejącego pliku. Bez odczytu/publikacji GPS i innych pól; bez NTFSmtime i bez zapisu obrazu.",
+    "DateTimeOriginal": null,
+    "DateTimeDigitized": null,
+    "OffsetTimeOriginal": null,
+    "result": "Brak wszystkich trzech tagów; datowanie z nazwy pozostaje UNVERIFIED. Brak potwierdzonej strefy czasowej zdjęcia."
+  }
+}

@@ -557,3 +557,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 06/tykocin-synagogue-round4 i06/monki-square-round4:7miniatur≤800px pochodnych podglądówCommons. AutorzyPiotrMig(CCBY4),SławomirMilejski(CCBY3),Emptywords(CCBY-SA4),JolantaDyr(CCBY-SA3),HenrykBorawski(CCBY3/BY-SA3) według konkretnego wiersza manifestu. Pełne atrybucje/URL/licencje i daty perplik; SHAminiatury oddzielony od podglądu, nie deklarowany jako pełny oryginał. Surowe podglądy poza gitem; bez pełnych oryginałów.
 
 04/accesses-verges-round5:2kadry Mapillary picturehoover z27.06.2020, wyłącznie link-only, bez kopii/API/tokenów; źródłoCCBY-SA4 w poprzednim audycie licencji. 04/temporary-works-round6:1fotografia publikowana RadioBiałystok, podpisx.com/GDDKiA_B_stok, autorUNVERIFIED; wyłącznie link-only, all rights reserved, bez kopii/screenshotów. DokładneURL i ograniczenia permanifest.
+
+03/owner-night-text-round9:wyłącznie własny opis istniejącej prywatnej referencji właściciela zgodnie zOWNER-PHOTOS-KNYSZYN. Bez plikówobrazu,miniatur,cropów,screenshotów i embedów; bez zgody na redystrybucję/tekstury. Nie przyznano prywatnemu obrazowi licencjiCC.
