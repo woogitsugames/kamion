@@ -152,7 +152,7 @@ def test_island_shrinks_by_the_extra_apron_width():
 
 
 @pytest.mark.parametrize("mat,expect", [("beton", "road_concrete"), ("asfalt", "road_asphalt"),
-                                        ("kostka_jasna", "sidewalk_paving")])
+                                        ("kostka_jasna", "apron_paving_light")])
 def test_truck_apron_other_surfaces(mat, expect):
     net = _net(_ov(width_m=2.5, height_m=0.03, material=mat))
     r, z = _radii(_mesh(net), expect)
@@ -191,7 +191,7 @@ def test_one_mechanism_for_the_island_strip():
     net = Nw.load(_graph(), (0.0, 0.0), [{"id": "old", "target": {"osm_way": RING_WAY}, "set": {"apron_width": 0.4}}])
     assert all(s.truck_apron is None for s in net.sec_list), "`apron_width` is not a key (ADR 0226 uses truck_apron)"
     assert Nw.TRUCK_APRON_W == (0.2, 6.0) and Nw.TRUCK_APRON_H == (0.0, 0.08)
-    assert Nw.TRUCK_APRON_MATS[Nw.TRUCK_APRON_CODE["kostka_jasna"]] == "sidewalk_paving"
+    assert Nw.TRUCK_APRON_MATS[Nw.TRUCK_APRON_CODE["kostka_jasna"]] == "apron_paving_light"
     root = Path(__file__).resolve().parents[2]
     hits = [str(p.relative_to(root)) for p in sorted((root / "Data/Regions").glob("*/overrides.yaml"))
             if "apron_width" in p.read_text(encoding="utf-8")]
@@ -224,12 +224,15 @@ def test_knyszyn_example_override_is_valid():
     ta = Nw._truck_apron(ov[0]["set"]["truck_apron"])
     # owner drone photos 9-11 (docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md): "pierścień przejezdny z jasnej kostki/betonu
     # (opaska dla naczep, wyraźnie jaśniejsza od asfaltu)" - light grey block paving, not the brown-red sett
-    assert ta is not None and ta["material"] == "sidewalk_paving" and ta["height_m"] == pytest.approx(0.04)
+    assert ta is not None and ta["material"] == "apron_paving_light" and ta["height_m"] == pytest.approx(0.04)
     from roads import build_world as BW
     lum = lambda c: 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]   # noqa: E731
-    apron, asphalt, sett = (BW.MATERIALS[k]["color"] for k in ("sidewalk_paving", "road_asphalt", "apron_sett"))
+    apron, asphalt, sett = (BW.MATERIALS[k]["color"] for k in ("apron_paving_light", "road_asphalt", "apron_sett"))
     assert lum(apron) > 2.5 * lum(asphalt), "clearly lighter than the asphalt"
     assert max(apron) - min(apron) < 0.02 < max(sett) - min(sett), "neutral grey, the sett is brown"
-    assert BW.MATERIALS["sidewalk_paving"].get("texture_set"), "existing library texture set, no new texture"
+    # owner D75: a NEW light material with the block texture - not the walk material sidewalk_paving, lighter than it
+    assert BW.MATERIALS["apron_paving_light"].get("texture_set") == "paving_20x10_grey", "block-paving texture"
+    assert lum(apron) > 1.4 * lum(BW.MATERIALS["sidewalk_paving"]["color"]), "lighter than the sidewalk paving"
+    assert lum(apron) > 4.0 * lum(asphalt)
     # ring asphalt + apron within 6.0-8.5 m (WR-D-31-3 as quoted in ADR 0218, secondary source)
     assert 6.0 <= ov[0]["set"]["width"] + ta["width_m"] <= 8.5

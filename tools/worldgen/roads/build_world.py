@@ -115,6 +115,14 @@ MATERIALS = {
     "bridge_kerb": {"color": [0.19, 0.186, 0.176], "rough": 0.9, "surface": "concrete_kerb",
                     "texture_set": "kerb_concrete_1m"},
     "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
+    # ADR 0218 / owner D71 + D75: truck apron of the Knyszyn roundabout = light concrete block paving, clearly lighter
+    # than the asphalt. Block pattern = the generated set paving_20x10_grey (ADR 0022; the engine tint is
+    # color / set mean = 1.6, like bridge_kerb re-tints kerb_concrete_1m); albedo 0.42 WORKING_VALUE: new concrete
+    # blocks in the range of concrete 0.3-0.4 and above (table header), set so that on the owner's drone photo 9 the
+    # apron reads lighter than the sidewalk paving (0.26) and the aged kerb (0.28); the JPEG is tone-mapped, so the
+    # photo ratio apron / ring asphalt (2.1-2.4 in linear luminance) is only a lower bound. Game: 0.42 / 0.081 = 5.2.
+    "apron_paving_light": {"color": [0.42, 0.42, 0.415], "rough": 0.85, "surface": "paving_stones",
+                           "texture_set": "paving_20x10_grey"},
     # viaducts: precast-concrete modulation map projected in world metres (the deck / pier meshes have no metric UV);
     # albedo from the CC0 Bieżeństwa photo (piers mid grey, soffit in its own shadow, REVIEW r3 W4). WORKING_VALUE
     # sky_occ (ADR 0060): the soffit and the deck underside face a road the deck itself shades
@@ -211,7 +219,7 @@ def glb_materials():
 
 
 WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
-        "sidewalk_paving", "apron_sett"}
+        "sidewalk_paving", "apron_sett", "apron_paving_light"}
 
 
 def sha(b: bytes) -> str:

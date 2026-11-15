@@ -155,6 +155,28 @@ jezdnia + opaska 5,0 + 3,2 = 8,2 m mieści się w 6,0–8,5 m.
    `overrides_stale`. Bloki mechanizmu w `network.py` są na obu gałęziach bajt w bajt takie same, więc drugi scalany
    PR nie ma w nich konfliktu. Kolejność: **#93, potem #97** (jak w recenzji); przy odwrotnej nic do poprawiania.
 
+## 5b. D75 (właściciel, 2026-11-15 s22) — nowy jasny materiał opaski, przejezdność przed wiernością
+Zastępuje §5a pkt 1 w części „istniejący materiał `sidewalk_paving`”.
+1. **Materiał.** Kod 8 `kostka_jasna` = **nowy materiał `apron_paving_light`** (`build_world.MATERIALS`): faktura
+   kostki 20×10 z wygenerowanego zestawu `paving_20x10_grey` (ADR 0022; **bez nowej tekstury**, więc bez wpisu w
+   `docs/LICENSES.md`), albedo **[0,42, 0,42, 0,415] WORKING_VALUE**, szorstkość 0,85, powierzchnia fizyczna
+   `paving_stones` (jak chodnik). Silnik (`WorldPbrMaterials`, materiał per nazwa z manifestu) barwi zestaw mnożnikiem
+   luminancja materiału / średnia zestawu = 0,42 / 0,26 ≈ 1,6 (zakres importera 0,4–2,5) — ten sam mechanizm, którym
+   `bridge_kerb` przyciemnia `kerb_concrete_1m`. Chodnik (`sidewalk_paving` 0,26, odrzucony przez właściciela jako
+   ≈ brąz) zostaje bez zmian. Kontrast w grze: opaska / asfalt = 0,42 / 0,081 ≈ 5,2; opaska / chodnik ≈ 1,6.
+   Zdjęcie 9 (JPEG po tone-mappingu, więc tylko dolne ograniczenie): opaska / asfalt pierścienia 2,1–2,4 w luminancji
+   liniowej (ESTIMATED). 0,42 nie jest pomiarem albedo — do korekty po ocenie renderu `rondo_dk65_top`.
+2. **Klasa materiału.** `apron_paving_light` jest wszędzie tam, gdzie `apron_sett`: kolizja `collision_paving`,
+   `consistency.py` → `apron` (nie `sidewalk`, jak było w §5a), `WELD`, `conform.WALL_SKIP_MATS`, pionowa ścianka
+   progu → `curb_concrete`, `fidelity.CARRIAGEWAY_MATS`, bariery przy filarach (`furniture.pier_guardrails`),
+   `tests/physics/swept_path_gate3.py` (kategoria `apron`). Nie jest materiałem jezdni (`road_*`) — próg 4 cm nie
+   jest wycinany jako „krawężnik na jezdni”.
+3. **Wymiary.** Właściciel: przejezdność przed wiernością zdjęciu — zostaje asfalt pierścienia **5,0 m** + opaska
+   **3,2 m** (zawracanie zestawu 16,5 m, §3), choć na zdjęciu 9 jest ok. 3,1 + 2,4 m (ESTIMATED, skala z Ø zewn.
+   22,6 m).
+4. Testy: `tests/gis/test_truck_apron_0218.py` (23 passed) — m.in. opaska > 1,4× jaśniejsza od chodnika i > 4× od
+   asfaltu, neutralna szarość, zestaw `paving_20x10_grey`.
+
 ## 6. Otwarte
 - Zdjęcia właściciela już są (15.11; §5a): potwierdzają 4 wloty jednopasowe, wyspę dwustrefową i jasną opaskę.
   Nadal niezmierzone: szerokość jezdni i opaski, Ø wyspy, wysokość progu — lider skaluje na zdjęciach 9–11

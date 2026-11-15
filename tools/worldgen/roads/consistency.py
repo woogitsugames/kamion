@@ -66,7 +66,7 @@ class SurfaceIndex:
                 k = OBSTACLE[p.mat]
             elif p.layer == "paved":
                 k = "yard"
-            elif p.mat in ("apron_sett",):
+            elif p.mat in ("apron_sett", "apron_paving_light"):
                 k = "apron"
             else:
                 continue                                     # soffits, parapets, piers, barriers: not a top surface

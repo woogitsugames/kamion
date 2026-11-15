@@ -2400,7 +2400,7 @@ def pier_guardrails(lin, net, piers, parts, report):
         # ADR 0123: the truck apron of a roundabout is driven on too - the edge beside a pier on the centre island is
         # the inner kerb of the apron (Mapillary 177786140912399: W-beam right behind the island kerb), not the
         # asphalt 2.5 m further out (the run stood on the apron or was not built at all)
-        if (p.mat.startswith("road_asphalt") or p.mat == "apron_sett") and not p.src.endswith(":vg"):
+        if (p.mat.startswith("road_asphalt") or p.mat in ("apron_sett", "apron_paving_light")) and not p.src.endswith(":vg"):
             tri.append(p.V[p.T])
         elif p.mat == "curb_concrete":
             kerb.append(p.V[:, :2])

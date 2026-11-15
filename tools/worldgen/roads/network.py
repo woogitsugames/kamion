@@ -37,10 +37,13 @@ MAT_FLUSH_ROAD = 4      # side `mat` code: flush edge shared with another carria
 #   + material/height_m -> mountable truck apron with its own surface and lip. Knyszyn: 3.2 m light block paving.
 # Side `mat` codes of the ISLAND family only; with one of them the side `h` is the apron lip height (not used by the
 # ISLAND family otherwise).
-# Code 8 `kostka_jasna` = light grey concrete block paving: the library material `sidewalk_paving` (texture set
-# paving_20x10_grey, same collision class as `apron_sett`), not a `road_*` material - a carriageway-class apron
-# would have its lip culled as "kerb on a carriageway" (meshing.cull_sides_on_carriageway).
-TRUCK_APRON_MATS = {5: "apron_sett", 6: "road_concrete", 7: "road_asphalt", 8: "sidewalk_paving"}
+# Code 8 `kostka_jasna` = light concrete block paving, owner decision D75: its own material `apron_paving_light`
+# (build_world.MATERIALS: block texture of the set paving_20x10_grey, light albedo; same collision / QA class as
+# `apron_sett`), not `sidewalk_paving` (too dark, a walk surface) and not a `road_*` material - a carriageway-class
+# apron would have its lip culled as "kerb on a carriageway" (meshing.cull_sides_on_carriageway).
+APRON_LIGHT = "apron_paving_light"
+APRON_MATS = ("apron_sett", APRON_LIGHT)     # mountable apron surfaces (drivable, not a carriageway, not a walk)
+TRUCK_APRON_MATS = {5: "apron_sett", 6: "road_concrete", 7: "road_asphalt", 8: APRON_LIGHT}
 WALK_MATS = WALK_MATS + [TRUCK_APRON_MATS[k] for k in sorted(TRUCK_APRON_MATS)]   # codes 5-8 resolve everywhere
 TRUCK_APRON_CODE = {"kostka": 5, "sett": 5, "beton": 6, "concrete": 6, "asfalt": 7, "asphalt": 7,
                     "kostka_jasna": 8, "paving": 8}
