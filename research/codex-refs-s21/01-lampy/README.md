@@ -111,3 +111,6 @@ Evidence-audit-round6: dokumentacyjny ledger snapshotu37głównych kadrów plus9
 
 
 Korekta datowaniaR48: koordynator niezależnie odczytał i obejrzał okładkę istniejącegoP4-001.pdf:16.10.2014, Rev12, seria06 doSupplement4wejście09.10.2014. Poprzedni skrót„snapshot2015” brał rok kataloguURL i został zastąpiony jawną datą dokumentu; wartości/punkty norm pozostały bez zmian. Skład źródła/hash nadal ten sam, render okładki wyłącznie poza gitem. R148 w metadanych także rozdziela dokument09.01.2020 odURL2021-05.
+
+
+Heavy-plate-lamps-round7:4 nowe, indywidualnie obejrzane firmowe kadry1fizycznej częściSIM (całość, mocowanie, logo, optyka), tylko link-onlyARR. Zastosowanie tablicyKrone/Schmitz/Koegel/Fliegl zadeklarowane przez sprzedawcęPartsBit878531; nie pomiar zgodności ani odczytE/L. Oba najważniejszeURL(całość/optyka) niezależnie sprawdzone przez drugiego agenta. Jedno wspólne okno z3widocznymi grupami nie dowodzi3komór/źródeł. E/L/pełny numer i emisjaUNVERIFIED. To1udokumentowany typ referencyjny z deklaracją ciężarową, nie4egzemplarze i nie ukończone5lampekM59. Main41rekordów kadrów(8lokalnych,33link-only).

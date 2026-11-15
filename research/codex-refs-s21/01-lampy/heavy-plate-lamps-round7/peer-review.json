@@ -1,0 +1,34 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "reviewer": "niezależny agent knyszyn",
+  "result": "PASS — dwa dokładne URL zgodne z opisami całej części i optyki; brak potwierdzonego E/L i emisji",
+  "method": "Dokładne dwa adresy z manifestu otwarto osobno w natywnym Chrome. Oba obrazy rzeczywiście wyrenderowane i obejrzane, każdy 588×457 wg tytułu przeglądarki. Bez pobierania obrazów i zapisanych screenshotów.",
+  "frames_reviewed": [
+    {
+      "id": "01-HP7-01",
+      "url": "https://www.partsbit.de/sites/default/files/styles/588x457/public/truckpartsphoto/autoweltgmbh/licence-plate-light/dsc07962.jpg",
+      "result": "PASS",
+      "observation": "Na szarym ziarnistym podłożu czarna część ze zwężoną szyjką, owalnym oknem na górnym końcu i szeroką podstawą z dwoma widocznymi otworami. Czarny przewód tworzy pętlę i kończy się prostokątnym złączem. Jasne plamki w oknie; nie dowodzą emisji.",
+      "E_L_number": "UNVERIFIED — brak czytelnego znaku i numeru"
+    },
+    {
+      "id": "01-HP7-04",
+      "url": "https://www.partsbit.de/sites/default/files/styles/588x457/public/truckpartsphoto/autoweltgmbh/licence-plate-light/dsc07963.jpg",
+      "result": "PASS",
+      "observation": "Zbliżenie od przodu, poziome owalne wspólne przejrzyste okno w czarnym obwodzie. Trzy grupy drobnych jasnych elementów i pionowe podziały wewnątrz. Wyraźne jasne odbicia w górnym pasie. Poniżej czarna ziarnista obudowa rozszerzająca się ku dołowi, przewód po prawej. Drobne znaki w oknie nie są dostatecznie czytelne do transkrypcji E lub L.",
+      "optical_windows": "SOURCED [obraz]: 1 wspólne widoczne okno. Trzy grupy elementów nie dowodzą trzech komór funkcjonalnych ani trzech źródeł.",
+      "E_L_number": "UNVERIFIED",
+      "emission": "UNVERIFIED — brak dowodu czynnego oświetlania tablicy lub innej powierzchni"
+    }
+  ],
+  "counting": "Cztery rekordy istniejącej galerii = 1 część według przypisania manifestu, nie cztery egzemplarze. Ta recenzja obejmuje dwa wskazane kadry, nie nową część.",
+  "application": "Deklarację Krone/Schmitz oraz innych pojazdów zawiera źródłowy tytuł sprzedawcy wskazany w manifeście. To deklaracja kompatybilności, nie wizualny dowód montażu. Recenzowane fotografie pokazują część poza pojazdem.",
+  "limits": [
+    "E/L, numer homologacji i emisja pozostają UNVERIFIED.",
+    "Nie zaliczać jako kadru świecenia w nocy ani oświetlenia tablicy w realnej scenie.",
+    "Nie zwiększać liczby egzemplarzy przy recenzji lub kolejnych detalach tej galerii.",
+    "Data zdjęć, GPS i azymut nieustalone.",
+    "Link-only, all rights reserved; bez kopii i bez odrębnego audytu licencji."
+  ]
+}

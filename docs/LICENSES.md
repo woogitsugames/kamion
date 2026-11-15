@@ -551,3 +551,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 03/fountain-active-round7:3 fotografieUrszulaCitkowska(2UM) iMartynaBielska/Onet(1), wyłącznie link-only, all rights reserved. DokładneURL obejrzane indywidualnie i niezależnie, Onet6/13 sprawdzony z podpisemKnyszyn. Bez lokalnych kopii fotografii/PDF/screenshotów; własne opisy, atrybucja i daty publikacji w manifestach.
 
 03/fountain-night-round8: EdytaRożko, NowyGoniecKnyszyńskiNr8(188),sierpień2020,s3, jedna fotografia wyłącznie link-only, all rights reserved. Ogląd w natywnym podglądziePDF przez2agentów, bez zapisu PDF/fotografii/screenshotów/cropów. Własne obserwacje, tytuł/strona i publiczny odnośnik w manifeście; brak ustalonej licencjiCC.
+
+01/heavy-plate-lamps-round7:4 fotografie jednej częściSIM, publikacjaAutoweltGmbH/PartsBit, autor fotografii nieustalony, tylko link-only, all rights reserved. Każdy exactURL obejrzany bezpośrednio; całość/optyka z niezależnympeer. Bez plików zdjęć/screenshotów. Zastosowanie jest deklaracją sprzedawcy, źródło/ograniczenia perwiersz.
