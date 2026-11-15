@@ -2,4 +2,15 @@
 # region-local E/N (origin EPSG:2180 771851, 596223) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
 # 2024 0.25 m (Data/raw/derived/bialystok-knyszynska/ortho_0p25m.tif), BDOT10k 2061 + 2002, LoD1 2024. No lettering.
 schema: truck-sim-pl/overrides/1
-overrides: []
+overrides:
+  # ---------------------------------------------------------------- seam with dk65-01 (x = 770827)
+  - id: knyszynska-seam-w-xsec
+    target: {osm_way: [234919333]}
+    reason: >-
+      Szosa Knyszyńska, last ~180 m of way 234919333 before the seam with dk65-01. dk65-01 (ADR 0205) measured this
+      way on the 2024 orthophoto strip: asphalt 6.1 m (BDOT10k 6.0 m), solid edge lines both sides, and set
+      width 6.0 + edge_lines both on it. Same values here, so the carriageway and its lines run through the seam
+      without a 0.5 m step (ADR 0205 Otwarte 8).
+    confidence: medium
+    verify: owner drive / owner photo of Szosa Knyszyńska
+    set: {width: 6.0, edge_lines: both}
