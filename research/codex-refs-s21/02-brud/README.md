@@ -144,3 +144,6 @@ Dealer-round2:2 obejrzane kadry1 naczepySchmitz, tylko link-only; łuszcząca/us
 02-CR6-001: autor EricPolk wprost opisuje semi-trailer na I-105 w Downey,California; CC BY-SA4.0,2023-08-04. Agent i koordynator osobno obejrzeli oryginał i wycinek: cienkie szare pionowe smugi, wyraźniejsze w dolnej części, oraz plamisty szary próg/belka. Rdza okuć odrębna. Oryginał1522×2233 iSHA sprawdzone; drzwi około1400–1500px ESTIMATED, bez upscalingu. Widoczny kontekst ruchu drogowego, prędkość i skład osadu UNVERIFIED. Lokalny osad nie musi pokrywać całych drzwi.
 
 Aktualny przyrost:1nowy przyjęty kadr/1pojazd;1/20 wymaganych nowych, zima0/6, Europa0/6. Cały M61 nadal niespełniony, recenzja lidera otwarta. Crop to pochodna tego samego kadru. Dwa pozostałe źródła obiegu odrzucono, obrazy poza gitem. Główny manifest16 rekordów=14 kadrów+2 dokumenty, nie16 kwalifikacji. Starsze akapity0/20 opisują stan przed tą porcją.
+
+
+Creator-round7: koordynator osobno obejrzał oryginał Premier1118×1487, miniaturę i wycinek. Lokalny szarobrunatny film/smugi lewego skrzydła są pomocniczo przydatne, lecz drzwi około900–950px nie spełniają progu1000px. 1 nowy pomocniczy kadr, 2 pochodne, ścisły M61 nadal1/20, zima0/6, Europa0/6. Główny manifest teraz17 rekordów=15 kadrów(10 lokalnych/5 link-only)+2 dokumenty. Trzy odrzucenia w dzienniku dziecka nie są włączone do głównego mianownika.
