@@ -1,0 +1,25 @@
+{
+  "seed": 20261115,
+  "method": "random.Random(20261115).sample(range(84), 17) na wierszach manifest.csv (przed poprawkami; numeracja id bez zmian)",
+  "date": "2026-11-15",
+  "sample": [
+    {"id": "K69-004", "check": "ponowne pobranie kafli OSM API 0.6 (bbox 53.125–53.145 N, 23.140–23.170 E) i przeliczenie", "result": "PASS", "note": "Wyszyńskiego: mediana 33,5 m (to samo); mniejszy bbox ucina część ulicy (20 par zamiast 27)"},
+    {"id": "K69-006", "check": "jw.", "result": "PASS", "note": "Skłodowskiej-Curie: 38,9 m w przyciętym bbox vs 40,5 m w pełnym; min/max 19,7/45,3 identyczne"},
+    {"id": "K69-011", "check": "jw.", "result": "PASS", "note": "Młynowa: 13 par, 19,4 / 24,4 / 74,8 m — identycznie"},
+    {"id": "K69-013", "check": "Antoniukowska poza bbox audytu — sprawdzono tylko spójność z osm_spacing.csv", "result": "PASS", "note": "12 par w CSV ze statusem OK"},
+    {"id": "K69-020", "check": "mediana z ortho_lamp_spacing.csv (C60) policzona ponownie", "result": "PASS", "note": "34,8 (33,6–36,7), n=7"},
+    {"id": "K69-021", "check": "jw.", "result": "PASS", "note": "32,4 (26,3–35,5), n=5"},
+    {"id": "K69-023", "check": "ponowne zliczenie tagów w osm-street-lamps.json", "result": "PASS", "note": "bent_mast 701"},
+    {"id": "K69-024", "check": "jw.", "result": "PASS", "note": "straight_mast 256"},
+    {"id": "K69-025", "check": "jw.", "result": "PASS", "note": "angled_mast 4"},
+    {"id": "K69-031", "check": "jw.", "result": "FIX", "note": "było „5” jako jedna liczba; light:method=led 4 i lamp_type=led 1 mogą się nakładać → wartość „4+1”"},
+    {"id": "K69-039", "check": "ponowne obejrzenie ov_88e3040d (960 px + wycinek 2× prawej połowy)", "result": "FIX", "note": "jasne łukowe pasy na jezdni w głębi to ślady świateł aut (długi czas naświetlania), nie pule — opis b) poprawiony"},
+    {"id": "K69-046", "check": "ponowne obejrzenie cm_016 (960 px), licencja CC0 na stronie pliku (HTML)", "result": "PASS", "note": "ozdobne słupy z łukowym ramieniem, sodowe, bruk równo"},
+    {"id": "K69-058", "check": "ponowne obejrzenie pnx_3eba62ce (wycinek 1600 px z linijką pikseli), azymut z API", "result": "PASS", "note": "dwuramienna łukowa, wysięg 145/880 i 115/880 px; view:azimuth 65"},
+    {"id": "K69-061", "check": "ponowne obejrzenie pnx_6af663fb (960 px)", "result": "FIX", "note": "dwuramienna stoi przy PRAWEJ krawędzi jezdni na pasie zieleni, nie w pasie dzielącym — opis poprawiony"},
+    {"id": "K69-064", "check": "ponowne obejrzenie pnx_3717771d (960 px)", "result": "PASS", "note": "pierwszy plan: maszt sygnalizatora (nie latarnia); latarnie jednoramienne na estakadzie w tle"},
+    {"id": "K69-067", "check": "T3: kadry cm_016, cm_017, cm_014 obejrzane ponownie", "result": "PASS", "note": "3 kadry, sylwetka zgodna"},
+    {"id": "K69-078", "check": "ponowne obejrzenie s. 1 i 3 skanu ZDM-VII.7021.1.14.2023 (render 110 dpi)", "result": "PASS", "note": "„o mocach 70, 100, 150, 250 W”; s. 3 pkt 10: zdemontowane typów … o mocy 70, 100, 150 W"}
+  ],
+  "summary": {"PASS": 14, "FIX": 3, "rows": 17, "share": "17/84 = 20,2 %"}
+}
