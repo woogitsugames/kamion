@@ -1,4 +1,4 @@
-param([switch]$SkipEditMode, [switch]$SkipVqa)
+param([switch]$SkipEditMode, [switch]$SkipVqa, [switch]$Force)
 # c-regen2-s23 stage 2, step 3: EditMode (compile gate for the C# of #109 #110 #111 #122 #125 - never compiled before)
 # -> import C + Dojlidy -> visual-qa "after" matrix. One unity slot. Run after 20-regen.ps1 (regen.done + budget exit=0).
 # EditMode exit code alone is not a verdict: c-regen-s22 had exit=1 with 2 known CarPaint failures. This script reads the XML:
@@ -8,7 +8,11 @@ param([switch]$SkipEditMode, [switch]$SkipVqa)
 Init-Status "$Art/unity" 'unity.status'
 Remove-Item "$O/unity.done" -ErrorAction SilentlyContinue
 $known = @('CarPaintMaterialTests.DepositionChannel_RequiresScopedYardOptInOrExistingCar')   # HANDOVER: known on main
-if (-not (Test-Path "$Art/regen/regen.done")) { "ABORT: $Art/regen/regen.done missing - run 20-regen.ps1 first" | Add-Content $St; exit 2 }
+Assert-Branch
+# gate: read exit= lines, not the .done marker (-Force = the lead accepts a red budget and wants the renders anyway)
+$rs = "$Art/regen/regen.status"
+$bad = @($Regions | Where-Object { -not (Step-Ok $rs "build_world-$_") }) + @(if (-not (Step-Ok $rs 'budget')) { 'budget' })
+if ($bad -and -not $Force) { "ABORT: regen not green in $rs : $($bad -join ', ') (rerun 20-regen.ps1, or -Force)" | Add-Content $St; exit 2 }
 Slot-Acquire unity
 $stop = $false
 try {
@@ -40,6 +44,9 @@ try {
     }
     if (-not $stop -and -not $SkipVqa) { & "$PSScriptRoot/vqa.ps1" -Tag after -NoSlot }
 } finally { Slot-Release unity }
+# evidence for #110 (migration revision 240 / setup-project is the lead's step): what Unity changed, before it is reverted
+git diff --stat -- game/Assets/_Project/Rendering game/ProjectSettings *> "$O/unity-side-effects.diffstat.txt"
+git diff -- game/Assets/_Project/Rendering/Settings *> "$O/unity-side-effects-rendering-settings.diff"
 Restore-UnitySideEffects
 "git status after Unity: $((git status --porcelain | Measure-Object).Count) entries -> $O/git-status-after-unity.txt" | Add-Content $St
 git status --porcelain *> "$O/git-status-after-unity.txt"

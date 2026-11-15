@@ -3,6 +3,7 @@
 . "$PSScriptRoot/_common.ps1"
 Init-Status "$Art/postmerge" 'postmerge.status'
 Remove-Item "$O/postmerge.done" -ErrorAction SilentlyContinue
+Assert-Branch
 Slot-Acquire heavy
 try {
     foreach ($r in $Regions) {

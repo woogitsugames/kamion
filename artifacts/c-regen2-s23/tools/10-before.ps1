@@ -23,10 +23,10 @@ if ($dirty -or -not $branch) { "ABORT: tracked changes in the worktree or detach
 # the tools are tracked on the branch only: the base checkout removes them from disk, so run the matrix from an untracked copy
 $tools = "$Wt\$Art\before\_tools"; New-Item -ItemType Directory -Force $tools | Out-Null
 Copy-Item "$PSScriptRoot\_common.ps1", "$PSScriptRoot\vqa.ps1" $tools -Force
-git checkout -q --detach $BaseSha; "checkout-base exit=$LASTEXITCODE $(git rev-parse --short=9 HEAD)" | Add-Content $St
-if ($LASTEXITCODE -ne 0) { exit 2 }
+Slot-Acquire heavy      # wait for the slot on the branch; leave it only when the work can start
+git checkout -q --detach $BaseSha; $co = $LASTEXITCODE; "checkout-base exit=$co $(git rev-parse --short=9 HEAD)" | Add-Content $St
+if ($co -ne 0) { Slot-Release heavy; exit 2 }
 try {
-    Slot-Acquire heavy
     try { foreach ($r in $Regions) { Step "before-build_world-$r" { uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region $r } } }
     finally { Slot-Release heavy }
     # determinism evidence: main code on main data must reproduce the committed generated/ (s22: only fidelity inputs differed)

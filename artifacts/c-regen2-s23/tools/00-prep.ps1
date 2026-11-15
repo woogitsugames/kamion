@@ -1,8 +1,8 @@
 # c-regen2-s23 stage 2, step 0: data the bare `git worktree add` did not bring (scripts/new-agent-worktree.ps1 layout).
-# Copies from main: Data/raw/derived (C + Dojlidy + cache), game/Assets/_Generated, game/Library. ~25 GB, disk IO only.
+# Copies from main: Data/raw/derived (14.5 GB), game/Assets/_Generated (13.3 GB), game/Library. Disk IO only.
 # Without Library every Unity step starts with a full import; without megascans the import falls back silently
 # (megascans, cc0 and cc0/_raw were copied in stage 1 - verified below).
-param([switch]$AllDerived)
+param([switch]$RegionsOnly)   # default: whole Data/raw/derived (14.5 GB; its root holds the layer caches *.pkl build_region reuses)
 . "$PSScriptRoot/_common.ps1"
 Init-Status "$Art/prep" 'prep.status'
 function Copy-Dir([string]$rel) {
@@ -11,7 +11,7 @@ function Copy-Dir([string]$rel) {
     robocopy $src $dst /E /MT:16 /R:1 /W:1 /NFL /NDL /NJH /NJS /NP *> "$O/robocopy-$($rel -replace '[\\/]', '_').log"
     "copy $rel robocopy=$LASTEXITCODE (0-7 ok, >=8 error) $(Get-Date -Format s)" | Add-Content $St
 }
-$derived = if ($AllDerived) { @('Data/raw/derived') } else { @('Data/raw/derived/cache') + ($Regions | ForEach-Object { "Data/raw/derived/$_" }) }
+$derived = if (-not $RegionsOnly) { @('Data/raw/derived') } else { @('Data/raw/derived/cache') + ($Regions | ForEach-Object { "Data/raw/derived/$_" }) }
 foreach ($d in $derived + @('game/Assets/_Generated', 'game/Library')) { Copy-Dir $d }
 foreach ($j in 'gugik', 'osm', 'refs', 'mapillary', 'fab') {
     $p = "Data/raw/$j"; $ok = (Test-Path $p) -and ((Get-Item $p).Attributes -band [IO.FileAttributes]::ReparsePoint)

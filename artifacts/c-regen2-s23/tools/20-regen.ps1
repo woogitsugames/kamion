@@ -4,6 +4,7 @@
 . "$PSScriptRoot/_common.ps1"
 Init-Status "$Art/regen" 'regen.status'
 Remove-Item "$O/regen.done" -ErrorAction SilentlyContinue
+Assert-Branch
 # "before" numbers = generated/ as committed (identical to main: no PR of this branch touches generated/)
 foreach ($r in $Regions) {
     $b = "$Art/before/data/$r"; New-Item -ItemType Directory -Force $b | Out-Null
@@ -34,4 +35,5 @@ Step 'region-catalog-check' { uv run --project tools/worldgen python scripts/exp
 Step 'thin-shadow-audit' { uv run --project tools/worldgen python tools/rendering/thin_shadow_audit.py --check }   # #124 changes prototypes
 Step 'budget' { uv run --project tools/worldgen python "$Art/tools/30-budget.py" }
 git status --porcelain *> "$O/git-status-after-regen.txt"
-Finish 'regen.done'
+$ok = (Step-Ok $St 'budget') -and -not ($Regions | Where-Object { -not (Step-Ok $St "build_world-$_") })
+if ($ok) { Finish 'regen.done' } else { "NOT DONE: a build_world or the budget is not exit=0 - no regen.done written $(Get-Date -Format s)" | Add-Content $St; exit 1 }

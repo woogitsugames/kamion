@@ -3,6 +3,7 @@
 # Known red on main (not regressions): forest_0187 edge texture, road_fidelity stale, world_v31 forest HLOD - compare by name.
 . "$PSScriptRoot/_common.ps1"
 Init-Status "$Art/regen" 'pytest.status'
+Assert-Branch
 Slot-Acquire heavy "$Name-pytest"
 try {
     Step 'pytest-gis' { uv run --project tools/worldgen python -m pytest tests/gis -q -p no:cacheprovider -o faulthandler_timeout=600 -rfEs }
