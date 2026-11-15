@@ -55,3 +55,7 @@ Monki-centre-round3:3nowe indywidualnie obejrzane link-onlyMapillary, szurek for
 ## Synagoga i skwer — obieg4
 
 Aktualny główny manifest:21rekordów. [Synagoga](tykocin-synagogue-round4/README.md):4różne zdjęciaCC, 4podglądy pobrane, 4miniatury≤800,0pełnychoryginałów; dach z poziomym uskokiem, rytm okien, przybudówki i bruk. [Mońki](monki-square-round4/README.md):3zdjęciaCC z2009/2011/2013,3podglądy i3miniatury,0pełnychoryginałów. Widok misy placowej i osobny kwietnik po dawnej fontannie nie tworzą pary przed/po. Wszystkie7miniatur koordynator obejrzał osobno; recenzje przy pakietach. Stan2026, RAL, wymiary i formalne kondygnacje UNVERIFIED. Kolorów2013synagogi nie łączyć w jeden stan z2020/2024.
+
+## Most Narwi — obieg5
+
+Aktualny główny manifest25rekordów. [Most w Tykocinie](tykocin-bridge-round5/README.md):4nowe fotografieCC,4pobrane podglądy/4miniatury≤800,0pełnychoryginałów, osobno obejrzane również przez koordynatora. Przyczółek, kratownica, oddzielenie chodnika od asfaltu, kamienna skarpa, brukowane dojście, bliska drewniana zabudowa i historyczne boki mostu. Nie uznano drogi gruntowej za najazdDW671 ani panelu nad latarnią za dowód wykonanego projektu oświetlenia. Materiał nie rozstrzyga prawnych ograniczeń tonażu/wysokości ani obecnego stanu2026. KontekstDW671 z dokumentu sesji gminy, osobno od wyglądu fotografii.

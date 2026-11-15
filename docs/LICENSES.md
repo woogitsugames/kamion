@@ -559,3 +559,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 04/accesses-verges-round5:2kadry Mapillary picturehoover z27.06.2020, wyłącznie link-only, bez kopii/API/tokenów; źródłoCCBY-SA4 w poprzednim audycie licencji. 04/temporary-works-round6:1fotografia publikowana RadioBiałystok, podpisx.com/GDDKiA_B_stok, autorUNVERIFIED; wyłącznie link-only, all rights reserved, bez kopii/screenshotów. DokładneURL i ograniczenia permanifest.
 
 03/owner-night-text-round9:wyłącznie własny opis istniejącej prywatnej referencji właściciela zgodnie zOWNER-PHOTOS-KNYSZYN. Bez plikówobrazu,miniatur,cropów,screenshotów i embedów; bez zgody na redystrybucję/tekstury. Nie przyznano prywatnemu obrazowi licencjiCC.
+
+06/tykocin-bridge-round5:4miniatury≤800px pochodne podglądówCommons, bez pełnychoryginałów. Zala(CCBY-SA4),DanutaRuminowicz(CCBY-SA3pl;2kadry),KrzysztofPopławski(CCBY4). Pełne atrybucje/URL/datowania/licencje permanifest; SHAminiatury i rawpodglądu rozdzielone; brak kopii firmowych fotografii.
