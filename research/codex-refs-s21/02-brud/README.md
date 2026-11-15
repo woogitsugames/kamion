@@ -136,3 +136,9 @@ Dalszy audyt typu istniejących P18: 02-008 autor opisuje tylko jako long lorry,
 ## Zużycie i niejednoznaczna powierzchnia — dalsze obiegi
 
 Dealer-round2:2 obejrzane kadry1 naczepySchmitz, tylko link-only; łuszcząca/uszkodzona powłoka i cień nie są zatwierdzonym brudem. Flickr-recheck-round4:1 duży kadr BillStilwell, CC BY-SA2.0,1599×1200; po peer-review mechanizm jasnej siatki jest UNVERIFIED, początkową kwalifikację brudu wycofano. Typ pojazdu także niepotwierdzony. Główny manifest teraz15 rekordów=13 kadrów+2 dokumenty, w tym odrzucenia i konteksty, nie13 kwalifikowanych brudnych naczep. Nowe ścisłe M61 nadal0. Openverse-round5 i nowy obieg niemiecki/francuski nie przyniosły kwalifikacji; własne obrazy odrzuceń pozostawiono poza gitem.
+
+## Pierwszy nowy przyjęty kadr M61 — Western Express
+
+02-CR6-001: autor EricPolk wprost opisuje semi-trailer na I-105 w Downey,California; CC BY-SA4.0,2023-08-04. Agent i koordynator osobno obejrzeli oryginał i wycinek: cienkie szare pionowe smugi, wyraźniejsze w dolnej części, oraz plamisty szary próg/belka. Rdza okuć odrębna. Oryginał1522×2233 iSHA sprawdzone; drzwi około1400–1500px ESTIMATED, bez upscalingu. Widoczny kontekst ruchu drogowego, prędkość i skład osadu UNVERIFIED. Lokalny osad nie musi pokrywać całych drzwi.
+
+Aktualny przyrost:1nowy przyjęty kadr/1pojazd;1/20 wymaganych nowych, zima0/6, Europa0/6. Cały M61 nadal niespełniony, recenzja lidera otwarta. Crop to pochodna tego samego kadru. Dwa pozostałe źródła obiegu odrzucono, obrazy poza gitem. Główny manifest16 rekordów=14 kadrów+2 dokumenty, nie16 kwalifikacji. Starsze akapity0/20 opisują stan przed tą porcją.
