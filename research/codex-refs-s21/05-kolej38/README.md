@@ -39,3 +39,6 @@ Uzupełnienie datowania05-O05: SOURCED [WFS Skorowidze2025, pola akt_data/godlo/
 ## Kolejny kadr naziemny stacji — ground-round2
 
 05-GR2-03: nowy względemK1 URL Henryka Borawskiego, CC BY-SA3.0,2013-10-29; indywidualnie obejrzany przez agenta i koordynatora. Płyty peronu/przejścia, szyny, podkłady, pas podsypki z roślinnością oraz podwieszenia sieci. Fragment czerwono-białego urządzenia przy brzegu kadru nie potwierdza rogatki drogowej. Nie wykazano przejazduDW671 ani kategoriiA–D. P34duplikat i podobnydoP32 odłożone w dzienniku, bez nowych kopii. Manifest główny ma10 rekordów, nowa miniatura800px.
+
+
+Mapillary-crossings-round3: sprawdzono3istniejące punktyK1/OSM w publicznymUI z OSM; bez widocznej sekwencji przez tor na bocznych drogach w wybranych widokach, w trzecim takżeAllcaptures. 0 nowo obejrzanych kadrów przejazdu, 0pobrań, bez określenia wyposażenia lub kategoriiA–D. Sąsiedni mały podgląd nie jest pełnymi oględzinami. Nie jest to dowód braku przejazdów ani zdjęć w całym regionie. Main10rekordów bez zmian.

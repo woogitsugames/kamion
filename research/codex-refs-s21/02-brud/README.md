@@ -147,3 +147,6 @@ Aktualny przyrost:1nowy przyjęty kadr/1pojazd;1/20 wymaganych nowych, zima0/6, 
 
 
 Creator-round7: koordynator osobno obejrzał oryginał Premier1118×1487, miniaturę i wycinek. Lokalny szarobrunatny film/smugi lewego skrzydła są pomocniczo przydatne, lecz drzwi około900–950px nie spełniają progu1000px. 1 nowy pomocniczy kadr, 2 pochodne, ścisły M61 nadal1/20, zima0/6, Europa0/6. Główny manifest teraz17 rekordów=15 kadrów(10 lokalnych/5 link-only)+2 dokumenty. Trzy odrzucenia w dzienniku dziecka nie są włączone do głównego mianownika.
+
+
+Europe-link-only-round9:2 osobno obejrzane pomocnicze obrazy komercyjne, tylko link-only ARR, bez kopii. Myjnia: niepotwierdzona konstrukcja drzwi/mechanizm pasmowania i około230–250px tylnej powierzchni. OLX: śnieg widoczny, ale przeważają ubytki powłoki i około440–470px drzwi. Nie zwiększają ścisłegoM61, zimy ani Europy; main17rekordów bez zmian, dziennik pomocniczy odrębny. Lokalizacja firmy/ogłoszenia nie jest geotagiem fotografii.

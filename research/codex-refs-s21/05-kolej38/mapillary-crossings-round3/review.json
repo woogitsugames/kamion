@@ -1,0 +1,21 @@
+{
+  "date":"2026-11-15",
+  "timezone":"Europe/Brussels",
+  "source_of_candidate_positions":"../data/osm-crossing-and-voltage-evidence.json; rekordy 05-O01,05-O02,05-O03",
+  "new_qualifying_crossing_frames":0,
+  "downloaded_images":0,
+  "saved_screenshots":0,
+  "api_used":false,
+  "tokens_read_or_recorded":false,
+  "login_performed":false,
+  "basemap":"OpenStreetMap",
+  "locations":[
+    {"identifier":"038 010 194","osm_node":"2070722551","map_center":[53.1675484,23.0564732],"visible_coverage":"Szosa Knyszyńska; brak widocznej sekwencji bocznej drogi przez tor"},
+    {"identifier":"038 010 956","osm_node":"2559254736","map_center":[53.1706241,23.0464631],"visible_coverage":"Szosa Knyszyńska; brak widocznej sekwencji bocznej drogi przez tor","nearby_preview":"3989804994444440 — tylko mały podgląd, bez pełnych oględzin i opisu urządzeń"},
+    {"identifier":"038 012 443","osm_node":"2335160489","map_center":[53.1755275,23.0263884],"capture_mode":"All captures, potwierdzona wybrana karta UI oraz captures=all","visible_coverage":"Szosa Knyszyńska; brak widocznej sekwencji bocznej drogi przez tor"}
+  ],
+  "position_limit":"Centra mapy z danych OSM, nie GPS żadnej fotografii",
+  "equipment_and_category":"UNVERIFIED — nie uzyskano obejrzanego kadru rzeczywistego przejazdu; nie nadano A–D",
+  "negative_result_limit":"Nie jest dowodem nieistnienia zdjęć w całym serwisie ani braku urządzeń w terenie",
+  "completion_summary_sent":true
+}

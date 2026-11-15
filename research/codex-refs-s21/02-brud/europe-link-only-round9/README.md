@@ -1,0 +1,15 @@
+# Europejskie źródła firmowe — link-only, obieg 9
+
+Cel: europejskie trasy/zimowe otoczenie i brud na podwójnych tylnych drzwiach, przy wykorzystaniu publicznych zdjęć firm/mediów wyłącznie jako **link-only, all rights reserved**. Nie pobierano obrazów ani screenshotów; zapisano tylko linki i obserwacje.
+
+## Wynik
+
+**2 kadry pomocnicze, 0 nowych kwalifikowanych brudnych dwuskrzydłowych tyłów naczep / 0 M61** (manifest.csv i screening.json). **1 kadr ma widoczny śnieg**, lecz przedstawia głównie uszkodzenia powłoki; nie zwiększa zimowego progu M61. Liczba pobranych fotografii i zapisanych screenshotów: **0**. Nie powtarzano trans.info z pługiem ani wcześniejszej myjni z segmentową roletą.
+
+[AutoClean / ZL.LV — publiczny indeks](https://bildes.zl.lv/Kravas%2Bauto%2Bmazg%C4%81%C5%A1ana/): pojedynczy publiczny obraz otwarto osobno. Szarobrunatna tylna powierzchnia ma gęste jasne pionowe smugi i szersze białawe plamy przy dole, ale przy tej rozdzielczości nie widać czytelnej szczeliny/okuć dowodzących dwóch skrzydeł. Nie rozstrzygnięto typu naczepy ani momentu względem mycia. **SOURCED [tytuł obrazu w Chrome] 768 × 512 px**; duże białe marginesy po bokach, tylna powierzchnia **ESTIMATED 230–250 px** wysokości. Źródło indeksowe wskazuje firmę AutoClean/Rīga, ale miejsce wykonania zdjęcia **UNVERIFIED**. Strona szczegółowa firmy zwróciła 404; normalnie obejrzano tylko dokładny publiczny URL obrazu uzyskany z wyszukiwania, bez wariantów. Przydatność wyłącznie pomocnicza dla wyglądu pasm; mechanizm śladów **UNVERIFIED**.
+
+[Kögel — oferta OLX](https://www.olx.pl/d/oferta/kogel-burta-podnoszony-dach-CID5-ID19hW5i.html): pojedynczy publiczny obraz otwarto osobno. Widać dwoje szarych drzwi, żółte obramowanie, nieregularne białe ubytki powłoki i elementy naprawy/zamknięcia. Śnieg leży na placu przy bokach; to wizualny dowód zimowego otoczenia. Szary kolor paneli i białe uszkodzenia nie dowodzą osadu — **nie kwalifikowano brudu**. **SOURCED [tytuł obrazu w Chrome] 525 × 700 px**, mimo 1536x2048 w URL; drzwi **ESTIMATED 440–470 px**. Wynik oferty wskazywał Garwolin, ale pełna oferta miała błąd aplikacji, a miejsce wykonania zdjęcia i typ konstrukcyjny naczepy pozostają **UNVERIFIED**. Nie odświeżano ani nie zgadywano adresów większych wersji.
+
+[TIRWASH](https://www.tirwash.cz/): obejrzany materiał promocyjny pokazuje przód ciągnika w myjni i grill z pianą, bez tylnego zamknięcia. Nie kwalifikowano jako referencji drzwi; pochodzenia fotograficznego stylizowanej grafiki nie potwierdzono. Nie pobierano materiału i nie traktowano reklamowego altu jako dowodu realnego zdjęcia. Artykuł VBG sprawdzono tylko tekstowo — jego obrazów nie opisano bez oględzin.
+
+Współrzędne, data fotografowania, kierunek patrzenia, skład śladów i historia bezpośrednio poprzedzającej trasy **UNVERIFIED** dla obu kadrów. Obecność nazwy firmy/Rygi/Garwolina nie została zamieniona w pewne współrzędne. Nie identyfikuje się soli, błota pośniegowego lub korozji z samego białego/ciemnego koloru. CUA zakończono completion_summary i zwolniono Chrome agentowi knyszyn. Bez edycji stabilnych wcześniejszych zestawów, bez commitów.
