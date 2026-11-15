@@ -102,3 +102,6 @@ Conditions-round5:6SOURCED+1UNVERIFIED o warunkachR148Amendment5serii01(03.03.20
 
 
 Rear-night-europe-round5:3nowe kadry obejrzane,2odrzucone;1zachowanyAUX Devokewater BY-SA4.0 z31.07.2020. Koordynator osobno obejrzał miniaturę: żuraw i platforma wyglądają na wspólne podwozie, brak pewnego ciągnika/naczepy. Boczne bursztynowe źródła/żółte odbicia odrębne od małego prześwietlonego punktu z tyłu o nieustalonej funkcji. Przyrost kwalifikowanej sceny zestawu0, E0. Główny manifest34kadry(8lokalnych,26link-only); RN3-04 nadaljedynym przyjętym nowym kontekstem tylnej emisji ciągnika pod naczepą.
+
+
+Front-approval-round5:3 indywidualnie obejrzane firmowe kadry1reflektora Renault GamaT, wyłącznie link-only ARR. Etykieta E2/11057 oraz00 HCR 25 RL 02A PL; osobne E2/10R-03 12010, numeryczęści odrębne. Niezależny przegląd wykrył złe mapowanieURL etykiety na obudowę; poprawiono przed publikacją, ponowny bezpośredni ogląd3URL i niezależnyPASS właściwej etykiety zachowane w raporcie. Literalnego02A nie rozwijano w niepotwierdzoną funkcję. 3główne pola optyczne nie dowodzą3komór ani emisji. Main37rekordów kadrów(8lokalnych,29link-only), nie37homologacji.
