@@ -29,10 +29,11 @@ trasy nie używają dróg wyciętych z grafu — test). Przed ADR 0229 w APK by�
    definicji pojazdu: przód ciągnika +5,15 m, tył naczepy −11,30 m od punktu startu, szerokość 2,55 m, zapas 0,5 m
    (test pilnuje zgodności z `TractorDimensions`, `TrailerDimensions` i JSON-ami fizyki).
 2. **Źródło danych: katalog.** `scripts/export-region-catalog.py`: gdy pierwszy węzeł trasy jest `boundary`,
-   `startS` = 60 + 25 = **85 m** (największe możliwe odsunięcie zamknięcia + zapas), inaczej 12 m; nadal z zapasem
+   `startS` = 60 + 25 + 5 = **90 m** (największe odsunięcie zamknięcia + zapas + 5 m na skośny rząd: pas ruchu
+   przecina go do 1,2 m dalej niż oś drogi, zmierzone w bialystok-maczka), inaczej 12 m; nadal z zapasem
    `MIN_AHEAD_M` = 100 m do końca trasy. Dokładna geometria zamknięć nie jest kopiowana do Pythona (ADR 0169 p. 2) —
    sędzią jest test EditMode na prawdziwych zamknięciach. `route_start.json` i dane regionów się nie zmieniają.
-   W dk65-05 start 85 m wypada za skrzyżowaniem z wysepką (zamknięcie 14 m, skrzyżowanie tuż za nim).
+   W dk65-05 start 90 m wypada za skrzyżowaniem z wysepką (zamknięcie 14 m, skrzyżowanie tuż za nim).
 3. **Importer** (`WorldSceneBuilder`): zapieczony spawn sceny = `startS` z katalogu, a potem `SafeStartS` na
    zamknięciach zbudowanych w tym samym imporcie (ostrzeżenie w logu, gdy katalog jest nieaktualny). Kamery kontrolne
    `truck-at-gate` / `cab-gate` idą za spawnem.
@@ -61,7 +62,7 @@ Draws/tris: bez zmian (żadnej nowej geometrii). Runtime: jednorazowo przy starc
 - Wyniki przebiegów i rendery: sekcja „Wyniki” niżej.
 
 ## Otwarte
-1. **300 m wolnej trasy**: dk65-09 (trasa 352 m) i dk65-11 (378 m) mają po starcie 85 m tylko ~267 / ~293 m trasy;
+1. **300 m wolnej trasy**: dk65-09 (trasa 352 m) i dk65-11 (378 m) mają po starcie 90 m tylko ~262 / ~288 m trasy;
    na tym odcinku nie ma zamknięcia, ale wymóg „≥ 300 m” jest tam spełniony tylko jako „do końca trasy”.
 2. Sceny w APK d67-full są zapieczone ze spawnem 12 m; poprawny start daje katalog (menu) i bezpiecznik (każda ścieżka).
    Kamery kontrolne `truck-at-gate` / `cab-gate` przesuną się dopiero po reimporcie regionu.
@@ -69,5 +70,5 @@ Draws/tris: bez zmian (żadnej nowej geometrii). Runtime: jednorazowo przy starc
    dw671-tykocin-01 — `rail-fix-s21`): po ich scaleniu `python scripts/export-region-catalog.py` (zmiana
    `route_start.json` zmienia `routeLengthM`) i testy z tego ADR. Możliwy konflikt w `region_catalog.json` — rozwiązać
    przez ponowne uruchomienie eksportera.
-4. `BehindClosureM` = 25 m i 85 m startu to WORKING_VALUE — ocena właściciela na telefonie.
+4. `BehindClosureM` = 25 m i 90 m startu to WORKING_VALUE — ocena właściciela na telefonie.
 5. Telefon: niemierzone.

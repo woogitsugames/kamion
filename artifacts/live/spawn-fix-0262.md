@@ -15,3 +15,9 @@ NASTĘPNY KROK: implementacja `SpawnClearance` (Gameplay) + testy; `pwsh scripts
 - pytest `tests/gis/test_start_clear_0262.py` na katalogu z main: 21 failed / 23 passed (`artifacts/spawn-fix-0262/pytest-red-main-catalog.log`).
 - W TLE: EditMode `StartClearanceTests` na starym katalogu (dowód czerwony + kompilacja) -> `artifacts/spawn-fix-0262/editmode-red.done|.log|.xml`.
 NASTĘPNY KROK: po `editmode-red.done`: `python scripts/export-region-catalog.py` ; `pwsh artifacts/spawn-fix-0262/run-editmode.ps1 -Tag green`
+## 15.11 krok 3 — czerwony dowód + katalog 90 m
+- EditMode na starym katalogu: 45 testów, 41 failed (20 regionów × 2 + C: szlaban bazy na 244 m = wyjątek DepotBarrier) -> `artifacts/spawn-fix-0262/editmode-red.log|.xml`.
+- Zmierzone stacje zamknięć wjazdowych (prawdziwe ResolveClosures): 60,0 m ×15, 61,2 (maczka), 54,6 (dk65-06), 53,9 (knyszyn-w), 20,8 (knyszynska), 14,5 (dk65-05).
+- Katalog: startS 90 m (60 + 25 + 5 na skośny rząd) w 20 regionach, C 12 m; pytest 44 passed (`pytest-green.log`).
+- W TLE: `run-green.ps1` (EditMode StartClearance+RegionSelect, PlayMode RouteSpawnTests) -> `artifacts/spawn-fix-0262/green-all.done`.
+NASTĘPNY KROK: po `green-all.done` reimport + render startu regionów nieprzebudowywanych: `pwsh artifacts/spawn-fix-0262/run-renders.ps1`

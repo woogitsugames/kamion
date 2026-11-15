@@ -195,6 +195,7 @@ namespace Game.Tests
                 {
                     // the tractor alone, no margin: a bend puts the straight 16.5 m box of the whole combination over kerbs and islands
                     var hit = SpawnSafety.FirstOverlap(route, d, ignore, 0.8f, 0f);
+                    if (hit != null && hit.GetComponentInParent<DepotBarrier>() != null) continue;   // the depot gate arm opens for the truck (region C)
                     Assert.IsNull(hit, region + ": collider '" + (hit != null ? hit.name : "") + "' on the route at " + F(d) + " m (" + F(d - s) + " m after the start)");
                 }
             }

@@ -28,7 +28,8 @@ REGIONS = REPO / "Data/Regions"
 SPAWN_S_M = 12.0       # StartClearance.DefaultStartS: route that starts inside the region
 CLOSURE_SETBACK_M = 60.0   # WorldEdgeBuilder.ClosureSetbackM (ADR 0169): the closure stands at most this far from the edge
 BEHIND_CLOSURE_M = 25.0    # StartClearance.BehindClosureM: tractor origin behind the row (trailer rear end 13.7 m clear) - WORKING_VALUE
-EDGE_START_S_M = CLOSURE_SETBACK_M + BEHIND_CLOSURE_M
+SKEW_ALLOWANCE_M = 5.0     # the lane centre meets a skewed row later than the road axis (measured: up to 1.2 m, bialystok-maczka) - WORKING_VALUE
+EDGE_START_S_M = CLOSURE_SETBACK_M + BEHIND_CLOSURE_M + SKEW_ALLOWANCE_M
 MIN_AHEAD_M = 100.0    # keep >= 100 m before the tile-end closure (closure 60 m before the edge, ADR 0169) - WORKING_VALUE
 
 
