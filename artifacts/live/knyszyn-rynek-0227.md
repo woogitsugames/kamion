@@ -16,3 +16,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline.done; Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30`
 - 2026-11-15 18:16 +01:00 — Import przygotowawczy OK (64 chunków, Low+High); build_world oczekuje w kolejce heavy. Cofnięto efekt uboczny M_Sky.mat.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
+- 2026-11-15 18:18 +01:00 — Orto K1: fontanna jest w zachodnim parku, a istniejący override na placu wschodnim; pozycja różni się o około 93 m (oszacowanie do weryfikacji). Build nadal czeka na slot heavy.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
