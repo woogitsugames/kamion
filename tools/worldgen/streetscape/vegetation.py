@@ -54,20 +54,23 @@ SPACING = {"las": 4.5, "zagajnik": 3.2, "zadrzewienie": 6.0}
 # ADR 0187: the young trees are their own prototypes (a mature pine scaled to 5 m was a bare pole with a tuft: the
 # "trunks with detached balls of leaves" of review s19 0179), spruce regeneration under the pines is the commonest
 # second storey of these stands, and the storey is twice as dense (one plant per ~30 m2).
-UNDERSTOREY = {"shrub": (1.2, 3.5, 0.38), "spruce": (1.5, 8.0, 0.30), "birchyoung": (2.5, 7.0, 0.16),
-               "pineyoung": (1.5, 5.0, 0.16)}
+UNDERSTOREY = {"shrub": (1.2, 3.5, 0.55), "birchyoung": (2.5, 7.0, 0.20), "spruce": (1.5, 8.0, 0.15),
+               "maple": (1.5, 5.0, 0.10)}
 UNDER_SPACING = 5.5
 CANOPY_SPECIES = ("pine", "birch", "alder", "maple", "linden", "spruce")
 # Stand edge (mantle): three bands with rising height instead of one row, so a stand does not end in a vertical cut
 # of bare boles (review s19 0179 "like a theatre flat"). (band inner offset, outer offset [m, + = outside the BDOT
 # outline], grid step, {species: (weight, h lo, h hi)}); "canopy" = the stand's own mix at 0.55-0.8 of its height.
-# WORKING_VALUE (typical okrajek: shrubs, young birch / pine, then the lower side crowns of the edge trees).
+# M68 measurement (REVIEW-2026-11-14-s20-cloud-m68.md): outer shrub belt 3.0-5.0 m appears on ~15-20% of edges,
+# inner young-tree belt on ~50-65%, leaving pine trunks + understorey visible in the lower 1/4-1/3 elsewhere.
+MANTLE_BAND_KEEP = (0.18, 0.58, 1.0)
+MANTLE_SEG_M = 18.0
 MANTLE = {
-    "conifer": [(0.0, 4.0, 2.6, {"shrub": (0.55, 1.2, 3.0), "birchyoung": (0.20, 1.5, 3.5), "pineyoung": (0.25, 1.0, 3.0)}),
+    "conifer": [(0.0, 4.0, 2.6, {"shrub": (0.55, 3.0, 5.0), "birchyoung": (0.20, 3.0, 5.0), "pineyoung": (0.25, 3.0, 5.0)}),
                 (-5.0, 0.0, 2.8, {"birchyoung": (0.30, 3.0, 7.0), "pineyoung": (0.28, 2.5, 6.0), "spruce": (0.24, 3.0, 9.0),
                                   "shrub": (0.18, 2.0, 3.8)}),
                 (-11.0, -5.0, 4.6, {"spruce": (0.45, 8.0, 15.0), "birch": (0.35, 8.0, 13.0), "pine": (0.20, 9.0, 14.0)})],
-    "broadleaf": [(0.0, 4.0, 2.6, {"shrub": (0.70, 1.2, 3.2), "birchyoung": (0.30, 1.5, 3.5)}),
+    "broadleaf": [(0.0, 4.0, 2.6, {"shrub": (0.70, 3.0, 5.0), "birchyoung": (0.30, 3.0, 5.0)}),
                   (-5.0, 0.0, 2.8, {"birchyoung": (0.42, 3.0, 7.0), "shrub": (0.28, 2.0, 3.8), "alder": (0.15, 4.5, 8.0),
                                     "maple": (0.15, 4.0, 7.5)}),
                   (-11.0, -5.0, 4.6, {"birch": (0.5, 7.0, 12.0), "alder": (0.25, 7.0, 11.0), "maple": (0.25, 6.0, 10.0)})],
@@ -158,6 +161,50 @@ def forest_clearings(overrides, origin):
     return out
 
 
+_DIR_VEC = {"N": (0.0, 1.0), "NE": (0.7071, 0.7071), "E": (1.0, 0.0), "SE": (0.7071, -0.7071),
+            "S": (0.0, -1.0), "SW": (-0.7071, -0.7071), "W": (-1.0, 0.0), "NW": (-0.7071, 0.7071)}
+
+
+def _in_facing_edge(poly, P, width_m, facing):
+    """Boolean mask of points P within `width_m` of `poly.exterior` on the side facing `facing`."""
+    if not len(P):
+        return np.zeros(0, bool)
+    vx, vy = _DIR_VEC[facing]
+    ext = poly.exterior
+    pts = shapely.points(P)
+    d = shapely.distance(ext, pts)
+    near = d <= width_m
+    if not near.any():
+        return near
+    s = shapely.line_locate_point(ext, pts[near])
+    bpts = shapely.get_coordinates(shapely.line_interpolate_point(ext, s))
+    dx = bpts[:, 0] - P[near, 0]
+    dy = bpts[:, 1] - P[near, 1]
+    nrm = np.hypot(dx, dy)
+    dot = np.where(nrm > 1e-6, (dx * vx + dy * vy) / np.maximum(nrm, 1e-6), 1.0)
+    out = np.zeros(len(P), bool)
+    out[near] = dot > 0.3
+    return out
+
+
+def _mantle_keep(poly, P, key, bi):
+    """Deterministic segment-hash mask for partial mantle belts (M68)."""
+    keep_rate = MANTLE_BAND_KEEP[bi]
+    if keep_rate >= 1.0 or not len(P):
+        return np.ones(len(P), bool)
+    s = shapely.line_locate_point(poly.exterior, shapely.points(P))
+    segs = np.floor(s / MANTLE_SEG_M).astype(int)
+    cache = {}
+    mask = np.empty(len(P), bool)
+    for k, seg in enumerate(segs):
+        val = cache.get(int(seg))
+        if val is None:
+            val = (_seed(f"{key}:m:{bi}:{int(seg)}") % 1000) < int(round(keep_rate * 1000))
+            cache[int(seg)] = val
+        mask[k] = val
+    return mask
+
+
 def forest_stands(overrides):
     """Authored `kind: forest_stand` (ADR 0170): measured character of one BDOT10k OT_PTLZ_A stand, where the class
     defaults (HEIGHT / MIX / SPACING) contradict the orthophoto and the photos. {bdot id: params}:
@@ -166,6 +213,7 @@ def forest_stands(overrides):
       mix        {species: weight} (replaces MIX[kategoria])
       spacing_m  jittered grid step (replaces SPACING[rodzaj])
       emergent   {share, height_m: [lo, hi]}: a few taller trees standing above the canopy (chosen by position hash)
+      young_edge {width_m, height_m: [lo, hi], facing}: young regrowth belt along one facing edge (M68)
     Keyed by the BDOT id like forest_clearing; a target missing from the source data is reported as stale."""
     out = {}
     for o in overrides or []:
@@ -183,6 +231,9 @@ def forest_stands(overrides):
             prm["spacing_m"] = float(o["spacing_m"])
         if "emergent" in o:
             prm["emergent"] = (float(o["emergent"]["share"]), tuple(float(v) for v in o["emergent"]["height_m"]))
+        if "young_edge" in o:
+            ye = o["young_edge"]
+            prm["young_edge"] = (float(ye["width_m"]), tuple(float(v) for v in ye["height_m"]), str(ye["facing"]))
         out[str(o["target"]["bdot"])] = prm
     return out
 
@@ -280,12 +331,29 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             shit.add(sk)
         P = _scatter(full, st.get("spacing_m", SPACING.get(rodzaj, 4.5)) if st else SPACING.get(rodzaj, 4.5), rng)
         sp = pick(rng, st.get("mix", MIX.get(kat, MIX[None])) if st else MIX.get(kat, MIX[None]), len(P))
-        emit(P, sp, rng, f"bdot:{f['id']}", 0.7 if rodzaj == "zagajnik" else 1.0, fk=fk, hrange=hr)
+        emit(P, sp, rng, f"bdot:{f['id']}", 1.0 if hr else (0.7 if rodzaj == "zagajnik" else 1.0), fk=fk, hrange=hr)
         if st:
+            ye_mask = np.zeros(len(out) - n_stand, bool)
+            if "young_edge" in st and len(out) > n_stand:
+                yw, (ylo, yhi), ydir = st["young_edge"]
+                TP = np.array([[t["e"], t["n"]] for t in out[n_stand:]])
+                ye_mask = _in_facing_edge(full, TP, yw, ydir)
+                for t, is_ye in zip(out[n_stand:], ye_mask):
+                    if is_ye and t["p"] != "tree_shrub":
+                        u = (_seed(f"ye:{t['e']},{t['n']}") % 1000) / 999.0
+                        t["h"] = round(float(ylo + (yhi - ylo) * u), 1)
+                        if t["p"] == "tree_pine":
+                            t["p"], t["v"] = "tree_pineyoung", 0
+                        elif t["p"] == "tree_birch":
+                            t["p"], t["v"] = "tree_birchyoung", 0
+                        elif t["p"] == "tree_spruce":
+                            t["v"] = SPRUCE_OPEN
             n_em = 0
             if "emergent" in st:
                 share, (elo, ehi) = st["emergent"]
-                for t in out[n_stand:]:
+                for t, is_ye in zip(out[n_stand:], ye_mask):
+                    if is_ye:
+                        continue
                     u = (_seed(f"em:{t['e']},{t['n']}") % 100000) / 99999.0
                     if t["p"] != "tree_shrub" and u < share:
                         t["h"] = round(float(elo + (ehi - elo) * u / share), 1)
@@ -311,10 +379,15 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             n0 = len(out)
             emit(P, ["floor"] * len(P), rng, f"bdot:{f['id']}:floor", 1.0, tier="high")
             n_floor += len(out) - n0
-        # edge (ADR 0187): mantle of three bands with rising height along the outline
+        # edge (ADR 0187): mantle of three bands with rising height along the outline (partial by segment hash, M68)
         for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk]):
             band = full.buffer(d_out).difference(full.buffer(d_in))
             P = _scatter(band, step, rng)
+            keep = _mantle_keep(full, P, f["id"], bi)
+            if bi == 1 and st and "young_edge" in st and len(P):
+                yw, _, ydir = st["young_edge"]
+                keep = keep | _in_facing_edge(full, P, yw, ydir)
+            P = P[keep]
             names = list(table)
             w = np.array([table[k][0] for k in names])
             sp = rng.choice(names, size=len(P), p=w / w.sum()) if len(P) else []
@@ -380,6 +453,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk][:2] if o.get("mantle") else []):
                 band = poly.buffer(d_out).difference(poly.buffer(d_in))
                 P = _scatter(band, step, rng)
+                P = P[_mantle_keep(poly, P, key, bi)]
                 names = list(table)
                 w = np.array([table[n_][0] for n_ in names])
                 sp = rng.choice(names, size=len(P), p=w / w.sum()) if len(P) else []
@@ -391,6 +465,15 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
                         t["h"] = round(min(t["h"], hr[1] * 0.6 * (0.5 + 0.25 * bi)), 1)
             forest_mix.append((poly, fk))
             area += poly.area
+        if "emergent" in o:
+            share = float(o["emergent"]["share"])
+            elo, ehi = (float(v) for v in o["emergent"]["height_m"])
+            for t in out[n_before:]:
+                if t["p"] == "tree_shrub" or t["src"].endswith(":edge"):
+                    continue
+                u = (_seed(f"em:{t['e']},{t['n']}") % 100000) / 99999.0
+                if u < share:
+                    t["h"] = round(float(elo + (ehi - elo) * u / share), 1)
         trep.append({"id": o["id"], "area_m2": round(area, 1), "trees": len(out) - n_before})
     report["tree_stands"] = trep
     report["_forest_cleared"] = cleared

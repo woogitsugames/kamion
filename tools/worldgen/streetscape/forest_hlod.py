@@ -29,6 +29,7 @@ Deterministic (pure geometry of the inputs). Constants: WORKING_VALUE.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 
@@ -52,6 +53,15 @@ CROWN_R = 4.5
 # primitive and material as the wall (no extra draw). A stand seen from the side then steps down shrub - young
 # trees - canopy instead of ending in one vertical plane.
 SKIRT_OFF_M = 3.5
+SKIRT_KEEP = 0.18          # M68: outer shrub skirt on ~15-20% of outer edges, not 100%
+SKIRT_SEG_M = 18.0
+
+
+def _skirt_keep(a, b):
+    """Deterministic spatial-bucket hash (~18% of outer wall segments get the low shrub skirt)."""
+    mx, my = 0.5 * (float(a[0]) + float(b[0])), 0.5 * (float(a[1]) + float(b[1]))
+    key = f"skirt:{int(round(mx / SKIRT_SEG_M))}:{int(round(my / SKIRT_SEG_M))}"
+    return (int(hashlib.sha1(key.encode()).hexdigest()[:8], 16) % 1000) < int(round(SKIRT_KEEP * 1000))
 CORNER_COS = 0.72          # outer edge turning by more than ~44 degrees at a point = a stand corner
 CORNER_DROP = 0.80         # wall height factor at the corner (0.90 one point either side)
 EDGE_ROW_M = 9.5          # + the 2.5 m clearance in no_forest = trees within 12 m of a road / yard stay individual
@@ -278,7 +288,7 @@ def build(trees, forests, no_forest, zground, half, report):
                         Tw += [[b0, t1, b1], [b0, t0, t1]]
                 mantle = edge_info.get("mantle")
                 if mantle and not inner[i]:
-                    # skirt: the strip moved SKIRT_OFF_M out of the stand, mantle height scaled like the wall
+                    # skirt: the strip moved SKIRT_OFF_M out of the stand on ~18% of segments, mantle height scaled like the wall
                     q = pts[idx] + nrm * SKIRT_OFF_M
                     zq = zground(q[:, 0], q[:, 1]) + edge_info["z0_m"]
                     hq = mantle["h_m"] * np.clip(hw[idx] / edge_info["h_m"], 0.5, 1.15)
@@ -288,6 +298,8 @@ def build(trees, forests, no_forest, zground, half, report):
                     UVw += [[u, 1.0] for u in us2] + [[u, vm] for u in us2]
                     Nw += list(n3) + list(n3)
                     for m_ in range(k - 1):
+                        if not _skirt_keep(pts[idx[m_]], pts[idx[m_ + 1]]):
+                            continue
                         b0, b1, t0, t1 = base + m_, base + m_ + 1, base + k + m_, base + k + m_ + 1
                         if face[i] > 0:
                             Tw += [[b0, b1, t1], [b0, t1, t0]]

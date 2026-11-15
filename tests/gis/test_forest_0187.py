@@ -15,7 +15,7 @@ from test_house_greenery_0163 import _forest_src
 REPO = Path(__file__).resolve().parents[2]
 VEG = REPO / "art-source" / "world" / "vegetation"
 RING = [[0, 0], [200, 0], [200, 200], [0, 200]]
-YOUNG = {"tree_pineyoung", "tree_birchyoung", "tree_shrub", "tree_spruce"}
+YOUNG = {"tree_pineyoung", "tree_birchyoung", "tree_shrub", "tree_spruce", "tree_maple"}
 
 
 def _place(src, road_x=None):
@@ -46,6 +46,7 @@ def test_understorey_and_self_seeded_are_young_prototypes():
     trees, _ = VG.place(src, (0.0, 0.0), hf, zc, np.zeros_like(zc, bool), rep, [])
     under = [t for t in trees if t["src"].endswith(":under")]
     assert len(under) > 600 and {t["p"] for t in under} <= YOUNG, {t["p"] for t in under}
+    assert "tree_pineyoung" not in {t["p"] for t in under}, "M68: no pine regeneration in understorey"
     assert all(t["v"] == VG.SPRUCE_OPEN for t in under if t["p"] == "tree_spruce"), "young spruce: boughs to the ground"
     assert max(t["h"] for t in under) <= 8.0
     seeded = [t for t in trees if t["src"].endswith(":self")]
@@ -65,8 +66,8 @@ def test_mantle_height_rises_from_the_outline_into_the_stand():
                   for t in edge])
     h = np.array([t["h"] for t in edge])
     out, young, sub = h[d < 0], h[(d >= 0) & (d < 5)], h[d >= 5.5]
-    assert len(out) > 100 and len(young) > 100 and len(sub) > 50
-    assert out.max() <= 3.5 and np.median(out) < np.median(young) < np.median(sub) < 14.0
+    assert 30 < len(out) < 200 and len(young) > 50 and len(sub) > 50
+    assert out.max() <= 5.0 and np.median(out) < np.median(young) < np.median(sub) < 14.0
     assert sub.max() <= 15.0 < np.median([t["h"] for t in trees if t["src"] == "bdot:F1:0"])
     assert rep["forest_mantle"] == len(edge)
 
@@ -171,3 +172,33 @@ def test_stand_corner_steps_down():
                 (tops_corner if d_corner < 1.0 else tops_edge if d_corner > 20.0 else []).append(v[2])
     assert tops_corner and tops_edge
     assert max(tops_corner) < 0.86 * np.median(tops_edge), (max(tops_corner), np.median(tops_edge))
+
+
+def test_forest_stand_zagajnik_keeps_explicit_height_and_young_edge():
+    """Explicit height_m on zagajnik is not scaled by 0.7; young_edge keeps 4-11 m regrowth on the facing side."""
+    src = _forest_src("F1:0", RING)
+    src["bdot10k"]["OT_PTLZ_A"][0]["props"] = {"rodzaj": "zagajnik", "kategoria": "mieszany"}
+    ov = [{"id": "z1", "kind": "forest_stand", "target": {"bdot": "F1"},
+           "height_m": [22.0, 29.0], "mix": {"pine": 0.65, "birch": 0.20, "spruce": 0.10, "linden": 0.05},
+           "young_edge": {"width_m": 10.0, "height_m": [4.0, 11.0], "facing": "N"}}]
+    hf = SimpleNamespace(x0=-10.0, y1=210.0)
+    zc = np.zeros((221, 221))
+    rep = {}
+    trees, _ = VG.place(src, (0.0, 0.0), hf, zc, np.zeros_like(zc, bool), rep, ov)
+    stand = [t for t in trees if t["src"] == "bdot:F1:0"]
+    interior = [t for t in stand if t["n"] < 180.0]
+    north_edge = [t for t in stand if t["n"] >= 191.0 and 15.0 <= t["e"] <= 185.0]
+    assert interior and np.median([t["h"] for t in interior]) >= 22.0
+    assert north_edge and all(4.0 <= t["h"] <= 11.0 for t in north_edge)
+
+
+def test_tree_stand_emergent_raises_small_share():
+    src = _forest_src("F1:0", [[900, 900], [901, 900], [901, 901]])
+    ov = [{"id": "rod", "kind": "tree_stand", "height_m": [4.0, 10.0], "spacing_m": 6.0,
+           "emergent": {"share": 0.05, "height_m": [14.0, 17.0]},
+           "mix": {"maple": 0.7, "shrub": 0.3}, "polygons_en": [RING]}]
+    hf = SimpleNamespace(x0=-10.0, y1=210.0)
+    zc = np.zeros((221, 221))
+    trees, _ = VG.place(src, (0.0, 0.0), hf, zc, np.zeros_like(zc, bool), {}, ov)
+    em = [t for t in trees if t["src"].startswith("override:rod") and t["h"] >= 14.0]
+    assert 10 <= len(em) <= 80 and all(14.0 <= t["h"] <= 17.0 for t in em)
