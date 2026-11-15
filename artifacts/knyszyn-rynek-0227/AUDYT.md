@@ -85,3 +85,6 @@ Cztery warianty ukończone; pary lokalne 01–11 `compare/r8/High-clear/` i `Low
 
 ## Iteracja r9 — ocena 16.11, editor
 Cztery warianty ukończone, 64 kadry/wariant, zdjęcia 01–11 lokalnie `compare/r9/High-clear/` i `Low-clear/`; kamery `rynek-crown-side-90/270` badają karty pod innymi kątami. Równoległe karty usunęły część ciemnych szwów, ale korony w 04 i 07 zwęziły się niemal do pionowych linii: FAIL w Low i High. Wariant wycofano z kodu i danych, obrazy zachowano jako dowód. Low max suma draws 500→487, wzrost do +5 draws i +1832 tris na wspólnych kamerach; High max 1 229 989 tris z instancjami, draws max 838→844. Wymagana przebudowa po wycofaniu.
+
+## Iteracja r10 — ocena 16.11, editor
+Cztery warianty ukończone, 70 kadrów/wariant; pary 01–11 lokalnie `compare/r10/High-clear/` i `Low-clear/` oraz osiem azymutów `rynek-crown-side-*`. Próba mniejszych kart nie znika jak R9, ale w obu profilach tworzy pionowe pasy, ciemne kliny i sylwetki jak wierzby; wizualnie gorsza od R8, FAIL, kod i dane cofnięte. Low max suma draws 500→487, wzrost do +5 draws i +1832 tris na wspólnych kamerach; High max 1 230 169 tris z instancjami, max suma draws 838→844. Wymagana przebudowa po cofnięciu.

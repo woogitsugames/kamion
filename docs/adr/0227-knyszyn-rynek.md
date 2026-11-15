@@ -47,3 +47,6 @@ Trzynaście próbnych koron daje bardziej liściasty park, ale widoczne szwy, po
 
 ## Iteracja r9 — wariant odrzucony
 Równoległe karty koron wyeliminowały część szwów, ale z niektórych kierunków zanikają do wąskich pionowych pasów. FAIL w High i Low; zmiana kodu i danych wycofana, dowody lokalne `compare/r9/` i kamery boczne R9. Low w tej próbie nadal FAIL względem baseline (+5 draws i +1832 tris na wspólnych kamerach); High max 1 229 989 tris. Konieczna kolejna przebudowa po wycofaniu.
+
+## Iteracja r10 — wariant odrzucony
+Objętościowa próba małych kart nie zniknęła w badanych kierunkach, ale dawała pasy i ciemne kliny, przypominając bardziej wierzby niż lipy. FAIL w obu profilach, wycofana; dowody lokalne `compare/r10/` i osiem kierunków. Low nadal FAIL: +5 draws i +1832 tris na wspólnych kamerach; High max 1 230 169 tris. Wymagana przebudowa po cofnięciu.
