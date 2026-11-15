@@ -22,3 +22,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
 - 2026-11-15 18:36 +01:00 — Przeczytano owner feedback z origin/main: priorytet skwer liściasty, kościół, urząd, czerwona kostka, pierzeje; targowica osobno, zdjęcie | render dla każdego kadru. Stary raport roślinności: override parku 49 drzew. Merge main po zakończeniu trwającego baseline.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
+- 2026-11-15 18:42 +01:00 — Baseline 4 wariantów ukończony; merge origin/main bez konfliktów. OSM marketplace ~1 km na N od starej kamery: sprawdzamy orto przed lokalizacją. #97 nie w main, orto 2025 sprzed nowego ronda.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis/test_knyszyn_park_0227.py -q` (po implementacji parkowej)
