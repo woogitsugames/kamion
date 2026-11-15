@@ -188,6 +188,12 @@ Determinizm C/Dojlidy (bez flagi): `build_world` dla `bialystok-industrial-c` i 
     `_deck_z`, `PANEL_LIFT` 0,015 m; r5 i r6: płyty ciągłe na całej szerokości jezdni w Low i High.
   - teren pod torem bez szczelin i bez „wiszącej” podsypki (`rail_bed_close`, `rail_track_along`).
   Ocena `visual-critic`: **nie wykonana** (agent nie tworzy subagentów) — dla lidera.
+- **Testy** (drzewo po scaleniu main @b4e42ef34 i regeneracji r6): `tests/gis` 1450 passed, 1 failed, 4 xfailed —
+  jedyny fail to `test_road_fidelity::test_report_not_stale` (raport fidelity regionu C nieświeży dla `build_world.py`, `consistency.py`,
+  `decals.py`, `markings.py`, `network.py` w `tools/worldgen/roads/` — cztery ostatnie nie są zmieniane w tej gałęzi;
+  odświeżenie u lidera, komenda w „Walidacja”); `test_rail_0217.py` +
+  `test_rail_import_layers_0217.py` 32/32; EditMode 628: 627 passed, 0 failed, 1 skipped
+  (`artifacts/rail-fix-s21/tests/editmode-20261115-212719.xml`). Logi: `artifacts/rail-fix-s21/pytest-gis-merged.log`.
 - **Albedo**: `docs/06` nie podaje progu liczbowego (tylko „tabela referencyjna” i „histogram albedo w walidatorze”);
   kafel `rail_bed.png` ma średnią sRGB (61, 57, 50), najciemniejsze są spoiny między kamieniami — WORKING_VALUE.
 - **`region.yaml`**: względem main zmienia się tylko blok `rail`. Dwa `manifest_sha256` (NMT, orto) zmienione przez
