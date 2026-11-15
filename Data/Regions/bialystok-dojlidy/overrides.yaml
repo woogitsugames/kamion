@@ -854,3 +854,29 @@ overrides:
       replacement).
     confidence: medium
     verify: owner - night photo of Mickiewicza / Kormoranow (LED or sodium) and of one unlisted street (Zurawia, Krecia)
+  # ================================================================ ADR 0237 (kerbs-0237, research R6): footways, kerbs
+  - id: pavements-0237
+    kind: pavement_rules
+    sidewalk_bdot: true
+    estate_slabs: false
+    crossing_kerb_drops: true
+    cycle_paver_material: sidewalk_paving
+    reason: >-
+      Research R6 pavements-kerbs (PR #65, review REVIEW-2026-11-15-s21-cloudD-65-pavements-kerbs.md). As in region C;
+      cycle_paver_material = grey blocks: every cycle track on the Dojlidy frames is grey (R6-110, 7 of 7 frames;
+      ADR 0188), so the one BDOT10k cycle path laid in blocks that no OSM way describes (c5b6041e..., 146 m east of
+      Kuronia 3) must not come out red. It was `cycle_red`, a flat colour (252 m2).
+    confidence: medium
+    verify: lead - visual-qa World_bialystok-dojlidy, photo_P11-001 / photo_P11-063
+  - id: mickiewicza-kuronia-red-block-strip
+    kind: sidewalk_surface
+    surface: paving_red
+    polygon_en: [[-67.5, 405.3], [-53.1, 376.8], [-56.5, 375.0], [-70.9, 403.6]]
+    reason: >-
+      Photo P11-063 (R6 frame F38, Commons CC0): a strip of red-brown concrete blocks between two grey edgings along
+      the west kerb of Mickiewicza (OSM way 258564446, the SE-bound carriageway), 3-5.5 m in front of the camera
+      (resected position -67.0 393.5, heading 100 deg, ADR 0186). The polygon is the band 4.5-8.3 m right of the way's
+      axis over stations 28-60 m; it only renames footway triangles that the generator lays there. Position from the
+      photo geometry, not from the orthophoto (not available in the cloud session).
+    confidence: low
+    verify: lead - 2024 orthophoto + render of camera photo_P11-063; listed in streetscape_qa.json pavements.overrides_stale when nothing is laid there

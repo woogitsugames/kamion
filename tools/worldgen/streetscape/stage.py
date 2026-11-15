@@ -71,6 +71,11 @@ def plan_plots(w, rid, blds=None):
     rp = PLT.region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=w.net)
     from . import plot_canopy as PCN                 # ADR 0132: crowns read off the orthophoto (None when not built)
     rp["canopy"] = PCN.load(rid)
+    # ADR 0237: kerbs lowered at the marked pedestrian crossings ride with the driveway drops into pass 2
+    # (build_world applies plot_plan["drops"]); a region without `pavement_rules` gets none
+    from . import pavements as PVM
+    rp["crossing_drops"] = {}
+    rp["drops"] = list(rp["drops"]) + PVM.crossing_drops(w.net, w.ctx["points"], overrides, rp["crossing_drops"])
     return rp
 
 

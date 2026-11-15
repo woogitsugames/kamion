@@ -100,6 +100,7 @@ GARAGE_ZONE_M = 5.5           # clear, paved depth in front of a garage door, m
 HOUSE_KERB_M = 0.10           # kerb height on the streets of single-family houses (refs P08, P13, P24: 8-12 cm,
                               # WORKING_VALUE from proportion; main roads keep roads.standards.KERB_HEIGHT 0.13)
 HOUSE_KERB_HW_M = 4.0         # ... only carriageways up to this half width (no collector / arterial)
+KERB_ONLY_SKIP_MAT = 2        # roads.network.WALK_MATS index of bridge_concrete: a deck cap is never lowered (ADR 0237)
 KERB_BAND_M = 0.17            # kerb stone top (standards.KERB_TOP_W 0.15) + joint: the driveway paving starts behind it
 WIRE_H_M = 7.4                # low-voltage bundle (AsXSn) on the street-lamp poles of the house streets, m above ground
 DROP_H_HOUSE_M = 4.2          # service drop: height of the anchor on the house wall, m (clamped below the eaves)
@@ -787,15 +788,20 @@ def apply_drops(net, drops):
             continue
         d = c.side[dr["side"]]
         s = np.asarray(c.line.s)
-        k = np.clip((np.abs(s - dr["s"]) - dr["half"]) / DROP_RAMP_M, 0.0, 1.0)      # 0 on the driveway, 1 outside
+        # ADR 0237: a drop may carry its own kerb height `h` and ramp length `ramp` (pedestrian crossings:
+        # streetscape.pavements.crossing_drops); `kerb_only` = a street kerb only, no ditch fill, no bridge cap
+        h_drop, ramp = float(dr.get("h", DROP_H_M)), float(dr.get("ramp", DROP_RAMP_M))
+        k = np.clip((np.abs(s - dr["s"]) - dr["half"]) / ramp, 0.0, 1.0)      # 0 on the driveway, 1 outside
         sel = k < 1.0
         if not sel.any():
             continue
         kind = np.asarray(d["kind"])
         h = np.asarray(d["h"], float)
-        urban = sel & (kind == NW.URBAN) & (np.asarray(d["mat"]) != NW.MAT_FLUSH_ROAD) & (h > DROP_H_M)
-        h[urban] = np.minimum(h[urban], DROP_H_M + (h[urban] - DROP_H_M) * k[urban])
-        rural = sel & (kind == NW.RURAL)
+        urban = sel & (kind == NW.URBAN) & (np.asarray(d["mat"]) != NW.MAT_FLUSH_ROAD) & (h > h_drop)
+        if dr.get("kerb_only"):
+            urban &= np.asarray(d["mat"]) != KERB_ONLY_SKIP_MAT
+        h[urban] = np.minimum(h[urban], h_drop + (h[urban] - h_drop) * k[urban])
+        rural = sel & (kind == NW.RURAL) & (not dr.get("kerb_only"))
         he = np.where((h > 0.05) & (h < 1.5), h, S.DITCH_DEPTH)
         h[rural] = np.minimum(he[rural], DITCH_FILL_M + (he[rural] - DITCH_FILL_M) * k[rural])
         d["h"] = h
@@ -1749,10 +1755,12 @@ def build(buf, rp, zf, surf_top, report, items=None):
     items: placed street furniture (the lamp poles carry the overhead line of the house streets)."""
     import shapely.ops                                       # noqa: F401
     plots = rp["plots"]
-    rep = {"plots": len(plots), "fence_m": {}, "gates": 0, "sliding_gates": 0, "wickets": 0, "drives": 0, "kerb_drops": len(rp["drops"]),
+    rep = {"plots": len(plots), "fence_m": {}, "gates": 0, "sliding_gates": 0, "wickets": 0, "drives": 0,
+           "kerb_drops": sum(1 for d in rp["drops"] if not d.get("kerb_only")),          # driveways (ADR 0114)
+           "crossing_kerb_drops": sum(1 for d in rp["drops"] if d.get("kerb_only")),     # pedestrian crossings (ADR 0237)
            "verge_overlays": 0, "thujas": 0, "spruces": 0, "fruit_trees": 0, "big_trees": 0, "shrubs": 0, "hedge_m": 0.0,
            "flower_cards": 0, "bins": 0, "tris": 0, "tris_low": 0, "tris_by": {}, "tris_by_low": {}, "instances": 0, "plot_m2_median": 0.0, "age": {}, "styles_front": {},
-           "styles_side": {}, "access": rp.get("access_stats", {}), "fence_step_zone_hits": 0,
+           "styles_side": {}, "access": rp.get("access_stats", {}), "crossing_kerb": rp.get("crossing_drops", {}), "fence_step_zone_hits": 0,
            "track_drives": sum(1 for p in plots if p.get("tracks")), "inst_trees": 0, "inst_trees_street": 0, "bushes": 0, "overgrowth": 0, "canopy": rp.get("canopy") is not None}
     keepout = []
     trees = []                                               # ADR 0132: grown garden trees -> region instances

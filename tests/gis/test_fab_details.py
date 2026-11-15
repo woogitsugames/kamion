@@ -316,10 +316,12 @@ def test_grate_replacement_skips_trenches_unknown_sources_and_metric_uv(monkeypa
 def test_measured_curved_street_grates_replace_material_without_geometry_change(monkeypatch):
     buf = MeshBuf()
     uv, triangles = [[0, 0], [1, 0], [1, 1], [0, 1]], [[0, 1, 2], [0, 2, 3]]
-    # Both transverse edges are 500 mm; curvature warps the opposite along edges.
+    # Both transverse edges are the grate width (420 mm since ADR 0237); curvature warps the opposite along edges.
+    from roads.decals import GULLY_SIZE
+    w = GULLY_SIZE[0]
     for index, length in enumerate((.08, .95)):
         v = np.array([[0, 0, 3], [length, 0, 3.005],
-                      [length+.05, np.sqrt(.5**2-.05**2), 3.015], [0, .5, 3.01]])
+                      [length+.05, np.sqrt(w**2-.05**2), 3.015], [0, w, 3.01]])
         buf.add('markings', 'drain_grate', v, uv, triangles, src=f'gully:curve:R:{index}')
     before = [(p.V.copy(), p.T.copy()) for p in buf.parts]
     monkeypatch.setattr(F, '_atlas', lambda assets: {'uv_rects': {'square-rusty-drain': [.1, .2, .4, .8]}})
