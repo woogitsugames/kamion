@@ -40,7 +40,13 @@ DK65 na Mońki i DW671 na Tykocin kończyły się zaporą końca świata tuż za
 | DK65 w polach | szerokość, oś | orto: linie krawędziowe i szpalery drzew po obu stronach; u nas tylko oś przerywana i drzewa z generatora — otwarte |
 
 ## Budżet (edytor, Low, overcast, `stats.txt`; hipotezy `docs/06` §6: Low ≤ 300–400 draws / ≤ 600 tys. tris)
-BUDGET_PLACEHOLDER
+| | Low |
+|---|---|
+| WORLD_MEMORY | 53,9 MB (High: 129,2 MB; teren 24,1 / 96,9 MB) |
+| draws max (kamery świata) | 202 (`route-s0426`, miasto), 201 (`dk65-koscielna`); w polach 18–64 |
+| tris max | 174 tys. (`route-s0426`) |
+| `build_world` | 126–158 s; import 8,5–11 min; GLB+import `_Generated/World/knyszyn-w` 516 MB |
+Wszystkie kamery Low w hipotezie budżetu (poniżej `knyszyn`: 429 draws). Pomiar na telefonie — lider.
 
 ## Walidacja
 - `tests/gis/test_region_knyszyn_w_0209.py` (7 testów: siatka, szew drogi/punkty/przekrój, teren szwu identyczny,
