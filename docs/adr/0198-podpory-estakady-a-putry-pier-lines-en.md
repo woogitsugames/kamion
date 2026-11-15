@@ -69,3 +69,9 @@ badanie `research/mistral/p13-andersa-viaducts/` (P13).
   istnieją w śladzie generatora; rzędy NE 133,5 i SW 135,5 mogą w rzeczywistości stać inaczej.
 - Wyrównanie rzędów obu pomostów w jednej linii poprzecznej: nieznane, nie wymuszane.
 - Czy prawdziwe rondo ma pierścień najazdowy przy wyspie pod pomostem SW: na ortofoto pas żwiru / ziemi, UNVERIFIED.
+
+## Runda 2 (2026-11-15, gałąź `putry-ring-0198b`): konflikt pomostu SW rozwiązany w ADR 0216
+Decyzja właściciela: poprawić geometrię ronda, potem dołożyć dwa rzędy. [ADR 0216](0216-rondo-putry-wyspa-z-ortofoto-apron-width.md)
+koryguje krawężnik wyspy do ortofoto GUGiK i wpisuje rzędy pomostu SW na 89,0 i 109,0 m (rzędy 86,0 / 111,0 m z p. 3
+stały poza jezdnią, ale w keep-out generatora). Pomost SW: 8 rzędów, max przęsło 32,5 m (było 79,0). `pier_lines_en_held`
+usunięte; test `test_sw_deck_conflict_is_explicit` zastąpiony przez `test_sw_deck_conflict_is_resolved`.
