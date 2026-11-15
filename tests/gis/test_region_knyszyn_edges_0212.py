@@ -45,7 +45,8 @@ def test_dk65_sections_paint_narrow_edge_lines_at_measured_offset(region_id):
     for s in secs:
         hw = s.width / 2
         lats = sorted(lat for lat, _ in edge_lines(s, hw, 1))
-        # orthophoto 0.1 m 2025: line peaks 3.0-4.0 m off the OSM axis, median ~3.55 m
+        # generator: axis 0.20 m inside the 7.5 m edge = 3.55 m (7.1 m line to line); orthophoto 0.1 m 2025: 6.8 m line to
+        # line on the cleanest series (way 305910042) -> +0.3 m, WORKING_VALUE (ADR 0212)
         assert lats == pytest.approx([-(hw - S.EDGE_LINE_INSET_MINOR), hw - S.EDGE_LINE_INSET_MINOR]), s.edge_id
         assert 3.3 <= lats[1] <= 3.8
         assert edge_line_width(s) == S.LINE_W_NARROW
@@ -176,3 +177,38 @@ def test_tykocin_terrain_seams_identical():
     t, w, s = load("dw671-tykocin-01"), load("knyszyn-w"), load("knyszyn-s")
     assert np.abs(t[0, :] - w[-1, :]).max() < 0.002       # north edge of (-9,7) = south edge of knyszyn-w
     assert np.abs(t[:, -1] - s[:, 0]).max() < 0.002       # east edge of (-9,7) = west edge of knyszyn-s
+
+
+def test_knyszyn_roundabout_splitter_legs_stay_without_edge_lines():
+    """The only DK65 (primary) sections outside the override: one-way single-lane legs at the splitter islands of the
+    DK65/DW671 roundabout in `knyszyn` (ADR 0212 decision 1)."""
+    from roads import pipeline
+    from roads.markings import edge_lines
+    out = {}
+    for r in KNYSZYN + ("dk65-monki-01",):
+        ways = {f"w{w}" for w in _dk65_override(r)["target"]["osm_way"]}
+        net, _, _, _ = pipeline.build_network(r)
+        for s in net.sec_list:
+            if s.highway == "primary" and not s.roundabout and str(s.edge_id).split(":")[0] not in ways:
+                out[s.edge_id] = s
+    assert {k.split(":")[0] for k in out} == {"w1464342634", "w1464342635", "w1464342638", "w1464342640"}
+    for s in out.values():
+        assert s.oneway and s.lanes == 1 and edge_lines(s, s.width / 2, 1) == []
+
+
+@pytest.mark.parametrize("region_id", ["knyszyn-w", "dk65-monki-01", "dw671-tykocin-01"])
+def test_year_pin_selects_the_sheets_of_the_manifest(region_id):
+    """The akt_rok grouping (ADR 0212) picks for every pinned region exactly the NMT sheets of its manifest
+    (knyszyn-w was ingested with the per-day grouping of ADR 0209: unchanged)."""
+    import ingest
+    import regions
+    av = REPO / "Data" / "SourceManifests" / f"{region_id}.gugik-availability.json"
+    mf = REPO / "Data" / "SourceManifests" / f"gugik-nmt-2022-{region_id}.json"
+    if not av.exists() or not mf.exists():
+        pytest.skip("availability / manifest missing: run ingest.py")
+    idx = json.loads(av.read_text(encoding="utf-8"))
+    pred = lambda r: (r.get("char_przestrz") == "1.00 m" and r.get("format", "").startswith("ARC/INFO")
+                      and r.get("uklad_h") == "PL-EVRF2007-NH" and r.get("akt_rok") == "2022")
+    got = sorted(r["url_do_pobrania"] for r in ingest.pick_latest(idx["products"]["NMT"], regions.get(region_id).bbox, pred, key="akt_rok"))
+    want = sorted(f["url"] for f in json.loads(mf.read_text(encoding="utf-8"))["files"])
+    assert got == want and len(got) == 4

@@ -16,21 +16,28 @@ krawędziowe DK65 widoczne na ortofoto, do dodania razem w `knyszyn` i `knyszyn-
      7,5 m = **3,55 m od osi**. Szerokość 0,12 m wg rozporządzenia [ZNAKI-Z2] pkt 2.2.2 (0,24 m tylko na drogach
      dwujezdniowych i trasach międzynarodowych; DK65 nie jest żadną z nich).
    - Pomiar położenia (narzędzie `artifacts/knyszyn-edges-0212/tools/linew.py`): ortofoto GUGiK 0,1 m 2025, całka nadwyżki
-     jasności w przekroju (krok 0,05 m, mediana wzdłuż odcinka) — piki linii 3,0–4,0 m od osi OSM, mediana ~3,55 m
-     (knyszyn-w 8 przekrojów, knyszyn 4, knyszyn-s 12, dk65-monki-01 7). Rozstaw osi linii 7,1 m wobec „6,8 m linia–linia”
-     z ADR 0204/0209 (±0,3 m) — w tolerancji, różnica = sposób odczytu (krawędź vs oś linii). Szerokości samej linii
+     jasności w przekroju (krok 0,05 m, mediana wzdłuż odcinka), 4 + 8 + 12 + 7 przekrojów (knyszyn, knyszyn-w,
+     knyszyn-s, dk65-monki-01). Linie są po obu stronach we wszystkich czterech kaflach; piki 3,0–4,0 m od osi OSM, ale
+     piki ≥ 3,7 m leżą na krawędzi asfaltu/poboczu. Najczystsza seria (way 305910042, 5 przekrojów): linie −3,65…−3,70
+     i +3,05…+3,15 przy linii środkowej −0,2…−0,35 → **6,8 m linia–linia** (jak ADR 0204/0209), ok. 3,4 m od osi.
+     Generator: 3,55 m od osi → **7,1 m linia–linia**, +0,3 m = granica tolerancji pomiaru — `WORKING_VALUE`
+     (wspólna stała `EDGE_LINE_INSET_MINOR` z dk65-01…05, zmiana = przebudowa 5 kafli; do szlifu). Szerokości linii
      z 0,1 m/px nie da się rozróżnić (0,12 vs 0,24 m) — wzięta z przepisu.
-   - Linie przerwane we wlotach (Legionowa, Kościelna, widełki Goniądzkiej, Polna; render z góry), brak na rondzie.
+   - Ramiona ronda DK65/DW671 w `knyszyn` (way 1464342634/-635/-638/-640: jednokierunkowe, 1 pas, 16,7–17,3 m, przy
+     wysepkach rozdzielających) zostają bez override i bez linii krawędziowych — jak dotąd (test je nazywa).
+   - We wlotach linia przechodzi w przerywaną przez wylot (obejrzane na planach: Legionowa, widełki Goniądzkiej, oba
+     skrzyżowania w `dk65-monki-01`); brak na rondzie. Kościelnej i Polnej nie oglądano z góry.
 2. **Kafel (−9,9) = region `dk65-monki-01`**: EPSG:2180 [758539, 613631, 760587, 615679], origin (759563, 614655),
    powiat 2008, wspólna krawędź y = 613631 z `knyszyn-w`. DK65 (way 232511647 → 98070954) wchodzi szwem w (759428,1;
    613631) — ten sam punkt co koniec trasy `knyszyn-w` — i wychodzi **zachodnią** krawędzią (758539; 614412,8) do kafla
    (−10,9) (niezbudowany). 1,18 km DK65, dwa przesunięte skrzyżowania z drogami polnymi (żwir SW 98072355; krótki
    łącznik 98072389 → asfalt na N i żwir 179127761 na E) — zgodne z ortofoto 0,1 m (crop 758870 613990 – 759030 614150).
    Graf 9 węzłów / 8 krawędzi, 42 budynki. Override: przekrój i linie jak `knyszyn-w`, bez latarni (orto: brak słupów).
-3. **NMT pin roku z dwoma dniami nalotu.** Seria 2022 kafla (−9,9) to 2022-07-29 (3 arkusze) + 2022-08-27 (1 arkusz);
+3. **NMT pin roku z dwoma dniami nalotu** (zmiana wspólnego `tools/worldgen/ingest.py`). Seria 2022 kafla (−9,9) to 2022-07-29 (3 arkusze) + 2022-08-27 (1 arkusz);
    `ingest.pick_latest` grupował po `akt_data`, więc pin `nmt_year: 2022` kończył się „no NMT 1 m series fully covers
    the tile”. Teraz przy pinie grupuje po `akt_rok` (jeden arkusz na godło, najnowszy dzień). Bez pinu zachowanie
-   bez zmian. Kolumna/wiersz szwu z `knyszyn-w` identyczne (test, < 2 mm).
+   bez zmian; dla `knyszyn-w` (drugi region z pinem) nowa ścieżka wybiera te same 4 arkusze co jego manifest (test).
+   Kolumna/wiersz szwu z `knyszyn-w` identyczne (test, < 2 mm).
 4. **Kafel (−9,7) = region `dw671-tykocin-01`**: EPSG:2180 [758539, 609535, 760587, 611583], origin (759563, 610559),
    powiat 2008, NMT pin 2022 (jak oba sąsiedzi). Szwy: północny z `knyszyn-w` (DW671 way 70329870 w (760129,2; 611583)
    + droga serwisowa), wschodni z `knyszyn-s` (way 98071886 w y 610278,8) — te same punkty i ten sam teren (test).
@@ -46,7 +53,7 @@ krawędziowe DK65 widoczne na ortofoto, do dodania razem w `knyszyn` i `knyszyn-
 |---|---|---|---|
 | knyszyn-w | 227 → 227 (kamery świata 202 → 203) | 287k → 287k | 53,9 → 54,0 MB (markings 0,3 MB) |
 | knyszyn | 429 → 429 | 370k → 370k | 95,5 MB (markings 0,4 MB) |
-| knyszyn-s | 100 → 100 (kamery świata 46 → 46; `dk65-side-road` 40 → 43) | 195k → 195k | 40,8 MB |
+| knyszyn-s | 100 → 100 (kamery świata 90 → 90, `construction-back`; `dk65-side-road` 40 → 43) | 195k → 195k | 40,8 MB |
 | dk65-monki-01 (nowy) | 92 (kamery świata) | 97k | 46,6 MB (High 113,6 MB) |
 | dw671-tykocin-01 (nowy) | 163 (`route-s0163`, wieś) | 129k | 45,7 MB (High 119,4 MB) |
 Linie dokładają ≤ 3 draws i ≤ 1 tys. trójkątów na kamerę. Wszystko w hipotezie `docs/06` §6 (Low ≤ 300–400 draws,
@@ -74,6 +81,9 @@ Pomiar na telefonie — lider.
    obrysy; kamera `village_above` kadruje pole zamiast fermy (pozycja do poprawy przy szlifie); stawy rybne na E kafla
    jako teren (etap wody 0210 opt-in — `water=True` do decyzji); DW671 we wsi z krawężnikami i latarniami z reguły.
 6. Kafle (−10,9) Mońki i (−9,6) Tykocin — dalej koniec świata.
+7. **Szew `knyszyn-s` / `dk65-11`** (x = 762635, agent 0214): kafel `dk65-11` musi nieść ten sam `set` DK65
+   (`lanes 2, lane_width 3.4, edge_strip 0.35, edge_lines both`), inaczej urwanie linii przesunie się tam.
+8. Rozstaw linii 7,1 m vs 6,8 m (p. 1) — `WORKING_VALUE`.
 
 ## Odtworzenie
 ```
