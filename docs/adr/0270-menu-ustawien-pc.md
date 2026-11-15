@@ -65,6 +65,20 @@ Panel sterowania (`ControlSettingsPanel`) dotyczy kierownicy/pedałów/kamery i 
   bezpośrednio przez Input System (jak `InputBindingsPanel`).
 - **H7 (pc-tiers-0269):** pkt 10.
 
+## Poprawki po recenzji #136 (pc-fix-s23, 2026-11-15)
+- **P1-1 „auto” (zastępuje „auto = High” z pkt 4 i adapter z pkt 10):** „auto” nigdy nie zapisuje `diag.qualityTier`.
+  Przy starcie `PcSettingsRuntime.ApplyTier(auto, startup: true)` nic nie robi — zostaje wybór `GameBootstrap`
+  (argument `-tier` → zapisany jawny wybór → autodetekcja sprzętowa ADR 0269/D74, niezapisywana). Wybór „auto” w menu:
+  `QualityTiers.ClearSavedTier()` + zastosowanie `PcTierTable.NameOf(PcGraphicsTiers.DefaultFor(DetectHardware()))` bez zapisu,
+  więc autodetekcja działa też przy kolejnych startach. Jawny tier: zastosowanie + zapis jak dotąd. Logika w
+  `Game.Rendering.PcTierChoice` (testowalna w EditMode; `Game.UI` nie jest widoczne z testów EditMode);
+  `IGraphicsTierApplier` / `QualityLevelTierApplier` usunięte (`QualityTiers.Apply` już kończy w `PcGraphicsTiers`).
+  Etykieta „auto (…)” w panelu pokazuje tier z autodetekcji. Testy: `PcAutoTierTests` (10).
+- **P2-1:** `ApplyHudScale` ustawia `UiPreferences.HudScale` (#131) — HUD przelicza się od razu, jeden klucz `ui.hudScale`.
+- **P2-2:** przycisk „Ekran, grafika, dźwięk” jest w siatce `UiFocus.ApplyGrid` menu startowego (#131).
+- **P2-3:** w edytorze `Commit` nie zmienia `QualitySettings.vSyncCount` ani tieru (pola `QualitySettings.asset`);
+  stosuje tylko `Application.targetFrameRate`. Tier i vsync działają w playerze desktop.
+
 ## Budżet
 Brak wpływu na treść i pętlę jazdy: panel i zapis tylko w menu; w jeździe jedno porównanie `int` na klatkę w
 `TruckAudioController` i mnożenie przez `ChannelGain` (domyślnie 1). Brak nowych zasobów (docs/LICENSES.md bez zmian).

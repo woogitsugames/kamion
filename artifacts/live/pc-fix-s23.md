@@ -10,3 +10,8 @@ Worktree: .claude/worktrees/pc-fix-s23, gałąź pc-fix-s23 (baza origin/int-pc-
 - `DriverInputMixer.MenuOpen` / `MenuGateActive` (+1 próbka po zamknięciu), `IMenuGatedInput.SampleBlocked` w: GamepadDriverInput, KeyboardBindingsDriverInput, KeyboardDriverInput, HidWheelDriverInput; `UiFocus.HasModal`; `DrivingLabBootstrap.Update` ustawia flagę przed `Sample` (+ C/klakson za bramką).
 - Test: `Tests/EditMode/MenuInputGateTests.cs` (9 testów, w tym GC=0).
 - NASTĘPNY KROK: #136 P1-1 — `QualityTiers.ClearSavedTier`, polityka auto w `Rendering/Runtime/PcTierChoice.cs`, `PcSettingsRuntime.ApplyTier`; test `Tests/EditMode/PcAutoTierTests.cs`; potem `git -C .claude/worktrees/pc-fix-s23 push`.
+
+## Krok 3 — #136 P1-1 „auto” (ZROBIONE, bez Unity = UNVERIFIED kompilacja)
+- `Rendering/Runtime/PcTierChoice.cs` (auto: start = nic, menu = ClearSavedTier + autodetekcja bez zapisu; jawny = zapis), `QualityTiers.ClearSavedTier/HasSavedTier/SavedTierKey`, `PcSettingsRuntime.ApplyTier(choice, startup)`, `AutoTier` = autodetekcja #135; usunięty `IGraphicsTierApplier`.
+- Test: `Tests/EditMode/PcAutoTierTests.cs` (10). ADR 0270 dopisany.
+- NASTĘPNY KROK: P2 osobnymi commitami: #136 P2-1 (`ApplyHudScale` → `UiPreferences.HudScale`), #136 P2-3 (edytor bez vSyncCount/tier), #131 P2-1 (`InputBindingsPanel` UiFocus), #131 P2-3 (ADR 0265), #131 P2-2 (sekcje dotyk/gyro na PC).

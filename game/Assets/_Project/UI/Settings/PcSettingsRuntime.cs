@@ -6,28 +6,6 @@ using UnityEngine;
 
 namespace Game.UI.Settings
 {
-    /// <summary>Applies a graphics tier (ADR 0270 adapter until H7 / ADR 0269 <c>PcGraphicsTiers</c> is merged).</summary>
-    public interface IGraphicsTierApplier
-    {
-        /// <summary>Applies a Unity quality level by name ("Low" .. "Ultra"); false when unknown.</summary>
-        bool Apply(string qualityLevelName);
-        /// <summary>Name of the active level.</summary>
-        string Current { get; }
-    }
-
-    /// <summary>
-    /// Default tier applier: Unity quality level by name (<see cref="QualityTiers.Apply"/>, persisted in the same PlayerPrefs
-    /// key the start menu and <c>-tier</c> use, so GameBootstrap agrees on the next start).
-    /// After H7 (ADR 0269) is merged replace the body of <see cref="Apply"/> with ONE line:
-    /// <c>PcGraphicsTiers.Apply((PcTier)System.Array.IndexOf(QualityTiers.Names, qualityLevelName)); return true;</c>
-    /// (PcTier {Low, Medium, High, Ultra} has the order of <see cref="QualityTiers.Names"/>).
-    /// </summary>
-    public sealed class QualityLevelTierApplier : IGraphicsTierApplier
-    {
-        public bool Apply(string qualityLevelName) => QualityTiers.Apply(qualityLevelName, persist: true);
-        public string Current => QualityTiers.Current;
-    }
-
     /// <summary>
     /// Runtime side of the PC settings (ADR 0270): owns the store, applies a <see cref="PcSettingsData"/> to Unity
     /// (Screen, QualitySettings / Application frame pacing, tier, AudioListener + <see cref="AudioMixLevels"/>, HUD scale
@@ -37,9 +15,10 @@ namespace Game.UI.Settings
     /// </summary>
     public static class PcSettingsRuntime
     {
-        public static IGraphicsTierApplier TierApplier = new QualityLevelTierApplier();
-        /// <summary>Tier used for "Auto": ADR 0261 desktop default (High). H7 may replace it with a hardware-based pick.</summary>
-        public static System.Func<string> AutoTier = () => "High";
+        /// <summary>Quality level "auto" stands for on this machine: the hardware default of ADR 0269 (D74; VRAM / RAM / GPU
+        /// class, at most High). Used for the menu label and when "auto" is chosen in the menu; never saved
+        /// (<see cref="PcTierChoice"/>, review #136 P1-1).</summary>
+        public static System.Func<string> AutoTier = () => PcTierChoice.AutoTierName();
 
         static PcSettingsStore s_Store;
         static PcSettingsData s_Current;
@@ -78,7 +57,8 @@ namespace Game.UI.Settings
             if (desktop && !s_DisplayApplied && StartupDisplayPolicy.ShouldApply(fromFile, System.Environment.GetCommandLineArgs())) ApplyDisplay(s.display);
             s_DisplayApplied = true;
             if (desktop && !fpsFromArgument) ApplyFramePacing(s);
-            if (desktop && !tierFromArgument) ApplyTier(s.graphicsTier);
+            // "auto" keeps the tier GameBootstrap just picked (saved explicit choice or the hardware default) and saves nothing.
+            if (desktop && !tierFromArgument) ApplyTier(s.graphicsTier, startup: true);
             ApplyAudio(s.volumes);
             ApplyHudScale(s.hudScale);
             Debug.Log("[SETTINGS] pc apply startup desktop=" + desktop + " " + Describe(s));
@@ -93,7 +73,7 @@ namespace Game.UI.Settings
             s_Current = s;
             bool desktop = IsDesktopPlayer || Application.isEditor;
             if (applyDisplay && IsDesktopPlayer) ApplyDisplay(s.display);
-            if (desktop) { ApplyFramePacing(s); ApplyTier(s.graphicsTier); }
+            if (desktop) { ApplyFramePacing(s); ApplyTier(s.graphicsTier, startup: false); }
             ApplyAudio(s.volumes);
             ApplyHudScale(s.hudScale);
             Debug.Log("[SETTINGS] pc commit " + Describe(s));
@@ -186,12 +166,18 @@ namespace Game.UI.Settings
             Application.targetFrameRate = target;
         }
 
-        public static void ApplyTier(string tierChoice)
+        /// <summary>
+        /// Applies the tier choice of the settings (<see cref="PcTierChoice"/>). "auto" is never saved: at startup it does
+        /// nothing (GameBootstrap's pick stays), from the menu it forgets the saved tier and applies the hardware default.
+        /// An explicit tier is applied and saved (the key the start menu and <c>-tier</c> use).
+        /// </summary>
+        public static void ApplyTier(string tierChoice, bool startup)
         {
-            string name = tierChoice == TierChoices.Auto ? AutoTier?.Invoke() : TierChoices.ToQualityLevel(tierChoice);
-            if (string.IsNullOrEmpty(name)) return;
-            if (TierApplier.Current == name) return;
-            if (!TierApplier.Apply(name)) Debug.LogWarning("[SETTINGS] unknown tier " + name);
+            bool auto = tierChoice == TierChoices.Auto;
+            string level = auto ? null : TierChoices.ToQualityLevel(tierChoice);
+            if (!auto && string.IsNullOrEmpty(level)) return;   // unknown id (Sanitize normally prevents it)
+            if (startup) { PcTierChoice.ApplyAtStartup(level); return; }
+            if (!PcTierChoice.ApplyFromMenu(level, PcGraphicsTiers.DetectHardware())) Debug.LogWarning("[SETTINGS] unknown tier " + tierChoice);
         }
 
         public static void ApplyAudio(PcVolumeSettings v)
