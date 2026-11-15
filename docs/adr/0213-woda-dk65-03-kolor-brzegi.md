@@ -101,6 +101,11 @@ impostory). High (`banks`, karty-namioty r6): patrz Walidacja (liczby r6); **uwa
 renderowały „High” na scenie Low (`World_<id>` z `-Tier High` = shader High, geometria Low); od r6 łańcuch używa
 `World_<id>_High`. Sceny High (r5H, cała zawartość High) mają 0,8–1,0 mln tris na kamerach wodnych `dk65-02` — to
 głównie istniejąca zawartość High (las, krzewy, teren LOD0), nie woda; pomiar telefonu (flagowiec, profil High) otwarty.
+High, karty-namioty r6 vs skrzyżowane karty r5 (ta sama scena `World_dk65-02_High`, draws bez zmian):
+`water-bank-west` 996,9 → 1021,7 tys. tris, `water-deck-east` 810,0 → 837,9, `drive-bridge-approach` 375,5 → 383,3,
+`route-s0450` 944,2 → 950,8, `top-bridge` 153,9 → 161,2. Cały kafel `banks` High: 02 122,3 tys. (26 chunków,
+max ~10,6 tys./chunk), 03 ~50 tys. Szacunek kosztu trzciny High na klatkę: ≤ ~30–55 tys. tris (r5 → r6 to +25–28 tys.,
+r5 ≈ połowa r6) i +1 draw / chunk z brzegiem (bez cieni). Low bez zmian względem r5 (tabela wyżej).
 
 ## Walidacja
 - Szew 02|03 (`tools/seam.py`, wierzchołki tafli GLB na x = 768 779): przed 110,163–110,193 | 110,132–110,160 m,
@@ -121,7 +126,7 @@ głównie istniejąca zawartość High (las, krzewy, teren LOD0), nie woda; pomi
 - Import bez błędów shadera / C#. Pętla wizualna (6 rund, `artifacts/water2-0213/{dk65-02,dk65-03}/r1..r6/view/`,
   strojenie `tune/`): r3 trzcina jak limonkowy żywopłot → r4 kępy z przerwami, ciemniejsza paleta → r4 z bliska
   „płetwy” (wstęga widziana wzdłuż brzegu) → r5 High = skrzyżowane karty (z daleka czyta się jak szuwar, z bliska
-  pionowe krawędzie kart) → r6 karty-namioty. Low: tafla już nie czarna (z bliska ciemnoszara z odbiciem nieba).
+  pionowe krawędzie kart) → r6 karty-namioty (High czyta się jak pas szuwaru wzdłuż brzegu, `dk65-02/r6/view/`). Low: tafla już nie czarna (z bliska ciemnoszara z odbiciem nieba).
 
 ## Otwarte
 1. **Telefon**: brak pomiaru (Low: shader bez dodatkowych pobrań; High: +tris kart trzciny, alpha-test na Mali —
