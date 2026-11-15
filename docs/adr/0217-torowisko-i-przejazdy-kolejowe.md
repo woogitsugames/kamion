@@ -161,29 +161,35 @@ uv run --project tools/worldgen python -m pytest -q tests/gis/test_rail_0217.py 
 Determinizm C/Dojlidy (bez flagi): `build_world` dla `bialystok-industrial-c` i `bialystok-dojlidy` →
 `git diff --stat origin/main -- Data/Regions/*/generated` = tylko `dw671-tykocin-01` (region z włączonym torem).
 
-## Wyniki s22 (dw671-tykocin-01, `rail.enabled`, po scaleniu main @8603fa2f3)
+## Wyniki s22 (dw671-tykocin-01, `rail.enabled`, po scaleniu main @b4e42ef34, regeneracja r6)
 - **Generator** (`generated/rail.json`): 1 tor, `bed_qa` 543 stacje co 2 m — `buried_crown_stations` 0,
   `open_toe_stations` 0, krawędź korony 0,114–0,121 m nad terenem, stopa skarpy 0,171–0,200 m w terenie; pas widoczny
   3,86 m (orto 3,5–4,5 m, ESTIMATED); 4 rogatki w 4 różnych miejscach + 4 sygnalizatory, `warnings` puste, najmniejsza
   odległość urządzenia od skrajni 2,16 m. Trójkąty: LoD0 15 084, LoD1 2 256, LoD2 112, płyty 132.
-- **Budżet A/B** (`streetscape_qa.json` → `mesh_budget.frame_estimate`, main → gałąź): najcięższy kadr High
-  1 068 212 → 1 053 777 (`route_s0489`), Low 310 738 → 308 051 (`dw671_seam_north_out`); kamery `rail_*`:
-  High ≤ 994 608, Low ≤ 305 221. Spadek na kamerach trasy = drzewa wycięte z pasa toru (`rail.blocked`). Draws: nie
-  mierzono (estymata nie ma tego pola). Telefon: nie mierzono.
-- **Pętla wizualna** (scena `World_dw671-tykocin-01`, Low + High, clear, 14 kamer; `artifacts/rail-fix-s21/vqa/r1…r5`,
+- **Budżet A/B** (`streetscape_qa.json` → `mesh_budget.frame_estimate`; „przed” = `build_world` z flagą wyłączoną,
+  `artifacts/rail-fix-s21/flagoff/after-fix/generated/`, „po” = r6): najcięższy kadr High 1 053 777 → 1 053 777
+  (`route_s0489`), Low 308 051 → 308 051 (`dw671_seam_north_out`) — kamery trasy bez zmian co do trójkąta;
+  `rail_xing_above` 993 279 → 994 608 (+1 329 `props` = urządzenia przejazdu). Estymata kadru **nie liczy siatek
+  toru** (brak kategorii) — dochodzi najwyżej cały tor regionu: +15 216 High (LoD0 + płyty), +2 388 Low (LoD1 +
+  płyty). Kamery `rail_*`: High ≤ 994 608, Low ≤ 305 221 (bez siatek toru). Zacommitowany na main
+  `streetscape_qa.json` tykocina jest nieświeży względem kodu (1 068 212 High) — różnica main → gałąź to drzewa
+  (`trees_lod0/1`) i nie pochodzi od toru. Draws: nie mierzono. Telefon: nie mierzono.
+- **Pętla wizualna** (scena `World_dw671-tykocin-01`, Low + High, clear, 14 kamer; `artifacts/rail-fix-s21/vqa/r1…r6`,
   referencje `artifacts/rail-fix-s21/ref/ortho_0p10_crossing_60m.jpg` i `ref/mapillary/crop_*.jpg`):
   - r1: rogatki `double_half` — 4 markery w 2 miejscach (wyjazdowa leżała na wjazdowej drugiego wlotu) → poprawione,
     r2 pokazuje 4 ramiona w 4 ćwiartkach jak na orto i Mapillary 1832769196903759;
   - r1: pasmo toru / asfalt (luminancja liniowa, `rail_xing_top`, `artifacts/rail-fix-s21/measure_render.py`)
-    0,94 High / 0,98 Low; orto 0,44 (`measure_ortho_rel.py`). r2–r5: **0,81 / 0,83**, tor / trawa 0,52 / 0,55
+    0,94 High / 0,98 Low; orto 0,44 (`measure_ortho_rel.py`). r2–r6: **0,81 / 0,83**, tor / trawa 0,52 / 0,55
     (orto 0,66), R : G : B 1,06 : 1 : 0,91 (orto 1,09 : 1 : 0,87). Kotwice są sprzeczne: asfalt gry / trawa = 0,65,
     na orto 1,48 (stara, jasna nawierzchnia DW671), więc 0,44 dałoby prawie czarny tłuczeń. Zostawione jako
     WORKING_VALUE do zdjęcia właściciela;
   - r1: boki szyn srebrne (bok pudełka próbkował główkę) → rdza na bokach, główka tylko na górze;
   - r2–r4: korona jezdni przebijała przez płyty (siatka 2 m, potem próbnik 1 m ścinający grzbiet) → siatka 0,5 m,
-    `_deck_z`, `PANEL_LIFT` 0,015 m; r5: płyty ciągłe na całej szerokości jezdni w Low i High.
+    `_deck_z`, `PANEL_LIFT` 0,015 m; r5 i r6: płyty ciągłe na całej szerokości jezdni w Low i High.
   - teren pod torem bez szczelin i bez „wiszącej” podsypki (`rail_bed_close`, `rail_track_along`).
   Ocena `visual-critic`: **nie wykonana** (agent nie tworzy subagentów) — dla lidera.
+- **Albedo**: `docs/06` nie podaje progu liczbowego (tylko „tabela referencyjna” i „histogram albedo w walidatorze”);
+  kafel `rail_bed.png` ma średnią sRGB (61, 57, 50), najciemniejsze są spoiny między kamieniami — WORKING_VALUE.
 - **`region.yaml`**: względem main zmienia się tylko blok `rail`. Dwa `manifest_sha256` (NMT, orto) zmienione przez
   wcześniejszy `build_region` były artefaktem checkoutu CRLF manifestów w worktree (hash treści LF = wartość z main) —
   przywrócone; `build_manifest.json` przeliczony.
