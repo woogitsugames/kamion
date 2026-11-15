@@ -94,3 +94,6 @@ D63/D64 uzupełnienie (2026-11-14 23:1x): w wersji „z grubsza” PRIORYTETEM j
 
 ## D65 — Odpowiedzi właściciela do tras DK65/Knyszyn (2026-11-15)
 1. Trasa Białystok → Knyszyn: **wariant A** (stara droga przez Fasty i Dobrzyniewo Duże). 2. Knyszyn DK65 × DW671: **rondo** (jak OSM). 3. Wiadukt S19 w Fastach: **stoi, otwarty**. 4. Budowa przy DK65 km 16,7–25: **jazda starą DK65, bez objazdu** (place budowy obok). 5. Ełcka/Studzienna: **wąska ~7 m** (zwęzić z 7,6 do ~6,9 m). 6. Nowa jezdnia DK65 w dk65-05: **nieotwarta** — plac budowy, trasa po starej. 7. Domyślna pora roku/światło: **lato** (zmierzch ~21:00, azymut ~300°). 8. Latarnie na trasie DK65/Knyszyn: **białe LED**.
+
+## D66 — Szerokość ul. Ełckiej (2026-11-15)
+Właściciel wybrał **6,6 m** szerokości jezdni (`width`) ul. Ełckiej / Studziennej w kaflach dk65-02…05 zamiast 6,9 m z D65. Powód: ortofoto 0,1 m pokazuje asfalt 6,5–7,1 m i linie krawędziowe 6,1–6,4 m od siebie (research K1, weryfikacja PR #80); przy 6,6 m generator rysuje linie ok. 6,2 m od siebie.

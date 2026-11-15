@@ -1,0 +1,314 @@
+{
+ "banks": {
+  "bank_shrubs": {
+   "skipped": {
+    "blocked": 126,
+    "near_tree": 80
+   },
+   "tree_alder": 93,
+   "tree_shrub": 580
+  },
+  "banks": {
+   "ribbons": 1562,
+   "triangles": 50504
+  },
+  "banks_low": {
+   "ribbons": 220,
+   "triangles": 3092
+  }
+ },
+ "bodies": [
+  {
+   "area_m2": 444,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-8F7C-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 511,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-904C-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 1520,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-9185-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 166,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-93A8-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 993,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-95F9-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 1959,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-9783-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 190,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-9EFC-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 230,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:8365637c-c18a-4f20-8d9f-be180f1b522e:0"
+  },
+  {
+   "area_m2": 123,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:aab87fd2-0788-4031-9d56-f127bb9ee22d:0"
+  },
+  {
+   "area_m2": 54778,
+   "kind": "woda płynąca",
+   "name": "Supraśl",
+   "src": "bdot10k:OT_PTWP_A:b7b3f375-77f9-46ae-aef9-f3bbad771d80:0"
+  },
+  {
+   "area_m2": 1809,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/309439550:0"
+  },
+  {
+   "area_m2": 873,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/309440743:0"
+  },
+  {
+   "area_m2": 863,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/969845392:0"
+  },
+  {
+   "area_m2": 180,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/969845408:0"
+  },
+  {
+   "area_m2": 175,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/969845409:0"
+  },
+  {
+   "area_m2": 159,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/1124790718:0"
+  }
+ ],
+ "carve": {
+  "bank_nodes_lowered": 24812,
+  "bed_lowered_m_max": 3.67,
+  "bed_nodes": 63258,
+  "lip_nodes_raised": 366,
+  "water_nodes_kept_by_road": 119
+ },
+ "profiles": [
+  {
+   "kind": "stream",
+   "len_m": 345,
+   "level_first_m": 111.36,
+   "level_last_m": 109.6,
+   "name": null,
+   "raw_min_max_m": [
+    109.6,
+    111.36
+   ],
+   "reversed": false,
+   "src": "osm:way/969845393:0",
+   "stations": 69
+  },
+  {
+   "kind": "river",
+   "len_m": 2404,
+   "level_first_m": 110.2,
+   "level_last_m": 109.33,
+   "name": "Supraśl",
+   "raw_min_max_m": [
+    109.3,
+    110.37
+   ],
+   "reversed": false,
+   "src": "osm:way/1068670427:0",
+   "stations": 481
+  },
+  {
+   "kind": "river",
+   "len_m": 2391,
+   "level_first_m": 110.2,
+   "level_last_m": 109.36,
+   "name": "Supraśl",
+   "raw_min_max_m": [
+    109.29,
+    110.37
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:2C9A9ABA-04DF-0F0D-E053-CA2BA8C04DCD:0",
+   "stations": 479
+  },
+  {
+   "kind": "stream",
+   "len_m": 594,
+   "level_first_m": 112.35,
+   "level_last_m": 111.49,
+   "name": null,
+   "raw_min_max_m": [
+    111.42,
+    112.35
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:2C9A9ABA-0656-0F0D-E053-CA2BA8C04DCD:0",
+   "stations": 119
+  }
+ ],
+ "region": "dk65-03",
+ "schema": "truck-sim-pl/water-qa/1",
+ "seams": [
+  {
+   "edge": "W",
+   "level_m": 109.45,
+   "nodes": 94,
+   "own_m": [
+    109.339,
+    109.456
+   ]
+  },
+  {
+   "edge": "E",
+   "level_m": 110.179,
+   "nodes": 24,
+   "own_m": [
+    110.132,
+    110.16
+   ]
+  }
+ ],
+ "sheet": {
+  "area_m2": 65686,
+  "triangles": 11695
+ },
+ "skipped": [
+  {
+   "src": "osm:way/309441964:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/972357850:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/972357854:0",
+   "why": "intermittent=yes"
+  }
+ ],
+ "still_levels": [
+  {
+   "at_local_en": [
+    485.7,
+    882.2
+   ],
+   "level_m": 112.31,
+   "nodes": 1667
+  },
+  {
+   "at_local_en": [
+    -282.2,
+    -316.5
+   ],
+   "level_m": 109.77,
+   "nodes": 282
+  },
+  {
+   "at_local_en": [
+    -269.5,
+    -319.4
+   ],
+   "level_m": 109.66,
+   "nodes": 451
+  },
+  {
+   "at_local_en": [
+    -890.1,
+    -378.1
+   ],
+   "level_m": 112.09,
+   "nodes": 205
+  },
+  {
+   "at_local_en": [
+    832.8,
+    -398.9
+   ],
+   "level_m": 110.24,
+   "nodes": 1215
+  },
+  {
+   "at_local_en": [
+    71.9,
+    -394.3
+   ],
+   "level_m": 112.52,
+   "nodes": 531
+  },
+  {
+   "at_local_en": [
+    -235.4,
+    -574.3
+   ],
+   "level_m": 115.28,
+   "nodes": 197
+  },
+  {
+   "at_local_en": [
+    -212.9,
+    -579.1
+   ],
+   "level_m": 116.03,
+   "nodes": 218
+  },
+  {
+   "at_local_en": [
+    153.3,
+    -614.9
+   ],
+   "level_m": 117.68,
+   "nodes": 576
+  },
+  {
+   "at_local_en": [
+    500.2,
+    -700.6
+   ],
+   "level_m": 116.76,
+   "nodes": 2102
+  },
+  {
+   "at_local_en": [
+    -664.9,
+    -781.2
+   ],
+   "level_m": 121.62,
+   "nodes": 270
+  }
+ ],
+ "water_nodes": 63377
+}

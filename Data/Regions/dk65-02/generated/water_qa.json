@@ -1,4 +1,22 @@
 {
+ "banks": {
+  "bank_shrubs": {
+   "skipped": {
+    "blocked": 131,
+    "near_tree": 16
+   },
+   "tree_alder": 34,
+   "tree_shrub": 270
+  },
+  "banks": {
+   "ribbons": 3645,
+   "triangles": 122300
+  },
+  "banks_low": {
+   "ribbons": 316,
+   "triangles": 7114
+  }
+ },
  "bodies": [
   {
    "area_m2": 409,
@@ -116,10 +134,10 @@
   }
  ],
  "carve": {
-  "bank_nodes_lowered": 39240,
+  "bank_nodes_lowered": 39140,
   "bed_lowered_m_max": 3.23,
   "bed_nodes": 78164,
-  "lip_nodes_raised": 354,
+  "lip_nodes_raised": 355,
   "water_nodes_kept_by_road": 75
  },
  "profiles": [
@@ -210,6 +228,35 @@
  ],
  "region": "dk65-02",
  "schema": "truck-sim-pl/water-qa/1",
+ "seams": [
+  {
+   "edge": "W",
+   "level_m": 110.179,
+   "nodes": 24,
+   "own_m": [
+    110.161,
+    110.193
+   ]
+  },
+  {
+   "edge": "E",
+   "level_m": 110.666,
+   "nodes": 12,
+   "own_m": [
+    110.644,
+    110.656
+   ]
+  },
+  {
+   "edge": "E",
+   "level_m": 111.292,
+   "nodes": 13,
+   "own_m": [
+    111.177,
+    111.211
+   ]
+  }
+ ],
  "sheet": {
   "area_m2": 82341,
   "triangles": 15631

@@ -10369,7 +10369,7 @@
     "chain": "c:w197904074:2081020082-2081020084",
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 1,
+    "piers": 0,
     "span_m": 38.0
    },
    {
@@ -10392,6 +10392,7 @@
   },
   "crossings_in_junction": [
    1166108041,
+   2881403110,
    8473985999,
    1883043030,
    2881403132,
@@ -10413,11 +10414,15 @@
    1883483225,
    1882953780,
    2441701386,
+   2441701386,
    9986085573,
    9986085574,
    5645859050,
    5645777754,
+   5645777754,
    5645777749,
+   5645777749,
+   3032448284,
    3032448284,
    1859438399,
    2882674807,
@@ -10426,24 +10431,32 @@
    2881403139,
    1859438371,
    3563106530,
+   3563106530,
    1883463881,
    11499806841,
    3032448286,
    5645777751,
+   5645777751,
+   1748446221,
    1748446221,
    6337303569,
    7069321043,
    8763628068,
    9224916295,
+   9224916295,
    9224916298,
+   9224916298,
+   2641555452,
    2641555452
   ],
   "crossings_merged": 0,
-  "crossings_p11": 7,
-  "crossings_skipped": [],
-  "crossings_snapped": 71,
+  "crossings_p11": 25,
+  "crossings_skipped": [
+   6337303569
+  ],
+  "crossings_snapped": 88,
   "decals": {
-   "gullies": 768,
+   "gullies": 766,
    "oil": 286,
    "patches": 443
   },
@@ -10452,7 +10465,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 565561,
+  "footprint_nodes": 572457,
   "fork_abreast": [
    {
     "alongside_run_m": 125.0,
@@ -11864,10 +11877,11 @@
   "markings": {
    "P-1 centre line": 4,
    "P-1 lane line": 167,
-   "P-10 crossing": 65,
-   "P-10 crossing in junction": 40,
-   "P-11 cycle crossing": 6,
-   "P-11 cycle crossing in junction": 6,
+   "P-10 crossing": 63,
+   "P-10 crossing in junction": 39,
+   "P-11 cycle crossing": 24,
+   "P-11 cycle crossing in junction": 18,
+   "P-11 red surfacing": 13,
    "P-13": 15,
    "P-14": 27,
    "P-7b edge line": 133,
@@ -12996,8 +13010,8 @@
   "roundabout_junctions": 12,
   "sides_on_carriageway_culled": {
    "kerb_tris": 4748,
-   "parts": 628,
-   "side_tris": 831
+   "parts": 623,
+   "side_tris": 815
   },
   "signalised_junctions": 11,
   "through_lines": {
@@ -13013,7 +13027,7 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 49466
+   "tris": 49290
   },
   "walled_ramps": [
    {
