@@ -25,3 +25,5 @@ Do repo pełna miniatura 515 × 800 i dolny crop 730 × 690; autor Jaggery, CC B
 Wszystkie 7 sprawdzonych podglądy pochodzą od Jaggery z Geograph i mają zweryfikowane CC BY-SA 2.0. Początkowa selekcja i intitle oraz metadane wybranych zdjęć zachowane w JSON. Główny brak to nie duża liczba megapikseli pliku, lecz odpowiednio bliski tył z widocznym lokalnym osadem, którego nie trzeba domniemywać z grafiki lub uszkodzeń. Nie podawano soli z samej daty i nie opisano nieobejrzanych obrazów. Odrzucone podglądy wyłącznie raw, bez zbędnych repo miniaturek.
 
 Odstępy między pobraniami ≥ 12 s, bez 429 i bez ponawiania. Nie użyto Flickr ani Chrome; obieg zakończono na siedmiu indywidualnych importach Geograph. Wcześniejszą prośbę o okno przeglądarki wycofano bez przejęcia UI. Bez commitów.
+
+Niezależny ślepy opis dwóch istniejących wycinków: [peer](../../01-lampy/review-notes/door-surface-peer.json). Jasna siatka Posti oraz szersze plamy/łukowe pasy EVcargo opisane oddzielnie; mechanizm pozostaje UNVERIFIED. Nie jest to nowy kadr ani wzrost M61.

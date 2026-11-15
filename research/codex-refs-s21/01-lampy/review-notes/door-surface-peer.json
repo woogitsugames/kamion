@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "reviewer": "agent lampy, niezależny opis ślepy",
+  "method": {
+    "order": [
+      "Osobne view_image pierwszego lokalnego pliku, zapis własnej obserwacji w pamięci narzędzia.",
+      "Osobne view_image drugiego lokalnego pliku, zapis własnej obserwacji w pamięci narzędzia.",
+      "Dopiero potem odczyt README/manifestów i recenzji koordynatora obu pakietów.",
+      "Zapis niniejszego raportu bez zmiany kwalifikacji."
+    ],
+    "new_images_downloaded": 0,
+    "images_copied_or_edited": 0,
+    "browser_used": false,
+    "blind_observations_preserved": true
+  },
+  "blind_observations": [
+    {
+      "file": "02-brud/europe-visual-round10/files/EV10-A01-posti003-rear-crop.jpg",
+      "sequence": "Obraz obejrzany przed odczytem README, manifestu lub recenzji obu pakietów.",
+      "observation": "Dwoje wysokich szarych drzwi z czterema pionowymi prętami zamknięć. Górne partie bardziej równomiernie szarobeżowe, dolna połowa ma gęstą jasną nieregularną siatkę: pionowe, miejscami rozgałęzione nitki i kanciaste małe pola. Dłuższe jasne pasma ciągną się w dół także z górnej części; ku dołowi wzór jaśniejszy i bardziej kontrastowy. Pręty i obrzeża szarociemne, z podłużnymi jasnymi śladami. Przy dolnych zamkach jaśniejsze poziome/brzegowe obszary, obok ciemne szczeliny i zabrudzone wgłębienia. Dolny prawy zamek otacza prostokątna jasna obwódka/pas; pod klamkami ciemniejsze pola. Czerwony napis w górnej lewej części i żółte obrzeże na dole przygaszone. Lewa i prawa powierzchnia mają podobny charakter drobnej siatki; rozkład nie jest jednolity.",
+      "limits": [
+        "Bez skali nie określam wysokości ani grubości warstwy.",
+        "Z obrazu nie rozstrzygam osad/nalot, siatka spękań lub degradacja powłoki ani ich współwystępowanie.",
+        "Nie identyfikuję soli, błota pośniegowego, składu chemicznego, wilgotności powierzchni ani kolejności nawarstwień.",
+        "Jasne obszary przy okuciach nie dowodzą mycia lub świeżo odsłoniętej farby.",
+        "Śnieg i drzewa w tle nie rozstrzygają mechanizmu śladów na drzwiach."
+      ]
+    },
+    {
+      "file": "02-brud/europe-rear-round11/files/ER11-P01-lower-doors.jpg",
+      "sequence": "Obraz obejrzany osobno przed odczytem README, manifestu lub recenzji obu pakietów.",
+      "observation": "Dwoje jasnoszarych drzwi z czterema ciemnymi pionowymi prętami. Górny fragment kadru bardziej jednolicie szary, choć przy prętach i prawej krawędzi widoczne wąskie ciemniejsze smugi. Dolna część ma nierówną, znacznie jaśniejszą strefę z miękką pofalowaną górną granicą, wysepkami i miejscami ostrzejszymi ukośnymi kreskami. Na lewym skrzydle bliżej dołu kilka jaśniejszych ukośnych/łukowych pasów; wokół dwóch dolnych klamek jasny, niejednorodny obszar przechodzi w szarość. Na prawym skrzydle nad napisem DOWNTON wyraźne jaśniejsze skośne/łukowe pole; poniżej więcej jasnych plamek i rozmazań. Nie widzę tak drobnej gęstej siatki jak w pierwszym obrazie. Przy osiach zamków i w zagłębieniach ciemniejsze punkty, na metalowych klamkach szare i jasne przetarcia; wąski ciemny pas przy podziale skrzydeł. Czerwone obrzeża i czarne napisy pozostają czytelne, dół z czarną belką częściowo ucięty.",
+      "limits": [
+        "Nie rozstrzygam nalotu, śladów tarcia/otarcia, wymywania, uszkodzenia powłoki ani ich nakładania.",
+        "Nie przypisuję jaśniejszej strefie soli lub zimowego błota, ani ciemnym smugom konkretnego składu.",
+        "Brak pewnego odniesienia wymiarowego dla wysokości granicy.",
+        "To wycinek: nie opisuję górnej krawędzi pełnych drzwi i otoczenia poza kadrem.",
+        "Przygaszona szarość może zależeć od oświetlenia i powierzchni; nie mierzę koloru materiału z pikseli."
+      ]
+    }
+  ],
+  "comparison": {
+    "A": {
+      "source_manifest": "02-brud/europe-visual-round10/manifest.csv#EV10-A01",
+      "readme": "02-brud/europe-visual-round10/README.md",
+      "review": "02-brud/europe-visual-round10/coordinator-posti-review.json",
+      "agreement": "Zgodne z zapisaną szarobrunatną/szarobeżową powierzchnią, pionowymi jasnymi smugami i gęstszą rozgałęzioną siatką u dołu. Podtrzymuję mechanizm UNVERIFIED: osad vs powłoka. Opis wzoru nie jest dowodem pewnego brudu ani soli.",
+      "qualification": "Zostaje AUX, bez przyrostu M61. Z samej oglądanej pochodnej nie weryfikuję źródłowych 850–950px wysokości drzwi ani pełnej geometrii naczepy z innych fotografii.",
+      "not_independently_reverified": [
+        "licencja i metadane Commons",
+        "miejsce Finlandia/Tornio",
+        "konstrukcja z nieoglądanych teraz001/002",
+        "wysokość drzwi w oryginale"
+      ]
+    },
+    "B": {
+      "source_manifest": "02-brud/europe-rear-round11/manifest.csv#ER11-P01",
+      "readme": "02-brud/europe-rear-round11/README.md",
+      "review": "02-brud/europe-rear-round11/coordinator-evcargo-review.json",
+      "agreement": "Zgodne z miejscowymi białawymi smugami/plamami i niepewnym mechanizmem. W moim oglądzie ważna jest miękka falista granica jaśniejszej dolnej strefy, ukośne/łukowe pasy i jasne obszary koło klamek. Nie nazwałem ich odciskami ani konkretną pozostałością grafiki. Nie potwierdzam rozstrzygającego łuszczenia, jednak crop nie wyklucza uszkodzeń powłoki.",
+      "qualification": "Zostaje PENDING/AUX, bez przyrostu M61. Widoczna geometria śladów przydatna pomocniczo, nie potwierdzona mapa brudu drogowego.",
+      "not_independently_reverified": [
+        "licencja, data i miejsce źródła",
+        "ciągnik/naczepa z pełnego nieoglądanego teraz kadru",
+        "1000–1100px wysokości skrzydeł w oryginale",
+        "kałuże, asfalt i trasa poza wycinkiem"
+      ]
+    }
+  },
+  "shared_limits": [
+    "Nie ustalono soli, błota pośniegowego ani składu substancji.",
+    "Nie wywiedziono mechanizmu z daty, kraju, sezonu lub nazwy pliku.",
+    "Dwa obrazy różnią się wzorem: A gęsta cienka jasna siatka; B szersze jasne plamy/pasy z miękką granicą. Różnica wizualna nie dowodzi różnych mechanizmów chemicznych.",
+    "Nie zmieniono plików02 ani liczników; nowy peer jest recenzją istniejących fotografii, nie nowymi kadrami."
+  ]
+}

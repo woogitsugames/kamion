@@ -1,10 +1,10 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Aktualny manifest:21 rekordów=19 kadrów(14 lokalnych,5 link-only)+2 dokumenty; obejmuje odrzucenia i pomocnicze. Ścisły M61 nadal1/20, nie21przyjętych zdjęć.
+Aktualny manifest:21 rekordów=19 kadrów(14 lokalnych,5 link-only)+2 dokumenty; obejmuje odrzucenia i pomocnicze. Nowo przyjęty do s21:1kadr; nie21przyjętych zdjęć. Łączna unikalna bazaP18+s21 w audycie.
 
-Cel: ≥20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥6 zimowych i ≥6 europejskich. **Stan po recenzji koordynatora:1/20 nowych przyjętych kadrów,0/6 zimowych,0/6 europejskich — kryteria całości niespełnione.**
+Cel: ≥20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥6 zimowych i ≥6 europejskich. **Do s21 przyjęto1nowy względem własnego manifestu kadr,0zimowych i0europejskich. Wymaganie użytkownika:≥20łącznie; M61-FIX pkt8 wymaga≥12NOWYCH. Unia zP18 i nowość dla całego projektu wymagają deduplikacji, nie są sumą liczników. Kryteria całości niepotwierdzone.**
 
-Główny manifest ma16 rekordów:14 kadrów (9 lokalnych i5 link-only) oraz2 dokumenty. Tylko02-CR6-001 jest nowym przyjętym kadrem po sprawdzeniu oryginału i źródłowego typu naczepy. Pozostałe wiersze obejmują odrzucenia, wzorce czyste, zużycie, niejednoznaczną powierzchnię oraz znane P18. Wycinki nie są nowymi zdjęciami. Starsze sekcje poniżej zachowują chronologię poszukiwań; ich 0/20 nie jest stanem bieżącym.
+Historyczny stan przed kolejnymi obiegami:16rekordów,14kadrów i2dokumenty (bieżący stan21rekordów powyżej). Tylko02-CR6-001 jest nowym przyjętym kadrem po sprawdzeniu oryginału i źródłowego typu naczepy. Pozostałe wiersze obejmują odrzucenia, wzorce czyste, zużycie, niejednoznaczną powierzchnię oraz znane P18. Wycinki nie są nowymi zdjęciami. Starsze sekcje poniżej zachowują chronologię poszukiwań; ich 0/20 nie jest stanem bieżącym.
 
 ## Wynik przeglądu
 
@@ -145,16 +145,22 @@ Dealer-round2:2 obejrzane kadry1 naczepySchmitz, tylko link-only; łuszcząca/us
 
 02-CR6-001: autor EricPolk wprost opisuje semi-trailer na I-105 w Downey,California; CC BY-SA4.0,2023-08-04. Agent i koordynator osobno obejrzeli oryginał i wycinek: cienkie szare pionowe smugi, wyraźniejsze w dolnej części, oraz plamisty szary próg/belka. Rdza okuć odrębna. Oryginał1522×2233 iSHA sprawdzone; drzwi około1400–1500px ESTIMATED, bez upscalingu. Widoczny kontekst ruchu drogowego, prędkość i skład osadu UNVERIFIED. Lokalny osad nie musi pokrywać całych drzwi.
 
-Aktualny przyrost:1nowy przyjęty kadr/1pojazd;1/20 wymaganych nowych, zima0/6, Europa0/6. Cały M61 nadal niespełniony, recenzja lidera otwarta. Crop to pochodna tego samego kadru. Dwa pozostałe źródła obiegu odrzucono, obrazy poza gitem. Główny manifest16 rekordów=14 kadrów+2 dokumenty, nie16 kwalifikacji. Starsze akapity0/20 opisują stan przed tą porcją.
+Aktualny przyrost:1nowy przyjęty kadr/1pojazd;1nowy względem własnego manifestu; prógFIX≥12nowych, prógcałości≥20, zima0/6, Europa0/6. Cały M61 nadal niespełniony, recenzja lidera otwarta. Crop to pochodna tego samego kadru. Dwa pozostałe źródła obiegu odrzucono, obrazy poza gitem. Główny manifest16 rekordów=14 kadrów+2 dokumenty, nie16 kwalifikacji. Starsze akapity0/20 opisują stan przed tą porcją.
 
 
-Creator-round7: koordynator osobno obejrzał oryginał Premier1118×1487, miniaturę i wycinek. Lokalny szarobrunatny film/smugi lewego skrzydła są pomocniczo przydatne, lecz drzwi około900–950px nie spełniają progu1000px. 1 nowy pomocniczy kadr, 2 pochodne, ścisły M61 nadal1/20, zima0/6, Europa0/6. Główny manifest teraz17 rekordów=15 kadrów(10 lokalnych/5 link-only)+2 dokumenty. Trzy odrzucenia w dzienniku dziecka nie są włączone do głównego mianownika.
+Creator-round7: koordynator osobno obejrzał oryginał Premier1118×1487, miniaturę i wycinek. Lokalny szarobrunatny film/smugi lewego skrzydła są pomocniczo przydatne, lecz drzwi około900–950px nie spełniają progu1000px. 1 nowy pomocniczy kadr, 2 pochodne, ścisły nowy przyrost s21 nadal1kadr, zima0/6, Europa0/6. Główny manifest teraz17 rekordów=15 kadrów(10 lokalnych/5 link-only)+2 dokumenty. Trzy odrzucenia w dzienniku dziecka nie są włączone do głównego mianownika.
 
 
 Europe-link-only-round9:2 osobno obejrzane pomocnicze obrazy komercyjne, tylko link-only ARR, bez kopii. Myjnia: niepotwierdzona konstrukcja drzwi/mechanizm pasmowania i około230–250px tylnej powierzchni. OLX: śnieg widoczny, ale przeważają ubytki powłoki i około440–470px drzwi. Nie zwiększają ścisłegoM61, zimy ani Europy; main17rekordów bez zmian, dziennik pomocniczy odrębny. Lokalizacja firmy/ogłoszenia nie jest geotagiem fotografii.
 
 
-Europe-visual-round10:3 nowe referencjeAUX/6pochodnych≤800px, koordynator osobno obejrzał wszystkie zachowane pełne miniatury i cropy. PostiFinlandia2026 potwierdzonego typu w śniegu: drzwi850–950px, jasna siatka o mechanizmieUNVERIFIED. ScaniaSzwajcaria2013: pionowe smugi dolnego boku, bez tylnych drzwi. MB1850Sinsheim2013: ciemna reklama/odblaski i plamista belka, muzeum/znany pojazdP18-141, nowy kadr nie nowy pojazd. Żaden nie zwiększa ścisłych1/20, zimowych0/6 ani europejskich0/6. Łącznie w selekcji9indywidualnie obejrzanych fotografii, wsparcie typuPosti001/002 nie liczone jako kolejne tyły.
+Europe-visual-round10:3 nowe referencjeAUX/6pochodnych≤800px, koordynator osobno obejrzał wszystkie zachowane pełne miniatury i cropy. PostiFinlandia2026 potwierdzonego typu w śniegu: drzwi850–950px, jasna siatka o mechanizmieUNVERIFIED. ScaniaSzwajcaria2013: pionowe smugi dolnego boku, bez tylnych drzwi. MB1850Sinsheim2013: ciemna reklama/odblaski i plamista belka, muzeum/znany pojazdP18-141, nowy kadr nie nowy pojazd. Żaden nie zwiększa przyjętego1kadru s21, zimowych0/6 ani europejskich0/6. Łącznie w selekcji9indywidualnie obejrzanych fotografii, wsparcie typuPosti001/002 nie liczone jako kolejne tyły.
 
 
 Europe-rear-round11:7nowych importów Geograph naCommons indywidualnie obejrzanych;1 zachowany PENDING/AUX EVcargo/Jaggery BY-SA2.0,2pochodne≤800px, pełny oryginał i crop osobno obejrzane przez koordynatora. Geometria drzwi około1000–1100px i europejska mokra droga są czytelne; mechanizm białawych śladów/wycierania/pozostałości grafiki pozostajeUNVERIFIED. Nie zwiększa M61, zimowych ani europejskich kwalifikacji. Kadry boków/rolety/dalekich poruszonych drzwi odrzucono. Dopasowania wcześniejszego źródła7602388 nie znaleziono w przeszukanych manifestachMistral/K1.
+
+## Korekta jednostki i deduplikacja — 15.11, obieg13 w toku
+
+Dawniejsze zapisy1/20nowych w tym pakiecie i raportach były błędem jednostki celu:≥20dotyczy łącznej kwalifikowanej bazy, a≥12NOWYCH wynika zM61-FIXpkt8. Nie wolno traktować zapisu1/20jako dowodu wymagania20nowych. Bieżący P18 zawiera już WesternExpress jakoP18-182, więc CR6-001 nie dodaje drugiego kadru w unii źródeł. Przyjęcie jakości fotografii pozostaje, nowość dla całego projektu jest sprawdzana według wersji/daty dodania. Nie przejęto statystyk P18 bez oglądu; audyt bazowy w toku. Nowych zimowych/europejskich do s21 nadal0/0.
+
+Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18-176 i5473100745=P18-178, trzeci już wscreeningu. DlaP18-176 dodatkowe odczytaneUI Central,Gateshead,England; nie dowód zimowej soli ani typu naczepy. [Dziennik](flickr-europe-round12/README.md).
