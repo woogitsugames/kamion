@@ -143,6 +143,8 @@ def build(buf, net, juncs, report):
                 if c.bridge[c.idx(sc)]:
                     continue
                 sec = c.section(sc, secs)
+                if getattr(sec, "construction", False):
+                    continue             # ADR 0215: never opened to traffic - no repair patches
                 hw = float(c.hw_at(sc))
                 kind = hf(*key, i, "kind")
                 if kind < 0.35:              # full-lane trench / overlay patch
@@ -184,6 +186,8 @@ def build(buf, net, juncs, report):
             t = j.trims[ai]
             s_stop = float(a.s(t + 1.5))
             sec = c.section(s_stop, secs)
+            if getattr(sec, "construction", False):
+                continue                 # ADR 0215: no traffic ever queued here - no oil stains
             hw = float(c.hw_at(s_stop))
             dirn_here = int(c.dirn[c.idx(s_stop)]) or 1
             _, _, lanes = lane_layout(sec, hw, dirn_here)

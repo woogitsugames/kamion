@@ -178,7 +178,7 @@ def edge_lines(sec, hw, dirn):
     """[(lat, kind)] of the painted edge lines of a section at half-width hw (scalar or array). Default rule:
     P-7b on both sides of class A / S / GP roads with an edge strip. `edge_lines` (override, direction of travel)
     narrows it; a section with measured `lane_edges` paints only what `edge_lines` names (ADR 0095)."""
-    if sec.roundabout:
+    if sec.roundabout or unmarked(sec):
         return []
     el = getattr(sec, "edge_lines", None)
     le = getattr(sec, "lane_edges", None)
@@ -204,6 +204,12 @@ def edge_lines(sec, hw, dirn):
             if el in ("both", name):
                 out.append(((d if sec.oneway else 1) * sg * (hw - S.EDGE_LINE_INSET_MINOR), "P-7b"))
     return out
+
+
+def unmarked(sec) -> bool:
+    """ADR 0215 (owner D65 p.6): a carriageway under construction / not open to traffic carries no horizontal
+    markings at all (authored `set: {construction: true}`, roads.closures)."""
+    return bool(getattr(sec, "construction", False))
 
 
 def edge_line_width(sec):
@@ -391,6 +397,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 sb = s1
             if sb - sa < 1.0:
                 continue
+            if unmarked(sec):
+                cnt("construction section (no markings)")     # ADR 0215: not open to traffic, no horizontal signs
+                continue
             marked = sec.highway in MARKED or sec.roundabout
             hw = float(c.hw_at(0.5 * (sa + sb)))
             dirn = int(c.dirn[a_]) or 1
@@ -467,6 +476,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         cnt("P-8 arrow")
         # crossings on this chain
         for s_c, osm, ckind, cwid in crossings.get(c.id, []):
+            if unmarked(c.section(s_c, secs)):
+                cnt("crossing skipped (construction)")
+                continue
             hw = float(c.hw_at(s_c))
             if ckind == "P-11":
                 if s0 + cwid / 2 + 0.5 <= s_c <= s1 - cwid / 2 - 0.5:

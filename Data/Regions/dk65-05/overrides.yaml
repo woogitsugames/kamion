@@ -19,3 +19,20 @@ overrides:
     confidence: medium
     verify: owner photo across Ełcka with a scale / tape measurement
     set: {width: 6.9, edge_lines: both}
+  # New DK65 carriageways (OSM highway=primary ref 65, two one-way ways + the merge stub at the north edge, 2 x ~1.2 km
+  # NE of the route). Owner D65 p.6: not open - a building site, the route stays on the old road. ADR 0215.
+  - id: dk65-05-new-carriageway-construction
+    target: {osm_way: [1151531612, 1151531613, 1151531608]}
+    source: "D65 właściciel p.6: nowa jezdnia DK65 w dk65-05 nieotwarta - plac budowy"
+    reason: >-
+      Owner decision D65 p.6 (docs/11, 2026-11-15): the new DK65 carriageway in dk65-05 is not open - building site,
+      the route runs on the old road. OSM (Geofabrik extract of the tile) already tags the three ways highway=primary
+      ref=65 oneway=yes lanes=2 maxspeed 100/70, so the generator built finished carriageways with painted lane
+      lines; the GUGiK orthophoto 2024-05-27 shows sand embankments there (ADR 0207, pair-top-seam-north.jpg). The
+      ways share no node with the open network inside the tile. construction: true = no horizontal markings, no rule
+      lamps, no repair decals, no edge in the routing graph (roads/closures.py); surface road_gravel is a
+      WORKING_VALUE (no sand / earthworks material in the library). Fences, plant and the closure at the DK65
+      roundabout (tile dk65-06) are not modelled here (open).
+    confidence: high
+    verify: "owner photo of the building site from Studzienna (surface - sand, aggregate or first asphalt layer?)"
+    set: {construction: true}
