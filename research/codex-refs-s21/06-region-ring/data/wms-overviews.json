@@ -1,0 +1,110 @@
+[
+  {
+    "name": "tykocin",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolution?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=Raster&STYLES=&SRS=EPSG%3A2180&BBOX=751665.1665155028%2C600045.6760219624%2C752065.1665155028%2C600445.6760219624&WIDTH=1600&HEIGHT=1600&FORMAT=image%2Fjpeg",
+    "centre_latlon": [
+      53.207646,
+      22.7730188
+    ],
+    "centre_osm_id": 31570835,
+    "bbox_epsg2180": [
+      751665.1665155028,
+      600045.6760219624,
+      752065.1665155028,
+      600445.6760219624
+    ],
+    "size_px": [
+      1600,
+      1600
+    ],
+    "pixel_m": 0.25,
+    "sha256": "524d851dcd1c64d019394c1e74d4d5661e7eb835499ced333981c62482b81e21",
+    "image_date": "UNVERIFIED, pending sheet query",
+    "sheet_queries": [
+      {
+        "year": 2024,
+        "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2024&SRSNAME=EPSG%3A2180&BBOX=751864.1665155028%2C600244.6760219624%2C751866.1665155028%2C600246.6760219624",
+        "dates": [
+          "2024-05-27",
+          "2024-05-27"
+        ],
+        "resolutions_m": [
+          "0.25",
+          "0.25"
+        ]
+      },
+      {
+        "year": 2025,
+        "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2025&SRSNAME=EPSG%3A2180&BBOX=751864.1665155028%2C600244.6760219624%2C751866.1665155028%2C600246.6760219624",
+        "dates": [
+          "2025-05-27"
+        ],
+        "resolutions_m": [
+          "0.1"
+        ]
+      },
+      {
+        "year": 2026,
+        "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2026&SRSNAME=EPSG%3A2180&BBOX=751864.1665155028%2C600244.6760219624%2C751866.1665155028%2C600246.6760219624",
+        "dates": [],
+        "resolutions_m": []
+      }
+    ]
+  },
+  {
+    "name": "monki",
+    "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolution?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=Raster&STYLES=&SRS=EPSG%3A2180&BBOX=752180.2143967113%2C622245.0080393776%2C752580.2143967113%2C622645.0080393776&WIDTH=1600&HEIGHT=1600&FORMAT=image%2Fjpeg",
+    "centre_latlon": [
+      53.4065738,
+      22.7983772
+    ],
+    "centre_osm_id": 31574303,
+    "bbox_epsg2180": [
+      752180.2143967113,
+      622245.0080393776,
+      752580.2143967113,
+      622645.0080393776
+    ],
+    "size_px": [
+      1600,
+      1600
+    ],
+    "pixel_m": 0.25,
+    "sha256": "0fe5fa6e9f53fda8bdf6518d60d625a6060b25c680ce3ccf9c1a0239539de0c3",
+    "image_date": "UNVERIFIED, pending sheet query",
+    "sheet_queries": [
+      {
+        "year": 2024,
+        "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2024&SRSNAME=EPSG%3A2180&BBOX=752379.2143967113%2C622444.0080393776%2C752381.2143967113%2C622446.0080393776",
+        "dates": [
+          "2024-05-27",
+          "2024-05-27"
+        ],
+        "resolutions_m": [
+          "0.25",
+          "0.25"
+        ]
+      },
+      {
+        "year": 2025,
+        "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2025&SRSNAME=EPSG%3A2180&BBOX=752379.2143967113%2C622444.0080393776%2C752381.2143967113%2C622446.0080393776",
+        "dates": [
+          "2025-05-27",
+          "2025-05-27",
+          "2025-07-02"
+        ],
+        "resolutions_m": [
+          "0.25",
+          "0.25",
+          "0.05"
+        ]
+      },
+      {
+        "year": 2026,
+        "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2026&SRSNAME=EPSG%3A2180&BBOX=752379.2143967113%2C622444.0080393776%2C752381.2143967113%2C622446.0080393776",
+        "dates": [],
+        "resolutions_m": []
+      }
+    ]
+  }
+]
