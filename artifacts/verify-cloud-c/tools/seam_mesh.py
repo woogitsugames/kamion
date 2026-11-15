@@ -49,7 +49,7 @@ def zat(segs, e):
 def tile(t):
     m = json.loads((ROOT / "Data/Regions" / t / "generated/world_manifest.json").read_text(encoding="utf-8"))
     ox, oy = m["origin_epsg2180"]["x"], m["origin_epsg2180"]["y"]; n0 = Y - oy
-    res = {"road": {}, "terrain": []}
+    res = {"road": {}, "terrain": [], "raw": []}
     segs = {}
     for c in m["chunks"]:
         b = c["bounds_local_m"]
@@ -58,6 +58,7 @@ def tile(t):
         for name, mat, at, idx in glb.load(ROOT / c["file"]):
             P = at["POSITION"]; W = np.column_stack([ox - P[:, 0], P[:, 2], P[:, 1]])      # E (EPSG:2180), N local, z
             if name == "road" and idx is not None:
+                res["raw"].append((mat, np.column_stack([W[:, 0], W[:, 1] + oy, W[:, 2]]), idx))
                 s = cut(W, idx, n0)
                 if len(s): segs.setdefault(mat, []).extend(s.tolist())
             elif name == "terrain_lod0":
@@ -109,5 +110,28 @@ for t, tt in ((A, ta), (B, tb)):
 if len(rep["sand"][A]) == len(rep["sand"][B]) and rep["sand"][A]:
     rep["sand"]["edge_diff_m"] = [round(max(abs(a[0] - b[0]), abs(a[1] - b[1])), 3) for a, b in zip(rep["sand"][A], rep["sand"][B])]
     print("  sand edge diff", rep["sand"]["edge_diff_m"], "m")
+# ---- perpendicular cross-sections of Ełcka (way 1560819273) on both sides of the seam
+g = json.loads((ROOT / "Data/Regions" / A / "roads.graph.json").read_text(encoding="utf-8"))
+ax = np.array([p[:2] for e in g["edges"] if e["osm_way"] == 1560819273 for p in e["geometry"]])
+P0, u = ax[-1], (ax[-1] - ax[-2]) / np.linalg.norm(ax[-1] - ax[-2]); nrm = np.array([u[1], -u[0]])      # nrm: to the right of travel
+rep["elcka"] = {"axis_at_seam": [round(float(v), 2) for v in P0], "heading_deg": round(float(np.degrees(np.arctan2(u[0], u[1])) % 360), 1), "sections": {}}
+print(f"Ełcka axis at the seam {rep['elcka']['axis_at_seam']}, heading {rep['elcka']['heading_deg']} deg; perpendicular sections (t = metres right of the OSM axis):")
+for t, r, stations in ((A, ra, (-30.0, -10.0, -2.0, -0.2)), (B, rb, (0.2, 2.0, 10.0, 20.0))):
+    for s0 in stations:
+        row = {}
+        for mat, W, idx in r["raw"]:
+            if mat not in ("road_asphalt", "shoulder_gravel", "road_gravel"):
+                continue
+            d = W[:, :2] - P0
+            Q = np.column_stack([d @ nrm, d @ u, W[:, 2]])          # (t, s, z)
+            sg = cut(Q, idx, s0)
+            sg = [x for x in sg.tolist() if abs(x[0][0]) < 12 and abs(x[1][0]) < 12]
+            if sg:
+                row[mat] = intervals(sg)
+            if sg and mat == "road_asphalt":
+                row["z_at_t"] = {str(tt): (None if zat(sg, tt) is None else round(zat(sg, tt), 3)) for tt in (-3.0, 0.0, 3.0)}
+        a = row.get("road_asphalt", [])
+        rep["elcka"]["sections"][f"{t} s={s0:+.1f}"] = row
+        print(f"  {t} s = {s0:+5.1f} m: asphalt {a} width {[round(x[1]-x[0],2) for x in a]}  gravel shoulder {row.get('shoulder_gravel')}  z(t=-3,0,+3) {list((row.get('z_at_t') or {}).values())}")
 if len(sys.argv) > 1:
     Path(sys.argv[1]).write_text(json.dumps(rep, indent=1), encoding="utf-8")
