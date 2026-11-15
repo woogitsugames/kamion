@@ -69,7 +69,7 @@ def commons(title):
     import re
     art = re.sub('<[^>]+>', '', em.get('Artist', {}).get('value', '')).strip()
     page = 'https://commons.wikimedia.org/wiki/' + urllib.parse.quote(title.replace(' ', '_'), safe=':')
-    return page, ii['url'], lic, art, ii.get('sha1', '')
+    return page, ii['url'].split('?')[0], lic, art, ii.get('sha1', '')
 
 
 def put_frame(title):
@@ -386,7 +386,7 @@ for t, why in REJ:
         uwagi='nie liczony jako kadr lotniska; pliku nie zapisano w files/')
 
 with open(os.path.join(OUT, 'manifest.csv'), 'w', newline='', encoding='utf-8') as fh:
-    w = csv.DictWriter(fh, fieldnames=COLS)
+    w = csv.DictWriter(fh, fieldnames=COLS, lineterminator='\n')
     w.writeheader()
     w.writerows(rows)
 print('rows', len(rows))

@@ -157,7 +157,7 @@ Heading 210° i 85° są ESTIMATED: punkt znany z OSM, jego położenie w kadrze
 - K64-013: plama oleju 6 × 4 → 8 × 9 m;
 - K64-039: rama bramy 6 → 5,5 m; opis nawierzchni drogi rowerowej poprawiony.
 
-Szczegóły i statusy HTTP linków są w `audit_20_percent.json`.
+Linki z próby: 15 × HTTP 200 (strony Commons, WMS GUGiK, API OSM), 8 × 429/timeout (pliki `upload.wikimedia.org` — limit Commons dla adresu sesji; strony plików odpowiadają 200, a sha1 oryginałów jest w manifeście). Szczegóły w `audit_20_percent.json`.
 
 ## 9. Licencje
 

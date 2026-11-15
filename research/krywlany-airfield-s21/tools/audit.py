@@ -15,18 +15,18 @@ def http(u):
     if not u.startswith('http'):
         return None
     u = u.split(' ')[0].split(';')[0]
-    for i in range(6):
+    for i in range(2):
         try:
             req = urllib.request.Request(u, headers={'User-Agent': 'research-client/1.0 (generic)', 'Range': 'bytes=0-1023'})
-            with urllib.request.urlopen(req, timeout=60) as r:
+            with urllib.request.urlopen(req, timeout=25) as r:
                 return r.status
         except urllib.error.HTTPError as e:
             if e.code == 429:
-                time.sleep(20 * (i + 1)); continue
+                time.sleep(5); continue
             return e.code
         except Exception as e:
             time.sleep(5)
-    return 'timeout'
+    return 429 if False else "429/timeout"
 
 
 out = []
@@ -34,7 +34,7 @@ for r in rows:
     if r['id'] not in sample:
         continue
     o = {'id': r['id'], 'kategoria': r.get('kategoria', r.get('obiekt', '')), 'element': r['element'], 'parametr': r['parametr']}
-    urls = [u for u in re.findall(r'https?://[^\s;,)]+', r['url_źródła'])][:2]
+    urls = [u for u in [u.rstrip(',.') for u in re.findall(r'https?://[^\s;)]+', r['url_źródła'])]][:2]
     if r.get('url_pliku', '').startswith('http'):
         urls.append(r['url_pliku'])
     o['http'] = {u[:120]: http(u) for u in urls}
