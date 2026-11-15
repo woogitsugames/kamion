@@ -5,6 +5,34 @@ ADR: 0214”; w `docs/adr` najwyższy plik to 0212).
 Powiązane: D64, D65 p. 5 i 6 (`docs/11`), ADR 0205 (linie krawędziowe poniżej klasy GP), 0207 (kafle `dk65-02…05`,
 otwarte p. 3 i 6), 0150 (graf tras KRTG), 0204 (`lamps: false`).
 
+## Rewizja r2 (2026-11-15, s21, weryfikacja PR #80, gałąź `fix-pr80-s21`) — obowiązuje zamiast p. 1 i 3 „Decyzji”
+Powód: D66 (`docs/11`) i decyzja właściciela o jednym mechanizmie placu budowy po scaleniu ADR 0214 (`dk65-06…11`).
+1. **Ełcka/Studzienna = 6,6 m (D66), nie 6,9 m**, w `dk65-02…05` **i w `dk65-06`** (D66 wymienia 02…05; way 1560819273
+   przechodzi przez szew 05/06, więc `dk65-06` dostaje ten sam `set`, inaczej skok 0,15 m na stronę). Wpis
+   `dk65-elcka-xsec`: `set: {width: 6.6, edge_lines: both}`. Generator (klasa G): 2 × 3,05 m + 2 × 0,25 m, linie
+   krawędziowe 0,20 m od krawędzi → **6,2 m od siebie**. Pomiar na wycinkach K1 0,1 m (`artifacts/verify-cloud-c/pr80/
+   ortho/elcka_xsec.json`, km 11,0–16,0, n = 11): linie 6,1–6,4 m (n = 9), asfalt 6,5–7,1 m (bez km 13,0 / 13,5 — wloty).
+2. **Nowa jezdnia DK65 w `dk65-05` = mechanizm ADR 0214, nie `construction: true`.** r1 budowało z wayów 1151531612 /
+   1151531613 / 1151531608 wstęgę `road_gravel` 7,5 m z krawężnikiem, która kończyła się na szwie N — w `dk65-06` te
+   same waye są wycięte z grafu (`graph_filter.authored.json`) i zamienione w piaszczysty korytarz `construction_site`.
+   Teraz w `dk65-05`: `graph_filter.authored.json` (`drop_osm_ways` = te trzy waye) + blok `construction_site`
+   wygenerowany przez `tools/worldgen/qa/construction_sites.py --region dk65-05 --ways 1151531612,1151531613,1151531608`
+   (3 osie `not_open`, półszerokość 10 m, jak ramię SE ronda w `dk65-06`; w kaflu nie ma osi OSM `highway=construction`).
+   `roads.graph.json` po `build_region`: −3 krawędzie, −5 węzłów (4 graniczne + `n4236127178`), nic poza tym.
+   Wynik `build_world`: plac 45 515 m², 5 hałd, podniesienie terenu maks. 2,75 m (hałdy), płot wg reguły 0214.
+3. **Schemat `set: {construction: true}` zostaje w generatorze** (`roads/closures.py`, `network`, `markings`, `decals`,
+   `navgraph`) i w testach syntetycznych, ale żaden region go nie używa. Do decyzji lidera: zostawić dla dróg
+   zamkniętych z gotową nawierzchnią albo usunąć (kod w `roads/`, którego ta poprawka nie ruszała).
+4. **Piasek na szwie**: `construction_site.ground_colour` rozmywał maskę placu z odbiciem lustrzanym na krawędzi
+   kafla; dla korytarza przecinającego szew pod kątem (tu ~41°) waga piasku w tym samym wierszu siatki różniła się
+   między kaflami do 0,24, a krawędź piasku (A > 0,5) o 1 m. Teraz maska jest rasteryzowana 6 węzłów poza kafel przed
+   rozmyciem (`_soft_mask`); regiony bez placu bez zmian. Test `test_construction_site_sand_is_identical_on_both_sides_of_a_seam`.
+5. Kamery: `top_site_seam` i `site_seam_oblique` w `dk65-05` i `dk65-06` (plac przy szwie).
+6. Testy: `test_construction_0215.py` (część „dane dk65-05”) sprawdza stan r2 (waye poza grafem, brak wstęgi, jeden
+   plac, osie przecinają szew w tym samym x ±0,1 m co w `dk65-06`); `test_dk65_seams_0207.py` 6,6 m;
+   `test_dk65_seams_0214.py`: szew 05/06 bez xfail (przekrój, teren, osie placu).
+Liczby szwu z buildu i rendery: `docs/reports/VERIFY-2026-11-15-pr80-pr82.md`.
+
 ## Kontekst
 ADR 0207 zostawił dwa pytania do właściciela; D65 (2026-11-15) na nie odpowiada:
 - p. 5: „Ełcka/Studzienna: wąska ~7 m (zwęzić z 7,6 do ~6,9 m)”. W danych jezdnia miała 7,6 m (odczyt krawędzi asfaltu
