@@ -81,7 +81,7 @@ def test_reed_ribbons_high_low():
         tall = V[:, 2] > 101.0
         # no standing ribbon vertex inside the keep-out (vertices there are collapsed to the foot)
         assert not shapely.contains_xy(keep, V[tall, 0], V[tall, 1]).any()
-        assert V[:, 2].min() >= 100.2 - 0.25 - 0.12 - 1e-6 and V[:, 2].max() <= 101.0 + max(RD.HEIGHT_M) * 1.25
+        assert V[:, 2].min() >= 100.2 - 0.25 - 0.12 - 1e-6 and V[:, 2].max() <= 101.0 + max(RD.HEIGHT_M) * 1.4
     assert rep["banks"]["ribbons"] >= 2 and rep["banks_low"]["triangles"] == tl
 
 

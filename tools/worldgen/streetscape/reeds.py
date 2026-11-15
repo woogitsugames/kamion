@@ -28,15 +28,15 @@ from scipy.ndimage import gaussian_filter as ndimage_gauss
 TEX_W, TEX_H = 1024, 512           # final texture px (u tiles)
 TEX_M = 4.0                        # metres of bank one texture width stands for
 SEG_M = 2.0                        # ribbon segment along the bank (High); Low: 2 x
-ROWS_HIGH = 3
+ROWS_HIGH = 4
 ROWS_LOW = 2
-ROW_GAP_M = 1.7                    # distance between rows (outward)
+ROW_GAP_M = 1.5                    # distance between rows (outward)
 ROW0_D_M = -0.35                   # row 0 stands in the water margin (foot under the sheet)
-HEIGHT_M = (2.3, 1.75, 1.45)       # mean top height of row 0 / 1 / 2+ (reed at the water, sedge / herbs behind)
+HEIGHT_M = (2.3, 1.8, 1.5, 1.3)       # mean top height of row 0 / 1 / 2+ (reed at the water, sedge / herbs behind)
 ZIGZAG_M = 0.28
 LEAN_M = 0.12
 PIECE_N = (2, 5)                   # clump length in samples (x SEG_M), r4
-GAP_P = 0.45                       # chance of a one-sample gap after a clump
+GAP_P = 0.20                       # chance of a one-sample gap after a clump (r5: clumps mostly overlap)
 PIECE_OFF_M = 0.6                  # clump offset from its row (+-)
 OCC = (0.35, 0.80)                 # foliage occlusion at the foot / top of a ribbon (PlotKit: albedo factor)
 SHRUB_MAX_R = 2.2
@@ -203,10 +203,14 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                         continue
                     hm = HEIGHT_M[min(row, len(HEIGHT_M) - 1)] * (0.75 + 0.45 * _h(*pk, "ph"))
                     hn = np.array([_h(key0, row, int(i), "h") for i in sp])
-                    h = hm * (0.80 + 0.35 * hn)
-                    h[0] *= 0.45                       # a clump thins out at both ends
-                    h[-1] *= 0.45
+                    h = hm * (0.70 + 0.45 * hn)            # r5: ragged top along the clump (max ~1.4 x row height)
+                    h[0] *= 0.15                       # a clump thins out to nothing at both ends (no box ends)
+                    h[-1] *= 0.15
                     h[inside] = 0.0
+                    # r5: a run on a shore that the sheet covers (OSM channel buffers, islands): water 2 m out AND
+                    # 2 m in -> no reed standing in open water
+                    wet = np.isfinite(np.asarray(zlevel(*(Q + Nm[sp] * 2.0).T), float)) &                         np.isfinite(np.asarray(zlevel(*(Q - Nm[sp] * 2.0).T), float))
+                    h[wet] = 0.0
                     zg = np.asarray(zground(Q[:, 0], Q[:, 1]), float)
                     zl = np.asarray(zlevel(Q[:, 0], Q[:, 1]), float)
                     foot = np.where(np.isfinite(zl) & (zg < zl - 0.25), zl - 0.25, zg) - 0.12
