@@ -23,8 +23,20 @@ Dane pochodne użyte w grze (sieć dróg i nawigacja) są udostępnione na licen
 Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl) — numeryczny model terenu, ortofotomapa (pomiary), Baza Danych Obiektów Topograficznych BDOT10k.
 Modele 3D budynków LoD1 (2024) i LoD2 (2017): Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), licencja CC BY 4.0 (creativecommons.org/licenses/by/4.0/legalcode.pl). Dane zostały przetworzone (wysokości i kształty dachów przeniesione do własnych modeli budynków).
 
+== Bank Danych o Lasach
+Parametry lasów regionu Dojlidy (wysokości drzewostanów, udział gatunków, podszyt): Bank Danych o Lasach (www.bdl.lasy.gov.pl), Biuro Urządzania Lasu i Geodezji Leśnej / Państwowe Gospodarstwo Leśne Lasy Państwowe — opisy taksacyjne Nadleśnictwa Dojlidy (plan urządzenia lasu 2017–2026) i lasów gminnych (stan 2023), pozyskano 14.11.2026. Dane zostały przetworzone na parametry generatora roślinności.
+# Regulamin BDL cz. V lit. a (źródło, czas wytworzenia i pozyskania) — https://www.bdl.lasy.gov.pl/portal/regulamin,
+# dostęp 2026-11-15. Lit. b („w pierwotnie pozyskanej formie”) — LEGAL_REVIEW (docs/LICENSES.md, ADR 0230).
+
 == Treść tablic drogowych
 Treść tablic kierunkowych: opracowanie „research G3 s8-signs” na licencji ODbL 1.0, na podstawie danych OpenStreetMap contributors i zdjęć Mapillary contributors.
+
+== Zdjęcia referencyjne
+Przy odtwarzaniu ulic posłużyły zdjęcia uliczne udostępnione przez społeczności Mapillary (Mapillary contributors, CC BY-SA 4.0), Panoramax (CC BY-SA 4.0) i KartaView. Zdjęcia te nie są częścią gry — modele i tekstury wykonano od nowa.
+# Wzmianka dobrowolna: zdjęcia CC BY-SA tylko jako referencja (ADR 0065), bez pikseli w buildzie. Logo Mapillary
+# niewymagane (Mapillary Terms: logo przy serwowaniu zdjęć lub danych z API — gra nie robi ani jednego).
+# KartaView: licencja potwierdzona tylko wtórnie (UNVERIFIED u źródła) — dlatego bez osobnego twierdzenia o licencji.
+# Dane Miasta Białystok (ArcGIS) NIE są w grze (warunki BIP: zakaz modyfikacji) — bez pozycji; docs/LICENSES.md.
 
 == Znaki drogowe
 Wzory znaków drogowych według rozporządzenia Ministra Infrastruktury w sprawie szczegółowych warunków technicznych dla znaków i sygnałów drogowych oraz urządzeń bezpieczeństwa ruchu drogowego i warunków ich umieszczania na drogach (t.j. Dz.U. 2019 poz. 2311); znaki narysowane od nowa.
@@ -75,6 +87,7 @@ glTFast (com.unity.cloud.gltfast 6.20.0) — Unity glTFast copyright © 2023 Uni
 
 Open Database License 1.0: opendatacommons.org/licenses/odbl/1-0/
 CC BY 4.0: creativecommons.org/licenses/by/4.0/legalcode.pl
+CC BY-SA 4.0: creativecommons.org/licenses/by-sa/4.0/legalcode.pl
 CC0 1.0: creativecommons.org/publicdomain/zero/1.0/
 
 == SIL Open Font License 1.1 (Inter)

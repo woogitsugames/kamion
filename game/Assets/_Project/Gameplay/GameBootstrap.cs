@@ -5,6 +5,7 @@ using Game.Platform;
 using Game.Rendering;
 using Game.Telemetry;
 using Game.UI;
+using Game.World;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -122,15 +123,57 @@ namespace Game.Gameplay
                     SceneManager.LoadScene(WorldCSceneForTier());
                 }));
             }
+            // Region starts (ADR 0229): every catalog region; the ones whose scene is not in this APK are greyed out.
+            m_Catalog = RegionCatalog.Load();
+            var regions = BuildRegionChoices(m_Catalog, options);
             ControlSettings.Load().Log("boot");
-            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout);
+            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout, regions);
             m_Menu.transform.SetParent(transform, false);
             Debug.Log("[CONTROLS] menu shown light=" + options.LightingId + " tier=" + options.Tier + " fps=" + options.Fps);
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
             // arguments (autopilot, speed) are read by that scene's bootstrap.
             string scene = Platform.GetLaunchArgument("scene");
-            if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : scene;
+            if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : LaunchSceneFor(scene);
+        }
+
+        RegionCatalog m_Catalog;
+
+        /// <summary>Launch argument scene=&lt;region id or alias&gt; (adb -e scene knyszyn) loads that region's scene for the
+        /// active tier; any other value is a scene name as before.</summary>
+        string LaunchSceneFor(string scene)
+        {
+            string id = m_Catalog?.ResolveId(scene);
+            return id != null ? RegionSceneForTier(id) : scene;
+        }
+
+        /// <summary>The scene of a region matching the active quality tier: High content when shipped (ADR 0012), else Low.</summary>
+        public static string RegionSceneForTier(string region)
+        {
+            string high = RegionScenes.SceneNameFor(region, RegionScenes.HighTier);
+            return RegionScenes.UsesHighContent(QualityTiers.Current) && Application.CanStreamedLevelBeLoaded(high)
+                ? high : RegionScenes.SceneNameFor(region);
+        }
+
+        static System.Collections.Generic.List<BootRegionChoice> BuildRegionChoices(RegionCatalog catalog, StartMenuOptions options)
+        {
+            var list = new System.Collections.Generic.List<BootRegionChoice>();
+            if (catalog == null) return list;
+            var ci = CultureInfo.InvariantCulture;
+            foreach (var r in catalog.regions)
+            {
+                string id = r.id, label = r.label;
+                bool inBuild = Application.CanStreamedLevelBeLoaded(RegionScenes.SceneNameFor(id));
+                float s = RegionStart.ClampStartS(r.startS, r.routeLengthM);
+                string km = (r.routeLengthM / 1000f).ToString("0.0", ci).Replace('.', ',');
+                string detail = inBuild ? $"{r.group} · trasa {km} km · start na początku trasy" : $"{r.group} · brak w tym APK";
+                list.Add(new BootRegionChoice(id, label, detail, inBuild, () =>
+                {
+                    StartRequest.SetRegion("region " + id, id, s, options.LightingId);
+                    SceneManager.LoadScene(RegionSceneForTier(id));
+                }));
+            }
+            return list;
         }
 
         ControlSettingsPanel m_Settings;

@@ -126,5 +126,71 @@
    "rows": 10,
    "share": "10/47 = 21,3 %"
   }
+ },
+ "r3_s21b": {
+  "zakres": "nowe wiersze K67-083…148 (66)",
+  "seed": 2026111521,
+  "metoda": "random.seed(2026111521); random.sample(K67-083…148, 14) — 14/66 = 21 %; ponowne obejrzenie pliku z files/ i ponowne sprawdzenie URL",
+  "data": "2026-11-15",
+  "proba": {
+   "K67-087": [
+    "PASS",
+    "kadr ponownie obejrzany (files/): estakada, akumulator ciepła, drzewa; wieży brak — zgodne"
+   ],
+   "K67-091": [
+    "PASS",
+    "chodnik, bloki z żółtymi/zielonymi balkonami zasłaniają kierunek celu — zgodne"
+   ],
+   "K67-114": [
+    "PASS",
+    "drewniany dom za zielonym ogrodzeniem — zgodne"
+   ],
+   "K67-122": [
+    "PASS",
+    "dom jednorodzinny, samochód przed bramą — zgodne"
+   ],
+   "K67-123": [
+    "PASS",
+    "biały drewniany dom za białym płotem — zgodne"
+   ],
+   "K67-125": [
+    "PASS",
+    "ogrodzenie budowy z graffiti, w tle domy i blok 4 kond. — zgodne"
+   ],
+   "K67-128": [
+    "PASS",
+    "budynek 4 kond. + poddasze, kominy wentylacyjne na dachu, masztów brak — zgodne"
+   ],
+   "K67-131": [
+    "PASS",
+    "ulica z domami, antena TV na maszcie przy domu — zgodne"
+   ],
+   "K67-136": [
+    "PASS",
+    "skrzyżowanie, baner, w tle blok — zgodne"
+   ],
+   "K67-137": [
+    "FIX",
+    "opis „dach dwuspadowy niski” — kształtu dachu w kadrze nie widać; poprawiono na „krawędź dachu bez masztów (kształt dachu niewidoczny)”"
+   ],
+   "K67-142": [
+    "PASS",
+    "budynek szkolny 3 kond. z ulicy, drzewa bez liści — zgodne"
+   ],
+   "K67-144": [
+    "PASS",
+    "boisko, w tle bloki 5 kond. — zgodne"
+   ],
+   "K67-145": [
+    "PASS",
+    "URL itemu Panoramax ponownie: HTTP 200; liczby zgodne z wynikiem tools/s21b/pnx.py"
+   ],
+   "K67-148": [
+    "PASS",
+    "node/11285970200 ponownie z API OSM: communication:radio=yes, man_made=mast, tower:construction=guyed_tube — zgodne"
+   ]
+  },
+  "wynik": "13 PASS, 1 FIX (K67-137 — opis poprawiony)",
+  "dodatkowo": "pomiary K67-094…096: drugi odczyt na innym kadrze (1326673581) — różnica 0,09–0,12 kond."
  }
 }

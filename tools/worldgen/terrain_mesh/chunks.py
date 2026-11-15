@@ -86,13 +86,18 @@ def grid_mesh(z, nrm, e0, n0, step, i0, i1, j0, j1, skirt=1.0, col=None):
     return np.vstack(Vs), np.vstack(Ns), np.vstack(Ts)
 
 
-def build_chunks(zc, mask, e0, n0, size_m, col=None):
-    """Return {(ci, cj): {lod: [primitive dicts]}} for the whole tile."""
+def build_chunks(zc, mask, e0, n0, size_m, col=None, low_cut=None):
+    """Return {(ci, cj): {lod: [primitive dicts]}} for the whole tile.
+    low_cut (ADR 0211): optional (node mask, node heights) applied to the LODs of 4 m and coarser (terrain_lod2 is the
+    terrain collision): masked nodes are held at or below those heights (bands behind cut walls)."""
     nch = int(size_m // CHUNK_M)
     out = {}
     lod_cache = {}
     for step in LODS:
         zl = lod_grid(zc, mask, step)
+        if low_cut is not None and step >= 4:
+            lm, lz = low_cut[0][::step, ::step], low_cut[1][::step, ::step]
+            zl = np.where(lm, np.minimum(zl, lz), zl)
         lod_cache[step] = (zl, normals(zl, step), None if col is None else col[::step, ::step])
     for cj in range(nch):            # rows from north
         for ci in range(nch):        # columns from west

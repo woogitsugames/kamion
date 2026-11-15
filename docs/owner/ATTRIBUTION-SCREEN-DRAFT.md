@@ -2,6 +2,8 @@
 
 Źródło prawdy: tabela zbiorcza w `docs/LICENSES.md` (sekcja „Tabela zbiorcza źródeł (audyt X1, s20)”) i raport `docs/reports/LICENSES-AUDIT-S20.md`. Tekst poniżej (blok „DO WKLEJENIA”) jest gotowy do wstawienia w grze; pozycje w nawiasach kwadratowych `[WARUNKOWO: …]` wstawić tylko, gdy warunek jest spełniony w danym buildzie. Znacznik `UNVERIFIED` = treść do potwierdzenia przed wydaniem (nie wklejać bez sprawdzenia).
 
+**Stan s21 (ADR 0230):** tekst w grze żyje w `game/Assets/_Project/UI/Resources/About/attributions.txt` (ten szkic jest historyczny). Dodane: pozycja „Bank Danych o Lasach” (Regulamin BDL cz. V: źródło, czas wytworzenia i pozyskania), dobrowolna pozycja „Zdjęcia referencyjne” (Mapillary contributors CC BY-SA 4.0, Panoramax, KartaView — bez logo, bo gra nie serwuje zdjęć ani danych z API Mapillary), link CC BY-SA 4.0. Dane Miasta Białystok — poza grą (warunki BIP: zakaz modyfikacji treści). Wymagania pilnują dane `tools/licenses/attribution_requirements.json` + pytest + `tools/about-runner`.
+
 Zasady techniczne ekranu (wynikające z licencji):
 - Ekran dostępny z menu głównego i z pauzy, bez połączenia z siecią (adresy jako tekst — ODbL 4.3a dopuszcza zwykły tekst URI, gdy hiperłącza nie są możliwe).
 - Pełne teksty licencji **Apache 2.0** (glTFast) i **SIL OFL 1.1** (Inter) dołączone do buildu jako tekst do przewinięcia (OFL leży już w `game/Assets/_Project/UI/Resources/Fonts/Inter-OFL.txt`; tekst Apache 2.0 trzeba skopiować z pakietu glTFast — `LICENSE.md` w pakiecie, poza repo).

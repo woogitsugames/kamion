@@ -1,0 +1,147 @@
+{
+ "seed": 20261114,
+ "metoda": "random.Random(20261114).sample(sorted(ids), ceil(0.2*n))",
+ "n_wierszy": 57,
+ "n_proba": 12,
+ "PASS": 11,
+ "FAIL": 1,
+ "uwaga": "FAIL R2-009 skorygowany w manifeście; próba obejmuje 4 wiersze obrazowe — każdy obraz ponownie otwarty narzędziem Read",
+ "wiersze": [
+  {
+   "id": "R2-002",
+   "kategoria": "kadr",
+   "sprawdzono": "Ponownie obejrzano files/_view/pmx_8376e36d_c100_310.jpg (wycinek 3×): 2 zielone tablice na bramownicy kratowej, treść L „65 Bobrowniki PL BY / 19 Lublin”, P „8 E 67 Augustów / 19 Kuźnica PL BY ↗” + zaklejony wiersz, niebieskie tablice pasów na słupach — zgodne z opisem",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-005",
+   "kategoria": "kadr",
+   "sprawdzono": "Ponownie obejrzano files/_view/pmx_9f85aac8_c340_340.jpg (wycinek 3×): 3 zielone tablice (lewa ←, środkowa dwupolowa, prawa mała →), estakada na słupach, znaki pierwszeństwo/ustąp, roboty, ślepa droga — zgodne",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-009",
+   "kategoria": "kadr",
+   "sprawdzono": "Ponownie obejrzano files/_view/pmx_9ff60a64.jpg (960 px): bramownica z pomostem sięga także nad naszą jezdnię (do słupa po prawej), a nie tylko nad przeciwną; pod nią tył znaku na 2 słupkach",
+   "wynik": "FAIL",
+   "korekta": "Opis w manifeście poprawiony (build_manifest.py) przed commitem"
+  },
+  {
+   "id": "R2-016",
+   "kategoria": "tablica",
+   "sprawdzono": "Ponownie obejrzano files/_view/pmx_9f85aac8_c340_340.jpg: treść i strzałki trzech tablic zgodne z wierszem; tło zielone; montaż: bramownica kratowa",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-029",
+   "kategoria": "osm_destination",
+   "sprawdzono": "Ponownie otwarto osm/overpass_raw.json, way 177876102: tagi destination* porównane z wierszem (1 tagów)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-031",
+   "kategoria": "osm_destination",
+   "sprawdzono": "Ponownie otwarto osm/overpass_raw.json, way 177903961: tagi destination* porównane z wierszem (1 tagów)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-032",
+   "kategoria": "osm_destination",
+   "sprawdzono": "Ponownie otwarto osm/overpass_raw.json, way 182399965: tagi destination* porównane z wierszem (2 tagów)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-033",
+   "kategoria": "osm_destination",
+   "sprawdzono": "Ponownie otwarto osm/overpass_raw.json, way 221240112: tagi destination* porównane z wierszem (2 tagów)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-036",
+   "kategoria": "osm_destination",
+   "sprawdzono": "Ponownie otwarto osm/overpass_raw.json, way 257359891: tagi destination* porównane z wierszem (1 tagów)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-038",
+   "kategoria": "osm_destination",
+   "sprawdzono": "Ponownie otwarto osm/overpass_raw.json, way 257367454: tagi destination* porównane z wierszem (2 tagów)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-049",
+   "kategoria": "osm_destination",
+   "sprawdzono": "Ponownie otwarto osm/overpass_raw.json, way 744388589: tagi destination* porównane z wierszem (2 tagów)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R2-056",
+   "kategoria": "osm_fakt",
+   "sprawdzono": "Ponownie otwarto osm/overpass_raw.json: name=Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP występuje",
+   "wynik": "PASS",
+   "korekta": ""
+  }
+ ],
+ "uzupelnienie_2026_11_15": {
+  "seed": 20261115,
+  "metoda": "random.Random(20261115).sample(sorted(id > R2-057), ceil(0.2*n))",
+  "n_nowych_wierszy": 26,
+  "n_proba": 6,
+  "PASS": 5,
+  "FIX": 1,
+  "wiersze": [
+   {
+    "id": "R2-058",
+    "kategoria": "kadr",
+    "sprawdzono": "Ponownie obejrzano files/kv_3686129_0211.jpg (960 px) i wycinek tablicy 3×: tablica-schemat 19 Kuźnica PL BY / 65 Ełk / Warszawa, Centrum, 676 Krynki, znak zakazu ciężarówek — zgodne; zdanie o drugiej tablicy w głębi podawało treść „Kuźnica/Ełk/Warszawa” bez wycinka",
+    "wynik": "FIX",
+    "korekta": "opis drugiej tablicy zmieniony na „czytelne tylko Warszawa; reszta UNVERIFIED”"
+   },
+   {
+    "id": "R2-067",
+    "kategoria": "kadr",
+    "sprawdzono": "Ponownie obejrzano files/kv_3686129_0306.jpg (960 px): 2 zielone tablice na bramownicy kratowej, zakaz zawracania nad nakazem prosto po obu stronach, żółte tablice, biała tablica na 2 słupkach po prawej — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R2-073",
+    "kategoria": "tablica",
+    "sprawdzono": "Ponownie obejrzano wycinek 3× z kv_3686129_0211: treść, schemat (dwie pary równoległych), białe pole Centrum, żółte 676, zakaz ciężarówek z tabliczką — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R2-077",
+    "kategoria": "tablica",
+    "sprawdzono": "Ponownie obejrzano kv_3686129_0281 (960 px): czerwone tablice „19” nad „65” na pojedynczych słupkach po obu stronach — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R2-079",
+    "kategoria": "tablica",
+    "sprawdzono": "Ponownie obejrzano wycinek 5× z kv_3686129_0303: 8 E67 Warszawa / 65 Ełk; 8 E67 Augustów / 19 Kuźnica PL BY; żółte pole (cyfry wyglądają na 675, pozostawione UNVERIFIED) i białe pole nieczytelne — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R2-080",
+    "kategoria": "tablica",
+    "sprawdzono": "Ponownie obejrzano kv_3686129_0306 + wycinek 4×: lewa ↑ Warszawa/Ełk, prawa Augustów/Kuźnica ↗ z żółtym i białym polem — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   }
+  ]
+ }
+}

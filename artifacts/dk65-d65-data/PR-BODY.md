@@ -1,0 +1,18 @@
+# A4 wg D65: Ełcka/Studzienna 6,9 m + nowa jezdnia DK65 w dk65-05 jako plac budowy (ADR 0215, gałąź `dk65-d65-data`)
+**Zmienione.** (a) `dk65-elcka-xsec` w dk65-02…05: 7,6 → 6,9 m, `source: "D65 właściciel, ~6,9 m"` (WORKING_VALUE, nie pomiar); waye 716806121, 1024956365, 41533343, 1243220441, 1024956364, 1399803717 (Studzienna), 1560819273. (b) Nowy schemat `set: {construction: true}` (`tools/worldgen/roads/closures.py`): `network` (flaga + provenance, bez linii/strzałek/latarń, nawierzchnia `road_gravel` WORKING_VALUE), `markings` (zero znaków poziomych), `decals` (bez łat/plam), `navgraph` (krawędź poza KRTG). Wpis `dk65-05-new-carriageway-construction` na wayach 1151531612, 1151531613, 1151531608 (3 krawędzie, 2554 m, bez wspólnych węzłów z otwartą siecią kafla). ADR `docs/adr/0215-…` (numer do potwierdzenia).
+**Testy uruchomione.** `uv run --project tools/worldgen python -m pytest tests/gis -q`: 1200 passed, 48 skipped, 3 xfailed, **1 failed** = `test_road_fidelity.py::test_report_not_stale` (raport fidelity regionu C ma sha `network.py`/`markings.py`/`decals.py` sprzed zmiany — wymaga `fidelity/run.py`, czyli Data/raw). Nowe `tests/gis/test_construction_0215.py` 15/15; `test_dk65_seams_0207.py` + `test_edge_lines_0205.py` 13/13. `pytest tools/worldgen/navgraph/tests tools/worldgen/roads/tests tools/worldgen/tests`: 60 passed, 1 skipped, 1 failed = `test_region_file_is_reproducible` (pada tak samo na origin/main `5724a161b`, nie z tej zmiany).
+**NIEuruchomione.** `build_world`, `export-route`, import do Unity, visual-qa, EditMode/PlayMode, telefon, `fidelity/run.py` (brak Data/raw i Unity). 48 testów gis pominęło się samo (powodów nie wypisywałem). Zmiana NIE była oglądana na renderze.
+**Komendy dla lidera** (po `git merge --no-ff origin/dk65-d65-data`; `roads.graph.json` bez zmian, więc `build_region.py` zbędny; dk65-01 bez zmian):
+```
+foreach ($t in 'dk65-02','dk65-03','dk65-04','dk65-05') {
+  uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region $t --context
+  uv run --project tools/worldgen python scripts/export-route.py --region $t
+  pwsh scripts/import-region.ps1 -Region $t
+  pwsh scripts/visual-qa.ps1 -Scene "World_$t" -Tier Low -Lighting clear -Width 1920 -Height 1080 -OutputDir "artifacts/dk65-d65-data/$t/r1/Low-clear" }
+# to samo jednym skryptem z ADR 0207: pwsh artifacts/dk65-tiles-0207/tools/chain.ps1 -Tiles dk65-02,dk65-03,dk65-04,dk65-05 -Tag d65
+uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c   # odświeża sha generatora w fidelity_qa.json
+uv run --project tools/worldgen python -m pytest tests/gis -q
+```
+Na renderze dk65-05 sprawdzić: nowa jezdnia bez linii, strzałek i latarń, żwir; w logu build_world linia „closed (construction, ADR 0215): 3 edges”; Ełcka 6,9 m z liniami krawędziowymi ciągłymi przez szwy.
+**Otwarte.** (1) dk65-06 (agent 0214) musi powtórzyć oba wpisy dla wayów szwu N: 1560819273 (6,9 m) i 1151531612/-613/-608 (`construction`), plus zamknięcie ramienia przy rondzie DK65 — schemat nie obsługuje jeszcze ramienia skrzyżowania z drogą otwartą (linie stop w płycie, zapora U-20) ani `export-route.py`. (2) Materiał placu budowy `road_gravel` = WORKING_VALUE; ogrodzenie/sprzęt/hałdy niezrobione. (3) Most na Supraśli (way 41533342) zostaje 7,5 m między 6,5 a 6,9 m. (4) Znaki pionowe z reguł przy zamkniętej jezdni i mapa GPS `<region>.bytes` niesprawdzone. (5) Stopka commitów: „Claude Fable 5.2” (model faktyczny, wg instrukcji sesji), nie „Opus 5.5” z kontraktu zadania.
+**Gotowe do scalenia po weryfikacji lidera: TAK** (warunek: regeneracja dk65-02…05 + obejrzenie renderów + `fidelity/run.py`).

@@ -35,6 +35,7 @@ from roads import markings as MK          # noqa: E402
 from roads import meshing as M            # noqa: E402
 from roads import pipeline                # noqa: E402
 from roads import standards as S          # noqa: E402
+from roads import tunnels as TN           # noqa: E402
 from terrain_mesh import chunks as CH     # noqa: E402
 from terrain_mesh import conform as CF    # noqa: E402
 from terrain_mesh.gltf import GLB, GLTF_AXES, smooth_normals  # noqa: E402
@@ -301,58 +302,6 @@ VERGE_TERRAIN_MAX_LOD = 1     # strips ride on terrain LOD0 / LOD1 (to 300 m); b
 
 def _is_verge(p):
     return p.layer == "road" and p.src.endswith(":vg")
-
-
-TUNNEL_ZONE_M = 9.0        # ADR 0206: terrain nodes this close to a tunnel way's axis are held below its surface
-TUNNEL_UPPER_ROAD_M = 2.0  # other road footprints higher than the tunnel road by this much keep their terrain ...
-TUNNEL_KEEP_UPPER_M = 7.0  # ... when farther than this from the axis (lane edge ~4 m + one 4 m collision cell)
-
-
-def keep_tunnel_cut(w, region_id, zc):
-    """ADR 0206: a road tagged tunnel=yes (OSM layer < 0) under an at-grade road (rondo Szymańskiego over the DK8
-    cutting) is not modelled as a tunnel. The terrain conform takes the HIGHER road per node, and the NMT itself keeps
-    the ring's ground between the carriageways, so the terrain (and its 4 m collision mesh terrain_lod2) closed the
-    lower road 0.3-4 m above its surface. Here every terrain node within TUNNEL_ZONE_M of a tunnel way's own axis
-    (not its whole chain) goes to just below the tunnel road (surface of the nearest tunnel-road footprint node -
-    0.35 m), so no 4 m collision triangle over the carriageway has a high vertex. Nodes under other, higher road
-    footprints (at-grade slip roads beside the cutting) keep their terrain beyond TUNNEL_KEEP_UPPER_M. In place on zc; the upper road keeps its own
-    mesh and collision. Returns stats (empty when the region has no such way, so other regions are unchanged)."""
-    g = json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
-    edges = [e for e in g["edges"]
-             if str(e["attrs"].get("tunnel", {}).get("v", "no")) not in ("no", "building_passage")
-             and e["attrs"]["highway"]["v"] not in ("service", "living_street", "footway", "path", "cycleway")]
-    if not edges:
-        return {}
-    eids = {e["id"] for e in edges}
-    chain_ids = {c.id for c in w.net.chains if any(w.net.sec_list[i].edge_id in eids for i in c.sec_idx)}
-    road = [p for p in w.buf.parts if p.layer == "road" and p.footprint]
-    tun = [p for p in road if p.src in chain_ids]
-    if not tun:
-        return {"ways": sorted({e["osm_way"] for e in edges}), "cells": 0}
-    tz, tmask = CF.rasterise(tun, w.hf)
-    oz, omask = CF.rasterise([p for p in road if p.src not in chain_ids], w.hf)
-    from scipy.ndimage import distance_transform_edt
-    H, W = zc.shape
-    axis = np.zeros((H, W), bool)
-    ox, oy = w.hf.ox, w.hf.oy
-    for e in edges:
-        P = np.array(e["geometry"], float) - (ox, oy)
-        for a, b in zip(P[:-1], P[1:]):
-            for t in np.linspace(0.0, 1.0, max(2, int(np.hypot(*(b - a)) / 0.5) + 1)):
-                q = a + (b - a) * t
-                i, j = int(round(q[0] - w.hf.x0)), int(round(w.hf.y1 - q[1]))
-                if 0 <= i < W and 0 <= j < H:
-                    axis[j, i] = True
-    dist = distance_transform_edt(~axis)
-    zone = dist <= TUNNEL_ZONE_M
-    _d, (jj, ii) = distance_transform_edt(~tmask, return_indices=True)
-    floor = tz[jj, ii] - 0.35                   # surface of the nearest tunnel-road node, minus the road build-up
-    upper = omask & (oz > floor + 0.35 + TUNNEL_UPPER_ROAD_M) & ~tmask
-    sel = zone & ~(upper & (dist > TUNNEL_KEEP_UPPER_M)) & (zc > floor)
-    drop = zc[sel] - floor[sel]
-    zc[sel] = floor[sel]
-    return {"ways": sorted({e["osm_way"] for e in edges}), "chains": sorted(chain_ids), "cells": int(sel.sum()),
-            "max_drop_m": round(float(drop.max()) if drop.size else 0.0, 2)}
 
 
 def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
@@ -896,11 +845,6 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         mid = p + d * (0.5 * (u0 + u1))
         w.stats["hero_docks"].append({"mid": mid, "d": d, "nout": nout, "z": dk["yard_z"], "n": len(dk["docks"])})
     log(f"terrain conformed: footprint {int(rmask.sum())} road + {int(mask.sum() - rmask.sum())} paved nodes")
-    tcut = keep_tunnel_cut(w, region_id, zc)
-    if tcut:
-        w.stats["tunnel_cut"] = tcut
-        log("tunnel cuttings kept open (ADR 0206):", tcut)
-
     def on_ground_road(q):
         i = int(round(q[0] - w.hf.x0))
         j = int(round(w.hf.y1 - q[1]))
@@ -939,16 +883,27 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     log("kerb triangles inside paved gore fills:", w.stats["gores"]["kerb_tris_in_fill"])
     log("hero bridges", {k: [x["id"] if isinstance(x, dict) else x for x in v] for k, v in w.stats["hero_bridges"].items()})
 
+    # ADR 0211 (replaces ADR 0206 keep_tunnel_cut): cut-and-cover slab, tunnel / retaining walls, ground on the slab;
+    # holds the terrain down under it (zc in place). Regions without a tunnel road: ({}, None), nothing changes.
+    tstats, low_cut = TN.build(w, region_id, zc, rmask, st["instances"],
+                               json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8")),
+                               log)
+    if tstats:
+        w.stats["tunnel"] = tstats
+        log("tunnels (ADR 0211):", {k: v for k, v in tstats.items() if k != "walls"},
+            "walls", [(x["side"], x["len_m"], x["h_max_m"]) for x in tstats["walls"]])
+
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]
     n0 = w.region["bbox"]["ymax"] - w.origin[1]
     terrain = CH.build_chunks(zc, mask if w.water is None else (mask | w.water.lod_mask()), e0, n0,
-                              w.region["bbox"]["width_m"], col=st["col"])
+                              w.region["bbox"]["width_m"], col=st["col"], low_cut=low_cut)
     log("terrain chunks", len(terrain))
     w.stats["verge_strips"] = merge_verge_into_terrain(terrain, w.buf.parts, half, st["col"], e0, n0)
     log("verge strips in terrain", w.stats["verge_strips"])
     if w.water is not None:
         w.water.sheet(w.buf, CH.CHUNK_M, log)
+    _src_tally([p for p in w.buf.parts if not _is_verge(p)], half)
     roads = assemble([p for p in w.buf.parts if not _is_verge(p)], LAYERS, half)
     log("road chunks", len(roads))
 
@@ -1207,6 +1162,34 @@ LOD_POLICY = {
             "tree": [[35, "tris_lod1"], [400, "tris_lod2"]], "forest_hlod_m": 70, "forest_hlod_cull_m": 1000,
             "lod_bias": 0.5, "furn": 400},
 }
+
+
+def _src_tally(parts, half):
+    """Diagnostics (ADR 0221): with KAMION_SRC_TALLY=<file.json> write triangles per chunk and per
+    `layer|material|source class` of the road layers (road, bridge, markings, paved), so a budget regression can be
+    attributed to the generator stage that caused it. No effect on the build output."""
+    import os
+    import re
+    dst = os.environ.get("KAMION_SRC_TALLY")
+    if not dst:
+        return
+    out = {}
+    for p in parts:
+        if p.layer not in ("road", "bridge", "markings", "paved"):
+            continue
+        src = p.src or ""
+        if "@" in src:
+            cls = src.split("@", 1)[0]
+        else:
+            m = re.search(r":([a-z_]+)$", src)
+            cls = m.group(1) if m else re.sub(r"[0-9a-fA-F-]{6,}|\d+", "#", src)[:24]
+        c = p.V[p.T].mean(axis=1)
+        ci, cj = chunk_of(c[:, 0], c[:, 1], half)
+        for a, b in zip(ci.tolist(), cj.tolist()):
+            d = out.setdefault(f"{int(a)}_{int(b)}", {})
+            k = f"{p.layer}|{p.mat}|{cls}"
+            d[k] = d.get(k, 0) + 1
+    Path(dst).write_text(json.dumps(out, sort_keys=True, indent=0), encoding="utf-8")
 
 
 def _bbox_dist(b, p):

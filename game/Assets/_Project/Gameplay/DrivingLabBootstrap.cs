@@ -227,6 +227,9 @@ namespace Game.Gameplay
                 SafetyNet.vehicle = vehicle;
                 SafetyNet.region = regionRoot;
             }
+            // Region start (menu or adb scene=...): one log line with region, route distance, local point and road (ADR 0229).
+            string menuRegion = StartRequest.ConsumeRegion();
+            if (regionRoot != null && route != null && route.points.Length > 1) LogRegionStart(regionRoot.regionId, menuRegion);
             // lighting=<preset> (clear | overcast | lowsun | dusk): device frames of the control set under the same light (A7).
             string menuLighting = StartRequest.ConsumeLighting();   // start menu choice; a launch argument wins
             string lighting = platform.GetLaunchArgument("lighting");
@@ -362,6 +365,18 @@ namespace Game.Gameplay
             var ci = CultureInfo.InvariantCulture;
             if (float.TryParse(platform.GetLaunchArgument("route_s"), NumberStyles.Float, ci, out float s) && s >= 0f) m_RouteS = Mathf.Min(s, route.Length);
             if (float.TryParse(platform.GetLaunchArgument("route_end"), NumberStyles.Float, ci, out float e) && e > 0f) m_RouteEndS = Mathf.Min(e, route.Length);
+        }
+
+        /// <summary>Start log of a world scene (ADR 0229): region id + region-local start point + road of the routing graph.
+        /// Runs once after the spawn (loads the region graph once; not part of the driving loop).</summary>
+        void LogRegionStart(string sceneRegion, string menuRegion)
+        {
+            if (!string.IsNullOrEmpty(menuRegion) && menuRegion != sceneRegion)
+                Debug.LogWarning("[START] menu region " + menuRegion + " but the scene holds " + sceneRegion);
+            float s = m_RouteS >= 0f ? m_RouteS : RegionStart.DefaultStartS;
+            Vector2 en = RegionStart.LocalPointAt(route.points, route.distances, s);
+            var road = RegionStart.FindRoad(Game.Core.Navigation.RouteGraph.Load(sceneRegion), en);
+            Debug.Log(RegionStart.Describe(sceneRegion, s, en, road));
         }
 
         /// <summary>Respawns the current preset at route distance s (same as launch argument route_s; also used by tests).</summary>
