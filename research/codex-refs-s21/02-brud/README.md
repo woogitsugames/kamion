@@ -1,6 +1,8 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Cel: ≥ 20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥ 6 zimowych i ≥ 6 europejskich. **Kryteria niespełnione: 0 / 0 / 0 kwalifikowanych.** W manifeście 8 lokalnych i obejrzanych kadrów oraz 2 link-only (jeden pomocniczy i jeden nowy pozytywny jakościowo): 3 odrzucone, 1 wzorzec czysty, 1 rdza/wiek, 1 zimowy kontekst klapy solówki oraz 1 link-only małego zabrudzenia; dodatkowo 2 znane pozytywne wzorce P18 ponownie wykorzystane. Dodatkowy screening obejmuje 8 nowych obejrzanych oryginałów (w tym ten 1 kadr rdzy), zapisanych poza gitem; 7 pozostałych odrzucono bez kopiowania miniatur do gita. Nie są dowodem rozkładu brudu. Liczby powyżej to zliczenie wierszy manifestu.
+Cel: ≥20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥6 zimowych i ≥6 europejskich. **Stan po recenzji koordynatora:1/20 nowych przyjętych kadrów,0/6 zimowych,0/6 europejskich — kryteria całości niespełnione.**
+
+Główny manifest ma16 rekordów:14 kadrów (9 lokalnych i5 link-only) oraz2 dokumenty. Tylko02-CR6-001 jest nowym przyjętym kadrem po sprawdzeniu oryginału i źródłowego typu naczepy. Pozostałe wiersze obejmują odrzucenia, wzorce czyste, zużycie, niejednoznaczną powierzchnię oraz znane P18. Wycinki nie są nowymi zdjęciami. Starsze sekcje poniżej zachowują chronologię poszukiwań; ich 0/20 nie jest stanem bieżącym.
 
 ## Wynik przeglądu
 
