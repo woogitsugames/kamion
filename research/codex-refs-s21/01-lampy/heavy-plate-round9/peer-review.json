@@ -1,0 +1,36 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "reviewer": "niezależny agent knyszyn",
+  "result": "PASS — optyka i etykieta pod poprawnymi URL; Proplast 40205506 potwierdzony etykietą, brak potwierdzonej homologacji",
+  "method": "Najpierw z manifestu odczytano wyłącznie id i dwa URL. Następnie każdy obraz otwarto osobno w Chrome i obejrzano bez odczytu opisów/kodów autora pakietu. Dopiero po oględzinach porównano README i dwa wiersze manifestu. Bez pobrań i zapisanych screenshotów.",
+  "frames": [
+    {
+      "id": "01-HP9-01",
+      "url": "https://www.partsbit.de/sites/default/files/styles/588x457/public/truckpartsphoto/autoweltgmbh/licence-plate-light/dsc04185.jpg",
+      "result": "PASS",
+      "independent_observation": "Skośna podłużna prostokątna część na przezroczystej folii i szarym ziarnistym podłożu. Duże bezbarwne rowkowane pole, czerwony obwód na trzech bokach, szeroki czarny pas na czwartym. Wewnątrz jaśniejsze plamy/grupy, czarny przewód w pętli. Odbicia jasne; brak pewnego świecenia i czytelnego E/L.",
+      "comparison": "Zgodne z opisem optyki. Nie potwierdzono funkcji poszczególnych jasnych pól ani trzech komór.",
+      "E_L": "UNVERIFIED",
+      "emission": "UNVERIFIED"
+    },
+    {
+      "id": "01-HP9-04",
+      "url": "https://www.partsbit.de/sites/default/files/styles/588x457/public/truckpartsphoto/autoweltgmbh/licence-plate-light/dsc04317.jpg",
+      "result": "PASS",
+      "independent_transcription": {"Artikelnummer": "40205506", "Menge": "2", "product_text": "LED Schluß-Kennzeichenleuchte,", "brand": "PROPLAST"},
+      "independent_observation": "Duża biała etykieta na przezroczystym opakowaniu, za nią czerwona część i dwa metaliczne punkty mocowania. Kod kreskowy obecny, jego cyfr nie transkrybowano. To etykieta opakowania, nie znak homologacji optyki.",
+      "comparison": "Numer, marka i tekst funkcji zgodne z manifestem. Menge 2 jest nadrukiem ilości, nie dowodem dwóch osobno obejrzanych egzemplarzy.",
+      "E_L": "UNVERIFIED"
+    }
+  ],
+  "evidence_levels": {
+    "family": "SOURCED [osobno obejrzana etykieta]: PROPLAST i numer 40205506.",
+    "function": "SOURCED [tekst etykiety]: LED Schluß-Kennzeichenleuchte. Jest to deklaracja produktu/funkcji na opakowaniu, nie odczyt kategorii homologacyjnej ani obserwacja oświetlania tablicy.",
+    "heavy_vehicle_application": "README i manifest przypisują zastosowanie Actros/Nutzfahrzeuge 24V do oferty sprzedawcy. W tej krótkiej recenzji nie odczytywano ponownie strony oferty; nie podnoszono tego do obserwacji montażu ani cechy widocznej na dwóch recenzowanych zdjęciach.",
+    "voltage": "Nie potwierdzono 24V z tych dwóch recenzowanych obrazów; pozostałe etykiety pakietu nie były zakresem recenzji.",
+    "approval": "E/L i numer homologacji UNVERIFIED.",
+    "counting": "Nie liczyć czterech kadrów jako czterech urządzeń. Ogląd dowodzi co najmniej jednej fizycznej części; liczba unikalnych egzemplarzy galerii UNVERIFIED."
+  },
+  "limits": ["Brak dowodu emisji, nocnego świecenia lub oświetlonej tablicy.", "Brak daty zdjęcia, GPS i azymutu.", "Link-only, all rights reserved; żadnych kopii obrazów."]
+}

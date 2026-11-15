@@ -561,3 +561,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 03/owner-night-text-round9:wyłącznie własny opis istniejącej prywatnej referencji właściciela zgodnie zOWNER-PHOTOS-KNYSZYN. Bez plikówobrazu,miniatur,cropów,screenshotów i embedów; bez zgody na redystrybucję/tekstury. Nie przyznano prywatnemu obrazowi licencjiCC.
 
 06/tykocin-bridge-round5:4miniatury≤800px pochodne podglądówCommons, bez pełnychoryginałów. Zala(CCBY-SA4),DanutaRuminowicz(CCBY-SA3pl;2kadry),KrzysztofPopławski(CCBY4). Pełne atrybucje/URL/datowania/licencje permanifest; SHAminiatury i rawpodglądu rozdzielone; brak kopii firmowych fotografii.
+
+01/heavy-plate-round9:4indywidualnie obejrzane fotografie Proplast40205506, publikacjaAutoweltGmbH/PartsBit878116, autorUNVERIFIED; tylko link-only, all rights reserved. Bez pobrań/cropów/screenshotów; optyka i etykieta40205506 po niezależnympeer. PełneURL/ograniczenia permanifest.

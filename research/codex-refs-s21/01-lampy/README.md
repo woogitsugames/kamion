@@ -118,3 +118,7 @@ Heavy-plate-lamps-round7:4 nowe, indywidualnie obejrzane firmowe kadry1fizycznej
 ## Geometria lampki tablicy — obieg8
 
 [Osobny CSV](plate-geometry-round8/norms.csv):8SOURCED i2UNVERIFIED,0nowychfotografii. R4pkt7:≤82°kąt padania, definicja krańca/środka krawędzi i przypisanego obszaru przy wielu lampkach. R1485.11.2:centrowanie próbki; formaty testowe tablic i łączenie siatek nie są wymiarami tablic polskich ani kategoriami kierunkowskazów. R48Rev12,16.10.2014,6.8.2–6.8.6 nie ustanawia uniwersalnej wysokości/odsunięcia lampki. R1485.11.5:wyjątek czerwieni tylko combined/grouped z tylną lampą; nie biała emisja ani samo sąsiedztwo. Kątów pól85°/60° i współrzędnych siatek bez bitmapy nie przyjęto. Datowane teksty nie zatwierdzają aktualności2026.
+
+## Proplast — inna rodzina tablicowa, obieg9
+
+Główny manifest45rekordów kadrów (8lokalnych/37link-only). [Heavy-plate-round9](heavy-plate-round9/README.md):4różne fotografie co najmniej1części Proplast40205506,0pobrań. Optyka czerwonego obrzeża/bezbarwnych rowków oraz osobne etykiety produktu. Niezależny peer obejrzał pełną optykę i etykietę40205506; etykieta potwierdza tekst funkcji, nie homologację. Actros/24V to oddzielne deklaracje oferty/etykiety, nie odczyt peer z dwóch zdjęć. E/L/pełny numer i emisja pozostająUNVERIFIED; nadrukMenge2 nie dowodzi2widocznych egzemplarzy. Nie są to4lampki ani4kwalifikowane tylne zbliżeniaECE. WzględemSIM inny model/IDoferty, nie powielony kadr.
