@@ -129,8 +129,9 @@ r5 ≈ połowa r6) i +1 draw / chunk z brzegiem (bez cieni). r7 High = r6 co do 
   `fidelity_qa.json` C: odświeżony tylko hash `build_world.py` (wynik C bez zmian).
 - `pytest tests/gis` (po scaleniu `origin/main` 6624550e4, r7): **1313 passed, 2 skipped, 3 xfailed, 1 failed** —
   `test_p1_0161::test_ring_mast_survives_the_carriageway_clearing` czyta `Data/raw/derived/bialystok-industrial-c` z
-  worktree (zbudowane o 08:33 kodem sprzed scalenia; na main test przechodzi) — wynik po przebudowie C: patrz
-  `artifacts/water2-0213/logs/det-c-postmerge.log`. Przed scaleniem: 1223 passed, 3 xfailed, 1 odznaczony (`test_road_stage_independent_of_hash_seed`, 3 × pełny
+  worktree (zbudowane o 08:33 kodem sprzed scalenia; na main test przechodzi). Po przebudowie C kodem po scaleniu: test **przechodzi** (23/23 z `test_water_*`),
+  a `generated/` C i manifest far-field **bez różnic** względem main — determinizm C po scaleniu potwierdzony
+  (`artifacts/water2-0213/logs/det-c-postmerge.log`). Przed scaleniem: 1223 passed, 3 xfailed, 1 odznaczony (`test_road_stage_independent_of_hash_seed`, 3 × pełny
   build C); nowe `tests/gis/test_water_0213.py` 6/6 (szew symetryczny na dwóch syntetycznych kaflach, wstęgi High/Low
   poza keep-out, krzewy i odstęp od drzew, tekstura kafelkuje i jest przycinana, izolacja C/Dojlidy, produkty
   `water_banks.json`); `test_water_0210.py` zaktualizowany (2 regiony z wodą, 3 strażniki w stage).
