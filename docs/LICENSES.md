@@ -531,3 +531,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 06/tykocin-landmarks-round3/files: Lollencja, CC BY-SA3.0pl (Kościół_w_Tykocinie.JPG) oraz Ymblanter, CC BY-SA4.0 (Tykocin_plac_Stefana_Czarnieckiego.jpg). URL/autor/licencja/daty perwiersz manifestu, metadata Commons i hashe w podkatalogu. Zmniejszenie pełnych podglądów960px do≤800px, bez kadrowania. Pełnych oryginałów nie pobrano, podglądy poza gitem; osobny peer-review.
 
 01/used-parts-round4:4 indywidualnie obejrzane fotografie firmowe Renault i DAF/Vignal, wyłącznie link-only, all rights reserved; bez pobrań i screenshotów. Autorzy fotografii nieustaleni, publikujący i źródła perwiersz; E2 w01-UP4-03 ma niezależną recenzję bez pewnego pełnego numeru.
+
+05/knyszyn-crossing-round4:grobin,2 kadry jednego przejazdu z02.09.2019; MapillaryCCBY-SA4.0 według oficjalnej pomocy wskazanej w manifestach. Indywidualny ogląd w przeglądarce, tylko permalinki i własne opisy, bez kopii zdjęć/screenshotów/API/tokenów; podkładOSM.

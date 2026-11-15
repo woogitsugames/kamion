@@ -42,3 +42,6 @@ Uzupełnienie datowania05-O05: SOURCED [WFS Skorowidze2025, pola akt_data/godlo/
 
 
 Mapillary-crossings-round3: sprawdzono3istniejące punktyK1/OSM w publicznymUI z OSM; bez widocznej sekwencji przez tor na bocznych drogach w wybranych widokach, w trzecim takżeAllcaptures. 0 nowo obejrzanych kadrów przejazdu, 0pobrań, bez określenia wyposażenia lub kategoriiA–D. Sąsiedni mały podgląd nie jest pełnymi oględzinami. Nie jest to dowód braku przejazdów ani zdjęć w całym regionie. Main10rekordów bez zmian.
+
+
+Knyszyn-crossing-round4:2 nowe osobno obejrzane kadry1przejazdu DW671 na północ od stacji, grobin,02.09.2019, MapillaryCCBY-SA4.0 według oficjalnej pomocy. 0pobrań. Widać rzeczywiste przecięcie szyn z jezdnią i prostokątne panele oraz przednie pary soczewek/daszki, czerwono-białe słupy i podniesione ramiona z pomarańczowym napędem. NapisS2 tylko odczyt urządzenia, nie kategoria. A–D, materiał paneli, pełna liczba ramion, G-3/G-4, identyfikatorPLK, emisja/napięcie i aktualność2026 UNVERIFIED. Główny manifest12rekordów.
