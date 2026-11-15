@@ -97,3 +97,9 @@ Dodano5 rekordów w new-round2/manifest.csv i głównym manifeście (teraz17):3 
 ## Gminne źródła2024–2026 — municipal-round3
 
 Cztery nowe dokumenty tekstowe (manifest główny teraz21 wierszy), bez nowych zdjęć. Konkurs otoczeniaUM z2026 dotyczy koncepcji i przyszłej dokumentacji, nie stanowi potwierdzenia wykonania. Rozstrzygnięcie06.05.2026 odczytał też koordynator: ocena29.04,5 prac, dokumentacja dopiero planowana. Informacja gminy o braku posiadanej cyfrowej dokumentacji do modelowania budynku nie jest dowodem nieistnienia geometrii LoD2 GUGiK użytej oddzielnie. Umowa Rynek6 z2024 zapowiada zmiany, bez potwierdzenia odbioru. Regulamin DOCX sprawdzony read-only: brak jawnej publicznej licencji wejściowych fotografiiZIP; archiwum niepobrane i PENDING-VISUAL. Szczegóły municipal-round3/README.md i legal-check.json.
+
+## Rynek6 — wykonana modernizacja i fotografie2025
+
+03/rynek6-round4 zawiera2 dokumenty i2 fotografie link-only. SOURCED [komunikat6381 z27.11.2025]: zakończenie inwestycji12.11.2025; przeprowadzka była jeszcze zapowiadana, dnia otwarcia nie ustalono. Dokument urzędowy opisuje użytkowanie Rynek6 przez bibliotekę według31.12.2025, lecz wymienia teżRynek38; nie stwierdzono wyłączności lokalizacji. Dwa kadry zewnętrzne w Gońcu11(250), listopad2025, s4 obejrzano osobno i niezależnie przez dwóch agentów: kremowo-szara elewacja, schody i balustrady, czerwony dach z lukarnami. Podpis Fot.UrszulaCitkowska dotyczy grupy zdjęć; daty ekspozycji UNVERIFIED. Brak kopii PDF/obrazów. Nie utożsamiono ze starszymi nieustalonymi fasadami.
+
+Fontanna-round5:1 nowy dokument gminny z15.12.2023 o zimowej bombce w miejscu letniej fontanny; fotografii nie oglądano i nie opisano. To nie dowód świecącej wody ani parametrów dysz. Łącznie główny manifest26 rekordów; nowe lokalne rastry w tych dwóch porcjach0.

@@ -1,0 +1,57 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "reviewer": "Niezależny agent lampy",
+  "source": "https://www.knyszyn.pl/asp/pliki/download/gonieclistopad_25.pdf",
+  "method": "Publiczny PDF otwarty w Chrome. Osobno obejrzano okładkę, całą stronę4 oraz górne i środkowe zdjęcie przy powiększeniu200%. Nie zapisano PDF, obrazów ani screenshotów na dysku. Web odmówił pełnego odczytu z powodu rozmiaru14,77MB; nie użyto tego jako źródła obserwacji zdjęć.",
+  "manifest_reviewed": "manifest.csv w tym samym katalogu, wiersze03R6-L01/03R6-L02",
+  "verdict": "PASS opisów fotografii, z ograniczeniami poniżej",
+  "cover": {
+    "read": "Nowy Goniec Knyszyński, Miesięcznik Turystyczno-Kulturalny, Nr11(250), Listopad2025",
+    "status": "SOURCED [obraz okładki]"
+  },
+  "exterior_photos": [
+    {
+      "manifest_id": "03R6-L01",
+      "locator": "PDFs4, zdjęcie górne",
+      "independent_observation": "Wejście na podwyższonym podeście, do którego prowadzą schody z lewej. Ciemnoszare pionowe strefy wokół drzwi, kremowa ściana, jasne poziome pasy. Czerwony napis BIBLIOTEKA MIEJSKA nad wejściem i biały okrągły element pod napisem. Drzwi przeszklone z ciemną ramą; metalowa ciemna balustrada o pionowych szczeblach przy schodach i podeście. Szara ziarnista okładzina boku podestu, jasna kostka przed nim. Po obu bokach okna w jasnych ramach i ciemnoczerwone parapety. Nad napisem częściowo widoczny balkon.",
+      "colour_verdict": "PASS",
+      "visible_storeys": "Kadr obejmuje głównie wejście/parter i fragment balkonu powyżej; nie daje pełnej liczby kondygnacji.",
+      "roof": "Poza kadrem.",
+      "limits": "Okrągłego elementu nie rozpoznano jako konkretnego typu lampy. Platformy dostępności nie zidentyfikowano na tym zdjęciu."
+    },
+    {
+      "manifest_id": "03R6-L02",
+      "locator": "PDFs4, zdjęcie środkowe",
+      "independent_observation": "Ukośny widok narożnika: duża kremowa górna strefa ściany, szara dolna strefa z jasnymi poziomymi pasami i bardzo ciemny cokół. Jasne pionowe okna, czerwone rury spustowe przy narożnikach oraz czerwone obrzeże dachu. Na bocznej ścianie balkon z ciemną metalową balustradą. Dach czerwony, spadzisty, z widocznymi równoległymi podłużnymi podziałami pokrycia; dwie widoczne lukarny. U dołu fragment ciemnego ogrodzenia.",
+      "colour_verdict": "PASS",
+      "visible_storeys": "Widoczne parter i piętro oraz strefa dachu z lukarnami. To dwie kondygnacje elewacyjne plus strefa dachu; użytkowość poddasza UNVERIFIED.",
+      "roof": "SOURCED [obraz]: czerwony spadzisty z lukarnami i podłużnymi podziałami. Materiał, pełny układ połaci i przekrój UNVERIFIED.",
+      "limits": "To widok narożnika i dwóch ścian, nie pełny obwód ani każda elewacja budynku."
+    }
+  ],
+  "credit": {
+    "article_byline": "URSZULA CITKOWSKA",
+    "photo_caption": "Fot. Urszula Citkowska",
+    "locator": "Pionowy podpis po prawej stronie grupy zdjęć, obok dolnego zdjęcia.",
+    "status": "SOURCED [osobno odczytany widoczny podpis]",
+    "limit": "Jeden podpis grupowy; nie ma osobnych podpisów fotografa przy każdym kadrze zewnętrznym."
+  },
+  "chronology_limits": {
+    "issue_date": "Listopad2025 to data numeru.",
+    "exposure_dates": "UNVERIFIED; brak odczytanych indywidualnych dat wykonania i EXIF.",
+    "article_context": "Artykuł opisuje zakończenie inwestycji12.11.2025 i zapowiada zmianę siedziby.",
+    "formal_acceptance": "UNVERIFIED; nie oglądano protokołu.",
+    "older_facade_matching": "Nie utożsamiono tych zdjęć z żadną wcześniejszą fasadą. Adres Rynek6 nie wynika z samego widoku i pozostaje oddzielnym ustaleniem dokumentacyjnym."
+  },
+  "rights": "link-only, all rights reserved; brak stwierdzonej otwartej licencji zdjęć.",
+  "counts": {
+    "exterior_frames_individually_reviewed": 2,
+    "new_frames_added": 0,
+    "interiors_counted": 0,
+    "saved_pdfs": 0,
+    "saved_images": 0,
+    "saved_screenshots": 0
+  },
+  "files_changed": "Tylko ten nowy plik peer-review.json; manifest/review autora bez zmian."
+}

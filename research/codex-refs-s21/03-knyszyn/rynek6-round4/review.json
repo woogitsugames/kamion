@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "counts": {"new_text_sources": 2, "new_external_photo_frames_link_only": 2, "downloaded_photo_files": 0, "copied_pdf_or_screenshot_files": 0},
+  "chronology": {
+    "investment_completion": {"date": "2025-11-12", "source": "https://www.knyszyn.pl/asp/zakonczenie-realizacji-inwestycji,239,artykul,1,6381", "publication": "2025-11-27", "status": "SOURCED [pełny HTML UM]"},
+    "occupation_at_rynek6": {"as_of": "2025-12-31", "source": "https://edziennik.bialystok.uw.gov.pl/GetActPdf.ashx?book=0&position=2173&year=2026", "document": "Zarządzenie 212/26, 24.03.2026, załącznik 1 s. 2 II.1", "publication": "2026-05-21", "status": "SOURCED [PDF]"},
+    "formal_acceptance_protocol": "UNVERIFIED — nie odczytano",
+    "public_opening_day": "UNVERIFIED"
+  },
+  "photo_review": {
+    "url": "https://www.knyszyn.pl/asp/pliki/download/gonieclistopad_25.pdf#page=4",
+    "issue_verified_on_cover": "Nr 11 (250), Listopad 2025",
+    "method": "Publiczny Chrome CUA: obejrzano okładkę i stronę 4, następnie górne i środkowe zdjęcie na stronie 4 przy 200% PDF; bez zapisu ekranu do pliku.",
+    "top_photo": "03R6-L01 — rzeczywiste wejście; indywidualnie obejrzane",
+    "middle_photo": "03R6-L02 — rzeczywisty narożnik i dach; indywidualnie obejrzane",
+    "bottom_photo": "Stanowiska komputerowe we wnętrzu; obejrzane przy odczycie podpisu, niewliczone do ujęć zewnętrznych i bez osobnego wiersza fotograficznego.",
+    "article_author": "Urszula Citkowska",
+    "photo_credit": "Fot. Urszula Citkowska — jeden podpis przy grupie zdjęć",
+    "exposure_dates": "UNVERIFIED — nie odczytano EXIF ani indywidualnych dat",
+    "use_as_completed_state": "Zdjęcia zilustrowały artykuł o zakończeniu inwestycji. Dokładna chwila wykonania i formalny odbiór każdego elementu pozostają UNVERIFIED.",
+    "rights": "link-only, all rights reserved — brak otwartej licencji",
+    "source_of_address": "Dokument mienia Rynek 6 oraz wcześniejszy komunikat umowy 03MR3-D04; nie dopasowano starszych fasad."
+  },
+  "screening": [
+    {"url": "https://www.biblioteka.knyszyn.pl/asp/pl_licznik.asp", "status": "HTTPS hostname mismatch podczas odczytu requests; web502/timeout; nie obchodzono certyfikatu", "used_as_primary_proof": false},
+    {"url": "https://www.knyszyn.pl/asp/pliki/download/goniecgrudzien2025.pdf", "status": "web zwrócił stronę weryfikacji; nie pobierano i nie opisywano obrazów", "used_as_primary_proof": false}
+  ],
+  "owner_photos_used": false,
+  "older_facades_assigned_to_rynek6": false,
+  "metric_estimates_made": false
+}
