@@ -24,3 +24,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
 - 2026-11-15 18:42 +01:00 — Baseline 4 wariantów ukończony; merge origin/main bez konfliktów. OSM marketplace ~1 km na N od starej kamery: sprawdzamy orto przed lokalizacją. #97 nie w main, orto 2025 sprzed nowego ronda.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis/test_knyszyn_park_0227.py -q` (po implementacji parkowej)
+- 2026-11-15 18:45 +01:00 — Iteracja r1: wyłączono regułę lasu dla poligonu parku, dodano trawnik/punkty lip, alejki, płytę fontanny i 6 szacunkowych kamer zdjęć 3–8. Test syntetyczny 1 passed. Uruchomiono build→import→4 rendery r1.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.done; Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 25`
