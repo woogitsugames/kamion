@@ -84,8 +84,6 @@ namespace Game.Gameplay
         float m_StatusUntil;
         ReversingCamera m_TractorCam, m_TrailerCam, m_ActiveRevCam;
         RenderTextureMirror m_MirrorL, m_MirrorR;
-        bool m_MirrorInsets;
-        const string PrefMirrorInsets = "lab.mirrorInsets";
         bool m_AutopilotStart;
         float m_RouteS = -1f, m_RouteEndS = -1f;
         bool m_RouteDoneLogged;
@@ -157,7 +155,7 @@ namespace Game.Gameplay
             foreach (var mir in vehicle.GetComponentsInChildren<RenderTextureMirror>(true))
                 if (!mir.main) continue;
                 else if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
-            m_MirrorInsets = PlayerPrefs.GetInt(PrefMirrorInsets, 1) != 0;
+            // D70 / ADR 0243: the mirror windows are a control setting (schema 5, saved with the controls), not a lab pref.
 
             // engine_audio=el|synth: engine sound set for the owner's A/B (ADR 0137); saved like the settings-panel choice.
             Game.Core.AudioPreferences.ApplyArgument(platform.GetLaunchArgument("engine_audio"));
@@ -195,8 +193,8 @@ namespace Game.Gameplay
                 // (usable at any head angle); look-around still shows the real glass. Toggle in the lab menu.
                 LeftMirrorTexture = () => MirrorInsetsOn && m_MirrorL != null ? m_MirrorL.Texture : null,
                 RightMirrorTexture = () => MirrorInsetsOn && m_MirrorR != null ? m_MirrorR.Texture : null,
-                MirrorInsets = () => m_MirrorInsets,
-                ToggleMirrorInsets = () => { m_MirrorInsets = !m_MirrorInsets; PlayerPrefs.SetInt(PrefMirrorInsets, m_MirrorInsets ? 1 : 0); },
+                MirrorInsets = () => Controls.mirrorInsets,
+                ToggleMirrorInsets = () => { Controls.mirrorInsets = !Controls.mirrorInsets; Controls.Save(); Controls.Log("lab-mirrors"); },
             }, overlay: true);
             m_Hud.transform.SetParent(transform, false);
             NavigationInstaller.Install(m_Hud, vehicle, gameObject);   // GPS: minimap, full map, cab route (ADR 0150)
@@ -292,7 +290,7 @@ namespace Game.Gameplay
         public void SetSteerMode(SteerMode mode)
         {
             Controls.gyroEnabled = mode == SteerMode.Gyro;
-            if (mode != SteerMode.Gyro) Controls.wheelRangeDeg = mode == SteerMode.Wheel900 ? 900f : 270f;
+            if (mode != SteerMode.Gyro) Controls.SetWheelRangePreset(mode == SteerMode.Wheel900);
             Controls.Save();
             Controls.Log("steer-mode");
             ApplyControls();
@@ -304,7 +302,7 @@ namespace Game.Gameplay
             bool wasGyro = Gyro.Enabled;
             Controls.ApplyTo(Wheel, Gyro, Touch, Column);
             ScreenOrientationGuard.GyroSteeringActive = Controls.gyroEnabled;   // ADR 0135: no autorotation while steering by tilt
-            m_SteerMode = Controls.gyroEnabled ? SteerMode.Gyro : (Controls.wheelRangeDeg >= 600f ? SteerMode.Wheel900 : SteerMode.Wheel270);
+            m_SteerMode = Controls.gyroEnabled ? SteerMode.Gyro : (Controls.WheelSimRange ? SteerMode.Wheel900 : SteerMode.Wheel270);
             if (Gyro.Enabled && !wasGyro) Gyro.Calibrate();
             if (!Controls.gyroEnabled) Gyro.Suspend();
             if (m_Rig != null)
@@ -754,7 +752,7 @@ namespace Game.Gameplay
             Flash(t.LandingGearDown ? "Nogi podporowe: opuszczanie" : "Nogi podporowe: podnoszenie");
         }
 
-        bool MirrorInsetsOn => m_MirrorInsets && m_Rig != null && m_Rig.mode == CameraMode.Cab;
+        bool MirrorInsetsOn => Controls != null && Controls.mirrorInsets && m_Rig != null && m_Rig.mode == CameraMode.Cab;
 
         string CouplingStatus()
         {

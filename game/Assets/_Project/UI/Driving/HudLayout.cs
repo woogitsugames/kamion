@@ -82,7 +82,8 @@ namespace Game.UI.Driving
         public static readonly Vector2 ClusterSize = new Vector2(440f, 156f);
         public static readonly Vector2 ParkWarnSize = new Vector2(440f, 44f);
         public static readonly Vector2 ReverseSize = new Vector2(440f, 248f);
-        public static readonly Vector2 MirrorSize = new Vector2(160f, 290f);
+        /// <summary>Mirror window size (D70 / ADR 0243: the placement maths lives in Game.Controls.MirrorInsetLayout).</summary>
+        public static readonly Vector2 MirrorSize = Game.Controls.MirrorInsetLayout.Size;
         public static readonly Vector2 DevToggleSize = new Vector2(150f, 60f);
         public static readonly Vector2 DevPanelSize = new Vector2(424f, 378f);
         public const float TelemetryMaxWidth = 760f, TelemetryWideEnough = 640f, TelemetryMaxHeight = 600f;
@@ -145,10 +146,10 @@ namespace Game.UI.Driving
             r.ParkWarn = new Rect(r.Cluster.x, r.Cluster.y - 8f - ParkWarnSize.y, ParkWarnSize.x, ParkWarnSize.y);
             r.ReverseView = new Rect(cx - ReverseSize.x * 0.5f, r.ParkWarn.y - 8f - ReverseSize.y, ReverseSize.x, ReverseSize.y);
             r.ShowReverseView = s.ReverseView;
-            r.MirrorLeft = new Rect(r.Cluster.x - Gap - MirrorSize.x, top - MirrorSize.y, MirrorSize.x, MirrorSize.y);
-            r.MirrorRight = new Rect(r.Cluster.xMax + Gap, top - MirrorSize.y, MirrorSize.x, MirrorSize.y);
-            r.ShowMirrorLeft = s.MirrorLeft;
-            r.ShowMirrorRight = s.MirrorRight;
+            // Fixed mirror windows (D70, ADR 0243) beside the cluster, inside the safe area; hidden only if they cannot fit.
+            bool mirrorsFit = Game.Controls.MirrorInsetLayout.Place(w, r.Cluster, top, Gap, Margin, Margin, out r.MirrorLeft, out r.MirrorRight);
+            r.ShowMirrorLeft = s.MirrorLeft && mirrorsFit;
+            r.ShowMirrorRight = s.MirrorRight && mirrorsFit;
 
             // ---- bottom left: steering, turn signals, retarder stalk
             float steerH = s.Gyro ? GyroSize.y : WheelSize;
