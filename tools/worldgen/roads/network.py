@@ -1009,7 +1009,6 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                     sh_src[sh.src] = sh_src.get(sh.src, 0.0) + round(float(m.sum() * DENSE), 1)
                     if sh.force == "open":
                         rural_d[side_][m] = True
-                        path_d[side_][m] = False
                     elif sh.force == "kerb":
                         rural_d[side_][m] = False
                     if sh.ditch_m is not None:

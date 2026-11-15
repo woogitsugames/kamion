@@ -104,16 +104,19 @@ Narzędzia i paski: `artifacts/rural-xsec-0272/` (`xsec.py`, `orto_*_strips.jpg`
   Draw calle: materiały `shoulder_gravel` / `verge_grass` już są w kaflu (bez nowych materiałów).
 - **C i Dojlidy: bez zmian** — tablice stron identyczne (skrót SHA przed/po: C `b7a4b57000c0f374`, Dojlidy
   `6f57fd627368fde6`), siatka dróg na płaskim NMT identyczna co do trójkąta w każdym materiale, wpusty 772 / 999.
-- **Inne regiony przy następnej regeneracji** (reguła G jednojezdniowa, nie dotykałem ich plików): dk65-01 (Knyszyńska),
-  dk65-06…11, knyszyn, knyszyn-s, knyszyn-w, dk65-monki-01 — asfalt DK65 węższy o 2 × 0,92 m (np. 8,6 → 6,76 m przy
-  pomiarze 7,1–7,5 m z ADR 0214 r3; Knyszyn 9,5 → 7,66 m przy 7,3–7,6 m z ADR 0204). bialystok-maczka: G dwujezdniowa —
-  bez zmian.
+- **Inne regiony przy następnej regeneracji** (reguła G jednojezdniowa ≥ 70 km/h; plików tych kafli nie dotykałem, lista z
+  `rways.py` na grafach z gita): dk65-01 i bialystok-knyszynska (Szosa Knyszyńska, way 234919333 — zmierzona wyżej),
+  dk65-06…11 (waye 208187096, 27718745: asfalt 8,6 → 6,76 m przy pomiarze 7,1–7,5 m z ADR 0214 r3), knyszyn, knyszyn-s,
+  knyszyn-w, dk65-monki-01 (DK65: asfalt węższy o 2 × 0,92 m). bialystok-maczka i bialystok-kleeberga: bez zmian.
+- **bialystok-knyszynska, Szosa Ełcka (way 303739903)**: reguła zwęziłaby asfalt z 8,5 do 6,66 m, a ortofoto pokazuje
+  ok. 9 m (1 przekrój wolny od zatok, 4 inne 11–14 m) → wpis `szosa-elcka-keep-paved-shoulder` zostawia dotychczasowy
+  profil (`confidence: low`, do pomiaru).
 
 ## Walidacja
-- `tests/gis/test_rural_xsec_0272.py` (29): klasa → pobocze; zakresy § 23 ust. 10; tagi OSM; override; profil bez
+- `tests/gis/test_rural_xsec_0272.py` (30): klasa → pobocze; zakresy § 23 ust. 10; tagi OSM; override; profil bez
   krawężnika o tej samej topologii; sieć syntetyczna (G 90 km/h: asfalt 6,76 m; droga 50 km/h z krawężnikiem do czasu
   override / tagu); Ełcka w dk65-02…05 z grafów w gicie (mediana 6,76 m, w 6,5–7,1); DW671: > 93 % stacji bez krawężnika,
-  krawędź przejazdu płaska, żaden wpust przy poboczu, strefa toru = jezdnia + 0,16 m; C i Dojlidy bez zmian.
+  krawędź przejazdu płaska, żaden wpust przy poboczu, strefa toru = jezdnia + 0,16 m; C i Dojlidy bez zmian; Szosa Ełcka w bialystok-knyszynska bez zmian.
 - Podgląd z góry siatki (płaski NMT) obok ortofoto: `artifacts/rural-xsec-0272/xing_triptych.jpg`,
   `elcka_triptych.jpg`. To nie jest render kamer kontrolnych — Unity w chmurze nie ma; kamery do obejrzenia przez lidera
   i `visual-critic` niżej.

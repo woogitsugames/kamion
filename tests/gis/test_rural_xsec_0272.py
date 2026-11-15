@@ -353,3 +353,16 @@ def test_city_regions_keep_their_side_profiles(region_id):
                 sec = net.sec_list[int(c.sec_idx[len(c.sec_idx) // 2])]
                 assert X.open_road(sec) and X.class_rule(sec).src == "legacy-paved", (c.id, sec.cls, sec.oneway)
     assert rural > 500      # the fast GP dual carriageways still have their paved shoulders
+
+
+def test_szosa_elcka_in_bialystok_knyszynska_keeps_its_paved_shoulder():
+    """City-edge tile: way 303739903 is class G, two-way, 90 km/h - the rule would give it a ground shoulder; the
+    orthophoto shows ~9 m of asphalt, so an authored entry keeps the profile it had (mat 0 = legacy)."""
+    net = _region_sides("bialystok-knyszynska")
+    n = 0
+    for c, i, sec in _stations(net, {303739903}):
+        for sd in "LR":
+            if int(c.side[sd]["kind"][i]) == Nw.RURAL:
+                n += 1
+                assert int(c.side[sd]["mat"][i]) == 0
+    assert n > 300
