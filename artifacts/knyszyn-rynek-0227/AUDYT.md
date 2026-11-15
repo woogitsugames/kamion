@@ -82,3 +82,6 @@ Po synchronizacji origin/main cztery warianty ukończone, porównania 01–11 lo
 
 ## Iteracja r8 — ocena 15.11, editor
 Cztery warianty ukończone; pary lokalne 01–11 `compare/r8/High-clear/` i `Low-clear/`. Trzynaście próbnych koron daje wyraźnie bardziej liściasty park i widoczny kościół, lecz korony są niemal identyczne, mają ciemne pionowe szwy i częściowo zasłaniają urząd; naturalność High/Low FAIL, wariant roboczy. Low max suma szacowanych draw calls 500→487 (R7 485), wzrost na wspólnych kamerach max +5 (R7 +6) i +1832 tris z instancjami; High max 1 258 099→1 230 049 tris z instancjami, max suma draws 838→844. Warunek Low bez pogorszenia nadal FAIL.
+
+## Iteracja r9 — ocena 16.11, editor
+Cztery warianty ukończone, 64 kadry/wariant, zdjęcia 01–11 lokalnie `compare/r9/High-clear/` i `Low-clear/`; kamery `rynek-crown-side-90/270` badają karty pod innymi kątami. Równoległe karty usunęły część ciemnych szwów, ale korony w 04 i 07 zwęziły się niemal do pionowych linii: FAIL w Low i High. Wariant wycofano z kodu i danych, obrazy zachowano jako dowód. Low max suma draws 500→487, wzrost do +5 draws i +1832 tris na wspólnych kamerach; High max 1 229 989 tris z instancjami, draws max 838→844. Wymagana przebudowa po wycofaniu.
