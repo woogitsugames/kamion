@@ -5,9 +5,34 @@
 overrides:
   # Ełcka / Studzienna (90 km/h): asphalt 7.5-8.0 m between the asphalt edges at dk65-02 s 1950, dk65-04 s 200 / 1360 /
   # 1960 (7.2-8.0), dk65-05 s 1200 (7.8); solid edge lines both sides; BDOT10k 6.0-6.5 m is too narrow.
+  # D65 p.5 (owner, 2026-11-15) + ADR 0215: 7.6 -> 6.9 m; same entry in dk65-02 ... dk65-05 (and to be repeated in
+  # dk65-06 for the ways shared across the north seam of dk65-05).
   - id: dk65-elcka-xsec
     target: {osm_way: [1024956364, 1399803717, 1560819273]}
-    reason: "Orthophoto: asphalt 7.2-8.0 m, solid edge lines both sides (BDOT10k 6.0-6.5 m)."
+    source: "D65 właściciel, ~6,9 m"
+    reason: >-
+      Owner decision D65 p.5 (docs/11, 2026-11-15): Ełcka / Studzienna is narrow, ~7 m - narrow the carriageway from
+      7.6 to ~6.9 m (ADR 0215). 6.9 m is the owner's approximate value, not a survey (WORKING_VALUE until an owner
+      photo with a scale or a tape measurement). It agrees with the edge-line spacing 6.25-7.0 m read on the 2024
+      orthophoto (ADR 0207 open item 3). Before D65 (ADR 0207): 7.6 m from the asphalt edges on the orthophoto -
+      orthophoto: asphalt 7.2-8.0 m, solid edge lines both sides (BDOT10k 6.0-6.5 m). Edge lines unchanged (both).
     confidence: medium
-    verify: owner drive / owner photo of Ełcka
-    set: {width: 7.6, edge_lines: both}
+    verify: owner photo across Ełcka with a scale / tape measurement
+    set: {width: 6.9, edge_lines: both}
+  # New DK65 carriageways (OSM highway=primary ref 65, two one-way ways + the merge stub at the north edge, 2 x ~1.2 km
+  # NE of the route). Owner D65 p.6: not open - a building site, the route stays on the old road. ADR 0215.
+  - id: dk65-05-new-carriageway-construction
+    target: {osm_way: [1151531612, 1151531613, 1151531608]}
+    source: "D65 właściciel p.6: nowa jezdnia DK65 w dk65-05 nieotwarta - plac budowy"
+    reason: >-
+      Owner decision D65 p.6 (docs/11, 2026-11-15): the new DK65 carriageway in dk65-05 is not open - building site,
+      the route runs on the old road. OSM (Geofabrik extract of the tile) already tags the three ways highway=primary
+      ref=65 oneway=yes lanes=2 maxspeed 100/70, so the generator built finished carriageways with painted lane
+      lines; the GUGiK orthophoto 2024-05-27 shows sand embankments there (ADR 0207, pair-top-seam-north.jpg). The
+      ways share no node with the open network inside the tile. construction: true = no horizontal markings, no rule
+      lamps, no repair decals, no edge in the routing graph (roads/closures.py); surface road_gravel is a
+      WORKING_VALUE (no sand / earthworks material in the library). Fences, plant and the closure at the DK65
+      roundabout (tile dk65-06) are not modelled here (open).
+    confidence: high
+    verify: "owner photo of the building site from Studzienna (surface - sand, aggregate or first asphalt layer?)"
+    set: {construction: true}

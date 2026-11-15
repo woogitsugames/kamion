@@ -15,6 +15,7 @@ import shapely
 from shapely.geometry import LineString, Point
 
 from . import standards as S
+from .closures import CONSTRUCTION_SURFACE_MAT
 from .geom import Polyline, cumlen, smooth_1d, smooth_open
 
 DENSE = 0.5          # m, dense polyline spacing used for evaluation
@@ -64,6 +65,8 @@ class EdgeSection:
     edge_lines: str | None = None   # painted edge lines in the direction of travel: none | left | right | both
     apron: str | None = None        # authored (ADR 0123): roundabout apron "asphalt" = no mountable sett apron, the ring
                                     # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
+    construction: bool = False      # authored (ADR 0215, owner D65 p.6): carriageway not open to traffic - no markings,
+                                    # no lamps, no route-graph edge (roads.closures)
     provenance: dict = field(default_factory=dict)
 
     def lane_coord(self, lat, hw, dirn=1):
@@ -336,6 +339,17 @@ def apply_edge_overrides(net: Network, edges, overrides):
             for side in ("left", "right"):
                 if f"side_{side}" in st:
                     sec.side_override[side] = st[f"side_{side}"]
+            if st.get("construction"):
+                # ADR 0215 (owner D65 p.6): a carriageway that is not open to traffic. Markings / decals / navgraph
+                # read sec.construction; the rule lamps are dropped like `lamps: false`
+                sec.construction = True
+                sec.provenance["construction"] = f"authored_override:{ov['id']}"
+                sec.provenance["no_lamps"] = ov["id"]
+                sec.edge_lines = "none"
+                sec.turn_fwd = sec.turn_bwd = None
+                if "surface" not in st:
+                    sec.surface_mat = CONSTRUCTION_SURFACE_MAT      # WORKING_VALUE (roads.closures)
+                    sec.provenance["surface_override"] = "construction (WORKING_VALUE)"
             if "surface" in st:
                 sec.surface_mat = SURFACE_MAT.get(st["surface"], "road_asphalt")
                 sec.provenance["surface_override"] = st["surface"]
