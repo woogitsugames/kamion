@@ -98,3 +98,7 @@
 - 2026-11-15 21:06 +01:00 — Uruchomiono r3 po scaleniu main: poprawione kamery 02/07, próba placu pomnika i materiałów Low. Wierzba r3 FAIL wizualnie, nie jest w grze; trwa r4. Test pomnika 6 passed.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r3.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r3.done`
 
+
+- 2026-11-15 21:09 +01:00 — R3 build trwa po scaleniu main; przegląd statyczny scalenia nie wykazał utraty zmian. Wierzba r3 FAIL, r4 wypalona i czeka na przegląd. Targowica: lokalizacja UNVERIFIED, pytanie o współrzędne zadane właścicielowi.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r3.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r3.done`
+
