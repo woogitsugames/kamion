@@ -26,3 +26,5 @@
 - NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis/test_knyszyn_park_0227.py -q` (po implementacji parkowej)
 - 2026-11-15 18:45 +01:00 — Iteracja r1: wyłączono regułę lasu dla poligonu parku, dodano trawnik/punkty lip, alejki, płytę fontanny i 6 szacunkowych kamer zdjęć 3–8. Test syntetyczny 1 passed. Uruchomiono build→import→4 rendery r1.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.done; Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 25`
+- 2026-11-15 18:46 +01:00 — Baseline: 51 kamer na wariant; max drawsEst Low 429, High 760 (statystyki edytora). Gotowy niezależny generator kościoła, testy 3 passed; integracja po r1. R1 czeka w kolejce heavy.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
