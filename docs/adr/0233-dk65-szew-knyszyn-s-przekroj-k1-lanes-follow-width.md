@@ -90,7 +90,12 @@ UNVERIFIED. `knyszyn-s`: brak bazy r3 w tym zestawie logów.
 - Pełny `pytest tests/gis` (po scaleniu main, przebieg 1): 1420 passed, 7 failed, 3 xfailed. 6 błędów = sekcje
   duck-typed w testach bez `lane_w_at` / `lane_follow` → poprawione (`network.lane_w_of`, 92 passed na tych plikach).
   7.: `test_road_fidelity.py::test_report_not_stale` — `fidelity_qa.json` (`bialystok-industrial-c`) nieaktualny już na
-  `origin/main` (5 plików generatora), nie z tego zadania. Przebieg 2: <!-- PYTEST2 -->
+  `origin/main` (5 plików generatora), nie z tego zadania. Przebieg 2 (3aee5cd24 + drzewo robocze): 1426 passed,
+  1 failed (`test_report_not_stale`; ta gałąź dokłada do 5 nieaktualnych na main plików szósty, `meshing.py`), 3 xfailed.
+  Testy `knyszyn-s` ze starym, commitowanym `generated` (stan po scaleniu, przed przebudową lidera): 77 passed
+  (geometria szwu 11/`knyszyn-s` wtedy pomijana jako „GLB starsze niż overrides”).
+  Liczby szwu pochodzą z buildów sprzed scalenia main; po scaleniu sprawdzono sieć (testy 0233) i brak surowego
+  `.lane_w` w kodzie z main — żadnego kafla nie przebudowano scalonym generatorem.
 - EditMode: 628 testów, 627 passed, 1 skipped, 0 failed (po `scripts/export-region-catalog.py`; przed: 1 failed —
   `knyszyn-s` routeLengthM), `artifacts/tests/editmode-20261115-2149*.xml`.
 - Pętla wizualna (Low + High, 1920 × 1080, clear): `artifacts/dk65-r4-s21/seam/r4/seam-*-{low,high}.jpg` (sklejka obu
