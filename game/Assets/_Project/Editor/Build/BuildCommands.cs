@@ -13,6 +13,10 @@ namespace Game.Editor.Build
     ///   Unity.exe -batchmode -quit -buildTarget Android -projectPath game
     ///     -executeMethod Game.Editor.Build.BuildCommands.BuildAndroidApk
     ///     [-buildOutput path/to.apk] [-development] [-worldHigh] [-regions "c,dk65-01..dk65-11,knyszyn"] [-regionsFile Data/build_regions.json] [-regionsAllowMissing]
+    ///   Unity.exe -batchmode -quit -buildTarget Win64 -projectPath game
+    ///     -executeMethod Game.Editor.Build.BuildCommands.BuildWindowsPlayer
+    ///     [-buildOutput path/to/Kamion.exe] [-development] [-worldLow] [-regions ...] [-regionsFile ...] [-regionsAllowMissing]
+    ///   (ADR 0261: Windows ships the High world content and the High vehicle material sets unless -worldLow.)
     /// Prints "BUILD_RESULT: Succeeded|Failed ..." for scripts.
     /// </summary>
     public static class BuildCommands
@@ -34,6 +38,26 @@ namespace Game.Editor.Build
             if (Application.isBatchMode) EditorApplication.Exit(exit);
         }
 
+        /// <summary>Batchmode entry of the Windows x64 player (ADR 0261, scripts/build-windows.ps1).</summary>
+        public static void BuildWindowsPlayer()
+        {
+            int exit = 1;
+            try
+            {
+                exit = BuildWindows(
+                    EditorTools.Arg("-buildOutput", Path.Combine(EditorTools.RepoRoot, "artifacts", "win", "kamion", WindowsExeName)),
+                    EditorTools.HasArg("-development"));
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                Debug.Log("BUILD_RESULT: Failed (exception)");
+            }
+            if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
+
+        public const string WindowsExeName = "Kamion.exe";
+
         [MenuItem("Kamion/Build/Android APK (release-like)")]
         static void MenuBuildRelease() => BuildAndroid(Path.Combine(EditorTools.RepoRoot, "artifacts", "apk", "kamion.apk"), false);
 
@@ -50,31 +74,8 @@ namespace Game.Editor.Build
             bool audio = Game.Editor.Audio.VehicleAudioImporter.ImportIfNeeded();
             Debug.Log(audio ? "[BUILD] vehicle audio library present" : "[BUILD] WARNING: no vehicle audio (art-source/audio/generated missing) - the APK will be silent");
 
-            var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToList();
-            // Content tiers (ADR 0012): the High world scene ships only when asked for (-worldHigh); the default APK
-            // carries the Low/Medium content only.
-            const string worldHigh = "Assets/_Generated/World/bialystok-industrial-c/WorldC_High.unity";
-            if (EditorTools.HasArg("-worldHigh"))
-            {
-                if (File.Exists(Path.Combine(EditorTools.ProjectRoot, worldHigh))) scenes.Add(worldHigh);
-                else Debug.LogWarning("[BUILD] -worldHigh: " + worldHigh + " missing (scripts/import-region.ps1)");
-            }
-            // Region scenes for this APK only (ADR 0229): -regions / -regionsFile, composed in memory; EditorBuildSettings
-            // (git) stays Boot + DrivingLab + WorldC. No argument = the list above unchanged.
-            if (!RegionBuildList.AppendFromCommandLine(scenes, EditorTools.HasArg("-worldHigh"), out string regionError))
-            {
-                Debug.LogError("BUILD_RESULT: Failed (-regions: " + regionError + ")");
-                return 4;
-            }
-            // Measurement only (APK world share, gate 3 E6): -noWorld drops the generated world scenes, so
-            // APK(default) - APK(-noWorld) = bytes the world content costs in the APK after LZ4HC.
-            if (EditorTools.HasArg("-noWorld"))
-                scenes.RemoveAll(s => s.StartsWith("Assets/_Generated/World/"));
-            if (scenes.Count == 0)
-            {
-                Debug.LogError("BUILD_RESULT: Failed (no scenes in build settings)");
-                return 3;
-            }
+            int sceneExit = ComposeBuildScenes(EditorTools.HasArg("-worldHigh"), out var scenes);
+            if (sceneExit != 0) return sceneExit;
 
             Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outputPath)));
             EditorUserBuildSettings.buildAppBundle = false;
@@ -108,6 +109,98 @@ namespace Game.Editor.Build
             finally
             {
                 PlayerSettings.SetManagedStrippingLevel(NamedBuildTarget.Android, savedStripping);
+                if (movedHigh) RestoreHighTiers();
+                PlayerSettings.Android.bundleVersionCode = savedVersionCode;
+                AssetDatabase.SaveAssets();
+            }
+            var s = report.summary;
+            WriteContentReport(report, outputPath);
+            bool ok = s.result == BuildResult.Succeeded;
+            Debug.Log($"BUILD_RESULT: {s.result} errors={s.totalErrors} warnings={s.totalWarnings} " +
+                      $"size={s.totalSize} time={s.totalTime.TotalSeconds:F0}s output={s.outputPath}");
+            if (!ok)
+            {
+                foreach (var step in report.steps)
+                foreach (var m in step.messages)
+                    if (m.type == LogType.Error || m.type == LogType.Exception)
+                        Debug.Log($"BUILD_ERROR: {m.content}");
+            }
+            return ok ? 0 : 1;
+        }
+
+        /// <summary>Scene list of one player build, shared by Android and Windows: enabled EditorBuildSettings scenes,
+        /// the High world scene when <paramref name="worldHigh"/>, region scenes from -regions / -regionsFile (ADR 0229),
+        /// minus the generated world with -noWorld. Returns 0 or the exit code of the failure (already logged).</summary>
+        static int ComposeBuildScenes(bool worldHigh, out System.Collections.Generic.List<string> scenes)
+        {
+            scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToList();
+            // Content tiers (ADR 0012): the High world scene ships only when asked for (Android: -worldHigh; Windows: unless
+            // -worldLow, ADR 0261); the default APK carries the Low/Medium content only.
+            const string worldHigh = "Assets/_Generated/World/bialystok-industrial-c/WorldC_High.unity";
+            if (worldHigh)
+            {
+                if (File.Exists(Path.Combine(EditorTools.ProjectRoot, worldHigh))) scenes.Add(worldHigh);
+                else Debug.LogWarning("[BUILD] -worldHigh: " + worldHigh + " missing (scripts/import-region.ps1)");
+            }
+            // Region scenes for this build only (ADR 0229): -regions / -regionsFile, composed in memory; EditorBuildSettings
+            // (git) stays Boot + DrivingLab + WorldC. No argument = the list above unchanged.
+            if (!RegionBuildList.AppendFromCommandLine(scenes, worldHigh, out string regionError))
+            {
+                Debug.LogError("BUILD_RESULT: Failed (-regions: " + regionError + ")");
+                return 4;
+            }
+            // Measurement only (APK world share, gate 3 E6): -noWorld drops the generated world scenes, so
+            // APK(default) - APK(-noWorld) = bytes the world content costs in the APK after LZ4HC.
+            if (EditorTools.HasArg("-noWorld"))
+                scenes.RemoveAll(s => s.StartsWith("Assets/_Generated/World/"));
+            if (scenes.Count == 0)
+            {
+                Debug.LogError("BUILD_RESULT: Failed (no scenes in build settings)");
+                return 3;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Windows x64 player (ADR 0260 / 0261): same scene composition as the APK (-regions, -regionsFile,
+        /// -regionsAllowMissing, -noWorld), vehicle audio import and content report. PC content = High: the High world
+        /// scenes and the High vehicle material sets ship unless -worldLow. Nothing is saved to ProjectSettings.
+        /// </summary>
+        public static int BuildWindows(string outputPath, bool development)
+        {
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows64 &&
+                !EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64))
+            {
+                Debug.LogError("BUILD_RESULT: Failed (cannot switch to StandaloneWindows64; start Unity with -buildTarget Win64)");
+                return 2;
+            }
+
+            bool audio = Game.Editor.Audio.VehicleAudioImporter.ImportIfNeeded();
+            Debug.Log(audio ? "[BUILD] vehicle audio library present" : "[BUILD] WARNING: no vehicle audio (art-source/audio/generated missing) - the player will be silent");
+
+            bool worldHigh = !EditorTools.HasArg("-worldLow");
+            int sceneExit = ComposeBuildScenes(worldHigh, out var scenes);
+            if (sceneExit != 0) return sceneExit;
+
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outputPath)));
+            var options = new BuildPlayerOptions
+            {
+                scenes = scenes.ToArray(),
+                locationPathName = outputPath,
+                target = BuildTarget.StandaloneWindows64,
+                targetGroup = BuildTargetGroup.Standalone,
+                options = development ? BuildOptions.Development : BuildOptions.CompressWithLz4HC,
+            };
+
+            Debug.Log($"[BUILD] Windows x64 → {outputPath} (development={development}, worldHigh={worldHigh}) scenes=[{string.Join(", ", scenes)}]");
+            // BuildInfoWriter sets the Android versionCode on every player build; restore it so ProjectSettings.asset stays clean.
+            int savedVersionCode = PlayerSettings.Android.bundleVersionCode;
+            BuildReport report;
+            ShaderVariantStripper.Enabled = !EditorTools.HasArg("-noShaderStrip");
+            bool movedHigh = !worldHigh && HideHighTiers();
+            try { report = BuildPipeline.BuildPlayer(options); }
+            finally
+            {
                 if (movedHigh) RestoreHighTiers();
                 PlayerSettings.Android.bundleVersionCode = savedVersionCode;
                 AssetDatabase.SaveAssets();
