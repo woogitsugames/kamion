@@ -67,9 +67,12 @@ namespace Game.Gameplay
             if (QualityTiers.Apply(tierArg) || QualityTiers.Apply(QualityTiers.SavedTier)) { }
             else if (desktopTier != null)
             {
-                // Desktop player (ADR 0261): the device rules are a phone GPU list; PC starts at High (not saved).
-                QualityTiers.Apply(desktopTier);
-                Debug.Log($"[BOOT] desktop default tier {desktopTier}");
+                // Desktop player (ADR 0261, ADR 0269): the device rules are a phone GPU list; the PC tier comes from the
+                // VRAM / RAM / GPU class (D74), at most High (desktopTier), not saved. QualityTiers.Apply adds the PC values.
+                var hw = PcGraphicsTiers.DetectHardware();
+                var pcTier = PcGraphicsTiers.DefaultFor(hw, out string why);
+                if (!PcGraphicsTiers.Apply(pcTier)) QualityTiers.Apply(desktopTier);
+                Debug.Log($"[BOOT] desktop default tier {QualityTiers.Current}: {why} (gpu='{hw.gpuName}' vram={hw.vramMb}MB ram={hw.systemRamMb}MB)");
             }
             else
             {

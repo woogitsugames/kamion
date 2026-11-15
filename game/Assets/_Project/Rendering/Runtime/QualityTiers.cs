@@ -5,7 +5,8 @@ namespace Game.Rendering
 {
     /// <summary>
     /// Quality tiers = Unity quality levels named Low/Medium/High/Ultra, each bound to its own
-    /// URP asset (Assets/_Project/Rendering/Settings/URP_*.asset). Frame-rate target is separate.
+    /// URP asset (Assets/_Project/Rendering/Settings/URP_*.asset). Frame-rate target is separate. On a desktop player the
+    /// level additionally gets its PC values (PcGraphicsTiers, ADR 0269).
     /// </summary>
     public static class QualityTiers
     {
@@ -34,6 +35,7 @@ namespace Game.Rendering
             {
                 if (!string.Equals(names[i], tier, StringComparison.OrdinalIgnoreCase)) continue;
                 QualitySettings.SetQualityLevel(i, true);
+                PcGraphicsTiers.OnQualityLevelApplied(names[i]);   // ADR 0269: PC URP asset + QualitySettings (desktop only)
                 if (persist) { PlayerPrefs.SetString(PrefTier, names[i]); PlayerPrefs.Save(); }
                 return true;
             }
