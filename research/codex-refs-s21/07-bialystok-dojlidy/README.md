@@ -28,3 +28,7 @@ SOURCED [07-D04, oba endpointy, pola w data/]: usługa jest publiczna, lecz brak
 ## B-040 — raport za2025 potwierdza raportowane wdrożenie
 
 07-D05/D06: SOURCED [Raport o stanie Miasta Białegostoku za2025, s101; URL w manifeście i data/annual-report-2025-source.json] — w sprawozdaniu działań odnotowano wprowadzenie zakazu dla ciężarówek na Suchowolca (Plażowa–Ciołkowskiego) oraz ograniczenia8ton na Mickiewicza (Kuronia–Ciołkowskiego). To źródło wdrożenia raportowanego za2025, uzupełniające wcześniejszą zapowiedź prasową. Okładkę2025 i pełną stronę101 odczytano tekstowo i obejrzano w renderach; mylący tytuł indeksu2024 nie został użyty. PDF15MB i rendery poza gitem. Rodzaj znaku B-5/B-18, definicja masy, tabliczki wyjątków i stan15.11.2026 UNVERIFIED; B-040 nadal otwarte. Brak nowych fotografii.
+
+## B-131 — miejskie warunki, nadal bez rozstrzygnięcia datasetu
+
+07-D07 i licence-round2/: znaleziono publiczne warunki BIP i zarządzenie973/21. §3 i§6 trzeba oceniać łącznie; prawa pierwotne do konkretnej bazy nie zostały wykazane. Świeże metadane potwierdzają wydawcę miejskiego, ale licenseInfo nadal null, copyrightText pusty. Brak jawnego powiązania warunków z tym itemem, więc LEGAL_REVIEW_REQUIRED pozostaje. Geometrii nie pobierano. Główny manifest teraz8 rekordów.

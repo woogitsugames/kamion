@@ -1,0 +1,62 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "dataset": "Drogi osie",
+  "item_id": "15cc2148e5074d8c88a1fd82a363e477",
+  "status": "LEGAL_REVIEW_REQUIRED",
+  "creative_commons_assigned": false,
+  "item": {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/15cc2148e5074d8c88a1fd82a363e477?f=pjson",
+    "http_status": 200,
+    "access": "public",
+    "licenseInfo": null,
+    "accessInformation": "",
+    "description": "",
+    "owner": "gis_umb",
+    "orgId": "jN5LJsqeW33UjdlH",
+    "evidence": "data/item-metadata.json"
+  },
+  "service": {
+    "url": "https://services6.arcgis.com/jN5LJsqeW33UjdlH/arcgis/rest/services/Drogi_osie/FeatureServer?f=pjson",
+    "http_status": 200,
+    "serviceItemId": "15cc2148e5074d8c88a1fd82a363e477",
+    "copyrightText": "",
+    "evidence": "data/service-metadata.json"
+  },
+  "organization": {
+    "url": "https://www.arcgis.com/sharing/rest/portals/jN5LJsqeW33UjdlH?f=pjson",
+    "name": "Urząd Miejski w Białymstoku",
+    "dataset_licence_confirmed": false,
+    "evidence": "data/portal-summary.json"
+  },
+  "municipal_policy": {
+    "url": "https://bip.bialystok.pl/urzad_miejski/dostep_do_informacji_publicznej/ponowne-wykorzystywanie-informac.html",
+    "page_modified": "2026-06-22 12:12 wg metryki BIP; strefa niepodana",
+    "read_scope": "Pełny tekst sekcji Warunki i Wniosek oraz metryka",
+    "finding": "Ogólne miejskie warunki i tryb wnioskowy są opublikowane. Konkretny item nie jest wymieniony. Nie wyprowadzono zgody z samej ogólnej definicji.",
+    "exact_dataset_binding_found": false
+  },
+  "order_973_21": {
+    "date": "2021-12-08",
+    "url": "https://bip.bialystok.pl/resource/187/Zarz%25C4%2585dzenie+973-21+ws+ustalenia+warunk%25C3%25B3w+ponownego+wykorzystania+informacji+sektora+publicznego+%2528do+odczytu%2529.docx",
+    "http_status": 200,
+    "bytes": 19527,
+    "sha256": "5834dac4d2a944b226c73774f8e77c426ae1229d6f070a8e662be35a240fb955",
+    "read_method": "anthropic-skills:docx read-only; pełny word/document.xml w pamięci, bez zapisu DOCX",
+    "section_3": "Atrybucja Prezydenta, data, brak modyfikowania pozyskanej treści oraz oznaczanie informacji w większej całości.",
+    "section_6": "Reguluje prawa innych podmiotów oraz swobodę kopii, zmian i rozpowszechniania utworów/baz, do których Prezydent ma prawa pierwotne; wskazanie znanego twórcy.",
+    "condition_unverified_for_item": "Nie ustalono praw pierwotnych do itemu Drogi osie ani stosunku tych zapisów do jego modyfikacji w generatorze."
+  },
+  "gis_landing": {
+    "url": "https://www.gisbialystok.pl/",
+    "read_scope": "Opis korzystania i serwisu publicznego; wyszukiwanie słów licenc i warunk bez trafień",
+    "finding": "Opis technicznych możliwości drukowania i zapisywania nie jest warunkiem redystrybucji konkretnego itemu."
+  },
+  "interpretation": "To brak wystarczającego dowodu do zmiany statusu w repo, nie stwierdzenie prawne że każda postać użycia jest zakazana.",
+  "geometry_downloaded": false,
+  "feature_queries_or_exports": false,
+  "maps_or_tiles_downloaded": false,
+  "authentication_used": false,
+  "messages_sent_to_city": false,
+  "esri_general_terms_used_as_city_licence": false
+}
