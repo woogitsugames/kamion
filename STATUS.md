@@ -4,4 +4,5 @@
 - #62 SCAL z erratą (12/12 opisów zgodnych; zdjęcia w gicie 6,4 MB; row_m 0,62 vs ≤ 0,56 z R1).
 - #64 SCAL z erratą (12/12 opisów, BDOT/LoD1 odtworzone 1:1; R4-075 bez przypisu; brak kolorów bloków).
 - #65 SCAL z erratą (12/12 opisów, 5/5 cytatów + wynik negatywny Dz.U. 2022/1518; potwierdza ADR 0188).
-- NASTĘPNY KROK: recenzje #66, #99, potem PR reviews-0225 → main.
+- #66 SCAL z erratą (FIX F1–F4 kompletny; 11/11 opisów; PX33 do usunięcia).
+- NASTĘPNY KROK: recenzja #99, potem PR reviews-0225 → main.
