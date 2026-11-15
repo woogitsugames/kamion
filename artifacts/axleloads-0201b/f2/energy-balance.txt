@@ -1,0 +1,116 @@
+# energy balance per step, fuzz_shrink_speed_runaway_fulllock, DisableBodyContact; columns: dE = d(KE+PE) both bodies; Wmod = work of tractor+trailer model forces; Wcoup = work of the fifth-wheel constraint split per row [kingpin point (Baumgarte), roll spring, roll stop, pitch stop, yaw stop, plate friction]; gravErr = -(symplectic-Euler gravity energy error) = m g^2 dt^2/2; rollE / stopE = elastic energy in roll spring / stops at the start of the solve
+## BEFORE-equivalent (stop cap off, tilt limit off), k 250 kN/m
+4.87 touch 0 dE    -238.7 Wmod     -39.5 Wcoup      -0.1 [pt   -13.4 roll    -0.1 rStop     0.0 pStop     0.0 yStop   -0.0 fr  -0.0] gravErr   185.1 rollE     0.2 stopE      0.0 roll   0.01 pitch  11.44 err   1.39mm |fA| 263 |tA| 144 |tB| 16 wA 2.07 wB 2.19
+4.88 touch 0 dE    -239.7 Wmod     -40.3 Wcoup      -0.1 [pt   -13.0 roll    -0.1 rStop     0.0 pStop     0.0 yStop   -0.0 fr  -0.0] gravErr   185.1 rollE     0.3 stopE      0.0 roll   0.01 pitch  11.92 err   1.38mm |fA| 267 |tA| 146 |tB| 17 wA 2.07 wB 2.19
+4.89 touch 0 dE   -8907.2 Wmod     -41.2 Wcoup   -8642.5 [pt   248.2 roll    -1.9 rStop    -0.0 pStop -8640.1 yStop   -0.0 fr  -0.0] gravErr   185.1 rollE     0.4 stopE   1938.5 roll   0.02 pitch  12.39 err   1.37mm |fA| 272 |tA| 149 |tB| 18 wA 2.09 wB 2.11
+4.90 touch 0 dE   -1998.9 Wmod     -40.9 Wcoup   -1747.7 [pt    96.2 roll    -7.0 rStop    -0.0 pStop -1713.0 yStop   -0.0 fr -25.3] gravErr   185.1 rollE     0.1 stopE   4342.2 roll  -0.01 pitch  12.58 err   1.38mm |fA| 263 |tA| 147 |tB| 19 wA 2.12 wB 2.07
+4.91 touch 0 dE      18.1 Wmod     -41.0 Wcoup     260.7 [pt    30.3 roll    -7.1 rStop    -0.0 pStop   284.2 yStop   -0.0 fr -15.1] gravErr   185.1 rollE     1.9 stopE   4590.9 roll  -0.04 pitch  12.60 err   1.41mm |fA| 259 |tA| 147 |tB| 21 wA 2.14 wB 2.04
+4.92 touch 0 dE      92.5 Wmod     -41.5 Wcoup     330.1 [pt     5.4 roll    -4.1 rStop    -0.0 pStop   341.7 yStop   -0.0 fr  -7.1] gravErr   185.1 rollE     4.7 stopE   3436.3 roll  -0.06 pitch  12.52 err   1.44mm |fA| 259 |tA| 147 |tB| 22 wA 2.14 wB 2.04
+4.93 touch 0 dE    -238.2 Wmod     -42.2 Wcoup      -2.8 [pt    -3.7 roll    -1.0 rStop    -0.0 pStop    -0.0 yStop   -0.0 fr  -1.9] gravErr   185.1 rollE     6.6 stopE   2016.7 roll  -0.07 pitch  12.40 err   1.47mm |fA| 261 |tA| 148 |tB| 23 wA 2.12 wB 2.04
+4.94 touch 0 dE    -235.6 Wmod     -43.1 Wcoup       0.6 [pt    -3.5 roll     0.5 rStop     0.0 pStop    -0.0 yStop   -0.0 fr  -0.0] gravErr   185.1 rollE     6.5 stopE    938.5 roll  -0.07 pitch  12.27 err   1.49mm |fA| 265 |tA| 150 |tB| 24 wA 2.12 wB 2.04
+4.95 touch 0 dE    -236.3 Wmod     -43.9 Wcoup       0.8 [pt    -3.2 roll     0.7 rStop     0.0 pStop    -0.0 yStop   -0.0 fr  -0.0] gravErr   185.1 rollE     5.2 stopE    250.2 roll  -0.06 pitch  12.14 err   1.50mm |fA| 270 |tA| 152 |tB| 26 wA 2.11 wB 2.04
+4.96 touch 0 dE    -237.5 Wmod     -44.8 Wcoup       0.5 [pt    -3.0 roll     0.5 rStop     0.0 pStop    -0.0 yStop   -0.0 fr  -0.0] gravErr   185.1 rollE     3.5 stopE      0.2 roll  -0.05 pitch  12.01 err   1.51mm |fA| 274 |tA| 153 |tB| 27 wA 2.11 wB 2.04
+k 250000 maxGain 92.5 at 4.92 maxWcoup 388.0 | 4.92 touch 0 dE      92.5 Wmod     -41.5 Wcoup     330.1 [pt     5.4 roll    -4.1 rStop    -0.0 pStop   341.7 yStop   -0.0 fr  -7.1] gravErr   185.1 rollE     4.7 stopE   3436.3 roll  -0.06 pitch  12.52 err   1.44mm |fA| 259 |tA| 147 |tB| 22 wA 2.14 wB 2.04
+## BEFORE-equivalent, k 252 kN/m (wheel grazing contact phase 4.10-4.27, then free flight)
+4.11 touch 4 dE    2121.3 Wmod    2222.0 Wcoup      -4.5 [pt     6.9 roll    -0.4 rStop    -0.0 pStop     0.0 yStop    0.0 fr  -5.9] gravErr    91.7 rollE    11.0 stopE      0.0 roll   0.09 pitch -12.00 err   0.73mm |fA| 181488 |tA| 124365 |tB| 61812 wA 1.69 wB 1.61
+   T front_R S 0.004 Fz 99698 cosN 0.45 comp 0.048 rate 1.25 hpY 0.34
+   T rear_R S 0.004 Fz 70135 cosN 0.95 comp 0.061 rate -0.26 hpY 0.14
+   R T_axle1_R S 0.146 Fz 31076 cosN 0.22 comp -0.060 rate -0.40 hpY 0.16
+   R T_axle2_R S 0.197 Fz 0 cosN 0.22 comp -0.100 rate -0.55 hpY 0.17
+4.12 touch 3 dE    2341.2 Wmod    2444.0 Wcoup      -4.6 [pt     9.1 roll    -1.3 rStop    -0.0 pStop     0.0 yStop    0.0 fr  -5.3] gravErr    93.6 rollE     4.7 stopE      0.0 roll   0.06 pitch -11.99 err   0.76mm |fA| 184725 |tA| 124584 |tB| 51079 wA 1.69 wB 1.63
+   T front_R S -0.008 Fz 102534 cosN 0.45 comp 0.057 rate 0.94 hpY 0.33
+   T rear_R S 0.006 Fz 69985 cosN 0.95 comp 0.059 rate -0.20 hpY 0.14
+   R T_axle1_R S 0.152 Fz 25076 cosN 0.21 comp -0.064 rate -0.46 hpY 0.15
+4.13 touch 3 dE    2633.9 Wmod    2739.5 Wcoup      -4.1 [pt    11.1 roll    -1.5 rStop    -0.0 pStop     0.0 yStop    0.0 fr  -4.6] gravErr    96.8 rollE     1.5 stopE      0.0 roll   0.03 pitch -11.98 err   0.79mm |fA| 186156 |tA| 123001 |tB| 38731 wA 1.70 wB 1.65
+   T front_R S -0.015 Fz 102674 cosN 0.44 comp 0.063 rate 0.57 hpY 0.33
+   T rear_R S 0.008 Fz 70508 cosN 0.95 comp 0.058 rate -0.11 hpY 0.13
+   R T_axle1_R S 0.158 Fz 18527 cosN 0.19 comp -0.069 rate -0.51 hpY 0.14
+4.14 touch 3 dE    2828.4 Wmod    2939.1 Wcoup      -3.2 [pt    13.2 roll    -1.3 rStop    -0.0 pStop     0.0 yStop    0.0 fr  -3.8] gravErr   102.6 rollE     0.3 stopE      0.0 roll   0.01 pitch -11.97 err   0.83mm |fA| 182503 |tA| 121814 |tB| 25049 wA 1.70 wB 1.67
+   T front_R S -0.017 Fz 97095 cosN 0.45 comp 0.064 rate 0.12 hpY 0.33
+   T rear_R S 0.008 Fz 71812 cosN 0.95 comp 0.058 rate 0.02 hpY 0.12
+   R T_axle1_R S 0.165 Fz 11633 cosN 0.18 comp -0.075 rate -0.55 hpY 0.13
+4.15 touch 3 dE    3634.7 Wmod    3755.8 Wcoup      -2.4 [pt    12.2 roll    -0.9 rStop    -0.0 pStop     0.0 yStop    0.0 fr  -3.2] gravErr   113.6 rollE     0.0 stopE      0.0 roll  -0.00 pitch -11.96 err   0.87mm |fA| 171087 |tA| 113858 |tB| 10519 wA 1.70 wB 1.68
+   T front_R S -0.012 Fz 77262 cosN 0.45 comp 0.060 rate -0.39 hpY 0.33
+   T rear_R S 0.003 Fz 79991 cosN 0.89 comp 0.062 rate 0.39 hpY 0.11
+   R T_axle1_R S 0.173 Fz 4701 cosN 0.16 comp -0.081 rate -0.58 hpY 0.12
+4.16 touch 3 dE    3598.4 Wmod    3727.1 Wcoup      -1.1 [pt    14.6 roll    -0.2 rStop    -0.0 pStop     0.0 yStop    0.0 fr  -2.6] gravErr   122.0 rollE     0.1 stopE      0.0 roll  -0.01 pitch -11.96 err   0.92mm |fA| 160116 |tA| 123955 |tB| 19 wA 1.70 wB 1.69
+   T front_R S -0.000 Fz 62528 cosN 0.45 comp 0.051 rate -0.92 hpY 0.33
+   T rear_R S -0.006 Fz 83645 cosN 0.89 comp 0.070 rate 0.73 hpY 0.10
+   R T_axle1_R S 0.180 Fz 0 cosN 0.14 comp -0.087 rate -0.58 hpY 0.11
+4.17 touch 3 dE    3070.7 Wmod    3207.1 Wcoup      -0.6 [pt    20.5 roll    -0.2 rStop     0.0 pStop    -0.0 yStop    0.0 fr  -2.3] gravErr   129.7 rollE     0.2 stopE      0.0 roll  -0.01 pitch -11.96 err   0.96mm |fA| 146524 |tA| 166027 |tB| 19 wA 1.69 wB 1.70
+   T front_R S 0.018 Fz 44422 cosN 0.45 comp 0.036 rate -1.46 hpY 0.33
+   T rear_R S -0.018 Fz 88671 cosN 0.89 comp 0.080 rate 1.06 hpY 0.09
+   R T_axle1_R S 0.188 Fz 0 cosN 0.13 comp -0.092 rate -0.56 hpY 0.10
+4.18 touch 3 dE    4268.3 Wmod    4413.0 Wcoup      -4.0 [pt    20.4 roll    -3.1 rStop     0.0 pStop    -0.0 yStop    0.0 fr  -2.6] gravErr   134.0 rollE     0.0 stopE      0.0 roll  -0.00 pitch -11.98 err   1.00mm |fA| 149166 |tA| 194835 |tB| 19 wA 1.67 wB 1.71
+   T front_R S 0.043 Fz 24811 cosN 0.45 comp 0.017 rate -1.95 hpY 0.33
+   T rear_R S -0.038 Fz 110228 cosN 0.81 comp 0.095 rate 1.47 hpY 0.08
+   R T_axle1_R S 0.195 Fz 0 cosN 0.11 comp -0.098 rate -0.54 hpY 0.09
+4.19 touch 2 dE    5574.2 Wmod    5804.2 Wcoup     -91.4 [pt    13.7 roll   -12.1 rStop     0.0 pStop   -77.3 yStop    0.0 fr  -2.8] gravErr   132.3 rollE     0.7 stopE      0.8 roll   0.02 pitch -12.01 err   1.03mm |fA| 172479 |tA| 264269 |tB| 20 wA 1.65 wB 1.72
+   T front_R S 0.073 Fz 10441 cosN 0.45 comp -0.008 rate -2.00 hpY 0.33
+   T rear_R S -0.067 Fz 144523 cosN 0.81 comp 0.110 rate 1.54 hpY 0.08
+4.20 touch 2 dE   10177.1 Wmod   10415.5 Wcoup    -114.9 [pt    15.0 roll   -33.7 rStop     0.0 pStop   -79.3 yStop    0.0 fr  -2.5] gravErr   114.9 rollE     5.2 stopE     16.5 roll   0.06 pitch -12.04 err   1.06mm |fA| 257314 |tA| 358426 |tB| 20 wA 1.62 wB 1.73
+   T front_R S 0.110 Fz 0 cosN 0.45 comp -0.037 rate -2.00 hpY 0.33
+   T rear_R S -0.106 Fz 232269 cosN 0.71 comp 0.126 rate 1.55 hpY 0.07
+4.21 touch 2 dE   14503.6 Wmod   14849.4 Wcoup    -244.1 [pt    42.4 roll  -112.6 rStop     0.0 pStop  -129.1 yStop    0.0 fr  -4.0] gravErr    88.7 rollE    20.6 stopE     46.8 roll   0.12 pitch -12.06 err   1.08mm |fA| 376961 |tA| 635309 |tB| 20 wA 1.54 wB 1.73
+   T front_R S 0.157 Fz 0 cosN 0.45 comp -0.074 rate -2.00 hpY 0.33
+   T rear_R S -0.164 Fz 346754 cosN 0.71 comp 0.144 rate 1.82 hpY 0.06
+4.22 touch 1 dE   32767.1 Wmod   33426.9 Wcoup    -564.6 [pt    42.9 roll  -338.8 rStop     0.0 pStop  -220.8 yStop    0.0 fr  -6.7] gravErr    83.9 rollE    77.2 stopE    113.6 roll   0.23 pitch -12.09 err   1.10mm |fA| 634635 |tA| 841232 |tB| 20 wA 1.38 wB 1.70
+   T rear_R S -0.245 Fz 622601 cosN 0.59 comp 0.164 rate 2.00 hpY 0.05
+4.23 touch 2 dE   26748.0 Wmod   28361.2 Wcoup   -1517.7 [pt   136.8 roll  -972.5 rStop     0.0 pStop  -543.3 yStop    0.0 fr  -5.1] gravErr    80.2 rollE   251.1 stopE    236.1 roll   0.41 pitch -12.14 err   1.12mm |fA| 632745 |tA| 1380036 |tB| 48939 wA 1.13 wB 1.66
+   T rear_R S -0.331 Fz 620809 cosN 0.81 comp 0.182 rate 1.81 hpY 0.04
+   R T_axle1_R S 0.184 Fz 19752 cosN 0.02 comp -0.090 rate 0.00 hpY 0.03
+4.24 touch 4 dE   29739.7 Wmod   33699.2 Wcoup   -3930.2 [pt   188.1 roll -2635.7 rStop     0.0 pStop -1295.7 yStop   -0.0 fr  -0.3] gravErr    18.4 rollE   767.3 stopE    557.7 roll   0.71 pitch -12.21 err   1.11mm |fA| 757100 |tA| 1894610 |tB| 581409 wA 0.82 wB 1.66
+   T rear_R S -0.435 Fz 755301 cosN 0.89 comp 0.201 rate 1.89 hpY 0.03
+   R T_axle1_R S 0.075 Fz 137154 cosN 0.01 comp -0.004 rate 2.00 hpY 0.01
+   R T_axle2_R S 0.133 Fz 61615 cosN 0.01 comp -0.050 rate 0.00 hpY 0.02
+   R T_axle3_R S 0.191 Fz 13880 cosN 0.01 comp -0.095 rate 0.00 hpY 0.02
+4.25 touch 4 dE   37445.5 Wmod   52274.0 Wcoup  -17119.5 [pt     6.1 roll -13830.2 rStop     0.0 pStop -3303.0 yStop    0.0 fr  -3.0] gravErr -2217.4 rollE  2192.0 stopE   1291.4 roll   1.20 pitch -12.32 err   1.10mm |fA| 660154 |tA| 1832641 |tB| 13446692 wA 1.03 wB 3.28
+   T rear_R S -0.422 Fz 652094 cosN 0.99 comp 0.199 rate -0.23 hpY 0.01
+   R T_axle1_R S -0.468 Fz 1532807 cosN -0.02 comp 0.170 rate 2.00 hpY 0.00
+   R T_axle2_R S -0.484 Fz 1588365 cosN -0.02 comp 0.172 rate 2.00 hpY 0.00
+   R T_axle3_R S -0.499 Fz 1644475 cosN -0.02 comp 0.174 rate 2.00 hpY 0.00
+4.26 touch 1 dE    -705.8 Wmod   15892.7 Wcoup  -16492.9 [pt   188.7 roll -13967.6 rStop     0.0 pStop -2534.8 yStop    0.0 fr -13.1] gravErr    90.9 rollE  9480.7 stopE   3089.1 roll   2.50 pitch -12.49 err   1.23mm |fA| 506088 |tA| 1340659 |tB| 17 wA 1.84 wB 3.05
+   T rear_R S -0.321 Fz 478485 cosN 0.99 comp 0.180 rate -1.85 hpY 0.02
+4.27 touch 1 dE   16957.7 Wmod   23534.2 Wcoup   -6478.2 [pt   134.2 roll -5619.1 rStop     0.0 pStop  -862.9 yStop    0.0 fr -10.6] gravErr    95.5 rollE 15549.6 stopE   4243.6 roll   3.20 pitch -12.57 err   1.30mm |fA| 542325 |tA| 1233504 |tB| 17 wA 2.45 wB 2.85
+   T rear_R S -0.328 Fz 517960 cosN 0.95 comp 0.182 rate 0.12 hpY 0.02
+4.28 touch 0 dE     190.2 Wmod     -16.4 Wcoup     418.4 [pt   -74.4 roll   182.5 rStop    -0.0 pStop   253.7 yStop    0.0 fr -13.5] gravErr   185.2 rollE 17986.1 stopE   4558.5 roll   3.44 pitch -12.59 err   1.35mm |fA| 152 |tA| 97 |tB| 17 wA 3.22 wB 2.69
+4.29 touch 0 dE    2022.0 Wmod     -16.7 Wcoup    2242.9 [pt   -38.3 roll  1863.8 rStop    -0.0 pStop   381.5 yStop    0.0 fr   0.0] gravErr   185.2 rollE 15097.7 stopE   3478.1 roll   3.15 pitch -12.52 err   1.41mm |fA| 155 |tA| 98 |tB| 17 wA 3.65 wB 2.60
+4.30 touch 0 dE     865.2 Wmod     -16.9 Wcoup    1083.8 [pt   -25.0 roll   986.8 rStop    -0.0 pStop    99.1 yStop    0.0 fr   0.0] gravErr   185.2 rollE 10053.9 stopE   2121.6 roll   2.57 pitch -12.41 err   1.49mm |fA| 157 |tA| 99 |tB| 17 wA 3.80 wB 2.57
+4.31 touch 0 dE    -448.0 Wmod     -17.1 Wcoup    -230.1 [pt   -28.3 roll  -227.3 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE  5402.9 stopE   1077.5 roll   1.88 pitch -12.29 err   1.57mm |fA| 158 |tA| 99 |tB| 17 wA 3.77 wB 2.58
+4.32 touch 0 dE   -1126.0 Wmod     -17.2 Wcoup    -908.6 [pt   -32.8 roll  -905.7 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE  2262.4 stopE    419.8 roll   1.22 pitch -12.18 err   1.63mm |fA| 159 |tA| 99 |tB| 17 wA 3.62 wB 2.61
+4.33 touch 0 dE   -1214.2 Wmod     -17.4 Wcoup    -997.4 [pt   -32.5 roll  -995.1 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE   646.8 stopE     84.9 roll   0.65 pitch -12.08 err   1.68mm |fA| 160 |tA| 100 |tB| 17 wA 3.43 wB 2.64
+k 252000 maxGain 2022.0 at 4.29 maxWcoup 2242.9 | 4.29 touch 0 dE    2022.0 Wmod     -16.7 Wcoup    2242.9 [pt   -38.3 roll  1863.8 rStop    -0.0 pStop   381.5 yStop    0.0 fr   0.0] gravErr   185.2 rollE 15097.7 stopE   3478.1 roll   3.15 pitch -12.52 err   1.41mm |fA| 155 |tA| 98 |tB| 17 wA 3.65 wB 2.60
+## stop cap off, tilt limit 60 deg (wheel injection removed), k 234 kN/m: pitch-stop rebound alone in free fall
+4.46 touch 0 dE    -238.8 Wmod     -10.7 Wcoup       1.5 [pt   -36.4 roll     1.3 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE    15.9 stopE      0.0 roll  -0.10 pitch  12.00 err   1.79mm |fA| 96 |tA| 59 |tB| 10 wA 2.61 wB 2.95
+4.47 touch 0 dE  -48714.0 Wmod     -11.1 Wcoup  -48284.5 [pt   723.2 roll   -53.0 rStop    -0.0 pStop -48230.3 yStop    0.0 fr   0.0] gravErr   185.2 rollE    13.8 stopE  15167.8 roll  -0.10 pitch  13.13 err   1.76mm |fA| 98 |tA| 60 |tB| 10 wA 2.53 wB 2.60
+4.48 touch 0 dE   -9801.5 Wmod     -11.2 Wcoup   -9467.6 [pt   158.1 roll  -175.9 rStop    -0.0 pStop -9169.2 yStop    0.0 fr -88.8] gravErr   185.2 rollE    56.1 stopE  29656.2 roll  -0.19 pitch  13.57 err   1.73mm |fA| 89 |tA| 59 |tB| 10 wA 2.61 wB 2.39
+4.49 touch 0 dE    1529.1 Wmod     -11.4 Wcoup    1801.4 [pt    -4.7 roll  -171.6 rStop    -0.0 pStop  2049.3 yStop    0.0 fr -59.6] gravErr   185.2 rollE   145.1 stopE  30408.5 roll  -0.31 pitch  13.60 err   1.78mm |fA| 86 |tA| 58 |tB| 10 wA 2.65 wB 2.28
+4.50 touch 0 dE    2054.7 Wmod     -11.7 Wcoup    2288.7 [pt   -23.6 roll   -84.8 rStop    -0.0 pStop  2414.7 yStop    0.0 fr -35.7] gravErr   185.2 rollE   235.1 stopE  22846.8 roll  -0.39 pitch  13.39 err   1.88mm |fA| 86 |tA| 59 |tB| 10 wA 2.65 wB 2.24
+4.51 touch 0 dE     249.7 Wmod     -12.0 Wcoup     462.3 [pt   -11.5 roll    -4.5 rStop    -0.0 pStop   485.0 yStop    0.0 fr -15.8] gravErr   185.2 rollE   273.3 stopE  13857.4 roll  -0.42 pitch  13.08 err   1.99mm |fA| 86 |tA| 59 |tB| 10 wA 2.60 wB 2.24
+4.52 touch 0 dE    -183.0 Wmod     -12.2 Wcoup      24.7 [pt    -8.0 roll    27.5 rStop     0.0 pStop    -0.0 yStop    0.0 fr  -0.8] gravErr   185.2 rollE   245.2 stopE   7001.1 roll  -0.40 pitch  12.77 err   2.08mm |fA| 87 |tA| 59 |tB| 10 wA 2.57 wB 2.25
+k 234000 maxGain 2054.7 at 4.50 maxWcoup 2288.7 | 4.50 touch 0 dE    2054.7 Wmod     -11.7 Wcoup    2288.7 [pt   -23.6 roll   -84.8 rStop    -0.0 pStop  2414.7 yStop    0.0 fr -35.7] gravErr   185.2 rollE   235.1 stopE  22846.8 roll  -0.39 pitch  13.39 err   1.88mm |fA| 86 |tA| 59 |tB| 10 wA 2.65 wB 2.24
+## AFTER (defaults), k 252 kN/m
+4.11 touch 0 dE    -203.7 Wmod     -10.0 Wcoup      -5.7 [pt    -2.7 roll    -5.6 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     2.9 stopE      0.0 roll   0.04 pitch -11.99 err   0.69mm |fA| 100 |tA| 71 |tB| 18 wA 1.62 wB 1.50
+4.12 touch 0 dE    -202.2 Wmod     -10.1 Wcoup      -4.1 [pt    -2.7 roll    -4.0 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.2 stopE      0.0 roll   0.01 pitch -11.97 err   0.70mm |fA| 101 |tA| 72 |tB| 18 wA 1.61 wB 1.51
+4.13 touch 0 dE    -200.6 Wmod     -10.3 Wcoup      -2.2 [pt    -2.7 roll    -2.2 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.1 stopE      0.0 roll  -0.01 pitch -11.95 err   0.70mm |fA| 101 |tA| 72 |tB| 19 wA 1.59 wB 1.51
+4.14 touch 0 dE    -199.4 Wmod     -10.4 Wcoup      -0.9 [pt    -2.8 roll    -0.8 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.6 stopE      0.0 roll  -0.02 pitch -11.92 err   0.71mm |fA| 102 |tA| 73 |tB| 19 wA 1.58 wB 1.51
+4.15 touch 0 dE    -198.8 Wmod     -10.6 Wcoup      -0.2 [pt    -2.8 roll    -0.2 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.9 stopE      0.0 roll  -0.02 pitch -11.89 err   0.71mm |fA| 103 |tA| 73 |tB| 19 wA 1.57 wB 1.51
+4.16 touch 0 dE    -198.8 Wmod     -10.7 Wcoup       0.0 [pt    -2.8 roll     0.1 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.9 stopE      0.0 roll  -0.02 pitch -11.85 err   0.71mm |fA| 104 |tA| 74 |tB| 19 wA 1.57 wB 1.51
+4.17 touch 0 dE    -198.9 Wmod     -10.9 Wcoup       0.0 [pt    -2.8 roll     0.1 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.7 stopE      0.0 roll  -0.02 pitch -11.81 err   0.72mm |fA| 105 |tA| 74 |tB| 20 wA 1.57 wB 1.52
+4.18 touch 0 dE    -199.2 Wmod     -11.1 Wcoup      -0.0 [pt    -2.8 roll     0.0 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.4 stopE      0.0 roll  -0.02 pitch -11.76 err   0.72mm |fA| 106 |tA| 75 |tB| 20 wA 1.57 wB 1.52
+4.19 touch 0 dE    -199.4 Wmod     -11.3 Wcoup      -0.1 [pt    -2.8 roll    -0.0 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.2 stopE      0.0 roll  -0.01 pitch -11.71 err   0.72mm |fA| 107 |tA| 76 |tB| 20 wA 1.57 wB 1.52
+4.20 touch 0 dE    -199.6 Wmod     -11.5 Wcoup      -0.1 [pt    -2.8 roll    -0.0 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.1 stopE      0.0 roll  -0.01 pitch -11.66 err   0.72mm |fA| 108 |tA| 76 |tB| 20 wA 1.57 wB 1.52
+4.21 touch 0 dE    -199.9 Wmod     -11.7 Wcoup      -0.1 [pt    -2.8 roll    -0.0 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.0 stopE      0.0 roll  -0.00 pitch -11.60 err   0.72mm |fA| 109 |tA| 77 |tB| 20 wA 1.57 wB 1.52
+4.22 touch 0 dE    -200.1 Wmod     -11.9 Wcoup      -0.0 [pt    -2.8 roll    -0.0 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.0 stopE      0.0 roll  -0.00 pitch -11.54 err   0.71mm |fA| 110 |tA| 78 |tB| 21 wA 1.57 wB 1.51
+4.23 touch 0 dE    -200.3 Wmod     -12.1 Wcoup      -0.0 [pt    -2.8 roll    -0.0 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.0 stopE      0.0 roll   0.00 pitch -11.47 err   0.71mm |fA| 111 |tA| 78 |tB| 21 wA 1.57 wB 1.51
+4.24 touch 1 dE  -54830.1 Wmod  -54909.9 Wcoup    -300.0 [pt    17.6 roll  -301.5 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr  -408.8 rollE     0.0 stopE      0.0 roll   0.00 pitch -11.40 err   0.71mm |fA| 113 |tA| 79 |tB| 3933742 wA 1.66 wB 1.95
+4.25 touch 0 dE    -576.0 Wmod     -11.0 Wcoup    -375.1 [pt    -7.5 roll  -368.8 rStop     0.0 pStop     0.0 yStop    0.0 fr  -5.1] gravErr   185.2 rollE   100.5 stopE      0.0 roll   0.26 pitch -11.32 err   0.77mm |fA| 104 |tA| 73 |tB| 19 wA 1.83 wB 1.92
+4.26 touch 0 dE    -312.3 Wmod     -11.2 Wcoup    -110.6 [pt    -6.3 roll  -109.9 rStop     0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE   222.5 stopE      0.0 roll   0.38 pitch -11.23 err   0.82mm |fA| 104 |tA| 73 |tB| 19 wA 1.97 wB 1.89
+4.27 touch 0 dE    -199.6 Wmod     -11.4 Wcoup       2.9 [pt    -5.7 roll     3.3 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE   256.7 stopE      0.0 roll   0.41 pitch -11.13 err   0.84mm |fA| 105 |tA| 74 |tB| 20 wA 2.05 wB 1.87
+4.28 touch 0 dE    -176.7 Wmod     -11.6 Wcoup      26.5 [pt    -5.6 roll    26.7 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE   214.3 stopE      0.0 roll   0.38 pitch -11.02 err   0.86mm |fA| 106 |tA| 74 |tB| 20 wA 2.10 wB 1.86
+4.29 touch 0 dE    -190.7 Wmod     -11.9 Wcoup      13.1 [pt    -5.7 roll    13.2 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE   141.2 stopE      0.0 roll   0.30 pitch -10.89 err   0.87mm |fA| 107 |tA| 75 |tB| 20 wA 2.12 wB 1.86
+4.30 touch 0 dE    -209.3 Wmod     -12.1 Wcoup      -5.0 [pt    -5.9 roll    -4.9 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE    74.3 stopE      0.0 roll   0.22 pitch -10.76 err   0.88mm |fA| 109 |tA| 76 |tB| 20 wA 2.11 wB 1.86
+4.31 touch 0 dE    -219.6 Wmod     -12.3 Wcoup     -15.0 [pt    -6.1 roll   -14.9 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE    29.8 stopE      0.0 roll   0.14 pitch -10.62 err   0.88mm |fA| 110 |tA| 76 |tB| 20 wA 2.09 wB 1.87
+4.32 touch 0 dE    -221.1 Wmod     -12.6 Wcoup     -16.1 [pt    -6.3 roll   -16.1 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     7.6 stopE      0.0 roll   0.07 pitch -10.47 err   0.88mm |fA| 111 |tA| 77 |tB| 20 wA 2.07 wB 1.87
+4.33 touch 0 dE    -217.6 Wmod     -12.8 Wcoup     -12.3 [pt    -6.5 roll   -12.2 rStop    -0.0 pStop     0.0 yStop    0.0 fr   0.0] gravErr   185.2 rollE     0.5 stopE      0.0 roll   0.02 pitch -10.32 err   0.89mm |fA| 113 |tA| 78 |tB| 21 wA 2.04 wB 1.88
+k 252000 maxGain 0.0 at 0.00 maxWcoup 27.2 | 

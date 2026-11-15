@@ -49,6 +49,12 @@ namespace Game.Vehicle.Physics
         /// <summary>Set by the vehicle each step: the driver requests endurance braking (engine brake).</summary>
         public bool EngineBrakeRequest;
         /// <summary>
+        /// Driver accelerator position for the shift schedule (before the ASR torque cut); &lt; 0 = use the throttle input.
+        /// ADR 0201b: ASR cuts the engine torque, not the driver's demand; reading the ASR-reduced torque request as a lifted
+        /// pedal moved the up-shift line down (light-throttle schedule) during an ASR-limited launch.
+        /// </summary>
+        public double ShiftSchedulePedal = -1;
+        /// <summary>
         /// Set by the vehicle each step: parking brake lever applied or spring brakes not fully released
         /// (also low circuit-3 air). Drives the drive-away interlock (ADR 0004 addendum 2026-11-10).
         /// </summary>
@@ -241,9 +247,10 @@ namespace Game.Vehicle.Physics
                     // Creep function: with a small pedal the clutch transmits a fixed creep torque at idle
                     // (manoeuvring, coupling); the idle governor supplies it.
                     else if (throttle < Def.creepPedal) cmd = Math.Max(cmd, Def.creepTorqueNm / Def.clutchMaxTorque);
-                    if (engOmega < idle * 0.95) cmd = Math.Min(cmd, ClutchCommand - dt * 2); // anti-stall
+                    bool antiStall = engOmega < idle * 0.95;
+                    if (antiStall) cmd = Math.Min(cmd, ClutchCommand - dt * AntiStallOpenRate); // anti-stall
                     cmd = MathUtil.Clamp01(cmd);
-                    ClutchCommand = MathUtil.MoveTowards(ClutchCommand, cmd, dt * 4.0);
+                    ClutchCommand = MathUtil.MoveTowards(ClutchCommand, cmd, dt * (antiStall ? AntiStallOpenRate : 4.0));
                     // Close only when the clutch is synchronous AND the drive wheels are not spinning (the
                     // engine-to-road slip, referenced to vehicle speed, is small): a launch with wheelspin keeps slipping the clutch.
                     double roadSlip = engOmega - Math.Abs(TotalRatio) * Math.Abs(vehicleSpeed) / wheelRadius;
@@ -272,7 +279,7 @@ namespace Game.Vehicle.Physics
                     }
                     if (reverse) break;
                     if (Manual) ManualDrive(rpm, upEdge, downEdge, engine);
-                    else AutoDrive(rpm, throttle, ebMode, engine, massKg, gradeSin, wheelRadius, resistanceForce, finalDriveEfficiency, vehicleSpeed);
+                    else AutoDrive(rpm, ShiftSchedulePedal >= 0 ? MathUtil.Clamp01(ShiftSchedulePedal) : throttle, ebMode, engine, massKg, gradeSin, wheelRadius, resistanceForce, finalDriveEfficiency, vehicleSpeed);
                     break;
                 }
                 case AmtState.ShiftTorqueRamp:
@@ -338,6 +345,13 @@ namespace Game.Vehicle.Physics
                     break;
             }
         }
+
+        /// <summary>
+        /// Anti-stall clutch opening rate in Launch [1/s] (ADR 0201b; was 2/s target offset + 4/s slew): full stroke in
+        /// ~0.125 s, the same order as the 0.15 s clutch phases of a shift. At 2/s an ASR torque cut at crawl speed let the
+        /// engine fall ~1500 rpm/s while the clutch was still at 0.7-0.9 and stalled it (reverse_dock_s_maneuver_comb@laden40).
+        /// </summary>
+        const double AntiStallOpenRate = 8.0;
 
         void AutoDrive(double rpm, double throttle, bool ebMode, Engine engine, double massKg, double gradeSin,
             double wheelRadius, double resistance, double fdEff, double speed)

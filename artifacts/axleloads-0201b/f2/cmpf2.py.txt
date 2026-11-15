@@ -1,0 +1,23 @@
+import sys
+def load(p):
+    d={}
+    for l in open(p):
+        if not l.startswith('| ') or l.startswith('| scenario') : continue
+        c=[x.strip() for x in l.split('|')[1:-1]]
+        if len(c)<6: continue
+        key=(c[0],c[1]); i=1
+        while key in d: i+=1; key=(c[0],c[1]+f'#{i}')
+        d[key]=(c[2],c[5])
+    return d
+a=load(sys.argv[1]); b=load(sys.argv[2])
+same=0; diff=[]
+for k in a:
+    if k not in b: diff.append((k,a[k],None)); continue
+    if a[k][0]==b[k][0]: same+=1
+    else:
+        try:
+            x=float(a[k][0]); y=float(b[k][0]); rel=(y-x)/abs(x) if x!=0 else float('inf')
+        except: rel=None
+        diff.append((k,a[k],b[k],rel))
+print("checks", len(a), len(b), "identical", same, "changed", len(diff))
+for d in diff: print(d)

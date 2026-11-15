@@ -14,6 +14,15 @@ namespace Game.Vehicle.Physics
         public double contactArcDeg = 63;
         /// <summary>Projected Gauss-Seidel iterations for clutch + brake constraints.</summary>
         public int constraintIterations = 4;
+        /// <summary>
+        /// Largest tilt [deg] of the suspension axis from the ground-surface normal at which a wheel still has tyre contact
+        /// (ADR 0201b, F2). The raycast travel S = d / cos(tilt) - r becomes hypersensitive near 90 deg: a lying combination's
+        /// wheels jumped from S +0.19 to -0.50 m in one step (1.6 MN per wheel, +52 kJ of work in 10 ms). 72.5 deg = acos 0.3,
+        /// the angle below which <see cref="WheelGroup"/> already stopped applying F / cos(tilt) (clamp at 0.3). Beyond it
+        /// the truck is on its side and the chassis colliders carry it (Unity: PhysX colliders, runner: BodyGroundContact).
+        /// WORKING_VALUE. Also rejects a ray grazing a vertical face (kerb side): no suspension load from a side face.
+        /// </summary>
+        public double maxContactTiltDeg = 72.5;
     }
 
     /// <summary>
@@ -208,6 +217,7 @@ namespace Game.Vehicle.Physics
             double pedal = Math.Min(MathUtil.Clamp01(input.Throttle), SpeedLimiterFactor) * AsrFactor;
             DriverInput amtInput = input;
             amtInput.Throttle = pedal;
+            Amt.ShiftSchedulePedal = Math.Min(MathUtil.Clamp01(input.Throttle), SpeedLimiterFactor);
             Amt.AbsActive = Air.AbsAnyActive;
             Amt.EngineBrakeRequest = EngineBrakeCommand > 0.01;
             // Spring brakes count as applied until fully released (the AMT waits for the release, ~0.7 s).

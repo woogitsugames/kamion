@@ -15,6 +15,8 @@ namespace Game.Vehicle.Physics
         readonly int[] _left, _right;
         readonly double[] _rayCos, _raySin;
         readonly int _constraintIterations;
+        /// <summary>cos of the largest tilt of the suspension axis from the ground normal at which the tyre still makes contact (see <see cref="SolverSettings.maxContactTiltDeg"/>).</summary>
+        public double MinContactCos;
 
         /// <param name="referenceAxleLoads">Per-axle static load [N] of the vehicle's own definition (solo / empty); defines the design ride height.</param>
         public WheelGroup(AxleDefinition[] axles, IDictionary<string, TireDefinition> tires, SolverSettings settings,
@@ -22,6 +24,7 @@ namespace Game.Vehicle.Physics
         {
             Axles = axles;
             _constraintIterations = settings.constraintIterations;
+            MinContactCos = Math.Cos(settings.maxContactTiltDeg * MathUtil.Deg2Rad);
             var wheels = new List<WheelState>();
             var tireModels = new Dictionary<string, TireModel>();
             _left = new int[axles.Length];
@@ -148,7 +151,7 @@ namespace Game.Vehicle.Physics
                 }
             }
 
-            if (bestIdx < 0 || bestS > su.travel)
+            if (bestIdx < 0 || bestS > su.travel || Vec3.Dot(bestNormal, up) < MinContactCos)
             {
                 w.Contact = false;
                 w.S = su.travel;
