@@ -137,6 +137,17 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,9) of the ADR 0203 plan)",
     ),
+    # ADR 0212: lattice (-9,7), south of `knyszyn-w` (y = 611583) and west of `knyszyn-s` (x = 760587): DW671 Tykocka
+    # from Knyszyn towards Tykocin. Powiat moniecki 2008. NMT pinned to 2022 like both neighbours.
+    "dw671-tykocin-01": Region(
+        id="dw671-tykocin-01",
+        title="DW671 w stronę Tykocina 01 — na południowy zachód od Knyszyna",
+        candidate="K_knyszyn_w",
+        bbox=(758539.0, 609535.0, 760587.0, 611583.0),
+        origin=(759563.0, 610559.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,7) of the ADR 0203 plan)",
+    ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
     "dk65-02": Region(
         id="dk65-02",
