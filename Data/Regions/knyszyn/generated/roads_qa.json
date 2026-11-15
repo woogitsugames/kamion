@@ -270,14 +270,16 @@
    ],
    "length_m": 10.7,
    "max_grade": 0.0024,
-   "overrides": [],
+   "overrides": [
+    "knyszyn-roundabout-truck-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.5,
    "width_m": [
-    4.0
+    5.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.3 (>=3.50) + WORKING_VALUE"
+    "authored_override:knyszyn-roundabout-truck-apron"
    ]
   },
   {
@@ -293,14 +295,16 @@
    ],
    "length_m": 11.5,
    "max_grade": 0.0038,
-   "overrides": [],
+   "overrides": [
+    "knyszyn-roundabout-truck-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.033,
    "sidewalk_frac": 0.5,
    "width_m": [
-    4.0
+    5.0
    ],
    "width_src": [
-    "bdot10k (clamped 3.50-5.50)"
+    "authored_override:knyszyn-roundabout-truck-apron"
    ]
   },
   {
@@ -316,14 +320,16 @@
    ],
    "length_m": 3.0,
    "max_grade": 0.0219,
-   "overrides": [],
+   "overrides": [
+    "knyszyn-roundabout-truck-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.5,
    "width_m": [
-    4.0
+    5.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.3 (>=3.50) + WORKING_VALUE"
+    "authored_override:knyszyn-roundabout-truck-apron"
    ]
   },
   {
@@ -339,14 +345,16 @@
    ],
    "length_m": 11.4,
    "max_grade": 0.0152,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.037,
+   "overrides": [
+    "knyszyn-roundabout-truck-apron"
+   ],
+   "profile_rms_vs_nmt_m": 0.038,
    "sidewalk_frac": 0.5,
    "width_m": [
-    4.0
+    5.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.3 (>=3.50) + WORKING_VALUE"
+    "authored_override:knyszyn-roundabout-truck-apron"
    ]
   },
   {
@@ -362,14 +370,16 @@
    ],
    "length_m": 8.7,
    "max_grade": 0.0086,
-   "overrides": [],
+   "overrides": [
+    "knyszyn-roundabout-truck-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.053,
    "sidewalk_frac": 0.5,
    "width_m": [
-    4.0
+    5.0
    ],
    "width_src": [
-    "bdot10k (clamped 3.50-5.50)"
+    "authored_override:knyszyn-roundabout-truck-apron"
    ]
   },
   {
@@ -385,14 +395,16 @@
    ],
    "length_m": 5.2,
    "max_grade": 0.0334,
-   "overrides": [],
+   "overrides": [
+    "knyszyn-roundabout-truck-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.5,
    "width_m": [
-    4.0
+    5.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.3 (>=3.50) + WORKING_VALUE"
+    "authored_override:knyszyn-roundabout-truck-apron"
    ]
   },
   {
@@ -408,14 +420,16 @@
    ],
    "length_m": 1.6,
    "max_grade": 0.0146,
-   "overrides": [],
+   "overrides": [
+    "knyszyn-roundabout-truck-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.5,
    "width_m": [
-    4.0
+    5.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.3 (>=3.50) + WORKING_VALUE"
+    "authored_override:knyszyn-roundabout-truck-apron"
    ]
   },
   {
@@ -431,14 +445,16 @@
    ],
    "length_m": 2.3,
    "max_grade": 0.0107,
-   "overrides": [],
+   "overrides": [
+    "knyszyn-roundabout-truck-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.5,
    "width_m": [
-    4.0
+    5.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.3 (>=3.50) + WORKING_VALUE"
+    "authored_override:knyszyn-roundabout-truck-apron"
    ]
   },
   {
@@ -3269,7 +3285,7 @@
    "patches": 256
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 432328,
+  "footprint_nodes": 432360,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3529,6 +3545,19 @@
   "nmt_nodes_replaced_under_decks": 119,
   "overrides_applied": [
    {
+    "id": "knyszyn-roundabout-truck-apron",
+    "targets": [
+     "w1426801304:13115969575-13432353449",
+     "w1426801304:13115969578-13115969582",
+     "w1426801304:13115969582-13115969583",
+     "w1426801304:13115969583-13432353458",
+     "w1426801304:13115969587-13432353443",
+     "w1426801304:13432353443-13115969575",
+     "w1426801304:13432353449-13115969578",
+     "w1426801304:13432353458-13115969587"
+    ]
+   },
+   {
     "id": "dk65-carriageway-width",
     "targets": [
      "w232511646:3047667219-1134814357",
@@ -3559,9 +3588,9 @@
   "profile_ties": [],
   "roundabout_junctions": 4,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 438,
-   "parts": 139,
-   "side_tris": 178
+   "kerb_tris": 458,
+   "parts": 140,
+   "side_tris": 206
   },
   "signalised_junctions": 0,
   "through_lines": {
@@ -3577,7 +3606,7 @@
   },
   "verge_strips": {
    "chunks": 39,
-   "tris": 28805
+   "tris": 28861
   },
   "walled_ramps": []
  }
