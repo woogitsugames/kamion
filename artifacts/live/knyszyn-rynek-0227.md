@@ -60,3 +60,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 20:09 +01:00 — R1 ponownie wstrzymano mimo ~26 GiB wolnego RAM; wznowiono wyłącznie dwa procesy należące do r1 (NtResumeProcess zwrócił 0), potwierdzono wzrost CPU i pracujący wątek. Przyczyna wstrzymywania pozostaje nieustalona.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 20:13 +01:00 — Uzupełniono audyt 11 kadrów właściciela, z rozróżnieniem brakujących renderów i niepewności; generator r1 nadal pracuje.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
