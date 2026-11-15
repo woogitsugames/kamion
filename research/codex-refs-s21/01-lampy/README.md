@@ -8,7 +8,7 @@ Cel: uzupełnić lukę M59-FIX zdjęciami lamp ciągników i naczep z czytelną 
 
 ## Fotometria
 
-Źródło: [UNECE R148, E/ECE/TRANS/505/Rev.3/Add.147](https://unece.org/sites/default/files/2021-05/R148e.pdf), wersja dokumentu z 2021 r.; sprawdzić aktualne poprawki przed zastosowaniem prawnym. Wartości są wymaganiami badania, nie bezpośrednimi wartościami emisji shadera.
+Źródło: [UNECE R148, E/ECE/TRANS/505/Rev.3/Add.147](https://unece.org/sites/default/files/2021-05/R148e.pdf), wersja dokumentu z 9 stycznia 2020 r. (katalog URL 2021-05); sprawdzić aktualne poprawki przed zastosowaniem prawnym. Wartości są wymaganiami badania, nie bezpośrednimi wartościami emisji shadera.
 
 - SOURCED [R148 pkt 4.8.11]: co najmniej 5:1 dla pomiaru obu wspólnie włączonych lamp wobec samej tylnej pozycyjnej/obrysowej, jeśli jest wzajemnie sprzężona ze stopem; w polu ±5° V i ±10° H.
 - SOURCED [R148 pkt 5.5.1 tabela 7]: S1 stałe: minimum 60 cd w osi H-V, maksimum pojedynczej lampy 260 cd w dowolnym kierunku.
@@ -17,7 +17,7 @@ Cel: uzupełnić lukę M59-FIX zdjęciami lamp ciągników i naczep z czytelną 
 
 ## Luki
 
-UNVERIFIED: kształt i kolejność funkcji typowych zespołów naczep i ciągników; czytelne homologacje tych pojazdów. Brak właściwych kadrów włączonych, nocnych i lampek tablicy. Potrzeba ≥ 15 zbliżeń tylnych, ≥ 4 włączonych, ≥ 3 zmierzch/noc i ≥ 5 lampek tablicy według M59-FIX. 01-001 nie jest zaliczany do tych progów. Drugi obejrzany kandydat `CombinedLampReflector.jpg` przedstawia małą przyczepę o nieustalonej kategorii; nie jest podstawą wniosków o naczepach.
+Częściowo uzupełniono kształty i czytelne oznaczenia (zob. Europoint/Europoint III/Volvo poniżej); kolejność funkcji poszczególnych pól i pełna reprezentatywność nadal UNVERIFIED. Brak właściwych kadrów włączonych, nocnych i lampek tablicy. Potrzeba ≥ 15 zbliżeń tylnych, ≥ 4 włączonych, ≥ 3 zmierzch/noc i ≥ 5 lampek tablicy według M59-FIX. 01-001 nie jest zaliczany do tych progów. Drugi obejrzany kandydat `CombinedLampReflector.jpg` przedstawia małą przyczepę o nieustalonej kategorii; nie jest podstawą wniosków o naczepach.
 
 Dalszy krok: wyszukiwać osobno fotografie tylnych lamp zespołów drogowych i zbliżenia kloszy, weryfikując E-numery na oryginale.
 
@@ -32,7 +32,7 @@ Dalszy krok: wyszukiwać osobno fotografie tylnych lamp zespołów drogowych i z
 
 `regulations.csv` zawiera 8 wpisów. Dane R48 zweryfikowano w pełnej istniejącej kopii **Rev.12, seria 06 (snapshot z 2015 r.)**: `research/gptpro/p4-truck-regulations/files/P4-001.pdf`, s. 20, 42 i 48. Stronę 48 odczytano tekstowo oraz obejrzano w renderze. Ustalono rytm kierunkowskazu 90 ± 30 błysków/min, emisję do 1 s, pierwsze zgaśnięcie do 1,5 s oraz miganie awaryjnych w fazie. Strona 20 rozróżnia homologację pojazdu R48, a strona 42 określa obowiązkowość, liczbę i wysokość lamp cofania. Kategoria O1 ma opcjonalność z pkt 6.4.1; sam warunek długości w pkt 6.4.2 nie tworzy obowiązku. Dokładne warunki są w CSV, a SHA256 źródła i metoda w `regulation-evidence.json`. **To starszy zweryfikowany snapshot; aktualność prawna w 2026 r. pozostaje UNVERIFIED.** Nie redystrybuowano nowej kopii PDF.
 
-Wpis 01-N04 przeniesiono z niezweryfikowanej poprawki R148 Amend.5 na pełny tekst bazowego R148 Add.147 z 2021 r.: ponownie otwarto zachowaną pełną odpowiedź web (2865 linii), pkt 3.3.2.1–4. Nie jest to fragment wyników wyszukiwania. Odczytano także tabelę 10, pkt 5.8.1 (01-N08): cofania — minimum 80 cd w H-V; maksima 300/600/8000 cd zależnie od kierunku. Warunki są w CSV. Bezpośrednie pobranie i screenshot PDF zwracały 403; nie deklarujemy nowej kopii ani obejrzenia składu strony. Próba odczytu publikacji EUR-Lex zwróciła weryfikację człowieka; CAPTCHA nie podejmowano. Starszej Rev.12 nie przedstawiamy jako potwierdzenia nowszej Rev.13.
+Wpis 01-N04 przeniesiono z niezweryfikowanej poprawki R148 Amend.5 na pełny tekst bazowego R148 Add.147 z 9 stycznia 2020 r. (katalog URL 2021-05): ponownie otwarto zachowaną pełną odpowiedź web (2865 linii), pkt 3.3.2.1–4. Nie jest to fragment wyników wyszukiwania. Odczytano także tabelę 10, pkt 5.8.1 (01-N08): cofania — minimum 80 cd w H-V; maksima 300/600/8000 cd zależnie od kierunku. Warunki są w CSV. Bezpośrednie pobranie i screenshot PDF zwracały 403; nie deklarujemy nowej kopii ani obejrzenia składu strony. Próba odczytu publikacji EUR-Lex zwróciła weryfikację człowieka; CAPTCHA nie podejmowano. Starszej Rev.12 nie przedstawiamy jako potwierdzenia nowszej Rev.13.
 
 Dodatkowi kandydaci obejrzani osobno:
 - `Lorrylights.jpg` (Rxj, CC BY-SA 3.0): wąski, przepalony i rozmyty widok tyłu; oznaczenia nieczytelne. Odrzucony poza manifestem.
@@ -68,3 +68,7 @@ Na etykiecie obudowy 01-VOL-003 czytelne E9 i grupy znaków potwierdzono niezale
 01-EUP-001: SOURCED [obejrzany obraz; niezależna recenzja drugiego agenta w link-only-candidates/europoint-observations.json] — E9 w okręgu,5497 oraz S1/IIIA/AR/R1 na fizycznym kloszu. Osobno E24 przy10R-06 0973. To1 pewny odczyt tylnej lampy naczepy, a nie dwa za dwa znaki. 01-EUP-002 to inny detal tej samej lampy bez odczytu E. Zastosowanie naczepowe z opisu oferty; karta TRP tego kodu dotyczy prawego wariantu, nie dowodzi napięcia i wymiarów sfotografowanego lewego. Emisja, noc i oświetlenie tablicy nadal UNVERIFIED. Nie ustalono konkretnej edycji R7/R23/R3/R148/R150 z samego numeru5497. Łącznie18 kadrów:6 lokalnych pomocniczych oraz12 link-only. Kryteria M59 nie są zamknięte.
 
 Klucz symboli Europoint: data/europoint-symbols-regulation-review.json wiąże S1/AR/R1 z tabelą1 R148 i IIIA z tabelą1 oraz zał.5 R150. R148 jest dokumentem z9.01.2020 pod adresem katalogu2021-05; skorygowano etykietę snapshotu. Znaczenia symboli nie ustalają serii homologacji5497 ani rzeczywistej emisji egzemplarza.
+
+## Europoint III — odmienny klosz i etykieta
+
+01-EUP3-001…003: trzy fizyczne kadry jednej części,15 link-only łącznie z pozostałymi zestawami; cały manifest21 kadrów (6 lokalnych). Dwa zbliżenia niezależnie obejrzał drugi agent, data/europoint3-peer-review.json. Na kloszu pewne symbole2a/AR/S1/F1/R1/L i częściowo przycięte E9; pełny numer pozostaje UNVERIFIED. Na etykiecie czytelne E9/6985 przy SM1/IA; przetartego numeru głównej grupy nie odtworzono. To nie dwa egzemplarze ani dowód świecenia. Odczyt SM1/IA nie potwierdza homologacji wszystkich pozostałych funkcji. Katalogowy mały widok odłożono poza manifestem.

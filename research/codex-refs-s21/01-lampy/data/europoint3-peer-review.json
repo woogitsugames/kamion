@@ -1,0 +1,105 @@
+{
+  "review_date": "2026-11-15",
+  "reviewer": "Niezależny agent lampy",
+  "method": "Dwa publiczne obrazy fizycznej części obejrzane osobno w Chrome. Bez pobierania i zapisywania obrazów ani screenshotów. Nie oparto odczytu na transkrypcji innego agenta.",
+  "verdict": "PASS odczytów wymienionych poniżej",
+  "images": [
+    {
+      "view": "6/10 detal klosza",
+      "url": "https://a.allegroimg.com/original/11fffc/f0d3d08542af8a53ae3900fa2cfc",
+      "observed": "Ukośny detal czerwonego klosza z drobną pryzmatyczną fakturą, częścią trójkąta, dwiema łukowymi listwami i metalowym wkrętem.",
+      "certain_reads": [
+        "2a / 01",
+        "AR / 00",
+        "S1 / 02",
+        "F1 / 00",
+        "R1 / 02",
+        "L / 00",
+        "E9 w okręgu, częściowo przycięte brzegiem zdjęcia"
+      ],
+      "unverified": [
+        "Pełny numer przy E9; nie rekonstruowano obszaru poza kadrem.",
+        "Przypisanie symboli konkretnym polom optycznym."
+      ]
+    },
+    {
+      "view": "10/10 etykieta obudowy",
+      "url": "https://a.allegroimg.com/original/11feb6/d82af1d844beb04732b559c7adbc",
+      "observed": "Biała drukowana etykieta na fizycznej ciemnej obudowie ze śladami powierzchni; fragment druku przy pierwszym znaku E9 przetarty.",
+      "certain_reads": [
+        "ASPÖCK PORTUGAL",
+        "25-7000-507",
+        "Pierwszy E9 w okręgu; numer przetarty i nieodczytany",
+        "Przed pierwszym E9: IIIA / 02, 2a / 01, AR / 00, S1 / 02, F1 / 00",
+        "Drugi E9 w okręgu i6985",
+        "Przy drugim E9: SM1 / 00 oraz IA / 02"
+      ],
+      "unverified": [
+        "Numer pierwszej grupy E9; bez rekonstrukcji cyfr.",
+        "Pozostałe przetarte znaki pierwszej grupy.",
+        "Znamionowe napięcie egzemplarza."
+      ]
+    }
+  ],
+  "function_vs_emission": {
+    "observed": "Znaki na kloszu i etykiecie; odbicia otoczenia.",
+    "emitting": "UNVERIFIED",
+    "illuminated_registration_plate": "UNVERIFIED",
+    "compartment_function_assignment": "UNVERIFIED; nie przypisano funkcji konkretnym polom po samym kolorze.",
+    "marking_number_scope": "6985 stoi graficznie przy odrębnej grupie SM1/IA. Nie dowodzi homologacji całego zespołu funkcji głównych. To ograniczenie wnioskowania z kadru, nie orzeczenie o konstrukcji egzemplarza."
+  },
+  "symbol_key_snapshot_only": [
+    {
+      "symbol": "SM1",
+      "meaning_pl": "Boczne światło obrysowe dla wszystkich kategorii pojazdów.",
+      "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "snapshot_date": "2020-01-09",
+      "locator": "pkt3.2.4 tabela1, s8; pkt5.7",
+      "status": "SOURCED"
+    },
+    {
+      "symbol": "2a",
+      "meaning_pl": "Tylne światło kierunkowskazu o stałej światłości, w odróżnieniu od kategorii2b o zmiennej światłości. Steady nie oznacza braku migania.",
+      "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "snapshot_date": "2020-01-09",
+      "locator": "pkt3.2.4 tabela1, s7; pkt5.6",
+      "status": "SOURCED"
+    },
+    {
+      "symbol": "F1",
+      "meaning_pl": "Tylne światło przeciwmgłowe o stałej światłości, w odróżnieniu od F2 o zmiennej światłości.",
+      "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "snapshot_date": "2020-01-09",
+      "locator": "pkt3.2.4 tabela1, s7; pkt5.9",
+      "status": "SOURCED"
+    },
+    {
+      "symbol": "L",
+      "meaning_pl": "Światło oświetlające tylną tablicę rejestracyjną. Symbol nie jest dowodem widocznego oświetlenia tablicy w tym kadrze.",
+      "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "snapshot_date": "2020-01-09",
+      "locator": "pkt3.2.4 tabela1, s7; pkt5.11",
+      "status": "SOURCED"
+    },
+    {
+      "symbol": "IA",
+      "meaning_pl": "Niezależny odblask dla pojazdów silnikowych; to klasa odblasku, nie funkcja lampy emitującej światło.",
+      "source": "https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2020/R150e.pdf",
+      "snapshot_date": "2020-01-13",
+      "locator": "pkt3.2.4 tabela1, s10; pkt5.1",
+      "status": "SOURCED"
+    }
+  ],
+  "approval_scope_source": {
+    "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+    "snapshot_date": "2020-01-09",
+    "locator": "pkt3.2.1–3.2.3.2 oraz3.3.2.1–4, s7/10",
+    "finding": "R148 rozróżnia homologowane funkcje, numery i symbole; sam numer obok jednej grupy nie pozwala uzupełnić pozostałych. Odczyt nie zawiera pewnego148R ani150R."
+  },
+  "limits": [
+    "Powyższy klucz tłumaczy symbole we wskazanych snapshotach. Nie ustala regulaminu ani serii homologacji konkretnego egzemplarza.",
+    "Nie potwierdzono aktualnej mocy prawnej2026.",
+    "Nie zaliczono tego zestawu do wykazania emisji, zmierzchu/nocy ani oświetlenia tablicy.",
+    "Nie zmieniono plików autora pierwotnego manifestu ani wcześniejszego klucza Europoint5497."
+  ]
+}
