@@ -80,3 +80,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
 - 2026-11-15 20:41 +01:00 — R2 build trwa. Audyt fontanny: istniejący WorldWater jest nieprzezroczysty i nie obsługuje pionowych strumieni; sucha fontanna pozostaje OPEN. Analiza ewentualnego shadera i ścieżki importu trwa.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
+- 2026-11-15 20:44 +01:00 — W TYPOPLOGIA.md (TYPOLOGIA.md) zapisano 25 brył w promieniu 85 m: typ, wysokość i źródło, dach/fasada z poziomem pewności; r2 nadal buduje.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
