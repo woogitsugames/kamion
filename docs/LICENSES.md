@@ -535,3 +535,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 05/knyszyn-crossing-round4:grobin,2 kadry jednego przejazdu z02.09.2019; MapillaryCCBY-SA4.0 według oficjalnej pomocy wskazanej w manifestach. Indywidualny ogląd w przeglądarce, tylko permalinki i własne opisy, bez kopii zdjęć/screenshotów/API/tokenów; podkładOSM.
 
 01/rear-night-europe-round5/files/01-RNE5-02.jpg:Devokewater, Commons Lawsons_Haulage_-_Mountain_Transformer.jpg, CC BY-SA4.0, miniatura800×600 całego obrazu bez kadrowania. Źródło/licencja/data w manifeście i metadataJSON, osobny przegląd koordynatora. Dwa odrzucenia tylko w dzienniku, bez zachowanych kopii.
+
+06/monki-centre-round3:3 indywidualnie obejrzane historyczne obrazy Mapillary, autorzy szurek for Here(2017) i roadlifehacks(2021); CC BY-SA4.0 według oficjalnej pomocy wskazanej w manifestach. Wyłącznie permalinki/opisy, bez kopii zdjęć/screenshotów/API/tokenów, podkładOSM.

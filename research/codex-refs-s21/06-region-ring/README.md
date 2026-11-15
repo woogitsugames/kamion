@@ -48,3 +48,6 @@ monki-ground-round2:2 nowe źródła Henryka Borawskiego, CC BY-SA3.0/4.0,2014/2
 
 
 Tykocin-landmarks-round3:2 nowe kadry2009/2018 (Lollencja BY-SA3.0pl, Ymblanter BY-SA4.0), kościół/pomnik i pierzeja placu. Osobne oględziny koordynatora i niezależny przegląd. Lewa wieża ucięta, wymiary/formalne kondygnacje i aktualność2026 nieustalone. 2 podglądy pobrane, 2 miniatury≤800px, brak pełnych oryginałów. Główny manifest11 rekordów.
+
+
+Monki-centre-round3:3nowe indywidualnie obejrzane link-onlyMapillary, szurek for Here2017 iroadlifehacks2021. Drewniany szczyt przy Białostockiej, pawilon z witrynami przy Słowackiego oraz dalsza niska pierzeja DK65. Bez kopii/API/tokenów, jawny podkładOSM. Nie są pełną panoramą placu/ronda ani dowodem wykonania skweru2026. Adresy/formalne kondygnacje/GPS kamery/metryka i stan2026UNVERIFIED. Główny manifest14rekordów.
