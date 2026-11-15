@@ -1,0 +1,78 @@
+{
+  "id": "gugik-nmt-2025-dk65-07",
+  "name": "GUGiK NMT (DTM) 1 m grid, 2025, sheets covering dk65-07",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "NMT",
+  "region": "dk65-07",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NumerycznyModelTerenuEVRF2007/WFS/Skorowidze",
+  "format": "ARC/INFO ASCII GRID",
+  "crs": "EPSG:2180 (PL-1992)",
+  "vertical_crs": "PL-EVRF2007-NH (EPSG:9651 EVRF2007-PL height); compound EPSG:2180+9651",
+  "resolution_m": 1.0,
+  "accuracy": {
+    "blad_sr_wys_m": "0.07",
+    "blad_sr_syt_m": "0.14"
+  },
+  "source_survey": "airborne laser scanning (zrodlo_danych: Skaning laserowy)",
+  "extent": "sheets intersecting bbox [764683.0, 603391.0, 766731.0, 605439.0]",
+  "license": "GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)",
+  "license_status": "LEGAL_REVIEW_REQUIRED (statutory basis cited from secondary sources, not from ISAP text)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/build_region.py --region dk65-07"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83184/83184_1736138_N-34-106-B-d-2-1.asc",
+      "godlo": "N-34-106-B-d-2-1",
+      "akt_data": "2025-05-25",
+      "akt_rok": "2025",
+      "char_przestrz": "1.00 m",
+      "uklad_xy": "PL-1992",
+      "uklad_h": "PL-EVRF2007-NH",
+      "blad_sr_wys": "0.07",
+      "blad_sr_syt": "0.14",
+      "format": "ARC/INFO ASCII GRID",
+      "dt_pzgik": "2025-11-12",
+      "local_path": "Data/raw/gugik/gugik-nmt-2025-dk65-07/83184_1736138_N-34-106-B-d-2-1.asc",
+      "sha256": "f69bd59435e0284bf47894552f9a35e0fd225b585732904769e23276ce6b8653",
+      "size_bytes": 37133705,
+      "downloaded_utc": "2026-11-15T08:06:21+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83184/83184_1736139_N-34-106-B-d-2-2.asc",
+      "godlo": "N-34-106-B-d-2-2",
+      "akt_data": "2025-05-25",
+      "akt_rok": "2025",
+      "char_przestrz": "1.00 m",
+      "uklad_xy": "PL-1992",
+      "uklad_h": "PL-EVRF2007-NH",
+      "blad_sr_wys": "0.07",
+      "blad_sr_syt": "0.14",
+      "format": "ARC/INFO ASCII GRID",
+      "dt_pzgik": "2025-11-12",
+      "local_path": "Data/raw/gugik/gugik-nmt-2025-dk65-07/83184_1736139_N-34-106-B-d-2-2.asc",
+      "sha256": "c967f468f028e8985dfb00f933304966a0f1cd17494cde781dd88232a99c6eff",
+      "size_bytes": 37148441,
+      "downloaded_utc": "2026-11-15T08:06:33+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83184/83184_1736141_N-34-106-B-d-2-4.asc",
+      "godlo": "N-34-106-B-d-2-4",
+      "akt_data": "2025-05-25",
+      "akt_rok": "2025",
+      "char_przestrz": "1.00 m",
+      "uklad_xy": "PL-1992",
+      "uklad_h": "PL-EVRF2007-NH",
+      "blad_sr_wys": "0.07",
+      "blad_sr_syt": "0.14",
+      "format": "ARC/INFO ASCII GRID",
+      "dt_pzgik": "2025-11-12",
+      "local_path": "Data/raw/gugik/gugik-nmt-2025-dk65-07/83184_1736141_N-34-106-B-d-2-4.asc",
+      "sha256": "f9b796ccfd39ed667176e6f09d83660910f50944a4c3cef8140d2a92fb97d818",
+      "size_bytes": 37178217,
+      "downloaded_utc": "2026-11-15T08:06:49+00:00"
+    }
+  ]
+}

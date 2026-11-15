@@ -127,3 +127,10 @@ Thermal 0. Budżet w skrypcie dla High = 60 FPS (p95 ≤ 17 ms) → „OVER” w
 | G3-A | 29,97 | 33,43 / 33,56 / 50,2 | 4 | 32,1 / 34,4 | 900,8 | 57/57 | OK |
 | G3-B | — | — | — | — | — | — | NIEZMIERZONY: instalacja APK nieudana, A16 offline w adb (19:43) — do powtórzenia |
 Dane: `artifacts/gate3/20261114-182955`.
+
+## 2026-11-15 — A16 (SM-A165F), Low/30, czysty APK `kamion-0.1.0-af2570fccd.apk` (lider s20)
+| Segment | ważny | śr. FPS | p95 ms | p99 ms | max ms | > 50 ms | GPU p95 ms | PSS MB | kamery | dowód |
+|---|---|---|---|---|---|---|---|---|---|---|
+| G3-A | TAK | 30,0 | 33,46 | 33,55 | 49,97 | 0 | 34,65 | 930,5 | 57/57 | `artifacts/gate3/20261115-141511/RFGL34SJYDZ/` |
+| G3-B | TAK | 29,94 | 33,46 | 33,61 | 83,29 | 3 | 34,39 | 933,8 | 46/46 | `artifacts/gate3/20261115-145242/RFGL34SJYDZ/` |
+Budżet (docs/PERFORMANCE_BUDGETS.md, WORKING_VALUE: p95 ≤ 34, p99 ≤ 40, PSS ≤ 1000): oba segmenty OK. Zawiera scalenia z 15.11 (Argon 0193/0186/0194, 0208, 0212, fizyka #77, marki #78). Zrzuty kamer do obejrzenia (pętla wizualna) — w katalogach `cam/`.

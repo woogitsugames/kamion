@@ -1,9 +1,4 @@
-# STATUS rail-dk65-0223 (ADR 0223, stacked na rail-0217 / PR #96)
-- krok 1-3: OSM API 0.6 (17 kafli + way/full + relacja 2316318 ref=38) -> linia 38 tylko w dk65-01..04, dw671-tykocin-01 (+ bialystok-knyszynska, zakazany); rail_sources.json 5 kafli (manifest Data/SourceManifests/osm-api-0.6-rail-l38.json); rail.py: KEEP_TAGS, extract_osm_xml, crossing_equipment (kat. A-F, Dz.U. 2025 poz. 1105 § 6), overrides kind rail_crossing, G-2 (§ 81), markery poza kaflem; regions.py rail=True x5; pytest -k rail 46/46.
-- NASTEPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis -k rail -q` po dopisaniu tests/gis/test_rail_dk65_0223.py
-- krok 4: tests/gis/test_rail_dk65_0223.py (opt-in 5 kafli, provenance, dlugosci/przejazdy per kafel, tor vs jezdnia, szwy +-0,1 m, budzet, mapowanie A-F, override, G-2, markery poza kaflem, extract XML); pytest -k rail 83 passed.
-- NASTEPNY KROK: ADR 0223 + LICENSES, potem `uv run --project tools/worldgen python -m pytest tests/gis -q`
-- krok 5: ADR 0223 (tabela kafli, mapowanie A-F z Dz.U. 2025 poz. 1105, budzet ESTIMATED, kolejnosc scalania, komendy lidera) + LICENSES (osm-api-0.6-rail-l38).
-- NASTEPNY KROK: wynik pelnego `uv run --project tools/worldgen python -m pytest tests/gis -q`, PR (baza rail-0217).
-- krok 6: pelny pytest tests/gis: 1319 passed, 48 skipped (Data/raw), 3 xfailed; deselected road_fidelity::test_report_not_stale (jak w 0217). Render kontrolny: artifacts/rail-dk65-0223/line38_tiles.png (poza gitem).
-- NASTEPNY KROK (lider): po #96 + FIX #95/#96 komendy z ADR 0223 "Odtworzenie" dla dk65-01..04, dw671-tykocin-01.
+# STATUS — F10 docs/gates-status-s21 (chmura D r2)
+- Krok 1: `docs/reports/GATES-STATUS-S21.md` (A16 af2570fccd G3-A/B, bramki 1–2 + 0201b, S24+, 66 scaleń s20/s21, D63–D68, korytarz DK65 w APK).
+- Krok 2: `docs/owner/BACKLOG-S21.md` — kolumna „status s21 (15.11)” dla 133 wierszy + Top 15; zamknięte 17, w toku 22, częściowo 18, bez zmian 74.
+- NASTĘPNY KROK: PR do main (REST `gh api repos/woogitsugames/kamion/pulls -f head=docs/gates-status-s21 -f base=main ...`).

@@ -52,6 +52,8 @@ namespace Game.Gameplay
         readonly DriverInputMixer m_Mixer = new DriverInputMixer();
         public readonly AutopilotDriverInput Autopilot = new AutopilotDriverInput();
         public readonly KeyboardDriverInput Keyboard = new KeyboardDriverInput();
+        /// <summary>Gamepad (ADR 0261): stick + triggers; inactive without a connected pad.</summary>
+        public readonly GamepadDriverInput Pad = new GamepadDriverInput();
         public readonly TouchSteeringWheel Wheel = new TouchSteeringWheel();
         public readonly GyroSteering Gyro = new GyroSteering();
         /// <summary>The simulated cab steering wheel (ADR 0058): driver target → hand-rate-limited wheel → Steering command, in the fixed step.</summary>
@@ -128,6 +130,7 @@ namespace Game.Gameplay
             m_Mixer.Add(Autopilot);
             m_Mixer.Add(RouteDriver);
             m_Mixer.Add(Keyboard);
+            m_Mixer.Add(Pad);
             m_Mixer.Add(Wheel);
             m_Mixer.Add(Gyro);
             m_Mixer.Add(Touch);
@@ -227,6 +230,9 @@ namespace Game.Gameplay
                 SafetyNet.vehicle = vehicle;
                 SafetyNet.region = regionRoot;
             }
+            // Region start (menu or adb scene=...): one log line with region, route distance, local point and road (ADR 0229).
+            string menuRegion = StartRequest.ConsumeRegion();
+            if (regionRoot != null && route != null && route.points.Length > 1) LogRegionStart(regionRoot.regionId, menuRegion);
             // lighting=<preset> (clear | overcast | lowsun | dusk): device frames of the control set under the same light (A7).
             string menuLighting = StartRequest.ConsumeLighting();   // start menu choice; a launch argument wins
             string lighting = platform.GetLaunchArgument("lighting");
@@ -362,6 +368,18 @@ namespace Game.Gameplay
             var ci = CultureInfo.InvariantCulture;
             if (float.TryParse(platform.GetLaunchArgument("route_s"), NumberStyles.Float, ci, out float s) && s >= 0f) m_RouteS = Mathf.Min(s, route.Length);
             if (float.TryParse(platform.GetLaunchArgument("route_end"), NumberStyles.Float, ci, out float e) && e > 0f) m_RouteEndS = Mathf.Min(e, route.Length);
+        }
+
+        /// <summary>Start log of a world scene (ADR 0229): region id + region-local start point + road of the routing graph.
+        /// Runs once after the spawn (loads the region graph once; not part of the driving loop).</summary>
+        void LogRegionStart(string sceneRegion, string menuRegion)
+        {
+            if (!string.IsNullOrEmpty(menuRegion) && menuRegion != sceneRegion)
+                Debug.LogWarning("[START] menu region " + menuRegion + " but the scene holds " + sceneRegion);
+            float s = m_RouteS >= 0f ? m_RouteS : RegionStart.DefaultStartS;
+            Vector2 en = RegionStart.LocalPointAt(route.points, route.distances, s);
+            var road = RegionStart.FindRoad(Game.Core.Navigation.RouteGraph.Load(sceneRegion), en);
+            Debug.Log(RegionStart.Describe(sceneRegion, s, en, road));
         }
 
         /// <summary>Respawns the current preset at route distance s (same as launch argument route_s; also used by tests).</summary>
@@ -589,6 +607,9 @@ namespace Game.Gameplay
         /// target and writes its angle / lock as the steering command. Autopilots bypass the hand model (their own
         /// controllers are tuned on the raw command) and the column is kept at their angle for a seamless hand-over.
         /// </summary>
+        /// <summary>Right-stick look-around: full deflection = this many pixels of look drag per second (WORKING_VALUE), dead zone.</summary>
+        const float PadLookPxPerSecond = 900f, PadLookDeadZone = 0.15f;
+
         void FixedUpdate()
         {
             if (!vehicle.Initialized || UnityEngine.Physics.simulationMode != SimulationMode.FixedUpdate) return;   // scripted stepping (tests) drives Input itself
@@ -631,12 +652,19 @@ namespace Game.Gameplay
             if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, k_CamModeEvents[(int)m_LoggedCamMode]); }
             m_InputLog.TryFlush(Time.unscaledTime, intent.Throttle < 0.01f && intent.Brake < 0.01f && !intent.SteerActive);   // batched; allocates only on that frame
             var kb = UnityEngine.InputSystem.Keyboard.current;   // Android back key arrives as Escape
-            if (kb != null && kb.escapeKey.wasPressedThisFrame)
+            var pad = UnityEngine.InputSystem.Gamepad.current;   // ADR 0261: Start = menu / back, Y = next camera, right stick = look
+            if ((kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.startButton.wasPressedThisFrame))
             {
                 if (Game.UI.Navigation.FullMapView.HandleBack()) { }   // back closes the map first (ADR 0150)
                 else if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
             }
-            Game.Core.AudioCues.HornHeld = kb != null && kb.kKey.isPressed;   // horn (ADR 0142; touch button: gameplay-ui TODO)
+            if ((kb != null && kb.cKey.wasPressedThisFrame) || (pad != null && pad.buttonNorth.wasPressedThisFrame)) m_Rig.NextMode();   // C / Y: cab → chase → orbit
+            if (pad != null)
+            {
+                Vector2 look = pad.rightStick.ReadValue();
+                if (look.sqrMagnitude > PadLookDeadZone * PadLookDeadZone) m_Rig.AddLookDelta(look * (PadLookPxPerSecond * Time.unscaledDeltaTime));
+            }
+            Game.Core.AudioCues.HornHeld = (kb != null && kb.kKey.isPressed) || (pad != null && pad.rightStickButton.isPressed);   // horn (ADR 0142; touch button: gameplay-ui TODO)
             ApplyCommands(intent);
             UpdateTurnSignals(intent, fb.RoadWheelAngleNormalized);
 

@@ -69,7 +69,9 @@ def test_tile_lies_between_kleeberga_and_dk65_01_and_matches_the_plan():
 def test_two_powiaty_and_single_powiat_regions_are_unchanged():
     k = regions.get(RID)
     assert k.powiaty == ("2061", "2002")
-    assert all(r.powiaty == (r.teryt_powiat,) for i, r in regions.REGIONS.items() if i != RID)
+    multi = {RID, "dk65-10", "dk65-11"}        # ADR 0214: the DK65 tiles on the białostocki / moniecki boundary
+    assert all(r.powiaty == (r.teryt_powiat,) for i, r in regions.REGIONS.items() if i not in multi)
+    assert regions.get("dk65-10").powiaty == ("2002", "2008") and regions.get("dk65-11").powiaty == ("2008", "2002")
     reg = yaml.safe_load((RDIR / "region.yaml").read_text(encoding="utf-8"))
     assert reg["teryt_powiat"] == "2061" and reg["teryt_powiat_extra"] == ["2002"]
 
@@ -112,6 +114,8 @@ def test_overrides_are_explained_and_target_existing_edges():
     assert len(ov) >= 4
     for o in ov:
         assert o["reason"].strip() and o["confidence"] and o["verify"]
+        if o.get("kind") == "lamp_policy":          # ADR 0216: region-wide policy, no edge target
+            continue
         t = o["target"]
         assert all(w in ways for w in t.get("osm_way", [])), o["id"]
         assert "edge" not in t or t["edge"] in edges, o["id"]

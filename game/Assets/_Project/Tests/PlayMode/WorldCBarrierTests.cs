@@ -14,7 +14,7 @@ using UnityEngine.TestTools;
 namespace Game.Tests
 {
     /// <summary>
-    /// Owner report (map audit MA-003): the Kwadrat Park boom did not open and had no collision. This test runs on the
+    /// Owner report (map audit MA-003): the start depot gate boom did not open and had no collision. This test runs on the
     /// imported world scene (WorldC), not on a synthetic rig:
     ///  * every imported boom is a closed, solid <see cref="DepotBarrier"/> (ray along the lane hits its collider);
     ///  * the 40 t combination driven along the start route by the path follower is let through by the boom on its
@@ -54,7 +54,7 @@ namespace Game.Tests
             Assert.IsNotNull(boot, "bootstrap missing");
             Assert.IsNotNull(route, "route missing");
             var bars = Object.FindObjectsByType<DepotBarrier>(FindObjectsSortMode.None);
-            Assert.GreaterOrEqual(bars.Length, 2, "Kwadrat Park gate kit: one automatic boom per lane");
+            Assert.GreaterOrEqual(bars.Length, 2, "Depot gate kit: one automatic boom per lane");
 
             // ---- every boom: closed, visible, solid ----
             DepotBarrier onRoute = null;

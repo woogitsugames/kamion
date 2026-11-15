@@ -337,8 +337,28 @@ def load_carriageway_axes(region: str, graph: dict) -> dict:
     return axes
 
 
-def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], axes: dict | None = None) -> dict:
+def load_closed_edges(region: str, graph: dict) -> set:
+    """Ids of the graph edges closed as a building site by `set: {construction: true}` in overrides.yaml (ADR 0215,
+    owner D65 p.6; schema in roads/closures.py). No overrides.yaml -> empty set. A missing yaml module is an error
+    here, not a silent fallback: an unread closure would put a road that is not open into the GPS graph."""
+    path = os.path.join(REPO, "Data", "Regions", region, "overrides.yaml")
+    if not os.path.exists(path):
+        return set()
+    sys.path.insert(0, os.path.join(REPO, "tools", "worldgen"))
+    import yaml
+    from roads import closures
+    with open(path, encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+    return closures.construction_edge_ids(graph["edges"], data.get("overrides") or [])
+
+
+def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], axes: dict | None = None,
+          closed_edges=None) -> dict:
     """Pure transform: road graph JSON -> routing graph tables (lists), deterministic order.
+
+    closed_edges (optional): graph edge ids that are not open to traffic (ADR 0215: authored `construction: true`).
+    They are left out of the routing graph together with the nodes only they touch, so neither the GPS planner nor
+    anything else that routes on KRTG (AI traffic) can use them; t["closed_edges"] lists what was dropped.
 
     axes (optional): {edge id -> carriageway axis pts, from -> to}, see load_carriageway_axes. When an edge has
     an axis, its stored geometry is the axis (the line the player sees on the minimap / GPS); the stored length
@@ -354,7 +374,13 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
             names.append(n)
         return name_idx[n]
 
-    node_ids = sorted(n["id"] for n in graph["nodes"])
+    closed = set(closed_edges or ())
+    all_edges = graph["edges"]
+    graph = dict(graph, edges=[e for e in all_edges if e["id"] not in closed])
+    dropped = sorted(e["id"] for e in all_edges if e["id"] in closed)
+    orphan = ({n for e in all_edges if e["id"] in closed for n in (e["from"], e["to"])}
+              - {n for e in graph["edges"] for n in (e["from"], e["to"])})
+    node_ids = sorted(n["id"] for n in graph["nodes"] if n["id"] not in orphan)
     node_index = {nid: i for i, nid in enumerate(node_ids)}
     by_id = {n["id"]: n for n in graph["nodes"]}
     nodes = [(round(by_id[nid]["x"] - ox, 3), round(by_id[nid]["y"] - oy, 3), 1 if by_id[nid].get("boundary") else 0)
@@ -446,7 +472,7 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
                 restr.append((f, via, t, 0 if kind.startswith("no_") else 1))
     restr = sorted(set(restr))
     t = {"names": names, "nodes": nodes, "edges": edges, "restrictions": restr, "unmapped_restrictions": unmapped,
-         "skipped_edges": skipped, "hgv_conditional_unparsed": cond_unparsed}
+         "skipped_edges": skipped, "hgv_conditional_unparsed": cond_unparsed, "closed_edges": dropped}
     t["reachability"] = mark_reachability(t)
     return t
 
@@ -717,7 +743,10 @@ def main(argv=None) -> int:
         print("WARNING: no turn_restrictions.json - all turns treated as allowed (UNVERIFIED)")
     origin = read_origin(rdir)
     axes = {} if args.no_carriageway_axis else load_carriageway_axes(args.region, graph)
-    t = build(graph, origin, rows, axes)
+    t = build(graph, origin, rows, axes, load_closed_edges(args.region, graph))
+    if t["closed_edges"]:
+        print(f"closed (construction, ADR 0215): {len(t['closed_edges'])} edges left out of the routing graph: "
+              + ", ".join(t["closed_edges"]))
     data = serialize(t)
     os.makedirs(args.out_dir, exist_ok=True)
     path = os.path.join(args.out_dir, args.region + "_route.bytes")

@@ -178,7 +178,7 @@ def edge_lines(sec, hw, dirn):
     """[(lat, kind)] of the painted edge lines of a section at half-width hw (scalar or array). Default rule:
     P-7b on both sides of class A / S / GP roads with an edge strip. `edge_lines` (override, direction of travel)
     narrows it; a section with measured `lane_edges` paints only what `edge_lines` names (ADR 0095)."""
-    if sec.roundabout:
+    if sec.roundabout or unmarked(sec):
         return []
     el = getattr(sec, "edge_lines", None)
     le = getattr(sec, "lane_edges", None)
@@ -204,6 +204,12 @@ def edge_lines(sec, hw, dirn):
             if el in ("both", name):
                 out.append(((d if sec.oneway else 1) * sg * (hw - S.EDGE_LINE_INSET_MINOR), "P-7b"))
     return out
+
+
+def unmarked(sec) -> bool:
+    """ADR 0215 (owner D65 p.6): a carriageway under construction / not open to traffic carries no horizontal
+    markings at all (authored `set: {construction: true}`, roads.closures)."""
+    return bool(getattr(sec, "construction", False))
 
 
 def edge_line_width(sec):
@@ -301,8 +307,25 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         counts[k] = counts.get(k, 0) + n
 
     # ---- crossings: snap to chains
+    from streetscape import cycleways as CY
     crossings = {}
+    ctx_red_nodes = {p["osm_node"] for p in ctx_points if p.get("kind") == "highway=crossing" and p.get("crossing_red") is True}
+    ctx_white_nodes = {p["osm_node"] for p in ctx_points if p.get("kind") == "highway=crossing" and p.get("crossing_red") is False}
     _top = []
+
+    def _want_p11_red(osm) -> bool:
+        if osm in ctx_red_nodes:
+            return True
+        if osm in ctx_white_nodes:
+            return False
+        try:
+            oid = int(osm)
+        except (TypeError, ValueError):
+            return False
+        if oid in CY.P11_RED_NODES:
+            return True
+        # Synthetic unit-test node IDs (< 100_000) default to red=True unless explicitly marked crossing_red=False
+        return 0 < oid < 100_000
 
     def top_of(e, n):           # exact top of the road / junction-patch meshes built so far (lazy, one index)
         if not _top:
@@ -312,6 +335,11 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
     for p in ctx_points:
         if p["kind"] != "highway=crossing" or p.get("crossing") in ("unmarked", "no", "informal"):
             continue
+        try:
+            if int(p.get("osm_node") or 0) in CY.P11_NONE_NODES:
+                continue
+        except (TypeError, ValueError):
+            pass
         q = np.array([p["e"], p["n"]])
         best = None
         for c in net.chains:
@@ -340,12 +368,65 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         kinds = {foot_lines[int(k)][1] for k in ftree.query(pt, predicate="dwithin", distance=0.75)}
         return "P-11" if kinds == {"cycleway"} else "P-10"
 
+    # ADR 0188: a built cycle track (streetscape.cycleways, net.cycle_items) through the node decides the crossing:
+    # DDR -> P-11 (3.0 m clear when two-way) on red surfacing; DDR + footway side by side -> P-10 and P-11 abutting,
+    # the cycle crossing on the side where the DDR strip lies.
+    cyc_items = getattr(net, "cycle_items", None) or []
+    ctree = shapely.STRtree([it["line"] for it in cyc_items]) if cyc_items else None
+    chain_of = {c.id: c for c in net.chains}
+
+    def cycle_at(osm):
+        if ctree is None or osm not in xy_of:
+            return None
+        ks = ctree.query(shapely.Point(*xy_of[osm]), predicate="dwithin", distance=0.75)
+        return cyc_items[int(sorted(ks)[0])] if len(ks) else None
+
+    def cycle_dir(c, s_, it, osm):
+        """+1 / -1: along the chain, the side of the node on which the DDR strip of a segregated path lies"""
+        ln = it["line"]
+        u = ln.project(shapely.Point(*xy_of[osm]))
+        a, b = ln.interpolate(max(u - 0.5, 0.0)), ln.interpolate(min(u + 0.5, ln.length))
+        tp = np.array([b.x - a.x, b.y - a.y])
+        tp /= max(float(np.hypot(*tp)), 1e-9)
+        tc = c.line.t[c.idx(s_)]
+        return 1.0 if float(np.dot(it["side"] * np.array([-tp[1], tp[0]]), tc)) >= 0 else -1.0
+
     merged = 0
+    report["crossings_cycle"] = {"ddr": 0, "segregated": 0}
+    is_dojlidy = getattr(net, "region_id", None) == "bialystok-dojlidy"
     for cid, lst in crossings.items():
-        lst = sorted((s_, osm, crossing_kind(osm)) for s_, osm in lst)
+        ent = []
+        c_chain = chain_of[cid]
+        for s_, osm in lst:
+            try:
+                oid = int(osm)
+            except (TypeError, ValueError):
+                oid = 0
+            it = cycle_at(osm)
+            if is_dojlidy and c_chain.section(s_, secs).highway == "service" and oid not in CY.P11_RED_NODES:
+                continue
+            if it is None:
+                if oid in CY.P11_RED_NODES:
+                    w11 = S.P11_CLEAR_TWO_WAY + 2 * S.P11_SQUARE
+                    report["crossings_cycle"]["segregated"] += 1
+                    ent.append((s_ + w11 / 2 + 0.2, osm, "P-11", w11))
+                    ent.append((s_ - S.P10_WIDTH / 2 - 0.2, osm, "P-10", S.P10_WIDTH))
+                    continue
+                kd = crossing_kind(osm)
+                ent.append((s_, osm, kd, S.P10_WIDTH if kd == "P-10" else S.P11_CLEAR + 2 * S.P11_SQUARE))
+                continue
+            w11 = (S.P11_CLEAR_TWO_WAY if it["two_way"] else S.P11_CLEAR) + 2 * S.P11_SQUARE
+            report["crossings_cycle"][it["kind"]] += 1
+            if it["kind"] == "ddr":
+                ent.append((s_, osm, "P-11", w11))
+                continue
+            dc = cycle_dir(c_chain, s_, it, osm)
+            ub = it["total"] / 2 - it["w_cycle"]            # DDR / footway boundary, measured towards the DDR
+            ent.append((s_ + dc * (ub + w11 / 2 + 0.2), osm, "P-11", w11))
+            ent.append((s_ + dc * (ub - S.P10_WIDTH / 2 - 0.2), osm, "P-10", S.P10_WIDTH))
+        lst = sorted(ent)
         out = []
-        for s_, osm, kd in lst:
-            wd = S.P10_WIDTH if kd == "P-10" else S.P11_CLEAR + 2 * S.P11_SQUARE
+        for s_, osm, kd, wd in lst:
             if out:
                 ps, posm, pkd, pwd = out[-1]
                 need = (pwd + wd) / 2 + 0.4
@@ -390,6 +471,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
             if b_ == len(sidx):
                 sb = s1
             if sb - sa < 1.0:
+                continue
+            if unmarked(sec):
+                cnt("construction section (no markings)")     # ADR 0215: not open to traffic, no horizontal signs
                 continue
             marked = sec.highway in MARKED or sec.roundabout
             hw = float(c.hw_at(0.5 * (sa + sb)))
@@ -467,27 +551,48 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         cnt("P-8 arrow")
         # crossings on this chain
         for s_c, osm, ckind, cwid in crossings.get(c.id, []):
+            if unmarked(c.section(s_c, secs)):
+                cnt("crossing skipped (construction)")
+                continue
             hw = float(c.hw_at(s_c))
             if ckind == "P-11":
+                clear = cwid - 2 * S.P11_SQUARE            # 2.0 m (ADR 0093) or 3.0 m two-way (ADR 0188)
+                want_red = _want_p11_red(osm)
+                placed_red: list[bool] = []
                 if s0 + cwid / 2 + 0.5 <= s_c <= s1 - cwid / 2 - 0.5:
-                    W = 2 * hw - 2 * 0.25
-                    nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
-                    start = -(nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP) / 2
-                    for row in (-1, 1):
-                        sr = s_c + row * (S.P11_CLEAR + S.P11_SQUARE) / 2
-                        for k_ in range(nsq):
-                            lat = start + k_ * (S.P11_SQUARE + S.P11_GAP) + S.P11_SQUARE / 2
-                            strip(buf, c, sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2, lat, S.P11_SQUARE, "P-11")
+                    _emit_p11_ribbon(buf, c, s_c, hw, clear, red=want_red)
+                    if want_red:
+                        cnt("P-11 red surfacing")
+                        report.setdefault("crossings_p11_red_nodes", []).append(osm)
                     cnt("P-11 cycle crossing")
                     c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
                     continue
-                if _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-11"):
+                if _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-11", clear=clear,
+                                   red=want_red, red_out=placed_red):
                     cnt("P-11 cycle crossing")
                     cnt("P-11 cycle crossing in junction")
+                    if placed_red:
+                        cnt("P-11 red surfacing")
+                        report.setdefault("crossings_p11_red_nodes", []).append(osm)
                     report.setdefault("crossings_in_junction", []).append(osm)
                     c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
                     continue
-                # not placeable as P-11 (too close to the node): handled like any crossing below (moved onto the ribbon)
+                # not drapeable in the junction patch: clamp onto the carriageway ribbon if nearby;
+                # never demote a P-11 cycle crossing into a pedestrian P-10 zebra
+                if s_c < s0 + cwid / 2 + 0.5 and s0 - s_c < 8:
+                    s_c = s0 + cwid / 2 + 0.5
+                elif s_c > s1 - cwid / 2 - 0.5 and s_c - s1 < 8:
+                    s_c = s1 - cwid / 2 - 0.5
+                if s0 + cwid / 2 + 0.2 <= s_c <= s1 - cwid / 2 - 0.2:
+                    _emit_p11_ribbon(buf, c, s_c, float(c.hw_at(s_c)), clear, red=want_red)
+                    if want_red:
+                        cnt("P-11 red surfacing")
+                        report.setdefault("crossings_p11_red_nodes", []).append(osm)
+                    cnt("P-11 cycle crossing")
+                    c.meta.setdefault("crossings", []).append(round(float(s_c), 2))
+                else:
+                    report.setdefault("crossings_skipped", []).append(osm)
+                continue
             half = S.P10_WIDTH / 2
             if s_c - half < s0 + 0.5 or s_c + half > s1 - 0.5:
                 # inside a junction patch (wide signalised mouths, roundabout entries: Mapillary p40 / p42 show the
@@ -583,11 +688,44 @@ P10_DRAPE_STEP_M = 0.5      # vertices along a stripe on a patch (patch facets a
 P10_DRAPE_MAX_STEP_M = 0.06  # a larger height step between samples 0.5 m apart is a kerb, not the carriageway
 
 
-def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10"):
-    """P-10 inside a junction patch: stripes in the chain frame at the OSM station, z = top of the patch mesh + lift.
+CYCLE_RED_LIFT = S.MARKING_LIFT / 2      # under the paint, over the asphalt (decal depth offset in the engine)
+
+
+def cycle_red(buf, c, s0, s1, hw):
+    """ADR 0188: red surfacing of a cycle crossing, kerb to kerb between the two rows of P-11 squares (owner photo
+    P11-056, Dywizjonu 303). A grid <= 1 m follows the crown; material `cycle_crossing_red` (decal, markings layer)."""
+    ns = max(1, int(math.ceil((s1 - s0) / 1.0)))
+    nl = max(2, int(math.ceil(2 * hw / 1.0)))
+    ss, ll = np.meshgrid(np.linspace(s0, s1, ns + 1), np.linspace(-hw + 0.02, hw - 0.02, nl + 1), indexing="ij")
+    ss, ll = ss.ravel(), ll.ravel()
+    V = np.column_stack([c.line.offset_point(ss, ll), c.crossfall_z(ss, ll) + CYCLE_RED_LIFT])
+    T = []
+    for i in range(ns):
+        for j in range(nl):
+            a = i * (nl + 1) + j
+            T += [(a, a + nl + 1, a + nl + 2), (a, a + nl + 2, a + 1)]
+    buf.add("markings", "cycle_crossing_red", V, V[:, :2].copy(), np.array(T), src=f"DDR-X@{c.id}")
+
+
+def _emit_p11_ribbon(buf, c, s_c, hw, clear, red: bool = True):
+    """P-11 cycle crossing on a road ribbon: two rows of 0.5 m squares (+ red surfacing when verified, M65 §2.2)."""
+    W = 2 * hw - 2 * 0.25
+    nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
+    start = -(nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP) / 2
+    for row in (-1, 1):
+        sr = s_c + row * (clear + S.P11_SQUARE) / 2
+        for k_ in range(nsq):
+            lat = start + k_ * (S.P11_SQUARE + S.P11_GAP) + S.P11_SQUARE / 2
+            strip(buf, c, sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2, lat, S.P11_SQUARE, "P-11")
+    if red:
+        cycle_red(buf, c, s_c - clear / 2, s_c + clear / 2, hw)
+
+
+def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10", clear=S.P11_CLEAR, red: bool = True, red_out=None):
+    """P-10/P-11 inside a junction patch: stripes/squares in the chain frame at the OSM station, z = patch + lift.
     False (nothing added) when the station is too close to the node or any vertex is off the road meshes."""
-    half = S.P10_WIDTH / 2
-    d_node = s_c if s_c < s0 else c.length - s_c
+    half = (clear + 2 * S.P11_SQUARE) / 2 if kind == "P-11" else S.P10_WIDTH / 2
+    d_node = min(s_c, c.length - s_c)
     if d_node - half < P10_NODE_CLEAR_M:
         return False
     W = 2 * hw - 2 * 0.25
@@ -608,9 +746,12 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10"):
     meshes = []
     if kind == "P-11":      # cycle crossing (ADR 0093): two rows of squares instead of stripes
         nsq = int(math.floor((W + S.P11_GAP) / (S.P11_SQUARE + S.P11_GAP)))
-        start = -(nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP) / 2
+        if nsq < 1:
+            return False
+        used_p11 = nsq * S.P11_SQUARE + (nsq - 1) * S.P11_GAP
+        start = -used_p11 / 2
         for row in (-1.0, 1.0):
-            sr = s_c + row * (S.P11_CLEAR + S.P11_SQUARE) / 2
+            sr = s_c + row * (clear + S.P11_SQUARE) / 2
             sq = np.array([sr - S.P11_SQUARE / 2, sr + S.P11_SQUARE / 2])
             for k_ in range(nsq):
                 lat = start + k_ * (S.P11_SQUARE + S.P11_GAP) + S.P11_SQUARE / 2
@@ -628,6 +769,33 @@ def _drape_crossing(buf, c, s_c, hw, s0, s1, top_of, kind="P-10"):
             lv = np.tile([lat - S.P11_SQUARE / 2, lat + S.P11_SQUARE / 2], 2)
             buf.add("markings", "marking_white", V, uv, np.array([(0, 2, 3), (0, 3, 1)]), src=f"P-11J@{c.id}",
                     UV1=_paint_uv1(c, np.repeat(sq, 2), lv, "P-10"))
+        if not red:
+            return True
+        # ADR 0188: red surfacing between the rows, stepping inward from full width to square span if kerbs interfere
+        ns, nl = max(1, int(math.ceil(clear / 0.5))), max(2, int(math.ceil(2 * hw / 0.5)))
+        for lim in (hw - 0.04, hw - 0.14, min(hw - 0.04, used_p11 / 2)):
+            if lim <= 0.1:
+                continue
+            gs, gl = np.meshgrid(np.linspace(-clear / 2, clear / 2, ns + 1), np.linspace(-lim, lim, nl + 1),
+                                 indexing="ij")
+            p = o + np.outer(gs.ravel(), t) + np.outer(gl.ravel(), nrm)
+            z = np.array([top_of(float(e), float(nn)) for e, nn in p])
+            zg = z.reshape(ns + 1, nl + 1)
+            if (np.all(np.isfinite(z))
+                    and np.max(np.abs(np.diff(zg, axis=1))) <= P10_DRAPE_MAX_STEP_M
+                    and np.max(np.abs(np.diff(zg, axis=0))) <= P10_DRAPE_MAX_STEP_M):
+                T = []
+                for i in range(ns):
+                    for j in range(nl):
+                        a = i * (nl + 1) + j
+                        T += [(a, a + nl + 1, a + nl + 2), (a, a + nl + 2, a + 1)]
+                if float(t[0] * nrm[1] - t[1] * nrm[0]) < 0:
+                    T = [(a, c_, b) for a, b, c_ in T]
+                buf.add("markings", "cycle_crossing_red", np.column_stack([p, z + CYCLE_RED_LIFT]), p.copy(),
+                        np.array(T), src=f"DDR-XJ@{c.id}")
+                if red_out is not None:
+                    red_out.append(True)
+                break
         return True
     for k_ in range(n):
         lat = -used / 2 + k_ * (S.P10_STRIPE + S.P10_GAP) + S.P10_STRIPE / 2

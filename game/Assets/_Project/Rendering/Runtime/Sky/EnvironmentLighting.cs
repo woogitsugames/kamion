@@ -20,6 +20,17 @@ namespace Game.Rendering
         [Tooltip("Fog density multiplier on top of Koschmieder (1 = physical extinction of the preset's visibility)")]
         public float fogDensityScale = 1f;
 
+        [Header("Region lighting profile (ADR 0216; written by the world import from Data/Regions/lighting_profiles.json)")]
+        [Tooltip("Season of the region's default light (owner D65 p.7), '' = not set. Informational: the sun of the presets is unchanged.")]
+        public string season = "";
+        [Tooltip("Local clock hour of LP_Dusk in this region (drives what follows the clock: office windows); < 0 = the preset's.")]
+        public float duskClockHour = -1f;
+        [Tooltip("LED street-luminaire colour of this region (linear Rec.709, max channel 1); alpha 0 = StreetLamps default.")]
+        public Color ledColour = new Color(0f, 0f, 0f, 0f);
+
+        /// <summary>ADR 0216: clock hour of a preset in this region (the dusk preset takes the region's summer/winter hour).</summary>
+        public float ClockHourOf(LightingPreset p) => p != null && duskClockHour >= 0f && p.name == "LP_Dusk" ? duskClockHour : (p != null ? p.clockHour : 12f);
+
         public static EnvironmentLighting Instance { get; private set; }
         /// <summary>ADR 0043 option (c) A/B renders only: &lt; 0 = the preset's value (0 for every preset). Not a default.</summary>
         public static float WhiteBalanceOverride = -1f;
@@ -114,7 +125,8 @@ namespace Game.Rendering
             // Display value per cd/m^2: emissive surfaces (truck lamps, A7) are authored in physical luminance.
             Shader.SetGlobalFloat(k_Exposure, m.Exposure);
             StreetLamps.SetSunElevation(m.TrueSunElevationDeg, m.Overcast);   // ADR 0199: far floor by cloud cover
-            NightWindows.Apply(m.TrueSunElevationDeg, m.Exposure, p.clockHour);   // ADR 0192, ADR 0199 offices by clock
+            NightWindows.Apply(m.TrueSunElevationDeg, m.Exposure, ClockHourOf(p));   // ADR 0192, ADR 0199 offices by clock, ADR 0216 per region
+            StreetLamps.SetLedColour(ledColour);   // ADR 0216
 
             // ---- sun ----
             if (sun == null) sun = RenderSettings.sun;

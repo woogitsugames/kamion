@@ -1,9 +1,9 @@
 {
  "by_source": {
   "skirt:path_asphalt": 2,
-  "skirt:yard_asphalt": 10
+  "skirt:yard_asphalt": 9
  },
- "count": 12,
+ "count": 11,
  "max_m": 0.349,
  "p99_m": 0.349,
  "skirt_area": [
@@ -16,6 +16,17 @@
    "points": 2,
    "run_m": 2.424,
    "src": "bdot:e45bc697-6c66-4508-8e92-b38699141851:0#1:edge",
+   "visible": true
+  },
+  {
+   "e": 269.0,
+   "exposed_m2": 0.188,
+   "mat": "yard_asphalt",
+   "max_h": 0.349,
+   "n": 903.8,
+   "points": 1,
+   "run_m": 1.516,
+   "src": "osm:way/325708383:0#0:edge",
    "visible": true
   },
   {
@@ -38,17 +49,6 @@
    "points": 2,
    "run_m": 2.163,
    "src": "bdot:ee5ea8a7-195c-11ed-a9a5-b8ca3aa2e5c2:0#0:edge",
-   "visible": true
-  },
-  {
-   "e": 269.0,
-   "exposed_m2": 0.153,
-   "mat": "yard_asphalt",
-   "max_h": 0.349,
-   "n": 903.8,
-   "points": 2,
-   "run_m": 1.516,
-   "src": "osm:way/325708383:0#0:edge",
    "visible": true
   },
   {
@@ -174,7 +174,7 @@
   },
   {
    "e": 164.9,
-   "h": 0.306,
+   "h": 0.305,
    "kind": "skirt",
    "mat": "yard_asphalt",
    "n": 915.7,
@@ -187,14 +187,6 @@
    "mat": "path_asphalt",
    "n": 811.4,
    "src": "bdot:ee5ea8a7-195c-11ed-a9a5-b8ca3aa2e5c2:0#0:edge"
-  },
-  {
-   "e": 270.0,
-   "h": 0.229,
-   "kind": "skirt",
-   "mat": "yard_asphalt",
-   "n": 902.6,
-   "src": "osm:way/325708383:0#0:edge"
   }
  ]
 }

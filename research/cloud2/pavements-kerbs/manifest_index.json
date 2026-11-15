@@ -1,0 +1,421 @@
+{
+ "docs": {
+  "DU1518": {
+   "url": "https://eli.gov.pl/api/acts/DU/2022/1518/text/O/D20221518.pdf",
+   "sha256": "fe1380ff495c2f293e6d2ab19a5b164105cc776845702f16e0cf54dbaf2da9c5",
+   "plik": "D20221518.pdf"
+  },
+  "DU124": {
+   "url": "https://eli.gov.pl/api/acts/DU/2016/124/text/O/D20160124.pdf",
+   "sha256": "c83b35b8f999fd780c2fe7548ed099a22c3d33c7a813f5676211ca2825b410b1",
+   "plik": "D20160124.pdf"
+  },
+  "ZDM": {
+   "url": "https://www.bip.bialystok.pl/resource/103311/Za%C5%82.+nr+5_Wytyczne+do+projektowania.pdf",
+   "sha256": "11e87d1a3a8825afa107a461e100e37a1565d771bdef7d1dff06ca219235b16b",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "OSTK": {
+   "url": "https://biparch.pomiechowek.pl/pliki/przetargi/2011/drogi2011/18_16.pdf",
+   "sha256": "2e9a2e78d814b7ce679581e3a3f0402e1176e4664881a24098b423f067b0f6b0",
+   "plik": "ost_D-08.01.01b_pomiechowek.pdf"
+  },
+  "SSTO": {
+   "url": "https://bip.czernica.pl/mfiles/2466/12/744/z/sst-obrzeza.pdf",
+   "sha256": "ebf1222eaa824e671b10a8f2e83a5c0ce668192a4053ea51932c1b23d0352841",
+   "plik": "ost_D-08.03.01_czernica.pdf"
+  },
+  "SSTK": {
+   "url": "https://krasnobrod.pl/wp-content/uploads/2020/11/21707_050323a.pdf",
+   "sha256": "0d83aea8096b2909aa8c420d04f00a3195e6d821e7db782810fd56c27478d4da",
+   "plik": "ost_D-05.03.23a_krasnobrod.pdf"
+  },
+  "BYDG": {
+   "url": "https://www.zdmikp.bydgoszcz.pl/attachments/article/4069/Za%C5%82.%203%20Wary%C5%84skiego%20STWIORB%20naw.%20z%20kostki%20bet.%20brukowej%20akt..pdf",
+   "sha256": "f1b848c897ec03cc7035f00d72114f156ae1cad1126ff94177904f84381a13b7",
+   "plik": "bydg_kostka.pdf"
+  },
+  "KAT": {
+   "url": "https://budujemydom.pl/files/ivv/12033-katalog_polbruk2016.pdf",
+   "sha256": "772dfdf5ffb80c27bf6b0935a4fb64009e3e85a765c5538a0e863ab326abf0d2",
+   "plik": "katalog_kostka_2016.pdf"
+  },
+  "WPU": {
+   "url": "https://mediahub.wavin.com/asset/fe43bc28-643e-4fdc-8dc7-b8af617fd4c9/Studzienki-wpustowe-Wavin.pdf",
+   "sha256": "ab1746cc9bd8cdcc2c4ba7b075af1fbfa1034490661fed6262283a0128ad0dbf",
+   "plik": "wavin_wpusty.pdf"
+  },
+  "WRD83": {
+   "url": "https://platformazakupowa.pl/file/get_new/0491e3221c3395908cae182abd01f21f.pdf",
+   "sha256": "4647018a0d7c8870e7bd22708d0fb9e0f572e3eaac3bb340c541dfc641918005",
+   "plik": "sosn_tender.pdf"
+  },
+  "WRD42": {
+   "url": "https://nowytarg.visitmalopolska.pl/documents/36564/1928441/Wytyczne+projektowania+infrastruktury+dla+rower%C3%B3w+cz.+2/9afce102-9448-480c-871e-905dcd42d871",
+   "sha256": "3b094566fbe9e8cf38f4341c0252fcc7d1862ca85ceed71600dd1f29eb45d638",
+   "plik": "wrd42_2_nowytarg.pdf"
+  }
+ },
+ "needles": {
+  "R6-001": {
+   "doc": "OSTK",
+   "needle": "wynosić od 10 do 12 cm",
+   "plik": "ost_D-08.01.01b_pomiechowek.pdf"
+  },
+  "R6-002": {
+   "doc": "OSTK",
+   "needle": "zmniejszone do 6 cm lub zwiększone do 16 cm",
+   "plik": "ost_D-08.01.01b_pomiechowek.pdf"
+  },
+  "R6-003": {
+   "doc": "DU124",
+   "needle": "na wysokość od 6 cm do 16 cm",
+   "plik": "D20160124.pdf"
+  },
+  "R6-004": {
+   "doc": "DU124",
+   "needle": "nie powinno być większe niż 2 cm",
+   "plik": "D20160124.pdf"
+  },
+  "R6-005": {
+   "doc": "DU1518",
+   "needle": "o wysokości\ndostosowanej",
+   "plik": "D20221518.pdf"
+  },
+  "R6-006": {
+   "doc": "DU1518",
+   "needle": "uskoków nie większych niż 0,01 m",
+   "plik": "D20221518.pdf"
+  },
+  "R6-007": {
+   "doc": "DU1518",
+   "needle": "co najmniej\n      0,12 m",
+   "plik": "D20221518.pdf"
+  },
+  "R6-008": {
+   "doc": "DU1518",
+   "needle": "nie więcej niż 0,05 m",
+   "plik": "D20221518.pdf"
+  },
+  "R6-009": {
+   "doc": "OSTK",
+   "needle": "Przykładowe wymiary krawężników",
+   "plik": "ost_D-08.01.01b_pomiechowek.pdf"
+  },
+  "R6-010": {
+   "doc": "OSTK",
+   "needle": "typ drogowy 12x25x100 cm",
+   "plik": "ost_D-08.01.01b_pomiechowek.pdf"
+  },
+  "R6-011": {
+   "doc": "OSTK",
+   "needle": "ułożony na płask",
+   "plik": "ost_D-08.01.01b_pomiechowek.pdf"
+  },
+  "R6-012": {
+   "doc": "OSTK",
+   "needle": "Spoiny krawężników nie powinny przekraczać szerokości 1 cm",
+   "plik": "ost_D-08.01.01b_pomiechowek.pdf"
+  },
+  "R6-013": {
+   "doc": "OSTK",
+   "needle": "Długość: ± 1%, ≥ 4 mm i ≤ 10 mm",
+   "plik": "ost_D-08.01.01b_pomiechowek.pdf"
+  },
+  "R6-014": {
+   "doc": "OSTK",
+   "needle": "powyżej 2 mm powinny być określone jako fazowane",
+   "plik": "ost_D-08.01.01b_pomiechowek.pdf"
+  },
+  "R6-015": {
+   "doc": "ZDM",
+   "needle": "Rysunek nr 9",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-016": {
+   "doc": "KAT",
+   "needle": "Krawężnik: 15/30/100",
+   "plik": "katalog_kostka_2016.pdf"
+  },
+  "R6-017": {
+   "doc": "SSTO",
+   "needle": "Ow1",
+   "plik": "ost_D-08.03.01_czernica.pdf"
+  },
+  "R6-018": {
+   "doc": "SSTK",
+   "needle": "zalecanymi grubościami są: 60 mm, 80 mm i 100 mm",
+   "plik": "ost_D-05.03.23a_krasnobrod.pdf"
+  },
+  "R6-019": {
+   "doc": "BYDG",
+   "needle": "< 100 mm",
+   "plik": "bydg_kostka.pdf"
+  },
+  "R6-020": {
+   "doc": "SSTK",
+   "needle": "od 3 mm do 5 mm.",
+   "plik": "ost_D-05.03.23a_krasnobrod.pdf"
+  },
+  "R6-021": {
+   "doc": "SSTK",
+   "needle": "grubości min.\n       4mm",
+   "plik": "ost_D-05.03.23a_krasnobrod.pdf"
+  },
+  "R6-022": {
+   "doc": "KAT",
+   "needle": "100x200",
+   "plik": "katalog_kostka_2016.pdf"
+  },
+  "R6-023": {
+   "doc": "KAT",
+   "needle": "198x163",
+   "plik": "katalog_kostka_2016.pdf"
+  },
+  "R6-024": {
+   "doc": "KAT",
+   "needle": "120x180; 120x120; 120x90",
+   "plik": "katalog_kostka_2016.pdf"
+  },
+  "R6-025": {
+   "doc": "KAT",
+   "needle": "350x350",
+   "plik": "katalog_kostka_2016.pdf"
+  },
+  "R6-026": {
+   "doc": "ZDM",
+   "needle": "kostki brukowej gr 8 cm",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-027": {
+   "doc": "ZDM",
+   "needle": "Rysunek nr 3",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-028": {
+   "doc": "ZDM",
+   "needle": "prze\\wicie 600 mm",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-029": {
+   "doc": "ZDM",
+   "needle": "115 mm, prze\\wicie 600 mm",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-030": {
+   "doc": "ZDM",
+   "needle": "projektować w osi pasa ruchu",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-031": {
+   "doc": "ZDM",
+   "needle": "prefabrykat betonowy o \\rednicy 500 mm",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-032": {
+   "doc": "ZDM",
+   "needle": "lub kraw",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-033": {
+   "doc": "ZDM",
+   "needle": "z zawiasem i ryglem w klasie D400",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-034": {
+   "doc": "WPU",
+   "needle": "620x420",
+   "plik": "wavin_wpusty.pdf"
+  },
+  "R6-035": {
+   "doc": "WPU",
+   "needle": "500x500",
+   "plik": "wavin_wpusty.pdf"
+  },
+  "R6-036": {
+   "doc": "DU1518",
+   "needle": "poza pasem przejazdu kół pojazdów",
+   "plik": "D20221518.pdf"
+  },
+  "R6-037": {
+   "doc": "ZDM",
+   "needle": "Wpusty kanalizacyjne powinny",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-038": {
+   "doc": "",
+   "needle": "",
+   "plik": ""
+  },
+  "R6-039": {
+   "doc": "OSM",
+   "needle": "\"manholes_within_30m\": []",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-040": {
+   "doc": "",
+   "needle": "",
+   "plik": ""
+  },
+  "R6-041": {
+   "doc": "WRD83",
+   "needle": "a) pęknięcia siatkowe,",
+   "plik": "sosn_tender.pdf"
+  },
+  "R6-042": {
+   "doc": "WRD83",
+   "needle": "łaty nałożone",
+   "plik": "sosn_tender.pdf"
+  },
+  "R6-043": {
+   "doc": "WRD83",
+   "needle": "co najmniej 20 m",
+   "plik": "sosn_tender.pdf"
+  },
+  "R6-044": {
+   "doc": "WRD83",
+   "needle": "mniejszej niż 10 cm",
+   "plik": "sosn_tender.pdf"
+  },
+  "R6-045": {
+   "doc": "WRD83",
+   "needle": "mniejszej niż 5 cm",
+   "plik": "sosn_tender.pdf"
+  },
+  "R6-046": {
+   "doc": "WRD83",
+   "needle": "GK                  [mm]                       10                        20                       30",
+   "plik": "sosn_tender.pdf"
+  },
+  "R6-047": {
+   "doc": "",
+   "needle": "",
+   "plik": ""
+  },
+  "R6-048": {
+   "doc": "WRD42",
+   "needle": "wykonana w kolorze czerwonym i jego odcieniach",
+   "plik": "wrd42_2_nowytarg.pdf"
+  },
+  "R6-049": {
+   "doc": "ZDM",
+   "needle": "wyraźnie inny",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-050": {
+   "doc": "ZDM",
+   "needle": "kolor RAL 3020, wykonane z masy",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-051": {
+   "doc": "ZDM",
+   "needle": "technologii bezszwowej",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-052": {
+   "doc": "ZDM",
+   "needle": "ona niżej niż chodnik",
+   "plik": "zdm_wytyczne_2025.pdf"
+  },
+  "R6-053": {
+   "doc": "OSM",
+   "needle": "\"Generała Władysława Andersa\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-054": {
+   "doc": "OSM",
+   "needle": "\"Aleja Tysiąclecia Państwa Polskiego\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-055": {
+   "doc": "OSM",
+   "needle": "\"Sokólska\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-056": {
+   "doc": "OSM",
+   "needle": "\"Generała Stanisława Maczka\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-057": {
+   "doc": "OSM",
+   "needle": "\"Władysława Wysockiego\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-058": {
+   "doc": "OSM",
+   "needle": "\"Kombatantów\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-059": {
+   "doc": "OSM",
+   "needle": "\"Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-060": {
+   "doc": "OSM",
+   "needle": "\"Jacka Kuronia\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-061": {
+   "doc": "OSM",
+   "needle": "\"Adama Mickiewicza\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-062": {
+   "doc": "OSM",
+   "needle": "\"Dywizjonu 303\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-063": {
+   "doc": "OSM",
+   "needle": "\"Sokólska\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-064": {
+   "doc": "OSM",
+   "needle": "\"Aleja Tysiąclecia Państwa Polskiego\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-065": {
+   "doc": "OSM",
+   "needle": "\"Generała Stanisława Maczka\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-066": {
+   "doc": "OSM",
+   "needle": "\"Adama Mickiewicza\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-067": {
+   "doc": "OSM",
+   "needle": "\"Generała Władysława Andersa\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-068": {
+   "doc": "OSM",
+   "needle": "\"Kombatantów\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-069": {
+   "doc": "OSM",
+   "needle": "\"Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-070": {
+   "doc": "OSM",
+   "needle": "\"Władysława Wysockiego\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-071": {
+   "doc": "OSM",
+   "needle": "\"Jacka Kuronia\"",
+   "plik": "files/osm/*.osm"
+  },
+  "R6-072": {
+   "doc": "OSM",
+   "needle": "\"Dywizjonu 303\"",
+   "plik": "files/osm/*.osm"
+  }
+ }
+}

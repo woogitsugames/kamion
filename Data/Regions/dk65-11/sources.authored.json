@@ -1,0 +1,6 @@
+{
+ "provenance": "authored_override (ADR 0214, pattern of ADR 0209): source pins of region dk65-11",
+ "pins": {"nmt_year": "2022"},
+ "reason": "knyszyn-s (west neighbour, ADR 0204) is built on NMT 2022; with the newest NMT 2025 the seam x = 762635 differs by median 0.07, p95 0.64, max 2.70 m (S19 earthworks of 2025 in one survey only; artifacts/dk65-tiles2-0214/tools/seam_dz.py). The year change moves to the seam dk65-10 / dk65-11 (measured in ADR 0214).",
+ "verify": "none"
+}

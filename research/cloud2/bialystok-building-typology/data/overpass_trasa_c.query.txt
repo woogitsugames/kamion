@@ -1,0 +1,4 @@
+# endpoint: https://maps.mail.ru/osm/tools/overpass/api/interpreter
+# pobrano UTC: 2026-11-14T17:09:59Z
+# osm_base: 2026-11-14T17:07:50Z
+[out:json][timeout:120];(way["building"](53.1455,23.14371,53.168,23.1885);relation["building"](53.1455,23.14371,53.168,23.1885););out tags geom;

@@ -38,13 +38,13 @@ sources:
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-nmt-2025-dk65-03.json
-  manifest_sha256: bf3441e71d8cd8af6e35c9afb4e8a1c09d2d8420b9d3aa736c0048d9a514d983
+  manifest_sha256: b80e203b935ea5d1d2c60d1cc06ccd0aae0272d456ce8faec501297772a26f0e
 - id: gugik-orto-2024-rgb-0p25-dk65-03
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
   manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-dk65-03.json
-  manifest_sha256: dfd4ba7ea9a3479610cf57420c013c66484b8c13850caddfbf3edb228a89489b
+  manifest_sha256: 298de7aa41b0780603fe2da515e9cba2f1286228b141fe9eb5514d9a82e8b0e9
 - id: gugik-bdot10k-2002
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
@@ -66,6 +66,10 @@ sources:
 rebuild:
 - uv run --project tools/worldgen tools/worldgen/ingest.py --region dk65-03
 - uv run --project tools/worldgen tools/worldgen/build_region.py --region dk65-03
+water:
+  enabled: true
+  sources: Data/Regions/dk65-03/generated/water_sources.json
+  note: BDOT10k OT_PTWP_A / OT_SWRS_L + OSM waterway / natural=water (ADR 0210)
 rail:
   enabled: true
   sources: Data/Regions/dk65-03/generated/rail_sources.json

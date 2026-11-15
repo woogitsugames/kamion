@@ -78,7 +78,7 @@
    ],
    "note": "driver eye 2.5 m, control route s = 1351 m of 2402 m (Szosa Knyszyńska)",
    "pos": [
-    -780.915,
+    -780.916,
     -470.007,
     117.258
    ],
@@ -91,13 +91,13 @@
    "look_at": [
     -902.47,
     -132.932,
-    116.064
+    116.063
    ],
    "note": "driver eye 2.5 m, control route s = 1651 m of 2402 m (unnamed)",
    "pos": [
-    -884.096,
-    -190.04,
-    117.398
+    -884.335,
+    -190.113,
+    117.407
    ],
    "route_s_m": 1651.487,
    "type": "persp"
@@ -108,13 +108,13 @@
    "look_at": [
     -956.526,
     162.379,
-    115.239
+    115.243
    ],
    "note": "driver eye 2.5 m, control route s = 1952 m of 2402 m (Ełcka)",
    "pos": [
-    -944.408,
-    103.589,
-    116.402
+    -944.654,
+    103.546,
+    116.41
    ],
    "route_s_m": 1951.758,
    "type": "persp"
@@ -125,13 +125,13 @@
    "look_at": [
     -1008.422,
     458.131,
-    115.339
+    115.344
    ],
    "note": "driver eye 2.5 m, control route s = 2252 m of 2402 m (Ełcka)",
    "pos": [
-    -996.304,
-    399.341,
-    116.685
+    -996.55,
+    399.298,
+    116.699
    ],
    "route_s_m": 2252.028,
    "type": "persp"
@@ -325,6 +325,38 @@
     -838.0,
     -333.0,
     115.66
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "water_deck_west",
+   "look_at": [
+    -937.027,
+    -346.917,
+    105.149
+   ],
+   "note": "place camera: ADR 0213: driver-height view (eye ~2.5 m over the deck) from the DK65 bridge west along the Supraśl towards the dk65-03 seam (~185 m)",
+   "pos": [
+    -838.0,
+    -333.0,
+    115.66
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_water_seam_w",
+   "look_at": [
+    -910.0,
+    -230.0,
+    -57034.781
+   ],
+   "note": "place camera: ADR 0213: QA top view of the Supraśl between the bridge and the W seam (dk65-03); pair = GUGiK orto 2024 crop",
+   "pos": [
+    -910.0,
+    -330.0,
+    260.94
    ],
    "type": "persp"
   },

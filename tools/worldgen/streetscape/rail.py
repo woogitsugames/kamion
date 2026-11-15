@@ -29,6 +29,8 @@ import numpy as np
 import shapely
 from shapely.geometry import LineString, Point
 
+from . import rail_textures as RT
+
 SCHEMA = "truck-sim-pl/rail-sources/1"
 OUT_SCHEMA = "truck-sim-pl/rail/1"
 REPO = Path(__file__).resolve().parents[3]
@@ -42,12 +44,21 @@ SLEEPER_W = 0.30           # WORKING_VALUE (sleeper width at the top)
 SLEEPER_H = 0.20           # WORKING_VALUE (visible sleeper body above its bed)
 SLEEPER_SPACING = 0.60     # WORKING_VALUE (0.6 m fastening spacing on PS-94, Baztech paper; Id-1 not checked)
 SLEEPER_PROUD = 0.05       # WORKING_VALUE: sleeper top above the crib ballast (so LoD0 sleepers read as ribs)
-BALLAST_UNDER = 0.30       # WORKING_VALUE (ballast under the sleeper; "zalecana 300 mm" - source not Id-1)
-BALLAST_SHOULDER = 0.40    # WORKING_VALUE (ballast shoulder beyond the sleeper end)
+BALLAST_UNDER = 0.30       # WORKING_VALUE (ballast under the sleeper; "zalecana 300 mm" - source not Id-1). Not
+#                            geometry: the NMT ground under an existing track IS the ballast surface (see BED_LIFT)
+# Visible width of the track band. Measured on the GUGiK orthophoto 2025 (0.1 m) of line 38 at the DW671 crossing,
+# 10 cross-sections 40-120 m from the crossing, band = contiguous non-vegetation pixels around the axis
+# (artifacts/rail-fix-s21/ortho_measure.py): 3.5-4.5 m, mean 3.9 m (ESTIMATED: grass grows over the toe, pixel 0.1 m).
+# Model: crown 2 x (1.30 + BALLAST_SHOULDER) = 3.50 m + 2 x BED_LIFT x BALLAST_SLOPE = 3.86 m where the slope meets the
+# conformed ground (FIX 5; the first version stood 0.45 m over the ground and showed 5.65 m of ballast).
+BALLAST_SHOULDER = 0.45    # ESTIMATED (orthophoto band 3.9 m; sleeper 2.60 m SOURCED)
 BALLAST_SLOPE = 1.5        # WORKING_VALUE (horizontal per vertical, 1:1.5 ballast slope)
-SKIRT_M = 0.30             # ballast slope continued below the formation so small ground bumps do not show a gap
+BED_LIFT = 0.12            # WORKING_VALUE: ballast top above the ground conformed under the bed (Plan.conform)
+SKIRT_M = 0.30             # ballast slope continued this far below the ballast top (0.18 m into the ground)
+CONFORM_PAD_M = 0.75       # ground flattened to the bed level this far beyond the crown edge (toe + 0.3 m)
+CONFORM_BLEND_M = 3.0      # ... and blended back to the terrain over this distance (WORKING_VALUE)
 TRACK_SPACING = 4.00       # WORKING_VALUE (track centre distance on open line; 4.0 m common PL minimum, UNVERIFIED)
-TRACK_H = RAIL_H + SLEEPER_H + BALLAST_UNDER          # top of rail above the formation (pads ignored) = 0.672 m
+TRACK_H = BED_LIFT + SLEEPER_PROUD + RAIL_H           # top of rail above the (smoothed) ground = 0.342 m
 
 # profile
 GROUND_SMOOTH_M = 15.0     # WORKING_VALUE: gaussian sigma of the ground under the track (rails cannot follow bumps)
@@ -58,8 +69,9 @@ LOD_STEP = {0: 5.0, 1: 10.0, 2: 20.0}
 # level crossing
 PANEL_HALF = SLEEPER_L / 2  # WORKING_VALUE: crossing panels cover the sleeper length on each side of the track axis
 PANEL_MARGIN = 0.50         # WORKING_VALUE: panels run this far past the road footprint edge
-PANEL_STEP = 2.0            # panel grid along the track (follows the road crown / grade)
-PANEL_LIFT = 0.005          # panels / rail heads this much above the road mesh (no z-fight with the asphalt)
+PANEL_STEP = 0.5            # panel grid along the track (follows the road crown / grade); 2.0 m let the crown poke through (render r2)
+PANEL_LIFT = 0.015          # panels / rail heads this much above the sampled road (WORKING_VALUE): the sampler is the 1 m
+                            # road_z grid, which clips the crown ridge by up to ~0.01 m (render r4: 0.005 left a notch)
 FLANGEWAY = 0.07            # WORKING_VALUE: groove next to the rail head inside the panel field
 CROSS_SNAP_M = 8.0          # an OSM level_crossing node within this distance of a rail axis belongs to that track
 CROSS_DEDUP_M = 10.0        # a geometric road x rail intersection this close to an OSM node is that node
@@ -72,6 +84,8 @@ SIGN_ARM_W = 0.20           # WORKING_VALUE: G-3 arm width
 SIGN_ARM_ANGLE = 50.0       # WORKING_VALUE: angle between the arms (deg)
 SIGN_BOTTOM_Z = 1.50        # WORKING_VALUE: lower edge of the cross above the road
 BARRIERS = ("no", "half", "double_half", "full", "gate", "chain", "yes")
+OVERRIDE_KIND = "rail_crossing"      # overrides.yaml: authored facts of one level crossing (Plan._apply_override)
+OVERRIDE_KEYS = ("barrier", "light", "light_left", "bell", "saltire", "panel_margin_m")
 
 # Clearance envelope (skrajnia budowli) - simplified cross-section, (lateral m, height above top of rail m).
 # UNVERIFIED shape: 4.40 m wide between 0.4 m and 4.0 m above rail, narrowing to the overhead-line zone; replace with
@@ -80,16 +94,19 @@ CLEARANCE_PROFILE = [(-1.60, 0.0), (-2.20, 0.40), (-2.20, 4.00), (-1.60, 6.00), 
                      (2.20, 0.40), (1.60, 0.0)]
 CLEARANCE_HALF = max(abs(x) for x, _ in CLEARANCE_PROFILE)
 
-# materials (linear albedo, WORKING_VALUE until compared with an orthophoto / owner photo)
+# materials. rail_bed (FIX 3): ONE textured material for the ballast, sleepers and rails of every LoD - the tile
+# streetscape.rail_textures.bed() carries crushed stone, the sleepers, fastenings and the rails (colours in the PNG,
+# sRGB; `color` 1), so the Low tier (LoD1: ribbon + rail boxes, LoD2: ribbon) reads as a track and the geometric
+# sleepers of LoD0 stand on painted ones. UV0 = (0.5 + lateral m / TEX_W_M, along m / TILE_M).
 RAIL_MATERIALS = {
-    "rail_ballast": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "metal": 0.0,
-                     "note": "UV0 = (lateral m, along-track m): sleeper stripe every %.2f m on LoD1" % SLEEPER_SPACING},
-    "rail_sleeper": {"color": [0.33, 0.32, 0.30], "rough": 0.9, "metal": 0.0},
-    "rail_steel": {"color": [0.30, 0.25, 0.21], "rough": 0.55, "metal": 0.6,
-                   "note": "rusty web; polished head = the top face (UV0.y = 1)"},
+    "rail_bed": {"color": [1.0, 1.0, 1.0], "rough": 0.95, "metal": 0.0, "surface": "gravel", "texture": "rail_bed",
+                 "note": "ballast + painted sleepers / rails; UV0 = (0.5 + lateral / %.2f m, along / %.2f m)"
+                         % (RT.TEX_W_M, RT.SLEEPERS_PER_TILE * SLEEPER_SPACING)},
     "rail_crossing_panel": {"color": [0.16, 0.16, 0.16], "rough": 0.85, "metal": 0.0,
                             "note": "concrete-rubber crossing panels; UV0 = local metres"},
 }
+BED_MAT = "rail_bed"
+TILE_M = RT.SLEEPERS_PER_TILE * SLEEPER_SPACING
 LAYERS = ("rail_lod0", "rail_lod1", "rail_lod2", "rail_crossing")
 LOW_EXCLUDE = ("rail_lod0",)       # the Low / Medium GLB carries LoD1, LoD2 and the crossing panels only
 
@@ -177,7 +194,7 @@ def crossing_equipment(barrier, light_tag, src="osm") -> dict:
     """ADR 0223: equipment type + category (Dz.U. 2025 poz. 1105 § 6 ust. 1) of a level crossing from
     crossing:barrier and the RAW crossing:light value (None = untagged). Every result carries its provenance:
     `equipment_src` osm (barrier tag read) / derived (inferred from the light tag) / default (nothing tagged) /
-    authored_override (overrides.yaml, see apply_crossing_overrides) and a confidence."""
+    authored_override (overrides.yaml, see Plan._apply_override) and a confidence."""
     light_yes = light_tag in ("yes", "true")
     light_no = light_tag in ("no", "false")
     if barrier in EQUIPMENT:
@@ -202,45 +219,10 @@ def crossing_equipment(barrier, light_tag, src="osm") -> dict:
         # A with barriers, B and C all have road signals (§ 6 ust. 1 pkt 1 lit. b, pkt 2, pkt 3), so a crossing
         # without lights is D (or A directed by hand signals - not modelled)
         return {"equipment": "brak", "category": "D", "equipment_src": "derived" if src == "osm" else src,
-                "equipment_confidence": "medium",
+                "equipment_confidence": "low",
                 "category_basis": "crossing:light=no + § 6 ust. 1: A (barriers) / B / C always have road signals"}
     return {"equipment": "nieznane", "category": None, "equipment_src": "default", "equipment_confidence": "low",
             "category_basis": "crossing:barrier and crossing:light untagged: rendered with signs only (as D)"}
-
-
-OVERRIDE_KIND = "rail_crossing"
-OVERRIDE_KEYS = ("barrier", "light", "bell", "saltire")
-
-
-def apply_crossing_overrides(nodes: list, overrides, report: dict) -> None:
-    """ADR 0223: authored equipment of a level crossing (overrides.yaml entries
-    `{id, kind: rail_crossing, target: {osm_node: <id>}, set: {barrier, light, bell, saltire}, reason, confidence,
-    source}`) - survives every re-extract of rail_sources.json. A target missing from the sources is reported as
-    stale, never dropped silently; unknown keys in `set` are an error."""
-    by_id = {nd["src"]: nd for nd in nodes}
-    for o in overrides or []:
-        if o.get("kind") != OVERRIDE_KIND:
-            continue
-        sid = f"osm:node/{(o.get('target') or {}).get('osm_node')}"
-        st = o.get("set") or {}
-        bad = sorted(set(st) - set(OVERRIDE_KEYS))
-        if bad:
-            raise ValueError(f"rail_crossing override {o.get('id')}: unknown keys {bad}")
-        if "barrier" in st and st["barrier"] not in BARRIERS:
-            raise ValueError(f"rail_crossing override {o.get('id')}: barrier {st['barrier']!r} not in {BARRIERS}")
-        nd = by_id.get(sid)
-        if nd is None:
-            report.setdefault("overrides_stale", []).append(o.get("id"))
-            continue
-        for k in OVERRIDE_KEYS:
-            if k in st:
-                nd[k] = st[k]
-        light_tag = ("yes" if st["light"] else "no") if "light" in st else nd.get("_light_tag")
-        nd.update(crossing_equipment(nd["barrier"], light_tag, src="authored_override"))
-        nd["equipment_src"] = "authored_override"
-        nd["equipment_confidence"] = o.get("confidence", "medium")
-        nd["override"] = o.get("id")
-        report.setdefault("overrides_applied", []).append({"id": o.get("id"), "target": sid})
 
 
 # ------------------------------------------------------------------------------------------------ extraction
@@ -418,6 +400,19 @@ def _frame(line: LineString, s):
     return P, T, Nl
 
 
+def _deck_z(road_z_at, x, y):
+    """Road surface under a panel / rail vertex: the highest of the point and 4 points PANEL_STEP / 2 around it, so a
+    ribbon that is linear between its stations never dips under the crown ridge of the carriageway (render r3: with
+    the point sample alone the crown showed through the panels as a notch along the road axis). Raises the deck by
+    at most PANEL_STEP / 2 x gradient (5 mm at 2 % cross-fall) over the asphalt."""
+    x, y = np.asarray(x, float), np.asarray(y, float)
+    h = PANEL_STEP / 2
+    z = road_z_at(x, y)
+    for dx, dy in ((h, 0.0), (-h, 0.0), (0.0, h), (0.0, -h)):
+        z = np.maximum(z, road_z_at(x + dx, y + dy))
+    return z
+
+
 def _stations(length, step, extra=()):
     n = max(1, int(math.ceil(length / step - 1e-9)))
     s = np.linspace(0.0, length, n + 1)
@@ -480,6 +475,9 @@ class Plan:
     def __init__(self, src: dict, origin, tile_local=None, road_poly=None, road_lines=(), overrides=()):
         self.origin = np.asarray(origin, float)
         self.tile_local = tile_local
+        self.overrides = [dict(o) for o in (overrides or ()) if o.get("kind") == OVERRIDE_KIND]
+        self.ground_grid = None      # smoothed ground the profile stands on (set by conform(); build_world samples it)
+        self._conform_mask = None
         self.road_poly = road_poly if road_poly is not None else shapely.Polygon()
         self.road_lines = list(road_lines)
         self.report = {"tracks": [], "skipped": [], "crossings": [], "markers": [], "warnings": []}
@@ -512,8 +510,44 @@ class Plan:
                 continue
             self.nodes.append({"src": sid, "p": np.asarray(nd["xy"], float) - self.origin, **at,
                                "_light_tag": nd.get("tags", {}).get("crossing:light")})
-        apply_crossing_overrides(self.nodes, overrides, self.report)
         self.crossings = self._find_crossings()
+        for o in self.overrides:
+            if not o.pop("_used", False):
+                # ADR 0223: a target that is gone from the sources is reported, never dropped silently
+                self.report.setdefault("overrides_stale", []).append(o.get("id"))
+                self.report["warnings"].append({"src": f"override:{o.get('id')}", "why": "rail_crossing override "
+                                                "matches no level crossing of this region"})
+
+    def _apply_override(self, c):
+        """Authored facts of one crossing (overrides.yaml `kind: rail_crossing`, survives every regeneration):
+        target {osm_node: id} or {near_epsg2180: [x, y], radius_m}; set {barrier, light, light_left, bell, saltire,
+        panel_margin_m}. OSM stays the default; the override wins and is named in rail.json."""
+        for o in self.overrides:
+            tg = o.get("target") or {}
+            hit = False
+            if tg.get("osm_node") is not None:
+                ids = tg["osm_node"] if isinstance(tg["osm_node"], list) else [tg["osm_node"]]
+                hit = c["src"] in {f"osm:node/{i}" for i in ids}
+            elif tg.get("near_epsg2180") is not None:
+                q = np.asarray(tg["near_epsg2180"], float) - self.origin
+                hit = float(np.linalg.norm(q - np.asarray(c["p"], float))) <= float(tg.get("radius_m", 15.0))
+            if not hit:
+                continue
+            st = o.get("set") or {}
+            bad = sorted(set(st) - set(OVERRIDE_KEYS))
+            if bad:
+                raise ValueError(f"override {o.get('id')}: unknown rail_crossing keys {bad}")
+            if "barrier" in st and st["barrier"] not in BARRIERS + (None,):
+                raise ValueError(f"override {o.get('id')}: barrier {st['barrier']!r} not in {BARRIERS}")
+            c = {**c, **st, "override": o.get("id")}
+            # ADR 0223: equipment / category (Dz.U. 2025 poz. 1105 § 6 ust. 1) follow the authored facts
+            light_tag = ("yes" if st["light"] else "no") if "light" in st else c.get("_light_tag")
+            c.update(crossing_equipment(c["barrier"], light_tag, src="authored_override"))
+            c["equipment_src"] = "authored_override"
+            c["equipment_confidence"] = o.get("confidence", "medium")
+            o["_used"] = True
+            self.report.setdefault("overrides_applied", []).append({"id": o.get("id"), "target": c["src"]})
+        return c
 
     # -------------------------------------------------------------------------------------------- crossings
     def _find_crossings(self):
@@ -553,6 +587,8 @@ class Plan:
         out.sort(key=lambda c: (round(float(c["p"][0]), 1), round(float(c["p"][1]), 1)))
         res = []
         for c in out:
+            c = self._apply_override(c)
+            pm = float(c.get("panel_margin_m", PANEL_MARGIN))
             t = self.tracks[c["track"]]
             s_c = t.line.project(Point(c["p"]))
             pc = np.asarray(t.line.interpolate(s_c).coords[0])
@@ -578,7 +614,7 @@ class Plan:
             # panel zone along the track = the road footprint (+ margin) on the track axis around the crossing
             zone = None
             if not self.road_poly.is_empty:
-                pieces = _parts(t.line.intersection(self.road_poly.buffer(PANEL_MARGIN)))
+                pieces = _parts(t.line.intersection(self.road_poly.buffer(pm)))
                 pieces = [q for q in pieces if q.geom_type == "LineString"]
                 if pieces:
                     q = min(pieces, key=lambda q: q.distance(Point(pc)))
@@ -588,7 +624,7 @@ class Plan:
             if zone is None:
                 zone = (s_c - 4.0 / sin_t, s_c + 4.0 / sin_t)    # WORKING_VALUE: 7 m road + margins
             zone = (max(0.0, zone[0]), min(t.line.length, zone[1]))
-            road_w = max((zone[1] - zone[0] - 2 * PANEL_MARGIN) * sin_t, 3.0)
+            road_w = max((zone[1] - zone[0] - 2 * pm) * sin_t, 3.0)
             # the whole bundle crossing this road: tracks of all rail ways whose axis passes the crossing
             n_tracks = sum(tt.a["tracks"] for tt in self.tracks if tt.line.distance(Point(pc)) <= CROSS_SNAP_M
                            + TRACK_SPACING * (tt.a["tracks"] - 1) / 2)
@@ -602,9 +638,8 @@ class Plan:
         return res
 
     def sign_code(self, c) -> str | None:
-        """G-3 (single track) / G-4 (multiple tracks) where the crossing has no barriers (Dz.U. 2025 poz. 1105 § 80
-        ust. 1: A without barriers, C, D; before 27.08.2025 Dz.U. 2015 poz. 1744 § 82 ust. 1); an explicit OSM
-        crossing:saltire overrides."""
+        """G-3 (single track) / G-4 (multiple tracks) where the crossing has no barriers (Dz.U. 2025 poz. 1105 § 80 ust. 1:
+        A without barriers, C, D); an explicit OSM crossing:saltire overrides."""
         show = c["barrier"] in (None, "no") if c["saltire"] is None else c["saltire"]
         if not show:
             return None
@@ -625,7 +660,7 @@ class Plan:
             z = (1 - wgt) * z + wgt * zr
             inz = (s >= sa - 1e-6) & (s <= sb + 1e-6)
             if inz.any():
-                z[inz] = road_z_at(P[inz, 0], P[inz, 1]) + PANEL_LIFT
+                z[inz] = _deck_z(road_z_at, P[inz, 0], P[inz, 1]) + PANEL_LIFT
         return z
 
     # -------------------------------------------------------------------------------------------- meshes
@@ -668,13 +703,7 @@ class Plan:
                 "electrified": c.get("electrified", False),
                 "sign": code, "road_width_m": round(c["road_w"], 2),
                 "panel_zone_m": [round(c["zone"][0], 2), round(c["zone"][1], 2)], "panel_triangles": n})
-            for m in self.markers(ci, c, road_z_at):
-                # ADR 0223: a crossing on the tile edge (dk65-04 Białostocka, 0.5 m inside) must not put a sign into
-                # the far field of the neighbour (no road there, height clamped): listed, not placed
-                if self.tile_local is not None and not self.tile_local.contains(Point(m["e"], m["n"])):
-                    self.report.setdefault("markers_outside_tile", []).append(m)
-                    continue
-                self.report["markers"].append(m)
+            self.report["markers"] += self.markers(ci, c, road_z_at, self.report.setdefault("markers_outside_tile", []))
             if any(m["crossing"] == ci for m in self.report.get("markers_outside_tile", [])):
                 self.report["warnings"].append({"src": c["src"], "why": "crossing on the tile edge: markers of the "
                                                 "outer approach dropped (markers_outside_tile)"})
@@ -690,24 +719,27 @@ class Plan:
         return tris
 
     def _ballast(self, buf, layer, t, P, Nl, tor, seg_ok, lod):
-        crib = SLEEPER_PROUD
-        form = RAIL_H + SLEEPER_H + BALLAST_UNDER           # TOR -> formation
+        """Bed ribbons with the UVs of the rail_bed tile: one top strip per track (u is measured from that track's
+        axis, so every track gets its painted sleepers and rails) + the two slopes (LoD0 / LoD1) or the top strips
+        widened to where the slope meets the ground (LoD2)."""
+        top = -(RAIL_H + SLEEPER_PROUD)                      # TOR -> ballast top
         bt = t.half_top
+        offs = sorted(t.offsets)
+        mids = [0.5 * (a + b) for a, b in zip(offs[:-1], offs[1:])]
+        edge = bt if lod < 2 else bt + BED_LIFT * BALLAST_SLOPE
+        bounds = [-edge] + mids + [edge]
+        strips = [(bounds[k], bounds[k + 1], offs[k], top, top) for k in range(len(offs))]
         if lod < 2:
-            drop = form + SKIRT_M - RAIL_H - crib            # ballast top -> skirt bottom
-            toe = bt + drop * BALLAST_SLOPE
-            lat = [-toe, -bt, bt, toe]
-            dz = [-(form + SKIRT_M), -(RAIL_H + crib), -(RAIL_H + crib), -(form + SKIRT_M)]
-        else:
-            # far: one flat band at mid height of the bed, as wide as the bed at that height
-            hmid = 0.5 * (form - RAIL_H - crib)
-            half = bt + hmid * BALLAST_SLOPE
-            lat = [-half, half]
-            dz = [-(RAIL_H + crib + hmid)] * 2
-        V, UV, T = _ribbon(P, Nl, tor, lat, dz)
-        T = _keep_segments(T, len(lat), seg_ok)
-        buf.add(layer, "rail_ballast", V, UV, T, src=f"rail:{t.id}:ballast")
-        return int(len(T))
+            toe = bt + SKIRT_M * BALLAST_SLOPE
+            strips = ([(-toe, -bt, offs[0], top - SKIRT_M, top)] + strips + [(bt, toe, offs[-1], top, top - SKIRT_M)])
+        n = 0
+        for l0, l1, axis, z0, z1 in strips:
+            V, UV, T = _ribbon(P, Nl, tor, [l0, l1], [z0, z1])
+            T = _keep_segments(T, 2, seg_ok)
+            UV = np.column_stack([0.5 + (UV[:, 0] - axis) / RT.TEX_W_M, UV[:, 1] / TILE_M])
+            buf.add(layer, BED_MAT, V, UV, T, src=f"rail:{t.id}:ballast")
+            n += len(T)
+        return int(n)
 
     def _rails(self, buf, layer, t, P, Nl, s, tor, road_z_at):
         n = 0
@@ -725,10 +757,13 @@ class Plan:
                 for (sa, sb, _) in t.zones:
                     inz |= (sk >= sa - 1e-6) & (sk <= sb + 1e-6)
                 if inz.any():
-                    top = road_z_at(Pk[inz, 0], Pk[inz, 1]) + PANEL_LIFT
+                    top = _deck_z(road_z_at, Pk[inz, 0], Pk[inz, 1]) + PANEL_LIFT
                     V[inz, 2] = top + np.tile(dz, len(s))[inz]
-            UV = np.column_stack([UV[:, 1], np.tile([0.0, 1.0, 1.0, 0.0], len(s))])
-            buf.add(layer, "rail_steel", V, UV, T, src=f"rail:{t.id}:rail")
+            # the rail samples its own painted rail in the rail_bed tile (always the 1435 mm one): polished running
+            # band on the top face, rust on the sides -> the whole track is ONE material (1 draw per chunk and LoD)
+            UV = np.column_stack([np.tile(RT.rail_u(c > min(t.offsets, key=lambda o: abs(o - c))), len(s)),
+                                  UV[:, 1] / TILE_M])
+            buf.add(layer, BED_MAT, V, UV, T, src=f"rail:{t.id}:rail")
             n += len(T)
         return int(n)
 
@@ -746,7 +781,7 @@ class Plan:
         top = tor - RAIL_H
         low = top - SLEEPER_PROUD
         hl, hw = SLEEPER_L / 2, SLEEPER_W / 2
-        Vs, Ts = [], []
+        Vs, Ts, UVs = [], [], []
         base = 0
         for o in t.offsets:
             c = P + Nl * o
@@ -762,13 +797,20 @@ class Plan:
             # faces (CCW from outside): top facing up, back facing -T, front facing +T  -> 6 triangles
             loc = np.array([[0, 2, 1], [0, 3, 2], [4, 1, 5], [4, 0, 1], [3, 6, 2], [3, 7, 6]])
             idx = (np.arange(len(s)) * 8)[:, None, None] + loc[None]
+            # UVs on the rail_bed tile: the top lies on its painted sleeper (u from the track axis, v = station),
+            # the two side faces repeat the outermost concrete rows
+            uv = np.zeros((len(s), 8, 2))
+            for k, (da, dl) in enumerate(corners):
+                uv[:, k, 0] = uv[:, k + 4, 0] = 0.5 + dl / RT.TEX_W_M
+                uv[:, k, 1] = (s + 0.8 * da) / TILE_M
+                uv[:, k + 4, 1] = (s + 0.7 * da) / TILE_M
             Vs.append(V.reshape(-1, 3))
+            UVs.append(uv.reshape(-1, 2))
             Ts.append(idx.reshape(-1, 3) + base)
             base += len(s) * 8
         V = np.concatenate(Vs)
         T = np.concatenate(Ts)
-        UV = np.column_stack([V[:, 0], V[:, 1]])
-        buf.add(layer, "rail_sleeper", V, UV, T, src=f"rail:{t.id}:sleepers")
+        buf.add(layer, BED_MAT, V, np.concatenate(UVs), T, src=f"rail:{t.id}:sleepers")
         return int(len(T))
 
     def _panels(self, buf, ci, c, road_z_at):
@@ -791,16 +833,29 @@ class Plan:
             if l1 - l0 < 0.05:
                 continue
             V, UV, T = _ribbon(P, Nl, np.zeros(len(s)), [l0, l1], [0.0, 0.0])
-            V[:, 2] = road_z_at(V[:, 0], V[:, 1]) + PANEL_LIFT
+            V[:, 2] = _deck_z(road_z_at, V[:, 0], V[:, 1]) + PANEL_LIFT
             UV = V[:, :2].copy()
             buf.add("rail_crossing", "rail_crossing_panel", V, UV, T, src=f"rail:crossing:{ci}")
             n += len(T)
         return int(n)
 
     # -------------------------------------------------------------------------------------------- markers
-    def markers(self, ci, c, road_z_at):
+    def markers(self, ci, c, road_z_at, outside=None):
         """Positioned / oriented crossing objects for the engine (prefabs): one per approach for signs and lights,
-        barriers by crossing:barrier, one bell. heading_deg = compass direction the face / boom points to."""
+        barriers by crossing:barrier, one bell. heading_deg = compass direction the face / boom points to.
+        ADR 0223: a crossing on the tile edge (dk65-04 Białostocka, 0.5 m inside) must not put a device into the far
+        field of the neighbour (no road there, height clamped) - markers outside the tile are appended to `outside`
+        (rail.json markers_outside_tile) and never returned, so rail.json and the instances (rail_props.place) agree."""
+        out = []
+        for m in self._markers_all(ci, c, road_z_at):
+            if self.tile_local is not None and not self.tile_local.contains(Point(m["e"], m["n"])):
+                if outside is not None:
+                    outside.append(m)
+                continue
+            out.append(m)
+        return out
+
+    def _markers_all(self, ci, c, road_z_at):
         out = []
         pc, r = c["p"], c["rdir"]
         dtrack = c["half_track"] / c["sin"]                  # crossing centre -> outer panel edge, along the road
@@ -822,10 +877,13 @@ class Plan:
                 out.append(mk("sign", post, face, a, code=code, arm_l_m=SIGN_ARM_L, arm_w_m=SIGN_ARM_W,
                               arm_angle_deg=SIGN_ARM_ANGLE, bottom_z_m=SIGN_BOTTOM_Z))
             if c["light"]:
-                out.append(mk("light", post, face, a))
+                out.append(mk("light", post, face, a, side="right"))
+            if c.get("light_left"):          # repeater on the left verge (authored: seen on photos of the crossing)
+                out.append(mk("light", pc - drive * (dtrack + SIGN_SETBACK) - right * (half_road + SIGN_LATERAL),
+                              face, a, side="left"))
             if c.get("electrified") and (code or c["light"]):
                 # ADR 0223: G-2 "sieć pod napięciem" (Dz.U. 2025 poz. 1105 § 81 ust. 1): kat. D below the G-3 / G-4
-                # on its post (pkt 2), kat. A-C on the signal mast below the lights (pkt 1)
+                # on its post (pkt 2), kat. A-C on the mast of the road signal below the lamp heads (pkt 1)
                 out.append(mk("sign", post, face, a, code="G-2", mount="below_cross" if code else "signal_mast"))
             bar = c["barrier"]
             if bar in ("half", "double_half", "full", "gate", "yes"):
@@ -835,8 +893,11 @@ class Plan:
                 out.append(mk("barrier", entry, boom_head, a, role="entry", type=bar,
                               boom_len_m=round((c["road_w"] if full else half_road) + 0.5, 2)))
                 if bar == "double_half":
-                    # exit half-barrier on the far side, closing this approach's lane for traffic leaving towards it
-                    ex = pc + drive * (dtrack + BARRIER_SETBACK) - right * (half_road + 0.5)
+                    # second half-barrier of this side of the track: on the LEFT verge, closing the opposite lane
+                    # (the exit lane of the other approach), as on Mapillary 1832769196903759 (booms on both verges
+                    # before the rails). s22: it stood on the far side at the left verge = exactly on the other
+                    # approach's entry barrier, so 4 markers gave 2 visible booms (render r1).
+                    ex = pc - drive * (dtrack + BARRIER_SETBACK) - right * (half_road + 0.5)
                     out.append(mk("barrier", ex, _heading(right), a, role="exit", type=bar,
                                   boom_len_m=round(half_road + 0.5, 2)))
         if c["bell"]:
@@ -867,6 +928,113 @@ class Plan:
         from streetscape import paved as PV
         return PV.rasterize_polys(self.footprint(), hf)
 
+    # -------------------------------------------------------------------------------------------- terrain (FIX 5)
+    def conform(self, zc, keep, hf, road_z_at, log=print):
+        """Ground under the track bed (opt-in stage only, like water.carve): the 1 m terrain nodes within the crown
+        + CONFORM_PAD_M take the bed level (ballast top - BED_LIFT = top of rail - TRACK_H) and blend back to the
+        terrain over CONFORM_BLEND_M; nodes of `keep` (roads, paved areas, buildings) are never touched. The bed then
+        shows crown + 2 x BED_LIFT x slope of ballast (3.86 m for one track) instead of a 5.65 m apron on the grass,
+        and neither floats over hollows nor is buried by bumps. Returns the new grid; keeps the smoothed ground the
+        profile stands on (self.ground_grid) for build()."""
+        from scipy import ndimage
+        self.ground_grid = ndimage.gaussian_filter(np.asarray(zc, float), GROUND_SMOOTH_M)
+        ground_at = grid_sampler(self.ground_grid, hf)
+        out = np.array(zc, float, copy=True)
+        keep = ndimage.binary_dilation(np.asarray(keep, bool), iterations=1)
+        self._conform_mask = np.zeros(out.shape, bool)
+        moved = []
+        for t in self.tracks:
+            if t.a["bridge"]:
+                continue
+            core = t.half_top + CONFORM_PAD_M
+            reach = core + CONFORM_BLEND_M
+            x0, y0, x1, y1 = t.line.buffer(reach).bounds
+            i0, i1 = max(int(np.floor(x0 - hf.x0)), 0), min(int(np.ceil(x1 - hf.x0)), out.shape[1] - 1)
+            j0, j1 = max(int(np.floor(hf.y1 - y1)), 0), min(int(np.ceil(hf.y1 - y0)), out.shape[0] - 1)
+            if i1 < i0 or j1 < j0:
+                continue
+            jj, ii = np.mgrid[j0:j1 + 1, i0:i1 + 1]
+            jj, ii = jj.ravel(), ii.ravel()
+            pts = shapely.points(hf.x0 + ii, hf.y1 - jj)
+            d = shapely.distance(t.line, pts)
+            near = d <= reach
+            if not near.any():
+                continue
+            jn, in_, d = jj[near], ii[near], d[near]
+            s = shapely.line_locate_point(t.line, pts[near])
+            P = np.array([t.line.interpolate(float(x)).coords[0] for x in s])
+            bed = self._tor(t, P, s, ground_at, road_z_at) - TRACK_H
+            wgt = np.clip(1.0 - (d - core) / CONFORM_BLEND_M, 0.0, 1.0)
+            wgt = wgt * wgt * (3 - 2 * wgt)
+            ok = ~keep[jn, in_]
+            z_old = out[jn, in_]
+            z_new = np.where(ok, wgt * bed + (1 - wgt) * z_old, z_old)
+            out[jn, in_] = z_new
+            full = ok & (d <= core)
+            self._conform_mask[jn[full], in_[full]] = True
+            dz = (z_new - z_old)[ok & (wgt > 0)]
+            if len(dz):
+                moved.append(dz)
+        if moved:
+            dz = np.concatenate(moved)
+            self.report["conform"] = {"nodes": int(len(dz)), "cut_max_m": round(float(max(-dz.min(), 0.0)), 3),
+                                      "fill_max_m": round(float(max(dz.max(), 0.0)), 3),
+                                      "abs_p95_m": round(float(np.percentile(np.abs(dz), 95)), 3)}
+            log("rail terrain conform", self.report["conform"])
+        return out
+
+    def lod_mask(self):
+        """Bed nodes for the coarse terrain LoDs (min-filtered like the road footprint: never above the ballast)."""
+        return self._conform_mask
+
+    def bed_qa(self, terrain_at, ground_at, road_z_at, step=2.0):
+        """Per-station check of the whole length (rail.json `bed_qa`): ballast top minus the final terrain at the
+        crown edges (must stay > 0: not buried) and at the slope toes (terrain minus the skirt bottom must stay > 0:
+        no gap under the bed). Stations inside crossing panels are skipped."""
+        up, toe_gap, n = [], [], 0
+        for t in self.tracks:
+            if t.a["bridge"]:
+                continue
+            s = np.arange(0.0, t.line.length + 1e-6, step)
+            P, _, Nl = _frame(t.line, s)
+            inz = np.zeros(len(s), bool)
+            for (sa, sb, _) in t.zones:
+                inz |= (s >= sa - 1.0) & (s <= sb + 1.0)
+            top = self._tor(t, P, s, ground_at, road_z_at) - RAIL_H - SLEEPER_PROUD
+            for sgn in (-1, 1):
+                a = P + Nl * sgn * t.half_top
+                b = P + Nl * sgn * (t.half_top + SKIRT_M * BALLAST_SLOPE)
+                up.append((top - terrain_at(a[:, 0], a[:, 1]))[~inz])
+                toe_gap.append((terrain_at(b[:, 0], b[:, 1]) - (top - SKIRT_M))[~inz])
+            n += int((~inz).sum())
+        if not n:
+            return None
+        up, toe_gap = np.concatenate(up), np.concatenate(toe_gap)
+        half = self.tracks[0].half_top
+        qa = {"stations": n, "step_m": step,
+              "crown_edge_above_terrain_m": {"min": round(float(up.min()), 3), "p50": round(float(np.median(up)), 3),
+                                             "max": round(float(up.max()), 3)},
+              "toe_buried_m": {"min": round(float(toe_gap.min()), 3), "p50": round(float(np.median(toe_gap)), 3),
+                               "max": round(float(toe_gap.max()), 3)},
+              "buried_crown_stations": int((up <= 0).sum()), "open_toe_stations": int((toe_gap <= 0).sum()),
+              "visible_width_m": {"model": round(2 * (half + BED_LIFT * BALLAST_SLOPE), 2),
+                                  "p50": round(float(2 * half + 2 * np.median(np.clip(up, 0, SKIRT_M)) * BALLAST_SLOPE), 2),
+                                  "orthophoto_m": [3.5, 4.5], "status": "ESTIMATED (GUGiK 0.1 m 2025, n = 10)"}}
+        self.report["bed_qa"] = qa
+        return qa
+
+    @staticmethod
+    def export_textures(tex_dir):
+        """rail_bed.png next to the region's other generated textures (only regions with the rail stage)."""
+        import io
+        tex_dir.mkdir(parents=True, exist_ok=True)
+        for k, im in RT.textures().items():
+            b = io.BytesIO()
+            im.save(b, "PNG", optimize=False)
+            p = tex_dir / f"{k}.png"
+            if not p.exists() or p.read_bytes() != b.getvalue():
+                p.write_bytes(b.getvalue())
+
     def out_json(self, region_id: str) -> dict:
         return {"schema": OUT_SCHEMA, "region": region_id, "frame": "local E,N,U (U absolute EVRF2007)",
                 "heading": "compass degrees clockwise from north (Unity: Y rotation)",
@@ -874,18 +1042,19 @@ class Plan:
 
 
 def tri_per_km(lod: int, tracks: int = 1) -> float:
-    """Closed-form triangle budget of plain track (no crossings) per km - ADR 0217 formula:
-    LoD0 = 1000/5 * (6 + 6*2n) + 1000/0.6 * 6n ; LoD1 = 1000/10 * (6 + 6*2n) ; LoD2 = 1000/20 * 2."""
+    """Closed-form triangle budget of plain track (no crossings) per km - ADR 0217 formula (bed = 2 slopes + one
+    top strip per track): LoD0 = 1000/5 * (4 + 2n + 6*2n) + 1000/0.6 * 6n ; LoD1 = 1000/10 * (4 + 2n + 6*2n) ;
+    LoD2 = 1000/20 * 2n."""
     seg = 1000.0 / LOD_STEP[lod]
     if lod == 2:
-        return seg * 2
-    v = seg * (6 + 6 * 2 * tracks)
+        return seg * 2 * tracks
+    v = seg * (4 + 2 * tracks + 6 * 2 * tracks)
     if lod == 0:
         v += 1000.0 / SLEEPER_SPACING * 6 * tracks
     return v
 
 
-def tri_per_crossing(road_w: float, tracks: int = 1, sin_t: float = 1.0) -> int:
+def tri_per_crossing(road_w: float, tracks: int = 1, sin_t: float = 1.0, margin: float = PANEL_MARGIN) -> int:
     """Panel triangles of one crossing: ceil(zone / PANEL_STEP) segments x (2n + 1) strips x 2."""
-    zone = road_w / sin_t + 2 * PANEL_MARGIN
+    zone = road_w / sin_t + 2 * margin
     return int(math.ceil(zone / PANEL_STEP - 1e-9)) * (2 * tracks + 1) * 2
