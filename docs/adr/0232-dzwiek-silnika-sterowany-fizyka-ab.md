@@ -33,7 +33,7 @@ osuszacz, opony, wiatr i sprężarka — bez zmian (ADR 0176 i wcześniejsze).
 ## Odsłuch A/B
 `tools/audio/telemetry0232.py` uruchamia `tools/physics-runner` (ten sam model C# co gra, 100 Hz) na scenariuszach
 `tools/audio/scenarios0232/*.json` i zapisuje kolumny dla dźwięku do `scenarios0232/telemetry/*.csv` (w gicie; ponowne
-uruchomienie 2026-11-15 dało identyczne pliki). `render_ab0232.py` renderuje obie wersje przez offline'owe lustro miksu gry
+uruchomienie 2026-11-15 dało identyczne pliki). Render A/B jest deterministyczny: `--rebuild` od zera dał 16/16 plików FLAC identycznych (md5). `render_ab0232.py` renderuje obie wersje przez offline'owe lustro miksu gry
 (te same detektory zdarzeń w A i B — asercja) do `artifacts/audio-0232/` (FLAC 48 kHz mono 16 bit, ext + kabina, spektrogramy
 z zaznaczonymi zdarzeniami, `metrics.json`, `README.md` ze znacznikami czasu). Sceny: ruszanie 40 t pod górę 3 %, biegi pustym
 zestawem, zjazd z hamulcem silnikowym i retarderem, postój z pneumatyką.
@@ -41,7 +41,7 @@ zestawem, zjazd z hamulcem silnikowym i retarderem, postój z pneumatyką.
 ## Dowody (pomiar)
 - Banki (LUFS, ext, A → B): `off` 600 obr/min −39,9 → −37,8 (spalanie na jałowym), `on` 1300 −21,1 → −21,1, `on` 2100 −15,0 → −15,0;
   hamulec silnikowy 1000 obr/min −23,5 → −27,1, 2000 obr/min −18,4 → −19,1 (krzywa momentu hamującego). Pełna tabela w README A/B.
-- Sceny: różnica LUFS A/B ≤ 0,4 LU; współczynnik kliknięcia (maks. skok próbki / 99,99 percentyl) 1,2–1,8 w obu wersjach.
+- Sceny 1–3: różnica LUFS A/B ≤ 0,4 LU; scena 4 (postój) B ciszej o 0,9 LU (ext) i 1,2 LU (kabina) — jałowy i krótsze wypływy pneumatyki; współczynnik kliknięcia (maks. skok próbki / 99,99 percentyl) 1,2–1,8 w obu wersjach.
 - pytest `tools/audio/tests`: 103 testy zielone (deterministyczność, `main` niezmieniony, brak clippingu, poziom rośnie z obciążeniem
   i obrotami, nachylenie harmonicznych zależy od obciążenia tylko w 0232, poziom hamulca wg krzywej fizyki, ciągłość szwów pętli,
   okresowość gwizdu, czasy wypływu wg objętości i kryzy, telemetria fizyczna, detektory zdarzeń).
