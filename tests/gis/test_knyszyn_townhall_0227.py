@@ -67,6 +67,9 @@ def test_real_roof_and_facades_stay_on_bdot_footprints():
         if mat == "roof_tiles_red":
             planar_triangles = []
             for tri in triangles:
+                # Red tile is also reused for the estimated entrance steps.
+                if vertices[tri, 2].max() < 126.0:
+                    continue
                 shape = MultiPoint(vertices[tri,:2]).convex_hull
                 assert allowed.covers(shape), (layer, shape.difference(allowed).area)
                 if shape.geom_type == "Polygon" and shape.area > 1e-8:
@@ -134,3 +137,21 @@ def test_low_preserves_landmarks_with_fewer_triangles_and_materials():
     # Two window rows per planned axis, 2 triangles per pane, plus the dark portico.
     assert low["plinth_dark"] >= 4*sum(r["window_axes"].values())
     assert low["roof_tiles_red"] >= 10
+
+
+def test_estimated_office_entrances_replace_ground_floor_windows():
+    fc=source(); blds=BM.load(fc,[761611,612607],[],hero=townhall.hero_targets("knyszyn",fc))
+    office=next(b for b in blds if b["id"]==townhall.OFFICE)
+    axis=townhall._frame(office["poly"])[1]
+    park=np.array([760943.5-761611,612382.3-612607])
+    plan=townhall._window_plan(office["poly"],park,axis,9)
+    buf=Buffer(); townhall.build(buf,"knyszyn",blds,lambda e,n:np.zeros_like(e)+125,{})
+    for index in (2,7):
+        p,tangent,out=plan[index]
+        for layer in townhall.LAYERS:
+            dark=next(v for ly,mat,v,tris,src in buf.parts if ly==layer and mat=="plinth_dark")
+            points=dark[np.isclose((dark[:,:2]-p)@out,.045,atol=1e-5)]
+            assert len(points)>=4 and np.isclose(points[:,2].min(),125.55)
+        high_glass=next(v for ly,mat,v,tris,src in buf.parts if ly=="buildings" and mat=="glass")
+        nearby=high_glass[np.linalg.norm(high_glass[:,:2]-p,axis=1)<1.0]
+        assert len(nearby) and nearby[:,2].min() > 129.0

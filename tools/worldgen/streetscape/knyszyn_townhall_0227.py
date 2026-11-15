@@ -201,14 +201,14 @@ def _dormer(acc, layer, center, axis, out, eave, rise, window_material="glass"):
     """Modest white dormer with a red gable, standing on the roof plane."""
     z0 = eave + rise * .25
     # Half axes in E,N,Z. The roof plane rises inward; this box partly intersects it.
-    acc.box(layer, "plaster_white", _pt(center, z0+.5), np.r_[axis*.70, 0],
-            np.r_[out*.65, 0], [0, 0, .65], skip=(0,))
-    _face(acc, layer, window_material, center, axis, out, .75, z0+.27, z0+1.12, .656)
-    front, back = center+out*.65, center-out*.65
-    a, b, c, d = front-axis*.8, front+axis*.8, back+axis*.8, back-axis*.8
+    acc.box(layer, "plaster_white", _pt(center, z0+.40), np.r_[axis*.57, 0],
+            np.r_[out*.55, 0], [0, 0, .50], skip=(0,))
+    _face(acc, layer, window_material, center, axis, out, .64, z0+.20, z0+.88, .556)
+    front, back = center+out*.55, center-out*.55
+    a, b, c, d = front-axis*.65, front+axis*.65, back+axis*.65, back-axis*.65
     peak0, peak1 = front, back
     # Roof is above the white box; normals checked independently of axis sign.
-    za, zp = z0+1.15, z0+1.53
+    za, zp = z0+.90, z0+1.20
     faces = [[_pt(a,za), _pt(d,za), _pt(peak1,zp), _pt(peak0,zp)],
              [_pt(c,za), _pt(b,za), _pt(peak0,zp), _pt(peak1,zp)]]
     if axis[0]*out[1] - axis[1]*out[0] < 0:
@@ -238,6 +238,7 @@ def build(buf, region, blds, zsmooth, report):
     frames = {bid: _frame(selected[bid]["poly"]) for bid in IDS}
     facades = {}
     plans = {}
+    entrances = {}
     for bid in IDS:
         target = np.array([760943.5-761611, 612382.3-612607]) if bid == OFFICE else frames[OFFICE][0]
         facades[bid] = _facade(selected[bid]["poly"], target, frames[bid][1])
@@ -248,6 +249,9 @@ def build(buf, region, blds, zsmooth, report):
         omit=facades[bid][1] if bid == CULTURE else None
         # Both long exterior sides receive windows; a short end facing the park is detailed too.
         plan = _window_plan(poly,target,axis,9 if bid==OFFICE else 6,omit=omit)
+        # ESTIMATED positions: use two existing axes on the courtyard-facing wall.
+        if bid == OFFICE:
+            entrances[bid] = [plan[i] for i in (2, 7)] if len(plan) >= 8 else []
         plan += _window_plan(poly,2*c-target,axis,9 if bid==OFFICE else 6)
         park=np.array([760943.5-761611, 612382.3-612607])
         plan += _window_plan(poly,park,axis,2,parallel=False)
@@ -275,6 +279,8 @@ def build(buf, region, blds, zsmooth, report):
             # Each axis is projected to its own BDOT wall, including split wall runs.
             for p,window_axis,window_out in plans[bid]:
                 for z0 in (z+1.0, z+4.55):
+                    if bid == OFFICE and z0 == z+1.0 and any(np.linalg.norm(p-q[0]) < .1 for q in entrances[bid]):
+                        continue
                     if low:
                         _face(acc, layer, "plinth_dark", p, window_axis, window_out, 1.16, z0+.15, z0+2.32, .035)
                     else:
@@ -283,6 +289,16 @@ def build(buf, region, blds, zsmooth, report):
                         # Existing white plaster material forms simple white window mullions.
                         _face(acc, layer, "plaster_white", p, window_axis, window_out, .065, z0+.15, z0+2.32, .065)
                         _face(acc, layer, "plaster_white", p, window_axis, window_out, 1.16, z0+1.58, z0+1.64, .065)
+            if bid == OFFICE:
+                # ESTIMATED doors and three tile steps; Low reuses existing materials.
+                for p, tangent, outward in entrances[bid]:
+                    _face(acc, layer, "plinth_dark", p, tangent, outward, 1.35, z+.55, z+3.15, .045)
+                    for step in range(3):
+                        depth = .45*(3-step)
+                        center_step = p+outward*(depth/2+.04)
+                        height = .55*(step+1)/3
+                        acc.box(layer, "plinth_dark" if low else "roof_tiles_red", _pt(center_step,z+height/2),
+                                np.r_[tangent*1.2,0], np.r_[outward*depth/2,0], [0,0,height/2], skip=(0,))
             n_dormer = (4 if bid == OFFICE else 3) if low else (8 if bid == OFFICE else 5)
             for j in range(n_dormer):
                 u = (j-(n_dormer-1)/2)*min(3.7, (facade_len-3)/max(1,n_dormer-1))
