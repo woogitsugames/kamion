@@ -61,7 +61,7 @@ dla C, potem Dojlid. Skrypt: `artifacts/c-regen-s22/tools/regen.ps1`, logi `arti
 - EditMode po merge PR (2 przebiegi): 629 = 626 pass / 2 fail / 1 skip; oba faile
   `CarPaintMaterialTests.DepositionChannel_RequiresScopedYardOptInOrExistingCar` (opisane jako znane z main w
   `artifacts/live/verify-cloud-b.md`; na czystym main w tej sesji niesprawdzane).
-__POSTMERGE__
+Kontrola po merge main (22:28–22:51, lider s23 domknął po martwym agencie): build_world C exit=0, fidelity C exit=0, build_world Dojlidy exit=0, fidelity Dojlidy exit=0, wybrane pytest 353 passed / 1215 deselected (89,9 s). `git status` po przebiegu: zmienione wyłącznie `generated/fidelity_qa.json` C i Dojlid, a w nich tylko `inputs_sha256` plików narzędzi zmienionych przez main (build_world, closures, consistency, decals, markings, meshing, network, tunnels) — geometria, manifesty chunków i QA bez różnic. Fidelity C odświeżone (zamyka uwagę z rail-fix-s21).
 
 ## Otwarte
 1. Telefon niemierzony (A16) — wg zadania bez adb.
