@@ -26,7 +26,10 @@ param(
     [Parameter(Mandatory)] [string]$Region,
     [switch]$Build,
     [string]$Tiers = 'Low,High',
-    [ValidateSet('High', 'Medium', 'Low')] [string]$MaterialTier = 'Medium'
+    [ValidateSet('High', 'Medium', 'Low')] [string]$MaterialTier = 'Medium',
+    # Editor platform of the run. A checkout whose Library is imported for Win64 (scripts/build-windows.ps1) must import
+    # with Win64, otherwise Unity switches back to Android and re-imports every asset (ADR 0261).
+    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android'
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
