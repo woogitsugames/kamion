@@ -1,0 +1,60 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "purpose": "Sprawdzenie jawnych warunków korzystania z załącznika fotograficznego; bez kwalifikowania fotografii jako automatycznie wolnych materiałów urzędowych.",
+  "method": {
+    "skill": "anthropic-skills:docx — read-only; odczytano SKILL.md",
+    "docx_url": "https://www.knyszyn.pl/asp/pliki/download/regulamin_konkursu_-_uzup.a.jakimowicz.docx",
+    "http_status": 200,
+    "bytes": 37739,
+    "sha256": "b50fb216a253bf6c1383f164b63b8b74a25545eeff63bfd48f4c7a96397aa9a8",
+    "extraction": "Pobrano wyłącznie DOCX regulaminu do pamięci procesu. Odczytano pełny tekst word/document.xml, bez zapisu DOCX na dysku; archiwum DOCX nie zawierało wpisów word/media/. Nie uruchamiano makr ani generowania dokumentów.",
+    "answers_url": "https://www.knyszyn.pl/asp/odpowiedzi-na-pytania-dot-konkursu-na-opracowanie-koncepcji-zagospodarowania-terenu-wokol-urzedu-miejskiego-w-knyszynie,239,artykul,1,6538",
+    "answers_read_scope": "Pełne pytania i odpowiedzi 1–4 z oficjalnego HTML, publikacja 19.03.2026.",
+    "photo_zip_downloaded": false,
+    "photo_zip_opened": false,
+    "maps_opened": false
+  },
+  "regulation_findings": [
+    {
+      "location": "Nagłówek i rozdział X, wykaz załączników",
+      "status": "SOURCED [DOCX regulaminu]",
+      "finding": "Regulamin jest załącznikiem do zarządzenia 209/26 z 09.03.2026; wymienia załącznik 3 jako dokumentację fotograficzną. Nie wskazuje autora tych fotografii ani ich licencji."
+    },
+    {
+      "location": "Rozdział IV, akapit o publikowaniu; rozdział V, wykorzystanie części cyfrowej",
+      "status": "SOURCED [DOCX regulaminu]",
+      "finding": "Zgoda uczestników obejmuje publikację złożonych prac przez organizatora i promocję wyników. Nie udziela czytelnikowi niezależnej licencji na fotografie wejściowe."
+    },
+    {
+      "location": "Rozdział IX — Przeniesienie praw autorskich",
+      "status": "SOURCED [DOCX regulaminu]",
+      "finding": "Opisano przejście praw uczestników do prac konkursowych na organizatora, ich prezentację, reprodukcję, multimedia i dalsze projektowanie. Adresatem tych uprawnień jest organizator; przedmiotem są prace konkursowe. Nie rozszerzono tych zapisów wprost na licencję publiczności do załącznika fotograficznego."
+    },
+    {
+      "location": "Pełny tekst rozdziałów I–X",
+      "status": "SOURCED [odczyt całego DOCX]",
+      "finding": "Nie znaleziono jawnego CC, CC0 ani zezwolenia osobom trzecim na użycie dokumentacji fotograficznej jako referencji gry lub na jej redystrybucję."
+    }
+  ],
+  "answers_findings": {
+    "status": "SOURCED [oficjalne odpowiedzi 1–4]",
+    "finding": "Odpowiedzi dotyczą podkładów budynku i zieleni, ruchu przy urzędzie, masztu i rozszerzonej mapy. Nie wskazują autora fotografii, licencji ZIP ani uprawnień do redystrybucji. Udostępnienie podkładu mapowego nie jest oświadczeniem o prawach do zdjęć."
+  },
+  "assessment": {
+    "status": "WNIOSKOWANIE z odczytanych dokumentów; nie odrębne rozstrzygnięcie prawne",
+    "photo_author": "UNVERIFIED — brak autora w odczytanych tekstach; ZIP nie otwierano",
+    "copyright_holder": "UNVERIFIED",
+    "photographs_as_official_materials": "UNVERIFIED — same miejsce publikacji i dołączenie do konkursu nie rozstrzygają w tych tekstach statusu poszczególnych zdjęć",
+    "explicit_reference_use_permission": "NIE USTALONO w odczytanych tekstach",
+    "explicit_redistribution_permission": "NIE USTALONO w odczytanych tekstach",
+    "creative_commons_assigned": false,
+    "do_not_infer": "Przeniesienie praw do konkursowych koncepcji nie dowodzi pochodzenia ani licencji wcześniejszej dokumentacji fotograficznej."
+  },
+  "archive_decision": {
+    "url": "https://www.knyszyn.pl/asp/pliki/download/zal._nr_3_dokumentacja_fotograficzna.zip",
+    "status": "PENDING-VISUAL / link-only, all rights reserved — nie stwierdzono otwartej licencji",
+    "action": "Pozostawić wyłącznie publiczny odnośnik. Nie pobierać, nie kopiować do raw ani gita, nie publikować miniaturek. Nie opisywać zawartości bez obejrzenia. Przejść do źródeł z jawną dopuszczoną licencją lub publicznych fotostron możliwych do obejrzenia link-only.",
+    "new_counted_frames": 0
+  }
+}

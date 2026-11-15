@@ -93,3 +93,7 @@ Dwa dodatkowe kadry fasady (OWN-B02/B03) potwierdzają zawijanie jasnych poziomy
 ## Kolejny obieg fasad i ulic — new-round2
 
 Dodano5 rekordów w new-round2/manifest.csv i głównym manifeście (teraz17):3 nowe źródła względem K1, dwa ponowne przeglądy istniejącychK1-P06/P22 bez kopiowania obrazów. Nowe fotografie Henryka Borawskiego, CC BY-SA3.0,2012-06-09: dwie fasady i detal tabliczki42. Koordynator osobno obejrzał wszystkie3 nowe miniatury: zgodność opisów PASS. Nazwy adresów z metadanych nie są niezależnym ustaleniem lokalizacji. Niebieskiej bryły z oknami na różnych wysokościach nie upraszczać do dwóch pełnych kondygnacji. Historyczny wlotDK65 z2009 nie potwierdza obecnego ronda. Nowych współczesnych ujęć trasyDK65 w tej porcji0.
+
+## Gminne źródła2024–2026 — municipal-round3
+
+Cztery nowe dokumenty tekstowe (manifest główny teraz21 wierszy), bez nowych zdjęć. Konkurs otoczeniaUM z2026 dotyczy koncepcji i przyszłej dokumentacji, nie stanowi potwierdzenia wykonania. Rozstrzygnięcie06.05.2026 odczytał też koordynator: ocena29.04,5 prac, dokumentacja dopiero planowana. Informacja gminy o braku posiadanej cyfrowej dokumentacji do modelowania budynku nie jest dowodem nieistnienia geometrii LoD2 GUGiK użytej oddzielnie. Umowa Rynek6 z2024 zapowiada zmiany, bez potwierdzenia odbioru. Regulamin DOCX sprawdzony read-only: brak jawnej publicznej licencji wejściowych fotografiiZIP; archiwum niepobrane i PENDING-VISUAL. Szczegóły municipal-round3/README.md i legal-check.json.

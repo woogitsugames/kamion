@@ -1,0 +1,33 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "scope": "Nowsze źródła tekstowe gminy o Rynku, bez kopii fotografii",
+  "new_text_sources": 4,
+  "new_downloaded_photos": 0,
+  "new_individually_viewed_terrain_photos": 0,
+  "owner_photos_used": false,
+  "deduplication": "Porównano URL z nadrzędnym manifest.csv i data/municipal-sources.json; numery artykułów 6520, 6538, 6590, 5749 nie występowały. Seria 5400 pominięta.",
+  "read_method": {
+    "6520": "pełna treść HTML odczytana w Chrome CUA; publiczna strona otworzyła się bez CAPTCHA; załączniki nieotwarte",
+    "6538": "pełne odpowiedzi 1–4 odczytane z oficjalnego HTML narzędziem web",
+    "6590": "pełna treść HTML odczytana w Chrome CUA oraz web; archiwa koncepcji nieotwarte",
+    "5749": "pełna treść HTML, opis umowy i lista zakresu odczytane narzędziem web; fotografie nieobejrzane"
+  },
+  "screening": [
+    {
+      "page": "https://www.knyszyn.pl/asp/konkurs-na-opracowanie-koncepcji-zagospodarowania-terenu-wokol-urzedu-miejskiego-w-knyszynie,239,artykul,1,6520",
+      "image_label": "konkurs__002_.png",
+      "viewed": true,
+      "observation": "Grafika promocyjna: tytuł koncepcji, ręka z ołówkiem, budynek w tle. Nie traktowana jako dokumentalna fotografia stanu terenu.",
+      "counted_as_terrain_photo": false,
+      "downloaded": false,
+      "rights": "link-only, all rights reserved"
+    }
+  ],
+  "unverified": [
+    "Wykonanie i odbiór zmian otoczenia UM według konkursu 2026",
+    "Zakończenie i docelowy wygląd biblioteki Rynek 6",
+    "Daty i liczba fotografii w archiwum załącznika 3",
+    "Aktualny układ ruchu oraz przebieg DK65 na podstawie omawianych stron"
+  ]
+}
