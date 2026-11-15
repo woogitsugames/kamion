@@ -43,7 +43,13 @@ namespace Game.World
         Bounds[] m_CellBounds;  // cell bounds in world space
         Camera m_Camera;
 
-        public struct Stats { public int Draws, Instances, Triangles, VisibleCells, HlodCells; }
+        public struct Stats
+        {
+            public int Draws, Instances, Triangles, VisibleCells, HlodCells;
+            /// <summary>ADR 0240: instanced submesh draws / triangles submitted as main-light shadow casters (before the
+            /// shadow-distance culling of the pipeline; props cast from LOD0 only).</summary>
+            public int ShadowDraws, ShadowTriangles;
+        }
         /// <summary>Counters of the last camera rendered (visual QA / diagnostics).</summary>
         public static Stats Last;
 
@@ -655,6 +661,7 @@ namespace Game.World
                 Graphics.RenderMeshInstanced(rp, mesh, s, m_Batch[slot], n);
                 Last.Draws++;
                 Last.Triangles += (int)(mesh.GetIndexCount(s) / 3) * n;
+                if (rp.shadowCastingMode != ShadowCastingMode.Off) { Last.ShadowDraws++; Last.ShadowTriangles += (int)(mesh.GetIndexCount(s) / 3) * n; }
             }
             Last.Instances += n;
             m_BatchCount[slot] = 0;

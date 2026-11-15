@@ -91,7 +91,8 @@ namespace Game.Tests.EditMode
         }
 
         [TestCase("fence_galv", true)]
-        [TestCase("fence_green_mesh", true)]
+        [TestCase("fence_green_mesh", false)]   // ADR 0239 (FenceMeshCoverage) owns the welded mesh on every tier
+        [TestCase("fence_galv_mesh", false)]
         [TestCase("fence_anthracite", true)]
         [TestCase("barrier_post", true)]
         [TestCase("chain_bollard", true)]

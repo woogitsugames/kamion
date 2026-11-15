@@ -33,8 +33,10 @@ namespace Game.Rendering
         static readonly string[] k_ThinExact = { "pylon" };   // the HV lattice tower; "pylon_u5a" is a 0.3 m marker post
 
         // Chunk-merged furniture / plot materials (RegionImporter -> Kamion/World PBR _LowNoShadow, like the manifest flag
-        // "shadow_low": false of ADR 0123): fence posts 4 cm and mesh panels, W-beam posts (the beam is already flagged).
-        // Solid fences are "concrete_fence" / wall materials and do not match.
+        // "shadow_low": false of ADR 0123): fence posts 4 cm, W-beam posts (the beam is already flagged).
+        // Solid fences are "concrete_fence" / wall materials and do not match. The welded mesh panels ("fence_*_mesh")
+        // are NOT handled here: ADR 0239 (FenceMeshCoverage.CastsShadow) switches their caster off on every tier.
+        const string k_FenceMeshSuffix = "_mesh";
         static readonly string[] k_ThinMaterialPrefixes = { "fence_", "barrier_post", "chain_" };
 
         /// <summary>True when an instanced prototype must not cast on a tier with thin casters off.</summary>
@@ -66,6 +68,8 @@ namespace Game.Rendering
         public static bool IsThinMaterial(string materialId)
         {
             if (string.IsNullOrEmpty(materialId)) return false;
+            if (materialId.StartsWith("fence_", StringComparison.Ordinal) && materialId.EndsWith(k_FenceMeshSuffix, StringComparison.Ordinal))
+                return false;   // ADR 0239 owns the fence mesh
             for (int i = 0; i < k_ThinMaterialPrefixes.Length; i++)
                 if (materialId.StartsWith(k_ThinMaterialPrefixes[i], StringComparison.Ordinal)) return true;
             return false;

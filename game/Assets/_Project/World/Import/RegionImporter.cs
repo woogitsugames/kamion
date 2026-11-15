@@ -304,7 +304,7 @@ namespace Game.World.Import
             // ADR 0123: manifest "shadow_low": false = no shadow casting on the Low tier (Kamion/World PBR _LowNoShadow)
             if (mat != null && mat.HasProperty("_LowNoShadow"))
             {
-                // ADR 0240: + thin chunk furniture by material id (fence posts / mesh panels, W-beam posts).
+                // ADR 0240: + thin chunk furniture by material id (fence posts, W-beam posts; the fence mesh is ADR 0239).
                 bool lowOff = (m.Get("shadow_low") is bool sl && !sl) || Game.Rendering.ThinShadowCasterPolicy.IsThinMaterial(id);
                 mat.SetFloat("_LowNoShadow", lowOff ? 1f : 0f);
                 EditorUtility.SetDirty(mat);
