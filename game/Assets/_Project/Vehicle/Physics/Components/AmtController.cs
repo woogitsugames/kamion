@@ -250,7 +250,7 @@ namespace Game.Vehicle.Physics
                     bool antiStall = engOmega < idle * 0.95;
                     if (antiStall) cmd = Math.Min(cmd, ClutchCommand - dt * AntiStallOpenRate); // anti-stall
                     cmd = MathUtil.Clamp01(cmd);
-                    ClutchCommand = MathUtil.MoveTowards(ClutchCommand, cmd, dt * (antiStall ? Math.Max(4.0, AntiStallOpenRate) : 4.0));
+                    ClutchCommand = MathUtil.MoveTowards(ClutchCommand, cmd, dt * (antiStall ? AntiStallOpenRate : 4.0));
                     // Close only when the clutch is synchronous AND the drive wheels are not spinning (the
                     // engine-to-road slip, referenced to vehicle speed, is small): a launch with wheelspin keeps slipping the clutch.
                     double roadSlip = engOmega - Math.Abs(TotalRatio) * Math.Abs(vehicleSpeed) / wheelRadius;
@@ -346,7 +346,12 @@ namespace Game.Vehicle.Physics
             }
         }
 
-        public static double AntiStallOpenRate = 8.0;
+        /// <summary>
+        /// Anti-stall clutch opening rate in Launch [1/s] (ADR 0201b; was 2/s target offset + 4/s slew): full stroke in
+        /// ~0.125 s, the same order as the 0.15 s clutch phases of a shift. At 2/s an ASR torque cut at crawl speed let the
+        /// engine fall ~1500 rpm/s while the clutch was still at 0.7-0.9 and stalled it (reverse_dock_s_maneuver_comb@laden40).
+        /// </summary>
+        const double AntiStallOpenRate = 8.0;
 
         void AutoDrive(double rpm, double throttle, bool ebMode, Engine engine, double massKg, double gradeSin,
             double wheelRadius, double resistance, double fdEff, double speed)
