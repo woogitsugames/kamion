@@ -47,7 +47,7 @@ def buildings_fc():
 @pytest.fixture(scope="session")
 def piers_check():
     """(report, world) of tools/worldgen/qa/check_piers_vs_roads.py for the default region: the road stage of the
-    generator on a flat ground model. No Data/raw, no Unity; about 100 s, once per session (ADR 0198 / 0216)."""
+    generator on a flat ground model. No Data/raw, no Unity; about 100 s, once per session (ADR 0198 / 0226)."""
     sys.path.insert(0, str(REPO / "tools" / "worldgen" / "qa"))
     import check_piers_vs_roads as K
     return K.check(REGION_ID)

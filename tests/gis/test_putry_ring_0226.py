@@ -1,4 +1,4 @@
-"""ADR 0216: centre island of Rondo Putry corrected to the GUGiK orthophoto (owner decision 2026-11-15).
+"""ADR 0226: centre island of Rondo Putry corrected to the GUGiK orthophoto (owner decision 2026-11-15).
 
 Generator mechanisms: `apron_width` on ring edges (distance carriageway edge -> island kerb) and the node override
 `island_curb_radius` (kerb return between two ring carriageways). No Data/raw, no Unity: the unit tests are instant,

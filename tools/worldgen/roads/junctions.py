@@ -202,7 +202,7 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
         elif alpha_deg <= S.STRAIGHT_MIN_ANGLE_DEG:
             R = corner_radius(net, A, B, r_override)
             if A.is_ring() and B.is_ring():
-                # ADR 0216: node override `island_curb_radius` - the kerb return between two ring carriageways, i.e.
+                # ADR 0226: node override `island_curb_radius` - the kerb return between two ring carriageways, i.e.
                 # a corner of the centre island of an elongated roundabout, measured on the orthophoto. Only this
                 # corner: the outer corners of the junction keep the class rule (`curb_radius` moves them all)
                 for n_ in j.nodes:

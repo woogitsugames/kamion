@@ -176,7 +176,7 @@ def underdeck_rows(cfg: dict, c):
     of THAT deck (local E, N). Every deck of the under-deck dressing is its own spec, so a flat list (the form of a
     `hero_bridge` override, ADR 0123) would be projected onto both decks; the rows are therefore keyed by deck.
     A deck without a key keeps the span rule. `pier_lines_en_held` (same form) is documentation only: rows that are
-    known from photos but cannot stand in the generated world yet - it is never read here (empty since ADR 0216)."""
+    known from photos but cannot stand in the generated world yet - it is never read here (empty since ADR 0226)."""
     rows = cfg.get("pier_lines_en") or {}
     hit = sorted(k for k in rows if str(k) in chain_ways(c))
     if len(hit) > 1:

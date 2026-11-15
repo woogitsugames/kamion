@@ -1,7 +1,8 @@
-# ADR 0216 — rondo Putry: krawężnik wyspy z ortofoto (`apron_width`, `island_curb_radius`) i dwa rzędy podpór pomostu SW
+# ADR 0226 — rondo Putry: krawężnik wyspy z ortofoto (`apron_width`, `island_curb_radius`) i dwa rzędy podpór pomostu SW
 Status: Proposed (agent world-builder, s20, gałąź `putry-ring-0198b` na bazie `piers-0198` = PR #82, sesja w chmurze),
-2026-11-15. Numer 0216 do potwierdzenia przez lidera (0214 = `dk65-tiles2-0214`, 0215 = `dk65-d65-data`; 0216 nie
-występuje na żadnej gałęzi `origin/*` w dniu zapisu). Do scalenia po weryfikacji w Unity.
+2026-11-15. Numer 0226 (przenumerowany z roboczego 0216 w s21: 0216 zajął `summer-led-0216` — latarnie LED Knyszyn;
+0217–0220 zajęte przez PR #96/#97/#95/#98, 0221 przez budget-fix-s21; numer 0226 przydzielił lider chmury s21;
+0226 nie występuje na żadnej gałęzi `origin/*` w dniu przenumerowania). Do scalenia po weryfikacji w Unity.
 Powiązane: ADR 0198 (rzędy podpór per pomost, konflikt pomostu SW), 0123 (`apron: asphalt`, `pier_lines_en`),
 0077 (`center_offset`, MA-010), 0095 (profile `[t, wartość]`), 0117 (bariery przy podporach).
 
@@ -20,7 +21,7 @@ Powiązane: ADR 0198 (rzędy podpór per pomost, konflikt pomostu SW), 0123 (`ap
   257367424 N, 257367428 E) — OSM nie ma obrysu wyspy.
 - Metoda: siatka 1 m w układzie lokalnym nałożona na powiększone wycinki (3–6×); odczyt „na oko” krawędzi asfaltu
   przy jasnym pasie krawężnika wyspy, **38 punktów**, dokładność ±0,3 m (dwa punkty w szczelinie między pomostami
-  ±0,5 m). Części wyspy pod pomostami są niewidoczne i nie mają punktów. Punkty: `tests/gis/test_putry_ring_0216.py`
+  ±0,5 m). Części wyspy pod pomostami są niewidoczne i nie mają punktów. Punkty: `tests/gis/test_putry_ring_0226.py`
   (`KERB`).
 - Wyspa nie ma opaski z kostki: asfalt dochodzi do krawężnika, za nim żwir i trawa (część N) albo żwir z barierą
   (strona SW przy pomoście SW). Czy jasny pas to sam krawężnik, czy krawężnik z wąskim pasem za nim: UNVERIFIED.
@@ -57,7 +58,7 @@ Powiązane: ADR 0198 (rzędy podpór per pomost, konflikt pomostu SW), 0123 (`ap
    wolnego okna 88–110 m.
 
 ## Wynik (zmierzony na płaskim modelu terenu)
-| Miara | ADR 0198 | ADR 0216 |
+| Miara | ADR 0198 | ADR 0226 |
 |---|---|---|
 | krawężnik wyspy vs 38 punktów ortofoto, średnia / p95 / max | 2,02 / 4,72 / 4,93 m | **0,46 / 1,24 / 1,37 m** |
 | strona S (pod pomostem SW), średnia / max | 3,64 / 4,93 m | 0,18 / 0,81 m |
