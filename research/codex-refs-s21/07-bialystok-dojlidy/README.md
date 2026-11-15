@@ -1,5 +1,7 @@
 # 07 — Białystok trasa C / Dojlidy: referencje i luki — WIP
 
+Stan bieżący:5 wierszy —4 dokumentacyjne i1 ponownie obejrzany istniejący kadr ronda. Nowych fotografii0; błędną etykietę śnieg z P1-004 wskazano w erracie, B-123 nadalotwarte.
+
 Cel: uzupełnić backlog S21 źródłami, nie zmieniając generatorów. W tym przeglądzie: **0 kadrów pobranych, 0 kadrów link-only**, 4 wiersze dokumentacyjne (3 fakty z jednego komunikatu + 1 kontrola publicznych metadanych). To nie jest pakiet zdjęciowy. Nie pobrano ani nie opisano zdjęć z galerii miejskiej.
 
 ## B-040 — ruch ciężarowy w Dojlidach

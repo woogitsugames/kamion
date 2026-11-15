@@ -1,5 +1,7 @@
 # 04 — DK65: datowany stan inwestycji i organizacja ruchu — WIP
 
+Stan bieżący manifestu:6 rekordów —4 dokumentacyjne i2 ponownie obejrzane orto. Brak nowych fotografii naziemnych i brak pobranych obrazów firmowych. Normy i prywatne obserwacje tekstowe opisano osobno.
+
 Cel: oddzielić otwartą S19 od aktualnej budowy S16 i archiwalnych zwężeń DK65. Pakiet zawiera 4 rekordy dokumentacyjne, **0 kadrów pobranych / 0 kadrów link-only**. Nie opisuje zdjęć na stronach GDDKiA, których nie oglądano.
 
 ## Ustalenia

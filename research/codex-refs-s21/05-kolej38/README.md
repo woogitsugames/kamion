@@ -1,5 +1,7 @@
 # 05 — Linia38: elektryfikacja i stan zastany kontra projekt — WIP
 
+Stan bieżący:9 rekordów —3 dokumentacyjne,4 rekordy danych OSM,1 ponownie obejrzana fotografia stacji i1 nowe orto przejazdu. Urządzenia konkretnego przejazdu nadalUNVERIFIED.
+
 3 rekordy dokumentacyjne, 0 fotografii terenowych pobranych / 0 kadrów link-only. Nie kopiowano do repo dokumentów PKP ani renderu ich stron. W manifeście odnośniki i własne parafrazy danych.
 
 ## Ustalenia
