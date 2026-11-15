@@ -45,3 +45,6 @@ Datowanie06-O03: WFS2025 zwraca arkusz N-34-106-C-b-2-4, akt_data2025-05-27, pik
 ## Mońki — dwie nowe fasady z poziomu ulicy
 
 monki-ground-round2:2 nowe źródła Henryka Borawskiego, CC BY-SA3.0/4.0,2014/2015. Obie miniatury800×600 obejrzane osobno przez agenta i koordynatora, opisy PASS. Kremowo-ceglana nieregularna bryła z arkadami i czerwonym dachem; osobno niska zabudowa, szeroki wjazd i rowopodobne obniżenie przy jezdni. Adresy z metadanych, nie odczytu numerów. Nie dopasowano dokładnych fasad do DK65, nie ustalono stanu2026 ani pełnych przekrojów. Główny manifest ma9 rekordów.
+
+
+Tykocin-landmarks-round3:2 nowe kadry2009/2018 (Lollencja BY-SA3.0pl, Ymblanter BY-SA4.0), kościół/pomnik i pierzeja placu. Osobne oględziny koordynatora i niezależny przegląd. Lewa wieża ucięta, wymiary/formalne kondygnacje i aktualność2026 nieustalone. 2 podglądy pobrane, 2 miniatury≤800px, brak pełnych oryginałów. Główny manifest11 rekordów.
