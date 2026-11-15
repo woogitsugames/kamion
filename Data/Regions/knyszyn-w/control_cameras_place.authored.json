@@ -1,0 +1,126 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0209): control cameras at places of west Knyszyn. Position region-local E/N (origin 759563, 612607), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions traced on the OSM axes of the road graph (+-3 m).",
+ "cameras": [
+  {
+   "id": "dk65_seam_east_out",
+   "pos_en": [
+    1009,
+    -503
+   ],
+   "heading_deg": 334,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DK65 30 m west of the east seam (roundabout arm), outbound NW towards Monki"
+  },
+  {
+   "id": "dk65_inbound_to_rondo",
+   "pos_en": [
+    929,
+    -332
+   ],
+   "heading_deg": 154,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DK65 inbound SE towards the roundabout (in tile knyszyn), Legionowa T-junction on the left"
+  },
+  {
+   "id": "dk65_koscielna",
+   "pos_en": [
+    842,
+    -152
+   ],
+   "heading_deg": 334,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DK65 outbound before the Koscielna junction (760360 612547)"
+  },
+  {
+   "id": "dk65_goniadzka",
+   "pos_en": [
+    632,
+    283
+   ],
+   "heading_deg": 334,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DK65 outbound before the Goniadzka fork (760131 613021 / 760097 613071)"
+  },
+  {
+   "id": "dk65_polna",
+   "pos_en": [
+    457,
+    518
+   ],
+   "heading_deg": 305,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DK65 at the Polna / field road junction (759875 613220)"
+  },
+  {
+   "id": "dk65_fields_nw",
+   "pos_en": [
+    137,
+    773
+   ],
+   "heading_deg": 313,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DK65 between fields towards the north tile edge"
+  },
+  {
+   "id": "dk65_north_edge_in",
+   "pos_en": [
+    -118,
+    1003
+   ],
+   "heading_deg": 133,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye 25 m inside the north tile edge, inbound towards Knyszyn"
+  },
+  {
+   "id": "tykocka_dw671_out",
+   "pos_en": [
+    972,
+    -692
+   ],
+   "heading_deg": 230,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DW671 Tykocka outbound SW towards Tykocin, 60 m from the seam"
+  },
+  {
+   "id": "goniadzka_above",
+   "pos_en": [
+    547,
+    423
+   ],
+   "heading_deg": 0,
+   "eye_m": 60.0,
+   "fov_deg": 60,
+   "pitch_deg": -45,
+   "note": "overhead of the DK65 x Goniadzka fork"
+  },
+  {
+   "id": "seam_east_above",
+   "pos_en": [
+    977,
+    -467
+   ],
+   "heading_deg": 0,
+   "eye_m": 55.0,
+   "fov_deg": 60,
+   "pitch_deg": -43,
+   "note": "overhead of the DK65 / DW671 seam with tile knyszyn"
+  }
+ ]
+}
