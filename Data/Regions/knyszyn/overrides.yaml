@@ -68,3 +68,28 @@ overrides:
     height_m: [14.0, 22.0]
     spacing_m: 12.0
     mix: {linden: 0.7, maple: 0.3}
+  - id: lamp-policy-led-0216
+    kind: lamp_policy
+    family: led
+    cct_k: 4000
+    sources: ["docs/11_DECYZJE_WLASCICIELA.md D65 p.8", "research/dk65-knyszyn-refs/README.md (e)",
+              "research/night-lamps-s21/README.md section 4"]
+    reason: >-
+      Owner D65 p.8: street lighting on the DK65 / Knyszyn route is white LED. The older side-street poles
+      (spun concrete with an arc arm, thin grey steel) keep their shape and positions and carry a flat LED head
+      instead of the sodium one (ADR 0216). Nominal 4000 K: ZDM Bialystok tenders 2023-2024 (K69, SOURCED for
+      Bialystok streets); type, height and spacing in Knyszyn UNVERIFIED (K1) - the generator's WORKING_VALUE.
+    confidence: medium
+    verify: owner - a night photo of a Knyszyn street lamp (pole type, light colour)
+  - id: dk65-obozowa-south-unlit-0216
+    target: {osm_way: [286990127]}
+    sources: ["artifacts/summer-led-0216/ortho/knyszyn_w286990127_f030.jpg", "artifacts/summer-led-0216/ortho/knyszyn_w286990127_f080.jpg",
+              "research/dk65-knyszyn-refs/README.md (e)"]
+    reason: >-
+      DK65 (Obozowa) south of the town, 528 m across fields (2.7 buildings per 100 m within 60 m): GUGiK orthophoto
+      0.1 m of 2025-05-27, two 120 m crops (EPSG:2180 760878 611699 and 760698 611892) show road signs but no lamp
+      columns or column shadows; the rule put 15 columns here. Same way as knyszyn-s `set: {lamps: false}`.
+      K1: no street lamps on DK65 outside built-up areas; OSM has no street_lamp nodes on the route.
+    confidence: high
+    verify: none
+    set: {lamps: false}
