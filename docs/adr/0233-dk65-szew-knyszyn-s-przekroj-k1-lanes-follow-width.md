@@ -77,8 +77,12 @@ przebudowywano; `lane_w_of()` (poprawka po pełnym pytest) nie zmienia wyniku dl
 ## Budżet
 Draws / tris: nie mierzono (zmiana szerokości przekroju, bez nowych obiektów; telefon poza zadaniem). `WORLD_MEMORY`
 z `artifacts/dk65-r4-s21/logs/import-<kafel>-r4.log` (Low / High, MB razem): `dk65-07` 61,2 / 138,6; `dk65-08` 57,8 / 125,1;
-`dk65-09` 54,4 / 125,3; `dk65-10` 50,9 / 119,2; `dk65-11` 50,0 / 114,8; `knyszyn-s` 41,4 / 107,5. Porównania A/B z r3 nie
-ma (logi r3 nie zawierają tej linii w tym worktree) — UNVERIFIED, że bez zmian.
+`dk65-09` 54,4 / 125,3; `dk65-10` 50,9 / 119,2; `dk65-11` 50,0 / 114,8; `knyszyn-s` 41,4 / 107,5.
+A/B wobec r3 (`artifacts/dk65-tiles2-0214/logs/import-<kafel>-r3.log`, Low / High): 07 59,1 / 136,5; 08 55,5 / 122,7;
+09 51,4 / 122,4; 10 49,0 / 117,3; 11 48,2 / 113,0 → r4 +1,8…+3,0 MB na kafel. `render_meshes` i `collision_src`
+identyczne (10: 26,3 / 10,4 MB; road 1,8, markings 0,2 bez zmian), cały przyrost w `instances` (10: 12,3 → 14,2 MB;
+09: 14,9 → 17,9 MB) — instancje nie pochodzą z tej zmiany (przekrój jezdni); przyczyna (baza main między r3 a r4)
+UNVERIFIED. `knyszyn-s`: brak bazy r3 w tym zestawie logów.
 
 ## Walidacja
 - `tests/gis/test_dk65_seam_knyszyn_0233.py` + `test_dk65_seams_0214.py` po scaleniu main: 39 passed (w tym geometria
@@ -87,7 +91,7 @@ ma (logi r3 nie zawierają tej linii w tym worktree) — UNVERIFIED, że bez zmi
   duck-typed w testach bez `lane_w_at` / `lane_follow` → poprawione (`network.lane_w_of`, 92 passed na tych plikach).
   7.: `test_road_fidelity.py::test_report_not_stale` — `fidelity_qa.json` (`bialystok-industrial-c`) nieaktualny już na
   `origin/main` (5 plików generatora), nie z tego zadania. Przebieg 2: <!-- PYTEST2 -->
-- EditMode: 628 testów, 626 passed, 1 skipped, 0 failed (po `scripts/export-region-catalog.py`; przed: 1 failed —
+- EditMode: 628 testów, 627 passed, 1 skipped, 0 failed (po `scripts/export-region-catalog.py`; przed: 1 failed —
   `knyszyn-s` routeLengthM), `artifacts/tests/editmode-20261115-2149*.xml`.
 - Pętla wizualna (Low + High, 1920 × 1080, clear): `artifacts/dk65-r4-s21/seam/r4/seam-*-{low,high}.jpg` (sklejka obu
   połówek szwu | ortofoto WMS 0,1 m), `widening-knyszyn-s-*.jpg`, `<kafel>/r4/view/grid-*.jpg`. Obejrzane: oba szwy —
