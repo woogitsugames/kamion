@@ -217,6 +217,106 @@ overrides:
       P11-063. Positions +-2 m from the orthophoto; heights +-1.5 m WORKING_VALUE.
     confidence: medium
     verify: owner photo session (Kuronia north lawn); tree heights
+  # ---------------------------------------------------------------- horizon tree line (ADR 0187, P11-056)
+  - id: allotment-gardens-north-of-krywlany
+    kind: tree_stand
+    category: broadleaf
+    height_m: [4.0, 10.0]
+    emergent: {share: 0.02, height_m: [14.0, 17.0]}
+    spacing_m: 6.0
+    mix: {maple: 0.46, birch: 0.12, spruce: 0.16, shrub: 0.26}
+    polygons_en:
+      - [[-640.0, 735.0], [-420.0, 880.0], [-355.0, 905.0], [-300.0, 820.0], [-190.0, 600.0], [-60.0, 395.0],
+         [-75.0, 345.0], [-130.0, 270.0], [-205.0, 285.0], [-330.0, 395.0], [-430.0, 500.0], [-590.0, 650.0]]
+      - [[-1024.0, 1024.0], [-430.0, 1024.0], [-415.0, 955.0], [-610.0, 850.0], [-690.0, 830.0], [-790.0, 830.0],
+         [-830.0, 810.0], [-1024.0, 810.0]]
+      - [[-165.0, 185.0], [-30.0, 215.0], [-5.0, 120.0], [-40.0, 75.0], [-130.0, 95.0]]
+    reason: >-
+      Photo P11-056 (Rakoon 2023-08-14, Dywizjonu 303 looking north): the horizon behind the meadow is one dark,
+      continuous line of trees. The 2024 orthophoto shows what it is: allotment gardens (ROD) full of fruit trees,
+      spruces and hedges between the meadow and the streets north-east of it (ring 1), north-west of the diagonal
+      road (ring 2) and in the bend south of Dywizjonu 303 (ring 3). They are no BDOT10k forest (OT_PTLZ_A), so the
+      first imports left open grass with a few rule saplings and the white far-field blocks stood on the horizon
+      (review s19 0179, P11-056 P1). Outlines traced from the orthophoto, +-15 m. Heights 4-10 m + 2% emergents 14-17 m
+      from GUGiK NMPT 2023 - NMT (M68 review: ring 0 p50/p90/p99 = 5.9/9.7/13.8 m, ring 1 = 5.7/10.8/17.6 m; ring 2
+      outside sheet 3-2). Species shares WORKING_VALUE (maple stands in for fruit and walnut trees). Garden sheds and
+      plot fences are not drawn (open).
+    confidence: medium
+    verify: NMPT 2023 measured (M68 review) for rings 0-1; ring 2 needs sheet 3-4; owner photo session (Dywizjonu 303)
+  - id: wood-north-west-of-the-meadow
+    kind: tree_stand
+    category: broadleaf
+    mantle: true
+    height_m: [8.0, 19.0]
+    spacing_m: 5.0
+    mix: {birch: 0.34, alder: 0.26, maple: 0.22, linden: 0.18}
+    polygons_en:
+      - [[-1024.0, 790.0], [-850.0, 790.0], [-815.0, 740.0], [-830.0, 680.0], [-900.0, 650.0], [-1000.0, 640.0],
+         [-1024.0, 650.0]]
+    reason: >-
+      2024 orthophoto: closed broadleaf wood (one dark canopy, no plots) west of the paved lot at the diagonal road,
+      part of the same horizon line of P11-056 (far left). Not in BDOT10k OT_PTLZ_A. Outline +-15 m; height 8-19 m
+      from GUGiK NMPT 2023 - NMT (M68 review: coverage 0.58, tops p50/p90 = 8.3/18.5 m).
+    confidence: medium
+    verify: NMPT 2023 measured (M68 review)
+  - id: wood-north-of-krywlany-skatepark
+    kind: tree_stand
+    category: broadleaf
+    mantle: true
+    height_m: [6.5, 11.5]
+    spacing_m: 6.0
+    mix: {birch: 0.36, maple: 0.28, alder: 0.20, shrub: 0.16}
+    polygons_en:
+      - [[-1024.0, 790.0], [-1024.0, 810.0], [-830.0, 810.0], [-790.0, 830.0], [-690.0, 830.0], [-610.0, 850.0],
+         [-645.0, 810.0], [-670.0, 780.0], [-720.0, 795.0], [-775.0, 798.0], [-802.0, 775.0], [-815.0, 740.0],
+         [-850.0, 790.0]]
+    reason: >-
+      Photo P11-056 and 2024 orthophoto: dense deciduous shelterbelt and mature trees along the southern border of
+      ROD Zwirki i Wigury and ROD Relaks (north of the diagonal road and behind the concrete skatepark). Before this
+      stand, the meadow wood stopped abruptly at E=-815 N=740 (x ~ 25% on P11-056) and the low allotment ring behind
+      it sat lower in the valley, leaving a notch of pale haze and distant blocks between x = 25% and x = 47%. Keeps
+      >= 18 m clearance to roads and skatepark loop. Heights 6.5-11.5 m (M68 NMPT 2023 p50/p90 = 6.1/10.8 m, coverage
+      0.28) tuned to keep the P11-056 horizon closed.
+    confidence: medium
+    verify: NMPT 2023 measured (M68 review); verify P11-056 horizon closure
+  # ---------------------------------------------------------------- Krywlany / Solnicki forest stands (M68 BDL + NMPT)
+  - id: dojlidy-ptlz-149a-conifer
+    kind: forest_stand
+    target: {bdot: "1260e10f-a825-11ef-9e0c-1866da21c735"}
+    height_m: [24.0, 29.0]
+    mix: {pine: 0.65, birch: 0.20, spruce: 0.07, linden: 0.05, alder: 0.03}
+    emergent: {share: 0.03, height_m: [29.0, 32.0]}
+    reason: >-
+      M68 BDL + NMPT 2023 (REVIEW-2026-11-14-s20-cloud-m68.md par. 6): BDOT las/iglasty corresponds to BDL 149-a
+      (9 SO 92 yrs, H=27 m; 10 SO 99 yrs, H=29 m) and CHM h30_max p50=26.0 / p90=29.1 m. Default pine 14-24 m was ~5 m
+      too low and default spruce 0.20 too high for Krywlany (BDL tile spruce 2-8%).
+    confidence: high
+    verify: emergent share 0.03 WORKING_VALUE
+  - id: dojlidy-ptlz-152a-mixed
+    kind: forest_stand
+    target: {bdot: "12617d4f-a825-11ef-b23a-1866da21c735"}
+    height_m: [20.0, 28.0]
+    mix: {pine: 0.55, birch: 0.25, linden: 0.10, spruce: 0.05, alder: 0.05}
+    emergent: {share: 0.03, height_m: [29.0, 32.0]}
+    reason: >-
+      M68 BDL + NMPT 2023 (REVIEW-2026-11-14-s20-cloud-m68.md par. 6): BDOT classifies this polygon as las/lisciasty
+      (which omitted pine in the rule), whereas BDL 152-a/i/j is 50-70% pine with oak, spruce and birch (0424-r birch).
+      linden stands in for oak (not in tree library).
+    confidence: high
+    verify: emergent share 0.03 and linden-for-oak substitution WORKING_VALUE
+  - id: dojlidy-ptlz-151a-mickiewicza
+    kind: forest_stand
+    target: {bdot: "1ac1a146-d200-4920-9fd4-9ac2b70023a0"}
+    height_m: [22.0, 29.0]
+    mix: {pine: 0.65, birch: 0.20, spruce: 0.10, linden: 0.05}
+    emergent: {share: 0.03, height_m: [29.0, 32.0]}
+    young_edge: {width_m: 8.0, height_m: [4.0, 11.0], facing: NE}
+    reason: >-
+      M68 BDL + NMPT 2023 (REVIEW-2026-11-14-s20-cloud-m68.md par. 6): BDOT classifies this polygon as zagajnik/mieszany
+      (0.7 height scale), whereas BDL 151-a/b is 85-99 yrs, H=27-29 m (CHM p90 27.6-29.9 m). linden stands in for oak.
+      An 8 m young-growth belt (4-11 m) is preserved along the NE edge facing ul. Mickiewicza (photos C68-217, C68-220).
+    confidence: high
+    verify: emergent share 0.03 WORKING_VALUE
   # ---------------------------------------------------------------- life rules
   - id: tyre-scrub-not-on-the-street
     kind: life_rules

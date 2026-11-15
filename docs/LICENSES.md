@@ -28,6 +28,12 @@ Zbiory pobrane 2026-11-09 przez `tools/worldgen/ingest.py --region bialystok-ind
 
 Sprawdzone, ale **niepobrane** (opcje `ingest.py --with nmpt|trees|lidar`): NMPT 0,5 m 2025, modele 3D drzew LoD1 2023 (CC BY 4.0, 1,07 GB), LiDAR LAZ 2025 (12 pkt/m², ~4,8 GB).
 
+## Bank Danych o Lasach (BDL)
+
+| ID | Źródło | URL | Pobrano | Licencja / warunki | Atrybucja | W gicie? | Użycie |
+|---|---|---|---|---|---|---|---|
+| `bdl-dojlidy-taxation` | Bank Danych o Lasach (BULiGL / PGL LP), opisy taksacyjne Nadleśnictwa Dojlidy (PUL 2017–2026) i lasów gminnych (stan 2023) | https://www.bdl.lasy.gov.pl | 2026-11-14 | Regulamin BDL (powszechny i nieodpłatny dostęp, wymóg atrybucji źródła, czasu wytworzenia i pozyskania) | „Bank Danych o Lasach (BULiGL/PGL LP), opisy taksacyjne Nadl. Dojlidy PUL 2017–2026 i lasy gminne stan 2023, pozyskano 2026-11-14 — parametry pochodne generatora roślinności” | nie (surowe opisy w `research/cloud/p25-krywlany-forest/data/`) | parametry pochodne (wysokości drzewostanów, udziały gatunków, skład podszytu) w `Data/Regions/bialystok-dojlidy/overrides.yaml` i `tools/worldgen/streetscape/vegetation.py` (ADR 0187) |
+
 ### Uwagi
 - Pochodne produkty w `Data/Regions/bialystok-industrial-c/` (`roads.graph.json`, `buildings.geojson`) **łączą dane ODbL (OSM) z CC BY 4.0 / danymi GUGiK**. Graf dróg to baza pochodna OSM (share-alike ODbL §4.4), a pola z BDOT10k mają oznaczone pochodzenie (`src: bdot10k`). Przed udostępnieniem publicznym (build w sklepie) potrzebny jest przegląd prawny zgodności ODbL z CC BY 4.0: `LEGAL_REVIEW_REQUIRED`.
 - Mapy w `docs/reports/map/bialystok-industrial-c_*.png` to *Produced Work* z atrybucją OSM i GUGiK na każdym obrazie. Wycinki ortofoto w raporcie są małe (6 × 90 m) i służą jako dowód QA.
