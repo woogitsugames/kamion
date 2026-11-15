@@ -193,6 +193,17 @@ tabela 0216, zegar kabiny, każda ulica LED w ogłoszeniu o udzieleniu zamówien
 reguła: LED tylko na ulicach z przetargu, te same słupy). EditMode `RegionLightingProfileTests` zaktualizowany
 (nowy test C/Dojlidy; Maczka/Kleeberga bez profilu) — NIE uruchomiony (chmura bez Unity).
 
+**Walidacja po regeneracji (c-regen-s22, 2026-11-15; raport `docs/reports/INTEGRATION-2026-11-15-c-regen-s22.md`):**
+build_world C i Dojlid exit 0. Dojlidy `streetscape_qa.json`: `lamps.policy = led-target`, `led_target_ways = 64`,
+`led_target_stale = []`, `lamp_old_concrete_led_9m` 21 + `lamp_old_steel_led_8m` 35 (sód: 50 + 73); C `by_family` bez
+`*_led_*`. Import obu regionów loguje `lighting profiles … summer-bialystok-cd,led-white-4000k-bialystok`.
+Budżet (`frame_estimate`): C 23 kamery bez zmian (max High 1 986 314); Dojlidy max High 1 768 028, Low −0,8…−4,8 %
+(skutek 0221 w `roads`, nie tej zmiany). EditMode 629 = 626 pass / 2 fail (CarPaint DepositionChannel, niezwiązane) /
+1 skip — `RegionLightingProfileTests` zielone. Rendery Low/High × clear/dusk before/after
+(`artifacts/c-regen-s22/view/ab_*.jpg`): o zmierzchu mniej świecących okien biur (zegar 21:00), dzień bez zmian,
+brak regresji. Głowice LED starych słupów Dojlid nie są widoczne w żadnej kamerze kontrolnej (potwierdzone tylko
+liczbami); telefon niemierzony.
+
 **Komendy dla lidera (po scaleniu budget-fix 0221; jedna regeneracja C+D):**
 ```
 uv run --project tools/worldgen python -m pytest tests/gis/test_summer_cd_0216b.py tests/gis/test_lamp_led_0216.py -q

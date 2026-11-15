@@ -66,6 +66,18 @@ Powiązane: ADR 0075 (fidelity), 0085 (far_field), 0070 (lod2_extract), 0204, 02
   (`test_far_field`: Low ≤ 30 000 tris; C dziś 24 548, maczka 25 621) i oględzin kamer — komendy w PR.
 - Nie uruchomiono: fidelity, far_field, lod2_extract, water (wymagają Data/raw).
 
+## Walidacja po regeneracji (c-regen-s22, 2026-11-15)
+Raport: `docs/reports/INTEGRATION-2026-11-15-c-regen-s22.md`. Uruchomione z Data/raw (paczki 2002 i 2061 na dysku):
+- far_field C: `ring_powiaty` [2061, 2002], `ring_powiaty_missing` []; Low 24 548 → 25 389 (limit 30 000),
+  High 118 588 → 122 016; przyrost w sektorze N (Low 3 949 → 4 726) i W (3 248 → 3 312). FIX 2 recenzji wykonany.
+- far_field Dojlidy: ring [2061, 2002], missing []; Low 20 680 → 23 907, High 99 315 → 119 759.
+- fidelity C exit 0: 30 węzłów trasy, 0 cięć; `fidelity_qa.json` różni się tylko `inputs_sha256` (overrides.yaml z
+  0216b). fidelity Dojlidy exit 0 (wcześniej wyjątek): 18 węzłów, 2 cięcia `tile_boundary`; nowy `fidelity_qa.json`.
+- `frame_estimate` C bez zmian (far_field nie wchodzi do szacunku kamer).
+- pytest `tests/gis` pełny: 1496 pass / 1 fail — `…registry…[dk65-09]` (region dodany do main po tej gałęzi: rejestr
+  2002, PRG 17,89 % kafla w 2008) → dopisany do `KNOWN_REGISTRY_GAPS`; `test_qa_tools_0219` poza tym zielony.
+- Horyzont N w kamerach kontrolnych C zasłania las — zmiana niepotwierdzona wzrokiem (brak kamery).
+
 ## Otwarte
 1. `knyszyn-s`: rejestr `teryt_powiat="2008"`, PRG: 22,87 % kafla w 2002 (komentarz w `regions.py` to przyznaje) —
    brak `teryt_powiat_extra=("2002",)`; strefa innego agenta, zgłoszone liderowi (test `KNOWN_REGISTRY_GAPS`).
