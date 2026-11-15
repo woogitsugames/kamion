@@ -50,3 +50,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-retry.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 19:25 +01:00 — Ponowiony r1 także wstrzymany 53/53 wątków po ~3 s CPU; zakończono wyłącznie własny proces i zwolniono własny slot. Wpięto suchą fontannę (dysze i obwódka; strumienie OPEN). 17 testów modułów passed.
 - NASTĘPNY KROK: `Remove-Item artifacts/knyszyn-rynek-0227/r1.done; pwsh -File artifacts/knyszyn-rynek-0227/r1.ps1` (w tle, po ustaleniu przyczyny wstrzymywania procesów)
+- 2026-11-15 19:27 +01:00 — Testy kierunkowe regionu i wszystkich nowych modułów po integracji: 30 passed. R1 nadal nie ma po dwukrotnym wstrzymaniu procesów systemowych; nie uruchamiam pętli prób.
+- NASTĘPNY KROK: `Remove-Item artifacts/knyszyn-rynek-0227/r1.done; pwsh -File artifacts/knyszyn-rynek-0227/r1.ps1` (w tle po ustąpieniu wstrzymywania)
