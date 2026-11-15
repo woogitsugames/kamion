@@ -8,13 +8,13 @@ overrides:
     target: {osm_way: [257353773, 257353774]}
     reason: >-
       Rondo prof. Szymańskiego spans the DK8/DK65 cutting: OSM tags the two DK8 carriageways below it tunnel=yes
-      layer=-1 (ways 23982181, 76073122, 77 m each) and leaves the ring at grade. The generator does not model
-      tunnels, so it conformed the terrain to the at-grade ring across the cutting: in r2 the terrain collision mesh
-      (terrain_lod2) hung 0.27-4 m above the DK8 road collision at both arcs (probe_lod2.py) - the D64 truck route
-      was blocked. The two ring arcs that cross the cutting (25 m each of their 35 m inside the 7 m buffer of the
-      DK8 axes) are carried as decks: the profile solver then holds them at the road below + clearance and does not
-      conform the terrain under them. Orthophoto 2024: ring and island over the cutting, portals in shadow at both
-      arcs (junctions/j5_interchange_773800.jpg).
+      layer=-1 (ways 23982181, 76073122, 77 m each) and leaves the ring at grade; the generator does not model
+      tunnels. The two ring arcs that cross the cutting (25 m of their 35 m within 7 m of the DK8 axes) are carried
+      as decks, so they get the bridge cross-section (deck edge, parapet) over the cutting and the profile solver
+      holds them at the road below + clearance (orthophoto 2024: ring over the cutting, portals in shadow at both
+      arcs, junctions/j5_interchange_773800.jpg; render vqa-r3/place_High.jpg). The decks alone did NOT reopen the
+      terrain under the ring (r3: terrain collision still 0.54 m over the DK8 road, lifted by the ring's junction
+      plate and pavements) - that is done by roads/build_world.keep_tunnel_cut (ADR 0206).
     confidence: high
-    verify: probe_lod2.py after the rebuild (no terrain or deck lower than 4.5 m above the DK8 road collision)
+    verify: probe_lod2.py / probe_underpass.py after the rebuild (nothing lower than 4.5 m above the DK8 road collision)
     set: {bridge: true}

@@ -267,38 +267,56 @@ def _is_verge(p):
     return p.layer == "road" and p.src.endswith(":vg")
 
 
-TUNNEL_BAND_M = 6          # ADR 0206: cells around a tunnel carriageway kept at the NMT (median, kerbs, cut toe)
-TUNNEL_LIFT_MIN_M = 1.0    # only cells the conform lifted more than this above the NMT (= an at-grade road over it)
+TUNNEL_ZONE_M = 9.0        # ADR 0206: terrain nodes this close to a tunnel way's axis are held below its surface
+TUNNEL_UPPER_ROAD_M = 2.0  # other road footprints higher than the tunnel road by this much keep their terrain ...
+TUNNEL_KEEP_UPPER_M = 7.0  # ... when farther than this from the axis (lane edge ~4 m + one 4 m collision cell)
 
 
 def keep_tunnel_cut(w, region_id, zc):
     """ADR 0206: a road tagged tunnel=yes (OSM layer < 0) under an at-grade road (rondo Szymańskiego over the DK8
-    cutting) is not modelled as a tunnel. The terrain conform takes the HIGHER road per node, so it lifted the terrain
-    to the upper road across the cutting and the terrain collision (terrain_lod2) closed the lower road 0.3-4 m above
-    its surface. Here the lifted nodes over and around tunnel carriageways go back to the NMT (which has the cutting:
-    bridges and roofs are not in the bare-earth NMT), and nodes under the tunnel carriageway to just below its
-    surface. In place on zc (row-major, like hf.z). The upper road keeps its own mesh and collision."""
+    cutting) is not modelled as a tunnel. The terrain conform takes the HIGHER road per node, and the NMT itself keeps
+    the ring's ground between the carriageways, so the terrain (and its 4 m collision mesh terrain_lod2) closed the
+    lower road 0.3-4 m above its surface. Here every terrain node within TUNNEL_ZONE_M of a tunnel way's own axis
+    (not its whole chain) goes to just below the tunnel road (surface of the nearest tunnel-road footprint node -
+    0.35 m), so no 4 m collision triangle over the carriageway has a high vertex. Nodes under other, higher road
+    footprints (at-grade slip roads beside the cutting) keep their terrain beyond TUNNEL_KEEP_UPPER_M. In place on zc; the upper road keeps its own
+    mesh and collision. Returns stats (empty when the region has no such way, so other regions are unchanged)."""
     g = json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
-    ways = {e["osm_way"] for e in g["edges"]
-            if str(e["attrs"].get("tunnel", {}).get("v", "no")) not in ("no", "building_passage")
-            and e["attrs"]["highway"]["v"] not in ("service", "living_street", "footway", "path", "cycleway")}
-    out = {"ways": sorted(ways), "cells": 0, "max_drop_m": 0.0}
-    if not ways:
-        return out
-    parts = [p for p in w.buf.parts if p.layer == "road" and p.footprint
-             and any(p.src.startswith(f"c:w{wid}:") for wid in ways)]
-    if not parts:
-        return out
-    tz, tmask = CF.rasterise(parts, w.hf)
-    from scipy.ndimage import binary_dilation
-    band = binary_dilation(tmask, iterations=TUNNEL_BAND_M)
-    nmt = w.hf.z
-    lifted = band & (zc - nmt > TUNNEL_LIFT_MIN_M)
-    new = np.where(tmask, np.minimum(nmt, tz - 0.35), nmt)
-    drop = np.where(lifted, zc - new, 0.0)
-    zc[lifted] = new[lifted]
-    out.update(cells=int(lifted.sum()), max_drop_m=round(float(drop.max()), 2))
-    return out
+    edges = [e for e in g["edges"]
+             if str(e["attrs"].get("tunnel", {}).get("v", "no")) not in ("no", "building_passage")
+             and e["attrs"]["highway"]["v"] not in ("service", "living_street", "footway", "path", "cycleway")]
+    if not edges:
+        return {}
+    eids = {e["id"] for e in edges}
+    chain_ids = {c.id for c in w.net.chains if any(w.net.sec_list[i].edge_id in eids for i in c.sec_idx)}
+    road = [p for p in w.buf.parts if p.layer == "road" and p.footprint]
+    tun = [p for p in road if p.src in chain_ids]
+    if not tun:
+        return {"ways": sorted({e["osm_way"] for e in edges}), "cells": 0}
+    tz, tmask = CF.rasterise(tun, w.hf)
+    oz, omask = CF.rasterise([p for p in road if p.src not in chain_ids], w.hf)
+    from scipy.ndimage import distance_transform_edt
+    H, W = zc.shape
+    axis = np.zeros((H, W), bool)
+    ox, oy = w.hf.ox, w.hf.oy
+    for e in edges:
+        P = np.array(e["geometry"], float) - (ox, oy)
+        for a, b in zip(P[:-1], P[1:]):
+            for t in np.linspace(0.0, 1.0, max(2, int(np.hypot(*(b - a)) / 0.5) + 1)):
+                q = a + (b - a) * t
+                i, j = int(round(q[0] - w.hf.x0)), int(round(w.hf.y1 - q[1]))
+                if 0 <= i < W and 0 <= j < H:
+                    axis[j, i] = True
+    dist = distance_transform_edt(~axis)
+    zone = dist <= TUNNEL_ZONE_M
+    _d, (jj, ii) = distance_transform_edt(~tmask, return_indices=True)
+    floor = tz[jj, ii] - 0.35                   # surface of the nearest tunnel-road node, minus the road build-up
+    upper = omask & (oz > floor + 0.35 + TUNNEL_UPPER_ROAD_M) & ~tmask
+    sel = zone & ~(upper & (dist > TUNNEL_KEEP_UPPER_M)) & (zc > floor)
+    drop = zc[sel] - floor[sel]
+    zc[sel] = floor[sel]
+    return {"ways": sorted({e["osm_way"] for e in edges}), "chains": sorted(chain_ids), "cells": int(sel.sum()),
+            "max_drop_m": round(float(drop.max()) if drop.size else 0.0, 2)}
 
 
 def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
@@ -810,9 +828,10 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         mid = p + d * (0.5 * (u0 + u1))
         w.stats["hero_docks"].append({"mid": mid, "d": d, "nout": nout, "z": dk["yard_z"], "n": len(dk["docks"])})
     log(f"terrain conformed: footprint {int(rmask.sum())} road + {int(mask.sum() - rmask.sum())} paved nodes")
-    w.stats["tunnel_cut"] = keep_tunnel_cut(w, region_id, zc)
-    if w.stats["tunnel_cut"]["cells"]:
-        log("tunnel cuttings kept open (ADR 0206):", w.stats["tunnel_cut"])
+    tcut = keep_tunnel_cut(w, region_id, zc)
+    if tcut:
+        w.stats["tunnel_cut"] = tcut
+        log("tunnel cuttings kept open (ADR 0206):", tcut)
 
     def on_ground_road(q):
         i = int(round(q[0] - w.hf.x0))
