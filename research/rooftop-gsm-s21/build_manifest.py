@@ -221,6 +221,39 @@ add(kategoria='luka', element='Commons — kadry niepobrane (HTTP 429)', paramet
     opis_co_widać='; '.join(fails) + ('. Inne: ' + '; '.join(other) if other else ''), url_źródła='https://commons.wikimedia.org/w/api.php', status='UNVERIFIED',
     uwagi='%d prób API w %s (przerwy ≥ 6 s, po 429 — 60 s), UA generyczny, bez obcych CDN; log: out/commons_log.json' % (len(CL), CL[0]['ts_utc'][:10] if CL else ''))
 
+
+# ================= s21b: kadry naziemne + proporcja do kondygnacji (K67-083+) =================
+import sys as _sys
+_sys.path.insert(0, HERE)
+import s21b_rows as S
+
+
+def _sez(dt):
+    m = int(dt[5:7])
+    return {12: 'zima', 1: 'zima', 2: 'zima', 3: 'wiosna', 4: 'wiosna', 5: 'wiosna', 6: 'lato', 7: 'lato', 8: 'lato'}.get(m, 'jesień')
+
+
+for (fn, pid, seq, user, la, lo, kurs, brg, odl, czas, cel, przyp, par, val, opis, st, uw, wyc) in S.KV:
+    kier = ('kurs kamery %.0f° (tor GPS = heading API); kierunek do celu %d°, cel %+d° od osi' % (kurs, brg, ((brg - kurs + 540) % 360) - 180)) if kurs is not None else 'UNVERIFIED (heading API niezgodny z torem)'
+    add(kategoria='kadr_naziemny', element='KartaView photo %s — cel: %s' % (pid, cel), parametr=par, wartość=val, jednostka='—', lat=la, lon=lo,
+        kierunek_deg=kier, odległość_m=str(odl), data_zdjęcia=czas + ' (czas lokalny wg API)', sezon=_sez(czas), pora_dnia='dzień',
+        opis_co_widać=opis, url_źródła=(S.KV_API % seq) + '; https://kartaview.org/details/%s/' % seq, licencja=S.KV_LIC,
+        autor='użytkownik KartaView id %s' % user if user != '—' else 'użytkownik KartaView (nazwa niepodana w API)',
+        status=st, uwagi=('PRZYPISANY do celu. ' if przyp else 'NIEPRZYPISANY (cel niewidoczny). ') + uw + ('; wycinki: ' + ', '.join('files/' + w for w in wyc) if wyc else ''),
+        plik='files/' + fn, sha256_pliku=sha(fn))
+
+for el, val, metoda, uw in S.POM:
+    add(kategoria='pomiar_proporcja', element='wieżowiec M57 — ' + el, parametr='wysokość nad attyką — proporcja do podziałki kondygnacji', wartość=val, jednostka='m',
+        kierunek_deg='kadry KartaView 1326673605 / 1326673581 (kurs 301–303°)', odległość_m='267 / 379', data_zdjęcia='2021-06-23', sezon='lato', pora_dnia='przedpołudnie',
+        opis_co_widać='metoda: ' + metoda + '; wysokość kondygnacji ' + S.H_STORY + '; niepewność odczytu ± 3 px na końcach (± 0,15 kond. ≈ ± 0,5 m)',
+        url_źródła='files/kv_1326673605_pomiar.jpg; files/kv_1326673581_pomiar.jpg (linijki w px oryginału)', licencja=S.KV_LIC, autor='pomiar własny na kadrach KartaView',
+        status='ESTIMATED', uwagi=uw, plik='files/kv_1326673605_pomiar.jpg', sha256_pliku=sha('kv_1326673605_pomiar.jpg'))
+
+for row in getattr(S, 'EXTRA', []):
+    if row.get('plik'):
+        row = dict(row, sha256_pliku=sha(row['plik'].replace('files/', '')))
+    add(**row)
+
 for i, r in enumerate(rows, 1):
     r['id'] = 'K67-%03d' % i
 with open(os.path.join(HERE, 'manifest.csv'), 'w', newline='', encoding='utf-8') as f:
