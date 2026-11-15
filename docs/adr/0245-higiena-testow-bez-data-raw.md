@@ -13,6 +13,15 @@ Trzy testy padały w chmurze (bez Data/raw, bez Unity) i według HANDOVER s21 ta
 | `tools/worldgen/tests/test_determinism_0173.py::test_vegetation_local_edit_stays_local` | `vegetation.place` (ADR 0187) filtrował kandydatów runa (`:floor`) testem „≤ 45 m od drogi” **przed** losowaniem atrybutów. Nowy krawężnik/plac zmieniał liczbę losowań, więc przesuwał strumień płaszcza (`:edge`) losowanego zaraz potem: płaszcz zmieniał się w całym lesie (na danych testu 154 → 161 drzew, w tym daleko od edycji). Dokładnie ten wzorzec ADR 0173 usunął w `emit`. Drugi, mniejszy błąd: przy siatce bez żadnego zablokowanego węzła `scipy.ndimage.distance_transform_edt` mierzy odległość do fantomowego punktu poza rogiem siatki, więc run pojawiał się w jednym rogu lasu „przy nieistniejącej drodze”. | **prawdziwy błąd generatora** (od scalenia 0187, `aa76c671`) |
 | `tests/gis/test_forest_0187.py::test_edge_texture_has_wall_and_mantle_rows` | `art-source/world/vegetation/forest_edge_*.png` są w LFS; checkout bez LFS daje plik‑wskaźnik i `PIL.UnidentifiedImageError`. Po `git lfs pull` test przechodzi (sprawdzone). | środowisko (checkout bez LFS) |
 
+Pełny pakiet na `origin/main` 830b077b w chmurze (checkout bez LFS) dał **6 failed**, 1419 passed, 68 skipped,
+5 xfailed. Poza trzema powyżej:
+
+| test | przyczyna | co zrobione |
+|---|---|---|
+| `tests/gate3/test_gate3_meta.py::test_evidence_apk_info_legacy_and_dirty` | `scripts/gate3_evidence.py` brał nazwę APK przez `Path(...).name`; ścieżka z wyniku zapisanego na Windows (`C:\x\apk\kamion-…apk`) na Linuksie nie dzieli się na `\` → brak sha | `PureWindowsPath(...).name` (dzieli `\` i `/`) |
+| `tests/physics/test_scenario_strictness.py::test_generator_reproduces_committed_scenarios` | ADR 0165 (podatny kontakt nadwozia) zmienił zacommitowany `kerb_step_27cm_42kmh_comb.json` (kontakt nadwozia włączony + check `max_body_penetration_m ≤ 0,05`), ale nie generator, który dalej pisał `overrides.bodyContact=false` z ADR 0158 | generator emituje dokładnie scenariusz zacommitowany (dodany check, bez override); JSON bez zmian |
+| `tests/gis/test_world_v31.py::test_frame_budget_with_forest_hlod` | stretch_04 C > 2 M trójkątów High (ADR 0221, budget-fix-s21) | **nie ruszane** (zakaz: budżet 0221; limitu nie podnoszę) |
+
 Lider zgłaszał też padanie dwóch ostatnich „na main” lokalnie. Pierwszy pada wszędzie (błąd generatora). Drugiego
 lokalnie z pełnym LFS nie odtworzyłem (brak dostępu); jeśli dalej pada u lidera z prawdziwym PNG, to inny powód
 niż tu opisany — komunikat asercji (`mix`, wartość) wskaże który.
