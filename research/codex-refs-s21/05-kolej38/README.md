@@ -15,3 +15,7 @@ Kategorie konkretnych przejazdów A–D, aktualne urządzenia i rogatki, znakiG-
 ## Odczyt i ograniczenia
 
 StarszyURL Id12 z lutego2025 zwraca404; aktualny odnaleziono przez oficjalny katalog instrukcji PKP. Lokalny transfer aktualnegoPDF był krótszy niż nagłówekContent-Length; zapisano bajty poza gitem, Poppler ostrzegł o strukturzeXRef, ale wyrenderował czytelną pełną stronę123. Ta strona została obejrzana; nie poświadczono integralności całegoPDF. Serwer web odczytał dokument255stron i ten sam wiersz. `data/source-read.json` rejestruje tę sytuację. Pojedyncze zapytanie Overpass o tagi linii38 zwróciło406, bez powtarzania i bez wnioskowania z braku odpowiedzi.
+
+## Reguły kategorii i znaków
+
+`regulations.csv`: 7 wpisów z §6, §80 i §81 rozporządzenia MI z09.07.2025, Dz.U.2025poz.1105. Pełne strony3,19,20 obejrzane osobno. ELI przy odczycie15.11.2026 oznacza akt jako obowiązujący, wejście27.08.2025; metadane w `data/eli-2025-1105-status.json`. Według ELI zastąpił m.in. rozporządzenie2015poz.1744 i jego wymienione zmiany. Reguły w tabeli nie przypisują kategorii konkretnym przejazdom. Brak geometrycznych wymiarów samych znaków i rogatek.
