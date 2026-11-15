@@ -50,3 +50,7 @@ Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.m
 ## Dojlidy — trzy rzeczywiste widoki UM, obieg7
 
 [Doilidy-signs-round7](dojlidy-signs-round7/README.md):3nowe indywidualnie obejrzane kadry galerii UM19.11.2025, MarcinJakowiak;0pobrań/3link-onlyARR. TablicaZmianaorganizacjiruchu/dojazd, wlotrondaMeyera z dwoma pasami/kreskowaniem/zebrami i czerwonymi przejazdami oraz narożnikSuchowolca/Plażowa z czytelnymi nazwamiulic/wysięgnikami. B5/B18 i wyjątki nie zostały odczytane; materiał nie zamykaB040 i nie potwierdza obecnejprzejezdnościHGV. Koordynator ponownie odczytał pełny tekstUM:tranzyt3.5t osobno odMickiewicza8t; wchwili artykułu znaki ciężarowe dopiero planowano w dalszym etapie. Publikacja nie jest ekspozycją ani stanem2026. Oglądy obrazów wykonałagent, kontrola koordynatora wtejrundzie dotyczyła tekstu.
+
+## B123 — ograniczony przegląd zimowych ulic, obieg8
+
+[Winter-streets-round8](winter-streets-round8/README.md):6konkretnych metadanychMaczka,1podglądCCosobnoobejrzany z25.03.2015. Suchaasfaltowa jezdnia/zieleń i bezlistne drzewa, bezśniegu lub czytelnegobłotapośniegowego — nie zakwalifikowano jako zimowy.0nowychkadrów/0rastrówGit,1podgląd tylko raw. Brak dokładnych kategorii ulic nie dowodzi braku zdjęćtychulic. B123pozostajeotwarte; nieopisanoPDF jako fotografii. BezOSM/Overpass/Chrome, bezstwierdzania nieistnienia obrazów. Głównymanifest15bez zmian.

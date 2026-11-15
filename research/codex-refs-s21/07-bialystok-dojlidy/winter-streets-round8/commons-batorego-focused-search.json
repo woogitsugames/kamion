@@ -1,0 +1,47 @@
+{
+  "request": {
+    "action": "query",
+    "format": "json",
+    "list": "search",
+    "srsearch": "\"Białystok\" \"Batorego\"",
+    "srnamespace": 6,
+    "srlimit": 10
+  },
+  "response": {
+    "batchcomplete": "",
+    "query": {
+      "searchinfo": {
+        "totalhits": 3
+      },
+      "search": [
+        {
+          "ns": 6,
+          "title": "File:Brzostowski - Adresaro de Polaj Esperantistoj por 1909, 1909.pdf",
+          "pageid": 89564872,
+          "size": 672,
+          "wordcount": 7,
+          "snippet": "English determination method or standard: SHA-1",
+          "timestamp": "2025-06-12T09:34:35Z"
+        },
+        {
+          "ns": 6,
+          "title": "File:PL-Ewa Dubas-Urwanowicz-Koronne zjazdy szlacheckie.pdf",
+          "pageid": 15918707,
+          "size": 792,
+          "wordcount": 126,
+          "snippet": "This file is licensed under the Creative Commons Attribution-Share Alike 3.0 Poland license. You are free: to share – to copy, distribute and transmit",
+          "timestamp": "2025-08-31T00:08:21Z"
+        },
+        {
+          "ns": 6,
+          "title": "File:Tradycje muzyczne społeczności polskiej na Wileńszczyźnie.pdf",
+          "pageid": 50918019,
+          "size": 643,
+          "wordcount": 95,
+          "snippet": "This file is licensed under the Creative Commons Attribution 3.0 Poland license. You are free: to share – to copy, distribute and transmit the work to",
+          "timestamp": "2025-08-31T00:48:33Z"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "status": "STABLE — 0nowych kwalifikowanych zimowych zdjęć wskazanych ulic",
+  "reviewed_at_brussels": "2026-11-15T23:49:00+01:00",
+  "scope": "Białystok Batorego,Brzeska/Buska,Maczka; B123",
+  "selection": {
+    "Commons_Maczka_direct_files": 6,
+    "direct_categories_missing": [
+      "Category:Batorego Street in Białystok",
+      "Category:Brzeska Street in Białystok",
+      "Category:Buska Street in Białystok"
+    ],
+    "limits": "Brak kategorii o wybranej dokładnej nazwie nie dowodzi braku fotografii ulic. Daty metadanych nie stanowią wizualnego potwierdzenia zimy.",
+    "focused_Batorego_search": "3wynikiPDF spoza celu, nie pobrano/nie opisano.",
+    "dedup": "Przed pobraniem rg dokładnych nazw/ciągów kandydatów wtekstowychmanifestach iJSON całego research, z wyłączeniem własnegochild; dla obejrzanego The viadukt... brak trafień. Starsze Andersa/Maczka2013 rozpoznane jako istniejący obieg i nie pobrane. K1/g3/P1B sprawdzane tekstowo wcałymresearch; nie jest to globalny wizualny audythash."
+  },
+  "rejected_visual": [
+    {
+      "title": "File:The viadukt Białystok-Zawady, General S. Maczek str., Białystok, Podlaskie Voivodeship, Poland.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:The_viadukt_Bia%C5%82ystok-Zawady,_General_S._Maczek_str.,_Bia%C5%82ystok,_Podlaskie_Voivodeship,_Poland.JPG",
+      "author": "Horakvlado",
+      "licence": "CC BY-SA4.0",
+      "date_source": "2015-03-25 12:59:44 wg CommonsDateTimeOriginal; strefaUNVERIFIED",
+      "location_source": "OpisCommons iCategory:Maczka Street inBiałystok; nie dodano GPS/adresu spoza źródła.",
+      "direction": "UNVERIFIED",
+      "raw_preview": "C:/Users/matma/Documents/Claude/kamion/Data/raw/refs/codex-s21/07-bialystok-dojlidy/winter-streets-round8/candidate-01-maczka-viaduct.jpg",
+      "actual_preview_dimensions": [
+        960,
+        639
+      ],
+      "visual_observation": "Dwie jezdnie i pasdzielący; bliższa ciemna asfaltowa nawierzchnia z białymi przerywanymi liniami. Zielony stok pobocza, krawężnik, z lewej ekran o zielonych słupkach i szarych panelach z czerwonymi słupkami niżej; po prawej chodnik/droga z barierką i bezlistne drzewa. Jasny duży łuk mostu i ukośne cięgna nad trasą, dwuramienne latarnie wpasieśrodkowym. Nie widać śniegu, hałd śnieżnych ani błota pośniegowego.",
+      "verdict": "REJECT_WINTER — nie zaliczono zimy; brak samej zimowej daty też nie ma znaczenia wobec oględzin."
+    }
+  ],
+  "counts": {
+    "preview_downloaded_and_viewed": 1,
+    "qualified_winter": 0,
+    "git_image_files": 0,
+    "new_originals": 0,
+    "new_link_only_qualified": 0
+  },
+  "method_limits": [
+    "CommonsAPIiiurlwidth800 zwróciło dyskretny wariant960px; pozostał wyłącznie rawpozaGit. Nie tworzono miniaturyGit dla odrzuconego kadru.",
+    "Nie otwierano Google, nie używano OSMAPI/Overpass ani Chrome.",
+    "0nowych ujęć nie dowodzi, że nie istnieją wCommons ani innych kolekcjach; to wynik krótkiej celowanej selekcji."
+  ]
+}
