@@ -357,6 +357,13 @@ def tiling_from_scan(name: str, aid: str, *, target: float, hue, out_L: float, o
     if modulation:
         m = alb.reshape(-1, 3).mean(0)
         alb = np.clip(alb * (0.5 / m), 0, 1).astype(np.float32)
+        # ADR 0237: a high-contrast scan (light blocks, dark joints) loses its brightest texels to the clip and lands
+        # below 0.5 (20 x 10 blocks: 0.49). Re-normalise only then, so the sets that are within 1.5 % keep their bytes.
+        for _ in range(4):
+            m = alb.reshape(-1, 3).mean(0)
+            if abs(float(m.mean()) - 0.5) <= 0.0075:
+                break
+            alb = np.clip(alb * (0.5 / m), 0, 1).astype(np.float32)
     else:
         alb, _ = calibrate(alb, target)
     s = SurfaceSet(name, c, alb.astype(np.float32), h.astype(np.float32), rough, eid.astype(np.float32),

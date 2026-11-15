@@ -2746,3 +2746,20 @@ overrides:
       away from the road.
     confidence: high
     verify: none
+  # ================================================================ ADR 0237 (kerbs-0237, research R6): footways, kerbs
+  - id: pavements-0237
+    kind: pavement_rules
+    sidewalk_bdot: true
+    estate_slabs: false
+    crossing_kerb_drops: true
+    cycle_paver_material: cycle_red
+    reason: >-
+      Research R6 pavements-kerbs (PR #65, review REVIEW-2026-11-15-s21-cloudD-65-pavements-kerbs.md). Footway
+      surface per piece from BDOT10k OT_SKRP_L materialnawierzchni (kostka prefabrykowana -> grey 20 x 10 blocks,
+      masa bitumiczna -> asphalt footway, płyty betonowe -> 35 x 35 slabs); kerbs lowered to 2 cm at marked
+      pedestrian crossings (Dz.U. 2016 poz. 124 § 127 ust. 10, R6-004; the act of 2022 names no number, R6-005).
+      estate_slabs stays off: R6 has no frame of a slab footway beside blocks of flats (R6-109: 3 of 31 frames, all on
+      Andersa). No sidewalk_surface override: frame F16 (bus stop on Andersa, "płyty") does not resolve the surface
+      at 1600 px.
+    confidence: medium
+    verify: lead - visual-qa WorldC, cameras with footways / crossings (see ADR 0237)
