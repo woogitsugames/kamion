@@ -67,10 +67,10 @@ def test_putry_config_has_rows_for_both_decks_of_estakada_a():
     assert set(rows) == {NE, SW} <= {str(x) for x in cfg["target"]["osm_way"]}
     assert len(rows[NE]) == 8, "P13-030: 7-9 rows on the NE deck"
     assert len(rows[SW]) == 8, "P13-031: 7-9 rows on the SW deck"
-    assert not cfg.get("pier_lines_en_held"), "ADR 0216: the island rows are built, nothing is held back"
+    assert not cfg.get("pier_lines_en_held"), "ADR 0226: the island rows are built, nothing is held back"
     assert "pier_lines_en" not in cfg["set"], "a flat list in `set` would be projected onto both decks"
     note = " ".join(cfg["pier_lines_note"])
-    assert "WORKING_VALUE" in note and "ADR 0216" in note and "CONFLICT" not in note
+    assert "WORKING_VALUE" in note and "ADR 0226" in note and "CONFLICT" not in note
     for pts in rows.values():
         assert all(len(q) == 2 for q in pts)
         e = [q[0] for q in pts]
@@ -116,14 +116,14 @@ def test_ne_deck_has_no_long_span_and_no_short_pair(report):
 
 
 def test_sw_deck_conflict_is_resolved(report):
-    """ADR 0216 (was `test_sw_deck_conflict_is_explicit`, ADR 0198): the ring of Rondo Putry is corrected to the
+    """ADR 0226 (was `test_sw_deck_conflict_is_explicit`, ADR 0198): the ring of Rondo Putry is corrected to the
     orthophoto, the two island rows are built and the 79 m span of the SW deck (94.8 m by the span rule) is gone.
     Nothing is held back any more."""
     sw = _deck(report, SW)
     assert len(sw["rows"]) == 8 and len(sw["spans_m"]) == 9
     assert max(sw["spans_m"]) < 35.0, sw["spans_m"]           # 32.5 m: 56.5 -> 89.0, over the west ring carriageway
     assert min(sw["spans_m"]) > 16.0, sw["spans_m"]
-    assert not sw.get("held"), "pier_lines_en_held must stay empty (ADR 0216)"
+    assert not sw.get("held"), "pier_lines_en_held must stay empty (ADR 0226)"
     island = [r for r in sw["rows"] if 60.0 < r["from_nw_end_m"] < 130.0]
     assert [round(r["from_nw_end_m"]) for r in island] == [89, 109]
     assert all(c["carriageway_m"] >= 2.5 and not c["keepout"] for r in island for c in r["cols"])

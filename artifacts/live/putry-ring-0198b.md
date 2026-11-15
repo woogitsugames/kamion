@@ -1,4 +1,4 @@
-# putry-ring-0198b (ADR 0216, wyspa ronda Putry + 2 rzędy podpór pomostu SW) — sesja w chmurze, bez Unity / Data/raw / build_world
+# putry-ring-0198b (ADR 0226, wyspa ronda Putry + 2 rzędy podpór pomostu SW) — sesja w chmurze, bez Unity / Data/raw / build_world
 
 - Gałąź `putry-ring-0198b` od `origin/piers-0198` `51f89f4c0` (PR #82). Worktree w chmurze: /workspace/wt-putry-ring.
 - Krok 1 (zrobione): pomiar wyspy na ortofoto GUGiK WMS HighResolution (0,05 m/px, 38 punktów krawężnika, ±0,3 m,
@@ -14,7 +14,7 @@
   `check_piers_vs_roads.py`: rc 0, `BLOCKED_COLS` pusty, każda kolumna ≥ 2,53 m od jezdni
   (`artifacts/putry-ring-0198b/piers_vs_roads.txt/.json`).
 - Krok 4 (testy): patrz `artifacts/putry-ring-0198b/PR-BODY.md`.
-- Krok 5 (zrobione): ADR 0216 (PROPOSED, numer do potwierdzenia), runda 2 w ADR 0198, `docs/WORLD_GENERATION.md`.
+- Krok 5 (zrobione): ADR 0226 (PROPOSED, numer do potwierdzenia), runda 2 w ADR 0198, `docs/WORLD_GENERATION.md`.
 - Dowody: `artifacts/putry-ring-0198b/ortho-overlay-island.jpg`, `ortho-overlay-sw-deck-rows.jpg`.
   Ortofoto: Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), tylko referencja.
 
