@@ -533,3 +533,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 01/used-parts-round4:4 indywidualnie obejrzane fotografie firmowe Renault i DAF/Vignal, wyłącznie link-only, all rights reserved; bez pobrań i screenshotów. Autorzy fotografii nieustaleni, publikujący i źródła perwiersz; E2 w01-UP4-03 ma niezależną recenzję bez pewnego pełnego numeru.
 
 05/knyszyn-crossing-round4:grobin,2 kadry jednego przejazdu z02.09.2019; MapillaryCCBY-SA4.0 według oficjalnej pomocy wskazanej w manifestach. Indywidualny ogląd w przeglądarce, tylko permalinki i własne opisy, bez kopii zdjęć/screenshotów/API/tokenów; podkładOSM.
+
+01/rear-night-europe-round5/files/01-RNE5-02.jpg:Devokewater, Commons Lawsons_Haulage_-_Mountain_Transformer.jpg, CC BY-SA4.0, miniatura800×600 całego obrazu bez kadrowania. Źródło/licencja/data w manifeście i metadataJSON, osobny przegląd koordynatora. Dwa odrzucenia tylko w dzienniku, bez zachowanych kopii.

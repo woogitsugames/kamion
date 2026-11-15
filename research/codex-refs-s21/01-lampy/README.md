@@ -99,3 +99,6 @@ R148-series01-round4:7 dodatkowych źródłowych porównań tabeli8, odrębnie o
 
 
 Conditions-round5:6SOURCED+1UNVERIFIED o warunkachR148Amendment5serii01(03.03.2023). MinimumHV z wyjątkiem kategorii5/6 w kierunkuA; maksimum w każdym kierunku widoczności, minimum pozaosiowe i osobne geometryczne. D/Y rozdzielone; dla zespołuD maksimum przy obu włączonych, minimum przy awarii którejkolwiek — bez dzielenia minimum przez2. Koordynator odczytał zachowany ekstrakt punktów. Table8-comparison-round6 zawiera12porównań tekstowych Am5/Am2;4rozbieżności potęg nadalUNVERIFIED, bo screenshot tabeli zwrócił403. Nie są12nowymi zatwierdzonymi normami ani dowodem daty pierwszej zmiany. Zero nowych zdjęć.
+
+
+Rear-night-europe-round5:3nowe kadry obejrzane,2odrzucone;1zachowanyAUX Devokewater BY-SA4.0 z31.07.2020. Koordynator osobno obejrzał miniaturę: żuraw i platforma wyglądają na wspólne podwozie, brak pewnego ciągnika/naczepy. Boczne bursztynowe źródła/żółte odbicia odrębne od małego prześwietlonego punktu z tyłu o nieustalonej funkcji. Przyrost kwalifikowanej sceny zestawu0, E0. Główny manifest34kadry(8lokalnych,26link-only); RN3-04 nadaljedynym przyjętym nowym kontekstem tylnej emisji ciągnika pod naczepą.
