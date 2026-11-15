@@ -21,4 +21,15 @@ Co widać (obejrzane przez lidera), patrząc mniej więcej wzdłuż osi trójką
 Porównanie z grą (render rynek-above po 0216): trójkąt w grze jest **wypełniony gęstym lasem sosnowym** — to największy błąd (najpewniej generator roślinności / landuse=forest|wood albo park→las). Kadr „rynek-fountain” pokazuje inny plac (wschodni, z kostki), który nie jest Rynkiem z tego zdjęcia.
 Priorytet poprawek: (1) trójkąt = trawniki + alejki + rzadkie drzewa liściaste + wierzba; (2) kościół z białą wieżą i czerwonym hełmem w osi; (3) biały budynek z czerwonym dachem i lukarnami po prawej; (4) czerwona kostka parkingu i chodników; (5) pierzeja lewa.
 
+## Targowica — 2 zdjęcia od właściciela (15.11 ~19:2x, z drona: pionowe i ukośne; tylko opis, nie do gita)
+To jest plac, który w grze pokazuje kamera „rynek-fountain” (plac wschodni z kostki) — to NIE Rynek, tylko targowica. Co widać:
+- Prostokątny plac z **jasnego betonu / jasnoszarych płyt**, podzielony **pasami z terakotowej/czerwonej kostki** (poprzeczne pasy co jedno zadaszenie i przy wjazdach).
+- **4 długie, otwarte zadaszenia targowe w jednym rzędzie** (osobne, z przerwami): dachy czterospadowe, ciemnoszare/grafitowe (blacha na rąbek), na słupach, pod spodem rzędy stołów/lad; na pierwszym od wjazdu **panele fotowoltaiczne** na połaci. Wymiary oszacuj z ortofoto GUGiK.
+- Wokół zadaszeń owalne/zaokrąglone obwódki z kostki; **wyspy z ziemią/nasadzeniami o zaokrąglonych (łukowych) krawędziach** przy wjazdach i w narożach, z młodymi drzewkami/podporami; latarnie parkowe.
+- Wzdłuż ulicy **ogrodzenie panelowe** z wjazdami; po drugiej stronie ulicy pas zieleni z łukowymi zatokami/parkingami.
+- W narożu przy wjeździe **mały żółty pawilon z ciemnym czterospadowym dachem** (szalet/kasa) z osobnym parkingiem z płyt.
+- Z tyłu wzdłuż placu **długi parterowy budynek** (część elewacji pomarańczowa/łososiowa, część czerwona/bordo przy sklepie z szyldem — szyld generyczny, bez marki), ciemny płaski/dwuspadowy dach z papy; przed nim **świerk**.
+- Za nim biała hala magazynowa, skład złomu/maszyn rolniczych, hałdy piasku i żwiru, dalej pola — skraj miasta.
+Porównanie z grą: w grze jest szary plac z kostki z dwiema czerwonymi wiatami przystankowymi i ceglaną budką — brak 4 zadaszeń targowych, brak pasów terakoty, brak łukowych wysp i ogrodzenia, brak żółtego pawilonu. Do poprawy jako generator/authored_override „market_hall_canopy” z danymi z OSM (amenity=marketplace) + ortofoto.
+
 4. Raportuj zestawienia „zdjęcie właściciela | render” dla każdego kadru (zdjęcia tylko lokalnie w artifacts, nie w gicie). Lider pokaże je właścicielowi do oceny rozpoznawalności.
