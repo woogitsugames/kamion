@@ -30,7 +30,7 @@ ADR 0210) — odrzucone.
      zapisane w `skipped` — generator nie ma siatki chodników przez tor.
 3. **Profil toru** (zmienione w rail-fix-s21, FIX 5): NMT pod istniejącym torem JEST powierzchnią podsypki, więc tor
    nie stoi już 0,45 m nad terenem. Główka szyny = wygładzony teren (gauss σ 15 m, WORKING_VALUE) + `TRACK_H` =
-   `BED_LIFT` 0,12 + wystawanie podkładu 0,05 + szyna 0,172 = **0,342 m**; na przejeździe główka = jezdnia + 0,005 m
+   `BED_LIFT` 0,12 + wystawanie podkładu 0,05 + szyna 0,172 = **0,342 m**; na przejeździe główka = jezdnia + 0,015 m
    (płyty), przejście liniowe na 25 m (WORKING_VALUE). W strefie płyt główki szyn biorą wysokość jezdni w swoim
    punkcie (spadek poprzeczny / daszek). **Teren jest wyrównywany pod torem** (`Plan.conform`, tylko przy fladze, wzorem
    `water.carve`): węzły siatki 1 m w pasie korona + 0,75 m dostają poziom ławy (góra podsypki − 0,12 m), dalej
@@ -65,7 +65,9 @@ ADR 0210) — odrzucone.
    jezdni naziemnych (bez odcinków mostowych; duplikat ≤ 10 m od węzła OSM odrzucany; bez węzła OSM → ostrzeżenie,
    rogatki nieznane, oznakowanie jak kat. D). Strefa płyt = oś toru ∩ (obrys jezdni + 0,5 m). **Płyty** (materiał
    `rail_crossing_panel`, betonowo-gumowe, bez marki): na szerokość podkładu (±1,30 m od osi skrajnego toru),
-   siatka co 2 m wzdłuż toru, przerwa 0,07 m + główka przy każdej szynie (żłobek), wysokość = jezdnia + 0,005 m.
+   siatka co 0,5 m wzdłuż toru (s22; przy 2 m korona jezdni przebijała przez płyty), przerwa 0,07 m + główka przy
+   każdej szynie (żłobek), wysokość = najwyższa z 5 próbek jezdni w promieniu 0,25 m + 0,015 m (`_deck_z`,
+   `PANEL_LIFT` WORKING_VALUE: próbnik to siatka `road_z` 1 m, która ścina grzbiet korony o ok. 0,01 m).
    Wysunięcie płyt poza obrys jezdni można podać w nadpisaniu przejazdu (`panel_margin_m`).
    **Nadpisanie przejazdu** (rail-fix-s21, FIX 4): `overrides.yaml`, `kind: rail_crossing`, `target: {osm_node: id}`
    albo `{near_epsg2180: [x, y], radius_m}`, `set: {barrier, light, light_left, bell, saltire, panel_margin_m}` —
@@ -81,7 +83,8 @@ ADR 0210) — odrzucone.
      3,0 m przed krawędzią płyt, 1,0 m za krawędzią jezdni (WORKING_VALUE). Ramię 1,20 × 0,20 m, kąt 50°, dolna
      krawędź 1,50 m — **WORKING_VALUE** (rysunku G-3 z rozporządzenia o znakach nie sprawdzono);
    - `barrier`: `half` → 1 ramię na wlot (wjazd, prawy pas, długość ½ jezdni + 0,5 m), `double_half` → 4 (wjazd +
-     wyjazd), `full`/`gate` → 1 na wlot przez całą jezdnię; słupek 2,0 m przed płytami (WORKING_VALUE);
+     druga półrogatka po tej samej stronie toru na lewym poboczu, ramiona naprzeciw siebie — s22: wcześniej leżała
+     na rogatce wjazdowej drugiego wlotu, 4 markery dawały 2 widoczne ramiona), `full`/`gate` → 1 na wlot przez całą jezdnię; słupek 2,0 m przed płytami (WORKING_VALUE);
    - `light` (`crossing:light=yes`) na słupku znaku każdego wlotu (+ powtarzacz po lewej, gdy nadpisanie podaje
      `light_left`); `bell` — jeden przy przejeździe.
    **Obiekty w scenie** (rail-fix-s21, FIX 4; `streetscape/rail_props.py`): markery stają się zwykłymi instancjami
@@ -103,7 +106,8 @@ Wzór (tor bez przejazdów, n torów pod jedną podsypką, Δs = krok stacji LoD
 - LoD1 = (1000/10)·(4 + 2n + 6·2n) → **1 800 / km** (n = 1), 3 200 / km (n = 2)
 - LoD2 = (1000/20)·2n → **100 / km** (n = 1), 200 / km (n = 2)
   (rail-fix-s21: korona ma jeden pas na tor, żeby każdy tor miał swoje malowane podkłady; dla n = 1 bez zmian)
-- przejazd: ⌈(B/sinθ + 2·0,5)/2⌉·(2n + 1)·2, B = szer. jezdni → 7 m, 90°, 1 tor: **24**; 2 tory: 40; 10 m pod 60°: 42.
+- przejazd: ⌈(B/sinθ + 2·m)/0,5⌉·(2n + 1)·2, B = szer. jezdni, m = margines płyt (0,5 m) → 7 m, 90°, 1 tor: **96**;
+  2 tory: 160; DW671 × linia 38 (7,4 m, m = 1,5 m, strefa 10,66 m): **132** (`rail.json`).
   Szyny w strefie płyt dochodzą (≈ 6 stacji × 6 tris × 2n).
 Zmierzone na syntetycznym kaflu (test): 1 km, 1 tor bez przejazdu — LoD0 13 602 (200·18 + 1667·6), LoD1 1 800,
 LoD2 100 = wzór (LoD0 ±6 przez liczbę podkładów).

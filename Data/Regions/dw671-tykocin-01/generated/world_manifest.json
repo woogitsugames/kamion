@@ -584,7 +584,7 @@
     "z_max_evrf2007": 134.52,
     "z_min_evrf2007": 115.27
    },
-   "bytes": 4962020,
+   "bytes": 4962044,
    "file": "Data/raw/derived/dw671-tykocin-01/world/chunk_1_5.glb",
    "forest_cells": [],
    "id": "1_5",
@@ -594,9 +594,9 @@
     "sha256": "b7d337864ae96632a490769916aea4e31981a9f4ddcf7bed6678b6bbf503d212"
    },
    "low": {
-    "bytes": 894948,
+    "bytes": 894960,
     "file": "Data/raw/derived/dw671-tykocin-01/world/chunk_1_5.low.glb",
-    "sha256": "d20b941c390fc7a46646787f82ee0a347ffa40d6e48bdfe693a666aad8452b29"
+    "sha256": "620432fdd45f421890fc9515c1ce8fc03e21d7f603b9e47ed158774419c545e6"
    },
    "materials": [
     "collision_asphalt",
@@ -610,7 +610,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "30b66e82be60c94a73772aad42b8284d86cc61a9f4f326fa429075f8e2e183c0",
+   "sha256": "5b2b9a2908c07f3318144fb29531c58c707d2792568412889a711853d9d03584",
    "triangles": {
     "markings": 164,
     "rail_lod0": 204,
@@ -641,12 +641,12 @@
    "instances": {
     "count": 168,
     "file": "Data/raw/derived/dw671-tykocin-01/world/instances_1_6.json",
-    "sha256": "a2ccbfa6323fe29dea5ff9123c32f8b4e24ee8a73103c95cc26efc8876039300"
+    "sha256": "b09061041eeb1141f608f018ce08729711b8d52b3c43797b815ded2854c80cce"
    },
    "low": {
     "bytes": 967020,
     "file": "Data/raw/derived/dw671-tykocin-01/world/chunk_1_6.low.glb",
-    "sha256": "37ed5098b1fbfb5e2a1281dde50fb877fdc8e37ec88f2a9c2429f36a34dbc55a"
+    "sha256": "8c8ffa4bca43cb9417199b3247da19d6aa335eabd3ddf6100d056a37eb9e7586"
    },
    "materials": [
     "collision_asphalt",
@@ -662,7 +662,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "66122caec0721bdfca55b4072d6776ee4c8cb1224c156a7e5ee2908e8c26d322",
+   "sha256": "5160ba3c618cbaa0a0dc0647388eccc1f35345813c9b7342dc6ea2b4218ba90a",
    "triangles": {
     "markings": 168,
     "rail_crossing": 132,
@@ -8416,7 +8416,7 @@
   "furniture": "linear furniture: fences, guard rails, noise barriers, retaining walls",
   "markings": "horizontal markings decal mesh (lift 0.006 m, use depth offset)",
   "paved": "yards, parking lots, dock aprons, set-back paths + edging; TEXCOORD_1 = (distance to the area edge m, distance to a building wall m)",
-  "rail_crossing": "level-crossing panels at road height + 0.005 m (ADR 0217); UV0 = local metres",
+  "rail_crossing": "level-crossing panels at road height + 0.015 m (ADR 0217); UV0 = local metres",
   "rail_lod0": "railway track bed (ADR 0217) lod0: ballast + sleepers + rails (5 m stations); bed UV0 = (0.5 + lateral m / 5.12 m from the track axis, along m / 2.4 m); High GLB carries LoD0-2, Low GLB LoD1-2",
   "rail_lod1": "railway track bed (ADR 0217) lod1: ballast + rails (10 m stations), sleepers painted in the rail_bed tile; bed UV0 = (0.5 + lateral m / 5.12 m from the track axis, along m / 2.4 m); High GLB carries LoD0-2, Low GLB LoD1-2",
   "rail_lod2": "railway track bed (ADR 0217) lod2: flat bed band (20 m stations), sleepers and rails painted in the tile; bed UV0 = (0.5 + lateral m / 5.12 m from the track axis, along m / 2.4 m); High GLB carries LoD0-2, Low GLB LoD1-2",
@@ -8467,7 +8467,7 @@
   "conform": {
    "abs_p95_m": 1.728,
    "cut_max_m": 2.171,
-   "fill_max_m": 0.688,
+   "fill_max_m": 0.689,
    "nodes": 11963
   },
   "crossings": 1,
