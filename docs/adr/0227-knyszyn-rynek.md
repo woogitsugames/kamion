@@ -22,3 +22,4 @@ Baseline edytora po 0216: 51 kamer na wariant, Low max `drawsEst` 429 i `trisExa
 - Pomnik króla i obelisk to prawdopodobnie osobne obiekty; geolokalizacje ESTIMATED.
 - Telefon i niezależny przegląd wizualny: do lidera, bez adb w tym zadaniu.
 
+- Wierzba płacząca z opisu właściciela: brak potwierdzonego prototypu w istniejącej bibliotece drzew; nie jest jeszcze odwzorowana. Wymaga zasobu i oceny na renderze.
