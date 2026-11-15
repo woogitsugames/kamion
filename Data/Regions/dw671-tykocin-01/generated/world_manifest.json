@@ -214,7 +214,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "812f672ba4df183ca7206b107c70efcfd02c548773d2344f5519e7643ab9c3ee",
+   "sha256": "5d8f0f0bb1605775759d1c3b206db241131aa7fbe90d14cefa3473e9e2b20868",
    "triangles": {
     "rail_lod0": 4611,
     "rail_lod1": 612,
@@ -240,9 +240,9 @@
    "forest_cells": [],
    "id": "0_6",
    "instances": {
-    "count": 167,
+    "count": 173,
     "file": "Data/raw/derived/dw671-tykocin-01/world/instances_0_6.json",
-    "sha256": "3cccf259ab1b14cd8d456ed69e33987a028ad4d2d1a54f0b4f952e8f5efd854c"
+    "sha256": "3fc6d9836df3fa7377f5ca167ca30d6e2cb4829d2a22665405f8cc4ba2031629"
    },
    "low": {
     "bytes": 818028,
@@ -589,14 +589,14 @@
    "forest_cells": [],
    "id": "1_5",
    "instances": {
-    "count": 209,
+    "count": 217,
     "file": "Data/raw/derived/dw671-tykocin-01/world/instances_1_5.json",
-    "sha256": "b7d337864ae96632a490769916aea4e31981a9f4ddcf7bed6678b6bbf503d212"
+    "sha256": "402605a69b609f53eec90fb9b1af078f82eff1e4f1a914a00ea6eb63ab3fd850"
    },
    "low": {
     "bytes": 894960,
     "file": "Data/raw/derived/dw671-tykocin-01/world/chunk_1_5.low.glb",
-    "sha256": "620432fdd45f421890fc9515c1ce8fc03e21d7f603b9e47ed158774419c545e6"
+    "sha256": "c219cf37e22ddbacd520cd75cc3547e24cc4dc6eebb894e27ba7f845669c0e09"
    },
    "materials": [
     "collision_asphalt",
@@ -610,7 +610,7 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "5b2b9a2908c07f3318144fb29531c58c707d2792568412889a711853d9d03584",
+   "sha256": "4f5ab79f60713d7d63053d72f0566d2e804e526e49dbb36bfd343b6a0442ffc9",
    "triangles": {
     "markings": 164,
     "rail_lod0": 204,
@@ -634,19 +634,19 @@
     "z_max_evrf2007": 129.6,
     "z_min_evrf2007": 111.0
    },
-   "bytes": 5252724,
+   "bytes": 5264924,
    "file": "Data/raw/derived/dw671-tykocin-01/world/chunk_1_6.glb",
    "forest_cells": [],
    "id": "1_6",
    "instances": {
-    "count": 168,
+    "count": 196,
     "file": "Data/raw/derived/dw671-tykocin-01/world/instances_1_6.json",
-    "sha256": "b09061041eeb1141f608f018ce08729711b8d52b3c43797b815ded2854c80cce"
+    "sha256": "06efcf405bbcb9c2d0c797e19bb002cc4b72c94d9062c9241ad2b1c619ed3a60"
    },
    "low": {
-    "bytes": 967020,
+    "bytes": 973344,
     "file": "Data/raw/derived/dw671-tykocin-01/world/chunk_1_6.low.glb",
-    "sha256": "8c8ffa4bca43cb9417199b3247da19d6aa335eabd3ddf6100d056a37eb9e7586"
+    "sha256": "b40aa86b2c3b5359a401ca52d961437e3fa682013bec89966ee1b311e2786eb3"
    },
    "materials": [
     "collision_asphalt",
@@ -662,17 +662,17 @@
     "terrain_grass",
     "wire"
    ],
-   "sha256": "5160ba3c618cbaa0a0dc0647388eccc1f35345813c9b7342dc6ea2b4218ba90a",
+   "sha256": "4d0d2f8373265b68c537bad2b61dd36a37c87e261ec3ab15aee1880ff0c79024",
    "triangles": {
-    "markings": 168,
+    "markings": 284,
     "rail_crossing": 132,
     "rail_lod0": 4573,
     "rail_lod1": 861,
     "rail_lod2": 34,
     "road": 4466,
-    "road_collision": 1760,
-    "terrain_lod0": 135576,
-    "terrain_lod1": 34200,
+    "road_collision": 1752,
+    "terrain_lod0": 135636,
+    "terrain_lod1": 34260,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 184
@@ -5384,6 +5384,14 @@
    "procedural": "grate",
    "rough": 0.6
   },
+  "drive_cabinet_faded": {
+   "color": [
+    0.5,
+    0.21,
+    0.07
+   ],
+   "rough": 0.75
+  },
   "fab_birch_tree_trunk": {
    "color": [
     1.0,
@@ -8467,7 +8475,7 @@
   "conform": {
    "abs_p95_m": 1.728,
    "cut_max_m": 2.171,
-   "fill_max_m": 0.689,
+   "fill_max_m": 0.688,
    "nodes": 11963
   },
   "crossings": 1,
@@ -8484,9 +8492,9 @@
  "schema": "truck-sim-pl/world-manifest/1",
  "sources_sha256": {
   "generated/osm_context.json": "3b403c0dfb9c7f5a71162f39d7c7e3e13a0534741e8771788159ef8a77bcb705",
-  "generated/rail_sources.json": "b45fcf004302b515a6e950d70773861287e8272fb8050fc9214b0fe1997e438c",
+  "generated/rail_sources.json": "9ef54d48ff8cf2ef38f0c6842c29efdd2739d68ffa61bd7ecc2a880ffe545f16",
   "heightmap.r16 (Data/raw)": "b4443318b790f9b7002728094af5cb60da02019157be4c38a8440427b709e4b2",
-  "overrides.yaml": "ac4f26d3a2a91ac6fa9f190c7a59e8d463619259425c907ab222a4cf61a323a9",
+  "overrides.yaml": "88077e0df578b27ad7a07619e58ea8ba4bce148ff7be5504ec06e9f0eb5962f0",
   "roads.graph.json": "21264b6407018d5c45406bcea44d0b3d786457a64f476135c7fcfb563f04cbae",
   "terrain.json": "8523a5c13d70efc669067173adcb6515305dc77e7cc7a72803564a8c39d86473"
  },

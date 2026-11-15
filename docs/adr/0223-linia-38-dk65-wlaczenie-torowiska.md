@@ -158,7 +158,21 @@ Gałąź `rail-dk65-s22` = `rail-dk65-0223` + `origin/main` (rail-fix-s21 scalon
 - Komendy odtworzenia wyżej (`-Scene WorldC`, `export-route.py`) są nieaktualne — aktualne w sekcji Walidacja s22.
 
 ## Walidacja s22
-(uzupełniane po buildach — patrz koniec pliku)
+- **dw671-tykocin-01** (jedyny kafel przebudowany w s22): `build_world` exit 0, `rail.json`: 1 przejazd
+  `osm:node/1778182481`, override `rail-crossing-dw671-line38` → `polrogatki_wjazd_wyjazd`, kat. B,
+  `equipment_src: authored_override`, `sign: null` (§ 80 ust. 1), G-2 ×2 jako `plate_G-2` na masztach. Import + VQA
+  Low/High exit 0, `rendered=15` (`artifacts/rail-dk65-s22/vqa/r2/dw671-tykocin-01/{Low,High}`); oględziny i budżet
+  kadrów A/B — ADR 0268 „Walidacja”.
+- **Testy** (2026-11-15, po r2): `tests/gis -k rail` 112 passed, 4 skipped, 1 failed
+  (`test_rail_0217.py::test_stage_is_opt_in_and_off_everywhere`: manifesty dk65-01..04 bez `rail_*` — oczekiwane do
+  ich regeneracji); całe `tests/gis`: 1502 passed, 3 failed — opis w ADR 0268 „Walidacja”.
+- **dk65-01..04: NIE przebudowane i nie commitowane w tej gałęzi** (polecenie lidera: po scaleniu int-dk65-s22 i
+  PR #138 / ADR 0272 → merge main → `pwsh artifacts/rail-dk65-s22/tools/chain-tests.ps1 -Regions
+  dk65-01,dk65-02,dk65-03,dk65-04 -Tag r3`). Próbny build dk65-04 (bw1, exit 0) odrzucony; kamery `rail_x*` dk65-04
+  w `control_cameras_place.authored.json` pochodzą z tamtego `rail.json` — po regeneracji puścić
+  `artifacts/rail-dk65-s22/tools/cams.py` ponownie (potrzebne dwa buildy: kamery wypala `build_world` w
+  `control_cameras.json`, a `cams.py` czyta `rail.json`). Budżet kadrów, wysokość toru na szwach 01|02|03|04, most
+  nad Supraślą (P1-4) w renderze: UNVERIFIED do tej regeneracji.
 
 ## Otwarte
 1. **Szew dk65-01 | bialystok-knyszynska** (x = 770827, y ≈ 596885): tor kończy się na krawędzi, bo sąsiad jest

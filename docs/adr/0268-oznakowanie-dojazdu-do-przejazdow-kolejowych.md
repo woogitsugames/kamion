@@ -57,7 +57,7 @@ płyty i szyny (krytyk wizualny: FAIL). Właściciel (D71 pkt 3) zlecił oznakow
    | rogatki (`half`, `double_half`, `full`, `gate`, `yes`, `chain`) | A-9, inaczej A-10 (§ 79 pkt 1a; 2310 § 6) |
    | kategoria dokładnie B lub C | + tablica „Sygnalizacja automatyczna” (§ 79 pkt 6); `A|B`, `C|D`, brak → bez tablicy |
    | v > 60 km/h | znak 150 m (dolna granica zakresu 150–300 m), G-1a pod znakiem, G-1b 100 m, G-1c 50 m |
-   | v ≤ 60 km/h lub brak `maxspeed` (50) | znak 100 m („do 100 m”), G-1b 66,7 m, G-1c 33,3 m; krótsza droga ≥ 60 m: te same proporcje |
+   | v ≤ 60 km/h lub brak danych (50, `speed_src: default`) | znak 100 m („do 100 m”), G-1b 66,7 m, G-1c 33,3 m; krótsza droga ≥ 60 m: te same proporcje |
    | droga krótsza niż wyżej, ≥ 30 m | § 78 ust. 3: znak na końcu dostępnego odcinka + G-1b, G-1c w 1/2 |
    | < 30 m | § 78 ust. 3: znak + G-1c; mniej niż urządzenia + 5 m → nic, wpis `dropped` |
    | bez rogatek | U-1a po obu stronach: 4, 7, 10, 13, 16, 19 m od skrajnej szyny (§ 79 pkt 5a) |
@@ -87,10 +87,82 @@ prowadzących + 2 × G-2. Nowe materiały: `sign_A-9` / `sign_A-10`, `sign_T-SA`
 prototyp `signal_rail_guide_*` (klasa LOD urządzeń przejazdu). Oznakowanie poziome: P-4 2 wstęgi × ~100 m, P-14
 ≤ 4 prostokąty na wlot. WORKING_VALUE do pomiaru w kadrze (niżej).
 
-## Walidacja
-(uzupełniane po buildach — patrz koniec pliku)
+7. **Prędkość dopuszczalna na dojeździe** (decyduje o przedziale § 3 ust. 2). Graf dróg wpisuje `maxspeed` 50 także
+   wtedy, gdy OSM nie ma tagu (`attrs.maxspeed.src = default`, conf low). Raport `approach_rules[].speed_src` podaje
+   teraz źródło (`osm` / `default` / `authored_override`; `EdgeSection.maxspeed_src`), a przejazd może dostać fakt
+   autorski `approach_speed_kmh` (override `kind: rail_crossing`). **DW671: `approach_speed_kmh: 90` = WORKING_VALUE**
+   (decyzja lidera s22). Źródło: detekcja Mapillary `regulatory--maximum-speed-limit-50` (map feature, ostatnio
+   widziana 2019-07-03) 57 m na SW od przejazdu po prawej stronie wlotu w kierunku NE → przed nią limit jest wyższy
+   niż 50; zdjęcia Mapillary 828893548045009 / 1832769196903759 / 955575365206348 pokazują pola (brak zabudowy).
+   90 km/h = ogólny limit poza obszarem zabudowanym cytowany z pamięci (ustawa nieczytana, UNVERIFIED); istotny jest
+   tylko przedział „> 60 km/h” → znak 150 m. **Do potwierdzenia zdjęciem właściciela / wizją lokalną** (rzeczywista
+   odległość A-9, czy B-33 „50” nadal stoi). Sam B-33 nie jest budowany.
+
+## Walidacja (s22, dw671-tykocin-01; dk65-01..04 czekają na scalenie int-dk65-s22 + PR #138 / ADR 0272)
+- **Build** `build_world --region dw671-tykocin-01` exit 0 (96 s): 1 przejazd, `approach_attach` = {crossings 1,
+  kerb_cut_m 17,9, missed []}; `roads_qa`: „P-4 level crossing approach” 1, „P-14 level crossing” 2; `rail.json`
+  `approach_rules` oba wloty: A-9 + T-SA, `speed_kmh` 90 `speed_src` authored_override, `dist_m` 150 (avail 170),
+  słupki 150 / 100 / 50 m, `dropped` []; 24 słupki prowadzące `red_white` (4,6–19,6 m od skrajnej szyny, co 3 m).
+- **Zgodność z aktami** (tekst przeczytany ponownie z lokalnych kopii `Data/raw/refs/codex-s21/05-kolej38/
+  D20251105-signs-19/20.png` i `…/D20192310.html.txt`): § 79 pkt 1 lit. a (rogatki → A-9), pkt 3 (G-1a–c po prawej),
+  pkt 4 lit. b i e (P-4, P-14), pkt 5 lit. b (słupki na zewnątrz rogatek), pkt 6 (tablica dla kat. B); § 80 ust. 1
+  (kat. B bez G-3/G-4 — `sign: null`); § 81 ust. 1 pkt 1 (G-2 na maszcie pod głowicami); 2310 § 78 ust. 2 (trzy kreski
+  pod znakiem, dwie w 2/3, jedna w 1/3 → 150 / 100 / 50 m).
+- **Rendery** (`pwsh artifacts/rail-dk65-s22/tools/chain-tests.ps1 -Regions dw671-tykocin-01 -Tag r2`; import exit 0,
+  VQA Low i High `rendered=15`): `artifacts/rail-dk65-s22/vqa/r2/dw671-tykocin-01/{Low,High}/`, podglądy
+  `…/vqa/r2/jpg/` (m.in. `zoom-signs.jpg`, `crop-far-a.jpg`, `crop-far-b.jpg`). Obejrzane: High `rail-x0-far-a/b`
+  (+ Low far-a) — A-9 (płotek), tablica „Sygnalizacja automatyczna”, G-1a z trzema kreskami opadającymi ku jezdni
+  na jednym słupku, dalej G-1b i G-1c; `rail-x0-side-eye`, `rail-xing-close-ne` (High i Low, r1) — krawężnik kończy
+  się przed płytami (P0-1 krytyka), maszty biało-czerwone (P1-3), G-2 na maszcie, wyblakłe szafy (P2-11);
+  `rail-x0-top`, `rail-xing-top` — P-4 przez przejazd, P-14 na pasie dojazdu obu wlotów, bez widocznego
+  z-fightingu na płytach; `rail-x0-near-b`, `rail-xing-devices-sw` — słupki po obu stronach. Porównanie z Mapillary
+  828893548045009 / 1832769196903759: układ urządzeń i podwójna ciągła zgodne; różnice = punkty „Otwarte” 3–4
+  (bariery, pobocze, sieć trakcyjna, pasy akustyczne).
+- **Budżet kadrów High, A = `artifacts/rail-fix-s21/vqa/r6/High/stats.txt` → B = r2** (te same pozy; „instanced”):
+  | kamera | siatki tris A → B | draws inst. A → B | instancje A → B | tris inst. A → B |
+  |---|---|---|---|---|
+  | rail-xing-close-ne | 89 244 → 89 360 | 57 → 75 | 265 → 292 | 9 859 → 12 163 |
+  | rail-xing-from-sw | 364 680 → 364 796 | 84 → 104 | 568 → 590 | 23 064 → 25 328 |
+  | rail-xing-top | 72 885 → 73 001 | 43 → 49 | 52 → 78 | 2 842 → 4 978 |
+  | rail-track-along | 178 924 → 179 040 | 65 → 84 | 332 → 373 | 10 070 → 12 562 |
+  Nowe kadry B: `rail-x0-far-a` 97 346 tris siatek, 95 draws / 379 inst. / 18 705 tris; `rail-x0-side-eye` 125 765,
+  82 / 330 / 11 348. Przyrost ≤ +20 draws i ≤ +2,5 tys. tris na kadr (szacunek edytora przed SRP batchingiem);
+  build Windows / telefon: nie mierzono.
+- **Testy**: `tests/gis -k rail` 112 passed, 4 skipped, 1 failed; całe `tests/gis` 1502 passed, 4 skipped, 4 xfailed,
+  3 failed (przed poprawką testu znaków): (a) `test_rail_0217.py::test_stage_is_opt_in_and_off_everywhere` —
+  oczekiwany do regeneracji dk65-01..04 (ich `world_manifest.json` nie ma `rail_*`; tykocin spełnia); (b)
+  `test_road_fidelity.py::test_report_not_stale` — `fidelity_qa.json` jest nieaktualny już na `origin/main`
+  (sha `consistency.py`, `decals.py`, `meshing.py` ≠ main), ta gałąź dokłada `build_world.py`, `markings.py`,
+  `network.py` → lider: `tools/worldgen/fidelity/run.py` po scaleniu; (c) `test_world_v34.py::
+  test_sign_faces_and_weathering` — własny: tabliczki prostokątne `signs.RECT` nie są kwadratem 512² → test
+  dopuszcza proporcje tabliczki (naprawione, 1 passed). `test_rail_approach_0268.py`: 17 passed, 4 skipped.
+  Pełne `tests/gis` po tej poprawce nie było powtarzane.
+
+## Zależność od krawężnika przy przejeździe (pod PR #138 / ADR 0272 — pobocze gruntowe DW671)
+Przejrzane `git diff origin/main...origin/rural-xsec-0272 -- tools/worldgen` (bez scalania):
+1. `attach()` — gałąź URBAN (zejście krawężnika do 0) stanie się na DW671 bezczynna: `kerb_cut_m` 17,9 → 0 (liczby
+   w tym ADR do aktualizacji; żaden test nie wymaga > 0 na zbudowanym kaflu). Gałąź RURAL wypełnia rów do
+   `DITCH_FILL_M` 0,06 m na długości płyt — 0272 daje na krawędzi przejazdu `ditch_m: 0` = `FLAT_DITCH_M` 0,06, więc
+   wynik bez zmiany; na pozostałych krawędziach (rów 0,2 m WORKING_VALUE) wypełnienie zadziała jak przy zjeździe.
+2. Słupki prowadzące stoją `U1_LATERAL_M` 0,75 m za krawędzią jezdni (`hw_at`) — bez krawężnika wypadną na poboczu
+   gruntowym (1,0 m), przed linią barier z ortofoto. Do decyzji po scaleniu: odsunąć za pobocze
+   (`NW.side_shoulder`, nowa funkcja 0272).
+3. Znaki A-9 / G-1: `sign_off` ma już gałąź RURAL (`ext + 0,5 m` za profilem pobocza) — zadziała, ale odległość
+   boczna wzrośnie o szerokość pobocza i rowu; do obejrzenia.
+4. Urządzenia przejazdu (rogatki, sygnalizatory, płyty) liczą się od `road_w` z obrysu jezdni; 0272 wyłącza z tego
+   obrysu `shoulder_gravel` / `verge_grass`, a jezdnia = szerokość BDOT + 2 × 0,08 m → przesunięcia rzędu cm.
+5. P-4 / P-14 nie zależą od krawężnika; 0272 dodaje linie krawędziowe (`edge_lines: both`) — bez kolizji.
+6. **Konflikty tekstowe przy scalaniu**: `roads/network.py` (obie gałęzie dopisują pola `EdgeSection` i argumenty
+   w tym samym wywołaniu `EdgeSection(... provenance=prov ...)` — zachować oba) oraz możliwie `roads/build_world.py`
+   (wywołanie planu rail z `road_footprint_polygon`).
+Po scaleniu: `build_world` tykocina + r3 tych samych 15 kamer.
 
 ## Otwarte
+0. Zrzut z urządzenia (krytyk P0-2): zamiast telefonu — zrzut z buildu Windows kamer `rail_xing_close_ne`,
+   `rail_track_along`; robi lider po scaleniu (decyzja lidera s22). Ocena `visual-critic` r2: niewykonana (agent nie
+   tworzy subagentów) — do zlecenia przez lidera na `artifacts/rail-dk65-s22/vqa/r2`.
+   Słupek A-9 wlotu SW stoi ~0,3 m od słupa latarni (`crop-far-b.jpg`; odległość szacowana z kadru) — brak reguły
+   odstępu znak/latarnia.
 1. Dz.U. 2019 poz. 2311 zał. 1 / zał. 4 do przeczytania (wymiary G-1, G-2, U-1a/U-1b, warunek G-1d–f, wysokości) —
    plik > 10 MB; po odczycie zamienić WORKING_VALUE/UNVERIFIED w `signs.RECT`, `rail_approach.py`, `rail_props.py`.
 2. Tablica „Sygnalizacja automatyczna”: wygląd UNVERIFIED (brak wzoru w akcie) — zdjęcie właściciela.
