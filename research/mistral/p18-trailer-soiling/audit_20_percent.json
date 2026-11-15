@@ -1,166 +1,152 @@
 {
-  "seed": 20261113,
-  "data": "2026-11-14 (audyt pełny z ponowną analizą wizyjną; pierwotny audyt 2026-11-13, aktualizacja po 20/20: 2026-11-14)",
-  "zakres": "kadry (kategoria kadr, status OK/REFERENCJA) w manifest.csv + 5 cytatów literaturowych",
-  "populacja_kadr_qualified": [
-    "P18-104","P18-105","P18-107","P18-108","P18-109","P18-111","P18-118","P18-121","P18-133",
-    "P18-136","P18-137","P18-138","P18-139","P18-140","P18-142","P18-143","P18-149","P18-150",
-    "P18-153","P18-155","P18-156","P18-158","P18-160","P18-162","P18-164","P18-166","P18-167",
-    "P18-169","P18-171","P18-172","P18-174"
-  ],
-  "n_qualified": 31,
-  "wymagana_proba_pct": 20,
-  "metoda_losowania": "deterministycznie: co 5-ty qualified wg id (posortowane): indeksy 1, 6, 11, 16, 21, 26, 31",
-  "audytowana_proba": ["P18-104", "P18-111", "P18-137", "P18-143", "P18-156", "P18-166", "P18-174"],
-  "rozmiar_proby": 7,
-  "pokrycie_proby_pct": 22.6,
-  "metoda_ponownej_weryfikacji": "Ponowna analiza wizyjna każdego kadru z próby (standardowe pytanie: TYL_DRZWI/CO_WIDAC/STREFY/KSZTALT/zacieki/%/KOLOR/KRYCIE/MARKI), wyniki zapisane w analysis_audit_<id>.json; przy dysparytecie dodatkowy recheck pytaniem celowanym („Opisz DOKŁADNIE tylną ścianę: dwuskrzydłowe drzwi? pionowa szczelina? rygle? zawiasy?"). Porównanie z wierszami manifest.csv.",
-  "weryfikacja_kadr": [
-    {
-      "id": "P18-104",
-      "kroki": "analiza standardowa + recheck celowany",
-      "porownanie_z": "manifest.csv vs analysis_audit_P18-104.json + analysis_audit_P18-104_recheck.json",
-      "kontrole": {
-        "kwalifikacja_zgodna": true,
-        "drzwi_potwierdzone": "recheck: dwuskrzydłowe, pionowa szczelina, rygle (klamry), zawiasy",
-        "strefy_zgodne": true,
-        "uwagi": "Pierwsze oględziny nie rozpoznały drzwi (kadr zimowy, śnieg); recheck potwierdził manifest. Kolor osadu wg rechecku: biały (śnieg/brud) vs manifest szaro-czarniawy — wariancja opisu przy pokrywie śnieżnej."
-      },
-      "wynik": "SPOJNY (po rechecku)"
-    },
-    {
-      "id": "P18-111",
-      "kroki": "analiza standardowa + recheck celowany",
-      "porownanie_z": "manifest.csv vs analysis_audit_P18-111.json + analysis_audit_P18-111_recheck.json",
-      "kontrole": {
-        "kwalifikacja_zgodna": true,
-        "drzwi_potwierdzone": "recheck: dwuskrzydłowe, pionowa szczelina, rygiel, zawiasy",
-        "strefy_zgodne": true,
-        "uwagi": "Różnica ESTIMATED: manifest 3 zacieki ~20% wys.; recheck 2 smugi po bokach szczeliny do ~50% wys. Reżim (zima, błoto pośniegowe, film od dołu) spójny."
-      },
-      "wynik": "SPOJNY (z odnotowaną wariancją liczb ESTIMATED)"
-    },
-    {
-      "id": "P18-137",
-      "kroki": "analiza standardowa",
-      "porownanie_z": "manifest.csv vs analysis_audit_P18-137.json",
-      "kontrole": {
-        "kwalifikacja_zgodna": true,
-        "strefy_zgodne": true,
-        "uwagi": "Różnice ESTIMATED: manifest 2-3 zacieki 50-70% wys., krycie średnie, szary/czarniawy; recheck 1-2 zacieki 10-15% wys., krycie słabe, brązowawy/czerwonawy (oświetlenie). Strefy (dół drzwi, próg) i faktura spójne."
-      },
-      "wynik": "SPOJNY w kwalifikacji/strefach; liczby ESTIMATED różne między oględzinami — odnotowane"
-    },
-    {
-      "id": "P18-143",
-      "kroki": "analiza standardowa + recheck celowany + recheck-2 (pytania binarne)",
-      "porownanie_z": "manifest.csv vs analysis_audit_P18-143.json + _recheck.json + _recheck2.json",
-      "kontrole": {
-        "kwalifikacja_zgodna": true,
-        "drzwi_potwierdzone": "recheck-2: pionowa szczelina TAK, zawiasy/listwy TAK, rygle NIEWYRAŹNE; kąt ujęcia ukośny",
-        "strefy_zgodne": true,
-        "uwagi": "Zabrudzenie dolne 10-15% wys., ciemnobrązowy osad — spójne z opisem filmu od dołu; barwa vs manifest (szaro-czarny) — wariancja odcienia."
-      },
-      "wynik": "SPOJNY (kadr ukośny — zaznaczono)"
-    },
-    {
-      "id": "P18-156",
-      "kroki": "analiza standardowa (plik: oryginał geograph.org.uk 851910 — miniatura Wikimedia zwracała HTTP 429)",
-      "porownanie_z": "manifest.csv vs analysis_audit_P18-156.json",
-      "kontrole": {
-        "kwalifikacja_zgodna": true,
-        "drzwi_potwierdzone": "TAK (dwuskrzydłowe)",
-        "strefy_zgodne": true,
-        "uwagi": "Smugi i plamy, dół drzwi + rygle, kolor szary, krycie średnie, zacieki brak — zgodne z manifestem."
-      },
-      "wynik": "SPOJNY"
-    },
-    {
-      "id": "P18-166",
-      "kroki": "analiza standardowa + recheck celowany (dolne strefy)",
-      "porownanie_z": "manifest.csv vs analysis_audit_P18-166.json + analysis_audit_P18-166_recheck.json",
-      "kontrole": {
-        "kwalifikacja_zgodna": true,
-        "drzwi_potwierdzone": "TAK (dwuskrzydłowe)",
-        "strefy_zgodne": false,
-        "uwagi": "NIESPOJNOŚĆ w opisie zabrudzenia: manifest (analiza pierwotna) — rozbryzg + smugi, 2 zacieki ~20%, krycie słabe; recheck 2x (2026-11-14) — tył CZYSTY (próg, belka, lampy, dół drzwi bez widocznego osadu). MANIFEST SKORYGOWANY (adnotacja w uwagach): kadr przekwalifikowany na wzorzec czystego tyłu (baseline). Kwalifikacja drzwiowa bez zmian."
-      },
-      "wynik": "NIESPOJNY (opis zabrudzenia) — skorygowano w manifeście; kwalifikacja utrzymana"
-    },
-    {
-      "id": "P18-174",
-      "kroki": "analiza standardowa",
-      "porownanie_z": "manifest.csv vs analysis_audit_P18-174.json",
-      "kontrole": {
-        "kwalifikacja_zgodna": true,
-        "drzwi_potwierdzone": "TAK (dwuskrzydłowe)",
-        "strefy_zgodne": true,
-        "uwagi": "Kadr warunkowy (pojazd dostawczy, nie naczepa 13,6 m). Różnice ESTIMATED: manifest zacieki 50-70% wys., krycie średnie, szaro-czarniawy; recheck 2-3 zacieki 20-30% wys., krycie słabe, szary."
-      },
-      "wynik": "SPOJNY w kwalifikacji/strefach; liczby ESTIMATED różne między oględzinami — odnotowane"
-    }
-  ],
-  "podsumowanie_audytu_wizyjnego": {
-    "proba": 7,
-    "kwalifikacje_potwierdzone": 7,
-    "pelna_spójność_opisu": 2,
-    "spójność_z_wariancją_estimated": 4,
-    "niespójność_ze_korektą": 1,
-    "wniosek": "Kryterium kwalifikacji (tylne drzwi widoczne) stabilne: 7/7 potwierdzonych (3 kadry wymagały rechecku celowanego — widok ukośny/zimowy). Liczby ESTIMATED (zacieki, krycie, odcień) podlegają wariancji między oględzinami ±1-2 zacieki i ±1 stopień krycia. Jedna korekta merytoryczna: P18-166 (tył czysty, wzorzec baseline)."
+ "audyt": "M61-FIX s21 (zastępuje audyt M61 z 2026-11-14, który wybierał „co piąty” i używał pytania sugerującego)",
+ "data": "2026-11-15",
+ "seed": 20261115,
+ "kod_losowania": "ids = sorted(id wszystkich 109 wierszy manifest.csv); sample = sorted(random.Random(20261115).sample(ids, ceil(109/5)))",
+ "populacja": 109,
+ "proba": 22,
+ "pokrycie_pct": 20.2,
+ "metoda": "Literatura: ponowne otwarcie źródła (Crossref / strona repozytorium / nagłówki HTTP) i porównanie z cytatem. Kadry: obraz pobrany ponownie albo odczytany z files/, obejrzany osobnym wywołaniem w dniu audytu (bez narzędzia wizyjnego z pytaniem), porównany z wierszem po jego napisaniu.",
+ "wynik": {
+  "PASS": 13,
+  "FIX (poprawione w manifeście)": 7,
+  "NIE OBEJRZANY (HTTP 429)": 2
+ },
+ "kadry_w_probie": 18,
+ "kadry_obejrzane_ponownie": 16,
+ "wiersze": [
+  {
+   "id": "P18-004",
+   "rodzaj": "literatura",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Crossref (DOI 10.1016/j.jweia.2018.11.024): tytuł, czasopismo JWEIA i rok 2019 zgodne. Cytatu „bow wave, side splash wave, tread pickup and capillary adhesion” nie dało się sprawdzić (Crossref bez abstraktu). Dopisane w uwagach: cytat UNVERIFIED w dniu audytu."
   },
-  "weryfikacja_cytatow": [
-    {
-      "id": "P18-001",
-      "cytat": "The rear tyres are seen to be the dominant source...",
-      "url": "https://saemobilus.sae.org/articles/insights-rear-surface-contamination-using-simulation-road-spray-aerodynamics-2014-01-0610",
-      "wynik": "POTWIERDZONY 2026-11-14 (pełna fraza obecna w treści strony; pobór automatyczny udany)"
-    },
-    {
-      "id": "P18-002/003",
-      "cytat": "Large particles are found to take on a ballistic trajectory and penetrate the wake.",
-      "url": "https://www.scilit.com/publications/b5815268e2193b06891526d5f0b87bb6",
-      "wynik": "POTWIERDZONY 2026-11-14 (fraza obecna w treści strony; pobór automatyczny udany — w przeciwieństwie do 2026-11-14 rano, gdy zwracało 403)"
-    },
-    {
-      "id": "P18-012",
-      "cytat": "primarily composed of quartz, but also of muscovite, albite, kaolinite...",
-      "url": "https://www.mdpi.com/1660-4601/17/5/1563",
-      "wynik": "POTWIERDZONY 2026-11-14 (fraza obecna w treści strony; pobór automatyczny udany)"
-    },
-    {
-      "id": "P18-014",
-      "cytat": "chlorek sodu (NaCl) o czystości min. 90% (najczęściej 94-97%)",
-      "url": "https://surowceprzemyslowe.pl/sol-drogowa/",
-      "wynik": "CZĘŚCIOWO — 2026-11-14: fraza \"chlorek sodu (NaCl)\", \"90%\" oraz skuteczność do -7°C obecne w treści; strona serwuje \"Wersję MINI\" bez frazy \"94-97%\"; liczby pozostają w manifeście z zastrzeżeniem \"orientacyjne\""
-    },
-    {
-      "id": "P18-018",
-      "cytat": "reached up to 0.13, 0.21, and 0.25 for red algal blooms, mineral dust, and dark particles respectively.",
-      "url": "https://tc.copernicus.org/articles/19/1527/2025/index.html",
-      "wynik": "POTWIERDZONY 2026-11-14 (pełna fraza obecna w treści strony; pobór automatyczny udany)"
-    }
-  ],
-  "statystyki_kadr": {
-    "kwalifikowane_kadry": 31,
-    "kandydaci_przeanalizowani_łącznie": 75,
-    "odrzucone_łącznie": 44,
-    "krycie": {"średnie": 20, "słabe": 10, "brak_zabrudzenia_baseline": 1, "pełne": 0},
-    "barwa": {"odcienie_szarego": 23, "odcienie_brązowego": 7, "bez_oceny": 1},
-    "strefy": {"próg_lub_dół_drzwi": 31, "belka_RUPD": 26, "lampy": 5, "uszczelka_rygle": 7},
-    "zacieki": {
-      "kadrów_z_policzalnymi_zaciekami": 10,
-      "mediana_skrzydło": 3,
-      "reżimy": "drogowy zimowy 20-30% wysokości drzwi (~0,5-0,8 m); stacyjny/długotrwały 50-80% (~1,3-2,1 m)"
-    },
-    "granica_filmu_dolnego": {
-      "n_z_filmem_do_1_3_wys": "30/30 kadrów z widocznym zabrudzeniem",
-      "typowa_granica": "dolna 1/3 wysokości drzwi (10-30%)",
-      "w_metrach_przy_drzwiach_2m6_2m7": [0.5, 1.0],
-      "metoda": "ułamek wysokości drzwi widocznej w kadrze (ESTIMATE z analizy wizyjnej, miniatury 640-1280 px)"
-    },
-    "sezony": {"zima": 6, "lato": 8, "jesień": 1, "wiosna": 1, "nieoznaczony_brak_danych": 15},
-    "licencje": {"OK_CC0_PD_CC_BY": 5, "REFERENCJA_CC_BY_SA": 26},
-    "kadry_warunkowe_inny_pojazd": ["P18-162", "P18-171", "P18-172", "P18-174"],
-    "korekty_audytowe": ["P18-166: opis zabrudzenia niepotwierdzony w rechecku — kadr oznaczony jako czysty baseline; manifest uzupełniony adnotacją"]
+  {
+   "id": "P18-006",
+   "rodzaj": "literatura",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "wrap.warwick.ac.uk/id/eprint/143065: w abstrakcie dosłownie „The rear surfaces of blunt-ended vehicles, such as SUVs, are vulnerable to the build-up of contaminants thrown up from wet road surfaces by their tyres.” Autor i rok (Gaylard 2019) zgodne."
+  },
+  {
+   "id": "P18-013",
+   "rodzaj": "literatura",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Crossref (DOI 10.3389/fenvs.2023.1258922): tytuł „Shades of grey—tire characteristics and road surface influence tire and road wear particle (TRWP) abundance and physicochemical properties”, Frontiers in Environmental Science, 2023-11-07 — zgodne z cytatem z tytułu."
+  },
+  {
+   "id": "P18-021",
+   "rodzaj": "literatura",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Link UNECE zwraca HTTP 403 klientowi automatycznemu; wiersz i tak nie cytuje treści. Dopisane w uwagach: UNVERIFIED w dniu audytu."
+  },
+  {
+   "id": "P18-102",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px): wywrotka wojskowa w hali wystawowej, nie „zderzak ciągnika” i nie „zimowe brudzenie belki”. Odrzucenie słuszne; opis i uwagi poprawione."
+  },
+  {
+   "id": "P18-103",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px): ciągnik z naczepą wywrotką przy hali, widok z boku i przodu; drzwi brak — zgodne z wierszem."
+  },
+  {
+   "id": "P18-104",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1067×1600): ciemny, pod światło, ciemnogranatowa grafika, w tle śmigłowiec i antena, śnieg, lewa żółta tablica z odpryskiem — zgodne; brud nieoceniany."
+  },
+  {
+   "id": "P18-110",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "NIE OBEJRZANY",
+   "co_sprawdzono_i_co_poprawiono": "Miniatura nie pobrała się (HTTP 429 w dwóch podejściach). Wiersza nie zmieniano; treść UNVERIFIED w dniu audytu."
+  },
+  {
+   "id": "P18-118",
+   "rodzaj": "kadr",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie: drzwi zamknięte, panele aerodynamiczne rozłożone, cętki na dole — zgodne; krycie „słabe–średnie” było zawyżone → poprawione na „słabe”."
+  },
+  {
+   "id": "P18-125",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "NIE OBEJRZANY",
+   "co_sprawdzono_i_co_poprawiono": "Miniatura nie pobrała się (HTTP 429 w dwóch podejściach). Wiersza nie zmieniano; treść UNVERIFIED w dniu audytu."
+  },
+  {
+   "id": "P18-137",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (975×1413): białawy nalot w dolnej połowie, duża roztarta plama na prawym skrzydle, ciemny posmużony próg, lampy świecą — zgodne."
+  },
+  {
+   "id": "P18-140",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1280×1427): pikowana lustrzana blacha, szary próg z zaciekami, czysta belka z taśmą — zgodne."
+  },
+  {
+   "id": "P18-146",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px): lekka skrzyniówka z windą na autostradzie, tył wygląda na czysty; „brud na progu i belce, rozbryzg kropel” nie do zobaczenia przy ok. 180 px. Odrzucenie słuszne; opis poprawiony."
+  },
+  {
+   "id": "P18-157",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px): naczepa wyścigowa z boku, z opuszczoną tylną rampą, przy budynku toru — widok boczny, zgodne z wierszem."
+  },
+  {
+   "id": "P18-160",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1200×1600): ściana PRZEDNIA naczepy z dwiema skrzynkami gaśnic, listwą złączy, kanistrami, miotłą i podporami — zgodne z odrzuceniem."
+  },
+  {
+   "id": "P18-164",
+   "rodzaj": "kadr",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (500×451): tył jest oświetlony, nie „w cieniu”; drzwi z czterema ryglami i tablicami wyglądają na czyste. Opis poprawiony; brud nadal nieoceniany (260 px)."
+  },
+  {
+   "id": "P18-167",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany osobno w 900 px po napisaniu wiersza: czerwona solówka z podniesioną windą załadowczą na placu z kostki — zgodne z odrzuceniem."
+  },
+  {
+   "id": "P18-169",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (500×375): wąska droga, platforma wioząca jasną skrzynię, zestaw ok. 130 px — zgodne z odrzuceniem."
+  },
+  {
+   "id": "P18-171",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany osobno w 900 px po napisaniu wiersza: zbliżenie ręcznie malowanej klapy i zderzaka, sznury plandeki — zgodne z odrzuceniem."
+  },
+  {
+   "id": "P18-177",
+   "rodzaj": "kadr nowy",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1024×681): ziarnisty film błotny na całych drzwiach, napisy cyrylicą na obu skrzydłach, zachlapana tablica i lampy, bezlistne drzewa — zgodne."
+  },
+  {
+   "id": "P18-178",
+   "rodzaj": "kadr nowy",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1024×680): brud w pasie nad dolną listwą — zgodne; błędne było zdanie „listwa progu usmarowana przy nitach” (listwa jest czystsza od pasa nad nią) i „belka przykurzona” (odpryski lakieru, rdza, otarcia na odbojach). Poprawione."
+  },
+  {
+   "id": "P18-185",
+   "rodzaj": "kadr nowy",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1024×766): białawoszary zaschnięty nalot na całych drzwiach furgonu, dziesiątki wymytych ścieżek na szybach i pod klamką — zgodne."
   }
+ ],
+ "uwaga": "5 z 6 poprawek dotyczy drobnych nieścisłości opisu; kwalifikacja (klasa kadru) nie zmieniła się w żadnym wierszu próby. Dwa wiersze odrzuconych kandydatów M61 (P18-102, P18-146) miały opisy brudu niezgodne z obrazem — pozostałych 38 wierszy odrzuconych kandydatów M61 poza próbą NIE oglądałem (UNVERIFIED)."
 }

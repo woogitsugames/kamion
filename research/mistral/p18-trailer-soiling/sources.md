@@ -85,3 +85,23 @@ Zakazane źródła (Google Maps/Street View/Earth/3D Tiles): **nie użyto w żad
 21. **KartaView** (https://api.kartaview.org/1.0/list/…): API nie zwróciło danych (puste odpowiedzi; endpoint 1.0/list i 1.0/list/nearby-photos bez klucza — 2026-11-13); **nie pobrano żadnego kadru**.
 
 22. **Geograph (UK)** — nie było na liście dozwolonych źródeł w zadaniu; NIE użyto.
+
+## M61-FIX s21 (2026-11-15) — nowe kadry i sposób pobrania
+
+Zakazane źródła (Google Maps/Street View/Earth/3D Tiles): **nie użyto**. Nagłówek User-Agent ogólny, bez nazwy projektu.
+
+- **Wikimedia Commons** (API `imageinfo`, standardowe miniatury ≤ 1920 px): ponownie 31 kadrów M61 oraz 3 nowe — P18-182 `File:Western_Express_semi-trailer.jpg`, P18-183 `File:Premier_Trailer_leasing_semi-trailer.jpg`, P18-184 `File:Belfor_box_truck.jpg` (autor: Epolk, CC BY-SA 4.0). EXIF P18-166 i P18-172 odczytany przez `iiprop=metadata`.
+- **Openverse** (API `api.openverse.org/v1/images`, filtr `license_type=commercial`) → obrazy i strony zdjęć na **Flickr**; licencja sprawdzona na stronie zdjęcia (kod 4 = CC BY 2.0, 5 = CC BY-SA 2.0, 10 = Public Domain Mark):
+  - P18-176 chuckoutrearseats, CC BY-SA 2.0 — https://www.flickr.com/photos/48625620@N00/329380100
+  - P18-177 Staropramen1969, **Public Domain Mark 1.0** (poza listą CC0/BY/BY-SA — tylko referencja, do decyzji lidera) — https://www.flickr.com/photos/136665246@N05/33794231211
+  - P18-178 Horia Varlan, CC BY 2.0 — https://www.flickr.com/photos/10361931@N06/5473100745
+  - P18-179 eddie.welker, CC BY 2.0 — https://www.flickr.com/photos/72923429@N00/4087495793
+  - P18-180 jeffk, CC BY 2.0 — https://www.flickr.com/photos/44124372247@N01/1809971838
+  - P18-181 hazelnicholson, CC BY 2.0 — https://www.flickr.com/photos/10515323@N08/40340489992
+  - P18-185 XoMEoX, CC BY 2.0 — https://www.flickr.com/photos/110925305@N06/31458298093
+  - P18-186 onnola, CC BY-SA 2.0 — https://www.flickr.com/photos/30845644@N04/8425468107
+  - P18-187 oatsy40, CC BY 2.0 — https://www.flickr.com/photos/68089229@N06/8474606062
+  - P18-188 amandabhslater, CC BY-SA 2.0 — https://www.flickr.com/photos/15181848@N02/8406218156
+- **Panoramax** (`api.panoramax.xyz/api/search`, bbox Polski, zimy 2023/24–2025/26): ok. 2 400 pozycji metadanych, obejrzana próbka 48 miniatur — drogi lokalne bez ciężarówek; nic nie pobrano do paczki.
+- Atrybucja: autor i licencja każdego kadru w `manifest.csv` (kolumny `autor`, `licencja`, `url_źródła`). CC BY-SA = referencja, nie tekstura.
+- Literatura sprawdzona ponownie w audycie s21: Crossref (P18-004, P18-013), WRAP Warwick (P18-006), UNECE (P18-021 — HTTP 403).
