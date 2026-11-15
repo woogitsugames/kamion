@@ -14,3 +14,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline.done; Get-Content artifacts/knyszyn-rynek-0227/import-before.log -Tail 20`
 - 2026-11-15 18:14 +01:00 — Przerwano własną regenerację materiałów przed Unity, skopiowano gotowe PNG z main po sprawdzeniu identyczności źródeł generatora; wznowiono import i baseline.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline.done; Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30`
+- 2026-11-15 18:16 +01:00 — Import przygotowawczy OK (64 chunków, Low+High); build_world oczekuje w kolejce heavy. Cofnięto efekt uboczny M_Sky.mat.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
