@@ -91,9 +91,6 @@ Nieuruchomione wszędzie: kompilacja Unity, EditMode/PlayMode, visual-qa, APK, A
 - Pamięć: #114 świadomie przekracza 200 MB Low na parach C+Maczka (277 MB), Maczka+Kleeberga (310), Kleeberga+Knyszyńska (273)
   (ESTIMATED z ADR 0229) przy PSS C 900–926 MB / cel 1000 MB. #112 `common` +44–74 MB przy przejściu APK → paczka.
 
-## Część B — #117–#125
-_(dopisuje drugi agent w tym pliku)_
-
 ## Część B — #117–#125 (recenzent D9-B)
 
 | PR | gałąź / ADR | werdykt | najważniejsze poprawki | kolejność |
