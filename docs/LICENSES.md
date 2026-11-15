@@ -515,3 +515,5 @@ Knyszyn03/new-round2:3 miniatury nowych względemK1 źródeł Henryka Borawskieg
 03R6-L01/L02: Urszula Citkowska (wspólny podpis grupy), Nowy Goniec Knyszyński11(250), listopad2025, s4; wyłącznie link-only, all rights reserved, bez kopii PDF, obrazów lub screenshotów. Każdy kadr osobno obejrzany i niezależnie zrecenzowany. Materiały wejścioweZIP konkursu2026 nie mają ustalonej publicznej licencji; pozostają niepobrane/PENDING-VISUAL, status w municipal-round3/legal-check.json.
 
 06/monki-ground-round2/files:2 miniatury Henryka Borawskiego, CC BY-SA3.0 i4.0 perwiersz, zmniejszenie pełnego kadru bez kadrowania. URL, autor, daty i metadane w lokalnym manifeście oraz data/. Oryginałów nie pobrano.
+
+01/used-parts-round3:7 firmowych kadrów wyłącznie link-only, all rights reserved, autor zdjęcia nieustalony perwiersz. 01/rear-night-round3/files/01-RN3-04.jpg: OathOn, CC BY-SA4.0, źródło Commons, zmniejszenie pełnego kadru800×400, bez kadrowania. Autor, licencja, data i geotag w manifeście oraz data/commons-metadata.json; osobna niezależna kontrola koordynatora.
