@@ -281,12 +281,15 @@ def render_sources(op: OperatingPoint, geo: LoopGeometry, seed: int, model: str 
         # under load the blow-down front is steep (more energy in firing orders 6, 9, 12 ...), on the
         # overrun the cylinder only re-expands the air it compressed: a soft, rounded pulse.
         sharp = fuel ** 0.6
-        tau_r = max(0.00030, 7.0 * ds * (1.9 - 1.25 * sharp))
+        # the rounding fades towards maximum speed: valve events get short in time there, and a softer pulse
+        # would bury the third firing harmonic of the cab loops under the half orders (analyze.py pitch check)
+        soft = (1.0 - sharp) * float(np.clip(1.15 - rpm_n, 0.0, 1.0))
+        tau_r = max(0.00030, 7.0 * ds * (0.65 + 1.6 * soft))
         crack = 0.04 + 0.46 * sharp
-        decay_scale = 1.25 - 0.40 * sharp
+        decay_scale = 0.85 + 0.5 * soft
         # the softer pulse carries less energy for the same peak: keep the part-load and overrun layers at the
         # loudness they have in the main bank (the change is the character of the layer, not the mix)
-        flow *= 1.0 + 0.28 * (1.0 - sharp)
+        flow *= 1.0 + 0.35 * soft
         # injected quantity per stroke is smallest at idle, so the injector-to-injector spread is
         # relatively largest there (lope: half orders 0.5, 1, 1.5 of the 4-stroke cycle)
         if fuel > 0:

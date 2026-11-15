@@ -4,7 +4,7 @@
     uv run python render_ab0232.py --rebuild  # force both banks to be re-rendered first
 
 Output: ``artifacts/audio-0232/`` -- ``<scene>_<ext|cab>_<A|B>.flac`` (48 kHz mono 16 bit, lossless),
-``spec/*.png`` (A over B with the event markers), ``metrics.json``, ``README.md`` (what to listen for, with
+``spec/*.jpg`` (A over B with the event markers), ``metrics.json``, ``README.md`` (what to listen for, with
 the time stamps of the events that the runtime detectors fired on the telemetry).
 
 Both versions go through the same offline mirror of the game's mixing code: ``runtime_sim.LayerGrid``
@@ -297,11 +297,13 @@ def click_ratio(x: np.ndarray) -> float:
     return float(d.max() / (np.percentile(d, 99.99) + 1e-12))
 
 
-def spectrogram_png(path: Path, a: np.ndarray, b: np.ndarray, title: str, events, f: tel.Frames) -> None:
+def spectrogram_jpg(path: Path, a: np.ndarray, b: np.ndarray, title: str, events, f: tel.Frames) -> None:
     import matplotlib
     matplotlib.use("Agg")
+    import io
+
     import matplotlib.pyplot as plt
-    from dsp import save_png_small
+    from PIL import Image
 
     fig, ax = plt.subplots(5, 1, figsize=(13, 13), gridspec_kw={"height_ratios": [1.1, 2, 2, 2, 2]})
     ax[0].plot(f.t, f.rpm / 2000.0, label="obr/min / 2000", lw=1)
@@ -324,8 +326,113 @@ def spectrogram_png(path: Path, a: np.ndarray, b: np.ndarray, title: str, events
             for t, _ in events:
                 axx.axvline(t, color="white", lw=0.4, alpha=0.5)
     fig.tight_layout()
-    save_png_small(fig, path)
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=80)
     plt.close(fig)
+    img = Image.open(buf).convert("RGB")
+    img = img.resize((960, round(img.height * 960 / img.width)), Image.LANCZOS)
+    img.save(path, quality=80, optimize=True)
+
+
+def _times(items, needle: str) -> str:
+    ts = [t for t, label in items if needle in label]
+    return ", ".join(f"{t:.1f}".replace(".", ",") for t in ts) + " s" if ts else "brak"
+
+
+def _cell_lufs(bank: "Bank", kind: str, persp: str, rpm: int, layer: str | None) -> float:
+    c = next(c for c in bank.manifest["clips"] if c["kind"] == kind and c["perspective"] == persp
+             and c["rpm"] == rpm and c["layer"] == layer)
+    x, _ = sf.read(ROOT / c["file"])
+    return lufs(x, FS)
+
+
+GUIDE = {
+    "1_ruszanie_40t": [
+        "Bieg jałowy 0–1,5 s: w B słychać spalanie na biegu jałowym (klekot, więcej harmonicznych zapłonu do ~600 Hz); "
+        "w A komórka „bez obciążenia” to silnik bez wtrysku, więc jałowy jest gładszy i bardziej pusty.",
+        "Zwolnienie hamulca roboczego ({brake}): B = wypływ z komór przez zawory (dwa strumienie, przód i tył), A = szum z obwiednią.",
+        "Pełny gaz pod obciążeniem (np. 2–5,5 s i 13–18,5 s): w B ostrzejszy, bardziej „warczący” wydech (stromy front impulsu), "
+        "gwizd turbo siedzi w szumie przepływu i ma wstęgi boczne; w A gwizd to prawie czysty ton 3,2–4,6 kHz.",
+        "Zmiany biegów AMT (wysprzęglenie: {neutral}; bieg włączony: {closed}): przerwa w momencie i spadek obrotów "
+        "pochodzą z fizyki i są takie same w A i B; w B wyraźniej zmienia się barwa silnika w przerwie (obciążenie → 0 → 1). "
+        "Stuki skrzyni i „pft” są te same (ADR 0176).",
+        "„Pssst” turbo przy odjęciu momentu ({liftoff}): B = upust powietrza doładowującego (ok. 0,3 s) + wybieg sprężarki, "
+        "A = krótszy syk z opadającym tonem. Ostatnie ({liftoff_last}) to odpuszczenie pedału przez kierowcę.",
+        "Wybieg 21–24 s i częściowy gaz od 24 s: B na wybiegu ciemniejszy i bardziej „mechaniczny”, po dodaniu gazu 50 % wraca wydech.",
+    ],
+    "2_biegi_pusty": [
+        "Gaz 55 % (1–10 s), zmiany co ~1,5 s (wysprzęglenie: {neutral}): słuchaj, czy silnik w B przy częściowym gazie "
+        "brzmi inaczej niż przy pełnym (10–18 s), a nie tylko ciszej. W A warstwy różnią się głównie poziomem.",
+        "Pełny gaz 10–18 s: gwizd turbo narasta z doładowaniem; „pssst” przy zmianach ({liftoff}).",
+        "Odpuszczenie gazu przy 18 s i powrót 70 % od 20,5 s: przejście wybieg → obciążenie (crossfade warstw off → on).",
+    ],
+    "3_zjazd_hamulce_dlugotrwale": [
+        "Wybieg 0–3 s na 12. biegu (~1050 obr/min): tło to głównie opony i wiatr przy 75–80 km/h (te same w A i B).",
+        "Dźwignia na 2 przy 3 s: redukcja 12 → 10 z przegazówką, hamulec silnikowy od {eb_on} (~1840 obr/min). "
+        "W B poziom hamulca silnikowego wynika z krzywej momentu hamującego z fizyki: przy wysokich obrotach prawie jak w A, "
+        "przy niskich wyraźnie ciszej (1000 obr/min: różnica w tabeli niżej).",
+        "Dźwignia na maksimum od 9 s: retarder (ton łopatek + szum oleju) — te same pliki w A i B (ADR 0176), "
+        "różnica A/B tylko w warstwie silnika pod spodem.",
+        "Zwolnienie przy 19 s (zmiana 10 → 12; zdarzenie zwolnienia przepustnicy jest tu celowo nieme, bo trwa zmiana biegu), "
+        "gaz 60 % od 21,5 s: wraca wydech i gwizd turbo.",
+    ],
+    "4_postoj_pneumatyka": [
+        "0–8 s: postój na podwyższonych obrotach (~1900 obr/min, kierowca dopompowuje układ), sprężarka pracuje cicho pod silnikiem (ten sam plik w A i B).",
+        "Odcięcie regulatora i wydmuch osuszacza ({purge}): ten sam plik w A i B (ADR 0176).",
+        "8–11 s: obroty spadają do jałowych; od ~11 s bieg jałowy — tu różnica silnika A/B jest największa (klekot spalania w B).",
+        "Zwolnienie hamulca postojowego ({park_off}): ten sam plik w A i B.",
+        "Zwolnienie hamulca roboczego ({brake}): B = model wypływu z komór; drugie zwolnienie jest cichsze (słabsze hamowanie).",
+        "Ruszenie 14–19 s, hamowanie do zatrzymania 19–21 s (fizyka dokłada hamulec silnikowy: {eb_on}).",
+        "Zaciągnięcie hamulca postojowego ({park_on}): B = wypływ z komór sprężynowych, stuk sprężyn ok. 0,45 s po otwarciu zaworu "
+        "(ciśnienie spada do progu sprężyn z definicji pojazdu); A = długi szum z kliknięciem po 1,75 s.",
+    ],
+}
+
+
+def readme(metrics: dict, banks: dict) -> str:
+    out = ["# audio-0232 — odsłuch A/B (ADR 0232)", "",
+           "A = synteza z `origin/main`, B = model 0232. Te same przebiegi z fizyki (physics-runner, 100 Hz), to samo lustro "
+           "miksu gry, te same prawa głośności; różnią się tylko pliki: siatka silnika i hamulca silnikowego, gwizd turbo, "
+           "„pssst” turbo, zwolnienie hamulca roboczego, zaciągnięcie postojowego. Opony, wiatr, sprężarka, retarder, fazy AMT, "
+           "osuszacz i zwolnienie postojowego to te same pliki w A i B.", "",
+           "Pliki: FLAC 48 kHz mono 16 bit (bezstratne; WAV to LFS w tym repo). `ext` = kamera zewnętrzna, `cab` = kabina. "
+           "W obrębie pary A i B mają to samo wzmocnienie (głośniejszy z dwóch ma szczyt −1 dBFS), więc różnice poziomu są prawdziwe. "
+           "Sceny mają różne wzmocnienia — kolumna „wzmocnienie sceny”.", "",
+           "Odsłuch: telefon (głośnik) i słuchawki, najlepiej na przemian A → B → A ten sam fragment. "
+           "Spektrogramy z zaznaczonymi zdarzeniami: `spec/<scena>_<ext|cab>.jpg` (góra: telemetria; 0–600 Hz i 0–9 kHz, A nad B).", "",
+           "Agent nie słyszy: poniżej jest to, co wynika z pomiaru i z konstrukcji dźwięku; ocena brzmienia należy do właściciela.", ""]
+    for name, e in metrics["scenes"].items():
+        ev = e["events_ext"]
+        mk = e["markers"]
+        lift = [t for t, label in ev if "turbo" in label]
+        fmt = {
+            "brake": _times(ev, "hamulca roboczego"), "neutral": _times(ev, "wysprzęglenie"), "closed": _times(ev, "sprzęgło zamknięte"),
+            "liftoff": _times(ev, "turbo"), "liftoff_last": (f"{lift[-1]:.1f}".replace(".", ",") + " s") if lift else "brak",
+            "eb_on": _times(ev, "hamulec silnikowy: włączenie"), "purge": _times(ev, "osuszacza"),
+            "park_off": _times(ev, "postojowy: zwolnienie"), "park_on": _times(ev, "postojowy: zaciągnięcie"),
+        }
+        out += [f"## {name}", "", e["title"] + f". Fizyka: `{e['scenario']}`, okno {e['window_s'][0]:.0f}–{e['window_s'][1]:.0f} s przebiegu.", "",
+                "| plik | LUFS | szczyt dBFS | wzmocnienie sceny dB |", "|---|---|---|---|"]
+        for fn, m in e["files"].items():
+            out.append(f"| `{fn}` | {m['lufs']:.1f} | {m['peak_dbfs']:.1f} | {m['scene_gain_db']:+.1f} |")
+        out += ["", "Czego słuchać:", ""] + [f"- {g.format(**fmt)}" for g in GUIDE[name]]
+        out += ["", "Znaczniki czasu (T = telemetria fizyki, D = zdarzenie dźwiękowe wykryte przez lustro gry):", ""]
+        rows = sorted([(t, "T", label) for t, label in mk] + [(t, "D", label) for t, label in ev])
+        out += [f"- {t:5.2f} s  {k}  {label}" for t, k, label in rows] + [""]
+    a, b = banks["A"], banks["B"]
+    out += ["## Pomiary banków (A = main, B = 0232)", "",
+            "| komórka | A LUFS | B LUFS |", "|---|---|---|"]
+    for kind, persp, rpm, layer in (("engine", "ext", 600, "off"), ("engine", "ext", 600, "on"), ("engine", "ext", 1300, "off"),
+                                    ("engine", "ext", 1300, "mid"), ("engine", "ext", 1300, "on"), ("engine", "cab", 1300, "on"),
+                                    ("engine", "ext", 2100, "on"), ("ebrake", "ext", 1000, None), ("ebrake", "ext", 1500, None),
+                                    ("ebrake", "ext", 2000, None)):
+        label = f"{'silnik' if kind == 'engine' else 'hamulec silnikowy'} {persp} {layer or ''} {rpm} obr/min".replace("  ", " ")
+        out.append(f"| {label} | {_cell_lufs(a, kind, persp, rpm, layer):.1f} | {_cell_lufs(b, kind, persp, rpm, layer):.1f} |")
+    out += ["", "| warstwa | A LUFS | B LUFS |", "|---|---|---|"]
+    for sname, v in b.manifest["sfx_0232"].items():
+        out.append(f"| `{sname}` | {v['main_lufs']:.1f} | {v['lufs']:.1f} |")
+    out += ["", "Odtworzenie: `cd tools/audio; uv run python render_ab0232.py --rebuild` (telemetria: `uv run python telemetry0232.py --refresh`, wymaga .NET 8).", ""]
+    return "\n".join(out)
 
 
 def main() -> None:
@@ -354,11 +461,12 @@ def main() -> None:
             assert [e[1] for e in rendered["A"][1]] == [e[1] for e in rendered["B"][1]]  # same detectors, same telemetry
             if not args.no_plots:
                 gain_a = rendered["A"][0] * gain
-                spectrogram_png(OUT / "spec" / f"{sc.name}_{persp}.png", gain_a, rendered["B"][0] * gain,
+                spectrogram_jpg(OUT / "spec" / f"{sc.name}_{persp}.jpg", gain_a, rendered["B"][0] * gain,
                                 f"{sc.name} ({persp}): {sc.title}", rendered["B"][1], tel.load(sc.name))
             print(sc.name, persp, {k: round(v["lufs"], 1) for k, v in entry["files"].items() if f"_{persp}_" in k})
         metrics["scenes"][sc.name] = entry
     (OUT / "metrics.json").write_text(json.dumps(metrics, indent=1, ensure_ascii=False), encoding="utf-8")
+    (OUT / "README.md").write_text(readme(metrics, banks), encoding="utf-8")
 
 
 if __name__ == "__main__":
