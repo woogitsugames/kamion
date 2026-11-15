@@ -294,13 +294,13 @@
   },
   {
    "fov_deg": 50.0,
-   "id": "rynek_fountain",
+   "id": "plac_wschodni_from_east",
    "look_at": [
     -656.619,
     -220.716,
     131.252
    ],
-   "note": "place camera: pedestrian eye on the plaza ~18 m east of the fountain plate (ESTIMATED position local -575 -210, 2025 orthophoto), looking west as owner frame 20240730_190331 (trees behind, houses to the right); direction ESTIMATED from the frame content",
+   "note": "place camera: Former rynek_fountain camera: eastern paved square; not the fountain or park. Marketplace identification UNVERIFIED against OSM way 704368699 ~1 km north.",
    "pos": [
     -557.0,
     -212.0,
@@ -353,6 +353,182 @@
     -828.0,
     -8.0,
     130.06
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rynek_owner_03",
+   "look_at": [
+    -612.289,
+    -127.289,
+    129.02
+   ],
+   "note": "place camera: ESTIMATED camera pose from owner photo 03 and GUGiK orthophoto; adjust by visual comparison.",
+   "pos": [
+    -683.0,
+    -198.0,
+    129.02
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rynek_owner_04",
+   "look_at": [
+    -666.0,
+    -133.0,
+    128.58
+   ],
+   "note": "place camera: ESTIMATED camera pose from owner photo 04 and GUGiK orthophoto; adjust by visual comparison.",
+   "pos": [
+    -666.0,
+    -233.0,
+    128.58
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rynek_owner_05",
+   "look_at": [
+    -751.552,
+    -253.557,
+    128.64
+   ],
+   "note": "place camera: ESTIMATED camera pose from owner photo 05 and GUGiK orthophoto; adjust by visual comparison.",
+   "pos": [
+    -657.0,
+    -221.0,
+    128.64
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rynek_owner_06",
+   "look_at": [
+    -779.481,
+    -249.365,
+    128.73
+   ],
+   "note": "place camera: ESTIMATED camera pose from owner photo 06 and GUGiK orthophoto; adjust by visual comparison.",
+   "pos": [
+    -681.0,
+    -232.0,
+    128.73
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rynek_owner_07",
+   "look_at": [
+    -715.314,
+    -266.913,
+    128.77
+   ],
+   "note": "place camera: ESTIMATED camera pose from owner photo 07 and GUGiK orthophoto; adjust by visual comparison.",
+   "pos": [
+    -641.0,
+    -200.0,
+    128.77
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rynek_owner_08",
+   "look_at": [
+    -725.801,
+    -236.566,
+    128.79
+   ],
+   "note": "place camera: ESTIMATED camera pose from owner photo 08 and GUGiK orthophoto; adjust by visual comparison.",
+   "pos": [
+    -647.0,
+    -175.0,
+    128.79
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rynek_owner_01",
+   "look_at": [
+    -615.738,
+    -93.369,
+    129.11
+   ],
+   "note": "place camera: ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison.",
+   "pos": [
+    -658.0,
+    -184.0,
+    129.11
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rynek_owner_02",
+   "look_at": [
+    -724.279,
+    -95.396,
+    129.12
+   ],
+   "note": "place camera: ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison.",
+   "pos": [
+    -660.0,
+    -172.0,
+    129.12
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rondo_owner_09",
+   "look_at": [
+    -946.798,
+    -690.969,
+    -1.6331239353195366e+18
+   ],
+   "note": "place camera: ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison.",
+   "pos": [
+    -981.0,
+    -597.0,
+    222.23
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rondo_owner_10",
+   "look_at": [
+    -1007.604,
+    -621.279,
+    76.116
+   ],
+   "note": "place camera: ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison.",
+   "pos": [
+    -931.0,
+    -557.0,
+    204.11
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rondo_owner_11",
+   "look_at": [
+    -973.642,
+    -608.915,
+    163.037
+   ],
+   "note": "place camera: ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison.",
+   "pos": [
+    -1031.0,
+    -527.0,
+    203.44
    ],
    "type": "persp"
   },
