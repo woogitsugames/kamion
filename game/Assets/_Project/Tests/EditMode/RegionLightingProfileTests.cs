@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Tests
 {
-    /// <summary>ADR 0216 (owner D65 p.7-8): summer and white LED as per-region data; tile C and Dojlidy unchanged.</summary>
+    /// <summary>ADR 0216 (owner D65 p.7-8) and 0216b (D68): summer and white LED as per-region data; tile C and Dojlidy since 0216b.</summary>
     public class RegionLightingProfileTests
     {
         static RegionLightingProfiles Load() =>
@@ -39,14 +39,14 @@ namespace Game.Tests
         }
 
         [Test]
-        public void CorridorTile_GetsSummerOnly_AndTileCAndDojlidyNothing()
+        public void CorridorTile_GetsSummerOnly_AndOtherBialystokTilesNothing()
         {
             var env = NewEnv(out var go);
             try
             {
                 Assert.AreEqual("summer-dk65-knyszyn", Load().ApplyTo(env, "dk65-03"));
                 Assert.AreEqual(0f, env.ledColour.a, "no LED override on the unlit corridor tiles");
-                foreach (string keep in new[] { "bialystok-industrial-c", "bialystok-dojlidy" })
+                foreach (string keep in new[] { "bialystok-maczka", "bialystok-kleeberga" })
                 {
                     var e2 = NewEnv(out var g2);
                     try
@@ -59,6 +59,34 @@ namespace Game.Tests
                 }
             }
             finally { Object.DestroyImmediate(go); }
+        }
+
+        [Test]
+        public void TileCAndDojlidy_GetSummerDuskClockAndTheKnyszynLedColour()
+        {
+            // ADR 0216b (owner D68 p.2): summer also in tile C and Dojlidy; LED colour = the ADR 0216 value
+            var k = NewEnv(out var gk);
+            try
+            {
+                Load().ApplyTo(k, "knyszyn");
+                foreach (string rid in new[] { "bialystok-industrial-c", "bialystok-dojlidy" })
+                {
+                    var env = NewEnv(out var go);
+                    try
+                    {
+                        Assert.AreEqual("summer-bialystok-cd,led-white-4000k-bialystok", Load().ApplyTo(env, rid));
+                        Assert.AreEqual("summer", env.season);
+                        var dusk = LightingPreset.CreateDusk();
+                        Assert.AreEqual(21f, env.ClockHourOf(dusk), 1e-6f, "D68: dusk about 21:00");
+                        Assert.AreEqual(300f, dusk.sunAzimuthDeg, 1e-6f, "D68 p.1: azimuth 300 deg (preset unchanged)");
+                        Assert.AreEqual(LightingPreset.NightClockHour, env.ClockHourOf(LightingPreset.CreateNight()), 1e-6f);
+                        Assert.AreEqual(k.ledColour, env.ledColour);
+                        Assert.Greater(env.ledColour.b, StreetLamps.DefaultLedColour.b);
+                    }
+                    finally { Object.DestroyImmediate(go); }
+                }
+            }
+            finally { Object.DestroyImmediate(gk); }
         }
 
         [Test]
