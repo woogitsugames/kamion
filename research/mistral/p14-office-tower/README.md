@@ -118,7 +118,7 @@ Andersa/Maczka 1/2/3, Krzysztof Putra Roundabout, 20201102 152339, 20210904 1012
 udokumentowana w ADR 0180, nie dublowana.
 
 
-## Pliki (w gałęzi, `files/`, razem ok. 3,6 MB)
+## Pliki (w gałęzi, `files/`, 16 JPG, razem ok. 2,9 MB)
 
 Polecenie właściciela s21: zdjęcia commitowane pomniejszone (≤ 1600 px). ZIP z poprzedniej wersji nie jest już potrzebny.
 
