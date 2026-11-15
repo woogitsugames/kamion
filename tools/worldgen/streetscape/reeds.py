@@ -37,6 +37,7 @@ ZIGZAG_M = 0.28
 LEAN_M = 0.12
 CROSS_DEG = 40.0                   # High: crossed cards at +-40 deg to the bank, CARD_W wide, one pair per sample
 CARD_W = 2.6
+EDGE_H = 0.55                      # r6: height of a card's side edges (x its middle height)
 PIECE_N = (2, 5)                   # clump length in samples (x SEG_M), r4
 GAP_P = 0.20                       # chance of a one-sample gap after a clump (r5: clumps mostly overlap)
 PIECE_OFF_M = 0.6                  # clump offset from its row (+-)
@@ -239,12 +240,20 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                                                        [A[1], B[1], A[1] + lean[i_][1], B[1] + lean[i_][1]]).any():
                                     continue
                                 u0 = _h(key0, row, int(sp[i_]), "cu", sgn)
+                                um = u0 + CARD_W / TEX_M / 2
                                 n0 = len(Vc)
-                                Vc += [[*A, foot[i_]], [*B, foot[i_]], [*(B + lean[i_]), foot[i_] + hc], [*(A + lean[i_]), foot[i_] + hc]]
+                                M_ = Q[i_]
                                 vt = float(np.clip(hc / 2.5, 0.05, 1.0))
-                                UVc += [[u0, 0.0], [u0 + CARD_W / TEX_M, 0.0], [u0 + CARD_W / TEX_M, vt], [u0, vt]]
-                                Cc += [_fol(nrm[i_], OCC[0])] * 2 + [_fol(nrm[i_], OCC[1])] * 2
-                                Tc += [(n0, n0 + 1, n0 + 2), (n0, n0 + 2, n0 + 3)]
+                                # r6: a tent card - full height in the middle, EDGE_H at the sides: no vertical cut edge
+                                # and no flat top where neighbouring cards end (close-up review of r5 High)
+                                Vc += [[*A, foot[i_]], [*M_, foot[i_]], [*B, foot[i_]],
+                                       [*(A + lean[i_]), foot[i_] + hc * EDGE_H], [*(M_ + lean[i_]), foot[i_] + hc],
+                                       [*(B + lean[i_]), foot[i_] + hc * EDGE_H]]
+                                UVc += [[u0, 0.0], [um, 0.0], [u0 + CARD_W / TEX_M, 0.0],
+                                        [u0, vt * EDGE_H], [um, vt], [u0 + CARD_W / TEX_M, vt * EDGE_H]]
+                                Cc += [_fol(nrm[i_], OCC[0])] * 3 + [_fol(nrm[i_], OCC[1] * 0.92), _fol(nrm[i_], OCC[1]),
+                                                                    _fol(nrm[i_], OCC[1] * 0.92)]
+                                Tc += [(n0, n0 + 1, n0 + 4), (n0, n0 + 4, n0 + 3), (n0 + 1, n0 + 2, n0 + 5), (n0 + 1, n0 + 5, n0 + 4)]
                         if Tc:
                             buf.add(layer, "water_reeds", np.asarray(Vc), np.asarray(UVc), np.asarray(Tc),
                                     src=f"water:reeds:{ri}:{row}:{pi_}", COL=np.asarray(Cc))

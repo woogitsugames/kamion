@@ -25,7 +25,7 @@ foreach ($t in $Tiles) {
   if (-not $NoImport) {
     Step "import-$t-$Tag" unity { pwsh scripts/import-region.ps1 -Region $t }
     if (-not $NoLow) { Step "vqa-low-$t-$Tag" unity { pwsh scripts/visual-qa.ps1 -Scene "World_$t" -Tier Low -Lighting clear -Width 1920 -Height 1080 -OutputDir "$A/$t/$Tag/Low-clear" } }
-    if (-not $NoHigh) { Step "vqa-high-$t-$Tag" unity { pwsh scripts/visual-qa.ps1 -Scene "World_$t" -Tier High -Lighting clear -Width 1920 -Height 1080 -OutputDir "$A/$t/$Tag/High-clear" } }
+    if (-not $NoHigh) { Step "vqa-high-$t-$Tag" unity { pwsh scripts/visual-qa.ps1 -Scene "World_${t}_High" -Tier High -Lighting clear -Width 1920 -Height 1080 -OutputDir "$A/$t/$Tag/High-clear" } }
   }
 }
 "CHAIN DONE $Tag $($Tiles -join ',') $(Get-Date -Format s)" | Add-Content $st
