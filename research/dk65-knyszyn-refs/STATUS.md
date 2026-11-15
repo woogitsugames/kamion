@@ -1,5 +1,11 @@
 # STATUS — K1 DK65 Białystok → Knyszyn (gałąź research/dk65-knyszyn-refs)
 
+## 2026-11-15 — GOTOWE (do PR)
+- manifest.csv 136 wierszy (SOURCED 89 / ESTIMATED 44 / UNVERIFIED 3), 42 kadry obejrzane, 43 wycinki orto, audyt 28 wierszy: 24 PASS / 4 FIX.
+- README (tabela per kafel, a–g, luki), sources.md, audit_20_percent.json.
+- Następny krok (lider/integrator): przegląd PR; ewentualnie zdjęcia właściciela dla kafli bez pokrycia (dk65-03, 05–11, knyszyn-s).
+  Komenda odtworzenia manifestu: `python -I research/dk65-knyszyn-refs/tools/build_manifest.py` (wymaga danych scratchpad — patrz README „Odtworzenie”).
+
 ## 2026-11-15 — WIP 2 (wznowienie po resecie limitu)
 - Dodane: `data/osm_corridor.json` (API 0.6 /map co 500 m, ±300 m: słupki DK65 km 161→143, przystanki, linia kolejowa 38,
   przejazdy na drogach bocznych, 0 latarni `highway=street_lamp`), narzędzia `osm_corridor.py`, `raildist.py`, `sheets_fix.py`.
