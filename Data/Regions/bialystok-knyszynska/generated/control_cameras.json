@@ -153,6 +153,70 @@
    "type": "persp"
   },
   {
+   "fov_deg": 60.0,
+   "id": "seam_e_into_tile",
+   "look_at": [
+    938.485,
+    -770.501,
+    128.973
+   ],
+   "note": "place camera: Kleeberga westbound 4 m inside the east edge (seam with bialystok-kleeberga): mainline, added lane 561326924 on the right, exit to rondo Pamieci Meczenstwa Kresowian ahead",
+   "pos": [
+    1020.3,
+    -713.0,
+    128.973
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "seam_e_back_to_edge",
+   "look_at": [
+    1060.258,
+    -694.261,
+    129.053
+   ],
+   "note": "place camera: same carriageway 60 m inside, looking back east at the tile edge: carriageway, kerbs, barriers and terrain must end flush at x = 772875",
+   "pos": [
+    971.8,
+    -740.9,
+    129.053
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "seam_w_to_edge",
+   "look_at": [
+    -1062.692,
+    793.814,
+    122.248
+   ],
+   "note": "place camera: Szosa Knyszynska westbound 60 m before the west edge (seam with dk65-01): 6.0 m carriageway with edge lines up to x = 770827",
+   "pos": [
+    -965.1,
+    772.0,
+    122.248
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "seam_w_back_into_tile",
+   "look_at": [
+    -922.363,
+    761.705,
+    122.18
+   ],
+   "note": "place camera: Szosa Knyszynska 4 m inside the west edge, looking east (the view of a truck arriving from dk65-01)",
+   "pos": [
+    -1019.8,
+    784.2,
+    122.18
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

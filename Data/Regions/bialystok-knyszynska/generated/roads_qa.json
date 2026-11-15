@@ -3017,15 +3017,17 @@
     2
    ],
    "length_m": 96.3,
-   "max_grade": 0.0418,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.008,
+   "max_grade": 0.0406,
+   "overrides": [
+    "knyszynska-seam-e-yard-222579345"
+   ],
+   "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.0
+    6.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:knyszynska-seam-e-yard-222579345"
    ]
   },
   {
@@ -3213,7 +3215,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.56,
+   "axis_smoothing_dev_max_m": 0.51,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -3225,14 +3227,16 @@
    ],
    "length_m": 255.8,
    "max_grade": 0.0164,
-   "overrides": [],
+   "overrides": [
+    "knyszynska-seam-e-yard-224161424"
+   ],
    "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.0
+    4.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:knyszynska-seam-e-yard-224161424"
    ]
   },
   {
@@ -6462,15 +6466,17 @@
     1
    ],
    "length_m": 28.9,
-   "max_grade": 0.006,
-   "overrides": [],
+   "max_grade": 0.0059,
+   "overrides": [
+    "knyszynska-seam-e-link-561326924"
+   ],
    "profile_rms_vs_nmt_m": 0.003,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5
+    6.0
    ],
    "width_src": [
-    "bdot10k (clamped 3.50-5.50)"
+    "authored_override:knyszynska-seam-e-link-561326924"
    ]
   },
   {
@@ -8601,8 +8607,8 @@
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n2504239797": [
-   "corner 1-2: arms touch (gap -5.44 m) -> no nose",
-   "corner 2-0: kerb chamfer 1:4 over 7.4 m (width step 1.85 m)"
+   "corner 1-2: arms touch (gap -5.69 m) -> no nose",
+   "corner 2-0: kerb chamfer 1:4 over 7.0 m (width step 1.74 m)"
   ],
   "j:n2504262114": [
    "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)"
@@ -8711,16 +8717,16 @@
   "decals": {
    "gullies": 1284,
    "oil": 273,
-   "patches": 374
+   "patches": 373
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 663412,
+  "footprint_nodes": 663237,
   "fork_abreast": [
    {
     "beside": "c:w261104557:2927425559-2504239797",
     "chain": "c:w561326924:3626955261-2504239797",
     "node": "n2504239797",
-    "overlap_max_m": 6.2,
+    "overlap_max_m": 6.45,
     "overlap_run_m": 27.5,
     "shift_max_m": 0.0,
     "side": "right"
@@ -8852,11 +8858,18 @@
     "to_hw": 2.5
    },
    {
-    "chain": "c:w1184606626:9519546497-2315344551",
-    "from_hw": 2.75,
-    "node": "n2315344551",
+    "chain": "c:w222615988:2329921567-2315670005",
+    "from_hw": 2.5,
+    "node": "n2329921567",
     "taper_m": 15.0,
-    "to_hw": 2.5
+    "to_hw": 2.0
+   },
+   {
+    "chain": "c:w222615988:5133970440-2329921567",
+    "from_hw": 2.5,
+    "node": "n2329921567",
+    "taper_m": 15.0,
+    "to_hw": 2.0
    },
    {
     "chain": "c:w300697966:3048054709-3048054727",
@@ -9119,7 +9132,7 @@
    "P-8 skipped (lanes continue)": 1,
    "P-8 skipped (off carriageway)": 13
   },
-  "markings_overlap_removed_tris": 25,
+  "markings_overlap_removed_tris": 28,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 830,
   "overrides_applied": [
@@ -9131,6 +9144,24 @@
      "w234919333:11762371697-11762371682",
      "w234919333:2430405905-11762371697"
     ]
+   },
+   {
+    "id": "knyszynska-seam-e-link-561326924",
+    "targets": [
+     "w561326924:3626955261-2504239797"
+    ]
+   },
+   {
+    "id": "knyszynska-seam-e-yard-222579345",
+    "targets": [
+     "w222579345:2315344515-2315344551"
+    ]
+   },
+   {
+    "id": "knyszynska-seam-e-yard-224161424",
+    "targets": [
+     "w224161424:2329921567-2329921561"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -9140,7 +9171,7 @@
   "profile_ties": [],
   "roundabout_junctions": 8,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 851,
+   "kerb_tris": 848,
    "parts": 210,
    "side_tris": 167
   },
@@ -9158,7 +9189,7 @@
   },
   "verge_strips": {
    "chunks": 59,
-   "tris": 53728
+   "tris": 53676
   },
   "walled_ramps": [
    {
