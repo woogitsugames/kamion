@@ -31,3 +31,7 @@ SOURCED [06-D01, UM03.07.2026](https://www.knyszyn.pl/asp/podpisanie-umowy-na-op
 `data/osm-source.json` ma SHA lokalnego PBF, licencję i metodę selekcji. Zachowano255 pełnych wayów wybranych po sąsiedztwie wierzchołków i ref671 — to nie zamknięty wycinek, nie licznik dróg w mieście i nie obliczenie długości DW671. Pochodna baza OSM: © OpenStreetMap contributors, ODbL1.0. Dane GUGiK osobno, nie łączono ich w bazie geometrycznej.
 
 Brak zdjęć ulicznych aktualnych fasad, charakterystycznych obiektów z poziomu kierowcy oraz zweryfikowanych rond. Nie identyfikowano materiałów/RAL i gatunków drzew z kolorów ortofoto. Brak potwierdzenia obecnego stanu ograniczeń mostu w Tykocinie. Nie pobierano modeli Drzewa3D. Oficjalna strona turystyczna UM Tykocin zwracała timeout; treść znalezioną w indeksie wykluczono z wniosków SOURCED.
+
+## Tykocin z poziomu ulicy — sierpień2026
+
+06-P01/P02: dwa nowe kadry Krzysztofa Popławskiego, CC BY4.0, indywidualnie obejrzane. Data2026-08-05 z metadanych Commons. Podglądy960px zachowano poza gitem i zmniejszono do≤800px; pełnych oryginałów nie pobrano. SOURCED [obrazy]: biały parterowy dom, czerwony dach, brązowe okiennice, drewniany płot; osobno wąski brukowany przesmyk, pnącza i latarnia z panelem. Liczby kondygnacji dotyczą widocznych elewacji, nie wnętrza/poddasza. Adresy z opisów autora, współrzędne, azymut, wysokości i szerokości UNVERIFIED. Łącznie6 rekordów:2 orto,2 dokumenty,2 fotografie.
