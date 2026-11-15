@@ -1,0 +1,1200 @@
+{
+ "panoramax": {
+  "queried_at": "2026-11-15T09:36:25Z",
+  "tiles": {
+   "dk65-01": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=23.02149,53.1541,23.05378,53.17143&limit=500",
+     "status": 200,
+     "n": 9,
+     "error": null,
+     "items": [
+      {
+       "id": "6e078c32-3ac0-4b07-a063-84854fb12147",
+       "lon": 23.0280704,
+       "lat": 53.1541161,
+       "datetime": "2019-09-01T10:29:10+00:00",
+       "view:azimuth": 280
+      },
+      {
+       "id": "d0582697-fc1b-4c99-bc39-49d39be9733e",
+       "lon": 23.0275005,
+       "lat": 53.1541375,
+       "datetime": "2019-08-15T15:25:01+00:00",
+       "view:azimuth": 108
+      },
+      {
+       "id": "b0b587e9-6e98-4bd3-8dcc-867b089b430c",
+       "lon": 23.0270254,
+       "lat": 53.1543046,
+       "datetime": "2019-09-01T10:29:12+00:00",
+       "view:azimuth": 280
+      },
+      {
+       "id": "e991e0dc-f2e8-4a61-b7a7-226583ddc4ab",
+       "lon": 23.025975,
+       "lat": 53.1544121,
+       "datetime": "2019-08-15T15:24:58+00:00",
+       "view:azimuth": 106
+      },
+      {
+       "id": "e0640f86-bda7-49a5-af81-a7f70f64d258",
+       "lon": 23.0245287,
+       "lat": 53.1547695,
+       "datetime": "2019-09-01T10:29:17+00:00",
+       "view:azimuth": 280
+      },
+      {
+       "id": "82199aa9-5672-412f-85c8-c4438154c7a9",
+       "lon": 23.0244571,
+       "lat": 53.1546827,
+       "datetime": "2019-08-15T15:24:55+00:00",
+       "view:azimuth": 108
+      },
+      {
+       "id": "8cf6af3e-04ee-4b24-abea-067ac2499107",
+       "lon": 23.0230241,
+       "lat": 53.155047,
+       "datetime": "2019-09-01T10:29:20+00:00",
+       "view:azimuth": 280
+      },
+      {
+       "id": "3a0d3173-d960-4748-b249-15a8815ab685",
+       "lon": 23.0224182,
+       "lat": 53.1550502,
+       "datetime": "2019-08-15T15:24:51+00:00",
+       "view:azimuth": 107
+      },
+      {
+       "id": "b9d30773-7ec3-4008-93cf-95b193d97e9b",
+       "lon": 23.0215081,
+       "lat": 53.1553144,
+       "datetime": "2019-09-01T10:29:23+00:00",
+       "view:azimuth": 279
+      }
+     ]
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=23.02149,53.1541,23.05378,53.17143&limit=500",
+     "status": 200,
+     "n": 9,
+     "error": null,
+     "items": [
+      {
+       "id": "6e078c32-3ac0-4b07-a063-84854fb12147",
+       "lon": 23.0280704,
+       "lat": 53.1541161,
+       "datetime": "2019-09-01T10:29:10+00:00",
+       "view:azimuth": 280
+      },
+      {
+       "id": "d0582697-fc1b-4c99-bc39-49d39be9733e",
+       "lon": 23.0275005,
+       "lat": 53.1541375,
+       "datetime": "2019-08-15T15:25:01+00:00",
+       "view:azimuth": 108
+      },
+      {
+       "id": "b0b587e9-6e98-4bd3-8dcc-867b089b430c",
+       "lon": 23.0270254,
+       "lat": 53.1543046,
+       "datetime": "2019-09-01T10:29:12+00:00",
+       "view:azimuth": 280
+      },
+      {
+       "id": "e991e0dc-f2e8-4a61-b7a7-226583ddc4ab",
+       "lon": 23.025975,
+       "lat": 53.1544121,
+       "datetime": "2019-08-15T15:24:58+00:00",
+       "view:azimuth": 106
+      },
+      {
+       "id": "e0640f86-bda7-49a5-af81-a7f70f64d258",
+       "lon": 23.0245287,
+       "lat": 53.1547695,
+       "datetime": "2019-09-01T10:29:17+00:00",
+       "view:azimuth": 280
+      },
+      {
+       "id": "82199aa9-5672-412f-85c8-c4438154c7a9",
+       "lon": 23.0244571,
+       "lat": 53.1546827,
+       "datetime": "2019-08-15T15:24:55+00:00",
+       "view:azimuth": 108
+      },
+      {
+       "id": "8cf6af3e-04ee-4b24-abea-067ac2499107",
+       "lon": 23.0230241,
+       "lat": 53.155047,
+       "datetime": "2019-09-01T10:29:20+00:00",
+       "view:azimuth": 280
+      },
+      {
+       "id": "3a0d3173-d960-4748-b249-15a8815ab685",
+       "lon": 23.0224182,
+       "lat": 53.1550502,
+       "datetime": "2019-08-15T15:24:51+00:00",
+       "view:azimuth": 107
+      },
+      {
+       "id": "b9d30773-7ec3-4008-93cf-95b193d97e9b",
+       "lon": 23.0215081,
+       "lat": 53.1553144,
+       "datetime": "2019-09-01T10:29:23+00:00",
+       "view:azimuth": 279
+      }
+     ]
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=23.02149,53.1541,23.05378,53.17143&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-02": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=23.02321,53.17247,23.05552,53.1898&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=23.02321,53.17247,23.05552,53.1898&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=23.02321,53.17247,23.05552,53.1898&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-03": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.99263,53.1735,23.02493,53.19084&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.99263,53.1735,23.02493,53.19084&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.99263,53.1735,23.02493,53.19084&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-04": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.99434,53.19187,23.02665,53.20921&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.99434,53.19187,23.02665,53.20921&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.99434,53.19187,23.02665,53.20921&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-05": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.99605,53.21024,23.02838,53.22758&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.99605,53.21024,23.02838,53.22758&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.99605,53.21024,23.02838,53.22758&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-06": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.99777,53.22861,23.03011,53.24595&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.99777,53.22861,23.03011,53.24595&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.99777,53.22861,23.03011,53.24595&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-07": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.96715,53.22963,22.99948,53.24698&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.96715,53.22963,22.99948,53.24698&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.96715,53.22963,22.99948,53.24698&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-08": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.96885,53.248,23.0012,53.26535&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.96885,53.248,23.0012,53.26535&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.96885,53.248,23.0012,53.26535&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-09": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.93823,53.24902,22.97056,53.26637&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.93823,53.24902,22.97056,53.26637&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.93823,53.24902,22.97056,53.26637&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-10": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.93992,53.26739,22.97226,53.28475&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.93992,53.26739,22.97226,53.28475&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.93992,53.26739,22.97226,53.28475&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "dk65-11": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.94161,53.28576,22.97397,53.30312&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.94161,53.28576,22.97397,53.30312&limit=500",
+     "status": null,
+     "n": null,
+     "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.94161,53.28576,22.97397,53.30312&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "knyszyn-s": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.91095,53.28678,22.9433,53.30414&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.91095,53.28678,22.9433,53.30414&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.91095,53.28678,22.9433,53.30414&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "knyszyn": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.91263,53.30515,22.945,53.32251&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.91263,53.30515,22.945,53.32251&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.91263,53.30515,22.945,53.32251&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "knyszyn-w": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=22.88196,53.30615,22.91431,53.32352&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=22.88196,53.30615,22.91431,53.32352&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=22.88196,53.30615,22.91431,53.32352&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   },
+   "(-3,0)knyszynska": {
+    "api.panoramax.xyz": {
+     "url": "https://api.panoramax.xyz/api/search?bbox=23.05205,53.15306,23.08435,53.17038&limit=500",
+     "status": 200,
+     "n": 15,
+     "error": null,
+     "items": [
+      {
+       "id": "e56c8ac0-e6ec-4ff8-aa30-7f098c18afa8",
+       "lon": 23.0765884,
+       "lat": 53.1530767,
+       "datetime": "2019-09-01T10:26:20+00:00",
+       "view:azimuth": 255
+      },
+      {
+       "id": "9108d691-5ec3-4124-94f3-1f81e7a3c3de",
+       "lon": 23.0773508,
+       "lat": 53.1532936,
+       "datetime": "2019-09-01T10:26:17+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "700c33af-793d-4b9d-9691-448999af920f",
+       "lon": 23.0777931,
+       "lat": 53.1532725,
+       "datetime": "2019-08-15T15:28:16+00:00",
+       "view:azimuth": 87
+      },
+      {
+       "id": "ea002400-c4a7-4e5c-8bc0-06282ee62349",
+       "lon": 23.0784509,
+       "lat": 53.1536016,
+       "datetime": "2019-09-01T10:26:13+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "a90bc15f-a8be-426e-ae79-f733a2b34470",
+       "lon": 23.0790309,
+       "lat": 53.1536193,
+       "datetime": "2019-08-15T15:28:20+00:00",
+       "view:azimuth": 78
+      },
+      {
+       "id": "24ac02b1-d976-402c-b90c-690084f3cc86",
+       "lon": 23.079317,
+       "lat": 53.1538436,
+       "datetime": "2019-09-01T10:26:10+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "6e4aa2a8-0f7a-41d9-95a6-5a094e970e3f",
+       "lon": 23.0799875,
+       "lat": 53.1538834,
+       "datetime": "2019-08-15T15:28:23+00:00",
+       "view:azimuth": 77
+      },
+      {
+       "id": "0d6abae9-d096-4665-b4bd-e0ae35877375",
+       "lon": 23.0802134,
+       "lat": 53.1540995,
+       "datetime": "2019-09-01T10:26:07+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "1155ff83-f71a-4ac7-a494-ecba8c06fe6e",
+       "lon": 23.0809555,
+       "lat": 53.1541521,
+       "datetime": "2019-08-15T15:28:26+00:00",
+       "view:azimuth": 82
+      },
+      {
+       "id": "97a89215-4e3a-44c0-953b-4876b76e1c51",
+       "lon": 23.0811218,
+       "lat": 53.154353,
+       "datetime": "2019-09-01T10:26:04+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "644693f2-254f-4819-8d41-70a8f170a000",
+       "lon": 23.0822945,
+       "lat": 53.1546841,
+       "datetime": "2019-09-01T10:26:00+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "58faa87d-ed77-4499-8f33-8f56d0e1b2a0",
+       "lon": 23.0822555,
+       "lat": 53.1545085,
+       "datetime": "2019-08-15T15:28:30+00:00",
+       "view:azimuth": 83
+      },
+      {
+       "id": "18a867d1-474f-41f5-b4ad-cfb24f6a3250",
+       "lon": 23.0832433,
+       "lat": 53.1549495,
+       "datetime": "2019-09-01T10:25:57+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "2b763966-4998-474b-b3fc-ba414b02a68c",
+       "lon": 23.0832332,
+       "lat": 53.1547768,
+       "datetime": "2019-08-15T15:28:33+00:00",
+       "view:azimuth": 86
+      },
+      {
+       "id": "d1cb6172-ea49-457d-85ed-e5d0ee4f085d",
+       "lon": 23.0841955,
+       "lat": 53.155207,
+       "datetime": "2019-09-01T10:25:54+00:00",
+       "view:azimuth": 254
+      }
+     ]
+    },
+    "panoramax.openstreetmap.fr": {
+     "url": "https://panoramax.openstreetmap.fr/api/search?bbox=23.05205,53.15306,23.08435,53.17038&limit=500",
+     "status": 200,
+     "n": 15,
+     "error": null,
+     "items": [
+      {
+       "id": "e56c8ac0-e6ec-4ff8-aa30-7f098c18afa8",
+       "lon": 23.0765884,
+       "lat": 53.1530767,
+       "datetime": "2019-09-01T10:26:20+00:00",
+       "view:azimuth": 255
+      },
+      {
+       "id": "9108d691-5ec3-4124-94f3-1f81e7a3c3de",
+       "lon": 23.0773508,
+       "lat": 53.1532936,
+       "datetime": "2019-09-01T10:26:17+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "700c33af-793d-4b9d-9691-448999af920f",
+       "lon": 23.0777931,
+       "lat": 53.1532725,
+       "datetime": "2019-08-15T15:28:16+00:00",
+       "view:azimuth": 87
+      },
+      {
+       "id": "ea002400-c4a7-4e5c-8bc0-06282ee62349",
+       "lon": 23.0784509,
+       "lat": 53.1536016,
+       "datetime": "2019-09-01T10:26:13+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "a90bc15f-a8be-426e-ae79-f733a2b34470",
+       "lon": 23.0790309,
+       "lat": 53.1536193,
+       "datetime": "2019-08-15T15:28:20+00:00",
+       "view:azimuth": 78
+      },
+      {
+       "id": "24ac02b1-d976-402c-b90c-690084f3cc86",
+       "lon": 23.079317,
+       "lat": 53.1538436,
+       "datetime": "2019-09-01T10:26:10+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "6e4aa2a8-0f7a-41d9-95a6-5a094e970e3f",
+       "lon": 23.0799875,
+       "lat": 53.1538834,
+       "datetime": "2019-08-15T15:28:23+00:00",
+       "view:azimuth": 77
+      },
+      {
+       "id": "0d6abae9-d096-4665-b4bd-e0ae35877375",
+       "lon": 23.0802134,
+       "lat": 53.1540995,
+       "datetime": "2019-09-01T10:26:07+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "1155ff83-f71a-4ac7-a494-ecba8c06fe6e",
+       "lon": 23.0809555,
+       "lat": 53.1541521,
+       "datetime": "2019-08-15T15:28:26+00:00",
+       "view:azimuth": 82
+      },
+      {
+       "id": "97a89215-4e3a-44c0-953b-4876b76e1c51",
+       "lon": 23.0811218,
+       "lat": 53.154353,
+       "datetime": "2019-09-01T10:26:04+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "644693f2-254f-4819-8d41-70a8f170a000",
+       "lon": 23.0822945,
+       "lat": 53.1546841,
+       "datetime": "2019-09-01T10:26:00+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "58faa87d-ed77-4499-8f33-8f56d0e1b2a0",
+       "lon": 23.0822555,
+       "lat": 53.1545085,
+       "datetime": "2019-08-15T15:28:30+00:00",
+       "view:azimuth": 83
+      },
+      {
+       "id": "18a867d1-474f-41f5-b4ad-cfb24f6a3250",
+       "lon": 23.0832433,
+       "lat": 53.1549495,
+       "datetime": "2019-09-01T10:25:57+00:00",
+       "view:azimuth": 254
+      },
+      {
+       "id": "2b763966-4998-474b-b3fc-ba414b02a68c",
+       "lon": 23.0832332,
+       "lat": 53.1547768,
+       "datetime": "2019-08-15T15:28:33+00:00",
+       "view:azimuth": 86
+      },
+      {
+       "id": "d1cb6172-ea49-457d-85ed-e5d0ee4f085d",
+       "lon": 23.0841955,
+       "lat": 53.155207,
+       "datetime": "2019-09-01T10:25:54+00:00",
+       "view:azimuth": 254
+      }
+     ]
+    },
+    "panoramax.ign.fr": {
+     "url": "https://panoramax.ign.fr/api/search?bbox=23.05205,53.15306,23.08435,53.17038&limit=500",
+     "status": 200,
+     "n": 0,
+     "error": null,
+     "items": []
+    }
+   }
+  }
+ },
+ "commons_geosearch_tiles": {
+  "queried_at": "2026-11-15T09:37:28Z",
+  "tiles": {
+   "dk65-01": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.162765|23.037635",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 138
+   },
+   "dk65-02": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.181135|23.039365",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 256
+   },
+   "dk65-03": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.18217|23.00878",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 14
+   },
+   "dk65-04": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.200540000000004|23.010495",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 10
+   },
+   "dk65-05": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.21891|23.012214999999998",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 5
+   },
+   "dk65-06": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.23728|23.013939999999998",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 19
+   },
+   "dk65-07": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.238305|22.983314999999997",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 6
+   },
+   "dk65-08": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.256675|22.985025",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 7
+   },
+   "dk65-09": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.257695|22.954394999999998",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 5
+   },
+   "dk65-10": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.276070000000004|22.95609",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 3
+   },
+   "dk65-11": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.29444|22.957790000000003",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 0
+   },
+   "knyszyn-s": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.29546|22.927125",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 0
+   },
+   "knyszyn": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.313829999999996|22.928815",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 148
+   },
+   "knyszyn-w": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.314835|22.898135",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 81
+   },
+   "(-3,0)knyszynska": {
+    "params": {
+     "action": "query",
+     "list": "geosearch",
+     "gscoord": "53.16172|23.0682",
+     "gsradius": 1450,
+     "gslimit": 500,
+     "gsnamespace": 6
+    },
+    "n": 131
+   }
+  },
+  "categories": {
+   "Category:Knyszyn": 21,
+   "Category:Market Square in Knyszyn": 0,
+   "Category:Fasty": 7,
+   "Category:Droga krajowa nr 65": 0,
+   "Category:National road 65 (Poland)": 38
+  }
+ },
+ "commons_geosearch_route": {
+  "queried_at": "2026-11-15T09:54:32Z",
+  "queries": [
+   {
+    "lat": 53.168872,
+    "lon": 23.0559,
+    "r": 300,
+    "n": 17
+   },
+   {
+    "lat": 53.170054,
+    "lon": 23.050271,
+    "r": 300,
+    "n": 1
+   },
+   {
+    "lat": 53.171752,
+    "lon": 23.045001,
+    "r": 300,
+    "n": 1
+   },
+   {
+    "lat": 53.17319,
+    "lon": 23.039523,
+    "r": 300,
+    "n": 1
+   },
+   {
+    "lat": 53.174762,
+    "lon": 23.034148,
+    "r": 300,
+    "n": 1
+   },
+   {
+    "lat": 53.176424,
+    "lon": 23.028846,
+    "r": 300,
+    "n": 3
+   },
+   {
+    "lat": 53.17948,
+    "lon": 23.026132,
+    "r": 300,
+    "n": 3
+   },
+   {
+    "lat": 53.183027,
+    "lon": 23.025223,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.186596,
+    "lon": 23.024522,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.190164,
+    "lon": 23.023817,
+    "r": 300,
+    "n": 1
+   },
+   {
+    "lat": 53.193732,
+    "lon": 23.023107,
+    "r": 300,
+    "n": 1
+   },
+   {
+    "lat": 53.197301,
+    "lon": 23.022402,
+    "r": 300,
+    "n": 1
+   },
+   {
+    "lat": 53.200869,
+    "lon": 23.021699,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.204438,
+    "lon": 23.020999,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.208007,
+    "lon": 23.020293,
+    "r": 300,
+    "n": 1
+   },
+   {
+    "lat": 53.211576,
+    "lon": 23.019597,
+    "r": 300,
+    "n": 1
+   },
+   {
+    "lat": 53.215144,
+    "lon": 23.018892,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.218712,
+    "lon": 23.018172,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.222279,
+    "lon": 23.017444,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.225412,
+    "lon": 23.014571,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.228435,
+    "lon": 23.011341,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.230903,
+    "lon": 23.008895,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.233955,
+    "lon": 23.005735,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.237007,
+    "lon": 23.002571,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.240055,
+    "lon": 22.999399,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.243094,
+    "lon": 22.996203,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.246197,
+    "lon": 22.993184,
+    "r": 300,
+    "n": 2
+   },
+   {
+    "lat": 53.249329,
+    "lon": 22.990246,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.252026,
+    "lon": 22.986289,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.254701,
+    "lon": 22.982288,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.257388,
+    "lon": 22.97831,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.260071,
+    "lon": 22.974323,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.263004,
+    "lon": 22.970921,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.266165,
+    "lon": 22.968071,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.269326,
+    "lon": 22.96522,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.272486,
+    "lon": 22.962364,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.275622,
+    "lon": 22.959444,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.278379,
+    "lon": 22.9556,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.281134,
+    "lon": 22.951749,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.283891,
+    "lon": 22.947904,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.286648,
+    "lon": 22.944057,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.289409,
+    "lon": 22.940218,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.292163,
+    "lon": 22.936366,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.294922,
+    "lon": 22.932523,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.297689,
+    "lon": 22.928694,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.300453,
+    "lon": 22.924861,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.303213,
+    "lon": 22.92102,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.305975,
+    "lon": 22.917181,
+    "r": 300,
+    "n": 0
+   },
+   {
+    "lat": 53.308831,
+    "lon": 22.913655,
+    "r": 300,
+    "n": 4
+   },
+   {
+    "lat": 53.311141,
+    "lon": 22.918232,
+    "r": 300,
+    "n": 78
+   },
+   {
+    "lat": 53.312074,
+    "lon": 22.920072,
+    "r": 450,
+    "n": 78
+   }
+  ]
+ },
+ "commons_text_search": {
+  "queried_at": "2026-11-15T09:56:33Z",
+  "queries": {
+   "Knyszyn": 526,
+   "Fasty droga": 1,
+   "Dobrzyniewo DK65": 2,
+   "Knyszyn Rynek": 30
+  }
+ },
+ "openverse": {
+  "date": "2026-11-15",
+  "note": "api.openverse.org: page_size>20 -> error for anonymous; q=Knyszyn page_size=20 -> 20 results, all source=wikimedia (no extra Flickr CC)"
+ },
+ "kartaview": {
+  "date": "2026-11-15",
+  "note": "api.openstreetcam.org TLS error (curl 60, certificate name mismatch); kartaview.org page 200 but no anonymous API -> gap"
+ },
+ "mapillary": {
+  "note": "no token (COMMON.md) - not queried"
+ }
+}
