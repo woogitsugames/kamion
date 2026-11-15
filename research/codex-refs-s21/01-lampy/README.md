@@ -96,3 +96,6 @@ Used-parts-round4:4 nowe indywidualnie obejrzane kadry firmowe, wyłącznie link
 
 
 R148-series01-round4:7 dodatkowych źródłowych porównań tabeli8, odrębnie od24+13+9 wcześniejszych wierszy. Pełny oficjalny R148Rev1Amendment2 (dokument16.12.2024, Supplement2serii01, wejście22.09.2024) odczytał agent. Kat.1/11 maks.single1200/D600 potwierdzone; ogólne„12bez zmian” względem pierwotnego2020 wymaga korekty: maks.D N.A.→250cd. Równość dla2a/2b/5/6 dotyczy tylko trzech kolumn; nie dowodzi niezmienności wszystkich testów. Źródła/punkty i ograniczenia dostępu koordynatora w podkatalogu. Nie jest to deklaracja aktualności2026.
+
+
+Conditions-round5:6SOURCED+1UNVERIFIED o warunkachR148Amendment5serii01(03.03.2023). MinimumHV z wyjątkiem kategorii5/6 w kierunkuA; maksimum w każdym kierunku widoczności, minimum pozaosiowe i osobne geometryczne. D/Y rozdzielone; dla zespołuD maksimum przy obu włączonych, minimum przy awarii którejkolwiek — bez dzielenia minimum przez2. Koordynator odczytał zachowany ekstrakt punktów. Table8-comparison-round6 zawiera12porównań tekstowych Am5/Am2;4rozbieżności potęg nadalUNVERIFIED, bo screenshot tabeli zwrócił403. Nie są12nowymi zatwierdzonymi normami ani dowodem daty pierwszej zmiany. Zero nowych zdjęć.

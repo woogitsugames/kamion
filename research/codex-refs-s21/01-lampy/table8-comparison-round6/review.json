@@ -1,0 +1,89 @@
+{
+  "checked_date": "2026-11-15",
+  "scope": "Doprecyzowanie D i porównanie dwóch wskazanych snapshotów, bez generycznej kompilacji norm.",
+  "D_clarification": {
+    "source": "https://unece.org/sites/default/files/2023-06/R148am5e.pdf",
+    "basis": [
+      "3.3.2.5.2(a)",
+      "4.8.3.1(a–d)",
+      "4.8.3.2(a–b)",
+      "5.6.1",
+      "Table8 column headings"
+    ],
+    "column_D_subject": "SOURCED: nagłówek tabeli odnosi się do lampy oznaczonej D; nie nazywa tej kolumny sumą całego zestawu.",
+    "definition_a_literal_location": "Punkt3.3.2.5.2(a) opisuje dodatkową literęD dla lamp będących częścią zespołu dwóch niezależnych lamp. W odczytanym punkcie nie ma słowa together.",
+    "together_location": "Słowo together występuje w4.8.3.2(a): warunek maksimum, gdy wszystkie lampy zespołu świecą razem.",
+    "assembly_conditions": "Jeżeli zespół dwóch niezależnych lamp tej samej funkcji, homologowanych jako D, uznaje się za jedną lampę: bada się maksimum przy wszystkich włączonych oraz minimum przy awarii którejkolwiek. To osobny warunek zespołu, nie redefinicja nagłówka D.",
+    "minimum_after_failure": "Nie podano tu połowy minimum. Właściwe minimum funkcji z tabeli/rozkładu ma być spełnione przy awarii dowolnej jednej lampy zespołu, nie tylko przy wybranej awarii. Dla kategorii2a minHV to50cd; pozaosiowo oraz w polu widoczności obowiązują właściwe minima/odsyłacze.",
+    "numeric_example_scope": "Przykład2a: tabela8 osobno podaje max pojedynczej500cd, max lampyD250cd i min50cd; nie wyliczono sumy/mnożnika/dzielnika zamiast stosowania4.8.3.2.",
+    "not_to_confuse": "Awaria jednej niezależnej lampy zespołuD nie jest tym samym co awaria pojedynczego źródła światła w wieloźródłowej lampie (inne przepisy4.6)."
+  },
+  "table8_comparison": {
+    "source_A": {
+      "url": "https://unece.org/sites/default/files/2023-06/R148am5e.pdf",
+      "document": "Add.147/Amend.5",
+      "date": "2023-03-03",
+      "series": "01",
+      "entry_cover": "2023-01-04",
+      "full_text_tool_lines": 2769
+    },
+    "source_B": {
+      "url": "https://unece.org/sites/default/files/2025-02/R148r1am2E.pdf",
+      "document": "Add.147/Rev.1/Amend.2",
+      "date": "2024-12-16",
+      "supplement": "2 do serii01",
+      "entry_cover": "2024-09-22",
+      "full_text_tool_lines": 119
+    },
+    "result": "W ekstraktach kat.1/11 i12 mają już te same trzy wartości wAm5 orazAm2; porównanie2020→Am2 nie dowodziło daty pierwszego wprowadzenia różnicy.",
+    "extraction_flags": [
+      "Kat.5 minimumAm5 występuje jako6×10¹,Am2jako6×10⁻¹.",
+      "Kat.11a/11b/11c maxsingleAm5 występuje jako1,20×10²,Am2jako1,20×10³.",
+      "Nie uznano tych różnic za pewną zmianę prawną bez sprawdzenia bitmapy/oryginału. Nowsze wartości mają własną podstawę wAm2; starszych podejrzanych nie poprawiono po cichu."
+    ],
+    "conditions_basis": "Szukane punkty4.8.3.1 i3.3.2.5.2 odczytano z pełnegoAm5. Am2odsyła do tych numerów i nie przepisuje ich brzmienia.",
+    "chain_limit": "Nie sprawdzono wszystkich dokumentów pośrednich, zwłaszcza oddzielnej Rev.1 ijejAmendment1; brak twierdzenia o pełnej niezmienności warunków doAm2."
+  },
+  "external_extract": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\01-lampy\\conditions-round5\\tool-extracted.txt",
+  "extraction_method": "Utrwalono fragmenty już otrzymanych wyników narzędzia, bez ponawiania dostępu dla ekstraktu. Nowy odczyt tabeli8 przez referencję do dostępnego pełnegoAm5 dotyczył konkretnego porównania.",
+  "counts": {
+    "comparison_rows": 12,
+    "flagged_extraction_rows": 4,
+    "new_images": 0,
+    "documentation_manifest_rows": 2,
+    "documentation_rows_counted_as_photos": 0
+  },
+  "visual_power_check": {
+    "date": "2026-11-15",
+    "action": "web screenshot już dostępnego pełnego PDF Am5, strona indeks22 (drukowana23), tabela8",
+    "result": "HTTP403",
+    "bitmap_viewed": false,
+    "binary_pdf_downloaded": false,
+    "no_retry_reason": "Po403 nie ponowiono przez HTTP ani inny wariant adresu; nadrzędne polecenie bez ponawiania403.",
+    "unresolved_rows": [
+      "5:min",
+      "11a:maxsingle",
+      "11b:maxsingle",
+      "11c:maxsingle"
+    ],
+    "status": "UNVERIFIED: błąd druku vs ekstrakcji nadal nierozstrzygnięty."
+  },
+  "source_short_quotes": {
+    "source": "https://unece.org/sites/default/files/2023-06/R148am5e.pdf",
+    "total_quoted_words": 22,
+    "quotes": [
+      {
+        "point": "3.3.2.5.2(a)",
+        "quote": "assembly of two independent lamps"
+      },
+      {
+        "point": "4.8.3.2(a)",
+        "quote": "Maximum intensity if all lamps together are lit"
+      },
+      {
+        "point": "4.8.3.2(b)",
+        "quote": "Minimum intensity if either lamp has failed"
+      }
+    ]
+  }
+}
