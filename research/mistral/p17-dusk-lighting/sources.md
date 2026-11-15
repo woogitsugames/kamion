@@ -49,3 +49,16 @@ Główne: 20201206_161447 (CC0), 20201218_153418 (CC0), 20201226_155743 (CC0), 2
 - Marketplanet (dokumentacja przetargowa ZDM-XII.271.32.2026) — endpoint ZIP zwraca błąd, /repository/download 404 → porzucone.
 - Mapillary — wymaga tokenu → NIE używane. Google Maps/StreetView/Earth — ZAKAZ (nie używane).
 - Richardson (domestic lighting) — brak wersji OA (core.ac.uk zablokowany) → porzucone.
+
+## s21 (2026-11-15) — źródła dodane / sprawdzone w poprawce
+
+| Źródło | Użycie | URL | Licencja |
+|---|---|---|---|
+| pl.wikipedia „Trasa Generalska w Białymstoku” | definicja nazwy: „Trasa Generalska biegnie ulicami generałów Franciszka Kleeberga, Stanisława Maczka, Władysława Andersa, Nikodema Sulika, Stanisława Sosabowskiego.” (P17-053) | https://pl.wikipedia.org/wiki/Trasa_Generalska_w_Bia%C5%82ymstoku | CC BY-SA 4.0 (cytat) |
+| Overpass API (maps.mail.ru) | rozstawy latarni Andersa / Tysiąclecia / Wysockiego / Kombatantów (P17-062…065); zapytanie: `area[name=Białystok][boundary=administrative]; way[highway][name~…]; node[highway=street_lamp]` | https://maps.mail.ru/osm/tools/overpass/api/interpreter | ODbL |
+| Nawar S. i in., „Discontinuity in the Brightness of the Twilight Sky at Different Wavelengths” | kandydat na dane horyzontu (pion słoneczny i antysłoneczny, wys. 0–70°, jednostki S10); liczb nie przeniesiono | https://arxiv.org/abs/1011.3024 | arXiv (tylko referencja) |
+| Lee R. L. Jr. 1994, „Horizon brightness revisited”, Appl. Opt. | tylko abstrakt/DTIC — bez tabel | https://apps.dtic.mil/sti/pdfs/ADA525090.pdf | tylko referencja |
+| TED 697205-2023 | kandydat (dostawa opraw LED, Białystok) — treści nie zweryfikowano | https://ted.europa.eu/en/notice/697205-2023/pdf | dokument urzędowy |
+| Commons API (37 kadrów) | miniatury 1280 px pobrane ponownie; EXIF (083, 084, 085, 086, 087, 109) przez `prop=imageinfo&iiprop=metadata` | https://commons.wikimedia.org/w/api.php | wg pliku (manifest) |
+
+h0 dla 083/084/087/109: algorytm NOAA (bez refrakcji), czas EXIF w strefie CEST/CET wg reguły UE; 087 bez GPS — pozycja przybliżona (centrum Warszawy).
