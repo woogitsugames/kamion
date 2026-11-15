@@ -13,3 +13,7 @@ Cel: oddzielić otwartą S19 od aktualnej budowy S16 i archiwalnych zwężeń DK
 Otwarcie S19 nie oznacza automatycznie końca robót S16 ani likwidacji każdego ograniczenia na DK65. Lokalny stan dojazdów, żółte oznakowanie, zapory, bariery i ich rozmieszczenie na 15.11.2026 pozostają UNVERIFIED. Nie wyprowadzono z komunikatu wymiarów jezdni DK65. Brak nowych pomiarów rozstawu/gatunków drzew, zatok i rowów. Trwa szukanie urzędowych rekordów oraz otwartych kadrów.
 
 Teksty gov.pl: CC BY-SA 4.0 według stopki odczytanych stron. Zdjęcia w stopce mają inną licencję (domyślnie CC BY-NC-ND 4.0), dlatego żadnej fotografii GDDKiA nie pobrano ani nie skopiowano. Do gita trafiają parafrazy i odnośniki.
+
+## Ortofoto — nieregularność drzew
+
+04-O01: ponownie obejrzany K1-132, bez nowego pobrania ortofoto; 1 miniatura ≤800 px. SOURCED [obraz]: po zachodniej stronie pojedyncze korony na pasie trawy, po wschodniej nieregularne grupy z przerwami. ESTIMATED: ręcznie wskazano 6 większych koron; odległości między tymi wybranymi środkami zapisano w `tree-crown-picks.json`, wraz z bbox i skalą. Nie są to potwierdzone kolejne pnie. Nie wyliczono średniego rozstawu wszystkich drzew ani gatunków. Dawnego skrótu K1 „8 drzew / 200 m” nie potwierdzono jako kompletnego inwentarza.
