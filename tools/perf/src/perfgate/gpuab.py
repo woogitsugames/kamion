@@ -3,13 +3,14 @@
 Sesja = katalog `artifacts/gpu-ab/<ts>/`:
 
     session.json                       metadane sesji (serial, tier, fps, apk ...)
-    runs/<nazwa>/run.json              {variant, segment, repeat, extras, valid, rejectReason,
-                                        batteryTempBeforeC, warmupSeconds}
+    runs/<nazwa>/run.json              {variant, segment, repeat, block, extras, valid, rejectReason,
+                                        batteryTempBeforeC, warmupSeconds}; block = klucz pary z bazą
+                                        (przebieg bazowy z tym samym block; domyślnie = repeat)
     runs/<nazwa>/frametimes.csv        z telefonu (format v1, perfgate.formats)
     runs/<nazwa>/metrics.json          z device-metrics.ps1 (PSS, temperatura; opcjonalny)
 
 Wynik: `results.csv` (jeden wiersz na przebieg), `summary.csv` (wariant x odcinek: mediany po
-powtórzeniach i różnica względem wariantu bazowego z TEGO SAMEGO powtórzenia), `REPORT.md`.
+powtórzeniach i różnica względem wariantu bazowego z TEGO SAMEGO bloku), `REPORT.md`.
 
 Percentyle liczone jak w `scripts/device-metrics.ps1` (nearest-rank, po odcięciu rozgrzewki).
 Liczby w raporcie są pomiarem tylko wtedy, gdy przebiegi pochodzą z telefonu; kolumna
@@ -159,6 +160,7 @@ class RunResult:
     segment: str
     repeat: int
     valid: bool
+    block: str = ""   # klucz parowania z bazą (run.json "block"; domyślnie numer powtórzenia)
     reject_reason: str = ""
     samples: int = 0
     mean_fps: float | None = None
@@ -249,6 +251,7 @@ def load_run(run_dir: Path) -> RunResult:
         segment=str(meta["segment"]),
         repeat=int(meta["repeat"]),
         valid=bool(meta.get("valid", True)),
+        block=str(meta.get("block") or meta["repeat"]),
         reject_reason=str(meta.get("rejectReason") or ""),
         battery_before_c=meta.get("batteryTempBeforeC"),
         extras=dict(meta.get("extras") or {}),
@@ -369,10 +372,10 @@ def summarise(runs: list[RunResult], catalog: dict | None = None, baseline: str 
             b50 = [r.gpu_p50_ms for r in base_ok]
             row.baseline_spread_gpu_p50 = round(max(b50) - min(b50), 3)
         if variant != baseline and ok and base_ok:
-            base_by_rep = {r.repeat: r for r in base_ok}
+            base_by_block = {r.block: r for r in base_ok}
             d50, d95 = [], []
             for r in ok:
-                b = base_by_rep.get(r.repeat)
+                b = base_by_block.get(r.block)
                 if b is None or r.gpu_p50_ms is None:
                     continue
                 d50.append(r.gpu_p50_ms - b.gpu_p50_ms)
@@ -398,7 +401,7 @@ def summarise(runs: list[RunResult], catalog: dict | None = None, baseline: str 
 
 # ---------------------------------------------------------------- zapis
 RESULT_COLUMNS = [
-    "name", "variant", "segment", "repeat", "valid", "reject_reason", "samples", "mean_fps", "p50_ms", "p95_ms", "p99_ms",
+    "name", "variant", "segment", "repeat", "block", "valid", "reject_reason", "samples", "mean_fps", "p50_ms", "p95_ms", "p99_ms",
     "max_ms", "over33", "over40", "gpu_p50_ms", "gpu_p95_ms", "gpu_p99_ms", "gpu_samples", "cpu_p50_ms", "cpu_p95_ms",
     "render_scale_min", "render_scale_max", "pss_mb", "battery_before_c", "battery_after_c", "thermal_status", "ab_delta_gpu_p50", "extras",
 ]
@@ -457,7 +460,7 @@ def render_report(runs: list[RunResult], rows: list[SummaryRow], session: dict |
     ok = [r for r in runs if r.valid]
     lines += [
         f"- Przebiegi: {len(ok)} ważnych, {len(runs) - len(ok)} odrzuconych. Percentyle: nearest-rank po rozgrzewce, jak `device-metrics.ps1`.",
-        "- Δ = wariant − baza z tego samego powtórzenia (mediana par; ujemna = mniej ms GPU). „Istotne” = wszystkie pary mają ten sam "
+        "- Δ = wariant − baza z tego samego bloku pomiarowego (baza zmierzona tuż przed wariantami bloku; mediana par; ujemna = mniej ms GPU). „Istotne” = wszystkie pary mają ten sam "
         "znak, ≥ 3 pary i |mediana| > rozrzut bazy (max − min GPU p50 bazy na tym odcinku).",
         f"- Budżet: GPU p95 ≤ {BUDGET_GPU_P95_MS} ms (kolumna „p95 ≤ budżet” liczona z NAJGORSZEGO powtórzenia; ma sens tylko przy limicie 30 FPS).",
         "- Kolumna „szacunek” to liczba SPRZED pomiaru (katalog wariantów: ESTIMATED / UNVERIFIED ze źródłem), nie wynik tej sesji.",

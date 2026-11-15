@@ -58,6 +58,8 @@ namespace Game.Rendering
                 RenderOverrides.AbHlodPart = HlodPart ?? 0;
                 s_OwnsHlodPart = HlodPart.HasValue;
             }
+            // One line per launch so a measurement run can prove which variant the APK really applied (gpu-ab-a16.ps1).
+            if (Any || Tag != null) UnityEngine.Debug.Log("[GPUAB]" + Describe());
         }
 
         /// <summary>Suffix of the RenderOverrides log line ("" when nothing was given).</summary>

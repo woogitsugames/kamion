@@ -219,6 +219,26 @@ def test_summary_needs_three_pairs_and_counts_rejected(tmp_path):
     assert rows["baseline"].gpu_p95_within_budget == "NIE"     # 34,6 + jitter > 33,3
 
 
+def test_block_pairs_a_variant_with_the_baseline_measured_next_to_it(tmp_path):
+    # jedna runda = kilka bloków; baza grzeje się z bloku na blok o 1 ms - para po "block", nie po "repeat"
+    s = tmp_path / "s"
+    for rep in (1, 2, 3):
+        for blk, heat in ((1, 0.0), (2, 1.0)):
+            d = make_run(s, "baseline", "G3-A", rep, 31.0 + heat)
+            d = d.rename(d.with_name(f"r{rep}b{blk}-baseline-G3-A"))
+            meta = json.loads((d / "run.json").read_text())
+            meta["block"] = f"{rep}.{blk}"
+            (d / "run.json").write_text(json.dumps(meta))
+        d = make_run(s, "far-720", "G3-A", rep, 32.0 - 0.7)      # zmierzony w bloku 2 (baza 32,0)
+        meta = json.loads((d / "run.json").read_text())
+        meta["block"] = f"{rep}.2"
+        (d / "run.json").write_text(json.dumps(meta))
+    rows = {r.variant: r for r in gpuab.summarise(gpuab.load_session(s), gpuab.load_catalog())}
+    assert rows["baseline"].runs == 6
+    assert rows["far-720"].pairs == 3
+    assert rows["far-720"].d_gpu_p50_ms == pytest.approx(-0.7, abs=0.15)
+
+
 def test_report_writes_csv_and_markdown(session):
     make_run(session, "depthtex-on", "G3-A", 1, 33.0, valid=False, reason="keyguard")
     out = gpuab.report(session)
