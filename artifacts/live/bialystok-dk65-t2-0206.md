@@ -7,3 +7,5 @@
 - 03:30 r2: EditMode 580/0 (1 skip), pytest gis 1163 ok / 1 fail = test_dojbld_0185 (na main xfail 3f625052c, baza 0203 go nie ma). vqa r2 Low/High + 5 kamer place. KRYTYCZNE: probe_lod2.py — kolizja terenu (terrain_lod2) 0,27–4 m nad jezdnią DK8 pod rondem Szymańskiego (trasa zablokowana). Poprawka: klucz override `bridge` (network.py, ADR 0206) + łuki ronda 257353773/74 jako pomosty.
 - W TLE: all3.ps1 (rebuild -> probe -> import -> topview -> vqa r3 Low/High).
 - NASTĘPNY KROK: `cat artifacts/bialystok-dk65-t2-0206/all3.status artifacts/bialystok-dk65-t2-0206/probe_lod2_r3.txt`
+- 04:20 r3 (łuki ronda jako pomosty, bridge_m 34,7/35,4): teren nadal 0,54 m nad jezdnią DK8 — podnosi go płyta skrzyżowania ronda i chodniki (conform bierze WYŻSZĄ drogę). Poprawka w build_world.keep_tunnel_cut: komórki nad/obok jezdni tunnel=yes (bez building_passage/service) wracają do NMT (wykop). Inne regiony bez zmian (brak takich dróg).
+- W TLE: all4.ps1. NASTĘPNY KROK: `cat artifacts/bialystok-dk65-t2-0206/all4.status artifacts/bialystok-dk65-t2-0206/probe_lod2_r4.txt`
