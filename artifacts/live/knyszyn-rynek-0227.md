@@ -162,3 +162,7 @@
 - 2026-11-15 22:18 +01:00 — R6 build trwa, pełny GIS po poprawkach >14% bez wyniku końcowego. EditMode 626 passed/2 skipped. Wiaty targowicy nadal poza światem: czekamy na ścieżkę do zdjęć dronowych potrzebnych do lokalizacji.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r6.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r6.log -Tail 10`
 
+
+- 2026-11-15 22:31 +01:00 — R6 4 warianty OK, lokalne porównania 01–11: lukarny niższe, nadal FAIL; Low +6 draws/+1825 tris na wspólnych kamerach, High max 1 229 814 tris. Pełny GIS po poprawkach w końcowej części (>88%), aktywny.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r6.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/gis-r6.done`
+
