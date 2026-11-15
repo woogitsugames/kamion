@@ -118,3 +118,7 @@
 - 2026-11-15 21:28 +01:00 — R4 wystartowała: plac pomnika przez park_flush, wejścia i lukarny urzędu, 2 próbne korony lip, korekta kamer 02/07. Każda zmiana wymaga renderu i ponownego budżetu.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r4.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r4.done`
 
+
+- 2026-11-15 21:33 +01:00 — R4 build trwa. Pełny pytest GIS uruchomiony w slocie heavy; jego proces potomny build_region był Suspended, wznowiono tylko własne PID 13432 i 68456 zgodnie z dyspozycją użytkownika; ponownie aktywny.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r4.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r4.log -Tail 10`
+
