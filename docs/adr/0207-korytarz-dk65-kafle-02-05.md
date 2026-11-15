@@ -33,6 +33,12 @@ Kafle `dk65-06`+ (km 16,7–25, budowa S19) czekają na odpowiedź właściciela
    - **Ełcka / Studzienna, 90 km/h** (`dk65-02` s 1548+, `dk65-03`, `-04`, `-05`): asfalt 7,2–8,0 m w 5 punktach
      (02 s 1950: 8,0; 04 s 200: 8,0, s 1360: 7,6, s 1960: 7,2; 05 s 1200: 7,8), linie krawędziowe ~7,5 m od siebie.
      BDOT10k 6,0–6,5 m jest tu za wąskie → **override 7,6 m + `edge_lines: both`** (WORKING_VALUE).
+     **Sprzeczność (niska pewność):** jasne piki farby w profilu bocznym (`xsec.json`) leżą ~6,25–7,0 m od siebie
+     (02: ~7,0; 04 s 1900: 6,5; 05 s 1400–1750: 6,25), a generator maluje linie klasy G 0,20 m od krawędzi, czyli przy
+     7,6 m ~7,2 m od siebie. Albo piki to linie i jest ~0,5–0,8 m asfaltu (opaska) poza linią — wtedy szerokość jest
+     dobra, a linia za szeroko — albo krawędź asfaltu odczytana ręcznie obejmuje jasne pobocze i jezdnia ma ~6,7–7,0 m.
+     Ortofoto 0,25 m z pasami kół i przechyleniem pojazdów (pojazdy wychodzą o 1,5× za szerokie) nie rozstrzyga tego;
+     do potwierdzenia przejazdem / zdjęciem właściciela, potem jedna korekta wpisu `dk65-elcka-xsec` (obejmuje 02–05).
    - **Most nad Supraślą** (way 41533342, s 1460–1546): balustrady 10,5 m, jezdnia z opaskami ~9 m → 7,5 m (przejście
      do Ełckiej), `confidence: low`.
    Overrides są **way-level** (`target: {osm_way: […]}`), ten sam wpis `dk65-elcka-xsec` w kaflach 02–05 → bez skoku
@@ -48,15 +54,20 @@ Kafle `dk65-06`+ (km 16,7–25, budowa S19) czekają na odpowiedź właściciela
   stan OSM (bieżący przejezdny) — wiadukt, nasypy i nowe łącznice serwisowe; układ lokalnych dróg przy S19 różni się
   od ortofoto (stan sprzed oddania). **Pytanie do właściciela**: czy S19 nad DK65 w Fastach jest już oddana (tak jak w
   OSM)? Para: `dk65-02/r2/view/pair-top-s19.jpg`, widok kierowcy `low-drive-s19-approach.jpg`.
-- **Most nad Supraślą**: pomost i bariery są, **rzeki brak** (generator nie rysuje wody; dolina = sam teren NMT) —
-  największy brak kafla do backlogu.
+- **Most nad Supraślą**: pomost i bariery są, **rzeki brak** — w `tools/worldgen/roads` nie ma etapu wody (grep
+  `waterway|water` trafia tylko w `streetscape/buildings_mesh.py`, `export.py` — nie rzeki); dolina = sam teren NMT.
+  Największy brak kafla do backlogu (nowy etap generatora, nie override).
 - Skrzyżowanie z Dzikowską (węzeł 1197260556): układ osi i wlotu zgodny z ortofoto (`pair-top-dzikowska.jpg`).
-- Szew z `dk65-01`: 6,5 m + linie po obu stronach z obu stron szwu (`pair-top-seam-south.jpg`).
+- Szew z `dk65-01`: 6,5 m + linie po obu stronach z obu stron szwu (`pair-top-seam-south.jpg`; w kadrze tor
+  kolejowy na SW z ortofoto — generator nie ma torów, jak w 0205). Pary `top-elcka`, `top-seam-west`: przebieg zgodny.
+- Szwy (pary szwów 02/03/04/05 obejrzane w `artifacts/dk65-tiles-0207/seams-grid.jpg`): punkt wyjścia trasy kafla N =
+  punkt wejścia N+1 (< 2 m, test), po drugiej stronie szwu tylko pas kontekstu bez oznakowania.
 
 ## Kafel `dk65-03` (Ełcka między Fastami S i N, km 11,80–12,28)
 - Graf 54/51, 280 budynków; build_world 663 s (kolejka slotów); ściany terenu 0; spójność 3 × `lane_blind_end`, 0 na
   trasie. Trasa 484 m po jednej krawędzi `w1024956365`; override `dk65-elcka-xsec` (7,6 m + linie) jak w `dk65-02`.
-- Pary z góry (szew E, środek, szew N) zgodne z ortofoto: prosta, bez wlotów. Widok kierowcy: po prawej podniesiony
+- Pary z góry (szew E, środek, szew N): przebieg prosty zgodny; na ortofoto w środku jest polny wjazd na W
+  (s ≈ 240), którego nie ma w OSM ani w świecie. Widok kierowcy: po prawej podniesiony
   krawężnik przy trawie (reguła miejska) — na ortofoto pobocze gruntowe; do backlogu.
 
 ## Kafel `dk65-04` (Fasty N, km 12,28–14,36)
@@ -64,8 +75,9 @@ Kafle `dk65-06`+ (km 16,7–25, budowa S19) czekają na odpowiedź właściciela
   `lane_blind_end`, 1 na trasie (wlot Szkolnej, węzeł 839428386, 17 m przed skrzyżowaniem, „what: none” — bez wpływu
   na jezdnię trasy).
 - Skrzyżowanie Białostocka / Kościelna (węzeł 839431354): czterowlotowe, przejście dla pieszych na N wlocie, parking
-  przy kościele NE — układ zgodny z ortofoto (`dk65-04/r2/view/pair-top-koscielna.jpg`); Sosnowa / Klubowa i Szkolna
-  zgodne co do położenia wlotów. Ełcka w Fastach N to aleja drzew po obu stronach — generator sadzi drzewa z reguły,
+  przy kościele NE — układ zgodny z ortofoto (`dk65-04/r2/view/pair-top-koscielna.jpg`); Sosnowa / Klubowa, Szkolna
+  i szew S zgodne co do położenia wlotów; przy `top-parking` na ortofoto boczny wjazd na plac na W, w świecie tylko
+  równoległa ulica. Ełcka w Fastach N to aleja drzew po obu stronach — generator sadzi drzewa z reguły,
   nie z ortofoto (backlog). Parkujące auta na poboczu przy kościele (s 600–830 na ortofoto) — nieodtworzone.
 
 ## Kafel `dk65-05` (Dobrzyniewo Duże, km 14,36–16,56)
@@ -75,6 +87,10 @@ Kafle `dk65-06`+ (km 16,7–25, budowa S19) czekają na odpowiedź właściciela
   Chabrowej na ortofoto 2024 są **roboty ziemne** (pas S19 / łącznice `proposed` w OSM, km 15,8–16,3); w świecie stan
   OSM: istniejąca droga bez nazwy na E jest asfaltowa, plac budowy nieodtworzony (WORKING_VALUE: brak). Pytanie do
   właściciela razem z `dk65-06`.
+- **Nowa jezdnia DK65 w OSM**: 3 krawędzie `primary` ref 65 (`w1151531612`, `w1151531613`, `w1151531608`, 2 × ~1,2 km)
+  równolegle na NE od trasy do ronda DK65 — generator zbudował je jako gotowe jezdnie; na ortofoto 2024 w tym miejscu
+  są **nasypy piaskowe placu budowy** (`pair-top-seam-north.jpg`). Konflikt dat jak przy S19 — pytanie do właściciela
+  (czy ta jezdnia jest już przejezdna).
 - Szew N z `dk65-06`: droga zamknięta zaporą na krawędzi kafla (70 m przed rondem DK65) — zniknie z `dk65-06`.
 
 ## Budżet (visual-qa, 1920×1080, edytor, szacunek przed SRP batching; A/B nie dotyczy — nowe regiony)
@@ -90,23 +106,28 @@ import 9–10 min, visual-qa 20–35 s na tier. High tylko na ostatnim kaflu (zg
 (zadanie bez telefonu).
 
 ## Walidacja
-- `tests/gis/test_dk65_seams_0207.py` 5/5: szwy 01→02→03→04→05 (ten sam way, ta sama szerokość i linie) + jeden
-  przekrój Ełckiej w 02–05; `tests/gis/test_edge_lines_0205.py` 4/4. Overrides: 4 + 1 + 1 + 1 zastosowane, 0 stale.
+- `tests/gis/test_dk65_seams_0207.py` 9/9: szwy 01→02→03→04→05 (ten sam way, ta sama szerokość i linie) + jeden
+  przekrój Ełckiej w 02–05 + punkty trasy na szwach < 2 m (9 testów); `tests/gis/test_edge_lines_0205.py` 4/4. Overrides: 4 + 1 + 1 + 1 zastosowane, 0 stale.
   Pełny `pytest tests/gis` i EditMode nie uruchamiane (zmiana = dane regionów + test; kod generatora bez zmian).
 - Pętla wizualna: pary render z góry | ortofoto `artifacts/dk65-tiles-0207/dk65-0N/r2/view/pair-top-*.jpg` (20 par),
-  widoki kierowcy `low-drive-*.jpg`, `low-rev-*.jpg`, `grid-drive*.jpg`; obejrzane: 02 (S19, Dzikowska, most, 4 widoki
-  kierowcy), 04 (Kościelna, Szkolna), 05 (Chabrowa High), siatka kierowcy 03/04/05. Krytyk `visual-critic`: nie
+  widoki kierowcy `low-drive-*.jpg`, `low-rev-*.jpg`, `grid-drive*.jpg`; obejrzane wszystkie 20 par (część w siatkach
+  `seams-grid.jpg`, `pairs-grid.jpg`) i siatki widoków kierowcy 02 oraz 03/04/05. Krytyk `visual-critic`: nie
   uruchamiany (agent nie tworzy subagentów) — do zlecenia przez lidera.
 
 ## Otwarte
 1. Rzeka Supraśl pod mostem w `dk65-02` (brak wody w generatorze).
 2. S19 w Fastach: zgodność OSM 2025 vs ortofoto 2024 (pytanie wyżej); węzeł i łącznice z reguł, bez szlifu.
-3. Oś OSM Ełckiej może być przesunięta ~0,5–1 m względem środka jezdni (odczyt niepewny przez pasy kół) —
+3. Szerokość Ełckiej 7,6 m vs rozstaw linii z ortofoto 6,25–7,0 m — patrz sprzeczność w Decyzji p. 3 (najważniejsze).
+3a. Oś OSM Ełckiej może być przesunięta ~0,5–1 m względem środka jezdni (odczyt niepewny przez pasy kół) —
    `center_offset` nie ustawiony.
 4. Szerokość w Fastach S (6,5 m BDOT) i na moście — niska pewność; do weryfikacji przejazdem właściciela.
 5. Krawężnik po prawej na Ełckiej w `dk65-03` (reguła miejska) zamiast pobocza gruntowego; aleje drzew w Fastach N
    i parkujące auta przy kościele nieodtworzone; dekale włazów na jezdni zamiejskiej (jak w 0205, UNVERIFIED).
-6. Plac budowy S19 przy Chabrowej (`dk65-05`) — stan OSM bez placu; odpowiedź właściciela razem z `dk65-06`.
+6. Plac budowy S19 przy Chabrowej i nowa jezdnia DK65 (`primary`, `dk65-05`) — stan OSM bez placu; odpowiedź
+   właściciela razem z `dk65-06`.
+6a. Kamery: `dk65-03` ma 5 authored (krótki kafel 484 m) + kamery generyczne z trasy; commity nie są ściśle „jeden na
+   kafel” (dane 03–05 szły razem, sekcje ADR osobno). `regions.py` będzie w konflikcie z gałęziami 0203/0204/0206
+   (dopisy w tym samym miejscu) — przy scaleniu zachować wszystkie wpisy.
 7. Na `dk65-05` trasa kończy się 70 m przed rondem DK65 (szew z `dk65-06`, nie budowany) — droga ucięta na krawędzi.
 
 ## Odtworzenie

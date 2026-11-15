@@ -59,3 +59,19 @@ def test_elcka_cross_section_same_in_all_tiles():
             if e[eid]["attrs"].get("name", {}).get("v") in ("Ełcka", "Studzienna"):
                 vals.add(_effective(e[eid], o))
     assert vals == {(7.6, "both")}
+
+
+@pytest.mark.parametrize("a,b", SEAMS)
+def test_seam_route_points_meet(a, b):
+    """The control route leaves tile a where it enters tile b (EPSG:2180, < 2 m; both snapped to the shared edge)."""
+    pts = []
+    for t, k in ((a, -1), (b, 0)):
+        d = REG / t
+        if not (d / "route_start.json").exists():
+            pytest.skip(f"{t}: no route_start.json")
+        r = json.loads((d / "route_start.json").read_text(encoding="utf-8"))
+        o = yaml.safe_load((d / "region.yaml").read_text(encoding="utf-8"))["origin"]
+        e, n = r["points_en"][k][:2]
+        pts.append((e + o["x"], n + o["y"]))
+    (x1, y1), (x2, y2) = pts
+    assert ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5 < 2.0, pts
