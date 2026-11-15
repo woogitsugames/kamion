@@ -165,7 +165,9 @@ SYN = {"A": box(-10_000, -10_000, 0, 10_000), "B": box(0, -10_000, 10_000, 10_00
 SYN_AOI = (-10_000, -10_000, 10_000, 10_000)
 # PRG divergence of the hand-kept registry (regions.py) for the TILE bbox, known and reported in ADR 0219;
 # knyszyn* is another agent's zone, so the registry is not changed here. Remove the entry when it is fixed.
-KNOWN_REGISTRY_GAPS = {"knyszyn-s": {"2002"}}
+# dk65-09 (added to main after ADR 0219 was written): registry 2002 only, PRG puts 17.89 % of the tile in 2008
+# (powiaty.py --report, c-regen-s22 2026-11-15) - dk65 zone, registry not changed here (needs a dk65-09 regeneration).
+KNOWN_REGISTRY_GAPS = {"knyszyn-s": {"2002"}, "dk65-09": {"2008"}}
 
 
 def test_bbox_across_two_powiaty_gets_both_largest_share_first():
