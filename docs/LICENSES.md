@@ -503,3 +503,5 @@ Dalsze uzupełnienie s21: `01-lampy/link-only-candidates/` oraz wiersze 01-LNK/0
 Uzupełnienie: 02-007 Chris McKenna, CC BY-SA 4.0, Commons Heavy_filthy.jpg; pomniejszenie i wycinek, atrybucja w manifeście02. Nowe orto05-O05: GUGiK, 700px, źródło i bbox w data/crossing-ortho-review.json. Europoint01-EUP: wyłącznie link-only, all rights reserved, bez plików obrazów.
 
 06-P01/P02 Tykocin: Krzysztof Popławski, CC BY4.0; źródła Commons w manifeście06, podglądy zmniejszone do≤800px bez kadrowania. Metadane licencji w data/tykocin-commons-metadata.json, hashe podglądów w data/tykocin-commons-retrieval.json.
+
+02-008/P18-121 Jaggery, CC BY-SA2.0 i02-009/P18-158 Eric Polk, CC BY-SA4.0: ponowne użycie lokalnych źródeł, zmniejszenie i jawne wycinki≤800px; autor, URL i ponownie odczytane licencje Commons w manifeście02 oraz data/reused-p18-source-metadata.json. To istniejące fotografie, nie nowe kadry M61-FIX.

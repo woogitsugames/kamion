@@ -1,6 +1,6 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Cel: ≥ 20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥ 6 zimowych i ≥ 6 europejskich. **Kryteria niespełnione: 0 / 0 / 0 kwalifikowanych.** W manifeście 6 pobranych i obejrzanych kadrów oraz 1 pomocniczy link-only: 3 odrzucone, 1 wzorzec czysty, 1 rdza/wiek, 1 zimowy kontekst klapy solówki oraz 1 link-only małego zabrudzenia. Dodatkowy screening obejmuje 8 nowych obejrzanych oryginałów (w tym ten 1 kadr rdzy), zapisanych poza gitem; 7 pozostałych odrzucono bez kopiowania miniatur do gita. Nie są dowodem rozkładu brudu. Liczby powyżej to zliczenie wierszy manifestu.
+Cel: ≥ 20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥ 6 zimowych i ≥ 6 europejskich. **Kryteria niespełnione: 0 / 0 / 0 kwalifikowanych.** W manifeście 8 lokalnych i obejrzanych kadrów oraz 1 pomocniczy link-only: 3 odrzucone, 1 wzorzec czysty, 1 rdza/wiek, 1 zimowy kontekst klapy solówki oraz 1 link-only małego zabrudzenia; dodatkowo 2 znane pozytywne wzorce P18 ponownie wykorzystane. Dodatkowy screening obejmuje 8 nowych obejrzanych oryginałów (w tym ten 1 kadr rdzy), zapisanych poza gitem; 7 pozostałych odrzucono bez kopiowania miniatur do gita. Nie są dowodem rozkładu brudu. Liczby powyżej to zliczenie wierszy manifestu.
 
 ## Wynik przeglądu
 
@@ -60,3 +60,25 @@ Przejrzano 61 lokalnych manifestów CSV; filtr terminów zimowych i ciężarowyc
 Nowy 02-007 (Heavy filthy): SOURCED [opis autora Commons] — Glasgow, 29.01.2010, śnieżyca; CC BY-SA 4.0, Chris McKenna (Thryduulf). Osobno obejrzany oryginał i wycinek pokazują gęsty szarobrązowy film, napis odsłaniający jaśniejszą powierzchnię i ciemne pionowe smugi poniżej. ESTIMATED: ślady spływu głównie w dolnej połowie, sam film niemal na całej widocznej klapie. Fizyczne wysokości i skład białego materiału przy zamknięciu UNVERIFIED. To **solówka z pojedynczą klapą/platformą**, dlatego stanowi tylko jakościowy kontekst zimowego brudu i nie spełnia kryterium dwuskrzydłowych drzwi naczepy. Oryginał 3648 × 2736 poza gitem, miniatury ≤800 px.
 
 Nowy kandydat Old Trailer Abandoned in the Snow (CC BY 2.0, Cindy Shebley) po obejrzeniu miniatury okazał się przyczepą kempingową widzianą z boku — odrzucony, bez miniatury w repo. Wyniki i SHA surowych plików w `data/local-winter-recheck-results-2026-11-15.json`. **Przyrost ścisłych progów M61: 0; nowy pomocniczy kadr zimowy/europejski: 1, jeden pojazd.**
+
+
+## Kolejny obieg — europejskie naczepy poza zimą
+
+Przegląd kategorii Krone trailers i dwóch celowanych zapytań Commons dał trzy nowe pobrane kadry do osobnego obejrzenia (pełne miniatury, dodatkowo wycinek drzwi Ribnitz). Ribnitz-Damgarten: jasne drzwi z niskimi zamkami i drobnymi kreskami/otarciami; nie rozpoznano filmu drogowego ani mokrych smug. Big white lorry: kabina i bok, brak tylnych drzwi. Altenwerder Damm: podwozie kontenerowe bez skrzyni. Wszystkie odrzucone, delta M61 0. Nie opisano pory jako jesień ani warunków jako mokre bez dowodu. Szczegóły i SHA w `data/europe-autumn-candidates-2026-11-15.json`; surowe pliki kandydatów18–20 poza gitem, bez dodatkowych miniatur w repo. Czwarty wynik 640 × 384 px odrzucono już na metadanych rozdzielczości, bez pobierania i bez opisu nieobejrzanego obrazu.
+
+
+## Porównanie dwóch znanych pozytywnych wzorców P18
+
+**02-008 = P18-121; 02-009 = P18-158. Istniejący P18, nie nowy kadr M61-FIX.** Oba pliki odczytano z lokalnego `research/_incoming/claude-p18-trailer-soiling-files-v2-2026-11-15/files`, bez ponownego pobierania. Osobno obejrzano pełne kadry i wycinki drzwi/progu. Poprzednia informacja o nieznalezieniu lokalnego archiwum P18 była zbyt szeroka: wcześniejsze wyszukiwanie pomijało ignorowany katalog `_incoming`; wyszukiwanie z `-uuu` znalazło zdjęcia i ZIP. Nie zmieniano źródłowych plików innych agentów.
+
+| Cecha widoczna | 02-008 / P18-121 | 02-009 / P18-158 |
+|---|---|---|
+| Drzwi | Jasne, dwa skrzydła i środkowa szczelina | Czerwone, dwa skrzydła, cztery pionowe pręty |
+| Film na panelach | Cienki szary, drobno smugowany, wyraźniejszy u góry | Delikatny jaśniejszy nalot na czerwieni |
+| Miejscowe ślady | Ciemne pionowe ślady przy prawej zewnętrznej krawędzi, środek/dół | Ciemniejszy napis na prawym skrzydle; wycierki przy prawym uchwycie i tabliczce, słabsze przy lewym uchwycie |
+| Próg / belka | Ciemne poplamienie listwy; szarobrunatne nieregularne plamy na białej dolnej belce | Matowy szary próg i wsporniki z gęstym pionowym smużeniem |
+| Pułapka interpretacji | Cienkiego filmu nie opisywać jako jednolicie grubej warstwy błota | Ostre cienie prętów i zawiasów nie są smugami brudu |
+
+Obserwacje z obrazu SOURCED [poszczególne URL w manifeście]. Położenie śladów jest jakościowe; wysokość fizyczna i chemiczny skład osadu UNVERIFIED. Udział soli pozostaje UNVERIFIED. Lokalna wysokość drzwi około 500–600 px i 650–700 px (ESTIMATED z obrazów), więc nie spełniają progu 1000 px. Nie powiększano zdjęć sztucznie. Wersja P18-158 ma lokalnie 960 × 1199, choć aktualne metadane źródła deklarują 1093 × 1365; większej wersji nie pobierano.
+
+Licencje zweryfikowane ponownie w Commons: 02-008 Jaggery, CC BY-SA 2.0; 02-009 Eric Polk, CC BY-SA 4.0. Snapshot w `data/reused-p18-source-metadata.json`, niezależne obserwacje i SHA lokalnych wersji w `data/reused-p18-observations-2026-11-15.json`. Miniatury i wycinki repo ≤800 px. **Znane pozytywne wzorce: 2 kadry / 2 pojazdy, w tym 1 zimowy i europejski. Nowe fotografie: 0; wzrost ścisłego M61: 0.** Nie doliczać ich drugi raz do zbioru P18.
