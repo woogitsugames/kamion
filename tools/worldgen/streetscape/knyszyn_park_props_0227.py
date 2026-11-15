@@ -8,9 +8,9 @@ photographs and GUGiK orthophoto. Sizes and individual details are WORKING_VALUE
 
 These are deliberately simple low-cost meshes, not scans or derived textures.
 The statue is a PROXY requiring visual review; the eagle on the obelisk and the
-wording on both plaques are omitted. Lamps do not yet emit dynamic light. These
-objects do not have colliders. Do not claim photo or device acceptance from the
-tests. They are emitted in both building LOD layers using existing materials.
+wording on both plaques are omitted. Lamps do not yet emit dynamic light.
+Collision uses simple low-detail boxes, separate from the visual LOD layers.
+Do not claim photo or device acceptance from the tests.
 """
 from __future__ import annotations
 
@@ -31,11 +31,11 @@ KING = (760959.0, 612427.0)         # ESTIMATED from GUGiK orthophoto
 FLAG = (760963.0, 612424.0)         # ESTIMATED, photo 8 / ortho
 # Candidate positions near, but outside, paths and central paving. Each is checked
 # against the authored path polygons at build time and is skipped if obstructing.
-BENCHES = ((760910., 612365.), (760925., 612370.), (760910., 612375.),
-           (760925., 612380.), (760965., 612385.), (760915., 612390.),
-           (760965., 612395.), (760930., 612410.))
-LAMPS = ((760925., 612355.), (760930., 612365.), (760980., 612390.),
-         (760905., 612400.), (760930., 612420.))
+BENCHES = ((760925., 612355.), (760930., 612365.), (760910., 612375.),
+           (760945., 612375.), (760970., 612385.), (760970., 612395.),
+           (760915., 612400.), (760915., 612410.))
+LAMPS = ((760922.5, 612350.), (760895., 612372.5), (760957.5, 612382.5),
+         (760982.5, 612392.5), (760940., 612422.5))
 
 
 def _p(xy, z):
@@ -130,6 +130,12 @@ def _paved(overrides, origin):
     return shapely.union_all(rings) if rings else None
 
 
+def _footprint(center, tangent, toward, half_length, half_depth):
+    return Polygon([center+tangent*a+toward*b for a,b in
+                    [(-half_length,-half_depth),(half_length,-half_depth),
+                     (half_length,half_depth),(-half_length,half_depth)]])
+
+
 def build(buf, region, origin, overrides, zsmooth, report):
     """Build props; candidate benches/lamps stay clear of authored path polygons.
 
@@ -146,6 +152,8 @@ def build(buf, region, origin, overrides, zsmooth, report):
     if origin.shape != (2,) or not np.isfinite(origin).all():
         result["reason"]="invalid region origin"; return result
     paved=_paved(overrides,origin)
+    tree_points = [Point(xy[:2]) for o in overrides if o.get("kind")=="tree_groups"
+                   and o.get("id", "").startswith("rynek-park-") for xy in o.get("points_en",[])]
     acc=BM.Acc()
 
     def ground(p):
@@ -156,6 +164,14 @@ def build(buf, region, origin, overrides, zsmooth, report):
         if not math.isfinite(z):
             result["refused"].append({"at":list(xy),"reason":"non-finite terrain"}); continue
         for layer in LAYERS: fn(acc,layer,p,z)
+        if fn is _obelisk:
+            # Main stone shaft only; the low decorative steps remain traversable.
+            _box(acc,"collision","collision_building",p,z-.1,z+3.2,.73,.73)
+        elif fn is _king:
+            _box(acc,"collision","collision_building",p,z-.1,z+3.39,1.05,.90)
+            _box(acc,"collision","collision_building",p+[0.,-2.],z-.1,z+.75,.65,.40)
+        else:
+            _box(acc,"collision","collision_steel",p,z-.1,z+7.,.065,.065)
     for kind, candidates in (("benches",BENCHES),("lamps",LAMPS)):
         for xy in candidates:
             p=np.asarray(xy,float)-origin
@@ -167,12 +183,22 @@ def build(buf, region, origin, overrides, zsmooth, report):
             nearest=nearest_points(point,paved)[1]
             toward=np.array(nearest.coords[0])-p; toward/=np.linalg.norm(toward)
             tangent=np.array([-toward[1],toward[0]])
+            footprint=_footprint(p,tangent,toward,.91 if kind=="benches" else .22,
+                                 .34 if kind=="benches" else .22)
+            if footprint.intersects(paved.buffer(.10)):
+                result["refused"].append({"at":list(xy),"reason":"object overlaps path clearance"}); continue
+            if any(point.distance(tree)<2.0 for tree in tree_points):
+                result["refused"].append({"at":list(xy),"reason":"too close to authored tree"}); continue
             z=ground(p)
             if not math.isfinite(z):
                 result["refused"].append({"at":list(xy),"reason":"non-finite terrain"}); continue
             for layer in LAYERS:
                 if kind=="benches": _bench(acc,layer,p,z,tangent,toward)
                 else: _lamp(acc,layer,p,z)
+            if kind=="benches":
+                _box(acc,"collision","collision_steel",p,z-.1,z+.9,.91,.30,tangent)
+            else:
+                _box(acc,"collision","collision_steel",p,z-.1,z+3.95,.08,.08)
             result[kind].append({"at_epsg2180":list(xy),"distance_to_path_m":round(d,2),"confidence":"ESTIMATED"})
     acc.flush(buf,ASSET_ID)
     result.update(status="applied" if acc.d else "skipped", confidence={"obelisk_point":"SOURCED OSM; identity ESTIMATED",
