@@ -9,4 +9,4 @@
 - `after-C3` / `after-D3` (Low + High) + `sbs3/*.jpg` wyrenderowane i zweryfikowane wizualnie (`after-heads.jpg`, `after-C-sheet-{Low,High}.jpg`, `gate3-signal-{Low,High}.jpg`, `sbs-P11-{063,094}-{Low,High}.jpg`).
 - Testy po przebudowie świata: `pytest tests/gis/test_signal_head_0193.py tests/gis/test_p1_0161.py tests/gis/test_p1b_0172.py tests/gis/test_photo_cameras_0174.py tests/gis/test_dojlidy_0179.py tests/gis/test_road_fidelity.py` = **62 passed, 1 xfailed** (`test_signal_head_0193.py` = 26 passed).
 - ADR `docs/adr/0193-sygnalizator-tarcza-i-kamera-d6.md` zaktualizowany, scommitowany i wypchnięty na `origin/sigplate-0193`.
-- NASTĘPNY KROK: KONIEC — gotowe do finałowej recenzji i scalenia przez lidera.
+- NASTĘPNY KROK: KONIEC — recenzja `docs/reports/REVIEW-ARGON-sigplate-0193.md` werdykt **SCAL**, raport `docs/reports/ARGON-S20-sigplate-0193.md` gotowy.
