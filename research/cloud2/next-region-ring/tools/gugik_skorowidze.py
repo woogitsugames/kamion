@@ -18,7 +18,7 @@ for prod, (ep, tmpl) in SVC.items():
         url = f"{ep}?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME={layer}&SRSNAME=EPSG:2180&BBOX={','.join(map(str, BBOX))}"
         out = raw / f"{prod}_{y}.xml"
         utc = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-        r = subprocess.run(["curl", "-sS", "-m", "180", "-A", "kamion-research/1.0", "-o", str(out), "-w", "%{http_code}", url], capture_output=True, text=True)
+        r = subprocess.run(["curl", "-sS", "-m", "180", "-A", "research-fetch/1.0", "-o", str(out), "-w", "%{http_code}", url], capture_output=True, text=True)
         code = r.stdout.strip()
         x = out.read_text(encoding="utf-8", errors="replace") if out.exists() else ""
         feats = re.findall(r"<gml:featureMember>(.*?)</gml:featureMember>", x, flags=re.S)

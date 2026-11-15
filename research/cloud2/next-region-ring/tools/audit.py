@@ -9,7 +9,7 @@ REVIEWED = {"PX02": ("PASS", ""), "PX03": ("PASS", ""), "PX05": ("PASS", ""), "P
             "PX20": ("FAIL", "opis mówił „trawiasta skarpa po prawej” — na obrazie płaska łąka; poprawiono w panoramax/frames_desc.json i manifest.csv"),
             "PX21": ("PASS", ""), "PX27": ("PASS", ""), "PX28": ("PASS", ""), "L02": ("PASS", "ponownie obejrzano PX06, PX07, PX25: brak wiaduktów/łącznic S19 — kadry historyczne, zgodne z uwagą"),
             "L10": ("PASS", "ponownie obejrzano PX29: wykop z murami i wiadukt nad jezdnią")}
-def curl(*a): return subprocess.run(["curl", "-sS", "-m", "90", "-A", "kamion-research/1.0", *a], capture_output=True, text=True).stdout
+def curl(*a): return subprocess.run(["curl", "-sS", "-m", "90", "-A", "research-fetch/1.0", *a], capture_output=True, text=True).stdout
 out = []
 for i in sample:
     r = by[i]; kat = r["kategoria"]; res = "PASS"; what = ""; kor = ""

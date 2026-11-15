@@ -8,7 +8,7 @@ def run(name, query, outdir):
     out = outdir / f"{name}.json"
     for attempt in range(5):
         t = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-        r = subprocess.run(["curl", "-sS", "-m", "300", "-A", "kamion-research/1.0", "-o", str(out), "-w", "%{http_code}",
+        r = subprocess.run(["curl", "-sS", "-m", "300", "-A", "research-fetch/1.0", "-o", str(out), "-w", "%{http_code}",
                             "--data-urlencode", f"data={query}", URL], capture_output=True, text=True)
         code = r.stdout.strip()
         try:

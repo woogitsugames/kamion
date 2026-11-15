@@ -24,7 +24,7 @@ for n, (i, j) in enumerate(sorted(cells)):
     page = 1
     while True:
         url = f"https://api.kartaview.org/2.0/photo/?lat={lat:.6f}&lng={lon:.6f}&radius=500&itemsPerPage=150&page={page}"
-        r = subprocess.run(["curl", "-sS", "-m", "60", "-A", "kamion-research/1.0", "-w", "\n%{http_code}", url], capture_output=True, text=True)
+        r = subprocess.run(["curl", "-sS", "-m", "60", "-A", "research-fetch/1.0", "-w", "\n%{http_code}", url], capture_output=True, text=True)
         body, _, code = r.stdout.rpartition("\n")
         try: res = json.loads(body)["result"]
         except Exception: res = {"data": [], "hasMoreData": False}

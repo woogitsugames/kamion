@@ -9,7 +9,7 @@ items = {}; log = []
 def q(bb, depth=0):
     url = f"https://api.panoramax.xyz/api/search?bbox={bb[0]:.6f},{bb[1]:.6f},{bb[2]:.6f},{bb[3]:.6f}&limit=1000"
     for a in range(4):
-        r = subprocess.run(["curl", "-sS", "-m", "120", "-A", "kamion-research/1.0", "-w", "\n%{http_code}", url], capture_output=True, text=True)
+        r = subprocess.run(["curl", "-sS", "-m", "120", "-A", "research-fetch/1.0", "-w", "\n%{http_code}", url], capture_output=True, text=True)
         body, _, code = r.stdout.rpartition("\n")
         if code == "200": break
         time.sleep(5 * (a + 1))

@@ -8,7 +8,7 @@ for r in csv.DictReader(open(root / "manifest.csv", encoding="utf-8")):
     if not r["kategoria"].startswith("kadr") or not r["url_pliku"]: continue
     dest = root / r["plik_dowodu"]
     if not dest.exists() or hashlib.sha256(dest.read_bytes()).hexdigest() != r["sha256"]:
-        subprocess.run(["curl", "-sS", "-m", "120", "-A", "kamion-research/1.0", "-o", str(dest), r["url_pliku"]], check=False)
+        subprocess.run(["curl", "-sS", "-m", "120", "-A", "research-fetch/1.0", "-o", str(dest), r["url_pliku"]], check=False)
     ok = dest.exists() and hashlib.sha256(dest.read_bytes()).hexdigest() == r["sha256"]
     total += dest.stat().st_size if dest.exists() else 0
     print("OK " if ok else "BAD", r["id"], dest.name); bad += not ok

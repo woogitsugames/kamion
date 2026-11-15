@@ -58,16 +58,11 @@ for c in ["motorway", "motorway_link", "trunk", "trunk_link", "primary", "second
         add("OSM tagi", f"Pokrycie tagu {tg} na highway={c}", k["pokrycie_tagow_proc_dlugosci"][tg], "% długości", "ESTIMATED", ovm(HQ) + "; % = długość way z tagiem / długość klasy", url=OVP, licencja=ODBL,
             plik_dowodu="overpass/summary_highways.json", uwagi=f"klasa: {k['dlugosc_km']} km" + ("; bridge/layer: udział odcinków na obiektach, nie kompletność" if tg in ("layer", "bridge") else ""))
 
-# --- D. budynki
-if (root / "overpass/summary_buildings.json").exists():
-  sb = J("overpass/summary_buildings.json")
-  add("OSM budynki", "Liczba budynków (way + relacje multipolygon) w bboxie", sb["liczba_budynkow_w_bbox"], "szt.", "ESTIMATED", ovm("buildings") + "; środek obiektu w bboxie", url=OVP, licencja=ODBL, plik_dowodu="overpass/summary_buildings.json")
-  for k, v in sb["pokrycie_proc"].items():
-    add("OSM budynki", f"Budynki z tagiem {k}", v, "%", "ESTIMATED", ovm("buildings"), url=OVP, licencja=ODBL, plik_dowodu="overpass/summary_buildings.json", uwagi=f"{sb['liczby'][k]} szt.")
-
-else:
-  add("OSM budynki", "Liczba budynków i % z building:levels/height w bboxie", "", "", "UNVERIFIED", "NIE ZEBRANO — zapytanie Overpass buildings (kafle 4x4) przerwane przez limit sesji; mirror maps.mail.ru zwracał 504 dla pełnego bboxu", uwagi="LUKA; komenda w STATUS.md")
-  add("OSM drogi", "Długości i tagi klas secondary/tertiary/residential/service w bboxie", "", "", "UNVERIFIED", "NIE ZEBRANO — zapytanie Overpass highways (kafle 4x4) przerwane po 10/16 kafli", uwagi="LUKA; komenda w STATUS.md")
+# --- D. budynki / drogi nizsze — 2 wiersze o stalych id (R9-0xx); dane z FIX 2026-11-15 w sekcji K na koncu manifestu
+add("OSM budynki", "Liczba budynków i % z building:levels/height w bboxie", "patrz wiersze kategorii „OSM budynki*” na końcu manifestu", "", "SOURCED" if (root / "overpass/summary_buildings.json").exists() else "ESTIMATED",
+    "uzupełnione 2026-11-15 (recenzja F2): Overpass buildings (kafle) i/lub pomiar recenzenta z PBF", uwagi="pierwotnie LUKA (2026-11-14: zapytanie przerwane przez limit sesji)", data_dostępu="2026-11-15")
+add("OSM drogi", "Długości i tagi klas secondary/tertiary/residential/service w bboxie", "patrz wiersze kategorii „OSM drogi niższe*” na końcu manifestu", "", "SOURCED" if (root / "overpass/summary_highways_all.json").exists() else "ESTIMATED",
+    "uzupełnione 2026-11-15 (recenzja F2): Overpass highways (kafle 4x4) i/lub pomiar recenzenta z PBF", uwagi="pierwotnie LUKA (2026-11-14: przerwane po 10/16 kafli)", data_dostępu="2026-11-15")
 # --- E. obiekty
 so = J("overpass/summary_objects.json")
 for r in so["wiersze"]:
@@ -124,10 +119,11 @@ for s in ks:
     add("KartaView", f"Sekwencja {s['sequenceId']} (dodana {str(s['dateAdded'])[:10]})", s["countActivePhotos"], "zdjęć w całej sekwencji", "SOURCED", "GET /2.0/sequence/{id}", f"countActivePhotos={s['countActivePhotos']}; distance={s['distance']}",
         s["url"], licencja="CC BY-SA 4.0 (KartaView)", plik_dowodu="kartaview/sequences.json", uwagi=f"trafień w próbie korytarzy: {s['zdjec_trafionych_w_probie']}; sekwencja może wychodzić daleko poza bbox (distance km)")
 cm = J("commons/geosearch_landmarks.json")
-for r in cm["wyniki"]:
-    add("Commons", f"{r['landmark']} {r['nazwa']}: pliki z geotagiem w promieniu 1000 m", r["liczba_plikow_r1000m"] if r["liczba_plikow_r1000m"] is not None else "", "szt.", "SOURCED" if r["http"] == "200" and r["liczba_plikow_r1000m"] else "UNVERIFIED",
-        "MediaWiki API list=geosearch gsradius=1000 gsnamespace=6 gsprimary=all gslimit=500", f"HTTP {r['http']}; geosearch: {r['liczba_plikow_r1000m']}", r["url"], licencja="różne (per plik; nie pobierano)", plik_dowodu="commons/geosearch_landmarks.json",
-        uwagi=f"{r['utc']}; tytuły z słowem drogowym (regex): {r['liczba_z_tytulem_drogowym']}" + ("; wynik 0 niespójny z sąsiednim punktem (możliwy błąd API w odpowiedzi 200) — do powtórzenia" if r["liczba_plikow_r1000m"] == 0 else "") + ("; limit 500 osiągnięty" if r["liczba_plikow_r1000m"] == 500 else ""))
+def commons_row(r):
+  add("Commons", f"{r['landmark']} {r['nazwa']}: pliki z geotagiem w promieniu 1000 m", r["liczba_plikow_r1000m"] if r["liczba_plikow_r1000m"] is not None else "", "szt.", "SOURCED" if r["http"] == "200" and r["liczba_plikow_r1000m"] else "UNVERIFIED",
+      "MediaWiki API list=geosearch gsradius=1000 gsnamespace=6 gsprimary=all gslimit=500", f"HTTP {r['http']}; geosearch: {r['liczba_plikow_r1000m']}", r["url"], licencja="różne (per plik; nie pobierano)", plik_dowodu="commons/geosearch_landmarks.json", data_dostępu=r["utc"][:10],
+      uwagi=f"{r['utc']}; powtórzone 2026-11-15 po recenzji (wcześniejsze zera L01/L03/L05 = odpowiedzi z błędem API); tytuły z słowem drogowym (regex): {r['liczba_z_tytulem_drogowym']}" + ("; wynik 0 niespójny z sąsiednim punktem (możliwy błąd API w odpowiedzi 200) — do powtórzenia" if r["liczba_plikow_r1000m"] == 0 else "") + ("; limit 500 osiągnięty" if r["liczba_plikow_r1000m"] == 500 else ""))
+for r in cm["wyniki"][:7]: commons_row(r)  # L01-L07 = wiersze z 2026-11-14 (stale id); L08-L24 dopisane w sekcji J
 add("Mapillary", "Pokrycie Mapillary", "", "", "UNVERIFIED", "POMINIĘTO — brak własnego tokenu (zakaz w briefie)", uwagi="LUKA: research/g7-street-greenery/mapillary_sample.csv i docs/WORLD_GENERATION.md (street-r9) pokazują, że lider ma dostęp przez tools/refs")
 
 # --- H. kadry
@@ -160,6 +156,35 @@ for lm in J("panoramax/landmarks.json"):
     add("landmark", f"{lm['id']} {lm['nazwa']}", ", ".join(lm["kadry"]) or "brak kadru", "kadry referencyjne", "ESTIMATED", "pozycja: " + lm["pozycja_zrodlo"] + "; dostępność: tools/prg_and_landmarks.py (skorowidze w punkcie, zdjęcia r=300 m)",
         url=f"https://www.openstreetmap.org/{lm['osm'].split(';')[0].strip().split(' (')[0].replace(' ', '/')}", licencja=ODBL, lat=f"{lm['lat']:.6f}", lon=f"{lm['lon']:.6f}", osm_id=lm["osm"], plik_dowodu="panoramax/landmarks.json",
         uwagi=ocena + "; kadry: " + (", ".join(f"{k}={fid[k]}" for k in lm["kadry"]) or "LUKA — brak zdjęcia z otwartych źródeł") + f"; gmina {lm['gmina']}; EPSG:2180 {lm['x2180']},{lm['y2180']}")
+
+for r in cm["wyniki"][7:]: commons_row(r)
+# --- J. (FIX 2026-11-15, recenzja F3) kadry Commons dla punktow bez kadru (L03, L19, L23); obejrzane (Read <=960 px)
+for s in J("commons/frames_desc.json"):
+    add("kadr Commons", f"CM{s['n']:02d}: {s['obiekt']}", s["title"], "plik Commons", "SOURCED", "MediaWiki API prop=imageinfo (extmetadata) → miniatura iiurlwidth=1600 → JPG ≤1600 px q82 w gałęzi → obejrzenie ≤960 px (Read)",
+        f"LicenseShortName={s['license']}; Artist={s['artist']}; DateTimeOriginal={s['date']}", s["page"], url_pliku=s["thumb_url"], licencja=s["license"] + " (Commons; referencja, nie tekstura)", autor=s["artist"],
+        sha256=s["sha256_local"], lat=f"{float(s['lat']):.6f}" if s["lat"] else "", lon=f"{float(s['lon']):.6f}" if s["lon"] else "", kierunek_deg="UNVERIFIED", opis_co_widać=s["opis"],
+        data_zdjęcia=s["date"][:10] if s["date"][:2] == "20" else "2008-05-28", plik_dowodu=s["local"], data_dostępu="2026-11-15",
+        uwagi=f"punkt {s['landmark']}; trafność: {s['trafnosc']}; sha256 = pliku JPG w gałęzi (po przeskalowaniu), sha1 oryginału Commons {s['orig_sha1']}; kierunek: brak azymutu geograficznego w metadanych")
+# --- K. (FIX 2026-11-15, recenzja F2) drogi ponizej primary i budynki
+sh = J("overpass/summary_highways_all.json") if (root / "overpass/summary_highways_all.json").exists() else {}
+if sh.get("zakres_klas") == "wszystkie":
+    for c in ("secondary", "tertiary", "unclassified", "residential", "living_street", "service", "track"):
+        k = sh["klasy"].get(c)
+        if not k: continue
+        p = k["pokrycie_tagow_proc_dlugosci"]
+        add("OSM drogi niższe", f"highway={c}: długość w bboxie (suma jezdni)", k["dlugosc_km"], "km", "SOURCED", ovm("highways"), f"liczba_way={k['liczba_way']}", OVP, licencja=ODBL, plik_dowodu="overpass/summary_highways.json", data_dostępu="2026-11-15",
+            uwagi="pokrycie tagów % długości: " + ", ".join(f"{t} {p[t]}" for t in ("lanes", "maxspeed", "surface", "name", "lit", "sidewalk*", "width")))
+for c, km, tg in J("overpass/reviewer_pbf_measure.json")["klasy"]:
+    add("OSM drogi niższe (pomiar recenzenta)", f"highway={c}: długość w bboxie (PBF 2026-11-08)", km, "km", "ESTIMATED", "pomiar recenzenta lidera (REVIEW-2026-11-14-s20-cloud2-r9.md §4): PBF Geofabrik podlaskie 2026-11-08, pyosmium, przycięcie do bboxu EPSG:2180, długość po jezdniach",
+        url="docs/reports/REVIEW-2026-11-14-s20-cloud2-r9.md", licencja=ODBL, plik_dowodu="overpass/reviewer_pbf_measure.json", data_dostępu="2026-11-15", uwagi=tg)
+sb = root / "overpass/summary_buildings.json"
+if sb.exists():
+    b = J("overpass/summary_buildings.json")
+    add("OSM budynki", "Liczba budynków (way + relacje multipolygon z building=*, środek w bboxie)", b["liczba_budynkow_w_bbox"], "szt.", "SOURCED", ovm("buildings"), url=OVP, licencja=ODBL, plik_dowodu="overpass/summary_buildings.json", data_dostępu="2026-11-15", uwagi=f"w tym way: {b['liczby'].get('_way')}, relacje: {b['liczby'].get('_relation')}; środek = center z Overpass (out center)")
+    for t in ("building:levels", "height"):
+        add("OSM budynki", f"Pokrycie tagu {t} (% liczby way)", b["pokrycie_proc"][t], "%", "SOURCED", ovm("buildings"), url=OVP, licencja=ODBL, plik_dowodu="overpass/summary_buildings.json", data_dostępu="2026-11-15")
+rb = J("overpass/reviewer_pbf_measure.json")["budynki"]
+add("OSM budynki (pomiar recenzenta)", "Liczba budynków (way building=*, środek wierzchołków w bboxie; PBF 2026-11-08)", rb["liczba"], "szt.", "ESTIMATED", "pomiar recenzenta lidera (REVIEW §4), pyosmium; relacji nie liczono", url="docs/reports/REVIEW-2026-11-14-s20-cloud2-r9.md", licencja=ODBL, plik_dowodu="overpass/reviewer_pbf_measure.json", data_dostępu="2026-11-15", uwagi=f"building:levels {rb['levels_proc']} %, height {rb['height_proc']} %")
 
 with open(root / "manifest.csv", "w", newline="", encoding="utf-8") as f:
     w = csv.DictWriter(f, fieldnames=COLS, lineterminator="\n"); w.writeheader(); w.writerows(rows)

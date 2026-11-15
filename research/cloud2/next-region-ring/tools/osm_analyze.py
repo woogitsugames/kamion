@@ -46,7 +46,7 @@ def highways(src="highways"):
         res["klasy"][c] = {"liczba_way": N[c], "dlugosc_km": round(L[c] / 1000, 2), "pokrycie_tagow_proc_dlugosci": {k: round(100 * T[c][k] / L[c], 1) for k in TAGS},
                            "wartosci_km": {k: {v: round(x / 1000, 2) for v, x in sorted(vals[k][c].items(), key=lambda q: -q[1])[:8]} for k in vals}}
     res["dlugosc_wg_ref_km"] = {f"{h}|{r}": round(v / 1000, 2) for (h, r), v in sorted(refs.items(), key=lambda q: -q[1])}
-    json.dump(res, open(out / "summary_highways.json", "w"), ensure_ascii=False, indent=1)
+    json.dump(res, open(out / ("summary_highways_all.json" if src == "highways" else "summary_highways.json"), "w"), ensure_ascii=False, indent=1)
     drv = ["motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary", "secondary_link", "tertiary", "tertiary_link", "unclassified", "residential", "living_street", "service"]
     print("class km n " + " ".join(TAGS))
     for c in drv:
@@ -59,7 +59,7 @@ def buildings():
         if not center_in(e): continue
         g = e.get("tags", {})
         if e["type"] == "relation" and g.get("type") != "multipolygon": continue
-        n += 1; typ[g.get("building")] += 1
+        n += 1; typ[g.get("building")] += 1; c["_way"] += e["type"] == "way"; c["_relation"] += e["type"] == "relation"
         lv = "building:levels" in g; h = "height" in g or "building:height" in g
         c["building:levels"] += lv; c["height"] += h; c["levels_or_height"] += (lv or h); c["roof:shape"] += "roof:shape" in g; c["building:material|colour"] += any(k in g for k in ("building:material", "building:colour"))
         c["addr:housenumber"] += "addr:housenumber" in g; c["start_date"] += "start_date" in g; c["typ!=yes"] += g.get("building") != "yes"
