@@ -43,6 +43,7 @@ namespace Game.UI.Settings
 
         static PcSettingsStore s_Store;
         static PcSettingsData s_Current;
+        static bool s_DisplayApplied;
         static PcSettingsLoadReport.Origin s_LoadedFrom = PcSettingsLoadReport.Origin.Defaults;
 
         public static PcSettingsStore Store => s_Store ??= new PcSettingsStore(Application.persistentDataPath, new PlayerPrefsLegacySource());
@@ -73,7 +74,9 @@ namespace Game.UI.Settings
             var s = Current;
             bool desktop = IsDesktopPlayer;
             bool fromFile = s_LoadedFrom == PcSettingsLoadReport.Origin.File || s_LoadedFrom == PcSettingsLoadReport.Origin.Backup;
-            if (desktop && StartupDisplayPolicy.ShouldApply(fromFile, System.Environment.GetCommandLineArgs())) ApplyDisplay(s.display);
+            // Once per process: the Boot scene is loaded again when the player returns to the menu (no window flicker).
+            if (desktop && !s_DisplayApplied && StartupDisplayPolicy.ShouldApply(fromFile, System.Environment.GetCommandLineArgs())) ApplyDisplay(s.display);
+            s_DisplayApplied = true;
             if (desktop && !fpsFromArgument) ApplyFramePacing(s);
             if (desktop && !tierFromArgument) ApplyTier(s.graphicsTier);
             ApplyAudio(s.volumes);
