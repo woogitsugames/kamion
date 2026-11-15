@@ -244,6 +244,7 @@ class Plan:
             (flow_polys if f["props"].get("rodzaj") == "woda płynąca" else still_polys).append(g)
             self.report["bodies"].append({"src": "bdot10k:OT_PTWP_A:" + f["id"], "kind": f["props"].get("rodzaj"),
                                           "name": f["props"].get("nazwa"), "area_m2": round(g.area)})
+        bdot_flow = shapely.union_all([shapely.make_valid(p) for p in flow_polys]) if flow_polys else None
         for a in osm["areas"]:
             t = a["tags"]
             sid = f"osm:{a['osm_type']}/{a['osm_id']}:{a['part']}"
@@ -251,6 +252,11 @@ class Plan:
                 self.report["skipped"].append({"src": sid, "why": "intermittent=yes"})
                 continue
             g = _local(a["geometry"], origin)
+            if _flowing_area(t) and bdot_flow is not None and g.intersects(bdot_flow):
+                # BDOT10k traced the same river on the 2024 orthophoto and follows the dark water more closely
+                # (dk65-02: OSM riverbank juts 3-5 m onto the meadow SE of the bridge); a union would widen it
+                self.report["skipped"].append({"src": sid, "why": "river outline also in BDOT10k OT_PTWP_A"})
+                continue
             (flow_polys if _flowing_area(t) else still_polys).append(g)
             self.report["bodies"].append({"src": sid, "kind": t.get("water") or t.get("waterway") or "water",
                                           "name": t.get("name"), "area_m2": round(g.area)})
