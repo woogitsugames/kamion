@@ -86,3 +86,7 @@ rear-night-round3:01-RN3-04 OathOn, CC BY-SA4.0, Gillingham2025-10-16, nocny zes
 legacy-regulations-round2/regulations.csv:13 wierszy (11SOURCED,2UNVERIFIED). Odczytano pełne oficjalne R4Rev.3 z19.08.2013 iR7Rev.6 z22.11.2012: symbole, serie i warunki fotometrii. Numer rewizji dokumentu nie jest serią homologacji. R6 pozostaje luką po403 oficjalnych plików; przykład2a/01 wR4 nie zastępuje pełnej normyR6. Nie przypisano certyfikatu5497 ani aktualności2026. Nowe ustalenia są w osobnym CSV z punktami, nie powielają24-wierszowej tabeli bazowej.
 
 rear-night-round4:2 kolejne kadry obejrzane i odrzucone jako przód/bok,1NOT_REVIEWED. Brak nowych przyjętych tylnych emisji, brak zachowanych obrazów. RN3-04 pozostaje1nocnym kontekstem, bez czytelnegoE.
+
+## R6 — pełny starszy tekst odnaleziony
+
+r6-source-round3/regulations.csv:9SOURCED z pełnego R6Rev.5,07.10.2011, Supplement21 serii01. Kategorie2a/2b, amber, znak/seria i kierunkowa fotometria z warunkami oraz ograniczeniem nocnego sterowania2b. Koordynator odczytał także tabelę i6.6.2 w pełnym tekście. Wcześniejsze403 Rev.7 pozostają dziennikiem dostępu; nie oznaczają już braku jakiegokolwiek pełnego R6. Snapshot2011 nie jest deklaracją aktualnej wersji2026. Tabele:24 bazowe +13legacy +9R6, z odrębnymi wersjami i statusami.
