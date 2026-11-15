@@ -614,3 +614,7 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 01/live-light-demonstrations-round17: publiczny film oficjalnegoERMAX, tylko link/timecode i własne obserwacje. Bez plików filmu, stillów, pobrań i zapisanych screenshotów. Nie przypisanoCC, nie ogłoszono fizycznej techniki nagrania ani trzech nowych fotografii.
 
 01/rear-mark-closeup-round18:2fotografie klosza publikowaneCzarnyStg/Allegro18809276824, tylko link-only, all rights reserved, fotografUNVERIFIED. KażdyexactURL ponownie sprawdzony i niezależnie obejrzany;0plików mediów. Numer6611489 z kataloguKögel nie stał się numerem samego klosza; pełnyE-number pozostajeUNVERIFIED.
+
+02/baseline-remote-round24:4indywidualnie obejrzane źródłaCC według source-metadata.json; podglądy wyłącznie raw pozaGit. W repo własne obserwacje, metadane i erraty,0nowych fotografiiGit.
+
+02/winter-editorial-round25:1fotografia przypisana ChristianPetrich/SINTEF, publikowana przezAquaHoy/Nofima, tylko link-only, all rights reserved; bez pobrania/cropu/screenshotu. Własne opisy i źródłowy kontekst nie są rozpoznaniem chemicznym nalotu ani otwartą licencją fotografii.

@@ -1,0 +1,12 @@
+# Audyt czterech kolejnych źródeł P18 — runda 24
+
+Obejrzano osobno cztery wcześniej NOT_REVIEWED źródła **P18-120, 132, 145, 151**. Licencje oficjalnego Commons sprawdzono przed obrazami: BY-SA 4.0 dla 120/132/151, BY-SA 2.0 dla 145. Autorzy/datowanie/rozdzielczości źródłowe SOURCED w `source-metadata.json`; własne obserwacje i erraty w `observations.json` oraz `candidates.csv`.
+
+**Potwierdzone przyrosty A/B/zimowych/Europy: 0/0/0/0.** B dla każdego FAIL_NOT_NEW_BASELINE niezależnie od rozdzielczości; do starego A nie narzucono progu 1000px. Te kadry odpadają z powodu braku docelowej pary drzwi albo niepotwierdzonego typu/brudu. Pokrycie audytu 53/88 rekordów (poprzednie 49 + 4 rozłączne); pozostałe 35 rekordów pozostają nieobejrzane. To nie globalny wynik kwalifikacji ani 53 unikalne fotografie.
+
+- **120 Moran:** rzeczywista naczepa z ciągnikiem, podporami i tylną grupą osi. Kadr obejmuje tył z windą i pracownikiem, wbrew staremu „tył poza kadrem”. Główny biały tylny panel niemal jednolity; nie potwierdzono centralnego podziału na parę skrzydeł ani filmu. Małych tyłów w tle nie traktujemy jako osobnych przeanalizowanych wzorców brudu.
+- **132 Nigeria:** ciągnik z czerwoną żebrowaną wywrotką/naczepą od boku, z motocyklami z przodu kadru. Brak płaszczyzny tylnych drzwi; nie orzekamy ruchu ciężarówki z samej obecności ruchu motocykli.
+- **145 Plumbridge:** dwa stare pojazdy stoją na trawie. Drewniane burty/tailboardy, metalowe zastrzały i podwozia; prawy NIE ma zamkniętej skrzyni ładunkowej, jak głosił P18. Nie zachowujemy niepotwierdzonego „2–3 zacieków” ani brudu tylnej lampy. Naczepa konstrukcyjnie/źródłowo niepotwierdzona.
+- **151 FedEx:** bezpośredni tył dostawczego nadwozia z poziomo segmentowaną roletą, jednym dolnym zamkiem i bez pary pionowych drzwi. Źródło mówi tylko truck, nie semi-trailer. Szare ślady dolnej belki mogą obejmować zużycie/otarcia; nie służą za dowód brudu drzwi naczepy.
+
+Wszystkie cztery obrazy obejrzane indywidualnie, 4 żądania obrazów, 0 dodatkowych większych oryginałów, odstępy≥12s, 0 HTTP429. Podglądy dozwolonych CC są wyłącznie poza Gitem: główne `Data/raw/refs/codex-s21/02-brud/baseline-remote-round24/`. Dla małych źródeł imageinfo oddało plik nieskalowany, co zapisano w metadanych; nie generowano większych wersji. Żadnych nowych miniaturek odrzuceń w Gicie, manifest przyjętych referencji pusty. Bez Chrome, bez zmian P18/ledger18/parenta i bez Git.

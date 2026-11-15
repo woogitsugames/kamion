@@ -196,3 +196,9 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Cztery dalsze rekordy bazowe — obieg23
 
 [Audyt119/122/126/157](baseline-remote-round23/README.md): cztery nowe indywidualne oglądy starych źródeł; pokrycie49/88P18, pozostałe39NOT_REVIEWED. Przyrost A/B:0/0. 122 rzeczywiście pokazuje zamknięte dwuskrzydłowe drzwi naczepy naM1, więc wcześniejszy powód „drzwi niewidoczne” jest błędny; natywny detal pokazuje prawie czyste płyciny. 119 to fałdy plandeki, bez potwierdzenia dawnych trzech zacieków.126 pokazuje bok chłodni,157 otwarty tył z rampą. B dla tych zdjęć pozostaje NOT_NEW. Cztery podglądy i jeden oryginał tej samej fotografii122 pozaGit, dwie miniatury≤800 jako dowód erraty, nie dwa zdjęcia. Nie zmieniono P18 ani historycznego ledger18.
+
+## Dalszy audyt i oblodzenie z innym kontekstem — obiegi24–25
+
+[R24](baseline-remote-round24/README.md):cztery nowe indywidualne oglądy120/132/145/151, pokrycie53/88P18,35NOT_REVIEWED.120 ma widoczny tył Moran, lecz para skrzydeł i brud niepotwierdzone;132 to bok naczepy wywrotki,145 drewniane burty,151 pojedyncza roletaFedEx. PrzyrostA/B0/0. Cztery podglądyCC tylko raw, bez większych oryginałów i bez zmiany historycznegoP18/ledger18.
+
+[R25](winter-editorial-round25/README.md):jeden nowy link-onlyAUX ChristianPetrich/SINTEF zAquaHoy/Nofima pokazuje oblodzone dolne fragmenty dwóch drzwi, próg i sople. Dostępne630×420; typ całego pojazdu i wysokość całych drzwi niepotwierdzone. Artykuł dotyczy wody z transportu ryb, więc nie nazwano nalotu drogową solą ani nie przeniesiono składu na fotografię. PrzyrostA/B/C0. Reuters zakończony naDeviceCheck bez ponawiania; PIXTA odrzucony po obejrzeniu przodu/boku. WszystkoARRlink-only,0pobrań/screenshotów; nie zmieniono głównego23 ani dolnych granic5A(zograniczeniami)/1B.
