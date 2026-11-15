@@ -30,5 +30,5 @@ for w, el in ways.items():
     if show_all or main:
         rows.append(dict(way=w, hw=a(e0, "highway"), ref=ref, name=a(e0, "name"), len_m=round(L), bld_per_100m=round(nb / max(L, 1) * 100, 1),
                          lamps=dict(per.get(w, {}))))
-print(json.dumps({"region": rid, "families": dict(sorted(fam.items())), "sodium": sum(v for k, v in fam.items() if "old" in k or "arc" in k),
+print(json.dumps({"region": rid, "families": dict(sorted(fam.items())), "sodium": sum(v for k, v in fam.items() if ("old" in k and "_led_" not in k) or "arc" in k),
                   "roads": sorted(rows, key=lambda r: -r["len_m"])}, ensure_ascii=False, indent=1))
