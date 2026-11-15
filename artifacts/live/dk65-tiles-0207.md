@@ -7,3 +7,5 @@
 - NASTĘPNY KROK: po CHAIN DONE r2 dk65-02 obejrzeć `artifacts/dk65-tiles-0207/dk65-02/r2/Low-clear/*.png` vs ortho/top_*.jpg; potem `pwsh artifacts/dk65-tiles-0207/tools/chain.ps1 -Tiles dk65-03,dk65-04,dk65-05 -Tag r2 -NoWorld`
 - 02:5x: dk65-02 r2 gotowy (import 59,9/139,0 MB, vqa Low, pary góra/ortofoto; S19 wiadukt z OSM brak na orto 2024; rzeki Supraśl brak). ADR 0207 sekcja dk65-02 zacommitowana. dk65-03..05 world r2 → W TLE `tools/imports.ps1` (import+vqa Low 03,04; 05 Low+High).
 - NASTĘPNY KROK: po `CHAIN DONE r2 dk65-05` w logs/chain.status: `uv run --project tools/worldgen python artifacts/dk65-tiles-0207/tools/pair.py dk65-0N r2`, obejrzeć, sekcje ADR 03–05, pytest.
+- 03:2x: 03/04/05 import + vqa Low (05 też High) OK: WORLD_MEMORY Low/High 03 50,5/131,7; 04 76,1/181,5; 05 75,5/176,5 MB. Pary góra/ortofoto obejrzane, ADR 0207 kompletny (sekcje 02–05, budżet, otwarte). pytest seams+edge 9/9.
+- KONIEC. Dla lidera: `git merge --no-ff origin/dk65-tiles-0207`; visual-critic na `artifacts/dk65-tiles-0207/dk65-0N/r2/view/`; pytania właściciela: S19 w Fastach (OSM 2025 vs orto 2024), plac budowy przy Chabrowej.

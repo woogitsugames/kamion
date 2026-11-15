@@ -53,19 +53,50 @@ Kafle `dk65-06`+ (km 16,7–25, budowa S19) czekają na odpowiedź właściciela
 - Skrzyżowanie z Dzikowską (węzeł 1197260556): układ osi i wlotu zgodny z ortofoto (`pair-top-dzikowska.jpg`).
 - Szew z `dk65-01`: 6,5 m + linie po obu stronach z obu stron szwu (`pair-top-seam-south.jpg`).
 
-## Kafel `dk65-03` … `dk65-05`
-(uzupełniane po imporcie — sekcje poniżej)
+## Kafel `dk65-03` (Ełcka między Fastami S i N, km 11,80–12,28)
+- Graf 54/51, 280 budynków; build_world 663 s (kolejka slotów); ściany terenu 0; spójność 3 × `lane_blind_end`, 0 na
+  trasie. Trasa 484 m po jednej krawędzi `w1024956365`; override `dk65-elcka-xsec` (7,6 m + linie) jak w `dk65-02`.
+- Pary z góry (szew E, środek, szew N) zgodne z ortofoto: prosta, bez wlotów. Widok kierowcy: po prawej podniesiony
+  krawężnik przy trawie (reguła miejska) — na ortofoto pobocze gruntowe; do backlogu.
+
+## Kafel `dk65-04` (Fasty N, km 12,28–14,36)
+- Graf 145/151, 788 budynków; build_world 327 s; ściany terenu > 0,15 m: 52, max 0,69 m; spójność 6 ×
+  `lane_blind_end`, 1 na trasie (wlot Szkolnej, węzeł 839428386, 17 m przed skrzyżowaniem, „what: none” — bez wpływu
+  na jezdnię trasy).
+- Skrzyżowanie Białostocka / Kościelna (węzeł 839431354): czterowlotowe, przejście dla pieszych na N wlocie, parking
+  przy kościele NE — układ zgodny z ortofoto (`dk65-04/r2/view/pair-top-koscielna.jpg`); Sosnowa / Klubowa i Szkolna
+  zgodne co do położenia wlotów. Ełcka w Fastach N to aleja drzew po obu stronach — generator sadzi drzewa z reguły,
+  nie z ortofoto (backlog). Parkujące auta na poboczu przy kościele (s 600–830 na ortofoto) — nieodtworzone.
+
+## Kafel `dk65-05` (Dobrzyniewo Duże, km 14,36–16,56)
+- Graf 139/138, 473 budynki; build_world 261 s; ściany terenu > 0,15 m: 13, max 0,67 m; spójność 7 ×
+  `lane_blind_end`, 0 na trasie.
+- Świerkowa (szew S), Dębowa / Podleśna, Chabrowa i droga bez nazwy s 1686: położenie wlotów zgodne z ortofoto. Przy
+  Chabrowej na ortofoto 2024 są **roboty ziemne** (pas S19 / łącznice `proposed` w OSM, km 15,8–16,3); w świecie stan
+  OSM: istniejąca droga bez nazwy na E jest asfaltowa, plac budowy nieodtworzony (WORKING_VALUE: brak). Pytanie do
+  właściciela razem z `dk65-06`.
+- Szew N z `dk65-06`: droga zamknięta zaporą na krawędzi kafla (70 m przed rondem DK65) — zniknie z `dk65-06`.
 
 ## Budżet (visual-qa, 1920×1080, edytor, szacunek przed SRP batching; A/B nie dotyczy — nowe regiony)
 | kafel | WORLD_MEMORY Low / High | draws (est.) kamery z drogi | trójkąty kamery z drogi |
 |---|---|---|---|
-| `dk65-02` | 59,9 / 139,0 MB | 21–196 | 45–220 tys. |
-Odniesienie `docs/06` §6 (hipotezy): Samsung A ≤ 300–400 draws, ≤ 400–600 tys. trójkątów. Telefon: nie mierzono
+| `dk65-02` | 59,9 / 139,0 MB | Low 21–196 | Low 45–220 tys. |
+| `dk65-03` | 50,5 / 131,7 MB | Low 7–78 | Low 26–83 tys. |
+| `dk65-04` | 76,1 / 181,5 MB | Low 47–281 | Low 69–177 tys. |
+| `dk65-05` | 75,5 / 176,5 MB | Low 26–171, **High 26–455** | Low 89–173 tys., High 90–537 tys. |
+High: max na `rev-mid` (455 draws, 436 tys.) i `route-s0157` (423 / 463 tys.) — wieś + las; mieści się w hipotezie flagowca (≤ 700–1000), nie w Samsungu A (High nie jest tierem A).
+Czasy: ingest 2–2,5 min/kafel (pobranie ~300 MB), build_region 7–8 s, build_world 141–663 s (z kolejką slotów),
+import 9–10 min, visual-qa 20–35 s na tier. High tylko na ostatnim kaflu (zgodnie z zadaniem).Odniesienie `docs/06` §6 (hipotezy): Samsung A ≤ 300–400 draws, ≤ 400–600 tys. trójkątów. Telefon: nie mierzono
 (zadanie bez telefonu).
 
 ## Walidacja
-- `tests/gis/test_dk65_seams_0207.py`: szwy 01→02→03→04→05 (ten sam way, ta sama szerokość i linie) + jeden przekrój
-  Ełckiej w 02–05.
+- `tests/gis/test_dk65_seams_0207.py` 5/5: szwy 01→02→03→04→05 (ten sam way, ta sama szerokość i linie) + jeden
+  przekrój Ełckiej w 02–05; `tests/gis/test_edge_lines_0205.py` 4/4. Overrides: 4 + 1 + 1 + 1 zastosowane, 0 stale.
+  Pełny `pytest tests/gis` i EditMode nie uruchamiane (zmiana = dane regionów + test; kod generatora bez zmian).
+- Pętla wizualna: pary render z góry | ortofoto `artifacts/dk65-tiles-0207/dk65-0N/r2/view/pair-top-*.jpg` (20 par),
+  widoki kierowcy `low-drive-*.jpg`, `low-rev-*.jpg`, `grid-drive*.jpg`; obejrzane: 02 (S19, Dzikowska, most, 4 widoki
+  kierowcy), 04 (Kościelna, Szkolna), 05 (Chabrowa High), siatka kierowcy 03/04/05. Krytyk `visual-critic`: nie
+  uruchamiany (agent nie tworzy subagentów) — do zlecenia przez lidera.
 
 ## Otwarte
 1. Rzeka Supraśl pod mostem w `dk65-02` (brak wody w generatorze).
@@ -73,4 +104,15 @@ Odniesienie `docs/06` §6 (hipotezy): Samsung A ≤ 300–400 draws, ≤ 400–6
 3. Oś OSM Ełckiej może być przesunięta ~0,5–1 m względem środka jezdni (odczyt niepewny przez pasy kół) —
    `center_offset` nie ustawiony.
 4. Szerokość w Fastach S (6,5 m BDOT) i na moście — niska pewność; do weryfikacji przejazdem właściciela.
-5. Na `dk65-05` trasa kończy się 70 m przed rondem DK65 (szew z `dk65-06`, nie budowany) — droga ucięta na krawędzi.
+5. Krawężnik po prawej na Ełckiej w `dk65-03` (reguła miejska) zamiast pobocza gruntowego; aleje drzew w Fastach N
+   i parkujące auta przy kościele nieodtworzone; dekale włazów na jezdni zamiejskiej (jak w 0205, UNVERIFIED).
+6. Plac budowy S19 przy Chabrowej (`dk65-05`) — stan OSM bez placu; odpowiedź właściciela razem z `dk65-06`.
+7. Na `dk65-05` trasa kończy się 70 m przed rondem DK65 (szew z `dk65-06`, nie budowany) — droga ucięta na krawędzi.
+
+## Odtworzenie
+```
+uv run --project tools/worldgen tools/worldgen/ingest.py --region dk65-0N          # N = 2..5
+uv run --project tools/worldgen tools/worldgen/build_region.py --region dk65-0N
+pwsh artifacts/dk65-tiles-0207/tools/chain.ps1 -Tiles dk65-0N -Tag r2 [-High]       # build_world + export-route + import + vqa
+uv run --project tools/worldgen python artifacts/dk65-tiles-0207/tools/pair.py dk65-0N r2
+```

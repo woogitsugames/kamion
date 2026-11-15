@@ -1,0 +1,40 @@
+world-dk65-02-r1 start 2026-11-15T01:51:34
+world-dk65-04-r1 start 2026-11-15T01:51:35
+world-dk65-02-r1 exit=0 2026-11-15T01:54:28
+world-dk65-03-r1 start 2026-11-15T01:54:29
+world-dk65-03-r1 exit=0 2026-11-15T01:57:21
+CHAIN DONE r1 dk65-02,dk65-03 2026-11-15T01:57:21
+world-dk65-04-r1 exit=0 2026-11-15T02:00:17
+world-dk65-05-r1 start 2026-11-15T02:00:18
+world-dk65-05-r1 exit=0 2026-11-15T02:04:56
+CHAIN DONE r1 dk65-04,dk65-05 2026-11-15T02:04:56
+world-dk65-02-r2 start 2026-11-15T02:28:24
+world-dk65-03-r2 start 2026-11-15T02:30:09
+world-dk65-02-r2 exit=0 2026-11-15T02:30:51
+import-dk65-02-r2 start 2026-11-15T02:30:52
+import-dk65-02-r2 exit=0 2026-11-15T02:40:34
+vqa-low-dk65-02-r2 start 2026-11-15T02:40:36
+vqa-low-dk65-02-r2 exit=0 2026-11-15T02:41:09
+CHAIN DONE r2 dk65-02 2026-11-15T02:41:10
+world-dk65-03-r2 exit=0 2026-11-15T02:41:17
+world-dk65-04-r2 start 2026-11-15T02:41:18
+import-dk65-03-r2 start 2026-11-15T02:42:07
+world-dk65-04-r2 exit=0 2026-11-15T02:46:50
+world-dk65-05-r2 start 2026-11-15T02:46:51
+world-dk65-05-r2 exit=0 2026-11-15T02:51:17
+CHAIN DONE r2 dk65-03,dk65-04,dk65-05 2026-11-15T02:51:17
+import-dk65-03-r2 exit=0 2026-11-15T02:51:22
+vqa-low-dk65-03-r2 start 2026-11-15T02:51:24
+vqa-low-dk65-03-r2 exit=0 2026-11-15T02:51:42
+import-dk65-04-r2 start 2026-11-15T02:51:45
+import-dk65-04-r2 exit=0 2026-11-15T03:00:56
+vqa-low-dk65-04-r2 start 2026-11-15T03:00:58
+vqa-low-dk65-04-r2 exit=0 2026-11-15T03:01:21
+CHAIN DONE r2 dk65-03,dk65-04 2026-11-15T03:01:22
+import-dk65-05-r2 start 2026-11-15T03:01:23
+import-dk65-05-r2 exit=0 2026-11-15T03:10:40
+vqa-low-dk65-05-r2 start 2026-11-15T03:10:42
+vqa-low-dk65-05-r2 exit=0 2026-11-15T03:11:01
+vqa-high-dk65-05-r2 start 2026-11-15T03:11:02
+vqa-high-dk65-05-r2 exit=0 2026-11-15T03:11:34
+CHAIN DONE r2 dk65-05 2026-11-15T03:11:35
