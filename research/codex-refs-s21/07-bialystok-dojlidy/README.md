@@ -1,6 +1,6 @@
 # 07 — Białystok trasa C / Dojlidy: referencje i luki — WIP
 
-Stan bieżący:5 wierszy —4 dokumentacyjne i1 ponownie obejrzany istniejący kadr ronda. Nowych fotografii0; błędną etykietę śnieg z P1-004 wskazano w erracie, B-123 nadalotwarte.
+Stan bieżący:7 wierszy —6 dokumentacyjnych i1 ponownie obejrzany istniejący kadr ronda. Nowych fotografii0; błędną etykietę śnieg z P1-004 wskazano w erracie, B-123 nadalotwarte.
 
 Cel: uzupełnić backlog S21 źródłami, nie zmieniając generatorów. W tym przeglądzie: **0 kadrów pobranych, 0 kadrów link-only**, 4 wiersze dokumentacyjne (3 fakty z jednego komunikatu + 1 kontrola publicznych metadanych). To nie jest pakiet zdjęciowy. Nie pobrano ani nie opisano zdjęć z galerii miejskiej.
 
@@ -24,3 +24,7 @@ SOURCED [07-D04, oba endpointy, pola w data/]: usługa jest publiczna, lecz brak
 ## B-123 — kontrola istniejącego ronda Bieżeństwa
 
 07-P01: ponownie obejrzany G3-028 = P1-004, bez pobrania i duplikowania obrazu. SOURCED [obraz]: niskie brązowawe krzewy, trawa, jezdnia, pas czerwonego gzymsu i walcowe słupy estakady. Pokrywy śnieżnej nie rozpoznano; etykieta sezon=śnieg w P1-004 jest błędna dla tego obrazu. Zapisano erratę w data/rondo-biezenstwa-recheck.json bez zmiany cudzych manifestów. To znany boczny widok, nie nowy dojazd z oka kierowcy, więc B-123 pozostaje otwarte. Łącznie5 wierszy:4 dokumentacyjne i1 ponownie obejrzany kadr; nowych zdjęć0.
+
+## B-040 — raport za2025 potwierdza raportowane wdrożenie
+
+07-D05/D06: SOURCED [Raport o stanie Miasta Białegostoku za2025, s101; URL w manifeście i data/annual-report-2025-source.json] — w sprawozdaniu działań odnotowano wprowadzenie zakazu dla ciężarówek na Suchowolca (Plażowa–Ciołkowskiego) oraz ograniczenia8ton na Mickiewicza (Kuronia–Ciołkowskiego). To źródło wdrożenia raportowanego za2025, uzupełniające wcześniejszą zapowiedź prasową. Okładkę2025 i pełną stronę101 odczytano tekstowo i obejrzano w renderach; mylący tytuł indeksu2024 nie został użyty. PDF15MB i rendery poza gitem. Rodzaj znaku B-5/B-18, definicja masy, tabliczki wyjątków i stan15.11.2026 UNVERIFIED; B-040 nadal otwarte. Brak nowych fotografii.

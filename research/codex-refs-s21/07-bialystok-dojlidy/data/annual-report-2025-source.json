@@ -1,0 +1,35 @@
+{
+  "source": "https://bip.bialystok.pl/resource/104575/Raport%2Bza%2B2025%2Brok_do%2BBRM.pdf",
+  "retrieved_utc": "2026-11-15T18:59:10.807701+00:00",
+  "bytes": 15024693,
+  "sha256": "dfe8103e92988dd75f9e814c87cfa274775a63c18005c97e86aa73e12dadf7d4",
+  "pdf_pages": 388,
+  "cover_text": "RAPORT O STANIE MIASTA BIAŁEGOSTOKU2025 — year verified visually, not inferred from filename",
+  "visual_review": "Cover and printed/pdf page101 independently rendered and visually read by coordinator. Cover clearly says2025 despite stale search title2024. Poppler font substitution warnings present; relevant Polish text and8ton value clearly readable.",
+  "matched_pages": [
+    {
+      "pdf_page_one_based": 101,
+      "extracted_page_text_sha256": "061e211472bd1c35253298fb783f586ee46a288f416797f1be30e58e967d6d9a",
+      "stored_text": "Full page text kept only outside git; own findings below"
+    }
+  ],
+  "findings": [
+    {
+      "id": "07-D05",
+      "period": "2025 report",
+      "street": "ks. S. Suchowolca",
+      "segment": "Plażowa–K. Ciołkowskiego",
+      "reported_action": "wprowadzenie zakazu wjazdu pojazdów ciężarowych",
+      "locator": "s101, bullet under other road/pedestrian safety measures"
+    },
+    {
+      "id": "07-D06",
+      "period": "2025 report",
+      "street": "A. Mickiewicza",
+      "segment": "J. Kuronia–K. Ciołkowskiego",
+      "reported_action": "wprowadzenie ograniczenia tonażowego8ton",
+      "locator": "s101, same bullet"
+    }
+  ],
+  "limits": "Implementation reported for2025, not just a future press announcement. Does not independently establish physical signs/exceptions or legal/field condition2026-11-15; B5 vsB18 and mass definition not inferred. B040 remains open. PDF/renders not redistributed."
+}
