@@ -20,37 +20,42 @@ Zasady:
 
 ---
 
-## Klasy sprzętu PC i budżety — **wszystko `WORKING_VALUE`** (ADR 0266)
+## Klasy sprzętu PC i budżety — **wszystko `WORKING_VALUE`** (D74, ADR 0266)
 
 Referencyjny PC **nie jest ustalony** (pytanie do właściciela). Maszyna dewelopera (RTX 5070) **nie jest referencją**:
 służy wyłącznie jako **maszyna pomiarowa** — wynik z niej jest informacyjny („jest zapas / nie ma zapasu”) i nie zalicza
 klasy „min” ani „zalecany”, dopóki właściciel nie wskaże sprzętu referencyjnego albo nie zaakceptuje zastępczej metody.
 
-Przykłady sprzętu są **kategoriami/generacjami**, nie konkretnymi modelami i nie wynikami benchmarków.
+Klasy **min** i **zalecany** = wymagania sprzętowe właściciela z **D74** (wzorowane na kartach Steam ETS2/ATS; Windows 10
+64-bit). Modele sprzętu to klasa wymagań, nie wyniki benchmarków. Klasa **wysoki** = propozycja ADR 0266 spoza D74.
+Progi FPS, RAM/VRAM procesu i dysk to propozycja lidera (SCS nie publikuje FPS) — do potwierdzenia przy pierwszym pomiarze.
 
 | | **Min** | **Zalecany** | **Wysoki** |
 |---|---|---|---|
-| Przykładowa klasa GPU (`WORKING_VALUE`) | dyskretny GPU średniej klasy sprzed ok. 2 generacji, ≥ 6 GB VRAM | dyskretny GPU średniej klasy z poprzedniej/bieżącej generacji, ≥ 8 GB VRAM | dyskretny GPU wyższej klasy bieżącej generacji, ≥ 12 GB VRAM |
-| Przykładowa klasa CPU (`WORKING_VALUE`) | 6 rdzeni / 12 wątków, desktop ok. 5 lat wstecz | 6–8 rdzeni, desktop ok. 3 lata wstecz | ≥ 8 rdzeni, bieżąca generacja |
-| RAM systemu (`WORKING_VALUE`) | 16 GB | 16 GB | 32 GB |
-| Dysk | SSD (HDD nie wspierany — do decyzji) | SSD | NVMe SSD |
+| GPU (D74 / `WORKING_VALUE`) | NVIDIA GTX 660 / AMD RX 460 / Intel HD 630 (2 GB VRAM) | NVIDIA GTX 1660 / AMD RX 590 (≥ 6 GB VRAM) | dyskretny GPU wyższej klasy bieżącej generacji, ≥ 12 GB VRAM |
+| CPU (D74 / `WORKING_VALUE`) | Intel Core i5-6400 / AMD Ryzen 3 1200 | Intel Core i5-9600 / AMD Ryzen 5 3600 | ≥ 8 rdzeni, bieżąca generacja |
+| RAM systemu (D74 / `WORKING_VALUE`) | 8 GB | 12 GB | 32 GB |
+| Dysk (gra bazowa ≤ 25 GB, D74) | SSD (HDD nie wspierany — do decyzji) | SSD | NVMe SSD |
 | Rozdzielczość pomiaru | 1920×1080 | 1920×1080 | 2560×1440 |
 | FPS docelowy (limit) | 30 | 60 | 60 (bez limitu jako informacja) |
-| Tier URP (`QualityProfile`) | Medium | High | Ultra |
+| Tier URP (`QualityProfile`) | Low | High | Ultra |
 | Czas klatki p50 | ≤ 33,3 ms | ≤ 16,7 ms | ≤ 16,7 ms |
 | Czas klatki p95 | ≤ 36,0 ms | ≤ 18,5 ms | ≤ 18,5 ms |
 | Czas klatki p99 | ≤ 50,0 ms | ≤ 25,0 ms | ≤ 25,0 ms |
 | Klatki > 2× budżetu (66,7 / 33,3 / 33,3 ms) | ≤ 0,5 % | ≤ 0,5 % | ≤ 0,5 % |
 | Klatki > 100 ms (przycięcia) po rozgrzewce | 0 | 0 | 0 |
-| Pamięć procesu (prywatna, szczyt) | ≤ 6 GB | ≤ 8 GB | ≤ 10 GB |
-| VRAM dedykowany procesu (szczyt) | ≤ 5 GB | ≤ 6,5 GB | ≤ 10 GB |
+| Pamięć procesu (prywatna, szczyt) | ≤ 4 GB | ≤ 7 GB | ≤ 10 GB |
+| VRAM dedykowany procesu (szczyt) | ≤ 1,75 GB | ≤ 5 GB | ≤ 10 GB |
 | Czas ładowania regionu (LoadScene → pierwsza klatka sceny) | ≤ 30 s | ≤ 20 s | ≤ 15 s |
-| Draw calls (licznik „Draw Calls Count”, p95) | ≤ 3 000 | ≤ 4 000 | ≤ 6 000 |
-| Trójkąty w klatce (p95) | ≤ 3 M | ≤ 6 M | ≤ 12 M |
+| Draw calls (licznik „Draw Calls Count”, p95) | ≤ 2 000 | ≤ 4 000 | ≤ 6 000 |
+| Trójkąty w klatce (p95) | ≤ 2 M | ≤ 6 M | ≤ 12 M |
 | Kolekcje GC w oknie pomiaru (90 s) | ≤ 2 | ≤ 2 | ≤ 2 |
 
 Te same liczby jako dane (jedno źródło prawdy dla parsera): `tools/pcperf/budgets/pc-budgets.json`.
 Zmiana budżetu = zmiana tego pliku + wiersza w tabeli + wpis w ADR 0266 (lub nowy ADR), po decyzji właściciela.
+**Ryzyko (D74):** Intel HD 630 przy obecnym świecie — pomiar tieru Low na iGPU konieczny, zanim klasa „min” zostanie
+obiecana. Liczby z maszyny deweloperskiej (ADR 0261: RTX 5070, High, 1600×900, 360–445 fps głównie na postoju) są
+informacyjne i nie zastępują pomiaru klas min/zalecany.
 
 **🔒 Zabezpieczenie mobilne (odroczone, D73, zostaje):** budżety z `docs/PERFORMANCE_BUDGETS.md` (A16 Low/Medium 30 FPS,
 p95 ≤ 34 ms, p99 ≤ 40 ms, PSS ≤ 1,0–1,2 GB; S24+ High 60 FPS; świat: draw calls 250/350/800/1000, **trójkąty
@@ -64,7 +69,7 @@ przez puchnięcie danych bazowych.
   `-metrics <katalog>`; bufor prealokowany, zero GC w pętli, zapis na końcu: `frames.csv` (czas klatki, CPU/GPU
   z `FrameTimingManager`, draw calls/batches/trójkąty), `memory.csv` (pamięć Unity co 0,5 s, licznik GC), `run.json`
   (sprzęt z `SystemInfo`, build, tier, rozdzielczość, czas ładowania regionu, percentyle z gry do kontroli krzyżowej).
-- Skrypt: `pwsh scripts/pc-metrics.ps1 -Exe <ścieżka do .exe> -Scene <region> -Tier High -Fps 60 -Width 1920 -Height 1080
+- Skrypt: `pwsh scripts/pc-metrics.ps1 -Exe artifacts/win/kamion-<ver>-<sha>[-regions]/Kamion.exe -Scene knyszyn-w -Tier High -Fps 60 -Width 1920 -Height 1080
   -DurationSeconds 90 -Class zalecany` → `artifacts/pc/<maszyna>/<ts>/` (+ `process.csv` z pamięcią procesu i VRAM
   z liczników Windows, `pc-report.json` / `pc-report.md`).
 - Parser: `uv run --no-project python tools/pcperf/pc_metrics.py <katalog> --budget tools/pcperf/budgets/pc-budgets.json

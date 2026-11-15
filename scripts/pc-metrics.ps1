@@ -4,13 +4,17 @@
   collect frames.csv / memory.csv / run.json / screen.png / Player.log and build the report (tools/pcperf/pc_metrics.py).
   Desktop counterpart of scripts/device-metrics.ps1. SZKIC — written without Windows/pwsh at hand, not run yet.
 .EXAMPLE
-  pwsh scripts/pc-metrics.ps1 -Exe artifacts/windows/<build>/Kamion.exe                                 # Boot scene, 90 s, no budget
-  pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene knyszyn -Tier High -Fps 60 -Width 1920 -Height 1080 -Class zalecany
-  pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene knyszyn -Tier Medium -Fps 30 -Class min -DurationSeconds 1800   # 30 min (Etap 5)
+  pwsh scripts/pc-metrics.ps1 -Exe artifacts/win/kamion-<ver>-<sha>-regions/Kamion.exe                  # Boot scene, 90 s, no budget
+  pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene knyszyn-w -Tier High -Fps 60 -Width 1920 -Height 1080 -Class zalecany
+  pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene knyszyn-w -Tier Low -Fps 30 -Class min -DurationSeconds 1800      # 30 min (Etap 5), D74 min = Low 1080p30
   pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene DrivingLab -Extra autopilot=circle50,speed=40,trailer=40 -Fps 240 -VSync 0   # uncapped headroom
 .NOTES
   Output: artifacts/pc/<machine>/<ts>/ (pc-report.md / .json; exit code of the parser: 0 in budget, 1 over budget, 2 invalid).
-  This script only takes the path to an already built .exe - building is scripts/build-windows.ps1 (ADR 0261).
+  This script only takes the path to an already built .exe - building is scripts/build-windows.ps1 (ADR 0261), whose output
+  is artifacts/win/kamion-<version>-<sha>[-low][-regions][-dev]/Kamion.exe. The region must be in that build (-Regions).
+  Do not pass the DesktopAutoShot arguments (-shot / -quit_t) here: the recorder quits the player itself after
+  -metricsSeconds and writes screen.png. Without -Tier / -Fps a desktop player starts at High / 60 fps (ADR 0261), so
+  for the "min" class pass -Tier Low -Fps 30 or the parser reports a context mismatch.
   Rules (docs/03): player only (never the editor), window in focus for the whole run, nothing else rendering on the machine,
   same machine + same route for before/after comparisons. The developer RTX 5070 machine is a measuring machine, NOT the
   reference PC (ADR 0260) - its reports say "informacyjny" until the owner names reference hardware.

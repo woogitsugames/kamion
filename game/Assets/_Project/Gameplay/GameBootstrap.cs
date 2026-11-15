@@ -33,6 +33,18 @@ namespace Game.Gameplay
             return high && Application.CanStreamedLevelBeLoaded(WorldCHighSceneName) ? WorldCHighSceneName : WorldCSceneName;
         }
         [SerializeField] int defaultTargetFps = 30;
+
+        /// <summary>Desktop frame-rate cap when neither a launch argument nor a saved choice exists (ADR 0261). WORKING_VALUE
+        /// until the owner names the reference PC (ADR 0260); "-fps N" overrides it (e.g. -fps 1000 for an uncapped measurement).</summary>
+        public const int DesktopTargetFps = 60;
+
+        public static bool IsDesktopPlayer(RuntimePlatform p) =>
+            p == RuntimePlatform.WindowsPlayer || p == RuntimePlatform.OSXPlayer || p == RuntimePlatform.LinuxPlayer;
+
+        /// <summary>First-launch tier of a desktop player ("High"); null on phones and in the editor (device rules / saved tier).</summary>
+        public static string DesktopDefaultTier(RuntimePlatform p) => IsDesktopPlayer(p) ? "High" : null;
+
+        public static int DesktopDefaultFps(RuntimePlatform p, int mobileDefault) => IsDesktopPlayer(p) ? DesktopTargetFps : mobileDefault;
         [SerializeField] bool showOverlay = true;
 
         public IPlatformServices Platform { get; private set; }
@@ -51,7 +63,15 @@ namespace Game.Gameplay
             Platform = PlatformServices.Create();
 
             string tierArg = Platform.GetLaunchArgument("tier");
-            if (!QualityTiers.Apply(tierArg) && !QualityTiers.Apply(QualityTiers.SavedTier))
+            string desktopTier = DesktopDefaultTier(Application.platform);
+            if (QualityTiers.Apply(tierArg) || QualityTiers.Apply(QualityTiers.SavedTier)) { }
+            else if (desktopTier != null)
+            {
+                // Desktop player (ADR 0261): the device rules are a phone GPU list; PC starts at High (not saved).
+                QualityTiers.Apply(desktopTier);
+                Debug.Log($"[BOOT] desktop default tier {desktopTier}");
+            }
+            else
             {
                 // First launch: tier by device class (data in QualityProfile.deviceRules; not saved, so a rule update
                 // reaches players who never chose a tier themselves).
@@ -77,7 +97,7 @@ namespace Game.Gameplay
             string rq = RenderOverrides.Parse(Platform.GetLaunchArgument);
             if (rq != null) Debug.Log("[BOOT] render overrides (profiling): " + rq);
 
-            int fps = defaultTargetFps;
+            int fps = DesktopDefaultFps(Application.platform, defaultTargetFps);
             if (int.TryParse(Platform.GetLaunchArgument("fps"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int argFps) && argFps > 0)
                 fps = argFps;
             else if (QualityTiers.SavedFrameRate > 0)
@@ -133,6 +153,7 @@ namespace Game.Gameplay
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
             // arguments (autopilot, speed) are read by that scene's bootstrap.
+            DesktopAutoShot.StartFromArguments(Platform.GetLaunchArgument);   // shot=<png> shot_t=<s> quit_t=<s> (ADR 0261 evidence run)
             string scene = Platform.GetLaunchArgument("scene");
             if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : LaunchSceneFor(scene);
         }
