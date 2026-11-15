@@ -110,3 +110,7 @@
 - 2026-11-15 21:24 +01:00 — R3 build_world zakończony, import Unity w toku (kontrola 13 assets, 65 plików, 0 problemów). Równolegle przygotowanie kolejnej próby koron lip oraz wejść urzędu, bez zmian bieżącego buildu.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r3.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r3.done`
 
+
+- 2026-11-15 21:28 +01:00 — R3 wszystkie 4 warianty OK, 62 kadry/wariant, pary 01–11 lokalnie. Wizualnie FAIL: 02 za blisko, 07 poza osią, plac pomnika przenika. Low nadal FAIL: wspólna kamera +6 draws i +1644 tris; High max 1 229 621 tris (<2 mln). Przygotowano wejścia urzędu i próbę koron, wymagają r4.
+- NASTĘPNY KROK: `pwsh artifacts/knyszyn-rynek-0227/r4.ps1`
+
