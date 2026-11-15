@@ -8,3 +8,4 @@ Agent chmurowy (bez Unity/dotnet/pwsh; Python przez uv). Gałąź `pc-gates-0266
 - [15.11] tools/pcperf: pc_metrics.py (stdlib) + budgets/pc-budgets.json + README; pytest 27/27 (uv run --no-project --with pytest pytest tools/pcperf/tests -q). NASTĘPNY KROK: scripts/pc-metrics.ps1.
 - [15.11] scripts/pc-metrics.ps1 (SZKIC, nieuruchomiony — brak pwsh/Windows): Start-Process playera z -metrics, próbki RAM/VRAM (CIM GPUProcessMemory) + nvidia-smi, parser. Recorder: zrzut screen.png + odroczone Quit. NASTĘPNY KROK: docs/01, docs/10, PERFORMANCE_BUDGETS, ADR 0266.
 - [15.11] docs/01 + docs/10 (D73, §3a pytania DLC/dystrybucja), PERFORMANCE_BUDGETS (sekcja PC), ADR 0266. pytest 27/27. NASTĘPNY KROK: przegląd diffu + PR.
+- [15.11] PR #130 otwarty (https://github.com/woogitsugames/kamion/pull/130). NASTĘPNY KROK (lider): pwsh scripts/test.ps1 -Platform EditMode, potem pc-metrics.ps1 na buildzie 0261.
