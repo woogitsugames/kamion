@@ -41,3 +41,6 @@ R7 po scaleniu main: cztery warianty i lokalne porównania wykonane; daszki i sz
 
 ## GIS po scaleniu main
 Pełny `pytest tests/gis -q`: 1472 passed, 33 skipped, 3 xfailed; exit 0. Poprawiono błędny odczyt terenu far field dla niestandardowego out_root oraz fallback R16; testy syntetyczne 10 passed. EditMode: 626 passed, 2 skipped, wykonany przed ostatnim scaleniem main, więc powtórzyć na stanie końcowym.
+
+## Iteracja r8
+Trzynaście próbnych koron daje bardziej liściasty park, ale widoczne szwy, powtarzalność oraz częściowe zasłanianie urzędu oznaczają FAIL naturalności. Cztery warianty ukończone, pary zdjęć lokalnie. Low nadal FAIL: max +5 szacowanych draws i +1832 tris z instancjami na wspólnych kamerach; max sumy draws 500→487. High max 1 230 049 tris, max draws 838→844. Wariant pozostaje roboczy do poprawy i pomiaru.

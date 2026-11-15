@@ -79,3 +79,6 @@ Cztery warianty ukończone; porównania 01–11 lokalnie w `compare/r6/High-clea
 
 ## Iteracja r7 — ocena 15.11, editor
 Po synchronizacji origin/main cztery warianty ukończone, porównania 01–11 lokalnie `compare/r7/High-clear/` i `Low-clear/`. W kadrze 02 czerwone daszki i podziały szyb są czytelniejsze w obu profilach (PASS wyłącznie dla tej poprawki), ale falująca kalenica i elewacja nadal odbiegają od zdjęcia; całość FAIL. Low max suma szacowanych draw calls 500→485, wzrost wspólnej kamery do +6 i trójkątów z instancjami +1832; High max 1 258 099→1 229 853 tris z instancjami, max suma draws 838→843. Szacunki edytora.
+
+## Iteracja r8 — ocena 15.11, editor
+Cztery warianty ukończone; pary lokalne 01–11 `compare/r8/High-clear/` i `Low-clear/`. Trzynaście próbnych koron daje wyraźnie bardziej liściasty park i widoczny kościół, lecz korony są niemal identyczne, mają ciemne pionowe szwy i częściowo zasłaniają urząd; naturalność High/Low FAIL, wariant roboczy. Low max suma szacowanych draw calls 500→487 (R7 485), wzrost na wspólnych kamerach max +5 (R7 +6) i +1832 tris z instancjami; High max 1 258 099→1 230 049 tris z instancjami, max suma draws 838→844. Warunek Low bez pogorszenia nadal FAIL.
