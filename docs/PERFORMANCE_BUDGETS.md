@@ -1,5 +1,17 @@
 # Performance budgets (initial, Stage 0)
 
+## PC (Windows) — platforma główna od D73 (ADR 0260, ADR 0266) — wszystko `WORKING_VALUE`
+Klasy **min / zalecany / wysoki** (FPS, rozdzielczość, tier, p50/p95/p99, klatki > progi, RAM/VRAM procesu, czas ładowania
+regionu, draw calls, trójkąty, GC): tabela w `docs/03` § „Klasy sprzętu PC i budżety”, dane dla parsera w
+`tools/pcperf/budgets/pc-budgets.json` (jedno źródło — test `test_docs03_table_matches_budget_file` pilnuje zgodności).
+Narzędzie: `PcFrameMetricsRecorder` (player, `-metrics <dir>`) + `scripts/pc-metrics.ps1` + `tools/pcperf/pc_metrics.py`.
+Klasy min / zalecany = wymagania sprzętowe z **D74** (min: i5-6400 / GTX 660 / 8 GB → Low 1080p 30 fps; zalecany:
+i5-9600 / GTX 1660 / 12 GB → High 1080p 60 fps; dysk ≤ 25 GB — wszystko `WORKING_VALUE`).
+**Zmierzone na PC dla klas: nic** (stan 15.11.2026). Jedyny pomiar to informacyjny przebieg ADR 0261 na maszynie deweloperskiej
+(RTX 5070, High, 1600×900, bez limitu, głównie na postoju) — nie jest referencją i nie zalicza żadnej klasy.
+
+Wszystko poniżej to budżety **mobilne** — od D73 🔒 zabezpieczenie dla przyszłej wersji telefonowej (odroczone, nie usunięte).
+
 Status: **initial**. Targets are `WORKING_VALUE`s until measured scenes exist; rendering-perf owns refinement.
 Measurement tool: Boot diagnostics (`DiagnosticsSampler`, rolling 600-frame window, nearest-rank percentiles) +
 `scripts/device-metrics.ps1` (full-session CSV, percentiles after a 5 s warm-up, `dumpsys meminfo` PSS, battery temperature).
