@@ -613,6 +613,7 @@ namespace Game.Gameplay
             if (!vehicle.Initialized || UnityEngine.Physics.simulationMode != SimulationMode.FixedUpdate) return;   // scripted stepping (tests) drives Input itself
             var m = vehicle.Model;
             Column.LockDeg = HandwheelLockDeg();
+            StepPcWheelForceFeedback(m);   // before any early return: autopilots get an inactive (zero) force
             if (StraightRunActive) { StepStraightRun(Time.fixedDeltaTime); return; }
             if (m_SteerBypass) { if (m_SteerHasTarget) Column.SnapTo(m_SteerTarget * Column.LockDeg); }
             else if (m_SteerDirect) Column.SnapTo(m_SteerTarget * Column.LockDeg);   // PC wheel: the player's hands are the hand model (ADR 0263)
@@ -621,7 +622,6 @@ namespace Game.Gameplay
             input.Steer = Column.Normalized;
             vehicle.Input = input;
             Wheel.FollowColumn(Column.Normalized);
-            StepPcWheelForceFeedback(m);
         }
 
         /// <summary>Force feedback from the physics of the last step (ADR 0263): steered-axle aligning torque and loads.</summary>
