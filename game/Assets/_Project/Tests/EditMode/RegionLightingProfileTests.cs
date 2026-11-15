@@ -62,7 +62,7 @@ namespace Game.Tests
         }
 
         [Test]
-        public void LedColourOverride_LeavesSodiumUnchanged_AndResets()
+        public void LedColourOverride_KeepsSodiumChromaticity_AndResets()
         {
             Color sodium = StreetLamps.SodiumLightColor;
             try
@@ -70,7 +70,9 @@ namespace Game.Tests
                 StreetLamps.SetLedColour(new Color(1f, 0.96f, 0.9f, 1f));
                 Assert.AreEqual(0.9f, StreetLamps.LedColour.b, 1e-6f);
                 Color s2 = StreetLamps.SodiumLightColor;
-                Assert.AreEqual(sodium.r, s2.r, 1e-5f); Assert.AreEqual(sodium.g, s2.g, 1e-5f); Assert.AreEqual(sodium.b, s2.b, 1e-5f);
+                // same chromaticity; the level follows the LED luminance at max channel 1 (equal-luminance rule of ADR 0191)
+                Assert.AreEqual(sodium.g / sodium.r, s2.g / s2.r, 1e-5f); Assert.AreEqual(sodium.b / sodium.r, s2.b / s2.r, 1e-5f);
+                Assert.AreEqual(1f, s2.r / sodium.r, 0.05f);
             }
             finally { StreetLamps.SetLedColour(new Color(0f, 0f, 0f, 0f)); }
             Assert.AreEqual(StreetLamps.DefaultLedColour, StreetLamps.LedColour);
