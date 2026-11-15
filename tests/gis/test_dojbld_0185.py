@@ -112,7 +112,21 @@ def test_materials_and_sets():
     assert "hall_wall_smooth" not in sys.modules["streetscape.buildings_mesh"].HALL_WALLS   # never a hashed pick
 
 
-@pytest.mark.xfail(reason="s20 lead reverted the fence mip exclusion (route C fence lost mesh at 10 m); follow-up alpha-to-coverage", strict=False)
 def test_fence_mesh_mips_do_not_preserve_coverage():
+    """ADR 0239 (B-082): plain box mips only for fence_mesh.png and only with its coverage shader (was: xfail after the
+    s20 revert of the ADR 0185 line - plain mips + URP Lit cutoff lost the mesh from ~10 m)."""
     src = (REPO / "game/Assets/_Project/World/Import/InstanceImporter.cs").read_text(encoding="utf-8")
-    assert 'ti.mipMapsPreserveCoverage = alpha && !file.StartsWith("fence_");' in src
+    assert "ti.mipMapsPreserveCoverage = Game.Rendering.FenceMeshCoverage.PreserveCoverageMips(file, alpha, fenceCoverage);" in src
+    assert 'file.StartsWith("fence_")' in src                                        # still an alpha texture
+    policy = (REPO / "game/Assets/_Project/Rendering/Runtime/FenceMeshCoverage.cs").read_text(encoding="utf-8")
+    assert 'TextureFile = "fence_mesh.png"' in policy
+    assert "alphaTested && !(fenceShaderAvailable && IsFenceMeshTexture(file))" in policy
+    reg = (REPO / "game/Assets/_Project/World/Import/RegionImporter.cs").read_text(encoding="utf-8")
+    assert "FenceMeshCoverage.Apply(lit, Shader.Find(Game.Rendering.FenceMeshCoverage.ShaderName))" in reg
+    # the texture the policy names is the one the generator writes, and the shader's fade assumes its 1 m tile
+    import numpy as np
+    from streetscape import export as EX
+    im = EX.fence_mesh_png()
+    assert im.size == (512, 512) and "fence_mesh" in (REPO / "tools/worldgen/streetscape/export.py").read_text(encoding="utf-8")
+    a = np.asarray(im)[:, :, 3] / 255.0
+    assert set(np.unique(a)) == {0.0, 1.0} and abs(float(a.mean()) - 0.152) < 0.005   # FenceMeshCoverageTests far case

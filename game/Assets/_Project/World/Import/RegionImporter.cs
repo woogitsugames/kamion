@@ -456,6 +456,12 @@ namespace Game.World.Import
                     if (custom != null) { lit.shader = custom; EditorUtility.SetDirty(lit); }
                     else Debug.LogWarning($"[IMPORT] material '{id}': shader '{shaderName}' not found, URP Lit kept");
                 }
+                // ADR 0239 (B-082): welded fence mesh -> Kamion/World FenceMesh (distance coverage instead of a cutoff).
+                if (clip && tex != null && Game.Rendering.FenceMeshCoverage.IsFenceMeshTexture(tex + ".png"))
+                {
+                    if (Game.Rendering.FenceMeshCoverage.Apply(lit, Shader.Find(Game.Rendering.FenceMeshCoverage.ShaderName))) EditorUtility.SetDirty(lit);
+                    else Debug.LogWarning($"[IMPORT] material '{id}': shader '{Game.Rendering.FenceMeshCoverage.ShaderName}' not found, URP Lit kept");
+                }
                 return lit;
             }
             bool decal = m.Get("decal") is bool dc && dc;
