@@ -73,6 +73,7 @@ namespace Game.World
             m_BatchCount = new int[slots];
             m_BatchBounds = new Bounds[slots];
             m_Thin = new bool[set.prototypes.Length];
+            m_ThinCaster = new bool[set.prototypes.Length];
             m_FixedCull = new bool[set.prototypes.Length];
             m_Ends = new float[set.prototypes.Length][];
             m_Lod0Min = new float[set.prototypes.Length];
@@ -80,6 +81,8 @@ namespace Game.World
             {
                 var pr = set.prototypes[p];
                 m_Thin[p] = pr.name.StartsWith("tree_");
+                // ADR 0240: thin street furniture (category or bounding box) casts nothing on tiers with thinCasterShadowsOff.
+                m_ThinCaster[p] = pr.lods.Length > 0 && pr.lods[0] != null && ThinShadowCasterPolicy.IsThin(pr.name, pr.lods[0].bounds.size);
                 m_FixedCull[p] = IsVehicle(pr.name);
                 m_Lod0Min[p] = m_FixedCull[p] && pr.lods.Length > 1 ? VehicleLod0MinM : 0f;
                 m_Ends[p] = (float[])pr.lodEndM.Clone();
@@ -105,6 +108,8 @@ namespace Game.World
         // the fallback when no tier was applied (edit-mode tools without an applier).
         float m_TreeCull, m_TreeCard, m_ThinStart, m_HlodSwitch, m_HlodCull;
         int m_TreeShadowMask;
+        bool[] m_ThinCaster;      // ADR 0240: per prototype, ThinShadowCasterPolicy
+        bool m_ThinCastersOff;    // active tier: QualityProfile.Tier.thinCasterShadowsOff
         bool m_Trees = true;
         bool m_HighOnly = true;
         bool m_LeafA2C = true;
@@ -122,6 +127,7 @@ namespace Game.World
             // forestHlodM: > 0 switch distance, < 0 off (rq_hlod=0), 0 = not set (profile before ADR 0015) → fallback field.
             m_HlodSwitch = ok && t.forestHlodM != 0f ? Mathf.Max(t.forestHlodM, 0f) : forestHlodM;
             m_HlodCull = ok && t.forestHlodM != 0f ? t.forestHlodCullM : forestHlodCullM;
+            m_ThinCastersOff = QualityProfileApplier.HasCurrent && t.thinCasterShadowsOff;
             m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
             m_HighOnly = DrawsHighOnly(QualityProfileApplier.HasCurrent, t.name);
             // ADR 0136 r2: per-tier vehicle cull (Low 150 m); 0 / no tier = the common VehicleCullM.
@@ -628,6 +634,7 @@ namespace Game.World
             // forest cost on the A16 (Low/Medium cast from LOD0 only).
             int mask = m_Thin[proto] ? (RenderOverrides.AbTreeShadowOff ? 0 : p.shadowLodMask & m_TreeShadowMask) : p.shadowLodMask;
             if (m_AbNoShadow != null && m_AbNoShadow[proto]) mask = 0;   // ADR 0136 r2 A/B (diagnostics)
+            if (m_ThinCastersOff && m_ThinCaster[proto]) mask = 0;       // ADR 0240: Low cannot resolve thin casters
             var shadows = (mask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
             int m0 = p.materialStart[lod];
             for (int s = 0; s < mesh.subMeshCount; s++)
