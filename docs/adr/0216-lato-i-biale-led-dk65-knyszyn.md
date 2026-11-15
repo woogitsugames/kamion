@@ -69,7 +69,26 @@ przed SRP batching), narzędzie `artifacts/summer-led-0216/tools/budget.py`. War
 - Telefon: nie mierzono (lider).
 
 ## Walidacja
-__VALIDATION__
+- **Rendery (edytor, `scripts/visual-qa.ps1 -Scene WorldC`, Low i High × clear/dusk/night, przed i po):**
+  `artifacts/summer-led-0216/{before,after}/{knyszyn,bialystok-knyszynska}/{Low,High}-{clear,dusk,night}/*.png`
+  (24 przebiegi, wszystkie exit 0); zestawienia przed (góra) / po (dół): `artifacts/summer-led-0216/view/ab_*.jpg`.
+  Obejrzane: `knyszyn` dusk/night `rynek-grodzienska-north`, `goniadzka-jagiellonska`, `dk65-inlet-south`;
+  `bialystok-knyszynska` dusk/night `route-s0925`, `route-s1665`, `route-s2404`.
+  - Pomarańczowa (sodowa) pula i halo przy Rynku w Knyszynie zniknęły; soczewki, pule na jezdni i poboczu czytają się
+    jako neutralnie białe na tle nieba zmierzchu, bez przepalenia i bez bloomu większego niż przed zmianą.
+  - `dk65-inlet-south` (DK65 na południe od Knyszyna): przed — rząd słupów i pula na jezdni; po — brak słupów,
+    droga ciemna (kamera kontrolna bez reflektorów pojazdu), w tle widać dopiero latarnie miasta.
+  - Zmierzch: okna biurowe wg zegara 21:00 (pojedyncze zamiast rzędów), mieszkalne bez zmian. Dzień bez zmian.
+  - `bialystok-knyszynska`: na kamerach trasy stoją słupy LED głównej ulicy — różnica to nieco chłodniejsza biel
+    soczewek i pul; głowice sodowe były na ulicach bocznych (311 → 0, audyt niżej).
+- **Audyt latarni** (`artifacts/summer-led-0216/tools/lamp_audit.py`, wyniki `after/data/<id>/lamp_audit.json`):
+  głowice sodowe 0 we wszystkich czterech regionach. DK65: `knyszyn-s` 0 latarni na całej długości; `knyszyn`
+  way 286990127 (528 m, 2,7 bud./100 m) 15 → 0; `knyszyn-w` way 232511647 (pola, 0 bud./100 m) 1 słup przy rozwidleniu
+  Goniądzkiej, odcinek przez miasto (way 232511646, 6,9 bud./100 m) 31 słupów — oświetlony wg ortofoto (ADR 0209).
+- **Testy:** __TESTS__
+- **Telefon:** nie mierzono — brak p50/p95/p99, PSS i temperatury dla tej zmiany (lider, po scaleniu; zakaz procesów
+  Unity podczas przebiegów na telefonie). Oczekiwanie (nie pomiar): bez zmiany kosztu klatki — te same siatki, materiały,
+  liczba świateł i pul; zmienia się stała koloru i wybór prototypu.
 
 ## Otwarte
 1. Właściciel: zmierzch „21:00 / 300°” — czy przestawić słońce `LP_Dusk` w regionach letnich na az. ~311° (31 VII,
