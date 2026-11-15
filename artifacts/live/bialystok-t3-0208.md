@@ -17,3 +17,5 @@
 - pytest tests/gis: 1240 ok, 1 fail `test_road_fidelity::test_report_not_stale` (hash build_world.py w fidelity_qa.json regionu C; nieaktualny też na main). W tle: `fidelity/run.py --region bialystok-industrial-c`.
 - Dane świata skopiowane do main (Data/raw/derived + game/Assets/_Generated/World, oba regiony, 11:44).
 - NASTĘPNY KROK: `git -C . status --short` → jeśli fidelity zmieniło tylko hashe: commit; `uv run --project tools/worldgen python -m pytest tests/gis/test_road_fidelity.py tests/gis/test_knyszynska_0208.py -q`; `robocopy artifacts\bialystok-t3-0208 C:\Users\matma\Documents\Claude\kamion\artifacts\bialystok-t3-0208 /E`
+- fidelity_qa.json regionu C odświeżony (zmienił się tylko hash build_world.py); test_road_fidelity + test_knyszynska_0208: 19 ok. Dowody skopiowane do main artifacts/bialystok-t3-0208/.
+- KONIEC. Gotowe do scalenia: TAK (pełny pytest: 1240 ok + 1 fail naprawiony odświeżeniem hasha; visual-critic i EditMode nie uruchamiane). NASTĘPNY KROK (lider): `git merge --no-ff bialystok-t3-0208`

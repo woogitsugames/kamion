@@ -70,7 +70,10 @@ batchingiem), bez telefonu — budżet urządzenia nie mierzony w tym zadaniu.
 - `pytest tests/gis` po scaleniu `origin/main`: **1240 ok, 3 skip, 3 xfail, 1 fail**
   (`pytest-r2.log`) — `test_road_fidelity::test_report_not_stale`: `fidelity_qa.json` regionu C ma stary hash
   `build_world.py`. Ten sam test jest nieaktualny na `main` (hash w raporcie b9eeb00a…, plik ece4c8bc…), a gałąź
-  zmienia `build_world.py` o 5 linii (`preview_trees`, drugi powiat). FIDELITY_NOTE
+  zmienia `build_world.py` o 5 linii (`preview_trees`, drugi powiat). Po `fidelity/run.py --region
+  bialystok-industrial-c` w raporcie zmienił się tylko ten jeden hash (metryki regionu C bez zmian) i test
+  przechodzi (`test_road_fidelity.py` + `test_knyszynska_0208.py`: 19 ok, 1 xfail). Pełny zestaw nie był
+  powtarzany po tej zmianie.
 - **Maczka r2** (`road_consistency_qa.json`): `furniture_in_lane` 2 → **0**; `cut_on_deck_carriageway_m` 2 → 6.
   Chunki: mur został na E 915,5–920,5 pod pomostem, balustrada do 131,24 < jezdnia 131,33. Kamera
   `deck_end_wall_0208` (`bialystok-maczka-r2/vqa/Low-overcast/deck-end-wall-0208.png`): trzy pasy wjazdu na pomost
