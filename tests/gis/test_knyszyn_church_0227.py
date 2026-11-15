@@ -38,7 +38,7 @@ def test_real_footprint_builds_both_tiers_with_lod2_silhouette():
     assert result["height_lod2_m"] == feature["properties"]["height_lod2_2017_m"]
     assert {p[0] for p in buf.parts} == set(church.LAYERS)
     assert {p[1] for p in buf.parts if p[0] == "buildings"} == {"plaster_white", "roof_tiles_red", "glass"}
-    assert {p[1] for p in buf.parts if p[0] == "buildings_low"} == {"plaster_white", "roof_tiles_red", "plinth_dark"}
+    assert {p[1] for p in buf.parts if p[0] == "buildings_low"} == {"plaster_light", "roof_tiles_red", "plinth_dark"}
     for layer, mat, vertices, triangles, src in buf.parts:
         assert np.isfinite(vertices).all()
         assert triangles.min() >= 0 and triangles.max() < len(vertices)

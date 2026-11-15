@@ -152,14 +152,14 @@ def willow_leaf_atlas(size=256, seed=22027):
     stem_x=.5+.028*np.sin(y*math.pi*1.5)
     stem=np.clip((.004-np.abs(x-stem_x))*size+.5,0.,1.)
     alpha=np.maximum(alpha,stem*((y>.08)&(y<.92)))
-    for i in range(11):
-        cy=.14+i*.067+rng.uniform(-.008,.008)
+    for i in range(13):
+        cy=.13+i*(.74/12.)+rng.uniform(-.008,.008)
         for sign in (-1.,1.):
             cx=.5+sign*rng.uniform(.075,.13)
             slope=sign*rng.uniform(.32,.53)
             dx=x-cx; dy=y-cy-slope*dx
             # Narrow elongated foliage, anti-aliased by a one-pixel transition.
-            radius=np.sqrt((dx/rng.uniform(.065,.105))**2+(dy/rng.uniform(.010,.017))**2)
+            radius=np.sqrt((dx/rng.uniform(.08,.12))**2+(dy/rng.uniform(.025,.033))**2)
             alpha=np.maximum(alpha,np.clip((1.-radius)*size*.025+.5,0.,1.))
     rgb=np.empty((size,size,3),dtype=np.uint8)
     # Slight deterministic, restrained within-card colour variation; WORKING_VALUE.
@@ -234,6 +234,27 @@ def grow_willow(g, height, variant, lod):
     g.tube("bark_linden", [V(p) for p in trunk], [.25,.21,.12,.035], seg=7 if lod == 0 else 5)
     for root, bend, tip in limbs:
         g.tube("bark_linden", [V(root),V(bend),V(tip)], [.105,.065,.018], seg=5 if lod == 0 else 3)
+    for index,(root,bend,tip) in enumerate(limbs):
+        if lod > 0 and index % 2 != 0:
+            continue
+        # Leafy, inclined branch groups join the upper crown. They follow real
+        # structural limbs rather than filling the silhouette with a solid ball.
+        horizontal=tip-root; horizontal[2]=0.
+        hnorm=float(np.linalg.norm(horizontal))
+        if hnorm < 1e-8:
+            continue
+        radial=horizontal/hnorm
+        side=np.array([-radial[1],radial[0],0.])
+        for a,b in ((root,bend),(bend,tip)):
+            for across in (side,(side+np.array([0.,0.,.5]))/(1.25**.5)):
+                delta=across*(height*.055)
+                normal=np.cross(across,b-a)
+                norm=float(np.linalg.norm(normal))
+                if norm < 1e-8:
+                    continue
+                normal=normal/norm
+                g.quad("leaves_willow",V(a-delta),V(a+delta),V(b+delta),V(b-delta),
+                       ((0,1),(1,1),(1,0),(0,0)),V(normal))
     for index,(top,middle,end,side,radial,width) in enumerate(strands):
         # LOD1 selects the same strand positions; no unrelated random redraw.
         if lod > 0 and index % 2 != 0:
@@ -250,6 +271,16 @@ def grow_willow(g, height, variant, lod):
                 g.quad("leaves_willow", V(a-delta),V(a+delta),V(b+delta),V(b-delta),
                        ((0,1),(1,1),(1,0),(0,0)),V(normal))
     return g
+
+
+def willow_open_radius(argv):
+    """Opt-in A/B for willow only; leave existing trees' pack policy unchanged."""
+    if "--willow-open-radius" not in argv:
+        return 1
+    i=argv.index("--willow-open-radius")
+    if i+1>=len(argv) or argv[i+1] not in ("0","1"):
+        raise ValueError("--willow-open-radius requires 0 or 1")
+    return int(argv[i+1])
 
 
 def grow(species, variant, lod):
@@ -1210,6 +1241,7 @@ def main():
     # The full opt-in export includes all existing species plus tree_willow_0 in
     # trees.glb / trees_lod2.glb / trees_meta.json, with the normal impostor bake.
     experimental = ("willow",) if "--include-willow" in argv or quick == "tree_willow_0" else ()
+    willow_open = willow_open_radius(argv) if experimental else 1
     if experimental:
         # This writes only the requested output directory and must not run during
         # module import, on normal species-only exports, or while r2 is active.
@@ -1245,8 +1277,9 @@ def main():
                 # leaving detached broad green islands. Keep connected pine twigs;
                 # still reject isolated specks. Non-pine and forest HLOD retain
                 # their established opening / component rules (far shimmer guard).
+                open_r = willow_open if sp == "willow" else (0 if sp in ("pine", "spruce", "pineyoung") else 1)
                 pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png",
-                     open_r=0 if sp in ("pine", "spruce", "pineyoung") else 1,
+                     open_r=open_r,
                      min_island=16 if sp in ("pine", "spruce", "pineyoung") else 0)
             o2 = impostor_object(name, H, png, S)
             o2.hide_render = True
@@ -1256,6 +1289,8 @@ def main():
                           "impostor_views": IMP_NF, "impostor_aspect": round(IMP_RES[0] / IMP_RES[1], 4),
                           "tris_lod0": sum(len(p.vertices) - 2 for p in o0.data.polygons),
                           "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons), "tris_lod2": 2}
+            if sp == "willow":
+                meta[name]["experimental_open_radius"] = willow_open
     if quick:
         return
     href = {k: v["href_m"] for k, v in meta.items()}

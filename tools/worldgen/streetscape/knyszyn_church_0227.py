@@ -211,6 +211,9 @@ def build(buf, region, blds, zsmooth, report):
     low_glass = acc.d.pop(("buildings_low", "glass"), [])
     if low_glass:
         acc.d.setdefault(("buildings_low", "plinth_dark"), []).extend(low_glass)
+    low_white = acc.d.pop(("buildings_low", "plaster_white"), [])
+    if low_white:
+        acc.d.setdefault(("buildings_low", "plaster_light"), []).extend(low_white)
     acc.flush(buf, ASSET_ID)
     result.update(status="applied", height_lod2_m=round(tip-z, 2), eave_m=round(eave-z, 2),
                   height_source="GUGiK LoD2 2017", proportions="WORKING_VALUE", bounds_local=list(poly.bounds))

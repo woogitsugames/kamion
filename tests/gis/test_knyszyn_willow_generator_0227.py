@@ -12,8 +12,8 @@ SCRIPT = Path(__file__).resolve().parents[2]/"tools/blender/world/make_trees.py"
 
 def isolated():
     tree=ast.parse(SCRIPT.read_text(encoding="utf8"))
-    selected=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ("willow_leaf_atlas","willow_blueprint","grow_willow")]
-    assert len(selected)==3
+    selected=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ("willow_leaf_atlas","willow_blueprint","grow_willow","willow_open_radius")]
+    assert len(selected)==4
     module=ast.fix_missing_locations(ast.Module(body=selected,type_ignores=[]))
     ns={"np":np,"math":math,"random":random,"Vector":lambda p:np.asarray(p,float)}
     exec(compile(module,str(SCRIPT),"exec"),ns)
@@ -45,7 +45,7 @@ def test_low_cards_are_exact_subset_and_use_existing_materials():
     high,low=Geometry(),Geometry()
     grow(high,13.5,0,0); grow(low,13.5,0,1)
     assert len(high.tubes)==len(low.tubes)==13
-    assert len(high.cards)==480 and len(low.cards)==240
+    assert len(high.cards)==528 and len(low.cards)==264
     assert {m for m,*_ in high.tubes}=={"bark_linden"}
     assert {m for m,*_ in high.cards}=={"leaves_willow"}
     high_cards={tuple(v.ravel()) for m,v,n in high.cards}
@@ -64,8 +64,25 @@ def test_willow_leaf_atlas_is_deterministic_transparent_and_sparse():
     assert a.shape==(256,256,4) and a.dtype==np.uint8 and np.array_equal(a,b)
     alpha=a[:,:,3]
     assert (alpha[:,:8]==0).all() and (alpha[:,-8:]==0).all()
-    assert .04 < np.count_nonzero(alpha)/alpha.size < .30
+    assert .22 < np.count_nonzero(alpha)/alpha.size < .33
+    assert .20 < np.count_nonzero(alpha>=128)/alpha.size < .30
     with pytest.raises(ValueError): make(32)
+
+
+def test_upper_foliage_follows_branches_and_opening_is_willow_only():
+    ns=isolated(); high=Geometry(); ns["grow_willow"](high,13.5,0,0)
+    # First 48 foliage cards follow the 12 arching structural limbs; they are
+    # not additional vertical tubes or independent circular crown puffs.
+    upper=high.cards[:48]
+    assert len(upper)==48
+    directions=np.array([v[2]-v[1] for _,v,_ in upper])
+    assert (np.linalg.norm(directions[:,:2],axis=1)>1.0).all()
+    assert ns["willow_open_radius"]([])==1
+    assert ns["willow_open_radius"](["--willow-open-radius","0"])==0
+    assert ns["willow_open_radius"](["--willow-open-radius","1"])==1
+    with pytest.raises(ValueError): ns["willow_open_radius"](["--willow-open-radius","2"])
+    source=SCRIPT.read_text(encoding="utf8")
+    assert 'willow_open if sp == "willow" else (0 if sp in ("pine", "spruce", "pineyoung") else 1)' in source
 
 
 def test_export_registration_is_explicitly_opt_in():
