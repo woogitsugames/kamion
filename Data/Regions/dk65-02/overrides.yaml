@@ -30,9 +30,17 @@ overrides:
     set: {width: 7.5, edge_lines: both}
   # Ełcka (90 km/h) s 1548-2400 m and on in dk65-03/-04 (same ways): asphalt 7.5-8.0 m (s 1950: edges +5.0/-3.0 m from the
   # lane line, centre line +1.0 m), edge lines ~7.5 m apart; BDOT10k 6.5 m is too narrow here.
+  # D65 p.5 (owner, 2026-11-15) + ADR 0215: 7.6 -> 6.9 m; same entry in dk65-02 ... dk65-05 (and to be repeated in
+  # dk65-06 for the ways shared across the north seam of dk65-05).
   - id: dk65-elcka-xsec
     target: {osm_way: [716806121, 1024956365]}
-    reason: "Orthophoto s 1548-2400 m: asphalt 7.5-8.0 m, solid edge lines both sides ~7.5 m apart (BDOT10k 6.5 m)."
+    source: "D65 właściciel, ~6,9 m"
+    reason: >-
+      Owner decision D65 p.5 (docs/11, 2026-11-15): Ełcka / Studzienna is narrow, ~7 m - narrow the carriageway from
+      7.6 to ~6.9 m (ADR 0215). 6.9 m is the owner's approximate value, not a survey (WORKING_VALUE until an owner
+      photo with a scale or a tape measurement). It agrees with the edge-line spacing 6.25-7.0 m read on the 2024
+      orthophoto (ADR 0207 open item 3). Before D65 (ADR 0207): 7.6 m from the asphalt edges on the orthophoto -
+      orthophoto s 1548-2400 m: asphalt 7.5-8.0 m, solid edge lines both sides ~7.5 m apart (BDOT10k 6.5 m). Edge lines unchanged (both).
     confidence: medium
-    verify: owner drive / owner photo of Ełcka
-    set: {width: 7.6, edge_lines: both}
+    verify: owner photo across Ełcka with a scale / tape measurement
+    set: {width: 6.9, edge_lines: both}

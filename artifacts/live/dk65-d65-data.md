@@ -1,0 +1,3 @@
+# dk65-d65-data (A4 wg D65) — gałąź dk65-d65-data, worktree /workspace/wt-dk65-d65-data (chmura: bez Unity, bez Data/raw)
+- 15.11: start. Ełcka/Studzienna: wpis `dk65-elcka-xsec` w dk65-02…05 zmieniony 7,6 → 6,9 m (źródło „D65 właściciel, ~6,9 m”); waye 716806121, 1024956365, 41533343, 1243220441, 1024956364, 1399803717 (Studzienna), 1560819273 (przedłużenie Studziennej bez nazwy w OSM). Most Supraśl (41533342, 7,5 m) bez zmian — otwarte. Test szwów zaktualizowany (6.9).
+- NASTĘPNY KROK: schemat `construction: true` (network/markings/decals/navgraph) + testy; `uv run --project tools/worldgen python -m pytest tests/gis -k "dk65 or edge_lines" -q`

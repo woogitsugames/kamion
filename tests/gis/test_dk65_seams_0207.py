@@ -58,7 +58,7 @@ def test_elcka_cross_section_same_in_all_tiles():
         for eid in r:
             if e[eid]["attrs"].get("name", {}).get("v") in ("Ełcka", "Studzienna"):
                 vals.add(_effective(e[eid], o))
-    assert vals == {(7.6, "both")}
+    assert vals == {(6.9, "both")}     # D65 p.5 (owner): 7.6 -> ~6.9 m, ADR 0215
 
 
 @pytest.mark.parametrize("a,b", SEAMS)
