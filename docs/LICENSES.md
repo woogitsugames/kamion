@@ -561,3 +561,185 @@ Audyt maszynowy (`uv run --project tools/licenses python tools/licenses/audit.py
 | `research/mistral/p10-greenery-3/nonveg_check.png`, `research/mistral/p10-greenery-3/overlays/` | `research/mistral/p10-greenery-3/README.md` (M51-FIX-2) | własne nakładki kontrolne na wycinkach ortofoto GUGiK WMS + osie dróg OSM (ODbL) | nie |
 
 Uwaga: wartości `licencja` są przepisane z manifestów pakietów, nie sprawdzone ponownie u źródła w tym zadaniu (wyrywkowe audyty 20 % — `audit_20_percent.json` w każdym pakiecie). Katalog `research/codex-refs-s21` (Codex, s21) nie był w tym audycie dotykany.
+
+## Pakiety research cloud2 (s21–s22) — pliki śledzone w repo, rejestr per plik (D10)
+
+Audyt maszynowy (`uv run --project tools/licenses python tools/licenses/audit.py -v`) na `main` @ `bfe10923f` (2026-11-15): 3639 zasobów, **142 bez wpisu** — wszystkie w czterech pakietach katalogu research/cloud2 (REVIEW s21 #103, FIX-1). Poniżej każdy plik osobno: źródło, licencja, autor. Żaden z tych plików nie trafia do buildu (zdjęcia = referencja wizualna, nie tekstura; ADR 0065).
+
+Metoda (2026-11-15, klient HTTP o nazwie ogólnej, bez nazwy projektu):
+- **Powiązanie plik → źródło:** sha256 pliku w repo = `sha256_w_galezi` w `files/jpg1600/INDEX.csv` pakietu albo = `sha256` wiersza `manifest.csv` (142/142 zgodne). Oryginałów nie pobierano ponownie — łańcuch kopia ≤ 1600 px → oryginał opiera się na `sha256_oryginalu` z INDEX/manifestu pakietu.
+- **Wikimedia Commons:** licencja i autor odczytane ponownie z `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=extmetadata&titles=File:…` (`LicenseShortName`, `Artist`).
+- **Panoramax:** licencja i autor odczytane ponownie z elementu STAC pod adresem z kolumny „Źródło” (`properties.license`, `providers[].name` z rolą `producer`); API zwraca identyfikator SPDX `CC-BY-SA-4.0`.
+- **KartaView:** autor (nazwa konta) z `https://api.kartaview.org/2.0/photo/?sequenceId=<sekw.>&sequenceIndex=<indeks>&join=user` (`user.username`; manifesty pakietów miały tu tylko `userId` albo „UNVERIFIED”). API nie podaje licencji per zdjęcie — licencja z regulaminu serwisu, tekst odczytany z pakietu JS strony `https://kartaview.org/terms` (`main.713c8a0a1a99dfff0f74.js`): „licensing the street images made available on KartaView and 3D spatial data under Creative Commons Attribution-ShareAlike 4.0 International”.
+- Wynik: w każdym ze 142 plików licencja i autor u źródła = wartości z manifestu pakietu (różnice tylko w zapisie, np. `CC-BY-SA-4.0` / „CC BY-SA 4.0”); 43 pliki KartaView zyskały nazwę autora. Google Maps/Street View/Earth/3D Tiles: brak (wszystkie URL-e źródeł to commons.wikimedia.org, api.panoramax.xyz, kartaview.org; `sources.md` pakietów: „Google … nieużyte”).
+- Pliki CC BY-SA w publicznym repo: atrybucja (autor, licencja, URL) = wiersze poniżej oraz manifest pakietu. Pochodna piksele-do-tekstury z plików CC BY-SA jest zabroniona (share-alike, ADR 0065); pliki CC0 — bez ograniczeń.
+
+### `research/cloud2/next-region-ring/` (R9) — 44 plików
+
+Manifest pakietu: `research/cloud2/next-region-ring/manifest.csv`, indeks kopii: `research/cloud2/next-region-ring/files/jpg1600/INDEX.csv`. Rozkład: Commons CC BY-SA 4.0 2; Commons CC0 3; KartaView CC BY-SA 4.0 6; Panoramax CC BY-SA 4.0 33. W buildzie: nie. Status: SOURCED 44/44, UNVERIFIED 0.
+
+| Plik | Id w manifeście | Źródło | Licencja | Autor |
+|---|---|---|---|---|
+| `research/cloud2/next-region-ring/files/commons/20200508_145754_Intersection_of_Trasa_Niepodleg_o_ci_and_Popie_uszki_street.jpg` | R9-392 | Commons: https://commons.wikimedia.org/wiki/File:20200508_145754_Intersection_of_Trasa_Niepodleg%C5%82o%C5%9Bci_and_Popie%C5%82uszki_street.jpg | CC BY-SA 4.0 | Rakoon |
+| `research/cloud2/next-region-ring/files/commons/20200805_130930_August_2020_in_Bia_ystok.jpg` | R9-393 | Commons: https://commons.wikimedia.org/wiki/File:20200805_130930_August_2020_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/next-region-ring/files/commons/20240501_124520_May_2024_in_Choroszcz.jpg` | R9-389 | Commons: https://commons.wikimedia.org/wiki/File:20240501_124520_May_2024_in_Choroszcz.jpg | CC0 | Rakoon |
+| `research/cloud2/next-region-ring/files/commons/20250520_152809_May_2025_in_Podlaskie_Voivodeship.jpg` | R9-390 | Commons: https://commons.wikimedia.org/wiki/File:20250520_152809_May_2025_in_Podlaskie_Voivodeship.jpg | CC0 | Rakoon |
+| `research/cloud2/next-region-ring/files/commons/Podlaskie_-_Choroszcz_-_Suprasl_river_-_bdg_DK65_near_Dzikie_-_W.jpg` | R9-391 | Commons: https://commons.wikimedia.org/wiki/File:Podlaskie_-_Choroszcz_-_Suprasl_river_-_bdg_DK65_near_Dzikie_-_W.JPG | CC BY-SA 4.0 | Athantor |
+| `research/cloud2/next-region-ring/files/jpg1600/KV01_989861518.jpg` | R9-342 | KartaView: https://kartaview.org/details/2763262/69 (zdjęcie 989861518) | CC BY-SA 4.0 | gpsmapper999 (userId 37458) |
+| `research/cloud2/next-region-ring/files/jpg1600/KV02_1326673117.jpg` | R9-343 | KartaView: https://kartaview.org/details/3686129/139 (zdjęcie 1326673117) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/next-region-ring/files/jpg1600/KV03_1326673457.jpg` | R9-344 | KartaView: https://kartaview.org/details/3686129/224 (zdjęcie 1326673457) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/next-region-ring/files/jpg1600/KV04_1326673597.jpg` | R9-345 | KartaView: https://kartaview.org/details/3686129/259 (zdjęcie 1326673597) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/next-region-ring/files/jpg1600/KV05_992992122.jpg` | R9-346 | KartaView: https://kartaview.org/details/2769366/30 (zdjęcie 992992122) | CC BY-SA 4.0 | gpsmapper999 (userId 37458) |
+| `research/cloud2/next-region-ring/files/jpg1600/KV06_989803918.jpg` | R9-347 | KartaView: https://kartaview.org/details/2763262/15 (zdjęcie 989803918) | CC BY-SA 4.0 | gpsmapper999 (userId 37458) |
+| `research/cloud2/next-region-ring/files/jpg1600/PX01_c28eed1e.jpg` | R9-309 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/c28eed1e-c787-4d92-968c-a3f4d92b22d6 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX02_cd4d1bd9.jpg` | R9-310 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/cd4d1bd9-c292-4917-8379-e56132353889 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX03_1baeedcd.jpg` | R9-311 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/1baeedcd-5be3-45d3-b6b9-8fcc49a12512 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX04_7221e072.jpg` | R9-312 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/7221e072-7cdd-43d3-bd24-e99142881bed | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX05_c94c0c97.jpg` | R9-313 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/c94c0c97-fbe4-431e-83da-8959738bb433 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX06_f8b9a93e.jpg` | R9-314 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/f8b9a93e-dfd9-473b-bdc0-5ce835627bf4 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX07_f730add4.jpg` | R9-315 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/f730add4-64bd-42ef-b97d-a7052eed8e3b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX08_31dc75cd.jpg` | R9-316 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/31dc75cd-4027-4377-a7d4-cf3a6491341c | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX09_3cb5bfa0.jpg` | R9-317 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/3cb5bfa0-6c7a-430e-b659-ac589d26996b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX10_cf19db26.jpg` | R9-318 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/cf19db26-089d-4ee6-bca9-b04ae2ca4c1b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX11_fa798cd9.jpg` | R9-319 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/fa798cd9-2871-457d-989b-2dcb511b8cdc | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX12_29e38eea.jpg` | R9-320 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/29e38eea-fa12-4762-a9f4-9f65cb01608d | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX13_1f07cacb.jpg` | R9-321 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/1f07cacb-3ef8-445e-8716-53d35d97fd4b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX14_c9dd9d72.jpg` | R9-322 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/c9dd9d72-f821-43fc-85bb-64f55ce7151e | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX15_c3959d82.jpg` | R9-323 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/c3959d82-3ab5-42f2-826e-78bf7ecda7d8 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX16_a5b7e58f.jpg` | R9-324 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/a5b7e58f-46d2-4b27-9274-d0656aece067 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX17_a228a704.jpg` | R9-325 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/a228a704-9663-4b12-ab73-a0423229f7fa | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX18_93e67fd0.jpg` | R9-326 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/93e67fd0-1ccd-4e9b-ae9b-e0d5476fb690 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX19_5dc30f35.jpg` | R9-327 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/5dc30f35-717a-4eb1-a33e-5a981fb4f5d2 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX20_79614afd.jpg` | R9-328 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/79614afd-5be0-4651-b0b7-5e2126b52ecd | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX21_2d6cc10e.jpg` | R9-329 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/2d6cc10e-757b-46e8-86bf-e66059c531ad | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX22_386598e7.jpg` | R9-330 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/386598e7-b440-43dd-8257-f2c75988d399 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX23_589e2714.jpg` | R9-331 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/589e2714-0314-49c9-a334-e7bcd280706b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX24_d5b3de31.jpg` | R9-332 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/d5b3de31-4ab1-4880-98a3-4c89b04686cb | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX25_b0b587e9.jpg` | R9-333 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/b0b587e9-6e98-4bd3-8dcc-867b089b430c | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX26_49422dc7.jpg` | R9-334 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/49422dc7-f2df-4ef1-a51e-00f7cedba165 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX27_671cb8f5.jpg` | R9-335 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/671cb8f5-b4a5-4bb0-b9ba-bde59939bdb3 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX28_86ce371b.jpg` | R9-336 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/86ce371b-466f-4d79-a857-87f3a6156b0e | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX29_2d409e41.jpg` | R9-337 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/2d409e41-da2f-4145-a392-01c2bde8c6fc | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX30_25d2b4ca.jpg` | R9-338 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/25d2b4ca-c625-47db-8ce5-b1160eedd50b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX31_49422dc7.jpg` | R9-339 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/49422dc7-f2df-4ef1-a51e-00f7cedba165 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/next-region-ring/files/jpg1600/PX32_68ed5b23.jpg` | R9-340 | Panoramax: https://api.panoramax.xyz/api/collections/e0bfc8ac-2ffe-42fe-9d61-5144d8b42331/items/68ed5b23-adc6-44de-a6f1-6ff4a060c5dc | CC BY-SA 4.0 | su91 |
+| `research/cloud2/next-region-ring/files/jpg1600/PX33_4d84fb34.jpg` | R9-341 | Panoramax: https://api.panoramax.xyz/api/collections/a7cf963f-8d1c-4bac-9717-e3149f5f9fff/items/4d84fb34-70b1-4921-b941-bd84697dd8da | CC BY-SA 4.0 | mapcomplete, eigenval |
+
+### `research/cloud2/bialystok-building-typology/` (R4) — 40 plików
+
+Manifest pakietu: `research/cloud2/bialystok-building-typology/manifest.csv`, indeks kopii: `research/cloud2/bialystok-building-typology/files/jpg1600/INDEX.csv`. Rozkład: Commons CC BY-SA 3.0 1; Commons CC0 23; KartaView CC BY-SA 4.0 9; Panoramax CC BY-SA 4.0 7. W buildzie: nie. Status: SOURCED 40/40, UNVERIFIED 0.
+
+| Plik | Id w manifeście | Źródło | Licencja | Autor |
+|---|---|---|---|---|
+| `research/cloud2/bialystok-building-typology/files/commons/20201102_152422_38A_Generala_Andersa_Street_in_Bia_ystok.jpg` | R4-145 | Commons: https://commons.wikimedia.org/wiki/File:20201102_152422_38A_Generala_Andersa_Street_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20210425_094546_April_2021_in_Bia_ystok.jpg` | R4-143 | Commons: https://commons.wikimedia.org/wiki/File:20210425_094546_April_2021_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20210629_092231_June_2021_in_Bia_ystok.jpg` | R4-141 | Commons: https://commons.wikimedia.org/wiki/File:20210629_092231_June_2021_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20220725_124141_July_2022_in_Bia_ystok.jpg` | R4-146 | Commons: https://commons.wikimedia.org/wiki/File:20220725_124141_July_2022_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20221103_151248_November_2022_in_Bia_ystok.jpg` | R4-133 | Commons: https://commons.wikimedia.org/wiki/File:20221103_151248_November_2022_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20221103_151859_November_2022_in_Bia_ystok.jpg` | R4-134 | Commons: https://commons.wikimedia.org/wiki/File:20221103_151859_November_2022_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20221203_101344_December_2022_in_Bia_ystok.jpg` | R4-144 | Commons: https://commons.wikimedia.org/wiki/File:20221203_101344_December_2022_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20230903_133850_September_2023_in_Bia_ystok.jpg` | R4-127 | Commons: https://commons.wikimedia.org/wiki/File:20230903_133850_September_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20230903_134050_September_2023_in_Bia_ystok.jpg` | R4-128 | Commons: https://commons.wikimedia.org/wiki/File:20230903_134050_September_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20230903_134232_September_2023_in_Bia_ystok.jpg` | R4-129 | Commons: https://commons.wikimedia.org/wiki/File:20230903_134232_September_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20230903_134445_September_2023_in_Bia_ystok.jpg` | R4-130 | Commons: https://commons.wikimedia.org/wiki/File:20230903_134445_September_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20230903_134854_September_2023_in_Bia_ystok.jpg` | R4-131 | Commons: https://commons.wikimedia.org/wiki/File:20230903_134854_September_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20230903_135728_September_2023_in_Bia_ystok.jpg` | R4-135 | Commons: https://commons.wikimedia.org/wiki/File:20230903_135728_September_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20230910_151311_September_2023_in_Bia_ystok.jpg` | R4-132 | Commons: https://commons.wikimedia.org/wiki/File:20230910_151311_September_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20231029_122554_October_2023_in_Bia_ystok.jpg` | R4-149 | Commons: https://commons.wikimedia.org/wiki/File:20231029_122554_October_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20240401_110629_April_2024_in_Bia_ystok.jpg` | R4-147 | Commons: https://commons.wikimedia.org/wiki/File:20240401_110629_April_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20240530_122451_May_2024_in_Bia_ystok.jpg` | R4-148 | Commons: https://commons.wikimedia.org/wiki/File:20240530_122451_May_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20240623_130316_June_2024_in_Bia_ystok.jpg` | R4-137 | Commons: https://commons.wikimedia.org/wiki/File:20240623_130316_June_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20240623_130552_June_2024_in_Bia_ystok.jpg` | R4-138 | Commons: https://commons.wikimedia.org/wiki/File:20240623_130552_June_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20240623_130803_June_2024_in_Bia_ystok.jpg` | R4-139 | Commons: https://commons.wikimedia.org/wiki/File:20240623_130803_June_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/20240623_134421_June_2024_in_Bia_ystok.jpg` | R4-140 | Commons: https://commons.wikimedia.org/wiki/File:20240623_134421_June_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/8855_November_2022_in_Bia_ystok.jpg` | R4-136 | Commons: https://commons.wikimedia.org/wiki/File:8855_November_2022_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/8861_November_2022_in_Bia_ystok.jpg` | R4-142 | Commons: https://commons.wikimedia.org/wiki/File:8861_November_2022_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/bialystok-building-typology/files/commons/Andersa_Maczka_streets_in_Bia_ystok_3.jpg` | R4-150 | Commons: https://commons.wikimedia.org/wiki/File:Andersa,_Maczka_streets_in_Bia%C5%82ystok_3.jpg | CC BY-SA 3.0 | Henryk Borawski |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-001.jpg` | R4-001 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/6fc62548-c122-4cba-9e9c-aadceb92e266 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-002.jpg` | R4-002 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/844e35c7-bcd0-43e7-a8ac-16931cf7e96b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-003.jpg` | R4-003 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/03ec4841-1311-4c3c-95ec-4a52ba4b2184 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-004.jpg` | R4-004 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/6248550a-d237-4124-95ec-8a4f910d95d6 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-005.jpg` | R4-005 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/a228a704-9663-4b12-ab73-a0423229f7fa | CC BY-SA 4.0 | stanton |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-006.jpg` | R4-006 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/128187d5-ae13-4754-a5cf-9c9bebb425e4 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-007.jpg` | R4-007 | Panoramax: https://api.panoramax.xyz/api/collections/989ab5f4-1c29-461d-a0dd-cfe3d2dc3fd3/items/3717771d-33ba-4abd-8c92-1b2b0208d5b3 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-008.jpg` | R4-008 | KartaView: https://kartaview.org/details/3686129/230 (zdjęcie 1326673481) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-009.jpg` | R4-009 | KartaView: https://kartaview.org/details/3686129/247 (zdjęcie 1326673549) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-010.jpg` | R4-010 | KartaView: https://kartaview.org/details/3686129/260 (zdjęcie 1326673601) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-011.jpg` | R4-011 | KartaView: https://kartaview.org/details/3686129/266 (zdjęcie 1326673629) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-012.jpg` | R4-012 | KartaView: https://kartaview.org/details/3686129/279 (zdjęcie 1326673681) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-013.jpg` | R4-013 | KartaView: https://kartaview.org/details/3686129/297 (zdjęcie 1326673753) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-014.jpg` | R4-014 | KartaView: https://kartaview.org/details/3686129/311 (zdjęcie 1326673809) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-015.jpg` | R4-015 | KartaView: https://kartaview.org/details/3686129/333 (zdjęcie 1326673897) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/bialystok-building-typology/files/jpg1600/R4-016.jpg` | R4-016 | KartaView: https://kartaview.org/details/3686129/337 (zdjęcie 1326673913) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+
+### `research/cloud2/pavements-kerbs/` (R6) — 31 plików
+
+Manifest pakietu: `research/cloud2/pavements-kerbs/manifest.csv`, indeks kopii: `research/cloud2/pavements-kerbs/files/jpg1600/INDEX.csv`. Rozkład: Commons CC0 9; KartaView CC BY-SA 4.0 13; Panoramax CC BY-SA 4.0 9. W buildzie: nie. Status: SOURCED 31/31, UNVERIFIED 0.
+
+| Plik | Id w manifeście | Źródło | Licencja | Autor |
+|---|---|---|---|---|
+| `research/cloud2/pavements-kerbs/files/jpg1600/F01_panoramax_26ebb828.jpg` | F01 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/26ebb828-a5ce-49eb-b3eb-9a4b8ee02dd0 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F02_panoramax_1f0492a9.jpg` | F02 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/1f0492a9-732a-42f1-a4e4-7e61fad69dc2 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F03_panoramax_75326b64.jpg` | F03 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/75326b64-3111-4716-bd9f-b484a2bcb963 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F04_panoramax_fc5ecd98.jpg` | F04 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/fc5ecd98-9de9-4a68-8b9d-5025d1a8d4b3 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F05_panoramax_c0b69dac.jpg` | F05 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/c0b69dac-3679-4b65-a182-ee2a367097f9 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F06_panoramax_a228a704.jpg` | F06 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/a228a704-9663-4b12-ab73-a0423229f7fa | CC BY-SA 4.0 | stanton |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F07_panoramax_5f92573a.jpg` | F07 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/5f92573a-5245-46f9-98cc-850a9de7d703 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F08_panoramax_35224dcb.jpg` | F08 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/35224dcb-99e7-472f-8b41-9fff1f150fdd | CC BY-SA 4.0 | stanton |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F09_panoramax_6fc62548.jpg` | F09 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/6fc62548-c122-4cba-9e9c-aadceb92e266 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F10_kartaview_13266734.jpg` | F10 | KartaView: https://kartaview.org/details/3686129/220 (zdjęcie 1326673441) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F11_kartaview_13266734.jpg` | F11 | KartaView: https://kartaview.org/details/3686129/231 (zdjęcie 1326673485) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F12_kartaview_13266735.jpg` | F12 | KartaView: https://kartaview.org/details/3686129/241 (zdjęcie 1326673525) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F13_kartaview_13266735.jpg` | F13 | KartaView: https://kartaview.org/details/3686129/254 (zdjęcie 1326673577) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F14_kartaview_13266736.jpg` | F14 | KartaView: https://kartaview.org/details/3686129/265 (zdjęcie 1326673621) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F15_kartaview_13266736.jpg` | F15 | KartaView: https://kartaview.org/details/3686129/278 (zdjęcie 1326673677) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F16_kartaview_13266737.jpg` | F16 | KartaView: https://kartaview.org/details/3686129/289 (zdjęcie 1326673721) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F17_kartaview_13266737.jpg` | F17 | KartaView: https://kartaview.org/details/3686129/300 (zdjęcie 1326673765) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F18_kartaview_13266738.jpg` | F18 | KartaView: https://kartaview.org/details/3686129/311 (zdjęcie 1326673809) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F19_kartaview_13266738.jpg` | F19 | KartaView: https://kartaview.org/details/3686129/324 (zdjęcie 1326673861) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F20_kartaview_13266739.jpg` | F20 | KartaView: https://kartaview.org/details/3686129/351 (zdjęcie 1326673969) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F29_kartaview_99302739.jpg` | F29 | KartaView: https://kartaview.org/details/2769366/163 (zdjęcie 993027390) | CC BY-SA 4.0 | gpsmapper999 (userId 37458) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F30_kartaview_99306255.jpg` | F30 | KartaView: https://kartaview.org/details/2769366/190 (zdjęcie 993062554) | CC BY-SA 4.0 | gpsmapper999 (userId 37458) |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F31_commons_P11-001.jpg` | F31 | Commons: https://commons.wikimedia.org/wiki/File:20240623_142113_June_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F32_commons_P11-007.jpg` | F32 | Commons: https://commons.wikimedia.org/wiki/File:20230903_134647_September_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F34_commons_P11-012.jpg` | F34 | Commons: https://commons.wikimedia.org/wiki/File:8869_November_2022_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F35_commons_P11-097.jpg` | F35 | Commons: https://commons.wikimedia.org/wiki/File:20230903_134802_September_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F36_commons_P11-023.jpg` | F36 | Commons: https://commons.wikimedia.org/wiki/File:20240623_140411_June_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F37_commons_P11-024.jpg` | F37 | Commons: https://commons.wikimedia.org/wiki/File:20240623_140200_June_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F38_commons_P11-063.jpg` | F38 | Commons: https://commons.wikimedia.org/wiki/File:20240623_124644_June_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F39_commons_P11-056.jpg` | F39 | Commons: https://commons.wikimedia.org/wiki/File:20230814_175724_August_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+| `research/cloud2/pavements-kerbs/files/jpg1600/F40_commons_P11-079.jpg` | F40 | Commons: https://commons.wikimedia.org/wiki/File:20230814_174936_August_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+
+### `research/cloud2/direction-signs-route-c/` (R2) — 27 plików
+
+Manifest pakietu: `research/cloud2/direction-signs-route-c/manifest.csv`, indeks kopii: `research/cloud2/direction-signs-route-c/files/jpg1600/INDEX.csv`. Rozkład: KartaView CC BY-SA 4.0 15; Panoramax CC BY-SA 4.0 12. W buildzie: nie. Status: SOURCED 27/27, UNVERIFIED 0.
+
+| Plik | Id w manifeście | Źródło | Licencja | Autor |
+|---|---|---|---|---|
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_03ec4841.jpg` | R2-006 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/03ec4841-1311-4c3c-95ec-4a52ba4b2184 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_5f92573a.jpg` | R2-011 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/5f92573a-5245-46f9-98cc-850a9de7d703 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_6248550a.jpg` | R2-004 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/6248550a-d237-4124-95ec-8a4f910d95d6 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_6ded8ec0.jpg` | R2-008 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/6ded8ec0-a24e-45d0-a6a0-ff0e4ab164a5 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_7196532e.jpg` | R2-010 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/7196532e-a8d7-4929-9043-e41b22db3450 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_8376e36d.jpg` | R2-002 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/8376e36d-7391-4145-b6e3-2d57115731b6 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_844e35c7.jpg` | R2-007 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/844e35c7-bcd0-43e7-a8ac-16931cf7e96b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_9f85aac8.jpg` | R2-005 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/9f85aac8-a36c-40fe-a4ad-4c1c66e66940 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_9ff60a64.jpg` | R2-009 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/9ff60a64-4f25-4237-96bd-1120f301bfbb | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_b27d2652.jpg` | R2-003 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/b27d2652-67ac-4f41-b762-c4a57f226f26 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_e11bd6e4.jpg` | R2-001 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/e11bd6e4-802b-4b66-8ea9-02a043df9910 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmxhd_390ca2c2.jpg` | R2-012 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/390ca2c2-d23e-4e1e-9d50-e6ea9927673b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0211.jpg` | R2-058 | KartaView: https://kartaview.org/details/3686129/211 (zdjęcie 1326673405) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0247.jpg` | R2-059 | KartaView: https://kartaview.org/details/3686129/247 (zdjęcie 1326673549) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0253.jpg` | R2-060 | KartaView: https://kartaview.org/details/3686129/253 (zdjęcie 1326673573) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0258.jpg` | R2-061 | KartaView: https://kartaview.org/details/3686129/258 (zdjęcie 1326673593) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0264.jpg` | R2-062 | KartaView: https://kartaview.org/details/3686129/264 (zdjęcie 1326673617) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0279.jpg` | R2-063 | KartaView: https://kartaview.org/details/3686129/279 (zdjęcie 1326673681) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0281.jpg` | R2-064 | KartaView: https://kartaview.org/details/3686129/281 (zdjęcie 1326673689) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0286.jpg` | R2-065 | KartaView: https://kartaview.org/details/3686129/286 (zdjęcie 1326673709) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0303.jpg` | R2-066 | KartaView: https://kartaview.org/details/3686129/303 (zdjęcie 1326673777) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0306.jpg` | R2-067 | KartaView: https://kartaview.org/details/3686129/306 (zdjęcie 1326673789) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0313.jpg` | R2-068 | KartaView: https://kartaview.org/details/3686129/313 (zdjęcie 1326673817) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0338.jpg` | R2-069 | KartaView: https://kartaview.org/details/3686129/338 (zdjęcie 1326673917) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0342.jpg` | R2-070 | KartaView: https://kartaview.org/details/3686129/342 (zdjęcie 1326673933) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0347.jpg` | R2-071 | KartaView: https://kartaview.org/details/3686129/347 (zdjęcie 1326673953) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0350.jpg` | R2-072 | KartaView: https://kartaview.org/details/3686129/350 (zdjęcie 1326673965) | CC BY-SA 4.0 | TMishaaa (userId 479) |
