@@ -541,3 +541,21 @@ Cytaty dosłowne ze stron źródeł pobranych 2026-11-15 klientem bez nazwy proj
 | Dane Miasta Białystok | sekcja wyżej | — | nie w grze; brak pozycji na ekranie |
 
 Google Maps / Street View / Earth / 3D Tiles: nieużywane i zakazane (ADR 0002); w tym zadaniu nie otwierano żadnej usługi Google.
+
+## Pakiety research s20–s21 — pliki śledzone w repo (uzupełnienie ADR 0230)
+
+Audyt maszynowy (`uv run --project tools/licenses python tools/licenses/audit.py`) na `main` @ `fc450006` (2026-11-15): 3419 zasobów, **360 bez wpisu** — wszystkie w pakietach research dodanych po audycie X1. Żaden z tych plików nie trafia do buildu (zdjęcia i wycinki = referencja, ADR 0065). Licencja **każdego pliku** jest w kolumnie `licencja` manifestu pakietu; poniżej rozkład wartości tej kolumny (liczba wierszy manifestu, odczyt 2026-11-15 — wiersze manifestu obejmują też fakty i dane, nie tylko pliki). Pliki CC BY-SA w publicznym repo: atrybucja (autor, licencja, URL) w manifeście — jak R-P2-1 audytu X1.
+
+| Wzorzec (ścieżka) | Manifest | Licencje w manifeście (wiersze) | W buildzie |
+|---|---|---|---|
+| `research/dk65-knyszyn-refs/files/` | `research/dk65-knyszyn-refs/manifest.csv` (136) | ortofoto GUGiK, bez opłat (art. 40a Pgik) 41; CC BY-SA 4.0 21; CC BY-SA 3.0 19; ODbL 25; pozostałe: fakty/dokumenty | nie |
+| `research/rooftop-gsm-s21/files/`, `research/rooftop-gsm-s21/out/` | `research/rooftop-gsm-s21/manifest.csv` (82) | GUGiK — dane otwarte (ortofoto, LiDAR) ok. 58; CC BY-SA 3.0 5; fakty z kart 5; `out/` = własne mapy i profile z LiDAR GUGiK (`tools/lidar_*.py`) | nie |
+| `research/gate3-spots-s21/files/` | `research/gate3-spots-s21/manifest.csv` (38) | CC BY-SA 4.0 24; CC0 4; GUGiK ortofoto 4; ODbL 4; CC BY 3.0 2 | nie |
+| `research/mistral/p17-dusk-lighting/files/` | `research/mistral/p17-dusk-lighting/manifest.csv` (109) | CC0 27; CC BY 4.0 (open access) 23; tabele normy wg strony producenta — tylko fakty; teksty © wydawców — tylko krótkie cytaty | nie |
+| `research/night-lamps-s21/files/` | `research/night-lamps-s21/manifest.csv` (84) | ODbL 1.0 27; CC BY-SA 4.0 (referencja, nie tekstura) 17; dokumenty urzędowe 12; CC0 9; CC BY 2.0 5 | nie |
+| `research/krywlany-airfield-s21/files/` | `research/krywlany-airfield-s21/manifest.csv` (92) | dane PZGiK (GUGiK), bez opłat 41; CC0 21; CC BY-SA 3.0 (referencja) 11; ODbL 5 | nie |
+| `research/plant-gates-s21/files/` | `research/plant-gates-s21/manifest.csv` (89) | CC0 45; dane PZGiK (GUGiK) 14; ODbL 2; dokument producenta — fakty 2 | nie |
+| `research/mistral/p14-office-tower/files/` | `research/mistral/p14-office-tower/manifest.csv` (19) | CC BY-SA 4.0 7; CC BY 3.0 4; CC0 4; GUGiK 2; dokument urzędowy (BIP UKE) 1 | nie |
+| `research/mistral/p10-greenery-3/nonveg_check.png`, `research/mistral/p10-greenery-3/overlays/` | `research/mistral/p10-greenery-3/README.md` (M51-FIX-2) | własne nakładki kontrolne na wycinkach ortofoto GUGiK WMS + osie dróg OSM (ODbL) | nie |
+
+Uwaga: wartości `licencja` są przepisane z manifestów pakietów, nie sprawdzone ponownie u źródła w tym zadaniu (wyrywkowe audyty 20 % — `audit_20_percent.json` w każdym pakiecie). Katalog `research/codex-refs-s21` (Codex, s21) nie był w tym audycie dotykany.
