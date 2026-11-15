@@ -194,3 +194,7 @@
 - 2026-11-15 23:41 +01:00 — R9 uruchomiona: odwracalny wariant 15 koron bez przecięć kart, dwie kamery boczne na 1,7 m; ryzyko płaskości i overdraw OPEN. Testy kierunkowe 5 passed, wygląd i budżet do pomiaru.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r9.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r9.done`
 
+
+- 2026-11-16 00:05 +01:00 — R9 FAIL: korony znikają pod kątem, wariant wycofany. R10 uruchomiona: objętościowe korony z istniejącego atlasu, osiem azymutów QA; testy kierunkowe 5 passed. Low koszt korony wyższy w próbie, pomiar całych kamer OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r10.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r10.done`
+
