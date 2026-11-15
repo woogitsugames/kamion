@@ -202,3 +202,7 @@
 - 2026-11-16 00:14 +01:00 — R10 build aktywny: próba koron objętościowych, osiem azymutów QA. R9 wycofana po FAIL (znikanie krawędziowe), R8 pozostaje punktem odniesienia. GIS 1472 passed dla R7; pełna walidacja nowszych zmian OPEN. Targowica na potwierdzonym placu, układ wiat bez zdjęć OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r10.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r10.done`
 
+
+- 2026-11-16 00:29 +01:00 — Scalono origin/main 2d125e171 bez konfliktów; testy far_field/fidelity 12 passed, 1 xfailed. R11 uruchomiona po wycofaniu FAIL R10; dodatkowo powstaje niezintegrowany prototyp lipy 3D. Układ wiat targowicy nadal bez zdjęć OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r11.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r11.done`
+
