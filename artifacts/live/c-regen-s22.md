@@ -6,3 +6,5 @@
 - 20:48 scalone origin/qa-tools-0219 (1c8c4576c) i origin/summer-cd-0216b (9e0adb2cd) — bez konfliktów; powiaty_prg.geojson sha256 = manifest (f90444f8…). Paczki 2002 (bdot10k, lod1, lod2) są na dysku.
 - W TLE (slot heavy): `artifacts/c-regen-s22/tools/regen.ps1` (build_region → build_world → fidelity → export_route → lamp_audit, C potem Dojlidy). Status: artifacts/c-regen-s22/regen/regen.status, koniec: regen/regen.done.
 - NASTĘPNY KROK: po regen.done → sprawdzić frame_estimate vs before/data (High < 2 M, Low ≤ +2 %), far_field_qa (ring_powiaty_missing pusty, Low ≤ 30 000), potem `Start-Process pwsh -ArgumentList '-NoProfile','-File','artifacts/c-regen-s22/tools/unity.ps1'` (EditMode → import ×2 → vqa after) i `…/tools/pytest.ps1`.
+- 20:51 EditMode po merge (przed regeneracją): 629 = 626 pass / 2 fail / 1 skip; 2 faile = CarPaintMaterialTests.DepositionChannel (znane z main wg verify-cloud-b, niezwiązane). Kompilacja OK. XML: artifacts/tests/editmode-20261115-204909.xml.
+- CZEKAM NA: artifacts/c-regen-s22/regen/regen.done (build_world C ~12 min, potem Dojlidy). NASTĘPNA KOMENDA jak wyżej (budżet → unity.ps1 + pytest.ps1).
