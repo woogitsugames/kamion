@@ -54,6 +54,8 @@ def parse():
     p.add_argument("--shape", default=B.DEFAULT_SHAPE, choices=["b2", "round", "modern"],
                    help="cab surfacing: b2 = exported cab, round = rounding-pass proposal (owner approval pending)")
     p.add_argument("--rake", type=float, default=None, help="modern only: front plane rake in degrees (default 7)")
+    p.add_argument("--badge", default="none", choices=["none", "trakt"],
+                   help="grille brand: none = brand-neutral (owner 2026-11-15, BRAND-SWEEP-S20 #5); trakt = old letters, comparison only")
     p.add_argument("--vis", action="store_true", help="a4: eye-point views + visibility map (widocznosc_*)")
     return p.parse_args(argv)
 
@@ -71,6 +73,7 @@ def build(a):
         C.make_tyre_materials()
     subpaths, strokes = G.load_svg_mark(os.path.join(G.REPO, "art-source", "truck", "brand", "trakt.svg"))
     B.set_shape(a.shape, a.rake)
+    B.BADGE = a.badge
     B.cab_shell()
     B.glazing()
     B.doors_and_gaps()
