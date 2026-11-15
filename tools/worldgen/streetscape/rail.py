@@ -69,7 +69,7 @@ LOD_STEP = {0: 5.0, 1: 10.0, 2: 20.0}
 # level crossing
 PANEL_HALF = SLEEPER_L / 2  # WORKING_VALUE: crossing panels cover the sleeper length on each side of the track axis
 PANEL_MARGIN = 0.50         # WORKING_VALUE: panels run this far past the road footprint edge
-PANEL_STEP = 2.0            # panel grid along the track (follows the road crown / grade)
+PANEL_STEP = 0.5            # panel grid along the track (follows the road crown / grade); 2.0 m let the crown poke through (render r2)
 PANEL_LIFT = 0.005          # panels / rail heads this much above the road mesh (no z-fight with the asphalt)
 FLANGEWAY = 0.07            # WORKING_VALUE: groove next to the rail head inside the panel field
 CROSS_SNAP_M = 8.0          # an OSM level_crossing node within this distance of a rail axis belongs to that track
