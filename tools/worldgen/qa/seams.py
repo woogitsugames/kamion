@@ -20,8 +20,10 @@ the route road of the corridor seams (`REFERENCE`).
   uv run --project tools/worldgen python -m tools.worldgen.qa.seams [--tiles a,b,...] [--overrides-ref <git ref>]
         [--json out.json] [--md out.md] [--compare-ref origin/dk65-k1-0220]
 
-`--overrides-ref` reads every overrides.yaml from a git ref (the rest from the checkout); `--compare-ref` runs twice
-(checkout and ref) and marks the FAIL rows that disappear with the ref.
+`--overrides-ref` reads overrides.yaml from a git ref for the tiles that ref changes against `--base` (default
+origin/main, merge base; the rest from the checkout) = "this checkout + that PR"; `--compare-ref` runs twice (checkout
+and checkout + ref) and adds the ref's result to every row. The generator code is always the checkout's, except the
+ADR 0220 key `edge_line_spacing` (PR #98), modelled here when an override carries it.
 """
 from __future__ import annotations
 
@@ -109,6 +111,13 @@ def _git_show(ref: str, rel: str) -> str | None:
     r = subprocess.run(["git", "-C", str(ROOT), "show", f"{ref}:{rel}"], capture_output=True, text=True,
                        encoding="utf-8")
     return r.stdout if r.returncode == 0 else None
+
+
+def changed_tiles(ref: str, base: str = "origin/main") -> set:
+    """Tiles whose overrides.yaml the ref changes against its merge base with `base` (a PR's own changes)."""
+    r = subprocess.run(["git", "-C", str(ROOT), "diff", "--name-only", f"{base}...{ref}", "--", "Data/Regions"],
+                       capture_output=True, text=True, encoding="utf-8")
+    return {Path(f).parts[2] for f in r.stdout.split() if f.endswith("/overrides.yaml")}
 
 
 def load_tile(tid: str, overrides_ref: str | None = None) -> Tile:
@@ -335,8 +344,9 @@ def crossings(t: Tile, se, net=None) -> list[Crossing]:
             P["oś jezdni N [m]"] = (round(float(pg[1]), 3), src_n)
             node = net.nodes.get(c.node_a if end == 0 else c.node_b, {})
             z = node.get("z_terrain")
-            P["wys. terenu w osi Z [m]"] = (z, "graph:z_terrain (NMT " + str(t.graph.get("sources", {}).get("z_terrain")) + ")"
-                                             if z is not None else "brak (z_terrain = null na krawędzi S/E kafla)")
+            nmt = str(t.graph.get("sources", {}).get("z_terrain"))
+            P["wys. terenu w osi Z [m]"] = (z, f"graph:z_terrain (NMT {nmt})" if z is not None else
+                                             f"brak (z_terrain = null na krawędzi S/E kafla; NMT {nmt})")
             q = qa.get(c.id)
             ws = sorted({float(w) for w in (q or {}).get("width_m") or []})
             hit = [w for w in ws if abs(w - float(sec.width)) <= 0.011]
@@ -479,8 +489,12 @@ def _cat(v):
 
 
 def run(tiles: list[str] | None = None, overrides_ref: str | None = None, tol: float = TOL_M,
-        loaded: list[Tile] | None = None) -> dict:
-    ts = loaded or [load_tile(t, overrides_ref) for t in (tiles or TILES) if (REG / t / "region.yaml").exists()]
+        loaded: list[Tile] | None = None, base: str | None = "origin/main") -> dict:
+    """overrides_ref: overrides.yaml of the tiles that ref changes against `base` (merge base) are read from ref, the
+    rest from the checkout = "checkout + that PR's overrides" (base=None: every tile from ref)."""
+    only = changed_tiles(overrides_ref, base) if overrides_ref and base else None
+    ts = loaded or [load_tile(t, overrides_ref if (only is None or t in only) else None)
+                    for t in (tiles or TILES) if (REG / t / "region.yaml").exists()]
     nets = {}
     seams = []
     for a, b, se in adjacent_pairs(ts):
@@ -589,17 +603,20 @@ def main(argv=None):
     ap.add_argument("--tiles", default=",".join(TILES))
     ap.add_argument("--overrides-ref", default=None, help="read overrides.yaml from this git ref")
     ap.add_argument("--compare-ref", default=None, help="second run with overrides from this ref; FAILs that vanish")
+    ap.add_argument("--base", default="origin/main", help="ref overrides only for tiles the ref changes vs this "
+                    "(merge base); 'none' = all tiles from the ref")
     ap.add_argument("--tol", type=float, default=TOL_M)
     ap.add_argument("--json", default=None)
     ap.add_argument("--md", default=None, help="write the tables (FAIL + route roads) as Markdown")
     ap.add_argument("--all-rows", action="store_true", help="print every row, not only FAIL")
     a = ap.parse_args(argv)
     tiles = [t for t in a.tiles.split(",") if t]
-    rep = run(tiles, a.overrides_ref, a.tol)
+    base = None if a.base == "none" else a.base
+    rep = run(tiles, a.overrides_ref, a.tol, base=base)
     out = {"main": rep}
     gone = None
     if a.compare_ref:
-        rep2 = run(tiles, a.compare_ref, a.tol)
+        rep2 = run(tiles, a.compare_ref, a.tol, base=base)
         gone = fail_keys(rep) - fail_keys(rep2)
         out["ref"] = rep2
         out["fail_gone_with_ref"] = sorted([list(k[:3]) + [k[4]] for k in gone])
