@@ -1,0 +1,13 @@
+# Geometria oświetlenia tablicy — obieg8
+
+Cel: warunki położenia lampki i powierzchni pomiarowej, których brakowało obok dotychczasowej fotometrii. **0zdjęć,0nowych kopiiPDF,0Chrome**. `norms.csv`:8SOURCED i2UNVERIFIED; własne parafrazy bez długich cytatów. To datowane snapshoty, nie deklaracja aktualności prawnej2026.
+
+Przed dopisaniem sprawdzono `../regulations.csv` (01-N24), `../legacy-regulations-round2/regulations.csv` (L02-03…05), `research/gptpro/p4-truck-regulations/manifest.csv` iREADME. Nie powtórzono progu luminancji ani gradientu. Dotychczasowe odsunięcie powierzchni badanej, kierunek pomiaru i średnica pola pozostają wN24/L02-04; nowy wpis doprecyzowuje centrowanie małej próbki. Zasada bezpośredniej emisji jest wCSV jako doprecyzowanie zakresu istniejącego wpisu, nie nowa niezależna norma.
+
+Pełny oficjalny tekstR4Rev.3 iR148Add.147 otwarto z zachowanych pełnych odpowiedzi narzędzia web (odpowiednio1400/2865linii); bezpośrednieURL zwróciły403, nie ponawiano pobierania. Odczytano treść pkt7–8/zał.3–4 R4 oraz5.11/zał.2D/zał.3pkt3 R148. Nie obejrzano bitmap rysunków: przyporządkowanie etykiet kątowych oraz współrzędne siatek pozostająUNVERIFIED. Nie wyprowadzono ich z kolejności tekstu.
+
+R48 odczytano z istniejącego pełnegoPDF `research/gptpro/p4-truck-regulations/files/P4-001.pdf` przezpypdf: okładka iwydrukowane s51–52. SHA256 `20300c933bfbd4557ed30245fe4365a0e8808c3d5014e66168fda23a6ec918dc`. Okładka podaje **16.10.2014**, seria06 doSupplement4 z09.10.2014; adresUNECE ma katalog2015. W tym pakiecie rozdzielono datę dokumentu od kataloguURL; nie zmieniono starszych plików. Znane pochodzenie kopii: `../regulation-evidence.json`, oryginalnyUNECEURL wCSV i wskazana tam kopia archiwalna.
+
+Wniosek dla generatora: brak uniwersalnego odsunięcia lampki w sprawdzonym6.8R48. Trzeba rozróżnić miejsce tablicy, powierzchnię badania, położenia lampki deklarowane producentem i pole widoczności. Nie mieszać odległości minimalnej z5.10R148 (lampy manewrowe) z5.11 (tablica). Nowy CSV nie podaje takiej wspólnej odległości. Nie ustala wymiarów rzeczywistej polskiej tablicy z wymiarów formatu testowego.
+
+Doprecyzowanie PG8-07 przed integracją: ponownie odczytano pełny pkt5.11.5 snapshotu2020, s31. Przepis mówi ogólnie o tylnej lampie, bez wyliczenia jej konkretnych funkcji. Ograniczenie dotyczy czerwieni oraz relacji combined/grouped — nie samego sąsiedztwa, nie białej emisji i nie automatycznie reciprocally incorporated. Krótki cytat wyłącznie wCSV. Nie pomylono tego zR486.8.9, które dotyczy innej kwestii: modyfikacji fotometrii tablicy podczas stopu/przeciwmgłowego.

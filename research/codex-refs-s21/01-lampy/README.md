@@ -114,3 +114,7 @@ Korekta datowaniaR48: koordynator niezależnie odczytał i obejrzał okładkę i
 
 
 Heavy-plate-lamps-round7:4 nowe, indywidualnie obejrzane firmowe kadry1fizycznej częściSIM (całość, mocowanie, logo, optyka), tylko link-onlyARR. Zastosowanie tablicyKrone/Schmitz/Koegel/Fliegl zadeklarowane przez sprzedawcęPartsBit878531; nie pomiar zgodności ani odczytE/L. Oba najważniejszeURL(całość/optyka) niezależnie sprawdzone przez drugiego agenta. Jedno wspólne okno z3widocznymi grupami nie dowodzi3komór/źródeł. E/L/pełny numer i emisjaUNVERIFIED. To1udokumentowany typ referencyjny z deklaracją ciężarową, nie4egzemplarze i nie ukończone5lampekM59. Main41rekordów kadrów(8lokalnych,33link-only).
+
+## Geometria lampki tablicy — obieg8
+
+[Osobny CSV](plate-geometry-round8/norms.csv):8SOURCED i2UNVERIFIED,0nowychfotografii. R4pkt7:≤82°kąt padania, definicja krańca/środka krawędzi i przypisanego obszaru przy wielu lampkach. R1485.11.2:centrowanie próbki; formaty testowe tablic i łączenie siatek nie są wymiarami tablic polskich ani kategoriami kierunkowskazów. R48Rev12,16.10.2014,6.8.2–6.8.6 nie ustanawia uniwersalnej wysokości/odsunięcia lampki. R1485.11.5:wyjątek czerwieni tylko combined/grouped z tylną lampą; nie biała emisja ani samo sąsiedztwo. Kątów pól85°/60° i współrzędnych siatek bez bitmapy nie przyjęto. Datowane teksty nie zatwierdzają aktualności2026.
