@@ -107,3 +107,6 @@ Właściciel (decyzje z ADR 0216 §Otwarte): (1) azymut zmierzchu **300°** (ok.
 
 ## D69 — Drobne potwierdzenia (2026-11-15, s21)
 Właściciel: (1) droga **1392B** (dk65-10/11) poza zabudową **bez latarni** — potwierdzone; (2) metryka bramki 3 (B-112): **≤ 12 klatek > 40 ms na przejazd**; (3) weryfikację/recenzję kodu PR robi sesja w chmurze (prompt docs/owner/CLOUD-REVIEW-PROMPT-S21.md), lokalny lider robi budowę świata, rendery i telefon.
+
+## D70 — Sterowanie i lusterka (2026-11-15, s21; B-076)
+Właściciel: domyślny zakres kierownicy dotykowej **270°** (900° w ustawieniach); lusterka jako **stałe okienka na ekranie**; feel test bramki 2 (B-075) **później** — po bramce 3.
