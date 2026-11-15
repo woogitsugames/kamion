@@ -25,7 +25,7 @@ ESTIMATED [własny pomiar 03-006]: cztery ręcznie wskazane narożniki `(91,179)
 
 SOURCED [WFS GUGiK, `data/fountain-sheet-2025.xml`]: arkusz N-34-106-B-b-1-4 ma datę 2025-05-27 i piksel 0,1 m. Zapytanie do skorowidza 2026 dla tego bbox zwróciło pustą kolekcję (`data/fountain-sheet-2026.xml`). WMS nie jest czasowo przypięty do arkusza; przyporządkowanie daty to najnowszy znaleziony arkusz w tych zapytaniach, nie gwarancja serwera WMS.
 
-UNVERIFIED: liczba i układ dysz, wysokość strumieni, rodzaj odpływu, kolor podświetlenia, stan działający w dniu pobrania. Ortofoto nie potwierdza tych szczegółów. OSM API zwróciło429; nie korzystano z niepobranych geometrii i nie próbowano obejścia.
+UNVERIFIED: rzeczywista liczba i układ indywidualnych dysz, wysokość strumieni podczas pracy, rodzaj odpływu, dokładny kolor podświetlenia, stan działający w dniu pobrania. Ortofoto nie potwierdza tych szczegółów. OSM API zwróciło429; nie korzystano z niepobranych geometrii i nie próbowano obejścia.
 
 
 ## Komunikaty UM: chronologia i wyposażenie (2 źródła tekstowe link-only)
@@ -45,3 +45,12 @@ Dwa zdjęcia dołączone do komunikatu UM2023-08-25 otwarto **osobno w Chrome i 
 - SOURCED [03-L02, obraz](https://www.knyszyn.pl/asp/pliki/aktualnosci/img_7835noc.jpg): nocą litery jasno zielonkawe, serce różowo-czerwone; pod literami zielonkawa poświata na trawie. Świecą2 widoczne głowice parkowe. Technologia źródeł, fotometria i CCT UNVERIFIED.
 
 **Oba kadry pokazują napis, nie fontannę.** Kolory liter nie są dowodem koloru światła w fontannie. Nie wyprowadzono wysokości liter/słupów ani ich rozstawu z perspektywy; brak skali. Stała/programowalna barwa napisu i jego obecne położenie UNVERIFIED. W komunikacie D01 napis jest opisany jako przenośny.
+
+
+## Fontanna: opis projektu z grudnia2019 (03-D03)
+
+SOURCED [Nowy Goniec Knyszyński nr12(181), grudzień2019, str8](https://www.knyszyn.pl/asp/pliki/download/goniec12.pdf): projekt przewidywał **3 rodzaje dysz**, **4 obiegi wody**, maksymalny strumień **2,5m** oraz reflektory podświetlenia. Rodzajów nie należy mylić z liczbą pojedynczych dysz. Ten sam opis przewidywał kostkę granitową na alejkach oraz nowe ławki i kosze. Numer i datę odczytano z okładki, całą stronę8 odczytano z PDF przez pypdf.
+
+Są to **parametry projektowane w2019**, nie pomiar fontanny ani odbiór wyposażenia. Komunikaty UM z2022/2023 potwierdzają działającą podświetlaną fontannę, ale nie potwierdzają zgodności liczby obiegów/dysz i wysokości strumieni. Zainstalowana liczba dysz, ich rozmieszczenie, program pracy i maksymalna osiągana wysokość w2026 pozostają UNVERIFIED. Dokument nie podaje mocy/reflektorów/CCT. Do shadera i modelu używać jako warunkowego punktu odniesienia do weryfikacji, nie dowodu obecnego stanu.
+
+PDF ma17 069 352B i pozostaje wyłącznie w `Data/raw/refs/codex-s21/03-knyszyn/goniec12.pdf`. SHA256 i lokalizacja danych w `data/goniec2019-fontanna.json`. W repo tylko parafraza z URL, bez zdjęć ani reprodukcji PDF. Źródło archiwalnej specyfikacji technicznej odrzucono przy błędzie certyfikatuTLS; nie obchodzono zabezpieczeń.
