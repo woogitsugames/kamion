@@ -54,8 +54,13 @@ z bliska prawie czarna; (2) brzegi „czyste” — równa linia skoszonej trawy
      (stopa pod taflą, trzcina 2,3 m ± 25 %), dalsze niższe (1,75 / 1,45 m), zygzak w planie ± 0,28 m, szum
      wysokości, zwężanie na końcach; tekstura `water_reeds` (1024×512, rysowana proceduralnie: łodygi, liście
      Phragmites, wiechy, suche zeszłoroczne źdźbła; kafelkuje w u, 4 m) — materiał `water_reeds` = Kamion/World
-     PlotKit (liście oświetlane normalną z COLOR_0, okluzja u stopy). Warstwa `banks` (High: do 3 rzędów, odcinek
-     2 m) / `banks_low` (Low/Medium: 2 rzędy, odcinek 4 m), LOD0–LOD1 chunka, bez cieni.
+     PlotKit (liście oświetlane normalną z COLOR_0, okluzja u stopy). Warstwa `banks` (High: do 4 rzędów
+     (`ROWS_HIGH`), para skrzyżowanych kart-namiotów co 2 m) / `banks_low` (Low/Medium: 2 rzędy, jedna ciągła wstęga
+     na odcinek brzegu, próbka co 4 m, zygzak ± 0,9 m), LOD0–LOD1 chunka, bez cieni.
+   - **r7 — obrys z alfy, nie z wielokąta**: góra każdej karty / wstęgi mapowana na górę tekstury (`V_TOP` 0,94;
+     pokrycie alfy 1,0 poniżej v 0,45, 0,5 przy v 0,72, 0,1 przy v 0,88), wielokąt 1,35 × wysokość rośliny
+     (`H_GEOM`). Do r6 górne v = h / 2,5 cięło nieprzezroczystą część tekstury: na Low kępy 2–3 próbek zwężane do
+     zera dawały pełne zielone trójkąty 8–12 m, na High kanciaste „grzbiety”.
    - Krzewy: korony r < 2,2 m → `tree_shrub` (zarośla wierzbowe 2–4,5 m), większe → `tree_alder` (olsza czarna
      8–16 m) — istniejące prototypy, instancje; ≥ 2,5 m od istniejących drzew, nie na drogach / w wodzie; ziarno
      z sha1 pozycji, dopisane po `VG.place` / HLOD lasu (strumień RNG regionu nietknięty).
@@ -84,20 +89,21 @@ Sondowanie źródeł (`tools/c_probe.py`, nic nie zapisane do `Data/`): Biała 9
   i odświeżeniem fidelity / bramki 3, po decyzji właściciela (Biała z trasy nie jest widoczna — zysk mały).
 
 ## Budżet (visual-qa 1920×1080, edytor, szacunek przed SRP batching; telefon NIE mierzony)
-A = 0210 r3 (`artifacts/water-0210/dk65-02/r3/*/stats.txt`), B = 0213 r5 (`artifacts/water2-0213/dk65-02/r5`), scena
+A = 0210 r3 (`artifacts/water-0210/dk65-02/r3/*/stats.txt`), B = 0213 r7 (`artifacts/water2-0213/dk65-02/r7`), scena
 Low (`World_dk65-02`):
 | kamera (Low) | draws A → B | trójkąty A → B |
 |---|---|---|
-| `top-bridge` | 21 → 23 | 51,3 → 52,0 tys. |
-| `drive-bridge-approach` | 32 → 33 | 74,6 → 74,9 tys. |
-| `water-bank-west` | 149 → 150 | 159,2 → 159,6 tys. |
+| `top-bridge` | 21 → 23 | 51,3 → 52,1 tys. |
+| `drive-bridge-approach` | 32 → 33 | 74,6 → 75,0 tys. |
+| `water-bank-west` | 149 → 149 | 159,2 → 159,6 tys. |
 | `water-deck-east` | 87 → 89 | 138,3 → 139,1 tys. |
-| `water-oblique-bridge` | 31 → 33 | 72,3 → 73,0 tys. |
+| `water-oblique-bridge` | 31 → 33 | 72,3 → 73,1 tys. |
 | `rev-elcka`, `route-s0450` (max trasy), `drive-s19-approach` | bez zmian | bez zmian |
 Koszt Low: ≤ +2 draws (materiał `water_reeds` w chunkach z brzegiem), ≤ +0,8 tys. trójkątów na klatkę; shader wody
-Low: ta sama liczba pobrań tekstur (1 sonda). Cały kafel: `banks_low` 02: 6,6 tys. tris (max 0,57 tys./chunk),
-03: 2,9 tys.; krzewy 02: 270 `tree_shrub` + 34 `tree_alder`, 03: 580 + 93 (instancje istniejących prototypów,
-impostory). High (`banks`, karty-namioty r6): patrz Walidacja (liczby r6); **uwaga**: ADR 0210 i r1–r5 tego zadania
+Low: ta sama liczba pobrań tekstur (1 sonda). Cały kafel (r7, `water_qa.json`): `banks_low` 02: 7,1 tys. tris
+(316 wstęg), 03: 3,1 tys. (220); krzewy 02: 270 `tree_shrub` + 34 `tree_alder`, 03: 580 + 93 (instancje istniejących prototypów,
+impostory). dk65-03 Low r7: `water-close-bank` 99 draws / 69,6 tys., `water-bank-mid` 131 / 89,3 tys., `top-water-mid`
+8 / 28,6 tys. High (`banks`, karty-namioty r6/r7 — r7 zmienia tylko UV i wysokość, liczba trójkątów bez zmian): **uwaga**: ADR 0210 i r1–r5 tego zadania
 renderowały „High” na scenie Low (`World_<id>` z `-Tier High` = shader High, geometria Low); od r6 łańcuch używa
 `World_<id>_High`. Sceny High (r5H, cała zawartość High) mają 0,8–1,0 mln tris na kamerach wodnych `dk65-02` — to
 głównie istniejąca zawartość High (las, krzewy, teren LOD0), nie woda; pomiar telefonu (flagowiec, profil High) otwarty.
@@ -105,7 +111,8 @@ High, karty-namioty r6 vs skrzyżowane karty r5 (ta sama scena `World_dk65-02_Hi
 `water-bank-west` 996,9 → 1021,7 tys. tris, `water-deck-east` 810,0 → 837,9, `drive-bridge-approach` 375,5 → 383,3,
 `route-s0450` 944,2 → 950,8, `top-bridge` 153,9 → 161,2. Cały kafel `banks` High: 02 122,3 tys. (26 chunków,
 max ~10,6 tys./chunk), 03 ~50 tys. Szacunek kosztu trzciny High na klatkę: ≤ ~30–55 tys. tris (r5 → r6 to +25–28 tys.,
-r5 ≈ połowa r6) i +1 draw / chunk z brzegiem (bez cieni). Low bez zmian względem r5 (tabela wyżej).
+r5 ≈ połowa r6) i +1 draw / chunk z brzegiem (bez cieni). r7 High = r6 co do trójkąta (`water-bank-west` 1021,7 tys.,
+439 draws; `water-deck-east` 837,9 tys., 328 draws).
 
 ## Walidacja
 - Szew 02|03 (`tools/seam.py`, wierzchołki tafli GLB na x = 768 779): przed 110,163–110,193 | 110,132–110,160 m,
@@ -114,21 +121,36 @@ r5 ≈ połowa r6) i +1 draw / chunk z brzegiem (bez cieni). Low bez zmian wzgl�
   identyczne (≤ 3,6 cm).
 - Kolor z góry (mediana sRGB tafli, `top_bridge` 02 / `top_water_mid` 03): ortofoto 44/50/54 i 52/53/57; render
   przed (0210) Low 30/32/32 i 31/33/32, High 35/38/39 i 36/39/39; **po: Low 48/49/47 i 49/49/47, High 54/54/52
-  i 54/55/52** (jasność jak ortofoto; odcień cieplejszy o ~7 w B — świadomie, patrz Decyzja 3).
+  i 54/55/52** (zmierzone ponownie na r7, bez zmian; jasność jak ortofoto; odcień cieplejszy o ~7 w B — świadomie,
+  patrz Decyzja 3). Stosunek woda/łąka (lum. lin.) w renderze 0,15–0,26 wobec 0,31–0,41 na ortofoto — łąka w renderze
+  jest jaśniejsza niż na ortofoto, nie tafla ciemniejsza.
 - Determinizm (etap wody wyłączony): `build_world` na tej gałęzi dla C i Dojlidy — `world_manifest.json`,
   `far_field_qa.json`, `<id>-far-field.manifest.json` **identyczne** z main (`artifacts/water2-0213/determinism.txt`).
   `fidelity_qa.json` C: odświeżony tylko hash `build_world.py` (wynik C bez zmian).
-- `pytest tests/gis`: **1223 passed, 3 xfailed**, 1 odznaczony (`test_road_stage_independent_of_hash_seed`, 3 × pełny
+- `pytest tests/gis` (po scaleniu `origin/main` 6624550e4, r7): **1313 passed, 2 skipped, 3 xfailed, 1 failed** —
+  `test_p1_0161::test_ring_mast_survives_the_carriageway_clearing` czyta `Data/raw/derived/bialystok-industrial-c` z
+  worktree (zbudowane o 08:33 kodem sprzed scalenia; na main test przechodzi) — wynik po przebudowie C: patrz
+  `artifacts/water2-0213/logs/det-c-postmerge.log`. Przed scaleniem: 1223 passed, 3 xfailed, 1 odznaczony (`test_road_stage_independent_of_hash_seed`, 3 × pełny
   build C); nowe `tests/gis/test_water_0213.py` 6/6 (szew symetryczny na dwóch syntetycznych kaflach, wstęgi High/Low
   poza keep-out, krzewy i odstęp od drzew, tekstura kafelkuje i jest przycinana, izolacja C/Dojlidy, produkty
   `water_banks.json`); `test_water_0210.py` zaktualizowany (2 regiony z wodą, 3 strażniki w stage).
 - EditMode: 587, **586 passed, 0 failed**, 1 skipped (`artifacts/water2-0213/tests/editmode-20261115-092220.xml`).
-- Import bez błędów shadera / C#. Pętla wizualna (6 rund, `artifacts/water2-0213/{dk65-02,dk65-03}/r1..r6/view/`,
+- Import bez błędów shadera / C#. Pętla wizualna (7 rund, `artifacts/water2-0213/{dk65-02,dk65-03}/r1..r7/`,
   strojenie `tune/`): r3 trzcina jak limonkowy żywopłot → r4 kępy z przerwami, ciemniejsza paleta → r4 z bliska
   „płetwy” (wstęga widziana wzdłuż brzegu) → r5 High = skrzyżowane karty (z daleka czyta się jak szuwar, z bliska
-  pionowe krawędzie kart) → r6 karty-namioty (High czyta się jak pas szuwaru wzdłuż brzegu, `dk65-02/r6/view/`). Low: tafla już nie czarna (z bliska ciemnoszara z odbiciem nieba).
+  pionowe krawędzie kart) → r6 karty-namioty: **odrzucone przy przeglądzie** — Low to pełne zielone trójkąty
+  (`dk65-03/r6/Low-clear/water-close-bank.png`, `dk65-02/r6/Low-clear/water-deck-west.png`), High kanciaste grzbiety →
+  **r7** (obrys z alfy tekstury, Low ciągła wstęga): Low czyta się jak ciągły pas trzciny z poszarpaną górą i wiechami,
+  High jak masa szuwaru (`dk65-0{2,3}/r7/{Low,High}-clear/water-close-bank|water-bank-west|water-deck-west.png`).
+  Pozostałe wady r7: High — proste linie cięcia stóp kart na trawie od strony lądu; Low — pojedyncze kliny tam, gdzie
+  wstęga schodzi do zera przy keep-out / otwartej wodzie, między stopą wstęgi a brzegiem widać ciemny pasek tafli.
+  Low: tafla z góry 48/49/47 (nie czarna); z mostu patrząc w dół pierwszy plan nadal ciemny (toń 0,12 przy małym
+  Fresnelu), jaśnieje ku horyzontowi.
 
 ## Otwarte
+0. High: tafla z bliska (`dk65-03/r7/High-clear/water-close-bank.png`) pokazuje blokowe, prostokątne łaty zmarszczek
+   z prostymi szwami (wygląda na kwantyzację normalnej zmarszczek / UV per trójkąt) — nie sprawdzone, czy było w 0210;
+   do strojenia `tune.ps1` (bez przebudowy świata) albo poprawki w `WorldWater.shader`.
 1. **Telefon**: brak pomiaru (Low: shader bez dodatkowych pobrań; High: +tris kart trzciny, alpha-test na Mali —
    UNVERIFIED). Zmierzyć na A16 (Low) i flagowcu (High) z kamerą przy moście.
 2. Kolor i trzcina strojone tylko na ortofoto (nadir) i renderach — **brak zdjęcia z brzegu Supraśli/Białej**
