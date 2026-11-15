@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-15 20:27:11Z" end-time="2026-11-15 20:27:15Z" duration="4,393934">
+  <test-suite type="TestSuite" id="1232" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="181" result="Passed" start-time="2026-11-15 20:27:11Z" end-time="2026-11-15 20:27:15Z" duration="4.393934" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1226" name="Game.Tests.PlayMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/spawn-fix-0262/game/Library/ScriptAssemblies/Game.Tests.PlayMode.dll" runstate="Runnable" testcasecount="181" result="Passed" start-time="2026-11-15 20:27:11Z" end-time="2026-11-15 20:27:15Z" duration="4.383691" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="76088" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1227" name="Game" fullname="Game" runstate="Runnable" testcasecount="181" result="Passed" start-time="2026-11-15 20:27:11Z" end-time="2026-11-15 20:27:15Z" duration="4.381555" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1228" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="181" result="Passed" start-time="2026-11-15 20:27:11Z" end-time="2026-11-15 20:27:15Z" duration="4.379903" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1169" name="RouteSpawnTests" fullname="Game.Tests.RouteSpawnTests" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-15 20:27:11Z" end-time="2026-11-15 20:27:15Z" duration="4.376309" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1173" name="Gate3Cameras_ParseAndNormalise" fullname="Game.Tests.RouteSpawnTests.Gate3Cameras_ParseAndNormalise" methodname="Gate3Cameras_ParseAndNormalise" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" seed="2096882859" result="Passed" start-time="2026-11-15 20:27:11Z" end-time="2026-11-15 20:27:11Z" duration="0.012178" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1172" name="PathFollower_SeekToAndEndS" fullname="Game.Tests.RouteSpawnTests.PathFollower_SeekToAndEndS" methodname="PathFollower_SeekToAndEndS" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" seed="124688880" result="Passed" start-time="2026-11-15 20:27:11Z" end-time="2026-11-15 20:27:11Z" duration="0.007390" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1171" name="RouteS_OutsideAClosureOrInsideACollider_MovesAlongTheRoute" fullname="Game.Tests.RouteSpawnTests.RouteS_OutsideAClosureOrInsideACollider_MovesAlongTheRoute" methodname="RouteS_OutsideAClosureOrInsideACollider_MovesAlongTheRoute" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" seed="1243143012" result="Passed" start-time="2026-11-15 20:27:11Z" end-time="2026-11-15 20:27:14Z" duration="3.841065" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Detected one or more triangles where the distance between any 2 vertices is greater than 500 units. The resulting Triangle Mesh can impact simulation and query stability. It is recommended to tessellate meshes that have large triangles. Source mesh name: HillRamp
+[DIAG] cannot write diagnostics files: Sharing violation on path C:\Users\matma\AppData\LocalLow\woogitsugames\Kamion\diag\frametimes.csv
+[DIAG] sensor poll mode=Background (diag_poll main|bg|off, ADR 0177)
+[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 69 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=1s tier=Low target=60 fps=0.3 p50=3779.67 p95=3779.67 p99=3779.67 max=3779.67ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[START] start moved along the route: route_s 12.0 -> 85.0 (region-edge closure on the route); regenerate the region start (ADR 0262)
+[START] start moved along the route: route_s 200.0 -> 214.0 (collider 'TestBarrier'); regenerate the region start (ADR 0262)
+]]></output>
+            </test-case>
+            <test-case id="1170" name="RouteS_SpawnsCoupledCombinationOnRouteWithHeading" fullname="Game.Tests.RouteSpawnTests.RouteS_SpawnsCoupledCombinationOnRouteWithHeading" methodname="RouteS_SpawnsCoupledCombinationOnRouteWithHeading" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" seed="607651209" result="Passed" start-time="2026-11-15 20:27:14Z" end-time="2026-11-15 20:27:15Z" duration="0.503157" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[DIAG] cannot write diagnostics files: Sharing violation on path C:\Users\matma\AppData\LocalLow\woogitsugames\Kamion\diag\frametimes.csv
+[DIAG] sensor poll mode=Background (diag_poll main|bg|off, ADR 0177)
+[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 69 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=0s tier=Low target=60 fps=2.2 p50=446.65 p95=446.65 p99=446.65 max=446.65ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

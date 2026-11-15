@@ -6,8 +6,13 @@
 Catalog: game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json (Resources, loaded by
 Game.Gameplay.RegionCatalog in the Boot menu and read by Game.Editor.Build.RegionBuildList for `-Regions`).
 Authored fields (kept as they are): id, label, group, order of the list, aliases, sets.
-Derived fields (rewritten here): routeLengthM (route_start.json length_m), startS (12 m like the spawn the importer
-places, WorldSceneBuilder spawnS, clamped so that at least MIN_AHEAD_M of route remains).
+Derived fields (rewritten here): routeLengthM (route_start.json length_m), startS (ADR 0262: 12 m from the route start
+when the route starts inside the region - the depot gate of region C; EDGE_START_S_M when the route starts ON the
+region edge, i.e. its first graph node is a `boundary` node of roads.graph.json - the importer closes such a road with a
+barrier row up to 60 m inside the tile (WorldEdgeBuilder.ClosureSetbackM, ADR 0169) and the start has to stand behind
+it; clamped so that at least MIN_AHEAD_M of route remains). The importer bakes the same startS as the scene spawn
+(WorldSceneBuilder). The exact closure geometry is NOT copied here (ADR 0169 p.2): the EditMode test
+StartClearanceTests checks every startS of this catalog against the real closures.
 Standard library only (no uv needed).
 """
 from __future__ import annotations
@@ -20,16 +25,35 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 CATALOG = REPO / "game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json"
 REGIONS = REPO / "Data/Regions"
-SPAWN_S_M = 12.0       # WorldSceneBuilder: const float spawnS = 12f
+SPAWN_S_M = 12.0       # StartClearance.DefaultStartS: route that starts inside the region
+CLOSURE_SETBACK_M = 60.0   # WorldEdgeBuilder.ClosureSetbackM (ADR 0169): the closure stands at most this far from the edge
+BEHIND_CLOSURE_M = 25.0    # StartClearance.BehindClosureM: tractor origin behind the row (trailer rear end 13.7 m clear) - WORKING_VALUE
+SKEW_ALLOWANCE_M = 5.0     # the lane centre meets a skewed row later than the road axis (measured: up to 1.2 m, bialystok-maczka) - WORKING_VALUE
+EDGE_START_S_M = CLOSURE_SETBACK_M + BEHIND_CLOSURE_M + SKEW_ALLOWANCE_M
 MIN_AHEAD_M = 100.0    # keep >= 100 m before the tile-end closure (closure 60 m before the edge, ADR 0169) - WORKING_VALUE
+
+
+def starts_on_region_edge(region_id: str, route: dict) -> bool:
+    """True when the first graph node of the start route is a boundary node (the road is cut by the region edge)."""
+    nodes = route.get("graph_nodes") or []
+    graph = REGIONS / region_id / "roads.graph.json"
+    if not nodes or not graph.exists():
+        raise SystemExit(f"{region_id}: route_start.json graph_nodes or roads.graph.json missing")
+    first = nodes[0]
+    for n in json.loads(graph.read_text(encoding="utf-8"))["nodes"]:
+        if n["id"] == first:
+            return bool(n.get("boundary"))
+    raise SystemExit(f"{region_id}: route node {first} is not in roads.graph.json (route_start.json stale: scripts/export-route.py)")
 
 
 def derived(region_id: str) -> dict:
     route = REGIONS / region_id / "route_start.json"
     if not route.exists():
         raise SystemExit(f"{region_id}: {route.relative_to(REPO)} missing (scripts/export-route.py)")
-    length = float(json.loads(route.read_text(encoding="utf-8"))["length_m"])
-    start = max(0.0, min(SPAWN_S_M, length - MIN_AHEAD_M))
+    data = json.loads(route.read_text(encoding="utf-8"))
+    length = float(data["length_m"])
+    wanted = EDGE_START_S_M if starts_on_region_edge(region_id, data) else SPAWN_S_M
+    start = max(0.0, min(wanted, length - MIN_AHEAD_M))
     return {"routeLengthM": round(length, 2), "startS": round(start, 2)}
 
 
