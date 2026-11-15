@@ -1151,6 +1151,9 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
     for o in overrides or []:
         if o.get("kind") != "tree_groups" or o.get("form") != "kit":
             continue
+        crown_model = o.get("crown_model", "kit")
+        if crown_model not in ("kit", "garden_trial"):
+            raise ValueError(f"tree_groups {o['id']}: unknown crown_model {crown_model!r}")
         spw = o.get("species") or {"maple": 1.0}
         if any(s not in KIT_SPECIES for s in spw):
             raise ValueError(f"tree_groups {o['id']}: form kit knows {sorted(KIT_SPECIES)}")
@@ -1162,20 +1165,29 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             sp = str(q[4]) if len(q) >= 5 and q[4] else PLT._pick_w(sorted(spw.items()), key, "sp")
             if sp not in KIT_SPECIES:
                 raise ValueError(f"tree_groups {o['id']}: unknown species {sp!r}, knows {sorted(KIT_SPECIES)}")
+            if crown_model == "garden_trial" and sp not in HABIT:
+                raise ValueError(f"tree_groups {o['id']}: garden_trial does not support species {sp!r}")
             cb = float(o.get("crown_base_m", (0.0 if sp == "berberis_red" else 0.08 if sp in ("shrub", "fruit") else 0.21) * H))
             z = zf(p)
             kit = PLT.Kit()
             kit.tag = "authored_tree"
             kit.low = False
-            _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False)
+            if crown_model == "garden_trial":
+                garden_tree(kit, p, z, r, H, cb, sp, key, lite=False, cards=3)
+            else:
+                _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False)
             kit.low = "only"
-            _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
+            if crown_model == "garden_trial":
+                garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=2, core=True)
+            else:
+                _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
             if groups is None:
                 groups = _garden_groups(buf, half)
             _emit(buf, kit, groups, half, f"override:{o['id']}:kit", rep, strict=False)
             rep["trees"] += 1
             rep["list"].append({"id": o["id"], "e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "h_m": H,
-                                "crown_m": round(2 * r, 2), "crown_base_m": round(cb, 2), "species": sp})
+                                "crown_m": round(2 * r, 2), "crown_base_m": round(cb, 2), "species": sp,
+                                **({"crown_model": crown_model} if crown_model != "kit" else {})})
     report["authored_trees"] = rep
     return rep
 
