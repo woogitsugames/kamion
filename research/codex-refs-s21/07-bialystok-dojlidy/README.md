@@ -18,3 +18,7 @@ SOURCED [07-D04, oba endpointy, pola w data/]: usługa jest publiczna, lecz brak
 - B-120: końcówki barier i aktualne źródła prawne to osobny etap; brak nowych liczb w tym przeglądzie.
 
 Źródło identyfikatorów: `docs/owner/BACKLOG-S21.md` z bieżącego worktree. Nie oznaczono żadnej luki jako zamkniętej bez dowodu. Dokumenty mają oznaczoną datę, obrazów nie zastępują opisem tekstowym.
+
+## B-123 — kontrola istniejącego ronda Bieżeństwa
+
+07-P01: ponownie obejrzany G3-028 = P1-004, bez pobrania i duplikowania obrazu. SOURCED [obraz]: niskie brązowawe krzewy, trawa, jezdnia, pas czerwonego gzymsu i walcowe słupy estakady. Pokrywy śnieżnej nie rozpoznano; etykieta sezon=śnieg w P1-004 jest błędna dla tego obrazu. Zapisano erratę w data/rondo-biezenstwa-recheck.json bez zmiany cudzych manifestów. To znany boczny widok, nie nowy dojazd z oka kierowcy, więc B-123 pozostaje otwarte. Łącznie5 wierszy:4 dokumentacyjne i1 ponownie obejrzany kadr; nowych zdjęć0.
