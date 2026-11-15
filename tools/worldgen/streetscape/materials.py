@@ -121,10 +121,12 @@ M = {
     "plate_back": {"color": [1, 1, 1], "rough": 0.5, "metal": 0.6, "texture": "plate_back"},
     "signal_housing": {"color": [0.03, 0.03, 0.03], "rough": 0.6},
     "signal_backplate": {"color": [0.02, 0.02, 0.02], "rough": 0.7},
-    "signal_border": {"color": [0.7, 0.7, 0.7], "rough": 0.5},
+    # ADR 0193 (M66, Dz.U. 2019 poz. 2311 zał. 3 pkt 3.3.5.6, s. 715, rys. 10.28): white border of the black contrast plate
+    "signal_border": {"color": [0.55, 0.55, 0.54], "rough": 0.4},
     "signal_red_on": {"color": [0.9, 0.05, 0.02], "rough": 0.3, "emissive": [6.0, 0.3, 0.1]},
     "signal_red_off": {"color": [0.12, 0.02, 0.02], "rough": 0.3},
     "signal_yellow_off": {"color": [0.15, 0.10, 0.02], "rough": 0.3},
+    "signal_yellow_on": {"color": [0.95, 0.60, 0.03], "rough": 0.3, "emissive": [5.0, 2.6, 0.1]},
     "signal_green_on": {"color": [0.05, 0.9, 0.5], "rough": 0.3, "emissive": [0.2, 5.0, 2.5]},
     "signal_green_off": {"color": [0.02, 0.10, 0.06], "rough": 0.3},
     "shelter_roof": {"color": [0.15, 0.16, 0.16], "rough": 0.5, "metal": 0.4},
@@ -614,6 +616,17 @@ M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "pa
 # WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
 # Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
 M["decal_oil"]["traffic_opacity_scale"] = 1.15
+# ADR 0194 (REVIEW s19-0179 P2 "jasne rozmyte splaty"): oil soaked into asphalt stays matt; the atlas cores carried
+# smoothness ~0.5 on a flat decal normal, so the overcast sky reflected off them at grazing angles. Smoothness of an old
+# stain / the freshest film (asphalt_worn = 0.09) and a coverage gamma < 1 for a denser core. WORKING_VALUE.
+M["decal_oil"]["oil_look"] = {"smooth_aged": 0.10, "smooth_fresh": 0.22, "coverage_gamma": 0.7}
+# ADR 0194: yard grime follows the traffic (paved UV1 = distance to area edge, to a building wall): damp / oily pools
+# along dock walls (trucks stand) and edges (water, fines), the open middle swept clean. Threshold offsets on the
+# ADR 0060 macro pool (0.62 = ~16 % of the area). WORKING_VALUE, judged on the chase / route_s1066 frames.
+_GRIME_TRAFFIC = {"open_clean": 0.07, "busy_damp": 0.04, "wall_zone_m": 18.0}
+for _k in ("yard_paving", "yard_concrete", "yard_slabs", "yard_asphalt", "yard_behaton", "yard_concrete_worn"):
+    if _k in M:
+        M[_k] = {**M[_k], "grime_traffic": dict(_GRIME_TRAFFIC)}
 
 
 def _underdeck_pier_paint(default):

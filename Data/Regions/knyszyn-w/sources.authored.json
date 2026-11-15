@@ -1,0 +1,6 @@
+{
+ "provenance": "authored_override (ADR 0209): source pins of region knyszyn-w, read by ingest.py and build_region.py",
+ "pins": {"nmt_year": "2022"},
+ "reason": "The east edge x = 760587 is shared with tile knyszyn, whose NMT is the 2022-07-29 series (ADR 0204; the 2025 series has two flight days there). The newest series of this tile (2025-05-27) differs from 2022 along the seam by median 0.06 m, p95 0.33 m, max 1.31 m, and by 0.11 m at the DK65 carriageway (measured on heightmap_2049.r16 of both tiles). Sheets N-34-106-B-b-1-2/1-4 carry the seam in both tiles, so the same year gives the same samples.",
+ "verify": "none (re-check when knyszyn is rebuilt on a newer NMT: then move both pins together)"
+}

@@ -1,0 +1,11633 @@
+{
+ "generator": "tools/worldgen/qa/dk65_route_plan.py",
+ "adr": "0203",
+ "osm_extract": "podlaskie-261108.osm.pbf",
+ "osm_sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
+ "crs": "EPSG:2180",
+ "lattice": {
+  "x0": 776971.0,
+  "y0": 595199.0,
+  "size_m": 2048.0,
+  "anchor": "bialystok-industrial-c"
+ },
+ "variants": {
+  "A_old_road": {
+   "allow_motorway": false,
+   "length_km": 28.442,
+   "start": {
+    "node": 3341716402,
+    "xy": [
+     778302.0,
+     595649.3
+    ]
+   },
+   "end": {
+    "node": 2979322320,
+    "xy": [
+     761058.2,
+     612417.2
+    ]
+   },
+   "length_by_class_m": {
+    "primary|65": 11136,
+    "secondary|": 10470,
+    "trunk|8;65": 4533,
+    "trunk|19;65": 777,
+    "trunk|65": 615,
+    "secondary|671": 465,
+    "trunk_link|": 258,
+    "residential|": 178,
+    "secondary|669": 10
+   },
+   "ways": [
+    {
+     "way_id": 552161976,
+     "km_start": 0.0,
+     "km_end": 0.196,
+     "length_m": 196.4,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 778302.0,
+     "y": 595649.3
+    },
+    {
+     "way_id": 560802658,
+     "km_start": 0.196,
+     "km_end": 0.256,
+     "length_m": 59.1,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 778128.3,
+     "y": 595740.8
+    },
+    {
+     "way_id": 560802657,
+     "km_start": 0.256,
+     "km_end": 0.276,
+     "length_m": 20.1,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 778076.2,
+     "y": 595768.8
+    },
+    {
+     "way_id": 249640399,
+     "km_start": 0.276,
+     "km_end": 0.491,
+     "length_m": 215.2,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 778058.4,
+     "y": 595778.3
+    },
+    {
+     "way_id": 1093579590,
+     "km_start": 0.491,
+     "km_end": 0.621,
+     "length_m": 129.8,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-11-07",
+     "x": 777879.0,
+     "y": 595896.3
+    },
+    {
+     "way_id": 1093579589,
+     "km_start": 0.621,
+     "km_end": 0.641,
+     "length_m": 20.8,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-11-07",
+     "x": 777777.5,
+     "y": 595977.2
+    },
+    {
+     "way_id": 266084693,
+     "km_start": 0.641,
+     "km_end": 0.777,
+     "length_m": 135.5,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777761.2,
+     "y": 595990.1
+    },
+    {
+     "way_id": 284022563,
+     "km_start": 0.777,
+     "km_end": 0.81,
+     "length_m": 32.7,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777655.0,
+     "y": 596074.2
+    },
+    {
+     "way_id": 1101181473,
+     "km_start": 0.81,
+     "km_end": 0.927,
+     "length_m": 117.4,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777629.1,
+     "y": 596094.1
+    },
+    {
+     "way_id": 173985172,
+     "km_start": 0.927,
+     "km_end": 1.035,
+     "length_m": 107.5,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777537.0,
+     "y": 596167.0
+    },
+    {
+     "way_id": 23844386,
+     "km_start": 1.035,
+     "km_end": 1.147,
+     "length_m": 112.1,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777452.9,
+     "y": 596233.9
+    },
+    {
+     "way_id": 173985169,
+     "km_start": 1.147,
+     "km_end": 1.244,
+     "length_m": 96.8,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777351.4,
+     "y": 596279.9
+    },
+    {
+     "way_id": 490398851,
+     "km_start": 1.244,
+     "km_end": 1.255,
+     "length_m": 11.9,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777255.3,
+     "y": 596291.5
+    },
+    {
+     "way_id": 490398852,
+     "km_start": 1.255,
+     "km_end": 1.392,
+     "length_m": 137.0,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777243.4,
+     "y": 596292.5
+    },
+    {
+     "way_id": 262140922,
+     "km_start": 1.392,
+     "km_end": 1.501,
+     "length_m": 108.7,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-11",
+     "x": 777106.7,
+     "y": 596292.1
+    },
+    {
+     "way_id": 257367422,
+     "km_start": 1.501,
+     "km_end": 1.675,
+     "length_m": 173.5,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776998.5,
+     "y": 596281.7
+    },
+    {
+     "way_id": 173990799,
+     "km_start": 1.675,
+     "km_end": 1.848,
+     "length_m": 173.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776825.7,
+     "y": 596265.9
+    },
+    {
+     "way_id": 173990800,
+     "km_start": 1.848,
+     "km_end": 2.061,
+     "length_m": 213.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776652.5,
+     "y": 596250.9
+    },
+    {
+     "way_id": 257352528,
+     "km_start": 2.061,
+     "km_end": 2.19,
+     "length_m": 128.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776440.3,
+     "y": 596233.4
+    },
+    {
+     "way_id": 257358866,
+     "km_start": 2.19,
+     "km_end": 2.656,
+     "length_m": 466.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776312.0,
+     "y": 596222.5
+    },
+    {
+     "way_id": 257357743,
+     "km_start": 2.656,
+     "km_end": 2.814,
+     "length_m": 157.9,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775848.8,
+     "y": 596179.0
+    },
+    {
+     "way_id": 257357742,
+     "km_start": 2.814,
+     "km_end": 2.851,
+     "length_m": 36.6,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775690.9,
+     "y": 596180.3
+    },
+    {
+     "way_id": 707029854,
+     "km_start": 2.851,
+     "km_end": 2.974,
+     "length_m": 123.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775654.3,
+     "y": 596180.4
+    },
+    {
+     "way_id": 606396475,
+     "km_start": 2.974,
+     "km_end": 3.101,
+     "length_m": 127.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775531.2,
+     "y": 596180.9
+    },
+    {
+     "way_id": 249740773,
+     "km_start": 3.101,
+     "km_end": 3.244,
+     "length_m": 142.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775404.1,
+     "y": 596182.6
+    },
+    {
+     "way_id": 249740760,
+     "km_start": 3.244,
+     "km_end": 3.275,
+     "length_m": 31.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775261.3,
+     "y": 596183.4
+    },
+    {
+     "way_id": 707029850,
+     "km_start": 3.275,
+     "km_end": 3.494,
+     "length_m": 218.7,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775230.3,
+     "y": 596183.6
+    },
+    {
+     "way_id": 249740774,
+     "km_start": 3.494,
+     "km_end": 3.664,
+     "length_m": 170.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775011.6,
+     "y": 596185.0
+    },
+    {
+     "way_id": 257355878,
+     "km_start": 3.664,
+     "km_end": 3.893,
+     "length_m": 229.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 774841.6,
+     "y": 596186.4
+    },
+    {
+     "way_id": 257355879,
+     "km_start": 3.893,
+     "km_end": 4.004,
+     "length_m": 111.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774612.9,
+     "y": 596197.5
+    },
+    {
+     "way_id": 606396479,
+     "km_start": 4.004,
+     "km_end": 4.065,
+     "length_m": 61.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774502.1,
+     "y": 596202.2
+    },
+    {
+     "way_id": 257355876,
+     "km_start": 4.065,
+     "km_end": 4.09,
+     "length_m": 25.2,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774441.0,
+     "y": 596202.8
+    },
+    {
+     "way_id": 693614875,
+     "km_start": 4.09,
+     "km_end": 4.205,
+     "length_m": 115.6,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774415.8,
+     "y": 596203.1
+    },
+    {
+     "way_id": 76073115,
+     "km_start": 4.205,
+     "km_end": 4.345,
+     "length_m": 139.4,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774300.2,
+     "y": 596204.2
+    },
+    {
+     "way_id": 668340288,
+     "km_start": 4.345,
+     "km_end": 4.419,
+     "length_m": 74.2,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 774162.1,
+     "y": 596186.5
+    },
+    {
+     "way_id": 249740778,
+     "km_start": 4.419,
+     "km_end": 4.736,
+     "length_m": 317.3,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 774089.8,
+     "y": 596169.9
+    },
+    {
+     "way_id": 76073122,
+     "km_start": 4.736,
+     "km_end": 4.813,
+     "length_m": 76.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "-1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773802.4,
+     "y": 596037.4
+    },
+    {
+     "way_id": 301702369,
+     "km_start": 4.813,
+     "km_end": 5.187,
+     "length_m": 373.9,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773735.0,
+     "y": 596000.3
+    },
+    {
+     "way_id": 306609226,
+     "km_start": 5.187,
+     "km_end": 5.269,
+     "length_m": 81.7,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773409.7,
+     "y": 595816.0
+    },
+    {
+     "way_id": 301702368,
+     "km_start": 5.269,
+     "km_end": 5.449,
+     "length_m": 179.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773339.7,
+     "y": 595774.0
+    },
+    {
+     "way_id": 242987870,
+     "km_start": 5.449,
+     "km_end": 5.608,
+     "length_m": 159.2,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773185.3,
+     "y": 595681.8
+    },
+    {
+     "way_id": 261104557,
+     "km_start": 5.608,
+     "km_end": 5.828,
+     "length_m": 220.6,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773047.0,
+     "y": 595603.0
+    },
+    {
+     "way_id": 306609228,
+     "km_start": 5.828,
+     "km_end": 5.926,
+     "length_m": 97.3,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 772852.2,
+     "y": 595499.4
+    },
+    {
+     "way_id": 242989867,
+     "km_start": 5.926,
+     "km_end": 6.057,
+     "length_m": 131.4,
+     "highway": "trunk_link",
+     "ref": "",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-23",
+     "x": 772766.2,
+     "y": 595453.8
+    },
+    {
+     "way_id": 561326922,
+     "km_start": 6.057,
+     "km_end": 6.184,
+     "length_m": 126.5,
+     "highway": "trunk_link",
+     "ref": "",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772646.3,
+     "y": 595400.6
+    },
+    {
+     "way_id": 306609223,
+     "km_start": 6.184,
+     "km_end": 6.194,
+     "length_m": 10.3,
+     "highway": "secondary",
+     "ref": "669",
+     "name": "Rondo Pamięci Męczeństwa Kresowian",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "roundabout",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772534.0,
+     "y": 595342.6
+    },
+    {
+     "way_id": 301702376,
+     "km_start": 6.194,
+     "km_end": 6.215,
+     "length_m": 21.5,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Ełcka",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-23",
+     "x": 772523.7,
+     "y": 595343.4
+    },
+    {
+     "way_id": 606396498,
+     "km_start": 6.215,
+     "km_end": 6.245,
+     "length_m": 29.5,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Ełcka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772508.8,
+     "y": 595358.7
+    },
+    {
+     "way_id": 303739902,
+     "km_start": 6.245,
+     "km_end": 6.3,
+     "length_m": 54.8,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Ełcka",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772496.0,
+     "y": 595385.3
+    },
+    {
+     "way_id": 303739903,
+     "km_start": 6.3,
+     "km_end": 6.928,
+     "length_m": 628.1,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Ełcka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772465.1,
+     "y": 595430.6
+    },
+    {
+     "way_id": 396566353,
+     "km_start": 6.928,
+     "km_end": 7.145,
+     "length_m": 217.0,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Ełcka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772166.4,
+     "y": 595983.1
+    },
+    {
+     "way_id": 551984622,
+     "km_start": 7.145,
+     "km_end": 7.204,
+     "length_m": 59.2,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772064.4,
+     "y": 596174.6
+    },
+    {
+     "way_id": 1281924652,
+     "km_start": 7.204,
+     "km_end": 7.217,
+     "length_m": 12.6,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772036.5,
+     "y": 596226.9
+    },
+    {
+     "way_id": 1281924653,
+     "km_start": 7.217,
+     "km_end": 7.277,
+     "length_m": 60.1,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772030.4,
+     "y": 596237.9
+    },
+    {
+     "way_id": 280165819,
+     "km_start": 7.277,
+     "km_end": 8.437,
+     "length_m": 1160.0,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772001.2,
+     "y": 596290.4
+    },
+    {
+     "way_id": 1181762243,
+     "km_start": 8.437,
+     "km_end": 8.579,
+     "length_m": 142.1,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 771143.9,
+     "y": 596935.2
+    },
+    {
+     "way_id": 234919333,
+     "km_start": 8.579,
+     "km_end": 9.23,
+     "length_m": 650.8,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 771005.3,
+     "y": 596966.2
+    },
+    {
+     "way_id": 1281925347,
+     "km_start": 9.23,
+     "km_end": 9.286,
+     "length_m": 56.1,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 770393.1,
+     "y": 597177.7
+    },
+    {
+     "way_id": 623133896,
+     "km_start": 9.286,
+     "km_end": 9.314,
+     "length_m": 28.5,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 770342.1,
+     "y": 597201.1
+    },
+    {
+     "way_id": 396566354,
+     "km_start": 9.314,
+     "km_end": 9.945,
+     "length_m": 631.0,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 770316.5,
+     "y": 597213.4
+    },
+    {
+     "way_id": 1321811066,
+     "km_start": 9.945,
+     "km_end": 10.245,
+     "length_m": 300.0,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769727.6,
+     "y": 597439.0
+    },
+    {
+     "way_id": 1321811065,
+     "km_start": 10.245,
+     "km_end": 10.275,
+     "length_m": 30.1,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769453.9,
+     "y": 597561.8
+    },
+    {
+     "way_id": 1442886950,
+     "km_start": 10.275,
+     "km_end": 10.361,
+     "length_m": 85.6,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769426.4,
+     "y": 597574.2
+    },
+    {
+     "way_id": 1442886949,
+     "km_start": 10.361,
+     "km_end": 10.385,
+     "length_m": 23.7,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-24",
+     "x": 769348.5,
+     "y": 597609.5
+    },
+    {
+     "way_id": 234919340,
+     "km_start": 10.385,
+     "km_end": 10.69,
+     "length_m": 305.5,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769326.7,
+     "y": 597619.0
+    },
+    {
+     "way_id": 716806122,
+     "km_start": 10.69,
+     "km_end": 10.854,
+     "length_m": 163.6,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Szosa Knyszyńska",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769057.0,
+     "y": 597759.3
+    },
+    {
+     "way_id": 41533342,
+     "km_start": 10.854,
+     "km_end": 10.942,
+     "length_m": 88.5,
+     "highway": "secondary",
+     "ref": "",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 768973.6,
+     "y": 597897.7
+    },
+    {
+     "way_id": 716806121,
+     "km_start": 10.942,
+     "km_end": 11.083,
+     "length_m": 141.0,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Ełcka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 768947.1,
+     "y": 597982.2
+    },
+    {
+     "way_id": 1024956365,
+     "km_start": 11.083,
+     "km_end": 13.125,
+     "length_m": 2041.2,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Ełcka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 768906.1,
+     "y": 598117.1
+    },
+    {
+     "way_id": 41533343,
+     "km_start": 13.125,
+     "km_end": 13.727,
+     "length_m": 602.6,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Ełcka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 768548.1,
+     "y": 600126.5
+    },
+    {
+     "way_id": 1243220441,
+     "km_start": 13.727,
+     "km_end": 14.353,
+     "length_m": 626.2,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Ełcka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 768443.9,
+     "y": 600720.1
+    },
+    {
+     "way_id": 1024956364,
+     "km_start": 14.353,
+     "km_end": 15.394,
+     "length_m": 1040.8,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Ełcka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 768336.0,
+     "y": 601336.9
+    },
+    {
+     "way_id": 1399803717,
+     "km_start": 15.394,
+     "km_end": 16.148,
+     "length_m": 753.4,
+     "highway": "secondary",
+     "ref": "",
+     "name": "Studzienna",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 768154.7,
+     "y": 602361.7
+    },
+    {
+     "way_id": 1560819273,
+     "km_start": 16.148,
+     "km_end": 16.594,
+     "length_m": 446.7,
+     "highway": "secondary",
+     "ref": "",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 767901.4,
+     "y": 603055.5
+    },
+    {
+     "way_id": 1448265994,
+     "km_start": 16.594,
+     "km_end": 16.63,
+     "length_m": 35.5,
+     "highway": "secondary",
+     "ref": "",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 767639.5,
+     "y": 603417.2
+    },
+    {
+     "way_id": 1448265995,
+     "km_start": 16.63,
+     "km_end": 16.664,
+     "length_m": 34.0,
+     "highway": "secondary",
+     "ref": "",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 767629.0,
+     "y": 603450.9
+    },
+    {
+     "way_id": 1151531611,
+     "km_start": 16.664,
+     "km_end": 16.756,
+     "length_m": 92.3,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "roundabout",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-19",
+     "x": 767640.6,
+     "y": 603482.7
+    },
+    {
+     "way_id": 1448265993,
+     "km_start": 16.756,
+     "km_end": 16.791,
+     "length_m": 34.8,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-26",
+     "x": 767625.9,
+     "y": 603519.2
+    },
+    {
+     "way_id": 1151531610,
+     "km_start": 16.791,
+     "km_end": 16.871,
+     "length_m": 80.6,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-09-20",
+     "x": 767592.9,
+     "y": 603529.4
+    },
+    {
+     "way_id": 208187096,
+     "km_start": 16.871,
+     "km_end": 18.918,
+     "length_m": 2046.4,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-09-20",
+     "x": 767532.4,
+     "y": 603582.3
+    },
+    {
+     "way_id": 27718745,
+     "km_start": 18.918,
+     "km_end": 25.657,
+     "length_m": 6739.1,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-09-28",
+     "x": 766359.8,
+     "y": 605259.2
+    },
+    {
+     "way_id": 1111506754,
+     "km_start": 25.657,
+     "km_end": 25.955,
+     "length_m": 297.6,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2022-11-08",
+     "x": 762071.6,
+     "y": 610415.2
+    },
+    {
+     "way_id": 1111506750,
+     "km_start": 25.955,
+     "km_end": 25.958,
+     "length_m": 3.5,
+     "highway": "primary",
+     "ref": "65",
+     "name": "Obozowa",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2022-11-08",
+     "x": 761868.9,
+     "y": 610633.0
+    },
+    {
+     "way_id": 305910042,
+     "km_start": 25.958,
+     "km_end": 26.96,
+     "length_m": 1001.7,
+     "highway": "primary",
+     "ref": "65",
+     "name": "Obozowa",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-02-15",
+     "x": 761866.6,
+     "y": 610635.6
+    },
+    {
+     "way_id": 286990128,
+     "km_start": 26.96,
+     "km_end": 26.979,
+     "length_m": 19.4,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2020-06-27",
+     "x": 761184.8,
+     "y": 611369.5
+    },
+    {
+     "way_id": 286990127,
+     "km_start": 26.979,
+     "km_end": 27.779,
+     "length_m": 800.2,
+     "highway": "primary",
+     "ref": "65",
+     "name": "Obozowa",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-01-05",
+     "x": 761171.4,
+     "y": 611383.5
+    },
+    {
+     "way_id": 1464342635,
+     "km_start": 27.779,
+     "km_end": 27.797,
+     "length_m": 17.3,
+     "highway": "primary",
+     "ref": "65",
+     "name": "Obozowa",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-01-05",
+     "x": 760634.8,
+     "y": 611976.1
+    },
+    {
+     "way_id": 1426801304,
+     "km_start": 27.797,
+     "km_end": 27.8,
+     "length_m": 3.0,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "",
+     "oneway": "",
+     "junction": "roundabout",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-01-05",
+     "x": 760631.9,
+     "y": 611992.9
+    },
+    {
+     "way_id": 1426600413,
+     "km_start": 27.8,
+     "km_end": 27.825,
+     "length_m": 25.6,
+     "highway": "secondary",
+     "ref": "671",
+     "name": "Tykocka",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-02-02",
+     "x": 760632.5,
+     "y": 611995.9
+    },
+    {
+     "way_id": 1464342641,
+     "km_start": 27.825,
+     "km_end": 27.846,
+     "length_m": 20.9,
+     "highway": "secondary",
+     "ref": "671",
+     "name": "Tykocka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-02-15",
+     "x": 760649.1,
+     "y": 612015.4
+    },
+    {
+     "way_id": 47812348,
+     "km_start": 27.846,
+     "km_end": 28.253,
+     "length_m": 406.6,
+     "highway": "secondary",
+     "ref": "671",
+     "name": "Tykocka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-02-15",
+     "x": 760665.0,
+     "y": 612028.9
+    },
+    {
+     "way_id": 1111506746,
+     "km_start": 28.253,
+     "km_end": 28.265,
+     "length_m": 12.0,
+     "highway": "secondary",
+     "ref": "671",
+     "name": "Tykocka",
+     "lanes": "",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2022-11-08",
+     "x": 760957.5,
+     "y": 612309.7
+    },
+    {
+     "way_id": 98071185,
+     "km_start": 28.265,
+     "km_end": 28.412,
+     "length_m": 147.7,
+     "highway": "residential",
+     "ref": "",
+     "name": "Rynek",
+     "lanes": "",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2024-01-13",
+     "x": 760964.2,
+     "y": 612319.7
+    },
+    {
+     "way_id": 173422687,
+     "km_start": 28.412,
+     "km_end": 28.442,
+     "length_m": 29.9,
+     "highway": "residential",
+     "ref": "",
+     "name": "Rynek",
+     "lanes": "",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2022-11-08",
+     "x": 761085.1,
+     "y": 612404.1
+    }
+   ],
+   "junctions": [
+    {
+     "node": 3136871040,
+     "km": 0.699,
+     "x": 777717.0,
+     "y": 596026.1,
+     "control": "traffic_signals",
+     "roads": []
+    },
+    {
+     "node": 2840742308,
+     "km": 0.777,
+     "x": 777655.0,
+     "y": 596074.2,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "19",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1832991672,
+     "km": 1.392,
+     "x": 777106.7,
+     "y": 596292.1,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "8",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1847317049,
+     "km": 1.501,
+     "x": 776998.5,
+     "y": 596281.7,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1847317037,
+     "km": 2.061,
+     "x": 776440.3,
+     "y": 596233.4,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2357583392,
+     "km": 2.814,
+     "x": 775690.9,
+     "y": 596180.3,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 6644301694,
+     "km": 2.851,
+     "x": 775654.3,
+     "y": 596180.4,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2357583396,
+     "km": 3.244,
+     "x": 775261.3,
+     "y": 596183.4,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 6644301685,
+     "km": 3.275,
+     "x": 775230.3,
+     "y": 596183.6,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 12962166397,
+     "km": 3.852,
+     "x": 774653.4,
+     "y": 596194.2,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2357583390,
+     "km": 3.893,
+     "x": 774612.9,
+     "y": 596197.5,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 897482222,
+     "km": 4.345,
+     "x": 774162.1,
+     "y": 596186.5,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2235605459,
+     "km": 5.187,
+     "x": 773409.7,
+     "y": 595816.0,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2927425563,
+     "km": 5.269,
+     "x": 773339.7,
+     "y": 595774.0,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2504239797,
+     "km": 5.828,
+     "x": 772852.2,
+     "y": 595499.4,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2504262150,
+     "km": 5.926,
+     "x": 772766.2,
+     "y": 595453.8,
+     "control": "",
+     "roads": [
+      [
+       "trunk",
+       "8;65",
+       "Generała Franciszka Kleeberga"
+      ]
+     ]
+    },
+    {
+     "node": 5303217293,
+     "km": 6.169,
+     "x": 772546.7,
+     "y": 595349.4,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 2504262139,
+     "km": 6.184,
+     "x": 772534.0,
+     "y": 595342.6,
+     "control": "",
+     "roads": [
+      [
+       "secondary",
+       "669",
+       "Rondo Pamięci Męczeństwa Kresowian"
+      ]
+     ]
+    },
+    {
+     "node": 3057952402,
+     "km": 6.194,
+     "x": 772523.7,
+     "y": 595343.4,
+     "control": "",
+     "roads": [
+      [
+       "secondary",
+       "669",
+       "Rondo Pamięci Męczeństwa Kresowian"
+      ]
+     ]
+    },
+    {
+     "node": 3139676256,
+     "km": 6.212,
+     "x": 772510.5,
+     "y": 595356.3,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 3081410944,
+     "km": 6.3,
+     "x": 772465.1,
+     "y": 595430.6,
+     "control": "",
+     "roads": [
+      [
+       "secondary",
+       "",
+       "Szosa Ełcka"
+      ]
+     ]
+    },
+    {
+     "node": 841774154,
+     "km": 6.928,
+     "x": 772166.4,
+     "y": 595983.1,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       "Przędzalniana"
+      ]
+     ]
+    },
+    {
+     "node": 841774135,
+     "km": 7.204,
+     "x": 772036.5,
+     "y": 596226.9,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       "Giełdowa"
+      ]
+     ]
+    },
+    {
+     "node": 5133970225,
+     "km": 7.217,
+     "x": 772030.4,
+     "y": 596237.9,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2268776079,
+     "km": 7.289,
+     "x": 771994.9,
+     "y": 596301.4,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Polonijna"
+      ]
+     ]
+    },
+    {
+     "node": 2268776058,
+     "km": 7.484,
+     "x": 771902.3,
+     "y": 596472.1,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Skrajna"
+      ]
+     ]
+    },
+    {
+     "node": 7274191786,
+     "km": 7.661,
+     "x": 771816.9,
+     "y": 596628.0,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 508874541,
+     "km": 8.122,
+     "x": 771450.7,
+     "y": 596864.0,
+     "control": "",
+     "roads": [
+      [
+       "tertiary",
+       "",
+       "Dobrzyniewska"
+      ]
+     ]
+    },
+    {
+     "node": 5330023636,
+     "km": 8.309,
+     "x": 771268.4,
+     "y": 596906.5,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 5330023635,
+     "km": 8.492,
+     "x": 771090.4,
+     "y": 596947.0,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 1782932321,
+     "km": 8.512,
+     "x": 771070.5,
+     "y": 596951.4,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       "Łyskowska"
+      ],
+      [
+       "unclassified",
+       "",
+       "Świętego Krzyża"
+      ]
+     ]
+    },
+    {
+     "node": 3993784057,
+     "km": 9.23,
+     "x": 770393.1,
+     "y": 597177.7,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       "Świętego Franciszka z Asyżu"
+      ]
+     ]
+    },
+    {
+     "node": 2559254737,
+     "km": 9.239,
+     "x": 770384.5,
+     "y": 597181.7,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Świętego Franciszka z Asyżu"
+      ]
+     ]
+    },
+    {
+     "node": 5330023634,
+     "km": 9.257,
+     "x": 770368.0,
+     "y": 597189.4,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 1782932318,
+     "km": 9.892,
+     "x": 769777.4,
+     "y": 597419.2,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       "Białostocka"
+      ]
+     ]
+    },
+    {
+     "node": 14201423307,
+     "km": 10.469,
+     "x": 769249.8,
+     "y": 597653.2,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 1197260556,
+     "km": 10.69,
+     "x": 769057.0,
+     "y": 597759.3,
+     "control": "",
+     "roads": [
+      [
+       "tertiary",
+       "",
+       "Dzikowska"
+      ]
+     ]
+    },
+    {
+     "node": 839431354,
+     "km": 13.125,
+     "x": 768548.1,
+     "y": 600126.5,
+     "control": "",
+     "roads": [
+      [
+       "tertiary",
+       "",
+       "Białostocka"
+      ],
+      [
+       "tertiary",
+       "",
+       "Kościelna"
+      ]
+     ]
+    },
+    {
+     "node": 5330023633,
+     "km": 13.138,
+     "x": 768545.6,
+     "y": 600139.6,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 2101477382,
+     "km": 13.695,
+     "x": 768449.4,
+     "y": 600688.6,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Sosnowa"
+      ]
+     ]
+    },
+    {
+     "node": 1858817539,
+     "km": 13.727,
+     "x": 768443.9,
+     "y": 600720.1,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Klubowa"
+      ]
+     ]
+    },
+    {
+     "node": 839428386,
+     "km": 14.353,
+     "x": 768336.0,
+     "y": 601336.9,
+     "control": "",
+     "roads": [
+      [
+       "tertiary",
+       "",
+       "Szkolna"
+      ]
+     ]
+    },
+    {
+     "node": 1151902694,
+     "km": 14.378,
+     "x": 768331.6,
+     "y": 601360.9,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Świerkowa"
+      ]
+     ]
+    },
+    {
+     "node": 14074866691,
+     "km": 14.391,
+     "x": 768329.3,
+     "y": 601373.9,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 2295268360,
+     "km": 14.71,
+     "x": 768274.3,
+     "y": 601688.6,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Czterech Wiatrów"
+      ]
+     ]
+    },
+    {
+     "node": 2123507327,
+     "km": 15.039,
+     "x": 768217.2,
+     "y": 602012.0,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Dębowa"
+      ],
+      [
+       "residential",
+       "",
+       "Podleśna"
+      ]
+     ]
+    },
+    {
+     "node": 8191275972,
+     "km": 16.045,
+     "x": 767960.5,
+     "y": 602971.7,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 304399045,
+     "km": 16.13,
+     "x": 767911.7,
+     "y": 603040.8,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       "Chabrowa"
+      ]
+     ]
+    },
+    {
+     "node": 10712325633,
+     "km": 16.63,
+     "x": 767629.0,
+     "y": 603450.9,
+     "control": "",
+     "roads": [
+      [
+       "secondary",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 10712325661,
+     "km": 16.674,
+     "x": 767650.3,
+     "y": 603483.7,
+     "control": "",
+     "roads": [
+      [
+       "primary",
+       "65",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 14170010105,
+     "km": 16.688,
+     "x": 767661.4,
+     "y": 603491.9,
+     "control": "",
+     "roads": [
+      [
+       "primary",
+       "65",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 10712325654,
+     "km": 16.712,
+     "x": 767663.0,
+     "y": 603515.4,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 10712325651,
+     "km": 16.726,
+     "x": 767653.1,
+     "y": 603524.9,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 10712325637,
+     "km": 16.791,
+     "x": 767592.9,
+     "y": 603529.4,
+     "control": "",
+     "roads": [
+      [
+       "primary",
+       "65",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 897574830,
+     "km": 18.768,
+     "x": 766440.6,
+     "y": 605132.6,
+     "control": "",
+     "roads": [
+      [
+       "tertiary",
+       "1392B",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 11515570683,
+     "km": 18.902,
+     "x": 766367.7,
+     "y": 605245.8,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 897574813,
+     "km": 18.918,
+     "x": 766359.8,
+     "y": 605259.2,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 897574857,
+     "km": 19.127,
+     "x": 766248.4,
+     "y": 605435.7,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 17795488,
+     "km": 20.728,
+     "x": 765165.2,
+     "y": 606608.1,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 14226925237,
+     "km": 22.41,
+     "x": 764199.2,
+     "y": 607974.1,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 13495192875,
+     "km": 22.649,
+     "x": 764073.6,
+     "y": 608177.3,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "1397B",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2101502781,
+     "km": 22.658,
+     "x": 764069.0,
+     "y": 608184.8,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2119002544,
+     "km": 23.658,
+     "x": 763436.0,
+     "y": 608954.6,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1134817563,
+     "km": 25.657,
+     "x": 762071.6,
+     "y": 610415.2,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1134813637,
+     "km": 27.393,
+     "x": 760889.4,
+     "y": 611686.6,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Południowa"
+      ]
+     ]
+    },
+    {
+     "node": 4898926854,
+     "km": 27.779,
+     "x": 760634.8,
+     "y": 611976.1,
+     "control": "",
+     "roads": [
+      [
+       "primary",
+       "65",
+       "Obozowa"
+      ]
+     ]
+    },
+    {
+     "node": 3047667218,
+     "km": 27.825,
+     "x": 760649.1,
+     "y": 612015.4,
+     "control": "crossing",
+     "roads": [
+      [
+       "secondary",
+       "671",
+       "Tykocka"
+      ]
+     ]
+    },
+    {
+     "node": 3047587472,
+     "km": 28.243,
+     "x": 760951.4,
+     "y": 612302.0,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 1842392533,
+     "km": 28.253,
+     "x": 760957.5,
+     "y": 612309.7,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Szkolna"
+      ]
+     ]
+    },
+    {
+     "node": 3047587482,
+     "km": 28.257,
+     "x": 760960.1,
+     "y": 612313.1,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Rynek"
+      ]
+     ]
+    },
+    {
+     "node": 3047587487,
+     "km": 28.265,
+     "x": 760964.2,
+     "y": 612319.7,
+     "control": "",
+     "roads": [
+      [
+       "secondary",
+       "671",
+       "Grodzieńska"
+      ]
+     ]
+    },
+    {
+     "node": 11514832011,
+     "km": 28.32,
+     "x": 761009.6,
+     "y": 612351.3,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 1134813711,
+     "km": 28.393,
+     "x": 761070.2,
+     "y": 612392.3,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 2979322319,
+     "km": 28.412,
+     "x": 761085.1,
+     "y": 612404.1,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Rynek"
+      ]
+     ]
+    },
+    {
+     "node": 3047596475,
+     "km": 28.428,
+     "x": 761070.8,
+     "y": 612410.6,
+     "control": "crossing",
+     "roads": []
+    }
+   ],
+   "roundabouts": [
+    {
+     "km_start": 6.184,
+     "km_end": 6.194,
+     "name": "Rondo Pamięci Męczeństwa Kresowian",
+     "x": 772534.0,
+     "y": 595342.6,
+     "ways": [
+      306609223
+     ]
+    },
+    {
+     "km_start": 16.664,
+     "km_end": 16.756,
+     "name": "",
+     "x": 767640.6,
+     "y": 603482.7,
+     "ways": [
+      1151531611
+     ]
+    },
+    {
+     "km_start": 27.797,
+     "km_end": 27.8,
+     "name": "",
+     "x": 760631.9,
+     "y": 611992.9,
+     "ways": [
+      1426801304
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "km_start": 0.927,
+     "km_end": 1.147,
+     "name": "Generała Władysława Andersa",
+     "x": 777537.0,
+     "y": 596167.0,
+     "ways": [
+      173985172,
+      23844386
+     ]
+    },
+    {
+     "km_start": 1.244,
+     "km_end": 1.255,
+     "name": "Generała Stanisława Maczka",
+     "x": 777255.3,
+     "y": 596291.5,
+     "ways": [
+      490398851
+     ]
+    },
+    {
+     "km_start": 1.675,
+     "km_end": 1.848,
+     "name": "Generała Stanisława Maczka",
+     "x": 776825.7,
+     "y": 596265.9,
+     "ways": [
+      173990799
+     ]
+    },
+    {
+     "km_start": 4.065,
+     "km_end": 4.09,
+     "name": "Generała Stanisława Maczka",
+     "x": 774441.0,
+     "y": 596202.8,
+     "ways": [
+      257355876
+     ]
+    },
+    {
+     "km_start": 5.449,
+     "km_end": 5.608,
+     "name": "Generała Franciszka Kleeberga",
+     "x": 773185.3,
+     "y": 595681.8,
+     "ways": [
+      242987870
+     ]
+    },
+    {
+     "km_start": 10.854,
+     "km_end": 10.942,
+     "name": "",
+     "x": 768973.6,
+     "y": 597897.7,
+     "ways": [
+      41533342
+     ]
+    },
+    {
+     "km_start": 26.96,
+     "km_end": 26.979,
+     "name": "",
+     "x": 761184.8,
+     "y": 611369.5,
+     "ways": [
+      286990128
+     ]
+    }
+   ],
+   "limits": [
+    {
+     "way_id": 552161976,
+     "km": 0.0,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 560802658,
+     "km": 0.196,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 560802657,
+     "km": 0.256,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249640399,
+     "km": 0.276,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1093579590,
+     "km": 0.491,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1093579589,
+     "km": 0.621,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 266084693,
+     "km": 0.641,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 284022563,
+     "km": 0.777,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1101181473,
+     "km": 0.81,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 173985172,
+     "km": 0.927,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 23844386,
+     "km": 1.035,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 173985169,
+     "km": 1.147,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 490398851,
+     "km": 1.244,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 490398852,
+     "km": 1.255,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 262140922,
+     "km": 1.392,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257367422,
+     "km": 1.501,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 173990799,
+     "km": 1.675,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 173990800,
+     "km": 1.848,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257352528,
+     "km": 2.061,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257358866,
+     "km": 2.19,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257357743,
+     "km": 2.656,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257357742,
+     "km": 2.814,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 707029854,
+     "km": 2.851,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 606396475,
+     "km": 2.974,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249740773,
+     "km": 3.101,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249740760,
+     "km": 3.244,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 707029850,
+     "km": 3.275,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249740774,
+     "km": 3.494,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257355878,
+     "km": 3.664,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257355879,
+     "km": 3.893,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 606396479,
+     "km": 4.004,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257355876,
+     "km": 4.065,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 693614875,
+     "km": 4.09,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 76073115,
+     "km": 4.205,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 668340288,
+     "km": 4.345,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249740778,
+     "km": 4.419,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 76073122,
+     "km": 4.736,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 301702369,
+     "km": 4.813,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 306609226,
+     "km": 5.187,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 301702368,
+     "km": 5.269,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 242987870,
+     "km": 5.449,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 261104557,
+     "km": 5.608,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 306609228,
+     "km": 5.828,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 242989867,
+     "km": 5.926,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 561326922,
+     "km": 6.057,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 306609223,
+     "km": 6.184,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 301702376,
+     "km": 6.194,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 606396498,
+     "km": 6.215,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 303739902,
+     "km": 6.245,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 303739903,
+     "km": 6.3,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 396566353,
+     "km": 6.928,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 551984622,
+     "km": 7.145,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1281924652,
+     "km": 7.204,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1281924653,
+     "km": 7.217,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 280165819,
+     "km": 7.277,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1181762243,
+     "km": 8.437,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 234919333,
+     "km": 8.579,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1281925347,
+     "km": 9.23,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 623133896,
+     "km": 9.286,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 396566354,
+     "km": 9.314,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1321811066,
+     "km": 9.945,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1321811065,
+     "km": 10.245,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1442886950,
+     "km": 10.275,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1442886949,
+     "km": 10.361,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 234919340,
+     "km": 10.385,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 716806122,
+     "km": 10.69,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 41533342,
+     "km": 10.854,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 716806121,
+     "km": 10.942,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1024956365,
+     "km": 11.083,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 41533343,
+     "km": 13.125,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1243220441,
+     "km": 13.727,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1024956364,
+     "km": 14.353,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1399803717,
+     "km": 15.394,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1560819273,
+     "km": 16.148,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1448265994,
+     "km": 16.594,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1151531610,
+     "km": 16.791,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 208187096,
+     "km": 16.871,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 27718745,
+     "km": 18.918,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1111506754,
+     "km": 25.657,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1111506750,
+     "km": 25.955,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 305910042,
+     "km": 25.958,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 286990128,
+     "km": 26.96,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 286990127,
+     "km": 26.979,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1464342635,
+     "km": 27.779,
+     "maxaxleload": "10"
+    }
+   ],
+   "admin_crossings": {
+    "Białystok|admin_level=6": {
+     "teryt": "2061",
+     "relation": 1429268,
+     "km": [
+      7.14
+     ],
+     "inside_km": 7.14
+    },
+    "powiat białostocki|admin_level=6": {
+     "teryt": "2002",
+     "relation": 2803334,
+     "km": [
+      23.67,
+      25.22,
+      25.95
+     ],
+     "inside_km": 24.4
+    },
+    "powiat moniecki|admin_level=6": {
+     "teryt": "2008",
+     "relation": 2803338,
+     "km": [
+      23.67,
+      25.22,
+      25.95
+     ],
+     "inside_km": 4.04
+    },
+    "Białystok|admin_level=8": {
+     "teryt": "",
+     "relation": 2910925,
+     "km": [
+      7.14
+     ],
+     "inside_km": 7.14
+    },
+    "Białystok|admin_level=7": {
+     "teryt": "2061011",
+     "relation": 2989154,
+     "km": [
+      7.14
+     ],
+     "inside_km": 7.14
+    },
+    "gmina Knyszyn|admin_level=7": {
+     "teryt": "2008043",
+     "relation": 3087478,
+     "km": [
+      23.67,
+      25.22,
+      25.95
+     ],
+     "inside_km": 4.04
+    },
+    "Knyszyn|admin_level=8": {
+     "teryt": "",
+     "relation": 3087483,
+     "km": [
+      25.95,
+      26.03,
+      26.09
+     ],
+     "inside_km": 2.42
+    },
+    "gmina Dobrzyniewo Duże|admin_level=7": {
+     "teryt": "2002032",
+     "relation": 3091193,
+     "km": [
+      7.14,
+      23.67,
+      25.22,
+      25.95
+     ],
+     "inside_km": 17.26
+    }
+   },
+   "construction_within_600m": {
+    "proposed|motorway|ref=": {
+     "length_m": 33586,
+     "km_min": 16.7,
+     "km_max": 26.4,
+     "last_edit": "2026-09-13",
+     "ways": 4
+    },
+    "proposed||ref=": {
+     "length_m": 422,
+     "km_min": 4.1,
+     "km_max": 4.2,
+     "last_edit": "2025-09-20",
+     "ways": 4
+    },
+    "proposed|service|ref=": {
+     "length_m": 1903,
+     "km_min": 13.7,
+     "km_max": 16.8,
+     "last_edit": "2026-09-20",
+     "ways": 5
+    },
+    "construction|unclassified|ref=": {
+     "length_m": 5826,
+     "km_min": 16.8,
+     "km_max": 24.6,
+     "last_edit": "2026-09-28",
+     "ways": 9
+    },
+    "construction|motorway|ref=": {
+     "length_m": 16573,
+     "km_min": 16.7,
+     "km_max": 25.0,
+     "last_edit": "2026-09-28",
+     "ways": 14
+    },
+    "construction|tertiary|ref=": {
+     "length_m": 1237,
+     "km_min": 18.1,
+     "km_max": 20.3,
+     "last_edit": "2026-05-10",
+     "ways": 2
+    },
+    "construction|primary|ref=": {
+     "length_m": 230,
+     "km_min": 25.0,
+     "km_max": 25.1,
+     "last_edit": "2026-05-10",
+     "ways": 2
+    },
+    "construction|secondary|ref=": {
+     "length_m": 2430,
+     "km_min": 22.7,
+     "km_max": 25.0,
+     "last_edit": "2026-05-10",
+     "ways": 1
+    },
+    "construction|motorway_link|ref=": {
+     "length_m": 111,
+     "km_min": 25.0,
+     "km_max": 25.0,
+     "last_edit": "2026-05-10",
+     "ways": 2
+    },
+    "proposed|secondary|ref=": {
+     "length_m": 189,
+     "km_min": 16.1,
+     "km_max": 16.2,
+     "last_edit": "2026-05-10",
+     "ways": 1
+    },
+    "proposed|motorway_link|ref=": {
+     "length_m": 897,
+     "km_min": 15.8,
+     "km_max": 16.3,
+     "last_edit": "2026-05-10",
+     "ways": 4
+    },
+    "proposed|unclassified|ref=": {
+     "length_m": 317,
+     "km_min": 15.9,
+     "km_max": 16.1,
+     "last_edit": "2026-09-20",
+     "ways": 2
+    }
+   },
+   "tiles": [
+    {
+     "ij": [
+      0,
+      0
+     ],
+     "bbox": [
+      776971.0,
+      595199.0,
+      779019.0,
+      597247.0
+     ],
+     "km_in": 0.0,
+     "km_out": 1.528,
+     "route_m": 1528,
+     "xy_in": [
+      778302.0,
+      595649.3
+     ],
+     "xy_out": [
+      776971.8,
+      596279.3
+     ]
+    },
+    {
+     "ij": [
+      -1,
+      0
+     ],
+     "bbox": [
+      774923.0,
+      595199.0,
+      776971.0,
+      597247.0
+     ],
+     "km_in": 1.529,
+     "km_out": 3.582,
+     "route_m": 2053,
+     "xy_in": [
+      776970.8,
+      596279.2
+     ],
+     "xy_out": [
+      774923.1,
+      596185.7
+     ]
+    },
+    {
+     "ij": [
+      -2,
+      0
+     ],
+     "bbox": [
+      772875.0,
+      595199.0,
+      774923.0,
+      597247.0
+     ],
+     "km_in": 3.583,
+     "km_out": 5.802,
+     "route_m": 2219,
+     "xy_in": [
+      774922.1,
+      596185.7
+     ],
+     "xy_out": [
+      772875.4,
+      595511.8
+     ]
+    },
+    {
+     "ij": [
+      -3,
+      0
+     ],
+     "bbox": [
+      770827.0,
+      595199.0,
+      772875.0,
+      597247.0
+     ],
+     "km_in": 5.803,
+     "km_out": 8.761,
+     "route_m": 2958,
+     "xy_in": [
+      772874.6,
+      595511.3
+     ],
+     "xy_out": [
+      770827.7,
+      597006.6
+     ]
+    },
+    {
+     "ij": [
+      -4,
+      0
+     ],
+     "bbox": [
+      768779.0,
+      595199.0,
+      770827.0,
+      597247.0
+     ],
+     "km_in": 8.762,
+     "km_out": 9.393,
+     "route_m": 631,
+     "xy_in": [
+      770826.7,
+      597006.9
+     ],
+     "xy_out": [
+      770245.1,
+      597246.8
+     ]
+    },
+    {
+     "ij": [
+      -4,
+      1
+     ],
+     "bbox": [
+      768779.0,
+      597247.0,
+      770827.0,
+      599295.0
+     ],
+     "km_in": 9.394,
+     "km_out": 11.795,
+     "route_m": 2401,
+     "xy_in": [
+      770244.2,
+      597247.2
+     ],
+     "xy_out": [
+      768779.1,
+      598817.2
+     ]
+    },
+    {
+     "ij": [
+      -5,
+      1
+     ],
+     "bbox": [
+      766731.0,
+      597247.0,
+      768779.0,
+      599295.0
+     ],
+     "km_in": 11.796,
+     "km_out": 12.28,
+     "route_m": 484,
+     "xy_in": [
+      768778.9,
+      598818.2
+     ],
+     "xy_out": [
+      768695.0,
+      599294.9
+     ]
+    },
+    {
+     "ij": [
+      -5,
+      2
+     ],
+     "bbox": [
+      766731.0,
+      599295.0,
+      768779.0,
+      601343.0
+     ],
+     "km_in": 12.281,
+     "km_out": 14.359,
+     "route_m": 2078,
+     "xy_in": [
+      768694.8,
+      599295.9
+     ],
+     "xy_out": [
+      768335.0,
+      601342.4
+     ]
+    },
+    {
+     "ij": [
+      -5,
+      3
+     ],
+     "bbox": [
+      766731.0,
+      601343.0,
+      768779.0,
+      603391.0
+     ],
+     "km_in": 14.36,
+     "km_out": 16.56,
+     "route_m": 2200,
+     "xy_in": [
+      768334.8,
+      601343.4
+     ],
+     "xy_out": [
+      767660.9,
+      603390.4
+     ]
+    },
+    {
+     "ij": [
+      -5,
+      4
+     ],
+     "bbox": [
+      766731.0,
+      603391.0,
+      768779.0,
+      605439.0
+     ],
+     "km_in": 16.561,
+     "km_out": 18.264,
+     "route_m": 1703,
+     "xy_in": [
+      767660.2,
+      603391.2
+     ],
+     "xy_out": [
+      766731.5,
+      604721.5
+     ]
+    },
+    {
+     "ij": [
+      -6,
+      4
+     ],
+     "bbox": [
+      764683.0,
+      603391.0,
+      766731.0,
+      605439.0
+     ],
+     "km_in": 18.265,
+     "km_out": 19.13,
+     "route_m": 865,
+     "xy_in": [
+      766730.9,
+      604722.3
+     ],
+     "xy_out": [
+      766246.5,
+      605438.5
+     ]
+    },
+    {
+     "ij": [
+      -6,
+      5
+     ],
+     "bbox": [
+      764683.0,
+      605439.0,
+      766731.0,
+      607487.0
+     ],
+     "km_in": 19.131,
+     "km_out": 21.485,
+     "route_m": 2354,
+     "xy_in": [
+      766245.9,
+      605439.4
+     ],
+     "xy_out": [
+      764683.4,
+      607186.1
+     ]
+    },
+    {
+     "ij": [
+      -7,
+      5
+     ],
+     "bbox": [
+      762635.0,
+      605439.0,
+      764683.0,
+      607487.0
+     ],
+     "km_in": 21.486,
+     "km_out": 21.838,
+     "route_m": 352,
+     "xy_in": [
+      764682.9,
+      607187.0
+     ],
+     "xy_out": [
+      764498.6,
+      607486.9
+     ]
+    },
+    {
+     "ij": [
+      -7,
+      6
+     ],
+     "bbox": [
+      762635.0,
+      607487.0,
+      764683.0,
+      609535.0
+     ],
+     "km_in": 21.839,
+     "km_out": 24.453,
+     "route_m": 2614,
+     "xy_in": [
+      764498.1,
+      607487.7
+     ],
+     "xy_out": [
+      762893.0,
+      609534.9
+     ]
+    },
+    {
+     "ij": [
+      -7,
+      7
+     ],
+     "bbox": [
+      762635.0,
+      609535.0,
+      764683.0,
+      611583.0
+     ],
+     "km_in": 24.454,
+     "km_out": 24.83,
+     "route_m": 376,
+     "xy_in": [
+      762892.3,
+      609535.6
+     ],
+     "xy_out": [
+      762635.7,
+      609810.4
+     ]
+    },
+    {
+     "ij": [
+      -8,
+      7
+     ],
+     "bbox": [
+      760587.0,
+      609535.0,
+      762635.0,
+      611583.0
+     ],
+     "km_in": 24.831,
+     "km_out": 27.251,
+     "route_m": 2420,
+     "xy_in": [
+      762635.0,
+      609811.1
+     ],
+     "xy_out": [
+      760986.2,
+      611582.5
+     ]
+    },
+    {
+     "ij": [
+      -8,
+      8
+     ],
+     "bbox": [
+      760587.0,
+      611583.0,
+      762635.0,
+      613631.0
+     ],
+     "km_in": 27.252,
+     "km_out": 28.442,
+     "route_m": 1190,
+     "xy_in": [
+      760985.5,
+      611583.3
+     ],
+     "xy_out": [
+      761058.5,
+      612417.0
+     ]
+    }
+   ],
+   "polyline": [
+    [
+     778302.0,
+     595649.3
+    ],
+    [
+     778128.3,
+     595740.8
+    ],
+    [
+     778076.2,
+     595768.8
+    ],
+    [
+     778058.4,
+     595778.3
+    ],
+    [
+     778003.4,
+     595807.8
+    ],
+    [
+     777968.0,
+     595829.5
+    ],
+    [
+     777935.4,
+     595852.8
+    ],
+    [
+     777879.0,
+     595896.3
+    ],
+    [
+     777777.5,
+     595977.2
+    ],
+    [
+     777761.2,
+     595990.1
+    ],
+    [
+     777717.0,
+     596026.1
+    ],
+    [
+     777702.4,
+     596037.4
+    ],
+    [
+     777655.0,
+     596074.2
+    ],
+    [
+     777629.1,
+     596094.1
+    ],
+    [
+     777537.0,
+     596167.0
+    ],
+    [
+     777482.9,
+     596211.3
+    ],
+    [
+     777452.9,
+     596233.9
+    ],
+    [
+     777444.3,
+     596239.8
+    ],
+    [
+     777429.3,
+     596248.7
+    ],
+    [
+     777410.6,
+     596258.7
+    ],
+    [
+     777391.1,
+     596267.5
+    ],
+    [
+     777368.3,
+     596275.4
+    ],
+    [
+     777351.4,
+     596279.9
+    ],
+    [
+     777326.2,
+     596284.6
+    ],
+    [
+     777300.7,
+     596287.5
+    ],
+    [
+     777255.3,
+     596291.5
+    ],
+    [
+     777243.4,
+     596292.5
+    ],
+    [
+     777223.2,
+     596294.0
+    ],
+    [
+     777202.2,
+     596295.4
+    ],
+    [
+     777173.8,
+     596296.3
+    ],
+    [
+     777139.5,
+     596295.0
+    ],
+    [
+     777106.7,
+     596292.1
+    ],
+    [
+     776998.5,
+     596281.7
+    ],
+    [
+     776825.7,
+     596265.9
+    ],
+    [
+     776652.5,
+     596250.9
+    ],
+    [
+     776440.3,
+     596233.4
+    ],
+    [
+     776360.8,
+     596226.7
+    ],
+    [
+     776324.8,
+     596223.6
+    ],
+    [
+     776312.0,
+     596222.5
+    ],
+    [
+     776260.0,
+     596217.5
+    ],
+    [
+     776209.3,
+     596210.1
+    ],
+    [
+     776144.4,
+     596200.2
+    ],
+    [
+     776050.2,
+     596186.4
+    ],
+    [
+     775968.1,
+     596179.2
+    ],
+    [
+     775916.1,
+     596178.3
+    ],
+    [
+     775848.8,
+     596179.0
+    ],
+    [
+     775772.0,
+     596179.5
+    ],
+    [
+     775690.9,
+     596180.3
+    ],
+    [
+     775654.3,
+     596180.4
+    ],
+    [
+     775531.2,
+     596180.9
+    ],
+    [
+     775404.1,
+     596182.6
+    ],
+    [
+     775261.3,
+     596183.4
+    ],
+    [
+     775230.3,
+     596183.6
+    ],
+    [
+     775011.6,
+     596185.0
+    ],
+    [
+     774841.6,
+     596186.4
+    ],
+    [
+     774751.5,
+     596187.7
+    ],
+    [
+     774662.9,
+     596193.4
+    ],
+    [
+     774653.4,
+     596194.2
+    ],
+    [
+     774612.9,
+     596197.5
+    ],
+    [
+     774560.4,
+     596201.3
+    ],
+    [
+     774502.1,
+     596202.2
+    ],
+    [
+     774441.0,
+     596202.8
+    ],
+    [
+     774415.8,
+     596203.1
+    ],
+    [
+     774360.1,
+     596204.9
+    ],
+    [
+     774300.2,
+     596204.2
+    ],
+    [
+     774244.5,
+     596200.0
+    ],
+    [
+     774203.7,
+     596194.3
+    ],
+    [
+     774162.1,
+     596186.5
+    ],
+    [
+     774132.8,
+     596180.5
+    ],
+    [
+     774089.8,
+     596169.9
+    ],
+    [
+     774041.5,
+     596154.5
+    ],
+    [
+     773994.5,
+     596136.2
+    ],
+    [
+     773934.7,
+     596108.3
+    ],
+    [
+     773870.0,
+     596074.6
+    ],
+    [
+     773802.4,
+     596037.4
+    ],
+    [
+     773735.0,
+     596000.3
+    ],
+    [
+     773558.5,
+     595902.2
+    ],
+    [
+     773409.7,
+     595816.0
+    ],
+    [
+     773339.7,
+     595774.0
+    ],
+    [
+     773185.3,
+     595681.8
+    ],
+    [
+     773047.0,
+     595603.0
+    ],
+    [
+     772852.2,
+     595499.4
+    ],
+    [
+     772813.1,
+     595478.9
+    ],
+    [
+     772766.2,
+     595453.8
+    ],
+    [
+     772731.5,
+     595441.5
+    ],
+    [
+     772694.0,
+     595426.0
+    ],
+    [
+     772646.3,
+     595400.6
+    ],
+    [
+     772592.2,
+     595374.1
+    ],
+    [
+     772546.7,
+     595349.4
+    ],
+    [
+     772534.0,
+     595342.6
+    ],
+    [
+     772528.6,
+     595343.6
+    ],
+    [
+     772523.7,
+     595343.4
+    ],
+    [
+     772518.5,
+     595347.9
+    ],
+    [
+     772513.6,
+     595352.2
+    ],
+    [
+     772510.5,
+     595356.3
+    ],
+    [
+     772508.8,
+     595358.7
+    ],
+    [
+     772496.0,
+     595385.3
+    ],
+    [
+     772491.2,
+     595394.3
+    ],
+    [
+     772483.6,
+     595405.1
+    ],
+    [
+     772465.1,
+     595430.6
+    ],
+    [
+     772390.1,
+     595570.2
+    ],
+    [
+     772247.0,
+     595834.7
+    ],
+    [
+     772198.9,
+     595923.2
+    ],
+    [
+     772166.4,
+     595983.1
+    ],
+    [
+     772163.8,
+     595988.5
+    ],
+    [
+     772153.2,
+     596008.3
+    ],
+    [
+     772137.6,
+     596037.3
+    ],
+    [
+     772124.0,
+     596062.8
+    ],
+    [
+     772119.2,
+     596071.9
+    ],
+    [
+     772085.6,
+     596134.9
+    ],
+    [
+     772064.4,
+     596174.6
+    ],
+    [
+     772062.2,
+     596178.7
+    ],
+    [
+     772058.9,
+     596184.8
+    ],
+    [
+     772036.5,
+     596226.9
+    ],
+    [
+     772030.4,
+     596237.9
+    ],
+    [
+     772001.2,
+     596290.4
+    ],
+    [
+     771997.4,
+     596297.1
+    ],
+    [
+     771994.9,
+     596301.4
+    ],
+    [
+     771967.4,
+     596352.4
+    ],
+    [
+     771953.9,
+     596377.2
+    ],
+    [
+     771915.6,
+     596447.7
+    ],
+    [
+     771902.3,
+     596472.1
+    ],
+    [
+     771868.4,
+     596533.7
+    ],
+    [
+     771841.7,
+     596582.3
+    ],
+    [
+     771834.6,
+     596595.4
+    ],
+    [
+     771816.9,
+     596628.0
+    ],
+    [
+     771779.6,
+     596696.2
+    ],
+    [
+     771766.2,
+     596716.3
+    ],
+    [
+     771748.9,
+     596737.9
+    ],
+    [
+     771730.7,
+     596756.7
+    ],
+    [
+     771711.8,
+     596773.2
+    ],
+    [
+     771679.6,
+     596796.0
+    ],
+    [
+     771662.8,
+     596806.4
+    ],
+    [
+     771651.4,
+     596812.0
+    ],
+    [
+     771643.9,
+     596815.7
+    ],
+    [
+     771628.7,
+     596821.4
+    ],
+    [
+     771614.0,
+     596826.5
+    ],
+    [
+     771605.9,
+     596828.4
+    ],
+    [
+     771450.7,
+     596864.0
+    ],
+    [
+     771386.9,
+     596878.9
+    ],
+    [
+     771335.5,
+     596890.8
+    ],
+    [
+     771305.1,
+     596897.9
+    ],
+    [
+     771295.7,
+     596900.1
+    ],
+    [
+     771268.4,
+     596906.5
+    ],
+    [
+     771238.0,
+     596913.5
+    ],
+    [
+     771214.4,
+     596918.9
+    ],
+    [
+     771209.8,
+     596920.0
+    ],
+    [
+     771169.1,
+     596929.2
+    ],
+    [
+     771143.9,
+     596935.2
+    ],
+    [
+     771090.4,
+     596947.0
+    ],
+    [
+     771070.5,
+     596951.4
+    ],
+    [
+     771053.4,
+     596955.3
+    ],
+    [
+     771005.3,
+     596966.2
+    ],
+    [
+     770980.5,
+     596971.8
+    ],
+    [
+     770938.0,
+     596981.9
+    ],
+    [
+     770899.0,
+     596990.6
+    ],
+    [
+     770874.5,
+     596996.1
+    ],
+    [
+     770834.6,
+     597005.0
+    ],
+    [
+     770765.5,
+     597021.3
+    ],
+    [
+     770727.6,
+     597030.6
+    ],
+    [
+     770693.6,
+     597041.3
+    ],
+    [
+     770676.7,
+     597047.6
+    ],
+    [
+     770652.6,
+     597057.5
+    ],
+    [
+     770629.2,
+     597068.0
+    ],
+    [
+     770399.1,
+     597174.8
+    ],
+    [
+     770393.1,
+     597177.7
+    ],
+    [
+     770384.5,
+     597181.7
+    ],
+    [
+     770368.0,
+     597189.4
+    ],
+    [
+     770342.1,
+     597201.1
+    ],
+    [
+     770337.4,
+     597203.4
+    ],
+    [
+     770316.5,
+     597213.4
+    ],
+    [
+     770232.3,
+     597252.7
+    ],
+    [
+     770209.1,
+     597263.5
+    ],
+    [
+     770187.5,
+     597272.7
+    ],
+    [
+     770165.1,
+     597281.5
+    ],
+    [
+     770140.8,
+     597290.8
+    ],
+    [
+     770048.9,
+     597323.5
+    ],
+    [
+     769913.2,
+     597371.5
+    ],
+    [
+     769777.4,
+     597419.2
+    ],
+    [
+     769727.6,
+     597439.0
+    ],
+    [
+     769686.9,
+     597457.2
+    ],
+    [
+     769650.8,
+     597473.3
+    ],
+    [
+     769611.5,
+     597491.1
+    ],
+    [
+     769580.5,
+     597504.9
+    ],
+    [
+     769493.9,
+     597543.8
+    ],
+    [
+     769476.7,
+     597551.7
+    ],
+    [
+     769453.9,
+     597561.8
+    ],
+    [
+     769426.4,
+     597574.2
+    ],
+    [
+     769348.5,
+     597609.5
+    ],
+    [
+     769344.1,
+     597611.5
+    ],
+    [
+     769326.7,
+     597619.0
+    ],
+    [
+     769261.4,
+     597648.0
+    ],
+    [
+     769249.8,
+     597653.2
+    ],
+    [
+     769177.9,
+     597686.0
+    ],
+    [
+     769160.9,
+     597693.7
+    ],
+    [
+     769139.9,
+     597703.2
+    ],
+    [
+     769119.8,
+     597713.6
+    ],
+    [
+     769108.1,
+     597719.8
+    ],
+    [
+     769096.1,
+     597727.4
+    ],
+    [
+     769084.5,
+     597735.7
+    ],
+    [
+     769075.1,
+     597743.1
+    ],
+    [
+     769066.3,
+     597750.7
+    ],
+    [
+     769057.0,
+     597759.3
+    ],
+    [
+     769049.0,
+     597767.5
+    ],
+    [
+     769043.2,
+     597773.0
+    ],
+    [
+     769030.5,
+     597787.7
+    ],
+    [
+     769020.5,
+     597800.4
+    ],
+    [
+     769011.4,
+     597813.5
+    ],
+    [
+     769003.8,
+     597825.5
+    ],
+    [
+     768996.3,
+     597840.3
+    ],
+    [
+     768990.1,
+     597852.9
+    ],
+    [
+     768985.1,
+     597864.9
+    ],
+    [
+     768979.3,
+     597880.5
+    ],
+    [
+     768973.6,
+     597897.7
+    ],
+    [
+     768947.1,
+     597982.2
+    ],
+    [
+     768906.1,
+     598117.1
+    ],
+    [
+     768902.4,
+     598130.4
+    ],
+    [
+     768898.8,
+     598145.0
+    ],
+    [
+     768895.1,
+     598160.1
+    ],
+    [
+     768888.9,
+     598191.8
+    ],
+    [
+     768741.3,
+     599033.0
+    ],
+    [
+     768737.2,
+     599055.9
+    ],
+    [
+     768675.3,
+     599406.6
+    ],
+    [
+     768655.0,
+     599521.1
+    ],
+    [
+     768631.7,
+     599651.9
+    ],
+    [
+     768572.0,
+     599991.6
+    ],
+    [
+     768548.1,
+     600126.5
+    ],
+    [
+     768545.6,
+     600139.6
+    ],
+    [
+     768523.6,
+     600267.4
+    ],
+    [
+     768505.9,
+     600367.7
+    ],
+    [
+     768499.1,
+     600406.1
+    ],
+    [
+     768474.0,
+     600547.1
+    ],
+    [
+     768466.5,
+     600592.0
+    ],
+    [
+     768449.4,
+     600688.6
+    ],
+    [
+     768443.9,
+     600720.1
+    ],
+    [
+     768430.5,
+     600797.5
+    ],
+    [
+     768391.7,
+     601018.1
+    ],
+    [
+     768381.6,
+     601075.4
+    ],
+    [
+     768351.4,
+     601245.9
+    ],
+    [
+     768336.0,
+     601336.9
+    ],
+    [
+     768331.6,
+     601360.9
+    ],
+    [
+     768329.3,
+     601373.9
+    ],
+    [
+     768314.1,
+     601461.2
+    ],
+    [
+     768274.3,
+     601688.6
+    ],
+    [
+     768256.5,
+     601789.5
+    ],
+    [
+     768217.2,
+     602012.0
+    ],
+    [
+     768201.5,
+     602098.9
+    ],
+    [
+     768154.7,
+     602361.7
+    ],
+    [
+     768153.6,
+     602367.6
+    ],
+    [
+     768145.4,
+     602412.6
+    ],
+    [
+     768132.9,
+     602481.6
+    ],
+    [
+     768100.1,
+     602669.0
+    ],
+    [
+     768091.9,
+     602716.4
+    ],
+    [
+     768086.6,
+     602745.0
+    ],
+    [
+     768082.5,
+     602762.2
+    ],
+    [
+     768081.1,
+     602767.9
+    ],
+    [
+     768074.8,
+     602786.0
+    ],
+    [
+     768067.7,
+     602804.7
+    ],
+    [
+     768059.5,
+     602823.4
+    ],
+    [
+     768047.6,
+     602846.1
+    ],
+    [
+     768033.0,
+     602867.7
+    ],
+    [
+     767974.8,
+     602951.1
+    ],
+    [
+     767960.5,
+     602971.7
+    ],
+    [
+     767950.3,
+     602986.2
+    ],
+    [
+     767911.7,
+     603040.8
+    ],
+    [
+     767901.4,
+     603055.5
+    ],
+    [
+     767853.6,
+     603124.7
+    ],
+    [
+     767766.8,
+     603248.5
+    ],
+    [
+     767705.5,
+     603334.5
+    ],
+    [
+     767639.5,
+     603417.2
+    ],
+    [
+     767633.8,
+     603430.7
+    ],
+    [
+     767630.3,
+     603442.1
+    ],
+    [
+     767629.0,
+     603450.9
+    ],
+    [
+     767631.3,
+     603462.5
+    ],
+    [
+     767634.4,
+     603470.5
+    ],
+    [
+     767640.6,
+     603482.7
+    ],
+    [
+     767650.3,
+     603483.7
+    ],
+    [
+     767653.5,
+     603485.1
+    ],
+    [
+     767656.5,
+     603486.9
+    ],
+    [
+     767659.1,
+     603489.2
+    ],
+    [
+     767661.4,
+     603491.9
+    ],
+    [
+     767664.2,
+     603497.3
+    ],
+    [
+     767665.5,
+     603503.4
+    ],
+    [
+     767665.1,
+     603509.5
+    ],
+    [
+     767663.0,
+     603515.4
+    ],
+    [
+     767660.4,
+     603519.2
+    ],
+    [
+     767657.1,
+     603522.5
+    ],
+    [
+     767653.1,
+     603524.9
+    ],
+    [
+     767646.0,
+     603527.1
+    ],
+    [
+     767638.5,
+     603526.8
+    ],
+    [
+     767631.6,
+     603524.1
+    ],
+    [
+     767625.9,
+     603519.2
+    ],
+    [
+     767621.4,
+     603519.3
+    ],
+    [
+     767612.5,
+     603521.5
+    ],
+    [
+     767592.9,
+     603529.4
+    ],
+    [
+     767579.7,
+     603537.8
+    ],
+    [
+     767562.2,
+     603553.1
+    ],
+    [
+     767532.4,
+     603582.3
+    ],
+    [
+     767459.3,
+     603686.9
+    ],
+    [
+     767387.4,
+     603788.5
+    ],
+    [
+     767301.2,
+     603912.2
+    ],
+    [
+     767210.3,
+     604041.6
+    ],
+    [
+     767030.9,
+     604296.9
+    ],
+    [
+     766824.0,
+     604591.1
+    ],
+    [
+     766662.7,
+     604818.4
+    ],
+    [
+     766616.6,
+     604883.7
+    ],
+    [
+     766515.8,
+     605023.9
+    ],
+    [
+     766440.6,
+     605132.6
+    ],
+    [
+     766367.7,
+     605245.8
+    ],
+    [
+     766359.8,
+     605259.2
+    ],
+    [
+     766248.4,
+     605435.7
+    ],
+    [
+     766207.1,
+     605498.2
+    ],
+    [
+     766183.8,
+     605536.8
+    ],
+    [
+     766122.6,
+     605633.0
+    ],
+    [
+     766114.5,
+     605645.6
+    ],
+    [
+     766106.7,
+     605657.6
+    ],
+    [
+     766099.2,
+     605667.7
+    ],
+    [
+     766092.7,
+     605676.0
+    ],
+    [
+     766085.0,
+     605685.0
+    ],
+    [
+     766070.1,
+     605701.2
+    ],
+    [
+     765910.6,
+     605860.6
+    ],
+    [
+     765455.0,
+     606314.8
+    ],
+    [
+     765165.2,
+     606608.1
+    ],
+    [
+     765123.8,
+     606649.5
+    ],
+    [
+     764992.8,
+     606780.5
+    ],
+    [
+     764910.8,
+     606862.3
+    ],
+    [
+     764874.8,
+     606898.7
+    ],
+    [
+     764853.2,
+     606920.7
+    ],
+    [
+     764843.2,
+     606932.6
+    ],
+    [
+     764836.5,
+     606941.0
+    ],
+    [
+     764834.1,
+     606944.0
+    ],
+    [
+     764827.7,
+     606953.1
+    ],
+    [
+     764819.6,
+     606965.4
+    ],
+    [
+     764741.2,
+     607092.3
+    ],
+    [
+     764662.9,
+     607219.4
+    ],
+    [
+     764507.4,
+     607472.7
+    ],
+    [
+     764329.4,
+     607762.2
+    ],
+    [
+     764199.2,
+     607974.1
+    ],
+    [
+     764152.9,
+     608049.4
+    ],
+    [
+     764073.6,
+     608177.3
+    ],
+    [
+     764069.0,
+     608184.8
+    ],
+    [
+     764037.8,
+     608235.9
+    ],
+    [
+     763913.4,
+     608437.3
+    ],
+    [
+     763903.3,
+     608451.7
+    ],
+    [
+     763890.1,
+     608468.4
+    ],
+    [
+     763851.3,
+     608510.9
+    ],
+    [
+     763743.5,
+     608625.7
+    ],
+    [
+     763524.1,
+     608860.1
+    ],
+    [
+     763436.0,
+     608954.6
+    ],
+    [
+     763424.1,
+     608966.6
+    ],
+    [
+     763268.2,
+     609133.3
+    ],
+    [
+     763004.9,
+     609415.3
+    ],
+    [
+     762848.5,
+     609582.4
+    ],
+    [
+     762798.1,
+     609636.5
+    ],
+    [
+     762780.3,
+     609655.5
+    ],
+    [
+     762692.5,
+     609749.6
+    ],
+    [
+     762621.6,
+     609825.4
+    ],
+    [
+     762428.7,
+     610033.5
+    ],
+    [
+     762379.3,
+     610085.7
+    ],
+    [
+     762365.5,
+     610100.3
+    ],
+    [
+     762201.3,
+     610275.2
+    ],
+    [
+     762071.6,
+     610415.2
+    ],
+    [
+     761919.8,
+     610577.1
+    ],
+    [
+     761868.9,
+     610633.0
+    ],
+    [
+     761866.6,
+     610635.6
+    ],
+    [
+     761842.8,
+     610661.2
+    ],
+    [
+     761614.0,
+     610907.5
+    ],
+    [
+     761503.5,
+     611026.7
+    ],
+    [
+     761308.7,
+     611236.2
+    ],
+    [
+     761184.8,
+     611369.5
+    ],
+    [
+     761171.4,
+     611383.5
+    ],
+    [
+     760889.4,
+     611686.6
+    ],
+    [
+     760749.8,
+     611836.9
+    ],
+    [
+     760733.5,
+     611854.3
+    ],
+    [
+     760717.4,
+     611871.4
+    ],
+    [
+     760702.9,
+     611887.2
+    ],
+    [
+     760688.2,
+     611903.5
+    ],
+    [
+     760677.5,
+     611915.2
+    ],
+    [
+     760668.0,
+     611927.5
+    ],
+    [
+     760658.7,
+     611939.0
+    ],
+    [
+     760652.6,
+     611947.6
+    ],
+    [
+     760638.6,
+     611969.2
+    ],
+    [
+     760634.8,
+     611976.1
+    ],
+    [
+     760634.8,
+     611982.3
+    ],
+    [
+     760632.9,
+     611990.2
+    ],
+    [
+     760631.9,
+     611992.9
+    ],
+    [
+     760632.5,
+     611995.9
+    ],
+    [
+     760634.1,
+     611998.1
+    ],
+    [
+     760640.5,
+     612004.5
+    ],
+    [
+     760649.1,
+     612015.4
+    ],
+    [
+     760656.5,
+     612021.7
+    ],
+    [
+     760665.0,
+     612028.9
+    ],
+    [
+     760672.2,
+     612035.0
+    ],
+    [
+     760681.6,
+     612042.9
+    ],
+    [
+     760685.2,
+     612045.9
+    ],
+    [
+     760694.1,
+     612053.4
+    ],
+    [
+     760698.0,
+     612056.6
+    ],
+    [
+     760706.1,
+     612063.4
+    ],
+    [
+     760717.0,
+     612072.6
+    ],
+    [
+     760721.7,
+     612076.5
+    ],
+    [
+     760733.1,
+     612086.1
+    ],
+    [
+     760830.5,
+     612167.7
+    ],
+    [
+     760852.6,
+     612189.4
+    ],
+    [
+     760888.1,
+     612228.9
+    ],
+    [
+     760903.7,
+     612247.1
+    ],
+    [
+     760951.4,
+     612302.0
+    ],
+    [
+     760957.5,
+     612309.7
+    ],
+    [
+     760960.1,
+     612313.1
+    ],
+    [
+     760964.2,
+     612319.7
+    ],
+    [
+     760972.1,
+     612323.2
+    ],
+    [
+     761009.6,
+     612351.3
+    ],
+    [
+     761019.0,
+     612358.4
+    ],
+    [
+     761070.2,
+     612392.3
+    ],
+    [
+     761085.1,
+     612404.1
+    ],
+    [
+     761070.8,
+     612410.6
+    ],
+    [
+     761058.2,
+     612417.2
+    ]
+   ]
+  },
+  "B_signed_dk65_via_s19": {
+   "allow_motorway": true,
+   "length_km": 30.734,
+   "start": {
+    "node": 3341716402,
+    "xy": [
+     778302.0,
+     595649.3
+    ]
+   },
+   "end": {
+    "node": 2979322320,
+    "xy": [
+     761058.2,
+     612417.2
+    ]
+   },
+   "length_by_class_m": {
+    "primary|65": 14939,
+    "trunk|8;65": 8102,
+    "motorway|S19;65": 4814,
+    "motorway_link|": 844,
+    "trunk|19;65": 777,
+    "trunk|65": 615,
+    "secondary|671": 465,
+    "residential|": 178
+   },
+   "ways": [
+    {
+     "way_id": 552161976,
+     "km_start": 0.0,
+     "km_end": 0.196,
+     "length_m": 196.4,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 778302.0,
+     "y": 595649.3
+    },
+    {
+     "way_id": 560802658,
+     "km_start": 0.196,
+     "km_end": 0.256,
+     "length_m": 59.1,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 778128.3,
+     "y": 595740.8
+    },
+    {
+     "way_id": 560802657,
+     "km_start": 0.256,
+     "km_end": 0.276,
+     "length_m": 20.1,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 778076.2,
+     "y": 595768.8
+    },
+    {
+     "way_id": 249640399,
+     "km_start": 0.276,
+     "km_end": 0.491,
+     "length_m": 215.2,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 778058.4,
+     "y": 595778.3
+    },
+    {
+     "way_id": 1093579590,
+     "km_start": 0.491,
+     "km_end": 0.621,
+     "length_m": 129.8,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-11-07",
+     "x": 777879.0,
+     "y": 595896.3
+    },
+    {
+     "way_id": 1093579589,
+     "km_start": 0.621,
+     "km_end": 0.641,
+     "length_m": 20.8,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-11-07",
+     "x": 777777.5,
+     "y": 595977.2
+    },
+    {
+     "way_id": 266084693,
+     "km_start": 0.641,
+     "km_end": 0.777,
+     "length_m": 135.5,
+     "highway": "trunk",
+     "ref": "19;65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777761.2,
+     "y": 595990.1
+    },
+    {
+     "way_id": 284022563,
+     "km_start": 0.777,
+     "km_end": 0.81,
+     "length_m": 32.7,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777655.0,
+     "y": 596074.2
+    },
+    {
+     "way_id": 1101181473,
+     "km_start": 0.81,
+     "km_end": 0.927,
+     "length_m": 117.4,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777629.1,
+     "y": 596094.1
+    },
+    {
+     "way_id": 173985172,
+     "km_start": 0.927,
+     "km_end": 1.035,
+     "length_m": 107.5,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Władysława Andersa",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777537.0,
+     "y": 596167.0
+    },
+    {
+     "way_id": 23844386,
+     "km_start": 1.035,
+     "km_end": 1.147,
+     "length_m": 112.1,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777452.9,
+     "y": 596233.9
+    },
+    {
+     "way_id": 173985169,
+     "km_start": 1.147,
+     "km_end": 1.244,
+     "length_m": 96.8,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777351.4,
+     "y": 596279.9
+    },
+    {
+     "way_id": 490398851,
+     "km_start": 1.244,
+     "km_end": 1.255,
+     "length_m": 11.9,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777255.3,
+     "y": 596291.5
+    },
+    {
+     "way_id": 490398852,
+     "km_start": 1.255,
+     "km_end": 1.392,
+     "length_m": 137.0,
+     "highway": "trunk",
+     "ref": "65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 777243.4,
+     "y": 596292.5
+    },
+    {
+     "way_id": 262140922,
+     "km_start": 1.392,
+     "km_end": 1.501,
+     "length_m": 108.7,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-11",
+     "x": 777106.7,
+     "y": 596292.1
+    },
+    {
+     "way_id": 257367422,
+     "km_start": 1.501,
+     "km_end": 1.675,
+     "length_m": 173.5,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776998.5,
+     "y": 596281.7
+    },
+    {
+     "way_id": 173990799,
+     "km_start": 1.675,
+     "km_end": 1.848,
+     "length_m": 173.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776825.7,
+     "y": 596265.9
+    },
+    {
+     "way_id": 173990800,
+     "km_start": 1.848,
+     "km_end": 2.061,
+     "length_m": 213.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776652.5,
+     "y": 596250.9
+    },
+    {
+     "way_id": 257352528,
+     "km_start": 2.061,
+     "km_end": 2.19,
+     "length_m": 128.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776440.3,
+     "y": 596233.4
+    },
+    {
+     "way_id": 257358866,
+     "km_start": 2.19,
+     "km_end": 2.656,
+     "length_m": 466.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 776312.0,
+     "y": 596222.5
+    },
+    {
+     "way_id": 257357743,
+     "km_start": 2.656,
+     "km_end": 2.814,
+     "length_m": 157.9,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775848.8,
+     "y": 596179.0
+    },
+    {
+     "way_id": 257357742,
+     "km_start": 2.814,
+     "km_end": 2.851,
+     "length_m": 36.6,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775690.9,
+     "y": 596180.3
+    },
+    {
+     "way_id": 707029854,
+     "km_start": 2.851,
+     "km_end": 2.974,
+     "length_m": 123.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775654.3,
+     "y": 596180.4
+    },
+    {
+     "way_id": 606396475,
+     "km_start": 2.974,
+     "km_end": 3.101,
+     "length_m": 127.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775531.2,
+     "y": 596180.9
+    },
+    {
+     "way_id": 249740773,
+     "km_start": 3.101,
+     "km_end": 3.244,
+     "length_m": 142.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775404.1,
+     "y": 596182.6
+    },
+    {
+     "way_id": 249740760,
+     "km_start": 3.244,
+     "km_end": 3.275,
+     "length_m": 31.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775261.3,
+     "y": 596183.4
+    },
+    {
+     "way_id": 707029850,
+     "km_start": 3.275,
+     "km_end": 3.494,
+     "length_m": 218.7,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775230.3,
+     "y": 596183.6
+    },
+    {
+     "way_id": 249740774,
+     "km_start": 3.494,
+     "km_end": 3.664,
+     "length_m": 170.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 775011.6,
+     "y": 596185.0
+    },
+    {
+     "way_id": 257355878,
+     "km_start": 3.664,
+     "km_end": 3.893,
+     "length_m": 229.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 774841.6,
+     "y": 596186.4
+    },
+    {
+     "way_id": 257355879,
+     "km_start": 3.893,
+     "km_end": 4.004,
+     "length_m": 111.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774612.9,
+     "y": 596197.5
+    },
+    {
+     "way_id": 606396479,
+     "km_start": 4.004,
+     "km_end": 4.065,
+     "length_m": 61.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774502.1,
+     "y": 596202.2
+    },
+    {
+     "way_id": 257355876,
+     "km_start": 4.065,
+     "km_end": 4.09,
+     "length_m": 25.2,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774441.0,
+     "y": 596202.8
+    },
+    {
+     "way_id": 693614875,
+     "km_start": 4.09,
+     "km_end": 4.205,
+     "length_m": 115.6,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774415.8,
+     "y": 596203.1
+    },
+    {
+     "way_id": 76073115,
+     "km_start": 4.205,
+     "km_end": 4.345,
+     "length_m": 139.4,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-09-14",
+     "x": 774300.2,
+     "y": 596204.2
+    },
+    {
+     "way_id": 668340288,
+     "km_start": 4.345,
+     "km_end": 4.419,
+     "length_m": 74.2,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 774162.1,
+     "y": 596186.5
+    },
+    {
+     "way_id": 249740778,
+     "km_start": 4.419,
+     "km_end": 4.736,
+     "length_m": 317.3,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Stanisława Maczka",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 774089.8,
+     "y": 596169.9
+    },
+    {
+     "way_id": 76073122,
+     "km_start": 4.736,
+     "km_end": 4.813,
+     "length_m": 76.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "-1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773802.4,
+     "y": 596037.4
+    },
+    {
+     "way_id": 301702369,
+     "km_start": 4.813,
+     "km_end": 5.187,
+     "length_m": 373.9,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773735.0,
+     "y": 596000.3
+    },
+    {
+     "way_id": 306609226,
+     "km_start": 5.187,
+     "km_end": 5.269,
+     "length_m": 81.7,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773409.7,
+     "y": 595816.0
+    },
+    {
+     "way_id": 301702368,
+     "km_start": 5.269,
+     "km_end": 5.449,
+     "length_m": 179.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773339.7,
+     "y": 595774.0
+    },
+    {
+     "way_id": 242987870,
+     "km_start": 5.449,
+     "km_end": 5.608,
+     "length_m": 159.2,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773185.3,
+     "y": 595681.8
+    },
+    {
+     "way_id": 261104557,
+     "km_start": 5.608,
+     "km_end": 5.828,
+     "length_m": 220.6,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 773047.0,
+     "y": 595603.0
+    },
+    {
+     "way_id": 306609228,
+     "km_start": 5.828,
+     "km_end": 5.926,
+     "length_m": 97.3,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2025-10-30",
+     "x": 772852.2,
+     "y": 595499.4
+    },
+    {
+     "way_id": 301702363,
+     "km_start": 5.926,
+     "km_end": 6.123,
+     "length_m": 197.6,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772766.2,
+     "y": 595453.8
+    },
+    {
+     "way_id": 242989866,
+     "km_start": 6.123,
+     "km_end": 6.294,
+     "length_m": 170.5,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772592.0,
+     "y": 595360.6
+    },
+    {
+     "way_id": 301702379,
+     "km_start": 6.294,
+     "km_end": 6.349,
+     "length_m": 55.5,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772441.2,
+     "y": 595281.0
+    },
+    {
+     "way_id": 561326921,
+     "km_start": 6.349,
+     "km_end": 6.418,
+     "length_m": 68.6,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772392.5,
+     "y": 595254.3
+    },
+    {
+     "way_id": 606396500,
+     "km_start": 6.418,
+     "km_end": 6.506,
+     "length_m": 87.7,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772331.9,
+     "y": 595222.3
+    },
+    {
+     "way_id": 23982165,
+     "km_start": 6.506,
+     "km_end": 6.623,
+     "length_m": 117.7,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772253.8,
+     "y": 595182.4
+    },
+    {
+     "way_id": 166369627,
+     "km_start": 6.623,
+     "km_end": 6.701,
+     "length_m": 77.9,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "Generała Franciszka Kleeberga",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 772150.1,
+     "y": 595126.7
+    },
+    {
+     "way_id": 615609915,
+     "km_start": 6.701,
+     "km_end": 6.956,
+     "length_m": 254.6,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 772081.5,
+     "y": 595089.6
+    },
+    {
+     "way_id": 615609913,
+     "km_start": 6.956,
+     "km_end": 7.066,
+     "length_m": 110.5,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 771849.8,
+     "y": 594984.9
+    },
+    {
+     "way_id": 615609911,
+     "km_start": 7.066,
+     "km_end": 7.215,
+     "length_m": 148.9,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 771748.7,
+     "y": 594940.6
+    },
+    {
+     "way_id": 615607633,
+     "km_start": 7.215,
+     "km_end": 7.308,
+     "length_m": 92.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 771616.7,
+     "y": 594871.7
+    },
+    {
+     "way_id": 837858665,
+     "km_start": 7.308,
+     "km_end": 7.583,
+     "length_m": 275.0,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 771531.9,
+     "y": 594833.8
+    },
+    {
+     "way_id": 825762754,
+     "km_start": 7.583,
+     "km_end": 7.86,
+     "length_m": 277.2,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 771264.8,
+     "y": 594774.2
+    },
+    {
+     "way_id": 1266830102,
+     "km_start": 7.86,
+     "km_end": 7.884,
+     "length_m": 24.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "4",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "1",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 770991.1,
+     "y": 594810.0
+    },
+    {
+     "way_id": 615609890,
+     "km_start": 7.884,
+     "km_end": 7.939,
+     "length_m": 55.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "4",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 770967.5,
+     "y": 594815.2
+    },
+    {
+     "way_id": 889307875,
+     "km_start": 7.939,
+     "km_end": 8.172,
+     "length_m": 232.2,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-20",
+     "x": 770913.9,
+     "y": 594827.7
+    },
+    {
+     "way_id": 685399521,
+     "km_start": 8.172,
+     "km_end": 8.2,
+     "length_m": 28.2,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "4",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "80",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 770687.6,
+     "y": 594879.9
+    },
+    {
+     "way_id": 685398186,
+     "km_start": 8.2,
+     "km_end": 8.458,
+     "length_m": 258.1,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "80",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 770660.1,
+     "y": 594886.2
+    },
+    {
+     "way_id": 825177452,
+     "km_start": 8.458,
+     "km_end": 8.788,
+     "length_m": 329.9,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "80",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 770408.8,
+     "y": 594944.7
+    },
+    {
+     "way_id": 1530059183,
+     "km_start": 8.788,
+     "km_end": 9.021,
+     "length_m": 233.4,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "80",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-24",
+     "x": 770087.7,
+     "y": 595020.6
+    },
+    {
+     "way_id": 1567973365,
+     "km_start": 9.021,
+     "km_end": 9.188,
+     "length_m": 166.8,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "80",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769860.7,
+     "y": 595074.6
+    },
+    {
+     "way_id": 1379858308,
+     "km_start": 9.188,
+     "km_end": 9.494,
+     "length_m": 306.4,
+     "highway": "trunk",
+     "ref": "8;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "80",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769698.4,
+     "y": 595113.2
+    },
+    {
+     "way_id": 1151531629,
+     "km_start": 9.494,
+     "km_end": 9.621,
+     "length_m": 127.0,
+     "highway": "motorway_link",
+     "ref": "",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "60",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-26",
+     "x": 769400.4,
+     "y": 595184.6
+    },
+    {
+     "way_id": 1151531630,
+     "km_start": 9.621,
+     "km_end": 9.73,
+     "length_m": 109.0,
+     "highway": "motorway_link",
+     "ref": "",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "60",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-24",
+     "x": 769280.8,
+     "y": 595225.6
+    },
+    {
+     "way_id": 310634018,
+     "km_start": 9.73,
+     "km_end": 10.071,
+     "length_m": 341.1,
+     "highway": "motorway_link",
+     "ref": "",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "60",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-26",
+     "x": 769175.0,
+     "y": 595251.6
+    },
+    {
+     "way_id": 424138208,
+     "km_start": 10.071,
+     "km_end": 10.206,
+     "length_m": 134.1,
+     "highway": "motorway_link",
+     "ref": "",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "60",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-24",
+     "x": 768994.0,
+     "y": 595520.6
+    },
+    {
+     "way_id": 1151531627,
+     "km_start": 10.206,
+     "km_end": 10.338,
+     "length_m": 132.4,
+     "highway": "motorway_link",
+     "ref": "",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "60",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-24",
+     "x": 769020.7,
+     "y": 595652.1
+    },
+    {
+     "way_id": 1564227967,
+     "km_start": 10.338,
+     "km_end": 10.365,
+     "length_m": 27.4,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769033.0,
+     "y": 595783.2
+    },
+    {
+     "way_id": 1564227966,
+     "km_start": 10.365,
+     "km_end": 10.385,
+     "length_m": 20.1,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769038.2,
+     "y": 595810.1
+    },
+    {
+     "way_id": 1151440420,
+     "km_start": 10.385,
+     "km_end": 10.595,
+     "length_m": 209.4,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769042.2,
+     "y": 595829.8
+    },
+    {
+     "way_id": 1557429211,
+     "km_start": 10.595,
+     "km_end": 10.606,
+     "length_m": 10.9,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769084.1,
+     "y": 596035.0
+    },
+    {
+     "way_id": 1151531623,
+     "km_start": 10.606,
+     "km_end": 11.312,
+     "length_m": 706.0,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769086.4,
+     "y": 596045.7
+    },
+    {
+     "way_id": 1567436413,
+     "km_start": 11.312,
+     "km_end": 11.613,
+     "length_m": 301.4,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769223.8,
+     "y": 596738.2
+    },
+    {
+     "way_id": 1567436411,
+     "km_start": 11.613,
+     "km_end": 11.664,
+     "length_m": 51.0,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769281.8,
+     "y": 597034.0
+    },
+    {
+     "way_id": 1516161715,
+     "km_start": 11.664,
+     "km_end": 11.927,
+     "length_m": 263.3,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769291.5,
+     "y": 597084.0
+    },
+    {
+     "way_id": 1151531620,
+     "km_start": 11.927,
+     "km_end": 11.969,
+     "length_m": 41.7,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769341.3,
+     "y": 597342.6
+    },
+    {
+     "way_id": 1449644046,
+     "km_start": 11.969,
+     "km_end": 12.174,
+     "length_m": 205.1,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769349.5,
+     "y": 597383.4
+    },
+    {
+     "way_id": 1449644044,
+     "km_start": 12.174,
+     "km_end": 12.189,
+     "length_m": 14.8,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769387.6,
+     "y": 597584.9
+    },
+    {
+     "way_id": 1151440442,
+     "km_start": 12.189,
+     "km_end": 12.409,
+     "length_m": 220.1,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769390.6,
+     "y": 597599.5
+    },
+    {
+     "way_id": 241580474,
+     "km_start": 12.409,
+     "km_end": 12.492,
+     "length_m": 82.4,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769420.1,
+     "y": 597817.3
+    },
+    {
+     "way_id": 241580473,
+     "km_start": 12.492,
+     "km_end": 12.759,
+     "length_m": 267.3,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769422.9,
+     "y": 597899.7
+    },
+    {
+     "way_id": 241580472,
+     "km_start": 12.759,
+     "km_end": 12.842,
+     "length_m": 83.1,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769401.5,
+     "y": 598165.6
+    },
+    {
+     "way_id": 241580471,
+     "km_start": 12.842,
+     "km_end": 13.655,
+     "length_m": 813.0,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769385.3,
+     "y": 598247.1
+    },
+    {
+     "way_id": 1457994934,
+     "km_start": 13.655,
+     "km_end": 13.675,
+     "length_m": 20.0,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "viaduct",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769166.0,
+     "y": 599027.9
+    },
+    {
+     "way_id": 1457994931,
+     "km_start": 13.675,
+     "km_end": 14.365,
+     "length_m": 690.2,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-20",
+     "x": 769163.9,
+     "y": 599047.8
+    },
+    {
+     "way_id": 1151531590,
+     "km_start": 14.365,
+     "km_end": 14.707,
+     "length_m": 342.1,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-21",
+     "x": 769236.9,
+     "y": 599730.4
+    },
+    {
+     "way_id": 1570446117,
+     "km_start": 14.707,
+     "km_end": 15.152,
+     "length_m": 444.4,
+     "highway": "motorway",
+     "ref": "S19;65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "120",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-10-21",
+     "x": 769310.0,
+     "y": 600064.5
+    },
+    {
+     "way_id": 1151531594,
+     "km_start": 15.152,
+     "km_end": 15.838,
+     "length_m": 686.0,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "100",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-11-08",
+     "x": 769404.7,
+     "y": 600498.8
+    },
+    {
+     "way_id": 1151531593,
+     "km_start": 15.838,
+     "km_end": 15.928,
+     "length_m": 90.1,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "100",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-11-08",
+     "x": 769518.2,
+     "y": 601174.0
+    },
+    {
+     "way_id": 1457994927,
+     "km_start": 15.928,
+     "km_end": 15.943,
+     "length_m": 15.7,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "100",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-11-08",
+     "x": 769518.7,
+     "y": 601264.1
+    },
+    {
+     "way_id": 1457994926,
+     "km_start": 15.943,
+     "km_end": 16.06,
+     "length_m": 117.0,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "3",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "100",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-11-08",
+     "x": 769518.5,
+     "y": 601279.7
+    },
+    {
+     "way_id": 1151531612,
+     "km_start": 16.06,
+     "km_end": 18.802,
+     "length_m": 2741.4,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "100",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-11-08",
+     "x": 769512.1,
+     "y": 601396.6
+    },
+    {
+     "way_id": 1151531608,
+     "km_start": 18.802,
+     "km_end": 18.884,
+     "length_m": 81.9,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "70",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "11.5"
+     },
+     "osm_edit": "2026-11-08",
+     "x": 767773.6,
+     "y": 603355.2
+    },
+    {
+     "way_id": 1557884362,
+     "km_start": 18.884,
+     "km_end": 18.979,
+     "length_m": 95.0,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "50",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-11-08",
+     "x": 767719.3,
+     "y": 603416.6
+    },
+    {
+     "way_id": 1151531611,
+     "km_start": 18.979,
+     "km_end": 19.047,
+     "length_m": 68.6,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "roundabout",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-19",
+     "x": 767661.4,
+     "y": 603491.9
+    },
+    {
+     "way_id": 1448265993,
+     "km_start": 19.047,
+     "km_end": 19.082,
+     "length_m": 34.8,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-10-26",
+     "x": 767625.9,
+     "y": 603519.2
+    },
+    {
+     "way_id": 1151531610,
+     "km_start": 19.082,
+     "km_end": 19.163,
+     "length_m": 80.6,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-09-20",
+     "x": 767592.9,
+     "y": 603529.4
+    },
+    {
+     "way_id": 208187096,
+     "km_start": 19.163,
+     "km_end": 21.209,
+     "length_m": 2046.4,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-09-20",
+     "x": 767532.4,
+     "y": 603582.3
+    },
+    {
+     "way_id": 27718745,
+     "km_start": 21.209,
+     "km_end": 27.948,
+     "length_m": 6739.1,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-09-28",
+     "x": 766359.8,
+     "y": 605259.2
+    },
+    {
+     "way_id": 1111506754,
+     "km_start": 27.948,
+     "km_end": 28.246,
+     "length_m": 297.6,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2022-11-08",
+     "x": 762071.6,
+     "y": 610415.2
+    },
+    {
+     "way_id": 1111506750,
+     "km_start": 28.246,
+     "km_end": 28.249,
+     "length_m": 3.5,
+     "highway": "primary",
+     "ref": "65",
+     "name": "Obozowa",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2022-11-08",
+     "x": 761868.9,
+     "y": 610633.0
+    },
+    {
+     "way_id": 305910042,
+     "km_start": 28.249,
+     "km_end": 29.251,
+     "length_m": 1001.7,
+     "highway": "primary",
+     "ref": "65",
+     "name": "Obozowa",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-02-15",
+     "x": 761866.6,
+     "y": 610635.6
+    },
+    {
+     "way_id": 286990128,
+     "km_start": 29.251,
+     "km_end": 29.27,
+     "length_m": 19.4,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "yes",
+     "layer": "1",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2020-06-27",
+     "x": 761184.8,
+     "y": 611369.5
+    },
+    {
+     "way_id": 286990127,
+     "km_start": 29.27,
+     "km_end": 30.07,
+     "length_m": 800.2,
+     "highway": "primary",
+     "ref": "65",
+     "name": "Obozowa",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-01-05",
+     "x": 761171.4,
+     "y": 611383.5
+    },
+    {
+     "way_id": 1464342635,
+     "km_start": 30.07,
+     "km_end": 30.088,
+     "length_m": 17.3,
+     "highway": "primary",
+     "ref": "65",
+     "name": "Obozowa",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "90",
+     "bridge": "",
+     "layer": "",
+     "limits": {
+      "maxaxleload": "10"
+     },
+     "osm_edit": "2026-01-05",
+     "x": 760634.8,
+     "y": 611976.1
+    },
+    {
+     "way_id": 1426801304,
+     "km_start": 30.088,
+     "km_end": 30.091,
+     "length_m": 3.0,
+     "highway": "primary",
+     "ref": "65",
+     "name": "",
+     "lanes": "",
+     "oneway": "",
+     "junction": "roundabout",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-01-05",
+     "x": 760631.9,
+     "y": 611992.9
+    },
+    {
+     "way_id": 1426600413,
+     "km_start": 30.091,
+     "km_end": 30.116,
+     "length_m": 25.6,
+     "highway": "secondary",
+     "ref": "671",
+     "name": "Tykocka",
+     "lanes": "1",
+     "oneway": "yes",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-02-02",
+     "x": 760632.5,
+     "y": 611995.9
+    },
+    {
+     "way_id": 1464342641,
+     "km_start": 30.116,
+     "km_end": 30.137,
+     "length_m": 20.9,
+     "highway": "secondary",
+     "ref": "671",
+     "name": "Tykocka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-02-15",
+     "x": 760649.1,
+     "y": 612015.4
+    },
+    {
+     "way_id": 47812348,
+     "km_start": 30.137,
+     "km_end": 30.544,
+     "length_m": 406.6,
+     "highway": "secondary",
+     "ref": "671",
+     "name": "Tykocka",
+     "lanes": "2",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2026-02-15",
+     "x": 760665.0,
+     "y": 612028.9
+    },
+    {
+     "way_id": 1111506746,
+     "km_start": 30.544,
+     "km_end": 30.556,
+     "length_m": 12.0,
+     "highway": "secondary",
+     "ref": "671",
+     "name": "Tykocka",
+     "lanes": "",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2022-11-08",
+     "x": 760957.5,
+     "y": 612309.7
+    },
+    {
+     "way_id": 98071185,
+     "km_start": 30.556,
+     "km_end": 30.704,
+     "length_m": 147.7,
+     "highway": "residential",
+     "ref": "",
+     "name": "Rynek",
+     "lanes": "",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2024-01-13",
+     "x": 760964.2,
+     "y": 612319.7
+    },
+    {
+     "way_id": 173422687,
+     "km_start": 30.704,
+     "km_end": 30.734,
+     "length_m": 29.9,
+     "highway": "residential",
+     "ref": "",
+     "name": "Rynek",
+     "lanes": "",
+     "oneway": "",
+     "junction": "",
+     "maxspeed": "",
+     "bridge": "",
+     "layer": "",
+     "limits": {},
+     "osm_edit": "2022-11-08",
+     "x": 761085.1,
+     "y": 612404.1
+    }
+   ],
+   "junctions": [
+    {
+     "node": 3136871040,
+     "km": 0.699,
+     "x": 777717.0,
+     "y": 596026.1,
+     "control": "traffic_signals",
+     "roads": []
+    },
+    {
+     "node": 2840742308,
+     "km": 0.777,
+     "x": 777655.0,
+     "y": 596074.2,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "19",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1832991672,
+     "km": 1.392,
+     "x": 777106.7,
+     "y": 596292.1,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "8",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1847317049,
+     "km": 1.501,
+     "x": 776998.5,
+     "y": 596281.7,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1847317037,
+     "km": 2.061,
+     "x": 776440.3,
+     "y": 596233.4,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2357583392,
+     "km": 2.814,
+     "x": 775690.9,
+     "y": 596180.3,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 6644301694,
+     "km": 2.851,
+     "x": 775654.3,
+     "y": 596180.4,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2357583396,
+     "km": 3.244,
+     "x": 775261.3,
+     "y": 596183.4,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 6644301685,
+     "km": 3.275,
+     "x": 775230.3,
+     "y": 596183.6,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 12962166397,
+     "km": 3.852,
+     "x": 774653.4,
+     "y": 596194.2,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2357583390,
+     "km": 3.893,
+     "x": 774612.9,
+     "y": 596197.5,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 897482222,
+     "km": 4.345,
+     "x": 774162.1,
+     "y": 596186.5,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2235605459,
+     "km": 5.187,
+     "x": 773409.7,
+     "y": 595816.0,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2927425563,
+     "km": 5.269,
+     "x": 773339.7,
+     "y": 595774.0,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2504239797,
+     "km": 5.828,
+     "x": 772852.2,
+     "y": 595499.4,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2504262150,
+     "km": 5.926,
+     "x": 772766.2,
+     "y": 595453.8,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 3626954274,
+     "km": 6.506,
+     "x": 772253.8,
+     "y": 595182.4,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 5821206968,
+     "km": 6.956,
+     "x": 771849.8,
+     "y": 594984.9,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 5821206949,
+     "km": 7.066,
+     "x": 771748.7,
+     "y": 594940.6,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 5821206933,
+     "km": 7.308,
+     "x": 771531.9,
+     "y": 594833.8,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 5821206859,
+     "km": 7.86,
+     "x": 770991.1,
+     "y": 594810.0,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 5821206792,
+     "km": 8.172,
+     "x": 770687.6,
+     "y": 594879.9,
+     "control": "",
+     "roads": [
+      [
+       "trunk_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2081020070,
+     "km": 9.494,
+     "x": 769400.4,
+     "y": 595184.6,
+     "control": "",
+     "roads": [
+      [
+       "motorway",
+       "S8",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 4236127136,
+     "km": 10.071,
+     "x": 768994.0,
+     "y": 595520.6,
+     "control": "",
+     "roads": [
+      [
+       "motorway_link",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 10712325654,
+     "km": 19.003,
+     "x": 767663.0,
+     "y": 603515.4,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 10712325651,
+     "km": 19.017,
+     "x": 767653.1,
+     "y": 603524.9,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 10712325637,
+     "km": 19.082,
+     "x": 767592.9,
+     "y": 603529.4,
+     "control": "",
+     "roads": [
+      [
+       "primary",
+       "65",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 897574830,
+     "km": 21.059,
+     "x": 766440.6,
+     "y": 605132.6,
+     "control": "",
+     "roads": [
+      [
+       "tertiary",
+       "1392B",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 11515570683,
+     "km": 21.193,
+     "x": 766367.7,
+     "y": 605245.8,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 897574813,
+     "km": 21.209,
+     "x": 766359.8,
+     "y": 605259.2,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 897574857,
+     "km": 21.418,
+     "x": 766248.4,
+     "y": 605435.7,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 17795488,
+     "km": 23.019,
+     "x": 765165.2,
+     "y": 606608.1,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 14226925237,
+     "km": 24.701,
+     "x": 764199.2,
+     "y": 607974.1,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 13495192875,
+     "km": 24.94,
+     "x": 764073.6,
+     "y": 608177.3,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "1397B",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2101502781,
+     "km": 24.949,
+     "x": 764069.0,
+     "y": 608184.8,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 2119002544,
+     "km": 25.949,
+     "x": 763436.0,
+     "y": 608954.6,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1134817563,
+     "km": 27.948,
+     "x": 762071.6,
+     "y": 610415.2,
+     "control": "",
+     "roads": [
+      [
+       "unclassified",
+       "",
+       ""
+      ]
+     ]
+    },
+    {
+     "node": 1134813637,
+     "km": 29.684,
+     "x": 760889.4,
+     "y": 611686.6,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Południowa"
+      ]
+     ]
+    },
+    {
+     "node": 4898926854,
+     "km": 30.07,
+     "x": 760634.8,
+     "y": 611976.1,
+     "control": "",
+     "roads": [
+      [
+       "primary",
+       "65",
+       "Obozowa"
+      ]
+     ]
+    },
+    {
+     "node": 3047667218,
+     "km": 30.116,
+     "x": 760649.1,
+     "y": 612015.4,
+     "control": "crossing",
+     "roads": [
+      [
+       "secondary",
+       "671",
+       "Tykocka"
+      ]
+     ]
+    },
+    {
+     "node": 3047587472,
+     "km": 30.534,
+     "x": 760951.4,
+     "y": 612302.0,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 1842392533,
+     "km": 30.544,
+     "x": 760957.5,
+     "y": 612309.7,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Szkolna"
+      ]
+     ]
+    },
+    {
+     "node": 3047587482,
+     "km": 30.548,
+     "x": 760960.1,
+     "y": 612313.1,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Rynek"
+      ]
+     ]
+    },
+    {
+     "node": 3047587487,
+     "km": 30.556,
+     "x": 760964.2,
+     "y": 612319.7,
+     "control": "",
+     "roads": [
+      [
+       "secondary",
+       "671",
+       "Grodzieńska"
+      ]
+     ]
+    },
+    {
+     "node": 11514832011,
+     "km": 30.612,
+     "x": 761009.6,
+     "y": 612351.3,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 1134813711,
+     "km": 30.685,
+     "x": 761070.2,
+     "y": 612392.3,
+     "control": "crossing",
+     "roads": []
+    },
+    {
+     "node": 2979322319,
+     "km": 30.704,
+     "x": 761085.1,
+     "y": 612404.1,
+     "control": "",
+     "roads": [
+      [
+       "residential",
+       "",
+       "Rynek"
+      ]
+     ]
+    },
+    {
+     "node": 3047596475,
+     "km": 30.719,
+     "x": 761070.8,
+     "y": 612410.6,
+     "control": "crossing",
+     "roads": []
+    }
+   ],
+   "roundabouts": [
+    {
+     "km_start": 18.979,
+     "km_end": 19.047,
+     "name": "",
+     "x": 767661.4,
+     "y": 603491.9,
+     "ways": [
+      1151531611
+     ]
+    },
+    {
+     "km_start": 30.088,
+     "km_end": 30.091,
+     "name": "",
+     "x": 760631.9,
+     "y": 611992.9,
+     "ways": [
+      1426801304
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "km_start": 0.927,
+     "km_end": 1.147,
+     "name": "Generała Władysława Andersa",
+     "x": 777537.0,
+     "y": 596167.0,
+     "ways": [
+      173985172,
+      23844386
+     ]
+    },
+    {
+     "km_start": 1.244,
+     "km_end": 1.255,
+     "name": "Generała Stanisława Maczka",
+     "x": 777255.3,
+     "y": 596291.5,
+     "ways": [
+      490398851
+     ]
+    },
+    {
+     "km_start": 1.675,
+     "km_end": 1.848,
+     "name": "Generała Stanisława Maczka",
+     "x": 776825.7,
+     "y": 596265.9,
+     "ways": [
+      173990799
+     ]
+    },
+    {
+     "km_start": 4.065,
+     "km_end": 4.09,
+     "name": "Generała Stanisława Maczka",
+     "x": 774441.0,
+     "y": 596202.8,
+     "ways": [
+      257355876
+     ]
+    },
+    {
+     "km_start": 5.449,
+     "km_end": 5.608,
+     "name": "Generała Franciszka Kleeberga",
+     "x": 773185.3,
+     "y": 595681.8,
+     "ways": [
+      242987870
+     ]
+    },
+    {
+     "km_start": 6.123,
+     "km_end": 6.294,
+     "name": "Generała Franciszka Kleeberga",
+     "x": 772592.0,
+     "y": 595360.6,
+     "ways": [
+      242989866
+     ]
+    },
+    {
+     "km_start": 6.623,
+     "km_end": 6.701,
+     "name": "Generała Franciszka Kleeberga",
+     "x": 772150.1,
+     "y": 595126.7,
+     "ways": [
+      166369627
+     ]
+    },
+    {
+     "km_start": 7.884,
+     "km_end": 7.939,
+     "name": "",
+     "x": 770967.5,
+     "y": 594815.2,
+     "ways": [
+      615609890
+     ]
+    },
+    {
+     "km_start": 10.365,
+     "km_end": 10.385,
+     "name": "",
+     "x": 769038.2,
+     "y": 595810.1,
+     "ways": [
+      1564227966
+     ]
+    },
+    {
+     "km_start": 10.595,
+     "km_end": 10.606,
+     "name": "",
+     "x": 769084.1,
+     "y": 596035.0,
+     "ways": [
+      1557429211
+     ]
+    },
+    {
+     "km_start": 11.927,
+     "km_end": 11.969,
+     "name": "",
+     "x": 769341.3,
+     "y": 597342.6,
+     "ways": [
+      1151531620
+     ]
+    },
+    {
+     "km_start": 12.174,
+     "km_end": 12.189,
+     "name": "",
+     "x": 769387.6,
+     "y": 597584.9,
+     "ways": [
+      1449644044
+     ]
+    },
+    {
+     "km_start": 12.409,
+     "km_end": 12.492,
+     "name": "",
+     "x": 769420.1,
+     "y": 597817.3,
+     "ways": [
+      241580474
+     ]
+    },
+    {
+     "km_start": 12.759,
+     "km_end": 12.842,
+     "name": "",
+     "x": 769401.5,
+     "y": 598165.6,
+     "ways": [
+      241580472
+     ]
+    },
+    {
+     "km_start": 13.655,
+     "km_end": 13.675,
+     "name": "",
+     "x": 769166.0,
+     "y": 599027.9,
+     "ways": [
+      1457994934
+     ]
+    },
+    {
+     "km_start": 15.928,
+     "km_end": 15.943,
+     "name": "",
+     "x": 769518.7,
+     "y": 601264.1,
+     "ways": [
+      1457994927
+     ]
+    },
+    {
+     "km_start": 29.251,
+     "km_end": 29.27,
+     "name": "",
+     "x": 761184.8,
+     "y": 611369.5,
+     "ways": [
+      286990128
+     ]
+    }
+   ],
+   "limits": [
+    {
+     "way_id": 552161976,
+     "km": 0.0,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 560802658,
+     "km": 0.196,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 560802657,
+     "km": 0.256,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249640399,
+     "km": 0.276,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1093579590,
+     "km": 0.491,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1093579589,
+     "km": 0.621,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 266084693,
+     "km": 0.641,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 284022563,
+     "km": 0.777,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1101181473,
+     "km": 0.81,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 173985172,
+     "km": 0.927,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 23844386,
+     "km": 1.035,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 173985169,
+     "km": 1.147,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 490398851,
+     "km": 1.244,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 490398852,
+     "km": 1.255,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 262140922,
+     "km": 1.392,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257367422,
+     "km": 1.501,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 173990799,
+     "km": 1.675,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 173990800,
+     "km": 1.848,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257352528,
+     "km": 2.061,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257358866,
+     "km": 2.19,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257357743,
+     "km": 2.656,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257357742,
+     "km": 2.814,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 707029854,
+     "km": 2.851,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 606396475,
+     "km": 2.974,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249740773,
+     "km": 3.101,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249740760,
+     "km": 3.244,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 707029850,
+     "km": 3.275,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249740774,
+     "km": 3.494,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257355878,
+     "km": 3.664,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257355879,
+     "km": 3.893,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 606396479,
+     "km": 4.004,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 257355876,
+     "km": 4.065,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 693614875,
+     "km": 4.09,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 76073115,
+     "km": 4.205,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 668340288,
+     "km": 4.345,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 249740778,
+     "km": 4.419,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 76073122,
+     "km": 4.736,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 301702369,
+     "km": 4.813,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 306609226,
+     "km": 5.187,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 301702368,
+     "km": 5.269,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 242987870,
+     "km": 5.449,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 261104557,
+     "km": 5.608,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 306609228,
+     "km": 5.828,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 301702363,
+     "km": 5.926,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 242989866,
+     "km": 6.123,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 301702379,
+     "km": 6.294,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 561326921,
+     "km": 6.349,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 606396500,
+     "km": 6.418,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 23982165,
+     "km": 6.506,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 166369627,
+     "km": 6.623,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 685399521,
+     "km": 8.172,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 685398186,
+     "km": 8.2,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 825177452,
+     "km": 8.458,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1530059183,
+     "km": 8.788,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1567973365,
+     "km": 9.021,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1379858308,
+     "km": 9.188,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1564227967,
+     "km": 10.338,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1564227966,
+     "km": 10.365,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151440420,
+     "km": 10.385,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1557429211,
+     "km": 10.595,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151531623,
+     "km": 10.606,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1567436413,
+     "km": 11.312,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1567436411,
+     "km": 11.613,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1516161715,
+     "km": 11.664,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151531620,
+     "km": 11.927,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1449644046,
+     "km": 11.969,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1449644044,
+     "km": 12.174,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151440442,
+     "km": 12.189,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 241580474,
+     "km": 12.409,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 241580473,
+     "km": 12.492,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 241580472,
+     "km": 12.759,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 241580471,
+     "km": 12.842,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1457994934,
+     "km": 13.655,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1457994931,
+     "km": 13.675,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151531590,
+     "km": 14.365,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1570446117,
+     "km": 14.707,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151531594,
+     "km": 15.152,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151531593,
+     "km": 15.838,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1457994927,
+     "km": 15.928,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1457994926,
+     "km": 15.943,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151531612,
+     "km": 16.06,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151531608,
+     "km": 18.802,
+     "maxaxleload": "11.5"
+    },
+    {
+     "way_id": 1151531610,
+     "km": 19.082,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 208187096,
+     "km": 19.163,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 27718745,
+     "km": 21.209,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1111506754,
+     "km": 27.948,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1111506750,
+     "km": 28.246,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 305910042,
+     "km": 28.249,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 286990128,
+     "km": 29.251,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 286990127,
+     "km": 29.27,
+     "maxaxleload": "10"
+    },
+    {
+     "way_id": 1464342635,
+     "km": 30.07,
+     "maxaxleload": "10"
+    }
+   ],
+   "admin_crossings": {
+    "Białystok|admin_level=6": {
+     "teryt": "2061",
+     "relation": 1429268,
+     "km": [
+      6.69
+     ],
+     "inside_km": 6.69
+    },
+    "powiat białostocki|admin_level=6": {
+     "teryt": "2002",
+     "relation": 2803334,
+     "km": [
+      25.96,
+      27.51,
+      28.24
+     ],
+     "inside_km": 26.69
+    },
+    "powiat moniecki|admin_level=6": {
+     "teryt": "2008",
+     "relation": 2803338,
+     "km": [
+      25.96,
+      27.51,
+      28.24
+     ],
+     "inside_km": 4.04
+    },
+    "Białystok|admin_level=8": {
+     "teryt": "",
+     "relation": 2910925,
+     "km": [
+      6.69
+     ],
+     "inside_km": 6.69
+    },
+    "Białystok|admin_level=7": {
+     "teryt": "2061011",
+     "relation": 2989154,
+     "km": [
+      6.69
+     ],
+     "inside_km": 6.69
+    },
+    "gmina Knyszyn|admin_level=7": {
+     "teryt": "2008043",
+     "relation": 3087478,
+     "km": [
+      25.96,
+      27.51,
+      28.24
+     ],
+     "inside_km": 4.04
+    },
+    "Knyszyn|admin_level=8": {
+     "teryt": "",
+     "relation": 3087483,
+     "km": [
+      28.24,
+      28.32,
+      28.39
+     ],
+     "inside_km": 2.42
+    },
+    "gmina Dobrzyniewo Duże|admin_level=7": {
+     "teryt": "2002032",
+     "relation": 3091193,
+     "km": [
+      10.64,
+      25.96,
+      27.51,
+      28.24
+     ],
+     "inside_km": 16.06
+    }
+   },
+   "construction_within_600m": {
+    "proposed|motorway|ref=": {
+     "length_m": 33586,
+     "km_min": 19.0,
+     "km_max": 28.7,
+     "last_edit": "2026-09-13",
+     "ways": 4
+    },
+    "proposed||ref=": {
+     "length_m": 422,
+     "km_min": 4.1,
+     "km_max": 4.2,
+     "last_edit": "2025-09-20",
+     "ways": 4
+    },
+    "construction|unclassified|ref=": {
+     "length_m": 7875,
+     "km_min": 15.0,
+     "km_max": 26.9,
+     "last_edit": "2026-09-28",
+     "ways": 15
+    },
+    "construction|motorway_link|ref=S19": {
+     "length_m": 3270,
+     "km_min": 14.7,
+     "km_max": 15.5,
+     "last_edit": "2026-10-19",
+     "ways": 7
+    },
+    "construction|motorway|ref=S19": {
+     "length_m": 477,
+     "km_min": 15.1,
+     "km_max": 15.1,
+     "last_edit": "2026-09-14",
+     "ways": 2
+    },
+    "construction||ref=": {
+     "length_m": 244,
+     "km_min": 7.5,
+     "km_max": 8.2,
+     "last_edit": "2025-12-25",
+     "ways": 2
+    },
+    "proposed|service|ref=": {
+     "length_m": 2495,
+     "km_min": 15.3,
+     "km_max": 19.1,
+     "last_edit": "2026-09-20",
+     "ways": 6
+    },
+    "construction|service|ref=": {
+     "length_m": 308,
+     "km_min": 8.7,
+     "km_max": 15.0,
+     "last_edit": "2026-09-14",
+     "ways": 6
+    },
+    "construction|motorway|ref=": {
+     "length_m": 16573,
+     "km_min": 19.0,
+     "km_max": 27.2,
+     "last_edit": "2026-09-28",
+     "ways": 14
+    },
+    "construction|tertiary|ref=": {
+     "length_m": 1237,
+     "km_min": 20.4,
+     "km_max": 22.6,
+     "last_edit": "2026-05-10",
+     "ways": 2
+    },
+    "construction|primary|ref=": {
+     "length_m": 230,
+     "km_min": 27.3,
+     "km_max": 27.4,
+     "last_edit": "2026-05-10",
+     "ways": 2
+    },
+    "construction|secondary|ref=": {
+     "length_m": 2430,
+     "km_min": 24.9,
+     "km_max": 27.3,
+     "last_edit": "2026-05-10",
+     "ways": 1
+    },
+    "construction|motorway_link|ref=": {
+     "length_m": 111,
+     "km_min": 27.2,
+     "km_max": 27.3,
+     "last_edit": "2026-05-10",
+     "ways": 2
+    },
+    "proposed|secondary|ref=": {
+     "length_m": 189,
+     "km_min": 18.4,
+     "km_max": 18.6,
+     "last_edit": "2026-05-10",
+     "ways": 1
+    },
+    "proposed|motorway_link|ref=": {
+     "length_m": 897,
+     "km_min": 17.8,
+     "km_max": 18.6,
+     "last_edit": "2026-05-10",
+     "ways": 4
+    },
+    "proposed|unclassified|ref=": {
+     "length_m": 317,
+     "km_min": 18.0,
+     "km_max": 18.5,
+     "last_edit": "2026-09-20",
+     "ways": 2
+    }
+   },
+   "tiles": [
+    {
+     "ij": [
+      0,
+      0
+     ],
+     "bbox": [
+      776971.0,
+      595199.0,
+      779019.0,
+      597247.0
+     ],
+     "km_in": 0.0,
+     "km_out": 1.528,
+     "route_m": 1528,
+     "xy_in": [
+      778302.0,
+      595649.3
+     ],
+     "xy_out": [
+      776971.8,
+      596279.3
+     ]
+    },
+    {
+     "ij": [
+      -1,
+      0
+     ],
+     "bbox": [
+      774923.0,
+      595199.0,
+      776971.0,
+      597247.0
+     ],
+     "km_in": 1.529,
+     "km_out": 3.582,
+     "route_m": 2053,
+     "xy_in": [
+      776970.8,
+      596279.2
+     ],
+     "xy_out": [
+      774923.1,
+      596185.7
+     ]
+    },
+    {
+     "ij": [
+      -2,
+      0
+     ],
+     "bbox": [
+      772875.0,
+      595199.0,
+      774923.0,
+      597247.0
+     ],
+     "km_in": 3.583,
+     "km_out": 5.802,
+     "route_m": 2219,
+     "xy_in": [
+      774922.1,
+      596185.7
+     ],
+     "xy_out": [
+      772875.4,
+      595511.8
+     ]
+    },
+    {
+     "ij": [
+      -3,
+      0
+     ],
+     "bbox": [
+      770827.0,
+      595199.0,
+      772875.0,
+      597247.0
+     ],
+     "km_in": 5.803,
+     "km_out": 6.469,
+     "route_m": 666,
+     "xy_in": [
+      772874.6,
+      595511.3
+     ],
+     "xy_out": [
+      772286.3,
+      595199.0
+     ]
+    },
+    {
+     "ij": [
+      -3,
+      -1
+     ],
+     "bbox": [
+      770827.0,
+      593151.0,
+      772875.0,
+      595199.0
+     ],
+     "km_in": 6.47,
+     "km_out": 8.028,
+     "route_m": 1558,
+     "xy_in": [
+      772285.5,
+      595198.5
+     ],
+     "xy_out": [
+      770827.6,
+      594847.5
+     ]
+    },
+    {
+     "ij": [
+      -4,
+      -1
+     ],
+     "bbox": [
+      768779.0,
+      593151.0,
+      770827.0,
+      595199.0
+     ],
+     "km_in": 8.029,
+     "km_out": 9.529,
+     "route_m": 1500,
+     "xy_in": [
+      770826.6,
+      594847.7
+     ],
+     "xy_out": [
+      769369.0,
+      595199.0
+     ]
+    },
+    {
+     "ij": [
+      -4,
+      0
+     ],
+     "bbox": [
+      768779.0,
+      595199.0,
+      770827.0,
+      597247.0
+     ],
+     "km_in": 9.53,
+     "km_out": 11.83,
+     "route_m": 2300,
+     "xy_in": [
+      769368.1,
+      595199.4
+     ],
+     "xy_out": [
+      769322.9,
+      597246.9
+     ]
+    },
+    {
+     "ij": [
+      -4,
+      1
+     ],
+     "bbox": [
+      768779.0,
+      597247.0,
+      770827.0,
+      599295.0
+     ],
+     "km_in": 11.831,
+     "km_out": 13.922,
+     "route_m": 2091,
+     "xy_in": [
+      769323.1,
+      597247.8
+     ],
+     "xy_out": [
+      769159.0,
+      599294.6
+     ]
+    },
+    {
+     "ij": [
+      -4,
+      2
+     ],
+     "bbox": [
+      768779.0,
+      599295.0,
+      770827.0,
+      601343.0
+     ],
+     "km_in": 13.923,
+     "km_out": 16.006,
+     "route_m": 2083,
+     "xy_in": [
+      769159.1,
+      599295.6
+     ],
+     "xy_out": [
+      769515.1,
+      601342.3
+     ]
+    },
+    {
+     "ij": [
+      -4,
+      3
+     ],
+     "bbox": [
+      768779.0,
+      601343.0,
+      770827.0,
+      603391.0
+     ],
+     "km_in": 16.007,
+     "km_out": 17.587,
+     "route_m": 1580,
+     "xy_in": [
+      769515.0,
+      601343.3
+     ],
+     "xy_out": [
+      768779.2,
+      602684.5
+     ]
+    },
+    {
+     "ij": [
+      -5,
+      3
+     ],
+     "bbox": [
+      766731.0,
+      601343.0,
+      768779.0,
+      603391.0
+     ],
+     "km_in": 17.588,
+     "km_out": 18.849,
+     "route_m": 1261,
+     "xy_in": [
+      768778.4,
+      602685.1
+     ],
+     "xy_out": [
+      767742.3,
+      603390.6
+     ]
+    },
+    {
+     "ij": [
+      -5,
+      4
+     ],
+     "bbox": [
+      766731.0,
+      603391.0,
+      768779.0,
+      605439.0
+     ],
+     "km_in": 18.85,
+     "km_out": 20.556,
+     "route_m": 1706,
+     "xy_in": [
+      767741.7,
+      603391.4
+     ],
+     "xy_out": [
+      766731.0,
+      604722.1
+     ]
+    },
+    {
+     "ij": [
+      -6,
+      4
+     ],
+     "bbox": [
+      764683.0,
+      603391.0,
+      766731.0,
+      605439.0
+     ],
+     "km_in": 20.557,
+     "km_out": 21.421,
+     "route_m": 864,
+     "xy_in": [
+      766730.5,
+      604723.0
+     ],
+     "xy_out": [
+      766246.6,
+      605438.4
+     ]
+    },
+    {
+     "ij": [
+      -6,
+      5
+     ],
+     "bbox": [
+      764683.0,
+      605439.0,
+      766731.0,
+      607487.0
+     ],
+     "km_in": 21.422,
+     "km_out": 23.776,
+     "route_m": 2354,
+     "xy_in": [
+      766246.0,
+      605439.2
+     ],
+     "xy_out": [
+      764683.5,
+      607186.0
+     ]
+    },
+    {
+     "ij": [
+      -7,
+      5
+     ],
+     "bbox": [
+      762635.0,
+      605439.0,
+      764683.0,
+      607487.0
+     ],
+     "km_in": 23.777,
+     "km_out": 24.129,
+     "route_m": 352,
+     "xy_in": [
+      764683.0,
+      607186.8
+     ],
+     "xy_out": [
+      764498.7,
+      607486.7
+     ]
+    },
+    {
+     "ij": [
+      -7,
+      6
+     ],
+     "bbox": [
+      762635.0,
+      607487.0,
+      764683.0,
+      609535.0
+     ],
+     "km_in": 24.13,
+     "km_out": 26.744,
+     "route_m": 2614,
+     "xy_in": [
+      764498.2,
+      607487.6
+     ],
+     "xy_out": [
+      762893.1,
+      609534.7
+     ]
+    },
+    {
+     "ij": [
+      -7,
+      7
+     ],
+     "bbox": [
+      762635.0,
+      609535.0,
+      764683.0,
+      611583.0
+     ],
+     "km_in": 26.745,
+     "km_out": 27.122,
+     "route_m": 377,
+     "xy_in": [
+      762892.5,
+      609535.5
+     ],
+     "xy_out": [
+      762635.1,
+      609811.0
+     ]
+    },
+    {
+     "ij": [
+      -8,
+      7
+     ],
+     "bbox": [
+      760587.0,
+      609535.0,
+      762635.0,
+      611583.0
+     ],
+     "km_in": 27.123,
+     "km_out": 29.542,
+     "route_m": 2419,
+     "xy_in": [
+      762634.4,
+      609811.7
+     ],
+     "xy_out": [
+      760986.3,
+      611582.4
+     ]
+    },
+    {
+     "ij": [
+      -8,
+      8
+     ],
+     "bbox": [
+      760587.0,
+      611583.0,
+      762635.0,
+      613631.0
+     ],
+     "km_in": 29.543,
+     "km_out": 30.733,
+     "route_m": 1190,
+     "xy_in": [
+      760985.7,
+      611583.1
+     ],
+     "xy_out": [
+      761058.7,
+      612416.9
+     ]
+    }
+   ],
+   "polyline": [
+    [
+     778302.0,
+     595649.3
+    ],
+    [
+     778128.3,
+     595740.8
+    ],
+    [
+     778076.2,
+     595768.8
+    ],
+    [
+     778058.4,
+     595778.3
+    ],
+    [
+     778003.4,
+     595807.8
+    ],
+    [
+     777968.0,
+     595829.5
+    ],
+    [
+     777935.4,
+     595852.8
+    ],
+    [
+     777879.0,
+     595896.3
+    ],
+    [
+     777777.5,
+     595977.2
+    ],
+    [
+     777761.2,
+     595990.1
+    ],
+    [
+     777717.0,
+     596026.1
+    ],
+    [
+     777702.4,
+     596037.4
+    ],
+    [
+     777655.0,
+     596074.2
+    ],
+    [
+     777629.1,
+     596094.1
+    ],
+    [
+     777537.0,
+     596167.0
+    ],
+    [
+     777482.9,
+     596211.3
+    ],
+    [
+     777452.9,
+     596233.9
+    ],
+    [
+     777444.3,
+     596239.8
+    ],
+    [
+     777429.3,
+     596248.7
+    ],
+    [
+     777410.6,
+     596258.7
+    ],
+    [
+     777391.1,
+     596267.5
+    ],
+    [
+     777368.3,
+     596275.4
+    ],
+    [
+     777351.4,
+     596279.9
+    ],
+    [
+     777326.2,
+     596284.6
+    ],
+    [
+     777300.7,
+     596287.5
+    ],
+    [
+     777255.3,
+     596291.5
+    ],
+    [
+     777243.4,
+     596292.5
+    ],
+    [
+     777223.2,
+     596294.0
+    ],
+    [
+     777202.2,
+     596295.4
+    ],
+    [
+     777173.8,
+     596296.3
+    ],
+    [
+     777139.5,
+     596295.0
+    ],
+    [
+     777106.7,
+     596292.1
+    ],
+    [
+     776998.5,
+     596281.7
+    ],
+    [
+     776825.7,
+     596265.9
+    ],
+    [
+     776652.5,
+     596250.9
+    ],
+    [
+     776440.3,
+     596233.4
+    ],
+    [
+     776360.8,
+     596226.7
+    ],
+    [
+     776324.8,
+     596223.6
+    ],
+    [
+     776312.0,
+     596222.5
+    ],
+    [
+     776260.0,
+     596217.5
+    ],
+    [
+     776209.3,
+     596210.1
+    ],
+    [
+     776144.4,
+     596200.2
+    ],
+    [
+     776050.2,
+     596186.4
+    ],
+    [
+     775968.1,
+     596179.2
+    ],
+    [
+     775916.1,
+     596178.3
+    ],
+    [
+     775848.8,
+     596179.0
+    ],
+    [
+     775772.0,
+     596179.5
+    ],
+    [
+     775690.9,
+     596180.3
+    ],
+    [
+     775654.3,
+     596180.4
+    ],
+    [
+     775531.2,
+     596180.9
+    ],
+    [
+     775404.1,
+     596182.6
+    ],
+    [
+     775261.3,
+     596183.4
+    ],
+    [
+     775230.3,
+     596183.6
+    ],
+    [
+     775011.6,
+     596185.0
+    ],
+    [
+     774841.6,
+     596186.4
+    ],
+    [
+     774751.5,
+     596187.7
+    ],
+    [
+     774662.9,
+     596193.4
+    ],
+    [
+     774653.4,
+     596194.2
+    ],
+    [
+     774612.9,
+     596197.5
+    ],
+    [
+     774560.4,
+     596201.3
+    ],
+    [
+     774502.1,
+     596202.2
+    ],
+    [
+     774441.0,
+     596202.8
+    ],
+    [
+     774415.8,
+     596203.1
+    ],
+    [
+     774360.1,
+     596204.9
+    ],
+    [
+     774300.2,
+     596204.2
+    ],
+    [
+     774244.5,
+     596200.0
+    ],
+    [
+     774203.7,
+     596194.3
+    ],
+    [
+     774162.1,
+     596186.5
+    ],
+    [
+     774132.8,
+     596180.5
+    ],
+    [
+     774089.8,
+     596169.9
+    ],
+    [
+     774041.5,
+     596154.5
+    ],
+    [
+     773994.5,
+     596136.2
+    ],
+    [
+     773934.7,
+     596108.3
+    ],
+    [
+     773870.0,
+     596074.6
+    ],
+    [
+     773802.4,
+     596037.4
+    ],
+    [
+     773735.0,
+     596000.3
+    ],
+    [
+     773558.5,
+     595902.2
+    ],
+    [
+     773409.7,
+     595816.0
+    ],
+    [
+     773339.7,
+     595774.0
+    ],
+    [
+     773185.3,
+     595681.8
+    ],
+    [
+     773047.0,
+     595603.0
+    ],
+    [
+     772852.2,
+     595499.4
+    ],
+    [
+     772813.1,
+     595478.9
+    ],
+    [
+     772766.2,
+     595453.8
+    ],
+    [
+     772592.0,
+     595360.6
+    ],
+    [
+     772441.2,
+     595281.0
+    ],
+    [
+     772392.5,
+     595254.3
+    ],
+    [
+     772331.9,
+     595222.3
+    ],
+    [
+     772253.8,
+     595182.4
+    ],
+    [
+     772190.7,
+     595148.7
+    ],
+    [
+     772150.1,
+     595126.7
+    ],
+    [
+     772081.5,
+     595089.6
+    ],
+    [
+     772020.7,
+     595057.6
+    ],
+    [
+     771988.6,
+     595041.4
+    ],
+    [
+     771951.6,
+     595024.7
+    ],
+    [
+     771916.5,
+     595009.7
+    ],
+    [
+     771893.0,
+     595000.7
+    ],
+    [
+     771849.8,
+     594984.9
+    ],
+    [
+     771812.2,
+     594970.8
+    ],
+    [
+     771784.3,
+     594958.2
+    ],
+    [
+     771748.7,
+     594940.6
+    ],
+    [
+     771689.1,
+     594909.5
+    ],
+    [
+     771631.6,
+     594879.3
+    ],
+    [
+     771616.7,
+     594871.7
+    ],
+    [
+     771589.1,
+     594859.0
+    ],
+    [
+     771565.9,
+     594848.6
+    ],
+    [
+     771531.9,
+     594833.8
+    ],
+    [
+     771508.3,
+     594824.4
+    ],
+    [
+     771480.7,
+     594814.5
+    ],
+    [
+     771439.4,
+     594802.0
+    ],
+    [
+     771405.6,
+     594793.9
+    ],
+    [
+     771369.4,
+     594786.3
+    ],
+    [
+     771346.8,
+     594782.5
+    ],
+    [
+     771318.6,
+     594778.2
+    ],
+    [
+     771290.9,
+     594775.6
+    ],
+    [
+     771264.8,
+     594774.2
+    ],
+    [
+     771238.3,
+     594774.6
+    ],
+    [
+     771207.5,
+     594774.8
+    ],
+    [
+     771178.5,
+     594776.1
+    ],
+    [
+     771143.7,
+     594779.3
+    ],
+    [
+     771114.6,
+     594783.0
+    ],
+    [
+     771080.2,
+     594788.6
+    ],
+    [
+     771044.3,
+     594796.6
+    ],
+    [
+     770991.1,
+     594810.0
+    ],
+    [
+     770967.5,
+     594815.2
+    ],
+    [
+     770913.9,
+     594827.7
+    ],
+    [
+     770814.6,
+     594850.5
+    ],
+    [
+     770687.6,
+     594879.9
+    ],
+    [
+     770660.1,
+     594886.2
+    ],
+    [
+     770550.3,
+     594911.9
+    ],
+    [
+     770408.8,
+     594944.7
+    ],
+    [
+     770314.1,
+     594967.1
+    ],
+    [
+     770087.7,
+     595020.6
+    ],
+    [
+     769979.0,
+     595046.4
+    ],
+    [
+     769914.1,
+     595061.9
+    ],
+    [
+     769860.7,
+     595074.6
+    ],
+    [
+     769698.4,
+     595113.2
+    ],
+    [
+     769400.4,
+     595184.6
+    ],
+    [
+     769358.6,
+     595203.8
+    ],
+    [
+     769331.3,
+     595213.6
+    ],
+    [
+     769280.8,
+     595225.6
+    ],
+    [
+     769247.5,
+     595234.0
+    ],
+    [
+     769175.0,
+     595251.6
+    ],
+    [
+     769145.3,
+     595264.2
+    ],
+    [
+     769127.7,
+     595273.8
+    ],
+    [
+     769116.4,
+     595281.8
+    ],
+    [
+     769103.7,
+     595293.6
+    ],
+    [
+     769090.7,
+     595309.0
+    ],
+    [
+     769082.9,
+     595319.4
+    ],
+    [
+     769052.8,
+     595366.5
+    ],
+    [
+     769019.2,
+     595419.6
+    ],
+    [
+     769009.8,
+     595436.8
+    ],
+    [
+     769004.0,
+     595450.6
+    ],
+    [
+     768999.3,
+     595464.3
+    ],
+    [
+     768995.7,
+     595484.6
+    ],
+    [
+     768994.8,
+     595500.4
+    ],
+    [
+     768994.0,
+     595520.6
+    ],
+    [
+     769020.7,
+     595652.1
+    ],
+    [
+     769031.2,
+     595707.0
+    ],
+    [
+     769032.7,
+     595718.9
+    ],
+    [
+     769033.8,
+     595731.8
+    ],
+    [
+     769034.8,
+     595755.3
+    ],
+    [
+     769033.0,
+     595783.2
+    ],
+    [
+     769038.2,
+     595810.1
+    ],
+    [
+     769042.2,
+     595829.8
+    ],
+    [
+     769084.1,
+     596035.0
+    ],
+    [
+     769086.4,
+     596045.7
+    ],
+    [
+     769133.2,
+     596283.7
+    ],
+    [
+     769184.9,
+     596546.0
+    ],
+    [
+     769223.8,
+     596738.2
+    ],
+    [
+     769237.2,
+     596804.6
+    ],
+    [
+     769281.8,
+     597034.0
+    ],
+    [
+     769291.5,
+     597084.0
+    ],
+    [
+     769341.3,
+     597342.6
+    ],
+    [
+     769349.5,
+     597383.4
+    ],
+    [
+     769369.5,
+     597481.4
+    ],
+    [
+     769387.6,
+     597584.9
+    ],
+    [
+     769390.6,
+     597599.5
+    ],
+    [
+     769403.3,
+     597666.2
+    ],
+    [
+     769411.5,
+     597719.3
+    ],
+    [
+     769417.6,
+     597777.4
+    ],
+    [
+     769420.1,
+     597817.3
+    ],
+    [
+     769422.2,
+     597861.3
+    ],
+    [
+     769422.9,
+     597899.7
+    ],
+    [
+     769421.4,
+     598002.8
+    ],
+    [
+     769418.5,
+     598045.6
+    ],
+    [
+     769413.2,
+     598095.2
+    ],
+    [
+     769407.5,
+     598133.1
+    ],
+    [
+     769401.5,
+     598165.6
+    ],
+    [
+     769394.1,
+     598206.4
+    ],
+    [
+     769385.3,
+     598247.1
+    ],
+    [
+     769371.5,
+     598310.2
+    ],
+    [
+     769356.7,
+     598359.0
+    ],
+    [
+     769319.2,
+     598473.0
+    ],
+    [
+     769233.5,
+     598717.5
+    ],
+    [
+     769209.6,
+     598795.1
+    ],
+    [
+     769194.8,
+     598855.1
+    ],
+    [
+     769180.5,
+     598927.7
+    ],
+    [
+     769172.1,
+     598980.4
+    ],
+    [
+     769166.0,
+     599027.9
+    ],
+    [
+     769163.9,
+     599047.8
+    ],
+    [
+     769158.6,
+     599121.4
+    ],
+    [
+     769156.3,
+     599184.8
+    ],
+    [
+     769156.2,
+     599222.2
+    ],
+    [
+     769159.3,
+     599301.8
+    ],
+    [
+     769167.4,
+     599379.5
+    ],
+    [
+     769178.7,
+     599450.5
+    ],
+    [
+     769199.8,
+     599563.3
+    ],
+    [
+     769236.9,
+     599730.4
+    ],
+    [
+     769310.0,
+     600064.5
+    ],
+    [
+     769381.2,
+     600388.1
+    ],
+    [
+     769404.7,
+     600498.8
+    ],
+    [
+     769469.7,
+     600794.1
+    ],
+    [
+     769485.7,
+     600873.8
+    ],
+    [
+     769497.4,
+     600942.2
+    ],
+    [
+     769509.4,
+     601032.7
+    ],
+    [
+     769515.3,
+     601103.8
+    ],
+    [
+     769518.2,
+     601174.0
+    ],
+    [
+     769518.7,
+     601264.1
+    ],
+    [
+     769518.5,
+     601279.7
+    ],
+    [
+     769512.1,
+     601396.6
+    ],
+    [
+     769498.8,
+     601504.3
+    ],
+    [
+     769468.5,
+     601659.1
+    ],
+    [
+     769443.4,
+     601745.0
+    ],
+    [
+     769410.4,
+     601846.6
+    ],
+    [
+     769367.9,
+     601950.7
+    ],
+    [
+     769318.6,
+     602054.5
+    ],
+    [
+     769274.0,
+     602135.6
+    ],
+    [
+     769221.2,
+     602221.1
+    ],
+    [
+     769186.5,
+     602271.4
+    ],
+    [
+     769146.7,
+     602326.0
+    ],
+    [
+     769096.4,
+     602387.7
+    ],
+    [
+     769045.1,
+     602446.1
+    ],
+    [
+     768987.2,
+     602506.4
+    ],
+    [
+     768928.0,
+     602562.3
+    ],
+    [
+     768859.2,
+     602621.3
+    ],
+    [
+     768808.7,
+     602662.6
+    ],
+    [
+     768744.3,
+     602710.4
+    ],
+    [
+     768616.8,
+     602790.8
+    ],
+    [
+     768567.5,
+     602819.1
+    ],
+    [
+     768491.2,
+     602861.6
+    ],
+    [
+     768386.4,
+     602919.3
+    ],
+    [
+     768301.4,
+     602966.3
+    ],
+    [
+     768170.1,
+     603039.7
+    ],
+    [
+     768110.6,
+     603075.3
+    ],
+    [
+     768055.1,
+     603110.7
+    ],
+    [
+     768008.3,
+     603142.7
+    ],
+    [
+     767960.2,
+     603178.4
+    ],
+    [
+     767918.1,
+     603212.7
+    ],
+    [
+     767879.5,
+     603246.5
+    ],
+    [
+     767825.0,
+     603299.3
+    ],
+    [
+     767773.6,
+     603355.2
+    ],
+    [
+     767719.3,
+     603416.6
+    ],
+    [
+     767700.3,
+     603440.6
+    ],
+    [
+     767685.1,
+     603459.9
+    ],
+    [
+     767661.4,
+     603491.9
+    ],
+    [
+     767664.2,
+     603497.3
+    ],
+    [
+     767665.5,
+     603503.4
+    ],
+    [
+     767665.1,
+     603509.5
+    ],
+    [
+     767663.0,
+     603515.4
+    ],
+    [
+     767660.4,
+     603519.2
+    ],
+    [
+     767657.1,
+     603522.5
+    ],
+    [
+     767653.1,
+     603524.9
+    ],
+    [
+     767646.0,
+     603527.1
+    ],
+    [
+     767638.5,
+     603526.8
+    ],
+    [
+     767631.6,
+     603524.1
+    ],
+    [
+     767625.9,
+     603519.2
+    ],
+    [
+     767621.4,
+     603519.3
+    ],
+    [
+     767612.5,
+     603521.5
+    ],
+    [
+     767592.9,
+     603529.4
+    ],
+    [
+     767579.7,
+     603537.8
+    ],
+    [
+     767562.2,
+     603553.1
+    ],
+    [
+     767532.4,
+     603582.3
+    ],
+    [
+     767459.3,
+     603686.9
+    ],
+    [
+     767387.4,
+     603788.5
+    ],
+    [
+     767301.2,
+     603912.2
+    ],
+    [
+     767210.3,
+     604041.6
+    ],
+    [
+     767030.9,
+     604296.9
+    ],
+    [
+     766824.0,
+     604591.1
+    ],
+    [
+     766662.7,
+     604818.4
+    ],
+    [
+     766616.6,
+     604883.7
+    ],
+    [
+     766515.8,
+     605023.9
+    ],
+    [
+     766440.6,
+     605132.6
+    ],
+    [
+     766367.7,
+     605245.8
+    ],
+    [
+     766359.8,
+     605259.2
+    ],
+    [
+     766248.4,
+     605435.7
+    ],
+    [
+     766207.1,
+     605498.2
+    ],
+    [
+     766183.8,
+     605536.8
+    ],
+    [
+     766122.6,
+     605633.0
+    ],
+    [
+     766114.5,
+     605645.6
+    ],
+    [
+     766106.7,
+     605657.6
+    ],
+    [
+     766099.2,
+     605667.7
+    ],
+    [
+     766092.7,
+     605676.0
+    ],
+    [
+     766085.0,
+     605685.0
+    ],
+    [
+     766070.1,
+     605701.2
+    ],
+    [
+     765910.6,
+     605860.6
+    ],
+    [
+     765455.0,
+     606314.8
+    ],
+    [
+     765165.2,
+     606608.1
+    ],
+    [
+     765123.8,
+     606649.5
+    ],
+    [
+     764992.8,
+     606780.5
+    ],
+    [
+     764910.8,
+     606862.3
+    ],
+    [
+     764874.8,
+     606898.7
+    ],
+    [
+     764853.2,
+     606920.7
+    ],
+    [
+     764843.2,
+     606932.6
+    ],
+    [
+     764836.5,
+     606941.0
+    ],
+    [
+     764834.1,
+     606944.0
+    ],
+    [
+     764827.7,
+     606953.1
+    ],
+    [
+     764819.6,
+     606965.4
+    ],
+    [
+     764741.2,
+     607092.3
+    ],
+    [
+     764662.9,
+     607219.4
+    ],
+    [
+     764507.4,
+     607472.7
+    ],
+    [
+     764329.4,
+     607762.2
+    ],
+    [
+     764199.2,
+     607974.1
+    ],
+    [
+     764152.9,
+     608049.4
+    ],
+    [
+     764073.6,
+     608177.3
+    ],
+    [
+     764069.0,
+     608184.8
+    ],
+    [
+     764037.8,
+     608235.9
+    ],
+    [
+     763913.4,
+     608437.3
+    ],
+    [
+     763903.3,
+     608451.7
+    ],
+    [
+     763890.1,
+     608468.4
+    ],
+    [
+     763851.3,
+     608510.9
+    ],
+    [
+     763743.5,
+     608625.7
+    ],
+    [
+     763524.1,
+     608860.1
+    ],
+    [
+     763436.0,
+     608954.6
+    ],
+    [
+     763424.1,
+     608966.6
+    ],
+    [
+     763268.2,
+     609133.3
+    ],
+    [
+     763004.9,
+     609415.3
+    ],
+    [
+     762848.5,
+     609582.4
+    ],
+    [
+     762798.1,
+     609636.5
+    ],
+    [
+     762780.3,
+     609655.5
+    ],
+    [
+     762692.5,
+     609749.6
+    ],
+    [
+     762621.6,
+     609825.4
+    ],
+    [
+     762428.7,
+     610033.5
+    ],
+    [
+     762379.3,
+     610085.7
+    ],
+    [
+     762365.5,
+     610100.3
+    ],
+    [
+     762201.3,
+     610275.2
+    ],
+    [
+     762071.6,
+     610415.2
+    ],
+    [
+     761919.8,
+     610577.1
+    ],
+    [
+     761868.9,
+     610633.0
+    ],
+    [
+     761866.6,
+     610635.6
+    ],
+    [
+     761842.8,
+     610661.2
+    ],
+    [
+     761614.0,
+     610907.5
+    ],
+    [
+     761503.5,
+     611026.7
+    ],
+    [
+     761308.7,
+     611236.2
+    ],
+    [
+     761184.8,
+     611369.5
+    ],
+    [
+     761171.4,
+     611383.5
+    ],
+    [
+     760889.4,
+     611686.6
+    ],
+    [
+     760749.8,
+     611836.9
+    ],
+    [
+     760733.5,
+     611854.3
+    ],
+    [
+     760717.4,
+     611871.4
+    ],
+    [
+     760702.9,
+     611887.2
+    ],
+    [
+     760688.2,
+     611903.5
+    ],
+    [
+     760677.5,
+     611915.2
+    ],
+    [
+     760668.0,
+     611927.5
+    ],
+    [
+     760658.7,
+     611939.0
+    ],
+    [
+     760652.6,
+     611947.6
+    ],
+    [
+     760638.6,
+     611969.2
+    ],
+    [
+     760634.8,
+     611976.1
+    ],
+    [
+     760634.8,
+     611982.3
+    ],
+    [
+     760632.9,
+     611990.2
+    ],
+    [
+     760631.9,
+     611992.9
+    ],
+    [
+     760632.5,
+     611995.9
+    ],
+    [
+     760634.1,
+     611998.1
+    ],
+    [
+     760640.5,
+     612004.5
+    ],
+    [
+     760649.1,
+     612015.4
+    ],
+    [
+     760656.5,
+     612021.7
+    ],
+    [
+     760665.0,
+     612028.9
+    ],
+    [
+     760672.2,
+     612035.0
+    ],
+    [
+     760681.6,
+     612042.9
+    ],
+    [
+     760685.2,
+     612045.9
+    ],
+    [
+     760694.1,
+     612053.4
+    ],
+    [
+     760698.0,
+     612056.6
+    ],
+    [
+     760706.1,
+     612063.4
+    ],
+    [
+     760717.0,
+     612072.6
+    ],
+    [
+     760721.7,
+     612076.5
+    ],
+    [
+     760733.1,
+     612086.1
+    ],
+    [
+     760830.5,
+     612167.7
+    ],
+    [
+     760852.6,
+     612189.4
+    ],
+    [
+     760888.1,
+     612228.9
+    ],
+    [
+     760903.7,
+     612247.1
+    ],
+    [
+     760951.4,
+     612302.0
+    ],
+    [
+     760957.5,
+     612309.7
+    ],
+    [
+     760960.1,
+     612313.1
+    ],
+    [
+     760964.2,
+     612319.7
+    ],
+    [
+     760972.1,
+     612323.2
+    ],
+    [
+     761009.6,
+     612351.3
+    ],
+    [
+     761019.0,
+     612358.4
+    ],
+    [
+     761070.2,
+     612392.3
+    ],
+    [
+     761085.1,
+     612404.1
+    ],
+    [
+     761070.8,
+     612410.6
+    ],
+    [
+     761058.2,
+     612417.2
+    ]
+   ]
+  }
+ },
+ "ref65_other": [
+  {
+   "way_id": 1028944175,
+   "highway": "proposed",
+   "proposed": "primary",
+   "construction": "",
+   "osm_edit": "2024-03-14",
+   "a": [
+    785902,
+    587893
+   ],
+   "b": [
+    787253,
+    591980
+   ],
+   "length_m": 4644
+  }
+ ]
+}

@@ -31,6 +31,7 @@ import numpy as np
 from roads import standards as S
 from roads.network import RURAL
 
+from . import brand_filter as BF
 from . import furniture as FU
 from . import signs as SG
 
@@ -124,6 +125,10 @@ def _attrs_at(net, graph_attrs, c, s):
     return graph_attrs.get(sec.edge_id, {})
 
 
+# Destinations dropped by the brand filter during this run (reported by the caller / tests; empty for the current regions).
+BRANDED_DESTINATIONS: list[str] = []
+
+
 def _arm_label(net, graph_attrs, arm):
     """(destinations, route refs, street name) of the road leaving through this arm."""
     a = _attrs_at(net, graph_attrs, arm.chain, float(arm.s(min(8.0, arm.L / 2))))
@@ -132,6 +137,9 @@ def _arm_label(net, graph_attrs, arm):
     name = (a.get("name") or {}).get("v") or ""
     refs = [r.strip() for r in ref.split(";") if r.strip()]
     dests = [x.strip() for x in dest.split(";") if x.strip()]
+    dests, dropped = BF.neutral_destinations(dests)       # no brand / company on a board (BRAND-SWEEP-S20 #6)
+    for x in dropped:
+        BRANDED_DESTINATIONS.append(x)
     return dests, refs, name
 
 

@@ -1,0 +1,6 @@
+{
+ "provenance": "authored_override (ADR 0212): source pins of region dw671-tykocin-01, read by ingest.py and build_region.py",
+ "pins": {"nmt_year": "2022"},
+ "reason": "The north edge y = 611583 is shared with knyszyn-w (pinned NMT 2022, ADR 0209) and the east edge x = 760587 with knyszyn-s (NMT 2022). The same survey year gives the same samples on both shared edges.",
+ "verify": "none (move together with the pins of knyszyn, knyszyn-w, dk65-monki-01)"
+}

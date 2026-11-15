@@ -1,0 +1,102 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0212): control cameras on DW671 towards Tykocin. Position region-local E/N (origin 759563, 610559), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions sampled on the OSM axis of DW671 in the road graph.",
+ "cameras": [
+  {
+   "id": "dw671_seam_north_out",
+   "pos_en": [
+    467,
+    940
+   ],
+   "heading_deg": 230,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DW671 ~130 m from the north seam (past the 60 m world-edge closure), outbound SW towards Tykocin"
+  },
+  {
+   "id": "dw671_inbound_to_knyszyn",
+   "pos_en": [
+    262,
+    765
+   ],
+   "heading_deg": 49,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DW671 inbound NE towards Knyszyn (tile knyszyn-w)"
+  },
+  {
+   "id": "dw671_village_approach",
+   "pos_en": [
+    -130,
+    402
+   ],
+   "heading_deg": 227,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DW671 outbound ~110 m before the village junctions (-212,328 / -375,168)"
+  },
+  {
+   "id": "village_above",
+   "pos_en": [
+    -300,
+    250
+   ],
+   "heading_deg": 0,
+   "eye_m": 70.0,
+   "fov_deg": 60,
+   "pitch_deg": -45,
+   "note": "plan-like view of the village junctions on DW671, pair with orthophoto"
+  },
+  {
+   "id": "dw671_south_junction_approach",
+   "pos_en": [
+    -650,
+    -380
+   ],
+   "heading_deg": 207,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DW671 outbound before the two junctions at -716,-501 / -755,-581"
+  },
+  {
+   "id": "south_junction_above",
+   "pos_en": [
+    -735,
+    -540
+   ],
+   "heading_deg": 0,
+   "eye_m": 60.0,
+   "fov_deg": 60,
+   "pitch_deg": -45,
+   "note": "plan-like view of the south junctions"
+  },
+  {
+   "id": "dw671_south_edge_in",
+   "pos_en": [
+    -917,
+    -908
+   ],
+   "heading_deg": 27,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye ~130 m inside the south tile edge, inbound NE towards Knyszyn"
+  },
+  {
+   "id": "seam_north_above",
+   "pos_en": [
+    480,
+    960
+   ],
+   "heading_deg": 0,
+   "eye_m": 55.0,
+   "fov_deg": 60,
+   "pitch_deg": -43,
+   "note": "north seam with knyszyn-w from above"
+  }
+ ]
+}

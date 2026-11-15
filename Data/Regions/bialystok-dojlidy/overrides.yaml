@@ -50,25 +50,53 @@ overrides:
     set: {wall_material: hall_wall_white, hall_bands: false}
   # ---------------------------------------------------------------- P11-063: corner of Mickiewicza / Kuronia
   - id: mickiewicza-kuronia-shrub-band
-    kind: tree_groups
-    lines:
-      - {line_epsg2180: [[779986.1, 590551.6], [780011.1, 590507.6], [780035.1, 590465.6]]}
-      - {line_epsg2180: [[779983.9, 590550.4], [780008.9, 590506.4], [780032.9, 590464.4]]}
-    group_size: [16, 24]
-    in_group_m: [1.9, 2.5]
-    gap_m: [0.2, 0.8]
-    depth_m: 0.6
-    rows_replace_m: 0.0
-    species: {shrub: 1.0}
+    kind: plantings
     reason: >-
-      Photo P11-063: a dense band of tall shrubs (2-4 m) fills the strip between the east footway of Mickiewicza and
-      the car park of the court, so the car park is not seen from the crossing; the generated frame showed ~100 cars
-      there. Orthophoto 2024: dark shrub strip 4-5 m wide from E -58 N 472 to E -9 N 386 (local), with its shadow on
-      the car park lane. Axis traced +-1.5 m; plant sizes are the rule's (shrub 1.5-4 m). Two rows 2.6 m apart
-      (axis +-1.3 m), plants 1.9-2.5 m apart: the first import (one row, 1.3-2.2 m) lost every second plant to the
-      1.8 m trunk thinning and read as single bushes with the cars between them.
+      Photo P11-063 (CC0, Rakoon 2024-06-23): a closed wall of grown shrubs 2-3 m high fills the strip between the
+      east footway of Mickiewicza and the car park of the court; nothing of the car park shows through, the crest is
+      a row of rounded bush tops of different height. Orthophoto 2024: dark shrub strip 4-5 m wide from E -58 N 472
+      to E -10 N 389 (local), with its shadow on the car park lane; the south end (bearing 92.7 deg from the camera
+      of the photo) is N 389-391. ADR 0179 planted two rows of single shrub instances 1.9-2.5 m apart: review s19
+      0179 P1 - "separate balls of leaves with gaps, the cars show through". ADR 0186: bush masses instead
+      (streetscape.plantings `thicket`: closed leaf shell on a dark core that goes into the ground, no missing
+      plants) - two staggered rows of oval masses 5.5-9.5 m long, 2.6-3.6 m wide, 2.0-3.3 m high, every mass
+      overlapping its neighbours by 1.2-2.0 m (generated once with a fixed seed, artifacts/dojgreen-0186: the axis
+      is traced +-1.5 m, the single bushes are not readable on the orthophoto - sizes WORKING_VALUE, heights against
+      the 2.0 m panel fence and the chain posts of the photo +-0.4 m).
     confidence: medium
-    verify: owner photo session (Mickiewicza / Kuronia crossing)
+    verify: owner photo session (Mickiewicza / Kuronia crossing); shrub species
+    beds:
+      - {name: T1, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.1, ring: [[779989.6, 590543.3], [779990.5, 590543.4], [779990.1, 590545.4], [779989.7, 590547.2], [779989.1, 590548.9], [779988.2, 590550.5], [779987.1, 590552.3], [779986.4, 590551.7], [779986.3, 590550.4], [779985.7, 590549.8], [779986.0, 590547.9], [779986.8, 590545.9], [779987.8, 590544.4], [779988.6, 590544.2]]}
+      - {name: T2, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.25, ring: [[779992.6, 590539.5], [779992.8, 590540.5], [779992.7, 590541.6], [779992.3, 590542.7], [779991.6, 590543.8], [779990.8, 590545.1], [779989.8, 590545.3], [779989.4, 590544.6], [779988.7, 590544.4], [779988.5, 590543.5], [779988.9, 590542.2], [779989.7, 590541.0], [779990.6, 590540.6], [779991.5, 590540.0]]}
+      - {name: T3, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.2, ring: [[779996.5, 590534.3], [779996.5, 590535.3], [779996.1, 590536.5], [779995.1, 590537.8], [779994.1, 590539.5], [779992.6, 590540.6], [779991.9, 590540.3], [779990.9, 590540.5], [779990.5, 590540.0], [779990.8, 590538.7], [779991.6, 590537.2], [779993.2, 590536.1], [779994.3, 590535.1], [779995.9, 590533.8]]}
+      - {name: T4, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.15, ring: [[779999.9, 590527.4], [780000.1, 590528.3], [779999.4, 590529.8], [779999.1, 590531.2], [779997.7, 590533.2], [779996.4, 590533.9], [779995.2, 590534.7], [779994.3, 590535.0], [779993.9, 590534.4], [779994.1, 590533.1], [779995.5, 590531.2], [779996.7, 590529.8], [779998.1, 590527.8], [779999.3, 590527.1]]}
+      - {name: T5, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.35, ring: [[780002.7, 590521.3], [780002.7, 590522.4], [780003.1, 590523.1], [780002.9, 590524.7], [780001.7, 590526.4], [780000.8, 590527.7], [779999.9, 590528.7], [779999.1, 590528.9], [779998.4, 590528.7], [779998.9, 590526.9], [779999.6, 590525.3], [780000.0, 590523.5], [780001.0, 590522.0], [780002.0, 590521.3]]}
+      - {name: T6, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.55, ring: [[780005.1, 590516.1], [780005.7, 590516.1], [780006.2, 590516.8], [780005.6, 590518.7], [780005.0, 590520.2], [780004.3, 590521.6], [780003.6, 590522.5], [780002.7, 590523.3], [780002.5, 590522.2], [780002.7, 590520.7], [780002.6, 590519.5], [780003.1, 590517.8], [780003.9, 590516.5], [780004.7, 590515.6]]}
+      - {name: T7, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.75, ring: [[780008.0, 590511.0], [780008.8, 590510.7], [780008.7, 590512.3], [780008.3, 590513.8], [780007.9, 590515.3], [780007.2, 590516.5], [780006.4, 590517.9], [780005.7, 590517.8], [780005.6, 590516.5], [780005.2, 590515.9], [780005.3, 590514.5], [780005.9, 590512.9], [780006.6, 590511.5], [780007.3, 590511.3]]}
+      - {name: T8, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.6, ring: [[780013.7, 590505.0], [780013.6, 590506.1], [780012.7, 590507.6], [780011.8, 590509.1], [780010.5, 590510.4], [780009.0, 590512.1], [780007.7, 590512.8], [780007.7, 590511.7], [780007.2, 590511.3], [780007.3, 590510.3], [780008.4, 590508.7], [780009.8, 590507.1], [780011.1, 590506.4], [780012.1, 590505.9]]}
+      - {name: T9, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.4, ring: [[780015.5, 590497.7], [780015.7, 590498.9], [780015.8, 590500.3], [780015.3, 590502.1], [780014.8, 590504.0], [780013.8, 590506.0], [780012.8, 590505.9], [780012.0, 590506.1], [780011.2, 590505.9], [780011.2, 590504.5], [780011.4, 590502.6], [780012.5, 590500.8], [780013.4, 590499.7], [780014.5, 590497.8]]}
+      - {name: T10, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.25, ring: [[780018.5, 590492.4], [780019.0, 590493.1], [780019.0, 590494.5], [780019.0, 590495.9], [780018.6, 590497.9], [780017.5, 590498.8], [780016.7, 590499.5], [780015.8, 590500.1], [780015.2, 590499.4], [780014.8, 590498.4], [780015.3, 590496.5], [780016.1, 590495.1], [780016.7, 590493.2], [780017.8, 590492.1]]}
+      - {name: T11, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.45, ring: [[780022.6, 590485.9], [780022.7, 590487.1], [780022.9, 590488.1], [780022.9, 590489.8], [780021.8, 590491.9], [780020.8, 590493.2], [780019.9, 590494.6], [780019.1, 590494.8], [780018.4, 590494.6], [780018.6, 590492.8], [780019.4, 590490.7], [780019.9, 590488.9], [780020.8, 590486.8], [780021.8, 590486.1]]}
+      - {name: T12, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.35, ring: [[780026.7, 590480.8], [780027.1, 590481.4], [780027.6, 590482.2], [780026.4, 590484.0], [780025.1, 590485.2], [780023.9, 590486.5], [780022.8, 590487.0], [780021.6, 590487.3], [780021.3, 590486.4], [780022.3, 590484.7], [780022.7, 590483.4], [780023.7, 590481.8], [780025.0, 590480.8], [780026.3, 590480.2]]}
+      - {name: T13, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.45, ring: [[780029.4, 590475.9], [780030.4, 590475.9], [780030.0, 590477.2], [780029.1, 590478.5], [780028.2, 590479.7], [780027.2, 590480.5], [780026.0, 590481.4], [780025.1, 590481.3], [780025.5, 590480.0], [780025.5, 590479.1], [780025.8, 590477.9], [780026.9, 590476.7], [780028.0, 590475.7], [780028.8, 590475.7]]}
+      - {name: T14, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.25, ring: [[780032.7, 590469.7], [780033.1, 590470.4], [780032.6, 590472.0], [780032.0, 590473.3], [780031.1, 590474.6], [780030.1, 590476.0], [780028.9, 590477.1], [780028.7, 590476.2], [780028.4, 590475.6], [780028.1, 590474.8], [780028.8, 590473.3], [780029.7, 590471.7], [780030.8, 590470.8], [780031.6, 590470.6]]}
+      - {name: T15, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.1, ring: [[780034.5, 590465.0], [780034.6, 590466.4], [780034.6, 590467.7], [780034.0, 590469.4], [780033.4, 590471.2], [780032.3, 590473.3], [780031.3, 590473.4], [780030.7, 590473.1], [780029.8, 590473.1], [780029.8, 590471.6], [780030.1, 590469.8], [780031.2, 590468.0], [780032.2, 590467.1], [780033.4, 590465.4]]}
+      - {name: T16, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.35, ring: [[779988.6, 590544.7], [779988.8, 590545.5], [779988.2, 590547.0], [779987.5, 590548.5], [779986.5, 590550.5], [779985.0, 590551.4], [779984.1, 590551.6], [779983.1, 590552.2], [779982.8, 590551.4], [779982.9, 590550.2], [779984.0, 590548.4], [779985.4, 590547.1], [779986.6, 590545.4], [779988.1, 590544.2]]}
+      - {name: T17, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.55, ring: [[779990.9, 590540.0], [779991.0, 590540.8], [779990.9, 590541.8], [779991.0, 590543.0], [779989.9, 590544.3], [779989.0, 590544.8], [779988.1, 590545.6], [779987.3, 590545.6], [779986.8, 590545.2], [779986.8, 590544.0], [779987.8, 590542.7], [779988.3, 590541.5], [779989.2, 590540.1], [779990.2, 590539.9]]}
+      - {name: T18, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.5, ring: [[779994.4, 590534.3], [779994.4, 590535.1], [779994.9, 590535.8], [779993.8, 590537.5], [779992.4, 590538.7], [779991.2, 590539.9], [779990.1, 590540.5], [779989.1, 590540.7], [779988.7, 590540.1], [779989.8, 590538.4], [779990.4, 590537.1], [779991.4, 590535.5], [779992.8, 590534.4], [779993.9, 590533.9]]}
+      - {name: T19, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.45, ring: [[779996.5, 590530.2], [779997.4, 590530.3], [779997.3, 590531.4], [779996.1, 590532.7], [779995.2, 590533.7], [779994.1, 590534.5], [779993.0, 590535.0], [779992.0, 590535.1], [779992.3, 590533.8], [779992.7, 590532.8], [779992.9, 590531.7], [779994.0, 590530.6], [779995.2, 590529.7], [779996.1, 590529.7]]}
+      - {name: T20, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.65, ring: [[780000.5, 590522.7], [780001.2, 590523.0], [780000.4, 590525.0], [779999.7, 590526.7], [779998.7, 590528.3], [779997.5, 590529.9], [779996.1, 590531.4], [779995.8, 590530.6], [779995.8, 590529.5], [779995.5, 590528.8], [779996.2, 590527.0], [779997.3, 590525.1], [779998.5, 590523.7], [779999.3, 590523.6]]}
+      - {name: T21, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.45, ring: [[780003.2, 590514.8], [780003.5, 590516.2], [780003.7, 590517.6], [780003.4, 590519.4], [780002.9, 590521.2], [780002.2, 590523.5], [780001.2, 590524.0], [780000.6, 590523.5], [779999.8, 590523.6], [779999.6, 590522.3], [779999.7, 590520.4], [780000.4, 590518.4], [780001.3, 590517.3], [780002.2, 590515.8]]}
+      - {name: T22, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.65, ring: [[780006.7, 590511.6], [780007.1, 590512.4], [780007.0, 590513.5], [780006.6, 590514.7], [780006.1, 590516.3], [780005.0, 590517.1], [780004.1, 590516.9], [780003.2, 590517.2], [780002.6, 590516.6], [780002.4, 590515.5], [780002.8, 590514.1], [780004.0, 590513.2], [780004.8, 590512.1], [780006.0, 590511.0]]}
+      - {name: T23, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.75, ring: [[780009.0, 590508.3], [780009.1, 590509.0], [780008.9, 590510.0], [780008.8, 590511.0], [780007.9, 590512.1], [780006.9, 590512.4], [780006.0, 590512.9], [780005.3, 590512.8], [780004.9, 590512.3], [780004.9, 590511.4], [780005.9, 590510.3], [780006.6, 590509.4], [780007.5, 590508.2], [780008.4, 590508.1]]}
+      - {name: T24, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.55, ring: [[780012.5, 590502.4], [780012.4, 590503.5], [780012.7, 590504.2], [780011.9, 590505.8], [780010.4, 590507.1], [780009.2, 590508.2], [780008.1, 590509.0], [780007.2, 590509.1], [780006.6, 590508.7], [780007.6, 590506.9], [780008.5, 590505.5], [780009.4, 590503.9], [780010.8, 590502.7], [780011.9, 590502.2]]}
+      - {name: T25, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.35, ring: [[780015.0, 590496.8], [780015.8, 590496.9], [780016.2, 590497.9], [780015.2, 590499.8], [780014.3, 590501.4], [780013.3, 590502.7], [780012.3, 590503.5], [780011.1, 590504.2], [780011.0, 590502.8], [780011.4, 590501.2], [780011.4, 590499.9], [780012.2, 590498.2], [780013.4, 590496.9], [780014.5, 590496.2]]}
+      - {name: T26, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.4, ring: [[780017.6, 590493.0], [780018.4, 590493.2], [780018.1, 590494.5], [780017.6, 590495.6], [780017.0, 590496.6], [780016.2, 590497.4], [780015.2, 590498.2], [780014.5, 590497.8], [780014.5, 590496.7], [780014.0, 590496.1], [780014.3, 590494.9], [780015.0, 590493.8], [780016.0, 590493.0], [780016.7, 590493.2]]}
+      - {name: T27, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.55, ring: [[780022.1, 590486.6], [780021.9, 590487.8], [780021.3, 590489.3], [780020.4, 590490.8], [780019.2, 590492.2], [780017.7, 590493.9], [780016.4, 590494.5], [780016.4, 590493.5], [780015.8, 590493.3], [780015.9, 590492.2], [780016.9, 590490.5], [780018.3, 590488.8], [780019.5, 590488.2], [780020.7, 590487.4]]}
+      - {name: T28, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.7, ring: [[780023.7, 590479.6], [780024.2, 590480.7], [780024.4, 590482.1], [780024.1, 590483.9], [780023.9, 590485.9], [780023.1, 590487.8], [780022.1, 590487.9], [780021.3, 590488.4], [780020.5, 590488.2], [780020.3, 590486.8], [780020.3, 590484.9], [780021.2, 590483.0], [780022.0, 590481.7], [780022.9, 590479.6]]}
+      - {name: T29, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.75, ring: [[780027.1, 590474.5], [780027.5, 590475.1], [780027.5, 590476.5], [780027.6, 590477.8], [780027.1, 590479.7], [780026.2, 590480.7], [780025.5, 590481.5], [780024.7, 590482.1], [780024.2, 590481.6], [780023.9, 590480.6], [780024.4, 590478.7], [780025.0, 590477.2], [780025.6, 590475.3], [780026.4, 590474.3]]}
+      - {name: T30, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.55, ring: [[780030.0, 590469.5], [780030.2, 590470.5], [780030.6, 590471.2], [780030.7, 590472.5], [780029.7, 590473.9], [780028.9, 590474.9], [780028.1, 590475.8], [780027.4, 590475.9], [780026.7, 590475.8], [780026.8, 590474.3], [780027.4, 590472.9], [780027.6, 590471.4], [780028.4, 590470.0], [780029.3, 590469.6]]}
+      - {name: T31, plant: thicket, rim_m: 0.0, band_m: 0, height_m: 2.3, ring: [[780032.1, 590466.4], [780032.7, 590466.6], [780033.3, 590467.1], [780032.8, 590468.8], [780032.3, 590470.0], [780031.7, 590471.2], [780031.0, 590471.9], [780030.2, 590472.5], [780029.8, 590471.7], [780030.0, 590470.3], [780029.8, 590469.3], [780030.1, 590467.8], [780030.8, 590466.7], [780031.6, 590466.0]]}
   - id: mickiewicza-kuronia-shrub-strip-ground
     kind: unpaved_area
     polygon_en: [[-61.9, 469.8], [-12.9, 383.8], [-5.1, 388.2], [-54.1, 474.2]]
@@ -81,17 +109,46 @@ overrides:
     verify: owner photo session (Mickiewicza / Kuronia crossing)
   - id: mickiewicza-kuronia-corner-trees
     kind: tree_groups
-    lines:
-      - {line_epsg2180: [[780031.0, 590453.0], [780047.0, 590455.5]]}
-    group_size: [3, 4]
-    in_group_m: [3.5, 5.0]
-    gap_m: [30.0, 40.0]
-    depth_m: 2.0
-    rows_replace_m: 0.0
-    species: {maple: 0.6, linden: 0.4}
+    form: kit
+    # [E, N, height m, crown diameter m, species]
+    points_en: [[-13.0, 372.5, 10.5, 7.6, ash], [-9.5, 375.2, 9.2, 6.2, ash], [-3.2, 378.8, 5.2, 4.4, fruit],
+                [0.6, 381.0, 4.2, 4.2, shrub], [-12.5, 387.8, 2.8, 4.5, berberis_red]]
+    species: {ash: 0.6, maple: 0.4}
     reason: >-
-      Photo P11-063: a clump of broadleaf trees stands at the corner in front of the hall of Kuronia 2 (centre of
-      the frame). Orthophoto 2024: three crowns at E -12..5 N 370..378 (local). Species from the crown shape.
+      Photo P11-063 (camera local -67.0 393.5, heading 100 deg, f = 1255 px at 1600 px): the main mass of green of
+      the frame is a grown broadleaf tree on the lawn of the corner in front of the hall of Kuronia 2 - trunk at
+      x 1037 (2.8 deg left of the signal cabinet E -15.3 N 371.0), crown x 940-1130 = 8.8 m at 58 m with a second,
+      lower top on its left (x 980), top 205 px above the horizon = 10.6 m. Left of it (x 750-910) stand lower,
+      ground-reaching shrubs and small multi-stemmed bushes (4.2-5.2 m), and at the south end of the shrub strip by
+      the path entrance (x 640-715, E -12.5 N 387.8) stands a dark reddish-burgundy shrub (`berberis_red`, 2.8 m,
+      4.5 m wide) reaching the ground without a bare trunk (review B-r3 P1-3). Orthophoto 2024: crowns at
+      E -12.5..-8 N 371..376 and E -4..1 N 377.5..381 (local); BDOT10k OT_OIPR_P at E -13.2 N 386.3 (1.66 m from the
+      reddish shrub stem, so the rule tree is suppressed by the 2.5 m kit-stem rule). Positions +-1.5 m, heights +-1 m.
+    confidence: medium
+    verify: owner photo session (Mickiewicza / Kuronia crossing); number and height of the corner shrubs/trees
+  - id: mickiewicza-u-turn-not-signalised
+    target: {node: "n3541204205"}
+    reason: >-
+      Junction of the U-turn gap in the median of Mickiewicza (OSM way 347902076) 20 m north of the stop line of the
+      Kuronia crossing. The proximity rule (a signal node within 25 m of the junction centre: OSM 4326877858, the
+      stop-line signal of the crossing itself) made it signal-controlled and stood two cantilever masts and three
+      poles around the gap - the mast in the middle of the generated frame P11-063 (review s19 0179 P1). Photo
+      P11-063 and the 2024 orthophoto show no signals at the gap: fence in the median, plain carriageway.
+    confidence: high
+    verify: none
+    set: {signalized: false}
+  - id: mickiewicza-kuronia-median-signal-mast
+    kind: gate3_signal
+    at_en: [-35.5, 368.0]
+    travel_bearing_deg: 153
+    arm_bearing_deg: 243
+    lit: red
+    reason: >-
+      Photo P11-063: a cantilever signal mast stands behind the median fence at the right edge of the frame (pole at
+      x 1492 / 1600 = 28.9 deg right of the axis), its arm reaching over the southbound carriageway of Mickiewicza
+      at the stop line of the Kuronia crossing. Orthophoto 2024: light object at the north tip of the median piece
+      E -35.8 N 367.8 (local). The junction rule stands the mast of this approach on the right kerb only. Position
+      +-1.5 m; arm length and head count are the prototype's (WORKING_VALUE of ADR 0069).
     confidence: medium
     verify: owner photo session (Mickiewicza / Kuronia crossing)
   - id: court-car-park-street-row
@@ -134,6 +191,32 @@ overrides:
       grassland (OT_PTTR_A), which put single trees all over the meadow in the first import (ADR 0174, item 4).
     confidence: medium
     verify: owner photo session (Dywizjonu 303)
+  - id: mickiewicza-kuronia-shrub-strip-no-rule-trees
+    kind: open_ground
+    polygons_en:
+      - [[-55.0, 460.0], [-14.0, 388.0], [-5.0, 392.0], [-46.0, 465.0]]
+    reason: >-
+      BDOT10k OT_OIPR_L 2BE4B432-4884-1BF0-E053-CC2BA8C0D140:0 ("rzad drzew") runs along the Mickiewicza shrub
+      strip ([-45.7, 452.7] -> [-12.1, 385.6]); opening the strip as unpaved_area unblocked (-23.51, 407.8) and
+      spawned a lone 10.2 m library tree_maple with a bare trunk behind the bus shelter (renders B-r1 / B-r2, left
+      edge of P11-063). The 2024 orthophoto and photo P11-063 show only 2-3 m shrubs there (no tree stem in the
+      strip south of N 425). Kept after krywlany-open-meadow so open_ground[0] stays the airfield meadow.
+    confidence: high
+    verify: none
+  - id: kuronia-north-park-skyline-trees
+    kind: tree_groups
+    form: kit
+    # [E, N, height m, crown diameter m]
+    points_en: [[153.0, 453.0, 14.0, 9.0], [168.0, 459.0, 15.0, 9.8], [178.0, 462.0, 14.0, 9.0]]
+    species: {maple: 0.5, linden: 0.5}
+    reason: >-
+      GUGiK orthophoto 2024 (north lawn along ul. Kuronia behind the court car park, E 150-185 N 450-470): mature
+      broadleaf trees casting ~15 m shadows where BDOT10k has no OT_OIPR_P and the self-seed rule only placed 6 m
+      saplings. In frame P11-063 their lower trunks sit behind the 2.5-3 m thicket on the left skyline (x 148-212
+      of 1600 px) so only the rounded upper crowns show above the shrubs, matching the deciduous skyline in photo
+      P11-063. Positions +-2 m from the orthophoto; heights +-1.5 m WORKING_VALUE.
+    confidence: medium
+    verify: owner photo session (Kuronia north lawn); tree heights
   # ---------------------------------------------------------------- life rules
   - id: tyre-scrub-not-on-the-street
     kind: life_rules
@@ -147,18 +230,22 @@ overrides:
     verify: none
   - id: mickiewicza-kuronia-chain-posts-p11-063
     kind: chain_bollards
-    line_epsg2180: [[780014.43, 590462.87], [780019.44, 590452.85]]
+    line_epsg2180: [[780013.35, 590461.80], [780018.27, 590448.69]]
     chain: true
-    sources: ["research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg", "GUGiK orthophoto 2024 0.25 m"]
+    first_upper: red
+    sources: ["research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg",
+              "research/cloud/p15-dojlidy-details (C58-001...018; GUGiK orthophoto 2025-04-18, 0.05 m)",
+              "docs/reports/REVIEW-2026-11-14-s20-cloud-m58.md"]
     reason: >-
-      Photo P11-063 (Wikimedia Commons, CC0, Rakoon, 2024-06-23, File:20240623_124644_June_2024_in_Białystok.jpg; from the bus-stop island of ul. Mickiewicza, looking east): 8 red-white posts with two
-      chains on the paving behind the east kerb of the NW-bound carriageway (osm way 691820489 / 258564444), up to
-      the crossing at the Kuronia corner; 8 posts = 7 bays x 1.60 m. On the orthophoto the row stands on paving at
-      [780011.30, 590461.30] -> [780016.31, 590451.28]; the generated world has a grass verge there, so the line is
-      moved 3.5 m away from the carriageway onto the generated sidewalk_paving (ADR 0183 r2). Move it back when the
-      Dojlidy paving matches the photo.
-    confidence: low
-    verify: start / end post on site (+-2 m along the kerb); the further row visible behind (smaller posts) is not placed
+      Photo P11-063 (Wikimedia Commons, CC0, Rakoon, 2024-06-23, File:20240623_124644_June_2024_in_Białystok.jpg; from
+      the median of ul. Mickiewicza, looking east): chain fence U-12b, 8 red-white posts with two chains on the
+      paving right behind the east kerb of the NW-bound carriageway (osm way 691820489 / 258564444), north of the
+      crossing at the Kuronia corner. ADR 0202: the line is the one of cloud M58 (ends C58-012 / C58-013 from the
+      0.05 m orthophoto, 13.99 m; five posts re-measured in the review lie 0.01-0.13 m off it) = 7 bays x 2.00 m,
+      ~2 m nearer the carriageway than the ADR 0183 r2 line (which had 7 x 1.60 m moved 3.5 m onto the generated
+      footway). The northmost bay has the red chain on top (P11-063), then alternating.
+    confidence: medium
+    verify: owner photo session (the further row behind, smaller posts, is not placed)
   # ================================================================ ADR 0185 (review 0179 P1/P2: buildings)
   - id: dojlidy-lod1-base-datum
     kind: building_rules
@@ -400,33 +487,83 @@ overrides:
   - id: krywlany-runway-paint
     kind: runway_markings
     axis_en: [[-1024.0, -217.0], [-105.0, -192.75]]
-    edge_lines: {offset_m: 14.05, width_m: 0.9, s_m: [0.5, 918.0]}
-    centre_w_m: 0.45
+    edge_lines: {offset_m: 14.55, width_m: 0.85, s_m: [0.5, 918.0]}
+    centre_w_m: 0.35
     centre_dashes:
+      # ADR 0202: the fifth (westmost) dash s 0.5-27.9 runs through the middle arrow head and the 09R bar; it is
+      # laid in three pieces that stop at that paint (no doubled coplanar paint)
+      - {s_m: [0.5, 10.15]}
+      - {s_m: [15.8, 17.775]}
+      - {s_m: [19.025, 27.9]}
       - {s_m: [54.7, 84.5]}
       - {s_m: [113.3, 143.1]}
       - {s_m: [171.5, 201.3]}
       - {s_m: [228.6, 258.4]}
     bars:
-      - {s_m: 18.4, width_m: 1.0, half_span_m: 13.6}
-      - {s_m: 207.4, width_m: 1.0, half_span_m: 13.6}
+      - {s_m: 18.4, width_m: 1.25, half_span_m: 14.125}
+      - {s_m: 207.4, width_m: 1.25, half_span_m: 14.125}
     chevrons:
-      - {s_m: [15.0, 5.5], rows_lat_m: [-11.2, -5.6, 0.0, 5.6, 11.2], width_m: 3.3}
-      - {s_m: [211.4, 221.4], rows_lat_m: [-11.2, -5.6, 0.0, 5.6, 11.2], width_m: 3.3}
+      - {s_m: [15.8, 5.8], rows_lat_m: [-11.0, -5.5, 0.0, 5.5, 11.0], width_m: 3.1, arm_m: 4.5}
+      - {s_m: [210.1, 220.1], rows_lat_m: [-11.0, -5.5, 0.0, 5.5, 11.0], width_m: 3.1, arm_m: 4.5}
     arrows:
       tips_s_m: [278.3, 335.5, 392.6, 449.8, 508.0, 566.6, 623.8, 680.9, 739.1, 796.2]
       length_m: 40.0
-      head_m: [10.0, 3.3]
-      shaft_w_m: 0.45
+      head_m: [10.0, 3.1]
+      shaft_w_m: 0.35
       towards: low
+    designator:
+      base: high
+      stroke_m: [0.8, 1.7]
+      glyphs:
+        - {char: "2", s_m: [845.9, 855.4], lat_m: -2.6, width_m: 3.2}
+        - {char: "7", s_m: [845.9, 855.4], lat_m: 2.6, width_m: 3.2}
+        - {char: "L", s_m: [860.9, 870.4], lat_m: 0.0, width_m: 3.2}
     reason: >-
       Paint of runway 09R/27L (OSM way 958211700: asphalt, 1350 x 30 m, axis local -1446.3 -227.2 -> -115.7 -192.3;
       the tile holds its eastern 919 m) traced on the 2024 orthophoto 0.25 m: white side stripes 1.0 m wide with
       their outer edges 29 m apart; ten displaced-threshold arrows 40 m long every 57.7 m pointing west (heads
       10 x 3.3 m); threshold bars at E -816.7 and E -1005.6 with five arrow heads before each; four centre line
       pieces of 30 m. Stations +-1.5 m, widths +-0.25 m (one orthophoto pixel); shaft / centre line width 0.45 m
-      WORKING_VALUE (under two pixels). Not drawn: the designator "27 L", the faded grey crosses of the old paint,
-      the taxi line on the turn pad. The grass runway 09L/27R (OSM way 303368859, east half inside the tile) has no
+      WORKING_VALUE (under two pixels). ADR 0202 supersedes the widths above with cloud M58 (GUGiK orthophoto
+      2025-04-18, 0.05 m; game station = M58 station - 422.6): side stripes 0.85 m with their centres 29.1 m apart;
+      threshold bars 1.25 m reaching the side stripes; arrow heads 10 x 3.1 m, 5.5 m apart, tips 2.1 m from the bar,
+      solid with a notch from the tail (arm_m 4.5 = arms ~0.7 m thick, 2024 orthophoto; ADR 0196 drew 0.14 m outlines);
+      shaft and centre line 0.35 m; the fifth centre dash s 0.5-27.9 through the 09R bar; designator "27" at
+      s 845.9-855.4 and "L" at s 860.9-870.4, feet toward the east end, "2" south and "7" north of the axis, "L" on
+      it. Digit centres +-2.6 m and paint thickness 0.8 m across / 1.7 m along read off the 2024 orthophoto 0.25 m
+      (+-0.3 m); glyph shapes WORKING_VALUE. Not drawn: the faded grey crosses of the old paint, the taxi line on
+      the turn pad. The grass runway 09L/27R (OSM way 303368859, east half inside the tile) has no
       paint or markers on the orthophoto and stays meadow.
     confidence: high
     verify: owner photo session (aerodrome fence)
+  # ================================================================ ADR 0202 (cloud M58: aerodrome fence)
+  - id: krywlany-aerodrome-fence-green
+    kind: fence_style
+    osm_way: [483199984, 483199985, 542255310]
+    colour: green
+    sources: ["research/cloud/p15-dojlidy-details (C58-061, C58-062)",
+              "research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-080.jpg"]
+    reason: >-
+      Fence of the Krywlany aerodrome (OSM barrier=fence ways 483199984 north along Dywizjonu 303, 483199985 west,
+      542255310 south / east). The rule hashes the colour of an OSM fence (green / anthracite / galvanised); photos
+      P11-080, P11-079, P11-099 and P11-076 (Commons, CC0) show green welded 3D panels on green posts all along.
+      Way 483199985 lies outside this tile (listed so a larger tile keeps the colour). The two rows of barbed wire
+      above the panel are not built (backlog).
+    confidence: high
+    verify: none
+  - id: mickiewicza-east-verge-paved-at-chain-posts
+    kind: paved_area
+    material: sidewalk_paving
+    polygon_epsg2180: [[779998.55, 590481.88], [780017.98, 590443.77], [780023.22, 590445.74], [780003.60, 590483.78]]
+    sources: ["GUGiK orthophoto 2024 0.25 m", "research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg"]
+    reason: >-
+      East side of the NW-bound carriageway of ul. Mickiewicza, 43 m north from the Kuronia crossing. Orthophoto
+      and photo P11-063: the footway is paved from the kerb on and the chain posts stand on that paving. The rules
+      built kerb -> ~4 m grass verge -> footway (BDOT10k footway line + default verge), so the chain row on its true
+      line (ADR 0202) stood in grass, its posts seated 0.2-0.4 m below the turf (artifacts/dojfix-0202/probe.json,
+      r1). The strip closes the verge between the generated kerb and the generated footway (it overlaps the
+      carriageway by 0.6 m and the footway by 0.5 m; the carriageway keeps its priority). The generated kerb runs
+      6 deg off the row (3.3 m from post 1, 1.6 m from post 8; on the street the posts stand right behind it) -
+      a road-edge matter, not corrected here.
+    confidence: medium
+    verify: owner photo session (paving pattern, kerb line)

@@ -1,0 +1,1040 @@
+{
+ "by_kind": {
+  "arrow_no_exit": 7,
+  "lane_blind_end": 40,
+  "marking_off_carriageway": 1,
+  "obstacle_in_lane": 3
+ },
+ "cases": [
+  {
+   "chain": "c:w257355873:1889474201-2357579520",
+   "e": -726.67,
+   "junction": "j:n2357579520",
+   "kind": "arrow_no_exit",
+   "lane": 2,
+   "lat": 53.1594861,
+   "lon": 23.1184263,
+   "n": -56.36,
+   "on_route": true,
+   "osm_ways": [
+    257355873
+   ],
+   "turn_lanes": "right",
+   "what": "right"
+  },
+  {
+   "chain": "c:w257352528:1847317037-1889474199",
+   "e": -253.21,
+   "junction": "j:n2357583392",
+   "kind": "arrow_no_exit",
+   "lane": 2,
+   "lat": 53.1594018,
+   "lon": 23.1255065,
+   "n": -38.45,
+   "on_route": true,
+   "osm_ways": [
+    257352528,
+    257358866,
+    257357743
+   ],
+   "turn_lanes": "right",
+   "what": "right"
+  },
+  {
+   "chain": "c:w249740766:2563060456-2563060432",
+   "e": -8.43,
+   "junction": "j:n1889474194",
+   "kind": "arrow_no_exit",
+   "lane": 2,
+   "lat": 53.159085,
+   "lon": 23.1291407,
+   "n": -59.64,
+   "on_route": true,
+   "osm_ways": [
+    249740767,
+    249740766,
+    707029846
+   ],
+   "turn_lanes": "right",
+   "what": "right"
+  },
+  {
+   "chain": "c:w257357907:5837318149-2357570527",
+   "e": 135.57,
+   "junction": "j:n2357570527",
+   "kind": "arrow_no_exit",
+   "lane": 2,
+   "lat": 53.1591137,
+   "lon": 23.1312993,
+   "n": -48.12,
+   "on_route": true,
+   "osm_ways": [
+    257357907
+   ],
+   "turn_lanes": "right",
+   "what": "right"
+  },
+  {
+   "chain": "c:w214404798:2776364331-9679697186",
+   "dist_from_stop_m": 11.1,
+   "e": -714.18,
+   "junction": "j:n2356666737",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1598189,
+   "lon": 23.1186451,
+   "n": -18.53,
+   "on_route": true,
+   "osm_ways": [
+    214404798
+   ],
+   "to_chain": "c:w214404798:8308028559-2356666735",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w985226459:2357583405-3273715236",
+   "dist_from_stop_m": 26.1,
+   "e": 236.09,
+   "junction": "j:n3273715236",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1595524,
+   "lon": 23.1328466,
+   "n": 6.61,
+   "on_route": true,
+   "osm_ways": [
+    985226459
+   ],
+   "to_chain": "c:w985226459:3273715236-2881482216",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w173990798:1847317033-1847317040",
+   "e": 561.98,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.1593244,
+   "lon": 23.1377036,
+   "n": 0.04,
+   "on_route": true,
+   "osm_ways": [
+    23982184,
+    173990798,
+    249740764
+   ],
+   "surface": "verge_grass",
+   "what": "P-7b"
+  },
+  {
+   "chain": "c:w617517004:1889474194-5837318150",
+   "e": 14.36,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1590379,
+   "lon": 23.1294774,
+   "n": -63.58,
+   "on_route": true,
+   "osm_ways": [
+    617517004
+   ],
+   "s": 12.8,
+   "what": "verge_grass"
+  },
+  {
+   "chain": "c:w693614874:5837318150-5837318149",
+   "e": 30.4,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.1590334,
+   "lon": 23.1297171,
+   "n": -63.15,
+   "on_route": true,
+   "osm_ways": [
+    693614874
+   ],
+   "s": 12.8,
+   "what": "verge_grass"
+  },
+  {
+   "chain": "c:w693614874:5837318150-5837318149",
+   "e": 31.69,
+   "junction": null,
+   "kind": "obstacle_in_lane",
+   "lane": 0,
+   "lat": 53.159045,
+   "lon": 23.1297376,
+   "n": -61.78,
+   "on_route": true,
+   "osm_ways": [
+    693614874
+   ],
+   "s": 10.8,
+   "what": "shoulder"
+  },
+  {
+   "chain": "c:w1363839506:2629158247-2357626371",
+   "e": -14.42,
+   "junction": "j:n12609651736",
+   "kind": "arrow_no_exit",
+   "lane": 1,
+   "lat": 53.1577961,
+   "lon": 23.1289272,
+   "n": -203.7,
+   "on_route": false,
+   "osm_ways": [
+    257357753,
+    1363839506,
+    137547625
+   ],
+   "turn_lanes": "right",
+   "what": "right"
+  },
+  {
+   "chain": "c:w1363839506:2629158247-2357626371",
+   "e": -12.25,
+   "junction": "j:n12609651736",
+   "kind": "arrow_no_exit",
+   "lane": 0,
+   "lat": 53.1577765,
+   "lon": 23.1289578,
+   "n": -205.76,
+   "on_route": false,
+   "osm_ways": [
+    257357753,
+    1363839506,
+    137547625
+   ],
+   "turn_lanes": "left",
+   "what": "left"
+  },
+  {
+   "chain": "c:w251428904:2281863192-934955029",
+   "e": 126.1,
+   "junction": "j:n934954661",
+   "kind": "arrow_no_exit",
+   "lane": 3,
+   "lat": 53.1555266,
+   "lon": 23.1308127,
+   "n": -448.63,
+   "on_route": false,
+   "osm_ways": [
+    80143710,
+    251428904
+   ],
+   "turn_lanes": "right",
+   "what": "right"
+  },
+  {
+   "chain": "c:w207644812:5421180791-2776405177",
+   "dist_from_stop_m": 21.7,
+   "e": -1024.23,
+   "junction": "j:n2776405177",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1667399,
+   "lon": 23.1146662,
+   "n": 735.29,
+   "on_route": false,
+   "osm_ways": [
+    207644812
+   ],
+   "to_chain": "c:w207644812:2776405177-2178985525",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w227027524:2640194018-2640194041",
+   "dist_from_stop_m": 0.0,
+   "e": -1023.25,
+   "junction": "j:n2640194018",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1590265,
+   "lon": 23.113942,
+   "n": -124.68,
+   "on_route": false,
+   "osm_ways": [
+    227027524
+   ],
+   "to_chain": "c:w339969307:4375750009-3471642155",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w339969307:4375750009-3471642155",
+   "dist_from_stop_m": 3.1,
+   "e": -1005.32,
+   "junction": "j:n2640194018",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1590046,
+   "lon": 23.1142084,
+   "n": -126.09,
+   "on_route": false,
+   "osm_ways": [
+    339969307
+   ],
+   "to_chain": "c:w227027524:2640194018-2640194041",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w340007181:282520549-3246040326",
+   "dist_from_stop_m": 23.8,
+   "e": -993.83,
+   "junction": "j:n282520549",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1509481,
+   "lon": 23.1136089,
+   "n": -1023.72,
+   "on_route": false,
+   "osm_ways": [
+    598210918,
+    340007181
+   ],
+   "to_chain": "c:w340007181:282520523-282520549",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w1061410335:9751925381-9751925384",
+   "dist_from_stop_m": 30.8,
+   "e": -950.06,
+   "junction": "j:n4034543359",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1688407,
+   "lon": 23.1159783,
+   "n": 973.8,
+   "on_route": false,
+   "osm_ways": [
+    1529693190,
+    1061410335
+   ],
+   "to_chain": "c:w400969379:4034543359-4034543364",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w302206762:2882674830-3064590173",
+   "dist_from_stop_m": 18.4,
+   "e": -852.74,
+   "junction": "j:n3064590173",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1592772,
+   "lon": 23.1165188,
+   "n": -86.91,
+   "on_route": false,
+   "osm_ways": [
+    302206762
+   ],
+   "to_chain": "c:w302206762:3064590173-2882674818",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w25899414:5145030158-282520202",
+   "dist_from_stop_m": 16.1,
+   "e": -841.81,
+   "junction": "j:n2451073410",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1555125,
+   "lon": 23.1163217,
+   "n": -506.05,
+   "on_route": false,
+   "osm_ways": [
+    529679312,
+    25899414,
+    529679311
+   ],
+   "to_chain": "c:w237164490:2451073420-4360427879",
+   "turn_lanes": null,
+   "what": "sidewalk"
+  },
+  {
+   "chain": "c:w926289066:2205799274-3409409972",
+   "dist_from_stop_m": 23.4,
+   "e": -774.48,
+   "junction": "j:n3409409972",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1568083,
+   "lon": 23.1174538,
+   "n": -357.68,
+   "on_route": false,
+   "osm_ways": [
+    926289066
+   ],
+   "to_chain": "c:w926289066:3409409972-8567678887",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w263623015:2692468627-282020985",
+   "dist_from_stop_m": 13.6,
+   "e": -702.97,
+   "junction": "j:n282020824",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1560771,
+   "lon": 23.1184542,
+   "n": -435.1,
+   "on_route": false,
+   "osm_ways": [
+    263623015
+   ],
+   "to_chain": "c:w25856127:282020824-282020981",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w226930229:2356666753-7366611223",
+   "dist_from_stop_m": 12.5,
+   "e": -694.36,
+   "junction": "j:n2356666737",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1600193,
+   "lon": 23.1189612,
+   "n": 4.96,
+   "on_route": false,
+   "osm_ways": [
+    226930229
+   ],
+   "to_chain": "c:w787933120:7366611224-7366611223",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w25856119:282020968-282020969",
+   "dist_from_stop_m": 6.7,
+   "e": -491.99,
+   "junction": "j:n282020969",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1569983,
+   "lon": 23.1217011,
+   "n": -320.22,
+   "on_route": false,
+   "osm_ways": [
+    25856119
+   ],
+   "to_chain": "c:w25856119:282020969-282020811",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w985235331:2178953521-2363585839",
+   "dist_from_stop_m": 16.3,
+   "e": -377.36,
+   "junction": "j:n2178953521",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1659113,
+   "lon": 23.1242728,
+   "n": 680.2,
+   "on_route": false,
+   "osm_ways": [
+    985235331
+   ],
+   "to_chain": "c:w669375199:2178953523-2178953521",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w317960574:3242994569-12623829244",
+   "dist_from_stop_m": 17.2,
+   "e": -281.88,
+   "junction": "j:n12623829244",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1541741,
+   "lon": 23.1245754,
+   "n": -622.99,
+   "on_route": false,
+   "osm_ways": [
+    317960574,
+    382655862
+   ],
+   "to_chain": "c:w1363390275:12623829244-12623829243",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w1361946125:12609722639-6371019268",
+   "dist_from_stop_m": 12.6,
+   "e": -275.99,
+   "junction": "j:n6644901543",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1569777,
+   "lon": 23.1249328,
+   "n": -310.05,
+   "on_route": false,
+   "osm_ways": [
+    1361946125,
+    707092777
+   ],
+   "to_chain": "c:w965379572:8930721195-8930721194",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w965379572:8930721195-8930721194",
+   "dist_from_stop_m": 13.7,
+   "e": -270.1,
+   "junction": "j:n6644901543",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1569764,
+   "lon": 23.1250208,
+   "n": -309.86,
+   "on_route": false,
+   "osm_ways": [
+    965379572
+   ],
+   "to_chain": "c:w1361946125:12609722639-6371019268",
+   "turn_lanes": null,
+   "what": "sidewalk"
+  },
+  {
+   "chain": "c:w1361946118:12609722635-12609722613",
+   "dist_from_stop_m": 6.1,
+   "e": -252.27,
+   "junction": "j:n12609722635",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.156635,
+   "lon": 23.1252548,
+   "n": -346.9,
+   "on_route": false,
+   "osm_ways": [
+    1361946118
+   ],
+   "to_chain": "c:w1361946123:12609722635-12609722633",
+   "turn_lanes": null,
+   "what": "sidewalk"
+  },
+  {
+   "chain": "c:w1361946123:12609722635-12609722633",
+   "dist_from_stop_m": 0.5,
+   "e": -242.18,
+   "junction": "j:n12609722635",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1565087,
+   "lon": 23.1253938,
+   "n": -360.4,
+   "on_route": false,
+   "osm_ways": [
+    1361946123
+   ],
+   "to_chain": "c:w1361946118:12609722635-12609722613",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w25856139:282021011-283329300",
+   "dist_from_stop_m": 24.6,
+   "e": -125.55,
+   "junction": "j:n282021003",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1535257,
+   "lon": 23.1268533,
+   "n": -686.27,
+   "on_route": false,
+   "osm_ways": [
+    25856139
+   ],
+   "to_chain": "c:w25856136:282021001-282021003",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w25856163:6371019266-282021075",
+   "dist_from_stop_m": 10.2,
+   "e": -106.17,
+   "junction": "j:n282021075",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1560661,
+   "lon": 23.1273875,
+   "n": -401.89,
+   "on_route": false,
+   "osm_ways": [
+    25856163
+   ],
+   "to_chain": "c:w25856163:282021075-282021072",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w257357757:2228711984-1399731003",
+   "dist_from_stop_m": 14.1,
+   "e": -63.06,
+   "junction": "j:n1399731003",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 2,
+   "lat": 53.157799,
+   "lon": 23.1281993,
+   "n": -206.18,
+   "on_route": false,
+   "osm_ways": [
+    257357757
+   ],
+   "to_chain": "c:w126214243:12628402837-1399730986",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w382655853:3858771581-3858771583",
+   "dist_from_stop_m": 2.6,
+   "e": -52.41,
+   "junction": "j:n282021006",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1538923,
+   "lon": 23.1279834,
+   "n": -641.16,
+   "on_route": false,
+   "osm_ways": [
+    382655853,
+    382655860
+   ],
+   "to_chain": "c:w25856138:282021003-282021006",
+   "turn_lanes": null,
+   "what": "verge_grass"
+  },
+  {
+   "chain": "c:w25899451:282520430-282520426",
+   "dist_from_stop_m": 10.1,
+   "e": -11.61,
+   "junction": "j:n282520430",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1525044,
+   "lon": 23.1284607,
+   "n": -793.56,
+   "on_route": false,
+   "osm_ways": [
+    25899451,
+    438162560
+   ],
+   "to_chain": "c:w25899451:282520423-282520430",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w137547625:2357626369-2357547671",
+   "dist_from_stop_m": 5.5,
+   "e": 25.84,
+   "junction": "j:n2357626369",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 2,
+   "lat": 53.1582013,
+   "lon": 23.1295688,
+   "n": -156.19,
+   "on_route": false,
+   "osm_ways": [
+    137547625
+   ],
+   "to_chain": "c:w1363839506:2629158247-2357626371",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w462343492:4577475989-4577475986",
+   "dist_from_stop_m": 11.5,
+   "e": 45.26,
+   "junction": "j:n4577475989",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1504785,
+   "lon": 23.1291173,
+   "n": -1016.17,
+   "on_route": false,
+   "osm_ways": [
+    462343492
+   ],
+   "to_chain": "c:w25899458:4577475989-282520465",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w438162560:4359030825-3253382813",
+   "dist_from_stop_m": 0.0,
+   "e": 55.59,
+   "junction": "j:n4359030825",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1532899,
+   "lon": 23.1295422,
+   "n": -702.1,
+   "on_route": false,
+   "osm_ways": [
+    438162560
+   ],
+   "to_chain": "c:w25899451:282520430-282520426",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w25899451:282520430-282520426",
+   "dist_from_stop_m": 22.9,
+   "e": 58.92,
+   "junction": "j:n4359030825",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1532667,
+   "lon": 23.1295898,
+   "n": -704.49,
+   "on_route": false,
+   "osm_ways": [
+    25899451,
+    438162560
+   ],
+   "to_chain": "c:w438162560:4359030825-3253382813",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w25899445:282520398-4359030839",
+   "dist_from_stop_m": 18.2,
+   "e": 60.7,
+   "junction": "j:n282520398",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1539446,
+   "lon": 23.1296815,
+   "n": -628.8,
+   "on_route": false,
+   "osm_ways": [
+    25899445
+   ],
+   "to_chain": "c:w25899446:282520402-282520404",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w25899446:282520402-282520404",
+   "dist_from_stop_m": 19.3,
+   "e": 71.5,
+   "junction": "j:n282520398",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1538657,
+   "lon": 23.1298357,
+   "n": -636.98,
+   "on_route": false,
+   "osm_ways": [
+    25899446
+   ],
+   "to_chain": "c:w25899445:282520398-4359030839",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w266056506:934955029-3058078540",
+   "dist_from_stop_m": 13.5,
+   "e": 76.34,
+   "junction": "j:n3058078417",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 3,
+   "lanes_out": 2,
+   "lat": 53.1555686,
+   "lon": 23.1300718,
+   "n": -446.83,
+   "on_route": false,
+   "osm_ways": [
+    266056506
+   ],
+   "to_chain": "c:w301716006:3058078540-12628402832",
+   "turn_lanes": "through",
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w25899460:282520461-282520479",
+   "dist_from_stop_m": 11.1,
+   "e": 107.36,
+   "junction": "j:n282520461",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1513293,
+   "lon": 23.1301286,
+   "n": -917.72,
+   "on_route": false,
+   "osm_ways": [
+    25899460
+   ],
+   "to_chain": "c:w25899458:282520461-282520470",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
+   "chain": "c:w1184839288:11005831854-934954970",
+   "dist_from_stop_m": 0.0,
+   "e": 179.94,
+   "junction": "j:n282520096",
+   "kind": "lane_blind_end",
+   "lane": 2,
+   "lanes_in": 3,
+   "lanes_out": 2,
+   "lat": 53.1549769,
+   "lon": 23.1315658,
+   "n": -506.81,
+   "on_route": false,
+   "osm_ways": [
+    1184839289,
+    1184839288
+   ],
+   "to_chain": "c:w257357744:934954970-941425951",
+   "turn_lanes": "",
+   "what": "verge_grass"
+  },
+  {
+   "chain": "c:w249740780:2629171312-8756164241",
+   "dist_from_stop_m": 6.5,
+   "e": 259.33,
+   "junction": "j:n2357580683",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1589967,
+   "lon": 23.133141,
+   "n": -54.0,
+   "on_route": false,
+   "osm_ways": [
+    249740780
+   ],
+   "to_chain": "c:w257358867:2357580683-2629171310",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w257358867:2357580683-2629171310",
+   "dist_from_stop_m": 11.1,
+   "e": 277.0,
+   "junction": "j:n2357580683",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.159004,
+   "lon": 23.1334062,
+   "n": -52.17,
+   "on_route": false,
+   "osm_ways": [
+    257358867
+   ],
+   "to_chain": "c:w249740780:2629171312-8756164241",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w25486860:282021026-282021022",
+   "dist_from_stop_m": 8.1,
+   "e": 303.06,
+   "junction": "j:n282021022",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1585805,
+   "lon": 23.1337557,
+   "n": -97.88,
+   "on_route": false,
+   "osm_ways": [
+    25486860
+   ],
+   "to_chain": "c:w25486860:282021022-282021021",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w270494326:282520458-277719387",
+   "dist_from_stop_m": 1.0,
+   "e": 307.01,
+   "junction": "j:n277719386",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1529053,
+   "lon": 23.1332687,
+   "n": -730.44,
+   "on_route": false,
+   "osm_ways": [
+    270494326
+   ],
+   "to_chain": "c:w270494326:277719386-282520155",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w270494326:277719386-282520155",
+   "dist_from_stop_m": 26.1,
+   "e": 317.79,
+   "junction": "j:n277719386",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.1530696,
+   "lon": 23.1334459,
+   "n": -711.51,
+   "on_route": false,
+   "osm_ways": [
+    270494326
+   ],
+   "to_chain": "c:w270494326:282520458-277719387",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w229142895:282520121-934954918",
+   "dist_from_stop_m": 8.2,
+   "e": 393.05,
+   "junction": "j:n934954856",
+   "kind": "lane_blind_end",
+   "lane": 1,
+   "lanes_in": 2,
+   "lanes_out": 2,
+   "lat": 53.153733,
+   "lon": 23.1346364,
+   "n": -633.18,
+   "on_route": false,
+   "osm_ways": [
+    229142895
+   ],
+   "to_chain": "c:w227029799:934954918-2338011607",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w173990806:2357588069-685201745",
+   "dist_from_stop_m": 45.6,
+   "e": 652.32,
+   "junction": "j:n3890183125",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 3,
+   "lanes_out": 2,
+   "lat": 53.1533984,
+   "lon": 23.1384852,
+   "n": -655.49,
+   "on_route": false,
+   "osm_ways": [
+    173990806,
+    672172564
+   ],
+   "to_chain": "c:w261468005:685201746-1892330858",
+   "turn_lanes": "through",
+   "what": "verge_grass"
+  }
+ ],
+ "count": 51,
+ "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
+ "on_route": {
+  "arrow_no_exit": 4,
+  "lane_blind_end": 2,
+  "marking_off_carriageway": 1,
+  "obstacle_in_lane": 3
+ },
+ "params": {
+  "dz_m": 0.8,
+  "kerb_ring_m": 0.3,
+  "lane_inset_m": 0.45,
+  "prop_inset_m": 0.2,
+  "station_m": 2.0,
+  "through_deg": 35.0
+ },
+ "region": "bialystok-maczka",
+ "route_band_m": 30.0,
+ "route_segments_s_m": [
+  [
+   0.0,
+   2054.0
+  ]
+ ],
+ "schema": "truck-sim-pl/road-consistency-qa/1",
+ "stats": {
+  "approach_lanes": 832,
+  "kerb_tris": 111598,
+  "lane_samples": 116280,
+  "lane_samples_in_taper": 126,
+  "marking_tris": 16079,
+  "props_checked": 1695
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "schema": "truck-sim-pl/junction-checks/1",
+ "provenance": "authored_override (ADR 0203): junctions and lane-layout checkpoints of the D64 truck route (DK8/DK65 Gen. Maczka) compared with the GUGiK orthophoto by tools/worldgen/qa/junction_topview.py. Centres EPSG:2180 from roads.graph.json node positions.",
+ "junctions": [
+  {"id": "j1_seam_c_ramps_e", "center_2180": [776900, 596270], "size_m": 300, "note": "east tile edge (seam with tile C): viaduct start, slip roads to/from rondo Nowaka-Jezioranskiego"},
+  {"id": "j2_rondo_nowaka_jezioranskiego", "center_2180": [776752, 596252], "size_m": 240, "note": "roundabout under the Maczka viaduct (Swietokrzyska), 4 slip roads"},
+  {"id": "j3_ramps_w_of_rondo", "center_2180": [776440, 596227], "size_m": 300, "note": "west slip roads of the roundabout junction: merge/diverge on both carriageways"},
+  {"id": "j4_orlicz_dreszera", "center_2180": [776030, 596172], "size_m": 300, "note": "Orlicz-Dreszera right-in/right-out links on the south carriageway + service link at 776125"},
+  {"id": "j5_ramps_775670_viaduct", "center_2180": [775640, 596170], "size_m": 300, "note": "slip roads at 775691/775654 and the tertiary viaduct over Maczka (way 126214244)"},
+  {"id": "j6_ramps_775240", "center_2180": [775242, 596177], "size_m": 300, "note": "slip roads on both carriageways at 775261/775230 and 775255/775223"},
+  {"id": "j7_gajowa_seam_w", "center_2180": [774990, 596180], "size_m": 300, "note": "Gajowa link at the west tile edge (seam with the future tile bialystok-kleeberga)"}
+ ]
+}

@@ -119,13 +119,19 @@ def edge_attrs(tags: dict, length_m: float) -> dict:
     return a
 
 
-def build(roads, points, bbox, bdot_roads=None) -> dict:
-    """roads: GeoDataFrame from osm_extract (EPSG:2180) with node_ids; points: OSM point layer."""
+def build(roads, points, bbox, bdot_roads=None, drop_service=(), drop_ways=()) -> dict:
+    """roads: GeoDataFrame from osm_extract (EPSG:2180) with node_ids; points: OSM point layer.
+    drop_service / drop_ways (ADR 0204, per-region graph_filter.authored.json): extra `service=*` values and OSM way
+    ids left out of the drivable graph (house driveways mapped every ~12 m break the junction generator)."""
     x0, y0, x1, y1 = bbox
     tile = shapely.box(*bbox)
     drv = roads[roads.highway.isin(DRIVABLE)]
     drv = drv[drv.geometry.intersects(tile.buffer(1.0))]
     drv = drv[~drv.service.isin(["parking_aisle", "drive-through"]) | drv.service.isna()]
+    if drop_service:
+        drv = drv[~((drv.highway == "service") & drv.service.isin(list(drop_service)))]
+    if drop_ways:
+        drv = drv[~drv.osm_id.isin([int(v) for v in drop_ways])]
 
     # which OSM nodes are graph nodes
     use = defaultdict(int)

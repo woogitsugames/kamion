@@ -85,6 +85,27 @@ namespace Game.Tests
             UnityEngine.Object.Destroy(menu.gameObject);
         }
 
+        [UnityTest]
+        public IEnumerator Menu_InformacjeOpensAbout_CloseReturns()
+        {
+            bool about = false;
+            var menu = BootMenu.Create(null, StartMenuOptions.Load(), new List<(string, Action)> { ("A", () => { }) }, null, () => about = true);
+            yield return null;
+            Click(menu.gameObject, BootMenu.AboutLabel);
+            Assert.IsTrue(about, "Informacje button calls back");
+            UnityEngine.Object.Destroy(menu.gameObject);
+
+            bool closed = false;
+            LogAssert.Expect(LogType.Log, new Regex(@"\[ABOUT\] opened blocks=\d+ problems=0"));
+            var p = AboutPanel.Create(null, () => closed = true);
+            yield return null;
+            Assert.Greater(p.Document.Blocks.Count, 20, "attribution blocks parsed");
+            Click(p.gameObject, AboutPanel.CloseLabel);
+            yield return null;
+            Assert.IsTrue(closed);
+            Assert.IsTrue(p == null, "panel destroyed on close");
+        }
+
         static Button Find(GameObject root, string name)
         {
             foreach (var b in root.GetComponentsInChildren<Button>(true)) if (b.name == name) return b;

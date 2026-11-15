@@ -1,0 +1,374 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0145",
+   "look_at": [
+    -764.884,
+    -873.8,
+    118.733
+   ],
+   "note": "driver eye 2.5 m, control route s = 145 m of 1161 m (Obozowa)",
+   "pos": [
+    -722.812,
+    -916.611,
+    119.778
+   ],
+   "route_s_m": 145.101,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0435",
+   "look_at": [
+    -959.048,
+    -658.37,
+    122.364
+   ],
+   "note": "driver eye 2.5 m, control route s = 435 m of 1161 m (Obozowa)",
+   "pos": [
+    -920.147,
+    -703.867,
+    122.423
+   ],
+   "route_s_m": 435.304,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0726",
+   "look_at": [
+    -799.689,
+    -455.341,
+    127.769
+   ],
+   "note": "driver eye 2.5 m, control route s = 726 m of 1161 m (Tykocka)",
+   "pos": [
+    -844.619,
+    -495.14,
+    128.638
+   ],
+   "route_s_m": 725.506,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1016",
+   "look_at": [
+    -595.738,
+    -251.459,
+    127.43
+   ],
+   "note": "driver eye 2.5 m, control route s = 1016 m of 1161 m (Tykocka)",
+   "pos": [
+    -643.806,
+    -287.652,
+    129.177
+   ],
+   "route_s_m": 1015.709,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_01_above",
+   "look_at": [
+    -993.815,
+    -615.437,
+    122.032
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1426801304:13115969575-13432353449",
+   "pos": [
+    -923.815,
+    -535.437,
+    164.032
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_02_above",
+   "look_at": [
+    -983.357,
+    -617.633,
+    122.046
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1426801304:13115969578-13115969582",
+   "pos": [
+    -913.357,
+    -537.633,
+    164.046
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_03_above",
+   "look_at": [
+    -978.822,
+    -612.579,
+    122.039
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1426801304:13115969582-13115969583",
+   "pos": [
+    -908.822,
+    -532.579,
+    164.039
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_04_above",
+   "look_at": [
+    -980.801,
+    -606.111,
+    122.185
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1426801304:13115969583-13432353458",
+   "pos": [
+    -910.801,
+    -526.111,
+    164.185
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_05_above",
+   "look_at": [
+    -991.058,
+    -603.417,
+    122.246
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1426801304:13115969587-13432353443",
+   "pos": [
+    -921.058,
+    -523.417,
+    164.246
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_06_above",
+   "look_at": [
+    -995.46,
+    -608.277,
+    122.124
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1426801304:13432353443-13115969575",
+   "pos": [
+    -925.46,
+    -528.277,
+    164.124
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_inlet_south",
+   "look_at": [
+    -734.2,
+    -906.865,
+    116.148
+   ],
+   "note": "place camera: driver eye on DK65 Obozowa 60 m inside the south tile edge (seam with knyszyn-s), looking NW towards the town",
+   "pos": [
+    -666.0,
+    -980.0,
+    119.64
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_poludniowa",
+   "look_at": [
+    -768.2,
+    -871.865,
+    116.248
+   ],
+   "note": "place camera: DK65 at the Poludniowa T-junction (local -722 -920)",
+   "pos": [
+    -700.0,
+    -945.0,
+    119.74
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rondo_dk65_from_south",
+   "look_at": [
+    -1023.913,
+    -577.686,
+    117.909
+   ],
+   "note": "place camera: driver eye on DK65 45 m before the DK65/DW671 roundabout (local -987 -611; OSM way 1426801304, see ADR 0204 question 1)",
+   "pos": [
+    -957.0,
+    -652.0,
+    123.15
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "rondo_dk65_above",
+   "look_at": [
+    -987.0,
+    -570.0,
+    81.858
+   ],
+   "note": "place camera: QA only: 55 m above, 60 m south of the roundabout, looking north and down - layout of the four arms",
+   "pos": [
+    -987.0,
+    -670.0,
+    175.11
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_outlet_nw",
+   "look_at": [
+    -1043.0,
+    -511.397,
+    121.388
+   ],
+   "note": "place camera: driver eye leaving the roundabout on DK65 towards Monki; the west tile edge is ~40 m ahead (tile (-9,8) not built)",
+   "pos": [
+    -993.0,
+    -598.0,
+    124.88
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "tykocka_into_town",
+   "look_at": [
+    -863.396,
+    -510.721,
+    122.488
+   ],
+   "note": "place camera: driver eye on DW671 Tykocka leaving the roundabout towards Rynek",
+   "pos": [
+    -940.0,
+    -575.0,
+    125.98
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "tykocka_rynek_junction",
+   "look_at": [
+    -621.8,
+    -264.865,
+    125.938
+   ],
+   "note": "place camera: Tykocka 55 m before the Tykocka / Szkolna / Rynek / Grodzienska junction (local -650 -294)",
+   "pos": [
+    -690.0,
+    -338.0,
+    129.43
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rynek_grodzienska_north",
+   "look_at": [
+    -607.808,
+    -164.97,
+    125.568
+   ],
+   "note": "place camera: DW671 Grodzienska northbound between the park (west) and the paved plaza (east) of Rynek",
+   "pos": [
+    -632.0,
+    -262.0,
+    129.06
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "rynek_fountain",
+   "look_at": [
+    -656.619,
+    -220.716,
+    131.252
+   ],
+   "note": "place camera: pedestrian eye on the plaza ~18 m east of the fountain plate (ESTIMATED position local -575 -210, 2025 orthophoto), looking west as owner frame 20240730_190331 (trees behind, houses to the right); direction ESTIMATED from the frame content",
+   "pos": [
+    -557.0,
+    -212.0,
+    127.76
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "rynek_above",
+   "look_at": [
+    -600.0,
+    -260.0,
+    106.8
+   ],
+   "note": "place camera: QA only: 70 m above the south edge of Rynek looking north and down - plaza, park, carriageways around",
+   "pos": [
+    -600.0,
+    -360.0,
+    196.84
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "grodzienska_podlaska",
+   "look_at": [
+    -530.635,
+    63.481,
+    127.468
+   ],
+   "note": "place camera: DW671 Grodzienska northbound at Podlaska (local -541 8)",
+   "pos": [
+    -548.0,
+    -35.0,
+    130.96
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "goniadzka_jagiellonska",
+   "look_at": [
+    -746.085,
+    -65.358,
+    126.568
+   ],
+   "note": "place camera: Goniadzka south-eastbound at the Jagiellonska T-junction (local -777 -44)",
+   "pos": [
+    -828.0,
+    -8.0,
+    130.06
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 272.951,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "knyszyn",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

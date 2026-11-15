@@ -799,11 +799,14 @@ def authored_openings(rule, wins, L, zref, key, door):
             ops.append((u0, u1, z0, z1, rv, "ribbon", cells("off", *vs)))
         elif lights:                                                # light band (ADR 0190): one office-row window
             rects = []                                              # per light, cropped as on LOD1 (FR.band_lights)
-            for lrow, lbay, crop in lights:
+            for li_, (lrow, lbay, crop) in enumerate(lights):
                 if lrow == FR.BLIND_ROW:
                     rects.append(FR.blind_rect(lbay))
                     continue
                 cu, cv_, cw, ch = FA.cell(*FA.FAR_ROWS[g][lrow][lbay])
+                half = FR.sash_half(li_, rule.get("sashes", 2))        # ADR 0200: one sash per light
+                if half is not None:
+                    cu, cw = cu + half * cw / 2, cw / 2
                 rects.append((cu, cv_ + ch * crop, cw, ch * (1.0 - crop)))
             ops.append((u0, u1, z0, z1, rv, "ribbon", ("atlas", rects, 0.0, 1.0, 0.0, 1.0)))
         else:
@@ -962,7 +965,10 @@ def load(fc, origin, overrides, hero=None):
                 o = {**o, "hero_asset": hero[f["id"]]}
             if o.get("footprint_open_m"):     # ADR 0180: authored straightening of the outline - a morphological
                 d_ = float(o["footprint_open_m"])        # opening drops protrusions narrower than 2 x d (mitred corners)
-                op = pl.buffer(-d_, join_style=2).buffer(d_, join_style=2).simplify(0.15)   # + steps under 0.15 m
+                # + steps under 0.15 m; ADR 0200 `footprint_simplify_m`: authored tolerance - near-collinear edges
+                # of one photographed wall become one edge (a facade rule sees the whole wall)
+                op = pl.buffer(-d_, join_style=2).buffer(d_, join_style=2).simplify(
+                    float(o.get("footprint_simplify_m", 0.15)))
                 if op.geom_type == "Polygon" and not op.is_empty:
                     pl = shapely.geometry.polygon.orient(op)
             if o.get("height_m"):             # ADR 0167: authored height (structures with no LoD1 / BDOT height)
@@ -1382,8 +1388,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             is_main = ei == main or (typ == "hall" and L > 30)
             door_z = zref + PLINTH_H["house"] + 0.15 * round(FK.hfloat(key, "plh")) if typ == "house" else None
             if rule:                                 # authored facade: the same rectangles on both LODs
-                lod1_wins = FR.facade_windows(rule, L, zref, zbase, sh, zt, storeys, f"{key}:{ei}", door=ei == main)
-                ops = authored_openings(rule, lod1_wins, L, zref, f"{key}:{ei}", ei == main)
+                door_ = ei == main if rule.get("door") is None else rule["door"]      # ADR 0200: authored entrance
+                lod1_wins = FR.facade_windows(rule, L, zref, zbase, sh, zt, storeys, f"{key}:{ei}", door=door_)
+                ops = authored_openings(rule, lod1_wins, L, zref, f"{key}:{ei}", door_)
                 n3_ = np.array([nout[0], nout[1], 0.0])
                 for lu0, lu1, lz0, lz1 in FR.facade_lintels(rule, lod1_wins):       # ADR 0190: dark lintel line
                     lu0, lu1 = max(lu0, 0.0), min(lu1, L)
@@ -1715,7 +1722,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # LOD1 roof stays one flat polygon (an attic inset is invisible from the road and cost 1.3 MiB in Low);
             # the coping ledge (5 cm above the roof) reads as the attic rim
             roof_flat(acc, "buildings_low", poly, zeave, attic=0.0)
-            tall_office = typ == "office" and storeys >= 5          # lift / plant rooms break the box top
+            # lift / plant rooms break the box top; ADR 0200: authored `machine_rooms: false` - the photographed
+            # roof has none (masts and cable trays only)
+            tall_office = typ == "office" and storeys >= 5 and b["ovr"].get("machine_rooms", True)
             if typ == "block" or tall_office:
                 FK.machine_rooms(acc, poly, zeave, "buildings_low")
             roof_flat(acc, "collision", poly, zeave, mat="collision_building", attic=0.0)

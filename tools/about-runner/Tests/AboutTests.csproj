@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Plain .NET 8 tests of the Unity-independent attribution parser (Game.Core.About, "Informacje" screen).
+    The sources are compiled straight from the Unity project (same pattern as tools/nav-runner, ADR 0150) and the
+    tests read the real game/Assets/_Project/UI/Resources/About/attributions.txt.
+    Run: dotnet test tools/about-runner/Tests/AboutTests.csproj
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>AboutRunner.Tests</RootNamespace>
+    <!-- Unity 6 compiles C# 9; keep the shared sources within that language version. -->
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RollForward>Major</RollForward>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../../game/Assets/_Project/Core/About/*.cs" LinkBase="About" />
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+</Project>

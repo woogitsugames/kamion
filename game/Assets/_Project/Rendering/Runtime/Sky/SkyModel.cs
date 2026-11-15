@@ -63,20 +63,50 @@ namespace Game.Rendering
 
         // ---------------------------------------------------------------- twilight (ADR 0062)
         public const float MinTwilightElevationDeg = -8f;
-        /// <summary>Horizontal illuminance at the end of civil twilight (sun −6°), clear sky. Commonly quoted ~3.4 lx
-        /// (UNVERIFIED: from memory of the twilight illuminance tables, e.g. Bond and Henderson 1963).</summary>
+        /// <summary>Horizontal illuminance at the end of civil twilight (sun −6°), clear sky: 3.4 lx. SOURCED (ADR 0199): 3.41 lx
+        /// (Schlyter, radfaq "Solar illumination on horizontal surface", after Seidelmann, Explanatory Supplement 1992 -
+        /// secondary; research/cloud/p17-dusk-lighting C60-005), 3.5 lx (Spitschan et al. 2016, urban series, AMS), 4.3 lx
+        /// (Fotios et al. 2024 after Muneer, C60-009). The table node at −6° uses this value.</summary>
         public const float CivilTwilightEndLux = 3.4f;
         /// <summary>
-        /// Twilight sky luminance factor for a sun below 0.5°: log-linear from 1 at 0.5° (the dome's own clear-sky diffuse
-        /// illuminance there, ≈ 2.25 klx) to <see cref="CivilTwilightEndLux"/> at −6°, i.e. ~0.37× per degree. The sky
-        /// keeps its 0.5° shape and colour (afterglow toward the sun's azimuth). WORKING_VALUE.
+        /// ADR 0199: clear-sky horizontal illuminance (lx) at 1° steps of sun elevation from +1° (index 0) to −8° (index 9),
+        /// Schlyter radfaq table (SOURCED_SECONDARY, C60-001…007; +1°, −1°, −2° read from the same table 2026-11-14:
+        /// 1270 / 405 / 189 lx), −6° = <see cref="CivilTwilightEndLux"/>. Independent check at −4° / −8°: Spitschan 2016
+        /// urban 36.1 / 0.49 lx (the sources differ by 20-40 % there).
+        /// </summary>
+        public static readonly float[] TwilightTableLux = { 1270f, 759f, 405f, 189f, 79.1f, 29.9f, 10.4f, CivilTwilightEndLux, 1.09f, 0.348f };
+        /// <summary>Sun elevation of <see cref="TwilightTableLux"/>[0] (degrees); the table steps down by 1°.</summary>
+        public const float TwilightTableTopDeg = 1f;
+        /// <summary>Clear-dome horizontal illuminance of the model at 0.5° (the twilight shape; ≈ 2248 lx, sky only).</summary>
+        public static float ModelSkyLuxAtHalfDegree => (0.8f + 15.5f * Mathf.Sqrt(Mathf.Sin(0.5f * Mathf.Deg2Rad))) * 1000f;
+
+        /// <summary>Clear-sky horizontal illuminance of <see cref="TwilightTableLux"/> at a sun elevation (log-linear
+        /// between the 1° nodes, clamped to +1° … −8°).</summary>
+        public static float TwilightTableLuxAt(float sunElevationDeg)
+        {
+            float x = Mathf.Clamp(TwilightTableTopDeg - sunElevationDeg, 0f, TwilightTableLux.Length - 1);
+            int i = Mathf.Min((int)x, TwilightTableLux.Length - 2);
+            float f = x - i;
+            return Mathf.Exp(Mathf.Lerp(Mathf.Log(TwilightTableLux[i]), Mathf.Log(TwilightTableLux[i + 1]), f));
+        }
+
+        /// <summary>
+        /// Twilight sky luminance factor for a sun below 0.5° (the dome keeps its 0.5° shape and dims by this factor).
+        /// ADR 0199 (review s20 cloud M60 §4.1: the old log-linear curve from the model's 0.5° value to 3.4 lx at −6° was
+        /// ×1.8 too bright at 0° and ×1.2 at −1°, ×0.85 at −3…−5°, ×1.3 at −8°): at and below 0° the factor gives the
+        /// measured table <see cref="TwilightTableLux"/> in absolute lux (model value E05 = <see cref="ModelSkyLuxAtHalfDegree"/>
+        /// × factor); between 0.5° and 0° it runs log-linearly from 1 (the model at 0.5°) to the table at 0°, so there is no
+        /// step at 0.5°. Left over: the model at +0.5° (2248 lx sky only) vs the table (994 lx total) - the daytime dome
+        /// formula above 0.5° is not part of the twilight factor (ADR 0199 "Otwarte").
         /// </summary>
         public static float TwilightFactorAt(float sunElevationDeg)
         {
             if (sunElevationDeg >= 0.5f) return 1f;
-            float e05 = (0.8f + 15.5f * Mathf.Sqrt(Mathf.Sin(0.5f * Mathf.Deg2Rad))) * 1000f;
+            float e05 = ModelSkyLuxAtHalfDegree;
             float el = Mathf.Max(sunElevationDeg, MinTwilightElevationDeg);
-            return Mathf.Exp(Mathf.Log(CivilTwilightEndLux / e05) * (0.5f - el) / 6.5f);
+            if (el >= 0f)
+                return Mathf.Exp(Mathf.Log(TwilightTableLuxAt(0f) / e05) * (0.5f - el) / 0.5f);
+            return TwilightTableLuxAt(el) / e05;
         }
 
         // Perez coefficients (A..E) for Y, x, y and zenith values (clear part).
@@ -720,7 +750,15 @@ namespace Game.Rendering
                                * (1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.15f, 0.6f, v)));
                     float k = t * TwilightBlueAmount * (1f - glow);
                     int idx = j * ChromaWidth + i;
-                    var c = Color.LerpUnclamped(m_Chroma[idx], blue, k);
+                    // ADR 0199 (review s20 cloud2 R7 §3, probe artifacts/dusk-cal-0199/probe-before.tsv): the glow kept the
+                    // sunset LUT of the 0.5° sun - at −6° the band 2-6° above the horizon toward the sun stayed coral
+                    // (linear R 2.0-2.3, G 0.66, B 0.44-0.8; 40-53 % saturation on screen). Photos of the end of civil
+                    // twilight toward the sun (research/cloud/p17-dusk-lighting C60-064/076/087, R7 c32/c16): pale
+                    // yellowish-peach at the horizon, a faint pink above it (~5-15°), blue higher. The glow is retinted
+                    // toward that pastel gradient as the sun sinks (same ramp t).
+                    var c = Color.LerpUnclamped(m_Chroma[idx], TwilightGlowColour(v), t * Mathf.Clamp01(glow * 2f));   // full inside the glow core: no coral residue
+                    c = NormaliseLum(c);
+                    c = Color.LerpUnclamped(c, blue, k);
                     // r5 (review s19 P2-7): the lowest band toward the sun read salmon-magenta; at the end of civil twilight
                     // it is orange-yellowish (B well below G). -15 % B there. WORKING_VALUE.
                     float lowBand = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.05f, 0.3f, v));
@@ -731,6 +769,27 @@ namespace Game.Rendering
                     m_Chroma[idx] = c;
                 }
             }
+        }
+
+        /// <summary>ADR 0199: pastel glow colours toward the sun at the end of civil twilight (linear Rec.709, luminance
+        /// normalised later). Low: pale yellow-peach (R &gt; G &gt; B; after the low-band −15 % B ≈ 22 % saturation on
+        /// screen). High: faint pink (R &gt; B ≥ G; the magenta pass turns B &gt; G into a rose with G = B, ~6 %). WORKING_VALUE
+        /// (R7 c32: the lowest band of a real dusk ~10 % saturation near clipping; the coral it replaces was 29-52 %).</summary>
+        public static readonly Color TwilightGlowLow = new Color(1.38f, 1.0f, 0.62f, 1f), TwilightGlowHigh = new Color(1.65f, 0.88f, 0.97f, 1f);
+        /// <summary>Elevations (degrees) between which the glow turns from <see cref="TwilightGlowLow"/> to
+        /// <see cref="TwilightGlowHigh"/>. WORKING_VALUE.</summary>
+        public const float TwilightGlowPinkFromDeg = 2.5f, TwilightGlowPinkToDeg = 5f;
+
+        /// <summary>ADR 0199: magenta excess min(R, B) − G (luminance-1 chroma) left alone by
+        /// <see cref="SuppressTwilightMagenta"/>, so a pastel pink survives (ADR 0192 test limit: 0.06). WORKING_VALUE.</summary>
+        public const float TwilightPinkAllowance = 0.03f;
+
+        /// <summary>ADR 0199: glow colour for a LUT row v = sqrt(cos θ) (θ from the zenith).</summary>
+        public static Color TwilightGlowColour(float v)
+        {
+            float elev = Mathf.Asin(Mathf.Clamp01(v * v)) * Mathf.Rad2Deg;
+            float s = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(TwilightGlowPinkFromDeg, TwilightGlowPinkToDeg, elev));
+            return Color.Lerp(TwilightGlowLow, TwilightGlowHigh, s);
         }
 
         /// <summary>
@@ -744,7 +803,9 @@ namespace Game.Rendering
         /// </summary>
         public static Color SuppressTwilightMagenta(Color c, float warm, float t)
         {
-            float lo = Mathf.Min(c.r, c.b);
+            // ADR 0199: a pastel pink (B up to TwilightPinkAllowance above G) is kept - the faint pink band above the
+            // yellow glow of a real dusk; only a stronger magenta excess is lifted.
+            float lo = Mathf.Min(c.r, c.b) - TwilightPinkAllowance;
             if (lo - c.g <= 0f || t <= 0f) return c;
             // lift G (never lower R or B: a dome of hard orange cells next to hard blue cells turns pink again in the
             // bilinear LUT fetch): to min(R, B) = pale / white, and in the warm band to B / 0.85 = orange-yellow

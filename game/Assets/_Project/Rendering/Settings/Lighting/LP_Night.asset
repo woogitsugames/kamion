@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game.Rendering::Game.Rendering.LightingPreset
   sunElevationDeg: -8
   sunAzimuthDeg: 300
+  clockHour: 22
   turbidity: 4
   overcast: 0.2
   visibilityKm: 12
@@ -42,7 +43,7 @@ MonoBehaviour:
   grassVariation: 1
   autoExposure: 1
   ev100: 3.7
-  exposureCompensation: -3
+  exposureCompensation: -3.405
   lookSaturation: -3
   whiteBalanceAdaptation: 0
   lookBlackLevel: 0.015

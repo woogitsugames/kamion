@@ -1,0 +1,9 @@
+{
+ "provenance": "authored_override (ADR 0208): control route for cameras/QA = the D64 truck route Białystok -> Knyszyn (variant A of ADR 0203) inside this tile",
+ "description": "Kleeberga westbound (DK8/DK65) from the east tile edge (seam with bialystok-kleeberga, x = 772875), exit slip road, rondo Pamięci Męczeństwa Kresowian, Szosa Ełcka, Szosa Knyszyńska to the west tile edge (seam with dk65-01, x = 770827). Route variant A km 5.803-8.761 of docs/reports/map/dk65_route_plan.json.",
+ "start_epsg2180": [772875.0, 595511.6],
+ "end_epsg2180": [770827.0, 597006.8],
+ "start_osm_way": 306609228,
+ "end_osm_way": 234919333,
+ "confidence": "high (OSM geometry + oneway; to be re-checked against the graph boundary nodes of roads.graph.json)"
+}

@@ -154,7 +154,7 @@ def test_runway_paint_lies_on_the_runway_and_faces_up():
     r = rep["runway_markings"][0]
     assert r["id"] == "krywlany-runway-paint" and 915.0 < r["length_m"] < 925.0
     tris = sum(len(p[3]) for p in buf.parts)
-    assert tris == r["triangles"] and 1500 < tris < 4000
+    assert tris == r["triangles"] and 1500 < tris < 4500
     area = 0.0
     for layer, mat, V, T, src, uv1 in buf.parts:
         assert layer == "markings" and mat == "marking_white" and src.startswith("runway:") and uv1 is not None
@@ -164,8 +164,8 @@ def test_runway_paint_lies_on_the_runway_and_faces_up():
         assert (a2 > 0).all(), src                                         # CCW seen from above
         area += 0.5 * a2.sum()
         assert all(asphalt.buffer(0.3).contains(Point(*q[:2])) for q in V), src
-    # two side stripes 918 x 0.9 m carry most of the paint
-    assert 2 * 917 * 0.9 < area < 2 * 918 * 0.9 + 700.0
+    # two side stripes 918 x 0.85 m (ADR 0202, was 0.9) carry most of the paint
+    assert 2 * 917 * 0.85 < area < 2 * 918 * 0.85 + 700.0
     buf2, rep2 = _Buf(), {}
     RWP.build(buf2, _ov(C), lambda e, n: np.zeros(len(e)), rep2)
     assert not buf2.parts and not rep2
@@ -221,3 +221,56 @@ def test_runway_camera_is_authored_and_stands_at_the_fence():
     d = np.array(k["look_at"][:2]) - np.array(k["pos"][:2])
     assert d[0] < -90.0 and -40.0 < d[1] < -20.0                           # looks WSW over the runway
     assert k["fov_deg"] == 14.0 and k["look_at"][2] < k["pos"][2]
+
+
+# ------------------------------------------------------------------------------------------------ ADR 0202
+def test_0202_runway_designator_27l_reads_from_the_east():
+    """"27" then "L" toward the east end, feet to the east; flying west the "2" is on the left (south), the "7" on
+    the right (north), the "L" on the axis with its foot to the right (north)."""
+    from shapely.geometry import Point
+    from streetscape import runway_paint as RWP
+    o = next(o for o in _ov(DOJ) if o["id"] == "krywlany-runway-paint")
+    d = o["designator"]
+    assert d["base"] == "high"
+    g = {x["char"]: x for x in d["glyphs"]}
+    assert g["2"]["s_m"] == g["7"]["s_m"] == [845.9, 855.4] and g["L"]["s_m"] == [860.9, 870.4]      # cloud M58 - 422.6
+    assert g["2"]["lat_m"] < 0 < g["7"]["lat_m"] and g["L"]["lat_m"] == 0.0
+    polys = {c: RWP.glyph_polygon(c, *x["s_m"], x["lat_m"], x["width_m"], d["stroke_m"], d["base"]) for c, x in g.items()}
+    for c, x in g.items():
+        s0, la0, s1, la1 = polys[c].bounds
+        assert (s0, s1) == pytest.approx(tuple(x["s_m"]), abs=1e-6)                                  # fills its box
+        assert (la0, la1) == pytest.approx((x["lat_m"] - x["width_m"] / 2, x["lat_m"] + x["width_m"] / 2), abs=1e-6)
+        assert polys[c].is_valid and 0.2 < polys[c].area / ((s1 - s0) * (la1 - la0)) < 0.7
+    L, x = polys["L"], g["L"]
+    assert L.contains(Point(x["s_m"][1] - 0.4, x["width_m"] / 2 - 0.2))        # foot: east end, north side
+    assert not L.contains(Point(x["s_m"][0] + 0.4, x["width_m"] / 2 - 0.2))    # nothing at the top on the north side
+    assert L.contains(Point(x["s_m"][0] + 0.4, -x["width_m"] / 2 + 0.2))       # stem: south side, up to the top
+    seven, x = polys["7"], g["7"]
+    assert seven.contains(Point(x["s_m"][0] + 0.4, x["lat_m"]))                # top bar at the west end
+    assert not seven.contains(Point(x["s_m"][1] - 0.4, x["lat_m"] + x["width_m"] / 2 - 0.2))   # no foot on the right
+    two, x = polys["2"], g["2"]
+    assert two.contains(Point(x["s_m"][1] - 0.4, x["lat_m"]))                  # base bar at the east end
+    with pytest.raises(ValueError):
+        RWP.glyph_polygon("X", 0.0, 9.0, 0.0, 3.0, d["stroke_m"], "high")
+
+
+def test_0202_runway_widths_and_fifth_dash():
+    o = next(o for o in _ov(DOJ) if o["id"] == "krywlany-runway-paint")
+    e = o["edge_lines"]
+    assert e["width_m"] == 0.85 and e["offset_m"] == 14.55                     # cloud M58: 0.80-0.87 m, centres 29.1 m
+    assert [b["width_m"] for b in o["bars"]] == [1.25, 1.25]
+    assert all(b["half_span_m"] == pytest.approx(e["offset_m"] - e["width_m"] / 2) for b in o["bars"])   # bar meets the stripes
+    assert o["centre_w_m"] == 0.35 and o["arrows"]["shaft_w_m"] == 0.35
+    ds = sorted(tuple(x["s_m"]) for x in o["centre_dashes"])
+    assert ds[0][0] == 0.5 and max(b for a, b in ds if a < 30) == 27.9         # the fifth dash: s 0.5-27.9
+    bar = o["bars"][0]
+    for a, b in ds:                                                            # ... and it never lies on the bar
+        assert b <= bar["s_m"] - bar["width_m"] / 2 + 1e-9 or a >= bar["s_m"] + bar["width_m"] / 2 - 1e-9
+    assert len([1 for a, b in ds if a > 30]) == 4
+
+
+def test_0202_aerodrome_fence_is_green():
+    from streetscape import furniture as FU
+    st = FU.fence_styles(_ov(DOJ))
+    ways = (483199984, 483199985, 542255310)
+    assert {w: st.get(w) for w in ways} == dict.fromkeys(ways, "fence_green")

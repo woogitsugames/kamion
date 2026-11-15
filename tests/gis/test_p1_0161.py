@@ -77,7 +77,7 @@ def test_gate3_signal_mast_and_post():
     pl, rep = _Pl(), {}
     G3.build(pl, None, {"nodes": []}, ov, (0, 0), {}, rep)
     protos = [i[0] for i in pl.items]
-    assert protos == ["signal_mast", "signal_head_red", "signal_head_red", "signal_pole", "signal_head_green"]
+    assert protos == ["signal_mast", "signal_head_red", "signal_head_side_red", "signal_pole", "signal_head_side_green"]
     mast, high, low = pl.items[:3]
     assert high[1] == [5.0, 0.0]                                       # 5 m along the arm (west)
     assert high[3] == pytest.approx(140.0 + G3.S.SIGNAL_MAST_H - 1.25) and low[3] == pytest.approx(142.9)
@@ -153,5 +153,5 @@ def test_ring_mast_survives_the_carriageway_clearing(qa):
         pytest.skip("derived world not on disk")
     protos = [o["p"] for f in files for o in json.loads(f.read_text(encoding="utf-8"))["instances"]
               if o.get("src", "").startswith("override:putry-ring-s-approach-signal")]
-    # ADR 0172: the mast has the 8.8 m arm with two heads
-    assert sorted(protos) == ["signal_head_red"] * 4 + ["signal_mast_9m", "signal_pole"]
+    # ADR 0172 + ADR 0193 (M66): the mast has the 8.8 m arm with two overhead heads (with contrast plate) + 2 pole heads (side, no plate)
+    assert sorted(protos) == ["signal_head_red"] * 2 + ["signal_head_side_red"] * 2 + ["signal_mast_9m", "signal_pole"]

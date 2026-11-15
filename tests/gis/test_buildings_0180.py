@@ -125,7 +125,7 @@ def test_lod1_facade_tiles_the_wall_without_overlap():
 
 def test_tower_gable_is_blank_with_one_stair_column():
     b = _loaded({TOWER})[TOWER]
-    assert len(b["ovr"]["facades"]) == 2 and b["ovr"]["wall_material"] == "plaster_beige"
+    assert len(b["ovr"]["facades"]) == 3 and b["ovr"]["wall_material"] == "plaster_beige"      # ADR 0200: + NW
     buf = _build(b)
     # LOD0: the atlas panes on the SW gable (16.09 m) form ONE column, one window per storey (11)
     g = _panes(_on_wall(buf, "buildings", "facade_atlas", SW, 238.0), 1.6)
@@ -183,15 +183,16 @@ def test_tower_uses_only_materials_the_generic_office_set_has():
     far = {m for m in buf.mats("buildings_low") if "__far_" in m}
     assert far == {"plaster_beige__far_office", "plaster_white__far_ribbon"}
     assert {"plaster_white", "plaster_beige"} <= set(BM.OFFICE_WALLS)
-    # LOD1 stays cheap: under 850 triangles for the walls and roof (300 with the hashed facade; ADR 0190: + one
-    # lintel quad per band) and under 1300 with the roof masts (galvanised steel + light radomes)
+    # LOD1 stays cheap: under 1300 triangles for the walls and roof (300 with the hashed facade; ADR 0190: + one
+    # lintel quad per band; ADR 0200: + the 66 window groups of the NW wall, 554 triangles) and under 2000 with the
+    # roof masts (galvanised steel + light radomes; ADR 0200: 10 structures)
     from streetscape import frontage as FR
     low = [p for p in buf.parts if p.layer == "buildings_low"]
     zroof = max(float(p.V[:, 2].max()) for p in low if "__far_" in p.mat)
     masts = sum(int((p.V[p.T][:, :, 2].min(1) > zroof - 0.5).sum()) for p in low
                 if p.mat in (FR.ROOF_MAST_MAT, FR.ROOF_PANEL_MAT))
     total = sum(len(p.T) for p in low)
-    assert total - masts < 850 and total < 1300, (total, masts)
+    assert total - masts < 1300 and total < 2000, (total, masts)
 
 
 def test_tower_outline_is_straightened_by_the_authored_opening():

@@ -1,0 +1,15 @@
+{
+ "provenance": "authored_override (ADR 0207): control route for cameras/QA = the D64 truck route Białystok -> Knyszyn (variant A of ADR 0203) inside this tile",
+ "description": "Ełcka northbound through Fasty (north part): Białostocka/Kościelna, Szkolna: from the south edge (seam with dk65-03, y = 599295) to the north edge (seam with dk65-05, y = 601343). Route variant A km 12.281-14.359 of docs/reports/map/dk65_route_plan.json (branch bialystok-dk65-0203).",
+ "start_epsg2180": [
+  768694.8,
+  599295.0
+ ],
+ "end_epsg2180": [
+  768335.0,
+  601343.0
+ ],
+ "start_osm_way": 1024956365,
+ "end_osm_way": 1024956364,
+ "confidence": "high (OSM geometry; plan tile entry/exit points snapped to the tile edge)"
+}
