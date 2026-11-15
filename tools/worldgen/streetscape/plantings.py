@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+import random
 
 import numpy as np
 import shapely
@@ -1139,6 +1140,81 @@ def _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False):
                       tilt_z=0.08 * r, vlo_frac=0.22 if sp_l == "apple_b" else 0.0)
 
 
+def _linden_study_r3(kit, p, z, height, diameter, low):
+    """Experimental 0227 study R3 layout using the existing alpha-clipped plot atlas.
+
+    The 12 sectors, six bands, seeded candidates and six-of-eight Low selection
+    match park_linden_blueprint_r3/grow_park_linden_r3. Atlas cards approximate
+    the original leaf texture and are not a visual or performance acceptance.
+    All dimensions are WORKING_VALUE; no GLB or reference image is loaded.
+    """
+    H = float(height)
+    if not math.isfinite(H) or H <= 0 or not math.isfinite(diameter) or diameter <= 0:
+        raise ValueError("linden_study_r3 needs positive finite height and diameter")
+    rng = random.Random(227232)  # study R3 variant 2
+    xy_scale = float(diameter) / (0.70 * H)
+    base = np.array([p[0], p[1], z], float)
+
+    def transform(q):
+        return base + np.asarray(q, float) * np.array([xy_scale, xy_scale, 1.0])
+
+    def tube(points, radii, sides):
+        pts = [transform(v) for v in points]
+        rings = []
+        for i, point in enumerate(pts):
+            tangent = pts[min(i+1, len(pts)-1)] - pts[max(i-1, 0)]
+            tangent /= np.linalg.norm(tangent)
+            ref = np.array([0., 0., 1.]) if abs(tangent[2]) < .95 else np.array([1., 0., 0.])
+            u = np.cross(tangent, ref); u /= np.linalg.norm(u)
+            v = np.cross(tangent, u)
+            rings.append([point + radii[i] * (u*math.cos(2*math.pi*k/sides) + v*math.sin(2*math.pi*k/sides))
+                          for k in range(sides)])
+        for a, b in zip(rings[:-1], rings[1:]):
+            for k in range(sides):
+                kit.quad([a[k], a[(k+1)%sides], b[(k+1)%sides], b[k]], [PLT.PK.SWATCH["trunk"]]*4)
+
+    trunk = [np.array(q)*H for q in ((0,0,-.02),(.008,-.008,.22),(.014,.005,.55),(.008,.012,.91))]
+    tube(trunk, [H*x/13.5 for x in (.27,.21,.12,.025)], 5 if low else 8)
+    u0, u1, v0, v1 = PLT.PK.sprite("shrub_a")
+    uv = [[u0,v0], [u1,v0], [u1,v1], [u0,v1]]
+    crown = transform([0,0,H*.60])
+    for sector in range(12):
+        az=2*math.pi*(sector+.5)/12+rng.uniform(-.08,.08)
+        out=np.array([math.cos(az),math.sin(az),0.])
+        root=np.array([0.,0.,H*(.24+.22*(sector%4)/3)])
+        tip=root+out*(H*rng.uniform(.26,.34))+np.array([0.,0.,H*rng.uniform(.30,.42)])
+        mid=(root+tip)*.5+np.array([0.,0.,.05*H])
+        tube([root,mid,tip], [H*x/13.5 for x in (.10,.06,.012)], 3 if low else 5)
+        sector_az=2*math.pi*(sector+.5)/12
+        for band in range(6):
+            for i in range(8):
+                a=2*math.pi*(sector+rng.uniform(.08,.92))/12
+                f=(band+rng.uniform(.15,.85))/6
+                zf=.25+.69*f
+                profile=max(.35,math.sqrt(max(0.,1-((zf-.60)/.39)**2)))
+                radius=H*.35*profile*rng.uniform(.25,1.)
+                point=np.array([math.cos(a)*radius,math.sin(a)*radius,zf*H])
+                normal=np.array([rng.uniform(-1,1),rng.uniform(-1,1),rng.uniform(-.7,1.)])
+                if np.linalg.norm(normal)<.1: normal=np.array([1.,0.,.5])
+                size=H*rng.uniform(.085,.125)
+                point[2]+=H*(.045*math.sin(sector_az+.6)+.025*math.sin(3*sector_az+.2))
+                taper=1.0-.38*max(0.,(point[2]/H-.73)/.30)
+                point[:2]*=max(.60,taper)*(1.+.08*math.sin(2*sector_az+.5))
+                point[2]=min(H*.99,max(H*.18,point[2]))
+                if low and i in (2,6): continue
+                center=transform(point)
+                normal /= np.linalg.norm(normal)
+                right=np.cross([0.,0.,1.],normal)
+                if np.linalg.norm(right)<1e-3: right=np.array([1.,0.,0.])
+                right/=np.linalg.norm(right)
+                up=np.cross(normal,right); up/=np.linalg.norm(up)
+                right *= size*.5*xy_scale; up *= size*.5
+                verts=[center-right-up,center+right-up,center+right+up,center-right+up]
+                shade=center-crown
+                shade=shade/max(np.linalg.norm(shade),1e-9)+np.array([0.,0.,.35])
+                kit.quad(verts, uv, [PLT._fol(shade)]*4)
+
+
 def authored_trees(buf, overrides, zf, report, half=1024.0):
     """ADR 0186: grown broadleaf trees and corner shrubs of an authored `kind: tree_groups` with `form: kit` -
     `points_en` rows `[E, N, height m, crown diameter m[, species]]` traced from the orthophoto / a photo, meshed as
@@ -1152,7 +1228,7 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
         if o.get("kind") != "tree_groups" or o.get("form") != "kit":
             continue
         crown_model = o.get("crown_model", "kit")
-        if crown_model not in ("kit", "garden_trial"):
+        if crown_model not in ("kit", "garden_trial", "linden_study_r3"):
             raise ValueError(f"tree_groups {o['id']}: unknown crown_model {crown_model!r}")
         spw = o.get("species") or {"maple": 1.0}
         if any(s not in KIT_SPECIES for s in spw):
@@ -1167,17 +1243,23 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
                 raise ValueError(f"tree_groups {o['id']}: unknown species {sp!r}, knows {sorted(KIT_SPECIES)}")
             if crown_model == "garden_trial" and sp not in HABIT:
                 raise ValueError(f"tree_groups {o['id']}: garden_trial does not support species {sp!r}")
+            if crown_model == "linden_study_r3" and sp != "linden":
+                raise ValueError(f"tree_groups {o['id']}: linden_study_r3 requires linden")
             cb = float(o.get("crown_base_m", (0.0 if sp == "berberis_red" else 0.08 if sp in ("shrub", "fruit") else 0.21) * H))
             z = zf(p)
             kit = PLT.Kit()
             kit.tag = "authored_tree"
             kit.low = False
-            if crown_model == "garden_trial":
+            if crown_model == "linden_study_r3":
+                _linden_study_r3(kit, p, z, H, 2*r, low=False)
+            elif crown_model == "garden_trial":
                 garden_tree(kit, p, z, r, H, cb, sp, key, lite=False, cards=3)
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False)
             kit.low = "only"
-            if crown_model == "garden_trial":
+            if crown_model == "linden_study_r3":
+                _linden_study_r3(kit, p, z, H, 2*r, low=True)
+            elif crown_model == "garden_trial":
                 garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=2, core=True)
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
