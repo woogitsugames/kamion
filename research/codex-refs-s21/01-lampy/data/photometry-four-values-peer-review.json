@@ -1,0 +1,76 @@
+{
+  "review_date": "2026-11-15",
+  "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+  "snapshot": "R148 Add.147, 2020-01-09; aktualność2026 UNVERIFIED",
+  "method": "Pełny oficjalny tekst w indeksowanej kopii web,2865 linii; nie snippet.",
+  "README_scope": "Fotometria, cztery punkty",
+  "checks": [
+    {
+      "point": "4.8.11",
+      "verdict": "PASS; doprecyzowanie",
+      "ratio_min": "5:1",
+      "numerator": "pozycja/obrys+stop równocześnie",
+      "denominator": "sama pozycja/obrys",
+      "field": "±5°V, ±10°H",
+      "condition": "Wzajemne sprzężenie; wszystkie źródła uznanej pojedynczej lampy pracują. Dotyczy stałej lub zmiennej światłości stopu.",
+      "pages": [
+        20,
+        21
+      ]
+    },
+    {
+      "point": "5.5.1 tabela7;5.5.2;4.8.3",
+      "verdict": "PASS wartości; nie globalny zakres",
+      "category": "S1",
+      "HV_min_cd": 60,
+      "single_max_cd": 260,
+      "D_marked_max_cd": 130,
+      "off_axis": "Minimum osiowe mnożone przez procent dla kierunku z zał.3; maksimum w kierunkach widoczności.",
+      "page": 24
+    },
+    {
+      "point": "5.6.1 tabela8;5.6.2;5.6.6;5.6.10",
+      "verdict": "PASS wartości; nie globalny zakres",
+      "category": "2a",
+      "reference_axis_min_cd": 50,
+      "single_max_cd": 500,
+      "D_marked_max_cd": 250,
+      "off_axis": "Minimum mnożone przez kierunkowe procenty zał.3.",
+      "measurement": "Zasadniczo ciągłe włączenie; dopuszczony pomiar migający: raportowane maksimum. Nieżarowe: osobna kontrola po1/30min w miganiu1,5Hz/50%.",
+      "pages": [
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "point": "5.11.2–3; zał.3 pkt3",
+      "verdict": "PASS",
+      "plate_categories": [
+        "1a",
+        "1b",
+        "1c",
+        "2a",
+        "2b"
+      ],
+      "minimum_cd_m2": 2.5,
+      "gradient": "abs(B1-B2)/odległość_cm ≤2×B0/cm",
+      "B0": "najmniejsza zmierzona luminancja",
+      "measurement": "Punkty reprezentują kołaØ25mm; bezbarwna powierzchnia rozpraszająca2mm przed uchwytem; pomiar prostopadły±5°, korekcja odbicia do1,0.",
+      "page": 30
+    }
+  ],
+  "terminology": "Steady oznacza kategorię stałej światłości względem regulacji zmiennej; nie jednakową światłość we wszystkich kierunkach. Kierunkowskaz nadal miga.",
+  "coupled_limit": "Nie stosować5:1 do dowolnych oddzielnych lamp. Nie wyprowadzać samej światłości stopu jako5×pozycja: licznik obejmuje obie funkcje.",
+  "regulations_csv_audit": {
+    "rows": 20,
+    "missing_points": [
+      "4.8.11 stosunek5:1",
+      "5.5.1 tabela7 S1",
+      "5.6.1 tabela8 kat.2a",
+      "5.11.3 luminancja/gradient"
+    ],
+    "action": "Wypunktowano braki; nie zmienianoCSV aniREADME."
+  },
+  "game_limit": "Wymagania badania, nie bezpośrednie nastawy shadera."
+}

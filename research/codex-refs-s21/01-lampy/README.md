@@ -72,3 +72,5 @@ Klucz symboli Europoint: data/europoint-symbols-regulation-review.json wiąże S
 ## Europoint III — odmienny klosz i etykieta
 
 01-EUP3-001…003: trzy fizyczne kadry jednej części,15 link-only łącznie z pozostałymi zestawami; cały manifest21 kadrów (6 lokalnych). Dwa zbliżenia niezależnie obejrzał drugi agent, data/europoint3-peer-review.json. Na kloszu pewne symbole2a/AR/S1/F1/R1/L i częściowo przycięte E9; pełny numer pozostaje UNVERIFIED. Na etykiecie czytelne E9/6985 przy SM1/IA; przetartego numeru głównej grupy nie odtworzono. To nie dwa egzemplarze ani dowód świecenia. Odczyt SM1/IA nie potwierdza homologacji wszystkich pozostałych funkcji. Katalogowy mały widok odłożono poza manifestem.
+
+Cztery początkowe wartości fotometryczne poddano niezależnemu audytowi i dodano jako01-N21…024 doCSV (teraz24 rekordy). Recenzja w data/photometry-four-values-peer-review.json doprecyzowuje stosunek5:1, kierunki minimalnej światłości i osobne maksima lamp oznaczonychD oraz powierzchnię/punkty badania tablicy. Steady nie oznacza jednakowej światłości w każdym kierunku ani braku migania kierunkowskazu.
