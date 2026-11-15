@@ -114,3 +114,7 @@
 - 2026-11-15 21:28 +01:00 — R3 wszystkie 4 warianty OK, 62 kadry/wariant, pary 01–11 lokalnie. Wizualnie FAIL: 02 za blisko, 07 poza osią, plac pomnika przenika. Low nadal FAIL: wspólna kamera +6 draws i +1644 tris; High max 1 229 621 tris (<2 mln). Przygotowano wejścia urzędu i próbę koron, wymagają r4.
 - NASTĘPNY KROK: `pwsh artifacts/knyszyn-rynek-0227/r4.ps1`
 
+
+- 2026-11-15 21:28 +01:00 — R4 wystartowała: plac pomnika przez park_flush, wejścia i lukarny urzędu, 2 próbne korony lip, korekta kamer 02/07. Każda zmiana wymaga renderu i ponownego budżetu.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r4.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r4.done`
+
