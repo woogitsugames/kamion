@@ -33,6 +33,11 @@ namespace Game.Vehicle.Physics
         /// <summary>Articulation angle (tractor heading relative to trailer, + = tractor turned right) [rad], plate pitch and relative roll [rad].</summary>
         public double Articulation, PitchAngle, RollAngle;
         public double PositionError;
+        /// <summary>Elastic energy stored in the coupling at the start of the last solve [J]: roll spring 0.5 kR roll^2 and the compliant stops 0.5 k err^2 (diagnostics / energy balance).</summary>
+        public double RollSpringEnergy, StopSpringEnergy;
+        /// <summary>Last solve, diagnostics: accumulated angular impulses per row [N m s] and the row axes (dC/dt = n . (wTrailer - wTractor)); KingpinImpulse = ForceOnTrailer dt.</summary>
+        public double ImpRoll, ImpRollStop, ImpPitchStop, ImpYawStop, ImpFriction;
+        public Vec3 AxisRoll, AxisPitch, AxisYaw;
         public int CouplingEvents, UncouplingEvents;
         /// <summary>Time since the jaw locked [s]; during the engagement phase the kingpin point is compliant.</summary>
         public double SinceCoupled = 100;
@@ -200,6 +205,10 @@ namespace Game.Vehicle.Physics
                 mFricSoft = 1.0 / (1.0 / mYaw + gammaF);
             }
 
+            RollSpringEnergy = 0.5 * kR * cRoll * cRoll;
+            StopSpringEnergy = StopEnergy(cRoll, sinRollLim, mRoll, Def.stopFrequencyHz) + StopEnergy(cPitch, sinPitchLim, mPitch, Def.stopFrequencyHz)
+                + StopEnergy(Articulation, yawLim, mYaw, Def.yawStopFrequencyHz);
+
             Vec3 P = Vec3.Zero;
             double accRoll = 0, accRollLim = 0, accPitch = 0, accYaw = 0, accFric = 0;
             Vec3 angImpulse = Vec3.Zero;
@@ -218,9 +227,9 @@ namespace Game.Vehicle.Physics
                 ApplyAngular(ref A, ref B, nRoll, lr); angImpulse += nRoll * lr;
 
                 // Hard limits.
-                Limit(ref A, ref B, nRoll, cRoll, sinRollLim, mRoll, Def.stopFrequencyHz, 0.7, dt, ref accRollLim, ref angImpulse);
-                Limit(ref A, ref B, nPitch, cPitch, sinPitchLim, mPitch, Def.stopFrequencyHz, 0.7, dt, ref accPitch, ref angImpulse);
-                Limit(ref A, ref B, nYaw, Articulation, yawLim, mYaw, Def.yawStopFrequencyHz, 1.0, dt, ref accYaw, ref angImpulse);
+                Limit(ref A, ref B, nRoll, cRoll, sinRollLim, mRoll, Def.stopFrequencyHz, Def.stopDampingRatio, Def.stopRecoveryRateDegS * MathUtil.Deg2Rad, dt, ref accRollLim, ref angImpulse);
+                Limit(ref A, ref B, nPitch, cPitch, sinPitchLim, mPitch, Def.stopFrequencyHz, Def.stopDampingRatio, Def.stopRecoveryRateDegS * MathUtil.Deg2Rad, dt, ref accPitch, ref angImpulse);
+                Limit(ref A, ref B, nYaw, Articulation, yawLim, mYaw, Def.yawStopFrequencyHz, 1.0, Def.stopRecoveryRateDegS * MathUtil.Deg2Rad, dt, ref accYaw, ref angImpulse);
 
                 // Plate friction about the kingpin axis.
                 if (frictionCap > 0)
@@ -236,6 +245,8 @@ namespace Game.Vehicle.Physics
                 }
             }
 
+            ImpRoll = accRoll; ImpRollStop = accRollLim; ImpPitchStop = accPitch; ImpYawStop = accYaw; ImpFriction = accFric;
+            AxisRoll = nRoll; AxisPitch = nPitch; AxisYaw = nYaw;
             ForceOnTrailer = P / dt;
             TorqueOnTrailer = angImpulse / dt;
             Vec3 onTractor = -ForceOnTrailer;
@@ -276,8 +287,13 @@ namespace Game.Vehicle.Physics
         /// One-sided soft stop keeping C inside [-limit, limit]: an implicit spring-damper (frequency f, damping
         /// ratio zeta relative to the row's effective mass) that only pushes, so contact with the stop is spread
         /// over a few steps instead of a single-step impulse (deformable cab / plate contact).
+        /// ADR 0201b (F2): the stop does not rebound. While the row approaches or rests on the stop the impulse is the soft
+        /// spring-damper one; it may never drive the rows apart faster than <paramref name="recoveryRate"/> [rad/s]. A Kelvin-Voigt
+        /// stop gives part of its stored spring energy back as relative velocity (ζ 0.7: 4.5 kJ of a 58 kJ plate-pitch
+        /// impact in the tumbling free fall of F2, energy that KE + PE does not contain); now the stored energy is released
+        /// only as a slow recovery of the penetration (stop crush / hysteresis), at most 0.5 m recoveryRate^2 of kinetic energy.
         /// </summary>
-        static void Limit(ref Body A, ref Body B, Vec3 n, double c, double limit, double m, double f, double zeta, double dt, ref double acc, ref Vec3 angImpulse)
+        static void Limit(ref Body A, ref Body B, Vec3 n, double c, double limit, double m, double f, double zeta, double recoveryRate, double dt, ref double acc, ref Vec3 angImpulse)
         {
             double err;
             if (c > limit) err = c - limit;
@@ -290,11 +306,22 @@ namespace Game.Vehicle.Physics
             double ms = 1.0 / (1.0 / m + gamma);
             double cdot = Vec3.Dot(n, B.W - A.W);
             double l = -ms * (cdot + beta * err / dt + gamma * acc);
-            double nacc = err > 0 ? Math.Min(acc + l, 0) : Math.Max(acc + l, 0);
+            // Rebound cap in "push" coordinates (s = +1 when c > limit): outward rate u = -s cdot, push p = -s acc >= 0.
+            double sgn = err > 0 ? 1.0 : -1.0;
+            double u = -sgn * cdot;
+            double dp = Math.Min(-sgn * l, m * (recoveryRate - u));
+            double nacc = err > 0 ? Math.Min(acc - dp, 0) : Math.Max(acc + dp, 0);
             double d = nacc - acc;
             acc = nacc;
             ApplyAngular(ref A, ref B, n, d);
             angImpulse += n * d;
+        }
+
+        static double StopEnergy(double c, double limit, double m, double f)
+        {
+            double err = c > limit ? c - limit : c < -limit ? c + limit : 0;
+            double w = 2 * Math.PI * f;
+            return 0.5 * m * w * w * err * err;
         }
 
         static double Quad(Vec3 n, Mat3 m) => Vec3.Dot(n, m * n);
