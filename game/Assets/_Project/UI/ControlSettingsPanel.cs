@@ -31,6 +31,9 @@ namespace Game.UI
 
         const float RowH = 66f, ColW = 700f, Pad = 40f, Edge = 20f, HeaderH = 86f, FooterH = 108f;
 
+        /// <summary>Opens the keyboard / pad bindings screen as a child of the given transform (ADR 0264); null = no PC input installed, row hidden.</summary>
+        public static Action<Transform> OpenInputBindings;
+
         public ControlSettings Settings { get; private set; }
         Action m_OnChanged, m_OnClose, m_OnCalibrate;
         Font m_Font;
@@ -165,6 +168,14 @@ namespace Game.UI
             Header(content, "PEDAŁY", left, ref y);
             Segment(content, left, ref y, "Krzywa gazu", "liniowa", "progresywna", () => Settings.throttleProgressive, v => Settings.throttleProgressive = v);
             Segment(content, left, ref y, "Krzywa hamulca", "liniowa", "progresywna", () => Settings.brakeProgressive, v => Settings.brakeProgressive = v);
+            if (OpenInputBindings != null)   // ADR 0264: PC keyboard + pad screen (installed by Game.Gameplay.PcInputBridge)
+            {
+                y += 18f;
+                Header(content, "KLAWIATURA I PAD", left, ref y);
+                var kb = TextButton(content, "Przypisania i czułość…", Vector2.zero, new Vector2(ColW, 64f), () => OpenInputBindings?.Invoke(transform));
+                PlaceTop((RectTransform)kb.transform, left, y, new Vector2(ColW, 64f));
+                y += 64f + 8f;
+            }
             float leftEnd = y;
 
             // Right column (or continued below in one column): gyro + camera
