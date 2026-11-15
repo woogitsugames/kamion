@@ -269,10 +269,12 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
         j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
         return ~blocked[j, i], zc[j, i]
 
-    def emit(P, species, rng, src_id, hscale=1.0, fk=None, hrange=None, spruce_v=None, tier=None):
+    def emit(P, species, rng, src_id, hscale=1.0, fk=None, hrange=None, spruce_v=None, tier=None, mask=None):
         if not len(P):
             return
         good, z = ok(P)
+        if mask is not None:                # extra blocked-dependent filter (forest floor near a road, ADR 0245):
+            good = good & mask              # drop AFTER the draws, so the stream does not depend on it (ADR 0173)
         # ADR 0173: the attributes are drawn for EVERY candidate point (same calls, same order as before), and the
         # clearance test only drops the tree afterwards. Before, a tree dropped by a new kerb / paved area / building
         # skipped its draws and shifted the random stream of every later tree of the same BDOT feature or group
@@ -308,6 +310,8 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
 
     from scipy import ndimage as _ndi
     road_dist = _ndi.distance_transform_edt(~blocked)       # metres to the nearest road / yard / building (1 m nodes)
+    if not blocked.any():                   # ADR 0245: with no blocked node scipy measures to a phantom point off the
+        road_dist = np.full(blocked.shape, np.inf)          # grid corner (floor plants appeared in one corner)
 
     def near_road(P, lim):
         i = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
@@ -394,11 +398,13 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
             emit(P, sp, rng, f"bdot:{f['id']}:under", 1.0, fk=fk, spruce_v="open")
             ranged(n0, {k: v[:2] for k, v in UNDERSTOREY.items()})
             # forest floor plants where the floor is seen from a road (High tier only)
+            # ADR 0245: every candidate draws its attributes and the near-road test only drops it afterwards. Before,
+            # the candidates were filtered first, so a new kerb / paved area changed the number of draws and shifted
+            # the stream of the stand mantle (:edge) drawn next - trees moved far outside the edited spot (ADR 0173).
             P = _scatter(full.buffer(-1.0), FLOOR_SPACING, rng)
-            if len(P):
-                P = P[near_road(P, FLOOR_ROAD_M)]
             n0 = len(out)
-            emit(P, ["floor"] * len(P), rng, f"bdot:{f['id']}:floor", 1.0, tier="high")
+            emit(P, ["floor"] * len(P), rng, f"bdot:{f['id']}:floor", 1.0, tier="high",
+                 mask=near_road(P, FLOOR_ROAD_M) if len(P) else None)
             n_floor += len(out) - n0
         # edge (ADR 0187): mantle of three bands with rising height along the outline (partial by segment hash, M68)
         for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk]):
