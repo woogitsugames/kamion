@@ -74,7 +74,12 @@ Maszyna deweloperska (Ultra 7 270K Plus, 64 GB, RTX 5070, D3D12) — **NIE refer
   `m_BuildTarget: Standalone` (static 1 / dynamic 0). Jeśli lider chce mieć to jawnie w gicie — jego decyzja.
 - `build_info` w playerze ma etykietę `ab4e89799e-dirty` (HEAD w chwili preprocessu + efekty uboczne Unity), a nazwa
   folderu `4ee3e02626` (HEAD przy starcie skryptu); kod identyczny (ab4e89799 dodaje tylko ten ADR).
-- Testy EditMode (Win64): wynik w raporcie agenta / `artifacts/win-build-0261/test.out.log`.
+- **Testy EditMode** (`scripts/test.ps1 -Platform EditMode -BuildTarget Win64`, worktree): 633 razem, 630 zaliczonych,
+  1 pominięty, **2 niezaliczone**: `CarPaintMaterialTests.DepositionChannel_RequiresScopedYardOptInOrExistingCar`
+  (przypadki `tractor_paint_blue` i `car_paint_blue`, `WorldPbrMaterials.Channels` — kod nieruszany w tym ADR; te same
+  przypadki przechodzą w przebiegach main z 20:20). Przyczyna UNVERIFIED (hipoteza: zestaw tekstur `car_grime_clean`
+  niewidoczny w danych worktree albo zależność od platformy edytora) — do sprawdzenia przez lidera przy scalaniu.
+  `WindowsBuildTests` 5/5, `RegionSelectTests` 16/16. Wynik: `artifacts/win-build-0261/tests/editmode-20261115-213516.xml`.
 
 ## Otwarte
 - Kierownica z FFB (D56/D73) — nie w tym ADR.
