@@ -166,6 +166,14 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     rep["terrain_soft_nodes"] = int(soft.sum())
     zc = CF.clamp_under_decks(zc, deck, deck_mask, thick, mask)
     zc = CF.tidy(zc, zjoin, mask, dist)
+    # Explicit park surfaces use lawn-level paving instead of deep yard skirts.
+    # Keep all other ground and surfaces on the existing conformance path.
+    flush_items = [p for p in paved if p.get("park_flush") is True]
+    if flush_items:
+        flush_mask = PV.rasterize_polys([p["poly"] for p in flush_items], hf)
+        other_mask = PV.rasterize_polys([p["poly"] for p in paved if p.get("park_flush") is not True] +
+                                        [p["poly"] for p in plot_paved], hf)
+        zc = PV.conform_park_flush(zc, pz, flush_mask, rmask | other_mask | deck_mask)
     bmask = PV.rasterize_polys([b["poly"] for b in blds], hf)
     zc = np.where(bmask & ~mask, np.minimum(zc, sm), zc)        # ground under buildings never above the floor
     if getattr(w, "water", None) is not None:      # ADR 0210 (opt-in): river / pond bed, shallow banks, shore lip

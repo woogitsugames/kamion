@@ -66,6 +66,15 @@ ROOFS_PITCHED = ["roof_tiles_red", "roof_metal_graphite", "roof_tiles_brown", "r
 HOUSE_TONES = [("plaster_light", 0.30, "n"), ("plaster_grey", 0.25, "n"), ("plaster_beige", 0.25, "w"),
                ("plaster_cream", 0.20, "w")]
 HOUSE_ROOFS = [("roof_tiles_red", 0.40), ("roof_tiles_brown", 0.32), ("roof_metal_graphite", 0.28)]
+
+
+def house_roof_material(building, default):
+    """Opt-in roof colour for a sourced house; preserve the neighbour palette."""
+    material = building.get("ovr", {}).get("roof_material", default)
+    allowed = {name for name, _ in HOUSE_ROOFS}
+    if material not in allowed:
+        raise ValueError(f"building {building['id']}: unsupported roof_material {material!r}")
+    return material
 HOUSE_NEAR_M = 40.0
 STOREY_H = {"office": 3.5, "block": 2.8, "house": 2.9}
 # window reveal depth of rendered walls, m: the frame sits in the old wall plane, the thermal insulation (12-15 cm of
@@ -1684,7 +1693,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                          uv1=runoff_uv1(hole_ro, uh, uh + L, zbot, zeave))
                 uh += L
         if pitched:
-            rmat = house_pal[key][1] if typ == "house" else hpick(key, ROOFS_PITCHED, "roof")
+            rmat = house_roof_material(b, house_pal[key][1]) if typ == "house" else hpick(key, ROOFS_PITCHED, "roof")
             # ADR 0094 (review s9 P1-4): the soffit is light boarding (`soffit_boards`), not the graphite flashing
             # (0.045) that read 24-26 sRGB under the verge of r10_house_2 next to a wall of 140. Measured there
             # (High overcast): white `reveal_plaster` 72, the wall material 70-73, `plinth_dark` (0.20) 38 - the engine

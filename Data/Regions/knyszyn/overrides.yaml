@@ -21,6 +21,7 @@ overrides:
   # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
   - id: rynek-fountain-plate-0227
     kind: paved_area
+    park_flush: true
     material: yard_concrete
     polygon_epsg2180:
     - - 760946.98
@@ -37,6 +38,7 @@ overrides:
     verify: compare against owner photos and GUGiK orthophoto
   - id: rynek-central-plaza-0227
     kind: paved_area
+    park_flush: true
     material: yard_paving
     polygon_epsg2180:
     - - 760941
@@ -61,6 +63,7 @@ overrides:
     verify: compare against owner photos and GUGiK orthophoto
   - id: rynek-path-main-sw-0227
     kind: paved_area
+    park_flush: true
     material: yard_paving
     polygon_epsg2180:
     - - 760882.62
@@ -76,6 +79,7 @@ overrides:
     verify: compare against owner photos and GUGiK orthophoto
   - id: rynek-path-main-ne-0227
     kind: paved_area
+    park_flush: true
     material: yard_paving
     polygon_epsg2180:
     - - 760946.41
@@ -91,6 +95,7 @@ overrides:
     verify: compare against owner photos and GUGiK orthophoto
   - id: rynek-path-north-0227
     kind: paved_area
+    park_flush: true
     material: yard_paving
     polygon_epsg2180:
     - - 760941.5
@@ -106,6 +111,7 @@ overrides:
     verify: compare against owner photos and GUGiK orthophoto
   - id: rynek-path-west-0227
     kind: paved_area
+    park_flush: true
     material: yard_paving
     polygon_epsg2180:
     - - 760905.81
@@ -121,6 +127,7 @@ overrides:
     verify: compare against owner photos and GUGiK orthophoto
   - id: rynek-path-south-0227
     kind: paved_area
+    park_flush: true
     material: yard_paving
     polygon_epsg2180:
     - - 760934.35
@@ -292,4 +299,29 @@ overrides:
       incidental self-seeded rule trees; preserve authored points.'
     confidence: high
     verify: visual comparison
+
+  - id: rynek-1-roof-0227
+    target: {building: "bdot:2002917F-3002-5C99-E053-CC2BA8C01CFC"}
+    reason: "ESTIMATED: dark grey roof in GUGiK orthophoto 2025-05-27; covering unverified."
+    confidence: medium
+    verify: "Owner reference and same-pose render; material unverified."
+    set: {roof_material: roof_metal_graphite}
+  - id: rynek-3-roof-0227
+    target: {building: "bdot:2002917F-3066-5C99-E053-CC2BA8C01CFC"}
+    reason: "ESTIMATED: warm reddish-brown roof in GUGiK orthophoto 2025-05-27; covering unverified."
+    confidence: medium
+    verify: "Compare red and brown on render."
+    set: {roof_material: roof_tiles_red}
+  - id: rynek-5-roof-0227
+    target: {building: "bdot:2002917F-3078-5C99-E053-CC2BA8C01CFC"}
+    reason: "ESTIMATED: blue-grey roof in GUGiK orthophoto 2025-05-27; covering unverified."
+    confidence: medium
+    verify: "Owner reference and same-pose render; material unverified."
+    set: {roof_material: roof_metal_graphite}
+  - id: rynek-9-roof-0227
+    target: {building: "bdot:2002917F-2E16-5C99-E053-CC2BA8C01CFC"}
+    reason: "ESTIMATED: brick-red roof in GUGiK orthophoto 2025-05-27; covering unverified."
+    confidence: medium
+    verify: "Owner reference and same-pose render; material unverified."
+    set: {roof_material: roof_tiles_red}
 

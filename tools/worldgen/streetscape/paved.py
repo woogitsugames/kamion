@@ -64,6 +64,9 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
     come right after the dock aprons (a mapped track is a precise line, a yard is a blob) and the BDOT10k path lines
     that describe the same paths are not laid a second time."""
     cand = []
+    # An explicit authored opt-in: park paths and plazas meet lawn without
+    # the concrete restraint and deep yard flange. Existing surfaces are unchanged.
+    flush_ids = {o["id"] for o in overrides if o.get("kind") == "paved_area" and o.get("park_flush") is True}
     for o in overrides:
         if o.get("kind") != "paved_area":
             continue
@@ -133,7 +136,10 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
             p = p.simplify(0.05)
             if p.is_empty or p.area <= 3.0 or p.geom_type != "Polygon":
                 continue
-            out.append({"id": f"{cid}#{k}", "poly": p, "mat": mat, "source": srcname, "parking": is_parking})
+            item = {"id": f"{cid}#{k}", "poly": p, "mat": mat, "source": srcname, "parking": is_parking}
+            if srcname == "authored_override" and cid in flush_ids:
+                item["park_flush"] = True
+            out.append(item)
             kept += p.area
         if kept:
             taken = shapely.union(taken, poly)
@@ -210,6 +216,24 @@ def paved_heights(hf, road_z, road_mask, pmask):
     w = np.clip(1.0 - d / S.PAVED_BLEND_M, 0.0, 1.0)
     z = sm + delta[jj, ii] * w
     return np.where(pmask, z, np.nan)
+
+
+def conform_park_flush(zc, pz, flush_mask, hard_mask, blend_m=3.0, under_m=0.03):
+    """Bring the terrain close under opt-in park paving and blend its grassy margin.
+
+    `hard_mask` protects roads and non-park paving; outside the park's influence
+    the result is exactly the original terrain. Both arrays use the NMT 1 m grid.
+    """
+    if not flush_mask.any():
+        return zc
+    selected = flush_mask & ~hard_mask & np.isfinite(pz)
+    if not selected.any():
+        return zc
+    distance, (jj, ii) = ndimage.distance_transform_edt(~selected, return_indices=True)
+    target = pz[jj, ii] - under_m
+    weight = np.clip(1.0 - distance / blend_m, 0.0, 1.0)
+    weight[hard_mask] = 0.0
+    return np.where(weight > 0, zc + weight * (target - zc), zc)
 
 
 def bilinear(grid, hf, e, n):
@@ -293,6 +317,8 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
 
 def _edges(buf, item, zgrid, hf, roads_poly=None):
     """Outer edge: concrete edging strip (paving blocks) or flush flange (concrete / asphalt)."""
+    if item.get("park_flush") is True:
+        return
     poly, mat = item["poly"], item["mat"]
     edged = mat in EDGED and item.get("edging", True)      # ADR 0114: plot driveways end flush (no extra material)
     for ring in [poly.exterior, *poly.interiors]:
