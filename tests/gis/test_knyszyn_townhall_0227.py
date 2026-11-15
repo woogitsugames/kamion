@@ -174,3 +174,26 @@ def test_culture_roof_reaches_real_eaves_and_has_upward_normals():
     for tri in triangles[::10]:
         xy=tri[:,:2].mean(axis=0)
         assert np.isclose(townhall._culture_roof_sample(triangles,xy),tri[:,2].mean())
+
+
+def test_culture_dormers_are_lower_on_the_existing_roof():
+    fc=source(); blds=BM.load(fc,[761611,612607],[],hero=townhall.hero_targets("knyszyn",fc))
+    culture=next(b for b in blds if b["id"]==townhall.CULTURE)
+    office=next(b for b in blds if b["id"]==townhall.OFFICE)
+    poly=culture["poly"]
+    _,axis,_,_,width=townhall._frame(poly)
+    length,front,tan,out=townhall._facade(poly,townhall._frame(office["poly"])[0],axis)
+    triangles=townhall._culture_roof_triangles(poly,10.,13.)
+    for count in (3,5):
+        placements=[]
+        for j in range(count):
+            u=(j-(count-1)/2)*min(3.7,(length-3)/max(1,count-1))
+            item=townhall._culture_dormer_placement(poly,triangles,front,tan,out,width,u,13.)
+            if item is None:
+                continue
+            center,base,scale=item
+            assert np.isclose((center-front)@out,-width*.12)
+            assert np.isclose(base,townhall._culture_roof_sample(triangles,center+out*.55))
+            assert base-.15+1.2*scale <= 13.-.08+1e-8
+            placements.append(item)
+        assert len(placements)>=2

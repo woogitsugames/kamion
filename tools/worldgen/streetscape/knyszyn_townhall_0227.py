@@ -239,18 +239,35 @@ def _culture_roof_sample(triangles, xy):
     return None
 
 
-def _dormer(acc, layer, center, axis, out, eave, rise, window_material="glass", roof_base=None):
+def _culture_dormer_placement(poly, triangles, front, axis, out, width, u, ridge):
+    """WORKING_VALUE: place the front lower on the photographed roof slope."""
+    center = front + axis*u - out*(width*.12)
+    outline = Polygon([center + axis*a + out*n
+                       for a, n in [(-.8,-.65),(.8,-.65),(.8,.65),(-.8,.65)]])
+    if not poly.covers(outline):
+        return None
+    # Base sampled at the front, rather than under the centre on the rising slope.
+    roof_base = _culture_roof_sample(triangles, center+out*.55)
+    if roof_base is None:
+        return None
+    scale = min(1.0, (ridge - roof_base + .15 - .08) / 1.20)
+    if scale < .35:
+        return None
+    return center, roof_base, scale
+
+
+def _dormer(acc, layer, center, axis, out, eave, rise, window_material="glass", roof_base=None, scale=1.0):
     """Modest white dormer with a red gable, standing on the roof plane."""
     z0 = eave + rise * .25 if roof_base is None else roof_base-.15
     # Half axes in E,N,Z. The roof plane rises inward; this box partly intersects it.
-    acc.box(layer, "plaster_white", _pt(center, z0+.40), np.r_[axis*.57, 0],
-            np.r_[out*.55, 0], [0, 0, .50], skip=(0,))
-    _face(acc, layer, window_material, center, axis, out, .64, z0+.20, z0+.88, .556)
+    acc.box(layer, "plaster_white", _pt(center, z0+.40*scale), np.r_[axis*.57, 0],
+            np.r_[out*.55, 0], [0, 0, .50*scale], skip=(0,))
+    _face(acc, layer, window_material, center, axis, out, .64, z0+.20*scale, z0+.88*scale, .556)
     front, back = center+out*.55, center-out*.55
     a, b, c, d = front-axis*.65, front+axis*.65, back+axis*.65, back-axis*.65
     peak0, peak1 = front, back
     # Roof is above the white box; normals checked independently of axis sign.
-    za, zp = z0+.90, z0+1.20
+    za, zp = z0+.90*scale, z0+1.20*scale
     faces = [[_pt(a,za), _pt(d,za), _pt(peak1,zp), _pt(peak0,zp)],
              [_pt(c,za), _pt(b,za), _pt(peak0,zp), _pt(peak1,zp)]]
     if axis[0]*out[1] - axis[1]*out[0] < 0:
@@ -349,15 +366,19 @@ def build(buf, region, blds, zsmooth, report):
             n_dormer = (4 if bid == OFFICE else 3) if low else (8 if bid == OFFICE else 5)
             for j in range(n_dormer):
                 u = (j-(n_dormer-1)/2)*min(3.7, (facade_len-3)/max(1,n_dormer-1))
+                if bid == CULTURE:
+                    placement = _culture_dormer_placement(poly, culture_roof, front, face_axis, out, width, u, top)
+                    if placement is not None:
+                        dormer_center, roof_base, scale = placement
+                        _dormer(acc, layer, dormer_center, face_axis, out, eave, top-eave,
+                                window_material="plinth_dark" if low else "glass", roof_base=roof_base, scale=scale)
+                    continue
                 dormer_center = front+face_axis*u-out*(width*.19)
                 outline = Polygon([dormer_center + face_axis*a + out*n
                                    for a, n in [(-.8,-.65),(.8,-.65),(.8,.65),(-.8,.65)]])
                 if poly.covers(outline):
-                    roof_base = _culture_roof_sample(culture_roof,dormer_center) if bid == CULTURE else None
-                    if bid == CULTURE and roof_base is None:
-                        continue
                     _dormer(acc, layer, dormer_center, face_axis, out, eave, top-eave,
-                            window_material="plinth_dark" if low else "glass", roof_base=roof_base)
+                            window_material="plinth_dark" if low else "glass")
         if bid == CULTURE:
             # Four full-height cream columns and two storeys of recessed loggia; no signs or emblems.
             for layer in LAYERS:
