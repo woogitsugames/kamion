@@ -5,9 +5,10 @@
 
 Catalog: game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json (Resources, loaded by
 Game.Gameplay.RegionCatalog in the Boot menu and read by Game.Editor.Build.RegionBuildList for `-Regions`).
-Authored fields (kept as they are): id, label, group, order of the list, aliases, sets.
+Authored fields (kept as they are): id, label, group, order of the list, aliases, sets (except the derived ones below).
 Derived fields (rewritten here): routeLengthM (route_start.json length_m), startS (12 m like the spawn the importer
-places, WorldSceneBuilder spawnS, clamped so that at least MIN_AHEAD_M of route remains).
+places, WorldSceneBuilder spawnS, clamped so that at least MIN_AHEAD_M of route remains), and the DERIVED_SETS
+(ADR 0267: d67-full = d67 + the D71 extras; the C# resolver does not nest sets, so the list is expanded here).
 Standard library only (no uv needed).
 """
 from __future__ import annotations
@@ -22,6 +23,38 @@ CATALOG = REPO / "game/Assets/_Project/Gameplay/Resources/Regions/region_catalog
 REGIONS = REPO / "Data/Regions"
 SPAWN_S_M = 12.0       # WorldSceneBuilder: const float spawnS = 12f
 MIN_AHEAD_M = 100.0    # keep >= 100 m before the tile-end closure (closure 60 m before the edge, ADR 0169) - WORKING_VALUE
+
+# Derived sets (ADR 0267, owner decision D71): name -> (base set, extra region ids, note). Written after the base set.
+DERIVED_SETS: dict[str, tuple[str, list[str], str]] = {
+    "d67-full": (
+        "d67",
+        ["bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01"],
+        "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin. APK size ESTIMATED 1407-1948 MB "
+        "(REVIEW-2026-11-15-s21-code-104, like 'all'); measure on the build (ADR 0267).",
+    ),
+}
+
+
+def apply_derived_sets(cat: dict, problems: list[str]) -> None:
+    """Expand DERIVED_SETS into cat["sets"] (in place); a missing / differing entry is reported in problems."""
+    sets = cat.setdefault("sets", [])
+    for name, (base_name, extra, note) in DERIVED_SETS.items():
+        base = next((s for s in sets if s.get("name") == base_name), None)
+        if base is None:
+            problems.append(f"set {name}: base set {base_name} missing")
+            continue
+        regions: list[str] = []
+        for r in list(base["regions"]) + extra:
+            if r not in regions:
+                regions.append(r)
+        want = {"name": name, "note": note, "regions": regions}
+        cur = next((i for i, s in enumerate(sets) if s.get("name") == name), None)
+        if cur is None:
+            problems.append(f"set {name}: missing (derived from {base_name})")
+            sets.insert(sets.index(base) + 1, want)
+        elif sets[cur] != want:
+            problems.append(f"set {name}: stale (derived from {base_name} + {', '.join(extra)})")
+            sets[cur] = want
 
 
 def derived(region_id: str) -> dict:
@@ -52,6 +85,7 @@ def main() -> int:
             if r.get(k) != v:
                 problems.append(f"{r['id']}.{k}: {r.get(k)} -> {v}")
                 r[k] = v
+    apply_derived_sets(cat, problems)
     for s in cat.get("sets", []):
         for t in s["regions"]:
             if t not in ids:
