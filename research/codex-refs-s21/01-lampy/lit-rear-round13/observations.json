@@ -1,0 +1,86 @@
+{
+  "snapshot_brussels": "2026-11-15T23:33:43+01:00",
+  "status": "STABLE; independent emission peer received, strict increment0",
+  "counts": {
+    "selected_distinct_photographs": 2,
+    "company_link_only": 2,
+    "downloaded_media": 0,
+    "saved_screenshots": 0,
+    "confirmed_physical_E": 0,
+    "confirmed_night": 0,
+    "strict_emitting_closeups_before_peer": 0,
+    "emission_candidate_with_large_lens": 0,
+    "clear_emission_below_individual_size_threshold": 1,
+    "strict_emitting_closeups_after_peer": 0,
+    "large_lens_emission_unverified": 1
+  },
+  "method": "Każdy dokładny URL otwarty i obraz indywidualnie obejrzany wChrome. Strona Ermax publicznyCSSbackground podała źródłową ścieżkęImage; ten wskazany plik otwarto bez zmiany nazwy/zgadywania rozmiaru. Nie zapisano plików obrazowych/screenshotów i nie wykonano cropów firmowych zdjęć.",
+  "dedup": "rg nazw daf-aspock-1600/europointverlichting/belysning-til-tunge w całym01 iK1 bez trafień; starychRN3/Lawsons/JoeKiser nie powtórzono. Ermaxsocialpreview i źródłowyJPG to ta sama ekspozycja, liczone raz.",
+  "source_text_limits": "Knapen wymienia EuropointIII do naczep i LightGuide, lecz nie stanowi samodzielnego dowodu elektrycznego włączenia tego kadru. Ermax strona dotyczy ciężkich naczep, nie dowód konkretnegoE/serii. Nie przeniesiono liczby7komór z nagłówka na obserwację obrazu.",
+  "photo_technique": "Knapen iErmax pokazują realną konstrukcję/śruby/zużycie/podłoże i fizyczny montaż; nie stwierdzono syntetycznej techniki. Nie jest to dowód braku korekcji reklamowej. DAFtechnikaUNVERIFIED, strictwykluczony.",
+  "photos": [
+    {
+      "id": "01-LR13-01",
+      "url": "https://www.knapen-trailers.com/sites/default/files/media/image/europoint%20verlichting%20website%20foto_0.jpg",
+      "source": "https://www.knapen-trailers.com/de/features/beleuchtung-7-kammer-leuchte",
+      "publisher": "Knapen Trailers; fotograf UNVERIFIED",
+      "size": [
+        2000,
+        1429
+      ],
+      "status": "EMISSION_UNVERIFIED_AFTER_INDEPENDENT_PEER",
+      "seen": "Fizyczna prostokątna lampa zamontowana na jasnym metalowym elemencie naczepy nad dużym zaokrąglonym zderzakiem. Na kloszu dwa górne bezbarwne pola z drobną fakturą, wydłużone czerwone pole u dołu, czerwone pole boczne i wąski bezbarwny fragment pośrodku. W dolnej czerwonej części wyraźne jasne pomarańczowoczerwone poziome pasma; na jasnym zderzaku czerwony rozproszony refleks. Widoczne śruby, karbowany gumowy wysięgnik, tekstura powierzchni metalowych i grunt z trawą w tle. E/pełny numer i symbole funkcji nieodczytane.",
+      "emission": "UNVERIFIED po niezależnym peer: jasne pomarańczowoczerwone pasma i czerwony refleks widoczne, ale nie wykluczają słońca/transmisji/odbicia. Nie zaliczono fizycznego załączenia z pojedynczej fotografii.",
+      "geometry": "ESTIMATED z obejrzanego całego kadru: szerokość prostokątnego korpusu około35–45% szerokości obrazu, więc zdecydowanie powyżej10%; brak zapisanego cropu i pomiaru pikselowego.",
+      "color": "czerwone i bezbarwne pola; jasne pomarańczowoczerwone pasma; jasna metalowa rama",
+      "shape": "poziomy prostokąt o zaokrąglonych narożach; wypukły klosz",
+      "chambers": "UNVERIFIED: widoczne pola i pasma nie wystarczają do policzenia siedmiu komór z nagłówka strony",
+      "application": "SOURCED [strona producenta]: Aspöck EuropointIII, opcja oświetlenia naczep Knapen. Na fotografii montaż do tylnej konstrukcji; nie komplet całego zestawu."
+    },
+    {
+      "id": "01-LR13-02",
+      "url": "https://en.ermax.dk/Files/Images/ermax/Produkter/Belysning/belysning-til-tunge-koeretoejer.jpg",
+      "source": "https://en.ermax.dk/products/lighting",
+      "publisher": "Ermax; fotograf UNVERIFIED",
+      "size": [
+        2560,
+        1440
+      ],
+      "status": "AUX_CONFIRMED_EMISSION_GEOMETRY_PER_LAMP_BELOW_THRESHOLD",
+      "seen": "Rzeczywisty tył pojazdu przy otwarciu budynku, światło dzienne w tle. W poziomym jasnym panelu trzy okrągłe moduły: każdy ma pierścień wyraźnych jasnych czerwonych punktów, a w środku nieświecącą szarawą siatkę prostokątnych elementów. Między lewym i środkowym modułem czerwony trójkątny element bez jasnych punktów. Poniżej osobna kwadratowa biała lampa z prześwietlonymi punktami i promieniami optycznymi. Obok trzy bardzo jasne bursztynowe punkty i mała czerwona lampka na wysięgniku. Tablica z pasemDK po prawej częściowo poza kadrem, pod nią duża żółto-czerwona powierzchnia.",
+      "emission": "SOURCED [obraz]: wyraźne jasne czerwone punkty w trzech pierścieniach, bursztynowe punkty oraz białe źródło z rozbłyskiem. Nie utożsamiono całego czerwonego trójkąta lub żółto-czerwonej dużej powierzchni z emisją. Stop vs pozycja i funkcje środków UNVERIFIED.",
+      "geometry": "ESTIMATED z całego kadru: każdy pojedynczy okrągły moduł około7–8% szerokości2560px, czyli poniżej10% i poniżej300px; cały wspólny panel około30–35%. Nie sumowano trzech odrębnych modułów, aby obejść minimum pojedynczej lampy; AUX do rozstrzygnięcia zakresu jednostki wFIX.",
+      "color": "czerwone świecące punkty; szare środki; czerwony trójkąt; jasny panel; biała i bursztynowa emisja",
+      "shape": "trzy okrągłe moduły w prostokątnym panelu; trójkątny element i osobny kwadrat lampy poniżej",
+      "chambers": "SOURCED [obraz]: trzy odrębne okrągłe moduły; wewnętrzna liczba komór każdego UNVERIFIED",
+      "application": "SOURCED [strona Ermax]: oświetlenie ciężkich naczep; na obrazie tylna konstrukcja i częściowy pasDK. Nie ustalono modelu pojazdu ani systemu homologacji z samego kraju tablicy."
+    }
+  ],
+  "not_selected": [
+    {
+      "url": "https://www.daf.pt/-/media/images/parts/news/2022/daf-aspock-1600x900.jpg?hash=D631E6D23AEDC37DFC4DC9EA86CE0962&mw=1200&rev=0b834a40e3554663b43233d525f549be",
+      "source": "https://www.daf.pt/pt-pt/servicos-daf/servicos-de-oficina/pecas-e-acessorios/road-news/news-articles/2022/complete-range-of-aspock-trailer-lighting-in-the-daf-webshop",
+      "seen": "Reklamowa kompozycja: jasne czerwone pasma dużej prostokątnej lampy przy ciemnej tylnej ramie, żółty bok naczepy i koła, duży nałożony znakAspöck.",
+      "decision": "Technika foto/renderUNVERIFIED ze względu na silnie opracowany reklamowy wygląd; nie zaliczono jako potwierdzonej fizycznej emisji. Publikacja20.10.2022 nie jest datą ekspozycji."
+    },
+    {
+      "url": "https://en.ermax.dk/Files/Images/ermax/open-graph/belysning-til-tunge-koeretoejer.png",
+      "seen": "Ten sam tył z trzema okrągłymi lampami co zachowany oryginalnyJPG;1200×630.",
+      "decision": "Duplikat ekspozycji, nie dodatkowa fotografia."
+    },
+    {
+      "url": "https://en.ermax.dk/admin/public/getimage.ashx?Image=/Files/Images/ermax/Produkter/Belysning/energieffektiv-LED-teknologi.jpg&Width=1280&Height=0&Format=jpg&Quality=75&Crop=0",
+      "seen": "Szeroki rzeczywisty tył wysokiej naczepyAMTna placu kruszywa; małe okrągłe moduły po obu stronach oraz białe punkty, duży udział nieba.",
+      "decision": "Za daleko dla zbliżenia; nie wybrano do manifestu ani nie wykonano niedozwolonego cropu."
+    }
+  ],
+  "limits": "Brak nocy, daty ekspozycji, punktów GPS, czytelnego E/funkcji z klosza. Nie nazwano białej lampy roboczej dowodem cofania, czerwonych pierścieni dowodem stopu ani koloru klosza emisją.",
+  "browser": "Zakończono completion_summary; knyszyn przejął dwa obrazy do niezależnego peer.",
+  "peer_received": {
+    "reviewer": "knyszyn",
+    "basis": "Niezależny ogląd obu dokładnychURL przezChrome; wiadomość po completion_summary. Osobny peer-review.json autorstwa recenzenta.",
+    "Knapen": "EmisjaUNVERIFIED; pasma i czerwony refleks nie wykluczają słońca/refleksu.",
+    "Ermax": "Jasne czerwone punkty, biały starburst i trzy bursztynowe punkty potwierdzone; pojedyncza lampa nie spełnia rozmiaru.",
+    "geometry_note": "Wartości7–8%/30–35% oznaczają udział szerokości; około1%/5% recenzenta oznaczają powierzchniębbox. Nie są sprzecznymi pomiarami tego samego wskaźnika; obie tylkoESTIMATED."
+  }
+}

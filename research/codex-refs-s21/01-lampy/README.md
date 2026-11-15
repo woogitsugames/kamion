@@ -136,3 +136,7 @@ Główny manifest45rekordów kadrów (8lokalnych/37link-only). [Heavy-plate-roun
 ## Pionowa Hella naczepy — kontekst, obieg12
 
 [Rear-approval-round12](rear-approval-round12/README.md):3fotografie rzeczywistej części link-only,0pobrań; jeden pełny klosz i2AUXtyłu/etykiety. Oferta wiąże używanąHella2VP340961-531 z naczepąSchmitz, lecz etykieta czytelna tylko2VP340.961-53; nie dopisano końcówki ztytułu. CE,24V/21W i dataetykiety nie są ECE, pomiaremświatłości ani datąfotografii. Cztery duże strefy nie dowodzą4komór. FizycznyE/funkcje i emisja nieodczytane;1nowa rodzina kontekstowa,0nowych homologacji. Zachowano osobny podmanifest, bez wzrostu45głównych ani15/4/3/5.
+
+## Optyka i świecenie — obieg13 po niezależnej recenzji
+
+[Lit-rear-round13](lit-rear-round13/README.md):2fotografie producentów,0pobrań/2link-onlyARR, obie obejrzane osobno przez2agentów. Knapen:duża zamontowanaEuropointIII, szerokośćEST35–45%obrazu; czerwone pasma/refleks nie rozstrzygają załączenia wobec silnego słońca, emisjaUNVERIFIED. Ermax:rzeczywiste jasne czerwonepunkty/białeźródło/bursztynowepunkty, emisjaPASS, lecz pojedyncze okrągłe modułyEST7–8%szerokości i<300px. Nie zsumowano trzech lamp do jednej kwalifikacji ani szerokości zpowierzchnią. Ciemne wnętrze przy jasnym plenerze nie dowodzi nocy.0nowych włączonych/nocnychzbliżeń i0E. Osobny podmanifest, główny45bez zmian.

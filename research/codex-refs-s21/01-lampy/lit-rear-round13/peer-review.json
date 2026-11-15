@@ -1,0 +1,52 @@
+{
+  "status": "Knapen emissionUNVERIFIED; Ermax emissionPASS but small individual modules",
+  "reviewer": "niezależny agent knyszyn",
+  "reviewed_at_brussels": "2026-11-15T23:43:00+01:00",
+  "method": "Dwa dokładneURL podane przezroot otwarto oddzielnie w natywnymChrome, obejrzano pełne obrazy. Bez pobrania, kopii, cropu, upscalingu ani plików screenshotów; completion_summary wykonano. Opis przed odczytem manifestu (plik nie był jeszcze dostępny); znany brief nie przesądzał emisji.",
+  "observations": [
+    {
+      "url": "https://www.knapen-trailers.com/sites/default/files/media/image/europoint%20verlichting%20website%20foto_0.jpg",
+      "browser_title_dimensions": [
+        2000,
+        1429
+      ],
+      "observation": "Rzeczywista prostokątna zespolona lampa osadzona na szarej tylnej belce pojazdu. Z lewej pionowe czerwone pole, u góry dwa duże bezbarwne pryzmatyczne pola, niżej czerwone pola i dwa długie poziome czerwono-pomarańczowe pasy. Górne bezbarwne pola mają silne białe połyski i odbicia, pionowy czerwony segment ma drobne jasne refleksy. Dolne pola są intensywnie czerwone, z czerwonym zabarwieniem srebrnej belki pod nimi. Dalej druga mała lampa, żółta tablica, trawa i jasna nawierzchnia. Kierunkowe silne światło i cienie wskazują na scenę dzienną.",
+      "emission": "UNVERIFIED: jasne pasy i czerwona plama na belce są zgodne zarówno z możliwością emisji, jak i z odbiciem/przenikaniem światła dziennego przez barwiony klosz. Obraz nie pozwala bezpiecznie odróżnić tych mechanizmów. Nie oznaczamOFF, ale nie podnoszę4włączonych.",
+      "frame_occupancy": "ESTIMATED z pełnego obrazu: obwiednia największej pojedynczej lampy około40% szerokości i46% wysokości zdjęcia, około18% pola całego kadru. To prostokątna obwiednia, nie dokładna powierzchnia klosza; skośna lampa zajmuje mniej niż obwiednia. Bez cropu.",
+      "night": "FAIL — rzeczywista scena dzienna.",
+      "approval_and_functions": "Nie odczytano homologacji ani funkcji z nazw/logo; brak pewnej transkrypcjiE."
+    },
+    {
+      "url": "https://en.ermax.dk/Files/Images/ermax/Produkter/Belysning/belysning-til-tunge-koeretoejer.jpg",
+      "browser_title_dimensions": [
+        2560,
+        1440
+      ],
+      "observation": "Rzeczywisty tył pojazdu przy otworze pomieszczenia. Na wspólnej jasnej prostokątnej płycie trzy oddzielne okrągłe moduły, każdy z jasnym czerwonym pierścieniem punktów i nieświecącym/szarym środkiem. Między pierwszym i drugim czerwony trójkąt. Niżej osobny mały kwadratowy biały moduł z prześwietlonymi punktami i promienistą poświatą. Powyżej z prawej mały bursztynowy moduł z trzema jasnymi punktami; skrajnie z lewej mały czerwony punkt na wysięgniku. W tle przez otwór widać jasne niebo, zieleń i oświetlony plac; wnętrze jest znacznie ciemniejsze.",
+      "emission": "PASS_VISUAL_EMISSION: wyraźne jasne czerwone punkty w pierścieniach, bursztynowe punkty i jasny biały moduł z poświatą są wystarczającym optycznym dowodem świecenia w tej scenie. To nie dowód funkcji regulaminowej, jasności wcd ani włączenia innych niejasnych elementów.",
+      "frame_occupancy": "ESTIMATED: wspólna płyta z3okręgami i trójkątem około32% szerokości×16% wysokości≈5% pola kadru. Pojedynczy okrąg około8% szerokości×14% wysokości≈1% pola w prostokątnej obwiedni. Nie sumować3oddzielnych lamp do jednej kwalifikowanej lampy; panel i klosz to odrębne wielkości. Biały/bursztynowy moduł jeszcze mniejsze.",
+      "night": "UNVERIFIED/NOT_COUNTED: zacienione wnętrze z widocznym jasnym plenerem nie dowodzi nocy ani zmierzchu.",
+      "approval_and_functions": "Brak czytelnej homologacji; nie przypisano funkcji punktów z logo/title."
+    }
+  ],
+  "qualification_limits": {
+    "new_confirmed_lit_closeup_toward_M59_4": 0,
+    "reason": "Knapen brak rozstrzygnięcia emisji; Ermax emisja pewna, ale pojedyncze moduły zbyt małe do kwalifikacji zbliżenia. Zaliczenia zglobalnymi progami pozostają uroot.",
+    "new_confirmed_night": 0,
+    "new_ECE_readings": 0,
+    "new_images_downloaded": 0
+  },
+  "source_page_mapping": {
+    "status": "Źródła porównane z lokalnym stabilnym manifestem lampy; strony nieotwierane w tej recenzji optycznej",
+    "Knapen": "https://www.knapen-trailers.com/de/features/beleuchtung-7-kammer-leuchte",
+    "Ermax": "https://en.ermax.dk/products/lighting",
+    "distinct_images": "Ermax socialpreview1200×630 wg lampy ta sama ekspozycja, nie dodatkowa referencja; recenzowano wyłącznie2560×1440."
+  },
+  "manifest_check": {
+    "rows": 2,
+    "exact_urls": [
+      "https://www.knapen-trailers.com/sites/default/files/media/image/europoint%20verlichting%20website%20foto_0.jpg",
+      "https://en.ermax.dk/Files/Images/ermax/Produkter/Belysning/belysning-til-tunge-koeretoejer.jpg"
+    ]
+  }
+}

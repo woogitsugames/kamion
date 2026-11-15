@@ -1,0 +1,13 @@
+# Świecące tylne lampy — obieg 13
+
+Cel: realna emisja tylnej lampy ciężkiego europejskiego pojazdu w zbliżeniu. **SOURCED [manifest i observations.json; indywidualny ogląd]: 2 wybrane odrębne fotografie firmowe, wyłącznie link-only, all rights reserved.** Brak pobrań, plików screenshotów i cropów. **Po niezależnym peer: przyrost ścisłego licznika świecących zbliżeń wynosi 0.**
+
+01-LR13-01: Knapen,2000×1429px wg przeglądarki. Rzeczywista lampa na metalowej konstrukcji naczepy z widocznymi śrubami, karbowanym wysięgnikiem i podłożem. Jasne pomarańczowoczerwone pasma i czerwony refleks na zderzaku są widoczne; niezależny peer pozostawia emisję UNVERIFIED, bo nie można wykluczyć transmisji/odbicia światła słońca. ESTIMATED: korpus zajmuje około35–45% szerokości całej fotografii, wyraźnie powyżej10%. Źródło producenta opisuje EuropointIII do naczep i LightGuide; nagłówka7komór nie przeniesiono na obraz. E i symbole funkcjiUNVERIFIED.
+
+01-LR13-02: Ermax, źródłowyJPG2560×1440px wg przeglądarki, wskazany przez publicznyCSS strony. SOURCED [ogląd]:3okrągłe moduły mają jasne czerwone punkty w pierścieniach; dodatkowo bursztynowe punkty i biała lampa z rozbłyskiem. Szare środki i czerwony trójkąt nie zostały nazwane świecącymi. Stop/pozycja i funkcje środkówUNVERIFIED. **Wielkość pojedynczych okrągłych modułów jest ograniczeniem:** ESTIMATED około7–8% szerokości i poniżej300px w natywnym obrazie; nie sumowano trzech lamp w jeden duży dowód progu. Cały panel około30–35% ma znaczenie kontekstowe, a status pozostajeAUX dla ścisłego rozmiaru pojedynczej lampy. Nie utożsamiono białej lampy roboczej ze światłem cofania.
+
+Dodatkowo obejrzano, ale nie wybrano: reklamowy obrazDAF/Aspöck o technice foto/renderUNVERIFIED oraz za daleki tyłAMTz tej samej stronyErmax. SocialpreviewErmax i źródłowyJPG to ta sama ekspozycja, policzona raz. Nie powielonoRN3-04, Lawsons aniJoeKiser. Deduplikacja nazw nowych zdjęć w01 iK1 przed zapisem bez trafień.
+
+Dane zastosowania pochodzą oddzielnie ze stron producentów, nie z tytułów obrazów. Fotograf i data ekspozycjiUNVERIFIED. Oba wybrane kadry pokazują światło dzienne/otoczenie, nie nazwano ich nocnymi. Nie ma nowych czytelnychE ani podstawy do interpretacji funkcji z samego koloru. Bez dopisywania parametrów fotometrycznych. Przeglądarka zwolniona po completion_summary; niezależna recenzja knyszyn potwierdziła ograniczenia obu kadrów. Osobny peer-review.json zapisuje recenzent.
+
+Udział szerokości i powierzchni nie są tym samym: Ermax pojedyncza średnica około7–8% szerokości, a pole bbox około1% powierzchni; wspólny panel około30–35% szerokości i około5% powierzchni. Wszystkie te oszacowania ESTIMATED, bez pomiaru pikselowego. Nie dodano trzech kół do progu pojedynczej lampy.
