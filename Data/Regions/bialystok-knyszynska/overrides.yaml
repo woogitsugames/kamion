@@ -14,3 +14,37 @@ overrides:
     confidence: medium
     verify: owner drive / owner photo of Szosa Knyszyńska
     set: {width: 6.0, edge_lines: both}
+  # ---------------------------------------------------------------- seam with bialystok-kleeberga (x = 772875)
+  # BDOT10k widths are matched per graph edge, and the tile edge cuts three ways into edges of different length, so
+  # the two tiles got different widths for the same way. The edge that touches the seam takes the value the
+  # neighbour builds with (bialystok-kleeberga roads.graph.json, ADR 0206); the neighbour's files are not edited.
+  - id: knyszynska-seam-e-link-561326924
+    target: {edge: "w561326924:3626955261-2504239797"}
+    reason: >-
+      Added lane of Kleeberga westbound, 29 m from the seam to its merge node 2504239797. BDOT10k gave 7.5 m here
+      (the width of the mainline carriageway) and 6.0 m on the kleeberga side. Orthophoto 2024 0.25 m, straightened
+      strip across the seam: one lane of 3.4 m (kerb to the first dashed line), contiguous with the two mainline
+      lanes (3.9 + ~3 m to the median), no verge in between - so neither value is the real cross-section. 6.0 m
+      keeps the carriageway edge continuous across the seam; the real layout (third lane on the mainline) needs one
+      override in both tiles (ADR 0206 Otwarte 4, ADR 0208 Otwarte).
+    confidence: low
+    verify: orthophoto strip artifacts/bialystok-t3-0208/seam-e/strip_561.jpg; owner drive Kleeberga westbound
+    set: {width: 6.0}
+  - id: knyszynska-seam-e-yard-222579345
+    target: {edge: "w222579345:2315344515-2315344551"}
+    reason: >-
+      Service road on a paved company yard, off the truck route. No BDOT10k width on this side (default), 6.0 m on
+      the kleeberga side. Orthophoto: continuous yard asphalt ~12 m wide, no readable carriageway edge.
+      WORKING_VALUE 6.0 m = the neighbour's value, for a seam without a step.
+    confidence: low
+    verify: orthophoto strip artifacts/bialystok-t3-0208/seam-e/strip_222.jpg
+    set: {width: 6.0}
+  - id: knyszynska-seam-e-yard-224161424
+    target: {edge: "w224161424:2329921567-2329921561"}
+    reason: >-
+      Service road on a truck yard, off the truck route. BDOT10k 3.0 m on this edge, 4.0 m on the kleeberga side
+      of the same way. Orthophoto: yard paving from +3.5 m to beyond -10 m of the axis, no carriageway edge.
+      WORKING_VALUE 4.0 m = the neighbour's value.
+    confidence: low
+    verify: orthophoto strip artifacts/bialystok-t3-0208/seam-e/strip_224.jpg
+    set: {width: 4.0}

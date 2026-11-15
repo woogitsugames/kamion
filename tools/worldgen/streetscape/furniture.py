@@ -1361,8 +1361,11 @@ class DeckKeepout:
         return out
 
 
-def _retaining_top(za, zb):            # as retaining(): top = max(ground) + 0.15, at least 1.0 m over min(ground) - 0.4
-    return np.maximum(np.maximum(za, zb) + 0.15, np.minimum(za, zb) - 0.4 + 1.0)
+def _retaining_top(za, zb):
+    """Highest point of what retaining() builds: wall top = max(ground) + 0.15, at least 1.0 m over min(ground) - 0.4,
+    plus the railing that stands on it. r1 of bialystok-maczka judged the wall alone: its top (130.54) stayed 0.8 m
+    under the deck lane (131.31) and only the railing (131.64) came up through the asphalt."""
+    return np.maximum(np.maximum(za, zb) + 0.15, np.minimum(za, zb) - 0.4 + 1.0) + S.RAILING_H
 
 
 def _fence_top(za, zb):                # panel / concrete fence: posts on the ground, ~2 m high

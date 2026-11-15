@@ -1,0 +1,15 @@
+{
+ "schema": "truck-sim-pl/junction-checks/1",
+ "provenance": "authored_override (ADR 0208): junctions and cross-section checkpoints of the D64 truck route inside bialystok-knyszynska (Kleeberga -> exit slip road -> rondo Pamieci Meczenstwa Kresowian -> Szosa Elcka -> Szosa Knyszynska), compared with the GUGiK orthophoto 2024 0.25 m by tools/worldgen/qa/junction_topview.py. Centres EPSG:2180 from route_start.json and roads.graph.json.",
+ "junctions": [
+  {"id": "j1_seam_e_kleeberga", "center_2180": [772800, 595490], "size_m": 150, "note": "east tile edge (seam with bialystok-kleeberga, x = 772875): both Kleeberga carriageways + added lane 561326924 joining the westbound mainline at node 2504239797"},
+  {"id": "j2_exit_772700", "center_2180": [772700, 595430], "size_m": 240, "note": "exit slip road 242989867 / 561326922 from Kleeberga westbound (route km 5.93-6.18)"},
+  {"id": "j3_rondo_kresowian", "center_2180": [772526, 595330], "size_m": 300, "note": "rondo Pamieci Meczenstwa Kresowian under the Kleeberga viaduct, exit into Szosa Elcka (301702376, 606396498, 303739902)"},
+  {"id": "j4_elcka_772330", "center_2180": [772330, 595680], "size_m": 300, "note": "Szosa Elcka 303739903, side streets"},
+  {"id": "j5_elcka_knyszynska_772100", "center_2180": [772100, 596110], "size_m": 300, "note": "Szosa Elcka -> Szosa Knyszynska (396566353 / 551984622), city limit at x = 772066"},
+  {"id": "j6_knyszynska_771910", "center_2180": [771910, 596460], "size_m": 300, "note": "Szosa Knyszynska 280165819, junctions at route km 7.3-7.5"},
+  {"id": "j7_bend_771700", "center_2180": [771700, 596780], "size_m": 300, "note": "Szosa Knyszynska left bend towards the west (route km 7.7-7.9)"},
+  {"id": "j8_knyszynska_771300", "center_2180": [771300, 596900], "size_m": 300, "note": "Szosa Knyszynska 280165819, side roads at route km 8.1-8.4"},
+  {"id": "j9_seam_w_dk65_01", "center_2180": [770940, 596985], "size_m": 220, "note": "west tile edge (seam with dk65-01, x = 770827): way 234919333, authored 6.0 m + edge lines on both sides of the seam"}
+ ]
+}
