@@ -34,7 +34,7 @@ def _load(t):
 
 def _effective(edge, ovs):
     """(width, edge_lines, lanes, lane_width, edge_strip, lamps) after the matching overrides (last wins)."""
-    out = {"width": round(float(edge["attrs"]["width"]["v"] or 0), 2), "edge_lines": None, "lanes": None,
+    out = {"width": round(float((edge["attrs"].get("width") or {}).get("v") or 0), 2), "edge_lines": None, "lanes": None,
            "lane_width": None, "edge_strip": None, "lamps": None}
     for ov in ovs:
         if ov.get("kind"):
