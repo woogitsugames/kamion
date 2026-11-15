@@ -186,3 +186,7 @@
 - 2026-11-15 23:13 +01:00 — R8 uruchomiona: próba 13 pełniejszych lip w dotychczas zaakceptowanych punktach, wysokości z R7; średnice WORKING_VALUE, trzy odrzucone poza próbą. GIS dla stanu R7 1472 passed, 33 skipped, 3 xfailed; test próby 4 passed. Wymagane nowe rendery i budżet.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r8.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r8.done`
 
+
+- 2026-11-15 23:38 +01:00 — R8 4 warianty OK, pary 01–11 lokalnie. Lipy lepiej przypominają park, ale widać szwy i częściowo zasłaniają urząd; FAIL naturalności. Low max +5 draws/+1832 tris na wspólnych kamerach, High max 1 230 049 tris. GIS 1472 passed dla R7, R8 po zmianie drzew wymaga końcowego testu.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python artifacts/knyszyn-rynek-0227/budget-compare.py r8`
+
