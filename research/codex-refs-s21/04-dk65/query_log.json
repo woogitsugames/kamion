@@ -8,5 +8,14 @@
     "https://drogi.gddkia.gov.pl/informacje-drogowe/lista-utrudnien?nr=65",
     "https://www.gov.pl/web/gddkia-bialystok/mozemy-budowac-s16-knyszyn---krynice"
   ],
-  "method": "web tool; dwa pełne teksty, pozostałe timeout/unavailable; indeks nie kwalifikowany jako aktualny stan"
+  "method": "web tool; dwa pełne teksty, pozostałe timeout/unavailable; indeks nie kwalifikowany jako aktualny stan",
+  "traffic_list_recheck": {
+    "date": "2026-11-15",
+    "url": "https://drogi.gddkia.gov.pl/informacje-drogowe/lista-utrudnien?nr=65",
+    "http_status": 200,
+    "received_bytes": 212,
+    "result": "not actual traffic records: script-only anti-automation response; no table rows",
+    "action": "stopped; no challenge solving or further resource requests",
+    "current_DK65_traffic": "UNVERIFIED"
+  }
 }
