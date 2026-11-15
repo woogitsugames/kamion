@@ -42,12 +42,14 @@ namespace Game.UI
         {
             if (!QualityTiers.Apply(tier, persist: true)) return false;
             Debug.Log("[CONTROLS] menu tier=" + QualityTiers.Current);
+            Settings.PcSettingsRuntime.NoteTierChanged(QualityTiers.Current);   // ADR 0270: the settings file follows the quick buttons
             return true;
         }
 
         public void SetFps(int fps)
         {
             QualityTiers.SetTargetFrameRate(fps, persist: true);
+            Settings.PcSettingsRuntime.NoteFrameRateChanged(fps);   // ADR 0270 (SetTargetFrameRate also switches vsync off)
             Debug.Log("[CONTROLS] menu fps=" + fps.ToString(CultureInfo.InvariantCulture));
         }
 

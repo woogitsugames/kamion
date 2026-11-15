@@ -63,17 +63,22 @@ namespace Game.UI
 
         void OnRectTransformDimensionsChange() { m_View?.Invalidate(); }
 
+        /// <summary>Opens the PC settings screen (ADR 0270); null = button hidden (phones).</summary>
+        Action m_OpenPcSettings;
+        public const string PcSettingsName = "PcSettings";
+
         /// <summary>Label of the button that opens the attributions / licences screen (<see cref="AboutPanel"/>).</summary>
         public const string AboutLabel = "Informacje";
 
         /// <summary>Builds the menu. <paramref name="cam"/> null = screen-space overlay; a camera = capture/test.
         /// <paramref name="openAbout"/> null = the menu opens its own <see cref="AboutPanel"/> (screen-space overlay).</summary>
         public static BootMenu Create(Camera cam, StartMenuOptions options, IReadOnlyList<(string label, Action action)> starts, Action openSettings,
-                                      Action openAbout = null, IReadOnlyList<BootRegionChoice> regions = null)
+                                      Action openAbout = null, IReadOnlyList<BootRegionChoice> regions = null, Action openPcSettings = null)
         {
             var go = new GameObject("BootMenu");
             var menu = go.AddComponent<BootMenu>();
             menu.Options = options;
+            menu.m_OpenPcSettings = openPcSettings;
             menu.Build(cam, starts, openSettings, openAbout ?? (() => AboutPanel.Create(null, null)), regions);
             return menu;
         }
@@ -236,6 +241,16 @@ namespace Game.UI
             var settingsBtn = Button(m_Safe, "Ustawienia sterowania", new Vector2(right, oy - 80f), new Vector2(ColW - aboutW - Gap, 80f), 32, TextAnchor.MiddleCenter, () => openSettings?.Invoke());
             var aboutBtn = Button(m_Safe, AboutLabel, new Vector2(right + ColW - aboutW, oy - 80f), new Vector2(aboutW, 80f), 32, TextAnchor.MiddleCenter, () => openAbout?.Invoke());
             m_Nav[1].Add(new[] { settingsBtn.GetComponent<Selectable>(), aboutBtn.GetComponent<Selectable>() });
+            if (m_OpenPcSettings != null)
+            {
+                // ADR 0270: display / graphics / audio screen, one full-width row under the settings row; part of the
+                // pad / keyboard grid of ADR 0265 (review #136 P2-2).
+                oy -= 80f + Gap;
+                var pcBtn = Button(m_Safe, Game.UI.Settings.PcSettingsTexts.MenuButton, new Vector2(right, oy - 80f), new Vector2(ColW, 80f), 32, TextAnchor.MiddleCenter,
+                    () => m_OpenPcSettings?.Invoke());
+                pcBtn.name = PcSettingsName;
+                m_Nav[1].Add(new[] { pcBtn.GetComponent<Selectable>() });
+            }
             Label(m_Safe, "Footer", "DrivingLab ma stałe światło. W jeździe: przycisk Menu wraca tutaj bez restartu aplikacji.\nWersja: " + BuildInfo.Current.ShortLabel,
                 22, TextAnchor.UpperLeft, k_Muted, new Vector2(right, oy - 80f - 12f - 70f), new Vector2(ColW, 70f)).horizontalOverflow = HorizontalWrapMode.Wrap;
 
