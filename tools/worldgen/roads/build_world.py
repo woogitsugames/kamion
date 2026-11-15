@@ -45,13 +45,17 @@ from streetscape import export as PR      # noqa: E402
 # plots (ADR 0124): the kit geometry of the house plots (fences, gates, garden plants; one material) - LOD0 / LOD1 like
 # `furniture`, a shadow caster, with a shorter range in the mirror cameras (Game.World.PlotViewCull)
 LAYERS = ("road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_low", "furniture", "plots", "plots_low", "wires",
-          "water", "collision")
+          "water", "rail_lod0", "rail_lod1", "rail_lod2", "rail_crossing", "collision")
+# rail_* (ADR 0217): railway track bed per LoD + level-crossing panels, only in regions with the opt-in rail stage
 # water (ADR 0210): only regions with the opt-in water stage have it; elsewhere the layer is empty and nothing changes
 # plots_low (ADR 0132): the plot kit of the Low / Medium chunk variant (streetscape.plots.Kit.low) - written there under
 # the node name `plots`; the High GLB carries `plots` only
 NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"), ("plot_ground", "plot_ground"),
          ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"), ("plots", "plots"),
-         ("wires", "wires"), ("water", "water"), ("collision", "road_collision"))
+         ("wires", "wires"), ("water", "water"), ("rail_lod0", "rail_lod0"), ("rail_lod1", "rail_lod1"),
+         ("rail_lod2", "rail_lod2"), ("rail_crossing", "rail_crossing"), ("collision", "road_collision"))
+# ADR 0217: the Low / Medium GLB variant carries no detailed buildings and no LoD0 track (sleepers)
+LOW_EXCLUDE = ("buildings", "rail_lod0")
 
 
 def DEFAULT_OUT(region_id):
@@ -188,8 +192,10 @@ WATER_MATERIALS = {
 def glb_materials():
     global _GLB_MATS
     if _GLB_MATS is None:
-        _GLB_MATS = {**MATERIALS, **PR.glb_materials(), **WATER_MATERIALS}
+        from streetscape import rail as _RL
+        _GLB_MATS = {**MATERIALS, **PR.glb_materials(), **WATER_MATERIALS, **_RL.RAIL_MATERIALS}
     return _GLB_MATS
+
 
 
 WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
@@ -867,6 +873,28 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                           PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]))
         log("water plan:", len(w.water.report["bodies"]), "bodies,", w.water.report["water_nodes"], "nodes,",
             len(w.water.report["profiles"]), "centre lines")
+    from streetscape import rail as RL
+    w.rail = None
+    if RL.enabled(w.region):          # ADR 0217: opt-in per region (region.yaml `rail: {enabled: true}`)
+        rsrc = RL.load(region_id)
+        if rsrc is None:
+            raise RuntimeError(f"{region_id}: rail stage enabled but generated/rail_sources.json missing "
+                               f"(run build_region.py --region {region_id})")
+        import shapely
+        from shapely.geometry import LineString as _LS
+        from streetscape import paved as PV_
+        bb = w.region["bbox"]
+        tile_local = shapely.box(bb["xmin"] - w.origin[0], bb["ymin"] - w.origin[1], bb["xmax"] - w.origin[0],
+                                 bb["ymax"] - w.origin[1])
+        ground_lines = []
+        for c in w.net.chains:        # ground road centre lines (bridge stations dropped: no level crossing there)
+            on = ~c.bridge if c.bridge is not None else np.ones(len(c.line.p), bool)
+            for run in np.split(np.arange(len(on)), np.where(np.diff(on.astype(int)) != 0)[0] + 1):
+                if len(run) >= 2 and on[run[0]]:
+                    ground_lines.append(_LS(c.line.p[run]))
+        w.rail = RL.Plan(rsrc, w.origin, tile_local,
+                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines)
+        log("rail plan:", len(w.rail.tracks), "tracks,", len(w.rail.crossings), "level crossings")
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
     if w.water is not None:
         st["col"] = w.water.bank_colours(st["col"])
@@ -935,6 +963,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     log("verge strips in terrain", w.stats["verge_strips"])
     if w.water is not None:
         w.water.sheet(w.buf, CH.CHUNK_M, log)
+    if w.rail is not None:
+        from scipy import ndimage as _nd
+        _ground = RL.grid_sampler(_nd.gaussian_filter(zc, RL.GROUND_SMOOTH_M), w.hf)
+        _zc = RL.grid_sampler(zc, w.hf)
+        w.rail.build(w.buf, _ground, RL.grid_sampler(road_z, w.hf, fallback=_zc), log)
     roads = assemble([p for p in w.buf.parts if not _is_verge(p)], LAYERS, half)
     log("road chunks", len(roads))
 
@@ -984,7 +1017,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                 glb_lo.add_mesh(f"terrain_lod{li}", prims, {"lod": li, "spacing_m": CH.LODS[li]})
         for layer, node in NODES:
             prims = layers.get("plots_low" if layer == "plots" else layer, [])
-            if prims and layer != "buildings":
+            if prims and layer not in LOW_EXCLUDE:
                 glb_lo.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
         for cid, c in cells:
             glb_lo.add_mesh(f"forest_hlod_{cid}", c["prims"], {"layer": "forest_hlod", "cell": cid,
@@ -1070,6 +1103,19 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         manifest["water"] = {k: v for k, v in w.water.report.items() if k in ("carve", "sheet", "water_nodes")}
         write_json(gen / "water_qa.json", {"schema": "truck-sim-pl/water-qa/1", "region": region_id,
                                            **w.water.report})
+    if w.rail is not None:
+        manifest["materials"] = {**manifest["materials"], **RL.RAIL_MATERIALS}
+        srcs["generated/rail_sources.json"] = sha(RL.sources_path(region_id).read_bytes().replace(b"\r\n", b"\n"))
+        for k, what in (("rail_lod0", "ballast + sleepers + rails (5 m stations)"),
+                        ("rail_lod1", "ballast + rails (10 m stations), sleepers as a texture stripe"),
+                        ("rail_lod2", "flat ballast band (20 m stations)")):
+            manifest["nodes"][k] = (f"railway track bed (ADR 0217) {k[-4:]}: {what}; UV0 = (lateral m, along m); "
+                                    "High GLB carries LoD0-2, Low GLB LoD1-2")
+        manifest["nodes"]["rail_crossing"] = ("level-crossing panels at road height + %.3f m (ADR 0217); "
+                                              "UV0 = local metres" % RL.PANEL_LIFT)
+        manifest["rail"] = {"triangles": w.rail.report["triangles"], "track_km": w.rail.report["track_km"],
+                            "crossings": len(w.rail.crossings), "markers": "generated/rail.json"}
+        write_json(gen / "rail.json", w.rail.out_json(region_id))
     write_json(gen / "world_manifest.json", manifest)
     qa = qa_report(w, mk_report, mask)
     write_json(gen / "roads_qa.json", qa)
