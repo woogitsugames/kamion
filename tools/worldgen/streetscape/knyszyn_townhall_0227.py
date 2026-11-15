@@ -139,16 +139,19 @@ def _window_plan(poly, target, major_axis, n, omit=None, parallel=True):
     return result
 
 
-def _culture_wall(acc, layer, a, b, z, eave, facade_center, facade_len):
+def _culture_wall(acc, layer, a, b, z, eave, facade_center, facade_len, low=False):
     """A real wall with a two-level portico cut-out, never a panel behind columns."""
     center=(a+b)/2
+    base = z-.15 if low else z+.55
     if np.linalg.norm(center-facade_center) >= .05:
-        acc.quad(layer,"plaster_white",_pt(a,z+.55),_pt(b,z+.55),_pt(b,eave),_pt(a,eave))
+        acc.quad(layer,"plaster_white",_pt(a,base),_pt(b,base),_pt(b,eave),_pt(a,eave))
         return
     t=(b-a)/np.linalg.norm(b-a)
     half=min(4.7,(facade_len-1.)/2)
     left,right=center-t*half,center+t*half
     top=min(z+7.7,eave-.45)
+    if low:
+        acc.quad(layer,"plaster_white",_pt(a,base),_pt(b,base),_pt(b,z+.55),_pt(a,z+.55))
     acc.quad(layer,"plaster_white",_pt(a,z+.55),_pt(left,z+.55),_pt(left,eave),_pt(a,eave))
     acc.quad(layer,"plaster_white",_pt(right,z+.55),_pt(b,z+.55),_pt(b,eave),_pt(right,eave))
     acc.quad(layer,"plaster_white",_pt(left,top),_pt(right,top),_pt(right,eave),_pt(left,eave))
@@ -194,13 +197,13 @@ def _hip_roof(acc, layer, footprint, center, axis, normal, length, width, eave, 
                 acc.add(layer, "roof_tiles_red", np.column_stack((xy, zz)), [[0, 1, 2]])
 
 
-def _dormer(acc, layer, center, axis, out, eave, rise):
+def _dormer(acc, layer, center, axis, out, eave, rise, window_material="glass"):
     """Modest white dormer with a red gable, standing on the roof plane."""
     z0 = eave + rise * .25
     # Half axes in E,N,Z. The roof plane rises inward; this box partly intersects it.
     acc.box(layer, "plaster_white", _pt(center, z0+.5), np.r_[axis*.70, 0],
             np.r_[out*.65, 0], [0, 0, .65], skip=(0,))
-    _face(acc, layer, "glass", center, axis, out, .75, z0+.27, z0+1.12, .656)
+    _face(acc, layer, window_material, center, axis, out, .75, z0+.27, z0+1.12, .656)
     front, back = center+out*.65, center-out*.65
     a, b, c, d = front-axis*.8, front+axis*.8, back+axis*.8, back-axis*.8
     peak0, peak1 = front, back
@@ -259,46 +262,55 @@ def build(buf, region, blds, zsmooth, report):
         # Unlike the roof's bounding rectangle, each facade is an actual BDOT exterior edge.
         facade_len, front, face_axis, out = facades[bid]
         for layer in LAYERS:
+            low = layer == "buildings_low"
             for a, c in zip(ring[:-1], ring[1:]):
-                acc.quad(layer, "plinth_dark", _pt(a,z-.15), _pt(c,z-.15), _pt(c,z+.55), _pt(a,z+.55))
+                if not low:
+                    acc.quad(layer, "plinth_dark", _pt(a,z-.15), _pt(c,z-.15), _pt(c,z+.55), _pt(a,z+.55))
                 if bid == CULTURE:
-                    _culture_wall(acc,layer,a,c,z,eave,front,facade_len)
+                    _culture_wall(acc,layer,a,c,z,eave,front,facade_len,low=low)
                 else:
-                    acc.quad(layer, "plaster_white", _pt(a,z+.55), _pt(c,z+.55), _pt(c,eave), _pt(a,eave))
+                    base = z-.15 if low else z+.55
+                    acc.quad(layer, "plaster_white", _pt(a,base), _pt(c,base), _pt(c,eave), _pt(a,eave))
             _hip_roof(acc, layer, poly, center, axis, normal, length, width, eave, top)
             # Each axis is projected to its own BDOT wall, including split wall runs.
             for p,window_axis,window_out in plans[bid]:
                 for z0 in (z+1.0, z+4.55):
-                    _face(acc, layer, "plaster_cream", p, window_axis, window_out, 1.55, z0, z0+2.5, .035)
-                    _face(acc, layer, "glass", p, window_axis, window_out, 1.16, z0+.15, z0+2.32, .055)
-                    # Existing white plaster material forms simple white window mullions.
-                    _face(acc, layer, "plaster_white", p, window_axis, window_out, .065, z0+.15, z0+2.32, .065)
-                    _face(acc, layer, "plaster_white", p, window_axis, window_out, 1.16, z0+1.58, z0+1.64, .065)
-            n_dormer = 8 if bid == OFFICE else 5
+                    if low:
+                        _face(acc, layer, "plinth_dark", p, window_axis, window_out, 1.16, z0+.15, z0+2.32, .035)
+                    else:
+                        _face(acc, layer, "plaster_cream", p, window_axis, window_out, 1.55, z0, z0+2.5, .035)
+                        _face(acc, layer, "glass", p, window_axis, window_out, 1.16, z0+.15, z0+2.32, .055)
+                        # Existing white plaster material forms simple white window mullions.
+                        _face(acc, layer, "plaster_white", p, window_axis, window_out, .065, z0+.15, z0+2.32, .065)
+                        _face(acc, layer, "plaster_white", p, window_axis, window_out, 1.16, z0+1.58, z0+1.64, .065)
+            n_dormer = (4 if bid == OFFICE else 3) if low else (8 if bid == OFFICE else 5)
             for j in range(n_dormer):
                 u = (j-(n_dormer-1)/2)*min(3.7, (facade_len-3)/max(1,n_dormer-1))
                 dormer_center = front+face_axis*u-out*(width*.19)
                 outline = Polygon([dormer_center + face_axis*a + out*n
                                    for a, n in [(-.8,-.65),(.8,-.65),(.8,.65),(-.8,.65)]])
                 if poly.covers(outline):
-                    _dormer(acc, layer, dormer_center, face_axis, out, eave, top-eave)
+                    _dormer(acc, layer, dormer_center, face_axis, out, eave, top-eave,
+                            window_material="plinth_dark" if low else "glass")
         if bid == CULTURE:
             # Four full-height cream columns and two storeys of recessed loggia; no signs or emblems.
             for layer in LAYERS:
+                low = layer == "buildings_low"
                 half_portico = min(4.7, (facade_len-1.0)/2)
                 # Back wall is recessed 1.2 m behind the opening; both floor openings remain dark.
                 back = front-out*1.2
                 _face(acc,layer,"plinth_dark",back,face_axis,out,2*half_portico,z+.55,z+7.7,0.)
                 for u in np.linspace(-half_portico+.3, half_portico-.3, 4):
                     p = front+face_axis*u+out*.12
-                    acc.box(layer, "plaster_cream", _pt(p,z+4.2), np.r_[face_axis*.25,0], np.r_[out*.25,0], [0,0,4.2], skip=(0,))
+                    acc.box(layer, "plaster_white" if low else "plaster_cream", _pt(p,z+4.2), np.r_[face_axis*.25,0], np.r_[out*.25,0], [0,0,4.2], skip=(0,))
                 p = front-out*.5
                 acc.box(layer, "plaster_white", _pt(p,z+4.0), np.r_[face_axis*half_portico,0], np.r_[out*.70,0], [0,0,.12], skip=(0,))
                 # Gallery railing: slim bars and continuous upper rail, using the existing dark material.
                 rail=front-out*.12
                 acc.box(layer,"plinth_dark",_pt(rail,z+5.0),np.r_[face_axis*half_portico,0],np.r_[out*.025,0],[0,0,.025],skip=(0,))
-                for u in np.linspace(-half_portico+.15,half_portico-.15,13):
-                    acc.box(layer,"plinth_dark",_pt(rail+face_axis*u,z+4.5),np.r_[face_axis*.02,0],np.r_[out*.025,0],[0,0,.5],skip=(0,))
+                if not low:
+                    for u in np.linspace(-half_portico+.15,half_portico-.15,13):
+                        acc.box(layer,"plinth_dark",_pt(rail+face_axis*u,z+4.5),np.r_[face_axis*.02,0],np.r_[out*.025,0],[0,0,.5],skip=(0,))
                 acc.box(layer, "plinth_dark", _pt(p+out*.9,z+.24), np.r_[face_axis*min(3.,half_portico),0], np.r_[out*.9,0], [0,0,.24], skip=(0,))
     acc.flush(buf, ASSET_ID)
     result.update(status="applied", confidence={"footprints": "SOURCED BDOT10k", "heights": "SOURCED GUGiK",

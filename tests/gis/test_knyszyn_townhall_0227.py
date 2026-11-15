@@ -109,7 +109,7 @@ def test_culture_loggia_has_a_real_opening_and_recessed_back():
     # The middle of the photographed loggia is actually open at ground floor height;
     # previously a full white wall occupied this plane behind the decorative columns.
     for layer,mat,v,tris,src in buf.parts:
-        if layer!="buildings" or mat!="plaster_white": continue
+        if layer not in townhall.LAYERS or mat!="plaster_white": continue
         for tri in tris:
             P=v[tri]
             if np.max(np.abs((P[:,:2]-front)@out)) > 1e-5: continue
@@ -121,3 +121,16 @@ def test_culture_loggia_has_a_real_opening_and_recessed_back():
     assert dark
     p=np.concatenate(dark)
     assert np.count_nonzero(np.isclose((p[:,:2]-front)@out,-1.2,atol=1e-5))>=4
+
+
+def test_low_preserves_landmarks_with_fewer_triangles_and_materials():
+    fc=source(); blds=BM.load(fc,[761611,612607],[],hero=townhall.hero_targets("knyszyn",fc))
+    buf=Buffer(); r=townhall.build(buf,"knyszyn",blds,lambda e,n:np.zeros_like(e)+125,{})
+    by_layer={layer:{mat:len(tris) for ly,mat,v,tris,src in buf.parts if ly==layer} for layer in townhall.LAYERS}
+    low=by_layer["buildings_low"]; high=by_layer["buildings"]
+    assert set(low)=={"plaster_white","plinth_dark","roof_tiles_red"}
+    assert len(low)<len(high)
+    assert sum(low.values()) < sum(high.values())*.5
+    # Two window rows per planned axis, 2 triangles per pane, plus the dark portico.
+    assert low["plinth_dark"] >= 4*sum(r["window_axes"].values())
+    assert low["roof_tiles_red"] >= 10
