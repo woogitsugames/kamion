@@ -280,6 +280,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         blocked |= PV.rasterize_polys(hero_keepout, hf)
     if getattr(w, "water", None) is not None:      # ADR 0210: no trees in the water
         blocked |= w.water.blocked()
+    if getattr(w, "rail", None) is not None:       # ADR 0217: no trees on the track bed / in the clearance
+        blocked |= w.rail.blocked(hf)
     vrep = {}
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask)
     forest_mix = vrep.pop("_forest_mix")

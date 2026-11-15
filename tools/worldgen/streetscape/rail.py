@@ -1,0 +1,725 @@
+"""Railway track bed and level crossings (ADR 0217): ballast, sleepers, rails in three LoDs + crossing panels and
+crossing markers (St Andrew's crosses G-3 / G-4, barriers, lights, bells) as positioned / oriented objects.
+
+Opt-in per region, exactly like the water stage (ADR 0210): `regions.py` Region.rail -> `rail: {enabled: true}` in
+region.yaml + Data/Regions/<id>/generated/rail_sources.json, both written by build_region only for regions that opt
+in. A region without the key is built exactly as before: no layer gets a part, no material / node / manifest key /
+generated file is added (determinism of every existing tile).
+
+Sources (rail_sources.json, small, committed; OSM ODbL):
+  ways  railway=rail (gauge, tracks, service, usage, bridge, tunnel, electrified, ref, name);
+        railway=disused|abandoned|construction|proposed|razed|narrow_gauge|light_rail|tram and railway=rail with
+        disused=yes / abandoned=yes are recorded in `skipped` with the reason, never meshed (ADR 0217 p. 2).
+  nodes railway=level_crossing (+ crossing:barrier / crossing:light / crossing:bell / crossing:saltire / supervision);
+        railway=crossing (pedestrian / cycle crossing over the track) recorded but not built (no footway mesh).
+
+Numbers. Every dimension below is either cited or WORKING_VALUE (CLAUDE.md rule 3); see ADR 0217 for the sources.
+Frame: local E, N, U metres (ADR 0003); the rail profile follows a smoothed ground, pinned to the road surface at
+level crossings.
+"""
+
+from __future__ import annotations
+
+import json
+import math
+import re
+from pathlib import Path
+
+import numpy as np
+import shapely
+from shapely.geometry import LineString, Point
+
+SCHEMA = "truck-sim-pl/rail-sources/1"
+OUT_SCHEMA = "truck-sim-pl/rail/1"
+REPO = Path(__file__).resolve().parents[3]
+
+# ------------------------------------------------------------------------------------------------ dimensions
+GAUGE_DEFAULT_MM = 1435.0  # standard gauge; OSM wiki Key:gauge (PL network = 1435 mm except LHS 1520 mm)
+RAIL_H = 0.172             # 60E1 rail height 172 mm (EN 13674-1 profile; catalogue moris.eu 60E1: 172 mm)
+RAIL_HEAD_W = 0.072        # 60E1 head 72 mm (catalogue figure; head width vs thickness UNVERIFIED in EN 13674-1)
+SLEEPER_L = 2.60           # PS-94 prestressed sleeper length 2.6 m (Plastwil / moris.eu PS94/SB/60E1)
+SLEEPER_W = 0.30           # WORKING_VALUE (sleeper width at the top)
+SLEEPER_H = 0.20           # WORKING_VALUE (visible sleeper body above its bed)
+SLEEPER_SPACING = 0.60     # WORKING_VALUE (0.6 m fastening spacing on PS-94, Baztech paper; Id-1 not checked)
+SLEEPER_PROUD = 0.05       # WORKING_VALUE: sleeper top above the crib ballast (so LoD0 sleepers read as ribs)
+BALLAST_UNDER = 0.30       # WORKING_VALUE (ballast under the sleeper; "zalecana 300 mm" - source not Id-1)
+BALLAST_SHOULDER = 0.40    # WORKING_VALUE (ballast shoulder beyond the sleeper end)
+BALLAST_SLOPE = 1.5        # WORKING_VALUE (horizontal per vertical, 1:1.5 ballast slope)
+SKIRT_M = 0.30             # ballast slope continued below the formation so small ground bumps do not show a gap
+TRACK_SPACING = 4.00       # WORKING_VALUE (track centre distance on open line; 4.0 m common PL minimum, UNVERIFIED)
+TRACK_H = RAIL_H + SLEEPER_H + BALLAST_UNDER          # top of rail above the formation (pads ignored) = 0.672 m
+
+# profile
+GROUND_SMOOTH_M = 15.0     # WORKING_VALUE: gaussian sigma of the ground under the track (rails cannot follow bumps)
+CROSS_BLEND_M = 25.0       # WORKING_VALUE: rail profile blends to the road surface over this distance at a crossing
+# LoD steps along the track (m). LoD0 near (<~120 m), LoD1 mid, LoD2 far - switch distances belong to the engine.
+LOD_STEP = {0: 5.0, 1: 10.0, 2: 20.0}
+
+# level crossing
+PANEL_HALF = SLEEPER_L / 2  # WORKING_VALUE: crossing panels cover the sleeper length on each side of the track axis
+PANEL_MARGIN = 0.50         # WORKING_VALUE: panels run this far past the road footprint edge
+PANEL_STEP = 2.0            # panel grid along the track (follows the road crown / grade)
+PANEL_LIFT = 0.005          # panels / rail heads this much above the road mesh (no z-fight with the asphalt)
+FLANGEWAY = 0.07            # WORKING_VALUE: groove next to the rail head inside the panel field
+CROSS_SNAP_M = 8.0          # an OSM level_crossing node within this distance of a rail axis belongs to that track
+CROSS_DEDUP_M = 10.0        # a geometric road x rail intersection this close to an OSM node is that node
+ROAD_SNAP_M = 15.0          # the road centre line of a crossing must pass within this distance
+SIGN_SETBACK = 3.0          # WORKING_VALUE: sign / signal post this far (along the road) before the panel edge
+SIGN_LATERAL = 1.0          # WORKING_VALUE: post this far outside the road footprint edge
+BARRIER_SETBACK = 2.0       # WORKING_VALUE: barrier post this far before the panel edge
+SIGN_ARM_L = 1.20           # WORKING_VALUE: G-3 arm length (regulation drawing not checked)
+SIGN_ARM_W = 0.20           # WORKING_VALUE: G-3 arm width
+SIGN_ARM_ANGLE = 50.0       # WORKING_VALUE: angle between the arms (deg)
+SIGN_BOTTOM_Z = 1.50        # WORKING_VALUE: lower edge of the cross above the road
+BARRIERS = ("no", "half", "double_half", "full", "gate", "chain", "yes")
+
+# Clearance envelope (skrajnia budowli) - simplified cross-section, (lateral m, height above top of rail m).
+# UNVERIFIED shape: 4.40 m wide between 0.4 m and 4.0 m above rail, narrowing to the overhead-line zone; replace with
+# the exact PN-K-02057 / Id-1 outline when checked. Used for QA (nothing may stand inside) and as a collision outline.
+CLEARANCE_PROFILE = [(-1.60, 0.0), (-2.20, 0.40), (-2.20, 4.00), (-1.60, 6.00), (1.60, 6.00), (2.20, 4.00),
+                     (2.20, 0.40), (1.60, 0.0)]
+CLEARANCE_HALF = max(abs(x) for x, _ in CLEARANCE_PROFILE)
+
+# materials (linear albedo, WORKING_VALUE until compared with an orthophoto / owner photo)
+RAIL_MATERIALS = {
+    "rail_ballast": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "metal": 0.0,
+                     "note": "UV0 = (lateral m, along-track m): sleeper stripe every %.2f m on LoD1" % SLEEPER_SPACING},
+    "rail_sleeper": {"color": [0.33, 0.32, 0.30], "rough": 0.9, "metal": 0.0},
+    "rail_steel": {"color": [0.30, 0.25, 0.21], "rough": 0.55, "metal": 0.6,
+                   "note": "rusty web; polished head = the top face (UV0.y = 1)"},
+    "rail_crossing_panel": {"color": [0.16, 0.16, 0.16], "rough": 0.85, "metal": 0.0,
+                            "note": "concrete-rubber crossing panels; UV0 = local metres"},
+}
+LAYERS = ("rail_lod0", "rail_lod1", "rail_lod2", "rail_crossing")
+LOW_EXCLUDE = ("rail_lod0",)       # the Low / Medium GLB carries LoD1, LoD2 and the crossing panels only
+
+SKIP_RAILWAY = ("disused", "abandoned", "construction", "proposed", "razed", "narrow_gauge", "light_rail", "tram",
+                "subway", "miniature", "funicular", "monorail", "preserved")
+
+
+# ------------------------------------------------------------------------------------------------ tags
+def _num(v):
+    if v is None:
+        return None
+    m = re.match(r"\s*([0-9]+(?:[.,][0-9]+)?)", str(v))
+    return float(m.group(1).replace(",", ".")) if m else None
+
+
+def classify_way(tags: dict) -> tuple[bool, str, dict]:
+    """(keep, reason, attributes) for one OSM way with a `railway` tag."""
+    rw = tags.get("railway")
+    if rw != "rail":
+        return False, f"railway={rw}", {}
+    for k in ("disused", "abandoned"):
+        if tags.get(k) == "yes":
+            return False, f"{k}=yes", {}
+    if tags.get("tunnel") in ("yes", "building_passage"):
+        return False, "tunnel (not modelled)", {}
+    g = _num(str(tags.get("gauge", "")).split(";")[0])
+    gauge_src = "osm"
+    if g is None or not 600 <= g <= 1700:
+        g, gauge_src = GAUGE_DEFAULT_MM, "default"
+    tr = _num(tags.get("tracks"))
+    n = int(tr) if tr and tr >= 1 else 1
+    n = min(n, 6)
+    return True, "", {"gauge_mm": g, "gauge_src": gauge_src, "tracks": n,
+                      "service": tags.get("service"), "usage": tags.get("usage"),
+                      "bridge": tags.get("bridge") not in (None, "no"),
+                      "electrified": tags.get("electrified"), "ref": tags.get("ref"), "name": tags.get("name")}
+
+
+def classify_node(tags: dict) -> tuple[bool, str, dict]:
+    """(keep, reason, attributes) for one OSM node with a `railway` tag."""
+    rw = tags.get("railway")
+    if rw == "crossing":
+        return False, "railway=crossing (pedestrian/cycle crossing; no footway mesh)", {}
+    if rw != "level_crossing":
+        return False, f"railway={rw}", {}
+    bar = tags.get("crossing:barrier")
+    if bar not in BARRIERS:
+        bar = None                          # unknown / untagged
+    yes = ("yes", "true")
+    return True, "", {"barrier": bar,
+                      "light": tags.get("crossing:light") in yes,
+                      "bell": tags.get("crossing:bell") in yes,
+                      "saltire": (None if tags.get("crossing:saltire") is None
+                                  else tags.get("crossing:saltire") in yes),
+                      "supervision": tags.get("supervision")}
+
+
+# ------------------------------------------------------------------------------------------------ extraction
+def extract_osm(bbox, pbf: Path) -> dict:
+    import osmium
+    from pyproj import Transformer
+    tr = Transformer.from_crs("EPSG:4326", "EPSG:2180", always_xy=True)
+    tile = shapely.box(*bbox).buffer(100.0, join_style="mitre")
+    keep = ("railway", "gauge", "tracks", "service", "usage", "bridge", "tunnel", "layer", "electrified", "ref", "name",
+            "disused", "abandoned", "crossing:barrier", "crossing:light", "crossing:bell", "crossing:saltire",
+            "crossing:activation", "supervision")
+    ways, nodes = [], []
+    fp = osmium.FileProcessor(str(pbf)).with_locations().with_filter(osmium.filter.KeyFilter("railway"))
+    for obj in fp:
+        t = obj.tags
+        tags = {k: t.get(k) for k in keep if t.get(k) is not None}
+        if obj.is_node():
+            if not obj.location.valid():
+                continue
+            x, y = tr.transform(obj.location.lon, obj.location.lat)
+            if tile.contains(Point(x, y)):
+                nodes.append({"osm_node": obj.id, "tags": tags, "xy": [round(x, 2), round(y, 2)]})
+        elif obj.is_way():
+            try:
+                pts = [tr.transform(n.location.lon, n.location.lat) for n in obj.nodes]
+            except osmium.InvalidLocationError:
+                continue
+            if len(pts) < 2:
+                continue
+            g = LineString(pts).intersection(tile)
+            for k, part in enumerate(_parts(g)):
+                if part.geom_type == "LineString" and part.length >= 1.0:
+                    ways.append({"osm_way": obj.id, "part": k, "tags": tags,
+                                 "coords": [[round(x, 2), round(y, 2)] for x, y in part.simplify(0.1).coords]})
+    ways.sort(key=lambda d: (d["osm_way"], d["part"]))
+    nodes.sort(key=lambda d: d["osm_node"])
+    return {"ways": ways, "nodes": nodes}
+
+
+def extract(region: dict) -> dict:
+    import sys
+    sys.path.insert(0, str(REPO / "tools" / "worldgen"))
+    from fetch_osm import download
+    b = region["bbox"]
+    bbox = (b["xmin"], b["ymin"], b["xmax"], b["ymax"])
+    return {"schema": SCHEMA, "crs": "EPSG:2180", "bbox": list(bbox), "margin_m": 100.0,
+            "license": {"osm": "ODbL 1.0, © OpenStreetMap contributors"}, "osm": extract_osm(bbox, download())}
+
+
+def sources_path(region_id: str) -> Path:
+    return REPO / "Data" / "Regions" / region_id / "generated" / "rail_sources.json"
+
+
+def write(region_id: str, data: dict) -> Path:
+    p = sources_path(region_id)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
+    if not p.exists() or p.read_text(encoding="utf-8") != text:
+        p.write_text(text, encoding="utf-8", newline="\n")
+    return p
+
+
+def enabled(region: dict) -> bool:
+    """The stage runs only for regions that opted in (region.yaml `rail: {enabled: true}`)."""
+    r = region.get("rail")
+    return bool(isinstance(r, dict) and r.get("enabled"))
+
+
+def load(region_id: str) -> dict | None:
+    p = sources_path(region_id)
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
+
+
+def _parts(g):
+    if g.is_empty:
+        return []
+    if hasattr(g, "geoms"):
+        out = []
+        for p in g.geoms:
+            out += _parts(p)
+        return out
+    return [g]
+
+
+# ------------------------------------------------------------------------------------------------ samplers
+def grid_sampler(grid, hf, fallback=None, reach=3):
+    """f(E, N) arrays -> bilinear value of a node grid (rows = north->south, like the heightfield); nodes that are not
+    finite (road_z off the road = -inf) are filled from the nearest finite node within `reach` nodes, else from
+    `fallback(E, N)`."""
+    from scipy import ndimage
+    g = np.asarray(grid, float)
+    bad = ~np.isfinite(g)
+    if bad.any() and (~bad).any():
+        d, (jj, ii) = ndimage.distance_transform_edt(bad, return_indices=True)
+        filled = g[jj, ii]
+        filled[d > reach] = np.nan
+        g = np.where(bad, filled, g)
+
+    def f(e, n):
+        e = np.asarray(e, float)
+        n = np.asarray(n, float)
+        fi = np.clip(e - hf.x0, 0, g.shape[1] - 1.001)
+        fj = np.clip(hf.y1 - n, 0, g.shape[0] - 1.001)
+        i0, j0 = np.floor(fi).astype(int), np.floor(fj).astype(int)
+        a, b = fi - i0, fj - j0
+        v = ((1 - a) * (1 - b) * g[j0, i0] + a * (1 - b) * g[j0, i0 + 1] + (1 - a) * b * g[j0 + 1, i0]
+             + a * b * g[j0 + 1, i0 + 1])
+        if fallback is not None and np.isnan(v).any():
+            v = np.where(np.isnan(v), fallback(e, n), v)
+        return v
+    return f
+
+
+# ------------------------------------------------------------------------------------------------ geometry helpers
+def _heading(v) -> float:
+    """Compass heading (deg clockwise from north) of a local (E, N) vector."""
+    return round(math.degrees(math.atan2(float(v[0]), float(v[1]))) % 360.0, 2)
+
+
+def _frame(line: LineString, s):
+    s = np.asarray(s, float)
+    P = np.array([line.interpolate(x).coords[0] for x in s])
+    if len(P) < 2:
+        T = np.array([[1.0, 0.0]])
+    else:
+        T = np.gradient(P, axis=0)
+        T /= np.maximum(np.linalg.norm(T, axis=1, keepdims=True), 1e-9)
+    Nl = np.column_stack([-T[:, 1], T[:, 0]])          # left normal
+    return P, T, Nl
+
+
+def _stations(length, step, extra=()):
+    n = max(1, int(math.ceil(length / step - 1e-9)))
+    s = np.linspace(0.0, length, n + 1)
+    if extra:
+        s = np.unique(np.concatenate([s, np.clip(np.asarray(extra, float), 0, length)]))
+        s = s[np.concatenate([[True], np.diff(s) > 1e-3])]
+    return s
+
+
+def _ribbon(P, Nl, Z, lat, dz):
+    """Vertices / triangles of a strip ribbon: lateral offsets `lat` (k), heights Z + dz (k) per station; returns
+    V (n*k, 3), T, UV (lateral, along)."""
+    n, k = len(P), len(lat)
+    lat = np.asarray(lat, float)
+    dz = np.asarray(dz, float)
+    V = (P[:, None, :] + Nl[:, None, :] * lat[None, :, None]).reshape(-1, 2)
+    Zv = (Z[:, None] + dz[None, :]).reshape(-1)
+    along = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(P, axis=0), axis=1))])
+    UV = np.column_stack([np.tile(lat, n), np.repeat(along, k)])
+    r, c = np.meshgrid(np.arange(n - 1), np.arange(k - 1), indexing="ij")
+    a = (r * k + c).ravel()
+    b = ((r + 1) * k + c).ravel()
+    cc = ((r + 1) * k + c + 1).ravel()
+    d = (r * k + c + 1).ravel()
+    # lateral grows to the LEFT (Nl), stations forward: (a, cc, d) and (a, b, cc) are CCW seen from above / outside
+    T = np.concatenate([np.column_stack([a, cc, d]), np.column_stack([a, b, cc])])
+    return np.column_stack([V, Zv]), UV, T
+
+
+def _keep_segments(T, k, seg_ok):
+    """Drop the triangles of ribbon segments (station i -> i+1) where seg_ok[i] is False."""
+    seg = T.min(axis=1) // k
+    return T[seg_ok[seg]]
+
+
+# ------------------------------------------------------------------------------------------------ plan
+class Track:
+    def __init__(self, src: dict, origin, attrs: dict):
+        self.id = f"osm:way/{src['osm_way']}:{src['part']}"
+        self.line = LineString(np.asarray(src["coords"], float) - np.asarray(origin, float))
+        self.a = attrs
+        n = attrs["tracks"]
+        self.offsets = [(k - (n - 1) / 2.0) * TRACK_SPACING for k in range(n)]
+        self.gauge = attrs["gauge_mm"] / 1000.0
+        self.zones = []          # [(s_a, s_b, crossing index)]
+
+    @property
+    def half_top(self):
+        return max(abs(o) for o in self.offsets) + SLEEPER_L / 2 + BALLAST_SHOULDER
+
+    def rail_lats(self):
+        """Lateral centre of every rail head (2 per track)."""
+        h = self.gauge / 2 + RAIL_HEAD_W / 2
+        return sorted(o + sgn * h for o in self.offsets for sgn in (-1, 1))
+
+
+class Plan:
+    """Rail tracks and level crossings of one region in local metres (E, N)."""
+
+    def __init__(self, src: dict, origin, tile_local=None, road_poly=None, road_lines=()):
+        self.origin = np.asarray(origin, float)
+        self.road_poly = road_poly if road_poly is not None else shapely.Polygon()
+        self.road_lines = list(road_lines)
+        self.report = {"tracks": [], "skipped": [], "crossings": [], "markers": [], "warnings": []}
+        osm = src.get("osm", src)
+        self.tracks = []
+        for wsrc in osm.get("ways", []):
+            keep, why, at = classify_way(wsrc.get("tags", {}))
+            sid = f"osm:way/{wsrc['osm_way']}:{wsrc.get('part', 0)}"
+            if not keep:
+                if wsrc.get("tags", {}).get("railway") is not None:
+                    self.report["skipped"].append({"src": sid, "why": why})
+                continue
+            wsrc = {**wsrc, "part": wsrc.get("part", 0)}
+            t = Track(wsrc, origin, at)
+            if tile_local is not None:
+                g = t.line.intersection(tile_local)
+                if g.is_empty:
+                    continue
+                if g.geom_type != "LineString":
+                    g = max(_parts(g), key=lambda q: q.length)
+                t.line = g
+            self.tracks.append(t)
+            self.report["tracks"].append({"src": t.id, "length_m": round(t.line.length, 1), **at})
+        self.nodes = []
+        for nd in osm.get("nodes", []):
+            keep, why, at = classify_node(nd.get("tags", {}))
+            sid = f"osm:node/{nd['osm_node']}"
+            if not keep:
+                self.report["skipped"].append({"src": sid, "why": why})
+                continue
+            self.nodes.append({"src": sid, "p": np.asarray(nd["xy"], float) - self.origin, **at})
+        self.crossings = self._find_crossings()
+
+    # -------------------------------------------------------------------------------------------- crossings
+    def _find_crossings(self):
+        out = []
+        used = set()
+        for nd in self.nodes:
+            best = None
+            for ti, t in enumerate(self.tracks):
+                d = t.line.distance(Point(nd["p"]))
+                if d <= CROSS_SNAP_M and (best is None or d < best[0]):
+                    best = (d, ti)
+            if best is None:
+                self.report["warnings"].append({"src": nd["src"], "why": "level_crossing node far from any rail"})
+                continue
+            out.append({**nd, "track": best[1], "source": "osm"})
+        # geometric intersections of the rail axis with ground road centre lines without an OSM node
+        for ti, t in enumerate(self.tracks):
+            if t.a["bridge"]:
+                continue
+            for rl in self.road_lines:
+                for q in _parts(t.line.intersection(rl)):
+                    pts = [q] if q.geom_type == "Point" else [Point(c) for c in getattr(q, "coords", [])]
+                    for pt in pts:
+                        p = np.asarray(pt.coords[0], float)
+                        if any(np.linalg.norm(c["p"] - p) < CROSS_DEDUP_M for c in out):
+                            continue
+                        key = (ti, round(p[0], 1), round(p[1], 1))
+                        if key in used:
+                            continue
+                        used.add(key)
+                        out.append({"src": "geometry", "p": p, "track": ti, "source": "geometry", "barrier": None,
+                                    "light": False, "bell": False, "saltire": None, "supervision": None})
+                        self.report["warnings"].append({"src": f"geometry {p.round(1).tolist()}",
+                                                        "why": "road x rail without OSM level_crossing node: "
+                                                               "barrier unknown, signed as category D"})
+        out.sort(key=lambda c: (round(float(c["p"][0]), 1), round(float(c["p"][1]), 1)))
+        res = []
+        for c in out:
+            t = self.tracks[c["track"]]
+            s_c = t.line.project(Point(c["p"]))
+            pc = np.asarray(t.line.interpolate(s_c).coords[0])
+            _, T, _ = _frame(t.line, [max(0, s_c - 1), min(t.line.length, s_c + 1)])
+            tdir = T.mean(0)
+            tdir /= np.linalg.norm(tdir)
+            # road at the crossing: nearest ground road centre line
+            rdir, rl_best = None, None
+            for rl in self.road_lines:
+                d = rl.distance(Point(pc))
+                if d <= ROAD_SNAP_M and (rl_best is None or d < rl_best[0]):
+                    rl_best = (d, rl)
+            if rl_best is not None:
+                rl = rl_best[1]
+                sr = rl.project(Point(pc))
+                a_ = np.asarray(rl.interpolate(max(0, sr - 2)).coords[0])
+                b_ = np.asarray(rl.interpolate(min(rl.length, sr + 2)).coords[0])
+                rdir = (b_ - a_) / max(np.linalg.norm(b_ - a_), 1e-9)
+            else:
+                rdir = np.array([-tdir[1], tdir[0]])        # no road line: assume square crossing
+                self.report["warnings"].append({"src": c["src"], "why": "no road centre line near the crossing"})
+            sin_t = max(abs(float(tdir[0] * rdir[1] - tdir[1] * rdir[0])), 0.2)    # >= ~11.5 deg (very skew crossings clamped)
+            # panel zone along the track = the road footprint (+ margin) on the track axis around the crossing
+            zone = None
+            if not self.road_poly.is_empty:
+                pieces = _parts(t.line.intersection(self.road_poly.buffer(PANEL_MARGIN)))
+                pieces = [q for q in pieces if q.geom_type == "LineString"]
+                if pieces:
+                    q = min(pieces, key=lambda q: q.distance(Point(pc)))
+                    if q.distance(Point(pc)) < 2.0:
+                        ss = sorted(t.line.project(Point(xy)) for xy in q.coords)
+                        zone = (ss[0], ss[-1])
+            if zone is None:
+                zone = (s_c - 4.0 / sin_t, s_c + 4.0 / sin_t)    # WORKING_VALUE: 7 m road + margins
+            zone = (max(0.0, zone[0]), min(t.line.length, zone[1]))
+            road_w = max((zone[1] - zone[0] - 2 * PANEL_MARGIN) * sin_t, 3.0)
+            # the whole bundle crossing this road: tracks of all rail ways whose axis passes the crossing
+            n_tracks = sum(tt.a["tracks"] for tt in self.tracks if tt.line.distance(Point(pc)) <= CROSS_SNAP_M
+                           + TRACK_SPACING * (tt.a["tracks"] - 1) / 2)
+            ci = len(res)
+            t.zones.append((zone[0], zone[1], ci))
+            res.append({**c, "p": pc, "s": s_c, "tdir": tdir, "rdir": rdir, "sin": sin_t, "zone": zone,
+                        "road_w": road_w, "n_tracks": int(max(n_tracks, t.a["tracks"])),
+                        "half_track": max(abs(o) for o in t.offsets) + PANEL_HALF})
+        return res
+
+    def sign_code(self, c) -> str | None:
+        """G-3 (single track) / G-4 (multiple tracks) where the crossing has no barriers (Dz.U. 2015 poz. 1744 § 5:
+        A without barriers, C, D); an explicit OSM crossing:saltire overrides."""
+        show = c["barrier"] in (None, "no") if c["saltire"] is None else c["saltire"]
+        if not show:
+            return None
+        return "G-3" if c["n_tracks"] <= 1 else "G-4"
+
+    # -------------------------------------------------------------------------------------------- profile
+    def _tor(self, t: Track, P, s, ground_at, road_z_at):
+        """Top of rail at the stations: smoothed ground + TRACK_H; linear on bridges; pinned to the road surface
+        (+ PANEL_LIFT) inside a crossing zone and blended over CROSS_BLEND_M outside it."""
+        z = ground_at(P[:, 0], P[:, 1]) + TRACK_H
+        if t.a["bridge"]:
+            z = np.interp(s, [s[0], s[-1]], [z[0], z[-1]])
+        for (sa, sb, ci) in t.zones:
+            c = self.crossings[ci]
+            zr = float(road_z_at(np.array([c["p"][0]]), np.array([c["p"][1]]))[0]) + PANEL_LIFT
+            d = np.maximum(np.maximum(sa - s, s - sb), 0.0)
+            wgt = np.clip(1.0 - d / CROSS_BLEND_M, 0.0, 1.0)
+            z = (1 - wgt) * z + wgt * zr
+            inz = (s >= sa - 1e-6) & (s <= sb + 1e-6)
+            if inz.any():
+                z[inz] = road_z_at(P[inz, 0], P[inz, 1]) + PANEL_LIFT
+        return z
+
+    # -------------------------------------------------------------------------------------------- meshes
+    def build(self, buf, ground_at, road_z_at, log=print):
+        """Add the track bed (rail_lod0/1/2) and the crossing panels (rail_crossing) to `buf`; fill the report
+        (triangles per LoD, crossings, markers, clearance)."""
+        tris = {k: 0 for k in LAYERS}
+        for t in self.tracks:
+            L = t.line.length
+            for lod in (0, 1, 2):
+                extra = []
+                for (sa, sb, _) in t.zones:
+                    extra += [sa, sb] + list(np.arange(sa, sb, PANEL_STEP))
+                s = _stations(L, LOD_STEP[lod], extra)
+                P, _, Nl = _frame(t.line, s)
+                tor = self._tor(t, P, s, ground_at, road_z_at)
+                mid = 0.5 * (s[:-1] + s[1:])
+                in_zone = np.zeros(len(mid), bool)
+                for (sa, sb, _) in t.zones:
+                    in_zone |= (mid > sa) & (mid < sb)
+                layer = f"rail_lod{lod}"
+                tris[layer] += self._ballast(buf, layer, t, P, Nl, tor, ~in_zone, lod)
+                if lod <= 1:
+                    tris[layer] += self._rails(buf, layer, t, P, Nl, s, tor, road_z_at)
+                if lod == 0:
+                    tris[layer] += self._sleepers(buf, layer, t, ground_at, road_z_at)
+        for ci, c in enumerate(self.crossings):
+            n = self._panels(buf, ci, c, road_z_at)
+            tris["rail_crossing"] += n
+            code = self.sign_code(c)
+            self.report["crossings"].append({
+                "id": ci, "src": c["src"], "source": c["source"],
+                "e": round(float(c["p"][0]), 2), "n": round(float(c["p"][1]), 2),
+                "z_road": round(float(road_z_at(np.array([c["p"][0]]), np.array([c["p"][1]]))[0]), 3),
+                "track_heading_deg": _heading(c["tdir"]), "road_heading_deg": _heading(c["rdir"]),
+                "tracks": c["n_tracks"], "barrier": c["barrier"], "light": c["light"], "bell": c["bell"],
+                "sign": code, "road_width_m": round(c["road_w"], 2),
+                "panel_zone_m": [round(c["zone"][0], 2), round(c["zone"][1], 2)], "panel_triangles": n})
+            self.report["markers"] += self.markers(ci, c, road_z_at)
+        self.report["triangles"] = tris
+        km = sum(t.line.length for t in self.tracks) / 1000.0
+        self.report["track_km"] = round(km, 3)
+        self.report["clearance"] = {"profile_m": [list(p) for p in CLEARANCE_PROFILE],
+                                    "frame": "(lateral from track axis, height above top of rail)",
+                                    "status": "UNVERIFIED simplified structure gauge (ADR 0217)",
+                                    "min_marker_distance_m": self.min_marker_clearance()}
+        log("rail", {"tracks": len(self.tracks), "km": round(km, 2), "crossings": len(self.crossings),
+                     "markers": len(self.report["markers"]), "triangles": tris})
+        return tris
+
+    def _ballast(self, buf, layer, t, P, Nl, tor, seg_ok, lod):
+        crib = SLEEPER_PROUD
+        form = RAIL_H + SLEEPER_H + BALLAST_UNDER           # TOR -> formation
+        bt = t.half_top
+        if lod < 2:
+            drop = form + SKIRT_M - RAIL_H - crib            # ballast top -> skirt bottom
+            toe = bt + drop * BALLAST_SLOPE
+            lat = [-toe, -bt, bt, toe]
+            dz = [-(form + SKIRT_M), -(RAIL_H + crib), -(RAIL_H + crib), -(form + SKIRT_M)]
+        else:
+            # far: one flat band at mid height of the bed, as wide as the bed at that height
+            hmid = 0.5 * (form - RAIL_H - crib)
+            half = bt + hmid * BALLAST_SLOPE
+            lat = [-half, half]
+            dz = [-(RAIL_H + crib + hmid)] * 2
+        V, UV, T = _ribbon(P, Nl, tor, lat, dz)
+        T = _keep_segments(T, len(lat), seg_ok)
+        buf.add(layer, "rail_ballast", V, UV, T, src=f"rail:{t.id}:ballast")
+        return int(len(T))
+
+    def _rails(self, buf, layer, t, P, Nl, s, tor, road_z_at):
+        n = 0
+        hw = RAIL_HEAD_W / 2
+        for c in t.rail_lats():
+            # top, outer and inner faces as one 4-edge ribbon: (c-hw, low) (c-hw, top) (c+hw, top) (c+hw, low)
+            lat = [c - hw, c - hw, c + hw, c + hw]
+            dz = [-RAIL_H, 0.0, 0.0, -RAIL_H]
+            V, UV, T = _ribbon(P, Nl, tor, lat, dz)
+            # inside crossing zones the heads sit on the road surface at their own position (crown / cross-fall)
+            if t.zones:
+                Pk = V[:, :2]
+                sk = np.repeat(s, 4)
+                inz = np.zeros(len(sk), bool)
+                for (sa, sb, _) in t.zones:
+                    inz |= (sk >= sa - 1e-6) & (sk <= sb + 1e-6)
+                if inz.any():
+                    top = road_z_at(Pk[inz, 0], Pk[inz, 1]) + PANEL_LIFT
+                    V[inz, 2] = top + np.tile(dz, len(s))[inz]
+            UV = np.column_stack([UV[:, 1], np.tile([0.0, 1.0, 1.0, 0.0], len(s))])
+            buf.add(layer, "rail_steel", V, UV, T, src=f"rail:{t.id}:rail")
+            n += len(T)
+        return int(n)
+
+    def _sleepers(self, buf, layer, t, ground_at, road_z_at):
+        L = t.line.length
+        s = np.arange(SLEEPER_SPACING / 2, L, SLEEPER_SPACING)
+        keep = np.ones(len(s), bool)
+        for (sa, sb, _) in t.zones:
+            keep &= ~((s > sa - SLEEPER_W) & (s < sb + SLEEPER_W))
+        s = s[keep]
+        if not len(s):
+            return 0
+        P, T_, Nl = _frame(t.line, s)
+        tor = self._tor(t, P, s, ground_at, road_z_at)
+        top = tor - RAIL_H
+        low = top - SLEEPER_PROUD
+        hl, hw = SLEEPER_L / 2, SLEEPER_W / 2
+        Vs, Ts = [], []
+        base = 0
+        for o in t.offsets:
+            c = P + Nl * o
+            # 8 vertices: top (back-left, back-right, front-right, front-left) + the same at the crib level
+            corners = [(-hw, -hl), (-hw, hl), (hw, hl), (hw, -hl)]
+            V = np.zeros((len(s), 8, 3))
+            for k, (da, dl) in enumerate(corners):
+                xy = c + T_ * da + Nl * dl
+                V[:, k, :2] = xy
+                V[:, k + 4, :2] = xy
+                V[:, k, 2] = top
+                V[:, k + 4, 2] = low
+            # faces (CCW from outside): top facing up, back facing -T, front facing +T  -> 6 triangles
+            loc = np.array([[0, 2, 1], [0, 3, 2], [4, 1, 5], [4, 0, 1], [3, 6, 2], [3, 7, 6]])
+            idx = (np.arange(len(s)) * 8)[:, None, None] + loc[None]
+            Vs.append(V.reshape(-1, 3))
+            Ts.append(idx.reshape(-1, 3) + base)
+            base += len(s) * 8
+        V = np.concatenate(Vs)
+        T = np.concatenate(Ts)
+        UV = np.column_stack([V[:, 0], V[:, 1]])
+        buf.add(layer, "rail_sleeper", V, UV, T, src=f"rail:{t.id}:sleepers")
+        return int(len(T))
+
+    def _panels(self, buf, ci, c, road_z_at):
+        """Crossing panels across the whole bundle, split at every rail head (head + flangeway gap)."""
+        t = self.tracks[c["track"]]
+        sa, sb = c["zone"]
+        s = _stations(sb - sa, PANEL_STEP) + sa
+        P, _, Nl = _frame(t.line, s)
+        W = max(abs(o) for o in t.offsets) + PANEL_HALF
+        cuts = []
+        for r in t.rail_lats():
+            cuts.append((r - RAIL_HEAD_W / 2 - FLANGEWAY, r + RAIL_HEAD_W / 2))
+        edges = [-W]
+        for a, b in cuts:
+            edges += [a, b]
+        edges.append(W)
+        n = 0
+        for k in range(0, len(edges), 2):
+            l0, l1 = edges[k], edges[k + 1]
+            if l1 - l0 < 0.05:
+                continue
+            V, UV, T = _ribbon(P, Nl, np.zeros(len(s)), [l0, l1], [0.0, 0.0])
+            V[:, 2] = road_z_at(V[:, 0], V[:, 1]) + PANEL_LIFT
+            UV = V[:, :2].copy()
+            buf.add("rail_crossing", "rail_crossing_panel", V, UV, T, src=f"rail:crossing:{ci}")
+            n += len(T)
+        return int(n)
+
+    # -------------------------------------------------------------------------------------------- markers
+    def markers(self, ci, c, road_z_at):
+        """Positioned / oriented crossing objects for the engine (prefabs): one per approach for signs and lights,
+        barriers by crossing:barrier, one bell. heading_deg = compass direction the face / boom points to."""
+        out = []
+        pc, r = c["p"], c["rdir"]
+        dtrack = c["half_track"] / c["sin"]                  # crossing centre -> outer panel edge, along the road
+        half_road = c["road_w"] / 2
+        code = self.sign_code(c)
+
+        def z_at(p):
+            return round(float(road_z_at(np.array([p[0]]), np.array([p[1]]))[0]), 3)
+
+        def mk(kind, p, heading, approach, **kw):
+            return {"crossing": ci, "kind": kind, "approach": approach, "e": round(float(p[0]), 2),
+                    "n": round(float(p[1]), 2), "z": z_at(p), "heading_deg": heading, **kw}
+        for a in (1, -1):
+            drive = a * r                                     # travel direction of this approach (towards the rails)
+            right = np.array([drive[1], -drive[0]])
+            face = _heading(-drive)                           # signs face the oncoming driver
+            post = pc - drive * (dtrack + SIGN_SETBACK) + right * (half_road + SIGN_LATERAL)
+            if code:
+                out.append(mk("sign", post, face, a, code=code, arm_l_m=SIGN_ARM_L, arm_w_m=SIGN_ARM_W,
+                              arm_angle_deg=SIGN_ARM_ANGLE, bottom_z_m=SIGN_BOTTOM_Z))
+            if c["light"]:
+                out.append(mk("light", post, face, a))
+            bar = c["barrier"]
+            if bar in ("half", "double_half", "full", "gate", "yes"):
+                boom_head = _heading(-right)                  # boom extends from the right verge to the left
+                entry = pc - drive * (dtrack + BARRIER_SETBACK) + right * (half_road + 0.5)
+                full = bar in ("full", "gate")
+                out.append(mk("barrier", entry, boom_head, a, role="entry", type=bar,
+                              boom_len_m=round((c["road_w"] if full else half_road) + 0.5, 2)))
+                if bar == "double_half":
+                    # exit half-barrier on the far side, closing this approach's lane for traffic leaving towards it
+                    ex = pc + drive * (dtrack + BARRIER_SETBACK) - right * (half_road + 0.5)
+                    out.append(mk("barrier", ex, _heading(right), a, role="exit", type=bar,
+                                  boom_len_m=round(half_road + 0.5, 2)))
+        if c["bell"]:
+            right = np.array([r[1], -r[0]])
+            out.append(mk("bell", pc - r * (dtrack + SIGN_SETBACK) + right * (half_road + SIGN_LATERAL),
+                          _heading(-r), 1))
+        return out
+
+    def min_marker_clearance(self):
+        """Smallest distance of a marker to any track axis bundle edge (track axis +/- outer offset); must exceed
+        CLEARANCE_HALF."""
+        if not self.report["markers"]:
+            return None
+        best = math.inf
+        for m in self.report["markers"]:
+            p = Point(m["e"], m["n"])
+            for t in self.tracks:
+                d = t.line.distance(p) - max(abs(o) for o in t.offsets)
+                best = min(best, d)
+        return round(best, 2)
+
+    def footprint(self):
+        """Track bed + clearance footprint (local polygons) for vegetation / collision QA."""
+        return [t.line.buffer(max(t.half_top + 1.0, max(abs(o) for o in t.offsets) + CLEARANCE_HALF), cap_style=2)
+                for t in self.tracks]
+
+    def blocked(self, hf):
+        from streetscape import paved as PV
+        return PV.rasterize_polys(self.footprint(), hf)
+
+    def out_json(self, region_id: str) -> dict:
+        return {"schema": OUT_SCHEMA, "region": region_id, "frame": "local E,N,U (U absolute EVRF2007)",
+                "heading": "compass degrees clockwise from north (Unity: Y rotation)",
+                **{k: v for k, v in self.report.items()}}
+
+
+def tri_per_km(lod: int, tracks: int = 1) -> float:
+    """Closed-form triangle budget of plain track (no crossings) per km - ADR 0217 formula:
+    LoD0 = 1000/5 * (6 + 6*2n) + 1000/0.6 * 6n ; LoD1 = 1000/10 * (6 + 6*2n) ; LoD2 = 1000/20 * 2."""
+    seg = 1000.0 / LOD_STEP[lod]
+    if lod == 2:
+        return seg * 2
+    v = seg * (6 + 6 * 2 * tracks)
+    if lod == 0:
+        v += 1000.0 / SLEEPER_SPACING * 6 * tracks
+    return v
+
+
+def tri_per_crossing(road_w: float, tracks: int = 1, sin_t: float = 1.0) -> int:
+    """Panel triangles of one crossing: ceil(zone / PANEL_STEP) segments x (2n + 1) strips x 2."""
+    zone = road_w / sin_t + 2 * PANEL_MARGIN
+    return int(math.ceil(zone / PANEL_STEP - 1e-9)) * (2 * tracks + 1) * 2

@@ -35,6 +35,7 @@ class Region:
     # LoD1 / LoD2 of every listed powiat; () = single-powiat region, outputs byte-identical to before the field.
     teryt_powiat_extra: tuple[str, ...] = ()
     water: bool = False                     # ADR 0210: surface-water stage (rivers, ponds) opt-in per region
+    rail: bool = False                      # ADR 0217: railway track bed + level crossings, opt-in per region
 
     @property
     def powiaty(self) -> tuple[str, ...]:
