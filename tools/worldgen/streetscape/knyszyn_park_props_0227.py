@@ -72,14 +72,31 @@ def _obelisk(acc, layer, at, z):
 
 
 def _king(acc, layer, at, z):
-    # Caution: a simple stylised silhouette only, not a reconstruction of the statue.
+    # Stylised proxy, not a scan or a reconstruction of the artwork. The front
+    # faces the separate sundial block (-N). Dimensions are WORKING_VALUE.
     _box(acc,layer,"plinth_grey",at,z,z+.18,1.05,.9)
     _box(acc,layer,"plinth_grey",at,z+.18,z+1.05,.86,.73)
-    # Cloak broad at the base and narrower at the shoulders, bronze-dark in photographs.
-    _frustum(acc,layer,"steel_painted",at,z+1.05,z+2.82,1.03,.72)
-    _box(acc,layer,"steel_painted",at,z+2.82,z+3.28,.25,.22)
-    # crown as a very low cap, without text or coat of arms
-    _box(acc,layer,"steel_painted",at,z+3.28,z+3.39,.28,.24)
+    body = np.asarray(at, float)
+    bronze = "steel_painted"
+    # The open silhouette is intentionally human: wide tapered cloak, a
+    # narrower neck and head, and arms visible at either side of the torso.
+    _frustum(acc,layer,bronze,body,z+1.05,z+2.64,1.26,.90)
+    _box(acc,layer,bronze,body,z+2.54,z+2.77,.45,.25)       # shoulders
+    for side in (-1, 1):
+        c = [body[0]+side*.46, body[1]-.22, z+2.15]
+        acc.box(layer,bronze,c,[.10,0,0],[0,.12,0],[-side*.055,0,.42],skip=(0,))
+    _box(acc,layer,bronze,body,z+2.72,z+2.84,.10,.10)     # neck
+    _box(acc,layer,bronze,body,z+2.82,z+3.18,.19,.17)     # head
+    _box(acc,layer,bronze,body,z+3.16,z+3.25,.22,.19)     # crown band
+    # The narrow raised points make the crown readable even on the cheap LOD.
+    # Keep the top at the earlier proxy's height; no emblem or lettering.
+    for x in (-.15, 0., .15):
+        _box(acc,layer,bronze,body+[x,0.],z+3.25,z+3.39,.04,.16)
+    if layer == "buildings":
+        # Small projecting beard and hands add depth in the close High view.
+        _box(acc,layer,bronze,body+[0.,-.18],z+2.78,z+3.02,.12,.045)
+        for side in (-1, 1):
+            _box(acc,layer,bronze,body+[side*.51,-.23],z+1.72,z+1.88,.105,.13)
     # Separate sundial/plaque block on paving in front of figure, blank.
     p=np.asarray(at)+[0.,-2.0]
     _box(acc,layer,"plinth_grey",p,z,z+.75,.65,.40)

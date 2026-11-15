@@ -6,6 +6,7 @@ from shapely.geometry import MultiPoint
 import yaml
 
 from streetscape import knyszyn_park_props_0227 as props
+from streetscape.buildings_mesh import Acc
 
 ROOT = Path(__file__).resolve().parents[2]
 ORIGIN = [761611, 612607]
@@ -63,3 +64,27 @@ def test_terrain_nan_drops_objects_without_writing_invalid_mesh():
     buf=Buffer()
     r=props.build(buf,"knyszyn",ORIGIN,[],lambda e,n: np.full_like(e,np.nan),{})
     assert not buf.parts and len(r["refused"])==3+len(props.BENCHES)+len(props.LAMPS)
+
+
+def test_king_proxy_has_crowned_head_and_cheaper_low_geometry():
+    outputs = {}
+    for layer in props.LAYERS:
+        acc = Acc()
+        props._king(acc, layer, [0., 0.], 0.)
+        buf = Buffer()
+        acc.flush(buf, props.ASSET_ID)
+        outputs[layer] = sum(len(p[3]) for p in buf.parts)
+        figure = next(p for p in buf.parts if p[1] == "steel_painted")
+        vertices, tris = figure[2], figure[3]
+        assert np.isfinite(vertices).all()
+        assert (np.linalg.norm(np.cross(vertices[tris[:,1]]-vertices[tris[:,0]],
+                                        vertices[tris[:,2]]-vertices[tris[:,0]]), axis=1) > 1e-9).all()
+        # Head and three separated crown tips make this a figure rather than a pillar.
+        assert np.isclose(vertices[:,2].max(), 3.39)
+        tips = vertices[np.isclose(vertices[:,2], 3.39), 0]
+        assert np.any(tips < -.1) and np.any(np.abs(tips) < .05) and np.any(tips > .1)
+        # Arms extend forward and to both sides above the pedestal.
+        arms = vertices[(vertices[:,2] > 1.7) & (vertices[:,2] < 2.7) & (vertices[:,1] < -.3)]
+        assert arms[:,0].min() < -.4 and arms[:,0].max() > .4
+    assert outputs["buildings"] > outputs["buildings_low"]
+    assert outputs["buildings"] <= 200 and outputs["buildings_low"] <= 160
