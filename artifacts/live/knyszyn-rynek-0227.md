@@ -12,3 +12,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline.done; Get-Content artifacts/knyszyn-rynek-0227/baseline.log -Tail 30`
 - 2026-11-15 18:09 +01:00 — Audyt kodu: kolejność authored paved_area prawdopodobnie usuwa płytę fontanny pod placem; weryfikacja na baseline oczekuje na render. Import nadal buduje brakujące materiały.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline.done; Get-Content artifacts/knyszyn-rynek-0227/import-before.log -Tail 20`
+- 2026-11-15 18:14 +01:00 — Przerwano własną regenerację materiałów przed Unity, skopiowano gotowe PNG z main po sprawdzeniu identyczności źródeł generatora; wznowiono import i baseline.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline.done; Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30`
