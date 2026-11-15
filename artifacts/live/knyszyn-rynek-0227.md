@@ -8,3 +8,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/copy.done; pwsh scripts/unity-slot.ps1 -Acquire -Owner knyszyn-rynek-0227`
 - 2026-11-15 18:06 +01:00 — Lokalna kopia danych i Library gotowa; import przygotowawczy w toku. Skopiowane GLB mogą być starsze niż scalony LED — przed baseline przebudować knyszyn i ponownie zaimportować.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/import-before.done; pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner knyszyn-rynek-0227`
+- 2026-11-15 18:07 +01:00 — Przygotowano i uruchomiono sekwencyjny baseline: po imporcie przygotowawczym build_world, ponowny import oraz Low/High × clear/dusk; status w baseline.done, log baseline.log.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline.done; Get-Content artifacts/knyszyn-rynek-0227/baseline.log -Tail 30`
