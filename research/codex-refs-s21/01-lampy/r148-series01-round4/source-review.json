@@ -1,0 +1,64 @@
+{
+  "checked_date": "2026-11-15",
+  "result": "E8_PARTIAL_PASS_WITH_FIX",
+  "primary_source": {
+    "url": "https://unece.org/sites/default/files/2025-02/R148r1am2E.pdf",
+    "document": "E/ECE/TRANS/505/Rev.3/Add.147/Rev.1/Amend.2",
+    "document_date": "2024-12-16",
+    "revision": 1,
+    "amendment_document": 2,
+    "series": "01",
+    "supplement_to_series": 2,
+    "entry_into_force_according_to_cover": "2024-09-22",
+    "full_text_read": true,
+    "available_extracted_lines": 119,
+    "pages": "1–3",
+    "content_reviewed": "Okładka i cała treść poprawki: przenumerowanie3.3.1,3.3.4.4, tabela8,5.7.7,zał.8pkt1.2.2.",
+    "document_status": "Dokumentacja UNECE; okładka wskazuje ECE/TRANS/WP.29/2024/23 jako tekst autentyczny i prawnie wiążący."
+  },
+  "baseline": {
+    "url": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+    "document": "E/ECE/TRANS/505/Rev.3/Add.147",
+    "document_date": "2020-01-09",
+    "full_text_available_lines": 2865,
+    "comparison_section": "5.6.1,tabela8",
+    "limits": "Nie porównano z pośrednią rewizją1 przed Amendment2. Nie ustalono, która zmiana historycznie jako pierwsza wprowadziła każdą różnicę."
+  },
+  "claims": [
+    {
+      "claim": "kat.1/11 maks1200/600",
+      "verdict": "SOURCED",
+      "scope": "Tabela8 poprawki; rozdzielenie maksimum pojedynczej i D, nie globalny zakres ani wartości każdej komory."
+    },
+    {
+      "claim": "2a/2b/5/6/12 bez zmian",
+      "verdict": "FIX_REQUIRED",
+      "scope": "Tabela porównawcza daje równość trzech kolumn dla2a/2b/5/6 względem pierwotnego2020. Dla12 kolumnaD różni się. Twierdzenie o wszystkich wymaganiach pozostaje UNVERIFIED."
+    }
+  ],
+  "table_conditions": {
+    "current_column_references": {
+      "minimum": "4.8.3.1(a)",
+      "maximum": "4.8.3.1(b)",
+      "standard_distribution": "4.8.3.1(c)",
+      "geometric_visibility": "4.8.3.1(d)",
+      "D": "3.3.2.5.2"
+    },
+    "limit": "Amendment2 odsyła do tych punktów, lecz ich nie przytacza. Nie wyprowadzono pełnych aktualnych warunków z samych nagłówków ani nie przeniesiono numeracji punktów pierwotnego tekstu."
+  },
+  "series_vs_revision": "Seria01 wynika wprost z okładki, a nie z oznaczenia Rev.1. Amendment2 to dokument uzupełnienia, nie seria02.",
+  "not_claimed": [
+    "Aktualność prawna2026",
+    "Identyfikacja certyfikatu5497",
+    "Niezmienność wszystkich wymagań kategorii2a/2b/5/6",
+    "Chronologia pierwszego wprowadzenia różnicy bez pośrednich dokumentów"
+  ],
+  "counts": {
+    "numeric_comparison_rows": 7,
+    "new_photos": 0
+  },
+  "access_method": "web search → open indeksowanego wyniku PDF; narzędzie udostępniło pełne119linii wszystkich3stron mimo403 przy osobnym bezpośrednim odczycie koordynatora. Tekst zachowany z już otrzymanego wyniku bez retry.",
+  "external_tool_extract": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\01-lampy\\r148-series01-round4\\source-extracted.txt",
+  "extract_limit": "Ekstrakt tekstowy narzędzia; białe znaki i skład tabeli znormalizowane, potęgi w zapisie102/103 jak w wyniku. Nie binarny PDF i nie archiwalna kopia składu.",
+  "binary_pdf_in_repo": false
+}

@@ -93,3 +93,6 @@ r6-source-round3/regulations.csv:9SOURCED z pełnego R6Rev.5,07.10.2011, Supplem
 
 
 Used-parts-round4:4 nowe indywidualnie obejrzane kadry firmowe, wyłącznie link-only ARR. Fizyczne E2 DAF/Vignal potwierdzone przez dwóch agentów, pełny numer/funkcje UNVERIFIED; nie zwiększa pełnego licznika homologacji. Oferta DAF części nowej, Renault używanego kompletu. Kolory kloszy i optyczne pola nie dowodzą emisji ani liczby komór. Manifest główny33 rekordy kadrów(7 lokalnych,26 link-only).
+
+
+R148-series01-round4:7 dodatkowych źródłowych porównań tabeli8, odrębnie od24+13+9 wcześniejszych wierszy. Pełny oficjalny R148Rev1Amendment2 (dokument16.12.2024, Supplement2serii01, wejście22.09.2024) odczytał agent. Kat.1/11 maks.single1200/D600 potwierdzone; ogólne„12bez zmian” względem pierwotnego2020 wymaga korekty: maks.D N.A.→250cd. Równość dla2a/2b/5/6 dotyczy tylko trzech kolumn; nie dowodzi niezmienności wszystkich testów. Źródła/punkty i ograniczenia dostępu koordynatora w podkatalogu. Nie jest to deklaracja aktualności2026.
