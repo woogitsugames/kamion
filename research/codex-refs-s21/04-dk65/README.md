@@ -1,6 +1,6 @@
 # 04 — DK65: datowany stan inwestycji i organizacja ruchu — WIP
 
-Stan bieżący manifestu:6 rekordów —4 dokumentacyjne i2 ponownie obejrzane orto. Brak nowych fotografii naziemnych i brak pobranych obrazów firmowych. Normy i prywatne obserwacje tekstowe opisano osobno.
+Stan bieżący manifestu:8 rekordów —6 dokumentacyjnych i2 ponownie obejrzane orto. Brak nowych fotografii naziemnych i brak pobranych obrazów firmowych. Normy i prywatne obserwacje tekstowe opisano osobno.
 
 Cel: oddzielić otwartą S19 od aktualnej budowy S16 i archiwalnych zwężeń DK65. Pakiet zawiera 4 rekordy dokumentacyjne, **0 kadrów pobranych / 0 kadrów link-only**. Nie opisuje zdjęć na stronach GDDKiA, których nie oglądano.
 
@@ -39,3 +39,7 @@ Osobno obejrzano3 kadry DK65, bez kopiowania zdjęć do repo ani tworzenia minia
 ## Drzewa i skrajnia — rozdzielenie prawa od stanu terenu
 
 regulations-vegetation.csv zawiera5 wierszy z paragrafami i datowanymi źródłami ELI. Dawnego minimum3m z2016/124 nie wolno uznać za uniwersalny aktualny wzorzec DK65. Sprawdzono2022/1518 oraz zmianę2025/1352 i przepisy przejściowe; reżim konkretnej inwestycji UNVERIFIED. To wymagania, nie pomiary zdjęć. Próba BDL w jednym punkcie lasu przy04-O01 zwróciła0 rekordów obu warstw drzewostanów; gatunków nie ustalono. Brak rekordu nie dowodzi braku drzew.
+
+## Uzupełnienie listy GDDKiA — pełne rekordy S16
+
+04-D05/D06: odczytano pełną oficjalną tabelę z innego publicznego URL, bez wykonywania skryptu challenge z wcześniejszej próby. Dane i metoda w data/gddkia-dk65-table-records.json. SOURCED jako treść rejestru: ręczne wahadło148+968–149+556, dojazd Chraboły147+713; osobno bypass przy152,3km. Zakres4,8km dotyczy obwiedni robót, nie długości wahadła. Terminy są planem w rejestrze; bez gwarancji faktycznego zakończenia. Dokładny stan terenowy15.11 i wygląd znaków nadal UNVERIFIED. Wcześniejszy04-D04 zachowuje dziennik nieskutecznego odczytu nr65; nie oznacza już braku jakichkolwiek pełnych danych o utrudnieniach.

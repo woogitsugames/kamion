@@ -1,0 +1,42 @@
+{
+  "retrieved_utc": "2026-11-15T18:44:29.727846+00:00",
+  "source": "https://drogi.gddkia.gov.pl/informacje-drogowe/lista-utrudnien?odcinek_id=40",
+  "source_owner": "GDDKiA",
+  "read_method": "Full primary table766 text lines opened from indexed official page; not search snippet. Earlier direct request to different nr65 URL produced challenge script, which was not executed. No raw-host challenge bypass.",
+  "freshness": "Web marks page crawled yesterday; raw live response not re-requested. SOURCED as published table records, not physical inspection on2026-11-15.",
+  "source_time_zone": "not explicitly given; date/time strings preserved without timezone conversion",
+  "items": [
+    {
+      "id": "04-D05",
+      "section": "Knyszyn–Krynice",
+      "road": "DK65",
+      "chainage_start_km": 145.0,
+      "affected_envelope_km": 4.8,
+      "speed_limit_reported_kmh": 50,
+      "no_overtaking_reported": true,
+      "source_start": "2026-05-14 08:50",
+      "source_end": "2028-06-30 15:00",
+      "temporary_access_Chrabol_chainage_km": 147.713,
+      "alternating_traffic_start_km": 148.968,
+      "alternating_traffic_end_km": 149.556,
+      "control": "ręczne według treści rekordu",
+      "locator": "full table row Knyszyn-Krynice; text line573 in web read",
+      "purpose": "budowa S16 Knyszyn–Krynice, wyjazdy z budowy; nie otwarta S19"
+    },
+    {
+      "id": "04-D06",
+      "section": "Kozińce–Krynice",
+      "road": "DK65",
+      "chainage_start_km": 152.3,
+      "affected_envelope_km": 0.6,
+      "speed_limit_reported_kmh": 50,
+      "no_overtaking_reported": true,
+      "source_start": "2026-07-30 11:00",
+      "source_end": "2027-11-30 15:00",
+      "control": "nie podano wahadła w tym rekordzie",
+      "locator": "full table row Kozińce-Krynice; text line530 in web read",
+      "purpose": "wyjazd z budowy i bypass przy budowie S16"
+    }
+  ],
+  "limits": "4.8km is entire affected envelope, not alternating lane length. End dates are reported schedule, not proof future work will last that long. Exact sign shapes/IDs, signals, barriers, bypass geometry and current field condition UNVERIFIED."
+}
