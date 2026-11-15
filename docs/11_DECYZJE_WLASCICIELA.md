@@ -113,3 +113,6 @@ Właściciel: domyślny zakres kierownicy dotykowej **270°** (900° w ustawieni
 
 ## D71 — Decyzje po recenzji kodu s21 (2026-11-15, s21; REVIEW-2026-11-15-s21-code-*)
 Właściciel: (1) **APK D67** — dodać zestaw regionów **`d67-full`** = obecny `d67` + Dojlidy, Knyszyn-W, Mońki, Tykocin (ESTIMATED do ~1,95 GB; limit 2 GB z D67 mierzyć na buildzie); `d67` zostaje jako lżejszy wariant (PR #104, ADR 0229). (2) **Opaska ronda Knyszyn** (DK65×Tykocka, PR #97, ADR 0218) — **jasna kostka betonowa**: nowy jasny materiał z fakturą kostki zgodny ze zdjęciami S21 (nie ciepły brąz `apron_sett`, nie gładki beton). (3) **Oznakowanie dojazdu do przejazdów kolejowych** (Dz.U. 2025 poz. 1105 § 79: A-9/A-10, G-1a–f, tablica „Sygnalizacja automatyczna”, U-1) — **osobne zadanie teraz**, po scaleniu rail-fix-s21 i #102.
+
+## D72 — Limit rozmiaru APK 10 GB (2026-11-15, s22)
+Właściciel: limit rozmiaru APK z regionami podniesiony z 2 GB (D67/D71) do **10 GB**. Uwaga techniczna: pojedynczy plik APK powyżej ~4 GB nie jest obsługiwany przez Androida i format ZIP32 (UNVERIFIED dla Unity 6000.3 — sprawdzić przy buildzie); powyżej tej granicy regiony muszą iść jako osobne paczki (PR #112, ADR 0234) albo asset packs.
