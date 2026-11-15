@@ -202,6 +202,7 @@ Pobierane do `Data/raw/refs/` (poza gitem, nie trafiaja do buildu). Manifest z a
 |---|---|---|---|---|
 | `refs-kartaview` | KartaView (api.kartaview.org, openstreetcam), autorzy w manifescie | CC BY-SA 4.0 | nie | tylko referencja wizualna; pochodna (tekstura) = CC BY-SA, zabronione |
 | `refs-panoramax` | Panoramax (api.panoramax.xyz), autorzy w manifescie | licencja per zdjecie (zaobserwowano CC BY-SA 4.0) | nie | tylko referencja |
+| `law-znaki-2311` | Dz.U. 2019 poz. 2311 zał. 1 (ELI API Sejmu; tabele liter i znaków E w `tools/worldgen/streetscape/sign_norms.py`, ADR 0236) | akt normatywny — nie jest przedmiotem prawa autorskiego (art. 4 pkt 2 upapp) | tak (liczby) | lica tablic to własne rysunki; kadry R2 (KartaView 3686129, Panoramax 2019, CC BY-SA 4.0) i ortofoto GUGiK tylko jako referencja treści i położeń |
 | `refs-commons` | Wikimedia Commons (geosearch, kategorie, wyszukiwanie), glownie Rakoon (CC0/CC BY 3.0), Henryk Borawski (CC BY-SA), Podlaski Urzad Wojewodzki (CC BY 3.0 pl) | CC0 / CC BY / CC BY-SA, wg `extmetadata` pliku | nie | CC0 moze byc zrodlem tekstur (osobny wpis przy uzyciu); BY wymaga atrybucji; BY-SA tylko referencja |
 | `refs-openverse` | Openverse (api.openverse.org), autorzy i dostawcy w manifescie | CC0 / CC BY / CC BY-SA | nie | j.w. |
 | `refs-gugik-ortho` | GUGiK Geoportal WMS ORTO HighResolution | dane otwarte GUGiK (art. 40a ust. 2 pkt 1 Pgik); atrybucja: Zrodlo danych: Glowny Urzad Geodezji i Kartografii | nie | referencja i dopasowanie ukladu; rozdzielczosc mozaiki WMS UNVERIFIED |

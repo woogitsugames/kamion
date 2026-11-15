@@ -7,7 +7,6 @@ generated/streetscape_qa.json, generated/control_cameras.json, art-source/world/
 from __future__ import annotations
 
 import json
-import math
 import re
 
 import numpy as np
@@ -99,7 +98,9 @@ def test_letters_have_the_norm_height_and_length():
     ys, xs = np.where(a)
     # capitals: 210 mm high; length by Tabela 1.10
     assert (ys.max() - ys.min() + 1) / 400 == pytest.approx(0.210, abs=0.012)
-    assert (xs.max() - xs.min() + 1) / 400 == pytest.approx(SN.text_len_m("HEN", 0.210), abs=0.02)
+    # ink extent <= the length between the outer measuring points (the side bearings of the stand-in glyphs)
+    ink = (xs.max() - xs.min() + 1) / 400
+    assert SN.text_len_m("HEN", 0.210) - 0.05 <= ink <= SN.text_len_m("HEN", 0.210) + 0.005
     assert abs((ys.max() + ys.min()) / 2 - 150) < 4                            # capitals centred on the row axis
 
 
@@ -306,10 +307,10 @@ def test_sign_meshes_cost_less_than_before():
     assert (_tris(l0), _tris(l1)) == (792, 208)
     l0, l1, _ = LP.sign_cantilever(8.0, 7.2, mirror=True)
     assert _tris(l0) < 528 and _tris(l1) < 240
-    m, l, _ = PP.plate("B-33_70")
-    assert _tris(m) == 176 < meta["plate_B-33_70"]["tris_lod0"] and _tris(l) == meta["plate_B-33_70"]["tris_lod1"]
-    m, l, _ = PP.board("E-2_x", 2.0, 1.0)
-    assert (_tris(m), _tris(l)) == (28, 4)
+    m, low, _ = PP.plate("B-33_70")
+    assert _tris(m) == 176 < meta["plate_B-33_70"]["tris_lod0"] and _tris(low) == meta["plate_B-33_70"]["tris_lod1"]
+    m, low, _ = PP.board("E-2_x", 2.0, 1.0)
+    assert (_tris(m), _tris(low)) == (28, 4)
 
 
 def test_plate_rim_faces_outward():

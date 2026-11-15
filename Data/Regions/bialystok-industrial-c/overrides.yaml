@@ -875,6 +875,7 @@ overrides:
     along: {osm_way: 237183783, before_node: n2466608891, distance_m: 38.0, side: R}
     parts: [{face: E-15, text: "8|19"}, {face: E-16, text: "E67"}]
     r2: [R2-017, R2-008]
+    photo: ["panoramax:6ded8ec0"]
     reason: >-
       ADR 0236, research R2-017 (Panoramax 6ded8ec0, 2019-08-15): route numbers "8" and "19" (red) side by side over
       "E 67" (green) on one post on both sides of the northbound exit of Rondo Putry. Station: the "E 67" plate
@@ -887,6 +888,7 @@ overrides:
     along: {osm_way: 237183783, before_node: n2466608891, distance_m: 38.0, side: L}
     parts: [{face: E-15, text: "8|19"}, {face: E-16, text: "E67"}]
     r2: [R2-017, R2-008]
+    photo: ["panoramax:6ded8ec0"]
     reason: Same assembly on the left (median) side, R2-017.
     confidence: low
     verify: station on site / orthophoto
@@ -895,6 +897,7 @@ overrides:
     along: {osm_way: 552161976, before_node: n2367445386, distance_m: 170.0, side: R}
     parts: [{face: E-15, text: "19"}, {face: E-15, text: "65"}]
     r2: [R2-077, R2-064]
+    photo: ["kartaview:3686129/281"]
     reason: >-
       ADR 0236, research R2-077 (KartaView 3686129 / 281, 2021-06-23): "19" over "65" (red) on single posts on both
       sides of the north-west bound carriageway just after the slip from Rondo Bieżeństwa joins. Station: the "19"
@@ -907,6 +910,7 @@ overrides:
     along: {osm_way: 552161976, before_node: n2367445386, distance_m: 170.0, side: L}
     parts: [{face: E-15, text: "19"}, {face: E-15, text: "65"}]
     r2: [R2-077, R2-064]
+    photo: ["kartaview:3686129/281"]
     reason: Same assembly on the median side (behind the guardrail), R2-077.
     confidence: low
     verify: station on site / orthophoto
