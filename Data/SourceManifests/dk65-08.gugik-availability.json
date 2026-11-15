@@ -1,0 +1,3612 @@
+{
+ "region": "dk65-08",
+ "bbox_epsg2180": [
+  764683.0,
+  605439.0,
+  766731.0,
+  607487.0
+ ],
+ "queried_utc": "2026-11-15T08:07:47+00:00",
+ "method": "WFS 1.0.0 GetFeature, BBOX in EPSG:2180, one request per product-year layer",
+ "services": {
+  "NMT": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NumerycznyModelTerenuEVRF2007/WFS/Skorowidze",
+  "NMPT": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/NumerycznyModelPokryciaTerenuEVRF2007/WFS/Skorowidze",
+  "LIDAR": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/DanePomiaroweLidarEVRF2007/WFS/Skorowidze",
+  "ORTO": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze"
+ },
+ "products": {
+  "NMT": [
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2020",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2020",
+    "akt_data": "2020-04-06",
+    "char_przestrz": "1.00 m",
+    "format": "ASCII XYZ GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.60",
+    "blad_sr_syt": "0.75",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/73866/73866_1050718_N-34-106-B-b-4-4.xyz.zip",
+    "dt_pzgik": "2021-01-21",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Zdj. lotnicze",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2020",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2020",
+    "akt_data": "2020-04-06",
+    "char_przestrz": "1.00 m",
+    "format": "ASCII XYZ GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.60",
+    "blad_sr_syt": "0.75",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/73866/73866_1050737_N-34-106-B-d-2-2.xyz.zip",
+    "dt_pzgik": "2021-01-21",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Zdj. lotnicze",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2020",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2020",
+    "akt_data": "2020-04-07",
+    "char_przestrz": "1.00 m",
+    "format": "ASCII XYZ GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.60",
+    "blad_sr_syt": "0.75",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/73866/73866_1050849_N-34-107-A-a-3-3.xyz.zip",
+    "dt_pzgik": "2021-01-21",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Zdj. lotnicze",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2022",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2022",
+    "akt_data": "2022-07-29",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.60",
+    "blad_sr_syt": "0.60",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/76753/76753_1291490_N-34-106-B-b-4-4.asc",
+    "dt_pzgik": "2023-02-08",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Zdj. lotnicze",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2022",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2022",
+    "akt_data": "2022-07-29",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.60",
+    "blad_sr_syt": "0.60",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/76753/76753_1291510_N-34-106-B-d-2-2.asc",
+    "dt_pzgik": "2023-02-08",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Zdj. lotnicze",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2022",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2022",
+    "akt_data": "2022-07-29",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.60",
+    "blad_sr_syt": "0.60",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/76753/76753_1291648_N-34-107-A-a-3-3.asc",
+    "dt_pzgik": "2023-02-08",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Zdj. lotnicze",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2024",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2024",
+    "akt_data": "2024-05-27",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.50",
+    "blad_sr_syt": "0.50",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/81449/81449_1657981_N-34-106-B-b-4-4.asc",
+    "dt_pzgik": "2025-04-09",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Zdj. lotnicze",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2024",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2024",
+    "akt_data": "2024-05-27",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.50",
+    "blad_sr_syt": "0.50",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/81449/81449_1657991_N-34-106-B-d-2-2.asc",
+    "dt_pzgik": "2025-04-09",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Zdj. lotnicze",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2024",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2024",
+    "akt_data": "2024-05-27",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.50",
+    "blad_sr_syt": "0.50",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/81449/81449_1658031_N-34-107-A-a-3-3.asc",
+    "dt_pzgik": "2025-04-09",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Zdj. lotnicze",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2025",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83184/83184_1736117_N-34-106-B-b-4-4.asc",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2025",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83184/83184_1736139_N-34-106-B-d-2-2.asc",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "NMT",
+    "layer": "gugik:SkorowidzNMT2025",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83184/83184_1736264_N-34-107-A-a-3-3.asc",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMT",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   }
+  ],
+  "NMPT": [
+   {
+    "product": "NMPT",
+    "layer": "gugik:SkorowidzNMPT2025",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMPT/83183/83183_1735342_N-34-106-B-b-4-4.asc",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMPT",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "NMPT",
+    "layer": "gugik:SkorowidzNMPT2025",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMPT/83183/83183_1735364_N-34-106-B-d-2-2.asc",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMPT",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "NMPT",
+    "layer": "gugik:SkorowidzNMPT2025",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "1.00 m",
+    "format": "ARC/INFO ASCII GRID",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/NMPT/83183/83183_1735489_N-34-107-A-a-3-3.asc",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:5000",
+    "asortyment": "NMPT",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   }
+  ],
+  "LIDAR": [
+   {
+    "product": "LIDAR",
+    "layer": "gugik:SkorowidzDanychPomiarowychLIDAR2025",
+    "godlo": "N-34-106-B-b-4-4-1",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "4 p/m2",
+    "format": "LAZ",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/DanePomiaroweLAZ/83181/83181_1733091_N-34-106-B-b-4-4-1.laz",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:2500",
+    "asortyment": "chmura punktow",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     606818.05,
+     765640.59,
+     608033.87
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      765608.28,
+      607454.96
+     ],
+     [
+      765640.59,
+      606876.05
+     ],
+     [
+      765119.96,
+      606847.02
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "LIDAR",
+    "layer": "gugik:SkorowidzDanychPomiarowychLIDAR2025",
+    "godlo": "N-34-106-B-b-4-4-2",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "4 p/m2",
+    "format": "LAZ",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/DanePomiaroweLAZ/83181/83181_1733092_N-34-106-B-b-4-4-2.laz",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:2500",
+    "asortyment": "chmura punktow",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     765575.96,
+     606876.05,
+     766681.84,
+     608092.1
+    ],
+    "ring": [
+     [
+      765608.28,
+      607454.96
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766161.21,
+      606905.14
+     ],
+     [
+      765640.59,
+      606876.05
+     ],
+     [
+      765608.28,
+      607454.96
+     ]
+    ]
+   },
+   {
+    "product": "LIDAR",
+    "layer": "gugik:SkorowidzDanychPomiarowychLIDAR2025",
+    "godlo": "N-34-106-B-b-4-4-3",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "4 p/m2",
+    "format": "LAZ",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/DanePomiaroweLAZ/83181/83181_1733093_N-34-106-B-b-4-4-3.laz",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:2500",
+    "asortyment": "chmura punktow",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764599.34,
+     605660.44,
+     765705.2,
+     606876.05
+    ],
+    "ring": [
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      765119.96,
+      606847.02
+     ],
+     [
+      765640.59,
+      606876.05
+     ],
+     [
+      765672.89,
+      606297.36
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ]
+    ]
+   },
+   {
+    "product": "LIDAR",
+    "layer": "gugik:SkorowidzDanychPomiarowychLIDAR2025",
+    "godlo": "N-34-106-B-b-4-4-4",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "4 p/m2",
+    "format": "LAZ",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/DanePomiaroweLAZ/83181/83181_1733094_N-34-106-B-b-4-4-4.laz",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:2500",
+    "asortyment": "chmura punktow",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     765640.59,
+     605718.45,
+     766746.7,
+     606934.29
+    ],
+    "ring": [
+     [
+      765672.89,
+      606297.36
+     ],
+     [
+      765640.59,
+      606876.05
+     ],
+     [
+      766161.21,
+      606905.14
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765672.89,
+      606297.36
+     ]
+    ]
+   },
+   {
+    "product": "LIDAR",
+    "layer": "gugik:SkorowidzDanychPomiarowychLIDAR2025",
+    "godlo": "N-34-106-B-d-2-2-1",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "4 p/m2",
+    "format": "LAZ",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/DanePomiaroweLAZ/83181/83181_1733179_N-34-106-B-d-2-2-1.laz",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:2500",
+    "asortyment": "chmura punktow",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     604502.83,
+     765769.8,
+     605718.45
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765737.51,
+      605139.54
+     ],
+     [
+      765769.8,
+      604560.85
+     ],
+     [
+      765248.92,
+      604531.81
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "LIDAR",
+    "layer": "gugik:SkorowidzDanychPomiarowychLIDAR2025",
+    "godlo": "N-34-106-B-d-2-2-2",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "4 p/m2",
+    "format": "LAZ",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/DanePomiaroweLAZ/83181/83181_1733180_N-34-106-B-d-2-2-2.laz",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:2500",
+    "asortyment": "chmura punktow",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     765705.2,
+     604560.85,
+     766811.55,
+     605776.69
+    ],
+    "ring": [
+     [
+      765737.51,
+      605139.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766290.68,
+      604589.94
+     ],
+     [
+      765769.8,
+      604560.85
+     ],
+     [
+      765737.51,
+      605139.54
+     ]
+    ]
+   },
+   {
+    "product": "LIDAR",
+    "layer": "gugik:SkorowidzDanychPomiarowychLIDAR2025",
+    "godlo": "N-34-107-A-a-3-3-1",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "4 p/m2",
+    "format": "LAZ",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/DanePomiaroweLAZ/83181/83181_1733631_N-34-107-A-a-3-3-1.laz",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:2500",
+    "asortyment": "chmura punktow",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     606934.29,
+     767723.08,
+     608150.55
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      767690.51,
+      607571.65
+     ],
+     [
+      767723.08,
+      606992.75
+     ],
+     [
+      767202.46,
+      606963.49
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "LIDAR",
+    "layer": "gugik:SkorowidzDanychPomiarowychLIDAR2025",
+    "godlo": "N-34-107-A-a-3-3-3",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "char_przestrz": "4 p/m2",
+    "format": "LAZ",
+    "uklad_xy": "PL-1992",
+    "uklad_h": "PL-EVRF2007-NH",
+    "blad_sr_wys": "0.07",
+    "blad_sr_syt": "0.14",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/NumDaneWys/DanePomiaroweLAZ/83181/83181_1733633_N-34-107-A-a-3-3-3.laz",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:2500",
+    "asortyment": "chmura punktow",
+    "zrodlo_danych": "Skaning laserowy",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766681.84,
+     605776.69,
+     767788.19,
+     606992.75
+    ],
+    "ring": [
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      767202.46,
+      606963.49
+     ],
+     [
+      767723.08,
+      606992.75
+     ],
+     [
+      767755.63,
+      606414.06
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ]
+    ]
+   }
+  ],
+  "ORTO": [
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2020",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2020",
+    "akt_data": "2020-04-06",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/73864/73864_951048_N-34-106-B-b-4-4.tif",
+    "wlk_pliku_mb": "43",
+    "dt_pzgik": "2021-01-21",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2020",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2020",
+    "akt_data": "2020-04-06",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/73864/73864_951070_N-34-106-B-d-2-2.tif",
+    "wlk_pliku_mb": "44",
+    "dt_pzgik": "2021-01-21",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2020",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2020",
+    "akt_data": "2020-04-07",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/73864/73864_951766_N-34-107-A-a-3-3.tif",
+    "wlk_pliku_mb": "44",
+    "dt_pzgik": "2021-01-21",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2022",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2022",
+    "akt_data": "2022-07-29",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151131_N-34-106-B-b-4-4.tif",
+    "wlk_pliku_mb": "50",
+    "dt_pzgik": "2023-02-08",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2022",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2022",
+    "akt_data": "2022-07-29",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151175_N-34-106-B-d-2-2.tif",
+    "wlk_pliku_mb": "51",
+    "dt_pzgik": "2023-02-08",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2022",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2022",
+    "akt_data": "2022-07-29",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/76751/76751_1151472_N-34-107-A-a-3-3.tif",
+    "wlk_pliku_mb": "51",
+    "dt_pzgik": "2023-02-08",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2022",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2022",
+    "akt_data": "2022-07-29",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "CIR",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/76752/76752_1151132_N-34-106-B-b-4-4.tif",
+    "wlk_pliku_mb": "49",
+    "dt_pzgik": "2023-02-08",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2022",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2022",
+    "akt_data": "2022-07-29",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "CIR",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/76752/76752_1151176_N-34-106-B-d-2-2.tif",
+    "wlk_pliku_mb": "50",
+    "dt_pzgik": "2023-02-08",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2022",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2022",
+    "akt_data": "2022-07-29",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "CIR",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/76752/76752_1151473_N-34-107-A-a-3-3.tif",
+    "wlk_pliku_mb": "51",
+    "dt_pzgik": "2023-02-08",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2024",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2024",
+    "akt_data": "2024-05-27",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "CIR",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/81426/81426_1389670_N-34-106-B-b-4-4.tif",
+    "wlk_pliku_mb": "41",
+    "dt_pzgik": "2025-04-09",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2024",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2024",
+    "akt_data": "2024-05-27",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "CIR",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/81426/81426_1389680_N-34-106-B-d-2-2.tif",
+    "wlk_pliku_mb": "40",
+    "dt_pzgik": "2025-04-09",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2024",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2024",
+    "akt_data": "2024-05-27",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "CIR",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/81426/81426_1389723_N-34-107-A-a-3-3.tif",
+    "wlk_pliku_mb": "41",
+    "dt_pzgik": "2025-04-09",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2024",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2024",
+    "akt_data": "2024-05-27",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393273_N-34-106-B-b-4-4.tif",
+    "wlk_pliku_mb": "40",
+    "dt_pzgik": "2025-04-09",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2024",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2024",
+    "akt_data": "2024-05-27",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393283_N-34-106-B-d-2-2.tif",
+    "wlk_pliku_mb": "39",
+    "dt_pzgik": "2025-04-09",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2024",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2024",
+    "akt_data": "2024-05-27",
+    "piksel": "0.25",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393326_N-34-107-A-a-3-3.tif",
+    "wlk_pliku_mb": "39",
+    "dt_pzgik": "2025-04-09",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2025",
+    "godlo": "N-34-107-A-a-3-3",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "piksel": "0.1",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/83186/83186_1483857_N-34-107-A-a-3-3.tif",
+    "wlk_pliku_mb": "285",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     766616.95,
+     605776.69,
+     768829.68,
+     608209.24
+    ],
+    "ring": [
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      767137.45,
+      608121.3
+     ],
+     [
+      767657.94,
+      608150.55
+     ],
+     [
+      768178.43,
+      608179.87
+     ],
+     [
+      768698.92,
+      608209.24
+     ],
+     [
+      768731.62,
+      607630.34
+     ],
+     [
+      768764.31,
+      607051.44
+     ],
+     [
+      768796.99,
+      606472.75
+     ],
+     [
+      768829.68,
+      605893.86
+     ],
+     [
+      768308.94,
+      605864.48
+     ],
+     [
+      767788.19,
+      605835.16
+     ],
+     [
+      767267.45,
+      605805.9
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766649.39,
+      607513.19
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2025",
+    "godlo": "N-34-106-B-b-4-4",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "piksel": "0.1",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/83186/83186_1484220_N-34-106-B-b-4-4.tif",
+    "wlk_pliku_mb": "270",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764534.96,
+     605660.44,
+     766746.7,
+     608092.1
+    ],
+    "ring": [
+     [
+      764567.15,
+      607396.96
+     ],
+     [
+      764534.96,
+      607975.87
+     ],
+     [
+      765055.46,
+      608004.84
+     ],
+     [
+      765575.96,
+      608033.87
+     ],
+     [
+      766096.46,
+      608062.95
+     ],
+     [
+      766616.95,
+      608092.1
+     ],
+     [
+      766649.39,
+      607513.19
+     ],
+     [
+      766681.84,
+      606934.29
+     ],
+     [
+      766714.26,
+      606355.59
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      764631.51,
+      606239.35
+     ],
+     [
+      764599.34,
+      606818.05
+     ],
+     [
+      764567.15,
+      607396.96
+     ]
+    ]
+   },
+   {
+    "product": "ORTO",
+    "layer": "gugik:SkorowidzOrtofomapy2025",
+    "godlo": "N-34-106-B-d-2-2",
+    "akt_rok": "2025",
+    "akt_data": "2025-05-25",
+    "piksel": "0.1",
+    "uklad_xy": "PL-1992",
+    "kolor": "RGB",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/83186/83186_1484242_N-34-106-B-d-2-2.tif",
+    "wlk_pliku_mb": "272",
+    "dt_pzgik": "2025-11-12",
+    "modul_archiwizacji": "1:5000",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "czy_ark_wypelniony": "TAK",
+    "ring_bounds": [
+     764663.69,
+     603345.01,
+     766876.41,
+     605776.69
+    ],
+    "ring": [
+     [
+      764695.87,
+      605081.53
+     ],
+     [
+      764663.69,
+      605660.44
+     ],
+     [
+      765184.45,
+      605689.42
+     ],
+     [
+      765705.2,
+      605718.45
+     ],
+     [
+      766225.95,
+      605747.54
+     ],
+     [
+      766746.7,
+      605776.69
+     ],
+     [
+      766779.13,
+      605197.79
+     ],
+     [
+      766811.55,
+      604619.1
+     ],
+     [
+      766843.98,
+      604040.19
+     ],
+     [
+      766876.41,
+      603461.29
+     ],
+     [
+      766355.41,
+      603432.13
+     ],
+     [
+      765834.41,
+      603403.04
+     ],
+     [
+      765313.4,
+      603374.0
+     ],
+     [
+      764792.39,
+      603345.01
+     ],
+     [
+      764760.22,
+      603923.92
+     ],
+     [
+      764728.04,
+      604502.83
+     ],
+     [
+      764695.87,
+      605081.53
+     ]
+    ]
+   }
+  ]
+ }
+}
