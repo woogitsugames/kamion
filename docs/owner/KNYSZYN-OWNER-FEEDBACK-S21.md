@@ -55,4 +55,15 @@ To jest właściwy wygląd wnętrza trójkąta Rynku (zastępuje „las sosnowy�
 - **Pierzeje wokół parku:** domy parterowe i piętrowe; **drewniane domy** (szare/grafitowe deskowanie, dom pomarańczowo-brązowy z desek), tynkowane różowe/beżowe/żółte, dachy czerwone, szare, blacha; od strony urzędu: urząd w L z portykiem 4 kolumn (patrz wyżej), budynek policji (neutralnie), parking skośny/prostopadły z asfaltu przed urzędem.
 Priorytet dla generatora: `leisure=park` / `place=square` na Rynku → **park z trawnikami i lipami, BEZ landuse lasu**; alejki z OSM `highway=footway` (jeśli są) albo authored_override z ortofoto; fontanna posadzkowa, obelisk, pomnik, maszt jako authored props w punktach z ortofoto.
 
+## Rondo DK65 × Tykocka (DW671) — 3 zdjęcia z drona od właściciela (15.11 ~20:0x; pliki 9–11.webp w Data/raw/refs/owner-knyszyn-2026-11-15/)
+Dotyczy też PR #97 (roundabout-0218, rondo Knyszyn) i K1 (średnica osi ~17,6 m).
+- **Rondo jednopasowe, 4 wloty**, świeżo przebudowane (nowe krawężniki, ziemia i piasek na poboczach, wiosna).
+- **Wyspa środkowa okrągła, dwustrefowa:** zewnętrzny **pierścień przejezdny z jasnej kostki/betonu** (opaska dla naczep, wyraźnie jaśniejsza od asfaltu), wewnątrz **okrąg z piaskiem/żwirem i małymi nasadzeniami** (krzewy, kamienie), bez drzew i bez rzeźby.
+- **Wysepki dzielące na wlotach**: podniesione, z jasnego betonu/kostki, kropelkowe; na **wlocie południowym DK65 długa wysepka** (kilkadziesiąt metrów, z przejściem/azylem dla pieszych); na zachodnim i wschodnim krótsze.
+- Jezdnia ciemny asfalt, **krawężniki jasne** po obu stronach na odcinku ronda; dalej od ronda linie krawędziowe przerywane. Na pierścieniu brak linii pasa.
+- **Chodniki z jasnej kostki** (szara) na części narożników, ścieżki dojścia do domów; zjazdy do posesji.
+- Otoczenie: domy jednorodzinne 1–2 kondygnacje z dachami czerwonymi, brązowymi i grafitowymi (kilka z fotowoltaiką), ogrody, ogrodzenia z siatki i żywopłoty; w narożniku płn.-zach. **wieża telekomunikacyjna kratowa** i zabudowa gospodarcza; na wschód niewielki skwer z alejką, kolorowe rabaty, **przydrożny krzyż biały** przy ścieżce (narożnik płd.-wsch.).
+- Za miastem na północ (zdjęcie 11): DK65 prosto przez pola, bez drzew przy drodze, linie energetyczne; teren płaski.
+Dla gry: rondo = authored z ortofoto (średnica zewnętrzna i wyspy mierzyć na ortofoto GUGiK, nie zgadywać); opaska przejezdna = `truck_apron` z #97; wyspa wewnętrzna jako piasek/żwir + niskie krzewy.
+
 4. Raportuj zestawienia „zdjęcie właściciela | render” dla każdego kadru (zdjęcia tylko lokalnie w artifacts, nie w gicie). Lider pokaże je właścicielowi do oceny rozpoznawalności.
