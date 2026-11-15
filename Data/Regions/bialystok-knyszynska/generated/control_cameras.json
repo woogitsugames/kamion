@@ -1,0 +1,170 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0185",
+   "look_at": [
+    803.847,
+    -817.885,
+    129.045
+   ],
+   "note": "driver eye 2.5 m, control route s = 185 m of 2959 m (unnamed)",
+   "pos": [
+    857.452,
+    -791.055,
+    129.78
+   ],
+   "route_s_m": 184.95,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0555",
+   "look_at": [
+    558.452,
+    -688.853,
+    128.996
+   ],
+   "note": "driver eye 2.5 m, control route s = 555 m of 2959 m (Szosa Ełcka)",
+   "pos": [
+    588.167,
+    -741.0,
+    130.409
+   ],
+   "route_s_m": 554.851,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0925",
+   "look_at": [
+    382.516,
+    -363.472,
+    132.035
+   ],
+   "note": "driver eye 2.5 m, control route s = 925 m of 2959 m (Szosa Ełcka)",
+   "pos": [
+    412.427,
+    -415.508,
+    132.61
+   ],
+   "route_s_m": 924.752,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1295",
+   "look_at": [
+    207.556,
+    -37.571,
+    137.725
+   ],
+   "note": "driver eye 2.5 m, control route s = 1295 m of 2959 m (Szosa Ełcka)",
+   "pos": [
+    237.195,
+    -89.763,
+    139.124
+   ],
+   "route_s_m": 1294.653,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1665",
+   "look_at": [
+    30.375,
+    287.125,
+    124.687
+   ],
+   "note": "driver eye 2.5 m, control route s = 1665 m of 2959 m (Szosa Knyszyńska)",
+   "pos": [
+    60.557,
+    235.243,
+    127.777
+   ],
+   "route_s_m": 1664.554,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2034",
+   "look_at": [
+    -184.37,
+    581.045,
+    126.433
+   ],
+   "note": "driver eye 2.5 m, control route s = 2034 m of 2959 m (Szosa Knyszyńska)",
+   "pos": [
+    -134.243,
+    547.862,
+    127.243
+   ],
+   "route_s_m": 2034.455,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2404",
+   "look_at": [
+    -541.523,
+    673.849,
+    122.612
+   ],
+   "note": "driver eye 2.5 m, control route s = 2404 m of 2959 m (Szosa Knyszyńska)",
+   "pos": [
+    -482.741,
+    661.725,
+    124.228
+   ],
+   "route_s_m": 2404.356,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2774",
+   "look_at": [
+    -902.113,
+    756.3,
+    121.46
+   ],
+   "note": "driver eye 2.5 m, control route s = 2774 m of 2959 m (Szosa Knyszyńska)",
+   "pos": [
+    -843.361,
+    744.085,
+    123.75
+   ],
+   "route_s_m": 2774.257,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_01_above",
+   "look_at": [
+    675.933,
+    -903.212,
+    134.008
+   ],
+   "note": "roundabout from ~40 m: Rondo Pamięci Męczeństwa Kresowian",
+   "pos": [
+    745.933,
+    -823.212,
+    176.008
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 283.492,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "bialystok-knyszynska",
+ "schema": "truck-sim-pl/control-cameras/1"
+}
