@@ -48,11 +48,12 @@ namespace Game.Telemetry
         }
 
         /// <summary>
-        /// Same text as <c>v.ToString("F" + decimals, CultureInfo.InvariantCulture)</c> for finite values with
-        /// |v| &lt; 9e15 / 10^decimals: fixed decimals with trailing zeros, rounding half away from zero, "-0.000" for
-        /// small negative values that round to zero (as .NET Core 3.0+). Digits beyond the float's precision follow the
-        /// exact binary value (the Mono runtime prints 7 significant digits first; differences are in the last digit
-        /// only, see ADR 0244). NaN / infinity print as NaN / ±Infinity. Allocation-free.
+        /// Text of <c>v.ToString("F" + decimals, CultureInfo.InvariantCulture)</c> for finite values with
+        /// |v| &lt; 9e15 / 10^decimals: fixed decimals with trailing zeros, from the exact binary value, exact ties rounded
+        /// half away from zero (.NET 8 rounds some of them down: 41.5625 F3 = 41.562 there, 41.563 here; tools/loop-runner
+        /// checks 800 000 floats: only such ties differ, by one unit of the last digit). UNVERIFIED on the device: the Mono
+        /// class library under IL2CPP may print floats with 7 significant digits first (.NET Framework rule), so old and new
+        /// rows can differ in digits beyond the float's precision (t_s above 1000 s). NaN / infinity print as NaN / Infinity / -Infinity. Allocation-free. ADR 0244.
         /// </summary>
         public static int AppendFixed(char[] buf, int pos, double v, int decimals)
         {

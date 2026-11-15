@@ -698,7 +698,7 @@ namespace Game.Gameplay
             }
             int edge = Signals.Step(Time.deltaTime, roadWheelNorm);
             if (m_Audio != null) m_Audio.OnFlasherEdge(edge);
-            if (m_Lights == null) m_Lights = vehicle.GetComponent<TruckLights>();
+            if (m_Lights == null) vehicle.TryGetComponent(out m_Lights);   // ADR 0244: no editor fake-null alloc while missing (graybox)
             if (m_Lights != null) { m_Lights.indicatorLever = Signals.Lever; m_Lights.flasherLit = Signals.Lit; }
         }
 

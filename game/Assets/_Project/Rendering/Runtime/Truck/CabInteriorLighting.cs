@@ -116,8 +116,18 @@ namespace Game.Rendering
         public float LastGain { get; private set; } = 1f;
         public Camera viewCamera;
 
+        /// <summary>ADR 0244: cabs between OnEnable and OnDisable (KamionHeadlamps binding recheck without FindObjectsOfTypeAll).</summary>
+        public static System.Collections.Generic.IReadOnlyList<CabInteriorLighting> Enabled => s_Enabled;
+        internal static readonly System.Collections.Generic.List<CabInteriorLighting> s_Enabled = new System.Collections.Generic.List<CabInteriorLighting>(4);
+
+        void OnEnable()
+        {
+            if (!s_Enabled.Contains(this)) s_Enabled.Add(this);
+        }
+
         void OnDisable()
         {
+            s_Enabled.Remove(this);
             Shader.SetGlobalVector(k_BacklightEnvironment, Vector4.zero);
             Shader.SetGlobalVector(k_Fill, Vector4.zero);
             Shader.SetGlobalFloat(k_Gain, 1f);
@@ -152,11 +162,39 @@ namespace Game.Rendering
         Camera m_LoggedCam;
         bool m_LoggedInCab;
 
+        EnvironmentLighting m_FallbackEnv;
+        float m_NextEnvSearch = float.NegativeInfinity;
+        /// <summary>Scene searches made by <see cref="FallbackEnvironment"/> (tests).</summary>
+        public int EnvironmentSearches { get; private set; }
+        /// <summary>Play mode: at most one scene search per this many seconds while no EnvironmentLighting is enabled.</summary>
+        public const float EnvironmentSearchIntervalS = 1f;
+
+        /// <summary>
+        /// EnvironmentLighting when <see cref="EnvironmentLighting.Instance"/> is null (none enabled, e.g. DrivingLab, which
+        /// has no sky rig). ADR 0244: in play mode the FindAnyObjectByType scene search ran every LateUpdate there; it is now
+        /// throttled to <see cref="EnvironmentSearchIntervalS"/> (the same pattern as FurnitureRetroSource, ADR 0131) and
+        /// the result is kept while it lives. Edit mode (visual QA calls Refresh per control camera) searches every call,
+        /// as before.
+        /// </summary>
+        EnvironmentLighting FallbackEnvironment()
+        {
+            if (Application.isPlaying)
+            {
+                if (m_FallbackEnv != null) return m_FallbackEnv;
+                float now = Time.unscaledTime;
+                if (now < m_NextEnvSearch) return null;
+                m_NextEnvSearch = now + EnvironmentSearchIntervalS;
+            }
+            EnvironmentSearches++;
+            m_FallbackEnv = FindAnyObjectByType<EnvironmentLighting>();
+            return m_FallbackEnv;
+        }
+
         /// <summary>Recomputes the fill (visual QA calls it per control camera).</summary>
         public void Refresh(Camera cam)
         {
             var env = EnvironmentLighting.Instance;
-            if (env == null) env = FindAnyObjectByType<EnvironmentLighting>();
+            if (env == null) env = FallbackEnvironment();
             var m = env != null ? env.Model : null;
             // ADR 0112 r3: physical panel emission follows exposure, independently of ambient/AO and cab-view lift.
             // z is validity: an unset/missing environment must never turn legends on accidentally.

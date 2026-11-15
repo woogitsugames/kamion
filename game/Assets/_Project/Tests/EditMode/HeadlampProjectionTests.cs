@@ -114,6 +114,19 @@ namespace Game.Tests
             Assert.IsFalse(KamionHeadlamps.Enabled);
         }
 
+        /// <summary>ADR 0244: the 4 Hz binding recheck (lit frames at night) walks the cab registry: no GC.Alloc.</summary>
+        [Test]
+        public void PeriodicRecheckOfABoundCab_ZeroGcAlloc()
+        {
+            MakeCab("player"); LowBeam(true); var model = m_Night.CreateModel();
+            KamionHeadlamps.Push(model, true, 20000f);
+            Assert.IsTrue(KamionHeadlamps.Enabled);
+            System.Threading.Thread.Sleep(300); // past BindingRefreshSeconds: the next Push runs the full recheck
+            GcAllocCounter.AssertZero(() => KamionHeadlamps.Push(model, true, 20000f), null, 0,
+                "binding recheck must not allocate (FindObjectsOfTypeAll + LINQ before ADR 0244)");
+            Assert.IsTrue(KamionHeadlamps.Enabled, "recheck keeps the single cab bound");
+        }
+
         [Test]
         public void CabCreatedAfterOffStateCanBindOnTheFirstLitFrame()
         {
