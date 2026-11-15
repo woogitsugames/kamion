@@ -309,6 +309,12 @@ def apply_edge_overrides(net: Network, edges, overrides):
                     sec.width_src = f"authored_override:{ov['id']} (lane_edges, orthophoto)"
                     if "turn_lanes" not in st and sec.turn_fwd and len(sec.turn_fwd) != sec.lanes:
                         sec.turn_fwd = None
+            if "bridge" in st:
+                # ADR 0206: a ground road that OSM leaves at grade over a cutting (the road below is tagged
+                # tunnel=yes layer=-1, which the generator does not model) is carried as a deck: elevated stations
+                # get the grade-separation clearance over the road below and no terrain conform
+                sec.bridge = bool(st["bridge"])
+                sec.provenance["bridge"] = f"authored_override:{ov['id']}"
             if "edge_lines" in st:
                 sec.edge_lines = str(st["edge_lines"])
             if "apron" in st:

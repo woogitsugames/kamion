@@ -1,0 +1,15 @@
+[build] terrain
+[build] OSM layers
+[fetch_osm] cached: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\Data\raw\osm\podlaskie-261108.osm.pbf
+[build] road graph
+[build] buildings
+[buildings] parsing 2061_lod1_2024.zip (LoD1) for tile
+[buildings] parsing 2061_lod2_gml.zip (LoD2) for tile
+[build] ortho
+[build] done: 670 nodes, 766 edges, 1865 buildings
+  3f7a81ddd0f89680  buildings.geojson
+  fb6cb4ad005109da  heightmap.r16 (not in git)
+  17e6769145f8c1b9  ortho.json
+  23cbe38a662ab59c  region.yaml
+  4d17e2e12d1b70d5  roads.graph.json
+  728b0d57099f3f83  terrain.json

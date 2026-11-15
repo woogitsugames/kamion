@@ -152,6 +152,18 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,3) of the ADR 0203 plan)",
     ),
+    # ADR 0206 (owner D64): second Białystok tile on the truck route to Knyszyn, lattice i = -2, j = 0 (shares its
+    # east edge x = 774923 with bialystok-maczka). DK8/DK65: west end of Gen. Maczka, Gen. Kleeberga with the
+    # interchange towards rondo Pamięci Męczeństwa Kresowian (km 3.58-5.80 of route variant A, ADR 0203 plan).
+    "bialystok-kleeberga": Region(
+        id="bialystok-kleeberga",
+        title="Białystok — DK8/DK65 Gen. Maczka (zachód) i Gen. Kleeberga, kafel -2,0 w stronę Knyszyna",
+        candidate="E_dk65_kleeberga",
+        bbox=(772875.0, 595199.0, 774923.0, 597247.0),
+        origin=(773899.0, 596223.0),
+        teryt_powiat="2061",
+        status="WORKING_ASSUMPTION (ADR 0206, tile id/bbox reserved by the ADR 0203 plan, lattice -2,0)",
+    ),
 }
 
 TILE_SIZE_M = 2048.0

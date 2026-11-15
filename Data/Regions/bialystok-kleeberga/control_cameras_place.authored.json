@@ -1,0 +1,16 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0206): driver-eye control cameras on places of the D64 truck route tile that the route cameras (every ~317 m) do not catch: the DK8/DK65 underpass below rondo Szymańskiego (OSM tunnel=yes layer=-1, both carriageways), the roundabout itself, the collector at km 5.2 and the roundabout under the Kleeberga viaduct. Position region-local E/N (origin 773899, 596223), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical.",
+ "cameras": [
+  {"id": "underpass_wb_szymanskiego", "pos_en": [-70.0, -173.0], "heading_deg": 245.0, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "DK8/DK65 westbound (route), ~30 m before the underpass below rondo Szymańskiego (way 76073122, tunnel=yes layer=-1)"},
+  {"id": "underpass_eb_szymanskiego", "pos_en": [-185.0, -247.0], "heading_deg": 60.0, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "DK8/DK65 eastbound, ~30 m before the underpass (way 23982181)"},
+  {"id": "produkcyjna_to_rondo_szymanskiego", "pos_en": [-9.0, -298.0], "heading_deg": 309.0, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "Produkcyjna (way 263791494, 3 lanes) north-westbound towards rondo Szymańskiego, which spans the DK8 cutting"},
+  {"id": "tertiary_to_rondo_under_kleeberga", "pos_en": [-704.0, -723.0], "heading_deg": 333.0, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "tertiary street (way 548982172) towards the roundabout under the Kleeberga viaduct (km 5.45-5.61)"},
+  {"id": "collector_wb_km52", "pos_en": [-384.0, -335.0], "heading_deg": 236.0, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "westbound collector / slip road (way 249810914) beside Kleeberga at km 5.2"}
+ ]
+}
