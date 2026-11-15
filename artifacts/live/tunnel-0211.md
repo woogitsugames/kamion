@@ -5,3 +5,7 @@
 - NASTEPNY KROK: Get-Content artifacts/tunnel-0211/chain-r1.status
 - 09:05 r1 zrobione (pytest 1209 ok; C fidelity bez zmian metryk). Bledy r1: sciana trawy w portalach, piramidki terenu przed scianami, chodniki/ciezki rowerowe 1,6-3,9 m w tunelu -> poprawione; r2 (build+import+vqa+EditMode+sweepy) w tle od 08:59.
 - NASTEPNY KROK: Get-Content artifacts/tunnel-0211/chain-r2.status
+- 15:20 PRZEJECIE (nowy agent). Stan: r3 (kod ac77750d7) zbudowany 10:04-11:18 (commit febc66c98 = wyjscie r3, nie r2). Rendery r3: NADAL sciana trawy w portalach + piramidki przed scianami.
+- 16:20 PRZYCZYNA: importer Unity (WorldMeshBake.TerrainBandData) odbudowuje teren bliski z wezlow siatki prymitywu terenu (max y na wezel, trojkaty odrzuca) -> wierzcholki pokrywy `tunnel:cover:vg` scalonej z terenem podnosily obnizone wezly (klif 1 komorki w portalach, piramidki 0,5-1,2 m za licem). GLB/zc czyste (dev_qa A=0).
+- r4 (kod): pokrywa = osobny prymityw bridge/verge_grass `tunnel:cover` (nie scalana), siatka-asekuracja 3 cm pod gruntem wokol pokrywy (szczeliny LOD 2 m: 0,4 m2 dziur 5 m -> 0), grunt nad plyta do F+1,5 m (pokrywa pod sufitem 46 -> 0), balustrada portalu takze nad pasami DK8 (maska drog w poziomie terenu). dev_qa.py: A (teren w wykopie >0,6 m) = 0 dla siatki 1 m i 2 m, C = 0. Test regresji w tests/gis/test_tunnel_0211.py.
+- NASTEPNY KROK: git merge origin/main (generated/ z main) -> pwsh artifacts/tunnel-0211/chain.ps1 -Tag r4 (w tle) -> Get-Content artifacts/tunnel-0211/chain-r4.status

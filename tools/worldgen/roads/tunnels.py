@@ -8,9 +8,10 @@ pavements of the roundabout were a hole down to the cutting and the ring decks w
   closed concrete box (top face hidden 0.15 m under the ground, soffit at the road + a constant clearance, portal
   faces at both ends) in the `bridge` layer, so it casts shadows and occludes the baked sky / sun of the ground lighting
   (WorldSkyBake: bridge = solid) - the road under it is dark on every tier, also beyond the realtime shadow distance;
-* **ground on the slab** - the 1 m terrain cells over F and behind the walls are re-emitted as a grass strip that is
-  merged into the terrain primitives (road layer, src `...:vg`, build_world.merge_verge_into_terrain): same shader,
-  same heights (the planes of the conformed terrain triangles), same masks; the terrain nodes under it go down;
+* **ground on the slab** - the 1 m terrain cells over F and behind the walls are re-emitted as a grass cover
+  (bridge layer, `verge_grass`, src `tunnel:cover`; own primitive - merged into the terrain it was undone by the
+  importer's terrain band, see _emit_cover) on the planes of the conformed terrain triangles; the terrain nodes
+  under it go down;
 * **walls** - tunnel walls (outer + a central wall between the carriageways, floor to soffit) and retaining walls of
   the open cutting beyond the portals (outer sides, wherever the bank behind is >= WALL_MIN_H above the footing):
   precast panels, coping, steel railing on top, collision wall (`collision_fence`), a footing strip from the side
@@ -40,7 +41,8 @@ SLAB_MIN_T = 0.80       # slab + ground cover over the soffit, WORKING_VALUE
 WALL_GAP_M = 0.30       # wall face behind the outer end of the side profile, WORKING_VALUE
 WALL_T = 0.50           # coping width (wall thickness at the top), WORKING_VALUE
 COVER_M = 3.0           # grass cover behind the wall face (hides the terrain step of the 1 m grid)
-WALL_MIN_H = 1.0        # open-cut retaining wall where the bank behind is at least this high, WORKING_VALUE
+NET_M = 3.0             # net under the conformed ground this far around the slab footprint (terrain LOD slits)
+WALL_MIN_H = 1.0       # open-cut retaining wall where the bank behind is at least this high, WORKING_VALUE
 WALL_BANK_LAT = (1.0, 4.0)   # bank height sampled this far behind the wall face (m)
 WALL_MIN_RUN_M = 10.0
 LOW_LOD_BAND_M = 4.5    # terrain LOD >= 2 (4 m grid; terrain_lod2 = terrain collision) held down to here behind the face
@@ -195,6 +197,8 @@ def _strip_poly(c, ss, lat0, lat1, sgn):
     ring = np.concatenate([a, b[::-1]])
     return shapely.make_valid(Polygon(ring)).buffer(0)
 
+
+DEBUG: dict = {}          # geometry of the last build() for dev QA scripts (not part of the stats)
 
 # --------------------------------------------------------------------------------------------- build
 def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list, graph: dict, log=print):
@@ -357,7 +361,8 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
                                                  lat_w[sl], zfoot[sl], bank[sl], in_F[sl], inner, grid, zc0, lower,
                                                  low_mask, cover_cells, clip_polys, col_polys, blend, near_face))
         # ---- slab
-        _build_slab(buf, g, grid, zc0, lower, cover_cells, clip_polys, col_polys, rmask)
+        # railing mask: roads AT GRADE only (the tunnel carriageways below do not count: r3 had no railing over the lanes)
+        _build_slab(buf, g, grid, zc0, lower, cover_cells, clip_polys, col_polys, other_mask | deck_mask)
         stats["groups"].append(gst)
 
     # ---- ground on the slab / behind the walls (terrain-merged grass), terrain held down under it
@@ -377,6 +382,16 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
     cut_m = np.zeros_like(interior)
     if corridor:
         CU = shapely.union_all(corridor + [g["F"] for g in groups]).buffer(0)
+        DEBUG["cut_raw"] = CU                 # dev QA (artifacts/tunnel-0211/dev_qa.py): the cut between the wall faces
+        # Net under the conformed ground around the cover (the cells left to other surfaces and a ring to
+        # NET_M beyond the cover): the conformed terrain planes - 3 cm. Invisible under the 1 m terrain; the 2 m / 4 m
+        # terrain LODs (Low tier near terrain = 2 m grid, min-filtered next to roads) carry the lowered nodes 1-4 m
+        # further out and opened slits down to the floor between the cover and the pavements beside it (dev QA B).
+        net_poly = shapely.union_all([K] + [g["F"].buffer(NET_M) for g in groups]).difference(CU.buffer(0.3)).buffer(0)
+        net_cells = np.zeros_like(cover_cells)
+        _mark_cells(net_cells, grid, net_poly.buffer(0.75))
+        net_cells &= ~cover_cells
+        gtris += _emit_cover(buf, grid, zc0, net_cells, net_poly, [], adjust=lambda V2, z: z - 0.03)
         CU = CU.buffer(5.0).buffer(-5.0)
         cut_m = _poly_mask(CU, grid)
     floor_all = _floor_field(groups, grid, interior | low_mask | cut_m)
@@ -430,7 +445,7 @@ def _upper_ground(groups, grid, zc0, oz, omask, deck, dmask):
     for g in groups:
         F = g["F"]
         near = _poly_mask(F.buffer(8.0), grid)
-        fin = _poly_mask(F.buffer(0.5), grid)
+        fin = _poly_mask(F.buffer(1.5), grid)      # every node of a cell that touches F (cover planes at the portal edge)
         jj, ii = np.where(near)
         zr = _floor_field([g], grid, near)[jj, ii] + FLOOR_DROP_M
         cand = np.where(dmask[jj, ii], deck[jj, ii] - 0.25,
@@ -762,7 +777,12 @@ def _emit_cover(buf, grid, zc0, cover_cells, K, blend, adjust=None):
     a, b, c = V[T[:, 0], :2], V[T[:, 1], :2], V[T[:, 2], :2]
     cr = (b[:, 0] - a[:, 0]) * (c[:, 1] - a[:, 1]) - (b[:, 1] - a[:, 1]) * (c[:, 0] - a[:, 0])
     T = np.where((cr < 0)[:, None], T[:, [0, 2, 1]], T)
-    buf.add("road", "verge_grass", V, uniq, T, src="tunnel:cover:vg")
+    # Own primitive (bridge layer: drawn in every LOD ring, like the grass fill of a bridge median), NOT merged into the
+    # terrain primitives: the Unity importer rebuilds the near terrain from the grid nodes of the terrain primitive
+    # (WorldMeshBake.TerrainBandData: highest vertex per node, triangles dropped), so merged cover vertices on grid
+    # nodes lifted the lowered terrain back up - a one-cell cliff across both portals and pyramids in front of the
+    # walls (r1-r3).
+    buf.add("bridge", "verge_grass", V, uniq, T, src="tunnel:cover")
     return int(len(T))
 
 

@@ -98,3 +98,30 @@ def test_low_cut_only_touches_the_coarse_lods():
 def test_clearance_is_the_polish_minimum_or_more():
     assert TN.CLEARANCE_M >= 4.70
     assert TN.SOFFIT_MAX_M >= TN.CLEARANCE_M
+
+
+def test_cover_is_its_own_primitive_not_merged_into_the_terrain():
+    """r1-r3: the cover was a ":vg" strip merged into the terrain primitives; the Unity importer rebuilds the near
+    terrain from the grid nodes of that primitive (WorldMeshBake.TerrainBandData: highest vertex per node), so the
+    cover vertices on grid nodes lifted the lowered terrain back up (cliff across the portals, pyramids at the walls)."""
+    class Buf:
+        def __init__(self):
+            self.parts = []
+
+        def add(self, layer, mat, V, UV, T, src="", **kw):
+            self.parts.append((layer, mat, src, V, T))
+
+    z = np.full((12, 14), 5.0)
+    grid = TN.Grid(_HF, z)
+    cells = np.zeros_like(z, bool)
+    cells[3:6, 3:6] = True
+    K = shapely.box(_HF.x0 + 3.2, _HF.y1 - 5.5, _HF.x0 + 5.4, _HF.y1 - 3.3)
+    buf = Buf()
+    n = TN._emit_cover(buf, grid, z, cells, K, [])
+    assert n > 0 and len(buf.parts) == 1
+    layer, mat, src, V, T = buf.parts[0]
+    assert layer == "bridge" and mat == "verge_grass"
+    assert not src.endswith(":vg")                 # build_world._is_verge: merged into the terrain
+    a, b, c = V[T[:, 0], :2], V[T[:, 1], :2], V[T[:, 2], :2]
+    area = float(np.abs((b[:, 0] - a[:, 0]) * (c[:, 1] - a[:, 1]) - (b[:, 1] - a[:, 1]) * (c[:, 0] - a[:, 0])).sum() / 2)
+    assert abs(area - K.area) < 1e-6
