@@ -53,3 +53,6 @@ mapillary-browser-round2:2 kadry picturehoover z27.06.2020 obejrzane indywidualn
 ## Mapillary — drugi odcinek drzewa/bariery
 
 mapillary-browser-round3:2 kolejne indywidualnie obejrzane kadry picturehoover,27.06.2020, link-only CC BY-SA4.0 wg pomocy zround2. Ełcka: drzewa, kruszywo, trawiaste obniżenie i zjazd. Studzienna: bariery, łuk i czerwono-białe pionowe tablice; wygrodzenia2020 nie przypisano do S16 z2026. Filtr2024+ nie pokazał pokrycia w zbadanych widokach; nie twierdzimy braku nowszych zdjęć w całym korytarzu. GPS/kafle/km niepotwierdzone. Główny manifest12 rekordów,0nowych pobrań obrazów.
+
+
+Mapillary-corridor-round4:2 nowe link-only kadry picturehoover z27.06.2020, obejrzane osobno w dużym widoku. Jeden pokazuje zatokę z wiatą, znakiem autobusu, koszem, krawężnikiem i płytami; drugi przejście asfalt–kruszywo–trawa oraz obniżenie. Funkcja poszerzenia w drugim nieustalona, nie policzono drugiego przystanku. Wymiary/kilometraż/kafel/GPS kamery/azymut i stan2026 UNVERIFIED. 0 pobrań. Główny manifest14 rekordów:6 dokumentów,2 orto,6 Mapillary link-only.

@@ -1,0 +1,12 @@
+{
+  "date":"2026-11-15",
+  "timezone":"Europe/Brussels",
+  "purpose":"Selekcja miejsc do ręcznego przeglądu Mapillary; nie są to nowe obserwacje zdjęć",
+  "source":"research/dk65-knyszyn-refs/data/osm_corridor.json, odczyt queried_at 2026-11-15T10:17:47Z; research/dk65-knyszyn-refs/README.md",
+  "priority_candidates":[
+    {"osm_node":"14067837805","name":"Dobrzyniewo Duże","lat":53.1971564,"lon":23.0222715,"route_km":12.985,"note":"K1 orto zatoka z wiatą; szukać nowego widoku naziemnego"},
+    {"osm_node":"11243685568","lat":53.2104976,"lon":23.0199523,"route_km":14.478,"note":"K1 zatoka po prawej przy km14.5; nie przypisywać nazwy na podstawie sąsiedztwa"}
+  ],
+  "limitations":"To pozycje OSM/K1 do orientacji, nie GPS przyszłego obrazu Mapillary. Dokładne powiązanie obrazu z kandydatem musi być osobno uzasadnione.",
+  "railway_scope":"K1 nie wskazuje przejazdu bezpośrednio na trasie; przejazdy linii38 są na bocznych drogach. Nie zakładać kategorii A–D."
+}

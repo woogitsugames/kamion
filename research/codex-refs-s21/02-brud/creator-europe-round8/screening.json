@@ -1,0 +1,103 @@
+{
+  "date": "2026-11-15",
+  "scope": "Europejskie floty i inni autorzy niż Eric Polk; Commons, następnie odrębna selekcja Geograph/Commons i Flickr",
+  "queries": [
+    {
+      "query": "\"Dachser\" \"trailer\" filetype:bitmap",
+      "returned": 1,
+      "result": "Geislingen2019 opis Fischhalle; brak obiecującego źródłowego opisu naczepy z tyłu."
+    },
+    {
+      "query": "\"DSV\" \"trailer\" filetype:bitmap",
+      "returned": 10,
+      "result": "Opisy modeli DAF/Volvo/Scania/Mercedes i duńskich operatorów; nie ustalają z samych metadanych widoczności zamkniętych drzwi. Nie pobierano na ślepo."
+    },
+    {
+      "query": "\"DHL\" \"rear\" filetype:bitmap",
+      "returned": 10,
+      "result": "Przewaga vanów, budynków i innego taboru; Chathamrear nie dawał źródłowego potwierdzenia naczepy. Nie pobierano."
+    },
+    {
+      "query": "\"semi-remorque\" \"portes\" filetype:bitmap",
+      "result": "TimeoutError: read operation timed out; nie ponawiano; brak potwierdzonego403/429."
+    },
+    {
+      "query": "\"articulated\" \"rear\" filetype:bitmap",
+      "returned": 15,
+      "titles": [
+        "File:ATM Iveco artic 2644.jpg",
+        "File:Articulation System JVS front engine bus. Spielvogel.JPG",
+        "File:Articulation system JVS rear engine bus. Spielvogel.JPG",
+        "File:Articulation system for urban buses. JVS 2014. Spielvogel.JPG",
+        "File:Autosan Sancity 18 LF - rear 2.jpg",
+        "File:BK670 replica at Beijing Public Transport Hall (20231227101914).jpg",
+        "File:Complete cast copper alloy stirrup-strap mount of probable eleventh century date (AD 1000 - AD 1100). Williams Class Class B, Type 2, Group 1. (FindID 87005).jpg",
+        "File:Container trailer rear vierw.jpg",
+        "File:I ran into these 2 guys yesterday on the side of the road. -freight -truck drivers get it done! -goodpeople -rustico -rlcarriers -yrc.jpg",
+        "File:Irisbus 491E.10.29 Cityclass n.190S Actv linea PK1.jpg",
+        "File:Irisbus Citelis 12 n°8787 (RATP - Ligne 214) - (Neuilly-Plaisance RER, Boulevard Gallieni) - (Neuilly-Plaisance, FR93) - 07-10-2024 4.jpg",
+        "File:MTA Installs Mask Dispensers Inside Buses (50166961076).jpg",
+        "File:Metro Transit articulated bus rear section (Madison, WI).png",
+        "File:StAT bus 814 interior articulation joint rear view, 106 Street 111 Ave Edmonton 03-31-2023.jpg",
+        "File:The Shire Hall - Agincourt Square, Monmouth (18940804858).jpg"
+      ],
+      "result": "Selekcja metadanych, bez oględzin: autobusy/inne konstrukcje; brak nowego obiecującego europejskiego źródła z potwierdzonym typem i tyłem. Wynik oznaczony AI-generated odrzucony bez otwierania."
+    },
+    {
+      "query": "\"lorry\" \"rear\" filetype:bitmap -bus",
+      "returned": 15,
+      "titles": [
+        "File:2023 Denver Auto Show International eMV electric boom truck.jpg",
+        "File:3663 SN08 CCV - Clachan Duich (8684653310).jpg",
+        "File:Bedford Van 764 XUT (rear view) - geograph.org.uk - 4217959.jpg",
+        "File:Coca-Cola AI ad - truck with misspelled logo.png",
+        "File:Dejou-Camion-plateau-jouet-en-bois-40cm.jpg",
+        "File:JASDF Ground power units(Isuzu ELF, 46-0005) right rear view at Komaki Air Base February 23, 2014.jpg",
+        "File:Lorries at the rear of the Allied Bakeries Lincoln factory - geograph.org.uk - 4076656.jpg",
+        "File:Model 1925 Kenworth Truck Piggy Bank.jpg",
+        "File:Nufam 2023, Rheinstetten (P1130575).jpg",
+        "File:QANON TRUCK STICKER.jpg",
+        "File:Road Machinery in Serule.jpg",
+        "File:Semonkong.jpg",
+        "File:Toy truck (AM 1996.165.211-1).jpg",
+        "File:Toy truck (AM 1996.165.85).jpg",
+        "File:ZiL130 Mongolia.jpg"
+      ],
+      "result": "Selekcja metadanych, bez oględzin: autobusy/inne konstrukcje; brak nowego obiecującego europejskiego źródła z potwierdzonym typem i tyłem. Wynik oznaczony AI-generated odrzucony bez otwierania."
+    }
+  ],
+  "flickr_license_checks": [
+    {
+      "source": "https://www.flickr.com/photos/129401525@N04/53134280815/",
+      "author": "Celikoglu’s Pictures",
+      "title": "Krone Cool Liner Sattelauflieger Kühlsattelauflieger 3-Achse2012 Ex Dachser",
+      "license": "All rights reserved",
+      "verification": "Publiczna fotostrona — link tekstowy All rights reserved; typ Sattelauflieger z tytułu; opisana A1E75 Beograd–Niš. Obrazu nie oglądano ani nie pobierano.",
+      "result": "REJECTED LICENSE: ten obieg tylko Flickr CC"
+    },
+    {
+      "source": "https://www.flickr.com/photos/gtrjackoplus/50040450631",
+      "author": "JackoPlates",
+      "title": "MAN TGX Euro6 —9184JRB Spain",
+      "license": "All rights reserved",
+      "verification": "Publiczna fotostrona — link tekstowy All rights reserved; A1(M) West Yorkshire, UK w opisie. Obrazu nie oglądano ani nie pobierano.",
+      "result": "REJECTED LICENSE: ten obieg tylko Flickr CC"
+    }
+  ],
+  "image_query": {
+    "query": "semi trailer truck rear doors winter Europe",
+    "domain": "commons.wikimedia.org",
+    "result": "empty search results"
+  },
+  "web_selection_additional_note": "FlickrMercedesActrosDachser31185091180 również widoczne All rights reserved w wyniku wyszukiwania; odrzucony przed oględzinami. Pozostałych nieotwartych wyników nie opisywano jako zdjęć.",
+  "photos_viewed": 0,
+  "photos_downloaded": 0,
+  "new_qualifying_frames": 0,
+  "new_auxiliary_frames": 0,
+  "winter_confirmed": 0,
+  "EU_confirmed_positive": 0,
+  "browser_used": false,
+  "http429_observed": false,
+  "originals_saved": 0,
+  "next_distinct_source": "Brytyjskie tylne widoki z Geograph/Commons i odrębni autorzy Flickr sprawdzeni w tym obiegu; bez kolejnych kopii wcześniejszych kadrów."
+}
