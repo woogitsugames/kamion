@@ -36,3 +36,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 18:56 +01:00 — R1 build trwa; materiał kostki granitowej nie ma lokalnego skanu, road_sett to proceduralne WORKING_VALUE do próby. Generator par 3–8 gotowy; kamery 1/2 i 9–11 mają orientacyjne pozycje do r2.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 19:00 +01:00 — Niezależny przegląd: docelowy poligon jest wyłączony z forest/HLOD i maski leśnej, bez wymuszenia piasku; 18 punktów drzew poza nowymi alejkami. Położenie fontanny zgodne z dopasowaniem orto na poziomie ESTIMATED.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
