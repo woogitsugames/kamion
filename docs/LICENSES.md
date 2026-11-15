@@ -555,6 +555,7 @@ Audyt maszynowy (`uv run --project tools/licenses python tools/licenses/audit.py
 | `research/gate3-spots-s21/files/` | `research/gate3-spots-s21/manifest.csv` (38) | CC BY-SA 4.0 24; CC0 4; GUGiK ortofoto 4; ODbL 4; CC BY 3.0 2 | nie |
 | `research/mistral/p17-dusk-lighting/files/` | `research/mistral/p17-dusk-lighting/manifest.csv` (109) | CC0 27; CC BY 4.0 (open access) 23; tabele normy wg strony producenta — tylko fakty; teksty © wydawców — tylko krótkie cytaty | nie |
 | `research/night-lamps-s21/files/` | `research/night-lamps-s21/manifest.csv` (84) | ODbL 1.0 27; CC BY-SA 4.0 (referencja, nie tekstura) 17; dokumenty urzędowe 12; CC0 9; CC BY 2.0 5 | nie |
+| `research/led-tenders-0216b/ted_notices.json` | `research/led-tenders-0216b/README.md` (ADR 0216b) | dokumenty urzędowe — ogłoszenia TED (Urząd Publikacji UE, ponowne wykorzystanie dozwolone, decyzja Komisji 2011/833/UE; treść ogłoszeń = dokument urzędowy, art. 4 ustawy o prawie autorskim): tylko wykazy ulic, bez nazw wykonawców i produktów | nie |
 | `research/krywlany-airfield-s21/files/` | `research/krywlany-airfield-s21/manifest.csv` (92) | dane PZGiK (GUGiK), bez opłat 41; CC0 21; CC BY-SA 3.0 (referencja) 11; ODbL 5 | nie |
 | `research/plant-gates-s21/files/` | `research/plant-gates-s21/manifest.csv` (89) | CC0 45; dane PZGiK (GUGiK) 14; ODbL 2; dokument producenta — fakty 2 | nie |
 | `research/mistral/p14-office-tower/files/` | `research/mistral/p14-office-tower/manifest.csv` (19) | CC BY-SA 4.0 7; CC BY 3.0 4; CC0 4; GUGiK 2; dokument urzędowy (BIP UKE) 1 | nie |
