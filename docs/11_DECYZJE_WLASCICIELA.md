@@ -97,3 +97,10 @@ D63/D64 uzupełnienie (2026-11-14 23:1x): w wersji „z grubsza” PRIORYTETEM j
 
 ## D66 — Szerokość ul. Ełckiej (2026-11-15)
 Właściciel wybrał **6,6 m** szerokości jezdni (`width`) ul. Ełckiej / Studziennej w kaflach dk65-02…05 zamiast 6,9 m z D65. Powód: ortofoto 0,1 m pokazuje asfalt 6,5–7,1 m i linie krawędziowe 6,1–6,4 m od siebie (research K1, weryfikacja PR #80); przy 6,6 m generator rysuje linie ok. 6,2 m od siebie.
+
+## D67 — Korytarz do Knyszyna w APK (2026-11-15, s21)
+Właściciel: „dodaj korytarz do następnego APK”. Następny APK (po naprawie budżetu trójkątów C, ADR 0221) zawiera oprócz WorldC sceny regionów korytarza Białystok → DK65 → Knyszyn (Dojlidy, bialystok-knyszynska, dk65-01…11, knyszyn-s, knyszyn; w miarę rozmiaru także knyszyn-w, dk65-monki-01, dw671-tykocin-01, kleeberga, maczka) z wyborem regionu/trasy w menu. Na start bez płynnego przejścia między kaflami. Kod: chmura E, E2 (ADR 0229); lider weryfikuje i mierzy na A16 (rozmiar APK, PSS, gate3 w C bez pogorszenia). Punkt odniesienia: APK z samym C ma 224 MB.
+Uzupełnienie (właściciel, 15.11): APK instaluje sam, więc **nie może być duży**. Do korytarza wchodzi tylko tyle regionów, ile mieści się w limicie ≤ 2 GB (właściciel 15.11: instaluje sam, 2 GB akceptowalne), w razie potrzeby sama trasa główna. Docelowo regiony jako osobne paczki do pobrania (podział: osobne zadanie po tym APK).
+
+## D68 — Pora roku i zmierzch (2026-11-15, s21)
+Właściciel (decyzje z ADR 0216 §Otwarte): (1) azymut zmierzchu **300°** (ok. 15 sierpnia, −6°) — zostaje obecne LP_Dusk; (2) **lato wszędzie**: letni preset (zmierzch ok. 21:00) także w Białymstoku C i na Dojlidach — przebudowa C i D po scaleniu naprawy budżetu (0221), potem pomiar na telefonie; (3) LED Knyszyna zostaje **4000 K** (WORKING_VALUE, bez nocnego zdjęcia).

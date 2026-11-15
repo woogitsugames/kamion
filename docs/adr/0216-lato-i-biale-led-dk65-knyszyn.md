@@ -10,7 +10,7 @@ Powiązane: D63, D65 p.7–8 (`docs/11`), ADR 0182/0199 (LP_Dusk, zegar), 0191/0
   generatora są letnie (`leaf_textures.py`, `hedge_textures.py`: „summer, muted”) — potwierdzone na renderach dziennych.
 - Latarnie: barwa LED jest globalną stałą `StreetLamps.k_Led` (1; 0,93; 0,82). Rodzina „starych” słupów ulic bocznych
   (`lamp_old_concrete_9m`, `lamp_old_steel_8m`) ma głowicę sodową (`lamp_glass_sodium`, pomarańczowa pula i halo):
-  `knyszyn` 216 z 479 latarni, `knyszyn-w` 72 z 167, `bialystok-knyszynska` 311 z 910, `knyszyn-s` 0.
+  `knyszyn` 216 z 479 latarni, `knyszyn-w` 72 z 167, `bialystok-knyszynska` 311 z 907 (audyt `lamp_audit.py`), `knyszyn-s` 0.
 - K1: na DK65 poza zabudową latarni brak (ortofoto, OSM 0 węzłów `street_lamp`). W `knyszyn` reguła stawiała 15 słupów
   na DK65 (Obozowa, way 286990127) na południe od miasta — w ADR 0204 zostawione jako „niezweryfikowane”.
 
@@ -21,7 +21,7 @@ Powiązane: D63, D65 p.7–8 (`docs/11`), ADR 0182/0199 (LP_Dusk, zegar), 0191/0
    Maczka, Kleeberga — bez zmian; test EditMode i pytest to sprawdzają).
 2. **Lato** (`summer-dk65-knyszyn`): `bialystok-knyszynska`, `dk65-01…11`, `knyszyn-s`, `knyszyn`, `knyszyn-w`,
    `dk65-monki-01`, `dw671-tykocin-01`. `LP_Dusk` zachowuje słońce (−6°, az. 300° = wartość właściciela) i ekspozycję;
-   zegar zmierzchu 21:00 zamiast 16:10 (udział okien biurowych 0,4 → wartość `OfficeShareAtHour(21)`). `LP_Clear`,
+   zegar zmierzchu 21:00 zamiast 16:10 (udział świecących okien biurowych 0,40 → 0,05, `OfficeShareAtHour`). `LP_Clear`,
    `LP_LowSun`, `LP_Night` bez zmian (noc 22:00 jest zgodna z lipcem: Słońce ok. −8°). Sceny dostają profil przy
    następnym imporcie; w tej gałęzi zaimportowane są cztery regiony z p. 3 (kafli `dk65-*` nie dotykano).
    Astronomia (`artifacts/summer-led-0216/sun_summer.json`, Białystok 53,13° N): koniec zmierzchu cywilnego (−6°)
@@ -47,11 +47,73 @@ Powiązane: D63, D65 p.7–8 (`docs/11`), ADR 0182/0199 (LP_Dusk, zegar), 0191/0
    i `knyszyn-w` miały to już (ADR 0204/0209). `bialystok-knyszynska`: Szosa Knyszyńska/Ełcka leży w granicach miasta,
    na ortofoto widać słupy po stronie N — zostawione regule (UNVERIFIED, otwarte p. 3).
 
-## Budżet (przed → po, edytor, te same kamery)
-__BUDGET__
+## Budżet (przed → po, edytor, kamery o tych samych id)
+`scripts/visual-qa.ps1`, kamery świata wspólne dla obu przebiegów (bez kabiny/pojazdu), `stats.txt` (szacunek edytora
+przed SRP batching), narzędzie `artifacts/summer-led-0216/tools/budget.py`. Wartości identyczne dla clear/dusk/night.
+
+| region / tier | kamer | draws suma | draws instancji suma | tris suma | maks. draws na kamerę | maks. tris na kamerę |
+|---|---|---|---|---|---|---|
+| knyszyn Low | 26 | 4517 → 4516 | 1276 → 1279 | 4 380 430 → 4 378 600 | 498 → **499** | 388 839 → 388 805 |
+| knyszyn High | 26 | 6542 → 6541 | 2230 → 2210 | 9 821 658 → 9 819 996 | 843 → 843 | 1 008 653 → 1 008 637 |
+| bialystok-knyszynska Low | 17 | 2975 → 2924 | 970 → 997 | 2 732 055 → 2 708 931 | 498 → 498 | 296 646 → 296 658 |
+| bialystok-knyszynska High | 17 | 6005 → 5951 | 1593 → 1618 | 6 331 951 → 6 092 373 | 1246 → 1246 | 868 712 → 868 816 |
+
+- Latarnie: `knyszyn` 479 → 464 (−15 na DK65 płd.), głowice sodowe 216 → 0; `knyszyn-w` 167 → 167, sód 72 → 0;
+  `bialystok-knyszynska` 907 → 907, sód 311 → 0; `knyszyn-s` 0 → 0.
+- Jedyne pogorszenie: `knyszyn` Low, najgorsza kamera +1 draw instancji (498 → 499; prototypy LED starej rodziny są
+  osobnymi prototypami obok zwykłych LED). W `bialystok-knyszynska` suma draws instancji +27 na 17 kamer przy −51 draws
+  zwykłych i −240 tys. tris na High — w całości z jednej kamery `seam-e-into-tile`, która po regeneracji stoi w innym
+  miejscu (`control_cameras.json`, ADR 0208), więc nie jest to porównanie tego samego kadru. Bez czterech kamer `seam-*`
+  (13 kamer): Low draws 2283 → 2283, draws instancji 753 → 753, tris 2 091 272 → 2 091 513; High draws 4296 → 4297,
+  draws instancji 1217 → 1217, tris 4 537 263 → 4 538 010; maks. na kamerę Low 498 → 498, High 1171 → 1171.
+  Pozostałe kamery: +2…+159 tris na kamerę w siatkach statycznych (źródło nierozdzielone — regeneracja świata, nie
+  instancje latarni: tris instancji bez zmian).
+- Odniesienie do `docs/PERFORMANCE_BUDGETS.md` (draw calls przed SRP batching: Low 250, High 800): najgorsze kamery były
+  ponad budżetem już przed zmianą (knyszyn Low 498, High 843; bialystok-knyszynska Low 498, High 1246) — to szacunek
+  edytora dla kamer przeglądowych, stan zastany; ta zmiana dokłada +1 (knyszyn Low).
+- Dane: `Data/raw/derived/<id>/world` knyszyn 793 → 794 MB, bialystok-knyszynska 979 → 979 MB; `_Generated/World`
+  knyszyn 758 → 759 MB, bialystok-knyszynska 887 → 888 MB. Biblioteka `street_props.glb`: +2 prototypy (2 × 174/91 tris).
+- Shadery, tekstury, liczba świateł i pul: bez zmian (zmienia się kolor globalny, nie liczba próbek).
+- Telefon: nie mierzono (lider).
 
 ## Walidacja
-__VALIDATION__
+- **Rendery (edytor, `scripts/visual-qa.ps1 -Scene WorldC`, Low i High × clear/dusk/night, przed i po):**
+  `artifacts/summer-led-0216/{before,after}/{knyszyn,bialystok-knyszynska}/{Low,High}-{clear,dusk,night}/*.png`
+  (24 przebiegi, wszystkie exit 0); zestawienia przed (góra) / po (dół): `artifacts/summer-led-0216/view/ab_*.jpg`.
+  Obejrzane: `knyszyn` dusk/night `rynek-grodzienska-north`, `goniadzka-jagiellonska`, `dk65-inlet-south`;
+  `bialystok-knyszynska` dusk/night `route-s0925`, `route-s1665`, `route-s2404`.
+  - Pomarańczowa (sodowa) pula i halo przy Rynku w Knyszynie zniknęły; soczewki, pule na jezdni i poboczu czytają się
+    jako neutralnie białe na tle nieba zmierzchu, bez przepalenia i bez bloomu większego niż przed zmianą.
+  - `dk65-inlet-south` (DK65 na południe od Knyszyna): przed — rząd słupów i pula na jezdni; po — brak słupów,
+    droga ciemna (kamera kontrolna bez reflektorów pojazdu), w tle widać dopiero latarnie miasta.
+  - Low (tier telefonu minimum) obejrzany osobno: `after/knyszyn/Low-dusk/rynek-fountain`, `Low-night/dk65-poludniowa`,
+    `after/bialystok-knyszynska/Low-night/route-s0925`, `Low-dusk/route-s2404` — ta sama biel, bez sodu.
+    W `bialystok-knyszynska` zamianę głowic na ulicach bocznych potwierdza tylko audyt (kamery ich nie pokazują).
+  - Zmierzch: okna biurowe wg zegara 21:00 (pojedyncze zamiast rzędów), mieszkalne bez zmian. Dzień bez zmian.
+  - `bialystok-knyszynska`: na kamerach trasy stoją słupy LED głównej ulicy — różnica to nieco chłodniejsza biel
+    soczewek i pul; głowice sodowe były na ulicach bocznych (311 → 0, audyt niżej).
+- **Audyt latarni** (`artifacts/summer-led-0216/tools/lamp_audit.py`, wyniki `after/data/<id>/lamp_audit.json`):
+  głowice sodowe 0 we wszystkich czterech regionach. DK65: `knyszyn-s` 0 latarni na całej długości; `knyszyn`
+  way 286990127 (528 m, 2,7 bud./100 m) 15 → 0; `knyszyn-w` way 232511647 (pola, 0 bud./100 m) 1 słup przypisany
+  przez audyt do najbliższej krawędzi (położenie UNVERIFIED, way ma `lamps: false`), odcinek przez miasto (way 232511646, 6,9 bud./100 m) 31 słupów — oświetlony wg ortofoto (ADR 0209).
+- **Testy:** po scaleniu `origin/main` (bez konfliktów; main nie zmieniał danych czterech regionów).
+  - `uv run --project tools/worldgen python -m pytest tests/gis -q`: 1373 passed, 5 failed, 6 skipped, 5 xfailed
+    (`artifacts/summer-led-0216/postmerge/pytest-postmerge.log`). `test_lamp_led_0216` 9/9 (w tym 4 po regeneracji),
+    `test_knyszynska_0208` zielony po poprawce (override `lamp_policy` jest regionowy, nie ma `target`).
+    Pięć porażek nie dotyczy tej zmiany: dwie znane z main (HANDOVER: `test_hero_bridge::test_asset_lods_and_budget`
+    2 022 535 > 2 000 000 tris, `test_world_v31::test_frame_budget_with_forest_hlod`); trzy dotyczą kafla C
+    (`test_far_field::test_generated_far_field_qa_and_manifests`, `test_world_v31::test_forest_trees_reference_their_cell`,
+    `test_road_fidelity::test_report_not_stale` — `fidelity_qa.json` z main odwołuje się do
+    `tools/worldgen/roads/tunnels.py`, którego nie ma w repozytorium: plik jest nieśledzony w katalogu main). Przed
+    scaleniem main ten sam zestaw dawał 1319 passed / 1 failed (ten z 0208), więc trzy porażki kafla C przyszły z main
+    (wniosek z porównania przebiegów; nie sprawdzano ich na czystym checkoucie main).
+  - EditMode (`pwsh scripts/test.ps1 -Platform EditMode`): 606 testów, 605 passed, 0 failed, 1 skipped (Ignored) — po
+    obu scaleniach main (`artifacts/tests/editmode-20261115-182356.xml`), w tym `RegionLightingProfileTests`.
+  - `CarPaintMaterialTests.DepositionChannel_*` (2 porażki w pierwszym przebiegu worktree): na main 6/6 Passed
+    (`artifacts/tests/editmode-20261115-165944.xml`), w worktree od drugiego przebiegu też — efekt świeżego worktree.
+- **Telefon:** nie mierzono — brak p50/p95/p99, PSS i temperatury dla tej zmiany (lider, po scaleniu; zakaz procesów
+  Unity podczas przebiegów na telefonie). Oczekiwanie (nie pomiar): bez zmiany kosztu klatki — te same siatki, materiały,
+  liczba świateł i pul; zmienia się stała koloru i wybór prototypu.
 
 ## Otwarte
 1. Właściciel: zmierzch „21:00 / 300°” — czy przestawić słońce `LP_Dusk` w regionach letnich na az. ~311° (31 VII,

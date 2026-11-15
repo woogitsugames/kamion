@@ -1,0 +1,16 @@
+**axleloads-tuning-0201b (ADR 0201b)**: baza `main` (PR #77 scalony; main wmergowany e342deea7). Naciski ciągnika według karty S9, strojenie zawieszenia i poprawka źródła energii F2.
+- **Naciski / strojenie:** solo bez paliwa **5,06/1,84 t = 73,3 %** (karta 73,2–73,5 %), 40 t 7,20/10,26/22,55 t (w limitach). Resor przedni 250 kN/m, tłumiki przodu 10/20 kN·s/m, stabilizatory 222/240 kN·m/rad, miech tyłu bez zmian sprzętu, odbój tyłu 15 mm. AMT: harmonogram z pedału kierowcy, anty-zgaśnięcie 8/s. 6 goldenów nagranych z nakładkami (`plots/`).
+- **F2 (decyzja właściciela: naprawić fizykę):** bilans energii na krok (`f2/energy-balance.txt`). Baumgarte sworznia ≤ 40 J/krok, więc nie jest źródłem. Źródłem było (1) odbicie miękkich odbojów siodła (oddają zmagazynowaną energię sprężystą, np. 4,5 kJ z 58 kJ) i (2) wtrysk przez kontakt opony przy przechyle ~90° (S = d/cos; 1,6 MN/koło, +52 kJ w 10 ms), oddawany potem w locie przez sprężynę przechyłu. Poprawka: odboje bez odbicia (rozpychanie ≤ 0,5 °/s, ≤ 0,87 J), brak kontaktu opony przy normalnej odchylonej > 72,5° (acos 0,3). Skan 230–260 kN/m co 0,5: przed 42/61 > 1 J (max 2044 J), po **0/61** (`f2/f2-scan.png`). Test, metryka i tolerancje bez zmian.
+- **Uruchomione (chmura, .NET):** `dotnet test tools/physics-runner/PhysicsRunner.sln` → **277/277** (274 + 3 nowe `F2CouplingEnergyTests`). Runner → **135/135 PASS (789)**, tolerancje bez zmian; względem e342deea7 772 kontrole są bit w bit, 17 zmienionych (wszystkie PASS, `f2/runner-diff.txt`). Solo 0–80 14,06 s / 80→0 35,39 m oraz 40 t 47,58 s / 41,20 m są identyczne.
+- **NIE uruchomione:** EditMode, PlayMode, build APK, telefon, feel test właściciela.
+- **Komendy dla lidera (Windows):**
+  - `pwsh scripts/test.ps1 -Platform EditMode`
+  - `pwsh scripts/test.ps1 -Platform PlayMode`
+  - `pwsh scripts/build-android.ps1`
+  - `pwsh scripts/gate12-phone.ps1 -Apk artifacts/apk/kamion-<ver>-<sha>.apk -UseExistingLock -Only s080_solo_1,s080_solo_2,s080_solo_3,s080_empty,s080_40t`
+- **Otwarte:**
+  - feel test (start solo z ASR, przód 250 kN/m, kiwnięcie, krawężnik, brak odbicia naczepy od odboju 90°);
+  - cienkie zapasy (pełzanie 12 % 4,97/5 mm);
+  - bramki A16 na telefonie (solo 0–80 ~+3,5 %);
+  - odbój tyłu i 0,5 °/s bez źródła (WORKING_VALUE).
+- **Gotowe do scalenia po weryfikacji lidera: TAK** (po zielonych EditMode/PlayMode/APK; feel test właściciela przed bramką etapu).
