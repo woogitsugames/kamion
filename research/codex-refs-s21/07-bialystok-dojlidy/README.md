@@ -35,3 +35,6 @@ SOURCED [07-D04, oba endpointy, pola w data/]: usługa jest publiczna, lecz brak
 
 
 KartaView-licence-round3: indeks oficjalnej sekcji4 wskazuje BY-SA4.0 fotografii, oddzielnie od MIT kodu; wymagany kredyt w źródle. Bezpośrednia strona dała shell, pełny regulamin nieodczytany. To częściowa kontrola B-119, bez zdjęć i bez zatwierdzenia wcześniejszych klatek. Manifest główny:9 rekordów.
+
+
+Mapillary-gates-round4:2 nowe, indywidualnie obejrzane link-only obrazy czadzik2018 i zsolt2017. Dojazd Mickiewicza/Karpińskiego z wyspami/kreskowaniem/zieleń oraz rozpoznany szyldem sklepBIAFORM z jasnym pawilonem i żółtą szczeblową bramą. Nadruk20m nie jest pomiarem; małeSTOP na bramie nie zostało zakwalifikowane do kodeksowegoB-20. Nie potwierdzono bramKAN/Rosti, funkcji logistycznej i przejezdności ciężarówki. Danehistoryczne nie domykają B040/B123. Main11rekordów,0pobrań.

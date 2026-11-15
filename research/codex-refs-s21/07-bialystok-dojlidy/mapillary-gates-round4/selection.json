@@ -1,0 +1,12 @@
+{
+  "date":"2026-11-15",
+  "timezone":"Europe/Brussels",
+  "status":"Punkty wyboru do UI; jeszcze nie nowe obserwacje fotograficzne",
+  "source":"research/mistral/p6-dojlidy-gates/manifest.csv, rekordy M49-003/004/005; przyjęto wyłącznie identyfikatory OSM i współrzędne orientacyjne",
+  "points":[
+    {"source_record":"M49-003","osm_node":"6596800253","reference_identifier":"Rosti","lat":53.1032347,"lon":23.1932384},
+    {"source_record":"M49-004","osm_node":"4656499172","reference_identifier":"KAN","lat":53.1034982,"lon":23.1900064},
+    {"source_record":"M49-005","osm_node":"2814000970","reference_identifier":"BIAFORM","lat":53.1132862,"lon":23.2013895}
+  ],
+  "limitations":"Nie przyjęto wcześniejszych szerokości, promieni ani ocen przejezdności. Nazwy/adresy w źródle służą orientacji, nie dowodzą obecnej obsługi bramy. Współrzędne centrum UI nie staną się GPS kamery. Każdy kadr i widoczne znaki trzeba obejrzeć osobno; niewyraźnych tablic nie klasyfikować jako zakaz. Wysokość kamery i stan 2026 UNVERIFIED."
+}

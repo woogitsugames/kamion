@@ -1,0 +1,17 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "status": "STABLE — do recenzji lidera",
+  "accepted_frames": 2,
+  "downloaded": 0,
+  "link_only": 2,
+  "method": "Mapillary publiczny UI i OpenStreetMap; każdy obraz otwarty osobno w dużym widoku; przesunięcia kadru nie liczone jako nowe fotografie",
+  "accepted": [
+    {"id": "07MG4-001", "pKey": "198900065381840", "author_ui": "czadzik", "image_date_ui": "2018-07-21", "role": "dojazd przy Mickiewicza/Karpińskiego; bez potwierdzenia konkretnej bramy"},
+    {"id": "07MG4-002", "pKey": "146365967462014", "author_ui": "zsolt", "image_date_ui": "2017-07-29", "role": "brama i pawilon z tablicą sklepu BIAFORM; obsługa ciężarówek UNVERIFIED"}
+  ],
+  "rejected": [{"pKey": "159066346181195", "author_ui": "szurek for Here", "image_date_ui": "2017-08-09", "individually_viewed": true, "reason": "silny ruchowy blur i przeciwny kierunek wobec poszukiwanej bramy", "time_travel_result": "No compatible captures found"}],
+  "unverified": ["stan 2026", "GPS kamery", "wysokość kamery", "azymut", "przejezdność ciężarówki", "wymiary bram", "prawne kody niewyraźnych znaków"],
+  "licence_audit": "../../04-dk65/mapillary-browser-round2/licence-check.json",
+  "no_api_tokens_downloads_login": true
+}

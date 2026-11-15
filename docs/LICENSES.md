@@ -541,3 +541,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 02/europe-visual-round10/files:3 źródła/6pochodnych≤800px: MikkoJ.Putkonen(Methem),Posti003,CCBY4.0; JoachimKohler-HB,ScaniaErlenbach2013,CCBY-SA4.0; Spielvogel,MB1850contour,CC0. Pełne źródła i daty perwiersz manifestu, zmiany: pomniejszenie całego kadru i jawne cropy, oryginały pozaGit. Koordynator osobno obejrzał wszystkie zachowane pochodne. ToAUX, nie przyrost kwalifikacjiM61.
 
 01/front-approval-round5:3 firmowe fotografie jednego reflektora Renault, tylko link-only, all rights reserved; bez kopii obrazów/screenshotów. Autor nieustalony, publikujący i adresy perwiersz. Przed publikacją poprawiono błędne mapowanieURL etykiety; peer-review zachowuje pierwotnyFAIL i PASS poprawionego źródła.
+
+07/mapillary-gates-round4:czadzik21.07.2018 i zsolt29.07.2017,2 indywidualnie obejrzane kadry MapillaryCCBY-SA4.0 według oficjalnej pomocy permanifest. Wyłącznie linki i własne opisy, bez kopii/screenshotów/API/tokenów; podkładOSM.
