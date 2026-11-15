@@ -169,7 +169,7 @@ są odtworzone (OSM bez `turn:lanes` na łącznicach).
 - Pomiar na A16 nie wykonany (lider; region nie jest w `BuildScenes`).
 
 ## Walidacja
-- `tests/gis/test_maczka_0203.py`: 6/6. Pełny `pytest tests/gis` na końcowym drzewie: **PYTEST_FINAL**
+- `tests/gis/test_maczka_0203.py`: 6/6. Pełny `pytest tests/gis` na końcowym drzewie: **1157 passed, 1 failed, 2 xfailed, 919 s**
   (przebieg w trakcie buildu r2: 1151 passed, 1 failed, 2 xfailed, 966 s); porażka `test_dojbld_0185::test_fence_mesh_mips_do_not_preserve_coverage` szuka
   w `InstanceImporter.cs` linii, której nie ma także w main (nie z 0203).
 - EditMode: **581 total, 580 passed, 0 failed, 1 skipped**.
