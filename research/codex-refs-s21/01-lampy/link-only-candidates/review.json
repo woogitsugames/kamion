@@ -1,0 +1,25 @@
+{
+  "review_date": "2026-11-15",
+  "method": "Każdy kadr obejrzany osobno w Chrome przez CUA. Tylko odczyt publicznej strony/obrazu. Bez plików zdjęć, miniaturek lub screenshotów w raw/repo.",
+  "licence": "link-only, all rights reserved",
+  "observed_ids": ["LNK-001", "LNK-002", "LNK-003", "LNK-004", "LNK-005"],
+  "observed_views": 5,
+  "unique_product_sources": 4,
+  "local_image_files": 0,
+  "readable_E_from_image": 2,
+  "readable_function_symbol_from_image": 2,
+  "readable_full_approval_number": 0,
+  "confirmed_installed_on_vehicle": 0,
+  "positive_reads": {"LNK-004": ["E9 w okręgu", "L-00"], "LNK-005": ["E9 w okręgu", "L-00"]},
+  "confirmed_emitting": 0,
+  "confirmed_dusk_or_night": 0,
+  "confirmed_illuminated_registration_plate": 0,
+  "catalogue_technique": "UNVERIFIED: nie potwierdzono fotografii fizycznego egzemplarza zamiast renderingu",
+  "not_a_visual_read": "E2 2040 jest deklaracją tekstu strony Vignal, nie odczytem oznaczenia na kloszu.",
+  "no_inference": [
+    "Liczba pól optycznych nie oznacza liczby komór funkcjonalnych.",
+    "Jasne refleksy nie dowodzą włączonego światła.",
+    "Białe/czarne tło katalogowe nie dowodzi pory dnia ani nocy.",
+    "Dolne okno bez widoku oświetlanej tablicy nie dowodzi pracy lampki tablicy."
+  ]
+}
