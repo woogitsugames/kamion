@@ -62,6 +62,15 @@ namespace Game.Gameplay
             if (vl >= 0) mask &= ~(1 << vl);
             m_Mask = mask;
             if (!m_HasBounds) Debug.LogWarning("[SAFETY] no region bounds: only the fall / no-ground checks are active");
+            m_OnOriginMoved = SafePoses.Offset;
+            Game.Core.FloatingOrigin.Moved += m_OnOriginMoved;
+        }
+
+        System.Action<Vector3> m_OnOriginMoved;
+
+        void OnDestroy()
+        {
+            if (m_OnOriginMoved != null) Game.Core.FloatingOrigin.Moved -= m_OnOriginMoved;
         }
 
         void FixedUpdate()
@@ -80,7 +89,10 @@ namespace Game.Gameplay
             var tr = vehicle.transform;
             Vector3 p = tr.position;
             float inside = float.MaxValue;
-            if (m_HasBounds && region != null)
+            // Streaming (ADR 0235): the drivable area is the union of the ready tiles; open seams are not an edge.
+            var streamer = Game.World.Streaming.WorldStreamer.Active;
+            if (streamer != null && streamer.TryInsideDistance(p, out float streamed)) inside = streamed;
+            else if (m_HasBounds && region != null)
             {
                 Vector3 l = region.transform.InverseTransformPoint(p);
                 inside = WorldBoundary.InsideDistance(m_Min, m_Max, l.x, l.z);

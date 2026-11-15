@@ -226,7 +226,17 @@ namespace Game.Gameplay
                 SafetyNet.bootstrap = this;
                 SafetyNet.vehicle = vehicle;
                 SafetyNet.region = regionRoot;
+                // Additive streaming of neighbouring tiles (ADR 0235); off with launch argument stream=0 or when no
+                // neighbour tile scene is in the build (then the region edge stays closed as before).
+                if (platform.GetLaunchArgument("stream") != "0")
+                {
+                    string contentTier = regionRoot.gameObject.scene.name.EndsWith("_High") ? Game.World.RegionScenes.HighTier : Game.World.RegionScenes.LowTier;
+                    Streamer = Game.World.Streaming.WorldStreamer.TryInstall(gameObject, regionRoot, vehicle.transform, vehicle.Body, contentTier);
+                    if (Streamer != null) Streamer.settings.memoryBudgetMB = Game.World.Streaming.StreamingSettings.BudgetForTier(QualityTiers.Current);
+                }
             }
+            m_OnOriginMoved = OnOriginMoved;
+            Game.Core.FloatingOrigin.Moved += m_OnOriginMoved;
             // Region start (menu or adb scene=...): one log line with region, route distance, local point and road (ADR 0229).
             string menuRegion = StartRequest.ConsumeRegion();
             if (regionRoot != null && route != null && route.points.Length > 1) LogRegionStart(regionRoot.regionId, menuRegion);
@@ -789,7 +799,21 @@ namespace Game.Gameplay
             Wheel.PointerUp();
         }
 
-        void OnDestroy() { m_InputLog?.Flush(Time.unscaledTime); }
+        void OnDestroy()
+        {
+            m_InputLog?.Flush(Time.unscaledTime);
+            if (m_OnOriginMoved != null) Game.Core.FloatingOrigin.Moved -= m_OnOriginMoved;
+        }
+
+        /// <summary>Additive tile streamer of world scenes (ADR 0235); null in the lab or when streaming is off.</summary>
+        public Game.World.Streaming.WorldStreamer Streamer { get; private set; }
+        System.Action<Vector3> m_OnOriginMoved;
+
+        /// <summary>Floating-origin rebase (ADR 0235): world-space copies held here move with the world.</summary>
+        void OnOriginMoved(Vector3 offset)
+        {
+            RouteDriver.Offset(offset);   // the spawn point and the route are scene roots: the streamer moved them already
+        }
 
         void OnApplicationFocus(bool focus) { if (!focus) OnApplicationPause(true); }
     }

@@ -60,6 +60,43 @@ namespace Game.Controls
             m_Seg = 0; Progress = 0f; Finished = false;
         }
 
+        /// <summary>Floating-origin rebase (ADR 0235): moves the path with the world. Distances are unchanged.</summary>
+        public void Offset(Vector3 offset)
+        {
+            for (int i = 0; i < m_Points.Length; i++) m_Points[i] += offset;
+        }
+
+        /// <summary>
+        /// Appends points to the path (route continues into a streamed tile, ADR 0235). Allocates the new arrays once per
+        /// call (a tile event, not the driving loop); keeps the current segment and progress.
+        /// </summary>
+        public void AppendPath(Vector3[] worldPoints, float[] speedLimitsKmh = null)
+        {
+            if (worldPoints == null || worldPoints.Length == 0) return;
+            int n0 = m_Points.Length, start = 0;
+            if (n0 > 0)
+            {
+                Vector3 d = worldPoints[0] - m_Points[n0 - 1]; d.y = 0f;
+                if (d.sqrMagnitude < 0.25f) start = 1;   // first point repeats the seam point
+            }
+            int add = worldPoints.Length - start;
+            var pts = new Vector3[n0 + add];
+            var s = new float[n0 + add];
+            var lim = new float[n0 + add];
+            System.Array.Copy(m_Points, pts, n0);
+            System.Array.Copy(m_S, s, n0);
+            System.Array.Copy(m_LimitKmh, lim, System.Math.Min(n0, m_LimitKmh.Length));
+            for (int k = 0; k < add; k++)
+            {
+                int i = n0 + k;
+                pts[i] = worldPoints[start + k];
+                if (i > 0) { Vector3 d = pts[i] - pts[i - 1]; d.y = 0f; s[i] = s[i - 1] + d.magnitude; }
+                lim[i] = speedLimitsKmh != null && speedLimitsKmh.Length == worldPoints.Length ? speedLimitsKmh[start + k] : 0f;
+            }
+            m_Points = pts; m_S = s; m_LimitKmh = lim;
+            Finished = false;
+        }
+
         public void Sample(float dt, in VehicleFeedback fb, ref DriverIntent intent)
         {
             if (m_Points.Length < 2) return;
