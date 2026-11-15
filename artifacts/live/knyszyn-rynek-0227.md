@@ -134,3 +134,7 @@
 - 2026-11-15 21:48 +01:00 — R4 4 warianty OK; pary 01–11 lokalnie. Plac ciągły, 07 na alei, ale dach portyku niewidoczny High/Low; naprawa generatora w toku. Low max +6 draws i +1704 tris na wspólnych kamerach; High max 1 229 693 tris. Raport fidelity liczy się po wznowieniu własnych procesów.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.done`
 
+
+- 2026-11-15 21:51 +01:00 — EditMode 626 passed, 2 skipped, 0 failed. R5 wystartowała z poprawką dachu portyku: r4 GLB ma materiał i normalne w górę, ale połać nie jest skierowana ku kamerze; nowa geometria wymaga renderu. Fidelity regionu C nadal liczy się.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r5.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.done`
+
