@@ -66,3 +66,7 @@ sources:
 rebuild:
 - uv run --project tools/worldgen tools/worldgen/ingest.py --region dk65-03
 - uv run --project tools/worldgen tools/worldgen/build_region.py --region dk65-03
+rail:
+  enabled: true
+  sources: Data/Regions/dk65-03/generated/rail_sources.json
+  note: OSM railway=rail + railway=level_crossing (ADR 0217)

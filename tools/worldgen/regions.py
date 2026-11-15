@@ -84,6 +84,7 @@ REGIONS: dict[str, Region] = {
         origin=(769803.0, 596223.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0205, owner D64; tile = lattice (-4,0) of the ADR 0203 plan)",
+        rail=True,       # ADR 0223: railway line 38 (OSM relation 2316318) + level crossings, sources OSM API 0.6
     ),
     # ADR 0203 (owner D64): first Białystok tile on the truck route to Knyszyn, lattice i = -1, j = 0 (shares its
     # east edge x = 776971 with tile C). DK8/DK65 Gen. Maczka ("Trasa Generalska"), 2.05 km of dual carriageway
@@ -169,6 +170,7 @@ REGIONS: dict[str, Region] = {
         origin=(759563.0, 610559.0),
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,7) of the ADR 0203 plan)",
+        rail=True,       # ADR 0223: railway line 38 (OSM relation 2316318) + level crossings, sources OSM API 0.6
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
     "dk65-02": Region(
@@ -180,6 +182,7 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-4,1) of the ADR 0203 plan)",
         water=True,      # ADR 0210: Supraśl + Biała under the DK65 bridge (km 10.85)
+        rail=True,       # ADR 0223: railway line 38 (OSM relation 2316318) + level crossings, sources OSM API 0.6
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,1) of the ADR 0203 plan, route variant A km 11.80-12.28. Powiat 2002.
     "dk65-03": Region(
@@ -190,6 +193,7 @@ REGIONS: dict[str, Region] = {
         origin=(767755.0, 598271.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,1) of the ADR 0203 plan)",
+        rail=True,       # ADR 0223: railway line 38 (OSM relation 2316318) + level crossings, sources OSM API 0.6
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,2) of the ADR 0203 plan, route variant A km 12.28-14.36. Powiat 2002.
     "dk65-04": Region(
@@ -200,6 +204,7 @@ REGIONS: dict[str, Region] = {
         origin=(767755.0, 600319.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,2) of the ADR 0203 plan)",
+        rail=True,       # ADR 0223: railway line 38 (OSM relation 2316318) + level crossings, sources OSM API 0.6
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,3) of the ADR 0203 plan, route variant A km 14.36-16.56. Powiat 2002.
     "dk65-05": Region(

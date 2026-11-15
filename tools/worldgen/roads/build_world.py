@@ -893,7 +893,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                 if len(run) >= 2 and on[run[0]]:
                     ground_lines.append(_LS(c.line.p[run]))
         w.rail = RL.Plan(rsrc, w.origin, tile_local,
-                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines)
+                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines,
+                         overrides=pipeline.load_overrides(region_id))     # ADR 0223: kind rail_crossing
         log("rail plan:", len(w.rail.tracks), "tracks,", len(w.rail.crossings), "level crossings")
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
     if w.water is not None:

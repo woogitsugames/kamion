@@ -93,6 +93,28 @@ RAIL_MATERIALS = {
 LAYERS = ("rail_lod0", "rail_lod1", "rail_lod2", "rail_crossing")
 LOW_EXCLUDE = ("rail_lod0",)       # the Low / Medium GLB carries LoD1, LoD2 and the crossing panels only
 
+# OSM tags copied into rail_sources.json (pbf extract and OSM API 0.6 XML extract use the same list; ADR 0217 / 0223)
+KEEP_TAGS = ("railway", "gauge", "tracks", "service", "usage", "bridge", "tunnel", "layer", "electrified", "voltage",
+             "maxspeed", "railway:track_ref", "ref", "name", "disused", "abandoned", "crossing:barrier",
+             "crossing:light", "crossing:bell", "crossing:saltire", "crossing:activation", "supervision")
+
+# ADR 0223: level-crossing equipment / category from the OSM crossing tags. Categories A-F: Dz.U. 2025 poz. 1105
+# (rozporządzenie MI z 9.07.2025, in force since 27.08.2025; it replaced Dz.U. 2015 poz. 1744) § 6 ust. 1:
+#   A - traffic directed by railway staff, by hand signals or by systems with barriers closing the WHOLE road width and
+#       road signals (lit. b); B - automatic systems with road signals and barriers closing the entry (a) or the entry
+#       and the exit (b); C - automatic systems with road signals only; D - no crossing systems, road signs only;
+#   E - pedestrian crossings (przejścia); F - crossings on internal roads (not inferable from OSM tags alone).
+# Signs G-3 / G-4: § 80 ust. 1 (A without barriers, C, D); G-2 on electrified lines: § 81 ust. 1 (A-C on the signal
+# mast, D on the G-3 / G-4 post below the cross).
+EQUIPMENT = {
+    "full": ("rogatki_pelne", "A", "§ 6 ust. 1 pkt 1 lit. b (barriers over the whole road width)"),
+    "gate": ("rogatki_pelne", "A", "§ 6 ust. 1 pkt 1 lit. b (gate over the whole road width)"),
+    "half": ("polrogatki", "B", "§ 6 ust. 1 pkt 2 lit. a (entry barriers)"),
+    "double_half": ("polrogatki_wjazd_wyjazd", "B", "§ 6 ust. 1 pkt 2 lit. b (entry + exit barriers)"),
+    "yes": ("rogatki_typ_nieznany", "A|B", "crossing:barrier=yes: barriers of unknown type (§ 6 ust. 1 pkt 1-2)"),
+    "chain": ("rogatki_typ_nieznany", "A|F", "crossing:barrier=chain (§ 12 ust. 3 pkt 1: kept-closed barriers)"),
+}
+
 SKIP_RAILWAY = ("disused", "abandoned", "construction", "proposed", "razed", "narrow_gauge", "light_rail", "tram",
                 "subway", "miniature", "funicular", "monorail", "preserved")
 
@@ -123,6 +145,8 @@ def classify_way(tags: dict) -> tuple[bool, str, dict]:
     n = int(tr) if tr and tr >= 1 else 1
     n = min(n, 6)
     return True, "", {"gauge_mm": g, "gauge_src": gauge_src, "tracks": n,
+                      "tracks_src": "osm" if tr and tr >= 1 else "default",
+                      "maxspeed_kmh": _num(tags.get("maxspeed")),
                       "service": tags.get("service"), "usage": tags.get("usage"),
                       "bridge": tags.get("bridge") not in (None, "no"),
                       "electrified": tags.get("electrified"), "ref": tags.get("ref"), "name": tags.get("name")}
@@ -139,12 +163,84 @@ def classify_node(tags: dict) -> tuple[bool, str, dict]:
     if bar not in BARRIERS:
         bar = None                          # unknown / untagged
     yes = ("yes", "true")
-    return True, "", {"barrier": bar,
-                      "light": tags.get("crossing:light") in yes,
-                      "bell": tags.get("crossing:bell") in yes,
-                      "saltire": (None if tags.get("crossing:saltire") is None
-                                  else tags.get("crossing:saltire") in yes),
-                      "supervision": tags.get("supervision")}
+    at = {"barrier": bar,
+          "light": tags.get("crossing:light") in yes,
+          "bell": tags.get("crossing:bell") in yes,
+          "saltire": (None if tags.get("crossing:saltire") is None
+                      else tags.get("crossing:saltire") in yes),
+          "supervision": tags.get("supervision")}
+    at.update(crossing_equipment(bar, tags.get("crossing:light")))
+    return True, "", at
+
+
+def crossing_equipment(barrier, light_tag, src="osm") -> dict:
+    """ADR 0223: equipment type + category (Dz.U. 2025 poz. 1105 § 6 ust. 1) of a level crossing from
+    crossing:barrier and the RAW crossing:light value (None = untagged). Every result carries its provenance:
+    `equipment_src` osm (barrier tag read) / derived (inferred from the light tag) / default (nothing tagged) /
+    authored_override (overrides.yaml, see apply_crossing_overrides) and a confidence."""
+    light_yes = light_tag in ("yes", "true")
+    light_no = light_tag in ("no", "false")
+    if barrier in EQUIPMENT:
+        eq, cat, basis = EQUIPMENT[barrier]
+        return {"equipment": eq, "category": cat, "equipment_src": src,
+                "equipment_confidence": "medium" if cat in ("A", "B") else "low", "category_basis": basis}
+    if barrier == "no":
+        if light_yes:
+            return {"equipment": "sygnalizacja_swietlna", "category": "C", "equipment_src": src,
+                    "equipment_confidence": "medium", "category_basis": "§ 6 ust. 1 pkt 3 (road signals only)"}
+        if light_no:
+            return {"equipment": "brak", "category": "D", "equipment_src": src, "equipment_confidence": "medium",
+                    "category_basis": "§ 6 ust. 1 pkt 4 (no crossing systems, road signs only)"}
+        return {"equipment": "brak_rogatek_swiatla_nieznane", "category": "C|D", "equipment_src": src,
+                "equipment_confidence": "low", "category_basis": "no barriers; crossing:light untagged"}
+    # barrier untagged
+    if light_yes:
+        return {"equipment": "sygnalizacja_swietlna_rogatki_nieznane", "category": "A|B|C",
+                "equipment_src": "derived" if src == "osm" else src, "equipment_confidence": "low",
+                "category_basis": "crossing:light=yes, crossing:barrier untagged"}
+    if light_no:
+        # A with barriers, B and C all have road signals (§ 6 ust. 1 pkt 1 lit. b, pkt 2, pkt 3), so a crossing
+        # without lights is D (or A directed by hand signals - not modelled)
+        return {"equipment": "brak", "category": "D", "equipment_src": "derived" if src == "osm" else src,
+                "equipment_confidence": "medium",
+                "category_basis": "crossing:light=no + § 6 ust. 1: A (barriers) / B / C always have road signals"}
+    return {"equipment": "nieznane", "category": None, "equipment_src": "default", "equipment_confidence": "low",
+            "category_basis": "crossing:barrier and crossing:light untagged: rendered with signs only (as D)"}
+
+
+OVERRIDE_KIND = "rail_crossing"
+OVERRIDE_KEYS = ("barrier", "light", "bell", "saltire")
+
+
+def apply_crossing_overrides(nodes: list, overrides, report: dict) -> None:
+    """ADR 0223: authored equipment of a level crossing (overrides.yaml entries
+    `{id, kind: rail_crossing, target: {osm_node: <id>}, set: {barrier, light, bell, saltire}, reason, confidence,
+    source}`) - survives every re-extract of rail_sources.json. A target missing from the sources is reported as
+    stale, never dropped silently; unknown keys in `set` are an error."""
+    by_id = {nd["src"]: nd for nd in nodes}
+    for o in overrides or []:
+        if o.get("kind") != OVERRIDE_KIND:
+            continue
+        sid = f"osm:node/{(o.get('target') or {}).get('osm_node')}"
+        st = o.get("set") or {}
+        bad = sorted(set(st) - set(OVERRIDE_KEYS))
+        if bad:
+            raise ValueError(f"rail_crossing override {o.get('id')}: unknown keys {bad}")
+        if "barrier" in st and st["barrier"] not in BARRIERS:
+            raise ValueError(f"rail_crossing override {o.get('id')}: barrier {st['barrier']!r} not in {BARRIERS}")
+        nd = by_id.get(sid)
+        if nd is None:
+            report.setdefault("overrides_stale", []).append(o.get("id"))
+            continue
+        for k in OVERRIDE_KEYS:
+            if k in st:
+                nd[k] = st[k]
+        light_tag = ("yes" if st["light"] else "no") if "light" in st else nd.get("_light_tag")
+        nd.update(crossing_equipment(nd["barrier"], light_tag, src="authored_override"))
+        nd["equipment_src"] = "authored_override"
+        nd["equipment_confidence"] = o.get("confidence", "medium")
+        nd["override"] = o.get("id")
+        report.setdefault("overrides_applied", []).append({"id": o.get("id"), "target": sid})
 
 
 # ------------------------------------------------------------------------------------------------ extraction
@@ -153,9 +249,7 @@ def extract_osm(bbox, pbf: Path) -> dict:
     from pyproj import Transformer
     tr = Transformer.from_crs("EPSG:4326", "EPSG:2180", always_xy=True)
     tile = shapely.box(*bbox).buffer(100.0, join_style="mitre")
-    keep = ("railway", "gauge", "tracks", "service", "usage", "bridge", "tunnel", "layer", "electrified", "ref", "name",
-            "disused", "abandoned", "crossing:barrier", "crossing:light", "crossing:bell", "crossing:saltire",
-            "crossing:activation", "supervision")
+    keep = KEEP_TAGS
     ways, nodes = [], []
     fp = osmium.FileProcessor(str(pbf)).with_locations().with_filter(osmium.filter.KeyFilter("railway"))
     for obj in fp:
@@ -184,14 +278,62 @@ def extract_osm(bbox, pbf: Path) -> dict:
     return {"ways": ways, "nodes": nodes}
 
 
+def extract_osm_xml(bbox, xml_paths) -> dict:
+    """ADR 0223: the same output as extract_osm, from OSM API 0.6 XML files (`/map?bbox=` cut-outs and
+    `/way/<id>/full`), for tiles whose sources were taken from the live API instead of the pbf snapshot. Several files
+    are merged (an element present in more than one file must be identical - the newest `version` wins)."""
+    import xml.etree.ElementTree as ET
+    from pyproj import Transformer
+    tr = Transformer.from_crs("EPSG:4326", "EPSG:2180", always_xy=True)
+    tile = shapely.box(*bbox).buffer(100.0, join_style="mitre")
+    loc, ntags, wdef = {}, {}, {}
+    for path in xml_paths:
+        root = ET.parse(path).getroot()
+        for n in root.iter("node"):
+            i, v = int(n.get("id")), int(n.get("version", 0))
+            if i in loc and loc[i][1] >= v:
+                continue
+            loc[i] = ((float(n.get("lon")), float(n.get("lat"))), v)
+            ntags[i] = {c.get("k"): c.get("v") for c in n.iter("tag")}
+        for w in root.iter("way"):
+            i, v = int(w.get("id")), int(w.get("version", 0))
+            if i in wdef and wdef[i][2] >= v:
+                continue
+            wdef[i] = ([int(c.get("ref")) for c in w.iter("nd")], {c.get("k"): c.get("v") for c in w.iter("tag")}, v)
+    ways, nodes = [], []
+    for i, t in ntags.items():
+        if "railway" not in t:
+            continue
+        x, y = tr.transform(*loc[i][0])
+        if tile.contains(Point(x, y)):
+            nodes.append({"osm_node": i, "tags": {k: t[k] for k in KEEP_TAGS if k in t},
+                          "xy": [round(x, 2), round(y, 2)]})
+    for i, (nds, t, _) in wdef.items():
+        if "railway" not in t or any(n not in loc for n in nds) or len(nds) < 2:
+            continue
+        pts = [tr.transform(*loc[n][0]) for n in nds]
+        g = LineString(pts).intersection(tile)
+        for k, part in enumerate(_parts(g)):
+            if part.geom_type == "LineString" and part.length >= 1.0:
+                ways.append({"osm_way": i, "part": k, "tags": {kk: t[kk] for kk in KEEP_TAGS if kk in t},
+                             "coords": [[round(x, 2), round(y, 2)] for x, y in part.simplify(0.1).coords]})
+    ways.sort(key=lambda d: (d["osm_way"], d["part"]))
+    nodes.sort(key=lambda d: d["osm_node"])
+    return {"ways": ways, "nodes": nodes}
+
+
 def extract(region: dict) -> dict:
     import sys
     sys.path.insert(0, str(REPO / "tools" / "worldgen"))
     from fetch_osm import download
     b = region["bbox"]
     bbox = (b["xmin"], b["ymin"], b["xmax"], b["ymax"])
+    pbf = download()
     return {"schema": SCHEMA, "crs": "EPSG:2180", "bbox": list(bbox), "margin_m": 100.0,
-            "license": {"osm": "ODbL 1.0, © OpenStreetMap contributors"}, "osm": extract_osm(bbox, download())}
+            "license": {"osm": "ODbL 1.0, © OpenStreetMap contributors"},
+            "provenance": {"source": "osm-pbf", "file": pbf.name,
+                           "manifest": "Data/SourceManifests/osm-geofabrik-podlaskie.json"},
+            "osm": extract_osm(bbox, pbf)}
 
 
 def sources_path(region_id: str) -> Path:
@@ -335,8 +477,9 @@ class Track:
 class Plan:
     """Rail tracks and level crossings of one region in local metres (E, N)."""
 
-    def __init__(self, src: dict, origin, tile_local=None, road_poly=None, road_lines=()):
+    def __init__(self, src: dict, origin, tile_local=None, road_poly=None, road_lines=(), overrides=()):
         self.origin = np.asarray(origin, float)
+        self.tile_local = tile_local
         self.road_poly = road_poly if road_poly is not None else shapely.Polygon()
         self.road_lines = list(road_lines)
         self.report = {"tracks": [], "skipped": [], "crossings": [], "markers": [], "warnings": []}
@@ -367,7 +510,9 @@ class Plan:
             if not keep:
                 self.report["skipped"].append({"src": sid, "why": why})
                 continue
-            self.nodes.append({"src": sid, "p": np.asarray(nd["xy"], float) - self.origin, **at})
+            self.nodes.append({"src": sid, "p": np.asarray(nd["xy"], float) - self.origin, **at,
+                               "_light_tag": nd.get("tags", {}).get("crossing:light")})
+        apply_crossing_overrides(self.nodes, overrides, self.report)
         self.crossings = self._find_crossings()
 
     # -------------------------------------------------------------------------------------------- crossings
@@ -400,7 +545,8 @@ class Plan:
                             continue
                         used.add(key)
                         out.append({"src": "geometry", "p": p, "track": ti, "source": "geometry", "barrier": None,
-                                    "light": False, "bell": False, "saltire": None, "supervision": None})
+                                    "light": False, "bell": False, "saltire": None, "supervision": None,
+                                    **crossing_equipment(None, None)})
                         self.report["warnings"].append({"src": f"geometry {p.round(1).tolist()}",
                                                         "why": "road x rail without OSM level_crossing node: "
                                                                "barrier unknown, signed as category D"})
@@ -446,16 +592,19 @@ class Plan:
             # the whole bundle crossing this road: tracks of all rail ways whose axis passes the crossing
             n_tracks = sum(tt.a["tracks"] for tt in self.tracks if tt.line.distance(Point(pc)) <= CROSS_SNAP_M
                            + TRACK_SPACING * (tt.a["tracks"] - 1) / 2)
+            electrified = any(tt.a.get("electrified") not in (None, "no") for tt in self.tracks
+                              if tt.line.distance(Point(pc)) <= CROSS_SNAP_M + TRACK_SPACING * (tt.a["tracks"] - 1) / 2)
             ci = len(res)
             t.zones.append((zone[0], zone[1], ci))
             res.append({**c, "p": pc, "s": s_c, "tdir": tdir, "rdir": rdir, "sin": sin_t, "zone": zone,
-                        "road_w": road_w, "n_tracks": int(max(n_tracks, t.a["tracks"])),
+                        "road_w": road_w, "n_tracks": int(max(n_tracks, t.a["tracks"])), "electrified": electrified,
                         "half_track": max(abs(o) for o in t.offsets) + PANEL_HALF})
         return res
 
     def sign_code(self, c) -> str | None:
-        """G-3 (single track) / G-4 (multiple tracks) where the crossing has no barriers (Dz.U. 2015 poz. 1744 § 5:
-        A without barriers, C, D); an explicit OSM crossing:saltire overrides."""
+        """G-3 (single track) / G-4 (multiple tracks) where the crossing has no barriers (Dz.U. 2025 poz. 1105 § 80
+        ust. 1: A without barriers, C, D; before 27.08.2025 Dz.U. 2015 poz. 1744 § 82 ust. 1); an explicit OSM
+        crossing:saltire overrides."""
         show = c["barrier"] in (None, "no") if c["saltire"] is None else c["saltire"]
         if not show:
             return None
@@ -513,9 +662,22 @@ class Plan:
                 "z_road": round(float(road_z_at(np.array([c["p"][0]]), np.array([c["p"][1]]))[0]), 3),
                 "track_heading_deg": _heading(c["tdir"]), "road_heading_deg": _heading(c["rdir"]),
                 "tracks": c["n_tracks"], "barrier": c["barrier"], "light": c["light"], "bell": c["bell"],
+                "equipment": c.get("equipment"), "category": c.get("category"),
+                "equipment_src": c.get("equipment_src"), "equipment_confidence": c.get("equipment_confidence"),
+                "category_basis": c.get("category_basis"), "override": c.get("override"),
+                "electrified": c.get("electrified", False),
                 "sign": code, "road_width_m": round(c["road_w"], 2),
                 "panel_zone_m": [round(c["zone"][0], 2), round(c["zone"][1], 2)], "panel_triangles": n})
-            self.report["markers"] += self.markers(ci, c, road_z_at)
+            for m in self.markers(ci, c, road_z_at):
+                # ADR 0223: a crossing on the tile edge (dk65-04 Białostocka, 0.5 m inside) must not put a sign into
+                # the far field of the neighbour (no road there, height clamped): listed, not placed
+                if self.tile_local is not None and not self.tile_local.contains(Point(m["e"], m["n"])):
+                    self.report.setdefault("markers_outside_tile", []).append(m)
+                    continue
+                self.report["markers"].append(m)
+            if any(m["crossing"] == ci for m in self.report.get("markers_outside_tile", [])):
+                self.report["warnings"].append({"src": c["src"], "why": "crossing on the tile edge: markers of the "
+                                                "outer approach dropped (markers_outside_tile)"})
         self.report["triangles"] = tris
         km = sum(t.line.length for t in self.tracks) / 1000.0
         self.report["track_km"] = round(km, 3)
@@ -661,6 +823,10 @@ class Plan:
                               arm_angle_deg=SIGN_ARM_ANGLE, bottom_z_m=SIGN_BOTTOM_Z))
             if c["light"]:
                 out.append(mk("light", post, face, a))
+            if c.get("electrified") and (code or c["light"]):
+                # ADR 0223: G-2 "sieć pod napięciem" (Dz.U. 2025 poz. 1105 § 81 ust. 1): kat. D below the G-3 / G-4
+                # on its post (pkt 2), kat. A-C on the signal mast below the lights (pkt 1)
+                out.append(mk("sign", post, face, a, code="G-2", mount="below_cross" if code else "signal_mast"))
             bar = c["barrier"]
             if bar in ("half", "double_half", "full", "gate", "yes"):
                 boom_head = _heading(-right)                  # boom extends from the right verge to the left

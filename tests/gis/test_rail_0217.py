@@ -15,6 +15,7 @@ from conftest import REPO
 REGIONS_DIR = REPO / "Data" / "Regions"
 FORBIDDEN = ("knyszyn", "knyszyn-s", "knyszyn-w", "bialystok-knyszynska", "dk65-06", "dk65-07", "dk65-08",
              "dk65-09", "dk65-10", "dk65-11")
+RAIL_ON_0223 = ("dk65-01", "dk65-02", "dk65-03", "dk65-04", "dw671-tykocin-01")
 
 
 # ------------------------------------------------------------------------------------------------ opt-in / regression
@@ -22,11 +23,12 @@ def test_stage_is_opt_in_and_off_everywhere():
     import regions
     from streetscape import rail as RL
     on = sorted(r.id for r in regions.REGIONS.values() if r.rail)
-    assert on == []                                    # ADR 0217: no region enabled by this change (lead decides)
+    # ADR 0217 enabled nothing; ADR 0223 enables the line-38 tiles (test_rail_dk65_0223.py checks them)
+    assert on == sorted(RAIL_ON_0223)
     assert not any(r.rail for r in regions.REGIONS.values() if r.id in FORBIDDEN)
     for rid in sorted(regions.REGIONS):
         d = REGIONS_DIR / rid
-        if not (d / "region.yaml").exists():
+        if not (d / "region.yaml").exists() or rid in RAIL_ON_0223:
             continue
         ry = yaml.safe_load((d / "region.yaml").read_text(encoding="utf-8"))
         assert "rail" not in ry and not RL.enabled(ry)
