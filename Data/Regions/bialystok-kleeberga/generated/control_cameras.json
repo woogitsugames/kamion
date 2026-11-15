@@ -1,0 +1,169 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0159",
+   "look_at": [
+    805.511,
+    -32.26,
+    120.524
+   ],
+   "note": "driver eye 2.5 m, control route s = 159 m of 2220 m (Generała Stanisława Maczka)",
+   "pos": [
+    865.462,
+    -32.008,
+    122.237
+   ],
+   "route_s_m": 158.601,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0476",
+   "look_at": [
+    488.725,
+    -18.98,
+    118.832
+   ],
+   "note": "driver eye 2.5 m, control route s = 476 m of 2220 m (Generała Stanisława Maczka)",
+   "pos": [
+    548.727,
+    -18.498,
+    120.516
+   ],
+   "route_s_m": 475.803,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0793",
+   "look_at": [
+    175.483,
+    -57.988,
+    118.473
+   ],
+   "note": "driver eye 2.5 m, control route s = 793 m of 2220 m (Generała Stanisława Maczka)",
+   "pos": [
+    233.461,
+    -42.664,
+    119.607
+   ],
+   "route_s_m": 793.005,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1110",
+   "look_at": [
+    -110.657,
+    -193.36,
+    118.972
+   ],
+   "note": "driver eye 2.5 m, control route s = 1110 m of 2220 m (Generała Stanisława Maczka)",
+   "pos": [
+    -58.862,
+    -163.029,
+    120.059
+   ],
+   "route_s_m": 1110.207,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1427",
+   "look_at": [
+    -387.549,
+    -348.093,
+    122.752
+   ],
+   "note": "driver eye 2.5 m, control route s = 1427 m of 2220 m (unnamed)",
+   "pos": [
+    -336.376,
+    -316.679,
+    123.457
+   ],
+   "route_s_m": 1427.409,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1745",
+   "look_at": [
+    -660.605,
+    -509.503,
+    128.228
+   ],
+   "note": "driver eye 2.5 m, control route s = 1745 m of 2220 m (Generała Franciszka Kleeberga)",
+   "pos": [
+    -609.933,
+    -477.332,
+    126.936
+   ],
+   "route_s_m": 1744.611,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2062",
+   "look_at": [
+    -936.945,
+    -665.135,
+    129.384
+   ],
+   "note": "driver eye 2.5 m, control route s = 2062 m of 2220 m (Generała Franciszka Kleeberga)",
+   "pos": [
+    -884.734,
+    -635.526,
+    131.081
+   ],
+   "route_s_m": 2061.812,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_01_above",
+   "look_at": [
+    -783.033,
+    -589.478,
+    130.996
+   ],
+   "note": "roundabout from ~40 m: Rondo Majora Antoniego Wiszowatego",
+   "pos": [
+    -713.033,
+    -509.478,
+    172.996
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_02_above",
+   "look_at": [
+    -127.882,
+    -210.015,
+    117.894
+   ],
+   "note": "roundabout from ~40 m: Rondo prof. Juliana Juliusza Szymańskiego",
+   "pos": [
+    -57.882,
+    -130.015,
+    159.894
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 267.592,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "bialystok-kleeberga",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

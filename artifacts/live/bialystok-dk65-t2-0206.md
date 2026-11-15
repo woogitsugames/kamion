@@ -1,3 +1,6 @@
 # bialystok-dk65-t2-0206 (ADR 0206) — live
 - worktree z origin/bialystok-dk65-0203 (plan tras + junction_topview). Kafel wg planu 0203: `bialystok-kleeberga` (-2,0; 772875,595199–774923,597247; km 3,58–5,80: Maczka zach. + Kleeberga + węzeł 5,19–5,27, wiadukt 5,45–5,61). Region dopisany do regions.py, route_endpoints + overrides (puste). Ingest + build_region w tle.
 - NASTĘPNY KROK: `cat artifacts/bialystok-dk65-t2-0206/ingest.done artifacts/bialystok-dk65-t2-0206/build_region.done`
+- 01:58 r1: build_world 2913 s (+ --context potrzebne dla nowego regionu), import OK chunks=64, WORLD_MEMORY Low 156,6 MB / High 356,8 MB; vqa r1 Low OK (route 7 kamer). 8 par ortho|top (junctions/), 56 kadrów pasów (lanes/sheet_*), profile linii (line_profile.py): pasy i szerokości trunk zgodne z OSM/BDOT (2 pasy ~7,4 m między liniami krawędziowymi, 3 pasy ~11 m). Krytyczne: DK8 w wykopie pod rondem Szymańskiego (OSM tunnel=yes layer=-1, generator nie zna tuneli) — wyspa ronda otwarta na wykop.
+- W TLE: all2.ps1 (rebuild z 5 kamerami place -> import -> vqa r2 Low+High -> EditMode).
+- NASTĘPNY KROK: `cat artifacts/bialystok-dk65-t2-0206/all2.status`
