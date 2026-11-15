@@ -54,3 +54,5 @@
 - NASTĘPNY KROK: `Remove-Item artifacts/knyszyn-rynek-0227/r1.done; pwsh -File artifacts/knyszyn-rynek-0227/r1.ps1` (w tle po ustąpieniu wstrzymywania)
 - 2026-11-15 19:28 +01:00 — OS zgłasza 3.8 GiB wolnej pamięci fizycznej (63,7 GiB całość), wiele procesów nadal Suspended; możliwa presja RAM, przyczyna niepotwierdzona. Nie wznawiam siłą cudzych procesów.
 - NASTĘPNY KROK: `Get-CimInstance Win32_OperatingSystem | Select-Object FreePhysicalMemory; Get-Process python | ForEach-Object { $_.Threads | Group-Object ThreadState,WaitReason }`
+- 2026-11-15 19:31 +01:00 — Wolny RAM 0.8 GiB; powtórne uruchomienie r1 zostało wstrzymane jak inne procesy, własny slot zwolniony. Dalszy ciężki build/Unity czeka na poprawę zasobów; kod i testy WIP wypchnięte.
+- NASTĘPNY KROK: `Get-CimInstance Win32_OperatingSystem | Select-Object FreePhysicalMemory; Get-Process python | ForEach-Object { $_.Threads | Group-Object ThreadState,WaitReason }`
