@@ -89,3 +89,7 @@ Niezależna recenzja obliczeń (agent brud,15.11.2026): PASS. Odtworzono SHA źr
 Bieżące działanie instalacji w listopadzie 2026 r. pozostaje UNVERIFIED; obserwacje odnoszą się wyłącznie do chwili wykonania prywatnych kadrów.
 
 Dwa dodatkowe kadry fasady (OWN-B02/B03) potwierdzają zawijanie jasnych poziomych pasów na narożniku, białe ramy z czerwonymi parapetami, ciemny cokół, narożnik między skrzydłami oraz mały daszek pod balkonem. To obserwacje kształtu i kolorów w chwili zdjęcia. Adres, rozstaw pasów, wymiary oraz obecny stan robót pozostają UNVERIFIED; nie przypisano fasady do modelu LoD2 bez lokalizacji.
+
+## Kolejny obieg fasad i ulic — new-round2
+
+Dodano5 rekordów w new-round2/manifest.csv i głównym manifeście (teraz17):3 nowe źródła względem K1, dwa ponowne przeglądy istniejącychK1-P06/P22 bez kopiowania obrazów. Nowe fotografie Henryka Borawskiego, CC BY-SA3.0,2012-06-09: dwie fasady i detal tabliczki42. Koordynator osobno obejrzał wszystkie3 nowe miniatury: zgodność opisów PASS. Nazwy adresów z metadanych nie są niezależnym ustaleniem lokalizacji. Niebieskiej bryły z oknami na różnych wysokościach nie upraszczać do dwóch pełnych kondygnacji. Historyczny wlotDK65 z2009 nie potwierdza obecnego ronda. Nowych współczesnych ujęć trasyDK65 w tej porcji0.
