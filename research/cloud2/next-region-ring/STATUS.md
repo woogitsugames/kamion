@@ -22,3 +22,11 @@
 - NASTĘPNY KROK (z katalogu research/cloud2/next-region-ring):
   `python3 tools/ovp_tiled.py highways 4 4 'way({bb})[highway];' 'out tags geom qt;' && python3 tools/ovp_tiled.py buildings 4 4 'way({bb})[building];relation({bb})[building];' 'out tags center qt;' && python3 tools/osm_analyze.py highways buildings && python3 tools/commons_landmarks.py && python3 tools/build_manifest.py && python3 tools/audit.py`
   (potem odświeżyć README §4 i §9; w commons_landmarks.py dodać sprawdzenie klucza `error` w odpowiedzi 200)
+
+## 2026-11-15 — FIX po recenzji lidera (sesja s21)
+- F1: UA ogólny `research-fetch/1.0` w fetch.py i tools/*.py; notatka w sources.md.
+- F2: pomiar recenzenta (PBF 2026-11-08) wklejony jako ESTIMATED: overpass/reviewer_pbf_measure.json, README §4a, wiersze R9-394…R9-401. Własne Overpass 4×4 i 6×6 przerwane przez 504 (mirror maps.mail.ru).
+- F3: Commons 24/24 punktów (commons/geosearch_landmarks.json), 5 plików obejrzanych (CM01…CM05, files/commons/), żaden nie pokazuje celu L03/L19/L23.
+- Zdjęcia w repo: files/jpg1600/ (39 JPG ≤1600 px + INDEX.csv), files/commons/.
+- Manifest 401 wierszy; audyt uzupełniający (seed 20261115): 10 PASS / 1 FIX (CM01 poprawiony). REVIEW.md: PASS z uwagami P2.
+- NASTĘPNY KROK: brak w tym pakiecie; opcjonalnie powtórzyć Overpass z innego środowiska: `python3 tools/ovp_tiled.py highways 6 6 'way({bb})[highway];' 'out tags geom qt;' && python3 tools/osm_analyze.py highways && python3 tools/build_manifest.py`

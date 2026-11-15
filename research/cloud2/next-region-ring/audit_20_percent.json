@@ -609,5 +609,106 @@
    "wynik": "PASS",
    "korekta": "ponownie obejrzano PX29: wykop z murami i wiadukt nad jezdnią"
   }
- ]
+ ],
+ "uzupelnienie_2026_11_15": {
+  "seed": 20261115,
+  "metoda_losowania": "random.Random(seed).sample(sorted(id > R9-371), ceil(n/5)) ∪ wszystkie wiersze 'kadr Commons'",
+  "liczba_nowych_wierszy": 30,
+  "liczba_w_probie": 11,
+  "data_utc": "2026-11-15T10:02:43Z",
+  "wynik_zbiorczy": {
+   "PASS": 10,
+   "FIX": 1
+  },
+  "pozycje": [
+   {
+    "id": "R9-372",
+    "kategoria": "Commons",
+    "przedmiot": "L08 Estakada DK8 ul. Gen. Kleeberga (171 m): pliki z geotagiem w promieniu 1000 m",
+    "co_sprawdzono": "ponowne zapytanie geosearch: 370 plików",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R9-381",
+    "kategoria": "Commons",
+    "przedmiot": "L17 Węzeł Białystok Północ (proposed:name w OSM): pliki z geotagiem w promieniu 1000 m",
+    "co_sprawdzono": "ponowne zapytanie geosearch: 4 plików",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R9-387",
+    "kategoria": "Commons",
+    "przedmiot": "L23 Tunele DW669 al. Niepodległości (2 × ok. 95 m): pliki z geotagiem w promieniu 1000 m",
+    "co_sprawdzono": "ponowne zapytanie geosearch: 363 plików",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R9-389",
+    "kategoria": "kadr Commons",
+    "przedmiot": "CM01: Okolica bramownic poboru opłat S8 (69 m od punktu) — celu NIE widać",
+    "co_sprawdzono": "PONOWNE obejrzenie pliku files/commons/ (Read ≤960 px) i porównanie z opis_co_widać; ponowne imageinfo (licencja/autor); LicenseShortName=CC0",
+    "wynik": "FIX",
+    "korekta": "opis: „ścieżka z jasną nawierzchnią” → na obrazie nawierzchnia czerwonawa; dopisano znak drogowy na słupku; poprawiono commons/frames_desc.json"
+   },
+   {
+    "id": "R9-390",
+    "kategoria": "kadr Commons",
+    "przedmiot": "CM02: Bramownica nad jezdnią z tablicą czasu oczekiwania na przejściach granicznych, ok. 97 m od L03",
+    "co_sprawdzono": "PONOWNE obejrzenie pliku files/commons/ (Read ≤960 px) i porównanie z opis_co_widać; ponowne imageinfo (licencja/autor); LicenseShortName=CC0",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R9-391",
+    "kategoria": "kadr Commons",
+    "przedmiot": "CM03: Rzeka Supraśl z mostu DK65 koło Dzikich (2008), ok. 465 m od L19 — mostów S19 NIE widać",
+    "co_sprawdzono": "PONOWNE obejrzenie pliku files/commons/ (Read ≤960 px) i porównanie z opis_co_widać; ponowne imageinfo (licencja/autor); LicenseShortName=CC BY-SA 4.0",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R9-392",
+    "kategoria": "kadr Commons",
+    "przedmiot": "CM04: Rondo al. Niepodległości / ul. Popiełuszki nad tunelem (ok. 25 m od L23) — portalu NIE widać",
+    "co_sprawdzono": "PONOWNE obejrzenie pliku files/commons/ (Read ≤960 px) i porównanie z opis_co_widać; ponowne imageinfo (licencja/autor); LicenseShortName=CC BY-SA 4.0",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R9-393",
+    "kategoria": "kadr Commons",
+    "przedmiot": "CM05: Rondo przy al. Niepodległości (ok. 14 m od L23) z czerwoną drogą rowerową i blokami — tunelu NIE widać",
+    "co_sprawdzono": "PONOWNE obejrzenie pliku files/commons/ (Read ≤960 px) i porównanie z opis_co_widać; ponowne imageinfo (licencja/autor); LicenseShortName=CC0",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R9-394",
+    "kategoria": "OSM drogi niższe (pomiar recenzenta)",
+    "przedmiot": "highway=secondary: długość w bboxie (PBF 2026-11-08)",
+    "co_sprawdzono": "porównanie z overpass/reviewer_pbf_measure.json i z tekstem REVIEW §4 (docs/reports/REVIEW-2026-11-14-s20-cloud2-r9.md)",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R9-396",
+    "kategoria": "OSM drogi niższe (pomiar recenzenta)",
+    "przedmiot": "highway=unclassified: długość w bboxie (PBF 2026-11-08)",
+    "co_sprawdzono": "porównanie z overpass/reviewer_pbf_measure.json i z tekstem REVIEW §4 (docs/reports/REVIEW-2026-11-14-s20-cloud2-r9.md)",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R9-398",
+    "kategoria": "OSM drogi niższe (pomiar recenzenta)",
+    "przedmiot": "highway=living_street: długość w bboxie (PBF 2026-11-08)",
+    "co_sprawdzono": "porównanie z overpass/reviewer_pbf_measure.json i z tekstem REVIEW §4 (docs/reports/REVIEW-2026-11-14-s20-cloud2-r9.md)",
+    "wynik": "PASS",
+    "korekta": ""
+   }
+  ]
+ }
 }

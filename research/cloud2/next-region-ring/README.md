@@ -1,6 +1,8 @@
 # R9 — next-region-ring: dostępność otwartych danych dla obrzeży Białegostoku (S8 / S19 / DK8 / DK19 / DK65)
 
-**Data:** 2026-11-14 · **Gałąź:** `research/cloud2-next-region-ring` · **Wierszy manifestu:** 371 (WORKING_VALUE 2, ESTIMATED 244, SOURCED 119, UNVERIFIED 6) · **Obejrzanych kadrów:** 38 (32 Panoramax + 6 KartaView; PX31 = duplikat PX26) · **Samokontrola:** 75 wierszy (seed 20261114): {'PASS': 74, 'FAIL': 1} — 1 FAIL poprawiony (opis PX20).
+**FIX 2026-11-15 (po recenzji lidera `docs/reports/REVIEW-2026-11-14-s20-cloud2-r9.md`):** F1 User-Agent ogólny we wszystkich skryptach; F2 drogi < primary i budynki (pomiar recenzenta z PBF, ESTIMATED; Overpass ponowiony — mirror 504, patrz §9); F3 Commons powtórzone dla 24/24 punktów + 5 obejrzanych plików dla L03/L19/L23; F4 liczba punktów bez kadru ujednolicona (3: L03, L19, L23). Manifest: **401 wierszy** (ESTIMATED 254, SOURCED 144, UNVERIFIED 1, WORKING_VALUE 2); wiersze R9-001…R9-371 mają niezmienione id, nowe są na końcu (R9-372…). Obejrzanych kadrów: **43** (38 + 5 Commons). Samokontrola nowych wierszy: `audit_20_percent.json` → `uzupelnienie_2026_11_15`. Recenzja wewnętrzna: `REVIEW.md`.
+
+**Stan pierwotny — Data:** 2026-11-14 · **Gałąź:** `research/cloud2-next-region-ring` · **Wierszy manifestu:** 371 (WORKING_VALUE 2, ESTIMATED 244, SOURCED 119, UNVERIFIED 6) · **Obejrzanych kadrów:** 38 (32 Panoramax + 6 KartaView; PX31 = duplikat PX26) · **Samokontrola:** 75 wierszy (seed 20261114): {'PASS': 74, 'FAIL': 1} — 1 FAIL poprawiony (opis PX20).
 
 > Raport planistyczny, **propozycja — nie decyzja**. Praca przerwana na polecenie lidera (limit sesji): sekcja „Luki” wymienia, czego nie zebrano.
 
@@ -8,7 +10,7 @@
 Sprawdzić, czy dla pierścienia dróg wokół Białegostoku są otwarte dane potrzebne pipeline'owi `tools/worldgen` (OSM, NMT 1 m, ortofoto, BDOT10k, LoD1/LoD2 — te same warstwy co w `Data/Regions/*/region.yaml`) oraz zdjęcia referencyjne do pętli visual-QA.
 - OSM: Overpass, mirror `maps.mail.ru` (overpass-api.de, kumi, private.coffee niedostępne przez proxy sesji; pełny tekst zapytań, czas UTC i `timestamp_osm_base` w `overpass/_log.jsonl` i `sources.md`). Wyniki przycięte do bboxu w EPSG:2180 (`tools/osm_analyze.py`, `tools/summaries.py`).
 - GUGiK: WFS skorowidzów ORTO/NMT/NMPT 2018–2026 (27 zapytań, wszystkie HTTP 200), WMS GetFeatureInfo BDOT10k i ModeleBudynkow3D, WFS PRG, HEAD plików na opendata.geoportal.gov.pl.
-- Zdjęcia: Panoramax `/api/search`, KartaView `/2.0/photo` (161 punktów co 600 m wzdłuż korytarzy), Commons `geosearch` (częściowo — 429). Mapillary pominięto (brak tokenu).
+- Zdjęcia: Panoramax `/api/search`, KartaView `/2.0/photo` (161 punktów co 600 m wzdłuż korytarzy), Commons `geosearch` (24/24 punktów po FIX 2026-11-15; wcześniej 7/24 z błędnymi zerami). Mapillary pominięto (brak tokenu).
 - Każda liczba w manifeście pochodzi z pliku wygenerowanego skryptem (`tools/build_manifest.py`), nie z pamięci.
 
 ## 2. Ustalenia o sieci (ważne: „ring S8” nie istnieje w OSM)
@@ -45,7 +47,7 @@ Jedyny węzeł z tagiem `ref` to Białystok Zachód (`ref=10`); pozostałe mają
 **Uwaga do zadania:** powiat białostocki ma TERYT **2002**, nie 2010 (GetFeatureInfo BDOT10k: „Powiat białostocki” → `2002_GPKG.zip`; PRG `JPT_KOD_JE=2002…`). 2010 to inny powiat — paczka `2010_GPKG.zip` istnieje, ale nie dotyczy tego obszaru.
 Bbox to obwiednia planistyczna; do budowy wystarczy korytarz — osie motorway/trunk/primary przecinają 161 komórek 600 m (ok. 58 km²).
 
-## 4. OSM — drogi główne (klasy niższe: LUKA, patrz §9)
+## 4. OSM — drogi główne (klasy niższe i budynki: §4a)
 Długość w km (jezdnie rozdzielone liczone osobno) i pokrycie tagów w % długości:
 
 | klasa | km | lanes | maxspeed | surface | width | turn:lanes | destination | lit | oneway | layer | bridge |
@@ -59,6 +61,22 @@ Długość w km (jezdnie rozdzielone liczone osobno) i pokrycie tagów w % dług
 
 `layer`/`bridge` to udział odcinków na obiektach, nie miara kompletności. W budowie/proponowane: construction:motorway 27.81 km, proposed:motorway 19.51 km, construction:motorway_link 4.8 km, proposed:primary 11.08 km.
 Wnioski dla generatora: `lanes`, `maxspeed`, `surface` praktycznie kompletne na motorway/trunk/primary; **`width` ≈ 0 %** (szerokość z przepisów/ortofoto, jak dotąd); `turn:lanes` 11–29 %, `destination` na łącznicach 56–73 %, na jezdniach głównych 2–13 %; `lit` 0 % na S8/S19 i 17 % na trunk — oświetlenie trzeba wyprowadzać z `highway=street_lamp` (1891 w bboxie) i ortofoto.
+
+### 4a. Klasy niższe i budynki (FIX 2026-11-15, ESTIMATED — pomiar recenzenta lidera)
+Metoda (recenzent, `REVIEW-2026-11-14-s20-cloud2-r9.md` §4): PBF Geofabrik `podlaskie-261108.osm.pbf` (2026-11-08), pyosmium + shapely, przycięcie do bboxu w EPSG:2180, długość po jezdniach; % = udział długości z tagiem. Dane przepisane 1:1 do `overpass/reviewer_pbf_measure.json` (wiersze „OSM drogi niższe (pomiar recenzenta)”). Własne Overpass 2026-11-15: patrz §9 p. 1.
+
+| klasa | km | lanes | maxspeed | surface | name | lit | sidewalk | width |
+|---|---|---|---|---|---|---|---|---|
+| secondary | 148.0 | 97,1 | 72,0 | 87,7 | 84,5 | 34,9 | 4,1 | 0,2 |
+| tertiary | 252.1 | 43,5 | 36,6 | 89,6 | 76,6 | 18,4 | 6,2 | 0,1 |
+| unclassified | 189.5 | 9,6 | 12,3 | 89,2 | 43,0 | 4,0 | 1,8 | 0,0 |
+| residential | 948.3 | 4,8 | 15,0 | 84,3 | 84,1 | 11,8 | 5,2 | 0,3 |
+| living_street | 133.8 | 0,8 | 52,8 | 71,2 | 27,6 | 12,8 | 1,1 | 1,0 |
+| service | 912.8 | 1,5 | 8,1 | 48,4 | 2,8 | 1,9 | 0,5 | 0,1 |
+| track | 864.1 | — | 0,1 | 42,1 | 11,9 | 0,1 | — | 0,5 |
+
+**Budynki** (way z `building=*`  środek wierzchołków w bboxie; 129 relacji `building` w całym pliku nie liczono): **83 505**; `building:levels` **22.9 %**, `height` **0.3 %**. Najczęstsze `building=`: yes 55 426, house 8 454, outbuilding 7 393, detached 2 021, apartments 1 755, residential 1 410, semidetached_house 925, allotment_house 663, retail 525, terrace 489, service 463, industrial 419.
+Wnioski: `width` ≈ 0 % we wszystkich klasach (szerokości z reguł `standards.py`); `lanes` secondary 97 %, tertiary 44 %, residential 5 %; `lit` 2–35 %; wysokości budynków z LoD1 2024 (OSM `height` 0,3 %).
 
 ### Obiekty
 | obiekt | liczba / długość |
@@ -153,7 +171,7 @@ Ortofoto: suma `wlk_pliku_mb` ze skorowidza. NMT/NMPT: skorowidz nie podaje rozm
 | Panoramax | 653 zdjęć w obwiedni bboxu, 14 sekwencji; wg roku {'2019': 613, '2020': 1, '2025': 6, '2026': 33}; 613 z 2 przejazdów z 2019 r. (S8 → Trasa Generalska → DK8/19 na północ, tam i z powrotem, kadr co ok. 75 m, aparat telefonu, FOV 59°) |
 | Panoramax po 2024 r. | 40 zdjęć — punktowe zdjęcia POI (obejrzane PX32: miejsce pamięci w lesie; PX33: wnętrze lokalu), **0 % komórek korytarzy** |
 | KartaView | 16 sekwencji przecina korytarze (lata 2016, 2018, 2019, 2021, 2026); API zwraca ok. 1 zdjęcie/sekwencję/zapytanie, więc 263 to dolne ograniczenie; pokrycie komórek korytarzy 52.2 % |
-| Commons | zebrano tylko 7 z 24 punktów (429): L01: 0, L02: 119, L03: 0, L04: 53, L05: 0, L06: 149, L07: 179 plików w promieniu 1 km; zera niespójne z sąsiadami → UNVERIFIED |
+| Commons | 24/24 punktów (2026-11-15; odpowiedź z kluczem `error` = ponowienie): L01: 37, L02: 119, L03: 82, L04: 53, L05: 105, L06: 149, L07: 179, L08: 370, L09: 317, L10: 155, L11: 82, L12: 93, L13: 104, L14: 221, L15: 207, L16: 9, L17: 4, L18: 29, L19: 10, L20: 500, L21: 500, L22: 304, L23: 363, L24: 15 plików w promieniu 1 km (500 = limit `gslimit`). Liczby oznaczają pliki w promieniu, nie trafność do punktu. Wcześniejsze zera L01/L03/L05 (2026-11-14) były artefaktem błędu API; recenzent 2026-11-14: 37/82/116 — różnica L05 116→105 i L19 7→10 to zmiany w Commons lub w rankingu, mieszczą się w ±10 % |
 | Mapillary | POMINIĘTO (brak tokenu) — LUKA |
 
 Pokrycie korytarzy (komórki 600 m z ≥ 1 zdjęciem w promieniu 500 m):
@@ -225,6 +243,17 @@ Azymut: `view:azimuth` z API (kompas telefonu). Dla 25 z 28 pierwszych kadrów r
 | R9-346 | KV05 | 2019-08-25 | 53.125988, 23.232227 | 253.46 | Wylot wschodni — tablica przed rondem, bramownica z VMS (2019) |
 | R9-347 | KV06 | 2019-08-04 | 53.220256, 23.169532 | 81.71 | DK19 za węzłem Białystok Północ — jedna jezdnia, ekran brązowy |
 
+### Kadry Commons dla punktów bez kadru (FIX F3, obejrzane ≤960 px)
+| id | plik | licencja / autor | odl. od punktu | punkt | trafność | co widać (skrót) |
+|---|---|---|---|---|---|---|
+| R9-389 | CM01 `20240501 124520 May 2024 in Choroszcz.jpg` | CC0 / Rakoon | 69 m (geosearch) | L03 | nie pokazuje celu | Okolica bramownic poboru opłat S8 (69 m od punktu) — celu NIE widać |
+| R9-390 | CM02 `20250520 152809 May 2025 in Podlaskie Voivodeship.jpg` | CC0 / Rakoon | 97 m (geosearch) | L03 | częściowo (bramownica w pobliżu celu; funkcja poboru UNVERIFIED) | Bramownica nad jezdnią z tablicą czasu oczekiwania na przejściach granicznych, ok. 97 m od L03 |
+| R9-391 | CM03 `Podlaskie - Choroszcz - Suprasl river - bdg DK65 near Dzikie - W.JPG` | CC BY-SA 4.0 / Athantor | 465 m (geosearch) | L19 | nie pokazuje celu (kadr historyczny okolicy) | Rzeka Supraśl z mostu DK65 koło Dzikich (2008), ok. 465 m od L19 — mostów S19 NIE widać |
+| R9-392 | CM04 `20200508 145754 Intersection of Trasa Niepodległości and Popiełuszki street.jpg` | CC BY-SA 4.0 / Rakoon | 25 m (geosearch) | L23 | częściowo (otoczenie, bez portalu) | Rondo al. Niepodległości / ul. Popiełuszki nad tunelem (ok. 25 m od L23) — portalu NIE widać |
+| R9-393 | CM05 `20200805 130930 August 2020 in Białystok.jpg` | CC0 / Rakoon | 14 m (geosearch) | L23 | nie pokazuje celu (otoczenie) | Rondo przy al. Niepodległości (ok. 14 m od L23) z czerwoną drogą rowerową i blokami — tunelu NIE widać |
+
+Wniosek: żaden plik Commons nie pokazuje bramownic poboru opłat (L03), mostów S19 (L19) ani portali tuneli DW669 (L23). Punkty pozostają **bez kadru celu**; CM02 to bramownica informacyjna w pobliżu L03, CM05 przydaje się do nawierzchni (czerwona droga rowerowa — R6).
+
 ## 7. Punkty rozpoznawalne do bramki etapu (24)
 Dla wszystkich: OSM jest, NMT 1 m 2025 jest, LoD1 2024 i LoD2 2017 w paczce powiatu. Różnicuje je ortofoto i zdjęcia.
 
@@ -232,7 +261,7 @@ Dla wszystkich: OSM jest, NMT 1 m 2025 jest, LoD1 2024 i LoD2 2017 w paczce powi
 |---|---|---|---|---|---|---|---|
 | L01 | Węzeł Choroszcz (S8) | 53.160046, 22.993638 | node 1940503816; node 1908957192 | 2025-05-25 / 0.1 m | PX03, PX04, PX27 | 10 | 8 |
 | L02 | Węzeł Białystok Zachód (S8/S19/DK8) | 53.156056, 23.016674 | node 3160890725; node 4236127140 (ref=10); node 2081020070 | 2025-05-25 / 0.1 m | PX06, PX07, PX25 | 10 | 4 |
-| L03 | Bramownice poboru opłat na S8 (highway=toll_gantry) | 53.156832, 23.011651 | node 8860869965; node 8860869966 | 2025-05-25 / 0.1 m | **brak** | 10 | 4 |
+| L03 | Bramownice poboru opłat na S8 (highway=toll_gantry) | 53.156832, 23.011651 | node 8860869965; node 8860869966 | 2025-05-25 / 0.1 m | **brak** (Commons CM01, CM02 — celu nie pokazują) | 10 | 4 |
 | L04 | Wiadukt ul. Podleśna nad S8 (żółto-zielony) | 53.157139, 23.010408 | way 183641838 | 2025-05-25 / 0.1 m | PX05, PX26 | 10 | 4 |
 | L05 | Żółto-zielony obiekt nad S8 (footway wg OSM) | 53.16144, 22.977677 | way 297344552 | 2025-05-25 / 0.1 m | PX02 | 11 | 4 |
 | L06 | Ekran akustyczny na końcu S8 / początku DK8 | 53.152765, 23.034554 | way 1570885060; way 1571341516 | 2025-05-25 / 0.1 m | PX08 | 11 | 8 |
@@ -248,11 +277,11 @@ Dla wszystkich: OSM jest, NMT 1 m 2025 jest, LoD1 2024 i LoD2 2017 w paczce powi
 | L16 | Niebieski wiadukt łukowy — węzeł Jurowce (DK8/DK19) | 53.197791, 23.155698 | way 239748580; node 1838303448; node 1154984451 | 2025-05-12 / 0.1 m | PX18, PX21 | 16 | 8 |
 | L17 | Węzeł Białystok Północ (proposed:name w OSM) | 53.217839, 23.154995 | node 1154993008; node 1838303608; way 188844674; way 188844677 | 2025-05-12 / 0.1 m | PX19, PX20 | 14 | 6 |
 | L18 | Węzeł Wasilków (proposed:name w OSM), DK19 | 53.220518, 23.214169 | node 1166095461; node 2183661977 | 2025-05-12 / 0.1 m | KV01 | 0 | 1 |
-| L19 | Mosty S19 (82–83 m) na odcinku S19;65 | 53.177635, 23.033319 | way 241580474; way 241580477; way 241580472; way 241580478 | 2025-05-25 / 0.1 m | **brak** | 0 | 0 |
+| L19 | Mosty S19 (82–83 m) na odcinku S19;65 | 53.177635, 23.033319 | way 241580474; way 241580477; way 241580472; way 241580478 | 2025-05-25 / 0.1 m | **brak** (Commons CM03 z 2008 — celu nie pokazuje) | 0 | 0 |
 | L20 | Estakada DK19/DK65 ul. Gen. Andersa (196 m) | 53.151774, 23.167485 | way 177876107; way 177895177 | 2025-04-18 / 0.05 m | KV04 | 0 | 5 |
 | L21 | Przejazd DK19/DK65 w wykopie (tunnel=yes, 77 m), widok na kominy | 53.146198, 23.182344 | way 175157471; way 237915062 | 2025-04-18 / 0.05 m | KV03 | 0 | 2 |
 | L22 | Wiadukty DK65 ul. Sosabowskiego / Sulika (120 m + 80 m) | 53.140638, 23.199932 | way 175054483; way 262041392; way 175054484; way 262041391 | 2025-04-18 / 0.05 m | KV02 | 0 | 3 |
-| L23 | Tunele DW669 al. Niepodległości (2 × ok. 95 m) | 53.128211, 23.088106 | way 318134425; way 318134438; way 318134424; way 318134432 | 2025-04-18 / 0.05 m | **brak** | 0 | 0 |
+| L23 | Tunele DW669 al. Niepodległości (2 × ok. 95 m) | 53.128211, 23.088106 | way 318134425; way 318134438; way 318134424; way 318134432 | 2025-04-18 / 0.05 m | **brak** (Commons CM04, CM05 — otoczenie, bez portalu) | 0 | 0 |
 | L24 | Wiadukt DK19 nad torami/drogą za węzłem Białystok Północ (95 m) | 53.220392, 23.171269 | way 211148007 | 2025-05-12 / 0.1 m | KV06 | 0 | 1 |
 
 Najmocniejsze wizualnie (potwierdzone na obrazie): biały łuk ul. Lodowej (L12), niebieski podwójny łuk w Jurowcach (L16), żółto-zielony wiadukt ul. Podleśnej (L04), wykopy z murami i zielonym oczepem (L10, L21), kominy widoczne z DK19/DK65 (KV03), ekran trójdzielny beton/panel/szkło (L15).
@@ -267,8 +296,8 @@ Najmocniejsze wizualnie (potwierdzone na obrazie): biały łuk ul. Lodowej (L12)
 | zdjęcia | Mapillary/KartaView dla regionów C i Dojlidy | pokrycie Panoramax/KartaView korytarzy pierścienia, 38 obejrzanych kadrów |
 
 ## 9. Ryzyka i luki
-1. **Nie zebrano (limit sesji):** długości i tagi klas secondary/tertiary/residential/service oraz **budynki (liczba, % `building:levels`/`height`)** — zapytania Overpass w kaflach 4×4 przerwane po 10/16 kafli dróg; budynków nie zaczęto. Komenda w `STATUS.md`.
-2. **Commons:** tylko 7/24 punktów, wyniki zerowe niewiarygodne; nie obejrzano żadnego pliku z Commons.
+1. **Klasy niższe i budynki — uzupełnione pomiarem recenzenta (ESTIMATED, §4a).** Własne Overpass ponowione 2026-11-15 (mirror maps.mail.ru, kafle 4×4, potem 6×6): przy 4×4 kafel 2_0, przy 6×6 kafel 0_5 — po 5 próbach HTTP 504 → przerwane (wpisy w overpass/_log.jsonl nie powstały, surowe kafle poza repo); overpass-api.de, private.coffee, kumi przez proxy niedostępne (reset/timeout). Wyniku Overpass dla klas niższych nie ma — liczby pochodzą tylko z PBF recenzenta (jedna niezależna metoda, nie dwie).
+2. **Commons:** 24/24 punktów (2026-11-15). Obejrzano 5 plików dla L03, L19, L23 — żaden nie pokazuje celu (§6). Liczba plików w promieniu ≠ liczba trafnych zdjęć.
 3. **Zdjęcia są stare.** Wszystkie kadry dróg pochodzą z 2016–2021; na części widać roboty z 2019 r. (PX09, PX10, PX22). Węzeł Białystok Zachód na kadrach z 2019 r. nie ma jeszcze obiektów S19 (PX06, PX07, PX25).
 4. **S19 (`S19;65`), DW669 z tunelami, DW678: 0–6 % pokrycia zdjęciami.** L19 i L23 nie mają żadnego kadru; L03 (bramownice opłat) bez rozpoznawalnego kadru.
 5. **Ortofoto 0,05 m tylko w granicach miasta**; poza nim 0,10 m (2025) — wystarcza na osie i pasy, słabiej na oznakowanie poziome. 1,8 % bboxu ma tylko 0,25 m z 2024.
@@ -287,5 +316,5 @@ Najmocniejsze wizualnie (potwierdzone na obrazie): biały łuk ul. Lodowej (L12)
 6. NMPT i modele drzew — dopiero gdy potrzebne; drzewa 2002 tylko wycinkami.
 
 ## 11. Pliki
-`manifest.csv` · `sources.md` · `audit_20_percent.json` · `fetch.py` (38 kadrów, 24,9 MB, sha256) · `overpass/` (surowe wyniki 2,6 MB + zbiorcze) · `gugik/` · `panoramax/` · `kartaview/` · `commons/` · `tools/` (wszystkie skrypty) · `STATUS.md`. Kadry Panoramax/KartaView: CC BY-SA 4.0 — referencja, nie tekstura.
+`manifest.csv` · `sources.md` · `audit_20_percent.json` · `fetch.py` (38 oryginałów, 24,9 MB, sha256; do `files/frames/`, poza repo) · `files/jpg1600/` (kopie ≤1600 px w repo, 8,1 MB, `INDEX.csv`) · `files/commons/` (5 plików Commons ≤1600 px, 1,8 MB) · `overpass/` (surowe wyniki 2,6 MB + zbiorcze) · `gugik/` · `panoramax/` · `kartaview/` · `commons/` · `tools/` (wszystkie skrypty) · `STATUS.md`. Kadry Panoramax/KartaView: CC BY-SA 4.0 — referencja, nie tekstura.
 
