@@ -32,3 +32,6 @@ R4 z lokalną próbą dwóch koron, wejściami urzędu i placykiem pomnika: czte
 
 ## Iteracja r5 i walidacja
 Dach skrzydła kultury jest widoczny po poprawce geometrii; jego kształt i lukarny nadal wymagają pracy. Ocena całości FAIL. Low bez pogorszenia FAIL: max wzrost na wspólnych kamerach +6 szacowanych draw calls z instancjami, +1825 tris; High max 1 229 814 tris. EditMode 626 passed, 2 skipped; pełny GIS wymaga ponowienia po usunięciu dwóch błędów wykrytych w poprzednim przebiegu. Targowica: właściciel potwierdził plac po drugiej stronie Jagiellońskiej od nr 50, kandydat OSM way 704368699; brak zdjęć dronowych i pomiarów wiat, niezintegrowany prototyp nie jest źródłem ich położeń.
+
+## Iteracja r6
+R6: lukarny osadzone niżej; cztery warianty i lokalne porównania wykonane. Wizualnie FAIL: kalenica i lukarny nadal odbiegają od zdjęć. Low bez pogorszenia FAIL (max wzrost wspólnej kamery +6 draws z instancjami i +1825 tris), High max 1 229 814 tris.
