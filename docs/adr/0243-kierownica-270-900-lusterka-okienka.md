@@ -121,6 +121,9 @@ koszt lusterka na G57 to głównie cull/submit/geometria, nie wypełnianie (ADR 
   koliduje z przyciskiem deweloperskim i telemetrią; do ewentualnej oceny właściciela razem z feel testem (B-075).
 - Wypukłe lusterka na Low odświeżają się rzadziej (1,9 Hz w ruchu) — przy manewrach z rozglądaniem obraz w szkle
   kl. V/VI może wyglądać skokowo; mierzalne, odwracalne `rq_mirror_rate 0`.
+- Pierwszy obraz lusterka wypukłego, które dopiero weszło w kadr, pojawia się na Low po ≤ 16 klatkach (start z
+  przesunięciem fazy ADR 0068; to samo zjawisko na High przy interwale 4). Okienka kl. II mają obraz po ≤ 3 klatkach.
+  Do sprawdzenia na telefonie przy rozglądaniu (czy szkło nie pokazuje przez ~0,5 s pustej tekstury).
 - Dotknięte pliki poza własnością G1 (konieczne do zadania): `Vehicle/Runtime/RenderTextureMirror.cs` (3 linie
   delegacji w `Schedule`, nowe metody `VehicleCameraBudget`), `Vehicle/Runtime/MirrorInsetBudget.cs` (nowy),
   `Rendering/Runtime/ExtraViewCostMonitor.cs` (klucz `mirrorrate`). Bez zmian asmdef, ProjectSettings, Packages, scen, prefabów.

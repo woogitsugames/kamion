@@ -51,6 +51,9 @@ namespace Game.Vehicle.Runtime
         public static bool DueScheduleWith(bool insets) => !Legacy && (MirrorOverrides.DueSchedule ?? MirrorInsetBudget.DueFor(Level, insets));
         /// <summary>Spare-slot fill of the due-based step (ADR 0068 High while driving; never under the ADR 0243 Low window policy).</summary>
         public static bool FillSpare(int level, bool insets, bool standing) => MirrorInsetBudget.FillSpareFor(level, insets, standing);
+        /// <summary>ADR 0243: <see cref="MirrorIntervalFor(int,int,bool)"/>, or the Low window policy (<see cref="MirrorInsetBudget"/>).</summary>
+        public static float MirrorIntervalFor(int level, int r46Class, bool standing, bool insets) =>
+            MirrorInsetBudget.Applies(level, insets) ? MirrorInsetBudget.Interval(r46Class, standing) : MirrorIntervalFor(level, r46Class, standing);
         /// <summary>
         /// Target refresh interval in frames per UN R46 class (2 = class II, 4 = IV, 5 = V, 6 = VI) for the due-based schedule.
         /// While driving: II 2, IV 4, V/VI 4 (= ADR 0046 High at 60 FPS: 30 / 15 / 15 Hz). Standing (speed &lt; 0.5 m/s and yaw
@@ -58,9 +61,6 @@ namespace Game.Vehicle.Runtime
         /// II keeps 30 Hz (the mirrors checked before pulling out). Other levels follow their round-robin cadence.
         /// WORKING_VALUE (ADR 0068); the frame cost of the worst case (driving, all six on screen) is unchanged by it.
         /// </summary>
-        /// <summary>ADR 0243: <see cref="MirrorIntervalFor(int,int,bool)"/>, or the Low window policy (<see cref="MirrorInsetBudget"/>).</summary>
-        public static float MirrorIntervalFor(int level, int r46Class, bool standing, bool insets) =>
-            MirrorInsetBudget.Applies(level, insets) ? MirrorInsetBudget.Interval(r46Class, standing) : MirrorIntervalFor(level, r46Class, standing);
         public static float MirrorIntervalFor(int level, int r46Class, bool standing)
         {
             float b = level switch { 0 => r46Class == 2 ? 4f : 8f, 1 => r46Class == 2 ? 2f : 4f, 2 => r46Class == 2 ? 2f : 4f, _ => 1f };
