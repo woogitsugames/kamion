@@ -835,7 +835,7 @@ namespace Game.Editor.Setup
                 rig.interiorLods = interiorLods.Select(l => new TruckVisualRig.RendererList { renderers = l.ToArray() }).ToArray();
                 rig.slots = rendererSlots.ToArray();
                 rig.residentSet = sets["Low"];
-                rig.tyreFlatRadius = (float)probe.Wheels[0].Radius;   // physics rolling radius: contact-patch plane of the wheel meshes
+                rig.tyreFlatRadius = (float)probe.Wheels[0].Radius;   // geometric tyre radius (contact plane), not rollingRadius (ADR 0201)
                 var sz = Json.Obj(ext["lod_screen_size_suggestion"]);
                 rig.screenSizes = new[] { (float)Json.Num(sz["LOD0"]), (float)Json.Num(sz["LOD1"]), (float)Json.Num(sz["LOD2"]), (float)Json.Num(sz["cull"]) };
                 rig.forceLevel = 0;

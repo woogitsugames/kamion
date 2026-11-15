@@ -268,7 +268,7 @@ namespace Game.Editor.Setup
             if (a == null) { a = ScriptableObject.CreateInstance<VehicleDataAsset>(); AssetDatabase.CreateAsset(a, VehicleDataPath); }
             a.vehicle = AssetDatabase.LoadAssetAtPath<TextAsset>($"{DefDir}/tractor_4x2_generic.vehicle.json");
             a.engine = AssetDatabase.LoadAssetAtPath<TextAsset>($"{DefDir}/diesel_r6_13l_368kw.engine.json");
-            a.gearbox = AssetDatabase.LoadAssetAtPath<TextAsset>($"{DefDir}/amt12_od_traxon_class.gearbox.json");
+            a.gearbox = AssetDatabase.LoadAssetAtPath<TextAsset>($"{DefDir}/amt12_od_class.gearbox.json");
             var tires = new List<TextAsset>();
             foreach (var guid in AssetDatabase.FindAssets("t:TextAsset", new[] { DefDir }))
             {

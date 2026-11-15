@@ -1,0 +1,80 @@
+ retarder_torque: max |diff| 72.62, outliers 0.0% ok
+ engine_brake_torque: max |diff| 0, outliers 0.0% ok
+ front_L_p_bar: max |diff| 0, outliers 0.0% ok
+ rear_L_p_bar: max |diff| 0, outliers 0.0% ok
+ front_L_fz: max |diff| 2984, outliers 0.0% ok
+ rear_L_fz: max |diff| 3317, outliers 0.7% ok
+
+
+  Failed PhysicsRunner.Tests.Stage2Tests.GoldenTelemetry_Matches(id: "launch_0_80_flat") [291 ms]
+  Error Message:
+   Assert.All() Failure: 1 out of 17 items in the collection did not pass.
+[0]: Item:  speed_kmh: max |diff| 1.728, outliers 5.6% FAIL
+     Error: speed_kmh: max |diff| 1.728, outliers 5.6% FAIL
+  Stack Trace:
+     at PhysicsRunner.Tests.Stage2Tests.GoldenTelemetry_Matches(String id) in /workspace/wt-truckdata/tools/physics-runner/Tests/Stage2Tests.cs:line 29
+   at InvokeStub_Stage2Tests.GoldenTelemetry_Matches(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ speed_kmh: max |diff| 1.728, outliers 5.6% FAIL
+ rpm: max |diff| 283.7, outliers 1.1% ok
+ gear: max |diff| 0, outliers 0.0% ok
+ a_long: max |diff| 2.104, outliers 2.2% ok
+ a_lat: max |diff| 0, outliers 0.0% ok
+ yaw_rate_dps: max |diff| 0, outliers 0.0% ok
+ articulation_deg: max |diff| 0, outliers 0.0% ok
+ kingpin_fz: max |diff| 0, outliers 0.0% ok
+ air_front_bar: max |diff| 0, outliers 0.0% ok
+ air_rear_bar: max |diff| 0, outliers 0.0% ok
+ air_trailer_res_bar: max |diff| 0, outliers 0.0% ok
+ retarder_torque: max |diff| 0, outliers 0.0% ok
+ engine_brake_torque: max |diff| 66.34, outliers 0.0% ok
+ front_L_p_bar: max |diff| 0, outliers 0.0% ok
+ rear_L_p_bar: max |diff| 0, outliers 0.0% ok
+ front_L_fz: max |diff| 1294, outliers 0.0% ok
+ rear_L_fz: max |diff| 930.6, outliers 0.0% ok
+
+
+[xUnit.net 00:00:10.82]     PhysicsRunner.Tests.Stage2Tests.GoldenTelemetry_Matches(id: "launch_6pct_uphill_comb@laden40") [FAIL]
+  Failed PhysicsRunner.Tests.Stage2Tests.GoldenTelemetry_Matches(id: "launch_6pct_uphill_comb@laden40") [722 ms]
+  Error Message:
+   Assert.All() Failure: 6 out of 17 items in the collection did not pass.
+[0]:  Item:  speed_kmh: max |diff| 2.1, outliers 9.2% FAIL
+      Error: speed_kmh: max |diff| 2.1, outliers 9.2% FAIL
+[1]:  Item:  rpm: max |diff| 450.9, outliers 10.0% FAIL
+      Error: rpm: max |diff| 450.9, outliers 10.0% FAIL
+[2]:  Item:  gear: max |diff| 6, outliers 9.2% FAIL
+      Error: gear: max |diff| 6, outliers 9.2% FAIL
+[3]:  Item:  a_long: max |diff| 0.9112, outliers 5.0% FAIL
+      Error: a_long: max |diff| 0.9112, outliers 5.0% FAIL
+[15]: Item:  front_L_fz: max |diff| 8214, outliers 6.7% FAIL
+      Error: front_L_fz: max |diff| 8214, outliers 6.7% FAIL
+[16]: Item:  rear_L_fz: max |diff| 6424, outliers 4.2% FAIL
+      Error: rear_L_fz: max |diff| 6424, outliers 4.2% FAIL
+  Stack Trace:
+     at PhysicsRunner.Tests.Stage2Tests.GoldenTelemetry_Matches(String id) in /workspace/wt-truckdata/tools/physics-runner/Tests/Stage2Tests.cs:line 29
+   at InvokeStub_Stage2Tests.GoldenTelemetry_Matches(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ speed_kmh: max |diff| 2.1, outliers 9.2% FAIL
+ rpm: max |diff| 450.9, outliers 10.0% FAIL
+ gear: max |diff| 6, outliers 9.2% FAIL
+ a_long: max |diff| 0.9112, outliers 5.0% FAIL
+ a_lat: max |diff| 1.006E-08, outliers 0.0% ok
+ yaw_rate_dps: max |diff| 1.516E-08, outliers 0.0% ok
+ articulation_deg: max |diff| 1.299E-08, outliers 0.0% ok
+ kingpin_fz: max |diff| 9885, outliers 1.7% ok
+ air_front_bar: max |diff| 0, outliers 0.0% ok
+ air_rear_bar: max |diff| 0, outliers 0.0% ok
+ air_trailer_res_bar: max |diff| 0, outliers 0.0% ok
+ retarder_torque: max |diff| 0, outliers 0.0% ok
+ engine_brake_torque: max |diff| 381.2, outliers 2.5% ok
+ front_L_p_bar: max |diff| 0, outliers 0.0% ok
+ rear_L_p_bar: max |diff| 0, outliers 0.0% ok
+ front_L_fz: max |diff| 8214, outliers 6.7% FAIL
+ rear_L_fz: max |diff| 6424, outliers 4.2% FAIL
+
+
+
+Failed!  - Failed:     4, Passed:   270, Skipped:     0, Total:   274, Duration: 1 m 43 s - Tests.dll (net8.0)
+VSTEST_ARTIFACTS_DIRECTORY environment variable was not found, falling back to a user-private temporary directory. This is most likely caused by an outdated Microsoft.NET.Test.Sdk package reference in the test project.

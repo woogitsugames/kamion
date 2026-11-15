@@ -55,7 +55,7 @@ namespace Game.Rendering
         [Tooltip("Ground layers (the vehicle layer is excluded)")] public LayerMask groundMask = ~((1 << 8) | (1 << 5) | (1 << 2));
         public float maxGroundDistance = 3f;
         [Tooltip("Effective occlusion height / real underside clearance: wheels, tanks and skirts close the sides of the gap, " +
-                 "so the open strip formula with the full clearance under-darkens (photo Volvo FH: almost black under the frame). WORKING_VALUE")]
+                 "so the open strip formula with the full clearance under-darkens (reference photo of a class tractor: almost black under the frame). WORKING_VALUE")]
         public float heightScale = 0.6f;
         [Tooltip("Side closure (r5 E-N1): wheels, tanks, steps, fenders and bumper hang down around the underside, so the occluder is " +
                  "effectively wider than the flat slab by sideClosure x h on each side; with 0 the open-strip formula gives only 50 % " +
