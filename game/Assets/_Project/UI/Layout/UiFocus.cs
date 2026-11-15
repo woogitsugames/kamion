@@ -58,7 +58,8 @@ namespace Game.UI.Layout
         /// <summary>HUD button: pointer only (never takes the pad / keyboard selection, ADR 0265) + hover frame.</summary>
         public static void PointerOnly(Selectable s)
         {
-            s.navigation = new Navigation { mode = Navigation.Mode.None };
+            // UnityEngine.UI.Navigation spelled out: inside Game.UI.* the simple name is the namespace Game.UI.Navigation (CS0118).
+            s.navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.None };
             FlatColors(s);
             if (s.gameObject.GetComponent<FocusFrame>() == null) s.gameObject.AddComponent<FocusFrame>();
         }
@@ -99,7 +100,7 @@ namespace Game.UI.Layout
             for (int r = 0; r < items[c].Length; r++)
             for (int i = 0; i < items[c][r].Length; i++)
             {
-                var nav = new Navigation { mode = Navigation.Mode.Explicit, wrapAround = false };
+                var nav = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.Explicit, wrapAround = false };
                 nav.selectOnUp = Pick(items, lengths, c, r, i, NavDir.Up);
                 nav.selectOnDown = Pick(items, lengths, c, r, i, NavDir.Down);
                 nav.selectOnLeft = Pick(items, lengths, c, r, i, NavDir.Left);

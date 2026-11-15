@@ -446,7 +446,8 @@ namespace Game.UI.Settings
                 var row = rows[r];
                 for (int i = 0; i < row.Length; i++)
                 {
-                    var nav = new Navigation { mode = Navigation.Mode.Explicit };
+                    // UnityEngine.UI.Navigation spelled out: inside Game.UI.* the simple name is the namespace Game.UI.Navigation (CS0118).
+                    var nav = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.Explicit };
                     nav.selectOnLeft = i > 0 ? row[i - 1] : null;
                     nav.selectOnRight = i < row.Length - 1 ? row[i + 1] : null;
                     nav.selectOnUp = r > 0 ? Pick(rows[r - 1], i, row.Length) : null;
