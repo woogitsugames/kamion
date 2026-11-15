@@ -62,3 +62,7 @@ Istniejący `WorldWater.shader` jest nieprzezroczysty i przeznaczony do tafli, a
 ## Iteracja r2 — ocena 15.11, editor
 
 Zestawienia 01–11 lokalnie: `compare/r2/High-clear/`; zdjęcia właściciela i pary poza Git. Cztery warianty Low/High × clear/dusk ukończone; ocena całości FAIL. Widoczny uskok placu fontanny zniknął w kadrach 04/05; drzewa nadal mają zbyt rzadkie korony, figura króla jest prowizoryczna, a fontanna bez strumieni. Kamera 02 zasłonięta pniem, 07 obeliskiem, 03 wymaga dopasowania alei, 08 placyku i układu zegara. Kamery 09–11 i układ ronda różnią się od fotografii. Low: maksimum drawsEst z instancjami 500→486, lecz najgorszy wzrost dla wspólnej kamery +6; High max suma trójkątów 1 258 099→1 256 983. Po scaleniu origin/main b5dca11f wymagana przebudowa.
+
+## Iteracja r3 — ocena 15.11, editor
+
+Cztery warianty zbudowane i wyrenderowane; 62 kadry/wariant. Lokalne zestawienia 01–11: `compare/r3/High-clear/` i `Low-clear/`. Ocena FAIL: 07 nie jest już zasłonięta obeliskiem, ale kamera nie leży na osi alejki; 02 jest zbyt blisko portyku; plac pomnika znika częściowo pod trawnikiem, a czerwony pas wystaje. Wierzba nie została włączona, prototyp r4 oceniony FAIL. Low: maksimum sumy szacowanych draw calls 500→486, lecz maksimum wzrostu na wspólnych kamerach +6 i trójkątów z instancjami +1644; warunek bez pogorszenia FAIL. High: maksimum trójkątów z instancjami 1 258 099→1 229 621 (<2 mln), maksimum sumy draws 838→844. Statystyki po scaleniu b5dca11f, są szacunkami edytora, nie pomiarem telefonu.

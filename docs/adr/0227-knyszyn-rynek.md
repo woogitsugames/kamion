@@ -23,3 +23,6 @@ Baseline i r2: `artifacts/knyszyn-rynek-0227/before/` i `r2/`; zestawienia 01–
 - Telefon i niezależny przegląd wizualny: do lidera, bez adb w tym zadaniu.
 
 - Wierzba płacząca z opisu właściciela: brak potwierdzonego prototypu w istniejącej bibliotece drzew; nie jest jeszcze odwzorowana. Wymaga zasobu i oceny na renderze.
+
+## Iteracja r3
+Trzecia przebudowa i cztery warianty renderów zakończone; lokalne pary zdjęcie–render w `compare/r3/High-clear/` i `Low-clear/`. Wynik wizualny FAIL: pozycje kamer 02/07 i osadzenie placu pomnika wymagają korekt, drzewa są zbyt rzadkie, brak strumieni. Low bez pogorszenia FAIL (największy wzrost na wspólnej kamerze +6 szacowanych draw calls z instancjami, +1644 tris). High max 1 229 621 tris z instancjami, poniżej 2 mln; max suma draw calls 838→844. Szczegóły `AUDYT.md`. Kolejna iteracja obejmie przygotowane wejścia urzędu i próbę dwóch koron lip; efekty i budżet niezweryfikowane.
