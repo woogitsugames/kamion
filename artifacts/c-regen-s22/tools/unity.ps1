@@ -11,6 +11,7 @@ pwsh scripts/unity-slot.ps1 -Acquire -Pool unity -Owner c-regen-s22 | Out-Null
 try {
   pwsh scripts/test.ps1 -Platform EditMode *> "$o/editmode.log"; "editmode exit=$LASTEXITCODE $(Get-Date -Format s)" | Add-Content $st
   foreach ($r in 'bialystok-industrial-c', 'bialystok-dojlidy') {
+    if ($r -eq 'bialystok-dojlidy') { while (-not (Test-Path 'artifacts/c-regen-s22/regen/regen.done')) { Start-Sleep 20 } }
     pwsh scripts/import-region.ps1 -Region $r *> "$o/import-$r.log"; "import-$r exit=$LASTEXITCODE $(Get-Date -Format s)" | Add-Content $st
   }
 } finally { pwsh scripts/unity-slot.ps1 -Release -Pool unity -Owner c-regen-s22 | Out-Null }
