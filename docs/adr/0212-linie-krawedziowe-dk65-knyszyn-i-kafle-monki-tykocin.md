@@ -31,22 +31,56 @@ krawędziowe DK65 widoczne na ortofoto, do dodania razem w `knyszyn` i `knyszyn-
    `ingest.pick_latest` grupował po `akt_data`, więc pin `nmt_year: 2022` kończył się „no NMT 1 m series fully covers
    the tile”. Teraz przy pinie grupuje po `akt_rok` (jeden arkusz na godło, najnowszy dzień). Bez pinu zachowanie
    bez zmian. Kolumna/wiersz szwu z `knyszyn-w` identyczne (test, < 2 mm).
-4. **Kafel (−9,7)** — patrz sekcja „Tykocin” niżej.
+4. **Kafel (−9,7) = region `dw671-tykocin-01`**: EPSG:2180 [758539, 609535, 760587, 611583], origin (759563, 610559),
+   powiat 2008, NMT pin 2022 (jak oba sąsiedzi). Szwy: północny z `knyszyn-w` (DW671 way 70329870 w (760129,2; 611583)
+   + droga serwisowa), wschodni z `knyszyn-s` (way 98071886 w y 610278,8) — te same punkty i ten sam teren (test).
+   DW671 2,61 km do południowej krawędzi (758587,2; 609535 → kafel (−9,6), niezbudowany), przez wieś z fermą (144
+   budynki LoD1/LoD2), skrzyżowanie 4-wlotowe z przejściem dla pieszych na wlocie S (zgodne z orto), dwa wloty T na
+   południu. DW671 bez linii krawędziowych (orto: tylko oś przerywana; w 25 przekrojach brak stałej linii) i z
+   szerokością BDOT 6,5–7,0 m (jak ta sama droga w `knyszyn-w`, bez override).
+5. **Trasy kontrolne** (`route_endpoints.json`): `dk65-monki-01` 1185 m (szew S → krawędź W), `dw671-tykocin-01` 2609 m
+   (szew N → krawędź S). Kamery miejsc: 6 + 8 (`control_cameras_place.authored.json`) + kamery trasy.
 
 ## Budżet (edytor, Low, overcast, `stats.txt`; A = stan main, B = z liniami)
 | kafel | max draws A→B | max tris A→B | WORLD_MEMORY Low A→B |
 |---|---|---|---|
 | knyszyn-w | 227 → 227 (kamery świata 202 → 203) | 287k → 287k | 53,9 → 54,0 MB (markings 0,3 MB) |
 | knyszyn | 429 → 429 | 370k → 370k | 95,5 MB (markings 0,4 MB) |
-Linie dokładają ≤ 1 draw i ≤ 1 tys. trójkątów na kamerę. Pomiar na telefonie — lider.
+| knyszyn-s | 100 → 100 (kamery świata 46 → 46; `dk65-side-road` 40 → 43) | 195k → 195k | 40,8 MB |
+| dk65-monki-01 (nowy) | 92 (kamery świata) | 97k | 46,6 MB (High 113,6 MB) |
+| dw671-tykocin-01 (nowy) | 163 (`route-s0163`, wieś) | 129k | 45,7 MB (High 119,4 MB) |
+Linie dokładają ≤ 3 draws i ≤ 1 tys. trójkątów na kamerę. Wszystko w hipotezie `docs/06` §6 (Low ≤ 300–400 draws,
+≤ 400–600 tys. tris; `knyszyn` 429 draws na kamerze miejskiej jak przed zmianą). Czas: build_world knyszyn-w 2,4 min,
+knyszyn 12,6, knyszyn-s 1,0, monki 1,6, tykocin 2,2; import 8,5–10 min/region; ingest monki/tykocin po 1,4 GB (orto10).
+Pomiar na telefonie — lider.
 
 ## Walidacja
 - `tests/gis/test_region_knyszyn_edges_0212.py`: ten sam `set` w 3 kaflach, linie 0,12 m na 3,55 m we wszystkich
   sekcjach DK65, `pick_latest` po roku, siatka (−9,9), szew dróg i punktów, przekrój, teren szwu identyczny.
-- Rendery: `artifacts/knyszyn-edges-0212/vqa/<region>/e1-Low` (knyszyn, knyszyn-w, knyszyn-s), `r1-Low` (dk65-monki-01).
+- Rendery: `artifacts/knyszyn-edges-0212/vqa/<region>/e1-Low` (knyszyn, knyszyn-w, knyszyn-s), `r1-Low` (dk65-monki-01,
+  dw671-tykocin-01); podgląd JPG `view/`. Plany z góry obok orto: `plan/dk65-monki-01/r1` (2 skrzyżowania, szew, krawędź W),
+  `plan/knyszyn-w/e1` (Goniądzka, Legionowa, szew ronda), `plan/dw671-tykocin-01/r1` (wieś N/S, ferma, skrzyżowania S, szew).
+- Spójność nawierzchni: monki 0, tykocin 7 × `lane_blind_end` (drogi gospodarcze fermy), 0 na trasie; ściany terenu 0.
 - Ocena `visual-critic` nie wykonana (subagent nie tworzy subagentów) — do lidera.
 
 ## Otwarte
 1. Zatoka autobusowa na DK65 w `knyszyn-s` (762500 609950): na orto linia krawędziowa przerywana (P-7c/d) — u nas ciągła.
 2. Kafel (−10,9) dalej na Mońki — dziś koniec świata na zachodniej krawędzi `dk65-monki-01`.
 3. `dk65-inlet-south` (knyszyn): szara plama przed kamerą — była już w r3 (ADR 0204), nie od linii.
+4. **Przejazd kolejowy na DW671** (linia kolejowa przecina DW671 ok. (758830, 610030), plan `south_junctions.jpg`):
+   generator nie ma torów (jak 0205 p. 1) — droga przejezdna, przejazdu brak. Wlot NE tam ma na orto wysepkę i pas
+   prawoskrętu — u nas zwykły wlot T.
+5. Tykocin: wlot SE skrzyżowania 4-wlotowego we wsi (plan `village_s.jpg`) na orto asfalt, u nas brązowa nawierzchnia; drogi fermy jako
+   obrysy; kamera `village_above` kadruje pole zamiast fermy (pozycja do poprawy przy szlifie); stawy rybne na E kafla
+   jako teren (etap wody 0210 opt-in — `water=True` do decyzji); DW671 we wsi z krawężnikami i latarniami z reguły.
+6. Kafle (−10,9) Mońki i (−9,6) Tykocin — dalej koniec świata.
+
+## Odtworzenie
+```
+uv run --project tools/worldgen tools/worldgen/ingest.py --region dk65-monki-01 --with orto10      # tak samo dw671-tykocin-01
+uv run --project tools/worldgen tools/worldgen/build_region.py --region dk65-monki-01
+pwsh artifacts/knyszyn-edges-0212/chain_edges.ps1                 # build_world --context + route + import + vqa Low: knyszyn-w, knyszyn, knyszyn-s
+pwsh artifacts/knyszyn-edges-0212/chain_monki.ps1                 # to samo dla dk65-monki-01 (chain_tyk.ps1: dw671-tykocin-01)
+pwsh artifacts/knyszyn-edges-0212/plan_monki.ps1; pwsh artifacts/knyszyn-edges-0212/plan_tyk.ps1   # plany z góry obok orto
+uv run --project tools/worldgen python -m pytest -q tests/gis/test_region_knyszyn_edges_0212.py
+```
