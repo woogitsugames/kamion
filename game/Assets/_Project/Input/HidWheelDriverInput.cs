@@ -13,7 +13,7 @@ namespace Game.Controls
     /// through <see cref="WheelSteeringMap"/> (270-900 deg range, soft lock). Exposes the device angle/rate for the
     /// force-feedback model.
     /// </summary>
-    public sealed class HidWheelDriverInput : IDriverInput, IDisposable
+    public sealed class HidWheelDriverInput : IDriverInput, IMenuGatedInput, IDisposable
     {
         public string Name => "kierownica";
         public bool Enabled { get; set; } = true;
@@ -130,6 +130,26 @@ namespace Game.Controls
                 bool high = m_RangeHeld != null ? m_RangeHeld.isPressed : m_RangeHigh;
                 Shifter.Update(dt, HShifterMapper.Slot(m_GateDown, m_GateDown.Length, IsDown(m_Reverse)), high, ref intent);
             }
+        }
+
+        /// <summary>
+        /// Menu open (review #131 P1-1): nothing reaches the vehicle. Paddles and mapped buttons are still read so their
+        /// edge state follows the device (a button held while the menu closes is not a new press afterwards); the
+        /// range toggle is not applied. The H-shifter is not fed: it is a position, so the gear the lever is in when
+        /// the menu closes is requested then. The device-rate history is dropped (no rate spike on the first sample).
+        /// </summary>
+        public void SampleBlocked(float dt, in VehicleFeedback fb)
+        {
+            DeviceRateDegS = 0f;
+            m_HasPrevDeg = false;
+            if (Device == null || !Device.added || m_Steer == null) return;
+            RawSteer = m_Steer.ReadValue();   // raw readings stay live for diagnostics / a calibration screen in the panel
+            if (m_Throttle != null) RawThrottle = m_Throttle.ReadValue();
+            if (m_Brake != null) RawBrake = m_Brake.ReadValue();
+            if (m_Clutch != null) RawClutch = m_Clutch.ReadValue();
+            m_Edges.Pressed(0, IsDown(m_PaddleUp));
+            m_Edges.Pressed(1, IsDown(m_PaddleDown));
+            for (int i = 0; i < m_ActionButtons.Length; i++) m_Edges.Pressed(2 + i, IsDown(m_ActionButtons[i]));
         }
 
         /// <summary>Soft-lock overshoot of the current device angle [deg] (force feedback wall).</summary>

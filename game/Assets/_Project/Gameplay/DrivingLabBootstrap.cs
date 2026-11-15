@@ -698,7 +698,11 @@ namespace Game.Gameplay
                 Position = vehicle.transform.position,
                 Forward = vehicle.transform.forward,
             };
+            // Review #131 P1-1: a settings panel / modal owns the pad, keyboard and wheel buttons (they navigate it), so
+            // those sources give an empty intent - also in the frame the panel closes (the mixer holds one more sample).
+            m_Mixer.MenuOpen = m_SettingsPanel != null || Game.UI.Layout.UiFocus.HasModal;
             var intent = m_Mixer.Sample(Time.deltaTime, fb);
+            bool menuGate = m_Mixer.MenuGateActive;
             m_SteerBypass = Autopilot.Enabled || RouteDriver.Enabled || StraightRunActive;
             m_SteerHasTarget = intent.SteerActive;
             m_SteerTarget = intent.SteerActive ? Mathf.Clamp(intent.Steer, -1f, 1f) : 0f;
@@ -716,8 +720,8 @@ namespace Game.Gameplay
             }
             // Camera (C / top face button), pad look-around and pad horn come from the rebindable actions of PcInputBridge
             // (ADR 0264, one source). It disables the fixed-key Keyboard source; until it is installed C still works here.
-            if (Keyboard.Enabled && kb != null && kb.cKey.wasPressedThisFrame) m_Rig.NextMode();   // C: cab → chase → orbit
-            Game.Core.AudioCues.HornHeld = kb != null && kb.kKey.isPressed;   // horn (ADR 0142); PcInputBridge ORs the Horn action in after this
+            if (!menuGate && Keyboard.Enabled && kb != null && kb.cKey.wasPressedThisFrame) m_Rig.NextMode();   // C: cab → chase → orbit
+            Game.Core.AudioCues.HornHeld = !menuGate && kb != null && kb.kKey.isPressed;   // horn (ADR 0142); PcInputBridge ORs the Horn action in after this
             ApplyCommands(intent);
             UpdateTurnSignals(intent, fb.RoadWheelAngleNormalized);
 

@@ -98,4 +98,19 @@ namespace Game.Controls
         bool Enabled { get; set; }
         void Sample(float dt, in VehicleFeedback feedback, ref DriverIntent intent);
     }
+
+    /// <summary>
+    /// A driver input whose device also navigates menus (pad, keyboard, PC wheel buttons). While a settings panel or
+    /// another modal is open the <see cref="DriverInputMixer"/> calls <see cref="SampleBlocked"/> instead of
+    /// <see cref="IDriverInput.Sample"/> and uses an empty intent for the source (review #131 P1-1).
+    /// </summary>
+    public interface IMenuGatedInput
+    {
+        /// <summary>
+        /// One frame with the menu open: produce nothing. Drop ramps / filters and view commands (no gas or camera
+        /// command left over when the menu closes) and keep the button-edge state in step with the device, so a button
+        /// that is held while the menu closes is not seen as a new press afterwards. Allocation-free.
+        /// </summary>
+        void SampleBlocked(float dt, in VehicleFeedback feedback);
+    }
 }

@@ -133,6 +133,24 @@ namespace Game.UI.Layout
                 if (s_Owners[i].Root.gameObject.activeInHierarchy) { SelectFirst(s_Owners[i].First, true); break; }
         }
 
+        /// <summary>
+        /// True while any menu / panel owns the pad / keyboard focus (an active owner on the stack). The driving scene
+        /// feeds it to <see cref="DriverInputMixer.MenuOpen"/>: menu buttons must not drive the truck (review #131 P1-1).
+        /// Destroyed and inactive owners do not count. No allocation.
+        /// </summary>
+        public static bool HasModal
+        {
+            get
+            {
+                for (int i = s_Owners.Count - 1; i >= 0; i--)
+                {
+                    var root = s_Owners[i].Root;
+                    if (root != null && root.gameObject.activeInHierarchy) return true;
+                }
+                return false;
+            }
+        }
+
         /// <summary>True when <paramref name="root"/> is the topmost active focus owner.</summary>
         public static bool IsTop(Component root)
         {
