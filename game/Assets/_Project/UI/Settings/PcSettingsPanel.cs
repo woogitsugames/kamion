@@ -212,6 +212,8 @@ namespace Game.UI.Settings
             m_Rows.Clear();
             FirstItem = null;
             m_Dialog = null;
+            m_Hint = null;
+            m_LastSelected = null;
 
             Vector2 avail = m_View.SizeUnits - new Vector2(2f * Edge, 2f * Edge);
             float twoW = 2f * ColW + 3f * Pad;
@@ -377,7 +379,8 @@ namespace Game.UI.Settings
             var row = Rect("Row " + label, parent);
             PlaceTop(row, x, y, new Vector2(ColW, RowH - 8f));
             row.gameObject.AddComponent<Image>().color = k_Row;
-            Label(row, "Label", label, 28, TextAnchor.MiddleLeft, k_Text, new Vector2(20f, 0f), new Vector2(LabelW, RowH - 8f));
+            var l = Label(row, "Label", label, 28, TextAnchor.MiddleLeft, k_Text, new Vector2(20f, 0f), new Vector2(LabelW - 20f, RowH - 8f));
+            l.horizontalOverflow = HorizontalWrapMode.Wrap; l.resizeTextForBestFit = true; l.resizeTextMinSize = 20; l.resizeTextMaxSize = 28;
             y += RowH;
             return row;
         }

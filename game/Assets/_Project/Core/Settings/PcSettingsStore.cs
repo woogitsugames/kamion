@@ -60,7 +60,7 @@ namespace Game.Core.Settings
         public const string HudScaleKey = "ui.hudScale";
 
         [Serializable]
-        sealed class VersionProbe { public int schemaVersion; }
+        sealed class VersionProbe { public int schemaVersion = 0; }
 
         public static string ToJson(PcSettingsData d) => JsonUtility.ToJson(d, true);
 
