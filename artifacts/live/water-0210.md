@@ -1,4 +1,3 @@
-# water-0210 (ADR 0210)
-- water stage in build_world (opt-in region.yaml water.enabled; dk65-02 on). r1 world: 84.6k water nodes, sheet 88.7k m2 / 16.7k tris; tests/gis/test_water_0210.py 8/8.
-- running: import+vqa r1 (chain.status), determinism C+Dojlidy (determinism.status)
-- NEXT: pwsh artifacts/water-0210/tools/chain.ps1 -Tag r2 (after tuning)
+# water-0210 (ADR 0210) KONIEC
+- water stage opt-in (dk65-02 on); r3 rendered Low/High; C+Dojlidy identical; pytest gis 1209 ok; EditMode 586/587.
+- NEXT (lead): git merge water-0210; then rerun tools/worldgen/fidelity/run.py for C (stale on main already); enable dk65-03 water.

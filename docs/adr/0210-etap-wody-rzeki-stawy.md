@@ -92,6 +92,10 @@ draw na chunk z wodą) i ≤ +4,6 tys. trójkątów na klatkę. Kamery wodne (no
   `*-drive-bridge-approach.jpg`. r1: Low wyglądał jak asfalt (SH zamiast sondy), na High szwy zmarszczek w ujściu
   (adwekcja bez ograniczenia) → r2: dwufazowa mapa przepływu, wygładzone pole kierunku, Low = rozmyta sonda; r3:
   jaśniejsza, oliwkowa toń. Przebieg, szerokość i ujście Białej zgodne z ortofoto (para top-bridge).
+- Pełny `pytest tests/gis`: 1209 passed, 3 xfailed; pominięte 2: `test_determinism::test_road_stage_independent_of_hash_seed`
+  (3 × pełny build C, ~25 min) i `test_road_fidelity::test_report_not_stale` — **pada też na czystym main**
+  (`fidelity_qa.json` C nieaktualny dla `build_world.py`, `markings.py`, `network.py`, `standards.py`); nie
+  odświeżany tutaj (wynik C się nie zmienia — patrz determinizm), do zrobienia przez lidera po scaleniu.
 - EditMode: 587 testów, 586 zaliczonych, 0 błędów, 1 pominięty (`artifacts/tests/editmode-20261115-070515.xml`). Krytyk `visual-critic`: nie uruchamiany (agent nie tworzy subagentów) — do zlecenia przez lidera.
 
 ## Otwarte
