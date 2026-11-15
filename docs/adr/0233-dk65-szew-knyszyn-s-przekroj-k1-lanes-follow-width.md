@@ -58,13 +58,43 @@ styku nawierzchni km 25,32 — **484 m w głąb krawędzi grafu `w27718745:89757
    (asfalt, osie linii, wysokość osi ekstrapolowana do szwu, boczne położenie punktu trasy).
 
 ## Wynik (r4)
-<!-- R4-RESULT -->
+Stan zbudowany po przebudowie r4 (`seam_section.py`, `artifacts/dk65-r4-s21/seam/built_after_r4.json`, przekroje 2 m od szwu):
+
+| szew | asfalt A \| B | linie A \| B | Δ wysokości osi | punkt trasy A \| B (Δ) |
+|---|---|---|---|---|
+| `dk65-10` \| `dk65-11` | 8,60 \| 8,60 m | 6,22 \| 6,20 m | +0,082 m (bez zmian, „Otwarte 4”) | −1,55 \| −1,55 m (0,00) |
+| `dk65-11` \| `knyszyn-s` | 8,58 \| 8,58 m | 6,20 \| 6,19 m | 0,000 m | −1,549 \| −1,549 m (0,00) |
+
+Asfalt 8,6 m = jezdnia 6,6 m + 2 × 1,0 m pobocza utwardzonego profilu zamiejskiego („Otwarte 5”). Załom osi 0,0° / 0,001°.
+Przebudowane i zaimportowane (Low + High): `dk65-07…11`, `knyszyn-s`. `dk65-06`: po scaleniu `origin/main` (b4e42ef34)
+obowiązuje `generated` z main (Ełcka 6,6 m, D66) — przebudowa r4 tego kafla z tej gałęzi (Ełcka 6,9 m) odrzucona; zmiana
+`dk65-06/overrides.yaml` z tej gałęzi to wyłącznie komentarz. `generated` kafla `knyszyn-s` nie jest commitowane
+(tylko `overrides.yaml`, kamery authored, `route_start.json`, `region_catalog.json`: routeLengthM 2420,66 → 2420,72) —
+lider przebudowuje `knyszyn-s` po scaleniu.
+Kafle 07…11 zbudowano generatorem sprzed scalenia main (tunnel-0211, construction 0215, cycleways) — po scaleniu nie
+przebudowywano; `lane_w_of()` (poprawka po pełnym pytest) nie zmienia wyniku dla `EdgeSection`.
 
 ## Budżet
-<!-- R4-BUDGET -->
+Draws / tris: nie mierzono (zmiana szerokości przekroju, bez nowych obiektów; telefon poza zadaniem). `WORLD_MEMORY`
+z `artifacts/dk65-r4-s21/logs/import-<kafel>-r4.log` (Low / High, MB razem): `dk65-07` 61,2 / 138,6; `dk65-08` 57,8 / 125,1;
+`dk65-09` 54,4 / 125,3; `dk65-10` 50,9 / 119,2; `dk65-11` 50,0 / 114,8; `knyszyn-s` 41,4 / 107,5. Porównania A/B z r3 nie
+ma (logi r3 nie zawierają tej linii w tym worktree) — UNVERIFIED, że bez zmian.
 
 ## Walidacja
-<!-- R4-VALIDATION -->
+- `tests/gis/test_dk65_seam_knyszyn_0233.py` + `test_dk65_seams_0214.py` po scaleniu main: 39 passed (w tym geometria
+  zbudowana obu szwów, tolerancja 0,1 m).
+- Pełny `pytest tests/gis` (po scaleniu main, przebieg 1): 1420 passed, 7 failed, 3 xfailed. 6 błędów = sekcje
+  duck-typed w testach bez `lane_w_at` / `lane_follow` → poprawione (`network.lane_w_of`, 92 passed na tych plikach).
+  7.: `test_road_fidelity.py::test_report_not_stale` — `fidelity_qa.json` (`bialystok-industrial-c`) nieaktualny już na
+  `origin/main` (5 plików generatora), nie z tego zadania. Przebieg 2: <!-- PYTEST2 -->
+- EditMode: 628 testów, 626 passed, 1 skipped, 0 failed (po `scripts/export-region-catalog.py`; przed: 1 failed —
+  `knyszyn-s` routeLengthM), `artifacts/tests/editmode-20261115-2149*.xml`.
+- Pętla wizualna (Low + High, 1920 × 1080, clear): `artifacts/dk65-r4-s21/seam/r4/seam-*-{low,high}.jpg` (sklejka obu
+  połówek szwu | ortofoto WMS 0,1 m), `widening-knyszyn-s-*.jpg`, `<kafel>/r4/view/grid-*.jpg`. Obejrzane: oba szwy —
+  krawędzie asfaltu, linie krawędziowe i oś przechodzą przez szew bez uskoku; poszerzenie km 25,32 jako płynny klin.
+  Różnice wobec ortofoto: linie przerywane / podwójna ciągła („Otwarte 1”), pobocze utwardzone szersze niż w terenie.
+  Wada kamer: `seam_s_drive` (11) i `seam_e_drive` (`knyszyn-s`) stoją wewnątrz naczepy ciężarówki QA (start trasy =
+  punkt szwu) — kadr bezużyteczny („Otwarte 7”). `visual-critic`: nie uruchamiano (do lidera).
 
 ## Otwarte
 1. Linie krawędziowe przerywane km 25,32–25,49 (nowa nawierzchnia, kreski szerokie) i przy zjazdach / zatoce km 24,85–25,0;
@@ -77,6 +107,8 @@ styku nawierzchni km 25,32 — **484 m w głąb krawędzi grafu `w27718745:89757
    teren obok jezdni różni się tam do 0,48 m (bez zmian).
 5. Pobocze utwardzone 1,0 m profilu zamiejskiego (asfalt 8,6 m przy zmierzonych ~7,1–7,5 m) — parametr globalny, jak w 0214.
 6. Telefon: nie mierzono (zadanie bez adb). `visual-critic`: do lidera.
+7. Kamery `seam_s_drive` / `seam_e_drive` wewnątrz naczepy ciężarówki QA — przesunąć oko ≥ 25 m przed punkt szwu
+   (`seam_cams.py`) i wyrenderować ponownie.
 
 ## Odtworzenie
 ```
