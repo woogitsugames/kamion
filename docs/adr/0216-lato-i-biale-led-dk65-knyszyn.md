@@ -96,7 +96,21 @@ przed SRP batching), narzędzie `artifacts/summer-led-0216/tools/budget.py`. War
   głowice sodowe 0 we wszystkich czterech regionach. DK65: `knyszyn-s` 0 latarni na całej długości; `knyszyn`
   way 286990127 (528 m, 2,7 bud./100 m) 15 → 0; `knyszyn-w` way 232511647 (pola, 0 bud./100 m) 1 słup przypisany
   przez audyt do najbliższej krawędzi (położenie UNVERIFIED, way ma `lamps: false`), odcinek przez miasto (way 232511646, 6,9 bud./100 m) 31 słupów — oświetlony wg ortofoto (ADR 0209).
-- **Testy:** __TESTS__
+- **Testy:** po scaleniu `origin/main` (bez konfliktów; main nie zmieniał danych czterech regionów).
+  - `uv run --project tools/worldgen python -m pytest tests/gis -q`: 1373 passed, 5 failed, 6 skipped, 5 xfailed
+    (`artifacts/summer-led-0216/postmerge/pytest-postmerge.log`). `test_lamp_led_0216` 9/9 (w tym 4 po regeneracji),
+    `test_knyszynska_0208` zielony po poprawce (override `lamp_policy` jest regionowy, nie ma `target`).
+    Pięć porażek nie dotyczy tej zmiany: dwie znane z main (HANDOVER: `test_hero_bridge::test_asset_lods_and_budget`
+    2 022 535 > 2 000 000 tris, `test_world_v31::test_frame_budget_with_forest_hlod`); trzy dotyczą kafla C
+    (`test_far_field::test_generated_far_field_qa_and_manifests`, `test_world_v31::test_forest_trees_reference_their_cell`,
+    `test_road_fidelity::test_report_not_stale` — `fidelity_qa.json` z main odwołuje się do
+    `tools/worldgen/roads/tunnels.py`, którego nie ma w repozytorium: plik jest nieśledzony w katalogu main). Przed
+    scaleniem main ten sam zestaw dawał 1319 passed / 1 failed (ten z 0208), więc trzy porażki kafla C przyszły z main
+    (wniosek z porównania przebiegów; nie sprawdzano ich na czystym checkoucie main).
+  - EditMode (`pwsh scripts/test.ps1 -Platform EditMode`): 606 testów, 605 passed, 0 failed, 1 skipped (Ignored) — po
+    obu scaleniach main (`artifacts/tests/editmode-20261115-182356.xml`), w tym `RegionLightingProfileTests`.
+  - `CarPaintMaterialTests.DepositionChannel_*` (2 porażki w pierwszym przebiegu worktree): na main 6/6 Passed
+    (`artifacts/tests/editmode-20261115-165944.xml`), w worktree od drugiego przebiegu też — efekt świeżego worktree.
 - **Telefon:** nie mierzono — brak p50/p95/p99, PSS i temperatury dla tej zmiany (lider, po scaleniu; zakaz procesów
   Unity podczas przebiegów na telefonie). Oczekiwanie (nie pomiar): bez zmiany kosztu klatki — te same siatki, materiały,
   liczba świateł i pul; zmienia się stała koloru i wybór prototypu.
