@@ -173,7 +173,7 @@ namespace Game.World.Import
             // The tractor at the gate (truck on the imported ground, contact shadows) and the cab view down the access road.
             Vector3 side = Vector3.Cross(Vector3.up, spawnFwd);
             Qa(qa, "truck-at-gate", spawnPos + spawnFwd * 11f + side * 7f + Vector3.up * 2.6f, spawnPos + Vector3.up * 1.6f - spawnFwd * 3f, 50f,
-                "Tractor + trailer at the Kwadrat Park spawn: wheels on the imported collision, shadows, scale against the road.");
+                "Tractor + trailer at the depot gate spawn: wheels on the imported collision, shadows, scale against the road.");
             Vector3 eye = spawnPos + spawn.rotation * dims.EyePointVehicle;
             Qa(qa, "cab-gate", eye, eye + spawnFwd * 30f - Vector3.up * 2.2f, 55f, "Driver eye at the spawn, looking along the depot access road.");
             AddEdgeCameras(qa);
