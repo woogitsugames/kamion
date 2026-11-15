@@ -106,3 +106,7 @@
 - 2026-11-15 21:15 +01:00 — Build R3 aktywny; proces 26128 zwiększa CPU, import i rendery czekają. Wierzba r4 FAIL, nie integrowana. Przegląd pierzei: urząd i skrzydło kultury zidentyfikowane w BDOT, drewniany dom nie ma pewnego ID. C ponad 300 GiB.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r3.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r3.done`
 
+
+- 2026-11-15 21:24 +01:00 — R3 build_world zakończony, import Unity w toku (kontrola 13 assets, 65 plików, 0 problemów). Równolegle przygotowanie kolejnej próby koron lip oraz wejść urzędu, bez zmian bieżącego buildu.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r3.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r3.done`
+
