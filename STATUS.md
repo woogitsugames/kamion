@@ -11,3 +11,6 @@
   ortofoto K1 km 11,7 i 14,6), hook w vegetation.place (`tree_rows=`) + stage.py. Testy: 13 nowych, `-k "treerow or
   vegetation or planting"` 27 passed / 1 skip (lfs). Plan drzew: dk65-02 60, -04 60, -05 53, -08 33, knyszyn-w 105 …
 - NASTĘPNY KROK: ADR 0222 (budżet per tier) + LICENSES + PR; lider: build_world + import + visual-qa (komendy w ADR).
+- Krok 4, 6: ADR `docs/adr/0222-szpalery-dk65.md` (tabela stanu, przepisy z paragrafami, budżet per tier, komendy),
+  `docs/LICENSES.md` (tree-rows-osm-probe, tree-rows-authored).
+- NASTĘPNY KROK (lider): pętla z ADR 0222 §Odtworzenie (build_world + import-region + visual-qa dla 10 kafli).
