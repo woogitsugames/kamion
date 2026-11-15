@@ -1,68 +1,77 @@
 {
   "task": "P14 biurowiec Biazet (Andersa 38, Kwadrat Park), Białystok",
-  "samokontrola": {
-    "procent_wymagany": 20,
-    "wiersze_manifestu": 18,
-    "wielkosc_proby": 4,
-    "procent": 22.2,
+  "audyt_s21": {
+    "data": "2026-11-15",
+    "wiersze_manifestu": 19,
+    "seed": 20261115,
+    "metoda_losowania": "r=random.Random(20261115); r.sample(WIEZA,5), potem r.sample(RESZTA,1); WIEZA=[P14-001,007,008,009,011,013,014,015,017,018,019] (wiersze z wieżą w kadrze), RESZTA=[P14-002..006,010,012,016]",
+    "wylosowane": [
+      "P14-001",
+      "P14-008",
+      "P14-011",
+      "P14-015",
+      "P14-017",
+      "P14-004"
+    ],
+    "wielkosc_proby": 6,
+    "procent": 31.6,
+    "kadry_z_wieza_w_probie": 5,
+    "metoda": "Każdy kadr ponownie OBEJRZANY osobnym wywołaniem (Read) na pliku z files/ albo na świeżym wycinku z niego; porównany zdanie po zdaniu z opis_co_widać. Pliki Commons, KartaView i WMS pobrane ponownie 2026-11-15 (HTTP 200; sha256 w sources.md).",
+    "wynik": {
+      "PASS": 4,
+      "FIX": 2
+    },
+    "wiersze": [
+      {
+        "id": "P14-001",
+        "plik": "files/commons/20200711_073045_crop_tower.jpg",
+        "wynik": "FIX",
+        "sprawdzone": "10 okien kolumny (policzone), 2+1+2 klimatyzatory, pas szklenia przy podstawie, szczyt po prawej i NW po lewej, napis na prawo od kolumny.",
+        "korekta": "położenie kolumny: było „nieco na lewo od środka”, pomiar w wycinku daje ok. 0,49 szerokości → „w osi”. Przy okazji P14-013: dopisano panele i krótki maszt na dalekim (N) końcu ściany NW."
+      },
+      {
+        "id": "P14-008",
+        "plik": "files/commons/20210328_105711_crop_tower.jpg",
+        "wynik": "FIX",
+        "sprawdzone": "6 grup na kondygnację, białe ramy, ochrowy tynk, parter wieży zasłonięty, brak nadbudówki.",
+        "korekta": "widoczne kondygnacje 6 → 5-6; położenie masztów 0,55/0,95 → 0,54/0,9 (ponowny pomiar)."
+      },
+      {
+        "id": "P14-011",
+        "plik": "wycinek dołu files/commons/20200711_073045_crop_tower.jpg",
+        "wynik": "PASS",
+        "sprawdzone": "pas szklenia przy podstawie w lewej i prawej części, środek za drzewem; 2 klimatyzatory przy najniższym oknie; krótki pionowy przewód; portalu nie widać."
+      },
+      {
+        "id": "P14-015",
+        "plik": "files/orto/orto_tower_80m.png",
+        "wynik": "PASS",
+        "sprawdzone": "4 podstawy X (N, E, środek SE, W z odciągami), cień na NW, widoczne SE i pas NE, NW niewidoczna, ok. 12 niebieskich elementów, niska bryła przy środku SE."
+      },
+      {
+        "id": "P14-017",
+        "plik": "files/kartaview/kv_993062122_crop_tower_x3.5.jpg",
+        "wynik": "PASS",
+        "sprawdzone": "wieża przy prawej krawędzi za latarnią; szczyt SW po lewej (kolumna okien, litera napisu), ściana SE po prawej z pasmami; 2 maszty; ten sam jasnożółty odcień SE i szczytu."
+      },
+      {
+        "id": "P14-004",
+        "plik": "files/kartaview/kv_7119874.jpg",
+        "wynik": "PASS",
+        "sprawdzone": "estakada, zbiornik z niebieskimi pasami przy prawej krawędzi, słup energetyczny i drzewa w środku, żółte znaki ostrzegawcze, wieży brak.",
+        "uwaga": "przy okazji poprawiono P14-002: „dwoma pasami” → „pasami (2 widoczne nad barierą)” — w 7119874 widać ich więcej."
+      }
+    ]
+  },
+  "audyt_poprzedni_m57_UNIEWAZNIONY": {
+    "powod": "Przegląd s20 (docs/reports/REVIEW-2026-11-14-s20-mistral-m57.md): opisy „zaobserwowano” dla P14-004, P14-005 i P14-017 nie odpowiadały obrazom, a etykiety element różniły się od manifestu. Zostaje tylko seed i próba jako historia; opisy usunięte.",
     "seed": 14,
     "metoda_losowania": "random.Random(14).sample(range(1, 19), 4)",
-    "wylosowane": ["P14-004", "P14-005", "P14-008", "P14-017"],
-    "metoda_audytu": "Ponowne obejrzenie wylosowanych kadrów (analyze_image) i porównanie z opisem w manifest.csv; rozbieżności zapisane i manifest skorygowany.",
-    "wynik": "COMPLETED",
-    "dodatkowa_ponowna_obserwacja_poza_proba": "P14-001"
-  },
-  "wiersze": [
-    {
-      "id": "P14-004",
-      "element": "ściana_SW",
-      "oczekiwano": "Bliżej wieży (~200 m): wyraźna wieża, jedna kolumna okien; ewentualnie szczyt SW — wartość coverage.",
-      "zaobserwowano": "Wieża NIEWIDOCZNA w kadrze: otwarta przestrzeń (błoto/trawa), w tle przy osi odczytu szara/gładka ściana nowoczesnego niskiego budynku handlowego/service, dalej budynek mieszkalny z dwuspadowym dachem; wieży (11 kondygnacji) brak — zasłona drzew wzdłuż drogi.",
-      "status_audytu": "NEGATIVE",
-      "zgodnosc": "PRZEWIDYWANIE NIEPOTWIERDZONE — geometryczne przewidywanie widoczności szczytu SW z sekwencji 1405 nie sprawdziło się (zapas hFoV ≈ 45–50° i zasięg 164–259 m nie wystarczyły: wieża schowana za drzewami/słupami/instalacjami stacji paliw i poza osią patrzenia).",
-      "korekta_manifestu": "status → UNVERIFIED (obserwowany negatyw), opis → brak wieży w kadrze, uwagi → geometryczna korekta przewidywania."
-    },
-    {
-      "id": "P14-005",
-      "element": "dach",
-      "oczekiwano": "Najbliższy kadr (~164 m): frontalnie szczyt SW i tył stacji paliw, ryzyko wykadrowania.",
-      "zaobserwowano": "Wieży brak w kadrze: budynek stacji paliw w całości (duże litery na ścianie = oznaczenia stacji), słupy, w tle 4-5 kondygnacyjny blok mieszkalny (jasny); 11-kondygnacyjnej wieży nie widać — zasłona słupów i drzew; słupy/linie energetyczne przebiegają w wąskiej uliczce do wieży (walidacja zapisu o liniach wzdłuż Andersa).",
-      "status_audytu": "NEGATIVE",
-      "zgodnosc": "PRZEWIDYWANIE NIEPOTWIERDZONE — kadr nie obejmował wieży; utrzymane tylko ryzyko wykadrowania/zasłony.",
-      "korekta_manifestu": "status → UNVERIFIED (obserwowany negatyw), opis → stacja paliw bez wieży."
-    },
-    {
-      "id": "P14-008",
-      "element": "ściana_NW",
-      "zaobserwowano": "POTWIERDZONY kadr: 11-kondygnacyjna wieża po prawej (jasny/piaskowy tynk); długa ściana z rzędami okien na wszystkich kondygnacjach; lewy narożnik z krótką ścianą; narożnik SW — jasne światło słoneczne z lewej dołu (zgadza się z godz. 10:57 Słońce od SE, słońce jasno oświetla szczyt SW); parter hali giełdowej po lewej z witrynami i wejściem; nad wejściem skrzyżowane słupki (element dekoracyjny hali); nadbudówka na dachu wieży; 2 maszty widoczne w tym kadrze; klimatyzatory/kieszenie na ścianach.",
-      "status_audytu": "CONFIRMED-with-discrepancies",
-      "zgodnosc": "ZGODNE: wieża 11 kondygnacji, jasny tynk, witryny + wejście w parterze, klimatyzatory, nadbudówka. ROZBIEŻNOŚCI (udokumentowane): (1) układ okien dłuższej ściany — odczyt 1: siatka/kolumny; odczyt 2: poziome pasma + 6 kolumn; na tym dystansie/resolution jednoznaczny odczyt niemożliwy — przypisanie do ściany NW utrzymano na podstawie ortofoto GUGiK (NW = regularna siatka) i położenia giełdy (NW od wieży); (2) liczba masztów: 2 widoczne w tym kadrze vs 4 w rzucie ortofoto.",
-      "korekta_manifestu": "wpis NW utrzymany; dodano jawne adnotacje o niejednoznaczności odczytu układu okien; liczba masztów uzgodniona z ortofoto (4–5, patrz P14-013/P14-015)."
-    },
-    {
-      "id": "P14-017",
-      "element": "dach",
-      "oczekiwano": "KartaView 2019: kamera NW od wieży, przewidywane ryzyko wykadrowania.",
-      "zaobserwowano": "Wieża poza kadrem — zgodnie z geometrią (kierunek kamery ok. 41,6° od osi wieża–kamera przy hFoV ok. 70°). W kadrze: szersza ulica z parkingiem, hale giełdowe, blaszane ogrodzenie, linie energetyczne, dwa maszty/dźwigi w tle (po lewej) — orientacje spójne z pozycją wieży poza kadrem.",
-      "status_audytu": "NEGATIVE",
-      "zgodnosc": "PRZEWIDYWANIE POTWIERDZONE — ryzyko wykadrowania materializowało się; wieży brak, kadr zachowany jako coverage/negatyw.",
-      "korekta_manifestu": "status → UNVERIFIED (obserwowany negatyw spójny z geometrią), opis → detale otoczenia, uwagi → potwierdzenie geometryczne."
-    },
-    {
-      "id": "P14-001",
-      "element": "ściana_SW",
-      "notka": "Poza wylosowaną próbą; dodatkowa ponowna obserwacja kluczowego kadru 073045.",
-      "zaobserwowano": "POTWIERDZONY: gładka ściana szczytowa; JEDNA pionowa kolumna dwudzielnych okien w osi; naliczono 11 rzędów (kondygnacji); tynk beżowy/piaskowy; ramy okien CIEMNE; klimatyzatory przy prawym narożniku (2 szt. potwierdzone); dach: 5 masztów — najwyższy pośrodku + 2 po lewej + 2 po prawej; nadbudówka po lewej/prawo od osi ok. 1/4 szerokości (~1 kondygnacja); attyka — w tym odczycie NIEWIDOCZNA.",
-      "status_audytu": "CONFIRMED-with-corrections",
-      "zgodnosc": "ZGODNE: kolumna okien, gładki szczyt, kolor tynku, ramy ciemne, klimatyzatory. KOREKTY: liczba kondygnacji 11 (poprzedni model naliczał ~13 rzędów — zawyżenie skorygowane); pionowe rury — odczyt niepewny (raz widoczne, raz niewidoczne — zostawiono 'niepewny'); portal wejściowy w parterze — nierozstrzygnięty (odczyty sprzeczne → P14-011 UNVERIFIED); liczba masztów: 3–4 → 4–5 (z ortofoto); attyka — odczyty rozbieżne → UNVERIFIED w tabeli dachu.",
-      "korekta_manifestu": "P14-001: kondygnacje_widoczne → 11; uwagi o korektach. P14-011 (parter): status → UNVERIFIED. P14-013 (dach): maszty 4–5, wysokości ESTIMATED z metodą proporcji 3,7 m. Tabela dachu w README: attyka UNVERIFIED."
-    }
-  ],
-  "wnioski": [
-    "Kadra 073045: zgodność wysoka — kolumna okien, kolor tynku, ramy ciemne, klimatyzatory potwierdzone.",
-    "Kadra 105711: zgodność wysoka; odczyt układu okien na granicy rozdzielczości — rozstrzygnięty ortofotem GUGiK (NW = siatka).",
-    "Kadry KartaView 2016: geometryczne przewidywanie widoczności nie potwierdziło się — zasłona drzew/słupów/stacji paliw skuteczniejsza niż model geometryczny; wnioski wprost w manifest.csv (statusy UNVERIFIED).",
-    "Różnice odczytu (attyka, rury, portal, liczba masztów) rozwiązano zgodnie z zasadą 'nie zmyślaj': pozostawiono UNVERIFIED lub przedziały ESTIMATED z jawną metodą.",
-    "Audyt przekroczył próg 20% (22,2%), uwzględniając dodatkowo kluczowy kadr P14-001 (poza próbą)."
-  ]
+    "wylosowane": [
+      "P14-004",
+      "P14-005",
+      "P14-008",
+      "P14-017"
+    ]
+  }
 }
