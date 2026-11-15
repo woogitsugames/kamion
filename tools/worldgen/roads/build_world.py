@@ -1043,9 +1043,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         "overrides_applied": w.net.overrides_applied, "overrides_stale": w.net.overrides_stale,
     }
     if w.water is not None:
-        srcs["generated/water_sources.json"] = sha(WT.sources_path(region_id).read_bytes().replace(b"
-", b"
-"))
+        srcs["generated/water_sources.json"] = sha(WT.sources_path(region_id).read_bytes().replace(b"\r\n", b"\n"))
         manifest["nodes"]["water"] = ("water sheet (ADR 0210): flat surface at the measured water level; UV0 = local "
                                       "metres (E, N); COLOR_0 = (shore distance / 8 m, depth / 1.5 m, flow E, flow N "
                                       "as 0.5 + 0.5 x unit vector)")
