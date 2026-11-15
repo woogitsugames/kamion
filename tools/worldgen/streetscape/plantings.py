@@ -1033,35 +1033,6 @@ def _kit_quad(kit, center_xy, z0, z1, w, a, sp, occ_lo=0.74, occ_hi=0.98, flip=F
     kit.quad(V, UV, C)
 
 
-def _authored_volume_crown(kit, p, z, r, H, cb, sp, key, lite=False):
-    """WORKING_VALUE / OPEN: tangent foliage cards on an estimated ellipsoid.
-
-    Appearance from all sides and alpha overdraw require visual QA.
-    """
-    p = np.asarray(p, float)
-    angle0 = 2 * math.pi * PLT.hfloat(key, "volume-angle")
-    tangent = np.array([math.cos(angle0), math.sin(angle0)])
-    trunk_r = .035 + .011 * H
-    kit.box(p, tangent, trunk_r, trunk_r, z-.1, z+cb+(H-cb)*.30,
-            PLT.PK.SWATCH["trunk"], top=False)
-    hc = H-cb
-    per_ring = 4 if lite else 6
-    for ring in range(2):
-        for i in range(per_ring):
-            az = angle0 + 2*math.pi*(i + .5*ring)/per_ring
-            az += .18*(PLT.hfloat(key, "volume-az", ring, i)-.5)
-            outward = np.array([math.cos(az), math.sin(az)])
-            radius = r*(.55 if ring == 0 else .39)*(.9 + .2*PLT.hfloat(key, "volume-r", ring, i))
-            center = p + outward*radius
-            low = (.05 if ring == 0 else .39) + .06*(PLT.hfloat(key, "volume-z", ring, i)-.5)
-            top = min(1., low + (.61 if ring == 0 else .60))
-            width = r*(.95 + .25*PLT.hfloat(key, "volume-w", ring, i))
-            sprite = "shrub_a" if (ring+i)%2 == 0 else "apple_b"
-            _kit_quad(kit, center, z+cb+hc*low, z+cb+hc*top, width,
-                      az+math.pi/2, sprite, occ_lo=.88, occ_hi=.98,
-                      flip=(i%2 == 1), vlo_frac=.22 if sprite == "apple_b" else 0.)
-
-
 def _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False):
     """Multi-lobed open crown / ground-reaching shrub for authored kit plants (ADR 0186 r4, review B-r3 P1-3).
     Front lobes face WNW (`a_face ~ 1.25 rad`) while side/depth cards sit behind the front plane (`-0.42 r f`) at
@@ -1181,7 +1152,7 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
         if o.get("kind") != "tree_groups" or o.get("form") != "kit":
             continue
         crown_model = o.get("crown_model", "kit")
-        if crown_model not in ("kit", "garden_trial", "garden_volume_trial"):
+        if crown_model not in ("kit", "garden_trial"):
             raise ValueError(f"tree_groups {o['id']}: unknown crown_model {crown_model!r}")
         spw = o.get("species") or {"maple": 1.0}
         if any(s not in KIT_SPECIES for s in spw):
@@ -1194,8 +1165,8 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             sp = str(q[4]) if len(q) >= 5 and q[4] else PLT._pick_w(sorted(spw.items()), key, "sp")
             if sp not in KIT_SPECIES:
                 raise ValueError(f"tree_groups {o['id']}: unknown species {sp!r}, knows {sorted(KIT_SPECIES)}")
-            if crown_model in ("garden_trial", "garden_volume_trial") and sp not in HABIT:
-                raise ValueError(f"tree_groups {o['id']}: {crown_model} does not support species {sp!r}")
+            if crown_model == "garden_trial" and sp not in HABIT:
+                raise ValueError(f"tree_groups {o['id']}: garden_trial does not support species {sp!r}")
             cb = float(o.get("crown_base_m", (0.0 if sp == "berberis_red" else 0.08 if sp in ("shrub", "fruit") else 0.21) * H))
             z = zf(p)
             kit = PLT.Kit()
@@ -1203,15 +1174,11 @@ def authored_trees(buf, overrides, zf, report, half=1024.0):
             kit.low = False
             if crown_model == "garden_trial":
                 garden_tree(kit, p, z, r, H, cb, sp, key, lite=False, cards=3)
-            elif crown_model == "garden_volume_trial":
-                _authored_volume_crown(kit, p, z, r, H, cb, sp, key, lite=False)
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False)
             kit.low = "only"
             if crown_model == "garden_trial":
                 garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=2, core=True)
-            elif crown_model == "garden_volume_trial":
-                _authored_volume_crown(kit, p, z, r, H, cb, sp, key, lite=True)
             else:
                 _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
             if groups is None:
