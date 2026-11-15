@@ -27,6 +27,7 @@ from . import hero_building as HBD
 from . import knyszyn_church_0227 as KC
 from . import knyszyn_townhall_0227 as KT
 from . import knyszyn_park_props_0227 as KP
+from . import knyszyn_fountain_0227 as KF
 from . import hero_depot as HD
 from . import landmarks as LM
 from . import chain_bollards as CB
@@ -182,6 +183,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         return PV.bilinear(zsurf_g, hf, np.asarray(e, float), np.asarray(n, float))
 
     KP.build(w.buf, rid, w.origin, overrides, zsurf, rep)
+    KF.build(w.buf, rid, w.origin, overrides, zsurf, rep)
 
     def zground(e, n):
         return PV.bilinear(zc, hf, np.asarray(e, float), np.asarray(n, float))
