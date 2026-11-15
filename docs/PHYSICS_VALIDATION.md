@@ -309,6 +309,13 @@ Runner → Unity editor: 0–80 13.60 → 13.67 s / 20.54 → 20.68 s / 47.52 �
 40.52 → 40.78 m; MFDD 7.0–7.5 m/s², no wheel lock, lateral ≤ 4 mm; solo ×3 0.00 %. `Metrics.FirstBrake` is now the first
 rising edge of the pedal (unchanged for all `brake_*` scenarios). Phone numbers: `gate12-phone.ps1 -Only s080_*` (leader).
 
+### 6g. Axle loads 73/27 % and suspension retune, ADR 0201b (2026-11-15)
+
+- Mass split calibrated to the S9 sheet (R3-013/014): solo without fuel 5.06 / 1.84 t (73.3 %), with fuel 5.35 / 2.15 t, 40 t 7.20 / 10.26 / 22.55 t. Front leaf 250 kN/m, front dampers 10/20 kN s/m, anti-roll 222 / 240 kN m/rad, rear air spring unchanged hardware (73 kN/m at the new reference load), rear bump stop 15 mm. AMT: shift schedule from the driver pedal (not the ASR-cut torque request), anti-stall clutch opening 8/s.
+- Runner 135/135 (`artifacts/axleloads-0201b/final/`), tolerances unchanged; the 4 scenarios that the uncalibrated shift (ADR 0201 n1) broke: kerb 0.11 s / 3.66 (base 0.12 / 3.94), eye nod 3.64° (3.79°), rollover first lift 0.458 g (0.460 g), soak drift −2.8 J (1.4 J). The n1 soak drift (44.9 J) is the same at dt 0.005 s and 8 substeps (`soak-dt/`): physical settling after the stop, not the integrator.
+- Solo 0–80 13.58 → 14.06 s (+3.5 %; masses alone +8.2 %, AMT fix −1.3 %): ASR-limited launch on the lighter drive axle. Solo 80→0 35.77 → 35.39 m; 40 t 47.54 → 47.58 s, 41.02 → 41.20 m.
+- Goldens: 6 re-recorded (overlays `artifacts/axleloads-0201b/plots/golden-*.png`). .NET 273/274: the F2 mutation run without chassis colliders (`max_free_flight_energy_gain_j`) is chaotic in the pre-fall trajectory (0–1059 J for front rate 237–255 kN/m); the gain appears right after contact loss (fifth-wheel roll spring and Baumgarte correction). Open for the lead (ADR 0201b).
+
 ## 7. Known gaps / not modelled
 
 - **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.
