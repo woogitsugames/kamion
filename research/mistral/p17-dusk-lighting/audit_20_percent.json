@@ -1,0 +1,136 @@
+{
+  "audyt_s21": {
+    "data": "2026-11-15",
+    "wiersze_manifestu": 109,
+    "seed": 20261115,
+    "metoda_losowania": "rows z files/ (37 kadrów) = KADRY, reszta = INNE; g=random.Random(20261115); g.sample(KADRY,8); g.sample(INNE,14) → 22/109 = 20,2 %",
+    "kadry": {
+      "metoda": "każdy plik z files/ OBEJRZANY ponownie osobnym wywołaniem (Read) w dniu audytu; porównanie z opis_co_widać i wartość",
+      "wynik": {
+        "zgodne": 5,
+        "niezgodne_poprawione": 3
+      },
+      "wiersze": [
+        {
+          "id": "P17-074",
+          "wynik": "zgodne",
+          "sprawdzone": "1–2 zapalone okna pięter (wyraźne jedno żółte), lampki świąteczne, girlanda, ozdobne latarnie pomarańczowe"
+        },
+        {
+          "id": "P17-083",
+          "wynik": "zgodne",
+          "sprawdzone": "niebo granatowe, horyzont szaroniebieski bez różu, plamy pod latarniami na arterii, ≈30–35 zapalonych okien mieszkań, klatki zapalone"
+        },
+        {
+          "id": "P17-084",
+          "wynik": "niezgodne → poprawione",
+          "korekta": "liczba kondygnacji bloków 6–7 → ok. 7–8 (z poddaszem); dopisano jaśniejszy niebieskawy pas przy horyzoncie, bez różu"
+        },
+        {
+          "id": "P17-092",
+          "wynik": "zgodne",
+          "sprawdzone": "śnieg oświetlony równo, latarnie ciepłobiałe, ratusz po prawej"
+        },
+        {
+          "id": "P17-095",
+          "wynik": "niezgodne → poprawione",
+          "korekta": "„drzewa bez lampek” → w drzewach rzadkie drobne lampki; latarnie ciepłobiałe"
+        },
+        {
+          "id": "P17-103",
+          "wynik": "zgodne",
+          "sprawdzone": "wysokie oprawy nie świecą, 2 niskie lampy świecą, ciepły pas przy horyzoncie po lewej pod chmurami"
+        },
+        {
+          "id": "P17-105",
+          "wynik": "zgodne",
+          "sprawdzone": "okna pięter ciemne, światło z lampek i latarni, mokra jezdnia"
+        },
+        {
+          "id": "P17-107",
+          "wynik": "niezgodne → poprawione",
+          "korekta": "„niebo czarne” → bardzo ciemne szarobrązowe (zachmurzone, łuna)"
+        }
+      ]
+    },
+    "inne": {
+      "metoda": "ponowne pobranie URL (2026-11-15, UA opisowy) i wyszukanie cytatu z uwag w tekście strony (normalizacja HTML, NBSP, miękkie dywizy)",
+      "wiersze": [
+        {
+          "id": "P17-006",
+          "http": 200,
+          "wynik": "cytat zgodny (różnica tylko w zapisie wykładnika 10^-4)"
+        },
+        {
+          "id": "P17-011",
+          "http": 200,
+          "wynik": "wiersz wycofany (seria wieś) — status UNVERIFIED, zgodnie z M60-FIX (1)"
+        },
+        {
+          "id": "P17-013",
+          "http": 200,
+          "wynik": "zgodne; status ESTIMATED (całkowanie suplementu), usunięte zdanie „miasto ~12× ciemniejsze niż wieś”"
+        },
+        {
+          "id": "P17-020",
+          "http": 200,
+          "wynik": "wiersz wycofany (CCT wsi) — UNVERIFIED"
+        },
+        {
+          "id": "P17-024",
+          "http": 200,
+          "wynik": "wzór i metoda jawne (ESTIMATED); liczby źródła nie sprawdzano ponownie w PDF"
+        },
+        {
+          "id": "P17-025",
+          "http": 200,
+          "wynik": "j.w."
+        },
+        {
+          "id": "P17-031",
+          "http": 200,
+          "wynik": "cytat zgodny"
+        },
+        {
+          "id": "P17-032",
+          "http": 200,
+          "wynik": "NIEPOTWIERDZONE — liczb tabeli brak w tekście HTML; adnotacja w uwagach"
+        },
+        {
+          "id": "P17-035",
+          "http": "—",
+          "wynik": "wiersz luki, bez URL — zgodne"
+        },
+        {
+          "id": "P17-056",
+          "http": 200,
+          "wynik": "cytat zgodny"
+        },
+        {
+          "id": "P17-058",
+          "http": 202,
+          "wynik": "TED zwraca 202 (treść ładowana asynchronicznie) — cytatu nie dało się sprawdzić"
+        },
+        {
+          "id": "P17-059",
+          "http": 202,
+          "wynik": "j.w."
+        },
+        {
+          "id": "P17-064",
+          "http": 200,
+          "wynik": "rozstaw Wysockiego poprawiony na ≈48,0 m (Overpass 2026-11-15, node 12300169918/12300169923); 16,1 m nieodtwarzalne"
+        },
+        {
+          "id": "P17-067",
+          "http": "—",
+          "wynik": "wiersz luki — zgodne"
+        }
+      ]
+    }
+  },
+  "audyt_poprzedni_m60": {
+    "uwaga": "seed 20261113, 22 wiersze; nie obejrzał ponownie żadnego obrazu (przegląd s20) — zachowany tylko jako historia",
+    "seed": 20261113
+  }
+}
