@@ -1,0 +1,90 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0205): control cameras of dk65-01 on Szosa Knyszynska (D64 route, variant A km 8.76-9.39). Position region-local E/N (origin EPSG:2180 769803, 596223), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions derived from route_start.json stations (right lane of travel NW-bound).",
+ "cameras": [
+  {
+   "id": "top_seam_east",
+   "pos_en": [
+    965.6,
+    797.5
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 150,
+   "fov_deg": 50,
+   "pitch_deg": -89.9,
+   "note": "QA top view (north up, ~140 m across) of Szosa Knyszynska at the east seam, route s = 60 m: driveways on the NE side; pair = ortho/top_seam_east.jpg"
+  },
+  {
+   "id": "top_mid",
+   "pos_en": [
+    778.4,
+    867.1
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 150,
+   "fov_deg": 50,
+   "pitch_deg": -89.9,
+   "note": "QA top view of Szosa Knyszynska mid-tile, route s = 260 m: cross-section, shoulders, driveways; pair = ortho/top_mid.jpg"
+  },
+  {
+   "id": "top_franciszka",
+   "pos_en": [
+    578.8,
+    959.8
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 150,
+   "fov_deg": 50,
+   "pitch_deg": -89.9,
+   "note": "QA top view of the junction Szosa Knyszynska / Swietego Franciszka z Asyzu (OSM node 3993784057) and the bus loop Fasty/Petla, route s = 480 m; pair = ortho/top_franciszka.jpg"
+  },
+  {
+   "id": "top_seam_north",
+   "pos_en": [
+    479.2,
+    1006.3
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 150,
+   "fov_deg": 50,
+   "pitch_deg": -89.9,
+   "note": "QA top view of Szosa Knyszynska at the north seam (towards dk65-02), route s = 590 m; pair = ortho/top_seam_north.jpg"
+  },
+  {
+   "id": "rev_s0600",
+   "pos_en": [
+    469.4,
+    1009.1
+   ],
+   "heading_deg": 115.0,
+   "eye_m": 2.5,
+   "fov_deg": 60.0,
+   "pitch_deg": -1.0,
+   "note": "driver eye 2.5 m, opposite direction (towards Bialystok) from the north seam, route s = 600 m"
+  },
+  {
+   "id": "rev_s0250",
+   "pos_en": [
+    786.8,
+    861.5
+   ],
+   "heading_deg": 114.9,
+   "eye_m": 2.5,
+   "fov_deg": 60.0,
+   "pitch_deg": -1.0,
+   "note": "driver eye 2.5 m, opposite direction (towards Bialystok), route s = 250 m"
+  },
+  {
+   "id": "junction_franciszka_approach",
+   "pos_en": [
+    624.8,
+    940.1
+   ],
+   "heading_deg": 294.9,
+   "eye_m": 2.5,
+   "fov_deg": 60.0,
+   "pitch_deg": -1.5,
+   "note": "driver eye 2.5 m, 40 m before the junction with Swietego Franciszka z Asyzu and the bus loop, route s = 430 m"
+  }
+ ]
+}

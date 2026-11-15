@@ -1,0 +1,39 @@
+# Authored overrides of region dk65-01 (ADR 0205). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 769803, 596223) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 2024 0.25 m (Data/raw/derived/dk65-01/ortho_0p25m.tif), BDOT10k 2002, LoD1 2024. No lettering, no brands.
+overrides:
+  # ---------------------------------------------------------------- Szosa Knyszyńska (D64 route), cross-section
+  # Read off the straightened strip of the 2024 orthophoto along route_start.json (artifacts/dk65-corridor-0205/
+  # ortho/route_strip.jpg, route_zoom_s200.jpg; lateral scale 0.25 m/px, reading +-0.3 m): asphalt 6.1 m wide
+  # (BDOT10k: 6.0 m), dashed centre line on the OSM axis (+-0.3 m), solid edge lines on both sides ~0.3 m inside the
+  # asphalt edge, light unpaved shoulders ~1.5 m (SW) and ~1.2 m (NE), no kerbs, no footway.
+  - id: knyszynska-xsec-main
+    target: {edge: "w234919333:2430405905-3993784057"}
+    reason: "Orthophoto strip s 0-470 m: asphalt 6.1 m (BDOT10k 6.0 m; the generator clamps class G to 6.5 m), solid edge lines both sides."
+    confidence: medium
+    verify: owner drive / owner photo of Szosa Knyszyńska
+    set: {width: 6.0, edge_lines: both}
+  - id: knyszynska-xsec-b
+    target: {edge: "w1281925347:3993784057-2559254737"}
+    reason: "Orthophoto strip s 470-480 m: solid edge lines both sides (width as BDOT10k 6.5 m, not re-measured under tree shadow)."
+    confidence: low
+    verify: owner drive
+    set: {edge_lines: both}
+  - id: knyszynska-xsec-c
+    target: {edge: "w1281925347:2559254737-2559254740"}
+    reason: "As knyszynska-xsec-b, s 480-525 m."
+    confidence: low
+    verify: owner drive
+    set: {edge_lines: both}
+  - id: knyszynska-xsec-d
+    target: {edge: "w623133896:2559254740-2559254743"}
+    reason: "As knyszynska-xsec-b, s 525-553 m."
+    confidence: low
+    verify: owner drive
+    set: {edge_lines: both}
+  - id: knyszynska-xsec-e
+    target: {edge: "w396566354:2559254743-1782932318"}
+    reason: "As knyszynska-xsec-b, s 553-632 m."
+    confidence: low
+    verify: owner drive
+    set: {edge_lines: both}
