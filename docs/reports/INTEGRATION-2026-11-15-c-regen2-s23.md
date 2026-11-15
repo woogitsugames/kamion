@@ -23,11 +23,11 @@ Wszystkie heady = sha z recenzji (0 nowych commitów do przejrzenia). Żaden z 7
 
 | PR | gałąź | head = recenzja | werdykt | w gałęzi | merge commit | testy po scaleniu (ten worktree) |
 |---|---|---|---|---|---|---|
-| #109 | fences-0239 | `684f9b5c4` tak | SCAL | tak | `9c8ab51a0` | `test_dojbld_0185`, `test_furniture_0120`, `test_furniture_r1`: 33 passed |
+| #109 | fences-0239 | `684f9b5c4` tak | SCAL | tak | `9c8ab51a0` | `test_dojbld_0185`, `test_furniture_0120`, `test_furniture_r1`: 33 passed (uruchomione na drzewie po scaleniu #110) |
 | #110 | shadows-0240 | `79830f024` tak | SCAL | tak | `3d4144f9e` + fix `68c3c0740` | `thin_shadow_audit.py --check`: exit 1 → po poprawce exit 0 (155 prototypów, 48 thin, 0 niezgodności) |
 | #111 | gpu-ab-0241 | `df5acb73b` tak | SCAL | tak | `72ce5ed05` | `tools/perf/tests`: 61 passed |
 | #123 | typology-0238 | `243b3065b` tak | **FIX** | **nie** | — | — |
-| #124 | signs-c-0236 | `174826435` tak | SCAL | tak | `f8095bf20` | 6 plików (0236, gate3_landmarks, g3b_lowread, g3b_r2, furniture_0162, budget_0221): 70 passed, 1 skipped (oczekiwany do przebudowy) |
+| #124 | signs-c-0236 | `174826435` tak | SCAL | tak | `f8095bf20` | 6 plików (0236, gate3_landmarks, g3b_lowread, g3b_r2, furniture_0162, budget_0221): 70 passed, 1 skipped (oczekiwany do przebudowy); `test_streetscape.py` (na końcowym drzewie): 58 passed, 1 skipped (instancje świata niezbudowane w worktree) |
 | #125 | kerbs-0237 | `7ab4dc2d8` tak | SCAL warunkowo | tak | `71c4e83bf` + hak `4ee4f646a` | `-k "pavements or cycleways or fab_details or yard_wear or plots or paved or bus_stop or cc0"`: 88 passed, 1 skipped (447 s) |
 | #122 | dojlidy-0242 | `4e845e768` tak | SCAL | tak | `f06f372bd` | zestaw końcowy — patrz niżej |
 
@@ -99,6 +99,12 @@ Liczby per PR to szacunki z recenzji (ESTIMATED), nie pomiar; `30-budget.py` pol
 ## Etap 2 — komendy (NIE uruchomione)
 Skrypty: `artifacts/c-regen2-s23/tools/` (w gicie na gałęzi). Każdy pisze `<krok> exit=<kod> try=<n> <czas>` do pliku
 statusu; kod −1073741502 jest ponawiany do 3 razy; znacznik `.done` nie jest dowodem — czytać `exit=`.
+Bramki między krokami: 20/40/50/60 przerywają pracę, gdy worktree nie jest na gałęzi `c-regen2-s23`; `20-regen.ps1` nie
+pisze `regen.done`, gdy `build_world` albo budżet nie mają `exit=0`; `40-unity.ps1` czyta te linie z `regen.status`
+(`-Force` = lider świadomie akceptuje czerwony budżet). Ponowienie działa też, gdy kod −1073741502 jest tylko w logu
+(`import-region.ps1` i `visual-qa.ps1` zwracają wtedy 1). Helpery sprawdzone testem na sucho w katalogu tymczasowym.
+**W trakcie `10-before.ps1` (tryb Fresh) nie commitować i nie pisać live w worktree** — drzewo stoi na sha main, a
+skrypty i plik live (śledzone tylko na gałęzi) na ten czas znikają z dysku; krok czeka na slot jeszcze na gałęzi.
 Uruchamianie odłączone (wzór), po kolei, każdy następny po `DONE` poprzedniego:
 
 ```powershell
@@ -112,7 +118,7 @@ Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile','-File',"$t\50
 
 | krok | skrypt | slot | co robi | status | czas |
 |---|---|---|---|---|---|
-| 0 | `00-prep.ps1` | — | robocopy z main: `Data/raw/derived/{cache,C,Dojlidy}`, `game/Assets/_Generated` (13,3 GB), `game/Library`; kontrola junctions i megascans | `prep/prep.status` | UNVERIFIED (kopiowanie ok. 25 GB) |
+| 0 | `00-prep.ps1` | — | robocopy z main: całe `Data/raw/derived` (14,5 GB; w korzeniu leżą cache warstw `*.pkl`), `game/Assets/_Generated` (13,3 GB), `game/Library`; kontrola junctions i megascans | `prep/prep.status` | UNVERIFIED (kopiowanie ponad 30 GB) |
 | 1 | `10-before.ps1` | heavy, potem unity | checkout bazy main (detached) → `build_world` C + Dojlidy → import → macierz VQA → powrót na gałąź | `before/before.status`, `before/vqa.status` | ok. 55 min WORKING_VALUE (20 + 23 + rendery; czasy s22) |
 | 2 | `20-regen.ps1` | heavy | `build_region` → `build_world` → `fidelity` → `export-route` → audyt lamp, C potem Dojlidy; cofnięcie `manifest_sha256` w `region.yaml`; katalog regionów; audyt cieni; `30-budget.py` | `regen/regen.status` | 27 min w s22 (C: 12 s + 12 min + 4 min 22 s; Dojlidy: 7 s + 8 min + 2 min 18 s) |
 | 3 | `40-unity.ps1` | unity | EditMode (bramka kompilacji, werdykt z XML) → import C → import Dojlidy → macierz VQA after | `unity/unity.status`, `after/vqa.status` | EditMode 2 min, import C 13 min, Dojlidy 10 min (s22) + rendery |
