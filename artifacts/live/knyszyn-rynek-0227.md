@@ -86,3 +86,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
 - 2026-11-15 20:52 +01:00 — Wierzba: opt-in generator i 3 testy, uruchomione izolowane studium Blender z osobnym slotem; bez integracji do świata. R2 nadal buduje.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/willow-study.done; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
+- 2026-11-15 20:54 +01:00 — Willow lookdev: pierwszy uruchomiony bake po poprawce ścieżek OK technicznie, ale wizualnie FAIL (pionowe kępy zamiast płaczącej korony); nie włączono do gry. Agent poprawia generator. R2 nadal w toku.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
