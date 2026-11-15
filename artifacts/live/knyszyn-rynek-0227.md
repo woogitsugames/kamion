@@ -66,3 +66,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 20:21 +01:00 — Audyt wierzby: brak prototypu dorosłej w bibliotece; potrzebne LOD/impostor i poprawka losowania wariantu points_en. R1 w trakcie. Szczegóły w AUDYT.md.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 20:22 +01:00 — R1 przeszedł generację budynków (3 hero assets) i nawierzchni; proces nadal pracuje, przywrócony bez ingerencji w cudze procesy.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
