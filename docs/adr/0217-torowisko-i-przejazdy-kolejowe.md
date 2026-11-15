@@ -127,8 +127,9 @@ W GLB Low LoD0 nie ma (sam LoD1: 0,512·1 800 ≈ 0,9 tys. na chunk). Draws (rai
   drogi kolejowe), rogatki no/brak/half/double_half/full (0/0/2/4/2 ramion, długości), światła/dzwon, pominięcie
   `railway=abandoned`, footprint blokuje roślinność, próbnik `road_z` poza jezdnią.
 - Determinizm: kod etapu jest wyłącznie za `RL.enabled(...)` / `w.rail is not None`; nowe pozycje w `LAYERS`/`NODES`
-  dla regionów bez toru są puste, więc GLB i manifest bez zmian. **Nie sprawdzone pełnym build_world** (brak Data/raw
-  w chmurze) — komenda dla lidera niżej.
+  dla regionów bez toru są puste, więc GLB i manifest bez zmian. Sprawdzone pełnym `build_world` tykocina z flagą
+  wyłączoną (s21): `derived/` 240/240 plików o identycznym SHA256 względem kodu main
+  (`artifacts/rail-fix-s21/flagoff/`).
 - `test_road_fidelity::test_report_not_stale` pada, bo `fidelity_qa.json` C hashuje `build_world.py` (zmieniony
   tutaj); wynik C się nie zmienia, ale raport trzeba odświeżyć z Data/raw:
   `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c`.
@@ -158,7 +159,34 @@ pwsh scripts/visual-qa.ps1 -Scene World_dw671-tykocin-01 -Tier High -Lighting cl
 uv run --project tools/worldgen python -m pytest -q tests/gis/test_rail_0217.py   # po włączeniu: zaktualizować listę `on`
 ```
 Determinizm C/Dojlidy (bez flagi): `build_world` dla `bialystok-industrial-c` i `bialystok-dojlidy` →
-`git diff --stat Data/Regions/*/generated` = pusto.
+`git diff --stat origin/main -- Data/Regions/*/generated` = tylko `dw671-tykocin-01` (region z włączonym torem).
+
+## Wyniki s22 (dw671-tykocin-01, `rail.enabled`, po scaleniu main @8603fa2f3)
+- **Generator** (`generated/rail.json`): 1 tor, `bed_qa` 543 stacje co 2 m — `buried_crown_stations` 0,
+  `open_toe_stations` 0, krawędź korony 0,114–0,121 m nad terenem, stopa skarpy 0,171–0,200 m w terenie; pas widoczny
+  3,86 m (orto 3,5–4,5 m, ESTIMATED); 4 rogatki w 4 różnych miejscach + 4 sygnalizatory, `warnings` puste, najmniejsza
+  odległość urządzenia od skrajni 2,16 m. Trójkąty: LoD0 15 084, LoD1 2 256, LoD2 112, płyty 132.
+- **Budżet A/B** (`streetscape_qa.json` → `mesh_budget.frame_estimate`, main → gałąź): najcięższy kadr High
+  1 068 212 → 1 053 777 (`route_s0489`), Low 310 738 → 308 051 (`dw671_seam_north_out`); kamery `rail_*`:
+  High ≤ 994 608, Low ≤ 305 221. Spadek na kamerach trasy = drzewa wycięte z pasa toru (`rail.blocked`). Draws: nie
+  mierzono (estymata nie ma tego pola). Telefon: nie mierzono.
+- **Pętla wizualna** (scena `World_dw671-tykocin-01`, Low + High, clear, 14 kamer; `artifacts/rail-fix-s21/vqa/r1…r5`,
+  referencje `artifacts/rail-fix-s21/ref/ortho_0p10_crossing_60m.jpg` i `ref/mapillary/crop_*.jpg`):
+  - r1: rogatki `double_half` — 4 markery w 2 miejscach (wyjazdowa leżała na wjazdowej drugiego wlotu) → poprawione,
+    r2 pokazuje 4 ramiona w 4 ćwiartkach jak na orto i Mapillary 1832769196903759;
+  - r1: pasmo toru / asfalt (luminancja liniowa, `rail_xing_top`, `artifacts/rail-fix-s21/measure_render.py`)
+    0,94 High / 0,98 Low; orto 0,44 (`measure_ortho_rel.py`). r2–r5: **0,81 / 0,83**, tor / trawa 0,52 / 0,55
+    (orto 0,66), R : G : B 1,06 : 1 : 0,91 (orto 1,09 : 1 : 0,87). Kotwice są sprzeczne: asfalt gry / trawa = 0,65,
+    na orto 1,48 (stara, jasna nawierzchnia DW671), więc 0,44 dałoby prawie czarny tłuczeń. Zostawione jako
+    WORKING_VALUE do zdjęcia właściciela;
+  - r1: boki szyn srebrne (bok pudełka próbkował główkę) → rdza na bokach, główka tylko na górze;
+  - r2–r4: korona jezdni przebijała przez płyty (siatka 2 m, potem próbnik 1 m ścinający grzbiet) → siatka 0,5 m,
+    `_deck_z`, `PANEL_LIFT` 0,015 m; r5: płyty ciągłe na całej szerokości jezdni w Low i High.
+  - teren pod torem bez szczelin i bez „wiszącej” podsypki (`rail_bed_close`, `rail_track_along`).
+  Ocena `visual-critic`: **nie wykonana** (agent nie tworzy subagentów) — dla lidera.
+- **`region.yaml`**: względem main zmienia się tylko blok `rail`. Dwa `manifest_sha256` (NMT, orto) zmienione przez
+  wcześniejszy `build_region` były artefaktem checkoutu CRLF manifestów w worktree (hash treści LF = wartość z main) —
+  przywrócone; `build_manifest.json` przeliczony.
 
 ## Otwarte
 1. **Włączenie**: proponowane `dw671-tykocin-01` (przejazd DW671 z 0212; kafel spoza listy zakazanej), potem `dk65-01`
@@ -170,4 +198,9 @@ Determinizm C/Dojlidy (bez flagi): `build_world` dla `bialystok-industrial-c` i 
    pierwszym kaflu (`rail.json` + render).
 4. Brak: słupków G-1a…f przed przejazdem, znaków A-9/A-10, linii P-12 przed rogatkami, sieci trakcyjnej (3 kV),
    rozjazdów, peronów, mostów kolejowych z podporami, przejść dla pieszych `railway=crossing`.
+6. Przejazd DW671 × linia 38 wobec orto GUGiK 2025 — brak w grze: linii P-12 i linii ciągłej P-4 przed przejazdem,
+   czerwonych pasów akustycznych, barier energochłonnych przy torze, słupów sieci trakcyjnej, biało-czerwonych
+   słupków sygnalizatorów (są szare); jezdnia ma krawężniki, na orto pobocze gruntowe (poza zakresem toru).
+7. Barwa podsypki: tor / asfalt 0,81–0,83 zamiast 0,44 z orto (patrz „Wyniki s22”) — zdjęcie właściciela rozstrzygnie.
+8. `PANEL_LIFT` 0,015 m to obejście siatki `road_z` 1 m; docelowo próbnik z siatki jezdni (trójkąty), wtedy 0,005 m.
 5. Bardzo skośne przejazdy: sinθ obcięty do 0,2 (≈ 11,5°) przy liczeniu szerokości jezdni.
