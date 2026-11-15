@@ -90,3 +90,7 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
 - 2026-11-15 20:55 +01:00 — Build_world r2 OK (992,7 s), import Unity w toku. Willow study r1 FAIL i nie wchodzi do r2.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
+
+- 2026-11-15 21:03 +01:00 — R2: build/import i cztery warianty renderów OK; wizualnie FAIL (m.in. kamery 02/07, zieleń, pomnik i suche dysze). Low: max drawsEst z instancjami 500→486, ale wspólne kadry do +6; High max 1 256 983 tris. Scalono origin/main b5dca11f, generator wymaga przebudowy.
+- NASTĘPNY KROK: `pwsh artifacts/knyszyn-rynek-0227/r3.ps1`
+
