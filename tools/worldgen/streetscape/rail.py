@@ -93,7 +93,7 @@ CLEARANCE_PROFILE = [(-1.60, 0.0), (-2.20, 0.40), (-2.20, 4.00), (-1.60, 6.00), 
                      (2.20, 0.40), (1.60, 0.0)]
 CLEARANCE_HALF = max(abs(x) for x, _ in CLEARANCE_PROFILE)
 
-# materials. rail_bed (FIX 3): ONE textured material for the ballast of every LoD and the LoD0 sleepers - the tile
+# materials. rail_bed (FIX 3): ONE textured material for the ballast, sleepers and rails of every LoD - the tile
 # streetscape.rail_textures.bed() carries crushed stone, the sleepers, fastenings and the rails (colours in the PNG,
 # sRGB; `color` 1), so the Low tier (LoD1: ribbon + rail boxes, LoD2: ribbon) reads as a track and the geometric
 # sleepers of LoD0 stand on painted ones. UV0 = (0.5 + lateral m / TEX_W_M, along m / TILE_M).
@@ -101,8 +101,6 @@ RAIL_MATERIALS = {
     "rail_bed": {"color": [1.0, 1.0, 1.0], "rough": 0.95, "metal": 0.0, "surface": "gravel", "texture": "rail_bed",
                  "note": "ballast + painted sleepers / rails; UV0 = (0.5 + lateral / %.2f m, along / %.2f m)"
                          % (RT.TEX_W_M, RT.SLEEPERS_PER_TILE * SLEEPER_SPACING)},
-    "rail_steel": {"color": [0.115, 0.085, 0.065], "rough": 0.6, "metal": 0.3,
-                   "note": "rusty web / head sides and top (the polished running band is in rail_bed on LoD2)"},
     "rail_crossing_panel": {"color": [0.16, 0.16, 0.16], "rough": 0.85, "metal": 0.0,
                             "note": "concrete-rubber crossing panels; UV0 = local metres"},
 }
@@ -621,8 +619,11 @@ class Plan:
                 if inz.any():
                     top = road_z_at(Pk[inz, 0], Pk[inz, 1]) + PANEL_LIFT
                     V[inz, 2] = top + np.tile(dz, len(s))[inz]
-            UV = np.column_stack([UV[:, 1], np.tile([0.0, 1.0, 1.0, 0.0], len(s))])
-            buf.add(layer, "rail_steel", V, UV, T, src=f"rail:{t.id}:rail")
+            # the rail samples its own painted rail in the rail_bed tile (always the 1435 mm one): polished running
+            # band on the top face, rust on the sides -> the whole track is ONE material (1 draw per chunk and LoD)
+            UV = np.column_stack([np.tile(RT.rail_u(c > min(t.offsets, key=lambda o: abs(o - c))), len(s)),
+                                  UV[:, 1] / TILE_M])
+            buf.add(layer, BED_MAT, V, UV, T, src=f"rail:{t.id}:rail")
             n += len(T)
         return int(n)
 

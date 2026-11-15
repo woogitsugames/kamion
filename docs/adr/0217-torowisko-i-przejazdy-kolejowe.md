@@ -112,8 +112,9 @@ uv run --project tools/worldgen tools/worldgen/build_region.py --region dw671-ty
 uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region dw671-tykocin-01
 uv run --project tools/worldgen python scripts/export-route.py --region dw671-tykocin-01
 pwsh scripts/import-region.ps1 -Region dw671-tykocin-01 -Build
-pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting clear -OutputDir artifacts/rail-0217/vqa/dw671-tykocin-01/Low
-pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting clear -OutputDir artifacts/rail-0217/vqa/dw671-tykocin-01/High
+pwsh scripts/visual-qa.ps1 -Scene World_dw671-tykocin-01 -Tier Low -Lighting clear -OutputDir artifacts/rail-0217/vqa/dw671-tykocin-01/Low
+pwsh scripts/visual-qa.ps1 -Scene World_dw671-tykocin-01 -Tier High -Lighting clear -OutputDir artifacts/rail-0217/vqa/dw671-tykocin-01/High
+# scena = World_<region> (WorldC to wyłącznie bialystok-industrial-c); kamery przejazdu: -Cameras rail_xing_top,rail_xing_above,...
 uv run --project tools/worldgen python -m pytest -q tests/gis/test_rail_0217.py   # po włączeniu: zaktualizować listę `on`
 ```
 Determinizm C/Dojlidy (bez flagi): `build_world` dla `bialystok-industrial-c` i `bialystok-dojlidy` →

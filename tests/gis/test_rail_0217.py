@@ -173,7 +173,7 @@ def test_triangles_per_lod_match_formula():
 def test_geometry_dimensions():
     from streetscape import rail as RL
     p, buf = _plan(node=False)
-    rails = [q for q in buf.parts if q.layer == "rail_lod1" and q.mat == "rail_steel"]
+    rails = [q for q in buf.parts if q.layer == "rail_lod1" and q.src.endswith(":rail")]
     assert len(rails) == 2
     # far from the crossing: top of rail = ground + TRACK_H, gauge between inner head edges = 1.435 m
     V = np.concatenate([q.V for q in rails])
@@ -214,13 +214,13 @@ def test_panels_at_road_height_and_rails_flush():
     assert abs(np.ptp(V[:, 1]) - RL.SLEEPER_L) < 1e-6
     assert _ntris(buf, "rail_crossing") == RL.tri_per_crossing(7.0, 1)
     # rail heads inside the panel zone are flush with the panels
-    R = np.concatenate([q.V for q in buf.parts if q.layer == "rail_lod0" and q.mat == "rail_steel"])
+    R = np.concatenate([q.V for q in buf.parts if q.layer == "rail_lod0" and q.src.endswith(":rail")])
     inz = (np.abs(R[:, 0] - 500) < 3.0)
     heads = R[inz][np.isclose(R[inz][:, 2], road_z_at(R[inz][:, 0], R[inz][:, 1]) + RL.PANEL_LIFT)]
     assert len(heads) > 0
     # no ballast / sleepers under the panels
     for q in buf.parts:
-        if q.mat == "rail_bed":
+        if q.mat == "rail_bed" and not q.src.endswith(":rail"):
             cen = q.V[q.T].mean(1)
             assert not np.any(np.abs(cen[:, 0] - 500) < 3.0)
     # profile climbs smoothly to the road: 0.8 m over the 25 m blend, untouched beyond it
@@ -313,7 +313,13 @@ def test_bed_uvs_address_the_tile():
     from streetscape import rail as RL
     from streetscape import rail_textures as RT
     p, buf = _plan(node=False, tracks=2)
-    assert set(RL.RAIL_MATERIALS) == {"rail_bed", "rail_steel", "rail_crossing_panel"}
+    assert set(RL.RAIL_MATERIALS) == {"rail_bed", "rail_crossing_panel"}       # the whole track = one material
+    for q in buf.parts:                                      # rails sample the painted rail: head on top, rust below
+        if q.src.endswith(":rail"):
+            lat_m = (q.UV[:, 0] - 0.5) * RT.TEX_W_M
+            assert np.all(np.abs(np.abs(lat_m) - (1.435 / 2 + 0.036)) <= 0.075)
+            top = np.isclose(q.V[:, 2], q.V[:, 2].max())
+            assert np.all(np.abs(np.abs(lat_m[top]) - (1.435 / 2 + 0.036)) < 0.036)
     assert RL.RAIL_MATERIALS["rail_bed"]["texture"] == "rail_bed"
     for q in buf.parts:
         if q.mat != "rail_bed":
@@ -437,6 +443,8 @@ def test_conform_levels_ground_under_the_bed():
     assert np.allclose(out[j, i], ground(hf.x0 + i, np.full(i.shape, 100.0)), atol=1e-9)
     assert p.lod_mask()[99, 50] and not p.lod_mask()[99, 101] and not p.lod_mask()[80, 50]
     assert p.report["conform"]["nodes"] > 0
+    # QA over the whole length on open ground (the kept "road" strip above is not a crossing of this plan)
+    out = p.conform(zc, np.zeros(zc.shape, bool), hf, road, log=lambda *a: None)
     qa = p.bed_qa(RL.grid_sampler(out, hf), ground, road)
     assert qa["buried_crown_stations"] == 0 and qa["open_toe_stations"] == 0
     assert abs(qa["crown_edge_above_terrain_m"]["p50"] - RL.BED_LIFT) < 0.02
