@@ -4,13 +4,17 @@
 .EXAMPLE
   pwsh scripts/test.ps1                 # EditMode + PlayMode
   pwsh scripts/test.ps1 -Platform EditMode
+  pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64   # worktree whose Library is imported for Windows
 .NOTES
   Exit 0 only if every requested run passed with at least one test. Unity runs sequentially
   (one Unity process per project).
 #>
 param(
     [ValidateSet('All', 'EditMode', 'PlayMode')] [string]$Platform = 'All',
-    [string]$Filter
+    [string]$Filter,
+    # Editor platform of the run. A checkout switched to Win64 (scripts/build-windows.ps1) must test with Win64,
+    # otherwise Unity switches back to Android and re-imports every asset (ADR 0261).
+    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android'
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -26,7 +30,7 @@ foreach ($p in $platforms) {
     $unityArgs = @('-runTests', '-testPlatform', $p, '-testResults', $xml)
     if ($Filter) { $unityArgs += @('-testFilter', $Filter) }
     # -runTests quits by itself; -quit would abort before tests run.
-    $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs -NoQuit -BuildTarget 'Android'
+    $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs -NoQuit -BuildTarget $BuildTarget
     if (-not (Test-Path $xml)) {
         Write-Host "$p : no results (exit $code), log $log" -ForegroundColor Red
         Show-UnityLogErrors $log; $failed++; continue

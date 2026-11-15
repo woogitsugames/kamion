@@ -1,0 +1,226 @@
+{
+ "metoda": "Pokrycie korytarzy zdjeciami: komorki 600 m (EPSG:2180) przecinane przez os drog motorway/trunk/primary(+link) w bboxie R9, grupowane wg ref.\nPanoramax: komorka pokryta, gdy >=1 zdjecie w promieniu 500 m od srodka komorki. KartaView: gdy zapytanie /photo (r=500 m) zwrocilo n>=1.\nWynik: panoramax/corridor_coverage.json",
+ "komorka_m": 600,
+ "razem": {
+  "komorek": 161,
+  "panoramax": 50,
+  "panoramax_od_2024": 0,
+  "kartaview": 84,
+  "ktorekolwiek": 85,
+  "panoramax_proc": 31.1,
+  "panoramax_od_2024_proc": 0.0,
+  "kartaview_proc": 52.2,
+  "ktorekolwiek_proc": 52.8
+ },
+ "wg_ref": {
+  "(trunk_link bez ref)": {
+   "komorek": 42,
+   "panoramax": 23,
+   "panoramax_od_2024": 0,
+   "kartaview": 34,
+   "ktorekolwiek": 34,
+   "panoramax_proc": 54.8,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 81.0,
+   "ktorekolwiek_proc": 81.0
+  },
+  "19": {
+   "komorek": 33,
+   "panoramax": 4,
+   "panoramax_od_2024": 0,
+   "kartaview": 14,
+   "ktorekolwiek": 15,
+   "panoramax_proc": 12.1,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 42.4,
+   "ktorekolwiek_proc": 45.5
+  },
+  "65": {
+   "komorek": 32,
+   "panoramax": 2,
+   "panoramax_od_2024": 0,
+   "kartaview": 16,
+   "ktorekolwiek": 16,
+   "panoramax_proc": 6.2,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 50.0,
+   "ktorekolwiek_proc": 50.0
+  },
+  "(primary_link bez ref)": {
+   "komorek": 22,
+   "panoramax": 2,
+   "panoramax_od_2024": 0,
+   "kartaview": 9,
+   "ktorekolwiek": 9,
+   "panoramax_proc": 9.1,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 40.9,
+   "ktorekolwiek_proc": 40.9
+  },
+  "678": {
+   "komorek": 17,
+   "panoramax": 0,
+   "panoramax_od_2024": 0,
+   "kartaview": 1,
+   "ktorekolwiek": 1,
+   "panoramax_proc": 0.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 5.9,
+   "ktorekolwiek_proc": 5.9
+  },
+  "8;65": {
+   "komorek": 17,
+   "panoramax": 17,
+   "panoramax_od_2024": 0,
+   "kartaview": 17,
+   "ktorekolwiek": 17,
+   "panoramax_proc": 100.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 100.0,
+   "ktorekolwiek_proc": 100.0
+  },
+  "8;19": {
+   "komorek": 16,
+   "panoramax": 16,
+   "panoramax_od_2024": 0,
+   "kartaview": 16,
+   "ktorekolwiek": 16,
+   "panoramax_proc": 100.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 100.0,
+   "ktorekolwiek_proc": 100.0
+  },
+  "669": {
+   "komorek": 15,
+   "panoramax": 0,
+   "panoramax_od_2024": 0,
+   "kartaview": 2,
+   "ktorekolwiek": 2,
+   "panoramax_proc": 0.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 13.3,
+   "ktorekolwiek_proc": 13.3
+  },
+  "(trunk bez ref)": {
+   "komorek": 10,
+   "panoramax": 1,
+   "panoramax_od_2024": 0,
+   "kartaview": 1,
+   "ktorekolwiek": 1,
+   "panoramax_proc": 10.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 10.0,
+   "ktorekolwiek_proc": 10.0
+  },
+  "8": {
+   "komorek": 10,
+   "panoramax": 10,
+   "panoramax_od_2024": 0,
+   "kartaview": 10,
+   "ktorekolwiek": 10,
+   "panoramax_proc": 100.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 100.0,
+   "ktorekolwiek_proc": 100.0
+  },
+  "S8": {
+   "komorek": 9,
+   "panoramax": 9,
+   "panoramax_od_2024": 0,
+   "kartaview": 9,
+   "ktorekolwiek": 9,
+   "panoramax_proc": 100.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 100.0,
+   "ktorekolwiek_proc": 100.0
+  },
+  "S19;65": {
+   "komorek": 8,
+   "panoramax": 0,
+   "panoramax_od_2024": 0,
+   "kartaview": 0,
+   "ktorekolwiek": 0,
+   "panoramax_proc": 0.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 0.0,
+   "ktorekolwiek_proc": 0.0
+  },
+  "19;65": {
+   "komorek": 7,
+   "panoramax": 1,
+   "panoramax_od_2024": 0,
+   "kartaview": 7,
+   "ktorekolwiek": 7,
+   "panoramax_proc": 14.3,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 100.0,
+   "ktorekolwiek_proc": 100.0
+  },
+  "676": {
+   "komorek": 6,
+   "panoramax": 3,
+   "panoramax_od_2024": 0,
+   "kartaview": 6,
+   "ktorekolwiek": 6,
+   "panoramax_proc": 50.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 100.0,
+   "ktorekolwiek_proc": 100.0
+  },
+  "(motorway_link bez ref)": {
+   "komorek": 6,
+   "panoramax": 5,
+   "panoramax_od_2024": 0,
+   "kartaview": 5,
+   "ktorekolwiek": 5,
+   "panoramax_proc": 83.3,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 83.3,
+   "ktorekolwiek_proc": 83.3
+  },
+  "19;65;676": {
+   "komorek": 3,
+   "panoramax": 0,
+   "panoramax_od_2024": 0,
+   "kartaview": 3,
+   "ktorekolwiek": 3,
+   "panoramax_proc": 0.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 100.0,
+   "ktorekolwiek_proc": 100.0
+  },
+  "19;676": {
+   "komorek": 1,
+   "panoramax": 0,
+   "panoramax_od_2024": 0,
+   "kartaview": 1,
+   "ktorekolwiek": 1,
+   "panoramax_proc": 0.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 100.0,
+   "ktorekolwiek_proc": 100.0
+  },
+  "19;678": {
+   "komorek": 1,
+   "panoramax": 0,
+   "panoramax_od_2024": 0,
+   "kartaview": 0,
+   "ktorekolwiek": 0,
+   "panoramax_proc": 0.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 0.0,
+   "ktorekolwiek_proc": 0.0
+  },
+  "(primary bez ref)": {
+   "komorek": 1,
+   "panoramax": 0,
+   "panoramax_od_2024": 0,
+   "kartaview": 0,
+   "ktorekolwiek": 0,
+   "panoramax_proc": 0.0,
+   "panoramax_od_2024_proc": 0.0,
+   "kartaview_proc": 0.0,
+   "ktorekolwiek_proc": 0.0
+  }
+ }
+}

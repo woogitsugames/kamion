@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "a0232_launch_laden",
+  "description": "40 t, 3 % uphill: service brake held, release, full throttle through the gears, lift-off at boost, part throttle",
+  "spec": "docs/adr/0232 (audio scenario, no physics checks)",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 3,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 27,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 1.5,
+        "throttle": 1,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 21,
+        "throttle": 0,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 24,
+        "throttle": 0.5,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      }
+    ]
+  },
+  "checks": []
+}
