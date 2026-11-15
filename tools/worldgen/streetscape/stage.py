@@ -230,6 +230,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     SR.osm_signs(pl, w.net, src, origin, w.junctions, frep, codes)
     SR.roundabout_signs(pl, w.net, w.junctions, attrs, frep, codes, boards, src=src, origin=origin)
     LM.build(pl, w.net, graph, overrides, origin, boards, frep)
+    SR.drop_rule_diagrams_near_gantries(pl, boards, frep)       # ADR 0236: the authored portal replaces the rule E-1
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     if getattr(w, "rail", None) is not None:       # ADR 0217: G-3 / G-4 crosses, barriers, signals of level crossings
         RP.place(pl, w.rail, rail_road_z, frep)
