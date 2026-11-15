@@ -37,7 +37,14 @@ ZIGZAG_M = 0.28
 LEAN_M = 0.12
 CROSS_DEG = 40.0                   # High: crossed cards at +-40 deg to the bank, CARD_W wide, one pair per sample
 CARD_W = 2.6
-EDGE_H = 0.55                      # r6: height of a card's side edges (x its middle height)
+EDGE_H = 0.75                      # r6/r7: height of a card's side edges (x its middle height)
+V_TOP = 0.94                       # r7: every card / ribbon top maps to the texture top - the outline is the ragged
+                                   # alpha (opaque coverage 1.0 below v 0.45, 0.5 at v 0.72, 0.1 at v 0.88), never
+                                   # the polygon edge (r6: top v = h / 2.5 cut through the opaque part -> solid
+                                   # tents on High, solid green triangles on Low)
+H_GEOM = 1.35                      # polygon height / nominal plant height (the 50 % coverage line sits at ~h)
+ZIGZAG_LOW_M = 0.9                 # Low: one continuous ribbon per stretch, deep zig-zag (volume without clumps)
+END_H_LOW = 0.5                    # Low: ribbon height at a stretch end (x)
 PIECE_N = (2, 5)                   # clump length in samples (x SEG_M), r4
 GAP_P = 0.20                       # chance of a one-sample gap after a clump (r5: clumps mostly overlap)
 PIECE_OFF_M = 0.6                  # clump offset from its row (+-)
@@ -189,7 +196,9 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                 pieces, a_ = [], 0
                 while a_ < len(sp0) - 1:
                     ln = int(PIECE_N[0] + _h(key0, row, int(sp0[a_]), "pl") * (PIECE_N[1] - PIECE_N[0] + 1))
-                    ln = max(2, (ln + 1) // 2 if low else ln)
+                    if low:
+                        ln = len(sp0)                  # r7: Low = one ribbon per stretch (2-3 sample clumps tapering
+                                                       # to nothing were 8-12 m triangles)
                     b_ = min(a_ + ln, len(sp0) - 1)
                     pieces.append(sp0[a_:b_ + 1])
                     a_ = b_ + (1 if _h(key0, row, int(sp0[a_]), "gap") < GAP_P else 0)
@@ -199,7 +208,7 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                     pk = (key0, row, int(sp[0]))
                     k = np.arange(len(sp))
                     jit = np.array([_h(key0, row, int(i), "z") for i in sp]) - 0.5
-                    zz = np.where(k % 2 == 0, 1.0, -1.0) * ZIGZAG_M + jit * 0.25 + (_h(*pk, "off") - 0.5) * 2 * PIECE_OFF_M
+                    zz = np.where((k + row) % 2 == 0, 1.0, -1.0) * (ZIGZAG_LOW_M if low else ZIGZAG_M) + jit * 0.25 + (_h(*pk, "off") - 0.5) * 2 * PIECE_OFF_M
                     Q = P[sp] + Nm[sp] * (dist + zz)[:, None] + T_[sp] * ((np.array([_h(key0, row, int(i), "t") for i in sp]) - 0.5) * 0.4)[:, None]
                     inside = shapely.contains_xy(keep_out, Q[:, 0], Q[:, 1])
                     if inside.all():
@@ -207,8 +216,8 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                     hm = HEIGHT_M[min(row, len(HEIGHT_M) - 1)] * (0.75 + 0.45 * _h(*pk, "ph"))
                     hn = np.array([_h(key0, row, int(i), "h") for i in sp])
                     h = hm * (0.70 + 0.45 * hn)            # r5: ragged top along the clump (max ~1.4 x row height)
-                    h[0] *= 0.15                       # a clump thins out to nothing at both ends (no box ends)
-                    h[-1] *= 0.15
+                    h[0] *= END_H_LOW if low else 0.15  # High: a clump thins out at both ends (cards: min 0.6 hm)
+                    h[-1] *= END_H_LOW if low else 0.15
                     h[inside] = 0.0
                     # r5: a run on a shore that the sheet covers (OSM channel buffers, islands): water 2 m out AND
                     # 2 m in -> no reed standing in open water
@@ -217,7 +226,7 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                     zg = np.asarray(zground(Q[:, 0], Q[:, 1]), float)
                     zl = np.asarray(zlevel(Q[:, 0], Q[:, 1]), float)
                     foot = np.where(np.isfinite(zl) & (zg < zl - 0.25), zl - 0.25, zg) - 0.12
-                    top = foot + h
+                    top = foot + h * H_GEOM
                     lean = -Nm[sp] * LEAN_M * (1.0 if row == 0 else -0.5)       # row 0 leans over the water
                     nrm = np.column_stack([-Nm[sp] * 0.6, np.full(len(sp), 0.6)])
                     s_ = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))])
@@ -229,7 +238,7 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                         for i_ in range(len(sp)):
                             if h[i_] <= 0.05:
                                 continue
-                            hc = max(h[i_], 0.6 * hm)
+                            hc = max(h[i_], 0.6 * hm) * H_GEOM
                             for sgn in (-1.0, 1.0):
                                 ang = sgn * math.radians(CROSS_DEG) + (_h(key0, row, int(sp[i_]), "ca", sgn) - 0.5) * 0.5
                                 t_ = T_[sp[i_]]
@@ -243,14 +252,13 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                                 um = u0 + CARD_W / TEX_M / 2
                                 n0 = len(Vc)
                                 M_ = Q[i_]
-                                vt = float(np.clip(hc / 2.5, 0.05, 1.0))
                                 # r6: a tent card - full height in the middle, EDGE_H at the sides: no vertical cut edge
                                 # and no flat top where neighbouring cards end (close-up review of r5 High)
                                 Vc += [[*A, foot[i_]], [*M_, foot[i_]], [*B, foot[i_]],
                                        [*(A + lean[i_]), foot[i_] + hc * EDGE_H], [*(M_ + lean[i_]), foot[i_] + hc],
                                        [*(B + lean[i_]), foot[i_] + hc * EDGE_H]]
                                 UVc += [[u0, 0.0], [um, 0.0], [u0 + CARD_W / TEX_M, 0.0],
-                                        [u0, vt * EDGE_H], [um, vt], [u0 + CARD_W / TEX_M, vt * EDGE_H]]
+                                        [u0, V_TOP], [um, V_TOP], [u0 + CARD_W / TEX_M, V_TOP]]
                                 Cc += [_fol(nrm[i_], OCC[0])] * 3 + [_fol(nrm[i_], OCC[1] * 0.92), _fol(nrm[i_], OCC[1]),
                                                                     _fol(nrm[i_], OCC[1] * 0.92)]
                                 Tc += [(n0, n0 + 1, n0 + 4), (n0, n0 + 4, n0 + 3), (n0 + 1, n0 + 2, n0 + 5), (n0 + 1, n0 + 5, n0 + 4)]
@@ -266,7 +274,7 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                     UV = np.zeros((2 * len(sp), 2))
                     UV[0::2, 0] = UV[1::2, 0] = u
                     UV[0::2, 1] = 0.0
-                    UV[1::2, 1] = np.clip(h / 2.5, 0.05, 1.0)    # texture spans 2.5 m: low clumps use the lower part
+                    UV[1::2, 1] = V_TOP                           # r7: the whole texture height on every ribbon
                     C = np.zeros((2 * len(sp), 4))
                     for i_ in range(len(sp)):
                         C[2 * i_] = _fol(nrm[i_], OCC[0])
