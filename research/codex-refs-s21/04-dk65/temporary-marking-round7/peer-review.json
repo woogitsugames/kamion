@@ -1,0 +1,44 @@
+{
+  "status": "PASS — dokładne3URL zgodne z fotografiami i zasadniczymi opisami",
+  "reviewer": "niezależny agent knyszyn",
+  "reviewed_at_brussels": "2026-11-15T23:26:00+01:00",
+  "method": "Każdy dokładny URL z manifestu otwarto oddzielnie w natywnym Chrome i obejrzano pełny obraz; bez pobrania, kopiowania i plików screenshotów. CUA completion_summary wykonano.",
+  "observations": [
+    {
+      "id": "04-TM7-01",
+      "url": "https://s1-gddkia.3ck.pl/img/uploads/2026/06/25/dk65_km_ok_0_250.jpg",
+      "result": "PASS",
+      "independent_observation": "Fotografia z podwyższenia wzdłuż czynnego wąskiego ciemnego pasa asfaltu: wyraźna żółta przerywana linia, pionowe czerwono-białe ukośne tablice na ciemnych stopach, żółte elementy u góry. Obok rozkopana jasna przestrzeń i oddzielny łuk asfaltu; prawy rów ma widoczną wodę, obok zielona koparka na ziemnym podwyższeniu. Dolny fragment zasłania metalowa bariera.",
+      "yellow_line": "SOURCED z obrazu: wyraźne żółte segmenty.",
+      "limits": "Brak wymiarów i prawnego podtypu U21; nie ustalać państwowego kilometrażu z nazwy pliku."
+    },
+    {
+      "id": "04-TM7-02",
+      "url": "https://s1-gddkia.3ck.pl/img/uploads/2026/06/02/km_ok_0_200_DK65.jpg",
+      "result": "PASS",
+      "independent_observation": "Ciemny wąski asfalt z szeregiem pojazdów, seria pionowych czerwono-białych tablic przy krawędziach, jasny ziemny pas z maszynami z lewej i uformowany rów z prawej. Przy prawym poprzecznym zjeździe widoczny ciemny okrągły wylot rury w skarpie i leżący jasny prostokątny element dalej na prawo. Okrągły znak z czarną sylwetką pieszego i czerwoną obwódką widoczny nad czerwonym pojazdem; dalsza tarcza z białym polem/czerwonym obwodem i małą tabliczką, tekst nieczytelny.",
+      "yellow_line": "UNVERIFIED — nie potwierdzam żółtej linii w tym obrazie.",
+      "limits": "Wylot rury nie daje średnicy, materiału, ciągłości przepustu ani prawnego opisu urządzenia; nazwa projektu i kilometraż wyłącznie według podpisu źródła."
+    },
+    {
+      "id": "04-TM7-03",
+      "url": "https://s1-gddkia.3ck.pl/img/uploads/2026/06/02/km_ok_0_050_DK65.jpg",
+      "result": "PASS",
+      "independent_observation": "Bliższe naziemne ujęcie styku ciemnego asfaltu z jasnym piaszczystym pasem budowy. Pierwsza pionowa tablica ma biały środek z szerokimi czerwonymi ukośnymi pasami, żółte obramowanie i grubą szarą stopę. Kolejne podobne tablice w szeregu. Obok pomarańczowa koparka, pryzmy ziemi i żółta wywrotka, w tle budynki i drzewa.",
+      "yellow_line": "UNVERIFIED — żółte obramowanie tablic nie jest poziomym oznakowaniem asfaltu.",
+      "limits": "Brak wymiaru, automatycznej klasyfikacji podtypu U21 i dowodu stałego wyposażenia."
+    }
+  ],
+  "not_verified": [
+    "Nie recenzowano niezależnie podpisów dat w galerii: daty z manifestu pozostają metadanymi źródła, nie odczytem EXIF.",
+    "Nie przypisano krajowego159+xxx do projektowego0+250/0+200/0+050.",
+    "Nie podano kategorii U21 ani wymiarów, natężenia ruchu czy szerokości pasa."
+  ],
+  "counts": {
+    "individually_viewed_exact_urls": 3,
+    "new_downloads": 0,
+    "new_photographs": 0,
+    "verified_yellow_horizontal_marking_frames": 1,
+    "verified_vertical_striped_devices_frames": 3
+  }
+}

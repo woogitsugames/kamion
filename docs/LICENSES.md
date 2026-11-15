@@ -579,3 +579,7 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 01/rear-approval-round12:3fotografie publikowaneAUTO CZĘŚCI KACZMAREK SEWERYN/Otomoto6144759743, autorfotografiiUNVERIFIED; tylko link-only, all rights reserved. Każdy dokładny adres obejrzany osobno, bez kopii/screenshotów; wGitwłasne obserwacje,0nowych odczytówE/funkcji.
 
 02/europe-used-trailers-round15:1fotografiaOLX/Otomoto1110839344/ID1daY3C, autorUNVERIFIED, tylko link-only, all rights reserved; bez pobrań/screenshotów. Typ i rozmiar obrazu sprawdzone oddzielnie, natywnyoryginałUNVERIFIED. 02/commons-europe-round16:0obrazówGit;1podglądMarkAhsmannCCBY-SA3.0 do audytu znanegoP18-131 wyłącznie pozaGit,2zestawy metadanychCommons i własne opisy wrepo.
+
+04/temporary-marking-round7:3fotografie publicznej strony kontraktuS19Krynice–Dobrzyniewo–BiałystokZachód, autorUNVERIFIED, tylko link-only, all rights reserved. DokładneURL i podpisyDK65/daty permanifest, wszystkiepo niezależnympeer; bez zdjęć/screenshotów wGit/na dysku. LogoGDDKiA nie uznane za licencjęCC.
+
+04/forest-context-round8:publiczne usługiBDL/LasówPaństwowych,1identyfikacjawydzielenia i literalneodpowiedzi/metadane + własnepara frazy. Nie przypisanoCC; mapaWMSwyłącznie pozaGit, bez redystrybucji geometrii(granicegeometrynull). Użycie nie rozszerza warunków źródła i nie identyfikuje szpaleru.

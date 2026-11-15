@@ -1,0 +1,136 @@
+{
+  "status": "STABLE — jedno rzeczywiste wydzielenie, bez fotografii",
+  "reviewed_at_brussels": "2026-11-15T23:23:00+01:00",
+  "documentation": [
+    {
+      "url": "https://bdl.lasy.gov.pl/portal/uslugi-ogc",
+      "locator": "1.7, WMS_BDL_mapa_drzewostanow",
+      "finding": "Oficjalnie opublikowany endpoint WMS. Nazwy warstw i formaty odczytane z GetCapabilities, nie zgadywane."
+    },
+    {
+      "url": "https://www9.bdl.lasy.gov.pl/portal/o-udostepnianiu?v=1",
+      "finding": "Publiczne udostępnianie danych nie jest przypisaniem CC; nie wysyłano wniosku ani wiadomości."
+    },
+    {
+      "url": "https://drewno.lasy.gov.pl/grupy-gatunkowe/",
+      "locator": "tabela SO | sosna",
+      "finding": "Pomocniczy słownik LP rozwija SO jako sosnę. Nie rozstrzyga samodzielnie gatunku botanicznego ani semantyki pola species_cd_d."
+    }
+  ],
+  "selection": {
+    "offline_source": "research/dk65-knyszyn-refs/data/km_points.json",
+    "K1_km": 20,
+    "tile": "dk65-08",
+    "K1_road_point_WGS84": {
+      "lat": 53.253363,
+      "lon": 22.984289
+    },
+    "K1_road_point_EPSG2180_xy_easting_northing": [
+      765678.6,
+      606091.9
+    ],
+    "chosen_map_pixel_I_J": [
+      500,
+      350
+    ],
+    "sample_EPSG2180_easting_northing": [
+      765879.0,
+      606191.0
+    ],
+    "sample_WGS84_lon_lat": [
+      22.98736904322183,
+      53.254151721636276
+    ],
+    "coordinate_status": "ESTIMATED: środek piksela mapy 2 m/piksel; punkt zapytania, nie pomiar pnia, granicy lasu ani odsunięcia od jezdni."
+  },
+  "map_observation": "Obejrzano pełną rzeczywistą mapę WMS: brunatne poligony z etykietami SO i wiekiem, cienkie granice, białe korytarze i poligony kropkowane. Wybrano brunatny poligon na prawo od białego pasa przy punkcie K1, nie próbkując na ślepo kolejnych punktów. Mapa tematyczna nie jest fotografią drzew.",
+  "result": {
+    "unit_address_literal": "01-08-2-04-232   -j   -98",
+    "arodes_int_num": "108033211",
+    "stand_subarea_id": "15725636",
+    "forest_unit_subarea_id": "55156",
+    "same_unit_check": "Obie warstwy mają ten sam adress_forest i arodes_int_num; dwa rekordy warstw to jedno wydzielenie, nie dwa lasy.",
+    "properties_verbatim": [
+      {
+        "type": "Feature",
+        "geometry": null,
+        "properties": {
+          "subarea_id": "15725636",
+          "adress_forest": "01-08-2-04-232   -j   -98",
+          "arodes_int_num": "108033211",
+          "species_cd": "SO       ",
+          "part_cd": "8  ",
+          "species_age": "129",
+          "age_class": "VII  ",
+          "order_key": "Null",
+          "storey_cd": "DRZEW   ",
+          "storey_rank_order": "1",
+          "stand_struct_cd": "DRZEW  ",
+          "sub_area": "4,18",
+          "lit": "j",
+          "rotation_age": "110",
+          "rotation_age_class": "VI   ",
+          "grp_age": "Rębne i starsze          ",
+          "gat_grp": "SO       ",
+          "grp_age_int": "3",
+          "Shape": "Polygon",
+          "a_year": "2026",
+          "st_area(geom)": "44527,9872",
+          "st_length(geom)": "1228,058948"
+        },
+        "layerName": "Drzewostany PGL LP"
+      },
+      {
+        "type": "Feature",
+        "geometry": null,
+        "properties": {
+          "subarea_id": "55156",
+          "arodes_int_num": "108033211",
+          "adress_forest": "01-08-2-04-232   -j   -98",
+          "area_type_cd": "D-STAN    ",
+          "site_type_cd": "BMŚW   ",
+          "silviculture_cd": "P-Z  ",
+          "forest_func_cd": "GOSP  ",
+          "stand_struct_cd": "DRZEW  ",
+          "rotation_age": "110",
+          "sub_area": "4,18",
+          "prot_category_cd": "OCH CENNE",
+          "species_cd_d": "SO       ",
+          "part_cd": "8  ",
+          "species_age": "129",
+          "Shape": "Polygon",
+          "a_year": "2026",
+          "st_area(geom)": "44527,9872",
+          "st_length(geom)": "1228,058948"
+        },
+        "layerName": "Wydzielenia PGL LP"
+      }
+    ],
+    "sourced_literals": {
+      "species_cd": "SO",
+      "species_cd_d": "SO",
+      "species_age": "129",
+      "a_year": "2026",
+      "part_cd": "8",
+      "age_class": "VII"
+    },
+    "interpretation": "SOURCED: kod SO (sosna wg słownika LP) i species_age=129 w danych z a_year=2026. Dominacja jest prawdopodobną interpretacją pola species_cd_d i najwyższego udziału part_cd=8, ale bez słownika konkretnego schematu nie deklarujemy tu 80% ani formalnie potwierdzonego gatunku panującego. Nie utożsamiać wieku 129 z wiekiem każdego pnia."
+  },
+  "limits": [
+    "GetFeatureInfo zwróciło geometry=null: źródło potwierdza obiekt Shape=Polygon, lecz nie pobrano granic/geometrii wydzielenia.",
+    "Brak botanicznego rozpoznania drzew na fotografii; SO nie jest dowodem gatunku szpaleru drogowego.",
+    "Nie wyliczono rozstawu, wysokości, średnicy pni ani odsunięcia od jezdni.",
+    "a_year=2026 to literalne pole, nie dowód terenowej inwentaryzacji wykonanej tego dnia/roku.",
+    "Pierwszy GetMap był biały przez błędną kolejność osi EPSG2180. Jeden poprawiony GetMap zastosował northing/easting zgodnie z capabilities; nie jest to zerowy wynik inwentaryzacji.",
+    "Wcześniejsze zapytania REST warstw11/12 nie są odpowiednikami WMS warstw1/7. Numery warstw zależą od interfejsu; nie przenosić ich wprost.",
+    "Brak zapytań OSM/Overpass, brak Google, brak Chrome, brak fotografii, brak wysłanych wiadomości do urzędów."
+  ],
+  "raw_map_path": "C:/Users/matma/Documents/Claude/kamion/Data/raw/refs/codex-s21/04-dk65/forest-context-round8/bdl-stands-map-correct-axis.png",
+  "counts": {
+    "new_stand_units": 1,
+    "GetCapabilities": 1,
+    "GetMap": 2,
+    "GetFeatureInfo": 1,
+    "new_photo_frames": 0
+  }
+}

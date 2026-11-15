@@ -1,0 +1,34 @@
+{
+  "status": "LIMITED — semantyka pól aktualnego WMS nie została potwierdzona pełnym słownikiem",
+  "checked_at_brussels": "2026-11-15T23:30:00+01:00",
+  "documents_read": [
+    {
+      "url": "https://mapserver.bdl.lasy.gov.pl/arcgis/rest/services/WMS_BDL_mapa_drzewostanow/MapServer/5",
+      "title": "Wydzielenia PGL LP, metadane warstwy REST5 odpowiadającej tematycznie WMS7",
+      "locator": "Fields",
+      "finding": "species_cd_d ma typString i alias identyczny; species_age SmallInteger i identyczny alias; a_year Integer i identyczny alias. Opisy i copyright puste. Strona nie rozwija znaczenia pól."
+    },
+    {
+      "url": "https://buligl.pl/documents/40124/48640/GIS_i_dane_przestrzenne_w_ocenach_oddzialywania_na_srodowisko.pdf/d2b541fa-93c0-90b5-2b9c-ef614c0d4007?t=1642168933352",
+      "title": "GIS i dane przestrzenne w ocenach oddziaływania na środowisko, red.Maciej Nowak, UAM2016; kopia w BULiGL",
+      "locator": "drukowane44,tabela4;46,tabela5;61,pozyskiwanie dokumentacji",
+      "finding": "Znaczenie A_YEAR zależy od tabeli: G_SITE_TYPE_BDL wiąże je z rokiem operatu glebowo-siedliskowego, G_FITO z rokiem opracowania. Rozdział urządzeniowy opisuje zarówno dane początku PUL, jak i coroczne aktualizacje SILP. Brak jednoznacznego połączenia z aktualnym polem a_year mapy drzewostanów."
+    }
+  ],
+  "SO": {
+    "status": "SOURCED — sosna jako rozwinięcie kodu w uprzednio odczytanym słowniku LP",
+    "url": "https://drewno.lasy.gov.pl/grupy-gatunkowe/",
+    "limit": "Nie jest to słownik species_cd_d konkretnej warstwy; formalna dominacja i identyfikacja gatunku botanicznego niepotwierdzone."
+  },
+  "field_status": {
+    "species_cd_d": "Kod literalny SO; znaczenie sufiksu_d i formalny gatunek panujący UNVERIFIED.",
+    "species_age": "Literalna129; nazwa wskazuje wiek, lecz zakres definicji/rok odniesienia niepotwierdzone słownikiem tej warstwy.",
+    "a_year": "Literalna2026; rok planu/taksacji/aktualizacji aktualnego WMS UNVERIFIED. Nie przenosić definicji z innej tabeli.",
+    "part_cd": "Literalna8; bez przeliczenia na80%."
+  },
+  "prohibited_inferences": [
+    "Nie obliczono2026−129 ani roku powstania lasu.",
+    "Nie przypisano gatunku szpaleru, rozstawu ani odsunięcia drzew od drogi."
+  ],
+  "network_scope": "2dokumenty, bez nowychWMSGetMap/GetFeatureInfo i bezOSM/Overpass; PDF tylko odczyt tekstowy przez web, bez pobrania/obrazów."
+}

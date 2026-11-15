@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities version="1.3.0"
+  xmlns="http://www.opengis.net/wms"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:esri_wms="http://www.esri.com/wms"
+  xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd http://www.esri.com/wms http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?version=1.3.0%26service=WMS%26request=GetSchemaExtension">
+  <Service>
+    <Name><![CDATA[WMS]]></Name>
+    <Title><![CDATA[WMS_BDL_mapa_drzewostanow]]></Title>
+    <Abstract><![CDATA[WMS_BDL_mapa_drzewostanow]]></Abstract>
+    <KeywordList><Keyword><![CDATA[WMS, BDL]]></Keyword></KeywordList>
+    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?"/>
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson><![CDATA[]]></ContactPerson>
+        <ContactOrganization><![CDATA[]]></ContactOrganization>
+      </ContactPersonPrimary>
+      <ContactPosition><![CDATA[]]></ContactPosition>
+      <ContactAddress>
+        <AddressType><![CDATA[]]></AddressType>
+        <Address><![CDATA[]]></Address>
+        <City><![CDATA[]]></City>
+        <StateOrProvince><![CDATA[]]></StateOrProvince>
+        <PostCode><![CDATA[]]></PostCode>
+        <Country><![CDATA[]]></Country>
+      </ContactAddress>
+      <ContactVoiceTelephone><![CDATA[]]></ContactVoiceTelephone>
+      <ContactFacsimileTelephone><![CDATA[]]></ContactFacsimileTelephone>
+      <ContactElectronicMailAddress><![CDATA[]]></ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees><![CDATA[]]></Fees>
+    <AccessConstraints><![CDATA[]]></AccessConstraints>
+    <MaxWidth>4096</MaxWidth>
+    <MaxHeight>4096</MaxHeight>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>application/vnd.ogc.wms_xml</Format>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP><Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?"/></Get></HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/bmp</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/tiff</Format>
+        <Format>image/png</Format>
+        <Format>image/png8</Format>
+        <Format>image/png24</Format>
+        <Format>image/png32</Format>
+        <Format>image/gif</Format>
+        <Format>image/svg+xml</Format>
+        <DCPType>
+          <HTTP><Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?"/></Get></HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>application/vnd.esri.wms_raw_xml</Format>
+        <Format>application/vnd.esri.wms_featureinfo_xml</Format>
+        <Format>application/vnd.ogc.wms_xml</Format>
+        <Format>application/geo+json</Format>
+        <Format>text/xml</Format>
+        <Format>text/html</Format>
+        <Format>text/plain</Format>
+        <DCPType>
+          <HTTP><Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?"/></Get></HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+      <esri_wms:GetStyles>
+        <Format>application/vnd.ogc.sld+xml</Format>
+        <DCPType>
+          <HTTP><Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?"/></Get></HTTP>
+        </DCPType>
+      </esri_wms:GetStyles>
+    </Request>
+    <Exception>
+      <Format>application/vnd.ogc.se_xml</Format>
+      <Format>application/vnd.ogc.se_inimage</Format>
+      <Format>application/vnd.ogc.se_blank</Format>
+      <Format>text/xml</Format>
+      <Format>XML</Format>
+    </Exception>
+    <Layer>
+      <Title><![CDATA[WMS_BDL_mapa_drzewostanow]]></Title>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621428</eastBoundLongitude><southBoundLatitude>48.960412</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960412" maxx="24.621428" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960412" miny="13.897674" maxx="54.838705" maxy="24.621428"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.778509" maxx="2740844.795392" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.778509" maxx="2740844.795392" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.407035" miny="126687.416896" maxx="789505.728041" maxy="911276.547111"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.316100" miny="5419283.817618" maxx="6121335.632452" maxy="6204053.535050"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.315667" miny="6199646.008340" maxx="6098924.329046" maxy="6984698.596437"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.315711" miny="6980123.511558" maxx="6101956.497466" maxy="7765151.666060"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.316339" miny="7760808.493718" maxx="6125704.351200" maxy="8545503.380838"/>
+      <Layer queryable="1">
+        <Name>0</Name>
+        <Title><![CDATA[Drzewostany poza PGL LP wg PUL]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960413</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960413" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960413" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.516782" miny="126687.424280" maxx="789505.661660" maxy="911275.597849"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.425860" miny="5419283.819211" maxx="6121335.518419" maxy="6204052.580617"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.425427" miny="6199646.014275" maxx="6098924.250759" maxy="6984697.645375"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.425458" miny="6980123.521862" maxx="6101956.497466" maxy="7765150.718739"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.426057" miny="7760808.508435" maxx="6125704.351200" maxy="8545502.437606"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Drzewostany poza PGL LP wg PUL]]></Title>
+          <LegendURL width="336" height="576">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=0" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>70870.535714</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>1</Name>
+        <Title><![CDATA[Drzewostany PGL LP]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960413</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960413" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960413" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.516782" miny="126687.424280" maxx="789505.661660" maxy="911275.597849"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.425860" miny="5419283.819211" maxx="6121335.518419" maxy="6204052.580617"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.425427" miny="6199646.014275" maxx="6098924.250759" maxy="6984697.645375"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.425458" miny="6980123.521862" maxx="6101956.497466" maxy="7765150.718739"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.426057" miny="7760808.508435" maxx="6125704.351200" maxy="8545502.437606"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Drzewostany PGL LP]]></Title>
+          <LegendURL width="336" height="576">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=1" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>70870.535714</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>2</Name>
+        <Title><![CDATA[Drzewostany w KO i KDO poza PGL LP wg PUL]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960413</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960413" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960413" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.516782" miny="126687.424280" maxx="789505.661660" maxy="911275.597849"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.425860" miny="5419283.819211" maxx="6121335.518419" maxy="6204052.580617"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.425427" miny="6199646.014275" maxx="6098924.250759" maxy="6984697.645375"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.425458" miny="6980123.521862" maxx="6101956.497466" maxy="7765150.718739"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.426057" miny="7760808.508435" maxx="6125704.351200" maxy="8545502.437606"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Drzewostany w KO i KDO poza PGL LP wg PUL]]></Title>
+          <LegendURL width="222" height="162">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=2" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>70870.535714</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>3</Name>
+        <Title><![CDATA[Drzewostany w KO i KDO PGL LP]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960413</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960413" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960413" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.516782" miny="126687.424280" maxx="789505.661660" maxy="911275.597849"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.425860" miny="5419283.819211" maxx="6121335.518419" maxy="6204052.580617"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.425427" miny="6199646.014275" maxx="6098924.250759" maxy="6984697.645375"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.425458" miny="6980123.521862" maxx="6101956.497466" maxy="7765150.718739"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.426057" miny="7760808.508435" maxx="6125704.351200" maxy="8545502.437606"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Drzewostany w KO i KDO PGL LP]]></Title>
+          <LegendURL width="222" height="162">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=3" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>70870.535714</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>4</Name>
+        <Title><![CDATA[Wydzielenia leśne niezalesione poza  PGL LP wg PUL]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960413</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960413" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960413" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.516782" miny="126687.424280" maxx="789505.661660" maxy="911275.597849"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.425860" miny="5419283.819211" maxx="6121335.518419" maxy="6204052.580617"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.425427" miny="6199646.014275" maxx="6098924.250759" maxy="6984697.645375"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.425458" miny="6980123.521862" maxx="6101956.497466" maxy="7765150.718739"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.426057" miny="7760808.508435" maxx="6125704.351200" maxy="8545502.437606"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Wydzielenia leśne niezalesione poza  PGL LP wg PUL]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=4" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>70870.535714</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>5</Name>
+        <Title><![CDATA[Wydzielenia leśne niezalesione PGL LP]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960413</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960413" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960413" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.516782" miny="126687.424280" maxx="789505.661660" maxy="911275.597849"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.425860" miny="5419283.819211" maxx="6121335.518419" maxy="6204052.580617"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.425427" miny="6199646.014275" maxx="6098924.250759" maxy="6984697.645375"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.425458" miny="6980123.521862" maxx="6101956.497466" maxy="7765150.718739"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.426057" miny="7760808.508435" maxx="6125704.351200" maxy="8545502.437606"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Wydzielenia leśne niezalesione PGL LP]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=5" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>70870.535714</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>6</Name>
+        <Title><![CDATA[Wydzielenia poza PGL LP wg PUL]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960412</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960412" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960412" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.778509" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.778509" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.407093" miny="126687.416896" maxx="789505.661660" maxy="911275.605987"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.316102" miny="5419283.817618" maxx="6121335.518419" maxy="6204052.594623"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.315669" miny="6199646.008340" maxx="6098924.250759" maxy="6984697.654976"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.315700" miny="6980123.511558" maxx="6101956.497466" maxy="7765150.723977"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.316299" miny="7760808.493718" maxx="6125704.351200" maxy="8545502.438504"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Wydzielenia poza PGL LP wg PUL]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=6" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>23623.511905</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>7</Name>
+        <Title><![CDATA[Wydzielenia PGL LP]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960413</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960413" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960413" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.516782" miny="126687.424280" maxx="789505.661660" maxy="911275.597849"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.425860" miny="5419283.819211" maxx="6121335.518419" maxy="6204052.580617"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.425427" miny="6199646.014275" maxx="6098924.250759" maxy="6984697.645375"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.425458" miny="6980123.521862" maxx="6101956.497466" maxy="7765150.718739"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.426057" miny="7760808.508435" maxx="6125704.351200" maxy="8545502.437606"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Wydzielenia PGL LP]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=7" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>23623.511905</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>8</Name>
+        <Title><![CDATA[Oddziały poza PGL LP wg PUL]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960412</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960412" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960412" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.778509" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.778509" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.407093" miny="126687.416896" maxx="789505.661660" maxy="911275.605987"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.316102" miny="5419283.817618" maxx="6121335.518419" maxy="6204052.594623"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.315669" miny="6199646.008340" maxx="6098924.250759" maxy="6984697.654976"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.315700" miny="6980123.511558" maxx="6101956.497466" maxy="7765150.723977"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.316299" miny="7760808.493718" maxx="6125704.351200" maxy="8545502.438504"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Oddziały poza PGL LP wg PUL]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=8" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>160639.880952</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>9</Name>
+        <Title><![CDATA[Oddziały PGL LP]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897674</westBoundLongitude><eastBoundLongitude>24.621415</eastBoundLongitude><southBoundLatitude>48.960413</southBoundLatitude><northBoundLatitude>54.838705</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897674" miny="48.960413" maxx="24.621415" maxy="54.838705"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960413" miny="13.897674" maxx="54.838705" maxy="24.621415"/>
+<BoundingBox CRS="EPSG:3857" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:102100" minx="1547081.990205" miny="6268146.945854" maxx="2740843.362790" maxy="7330624.789250"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.516782" miny="126687.424280" maxx="789505.661660" maxy="911275.597849"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.425860" miny="5419283.819211" maxx="6121335.518419" maxy="6204052.580617"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.425427" miny="6199646.014275" maxx="6098924.250759" maxy="6984697.645375"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.425458" miny="6980123.521862" maxx="6101956.497466" maxy="7765150.718739"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.426057" miny="7760808.508435" maxx="6125704.351200" maxy="8545502.437606"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Oddziały PGL LP]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=9" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>160639.880952</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>10</Name>
+        <Title><![CDATA[Leśnictwa]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897790</westBoundLongitude><eastBoundLongitude>24.621296</eastBoundLongitude><southBoundLatitude>49.021688</southBoundLatitude><northBoundLatitude>54.837848</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897790" miny="49.021688" maxx="24.621296" maxy="54.837848"/>
+<BoundingBox CRS="EPSG:4326" minx="49.021688" miny="13.897790" maxx="54.837848" maxy="24.621296"/>
+<BoundingBox CRS="EPSG:3857" minx="1547094.891220" miny="6278542.268958" maxx="2740830.158946" maxy="7330459.020557"/>
+<BoundingBox CRS="EPSG:102100" minx="1547094.891220" miny="6278542.268958" maxx="2740830.158946" maxy="7330459.020557"/>
+<BoundingBox CRS="EPSG:2180" minx="128237.180582" miny="127154.460220" maxx="789409.807213" maxy="910761.484396"/>
+<BoundingBox CRS="EPSG:2176" minx="5431621.334974" miny="5419391.229076" maxx="6121239.471673" maxy="6203174.025849"/>
+<BoundingBox CRS="EPSG:2177" minx="5431621.334652" miny="6200023.138245" maxx="6098828.288036" maxy="6984092.654765"/>
+<BoundingBox CRS="EPSG:2178" minx="5431621.334655" miny="6980771.963021" maxx="6101860.532770" maxy="7764816.709445"/>
+<BoundingBox CRS="EPSG:2179" minx="5431621.334998" miny="7761731.035798" maxx="6125608.325121" maxy="8545437.994445"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Leśnictwa]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=10" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+        <MaxScaleDenominator>330729.166667</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1">
+        <Name>11</Name>
+        <Title><![CDATA[Nadleśnictwa]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897790</westBoundLongitude><eastBoundLongitude>24.621401</eastBoundLongitude><southBoundLatitude>48.960412</southBoundLatitude><northBoundLatitude>54.837848</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897790" miny="48.960412" maxx="24.621401" maxy="54.837848"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960412" miny="13.897790" maxx="54.837848" maxy="24.621401"/>
+<BoundingBox CRS="EPSG:3857" minx="1547094.880635" miny="6268146.838465" maxx="2740841.789017" maxy="7330459.024027"/>
+<BoundingBox CRS="EPSG:102100" minx="1547094.880635" miny="6268146.838465" maxx="2740841.789017" maxy="7330459.024027"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.445895" miny="126695.888713" maxx="789410.348102" maxy="911274.569206"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.355292" miny="5419292.297087" maxx="6121240.399406" maxy="6204051.556506"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.354973" miny="6199654.486582" maxx="6098828.925577" maxy="6984696.617303"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.355068" miny="6980131.985200" maxx="6101860.535383" maxy="7765149.687182"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.355602" miny="7760816.959007" maxx="6125608.327993" maxy="8545501.402988"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[Nadleśnictwa]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=11" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1">
+        <Name>12</Name>
+        <Title><![CDATA[RDLP]]></Title>
+        <Abstract><![CDATA[]]></Abstract>
+<CRS>CRS:84</CRS>
+<CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+ <!-- alias 3857 -->
+<CRS>EPSG:102100</CRS>
+<CRS>EPSG:2180</CRS>
+<CRS>EPSG:2176</CRS>
+<CRS>EPSG:2177</CRS>
+<CRS>EPSG:2178</CRS>
+<CRS>EPSG:2179</CRS>
+<EX_GeographicBoundingBox><westBoundLongitude>13.897765</westBoundLongitude><eastBoundLongitude>24.621428</eastBoundLongitude><southBoundLatitude>48.960412</southBoundLatitude><northBoundLatitude>54.838043</northBoundLatitude></EX_GeographicBoundingBox>
+<BoundingBox CRS="CRS:84" minx="13.897765" miny="48.960412" maxx="24.621428" maxy="54.838043"/>
+<BoundingBox CRS="EPSG:4326" minx="48.960412" miny="13.897765" maxx="54.838043" maxy="24.621428"/>
+<BoundingBox CRS="EPSG:3857" minx="1547092.159167" miny="6268146.838465" maxx="2740844.795392" maxy="7330496.831589"/>
+<BoundingBox CRS="EPSG:102100" minx="1547092.159167" miny="6268146.838465" maxx="2740844.795392" maxy="7330496.831589"/>
+<BoundingBox CRS="EPSG:2180" minx="121427.445895" miny="126694.100675" maxx="789432.209972" maxy="911276.544195"/>
+<BoundingBox CRS="EPSG:2176" minx="5424807.355315" miny="5419290.506995" maxx="6121262.304967" maxy="6204053.530032"/>
+<BoundingBox CRS="EPSG:2177" minx="5424807.354974" miny="6199652.697078" maxx="6098850.812100" maxy="6984698.592997"/>
+<BoundingBox CRS="EPSG:2178" minx="5424807.355084" miny="6980130.196998" maxx="6101882.409680" maxy="7765151.664183"/>
+<BoundingBox CRS="EPSG:2179" minx="5424807.355668" miny="7760815.172902" maxx="6125630.210773" maxy="8545503.380516"/>
+        <Style>
+          <Name>default</Name>
+          <Title><![CDATA[RDLP]]></Title>
+          <LegendURL width="18" height="18">
+            <Format>image/png</Format>
+            <OnlineResource xlink:href="http://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=12" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" />
+          </LegendURL>
+        </Style>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>

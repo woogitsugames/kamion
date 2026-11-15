@@ -60,3 +60,9 @@ Mapillary-corridor-round4:2 nowe link-only kadry picturehoover z27.06.2020, obej
 ## Zjazd, pobocze i zakres numeru drogi — obiegi5–6
 
 Główny manifest17rekordów: [2historyczne Mapillary](accesses-verges-round5/README.md), 0pobrań/2link-only — jeden zjazd i jeden przekrój zboczy, bez rozpoznanej rury/czoła przepustu. Kontekst dawnej drogi65 z K1: way1399803717, version4 z20.10.2026, highway=secondary, old_ref=65, bez ref=65. GPS kamery, przypisanie konkretnego kadru do way/kafla i obecny status DK65 UNVERIFIED. Korekta obejmuje też04M3-002, bez zmiany obserwacji wyglądu. [Plac budowy](temporary-works-round6/README.md):1AUXlink-only z RadiaBiałystok/GDDKiA,0pobrań, żółtych linii/zapór nie rozpoznano. Nie zwiększa liczby kwalifikowanych referencji oznakowania.
+
+## Czytelne oznakowanie i dane lasu — obiegi7–8
+
+Główny manifest21rekordów. [TM7](temporary-marking-round7/README.md):3nowe fotografie kontraktu,0pobrań/3link-onlyARR, każda niezależnie obejrzana przez2agentów.1kadr pewnej żółtej linii przerywanej, wszystkie3pionowych czerwono-białych tablic na stopach; brak potwierdzonych poziomychU20 i dokładnego podtypuU21. PodpisyDK65 0+050/0+200/0+250 to lokalny zapis projektu, nie krajowy159+xxx; daty02/24.06.2026 wg podpisów, nieEXIF. W02widoczny okrągły wylot rury, bez średnicy/materiału/ciągłości. Nie aktualny stan15.11.2026.
+
+[BDL](forest-context-round8/README.md):1rzeczywistewydzielenie przy K1km20/dk65-08,0fotografii. ŹródłoweSO/species_age129/a_year2026 i wspólnyidentyfikator108033211 w2warstwach. SO rozwinięto jako sosnę słownikiemLP, nie botanika ze zdjęcia. Nie potwierdzono semantyki roku/formalnej dominacji/80%udziału ani roku powstania. Koordynator obejrzał mapę i sprawdził literalneJSON; mapa tylko raw pozaGit, geometrynull. Gatunek szpaleru przyjezdni, wymiary/rozstaw/odsunięcie pni nadalUNVERIFIED. To kontekst lasu, nie dowód alei drzew.

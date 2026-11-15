@@ -1,0 +1,22 @@
+{
+  "endpoint": "https://mapserver.bdl.lasy.gov.pl/arcgis/services/WMS_BDL_mapa_drzewostanow/MapServer/WMSServer",
+  "params": {
+    "SERVICE": "WMS",
+    "VERSION": "1.3.0",
+    "REQUEST": "GetFeatureInfo",
+    "LAYERS": "0,1,6,7",
+    "STYLES": "",
+    "CRS": "EPSG:2180",
+    "BBOX": "605292,764878,606892,766478",
+    "WIDTH": 800,
+    "HEIGHT": 800,
+    "FORMAT": "image/png",
+    "TRANSPARENT": "FALSE",
+    "QUERY_LAYERS": "0,1,6,7",
+    "INFO_FORMAT": "application/geo+json",
+    "I": 500,
+    "J": 350,
+    "FEATURE_COUNT": 5
+  },
+  "http": 200
+}
