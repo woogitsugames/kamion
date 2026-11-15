@@ -133,3 +133,46 @@ def test_monki_terrain_seam_identical():
     (tm, am), (tw, aw) = rows
     hm = lambda t, a, r: t["encoding"]["offset_m"] + a[r, :] * t["encoding"]["scale_m_per_unit"]
     assert np.abs(hm(tm, am, -1) - hm(tw, aw, 0)).max() < 0.002
+
+
+def _crossings_x(region_id, seam_x):
+    g = _graph(region_id)
+    nodes = {n["id"]: n for n in g["nodes"]}
+    out = {}
+    for e in g["edges"]:
+        for k in ("from", "to"):
+            n = nodes[e[k]]
+            if abs(n["x"] - seam_x) < 0.01:
+                out.setdefault(e["osm_way"], set()).add(round(n["y"], 1))
+    return out
+
+
+def test_tykocin_tile_on_the_lattice_and_pinned():
+    import regions
+    c = regions.get("bialystok-industrial-c")
+    r = regions.get("dw671-tykocin-01")
+    i, j = -9, 7
+    assert r.bbox == (c.bbox[0] + 2048 * i, c.bbox[1] + 2048 * j, c.bbox[0] + 2048 * (i + 1), c.bbox[1] + 2048 * (j + 1))
+    assert r.bbox[3] == regions.get("knyszyn-w").bbox[1] and r.bbox[2] == regions.get("knyszyn-s").bbox[0]
+    assert regions.source_pins("dw671-tykocin-01") == {"nmt_year": "2022"}
+
+
+def test_tykocin_seams_same_roads_same_points():
+    n_t, n_w = _crossings("dw671-tykocin-01", 611583.0), _crossings("knyszyn-w", 611583.0)
+    assert 70329870 in n_t and n_t == n_w            # DW671 Tykocka + a service road cross the north seam
+    e_t, e_s = _crossings_x("dw671-tykocin-01", 760587.0), _crossings_x("knyszyn-s", 760587.0)
+    assert e_t == e_s
+
+
+def test_tykocin_terrain_seams_identical():
+    def load(rid):
+        t = json.loads((REGIONS / rid / "terrain.json").read_text(encoding="utf-8"))
+        assert t["source_manifest"] == f"gugik-nmt-2022-{rid}"
+        f = REPO / t["encoding"]["file"]
+        if not f.exists():
+            pytest.skip(f"{f} missing (not in git): run build_region.py")
+        a = np.fromfile(f, "<u2").reshape(2049, 2049).astype(float)
+        return t["encoding"]["offset_m"] + a * t["encoding"]["scale_m_per_unit"]
+    t, w, s = load("dw671-tykocin-01"), load("knyszyn-w"), load("knyszyn-s")
+    assert np.abs(t[0, :] - w[-1, :]).max() < 0.002       # north edge of (-9,7) = south edge of knyszyn-w
+    assert np.abs(t[:, -1] - s[:, 0]).max() < 0.002       # east edge of (-9,7) = west edge of knyszyn-s
