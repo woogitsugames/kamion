@@ -35,3 +35,13 @@ SOURCED [03-D01, UM, 2023-08-25](https://www.knyszyn.pl/asp/i-%E2%99%A5-knyszyn,
 SOURCED [03-D02, UM, 2022-07-21](https://www.knyszyn.pl/asp/nasz-wspolny-rynek---apel-do-mieszkancow,239,artykul,1,4982): po rewitalizacji są brukowane alejki, podświetlana fontanna, ławki i stoliki; w sezonie2022 urząd opisuje czerwone pelargonie w donicach. Nie przenosimy gatunku i koloru sezonowych nasadzeń bezwarunkowo do2026.
 
 **Wniosek dla generatora:** fotografie wnętrza parku sprzed2020 nie są dowodem obecnego układu nawierzchni/wyposażenia. Bryły fasad z2009/2012 również wymagają aktualizacji, choć sama data rewitalizacji nie dowodzi ich przebudowy. Źródła tekstowe są odczytane; zdjęć z komunikatów nie pobrano i nie opisano. Łączny nowy materiał w tym uzupełnieniu: 1 ortofoto + 2 dokumenty tekstowe link-only, 0 nowych fotografii ulicznych; 5 poprzednich fotografii to ponowny przegląd K1.
+
+
+## Nowe kadry link-only: napis i lampy parkowe (03-L01/L02)
+
+Dwa zdjęcia dołączone do komunikatu UM2023-08-25 otwarto **osobno w Chrome i obejrzano**. Licencja fotografii nieustalona: `link-only, all rights reserved`; brak lokalnych plików zdjęć lub screenshotów. Ścieżki i zapis oględzin w `data/link-only-visual-review.json`. Są to **2 nowe kadry link-only**, odrębne od2 źródeł tekstowych D01/D02.
+
+- SOURCED [03-L01, obraz](https://www.knyszyn.pl/asp/pliki/aktualnosci/img_7820.jpg): białe lica liter, czerwone serce, cienkie podpory napisu w trawniku; za nim proste ciemne słupy z jasnymi głowicami pod szerszym daszkiem. Iglaste drzewo po lewej ma sinawy odcień igieł (gatunek UNVERIFIED). Znak B-36 przy ulicy widoczny w prawym tle, aktualne obowiązywanie2026 UNVERIFIED.
+- SOURCED [03-L02, obraz](https://www.knyszyn.pl/asp/pliki/aktualnosci/img_7835noc.jpg): nocą litery jasno zielonkawe, serce różowo-czerwone; pod literami zielonkawa poświata na trawie. Świecą2 widoczne głowice parkowe. Technologia źródeł, fotometria i CCT UNVERIFIED.
+
+**Oba kadry pokazują napis, nie fontannę.** Kolory liter nie są dowodem koloru światła w fontannie. Nie wyprowadzono wysokości liter/słupów ani ich rozstawu z perspektywy; brak skali. Stała/programowalna barwa napisu i jego obecne położenie UNVERIFIED. W komunikacie D01 napis jest opisany jako przenośny.
