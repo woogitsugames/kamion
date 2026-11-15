@@ -34,3 +34,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 18:53 +01:00 — R1 uzyskało slot heavy i przebudowuje region. Moduł obelisku/monumentu/ławek/latarni przygotowany, 3 testy passed; sylwetka króla PROXY_NOT_APPROVED, orzeł i emisja latarni otwarte.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 18:56 +01:00 — R1 build trwa; materiał kostki granitowej nie ma lokalnego skanu, road_sett to proceduralne WORKING_VALUE do próby. Generator par 3–8 gotowy; kamery 1/2 i 9–11 mają orientacyjne pozycje do r2.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
