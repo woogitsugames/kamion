@@ -48,3 +48,18 @@ overrides:
     confidence: medium
     verify: none
     set: {lamps: false}
+  - id: rynek-park-trees
+    kind: forest_stand
+    target: {bdot: "20029180-A4BE-5C99-E053-CC2BA8C01CFC"}
+    reason: >-
+      West half of Rynek is a town park (OSM way 300660468 leisure=park, 0.74 ha): mown lawn, paths to a monument
+      and large single broadleaf trees. BDOT10k has it as OT_PTLZ_A "zadrzewienie, lisciaste", which the class
+      default plants as a closed wood (render r2 rynek-above: a dark block of trunks). GUGiK orthophoto 0.1 m
+      2025-05-27: ~60 separate crowns of 8-14 m diameter on 0.9 ha -> one tree per ~12 m; owner frames
+      20240730_190331 / 20250729_1825xx: old trees ~2.5-3x the height of the two-storey houses behind. Heights
+      14-22 m and the linden/maple shares are WORKING_VALUE (species read from crown shape only).
+    confidence: medium
+    verify: owner - species of the Rynek trees (lindens?)
+    height_m: [14.0, 22.0]
+    spacing_m: 12.0
+    mix: {linden: 0.7, maple: 0.3}
