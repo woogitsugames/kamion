@@ -21,3 +21,8 @@ NASTĘPNY KROK: po `editmode-red.done`: `python scripts/export-region-catalog.py
 - Katalog: startS 90 m (60 + 25 + 5 na skośny rząd) w 20 regionach, C 12 m; pytest 44 passed (`pytest-green.log`).
 - W TLE: `run-green.ps1` (EditMode StartClearance+RegionSelect, PlayMode RouteSpawnTests) -> `artifacts/spawn-fix-0262/green-all.done`.
 NASTĘPNY KROK: po `green-all.done` reimport + render startu regionów nieprzebudowywanych: `pwsh artifacts/spawn-fix-0262/run-renders.ps1`
+## 15.11 krok 4 — zielono
+- EditMode `StartClearanceTests`+`RegionSelectTests`: 61/61 (w tym 21 scen: pudło startu wolne, 300 m trasy bez colliderów); PlayMode `RouteSpawnTests` 4/4.
+  Logi: `artifacts/spawn-fix-0262/editmode-green.*`, `editmode-playmode-green.*`.
+- W TLE: `run-renders.ps1` (reimport Low + kamery truck-at-gate/cab-gate, 20 regionów) -> `artifacts/spawn-fix-0262/renders/<id>.status`, `renders.done`.
+NASTĘPNY KROK: obejrzeć `artifacts/spawn-fix-0262/renders/<id>/*.png`; wznowienie: `pwsh artifacts/spawn-fix-0262/run-renders.ps1 -Regions <brakujące>`
