@@ -77,3 +77,14 @@ def test_junction_checks_are_inside_the_tile():
     for j in js:
         x, y = j["center_2180"]
         assert k.bbox[0] <= x <= k.bbox[2] and k.bbox[1] <= y <= k.bbox[3]
+
+
+def test_ring_over_the_dk8_cutting_is_carried_as_a_deck():
+    from roads import pipeline
+    net, _g, _ov, _st = pipeline.build_network(RID)
+    assert not net.overrides_stale
+    ring = [s for s in net.sec_list if str(s.edge_id).split(":")[0] in ("w257353773", "w257353774")]
+    assert len(ring) == 2 and all(s.bridge for s in ring)
+    assert all(s.provenance["bridge"].startswith("authored_override:") for s in ring)
+    dk8 = [s for s in net.sec_list if str(s.edge_id).split(":")[0] in ("w23982181", "w76073122")]
+    assert dk8 and not any(s.bridge or s.layer >= 1 for s in dk8)
