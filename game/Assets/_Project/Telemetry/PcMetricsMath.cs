@@ -73,11 +73,13 @@ namespace Game.Telemetry
         /// <summary>-1 = leave the quality level's vSyncCount alone; 0/1 = force for the measurement.</summary>
         public int VSync = -1;
         public bool QuitWhenDone = true;
+        /// <summary>Save screen.png (ScreenCapture) at the end of the window, before quitting.</summary>
+        public bool Screenshot = true;
         public int MaxFps = DefaultMaxFps;
         public string Label = "";
 
         /// <summary>Parses <c>-metrics &lt;dir&gt;</c> [<c>-metricsSeconds s</c>] [<c>-metricsWarmup s</c>] [<c>-metricsStart boot|region</c>]
-        /// [<c>-metricsTimeout s</c>] [<c>-metricsVsync 0|1</c>] [<c>-metricsQuit 0|1</c>] [<c>-metricsMaxFps n</c>] [<c>-metricsLabel text</c>].
+        /// [<c>-metricsTimeout s</c>] [<c>-metricsVsync 0|1</c>] [<c>-metricsQuit 0|1</c>] [<c>-metricsScreenshot 0|1</c>] [<c>-metricsMaxFps n</c>] [<c>-metricsLabel text</c>].
         /// Without <c>-metricsStart</c>, a <c>-scene</c> argument implies <c>region</c>. Flags are case-insensitive.</summary>
         public static PcMetricsOptions Parse(string[] args)
         {
@@ -113,6 +115,9 @@ namespace Game.Telemetry
                         break;
                     case "-metricsquit":
                         if (v == "0") o.QuitWhenDone = false; else if (v == "1") o.QuitWhenDone = true;
+                        break;
+                    case "-metricsscreenshot":
+                        if (v == "0") o.Screenshot = false; else if (v == "1") o.Screenshot = true;
                         break;
                     case "-metricsmaxfps":
                         if (int.TryParse(v, NumberStyles.Integer, ci, out int m) && m > 0) o.MaxFps = m;

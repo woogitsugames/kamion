@@ -22,7 +22,7 @@ uv run --no-project --with pytest pytest tools/pcperf/tests -q
 
 Argumenty playera (czyta `PcMetricsOptions.Parse`): `-metrics <dir>` (wymagany), `-metricsSeconds 90`, `-metricsWarmup 5`,
 `-metricsStart boot|region` (domyślnie `region`, gdy podano `-scene`), `-metricsTimeout 300`, `-metricsVsync 0|1`,
-`-metricsQuit 0|1` (domyślnie 1 — player sam się zamyka; kod wyjścia 0 = OK, 3 = brak regionu w czasie, 4 = błąd zapisu),
+`-metricsScreenshot 0|1`, `-metricsQuit 0|1` (domyślnie 1 — player sam się zamyka; kod wyjścia 0 = OK, 3 = brak regionu w czasie, 4 = błąd zapisu),
 `-metricsMaxFps 1000` (rozmiar bufora), `-metricsLabel <tekst>`. Pozostałe argumenty gry jak dotąd (`-tier`, `-fps`,
 `-scene`, standardowe Unity `-screen-width/-screen-height/-screen-fullscreen/-window-mode/-logFile`).
 
@@ -33,6 +33,8 @@ Argumenty playera (czyta `PcMetricsOptions.Parse`): `-metrics <dir>` (wymagany),
 | `frames.csv` | gra | `frame,t_s,frame_ms,cpu_main_ms,gpu_ms,draw_calls,batches,setpass,tris,gc_count,scene`; `t_s` od początku okna; `cpu/gpu` 0 = sterownik nie raportuje; liczniki -1 = niedostępne w tym playerze; `scene` = numer sceny (0 = Boot) |
 | `memory.csv` | gra, co 0,5 s | `t_s,allocated_mb,reserved_mb,mono_used_mb,mono_heap_mb,gfx_driver_mb,gc_count` (`gfx_driver_mb` -1 poza buildem development) |
 | `run.json` | gra | `format: kamion/pc-metrics/1`, `system` (SystemInfo), `display` (rozdzielczość, VSync, limit, tier), `options`, `recording` (klatki, utrata fokusu, GC), `loads[]` (czas ładowania sceny: od klatki, która zleciła LoadScene, albo od `MarkRegionLoadStart()`, do końca pierwszej klatki nowej sceny), `inGame` (percentyle do kontroli krzyżowej) |
+| `screen.png` | gra | zrzut ekranu na końcu okna (`ScreenCapture`, `-metricsScreenshot 0` wyłącza; zamknięcie playera 5 klatek później) |
+| `Player.log`, `pc-metrics-meta.json` | skrypt | log playera (`-logFile`), ścieżka i SHA256 .exe, argumenty, kod wyjścia playera, git sha |
 | `process.csv` | `pc-metrics.ps1` co 1 s | `t_s,working_set_mb,private_mb,gpu_dedicated_mb,gpu_shared_mb,gpu_temp_c,gpu_util_pct` (VRAM z licznika Windows „GPU Process Memory”; temp./obciążenie tylko z `nvidia-smi`, inaczej puste) |
 
 Nieznane kolumny → błąd (exit 2), bez cichego pomijania. Kody wyjścia parsera: 0 PASS/INCOMPLETE/NO_BUDGET, 1 FAIL, 2 INVALID.

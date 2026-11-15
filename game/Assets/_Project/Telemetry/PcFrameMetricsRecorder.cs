@@ -249,8 +249,31 @@ namespace Game.Telemetry
             m_EndReason = reason;
             bool ok = WriteAll();
             Debug.Log($"[PCMET] done reason={reason} frames={m_Count} dropped={m_Dropped} focusLost={m_FocusLost} written={ok} dir={m_Opt.OutputDirectory}");
-            if (exitCode >= 0 && m_Opt.QuitWhenDone && !Application.isEditor)
-                Application.Quit(ok ? exitCode : 4);
+            if (exitCode < 0) return;   // already quitting
+            if (m_Opt.Screenshot && reason == "duration")
+            {
+                // Captured at the end of a later frame; quit is deferred a few frames so the file is written (UNVERIFIED margin).
+                try { ScreenCapture.CaptureScreenshot(Path.Combine(m_Opt.OutputDirectory, "screen.png")); }
+                catch (Exception e) { Debug.LogWarning($"[PCMET] screenshot failed: {e.Message}"); }
+            }
+            if (m_Opt.QuitWhenDone && !Application.isEditor)
+            {
+                m_QuitCode = ok ? exitCode : 4;
+                m_QuitAtFrame = Time.frameCount + 5;
+            }
+        }
+
+        int m_QuitCode = -1;
+        int m_QuitAtFrame = int.MaxValue;
+
+        void LateUpdate()
+        {
+            if (m_QuitCode >= 0 && Time.frameCount >= m_QuitAtFrame)
+            {
+                int code = m_QuitCode;
+                m_QuitCode = -1;
+                Application.Quit(code);
+            }
         }
 
         bool WriteAll()

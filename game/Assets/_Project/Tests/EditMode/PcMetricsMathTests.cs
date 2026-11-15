@@ -80,7 +80,7 @@ namespace Game.Tests
             {
                 "Kamion.exe", "-tier", "High", "-METRICS", @"C:\m\run 1", "-metricsSeconds", "120.5", "-metricsWarmup", "10",
                 "-metricsStart", "boot", "-scene", "knyszyn", "-metricsVsync", "0", "-metricsQuit", "0", "-metricsMaxFps", "500",
-                "-metricsTimeout", "60", "-metricsLabel", "zalecany",
+                "-metricsTimeout", "60", "-metricsLabel", "zalecany", "-metricsScreenshot", "0",
             });
             Assert.IsTrue(o.Enabled);
             Assert.AreEqual(@"C:\m\run 1", o.OutputDirectory);
@@ -92,6 +92,7 @@ namespace Game.Tests
             Assert.AreEqual(500, o.MaxFps);
             Assert.AreEqual(60f, o.TimeoutSeconds);
             Assert.AreEqual("zalecany", o.Label);
+            Assert.IsFalse(o.Screenshot);
         }
 
         [Test]
@@ -103,6 +104,7 @@ namespace Game.Tests
             Assert.AreEqual(PcMetricsOptions.DefaultWarmup, o.WarmupSeconds);
             Assert.AreEqual(-1, o.VSync);
             Assert.IsTrue(o.QuitWhenDone);
+            Assert.IsTrue(o.Screenshot);
 
             var b = PcMetricsOptions.Parse(new[] { "k.exe", "-metrics", "out" });
             Assert.AreEqual(PcMetricsStart.Boot, b.Start);
