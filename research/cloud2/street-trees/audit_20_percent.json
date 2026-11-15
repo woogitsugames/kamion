@@ -1,0 +1,348 @@
+{
+ "pakiet": "R5 street-trees",
+ "data": "2026-11-14",
+ "seed": 20261114,
+ "metoda_losowania": "python random.Random(20261114).sample(sorted(ids), ceil(0.2*210)) = 42 wiersze",
+ "n_wierszy_manifestu": 210,
+ "n_proby": 42,
+ "wynik_zbiorczy": "42 PASS (w tym 1 PASS po korekcie opisu kadru) / 0 FAIL",
+ "uwaga": "kadry z próby (11) i wykres fenologiczny obejrzano ponownie na arkuszach kontrolnych 3×2 (kafel 640 px), nie w pełnej rozdzielczości 960 px",
+ "wiersze": [
+  {
+   "id": "R5-007",
+   "kategoria": "osm",
+   "przedmiot": "natural=tree_row w Białymstoku",
+   "sprawdzono": "ponowne uruchomienie tools/osm_stats.py na data/ — wynik bajt w bajt = data/osm_stats.json",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-017",
+   "kategoria": "szpaler",
+   "przedmiot": "odstęp w rzędzie — ulice zbiorcze (tertiary): mediana median rzędów",
+   "sprawdzono": "ponowne przeliczenie z data/row_spacing.json (mediana median rzędów tertiary = 6,95; 37 rzędów)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-032",
+   "kategoria": "gatunki",
+   "przedmiot": "jabłoń dzika (Malus sylvestris) — liczba w 4 transektach / udział wśród drzew",
+   "sprawdzono": "ponowne otwarcie PDF Łaski: wiersz „Malus sylvestris Mill. 9 2 2 1 14” obecny",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-034",
+   "kategoria": "gatunki",
+   "przedmiot": "jesion wyniosły (Fraxinus excelsior) — liczba w 4 transektach / udział wśród drzew",
+   "sprawdzono": "ponowne otwarcie PDF Łaski: wiersz „Fraxinus excelsior L. - 6 1 1 8” obecny (potwierdza korektę P10-004)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-039",
+   "kategoria": "wymiary",
+   "przedmiot": "drzewa przyuliczne ≤ 10 m od jezdni (171 szt., 4 transekty): klasy wysokości",
+   "sprawdzono": "ponowne otwarcie PDF: wiersz Total klas wysokości „8 4.7 56 32.7 92 53.8 6 3.5 9 5.3 171”",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-040",
+   "kategoria": "wymiary",
+   "przedmiot": "drzewa przyuliczne (171 szt.): klasy obwodu pnia na 1,2 m",
+   "sprawdzono": "ponowne otwarcie PDF: wiersz Total klas obwodu „41 24.0 96 56.1 23 13.5 9 5.3 1 0.6 1 0.6 171”",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-048",
+   "kategoria": "gatunki",
+   "przedmiot": "ewidencja gatunków drzew usuwanych i sadzonych przez Urząd",
+   "sprawdzono": "ponowne otwarcie PDF NIK: zdanie cytatu obecne dosłownie (s. 30)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-050",
+   "kategoria": "wymiary",
+   "przedmiot": "materiał do nasadzeń w pasach drogowych — obwód pnia na wys. 1 m",
+   "sprawdzono": "ponowne otwarcie zał. 2 BIP: „obwód pnia mierzony na wysokości 1 m - 14 - 16 cm” obecne",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-055",
+   "kategoria": "gatunki",
+   "przedmiot": "paleta nasadzeń uzupełniających w pasach drogowych (UM 2017) — klony",
+   "sprawdzono": "ponowne otwarcie zał. 2: „Klon polny ‘Elsrijk’” i pozostałe klony na liście 1.3",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-057",
+   "kategoria": "gatunki",
+   "przedmiot": "paleta nasadzeń uzupełniających w pasach drogowych (UM 2017) — kasztanowce",
+   "sprawdzono": "ponowne otwarcie zał. 2: „Kasztanowiec czerwony (Aesculus carnea)” obecne",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-061",
+   "kategoria": "gatunki",
+   "przedmiot": "paleta nasadzeń uzupełniających w pasach drogowych (UM 2017) — inne liściaste",
+   "sprawdzono": "ponowne otwarcie zał. 2: „Leszczyna turecka” i pozostałe pozycje obecne",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-062",
+   "kategoria": "gatunki",
+   "przedmiot": "platan (Platanus) i brzoza (Betula) na liście nasadzeń ulicznych UM 2017",
+   "sprawdzono": "przeszukanie tekstu zał. 2: ciągi „Platan”, „Brzoza”, „rzoza” nieobecne („latan” występuje tylko w „platanoides”)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-070",
+   "kategoria": "gatunki",
+   "przedmiot": "nasadzenia w pielęgnacji 2017–2020: Al. J. Piłsudskiego (od kościoła św. Rocha do ronda Lussy)",
+   "sprawdzono": "ponowne otwarcie zał. 3: ciąg „94 20 1125 2400 10000” w wierszu Al. J. Piłsudskiego",
+   "wynik": "PASS",
+   "korekta": "ostatnia liczba 10000 = rośliny cebulowe — pominięta w wartości, bez wpływu"
+  },
+  {
+   "id": "R5-075",
+   "kategoria": "przepisy",
+   "przedmiot": "Dz.U. 2022 poz. 1518 § 80 — wysokość skrajni jezdni (klasy GP, G, Z, L, D) / chodnika",
+   "sprawdzono": "ponowne otwarcie Dz.U. 2022 poz. 1518 s. 19: oba cytaty § 80 obecne dosłownie",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-092",
+   "kategoria": "wymiary",
+   "przedmiot": "jesion pensylwański (zamiennik jesionu wyniosłego — F. excelsior w UTD tylko z Kalifornii) (Fraxinus pennsylvanica) — obwód 51-100 cm: wysokość mediana (p25–p75) / średnica korony mediana (p25–p75)",
+   "sprawdzono": "ponowne uruchomienie tools/utd_allometry.py na pobranym TS3_Raw_tree_data.csv — wynik bajt w bajt = data/utd_allometry.json; wartość wiersza zgodna z JSON",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-095",
+   "kategoria": "wymiary",
+   "przedmiot": "jesion pensylwański (zamiennik jesionu wyniosłego — F. excelsior w UTD tylko z Kalifornii) (Fraxinus pennsylvanica) — obwód 201-300 cm: wysokość mediana (p25–p75) / średnica korony mediana (p25–p75)",
+   "sprawdzono": "ponowne uruchomienie tools/utd_allometry.py na pobranym TS3_Raw_tree_data.csv — wynik bajt w bajt = data/utd_allometry.json; wartość wiersza zgodna z JSON",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-098",
+   "kategoria": "wymiary",
+   "przedmiot": "kasztanowiec biały (Aesculus hippocastanum) — obwód 201-300 cm: wysokość mediana (p25–p75) / średnica korony mediana (p25–p75)",
+   "sprawdzono": "ponowne uruchomienie tools/utd_allometry.py na pobranym TS3_Raw_tree_data.csv — wynik bajt w bajt = data/utd_allometry.json; wartość wiersza zgodna z JSON",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-102",
+   "kategoria": "wymiary",
+   "przedmiot": "brzoza brodawkowata (Betula pendula) — obwód 151-200 cm: wysokość mediana (p25–p75) / średnica korony mediana (p25–p75)",
+   "sprawdzono": "ponowne uruchomienie tools/utd_allometry.py na pobranym TS3_Raw_tree_data.csv — wynik bajt w bajt = data/utd_allometry.json; wartość wiersza zgodna z JSON",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-108",
+   "kategoria": "wymiary",
+   "przedmiot": "klon jesionolistny (Acer negundo) — obwód 51-100 cm: wysokość mediana (p25–p75) / średnica korony mediana (p25–p75)",
+   "sprawdzono": "ponowne uruchomienie tools/utd_allometry.py na pobranym TS3_Raw_tree_data.csv — wynik bajt w bajt = data/utd_allometry.json; wartość wiersza zgodna z JSON",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-111",
+   "kategoria": "wymiary",
+   "przedmiot": "klon jesionolistny (Acer negundo) — obwód 201-300 cm: wysokość mediana (p25–p75) / średnica korony mediana (p25–p75)",
+   "sprawdzono": "ponowne uruchomienie tools/utd_allometry.py na pobranym TS3_Raw_tree_data.csv — wynik bajt w bajt = data/utd_allometry.json; wartość wiersza zgodna z JSON",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-113",
+   "kategoria": "wymiary",
+   "przedmiot": "grusza drobnoowocowa (Pyrus calleryana) — obwód 51-100 cm: wysokość mediana (p25–p75) / średnica korony mediana (p25–p75)",
+   "sprawdzono": "ponowne uruchomienie tools/utd_allometry.py na pobranym TS3_Raw_tree_data.csv — wynik bajt w bajt = data/utd_allometry.json; wartość wiersza zgodna z JSON",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-117",
+   "kategoria": "wymiary",
+   "przedmiot": "lipa srebrzysta (Tilia tomentosa) — obwód 101-150 cm: wysokość mediana (p25–p75) / średnica korony mediana (p25–p75)",
+   "sprawdzono": "ponowne uruchomienie tools/utd_allometry.py na pobranym TS3_Raw_tree_data.csv — wynik bajt w bajt = data/utd_allometry.json; wartość wiersza zgodna z JSON",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-124",
+   "kategoria": "wymiary",
+   "przedmiot": "klon zwyczajny — wiek od posadzenia 41-60 lat (USA): wysokość / średnica korony / obwód / podstawa korony",
+   "sprawdzono": "ponowne uruchomienie tools/utd_allometry.py na pobranym TS3_Raw_tree_data.csv — wynik bajt w bajt = data/utd_allometry.json; wartość wiersza zgodna z JSON",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-128",
+   "kategoria": "wymiary",
+   "przedmiot": "platan klonolistny — wysokość / korona",
+   "sprawdzono": "wiersz UNVERIFIED — sprawdzono, że nie udaje SOURCED; Platanus nieobecny w liście UM i tabeli Łaski",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-130",
+   "kategoria": "zywoplot",
+   "przedmiot": "żywotnik ‘Smaragd’ — rozstaw sadzenia w rzędzie",
+   "sprawdzono": "ponowne otwarcie pobranej karty ZSzP ‘Smaragd’: „co 0,5-0,6 m” obecne",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-134",
+   "kategoria": "zywoplot",
+   "przedmiot": "grab pospolity, berberys Thunberga — wysokość / rozstaw żywopłotu",
+   "sprawdzono": "wiersz UNVERIFIED — status zgodny z brakiem źródła",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-139",
+   "kategoria": "fenologia",
+   "przedmiot": "kwitnienie robinii akacjowej (BBCH 60) — mediana, Polska 2007–2014",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit3.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać — wykres Fig. 2: mediana Fl.Rob. tuż przed znacznikiem Jun (≈ 25 V, DOY 145)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-142",
+   "kategoria": "fenologia",
+   "przedmiot": "przebarwianie liści brzozy (BBCH 94) — mediana, Polska 2007–2014",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit3.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać — wykres Fig. 2: mediana Co.Bet. ok. 1/4 odcinka Oct–Nov (≈ 9 X, DOY 282)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-145",
+   "kategoria": "kadr",
+   "przedmiot": "kadr KartaView kv7119783 — gen. Andersa — przystanek",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit1.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-151",
+   "kategoria": "kadr",
+   "przedmiot": "kadr Panoramax px56c91e4d — DK8 — odcinek leśny",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit1.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-158",
+   "kategoria": "kadr",
+   "przedmiot": "kadr KartaView kv1326673541 — gen. Andersa (tablica „ul. Gen. Andersa 26” na budynku w kadrze)",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit1.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-164",
+   "kategoria": "kadr",
+   "przedmiot": "kadr KartaView kv1326673809 — gen. Andersa — najazd na wiadukt",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit1.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-168",
+   "kategoria": "kadr",
+   "przedmiot": "kadr Wikimedia Commons cm20200726084417 — ul. Żurawia",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit1.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-179",
+   "kategoria": "kadr",
+   "przedmiot": "kadr Wikimedia Commons cm20200509123619 — ul. Żeromskiego",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit1.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-180",
+   "kategoria": "kadr",
+   "przedmiot": "kadr Wikimedia Commons cm20200509124811 — ul. Harcerska (tabliczka w kadrze)",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit2.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS po korekcie",
+   "korekta": "opis mówił „dwa stożkowe żywotniki” — widać jeden ciemny kolumnowy iglak przy lewej krawędzi; poprawiono w tools/frame_notes.py i manifeście"
+  },
+  {
+   "id": "R5-189",
+   "kategoria": "kadr",
+   "przedmiot": "kadr Wikimedia Commons cm20220507153630 — dolina cieku przy ul. Świętego Ojca Pio (geotag)",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit2.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-190",
+   "kategoria": "kadr",
+   "przedmiot": "kadr Wikimedia Commons cm20220612161639 — ulica domów przy ul. Świętego Ojca Pio (geotag)",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit2.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-192",
+   "kategoria": "kadr",
+   "przedmiot": "kadr Wikimedia Commons cm20230805102312 — rejon ul. Wspólnej / Pracowniczej (geotag)",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit2.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-196",
+   "kategoria": "kadr",
+   "przedmiot": "kadr Panoramax pxcbcb62c5 — ul. Jarzębinowa 8 (napis na bloku w kadrze)",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit2.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-201",
+   "kategoria": "zywoplot",
+   "przedmiot": "ulice domów — luźny szpaler wysokich iglaków przy ogrodzeniu (nie strzyżony)",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit3.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać — oba kadry (Borsucza strefa 30, Kormoranów): wysokie iglaki przy ogrodzeniu, bez strzyżonego żywopłotu; 2/11",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R5-206",
+   "kategoria": "wymiary",
+   "przedmiot": "ul. Lipowa — drzewa szpalerowe (pokrój stożkowy, zwarta korona): wysokość / średnica korony / podstawa korony",
+   "sprawdzono": "PONOWNE obejrzenie obrazu (arkusz kontrolny files/_view/audit2.jpg, kafel 640 px; pierwsze oglądanie: pojedynczy kadr 960 px) i porównanie z opisem_co_widać — kadr Lipowa 4 X 2020: 4 drzewa, wierzchołki między 3. a 4. kondygnacją, korona ≈ połowa odstępu",
+   "wynik": "PASS",
+   "korekta": "skala zależy od mediany OSM 6,8 m — ±1 m"
+  },
+  {
+   "id": "R5-209",
+   "kategoria": "szpaler",
+   "przedmiot": "trasa C (Andersa–wiadukt–DK8): kadry letnie z drzewami w regularnym rzędzie w pasie drogowym",
+   "sprawdzono": "ponowne zliczenie w manifeście: 22 kadry obszar=trasa_c; 3 z rzędem młodych drzew (opisy); kadry 158, 164, 145, 151 obejrzane ponownie w tym audycie",
+   "wynik": "PASS",
+   "korekta": "pozostałe kadry trasy C nie były oglądane drugi raz"
+  }
+ ]
+}

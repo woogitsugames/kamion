@@ -74,11 +74,18 @@ def covers(rows: list[dict], bbox) -> float:
     return u.intersection(tile).area / tile.area
 
 
-def pick_latest(rows: list[dict], bbox, pred) -> list[dict]:
-    """Latest akt_data series (all sheets with that date) satisfying `pred` that fully covers the tile."""
+def pick_latest(rows: list[dict], bbox, pred, key: str = "akt_data") -> list[dict]:
+    """Latest series (all sheets with the same `key`: akt_data by default) satisfying `pred` that fully covers the
+    tile. key="akt_rok" (ADR 0212, pinned survey year) joins the flight days of one year: the NMT 2022 of tile
+    (-9,9) is flown on 2022-07-29 and 2022-08-27; one sheet per godlo (the latest date when a sheet repeats)."""
     cand = [r for r in rows if pred(r)]
-    for date in sorted({r["akt_data"] for r in cand}, reverse=True):
-        series = [r for r in cand if r["akt_data"] == date]
+    for val in sorted({r[key] for r in cand}, reverse=True):
+        series = [r for r in cand if r[key] == val]
+        if key != "akt_data":
+            last: dict[str, dict] = {}
+            for r in sorted(series, key=lambda r: r["akt_data"]):
+                last[r.get("godlo") or r["url_do_pobrania"]] = r
+            series = list(last.values())
         if covers(series, bbox) > 0.9999:
             return sorted(series, key=lambda r: r["url_do_pobrania"])
     return []
@@ -96,7 +103,7 @@ def main() -> None:
     ap.add_argument("--region", required=True)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--refresh-index", action="store_true")
-    ap.add_argument("--with", dest="extra", nargs="*", default=[], choices=["nmpt", "trees", "lidar"])
+    ap.add_argument("--with", dest="extra", nargs="*", default=[], choices=["nmpt", "trees", "lidar", "orto10"])
     a = ap.parse_args()
     region = regions.get(a.region)
     dl = Downloader(dry_run=a.dry_run)
@@ -110,9 +117,12 @@ def main() -> None:
     idx = load_or_query_index(region, a.refresh_index)
     P = idx["products"]
 
-    # 2. NMT 1 m, EVRF2007
+    # 2. NMT 1 m, EVRF2007 (ADR 0209: an authored per-region pin `nmt_year` keeps the survey year of a neighbour tile,
+    # so the shared seam column comes from the same sheets and both terrains meet exactly)
+    pin = regions.source_pins(region.id).get("nmt_year")
     nmt = pick_latest(P["NMT"], bb, lambda r: r.get("char_przestrz") == "1.00 m"
-                      and r.get("format", "").startswith("ARC/INFO") and r.get("uklad_h") == "PL-EVRF2007-NH")
+                      and r.get("format", "").startswith("ARC/INFO") and r.get("uklad_h") == "PL-EVRF2007-NH"
+                      and (pin is None or r.get("akt_rok") == str(pin)), key="akt_rok" if pin else "akt_data")
     if not nmt:
         sys.exit("no NMT 1 m series fully covers the tile")
     yr = nmt[0]["akt_rok"]
@@ -177,6 +187,29 @@ def main() -> None:
             "index_service": gi.INDEX_SERVICES["NMPT"][0], "format": "ARC/INFO ASCII GRID",
             "crs": "EPSG:2180", "vertical_crs": "PL-EVRF2007-NH", **LIC_GUGIK, "used_by": [used_by],
         }, sheet_files(nmpt))
+    if "orto10" in a.extra:
+        # ADR 0204: newest 0.1 m RGB orthophoto as a QA reference where the 0.25 m series is older than the roads
+        # (Knyszyn: 0.25 m = 2022/2024, 0.1 m = 2025-05; ~280 MB per sheet). Reference only, never a texture.
+        # one flight campaign has several akt_data days (knyszyn-s: 2025-05-25 and 05-27), so group by year here
+        c10 = [r for r in P["ORTO"] if r.get("piksel") == "0.1" and r.get("kolor") == "RGB"
+               and r.get("uklad_xy") == "PL-1992"]
+        o10 = []
+        for year in sorted({r["akt_rok"] for r in c10}, reverse=True):
+            series = [r for r in c10 if r["akt_rok"] == year]
+            if covers(series, bb) > 0.9999:
+                o10 = sorted(series, key=lambda r: r["url_do_pobrania"])
+                break
+        if not o10:
+            sys.exit("no 0.1 m RGB orthophoto series fully covers the tile")
+        ingest_dataset(dl, {
+            "id": f"gugik-orto-{o10[0]['akt_rok']}-rgb-0p10-{region.id}",
+            "name": f"GUGiK orthophoto RGB 0.1 m, {o10[0]['akt_data']}, sheets covering {region.id}",
+            "provider": "Główny Urząd Geodezji i Kartografii", "product": "ORTO", "region": region.id,
+            "index_service": gi.INDEX_SERVICES["ORTO"][0], "format": "GeoTIFF", "crs": "EPSG:2180 (PL-1992)",
+            "resolution_m": 0.1, "extent": f"sheets intersecting bbox {list(bb)}",
+            "usage_restriction": "visual reference + alignment QA only; not a game texture (docs/05 §3)",
+            **LIC_GUGIK, "used_by": [f"road network QA of {region.id} (ADR 0204)"],
+        }, sheet_files(o10))
     if "trees" in a.extra:
         ingest_dataset(dl, {
             "id": f"gugik-trees3d-2023-{t}", "name": f"GUGiK 3D tree models LoD1 (2023), powiat {t}",

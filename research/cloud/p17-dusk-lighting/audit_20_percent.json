@@ -1,0 +1,139 @@
+{
+ "seed": 20261114,
+ "metoda": "random.Random(20261114).sample(range(87), 18) na wierszach manifest.csv w kolejności pliku",
+ "liczba_wierszy": 87,
+ "proba": 18,
+ "wiersze": [
+  {
+   "id": "C60-004",
+   "kategoria": "niebo",
+   "co_sprawdzono": "cytat odszukany w zapisanym tekście strony (wiersz „-5.0 1.02 10.4”); link 200",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-009",
+   "kategoria": "niebo",
+   "co_sprawdzono": "cytat „End of civil twilight: 4.3 lx” odszukany w pełnym tekście (Europe PMC XML); link 200",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-017",
+   "kategoria": "niebo",
+   "co_sprawdzono": "wiersz tabeli „Clear sky 15 min after sunset (horiz) 1” odszukany; link 200",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-020",
+   "kategoria": "niebo",
+   "co_sprawdzono": "wiersz UNVERIFIED - sprawdzono, że nie ma liczby ani źródła",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-031",
+   "kategoria": "ulica",
+   "co_sprawdzono": "wartość zgodna z odczytem strony (C2 20,0 lx, U0 0,40); link 301 (przekierowanie)",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-049",
+   "kategoria": "ulica",
+   "co_sprawdzono": "ponownie przeliczono odstępy z pozycji w ortho_lamp_spacing.csv (36,7; 33,6; 35,4; 35,0; 33,6; 34,2; 34,8 → mediana 34,8); WMS 200",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-051",
+   "kategoria": "ulica",
+   "co_sprawdzono": "ponownie uruchomiono tools/lampspacing.py na zapisanej odpowiedzi Overpass: 6 lamp, 3 odstępy, p50 32,6 m",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-054",
+   "kategoria": "ulica",
+   "co_sprawdzono": "cytat odszukany w tekście PDF (pdftotext); link 200",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-056",
+   "kategoria": "okna",
+   "co_sprawdzono": "cytat odszukany w tekście PDF (s. 799); link 200; licencja CC BY-NC potwierdzona na stronie tytułowej",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-057",
+   "kategoria": "okna",
+   "co_sprawdzono": "cytat i „27 lm” (Tabela 2) odszukane w tekście PDF",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-062",
+   "kategoria": "kadr",
+   "co_sprawdzono": "kadr r09 obejrzany ponownie (arkusz + wycinek środka): dwie latarnie parkingowe białe, barierki żółte, odbicia fioletowe - zgodne",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-064",
+   "kategoria": "kadr",
+   "co_sprawdzono": "kadr s10 obejrzany ponownie: gradient nieba, dwie latarnie, szyld z nazwą ulicy - zgodne",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-065",
+   "kategoria": "kadr",
+   "co_sprawdzono": "kadr s06 obejrzany ponownie: jasne płyty, pomarańczowe latarnie z poświatą, wieża w osi - zgodne",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-070",
+   "kategoria": "kadr",
+   "co_sprawdzono": "kadr s07 obejrzany ponownie w 960 px: autobus, piesi, łukowy wysięgnik, fioletowa witryna - zgodne",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-071",
+   "kategoria": "kadr",
+   "co_sprawdzono": "kadr s08 obejrzany ponownie + wycinek nieba: chmury granatowe, brak ciepłej poświaty - zgodne",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-076",
+   "kategoria": "okna",
+   "co_sprawdzono": "kadr b01 - wycinek 900 px, okna przeliczone: szczyt 3/5, elewacja długa 4/ok. 21-22, budynek po lewej 2/5 → 9/32 bez zmian",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-079",
+   "kategoria": "okna",
+   "co_sprawdzono": "kadr b04 obejrzany ponownie: zielonkawe elewacje, okna klatki, blok w głębi za drzewem - zgodne; mianownik nadal niepewny",
+   "wynik": "PASS"
+  },
+  {
+   "id": "C60-084",
+   "kategoria": "okna",
+   "co_sprawdzono": "kadr s01 obejrzany ponownie: neonowa choinka, pojedyncze zapalone pokoje - zgodne (5/22 ±2)",
+   "wynik": "PASS"
+  }
+ ],
+ "linki_http": {
+  "stjarnhimlen.se/comp/radfaq.html": 200,
+  "pmc PMC11469482": 200,
+  "performanceinlighting.com en-13201-2-2015": 301,
+  "files.cie.co.at Novak": 200,
+  "bip.um.augustow.pl audyt": 200,
+  "commons File:20220114_161403…": 200,
+  "arxiv astro-ph/0604128": 200,
+  "ted.europa.eu detail 281034-2023": "202 (ochrona przed botami; treść potwierdzona API TED)"
+ },
+ "poprawki_po_losowaniu": [],
+ "poprawki_przed_audytem": [
+  "C60-071: elewacja w polu wartość -7,6° → -7,9°",
+  "6 wierszy: usunięte domysły lokalizacyjne w polu element (b01, b04, b06/b07, s08, o01, r08)",
+  "12 pobranych kadrów odrzuconych i nieujętych w manifeście (r02, r03, r05 wnętrza; r11, r12, b10, o03 - dzień wg EXIF; r10, o02, o05, o06, s05 - obejrzane tylko w arkuszu 316 px)",
+  "C60-074 (r01) pozostawiony jako REJECTED: nazwa pliku 21:09, EXIF 18:14"
+ ],
+ "obejrzane_kadry_lacznie": {
+  "pliki_w_manifescie": 24,
+  "pobrane_i_obejrzane": 36,
+  "wycinki": 6,
+  "ortofoto_arkusze_i_wycinki": 11
+ }
+}

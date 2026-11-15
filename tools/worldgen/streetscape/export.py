@@ -22,6 +22,7 @@ from . import life_cars as LC
 from . import vehicle_lod_atlas as VLA
 from . import signs as SG
 from . import hedge_textures as HT
+from . import chain_bollards as CB
 from . import furniture_textures as FT
 from . import plot_kit as PKT
 from .materials import M
@@ -143,7 +144,8 @@ def textures():
             "fire_station_alpha": (ART / "textures" / "fire_station_alpha.png").read_bytes(),
             **{k: SG.png_bytes(im) for k, im in HT.textures().items()},
             # house plot kit (ADR 0114): one alpha atlas for fences / gates / garden plants (streetscape.plot_kit)
-            **{k: SG.png_bytes(im) for k, im in PKT.textures().items()}}
+            **{k: SG.png_bytes(im) for k, im in PKT.textures().items()},
+            **{k: SG.png_bytes(im) for k, im in CB.textures().items()}}      # ADR 0183
 
 
 def glb_materials():

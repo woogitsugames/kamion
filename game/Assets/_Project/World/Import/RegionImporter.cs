@@ -285,6 +285,7 @@ namespace Game.World.Import
         {
             var mat = CreateMaterialCore(r, id, m, roadAsphalt);
             WorldShadowCasterBias.ApplyRegionPolicy(mat, m, r.Region, id); // ADR0155: optional region data, no global bias change.
+            NightWindowAssets.ApplyMaterial(mat, id);   // ADR 0192: lit windows on facade_atlas and the LOD1 rows
             // ADR0098: explicit hero glazing semantic for receiver-depth bias; other materials stay off.
             if (mat != null && mat.HasProperty("_ArchitecturalGlass"))
             {
@@ -385,6 +386,7 @@ namespace Game.World.Import
                 return LitMaterial(path, albedo, rough, metal, t, edge, edge ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, edge, null);
             }
             if (m.Get("shader") as string == "wire") return WireMaterial(path, albedo);
+            if (m.Get("shader") as string == "water") return WaterMaterial(path, albedo, m);   // ADR 0210
             // Parked-vehicle contact shadow (ADR 0050): shader defaults; InstanceImporter makes one copy per prototype spec.
             if (m.Get("shader") as string == "vehicle_contact") return VehicleContactMaterial(path, null);
             if (m.Get("window_grid") is Dictionary<string, object> grid && m.Get("base") is string baseId)
@@ -483,6 +485,25 @@ namespace Game.World.Import
             mat.SetVector("_WindowGrid", new Vector4(0.5f - w * 0.5f, 0.5f + w * 0.5f, sill, head));
             var g = glass != null ? new Color((float)Num(glass[0]), (float)Num(glass[1]), (float)Num(glass[2])) : new Color(0.03f, 0.035f, 0.04f);
             mat.SetColor("_GlassColor", new Color(g.r, g.g, g.b, 1f).gamma);
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        /// <summary>River / pond sheet (generator layer "water", ADR 0210): Kamion/World Water, opaque, no depth or
+        /// opaque texture; Low = flat dimmed sky gloss, High (_KAMION_WORLD_DETAIL) = flowing ripples + probe + glint.</summary>
+        static Material WaterMaterial(string path, Color albedo, Dictionary<string, object> m)
+        {
+            var shader = Shader.Find("Kamion/World Water") ?? throw new InvalidOperationException("Kamion/World Water not found (compile error?)");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.enableInstancing = true;
+            mat.SetVector("_BaseColor", new Vector4(albedo.r, albedo.g, albedo.b, 1f));
+            if (m.Get("shallow") is List<object> sc)
+                mat.SetVector("_ShallowColor", new Vector4((float)Num(sc[0]), (float)Num(sc[1]), (float)Num(sc[2]), 1f));
+            if (m.Get("reflect") != null) mat.SetFloat("_Reflect", (float)Num(m.Get("reflect")));
+            if (m.Get("reflect_low") != null) mat.SetFloat("_ReflectLow", (float)Num(m.Get("reflect_low")));
+            if (m.Get("flow_mps") != null) mat.SetFloat("_FlowSpeed", (float)Num(m.Get("flow_mps")));
             EditorUtility.SetDirty(mat);
             return mat;
         }
@@ -614,8 +635,9 @@ namespace Game.World.Import
         }
 
         // ------------------------------------------------------------------------------------------------- meshes
-        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "plots", "wires" };   // plot_ground: ADR 0114
-        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "plots", "wires" };   // plots: ADR 0124
+        // water (ADR 0210): only regions with the opt-in water stage have the node
+        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "plots", "wires", "water" };   // plot_ground: ADR 0114
+        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "plots", "wires", "water" };   // plots: ADR 0124
 
         static void BakeVisual(Result r, Chunk ch, GlbReader g, string tier, GlbReader.MeshNode extraBuildingsLod0 = null)
         {
@@ -686,6 +708,7 @@ namespace Game.World.Import
                     }
                 }
                 if (layer == "wires") { uv = true; colors = true; }   // side / half width + tangent (Kamion/World Wire)
+                if (layer == "water") { uv = true; colors = true; uv1 = false; }   // local metres + shore / depth / flow (ADR 0210)
                 Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1, Colors = colors, RoadWearSentinel = roadWear }), mats);
             }
         }

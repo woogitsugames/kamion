@@ -113,7 +113,8 @@ namespace Game.Rendering
             m_AppliedCct = LightingPreset.OvercastCctOverride;
             // Display value per cd/m^2: emissive surfaces (truck lamps, A7) are authored in physical luminance.
             Shader.SetGlobalFloat(k_Exposure, m.Exposure);
-            StreetLamps.SetSunElevation(m.TrueSunElevationDeg);
+            StreetLamps.SetSunElevation(m.TrueSunElevationDeg, m.Overcast);   // ADR 0199: far floor by cloud cover
+            NightWindows.Apply(m.TrueSunElevationDeg, m.Exposure, p.clockHour);   // ADR 0192, ADR 0199 offices by clock
 
             // ---- sun ----
             if (sun == null) sun = RenderSettings.sun;
@@ -194,6 +195,7 @@ namespace Game.Rendering
         {
             ApplySkyCap();
             ApplySunShadowFilter();
+            NightWindows.Reapply();
         }
 
         /// <summary>ADR 0108: the preset explicitly opts High into a smoother filter, without raising atlas size.

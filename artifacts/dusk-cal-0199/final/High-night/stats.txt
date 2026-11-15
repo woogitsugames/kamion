@@ -1,0 +1,11 @@
+tier=High lighting=night msaa=2 renderScale=1
+chase: objects=128 drawsEst=631 shadowDrawsEst=477 trisK=827 trisExact=827900 (estimate, before SRP batching)
+  chase instanced (props+trees): draws 342, instances 701, triangles 66k, cells 242, forest HLOD cells 8, trianglesExact 66554
+driver-andersa-to-putry: objects=101 drawsEst=510 shadowDrawsEst=327 trisK=740 trisExact=740676 (estimate, before SRP batching)
+  driver-andersa-to-putry instanced (props+trees): draws 225, instances 834, triangles 88k, cells 311, forest HLOD cells 187, trianglesExact 88961
+kwadrat-park-gate: objects=84 drawsEst=281 shadowDrawsEst=294 trisK=318 trisExact=318117 (estimate, before SRP batching)
+  kwadrat-park-gate instanced (props+trees): draws 501, instances 485, triangles 158k, cells 291, forest HLOD cells 238, trianglesExact 158482
+route-putry-approach: objects=88 drawsEst=425 shadowDrawsEst=369 trisK=534 trisExact=534903 (estimate, before SRP batching)
+  route-putry-approach instanced (props+trees): draws 218, instances 654, triangles 53k, cells 212, forest HLOD cells 135, trianglesExact 53236
+trailer-34: objects=171 drawsEst=950 shadowDrawsEst=483 trisK=1308 trisExact=1308027 (estimate, before SRP batching)
+  trailer-34 instanced (props+trees): draws 388, instances 588, triangles 68k, cells 352, forest HLOD cells 26, trianglesExact 68785

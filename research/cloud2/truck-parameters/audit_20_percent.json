@@ -1,0 +1,467 @@
+{
+ "pakiet": "R3 truck-parameters",
+ "data": "2026-11-14",
+ "seed": 20261114,
+ "metoda_losowania": "random.Random(20261114).sample(sorted(ids), ceil(162 * 0.21))",
+ "liczba_wierszy": 162,
+ "wylosowano": 35,
+ "procent": 21.6,
+ "wynik_zbiorczy": "35 PASS / 0 FAIL",
+ "wiersze": [
+  {
+   "id": "R3-007",
+   "przedmiot": "Maks. masa dwuosiowego pojazdu silnikowego",
+   "wartość": "18",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 17: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-017",
+   "przedmiot": "Średnica zawracania krawężnik–krawężnik (WB 3500/3600/3700/3800)",
+   "wartość": "12700 / 13100 / 13400 / 13700",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 1: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-032",
+   "przedmiot": "Dop. nacisk zespołu osi naczepy (3 × 9 t)",
+   "wartość": "27000",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 3: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-034",
+   "przedmiot": "Rozstaw osi naczepy (sworzeń → środek zespołu osi)",
+   "wartość": "7700",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 3: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-039",
+   "przedmiot": "Moc maks. silnika R6 12,8 l (368 kW) i zakres obrotów",
+   "wartość": "368 @ 1530–1800",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 3: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-040",
+   "przedmiot": "Moment maks. silnika R6 12,8 l (368 kW)",
+   "wartość": "2500 @ 980–1270",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 3: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-046",
+   "przedmiot": "Hamulec silnikowy (dekompresyjny + przepustnica) przy 2300 rpm",
+   "wartość": "375",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 3: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-048",
+   "przedmiot": "Moc / moment silnika R6 12,9 l (klasa 480 KM, producent 2)",
+   "wartość": "355 kW @ 1600; 2500 Nm @ 900–1125",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 2: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-050",
+   "przedmiot": "Hamulec silnikowy rodziny ciężkich silników R6 (maks.)",
+   "wartość": "do 480",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 14: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-055",
+   "przedmiot": "AMT 12 OD (karta A, wariant 2600 Nm) — bieg 2",
+   "wartość": "9.98",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 1: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-057",
+   "przedmiot": "AMT 12 OD (karta A, wariant 2600 Nm) — bieg 4",
+   "wartość": "5.94",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 1: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-061",
+   "przedmiot": "AMT 12 OD (karta A, wariant 2600 Nm) — bieg 8",
+   "wartość": "2.19",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 1: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-062",
+   "przedmiot": "AMT 12 OD (karta A, wariant 2600 Nm) — bieg 9",
+   "wartość": "1.68",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 1: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-070",
+   "przedmiot": "AMT 12 direct drive (karta B) — bieg 3",
+   "wartość": "9.04",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "strona 3 wyrenderowana ponownie z świeżego pliku → files/_audit_view/R3-070_p3.png",
+    "PONOWNE obejrzenie obrazu: PASS — wykres słupkowy 'Ratios AT2612' (wycinek s. 3, 150 dpi, obejrzany): biegi 1–12 = 14.94 11.73 9.04 7.09 5.54 4.35 3.44 2.70 2.08 1.63 1.27 1.00; R1–R4 17.48 13.73 4.02 3.16 — bieg 3 = 9.04 zgodny"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-075",
+   "przedmiot": "AMT 12 direct drive (karta B) — bieg 8",
+   "wartość": "2.70",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "strona 3 wyrenderowana ponownie z świeżego pliku → files/_audit_view/R3-075_p3.png",
+    "PONOWNE obejrzenie obrazu: PASS — wykres słupkowy 'Ratios AT2612' (wycinek s. 3, 150 dpi, obejrzany): biegi 1–12 = 14.94 11.73 9.04 7.09 5.54 4.35 3.44 2.70 2.08 1.63 1.27 1.00; R1–R4 17.48 13.73 4.02 3.16 — bieg 8 = 2.70 zgodny"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-092",
+   "przedmiot": "AMT 12 overdrive (karta D, 3300 Nm) — bieg 1",
+   "wartość": "11.639",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "strona 29 wyrenderowana ponownie z świeżego pliku → files/_audit_view/R3-092_p29.png",
+    "liczby w warstwie tekstu strony: obecne",
+    "PONOWNE obejrzenie obrazu: PASS — tabela s. 29 obejrzana ponownie (wycinek ze świeżego renderu): iS kol.1 = 11.639 → bieg 1 (numer biegu = wniosek z przeplotu, liczba SOURCED)"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-095",
+   "przedmiot": "AMT 12 overdrive (karta D, 3300 Nm) — bieg 4",
+   "wartość": "5.452",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "strona 29 wyrenderowana ponownie z świeżego pliku → files/_audit_view/R3-095_p29.png",
+    "liczby w warstwie tekstu strony: obecne",
+    "PONOWNE obejrzenie obrazu: PASS — tabela G 330-12 s. 29 (obejrzana): iS 11.639 7.035 4.400 2.645 1.599 1.000 | iL 9.020 5.452 3.410 2.050 1.239 0.775; przeplot iS1,iL1,iS2,iL2,… daje bieg 4 = 5.452"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-098",
+   "przedmiot": "AMT 12 overdrive (karta D, 3300 Nm) — bieg 7",
+   "wartość": "2.645",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "strona 29 wyrenderowana ponownie z świeżego pliku → files/_audit_view/R3-098_p29.png",
+    "liczby w warstwie tekstu strony: obecne",
+    "PONOWNE obejrzenie obrazu: PASS — tabela G 330-12 s. 29 (obejrzana): iS 11.639 7.035 4.400 2.645 1.599 1.000 | iL 9.020 5.452 3.410 2.050 1.239 0.775; przeplot iS1,iL1,iS2,iL2,… daje bieg 7 = 2.645"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-102",
+   "przedmiot": "AMT 12 overdrive (karta D, 3300 Nm) — bieg 11",
+   "wartość": "1.000",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "strona 29 wyrenderowana ponownie z świeżego pliku → files/_audit_view/R3-102_p29.png",
+    "liczby w warstwie tekstu strony: obecne",
+    "PONOWNE obejrzenie obrazu: PASS — tabela G 330-12 s. 29 (obejrzana): iS 11.639 7.035 4.400 2.645 1.599 1.000 | iL 9.020 5.452 3.410 2.050 1.239 0.775; przeplot iS1,iL1,iS2,iL2,… daje bieg 11 = 1.000"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-108",
+   "przedmiot": "315/80 R22.5 156/150 L (karta: A1) — średnica / promień statyczny / obwód toczenia",
+   "wartość": "1084 / 502 / 3294",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 34: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-111",
+   "przedmiot": "315/70 R22.5 154/150 L (karta: A2) — średnica / promień statyczny / obwód toczenia",
+   "wartość": "1014 / 471 / 3095",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 34: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-113",
+   "przedmiot": "315/70 R22.5 156/150 L (karta: B2) — średnica / promień statyczny / obwód toczenia",
+   "wartość": "1017 / 469 / 3091",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 1: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-117",
+   "przedmiot": "315/80 R22.5 — promień dynamiczny (toczenia) r = obwód/2π",
+   "wartość": "0.521–0.528",
+   "status": "ESTIMATED",
+   "checks": [
+    "ponowne przeliczenie: 3294/2π = 524.3 mm, 3319/2π = 528.2 mm, 3272/2π = 520.8 mm → 0.521–0.528 m — zgodne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-118",
+   "przedmiot": "385/65 R22.5 — promień dynamiczny (toczenia) r = obwód/2π",
+   "wartość": "0.522–0.526",
+   "status": "ESTIMATED",
+   "checks": [
+    "ponowne przeliczenie: 3293/2π=524.1, 3302/2π=525.5, 3277/2π=521.6 mm → 0.520–0.526 m — zgodne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-124",
+   "przedmiot": "Nośność 315/70 154 vs ciśnienie (oś pojedyncza)",
+   "wartość": "5780 @ 650 … 7500 @ 900",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 1: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-128",
+   "przedmiot": "Współczynnik sztywności bocznej (cornering coefficient) CCy0",
+   "wartość": "7.4",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 47: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-130",
+   "przedmiot": "Maks. współczynnik siły bocznej (sucho)",
+   "wartość": "0.8",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 47: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-134",
+   "przedmiot": "Klasa B, opony C3 (RRC)",
+   "wartość": "4.1–5.0",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 14: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-139",
+   "przedmiot": "UN R13 N3 typ-0, silnik odłączony: prędkość próby",
+   "wartość": "60",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "strona 43 wyrenderowana ponownie z świeżego pliku → files/_audit_view/R3-139_p43.png",
+    "PONOWNE obejrzenie obrazu: PASS — tabela pkt 2.1.1 zał. 4 s. 43 (wycinek 150 dpi obejrzany): kolumna N3: v 60 km/h; s ≤ 0.15v + v²/130 i dm ≥ 5.0 m/s² (komórka wspólna M2–N3); silnik podłączony 90 km/h, 0.15v + v²/103.5 (wzór złożony graficznie jako 'v²/103 .5'), 4.0 m/s²; F ≤ 70 daN — v = 60 km/h zgodne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-142",
+   "przedmiot": "UN R13 N3 typ-0, silnik podłączony: prędkość / droga / MFDD",
+   "wartość": "v = 0.80·vmax, maks. 90 km/h; s ≤ 0.15 v + v²/103.5; ≥ 4.0",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "strona 43 wyrenderowana ponownie z świeżego pliku → files/_audit_view/R3-142_p43.png",
+    "PONOWNE obejrzenie obrazu: PASS — tabela pkt 2.1.1 zał. 4 s. 43 (wycinek 150 dpi obejrzany): kolumna N3: v 60 km/h; s ≤ 0.15v + v²/130 i dm ≥ 5.0 m/s² (komórka wspólna M2–N3); silnik podłączony 90 km/h, 0.15v + v²/103.5 (wzór złożony graficznie jako 'v²/103 .5'), 4.0 m/s²; F ≤ 70 daN — 90 km/h / 103.5 / 4.0 zgodne; uwaga: zapis '103 .5' w PDF interpretowany jako 103,5 (wpisane w uwagach wiersza)"
+   ],
+   "korekta": "dopisano w uwagach wiersza, że mianownik w PDF jest złożony jako 'v²/103 .5'",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-145",
+   "przedmiot": "UN R13: naczepa (O3/O4) — min. suma sił hamowania, laden i unladen",
+   "wartość": "45",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 47: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-151",
+   "przedmiot": "UN R13 (02): hamowanie awaryjne (secondary) kat. N — wzór i MFDD",
+   "wartość": "s ≤ 0.15 v + 2v²/115; dm ≥ 2.2",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "cytat na stronie 29: znaleziony",
+    "liczby z 'wartość' na stronie: wszystkie obecne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-154",
+   "przedmiot": "Zmierzone drogi hamowania 80→0 zestawu 40 t z EBS (publikacje pomiarowe)",
+   "wartość": "—",
+   "status": "UNVERIFIED",
+   "checks": [
+    "UNVERIFIED — brak liczby podanej jako fakt; status poprawny"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-158",
+   "przedmiot": "UN R13 N3 typ-0 silnik odłączony: próba regulaminowa 60→0 — maks. droga",
+   "wartość": "≤ 36.7",
+   "status": "ESTIMATED",
+   "checks": [
+    "ponowne przeliczenie: 0.15·60 + 60²/130 = 36.7 m — zgodne"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  },
+  {
+   "id": "R3-161",
+   "przedmiot": "UN R13 (02): hamowanie resztkowe po awarii przenoszenia, N3 obciążony",
+   "wartość": "40 km/h; s ≤ 0.15v + (100/30)·v²/115 = 52.4 m; dm ≥ 1.3",
+   "status": "SOURCED",
+   "checks": [
+    "ponowne pobranie z url_pliku: sha256 zgodny",
+    "strona 31 wyrenderowana ponownie z świeżego pliku → files/_audit_view/R3-161_p31.png",
+    "PONOWNE obejrzenie obrazu: PASS — tabela pkt 2.4.1 s. 31 obejrzana ponownie: N3, v 40, laden 0.15v +(100/30)·(v²/115), dm 1.3; 0.15·40 + (100/30)·1600/115 = 52.4 m"
+   ],
+   "korekta": "",
+   "wynik": "PASS"
+  }
+ ],
+ "historia": [
+  "v1 (157 wierszy, k=33): 1. przebieg 32 PASS / 1 FAIL (R3-153 przeliczenie jednostek) → poprawione → 33/33 PASS",
+  "v2 po recenzji REVIEW.md (162 wiersze, k=35, ten sam seed): 35 PASS / 0 FAIL; nowe wiersze obrazowe (MB s.29, MLIT s.31) obejrzane ponownie, ESTIMATED przeliczone"
+ ]
+}

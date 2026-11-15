@@ -26,12 +26,14 @@ from . import depot_yard as DY
 from . import hero_building as HBD
 from . import hero_depot as HD
 from . import landmarks as LM
+from . import chain_bollards as CB
 from . import gate3_landmarks as G3
 from . import life as LF
 from . import masonry_gate as MG
 from . import paved as PV
 from . import plantings as PT
 from . import plots as PLT
+from . import runway_paint as RWP
 from . import sources as SRC
 from . import vegetation as VG
 from . import yard_wear as YW
@@ -144,6 +146,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     zc = CF.tidy(zc, zjoin, mask, dist)
     bmask = PV.rasterize_polys([b["poly"] for b in blds], hf)
     zc = np.where(bmask & ~mask, np.minimum(zc, sm), zc)        # ground under buildings never above the floor
+    if getattr(w, "water", None) is not None:      # ADR 0210 (opt-in): river / pond bed, shallow banks, shore lip
+        zc = w.water.carve(zc, mask, log)
     zsurf_g = np.where(mask, zjoin, zc)
 
     def zsurf(e, n):
@@ -229,6 +233,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
              no_parking=DY.no_parking(overrides, origin) + GT.no_parking(frep), authored_trailers=DY.dock_trailers(overrides),
              tyre_keep_off=roads_poly.buffer(0.5) if any(o.get("kind") == "life_rules" and o.get("tyre_scrub_off_roads")
                                                            for o in overrides) else None)   # ADR 0179
+    RWP.build(w.buf, overrides, zsurf, frep)                    # runway paint on an authored paved area (ADR 0196)
     FR.place_cars(pl, brep.get("frontage_props"), frep)         # display vehicles of authored frontages (ADR 0129)
     YW.apply(w.buf, overrides, origin, docks, paved, roads_poly, zsurf, frep)     # authored yard wear (ADR 0071 r11)
     FD.apply(w, pl, roads_poly, bpoly, paved, park_polys, route_P, frep, log, overrides=overrides, deck_at=deck_at)   # Fab Megascans (ADR 0084)
@@ -242,6 +247,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.clear_under_decks(pl, w.buf.parts, frep)
     FU.clear_level_carriageways(pl, w.buf.parts, frep)
     FU.lamp_rows(pl, w.buf.parts, pipeline.REGIONS / rid / "lamp_rows.json", frep)   # ADR 0133: authored rows
+    CB.apply(pl, overrides, origin, frep)                        # ADR 0183: authored rows of chain posts
     frep["poles_reseated"] = pl.reseated
     frep["pole_footing_steps"] = {"count": len(pl.seat_log), "max_m": max([r["step_m"] for r in pl.seat_log], default=0.0),
                                   "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}
@@ -275,6 +281,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     hero_keepout = HBD.keepout(heroes)
     if hero_keepout:
         blocked |= PV.rasterize_polys(hero_keepout, hf)
+    if getattr(w, "water", None) is not None:      # ADR 0210: no trees in the water
+        blocked |= w.water.blocked()
     vrep = {}
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides)
     forest_mix = vrep.pop("_forest_mix")

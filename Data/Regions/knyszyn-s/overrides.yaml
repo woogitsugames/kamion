@@ -1,0 +1,57 @@
+# Authored overrides of region knyszyn-s (ADR 0204). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 761611, 610559) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 2024 0.25 m (Data/raw/derived/knyszyn-s/ortho_0p25m.tif), BDOT10k 2008, LoD1 2024. No lettering, no brands.
+overrides:
+  - id: dk65-carriageway-width
+    target: {osm_way: [1111506750, 1111506754, 27718745, 286990127, 286990128, 305910042]}
+    reason: >-
+      DK65 single carriageway. BDOT10k gives 6.0 m (or nothing), the generator drew 2 x 3.0 m. GUGiK orthophoto
+      0.1 m of 2025-05-27, cross profiles averaged over 6-10 m at four stations (EPSG:2180 760751 611837;
+      760683 611909; 761079 611483; 761559 610967; tool artifacts/knyszyn-0204/profile10.py): edge line to edge
+      line 6.8 m (lanes 3.3-3.5 m), asphalt 7.3-7.6 m, then a pale shoulder. Set 2 x 3.4 m + 0.35 m edge strips
+      = 7.5 m (+-0.3 m).
+      ADR 0212: solid edge lines P-7b on both sides (edge_lines: both). Orthophoto 0.1 m 2025, integrated brightness
+      excess across DK65 at 12 stations of ways 305910042 / 27718745 / 1111506754 / 286990127: peaks 3.0-4.0 m left
+      and right of the OSM axis, median ~3.6 m (generator: axis 0.20 m inside the 7.5 m edge = 3.55 m; 0.12 m wide,
+      pkt 2.2.2). The bus bay at 762500 609950 has a broken edge line on the orthophoto - painted solid here (open).
+      Same set in knyszyn and knyszyn-w (seams consistent).
+    confidence: high
+    verify: none
+    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  # ---------------------------------------------------------------- expressway construction zone (D64, WORKING_VALUE)
+  - id: s-construction-earthworks
+    kind: paved_area
+    material: yard_gravel
+    polygon_epsg2180: [[762480.9, 609847.0], [762471.3, 609907.5], [762464.0, 609916.5], [762460.6, 609927.7], [762462.8, 609942.1], [762471.4, 609953.7], [762459.7, 609978.5], [762445.0, 610001.2], [762519.0, 609921.4], [762515.0, 609913.3], [762519.8, 609876.3], [762522.0, 609878.4], [762634.5, 609756.9], [762634.5, 609681.6], [762628.0, 609675.6], [762478.0, 609837.6], [762483.9, 609843.1]]
+    reason: >-
+      Simplified construction site of the expressway beside DK65 (owner D64: current drivable state, site
+      simplified). Outline = 30 m each side of the OSM highway=construction motorway axis (ways 1511762695/6, edited
+      2026-09-13) from the east tile edge to its mapped end 762501 609854, a 30 m disc at the roundabout under
+      construction (way 1511762690, centre 762490.5 609930.6, r 20.7 m) and the 8 m strip of the future DK65 link
+      (way 1511762694), kept 10 m off the DK65 axis. The GUGiK 0.1 m orthophoto of 2025-05-25/27 shows only a
+      clear-cut corridor ~30 m wide here (no earthworks yet); owner frames of 2026-07-27/28 show bare sand
+      platforms, spoil heaps and excavators beside DK65 (location of the frames not known). Bare compacted
+      ground (yard_gravel) stands for the sand platform; heaps, machines, temporary signs (C-5 with a plate, B-33)
+      and the yellow temporary centre line are not modelled. Width 60 m WORKING_VALUE.
+    confidence: low
+    verify: owner - where the works touch DK65 near Knyszyn, which side, how wide; any diversion or traffic lights
+  - id: s-construction-clearcut
+    kind: forest_clearing
+    target: {bdot: "87a8e448-7c01-4185-8ae3-70f9f77cf54b"}
+    reason: >-
+      The pine stand SW of DK65 (BDOT10k OT_PTLZ_A 87a8e448, 6.8 ha) is cut along the expressway corridor: on the
+      2025 orthophoto a ~30 m clear-cut runs 90-100 m from DK65 (762390 609960 -> 762570 609780). The clearing
+      = the construction outline above (wider than the 2025 cut, as the works of 2026 are).
+    confidence: low
+    verify: as s-construction-earthworks
+    cleared_epsg2180: [[[762480.9, 609847.0], [762471.3, 609907.5], [762464.0, 609916.5], [762460.6, 609927.7], [762462.8, 609942.1], [762471.4, 609953.7], [762459.7, 609978.5], [762445.0, 610001.2], [762519.0, 609921.4], [762515.0, 609913.3], [762519.8, 609876.3], [762522.0, 609878.4], [762634.5, 609756.9], [762634.5, 609681.6], [762628.0, 609675.6], [762478.0, 609837.6], [762483.9, 609843.1]]]
+  - id: rural-roads-unlit
+    target: {osm_way: [27718745, 98071886, 286990127, 286990128, 305910042, 1111506750, 1111506754]}
+    reason: >-
+      DK65 and the field road of this tile run through fields and pine woods with no street lighting: owner frames
+      of DK65 (2026-07-27/28, 10 frames) show no lamp columns outside the town, and the 0.1 m orthophoto of 2025
+      shows no columns or their shadows on the verges. The lamp rule lights every road of class GP/G/Z (122 columns
+      here). OSM has no `lit` tag on these ways.
+    confidence: high
+    verify: none
+    set: {lamps: false}

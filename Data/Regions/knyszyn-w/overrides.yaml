@@ -1,0 +1,39 @@
+# Authored overrides of region knyszyn-w (ADR 0209). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 759563, 612607) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 0.1 m 2025 (Data/raw/gugik/gugik-orto-2025-rgb-0p10-knyszyn-w), BDOT10k 2008, LoD1 2024. No lettering, no brands.
+overrides:
+  - id: dk65-carriageway-width
+    target: {osm_way: [232511646, 232511647]}
+    reason: >-
+      DK65 Obozowa from the DK65/DW671 roundabout (east seam with tile knyszyn, x = 760587) north-west to the north
+      tile edge (towards Monki). BDOT10k gives 5.6-6.0 m. GUGiK orthophoto 0.1 m 2025, cross profiles averaged over
+      6 m (artifacts/knyszyn-w-0209/tools/profile10.py) at EPSG:2180 760480 612300 and 759650 613425: edge line to
+      edge line 6.8 m (both stations), pale paved strip incl. shoulder 8.4-10.4 m. Same cross-section as the
+      measured override of the knyszyn tile (ADR 0204: 2 x 3.4 m + 0.35 m edge strips = 7.5 m, +-0.3 m), so the
+      seam at the roundabout arm keeps one width.
+      ADR 0212: solid edge lines P-7b on both sides (edge_lines: both). Orthophoto 0.1 m 2025, integrated brightness
+      excess across DK65 at 8 stations of way 232511647: peaks 3.3-3.95 m left and right of the OSM axis, median
+      ~3.55 m = the generator's axis 0.20 m inside the 7.5 m carriageway edge; 0.12 m wide (DK65 is no dual
+      carriageway / international route, pkt 2.2.2). Same set in knyszyn and knyszyn-s (seams consistent).
+    confidence: high
+    verify: none
+    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  - id: dk65-fields-unlit
+    target: {osm_way: [232511647]}
+    reason: >-
+      DK65 north-west of the town between fields (way 232511647, from the Goniadzka fork to the north tile edge):
+      GUGiK orthophoto 0.1 m 2025 (crop EPSG:2180 759700 613250 - 759900 613450, artifacts/knyszyn-w-0209/
+      ortho_lamps_b.jpg) shows no lamp columns or their shadows, only tree rows on both sides; the lamp rule put
+      columns there (render r1 dk65-fields-nw). The lit part of DK65 (columns with arms on the east side every
+      ~40 m, ortho_lamps_a.jpg) is way 232511646 through the town, left to the rule. The fork-to-Polna stretch
+      (~250 m) of 232511647 is not verified (open).
+    confidence: medium
+    verify: owner - where the street lights on DK65 end towards Monki
+    set: {lamps: false}
+  - id: field-roads-unlit
+    target: {osm_way: [98072121, 98072355]}
+    reason: >-
+      Unclassified field roads (gravel on the 2025 orthophoto, plan view r1 polna.jpg): no street lighting.
+    confidence: medium
+    verify: none
+    set: {lamps: false}

@@ -1,0 +1,293 @@
+{
+  "pakiet": "R8 mobile-gpu-a16",
+  "data": "2026-11-14",
+  "seed": 20261114,
+  "metoda_losowania": "random.Random(20261114).sample(sorted(ids), k), k = ceil(0.2 * n)",
+  "n_wierszy": 134,
+  "k": 27,
+  "pass": 26,
+  "fail": 1,
+  "todo": 0,
+  "wiersze": [
+    {
+      "id": "R8-004",
+      "przedmiot": "Helio G99: CPU",
+      "status": "SOURCED",
+      "cytat": "2x Arm Cortex-A76 up to 2.2GHz 6x Arm Cortex-A55 up to 2.0GHz",
+      "źródło": "https://www.mediatek.com/products/smartphones-2/mediatek-helio-g99",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://www.mediatek.com/products/smartphones-2/mediatek-helio-g99)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-007",
+      "przedmiot": "Mali-G57: architektura",
+      "status": "SOURCED",
+      "cytat": "Architecture ... Valhall (kolumny Mali-G57 … Immortalis-G715)",
+      "źródło": "https://documentation-service.arm.com/static/6659a973876c8d213b7870b5",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://documentation-service.arm.com/static/6659a973876c8d213b7870b5); PONOWNE obejrzenie s.1 świeżo pobranego PDF jako obrazu (Read): wiersz Architecture, pasmo 'Valhall' zaczyna się w kolumnie Mali-G57 i kończy na Immortalis-G715",
+      "wynik": "PASS",
+      "korekta": "",
+      "automat_brakujące_fragmenty": [
+        "valhall (kolumny mali-g57"
+      ]
+    },
+    {
+      "id": "R8-017",
+      "przedmiot": "Mali-G57: koszt próbkowania głębi z porównaniem (shadow map)",
+      "status": "SOURCED",
+      "cytat": "Depth format with reference … Mali-G57: x2",
+      "źródło": "https://documentation-service.arm.com/static/6659a973876c8d213b7870b5",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://documentation-service.arm.com/static/6659a973876c8d213b7870b5); PONOWNE obejrzenie s.2 (Read, obraz): Texturing > 'Depth format with reference', kolumna Mali-G57 = x2 (Bifrost x1)",
+      "wynik": "PASS",
+      "korekta": "",
+      "automat_brakujące_fragmenty": [
+        "mali-g57: x2"
+      ]
+    },
+    {
+      "id": "R8-020",
+      "przedmiot": "Mali-G57: przyspieszone mieszanie FP16 / R11G11B10",
+      "status": "SOURCED",
+      "cytat": "FP16 / R11G11B10 accelerated blending [5] ✓ (od Mali-G57)",
+      "źródło": "https://documentation-service.arm.com/static/6659a973876c8d213b7870b5",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://documentation-service.arm.com/static/6659a973876c8d213b7870b5); PONOWNE obejrzenie s.1 (Read, obraz): 'FP16 / R11G11B10 accelerated blending [5]' — znaczniki ✓ od kolumny Mali-G57 w prawo; przypis 5 na s.2: 'All have float blending. Valhall adds hardware acceleration for standard blend operations'",
+      "wynik": "PASS",
+      "korekta": "",
+      "automat_brakujące_fragmenty": [
+        "fp16 / r11g11b10 accelerated blending [5] ✓ (od mali-g57)"
+      ]
+    },
+    {
+      "id": "R8-029",
+      "przedmiot": "Mali-G57 MC2: maxPerStageDescriptorSamplers / SampledImages / UniformBuffers / Resources",
+      "status": "SOURCED",
+      "cytat": "maxPerStageDescriptorSamplers 8388608; maxPerStageDescriptorSampledImages 8388608; maxPerStageDescriptorUniformBuffers 8388608; maxPerStageResources 8388608",
+      "źródło": "https://vulkan.gpuinfo.org/displayreport.php?id=53265",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://vulkan.gpuinfo.org/displayreport.php?id=53265); automat: fragment 'maxPerStageDescriptorSamplers 500000' nie występuje w raporcie 53265 (wiersz łączył wartości z dwóch raportów, a podawał jeden URL)",
+      "wynik": "FAIL",
+      "korekta": "POPRAWIONO w manifeście: cytat tylko z 53265 (8388608 ×4); wartość 500000 przeniesiona do uwag z linkiem do raportu 53260 (sprawdzona tam: 'maxPerStageDescriptorSamplers 500000'). Ten sam błąd usunięty w wierszu maxBoundDescriptorSets.",
+      "automat_brakujące_fragmenty": []
+    },
+    {
+      "id": "R8-031",
+      "przedmiot": "Mali-G57 MC2: subgroup",
+      "status": "SOURCED",
+      "cytat": "subgroupSize 16; subgroupSupportedOperations basic vote arithmetic ballot shuffle shuffle (relative) clustered quad partitioned_bit_nv",
+      "źródło": "https://vulkan.gpuinfo.org/displayreport.php?id=53265",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://vulkan.gpuinfo.org/displayreport.php?id=53265)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-034",
+      "przedmiot": "Mali-G57 MC2: maxSamplerAnisotropy",
+      "status": "SOURCED",
+      "cytat": "maxSamplerAnisotropy 16",
+      "źródło": "https://vulkan.gpuinfo.org/displayreport.php?id=53265",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://vulkan.gpuinfo.org/displayreport.php?id=53265)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-035",
+      "przedmiot": "Mali-G57 MC2: multiDrawIndirect / maxDrawIndirectCount",
+      "status": "SOURCED",
+      "cytat": "multiDrawIndirect false; maxDrawIndirectCount 1",
+      "źródło": "https://vulkan.gpuinfo.org/displayreport.php?id=53265",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://vulkan.gpuinfo.org/displayreport.php?id=53265)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-049",
+      "przedmiot": "Discard/A2C: co robić, gdy konieczne",
+      "status": "SOURCED",
+      "cytat": "Render alpha-tested geometry front-to-back with depth-testing enabled. Doing so causes as many fragments as possible to fail during early ZS testing.",
+      "źródło": "https://developer.arm.com/documentation/101897",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://documentation-service.arm.com/static/67a62b17091bfc3e0a947695)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-051",
+      "przedmiot": "Mieszanie (alpha blend) na Mali",
+      "status": "SOURCED",
+      "cytat": "blending disables many of the important optimizations that remove fragment overdraw, for example, early ZS testing and FPK.",
+      "źródło": "https://developer.arm.com/documentation/101897",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://documentation-service.arm.com/static/67a62b17091bfc3e0a947695)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-054",
+      "przedmiot": "URP: Depth Priming na mobile",
+      "status": "SOURCED",
+      "cytat": "set Depth Priming Mode to Auto or Forced for PC and console platforms, or Disabled for mobile platforms.",
+      "źródło": "https://docs.unity3d.com/6000.3/Documentation/Manual/urp/configure-for-better-performance.html",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://docs.unity3d.com/6000.3/Documentation/Manual/urp/configure-for-better-performance.html)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-056",
+      "przedmiot": "MSAA — koszt złego resolve (Arm)",
+      "status": "SOURCED",
+      "cytat": "manually writing and resolving a 4x MSAA 1080p surface at 60 FPS requires 3.9GB/s of memory bandwidth. This is compared to 500MB/s when using an inline resolve.",
+      "źródło": "https://developer.arm.com/documentation/101897",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://documentation-service.arm.com/static/67a62b17091bfc3e0a947695)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-057",
+      "przedmiot": "MSAA — pomiar Khronos/Arm (Mali-G76)",
+      "status": "SOURCED",
+      "cytat": "If this attachment remains in tile memory, the impact on performance remains minimal (3% bandwidth increase shown in the screenshots above) … a separate resolve pass is resulting in 5 GB/s increase in bandwidth.",
+      "źródło": "https://github.com/KhronosGroup/Vulkan-Samples/blob/b4fb432b80234e54cf7be7411f20b65494a5b0f5/samples/performance/msaa/README.adoc",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://raw.githubusercontent.com/KhronosGroup/Vulkan-Samples/b4fb432b80234e54cf7be7411f20b65494a5b0f5/samples/performance/msaa/README.adoc)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-062",
+      "przedmiot": "Render pass: LOAD zamiast CLEAR — pomiar",
+      "status": "SOURCED",
+      "cytat": "we observe a difference of `1533.9 - 933.7 = 600.2 MiB/s` if we select `LOAD_OP_CLEAR`",
+      "źródło": "https://github.com/KhronosGroup/Vulkan-Samples/blob/b4fb432b80234e54cf7be7411f20b65494a5b0f5/samples/performance/render_passes/README.adoc",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://raw.githubusercontent.com/KhronosGroup/Vulkan-Samples/b4fb432b80234e54cf7be7411f20b65494a5b0f5/samples/performance/render_passes/README.adoc)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-070",
+      "przedmiot": "Tekstury: trilinear, FP32, 3D",
+      "status": "SOURCED",
+      "cytat": "Trilinear, LINEAR_MIPMAP_LINEAR, filtering has a 2x cost. • 3D formats have a 2x cost. • FP32 formats have a 2x cost. … always use mipmaps for textures that are in 3D scenes.",
+      "źródło": "https://developer.arm.com/documentation/101897",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://documentation-service.arm.com/static/67a62b17091bfc3e0a947695)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-079",
+      "przedmiot": "URP: Render Scale a UI",
+      "status": "SOURCED",
+      "cytat": "Note : This only scales the game rendering. UI rendering is left at the native resolution for the device.",
+      "źródło": "https://docs.unity3d.com/6000.3/Documentation/Manual/urp/universalrp-asset.html",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://docs.unity3d.com/6000.3/Documentation/Manual/urp/universalrp-asset.html)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-084",
+      "przedmiot": "Adreno: co wyłącza LRZ / Early-Z",
+      "status": "SOURCED",
+      "cytat": "blending, stencil use, manually writing to the depth buffer or UAVs, alpha-to-coverage use, the “discard” shader keyword, changing the depth comparison operator, reading from the framebuffer, or masked writes … all might disable LRZ",
+      "źródło": "https://docs.qualcomm.com/doc/80-78185-2/topic/mobile_best_practices.html",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://docs.qualcomm.com/bundle/publicresource/80-78185-2/topics/mobile_best_practices.md)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-090",
+      "przedmiot": "Arm Performance Studio (Streamline, Performance Advisor, Frame Advisor, Mali Offline Compiler, RenderDoc for Arm GPUs)",
+      "status": "SOURCED",
+      "cytat": "All features of Arm Performance Studio are available free of charge without any additional license.",
+      "źródło": "https://learn.arm.com/install-guides/ams/",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://learn.arm.com/install-guides/ams/)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-095",
+      "przedmiot": "Mali Offline Compiler — ograniczenie",
+      "status": "SOURCED",
+      "cytat": "the texture cycle counts from the tool assumes one cycle per texel performance. … You must manually de-rate the texture performance",
+      "źródło": "https://developer.arm.com/documentation/101897",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://documentation-service.arm.com/static/67a62b17091bfc3e0a947695)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-099",
+      "przedmiot": "UUM-107530: spadek wydajności Vulkan po upgradzie projektu (2022.3/6000.0)",
+      "status": "SOURCED",
+      "cytat": "There are two regressions, one in 2022.3 and the other in 6000.0 … Not reproducible with: … GPU: Mali-G77 … GPU: Mali-G76 … GPU: Mali-G78 … GPU: Mali-G710",
+      "źródło": "https://issuetracker.unity3d.com/issues/build-performance-deteriorates-on-certain-android-devices-when-graphics-api-is-set-to-vulkan-on-an-upgraded-project",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://issuetracker.unity.com/api/v1.0/issues/20394)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-101",
+      "przedmiot": "Projekt: API grafiki Android",
+      "status": "ESTIMATED",
+      "cytat": "m_APIs: 150000000b000000 m_Automatic: 0",
+      "źródło": "repo:game/ProjectSettings/ProjectSettings.asset@81c9bae",
+      "sprawdzono": "ponowne otwarcie pliku w repo (game/ProjectSettings/ProjectSettings.asset)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-107",
+      "przedmiot": "Rozkład GPU A16 Low: skala renderu 0,75 → 0,70/0,65/0,60",
+      "status": "SOURCED",
+      "cytat": "Render scale 0.75 -> 0.70 / 0.65 / 0.60 | 2.0 / 3.3 / 4.8 (~13 ms pixel-proportional at 0.75)",
+      "źródło": "repo:docs/PERFORMANCE_BUDGETS.md@81c9bae",
+      "sprawdzono": "ponowne otwarcie pliku w repo (docs/PERFORMANCE_BUDGETS.md)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-109",
+      "przedmiot": "Rozkład GPU A16 Low: lusterka / cienie / MSAA",
+      "status": "SOURCED",
+      "cytat": "Mirrors (1 render/frame); mirror LOD 0.5 | 0.75-1.25; 0.1 … Shadows off; props + parked cars; HUD | 0.9; 0.3; 0.3 … MSAA 2x -> 1x; sky clouds/haze; A8 vehicle look | 0; 0; 0",
+      "źródło": "repo:docs/PERFORMANCE_BUDGETS.md@81c9bae",
+      "sprawdzono": "ponowne otwarcie pliku w repo (docs/PERFORMANCE_BUDGETS.md)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-124",
+      "przedmiot": "P6: szyba kabiny — mniejsza powierzchnia mieszania",
+      "status": "UNVERIFIED",
+      "cytat": "blending disables many of the important optimizations that remove fragment overdraw",
+      "źródło": "https://developer.arm.com/documentation/101897",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://documentation-service.arm.com/static/67a62b17091bfc3e0a947695)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-125",
+      "przedmiot": "P7: ściany HLOD — przycięcie pustych ~12 % atlasu",
+      "status": "UNVERIFIED",
+      "cytat": "Ściany HLOD: górne ~12 % atlasu puste — przycięcie w `forest_hlod.py` (mały zysk).",
+      "źródło": "repo:docs/adr/0136-a16-gpu-regression-impostor-trim.md@81c9bae",
+      "sprawdzono": "ponowne otwarcie pliku w repo (docs/adr/0136-a16-gpu-regression-impostor-trim.md)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-128",
+      "przedmiot": "P10: światła dodatkowe Low → Disabled (jeśli w scenie brak świateł punktowych na Low)",
+      "status": "UNVERIFIED",
+      "cytat": "Set Additional Lights to Disabled , or Per Vertex",
+      "źródło": "https://docs.unity3d.com/6000.3/Documentation/Manual/urp/configure-for-better-performance.html",
+      "sprawdzono": "ponowne pobranie z sieci 2026-11-14 i wyszukanie cytatu (https://docs.unity3d.com/6000.3/Documentation/Manual/urp/configure-for-better-performance.html)",
+      "wynik": "PASS",
+      "korekta": ""
+    },
+    {
+      "id": "R8-130",
+      "przedmiot": "P12: LOD bias Low 0,5 → 0,3 (×0,6)",
+      "status": "SOURCED",
+      "cytat": "Far clip 900 -> 720 / 450 m; LOD bias x0.6 | 0.7 / 1.4; 1.4",
+      "źródło": "repo:docs/PERFORMANCE_BUDGETS.md@81c9bae",
+      "sprawdzono": "ponowne otwarcie pliku w repo (docs/PERFORMANCE_BUDGETS.md)",
+      "wynik": "PASS",
+      "korekta": ""
+    }
+  ]
+}

@@ -246,6 +246,22 @@ overrides:
         - {a: [49.4, 40.4], b: [52.2, 19.6], w: 0.9, tone: dark}
       oil_per_dock: [2, 5]
       grime_edges: true
+  # s20 night-int-0191-0192 (review REVIEW-2026-11-14-s20-0191-0192 P1-1): own block so the yard block stays as authored.
+  - id: kwadrat-park-yard-lamp-gate-face
+    kind: depot_yard
+    reason: >-
+      The northernmost arched column of kwadrat-park-yard (at 778727.0 595836.0, local E 731.7 N -387.1, 2.2 m west of
+      the route-start lane centre) had its arm turned west over the open yard (face 778720 595840), the only one of the
+      six; at dusk / night the ADR 0191 road-luminaire pool then lit the paving and left the lane under the trailer at
+      ~4 % luma (review P1-1). Like the other five columns on the west edge of the lane, its arm now points east-south-east
+      over the carriageway (same face offset +9.5 / -5.2 m as lamps 1-4). Orthophoto shows the column foot, not the arm
+      direction - arm direction follows the rest of the row (WORKING_VALUE). This block removes the yard block's lamp
+      (clear polygon +-1.5 m around its foot, applied after it) and places it again with the new face.
+    confidence: medium
+    verify: owner photo session item 4 (yard lamps, arm direction of the northern column)
+    clear_lamps_epsg2180: [[778725.5, 595834.5], [778728.5, 595834.5], [778728.5, 595837.5], [778725.5, 595837.5]]
+    lamps:
+      - {at: [778727.0, 595836.0], face: [778736.5, 595830.8]}
   - id: andersa-viaduct-biezenstwa-style
     kind: bridge_style
     target: {osm_way: [175157461, 177895177]}
@@ -2465,22 +2481,113 @@ overrides:
     #     the roof edge on the orthophoto 2024-05-27 looks straight; as a 42 m prism the 1.8 m return wall was a sunlit
     #     white stripe over the whole height (review 0180 P1). `footprint_open_m: 3.3` drops protrusions narrower than
     #     6.6 m (the SE wall becomes one 37 m edge). confidence medium (what the BDOT step is at ground level: unknown).
-    #   NW long wall (orthophoto 2024-05-27, building lean): pale yellow with a regular grid of punched windows (about
-    #     11 rows) - no rule: the hashed punched rows in the building colour plaster_beige.
+    #   NW long wall: see ADR 0200 below (the ADR 0180 reading "regular grid of punched windows" came from the
+    #     foreshortened lean of the orthophoto 2024-05-27, whose rows of short dashes do not tell a grid from bands).
     #   NE gable: no open source - the SW rule, WORKING_VALUE (confidence low).
     # Materials: plaster_white / plaster_beige, plaster_white__far_ribbon and plaster_beige__far_office are all drawn
     # by chunk 6_6 already on both LODs (no new draw); the lettering on the gable is a brand - not reproduced; roof
-    # masts / antennas: not done.
+    # masts / antennas: ADR 0190 below.
+    # ADR 0190 (review REVIEW-2026-11-13-s19-0180-r2 P2-3 / P2-4 / P2-5):
+    #   SE bands: on both photos the windows under each dark line are as light as the wall, only a few panes are dark
+    #     (`glazing: light` = white blinds down / 2/3 down / clear glass, frontage.BAND_LIGHTS) and the dark thing is
+    #     a thin line over each band (`lintel_m: 0.15`, about 1/9 of the band height in the 4x crops; what it is -
+    #     a sun-shade fin or a shadow gap - is not resolved by the photos: WORKING_VALUE).
+    #   Gable column: white-framed two-pane windows with blue-grey glass = `off` variant 2 (white frame, clear glass;
+    #     r2 used variant 4, the white blind in a grey frame, without contrast on the shaded wall - why its frame
+    #     showed on one side only in one Low frame was not established);
+    #     `reveal_m: 0.06` (the photos show the frames nearly flush with the render).
+    #   Roof (both photos, seen from the south, 150 m; orthophoto 2024-05-27: clutter of light objects over the SW end
+    #     of the roof and a few along the SE edge): one tall lattice mast behind the SW gable about 0.3 of its width
+    #     from the W corner (9.5 m above the roof from the pixel ratio to the 41.8 m wall, +-15 %), a shorter lattice
+    #     mast with panel antennas at the S corner (6.5 m), four short poles with drums along the SE edge, panel
+    #     antennas at the W and E corners. Count and kinds from the photos; positions along the walls +-2 m, insets
+    #     and the antenna counts per mast: UNVERIFIED (WORKING_VALUE). Generic hardware, no operator marks.
+    #   Downpipes: the hashed office rule hangs one 0.35 m from either end of every footprint edge over 8 m - on
+    #     this outline 8 pipes: a pair at every corner and a pair 0.7 m apart in the NW wall where two collinear
+    #     BDOT edges meet (the "white vertical lines" of ADR 0184 par. 4, camera a184_tower_n; galvanised steel reads
+    #     white). Both photos show the SW and SE walls and the S corner without external pipes (flat roof behind an
+    #     attic: inside drains); NW / NE: no open photo, the same assumed (WORKING_VALUE). `downpipes: false`.
+    # ADR 0200 (reviews REVIEW-2026-11-14-s20-mistral-m57 par. 6 and -s20-0190 P2-A / P2-B / P2-G; photos looked at
+    # in this task: Commons 20210328_115626 and 20210328_105711 (Rakoon, CC0), 20200711_073045 (Rakoon, CC BY 3.0),
+    # KartaView 1326673613 (2021-06-23, reference only), GUGiK orthophoto WMS tile 80 m):
+    #   NW long wall (115626 nearly frontal, 073045 oblique): horizontal window bands on the sand render - on every
+    #     storey 6 groups of about 5 white-framed sashes between sand piers. Fractions of the wall from its NE end,
+    #     read off 115626 (+-0.02, WORKING_VALUE): the `spans` below. BDOT10k draws this wall as two edges 1.5 deg
+    #     apart (9.73 + 27.36 m after the opening; the vertex 0.25 m off the chord) - `footprint_simplify_m: 0.3` makes
+    #     it one 37.1 m edge so the fractions are those of the whole wall. `light_m: 0.96` + `light_sashes: 1`: one
+    #     sash per light (5 / 5 / 5 / 5 / 5 / 6 lights); `light_mix`: mostly glass, few blinds (the photos; shares
+    #     WORKING_VALUE); no lintel line (none visible on NW); `far_kind: office`: the LOD1 wall in the far material
+    #     the gables use (no new draw). Sill / head as on SE (WORKING_VALUE).
+    #   Roof masts (X-shaped base frames on the orthophoto tile, 0.1 m / px; 115626; 073045; KartaView 2021):
+    #     - W mast (was u 0.30, inset 4.5): base frame 3.3 m along the SW gable from the W corner, 2.1 m in; two
+    #       photos triangulate the same (Mapillary from S: 0.3 of the gable width; 073045 from SW: 0.18) -> u 0.20,
+    #       inset 2.3 (+-1 m). 115626 puts it at 0.89 of the NW wall = 4 m in: not reconciled, UNVERIFIED.
+    #       side_m 0.7 for the two tall masts: 073045 - the W mast with its antennas is about 1.05 m wide against
+    #       the 16.09 m gable, the lattice itself 0.6-0.7 m (ESTIMATED; review 0190: "thinner than on the photo").
+    #     - middle mast (new): lattice base frame at 0.48 of the SE edge from S, 2.7 m in; 115626: at 0.48 of the NW
+    #       wall from NE, as tall as the W mast, about 2.8 storey pitches above the attic with its foot hidden ->
+    #       11 m (ESTIMATED 10-12 m). Mapillary 2020-08-15 from the south shows only a short mast there: conflict
+    #       (date / position), UNVERIFIED.
+    #     - S corner 6.5 m lattice: kept. CONFLICT: Mapillary 2020 shows a structure of about 1.5 storeys there;
+    #       073045 only wall-mounted panels up to the attic line, the orthophoto tile no base frame. Height UNVERIFIED.
+    #     - N and E corners: base frames 2.0 m / 3.9 m and 2.7 m / 3.0 m from the corner edges; 115626: 3-4 masts
+    #       with panels at the NE end, shorter than the two tall ones -> lattice 5.0 / 4.6 m (ESTIMATED 4-6 m).
+    #     - short poles of the SE edge: KartaView 2021 - white panel antennas along the edge and two masts with
+    #       dishes; panels on two poles, drums on two, heights 2.1-3.4 m (positions UNVERIFIED).
+    #   SE wall colour: unchanged (plaster_white) - the sources disagree (KartaView 2019 / 2021: as the gable;
+    #     Mapillary 2020 and the orthophoto: nearly white); owner photo session.
+    #   Roof box: the hashed lift machine room of tall offices (2.8 x 3.2 x 2.2 m in the middle of the roof) is on no
+    #     photo and not on the orthophoto tile (cable trays and blue fans only) - `machine_rooms: false`.
+    #   Ground-floor annex on SE: the building_part `g3a-office-tower-se-annex` below.
     set:
       wall_material: plaster_beige
       ribbon: false
       bands: false
+      downpipes: false
       footprint_open_m: 3.3
+      footprint_simplify_m: 0.3
+      machine_rooms: false
       facades:
         - {facing: [SW, NE], min_len_m: 8.0, windows: column, u: 0.52, window_w_m: 2.0, sill_m: 0.9, head_m: 2.5,
-           variants: [4]}
-        - {facing: SE, min_len_m: 30.0, windows: ribbon, glazing: light, sill_m: 1.0, head_m: 2.3,
-           wall_material: plaster_white, spans: [[0.03, 0.20], [0.30, 1.0]]}
+           variants: [2], reveal_m: 0.06}
+        - {facing: SE, min_len_m: 30.0, windows: ribbon, glazing: light, sill_m: 1.0, head_m: 2.3, lintel_m: 0.15,
+           wall_material: plaster_white, spans: [[0.03, 0.20], [0.30, 1.0]], door: false}
+        - {facing: NW, min_len_m: 30.0, windows: ribbon, glazing: light, sill_m: 1.0, head_m: 2.3, light_m: 0.96,
+           light_sashes: 1, light_mix: [10, 20, 70], far_kind: office,
+           spans: [[0.01, 0.14], [0.17, 0.30], [0.33, 0.47], [0.51, 0.64], [0.67, 0.81], [0.84, 0.99]]}
+      roof_masts:
+        - {kind: lattice, facing: SW, u: 0.20, inset_m: 2.3, height_m: 9.5, side_m: 0.7, sectors: 3, dishes: 2}
+        - {kind: lattice, facing: SE, u: 0.49, inset_m: 2.7, height_m: 11.0, side_m: 0.7, sectors: 3, dishes: 1, aim_deg: 30}
+        - {kind: lattice, facing: SW, u: 0.90, inset_m: 2.0, height_m: 6.5, side_m: 0.4, sectors: 3, dishes: 1, aim_deg: 40}
+        - {kind: lattice, facing: NE, u: 0.88, inset_m: 3.9, height_m: 5.0, side_m: 0.35, sectors: 3, panel_h_m: 1.6, aim_deg: 20}
+        - {kind: lattice, facing: NE, u: 0.17, inset_m: 3.0, height_m: 4.6, side_m: 0.35, sectors: 2, panel_h_m: 1.6, dishes: 1, dish_m: 0.3}
+        - {kind: pole, facing: SE, u: 0.20, inset_m: 0.8, height_m: 3.4, sectors: 3, panel_h_m: 1.4}
+        - {kind: pole, facing: SE, u: 0.40, inset_m: 0.8, height_m: 2.4, dishes: 1, aim_deg: -60}
+        - {kind: pole, facing: SE, u: 0.58, inset_m: 0.8, height_m: 3.0, sectors: 2, panel_h_m: 1.3, dishes: 1, dish_m: 0.3, aim_deg: 20}
+        - {kind: pole, facing: SE, u: 0.66, inset_m: 0.8, height_m: 2.1, dishes: 1, aim_deg: -100}
+        - {kind: pole, facing: SW, u: 0.03, inset_m: 0.6, height_m: 3.0, sectors: 3, panel_h_m: 1.4, aim_deg: 45}
+  - id: g3a-office-tower-se-annex
+    kind: building_part
+    name: ground-floor annex on the SE wall of the tower at Andersa 38
+    polygon_en: [[583.71, -565.62], [585.55, -566.63], [588.62, -561.03], [586.78, -560.04]]
+    height_m: 3.9
+    storeys: 1
+    reason: >-
+      ADR 0200 (review REVIEW-2026-11-14-s20-mistral-m57 par. 6). BDOT10k draws a 6.39 x 1.8 m protrusion in the
+      middle of the SE wall of the tower; `footprint_open_m` removes it from the 42 m prism (ADR 0180: no photo shows
+      a step in that wall). The GUGiK orthophoto WMS tile (80 m, 0.1 m / px) shows a low grey flat roof with a short
+      shadow against the middle of the SE wall there - a ground-floor annex (entrance lobby?) of about one storey.
+      Ring = the four BDOT10k vertices of the protrusion, its two wall-side corners moved 0.3 m into the tower (no
+      gap at the junction). Height one storey (3.69 m pitch) + attic = 3.9 m, ESTIMATED. Walls: what they look like
+      is on no open photo - plain render in the building colour, UNVERIFIED. The hashed entrance of the tower sat in
+      the middle of its SE wall, i.e. half behind this annex; the orthophoto shows the paved approach from the car
+      park ending at the annex, so the door is on the SE face of the annex (WORKING_VALUE) and the SE wall of the
+      tower has none (`door: false` in its rule).
+    confidence: low
+    verify: owner photo session item 6 (Kwadrat Park lane; SE side of the tower at ground level)
+    set: {typology: office, wall_material: plaster_beige, ribbon: false, bands: false, downpipes: false,
+          facades: [{facing: SE, min_len_m: 5.0, windows: blank, door: true},
+                    {facing: [SE, SW, NE, NW], min_len_m: 1.0, windows: blank, door: false}]}
   - id: g3a-small-office-no-band
     target: {building: "bdot:2BE4B431-C926-1BF0-E053-CC2BA8C0D140"}
     reason: >-

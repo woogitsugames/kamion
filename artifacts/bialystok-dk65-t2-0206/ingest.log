@@ -1,0 +1,25 @@
+Using CPython 3.12.14
+Creating virtual environment at: tools\worldgen\.venv
+Installed 34 packages in 1.22s
+[ingest] osm-geofabrik-podlaskie
+[fetch_osm] cached: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\Data\raw\osm\podlaskie-261108.osm.pbf
+[ingest] querying GUGiK sheet indexes for (772875.0, 595199.0, 774923.0, 597247.0)
+[ingest] gugik-nmt-2025-bialystok-kleeberga: 4 file(s) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\Data\raw\gugik\gugik-nmt-2025-bialystok-kleeberga
+  [get] https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83271/83271_1746286_N-34-107-A-c-4-3.asc
+  [get] https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83271/83271_1746287_N-34-107-A-c-4-4.asc
+  [get] https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83271/83271_1746292_N-34-107-C-a-2-1.asc
+  [get] https://opendata.geoportal.gov.pl/NumDaneWys/NMT/83271/83271_1746293_N-34-107-C-a-2-2.asc
+  manifest gugik-nmt-2025-bialystok-kleeberga.json updated
+[ingest] gugik-orto-2024-rgb-0p25-bialystok-kleeberga: 4 file(s) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\Data\raw\gugik\gugik-orto-2024-rgb-0p25-bialystok-kleeberga
+  [get] https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393362_N-34-107-A-c-4-3.tif
+  [get] https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393363_N-34-107-A-c-4-4.tif
+  [get] https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393434_N-34-107-C-a-2-1.tif
+  [get] https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393435_N-34-107-C-a-2-2.tif
+  manifest gugik-orto-2024-rgb-0p25-bialystok-kleeberga.json updated
+[ingest] gugik-bdot10k-2061: 1 file(s) -> Data/raw/gugik/bdot10k-2061
+  [skip] 2061_GPKG.zip (sha256 matches manifest)
+[ingest] gugik-lod2-2017-2061: 1 file(s) -> Data/raw/gugik/lod2-2017-2061
+  [skip] 2061_lod2_gml.zip (sha256 matches manifest)
+[ingest] gugik-lod1-2024-2061: 1 file(s) -> Data/raw/gugik/lod1-2024-2061
+  [skip] 2061_lod1_2024.zip (sha256 matches manifest)
+[ingest] done: {'downloaded': 8, 'skipped': 3, 'bytes': 322501498}

@@ -1,0 +1,35 @@
+# Authored overrides of region bialystok-maczka (ADR 0203). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 775947, 596223) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 2024 0.25 m (Data/raw/derived/bialystok-maczka/ortho_0p25m.tif), BDOT10k, LoD1 2024. No lettering, no brands.
+# Evidence pairs [orthophoto | generated top view]: artifacts/bialystok-dk65-0203/{junctions,lanes}/ (ADR 0203).
+schema: truck-sim-pl/overrides/1
+overrides:
+  - id: maczka-viaduct-eastbound-two-lanes
+    target: {osm_way: [173990798]}
+    reason: >-
+      DK8/DK65 Gen. Maczka, eastbound carriageway on the viaduct over rondo Nowaka-Jezioranskiego. OSM has lanes=3;
+      the 2024 orthophoto shows one dashed lane line and ~7.75 m of asphalt between the kerbs (same as the
+      westbound deck, way 173990799, lanes=2, 8.5 m), i.e. two lanes. The generated deck was 10.75 m.
+      Evidence: lanes/zoom_a.jpg (top pair), lane_widths.json.
+    confidence: medium
+    verify: owner drive-by or a Mapillary frame on the viaduct (number of lanes eastbound)
+    set: {lanes: 2}
+  - id: rondo-nowaka-slip-ne-three-lanes
+    target: {osm_way: [261467997]}
+    reason: >-
+      North slip road, westbound approach to rondo Nowaka-Jezioranskiego. OSM has lanes=2; the 2024 orthophoto
+      shows three rows of lane arrows side by side for at least 60 m before the roundabout (three lanes).
+      Evidence: lanes/zoom_b.jpg (pair 1). Whether the third lane runs the whole 111 m of the way is not
+      measured (WORKING_VALUE: whole way).
+    confidence: medium
+    verify: orthophoto 5 cm sheet or owner photo of the approach (where the third lane starts)
+    set: {lanes: 3}
+  - id: rondo-nowaka-slip-sw-three-lanes
+    target: {osm_way: [606396472]}
+    reason: >-
+      South slip road, eastbound approach to rondo Nowaka-Jezioranskiego. OSM has lanes=2; the 2024 orthophoto
+      shows three rows of lane arrows (three lanes) before the roundabout. Evidence: lanes/zoom_b.jpg (pair 4).
+      Extent along the 144 m way not measured (WORKING_VALUE: whole way).
+    confidence: medium
+    verify: orthophoto 5 cm sheet or owner photo of the approach (where the third lane starts)
+    set: {lanes: 3}

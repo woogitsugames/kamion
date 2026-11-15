@@ -1,0 +1,14 @@
+{
+ "schema": "truck-sim-pl/junction-checks/1",
+ "provenance": "authored_override (ADR 0206): junctions and lane-layout checkpoints of the D64 truck route (DK8/DK65 Gen. Maczka west + Gen. Kleeberga) compared with the GUGiK orthophoto by tools/worldgen/qa/junction_topview.py. Centres EPSG:2180 from roads.graph.json node positions (both carriageways).",
+ "junctions": [
+  {"id": "j1_seam_maczka_gajowa", "center_2180": [774860, 596180], "size_m": 300, "note": "east tile edge (seam with bialystok-maczka): Gajowa link, 2->3 lane change on both carriageways"},
+  {"id": "j2_ramps_774630", "center_2180": [774630, 596190], "size_m": 240, "note": "slip roads 1410715795-99 / 257355887 on both carriageways (km 3.85-3.89)"},
+  {"id": "j3_bridge_774441", "center_2180": [774440, 596190], "size_m": 240, "note": "short bridge km 4.07-4.09, carriageways split 2/3 lanes"},
+  {"id": "j4_ramps_774100", "center_2180": [774090, 596165], "size_m": 300, "note": "slip roads 76073125 / 606396493 / 606396492 at km 4.35"},
+  {"id": "j5_interchange_773800", "center_2180": [773790, 596010], "size_m": 360, "note": "Maczka -> Kleeberga bend, interchange with the secondary/tertiary loop under DK8 (263791494, 257353771-74, 249732547)"},
+  {"id": "j6_ramps_773450", "center_2180": [773450, 595830], "size_m": 300, "note": "slip roads 249810914 / 606396494 / 23982180 (km 5.19-5.27)"},
+  {"id": "j7_viaduct_773150", "center_2180": [773150, 595630], "size_m": 300, "note": "Kleeberga viaduct km 5.45-5.61 over the tertiary street + its ramps (242987881, 301702365, 308701601, 606396496/97)"},
+  {"id": "j8_seam_w_knyszynska", "center_2180": [772960, 595540], "size_m": 240, "note": "west tile edge (seam with the future tile bialystok-knyszynska): trunk_link 561326924 diverge towards rondo Pamieci Meczenstwa Kresowian; the mainline diverge node 2504239797 lies 23 m outside the tile"}
+ ]
+}

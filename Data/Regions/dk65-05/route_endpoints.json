@@ -1,0 +1,15 @@
+{
+ "provenance": "authored_override (ADR 0207): control route for cameras/QA = the D64 truck route Białystok -> Knyszyn (variant A of ADR 0203) inside this tile",
+ "description": "Ełcka / Studzienna northbound through Dobrzyniewo Duże: from the south edge (seam with dk65-04, y = 601343) to the north edge (seam with dk65-06, y = 603391). Route variant A km 14.360-16.560 of docs/reports/map/dk65_route_plan.json (branch bialystok-dk65-0203).",
+ "start_epsg2180": [
+  768334.8,
+  601343.0
+ ],
+ "end_epsg2180": [
+  767660.9,
+  603391.0
+ ],
+ "start_osm_way": 1024956364,
+ "end_osm_way": 1560819273,
+ "confidence": "high (OSM geometry; plan tile entry/exit points snapped to the tile edge)"
+}

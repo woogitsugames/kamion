@@ -269,23 +269,63 @@ namespace Game.World
         }
 
         Vector3[] m_LampHeads;
-        /// <summary>Lamp head positions (top of the LOD0 bounds, over its centre) for StreetLamps' point lights.</summary>
+        Vector4[] m_LampAxes;
+        readonly Vector3[] m_LumPos = new Vector3[2];
+        readonly Vector2[] m_LumArm = new Vector2[2];
+
+        /// <summary>
+        /// Luminaires of a lamp prototype in mesh space (ADR 0191): from the bounds of its lamp-glass submesh - one per arm,
+        /// with the arm direction and sodium / LED; without a glass submesh the old head (top of the LOD0 bounds over
+        /// its centre), symmetric LED. Returns the luminaire count (0-2); fills m_LumPos / m_LumArm.
+        /// </summary>
+        int PrototypeLuminaires(WorldInstanceSet.Prototype pr, out bool sodium)
+        {
+            sodium = false;
+            var mesh = pr.lods[0];
+            int m0 = pr.materialStart.Length > 0 ? pr.materialStart[0] : -1;
+            for (int s = 0; m0 >= 0 && s < mesh.subMeshCount; s++)
+            {
+                int mi = m0 + s;
+                if (mi >= set.materials.Length || !StreetLamps.IsLampGlass(set.materials[mi])) continue;
+                var gb = mesh.GetSubMesh(s).bounds;
+                if (gb.size.sqrMagnitude < 1e-6f) break;
+                sodium = set.materials[mi].name.Contains("sodium");
+                return StreetLampOptics.LuminairesFromGlass(gb, m_LumPos, m_LumArm);
+            }
+            var b = mesh.bounds;
+            m_LumPos[0] = new Vector3(b.center.x, b.max.y - 0.25f, b.center.z);
+            m_LumArm[0] = Vector2.zero;
+            return 1;
+        }
+
+        /// <summary>Luminaire positions + axes in world space for StreetLamps' point lights and analytic pools.</summary>
         void SendLampHeads()
         {
             int n = 0;
-            foreach (var r in set.runs) if (r.prototype >= 0 && set.prototypes[r.prototype].name.StartsWith("lamp_")) n += r.count;
-            if (m_LampHeads == null || m_LampHeads.Length != n) m_LampHeads = new Vector3[n];
+            foreach (var r in set.runs) if (r.prototype >= 0 && set.prototypes[r.prototype].name.StartsWith("lamp_")) n += 2 * r.count;
+            if (m_LampHeads == null || m_LampHeads.Length != n) { m_LampHeads = new Vector3[n]; m_LampAxes = new Vector4[n]; }
             int k = 0;
             foreach (var r in set.runs)
             {
                 if (r.prototype < 0) continue;
                 var pr = set.prototypes[r.prototype];
                 if (!pr.name.StartsWith("lamp_") || pr.lods.Length == 0 || pr.lods[0] == null) continue;
-                var b = pr.lods[0].bounds;
-                var head = new Vector3(b.center.x, b.max.y - 0.25f, b.center.z);
-                for (int i = 0; i < r.count && k < n; i++) m_LampHeads[k++] = m_World[r.start + i].MultiplyPoint3x4(head);
+                int lum = PrototypeLuminaires(pr, out bool sodium);
+                for (int i = 0; i < r.count; i++)
+                {
+                    var m = m_World[r.start + i];
+                    for (int j = 0; j < lum && k < n; j++)
+                    {
+                        m_LampHeads[k] = m.MultiplyPoint3x4(m_LumPos[j]);
+                        Vector3 a = m.MultiplyVector(new Vector3(m_LumArm[j].x, 0f, m_LumArm[j].y));
+                        a.y = 0f;
+                        bool road = a.sqrMagnitude > 1e-6f;
+                        if (road) a.Normalize();
+                        m_LampAxes[k++] = new Vector4(a.x, a.z, sodium ? 1f : 0f, road ? 1f : 0f);
+                    }
+                }
             }
-            StreetLamps.SetHeads(m_LampHeads, k);
+            StreetLamps.SetHeads(m_LampHeads, m_LampAxes, k);
         }
 
         /// <summary>The tier LOD bias (not the temporary extra-view bias while a mirror renders; ADR 0068).</summary>

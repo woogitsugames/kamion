@@ -1,0 +1,9 @@
+{
+ "provenance": "authored_override (ADR 0205): control route for cameras/QA = the D64 truck route Białystok -> Knyszyn (variant A of ADR 0203) inside this tile",
+ "description": "Szosa Knyszyńska north-westbound: from the east tile edge (seam with bialystok-knyszynska, x = 770827) to the north tile edge (seam with dk65-02, y = 597247). Route variant A km 8.762-9.393 of docs/reports/map/dk65_route_plan.json (branch bialystok-dk65-0203).",
+ "start_epsg2180": [770827.0, 597006.8],
+ "end_epsg2180": [770244.6, 597247.0],
+ "start_osm_way": 234919333,
+ "end_osm_way": 396566354,
+ "confidence": "high (OSM geometry; graph boundary nodes Bw234919333 and Bw396566354 of dk65-01 roads.graph.json)"
+}

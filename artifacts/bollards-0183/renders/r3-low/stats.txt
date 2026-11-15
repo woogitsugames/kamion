@@ -1,0 +1,11 @@
+tier=Low lighting=overcast msaa=2 renderScale=0.75
+bollards-along-8m: objects=45 drawsEst=150 shadowDrawsEst=21 trisK=276 trisExact=276948 (estimate, before SRP batching)
+  bollards-along-8m instanced (props+trees): draws 150, instances 134, triangles 42k, cells 157, forest HLOD cells 92, trianglesExact 42064
+bollards-cab-20m: objects=52 drawsEst=366 shadowDrawsEst=3 trisK=376 trisExact=376461 (estimate, before SRP batching)
+  bollards-cab-20m instanced (props+trees): draws 118, instances 346, triangles 21k, cells 182, forest HLOD cells 9, trianglesExact 21218
+bollards-close-5m: objects=51 drawsEst=383 shadowDrawsEst=21 trisK=346 trisExact=346854 (estimate, before SRP batching)
+  bollards-close-5m instanced (props+trees): draws 143, instances 380, triangles 34k, cells 179, forest HLOD cells 8, trianglesExact 34706
+bollards-detail-2m: objects=48 drawsEst=376 shadowDrawsEst=21 trisK=360 trisExact=360485 (estimate, before SRP batching)
+  bollards-detail-2m instanced (props+trees): draws 147, instances 391, triangles 34k, cells 154, forest HLOD cells 2, trianglesExact 34265
+photo-P11-063: objects=48 drawsEst=325 shadowDrawsEst=3 trisK=337 trisExact=337973 (estimate, before SRP batching)
+  photo-P11-063 instanced (props+trees): draws 117, instances 351, triangles 21k, cells 178, forest HLOD cells 12, trianglesExact 21703
