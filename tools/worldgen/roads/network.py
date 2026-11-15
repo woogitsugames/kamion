@@ -30,6 +30,24 @@ URBAN, ISLAND, RURAL, MEDIAN_RURAL = 0, 1, 2, 3
 WALK_MATS = ["curb_concrete", "sidewalk_paving", "bridge_concrete", "verge_grass", "road_asphalt"]
 FLUSH_FILL_MAX_M = 1.5  # a flush edge strip is at most this wide (the flush mask is dilated 4 m past gap < NOSE_MIN_GAP_M)
 MAT_FLUSH_ROAD = 4      # side `mat` code: flush edge shared with another carriageway -> asphalt, no kerb (ADR 0076)
+# ADR 0218 + ADR 0226: ONE authored mechanism for the strip between the ring carriageway and the kerb of the centre
+# island - the `truck_apron` override on a roundabout ring way: {width_m, height_m?, material?}.
+#   width_m only        -> the island kerb stands width_m from the carriageway edge; surface and lip stay with the
+#                          rule (sett apron, 4 cm lip) or with `apron: asphalt` (ADR 0123). Rondo Putry: 0.4 m.
+#   + material/height_m -> mountable truck apron with its own surface and lip. Knyszyn: 3.2 m light block paving.
+# Side `mat` codes of the ISLAND family only; with one of them the side `h` is the apron lip height (not used by the
+# ISLAND family otherwise).
+# Code 8 `kostka_jasna` = light grey concrete block paving: the library material `sidewalk_paving` (texture set
+# paving_20x10_grey, same collision class as `apron_sett`), not a `road_*` material - a carriageway-class apron
+# would have its lip culled as "kerb on a carriageway" (meshing.cull_sides_on_carriageway).
+TRUCK_APRON_MATS = {5: "apron_sett", 6: "road_concrete", 7: "road_asphalt", 8: "sidewalk_paving"}
+WALK_MATS = WALK_MATS + [TRUCK_APRON_MATS[k] for k in sorted(TRUCK_APRON_MATS)]   # codes 5-8 resolve everywhere
+TRUCK_APRON_CODE = {"kostka": 5, "sett": 5, "beton": 6, "concrete": 6, "asfalt": 7, "asphalt": 7,
+                    "kostka_jasna": 8, "paving": 8}
+# WORKING_VALUE: accepted width_m range. Below 0.2 m (the kerb-side gutter strip) the strip would be meshed as
+# degenerate triangles; above 6.0 m it is not a ring any more.
+TRUCK_APRON_W = (0.2, 6.0)
+TRUCK_APRON_H = (0.0, 0.08)       # WORKING_VALUE: accepted lip height_m (above 0.08 m it is no longer mountable)
 
 
 @dataclass
@@ -73,6 +91,9 @@ class EdgeSection:
                                     # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
     construction: bool = False      # authored (ADR 0215, owner D65 p.6): carriageway not open to traffic - no markings,
                                     # no lamps, no route-graph edge (roads.closures)
+    truck_apron: dict | None = None  # authored (ADR 0218 + 0226): {width_m, height_m, material, code} - strip between
+                                     # the ring carriageway and the island kerb; code None = width only (surface and
+                                     # lip from the rule / `apron`); field None = generator default (ROUNDABOUT_APRON_W)
     provenance: dict = field(default_factory=dict)
 
     def lane_w_at(self, hw):
@@ -255,6 +276,28 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     return net
 
 
+def _truck_apron(v) -> dict | None:
+    """Validated `truck_apron` override (ADR 0218 + 0226) or None when it is malformed / out of range.
+
+    `width_m` is required. With neither `material` nor `height_m` the entry only moves the island kerb (code None);
+    with either of them it is a mountable apron (material default kostka, lip default standards.KERB_HEIGHT_APRON)."""
+    if not isinstance(v, dict) or set(v) - {"width_m", "height_m", "material"}:
+        return None
+    try:
+        w = float(v["width_m"])
+        h = float(v.get("height_m", S.KERB_HEIGHT_APRON))
+    except (KeyError, TypeError, ValueError):
+        return None
+    if not TRUCK_APRON_W[0] <= w <= TRUCK_APRON_W[1] or not TRUCK_APRON_H[0] <= h <= TRUCK_APRON_H[1]:   # NaN fails too
+        return None
+    if "material" not in v and "height_m" not in v:
+        return {"width_m": w, "height_m": None, "material": None, "code": None}
+    code = TRUCK_APRON_CODE.get(str(v.get("material", "kostka")).lower())
+    if code is None:
+        return None
+    return {"width_m": w, "height_m": h, "material": TRUCK_APRON_MATS[code], "code": code}
+
+
 def apply_edge_overrides(net: Network, edges, overrides):
     for ov in overrides:
         tgt = ov.get("target", {})
@@ -348,6 +391,15 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 sec.provenance["edge_line_spacing"] = f"authored_override:{ov['id']}"
             if "apron" in st:
                 sec.apron = str(st["apron"])
+            if "truck_apron" in st:
+                ta = _truck_apron(st["truck_apron"])
+                if ta is None or not sec.roundabout:
+                    if ov["id"] not in net.overrides_stale:
+                        net.overrides_stale.append(ov["id"])
+                    sec.provenance["truck_apron_rejected"] = st["truck_apron"]
+                else:
+                    sec.truck_apron = ta
+                    sec.provenance["truck_apron"] = f"authored_override:{ov['id']}"
             if "turn_lanes" in st:
                 sec.turn_fwd = [t for t in str(st["turn_lanes"]).split("|")] if st["turn_lanes"] else None
             if "center_offset" in st:
@@ -1063,6 +1115,17 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 # ADR 0123 (REVIEW s11 D51 blocker 7): `apron: asphalt` on the ring edges = the 2 m strip is carriageway
                 # (asphalt, no 4 cm lip); the island kerb, the footprint and the lane layout stay
                 mat[:] = MAT_FLUSH_ROAD if sec_mid.apron == "asphalt" else 0
+                # ADR 0218 + 0226: authored `truck_apron` per ring way. The island kerb stands width_m from the
+                # carriageway edge (wider apron = smaller island); with a material the strip also gets its own lip
+                # height and surface, otherwise it keeps the rule's sett / the `apron: asphalt` strip set above.
+                # No override = unchanged.
+                for i_sec in np.unique(c.sec_idx):
+                    ta = net.sec_list[int(i_sec)].truck_apron
+                    if ta:
+                        m = c.sec_idx == i_sec
+                        w[m] = ta["width_m"]
+                        if ta["code"] is not None:
+                            h[m], mat[m] = ta["height_m"], ta["code"]
             # a parallel carriageway right next to this edge (on-ramp beside the Andersa ramp at Rondo Bieżeństwa):
             # the verge / ditch / sidewalk would lie on the other road, so the edge is a plain kerb
             if not (c.roundabout and kind[0] == ISLAND):
@@ -1202,12 +1265,14 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
     The topology (number of segments) depends only on `kind`, so stations of one family can be
     connected into strips and interpolated.
     """
-    m = WALK_MATS[mat]
     if kind == ISLAND:
         ha = S.KERB_HEIGHT_APRON
         ap = w
         top = ha + 0.02 * ap
         am = "apron_sett"
+        if mat in TRUCK_APRON_MATS:         # authored truck apron (ADR 0218): lip height h, own surface
+            ha, am = h, TRUCK_APRON_MATS[mat]
+            top = ha + 0.02 * ap
         if mat == MAT_FLUSH_ROAD:           # authored asphalt apron (ADR 0123): flush, same topology
             ha, am = 0.0, "road_asphalt"
             top = 0.02 * ap
@@ -1240,6 +1305,7 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
                 (u2, z1 - d, u3, z1 - d, "verge_grass"),
                 (u3, z1 - d, u4, 0.0, "verge_grass"),
                 (u4, 0.0, u4, -depth, "verge_grass")]
+    m = WALK_MATS[mat]
     tw = S.KERB_TOP_W
     zw = h + S.SIDEWALK_CROSSFALL * w
     if mat == MAT_FLUSH_ROAD:
