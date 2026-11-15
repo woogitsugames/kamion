@@ -190,3 +190,7 @@
 - 2026-11-15 23:38 +01:00 — R8 4 warianty OK, pary 01–11 lokalnie. Lipy lepiej przypominają park, ale widać szwy i częściowo zasłaniają urząd; FAIL naturalności. Low max +5 draws/+1832 tris na wspólnych kamerach, High max 1 230 049 tris. GIS 1472 passed dla R7, R8 po zmianie drzew wymaga końcowego testu.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python artifacts/knyszyn-rynek-0227/budget-compare.py r8`
 
+
+- 2026-11-15 23:41 +01:00 — R9 uruchomiona: odwracalny wariant 15 koron bez przecięć kart, dwie kamery boczne na 1,7 m; ryzyko płaskości i overdraw OPEN. Testy kierunkowe 5 passed, wygląd i budżet do pomiaru.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r9.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r9.done`
+
