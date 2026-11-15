@@ -35,3 +35,7 @@ Brak zdjęć ulicznych aktualnych fasad, charakterystycznych obiektów z poziomu
 ## Tykocin z poziomu ulicy — sierpień2026
 
 06-P01/P02: dwa nowe kadry Krzysztofa Popławskiego, CC BY4.0, indywidualnie obejrzane. Data2026-08-05 z metadanych Commons. Podglądy960px zachowano poza gitem i zmniejszono do≤800px; pełnych oryginałów nie pobrano. SOURCED [obrazy]: biały parterowy dom, czerwony dach, brązowe okiennice, drewniany płot; osobno wąski brukowany przesmyk, pnącza i latarnia z panelem. Liczby kondygnacji dotyczą widocznych elewacji, nie wnętrza/poddasza. Adresy z opisów autora, współrzędne, azymut, wysokości i szerokości UNVERIFIED. Łącznie6 rekordów:2 orto,2 dokumenty,2 fotografie.
+
+## Rondo DW671/DK64 — odrębne nowe orto
+
+06-O03: nowy kadr800px GUGiK, indywidualnie obejrzany. SOURCED [obraz]:4 główne ramiona, trawiasta wyspa z zakrzywionymi niskimi nasadzeniami, jasny pierścień, widoczne zebry przy ramionach północnym/zachodnim. Materiał i przejezdność pierścienia, wymiary, gatunki oraz komplet urządzeń UNVERIFIED. Identyfikacjaref64;671 z istniejących danych OSMway183373470, nie nowej inwentaryzacji prawnej. WMS bez daty przypięcia; data arkusza jeszcze UNVERIFIED. Łącznie7 rekordów:3 orto,2 dokumenty i2 fotografie.
