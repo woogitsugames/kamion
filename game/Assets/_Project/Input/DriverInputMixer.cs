@@ -25,6 +25,18 @@ namespace Game.Controls
             if (m_Scratch.Length < m_Sources.Count) m_Scratch = new DriverIntent[m_Sources.Count * 2];
         }
 
+        /// <summary>
+        /// Inserts a source just before <paramref name="anchor"/> (its steering priority), or appends it when the
+        /// anchor is not in the mixer (ADR 0264: the pad and rebindable keyboard take the old keyboard's place, ahead of
+        /// the always-active touch wheel). Not in the driving loop.
+        /// </summary>
+        public void InsertBefore(IDriverInput anchor, IDriverInput source)
+        {
+            int i = anchor != null ? m_Sources.IndexOf(anchor) : -1;
+            if (i < 0) m_Sources.Add(source); else m_Sources.Insert(i, source);
+            if (m_Scratch.Length < m_Sources.Count) m_Scratch = new DriverIntent[m_Sources.Count * 2];
+        }
+
         public IReadOnlyList<IDriverInput> Sources => m_Sources;
 
         public DriverIntent Sample(float dt, in VehicleFeedback fb)
