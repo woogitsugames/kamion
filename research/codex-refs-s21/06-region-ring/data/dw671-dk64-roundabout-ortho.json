@@ -18,10 +18,58 @@
   ],
   "bytes": 75872,
   "sha256": "3a3c53050187a35136f6a96647fd5df14c857e68d4af813adcbc089a87b5d512",
-  "date_of_imagery": "UNVERIFIED; WMS not time-fixed, no footprint query yet",
+  "date_of_imagery": "2025-05-27 covering centre sheet per WFS2025; WFS2026 gml:null missing. WMS itself not time-fixed, rendered layer date not independently guaranteed.",
   "location_basis": "Existing selected OSM way183373470, junction=roundabout, ref64;671, timestamp2025-11-22; source and licence in06/data/osm-selected-roads.json/osm-source.json",
   "visual_review": "coordinator individually viewed full800x800 image on2026-11-15",
   "measurement": "none; no metric inference from geographic raster",
   "observation": "Cztery główne ramiona jezdni i okrągła wyspa z zielenią. Wewnątrz trawa i ciemniejsze niskie nasadzenia w zakrzywionym wzorze; wokół wyspy jasny pierścień i ciemniejsza jezdnia bez rozpoznanej linii podziału na pasy. Na północnym i zachodnim ramieniu czytelne białe pasy przejść i wyspy rozdzielające; inne fragmenty częściowo zasłonięte pojazdami/cieniami. Wokół chodniki lub ciągi o jasnej nawierzchni oraz ścieżka równoległa do wschodniego i północnego ramienia. Otoczenie polne, pasy trawy i rowopodobne ciemne obniżenia.",
-  "limits": "Typ materiału pierścienia, jego przejezdność, fizyczne wyniesienie, liczba pasów normatywna, dokładny zestaw znaków i gatunki roślin UNVERIFIED. OSM ref64;671 jest identyfikatorem mapowym, nie nową weryfikacją stanu prawnego. Nie stwierdzono ani nie zliczono wszystkich przejść. Bez pomiarów szerokości i średnic."
+  "limits": "Typ materiału pierścienia, jego przejezdność, fizyczne wyniesienie, liczba pasów normatywna, dokładny zestaw znaków i gatunki roślin UNVERIFIED. OSM ref64;671 jest identyfikatorem mapowym, nie nową weryfikacją stanu prawnego. Nie stwierdzono ani nie zliczono wszystkich przejść. Bez pomiarów szerokości i średnic.",
+  "footprint_queries": [
+    {
+      "year": 2025,
+      "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2025&SRSNAME=EPSG%3A4326&BBOX=22.74129%2C53.13764%2C22.74131%2C53.137660000000004%2CEPSG%3A4326",
+      "sha256": "8a5217df45ec83fbecadd859794d015346580b4bfb8da5f397f37b727ea12a56",
+      "fields": [
+        {
+          "field": "godlo",
+          "value": "N-34-106-C-b-2-4"
+        },
+        {
+          "field": "akt_rok",
+          "value": "2025"
+        },
+        {
+          "field": "piksel",
+          "value": "0.1"
+        },
+        {
+          "field": "akt_data",
+          "value": "2025-05-27"
+        },
+        {
+          "field": "url_do_pobrania",
+          "value": "https://opendata.geoportal.gov.pl/ortofotomapa/83186/83186_1484264_N-34-106-C-b-2-4.tif"
+        },
+        {
+          "field": "dt_pzgik",
+          "value": "2025-11-12"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2026&SRSNAME=EPSG%3A4326&BBOX=22.74129%2C53.13764%2C22.74131%2C53.137660000000004%2CEPSG%3A4326",
+      "sha256": "dc6ec7dae67ad6b5ffb66687511097b7d8375a6b5af0844237fbce8d0d142d91",
+      "fields": [
+        {
+          "field": "null",
+          "value": "missing"
+        }
+      ]
+    }
+  ],
+  "footprint_query_utc": "2026-11-15T18:52:54.668337+00:00",
+  "sheet_id": "N-34-106-C-b-2-4",
+  "sheet_date_sourced": "2025-05-27",
+  "sheet_resolution_m": 0.1
 }

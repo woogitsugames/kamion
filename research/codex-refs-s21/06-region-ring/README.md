@@ -39,3 +39,5 @@ Brak zdjęć ulicznych aktualnych fasad, charakterystycznych obiektów z poziomu
 ## Rondo DW671/DK64 — odrębne nowe orto
 
 06-O03: nowy kadr800px GUGiK, indywidualnie obejrzany. SOURCED [obraz]:4 główne ramiona, trawiasta wyspa z zakrzywionymi niskimi nasadzeniami, jasny pierścień, widoczne zebry przy ramionach północnym/zachodnim. Materiał i przejezdność pierścienia, wymiary, gatunki oraz komplet urządzeń UNVERIFIED. Identyfikacjaref64;671 z istniejących danych OSMway183373470, nie nowej inwentaryzacji prawnej. WMS bez daty przypięcia; data arkusza jeszcze UNVERIFIED. Łącznie7 rekordów:3 orto,2 dokumenty i2 fotografie.
+
+Datowanie06-O03: WFS2025 zwraca arkusz N-34-106-C-b-2-4, akt_data2025-05-27, piksel0,1m; WFS2026 zwraca gml:null missing. SOURCED jako metadane arkusza w punkcie środka, nie gwarancja daty bieżącej mozaiki WMS ani stanu2026.
