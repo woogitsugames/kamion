@@ -547,3 +547,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 05/traction-parameters-round5: własne parafrazy/fakty z publicznego Regulaminu sieciPKP2025/2026v45 i załącznika2.12, dokładne adresy/komórki/punkty w manifestach. Bez redystrybucji źródłowych XLSX/PDF, zdjęć ani renderów. Binaria i render poza gitem; odczytXLSXread-only, niezależnypeer-review. Nie przypisano źródłom licencjiCC.
 
 02/europe-rear-round11/files/ER11-P01*.jpg:Jaggery, Commons/Geograph7602388, CC BY-SA2.0; zmniejszenie całego kadru i jawny crop dolnych drzwi, obie pochodne≤800px. Źródło/autor/data/oryginalnySHA w lokalnym manifeście. Jeden PENDING/AUX kadr, bez wzrostu kwalifikacjiM61; koordynator obejrzał oryginał i crop.
+
+03/fountain-active-round7:3 fotografieUrszulaCitkowska(2UM) iMartynaBielska/Onet(1), wyłącznie link-only, all rights reserved. DokładneURL obejrzane indywidualnie i niezależnie, Onet6/13 sprawdzony z podpisemKnyszyn. Bez lokalnych kopii fotografii/PDF/screenshotów; własne opisy, atrybucja i daty publikacji w manifestach.

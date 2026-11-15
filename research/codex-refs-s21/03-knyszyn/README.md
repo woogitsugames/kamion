@@ -108,3 +108,6 @@ Dodatkowy historyczny kadr ulicy przy Rynku:04-dk65/mapillary-browser-round2,04M
 
 
 Mapillary-town-round6: dwa nowe, osobno obejrzane kadry picturehoover z 27.06.2020: Kościelna (zielona bryła ze szczytem, chodnik i łaty asfaltu) oraz Rynek (ceglana poczta, schody, sąsiednia drewniana fasada). Obserwacje i ograniczenia w podkatalogu. SOURCED [manifest i przegląd UI]: główny manifest 28 rekordów; ta porcja 2 link-only, 0 pobrań. Nie potwierdzają stanu 2026, GPS kamery ani formalnej liczby kondygnacji.
+
+
+Fountain-active-round7:3nowe indywidualnie obejrzane dzienne kadry pracującej fontanny, wszystkie link-onlyARR,0pobrań. DwaUM(seriaUrszulaCitkowska, publikacja30.06.2020) i jedenOnet(MartynaBielska, publikacja29.08.2022), dokładne daty ekspozycjiUNVERIFIED. Drugi agent sprawdził każdy dokładnyURL i mapowanie Onet6/13→Knyszyn. Wysoki środek/niższe spienione strugi i płaska mokra posadzka; widoczne minima5/4/7strugESTIMATED, nie dysze. Dzienny niebieskawy cień nie dowodziLED. Main31rekordów.
