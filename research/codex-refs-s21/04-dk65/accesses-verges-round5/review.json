@@ -1,0 +1,75 @@
+{
+  "date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "status": "STABLE — do recenzji lidera",
+  "accepted_frames": 2,
+  "downloaded": 0,
+  "link_only": 2,
+  "accepted": [
+    {
+      "id": "04AV5-001",
+      "pKey": "375494957174776",
+      "author": "picturehoover",
+      "date": "2020-06-27",
+      "viewport": "53.21967320261402,23.01798120000001",
+      "view": "Po prawej asfaltowy zjazd od jezdni do posesji z ogrodzeniem o ciemnych pionowych elementach i jasnych słupkach. Przy zjeździe biała linia krawędziowa przechodzi w krótkie odcinki. Jasny pas kruszywa przy asfalcie i trawiaste obniżenie pomiędzy drogą a ogrodzeniem. Zjazd przecina to obniżenie, ale nie widać otworu rury ani czoła przepustu. Drzewa i zwarta zieleń; słupy oraz przewody nad posesjami.",
+      "use": "Historyczna referencja zjazdu posesyjnego i przejścia pobocza w nawierzchnię wjazdu przy Studziennej; materiał pod zjazdem i odwodnienie UNVERIFIED.",
+      "url": "https://www.mapillary.com/app/?pKey=375494957174776&focus=photo&mapStyle=OpenStreetMap"
+    },
+    {
+      "id": "04AV5-002",
+      "pKey": "187847706528601",
+      "author": "picturehoover",
+      "date": "2020-06-27",
+      "viewport": "53.22221693587801,23.017481686569",
+      "view": "Droga biegnie między obustronnymi trawiastymi zboczami wznoszącymi się od pobocza. Cienki jasny pas kruszywa tuż za białą linią krawędziową, u dołu zbocza łagodne trawiaste obniżenie. Na wyższym terenie drzewa o różnych kształtach koron i krzewy. Asfalt z podwójną białą linią osiową. Nie widać otworu rury, czoła przepustu ani zjazdu do posesji.",
+      "use": "Odrębny historyczny przekrój otoczenia drogi: zbocza i pobocze przy Studziennej; nie zaliczono drugiego zjazdu ani rozpoznanego przepustu.",
+      "url": "https://www.mapillary.com/app/?pKey=187847706528601&focus=photo&mapStyle=OpenStreetMap"
+    }
+  ],
+  "scope_result": "1 zjazd posesyjny i 1 odrębny widok pobocza/zboczy. Brak potwierdzonego otworu przepustu.",
+  "helpers": [
+    {
+      "pKey": "500844087728010",
+      "date": "2020-06-27",
+      "author": "picturehoover",
+      "reviewed": "duży widok",
+      "reason": "dalszy widok tego samego zjazdu co375494, nie liczony osobno"
+    },
+    {
+      "pKey": "113812350787658",
+      "date": "2017-08-10",
+      "author": "szurek for Here",
+      "reviewed": "duży widok",
+      "reason": "bariera na łuku, brak poszukiwanego zjazdu; nie liczony, unikanie powtórzenia tematu471918"
+    },
+    {
+      "pKey": "192708419380102",
+      "date": "2017-08-10",
+      "author": "szurek for Here",
+      "reviewed": "tylko mały podgląd",
+      "reason": "nie włączono do opisów i licznika"
+    }
+  ],
+  "limits": [
+    "Mapillary browser-only, podkład OpenStreetMap; bez API/tokenów/logowania/pobrań/zapisanych screenshotów.",
+    "Wszystkie lat/lng to viewport, nie niezależnie zweryfikowany GPS.",
+    "Gatunki, przekrój i głębokość rowów, wymiary oraz stan2026 UNVERIFIED.",
+    "Obniżenie trawiaste nie dowodzi budowy odwodnienia lub przepustu.",
+    "Wybrane punkty UI: rejon Studziennej przy Krynicach. Kontekst old_ref=65 pochodzi z K1; konkretne przypisanie obu kadrów do dawnej/obecnej DK65 i kafla UNVERIFIED."
+  ],
+  "road_assignment_check": {
+    "date": "2026-11-15",
+    "source": "research/dk65-knyszyn-refs/data/osm_route_ways.json: way_id1399803717; K1-034/K1-117; README sekcja(d)",
+    "source_tags": {
+      "name": "Studzienna",
+      "highway": "secondary",
+      "old_ref": "65",
+      "ref": null
+    },
+    "source_version": "OSM4,2026-10-20T08:16:05Z",
+    "finding": "K1 potwierdza kontekst starego korytarza65 dla Studziennej. Nie potwierdza niezależnie pozycji kamery obu kadrów. Bieżący statusDK65 i dokładne przypisanie kadru do odcinka/kafla UNVERIFIED.",
+    "appearance_descriptions_changed": false,
+    "browser_needed": false
+  }
+}

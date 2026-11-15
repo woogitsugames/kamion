@@ -27,3 +27,7 @@ Lokalizację nazwano z wybranego punktu sekwencji **Studzienna** przy Krynicach,
 ## Granice wyniku
 
 Nie znaleziono i nie obejrzano nowej sceny budowy S16 z lat 2024–2026. Nie zaliczono przystanków niewidocznych w kadrach. Brak pomiarów metrycznych; proporcje perspektywiczne nie służą jako SOURCED wymiary.
+
+## Doprecyzowanie kontekstu drogi
+
+Kontekst dawnej drogi65 z K1: way1399803717, version4 z20.10.2026, highway=secondary, old_ref=65, bez ref=65. GPS kamery, przypisanie konkretnego kadru do way/kafla i obecny status DK65 UNVERIFIED. Źródło: research/dk65-knyszyn-refs/data/osm_route_ways.json, odczyt i szczegóły w../accesses-verges-round5/README.md. Nie zmieniono K1 ani opisów widocznych barier.

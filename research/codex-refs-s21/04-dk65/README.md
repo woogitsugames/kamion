@@ -56,3 +56,7 @@ mapillary-browser-round3:2 kolejne indywidualnie obejrzane kadry picturehoover,2
 
 
 Mapillary-corridor-round4:2 nowe link-only kadry picturehoover z27.06.2020, obejrzane osobno w dużym widoku. Jeden pokazuje zatokę z wiatą, znakiem autobusu, koszem, krawężnikiem i płytami; drugi przejście asfalt–kruszywo–trawa oraz obniżenie. Funkcja poszerzenia w drugim nieustalona, nie policzono drugiego przystanku. Wymiary/kilometraż/kafel/GPS kamery/azymut i stan2026 UNVERIFIED. 0 pobrań. Główny manifest14 rekordów:6 dokumentów,2 orto,6 Mapillary link-only.
+
+## Zjazd, pobocze i zakres numeru drogi — obiegi5–6
+
+Główny manifest17rekordów: [2historyczne Mapillary](accesses-verges-round5/README.md), 0pobrań/2link-only — jeden zjazd i jeden przekrój zboczy, bez rozpoznanej rury/czoła przepustu. Kontekst dawnej drogi65 z K1: way1399803717, version4 z20.10.2026, highway=secondary, old_ref=65, bez ref=65. GPS kamery, przypisanie konkretnego kadru do way/kafla i obecny status DK65 UNVERIFIED. Korekta obejmuje też04M3-002, bez zmiany obserwacji wyglądu. [Plac budowy](temporary-works-round6/README.md):1AUXlink-only z RadiaBiałystok/GDDKiA,0pobrań, żółtych linii/zapór nie rozpoznano. Nie zwiększa liczby kwalifikowanych referencji oznakowania.
