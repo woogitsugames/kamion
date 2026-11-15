@@ -553,3 +553,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 03/fountain-night-round8: EdytaRożko, NowyGoniecKnyszyńskiNr8(188),sierpień2020,s3, jedna fotografia wyłącznie link-only, all rights reserved. Ogląd w natywnym podglądziePDF przez2agentów, bez zapisu PDF/fotografii/screenshotów/cropów. Własne obserwacje, tytuł/strona i publiczny odnośnik w manifeście; brak ustalonej licencjiCC.
 
 01/heavy-plate-lamps-round7:4 fotografie jednej częściSIM, publikacjaAutoweltGmbH/PartsBit, autor fotografii nieustalony, tylko link-only, all rights reserved. Każdy exactURL obejrzany bezpośrednio; całość/optyka z niezależnympeer. Bez plików zdjęć/screenshotów. Zastosowanie jest deklaracją sprzedawcy, źródło/ograniczenia perwiersz.
+
+06/tykocin-synagogue-round4 i06/monki-square-round4:7miniatur≤800px pochodnych podglądówCommons. AutorzyPiotrMig(CCBY4),SławomirMilejski(CCBY3),Emptywords(CCBY-SA4),JolantaDyr(CCBY-SA3),HenrykBorawski(CCBY3/BY-SA3) według konkretnego wiersza manifestu. Pełne atrybucje/URL/licencje i daty perplik; SHAminiatury oddzielony od podglądu, nie deklarowany jako pełny oryginał. Surowe podglądy poza gitem; bez pełnych oryginałów.

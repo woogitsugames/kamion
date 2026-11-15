@@ -51,3 +51,7 @@ Tykocin-landmarks-round3:2 nowe kadry2009/2018 (Lollencja BY-SA3.0pl, Ymblanter 
 
 
 Monki-centre-round3:3nowe indywidualnie obejrzane link-onlyMapillary, szurek for Here2017 iroadlifehacks2021. Drewniany szczyt przy Białostockiej, pawilon z witrynami przy Słowackiego oraz dalsza niska pierzeja DK65. Bez kopii/API/tokenów, jawny podkładOSM. Nie są pełną panoramą placu/ronda ani dowodem wykonania skweru2026. Adresy/formalne kondygnacje/GPS kamery/metryka i stan2026UNVERIFIED. Główny manifest14rekordów.
+
+## Synagoga i skwer — obieg4
+
+Aktualny główny manifest:21rekordów. [Synagoga](tykocin-synagogue-round4/README.md):4różne zdjęciaCC, 4podglądy pobrane, 4miniatury≤800,0pełnychoryginałów; dach z poziomym uskokiem, rytm okien, przybudówki i bruk. [Mońki](monki-square-round4/README.md):3zdjęciaCC z2009/2011/2013,3podglądy i3miniatury,0pełnychoryginałów. Widok misy placowej i osobny kwietnik po dawnej fontannie nie tworzą pary przed/po. Wszystkie7miniatur koordynator obejrzał osobno; recenzje przy pakietach. Stan2026, RAL, wymiary i formalne kondygnacje UNVERIFIED. Kolorów2013synagogi nie łączyć w jeden stan z2020/2024.
