@@ -1787,15 +1787,19 @@
     3
    ],
    "length_m": 531.7,
-   "max_grade": 0.0491,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 3.169,
+   "max_grade": 0.0516,
+   "overrides": [
+    "maczka-viaduct-eastbound-two-lanes"
+   ],
+   "profile_rms_vs_nmt_m": 2.748,
    "sidewalk_frac": 1.0,
    "width_m": [
+    7.5,
     8.5,
     10.75
    ],
    "width_src": [
+    "authored_override:maczka-viaduct-eastbound-two-lanes",
     "bdot10k (clamped to PTB2022 §17 ust.1 range)"
    ]
   },
@@ -1811,9 +1815,9 @@
     2
    ],
    "length_m": 532.7,
-   "max_grade": 0.0488,
+   "max_grade": 0.0548,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 1.421,
+   "profile_rms_vs_nmt_m": 2.365,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.5
@@ -1858,19 +1862,21 @@
    "id": "c:w173990803:1847317032-5749429998",
    "lanes": [
     1,
-    2
+    3
    ],
    "length_m": 295.3,
-   "max_grade": 0.0263,
-   "overrides": [],
+   "max_grade": 0.0264,
+   "overrides": [
+    "rondo-nowaka-slip-sw-three-lanes"
+   ],
    "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.5,
    "width_m": [
     5.5,
-    8.0
+    11.5
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard",
+    "authored_override:rondo-nowaka-slip-sw-three-lanes",
     "bdot10k (clamped 3.50-5.50)"
    ]
   },
@@ -8452,7 +8458,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.19,
+   "axis_smoothing_dev_max_m": 0.23,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -8461,20 +8467,22 @@
    "id": "c:w261467997:1847317056-2648515276",
    "lanes": [
     1,
-    2
+    3
    ],
    "length_m": 201.7,
-   "max_grade": 0.0365,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.013,
+   "max_grade": 0.035,
+   "overrides": [
+    "rondo-nowaka-slip-ne-three-lanes"
+   ],
+   "profile_rms_vs_nmt_m": 0.017,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5,
-    7.5
+    10.75
    ],
    "width_src": [
-    "bdot10k (clamped 3.50-5.50)",
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:rondo-nowaka-slip-ne-three-lanes",
+    "bdot10k (clamped 3.50-5.50)"
    ]
   },
   {
@@ -12682,7 +12690,7 @@
   "axis_smoothing_deviation_m": {
    "max": 4.716,
    "p50": 0.0,
-   "p95": 0.17
+   "p95": 0.171
   },
   "bridges": [
    {
@@ -12696,14 +12704,14 @@
     "chain": "c:w173990798:1847317033-1847317040",
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 5,
+    "piers": 3,
     "span_m": 172.9
    },
    {
     "chain": "c:w173990799:1847317047-1847317038",
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 5,
+    "piers": 4,
     "span_m": 172.9
    }
   ],
@@ -12772,7 +12780,6 @@
    3145392306,
    3145381046,
    3041604534,
-   2881482207,
    1892330905,
    3243043330,
    5708354402,
@@ -12824,19 +12831,19 @@
   "crossings_snapped": 158,
   "decals": {
    "gullies": 1420,
-   "oil": 468,
-   "patches": 471
+   "oil": 472,
+   "patches": 470
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 894096,
+  "footprint_nodes": 895039,
   "fork_abreast": [
    {
-    "alongside_run_m": 30.5,
+    "alongside_run_m": 92.5,
     "beside": "c:w173990798:1847317033-1847317040",
     "chain": "c:w173990803:1847317032-5749429998",
     "node": "n1847317032",
     "shift_max_m": 0.0,
-    "to_m": 87.4
+    "to_m": 213.4
    },
    {
     "beside": "c:w257357907:1889474194-5837318149",
@@ -13756,13 +13763,13 @@
      ]
     },
     {
-     "area_m2": 8.7,
+     "area_m2": 8.9,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "sliver",
      "xy": [
-      509.8,
+      509.9,
       -4.0
      ]
     },
@@ -13831,49 +13838,39 @@
      "count": 6
     },
     "sliver": {
-     "area_m2": 156.3,
+     "area_m2": 156.5,
      "count": 13
     }
    },
    "rejected": [
     {
-     "area_m2": 129.3,
+     "area_m2": 127.7,
      "reason": "carriageways at different heights",
-     "step_m": 0.68,
+     "step_m": 0.67,
      "why": "merge",
      "xy": [
-      534.4,
+      534.1,
       -2.7
      ]
     },
     {
-     "area_m2": 80.6,
+     "area_m2": 109.9,
      "reason": "carriageways at different heights",
-     "step_m": 0.77,
+     "step_m": 1.78,
      "why": "merge",
      "xy": [
-      651.4,
+      956.3,
+      31.2
+     ]
+    },
+    {
+     "area_m2": 79.2,
+     "reason": "carriageways at different heights",
+     "step_m": 0.78,
+     "why": "merge",
+     "xy": [
+      651.2,
       29.3
-     ]
-    },
-    {
-     "area_m2": 69.9,
-     "reason": "carriageways at different heights",
-     "step_m": 0.98,
-     "why": "merge",
-     "xy": [
-      950.5,
-      54.6
-     ]
-    },
-    {
-     "area_m2": 9.4,
-     "reason": "carriageways at different heights",
-     "step_m": 4.03,
-     "why": "merge",
-     "xy": [
-      940.7,
-      29.8
      ]
     },
     {
@@ -13899,7 +13896,7 @@
     {
      "area_m2": 50.2,
      "reason": "carriageways at different heights",
-     "step_m": 0.16,
+     "step_m": 0.17,
      "why": "sliver",
      "xy": [
       570.7,
@@ -13907,43 +13904,33 @@
      ]
     },
     {
-     "area_m2": 30.7,
+     "area_m2": 26.3,
      "reason": "carriageways at different heights",
-     "step_m": 0.24,
+     "step_m": 0.67,
      "why": "sliver",
      "xy": [
-      961.2,
-      55.5
-     ]
-    },
-    {
-     "area_m2": 27.9,
-     "reason": "carriageways at different heights",
-     "step_m": 0.68,
-     "why": "sliver",
-     "xy": [
-      556.4,
+      556.0,
       -1.1
      ]
     },
     {
-     "area_m2": 14.8,
+     "area_m2": 23.2,
      "reason": "carriageways at different heights",
-     "step_m": 0.97,
+     "step_m": 1.79,
      "why": "sliver",
      "xy": [
-      936.6,
-      53.4
+      936.2,
+      29.6
      ]
     },
     {
-     "area_m2": 6.9,
+     "area_m2": 19.0,
      "reason": "carriageways at different heights",
-     "step_m": 4.04,
+     "step_m": 0.16,
      "why": "sliver",
      "xy": [
-      940.6,
-      29.8
+      977.7,
+      33.6
      ]
     },
     {
@@ -14013,24 +14000,43 @@
   ],
   "markings": {
    "P-1 centre line": 53,
-   "P-1 lane line": 120,
+   "P-1 lane line": 121,
    "P-10 crossing": 137,
    "P-10 crossing in junction": 86,
    "P-11 cycle crossing": 17,
-   "P-11 cycle crossing in junction": 8,
+   "P-11 cycle crossing in junction": 7,
    "P-13": 21,
    "P-14": 18,
    "P-4 double centre line": 1,
    "P-7b edge line": 68,
    "P-8 arrow": 58,
    "P-8 skipped (lane too narrow)": 12,
-   "P-8 skipped (lanes continue)": 7,
-   "P-8 skipped (off carriageway)": 49
+   "P-8 skipped (lanes continue)": 6,
+   "P-8 skipped (off carriageway)": 41
   },
-  "markings_overlap_removed_tris": 87,
+  "markings_overlap_removed_tris": 65,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 1108,
-  "overrides_applied": [],
+  "nmt_nodes_replaced_under_decks": 669,
+  "overrides_applied": [
+   {
+    "id": "maczka-viaduct-eastbound-two-lanes",
+    "targets": [
+     "w173990798:1847317033-1847317040"
+    ]
+   },
+   {
+    "id": "rondo-nowaka-slip-ne-three-lanes",
+    "targets": [
+     "w261467997:1847317056-2648515276"
+    ]
+   },
+   {
+    "id": "rondo-nowaka-slip-sw-three-lanes",
+    "targets": [
+     "w606396472:5749429998-2648515260"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -14038,9 +14044,9 @@
   "profile_ties": [],
   "roundabout_junctions": 8,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 3740,
-   "parts": 506,
-   "side_tris": 719
+   "kerb_tris": 3700,
+   "parts": 509,
+   "side_tris": 730
   },
   "signalised_junctions": 6,
   "through_lines": {
@@ -14057,22 +14063,22 @@
   },
   "verge_strips": {
    "chunks": 49,
-   "tris": 66179
+   "tris": 66024
   },
   "walled_ramps": [
    {
     "chain": "c:w173990798:1847317033-1847317040",
     "confidence": "medium",
-    "max_wall_h_m": 5.65,
-    "nmt_fill_max_m": 1.76,
-    "walled_m": 252.9
+    "max_wall_h_m": 5.8,
+    "nmt_fill_max_m": 0.97,
+    "walled_m": 186.9
    },
    {
     "chain": "c:w173990799:1847317047-1847317038",
     "confidence": "medium",
-    "max_wall_h_m": 4.82,
-    "nmt_fill_max_m": 0.57,
-    "walled_m": 94.9
+    "max_wall_h_m": 5.77,
+    "nmt_fill_max_m": 1.76,
+    "walled_m": 158.4
    }
   ]
  }

@@ -110,5 +110,95 @@ Rzeczy wspólne, których ten ADR **nie** zmienia (żeby trzech agentów nie edy
 2. Budowa przy km 16,7–25: OSM pokazuje nową jezdnię w budowie po obu stronach DK65 i przełożenie DK65 przy km 25;
    zdjęcia z 2026-07 (żółte oznakowanie, C-…) są nowsze niż typowe ortofoto. Które miejsca mają objazd?
 
-## Część 3 — kafel `bialystok-maczka` (wyniki)
-(uzupełniane po buildzie)
+## Część 3 — kafel `bialystok-maczka` (wyniki, 2026-11-15)
+**Decyzja.** Region `bialystok-maczka` = kafel (−1,0) siatki, EPSG:2180 [774923, 595199, 776971, 597247], origin
+(775947, 596223), powiat 2061 (100 % w granicach miasta). Zawiera 2,05 km DK8/DK65 Gen. Maczka (dwie jezdnie,
+wiadukt 173 m nad rondem Nowaka-Jeziorańskiego ze Świętokrzyską, 4 łącznice ronda, włączenia Orlicz-Dreszera,
+wiadukt drogi poprzecznej przy 775564, włączenia przy 775675, 775240 i Gajowa). Trasa kontrolna: jezdnia zachodnia
+od szwu z C do zachodniej krawędzi (`route_endpoints.json`).
+
+**Dane i build.** Ingest: NMT 2025 1 m, ortofoto 2024 RGB 0,25 m (nowe arkusze), BDOT10k/LoD1/LoD2 2061 z cache.
+`build_region`: 656 węzłów, 718 krawędzi, 48,6 km dróg (trunk 4,1 km, trunk_link 1,3 km, secondary 4,4, tertiary
+4,3, residential 16,6, service 14,6), 1760 budynków. Pierwszy `build_world` wymaga `--context` (brak
+`generated/osm_context.json`). Czasy: build_world 2158 s i 2249 s (2 przebiegi), import 9 min, 64 chunki,
+GLB 774 MiB High / 306 MiB Low.
+
+**Szew z C** (x = 776971): 7 dróg przecina krawędź, po obu stronach te same `osm_way`, klasa, pasy i kierunek
+(test `test_seam_with_c_has_the_same_roads_on_both_sides`); obie jezdnie Maczka + 2 łącznice. Pliki regionu C
+bez zmian w gałęzi (testy C przepisują `generated/*` C w drzewie roboczym — przywrócone `git checkout`).
+Szerokości jezdni po obu stronach szwu po zastosowaniu overrides C nie były porównywane (otwarte).
+
+**Drogi kontra ortofoto** (D64 „drogi najpierw”). Narzędzie `tools/worldgen/qa/junction_topview.py` rysuje widok
+z góry wprost z trójkątów chunków GLB (bez LOD) obok ortofoto w tym samym kadrze; lista węzłów w
+`Data/Regions/bialystok-maczka/junction_checks.authored.json`. Obejrzane (agent, Read na JPG): 7 węzłów
+(`junctions/j1…j7`), 16 z 35 odcinków trunk/trunk_link (`lanes/lanes_00.jpg`),
+powiększenia `lanes/zoom_a.jpg`, `zoom_b.jpg`, `zoom_r2.jpg`; dla wszystkich 35 odcinków szerokość jezdni z profilu
+poprzecznego (`lane_widths.json`: asfalt na ortofoto wobec jezdni wygenerowanej).
+| Miejsce | Zgodne | Rozbieżne → co zrobione |
+|---|---|---|
+| j1 szew z C, łącznice E | osie, 2 łącznice, początek wiaduktu | — |
+| j2 rondo Nowaka-Jeziorańskiego | wiadukt nad rondem, 4 łącznice, 2 jezdnie Świętokrzyskiej, przejścia | wiadukt, jezdnia wschodnia: OSM 3 pasy, ortofoto 2 (7,75 m asfaltu wobec 10,75 m wygenerowanych) → override `lanes: 2`; wloty N-E i S-W ronda: OSM 2 pasy, ortofoto 3 rzędy strzałek → override `lanes: 3` (zasięg wzdłuż odcinka WORKING_VALUE) |
+| j3 łącznice W | włączenie i wyłączenie po obu stronach, 3 pasy na zachód | brak powierzchni wyłączonych (P-21) przy klinach |
+| j4 Orlicz-Dreszera | łącznik z wysepkami po stronie S, zjazd przy 776125 | ciąg pieszo-rowerowy po stronie N narysowany jako jezdnia asfaltowa ~6 m (na ortofoto jasna kostka) — bez zmiany |
+| j5 wiadukt 775564 + łącznik N | wiadukt, drogi serwisowe N i S, łącznik z wysepką | wiadukt ma na ortofoto pylon — u nas zwykły pomost, 0 podpór — bez zmiany |
+| j7 Gajowa, szew W | jezdnie, łącznik, drogi serwisowe | kładka piesza nad DK8/65 przy 774930 leży na krawędzi kafla — u nas same pochylnie, bez pomostu (do kafla `bialystok-kleeberga`) |
+| j6 łączniki 775240 | łączniki N i S z wysepkami, 3 pasy | łącznik S ma dodatkowy trójkąt asfaltu, plac po stronie N zlany z łącznikiem — bez zmiany |
+Liczby: odcinki 3-pasowe 12,0–12,5 m wygenerowane wobec 12,0–13,25 m na ortofoto (9 odcinków, różnica ≤ 0,75 m).
+Odcinki 2-pasowe: wygenerowane 8,25–8,5 m; profil automatyczny daje na ortofoto 9,75–11,25 m, bo zlicza jasny pas
+utwardzony obok jezdni — z powiększenia `zoom_a.jpg` sam asfalt ma ~7,2 m (odczyt z pikseli, ±0,5 m). Przy klinach
+włączeń profil zlewa jezdnię z łącznicą (wartości 14–18 m w pliku są bezużyteczne i nie były podstawą zmian).
+Po przebudowie (`zoom_r2.jpg`): wiadukt E 2 pasy, oba wloty 3 pasy. Strzałki kierunkowe na wlotach ronda i P-21 nie
+są odtworzone (OSM bez `turn:lanes` na łącznicach).
+
+**Kamery.** 7 kamer trasy (oko kierowcy 2,5 m co ~293 m) + 3 kamery `control_cameras_place.authored.json`
+(łącznica N-E, Świętokrzyska, łącznica S-W) = 10 kamer z drogi, plus `roundabout_01_above` i `ortho_tile`.
+
+## Budżet (edytor, nie telefon; metoda importu jak w ADR 0174)
+- WORLD_MEMORY: **Low 153,2 MB** (meshe 114,3; instancje 16,9; kolizja 22,0), **High 420,4 MB** (meshe 381,5).
+  Największe: teren 34,0 / 157,6 MB, budynki 29,0 / 163,4 MB (1760 budynków; Dojlidy 406). Dla porównania Dojlidy
+  (ADR 0179): Low 97,7 / High 213 MB.
+- Kamery z drogi, 1920×1080, overcast (szacunek edytora przed batchingiem, `vqa-r2/*/stats.txt`):
+  Low 91–586 draws, 150–388 tys. trójkątów; High 98–1348 draws, 0,20–1,38 mln trójkątów (najcięższe:
+  `route_s0147` 1348 draws, `route_s0733` 1,38 mln trójkątów).
+- Pomiar na A16 nie wykonany (lider; region nie jest w `BuildScenes`).
+
+## Walidacja
+- `tests/gis/test_maczka_0203.py`: 6/6. Pełny `pytest tests/gis` (przed dodaniem tego pliku): **1151 passed,
+  1 failed, 2 xfailed** (966 s); porażka `test_dojbld_0185::test_fence_mesh_mips_do_not_preserve_coverage` szuka
+  w `InstanceImporter.cs` linii, której nie ma także w main (nie z 0203).
+- EditMode: **581 total, 580 passed, 0 failed, 1 skipped**.
+- visual-qa scena `World_bialystok-maczka`, overcast: r1 Low (pierwszy import) — obejrzane 7 kamer trasy
+  i `roundabout_01_above`; r2 (po poprawkach pasów) Low + High wyrenderowane, obejrzane z High 3 kamery place
+  i `route_s0147`. W obejrzanych kadrach: jezdnia ciągła, bariery i ekrany na miejscu, brak dziur w terenie
+  i wiszących budynków. Kadry tras r2 i tier High poza tymi czterema nie były oglądane. Ocena `visual-critic` — lider.
+- QA danych: ściany terenu > 0,15 m: 11 (max 0,40 m); spójność nawierzchni 53 przypadki, w paśmie trasy 12.
+
+## Otwarte (backlog szlifu)
+1. `furniture_in_lane` ×2 przy wschodnim końcu wiaduktu na jezdni wschodniej (776869–776873, 596254): koniec
+   bariery przy przejściu 2 → 3 pasy (pojawiło się po zwężeniu pomostu do 2 pasów). Jezdnia wschodnia nie jest
+   trasą kontrolną i nie była przejechana — sprawdzić przed APK.
+2. `arrow_no_exit` ×4 (strzałka w prawo bez wylotu przy włączeniach), `obstacle_in_lane` ×3 na łącznikach
+   Orlicz-Dreszera (zieleń/pobocze w pasie łącznika), `marking_off_carriageway` ×1, `lane_blind_end` ×2.
+3. Brak P-21 i strzałek na wlotach ronda; pas między pomostami wiaduktu otwarty (widać teren pod spodem).
+4. Mur oporowy najazdu wiaduktu: zbyt duża skala tekstury kamienia; ekrany na wiadukcie na ortofoto czerwone —
+   u nas bariery stalowe.
+5. Kamera `swietokrzyska_to_rondo` stała na ciągu pieszo-rowerowym (10 m na wschód od osi); pozycja poprawiona
+   w pliku authored (E 791,8), wejdzie przy następnym `build_world` (`generated/control_cameras.json` ma starą).
+6. Pojedyncze krzewy unoszące się nad trawą (`route_s0733`, `roundabout_01_above`), biała obwódka alfa drzew na Low.
+7. Pamięć High 2× Dojlidy (1760 budynków) — do pomiaru na A16 przed dołączeniem do APK.
+8. 19 odcinków łącznic/jezdni z `lanes_01/02.jpg` nieobejrzane; pozostałe jezdnie kafla
+   (Hallera, Świętokrzyska, Gajowa, Lodowa…) nie były porównywane z ortofoto — poza trasą D64.
+
+## Odtworzenie
+```
+uv run --project tools/worldgen python tools/worldgen/qa/dk65_route_plan.py
+uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-maczka
+uv run --project tools/worldgen tools/worldgen/build_region.py --region bialystok-maczka
+uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-maczka   # pierwszy raz: --context
+uv run --project tools/worldgen python scripts/export-route.py --region bialystok-maczka
+pwsh scripts/import-region.ps1 -Region bialystok-maczka
+uv run --project tools/worldgen python tools/worldgen/qa/junction_topview.py --region bialystok-maczka --out artifacts/bialystok-dk65-0203/junctions
+pwsh scripts/visual-qa.ps1 -Scene World_bialystok-maczka -Tier Low -Lighting overcast -Width 1920 -Height 1080 -OutputDir <dir>
+```
+Dowody: `artifacts/bialystok-dk65-0203/` (`junctions/`, `junctions-r1/`, `lanes/`, `lane_widths.json`, `graph/`,
+`vqa-r1/`, `vqa-r2/`, logi, skrypty `chain.ps1`, `vqa.ps1`, `lane_widths.py`, `zoom.py`).

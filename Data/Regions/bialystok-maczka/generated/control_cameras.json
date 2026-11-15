@@ -6,13 +6,13 @@
    "look_at": [
     818.166,
     37.67,
-    136.074
+    136.059
    ],
    "note": "driver eye 2.5 m, control route s = 147 m of 2053 m (Generała Stanisława Maczka)",
    "pos": [
     877.774,
     44.742,
-    136.65
+    137.573
    ],
    "route_s_m": 146.666,
    "type": "persp"
@@ -23,13 +23,13 @@
    "look_at": [
     525.869,
     13.06,
-    132.855
+    132.84
    ],
    "note": "driver eye 2.5 m, control route s = 440 m of 2053 m (Generała Stanisława Maczka)",
    "pos": [
     585.512,
     19.859,
-    133.779
+    133.785
    ],
    "route_s_m": 439.998,
    "type": "persp"
@@ -125,13 +125,61 @@
    "look_at": [
     805.144,
     30.339,
-    135.017
+    134.984
    ],
    "note": "roundabout from ~40 m: Rondo Jana Nowaka-Jeziorańskiego",
    "pos": [
     875.144,
     110.339,
-    177.017
+    176.984
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "slip_ne_to_rondo",
+   "look_at": [
+    805.745,
+    44.313,
+    132.625
+   ],
+   "note": "place camera: driver eye 2.5 m on the north slip road (way 261467997), westbound, ~80 m before rondo Nowaka-Jezioranskiego: three approach lanes, roundabout and the Maczka viaduct on the left",
+   "pos": [
+    905.0,
+    56.5,
+    132.625
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "swietokrzyska_to_rondo",
+   "look_at": [
+    813.917,
+    4.027,
+    129.83
+   ],
+   "note": "place camera: driver eye 2.5 m on Swietokrzyska northbound, ~110 m before the roundabout: the viaduct of DK8/DK65 across the frame",
+   "pos": [
+    800.0,
+    -95.0,
+    129.83
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "slip_sw_to_rondo",
+   "look_at": [
+    739.452,
+    13.453,
+    133.61
+   ],
+   "note": "place camera: driver eye 2.5 m on the south slip road (way 606396472), eastbound, ~80 m before the roundabout: three approach lanes, viaduct ramp on the left",
+   "pos": [
+    640.0,
+    3.0,
+    133.61
    ],
    "type": "persp"
   },
