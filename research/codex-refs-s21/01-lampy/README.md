@@ -105,3 +105,6 @@ Rear-night-europe-round5:3nowe kadry obejrzane,2odrzucone;1zachowanyAUX Devokewa
 
 
 Front-approval-round5:3 indywidualnie obejrzane firmowe kadry1reflektora Renault GamaT, wyłącznie link-only ARR. Etykieta E2/11057 oraz00 HCR 25 RL 02A PL; osobne E2/10R-03 12010, numeryczęści odrębne. Niezależny przegląd wykrył złe mapowanieURL etykiety na obudowę; poprawiono przed publikacją, ponowny bezpośredni ogląd3URL i niezależnyPASS właściwej etykiety zachowane w raporcie. Literalnego02A nie rozwijano w niepotwierdzoną funkcję. 3główne pola optyczne nie dowodzą3komór ani emisji. Main37rekordów kadrów(8lokalnych,29link-only), nie37homologacji.
+
+
+Evidence-audit-round6: dokumentacyjny ledger snapshotu37głównych kadrów plus9odrzuceń i3NOT_REVIEWED z określonych dzienników. Bez nowych oględzin/pobrań, nie zastępuje audytu wizualnego20%. Pełne odczyty4:2przód,1tyłEUP5497,1tylko boczna grupaSM1/IA; symbolE bez pełnego numeru/MD/EMC osobno. Geometryczne progi tylnych15zbliżeń niezatwierdzone;0bezspornych wymaganych włączonych/nocnych zbliżeń i0lampek tablicy o potwierdzonym ciężarowym zastosowaniu. Globalna liczba egzemplarzyUNVERIFIED. To plan braków, nie domknięcieM59.
