@@ -1,5 +1,5 @@
 # ADR 0223 — linia kolejowa nr 38 w kaflach korytarza DK65: włączenie torowiska (rail-0217) i wyposażenie przejazdów
-Status: Proposed (chmura D, s21, gałąź `rail-dk65-0223`, stacked na `rail-0217` / PR #96), 2026-11-15. Do scalenia przez lidera.
+Status: Proposed (chmura D, s21, gałąź `rail-dk65-0223`, PR #102) + **poprawki po recenzji kodu (agent `rail-dk65-s22`, s22, gałąź `rail-dk65-s22` = #102 + merge main z rail-fix-s21)**, 2026-11-15. Do scalenia przez lidera.
 Powiązane: ADR 0217 (generator torowiska, opt-in `Region.rail`, PR #96), ADR 0212 (przejazd DW671), K1
 `research/dk65-knyszyn-refs/README.md` §(g), ADR 0210 (wzorzec opt-in), docs/06 §6 (budżety).
 
@@ -129,6 +129,36 @@ Potem: `git diff --stat Data/Regions/<id>/generated` (nowe `rail.json`, klucz `r
 `EXPECTED` w teście albo `git checkout` pliku). Kamery kontrolne nie celują dziś w przejazdy; pozycje do dopisania
 (lokalne E/N): dk65-01 (540,5; 906,9), dk65-02 (−830,8; −671,9), dk65-04 (−157,9; −874,5) i (−1023,5; −446,6),
 dw671-tykocin-01 (−732,2; −533,4); most kolejowy dk65-03 ≈ (988; −314).
+
+## Aktualizacja s22 (`rail-dk65-s22`) — FIX z `docs/reports/REVIEW-2026-11-15-s21-code-102.md`
+Gałąź `rail-dk65-s22` = `rail-dk65-0223` + `origin/main` (rail-fix-s21 scalony w `f92d0ab6a`). Zmiany względem tekstu wyżej:
+- **P0-1 jeden mechanizm `rail_crossing`**: zostaje `OVERRIDE_KIND` / `OVERRIDE_KEYS` + `Plan._apply_override` z
+  rail-fix (cel `osm_node` albo `near_epsg2180`, klucze `barrier, light, light_left, bell, saltire, panel_margin_m`
+  + `guide_post` z ADR 0268). `apply_crossing_overrides` z #102 usunięte. Z #102 przeniesione do `_apply_override`:
+  przeliczenie `crossing_equipment` (`equipment_src: authored_override`, `equipment_confidence` z wpisu) oraz
+  `overrides_applied` / `overrides_stale` w `rail.json`. Decyzja p. 4 wyżej („set: {barrier, light, bell, saltire}”,
+  „żadnego wpisu nie dodano”) jest nieaktualna: DW671 ma wpis `rail-crossing-dw671-line38` (rail-fix) → kat. **B**.
+- **P0-2 G-2**: marker `sign` `G-2` nie buduje już krzyża (`KeyError 'arm_l_m'`); jest tabliczką `plate_G-2`
+  (ADR 0268 p. 4) na maszcie sygnalizatora (A–C) albo pod krzyżem (D). Test „każdy marker ma prototyp”.
+- **P1-1** `dk65-03/region.yaml`: bloki `water` + `rail` w kolejności dumpu `build_region.py`, hash w
+  `build_manifest.json` przeliczony (LF). **P1-2** filtr kafla przeniesiony do `Plan.markers()` — `rail.json` i
+  instancje (`rail_props.place`) widzą tę samą listę; markery poza kaflem → `markers_outside_tile`.
+  **P1-4** `stage.py`: węzły zmienione przez `water.carve` trafiają do `keep` w `rail.conform`
+  (`rail_conform_water_kept_nodes`) — most kolejowy nad Supraślą w dk65-03 nie zasypuje rzeki.
+  **P1-5** VQA: `-Scene World_<id>`; kamery `rail_x<k>_*` z `artifacts/rail-dk65-s22/tools/cams.py` (ADR 0268 p. 6).
+  **P1-6** `test_rail_0217`: `ENABLED` = 5 kafli, kafle rail nie są pomijane (manifest musi mieć `rail_*`).
+- **P1-3** oznakowanie dojazdu § 79 → **ADR 0268**. **P2-1** cytat § 80 ust. 1 Dz.U. 2025 poz. 1105 w kodzie (main).
+  **P2-2** wariant derived `light=no` → `equipment_confidence: low`.
+- **P2-3** źródła: wszystkie 5 kafli ma `rail_sources.json` z OSM API (2026-11-15, `provenance: osm-api-0.6`);
+  dla tykocina geometria i węzły są identyczne z ekstraktem pbf z main (porównane: te same współrzędne), wersja API
+  ma dodatkowo `maxspeed`, `voltage` i `provenance`. `build_region.py` nadpisze je ekstraktem pbf — wtedy test
+  provenance przechodzi gałęzią `osm-pbf`. **P2-4** (Overpass zamiast `/map`) — otwarte.
+- Budżet: `PANEL_STEP` 0,5 m (rail-fix) dodaje stacje LoD1/LoD2 w strefie płyt — test budżetu dopuszcza
+  `+12 / +4 tris × ceil(strefa / 0,5 m)` na przejazd.
+- Komendy odtworzenia wyżej (`-Scene WorldC`, `export-route.py`) są nieaktualne — aktualne w sekcji Walidacja s22.
+
+## Walidacja s22
+(uzupełniane po buildach — patrz koniec pliku)
 
 ## Otwarte
 1. **Szew dk65-01 | bialystok-knyszynska** (x = 770827, y ≈ 596885): tor kończy się na krawędzi, bo sąsiad jest
