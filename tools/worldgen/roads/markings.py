@@ -200,10 +200,81 @@ def edge_lines(sec, hw, dirn):
     elif el in ("left", "right", "both"):
         # ADR 0205: edge lines read off the orthophoto on a road below class GP (rural G road, no edge strip):
         # only by authored override; narrow line (see edge_line_width) just inside the carriageway edge
+        off = hw - S.EDGE_LINE_INSET_MINOR
+        sp = getattr(sec, "edge_line_spacing", None)
+        if sp:
+            # ADR 0220: measured line-to-line distance; never closer to the edge than EDGE_LINE_INSET_MINOR
+            off = np.minimum(0.5 * float(sp), off)
         for sg, name in ((1, "left"), (-1, "right")):
             if el in ("both", name):
-                out.append(((d if sec.oneway else 1) * sg * (hw - S.EDGE_LINE_INSET_MINOR), "P-7b"))
+                out.append(((d if sec.oneway else 1) * sg * off, "P-7b"))
     return out
+
+
+EDGE_DASHED_KIND = "edge_line_dashed"
+EDGE_DASHED_SNAP_M = 1.5     # a span end may lie this far outside the carriageway half-width (axis traced off the data)
+
+
+def edge_dashed_spans(net, authored, report=None):
+    """ADR 0220: authored spans where an override edge line is broken instead of solid (a bus bay, a junction mouth
+    the OSM graph does not have, a section painted with short dashes):
+
+      kind: edge_line_dashed   line_en: [[E, N], [E, N]] (two points near the carriageway axis: start, end)
+                               side: left | right   (of the carriageway, looking from line_en[0] to line_en[1])
+                               line: P-7a (dash / gap of S.DASH) or dash_m: [dash, gap] (measured)
+
+    Returns {chain_id: [(s_lo, s_hi, lat_sign, dash, gap, id)]}. A span whose two ends do not project onto the same
+    chain within its half-width + EDGE_DASHED_SNAP_M is stale (reported, never silently dropped)."""
+    out, applied, stale = {}, [], []
+    for o in authored or []:
+        if o.get("kind") != EDGE_DASHED_KIND:
+            continue
+        pts = np.asarray(o.get("line_en") or [], float)
+        side = o.get("side")
+        dash, gap = o.get("dash_m") or S.DASH[o.get("line", "P-7a")]
+        cands = []
+        if len(pts) == 2 and side in ("left", "right"):
+            for c in net.chains:
+                if c.meta.get("absorbed"):
+                    continue
+                (sa, la), (sb, lb) = c.line.project(pts[0]), c.line.project(pts[1])
+                if (abs(la) > float(c.hw_at(sa)) + EDGE_DASHED_SNAP_M or abs(lb) > float(c.hw_at(sb)) + EDGE_DASHED_SNAP_M
+                        or abs(sb - sa) < 1.0):
+                    continue
+                inside = 0.0 < sa < c.length and 0.0 < sb < c.length
+                sign = (1.0 if side == "left" else -1.0) * (1.0 if sb > sa else -1.0)
+                cands.append((not inside, abs(la) + abs(lb), c.id,
+                              (min(sa, sb), max(sa, sb), sign, float(dash), float(gap), o["id"])))
+        if not cands:
+            stale.append(o["id"])
+            continue
+        _, _, cid, span = min(cands, key=lambda k: (k[0], k[1]))
+        hit = (cid, span)
+        out.setdefault(hit[0], []).append(hit[1])
+        applied.append({"id": o["id"], "chain": hit[0], "s": [round(hit[1][0], 2), round(hit[1][1], 2)],
+                        "lat_sign": hit[1][2]})
+    if report is not None:
+        report["edge_line_dashed"] = {"applied": applied, "stale": stale}
+    if hasattr(net, "overrides_stale"):
+        net.overrides_stale.extend(s for s in stale if s not in net.overrides_stale)
+        net.overrides_applied.extend({"id": a["id"], "targets": [a["chain"]]} for a in applied)
+    return out
+
+
+def _solid_with_dashes(buf, c, sa, sb, lat, w, spans, sign, kind):
+    """Edge line from sa to sb: solid, broken (dash / gap) inside the authored spans on its side (ADR 0220)."""
+    iv = sorted((max(sa, a), min(sb, b), d, g) for a, b, sg, d, g, _ in spans if sg == sign and min(sb, b) > max(sa, a))
+    cur = sa
+    for a, b, d, g in iv:
+        if a > cur:
+            strip(buf, c, cur, a, lat, w, kind)
+        if b > max(a, cur):
+            # same paint kind as the solid line (QA: consistency.PAINT, fidelity overlays), broken pattern
+            dashed(buf, c, max(a, cur), b, lat, w, d, g, kind)
+        cur = max(cur, b)
+    if sb > cur:
+        strip(buf, c, cur, sb, lat, w, kind)
+    return len(iv)
 
 
 def edge_line_width(sec):
@@ -296,6 +367,7 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         for i, a in enumerate(j.arms):
             arm_info[a.key] = (j, i, maxrank)
     counts = {}
+    dashed_spans = edge_dashed_spans(net, getattr(net, "authored", None), report)
 
     def cnt(k, n=1):
         counts[k] = counts.get(k, 0) + n
@@ -415,9 +487,16 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     else:
                         _segmented(buf, c, sa, sb, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
                         cnt("P-1 centre line")
-                for k_e, _ in enumerate(edge_lines(sec, hw, dirn)):
-                    strip(buf, c, sa, sb, (lambda ss_, k_e=k_e, sec=sec, dirn=dirn:
-                                           edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0]), edge_line_width(sec), "P-7b")
+                for k_e, (lat_e, _) in enumerate(edge_lines(sec, hw, dirn)):
+                    lat_fn = (lambda ss_, k_e=k_e, sec=sec, dirn=dirn: edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0])
+                    spans = dashed_spans.get(c.id)
+                    if spans:       # ADR 0220: authored broken spans of the edge line on this side
+                        n_iv = _solid_with_dashes(buf, c, sa, sb, lat_fn, edge_line_width(sec), spans,
+                                                  1.0 if float(lat_e) > 0 else -1.0, "P-7b")
+                        if n_iv:
+                            cnt("P-7a edge line span (authored)", n_iv)
+                    else:
+                        strip(buf, c, sa, sb, lat_fn, edge_line_width(sec), "P-7b")
                     cnt("P-7b edge line")
             # arrows from turn:lanes at the downstream end of this section
             for tl, tdir in ((sec.turn_fwd, 1), (sec.turn_bwd, -1)):

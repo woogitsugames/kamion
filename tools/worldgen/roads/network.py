@@ -62,6 +62,8 @@ class EdgeSection:
     center_offset_profile: list | None = None  # authored: [[t, offset], ...], t = 0..1 along the edge (ADR 0095)
     width_profile: list | None = None          # authored: [[t, width], ...] along the edge (ADR 0095); `width` = max
     edge_lines: str | None = None   # painted edge lines in the direction of travel: none | left | right | both
+    edge_line_spacing: float | None = None  # authored (ADR 0220): override edge lines (class < GP) this far apart,
+                                            # axis to axis, symmetric about the carriageway centre (measured)
     apron: str | None = None        # authored (ADR 0123): roundabout apron "asphalt" = no mountable sett apron, the ring
                                     # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
     provenance: dict = field(default_factory=dict)
@@ -317,6 +319,11 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 sec.provenance["bridge"] = f"authored_override:{ov['id']}"
             if "edge_lines" in st:
                 sec.edge_lines = str(st["edge_lines"])
+            if "edge_line_spacing" in st:
+                # ADR 0220: measured line-to-line distance (research K1, orthophoto 0.1 m); markings.edge_lines keeps
+                # the lines EDGE_LINE_INSET_MINOR inside the carriageway edge where the carriageway is narrower
+                sec.edge_line_spacing = float(st["edge_line_spacing"])
+                sec.provenance["edge_line_spacing"] = f"authored_override:{ov['id']}"
             if "apron" in st:
                 sec.apron = str(st["apron"])
             if "turn_lanes" in st:
