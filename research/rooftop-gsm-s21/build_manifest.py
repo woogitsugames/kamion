@@ -249,6 +249,18 @@ for el, val, metoda, uw in S.POM:
         url_źródła='files/kv_1326673605_pomiar.jpg; files/kv_1326673581_pomiar.jpg (linijki w px oryginału)', licencja=S.KV_LIC, autor='pomiar własny na kadrach KartaView',
         status='ESTIMATED', uwagi=uw, plik='files/kv_1326673605_pomiar.jpg', sha256_pliku=sha('kv_1326673605_pomiar.jpg'))
 
+CM = json.load(open(os.path.join(HERE, 'out', 'commons_s21b_meta.json')))
+CO = json.load(open(os.path.join(HERE, 'commons_s21b_opisy.json')))
+for m in CM:
+    cel, przyp, opis = CO[m['sha1_oryginalu'][:10]]
+    add(kategoria='kadr_naziemny', element=m['title'] + ' — cel: ' + cel, parametr='sylwetka dachu na tle nieba',
+        wartość='PRZYPISANY' if przyp else 'nieprzypisany', jednostka='—', lat='%.6f' % m['lat'] if m['lat'] else 'UNVERIFIED', lon='%.6f' % m['lon'] if m['lon'] else 'UNVERIFIED',
+        kierunek_deg='UNVERIFIED (Commons bez azymutu)', odległość_m=('%d do %s (z geotagu)' % (m['odl'], m['najblizszy'])) if m['odl'] is not None else 'UNVERIFIED',
+        data_zdjęcia=m['data'], sezon=_sez(m['data']) if m['data'] else '', pora_dnia='dzień', opis_co_widać=opis, url_źródła=m['page'], licencja=m['licencja'],
+        autor=m['user'], status='VERIFIED_WIZJA', uwagi='s21b Commons; miniatura 960 px z thumburl API; sha1 oryginału ' + m['sha1_oryginalu'] +
+        ('; wycinek 3×: files/commons_s21b_7ecfa0059e_wyc3x.jpg' if m['sha1_oryginalu'].startswith('7ecfa0059e') else ''),
+        plik=m['plik'], sha256_pliku=m['sha256'])
+
 for row in getattr(S, 'EXTRA', []):
     if row.get('plik'):
         row = dict(row, sha256_pliku=sha(row['plik'].replace('files/', '')))
