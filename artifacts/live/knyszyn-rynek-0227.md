@@ -58,3 +58,5 @@
 - NASTĘPNY KROK: `Get-CimInstance Win32_OperatingSystem | Select-Object FreePhysicalMemory; Get-Process python | ForEach-Object { $_.Threads | Group-Object ThreadState,WaitReason }`
 - 2026-11-15 20:05 +01:00 — Na polecenie właściciela wznowiono r1 po sprawdzeniu zasobów: RAM 29,43 GiB, C: 501,77 GiB; log r1-resume.log.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 20:09 +01:00 — R1 ponownie wstrzymano mimo ~26 GiB wolnego RAM; wznowiono wyłącznie dwa procesy należące do r1 (NtResumeProcess zwrócił 0), potwierdzono wzrost CPU i pracujący wątek. Przyczyna wstrzymywania pozostaje nieustalona.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
