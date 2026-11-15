@@ -29,7 +29,7 @@ THIN_PREFIXES = ("lamp_", "signal_pole", "sign_post", "sign_g3_", "sign_gantry_"
 THIN_EXACT = ("pylon",)
 MAX_ROD_WIDTH_M = 0.20  # WORKING_VALUE, ~2.5 Low texels
 # --check: family members that are individually resolvable but follow their family (one lamp row must not mix).
-FAMILY_EXCEPTIONS = ("lamp_old_concrete_9m", "sign_g3_G3518e7fb6")
+FAMILY_EXCEPTIONS = ("lamp_old_concrete_9m", "lamp_old_concrete_led_9m", "sign_g3_G3518e7fb6")  # led_9m: ADR 0216b (#120), same pole
 
 
 def is_thin(name, size):
