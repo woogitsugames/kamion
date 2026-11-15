@@ -489,7 +489,7 @@ def _signals(pl, overrides, rep, carriage, islands):
         else:
             z = pl.add("signal_pole", p, PP_yaw(face), src=src, **zkw)
         if o.get("pole_head", True) or not mast:
-            pl.add(f"signal_head_{lit}", p + face * 0.15, PP_yaw(face), z=z + 2.9, src=src)
+            pl.add(f"signal_head_side_{lit}", p + face * 0.15, PP_yaw(face), z=z + 2.9, src=src)
         rep.setdefault("signals", []).append({"id": o["id"], "at": [round(float(v), 1) for v in p], "mast": mast,
                                               "snapped_m": round(moved, 2), "lit": lit,
                                               **({"arm_heads_m": heads} if mast else {})})

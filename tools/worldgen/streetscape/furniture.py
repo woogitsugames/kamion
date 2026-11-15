@@ -867,13 +867,13 @@ def signals(pl, net, juncs, report):
                 pl.add(f"signal_head_{lit}", head, yaw_of(face), z=z + S.SIGNAL_MAST_H - 1.25, src=f"rule:signal:{j.id}")
             else:
                 z = pl.add("signal_pole", p, yaw_of(face), src=f"rule:signal:{j.id}")
-            pl.add(f"signal_head_{lit}", p + face * 0.15, yaw_of(face), z=z + 2.9, src=f"rule:signal:{j.id}")
+            pl.add(f"signal_head_side_{lit}", p + face * 0.15, yaw_of(face), z=z + 2.9, src=f"rule:signal:{j.id}")
             # repeater on the left (median kerb) of one-way approaches with >= 2 lanes, as on the Andersa / Maczka
             # photos (S-1 repeated on the left side; Dz.U. 2019 poz. 2311 zał. 3 - paragraph UNVERIFIED, not re-read)
             if sec.oneway and lanes_in >= 2:
                 pL = a.gutter(d, -1, extra=S.KERB_TOP_W + 0.6)
                 zl = pl.add("signal_pole", pL, yaw_of(face), src=f"rule:signal:{j.id}:left")
-                pl.add(f"signal_head_{lit}", pL + face * 0.15, yaw_of(face), z=zl + 2.9, src=f"rule:signal:{j.id}:left")
+                pl.add(f"signal_head_side_{lit}", pL + face * 0.15, yaw_of(face), z=zl + 2.9, src=f"rule:signal:{j.id}:left")
                 rep_left = report.setdefault("signal_repeaters_left", 0)
                 report["signal_repeaters_left"] = rep_left + 1
             n += 1
