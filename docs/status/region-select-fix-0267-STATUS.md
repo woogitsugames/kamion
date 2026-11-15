@@ -11,3 +11,5 @@ Gałąź `region-select-fix-0267` od origin/main `ae372b19c`. Poprawki po recenz
   RegionSelectTests. build-android.ps1: normalizacja `-Regions` (`[\s;]+` → `,`), pusta po normalizacji = throw; `-RegionsFile`
   względem bieżącego katalogu (fallback korzeń repo) + Test-Path + ścieżka absolutna do Unity. Unity/pwsh NIEuruchomione (chmura).
   NASTĘPNY KROK (lider): `pwsh scripts/test.ps1 -Platform EditMode` (RegionSelectTests 20/20).
+- [krok 3] pytest `tests/gis/test_region_catalog_0267.py` 3/3, `--check` exit 0. ADR 0267 + odsyłacz w ADR 0229 §3 (odstępstwo d67 vs D67, d67-full).
+  NASTĘPNY KROK: PR do main; lider: `pwsh scripts/test.ps1 -Platform EditMode`, `pwsh scripts/build-android.ps1 -Regions d67-full`.
