@@ -12,3 +12,6 @@
 - [krok 4] Import: scena `World_<id>[_High]_Tile` (WorldSceneBuilder.BuildTileScene), `Apron_N/E/S/W` (WorldEdgeBuilder),
   sky bake na scenach `_Tile`, `RegionBuildList` dokłada `_Tile`; PlayMode `WorldStreamingPlayModeTests` (dk65-03→04).
 - NASTĘPNY KROK: ADR 0235 + PR.
+- [krok 5] ADR `docs/adr/0235-streaming-kafli-addytywny.md`. NASTĘPNY KROK (lider): reimport regionów korytarza
+  (`pwsh scripts/import-region.ps1 -Region dk65-03` i `-Region dk65-04`), EditMode `pwsh scripts/test.ps1 -Platform EditMode`,
+  PlayMode `WorldStreamingPlayModeTests` (sceny World_dk65-03 + World_dk65-04_Tile w Build Settings).
