@@ -79,7 +79,7 @@ draw na chunk z wodą) i ≤ +4,6 tys. trójkątów na klatkę. Kamery wodne (no
   `world_manifest.json` (sha256 wszystkich GLB High/Low i plików instancji), `far_field_qa.json`,
   `Data/SourceManifests/<id>-far-field.manifest.json` identyczne z zacommitowanymi (po normalizacji LF;
   `artifacts/water-0210/determinism.txt`).
-- `tests/gis/test_water_0210.py` 9/9 (opt-in, strażnicy w stage/build_world, poziomy w dół rzeki, staw, pominięcie
+- `tests/gis/test_water_0210.py` 8/8 (opt-in, strażnicy w stage/build_world, poziomy w dół rzeki, staw, pominięcie
   `intermittent`, dno/brzeg/próg, drogi nietknięte, tafla bez jezdni i w granicach chunków, kolory brzegu,
   dane Supraśli/Białej na `dk65-02`).
 - `build_world dk65-02` r3: 19 ciał wody (6 OSM `intermittent` i 6 zarysów OSM pokrytych przez BDOT pominiętych),
@@ -92,7 +92,7 @@ draw na chunk z wodą) i ≤ +4,6 tys. trójkątów na klatkę. Kamery wodne (no
   `*-drive-bridge-approach.jpg`. r1: Low wyglądał jak asfalt (SH zamiast sondy), na High szwy zmarszczek w ujściu
   (adwekcja bez ograniczenia) → r2: dwufazowa mapa przepływu, wygładzone pole kierunku, Low = rozmyta sonda; r3:
   jaśniejsza, oliwkowa toń. Przebieg, szerokość i ujście Białej zgodne z ortofoto (para top-bridge).
-- EditMode: TODO_EM. Krytyk `visual-critic`: nie uruchamiany (agent nie tworzy subagentów) — do zlecenia przez lidera.
+- EditMode: 587 testów, 586 zaliczonych, 0 błędów, 1 pominięty (`artifacts/tests/editmode-20261115-070515.xml`). Krytyk `visual-critic`: nie uruchamiany (agent nie tworzy subagentów) — do zlecenia przez lidera.
 
 ## Otwarte
 1. **Kolor toni** z góry nadal ciemniejszy i bardziej neutralny niż na ortofoto (render ~30/30/28 sRGB vs ~40/50/40);
