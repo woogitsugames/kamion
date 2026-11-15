@@ -90,6 +90,33 @@ for i, (kat, prz, val, jed, st, met, cyt, doc, strona, uw, needle) in enumerate(
     d = DOCS.get(doc, ("", "", "", "", ""))
     rid = "R6-%03d" % i; needles[rid] = {"doc": doc, "needle": needle, "plik": d[2]}
     rows.append([rid, kat, prz, val, jed, st, met, cyt, d[0], d[0], d[3], d[4], "2026-11-14", d[1], "", "", "", "", "", strona, d[2], uw])
+# --- Kadry (2026-11-15): 31 obejrzanych (frames_desc.json), wiersze dopisane po wierszach dokumentowych
+import hashlib as _h
+FD = json.load(open(D / "frames_desc.json")); FS = json.load(open(D / "frames_selected.json"))
+import collections as _c
+cnt = _c.Counter(); fr_ids = {}
+for f in FS:
+    k = "F%02d" % f["n"]; d = FD[k]; rid = "R6-%03d" % (len(rows) + 1); fr_ids[k] = rid
+    for c in d["cechy"]: cnt[c] += 1
+    j = D / "files" / "jpg1600" / f["file_local"]
+    shaj = _h.sha256(j.read_bytes()).hexdigest() if j.exists() else ""
+    az = f["azimuth"] if f["azimuth"] is not None else "UNVERIFIED"
+    lic = {"CC-BY-SA-4.0": "CC BY-SA 4.0", "CC0": "CC0"}.get(f["license"], f["license"]) + " (referencja, nie tekstura)"
+    rows.append([rid, "kadr", "%s %s: %s" % (k, f["src"], f["street"]), f["src_id"], "id zdjęcia", "SOURCED",
+                 "API %s → pobranie (sha256) → obejrzenie 960 px + 2 wycinki dolnych narożników (Read), 2026-11-15" % f["src"], "datetime=%s; azimuth=%s" % (f["datetime"], az),
+                 f["url_zrodla"], f["url_pliku"], lic, f["author"], "2026-11-15", f["sha256"], f["lat"], f["lon"], az, d["opis"], "", "",
+                 "files/frames/%s (oryginał, poza repo); files/jpg1600/%s (kopia w repo, sha256 %s)" % (f["file_local"], f["file_local"], shaj[:16]),
+                 "kierunek = azimuth z API (kompas urządzenia); dla Commons brak azymutu"])
+AGG = [("asfalt", "kadry z cechą „asfalt” (jezdnia asfaltowa jako temat kadru; kadry Commons z DDR liczone osobno)"), ("krawężnik", "kadry z widocznym szarym krawężnikiem betonowym przy jezdni"), ("kapa", "kadry z kapą chodnikową czerwonobrązową na obiekcie mostowym"),
+       ("wpust", "kadry z widocznym wpustem/kratą przy krawężniku"), ("kostka", "kadry z chodnikiem/pasem z kostki betonowej prostokątnej"), ("płyty", "kadry z chodnikiem z płyt betonowych"),
+       ("ddr-asfalt", "kadry z drogą dla rowerów z szarego asfaltu"), ("czerwona-kostka", "kadry z pasem z czerwonej kostki betonowej"), ("przejazd-czerwony", "kadry z czerwonym przejazdem rowerowym")]
+for key, prz in AGG:
+    ids = [k for k in FD if k.startswith("F") and key in FD[k]["cechy"]]
+    rows.append(["R6-%03d" % (len(rows) + 1), "kadry-zliczenie", prz, len(ids), "kadrów z 31", "ESTIMATED", "zliczenie cech nadanych przy oglądaniu (frames_desc.json); próba nie jest losowa — kadry dobrane pod trasę C i Dojlidy",
+                 "", "", "", "", "", "2026-11-15", "", "", "", "", "", "", "", "frames_desc.json", ", ".join("%s=%s" % (k, fr_ids[k]) for k in ids)])
+dmg = [k for k in FD if k.startswith("F") and set(FD[k]["cechy"]) & {"szew", "rysa", "smugi", "pęknięcie", "łata", "zużycie", "zacieki", "zabrudzenie"}]
+rows.append(["R6-%03d" % (len(rows) + 1), "kadry-zliczenie", "kadry z widocznym uszkodzeniem/śladem zużycia (szew, rysa, pęknięcie, smugi, łata, wytarta linia, zacieki, brud)", len(dmg), "kadrów z 31", "ESTIMATED",
+             "zliczenie z frames_desc.json; wybojów, siatki spękań i kolein nie widać na żadnym kadrze", "", "", "", "", "", "2026-11-15", "", "", "", "", "", "", "", "frames_desc.json", ", ".join("%s=%s" % (k, fr_ids[k]) for k in dmg)])
 with open(D / "manifest.csv", "w", newline="", encoding="utf-8") as f:
     w = csv.writer(f); w.writerow(cols); w.writerows(rows)
 json.dump({"docs": {k: {"url": v[0], "sha256": v[1], "plik": v[2]} for k, v in DOCS.items() if v[1]}, "needles": needles}, open(D / "manifest_index.json", "w"), ensure_ascii=False, indent=1)

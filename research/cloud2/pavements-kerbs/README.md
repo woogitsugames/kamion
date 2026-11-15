@@ -1,10 +1,12 @@
 # R6 — nawierzchnie, krawężniki i drobna infrastruktura uliczna (trasa C + Dojlidy)
 
-Data: 2026-11-14 · gałąź `research/cloud2-pavements-kerbs` · **72 wiersze** manifestu (69 SOURCED, 3 UNVERIFIED) ·
+**Dokończenie 2026-11-15:** obejrzałem wszystkie **31 pobranych kadrów** (zad. 6; 22 z trasy C: Panoramax 2019 i KartaView 2019/2021, 9 z Dojlid: Commons CC0). Manifest ma teraz **113 wierszy**: 31 kadrów (R6-073…R6-103) i 10 zliczeń cech (R6-104…R6-113). Samokontrola nowych wierszy: seed 20261115, 9 z 41, wynik **8 PASS / 1 FIX** (poprawione). Recenzja: `REVIEW.md`. Kopie kadrów ≤ 1600 px są w repo (`files/jpg1600/` + `INDEX.csv`, 6,1 MB).
+
+**Stan pierwotny —** Data: 2026-11-14 · gałąź `research/cloud2-pavements-kerbs` · **72 wiersze** manifestu (69 SOURCED, 3 UNVERIFIED) ·
 **obejrzane obrazy: 3 strony dokumentu ZDM (rys. 3, rys. 9, s. 11); kadry uliczne: 0 obejrzanych** ·
 samokontrola: **15 PASS / 0 FAIL** (seed 20261114, 15 z 72 = 21 %, 2 wiersze obrazowe ponownie obejrzane).
 
-> **STAN: PAKIET NIEDOKOŃCZONY — sesja przerwana na polecenie lidera (limit).** Zrobiona jest część normowa
+> *(Nieaktualne od 2026-11-15 — kadry obejrzane, patrz „Kadry”.)* **STAN 2026-11-14: PAKIET NIEDOKOŃCZONY — sesja przerwana na polecenie lidera (limit).** Zrobiona jest część normowa
 > (zad. 1–5: liczby z dokumentów) i statystyka OSM. **Zadanie 6 (≥ 30 obejrzanych kadrów) NIE jest wykonane**:
 > 31 kadrów wybrano i pobrano (`frames_selected.json`, sha256, azymuty z API), przygotowano widoki 960 px i wycinki 3×,
 > ale ŻADEN nie został obejrzany — dlatego nie ma ich w manifeście i nie ma żadnego opisu „co widać”, liczby kadrów
@@ -41,6 +43,29 @@ samokontrola: **15 PASS / 0 FAIL** (seed 20261114, 15 z 72 = 21 %, 2 wiersze obr
 | przejazd rowerowy | czerwony RAL 3020, masa chemoutwardzalna z uszorstnieniem (powierzchniowo); styk z jezdnią bezszwowy | czerwony | — | przejazdy | — | R6-050, 051 |
 | DDR | „wyraźnie inny kolor” (ZDM); „czerwony i jego odcienie” (zalecenie WR-D-42-2); niżej niż chodnik, wyżej niż jezdnia | czerwony | — | wzdłuż ulic | inwentarz = M65 | R6-048, 049, 052 |
 
+## Kadry (zad. 6, 2026-11-15) — co widać na 31 obejrzanych kadrach
+Metoda: każdy kadr obejrzałem jako arkusz: pełny kadr 960 px + dwa wycinki dolnych narożników (ok. 2×), gdzie są krawężniki i pobocza. Opisy są w `frames_desc.json` i w kolumnie `opis_co_widać`. Wysokości krawężników **nie są mierzone** z obrazu (UNVERIFIED). Próba nie jest losowa: kadry dobrano pod trasę C i Dojlidy.
+
+| Cecha | Kadrów (z 31) | Gdzie | Wiersz |
+|---|---|---|---|
+| jezdnia asfaltowa jako temat kadru | 24 | wszystkie kadry trasy C + F38, F39 | R6-104 |
+| szary krawężnik betonowy przy jezdni | 21 | trasa C i Dojlidy | R6-105 |
+| kapa chodnikowa **czerwonobrązowa** na obiektach mostowych (estakady Andersa/Maczka) + szary krawężnik mostowy + bariera na kotwach | 6 | F04, F05, F14, F19, F20, F30 | R6-106 |
+| wpust z kratą przy krawężniku (prostokątny, krata rdzawa, w linii krawędziowej) | 2 | F14, F30 (estakada Andersa) | R6-107 |
+| kostka betonowa prostokątna (chodnik/pas) | 9 | rzędy poprzeczne do osi (F31, F32, F34, F35), układ ukośny/jodełka (F36, F37 — UNVERIFIED), pas przy jezdni (F17) | R6-108 |
+| płyty betonowe (chodnik/opaska) | 3 | F09, F16, F40 (duże płyty) | R6-109 |
+| **droga dla rowerów z szarego asfaltu** | 7 | wszystkie DDR na kadrach Dojlid (Kuronia, Mickiewicza, Dywizjonu 303) | R6-110 |
+| pas z czerwonej kostki betonowej | 1 | F38 (Mickiewicza; funkcja UNVERIFIED) | R6-111 |
+| czerwony przejazd rowerowy | 1 | F39 (z daleka) | R6-112 |
+| uszkodzenie lub ślad zużycia | 9 | F04 poprzeczny szew, F06 rysa, F11/F14 ciemne smugi, F20 wytarta linia, F30 rdzawe zacieki, F36 podłużne pęknięcie DDR, F35 łata w kostce, F09 brud | R6-113 |
+
+Wnioski dla generatora (ESTIMATED z obrazu):
+- **DDR w Dojlidach jest szara (asfalt), nie czerwona** (7/7 kadrów). Czerwień występuje tylko na przejazdach (F39) i w pojedynczym pasie kostki (F38). Zalecenie „czerwony” z WR-D-42-2 (R6-049) **nie opisuje stanu tych ulic**.
+- Na estakadach trasy C kapy są czerwonobrązowe, a krawężniki szare, wysokie; wpusty są w linii krawędziowej przy krawężniku.
+- Na kadrach nie widać wybojów, siatki spękań ani kolein. Nawierzchnia trasy C (2019–2021) jest w większości jednolita; ślady to pojedyncze szwy, rysy i smugi. Decale łat i spękań powinny być rzadkie.
+- Panoramax: azymuty F06/F07 z API różnią się od kursu toru o ok. 55° (por. R9 PX17, R2-011). Do kamer używać kursu toru.
+- Kadry tunelu/wykopu (F10 prześwietlony, F29 w pomarańczowym świetle) nie nadają się do oceny koloru nawierzchni.
+
 ## Najważniejsze ustalenia
 1. **Dz.U. 2022 poz. 1518 nie podaje liczbowej wysokości krawężnika jezdni** (R6-005) — zakładane w zleceniu „10–14 cm / 0–2 cm” nie ma tam pokrycia. Liczby: 6–16 cm i ≤ 2 cm są w uchylonym Dz.U. 2016 poz. 124 (§ 43 ust. 5, § 127 ust. 10), 10–12 cm w OST D-08.01.01b.
 2. Generator `KERB_HEIGHT = 0,13 m` leży 1 cm powyżej domyślnego zakresu OST (10–12), w granicach 6–16.
@@ -57,7 +82,7 @@ samokontrola: **15 PASS / 0 FAIL** (seed 20261114, 15 z 72 = 21 %, 2 wiersze obr
 | rozmiary kostki w materiałach | ADR 0063 (holland 20×10, płyta 35×35, behaton ~210×140 WORKING_VALUE) | wymiar katalogowy „podwójnego T” 198×163, grubości, spoiny, tolerancje |
 
 ## Luki (do domknięcia w następnej sesji)
-- **Zad. 6 w całości**: obejrzeć 31 pobranych kadrów (`files/_view/F??_view.jpg`, `F??_crop3x.jpg`), dopisać wiersze kadrów, liczby kadrów per typ kostki/wzór, widoczność łat/spękań/kolein, opis czerwieni DDR; dobrać do ≥ 30 (brak pokrycia: Sokólska, Wysockiego, Kombatantów — 0 kadrów Panoramax/KartaView; Tysiąclecia — sekwencja KartaView 1155711 nie weszła do wyboru).
+- Zad. 6 zrobione 2026-11-15 (31 kadrów). Nadal brak kadrów: Sokólska, Wysockiego, Kombatantów; sekw. KartaView 1155711 (Tysiąclecia) nieużyta. Rozmiar kostki z obrazu: nie mierzony.
 - Rozstaw wpustów [m], wymiar kraty 400×600, korytka odwodnienia liniowego, płyta 30×30 — brak źródła.
 - PN-EN 1338/1339/1340, PN-EN 124 — tylko pośrednio (OST/STWiORB); PN-EN 1339 (płyty) bez cytatu.
 - KTKNPiP, DSN/SOSN GDDKiA, WR-D-63 — hosty niedostępne; klasyfikacja uszkodzeń wzięta z WR-D-83-2 (drogi samorządowe).

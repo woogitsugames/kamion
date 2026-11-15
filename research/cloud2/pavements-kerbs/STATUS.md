@@ -12,6 +12,13 @@
 - Niedostępne przez proxy: gov.pl, archiwum.gddkia.gov.pl, web.archive.org, yadda.icm.edu.pl (403) → KTKNPiP / DSN GDDKiA oryginały = luka; zamiast tego WR-D-83-2.
 - NASTĘPNY KROK: szukanie rozstawu wpustów (BIP Białystok), kart producentów (kostka, kraty), WR-D-42 (czerwona nawierzchnia); potem `python3 research/cloud2/pavements-kerbs/frames_search.py`.
 
+## Krok 4 (2026-11-15, sesja s21) — zad. 6: oględziny kadrów, dokończenie
+- 31 kadrów obejrzanych (arkusz 960 px + 2 wycinki dolnych narożników, files/_v2/, poza repo), opisy w frames_desc.json; manifest 113 wierszy (R6-073…R6-103 kadry, R6-104…R6-113 zliczenia cech).
+- Najważniejsze: DDR w Dojlidach szara (asfalt, 7/7 kadrów); na estakadach trasy C kapy czerwonobrązowe, wpusty przy krawężniku (2 kadry); brak widocznych wybojów/siatek spękań/kolein.
+- Audyt uzupełniający seed 20261115: 8 PASS / 1 FIX (F12). REVIEW.md: PASS z uwagami P2.
+- Kopie kadrów ≤1600 px w repo: files/jpg1600/ (+INDEX.csv).
+- NASTĘPNY KROK (opcjonalny): kadry Sokólska/Wysockiego/Kombatantów i sekw. 1155711: `python3 frames_kv_seq.py`, potem dopisać do frames_selected.json + frames_desc.json i `python3 -I build_manifest.py`.
+
 ## Krok 3 (2026-11-14) — manifest dokumentowy, fetch, samokontrola; PRZERWANE na polecenie lidera (limit sesji)
 - `manifest.csv`: 72 wiersze (69 SOURCED, 3 UNVERIFIED) — dokumenty + OSM. `build_manifest.py` = źródło prawdy wierszy.
 - `fetch.py` OK (11 dokumentów, 38 MB; `--frames` +31 kadrów, 30 MB). `audit_20_percent.json`: 15 PASS / 0 FAIL, seed 20261114.

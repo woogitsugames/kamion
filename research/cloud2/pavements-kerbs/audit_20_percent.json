@@ -126,5 +126,80 @@
   }
  ],
  "wynik_zbiorczy": "15 PASS / 0 FAIL",
- "uwaga": "Manifest zawiera wyłącznie wiersze dokumentowe/OSM; kadry uliczne (frames_selected.json) NIE zostały obejrzane i nie są wierszami manifestu — nie podlegały losowaniu."
+ "uwaga": "Manifest zawiera wyłącznie wiersze dokumentowe/OSM; kadry uliczne (frames_selected.json) NIE zostały obejrzane i nie są wierszami manifestu — nie podlegały losowaniu.",
+ "uzupelnienie_2026_11_15": {
+  "seed": 20261115,
+  "metoda": "random.Random(20261115).sample(sorted(id > R6-072), ceil(0.2*n))",
+  "n_nowych_wierszy": 41,
+  "k": 9,
+  "wynik": {
+   "PASS": 8,
+   "FIX": 1
+  },
+  "wiersze": [
+   {
+    "id": "R6-074",
+    "kadr": "F02",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F02*.jpg (960 px + 2 wycinki): krawężnik + wąski jasnoszary pas + trawa, ekran z panelami o pionowym żebrowaniu i szkłem — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-079",
+    "kadr": "F07",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F07*.jpg (960 px + 2 wycinki): jasnoszary krawężnik na łuku, ekran: biały cokół, ciemne żłobione panele, szkło — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-083",
+    "kadr": "F11",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F11*.jpg (960 px + 2 wycinki): ciemne smugi łukowe i podłużne na asfalcie, ekran z poziomo profilowanych paneli z zielonym pasem — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-084",
+    "kadr": "F12",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F12*.jpg (960 px + 2 wycinki): po lewej jest pas dzielący, nie wysepka",
+    "wynik": "FIX",
+    "korekta": "„Lewa: wysepka z krawężnikiem” → „Lewa: pas dzielący z krawężnikiem, trawą i żółtym ogrodzeniem”"
+   },
+   {
+    "id": "R6-085",
+    "kadr": "F13",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F13*.jpg (960 px + 2 wycinki): niski krawężnik, pas trawy z barierą — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-092",
+    "kadr": "F20",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F20*.jpg (960 px + 2 wycinki): wytarta, postrzępiona linia krawędziowa, wysoki krawężnik mostowy, kapa czerwonobrązowa z piaskiem — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-095",
+    "kadr": "F31",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F31*.jpg (960 px + 2 wycinki): DDR szary asfalt, chodnik z kostki prostokątnej w rzędach z przebarwieniem przy trawniku — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-101",
+    "kadr": "F38",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F38*.jpg (960 px + 2 wycinki): czerwonobrązowa kostka z szarym obrzeżem, pas szarej kostki kamiennej, słupki z łańcuchami — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-103",
+    "kadr": "F40",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F40*.jpg (960 px + 2 wycinki): DDR ciemnoszary asfalt na łuku, duże szare płyty, obrzeża — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   }
+  ]
+ }
 }
