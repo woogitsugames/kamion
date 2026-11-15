@@ -26,7 +26,7 @@ namespace Game.Gameplay
         /// <summary>Top of the test box above the road [m]: the 4.0 m trailer.</summary>
         public const float BoxTopM = 4.0f;
 
-        static readonly Collider[] s_Hits = new Collider[128]   // the vehicle's own colliders are in the box too;
+        static readonly Collider[] s_Hits = new Collider[128];   // the vehicle's own colliders are in the box too
         static readonly List<StartClearance.Crossing> s_Crossings = new List<StartClearance.Crossing>(8);
 
         /// <summary>
