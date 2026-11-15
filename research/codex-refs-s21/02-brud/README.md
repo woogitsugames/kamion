@@ -1,6 +1,6 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Cel: ≥ 20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥ 6 zimowych i ≥ 6 europejskich. **Kryteria niespełnione: 0 / 0 / 0 kwalifikowanych.** W manifeście 8 lokalnych i obejrzanych kadrów oraz 1 pomocniczy link-only: 3 odrzucone, 1 wzorzec czysty, 1 rdza/wiek, 1 zimowy kontekst klapy solówki oraz 1 link-only małego zabrudzenia; dodatkowo 2 znane pozytywne wzorce P18 ponownie wykorzystane. Dodatkowy screening obejmuje 8 nowych obejrzanych oryginałów (w tym ten 1 kadr rdzy), zapisanych poza gitem; 7 pozostałych odrzucono bez kopiowania miniatur do gita. Nie są dowodem rozkładu brudu. Liczby powyżej to zliczenie wierszy manifestu.
+Cel: ≥ 20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥ 6 zimowych i ≥ 6 europejskich. **Kryteria niespełnione: 0 / 0 / 0 kwalifikowanych.** W manifeście 8 lokalnych i obejrzanych kadrów oraz 2 link-only (jeden pomocniczy i jeden nowy pozytywny jakościowo): 3 odrzucone, 1 wzorzec czysty, 1 rdza/wiek, 1 zimowy kontekst klapy solówki oraz 1 link-only małego zabrudzenia; dodatkowo 2 znane pozytywne wzorce P18 ponownie wykorzystane. Dodatkowy screening obejmuje 8 nowych obejrzanych oryginałów (w tym ten 1 kadr rdzy), zapisanych poza gitem; 7 pozostałych odrzucono bez kopiowania miniatur do gita. Nie są dowodem rozkładu brudu. Liczby powyżej to zliczenie wierszy manifestu.
 
 ## Wynik przeglądu
 
@@ -82,3 +82,12 @@ Przegląd kategorii Krone trailers i dwóch celowanych zapytań Commons dał trz
 Obserwacje z obrazu SOURCED [poszczególne URL w manifeście]. Położenie śladów jest jakościowe; wysokość fizyczna i chemiczny skład osadu UNVERIFIED. Udział soli pozostaje UNVERIFIED. Lokalna wysokość drzwi około 500–600 px i 650–700 px (ESTIMATED z obrazów), więc nie spełniają progu 1000 px. Nie powiększano zdjęć sztucznie. Wersja P18-158 ma lokalnie 960 × 1199, choć aktualne metadane źródła deklarują 1093 × 1365; większej wersji nie pobierano.
 
 Licencje zweryfikowane ponownie w Commons: 02-008 Jaggery, CC BY-SA 2.0; 02-009 Eric Polk, CC BY-SA 4.0. Snapshot w `data/reused-p18-source-metadata.json`, niezależne obserwacje i SHA lokalnych wersji w `data/reused-p18-observations-2026-11-15.json`. Miniatury i wycinki repo ≤800 px. **Znane pozytywne wzorce: 2 kadry / 2 pojazdy, w tym 1 zimowy i europejski. Nowe fotografie: 0; wzrost ścisłego M61: 0.** Nie doliczać ich drugi raz do zbioru P18.
+
+
+## Nowy pozytywny wzorzec z Flickr: 02-010
+
+**NOWE zdjęcie brudnych dwuskrzydłowych drzwi, jakościowo potwierdzone obrazem**, bez dopisywania do progu rozdzielczości M61. Flickr230839170, Harold Hollingsworth, CC BY-SA2.0; obejrzany indywidualnie publiczny podgląd 768 × 1024 px (SOURCED [DOM wyrenderowanego obrazu]). Pełny obraz pokazuje naczepę z dwiema jasnymi drzwiami, dwoma prętami zamków i brudem: górny pas/górna połowa mają nierówny szarobrunatny film i liczne pionowe ciemniejsze ślady. Środek jaśniejszy, dolne obrzeże i okolice zamknięć ciemniej poplamione. Resztki naklejki po prawej nie są plamą brudu. Obserwacje SOURCED [obraz fotostrony w manifeście]; skład chemiczny UNVERIFIED.
+
+Drzwi około550px w podglądzie (ESTIMATED), oryginał wg metadanych ma960 × 1280, nie został pobrany ani obejrzany. Kraj, data wykonania i kalendarzowa zima UNVERIFIED; 01.09.2006 to upload. Widoczne białe płaty w krajobrazie nie uprawniają do przypisania soli ani miesiąca. **Nowe pozytywne jakościowo:1kadr /1pojazd; ścisły wzrost M61>=1000px:0.** Zdjęcie nie występowało w lokalnych manifestach P18; było jedynie w dawnym nieobejrzanym surowym wyniku wyszukiwania. Nie pobrano fotografii, użyto link-only. Metadane tylko fotografii, bez danych runtime, w `data/flickr-230839170-public-metadata.json`; wynik obserwacji w `data/flickr-230839170-observation.json`.
+
+Podglądy kategorii Rear views of trucks pozwoliły też odrzucić bez pobierania Big Rigs (cysterna) i LKW-Sattezug Rückseite (niska klapa/platforma; PD-self poza filtrem CC). Nie opisano z nich brudu drzwi.
