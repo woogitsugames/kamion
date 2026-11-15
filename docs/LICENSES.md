@@ -543,3 +543,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 01/front-approval-round5:3 firmowe fotografie jednego reflektora Renault, tylko link-only, all rights reserved; bez kopii obrazów/screenshotów. Autor nieustalony, publikujący i adresy perwiersz. Przed publikacją poprawiono błędne mapowanieURL etykiety; peer-review zachowuje pierwotnyFAIL i PASS poprawionego źródła.
 
 07/mapillary-gates-round4:czadzik21.07.2018 i zsolt29.07.2017,2 indywidualnie obejrzane kadry MapillaryCCBY-SA4.0 według oficjalnej pomocy permanifest. Wyłącznie linki i własne opisy, bez kopii/screenshotów/API/tokenów; podkładOSM.
+
+05/traction-parameters-round5: własne parafrazy/fakty z publicznego Regulaminu sieciPKP2025/2026v45 i załącznika2.12, dokładne adresy/komórki/punkty w manifestach. Bez redystrybucji źródłowych XLSX/PDF, zdjęć ani renderów. Binaria i render poza gitem; odczytXLSXread-only, niezależnypeer-review. Nie przypisano źródłom licencjiCC.

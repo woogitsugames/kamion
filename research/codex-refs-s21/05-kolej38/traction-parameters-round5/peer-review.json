@@ -1,0 +1,40 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "reviewer": "niezależny agent knyszyn",
+  "result": "PASS — wniosek 3 kV DC poprawnie oparty na dwóch źródłach, w podanym zakresie",
+  "method": "Dostarczony runtime Python/openpyxl read_only=True; odczyt komórek, nagłówków i opisów. PDF: odczyt całej strony 24 przez pypdf oraz osobne oględziny istniejącego reg-page24.png. Bez modyfikacji i eksportu XLSX/PDF, bez Chrome.",
+  "sources": {
+    "xlsx": {
+      "local_file": "Data/raw/refs/codex-s21/05-kolej38/traction-parameters-round5/N_ZAL_2.12_20252026_20261008065033.xlsx",
+      "url": "https://www.plk-sa.pl/files/public/user_upload/pdf/Reg_przydzielania_tras/Regulamin_sieci_2025-2026/v.42/N_ZAL_2.12_20252026_20261008065033.xlsx",
+      "sha256_independently_computed": "6eb09262ee156319132da62cb97383231873e8d24ac355c3967da70c04aebd96",
+      "sheet": "Załącznik 2.12 dane",
+      "cells_verified": {"A351": " 38", "B351": "BIAŁYSTOK - GŁOMNO", "C351": "N", "D351": 4.298, "E351": 98.598, "F351": "YzC120-2C", "G351": "140", "J351": null},
+      "dates_verified": {"I1": "Data wydruku / Print Date: ", "J1": "08.10.2026", "I2": "Stan na dzień / State as at:", "J2": "25.10.2026"},
+      "date_comment": "Dwie różne daty i dwa różne znaczenia; zachowano dosłownie, bez naprawiania chronologii nagłówka.",
+      "column_headers_verified": "A6:J6 i A7:J7; brak kolumny napięcia. W odczycie tekstowych komórek wszystkich arkuszy nie znaleziono napię*/voltage.",
+      "definitions_verified": {
+        "Załącznik 2.12 opis!A8": "N oznacza tor nieparzysty, P parzysty. Nie określa liczby torów.",
+        "Załącznik 2.12 opis!A11": "Typ sieci opisuje typ budowli i parametry konstrukcyjne; nie jest polem napięcia.",
+        "Załącznik 2.12 opis!A12": "Maksymalna prędkość dotyczy pojazdu trakcyjnego z jednym pracującym odbierakiem prądu.",
+        "Załącznik 2.12 opis!A15": "Niepuste oznaczenie innego zarządcy wskazuje odcinek poza zarządem PLK. J351 jest puste."
+      }
+    },
+    "pdf": {
+      "local_file": "Data/raw/refs/codex-s21/05-kolej38/traction-parameters-round5/Reg_sieci_25-26_v45_publ.pdf",
+      "url": "https://www.plk-sa.pl/files/public/user_upload/pdf/Reg_przydzielania_tras/Regulamin_sieci_2025-2026/v.45/Reg_sieci_25-26_v45_publ.pdf",
+      "sha256_independently_computed": "6e9a58c0651993334c9100e33309720b4f9f0dd4a16f0198cbde7bd17239d7c8",
+      "page_one_based": 24,
+      "printed_page": 24,
+      "update_in_footer": "12.11.2026",
+      "section": "2.3.9 Zasilanie trakcyjne",
+      "paragraph_1_verified": "PLK umożliwia na liniach zelektryfikowanych pobór energii z sieci o napięciu 3 kV DC.",
+      "paragraph_6_verified": "Parametry sieci trakcyjnej wskazane są w załączniku 2.12.",
+      "visual_review": "Cała wyrenderowana strona reg-page24.png obejrzana; nagłówek, ust.1 i 6 oraz stopka odpowiadają ekstrakcji tekstu."
+    }
+  },
+  "conclusion": "SOURCED [XLSX Załącznik 2.12 dane!A351:F351 + definicje + Regulamin 2.3.9 ust.1,6]: dla opisanego toru N linii 38 na km 4.298–98.598 uzasadniony jest wniosek o systemie 3 kV DC. Wartość napięcia pochodzi z ogólnego przepisu regulaminu, powiązanego z parametrami odcinka przez załącznik, a nie z arkusza ani tagu OSM.",
+  "speed_check": "PASS: G351=140 przy nagłówku Maks. prędkość [km/h] i definicji A12 to parametr dopuszczenia dla jednego czynnego odbieraka, nie dowód rzeczywistej ani ogólnie dozwolonej prędkości każdego pociągu. README nie przenosi tej wartości do generatora ruchu.",
+  "limits": ["Nie pomiar napięcia w terenie.", "Nie potwierdzenie aktualnego zasilenia w dowolnej chwili.", "Nie rozszerzać na całą linię 38 ani na nieobjęte tory.", "Nie wyprowadzać geometrii sieci z samego kodu YzC120-2C.", "Nie przypisywać kategorii przejazdu A–D."]
+}

@@ -1,18 +1,18 @@
 # 05 — Linia38: elektryfikacja i stan zastany kontra projekt — WIP
 
-Stan bieżący:9 rekordów —3 dokumentacyjne,4 rekordy danych OSM,1 ponownie obejrzana fotografia stacji i1 nowe orto przejazdu. Urządzenia konkretnego przejazdu nadalUNVERIFIED.
+Stan bieżący:14 rekordów —5 dokumentacyjnych,4 danychOSM,1orto,2 lokalne fotografie stacji oraz2link-only kadry1przejazdu DW671 z2019. KategorieA–D i stan wyposażenia2026 nadalUNVERIFIED. Źródłowe3kV DC uzupełniono z dwóch dokumentówPKP, nie wyłącznie z OSM.
 
-3 rekordy dokumentacyjne, 0 fotografii terenowych pobranych / 0 kadrów link-only. Nie kopiowano do repo dokumentów PKP ani renderu ich stron. W manifeście odnośniki i własne parafrazy danych.
+W gicie tylko odnośniki, własne parafrazy i dozwolone miniatury. BinariaPKP oraz ich rendery poza gitem.
 
 ## Ustalenia
 
-05-D01/02: SOURCED [PKP PLK, Id12, stan07.09.2026, tabela6,s123 drukowana = strona121 PDF]. Sprawdzono pełny render strony i kontekst sąsiednich wierszy37/39/40. Elektryfikacja jest cechą istniejącego odcinka. Dla napięcia3kV źródło to nie daje potwierdzenia: UNVERIFIED. W korytarzu Knyszyna nie przyjmować pełnej dwutorowości tylko z planów inwestycji.
+05-D01/02: SOURCED [PKP PLK, Id12, stan07.09.2026, tabela6,s123 drukowana = strona121 PDF]. Sprawdzono pełny render strony i kontekst sąsiednich wierszy37/39/40. Elektryfikacja jest cechą istniejącego odcinka. Sam Id12 nie podaje napięcia; uzupełnienie3kV DC ma osobną podstawę w traction-parameters-round5 poniżej. W korytarzu Knyszyna nie przyjmować pełnej dwutorowości tylko z planów inwestycji.
 
 05-D03: SOURCED [PKP PLK,15.09.2026, Więcej Rail Baltiki]. Docelowy drugi tor i zastępowanie przejazdów to zakres modernizacji, nie potwierdzenie wykonania w listopadzie2026.
 
 ## Luki
 
-Kategorie konkretnych przejazdów A–D, aktualne urządzenia i rogatki, znakiG-3/G-4, materiał nawierzchni, rozstaw i typ słupów oraz wizualny stan podsypki — UNVERIFIED; brak nowego kadru terenowego. Stan energetyczny odcinka podczas robót i zamknięcia ruchu nie wynikają z ewidencyjnej cechy „zelektryfikowana”.
+Kategorie konkretnych przejazdów A–D, aktualne urządzenia i rogatki, znakiG-3/G-4, materiał nawierzchni, rozstaw i typ słupów oraz wizualny stan podsypki — dla stanu2026 UNVERIFIED; historyczne kadry urządzeń2019 opisano oddzielnie. Stan energetyczny odcinka podczas robót i zamknięcia ruchu nie wynikają z ewidencyjnej cechy „zelektryfikowana”.
 
 ## Odczyt i ograniczenia
 
@@ -28,7 +28,7 @@ StarszyURL Id12 z lutego2025 zwraca404; aktualny odnaleziono przez oficjalny kat
 
 ## OSM — punkty dalszego poszukiwania, nie inwentaryzacja
 
-05-O01…O03 zachowują identyfikatory trzech węzłów przejazdowych blisko korytarza z istniejącego zapytania K1. Ich tagi nie zawierają wystarczających danych do A–D; brak tagu rogatki nie dowodzi braku rogatki. 05-O04 rozdziela tagi istniejącego napięcia i proposed na moście. Dane, identyfikatory, czasy edycji i hash źródła w `data/osm-crossing-and-voltage-evidence.json`. To ponowne wykorzystanie otwartych danych K1, bez nowego zapytaniaOverpass i bez nowych fotografii. Napięcie3000V jest SOURCED jako tag OSM, ale pozostaje niepotwierdzone niezależnym dokumentem zarządcy. Proponowane25000V nie są dowodem wykonania.
+05-O01…O03 zachowują identyfikatory trzech węzłów przejazdowych blisko korytarza z istniejącego zapytania K1. Ich tagi nie zawierają wystarczających danych do A–D; brak tagu rogatki nie dowodzi braku rogatki. 05-O04 rozdziela tagi istniejącego napięcia i proposed na moście. Dane, identyfikatory, czasy edycji i hash źródła w `data/osm-crossing-and-voltage-evidence.json`. To ponowne wykorzystanie otwartych danych K1, bez nowego zapytaniaOverpass i bez nowych fotografii. Napięcie3000V jest SOURCED jako tag OSM; niezależną podstawę zarządcy uzupełniono później w traction-parameters-round5. Tego tagu nie przepisano jako urzędowego pola. Proponowane25000V nie są dowodem wykonania.
 
 ## Nowe orto przejazdu 038 010 194
 
@@ -45,3 +45,12 @@ Mapillary-crossings-round3: sprawdzono3istniejące punktyK1/OSM w publicznymUI z
 
 
 Knyszyn-crossing-round4:2 nowe osobno obejrzane kadry1przejazdu DW671 na północ od stacji, grobin,02.09.2019, MapillaryCCBY-SA4.0 według oficjalnej pomocy. 0pobrań. Widać rzeczywiste przecięcie szyn z jezdnią i prostokątne panele oraz przednie pary soczewek/daszki, czerwono-białe słupy i podniesione ramiona z pomarańczowym napędem. NapisS2 tylko odczyt urządzenia, nie kategoria. A–D, materiał paneli, pełna liczba ramion, G-3/G-4, identyfikatorPLK, emisja/napięcie i aktualność2026 UNVERIFIED. Główny manifest12rekordów.
+
+
+## Typ sieci i oficjalna podstawa3kV DC — traction-parameters-round5
+
+SOURCED [załącznik2.12, „Załącznik2.12dane”!A351:F351]: linia38, torN, km4,298–98,598, literalny typYzC120-2C. N oznacza tor nieparzysty, nie liczbę torów. Daty nagłówka odrębne: wydruk08.10.2026 i stan25.10.2026. Brak pola napięcia w tym arkuszu.
+
+SOURCED [Regulamin sieci2025/2026v45, aktualizacja12.11.2026,2.3.9ust.1,6,s24]: zelektryfikowane liniePLK są zasilane3kV DC, parametry sieci określa załącznik2.12. **Wniosek z dwóch dokumentów:3000V DC dla wskazanego elektryfikowanego odcinka linii38**, nie pomiar i nie stan chwilowego załączenia podczas robót. Oba odczyty, komórki i render strony potwierdził niezależny agent. Nie rozszerzono tego wiersza na całą linię38.
+
+Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr prędkości kolumnyG dotyczy jazdy z jednym pracującym odbierakiem i nie jest prędkością każdego pociągu. OryginalnyXLSX123617B ma pełne poprawneCRC; oba binaria/hash/render poza gitem. 2nowe rekordy dokumentacyjne,0zdjęć.

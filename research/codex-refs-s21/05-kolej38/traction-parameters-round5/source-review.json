@@ -1,0 +1,46 @@
+{
+  "checked_date": "2026-11-15",
+  "source_page": "https://www.plk-sa.pl/klienci-i-kontrahenci/warunki-udostepniania-infrastruktury-i-regulaminy/regulamin-sieci/regulamin-sieci-2025/2026",
+  "xlsx": {
+    "url": "https://www.plk-sa.pl/files/public/user_upload/pdf/Reg_przydzielania_tras/Regulamin_sieci_2025-2026/v.42/N_ZAL_2.12_20252026_20261008065033.xlsx",
+    "bytes": 123617,
+    "sha256": "6eb09262ee156319132da62cb97383231873e8d24ac355c3967da70c04aebd96",
+    "zip_CRC_verified": true,
+    "method": "read-only openpyxl w dostarczonym runtime; bez edycji/eksportu XLSX",
+    "sheet": "Załącznik 2.12 dane",
+    "range": "A351:F351",
+    "print_date_cell": "J1 = 08.10.2026",
+    "state_date_cell": "J2 = 25.10.2026",
+    "values": {
+      "A351": " 38",
+      "B351": "BIAŁYSTOK - GŁOMNO",
+      "C351": "N",
+      "D351": 4.298,
+      "E351": 98.598,
+      "F351": "YzC120-2C"
+    },
+    "voltage_in_this_sheet": false,
+    "N_definition": "arkusz Załącznik2.12opis A8: N=nieparzysty; nie liczba torów",
+    "network_type_definition_cell": "Załącznik2.12opis A11; typ budowli sieci, nie napięcie"
+  },
+  "regulation": {
+    "url": "https://www.plk-sa.pl/files/public/user_upload/pdf/Reg_przydzielania_tras/Regulamin_sieci_2025-2026/v.45/Reg_sieci_25-26_v45_publ.pdf",
+    "bytes": 3976855,
+    "sha256": "6e9a58c0651993334c9100e33309720b4f9f0dd4a16f0198cbde7bd17239d7c8",
+    "updated": "2026-11-12",
+    "pdf_page_one_based": 24,
+    "printed_page": 24,
+    "section": "2.3.9 ust.1 oraz6",
+    "paraphrase": "Zelektryfikowane linie PLK: zasilanie3kV DC; parametry sieci w załączniku2.12.",
+    "visually_reviewed_page": "reg-page24.png poza gitem; koordynator obejrzał stronę po renderze"
+  },
+  "conclusion": "SOURCED złożenie dwóch źródeł: dla elektryfikowanego odcinka linii38 objętego wierszem351 stosujemy3kV DC według ogólnej regułyPLK. To wniosek z dwóch dokumentów, nie pomiar terenowy ani pole napięcia w XLSX.",
+  "not_derived": [
+    "obecne napięcie zmierzone przy konkretnym słupie",
+    "wysokość/rozstaw słupów i geometria typu z samych cyfr kodu",
+    "prędkość rzeczywistego pociągu z ograniczenia konstrukcyjnego sieci",
+    "kategoria A–D przejazdu",
+    "stan całej linii38 poza odcinkiem4.298–98.598"
+  ],
+  "retrieval_limit": "urllib dwukrotnie przerwane; curl trzeci pojedynczy odczyt sukces. Binarny XLSX ma pełną poprawną strukturę ZIP/CRC. Brak binarnych źródeł i renderów w gicie."
+}
