@@ -112,7 +112,8 @@ def build(rid):
             per.setdefault(cid, {l: 0 for l in LAYERS})[layer] += int(n)
     tot = {l: sum(v[l] for v in per.values()) for l in LAYERS}
     return {"region": rid, "typologies": rep["typologies"], "subtypes": rep.get("subtypes"),
-            "roofs": rep.get("roofs"), "house_roofs": rep.get("house_roofs"), "total": tot,
+            "roofs_other": rep.get("roofs_other"), "pavilion_fronts": rep.get("pavilion_fronts"),
+            "house_roofs": rep.get("house_roofs"), "total": tot,
             "materials": {l: len(mats[l]) for l in LAYERS}, "per_chunk": dict(sorted(per.items()))}, man
 
 

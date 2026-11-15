@@ -509,7 +509,8 @@ FAR_GRID = {"block": {"pitch_m": 3.0, "win_w": 0.50, "sill": 0.32, "head": 0.84}
             "ribbon": {"pitch_m": 3.0, "win_w": 1.00, "sill": 0.26, "head": 0.71}}
 _FAR_WALLS = {"block": ["plaster_cream", "plaster_grey", "plaster_pastel_blue", "plaster_light", "plaster_yellow",
                         "plaster_peach", "plaster_sage", "panel_concrete", "plaster_accent_terracotta",
-                        "plaster_accent_green", "plaster_accent_ochre", "plaster_accent_grey"],
+                        "plaster_accent_green", "plaster_accent_ochre", "plaster_accent_grey",
+                        "plaster_white"],              # ADR 0238: white blocks (typology.BLOCK_WALLS)
               "office": ["plaster_light", "plaster_grey", "plaster_beige", "plaster_white", "brick_red"]}
 _FAR_WALLS["ribbon"] = _FAR_WALLS["office"]
 for _k, _ws in _FAR_WALLS.items():
