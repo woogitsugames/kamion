@@ -112,6 +112,18 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0204, owner D64; tile = lattice (-8,7) of the ADR 0203 plan)",
     ),
+    # ADR 0209 (owner D64): west part of Knyszyn, lattice (-9,8) (shares its east edge x = 760587 with `knyszyn`, 37 m
+    # west of the DK65/DW671 roundabout). DK65 outlet towards Monki, DW671 towards Tykocin, west streets of the town.
+    # 100 % powiat moniecki 2008 (OSM admin relations: gmina Knyszyn 97.6 %, gmina Krypno 2.4 %).
+    "knyszyn-w": Region(
+        id="knyszyn-w",
+        title="Knyszyn — zachód: wylot DK65 na Mońki, DW671 na Tykocin",
+        candidate="K_knyszyn_w",
+        bbox=(758539.0, 611583.0, 760587.0, 613631.0),
+        origin=(759563.0, 612607.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0209, owner D64; tile = lattice (-9,8) of the ADR 0203 plan)",
+    ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
     "dk65-02": Region(
         id="dk65-02",
