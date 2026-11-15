@@ -20,5 +20,13 @@
 - Wycinków c027 / c022 (`research/_incoming/...`) NIE MA w repo (katalog poza gitem) — oparłem się na opisach w
   manifest.csv (P13-022, P13-027, P13-030, P13-031) i przeglądzie REVIEW-2026-11-14.
 
-NASTĘPNY KROK: poprawki opisów (overrides.yaml l. 280 / 358 / 363), ADR 0198, PR-BODY:
-`uv run --project tools/worldgen python -m pytest tests/gis/test_piers_vs_roads_0198.py tests/gis/test_viaduct_underdeck.py -q`
+- Krok 2 (zrobione): opisy w overrides.yaml / gate3-segment.py / gate3_segment.json, ADR 0198 (PROPOSED).
+- Testy: tests/gis/test_piers_vs_roads_0198.py 8 passed (104 s z underdeck + hero_bridge: 26 passed, 4 skipped);
+  całe tests/gis: 1185 passed, 48 skipped, 3 xfailed, 1 failed = test_road_fidelity::test_report_not_stale
+  (sha overrides.yaml + build_world.py; wymaga fidelity/run.py z Data/raw — lider).
+- Raport: artifacts/piers-0198/PR-BODY.md.
+
+KONIEC (chmura). NASTĘPNY KROK (lider, maszyna z Data/raw + Unity):
+`uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c`
+potem `uv run --project tools/worldgen python tools/worldgen/qa/check_piers_vs_roads.py`, fidelity/run.py, import-region,
+visual-qa (putry-above, g3b_eye_s1582, g3b_eye_s1632, route-putry-approach, driver-andersa-to-putry; Low i High), EditMode.
