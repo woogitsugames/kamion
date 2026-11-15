@@ -504,7 +504,7 @@ class Plan:
         return res
 
     def sign_code(self, c) -> str | None:
-        """G-3 (single track) / G-4 (multiple tracks) where the crossing has no barriers (Dz.U. 2015 poz. 1744 § 5:
+        """G-3 (single track) / G-4 (multiple tracks) where the crossing has no barriers (Dz.U. 2025 poz. 1105 § 80 ust. 1:
         A without barriers, C, D); an explicit OSM crossing:saltire overrides."""
         show = c["barrier"] in (None, "no") if c["saltire"] is None else c["saltire"]
         if not show:

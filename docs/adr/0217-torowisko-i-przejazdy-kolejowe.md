@@ -74,8 +74,10 @@ ADR 0210) — odrzucone.
 7. **Markery** (`generated/rail.json` → `markers`; pozycja E/N/Z lokalnie, `heading_deg` = azymut, w który patrzy
    lico/ramię, zgodnie z ruchem wskazówek od N = obrót Y w Unity), po jednym na wlot:
    - `sign` **G-3** (1 tor) / **G-4** (≥ 2 tory, suma `tracks` wszystkich dróg kolejowych przy przejeździe) — tylko
-     gdy brak rogatek (`crossing:barrier` brak/`no`), zgodnie z Dz.U. 2015 poz. 1744 § 5 (G-3/G-4 przed przejazdami
-     kat. A bez rogatek, C i D); jawny `crossing:saltire` ma pierwszeństwo. Słupek po prawej stronie wlotu,
+     gdy brak rogatek (`crossing:barrier` brak/`no`), zgodnie z § 80 ust. 1 Dz.U. 2025 poz. 1105 (G-3/G-4 przed przejazdami
+     kat. A bez rogatek, C i D; źródło: `https://api.sejm.gov.pl/eli/acts/DU/2025/1105/text.pdf`, pobrane 2026-11-15,
+     SHA256 `c3caeb070b48af809707db4d3c77cb2b3aa00bebd27d55d3fbfc8cb6857dd924`; Dz.U. 2015 poz. 1744 ma w ELI status
+     „uznany za uchylony” z dniem 2025-08-27 przez DU/2025/1105); jawny `crossing:saltire` ma pierwszeństwo. Słupek po prawej stronie wlotu,
      3,0 m przed krawędzią płyt, 1,0 m za krawędzią jezdni (WORKING_VALUE). Ramię 1,20 × 0,20 m, kąt 50°, dolna
      krawędź 1,50 m — **WORKING_VALUE** (rysunku G-3 z rozporządzenia o znakach nie sprawdzono);
    - `barrier`: `half` → 1 ramię na wlot (wjazd, prawy pas, długość ½ jezdni + 0,5 m), `double_half` → 4 (wjazd +
