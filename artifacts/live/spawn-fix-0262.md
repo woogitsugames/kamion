@@ -31,3 +31,8 @@ NASTĘPNY KROK: obejrzeć `artifacts/spawn-fix-0262/renders/<id>/*.png`; wznowie
 - UWAGA: pierwszy import w worktree uruchomił generator PBR `build_all.py` (521 s, poza slotem heavy) — brak tekstur PBR w kopii worktree.
 - W TLE nadal: `run-renders.ps1` -> `artifacts/spawn-fix-0262/renders/<id>.status`, `renders.done`.
 NASTĘPNY KROK: `ls artifacts/spawn-fix-0262/renders/*.status`; brakujące: `pwsh artifacts/spawn-fix-0262/run-renders.ps1 -Regions <id,...>`; potem obejrzeć PNG, uzupełnić ADR „Wyniki”, cofnąć efekty uboczne Unity, commit końcowy.
+## 15.11 22:48 krok 6 — przejęcie po martwym agencie, ponowienie renderów
+- Statusy `import=-1073741502` (0xC0000142, proces nie wystartował po zamknięciu sesji) przeniesione do `renders/<id>.status.dead-2242`; martwy slot zwolniony przez `unity-slot.ps1 -Release`.
+- ODŁĄCZONY proces (Start-Process pwsh Hidden, pid 9568) renderuje 14 regionów: dk65-01,-02,-03,-04,-07,-08,-09,-10,-11, dk65-monki-01, dw671-tykocin-01, knyszyn-s, knyszyn, bialystok-dojlidy. Log: `artifacts/spawn-fix-0262/renders-rerun.log`.
+- OK z poprzedniej tury (import=0 qa=0): dk65-05, dk65-06, knyszynska, maczka, kleeberga, knyszyn-w. NIE ufać `renders.done` — czytać `renders/<id>.status`.
+NASTĘPNY KROK: `Get-ChildItem artifacts/spawn-fix-0262/renders/*.status | % { $_.BaseName + ' ' + (Get-Content $_ -Raw) }`; gdy 20/20 `import=0 qa=0` -> obejrzeć PNG, ADR „Wyniki”; brakujące: `Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile','-Command',"& 'artifacts/spawn-fix-0262/run-renders.ps1' -Regions <id,...>"`
