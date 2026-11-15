@@ -2,7 +2,7 @@
 
 Weryfikacja lokalna (Windows, z Data/raw) w worktree `verify-cloud-b`. Baza: origin/main `657b85837` (+ #90); PR: `2ce9b03e1`, scalony lokalnie jako `fc62185cf` (bez konfliktów).
 
-## 1. Wynik: DONE — werdykt **FIX** (2 drobne poprawki testów/atrybutów; kod narzędzi działa zgodnie z opisem)
+## 1. Wynik: DONE — werdykt **SCAL pod warunkiem FIX 2** (stan po `ac633802f`, patrz §8; pierwotnie FIX z 2 punktami, FIX 1 naprawiony w PR)
 
 ## 2. Ustalenia
 1. **Fidelity Dojlidy naprawione.** Na main `fidelity/run.py --region bialystok-dojlidy --no-tile` kończy się rc=1: `ValueError: invalid literal for int() … 'Bw443103344:6284342131-6610648269:0s'` w `metrics.node_arm_check` (l. 628). Po #95: rc=0 z `--no-tile` (65 s) i bez (98 s). W `route_node_arms` 18 wierszy, w tym 2 cięcia granicy kafla ze `skipped: tile_boundary` (`Bw443103344…:0s`, `Bw236885860…:0e`).
@@ -33,3 +33,9 @@ Weryfikacja lokalna (Windows, z Data/raw) w worktree `verify-cloud-b`. Baza: ori
 
 ## 7. Następny krok
 Autor: FIX 1 i decyzja co do FIX 2. Lider po scaleniu: regeneracja far_field regionów granicznych (pkt 2 PR) razem z C, potem `pytest tests/gis -k far_field` i oględziny horyzontu.
+
+## 8. Aktualizacja 2026-11-15 wieczór (po `ac633802f`)
+- **FIX 1 potwierdzony na Windows.** Autor dodał `Data/Admin/*.geojson -text` w `.gitattributes`. Po scaleniu `ac633802f` i ponownym wyjęciu pliku (`rm Data/Admin/powiaty_prg.geojson; git checkout -- Data/Admin/powiaty_prg.geojson`) plik ma 139 359 B, sha256 `f90444f8…` = manifest, `pytest tests/gis/test_qa_tools_0219.py` → **78 passed**. Bez ponownego wyjęcia stary plik z CRLF zostaje na dysku i test dalej pada (77/1) — po scaleniu trzeba to zrobić raz w main i w każdym istniejącym worktree.
+- **FIX 2 bez zmian:** warunek scalenia — #95 scalać razem z regeneracją far_field regionu C (cache schemat 11 → 12). Autor świadomie nie dodaje pomijania.
+- Werdykt po aktualizacji: **SCAL pod warunkiem FIX 2** (regeneracja far_field C w tym samym kroku). Gałąź `fix-pr95-96-s21` nie zawiera nic dla #95, bo poprawka jest już w PR.
+- Dowody: `artifacts/verify-cloud-b/pr95/pytest-0219-after-fix1.log`, `pytest-0219-after-fix1-stale-checkout.log`.
