@@ -27,3 +27,7 @@ StarszyURL Id12 z lutego2025 zwraca404; aktualny odnaleziono przez oficjalny kat
 ## OSM — punkty dalszego poszukiwania, nie inwentaryzacja
 
 05-O01…O03 zachowują identyfikatory trzech węzłów przejazdowych blisko korytarza z istniejącego zapytania K1. Ich tagi nie zawierają wystarczających danych do A–D; brak tagu rogatki nie dowodzi braku rogatki. 05-O04 rozdziela tagi istniejącego napięcia i proposed na moście. Dane, identyfikatory, czasy edycji i hash źródła w `data/osm-crossing-and-voltage-evidence.json`. To ponowne wykorzystanie otwartych danych K1, bez nowego zapytaniaOverpass i bez nowych fotografii. Napięcie3000V jest SOURCED jako tag OSM, ale pozostaje niepotwierdzone niezależnym dokumentem zarządcy. Proponowane25000V nie są dowodem wykonania.
+
+## Nowe orto przejazdu 038 010 194
+
+05-O05: GUGiK WMS,700×700px, samodzielnie obejrzany. SOURCED [obraz i data/crossing-ortho-review.json]: pojedynczy tor, jasne prostokątne pasy/panele w obrębie szyn, powtarzalne podkłady, szarobrązowy pas podsypki. Nie identyfikowano materiału paneli ani rodzaju kamienia. Kategoria A–D, rogatki, sygnalizatory i krzyże UNVERIFIED — drobne obiekty z góry nie pozwalają rozstrzygnąć wyposażenia. Data zdjęcia UNVERIFIED: WMS bez parametru czasu, nie zapytano jeszcze o arkusz. Kierunek góry to północ geograficzna. To1 nowy pobrany kadr; oryginał poza gitem, kopia referencyjna700px w files.
