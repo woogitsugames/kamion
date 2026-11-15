@@ -7401,7 +7401,7 @@
   "crossings_snapped": 75,
   "decals": {
    "gullies": 989,
-   "oil": 271,
+   "oil": 262,
    "patches": 285
   },
   "emergency_signal_junctions": [],
@@ -7876,7 +7876,7 @@
    "P-11 cycle crossing": 6,
    "P-11 cycle crossing in junction": 6,
    "P-13": 4,
-   "P-14": 17,
+   "P-14": 15,
    "P-7b edge line": 60,
    "P-8 arrow": 27,
    "P-8 skipped (lane too narrow)": 4,
@@ -7886,7 +7886,14 @@
   "markings_overlap_removed_tris": 21,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 0,
-  "overrides_applied": [],
+  "overrides_applied": [
+   {
+    "id": "mickiewicza-u-turn-not-signalised",
+    "targets": [
+     "n3541204205"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -7898,7 +7905,7 @@
    "parts": 259,
    "side_tris": 450
   },
-  "signalised_junctions": 6,
+  "signalised_junctions": 5,
   "through_lines": {
    "crossing_pairs_skipped": 59,
    "junctions": 41,
