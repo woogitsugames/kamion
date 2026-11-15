@@ -822,8 +822,8 @@
     },
     "behaton_i_grey": {
       "tile_m": [
-        1.92,
-        1.92
+        1.4049,
+        1.7357
       ],
       "target": 0.23,
       "uv": "world_xy_planar",
@@ -838,6 +838,14 @@
         "source_dimensions_m": [
           1.92,
           1.92
+        ],
+        "measured_period_m": [
+          0.2747,
+          0.3197
+        ],
+        "scale_to_standard_xy": [
+          0.7317,
+          0.904
         ],
         "elements_per_tile": 106,
         "assets": [
@@ -855,11 +863,11 @@
         "High": {
           "res": [
             1024,
-            1024
+            1264
           ],
-          "texel_mm": 1.88,
+          "texel_mm": 1.37,
           "dir": "behaton_i_grey/High",
-          "png_bytes": 5398654,
+          "png_bytes": 7246154,
           "files": [
             "T_behaton_i_grey_BaseColor.png",
             "T_behaton_i_grey_MaskMap.png",
@@ -873,71 +881,71 @@
             "MaskMap": "6x6",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 2488620
+          "gpu_bytes_astc_mips": 3071890
         },
         "Medium": {
           "res": [
             512,
-            512
+            632
           ],
-          "texel_mm": 3.75,
+          "texel_mm": 2.74,
           "dir": "behaton_i_grey/Medium",
-          "png_bytes": 1500570,
+          "png_bytes": 1958964,
           "files": [
             "T_behaton_i_grey_BaseColor.png",
             "T_behaton_i_grey_MaskMap.png",
             "T_behaton_i_grey_Normal.png",
             "T_behaton_i_grey_Var.png"
           ],
-          "smoothness_mean": 0.107,
+          "smoothness_mean": 0.105,
           "astc": {
             "BaseColor": "6x6",
             "Normal": "6x6",
             "MaskMap": "8x8",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 485840
+          "gpu_bytes_astc_mips": 599709
         },
         "Low": {
           "res": [
             256,
-            256
+            316
           ],
-          "texel_mm": 7.5,
+          "texel_mm": 5.49,
           "dir": "behaton_i_grey/Low",
-          "png_bytes": 373072,
+          "png_bytes": 477701,
           "files": [
             "T_behaton_i_grey_BaseColor.png",
             "T_behaton_i_grey_MaskMap.png",
             "T_behaton_i_grey_Normal.png",
             "T_behaton_i_grey_Var.png"
           ],
-          "smoothness_mean": 0.101,
+          "smoothness_mean": 0.097,
           "astc": {
             "BaseColor": "8x8",
             "Normal": "8x8",
             "MaskMap": "8x8",
             "Var": "8x8"
           },
-          "gpu_bytes_astc_mips": 87381
+          "gpu_bytes_astc_mips": 107861
         }
       },
       "height_range_m": [
-        -0.00659,
-        0.00362
+        -0.00667,
+        0.00365
       ],
       "albedo": {
         "mean_lum_linear": 0.23,
-        "p05": 0.1143,
-        "p95": 0.3096,
+        "p05": 0.1108,
+        "p95": 0.3147,
         "mean_rgb_linear": [
-          0.2316,
-          0.2303,
-          0.2226
+          0.2315,
+          0.2302,
+          0.2234
         ]
       },
-      "hf_ratio_albedo": 0.0514,
-      "ao_mean": 0.934
+      "hf_ratio_albedo": 0.0661,
+      "ao_mean": 0.927
     },
     "box_panel": {
       "tile_m": [
@@ -3784,6 +3792,132 @@
       "hf_ratio_albedo": 0.1538,
       "ao_mean": 0.925
     },
+    "paving_20x10_tint": {
+      "tile_m": [
+        2.2792,
+        2.2792
+      ],
+      "slots": [
+        "sidewalk_paving_red",
+        "cycle_red"
+      ],
+      "note": "ADR 0237: the paving_20x10_grey scan (pavement_04) as a neutral modulation map (mean 0.5 per channel); colour from the manifest (red-brown concrete blocks). Same joints, height, roughness and Var.G block ids as paving_20x10_grey.",
+      "uv": "world_xy_planar",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "pavement_04",
+        "source_dimensions_m": [
+          3.1,
+          3.1
+        ],
+        "measured_period_m": [
+          0.1408
+        ],
+        "scale_to_standard_xy": [
+          0.7352,
+          0.7352
+        ],
+        "elements_per_tile": 239,
+        "assets": [
+          {
+            "id": "pavement_04",
+            "page": "https://polyhaven.com/a/pavement_04",
+            "authors": {
+              "Jan Burghardt": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.23,
+          "dir": "paving_20x10_tint/High",
+          "png_bytes": 4188740,
+          "files": [
+            "T_paving_20x10_tint_BaseColor.png",
+            "T_paving_20x10_tint_MaskMap.png",
+            "T_paving_20x10_tint_Normal.png",
+            "T_paving_20x10_tint_Var.png"
+          ],
+          "smoothness_mean": 0.166,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 4.45,
+          "dir": "paving_20x10_tint/Medium",
+          "png_bytes": 1070624,
+          "files": [
+            "T_paving_20x10_tint_BaseColor.png",
+            "T_paving_20x10_tint_MaskMap.png",
+            "T_paving_20x10_tint_Normal.png",
+            "T_paving_20x10_tint_Var.png"
+          ],
+          "smoothness_mean": 0.166,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 8.9,
+          "dir": "paving_20x10_tint/Low",
+          "png_bytes": 274117,
+          "files": [
+            "T_paving_20x10_tint_BaseColor.png",
+            "T_paving_20x10_tint_MaskMap.png",
+            "T_paving_20x10_tint_Normal.png",
+            "T_paving_20x10_tint_Var.png"
+          ],
+          "smoothness_mean": 0.166,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00126,
+        0.00178
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.49,
+        "p05": 0.1295,
+        "p95": 0.7317,
+        "mean_rgb_linear": [
+          0.49,
+          0.49,
+          0.49
+        ]
+      },
+      "hf_ratio_albedo": 0.1221,
+      "ao_mean": 0.925
+    },
     "plaster": {
       "tile_m": [
         2.0,
@@ -4313,7 +4447,7 @@
         2.158
       ],
       "slots": [
-        "(not assigned yet) sidewalk slabs 35x35 cm, older footways"
+        "sidewalk_slabs"
       ],
       "note": "Square concrete sidewalk slabs (plyty chodnikowe 35x35x5), scan scaled from ~0.30 m to 0.35 m slabs (WORKING_VALUE). Var.G = slab id from the scan's displacement.",
       "uv": "world_xy_planar",
@@ -4352,7 +4486,7 @@
           ],
           "texel_mm": 2.11,
           "dir": "sidewalk_slab_35/High",
-          "png_bytes": 6545019,
+          "png_bytes": 6608247,
           "files": [
             "T_sidewalk_slab_35_BaseColor.png",
             "T_sidewalk_slab_35_MaskMap.png",
@@ -4375,7 +4509,7 @@
           ],
           "texel_mm": 4.21,
           "dir": "sidewalk_slab_35/Medium",
-          "png_bytes": 1694811,
+          "png_bytes": 1708156,
           "files": [
             "T_sidewalk_slab_35_BaseColor.png",
             "T_sidewalk_slab_35_MaskMap.png",
@@ -4398,7 +4532,7 @@
           ],
           "texel_mm": 8.43,
           "dir": "sidewalk_slab_35/Low",
-          "png_bytes": 396075,
+          "png_bytes": 399017,
           "files": [
             "T_sidewalk_slab_35_BaseColor.png",
             "T_sidewalk_slab_35_MaskMap.png",

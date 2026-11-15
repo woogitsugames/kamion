@@ -712,6 +712,25 @@ M["sidewalk_paving"] = {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface":
 for _asphalt_ground_id in ("curb_concrete", "sidewalk_paving"):
     M[_asphalt_ground_id]["ground_wear_exclude_local_en"] = [400.0, -700.0, 850.0, -250.0]
 
+# ADR 0237 (research R6 pavements-kerbs): surface types of footways beside `sidewalk_paving` (grey 20 x 10 blocks).
+# streetscape.pavements chooses the type per piece of footway; the wear parameters are those of sidewalk_paving.
+# - `sidewalk_slabs`: 35 x 35 cm concrete slabs (R6-025; set sidewalk_slab_35, CC0 scan scaled to 35 cm, ADR 0063).
+#   Colour = the set's calibrated mean (tint 1).
+# - `sidewalk_paving_red`: red-brown 20 x 10 concrete blocks. Set paving_20x10_tint = the grey block scan as a neutral
+#   modulation map (engine albedo = 2 x colour x map), so joints, relief and per-block tone are those of the grey
+#   blocks. Colour: WORKING_VALUE from frame F38 (owner photo P11-063, Mickiewicza, overcast): reddest pixels of the
+#   strip sRGB 97/76/75 against the grey concrete edging 84/82/82 beside it (R/G 1.28 vs 1.02); one frame, 20 m away,
+#   JPEG - to be judged in the render of camera photo_P11-063.
+# - `cycle_red` (cycle paths BDOT10k says are laid in blocks): was a flat colour (0.20, 0.06, 0.05) because its set
+#   `paving_red` never existed in materials_spec.json; now the same red blocks.
+_FOOTWAY_GRIME = M["sidewalk_paving"]["ground_grime"]
+M["sidewalk_slabs"] = {"color": [0.27, 0.267, 0.258], "rough": 0.85, "surface": "paving_stones",
+                       "texture_set": "sidewalk_slab_35", "ground_grime": dict(_FOOTWAY_GRIME)}
+M["sidewalk_paving_red"] = {"color": [0.26, 0.125, 0.11], "rough": 0.85, "surface": "paving_stones",
+                            "texture_set": "paving_20x10_tint", "uv": "planar", "ground_grime": dict(_FOOTWAY_GRIME)}
+M["cycle_red"] = {"color": [0.26, 0.125, 0.11], "rough": 0.85, "surface": "asphalt",
+                  "texture_set": "paving_20x10_tint", "uv": "planar", "ground_grime": dict(_FOOTWAY_GRIME)}
+
 
 # ADR 0129 (G3-B frontage round 2, review 0126 P2; additive block, parameters of the existing Kamion/World PBR
 # material - no shader change, no new pass):

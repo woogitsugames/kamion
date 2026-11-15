@@ -475,9 +475,16 @@ SCAN_SETS = {
     "gravel_compacted": (["gravel_floor_02"], lambda: tiling_from_scan(
         "gravel_compacted", "gravel_floor_02", target=0.20, hue=HUE_GRAVEL, out_L=4.0, out_n=2048, seed=6314,
         bomb_cells=4, flat_m=0.6, flat_k=0.8, hue_keep=0.8, rough_add=0.35, ao_k=0.3)),
+    # ADR 0237: the scan's block is 275 x 160 mm in pitch (autocorrelation of the 1.92 m scan: 274.7 mm along the
+    # rows, 319.7 mm across two rows), a longer product than the Polish double-T 198 x 163 mm (R6-023), so the 1.92 m
+    # tile laid blocks 37 % too long. Per-axis scale to the Polish pitch: 201 mm along (198 + 3 mm joint, R6-020:
+    # 3-5 mm) and 289 mm per two rows (163 + waist 120 + 2 x 3 mm; the waist is a WORKING_VALUE: the scan's own
+    # waist / flange ratio 137 / 183 applied to 163 mm gives 122 mm).
     "behaton_i_grey": (["concrete_pavers"], lambda: tiling_from_scan(
         "behaton_i_grey", "concrete_pavers", target=0.23, hue=HUE_BEHATON, out_L=1.92, out_n=1024, seed=6315,
-        flat_m=1.2, flat_k=0.5, hue_keep=0.6, segment={"joint_quantile": 0.22})),
+        flat_m=1.2, flat_k=0.5, hue_keep=0.6, segment={"joint_quantile": 0.22},
+        period_fix=[{"axis": 1, "search_m": (0.24, 0.31), "period_m": 0.201},
+                    {"axis": 0, "search_m": (0.28, 0.36), "period_m": 0.289}])),
     "paving_20x10_grey": (["pavement_04"], lambda: tiling_from_scan(
         "paving_20x10_grey", "pavement_04", target=0.26, hue=HUE_PAVING, out_L=3.1, out_n=1024, seed=6316,
         flat_m=1.2, flat_k=0.5, hue_keep=0.6, segment={"joint_quantile": 0.20},
@@ -492,6 +499,13 @@ SCAN_SETS = {
     "asphalt_tint": (["asphalt_04"], lambda: tiling_from_scan(
         "asphalt_tint", "asphalt_04", target=0.5, hue=NEUTRAL, out_L=4.04, out_n=1024, seed=6311,
         flat_m=0.35, flat_k=0.95, hue_keep=0.0, ao_gamma=0.0, rough_add=-0.03, modulation=True)),
+    # ADR 0237: the 20 x 10 block scan (pavement_04, same scaling and block segmentation as paving_20x10_grey) with
+    # the hue removed -> red block paving (footways, cycle paths in blocks) keeps the grey blocks' joints, relief and
+    # per-block tone; colour from the manifest
+    "paving_20x10_tint": (["pavement_04"], lambda: tiling_from_scan(
+        "paving_20x10_tint", "pavement_04", target=0.5, hue=NEUTRAL, out_L=3.1, out_n=1024, seed=6316,
+        flat_m=1.2, flat_k=0.5, hue_keep=0.0, segment={"joint_quantile": 0.20}, modulation=True,
+        period_fix=[{"axis": 0, "search_m": (0.08, 0.2), "period_m": 0.1035}])),
     "plaster": (["painted_plaster_wall"], lambda: tiling_from_scan(
         "plaster", "painted_plaster_wall", target=0.5, hue=NEUTRAL, out_L=2.0, out_n=1024, seed=6318,
         # ADR 0094 (review s9 P1-2): the scan is a weathered, repainted wall - its cream / white paint patches of
@@ -519,13 +533,18 @@ SCAN_SETS = {
 # sets that exist only as scans (no procedural twin): spec metadata
 SCAN_ONLY_META = {
     "sidewalk_slab_35": dict(kind="tiling_set", target=0.27, uv="world_xy_planar",
-                             slots=["(not assigned yet) sidewalk slabs 35x35 cm, older footways"],
+                             slots=["sidewalk_slabs"],
                              note="Square concrete sidewalk slabs (plyty chodnikowe 35x35x5), scan scaled from ~0.30 m "
                                   "to 0.35 m slabs (WORKING_VALUE). Var.G = slab id from the scan's displacement."),
     "asphalt_tint": dict(kind="modulation_set", target=0.5, uv="world_xy_planar", tile_m=[4.04, 4.04],
                          slots=["cycle_asphalt_red", "cycle_crossing_red"],
                          note="ADR 0188: the asphalt_worn scan (asphalt_04) as a neutral modulation map (mean 0.5 per "
                               "channel); colour from the manifest. Same height / roughness / AO as asphalt_worn."),
+    "paving_20x10_tint": dict(kind="modulation_set", target=0.5, uv="world_xy_planar",
+                              slots=["sidewalk_paving_red", "cycle_red"],
+                              note="ADR 0237: the paving_20x10_grey scan (pavement_04) as a neutral modulation map (mean "
+                                   "0.5 per channel); colour from the manifest (red-brown concrete blocks). Same joints, "
+                                   "height, roughness and Var.G block ids as paving_20x10_grey."),
     "bark_pine": dict(kind="modulation_set", target=0.5, uv="mesh_uv0_metres (u around, v up)",
                       slots=["(not assigned) tree trunks - vegetation is the world-builder's scope (ADR 0060)"],
                       note="Plated pine bark, neutral modulation map (mean 0.5 per channel); colour from the manifest."),
