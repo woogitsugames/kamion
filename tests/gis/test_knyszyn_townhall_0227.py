@@ -62,11 +62,17 @@ def test_real_roof_and_facades_stay_on_bdot_footprints():
     buf = Buffer()
     assert townhall.build(buf, "knyszyn", blds, lambda e,n: np.zeros_like(e)+125, {})["status"] == "applied"
     allowed = shapely.union_all(list(by_id.values())).buffer(1e-5)
+    footprint = shapely.union_all(list(by_id.values()))
     for layer, mat, vertices, triangles, _ in buf.parts:
         if mat == "roof_tiles_red":
+            planar_triangles = []
             for tri in triangles:
                 shape = MultiPoint(vertices[tri,:2]).convex_hull
                 assert allowed.covers(shape), (layer, shape.difference(allowed).area)
+                if shape.geom_type == "Polygon" and shape.area > 1e-8:
+                    planar_triangles.append(shape)
+            roof = shapely.union_all(planar_triangles)
+            assert footprint.difference(roof).area < .01
         if mat == "glass":
             # Floor windows (not dormers): all vertices sit within 6 cm of an actual source wall.
             lower = vertices[vertices[:,2] < 132.0]

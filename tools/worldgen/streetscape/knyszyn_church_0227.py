@@ -15,6 +15,8 @@ from __future__ import annotations
 import math
 
 import numpy as np
+import shapely
+from shapely.geometry import Polygon
 
 from . import buildings_mesh as BM
 
@@ -48,15 +50,44 @@ def _pt(xy, z):
     return [float(xy[0]), float(xy[1]), float(z)]
 
 
-def _gable(acc, layer, center, along, normal, length, width, eave, ridge):
-    """Gable along the long axis, with correctly wound slopes and gables."""
+def _gable(acc, layer, poly, center, along, normal, length, width, eave, ridge):
+    """Two sloping planes clipped to the footprint, with walls up to their edges."""
     a, b = center - along * length / 2, center + along * length / 2
     al, ar, bl, br = a - normal * width / 2, a + normal * width / 2, b - normal * width / 2, b + normal * width / 2
-    acc.quad(layer, "roof_tiles_red", _pt(al, eave), _pt(bl, eave), _pt(b, ridge), _pt(a, ridge))
-    acc.quad(layer, "roof_tiles_red", _pt(br, eave), _pt(ar, eave), _pt(a, ridge), _pt(b, ridge))
-    acc.add(layer, "plaster_white", [_pt(ar, eave), _pt(al, eave), _pt(a, ridge),
-                                      _pt(bl, eave), _pt(br, eave), _pt(b, ridge)],
-            [[0, 1, 2], [3, 4, 5]])
+
+    def roof_z(p):
+        d = abs(float(np.dot(p - center, normal)))
+        return eave + (ridge - eave) * max(0.0, 1.0 - d / (width / 2))
+
+    # Clip each side separately so no triangle spans the ridge's change in slope.
+    for half in (Polygon([al, bl, b, a]), Polygon([br, ar, a, b])):
+        clipped = shapely.make_valid(poly.intersection(half))
+        for part in getattr(clipped, "geoms", [clipped]):
+            if part.geom_type != "Polygon" or part.area < 1e-8:
+                continue
+            for tri in shapely.constrained_delaunay_triangles(part).geoms:
+                points = np.asarray(tri.exterior.coords, float)[:3]
+                e0, e1 = points[1] - points[0], points[2] - points[0]
+                if e0[0] * e1[1] - e0[1] * e1[0] < 0:
+                    points = points[::-1]
+                acc.add(layer, "roof_tiles_red", [_pt(p, roof_z(p)) for p in points], [[0, 1, 2]])
+
+    # Where the actual outline falls inside the enclosing rectangle, its roof
+    # edge is above eaves. Fill the gap along each exterior segment. Split at
+    # the ridge so the top edge follows the two plane equations exactly.
+    ring = np.asarray(poly.exterior.coords, float)
+    for p, q in zip(ring[:-1], ring[1:]):
+        dp, dq = np.dot(p - center, normal), np.dot(q - center, normal)
+        segments = [(p, q)]
+        if dp * dq < 0:
+            mid = p + (q - p) * (dp / (dp - dq))
+            segments = [(p, mid), (mid, q)]
+        for x, y in segments:
+            zx, zy = roof_z(x), roof_z(y)
+            if zy > eave + 1e-7:
+                acc.add(layer, "plaster_white", [_pt(x, eave), _pt(y, eave), _pt(y, zy)], [[0, 1, 2]])
+            if zx > eave + 1e-7:
+                acc.add(layer, "plaster_white", [_pt(x, eave), _pt(y, zy), _pt(x, zx)], [[0, 1, 2]])
 
 
 def _octagon(acc, layer, center, radius, z0, z1, mat):
@@ -85,6 +116,32 @@ def _arch(acc, layer, a, b, z0, height, outward):
     # A fan over a convex arched polygon: no extra material and no transparent surface.
     tris = [[0, i, i + 1] for i in range(1, len(verts) - 1)]
     acc.add(layer, "glass", verts, tris)
+
+
+def _wall_window(poly, target, wanted_outward, width=1.5):
+    """Place a window on the nearest sufficiently long, outward-facing footprint edge.
+
+    BM.load orients the exterior CCW, so the right normal of an edge faces out.
+    The centre is clamped to keep the whole opening on the same wall segment.
+    """
+    ring = np.asarray(poly.exterior.coords, float)
+    candidates = []
+    for p, q in zip(ring[:-1], ring[1:]):
+        edge = q - p
+        length = float(np.linalg.norm(edge))
+        if length < width + 0.1:
+            continue
+        tangent = edge / length
+        outward = np.array([tangent[1], -tangent[0]])
+        if float(np.dot(outward, wanted_outward)) < .5:
+            continue
+        u = float(np.clip(np.dot(target - p, tangent), width / 2, length - width / 2))
+        middle = p + tangent * u
+        candidates.append((float(np.linalg.norm(target - middle)), middle, tangent, outward))
+    if not candidates:
+        return None
+    _, middle, tangent, outward = min(candidates, key=lambda v: v[0])
+    return middle - tangent * width / 2, middle + tangent * width / 2, outward
 
 
 def build(buf, region, blds, zsmooth, report):
@@ -129,7 +186,7 @@ def build(buf, region, blds, zsmooth, report):
     for layer in LAYERS:
         for a, c in zip(ring[:-1], ring[1:]):
             acc.quad(layer, "plaster_white", _pt(a, z - .3), _pt(c, z - .3), _pt(c, eave), _pt(a, eave))
-        _gable(acc, layer, center, along, normal, length, width, eave, ridge)
+        _gable(acc, layer, poly, center, along, normal, length, width, eave, ridge)
         # Tower rises from the front end; LoD2 overall height anchors the distinctive red spire.
         acc.box(layer, "plaster_white", _pt(tower, z + 10.0), np.r_[along * 3.25, 0],
                 np.r_[normal * 3.25, 0], [0, 0, 10.0], skip=(0,))
@@ -146,10 +203,10 @@ def build(buf, region, blds, zsmooth, report):
             out = normal * s
             for t in (-.25, .02, .29):
                 mid = center + along * (length * t) + out * (width / 2 + .03)
-                a, c = mid - along * .75, mid + along * .75
-                if s > 0:
-                    a, c = c, a
-                _arch(acc, layer, a, c, z + 1.8, 3.3, out)
+                opening = _wall_window(poly, mid, out)
+                if opening is not None:
+                    a, c, wall_outward = opening
+                    _arch(acc, layer, a, c, z + 1.8, 3.3, wall_outward)
     acc.flush(buf, ASSET_ID)
     result.update(status="applied", height_lod2_m=round(tip-z, 2), eave_m=round(eave-z, 2),
                   height_source="GUGiK LoD2 2017", proportions="WORKING_VALUE", bounds_local=list(poly.bounds))

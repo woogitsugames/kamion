@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+from shapely.geometry import LineString, Polygon
 
 from streetscape import buildings_mesh as BM
 from streetscape import knyszyn_church_0227 as church
@@ -52,3 +53,57 @@ def test_without_hero_target_no_duplicate_generic_geometry():
     result = church.build(buf, "knyszyn", blds, lambda e, n: np.zeros_like(e), {})
     assert result["status"] == "skipped"
     assert not buf.parts
+
+
+def test_nave_roof_is_clipped_to_real_footprint_and_wound_upward():
+    fc = json.loads((ROOT / "Data/Regions/knyszyn/buildings.geojson").read_text(encoding="utf-8"))
+    fc["features"] = [f for f in fc["features"] if f["id"] == church.BUILDING_ID]
+    b = BM.load(fc, [761611, 612607], [])[0]
+    poly = b["poly"]
+    rect = np.asarray(poly.minimum_rotated_rectangle.exterior.coords, float)[:4]
+    edges = np.roll(rect, -1, axis=0) - rect
+    i = int(np.argmax(np.linalg.norm(edges, axis=1)))
+    along = edges[i] / np.linalg.norm(edges[i])
+    normal = np.array([-along[1], along[0]])
+    length = float(np.linalg.norm(edges[i]))
+    width = float(np.linalg.norm(edges[(i + 1) % 4]))
+    center = np.asarray(poly.minimum_rotated_rectangle.centroid.coords[0], float)
+    acc = BM.Acc()
+    church._gable(acc, "buildings", poly, center, along, normal, length, width, 5.85, 14.24)
+    buf = Buffer()
+    acc.flush(buf, "test")
+    roof = next(p for p in buf.parts if p[1] == "roof_tiles_red")
+    vertices, triangles = roof[2], roof[3]
+    assert np.isclose(max(vertices[:, 2]), 14.24)
+    total = 0.0
+    for t in triangles:
+        v = vertices[t]
+        projected = Polygon(v[:, :2])
+        total += projected.area
+        assert projected.difference(poly).area < 1e-7
+        assert np.cross(v[1] - v[0], v[2] - v[0])[2] > 0
+    assert abs(total - poly.area) < 1e-6
+
+
+def test_nave_windows_follow_real_footprint_walls():
+    fc = json.loads((ROOT / "Data/Regions/knyszyn/buildings.geojson").read_text(encoding="utf-8"))
+    fc["features"] = [f for f in fc["features"] if f["id"] == church.BUILDING_ID]
+    poly = BM.load(fc, [761611, 612607], [])[0]["poly"]
+    rect = np.asarray(poly.minimum_rotated_rectangle.exterior.coords, float)[:4]
+    edges = np.roll(rect, -1, axis=0) - rect
+    i = int(np.argmax(np.linalg.norm(edges, axis=1)))
+    along = edges[i] / np.linalg.norm(edges[i])
+    if along[0] > 0:
+        along = -along
+    normal = np.array([-along[1], along[0]])
+    length, width = float(np.linalg.norm(edges[i])), float(np.linalg.norm(edges[(i + 1) % 4]))
+    center = np.asarray(poly.minimum_rotated_rectangle.centroid.coords[0], float)
+    for side in (-1, 1):
+        out = normal * side
+        for t in (-.25, .02, .29):
+            target = center + along * (length * t) + out * (width / 2 + .03)
+            a, b, wall_out = church._wall_window(poly, target, out)
+            # The whole opening, not just its centre, lies on one actual wall.
+            assert LineString([a, b]).difference(poly.boundary.buffer(1e-7)).length < 1e-6
+            assert np.isclose(np.linalg.norm(b - a), 1.5)
+            assert np.dot(wall_out, out) > .5
