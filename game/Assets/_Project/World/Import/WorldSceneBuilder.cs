@@ -51,6 +51,13 @@ namespace Game.World.Import
             env.presets = LookDevAssets.Presets();
             env.sun = sun;
             env.skyMaterial = AssetDatabase.LoadAssetAtPath<Material>(LookDevAssets.SkyMaterial);
+            // ADR 0216: per-region lighting data (season, dusk clock hour, LED colour). Regions not listed keep the defaults.
+            string profilesPath = System.IO.Path.Combine(Game.Editor.Build.EditorTools.RepoRoot, "Data/Regions/lighting_profiles.json");
+            if (System.IO.File.Exists(profilesPath))
+            {
+                string applied = RegionLightingProfiles.Parse(System.IO.File.ReadAllText(profilesPath)).ApplyTo(env, r.Region);
+                Debug.Log($"[IMPORT] lighting profiles for {r.Region}: {(applied.Length > 0 ? applied : "none")}");
+            }
             env.Apply();
             var volGo = new GameObject("WorldVolume");
             var vol = volGo.AddComponent<Volume>();
