@@ -144,6 +144,15 @@ load): frames > 40 ms in the first 5 s of G3-A 17 -> 3, the Bieżeństwa roundab
 6b6c1d8003): G3-A p99 33.6 ms without the capture window (official 49.9: `device-metrics.ps1` screencap + meminfo add ~12
 frames > 40 ms at the end of every run), G3-B p99 33.6, GPU p95 31.7 / 32.2 ms. ADR 0113 "Wynik".
 
+## Low shadows: thin casters and bias (ADR 0240, B-088) - UNVERIFIED on the phone
+Low main-light shadow map unchanged (35 m, 1 cascade, 1024 px, hard; texel ~7.8 cm ESTIMATED). Bias 1.0 / 1.0 -> 0.4 / 0.3
+(normal bias 1.0 removed ~16 cm of every caster silhouette: signal arm kept 33 % of its shadow area, 80 % at 0.3 - data
+audit `tools/rendering/thin_shadow_audit.py`). Thin casters (`ThinShadowCasterPolicy`: lamps, sign / signal posts, bollards,
+railings, fence posts, lattice gantries; 46 of 153 prop prototypes) cast nothing on Low (`thinCasterShadowsOff`,
+A/B `rq_thinshadow`). ESTIMATED per G3 frame: -10..-30 instanced caster draws, -2..-10 k caster triangles, GPU -0.0..-0.1 ms
+of the 0.9 ms shadow cost (ADR 0106); memory 0. Rejected by estimate: Low 2048 px (+6 MB, +0.3-0.8 ms), screen-space
+contact shadows (>= 1-2 ms, no depth texture on Low). Measure: visual-qa `stats.txt` `shadowCasterDraws`, A16 G3-A/B.
+
 ## World content v2 (ADR 0012) — build and memory, 2026-11-09
 Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
 report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110 800 instances (2 300 props + 108 500 trees).
