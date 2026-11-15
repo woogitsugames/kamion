@@ -28,3 +28,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.done; Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 25`
 - 2026-11-15 18:46 +01:00 — Baseline: 51 kamer na wariant; max drawsEst Low 429, High 760 (statystyki edytora). Gotowy niezależny generator kościoła, testy 3 passed; integracja po r1. R1 czeka w kolejce heavy.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 18:48 +01:00 — Generatory kościoła i urzędu przygotowane w osobnych modułach, każdy 3 testy passed; wymagają integracji i porównania renderów. R1 nadal oczekuje slotu heavy.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
