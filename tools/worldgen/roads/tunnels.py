@@ -185,13 +185,13 @@ def _poly_mask(poly, grid, buffer=0.0):
     return m
 
 
-def _strip_poly(c, s0, s1, lat0, lat1, sgn):
-    """Polygon of the band lat0..lat1 (absolute lateral distance, side sgn) between stations s0, s1."""
-    ss = np.linspace(s0, s1, max(2, int((s1 - s0) / 1.0) + 1))
+def _strip_poly(c, ss, lat0, lat1, sgn):
+    """Polygon of the band lat0..lat1 (absolute lateral distances per station, side sgn) along the stations ss."""
+    ss = np.asarray(ss, float)
     P = c.line.point(ss)
     _, N = c.line.frame(ss)
-    a = P + N * sgn * lat0
-    b = P + N * sgn * lat1
+    a = P + N * sgn * np.broadcast_to(np.asarray(lat0, float), ss.shape)[:, None]
+    b = P + N * sgn * np.broadcast_to(np.asarray(lat1, float), ss.shape)[:, None]
     ring = np.concatenate([a, b[::-1]])
     return shapely.make_valid(Polygon(ring)).buffer(0)
 
@@ -218,6 +218,7 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
     # ground over the slab: the NMT (LiDAR ground class) runs through the structure at the level of the cut and the
     # conform only follows the roads, so the island / verges on the slab are interpolated from what stands at grade
     # around and on it: ring decks, at-grade roads and junction plates, the banks of the cut
+    zc_placed = zc0.copy()            # the ground the streetscape placed its instances on
     zc0 = _upper_ground(groups, grid, zc0, oz, other_mask, deck, deck_mask)
     buf = w.buf
     stats = {"groups": []}
@@ -275,6 +276,10 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
                 u_end = np.array([a for a, _ in info])
                 top_dz = np.array([b for _, b in info])
                 lat_w = hw + u_end + WALL_GAP_M
+                # a wall does not jog where the side profile changes (kerb 0.15 m <-> verge 2.85 m): never closer
+                # than the profile allows, steps eased over ~10 m (running max 6 m, then mean 4 m)
+                from scipy.ndimage import maximum_filter1d, uniform_filter1d
+                lat_w = uniform_filter1d(maximum_filter1d(lat_w, 7, mode="nearest"), 5, mode="nearest")
                 zedge = c.crossfall_z(ss, sgn * hw)
                 zfoot = zedge + top_dz
                 face = P + N * sgn * lat_w[:, None]
@@ -338,7 +343,8 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
     stats["walls"] = walls_out
     stats["terrain"] = {"nodes_lowered": int(sel.sum()), "max_drop_m": round(float(drop.max()) if drop.size else 0.0, 2),
                         "cover_cells": int(cover_cells.sum()), "cover_tris": gtris, "low_lod_nodes": int(low_mask.sum())}
-    stats["culled"] = _cull(w, groups, instances, lambda x, y: grid.plane(x, y, zc0))
+    stats["culled"] = _cull(w, groups, instances, lambda x, y: float(grid.plane(x, y, zc0) - grid.plane(x, y, zc_placed)),
+                            lambda x, y: bool(deck_mask[grid.ij(x, y)[1], grid.ij(x, y)[0]]))
     return stats, (low_mask, low_z)
 
 
@@ -393,7 +399,11 @@ def _upper_ground(groups, grid, zc0, oz, omask, deck, dmask):
             z[bad] = griddata(P, cand[ok], Q[bad], method="nearest")
         # never thinner than clearance + slab over the road axis (all surfaces at grade here stand 5.75-6.2 m above)
         zmin = _floor_field([g], grid, fin)[fj, fi] + FLOOR_DROP_M + CLEARANCE_M + SLAB_MIN_T
-        out[fj, fi] = np.maximum(out[fj, fi], np.maximum(z, zmin))
+        # only nodes below grade are filled: a node already at grade keeps its conformed height (oz / deck are per-node
+        # maxima incl. kerb tops and caps and would put grass slivers above the asphalt)
+        zr_f = zmin - CLEARANCE_M - SLAB_MIN_T
+        low = (out[fj, fi] - zr_f) < UPPER_MIN_M
+        out[fj[low], fi[low]] = np.maximum(z[low], zmin[low])
         g["upper_samples"] = int(ok.sum())
     return out
 
@@ -417,7 +427,8 @@ def _build_wall(buf, g, c, side, sgn, ss, P, N, hw, u_end, lat_w, zfoot, bank, i
     # wall top: soffit in the tunnel, smoothed bank outside (running max 9 m, mean 5 m), never below footing + MIN_H
     from scipy.ndimage import maximum_filter1d, uniform_filter1d
     btop = uniform_filter1d(maximum_filter1d(bank, 5, mode="nearest"), 3, mode="nearest")
-    top = np.where(in_F, soffit, np.maximum(btop, zfoot + WALL_MIN_H))
+    # in the tunnel the wall runs 0.3 m up into the slab (the soffit follows the higher carriageway edge + crossfall)
+    top = np.where(in_F, soffit + 0.3, np.maximum(btop, zfoot + WALL_MIN_H))
     face = P + N * sgn * lat_w[:, None]
     bot = zfoot - 0.40
     A = np.column_stack([face, bot])
@@ -431,6 +442,13 @@ def _build_wall(buf, g, c, side, sgn, ss, P, N, hw, u_end, lat_w, zfoot, bank, i
             buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
 
     strip("bridge", WALL_MAT, A, B, "")
+    # back face (0.3 m behind, hidden in the ground): the wall casts its realtime shadow onto the road when the sun is
+    # behind it (single-sided faces are culled in the shadow pass) - the banks are terrain, which casts none
+    back = np.column_stack([P + N * sgn * (lat_w + 0.3)[:, None], bot])
+    backt = np.column_stack([P + N * sgn * (lat_w + 0.3)[:, None], top])
+    M._strip(buf, "bridge", WALL_MAT, back, backt, src + ":back", both=False)
+    if sgn > 0:
+        buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
     strip("collision", "collision_fence", A, B, ":col")
     # footing strip from the side profile end to the face (hides the terrain step in front of the wall)
     a0 = P + N * sgn * (hw + u_end)[:, None]
@@ -439,7 +457,7 @@ def _build_wall(buf, g, c, side, sgn, ss, P, N, hw, u_end, lat_w, zfoot, bank, i
     T = M.grid_tris(len(ss), 2, flip=(sgn < 0))          # up-facing
     buf.add("bridge", "bridge_concrete", V, V[:, :2], T, src=src + ":footing")
     # terrain in front of the face and under the footing: below the footing
-    band = _strip_poly(c, ss[0], ss[-1], float(np.min(hw + u_end)) - 0.6, float(np.max(lat_w)) + 0.0, sgn)
+    band = _strip_poly(c, ss, hw + u_end - 0.6, lat_w, sgn)
     m = _poly_mask(band, grid)
     # per node: footing height of the nearest station - 0.15
     jj, ii = np.where(m)
@@ -448,14 +466,12 @@ def _build_wall(buf, g, c, side, sgn, ss, P, N, hw, u_end, lat_w, zfoot, bank, i
         k = np.argmin(((X[:, None, :] - P[None, :, :]) ** 2).sum(-1), axis=1)
         lower[jj, ii] = np.minimum(lower[jj, ii], zfoot[k] - 0.15)
     # LOD >= 2 band (terrain collision) and the cover behind the face
-    lowb = _strip_poly(c, ss[0], ss[-1], float(np.min(hw + u_end)) - 0.6, float(np.max(lat_w)) + LOW_LOD_BAND_M, sgn)
+    lowb = _strip_poly(c, ss, hw + u_end - 0.6, lat_w + LOW_LOD_BAND_M, sgn)
     low_mask |= _poly_mask(lowb, grid)
-    cov = _strip_poly(c, ss[0], ss[-1], float(np.min(lat_w)) - 1.0, float(np.max(lat_w)) + COVER_M, sgn)
+    cov = _strip_poly(c, ss, lat_w - 1.0, lat_w + COVER_M, sgn)
     _mark_cells(cover_cells, grid, cov)
-    clip_polys.append(_strip_poly(c, ss[0], ss[-1], float(np.max(lat_w)) + (0.0 if inner else WALL_T),
-                                  float(np.max(lat_w)) + COVER_M + 3.0, sgn))
-    col_polys.append(_strip_poly(c, ss[0], ss[-1], float(np.max(lat_w)), float(np.max(lat_w)) + LOW_LOD_BAND_M + 4.0,
-                                 sgn))
+    clip_polys.append(_strip_poly(c, ss, lat_w + (0.0 if inner else WALL_T), lat_w + COVER_M + 3.0, sgn))
+    col_polys.append(_strip_poly(c, ss, lat_w, lat_w + LOW_LOD_BAND_M + 4.0, sgn))
     rail_m = 0.0
     if inner:
         # end faces of the central wall at both portals: half the gap to the other carriageway's wall face each
@@ -521,7 +537,8 @@ def _build_wall(buf, g, c, side, sgn, ss, P, N, hw, u_end, lat_w, zfoot, bank, i
             blend.append((fc, back, tp + 0.05, nn * sgn))
     return {"chain": c.id, "side": side, "inner": inner, "s": [round(float(ss[0]), 1), round(float(ss[-1]), 1)],
             "len_m": round(float(ss[-1] - ss[0]), 1), "tunnel_m": round(float(in_F.sum() * STEP_M), 1),
-            "h_max_m": round(float((top - zfoot).max()), 2), "rail_m": round(rail_m, 1)}
+            "h_max_m": round(float((top - zfoot).max()), 2), "rail_m": round(rail_m, 1),
+            "lat_w_m": [round(float(lat_w.min()), 2), round(float(lat_w.max()), 2)]}
 
 
 def _railing(buf, line, z, keep, src):
@@ -652,14 +669,19 @@ def _cover_heights(V2, grid, zc0, blend):
         # nearest coping station within 2.5 m behind the face
         from scipy.spatial import cKDTree
         tree = cKDTree(back)
-        d, k = tree.query(V2, distance_upper_bound=2.5)
+        d, k = tree.query(V2, distance_upper_bound=3.5)
         hit = np.isfinite(d)
         if not hit.any():
             continue
         kk = k[hit]
         along = ((V2[hit] - back[kk]) * nn[kk]).sum(1)          # metres behind the coping back edge
-        wgt = np.clip(1.0 - along / 2.0, 0.0, 1.0) * (along > -0.6)
-        z[hit] = z[hit] + wgt * (tp[kk] - 0.02 - z[hit])
+        on = along > -0.6
+        tgt = tp[kk] - 0.02
+        near = np.clip(1.0 - along / 2.0, 0.0, 1.0) * on                       # meets the coping (up or down)
+        fill = np.clip((COVER_M - WALL_T - 0.5 - along) / 1.0, 0.0, 1.0) * on   # the cut slope behind the wall filled
+        zh = z[hit]
+        z1 = zh + near * (tgt - zh)
+        z[hit] = np.maximum(z1, zh + fill * np.maximum(tgt - zh, 0.0))
     return z
 
 
@@ -708,7 +730,7 @@ TRIM_SUFFIX = (":soffit", ":fascia", ":parapet", ":abutment", ":pier", ":screen"
 CULL_PROTO = ("lamp_", "tree_", "board_", "signal_", "sign_post", "plate_")
 
 
-def _cull(w, groups, instances, upper=None):
+def _cull(w, groups, instances, lift=None, under_deck=None):
     """Pieces of the ring decks and instances that the slab replaces or that would pierce it."""
     rep = {"deck_tris": 0, "instances": {}}
     Fs = [g["F"] for g in groups]
@@ -736,10 +758,12 @@ def _cull(w, groups, instances, upper=None):
             soffit = g["zroad"](q) + g["clear"]
             if it.get("z", -1e9) >= soffit - 0.2:
                 break
-            # inside the structure below the soffit: on a tunnel carriageway / shoulder it belongs to the tunnel road
-            # (tall ones would pierce the slab: dropped); elsewhere (median, island) it was placed on the cut-level
-            # ground of the conform and belongs on the ground over the slab
-            in_road = False
+            # inside the structure below the soffit. Placed for a tunnel carriageway (src names its chain) or standing on
+            # one / its shoulder: it belongs to the tunnel road (tall ones would pierce the slab: dropped). Else
+            # (island, verges of the junction) it was placed on the cut-level ground of the conform and is lifted by
+            # the ground difference (plates / heads keep their offset over their post); under a ring deck: dropped.
+            run_ids = tuple(r["c"].id for r in g["runs"])
+            in_road = any(rid in str(it.get("src", "")) for rid in run_ids)
             for r in g["runs"]:
                 s, lat = r["c"].line.project(q)
                 side = "L" if lat > 0 else "R"
@@ -751,8 +775,11 @@ def _cull(w, groups, instances, upper=None):
                 if it["p"].startswith(CULL_PROTO):
                     hit = True
                     rep["instances"][k] = rep["instances"].get(k, 0) + 1
-            elif upper is not None:
-                it["z"] = round(float(upper(*q)), 2)
+            elif under_deck is not None and under_deck(*q):
+                hit = True
+                rep.setdefault("under_deck", {})[k] = rep.setdefault("under_deck", {}).get(k, 0) + 1
+            elif lift is not None:
+                it["z"] = round(float(it["z"]) + lift(*q), 3)
                 rep["lifted"][k] = rep["lifted"].get(k, 0) + 1
             break
         if not hit:

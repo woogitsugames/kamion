@@ -21,7 +21,7 @@ zc0 = zc.copy()
 g = json.loads((pipeline.REGIONS / "bialystok-kleeberga" / "roads.graph.json").read_text(encoding="utf-8"))
 n0 = len(w.buf.parts)
 t0 = time.time()
-inst = [{"p": "lamp_10m", "e": -128.0, "n": -210.0, "z": 117.5}]
+inst = [{"p": "lamp_10m", "e": -128.0, "n": -210.0, "z": 117.5, "src": "rule:median:c:w23982181:131612934-320023667"}, {"p": "plate_B-33", "e": -125.0, "n": -212.0, "z": 120.0, "src": "x"}]
 stats, low = TN.build(w, "bialystok-kleeberga", zc, d["mask"], inst, g, print)
 print("build", round(time.time() - t0, 1), "s")
 st = {k: v for k, v in stats.items() if k != "walls"}
