@@ -84,3 +84,40 @@ def test_real_roof_and_facades_stay_on_bdot_footprints():
             assert len(feet) >= 16
             wall = by_id[townhall.CULTURE].exterior
             assert max(wall.distance(Point(x,y)) for x,y in feet[:,:2]) < .71
+
+
+def test_office_window_axes_cover_split_source_wall_without_floating():
+    blds = BM.load(source(), [761611, 612607], [], hero=townhall.hero_targets("knyszyn", source()))
+    office = next(b for b in blds if b["id"] == townhall.OFFICE)
+    center,axis,*_ = townhall._frame(office["poly"])
+    park=np.array([760943.5-761611,612382.3-612607])
+    windows=townhall._window_plan(office["poly"],park,axis,9)
+    assert len(windows)==9
+    positions=[(p-center)@axis for p,t,n in windows]
+    assert max(positions)-min(positions)>34.0
+    assert all(office["poly"].exterior.distance(Point(p))<1e-6 for p,t,n in windows)
+    assert min(np.linalg.norm(a[0]-b[0]) for i,a in enumerate(windows) for b in windows[i+1:])>=1.70
+
+
+def test_culture_loggia_has_a_real_opening_and_recessed_back():
+    fc=source(); blds=BM.load(fc,[761611,612607],[],hero=townhall.hero_targets("knyszyn",fc))
+    culture=next(b for b in blds if b["id"]==townhall.CULTURE)
+    office=next(b for b in blds if b["id"]==townhall.OFFICE)
+    axis=townhall._frame(culture["poly"])[1]
+    L,front,tan,out=townhall._facade(culture["poly"],townhall._frame(office["poly"])[0],axis)
+    buf=Buffer(); townhall.build(buf,"knyszyn",blds,lambda e,n:np.zeros_like(e)+125,{})
+    # The middle of the photographed loggia is actually open at ground floor height;
+    # previously a full white wall occupied this plane behind the decorative columns.
+    for layer,mat,v,tris,src in buf.parts:
+        if layer!="buildings" or mat!="plaster_white": continue
+        for tri in tris:
+            P=v[tri]
+            if np.max(np.abs((P[:,:2]-front)@out)) > 1e-5: continue
+            uv=np.column_stack(((P[:,:2]-front)@tan,P[:,2]))
+            triangle=Polygon(uv)
+            if triangle.is_valid and triangle.area>1e-8:
+                assert not triangle.covers(Point(0,127.5))
+    dark=[v for layer,mat,v,tris,src in buf.parts if layer=="buildings" and mat=="plinth_dark"]
+    assert dark
+    p=np.concatenate(dark)
+    assert np.count_nonzero(np.isclose((p[:,:2]-front)@out,-1.2,atol=1e-5))>=4
