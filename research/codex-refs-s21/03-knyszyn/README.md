@@ -12,4 +12,17 @@ Cel: dać sesji rynku rozróżnienia brył, kolorów i detali, które gubią si�
 
 ## Luki
 
-Wymiary metryczne i proporcje ortogonalnej elewacji UNVERIFIED: kadry są perspektywiczne. Nie wyprowadzono szerokości z liczby okien ani kondygnacji z wysokości modelu. Budynki 03-001/003 wymagają kontroli bryły z LoD2/ortofoto, szczególnie przed przyjęciem etykiety „dach mansardowy”. Aktualność elewacji/ogrodzeń z 2009/2012 UNVERIFIED. Fontanna, dzisiejsze pierzeje, DK65 przez miasto i mała architektura wymagają dalszego uzupełnienia. Informacje o fontannie z K1 nie zostały tu ponownie zweryfikowane.
+Wymiary metryczne i proporcje ortogonalnej elewacji UNVERIFIED: kadry są perspektywiczne. Nie wyprowadzono szerokości z liczby okien ani kondygnacji z wysokości modelu. Budynki 03-001/003 wymagają kontroli bryły z LoD2/ortofoto, szczególnie przed przyjęciem etykiety „dach mansardowy”. Aktualność elewacji/ogrodzeń z 2009/2012 UNVERIFIED. Dzisiejsze pierzeje, DK65 przez miasto i mała architektura wymagają dalszego uzupełnienia. Obrys posadzki fontanny został sprawdzony nowym WMS w 03-006 poniżej; wygląd z poziomu ulicy i układ dysz pozostają UNVERIFIED.
+
+
+## Uzupełnienie: nowy wycinek GUGiK fontanny (03-006)
+
+**Nowy materiał:** 1 wycinek ortofoto WMS (480×480 px, 48×48 m), pobrany 2026-11-15; 5 wcześniejszych kadrów fasad pozostaje pogłębieniem K1. Żadnych nowych zdjęć ulicznych ani zdjęć właściciela. `data/fountain-wms.json` zawiera pełny URL, bbox EPSG:2180, skalę 0,1 m/px i SHA256. Wycinek obejrzano osobno.
+
+SOURCED [03-006, Geoportal WMS]: w jasnej płaskiej posadzce widoczny kwadratowy ciemny obrys i mały ciemny element przy środku; nie widać strumieni wody ani podniesionej misy. Korony i cienie drzew zasłaniają część otoczenia. Nie określam tego elementu jako kratki odpływowej bez obrazu z ziemi.
+
+ESTIMATED [własny pomiar 03-006]: cztery ręcznie wskazane narożniki `(91,179), (145,169), (156,223), (102,234)` px; odległości euklidesowe ×0,1 m/px i pole wzorem Gaussa. Widoczny obrys ma około **5,5×5,6 m**, pole około **31 m²**; przyjmuję ostrożnie ±0,4 m dla boków (wybór narożników ±2 px, brak pomiaru terenowego). To wymiary **obrysu na posadzce**, nie potwierdzona długość instalacji/dysz ani rozmiar całego okrągłego placu. K1 podawał ~6,3×5,8 m — tej wartości nie powielam jako własnego pomiaru; różnica może wynikać z wyboru krawędzi. Przed skalowaniem modelu zalecane porównanie obu obrysów.
+
+SOURCED [WFS GUGiK, `data/fountain-sheet-2025.xml`]: arkusz N-34-106-B-b-1-4 ma datę 2025-05-27 i piksel 0,1 m. Zapytanie do skorowidza 2026 dla tego bbox zwróciło pustą kolekcję (`data/fountain-sheet-2026.xml`). WMS nie jest czasowo przypięty do arkusza; przyporządkowanie daty to najnowszy znaleziony arkusz w tych zapytaniach, nie gwarancja serwera WMS.
+
+UNVERIFIED: liczba i układ dysz, wysokość strumieni, rodzaj odpływu, kolor podświetlenia, stan działający w dniu pobrania. Ortofoto nie potwierdza tych szczegółów. OSM API zwróciło429; nie korzystano z niepobranych geometrii i nie próbowano obejścia.

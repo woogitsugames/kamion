@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding="UTF-8" ?>
+<wfs:FeatureCollection
+   xmlns:gugik="http://www.gugik.gov.pl"
+   xmlns:wfs="http://www.opengis.net/wfs"
+   xmlns:gml="http://www.opengis.net/gml"
+   xmlns:ogc="http://www.opengis.net/ogc"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd 
+                       http://www.gugik.gov.pl https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&amp;VERSION=1.0.0&amp;REQUEST=DescribeFeatureType&amp;TYPENAME=gugik:SkorowidzOrtofomapy2025&amp;OUTPUTFORMAT=XMLSCHEMA">
+      <gml:boundedBy>
+      	<gml:Box srsName="EPSG:2180">
+      		<gml:coordinates>760117.420000,610061.430000 762325.210000,612491.270000</gml:coordinates>
+      	</gml:Box>
+      </gml:boundedBy>
+    <gml:featureMember>
+      <gugik:SkorowidzOrtofomapy2025 fid="SkorowidzOrtofomapy2025.1484208">
+        <gml:boundedBy>
+        	<gml:Box srsName="EPSG:2180">
+        		<gml:coordinates>760117.420000,610061.430000 762325.210000,612491.270000</gml:coordinates>
+        	</gml:Box>
+        </gml:boundedBy>
+        <gugik:msGeometry>
+        <gml:Polygon srsName="EPSG:2180">
+          <gml:outerBoundaryIs>
+            <gml:LinearRing>
+              <gml:coordinates>760149.120000,611797.990000 760117.420000,612376.920000 760637.420000,612405.420000 761157.420000,612433.980000 761677.420000,612462.590000 762197.420000,612491.270000 762229.370000,611912.350000 762261.310000,611333.640000 762293.260000,610754.720000 762325.210000,610175.800000 761804.960000,610147.120000 761284.700000,610118.500000 760764.450000,610089.940000 760244.190000,610061.430000 760212.500000,610640.350000 760180.800000,611219.280000 760149.120000,611797.990000 </gml:coordinates>
+            </gml:LinearRing>
+          </gml:outerBoundaryIs>
+        </gml:Polygon>
+        </gugik:msGeometry>
+        <gugik:godlo>N-34-106-B-b-1-4</gugik:godlo>
+        <gugik:akt_rok>2025</gugik:akt_rok>
+        <gugik:piksel>0.1</gugik:piksel>
+        <gugik:kolor>RGB</gugik:kolor>
+        <gugik:zrodlo_danych>Zdj. cyfrowe</gugik:zrodlo_danych>
+        <gugik:uklad_xy>PL-1992</gugik:uklad_xy>
+        <gugik:modul_archiwizacji>1:5000</gugik:modul_archiwizacji>
+        <gugik:nr_zglosz>GK-FOTO.6201.11.2025</gugik:nr_zglosz>
+        <gugik:akt_data>2025-05-27</gugik:akt_data>
+        <gugik:czy_ark_wypelniony>TAK</gugik:czy_ark_wypelniony>
+        <gugik:url_do_pobrania>https://opendata.geoportal.gov.pl/ortofotomapa/83186/83186_1484208_N-34-106-B-b-1-4.tif</gugik:url_do_pobrania>
+        <gugik:dt_pzgik>2025-11-12</gugik:dt_pzgik>
+        <gugik:wlk_pliku_mb>263</gugik:wlk_pliku_mb>
+      </gugik:SkorowidzOrtofomapy2025>
+    </gml:featureMember>
+</wfs:FeatureCollection>
+
