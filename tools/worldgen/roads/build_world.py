@@ -33,6 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from roads import decals as DC           # noqa: E402
 from roads import markings as MK          # noqa: E402
 from roads import meshing as M            # noqa: E402
+from roads.network import lane_w_of       # noqa: E402
 from roads import pipeline                # noqa: E402
 from roads import standards as S          # noqa: E402
 from roads import tunnels as TN           # noqa: E402
@@ -450,7 +451,7 @@ def cameras_generic(region_id, w):
         hw = float(c.hw_at(cs))
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
-        lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)
+        lat_l = -trav * (hw - sec.edge_strip - float(lane_w_of(sec, hw)) / 2)
         if getattr(sec, "lane_edges", None):
             lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)
@@ -535,7 +536,7 @@ def cameras_industrial_c(region_id, w):
         # rightmost lane centre in travel direction
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
-        lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)     # rightmost lane of travel
+        lat_l = -trav * (hw - sec.edge_strip - float(lane_w_of(sec, hw)) / 2)     # rightmost lane of travel
         if getattr(sec, "lane_edges", None):
             lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)
