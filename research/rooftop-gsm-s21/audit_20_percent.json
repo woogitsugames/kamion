@@ -1,0 +1,15 @@
+{
+  "seed": 20261115,
+  "method": "random.Random(20261115).sample(range(35), 7) na manifest.csv",
+  "date": "2026-11-15",
+  "sample": [
+    {"id": "K67-002", "check": "ponowne pobranie strony karty (WebFetch)", "result": "PASS", "note": "1499 / 498 / 197 mm, Light Gray RAL 7035 — zgodne"},
+    {"id": "K67-006", "check": "ponowne pobranie strony karty", "result": "PASS", "note": "425 × 296 × 130 mm, 18,3 kg, IP65 — zgodne"},
+    {"id": "K67-011", "check": "ponowne obejrzenie wycinka 2× z ortho_skor_z (0,05 m/px)", "result": "PASS", "note": "szerokość koryta 8–10 px → 0,4–0,5 m"},
+    {"id": "K67-012", "check": "jw.", "result": "PASS", "note": "przy narożniku NE skupisko jasnych elementów i szafka na końcu koryta; SW — w kadrze 960 px"},
+    {"id": "K67-020", "check": "ponowne obejrzenie ortho_tys10a (800 px)", "result": "PASS", "note": "dach z panelami PV, bez masztów"},
+    {"id": "K67-023", "check": "ponowne obejrzenie ortho_kraszewskiego45a (800 px, wcześniej tylko w arkuszu 480 px)", "result": "PASS", "note": "wywiewki i urządzenia, bez masztów"},
+    {"id": "K67-031", "check": "ponowne pobranie tekstu art. 29 (standardyprawa.pl)", "result": "PASS", "note": "ust. 3 pkt 3 lit. a: > 3 m i ≤ 12 m, zgłoszenie z art. 30"}
+  ],
+  "summary": {"PASS": 7, "FIX": 0, "rows": 7, "share": "7/35 = 20 %"}
+}
