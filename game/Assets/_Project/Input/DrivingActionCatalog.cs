@@ -55,10 +55,12 @@ namespace Game.Controls
         static readonly string[] None = new string[0];
 
         /// <summary>
-        /// All actions in settings-screen order. Keyboard defaults are the keys of the Stage 1/2 KeyboardDriverInput
-        /// (unchanged for the owner), plus Tab = camera and L = mirror insets. Pad defaults: triggers = pedals, left
-        /// stick = wheel, bumpers = gears, face buttons = selector / parking brake / camera, d-pad = indicators and
-        /// retarder stalk, stick presses = hazard / mirrors, right stick = look. Start is left to the menu (ADR 0265).
+        /// All actions in settings-screen order. Defaults = the fixed mapping of ADR 0261 already on main (one documented
+        /// layout for the owner): keyboard as KeyboardDriverInput with C (and Tab) = camera, T = couple, L = mirror insets.
+        /// Pad: triggers = pedals, left stick = wheel, bumpers = gears, bottom face button = parking brake, left / right
+        /// face = D / N, select = R, top face = camera, d-pad left / right = indicators, up = hazard, down / left-stick
+        /// press = retarder more / less, right-stick press = horn, right stick = look. Start is left to the menu
+        /// (bootstrap, ADR 0261 / 0265).
         /// </summary>
         public static readonly DrivingActionDef[] All =
         {
@@ -68,22 +70,22 @@ namespace Game.Controls
             new DrivingActionDef(Clutch, DrivingActionKind.Axis, "Sprzęgło", None, None, visible: false),   // reserved: AMT has no pedal; wheel sets (ADR 0263)
             new DrivingActionDef(ShiftUp, DrivingActionKind.Button, "Bieg w górę", K("<Keyboard>/e"), K("<Gamepad>/rightShoulder")),
             new DrivingActionDef(ShiftDown, DrivingActionKind.Button, "Bieg w dół", K("<Keyboard>/q"), K("<Gamepad>/leftShoulder")),
-            new DrivingActionDef(SelectDrive, DrivingActionKind.Button, "Jazda (D)", K("<Keyboard>/1"), K("<Gamepad>/buttonSouth")),
-            new DrivingActionDef(SelectNeutral, DrivingActionKind.Button, "Luz (N)", K("<Keyboard>/2"), K("<Gamepad>/select")),
-            new DrivingActionDef(SelectReverse, DrivingActionKind.Button, "Wsteczny (R)", K("<Keyboard>/3"), K("<Gamepad>/buttonEast")),
+            new DrivingActionDef(SelectDrive, DrivingActionKind.Button, "Jazda (D)", K("<Keyboard>/1"), K("<Gamepad>/buttonWest")),
+            new DrivingActionDef(SelectNeutral, DrivingActionKind.Button, "Luz (N)", K("<Keyboard>/2"), K("<Gamepad>/buttonEast")),
+            new DrivingActionDef(SelectReverse, DrivingActionKind.Button, "Wsteczny (R)", K("<Keyboard>/3"), K("<Gamepad>/select")),
             new DrivingActionDef(ToggleManual, DrivingActionKind.Button, "Tryb ręczny / automat", K("<Keyboard>/m"), None),
-            new DrivingActionDef(ParkingBrake, DrivingActionKind.Button, "Hamulec postojowy", K("<Keyboard>/space"), K("<Gamepad>/buttonNorth")),
+            new DrivingActionDef(ParkingBrake, DrivingActionKind.Button, "Hamulec postojowy", K("<Keyboard>/space"), K("<Gamepad>/buttonSouth")),
             new DrivingActionDef(RetarderMore, DrivingActionKind.Button, "Retarder: mocniej", K("<Keyboard>/x"), K("<Gamepad>/dpad/down")),
-            new DrivingActionDef(RetarderLess, DrivingActionKind.Button, "Retarder: słabiej", K("<Keyboard>/z"), K("<Gamepad>/dpad/up")),
+            new DrivingActionDef(RetarderLess, DrivingActionKind.Button, "Retarder: słabiej", K("<Keyboard>/z"), K("<Gamepad>/leftStickPress")),
             new DrivingActionDef(IndicatorLeft, DrivingActionKind.Button, "Kierunkowskaz w lewo", K("<Keyboard>/comma"), K("<Gamepad>/dpad/left")),
             new DrivingActionDef(IndicatorRight, DrivingActionKind.Button, "Kierunkowskaz w prawo", K("<Keyboard>/period"), K("<Gamepad>/dpad/right")),
-            new DrivingActionDef(Hazard, DrivingActionKind.Button, "Światła awaryjne", K("<Keyboard>/h"), K("<Gamepad>/leftStickPress")),
-            new DrivingActionDef(Horn, DrivingActionKind.Button, "Klakson", K("<Keyboard>/k"), None),
-            new DrivingActionDef(CycleCamera, DrivingActionKind.Button, "Zmiana kamery", K("<Keyboard>/tab"), K("<Gamepad>/buttonWest")),
-            new DrivingActionDef(MirrorInsets, DrivingActionKind.Button, "Lusterka w oknach", K("<Keyboard>/l"), K("<Gamepad>/rightStickPress")),
+            new DrivingActionDef(Hazard, DrivingActionKind.Button, "Światła awaryjne", K("<Keyboard>/h"), K("<Gamepad>/dpad/up")),
+            new DrivingActionDef(Horn, DrivingActionKind.Button, "Klakson", K("<Keyboard>/k"), K("<Gamepad>/rightStickPress")),
+            new DrivingActionDef(CycleCamera, DrivingActionKind.Button, "Zmiana kamery", K("<Keyboard>/c", "<Keyboard>/tab"), K("<Gamepad>/buttonNorth")),
+            new DrivingActionDef(MirrorInsets, DrivingActionKind.Button, "Lusterka w oknach", K("<Keyboard>/l"), None),
             new DrivingActionDef(ReverseCamera, DrivingActionKind.Button, "Kamera cofania", K("<Keyboard>/v"), None),
             new DrivingActionDef(BrakeCruise, DrivingActionKind.Button, "Tempomat zjazdu", K("<Keyboard>/b"), None),
-            new DrivingActionDef(Couple, DrivingActionKind.Button, "Sprzęg naczepy", K("<Keyboard>/c"), None),
+            new DrivingActionDef(Couple, DrivingActionKind.Button, "Sprzęg naczepy", K("<Keyboard>/t"), None),
             new DrivingActionDef(LandingGear, DrivingActionKind.Button, "Podpory naczepy", K("<Keyboard>/g"), None),
             new DrivingActionDef(Look, DrivingActionKind.Stick, "Rozglądanie", None, K("<Gamepad>/rightStick")),
         };

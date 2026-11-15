@@ -275,6 +275,19 @@ namespace Game.Tests
             Assert.Contains("<Gamepad>/rightTrigger", DrivingActionCatalog.Find(DrivingActionCatalog.Throttle).Gamepad);
             Assert.Contains("<Gamepad>/leftTrigger", DrivingActionCatalog.Find(DrivingActionCatalog.Brake).Gamepad);
             Assert.Contains("<Gamepad>/leftStick/x", DrivingActionCatalog.Find(DrivingActionCatalog.Steer).Gamepad);
+
+            // One documented layout after the merge with main (ADR 0261 "Sterowanie"; ADR 0264 "Scalenie").
+            Assert.Contains("<Keyboard>/c", DrivingActionCatalog.Find(DrivingActionCatalog.CycleCamera).Keyboard);
+            Assert.Contains("<Keyboard>/t", DrivingActionCatalog.Find(DrivingActionCatalog.Couple).Keyboard);
+            Assert.Contains("<Gamepad>/buttonSouth", DrivingActionCatalog.Find(DrivingActionCatalog.ParkingBrake).Gamepad);
+            Assert.Contains("<Gamepad>/buttonWest", DrivingActionCatalog.Find(DrivingActionCatalog.SelectDrive).Gamepad);
+            Assert.Contains("<Gamepad>/buttonEast", DrivingActionCatalog.Find(DrivingActionCatalog.SelectNeutral).Gamepad);
+            Assert.Contains("<Gamepad>/select", DrivingActionCatalog.Find(DrivingActionCatalog.SelectReverse).Gamepad);
+            Assert.Contains("<Gamepad>/buttonNorth", DrivingActionCatalog.Find(DrivingActionCatalog.CycleCamera).Gamepad);
+            Assert.Contains("<Gamepad>/dpad/up", DrivingActionCatalog.Find(DrivingActionCatalog.Hazard).Gamepad);
+            Assert.Contains("<Gamepad>/dpad/down", DrivingActionCatalog.Find(DrivingActionCatalog.RetarderMore).Gamepad);
+            Assert.Contains("<Gamepad>/leftStickPress", DrivingActionCatalog.Find(DrivingActionCatalog.RetarderLess).Gamepad);
+            Assert.Contains("<Gamepad>/rightStickPress", DrivingActionCatalog.Find(DrivingActionCatalog.Horn).Gamepad);
         }
 
         [Test]

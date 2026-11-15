@@ -127,7 +127,7 @@ namespace Game.Gameplay
 
             m_Mixer.Add(Autopilot);
             m_Mixer.Add(RouteDriver);
-            m_Mixer.Add(Keyboard);
+            m_Mixer.Add(Keyboard);   // the gamepad and rebindable keyboard (ADR 0264) are inserted before it by PcInputBridge
             m_Mixer.Add(Wheel);
             m_Mixer.Add(Gyro);
             m_Mixer.Add(Touch);
@@ -158,6 +158,7 @@ namespace Game.Gameplay
                 if (!mir.main) continue;
                 else if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
             m_MirrorInsets = PlayerPrefs.GetInt(PrefMirrorInsets, 1) != 0;
+            PcInputBridge.ToggleMirrorInsets = () => { m_MirrorInsets = !m_MirrorInsets; PlayerPrefs.SetInt(PrefMirrorInsets, m_MirrorInsets ? 1 : 0); };   // L key (ADR 0264)
 
             // engine_audio=el|synth: engine sound set for the owner's A/B (ADR 0137); saved like the settings-panel choice.
             Game.Core.AudioPreferences.ApplyArgument(platform.GetLaunchArgument("engine_audio"));
@@ -646,12 +647,16 @@ namespace Game.Gameplay
             if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, k_CamModeEvents[(int)m_LoggedCamMode]); }
             m_InputLog.TryFlush(Time.unscaledTime, intent.Throttle < 0.01f && intent.Brake < 0.01f && !intent.SteerActive);   // batched; allocates only on that frame
             var kb = UnityEngine.InputSystem.Keyboard.current;   // Android back key arrives as Escape
-            if (kb != null && kb.escapeKey.wasPressedThisFrame)
+            var pad = UnityEngine.InputSystem.Gamepad.current;   // ADR 0261: Start = menu / back (not a rebindable driving action)
+            if ((kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.startButton.wasPressedThisFrame))
             {
                 if (Game.UI.Navigation.FullMapView.HandleBack()) { }   // back closes the map first (ADR 0150)
                 else if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
             }
-            Game.Core.AudioCues.HornHeld = kb != null && kb.kKey.isPressed;   // horn (ADR 0142; touch button: gameplay-ui TODO)
+            // Camera (C / top face button), pad look-around and pad horn come from the rebindable actions of PcInputBridge
+            // (ADR 0264, one source). It disables the fixed-key Keyboard source; until it is installed C still works here.
+            if (Keyboard.Enabled && kb != null && kb.cKey.wasPressedThisFrame) m_Rig.NextMode();   // C: cab → chase → orbit
+            Game.Core.AudioCues.HornHeld = kb != null && kb.kKey.isPressed;   // horn (ADR 0142); PcInputBridge ORs the Horn action in after this
             ApplyCommands(intent);
             UpdateTurnSignals(intent, fb.RoadWheelAngleNormalized);
 

@@ -20,18 +20,18 @@ Dwie mapy o identycznych nazwach akcji — po jednej na rodzinę urządzeń, że
 | `Brake` | Axis | S, ↓ | `leftTrigger` | `Brake` |
 | `Clutch` | Axis | — | — | zarezerwowane (AMT bez pedału; 0263) |
 | `ShiftUp` / `ShiftDown` | Button | E / Q | `rightShoulder` / `leftShoulder` | `ShiftDelta` |
-| `SelectDrive` / `SelectNeutral` / `SelectReverse` | Button | 1 / 2 / 3 | `buttonSouth` / `select` / `buttonEast` | `Selector` |
+| `SelectDrive` / `SelectNeutral` / `SelectReverse` | Button | 1 / 2 / 3 | `buttonWest` / `buttonEast` / `select` | `Selector` |
 | `ToggleManual` | Button | M | — (do przypisania) | `ToggleManual` |
-| `ParkingBrake` | Button | Spacja | `buttonNorth` | `ToggleParkingBrake` |
-| `RetarderMore` / `RetarderLess` | Button | X / Z | `dpad/down` / `dpad/up` | `RetarderDelta` |
-| `IndicatorLeft` / `IndicatorRight` / `Hazard` | Button | , / . / H | `dpad/left` / `dpad/right` / `leftStickPress` | `TurnSignal` |
-| `Horn` | Button | K | — | `AudioCues.HornHeld` |
-| `CycleCamera` | Button | Tab | `buttonWest` | `CameraRig.NextMode` |
-| `MirrorInsets` | Button | L | `rightStickPress` | lusterka w oknach (D70) |
-| `ReverseCamera` / `BrakeCruise` / `Couple` / `LandingGear` | Button | V / B / C / G | — | odpowiednie pola `DriverIntent` |
+| `ParkingBrake` | Button | Spacja | `buttonSouth` | `ToggleParkingBrake` |
+| `RetarderMore` / `RetarderLess` | Button | X / Z | `dpad/down` / `leftStickPress` | `RetarderDelta` |
+| `IndicatorLeft` / `IndicatorRight` / `Hazard` | Button | , / . / H | `dpad/left` / `dpad/right` / `dpad/up` | `TurnSignal` |
+| `Horn` | Button | K | `rightStickPress` | `AudioCues.HornHeld` |
+| `CycleCamera` | Button | C, Tab | `buttonNorth` | `CameraRig.NextMode` |
+| `MirrorInsets` | Button | L | — | lusterka w oknach (D70) |
+| `ReverseCamera` / `BrakeCruise` / `Couple` / `LandingGear` | Button | V / B / T / G | — | odpowiednie pola `DriverIntent` |
 | `Look` | Vector2 | — | `rightStick` | `CameraRig.AddLookDelta` |
 
-Klawisze = te same co w `KeyboardDriverInput` (pamięć mięśniowa właściciela) + Tab/L. Escape (menu/wstecz) i `start` pada (menu, ADR 0265) nie są przypisywane. `DriverIntent` bez zmian; kamera/lusterka/rozglądanie/klakson idą osobną strukturą `ViewCommands`.
+Domyślne = mapowanie ADR 0261 z main (klawisze `KeyboardDriverInput`: C kamera, T sprzęg; pad jak w ADR 0261 §6) + Tab/L (tabela po scaleniu z main, patrz „Scalenie”). Escape (menu/wstecz) i `start` pada (menu, ADR 0265) nie są przypisywane. `DriverIntent` bez zmian; kamera/lusterka/rozglądanie/klakson idą osobną strukturą `ViewCommands`.
 
 ### 2. Asset akcji z JSON ze stabilnymi id
 `DrivingActions` buduje `InputActionAsset.FromJson(DrivingActionCatalog.BuildAssetJson())` — bez importowanego assetu i bez edycji szablonu `InputSystem_Actions.inputactions`. **Id map/akcji/powiązań = MD5(`"kamion.driving/" + mapa/akcja/indeks`)**: `LoadBindingOverridesFromJson` dopasowuje nadpisania wyłącznie po id powiązania (źródło: `InputActionRebindingExtensions.LoadBindingOverridesFromJsonInternal`, repo Unity-Technologies/InputSystem, gałąź develop), więc losowe id z `AddBinding` gubiłyby zapis po restarcie. Zmiana kolejności powiązań w akcji = zmiana id → wpis w `InputBindingsStore.ActionRenames` albo akceptacja resetu tej akcji.
@@ -55,7 +55,31 @@ Schemat 0 = goły dokument `{"bindings":[...]}` → migracja z domyślnym stroje
 ### 6. Integracja bez dotykania kompozycji (0261/0262)
 `PcInputBridge` (Game.Gameplay) dołącza się sam po załadowaniu sceny (`RuntimeInitializeOnLoadMethod(AfterSceneLoad)` + `sceneLoaded`) do każdego `DrivingLabBootstrap`: wczytuje plik, buduje akcje, wstawia `GamepadDriverInput` i `KeyboardBindingsDriverInput` **przed** `bootstrap.Keyboard` w mikserze (nowe `DriverInputMixer.InsertBefore`; zawsze aktywne koło dotykowe jest dalej w kolejce, więc nie przejmuje sterowania), wyłącza stare `KeyboardDriverInput` (te same klawisze), co klatkę stosuje `ViewCommands` (kamera, rozglądanie, klakson OR z K bootstrapu, lusterka przez `PcInputBridge.ToggleMirrorInsets`).
 
-## Scalenie z win-build-0261 (możliwe konflikty)
+## Scalenie z win-build-0261 — rozstrzygnięcie (agent H6, s22, merge `origin/main` do `gamepad-0264`)
+0261 jest już na main z własnym, minimalnym `Game.Controls.GamepadDriverInput` (statyczne `ShapeAxis`/`ShapeTrigger`,
+pole `DrivingLabBootstrap.Pad` w mikserze po klawiaturze) i obsługą pada/klawiatury w `DrivingLabBootstrap.Update`
+(Y / C = kamera, prawa gałka = rozglądanie, klik prawej gałki = klakson, Start = menu). Bez rozstrzygnięcia jeden pad
+byłby czytany dwa razy (`ShiftDelta`/`RetarderDelta` sumują się → podwójna zmiana biegu), a domyślne przyciski 0261 i 0264
+się wykluczały (np. Y = kamera w 0261, hamulec postojowy w 0264; C = kamera w 0261, sprzęg w 0264).
+1. **Jedna implementacja pada:** `GamepadDriverInput.cs` = wersja 0264 (akcje z rebindingiem, krzywe, amplituda i limit
+   skrętu od prędkości, powrót z fizyki); `.meta` z main (GUID `e2c8359a…`, klasa nie jest komponentem). Minimalna klasa
+   0261 usunięta. Z `DrivingLabBootstrap` usunięte pole `Pad`, `m_Mixer.Add(Pad)`, kamera z Y, rozglądanie i klakson
+   z pada. Jedynym źródłem pada w mikserze jest `PcInputBridge` (wstawia pad i klawiaturę z akcjami przed `Keyboard`
+   i wyłącza `KeyboardDriverInput`). Bootstrap zostawia: Esc / Start = menu, K = klakson (bridge dokłada akcję `Horn`
+   przez OR), C = kamera **tylko gdy** `Keyboard.Enabled` (bridge jeszcze niezainstalowany) — bez podwójnego `NextMode`.
+   Dodana linia `PcInputBridge.ToggleMirrorInsets = …` (L przełącza lusterka w oknach). Auto-hook bridge zostaje.
+2. **Wspólne nazwy i domyślne przyciski = mapowanie ADR 0261** (opisane właścicielowi w ADR 0261 §6 na main): klawiatura
+   C (+ Tab) = kamera, T = sprzęg; pad: A/dolny = hamulec postojowy, X/lewy = D, B/prawy = N, Back = R, Y/górny = kamera,
+   krzyżak ↑ = awaryjne, ↓ / klik lewej gałki = retarder +/−, klik prawej gałki = klakson; lusterka na padzie bez
+   przypisania (do ustawienia w panelu). Nazwy akcji 0264 bez zmian (id powiązań zależą od mapy/akcji/indeksu, nie od
+   ścieżki, więc zapisane nadpisania zostają ważne). Test `Catalogue_…` pilnuje tego układu.
+3. `WindowsBuildTests` (0261): testy kształtu gałki i spustu przepisane z `GamepadDriverInput.ShapeAxis/ShapeTrigger` na
+   `PadSteeringMath.Shape(raw, dz, 0, curve)` — te same przypadki i liczby (jedna funkcja kształtu).
+4. Konflikty z innymi PR rundy 1: `DriverInputMixer.cs` (#132 wheel-0263 dodaje źródło kierownicy) i
+   `ControlSettingsPanel.cs` (#131 pc-ui-0265) — opis i rozwiązanie w komentarzach PR #129–#133 (scalanie w kolejności
+   #129 → #130 → #131 → #133 → #132).
+
+### Pierwotna analiza ryzyk (przed scaleniem)
 | Plik / obszar | Ryzyko | Co wybrać |
 |---|---|---|
 | `Input/KeyboardDriverInput.cs` | 0264 go nie edytuje; bridge go wyłącza | Zachować plik (edytor bez bridge, testy). Jeśli 0261 dodał tam nowe klawisze, dopisać je do `DrivingActionCatalog.All`. |
