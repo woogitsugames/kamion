@@ -18,7 +18,6 @@ $ok = Step 'editmode' 'unity' { pwsh scripts/test.ps1 -Platform EditMode }
 $regions = 'knyszyn-s', 'knyszyn-w', 'knyszyn', 'bialystok-knyszynska'
 foreach ($r in $regions) {
     $b = Step "build_world-$r" 'heavy' { uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region $r }
-    if ($b) { $null = Step "route-$r" 'heavy' { uv run --project tools/worldgen python scripts/export-route.py --region $r } }
     if ($b) { $null = Step "import-$r" 'unity' { pwsh scripts/import-region.ps1 -Region $r } }
 }
 "REGEN DONE $(Get-Date -Format s)" | Add-Content $log; 'done' | Set-Content "$o/regen.done"
