@@ -109,7 +109,8 @@ namespace Game.Rendering
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
                                   Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue ||
-                                  LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || Grime.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue;
+                                  LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || Grime.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue ||
+                                  GpuAbOverrides.Any;   // ADR 0241
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
@@ -154,6 +155,7 @@ namespace Game.Rendering
             VehicleCull = F(arg("rq_vehcull"));      // ADR 0136 r2
             Grime = B(arg("rq_grime"));
             Landscape = B(arg("rq_landscape")) == true;   // ADR 0136 r2: measurement runs in landscape (DiagLandscape)
+            GpuAbOverrides.Parse(arg);   // ADR 0241: rq_depthtex, rq_opaquetex, rq_impostors, rq_hlodpart, rq_abtag
             PsoWarmup.Init(arg);   // ADR 0113: PSO warm-up / trace, spike probe (player only)
             string ab = arg("rq_ab");
             Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();

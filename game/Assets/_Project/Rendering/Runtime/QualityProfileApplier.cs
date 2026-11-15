@@ -102,6 +102,7 @@ namespace Game.Rendering
             if (RenderOverrides.FsrSharpness.HasValue || (t.name == "High" && t.upscalingFilter == UpscalingFilterSelection.FSR))
             { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
             if (RenderOverrides.LodBias.HasValue && Application.isPlaying) QualitySettings.lodBias = t.lodBias;   // ADR 0106
+            GpuAbOverrides.ApplyPipeline(urp);   // ADR 0241: rq_depthtex / rq_opaquetex (no-op unless given)
         }
 
         /// <summary>Raised after a tier was applied (vegetation reads <see cref="Current"/>).</summary>

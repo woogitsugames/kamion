@@ -206,3 +206,12 @@ noise, 3-level quantisation; URP `AlphaClip` removed), no extra texture sample, 
 The mesh no longer draws into the shadow map (15.7 km of panel fence in region C). Forward overdraw is unchanged (2 layers:
 doubled geometry + Cull Off - follow-up O-4 in the ADR would halve it). To measure on the A16 after reimport:
 `pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90 -Serial RFGL34SJYDZ` on route C Low against the last main run.
+
+## GPU A/B procedure on the A16 (ADR 0241, backlog B-113) — NOT MEASURED YET
+Open gap: A16 Low, 30 FPS cap, APK `77cfd94bf8`: GPU p95 34.3–34.5 ms against the 33.3 ms frame (HANDOVER s20). Candidate
+levers and their expected gains (ESTIMATED / UNVERIFIED, with sources) are data in `tools/perf/gpu-ab-variants.json`; none of
+them is a default. One session = same APK, launch-argument variants, ≥ 3 repeats, battery < 36 °C before each run, keyguard
+checks: `pwsh scripts/gpu-ab-a16.ps1 -Apk <apk> [-Mode Camera -Uncapped | -Segments A,B -Fps 30]` →
+`artifacts/gpu-ab/<ts>/REPORT.md` (`uv run --project tools/perf python -m perfgate.gpuab report <dir>`). Write the measured
+table here once the leader has run it; a tier value changes only after that table, the visual review and (for visible
+changes: render scale, LOD bias, far clip) the owner's decision.
