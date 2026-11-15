@@ -291,6 +291,42 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
         _edges(buf, item, zgrid, hf, roads_poly)
 
 
+EDGE_TOL_XY_M = 0.002       # ADR 0221: an edge vertex may be dropped when it lies this close to the chord in plan
+EDGE_TOL_Z_M = 0.005        # ... and this close in height (edging top is 30 mm proud, the skirt 300 mm deep) WORKING_VALUE
+
+
+def _edge_keep(P, Z, skip):
+    """Indices of the edge vertices that carry shape (Douglas-Peucker in plan and in height, ADR 0221). Vertices where
+    the built / skipped state changes are always kept, so every remaining segment is built or skipped as a whole."""
+    n = len(P)
+    Q = np.column_stack([P * (EDGE_TOL_Z_M / EDGE_TOL_XY_M), Z])
+    must = np.zeros(n, bool)
+    must[[0, n - 1]] = True
+    must[1:-1] = skip[1:] != skip[:-1]
+    if n > 3 and float(np.hypot(*(P[0] - P[-1]))) < 1e-6:      # closed ring: one more anchor, far from the start
+        must[int(np.argmax(np.hypot(*(P - P[0]).T)))] = True
+    anchors = np.flatnonzero(must)
+    keep = must.copy()
+    stack = [(int(a), int(b)) for a, b in zip(anchors[:-1], anchors[1:])]
+    while stack:
+        a, b = stack.pop()
+        if b - a < 2:
+            continue
+        ab = Q[b] - Q[a]
+        L2 = float(ab @ ab)
+        w = Q[a + 1:b] - Q[a]
+        if L2 < 1e-12:
+            d = np.linalg.norm(w, axis=1)
+        else:
+            tpar = np.clip(w @ ab / L2, 0.0, 1.0)
+            d = np.linalg.norm(w - np.outer(tpar, ab), axis=1)
+        k = int(np.argmax(d))
+        if d[k] > EDGE_TOL_Z_M:
+            keep[a + 1 + k] = True
+            stack += [(a, a + 1 + k), (a + 1 + k, b)]
+    return np.flatnonzero(keep)
+
+
 def _edges(buf, item, zgrid, hf, roads_poly=None):
     """Outer edge: concrete edging strip (paving blocks) or flush flange (concrete / asphalt)."""
     poly, mat = item["poly"], item["mat"]
@@ -328,8 +364,6 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
             rows = [D, A, B, C]
         else:
             rows = [np.column_stack([P, Z]), np.column_stack([P + nout * (S.PAVED_FLANGE * S.EMBANKMENT_SLOPE), Z - S.PAVED_FLANGE])]   # battered skirt (W-H5)
-        V = np.concatenate(rows)
-        UV = np.column_stack([np.tile(s, len(rows)), np.repeat(np.arange(len(rows)) * 0.1, n)])
         # no edging / flange where the area meets a road surface (the road owns that edge)
         if roads_poly is not None and not roads_poly.is_empty:
             mid = 0.5 * (P[1:] + P[:-1])
@@ -340,6 +374,14 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
         # segregated path: one flush edging between them is laid by cycleways.paint)
         if item.get("skip_edge") is not None:
             skip |= shapely.distance(shapely.points(0.5 * (P[1:] + P[:-1])), item["skip_edge"]) < 0.3
+        # ADR 0221: the 2 m samples are needed only where the ground bends; on a straight edge over smoothed ground
+        # they were 6 triangles every 2 m for nothing (77 k triangles in one view of region C)
+        keep = _edge_keep(P, Z, skip)
+        rows = [r_[keep] for r_ in rows]
+        skip = skip[keep[:-1]]
+        s, n = s[keep], len(keep)
+        V = np.concatenate(rows)
+        UV = np.column_stack([np.tile(s, len(rows)), np.repeat(np.arange(len(rows)) * 0.1, n)])
         T = []
         for r in range(len(rows) - 1):
             a0 = r * n
