@@ -170,3 +170,7 @@
 - 2026-11-15 22:35 +01:00 — GIS rerun: 1419 passed, 31 skipped, 4 xfailed, 11 errors ze wspólnej starej usterki far_field (out_root ignorowany, fallback R16 używa starego schematu). Poprawka i testy kierunkowe w toku; po GIS przywrócono własne efekty uboczne generated regionu C.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis -q`
 
+
+- 2026-11-15 22:37 +01:00 — Scalono origin/main 114658153 bez konfliktów, R7 uruchomiona (dopracowane lukarny i fix far_field). Raport fidelity C ponownie nieaktualny po zmianach dróg main, trwa pełne przeliczenie. Poprawki kierunkowo 10/11 testów modułów passed; pełny GIS nadal wymagany.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r7.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.done`
+
