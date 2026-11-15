@@ -1218,7 +1218,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
             kit.tag = "g7_spruce"
             h = min(3.2 + 3.4 * r, 14.0) * (0.9 + 0.2 * PLT.hfloat(key, "h"))
             PLT.spruce(kit, p, z, h, key)
-        if _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
+        if _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep, strict=not t.get("authored")):
             rep["conifers"].append({"e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "r_m": round(r, 2), "h_m": round(h, 1),
                                     "kind": "thuja" if columnar else "spruce", "claimed": bool(t.get("claimed")),
                                     "converted": bool(t.get("converted"))})
