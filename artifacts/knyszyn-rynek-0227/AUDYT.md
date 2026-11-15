@@ -12,3 +12,5 @@ Zdjęcia właściciela są lokalne i nie stanowią tekstur ani materiału do pub
 
 K1 podaje fontannę OSM 32 m² (~6 × 6 m), natomiast istniejący override przyjmuje ~9 × 7 m. Nie rozstrzygnięto rozbieżności bez pomiaru i dokładnego dopasowania ortofoto.
 `paved.collect` obsługuje authored polygons w kolejności wpisów: `rynek-plaza-east` wyprzedza w pełni zawartą płytę fontanny, więc odejmowanie zajętej powierzchni usuwa płytę. Wniosek z kodu, do potwierdzenia renderem baseline; właściwa kolejność to najpierw detal, potem plac.
+
+**P0 — położenie fontanny:** wycinki GUGiK `J_rynek_W_north.jpg` oraz `J_rynek_knyszyn_north.jpg` pokazują, że kwadratowa płyta znajduje się na okrągłym placu w zachodnim parku, a nie na wschodnim placu po drugiej stronie Grodzieńskiej. Korelacja wspólnego fragmentu obu wycinków (`align.py`, 0,1 m/px) daje orientacyjny środek fontanny EPSG:2180 ~760943,5 / 612382,3 (ESTIMATED, wymaga kontroli naroży i OSM). Dotychczasowy override ~761035,7 / 612396,9 leży około 93 m dalej. Wcześniejsze przypuszczenie o samej kolejności nakładających się pól pozostaje prawdziwe dla tego błędnego położenia, lecz nie rozwiązuje lokalizacji.
