@@ -33,7 +33,8 @@ def test_region_c_cannot_change():
     assert not [o["id"] for o in ov if o.get("kind") == "building_rules"]
     sets = [o.get("set") or {} for o in ov]
     assert not any("hall_windows" in s or "storeys" in s or "hall_sign" in s or "hall_plinth_z" in s for s in sets)
-    assert not any(s.get("wall_material") in ("hall_wall_smooth", "cladding_vertical_grey") for s in sets)
+    assert not any(s.get("wall_material") in ("hall_wall_smooth", "cladding_vertical_grey", "cladding_cassette_grey")
+                   for s in sets)
     # no ground_z_evrf2007 of a part either; ADR 0200 opts region C in with one part (the tower's SE annex)
     parts = [o for o in ov if o.get("kind") == "building_part"]
     assert [o["id"] for o in parts] == ["g3a-office-tower-se-annex"] and "ground_z_evrf2007" not in parts[0]
@@ -80,17 +81,17 @@ def test_dojlidy_buildings_after_overrides():
     # the main hall keeps the BDOT10k id (one piece) and both sets (0179 colour entry + 0185 cladding entry)
     assert not [i for i in blds if i.startswith(ROSTI + "#cut")]
     assert hall["ovr"] == {"wall_material": "hall_wall_smooth", "hall_bands": False, "hall_windows": False,
-                           "hall_sign": False, "hall_plinth_z": 152.9, "height_m": 16.9}
+                           "hall_sign": False, "hall_plinth_z": 152.9}      # ADR 0242: 16.9 withdrawn (NMPT = LoD1)
     assert hall["poly"].intersection(wing["poly"]).area < 0.5
     assert wing["poly"].area == pytest.approx(3234, rel=0.02) and wing["typ"] == "hall"
-    # wing roof 4.7 m under the hall roof (LoD1 base 152.06 + 16.9 authored / + 12.2)
-    assert BM.roof_height(hall, 152.06) == pytest.approx(16.9) and BM.roof_height(wing, 152.06) == pytest.approx(12.2)
+    # wing roof 5.7 m under the hall roof (ADR 0242, GUGiK NMPT: LoD1 base 152.06 + 18.92 LoD1 / + 13.2)
+    assert BM.roof_height(hall, 152.06) == pytest.approx(18.92) and BM.roof_height(wing, 152.06) == pytest.approx(13.2)
     # north wall of the tall hall: 83.4 m of the outline minus the 13.8 m wing
     from shapely.geometry import LineString
     north = LineString([(747.2, 356.6), (683.3, 384.1)])
     assert hall["poly"].exterior.intersection(north.buffer(0.3)).length == pytest.approx(69.6, abs=1.0)
-    assert k3["typ"] == "office" and k3["props"]["storeys"] == 3 and k3["ovr"]["wall_material"] == "cladding_vertical_grey"
-    assert BM.storey_plan("office", 14.0, k3["props"])[0] == 3
+    assert k3["typ"] == "office" and k3["props"]["storeys"] == 3 and k3["ovr"]["wall_material"] == "cladding_cassette_grey"
+    assert BM.storey_plan("office", 15.4, k3["props"])[0] == 3                         # ADR 0242: storeys_fixed
     from streetscape import frontage as FR
     rules = FR.facade_rules(k3["ovr"]["facades"], k3["ovr"]["wall_material"])
     assert [r["windows"] for r in rules] == ["ribbon", "blank"]
