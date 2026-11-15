@@ -261,6 +261,15 @@ def main() -> None:
         "rebuild": [f"uv run --project tools/worldgen tools/worldgen/ingest.py --region {region.id}",
                     f"uv run --project tools/worldgen tools/worldgen/build_region.py --region {region.id}"],
     }
+    if getattr(region, "water", False):
+        # ADR 0210: opt-in surface-water stage; the key (and the sources file) exist only in regions that enable it
+        ry["water"] = {"enabled": True, "sources": f"Data/Regions/{region.id}/generated/water_sources.json",
+                       "note": "BDOT10k OT_PTWP_A / OT_SWRS_L + OSM waterway / natural=water (ADR 0210)"}
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from streetscape import water as WT
+        print("[build] water sources")
+        WT.write(region.id, WT.extract(ry))
     text = yaml.safe_dump(ry, allow_unicode=True, sort_keys=False, width=120)
     write_if_changed(out_dir / "region.yaml", text)
     hashes["region.yaml"] = sha_bytes(text.encode("utf-8"))

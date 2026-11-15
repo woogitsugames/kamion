@@ -145,6 +145,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     zc = CF.tidy(zc, zjoin, mask, dist)
     bmask = PV.rasterize_polys([b["poly"] for b in blds], hf)
     zc = np.where(bmask & ~mask, np.minimum(zc, sm), zc)        # ground under buildings never above the floor
+    if getattr(w, "water", None) is not None:      # ADR 0210 (opt-in): river / pond bed, shallow banks, shore lip
+        zc = w.water.carve(zc, mask, log)
     zsurf_g = np.where(mask, zjoin, zc)
 
     def zsurf(e, n):
@@ -275,6 +277,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     hero_keepout = HBD.keepout(heroes)
     if hero_keepout:
         blocked |= PV.rasterize_polys(hero_keepout, hf)
+    if getattr(w, "water", None) is not None:      # ADR 0210: no trees in the water
+        blocked |= w.water.blocked()
     vrep = {}
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides)
     forest_mix = vrep.pop("_forest_mix")

@@ -31,6 +31,7 @@ class Region:
     teryt_powiat: str                       # GUGiK per-powiat datasets (BDOT10k, LoD1/2, trees)
     status: str
     min_route_margin_m: float = 280.0
+    water: bool = False                     # ADR 0210: surface-water stage (rivers, ponds) opt-in per region
 
     @property
     def width(self) -> float:
@@ -121,6 +122,7 @@ REGIONS: dict[str, Region] = {
         origin=(769803.0, 598271.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-4,1) of the ADR 0203 plan)",
+        water=True,      # ADR 0210: Supraśl + Biała under the DK65 bridge (km 10.85)
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,1) of the ADR 0203 plan, route variant A km 11.80-12.28. Powiat 2002.
     "dk65-03": Region(
