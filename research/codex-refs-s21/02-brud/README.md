@@ -86,8 +86,40 @@ Licencje zweryfikowane ponownie w Commons: 02-008 Jaggery, CC BY-SA 2.0; 02-009 
 
 ## Nowy pozytywny wzorzec z Flickr: 02-010
 
-**NOWE zdjęcie brudnych dwuskrzydłowych drzwi, jakościowo potwierdzone obrazem**, bez dopisywania do progu rozdzielczości M61. Flickr230839170, Harold Hollingsworth, CC BY-SA2.0; obejrzany indywidualnie publiczny podgląd 768 × 1024 px (SOURCED [DOM wyrenderowanego obrazu]). Pełny obraz pokazuje naczepę z dwiema jasnymi drzwiami, dwoma prętami zamków i brudem: górny pas/górna połowa mają nierówny szarobrunatny film i liczne pionowe ciemniejsze ślady. Środek jaśniejszy, dolne obrzeże i okolice zamknięć ciemniej poplamione. Resztki naklejki po prawej nie są plamą brudu. Obserwacje SOURCED [obraz fotostrony w manifeście]; skład chemiczny UNVERIFIED.
+**NOWE zdjęcie brudnych dwuskrzydłowych drzwi, jakościowo potwierdzone obrazem**, bez dopisywania do progu rozdzielczości M61. Flickr230839170, Harold Hollingsworth, CC BY-SA2.0; obejrzany indywidualnie publiczny podgląd 768 × 1024 px (SOURCED [DOM wyrenderowanego obrazu]). Pełny obraz pokazuje tył skrzyni z dwiema jasnymi drzwiami, dwoma prętami zamków i brudem: górny pas/górna połowa mają nierówny szarobrunatny film i liczne pionowe ciemniejsze ślady. Środek jaśniejszy, dolne obrzeże i okolice zamknięć ciemniej poplamione. Resztki naklejki po prawej nie są plamą brudu. Obserwacje SOURCED [obraz fotostrony w manifeście]; skład chemiczny UNVERIFIED.
 
 Drzwi około550px w podglądzie (ESTIMATED), oryginał wg metadanych ma960 × 1280, nie został pobrany ani obejrzany. Kraj, data wykonania i kalendarzowa zima UNVERIFIED; 01.09.2006 to upload. Widoczne białe płaty w krajobrazie nie uprawniają do przypisania soli ani miesiąca. **Nowe pozytywne jakościowo:1kadr /1pojazd; ścisły wzrost M61>=1000px:0.** Zdjęcie nie występowało w lokalnych manifestach P18; było jedynie w dawnym nieobejrzanym surowym wyniku wyszukiwania. Nie pobrano fotografii, użyto link-only. Metadane tylko fotografii, bez danych runtime, w `data/flickr-230839170-public-metadata.json`; wynik obserwacji w `data/flickr-230839170-observation.json`.
 
 Podglądy kategorii Rear views of trucks pozwoliły też odrzucić bez pobierania Big Rigs (cysterna) i LKW-Sattezug Rückseite (niska klapa/platforma; PD-self poza filtrem CC). Nie opisano z nich brudu drzwi.
+
+
+### Następny obieg Flickr — duży kandydat oczekuje obrazu
+
+Kandydat4433883530 „Dirty”, Bill Stilwell (icathing), ma na publicznej fotostronie datę wykonania17.02.2010 i upload14.03.2010; CC BY-SA2.0 potwierdzono na fotostronie i stronie publicznych rozmiarów. Ta ostatnia deklaruje oryginał3444 × 2584. Obejrzano tylko miniaturę w wynikach, **pełny obraz nie został obejrzany**: hero czarny, original brokenimage i naturalne0 × 0. Jedna próba dokładnego URL oryginału zwróciłaHTTP429; host live.staticflickr.com wstrzymany, bez wariantów/retry. Brak wpisu zdjęcia w manifeście i brak wzrostu liczników. Log `data/flickr-4433883530-access.json`; nie wyprowadzono stref/koloru/rozdzielczości drzwi z tytułu ani z metadanych rozmiaru całego obrazu.
+
+Publiczny search trailer rear był zdominowany przez niepasujące obiekty; wynik van trailer4874408570 wykluczono opisem autora jako przyczepę z fragmentu Dodge Maxivan, bez opisu nieobejrzanego obrazu. Jego selektywne publiczne metadane w `data/flickr-4874408570-public-metadata.json`. Dodatkowy search trailer doors zachowano jako25 metadanych kandydatów w `data/flickr-trailer-doors-candidates.json`, nie jako obejrzane fotografie. Wszystkie te pliki zawierają wyłącznie wybrane dane fotografii; brak danych runtime i uwierzytelniających.
+
+
+### Niezależna kopia4433883530 i kontrola nowego Commons
+
+Nie znaleziono niezależnej kopii4433883530: wyszukiwarka poID z wyłączeniemFlickr, indeksOpenverse oraz CommonsAPI poID/autorze zwróciły0 pasujących wyników. To wynik wskazanych wyszukiwań, nie dowód nieistnienia kopii; szczegóły w `data/flickr-4433883530-independent-copy-check.json`. Nie ponawiano static hostu Flickr ani OpenverseAPI po wcześniejszym403.
+
+Nowy Commons kandydat Dot Foods Distribution Truck Whitmore Lake Michigan, Dwight Burdette, CC BY3.0, 06.02.2012, oryginał4752 × 3168 obejrzany jako pełny lokalny podgląd i osobny wycinek drzwi/progu. Dwa skrzydła są z pikowanej blachy: regularne jasne/ciemne romby i odbicia nie stanowią dowodu filmu. Wyraźniejsze pionowe szare/szarobrązowe ślady występują na listwie/progu, a dolna rama jest brunatnawo przygaszona. Przy okuciach punktowe rude przebarwienia. Brud na samych panelach pozostaje nierozstrzygnięty, więc odrzucono jako nowy pozytywny wzorzec brudnych drzwi. Nie wnioskowano o soli z lutowej daty. Oryginał6,23MB wyłącznie poza gitem, brak dodatkowych repo miniaturek. Log ze źródłem/licencją/SHA: `data/candidate-23-dotfoods-observation.json`. Delta M61:0; 02-010 pozostaje stabilny.
+
+
+### Obieg galerii firmowych i medialnych — tylko link-only
+
+W relacji trans.info z08.02.2021 indywidualnie obejrzany główny kadr (podpis Twitter/@GDDKiA_Opole) pokazuje pług i czerwoną kabinę od przodu w opadzie śniegu, bez tylnych drzwi naczepy. Odrzucony. W galerii The Mobile Wash Company kadr opisany jako „Dry van trailer, rear doors” po obejrzeniu pokazał **pojedynczą segmentową roletę i windę**, nie parę skrzydeł. Odrzucony; nie klasyfikowano konstrukcji z altu. Brak nowych pozytywnych kadrów. Oba źródła link-only, all rights reserved; brak zapisu zdjęć/PDF/zrzutów.
+
+Dziennik `data/company-media-screening-2026-11-15.json` rozdziela2 obejrzane odrzucenia od niedostępnych źródeł: GITD timeout, nswiecie403 bez retry, bidcom brak odczytu. Publiczny dokument PKO dotyczył lawety, więc nie przeniesiono jego zimowych fotografii do statystyki drzwi. Kraj i daty konkretnych kadrów pozostają UNVERIFIED tam, gdzie nie ma danych autora; adresu myjni nie użyto jako geotagu fotografii. Zimowe otoczenie nie zostało użyte do identyfikacji soli.
+
+
+### Obieg nordycki — selekcja bez pobierania oryginałów
+
+Nowy fiński kadr Full-trailer truck on Mäkelänkatu (JIP, CC BY-SA4.0, 25.07.2023, Helsinki) obejrzano indywidualnie w przeglądarce: dwa skrzydła i cztery pręty są widoczne, lecz błyszczące panele nie pokazują czytelnego filmu ani smug brudu. Odrzucono; źródło dodatkowo identyfikuje przyczepę dyszlową. Dwa inne podglądy, Red Star rear view (Szwecja w zapytaniu) oraz Varelevering i Thomas Angells gate, pozostały białe — **nieobejrzane**, bez opisu obrazu i bez retry oryginału. Pierwszy ma cały obraz1300 × 925, więc próg1000px drzwi jest niemożliwy. Kraju drugiego nie wyprowadzono z tytułu.
+
+Siatkę zimowych wyników Finlandii potraktowano wyłącznie jako selekcję; dominujące pługi/wywrotki/załadunek śniegu i frontowe ujęcia nie zostały wpisami manifestu. Szczegóły `data/nordic-screening-results-2026-11-15.json`, metadane wyszukiwania `data/nordic-candidates-2026-11-15.json`. Nowe pobrane obrazy0, nowe kwalifikowane0, nowych miniaturek wGit0. Białych podglądów nie nazwano potwierdzonymHTTP429; mimo to nie próbowano wariantów ani serii oryginałów.
+
+## Korekta typu pojazdu02-010
+
+Audyt data/flickr-230839170-type-audit.json: z tylnego kadru pewne są drzwi skrzyni, koła i belka; brak potwierdzenia sprzęgu/siodła, podpór, kabiny lub całego podwozia. Naczepa vs solówka/drawbar pozostaje UNVERIFIED. Poprawiono wcześniejsze bezwarunkowe określenie naczepa w głównym manifeście i obserwacjach. Wzorzec filmu/smug pozostaje jakościowo użyteczny, ale nie kwalifikuje rodzaju pojazdu do M61; ścisły licznik nadal0.

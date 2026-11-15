@@ -4,7 +4,7 @@
   "source": "https://www.flickr.com/photos/haroldhollingsworth/230839170/",
   "method": "Samodzielnie otwarta kanoniczna fotostrona w Chrome, oglądany pojedynczy pełny podgląd. Link licencji i data odczytane z wyrenderowanej strony. Naturalny rozmiar obrazu odczytany przez udokumentowany odczyt DOM. Bez zapisu zdjęć/screenshotów.",
   "verdict": "PASS jakościowy; próg1000px drzwi niespełniony przez obejrzany podgląd",
-  "observation_independent": "Naczepa widziana bezpośrednio od tyłu na drodze. Dwa jasne pionowe skrzydła drzwi rozdziela szczelina środkowa, obok niej dwa ciemne pionowe pręty zamknięć; zawiasy w kilku poziomach przy zewnętrznych krawędziach. Na panelach szarobrązowy nalot, najwyraźniejszy przy górnej ramie i w górnych częściach skrzydeł. Liczne pionowe smugi schodzą od góry; ich natężenie jest nierówne, środkowe i dolne powierzchnie miejscami jaśniejsze. Ciemniejsze obwódki/plamy przy zawiasach, prętach, dolnych zamknięciach i progu. Na prawym dolnym panelu uszkodzone resztki oznaczenia oraz rombowa ramka. U dołu pas odblaskowy, tylna belka, koła i czerwone punkty świateł. Po bokach drogi widoczne białe płaty na gruncie/skarpach, samochód po lewej i bariera po prawej.",
+  "observation_independent": "Skrzynia pojazdu widziana bezpośrednio od tyłu na drodze. Dwa jasne pionowe skrzydła drzwi rozdziela szczelina środkowa, obok niej dwa ciemne pionowe pręty zamknięć; zawiasy w kilku poziomach przy zewnętrznych krawędziach. Na panelach szarobrązowy nalot, najwyraźniejszy przy górnej ramie i w górnych częściach skrzydeł. Liczne pionowe smugi schodzą od góry; ich natężenie jest nierówne, środkowe i dolne powierzchnie miejscami jaśniejsze. Ciemniejsze obwódki/plamy przy zawiasach, prętach, dolnych zamknięciach i progu. Na prawym dolnym panelu uszkodzone resztki oznaczenia oraz rombowa ramka. U dołu pas odblaskowy, tylna belka, koła i czerwone punkty świateł. Po bokach drogi widoczne białe płaty na gruncie/skarpach, samochód po lewej i bariera po prawej.",
   "certainty": {
     "two_leaf_doors": "SOURCED [obraz]",
     "film_and_vertical_streaks": "SOURCED [obraz]",
@@ -12,7 +12,8 @@
     "country": "UNVERIFIED; brak niezależnej lokalizacji",
     "photo_capture_date": "UNVERIFIED",
     "upload_date": "SOURCED [fotostrona]:2006-09-01; nie data zdjęcia",
-    "chemical_composition": "UNVERIFIED; nie identyfikowano soli ani błota pośniegowego na drzwiach"
+    "chemical_composition": "UNVERIFIED; nie identyfikowano soli ani błota pośniegowego na drzwiach",
+    "vehicle_type": "UNVERIFIED: naczepa vs solówka/drawbar; confirmed rear doors do not establish trailer construction"
   },
   "license": {
     "name": "CC BY-SA2.0",
@@ -38,5 +39,6 @@
   "strict_m61_delta": 0,
   "qualitative_frame_confirmed": 1,
   "local_image_files_written": 0,
-  "files_changed": "Wyłącznie ten nowy plik peer-review."
+  "files_changed": "Wyłącznie ten nowy plik peer-review.",
+  "coordinator_type_correction": "Unconditional vehicle-type wording corrected after explicit subsequent audit; dirt-pattern visual observations unchanged."
 }
