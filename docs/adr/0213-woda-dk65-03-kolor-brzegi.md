@@ -83,11 +83,58 @@ Sondowanie źródeł (`tools/c_probe.py`, nic nie zapisane do `Data/`): Biała 9
 - **Rekomendacja:** nie teraz. Włączyć razem z poprawkami (a)–(b), jedną świadomą zmianą linii bazowej C
   i odświeżeniem fidelity / bramki 3, po decyzji właściciela (Biała z trasy nie jest widoczna — zysk mały).
 
-## Budżet
-(uzupełnione po r3 — patrz Walidacja)
+## Budżet (visual-qa 1920×1080, edytor, szacunek przed SRP batching; telefon NIE mierzony)
+A = 0210 r3 (`artifacts/water-0210/dk65-02/r3/*/stats.txt`), B = 0213 r5 (`artifacts/water2-0213/dk65-02/r5`), scena
+Low (`World_dk65-02`):
+| kamera (Low) | draws A → B | trójkąty A → B |
+|---|---|---|
+| `top-bridge` | 21 → 23 | 51,3 → 52,0 tys. |
+| `drive-bridge-approach` | 32 → 33 | 74,6 → 74,9 tys. |
+| `water-bank-west` | 149 → 150 | 159,2 → 159,6 tys. |
+| `water-deck-east` | 87 → 89 | 138,3 → 139,1 tys. |
+| `water-oblique-bridge` | 31 → 33 | 72,3 → 73,0 tys. |
+| `rev-elcka`, `route-s0450` (max trasy), `drive-s19-approach` | bez zmian | bez zmian |
+Koszt Low: ≤ +2 draws (materiał `water_reeds` w chunkach z brzegiem), ≤ +0,8 tys. trójkątów na klatkę; shader wody
+Low: ta sama liczba pobrań tekstur (1 sonda). Cały kafel: `banks_low` 02: 6,6 tys. tris (max 0,57 tys./chunk),
+03: 2,9 tys.; krzewy 02: 270 `tree_shrub` + 34 `tree_alder`, 03: 580 + 93 (instancje istniejących prototypów,
+impostory). High (`banks`, karty-namioty r6): patrz Walidacja (liczby r6); **uwaga**: ADR 0210 i r1–r5 tego zadania
+renderowały „High” na scenie Low (`World_<id>` z `-Tier High` = shader High, geometria Low); od r6 łańcuch używa
+`World_<id>_High`. Sceny High (r5H, cała zawartość High) mają 0,8–1,0 mln tris na kamerach wodnych `dk65-02` — to
+głównie istniejąca zawartość High (las, krzewy, teren LOD0), nie woda; pomiar telefonu (flagowiec, profil High) otwarty.
 
 ## Walidacja
-(uzupełnione po r3)
+- Szew 02|03 (`tools/seam.py`, wierzchołki tafli GLB na x = 768 779): przed 110,163–110,193 | 110,132–110,160 m,
+  po: **110,179 | 110,179 m**, zasięg wody n −330,5…−306,2 m identyczny. Dno pod taflą na szwie różni się do
+  0,25 m (odległość od brzegu `d_in` liczona w kaflu) — niewidoczne pod nieprzezroczystą taflą; brzeg i próg
+  identyczne (≤ 3,6 cm).
+- Kolor z góry (mediana sRGB tafli, `top_bridge` 02 / `top_water_mid` 03): ortofoto 44/50/54 i 52/53/57; render
+  przed (0210) Low 30/32/32 i 31/33/32, High 35/38/39 i 36/39/39; **po: Low 48/49/47 i 49/49/47, High 54/54/52
+  i 54/55/52** (jasność jak ortofoto; odcień cieplejszy o ~7 w B — świadomie, patrz Decyzja 3).
+- Determinizm (etap wody wyłączony): `build_world` na tej gałęzi dla C i Dojlidy — `world_manifest.json`,
+  `far_field_qa.json`, `<id>-far-field.manifest.json` **identyczne** z main (`artifacts/water2-0213/determinism.txt`).
+  `fidelity_qa.json` C: odświeżony tylko hash `build_world.py` (wynik C bez zmian).
+- `pytest tests/gis`: **1223 passed, 3 xfailed**, 1 odznaczony (`test_road_stage_independent_of_hash_seed`, 3 × pełny
+  build C); nowe `tests/gis/test_water_0213.py` 6/6 (szew symetryczny na dwóch syntetycznych kaflach, wstęgi High/Low
+  poza keep-out, krzewy i odstęp od drzew, tekstura kafelkuje i jest przycinana, izolacja C/Dojlidy, produkty
+  `water_banks.json`); `test_water_0210.py` zaktualizowany (2 regiony z wodą, 3 strażniki w stage).
+- EditMode: 587, **586 passed, 0 failed**, 1 skipped (`artifacts/water2-0213/tests/editmode-20261115-092220.xml`).
+- Import bez błędów shadera / C#. Pętla wizualna (6 rund, `artifacts/water2-0213/{dk65-02,dk65-03}/r1..r6/view/`,
+  strojenie `tune/`): r3 trzcina jak limonkowy żywopłot → r4 kępy z przerwami, ciemniejsza paleta → r4 z bliska
+  „płetwy” (wstęga widziana wzdłuż brzegu) → r5 High = skrzyżowane karty (z daleka czyta się jak szuwar, z bliska
+  pionowe krawędzie kart) → r6 karty-namioty. Low: tafla już nie czarna (z bliska ciemnoszara z odbiciem nieba).
 
 ## Otwarte
-(uzupełnione po r3)
+1. **Telefon**: brak pomiaru (Low: shader bez dodatkowych pobrań; High: +tris kart trzciny, alpha-test na Mali —
+   UNVERIFIED). Zmierzyć na A16 (Low) i flagowcu (High) z kamerą przy moście.
+2. Kolor i trzcina strojone tylko na ortofoto (nadir) i renderach — **brak zdjęcia z brzegu Supraśli/Białej**
+   (prośba do właściciela: 2–3 zdjęcia z mostu DK65 i z brzegu, lato). Wartości WORKING_VALUE.
+3. Trzcina z bliska (< 10 m) nadal widać pojedyncze karty; docelowo LOD0 z kępami krzyżowymi o losowym skręcie
+   i tekstura z fotoskanu CC0 (brak w repo).
+4. Pas szuwarów z ortofoto jest szeroki (do 24 m), geometria buduje ≤ 4 rzędy (~5,5 m) — reszta pasa to kolor gruntu
+   (wysoka trawa 6 m z ADR 0210); poszerzyć maskę `unmown` do szerokości pasu.
+5. `tree_shrub` z bliska wygląda jak pochylony krzak-miotła — prototyp wierzby (Salix cinerea) do zrobienia w
+   `make_trees.py`.
+6. Krawędź kafla bez sąsiada z wodą też dostaje korektę poziomu (02 E: Biała +9 cm na krawędzi, 03 W: +1 cm) —
+   nieszkodliwe; po włączeniu wody w `dk65-01` / kaflu na zachód od 03 szew będzie ciągły automatycznie.
+7. Sceny „High” w ADR 0210 były renderowane na geometrii Low — dowody 0210 High dotyczą tylko shadera.
+8. C — patrz Ocena C (rekomendacja: później, z poprawkami szerokości z SWRS i wykluczeniem osadników).
