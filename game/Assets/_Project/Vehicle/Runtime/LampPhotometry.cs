@@ -37,7 +37,7 @@ namespace Game.Vehicle.Runtime
         // Amber (1, 0.22, 0): x 0.542, y 0.408. ADR 0197: the R48 2.11.1.3 amber area also lies outside sRGB (white limit
         // y >= 0.790 - 0.670 x is above the sRGB red-green edge for every x of the area). (1, g, 0) is the gamut edge facing
         // it; g = 0.22 meets the green (y <= x - 0.120) and red (y >= 0.390) limits and is 0.0159 xy from the area (the
-        // nearest edge point, g = 0.24, is 0.0153 but only 0.0017 inside the green limit). Was (1, 0.28, 0): y 0.422, beyond
+        // nearest edge point, g = 0.24, is 0.0153 but only 0.0025 in y inside the green limit). Was (1, 0.28, 0): y 0.422, beyond
         // the green limit (review M59 G3).
         public static readonly float[] AmberLinear = { 1f, 0.22f, 0f };
         public static readonly float[] WhiteLinear = { 1f, 0.97f, 0.92f };

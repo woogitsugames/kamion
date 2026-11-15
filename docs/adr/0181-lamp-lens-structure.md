@@ -32,7 +32,7 @@ listwa lampki), tylna tablica ciągnika nie miała lampki wcale (R48 6.8: obowi�
 3. **Tablica**: płyta tablicy tylnej (naczepa `plate_rear`, ciągnik `rear_plate`) przechodzi ze slotu Trim do Lights,
    grupa PLATE (13), styl PLATE. Emisja = albedo (z brudem) × stan lampki PLATE × `_PlateIllum` × zanik od listwy nad
    górną krawędzią (góra-środek : dolny róg ≈ 4,7 : 1). `_PlateIllum` = 0,005 (`TruckAssetBuilder.PlateIllum`): lampka
-   2 000 cd/m² → ~8 cd/m² na białym polu (R4: ≥ 2,5 cd/m² — z pamięci, UNVERIFIED). Lampka naczepy poszerzona
+   2 000 cd/m² → ~8 cd/m² na białym polu (R4: ≥ 2,5 cd/m² — z pamięci, UNVERIFIED; *ADR 0197: R148 pkt 5.11.3 lit. a, SOURCED; `_PlateIllum` 0,005 → 0,006, min okręgu 25 mm 2,91 cd/m²*). Lampka naczepy poszerzona
    90 → 230 mm (listwa LED; 90 mm nie oświetli równo 520 mm). Ciągnik: nowa lampka `numlamp_body/lens` nad tablicą.
    Skutek uboczny: tablica trafia do gęstszego atlasu Lights (naczepa 662 / 331 / 166 px/m High / Medium / Low
    zamiast 132 / 66 / 33) — czytelna także na Low.
