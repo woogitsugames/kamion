@@ -513,3 +513,5 @@ Knyszyn03/new-round2:3 miniatury nowych względemK1 źródeł Henryka Borawskieg
 01/night-round2/files/running-lights-800.jpg: Bob Harvey, CC BY-SA2.0, źródło i data w lokalnym manifeście; zmniejszenie, odrzucony dla celu tylnych lamp. 05/ground-round2/files/05-GR2-03.jpg: Henryk Borawski, CC BY-SA3.0, zmniejszenie800px, atrybucja i metadane w manifeście/commons-source-metadata.json. Raport miastaBiałystok2025 (07-D05/D06) tylko link i własna parafraza, PDF/rendery poza gitem, bez redystrybucji zdjęć.
 
 03R6-L01/L02: Urszula Citkowska (wspólny podpis grupy), Nowy Goniec Knyszyński11(250), listopad2025, s4; wyłącznie link-only, all rights reserved, bez kopii PDF, obrazów lub screenshotów. Każdy kadr osobno obejrzany i niezależnie zrecenzowany. Materiały wejścioweZIP konkursu2026 nie mają ustalonej publicznej licencji; pozostają niepobrane/PENDING-VISUAL, status w municipal-round3/legal-check.json.
+
+06/monki-ground-round2/files:2 miniatury Henryka Borawskiego, CC BY-SA3.0 i4.0 perwiersz, zmniejszenie pełnego kadru bez kadrowania. URL, autor, daty i metadane w lokalnym manifeście oraz data/. Oryginałów nie pobrano.
