@@ -191,6 +191,7 @@ Shader "Kamion/Truck Exterior"
                 if (ceiling <= 0.0 || ceiling <= knee) return radiance;
                 float m = max(max(radiance.r, radiance.g), radiance.b);
                 float r = max(refMax, m);
+                if (r <= knee) return radiance; // identity below the knee (review O1)
                 float over = max(r - knee, 0.0);
                 float limited = min(r, knee) + over / (1.0 + over / (ceiling - knee));
                 return radiance * (limited / max(r, 1e-6));

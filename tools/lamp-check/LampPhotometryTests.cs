@@ -49,6 +49,14 @@ namespace LampCheck
         }
 
         [Fact]
+        public void HueLimitScale_IsIdentityBelowKnee_EvenForTinyRadiance()
+        {
+            // Review O1 (2026-11-15): r < 1e-6 used to return r / 1e-6 instead of 1.
+            foreach (double m in new[] { 0.0, 1e-9, 1e-7, 1e-6, 0.5 * P.HueKnee, P.HueKnee })
+                Assert.Equal(1.0, P.HueLimitScale(m, 0.0), 12);
+        }
+
+        [Fact]
         public void LegacyPerPixelLimiter_CollapsesStopToTail_AtDusk()
         {
             // ADR 0181 r2 P2-5 measured tail 201 vs stop 202 (sRGB). The per-pixel ADR 0178 limiter: both at the ceiling.

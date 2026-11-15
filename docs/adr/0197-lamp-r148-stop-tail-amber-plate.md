@@ -19,7 +19,7 @@ Status: PROPOSED (gałąź `lights-0197`, nie scalone). Data: 2026-11-15. Autor:
    0,398 ≤ y ≤ 0,429 z ADR 0178 pochodzi z ADR 49/00 (Australia), nie z R48.
 4. **Tablica:** „≥ 2,5 cd/m² — z pamięci, UNVERIFIED” (ADR 0181). Teraz SOURCED: R148 pkt 5.11.3 lit. a, 2,5 cd/m² dla
    kat. 1a/1b/1c/2a/2b w każdym punkcie pomiarowym (P16-090); punkt = okrąg 25 mm, luminancja korygowana do
-   współczynnika odbicia 1,0 (pkt 5.11.2, P16-094); gradient ≤ 2 × B₀/cm (P16-092).
+   współczynnika odbicia 1,0 (pkt 5.11.2, P16-094); gradient ≤ 2 × B₀/cm (P16-092); B₀ = najmniejsza zmierzona luminancja w punktach pomiarowych (tu min okręgu 25 mm).
 
 ## Decyzja
 1. **Limiter z poziomem odniesienia.** `TruckLampHueLimitRef(radiance, refMax, knee, ceiling)`: wspólna skala RGB liczona
@@ -87,3 +87,7 @@ Status: PROPOSED (gałąź `lights-0197`, nie scalone). Data: 2026-11-15. Autor:
 - Punkty pomiarowe rys. A3-X (R148 zał. 3) nieodczytane — test konserwatywny; emisja listwy lampki do tyłu (pkt 5.11.5,
   recenzja G4) nie sprawdzona.
 - Wymiary lampy zespolonej naczepy 520 × 170 mm vs karty 390–450 × 138–153 mm (G5) — poza zakresem.
+
+
+## Recenzja drugim modelem (2026-11-15)
+Darmowe modele OpenRouter (`cohere/north-mini-code:free`, `nvidia/nemotron-3-ultra-550b-a55b:free`, `baidu/ernie-5.5-flash-preview:free`; zasady: `docs/owner/OPENROUTER-FREE-MODELS.md`). Każde zgłoszenie zweryfikowane w kodzie: brak błędów matematyki (macierz sRGB D65, granice R48, stosunek 15,385, tablica 2,91 cd/m² potwierdzone niezależnym przeliczeniem). Poprawione: O1 — `HueLimitScale`/`TruckLampHueLimitRef` dla r ≤ kolano zwraca tożsamość (wcześniej r/1e-6 dla r < 1e-6; niewidoczne w 8 bitach) + test `HueLimitScale_IsIdentityBelowKnee_EvenForTinyRadiance`; definicja B₀ w ADR.

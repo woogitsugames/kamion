@@ -64,6 +64,7 @@ namespace Game.Vehicle.Runtime
         {
             if (ceiling <= 0.0 || ceiling <= knee) return 1.0;
             double r = Math.Max(reference, m);
+            if (r <= knee) return 1.0; // identity below the knee (also for r < 1e-6, review O1)
             return HueLimit(r, knee, ceiling) / Math.Max(r, 1e-6);
         }
 
