@@ -16,9 +16,7 @@ REG = ROOT / "Data" / "Regions"
 sys.path.insert(0, str(ROOT / "tools" / "worldgen"))
 TILES = ["dk65-05", "dk65-06", "dk65-07", "dk65-08", "dk65-09", "dk65-10", "dk65-11", "knyszyn-s"]
 SEAMS = list(zip(TILES, TILES[1:]))
-# dk65-05 still carries the ADR 0207 Ełcka section (7.6 m); owner D65 p.5 (6.9 m) is applied in dk65-06 here and in
-# dk65-02..05 by the separately queued correction task (HANDOVER D65 (b)).
-PENDING_0207 = {("dk65-05", "dk65-06")}
+# Ełcka / Studzienna: owner D66 = 6.6 m in dk65-02..06 (ADR 0215 r2) - the seam 05/06 is asserted, no xfail.
 # Research K1 (research/dk65-knyszyn-refs): edge lines 6.0-6.4 m apart up to km 25.0 -> dk65-06..11 carry 2 x 3.1 + 2 x 0.2 m
 # (`dk65-xsec-k1`). ADR 0233: knyszyn-s keeps that section on its first 484 m through a `width` profile on the seam edge
 # (the knyszyn-s set starts at the repaving joint km 25.32), so the set of the overrides differs across that seam while
@@ -63,8 +61,6 @@ def test_seam_cross_section_matches(a, b):
     eb, rb, ob = _load(b)
     last, first = ea[ra[-1]], eb[rb[0]]
     assert last["osm_way"] == first["osm_way"], f"{a}->{b}: route leaves via way {last['osm_way']}, enters via {first['osm_way']}"
-    if (a, b) in PENDING_0207:
-        pytest.xfail("dk65-05 Ełcka 7.6 m (ADR 0207) until the D65 p.5 correction of dk65-02..05 lands")
     va, vb = _effective(last, oa), _effective(first, ob)
     if (a, b) in PROFILED_SEAM:
         from test_dk65_seam_knyszyn_0233 import _section_at
@@ -125,7 +121,7 @@ def _heights(t):
     return tj["bbox"], z, tj["source_manifest"]
 
 
-@pytest.mark.parametrize("a,b", SEAMS[1:])
+@pytest.mark.parametrize("a,b", SEAMS)
 def test_seam_terrain(a, b):
     """Shared tile edges carry the same NMT samples; the one survey-year change (dk65-10 NMT 2025 | dk65-11 NMT 2022,
     pinned to knyszyn-s) stays under 0.5 m."""
@@ -148,7 +144,7 @@ def _site(t):
     return [o for o in ov if o.get("kind") == "construction_site"]
 
 
-@pytest.mark.parametrize("a,b", SEAMS[1:-1])
+@pytest.mark.parametrize("a,b", SEAMS[:-1])       # from dk65-05/06: dk65-05 uses the same site mechanism (ADR 0215 r2)
 def test_seam_site_axes_continue(a, b):
     """A construction axis cut by a seam reaches past it in both tiles with the same geometry and half-width, so both
     sides get the same corridor edge (no step in the sand at the seam)."""
@@ -158,6 +154,8 @@ def test_seam_site_axes_continue(a, b):
     if seam.is_empty:
         pytest.skip("no shared edge")
     ax = {t: {(x["osm_way"]): x for s in _site(t) for x in s["axes"]} for t in (a, b)}
+    if (a, b) == ("dk65-05", "dk65-06"):
+        assert {1151531608, 1151531613} <= set(ax[a]) & set(ax[b]), "the not-open DK65 carriageway is a site on both sides"
     for w in set(ax[a]) & set(ax[b]):
         la, lb = LineString(ax[a][w]["line_epsg2180"]), LineString(ax[b][w]["line_epsg2180"])
         if not la.intersects(seam.buffer(0.1)):
@@ -209,3 +207,26 @@ def test_construction_site_heaps_inside_tile_and_deterministic():
     assert z[outside].max() < 0.05
     assert z[_ras([road], hf)].max() == 0.0
     assert 1.0 < z.max() < 3.5
+
+
+def test_construction_site_sand_is_identical_on_both_sides_of_a_seam():
+    """ADR 0215 r2: a corridor crossing a tile seam at an angle gets the same sand weight on the shared grid row in
+    both tiles (the blur sees the corridor beyond the tile, not its mirror image)."""
+    from streetscape import construction_site as CS
+    ov = [{"id": "t", "kind": "construction_site", "platform_m": 0.0, "heaps_per_ha": 0.0,
+           "axes": [{"osm_way": 1, "half_width_m": 10.0, "line_epsg2180": [[-60.0, -80.0], [45.0, 60.0]]}]}]
+    n = 200
+    south = SimpleNamespace(x0=-100.0, y1=0.0, z=np.zeros((n + 1, n + 1)))       # rows N = 0 ... -200, seam = row 0
+    north = SimpleNamespace(x0=-100.0, y1=200.0, z=np.zeros((n + 1, n + 1)))     # rows N = 200 ... 0, seam = last row
+    rows = {}
+    for name, hf, row in (("s", south, 0), ("n", north, -1)):
+        rep = {}
+        sites = CS.plan(ov, (0, 0), None, rep)
+        _, m = CS.shape_terrain(hf.z.copy(), np.zeros(hf.z.shape, bool), hf, sites, _ras, rep)
+        col = CS.ground_colour(np.zeros(hf.z.shape + (4,), np.float32), m, hf, sites, _ras)
+        rows[name] = col[row, :, 3]
+        old = CS.ground_colour(np.zeros(hf.z.shape + (4,), np.float32), m, hf)[row, :, 3]
+        rows[name + "_mirror"] = old
+    assert rows["s"].max() > 0.8
+    assert np.abs(rows["s"] - rows["n"]).max() < 1e-4
+    assert np.abs(rows["s_mirror"] - rows["n_mirror"]).max() > 0.05, "the unpadded blur is what differed at the seam"

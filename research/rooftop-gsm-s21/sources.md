@@ -39,3 +39,11 @@
 - File:Antenna tower in Białystok (Cieszyńska).jpg, File:Antenna tower in Białystok (Kawaleryjska).jpg (CC BY-SA 4.0, wolnostojące — do katalogu elementów)
 - File:Waszyngtona 36 Białystok 2.jpg / 3.jpg, File:Tysiąclecia 10A Białystok 1.jpg / 2.jpg, File:Tysiąclecia 10 Białystok 3a.jpg, File:Apartment buildings in Białystok (Waszyngtona).jpg, File:W Białymstoku 008.jpg
 - File:20191110 114106 Zwierzyniecka Street in Bialystok November 2019.jpg, File:20191111 102206 Zwierzyniecka Street in Białystok.jpg, File:20201102 091949 Dobra Street in Białystok.jpg, File:20200509 155354 Kopernika Street in Białystok May 2020.jpg (+ 155417, 155523)
+- Stan po s21b: oba tytuły Zwierzynieckiej pobrane (K67-098, K67-099; budynek nr 7, nie cel). Nadal niepobrane: Antenna tower (Kawaleryjska), Tysiąclecia 10 Białystok 3a.
+
+## s21b (2026-11-15) — kadry naziemne
+- KartaView API `https://api.kartaview.org/2.0/photo/` (sekwencje 3686129 [2021-06-23], 2769366 [2019-08-25], 11712048, 10733 i in.; CC BY-SA 4.0). Pliki `fileurlProc` ze storage1.openstreetcam.org. Kadry: K67-083…093.
+- Panoramax `https://api.panoramax.xyz/api/search` (bbox wokół 6 dachów) — K67-145.
+- Wikimedia Commons API (geosearch 600 m, imageinfo/coordinates, miniatury przez `thumburl`) — K67-097…144; metadane `out/commons_s21b_meta.json`, log prób `out/commons_s21b_log.json`. Openverse (`api.openverse.org`) tylko do wyszukania tytułów Commons.
+- OSM API 0.6 `node/11285970200`, `way/284157362` — K67-148.
+- Nie pobrano (HTTP 429): geosearch Commons dla Zwierzynieckiej 4, Hallera 19, Kopernika 5A, wieżowca; wersja 1920 px File:6451 August 2019 in Bialystok Kopernika Street.jpg.

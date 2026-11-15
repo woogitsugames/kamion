@@ -137,6 +137,9 @@ DIVIDER_W, DIVIDER_LIFT = S.EDGING_W, 0.01
 # (two wheels, diamond frame, handlebar, saddle): WORKING_VALUE shape inside SOURCED outer dimensions.
 P23 = {"len": 2.00, "h": 1.10, "line": 0.10}
 P23_SMALL = {"len": 1.30, "h": 0.715, "line": 0.065}
+# ADR 0221: segments per quarter of a wheel outline. 32 gave 128-gons (479 triangles per symbol, 21 k in region C);
+# 8 = 32-gon, chord error <= 3.5 mm on the 1.43 m long axis of the large symbol (measured: tests/gis/test_budget_0221.py)
+P23_WHEEL_QUAD_SEGS = 8
 P23_AFTER_CROSSING_M = 3.0  # WORKING_VALUE: tail of the symbol this far behind the carriageway edge
 LINE_W = S.LINE_W_NARROW    # 0.12 m
 # centre line of a two-way track: dash 1 m, gap 3 m - read off owner photo P11-001 (Kuronia, dash : gap about 1 : 3
@@ -484,7 +487,7 @@ def p23_glyph(small: bool = True):
     parts = []
     for u in (-0.5 + r, 0.5 - r):
         cx, cy = r * H * k + lw / 2, u * (H - lw)
-        outer = affinity.translate(affinity.scale(Point(0, 0).buffer(1.0, 32), r * H * k + lw / 2, r * (H - lw) + lw / 2,
+        outer = affinity.translate(affinity.scale(Point(0, 0).buffer(1.0, P23_WHEEL_QUAD_SEGS), r * H * k + lw / 2, r * (H - lw) + lw / 2,
                                                   origin=(0, 0)), cx, cy)
         parts.append(outer.difference(outer.buffer(-lw)))
     hub_r, hub_f = (r * H * k + lw / 2, (-0.5 + r) * (H - lw)), (r * H * k + lw / 2, (0.5 - r) * (H - lw))

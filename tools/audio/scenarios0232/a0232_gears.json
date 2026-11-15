@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "a0232_gears",
+  "description": "empty combination, flat: part throttle through the gears, full throttle, lift-off, back on the throttle",
+  "spec": "docs/adr/0232 (audio scenario, no physics checks)",
+  "variants": [
+    "empty"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 25,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 1.0,
+        "throttle": 0.55,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 10,
+        "throttle": 1,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 18,
+        "throttle": 0,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      },
+      {
+        "t": 20.5,
+        "throttle": 0.7,
+        "brake": 0.0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D",
+        "retarderLever": 0
+      }
+    ]
+  },
+  "checks": []
+}

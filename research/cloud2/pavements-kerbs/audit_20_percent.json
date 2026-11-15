@@ -1,0 +1,205 @@
+{
+ "seed": 20261114,
+ "metoda_losowania": "random.Random(20261114).sample(sorted(ids), ceil(0.2*N))",
+ "N": 72,
+ "k": 15,
+ "wiersze": [
+  {
+   "id": "R6-002",
+   "przedmiot": "światło krawężnika — wyjątki",
+   "sprawdzono": "ponowne otwarcie źródła: ost_D-08.01.01b_pomiechowek.pdf (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy 'zmniejszone do 6 cm lub zwiększone do 16 cm'; sha256 pliku zgodne",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-004",
+   "przedmiot": "krawężnik wyspy/pasa dzielącego na przejściu dla pieszych",
+   "sprawdzono": "ponowne otwarcie źródła: D20160124.pdf (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy 'nie powinno być większe niż 2 cm'; sha256 pliku zgodne",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-009",
+   "przedmiot": "krawężnik uliczny — przekroje b×h, długość",
+   "sprawdzono": "ponowne otwarcie źródła: ost_D-08.01.01b_pomiechowek.pdf (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy 'Przykładowe wymiary krawężników'; sha256 pliku zgodne",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-010",
+   "przedmiot": "krawężnik drogowy — przekroje",
+   "sprawdzono": "ponowne otwarcie źródła: ost_D-08.01.01b_pomiechowek.pdf (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy 'typ drogowy 12x25x100 cm'; sha256 pliku zgodne",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-017",
+   "przedmiot": "obrzeże chodnikowe 8×30",
+   "sprawdzono": "ponowne otwarcie źródła: ost_D-08.03.01_czernica.pdf (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy 'Ow1'; sha256 pliku zgodne",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-027",
+   "przedmiot": "obróbka brukarska wokół włazów/hydrantów/zasuw (Białystok)",
+   "sprawdzono": "ponowne otwarcie źródła: zdm_wytyczne_2025.pdf (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy 'Rysunek nr 3'; sha256 pliku zgodne",
+   "obraz": "PONOWNIE OBEJRZANO świeży render s. 10 (90 dpi): rys. 3 — właz okrągły z kratownicą otworów w wieńcu kształtek trapezowych, mała skrzynka w wieńcu 9 kształtek, owalny hydrant z napisem HYDRANT, podpis „Kostka betonowa typu starobruk o różnych kształtach”, tło w wiązaniu półcegłowym — zgodne z wierszem",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-028",
+   "przedmiot": "właz studni w jezdni (Białystok)",
+   "sprawdzono": "ponowne otwarcie źródła: zdm_wytyczne_2025.pdf (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy 'prze\\\\wicie 600 mm'; sha256 pliku zgodne",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-031",
+   "przedmiot": "studzienka wpustu ściekowego (Białystok)",
+   "sprawdzono": "ponowne otwarcie źródła: zdm_wytyczne_2025.pdf (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy 'prefabrykat betonowy o \\\\rednicy 500 mm'; sha256 pliku zgodne",
+   "obraz": "PONOWNIE OBEJRZANO świeży render s. 11 (90 dpi): pkt 20 „…prefabrykat betonowy o średnicy 500 mm, z osadnikiem o głębokości 1.00 m” — zgodne z cytatem",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-048",
+   "przedmiot": "kolor nawierzchni DDR — zalecenie krajowe",
+   "sprawdzono": "ponowne otwarcie źródła: wrd42_2_nowytarg.pdf (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy 'wykonana w kolorze czerwonym i jego odcieniach'; sha256 pliku zgodne",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-055",
+   "przedmiot": "Sokólska — jezdnia: długość i surface",
+   "sprawdzono": "ponowne otwarcie źródła: osm_summary.json (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy '\"Sokólska\"'; sha256 pliku n/d",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-057",
+   "przedmiot": "Władysława Wysockiego — jezdnia: długość i surface",
+   "sprawdzono": "ponowne otwarcie źródła: osm_summary.json (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy '\"Władysława Wysockiego\"'; sha256 pliku n/d",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-062",
+   "przedmiot": "Dywizjonu 303 — jezdnia: długość i surface",
+   "sprawdzono": "ponowne otwarcie źródła: osm_summary.json (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy '\"Dywizjonu 303\"'; sha256 pliku n/d",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-064",
+   "przedmiot": "Aleja Tysiąclecia Państwa Polskiego — ciągi piesze/rowerowe ≤ 30 m od osi: tag surface",
+   "sprawdzono": "ponowne otwarcie źródła: osm_summary.json (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy '\"Aleja Tysiąclecia Państwa Polskiego\"'; sha256 pliku n/d",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-065",
+   "przedmiot": "Generała Stanisława Maczka — ciągi piesze/rowerowe ≤ 30 m od osi: tag surface",
+   "sprawdzono": "ponowne otwarcie źródła: osm_summary.json (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy '\"Generała Stanisława Maczka\"'; sha256 pliku n/d",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  },
+  {
+   "id": "R6-071",
+   "przedmiot": "Jacka Kuronia — ciągi piesze/rowerowe ≤ 30 m od osi: tag surface",
+   "sprawdzono": "ponowne otwarcie źródła: osm_summary.json (świeży pdftotext / odczyt JSON), wyszukanie frazy-kotwicy '\"Jacka Kuronia\"'; sha256 pliku n/d",
+   "obraz": "n/d (wiersz tekstowy)",
+   "wynik": "PASS",
+   "korekta": ""
+  }
+ ],
+ "wynik_zbiorczy": "15 PASS / 0 FAIL",
+ "uwaga": "Manifest zawiera wyłącznie wiersze dokumentowe/OSM; kadry uliczne (frames_selected.json) NIE zostały obejrzane i nie są wierszami manifestu — nie podlegały losowaniu.",
+ "uzupelnienie_2026_11_15": {
+  "seed": 20261115,
+  "metoda": "random.Random(20261115).sample(sorted(id > R6-072), ceil(0.2*n))",
+  "n_nowych_wierszy": 41,
+  "k": 9,
+  "wynik": {
+   "PASS": 8,
+   "FIX": 1
+  },
+  "wiersze": [
+   {
+    "id": "R6-074",
+    "kadr": "F02",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F02*.jpg (960 px + 2 wycinki): krawężnik + wąski jasnoszary pas + trawa, ekran z panelami o pionowym żebrowaniu i szkłem — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-079",
+    "kadr": "F07",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F07*.jpg (960 px + 2 wycinki): jasnoszary krawężnik na łuku, ekran: biały cokół, ciemne żłobione panele, szkło — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-083",
+    "kadr": "F11",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F11*.jpg (960 px + 2 wycinki): ciemne smugi łukowe i podłużne na asfalcie, ekran z poziomo profilowanych paneli z zielonym pasem — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-084",
+    "kadr": "F12",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F12*.jpg (960 px + 2 wycinki): po lewej jest pas dzielący, nie wysepka",
+    "wynik": "FIX",
+    "korekta": "„Lewa: wysepka z krawężnikiem” → „Lewa: pas dzielący z krawężnikiem, trawą i żółtym ogrodzeniem”"
+   },
+   {
+    "id": "R6-085",
+    "kadr": "F13",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F13*.jpg (960 px + 2 wycinki): niski krawężnik, pas trawy z barierą — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-092",
+    "kadr": "F20",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F20*.jpg (960 px + 2 wycinki): wytarta, postrzępiona linia krawędziowa, wysoki krawężnik mostowy, kapa czerwonobrązowa z piaskiem — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-095",
+    "kadr": "F31",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F31*.jpg (960 px + 2 wycinki): DDR szary asfalt, chodnik z kostki prostokątnej w rzędach z przebarwieniem przy trawniku — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-101",
+    "kadr": "F38",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F38*.jpg (960 px + 2 wycinki): czerwonobrązowa kostka z szarym obrzeżem, pas szarej kostki kamiennej, słupki z łańcuchami — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R6-103",
+    "kadr": "F40",
+    "sprawdzono": "PONOWNE obejrzenie files/_v2/F40*.jpg (960 px + 2 wycinki): DDR ciemnoszary asfalt na łuku, duże szare płyty, obrzeża — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   }
+  ]
+ }
+}

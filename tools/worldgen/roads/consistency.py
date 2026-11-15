@@ -57,6 +57,8 @@ class SurfaceIndex:
         for p in parts:
             if p.layer not in ("road", "bridge", "paved") or len(p.T) == 0:
                 continue
+            if p.src.startswith("tunnel"):                   # ADR 0211: ground re-emitted on a tunnel slab (merged
+                continue                                     # into the terrain) and the slab body: not road surfaces
             if p.mat in CARRIAGEWAY:
                 k = "carriageway"
             elif p.mat in OBSTACLE:
