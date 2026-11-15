@@ -583,3 +583,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 04/temporary-marking-round7:3fotografie publicznej strony kontraktuS19Krynice–Dobrzyniewo–BiałystokZachód, autorUNVERIFIED, tylko link-only, all rights reserved. DokładneURL i podpisyDK65/daty permanifest, wszystkiepo niezależnympeer; bez zdjęć/screenshotów wGit/na dysku. LogoGDDKiA nie uznane za licencjęCC.
 
 04/forest-context-round8:publiczne usługiBDL/LasówPaństwowych,1identyfikacjawydzielenia i literalneodpowiedzi/metadane + własnepara frazy. Nie przypisanoCC; mapaWMSwyłącznie pozaGit, bez redystrybucji geometrii(granicegeometrynull). Użycie nie rozszerza warunków źródła i nie identyfikuje szpaleru.
+
+06/dw671-roundabout-ground-round6:2fotografieMapillary, grobin2019/2020, CC BY-SA4.0 według oficjalnej pomocy wskazanej wmanifeście. Wyłącznie linki i własne opisy,0kopii/screenshotów/API/tokenów. PodkładOSM, dokładnepKey/datowania/ograniczenia permanifest.

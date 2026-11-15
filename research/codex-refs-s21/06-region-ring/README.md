@@ -59,3 +59,7 @@ Aktualny główny manifest:21rekordów. [Synagoga](tykocin-synagogue-round4/READ
 ## Most Narwi — obieg5
 
 Aktualny główny manifest25rekordów. [Most w Tykocinie](tykocin-bridge-round5/README.md):4nowe fotografieCC,4pobrane podglądy/4miniatury≤800,0pełnychoryginałów, osobno obejrzane również przez koordynatora. Przyczółek, kratownica, oddzielenie chodnika od asfaltu, kamienna skarpa, brukowane dojście, bliska drewniana zabudowa i historyczne boki mostu. Nie uznano drogi gruntowej za najazdDW671 ani panelu nad latarnią za dowód wykonanego projektu oświetlenia. Materiał nie rozstrzyga prawnych ograniczeń tonażu/wysokości ani obecnego stanu2026. KontekstDW671 z dokumentu sesji gminy, osobno od wyglądu fotografii.
+
+## Rondo DW671/DK64 — widoki naziemne, obieg6
+
+Główny manifest27rekordów. [Dwa kadryMapillary](dw671-roundabout-ground-round6/README.md),grobin2019/2020,0pobrań/2link-only: jeden pokazuje łuk ronda i jasny pierścień z podziałem na małe elementy, drugi samo północne ramię/wyspęrozdzielającą/żółtąosłonę i kreskowanie. To nie pełny ogląd4ramion ani dwa różne ronda. Punkt wzięto z06-O03/data, OSMpodkład jawnie sprawdzony;viewport nie jest GPSkamery. Nie zmierzono wysokości/materiału/przejezdności pierścienia ani nie odczytano małych ograniczeń. Stan2026UNVERIFIED. Każdy wybrany obraz agent obejrzał osobno.

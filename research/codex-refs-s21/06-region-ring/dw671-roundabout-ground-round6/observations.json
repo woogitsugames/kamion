@@ -1,0 +1,65 @@
+{
+  "snapshot_brussels": "2026-11-15T23:26:56+01:00",
+  "counts": {
+    "individually_observed_distinct_images": 2,
+    "roundabout_ring_view": 1,
+    "adjacent_north_arm_context": 1,
+    "downloaded_images": 0,
+    "saved_screenshots": 0
+  },
+  "point_basis": {
+    "source_existing": "06-region-ring/data/dw671-dk64-roundabout-ortho.json; main manifest06-O03",
+    "target_centre_lat_lon": [
+      53.13765,
+      22.7413
+    ],
+    "map_identifier": "Existing local OSM way183373470, junction=roundabout, ref64;671. No new OSM API or Overpass query.",
+    "limits": "Point is existing crop centre used for selection, not camera GPS or new legal road-inventory proof."
+  },
+  "method": "Chrome CUA, public Mapillary viewer. Started at existing coordinate; opened basemap chooser and visually confirmed outlined OpenStreetMap selection. No Esri/Google/3D. Picked actual green point on roundabout and separate point on northern arm; each maximised and individually viewed before description. No screenshots or images written to disk, no API/tokens queried.",
+  "basemap_evidence": "Visible selector explicitly listed OpenStreetMap and outlined its thumbnail; not inferred merely from mapStyle parameter.",
+  "image_metadata": "Both creator grobin and individual dates read from actual viewer. First2020-09-20, second2019-09-02.",
+  "location_evidence": "Viewer map marker for first on western arc of selected roundabout, second on northern arm; OSM map showed64/671. The selected point came from existing06 data, not guessed from media title.",
+  "coordinate_limits": "URL lat/lng are viewport parameters. On focus changes viewer recentered, but no independent camera GPS was read. Preserve UNVERIFIED; no camera azimuth inferred from vehicle heading.",
+  "dedup": "Exact pKeys952218695320138 and804961790455082 absent from prior codex-refs-s21 and K1 text records before write.",
+  "licence_basis": {
+    "official_help": "https://help.mapillary.com/hc/en-us/articles/115001770409-CC-BY-SA-license-for-open-data",
+    "existing_verified_record": "04-dk65/mapillary-browser-round2/licence-check.json, read2026-11-15",
+    "finding": "Official help states CC BY-SA images and links BY-SA4.0; attribution image link and creator. This round no new full terms inspection or local copy.",
+    "limit": "Do not apply image licence to map tiles or all derived datasets."
+  },
+  "source_screening": "General web lookup Jeżewo press article identified possible protest photography, but it was NOT visually reviewed and is not in photo manifest; no description from title or article.",
+  "photos": [
+    {
+      "id": "06-DW6-01",
+      "key": "952218695320138",
+      "url": "https://www.mapillary.com/app/?lat=53.137645696727&lng=22.741008535571&z=17&mapStyle=OpenStreetMap&pKey=952218695320138&focus=photo",
+      "date": "2020-09-20",
+      "ui_date": "20 wrz 2020",
+      "viewport": "53.137645696727,22.741008535571",
+      "status": "GROUND_ROUNDABOUT_RING",
+      "seen": "Widok przez przednią szybę z maską i wycieraczkami u dołu. Ciemna jezdnia zakrzywia się wokół zielonej wyspy po lewej. Przy wewnętrznym brzegu szeroki jasny pas z widocznym podziałem na małe elementy, obramowany krawędzią; bliżej kamery łuk tego pasa dobrze widoczny. Na wyspie pionowe białe tarcze z czerwonymi strzałkami w prawo, dalej małe okrągłe i trójkątne tarcze bez pewnego odczytu treści. Po prawej trawa, chodnik lub ciąg pieszy, czerwone ogrodzenia przy małej zieleni, wysokie słupy z jedną oprawą. Silne światło z prawej i plamy na szybie utrudniają drobny detal.",
+      "use": "Łuk jezdni, wygląd jasnego pierścienia, krawędź wyspy, strzałki i relacja do słupów; bez wniosku o przejezdności.",
+      "limits": "Materiał, fizyczna wysokość i przejezdność pierścienia UNVERIFIED; wartości małych znaków nieodczytane. Nie policzono wszystkich ramion ani pełnego zestawu urządzeń."
+    },
+    {
+      "id": "06-DW6-02",
+      "key": "804961790455082",
+      "url": "https://www.mapillary.com/app/?lat=53.13764569672699&lng=22.74100853557104&z=17&mapStyle=OpenStreetMap&pKey=804961790455082&focus=photo",
+      "date": "2019-09-02",
+      "ui_date": "2 wrz 2019",
+      "viewport": "53.13764569672699,22.74100853557104",
+      "status": "GROUND_NORTH_ARM_CONTEXT",
+      "seen": "Naziemny widok wzdłuż prostego ramienia drogi z maską u dołu. Po lewej wydłużona jasna wyspa rozdzielająca z obramowaniem, żółtym osłoniętym słupkiem i tyłem okrągłej tarczy; dalej białe ukośne kreski pola wyłączenia. Ciemna jezdnia ma białą linię krawędziową. Po prawej trawiasty pas, niski słupek odblaskowy, okrągła biało-czerwona tarcza z pionowymi symbolami strzałek i mniejsza tabliczka z nieodczytanym tekstem. Dalej mała niebieska tablica i drobne znaki; obok pola, słupy linii napowietrznej, duża kratowa konstrukcja i ogrodzony teren z zielenią. Wyspa centralna ronda nie jest w tym kadrze widoczna.",
+      "use": "Północne ramię przy rondzie: wyspa rozdzielająca, żółta osłona, pole kreskowane i krawędź asfaltu.",
+      "limits": "To widok z ramienia obok ronda, nie pełna centralna wyspa ani widok wszystkich wlotów. Nie odczytano/przypisano prędkości, tonażu ani szczegółowej treści małych tablic. Nie ustalono aktualnych ograniczeń prawnych."
+    }
+  ],
+  "critical_limits": [
+    "Historical2019/2020, not current2026 inventory.",
+    "Only one central roundabout view, one adjacent arm; not a complete four-arm survey.",
+    "Light surface colour or apparent element pattern does not establish drivable apron or material.",
+    "No metrical dimensions or full restriction set asserted."
+  ],
+  "browser": "Released after completion_summary; knyszyn informed for priority Roadtour peer."
+}
