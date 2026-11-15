@@ -35,10 +35,12 @@ ROW0_D_M = -0.35                   # row 0 stands in the water margin (foot unde
 HEIGHT_M = (2.3, 1.8, 1.5, 1.3)       # mean top height of row 0 / 1 / 2+ (reed at the water, sedge / herbs behind)
 ZIGZAG_M = 0.28
 LEAN_M = 0.12
+CROSS_DEG = 40.0                   # High: crossed cards at +-40 deg to the bank, CARD_W wide, one pair per sample
+CARD_W = 2.6
 PIECE_N = (2, 5)                   # clump length in samples (x SEG_M), r4
 GAP_P = 0.20                       # chance of a one-sample gap after a clump (r5: clumps mostly overlap)
 PIECE_OFF_M = 0.6                  # clump offset from its row (+-)
-OCC = (0.35, 0.80)                 # foliage occlusion at the foot / top of a ribbon (PlotKit: albedo factor)
+OCC = (0.55, 0.90)                 # foliage occlusion at the foot / top of a ribbon (PlotKit: albedo factor)
 SHRUB_MAX_R = 2.2
 TREE_KEEP_M = 2.5
 
@@ -216,8 +218,39 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                     foot = np.where(np.isfinite(zl) & (zg < zl - 0.25), zl - 0.25, zg) - 0.12
                     top = foot + h
                     lean = -Nm[sp] * LEAN_M * (1.0 if row == 0 else -0.5)       # row 0 leans over the water
+                    nrm = np.column_stack([-Nm[sp] * 0.6, np.full(len(sp), 0.6)])
                     s_ = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))])
                     u = _h(*pk, "u") + s_ / TEX_M
+                    if not low:
+                        # r5 (High): crossed cards per sample (+-CROSS_DEG to the bank) instead of a ribbon - a
+                        # ribbon seen along the bank turned into dark fins; crossed cards keep volume from every side
+                        Vc, UVc, Cc, Tc = [], [], [], []
+                        for i_ in range(len(sp)):
+                            if h[i_] <= 0.05:
+                                continue
+                            hc = max(h[i_], 0.6 * hm)
+                            for sgn in (-1.0, 1.0):
+                                ang = sgn * math.radians(CROSS_DEG) + (_h(key0, row, int(sp[i_]), "ca", sgn) - 0.5) * 0.5
+                                t_ = T_[sp[i_]]
+                                dv = np.array([t_[0] * math.cos(ang) - t_[1] * math.sin(ang),
+                                               t_[0] * math.sin(ang) + t_[1] * math.cos(ang)]) * (CARD_W / 2)
+                                A, B = Q[i_] - dv, Q[i_] + dv
+                                if shapely.contains_xy(keep_out, [A[0], B[0], A[0] + lean[i_][0], B[0] + lean[i_][0]],
+                                                       [A[1], B[1], A[1] + lean[i_][1], B[1] + lean[i_][1]]).any():
+                                    continue
+                                u0 = _h(key0, row, int(sp[i_]), "cu", sgn)
+                                n0 = len(Vc)
+                                Vc += [[*A, foot[i_]], [*B, foot[i_]], [*(B + lean[i_]), foot[i_] + hc], [*(A + lean[i_]), foot[i_] + hc]]
+                                vt = float(np.clip(hc / 2.5, 0.05, 1.0))
+                                UVc += [[u0, 0.0], [u0 + CARD_W / TEX_M, 0.0], [u0 + CARD_W / TEX_M, vt], [u0, vt]]
+                                Cc += [_fol(nrm[i_], OCC[0])] * 2 + [_fol(nrm[i_], OCC[1])] * 2
+                                Tc += [(n0, n0 + 1, n0 + 2), (n0, n0 + 2, n0 + 3)]
+                        if Tc:
+                            buf.add(layer, "water_reeds", np.asarray(Vc), np.asarray(UVc), np.asarray(Tc),
+                                    src=f"water:reeds:{ri}:{row}:{pi_}", COL=np.asarray(Cc))
+                            ntri += len(Tc)
+                            nrib += 1
+                        continue
                     V = np.zeros((2 * len(sp), 3))
                     V[0::2, :2], V[0::2, 2] = Q, foot
                     V[1::2, :2], V[1::2, 2] = Q + lean, top
@@ -225,7 +258,6 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
                     UV[0::2, 0] = UV[1::2, 0] = u
                     UV[0::2, 1] = 0.0
                     UV[1::2, 1] = np.clip(h / 2.5, 0.05, 1.0)    # texture spans 2.5 m: low clumps use the lower part
-                    nrm = np.column_stack([-Nm[sp] * 0.6, np.full(len(sp), 0.6)])
                     C = np.zeros((2 * len(sp), 4))
                     for i_ in range(len(sp)):
                         C[2 * i_] = _fol(nrm[i_], OCC[0])
