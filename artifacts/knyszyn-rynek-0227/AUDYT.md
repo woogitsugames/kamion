@@ -41,3 +41,6 @@ Pary adres OSM → obrys BDOT (położenie SOURCED, wygląd poszczególnych fasa
 | 11 | Rondo i DK65 z drona | `rondo_owner_11` | Brak renderu; punkt, wysokość i kierunek ESTIMATED. |
 
 Pary są przygotowywane wyłącznie lokalnie przez `compare.py`; nie zamieszczać zdjęć ani wyników par w Git. Zdjęcia targowicy z drona pozostają opisem, bez lokalnego pliku do bezpośredniego SBS.
+
+## Wierzba płacząca — analiza techniczna
+Istniejące `tree_shrub` w module brzegowym nie jest dorosłą wierzbą płaczącą. Osobny prototyp wymaga LOD0/LOD1, impostora i materiału drobnych liści oraz weryfikacji wizualnej; koszt i pozycja UNVERIFIED. Ścieżka authored `points_en` losuje obecnie wariant 0–2 bez ograniczenia `NVAR`, więc jeden wariant wymaga poprawki doboru indeksu; dodanie gatunku do globalnych mieszanek zmieniłoby dotychczasowe losowania i nie jest potrzebne. Nowy zasób wymaga wpisu licencyjnego i pomiaru Low/High.
