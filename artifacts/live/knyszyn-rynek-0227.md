@@ -150,3 +150,7 @@
 - 2026-11-15 22:07 +01:00 — Właściciel potwierdził: targowica z 4 wiatami jest na placu po drugiej stronie Jagiellońskiej od nr 50; odpowiada kandydatowi OSM way 704368699. Układ i wymiary wiat nadal ESTIMATED; przygotowanie po R5.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r5.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r5.done`
 
+
+- 2026-11-15 22:11 +01:00 — R5 wszystkie warianty OK, dach portyku widoczny High/Low; kalenica i lukarny nadal niezgodne. Low max +6 draws i +1825 tris na wspólnych kamerach, High max 1 229 814 tris. Pary 01–11 lokalnie. Targowica potwierdzona przez właściciela, prototyp wiat NIEZINTEGROWANY do czasu zdjęć/pozycji.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis -q`
+
