@@ -154,3 +154,7 @@
 - 2026-11-15 22:11 +01:00 — R5 wszystkie warianty OK, dach portyku widoczny High/Low; kalenica i lukarny nadal niezgodne. Low max +6 draws i +1825 tris na wspólnych kamerach, High max 1 229 814 tris. Pary 01–11 lokalnie. Targowica potwierdzona przez właściciela, prototyp wiat NIEZINTEGROWANY do czasu zdjęć/pozycji.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis -q`
 
+
+- 2026-11-15 22:12 +01:00 — R6 uruchomiona: niższe lukarny CULTURE na istniejącej połaci, 10 testów modułu passed; dach nadal wymaga poprawy kalenicy. C powyżej progu. Targowica: potwierdzony plac OSM, zdjęcia dronowe potrzebne do położeń wiat.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r6.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r6.done`
+
