@@ -16,6 +16,6 @@
 
 ## Uwagi
 - **P2-1:** Overpass dla klas niższych nie powiódł się ponownie: przy 4×4 kafel 2_0, przy 6×6 kafel 0_5, po 5 próbach HTTP 504. Inne serwery przez proxy nie odpowiadają. Liczby §4a mają więc jedno źródło (PBF recenzenta, 2026-11-08). Jeśli lider potrzebuje drugiej metody: `uv run --project tools/worldgen` na tym samym PBF z innym narzędziem (np. osmium tags-filter + ogr) albo Overpass z innego środowiska.
-- **P2-2:** L05 105 vs 116 i L19 10 vs 7: różnice między zapytaniami z 2026-11-14 (recenzent) i 2026-11-15 (pakiet). Mieszczą się w ±10 %, nie wyjaśniłem ich przyczyny. Liczby z geosearch traktować jako rząd wielkości.
+- **P2-2:** L05 105 vs 116 i L19 10 vs 7: różnice między zapytaniami z 2026-11-14 (recenzent) i 2026-11-15 (pakiet). L05 to −9 %, L19 to +3 pliki przy małej liczbie; przyczyny nie wyjaśniłem. Liczby z geosearch traktować jako rząd wielkości.
 - **P2-3:** Żaden z obejrzanych plików Commons nie pokazuje celu L03/L19/L23 → nadal potrzebne Mapillary (token lidera) albo zdjęcia właściciela.
 - **P2-4 (bez zmiany):** `overpass/*.json` zajmują 2,6 MB w repo (uwaga lidera §7). Nie przenosiłem ich, bo `build_manifest.py` i audyt ich potrzebują.
