@@ -151,7 +151,27 @@
 - [15.11 ~16:5x] **A16 gate3 G3-B WAŻNY** (af2570fccd): 29,94 FPS, p95 33,46, p99 33,61, max 83,3, > 50 ms 3 klatki, PSS 933,8 MB, 46/46 kamer. Oba segmenty w budżecie, wpis w docs/reports/GATE-3.md. S24+ niepodłączony. #90 po weryfikacji: solo 0–80 14,06 s (było 13,58), hamowanie 35,39 m; 40 t 47,58 s / 41,20 m.
 - [15.11 ~17:3x] Scalono 0213 (woda dk65-02/03: trzcina r7, brzegi, kolor; pytest 1313 ok, 1 fail na nieaktualnych danych C w worktree). Otwarte z obejrzenia water-close-bank Low: schodkowa, ciemna krawędź wody widoczna spod trawy przy brzegu; łaty zmarszczek na High. EditMode po scaleniu do powtórzenia. #80 (Ełcka) można teraz weryfikować.
 - [15.11 ~18:0x] Scalono Argona 0188 (DDR M65), 0187 (las M68, recenzja: SCAL warunkowo, szwy HLOD Low) i 0189 (brama szpitala M62). Konflikty: overrides D = suma; vegetation.py = priorytet authored 0186 + wyjątek tree_floor 0187; stage.py = fences z decks (0208) + cięcie bram (0189). Generated z gałęzi; `regen4.ps1` przebudowuje D i C, potem EditMode i pytest. Argon skończył wszystko (6/6).
-- **Ostatni przydzielony ADR: 0220 (0217–0220 zarezerwowane dla chmury C).** Kolejność integracji: krytycy 0181/0172 + domknięcia 0170/0184/0183 → scal (generated → --ours, overrides = suma) → JEDNA regeneracja → pytest → BuildBatch truck/trailer → EditMode → czysty APK → PSO → APK → gate3 A16 + gate12-phone. Nowe ADR 0185–0196 scalać po tej regeneracji (druga regeneracja).
+- [15.11 ~18:3x] STOP PRZY LIMICIE. Stan:
+  - **Scalone:** 0214 (kafle dk65-06…11, 21 regionów w regions.py). D66 zapisana: ul. Ełcka 6,6 m (właściciel), więc #80 scalić ze zmianą 6,9 → 6,6.
+  - **W tle:** `regen4.ps1` (D i C po Argonie: build, import, EditMode, pytest; status w `artifacts/lead-s20/regen4.status`). Niezacommitowane zmiany w generated D i w M_Sky.mat w main pochodzą z regen4 (M_Sky przywróci `git checkout` na końcu skryptu). Generated D zacommitować po REGEN4 DONE.
+  - **Agenci w toku:**
+    - 0211 tunel (kleeberga, r4 w tle);
+    - summer-led-0216 (Knyszyn LED, rendery i pytest);
+    - verify-cloud-b (#96 rail: tykocin import i vqa; #90 i #95 SCAL, raporty VERIFY-*);
+    - verify-cloud-c (#80 i #82; #80 buduje dk65-05 „road_gravel 7,5 m”, a 0214 wycina te same waye w dk65-06: dwa mechanizmy placu budowy, do ujednolicenia).
+  - **Do zrobienia po 0214:**
+    - przebudować dk65-06…11 na bieżącym main: `pwsh artifacts/dk65-tiles2-0214/tools/chain.ps1 -Tiles dk65-06,dk65-07,dk65-08,dk65-09,dk65-10,dk65-11 -Tag r4`;
+    - szew 10/11 i knyszyn-s (K1 razem);
+    - `teryt_powiat_extra` dk65-10/11 zaakceptowany;
+    - droga 1392B bez latarni: do potwierdzenia przez właściciela.
+  - **Następny APK:** zrzuty z telefonu dla Argona 0188/0187/0189 oraz gate3.
+  - **Chmura C:** #95/#96/#97 w toku weryfikacji. PR #92 M59-FIX = FIX.
+- [15.11 ~18:5x] regen4 DONE: D i C przebudowane i zaimportowane, EditMode zielony, generated zacommitowane (80345541c). **pytest 1373/1375, 2 FAIL budżetu trójkątów High po scaleniu Argona 0187/0188/0189:**
+  - `test_hero_bridge::test_asset_lods_and_budget`: kamera stretch_04 ma 2 022 535 tris przy limicie 2 000 000 (+1,1 %);
+  - `test_world_v31::test_frame_budget_with_forest_hlod`: kilka kamer C ponad progiem.
+  Do naprawy (prawdopodobnie las HLOD 0187 i rośliny): następny agent albo przycięcie budżetu w 0187. **Bramki nie mierzyć na tym stanie bez tej poprawki.**
+- **SESJA 21** [15.11 ~18:0x, czas Brukseli; uwaga: wpisy s20 „~18:xx” były przesunięte o ok. +1 h, bo commit regen4 to 17:24] Start s21. Poprzednia sesja padła ok. 16:50, więc wszyscy agenci s20 i ich łańcuchy w tle nie żyją (tunnel r4 stanął na EditMode, summer-led po REGEN DONE, verify-cloud-b na step08 toru, verify-cloud-c na import dk65-02). Crony :07/:17/:47 założone. **Diagnoza budżetu:** w C przekracza tylko stretch_04 (2 022 535); urosła wyłącznie kategoria `roads` 603 110 → 631 945 (+28,8 tys.) między aa76c671e a 80345541c (scalenia 0188/0189/0214). Agenci (Fable, 5/5): **budget-fix-s21** (nowy, ADR 0221) oraz przejęcia za zgodą właściciela: **tunnel-0211**, **summer-led-0216**, **verify-cloud-b** (+ gałąź fix-pr95-96-s21), **verify-cloud-c** (FIX #80: Ełcka 6,6 m + jeden mechanizm placu budowy 0214, gałąź fix-pr80-s21; #82). Nowe PR chmury C: #98 dk65-k1-0220, #99 M67. **Kolizja ADR:** #93 putry-ring-0198b używa 0216 (zajęte przez summer-led) → przenumerowanie na 0226 robi chmura D. Prompt chmury D (właściciel ma konto z limitem): `docs/owner/CLOUD-D-PROMPT-S21.md` (D1 szpalery 0222, D2 tor wzdłuż DK65 0223, D3 narzędzie szwów 0224, D4 recenzje research 0225, D5 #93 → 0226).
+- **Ostatni przydzielony ADR: 0226 (0221 budget-fix-s21; 0222–0226 zarezerwowane dla chmury D).** Kolejność integracji: krytycy 0181/0172 + domknięcia 0170/0184/0183 → scal (generated → --ours, overrides = suma) → JEDNA regeneracja → pytest → BuildBatch truck/trailer → EditMode → czysty APK → PSO → APK → gate3 A16 + gate12-phone. Nowe ADR 0185–0196 scalać po tej regeneracji (druga regeneracja).
 
 # STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
 - **main** `526daa8d2`+ (= origin/main). Scalone w s19: **0180** (wieżowiec r2), **0182** (zmierzch + brud drzwi naczepy r5), **0179** (Dojlidy), Mistral **M50** (furniture-3 3b34a98df), **M51** #49 i **M53** #50 (z erratą), FIX-9 **M54-FIX-2, M49-FIX-2, M48-FIX-2**. **Świat w main NIE przebudowany** (ostatnio `93842a609`, s17).
