@@ -173,7 +173,8 @@ def main() -> None:
     tile = shapely.box(*region.bbox)
     hashes: dict[str, str] = {}
 
-    nmt_id = find_manifest("gugik-nmt-", f"-{region.id}")
+    nmt_pin = regions.source_pins(region.id).get("nmt_year")    # ADR 0209: authored survey-year pin (seam match)
+    nmt_id = f"gugik-nmt-{nmt_pin}-{region.id}" if nmt_pin else find_manifest("gugik-nmt-", f"-{region.id}")
     orto_id = find_manifest("gugik-orto-", f"-{region.id}")
     src_ids = ["osm-geofabrik-podlaskie", nmt_id, orto_id, f"gugik-bdot10k-{t}", f"gugik-lod1-2024-{t}",
                f"gugik-lod2-2017-{t}"]
