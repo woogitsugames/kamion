@@ -44,3 +44,5 @@
 - NASTĘPNY KROK: `Get-Process -Id 35844 | Select-Object CPU,Responding; Get-Process -Id 35844 | ForEach-Object { $_.Threads | Group-Object ThreadState,WaitReason }`
 - 2026-11-15 19:13 +01:00 — Wstrzymany proces r1 (53/53 wątków Suspended, wiele innych Pythonów także) zakończono wyłącznie własny; wrapper zapisał spodziewany błąd i zwolnił własny slot heavy. R1 nie powstało. Plan korekt: artifacts/knyszyn-rynek-0227/R2-PLAN.md.
 - NASTĘPNY KROK: `Get-Process python | ForEach-Object { $_.Threads | Group-Object ThreadState,WaitReason }; Remove-Item artifacts/knyszyn-rynek-0227/r1.done; pwsh -File artifacts/knyszyn-rynek-0227/r1.ps1` (po ustąpieniu masowego wstrzymania, w tle)
+- 2026-11-15 19:16 +01:00 — Po zatrzymaniu r1 wpięto poprawione moduły kościoła, urzędu i props do stage; poprawiono obrys placu i kamery 1–11. Testy modułów: 13 passed; brak renderu po integracji. Inne procesy pozostają Suspended.
+- NASTĘPNY KROK: `Remove-Item artifacts/knyszyn-rynek-0227/r1.done; pwsh -File artifacts/knyszyn-rynek-0227/r1.ps1` (po ustąpieniu masowego wstrzymania, uruchomić w tle)
