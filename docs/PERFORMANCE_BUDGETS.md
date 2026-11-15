@@ -189,3 +189,12 @@ Not done: the world goal <= 60 MB is still not met (133.5 MB packed uncompressed
 ProjectSettings patch for the lead (not committed): (1) `managedStrippingLevel: Android: 1 -> 3` (High), test with a device run (reflection users: glTFast, Json); -2.6 MB. (2) `m_ShowUnitySplashLogo: 1 -> 0`, -1.2 MB, only if the licence allows; (3) `il2cppCompilerConfiguration` stays Release; consider `il2cppCodeGeneration: OptimizeSize` (not measured). (4) mipmap limit groups per quality (Unity 6 `mipmapLimitGroupName`) would let one APK drop top mips on Low at load time - saves RAM, not APK size.
 
 High tier as a separate package (options, nothing deployed): (a) status quo: two APKs, `-WorldHigh` ships WorldC_High + High sets (sideload/test; Play needs one artifact). (b) AAB + Play Asset Delivery install-time/fast-follow packs: High world + High truck/trailer textures as an asset pack, loaded via Addressables (Unity 6 supports Android asset packs through Addressables Play Asset Delivery); needs `buildAppBundle`, an Addressables group per tier, and the High sets taken out of Resources; Play delivers only to devices matching a texture-compression/device-tier targeting rule (device tier targeting can send the pack only to flagships). (c) Addressables remote groups on a CDN: no Play dependency, adds hosting and a download UI. Recommended: (b) once streaming chunks (ADR 0003) lands; until then the build flag (this change) is the cheap equivalent.
+
+## GPU A/B procedure on the A16 (ADR 0241, backlog B-113) — NOT MEASURED YET
+Open gap: A16 Low, 30 FPS cap, APK `77cfd94bf8`: GPU p95 34.3–34.5 ms against the 33.3 ms frame (HANDOVER s20). Candidate
+levers and their expected gains (ESTIMATED / UNVERIFIED, with sources) are data in `tools/perf/gpu-ab-variants.json`; none of
+them is a default. One session = same APK, launch-argument variants, ≥ 3 repeats, battery < 36 °C before each run, keyguard
+checks: `pwsh scripts/gpu-ab-a16.ps1 -Apk <apk> [-Mode Camera -Uncapped | -Segments A,B -Fps 30]` →
+`artifacts/gpu-ab/<ts>/REPORT.md` (`uv run --project tools/perf python -m perfgate.gpuab report <dir>`). Write the measured
+table here once the leader has run it; a tier value changes only after that table, the visual review and (for visible
+changes: render scale, LOD bias, far clip) the owner's decision.
