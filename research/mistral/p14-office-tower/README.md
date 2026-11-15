@@ -134,7 +134,7 @@ Polecenie właściciela s21: zdjęcia commitowane pomniejszone (≤ 1600 px). ZI
 | files/kartaview/kv_993062122.jpg, kv_1326673613.jpg | KartaView lth (oryginalne bajty) | CC BY-SA 4.0, referencja | w sources.md §4 | **1280×720** |
 | files/kartaview/kv_993062122_crop_tower_x3.5.jpg | wycinek wieży, powiększenie 3,5× | CC BY-SA 4.0 | 8d1c0c75d3d70f460a9341ec9a244965c596e088b51b04a07be9e24bb30b8982 | 630×504 |
 | files/kartaview/kv_1326673613_crop_tower_x3.5.jpg | j.w. | CC BY-SA 4.0 | a5cd037a6a18cc78e8bbc523a70e08bf4b137dcb3f52b167da42aa85385508e8 | 626×654 |
-| files/orto/orto_tower_80m.png | GUGiK WMS HighResolution GetMap (oryginalne bajty) | dane otwarte GUGiK | bed34e22bd6425fc3a49f1f7df58c27ea667f39c6c79b247091dd816e91dce63 | 800×800 |
+| files/orto/orto_tower_80m.jpg | GUGiK WMS HighResolution GetMap, PNG → JPG q92 (PNG trafiałby do LFS); sha256 PNG z WMS: bed34e22…dce63 | dane otwarte GUGiK | a2ab53c9cdd24b0a62ada40602962e7d33900c46ffa1c106a6ac35c018f182a5 | 800×800 |
 
 Plik 20210328_110412 (poprzednio 1280×2276 w ZIP-ie) nie jest już w pakiecie — był tylko kontekstem.
 
