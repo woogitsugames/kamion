@@ -125,3 +125,38 @@ def test_cover_is_its_own_primitive_not_merged_into_the_terrain():
     a, b, c = V[T[:, 0], :2], V[T[:, 1], :2], V[T[:, 2], :2]
     area = float(np.abs((b[:, 0] - a[:, 0]) * (c[:, 1] - a[:, 1]) - (b[:, 1] - a[:, 1]) * (c[:, 0] - a[:, 0])).sum() / 2)
     assert abs(area - K.area) < 1e-6
+
+
+def test_inside_the_tunnel_no_grass_verge_and_no_rule_guardrail():
+    """r4 renders (tunnel_eb_inside): a grass verge under the slab and an 8 m W-beam stub of the "beside a structure"
+    rule between the tunnel walls. Inside F below the soffit: grass rows of the tunnel carriageway -> gravel, rule
+    guardrails (visual + collision) dropped; outside F, above the soffit and other chains: untouched."""
+    from types import SimpleNamespace as NS
+    from roads.meshing import MeshBuf
+
+    def quad(x0, z):
+        V = np.array([[x0, 0, z], [x0 + 2, 0, z], [x0 + 2, 2, z], [x0, 2, z]], float)
+        return V, V[:, :2].copy(), np.array([[0, 1, 2], [0, 2, 3]])
+
+    cid = "c:w1:1-2"
+    g = {"F": shapely.box(0, -5, 20, 5), "zroad": lambda q: 100.0, "clear": 4.7, "runs": [{"c": NS(id=cid)}]}
+    buf = MeshBuf()
+    buf.add("road", "verge_grass", *quad(5, 99.8), src=cid + ":L:3")                 # inside: -> gravel
+    buf.add("road", "verge_grass", *quad(40, 99.8), src=cid + ":L:3")                # outside F: stays grass
+    buf.add("road", "verge_grass", *quad(5, 99.8), src="c:w9:8-9:L:3")               # another chain: stays
+    buf.add("road", "verge_grass", *quad(5, 99.9), src=cid + ":R:vg")                # merged-into-terrain skirt: stays
+    buf.add("bridge", "barrier_steel", *quad(8, 100.5), src=cid + ":L:structure")    # inside: dropped
+    buf.add("collision", "collision_steel", *quad(8, 100.5), src=cid + ":L:structure")
+    buf.add("bridge", "barrier_steel", *quad(8, 106.0), src=cid + ":L:structure")    # above the soffit: stays
+    buf.add("bridge", "barrier_steel", *quad(40, 100.5), src=cid + ":L:median")      # outside F: stays
+    rep = TN._dress_inside(NS(buf=buf), [g])
+    assert rep == {"side_grass_to_gravel_tris": 2, "guardrail_tris": 2, "guardrail_collision_tris": 2}
+    got = sorted((p.layer, p.mat, p.src, float(p.V[p.T].mean((0, 1))[0]), float(p.V[:, 2].max())) for p in buf.parts)
+    assert got == sorted([
+        ("road", "shoulder_gravel", cid + ":L:3:tunnel", 6.0, 99.8),
+        ("road", "verge_grass", cid + ":L:3", 41.0, 99.8),
+        ("road", "verge_grass", "c:w9:8-9:L:3", 6.0, 99.8),
+        ("road", "verge_grass", cid + ":R:vg", 6.0, 99.9),
+        ("bridge", "barrier_steel", cid + ":L:structure", 9.0, 106.0),
+        ("bridge", "barrier_steel", cid + ":L:median", 41.0, 100.5),
+    ])

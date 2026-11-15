@@ -407,6 +407,7 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
     stats["terrain"] = {"nodes_lowered": int(sel.sum()), "max_drop_m": round(float(drop.max()) if drop.size else 0.0, 2),
                         "cover_cells": int(cover_cells.sum()), "cover_cells_left_to_other_surfaces": int(excluded.sum()),
                         "cover_tris": gtris, "cut_nodes": int(cut_m.sum()), "low_lod_nodes": int(low_mask.sum())}
+    stats["inside"] = _dress_inside(w, groups)
     stats["culled"] = _cull(w, groups, instances, lambda x, y: float(grid.plane(x, y, zc0) - grid.plane(x, y, zc_placed)),
                             lambda x, y: bool(deck_mask[grid.ij(x, y)[1], grid.ij(x, y)[0]]))
     return stats, (low_mask, low_z)
@@ -799,6 +800,48 @@ def _emit_cover_collision(buf, grid, zc0, poly, blend):
     cr = (b[:, 0] - a[:, 0]) * (c[:, 1] - a[:, 1]) - (b[:, 1] - a[:, 1]) * (c[:, 0] - a[:, 0])
     T = np.where((cr < 0)[:, None], T[:, [0, 2, 1]], T)
     buf.add("collision", "collision_grass", V, uniq, T, src="tunnel:cover:col")
+
+
+GUARD_SUFFIX = (":structure", ":embankment", ":median", ":approach")    # keys of streetscape.furniture.guardrails runs
+INSIDE_SIDE_MAT = "shoulder_gravel"    # WORKING_VALUE: nothing grows under the slab
+
+
+def _dress_inside(w, groups):
+    """Side strips and road barriers of the tunnel carriageways under the slab (r5).
+
+    * the rural side profile (gravel shoulder + grass verge with a ditch) keeps its shape but its grass rows become
+      gravel between the portals (r4: a grass verge ran through the 77 m under the slab);
+    * rule runs of W-beam on a tunnel carriageway (streetscape.furniture.guardrails: "beside a structure" fired on the
+      ring decks over the cut and left an 8 m stub with two turned-down terminals between the tunnel walls, r4) are
+      dropped inside the structure together with their collision - the tunnel walls are the restraint there.
+    Only parts of the tunnel chains inside F and below the soffit are touched."""
+    import dataclasses
+    rep = {"side_grass_to_gravel_tris": 0, "guardrail_tris": 0, "guardrail_collision_tris": 0}
+    new = []
+    for g in groups:
+        Fb = g["F"].buffer(0.5)
+        run_ids = tuple(r["c"].id + ":" for r in g["runs"])
+        for p in w.buf.parts:
+            if not len(p.T) or not p.src.startswith(run_ids):
+                continue
+            grass = p.layer == "road" and p.mat == "verge_grass" and not p.src.endswith(":vg")
+            rail = p.layer in ("bridge", "furniture", "collision") and p.src.endswith(GUARD_SUFFIX)
+            if not (grass or rail):
+                continue
+            cen = p.V[p.T].mean(1)
+            m = shapely.contains_xy(Fb, cen[:, 0], cen[:, 1])
+            for k in np.where(m)[0]:
+                m[k] = cen[k, 2] < g["zroad"](tuple(cen[k, :2])) + g["clear"] - 0.1
+            if not m.any():
+                continue
+            if grass:
+                new.append(dataclasses.replace(p, mat=INSIDE_SIDE_MAT, T=p.T[m], src=p.src + ":tunnel"))
+                rep["side_grass_to_gravel_tris"] += int(m.sum())
+            else:
+                rep["guardrail_collision_tris" if p.layer == "collision" else "guardrail_tris"] += int(m.sum())
+            p.T = p.T[~m]
+    w.buf.parts[:] = [p for p in w.buf.parts if len(p.T)] + new
+    return rep
 
 
 TRIM_SUFFIX = (":soffit", ":fascia", ":parapet", ":abutment", ":pier", ":screen")
