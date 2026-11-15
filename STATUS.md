@@ -5,3 +5,5 @@
 - NASTĘPNY KROK: `scripts/build-region-packs.ps1` + `scripts/estimate-region-packs.py` + ADR 0234.
 - [krok 2] `scripts/build-region-packs.ps1` (build + weryfikacja sha256 + `-Push` adb do incoming/), `scripts/estimate-region-packs.py` (tabela ESTIMATED), ADR 0234 (decyzja, rozmiary, propozycja PAD, diff dla #104 w zał. A). Indeks ADR (README) nie regenerowany — lider (konflikty z innymi PR).
 - NASTĘPNY KROK (lider): `pwsh scripts/test.ps1 -Platform EditMode` → `pwsh scripts/build-region-packs.ps1 -Regions dk65-06` → push + A16.
+- [krok 3] zależności domknięte przechodnio (data → common), `LoadOrder`; test łańcucha; chmura 43/43 zielone.
+- NASTĘPNY KROK: PR do main.

@@ -154,7 +154,7 @@ namespace Game.Editor.Build
                 var scene = scenes.FirstOrDefault(s => s.Id + RegionPackPaths.BundleExtension == file);
                 string id = Path.GetFileNameWithoutExtension(file);
                 var deps = abManifest.GetAllDependencies(file).Select(Path.GetFileNameWithoutExtension)
-                                     .OrderBy(d => d == RegionPackEntry.CommonId ? 0 : 1).ThenBy(d => d, StringComparer.Ordinal).ToArray();
+                                     .OrderBy(d => d, StringComparer.Ordinal).ToArray();   // load order: RegionPackManifest.LoadOrder
                 var e = new RegionPackEntry
                 {
                     id = id,

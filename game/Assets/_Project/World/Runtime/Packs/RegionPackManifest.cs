@@ -97,12 +97,30 @@ namespace Game.World.Packs
                     if (dep == null) { error = "pack '" + p.id + "': unknown dependency '" + d + "'"; return false; }
                     // Unity cannot make a scene bundle a dependency of another bundle; a set where it happens is broken.
                     if (dep.IsScenePack) { error = "pack '" + p.id + "' depends on scene pack '" + d + "'"; return false; }
-                    if (dep.dependencies != null && dep.dependencies.Length > 0)
-                    { error = "dependency '" + d + "' has dependencies of its own (only one shared level is supported)"; return false; }
+                    // Lists are transitively closed (AssetBundleManifest.GetAllDependencies): a dependency's own
+                    // dependencies must be listed too. With "no self-dependency" this also rules out cycles.
+                    if (dep.dependencies != null)
+                        foreach (var dd in dep.dependencies)
+                            if (Array.IndexOf(p.dependencies, dd) < 0)
+                            { error = "pack '" + p.id + "': dependency list not closed ('" + d + "' needs '" + dd + "')"; return false; }
                 }
             }
             error = null;
             return true;
+        }
+
+        /// <summary>Dependencies of a pack in load order: fewest own dependencies first (common before region data).</summary>
+        public List<RegionPackEntry> LoadOrder(RegionPackEntry entry)
+        {
+            var list = new List<RegionPackEntry>();
+            if (entry?.dependencies == null) return list;
+            foreach (var d in entry.dependencies)
+            {
+                var dep = Find(d);
+                if (dep != null) list.Add(dep);
+            }
+            list.Sort((a, b) => (a.dependencies?.Length ?? 0).CompareTo(b.dependencies?.Length ?? 0));
+            return list;
         }
 
         /// <summary>Total bytes of a pack plus its dependencies (download / storage size shown in the menu).</summary>

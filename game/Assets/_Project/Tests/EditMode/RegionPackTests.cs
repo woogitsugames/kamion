@@ -131,6 +131,35 @@ namespace Game.Tests
             AssertInvalid(m => m.packs = new RegionPackEntry[0], "no packs");
         }
 
+        [Test]
+        public void Manifest_RegionDataChain_MustBeClosedAndLoadsCommonFirst()
+        {
+            var m = Set();
+            var data = Encoding.ASCII.GetBytes("dk65-06 data: collision + instances");
+            m.packs = new[]
+            {
+                m.packs[0],
+                Entry("dk65-06-data", "dk65-06", "", data, "common"),
+                Entry("dk65-06", "dk65-06", "Low", DkBytes, "dk65-06-data", "common"),
+                Entry("dk65-06-high", "dk65-06", "High", DkHighBytes, "common", "dk65-06-data"),
+            };
+            m.packs[1].region = "dk65-06";
+            Assert.IsTrue(RegionPackManifest.Validate(m, out string err), err);
+            Assert.IsFalse(m.Find("dk65-06-data").IsScenePack, "data pack is not a scene pack");
+            Assert.AreEqual("dk65-06", m.FindRegion("dk65-06", "Low").id);
+            var order = m.LoadOrder(m.Find("dk65-06"));
+            Assert.AreEqual("common", order[0].id);
+            Assert.AreEqual("dk65-06-data", order[1].id);
+            Assert.AreEqual(CommonBytes.Length + data.Length + DkBytes.Length, m.SizeWithDependencies(m.Find("dk65-06")));
+
+            m.packs[2].dependencies = new[] { "dk65-06-data" };   // misses common, which the data pack needs
+            Assert.IsFalse(RegionPackManifest.Validate(m, out err));
+            StringAssert.Contains("not closed", err);
+            m.packs[2].dependencies = new[] { "dk65-06-data", "common" };
+            m.packs[0].dependencies = new[] { "dk65-06-data" };      // cycle common <-> data
+            Assert.IsFalse(RegionPackManifest.Validate(m, out err));
+        }
+
         // ------------------------------------------------------------------ hash + paths
 
         [Test]

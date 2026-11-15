@@ -156,8 +156,7 @@ namespace Game.World.Packs
             if (info.State != RegionPackState.Installed) { Fail(done, region + "/" + tier + ": " + info); yield break; }
 
             var entry = installed.FindRegion(region, tier);
-            var order = new List<RegionPackEntry>();
-            foreach (var d in entry.dependencies) order.Add(installed.Find(d));
+            var order = installed.LoadOrder(entry);
             order.Add(entry);
             foreach (var e in order)
             {
@@ -258,11 +257,8 @@ namespace Game.World.Packs
 
             // The dependency first, then the region; files already intact in the installed set are skipped.
             var todo = new List<RegionPackEntry>();
-            foreach (var d in entry.dependencies)
-            {
-                var dep = set.Find(d);
+            foreach (var dep in set.LoadOrder(entry))
                 if (RegionPackResolver.CheckFile(dep, m_Paths, RegionPackDiskFiles.Instance, false) != RegionPackState.Installed) todo.Add(dep);
-            }
             if (RegionPackResolver.CheckFile(entry, m_Paths, RegionPackDiskFiles.Instance, false) != RegionPackState.Installed) todo.Add(entry);
 
             m_DownloadingKey = region + "|" + tier;

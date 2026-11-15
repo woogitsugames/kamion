@@ -56,7 +56,10 @@ Pola: `packSetVersion` (`<bundleVersion>-<sha>[-dirty]`, jak nazwa APK), `unityV
 `maxAppVersionCode` (0 = brak), `gitSha`, `createdUtc`, `packs[]`: `id`, `region`, `tier`, `file`, `sizeBytes`, `sha256`,
 `crc` (informacyjnie), `scenes[]`, `dependencies[]`. Walidacja (`RegionPackManifest.Validate`): schema, bezpieczne nazwy
 plików (`[a-z0-9][a-z0-9._-]*.bundle`, bez `..` i separatorów — manifest może przyjść z sieci), sha256 64 hex, rozmiar > 0,
-unikalne id/pliki, zależności istnieją, nie są scenami i nie mają własnych zależności (jeden poziom).
+unikalne id/pliki, zależności istnieją, nie są scenami, lista jest domknięta przechodnio (jak
+`AssetBundleManifest.GetAllDependencies`; `<region>-data` → `common` musi być też na liście sceny) — razem z zakazem
+zależności od siebie wyklucza to cykle. Kolejność ładowania: `RegionPackManifest.LoadOrder` (najpierw pakiety z najmniejszą
+liczbą własnych zależności: `common`, potem `-data`).
 Zgodność (`RegionPackResolver.CompatibilityProblem`): **dokładnie ta sama wersja Unity**, ten sam target, `versionCode` w
 zakresie. TypeTree zostają włączone (domyślnie), więc dodane/usunięte pola skryptów nie psują odczytu, ale zmiana
 semantyki danych już tak — stąd `minAppVersionCode`. **Jeden zestaw = jeden przebieg budowy**; bundle różnych zestawów się
@@ -67,7 +70,7 @@ nie mieszają (sceny odwołują się do `common` z tego samego przebiegu).
 `Loaded`. Kolejność: brak zestawu → NotInstalled; niezgodny → Incompatible; brak wpisu/pliku → NotInstalled (+ bajty do
 pobrania); zły rozmiar → Corrupt; (głęboko) zły SHA-256 → Corrupt; zależność nie OK → MissingDependency; inaczej Installed.
 Menu używa sprawdzenia płytkiego (rozmiary, bez hashowania); przed wczytaniem `Prepare` liczy SHA-256 paczki i zależności
-na wątku roboczym (`Task.Run`), potem `AssetBundle.LoadFromFileAsync` (common → data → scena) i zwraca nazwę sceny.
+na wątku roboczym (`Task.Run`), potem `AssetBundle.LoadFromFileAsync` (`LoadOrder`: common → data → scena) i zwraca nazwę sceny.
 `Application.CanStreamedLevelBeLoaded`: „Verify if the named scene exists in either the Player build or currently loaded
 AssetBundles” (ScriptReference 6000.3) — więc po `Prepare` działa istniejąca ścieżka `SceneManager.LoadScene` z #104.
 Zmiana aktywnej sceny na scenę spoza wczytanych bundli (menu, DrivingLab, C) → `UnloadAll(true)`. Brak `Update()` —
@@ -140,9 +143,9 @@ Rekomendacja: zostać przy AssetBundles (ten ADR) w fazie sideload; jednostki (`
 mapują się 1:1 na grupy Addressables / asset packi on-demand, więc przejście nie zmienia podziału treści.
 
 ## Weryfikacja w chmurze (bez Unity)
-- `RegionPackTests` (EditMode, 42 przypadki z TestCase): skompilowane i uruchomione pod .NET 8 + NUnit 3.14 z prawdziwymi
+- `RegionPackTests` (EditMode, 43 przypadki z TestCase): skompilowane i uruchomione pod .NET 8 + NUnit 3.14 z prawdziwymi
   plikami `Packs/*.cs` (bez `RegionPackService`) i `RegionPackPlanner.cs`, `JsonUtility` zastąpione System.Text.Json:
-  **42/42 zielone**. `RegionPackService.cs` i `RegionPackCommands.cs` skompilowane na zaślepkach API Unity (sygnatury
+  **43/43 zielone**. `RegionPackService.cs` i `RegionPackCommands.cs` skompilowane na zaślepkach API Unity (sygnatury
   przepisane z dokumentacji) — **nieskompilowane w Unity**, nieuruchomione: build bundli, ładowanie sceny z bundla, adb push,
   pobieranie, telefon.
 
