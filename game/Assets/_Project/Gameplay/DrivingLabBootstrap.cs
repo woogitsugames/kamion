@@ -54,10 +54,12 @@ namespace Game.Gameplay
         public readonly KeyboardDriverInput Keyboard = new KeyboardDriverInput();
         public readonly TouchSteeringWheel Wheel = new TouchSteeringWheel();
         public readonly GyroSteering Gyro = new GyroSteering();
+        /// <summary>PC wheel + pedals + shifter and its force feedback (ADR 0263); null FFB backend until a native plugin exists.</summary>
+        public readonly PcWheel PcWheel = new PcWheel();
         /// <summary>The simulated cab steering wheel (ADR 0058): driver target → hand-rate-limited wheel → Steering command, in the fixed step.</summary>
         public readonly SteeringColumn Column = new SteeringColumn();   // tuning loaded in Awake (Resources)
         float m_SteerTarget;
-        bool m_SteerHandsOn, m_SteerBypass, m_SteerHasTarget;
+        bool m_SteerHandsOn, m_SteerBypass, m_SteerHasTarget, m_SteerDirect;
         public readonly TouchControls Touch = new TouchControls();
         /// <summary>Turn-signal stalk + flasher (self-cancelling, 1.5 Hz); drives the lamps, the cluster arrows and the relay click.</summary>
         public readonly TurnSignal Signals = new TurnSignal();
@@ -128,6 +130,7 @@ namespace Game.Gameplay
             m_Mixer.Add(Autopilot);
             m_Mixer.Add(RouteDriver);
             m_Mixer.Add(Keyboard);
+            m_Mixer.Add(PcWheel.Input);   // absolute wheel: steers whenever connected (keys still override while held)
             m_Mixer.Add(Wheel);
             m_Mixer.Add(Gyro);
             m_Mixer.Add(Touch);
@@ -137,6 +140,7 @@ namespace Game.Gameplay
             Column.LockDeg = HandwheelLockDeg();
             GyroSteering.EnableSensors();
             Controls = ControlSettings.Load();
+            PcWheel.Load();
             ApplyControls();
             Controls.Log("loaded");
             m_InputLog = new ControlInputLogger();
@@ -611,11 +615,29 @@ namespace Game.Gameplay
             Column.LockDeg = HandwheelLockDeg();
             if (StraightRunActive) { StepStraightRun(Time.fixedDeltaTime); return; }
             if (m_SteerBypass) { if (m_SteerHasTarget) Column.SnapTo(m_SteerTarget * Column.LockDeg); }
+            else if (m_SteerDirect) Column.SnapTo(m_SteerTarget * Column.LockDeg);   // PC wheel: the player's hands are the hand model (ADR 0263)
             else Column.Step(Time.fixedDeltaTime, m_SteerTarget * Column.LockDeg, m_SteerHandsOn, (float)m.SpeedForward * 3.6f, (float)m.AligningTorqueTotal);
             var input = vehicle.Input;
             input.Steer = Column.Normalized;
             vehicle.Input = input;
             Wheel.FollowColumn(Column.Normalized);
+            StepPcWheelForceFeedback(m);
+        }
+
+        /// <summary>Force feedback from the physics of the last step (ADR 0263): steered-axle aligning torque and loads.</summary>
+        void StepPcWheelForceFeedback(VehicleModel m)
+        {
+            float loadL = 0f, loadR = 0f;
+            var wheels = m.Wheels;
+            for (int i = 0; i < wheels.Length; i++)
+            {
+                var w = wheels[i];
+                if (!w.Steered || !w.Contact) continue;
+                if (w.Side < 0) loadL += (float)w.Fz; else loadR += (float)w.Fz;
+            }
+            bool driving = !m_SteerBypass && Time.timeScale > 0f && m_SettingsPanel == null;
+            PcWheel.StepForceFeedback(Time.fixedDeltaTime, driving, (float)m.SpeedForward, (float)m.AligningTorqueTotal,
+                (float)m.Steering.Def.steeringRatio, loadL, loadR);
         }
 
         void Update()
@@ -642,6 +664,7 @@ namespace Game.Gameplay
             m_SteerHasTarget = intent.SteerActive;
             m_SteerTarget = intent.SteerActive ? Mathf.Clamp(intent.Steer, -1f, 1f) : 0f;
             m_SteerHandsOn = intent.SteerActive && intent.HandsOn;
+            m_SteerDirect = intent.SteerActive && intent.DirectSteer;
             if (!m_SteerBypass) m_InputLog.Observe(Time.unscaledTime, intent, vehicle.SpeedKmh, Column.AngleDeg);
             if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, k_CamModeEvents[(int)m_LoggedCamMode]); }
             m_InputLog.TryFlush(Time.unscaledTime, intent.Throttle < 0.01f && intent.Brake < 0.01f && !intent.SteerActive);   // batched; allocates only on that frame
@@ -787,9 +810,10 @@ namespace Game.Gameplay
             Touch.ThrottleRaw = 0f;
             Touch.BrakeRaw = 0f;
             Wheel.PointerUp();
+            PcWheel.Stop();   // no force left on the rim while the game is not running (ADR 0263)
         }
 
-        void OnDestroy() { m_InputLog?.Flush(Time.unscaledTime); }
+        void OnDestroy() { m_InputLog?.Flush(Time.unscaledTime); PcWheel.Dispose(); }
 
         void OnApplicationFocus(bool focus) { if (!focus) OnApplicationPause(true); }
     }

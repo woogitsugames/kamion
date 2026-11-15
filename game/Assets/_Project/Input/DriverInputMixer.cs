@@ -6,7 +6,7 @@ namespace Game.Controls
     /// Combines several <see cref="IDriverInput"/> sources:
     /// - steering: the first source (in priority order) that reports <see cref="DriverIntent.SteerActive"/>;
     ///   if none, the last active source's value is held by the sources themselves (each keeps its own state);
-    /// - throttle / brake: maximum over sources (pedal on any device wins);
+    /// - throttle / brake / clutch: maximum over sources (pedal on any device wins);
     /// - one-shot commands: merged (last non-None selector wins, shift deltas summed, toggles OR-ed).
     /// Allocation-free per frame.
     /// </summary>
@@ -36,18 +36,21 @@ namespace Game.Controls
                 var s = m_Sources[i];
                 ref var it = ref m_Scratch[i];
                 it.ClearCommands();
-                if (!s.Enabled) { it.SteerActive = false; it.Throttle = 0; it.Brake = 0; continue; }
+                if (!s.Enabled) { it.SteerActive = false; it.Throttle = 0; it.Brake = 0; it.Clutch = 0; continue; }
                 s.Sample(dt, fb, ref it);
                 if (!steered && it.SteerActive)
                 {
                     result.Steer = it.Steer;
                     result.SteerActive = true;
                     result.HandsOn = it.HandsOn;
+                    result.DirectSteer = it.DirectSteer;
                     steered = true;
                     SteeringSource = s.Name;
                 }
                 if (it.Throttle > result.Throttle) result.Throttle = it.Throttle;
                 if (it.Brake > result.Brake) result.Brake = it.Brake;
+                if (it.Clutch > result.Clutch) result.Clutch = it.Clutch;
+                if (it.TargetGear != 0) result.TargetGear = it.TargetGear;
                 if (it.Selector != SelectorRequest.None) result.Selector = it.Selector;
                 result.ShiftDelta += it.ShiftDelta;
                 result.ToggleParkingBrake |= it.ToggleParkingBrake;
