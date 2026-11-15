@@ -210,3 +210,7 @@
 - 2026-11-16 00:34 +01:00 — Izolowany prototyp lipy 3D wyeksportowany i obejrzany w 16 kadrach LOD0/LOD1: FAIL, zbyt rzadka wąska korona i wyraźny spadek pokrycia LOD1; nie w grze. Druga próba prototypu w przygotowaniu. R11 build trwa.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r11.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r11.done`
 
+
+- 2026-11-16 00:51 +01:00 — R11 cztery warianty OK, High max 1 250 405 tris; Low +63 draws w dk65-inlet-south vs before, lecz kadr R11 zawiera pełną ciężarówkę zamiast szarej atrapy baseline, więc udział far-field nieustalony. R12 start: 2 lipy 3D w lokalnym worldgen, testy kierunkowe 6 passed, pomiar OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r12.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r12.done`
+
