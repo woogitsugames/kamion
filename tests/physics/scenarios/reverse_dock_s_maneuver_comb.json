@@ -70,9 +70,20 @@
     {
       "metric": "max_articulation_deg",
       "status": "WORKING_VALUE",
-      "source": "S-manoeuvre folds the trailer but the fifth-wheel stop bounds it: +/-90 deg soft deformable stop (3 Hz critically damped), 95 deg = stop + compliance margin; >=20 deg proves the manoeuvre actually articulated",
-      "min": 20,
-      "max": 95
+      "source": ">=20 deg proves the manoeuvre actually articulated (the 0.55 lock folds it into the cab, ADR 0228)",
+      "min": 20
+    },
+    {
+      "metric": "articulation_limit_excess_deg",
+      "status": "WORKING_VALUE",
+      "source": "ADR 0228: the fold is stopped by the tractor-trailer body contact (trailer side wall on the cab rear corner, 117.12 deg level); measured ~1 deg incl. crush and plate-pitch lean (was: angular 90 deg stop, max 95)",
+      "max": 1.5
+    },
+    {
+      "metric": "max_coupling_penetration_m",
+      "status": "WORKING_VALUE",
+      "source": "ADR 0228: cab / trailer crush while the drive axle pushes the trailer into the cab <= 5 cm",
+      "max": 0.05
     },
     {
       "metric": "wheel_lift",

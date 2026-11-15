@@ -12,7 +12,10 @@ namespace Game.Vehicle.Physics
     /// <item>kingpin point: rigid 3-DOF ball joint (3x3 block solve, Baumgarte feedback with a speed cap);</item>
     /// <item>roll: stiff torsional spring-damper as an implicit soft constraint (unconditionally stable) plus a hard roll stop;</item>
     /// <item>pitch: free plate oscillation inside +/- pitch limit (one-sided stops);</item>
-    /// <item>yaw (articulation): free inside +/- yaw limit, so jackknife is possible, with greased plate Coulomb friction.</item>
+    /// <item>yaw (articulation): free, so jackknife is possible, with greased plate Coulomb friction. The articulation is
+    /// limited by the physical contact of the trailer body with the cab / mudguards / frame (<see cref="CouplingContact"/>,
+    /// ADR 0228: soft, no-rebound contact rows solved together with the joint rows); the angular yaw stop is only the
+    /// fallback for definitions without body boxes.</item>
     /// </list>
     /// The result is returned as an equivalent force at the kingpin plus a pure torque per body for this step,
     /// so any host that integrates F/m and I^-1 tau (PhysX, the .NET runner) applies it with ordinary force calls.
@@ -42,7 +45,24 @@ namespace Game.Vehicle.Physics
         /// <summary>Time since the jaw locked [s]; during the engagement phase the kingpin point is compliant.</summary>
         public double SinceCoupled = 100;
 
-        public FifthWheel(FifthWheelDefinition def) { Def = def; }
+        /// <summary>Tractor-trailer body contact (ADR 0228): geometry from the definitions' body boxes, set by <see cref="CombinationModel"/>.</summary>
+        public readonly CouplingContact Contact = new CouplingContact();
+        /// <summary>Body contact of the last solve: force on the trailer [N, world] (the tractor gets the opposite) and the torque it makes about each CoM [N m, world].</summary>
+        public Vec3 ContactForceOnTrailer, ContactTorqueOnTrailer, ContactTorqueOnTractor;
+        /// <summary>Contact points with a non-zero normal impulse in the last solve, their deepest penetration [m] and total normal impulse [N s].</summary>
+        public int ContactPoints;
+        public double ContactPenetration, ContactNormalImpulse;
+        /// <summary>Elastic energy in the contact springs at the start of the last solve, sum 0.5 k pen^2 [J] (energy balance).</summary>
+        public double ContactSpringEnergy;
+
+        // Contact rows (fixed buffers, no allocation per step).
+        readonly Vec3[] _cRA = new Vec3[CouplingContact.MaxPoints], _cRB = new Vec3[CouplingContact.MaxPoints], _cN = new Vec3[CouplingContact.MaxPoints],
+            _cT1 = new Vec3[CouplingContact.MaxPoints], _cT2 = new Vec3[CouplingContact.MaxPoints];
+        readonly double[] _cMN = new double[CouplingContact.MaxPoints], _cMT1 = new double[CouplingContact.MaxPoints], _cMT2 = new double[CouplingContact.MaxPoints],
+            _cSoft = new double[CouplingContact.MaxPoints], _cSc = new double[CouplingContact.MaxPoints], _cRhs = new double[CouplingContact.MaxPoints],
+            _cJN = new double[CouplingContact.MaxPoints], _cJT1 = new double[CouplingContact.MaxPoints], _cJT2 = new double[CouplingContact.MaxPoints];
+
+        public FifthWheel(FifthWheelDefinition def) { Def = def; Contact.Margin = def.contactMargin; }
 
         struct Body
         {
@@ -118,6 +138,13 @@ namespace Game.Vehicle.Physics
             Articulation = 0; PitchAngle = 0; RollAngle = 0; PositionError = 0;
             GuideForce = 0; OpenJawOffset = Vec3.Zero;
             SinceCoupled = 100;
+            ClearContact();
+        }
+
+        void ClearContact()
+        {
+            ContactForceOnTrailer = Vec3.Zero; ContactTorqueOnTrailer = Vec3.Zero; ContactTorqueOnTractor = Vec3.Zero;
+            ContactPoints = 0; ContactPenetration = 0; ContactNormalImpulse = 0; ContactSpringEnergy = 0;
         }
 
         public void Release()
@@ -143,9 +170,24 @@ namespace Game.Vehicle.Physics
             RollAngle = Math.Asin(MathUtil.Clamp(Vec3.Dot(upB, rightA), -1, 1));
             Vec3 cErr = pB - pA;
             PositionError = cErr.Magnitude;
+            ClearContact();
+            bool geometry = Contact.HasGeometry;
+            int nc = 0;
+            if (geometry)
+            {
+                Contact.Detect(a, b);
+                nc = Contact.Count;
+            }
             if (!Coupled)
             {
                 ForceOnTrailer = Vec3.Zero; TorqueOnTrailer = Vec3.Zero; KingpinLoadLocal = Vec3.Zero;
+                if (nc == 0) return;
+                // Uncoupled trailer (on its legs) touched by the tractor: contact rows only.
+                Body Au = Predict(a, ma, fA, tA, gravity, dt, pA);
+                Body Bu = Predict(b, mb, fB, tB, gravity, dt, pB);
+                PrepareContacts(ref Au, ref Bu, a.CenterOfMassWorld, b.CenterOfMassWorld, upA, nc, dt, pB, Vec3.Zero, 0);
+                for (int it = 0; it < Math.Max(1, Def.iterations); it++) SolveContacts(ref Au, ref Bu, nc);
+                FinishContacts(nc, dt);
                 return;
             }
 
@@ -183,6 +225,7 @@ namespace Game.Vehicle.Physics
             double mRoll = 1.0 / Math.Max(1e-12, Quad(nRoll, A.InvI) + Quad(nRoll, B.InvI));
             double mPitch = 1.0 / Math.Max(1e-12, Quad(nPitch, A.InvI) + Quad(nPitch, B.InvI));
             double mYaw = 1.0 / Math.Max(1e-12, Quad(nYaw, A.InvI) + Quad(nYaw, B.InvI));
+            if (nc > 0) PrepareContacts(ref A, ref B, a.CenterOfMassWorld, b.CenterOfMassWorld, upA, nc, dt, pB, nYaw, mYaw);
 
             // Soft roll spring (Catto's soft constraint): gamma, beta from stiffness and damping.
             double kR = Def.rollStiffness, cR = Def.rollDamping;
@@ -207,7 +250,7 @@ namespace Game.Vehicle.Physics
 
             RollSpringEnergy = 0.5 * kR * cRoll * cRoll;
             StopSpringEnergy = StopEnergy(cRoll, sinRollLim, mRoll, Def.stopFrequencyHz) + StopEnergy(cPitch, sinPitchLim, mPitch, Def.stopFrequencyHz)
-                + StopEnergy(Articulation, yawLim, mYaw, Def.yawStopFrequencyHz);
+                + (geometry ? ContactSpringEnergy : StopEnergy(Articulation, yawLim, mYaw, Def.yawStopFrequencyHz));
 
             Vec3 P = Vec3.Zero;
             double accRoll = 0, accRollLim = 0, accPitch = 0, accYaw = 0, accFric = 0;
@@ -229,7 +272,9 @@ namespace Game.Vehicle.Physics
                 // Hard limits.
                 Limit(ref A, ref B, nRoll, cRoll, sinRollLim, mRoll, Def.stopFrequencyHz, Def.stopDampingRatio, Def.stopRecoveryRateDegS * MathUtil.Deg2Rad, dt, ref accRollLim, ref angImpulse);
                 Limit(ref A, ref B, nPitch, cPitch, sinPitchLim, mPitch, Def.stopFrequencyHz, Def.stopDampingRatio, Def.stopRecoveryRateDegS * MathUtil.Deg2Rad, dt, ref accPitch, ref angImpulse);
-                Limit(ref A, ref B, nYaw, Articulation, yawLim, mYaw, Def.yawStopFrequencyHz, 1.0, Def.stopRecoveryRateDegS * MathUtil.Deg2Rad, dt, ref accYaw, ref angImpulse);
+                // ADR 0228: with body geometry the articulation is limited by the cab / trailer contact rows, not by an angle.
+                if (!geometry) Limit(ref A, ref B, nYaw, Articulation, yawLim, mYaw, Def.yawStopFrequencyHz, 1.0, Def.stopRecoveryRateDegS * MathUtil.Deg2Rad, dt, ref accYaw, ref angImpulse);
+                if (nc > 0) SolveContacts(ref A, ref B, nc);
 
                 // Plate friction about the kingpin axis.
                 if (frictionCap > 0)
@@ -245,12 +290,110 @@ namespace Game.Vehicle.Physics
                 }
             }
 
+            if (nc > 0) FinishContacts(nc, dt);
             ImpRoll = accRoll; ImpRollStop = accRollLim; ImpPitchStop = accPitch; ImpYawStop = accYaw; ImpFriction = accFric;
             AxisRoll = nRoll; AxisPitch = nPitch; AxisYaw = nYaw;
             ForceOnTrailer = P / dt;
             TorqueOnTrailer = angImpulse / dt;
             Vec3 onTractor = -ForceOnTrailer;
             KingpinLoadLocal = new Vec3(Vec3.Dot(onTractor, rightA), -Vec3.Dot(onTractor, upA), Vec3.Dot(onTractor, fwdA));
+        }
+
+        /// <summary>
+        /// Contact rows (ADR 0228): per point a unilateral implicit spring-damper along the normal (soft constraint, Catto GDC 2011,
+        /// same form as the chassis-ground contact of ADR 0165) on the two-body effective mass, k = m (2 pi f)^2,
+        /// c = 2 zeta m (2 pi f); a point still in the speculative gap may only close it this step. No rebound: the push may never
+        /// separate the bodies faster than contactRecoverySpeed (crushing panels, restitution ~0). Coulomb friction (circular cone).
+        /// While coupled, the mass that sets the spring is the larger of the free two-body point mass and the articulation inertia
+        /// seen at the point (mYaw / arm^2, arm = lever of the normal about the kingpin axis): the kingpin joint makes the
+        /// jackknife mode far heavier than the free point mass, and a spring tuned on the free mass alone would be several
+        /// times softer than its nominal frequency in that mode.
+        /// </summary>
+        void PrepareContacts(ref Body A, ref Body B, Vec3 comA, Vec3 comB, Vec3 upA, int nc, double dt, Vec3 kingpin, Vec3 nYaw, double mYaw)
+        {
+            double omega = 2 * Math.PI * Def.contactFrequencyHz;
+            for (int c = 0; c < nc; c++)
+            {
+                Vec3 p = Contact.Point[c], n = Contact.Normal[c];
+                Vec3 rA = p - comA, rB = p - comB;
+                Vec3 t1 = Vec3.Cross(upA, n);
+                double tl = t1.Magnitude;
+                t1 = tl > 1e-9 ? t1 / tl : Vec3.Cross(n, Vec3.Right).Normalized;
+                Vec3 t2 = Vec3.Cross(n, t1);
+                _cRA[c] = rA; _cRB[c] = rB; _cN[c] = n; _cT1[c] = t1; _cT2[c] = t2;
+                double mN = PointMass(A, B, rA, rB, n);
+                _cMN[c] = mN; _cMT1[c] = PointMass(A, B, rA, rB, t1); _cMT2[c] = PointMass(A, B, rA, rB, t2);
+                double mS = mN;
+                if (mYaw > 0)
+                {
+                    double arm = Math.Abs(Vec3.Dot(Vec3.Cross(p - kingpin, n), nYaw));
+                    if (arm > 0.05) mS = Math.Max(mS, mYaw / (arm * arm));
+                }
+                double k = mS * omega * omega, kc = k * dt + 2 * Def.contactDampingRatio * mS * omega;
+                double pen = -Contact.Separation[c];
+                _cRhs[c] = pen >= 0 ? pen * k / kc : pen / dt;
+                _cSc[c] = 1.0 / (dt * kc);
+                _cSoft[c] = 1.0 / (1.0 / mN + _cSc[c]);
+                _cJN[c] = 0; _cJT1[c] = 0; _cJT2[c] = 0;
+                if (pen > 0) ContactSpringEnergy += 0.5 * k * pen * pen;
+                if (pen > ContactPenetration) ContactPenetration = pen;
+            }
+        }
+
+        void SolveContacts(ref Body A, ref Body B, int nc)
+        {
+            double recovery = Def.contactRecoverySpeed, mu = Def.contactFriction;
+            for (int c = 0; c < nc; c++)
+            {
+                Vec3 rA = _cRA[c], rB = _cRB[c], n = _cN[c];
+                Vec3 vrel = (B.V + Vec3.Cross(B.W, rB)) - (A.V + Vec3.Cross(A.W, rA));
+                double vn = Vec3.Dot(vrel, n);
+                double dj = _cSoft[c] * (_cRhs[c] - vn - _cSc[c] * _cJN[c]);
+                // No rebound: the push may not drive the bodies apart faster than the recovery speed.
+                dj = Math.Min(dj, _cMN[c] * (recovery - vn));
+                double jn = Math.Max(0, _cJN[c] + dj);
+                dj = jn - _cJN[c];
+                _cJN[c] = jn;
+                if (dj != 0) ApplyPoint(ref A, ref B, rA, rB, n * dj);
+                if (mu <= 0) continue;
+                vrel = (B.V + Vec3.Cross(B.W, rB)) - (A.V + Vec3.Cross(A.W, rA));
+                double a1 = _cJT1[c] - _cMT1[c] * Vec3.Dot(vrel, _cT1[c]);
+                double a2 = _cJT2[c] - _cMT2[c] * Vec3.Dot(vrel, _cT2[c]);
+                double lim = mu * jn, mag = Math.Sqrt(a1 * a1 + a2 * a2);
+                if (mag > lim) { double sc = mag > 1e-12 ? lim / mag : 0; a1 *= sc; a2 *= sc; }
+                double d1 = a1 - _cJT1[c], d2 = a2 - _cJT2[c];
+                _cJT1[c] = a1; _cJT2[c] = a2;
+                if (d1 != 0 || d2 != 0) ApplyPoint(ref A, ref B, rA, rB, _cT1[c] * d1 + _cT2[c] * d2);
+            }
+        }
+
+        void FinishContacts(int nc, double dt)
+        {
+            Vec3 f = Vec3.Zero, tB = Vec3.Zero, tA = Vec3.Zero;
+            int active = 0; double jSum = 0;
+            for (int c = 0; c < nc; c++)
+            {
+                if (_cJN[c] <= 0) continue;
+                active++; jSum += _cJN[c];
+                Vec3 j = _cN[c] * _cJN[c] + _cT1[c] * _cJT1[c] + _cT2[c] * _cJT2[c];
+                f += j; tB += Vec3.Cross(_cRB[c], j); tA -= Vec3.Cross(_cRA[c], j);
+            }
+            ContactPoints = active; ContactNormalImpulse = jSum;
+            ContactForceOnTrailer = f / dt; ContactTorqueOnTrailer = tB / dt; ContactTorqueOnTractor = tA / dt;
+        }
+
+        static double PointMass(in Body A, in Body B, Vec3 rA, Vec3 rB, Vec3 d)
+        {
+            double k = A.InvMass + B.InvMass + Quad(Vec3.Cross(rA, d), A.InvI) + Quad(Vec3.Cross(rB, d), B.InvI);
+            return 1.0 / Math.Max(1e-12, k);
+        }
+
+        static void ApplyPoint(ref Body A, ref Body B, Vec3 rA, Vec3 rB, Vec3 j)
+        {
+            B.V += j * B.InvMass;
+            B.W += B.InvI * Vec3.Cross(rB, j);
+            A.V -= j * A.InvMass;
+            A.W -= A.InvI * Vec3.Cross(rA, j);
         }
 
         static Body Predict(in ChassisState s, in MassProperties m, Vec3 f, Vec3 t, Vec3 g, double dt, Vec3 anchorWorld)
@@ -343,6 +486,265 @@ namespace Game.Vehicle.Physics
             s.m10 = r.z; s.m11 = 0; s.m12 = -r.x;
             s.m20 = -r.y; s.m21 = r.x; s.m22 = 0;
             return Mat3.Mul(Mat3.Mul(s, m), s);
+        }
+    }
+
+    /// <summary>
+    /// Tractor-trailer body contact detection (ADR 0228, B-077): the coupling-flagged body boxes of the tractor (cab, frame,
+    /// mudguards; tractor frame) against those of the trailer (body, beams, underrun; trailer frame), from the definitions'
+    /// <see cref="BodyBoxDefinition"/> arrays, the same boxes the runner uses for the chassis-ground contact.
+    ///
+    /// Model: in the tractor frame each pair is a 2D box-box test in the ground plane (separating axes of both footprints,
+    /// reference face + clipped incident edge, Box2D b2CollidePolygons style), run at two height slices (bottom and top of the
+    /// boxes' common height range, so a trailer leaning on the plate pitch / roll is seen where it actually is), at most
+    /// 2 points per slice, plus the vertical overlap of the two boxes at each point measured in the trailer frame. Only side
+    /// contacts (horizontal normal: trailer side wall or front corner against the cab) are kept; a point whose vertical
+    /// overlap is smaller than its horizontal penetration (boxes meeting top-to-bottom) is dropped. Points closer than
+    /// <see cref="Margin"/> are speculative. The fifth wheel solves the points as soft contact rows together with the joint.
+    /// No allocations in <see cref="Detect"/> (arrays are sized in <see cref="SetGeometry"/>).
+    /// </summary>
+    public sealed class CouplingContact
+    {
+        /// <summary>Capacity: 4 tractor x 3 trailer coupling boxes x 2 height slices x 2 points.</summary>
+        public const int MaxPoints = 48;
+        Vec3[] _aC = new Vec3[0], _aH = new Vec3[0], _bC = new Vec3[0], _bH = new Vec3[0];
+        int _na, _nb;
+
+        /// <summary>Contacts of the last <see cref="Detect"/>: world point, unit world normal (direction the trailer is pushed), separation [m] (&lt; 0 = penetration).</summary>
+        public readonly Vec3[] Point = new Vec3[MaxPoints];
+        public readonly Vec3[] Normal = new Vec3[MaxPoints];
+        public readonly double[] Separation = new double[MaxPoints];
+        /// <summary>Indices of the touching boxes (into the coupling-flagged boxes, in definition order) — diagnostics.</summary>
+        public readonly int[] TractorBox = new int[MaxPoints], TrailerBox = new int[MaxPoints];
+        public int Count;
+        /// <summary>Speculative margin [m] (FifthWheelDefinition.contactMargin).</summary>
+        public double Margin = 0.05;
+
+        public bool HasGeometry => _na > 0 && _nb > 0;
+        public int TractorBoxCount => _na;
+        public int TrailerBoxCount => _nb;
+
+        /// <summary>Copies the coupling-flagged boxes (null / empty trailer = no contact). Allocates: call on setup / trailer swap only.</summary>
+        public void SetGeometry(BodyBoxDefinition[] tractor, BodyBoxDefinition[] trailer)
+        {
+            _na = Fill(tractor, ref _aC, ref _aH);
+            _nb = Fill(trailer, ref _bC, ref _bH);
+            Count = 0;
+        }
+
+        static int Fill(BodyBoxDefinition[] src, ref Vec3[] c, ref Vec3[] h)
+        {
+            int n = 0;
+            if (src != null) foreach (var b in src) if (b != null && b.coupling) n++;
+            c = new Vec3[n]; h = new Vec3[n];
+            int k = 0;
+            if (src != null)
+                foreach (var b in src)
+                    if (b != null && b.coupling) { c[k] = b.center; h[k] = b.size * 0.5; k++; }
+            return n;
+        }
+
+        struct Rect { public double cx, cz, e0x, e0z, e1x, e1z, h0, h1; }
+
+        /// <summary>Finds the contact points between tractor <paramref name="a"/> and trailer <paramref name="b"/>.</summary>
+        public void Detect(in ChassisState a, in ChassisState b)
+        {
+            Count = 0;
+            if (!HasGeometry) return;
+            Quat qa = a.Rotation, qaInv = qa.Conjugate;
+            Quat rel = qaInv * b.Rotation, relInv = rel.Conjugate;
+            Vec3 t = qaInv * (b.Position - a.Position);
+            Vec3 u = rel * Vec3.Right, upR = rel * Vec3.Up;
+            double ul = Math.Sqrt(u.x * u.x + u.z * u.z);
+            if (ul < 0.5 || upR.y < 0.5) return; // trailer rolled / pitched > 60 deg against the tractor: left to the chassis-ground contact
+            double ux = u.x / ul, uz = u.z / ul;
+            for (int j = 0; j < _nb; j++)
+            {
+                Vec3 cB = rel * _bC[j] + t, hB = _bH[j];
+                double radB = Math.Sqrt(hB.x * hB.x + hB.z * hB.z);
+                for (int i = 0; i < _na; i++)
+                {
+                    Vec3 cA = _aC[i], hA = _aH[i];
+                    var ra = new Rect { cx = cA.x, cz = cA.z, e0x = 1, e0z = 0, e1x = 0, e1z = 1, h0 = hA.x, h1 = hA.z };
+                    double dx = cB.x - ra.cx, dz = cB.z - ra.cz, rr = Math.Sqrt(ra.h0 * ra.h0 + ra.h1 * ra.h1) + radB + Margin;
+                    if (dx * dx + dz * dz > rr * rr) continue;
+                    // Height slices: the common height range of both boxes at the column of the tractor box centre. A pitched /
+                    // rolled trailer leans, so its footprint changes with height: the 2D test runs at the bottom and at the top
+                    // of the common range (one slice when the range is thin or empty: vertical contact candidates).
+                    Vec3 qc = relInv * (cA - t);
+                    double yb0 = (rel * new Vec3(qc.x, _bC[j].y - hB.y, qc.z) + t).y, yb1 = (rel * new Vec3(qc.x, _bC[j].y + hB.y, qc.z) + t).y;
+                    if (yb0 > yb1) { double tmp = yb0; yb0 = yb1; yb1 = tmp; }
+                    double lo = Math.Max(cA.y - hA.y, yb0), hi = Math.Min(cA.y + hA.y, yb1);
+                    const double inset = 0.02;
+                    int slices = hi - lo > 4 * inset ? 2 : 1;
+                    for (int k = 0; k < slices; k++)
+                    {
+                        double ys = slices == 1 ? 0.5 * (lo + hi) : (k == 0 ? lo + inset : hi - inset);
+                        double lam = (ys - cB.y) / upR.y;
+                        var rb = new Rect { cx = cB.x + upR.x * lam, cz = cB.z + upR.z * lam, e0x = ux, e0z = uz, e1x = -uz, e1z = ux, h0 = hB.x, h1 = hB.z };
+                        Collide(a, qa, rel, relInv, t, i, j, ra, rb, ys, k == 0);
+                        if (Count >= MaxPoints - 1) return;
+                    }
+                }
+            }
+        }
+
+        void Collide(in ChassisState a, Quat qa, Quat rel, Quat relInv, Vec3 t, int i, int j, in Rect ra, in Rect rb, double ys, bool allowVertical)
+        {
+            double sA = MaxSeparation(ra, rb, out double nAx, out double nAz, out double hNA, out double tAx, out double tAz, out double hTA);
+            if (sA > Margin) return;
+            double sB = MaxSeparation(rb, ra, out double nBx, out double nBz, out double hNB, out double tBx, out double tBz, out double hTB);
+            if (sB > Margin) return;
+            bool refB = sB > sA + 1e-3; // prefer the tractor's faces (stable choice when both are equal)
+            Rect rf = refB ? rb : ra, inc = refB ? ra : rb;
+            double nx = refB ? nBx : nAx, nz = refB ? nBz : nAz, hN = refB ? hNB : hNA;
+            double tx = refB ? tBx : tAx, tz = refB ? tBz : tAz, hT = refB ? hTB : hTA;
+            IncidentEdge(inc, nx, nz, out double p1x, out double p1z, out double p2x, out double p2z);
+            double s1 = tx * (p1x - rf.cx) + tz * (p1z - rf.cz), s2 = tx * (p2x - rf.cx) + tz * (p2z - rf.cz);
+            if (!Clip(ref p1x, ref p1z, ref s1, ref p2x, ref p2z, ref s2, -hT, hT)) return;
+            AddPoint(a, qa, rel, relInv, t, i, j, rf, refB, nx, nz, hN, p1x, p1z, ys, allowVertical);
+            if (Count >= MaxPoints) return;
+            AddPoint(a, qa, rel, relInv, t, i, j, rf, refB, nx, nz, hN, p2x, p2z, ys, allowVertical);
+        }
+
+        void AddPoint(in ChassisState a, Quat qa, Quat rel, Quat relInv, Vec3 t, int i, int j, in Rect rf, bool refB,
+            double nx, double nz, double hN, double px, double pz, double ys, bool allowVertical)
+        {
+            double sep = nx * (px - rf.cx) + nz * (pz - rf.cz) - hN;
+            if (sep > Margin) return;
+            // Vertical overlap of the two boxes at this column, the trailer box measured in its own frame (plate pitch / roll).
+            Vec3 cA = _aC[i], hA = _aH[i];
+            double ya0 = cA.y - hA.y, ya1 = cA.y + hA.y;
+            Vec3 q = relInv * (new Vec3(px, ys, pz) - t);
+            double yb0 = (rel * new Vec3(q.x, _bC[j].y - _bH[j].y, q.z) + t).y;
+            double yb1 = (rel * new Vec3(q.x, _bC[j].y + _bH[j].y, q.z) + t).y;
+            if (yb0 > yb1) { double tmp = yb0; yb0 = yb1; yb1 = tmp; }
+            double lo = Math.Max(ya0, yb0), hi = Math.Min(ya1, yb1);
+            double vOverlap = hi - lo, hPen = -sep;
+            if (sep > 0 && vOverlap < 0) return; // apart both horizontally and vertically
+            // Only side contacts (horizontal normal). Where the vertical overlap is smaller than the horizontal penetration the
+            // boxes meet top-to-bottom (a rolled / pitched trailer body over a mudguard or the frame end): not modelled
+            // (ADR 0228): the graybox body box is full width down to 1.22 m where the real trailer has a narrow gooseneck,
+            // and plastic mudguards on brackets do not carry the trailer.
+            if (vOverlap <= 0 || vOverlap < hPen) return;
+            // The slice must lie in the common height range at this column (a leaning trailer may not reach it here).
+            if (ys < lo - 0.05 || ys > hi + 0.05) return;
+            int c = Count;
+            // Normal pushing the trailer: out of the tractor face (reference A), or into the trailer face (reference B).
+            double mx = refB ? -nx : nx, mz = refB ? -nz : nz;
+            Point[c] = a.LocalToWorld(new Vec3(px, MathUtil.Clamp(ys, lo, hi), pz));
+            Normal[c] = qa * new Vec3(mx, 0, mz);
+            Separation[c] = sep;
+            TractorBox[c] = i; TrailerBox[c] = j;
+            Count = c + 1;
+        }
+
+        /// <summary>Largest signed separation of <paramref name="r2"/> from the faces of <paramref name="r1"/> (SAT), with that face's normal, half-depth and tangent.</summary>
+        static double MaxSeparation(in Rect r1, in Rect r2, out double nx, out double nz, out double hN, out double tx, out double tz, out double hT)
+        {
+            nx = 0; nz = 0; hN = 0; tx = 0; tz = 0; hT = 0;
+            double best = double.NegativeInfinity;
+            for (int k = 0; k < 4; k++)
+            {
+                double sg = (k & 1) == 0 ? 1 : -1;
+                bool ax0 = k < 2;
+                double ex = sg * (ax0 ? r1.e0x : r1.e1x), ez = sg * (ax0 ? r1.e0z : r1.e1z);
+                double h = ax0 ? r1.h0 : r1.h1;
+                double proj = Math.Abs(ex * r2.e0x + ez * r2.e0z) * r2.h0 + Math.Abs(ex * r2.e1x + ez * r2.e1z) * r2.h1;
+                double s = ex * (r2.cx - r1.cx) + ez * (r2.cz - r1.cz) - h - proj;
+                if (s > best)
+                {
+                    best = s; nx = ex; nz = ez; hN = h;
+                    tx = ax0 ? r1.e1x : r1.e0x; tz = ax0 ? r1.e1z : r1.e0z; hT = ax0 ? r1.h1 : r1.h0;
+                }
+            }
+            return best;
+        }
+
+        /// <summary>The face of <paramref name="r"/> most anti-parallel to the reference normal: its two end points.</summary>
+        static void IncidentEdge(in Rect r, double nx, double nz, out double p1x, out double p1z, out double p2x, out double p2z)
+        {
+            double bestDot = double.PositiveInfinity, mx = 0, mz = 0, hm = 0, tmx = 0, tmz = 0, ht = 0;
+            for (int k = 0; k < 4; k++)
+            {
+                double sg = (k & 1) == 0 ? 1 : -1;
+                bool ax0 = k < 2;
+                double ex = sg * (ax0 ? r.e0x : r.e1x), ez = sg * (ax0 ? r.e0z : r.e1z);
+                double d = ex * nx + ez * nz;
+                if (d < bestDot)
+                {
+                    bestDot = d; mx = ex; mz = ez; hm = ax0 ? r.h0 : r.h1;
+                    tmx = ax0 ? r.e1x : r.e0x; tmz = ax0 ? r.e1z : r.e0z; ht = ax0 ? r.h1 : r.h0;
+                }
+            }
+            double fx = r.cx + mx * hm, fz = r.cz + mz * hm;
+            p1x = fx + tmx * ht; p1z = fz + tmz * ht;
+            p2x = fx - tmx * ht; p2z = fz - tmz * ht;
+        }
+
+        /// <summary>Clips the segment p1-p2 (tangent coordinates s1, s2) to [lo, hi]; false when it lies outside.</summary>
+        static bool Clip(ref double p1x, ref double p1z, ref double s1, ref double p2x, ref double p2z, ref double s2, double lo, double hi)
+        {
+            if ((s1 < lo && s2 < lo) || (s1 > hi && s2 > hi)) return false;
+            if (s1 < lo) { double f = (lo - s1) / (s2 - s1); p1x += (p2x - p1x) * f; p1z += (p2z - p1z) * f; s1 = lo; }
+            else if (s2 < lo) { double f = (lo - s2) / (s1 - s2); p2x += (p1x - p2x) * f; p2z += (p1z - p2z) * f; s2 = lo; }
+            if (s1 > hi) { double f = (s1 - hi) / (s1 - s2); p1x += (p2x - p1x) * f; p1z += (p2z - p1z) * f; s1 = hi; }
+            else if (s2 > hi) { double f = (s2 - hi) / (s2 - s1); p2x += (p1x - p2x) * f; p2z += (p1z - p2z) * f; s2 = hi; }
+            return true;
+        }
+
+        /// <summary>
+        /// Smallest articulation [deg] at which the coupled, level combination (kingpin in the jaw) first touches, sweeping the
+        /// trailer yaw both ways (bisection to 0.01 deg). NaN when there is no geometry or no contact up to <paramref name="maxDeg"/>.
+        /// Allocates (setup / tests / metrics only).
+        /// </summary>
+        public static double FirstContactArticulationDeg(VehicleDefinition tractor, TrailerDefinition trailer, double maxDeg = 179)
+        {
+            var c = new CouplingContact { Margin = 0 };
+            c.SetGeometry(tractor.bodyBoxes, trailer.bodyBoxes);
+            if (!c.HasGeometry) return double.NaN;
+            double best = double.NaN;
+            for (int sg = -1; sg <= 1; sg += 2)
+            {
+                double prev = 0, hit = double.NaN;
+                for (double phi = 0.5; phi <= maxDeg; phi += 0.5)
+                {
+                    if (Touches(c, tractor, trailer, sg * phi)) { hit = phi; break; }
+                    prev = phi;
+                }
+                if (double.IsNaN(hit)) continue;
+                double lo = prev, hi = hit;
+                for (int it = 0; it < 30; it++)
+                {
+                    double mid = 0.5 * (lo + hi);
+                    if (Touches(c, tractor, trailer, sg * mid)) hi = mid; else lo = mid;
+                }
+                double art = Math.Abs(ArticulationAt(tractor, trailer, sg * hi));
+                if (double.IsNaN(best) || art < best) best = art;
+            }
+            return best;
+        }
+
+        static void Pose(VehicleDefinition tractor, TrailerDefinition trailer, double yawDeg, out ChassisState a, out ChassisState b)
+        {
+            a = new ChassisState { Rotation = Quat.Identity };
+            Quat qb = Quat.AngleAxis(yawDeg * MathUtil.Deg2Rad, Vec3.Up);
+            b = new ChassisState { Rotation = qb, Position = tractor.fifthWheel.position - qb * new Vec3(0, trailer.kingpinHeight, 0) };
+        }
+
+        static bool Touches(CouplingContact c, VehicleDefinition tractor, TrailerDefinition trailer, double yawDeg)
+        {
+            Pose(tractor, trailer, yawDeg, out ChassisState a, out ChassisState b);
+            c.Detect(a, b);
+            for (int k = 0; k < c.Count; k++) if (c.Separation[k] < 0) return true;
+            return false;
+        }
+
+        static double ArticulationAt(VehicleDefinition tractor, TrailerDefinition trailer, double yawDeg)
+        {
+            Pose(tractor, trailer, yawDeg, out ChassisState a, out ChassisState b);
+            Vec3 fwdA = a.Rotation * Vec3.Forward, fwdB = b.Rotation * Vec3.Forward, rightB = b.Rotation * Vec3.Right;
+            return Math.Atan2(Vec3.Dot(fwdA, rightB), Vec3.Dot(fwdA, fwdB)) * MathUtil.Rad2Deg;
         }
     }
 }

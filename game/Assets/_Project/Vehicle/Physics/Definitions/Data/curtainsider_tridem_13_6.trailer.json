@@ -92,6 +92,7 @@
         "staticPositionFraction": 0.5,
         "bumpStopClearance": 0.025,
         "bumpStopRate": 40000000.0,
+        "bumpStopHysteresis": 1.0,
         "damperBump": 9000,
         "damperRebound": 18000,
         "damperKneeVelocity": 0.3,
@@ -128,6 +129,7 @@
         "staticPositionFraction": 0.5,
         "bumpStopClearance": 0.025,
         "bumpStopRate": 40000000.0,
+        "bumpStopHysteresis": 1.0,
         "damperBump": 9000,
         "damperRebound": 18000,
         "damperKneeVelocity": 0.3,
@@ -164,6 +166,7 @@
         "staticPositionFraction": 0.5,
         "bumpStopClearance": 0.025,
         "bumpStopRate": 40000000.0,
+        "bumpStopHysteresis": 1.0,
         "damperBump": 9000,
         "damperRebound": 18000,
         "damperKneeVelocity": 0.3,
@@ -223,5 +226,52 @@
     "x": 0,
     "y": 2.5,
     "z": -5.0
-  }
+  },
+  "bodyBoxes": [
+    {
+      "name": "Body",
+      "center": {
+        "x": 0,
+        "y": 2.61,
+        "z": -5.178
+      },
+      "size": {
+        "x": 2.55,
+        "y": 2.78,
+        "z": 13.6
+      },
+      "ground": true,
+      "coupling": true
+    },
+    {
+      "name": "Beams",
+      "center": {
+        "x": 0,
+        "y": 1.06,
+        "z": -7.239
+      },
+      "size": {
+        "x": 1.2,
+        "y": 0.28,
+        "z": 9.278
+      },
+      "ground": true,
+      "coupling": true
+    },
+    {
+      "name": "RearUnderrun",
+      "center": {
+        "x": 0,
+        "y": 0.475,
+        "z": -11.728
+      },
+      "size": {
+        "x": 2.35,
+        "y": 0.15,
+        "z": 0.12
+      },
+      "ground": true,
+      "coupling": true
+    }
+  ]
 }

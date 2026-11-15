@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "drop_05m_comb",
+  "description": "ADR 0228 (B-077, ADR 0158 Open 4): the coupled combination lifted 0.5 m above its equilibrium pose and released at standstill. Before ADR 0228 it bounced back to ~85 % of the drop height (elastic bump stops, undamped tyres). Checks the share of the drop energy returned as the first rebound and the time spent airborne again.",
+  "spec": "docs/04 s6.9/s6.10, ADR 0228 (B-077, gate 2)",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "dropHeight": 0.5
+  },
+  "overrides": {
+    "articulationDeg": 0
+  },
+  "duration": 6,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.0,
+        "brake": 0.0,
+        "steer": 0.0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "no NaN",
+      "max": 0
+    },
+    {
+      "metric": "free_flight_s",
+      "status": "DERIVED",
+      "source": "the drop is a flight: sqrt(2 * 0.4 / 9.81) = 0.29 s (wheels hang below the static pose)",
+      "min": 0.2
+    },
+    {
+      "metric": "max_free_flight_energy_gain_j",
+      "status": "WORKING_VALUE",
+      "source": "E = KE + PE does not grow in free flight",
+      "max": 1
+    },
+    {
+      "metric": "drop_rebound_ratio",
+      "status": "WORKING_VALUE",
+      "source": "damped landing: <= 45 % of the drop energy comes back as the first rebound (ADR 0228 criterion; before ADR 0228: 0.68 laden40 / 0.37 empty, measured after: 0.38 / 0.16)",
+      "max": 0.45
+    },
+    {
+      "metric": "drop_relaunch_s",
+      "status": "WORKING_VALUE",
+      "source": "the combination does not take off again after the landing",
+      "max": 0.1
+    },
+    {
+      "metric": "max_body_penetration_m",
+      "status": "WORKING_VALUE",
+      "source": "chassis does not dig into the road (ADR 0165 bumper-crush bound)",
+      "max": 0.05
+    },
+    {
+      "metric": "min_com_height_m",
+      "status": "WORKING_VALUE",
+      "source": "no fall-through",
+      "min": 0.5
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "coupling holds through the landing (free_fall_drop_comb bound)",
+      "max": 15
+    }
+  ]
+}

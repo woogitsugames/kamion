@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "jackknife_fold_90_reverse_comb",
+  "description": "ADR 0228 (laden40): reversing with full lock from 30 deg articulation folds the combination past 90 deg, then the driver brakes. Before ADR 0228 an angular stop held the articulation at 90 deg (F1 tolerance 3.5 deg); now the limit is the body contact at 117.1 deg, so the fold passes 90 deg freely and nothing touches.",
+  "spec": "docs/04 s6.9/s6.10, ADR 0228 (B-077, gate 2)",
+  "combination": "laden40",
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "overrides": {
+    "articulationDeg": 30.0
+  },
+  "duration": 10,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 0.0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 1,
+        "throttle": 0.3,
+        "brake": 0.0,
+        "steer": 1,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 5.15,
+        "throttle": 0.0,
+        "brake": 1,
+        "steer": 1,
+        "parkingBrake": false,
+        "selector": "R"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "no NaN (solver explosion)",
+      "max": 0
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "no teleport |dx_com - v dt| <= 1e-4 m",
+      "max": 0.0001
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "per-step velocity change <= 0.35 m/s (kerb jerk ceiling, ADR 0165 / D58)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin stays in the jaw through the contact (driving limit 5 mm)",
+      "max": 5
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "folds past the old 90 deg stop and stays clear of the cab (first contact of the level combination at 117.12 deg (trailer side wall, half width 1.275 m, on the cab rear corner x 1.245 m, 2.07 m ahead of the kingpin; CouplingContact.FirstContactArticulationDeg, analytic in JackknifeContactTests))",
+      "min": 90,
+      "max": 112
+    },
+    {
+      "metric": "coupling_contact_s",
+      "status": "WORKING_VALUE",
+      "source": "no tractor-trailer contact below the geometric contact angle",
+      "max": 0
+    },
+    {
+      "metric": "max_coupling_penetration_m",
+      "status": "WORKING_VALUE",
+      "source": "no tractor-trailer penetration",
+      "max": 0
+    }
+  ]
+}

@@ -30,6 +30,11 @@ namespace Game.Vehicle.Physics
 
         /// <summary>Radial (vertical) stiffness per tire [N/m], in series with the suspension.</summary>
         public double radialStiffness = 1.0e6;
+        /// <summary>
+        /// Radial (vertical) damping per tire [N s/m] on the tyre deflection rate (ADR 0228; 0 = undamped tyre, before ADR 0228).
+        /// WORKING_VALUE: no measured value for this tyre; see ADR 0228 for the range used.
+        /// </summary>
+        public double radialDamping;
 
         /// <summary>Nominal vertical load per tire [N] used for load sensitivity.</summary>
         public double nominalLoadN = 30000;

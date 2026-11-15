@@ -376,6 +376,67 @@ namespace PhysicsRunner.Sim
                     for (int i = Math.Max(i0, 1); i <= i1; i++) if (s[i].BodyContacts > 0) tc += s[i].T - s[i - 1].T;
                     return tc;
                 }
+                // ---------------- tractor-trailer body contact, heavy landing (ADR 0228) ----------------
+                case "max_coupling_penetration_m": return Max(s, i0, i1, x => x.CouplingPenetration);
+                case "max_coupling_contact_force_kn": return Max(s, i0, i1, x => x.CouplingContactForce) / 1000;
+                case "coupling_contact_s":
+                {
+                    double tc = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (s[i].CouplingContacts > 0) tc += s[i].T - s[i - 1].T;
+                    return tc;
+                }
+                case "max_articulation_rate_dps":
+                {
+                    // Relative yaw rate tractor vs trailer from the sampled articulation [deg/s].
+                    double m = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) m = Math.Max(m, Math.Abs(s[i].Articulation - s[i - 1].Articulation) / (s[i].T - s[i - 1].T));
+                    return m * MathUtil.Rad2Deg;
+                }
+                case "max_body_rate_dps": return Max(s, i0, i1, x => Math.Max(x.TractorAngRate, x.TrailerAngRate)) * MathUtil.Rad2Deg;
+                case "coupling_contact_restitution":
+                {
+                    // Yaw "restitution" of the first tractor-trailer contact: largest articulation rate AWAY from the contact
+                    // within 1 s after the first contact sample, over the approach rate (largest |rate| towards it in the
+                    // 0.5 s before). 0 = the trailer stays at the cab (plastic), 1 = elastic rebound. NaN without contact.
+                    int ic = -1;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (s[i].CouplingContacts > 0) { ic = i; break; }
+                    if (ic < 0) return double.NaN;
+                    double sgn = Math.Sign(s[ic].Articulation);
+                    double approach = 0, away = 0;
+                    for (int i = Math.Max(1, ic - (int)Math.Round(0.5 / r.SampleDt)); i <= ic; i++)
+                        approach = Math.Max(approach, sgn * (s[i].Articulation - s[i - 1].Articulation) / (s[i].T - s[i - 1].T));
+                    int end = Math.Min(i1, ic + (int)Math.Round(1.0 / r.SampleDt));
+                    for (int i = ic + 1; i <= end; i++)
+                        away = Math.Max(away, -sgn * (s[i].Articulation - s[i - 1].Articulation) / (s[i].T - s[i - 1].T));
+                    return approach > 1e-9 ? away / approach : 0;
+                }
+                case "drop_rebound_ratio":
+                {
+                    // Heavy landing (ADR 0228): share of the drop energy that comes back as the first rebound.
+                    // PE of both bodies: drop E = PE(0) - PE(end, settled); rebound = highest PE after the deepest point of the
+                    // first landing (within 1.5 s) minus PE(end). Plastic landing 0, elastic bounce 1.
+                    int land = -1;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (!FreeFlight(s[i]) && FreeFlight(s[i - 1])) { land = i; break; }
+                    if (land < 0) return double.NaN;
+                    double peEnd = s[i1].PotentialEnergy, drop = s[i0].PotentialEnergy - peEnd;
+                    if (drop <= 0) return double.NaN;
+                    int win = (int)Math.Round(1.5 / r.SampleDt);
+                    int bottom = land;
+                    for (int i = land; i <= Math.Min(i1, land + win); i++) if (s[i].PotentialEnergy < s[bottom].PotentialEnergy) bottom = i;
+                    double apex = s[bottom].PotentialEnergy;
+                    for (int i = bottom; i <= Math.Min(i1, bottom + win); i++) apex = Math.Max(apex, s[i].PotentialEnergy);
+                    return Math.Max(0, apex - peEnd) / drop;
+                }
+                case "drop_relaunch_s":
+                {
+                    // Time all wheels / colliders are off the ground again after the first landing [s].
+                    int land = -1;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (!FreeFlight(s[i]) && FreeFlight(s[i - 1])) { land = i; break; }
+                    if (land < 0) return 0;
+                    double tf = 0;
+                    for (int i = land + 1; i <= i1; i++) if (FreeFlight(s[i - 1]) && FreeFlight(s[i])) tf += s[i].T - s[i - 1].T;
+                    return tf;
+                }
                 case "max_tire_friction_ratio": return Max(s, i0, i1, x => x.MaxFrictionRatio);
                 case "min_air_all_bar":
                     return Min(s, i0, i1, x => Math.Min(Math.Min(x.AirSupply, Math.Min(x.AirFront, x.AirRear)), Math.Min(x.AirPark, x.AirTrailer)));

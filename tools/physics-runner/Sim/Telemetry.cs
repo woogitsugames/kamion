@@ -59,6 +59,13 @@ namespace PhysicsRunner.Sim
         public double ComHeightAboveGround;
         /// <summary>Velocity of the combined centre of mass (momentum / total mass) [m/s].</summary>
         public Vec3 SystemVel;
+        // tractor-trailer body contact (ADR 0228)
+        /// <summary>Contact points with a non-zero normal impulse between tractor and trailer bodies.</summary>
+        public int CouplingContacts;
+        /// <summary>Deepest tractor-trailer body penetration at the start of the step [m] and contact force on the trailer [N].</summary>
+        public double CouplingPenetration, CouplingContactForce;
+        /// <summary>|angular velocity| of the tractor and the trailer body [rad/s].</summary>
+        public double TractorAngRate, TrailerAngRate;
     }
 
     /// <summary>CSV telemetry writer (docs/04 section 4).</summary>
@@ -86,7 +93,7 @@ namespace PhysicsRunner.Sim
                 string n = wh.Name;
                 _sb.Append($"{n}_fz,{n}_fx,{n}_fy,{n}_slip,{n}_alpha_deg,{n}_comp,{n}_omega,{n}_brake_t,{n}_abs,{n}_drive_t,{n}_tire_defl,{n}_contact,{n}_p_bar,");
             }
-            _sb.Append("axle0_load,axle1_load,trailer_axles_load,body_pen_tractor_m,body_pen_trailer_m,body_contacts,body_deep_corner_tractor,body_deep_corner_trailer,step_us,config_id,commit");
+            _sb.Append("axle0_load,axle1_load,trailer_axles_load,body_pen_tractor_m,body_pen_trailer_m,body_contacts,body_deep_corner_tractor,body_deep_corner_trailer,coupling_contacts,coupling_pen_m,coupling_force_kn,tractor_ang_rate_dps,trailer_ang_rate_dps,step_us,config_id,commit");
             _w.WriteLine(_sb.ToString());
         }
 
@@ -127,7 +134,11 @@ namespace PhysicsRunner.Sim
             double bpt = 0, bpr = 0; int bc = 0;
             if (s.TractorContact != null) { bpt = s.TractorContact.MaxPenetration; bc += s.TractorContact.ActiveContacts; }
             if (s.TrailerContact != null) { bpr = s.TrailerContact.MaxPenetration; bc += s.TrailerContact.ActiveContacts; }
-            F(bpt); F(bpr); F(bc); F(s.TractorContact != null ? s.TractorContact.DeepestCorner : -1); F(s.TrailerContact != null ? s.TrailerContact.DeepestCorner : -1); F(stepMicros);
+            F(bpt); F(bpr); F(bc); F(s.TractorContact != null ? s.TractorContact.DeepestCorner : -1); F(s.TrailerContact != null ? s.TrailerContact.DeepestCorner : -1);
+            // ADR 0228: tractor-trailer body contact and body angular rates
+            F(fw.ContactPoints); F(fw.ContactPenetration); F(fw.ContactForceOnTrailer.Magnitude / 1000);
+            F(b.AngularVelocity.Magnitude * MathUtil.Rad2Deg); F(s.TrailerBody != null ? s.TrailerBody.AngularVelocity.Magnitude * MathUtil.Rad2Deg : 0);
+            F(stepMicros);
             _sb.Append(_configId); _sb.Append(','); _sb.Append(_commit);
             _w.WriteLine(_sb.ToString());
         }
