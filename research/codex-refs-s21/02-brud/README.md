@@ -1,6 +1,6 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Cel: ≥ 20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥ 6 zimowych i ≥ 6 europejskich. **Kryteria niespełnione: 0 / 0 / 0 kwalifikowanych.** W manifeście 5 pobranych i obejrzanych kadrów, 0 link-only: 3 odrzucone, 1 wzorzec czysty i 1 rdza/wiek. Dodatkowy screening obejmuje 8 nowych obejrzanych oryginałów (w tym ten 1 kadr rdzy), zapisanych poza gitem; 7 pozostałych odrzucono bez kopiowania miniatur do gita. Nie są dowodem rozkładu brudu. Liczby powyżej to zliczenie wierszy manifestu.
+Cel: ≥ 20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥ 6 zimowych i ≥ 6 europejskich. **Kryteria niespełnione: 0 / 0 / 0 kwalifikowanych.** W manifeście 5 pobranych i obejrzanych kadrów oraz 1 pomocniczy link-only: 3 odrzucone, 1 wzorzec czysty i 1 rdza/wiek. Dodatkowy screening obejmuje 8 nowych obejrzanych oryginałów (w tym ten 1 kadr rdzy), zapisanych poza gitem; 7 pozostałych odrzucono bez kopiowania miniatur do gita. Nie są dowodem rozkładu brudu. Liczby powyżej to zliczenie wierszy manifestu.
 
 ## Wynik przeglądu
 
@@ -32,3 +32,22 @@ Publiczny search Flickr HTTP200 z filtrem licencji 4 (BY) / 5 (BY-SA) / 9 (CC0):
 02-D02 (Oddział Białystok, 20.01.2026): SOURCED [pełny tekst jednostronicowej odpowiedzi przetargowej, pkt 1] — uziarnienie piasku 1–2 mm dla dostawy ZUD sezonu 2026. Lokalna kopia i wizualny zrzut PDF nie powstały (timeout); wartość pochodzi z pełnego odczytu tekstowego, nie z obrazu.
 
 **Dawka g/m² na DK65, procent NaCl w dostawie lokalnej, aktualny standard ZUD dawnego odcinka po otwarciu S19 oraz skład i rozkład osadu na drzwiach pozostają UNVERIFIED.** Wielkość ziarna na jezdni nie oznacza tej samej wielkości cząstek przyklejonych do naczepy. Nie wyprowadzono odsetka soli, wysokości filmu, koloru ani smużenia z danych o utrzymaniu drogi. Dwa wiersze dokumentacyjne nie zwiększają liczby kadrów.
+
+## Tabela dawek — odczyt archiwalny oczekuje obrazu
+
+`data/zud2006-table2-PENDING-VISUAL.csv` to robocza transkrypcja tekstowa tablicy 2 z **2006**, s. 36–37. Nie jest wersją 2017 ani aktualnym przepisem. Kod A oznacza prewencję gołoledzi/lodowicy/szronu; B — zapobieganie przywieraniu śniegu; C — likwidację śliskości/cienkich pozostałości po pługu. Wszystkie dawki dotyczą jezdni, g/m².
+
+**NIEGOTOWE do użycia jako pełna tabela**: tekst pominął wiersz A dla −3…−6°C; ten wiersz ma UNVERIFIED. Nie uzupełniono go z innej wersji. PDF 2017, lokalne pobranie 2006 i obraz stron były niedostępne (timeout/blank). Szczegóły w `data/zud-table-access-check.json`. Roboczego pliku nie traktować jako zamknięcia luki dawek ani jako wejścia generatora. Nie ma lokalnego snapshotu PDF/SHA.
+
+## Zimowe kadry stock — obejrzany podgląd, wyłącznie link-only
+
+02-006: SOURCED [fotostrona Getty 2208838382 i obejrzany obraz] — Bośnia i Hercegowina, autor MASTER, kolekcja Moment, widoczna etykieta Non-AI. Data zdjęcia UNVERIFIED; 07.06.2025 to upload. Podgląd pokazuje słabe zabrudzenie jasnych dwuskrzydłowych drzwi: rozproszony szarobeżowy film i cienkie pionowe ślady. Na belce poniżej drzwi zabrudzenie jest mocniejsze. Brak wiarygodnej identyfikacji soli, błota pośniegowego lub składu chemicznego; zimowy kontekst wspierają tytuł oraz białe drzewa. Fizyczna wysokość stref i kierunek geograficzny UNVERIFIED.
+
+Obejrzano osobno także trzy kadry tej serii (log `getty-screening-2026-11-15.json`): dwa powtarzają czerwony zestaw, trzeci pokazuje inny pojazd zbyt daleko do rozkładu osadu. Nie zwiększają liczników. **Kryterium brudnych drzwi >=1000 px na zweryfikowanym obrazie pozostaje niespełnione**: podgląd 02-006 ma drzwi około 320 px wysokości (ESTIMATED); deklarowane 8636 × 5760 dotyczy niedostępnego oryginału, a nie obejrzanej rozdzielczości drzwi. Delta ścisłych kryteriów: 0 / 0 / 0. Link-only obejrzane pomocnicze: 1. Materiałów komercyjnych ani zrzutów obrazu nie pobrano; tylko URL i własny opis. Royalty-free nie oznacza CC ani otrzymanej licencji.
+
+
+### Kontrola publicznego zoomu Getty
+
+02-006 obejrzano ponownie w zwykłej galerii Zoom: wyrenderowany obraz ma naturalnie 2048 × 1366 px (SOURCED [read-only DOM obrazu galerii]), wyświetlony 1303 × 869 px. Drzwi około 370 px na ekranie i około 580 px w naturalnym podglądzie (ESTIMATED z proporcji, nie pomiar oryginału); nadal poniżej progu 1000 px. Nie powiększano sztucznie miniatury. Dodatkowy kadr 181541451 obejrzany osobno w Zoom odrzucono: jasny prosty tył bez wiarygodnego brudu i bez czytelnej konstrukcji dwuskrzydłowych drzwi.
+
+Łącznie ta seria screeningu obejmuje 5 różnych kadrów, około 3 pojazdów/scen (ESTIMATED z obrazów); trzykrotny czerwony zestaw to jeden pojazd. Ponowny Zoom 02-006 nie jest nowym kadrem. Przyrost kwalifikowanych M61 pozostaje 0. Publiczny PDF gov.pl ze zdjęciem naczepy w zimowym otoczeniu był niedostępny wizualnie (timeout); Shutterstock pokazał Device Check. Nie użyto tych nieobejrzanych kandydatów ani nie obchodzono blokad.
