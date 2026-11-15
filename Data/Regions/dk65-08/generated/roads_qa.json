@@ -150,17 +150,17 @@
     2
    ],
    "length_m": 482.9,
-   "max_grade": 0.0407,
+   "max_grade": 0.04,
    "overrides": [
     "rural-roads-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.018,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -175,21 +175,21 @@
     2
    ],
    "length_m": 274.8,
-   "max_grade": 0.0135,
+   "max_grade": 0.0136,
    "overrides": [
     "rural-roads-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.04,
+   "axis_smoothing_dev_max_m": 0.03,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -200,17 +200,17 @@
     2
    ],
    "length_m": 1597.4,
-   "max_grade": 0.0539,
+   "max_grade": 0.0543,
    "overrides": [
     "rural-roads-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.017,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -289,10 +289,10 @@
   "decals": {
    "gullies": 81,
    "oil": 10,
-   "patches": 48
+   "patches": 36
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 65942,
+  "footprint_nodes": 63960,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -334,7 +334,7 @@
   "nmt_nodes_replaced_under_decks": 0,
   "overrides_applied": [
    {
-    "id": "dk65-carriageway-width",
+    "id": "dk65-xsec-k1",
     "targets": [
      "w27718745:17795488-5548637893",
      "w27718745:5548637893-1134817563",
@@ -375,7 +375,7 @@
   },
   "verge_strips": {
    "chunks": 9,
-   "tris": 2060
+   "tris": 2084
   },
   "walled_ramps": []
  }

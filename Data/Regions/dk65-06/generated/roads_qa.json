@@ -13,7 +13,9 @@
    ],
    "length_m": 349.3,
    "max_grade": 0.0434,
-   "overrides": [],
+   "overrides": [
+    "kozince-1392b-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -70,7 +72,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.18,
+   "axis_smoothing_dev_max_m": 0.17,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -85,13 +87,13 @@
    "overrides": [
     "dk65-old-unlit"
    ],
-   "profile_rms_vs_nmt_m": 0.03,
+   "profile_rms_vs_nmt_m": 0.033,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-old-xsec"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -1006,7 +1008,9 @@
    ],
    "length_m": 1417.3,
    "max_grade": 0.041,
-   "overrides": [],
+   "overrides": [
+    "kozince-1392b-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.019,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1029,7 +1033,9 @@
    ],
    "length_m": 56.2,
    "max_grade": 0.0118,
-   "overrides": [],
+   "overrides": [
+    "kozince-1392b-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.033,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1052,7 +1058,9 @@
    ],
    "length_m": 99.5,
    "max_grade": 0.0289,
-   "overrides": [],
+   "overrides": [
+    "kozince-1392b-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.017,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1075,7 +1083,9 @@
    ],
    "length_m": 120.2,
    "max_grade": 0.0205,
-   "overrides": [],
+   "overrides": [
+    "kozince-1392b-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.014,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1098,7 +1108,9 @@
    ],
    "length_m": 138.7,
    "max_grade": 0.0133,
-   "overrides": [],
+   "overrides": [
+    "kozince-1392b-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.02,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1148,10 +1160,10 @@
   "decals": {
    "gullies": 371,
    "oil": 36,
-   "patches": 74
+   "patches": 91
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 108944,
+  "footprint_nodes": 107622,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1257,10 +1269,22 @@
     ]
    },
    {
-    "id": "dk65-old-xsec",
+    "id": "dk65-xsec-k1",
     "targets": [
      "w1151531610:10712325637-10712325634",
      "w208187096:10712325634-897574830"
+    ]
+   },
+   {
+    "id": "kozince-1392b-unlit",
+    "targets": [
+     "w76085945:12529420150-897574830",
+     "w76085945:13371361361-4087227386",
+     "w76085945:4087227386-4087227393",
+     "w76085945:4087227393-12529420150",
+     "w76085945:8181413293-13371361361",
+     "w76085945:897574797-897574852",
+     "w76085945:897574852-8181413293"
     ]
    },
    {
@@ -1292,7 +1316,7 @@
   },
   "verge_strips": {
    "chunks": 28,
-   "tris": 9155
+   "tris": 9159
   },
   "walled_ramps": []
  }

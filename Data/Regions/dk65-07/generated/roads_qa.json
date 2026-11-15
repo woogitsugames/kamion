@@ -270,17 +270,17 @@
     2
    ],
    "length_m": 118.0,
-   "max_grade": 0.0297,
+   "max_grade": 0.0298,
    "overrides": [
     "dk65-old-unlit"
    ],
-   "profile_rms_vs_nmt_m": 0.015,
+   "profile_rms_vs_nmt_m": 0.016,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-old-xsec"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -295,17 +295,17 @@
     2
    ],
    "length_m": 252.6,
-   "max_grade": 0.0537,
+   "max_grade": 0.0533,
    "overrides": [
     "dk65-old-unlit"
    ],
-   "profile_rms_vs_nmt_m": 0.023,
+   "profile_rms_vs_nmt_m": 0.024,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-old-xsec"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -320,17 +320,17 @@
     2
    ],
    "length_m": 132.1,
-   "max_grade": 0.0201,
+   "max_grade": 0.0203,
    "overrides": [
     "dk65-old-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.026,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-old-xsec"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -345,17 +345,17 @@
     2
    ],
    "length_m": 150.3,
-   "max_grade": 0.0154,
+   "max_grade": 0.0151,
    "overrides": [
     "dk65-old-unlit"
    ],
-   "profile_rms_vs_nmt_m": 0.02,
+   "profile_rms_vs_nmt_m": 0.021,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-old-xsec"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -377,10 +377,10 @@
    "profile_rms_vs_nmt_m": 0.027,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -395,17 +395,17 @@
     2
    ],
    "length_m": 3.9,
-   "max_grade": 0.0358,
+   "max_grade": 0.0364,
    "overrides": [
     "rural-roads-unlit"
    ],
-   "profile_rms_vs_nmt_m": 0.013,
+   "profile_rms_vs_nmt_m": 0.019,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -651,7 +651,9 @@
    ],
    "length_m": 323.5,
    "max_grade": 0.0179,
-   "overrides": [],
+   "overrides": [
+    "kozince-1392b-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.023,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -856,10 +858,10 @@
   "decals": {
    "gullies": 394,
    "oil": 28,
-   "patches": 88
+   "patches": 90
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 114169,
+  "footprint_nodes": 113437,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -925,10 +927,20 @@
   "nmt_nodes_replaced_under_decks": 0,
   "overrides_applied": [
    {
-    "id": "dk65-carriageway-width",
+    "id": "dk65-xsec-k1",
     "targets": [
+     "w208187096:10712325634-4090471697",
+     "w208187096:4090471697-4090471704",
+     "w208187096:4090471704-897574830",
+     "w208187096:897574830-897574813",
      "w27718745:897574813-897574857",
      "w27718745:897574857-1134817563"
+    ]
+   },
+   {
+    "id": "kozince-1392b-unlit",
+    "targets": [
+     "w76085945:897574797-897574830"
     ]
    },
    {
@@ -936,15 +948,6 @@
     "targets": [
      "w27718745:897574813-897574857",
      "w27718745:897574857-1134817563"
-    ]
-   },
-   {
-    "id": "dk65-old-xsec",
-    "targets": [
-     "w208187096:10712325634-4090471697",
-     "w208187096:4090471697-4090471704",
-     "w208187096:4090471704-897574830",
-     "w208187096:897574830-897574813"
     ]
    },
    {
@@ -982,7 +985,7 @@
   },
   "verge_strips": {
    "chunks": 24,
-   "tris": 8588
+   "tris": 8640
   },
   "walled_ramps": []
  }

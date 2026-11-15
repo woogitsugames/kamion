@@ -141,7 +141,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.01,
+   "axis_smoothing_dev_max_m": 0.0,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -152,17 +152,17 @@
     2
    ],
    "length_m": 239.0,
-   "max_grade": 0.0185,
+   "max_grade": 0.0184,
    "overrides": [
     "rural-roads-unlit"
    ],
-   "profile_rms_vs_nmt_m": 0.007,
+   "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -177,21 +177,21 @@
     2
    ],
    "length_m": 1000.7,
-   "max_grade": 0.0143,
+   "max_grade": 0.0142,
    "overrides": [
     "rural-roads-unlit"
    ],
-   "profile_rms_vs_nmt_m": 0.006,
+   "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.03,
+   "axis_smoothing_dev_max_m": 0.02,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -202,17 +202,17 @@
     2
    ],
    "length_m": 794.9,
-   "max_grade": 0.0335,
+   "max_grade": 0.0336,
    "overrides": [
     "rural-roads-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -227,17 +227,17 @@
     2
    ],
    "length_m": 571.7,
-   "max_grade": 0.0187,
+   "max_grade": 0.0186,
    "overrides": [
     "rural-roads-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
-    7.5
+    6.6
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-xsec-k1"
    ]
   },
   {
@@ -337,12 +337,12 @@
   "crossings_skipped": [],
   "crossings_snapped": 0,
   "decals": {
-   "gullies": 180,
+   "gullies": 179,
    "oil": 13,
-   "patches": 67
+   "patches": 62
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 71367,
+  "footprint_nodes": 70081,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -393,7 +393,7 @@
   "nmt_nodes_replaced_under_decks": 0,
   "overrides_applied": [
    {
-    "id": "dk65-carriageway-width",
+    "id": "dk65-xsec-k1",
     "targets": [
      "w27718745:13495192875-2101502781",
      "w27718745:14226925237-13495192875",
@@ -438,7 +438,7 @@
   },
   "verge_strips": {
    "chunks": 14,
-   "tris": 3740
+   "tris": 3756
   },
   "walled_ramps": []
  }

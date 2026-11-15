@@ -19,6 +19,8 @@ origin:
   z: 121.8
   note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
 teryt_powiat: '2002'
+teryt_powiat_extra:
+- '2008'
 products:
   buildings.geojson: Data/Regions/dk65-10/buildings.geojson
   ortho.json: Data/Regions/dk65-10/ortho.json
@@ -63,6 +65,24 @@ sources:
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
   manifest: Data/SourceManifests/gugik-lod2-2017-2002.json
   manifest_sha256: 57606993ad174e3b804cd0353a8dd45cc5ef661f81f6d8d2cb3cfb52c2575d1c
+- id: gugik-bdot10k-2008
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2008.json
+  manifest_sha256: 01acef7cb475ce9d1e17b10219528ba38a238d239b19ed0c1f421a58fb2c3342
+- id: gugik-lod1-2024-2008
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2008.json
+  manifest_sha256: 9de6f83074f3c1dd0bbf0bf17bf6586627a5cb6f5d1c69c2e7fbd51281f8f50a
+- id: gugik-lod2-2017-2008
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2008.json
+  manifest_sha256: 59067604e5b413363678e77bdde143aa1a871b088fc9dcaee792aec53295d7ef
 rebuild:
 - uv run --project tools/worldgen tools/worldgen/ingest.py --region dk65-10
 - uv run --project tools/worldgen tools/worldgen/build_region.py --region dk65-10
