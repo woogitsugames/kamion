@@ -68,3 +68,24 @@ Fizyka bez zmian.
 - Sekcje „KIEROWNICA DOTYKOWA” i „GYRO” w ustawieniach są widoczne także na PC (do przebudowy razem z H1/H2).
 - Propozycja dla lidera (asmdef): dodać `Game.UI` do `Game.Tests.EditMode`, wtedy modele mogą wrócić do Game.UI,
   a `PcHudSolverTests` do EditMode.
+
+## Poprawki po recenzji #131 (pc-fix-s23, 2026-11-15)
+- **P1-1 — menu nie steruje ciężarówką.** Gdy otwarty jest panel ustawień albo inny modal (`m_SettingsPanel != null ||
+  UiFocus.HasModal`), `DrivingLabBootstrap.Update` ustawia `DriverInputMixer.MenuOpen` przed `Sample`. Mikser — jedno
+  miejsce — dla źródeł `IMenuGatedInput` (pad, obie klawiatury, kierownica HID) woła `SampleBlocked` i daje pusty zamiar;
+  bramka trzyma jeszcze jedną próbkę po zamknięciu (klatka zamknięcia, niezależnie od kolejności UI ↔ mikser), więc
+  zbocze przycisku B/Esc/A nie wrzuca luzu ani nie przełącza postojowego. `SampleBlocked`: pad i klawiatury zerują
+  rampy/filtr i komendy widoku (kamera, klakson, rozglądanie), kierownica aktualizuje stan zboczy przycisków bez
+  wykonywania akcji (przycisk trzymany przez zamknięcie nie jest nowym naciśnięciem), H-shifter nie jest karmiony
+  (pozycja dźwigni zostanie zażądana po zamknięciu). Autopilot, trasa, dotyk i gyro nie są bramkowane (pomiary, telefon
+  bez zmian). Zero alokacji. Testy EditMode: `MenuInputGateTests` (9).
+  Skutek uboczny do oceny w jeździe (UNVERIFIED): przy otwartym panelu kierownica PC nie steruje (kolumna wraca sama z
+  momentu z fizyki), po zamknięciu kolumna skacze do kąta urządzenia (`SnapTo`).
+- **P2-1:** `InputBindingsPanel` (#133) jest właścicielem fokusu (`UiFocus.Push/Pop`); jego przyciski są tylko dla
+  wskaźnika (`UiFocus.PointerOnly`) — naciśnięcie klawisza/przycisku pada w tym ekranie to nowe przypisanie, nie nawigacja.
+- **P2-3 (świadome ograniczenie):** nawigacja menu (`UiFocus.NavigationPressed`, `AboutPanel.PadScroll`, domyślne akcje
+  `InputSystemUIInputModule`) czyta `Gamepad.current` / `Keyboard.current` na sztywno: strzałki / krzyżak / gałka,
+  Enter / dolny przycisk = wybór, Esc / prawy przycisk = wstecz. Zmiana przypisań jazdy (ADR 0264) **nie zmienia**
+  sterowania w menu — menu ma stały układ, jak w wyświetlaczach pojazdu.
+- **P2-2, P2-4, P2-5:** bez zmian, patrz „Otwarte” (P2-5: po ADR 0269 tier PC ma już `mirrorResolutionScale`; wartości do
+  pomiaru na 4K).
