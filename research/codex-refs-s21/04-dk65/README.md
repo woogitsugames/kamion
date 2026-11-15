@@ -19,3 +19,7 @@ Teksty gov.pl: CC BY-SA 4.0 według stopki odczytanych stron. Zdjęcia w stopce 
 04-O01: ponownie obejrzany K1-132, bez nowego pobrania ortofoto; 1 miniatura ≤800 px. SOURCED [obraz]: po zachodniej stronie pojedyncze korony na pasie trawy, po wschodniej nieregularne grupy z przerwami. ESTIMATED: ręcznie wskazano 6 większych koron; odległości między tymi wybranymi środkami zapisano w `tree-crown-picks.json`, wraz z bbox i skalą. Nie są to potwierdzone kolejne pnie. Nie wyliczono średniego rozstawu wszystkich drzew ani gatunków. Dawnego skrótu K1 „8 drzew / 200 m” nie potwierdzono jako kompletnego inwentarza.
 
 Ponowna próba listy utrudnień15.11.2026: HTTP200 zwróciło tylko212bajtową odpowiedź skryptową ochrony automatyzacji, bez tabeli. Nie wykonywano dodatkowego żądania zasobu ochrony ani rozwiązywania wyzwania. Sam status200 nie jest dowodem odczytu aktualnych utrudnień; pozostają UNVERIFIED.
+
+## Źródłowe oznakowanie czasowe
+
+`temporary-marking/` zawiera17 ustaleń normatywnych SOURCED i1 warunek terenowy UNVERIFIED: żółte/białe oznakowanie oraz U-3/U-20/U-21. Źródła sprawdzono z nowelizacjami do2026. Agent obejrzał6 stron rysunków; koordynator ponownie obejrzał3, dodając wymiary wariantów U-21. To zasady i rysunki urzędowe, nie nowe kadry robót. Nie ustalają rozmieszczenia urządzeń w poszczególnych kaflach.
