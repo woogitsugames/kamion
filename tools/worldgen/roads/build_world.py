@@ -772,6 +772,31 @@ def _route_graph_step(region_id: str, enabled: bool, log) -> None:
     log("route graph: rebuilt (KRTG, reachability flags) -> game/Assets/_Project/UI/Resources/CabDisplay/Nav/")
 
 
+def _rail_plan(w, region_id):
+    """streetscape.rail.Plan of a built road world (ADR 0217): tracks clipped to the tile, level crossings with the
+    ground carriageways, authored `rail_crossing` overrides."""
+    import shapely
+    from shapely.geometry import LineString as _LS
+    from streetscape import paved as PV_
+    from streetscape import rail as RL
+    rsrc = RL.load(region_id)
+    if rsrc is None:
+        raise RuntimeError(f"{region_id}: rail stage enabled but generated/rail_sources.json missing "
+                           f"(run build_region.py --region {region_id})")
+    bb = w.region["bbox"]
+    tile_local = shapely.box(bb["xmin"] - w.origin[0], bb["ymin"] - w.origin[1], bb["xmax"] - w.origin[0],
+                             bb["ymax"] - w.origin[1])
+    ground_lines = []
+    for c in w.net.chains:        # ground road centre lines (bridge stations dropped: no level crossing there)
+        on = ~c.bridge if c.bridge is not None else np.ones(len(c.line.p), bool)
+        for run in np.split(np.arange(len(on)), np.where(np.diff(on.astype(int)) != 0)[0] + 1):
+            if len(run) >= 2 and on[run[0]]:
+                ground_lines.append(_LS(c.line.p[run]))
+    return RL.Plan(rsrc, w.origin, tile_local,
+                   PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines,
+                   overrides=pipeline.load_overrides(region_id))
+
+
 def build(region_id: str, out_root: Path | None = None, verbose=True, route_graph: bool = True):
     t0 = time.time()
     log = (lambda *a: print(f"[world {time.time() - t0:6.1f}s]", *a)) if verbose else (lambda *a: None)
@@ -790,6 +815,12 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     from streetscape import plots as PLT
     plot_plan = SS0.plan_plots(w0, region_id)
     log(f"plots planned: {len(plot_plan['plots'])}, kerb drops {len(plot_plan['drops'])}")
+    # ADR 0268: level crossings are planned on the pass-1 geometry too, so pass 2 can cut the kerbs over the crossing
+    # panels and the markings know the crossing stations (streetscape.rail_approach.attach)
+    from streetscape import rail as RL
+    from streetscape import rail_approach as RA
+    rail0 = _rail_plan(w0, region_id) if RL.enabled(w0.region) else None
+    rail_attach = {}
     # pass 2: final geometry on the cleaned ground model
     # ADR 0124: the kerbs of the house streets are 10 cm (apply_house_kerbs), then lowered at the driveways
     def _plot_side_edit(net):
@@ -798,7 +829,11 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         from streetscape import cycleways as CY          # ADR 0188: kerbs lowered where a cycle track crosses
         cyd = CY.crossing_drops(net, getattr(net, "cycle_items", []))
         log(f"cycle track kerb drops: {len(cyd)}")
-        return PLT.apply_drops(net, plot_plan["drops"] + cyd)
+        n_drops = PLT.apply_drops(net, plot_plan["drops"] + cyd)
+        if rail0 is not None:
+            rail_attach.update(RA.attach(net, rail0))
+            log("rail crossings attached:", rail_attach)
+        return n_drops
     w = pipeline.build(region_id, hf=hf, side_edit=_plot_side_edit)
     w.plot_plan = plot_plan
     log(f"kerb drops applied: {w.stats.get('side_edit')}")
@@ -837,29 +872,16 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         w.water.banks_doc = WB.load(region_id)          # ADR 0213 (None: banks as in ADR 0210)
         log("water plan:", len(w.water.report["bodies"]), "bodies,", w.water.report["water_nodes"], "nodes,",
             len(w.water.report["profiles"]), "centre lines")
-    from streetscape import rail as RL
     w.rail = None
     if RL.enabled(w.region):          # ADR 0217: opt-in per region (region.yaml `rail: {enabled: true}`)
-        rsrc = RL.load(region_id)
-        if rsrc is None:
-            raise RuntimeError(f"{region_id}: rail stage enabled but generated/rail_sources.json missing "
-                               f"(run build_region.py --region {region_id})")
-        import shapely
-        from shapely.geometry import LineString as _LS
-        from streetscape import paved as PV_
-        bb = w.region["bbox"]
-        tile_local = shapely.box(bb["xmin"] - w.origin[0], bb["ymin"] - w.origin[1], bb["xmax"] - w.origin[0],
-                                 bb["ymax"] - w.origin[1])
-        ground_lines = []
-        for c in w.net.chains:        # ground road centre lines (bridge stations dropped: no level crossing there)
-            on = ~c.bridge if c.bridge is not None else np.ones(len(c.line.p), bool)
-            for run in np.split(np.arange(len(on)), np.where(np.diff(on.astype(int)) != 0)[0] + 1):
-                if len(run) >= 2 and on[run[0]]:
-                    ground_lines.append(_LS(c.line.p[run]))
-        w.rail = RL.Plan(rsrc, w.origin, tile_local,
-                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines,
-                         overrides=pipeline.load_overrides(region_id))
+        w.rail = _rail_plan(w, region_id)
         log("rail plan:", len(w.rail.tracks), "tracks,", len(w.rail.crossings), "level crossings")
+        # ADR 0268: kerb cuts and markings were laid out on the pass-1 plan - both passes must see the same crossings
+        if len(rail0.crossings) != len(w.rail.crossings) or any(
+                float(np.hypot(*(np.asarray(a_["p"]) - np.asarray(b_["p"])))) > 0.5
+                for a_, b_ in zip(rail0.crossings, w.rail.crossings)):
+            raise RuntimeError(f"{region_id}: level crossings of pass 1 and pass 2 differ (rail_approach.attach)")
+        w.rail.report["approach_attach"] = rail_attach
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
     if w.water is not None:
         st["col"] = w.water.bank_colours(st["col"])

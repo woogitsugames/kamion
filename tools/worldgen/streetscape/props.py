@@ -266,13 +266,26 @@ def plate(code):
     WORKING_VALUE): face (retroreflective foil, our weathered texture), rim, grey mill-finish back with a label
     (signs.plate_back) and two galvanised clamps (obejmy) around the Ø60 mm post."""
     shape, _ = SG.face(code)
-    size = S.SIGN_SIZE[shape]
+    size = S.SIGN_SIZE["triangle" if shape == "triangle_up" else "square" if shape == "rect" else shape]
     m, l1 = Mesh(), Mesh()
     rim = 0.025
     y = S.SIGN_POST_D / 2 + 0.012 + rim             # face; the back clears the post by 12 mm
-    n = {"disc": 32, "octagon": 8, "triangle": 3, "diamond": 4, "square": 4}[shape]
+    n = {"disc": 32, "octagon": 8, "triangle": 3, "diamond": 4, "square": 4, "triangle_up": 3, "rect": 4}[shape]
     r = size / 2
-    if shape == "triangle":         # inverted triangle (A-7), side = size
+    uvc = (0.5, 0.5)                # texture coordinate of the fan centre (plate origin)
+    rect_h = None
+    if shape == "triangle_up":      # ADR 0268: upright warning triangle (A-9 / A-10), origin at the centroid
+        h = size * math.sqrt(3) / 2
+        pts2 = [(-size / 2, -h / 3), (size / 2, -h / 3), (0, 2 * h / 3)]
+        top = SG.TRI_UP_TOP
+        hp = (SG.S - 16) * math.sqrt(3) / 2
+        uvs = [(8 / 512, 1 - (top + hp) / 512), (504 / 512, 1 - (top + hp) / 512), (0.5, 1 - top / 512)]
+        uvc = (0.5, 1 - (top + 2 * hp / 3) / 512)
+    elif shape == "rect":           # ADR 0268: rectangular plate (G-1, G-2, board), size per code (signs.RECT)
+        rw, rect_h = SG.RECT[code]
+        pts2 = [(-rw / 2, -rect_h / 2), (rw / 2, -rect_h / 2), (rw / 2, rect_h / 2), (-rw / 2, rect_h / 2)]
+        uvs = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0)]
+    elif shape == "triangle":       # inverted triangle (A-7), side = size
         h = size * math.sqrt(3) / 2
         pts2 = [(-size / 2, h / 3), (size / 2, h / 3), (0, -2 * h / 3)]
         top = (512 - 496 * math.sqrt(3) / 2) / 2          # signs.a7(): side 496 px centred in 512
@@ -291,12 +304,12 @@ def plate(code):
     if area2 > 0:
         pts2, uvs = pts2[::-1], uvs[::-1]
     k_ = len(pts2)
-    hh = size * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
+    hh = rect_h if rect_h else size * (math.sqrt(3) / 2 if shape in ("triangle", "triangle_up") else 1.0)
     for mm, full in ((m, True), (l1, False)):
         V = [[0, y, 0]] + [[x, y, z] for x, z in pts2]
         # u runs against local +x: seen from the front (+y) in Unity, local +x is on the viewer's left (the C-12 arrows
         # turned clockwise and digits would read mirrored; checked on route-putry-entry-signs, ADR 0023)
-        UV = [(0.5, 0.5)] + [(1.0 - u, v) for u, v in uvs]
+        UV = [(1.0 - uvc[0], uvc[1])] + [(1.0 - u, v) for u, v in uvs]
         T = [(0, 1 + (k + 1) % k_, 1 + k) for k in range(k_)]
         T = [(a, c, b) for a, b, c in T]        # face +y
         mm.add(f"sign_{code}", V, T, UV)

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 
 import numpy as np
 import pytest
@@ -211,8 +212,10 @@ def test_tile_meshes_and_budget():
         km += L
         for k in tot:
             tot[k] += tris[k]
-        assert tris["rail_lod1"] <= RL.tri_per_km(1) * L * 1.05 + 40 * len(p.tracks)
-        assert tris["rail_lod2"] <= RL.tri_per_km(2) * L * 1.05 + 10 * len(p.tracks)
+        # + the PANEL_STEP (0.5 m) stations of every crossing zone (rail-fix-s21: the bed follows the road crown there)
+        zone = sum(math.ceil((c["zone"][1] - c["zone"][0]) / RL.PANEL_STEP) for c in p.crossings)
+        assert tris["rail_lod1"] <= RL.tri_per_km(1) * L * 1.05 + 40 * len(p.tracks) + 12 * zone
+        assert tris["rail_lod2"] <= RL.tri_per_km(2) * L * 1.05 + 10 * len(p.tracks) + 4 * zone
         assert abs(tris["rail_lod0"] - RL.tri_per_km(0) * L) <= 0.03 * RL.tri_per_km(0) * L + 300
         assert all(m["kind"] in ("sign", "light", "barrier", "bell") for m in p.report["markers"])
         assert p.report["clearance"]["min_marker_distance_m"] is None or \

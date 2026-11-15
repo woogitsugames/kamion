@@ -238,7 +238,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     LM.build(pl, w.net, graph, overrides, origin, boards, frep)
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     if getattr(w, "rail", None) is not None:       # ADR 0217: G-3 / G-4 crosses, barriers, signals of level crossings
-        RP.place(pl, w.rail, rail_road_z, frep)
+        RP.place(pl, w.rail, rail_road_z, frep, net=w.net, codes=codes)     # + ADR 0268 approach signs / posts
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep, overrides)
     FU.bridge_median_lamps(pl, w.net, frep)          # ADR 0123: twin-arm lamps between the decks (bridge_style `lamps`)
     lin = FU.Lin(w.buf, zsurf)

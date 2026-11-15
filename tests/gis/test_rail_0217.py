@@ -490,8 +490,9 @@ def test_crossing_devices_are_instances():
     lod0, lod1, col = RP.prototypes()["signal_rail_saltire_g3"]
     mats = {q["mat"] for q in lod0.out()}
     assert {"paint_white_reflective", "paint_ral3020"} <= mats and mats <= set(M) and col is not None
-    V = np.concatenate([q["V"] for q in lod0.out() if q["mat"] == "paint_white_reflective"])
-    assert V[:, 2].min() > 1.50 and np.ptp(V[:, 0]) > 1.0 and np.ptp(V[:, 0]) > np.ptp(V[:, 2])   # wide cross, clear of 1.5 m
+    # rail-dk65-s22: white arms with red bands to the tips (pattern G-3, Dz.U. 2019 poz. 2310) - the face is both paints
+    V = np.concatenate([q["V"] for q in lod0.out() if q["mat"] in ("paint_white_reflective", "paint_ral3020")])
+    assert V[:, 2].min() >= 1.50 - 1e-9 and np.ptp(V[:, 0]) > 1.0 and np.ptp(V[:, 0]) > np.ptp(V[:, 2])   # wide cross, clear of 1.5 m
     g4 = RP.saltire("G-4")[0]
     g3 = RP.saltire("G-3")[0]
     assert sum(len(q["T"]) for q in g4.out()) > sum(len(q["T"]) for q in g3.out())

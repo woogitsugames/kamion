@@ -749,6 +749,9 @@ M["shelter_glass_clear"] = {"color": [0.030, 0.040, 0.040], "rough": 0.04, "alph
                             "shader": "car_glass", "dust": 0.5, "screen": {"horizon_sky": 0.85, "haze": 0.03}}
 M["paint_ral1012"] = {"color": [0.52, 0.42, 0.06], "rough": 0.5}
 M["paint_ral3020"] = {"color": [0.55, 0.012, 0.009], "rough": 0.5}
+# ADR 0268 (REVIEW s22 0217 visual P2-11): drive cabinet of a level-crossing barrier - sun-faded orange instead of the
+# saturated cone_orange (WORKING_VALUE read off Mapillary 1832769196903759 / 1569863873404925, reference only)
+M["drive_cabinet_faded"] = {"color": [0.50, 0.21, 0.07], "rough": 0.75}
 for _k in ("shelter_paint", "paint_ral1012", "paint_ral3020"):
     M[_k].setdefault("sky_occ", SKY_OCC_STRUCT)
 M["shelter_glass_clear"].setdefault("sky_occ", SKY_OCC_GLASS)
