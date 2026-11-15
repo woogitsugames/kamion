@@ -105,3 +105,4 @@ Zakazane źródła (Google Maps/Street View/Earth/3D Tiles): **nie użyto**. Nag
 - **Panoramax** (`api.panoramax.xyz/api/search`, bbox Polski, zimy 2023/24–2025/26): ok. 2 400 pozycji metadanych, obejrzana próbka 48 miniatur — drogi lokalne bez ciężarówek; nic nie pobrano do paczki.
 - Atrybucja: autor i licencja każdego kadru w `manifest.csv` (kolumny `autor`, `licencja`, `url_źródła`). CC BY-SA = referencja, nie tekstura.
 - Literatura sprawdzona ponownie w audycie s21: Crossref (P18-004, P18-013), WRAP Warwick (P18-006), UNECE (P18-021 — HTTP 403).
+- **Commons, pula kategorii** („Trucks in snow”, „Semi-trailer trucks in <kraj>”, „Box semi-trailers”, „Schmitz Cargobull” i in.): 550 miniatur 330 px obejrzanych na arkuszach; 2 pliki obejrzane w 1600 px (`File:20140714 mk esst mehr spechte.jpg`, CC BY-SA 4.0; naczepa z turecką tablicą na śniegu, czysta) — żaden nie wszedł do manifestu.
