@@ -69,7 +69,10 @@ Węzeł rozjazdu do ronda Pamięci Męczeństwa Kresowian (węzeł 2504239797) l
   kolizji na osi ≤ 0,10 m, 14 próbek bez kolizji jezdni (krańce ±3 m przy zwężeniach — do sprawdzenia przy
   przejeździe A16). `probe_lod2_r4.txt`: brak terenu < 4,5 m nad DK8 pod rondem (r2: 0,27 m, r3: 0,54 m).
 - EditMode r2: 580/581 (1 skip). pytest gis r2: 1163 ok, 1 fail `test_dojbld_0185::test_fence_mesh_mips…` —
-  na main oznaczony xfail w 3f625052c, którego nie ma w bazie 0203; po scaleniu znika. Wyniki końcowe: raport.
+  na main oznaczony xfail w 3f625052c, którego nie ma w bazie 0203; po scaleniu znika.
+- Końcowo (kod r4): EditMode 580/581 (1 skip); pytest gis 1163 ok + ten sam 0185; `fidelity_qa.json` regionu C
+  odświeżony (`fidelity/run.py`): zmieniły się tylko 2 hashe wejść (build_world.py, network.py) — metryki C bez zmian,
+  co potwierdza, że poprawka nie rusza innych regionów.
 - visual-critic: NIE uruchomiony (subagent nie tworzy subagentów) — do zlecenia przez lidera na `vqa-r4/*.jpg`.
 
 ## Otwarte (backlog do szlifu)

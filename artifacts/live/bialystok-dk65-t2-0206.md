@@ -9,3 +9,4 @@
 - NASTĘPNY KROK: `cat artifacts/bialystok-dk65-t2-0206/all3.status artifacts/bialystok-dk65-t2-0206/probe_lod2_r3.txt`
 - 04:20 r3 (łuki ronda jako pomosty, bridge_m 34,7/35,4): teren nadal 0,54 m nad jezdnią DK8 — podnosi go płyta skrzyżowania ronda i chodniki (conform bierze WYŻSZĄ drogę). Poprawka w build_world.keep_tunnel_cut: komórki nad/obok jezdni tunnel=yes (bez building_passage/service) wracają do NMT (wykop). Inne regiony bez zmian (brak takich dróg).
 - W TLE: all4.ps1. NASTĘPNY KROK: `cat artifacts/bialystok-dk65-t2-0206/all4.status artifacts/bialystok-dk65-t2-0206/probe_lod2_r4.txt`
+- 05:50 r4: przejazd pod rondem otwarty (probe_lod2 r4 czysto; route_sweep 5345 próbek, 0 przeszkód). EditMode 580/0, pytest gis 1163 ok + 0185 (xfail na main), fidelity C odświeżony (tylko hashe). ADR 0206 gotowy. KONIEC.
