@@ -119,7 +119,7 @@ def _heights(t):
     return tj["bbox"], z, tj["source_manifest"]
 
 
-@pytest.mark.parametrize("a,b", SEAMS[1:])
+@pytest.mark.parametrize("a,b", SEAMS)
 def test_seam_terrain(a, b):
     """Shared tile edges carry the same NMT samples; the one survey-year change (dk65-10 NMT 2025 | dk65-11 NMT 2022,
     pinned to knyszyn-s) stays under 0.5 m."""
@@ -142,7 +142,7 @@ def _site(t):
     return [o for o in ov if o.get("kind") == "construction_site"]
 
 
-@pytest.mark.parametrize("a,b", SEAMS[1:-1])
+@pytest.mark.parametrize("a,b", SEAMS[:-1])       # from dk65-05/06: dk65-05 uses the same site mechanism (ADR 0215 r2)
 def test_seam_site_axes_continue(a, b):
     """A construction axis cut by a seam reaches past it in both tiles with the same geometry and half-width, so both
     sides get the same corridor edge (no step in the sand at the seam)."""
@@ -152,6 +152,8 @@ def test_seam_site_axes_continue(a, b):
     if seam.is_empty:
         pytest.skip("no shared edge")
     ax = {t: {(x["osm_way"]): x for s in _site(t) for x in s["axes"]} for t in (a, b)}
+    if (a, b) == ("dk65-05", "dk65-06"):
+        assert {1151531608, 1151531613} <= set(ax[a]) & set(ax[b]), "the not-open DK65 carriageway is a site on both sides"
     for w in set(ax[a]) & set(ax[b]):
         la, lb = LineString(ax[a][w]["line_epsg2180"]), LineString(ax[b][w]["line_epsg2180"])
         if not la.intersects(seam.buffer(0.1)):
