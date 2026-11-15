@@ -39,6 +39,10 @@ namespace Game.World.Packs
             }
         }
 
+        /// <summary>The service if something already created it (the start menu), else null. Never creates it: creation
+        /// installs incoming/ and hashes new bundles synchronously, which must not happen mid-drive (ADR 0273 §3).</summary>
+        public static RegionPackService Existing => s_Instance;
+
         public event Action Changed;
 
         RegionPackPaths m_Paths;
