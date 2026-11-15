@@ -29,3 +29,7 @@ Ponowna próba listy utrudnień15.11.2026: HTTP200 zwróciło tylko212bajtową o
 Osobno obejrzano3 kadry DK65, bez kopiowania zdjęć do repo ani tworzenia miniaturek. `data/owner-dk65-observations.json` zachowuje opis widocznych robót, poboczy, drzew i oznakowania; daty z nazw nie są potwierdzonym EXIF, kafle i azymuty UNVERIFIED. Widoczny jest fragment żółtych linii w osi oraz prosta biała strzałka na niebieskim kole z tabliczką wyjątku dla pojazdów budowy.
 
 **Korekta kodu znaku:** kształt widoczny na dwóch kadrach odpowiada C-5, a nie C-1. Nazwy sprawdzono w §35 ust.1 pkt5/pkt1 Dz.U.2019poz.2310: C-5 nakazuje jazdę prosto, C-1 w prawo przed znakiem. Robocza wzmianka C-1/nakaz prosto w opisie zdjęć właściciela jest niespójna. Pozostałych małych tarcz i symbolu prawnego żółtych linii nie rozstrzygnięto. To obserwacje chwili zdjęcia, nie inwentaryzacja robót na15.11.2026.
+
+## Zatoka Dobrzyniewo — ponowny przegląd K1
+
+04-O02: istniejący kadr K1-008 obejrzano indywidualnie, bez nowego pobrania ani kopii. SOURCED [obraz i data/bus-bay-review.json]: jasne boczne poszerzenie, biała linia przerywana, szary prostokątny dach przy jego końcu; po przeciwnej stronie jasny wlot. Nazwa przystanku i node14067837805 pochodzą osobno z metadanych K1/OSM. Oznakowanie pionowe, wyposażenie wiaty i stan listopadowy UNVERIFIED. Nie wykonano nowego pomiaru szerokości. To ponowne wykorzystanie jednego kadru, nie nowa fotografia.
