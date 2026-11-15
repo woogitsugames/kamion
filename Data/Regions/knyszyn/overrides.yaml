@@ -1,0 +1,65 @@
+# Authored overrides of region knyszyn (ADR 0204). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 761611, 612607) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 2022 0.25 m (Data/raw/derived/knyszyn/ortho_0p25m.tif), BDOT10k 2008, LoD1 2024. No lettering, no brands.
+overrides:
+  - id: dk65-carriageway-width
+    target: {osm_way: [232511646, 286990127]}
+    reason: >-
+      DK65 single carriageway. BDOT10k gives 6.0 m (or nothing), the generator drew 2 x 3.0 m. GUGiK orthophoto
+      0.1 m of 2025-05-27, cross profiles averaged over 6-10 m at four stations (EPSG:2180 760751 611837;
+      760683 611909; 761079 611483; 761559 610967; tool artifacts/knyszyn-0204/profile10.py): edge line to edge
+      line 6.8 m (lanes 3.3-3.5 m), asphalt 7.3-7.6 m, then a pale shoulder. Set 2 x 3.4 m + 0.35 m edge strips
+      = 7.5 m (+-0.3 m).
+    confidence: high
+    verify: none
+    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35}
+  # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
+  - id: rynek-plaza-east
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180: [[761009.8, 612431.3], [761034.6, 612426.7], [761066.6, 612408.3], [761071.2, 612399.2],
+                       [761066.6, 612392.3], [761039.2, 612376.3], [761016.2, 612371.7], [761002.5, 612376.3],
+                       [760999.0, 612385.4], [761002.0, 612408.3], [761005.9, 612429.0]]
+    reason: >-
+      East half of Rynek: a paved plaza between Grodzienska (west) and the two streets of the market's east corner.
+      BDOT10k OT_PTPL_A has it as gravel (older state); the 2025 orthophoto and owner frames 20240730_190331 /
+      20250729_1825xx show light granite setts laid in arcs. Outline traced on the 2025 orthophoto, +-3 m, the two
+      lawns (north triangle, south oval) are not cut out (open). yard_paving = the closest existing set (block
+      paving); granite sett in arcs is not in the library (open, later polish).
+    confidence: medium
+    verify: owner photo of the whole plaza from a corner
+  - id: rynek-fountain-plate
+    kind: paved_area
+    material: yard_slabs
+    polygon_epsg2180: [[761031.2, 612400.4], [761040.2, 612400.4], [761040.2, 612393.4], [761031.2, 612393.4]]
+    reason: >-
+      Ground-level fountain of Rynek (owner frames: jets from a flush rectangular plate ~9 x 7 m in the sett
+      paving). Position ESTIMATED from the ring pattern of the paving on the 2025 orthophoto (centre 761035.7
+      612396.9, +-5 m); size WORKING_VALUE read off the owner frame (a child ~1 m tall beside a plate ~8-9 m wide).
+      Only the plate is laid; water jets and night lighting are not modelled (open).
+    confidence: low
+    verify: owner - where on the plaza the fountain is (which corner / distance from Grodzienska)
+  - id: field-roads-unlit
+    target: {osm_way: [305910057, 1111506743, 1111506749]}
+    reason: >-
+      Unclassified roads across the fields east of the town (x > 761700): no street lighting on the 2025
+      orthophoto (no columns, no shadows); the lamp rule would light them. DK65 south of the town (way 286990127)
+      is left to the rule - not verified (open).
+    confidence: medium
+    verify: none
+    set: {lamps: false}
+  - id: rynek-park-trees
+    kind: forest_stand
+    target: {bdot: "20029180-A4BE-5C99-E053-CC2BA8C01CFC"}
+    reason: >-
+      West half of Rynek is a town park (OSM way 300660468 leisure=park, 0.74 ha): mown lawn, paths to a monument
+      and large single broadleaf trees. BDOT10k has it as OT_PTLZ_A "zadrzewienie, lisciaste", which the class
+      default plants as a closed wood (render r2 rynek-above: a dark block of trunks). GUGiK orthophoto 0.1 m
+      2025-05-27: ~60 separate crowns of 8-14 m diameter on 0.9 ha -> one tree per ~12 m; owner frames
+      20240730_190331 / 20250729_1825xx: old trees ~2.5-3x the height of the two-storey houses behind. Heights
+      14-22 m and the linden/maple shares are WORKING_VALUE (species read from crown shape only).
+    confidence: medium
+    verify: owner - species of the Rynek trees (lindens?)
+    height_m: [14.0, 22.0]
+    spacing_m: 12.0
+    mix: {linden: 0.7, maple: 0.3}

@@ -89,6 +89,29 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2061",
         status="WORKING_ASSUMPTION (ADR 0203, owner D64 chose the direction; tile = lattice neighbour of C)",
     ),
+    # ADR 0204 (owner D64): Knyszyn. Two tiles of the 2048 m lattice reserved by ADR 0203 (x = 776971 + 2048*i,
+    # y = 595199 + 2048*j). `knyszyn` (i = -8, j = 8): the town - Rynek, DW671 Tykocka/Bialostocka, the DK65/DW671
+    # roundabout (37 m inside the west edge). `knyszyn-s` (i = -8, j = 7): DK65 inlet from the corridor seam
+    # (x = 762635) and the expressway construction zone (roundabout under construction at 762502, 609913).
+    # Powiat moniecki 2008; the SE corner of knyszyn-s lies in powiat 2002 (see ADR 0204).
+    "knyszyn": Region(
+        id="knyszyn",
+        title="Knyszyn — miasto: Rynek, DW671, rondo DK65/DW671",
+        candidate="K_knyszyn",
+        bbox=(760587.0, 611583.0, 762635.0, 613631.0),
+        origin=(761611.0, 612607.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0204, owner D64; tile = lattice (-8,8) of the ADR 0203 plan)",
+    ),
+    "knyszyn-s": Region(
+        id="knyszyn-s",
+        title="Knyszyn — wlot DK65 od Białegostoku i strefa budowy ekspresówki",
+        candidate="K_knyszyn_s",
+        bbox=(760587.0, 609535.0, 762635.0, 611583.0),
+        origin=(761611.0, 610559.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0204, owner D64; tile = lattice (-8,7) of the ADR 0203 plan)",
+    ),
 }
 
 TILE_SIZE_M = 2048.0

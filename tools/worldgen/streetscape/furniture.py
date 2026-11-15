@@ -537,6 +537,8 @@ def lamps(pl, net, osm_nodes, origin, report):
         sec = c.section(c.length / 2, net.sec_list)
         if sec.cls not in S.LAMP or sec.highway in ("service",) and c.length < 60:
             continue
+        if sec.provenance.get("no_lamps"):       # ADR 0204: authored `set: {lamps: false}` - unlit rural road
+            continue
         spec = S.LAMP[sec.cls]
         # older side-street family (critic R2 #10): one family per street (hash of the chain), never on G/GP;
         # residential streets 65 % old (spun-concrete poles dominate), other L/D roads 30 % (grey steel)
