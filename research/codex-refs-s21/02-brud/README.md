@@ -1,6 +1,6 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Aktualny manifest:20 rekordów=18 kadrów(13 lokalnych,5 link-only)+2 dokumenty; obejmuje odrzucenia i pomocnicze, nie20kwalifikowanych zdjęć.
+Aktualny manifest:21 rekordów=19 kadrów(14 lokalnych,5 link-only)+2 dokumenty; obejmuje odrzucenia i pomocnicze. Ścisły M61 nadal1/20, nie21przyjętych zdjęć.
 
 Cel: ≥20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥6 zimowych i ≥6 europejskich. **Stan po recenzji koordynatora:1/20 nowych przyjętych kadrów,0/6 zimowych,0/6 europejskich — kryteria całości niespełnione.**
 
@@ -155,3 +155,6 @@ Europe-link-only-round9:2 osobno obejrzane pomocnicze obrazy komercyjne, tylko l
 
 
 Europe-visual-round10:3 nowe referencjeAUX/6pochodnych≤800px, koordynator osobno obejrzał wszystkie zachowane pełne miniatury i cropy. PostiFinlandia2026 potwierdzonego typu w śniegu: drzwi850–950px, jasna siatka o mechanizmieUNVERIFIED. ScaniaSzwajcaria2013: pionowe smugi dolnego boku, bez tylnych drzwi. MB1850Sinsheim2013: ciemna reklama/odblaski i plamista belka, muzeum/znany pojazdP18-141, nowy kadr nie nowy pojazd. Żaden nie zwiększa ścisłych1/20, zimowych0/6 ani europejskich0/6. Łącznie w selekcji9indywidualnie obejrzanych fotografii, wsparcie typuPosti001/002 nie liczone jako kolejne tyły.
+
+
+Europe-rear-round11:7nowych importów Geograph naCommons indywidualnie obejrzanych;1 zachowany PENDING/AUX EVcargo/Jaggery BY-SA2.0,2pochodne≤800px, pełny oryginał i crop osobno obejrzane przez koordynatora. Geometria drzwi około1000–1100px i europejska mokra droga są czytelne; mechanizm białawych śladów/wycierania/pozostałości grafiki pozostajeUNVERIFIED. Nie zwiększa M61, zimowych ani europejskich kwalifikacji. Kadry boków/rolety/dalekich poruszonych drzwi odrzucono. Dopasowania wcześniejszego źródła7602388 nie znaleziono w przeszukanych manifestachMistral/K1.

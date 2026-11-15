@@ -545,3 +545,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 07/mapillary-gates-round4:czadzik21.07.2018 i zsolt29.07.2017,2 indywidualnie obejrzane kadry MapillaryCCBY-SA4.0 według oficjalnej pomocy permanifest. Wyłącznie linki i własne opisy, bez kopii/screenshotów/API/tokenów; podkładOSM.
 
 05/traction-parameters-round5: własne parafrazy/fakty z publicznego Regulaminu sieciPKP2025/2026v45 i załącznika2.12, dokładne adresy/komórki/punkty w manifestach. Bez redystrybucji źródłowych XLSX/PDF, zdjęć ani renderów. Binaria i render poza gitem; odczytXLSXread-only, niezależnypeer-review. Nie przypisano źródłom licencjiCC.
+
+02/europe-rear-round11/files/ER11-P01*.jpg:Jaggery, Commons/Geograph7602388, CC BY-SA2.0; zmniejszenie całego kadru i jawny crop dolnych drzwi, obie pochodne≤800px. Źródło/autor/data/oryginalnySHA w lokalnym manifeście. Jeden PENDING/AUX kadr, bez wzrostu kwalifikacjiM61; koordynator obejrzał oryginał i crop.
