@@ -6,3 +6,6 @@
 - [krok 2] Czysta logika C# (nieskompilowana w chmurze): `World/Runtime/Streaming/{TileGraph,StreamingPolicy,TilePlacement,EdgeSides}.cs`,
   `Core/FloatingOrigin.cs`, `WorldRegionRoot.PlaceAt`; testy EditMode `WorldStreamingPolicyTests` (19).
 - NASTĘPNY KROK: runtime `WorldStreamer` (LoadSceneAsync additive, aktywacja rozłożona, cooking async) + import sceny `_Tile`.
+- [krok 3] `WorldStreamer` (LoadSceneAsync Additive, allowSceneActivation, aktywacja chunków ≤ 2 ms/klatkę, cooking async
+  `WorldCollisionCooker.BeginCook/PollCook`, szwy otwierane dopiero gdy oba kafle Ready, rebase originu w FixedUpdate),
+  `RegionScenes.TileSceneNameFor`. NASTĘPNY KROK: integracja (bootstrap, safety net, kamera, autopilot) + import `_Tile`.

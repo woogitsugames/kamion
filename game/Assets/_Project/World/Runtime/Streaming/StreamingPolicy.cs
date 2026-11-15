@@ -107,6 +107,7 @@ namespace Game.World.Streaming
         readonly double[] m_Score;      // distance used for ordering (min of point and look-ahead distance)
         readonly double[] m_Dist;       // distance from the vehicle to the tile rectangle
         readonly bool[] m_Wanted;
+        readonly bool[] m_Unavailable;  // tile scene not in this build: never wanted (its seam stays closed)
         readonly int[] m_Order;         // candidate indices sorted by score
 
         public int Current { get; private set; } = -1;
@@ -124,6 +125,7 @@ namespace Game.World.Streaming
             m_Score = new double[n];
             m_Dist = new double[n];
             m_Wanted = new bool[n];
+            m_Unavailable = new bool[n];
             m_Order = new int[n];
         }
 
@@ -136,6 +138,10 @@ namespace Game.World.Streaming
             m_State[tile] = TileState.Ready;
             Current = tile;
         }
+
+        /// <summary>Marks a tile whose scene is not in the build: never loaded, never counted.</summary>
+        public void SetUnavailable(int tile, bool unavailable = true) => m_Unavailable[tile] = unavailable;
+        public bool IsUnavailable(int tile) => m_Unavailable[tile];
 
         public bool IsResident(int tile) => m_State[tile] != TileState.Unloaded;
 
@@ -206,6 +212,7 @@ namespace Game.World.Streaming
                 for (int k = 0; k < nb.Length; k++)
                 {
                     int j = nb[k];
+                    if (m_Unavailable[j]) continue;
                     double seg = Graph.SegmentDistanceTo(j, x, y, ax, ay);
                     m_Score[j] = Math.Min(m_Dist[j], seg);
                     m_Wanted[j] = m_Dist[j] <= loadR || seg <= Settings.marginM;

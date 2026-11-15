@@ -1,0 +1,651 @@
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using Game.Core;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
+
+namespace Game.World.Streaming
+{
+    /// <summary>
+    /// Additive streaming of neighbouring region tiles while driving (ADR 0235). The start scene (World_&lt;id&gt; with the
+    /// truck, camera and lighting) is the base; neighbours come as tile scenes (World_&lt;id&gt;_Tile: region root + start
+    /// route only, chunks saved inactive, collision cooking deferred, see WorldSceneBuilder.BuildTileScene).
+    ///
+    /// Per frame (no GC allocations in the steady loop; a tile event - load, activation, unload, origin rebase - allocates
+    /// a little once, like Unity's own async load):
+    ///  1. every <see cref="decideIntervalS"/> the pure <see cref="StreamingPolicy"/> decides from the vehicle position and
+    ///     velocity which tile to load / unload;
+    ///  2. a load is <c>SceneManager.LoadSceneAsync(tile, Additive)</c> with <c>allowSceneActivation = false</c> under
+    ///     <c>Application.backgroundLoadingPriority = Low</c>; activation is allowed when the load reached 90 %;
+    ///  3. on <c>sceneLoaded</c> (after Awake/OnEnable, before the first render) the region root is placed for the current
+    ///     world anchor (<see cref="TilePlacement"/>) and the collision bake job is scheduled (worker threads);
+    ///  4. chunks are enabled within <see cref="activationBudgetMs"/> per frame, colliders <see cref="collidersPerFrame"/>
+    ///     per frame; then the tile is Ready and the seam with each Ready neighbour opens (closures, apron piece and
+    ///     far-field sector on that side are disabled). A seam never opens before both tiles are Ready, so a late load
+    ///     means a closed road, never a hole;
+    ///  5. when the vehicle is <see cref="rebaseInsideM"/> inside a new tile, the world anchor moves to that tile's anchor
+    ///     in FixedUpdate: every scene root moves, region roots are re-placed exactly from double, physics transforms are
+    ///     synced and <see cref="FloatingOrigin.Moved"/> is raised (camera smoothing, autopilot path, safe poses).
+    /// </summary>
+    [DefaultExecutionOrder(-950)]
+    public sealed class WorldStreamer : MonoBehaviour
+    {
+        /// <summary>The streamer of the running world scene (null when streaming is off).</summary>
+        public static WorldStreamer Active { get; private set; }
+
+        public Transform vehicle;
+        public Rigidbody vehicleBody;
+        public StreamingSettings settings = new StreamingSettings();
+        [Tooltip("Content tier of the tile scenes: \"Low\" (Low + Medium) or \"High\" (RegionScenes)")]
+        public string contentTier = RegionScenes.LowTier;
+        [Tooltip("Seconds between streaming decisions")] public float decideIntervalS = 0.25f;
+        [Tooltip("Main-thread time for enabling chunks of an activating tile per frame [ms] (WORKING_VALUE)")]
+        public float activationBudgetMs = 2f;
+        [Tooltip("Colliders enabled per frame after the bake (WORKING_VALUE)")] public int collidersPerFrame = 16;
+        [Tooltip("The world anchor moves to a tile once the vehicle is this far inside it [m] (WORKING_VALUE)")]
+        public float rebaseInsideM = 100f;
+        [Tooltip("Resources.UnloadUnusedAssets after an unload at most this often [s] (WORKING_VALUE; hitch measured on device)")]
+        public float unloadAssetsMinIntervalS = 20f;
+        [Tooltip("Async loading priority while streaming (Low = smallest main-thread slice per frame)")]
+        public ThreadPriority loadingPriority = ThreadPriority.Low;
+
+        public TileGraph Graph { get; private set; }
+        public StreamingPolicy Policy { get; private set; }
+        /// <summary>World anchor: EPSG:2180 x / y and EVRF2007 height of Unity (0, 0, 0).</summary>
+        public double AnchorX => m_Wx;
+        public double AnchorY => m_Wy;
+        public double AnchorZ => m_Wz;
+        /// <summary>Diagnostics: last load / activation times [ms] and counters (log, PlayMode test).</summary>
+        public float LastLoadMs { get; private set; }
+        public float LastActivationMs { get; private set; }
+        public float LastRebaseMs { get; private set; }
+        public int LoadCount { get; private set; }
+        public int UnloadCount { get; private set; }
+        public int RebaseCount { get; private set; }
+
+        sealed class Tile
+        {
+            public int index;
+            public string sceneName;
+            public bool fromStartScene;
+            public Scene scene;
+            public AsyncOperation op;
+            public WorldRegionRoot root;
+            public WorldBoundary boundary;
+            public WorldCollisionCooker cooker;
+            public WorldInstances instances;
+            public Transform route;
+            public GameObject[] chunks;
+            public int nextChunk;
+            public float loadStart, activateStart;
+            public Vector2 min, max;
+            public TileSide openSides;
+            // edge objects (ADR 0169 closures, ADR 0085 far field, apron)
+            public GameObject[] closures; public TileSide[] closureSide; public float[] closureE, closureN; public bool[] closureOpen;
+            public GameObject[] groups; public Vector4[] groupBounds;   // (minE, minN, maxE, maxN)
+            public GameObject[] farSectors; public TileSide[] farSide;
+            public GameObject apronWhole; public GameObject[] apronPieces; public TileSide[] apronSide;
+            public bool warnedApron;
+        }
+
+        Tile[] m_Tiles;
+        double m_Wx, m_Wy, m_Wz;
+        readonly StreamCommand[] m_Cmd = new StreamCommand[8];
+        readonly List<GameObject> m_Roots = new List<GameObject>(64);
+        readonly List<Rigidbody> m_Bodies = new List<Rigidbody>(32);
+        readonly List<Vector3> m_BodyPos = new List<Vector3>(32);
+        readonly Stopwatch m_Clock = new Stopwatch();
+        float m_NextDecide, m_LastUnloadAssets = -1000f;
+        bool m_UnloadAssetsPending, m_RebasePending;
+        int m_RebaseTile = -1;
+        ThreadPriority m_PrevPriority;
+
+        // ------------------------------------------------------------------ install
+
+        /// <summary>
+        /// Adds the streamer to <paramref name="host"/> when the start region is in the tile graph and at least one
+        /// neighbour tile scene is in the build (else streaming stays off and the region behaves as before: closed edges).
+        /// </summary>
+        public static WorldStreamer TryInstall(GameObject host, WorldRegionRoot start, Transform vehicle, Rigidbody body, string contentTier)
+        {
+            if (host == null || start == null) return null;
+            var graph = TileGraph.LoadDefault();
+            if (graph == null) { Debug.LogWarning("[STREAM] off: Resources/" + TileGraph.ResourcePath + " missing"); return null; }
+            int idx = graph.IndexOf(start.regionId);
+            if (idx < 0) { Debug.Log($"[STREAM] off: region {start.regionId} not in the tile graph"); return null; }
+            int available = 0;
+            foreach (int j in graph.Neighbors[idx])
+                if (Application.CanStreamedLevelBeLoaded(RegionScenes.TileSceneNameFor(graph.Tiles[j].id, contentTier))) available++;
+            if (available == 0)
+            {
+                Debug.Log($"[STREAM] off: no neighbour tile scene of {start.regionId} in the build (tier {contentTier}; build with -Regions ... and scripts/import-region.ps1)");
+                return null;
+            }
+            var s = host.AddComponent<WorldStreamer>();
+            s.vehicle = vehicle;
+            s.vehicleBody = body;
+            s.contentTier = contentTier;
+            s.Init(graph, idx, start);
+            Debug.Log($"[STREAM] on: start {start.regionId}, {available}/{graph.Neighbors[idx].Length} neighbour tile scenes in the build, " +
+                      $"load radius {s.settings.BaseLoadRadiusM:F0} m, unload +{s.settings.hysteresisM:F0} m, max {s.settings.maxTiles} tiles, budget {s.settings.memoryBudgetMB:F0} MB");
+            return s;
+        }
+
+        /// <summary>Initialises with the graph and the start tile (public for tests that build a streamer by hand).</summary>
+        public void Init(TileGraph graph, int startTile, WorldRegionRoot start)
+        {
+            Graph = graph;
+            Policy = new StreamingPolicy(graph, settings);
+            m_Tiles = new Tile[graph.Count];
+            for (int i = 0; i < m_Tiles.Length; i++)
+                m_Tiles[i] = new Tile { index = i, sceneName = RegionScenes.TileSceneNameFor(graph.Tiles[i].id, contentTier) };
+            // World anchor of the start scene as imported (root at (0, -Az, 0) - originShift).
+            m_Wx = start.anchorX + start.originShift.x;
+            m_Wy = start.anchorY + start.originShift.z;
+            m_Wz = start.anchorZ + start.originShift.y;
+            var t = m_Tiles[startTile];
+            t.fromStartScene = true;
+            t.scene = start.gameObject.scene;
+            Register(t, start, FindStartRoute(start.gameObject.scene));
+            t.nextChunk = t.chunks.Length;   // already active
+            Policy.InitResident(startTile);
+            for (int i = 0; i < m_Tiles.Length; i++)
+                if (i != startTile && !Application.CanStreamedLevelBeLoaded(m_Tiles[i].sceneName)) Policy.SetUnavailable(i);
+            Place(t);
+        }
+
+        void OnEnable()
+        {
+            Active = this;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            m_PrevPriority = Application.backgroundLoadingPriority;
+            Application.backgroundLoadingPriority = loadingPriority;
+        }
+
+        void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            Application.backgroundLoadingPriority = m_PrevPriority;
+            if (Active == this) Active = null;
+        }
+
+        Transform FindStartRoute(Scene scene)
+        {
+            scene.GetRootGameObjects(m_Roots);
+            foreach (var go in m_Roots) if (go.TryGetComponent(out WorldRoute _)) return go.transform;
+            return null;
+        }
+
+        // ------------------------------------------------------------------ frame loop
+
+        void Update()
+        {
+            if (Policy == null || vehicle == null) return;
+            ProgressLoads();
+            ProgressActivation();
+            ProgressUnloads();
+            if (Time.unscaledTime >= m_NextDecide)
+            {
+                m_NextDecide = Time.unscaledTime + decideIntervalS;
+                Decide();
+            }
+        }
+
+        void FixedUpdate()
+        {
+            if (m_RebasePending) Rebase(m_RebaseTile);
+        }
+
+        void Decide()
+        {
+            Vector3 p = vehicle.position;
+            Vector3 v = vehicleBody != null ? vehicleBody.linearVelocity : Vector3.zero;
+            double x = m_Wx + p.x, y = m_Wy + p.z;
+            int n = Policy.Decide(x, y, v.x, v.z, m_Cmd);
+            for (int k = 0; k < n; k++)
+            {
+                if (m_Cmd[k].op == StreamOp.Load) BeginLoad(m_Tiles[m_Cmd[k].tile]);
+                else BeginUnload(m_Tiles[m_Cmd[k].tile]);
+            }
+            if (n > 0 && Policy.OverBudget)
+                Debug.LogWarning(string.Format(CultureInfo.InvariantCulture, "[STREAM] over budget: resident {0:F0} MB (ESTIMATED) > {1:F0} MB, loading the tile ahead anyway (ADR 0235 §4)",
+                    Policy.ResidentMemoryMB(), settings.memoryBudgetMB));
+            int cur = Policy.Current;
+            if (!m_RebasePending && cur >= 0 && m_Tiles[cur].root != null && Policy.StateOf(cur) == TileState.Ready &&
+                TilePlacement.ShouldRebase(Graph, cur, x, y, m_Wx, m_Wy, rebaseInsideM))
+            {
+                m_RebasePending = true;
+                m_RebaseTile = cur;
+            }
+        }
+
+        void BeginLoad(Tile t)
+        {
+            if (!Application.CanStreamedLevelBeLoaded(t.sceneName))
+            {
+                // Not in this APK: stay Unloaded; the seam stays closed (the road ends at the closure as before).
+                Debug.LogWarning($"[STREAM] {t.sceneName} not in the build: seam stays closed");
+                MarkMissing(t.index);
+                return;
+            }
+            t.loadStart = Time.realtimeSinceStartup;
+            t.op = SceneManager.LoadSceneAsync(t.sceneName, LoadSceneMode.Additive);
+            if (t.op == null) { MarkMissing(t.index); return; }
+            t.op.allowSceneActivation = false;
+            LoadCount++;
+            Debug.Log($"[STREAM] load {t.sceneName} (resident {Policy.ResidentCount()} tiles)");
+        }
+
+        void MarkMissing(int tile)
+        {
+            // Never asked again: the policy skips unavailable tiles; the seam with it stays closed.
+            Policy.SetState(tile, TileState.Unloaded);
+            Policy.SetUnavailable(tile);
+        }
+
+        void ProgressLoads()
+        {
+            for (int i = 0; i < m_Tiles.Length; i++)
+            {
+                var t = m_Tiles[i];
+                if (t.op == null || Policy.StateOf(i) != TileState.Loading) continue;
+                // One activation at a time and never while another tile is still enabling its chunks.
+                if (!t.op.allowSceneActivation && t.op.progress >= 0.9f && !AnyActivating())
+                {
+                    t.op.allowSceneActivation = true;
+                    LastLoadMs = (Time.realtimeSinceStartup - t.loadStart) * 1000f;
+                }
+            }
+        }
+
+        bool AnyActivating()
+        {
+            for (int i = 0; i < m_Tiles.Length; i++) if (Policy.StateOf(i) == TileState.Activating) return true;
+            return false;
+        }
+
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (mode != LoadSceneMode.Additive || m_Tiles == null) return;
+            for (int i = 0; i < m_Tiles.Length; i++)
+            {
+                var t = m_Tiles[i];
+                if (t.sceneName != scene.name || Policy.StateOf(i) != TileState.Loading) continue;
+                t.scene = scene;
+                t.op = null;
+                WorldRegionRoot root = null;
+                Transform route = null;
+                scene.GetRootGameObjects(m_Roots);
+                foreach (var go in m_Roots)
+                {
+                    if (root == null && go.TryGetComponent(out WorldRegionRoot r)) root = r;
+                    else if (route == null && go.TryGetComponent(out WorldRoute _)) route = go.transform;
+                }
+                if (root == null)
+                {
+                    Debug.LogError($"[STREAM] {scene.name} has no WorldRegionRoot: unloading");
+                    Policy.SetState(i, TileState.Unloading);
+                    SceneManager.UnloadSceneAsync(scene);
+                    return;
+                }
+                Register(t, root, route);
+                Place(t);   // before the first render of the new scene
+                t.activateStart = Time.realtimeSinceStartup;
+                if (t.cooker != null) t.cooker.BeginCook();
+                Policy.SetState(i, TileState.Activating);
+                return;
+            }
+        }
+
+        void ProgressActivation()
+        {
+            for (int i = 0; i < m_Tiles.Length; i++)
+            {
+                if (Policy.StateOf(i) != TileState.Activating) continue;
+                var t = m_Tiles[i];
+                m_Clock.Restart();
+                // At least one chunk per frame, then while the budget lasts.
+                while (t.nextChunk < t.chunks.Length)
+                {
+                    var c = t.chunks[t.nextChunk++];
+                    if (c != null) c.SetActive(true);
+                    if (m_Clock.Elapsed.TotalMilliseconds >= activationBudgetMs) break;
+                }
+                bool cooked = t.cooker == null || t.cooker.PollCook(collidersPerFrame);
+                if (t.nextChunk < t.chunks.Length || !cooked) return;   // one activating tile at a time
+                if (t.instances != null) t.instances.enabled = true;
+                Physics.SyncTransforms();
+                Policy.SetState(i, TileState.Ready);
+                LastActivationMs = (Time.realtimeSinceStartup - t.activateStart) * 1000f;
+                float dist = DistanceToTileM(i);
+                Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] ready {0}: load {1:F0} ms, activation {2:F0} ms ({3} chunks), vehicle {4:F0} m from the tile, resident {5} tiles / {6:F0} MB (ESTIMATED)",
+                    t.sceneName, LastLoadMs, LastActivationMs, t.chunks.Length, dist, Policy.ResidentCount(), Policy.ResidentMemoryMB()));
+                RefreshEdgesAround(i);
+                return;
+            }
+        }
+
+        void BeginUnload(Tile t)
+        {
+            int i = t.index;
+            // Close the seams of the neighbours first (their closures come back before the geometry goes).
+            t.openSides = TileSide.None;
+            var nb = Graph.Neighbors[i];
+            for (int k = 0; k < nb.Length; k++) RefreshEdges(nb[k], i);
+            UnloadCount++;
+            if (t.fromStartScene)
+            {
+                // The start scene also holds the truck, camera and lighting: only its region root (and route) go.
+                if (t.root != null) Destroy(t.root.gameObject);
+                if (t.route != null) Destroy(t.route.gameObject);
+                Clear(t);
+                Policy.SetState(i, TileState.Unloaded);
+                m_UnloadAssetsPending = true;
+                Debug.Log($"[STREAM] unload start region {Graph.Tiles[i].id} (root destroyed)");
+                return;
+            }
+            Clear(t);
+            t.op = t.scene.IsValid() && t.scene.isLoaded ? SceneManager.UnloadSceneAsync(t.scene) : null;
+            if (t.op == null) Policy.SetState(i, TileState.Unloaded);
+            Debug.Log($"[STREAM] unload {t.sceneName}");
+        }
+
+        void ProgressUnloads()
+        {
+            for (int i = 0; i < m_Tiles.Length; i++)
+            {
+                var t = m_Tiles[i];
+                if (Policy.StateOf(i) != TileState.Unloading) continue;
+                if (t.op != null && !t.op.isDone) continue;
+                t.op = null;
+                Policy.SetState(i, TileState.Unloaded);
+                m_UnloadAssetsPending = true;
+            }
+            // Scene unload does not free the meshes / textures: Resources.UnloadUnusedAssets, throttled, never while loading.
+            if (m_UnloadAssetsPending && Time.unscaledTime - m_LastUnloadAssets >= unloadAssetsMinIntervalS && !AnyLoadingOrActivating())
+            {
+                m_UnloadAssetsPending = false;
+                m_LastUnloadAssets = Time.unscaledTime;
+                Resources.UnloadUnusedAssets();
+            }
+        }
+
+        bool AnyLoadingOrActivating()
+        {
+            for (int i = 0; i < m_Tiles.Length; i++)
+            {
+                var s = Policy.StateOf(i);
+                if (s == TileState.Loading || s == TileState.Activating) return true;
+            }
+            return false;
+        }
+
+        // ------------------------------------------------------------------ placement / floating origin
+
+        void Place(Tile t)
+        {
+            if (t.root == null) return;
+            var d = Graph.Tiles[t.index];
+            var p = TilePlacement.For(m_Wx, m_Wy, m_Wz, d);
+            var pos = new Vector3(p.posX, p.posY, p.posZ);
+            t.root.PlaceAt(pos, new Vector3(p.shiftX, p.shiftY, p.shiftZ));
+            // WorldRoute points are region-local with heights above the anchor, relative to a scene root at the origin of
+            // the imported scene: (root position) + (0, Az, 0).
+            if (t.route != null) t.route.position = pos + new Vector3(0f, (float)d.anchorZ, 0f);
+        }
+
+        /// <summary>Moves the world anchor to tile <paramref name="tile"/> (FixedUpdate, before physics).</summary>
+        void Rebase(int tile)
+        {
+            m_RebasePending = false;
+            if (tile < 0 || m_Tiles[tile].root == null) return;
+            m_Clock.Restart();
+            var d = Graph.Tiles[tile];
+            TilePlacement.RebaseOffset(m_Wx, m_Wy, d.anchorX, d.anchorY, out float ox, out float oz);
+            var offset = new Vector3(ox, 0f, oz);
+            m_Wx = d.anchorX; m_Wy = d.anchorY;
+            for (int s = 0; s < SceneManager.sceneCount; s++)
+            {
+                var scene = SceneManager.GetSceneAt(s);
+                if (!scene.isLoaded) continue;
+                scene.GetRootGameObjects(m_Roots);
+                for (int r = 0; r < m_Roots.Count; r++)
+                {
+                    var go = m_Roots[r];
+                    if (IsManaged(go)) continue;
+                    if (go.transform is RectTransform) continue;   // screen-space UI
+                    // Dynamic bodies: take the physics pose before the move and set it shifted after it, so neither the
+                    // interpolated render pose nor the transform sync can put the body back at the old place.
+                    go.GetComponentsInChildren(false, m_Bodies);
+                    m_BodyPos.Clear();
+                    for (int b = 0; b < m_Bodies.Count; b++) m_BodyPos.Add(m_Bodies[b].position);
+                    go.transform.position += offset;
+                    for (int b = 0; b < m_Bodies.Count; b++)
+                        if (!m_Bodies[b].isKinematic) m_Bodies[b].position = m_BodyPos[b] + offset;
+                }
+            }
+            for (int i = 0; i < m_Tiles.Length; i++) if (m_Tiles[i].root != null) Place(m_Tiles[i]);
+            Physics.SyncTransforms();
+            FloatingOrigin.Notify(offset);
+            RebaseCount++;
+            LastRebaseMs = (float)m_Clock.Elapsed.TotalMilliseconds;
+            Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] origin rebase #{0} to {1}: offset ({2:F1}, {3:F1}) m, {4:F2} ms",
+                RebaseCount, d.id, ox, oz, LastRebaseMs));
+        }
+
+        bool IsManaged(GameObject go)
+        {
+            for (int i = 0; i < m_Tiles.Length; i++)
+            {
+                var t = m_Tiles[i];
+                if (t.root != null && t.root.gameObject == go) return true;
+                if (t.route != null && t.route.gameObject == go) return true;
+            }
+            return false;
+        }
+
+        // ------------------------------------------------------------------ edges
+
+        void Register(Tile t, WorldRegionRoot root, Transform route)
+        {
+            t.root = root;
+            t.route = route;
+            t.boundary = root.GetComponent<WorldBoundary>();
+            t.cooker = root.GetComponent<WorldCollisionCooker>();
+            t.instances = root.GetComponent<WorldInstances>();
+            if (t.boundary != null && t.boundary.maxEN.x > t.boundary.minEN.x) { t.min = t.boundary.minEN; t.max = t.boundary.maxEN; }
+            else WorldBoundary.TryChunkBounds(root, out t.min, out t.max);
+            var chunks = new List<GameObject>();
+            Transform edge = null;
+            foreach (Transform c in root.transform)
+            {
+                if (c.name.StartsWith("Chunk_", System.StringComparison.Ordinal)) chunks.Add(c.gameObject);
+                else if (c.name == "WorldEdge") edge = c;
+            }
+            t.chunks = chunks.ToArray();
+            t.nextChunk = 0;
+            CollectEdge(t, edge);
+        }
+
+        void CollectEdge(Tile t, Transform edge)
+        {
+            var closures = new List<GameObject>(); var cs = new List<TileSide>(); var ce = new List<float>(); var cn = new List<float>();
+            var groups = new List<GameObject>(); var gb = new List<Vector4>();
+            var far = new List<GameObject>(); var fs = new List<TileSide>();
+            var pieces = new List<GameObject>(); var ps = new List<TileSide>();
+            t.apronWhole = null;
+            if (edge != null)
+            {
+                var data = t.boundary != null ? t.boundary.closures : System.Array.Empty<WorldBoundary.Closure>();
+                foreach (Transform c in edge)
+                {
+                    string n = c.name;
+                    if (n.StartsWith("ClosureGroup_", System.StringComparison.Ordinal))
+                    {
+                        if (c.TryGetComponent(out MeshFilter mf) && mf.sharedMesh != null)
+                        {
+                            var b = mf.sharedMesh.bounds;   // region space (WorldEdge has an identity transform under the root)
+                            groups.Add(c.gameObject); gb.Add(new Vector4(b.min.x, b.min.z, b.max.x, b.max.z));
+                        }
+                    }
+                    else if (n.StartsWith("Closure_", System.StringComparison.Ordinal))
+                    {
+                        Vector3 lp = c.localPosition; float heading = c.localEulerAngles.y;
+                        int idx = ParseIndex(n);
+                        if (idx >= 0 && idx < data.Length) { lp = data[idx].localPos; heading = data[idx].headingDeg; }
+                        closures.Add(c.gameObject); ce.Add(lp.x); cn.Add(lp.z);
+                        cs.Add(EdgeSides.ClosureSide(lp.x, lp.z, heading, t.min.x, t.min.y, t.max.x, t.max.y));
+                    }
+                    else if (n == "Apron") t.apronWhole = c.gameObject;
+                    else if (EdgeSides.ApronPieceSide(n) != TileSide.None) { pieces.Add(c.gameObject); ps.Add(EdgeSides.ApronPieceSide(n)); }
+                    else if (n == "WorldFarField")
+                        foreach (Transform f in c)
+                        {
+                            var side = EdgeSides.FarSectorSide(f.name);
+                            if (side != TileSide.None) { far.Add(f.gameObject); fs.Add(side); }
+                        }
+                }
+            }
+            t.closures = closures.ToArray(); t.closureSide = cs.ToArray(); t.closureE = ce.ToArray(); t.closureN = cn.ToArray();
+            t.closureOpen = new bool[t.closures.Length];
+            t.groups = groups.ToArray(); t.groupBounds = gb.ToArray();
+            t.farSectors = far.ToArray(); t.farSide = fs.ToArray();
+            t.apronPieces = pieces.ToArray(); t.apronSide = ps.ToArray();
+            t.openSides = TileSide.None;
+        }
+
+        static int ParseIndex(string name)
+        {
+            int v = 0, i = "Closure_".Length, digits = 0;
+            for (; i < name.Length && name[i] >= '0' && name[i] <= '9'; i++, digits++) v = v * 10 + (name[i] - '0');
+            return digits > 0 ? v : -1;
+        }
+
+        static void Clear(Tile t)
+        {
+            t.root = null; t.route = null; t.boundary = null; t.cooker = null; t.instances = null;
+            t.chunks = System.Array.Empty<GameObject>(); t.nextChunk = 0;
+            t.closures = System.Array.Empty<GameObject>(); t.groups = System.Array.Empty<GameObject>();
+            t.farSectors = System.Array.Empty<GameObject>(); t.apronPieces = System.Array.Empty<GameObject>(); t.apronWhole = null;
+            t.openSides = TileSide.None;
+        }
+
+        void RefreshEdgesAround(int tile)
+        {
+            RefreshEdges(tile, -1);
+            var nb = Graph.Neighbors[tile];
+            for (int k = 0; k < nb.Length; k++) RefreshEdges(nb[k], -1);
+        }
+
+        /// <summary>Opens the sides of <paramref name="tile"/> whose neighbour is Ready (both must be Ready), closes the rest.
+        /// <paramref name="leaving"/> = a neighbour about to unload (treated as not ready).</summary>
+        void RefreshEdges(int tile, int leaving)
+        {
+            var t = m_Tiles[tile];
+            if (t.root == null) return;
+            TileSide open = TileSide.None;
+            if (Policy.StateOf(tile) == TileState.Ready)
+            {
+                var nb = Graph.Neighbors[tile];
+                for (int k = 0; k < nb.Length; k++)
+                {
+                    var side = Graph.NeighborSides[tile][k];
+                    if (side != TileSide.N && side != TileSide.E && side != TileSide.S && side != TileSide.W) continue;
+                    if (nb[k] != leaving && Policy.StateOf(nb[k]) == TileState.Ready && m_Tiles[nb[k]].root != null) open |= side;
+                }
+            }
+            if (open == t.openSides && open == TileSide.None) return;
+            t.openSides = open;
+            for (int i = 0; i < t.closures.Length; i++)
+            {
+                t.closureOpen[i] = (open & t.closureSide[i]) != 0;
+                if (t.closures[i] != null) t.closures[i].SetActive(!t.closureOpen[i]);
+            }
+            for (int i = 0; i < t.groups.Length; i++)
+            {
+                var b = t.groupBounds[i];
+                bool hide = EdgeSides.GroupMayHide(b.x, b.y, b.z, b.w, t.closureE, t.closureN, t.closureOpen, t.closures.Length);
+                if (t.groups[i] != null) t.groups[i].SetActive(!hide);
+            }
+            for (int i = 0; i < t.farSectors.Length; i++)
+                if (t.farSectors[i] != null) t.farSectors[i].SetActive((open & t.farSide[i]) == 0);
+            if (t.apronPieces.Length > 0)
+            {
+                if (t.apronWhole != null) t.apronWhole.SetActive(open == TileSide.None);
+                for (int i = 0; i < t.apronPieces.Length; i++)
+                    if (t.apronPieces[i] != null) t.apronPieces[i].SetActive(open != TileSide.None && (open & t.apronSide[i]) == 0);
+            }
+            else if (open != TileSide.None && !t.warnedApron)
+            {
+                t.warnedApron = true;
+                Debug.LogWarning($"[STREAM] {Graph.Tiles[tile].id}: scene has no Apron_N/E/S/W pieces (imported before ADR 0235) - the apron overlaps the neighbour; reimport with scripts/import-region.ps1");
+            }
+            Debug.Log($"[STREAM] edges {Graph.Tiles[tile].id}: open {open}");
+        }
+
+        // ------------------------------------------------------------------ queries (safety net, tests)
+
+        float DistanceToTileM(int tile)
+        {
+            Vector3 p = vehicle.position;
+            return (float)Graph.DistanceTo(tile, m_Wx + p.x, m_Wy + p.z);
+        }
+
+        /// <summary>
+        /// Distance from a world position to the edge of the drivable union of Ready tiles [m] (positive inside), for the
+        /// world safety net (ADR 0082) - open seams do not count as an edge. False when no tile is registered.
+        /// </summary>
+        public bool TryInsideDistance(Vector3 worldPos, out float inside)
+        {
+            inside = float.MinValue;
+            if (m_Tiles == null) return false;
+            bool any = false;
+            for (int i = 0; i < m_Tiles.Length; i++)
+            {
+                var t = m_Tiles[i];
+                if (t.root == null || Policy.StateOf(i) != TileState.Ready) continue;
+                Vector3 l = worldPos - t.root.transform.position;
+                bool contains = l.x >= t.min.x && l.x <= t.max.x && l.z >= t.min.y && l.z <= t.max.y;
+                float d;
+                if (contains)
+                {
+                    int missing = 0;
+                    if ((t.openSides & TileSide.NE) == TileSide.NE && !Policy.NeighborReady(i, TileSide.NE)) missing |= EdgeSides.CornerBit(TileSide.NE);
+                    if ((t.openSides & TileSide.SE) == TileSide.SE && !Policy.NeighborReady(i, TileSide.SE)) missing |= EdgeSides.CornerBit(TileSide.SE);
+                    if ((t.openSides & TileSide.SW) == TileSide.SW && !Policy.NeighborReady(i, TileSide.SW)) missing |= EdgeSides.CornerBit(TileSide.SW);
+                    if ((t.openSides & TileSide.NW) == TileSide.NW && !Policy.NeighborReady(i, TileSide.NW)) missing |= EdgeSides.CornerBit(TileSide.NW);
+                    d = EdgeSides.UnionInsideDistance(l.x, l.z, t.min.x, t.min.y, t.max.x, t.max.y, t.openSides, missing);
+                    inside = any ? Mathf.Max(inside, d) : d;
+                    any = true;
+                }
+                else if (!any)
+                {
+                    d = WorldBoundary.InsideDistance(t.min, t.max, l.x, l.z);
+                    if (d > inside) inside = d;
+                }
+            }
+            return inside > float.MinValue;
+        }
+
+        /// <summary>World-space start route of a resident tile (null when the tile is not resident or has none).</summary>
+        public WorldRoute RouteOf(string regionId)
+        {
+            int i = Graph != null ? Graph.IndexOf(regionId) : -1;
+            if (i < 0 || m_Tiles[i].route == null) return null;
+            return m_Tiles[i].route.GetComponent<WorldRoute>();
+        }
+
+        public TileState StateOf(string regionId)
+        {
+            int i = Graph != null ? Graph.IndexOf(regionId) : -1;
+            return i >= 0 ? Policy.StateOf(i) : TileState.Unloaded;
+        }
+
+        void OnDestroy()
+        {
+            if (Active == this) Active = null;
+        }
+    }
+}
