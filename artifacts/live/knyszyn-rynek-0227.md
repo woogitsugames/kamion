@@ -40,3 +40,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 19:08 +01:00 — Review wykrył odstające okna/portyk i dachy landmarków; urząd poprawiony i testy 4 passed, kościół poprawiany. R1 nie korzysta jeszcze z tych modułów.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 19:09 +01:00 — UWAGA: proces r1 build_world PID 35844 ma 53 wątki Wait/Suspended, CPU ~10 s nie rośnie; przyczyna nieustalona, nie wznawiam wymuszeniem na współdzielonej maszynie. Slot heavy nadal zajęty przez nas.
+- NASTĘPNY KROK: `Get-Process -Id 35844 | Select-Object CPU,Responding; Get-Process -Id 35844 | ForEach-Object { $_.Threads | Group-Object ThreadState,WaitReason }`
