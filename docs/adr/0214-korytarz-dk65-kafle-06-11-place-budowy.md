@@ -101,6 +101,10 @@ do pomiaru na A16.
   `test_knyszynska_0208.py`: strażnik „jeden powiat” dopuszcza teraz `dk65-10` / `dk65-11`.
 - Dane r3 zbudowane na main z `44ab8422c`+147; drugie scalenie main (0213 woda, Argon 0187–0189: roślinność, płoty) bez
   przebudowy kafli — regeneracja po stronie lidera.
+  Próba po drugim scaleniu: `build_world --context` dla `dk65-09` exit 0 (`logs/world-dk65-09-smoke-m2.log`), wynik nie
+  zacommitowany. Testy szwów / 0208 / 0212 po drugim scaleniu: 51 passed, 2 skipped, 2 xfailed.
+- Przekrój zbudowany, zmierzony na renderze z góry (0,13 m/px): `dk65-11` asfalt 9,4 m, linie 7,0 m; `dk65-10` asfalt
+  ~8,7 m (jezdnia 6,6 m w `roads_qa.json`, linie w cieniu drzew nieodczytane). Klasa drogi G, pobocze utwardzone 1,0 m.
 - `tests/gis/test_dk65_seams_0214.py`: szwy 05…knyszyn-s — ta sama droga OSM, punkty trasy < 2 m, teren (max 0,48 m na
   10/11 przez rok NMT, reszta 0), osie placów ciągłe; przekrój: K1 w 06…10 (wpis dosłownie ten sam), zestaw `knyszyn-s`
   w 11 = `knyszyn-s`; xfail: 05/06 (Ełcka 7,6 m z 0207 do korekty 02…05), 10/11 (K1).
