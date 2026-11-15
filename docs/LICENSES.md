@@ -509,3 +509,5 @@ Uzupełnienie: 02-007 Chris McKenna, CC BY-SA 4.0, Commons Heavy_filthy.jpg; pom
 Knyszyn03/new-round2:3 miniatury nowych względemK1 źródeł Henryka Borawskiego, CC BY-SA3.0, zmniejszenie bez kadrowania. Autor/URL/daty/licencje w manifestach i data/candidates-imageinfo.json, hashe w data/review.json. Dwa dodatkowe kadry K1-P06/P22 tylko ponownie obejrzane i linkowane lokalnie, bez nowych kopii; autorzy i CC BY-SA3.0/4.0 perwiersz.
 
 02-010 Flickr Harold Hollingsworth, CC BY-SA2.0: obraz i licencję odczytano niezależnie dwukrotnie, wyłącznie URL i własne obserwacje, bez pobrania fotografii. 06-O03 orto ronda GUGiK800px, atrybucja i bbox w manifeście06; normy drzew/skrajni04 to własne parafrazy aktów Dz.U., bez skanów.
+
+01/night-round2/files/running-lights-800.jpg: Bob Harvey, CC BY-SA2.0, źródło i data w lokalnym manifeście; zmniejszenie, odrzucony dla celu tylnych lamp. 05/ground-round2/files/05-GR2-03.jpg: Henryk Borawski, CC BY-SA3.0, zmniejszenie800px, atrybucja i metadane w manifeście/commons-source-metadata.json. Raport miastaBiałystok2025 (07-D05/D06) tylko link i własna parafraza, PDF/rendery poza gitem, bez redystrybucji zdjęć.

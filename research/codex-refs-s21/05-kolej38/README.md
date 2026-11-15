@@ -35,3 +35,7 @@ StarszyURL Id12 z lutego2025 zwraca404; aktualny odnaleziono przez oficjalny kat
 05-O05: GUGiK WMS,700×700px, samodzielnie obejrzany. SOURCED [obraz i data/crossing-ortho-review.json]: pojedynczy tor, jasne prostokątne pasy/panele w obrębie szyn, powtarzalne podkłady, szarobrązowy pas podsypki. Nie identyfikowano materiału paneli ani rodzaju kamienia. Kategoria A–D, rogatki, sygnalizatory i krzyże UNVERIFIED — drobne obiekty z góry nie pozwalają rozstrzygnąć wyposażenia. Data zdjęcia UNVERIFIED: WMS bez parametru czasu, nie zapytano jeszcze o arkusz. Kierunek góry to północ geograficzna. To1 nowy pobrany kadr; oryginał poza gitem, kopia referencyjna700px w files.
 
 Uzupełnienie datowania05-O05: SOURCED [WFS Skorowidze2025, pola akt_data/godlo/piksel, pełny URL w JSON] — pokrywający środek arkusz N-34-107-A-c-3-4 ma datę2025-05-25 i piksel0,1m. Zapytanie2026 zwraca gml:null missing. Jest to data arkusza, bez gwarancji przypięcia czasu bieżącego WMS. Nie jest potwierdzeniem stanu listopad2026.
+
+## Kolejny kadr naziemny stacji — ground-round2
+
+05-GR2-03: nowy względemK1 URL Henryka Borawskiego, CC BY-SA3.0,2013-10-29; indywidualnie obejrzany przez agenta i koordynatora. Płyty peronu/przejścia, szyny, podkłady, pas podsypki z roślinnością oraz podwieszenia sieci. Fragment czerwono-białego urządzenia przy brzegu kadru nie potwierdza rogatki drogowej. Nie wykazano przejazduDW671 ani kategoriiA–D. P34duplikat i podobnydoP32 odłożone w dzienniku, bez nowych kopii. Manifest główny ma10 rekordów, nowa miniatura800px.
