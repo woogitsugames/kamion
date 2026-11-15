@@ -27,6 +27,7 @@ from . import hero_building as HBD
 from . import hero_depot as HD
 from . import landmarks as LM
 from . import chain_bollards as CB
+from . import construction_site as CS
 from . import gate3_landmarks as G3
 from . import life as LF
 from . import paved as PV
@@ -147,6 +148,13 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     zc = np.where(bmask & ~mask, np.minimum(zc, sm), zc)        # ground under buildings never above the floor
     if getattr(w, "water", None) is not None:      # ADR 0210 (opt-in): river / pond bed, shallow banks, shore lip
         zc = w.water.carve(zc, mask, log)
+    # ADR 0214: expressway construction sites (override kind: construction_site) - sand platform + spoil heaps
+    bbx = w.region["bbox"]
+    sites = CS.plan(overrides, origin, roads_poly, rep, tile=shapely.box(bbx["xmin"] - origin[0], bbx["ymin"] - origin[1],
+                                                                       bbx["xmax"] - origin[0], bbx["ymax"] - origin[1]))
+    zc, site_mask = CS.shape_terrain(zc, mask | bmask, hf, sites, PV.rasterize_polys, rep)
+    if sites:
+        log("construction sites", rep["construction_sites"])
     zsurf_g = np.where(mask, zjoin, zc)
 
     def zsurf(e, n):
@@ -207,6 +215,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
     FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep,
               styles=FU.fence_styles(overrides), net=w.net)
+    CS.fences(lin, sites, roads_poly, rep)          # ADR 0214: temporary site fence facing the road
     def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
     FU.guardrails(lin, w.net, znat, frep)
@@ -279,6 +288,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         blocked |= PV.rasterize_polys(hero_keepout, hf)
     if getattr(w, "water", None) is not None:      # ADR 0210: no trees in the water
         blocked |= w.water.blocked()
+    blocked |= site_mask                          # ADR 0214: no trees on a construction site
     vrep = {}
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides)
     forest_mix = vrep.pop("_forest_mix")
@@ -286,12 +296,13 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     rep["vegetation"] = vrep
     log("trees", vrep["trees"])
     # forest HLOD cells (canopy + edge walls) replacing far stands
-    no_forest = shapely.union_all([roads_poly, bpoly] + [p["poly"] for p in paved]).buffer(2.5)
+    no_forest = shapely.union_all([roads_poly, bpoly] + [p["poly"] for p in paved] + [s_["poly"] for s_ in sites]).buffer(2.5)
     half = w.region["bbox"]["width_m"] / 2
     hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep)
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests, forest_cleared)
     col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # no grit strip around the lawns (ADR 0114)
+    col = CS.ground_colour(col, site_mask, hf)                           # ADR 0214: sand on construction sites
     # ADR 0132: grown garden trees of the house plots (orthophoto crowns) join the tree instances - same prototypes,
     # LODs and impostors as every street tree; none closer than 2.5 m to a tree the region already has there
     ptrees = plots.get("trees") or []
