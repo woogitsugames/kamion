@@ -31,3 +31,5 @@ StarszyURL Id12 z lutego2025 zwraca404; aktualny odnaleziono przez oficjalny kat
 ## Nowe orto przejazdu 038 010 194
 
 05-O05: GUGiK WMS,700×700px, samodzielnie obejrzany. SOURCED [obraz i data/crossing-ortho-review.json]: pojedynczy tor, jasne prostokątne pasy/panele w obrębie szyn, powtarzalne podkłady, szarobrązowy pas podsypki. Nie identyfikowano materiału paneli ani rodzaju kamienia. Kategoria A–D, rogatki, sygnalizatory i krzyże UNVERIFIED — drobne obiekty z góry nie pozwalają rozstrzygnąć wyposażenia. Data zdjęcia UNVERIFIED: WMS bez parametru czasu, nie zapytano jeszcze o arkusz. Kierunek góry to północ geograficzna. To1 nowy pobrany kadr; oryginał poza gitem, kopia referencyjna700px w files.
+
+Uzupełnienie datowania05-O05: SOURCED [WFS Skorowidze2025, pola akt_data/godlo/piksel, pełny URL w JSON] — pokrywający środek arkusz N-34-107-A-c-3-4 ma datę2025-05-25 i piksel0,1m. Zapytanie2026 zwraca gml:null missing. Jest to data arkusza, bez gwarancji przypięcia czasu bieżącego WMS. Nie jest potwierdzeniem stanu listopad2026.

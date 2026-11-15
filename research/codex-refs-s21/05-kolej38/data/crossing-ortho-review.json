@@ -20,9 +20,90 @@
   ],
   "sha256": "b3989b1ca90fe694ca252dcefa6d0e6d0cbdcf5e2c17cc52b29aef64cc8d477b",
   "bytes": 79201,
-  "date_of_imagery": "UNVERIFIED; no time-fixed WMS parameter, no footprint date queried",
+  "date_of_imagery": "2025-05-25 latest covering sheet per2025 WFS footprint;2026 response has gml:null missing. WMS itself not time-fixed, exact rendered layer date UNVERIFIED.",
   "interpretation": "SOURCED [individually viewed image]: pojedynczy tor przecina ukośnie wąską drogę asfaltową. W obrębie szyn jasne prostokątne pasy/panele; ciemne równoległe linie szyn, powtarzalne poprzeczne podkłady oraz szarobrązowy pas podsypki. Po zachodniej stronie dwa wysokie słupy o widocznych cienkich elementach i długie liniowe cienie. Przy drodze drobne jasne i niebieskie obiekty, których funkcji nie rozpoznano.",
   "measurement": "none; geographic bbox and reprojected WMS image not used for metric measurements",
   "limits": "Kategoria A–D, rogatki, sygnalizacja, G3/G4 oraz materiał paneli UNVERIFIED. Widoczność drobnych obiektów z góry nie potwierdza braku wyposażenia. Nie ustalono daty zdjęcia ani stanu listopad2026. Napowietrzna sieć potwierdzona osobno Id12; same cienie nie wyznaczają napięcia ani rozstawu przewodów.",
-  "orientation": "góra = północ geograficzna w WMS EPSG4326; pionowy widok, brak poziomego kierunku kamery"
+  "orientation": "góra = północ geograficzna w WMS EPSG4326; pionowy widok, brak poziomego kierunku kamery",
+  "footprint_queries": [
+    {
+      "year": 2025,
+      "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2025&SRSNAME=EPSG%3A4326&BBOX=23.0564632%2C53.1675384%2C23.0564832%2C53.167558400000004%2CEPSG%3A4326",
+      "bytes": 2792,
+      "sha256": "c1d0c1067712267d00b7cd9064426b0a1bdb0ac9b0d000edb28bb73b5ed3143d",
+      "leaf_fields_except_geometry": [
+        {
+          "field": "godlo",
+          "value": "N-34-107-A-c-3-4"
+        },
+        {
+          "field": "akt_rok",
+          "value": "2025"
+        },
+        {
+          "field": "piksel",
+          "value": "0.1"
+        },
+        {
+          "field": "kolor",
+          "value": "RGB"
+        },
+        {
+          "field": "zrodlo_danych",
+          "value": "Zdj. cyfrowe"
+        },
+        {
+          "field": "uklad_xy",
+          "value": "PL-1992"
+        },
+        {
+          "field": "modul_archiwizacji",
+          "value": "1:5000"
+        },
+        {
+          "field": "nr_zglosz",
+          "value": "GK-FOTO.6201.11.2025"
+        },
+        {
+          "field": "akt_data",
+          "value": "2025-05-25"
+        },
+        {
+          "field": "czy_ark_wypelniony",
+          "value": "TAK"
+        },
+        {
+          "field": "url_do_pobrania",
+          "value": "https://opendata.geoportal.gov.pl/ortofotomapa/83186/83186_1484285_N-34-107-A-c-3-4.tif"
+        },
+        {
+          "field": "dt_pzgik",
+          "value": "2025-11-12"
+        },
+        {
+          "field": "wlk_pliku_mb",
+          "value": "271"
+        }
+      ],
+      "root": "{http://www.opengis.net/wfs}FeatureCollection"
+    },
+    {
+      "year": 2026,
+      "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2026&SRSNAME=EPSG%3A4326&BBOX=23.0564632%2C53.1675384%2C23.0564832%2C53.167558400000004%2CEPSG%3A4326",
+      "bytes": 738,
+      "sha256": "dc6ec7dae67ad6b5ffb66687511097b7d8375a6b5af0844237fbce8d0d142d91",
+      "leaf_fields_except_geometry": [
+        {
+          "field": "null",
+          "value": "missing"
+        }
+      ],
+      "root": "{http://www.opengis.net/wfs}FeatureCollection"
+    }
+  ],
+  "footprint_checked_utc": "2026-11-15T18:26:49.529832+00:00",
+  "sheet_date_sourced": "2025-05-25",
+  "sheet_resolution_m": 0.1,
+  "sheet_id": "N-34-107-A-c-3-4",
+  "sheet_url": "https://opendata.geoportal.gov.pl/ortofotomapa/83186/83186_1484285_N-34-107-A-c-3-4.tif"
 }

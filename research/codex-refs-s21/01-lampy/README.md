@@ -66,3 +66,5 @@ Na etykiecie obudowy 01-VOL-003 czytelne E9 i grupy znaków potwierdzono niezale
 ## Europoint — pierwszy czytelny znak tylnej lampy naczepy
 
 01-EUP-001: SOURCED [obejrzany obraz; niezależna recenzja drugiego agenta w link-only-candidates/europoint-observations.json] — E9 w okręgu,5497 oraz S1/IIIA/AR/R1 na fizycznym kloszu. Osobno E24 przy10R-06 0973. To1 pewny odczyt tylnej lampy naczepy, a nie dwa za dwa znaki. 01-EUP-002 to inny detal tej samej lampy bez odczytu E. Zastosowanie naczepowe z opisu oferty; karta TRP tego kodu dotyczy prawego wariantu, nie dowodzi napięcia i wymiarów sfotografowanego lewego. Emisja, noc i oświetlenie tablicy nadal UNVERIFIED. Nie ustalono konkretnej edycji R7/R23/R3/R148/R150 z samego numeru5497. Łącznie18 kadrów:6 lokalnych pomocniczych oraz12 link-only. Kryteria M59 nie są zamknięte.
+
+Klucz symboli Europoint: data/europoint-symbols-regulation-review.json wiąże S1/AR/R1 z tabelą1 R148 i IIIA z tabelą1 oraz zał.5 R150. R148 jest dokumentem z9.01.2020 pod adresem katalogu2021-05; skorygowano etykietę snapshotu. Znaczenia symboli nie ustalają serii homologacji5497 ani rzeczywistej emisji egzemplarza.

@@ -1,0 +1,76 @@
+{
+  "review_date": "2026-11-15",
+  "mode": "Niezależny odczyt pełnych oficjalnych snapshotów; bez potwierdzania aktualnej mocy prawnej 2026.",
+  "object": "Europoint, widoczny E9 w okręgu i5497; S1/IIIA/AR/R1; oddzielne E24/10R-06 0973.",
+  "symbol_key": [
+    {
+      "symbol": "S1",
+      "meaning_pl": "Światło hamowania o stałej światłości. Steady nie oznacza tu potwierdzonej emisji egzemplarza.",
+      "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "locator": "pkt3.2.4 tabela1, s8; pkt5.5",
+      "status": "SOURCED"
+    },
+    {
+      "symbol": "AR",
+      "meaning_pl": "Światło cofania.",
+      "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "locator": "pkt3.2.4 tabela1, s7; pkt5.8",
+      "status": "SOURCED"
+    },
+    {
+      "symbol": "R1",
+      "meaning_pl": "Tylne światło pozycyjne o stałej światłości.",
+      "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "locator": "pkt3.2.4 tabela1, s7; pkt5.2",
+      "status": "SOURCED"
+    },
+    {
+      "symbol": "IIIA",
+      "meaning_pl": "Odblask dla przyczep, klasa niezależna IIIA; powierzchnia trójkąta równobocznego. Klasa odblasku, nie światło z emisją własną.",
+      "source": "https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2020/R150e.pdf",
+      "locator": "pkt3.2.4 tabela1, s10; pkt5.2; zał.5 pkt2.1, s56",
+      "status": "SOURCED"
+    }
+  ],
+  "mark_limits": [
+    {
+      "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "locator": "pkt3.3.2.1–4, s10; pkt3.3.5.1, s12",
+      "finding": "Znak R148 obejmuje E/kraj, numer, symbole funkcji oraz numer regulaminu zR i serią. Dopuszcza się wspólny znak zespołu. E9 i5497 nie określają edycji ani serii."
+    },
+    {
+      "source": "https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2020/R150e.pdf",
+      "locator": "pkt3.3.2.1–4, s12",
+      "finding": "R150 również wymaga numeru regulaminu zR oraz serią. Nie odczytano150R na tym kadrze; nie przypisuje się5497 do konkretnego regulaminu."
+    }
+  ],
+  "legacy_and_transition": [
+    {
+      "source": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "locator": "Wprowadzenie s4; pkt6.1.1–2, s31",
+      "finding": "R148 konsoliduje m.in.R7 iR23. Pkt6.1 dotyczy wcześniejszych serii TEGO regulaminu; nie stanowi samodzielnego potwierdzenia ważności wszystkich starszych R7/R23."
+    },
+    {
+      "source": "https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2020/R150e.pdf",
+      "locator": "Wprowadzenie s5; pkt6.1.1–2, s41",
+      "finding": "R150 konsoliduje m.in.R3. Pkt6.1 dotyczy poprzednich serii R150 i indeksu zmian, nie automatycznego uznania wszystkich homologacji R3."
+    }
+  ],
+  "older_individual_regulations": {
+    "status": "UNVERIFIED w tym przeglądzie",
+    "detail": "Starszych indywidualnych R7/R23/R3 nie użyto do przypisania tego egzemplarza. Próby odczytu R7 Rev6 iR23 Rev4 z oficjalnych URL dały403; nie zastąpiono pełnego źródła snippetem. Potrzebna komunikacja homologacyjna5497 lub pełniejszy znak."
+  },
+  "conclusion": "SOURCED: znaczenie czterech symboli w wskazanych snapshotach. UNVERIFIED: edycja/seria i faktyczna podstawa homologacji konkretnego egzemplarza5497, aktualna ważność prawna2026. Brak148R/150R w odczycie nie dowodzi nieważności starszego znaku.",
+  "sources": [
+    {
+      "url": "https://unece.org/sites/default/files/2021-05/R148e.pdf",
+      "document": "E/ECE/TRANS/505/Rev.3/Add.147",
+      "snapshot": "9 January 2020; seria oryginalna, w witrynie UNECE katalog2021-05. Pełny tekst2865 linii dostępny przez indeksowaną kopięweb."
+    },
+    {
+      "url": "https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2020/R150e.pdf",
+      "document": "E/ECE/TRANS/505/Rev.3/Add.149",
+      "snapshot": "13January2020; seria oryginalna. Pełny tekst4847 linii dostępny przez indeksowaną kopięweb."
+    }
+  ]
+}
