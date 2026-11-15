@@ -743,3 +743,11 @@ Manifest pakietu: `research/cloud2/direction-signs-route-c/manifest.csv`, indeks
 | `research/cloud2/direction-signs-route-c/files/kv_3686129_0342.jpg` | R2-070 | KartaView: https://kartaview.org/details/3686129/342 (zdjęcie 1326673933) | CC BY-SA 4.0 | TMishaaa (userId 479) |
 | `research/cloud2/direction-signs-route-c/files/kv_3686129_0347.jpg` | R2-071 | KartaView: https://kartaview.org/details/3686129/347 (zdjęcie 1326673953) | CC BY-SA 4.0 | TMishaaa (userId 479) |
 | `research/cloud2/direction-signs-route-c/files/kv_3686129_0350.jpg` | R2-072 | KartaView: https://kartaview.org/details/3686129/350 (zdjęcie 1326673965) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+
+## Dystrybucja PC — narzędzia i pliki paczki (ADR 0271, 2026-11-15)
+| Pozycja | Licencja | W paczce / buildzie | Uwagi |
+|---|---|---|---|
+| `scripts/package-windows.py`, `scripts/collect-logs.ps1`, `dist/windows/README.txt.in`, `dist/windows/kamion.iss` | własne (projekt) | `collect-logs.ps1`, README i `THIRD_PARTY_NOTICES.txt` (generowany z `About/attributions.txt`) trafiają do zipu | tekst atrybucji bez zmian — jedno źródło z ekranem „Informacje” |
+| butler (itch.io) | MIT (https://itch.io/docs/butler/, dostęp 2026-11-15) | nie (narzędzie uploadu) | używane dopiero po założeniu konta przez właściciela |
+| Inno Setup 6.x | `license.txt` — dowolne użycie, także komercyjne; od 6.5.0 autor prosi komercyjnych użytkowników o zakup licencji („not strictly required”, https://jrsoftware.org/isorder.php) | nie (szablon nieużywany) | w instalatorze licencja wymaga zachowania informacji o prawach autorskich w plikach binarnych (skrót `license.txt`) — sprawdzić przy pierwszym użyciu |
+| WiX Toolset | MS-RL + Open Source Maintenance Fee > 10 000 USD przychodu (https://docs.firegiant.com/wix/osmf/) | nie | odrzucony w ADR 0271 |
