@@ -1,7 +1,9 @@
 import copy
+from pathlib import Path
 
 import numpy as np
 import pytest
+import yaml
 
 from streetscape import plantings as PT, vegetation as VG
 
@@ -52,3 +54,29 @@ def test_invalid_model_or_species_fails():
     bad["points_en"][0][4] = "shrub"
     with pytest.raises(ValueError, match="does not support species"):
         build(bad)
+
+
+def test_r8_replaces_only_r7_accepted_stems_with_preserved_heights():
+    path = Path(__file__).resolve().parents[2] / "Data/Regions/knyszyn/overrides.yaml"
+    overrides = yaml.safe_load(path.read_text(encoding="utf8"))["overrides"]
+    groups = {o["id"]: o for o in overrides}
+    trial = groups["rynek-lindens-r8-trial-0227"]
+    expected = {(-674., -171.2): 19.6, (-662., -182.2): 16.1, (-648.5, -185.7): 18.,
+                (-639.5, -192.2): 19.7, (-696., -192.2): 19.3, (-706.5, -209.2): 17.6,
+                (-697., -222.2): 15.8, (-702., -243.2): 16.9, (-685.5, -248.2): 16.,
+                (-676., -254.2): 17.8, (-661., -247.2): 15.4, (-646., -240.2): 19.9,
+                (-638., -227.2): 17.}
+    assert trial["form"] == "kit" and trial["crown_model"] == "garden_trial"
+    assert len(trial["points_en"]) == len(expected)
+    assert {(p[0], p[1]): p[2] for p in trial["points_en"]} == expected
+    assert all(p[3] > 0 and p[4] == "linden" for p in trial["points_en"])
+    rejected = groups["rynek-park-broadleaf-0227"]
+    assert rejected.get("form") != "kit"
+    assert {tuple(p) for p in rejected["points_en"]} == {
+        (-687., -167.2), (-702., -180.2), (-689., -205.2)}
+    other_kit = groups["rynek-near-lindens-kit-0227"]["points_en"]
+    all_kit = trial["points_en"] + other_kit
+    assert all(np.linalg.norm(np.array(a[:2]) - np.array(b[:2])) >= 2.5
+               for i, a in enumerate(all_kit) for b in all_kit[i + 1:])
+    _, rep = build(trial)
+    assert rep["trees"] == 13 and rep["tris_high"] > rep["tris_low"] > 0

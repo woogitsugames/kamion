@@ -172,34 +172,8 @@ overrides:
     points_en:
     - - -687.0
       - -167.2
-    - - -674.0
-      - -171.2
-    - - -662.0
-      - -182.2
-    - - -648.5
-      - -185.7
-    - - -639.5
-      - -192.2
     - - -702.0
       - -180.2
-    - - -696.0
-      - -192.2
-    - - -706.5
-      - -209.2
-    - - -697.0
-      - -222.2
-    - - -702.0
-      - -243.2
-    - - -685.5
-      - -248.2
-    - - -676.0
-      - -254.2
-    - - -661.0
-      - -247.2
-    - - -646.0
-      - -240.2
-    - - -638.0
-      - -227.2
     - - -689.0
       - -205.2
     species:
@@ -207,10 +181,36 @@ overrides:
     height_m:
     - 15.0
     - 20.0
-    reason: ESTIMATED crown locations from GUGiK 2025 orthophoto; owner photos indicate mature lindens; heights WORKING_VALUE.
-      Avoid forest mantle and HLOD.
+    reason: ESTIMATED crown locations from GUGiK 2025 orthophoto; these three points were refused by the hard mask in R7.
+      Keep them in the instance path for the same safety check; do not move them into the kit trial without verification.
     confidence: medium
     verify: owner photos and individual stem positions
+  - id: rynek-lindens-r8-trial-0227
+    kind: tree_groups
+    form: kit
+    crown_model: garden_trial
+    points_en:
+    - [-674.0, -171.2, 19.6, 11.8, linden]
+    - [-662.0, -182.2, 16.1, 10.7, linden]
+    - [-648.5, -185.7, 18.0, 10.8, linden]
+    - [-639.5, -192.2, 19.7, 11.8, linden]
+    - [-696.0, -192.2, 19.3, 12.9, linden]
+    - [-706.5, -209.2, 17.6, 11.7, linden]
+    - [-697.0, -222.2, 15.8, 9.5, linden]
+    - [-702.0, -243.2, 16.9, 10.2, linden]
+    - [-685.5, -248.2, 16.0, 10.7, linden]
+    - [-676.0, -254.2, 17.8, 10.7, linden]
+    - [-661.0, -247.2, 15.4, 9.3, linden]
+    - [-646.0, -240.2, 19.9, 12.0, linden]
+    - [-638.0, -227.2, 17.0, 11.3, linden]
+    species: {linden: 1.0}
+    reason: >-
+      Reversible R8 trial replacing the 13 R7 accepted points 1:1. Positions ESTIMATED from GUGiK 2025; heights
+      WORKING_VALUE copied from R7 instance records. Crown diameters WORKING_VALUE computed as mean horizontal
+      leaves_linden GLB AABB spans for each R7 prototype variant, scaled by h / 13.5 m and rounded to 0.1 m;
+      not measured crown diameters. Hard-mask-refused points remain in the non-kit group. Review both LODs.
+    confidence: medium
+    verify: R8 owner comparison and per-camera budget; revert trial if landmark visibility or budget regresses
   - id: rynek-plaza-east
     kind: paved_area
     material: yard_paving
