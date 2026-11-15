@@ -119,3 +119,10 @@ Właściciel: limit rozmiaru APK z regionami podniesiony z 2 GB (D67/D71) do **1
 
 ## D73 — Windows jako platforma główna, telefon później (2026-11-15, s22)
 Właściciel: na telefon „jednak za ciężkie” → **Windows (PC) jest teraz platformą główną**; Android/iOS później jako lżejsza wersja. **Silnik bez zmian: Unity 6 URP** (właściciel wybrał wariant rekomendowany zamiast Unreal 5). Zastępuje kolejność z D56 (PC po bramce 3). D67/D71/D72 (APK z korytarzem, limit rozmiaru) stają się drugorzędne. Budżety i bramki PC: do zdefiniowania (referencyjny PC, FPS, wejście — pytanie do właściciela); do czasu pomiaru WORKING_VALUE. Dotychczasowe budżety mobilne (np. < 2 M tris High) zostają jako zabezpieczenie dla przyszłej wersji telefonowej. ADR 0260.
+
+## D74 — Wymagania sprzętowe PC jak w ETS2/ATS (2026-11-15, s22)
+Właściciel: „zobacz wymagania Euro i American Truck Simulator 2 i zrób podobne”. Przyjęte klasy (Windows 10 64-bit; źródło: karta Steam ATS 270880 i serwisy cytujące kartę ETS2 227300, stan 15.11.2026 — ETS2 do potwierdzenia na samej karcie Steam):
+- **Minimalne:** Intel Core i5-6400 / AMD Ryzen 3 1200, NVIDIA GTX 660 / AMD RX 460 / Intel HD 630 (2 GB VRAM), 8 GB RAM. Cel: tier Low, 1080p, **30 fps** (WORKING_VALUE).
+- **Zalecane:** Intel Core i5-9600 / AMD Ryzen 5 3600, NVIDIA GTX 1660 / AMD RX 590, 12 GB RAM. Cel: tier High, 1080p, **60 fps** (WORKING_VALUE).
+- Dysk: jak u nich ≤ 25 GB na grę bazową (WORKING_VALUE).
+Progi FPS i dysk to propozycja lidera (SCS nie publikuje FPS) — do potwierdzenia przy pierwszym pomiarze. Ryzyko: Intel HD 630 przy obecnym świecie (do 2 M tris High) — pomiar Low na iGPU konieczny przed obietnicą. Pomiar na maszynie deweloperskiej (RTX 5070) nie zastępuje klas minimalnej/zalecanej. ADR 0260 (uzupełnienie), chmura H zadanie H4 (0266).
