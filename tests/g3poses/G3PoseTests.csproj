@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    ADR 0246: the Unity-independent part of the photo-pair capture (pose parser, launch arguments, names, sizes, settle
+    rule, [G3POSE] lines) compiled straight from the Unity project, with the SAME NUnit file Unity runs as an EditMode test
+    (game/Assets/_Project/Tests/EditMode/G3PoseTests.cs). Pattern of tools/about-runner and tools/nav-runner (ADR 0150).
+    Run: dotnet test tests/g3poses/G3PoseTests.csproj
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>G3PoseTests</RootNamespace>
+    <!-- Unity 6 compiles C# 9; keep the shared sources within that language version. -->
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RollForward>Major</RollForward>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../game/Assets/_Project/Gameplay/G3Poses/G3PoseSet.cs" LinkBase="G3Poses" />
+    <Compile Include="../../game/Assets/_Project/Gameplay/G3Poses/G3PoseArgs.cs" LinkBase="G3Poses" />
+    <Compile Include="../../game/Assets/_Project/Gameplay/G3Poses/G3PoseCapture.cs" LinkBase="G3Poses" />
+    <Compile Include="../../game/Assets/_Project/Tests/EditMode/G3PoseTests.cs" LinkBase="EditMode" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+
+</Project>
