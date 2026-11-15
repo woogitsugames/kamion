@@ -94,7 +94,8 @@ UNVERIFIED. `knyszyn-s`: brak bazy r3 w tym zestawie logów.
 - EditMode: 628 testów, 627 passed, 1 skipped, 0 failed (po `scripts/export-region-catalog.py`; przed: 1 failed —
   `knyszyn-s` routeLengthM), `artifacts/tests/editmode-20261115-2149*.xml`.
 - Pętla wizualna (Low + High, 1920 × 1080, clear): `artifacts/dk65-r4-s21/seam/r4/seam-*-{low,high}.jpg` (sklejka obu
-  połówek szwu | ortofoto WMS 0,1 m), `widening-knyszyn-s-*.jpg`, `<kafel>/r4/view/grid-*.jpg`. Obejrzane: oba szwy —
+  połówek szwu | ortofoto WMS 0,1 m), `widening-knyszyn-s-*.jpg`, `<kafel>/r4/view/grid-*.jpg`. Obejrzane (s22): `seam-*` obu szwów i `widening` w Low i High; `grid-high-drive` 07, 08, 09, 11, `knyszyn-s`;
+  `grid-low-drive` 10; `grid-high-top` 10, 11 (pozostałe arkusze `grid-*` nieobejrzane w s22). Oba szwy —
   krawędzie asfaltu, linie krawędziowe i oś przechodzą przez szew bez uskoku; poszerzenie km 25,32 jako płynny klin.
   Różnice wobec ortofoto: linie przerywane / podwójna ciągła („Otwarte 1”), pobocze utwardzone szersze niż w terenie.
   Wada kamer: `seam_s_drive` (11) i `seam_e_drive` (`knyszyn-s`) stoją wewnątrz naczepy ciężarówki QA (start trasy =
