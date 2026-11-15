@@ -56,6 +56,28 @@ def test_invalid_model_or_species_fails():
         build(bad)
 
 
+def test_volume_trial_is_deterministic_and_wraps_the_crown():
+    class Kit:
+        def __init__(self): self.cards=[]; self.trunks=0
+        def quad(self, vertices, uv, colors): self.cards.append((np.asarray(vertices),np.asarray(uv)))
+        def box(self, *args, **kwargs): self.trunks+=1
+    p=np.array([5.,5.]); key=("volume-test",0)
+    for lite,count in ((False,12),(True,8)):
+        kit=Kit(); repeat=Kit()
+        for k in (kit,repeat):
+            PT._authored_volume_crown(k,p,100.,5.,17.,3.57,"linden",key,lite=lite)
+        assert kit.trunks==1 and len(kit.cards)==count
+        assert all(np.array_equal(a[0],b[0]) and np.array_equal(a[1],b[1]) for a,b in zip(kit.cards,repeat.cards))
+        centers=np.asarray([v[:,:2].mean(axis=0)-p for v,uv in kit.cards])
+        assert np.all(np.linalg.norm(centers,axis=1)>1.)
+        for axis in ([1.,0.],[0.,1.],[-1.,0.],[0.,-1.]):
+            assert max(centers@axis)>1.
+        assert all(np.isfinite(v).all() and 103. < v[:,2].min() <= v[:,2].max() <= 117. for v,uv in kit.cards)
+    _,rep=build(group(crown_model="garden_volume_trial"))
+    assert rep["trees"]==2 and rep["tris_high"]>rep["tris_low"]>0
+    assert all(x["crown_model"]=="garden_volume_trial" for x in rep["list"])
+
+
 def test_r8_replaces_only_r7_accepted_stems_with_preserved_heights():
     path = Path(__file__).resolve().parents[2] / "Data/Regions/knyszyn/overrides.yaml"
     overrides = yaml.safe_load(path.read_text(encoding="utf8"))["overrides"]
@@ -66,7 +88,7 @@ def test_r8_replaces_only_r7_accepted_stems_with_preserved_heights():
                 (-697., -222.2): 15.8, (-702., -243.2): 16.9, (-685.5, -248.2): 16.,
                 (-676., -254.2): 17.8, (-661., -247.2): 15.4, (-646., -240.2): 19.9,
                 (-638., -227.2): 17.}
-    assert trial["form"] == "kit" and trial["crown_model"] == "garden_trial"
+    assert trial["form"] == "kit" and trial["crown_model"] == "garden_volume_trial"
     assert len(trial["points_en"]) == len(expected)
     assert {(p[0], p[1]): p[2] for p in trial["points_en"]} == expected
     assert all(p[3] > 0 and p[4] == "linden" for p in trial["points_en"])
@@ -74,7 +96,9 @@ def test_r8_replaces_only_r7_accepted_stems_with_preserved_heights():
     assert rejected.get("form") != "kit"
     assert {tuple(p) for p in rejected["points_en"]} == {
         (-687., -167.2), (-702., -180.2), (-689., -205.2)}
-    other_kit = groups["rynek-near-lindens-kit-0227"]["points_en"]
+    other = groups["rynek-near-lindens-kit-0227"]
+    assert other["crown_model"] == "garden_volume_trial"
+    other_kit = other["points_en"]
     all_kit = trial["points_en"] + other_kit
     assert all(np.linalg.norm(np.array(a[:2]) - np.array(b[:2])) >= 2.5
                for i, a in enumerate(all_kit) for b in all_kit[i + 1:])
