@@ -56,3 +56,5 @@
 - NASTĘPNY KROK: `Get-CimInstance Win32_OperatingSystem | Select-Object FreePhysicalMemory; Get-Process python | ForEach-Object { $_.Threads | Group-Object ThreadState,WaitReason }`
 - 2026-11-15 19:31 +01:00 — Wolny RAM 0.8 GiB; powtórne uruchomienie r1 zostało wstrzymane jak inne procesy, własny slot zwolniony. Dalszy ciężki build/Unity czeka na poprawę zasobów; kod i testy WIP wypchnięte.
 - NASTĘPNY KROK: `Get-CimInstance Win32_OperatingSystem | Select-Object FreePhysicalMemory; Get-Process python | ForEach-Object { $_.Threads | Group-Object ThreadState,WaitReason }`
+- 2026-11-15 20:05 +01:00 — Na polecenie właściciela wznowiono r1 po sprawdzeniu zasobów: RAM 29,43 GiB, C: 501,77 GiB; log r1-resume.log.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
