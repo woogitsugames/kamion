@@ -1,0 +1,90 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "status": "STABLE — dokument projektowy, nie as-built",
+  "documents_qualified": 1,
+  "photo_frames": 0,
+  "drawings_reviewed": 0,
+  "source": {
+    "id": "07CP6-D01",
+    "url": "https://www.bip.bialystok.pl/resource/26539/27605/Za%25C5%2582%25C4%2585cznik%2B9%2B-%2Bopis.pdf",
+    "publisher": "BIP Urzędu Miejskiego w Białymstoku",
+    "author": "ARKAS-PROJEKT Sp. z o.o. Sp.k.",
+    "title": "Opis techniczny do projektu architektoniczno-budowlanego — układ drogowy, Rozbudowa Alei Tysiąclecia Państwa Polskiego w Białymstoku od ul.Wileńskiej do terenu kolejowego przy ul.Poleskiej wraz z infrastrukturą techniczną",
+    "pdf_documentinfo_title": "Al.1000-opis_PAB_2017.07.05",
+    "date_evidence": "2017-07-05 wyłącznie z tytułu DocumentInfo PDF; data zatwierdzenia i realizacji UNVERIFIED. Umowa wskazana w1.1 z15.07.2015 nie jest datą wykonania projektu.",
+    "bytes": 11666280,
+    "sha256": "601628b20db6488799e2d85ed300a956ad0dc17793eeb613ffd0e0a57291839c",
+    "pdf_pages": 102,
+    "local_raw": "Data/raw/refs/codex-s21/07-bialystok-dojlidy/route-c-public-plans-round6/UM-Zalacznik9-opis-2017.pdf",
+    "rights": "Publiczny dokument udostępniony przezBIP. Nie przypisanoCC ani public domain projektowi zewnętrznego autora. W gicie wyłącznie własne streszczenie/fakty/link, bez PDF i renderów."
+  },
+  "method": "PDF pobrany pojedynczym HTTP200 zBIP; pypdf tekst, następnie render pypdfium2 stronPDF9i14 i osobny lokalny view_image obu pełnych stron. Nie użyto Chrome i nie otwierano map/podkładówGoogle. Renderer/źródło poza gitem. Część rysunkowa tylko wymieniona, nie pozyskana/nieobejrzana.",
+  "findings": [
+    {
+      "locator": "PDF5, drukowana9,2.1–2.2",
+      "status": "SOURCED [tekst dokumentu, opis stanu istniejącego w projekcie]",
+      "fact": "Odcinek Wileńska–teren kolejowy Poleska; około1.43km. Dokument określa ówczesną Aleję na tym odcinku jakoDW675. Nie opisuje portalu675Centrum."
+    },
+    {
+      "locator": "PDF9, drukowana13,3.2",
+      "status": "SOURCED [tabela projektowa, odczyt tekstowy i wizualny]",
+      "parameters": {
+        "road_class": "G",
+        "traffic_category": "KR6",
+        "design_speed_kmh": 50,
+        "reference_speed_kmh": 60,
+        "cross_section": "2x2",
+        "lane_width_m": 3.5,
+        "additional_lane_width_m": 3.5,
+        "sidewalk_width_m": 2.0,
+        "cycle_path_width_m": 3.0,
+        "median_width_m": "2.50–6.00",
+        "pavement_design_axle_load_kN": 115
+      },
+      "meaning": "Parametry projektowe; Vp/Vm nie są odczytem obowiązującego znaku prędkości,115kN/oś nie jest znakiem tonażowym."
+    },
+    {
+      "locator": "PDF14, drukowana18,3.7–3.8",
+      "status": "SOURCED [projekt, odczyt tekstowy i wizualny]",
+      "parameters": {
+        "planned_bus_bays_total": 7,
+        "planned_bays_avenue": 5,
+        "planned_bays_sokolska": 1,
+        "planned_bays_kombatantow": 1,
+        "bay_width_m": 3.0,
+        "planned_platform_length_m": "około20.0",
+        "platform_concrete_paver_thickness_cm": 8,
+        "local_combined_path_width_m": 3.0
+      },
+      "fact": "Zatoki projektowano z kostki kamiennej, perony z kostki betonowej, miejsca na wiaty. Nie policzono zrealizowanych przystanków."
+    },
+    {
+      "locator": "PDF15, drukowana19,3.11",
+      "status": "SOURCED [tekst projektu]",
+      "fact": "Opis przewiduje oprawy sodowe na podatnych słupach aluminiowych. Stan oświetlenia2026 i realizacja tego rozwiązania UNVERIFIED."
+    },
+    {
+      "locator": "PDF2, drukowana6 orazPDF102, drukowana106",
+      "status": "SOURCED [spis treści]",
+      "fact": "Wylicza rys.1.0 plan orientacyjny,2.1–2.2 sytuacyjny,3.1–3.3 profile,4.0 przekroje normalne,5.1–5.2 szczegóły. W tym102-stronicowym pliku to wykaz, nie obejrzane plansze. Nie opisano rysunków jako dostępnych/zweryfikowanych."
+    }
+  ],
+  "screening": {
+    "queries": [
+      "BIP Putry organizacja ruchu projekt tablice",
+      "BIP Tysiąclecia Andersa Wysockiego bramownice675",
+      "BIP26539 Tysiąclecia",
+      "BIP Putry organizacja rys",
+      "BIP Wileńskiej Załącznik9 2017",
+      "BIP Rozbudowa Alei Tysiąclecia rysunki"
+    ],
+    "result": "Jedno konkretne źródło projektowe. Pozostałe trafienia to ogólna procedura zatwierdzenia organizacji ruchu albo inne inwestycje. Nie wpisano ich jako referencji trasy. Webparser nie obsłużyłPDF11.67MB, pojedyncze pobranie requests200 z oficjalnegoBIP się powiodło. Pypdf ostrzegał o fontTools przy części czcionek; wskazaną tabelę i sekcję zatok sprawdzono wizualnie."
+  },
+  "open_gaps": [
+    "Układ i liczba tablic675Centrum, bramowniceA/portalN w2024–2026 UNVERIFIED.",
+    "Brak indywidualnie obejrzanych rysunków organizacji ruchu, przekrojów i oznakowania.",
+    "Brak dowodu wykonania, odbioru albo późniejszych zmian względem opisu.",
+    "Andersa/Wysockiego nie są odcinkiem tego dokumentu; Putry jest tylko punktem kontekstu zawracania w3.6."
+  ]
+}

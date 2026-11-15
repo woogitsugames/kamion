@@ -42,3 +42,7 @@ Mapillary-gates-round4:2 nowe, indywidualnie obejrzane link-only obrazy czadzik2
 ## TrasaC — kontrola nowszego materiału, obieg5
 
 [Celowany screening](route-c-signs-round5/README.md):3pobrane i osobno obejrzane podglądyCC0 z2024 odrzucono jako boczne elewacje/parking/zieleń, bez portalu. Żadnych nowych obrazów wGit ani przyjętych kadrów; główny manifest nadal11rekordów. Dwa ograniczone zapytania publicznego katalogu federacyjnegoPanoramax dla2024–15.11.2026 zwróciły features[]; nie dowód braku zdjęć we wszystkich instancjach. B006/B007, treść tablicy675Centrum, liczba paneli/wierszy/wysięgników i wysokość kamery pozostająUNVERIFIED. Nie opisano zdjęć z tytułów.
+
+## Publiczny projekt Alei Tysiąclecia — obieg6
+
+Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.md):1nowy opisPAB,0fotografii. PDF9/druk13 iPDF14/druk18 obejrzane przezagenta i koordynatora: projekt2×2,pas3.50m,chodnik2m,DDR3m,mediana2.5–6m;7projektowanych przystanków z zatokami(5Aleja+1Sokólska+1Kombatantów),zatoka3m/peronokoło20m. ZakresWileńska–teren kolejowyPoleska, data2017.07.05 wyłączniezDocumentInfo, nie datarealizacji. Materiał pomaga parametrom projektowym; nie potwierdza stanu wykonanego ani675Centrum/bramownic2024+. PDF11.67MB i rendery pozaGit, wyłącznie własneparafrazy/link.

@@ -563,3 +563,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 06/tykocin-bridge-round5:4miniatury≤800px pochodne podglądówCommons, bez pełnychoryginałów. Zala(CCBY-SA4),DanutaRuminowicz(CCBY-SA3pl;2kadry),KrzysztofPopławski(CCBY4). Pełne atrybucje/URL/datowania/licencje permanifest; SHAminiatury i rawpodglądu rozdzielone; brak kopii firmowych fotografii.
 
 01/heavy-plate-round9:4indywidualnie obejrzane fotografie Proplast40205506, publikacjaAutoweltGmbH/PartsBit878116, autorUNVERIFIED; tylko link-only, all rights reserved. Bez pobrań/cropów/screenshotów; optyka i etykieta40205506 po niezależnympeer. PełneURL/ograniczenia permanifest.
+
+07/route-c-public-plans-round6:publiczny opisPABARKAS-PROJEKT zBIP UM Białystok. Nie przypisanoCC ani domenypublicznej zewnętrznemu opracowaniu. WGit wyłącznie własne streszczenie,fakty/odsyłacze/recenzja, bez źródłowegoPDF11.67MB i renderów; pozaGitread-only. Bez fotografii i bez kopiowania plansz.
