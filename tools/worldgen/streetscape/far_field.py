@@ -902,7 +902,8 @@ class SectorBuilder:
         V = np.vstack([v_bot, v_top])
         N = np.vstack([n3, n3])
         uv_bot = np.column_stack([us, np.zeros(k)])
-        uv_top = np.column_stack([us, np.ones(k)])
+        # ADR 0187: the wall picture ends at v_main of the edge texture (the mantle strip lies above it)
+        uv_top = np.column_stack([us, np.full(k, FH.edge_v_main(FH.bake_info()["mixed"]["edge"]))])
         UV = np.vstack([uv_bot, uv_top])
 
         base = self.count1

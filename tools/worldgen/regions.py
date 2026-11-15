@@ -189,6 +189,7 @@ REGIONS: dict[str, Region] = {
         origin=(767755.0, 598271.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,1) of the ADR 0203 plan)",
+        water=True,      # ADR 0213: the Supraśl continues west of the dk65-02 confluence (level continuous at the seam)
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,2) of the ADR 0203 plan, route variant A km 12.28-14.36. Powiat 2002.
     "dk65-04": Region(

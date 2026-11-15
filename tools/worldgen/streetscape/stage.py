@@ -30,6 +30,7 @@ from . import chain_bollards as CB
 from . import construction_site as CS
 from . import gate3_landmarks as G3
 from . import life as LF
+from . import masonry_gate as MG
 from . import paved as PV
 from . import plantings as PT
 from . import plots as PLT
@@ -112,7 +113,17 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     prep = {}
     truck_zone = shapely.union_all([b["poly"].buffer(40.0) for b in blds if b["typ"] == "hall"] +
                                    [d["apron"].buffer(10.0) for d in docks])
-    paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep, truck_zone=truck_zone)
+    # ADR 0188: cycle tracks from OSM (planned on the network in roads.pipeline.build)
+    from . import cycleways as CY
+    cyc_items = getattr(w.net, "cycle_items", [])
+    cyc_rep = dict(getattr(w.net, "cycle_report", {}))
+    paved = PV.collect(src, origin, overrides, docks, roads_poly, bpoly, prep, truck_zone=truck_zone,
+                       cycle={"cands": CY.candidates(cyc_items), "bdot_replaced": cyc_rep.get("bdot_replaced", [])})
+    _cyc = [p for p in paved if p["source"] == "osm_cycleway"]
+    for p in _cyc:          # the two strips of one way do not edge against each other (paved._edges)
+        sib = [q["poly"] for q in _cyc if q is not p and q["id"].rsplit(":", 1)[0] == p["id"].rsplit(":", 1)[0]]
+        if sib:
+            p["skip_edge"] = shapely.union_all(sib)
     rep["paved_m2_by_source"] = prep
     # house plots (ADR 0114): lawn / driveway / path are paved-area items of their own list (yard life, wear and
     # gate logic keep reading `paved` only)
@@ -122,6 +133,10 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     pz = PV.paved_heights(hf, road_z, rmask, pmask)
     shapely.prepare(roads_poly)
     PV.build_meshes(w.buf, paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
+    if cyc_items:
+        CY.paint(w.buf, cyc_items, PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")]), cyc_rep)
+    rep["cycleways"] = cyc_rep
+    log("cycleways", {k: v for k, v in cyc_rep.items() if k != "bdot_replaced"})
     # ADR 0124 r2: the ground of the house plots reads the ROAD height on the nodes of the road footprint (the yards
     # above read the smoothed terrain there). A driveway that comes down from a plot 0.3-0.5 m above the street ended
     # 15-20 cm over the lowered kerb, and the terrain showed under that lip as a wedge of grass (`r16_kerb_0`).
@@ -213,7 +228,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.bridge_median_lamps(pl, w.net, frep)          # ADR 0123: twin-arm lamps between the decks (bridge_style `lamps`)
     lin = FU.Lin(w.buf, zsurf)
     # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
-    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep,
+    mg_kits = MG.plan(overrides)                 # ADR 0189: brick gate kits; the rule fence is cut at their walls
+    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes) + MG.fence_cut(mg_kits)), frep,
               styles=FU.fence_styles(overrides), net=w.net,
               decks=[p for p in w.buf.parts if p.layer == "bridge" and p.mat.startswith("road_")])
     CS.fences(lin, sites, roads_poly, rep)          # ADR 0214: temporary site fence facing the road
@@ -248,6 +264,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     G3.build(pl, w.net, graph, overrides, origin, boards, frep, carriage=carriage,   # ADR 0125 gate 3 signs
              islands=[i for i in getattr(getattr(w, "gore_plan", None), "islands", []) if i.built])   # ADR 0128
+    if mg_kits:
+        MG.build(pl, mg_kits, boards, frep, carriage=carriage)
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     FU.clear_narrow_islands(pl, w.buf.parts, w.net, frep)        # ADR 0093: no lamp on a separation < ~2 m
     FU.clear_under_decks(pl, w.buf.parts, frep)
@@ -313,6 +331,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         dd, _ = kd.query(np.array([[t_["e"], t_["n"]] for t_ in ptrees]))
         ptrees = [t_ for t_, d_ in zip(ptrees, dd) if d_ >= 2.5]
     if gardens_0163:
+        mg_conifers = MG.conifers(mg_kits)
+        if mg_conifers:
+            plot_plan.setdefault("garden_trees", []).extend(mg_conifers)
         PT.garden_trees(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2, region_trees=trees)
         log("garden trees", {k: v for k, v in rep["garden_trees"].items() if k not in ("list", "conifers")})
         ptrees = VG.garden_canopies(ptrees, plot_plan, rep)
@@ -322,7 +343,13 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     rep["plots"]["inst_trees_kept"] = len(ptrees)
     for t_ in ptrees:
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
-    instances = pl.items + trees + ptrees
+    wtrees = []
+    if getattr(w, "water", None) is not None:      # ADR 0213: reed belt ribbons + willow / alder scrub on the banks
+        bank_keep = shapely.union_all([roads_poly, bpoly] + [p_["poly"] for p_ in paved]).buffer(1.0)
+        wtrees = w.water.bank_vegetation(w.buf, zground, bank_keep, trees + ptrees, blocked, rep, log)
+        for t_ in wtrees:
+            vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
+    instances = pl.items + trees + ptrees + wtrees
     hero_tris = {**hero_tris, **HBD.apply(w.buf, heroes, instances, rep, log)}      # depot halls + hero buildings
     if heroes or rep.get("hero_buildings", {}).get("stale"):
         log("hero buildings", {k: [x["id"] for x in v] for k, v in rep["hero_buildings"].items()})

@@ -504,9 +504,23 @@ namespace Game.World.Import
             if (m.Get("reflect") != null) mat.SetFloat("_Reflect", (float)Num(m.Get("reflect")));
             if (m.Get("reflect_low") != null) mat.SetFloat("_ReflectLow", (float)Num(m.Get("reflect_low")));
             if (m.Get("flow_mps") != null) mat.SetFloat("_FlowSpeed", (float)Num(m.Get("flow_mps")));
+            // ADR 0213: every tunable is written from the manifest (a material created by an older shader kept its
+            // stale defaults, e.g. ripple 1.6 m / 0.10 instead of 2.4 m / 0.05) - shader default when the key is absent
+            foreach (var (key, prop) in k_WaterFloats)
+                mat.SetFloat(prop, m.Get(key) != null ? (float)Num(m.Get(key)) : shader.GetPropertyDefaultFloatValue(shader.FindPropertyIndex(prop)));
+            if (m.Get("bank_tint") is List<object> bt)
+                mat.SetVector("_BankTint", new Vector4((float)Num(bt[0]), (float)Num(bt[1]), (float)Num(bt[2]), 1f));
+            else
+                mat.SetVector("_BankTint", shader.GetPropertyDefaultVectorValue(shader.FindPropertyIndex("_BankTint")));
             EditorUtility.SetDirty(mat);
             return mat;
         }
+
+        static readonly (string key, string prop)[] k_WaterFloats =
+        {
+            ("flow_cycle_s", "_FlowCycle"), ("ripple_m", "_RippleScale"), ("ripple_slope", "_RippleStrength"),
+            ("smoothness", "_Smoothness"), ("bank_horizon", "_BankHorizon"),
+        };
 
         /// <summary>Power-line conductors (generator layer "wires"): camera-facing ribbons >= 1 px with coverage alpha,
         /// faded with the power-pole cull distance (Kamion/World Wire, ADR 0022).</summary>
@@ -636,8 +650,8 @@ namespace Game.World.Import
 
         // ------------------------------------------------------------------------------------------------- meshes
         // water (ADR 0210): only regions with the opt-in water stage have the node
-        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "plots", "wires", "water" };   // plot_ground: ADR 0114
-        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "plots", "wires", "water" };   // plots: ADR 0124
+        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "plots", "wires", "water", "banks" };   // plot_ground: ADR 0114; banks: ADR 0213
+        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "plots", "wires", "water", "banks" };   // plots: ADR 0124
 
         static void BakeVisual(Result r, Chunk ch, GlbReader g, string tier, GlbReader.MeshNode extraBuildingsLod0 = null)
         {
