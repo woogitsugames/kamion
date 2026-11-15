@@ -36,6 +36,10 @@ namespace Game.UI
         Font m_Font;
         RectTransform m_Safe;
         UiViewport m_View;
+        ScrollRect m_Scroll;
+        GameObject m_Close;
+        /// <summary>Pad / arrow-key scroll speed [canvas units per second]. WORKING_VALUE.</summary>
+        const float PadScrollSpeed = 1400f;
 
         /// <summary>The panel rect (tests: must lie inside the safe area).</summary>
         public RectTransform PanelRect { get; private set; }
@@ -109,13 +113,40 @@ namespace Game.UI
             m_View.Refresh();
             BuildContent();
 
-            if (FindAnyObjectByType<EventSystem>() == null)
-                new GameObject("EventSystem", typeof(EventSystem)).AddComponent<InputSystemUIInputModule>().AssignDefaultActions();
+            UiFocus.EnsureEventSystem();
+            UiFocus.Push(this, m_Close, m_View.Desktop);   // ADR 0265: Enter / pad A / Esc / pad B close
         }
 
         void Update()
         {
-            if (m_View != null && m_View.Refresh()) BuildContent();   // rotation, fold / unfold, split screen
+            if (m_View != null && m_View.Refresh()) { BuildContent(); UiFocus.Push(this, m_Close, m_View.Desktop); }   // rotation, fold / unfold, split screen
+            UiFocus.RestoreIfLost(this, m_Close);
+            PadScroll();
+        }
+
+        void OnDestroy() => UiFocus.Pop(this, true);
+
+        /// <summary>ADR 0265: the licence text scrolls with the pad (right stick / d-pad up-down) and the arrow / page keys.
+        /// No allocation.</summary>
+        void PadScroll()
+        {
+            if (m_Scroll == null || m_Scroll.content == null || !UiFocus.IsTop(this)) return;
+            float v = 0f;
+            var g = UnityEngine.InputSystem.Gamepad.current;
+            if (g != null) v += g.rightStick.ReadValue().y + (g.dpad.up.isPressed ? 1f : 0f) - (g.dpad.down.isPressed ? 1f : 0f);
+            var k = UnityEngine.InputSystem.Keyboard.current;
+            if (k != null)
+            {
+                v += (k.upArrowKey.isPressed ? 1f : 0f) - (k.downArrowKey.isPressed ? 1f : 0f);
+                v += (k.pageUpKey.isPressed ? 3f : 0f) - (k.pageDownKey.isPressed ? 3f : 0f);
+            }
+            if (Mathf.Abs(v) < 0.2f) return;
+            var content = m_Scroll.content;
+            float maxY = Mathf.Max(0f, content.rect.height - m_Scroll.viewport.rect.height);
+            var p = content.anchoredPosition;
+            p.y = Mathf.Clamp(p.y - v * PadScrollSpeed * Time.unscaledDeltaTime, 0f, maxY);
+            content.anchoredPosition = p;
+            m_Scroll.velocity = Vector2.zero;
         }
 
         void OnRectTransformDimensionsChange() { m_View?.Invalidate(); }
@@ -207,6 +238,8 @@ namespace Game.UI
             ver.horizontalOverflow = HorizontalWrapMode.Wrap;
             var close = TextButton(panel, CloseLabel, new Vector2(panelW - Pad - closeW, 20f), new Vector2(closeW, 72f), Close);
             close.GetComponent<Image>().color = k_ButtonOn;
+            m_Close = close;
+            m_Scroll = scroll;
 
             Canvas.ForceUpdateCanvases();
             LayoutRebuilder.ForceRebuildLayoutImmediate(content);
@@ -257,6 +290,7 @@ namespace Game.UI
             var b = rt.gameObject.AddComponent<Button>();
             b.targetGraphic = img;
             b.onClick.AddListener(onClick);
+            UiFocus.Decorate(b, Close);   // ADR 0265: focus frame; Esc / pad B closes
             var l = Label(rt, "Label", text, 30, TextAnchor.MiddleCenter, k_Text);
             var lr = l.rectTransform;
             lr.anchorMin = Vector2.zero; lr.anchorMax = Vector2.one; lr.offsetMin = lr.offsetMax = Vector2.zero;
