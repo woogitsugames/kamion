@@ -70,7 +70,7 @@ def _dk65_override(region_id):
 
 def test_dk65_cross_section_same_on_both_sides():
     w, k = _dk65_override("knyszyn-w"), _dk65_override("knyszyn")
-    assert w["set"] == k["set"] == {"lanes": 2, "lane_width": 3.4, "edge_strip": 0.35}
+    assert w["set"] == k["set"] == {"lanes": 2, "lane_width": 3.4, "edge_strip": 0.35, "edge_lines": "both"}   # ADR 0212
     assert 232511646 in w["target"]["osm_way"] and 232511646 in k["target"]["osm_way"]
 
 
