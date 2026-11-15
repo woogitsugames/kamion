@@ -153,6 +153,7 @@ def _paved(overrides, origin):
              if o.get("kind")=="paved_area" and "polygon_epsg2180" in o and
              (o.get("id", "").startswith("rynek-path-") or
               o.get("id", "").startswith("rynek-central") or
+              o.get("id", "").startswith("rynek-king-plaza") or
               o.get("id", "").startswith("rynek-fountain"))]
     return shapely.union_all(rings) if rings else None
 
@@ -161,34 +162,6 @@ def _footprint(center, tangent, toward, half_length, half_depth):
     return Polygon([center+tangent*a+toward*b for a,b in
                     [(-half_length,-half_depth),(half_length,-half_depth),
                      (half_length,half_depth),(-half_length,half_depth)]])
-
-
-def _king_plaza(acc, origin, zsurf):
-    """Estimated paved memorial forecourt, conformed to the visible ground.
-
-    GUGiK ortho supplies the outline; the narrow red border is a WORKING_VALUE
-    approximation of photo 1. No photograph is used as a texture or mesh.
-    """
-    poly = Polygon(np.asarray(KING_PLAZA_EPSG2180, float) - origin)
-    inner = poly.buffer(-.7, join_style="mitre")
-    ring = inner.difference(inner.buffer(-.12, join_style="mitre"))
-    tris = []
-    for mat, geom, offset in (("yard_paving", poly, .018), ("brick_red", ring, .023)):
-        for piece in getattr(geom, "geoms", [geom]):
-            if piece.geom_type != "Polygon" or piece.is_empty:
-                continue
-            for triangle in shapely.constrained_delaunay_triangles(piece).geoms:
-                xy = np.asarray(triangle.exterior.coords, float)[:3]
-                a, b = xy[1] - xy[0], xy[2] - xy[0]
-                if a[0]*b[1]-a[1]*b[0] < 0:
-                    xy = xy[::-1]
-                heights = np.asarray(zsurf(xy[:,0], xy[:,1]), float).reshape(-1)
-                if len(heights) != 3 or not np.isfinite(heights).all():
-                    return False
-                tris.append((mat, np.column_stack((xy, heights + offset))))
-    for mat, vertices in tris:
-        acc.add("paved", mat, vertices, [[0,1,2]])
-    return bool(tris)
 
 
 def build(buf, region, origin, overrides, zsmooth, report):
@@ -214,7 +187,7 @@ def build(buf, region, origin, overrides, zsmooth, report):
     def ground(p):
         return float(np.asarray(zsmooth(np.array([p[0]]),np.array([p[1]]))).ravel()[0])
 
-    result["king_plaza"] = "ESTIMATED" if _king_plaza(acc, origin, zsmooth) else "skipped_invalid_height"
+    result["king_plaza"] = "authored_paved_area" if any(o.get("id") == "rynek-king-plaza-0227" for o in overrides) else "missing_override"
     for xy, fn in ((OBELISK,_obelisk),(KING,_king),(FLAG,_flagpole)):
         p=np.asarray(xy,float)-origin; z=ground(p)
         if not math.isfinite(z):

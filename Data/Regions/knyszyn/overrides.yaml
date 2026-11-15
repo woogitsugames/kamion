@@ -19,6 +19,18 @@ overrides:
     verify: none
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
   # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
+  - id: rynek-king-plaza-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_paving
+    polygon_epsg2180:
+    - [760955.5, 612433.2]
+    - [760964.8, 612428.25]
+    - [760959.0, 612417.65]
+    - [760951.75, 612423.8]
+    reason: 'ESTIMATED: memorial forecourt traced from GUGiK 2025 and owner photos; outline requires visual verification.'
+    confidence: medium
+    verify: compare with owner photos and ground-level render
   - id: rynek-fountain-plate-0227
     kind: paved_area
     park_flush: true

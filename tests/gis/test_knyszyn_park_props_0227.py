@@ -6,6 +6,7 @@ from shapely.geometry import MultiPoint, Polygon
 import yaml
 
 from streetscape import knyszyn_park_props_0227 as props
+from streetscape import paved
 from streetscape.buildings_mesh import Acc
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -36,7 +37,7 @@ def test_anchors_clear_current_paths_and_geometry_is_finite():
     assert r["eagle"]=="omitted" and r["lighting"]=="no dynamic emission"
     assert len(r["benches"]) == 8 and len(r["lamps"]) == 5 and not r["refused"]
     assert all(1.2 <= x["distance_to_path_m"] <= 5.0 for x in r["benches"]+r["lamps"])
-    assert {p[0] for p in buf.parts}==set(props.LAYERS) | {"collision", "paved"}
+    assert {p[0] for p in buf.parts}==set(props.LAYERS) | {"collision"}
     low = {p[1] for p in buf.parts if p[0] == "buildings_low"}
     assert not low & {"bench_wood", "paint_white_reflective", "plinth_grey", "steel_painted", "plaster_white"}
     assert {"bench_wood", "steel_painted"} <= {p[1] for p in buf.parts if p[0] == "buildings"}
@@ -98,14 +99,17 @@ def test_king_proxy_has_crowned_head_and_cheaper_low_geometry():
 def test_memorial_forecourt_and_sundial_face_town_hall():
     ovs=yaml.safe_load((ROOT/"Data/Regions/knyszyn/overrides.yaml").read_text(encoding="utf8"))["overrides"]
     buf=Buffer(); r=props.build(buf,"knyszyn",ORIGIN,ovs,terrain,{})
-    assert r["king_plaza"] == "ESTIMATED"
+    assert r["king_plaza"] == "authored_paved_area"
     plaza=Polygon(np.asarray(props.KING_PLAZA_EPSG2180)-ORIGIN).buffer(1e-7)
-    parts=[p for p in buf.parts if p[0]=="paved"]
-    assert {p[1] for p in parts} == {"yard_paving", "brick_red"}
-    for _,mat,v,t,_ in parts:
-        assert np.isfinite(v).all()
-        assert np.allclose(v[:,2], 125.018 if mat=="yard_paving" else 125.023)
-        assert all(plaza.covers(Polygon(v[tri,:2])) for tri in t)
+    assert not [p for p in buf.parts if p[0]=="paved"]
+    item=next(o for o in ovs if o.get("id")=="rynek-king-plaza-0227")
+    assert item["park_flush"] is True and item["material"]=="yard_paving"
+    assert Polygon(np.asarray(item["polygon_epsg2180"])-ORIGIN).equals_exact(
+        Polygon(np.asarray(props.KING_PLAZA_EPSG2180)-ORIGIN),1e-7)
+    src={"osm":{"areas":[]},"bdot10k":{"OT_PTPL_A":[],"OT_KUKO_A":[],"OT_SKRP_L":[]}}
+    candidates=paved.collect(src,np.asarray(ORIGIN),[item],[],Polygon(),None,{})
+    assert len(candidates)==1 and candidates[0]["park_flush"] is True
+    assert candidates[0]["mat"]=="yard_paving" and candidates[0]["poly"].area>100
     # Third building-collision box is the separate sundial, aimed towards the
     # hall. Its centre must coincide with the visible block, not the old -N position.
     col=next(p for p in buf.parts if p[0]=="collision" and p[1]=="collision_building")
