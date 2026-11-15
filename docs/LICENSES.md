@@ -507,3 +507,5 @@ Uzupełnienie: 02-007 Chris McKenna, CC BY-SA 4.0, Commons Heavy_filthy.jpg; pom
 02-008/P18-121 Jaggery, CC BY-SA2.0 i02-009/P18-158 Eric Polk, CC BY-SA4.0: ponowne użycie lokalnych źródeł, zmniejszenie i jawne wycinki≤800px; autor, URL i ponownie odczytane licencje Commons w manifeście02 oraz data/reused-p18-source-metadata.json. To istniejące fotografie, nie nowe kadry M61-FIX.
 
 Knyszyn03/new-round2:3 miniatury nowych względemK1 źródeł Henryka Borawskiego, CC BY-SA3.0, zmniejszenie bez kadrowania. Autor/URL/daty/licencje w manifestach i data/candidates-imageinfo.json, hashe w data/review.json. Dwa dodatkowe kadry K1-P06/P22 tylko ponownie obejrzane i linkowane lokalnie, bez nowych kopii; autorzy i CC BY-SA3.0/4.0 perwiersz.
+
+02-010 Flickr Harold Hollingsworth, CC BY-SA2.0: obraz i licencję odczytano niezależnie dwukrotnie, wyłącznie URL i własne obserwacje, bez pobrania fotografii. 06-O03 orto ronda GUGiK800px, atrybucja i bbox w manifeście06; normy drzew/skrajni04 to własne parafrazy aktów Dz.U., bez skanów.
