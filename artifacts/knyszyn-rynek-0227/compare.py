@@ -9,7 +9,8 @@ photos=Path('Data/raw/refs/owner-knyszyn-2026-11-15')
 out=root/'compare'/iteration/tier
 out.mkdir(parents=True,exist_ok=True)
 for n in range(1,12):
- photo=photos/f'{n}.webp'; render=root/iteration/tier/f'rynek-owner-{n:02}.png'
+ photo=photos/f'{n}.webp'; camera = 'rynek' if n <= 8 else 'rondo'
+ render=root/iteration/tier/f'{camera}-owner-{n:02}.png'
  if not render.exists():
   print(f'{n}: missing {render}')
   continue
@@ -24,4 +25,5 @@ for n in range(1,12):
  draw=ImageDraw.Draw(panel); draw.text((12,10),f'Owner photo {n} | local reference only',fill='black'); draw.text((972,10),f'{iteration} {tier} | estimated camera',fill='black')
  panel.save(out/f'{n:02}-owner-render.jpg',quality=88)
  print(out/f'{n:02}-owner-render.jpg')
+
 

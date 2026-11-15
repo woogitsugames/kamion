@@ -39,70 +39,22 @@ overrides:
     kind: paved_area
     material: yard_paving
     polygon_epsg2180:
-    - - 760956.0
-      - 612382.3
-    - - 760955.76
-      - 612379.86
-    - - 760955.05
-      - 612377.52
-    - - 760953.89
-      - 612375.36
-    - - 760952.34
-      - 612373.46
-    - - 760950.44
-      - 612371.91
-    - - 760948.28
-      - 612370.75
-    - - 760945.94
-      - 612370.04
-    - - 760943.5
-      - 612369.8
-    - - 760941.06
-      - 612370.04
-    - - 760938.72
-      - 612370.75
-    - - 760936.56
-      - 612371.91
-    - - 760934.66
-      - 612373.46
-    - - 760933.11
-      - 612375.36
-    - - 760931.95
-      - 612377.52
-    - - 760931.24
-      - 612379.86
-    - - 760931.0
-      - 612382.3
-    - - 760931.24
-      - 612384.74
-    - - 760931.95
-      - 612387.08
-    - - 760933.11
-      - 612389.24
-    - - 760934.66
-      - 612391.14
-    - - 760936.56
-      - 612392.69
-    - - 760938.72
-      - 612393.85
-    - - 760941.06
-      - 612394.56
-    - - 760943.5
-      - 612394.8
-    - - 760945.94
-      - 612394.56
-    - - 760948.28
-      - 612393.85
-    - - 760950.44
-      - 612392.69
-    - - 760952.34
-      - 612391.14
-    - - 760953.89
-      - 612389.24
-    - - 760955.05
-      - 612387.08
-    - - 760955.76
-      - 612384.74
+    - - 760941
+      - 612400
+    - - 760949.5
+      - 612396.5
+    - - 760953
+      - 612388
+    - - 760949.5
+      - 612379.5
+    - - 760941
+      - 612376
+    - - 760932.5
+      - 612379.5
+    - - 760929
+      - 612388
+    - - 760932.5
+      - 612396.5
     reason: 'ESTIMATED: central park paving traced from GUGiK 2025 orthophoto; granite setts approximated with existing
       paving material.'
     confidence: medium
@@ -111,14 +63,14 @@ overrides:
     kind: paved_area
     material: yard_paving
     polygon_epsg2180:
-    - - 760942.7
-      - 612384.4
-    - - 760944.3
-      - 612380.2
-    - - 760882.8
-      - 612356.9
-    - - 760881.2
-      - 612361.1
+    - - 760882.62
+      - 612377.22
+    - - 760934.62
+      - 612386.22
+    - - 760935.38
+      - 612381.78
+    - - 760883.38
+      - 612372.78
     reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
     confidence: medium
     verify: compare against owner photos and GUGiK orthophoto
@@ -126,14 +78,14 @@ overrides:
     kind: paved_area
     material: yard_paving
     polygon_epsg2180:
-    - - 760986.28
-      - 612399.13
-    - - 760987.72
-      - 612394.87
-    - - 760944.22
-      - 612380.17
-    - - 760942.78
-      - 612384.43
+    - - 760946.41
+      - 612386.17
+    - - 760979.41
+      - 612395.17
+    - - 760980.59
+      - 612390.83
+    - - 760947.59
+      - 612381.83
     reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
     confidence: medium
     verify: compare against owner photos and GUGiK orthophoto
@@ -141,20 +93,14 @@ overrides:
     kind: paved_area
     material: yard_paving
     polygon_epsg2180:
-    - - 760924.66
-      - 612416.32
-    - - 760924.5
-      - 612416.91
-    - - 760923.5
-      - 612433.91
-    - - 760926.5
-      - 612434.09
-    - - 760927.48
-      - 612417.4
-    - - 760944.84
-      - 612382.98
-    - - 760942.16
-      - 612381.62
+    - - 760941.5
+      - 612419.95
+    - - 760940.5
+      - 612391.95
+    - - 760937.5
+      - 612392.05
+    - - 760938.5
+      - 612420.05
     reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
     confidence: medium
     verify: compare against owner photos and GUGiK orthophoto
@@ -162,20 +108,14 @@ overrides:
     kind: paved_area
     material: yard_paving
     polygon_epsg2180:
-    - - 760912.42
-      - 612393.62
-    - - 760911.79
-      - 612394.11
-    - - 760900.79
-      - 612409.11
-    - - 760903.21
-      - 612410.89
-    - - 760913.96
-      - 612396.22
-    - - 760944.08
-      - 612383.68
-    - - 760942.92
-      - 612380.92
+    - - 760905.81
+      - 612412.26
+    - - 760939.81
+      - 612390.26
+    - - 760938.19
+      - 612387.74
+    - - 760904.19
+      - 612409.74
     reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
     confidence: medium
     verify: compare against owner photos and GUGiK orthophoto
@@ -352,3 +292,4 @@ overrides:
       incidental self-seeded rule trees; preserve authored points.'
     confidence: high
     verify: visual comparison
+

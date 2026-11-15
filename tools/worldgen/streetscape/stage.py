@@ -24,6 +24,9 @@ from . import signs_route as SR
 from . import gate as GT
 from . import depot_yard as DY
 from . import hero_building as HBD
+from . import knyszyn_church_0227 as KC
+from . import knyszyn_townhall_0227 as KT
+from . import knyszyn_park_props_0227 as KP
 from . import hero_depot as HD
 from . import landmarks as LM
 from . import chain_bollards as CB
@@ -93,7 +96,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     fc = json.loads((pipeline.REGIONS / rid / "buildings.geojson").read_text(encoding="utf-8"))
     # hero buildings (override kind: hero_building, ADR 0070): authored asset instead of the rule facade
     heroes = HBD.plan(rid, overrides, fc, w.origin, lambda e, n: float(np.asarray(zsmooth(e, n)).ravel()[0]), rep, log)
-    blds = BM.load(fc, w.origin, overrides, hero=HBD.targets(heroes))
+    blds = BM.load(fc, w.origin, overrides,
+                   hero={**HBD.targets(heroes), **KC.hero_targets(rid, fc), **KT.hero_targets(rid, fc)})
     yard_src = [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_PTPL_A"]
                 if f["props"].get("materialnawierzchni") != "grunt naturalny"]
     yard_src += [PV._poly_local(a["geometry"]["coordinates"], w.origin) for a in src["osm"]["areas"]
@@ -105,6 +109,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     facade_signs = []
     depots = HD.plan(w, rid, overrides, blds, zsmooth, log)      # hero depot halls (override kind: hero_depot, ADR 0071)
     docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs, heroes=depots)
+    KC.build(w.buf, rid, blds, zsmooth, rep)
+    KT.build(w.buf, rid, blds, zsmooth, rep)
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])
@@ -174,6 +180,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
 
     def zsurf(e, n):
         return PV.bilinear(zsurf_g, hf, np.asarray(e, float), np.asarray(n, float))
+
+    KP.build(w.buf, rid, w.origin, overrides, zsurf, rep)
 
     def zground(e, n):
         return PV.bilinear(zc, hf, np.asarray(e, float), np.asarray(n, float))

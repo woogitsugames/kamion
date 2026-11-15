@@ -1,222 +1,282 @@
 {
- "schema": "truck-sim-pl/place-cameras/1",
- "provenance": "authored_override (ADR 0204): control cameras at named places of Knyszyn. Position region-local E/N (origin 761611, 612607), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions traced on the GUGiK orthophoto 0.1 m 2025-05-27 (+-2 m).",
- "cameras": [
-  {
-   "id": "dk65_inlet_south",
-   "pos_en": [
-    -666,
-    -980
-   ],
-   "heading_deg": 317,
-   "eye_m": 2.5,
-   "fov_deg": 60,
-   "pitch_deg": -2,
-   "note": "driver eye on DK65 Obozowa 60 m inside the south tile edge (seam with knyszyn-s), looking NW towards the town"
-  },
-  {
-   "id": "dk65_poludniowa",
-   "pos_en": [
-    -700,
-    -945
-   ],
-   "heading_deg": 317,
-   "eye_m": 2.5,
-   "fov_deg": 60,
-   "pitch_deg": -2,
-   "note": "DK65 at the Poludniowa T-junction (local -722 -920)"
-  },
-  {
-   "id": "rondo_dk65_from_south",
-   "pos_en": [
-    -957,
-    -652
-   ],
-   "heading_deg": 318,
-   "eye_m": 2.5,
-   "fov_deg": 60,
-   "pitch_deg": -3,
-   "note": "driver eye on DK65 45 m before the DK65/DW671 roundabout (local -987 -611; OSM way 1426801304, see ADR 0204 question 1)"
-  },
-  {
-   "id": "rondo_dk65_above",
-   "pos_en": [
-    -987,
-    -670
-   ],
-   "heading_deg": 0,
-   "eye_m": 55.0,
-   "fov_deg": 50,
-   "pitch_deg": -43,
-   "note": "QA only: 55 m above, 60 m south of the roundabout, looking north and down - layout of the four arms"
-  },
-  {
-   "id": "dk65_outlet_nw",
-   "pos_en": [
-    -993,
-    -598
-   ],
-   "heading_deg": 330,
-   "eye_m": 2.5,
-   "fov_deg": 60,
-   "pitch_deg": -2,
-   "note": "driver eye leaving the roundabout on DK65 towards Monki; the west tile edge is ~40 m ahead (tile (-9,8) not built)"
-  },
-  {
-   "id": "tykocka_into_town",
-   "pos_en": [
-    -940,
-    -575
-   ],
-   "heading_deg": 50,
-   "eye_m": 2.5,
-   "fov_deg": 60,
-   "pitch_deg": -2,
-   "note": "driver eye on DW671 Tykocka leaving the roundabout towards Rynek"
-  },
-  {
-   "id": "tykocka_rynek_junction",
-   "pos_en": [
-    -690,
-    -338
-   ],
-   "heading_deg": 43,
-   "eye_m": 2.5,
-   "fov_deg": 60,
-   "pitch_deg": -2,
-   "note": "Tykocka 55 m before the Tykocka / Szkolna / Rynek / Grodzienska junction (local -650 -294)"
-  },
-  {
-   "id": "rynek_grodzienska_north",
-   "pos_en": [
-    -632,
-    -262
-   ],
-   "heading_deg": 14,
-   "eye_m": 2.5,
-   "fov_deg": 60,
-   "pitch_deg": -2,
-   "note": "DW671 Grodzienska northbound between the park (west) and the paved plaza (east) of Rynek"
-  },
-  {
-   "id": "plac_wschodni_from_east",
-   "pos_en": [
-    -557,
-    -212
-   ],
-   "heading_deg": 265,
-   "eye_m": 1.6,
-   "fov_deg": 50,
-   "pitch_deg": 2,
-   "note": "Former rynek_fountain camera: eastern paved square; not the fountain or park. Marketplace identification UNVERIFIED against OSM way 704368699 ~1 km north."
-  },
-  {
-   "id": "rynek_above",
-   "pos_en": [
-    -600,
-    -360
-   ],
-   "heading_deg": 0,
-   "eye_m": 70.0,
-   "fov_deg": 50,
-   "pitch_deg": -42,
-   "note": "QA only: 70 m above the south edge of Rynek looking north and down - plaza, park, carriageways around"
-  },
-  {
-   "id": "grodzienska_podlaska",
-   "pos_en": [
-    -548,
-    -35
-   ],
-   "heading_deg": 10,
-   "eye_m": 2.5,
-   "fov_deg": 60,
-   "pitch_deg": -2,
-   "note": "DW671 Grodzienska northbound at Podlaska (local -541 8)"
-  },
-  {
-   "id": "goniadzka_jagiellonska",
-   "pos_en": [
-    -828,
-    -8
-   ],
-   "heading_deg": 125,
-   "eye_m": 2.5,
-   "fov_deg": 60,
-   "pitch_deg": -2,
-   "note": "Goniadzka south-eastbound at the Jagiellonska T-junction (local -777 -44)"
-  },
-  {
-   "id": "rynek_owner_03",
-   "pos_en": [
-    -683,
-    -198
-   ],
-   "heading_deg": 45,
-   "eye_m": 1.7,
-   "fov_deg": 55,
-   "pitch_deg": 0,
-   "note": "ESTIMATED camera pose from owner photo 03 and GUGiK orthophoto; adjust by visual comparison."
-  },
-  {
-   "id": "rynek_owner_04",
-   "pos_en": [
-    -673,
-    -235
-   ],
-   "heading_deg": 25,
-   "eye_m": 1.7,
-   "fov_deg": 55,
-   "pitch_deg": 0,
-   "note": "ESTIMATED camera pose from owner photo 04 and GUGiK orthophoto; adjust by visual comparison."
-  },
-  {
-   "id": "rynek_owner_05",
-   "pos_en": [
-    -657,
-    -221
-   ],
-   "heading_deg": 251,
-   "eye_m": 1.7,
-   "fov_deg": 55,
-   "pitch_deg": 0,
-   "note": "ESTIMATED camera pose from owner photo 05 and GUGiK orthophoto; adjust by visual comparison."
-  },
-  {
-   "id": "rynek_owner_06",
-   "pos_en": [
-    -641,
-    -216
-   ],
-   "heading_deg": 251,
-   "eye_m": 1.7,
-   "fov_deg": 55,
-   "pitch_deg": 0,
-   "note": "ESTIMATED camera pose from owner photo 06 and GUGiK orthophoto; adjust by visual comparison."
-  },
-  {
-   "id": "rynek_owner_07",
-   "pos_en": [
-    -641,
-    -200
-   ],
-   "heading_deg": 250,
-   "eye_m": 1.7,
-   "fov_deg": 55,
-   "pitch_deg": 0,
-   "note": "ESTIMATED camera pose from owner photo 07 and GUGiK orthophoto; adjust by visual comparison."
-  },
-  {
-   "id": "rynek_owner_08",
-   "pos_en": [
-    -685,
-    -213
-   ],
-   "heading_deg": 30,
-   "eye_m": 1.7,
-   "fov_deg": 55,
-   "pitch_deg": 0,
-   "note": "ESTIMATED camera pose from owner photo 08 and GUGiK orthophoto; adjust by visual comparison."
-  }
- ]
+  "schema": "truck-sim-pl/place-cameras/1",
+  "provenance": "authored_override (ADR 0204): control cameras at named places of Knyszyn. Position region-local E/N (origin 761611, 612607), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions traced on the GUGiK orthophoto 0.1 m 2025-05-27 (+-2 m).",
+  "cameras": [
+    {
+      "id": "dk65_inlet_south",
+      "pos_en": [
+        -666,
+        -980
+      ],
+      "heading_deg": 317,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -2,
+      "note": "driver eye on DK65 Obozowa 60 m inside the south tile edge (seam with knyszyn-s), looking NW towards the town"
+    },
+    {
+      "id": "dk65_poludniowa",
+      "pos_en": [
+        -700,
+        -945
+      ],
+      "heading_deg": 317,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -2,
+      "note": "DK65 at the Poludniowa T-junction (local -722 -920)"
+    },
+    {
+      "id": "rondo_dk65_from_south",
+      "pos_en": [
+        -957,
+        -652
+      ],
+      "heading_deg": 318,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -3,
+      "note": "driver eye on DK65 45 m before the DK65/DW671 roundabout (local -987 -611; OSM way 1426801304, see ADR 0204 question 1)"
+    },
+    {
+      "id": "rondo_dk65_above",
+      "pos_en": [
+        -987,
+        -670
+      ],
+      "heading_deg": 0,
+      "eye_m": 55.0,
+      "fov_deg": 50,
+      "pitch_deg": -43,
+      "note": "QA only: 55 m above, 60 m south of the roundabout, looking north and down - layout of the four arms"
+    },
+    {
+      "id": "dk65_outlet_nw",
+      "pos_en": [
+        -993,
+        -598
+      ],
+      "heading_deg": 330,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -2,
+      "note": "driver eye leaving the roundabout on DK65 towards Monki; the west tile edge is ~40 m ahead (tile (-9,8) not built)"
+    },
+    {
+      "id": "tykocka_into_town",
+      "pos_en": [
+        -940,
+        -575
+      ],
+      "heading_deg": 50,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -2,
+      "note": "driver eye on DW671 Tykocka leaving the roundabout towards Rynek"
+    },
+    {
+      "id": "tykocka_rynek_junction",
+      "pos_en": [
+        -690,
+        -338
+      ],
+      "heading_deg": 43,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -2,
+      "note": "Tykocka 55 m before the Tykocka / Szkolna / Rynek / Grodzienska junction (local -650 -294)"
+    },
+    {
+      "id": "rynek_grodzienska_north",
+      "pos_en": [
+        -632,
+        -262
+      ],
+      "heading_deg": 14,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -2,
+      "note": "DW671 Grodzienska northbound between the park (west) and the paved plaza (east) of Rynek"
+    },
+    {
+      "id": "plac_wschodni_from_east",
+      "pos_en": [
+        -557,
+        -212
+      ],
+      "heading_deg": 265,
+      "eye_m": 1.6,
+      "fov_deg": 50,
+      "pitch_deg": 2,
+      "note": "Former rynek_fountain camera: eastern paved square; not the fountain or park. Marketplace identification UNVERIFIED against OSM way 704368699 ~1 km north."
+    },
+    {
+      "id": "rynek_above",
+      "pos_en": [
+        -600,
+        -360
+      ],
+      "heading_deg": 0,
+      "eye_m": 70.0,
+      "fov_deg": 50,
+      "pitch_deg": -42,
+      "note": "QA only: 70 m above the south edge of Rynek looking north and down - plaza, park, carriageways around"
+    },
+    {
+      "id": "grodzienska_podlaska",
+      "pos_en": [
+        -548,
+        -35
+      ],
+      "heading_deg": 10,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -2,
+      "note": "DW671 Grodzienska northbound at Podlaska (local -541 8)"
+    },
+    {
+      "id": "goniadzka_jagiellonska",
+      "pos_en": [
+        -828,
+        -8
+      ],
+      "heading_deg": 125,
+      "eye_m": 2.5,
+      "fov_deg": 60,
+      "pitch_deg": -2,
+      "note": "Goniadzka south-eastbound at the Jagiellonska T-junction (local -777 -44)"
+    },
+    {
+      "id": "rynek_owner_03",
+      "pos_en": [
+        -683,
+        -198
+      ],
+      "heading_deg": 45,
+      "eye_m": 1.7,
+      "fov_deg": 55,
+      "pitch_deg": 0,
+      "note": "ESTIMATED camera pose from owner photo 03 and GUGiK orthophoto; adjust by visual comparison."
+    },
+    {
+      "id": "rynek_owner_04",
+      "pos_en": [
+        -666,
+        -233
+      ],
+      "heading_deg": 0,
+      "eye_m": 1.7,
+      "fov_deg": 55,
+      "pitch_deg": 0,
+      "note": "ESTIMATED camera pose from owner photo 04 and GUGiK orthophoto; adjust by visual comparison."
+    },
+    {
+      "id": "rynek_owner_05",
+      "pos_en": [
+        -657,
+        -221
+      ],
+      "heading_deg": 251,
+      "eye_m": 1.7,
+      "fov_deg": 55,
+      "pitch_deg": 0,
+      "note": "ESTIMATED camera pose from owner photo 05 and GUGiK orthophoto; adjust by visual comparison."
+    },
+    {
+      "id": "rynek_owner_06",
+      "pos_en": [
+        -681,
+        -232
+      ],
+      "heading_deg": 260,
+      "eye_m": 1.7,
+      "fov_deg": 55,
+      "pitch_deg": 0,
+      "note": "ESTIMATED camera pose from owner photo 06 and GUGiK orthophoto; adjust by visual comparison."
+    },
+    {
+      "id": "rynek_owner_07",
+      "pos_en": [
+        -641,
+        -200
+      ],
+      "heading_deg": 228,
+      "eye_m": 1.7,
+      "fov_deg": 55,
+      "pitch_deg": 0,
+      "note": "ESTIMATED camera pose from owner photo 07 and GUGiK orthophoto; adjust by visual comparison."
+    },
+    {
+      "id": "rynek_owner_08",
+      "pos_en": [
+        -647,
+        -175
+      ],
+      "heading_deg": 232,
+      "eye_m": 1.7,
+      "fov_deg": 55,
+      "pitch_deg": 0,
+      "note": "ESTIMATED camera pose from owner photo 08 and GUGiK orthophoto; adjust by visual comparison."
+    },
+    {
+      "id": "rynek_owner_01",
+      "pos_en": [
+        -658,
+        -184
+      ],
+      "heading_deg": 25,
+      "eye_m": 1.7,
+      "fov_deg": 55,
+      "pitch_deg": 0,
+      "note": "ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison."
+    },
+    {
+      "id": "rynek_owner_02",
+      "pos_en": [
+        -660,
+        -172
+      ],
+      "heading_deg": 320,
+      "eye_m": 1.7,
+      "fov_deg": 55,
+      "pitch_deg": 0,
+      "note": "ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison."
+    },
+    {
+      "id": "rondo_owner_09",
+      "pos_en": [
+        -981,
+        -597
+      ],
+      "heading_deg": 160,
+      "eye_m": 100,
+      "fov_deg": 55,
+      "pitch_deg": -90,
+      "note": "ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison."
+    },
+    {
+      "id": "rondo_owner_10",
+      "pos_en": [
+        -931,
+        -557
+      ],
+      "heading_deg": 230,
+      "eye_m": 80,
+      "fov_deg": 55,
+      "pitch_deg": -52,
+      "note": "ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison."
+    },
+    {
+      "id": "rondo_owner_11",
+      "pos_en": [
+        -1031,
+        -527
+      ],
+      "heading_deg": 145,
+      "eye_m": 80,
+      "fov_deg": 55,
+      "pitch_deg": -22,
+      "note": "ESTIMATED pose from owner photo and map; no EXIF; adjust by visual comparison."
+    }
+  ]
 }
