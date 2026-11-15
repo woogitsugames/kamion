@@ -220,6 +220,38 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
     # around and on it: ring decks, at-grade roads and junction plates, the banks of the cut
     zc_placed = zc0.copy()            # the ground the streetscape placed its instances on
     zc0 = _upper_ground(groups, grid, zc0, oz, other_mask, deck, deck_mask)
+    # Other roads / paved areas at grade beside the cut (collectors on the bank top, ADR 0211 r1: 341 lane obstacles
+    # + 185 markings on grass) keep their own conformed terrain: outside the slab their cells are not re-emitted;
+    # on the slab (junction plates, ring) the ground stays under them like the terrain did (roads.consistency skips
+    # the `tunnel` parts: terrain-equivalent, not a road surface).
+    from scipy.ndimage import binary_dilation
+    pv = [p for p in w.buf.parts if p.layer in ("paved", "plot_ground") and len(p.T)]
+    for p in pv:
+        p._fp, p.footprint = p.footprint, True
+    pz_, pmask_ = CF.rasterise(pv, w.hf)
+    for p in pv:
+        p.footprint = p._fp
+        del p._fp
+    occ = other_mask | pmask_ | deck_mask
+    occ_z = np.where(other_mask, oz, -np.inf)
+    occ_z = np.maximum(occ_z, np.where(deck_mask, deck, -np.inf))
+    occ_z = np.maximum(occ_z, np.where(pmask_, pz_, -np.inf))
+    occ_d = binary_dilation(occ, iterations=1)
+    cell_occ = np.zeros_like(occ_d)
+    cell_occ[:-1, :-1] = occ_d[:-1, :-1] | occ_d[1:, :-1] | occ_d[:-1, 1:] | occ_d[1:, 1:]
+    zocc = np.where(binary_dilation(occ, iterations=1),
+                    np.maximum(occ_z, np.maximum(np.roll(occ_z, 1, 0), np.roll(occ_z, 1, 1))), -np.inf)
+
+    def under_other(V2, z):
+        fi, fj = grid.ij(V2[:, 0], V2[:, 1])
+        fi, fj = np.clip(fi, 0, grid.W - 1), np.clip(fj, 0, grid.H - 1)
+        zo = zocc[fj, fi]
+        on_slab = shapely.contains_xy(Fu, V2[:, 0], V2[:, 1])
+        return np.where(np.isfinite(zo) & on_slab, np.minimum(z, zo - 0.9), z)
+
+    Fu = shapely.union_all([g["F"] for g in groups]).buffer(0.5)
+
+
     buf = w.buf
     stats = {"groups": []}
     lower = np.full(zc.shape, np.inf)          # per node: max allowed height (terrain held down)
@@ -229,6 +261,7 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
     col_polys = []                             # grass collision over the slab / behind walls
     blend = []                                 # (polygon of the wall-top blend, line, wall-top function)
     walls_out = []
+    corridor = []                              # floor of the cut between the outer walls (+ the slab footprints)
     for g in groups:
         F = g["F"]
         runs = g["runs"]
@@ -317,6 +350,8 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
                     if len(run) < 2 or ss[run[-1]] - ss[run[0]] < WALL_MIN_RUN_M:
                         continue
                     sl = slice(run[0], run[-1] + 1)
+                    if not inner:      # the open cut between the walls (closed over the median below)
+                        corridor.append(_strip_poly(c, ss[sl], -(hw[sl] + 4.0), lat_w[sl] - 0.05, sgn))
                     walls_out.append(_build_wall(buf, g, c, side, sgn, ss[sl], P[sl], N[sl], hw[sl], u_end[sl],
                                                  lat_w[sl], zfoot[sl], bank[sl], in_F[sl], inner, grid, zc0, lower,
                                                  low_mask, cover_cells, clip_polys, col_polys, blend))
@@ -325,14 +360,26 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
         stats["groups"].append(gst)
 
     # ---- ground on the slab / behind the walls (terrain-merged grass), terrain held down under it
+    in_slab = np.zeros_like(cover_cells)
+    for g in groups:
+        _mark_cells(in_slab, grid, g["F"].buffer(0.5))
+    excluded = cover_cells & cell_occ & ~in_slab
+    cover_cells &= ~excluded
     K = shapely.union_all(clip_polys).buffer(0) if clip_polys else None
     gtris = _emit_cover(buf, grid, zc0, cover_cells, K, blend)
     # interior nodes of the cover: all four incident cells covered
     cc = cover_cells
     interior = np.zeros_like(cc)
     interior[1:, 1:] = cc[1:, 1:] & cc[:-1, :-1] & cc[1:, :-1] & cc[:-1, 1:]
-    floor_all = _floor_field(groups, grid, interior | low_mask)
-    lower = np.where(interior, np.minimum(lower, floor_all), lower)
+    # the whole cut between the outer walls goes to its floor: the conform lifted nodes there to at-grade surfaces
+    # nearby (junction plates, crossings at the portals: r1 had a grass wall across both portals)
+    cut_m = np.zeros_like(interior)
+    if corridor:
+        CU = shapely.union_all(corridor + [g["F"] for g in groups]).buffer(0)
+        CU = CU.buffer(5.0).buffer(-5.0)
+        cut_m = _poly_mask(CU, grid)
+    floor_all = _floor_field(groups, grid, interior | low_mask | cut_m)
+    lower = np.where(interior | cut_m, np.minimum(lower, floor_all), lower)
     sel = zc > lower
     drop = zc[sel] - lower[sel]
     zc[sel] = lower[sel]
@@ -342,7 +389,8 @@ def build(w, region_id: str, zc: np.ndarray, rmask: np.ndarray, instances: list,
         _emit_cover_collision(buf, grid, zc0, shapely.union_all(col_polys).buffer(0), blend)
     stats["walls"] = walls_out
     stats["terrain"] = {"nodes_lowered": int(sel.sum()), "max_drop_m": round(float(drop.max()) if drop.size else 0.0, 2),
-                        "cover_cells": int(cover_cells.sum()), "cover_tris": gtris, "low_lod_nodes": int(low_mask.sum())}
+                        "cover_cells": int(cover_cells.sum()), "cover_cells_left_to_other_surfaces": int(excluded.sum()),
+                        "cover_tris": gtris, "cut_nodes": int(cut_m.sum()), "low_lod_nodes": int(low_mask.sum())}
     stats["culled"] = _cull(w, groups, instances, lambda x, y: float(grid.plane(x, y, zc0) - grid.plane(x, y, zc_placed)),
                             lambda x, y: bool(deck_mask[grid.ij(x, y)[1], grid.ij(x, y)[0]]))
     return stats, (low_mask, low_z)
@@ -573,7 +621,7 @@ def _railing(buf, line, z, keep, src):
     return total
 
 
-def _build_slab(buf, g, grid, zc0, lower, cover_cells, clip_polys, col_polys, rmask):
+def _build_slab(buf, g, grid, zc0, lower, cover_cells, clip_polys, col_polys, rmask, adjust=None):
     F = g["F"]
     src = g["id"] + ":slab"
     zroad, clear = g["zroad"], g["clear"]
@@ -587,6 +635,8 @@ def _build_slab(buf, g, grid, zc0, lower, cover_cells, clip_polys, col_polys, rm
     zr = np.array([zroad(q) for q in uniq])
     ztop = np.min([grid.plane(uniq[:, 0] + dx, uniq[:, 1] + dy, zc0) for dx in (-1.0, 0.0, 1.0)
                    for dy in (-1.0, 0.0, 1.0)], axis=0) - 0.15
+    if adjust is not None:                       # under a deck / junction plate: out of the surface window
+        ztop = adjust(uniq, ztop + 0.05) - 0.05
     zsof = zr + clear
     ztop = np.maximum(ztop, zsof + 0.3)
     T = inv.reshape(-1, 3)
@@ -685,7 +735,7 @@ def _cover_heights(V2, grid, zc0, blend):
     return z
 
 
-def _emit_cover(buf, grid, zc0, cover_cells, K, blend):
+def _emit_cover(buf, grid, zc0, cover_cells, K, blend, adjust=None):
     if K is None or not cover_cells.any():
         return 0
     J, I = np.where(cover_cells)
@@ -701,6 +751,8 @@ def _emit_cover(buf, grid, zc0, cover_cells, K, blend):
     flat = T2.reshape(-1, 2)
     uniq, inv = np.unique(np.round(flat, 4), axis=0, return_inverse=True)
     z = _cover_heights(uniq, grid, zc0, blend)
+    if adjust is not None:
+        z = adjust(uniq, z)
     V = np.column_stack([uniq, z])
     T = inv.reshape(-1, 3)
     # CCW from above
@@ -735,6 +787,27 @@ def _cull(w, groups, instances, lift=None, under_deck=None):
     rep = {"deck_tris": 0, "instances": {}}
     Fs = [g["F"] for g in groups]
     U = shapely.union_all(Fs).buffer(0.5)
+    # surfaces at grade over the slab that the streetscape laid on the cut-level ground (paved yards, cycle paths,
+    # plot ground and their collision; r1: yard_asphalt / cycle_red 1.6-3.9 m over the tunnel road): lifted by the
+    # ground difference, vertices inside the footprint below its soffit only
+    rep["lifted_surface_vertices"] = 0
+    run_ids = tuple(r["c"].id for g in groups for r in g["runs"])
+    Fl = [(g["F"].buffer(0.3), g) for g in groups]
+    if lift is not None:
+        for p in w.buf.parts:
+            if (p.layer not in ("paved", "plot_ground", "collision", "road") or p.src.startswith(run_ids)
+                    or p.src.startswith("tunnel") or not len(p.V)):
+                continue
+            for Fb, g in Fl:
+                m = shapely.contains_xy(Fb, p.V[:, 0], p.V[:, 1])
+                if not m.any():
+                    continue
+                idx = np.where(m)[0]
+                zs = np.array([g["zroad"](tuple(p.V[k, :2])) for k in idx]) + g["clear"]
+                low = p.V[idx, 2] < zs - 0.1
+                for k in idx[low]:
+                    p.V[k, 2] += lift(p.V[k, 0], p.V[k, 1])
+                rep["lifted_surface_vertices"] += int(low.sum())
     keep_parts = []
     for p in w.buf.parts:
         if p.layer == "bridge" and not p.src.startswith("tunnel") and p.src.endswith(TRIM_SUFFIX):

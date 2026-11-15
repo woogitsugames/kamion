@@ -30,8 +30,19 @@ if ($ok) {
             "vqa $t exit=$LASTEXITCODE $(Get-Date -Format s)" | Add-Content $st
         }
     }
+    if ($ok -and $Tag -ne 'r1') {
+        "editmode start $(Get-Date -Format s)" | Add-Content $st
+        pwsh scripts/test.ps1 -Platform EditMode *>> "artifacts/$n/editmode-$Tag.log"
+        "editmode exit=$LASTEXITCODE $(Get-Date -Format s)" | Add-Content $st
+    }
     pwsh scripts/unity-slot.ps1 -Release -Owner $n | Out-Null
     git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
 }
 git checkout -- Data/Regions/bialystok-industrial-c Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json 2>$null
+if ($ok) {
+    tools/worldgen/.venv/Scripts/python.exe "artifacts/$n/tunnel_sweep.py" *> "artifacts/$n/tunnel_sweep-$Tag.txt"
+    tools/worldgen/.venv/Scripts/python.exe "artifacts/$n/route_sweep.py" *> "artifacts/$n/route_sweep-$Tag.txt"
+    "sweeps done $(Get-Date -Format s)" | Add-Content $st
+}
 if ($ok) { "CHAIN DONE $(Get-Date -Format s)" | Add-Content $st } else { "CHAIN FAILED $(Get-Date -Format s)" | Add-Content $st }
+
