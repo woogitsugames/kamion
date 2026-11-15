@@ -58,6 +58,10 @@ krawędzi jezdni (`EDGE_LINE_INSET_MINOR`), więc rozstaw = szerokość − 0,40
    szerokości (opaska 0,35 m przy 6,9). **Pytanie do właściciela**: czy jezdnia Ełckiej to 6,9 m (D65) czy ~6,5–6,6 m
    (K1, linie + ~0,15 m)? Rozstrzyga taśma od krawędzi do krawędzi asfaltu na jednym przekroju (np. km 13,5).
 
+9. **Kamery kontrolne** (`artifacts/dk65-k1-0220/tools/cams.py` → `control_cameras_place.authored.json`):
+   `k1_bay_1298_top/_drive` (dk65-04), `k1_bay_1447_top/_drive` (dk65-05), `k1_dashed_1200_drive` (dk65-03); pary do
+   porównania: `artifacts/dk65-k1-0220/evidence/*.jpg` (paski ortofoto, km rośnie w górę, L po lewej, podziałka 1 m).
+
 ## Rozbieżności (K1 / ortofoto / dane)
 1. **Way 234919333 (dk65-01, km 8,58–9,23)**: K1 6,2–6,3 m i paski 6,2–6,4 m między liniami, asfalt ~7,9–8,4 m (K1) vs
    override 0205 `width 6.0` (ortofoto 2024 0,25 m) → generator 5,6 m. Linii 6,2 m nie da się położyć na 6,0 m, a zmiana
