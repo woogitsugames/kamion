@@ -604,3 +604,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 02/native-detail-round21/files/P18-143*.jpg:DwightBurdette, WikimediaCommonsFile:Schneider_national_truck_rear_view.JPG, CC BY3.0 (https://creativecommons.org/licenses/by/3.0),21.07.2010. Zmiany:zmniejszeniepełnegokadru i jawnycropdrzwi, oba≤800px;SHAoryginału/URL wsource-fetch.json. JedenznanyP18kadr,nie2zdjęcia. Oryginał/natywnycrop pozaGit.
 
 02/europe-worksites-round22:0obrazówwGit/0pobrań; tylko własne opisyodrzuceń i linki publicznychgaleriikontraktuS19,allrightsreserved/autorUNVERIFIED. Nie nadanoCC zlogoGDDKiA.
+
+04/tree-inventory-round9 i tree-table-search-round10: publiczne dokumenty Gminy Dobrzyniewo Duże / opracowanie Value Engineering. W Git wyłącznie własne fakty, parafrazy, sześć wybranych nazw gatunków i odsyłacze. Bez automatycznego CC dla projektu, bez PDF/renderów w repo; plik źródłowy i dwa rendery poza Git. Map nie otwierano i nie redystrybuowano geometrii ani danych osobowych.
