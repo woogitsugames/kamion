@@ -33,10 +33,10 @@ Kontrola krzyżowa z LIDAR 2025-04-18 (tylko liczby, bez układu): najwyższy ma
 | 6 | moduł RRU przy antenie | 425 × 296 × 130 mm, 18,3 kg | UNVERIFIED | SOURCED (wymiary) |
 | 7 | szafa/kontener na dachu | rzut ok. 2 × 1 m | jasnoszary | ESTIMATED (ortofoto) |
 | 8 | rama krzyżowa (X) pod maszt | ramiona ok. 12 (11–13) m | stal szara | ESTIMATED |
-| 9 | maszt rurowy z odciągami | 6–8 odciągów, kotwienie r ≈ 3–4 m; **≥ 8,55 m nad dachem (Zwierzyniecka 4, LIDAR)** | stal | ESTIMATED / MEASURED |
+| 9 | maszt rurowy z odciągami | 6–8 odciągów, kotwienie r ≈ 3–4 m; **≥ 8,55 m nad dachem (Zwierzyniecka 4, LIDAR)** | stal | ESTIMATED (LIDAR) |
 | 10 | maszt kratowy | **9–12 m (wieżowiec, M57-FIX #88)**; 4–6 m | stal | SOURCED_SECONDARY (+ LIDAR) |
 | 11 | koryto kablowe drabinkowe | szer. 0,4–0,5 m | stal ocynk., jasna | ESTIMATED |
-| 12 | wysięgnik/maszt narożny przy attyce | **4,35–4,75 m (Skorupska 17), 7,65 m (Dobra 3 NW)** | szary | MEASURED (LIDAR) |
+| 12 | wysięgnik/maszt narożny przy attyce | **4,35–4,75 m (Skorupska 17), 7,65 m (Dobra 3 NW)** | szary | ESTIMATED (LIDAR, dolna granica) |
 | 13 | rozmieszczenie sektorów | 3 × 120° — przyjęcie typowe | — | UNVERIFIED |
 
 ## 2. Dachy — wysokości urządzeń nad dachem

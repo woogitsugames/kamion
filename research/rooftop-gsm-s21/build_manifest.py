@@ -89,11 +89,11 @@ def tel(k):
 
 
 LIDAR_SUMMARY = {
-    'skorupska17': (mmm(tel('skorupska17')), 'MEASURED (LIDAR)', METH + '. Maszt środkowy na ramie X ≥ 11,55 m; wsporniki narożne 4,35–4,75 m.'),
-    'dobra3': (mmm(tel('dobra3')), 'MEASURED (LIDAR)', METH + '. Maszt przy węźle skrzydeł ≥ 9,55 m; narożnik NW ≥ 7,65 m.'),
-    'zwierzyniecka4': (mmm(tel('zwierzyniecka4')), 'MEASURED (LIDAR)', METH + '. Jeden maszt rurowy z odciągami ≥ 8,55 m nad podwyższoną częścią SE (n = 1). Element przy krawędzi N (h = 5,85 m, szczyt 2 punkty) — przynależność telekom. UNVERIFIED, poza statystyką.'),
-    'hallera19': ('brak urządzeń > 1,3 m nad dachem', 'MEASURED (LIDAR) — negatyw', METH + '. Najwyższe elementy: nadbudówki 1,05–1,25 m; tag OSM man_made=tower NIEPOTWIERDZONY w danych 2025.'),
-    'kopernika5a': (mmm(tel('kopernika5a')), 'MEASURED (LIDAR)', METH + '. Wsporniki/platformy przy końcach bloków 2,55–3,35 m (w granicy ≤ 3 m z art. 29 ust. 4 lub tuż ponad); identyfikacja jako telekom. z rzutu (ortho_kopernika_n/_s).'),
+    'skorupska17': (mmm(tel('skorupska17')), 'ESTIMATED (LIDAR, dolna granica)', METH + '. Maszt środkowy na ramie X ≥ 11,55 m; wsporniki narożne 4,35–4,75 m.'),
+    'dobra3': (mmm(tel('dobra3')), 'ESTIMATED (LIDAR, dolna granica)', METH + '. Maszt przy węźle skrzydeł ≥ 9,55 m; narożnik NW ≥ 7,65 m.'),
+    'zwierzyniecka4': (mmm(tel('zwierzyniecka4')), 'ESTIMATED (LIDAR, dolna granica)', METH + '. Jeden maszt rurowy z odciągami ≥ 8,55 m nad podwyższoną częścią SE (n = 1). Element przy krawędzi N (h = 5,85 m, szczyt 2 punkty) — przynależność telekom. UNVERIFIED, poza statystyką.'),
+    'hallera19': ('brak urządzeń > 1,3 m nad dachem', 'ESTIMATED (LIDAR, dolna granica) — negatyw', METH + '. Najwyższe elementy: nadbudówki 1,05–1,25 m; tag OSM man_made=tower NIEPOTWIERDZONY w danych 2025.'),
+    'kopernika5a': (mmm(tel('kopernika5a')), 'ESTIMATED (LIDAR, dolna granica)', METH + '. Wsporniki/platformy przy końcach bloków 2,55–3,35 m (w granicy ≤ 3 m z art. 29 ust. 4 lub tuż ponad); identyfikacja jako telekom. z rzutu (ortho_kopernika_n/_s).'),
 }
 for name, lat, lon, osm, key, img, opis in D:
     u = uke.get(key.split(' /')[0].replace('Kopernika 5A', 'Kopernika 5a'), {}) if key != 'Kopernika 5A / 7' else None
@@ -113,7 +113,7 @@ for name, lat, lon, osm, key, img, opis in D:
         uwagi=ukes + '. ' + hnote,
         plik='files/ortho_%s.jpg' % img, sha256_pliku=sha('ortho_%s.jpg' % img))
 add(kategoria='dach', element='wieżowiec przy Kwadrat Park — ODSYŁACZ do M57', parametr='wysokość masztów nad dachem', wartość='9–12 (M57-FIX #88); kontrola LIDAR: ' + mmm(tel('wiezowiec_m57')), jednostka='m',
-    url_źródła='docs/reports/REVIEW-2026-11-14-s20-mistral-m57.md; PR #88 (research/mistral-p14-office-tower-fix-s21); LIDAR ' + LIDAR_URL['wiezowiec_m57'], status='SOURCED_SECONDARY + MEASURED (LIDAR)',
+    url_źródła='docs/reports/REVIEW-2026-11-14-s20-mistral-m57.md; PR #88 (research/mistral-p14-office-tower-fix-s21); LIDAR ' + LIDAR_URL['wiezowiec_m57'], status='SOURCED_SECONDARY + ESTIMATED (LIDAR, dolna granica)',
     uwagi='lokalizacji i układu nie powtarzam (zakres M57); UKE: 2 operatorzy (B, C). LIDAR 2025-04-18: maszt z odciągami przy końcu SW / narożniku W ≥ 10,95 m; przy środku krawędzi SE tylko 5,25 m — masztu 10–12 m w środku krawędzi SE w danych 2025 NIE MA (do rozstrzygnięcia w M57)')
 
 # ---------------- 3. kadry (obejrzane) — ortofoto bez instalacji i kontekst ----------------
@@ -164,7 +164,7 @@ for rk, v in LM.items():
             opis_co_widać='Z_top %.2f, 2. punkt %.2f, Z_dachu %.2f m n.p.m. (PL-EVRF2007-NH); punktów w walcu %d, w tym > 1 m nad dachem %d; offset od punktu dachu dx %.2f / dy %.2f m (EPSG:2180)'
                           % (u['Z_top'], u['Z_top2'], u['Z_base'], u['n_pts_walec'], u['n_pts_powyzej_base_1m'], u['dx'], u['dy']),
             url_źródła=LIDAR_URL[rk], licencja='GUGiK — dane otwarte (bezpłatne, art. 40a Pgik)', autor='GUGiK',
-            status='MEASURED (LIDAR)' if u.get('telecom') else 'MEASURED (LIDAR) — element nietelekom./kontrola',
+            status='ESTIMATED (LIDAR, dolna granica)' if u.get('telecom') else 'ESTIMATED (LIDAR, dolna granica) — element nietelekom./kontrola',
             uwagi=METH + '; profil boczny: out/prof_%s_%s_zS.png / _zW.png (obejrzane)' % (rk, u['id']),
             plik='out/prof_%s_%s_zS.png' % (rk, u['id']),
             sha256_pliku=hashlib.sha256(open(os.path.join(HERE, 'out', 'prof_%s_%s_zS.png' % (rk, u['id'])), 'rb').read()).hexdigest())
