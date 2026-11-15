@@ -126,7 +126,10 @@ def test_spacing_sets_line_positions():
 def test_spacing_never_leaves_the_carriageway():
     sec = _straight(6.0).sections["e"]
     lats = sorted(float(lat) for lat, _ in MK.edge_lines(sec, sec.width / 2, 1))
-    assert lats == pytest.approx([-(3.0 - S.EDGE_LINE_INSET_MINOR), 3.0 - S.EDGE_LINE_INSET_MINOR])
+    assert lats == pytest.approx([-(3.0 - MK.EDGE_LINE_MIN_INSET), 3.0 - MK.EDGE_LINE_MIN_INSET])
+    # BDOT 6.5 m (Fasty): 6.2 m fits (line axis 0.15 m inside the edge)
+    sec = _straight(6.5).sections["e"]
+    assert sorted(float(lat) for lat, _ in MK.edge_lines(sec, sec.width / 2, 1)) == pytest.approx([-3.1, 3.1])
 
 
 def test_without_spacing_rule_unchanged():
@@ -182,3 +185,108 @@ def test_dashed_span_off_the_road_is_stale():
     buf, rep = _paint(net)
     assert rep["edge_line_dashed"]["stale"] == ["far"] and "far" in net.overrides_stale
     assert len(_edge_parts(buf, 1)) == 1
+
+
+# --------------------------------------------------------------------------------------------- 3. region data
+@pytest.fixture(scope="module")
+def nets():
+    from roads import pipeline
+    out = {}
+    for t in TILES:
+        net, graph, ov, _ = pipeline.build_network(t)
+        net.authored = ov
+        out[t] = (net, graph, ov)
+    return out
+
+
+def _route_edges(t):
+    r = json.loads((REG / t / "route_start.json").read_text(encoding="utf-8"))
+    return sorted(set(r["edge"]))
+
+
+def test_generated_blocks_match_the_table():
+    import subprocess
+    r = subprocess.run([sys.executable, str(ROOT / "tools/worldgen/qa/dk65_k1_elements.py"), "--check"],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr + r.stdout
+
+
+def test_route_edge_line_spacing_is_k1_median(nets):
+    """Every route section with override edge lines: lines SPACING apart (+-TOL), except way 234919333 (dk65-01, seam
+    with bialystok-knyszynska at 6.0 m: unchanged, ADR 0220 Otwarte) and the Supraśl bridge (no K1 / strip reading)."""
+    checked = 0
+    for t, (net, _, _) in nets.items():
+        assert net.overrides_stale == [], (t, net.overrides_stale)
+        for eid in _route_edges(t):
+            sec = net.sections[eid]
+            el = MK.edge_lines(sec, sec.width / 2, 1)
+            if len(el) != 2:
+                continue
+            sp = abs(float(el[0][0]) - float(el[1][0]))
+            way = int(eid.split(":")[0][1:])
+            if way in (234919333, 41533342):
+                assert sec.edge_line_spacing is None
+                continue
+            assert sp == pytest.approx(SPACING, abs=TOL), (t, eid, sp)
+            checked += 1
+    assert checked >= 20
+
+
+def test_k1_spacing_readings_within_tolerance():
+    import csv
+    rows = [r for r in csv.DictReader((K1 / "manifest.csv").open(encoding="utf-8"))
+            if r["kafel"] in TILES and r["parametr"].startswith("rozstaw linii")]
+    assert len(rows) == 14
+    for r in rows:
+        assert abs(float(r["wartość"]) - SPACING) <= K1_TOL, r["id"]
+
+
+def test_dashed_spans_land_on_the_route(nets):
+    for t, (net, _, ov) in nets.items():
+        rep = {}
+        spans = MK.edge_dashed_spans(net, ov, rep)
+        want = [o["id"] for o in ov if o.get("kind") == "edge_line_dashed"]
+        assert rep["edge_line_dashed"]["stale"] == [], t
+        assert sorted({a["id"] for a in rep["edge_line_dashed"]["applied"]}) == sorted(want)
+        route_chains = {c.id for c in net.chains if {x for x, _ in c.edges} & set(_route_edges(t))}
+        assert {a["chain"] for a in rep["edge_line_dashed"]["applied"]} <= route_chains, t
+        for lst in spans.values():
+            for lo, hi, sign, d, g, oid in lst:
+                assert hi - lo > 5.0 and (d, g) == (1.0, 1.0), oid
+
+
+def test_dashed_span_sides_follow_k1():
+    """side 'left' / 'right' in the data = K1 L / P (both measured in the direction of growing km)."""
+    tab = json.loads((ROOT / "docs/reports/map/dk65_k1_elements.json").read_text(encoding="utf-8"))
+    by_id = {e["id"]: e for e in tab["dashed"]}
+    n = 0
+    for t in TILES:
+        ov = yaml.safe_load((REG / t / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+        for o in ov:
+            if o.get("kind") == "edge_line_dashed":
+                e = by_id[o["id"]]
+                assert o["side"] == {"L": "left", "P": "right"}[e["side"]]
+                a = km_to_region(t, e["km"][0])
+                assert o["line_en"][0] == pytest.approx([a["x"], a["z"]], abs=0.01)
+                n += 1
+    assert n == len(tab["dashed"]) == 11
+
+
+def test_bus_bays_are_beside_the_carriageway_on_the_k1_side():
+    from shapely.geometry import Point, Polygon
+    route = RouteKm.from_plan()
+    tab = json.loads((ROOT / "docs/reports/map/dk65_k1_elements.json").read_text(encoding="utf-8"))
+    stops = {"dk65-04": (768561.99, 599987.33), "dk65-05": (768323.77, 601461.29)}   # OSM platforms 14067837805, 11243685568
+    assert len(tab["bays"]) == 2
+    for b in tab["bays"]:
+        ov = yaml.safe_load((REG / b["tile"] / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+        o = next(o for o in ov if o["id"] == b["id"])
+        assert o["kind"] == "paved_area" and o["material"] == "yard_asphalt" and not o.get("parking")
+        pg = Polygon(o["polygon_epsg2180"])
+        assert pg.is_valid and 100.0 < pg.area < 400.0, (b["id"], pg.area)
+        assert not pg.contains(Point(*route.point(sum(b["km"]) / 2)))      # not on the axis
+        km_s, lat_s = route.locate(*stops[b["tile"]])
+        assert b["km"][0] < km_s < b["km"][1]
+        c = pg.centroid
+        _, lat_c = route.locate(c.x, c.y)
+        assert np.sign(lat_c) == np.sign(lat_s) == (1 if b["side"] == "L" else -1)

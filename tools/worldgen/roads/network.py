@@ -321,7 +321,7 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 sec.edge_lines = str(st["edge_lines"])
             if "edge_line_spacing" in st:
                 # ADR 0220: measured line-to-line distance (research K1, orthophoto 0.1 m); markings.edge_lines keeps
-                # the lines EDGE_LINE_INSET_MINOR inside the carriageway edge where the carriageway is narrower
+                # the lines markings.EDGE_LINE_MIN_INSET inside the carriageway edge where the carriageway is narrower
                 sec.edge_line_spacing = float(st["edge_line_spacing"])
                 sec.provenance["edge_line_spacing"] = f"authored_override:{ov['id']}"
             if "apron" in st:

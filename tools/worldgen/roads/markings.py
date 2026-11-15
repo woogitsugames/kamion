@@ -203,8 +203,8 @@ def edge_lines(sec, hw, dirn):
         off = hw - S.EDGE_LINE_INSET_MINOR
         sp = getattr(sec, "edge_line_spacing", None)
         if sp:
-            # ADR 0220: measured line-to-line distance; never closer to the edge than EDGE_LINE_INSET_MINOR
-            off = np.minimum(0.5 * float(sp), off)
+            # ADR 0220: measured line-to-line distance; the line stays on the carriageway (EDGE_LINE_MIN_INSET)
+            off = np.minimum(0.5 * float(sp), hw - EDGE_LINE_MIN_INSET)
         for sg, name in ((1, "left"), (-1, "right")):
             if el in ("both", name):
                 out.append(((d if sec.oneway else 1) * sg * off, "P-7b"))
@@ -212,47 +212,81 @@ def edge_lines(sec, hw, dirn):
 
 
 EDGE_DASHED_KIND = "edge_line_dashed"
-EDGE_DASHED_SNAP_M = 1.5     # a span end may lie this far outside the carriageway half-width (axis traced off the data)
+EDGE_DASHED_SNAP_M = 1.5     # a span sample may lie this far outside the carriageway half-width (axis traced off data)
+EDGE_DASHED_STEP_M = 2.0     # resampling of line_en
+EDGE_LINE_MIN_INSET = 0.12   # WORKING_VALUE (ADR 0220): an authored edge_line_spacing keeps the line axis this far
+                             # inside the carriageway edge (half the 0.12 m line + 0.06 m of asphalt)
 
 
 def edge_dashed_spans(net, authored, report=None):
     """ADR 0220: authored spans where an override edge line is broken instead of solid (a bus bay, a junction mouth
     the OSM graph does not have, a section painted with short dashes):
 
-      kind: edge_line_dashed   line_en: [[E, N], [E, N]] (two points near the carriageway axis: start, end)
-                               side: left | right   (of the carriageway, looking from line_en[0] to line_en[1])
+      kind: edge_line_dashed   line_en: [[E, N], ...] (the carriageway axis from the start to the end of the span,
+                                        >= 2 points; may run through junctions: every chain it follows is broken)
+                               side: left | right   (of the carriageway, looking along line_en)
                                line: P-7a (dash / gap of S.DASH) or dash_m: [dash, gap] (measured)
 
-    Returns {chain_id: [(s_lo, s_hi, lat_sign, dash, gap, id)]}. A span whose two ends do not project onto the same
-    chain within its half-width + EDGE_DASHED_SNAP_M is stale (reported, never silently dropped)."""
+    The line is resampled every EDGE_DASHED_STEP_M; a sample belongs to the nearest chain whose carriageway it lies on
+    (|lat| <= half-width + EDGE_DASHED_SNAP_M) running the same way (|cos| >= 0.8). Each run of >= 2 consecutive samples
+    on one chain is a span; where the line goes on past a run (through a junction) the span reaches that chain end.
+    Returns {chain_id: [(s_lo, s_hi, lat_sign, dash, gap, id)]}. Nothing matched = stale (reported, never dropped)."""
     out, applied, stale = {}, [], []
+    chains = [c for c in net.chains if not c.meta.get("absorbed") and len(c.line.p) >= 2]
     for o in authored or []:
         if o.get("kind") != EDGE_DASHED_KIND:
             continue
-        pts = np.asarray(o.get("line_en") or [], float)
+        pts = np.asarray(o.get("line_en") or [], float).reshape(-1, 2)
         side = o.get("side")
         dash, gap = o.get("dash_m") or S.DASH[o.get("line", "P-7a")]
-        cands = []
-        if len(pts) == 2 and side in ("left", "right"):
-            for c in net.chains:
-                if c.meta.get("absorbed"):
+        runs = []
+        if len(pts) >= 2 and side in ("left", "right"):
+            seg = np.hypot(*np.diff(pts, axis=0).T)
+            cum = np.concatenate([[0.0], np.cumsum(seg)])
+            u = np.unique(np.append(np.arange(0.0, cum[-1], EDGE_DASHED_STEP_M), cum[-1]))
+            Q = np.column_stack([np.interp(u, cum, pts[:, 0]), np.interp(u, cum, pts[:, 1])])
+            D = np.gradient(Q, axis=0)
+            D /= np.maximum(np.hypot(*D.T), 1e-9)[:, None]
+            owner = [None] * len(Q)
+            for k, q in enumerate(Q):
+                best = None
+                for c in chains:
+                    s, lat = c.line.project(q)
+                    if abs(lat) > float(c.hw_at(s)) + EDGE_DASHED_SNAP_M:
+                        continue
+                    t, _ = c.line.frame(s)
+                    cos = float(np.dot(t, D[k]))
+                    if abs(cos) < 0.8:
+                        continue
+                    if best is None or abs(lat) < best[0]:
+                        best = (abs(lat), c, s)
+                owner[k] = None if best is None else (best[1], best[2])
+            k = 0
+            while k < len(Q):
+                if owner[k] is None:
+                    k += 1
                     continue
-                (sa, la), (sb, lb) = c.line.project(pts[0]), c.line.project(pts[1])
-                if (abs(la) > float(c.hw_at(sa)) + EDGE_DASHED_SNAP_M or abs(lb) > float(c.hw_at(sb)) + EDGE_DASHED_SNAP_M
-                        or abs(sb - sa) < 1.0):
-                    continue
-                inside = 0.0 < sa < c.length and 0.0 < sb < c.length
-                sign = (1.0 if side == "left" else -1.0) * (1.0 if sb > sa else -1.0)
-                cands.append((not inside, abs(la) + abs(lb), c.id,
-                              (min(sa, sb), max(sa, sb), sign, float(dash), float(gap), o["id"])))
-        if not cands:
+                c = owner[k][0]
+                k1 = k
+                while k1 + 1 < len(Q) and owner[k1 + 1] is not None and owner[k1 + 1][0] is c:
+                    k1 += 1
+                if k1 > k:
+                    sa, sb = owner[k][1], owner[k1][1]
+                    fwd = sb > sa
+                    if k > 0:                          # the line comes in from another chain / a junction
+                        sa = 0.0 if fwd else c.length
+                    if k1 < len(Q) - 1:                # and goes on past this chain
+                        sb = c.length if fwd else 0.0
+                    sign = (1.0 if side == "left" else -1.0) * (1.0 if fwd else -1.0)
+                    runs.append((c.id, (min(sa, sb), max(sa, sb), sign, float(dash), float(gap), o["id"])))
+                k = k1 + 1
+        if not runs:
             stale.append(o["id"])
             continue
-        _, _, cid, span = min(cands, key=lambda k: (k[0], k[1]))
-        hit = (cid, span)
-        out.setdefault(hit[0], []).append(hit[1])
-        applied.append({"id": o["id"], "chain": hit[0], "s": [round(hit[1][0], 2), round(hit[1][1], 2)],
-                        "lat_sign": hit[1][2]})
+        for cid, span in runs:
+            out.setdefault(cid, []).append(span)
+            applied.append({"id": o["id"], "chain": cid, "s": [round(span[0], 2), round(span[1], 2)],
+                            "lat_sign": span[2]})
     if report is not None:
         report["edge_line_dashed"] = {"applied": applied, "stale": stale}
     if hasattr(net, "overrides_stale"):
