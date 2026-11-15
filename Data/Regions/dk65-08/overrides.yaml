@@ -1,24 +1,24 @@
 # Authored overrides of region dk65-08 (ADR 0214). Every entry survives a re-import. Targets are OSM ways (way-level: the
 # same entry is repeated verbatim in each DK65 tile that shares the way - seam continuity, tests/gis/test_dk65_seams_0214.py).
-# DK65 entries `dk65-carriageway-width` and `rural-roads-unlit` are copied verbatim from knyszyn-s (ADR 0204): way 27718745
-# runs from dk65-07 to knyszyn-s, one section and one lamp rule along all of it.
+# `rural-roads-unlit` is copied verbatim from knyszyn-s (ADR 0204): way 27718745 runs from dk65-07 to knyszyn-s, one lamp
+# rule along all of it. Cross-section: `dk65-xsec-k1` (research K1), dk65-11 keeps the knyszyn-s set.
 overrides:
-  - id: dk65-carriageway-width
-    target: {osm_way: [1111506750, 1111506754, 27718745, 286990127, 286990128, 305910042]}
+  # Old DK65 km 16.7-24.45 (ways 208187096, 27718745, link 1151531610): research K1 (research/dk65-knyszyn-refs/README.md,
+  # table (a)): edge line to edge line 6.0-6.4 m at 8 stations of these tiles (km 17.0 6.1, 18.0 6.0, 19.0 6.4, 20.0 6.0,
+  # 21.0 6.25, 24.6 6.0; corridor median 6.2 m, n = 25), 6.8 m only from km 26 (knyszyn-s). Same entry verbatim in 06..10.
+  # dk65-11 keeps the knyszyn-s set (seam x = 762635 identical) until 11 + knyszyn-s get this correction together.
+  - id: dk65-xsec-k1
+    target: {osm_way: [208187096, 27718745, 1151531610]}
     reason: >-
-      DK65 single carriageway. BDOT10k gives 6.0 m (or nothing), the generator drew 2 x 3.0 m. GUGiK orthophoto
-      0.1 m of 2025-05-27, cross profiles averaged over 6-10 m at four stations (EPSG:2180 760751 611837;
-      760683 611909; 761079 611483; 761559 610967; tool artifacts/knyszyn-0204/profile10.py): edge line to edge
-      line 6.8 m (lanes 3.3-3.5 m), asphalt 7.3-7.6 m, then a pale shoulder. Set 2 x 3.4 m + 0.35 m edge strips
-      = 7.5 m (+-0.3 m).
-      ADR 0212: solid edge lines P-7b on both sides (edge_lines: both). Orthophoto 0.1 m 2025, integrated brightness
-      excess across DK65 at 12 stations of ways 305910042 / 27718745 / 1111506754 / 286990127: peaks 3.0-4.0 m left
-      and right of the OSM axis, median ~3.6 m (generator: axis 0.20 m inside the 7.5 m edge = 3.55 m; 0.12 m wide,
-      pkt 2.2.2). The bus bay at 762500 609950 has a broken edge line on the orthophoto - painted solid here (open).
-      Same set in knyszyn and knyszyn-w (seams consistent).
-    confidence: high
-    verify: none
-    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+      Old DK65 between the Dobrzyniewo roundabout and dk65-11. K1: painted edge lines 6.0-6.4 m apart (median 6.2 m);
+      the in-tile reading of ADR 0214 on the 0.25 m orthophoto 2024 gave 6.25-6.75 m and asphalt 7.1-7.5 m. Class G:
+      the generator paints the 0.12 m edge line 0.20 m inside the carriageway edge and adds a 1.0 m paved shoulder
+      (rural profile, WORKING_VALUE), so 2 x 3.1 m + 2 x 0.2 m = 6.6 m gives lines 6.2 m apart and 8.6 m of asphalt
+      (the knyszyn-s set gave lines 7.1 m apart and 9.5 m of asphalt). Solid lines both sides (owner frames 2026; the
+      2024 orthophoto reads broken on parts). OSM axis on the carriageway centre (+-0.4 m).
+    confidence: medium
+    verify: owner drive / 0.1 m orthophoto when published for these sheets
+    set: {lanes: 2, lane_width: 3.1, edge_strip: 0.2, edge_lines: both}
   - id: rural-roads-unlit
     target: {osm_way: [27718745, 98071886, 286990127, 286990128, 305910042, 1111506750, 1111506754]}
     reason: >-

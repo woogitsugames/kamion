@@ -11,18 +11,31 @@ overrides:
     confidence: medium
     verify: owner drive / owner photo of Ełcka
     set: {width: 6.9, edge_lines: both}
-  # Old DK65 north of the roundabout (208187096, 1151531610): same cross-section as DK65 in knyszyn-s (ADR 0204, 0.1 m
-  # orthophoto 2025: edge line to edge line 6.8 m, asphalt 7.3-7.6 m) - one road, one section through 06..11.
-  - id: dk65-old-xsec
-    target: {osm_way: [208187096, 1151531610]}
+  # Old DK65 km 16.7-24.45 (ways 208187096, 27718745, link 1151531610): research K1 (research/dk65-knyszyn-refs/README.md,
+  # table (a)): edge line to edge line 6.0-6.4 m at 8 stations of these tiles (km 17.0 6.1, 18.0 6.0, 19.0 6.4, 20.0 6.0,
+  # 21.0 6.25, 24.6 6.0; corridor median 6.2 m, n = 25), 6.8 m only from km 26 (knyszyn-s). Same entry verbatim in 06..10.
+  # dk65-11 keeps the knyszyn-s set (seam x = 762635 identical) until 11 + knyszyn-s get this correction together.
+  - id: dk65-xsec-k1
+    target: {osm_way: [208187096, 27718745, 1151531610]}
     reason: >-
-      Old DK65 north of the Dobrzyniewo roundabout. Same set as `dk65-carriageway-width` of knyszyn-s (2 x 3.4 m + 0.35 m
-      edge strips = 7.5 m, solid edge lines both sides as in ADR 0212). 0.25 m orthophoto 2024 of this tile: asphalt 7.1-7.5 m
-      (median per 50 m, s 900-1700), edge-line pair 6.25-6.75 m apart (artifacts/dk65-tiles2-0214/tools/axis_offset.py); OSM axis on the
-      carriageway centre (+-0.4 m). The 2024 lines read as broken (P-7a); the owner frames of 2026 show solid lines -> solid.
+      Old DK65 between the Dobrzyniewo roundabout and dk65-11. K1: painted edge lines 6.0-6.4 m apart (median 6.2 m);
+      the in-tile reading of ADR 0214 on the 0.25 m orthophoto 2024 gave 6.25-6.75 m and asphalt 7.1-7.5 m. Class G:
+      the generator paints the 0.12 m edge line 0.20 m inside the carriageway edge and adds a 1.0 m paved shoulder
+      (rural profile, WORKING_VALUE), so 2 x 3.1 m + 2 x 0.2 m = 6.6 m gives lines 6.2 m apart and 8.6 m of asphalt
+      (the knyszyn-s set gave lines 7.1 m apart and 9.5 m of asphalt). Solid lines both sides (owner frames 2026; the
+      2024 orthophoto reads broken on parts). OSM axis on the carriageway centre (+-0.4 m).
     confidence: medium
-    verify: none
-    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+    verify: owner drive / 0.1 m orthophoto when published for these sheets
+    set: {lanes: 2, lane_width: 3.1, edge_strip: 0.2, edge_lines: both}
+  - id: kozince-1392b-unlit
+    target: {osm_way: [76085945]}
+    reason: >-
+      Powiat road 1392B (tertiary) through the wood and fields to Kozińce: K1 - no lamps outside built-up areas on the
+      corridor; 62-76 % of the way in dk65-06/07 has no building within 50 m. The lamp rule lit all of it (class Z).
+      The village streets keep the rule lamps.
+    confidence: low
+    verify: owner - lamps on the road into Kozińce
+    set: {lamps: false}
   - id: dk65-old-unlit
     target: {osm_way: [208187096, 1151531610]}
     reason: >-

@@ -264,6 +264,7 @@ REGIONS: dict[str, Region] = {
         bbox=(762635.0, 607487.0, 764683.0, 609535.0),
         origin=(763659.0, 608511.0),
         teryt_powiat="2002",
+        teryt_powiat_extra=("2008",),      # ADR 0208 mechanism: the route crosses into powiat moniecki at km 23.67
         status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-7,6) of the ADR 0203 plan)",
     ),
     # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-7,7) of the ADR 0203 plan, route variant A km 24.45-24.83
@@ -276,6 +277,7 @@ REGIONS: dict[str, Region] = {
         bbox=(762635.0, 609535.0, 764683.0, 611583.0),
         origin=(763659.0, 610559.0),
         teryt_powiat="2008",
+        teryt_powiat_extra=("2002",),      # ADR 0208 mechanism: 25 % of the tile is powiat białostocki
         status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-7,7) of the ADR 0203 plan)",
     ),
     # ADR 0206 (owner D64): second Białystok tile on the truck route to Knyszyn, lattice i = -2, j = 0 (shares its

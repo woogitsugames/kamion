@@ -19,6 +19,12 @@ SEAMS = list(zip(TILES, TILES[1:]))
 # dk65-05 still carries the ADR 0207 Ełcka section (7.6 m); owner D65 p.5 (6.9 m) is applied in dk65-06 here and in
 # dk65-02..05 by the separately queued correction task (HANDOVER D65 (b)).
 PENDING_0207 = {("dk65-05", "dk65-06")}
+# Research K1 (research/dk65-knyszyn-refs): edge lines 6.0-6.4 m apart up to km 25.0 -> dk65-06..10 carry 2 x 3.1 + 2 x 0.2 m
+# (`dk65-xsec-k1`); dk65-11 keeps the knyszyn-s set (2 x 3.4 + 2 x 0.35 m) so the seam with knyszyn-s (x = 762635) is
+# identical, until dk65-11 and knyszyn-s get the K1 correction together (knyszyn-s is not this task's tile).
+PENDING_K1 = {("dk65-10", "dk65-11")}
+K1_SET = (2, 3.1, 0.2)
+KNYSZYN_SET = (2, 3.4, 0.35)
 
 
 def _load(t):
@@ -60,21 +66,36 @@ def test_seam_cross_section_matches(a, b):
     if (a, b) in PENDING_0207:
         pytest.xfail("dk65-05 Ełcka 7.6 m (ADR 0207) until the D65 p.5 correction of dk65-02..05 lands")
     va, vb = _effective(last, oa), _effective(first, ob)
+    if (a, b) in PENDING_K1:
+        assert (va["lanes"], va["lane_width"], va["edge_strip"]) == K1_SET
+        assert (vb["lanes"], vb["lane_width"], vb["edge_strip"]) == KNYSZYN_SET
+        assert va["edge_lines"] == vb["edge_lines"] == "both" and va["lamps"] == vb["lamps"]
+        pytest.xfail("0.45 m step per side at dk65-10/11 until dk65-11 + knyszyn-s get the K1 section")
     if b == "knyszyn-s" and vb["edge_lines"] is None and {k for k in va if va[k] != vb[k]} == {"edge_lines"}:
         pytest.xfail("knyszyn-s DK65 edge lines come with ADR 0212 (branch knyszyn-edges-0212, not merged yet)")
     assert va == vb
 
 
-def test_dk65_section_same_from_06_to_knyszyn_s():
-    """Old DK65 (208187096 / 27718745 ...) keeps one cross-section (2 x 3.4 + 2 x 0.35 m) through 06..11 and knyszyn-s."""
-    vals = set()
+def test_dk65_section_k1_06_to_10_knyszyn_set_from_11():
+    """Old DK65 (208187096 / 27718745): K1 section through 06..10, the knyszyn-s section in dk65-11 and knyszyn-s."""
     for t in TILES[1:]:
         e, r, o = _load(t)
+        vals = set()
         for eid in r:
             if e[eid]["osm_way"] in (208187096, 27718745, 1111506754):
                 v = _effective(e[eid], o)
-                vals.add((v["lanes"], v["lane_width"], v["edge_strip"]))
-    assert vals == {(2, 3.4, 0.35)}
+                vals.add((v["lanes"], v["lane_width"], v["edge_strip"], v["edge_lines"], v["lamps"]))
+        want = KNYSZYN_SET if t in ("dk65-11", "knyszyn-s") else K1_SET
+        assert vals == {want + ("both", False)}, (t, vals)
+
+
+def test_k1_entry_verbatim_06_to_10():
+    ent = []
+    for t in TILES[1:6]:
+        ov = (yaml.safe_load((REG / t / "overrides.yaml").read_text(encoding="utf-8")) or {}).get("overrides", [])
+        ent.append(next(o for o in ov if o["id"] == "dk65-xsec-k1"))
+        assert not any(o["id"] in ("dk65-carriageway-width", "dk65-old-xsec") for o in ov), t
+    assert all(x == ent[0] for x in ent)
 
 
 @pytest.mark.parametrize("a,b", SEAMS)
