@@ -20,7 +20,7 @@ polecenie lidera: pierwszy kafel **poza granicą miasta, kolejny po kaflach miej
    są z lat 2024/2025; w tym kaflu nie ma robót, więc nie ma konfliktu dat.
 4. **Budowa ekspresówki: w tym kaflu nie występuje.** Zapytanie `highway=construction|proposed` w bbox + 600 m
    zwraca tylko 3 podjazdy `construction` 500 m na południe od kafla. W kaflu jest natomiast **otwarta** S19/S8
-   (węzeł Białystok Zachód: motorway 4,1 km, łącznice 2,7 km, 9 pomostów) — 1,1 km od trasy, wygenerowana z reguł bez
+   (węzeł Białystok Zachód: motorway 4,1 km, łącznice 2,7 km, 9 pomostów) — jezdnie S19 przecinają północną krawędź kafla przy x ≈ 769310, ~0,9 km na zachód od wyjścia trasy (x = 770245); wygenerowana z reguł bez
    szlifu. Place budowy, oznakowanie tymczasowe i kadry właściciela z DK65 dotyczą km 16,7–25 (`dk65-06` … `-11`);
    tu nic nie zostało dodane ani zmyślone. Zdjęcia właściciela nie były kopiowane ani użyte jako tekstury.
 5. **Przekrój Szosy Knyszyńskiej z ortofoto** (pasek wyprostowany wzdłuż `route_start.json`, 0,25 m/px, odczyt
@@ -41,7 +41,10 @@ polecenie lidera: pierwszy kafel **poza granicą miasta, kolejny po kaflach miej
 | WORLD_MEMORY (import) | 68,2 MB | 165,9 MB |
 | draws (est.), kamery z drogi (6) | 92–187 | 123–260 |
 | trójkąty, kamery z drogi (6) | 98–167 tys. | 194–337 tys. |
-Czas: ingest ~8 min, build_region < 2 min, build_world 257 s, import ~2 min, visual-qa ~25 s na tier. Telefon: nie
+Czas (z `logs/chain.status`): build_world 257 s, import 113 s (r1) / 68 s (r2), visual-qa 24–28 s na tier; ingest i
+build_region — nie zmierzone (UNVERIFIED).
+Odniesienie `docs/06` §6 (hipotezy): Samsung A ≤ 300–400 draws i ≤ 400–600 tys. trójkątów; flagowiec ≤ 700–1000
+i ≤ 1,5–2 mln. Kamery z drogi mieszczą się w obu (szacunek edytora przed SRP batching, bez ciężarówki w kadrze). Telefon: nie
 mierzono (zadanie bez telefonu) — budżet z `docs/06` §6 do potwierdzenia przez lidera na A16.
 
 ## Walidacja
@@ -50,7 +53,15 @@ mierzono (zadanie bez telefonu) — budżet z `docs/06` §6 do potwierdzenia prz
   trasą; przy trasie do 0,70 m = skarpa rowu, `steep_grass`).
 - Pary render z góry / ortofoto: `artifacts/dk65-corridor-0205/r2/view/pair-top-*.jpg` — zgodne: przebieg osi,
   skrzyżowanie, pętla, zjazdy NE, droga gruntowa na południe.
-- Testy: patrz raport końcowy agenta i `artifacts/dk65-corridor-0205/logs/{pytest-gis,editmode}.log`.
+- Testy: `pytest tests/gis` 1158 passed, 2 xfailed, 1 failed (`test_dojbld_0185` płot — xfail w main; po
+  `git merge origin/main` plik: 6 passed, 1 xfailed), w tym `test_export_is_deterministic`; nowy
+  `tests/gis/test_edge_lines_0205.py` 4/4; EditMode 587: 586 passed, 0 failed, 1 skipped (przed scaleniem main).
+- Zmiana bbox OSM (`7ce3fe325`) a regiony C i Dojlidy: `build_region` obu regionów na nowym wyciągu — `git diff`
+  pusty dla C; dla Dojlid różnią się tylko dwa `manifest_sha256` w `region.yaml` (manifesty NMT/orto wypisane
+  w worktree z CRLF; sha po LF = wartość z gita), `roads.graph.json` i `buildings.geojson` bez zmian.
+- Obejrzane klatki r2: 4 pary z góry, `rev-s0250`, `junction-franciszka-approach` (Low), `route-s0316` (High),
+  `roundabout-01-above` (węzeł S19: pomost i rondo osadzone, bez dziur w kadrze). Szwy E i N: bez dziur; za
+  krawędzią kafla tylko pas kontekstu drogi i teren dalekiego planu.
 - visual-critic: nie uruchamiany (agent nie tworzy subagentów) — do zrobienia przez lidera na `r2/Low-clear`,
   `r2/High-clear`.
 
@@ -58,13 +69,20 @@ mierzono (zadanie bez telefonu) — budżet z `docs/06` §6 do potwierdzenia prz
 1. Tory kolejowe (linia równoległa ~80–150 m na SW od drogi, przejazd 038 010 956 na drodze gruntowej): generator
    nie ma torów.
 2. Pętla autobusowa i wlot Św. Franciszka są na ortofoto żwirowe/nieutwardzone, u nas asfalt; szpaler drzew
-   i krzewów po stronie SW drogi nieodtworzony; biało-czerwona zapora przy wlocie Św. Franciszka — pochodzenie
-   niezbadane (UNVERIFIED).
+   i krzewów po stronie SW drogi nieodtworzony. Biało-czerwona zapora na Św. Franciszka = zamknięcie krawędzi kafla (droga ucięta
+   80 m od skrzyżowania na y = 597247), zniknie po dołączeniu `dk65-02`.
 3. Latarnie po stronie NE postawione regułą — na ortofoto niepotwierdzone (UNVERIFIED).
 4. `cameras_generic` tworzy osobną kamerę dla każdego łańcucha ronda bez nazwy (6 kamer jednego ronda przy S19).
 5. Węzeł S19/S8: pomosty z interpolacji (`confidence: low`), 5 ramp ze ścianami do 5,0 m, uskok 1,62 m.
 6. `Region.teryt_powiat` to nadal jeden kod — rozszerzenie na listę potrzebne dopiero w `dk65-10` (2002 + 2008).
-7. Plik `game/Assets/_Project/UI/Resources/CabDisplay/Nav/dk65-01_route.bytes` jest generowany, nie commitowany.
+7. Na jezdni trasy są dekale włazów/wpustów z reguły miejskiej (droga zamiejska bez kanalizacji — UNVERIFIED);
+   w widoku węzła S19 las dalekiego planu wygląda jak ciemne bloki — do szlifu.
+8. **Szwy przekroju**: override 6,0 m + linie krawędziowe jest lokalny dla kafla. Way 234919333 biegnie dalej
+   ~180 m w `bialystok-knyszynska`, way 396566354 ~550 m w `dk65-02` — bez tego samego override na szwie będzie
+   skok szerokości 0,5 m i urwane linie. Skok 6,0 → 6,5 m przy skrzyżowaniu ze Św. Franciszka nie był mierzony.
+9. `generated` kafla zbudowane przed scaleniem main (które zmieniło `chain_bollards.py`, `runway_paint.py` —
+   reguły Dojlid); `regions.py` będzie w konflikcie z 0203 i 0204 (trzy gałęzie dopisują wpis w tym samym miejscu).
+10. Plik `game/Assets/_Project/UI/Resources/CabDisplay/Nav/dk65-01_route.bytes` jest generowany, nie commitowany.
 
 ## Kolejne kafle korytarza (do zrobienia, w tej kolejności)
 | kafel | i,j | km trasy | uwagi |
