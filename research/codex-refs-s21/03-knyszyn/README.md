@@ -26,3 +26,12 @@ ESTIMATED [własny pomiar 03-006]: cztery ręcznie wskazane narożniki `(91,179)
 SOURCED [WFS GUGiK, `data/fountain-sheet-2025.xml`]: arkusz N-34-106-B-b-1-4 ma datę 2025-05-27 i piksel 0,1 m. Zapytanie do skorowidza 2026 dla tego bbox zwróciło pustą kolekcję (`data/fountain-sheet-2026.xml`). WMS nie jest czasowo przypięty do arkusza; przyporządkowanie daty to najnowszy znaleziony arkusz w tych zapytaniach, nie gwarancja serwera WMS.
 
 UNVERIFIED: liczba i układ dysz, wysokość strumieni, rodzaj odpływu, kolor podświetlenia, stan działający w dniu pobrania. Ortofoto nie potwierdza tych szczegółów. OSM API zwróciło429; nie korzystano z niepobranych geometrii i nie próbowano obejścia.
+
+
+## Komunikaty UM: chronologia i wyposażenie (2 źródła tekstowe link-only)
+
+SOURCED [03-D01, UM, 2023-08-25](https://www.knyszyn.pl/asp/i-%E2%99%A5-knyszyn,239,artykul,1,5400): zrewitalizowany rynek dostępny od2020; fontanna podświetlana, nocą świeci kolorowo. W sierpniu2023 dołożono przenośny podświetlany napis „I ♥ KNYSZYN”. To potwierdza istnienie światła, ale nie liczbę reflektorów, moc ani stałą barwę. Pozycja przenośnego napisu w2026 UNVERIFIED.
+
+SOURCED [03-D02, UM, 2022-07-21](https://www.knyszyn.pl/asp/nasz-wspolny-rynek---apel-do-mieszkancow,239,artykul,1,4982): po rewitalizacji są brukowane alejki, podświetlana fontanna, ławki i stoliki; w sezonie2022 urząd opisuje czerwone pelargonie w donicach. Nie przenosimy gatunku i koloru sezonowych nasadzeń bezwarunkowo do2026.
+
+**Wniosek dla generatora:** fotografie wnętrza parku sprzed2020 nie są dowodem obecnego układu nawierzchni/wyposażenia. Bryły fasad z2009/2012 również wymagają aktualizacji, choć sama data rewitalizacji nie dowodzi ich przebudowy. Źródła tekstowe są odczytane; zdjęć z komunikatów nie pobrano i nie opisano. Łączny nowy materiał w tym uzupełnieniu: 1 ortofoto + 2 dokumenty tekstowe link-only, 0 nowych fotografii ulicznych; 5 poprzednich fotografii to ponowny przegląd K1.
