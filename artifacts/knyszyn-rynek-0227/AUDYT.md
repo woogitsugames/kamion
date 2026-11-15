@@ -55,3 +55,6 @@ Rendery Low/High × clear/dusk: `artifacts/knyszyn-rynek-0227/r1/`; lokalne pary
 - 05–07: kościół ma rozpoznawalny kolor i wieżę, ale bryła jest zbyt uproszczona; kąty zdjęć i pierzeje wymagają korekty.
 - 09–11: widoczny pierścień ronda nie ma jasnej dwustrefowej wyspy i długich azylów; kamera 09/10 ma inny obrót i perspektywę niż zdjęcie. Zakres ronda wymaga #97 i danych zgodnych z nowym stanem.
 - Szacowane draws edytora Low: maksimum 429 → 440 (`tykocka-into-town`); na wspólnych kamerach największy wzrost 14 (`cab-mirror-front`). High max 760 → 774. Mesh `trisExact` Low max 370158 → 368247, High 1237074 → 1237336; instancje są w osobnych wierszach. Low bez pogorszenia NIE spełnione. Szczegóły: `budget-r1.py`, `before/*/stats.txt`, `r1/*/stats.txt`.
+
+## Fontanna — analiza animacji
+Istniejący `WorldWater.shader` jest nieprzezroczysty i przeznaczony do tafli, a dostępny `blend` importera tworzy statyczny materiał. Nie znaleziono ścieżki animowanych półprzezroczystych pionowych strumieni wyłącznie danymi `tools/worldgen`. Konieczne byłyby osobny shader, materiał i ścieżka warstwy/importu, zachowanie UV oraz test faz, stripowania i kosztu Low/High; sortowanie, migotanie i overdraw są niezweryfikowane. Obecna fontanna pozostaje sucha (`water_jets=OPEN`), także latem. Bez osobnej implementacji i walidacji nie twierdzić, że strumienie działają.
