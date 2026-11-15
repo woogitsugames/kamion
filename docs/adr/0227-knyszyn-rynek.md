@@ -50,3 +50,6 @@ Równoległe karty koron wyeliminowały część szwów, ale z niektórych kieru
 
 ## Iteracja r10 — wariant odrzucony
 Objętościowa próba małych kart nie zniknęła w badanych kierunkach, ale dawała pasy i ciemne kliny, przypominając bardziej wierzby niż lipy. FAIL w obu profilach, wycofana; dowody lokalne `compare/r10/` i osiem kierunków. Low nadal FAIL: +5 draws i +1832 tris na wspólnych kamerach; High max 1 230 169 tris. Wymagana przebudowa po cofnięciu.
+
+## Iteracja r11 i porównywalność budżetu
+Po scaleniu ADR 0219 poprawne dane far-field pokrywają Knyszyn; w kadrach Rynku 03–08 nie widać istotnej zmiany poza małym fragmentem tła. Cztery warianty i pary wykonane. High max 1 250 405 tris; Low max wzrost wspólnej kamery +63 draws i +37788 tris z instancjami względem pierwotnego baseline. Jednak ADR 0262 zmienił start ciężarówki 12→90 m: w problematycznym kadrze pojawiła się pełna naczepa zamiast szarej atrapy. Części kosztu nie rozdzielono pomiarem; nie przypisywać całej różnicy far-field ani uznać budżetu Low za spełniony.
