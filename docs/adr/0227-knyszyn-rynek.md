@@ -35,3 +35,6 @@ Dach skrzydła kultury jest widoczny po poprawce geometrii; jego kształt i luka
 
 ## Iteracja r6
 R6: lukarny osadzone niżej; cztery warianty i lokalne porównania wykonane. Wizualnie FAIL: kalenica i lukarny nadal odbiegają od zdjęć. Low bez pogorszenia FAIL (max wzrost wspólnej kamery +6 draws z instancjami i +1825 tris), High max 1 229 814 tris.
+
+## Iteracja r7
+R7 po scaleniu main: cztery warianty i lokalne porównania wykonane; daszki i szprosy czytelne w kadrze 02, całość nadal FAIL wizualnie. Low bez pogorszenia FAIL (na wspólnych kamerach wzrost do +6 draws z instancjami i +1832 tris), High max 1 229 853 tris. GIS po poprawce far_field w toku.

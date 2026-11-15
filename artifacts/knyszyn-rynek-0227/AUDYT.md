@@ -76,3 +76,6 @@ Cztery warianty ukończone; pary 01–11 lokalnie `compare/r5/High-clear/` i `Lo
 
 ## Iteracja r6 — ocena 15.11, editor
 Cztery warianty ukończone; porównania 01–11 lokalnie w `compare/r6/High-clear/` i `Low-clear/`. Lukarny niższe niż r5, ale w obu profilach wciąż wyglądają jak białe pudełka, daszki mało czytelne, kalenica faluje; FAIL wizualny. Low max suma szacowanych draw calls 500→485, na wspólnej kamerze wzrost do +6 i trójkątów z instancjami +1825; High max tris z instancjami 1 258 099→1 229 814, suma draw calls max 838→843. Szacunki edytora.
+
+## Iteracja r7 — ocena 15.11, editor
+Po synchronizacji origin/main cztery warianty ukończone, porównania 01–11 lokalnie `compare/r7/High-clear/` i `Low-clear/`. W kadrze 02 czerwone daszki i podziały szyb są czytelniejsze w obu profilach (PASS wyłącznie dla tej poprawki), ale falująca kalenica i elewacja nadal odbiegają od zdjęcia; całość FAIL. Low max suma szacowanych draw calls 500→485, wzrost wspólnej kamery do +6 i trójkątów z instancjami +1832; High max 1 258 099→1 229 853 tris z instancjami, max suma draws 838→843. Szacunki edytora.
