@@ -30,3 +30,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 18:48 +01:00 — Generatory kościoła i urzędu przygotowane w osobnych modułach, każdy 3 testy passed; wymagają integracji i porównania renderów. R1 nadal oczekuje slotu heavy.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 18:51 +01:00 — Testy test_region_knyszyn_0204 + test_knyszyn_park_0227: 14 passed. Przygotowano lokalny generator zestawień zdjęcie/render (bez zdjęć w Git); r1 nadal czeka na slot heavy.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
