@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Plain .NET 8 check of the Unity-independent control / mirror-window logic of ADR 0243 (D70):
+    ControlSettings (schema 5 migration, presets), TouchSteeringWheel direction, MirrorInsetLayout (safe area),
+    MirrorInsetBudget + MirrorRefreshSchedule (Low refresh policy). The sources are compiled straight from the Unity
+    project (same pattern as tools/nav-runner, ADR 0150); UnityShim.cs stands in for the few UnityEngine types used.
+    The Unity EditMode suite (Controls0243Tests) stays the reference; this runner exists because cloud sessions have no Unity.
+    Run: dotnet test tools/controls-runner/Tests/ControlsTests.csproj
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>ControlsRunner.Tests</RootNamespace>
+    <!-- Unity 6 compiles C# 9; keep the shared sources within that language version. -->
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RollForward>Major</RollForward>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../../game/Assets/_Project/Input/ControlSettings.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/MirrorInsetLayout.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/TouchSteeringWheel.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/SteeringMath.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/SteeringColumn.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/DriverIntent.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/TouchControls.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/TurnSignal.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Vehicle/Runtime/MirrorRefreshSchedule.cs" LinkBase="Vehicle" />
+    <Compile Include="../../../game/Assets/_Project/Vehicle/Runtime/MirrorInsetBudget.cs" LinkBase="Vehicle" />
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+</Project>
