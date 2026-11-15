@@ -11,3 +11,4 @@ Zdjęcia właściciela są lokalne i nie stanowią tekstur ani materiału do pub
 | 20251031_122316(0) | Ta sama zabudowa z ulicy, chodnik, słupy i przewody | Generator ulic i zabudowy | Kadr i lokalizacja niezweryfikowane; porównanie po ustaleniu położenia. |
 
 K1 podaje fontannę OSM 32 m² (~6 × 6 m), natomiast istniejący override przyjmuje ~9 × 7 m. Nie rozstrzygnięto rozbieżności bez pomiaru i dokładnego dopasowania ortofoto.
+`paved.collect` obsługuje authored polygons w kolejności wpisów: `rynek-plaza-east` wyprzedza w pełni zawartą płytę fontanny, więc odejmowanie zajętej powierzchni usuwa płytę. Wniosek z kodu, do potwierdzenia renderem baseline; właściwa kolejność to najpierw detal, potem plac.
