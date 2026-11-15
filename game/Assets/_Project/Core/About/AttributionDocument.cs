@@ -125,15 +125,27 @@ namespace Game.Core.About
         }
 
         /// <summary>Problems that make the document unfit for a build: no content, an empty heading or include path,
+        /// a heading with no text under it,
         /// a missing include (<paramref name="resolveInclude"/> returned null), or an unresolved marker
         /// (<see cref="ForbiddenVisibleMarkers"/>) in visible text. Empty list = OK.</summary>
         public List<string> Problems(Func<string, string> resolveInclude)
         {
             var p = new List<string>();
             if (m_Blocks.Count == 0) p.Add("document is empty");
-            foreach (var b in m_Blocks)
+            for (int i = 0; i < m_Blocks.Count; i++)
             {
+                var b = m_Blocks[i];
                 if (string.IsNullOrWhiteSpace(b.Text)) { p.Add("empty " + b.Kind); continue; }
+                if (b.Kind == AttributionBlockKind.Entry || b.Kind == AttributionBlockKind.Section)
+                {
+                    // A heading must be followed by content: an entry by a paragraph or include, a section by anything
+                    // but another section (ADR 0230: no empty attribution entries on screen).
+                    var next = i + 1 < m_Blocks.Count ? m_Blocks[i + 1].Kind : (AttributionBlockKind?)null;
+                    bool empty = b.Kind == AttributionBlockKind.Entry
+                        ? next != AttributionBlockKind.Paragraph && next != AttributionBlockKind.Include
+                        : next == null || next == AttributionBlockKind.Section;
+                    if (empty) p.Add("heading without text: " + b.Kind + ": " + b.Text);
+                }
                 if (b.Kind == AttributionBlockKind.Include)
                 {
                     if (resolveInclude != null && resolveInclude(b.Text) == null) p.Add("missing include " + b.Text);

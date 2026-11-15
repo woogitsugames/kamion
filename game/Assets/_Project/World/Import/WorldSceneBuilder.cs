@@ -27,11 +27,7 @@ namespace Game.World.Import
     /// </summary>
     public static class WorldSceneBuilder
     {
-        public static string SceneNameFor(string region, string tier = "Low")
-        {
-            string b = region == "bialystok-industrial-c" ? "WorldC" : "World_" + region;
-            return tier == "High" ? b + "_High" : b;
-        }
+        public static string SceneNameFor(string region, string tier = "Low") => RegionScenes.SceneNameFor(region, tier);   // one rule (ADR 0229)
 
         /// <summary>Builds the scene of one content tier: "Low" (Low + Medium quality, WorldC) or "High" (WorldC_High).</summary>
         public static void Build(RegionImporter.Result r, string tier)
@@ -51,6 +47,13 @@ namespace Game.World.Import
             env.presets = LookDevAssets.Presets();
             env.sun = sun;
             env.skyMaterial = AssetDatabase.LoadAssetAtPath<Material>(LookDevAssets.SkyMaterial);
+            // ADR 0216: per-region lighting data (season, dusk clock hour, LED colour). Regions not listed keep the defaults.
+            string profilesPath = System.IO.Path.Combine(Game.Editor.Build.EditorTools.RepoRoot, "Data/Regions/lighting_profiles.json");
+            if (System.IO.File.Exists(profilesPath))
+            {
+                string applied = RegionLightingProfiles.Parse(System.IO.File.ReadAllText(profilesPath)).ApplyTo(env, r.Region);
+                Debug.Log($"[IMPORT] lighting profiles for {r.Region}: {(applied.Length > 0 ? applied : "none")}");
+            }
             env.Apply();
             var volGo = new GameObject("WorldVolume");
             var vol = volGo.AddComponent<Volume>();
@@ -166,7 +169,7 @@ namespace Game.World.Import
             // The tractor at the gate (truck on the imported ground, contact shadows) and the cab view down the access road.
             Vector3 side = Vector3.Cross(Vector3.up, spawnFwd);
             Qa(qa, "truck-at-gate", spawnPos + spawnFwd * 11f + side * 7f + Vector3.up * 2.6f, spawnPos + Vector3.up * 1.6f - spawnFwd * 3f, 50f,
-                "Tractor + trailer at the Kwadrat Park spawn: wheels on the imported collision, shadows, scale against the road.");
+                "Tractor + trailer at the depot gate spawn: wheels on the imported collision, shadows, scale against the road.");
             Vector3 eye = spawnPos + spawn.rotation * dims.EyePointVehicle;
             Qa(qa, "cab-gate", eye, eye + spawnFwd * 30f - Vector3.up * 2.2f, 55f, "Driver eye at the spawn, looking along the depot access road.");
             AddEdgeCameras(qa);

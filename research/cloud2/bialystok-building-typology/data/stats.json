@@ -1,0 +1,902 @@
+{
+ "osm": {
+  "trasa_c": {
+   "n": 2734,
+   "building": {
+    "yes": 2224,
+    "outbuilding": 94,
+    "apartments": 88,
+    "house": 57,
+    "retail": 41,
+    "industrial": 37,
+    "roof": 23,
+    "garages": 20,
+    "warehouse": 18,
+    "service": 18,
+    "garbage_shed": 18,
+    "residential": 17,
+    "office": 15,
+    "detached": 14,
+    "semidetached_house": 10,
+    "school": 6,
+    "garage": 6,
+    "supermarket": 5,
+    "terrace": 4,
+    "chapel": 3,
+    "commercial": 3,
+    "public": 2,
+    "kiosk": 2,
+    "fire_station": 1,
+    "kindergarten": 1,
+    "church": 1,
+    "transformer_tower": 1,
+    "carport": 1,
+    "bungalow": 1,
+    "shed": 1,
+    "waste_busket": 1,
+    "construction": 1
+   },
+   "n_levels": 261,
+   "n_height": 9,
+   "n_roof_shape": 2,
+   "n_colour": 2,
+   "groups": {
+    "blok (apartments/residential)": {
+     "n": 105,
+     "levels": {
+      "4": 6,
+      "5": 7,
+      "6": 4,
+      "8": 4,
+      "12": 2,
+      "13": 1,
+      "16": 1
+     },
+     "roof_shape": {},
+     "dl_m_p10_p50_p90": [
+      27.4,
+      41.3,
+      75.3
+     ],
+     "szer_m_p10_p50_p90": [
+      10.3,
+      13.4,
+      29.8
+     ],
+     "pow_m2_p10_p50_p90": [
+      281.8,
+      472.2,
+      1082.1
+     ]
+    },
+    "dom (house/detached/semidetached/terrace/bungalow)": {
+     "n": 86,
+     "levels": {
+      "1": 9,
+      "2": 36,
+      "3": 1
+     },
+     "roof_shape": {},
+     "dl_m_p10_p50_p90": [
+      10.0,
+      12.3,
+      18.6
+     ],
+     "szer_m_p10_p50_p90": [
+      6.0,
+      8.8,
+      12.2
+     ],
+     "pow_m2_p10_p50_p90": [
+      67.0,
+      93.7,
+      169.1
+     ]
+    },
+    "hala (industrial/warehouse)": {
+     "n": 53,
+     "levels": {
+      "1": 30,
+      "2": 3,
+      "3": 1,
+      "8": 1
+     },
+     "roof_shape": {},
+     "dl_m_p10_p50_p90": [
+      9.6,
+      37.1,
+      110.8
+     ],
+     "szer_m_p10_p50_p90": [
+      6.0,
+      14.6,
+      66.9
+     ],
+     "pow_m2_p10_p50_p90": [
+      56.3,
+      398.8,
+      5469.0
+     ]
+    },
+    "biuro/uslugi (office/retail/commercial/supermarket/public/school/hospital/university)": {
+     "n": 72,
+     "levels": {
+      "1": 21,
+      "2": 7,
+      "3": 6,
+      "4": 2,
+      "5": 1,
+      "11": 1
+     },
+     "roof_shape": {
+      "flat": 2
+     },
+     "dl_m_p10_p50_p90": [
+      13.6,
+      31.3,
+      89.8
+     ],
+     "szer_m_p10_p50_p90": [
+      7.0,
+      13.2,
+      65.6
+     ],
+     "pow_m2_p10_p50_p90": [
+      95.6,
+      371.8,
+      3086.3
+     ]
+    },
+    "pomocnicze (outbuilding/garage(s)/shed/garbage_shed/roof/carport/service/kiosk)": {
+     "n": 184,
+     "levels": {
+      "1": 94,
+      "2": 5,
+      "3": 1
+     },
+     "roof_shape": {},
+     "dl_m_p10_p50_p90": [
+      5.4,
+      10.8,
+      25.5
+     ],
+     "szer_m_p10_p50_p90": [
+      3.4,
+      6.2,
+      12.8
+     ],
+     "pow_m2_p10_p50_p90": [
+      18.1,
+      60.8,
+      276.6
+     ]
+    },
+    "yes (bez typu)": {
+     "n": 2224,
+     "levels": {
+      "1": 13,
+      "2": 1,
+      "5": 1,
+      "8": 1
+     },
+     "roof_shape": {},
+     "dl_m_p10_p50_p90": [
+      7.2,
+      11.1,
+      19.3
+     ],
+     "szer_m_p10_p50_p90": [
+      4.3,
+      8.3,
+      12.5
+     ],
+     "pow_m2_p10_p50_p90": [
+      32.6,
+      88.6,
+      193.8
+     ]
+    }
+   }
+  },
+  "dojlidy": {
+   "n": 962,
+   "building": {
+    "yes": 756,
+    "house": 43,
+    "outbuilding": 43,
+    "industrial": 26,
+    "service": 15,
+    "terrace": 13,
+    "hospital": 12,
+    "public": 5,
+    "construction": 5,
+    "school": 4,
+    "apartments": 4,
+    "retail": 4,
+    "detached": 4,
+    "roof": 4,
+    "residential": 3,
+    "commercial": 3,
+    "garage": 3,
+    "warehouse": 3,
+    "allotment_house": 3,
+    "office": 2,
+    "church": 1,
+    "university": 1,
+    "hangar": 1,
+    "transformer_tower": 1,
+    "chapel": 1,
+    "greenhouse": 1,
+    "silo": 1
+   },
+   "n_levels": 124,
+   "n_height": 0,
+   "n_roof_shape": 4,
+   "n_colour": 0,
+   "groups": {
+    "blok (apartments/residential)": {
+     "n": 7,
+     "levels": {
+      "2": 1,
+      "3": 2,
+      "4": 1
+     },
+     "roof_shape": {},
+     "dl_m_p10_p50_p90": [
+      15.6,
+      53.0,
+      88.9
+     ],
+     "szer_m_p10_p50_p90": [
+      11.8,
+      13.5,
+      18.6
+     ],
+     "pow_m2_p10_p50_p90": [
+      182.8,
+      731.8,
+      1060.9
+     ]
+    },
+    "dom (house/detached/semidetached/terrace/bungalow)": {
+     "n": 60,
+     "levels": {
+      "1": 23,
+      "2": 29,
+      "3": 2
+     },
+     "roof_shape": {},
+     "dl_m_p10_p50_p90": [
+      9.8,
+      12.4,
+      15.9
+     ],
+     "szer_m_p10_p50_p90": [
+      7.0,
+      7.6,
+      12.3
+     ],
+     "pow_m2_p10_p50_p90": [
+      79.1,
+      95.8,
+      139.3
+     ]
+    },
+    "hala (industrial/warehouse)": {
+     "n": 29,
+     "levels": {
+      "1": 2
+     },
+     "roof_shape": {},
+     "dl_m_p10_p50_p90": [
+      30.4,
+      111.9,
+      210.7
+     ],
+     "szer_m_p10_p50_p90": [
+      7.8,
+      54.7,
+      103.5
+     ],
+     "pow_m2_p10_p50_p90": [
+      236.6,
+      6380.7,
+      19991.9
+     ]
+    },
+    "biuro/uslugi (office/retail/commercial/supermarket/public/school/hospital/university)": {
+     "n": 30,
+     "levels": {
+      "1": 3,
+      "2": 1,
+      "3": 2,
+      "4": 1
+     },
+     "roof_shape": {
+      "flat": 2
+     },
+     "dl_m_p10_p50_p90": [
+      32.0,
+      58.8,
+      104.6
+     ],
+     "szer_m_p10_p50_p90": [
+      5.8,
+      20.0,
+      72.6
+     ],
+     "pow_m2_p10_p50_p90": [
+      101.6,
+      1068.4,
+      4923.2
+     ]
+    },
+    "pomocnicze (outbuilding/garage(s)/shed/garbage_shed/roof/carport/service/kiosk)": {
+     "n": 66,
+     "levels": {
+      "1": 46
+     },
+     "roof_shape": {
+      "flat": 2
+     },
+     "dl_m_p10_p50_p90": [
+      5.4,
+      9.7,
+      20.9
+     ],
+     "szer_m_p10_p50_p90": [
+      3.5,
+      5.0,
+      7.9
+     ],
+     "pow_m2_p10_p50_p90": [
+      18.1,
+      40.6,
+      133.1
+     ]
+    },
+    "yes (bez typu)": {
+     "n": 755,
+     "levels": {
+      "1": 3,
+      "2": 5,
+      "3": 1
+     },
+     "roof_shape": {},
+     "dl_m_p10_p50_p90": [
+      7.7,
+      12.0,
+      20.0
+     ],
+     "szer_m_p10_p50_p90": [
+      4.7,
+      8.6,
+      12.9
+     ],
+     "pow_m2_p10_p50_p90": [
+      37.4,
+      88.8,
+      187.6
+     ]
+    }
+   }
+  }
+ },
+ "repo": {
+  "bialystok-industrial-c": {
+   "n": 643,
+   "groups": {
+    "blok (budynek wielorodzinny)": {
+     "n": 50,
+     "storeys_bdot": {
+      "12": 2,
+      "13": 1,
+      "16": 3,
+      "2": 7,
+      "3": 7,
+      "4": 25,
+      "5": 2,
+      "6": 3
+     },
+     "roof_type_lod2": {
+      "1130": 23,
+      "None": 17,
+      "1030": 6,
+      "1000": 4
+     },
+     "h_lod1_p10_p50_p90": [
+      8.9,
+      14.9,
+      39.6
+     ],
+     "n_h": 48,
+     "h_lod2_kalenica_p10_p50_p90": [
+      9.1,
+      14.2,
+      17.4
+     ],
+     "okap_lod2_p10_p50_p90": [
+      2.8,
+      9.9,
+      12.4
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": [
+      2.94,
+      3.6,
+      7.23
+     ],
+     "dl_m_p10_p50_p90": [
+      15.7,
+      47.7,
+      72.6
+     ],
+     "szer_m_p10_p50_p90": [
+      10.8,
+      15.7,
+      30.9
+     ],
+     "pow_m2_p10_p50_p90": [
+      162.4,
+      586.5,
+      1093.8
+     ]
+    },
+    "dom (budynek jednorodzinny)": {
+     "n": 269,
+     "storeys_bdot": {
+      "1": 38,
+      "2": 229,
+      "3": 2
+     },
+     "roof_type_lod2": {
+      "1130": 168,
+      "None": 41,
+      "1010": 38,
+      "1030": 19,
+      "1000": 3
+     },
+     "h_lod1_p10_p50_p90": [
+      4.6,
+      7.7,
+      10.8
+     ],
+     "n_h": 267,
+     "h_lod2_kalenica_p10_p50_p90": [
+      6.1,
+      10.7,
+      13.0
+     ],
+     "okap_lod2_p10_p50_p90": [
+      2.7,
+      4.8,
+      7.9
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": [
+      3.19,
+      3.92,
+      5.48
+     ],
+     "dl_m_p10_p50_p90": [
+      10.6,
+      12.6,
+      15.9
+     ],
+     "szer_m_p10_p50_p90": [
+      7.5,
+      8.6,
+      10.7
+     ],
+     "pow_m2_p10_p50_p90": [
+      70.8,
+      98.7,
+      138.9
+     ]
+    },
+    "hala (magazyn/produkcyjny)": {
+     "n": 52,
+     "storeys_bdot": {
+      "None": 52
+     },
+     "roof_type_lod2": {
+      "1130": 20,
+      "None": 15,
+      "1030": 9,
+      "1000": 8
+     },
+     "h_lod1_p10_p50_p90": [
+      3.6,
+      6.6,
+      15.5
+     ],
+     "n_h": 48,
+     "h_lod2_kalenica_p10_p50_p90": [
+      4.2,
+      7.0,
+      15.8
+     ],
+     "okap_lod2_p10_p50_p90": [
+      3.0,
+      4.8,
+      14.3
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": null,
+     "dl_m_p10_p50_p90": [
+      18.7,
+      49.2,
+      109.9
+     ],
+     "szer_m_p10_p50_p90": [
+      6.0,
+      18.0,
+      55.1
+     ],
+     "pow_m2_p10_p50_p90": [
+      149.6,
+      869.2,
+      5482.4
+     ]
+    },
+    "biuro/uslugi (siedziba firmy, obiekt handlowo-uslugowy, urzad, szkola, szpital...)": {
+     "n": 102,
+     "storeys_bdot": {
+      "1": 63,
+      "11": 1,
+      "2": 23,
+      "3": 6,
+      "4": 3,
+      "5": 2,
+      "None": 4
+     },
+     "roof_type_lod2": {
+      "1130": 37,
+      "None": 27,
+      "1000": 24,
+      "1030": 14
+     },
+     "h_lod1_p10_p50_p90": [
+      3.2,
+      6.4,
+      14.5
+     ],
+     "n_h": 97,
+     "h_lod2_kalenica_p10_p50_p90": [
+      3.2,
+      7.7,
+      15.1
+     ],
+     "okap_lod2_p10_p50_p90": [
+      2.9,
+      4.5,
+      12.0
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": [
+      3.04,
+      4.45,
+      7.53
+     ],
+     "dl_m_p10_p50_p90": [
+      11.1,
+      30.9,
+      72.7
+     ],
+     "szer_m_p10_p50_p90": [
+      6.0,
+      12.9,
+      30.4
+     ],
+     "pow_m2_p10_p50_p90": [
+      85.0,
+      305.2,
+      1488.7
+     ]
+    },
+    "gospodarcze/garaz": {
+     "n": 103,
+     "storeys_bdot": {
+      "1": 97,
+      "2": 6
+     },
+     "roof_type_lod2": {
+      "None": 36,
+      "1000": 26,
+      "1130": 24,
+      "1030": 12,
+      "1010": 5
+     },
+     "h_lod1_p10_p50_p90": [
+      3.0,
+      3.9,
+      7.5
+     ],
+     "n_h": 101,
+     "h_lod2_kalenica_p10_p50_p90": [
+      3.4,
+      4.0,
+      8.6
+     ],
+     "okap_lod2_p10_p50_p90": [
+      2.4,
+      3.3,
+      6.0
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": [
+      2.94,
+      3.8,
+      6.04
+     ],
+     "dl_m_p10_p50_p90": [
+      7.6,
+      18.3,
+      33.9
+     ],
+     "szer_m_p10_p50_p90": [
+      5.4,
+      7.2,
+      14.6
+     ],
+     "pow_m2_p10_p50_p90": [
+      39.6,
+      115.2,
+      393.3
+     ]
+    }
+   }
+  },
+  "bialystok-dojlidy": {
+   "n": 406,
+   "groups": {
+    "blok (budynek wielorodzinny)": {
+     "n": 12,
+     "storeys_bdot": {
+      "2": 2,
+      "3": 4,
+      "4": 5,
+      "5": 1
+     },
+     "roof_type_lod2": {
+      "None": 4,
+      "1130": 4,
+      "1030": 4
+     },
+     "h_lod1_p10_p50_p90": [
+      7.3,
+      11.9,
+      17.8
+     ],
+     "n_h": 11,
+     "h_lod2_kalenica_p10_p50_p90": [
+      7.2,
+      12.6,
+      19.2
+     ],
+     "okap_lod2_p10_p50_p90": [
+      2.5,
+      6.5,
+      16.2
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": [
+      3.2,
+      3.5,
+      4.56
+     ],
+     "dl_m_p10_p50_p90": [
+      16.3,
+      42.2,
+      73.9
+     ],
+     "szer_m_p10_p50_p90": [
+      10.1,
+      14.9,
+      20.4
+     ],
+     "pow_m2_p10_p50_p90": [
+      176.0,
+      606.9,
+      1620.5
+     ]
+    },
+    "dom (budynek jednorodzinny)": {
+     "n": 172,
+     "storeys_bdot": {
+      "1": 13,
+      "2": 152,
+      "3": 5,
+      "4": 2
+     },
+     "roof_type_lod2": {
+      "1130": 94,
+      "None": 36,
+      "1030": 20,
+      "1000": 14,
+      "1040": 6,
+      "1010": 2
+     },
+     "h_lod1_p10_p50_p90": [
+      6.5,
+      7.9,
+      9.7
+     ],
+     "n_h": 170,
+     "h_lod2_kalenica_p10_p50_p90": [
+      7.4,
+      8.8,
+      10.8
+     ],
+     "okap_lod2_p10_p50_p90": [
+      2.6,
+      4.6,
+      8.1
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": [
+      3.33,
+      3.97,
+      4.88
+     ],
+     "dl_m_p10_p50_p90": [
+      9.2,
+      12.5,
+      16.6
+     ],
+     "szer_m_p10_p50_p90": [
+      6.4,
+      8.8,
+      11.2
+     ],
+     "pow_m2_p10_p50_p90": [
+      64.3,
+      96.9,
+      135.1
+     ]
+    },
+    "hala (magazyn/produkcyjny)": {
+     "n": 38,
+     "storeys_bdot": {
+      "None": 38
+     },
+     "roof_type_lod2": {
+      "None": 23,
+      "1030": 6,
+      "1130": 4,
+      "1000": 4,
+      "1010": 1
+     },
+     "h_lod1_p10_p50_p90": [
+      3.7,
+      5.4,
+      13.1
+     ],
+     "n_h": 23,
+     "h_lod2_kalenica_p10_p50_p90": [
+      4.0,
+      5.7,
+      8.7
+     ],
+     "okap_lod2_p10_p50_p90": [
+      2.5,
+      4.2,
+      5.6
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": null,
+     "dl_m_p10_p50_p90": [
+      18.6,
+      55.4,
+      156.6
+     ],
+     "szer_m_p10_p50_p90": [
+      5.7,
+      19.6,
+      96.8
+     ],
+     "pow_m2_p10_p50_p90": [
+      88.2,
+      1175.4,
+      12625.8
+     ]
+    },
+    "biuro/uslugi (siedziba firmy, obiekt handlowo-uslugowy, urzad, szkola, szpital...)": {
+     "n": 60,
+     "storeys_bdot": {
+      "1": 36,
+      "2": 7,
+      "3": 8,
+      "4": 2,
+      "5": 2,
+      "None": 5
+     },
+     "roof_type_lod2": {
+      "None": 21,
+      "1130": 18,
+      "1030": 14,
+      "1000": 7
+     },
+     "h_lod1_p10_p50_p90": [
+      3.6,
+      5.3,
+      13.1
+     ],
+     "n_h": 51,
+     "h_lod2_kalenica_p10_p50_p90": [
+      3.9,
+      5.6,
+      12.9
+     ],
+     "okap_lod2_p10_p50_p90": [
+      3.1,
+      4.3,
+      9.1
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": [
+      3.21,
+      4.31,
+      6.79
+     ],
+     "dl_m_p10_p50_p90": [
+      12.2,
+      30.8,
+      87.3
+     ],
+     "szer_m_p10_p50_p90": [
+      6.6,
+      15.9,
+      43.3
+     ],
+     "pow_m2_p10_p50_p90": [
+      83.8,
+      435.9,
+      1655.5
+     ]
+    },
+    "gospodarcze/garaz": {
+     "n": 68,
+     "storeys_bdot": {
+      "1": 65,
+      "2": 3
+     },
+     "roof_type_lod2": {
+      "None": 27,
+      "1000": 19,
+      "1130": 14,
+      "1010": 5,
+      "1030": 3
+     },
+     "h_lod1_p10_p50_p90": [
+      2.6,
+      3.5,
+      5.0
+     ],
+     "n_h": 66,
+     "h_lod2_kalenica_p10_p50_p90": [
+      3.0,
+      4.1,
+      5.7
+     ],
+     "okap_lod2_p10_p50_p90": [
+      2.5,
+      3.0,
+      3.8
+     ],
+     "h_lod1_na_kondygnacje_p10_p50_p90": [
+      2.63,
+      3.47,
+      4.73
+     ],
+     "dl_m_p10_p50_p90": [
+      7.4,
+      10.7,
+      29.9
+     ],
+     "szer_m_p10_p50_p90": [
+      4.2,
+      6.3,
+      9.6
+     ],
+     "pow_m2_p10_p50_p90": [
+      37.2,
+      59.1,
+      186.5
+     ]
+    }
+   }
+  }
+ }
+}

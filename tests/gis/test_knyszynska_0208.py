@@ -114,6 +114,8 @@ def test_overrides_are_explained_and_target_existing_edges():
     assert len(ov) >= 4
     for o in ov:
         assert o["reason"].strip() and o["confidence"] and o["verify"]
+        if o.get("kind") == "lamp_policy":          # ADR 0216: region-wide policy, no edge target
+            continue
         t = o["target"]
         assert all(w in ways for w in t.get("osm_way", [])), o["id"]
         assert "edge" not in t or t["edge"] in edges, o["id"]

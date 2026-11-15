@@ -12,7 +12,7 @@ namespace Game.Editor.Build
     /// Batchmode build entry points. Always exit the editor with 0 on success, non-zero on failure.
     ///   Unity.exe -batchmode -quit -buildTarget Android -projectPath game
     ///     -executeMethod Game.Editor.Build.BuildCommands.BuildAndroidApk
-    ///     [-buildOutput path/to.apk] [-development]
+    ///     [-buildOutput path/to.apk] [-development] [-worldHigh] [-regions "c,dk65-01..dk65-11,knyszyn"] [-regionsFile Data/build_regions.json] [-regionsAllowMissing]
     /// Prints "BUILD_RESULT: Succeeded|Failed ..." for scripts.
     /// </summary>
     public static class BuildCommands
@@ -58,6 +58,13 @@ namespace Game.Editor.Build
             {
                 if (File.Exists(Path.Combine(EditorTools.ProjectRoot, worldHigh))) scenes.Add(worldHigh);
                 else Debug.LogWarning("[BUILD] -worldHigh: " + worldHigh + " missing (scripts/import-region.ps1)");
+            }
+            // Region scenes for this APK only (ADR 0229): -regions / -regionsFile, composed in memory; EditorBuildSettings
+            // (git) stays Boot + DrivingLab + WorldC. No argument = the list above unchanged.
+            if (!RegionBuildList.AppendFromCommandLine(scenes, EditorTools.HasArg("-worldHigh"), out string regionError))
+            {
+                Debug.LogError("BUILD_RESULT: Failed (-regions: " + regionError + ")");
+                return 4;
             }
             // Measurement only (APK world share, gate 3 E6): -noWorld drops the generated world scenes, so
             // APK(default) - APK(-noWorld) = bytes the world content costs in the APK after LZ4HC.

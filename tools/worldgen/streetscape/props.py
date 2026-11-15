@@ -164,8 +164,10 @@ def lamp_y(h=10.3, reach=1.3, rise=1.0, console=False, sink=0.0):
     return m, l1, col
 
 
-def lamp_old(h, kind):
-    """Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
+def lamp_old(h, kind, led=False):
+    """led=True (ADR 0216, owner D65 p.8 "white LED"): the same pole and arm with the sodium head replaced by a flat LED
+    housing and clear glass (materials of lamp(): luminaire_housing, lamp_glass) - a retrofit, triangle count unchanged.
+    Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
     and industrial access roads (shapes typical, no product copied; dimensions WORKING_VALUE).
       kind "concrete": spun-concrete pole (żerdź wirowana, 0.30 -> 0.14 m) with a steel arm rising in an arc and an
         elongated "cobra" sodium luminaire (orange-tinted bowl);
@@ -194,9 +196,13 @@ def lamp_old(h, kind):
                                     [-.17,-.05,.10], [.17,-.05,.10], [-.16,.78,.06], [.16,.78,.06]])
             faces = [(0,2,3,1), (4,5,7,6), (0,1,5,4), (2,6,7,3), (0,4,6,2), (1,3,7,5)]
             triangles = [t for a,b,c,d in faces for t in ((a,b,c),(a,c,d))]
-            mm.add("luminaire_old", housing, triangles)
-            mm.quad("lamp_glass_sodium", e + [-.10,.09,-.102], e + [-.11,.63,-.102],
-                    e + [.11,.63,-.102], e + [.10,.09,-.102])
+            if led:                                    # flat LED box on the arm end (12 triangles, as the old housing)
+                mm.box("luminaire_housing", e + [0, 0.36, -0.03], 0.16, 0.34, 0.05)
+                mm.quad("lamp_glass", e + [-.13,.08,-.081], e + [.13,.08,-.081], e + [.13,.64,-.081], e + [-.13,.64,-.081])
+            else:
+                mm.add("luminaire_old", housing, triangles)
+                mm.quad("lamp_glass_sodium", e + [-.10,.09,-.102], e + [-.11,.63,-.102],
+                        e + [.11,.63,-.102], e + [.10,.09,-.102])
         else:
             mm.box("concrete_base", [0, 0, -0.01], 0.2, 0.2, 0.09)
             mm.tube("steel_painted_grey", [0, 0, 0.06], [0, 0, h - 0.2], 0.075, 0.05, seg)
@@ -205,8 +211,8 @@ def lamp_old(h, kind):
             top = np.array([0, 0, h - 0.35])
             end = top + np.array([0, 1.4 * math.cos(math.radians(15)), 1.4 * math.sin(math.radians(15))])
             mm.tube("steel_painted_grey", top, end, 0.03, 0.03, max(4, seg // 2))
-            mm.box("luminaire_old", end + [0, 0.28, 0.0], 0.14, 0.3, 0.07)
-            mm.quad("lamp_glass_sodium", end + [-0.11, 0.04, -0.072], end + [0.11, 0.04, -0.072],
+            mm.box("luminaire_housing" if led else "luminaire_old", end + [0, 0.28, 0.0], 0.14, 0.3, 0.07 if not led else 0.05)
+            mm.quad("lamp_glass" if led else "lamp_glass_sodium", end + [-0.11, 0.04, -0.072], end + [0.11, 0.04, -0.072],
                     end + [0.11, 0.52, -0.072], end + [-0.11, 0.52, -0.072])
     col.tube("collision_steel", [0, 0, 0], [0, 0, h],
              0.16 if kind == "concrete" else 0.13, 0.08 if kind == "concrete" else 0.13, 6)
@@ -914,6 +920,7 @@ def build_all(sign_codes, boards):
         P[f"lamp_{int(d['h'])}m"] = lamp(d["h"], d["bracket"])
     for kind, hh in LAMP_OLD:
         P[f"lamp_old_{kind}_{hh}m"] = lamp_old(float(hh), kind)
+        P[f"lamp_old_{kind}_led_{hh}m"] = lamp_old(float(hh), kind, led=True)     # ADR 0216: LED retrofit of the family
     P["lamp_arc_9m"] = lamp_arc(9.0)
     P["lamp_arc_9m_double"] = lamp_arc(9.0, double=True)
     # ADR 0133 / 0146: DK8 median row (authored lamp_rows.json). Luminaires LAMP_Y_H_M above the road; in the gap
