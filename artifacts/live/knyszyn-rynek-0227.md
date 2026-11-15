@@ -78,3 +78,5 @@
 - NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis/test_knyszyn_*_0227.py -q` (po zakończeniu prac agentów), potem build r2
 - 2026-11-15 20:38 +01:00 — R2 uruchomione: park_flush, 4 barwy dachów, 2 lipy kit, poprawione kamery, urząd i pomnik oraz ograniczenie materiałów Low. Testy kierunkowe 25 passed; RAM 23,7 GiB, C: 472,7 GiB.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
+- 2026-11-15 20:41 +01:00 — R2 build trwa. Audyt fontanny: istniejący WorldWater jest nieprzezroczysty i nie obsługuje pionowych strumieni; sucha fontanna pozostaje OPEN. Analiza ewentualnego shadera i ścieżki importu trwa.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
