@@ -35,7 +35,8 @@ if "--out" in ARGV:
     VEG = Path(ARGV[ARGV.index("--out") + 1]).resolve()
 VEG.mkdir(parents=True, exist_ok=True)
 HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8,
-        "spruce": 21.0, "pineyoung": 5.0, "birchyoung": 6.0, "floor": 0.7}
+        "spruce": 21.0, "pineyoung": 5.0, "birchyoung": 6.0, "floor": 0.7,
+        "willow": 13.5}  # 0227 prototype: all dimensions WORKING_VALUE, no measured willow height
 # ADR 0187 (forest wall): species of a Podlasie pine / spruce stand that the first six could not stand in for.
 #   spruce      Norway spruce (Picea abies): variants 0, 1 = stand form (live crown from ~0.36-0.46 H, dead stubs
 #               below), variant 2 = open-grown / young form with boughs to the ground (understorey, stand edge).
@@ -50,7 +51,7 @@ NEW_SPECIES = ("spruce", "pineyoung", "birchyoung", "floor")
 # Variants: one per young species (a thicket is uniform; yaw and height vary per instance) - every variant costs the
 # Low tier up to three instanced draws (LOD1 bark + foliage, impostor). Build 1 with 2 + 2 young variants raised the
 # instanced draws of the forest cameras by 8-30 (artifacts/forest-0187/compare1-dojlidy-Low.tsv).
-NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2}       # others: 3
+NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2, "willow": 1}  # others: 3
 IMP_SCALE = {"pineyoung": 0.5}    # impostor views of the pine thicket at half resolution (a filled cone; the airy
 # young birch at half resolution left the trim polygon of ImpostorTrim over 60 % of the frame)
 NO_IMPOSTOR = ("floor",)
@@ -133,12 +134,81 @@ def bend_path(p0, d, L, n, rng, wobble, gravity=0.0):
     return pts
 
 
+def willow_blueprint(height, variant=0):
+    """Deterministic 0227 weeping-willow study; all proportions WORKING_VALUE.
+
+    This is procedural original geometry, not a scan. The orchard silhouette,
+    branch count and heights are not species survey data. Both LODs use these
+    exact positions; this helper deliberately has no Blender dependencies.
+    """
+    H = float(height)
+    if not math.isfinite(H) or H <= 0:
+        raise ValueError("willow height must be positive and finite")
+    rng = random.Random(220270 + int(variant))
+    trunk = [np.array(p, float)*H for p in
+             ((0., 0., -.02), (.006, -.004, .24), (.015, .006, .68), (.004, .010, .92))]
+    limbs, strands = [], []
+    for i in range(10):
+        angle = 2*math.pi*(i/10.) + rng.uniform(-.17, .17)
+        radial = np.array([math.cos(angle), math.sin(angle), 0.])
+        side = np.array([-math.sin(angle), math.cos(angle), 0.])
+        root = trunk[1]*(1.-i/10.) + trunk[2]*(i/10.)
+        root = root + np.array([0., 0., H*rng.uniform(-.035,.045)])
+        span = H*rng.uniform(.25,.40)
+        tip = root + radial*span + np.array([0.,0.,H*rng.uniform(.20,.30)])
+        bend = (root+tip)*.5 + side*(H*rng.uniform(-.025,.025)) + np.array([0.,0.,H*.065])
+        limbs.append((root,bend,tip))
+        for j in range(6):
+            f = .28 + .68*(j+rng.uniform(.15,.85))/6.
+            p = bend*(1.-f)+tip*f + side*(H*rng.uniform(-.035,.035))
+            drop = H*rng.uniform(.22,.46)
+            end = p + radial*(H*rng.uniform(.025,.075)) + side*(H*rng.uniform(-.025,.025))
+            end[2] = max(H*.12,p[2]-drop)
+            middle = (p+end)*.5 + radial*(H*rng.uniform(.01,.04))
+            width = H*rng.uniform(.055,.10)
+            strands.append((p,middle,end,side,radial,width))
+    return trunk, limbs, strands
+
+
+def grow_willow(g, height, variant, lod):
+    """Experimental weeping silhouette using only existing, licensed project assets.
+
+    Uses linden bark and birch leaf cards as temporary, visibly non-botanical
+    stand-ins. No owner photo pixels are used. Proportions, leaf shape and total
+    cost are WORKING_VALUE and must pass visual / budget QA before game use.
+    """
+    trunk, limbs, strands = willow_blueprint(height, variant)
+    V = lambda p: Vector(tuple(float(x) for x in p))
+    g.tube("bark_linden", [V(p) for p in trunk], [.25,.21,.12,.035], seg=7 if lod == 0 else 5)
+    for root, bend, tip in limbs:
+        g.tube("bark_linden", [V(root),V(bend),V(tip)], [.105,.065,.018], seg=5 if lod == 0 else 3)
+    for index,(top,middle,end,side,radial,width) in enumerate(strands):
+        # LOD1 selects the same strand positions; no unrelated random redraw.
+        if lod > 0 and index % 3 != 0:
+            continue
+        for a,b in ((top,middle),(middle,end)):
+            # Two crossed, vertically hanging cards; gaps between strands remain.
+            for horizontal in (side, (side+radial)*(.5**.5)):
+                delta=horizontal*(width*.5)
+                normal=np.cross(horizontal,b-a)
+                norm=float(np.linalg.norm(normal))
+                if norm < 1e-8:
+                    continue
+                normal=normal/norm
+                g.quad("leaves_birch", V(a-delta),V(a+delta),V(b+delta),V(b-delta),
+                       ((0,1),(1,1),(1,0),(0,0)),V(normal))
+    return g
+
+
 def grow(species, variant, lod):
     rng = random.Random(hash((species, variant)) & 0xFFFF if False else (sum(map(ord, species)) * 31 + variant))
     H = HREF[species] * rng.uniform(0.92, 1.08)
     g = Geo()
     g.crown_height = H
     g.crown_phase = variant * 1.73 + sum(map(ord, species)) * .013
+    if species == "willow":
+        # Only requested explicitly by --include-willow or --quick tree_willow_0.
+        return grow_willow(g, H, variant, lod), H
     leaf = f"leaves_{species}"
     cards_keep = 1.0 if lod == 0 else (0.6 if species == "birch" else 0.33)
     csize_k = 1.0 if lod == 0 else (1.5 if species == "birch" else 1.6)
@@ -1084,7 +1154,11 @@ def main():
     if "--reuse-bakes" in argv and (VEG / "trees_meta.json").exists():
         cached = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))
     rebake = set(argv[argv.index("--rebake") + 1].split(",")) if "--rebake" in argv else set()   # species
-    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES:
+    # 0227: opt-in only so a routine rebuild of established vegetation is unchanged.
+    # The full opt-in export includes all existing species plus tree_willow_0 in
+    # trees.glb / trees_lod2.glb / trees_meta.json, with the normal impostor bake.
+    experimental = ("willow",) if "--include-willow" in argv or quick == "tree_willow_0" else ()
+    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES + experimental:
         for v in range(NVAR.get(sp, 3)):
             name = f"tree_{sp}_{v}"
             if quick and name != quick:
@@ -1092,7 +1166,7 @@ def main():
             g0, H = grow(sp, v, 0)
             o0 = to_object(name, g0)
             g1, _ = grow(sp, v, 1)
-            if sp not in NEW_SPECIES:
+            if sp not in NEW_SPECIES and sp != "willow":
                 g1 = reuse_leaf_lod(g0, g1, sum(map(ord, sp)) * 31 + v)
             o1 = to_object(name + ".lod1", g1)
             o1.hide_render = True
