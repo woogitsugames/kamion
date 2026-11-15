@@ -15,9 +15,10 @@ namespace Game.Vehicle.Physics
         public string id = "";
         public string size = "";
 
-        /// <summary>Geometric (loaded) radius [m]: wheel-centre height above the contact plane. Used for the contact rays and the
-        /// suspension hardpoint (the tire's radial deflection is carried by the suspension state, so the wheel centre stays at
-        /// this height; ADR 0201). Also the contact-patch plane of the visual wheel (tyreFlatRadius).</summary>
+        /// <summary>Geometric radius [m] of the contact model (rigid disc): used for the contact rays and the suspension
+        /// hardpoint. The tire's radial deflection is added in series (WheelGroup: hardpoint height = radius + SStatic -
+        /// refLoad / radialStiffness), so the static wheel-centre height is radius minus the static deflection (ADR 0201).
+        /// Also the contact-patch plane of the visual wheel (tyreFlatRadius).</summary>
         public double radius = 0.51;
         /// <summary>Effective rolling radius [m] = rolling circumference / 2π: wheel speed ↔ road speed and tire force ↔ wheel
         /// torque (drive, brake, rolling resistance). 0 = use <see cref="radius"/> (pre-ADR 0201 data).</summary>
