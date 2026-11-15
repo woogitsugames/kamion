@@ -44,3 +44,14 @@ Pary są przygotowywane wyłącznie lokalnie przez `compare.py`; nie zamieszcza�
 
 ## Wierzba płacząca — analiza techniczna
 Istniejące `tree_shrub` w module brzegowym nie jest dorosłą wierzbą płaczącą. Osobny prototyp wymaga LOD0/LOD1, impostora i materiału drobnych liści oraz weryfikacji wizualnej; koszt i pozycja UNVERIFIED. Ścieżka authored `points_en` losuje obecnie wariant 0–2 bez ograniczenia `NVAR`, więc jeden wariant wymaga poprawki doboru indeksu; dodanie gatunku do globalnych mieszanek zmieniłoby dotychczasowe losowania i nie jest potrzebne. Nowy zasób wymaga wpisu licencyjnego i pomiaru Low/High.
+
+## Iteracja r1 — ocena 15.11, editor
+
+Rendery Low/High × clear/dusk: `artifacts/knyszyn-rynek-0227/r1/`; lokalne pary 01–11: `artifacts/knyszyn-rynek-0227/compare/r1/High-clear/` (zdjęcia poza Git). **FAIL**, nie jest to ocena właściciela ani pomiar telefonu.
+
+- W 03–07 zwarta ściana lasu zniknęła, ale korony wyglądają jak spłaszczone sosny, nie lipy; zdjęcia wskazują większe pełne korony i gęstszy układ. Trzy punkty odrzucone przez maskę.
+- W 04/05 centralny plac ma widoczny podest i ciemne krawędzie, fontanna zlewa się z nawierzchnią i nie ma strumieni; plac nie jest równo z trawnikiem. Ujęcie 06 nie jest na osi alei.
+- 03: część ścian urzędu jest ślepa, kolumny nie tworzą loggii ze zdjęcia; kamery 01/02 wymagają dostrojenia. 08: sylwetka króla jest zastępczym słupkiem, nie figurą.
+- 05–07: kościół ma rozpoznawalny kolor i wieżę, ale bryła jest zbyt uproszczona; kąty zdjęć i pierzeje wymagają korekty.
+- 09–11: widoczny pierścień ronda nie ma jasnej dwustrefowej wyspy i długich azylów; kamera 09/10 ma inny obrót i perspektywę niż zdjęcie. Zakres ronda wymaga #97 i danych zgodnych z nowym stanem.
+- Szacowane draws edytora Low: maksimum 429 → 440 (`tykocka-into-town`); na wspólnych kamerach największy wzrost 14 (`cab-mirror-front`). High max 760 → 774. Mesh `trisExact` Low max 370158 → 368247, High 1237074 → 1237336; instancje są w osobnych wierszach. Low bez pogorszenia NIE spełnione. Szczegóły: `budget-r1.py`, `before/*/stats.txt`, `r1/*/stats.txt`.
