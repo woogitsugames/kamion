@@ -26,7 +26,8 @@ jako DK65**:
 | przebieg | Andersa → Maczka → Kleeberga → łącznica → rondo Pamięci Męczeństwa Kresowian (DW669) → Szosa Ełcka → Szosa Knyszyńska → Fasty (Ełcka) → Dobrzyniewo Duże (Studzienna) → rondo z DK65 → DK65 → Knyszyn (Obozowa) → rondo DK65/DW671 → Tykocka → Rynek | Andersa → Maczka → Kleeberga do węzła z S19 → S19 → węzeł Dobrzyniewo → DK65 → dalej jak A |
 | zgodność z D64 | tak (bez ekspresówki) | nie (4,8 km ekspresówki) |
 
-Wariant A przyjęty jako WORKING_ASSUMPTION, bo D64 mówi „zwykłą drogą, nie ekspresówką”, a zdjęcia właściciela
+Wariant A przyjęty (lider potwierdził w trakcie zadania: „wariant A — stara droga, bez S19”; pytanie do
+właściciela niżej zostaje), bo D64 mówi „zwykłą drogą, nie ekspresówką”, a zdjęcia właściciela
 z DK65 pokazują jedną jezdnię 2×1 z budową obok (zgodne z odcinkiem km 16,7–25 obu wariantów). Od ronda
 (767641, 603483; km 16,66 wariantu A) oba warianty są identyczne.
 
@@ -51,7 +52,8 @@ Wariant A — odcinki (km liczone od startu; `way_id` wszystkich 94 odcinków w 
 Liczby z OSM dla wariantu A: 3 ronda, 7 mostów/wiaduktów, 75 węzłów trasy z innymi drogami (30 z drogą klasy ≥
 tertiary lub łącznicą), 1 sygnalizacja i 14 przejść oznaczonych na węzłach trasy, 0 przejazdów kolejowych w poziomie.
 Ograniczenia dla ciężarówek: brak `hgv=no`, `maxweight`, `maxheight` na całej trasie; `maxaxleload=11.5` do km 6,18,
-`maxaxleload=10` dalej (stara droga i DK65) — do uwzględnienia w danych pojazdu (ADR 0164), nie blokuje przejazdu.
+`maxaxleload=10` dalej (stara droga i DK65) — do uwzględnienia w danych pojazdu (ADR 0164). Czy naciski osi naszego zestawu mieszczą się w 10 t na oś
+pojedynczą — UNVERIFIED (nie porównane z danymi pojazdu).
 
 Budowa ekspresówki (OSM, pas 600 m od trasy): `highway=construction` motorway 16,6 km przy km 16,7–25,0 (ostatnia
 edycja 2026-09-28), łącznice i drogi serwisowe w budowie (unclassified 5,8 km, secondary 2,4 km km 22,7–25,0,
@@ -131,7 +133,7 @@ Szerokości jezdni po obu stronach szwu po zastosowaniu overrides C nie były po
 **Drogi kontra ortofoto** (D64 „drogi najpierw”). Narzędzie `tools/worldgen/qa/junction_topview.py` rysuje widok
 z góry wprost z trójkątów chunków GLB (bez LOD) obok ortofoto w tym samym kadrze; lista węzłów w
 `Data/Regions/bialystok-maczka/junction_checks.authored.json`. Obejrzane (agent, Read na JPG): 7 węzłów
-(`junctions/j1…j7`), 16 z 35 odcinków trunk/trunk_link (`lanes/lanes_00.jpg`),
+(`junctions/j1…j7`), 35 odcinków trunk/trunk_link (`lanes/lanes_00…02.jpg`, stan r1),
 powiększenia `lanes/zoom_a.jpg`, `zoom_b.jpg`, `zoom_r2.jpg`; dla wszystkich 35 odcinków szerokość jezdni z profilu
 poprzecznego (`lane_widths.json`: asfalt na ortofoto wobec jezdni wygenerowanej).
 | Miejsce | Zgodne | Rozbieżne → co zrobione |
@@ -160,23 +162,34 @@ są odtworzone (OSM bez `turn:lanes` na łącznicach).
 - Kamery z drogi, 1920×1080, overcast (szacunek edytora przed batchingiem, `vqa-r2/*/stats.txt`):
   Low 91–586 draws, 150–388 tys. trójkątów; High 98–1348 draws, 0,20–1,38 mln trójkątów (najcięższe:
   `route_s0147` 1348 draws, `route_s0733` 1,38 mln trójkątów).
+- Wobec hipotez `docs/06` §6 (szacunek edytora, nie telefon): **Low** trójkąty w normie (max 388 tys. ≤ 400–600 tys.),
+  draws **ponad** 300–400 na 3 z 10 kamer z drogi (`route_s0440` 425, `route_s0733` 525, `route_s1027` 586);
+  **High** trójkąty w normie (max 1,38 mln ≤ 1,5–2 mln), draws **ponad** 700–1000 na 5 z 10 kamer (1080–1348).
+  Liczby są sprzed SRP batchingu, więc przekroczenie draws to sygnał do pomiaru, nie wynik.
 - Pomiar na A16 nie wykonany (lider; region nie jest w `BuildScenes`).
 
 ## Walidacja
-- `tests/gis/test_maczka_0203.py`: 6/6. Pełny `pytest tests/gis` (przed dodaniem tego pliku): **1151 passed,
-  1 failed, 2 xfailed** (966 s); porażka `test_dojbld_0185::test_fence_mesh_mips_do_not_preserve_coverage` szuka
+- `tests/gis/test_maczka_0203.py`: 6/6. Pełny `pytest tests/gis` na końcowym drzewie: **PYTEST_FINAL**
+  (przebieg w trakcie buildu r2: 1151 passed, 1 failed, 2 xfailed, 966 s); porażka `test_dojbld_0185::test_fence_mesh_mips_do_not_preserve_coverage` szuka
   w `InstanceImporter.cs` linii, której nie ma także w main (nie z 0203).
 - EditMode: **581 total, 580 passed, 0 failed, 1 skipped**.
 - visual-qa scena `World_bialystok-maczka`, overcast: r1 Low (pierwszy import) — obejrzane 7 kamer trasy
   i `roundabout_01_above`; r2 (po poprawkach pasów) Low + High wyrenderowane, obejrzane z High 3 kamery place
-  i `route_s0147`. W obejrzanych kadrach: jezdnia ciągła, bariery i ekrany na miejscu, brak dziur w terenie
-  i wiszących budynków. Kadry tras r2 i tier High poza tymi czterema nie były oglądane. Ocena `visual-critic` — lider.
+  i wszystkie 7 kamer trasy, `roundabout_01_above`, `chase`. W obejrzanych kadrach: jezdnia ciągła, bariery i ekrany
+  na miejscu, brak dziur w terenie i wiszących budynków. Kadry tras r2 Low nie były oglądane ponownie (te same kamery
+  co r1). Ocena `visual-critic` — lider.
 - QA danych: ściany terenu > 0,15 m: 11 (max 0,40 m); spójność nawierzchni 53 przypadki, w paśmie trasy 12.
 
 ## Otwarte (backlog szlifu)
-1. `furniture_in_lane` ×2 przy wschodnim końcu wiaduktu na jezdni wschodniej (776869–776873, 596254): koniec
-   bariery przy przejściu 2 → 3 pasy (pojawiło się po zwężeniu pomostu do 2 pasów). Jezdnia wschodnia nie jest
-   trasą kontrolną i nie była przejechana — sprawdzić przed APK.
+1. **Przeszkoda na jezdni wschodniej przy wschodnim końcu wiaduktu** (`furniture_in_lane` ×2; lokalnie E 919,5–926,5,
+   N 30,5–31,4 = EPSG:2180 776866–776873, 596253–596254). Zmierzone w `chunk_7_3.glb`: ścianka `concrete_wall`
+   z balustradą `steel_galv` (góra 132,65 m, jezdnia 131,3–131,7 m, czyli ~1 m nad nawierzchnią) stoi na linii
+   krawędzi pomostu 2-pasowego i wchodzi na ~7 m długości w jezdnię 3-pasową odcinka 23982184, 1,6–2,6 m od jej
+   południowej krawędzi (skok szerokości 8,25 → 10,75 m bez klina). Leży w przedłużeniu krawędzi pomostu, więc pasy
+   1–2 jadące prosto z wiaduktu są wolne; zajęte jest pierwsze ~7 m dodanego prawego pasa. Przed zwężeniem pomostu był
+   1 taki przypadek. Nie naprawione: odcinek 23982184 przechodzi przez szew do kafla C (zmiana pasów rozjechałaby szew),
+   potrzebny klin/skrócenie ścianki w generatorze. Jezdnia wschodnia nie jest trasą kontrolną i nie była przejechana —
+   **do naprawy przed jazdą na wschód / APK**.
 2. `arrow_no_exit` ×4 (strzałka w prawo bez wylotu przy włączeniach), `obstacle_in_lane` ×3 na łącznikach
    Orlicz-Dreszera (zieleń/pobocze w pasie łącznika), `marking_off_carriageway` ×1, `lane_blind_end` ×2.
 3. Brak P-21 i strzałek na wlotach ronda; pas między pomostami wiaduktu otwarty (widać teren pod spodem).
@@ -186,7 +199,7 @@ są odtworzone (OSM bez `turn:lanes` na łącznicach).
    w pliku authored (E 791,8), wejdzie przy następnym `build_world` (`generated/control_cameras.json` ma starą).
 6. Pojedyncze krzewy unoszące się nad trawą (`route_s0733`, `roundabout_01_above`), biała obwódka alfa drzew na Low.
 7. Pamięć High 2× Dojlidy (1760 budynków) — do pomiaru na A16 przed dołączeniem do APK.
-8. 19 odcinków łącznic/jezdni z `lanes_01/02.jpg` nieobejrzane; pozostałe jezdnie kafla
+8. Pozostałe jezdnie kafla
    (Hallera, Świętokrzyska, Gajowa, Lodowa…) nie były porównywane z ortofoto — poza trasą D64.
 
 ## Odtworzenie
@@ -200,5 +213,8 @@ pwsh scripts/import-region.ps1 -Region bialystok-maczka
 uv run --project tools/worldgen python tools/worldgen/qa/junction_topview.py --region bialystok-maczka --out artifacts/bialystok-dk65-0203/junctions
 pwsh scripts/visual-qa.ps1 -Scene World_bialystok-maczka -Tier Low -Lighting overcast -Width 1920 -Height 1080 -OutputDir <dir>
 ```
+Dane poza gitem istnieją tylko w worktree: `Data/raw/derived/bialystok-maczka/` (heightmap, ortho, `world/` 1,1 GiB)
+i `game/Assets/_Generated/World/bialystok-maczka/`. Po scaleniu lider albo je kopiuje (robocopy do main), albo
+odtwarza komendami wyżej (~50 min).
 Dowody: `artifacts/bialystok-dk65-0203/` (`junctions/`, `junctions-r1/`, `lanes/`, `lane_widths.json`, `graph/`,
-`vqa-r1/`, `vqa-r2/`, logi, skrypty `chain.ps1`, `vqa.ps1`, `lane_widths.py`, `zoom.py`).
+`vqa-r1/`, `vqa-r2/`, logi, skrypty `chain.ps1`, `vqa.ps1`); narzędzia porównania w `tools/worldgen/qa/junction_{topview,zoom,lane_stations,lane_widths}.py`.
