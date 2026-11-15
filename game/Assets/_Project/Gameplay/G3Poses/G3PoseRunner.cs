@@ -133,13 +133,15 @@ namespace Game.Gameplay
 
             if (file == null) errors.Add("pose file missing or invalid (Resources/" + G3PoseSet.ResourceName + ".json)");
             else if (poses.Count == 0) errors.Add($"filter '{a.Filter}' matched no pose");
-            if (errors.Count == 0)
+            // Poses dropped by the parser stay in errors (reported as FAIL, the run is not clean) but the valid ones are captured.
+            bool canRun = file != null && poses.Count > 0;
+            if (canRun)
             {
                 try { Directory.CreateDirectory(dir); }
-                catch (Exception e) { errors.Add("cannot create " + dir + ": " + e.Message); }
+                catch (Exception e) { errors.Add("cannot create " + dir + ": " + e.Message); canRun = false; }
             }
 
-            if (errors.Count == 0 || (file != null && poses.Count > 0 && Directory.Exists(dir)))
+            if (canRun)
             {
                 Debug.Log(G3PoseCapture.BeginLine(a.RunId, poses.Count, man.total, man.tier, a.Lighting, a.Width, dir));
                 Debug.Log($"{G3PoseCapture.Tag} build={man.build} device='{man.device}' gpu='{man.gpu}' renderScale={scale} msaa={msaa} screen={Screen.width}x{Screen.height}");
