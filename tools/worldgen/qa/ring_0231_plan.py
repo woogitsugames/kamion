@@ -396,7 +396,7 @@ def overrides_yaml(tile: dict) -> str:
       both sides) is continued so that the seam keeps one width and one set of lines. NOT measured in this tile
       (no orthophoto in the session that wrote ADR {ADR}); BDOT10k width unknown until build_region runs.
     confidence: low
-    verify: orthophoto 0.1 m cross profiles after the ingest (tool of ADR 0212: artifacts/knyszyn-edges-0212/tools/linew.py); owner drive
+    verify: "orthophoto 0.1 m cross profiles after the ingest (tool of ADR 0212 - artifacts/knyszyn-edges-0212/tools/linew.py); owner drive"
     set: {{lanes: {DK65_SET['lanes']}, lane_width: {DK65_SET['lane_width']}, edge_strip: {DK65_SET['edge_strip']}, edge_lines: {DK65_SET['edge_lines']}}}
   - id: dk65-fields-unlit
     target: {{osm_way: {w}}}
