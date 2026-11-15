@@ -50,16 +50,112 @@ namespace Game.UI
         /// <summary>Builds the menu. <paramref name="cam"/> null = screen-space overlay; a camera = capture/test.
         /// <paramref name="openAbout"/> null = the menu opens its own <see cref="AboutPanel"/> (screen-space overlay).</summary>
         public static BootMenu Create(Camera cam, StartMenuOptions options, IReadOnlyList<(string label, Action action)> starts, Action openSettings,
-                                      Action openAbout = null)
+                                      Action openAbout = null, IReadOnlyList<BootRegionChoice> regions = null)
         {
             var go = new GameObject("BootMenu");
             var menu = go.AddComponent<BootMenu>();
             menu.Options = options;
-            menu.Build(cam, starts, openSettings, openAbout ?? (() => AboutPanel.Create(null, null)));
+            menu.Build(cam, starts, openSettings, openAbout ?? (() => AboutPanel.Create(null, null)), regions);
             return menu;
         }
 
-        void Build(Camera cam, IReadOnlyList<(string label, Action action)> starts, Action openSettings, Action openAbout)
+        // ---- region picker (ADR 0229): one row "< region >" + start button; regions missing from the APK are greyed out
+        /// <summary>PlayerPrefs key of the last picked region id.</summary>
+        public const string PrefRegion = "menu.region";
+        public const string RegionPrevName = "RegionPrev", RegionNextName = "RegionNext", RegionStartName = "RegionStart";
+        public const string RegionStartLabel = "Jedź w wybranym regionie", RegionMissingLabel = "Region niedostępny w tym APK";
+        IReadOnlyList<BootRegionChoice> m_Regions;
+        int m_RegionIndex = -1;
+        Text m_RegionLabel, m_RegionDetail, m_RegionStartText;
+        Button m_RegionStart;
+
+        /// <summary>Index of the region shown in the picker (-1 = no picker).</summary>
+        public int RegionIndex => m_RegionIndex;
+        public BootRegionChoice CurrentRegion => m_RegionIndex >= 0 ? m_Regions[m_RegionIndex] : default;
+
+        /// <summary>First index to show: the stored pick when it is in this APK, else the first region in this APK.</summary>
+        public static int InitialRegionIndex(IReadOnlyList<BootRegionChoice> regions, string storedId)
+        {
+            if (regions == null || regions.Count == 0) return -1;
+            int first = -1;
+            for (int i = 0; i < regions.Count; i++)
+            {
+                if (!regions[i].Available) continue;
+                if (regions[i].Id == storedId) return i;
+                if (first < 0) first = i;
+            }
+            return first;
+        }
+
+        /// <summary>Shows the previous / next region (wraps; greyed regions included so the owner sees what is missing).</summary>
+        public void StepRegion(int delta)
+        {
+            if (m_Regions == null || m_Regions.Count == 0) return;
+            int n = m_Regions.Count;
+            m_RegionIndex = ((m_RegionIndex + delta) % n + n) % n;
+            RefreshRegion();
+        }
+
+        void StartRegion()
+        {
+            if (m_RegionIndex < 0) return;
+            var r = m_Regions[m_RegionIndex];
+            if (!r.Available || r.Start == null) return;
+            PlayerPrefs.SetString(PrefRegion, r.Id);
+            PlayerPrefs.Save();
+            Debug.Log(Options.StartLine("region " + r.Id));
+            r.Start();
+        }
+
+        void RefreshRegion()
+        {
+            if (m_RegionIndex < 0 || m_RegionLabel == null) return;
+            var r = m_Regions[m_RegionIndex];
+            m_RegionLabel.text = r.Label;
+            m_RegionLabel.color = r.Available ? k_Text : k_Muted;
+            m_RegionDetail.text = (m_RegionIndex + 1) + "/" + m_Regions.Count + " · " + r.Detail;
+            m_RegionStart.interactable = r.Available;
+            m_RegionStartText.text = r.Available ? RegionStartLabel : RegionMissingLabel;
+            m_RegionStartText.color = r.Available ? k_Text : k_Muted;
+        }
+
+        float BuildRegionPicker(IReadOnlyList<BootRegionChoice> regions, float left, float y)
+        {
+            m_Regions = regions;
+            m_RegionIndex = InitialRegionIndex(regions, PlayerPrefs.GetString(PrefRegion, ""));
+            if (m_RegionIndex < 0) return y;   // no region of the catalog in this APK: no picker
+            const float arrowW = 96f, rowH = 88f;
+            y -= 8f;
+            Label(m_Safe, "HeaderRegion", "REGION — START NA POCZĄTKU TRASY", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(left, y - 36f), new Vector2(ColW, 36f));
+            y -= 44f;
+            Button(m_Safe, "<", new Vector2(left, y - rowH), new Vector2(arrowW, rowH), 40, TextAnchor.MiddleCenter, () => StepRegion(-1)).name = RegionPrevName;
+            Button(m_Safe, ">", new Vector2(left + ColW - arrowW, y - rowH), new Vector2(arrowW, rowH), 40, TextAnchor.MiddleCenter, () => StepRegion(1)).name = RegionNextName;
+            float bw = ColW - 2f * (arrowW + Gap);
+            var box = Rect("RegionBox", m_Safe);
+            Place(box, new Vector2(left + arrowW + Gap, y - rowH), new Vector2(bw, rowH));
+            var bg = box.gameObject.AddComponent<Image>();
+            bg.color = k_Panel; bg.raycastTarget = false;
+            m_RegionLabel = Label(box, "RegionLabel", "", 28, TextAnchor.MiddleLeft, k_Text, new Vector2(-bw * 0.5f + 16f, 0f), new Vector2(bw - 32f, rowH * 0.5f));
+            m_RegionDetail = Label(box, "RegionDetail", "", 21, TextAnchor.MiddleLeft, k_Muted, new Vector2(-bw * 0.5f + 16f, -rowH * 0.5f + 4f), new Vector2(bw - 32f, rowH * 0.5f - 4f));
+            foreach (var t in new[] { m_RegionLabel, m_RegionDetail })
+            {
+                // Long street names shrink instead of running under the arrows.
+                t.horizontalOverflow = HorizontalWrapMode.Wrap; t.verticalOverflow = VerticalWrapMode.Truncate;
+                t.resizeTextForBestFit = true; t.resizeTextMinSize = 16; t.resizeTextMaxSize = t.fontSize;
+            }
+            y -= rowH + Gap;
+            var go = Button(m_Safe, RegionStartLabel, new Vector2(left, y - BtnH), new Vector2(ColW, BtnH), 31, TextAnchor.MiddleLeft, StartRegion);
+            go.name = RegionStartName;
+            m_RegionStart = go.GetComponent<Button>();
+            m_RegionStartText = go.GetComponentInChildren<Text>();
+            m_RegionStartText.rectTransform.offsetMin = new Vector2(32f, 0f);
+            y -= BtnH + Gap;
+            m_Refresh.Add(RefreshRegion);
+            return y;
+        }
+
+        void Build(Camera cam, IReadOnlyList<(string label, Action action)> starts, Action openSettings, Action openAbout,
+                   IReadOnlyList<BootRegionChoice> regions)
         {
             var canvas = gameObject.AddComponent<Canvas>();
             canvas.renderMode = cam != null ? RenderMode.ScreenSpaceCamera : RenderMode.ScreenSpaceOverlay;
@@ -95,6 +191,7 @@ namespace Game.UI
                 b.GetComponentInChildren<Text>().rectTransform.offsetMin = new Vector2(32f, 0f);
                 y -= BtnH + Gap;
             }
+            if (regions != null && regions.Count > 0) y = BuildRegionPicker(regions, left, y);
 
             // ---- right: options
             Label(m_Safe, "HeaderOptions", "OPCJE", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(right, top - 8f), new Vector2(ColW, 36f));
@@ -179,6 +276,19 @@ namespace Game.UI
             t.rectTransform.anchorMin = Vector2.zero; t.rectTransform.anchorMax = Vector2.one;
             t.rectTransform.offsetMin = t.rectTransform.offsetMax = Vector2.zero;
             return rt.gameObject;
+        }
+    }
+
+    /// <summary>One region of the start menu's region picker (ADR 0229). <see cref="Available"/> = its scene is in this APK.</summary>
+    public readonly struct BootRegionChoice
+    {
+        public readonly string Id, Label, Detail;
+        public readonly bool Available;
+        public readonly Action Start;
+
+        public BootRegionChoice(string id, string label, string detail, bool available, Action start)
+        {
+            Id = id ?? ""; Label = label ?? Id; Detail = detail ?? ""; Available = available; Start = start;
         }
     }
 }

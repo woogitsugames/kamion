@@ -27,11 +27,7 @@ namespace Game.World.Import
     /// </summary>
     public static class WorldSceneBuilder
     {
-        public static string SceneNameFor(string region, string tier = "Low")
-        {
-            string b = region == "bialystok-industrial-c" ? "WorldC" : "World_" + region;
-            return tier == "High" ? b + "_High" : b;
-        }
+        public static string SceneNameFor(string region, string tier = "Low") => RegionScenes.SceneNameFor(region, tier);   // one rule (ADR 0229)
 
         /// <summary>Builds the scene of one content tier: "Low" (Low + Medium quality, WorldC) or "High" (WorldC_High).</summary>
         public static void Build(RegionImporter.Result r, string tier)
