@@ -32,3 +32,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 18:51 +01:00 — Testy test_region_knyszyn_0204 + test_knyszyn_park_0227: 14 passed. Przygotowano lokalny generator zestawień zdjęcie/render (bez zdjęć w Git); r1 nadal czeka na slot heavy.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 18:53 +01:00 — R1 uzyskało slot heavy i przebudowuje region. Moduł obelisku/monumentu/ławek/latarni przygotowany, 3 testy passed; sylwetka króla PROXY_NOT_APPROVED, orzeł i emisja latarni otwarte.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
