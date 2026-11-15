@@ -91,6 +91,9 @@ W GLB Low LoD0 nie ma (sam LoD1: 0,512·1 800 ≈ 0,9 tys. na chunk). Draws: ≤
 - Determinizm: kod etapu jest wyłącznie za `RL.enabled(...)` / `w.rail is not None`; nowe pozycje w `LAYERS`/`NODES`
   dla regionów bez toru są puste, więc GLB i manifest bez zmian. **Nie sprawdzone pełnym build_world** (brak Data/raw
   w chmurze) — komenda dla lidera niżej.
+- `test_road_fidelity::test_report_not_stale` pada, bo `fidelity_qa.json` C hashuje `build_world.py` (zmieniony
+  tutaj); wynik C się nie zmienia, ale raport trzeba odświeżyć z Data/raw:
+  `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c`.
 - Ocena wizualna: nie wykonana (brak Unity/GPU) — do lidera.
 
 ## Integracja z Unity (lider)
