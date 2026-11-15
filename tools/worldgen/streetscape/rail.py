@@ -292,6 +292,19 @@ def _frame(line: LineString, s):
     return P, T, Nl
 
 
+def _deck_z(road_z_at, x, y):
+    """Road surface under a panel / rail vertex: the highest of the point and 4 points PANEL_STEP / 2 around it, so a
+    ribbon that is linear between its stations never dips under the crown ridge of the carriageway (render r3: with
+    the point sample alone the crown showed through the panels as a notch along the road axis). Raises the deck by
+    at most PANEL_STEP / 2 x gradient (5 mm at 2 % cross-fall) over the asphalt."""
+    x, y = np.asarray(x, float), np.asarray(y, float)
+    h = PANEL_STEP / 2
+    z = road_z_at(x, y)
+    for dx, dy in ((h, 0.0), (-h, 0.0), (0.0, h), (0.0, -h)):
+        z = np.maximum(z, road_z_at(x + dx, y + dy))
+    return z
+
+
 def _stations(length, step, extra=()):
     n = max(1, int(math.ceil(length / step - 1e-9)))
     s = np.linspace(0.0, length, n + 1)
@@ -526,7 +539,7 @@ class Plan:
             z = (1 - wgt) * z + wgt * zr
             inz = (s >= sa - 1e-6) & (s <= sb + 1e-6)
             if inz.any():
-                z[inz] = road_z_at(P[inz, 0], P[inz, 1]) + PANEL_LIFT
+                z[inz] = _deck_z(road_z_at, P[inz, 0], P[inz, 1]) + PANEL_LIFT
         return z
 
     # -------------------------------------------------------------------------------------------- meshes
@@ -617,7 +630,7 @@ class Plan:
                 for (sa, sb, _) in t.zones:
                     inz |= (sk >= sa - 1e-6) & (sk <= sb + 1e-6)
                 if inz.any():
-                    top = road_z_at(Pk[inz, 0], Pk[inz, 1]) + PANEL_LIFT
+                    top = _deck_z(road_z_at, Pk[inz, 0], Pk[inz, 1]) + PANEL_LIFT
                     V[inz, 2] = top + np.tile(dz, len(s))[inz]
             # the rail samples its own painted rail in the rail_bed tile (always the 1435 mm one): polished running
             # band on the top face, rust on the sides -> the whole track is ONE material (1 draw per chunk and LoD)
@@ -693,7 +706,7 @@ class Plan:
             if l1 - l0 < 0.05:
                 continue
             V, UV, T = _ribbon(P, Nl, np.zeros(len(s)), [l0, l1], [0.0, 0.0])
-            V[:, 2] = road_z_at(V[:, 0], V[:, 1]) + PANEL_LIFT
+            V[:, 2] = _deck_z(road_z_at, V[:, 0], V[:, 1]) + PANEL_LIFT
             UV = V[:, :2].copy()
             buf.add("rail_crossing", "rail_crossing_panel", V, UV, T, src=f"rail:crossing:{ci}")
             n += len(T)

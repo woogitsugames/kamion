@@ -208,7 +208,11 @@ def test_panels_at_road_height_and_rails_flush():
     panels = [q for q in buf.parts if q.layer == "rail_crossing"]
     assert panels and all(q.mat == "rail_crossing_panel" for q in panels)
     V = np.concatenate([q.V for q in panels])
-    assert np.allclose(V[:, 2], road_z_at(V[:, 0], V[:, 1]) + RL.PANEL_LIFT)
+    # never under the asphalt, and at most PANEL_STEP / 2 x gradient above the point sample (_deck_z: the crown
+    # of the carriageway must not show through a ribbon that is linear between its stations)
+    lift = V[:, 2] - road_z_at(V[:, 0], V[:, 1])
+    assert lift.min() >= RL.PANEL_LIFT - 1e-9 and lift.max() <= RL.PANEL_LIFT + 0.02 * RL.PANEL_STEP / 2 + 1e-6
+    assert np.allclose(V[:, 2], RL._deck_z(road_z_at, V[:, 0], V[:, 1]) + RL.PANEL_LIFT)
     # panels span the road (7 m) + margins along the track, the sleeper length across it
     assert np.ptp(V[:, 0]) >= 7.0 + 2 * RL.PANEL_MARGIN - 1e-6
     assert abs(np.ptp(V[:, 1]) - RL.SLEEPER_L) < 1e-6
@@ -216,7 +220,7 @@ def test_panels_at_road_height_and_rails_flush():
     # rail heads inside the panel zone are flush with the panels
     R = np.concatenate([q.V for q in buf.parts if q.layer == "rail_lod0" and q.src.endswith(":rail")])
     inz = (np.abs(R[:, 0] - 500) < 3.0)
-    heads = R[inz][np.isclose(R[inz][:, 2], road_z_at(R[inz][:, 0], R[inz][:, 1]) + RL.PANEL_LIFT)]
+    heads = R[inz][np.isclose(R[inz][:, 2], RL._deck_z(road_z_at, R[inz][:, 0], R[inz][:, 1]) + RL.PANEL_LIFT)]
     assert len(heads) > 0
     # no ballast / sleepers under the panels
     for q in buf.parts:
