@@ -35,6 +35,10 @@ ROW0_D_M = -0.35                   # row 0 stands in the water margin (foot unde
 HEIGHT_M = (2.3, 1.75, 1.45)       # mean top height of row 0 / 1 / 2+ (reed at the water, sedge / herbs behind)
 ZIGZAG_M = 0.28
 LEAN_M = 0.12
+PIECE_N = (2, 5)                   # clump length in samples (x SEG_M), r4
+GAP_P = 0.45                       # chance of a one-sample gap after a clump
+PIECE_OFF_M = 0.6                  # clump offset from its row (+-)
+OCC = (0.35, 0.80)                 # foliage occlusion at the foot / top of a ribbon (PlotKit: albedo factor)
 SHRUB_MAX_R = 2.2
 TREE_KEEP_M = 2.5
 
@@ -53,12 +57,13 @@ def texture(seed=213):
     d = ImageDraw.Draw(im)
     px_m = W / TEX_M
     # palette (sRGB): fresh reed leaf, blue-green reed, olive sedge, last year's straw stems, dark base, panicle
-    fresh = np.array([88, 116, 52])
-    blue = np.array([84, 110, 76])
-    olive = np.array([104, 112, 60])
-    straw = np.array([150, 134, 92])
-    dark = np.array([42, 50, 30])
-    pan = np.array([104, 82, 70])
+    # r4: darker, greyer (a reed bed seen from 20-200 m is olive-grey, never lime: orthophoto belt ~95/105/80)
+    fresh = np.array([74, 94, 46])
+    blue = np.array([72, 90, 64])
+    olive = np.array([90, 94, 54])
+    straw = np.array([136, 122, 88])
+    dark = np.array([38, 44, 28])
+    pan = np.array([96, 76, 66])
 
     def col(c, k):
         c = np.clip(c * (0.85 + 0.3 * k), 0, 255)
@@ -75,15 +80,15 @@ def texture(seed=213):
     # dense dark base (litter, stems in shade): the belt reads as a mass, not single blades
     for _ in range(1400):
         x = rng.uniform(0, W)
-        h = rng.uniform(0.10, 0.50) * H
+        h = rng.uniform(0.10, 0.40) * H
         lean = rng.normal(0, 0.12)
         pts = [(x + lean * h * t * t, H - h * t) for t in np.linspace(0, 1, 6)]
         stroke(pts, 6 * S, 1.5 * S, col(dark * rng.uniform(0.8, 1.5), rng.random()))
     # stems with leaves
-    for k in range(820):
+    for k in range(700):
         x = rng.uniform(0, W)
         tall = rng.random()
-        h = (0.42 + 0.56 * tall ** 0.8) * H
+        h = (0.30 + 0.68 * tall ** 1.3) * H          # ragged top: few stems reach the full height
         lean = rng.normal(0, 0.07)
         dry = rng.random() < 0.20
         base = straw if dry else (fresh, blue, olive)[int(rng.integers(0, 3))]
@@ -173,54 +178,65 @@ def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
             # contiguous stretches of this row
             idx = np.nonzero(on)[0]
             splits = np.split(idx, np.nonzero(np.diff(idx) > 1)[0] + 1)
-            for sp in splits:
-                if len(sp) < 2:
+            for sp0 in splits:
+                if len(sp0) < 2:
                     continue
-                k = np.arange(len(sp))
-                jit = np.array([_h(key0, row, int(i), "z") for i in sp]) - 0.5
-                zz = np.where(k % 2 == 0, 1.0, -1.0) * ZIGZAG_M + jit * 0.25
-                Q = P[sp] + Nm[sp] * (dist + zz)[:, None] + T_[sp] * ((np.array([_h(key0, row, int(i), "t") for i in sp]) - 0.5) * 0.4)[:, None]
-                inside = shapely.contains_xy(keep_out, Q[:, 0], Q[:, 1])
-                if inside.all():
-                    continue
-                hm = HEIGHT_M[min(row, len(HEIGHT_M) - 1)]
-                hn = np.array([_h(key0, row, int(i), "h") for i in sp])
-                h = hm * (0.72 + 0.50 * hn)
-                # taper the ends of a stretch (a belt fades out, never ends in a cut wall)
-                ramp = np.minimum(np.minimum(k + 1, len(sp) - k) / 3.0, 1.0)
-                h = h * (0.35 + 0.65 * ramp)
-                h[inside] = 0.0
-                zg = np.asarray(zground(Q[:, 0], Q[:, 1]), float)
-                zl = np.asarray(zlevel(Q[:, 0], Q[:, 1]), float)
-                foot = np.where(np.isfinite(zl) & (zg < zl - 0.25), zl - 0.25, zg) - 0.12
-                top = foot + h
-                lean = -Nm[sp] * LEAN_M * (1.0 if row == 0 else -0.5)       # row 0 leans over the water
-                s = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))])
-                u0 = _h(key0, row, "u")
-                u = u0 + s / TEX_M
-                V = np.zeros((2 * len(sp), 3))
-                V[0::2, :2], V[0::2, 2] = Q, foot
-                V[1::2, :2], V[1::2, 2] = Q + lean, top
-                UV = np.zeros((2 * len(sp), 2))
-                UV[0::2, 0] = UV[1::2, 0] = u
-                UV[0::2, 1] = 0.0
-                UV[1::2, 1] = np.clip(h / 2.5, 0.05, 1.0)    # texture spans 2.5 m: lower rows use the lower part
-                nrm = np.column_stack([-Nm[sp] * 0.35, np.full(len(sp), 0.94)])
-                C = np.zeros((2 * len(sp), 4))
-                for i_ in range(len(sp)):
-                    C[2 * i_] = _fol([nrm[i_, 0], nrm[i_, 1], nrm[i_, 2]], 0.45)
-                    C[2 * i_ + 1] = _fol([nrm[i_, 0], nrm[i_, 1], nrm[i_, 2]], 1.0)
-                Tr = []
-                for i_ in range(len(sp) - 1):
-                    if h[i_] <= 0 and h[i_ + 1] <= 0:
+                # r4: a belt is a chain of clumps, not a hedge: pieces of PIECE_N samples with small gaps, each with
+                # its own offset from the shore and height (the rows no longer read as parallel walls)
+                pieces, a_ = [], 0
+                while a_ < len(sp0) - 1:
+                    ln = int(PIECE_N[0] + _h(key0, row, int(sp0[a_]), "pl") * (PIECE_N[1] - PIECE_N[0] + 1))
+                    ln = max(2, (ln + 1) // 2 if low else ln)
+                    b_ = min(a_ + ln, len(sp0) - 1)
+                    pieces.append(sp0[a_:b_ + 1])
+                    a_ = b_ + (1 if _h(key0, row, int(sp0[a_]), "gap") < GAP_P else 0)
+                for pi_, sp in enumerate(pieces):
+                    if len(sp) < 2:
                         continue
-                    a_, b_, c_, d_ = 2 * i_, 2 * i_ + 2, 2 * i_ + 3, 2 * i_ + 1
-                    Tr += [(a_, b_, c_), (a_, c_, d_)]
-                if not Tr:
-                    continue
-                buf.add(layer, "water_reeds", V, UV, np.asarray(Tr), src=f"water:reeds:{ri}:{row}", COL=C)
-                ntri += len(Tr)
-                nrib += 1
+                    pk = (key0, row, int(sp[0]))
+                    k = np.arange(len(sp))
+                    jit = np.array([_h(key0, row, int(i), "z") for i in sp]) - 0.5
+                    zz = np.where(k % 2 == 0, 1.0, -1.0) * ZIGZAG_M + jit * 0.25 + (_h(*pk, "off") - 0.5) * 2 * PIECE_OFF_M
+                    Q = P[sp] + Nm[sp] * (dist + zz)[:, None] + T_[sp] * ((np.array([_h(key0, row, int(i), "t") for i in sp]) - 0.5) * 0.4)[:, None]
+                    inside = shapely.contains_xy(keep_out, Q[:, 0], Q[:, 1])
+                    if inside.all():
+                        continue
+                    hm = HEIGHT_M[min(row, len(HEIGHT_M) - 1)] * (0.75 + 0.45 * _h(*pk, "ph"))
+                    hn = np.array([_h(key0, row, int(i), "h") for i in sp])
+                    h = hm * (0.80 + 0.35 * hn)
+                    h[0] *= 0.45                       # a clump thins out at both ends
+                    h[-1] *= 0.45
+                    h[inside] = 0.0
+                    zg = np.asarray(zground(Q[:, 0], Q[:, 1]), float)
+                    zl = np.asarray(zlevel(Q[:, 0], Q[:, 1]), float)
+                    foot = np.where(np.isfinite(zl) & (zg < zl - 0.25), zl - 0.25, zg) - 0.12
+                    top = foot + h
+                    lean = -Nm[sp] * LEAN_M * (1.0 if row == 0 else -0.5)       # row 0 leans over the water
+                    s_ = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))])
+                    u = _h(*pk, "u") + s_ / TEX_M
+                    V = np.zeros((2 * len(sp), 3))
+                    V[0::2, :2], V[0::2, 2] = Q, foot
+                    V[1::2, :2], V[1::2, 2] = Q + lean, top
+                    UV = np.zeros((2 * len(sp), 2))
+                    UV[0::2, 0] = UV[1::2, 0] = u
+                    UV[0::2, 1] = 0.0
+                    UV[1::2, 1] = np.clip(h / 2.5, 0.05, 1.0)    # texture spans 2.5 m: low clumps use the lower part
+                    nrm = np.column_stack([-Nm[sp] * 0.6, np.full(len(sp), 0.6)])
+                    C = np.zeros((2 * len(sp), 4))
+                    for i_ in range(len(sp)):
+                        C[2 * i_] = _fol(nrm[i_], OCC[0])
+                        C[2 * i_ + 1] = _fol(nrm[i_], OCC[1])
+                    Tr = []
+                    for i_ in range(len(sp) - 1):
+                        if h[i_] <= 0 and h[i_ + 1] <= 0:
+                            continue
+                        a2, b2, c2, d2 = 2 * i_, 2 * i_ + 2, 2 * i_ + 3, 2 * i_ + 1
+                        Tr += [(a2, b2, c2), (a2, c2, d2)]
+                    if not Tr:
+                        continue
+                    buf.add(layer, "water_reeds", V, UV, np.asarray(Tr), src=f"water:reeds:{ri}:{row}:{pi_}", COL=C)
+                    ntri += len(Tr)
+                    nrib += 1
     rep[layer] = {"ribbons": nrib, "triangles": ntri}
     return ntri
 
