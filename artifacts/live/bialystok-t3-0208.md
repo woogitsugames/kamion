@@ -19,3 +19,4 @@
 - NASTĘPNY KROK: `git -C . status --short` → jeśli fidelity zmieniło tylko hashe: commit; `uv run --project tools/worldgen python -m pytest tests/gis/test_road_fidelity.py tests/gis/test_knyszynska_0208.py -q`; `robocopy artifacts\bialystok-t3-0208 C:\Users\matma\Documents\Claude\kamion\artifacts\bialystok-t3-0208 /E`
 - fidelity_qa.json regionu C odświeżony (zmienił się tylko hash build_world.py); test_road_fidelity + test_knyszynska_0208: 19 ok. Dowody skopiowane do main artifacts/bialystok-t3-0208/.
 - KONIEC. Gotowe do scalenia: TAK (pełny pytest: 1240 ok + 1 fail naprawiony odświeżeniem hasha; visual-critic i EditMode nie uruchamiane). NASTĘPNY KROK (lider): `git merge --no-ff bialystok-t3-0208`
+- 12:09 pełny pytest tests/gis na 524f1b034: 1241 ok, 3 skip, 3 xfail. KONIEC, gotowe do scalenia: TAK.
