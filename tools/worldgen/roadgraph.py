@@ -18,7 +18,9 @@ Defaults (WORKING_VALUE, documented, never silent):
 from __future__ import annotations
 
 import math
+import re
 from collections import defaultdict
+from dataclasses import dataclass
 
 import numpy as np
 import shapely
@@ -41,6 +43,59 @@ RAW_TAGS = ("name", "ref", "lanes", "lanes:forward", "lanes:backward", "turn:lan
             "width", "maxweight", "maxheight", "hgv", "access", "service", "destination", "destination:ref", "int_ref",
             *TRUCK_LIMIT_TAGS, *SHOULDER_TAGS)
 GRAPH_SCHEMA = "truck-sim-pl/road-graph/1"
+
+# ADR 0219: graph ids, minted only here and parsed only by the helpers below (never `lstrip`, which strips a SET of
+# characters, not a prefix). Two node formats exist in every region (checked over Data/Regions/*/roads.graph.json):
+#   n<osm_node>                       OSM node inside the tile (way end or shared by >= 2 drivable ways)
+#   B<edge_id>:<k><s|e>               synthetic tile-boundary cut: start (s) / end (e) of piece k of edge
+#                                     <edge_id> = w<osm_way>:<osm_node_a>-<osm_node_b> clipped by the tile; it has
+#                                     NO OSM node (the cut lies between nodes a and b of the way)
+# Edge ids: w<osm_way>:<osm_node_a>-<osm_node_b>, with a #<k> suffix when the tile cuts the piece into several.
+_NODE_OSM = re.compile(r"n(\d+)")
+_NODE_BOUNDARY = re.compile(r"B(w(\d+):(\d+)-(\d+)):(\d+)([se])")
+_EDGE = re.compile(r"w(\d+):(\d+)-(\d+)(?:#(\d+))?")
+
+
+@dataclass(frozen=True)
+class NodeRef:
+    """Parsed graph node id. kind 'osm': osm_node set. kind 'boundary': osm_node None; osm_way / way_nodes / piece /
+    end describe the clipped edge the synthetic cut belongs to."""
+    id: str
+    kind: str                                   # "osm" | "boundary"
+    osm_node: int | None = None
+    osm_way: int | None = None
+    way_nodes: tuple[int, int] | None = None
+    piece: int | None = None
+    end: str | None = None                      # "s" | "e"
+
+
+def osm_node_id(osm_node) -> str:
+    return f"n{osm_node}"
+
+
+def boundary_node_id(edge_id: str, piece: int, end: str) -> str:
+    return f"B{edge_id}:{piece}{end}"
+
+
+def parse_node_id(nid) -> NodeRef:
+    """ADR 0219: the one parser of graph node ids; raises ValueError on an unknown format (never guesses)."""
+    s = str(nid)
+    m = _NODE_OSM.fullmatch(s)
+    if m:
+        return NodeRef(s, "osm", osm_node=int(m.group(1)))
+    m = _NODE_BOUNDARY.fullmatch(s)
+    if m:
+        return NodeRef(s, "boundary", osm_way=int(m.group(2)), way_nodes=(int(m.group(3)), int(m.group(4))),
+                       piece=int(m.group(5)), end=m.group(6))
+    raise ValueError(f"unknown road-graph node id {s!r} (expected n<osm_node> or B<edge_id>:<k>s|e)")
+
+
+def edge_osm_way(eid) -> int:
+    """ADR 0219: OSM way id of a graph edge id (w<way>:<a>-<b>[#k]); raises ValueError on an unknown format."""
+    m = _EDGE.fullmatch(str(eid))
+    if not m:
+        raise ValueError(f"unknown road-graph edge id {eid!r} (expected w<osm_way>:<a>-<b>[#k])")
+    return int(m.group(1))
 # BDOT10k MATERIALNAWIERZCHNI -> OSM surface (used only when OSM has no surface tag)
 BDOT_SURFACE = {"masa bitumiczna": "asphalt", "kostka prefabrykowana": "paving_stones", "beton": "concrete",
                 "płyty betonowe": "concrete:plates", "grunt naturalny": "ground", "żwir": "gravel",
@@ -164,7 +219,7 @@ def build(roads, points, bbox, bdot_roads=None, drop_service=(), drop_ways=()) -
             line = LineString(pts)
             if not line.intersects(tile):
                 continue
-            na, nb = f"n{nids[a_i]}", f"n{nids[b_i]}"
+            na, nb = osm_node_id(nids[a_i]), osm_node_id(nids[b_i])
             eid = f"w{row.osm_id}:{nids[a_i]}-{nids[b_i]}"
             pieces = [line] if tile.contains(line) else [g for g in getattr(line.intersection(tile), "geoms",
                                                                             [line.intersection(tile)])
@@ -173,8 +228,8 @@ def build(roads, points, bbox, bdot_roads=None, drop_service=(), drop_ways=()) -
                 pc = list(piece.coords)
                 s_inside = math.dist(pc[0], pts[0]) < 1e-6
                 e_inside = math.dist(pc[-1], pts[-1]) < 1e-6
-                sid = na if s_inside else f"B{eid}:{k}s"
-                tid = nb if e_inside else f"B{eid}:{k}e"
+                sid = na if s_inside else boundary_node_id(eid, k, "s")
+                tid = nb if e_inside else boundary_node_id(eid, k, "e")
                 add_node(sid, pc[0], **({"osm_node": int(nids[a_i])} if s_inside else {"boundary": True}))
                 add_node(tid, pc[-1], **({"osm_node": int(nids[b_i])} if e_inside else {"boundary": True}))
                 length = piece.length

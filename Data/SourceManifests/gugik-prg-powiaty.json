@@ -1,0 +1,39 @@
+{
+  "id": "gugik-prg-powiaty",
+  "name": "GUGiK PRG — granice powiatów (WFS AdministrativeBoundaries, A02_Granice_powiatow)",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "PRG",
+  "request": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=ms%3AA02_Granice_powiatow&SRSNAME=EPSG%3A2180&BBOX=575000.0%2C740000.0%2C635000.0%2C800000.0%2Curn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A2180",
+  "crs": "EPSG:2180 (PL-1992); GML axis order northing, easting -> stored as x = E, y = N",
+  "aoi_epsg2180": [
+    740000.0,
+    575000.0,
+    800000.0,
+    635000.0
+  ],
+  "processing": "clip to AOI, simplify 2.0 m (preserve topology), precision 0.1 m",
+  "license": "GUGiK open data (PRG): free of charge, Pgik art. 40a ust. 2 pkt 1 — LEGAL_REVIEW_REQUIRED",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/powiaty.py (far_field, lod2_extract, water — ADR 0219)"
+  ],
+  "in_git": true,
+  "response_sha256": "8017f7916c1c03c8d736c37d89b8444fd1a4aa60a3b7c72b7f0b4cba4f93c268",
+  "files": [
+    {
+      "local_path": "Data/Admin/powiaty_prg.geojson",
+      "sha256": "f90444f8eb9ec36c006722d83ae6ee48854bc601be94dfd8b6808792bdc7e308",
+      "downloaded_utc": "2026-11-15T13:22:19Z"
+    }
+  ],
+  "powiaty": {
+    "2002": "powiat białostocki",
+    "2004": "powiat grajewski",
+    "2005": "powiat hajnowski",
+    "2008": "powiat moniecki",
+    "2011": "powiat sokólski",
+    "2013": "powiat wysokomazowiecki",
+    "2014": "powiat zambrowski",
+    "2061": "powiat Białystok"
+  }
+}

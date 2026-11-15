@@ -1,5 +1,5 @@
-# STATUS — D11 rural-xsec-0272 (chmura D r4, ADR 0272)
-- Krok 1: reguła pobocza jako dane `tools/worldgen/roads/xsec_rules.yaml` + `roads/xsec.py`; `network.py` (override `shoulder`, tagi OSM `shoulder*`, kod pobocza w `mat`), włazy tylko przy krawężniku / poboczu utwardzonym, obrys dla toru bez pobocza (`build_world.RAIL_ZONE_EXCLUDE_MATS`).
-- Krok 2: `dw671-tykocin-01/overrides.yaml` — DW671 pobocze gruntowe + linie krawędziowe (waye 145989268, 286989055), krawędź przejazdu bez muldy. Ełcka: asfalt 8,6 → 6,76 m z reguły klasy G (ortofoto 6,5–7,1).
-- Krok 3: `tests/gis/test_rural_xsec_0272.py` 30 passed; C i Dojlidy bez zmian (SHA stron + siatka na płaskim NMT). ADR 0272, LICENSES, docs/05.
-- NASTĘPNY KROK (lider): `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region dw671-tykocin-01` → `pwsh scripts/import-region.ps1 -Region dw671-tykocin-01` → `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting clear -Cameras rail_xing_from_ne,rail_xing_close_ne,rail_xing_top -OutputDir artifacts/rural-xsec-0272/dw671-High`
+# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
+- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
+- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
+- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
+- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
