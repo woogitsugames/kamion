@@ -31,6 +31,12 @@ sys.path.insert(0, str(REPO / "tools/worldgen"))
 from streetscape.foliage_policy import crown_opening, leaf_lod_indices
 VEG = REPO / "art-source" / "world" / "vegetation"
 ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+if "--park-linden-study" in ARGV:
+    if "--out" not in ARGV or ARGV.index("--out")+1 >= len(ARGV):
+        raise ValueError("--park-linden-study requires --out under this worktree's artifacts")
+    study_dir = Path(ARGV[ARGV.index("--out")+1]).resolve()
+    if not study_dir.is_relative_to((REPO / "artifacts").resolve()):
+        raise ValueError("--park-linden-study output must be under artifacts")
 if "--out" in ARGV:
     VEG = Path(ARGV[ARGV.index("--out") + 1]).resolve()
 VEG.mkdir(parents=True, exist_ok=True)
@@ -198,6 +204,54 @@ def write_willow_leaf_atlas(path):
         im.save()
     finally:
         bpy.data.images.remove(im)
+
+
+def park_linden_blueprint(height, variant=0):
+    """Experimental 0227 park linden; all dimensions WORKING_VALUE.
+
+    Deterministic original geometry; no reference-photo pixels. Returns one
+    candidate list shared verbatim by the High and Low foliage selections.
+    """
+    H=float(height)
+    if not math.isfinite(H) or H <= 0:
+        raise ValueError("linden height must be positive and finite")
+    rng=random.Random(227130+int(variant))
+    trunk=[np.array(x,float)*H for x in ((0,0,-.02),(.008,-.008,.28),(.014,.005,.60),(.008,.012,.91))]
+    limbs=[]; cards=[]
+    for i in range(12):
+        az=2*math.pi*(i/12)+rng.uniform(-.20,.20)
+        out=np.array([math.cos(az),math.sin(az),0.]); side=np.array([-out[1],out[0],0.])
+        level=.30+.48*((i+.5)/12)
+        root=np.array([.008*H,0.,level*H])
+        profile=max(.42,math.sin(math.pi*(.16+.76*(i+.5)/12))**.65)
+        tip=root+out*(H*.32*profile*rng.uniform(.90,1.12))+np.array([0.,0.,H*rng.uniform(.11,.20)])
+        mid=(root+tip)*.5+side*H*rng.uniform(-.025,.025)+np.array([0.,0.,.025*H])
+        limbs.append((root,mid,tip))
+        for j in range(32):
+            t=.12+.86*(j+rng.uniform(.1,.9))/32
+            point=root*(1-t)**2+2*mid*t*(1-t)+tip*t*t
+            point+=side*H*rng.uniform(-.09,.09)+np.array([0.,0.,H*rng.uniform(-.055,.07)])
+            normal=np.array([rng.uniform(-1,1),rng.uniform(-1,1),rng.uniform(-.7,1.0)])
+            if np.linalg.norm(normal)<.1: normal=np.array([1.,0.,.5])
+            size=H*rng.uniform(.065,.105)
+            cards.append((point,normal,size))
+    return trunk,limbs,cards
+
+
+def grow_park_linden(g, height, variant, lod):
+    """Separate opt-in study: LOD1 uses exact centres, orientations and sizes from LOD0."""
+    trunk,limbs,cards=park_linden_blueprint(height,variant)
+    V=lambda p: Vector(tuple(float(x) for x in p))
+    g.crown_height=0
+    g.tube("bark_linden",[V(p) for p in trunk],[.27,.21,.12,.025],seg=8 if lod==0 else 5)
+    for root,mid,tip in limbs:
+        g.tube("bark_linden",[V(root),V(mid),V(tip)],[.10,.06,.012],seg=5 if lod==0 else 3)
+    indices=range(len(cards)) if lod==0 else leaf_lod_indices(len(cards),227130+variant,share=.45)
+    crown=V((0.,0.,height*.64)); up=V((0.,0.,1.))
+    for i in indices:
+        point,normal,size=cards[int(i)]
+        g.card("leaves_linden",V(point),V(normal),up,size,crown)
+    return g
 
 
 def willow_blueprint(height, variant=0):
@@ -1251,6 +1305,26 @@ def bake_forest(mix, src, href, seed):
 
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
+    if "--park-linden-study" in ARGV:
+        # Isolated geometry-only prototype: no shared tree library or forest bake.
+        import shutil
+        source_dir = REPO / "art-source/world/vegetation"
+        for name in ("bark_linden.png", "leaves_linden.png"):
+            shutil.copyfile(source_dir / name, VEG / name)
+        models=[]; info={}
+        for lod in (0,1):
+            obj=to_object("tree_linden_park_0" + (".lod1" if lod else ""),
+                          grow_park_linden(Geo(),13.5,0,lod))
+            models.append(obj)
+            info[f"tris_lod{lod}"]=sum(len(p.vertices)-2 for p in obj.data.polygons)
+        for obj in bpy.context.scene.objects:
+            obj.select_set(obj in models)
+        bpy.ops.export_scene.gltf(filepath=str(VEG / "tree_linden_park_study.glb"),
+                                  export_format="GLB", use_selection=True, export_apply=False, export_yup=True)
+        (VEG / "tree_linden_park_study.json").write_text(json.dumps(
+            {"status":"WORKING_VALUE; visual and budget QA OPEN", "href_m":13.5, **info},
+            indent=2)+"\n",encoding="utf-8")
+        return
     meta = {}
     objs = []
     src = {}
