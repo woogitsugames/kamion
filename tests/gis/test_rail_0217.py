@@ -263,6 +263,13 @@ def test_barrier_types(barrier, n_booms, sign):
         assert all(abs(m["boom_len_m"] - 7.5) < 1e-6 for m in booms)
     if barrier == "double_half":
         assert sorted(m["role"] for m in booms) == ["entry", "entry", "exit", "exit"]
+        # s22: four booms stand in four places (the exit boom lay on the other approach's entry boom), two on each
+        # side of the track, on opposite verges, pointing at each other
+        assert len({(m["e"], m["n"]) for m in booms}) == 4
+        for a in (1, -1):
+            pair = [m for m in booms if m["approach"] == a]
+            assert abs((pair[0]["heading_deg"] - pair[1]["heading_deg"]) % 360 - 180) < 1e-6
+            assert 7.0 < float(np.hypot(pair[0]["e"] - pair[1]["e"], pair[0]["n"] - pair[1]["n"])) < 9.0   # 7 m road + 2 x 0.5 m
 
 
 def test_lights_bell_and_pedestrian_skip():

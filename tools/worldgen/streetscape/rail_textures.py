@@ -121,7 +121,7 @@ def rail_u(left, gauge_m=1.435, head_w_m=0.072):
     """u of the four ribbon edges of a rail box (outer low, outer top, inner top, inner low; lateral growing to the
     left) on the painted rail of the tile: `left` = the rail on the +lateral side of its track axis."""
     rc = (1 if left else -1) * (gauge_m / 2 + head_w_m / 2)
-    return [0.5 + (rc + d) / TEX_W_M for d in (-0.072, -0.037, 0.037, 0.072)]
+    return [0.5 + (rc + d) / TEX_W_M for d in (-0.072, -0.035, 0.035, 0.072)]
 
 
 def textures():
