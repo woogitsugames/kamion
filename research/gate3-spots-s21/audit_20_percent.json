@@ -1,0 +1,20 @@
+{
+  "task": "G3 — punkty problemowe trasy C (bramka 3), sesja s21",
+  "date": "2026-11-15",
+  "method": "random.Random(20261115).sample(ids, 8) z 38 id manifestu (21 %). Dla każdego wiersza: PONOWNE obejrzenie pliku files/G3-NNN.jpg (1600 px; ortofoto — wycinek 3x wokół mierzonego obiektu) i porównanie ze zdaniem opis_co_widać; ponowne sprawdzenie url_źródła i url_pliku (curl -L, kod HTTP).",
+  "seed": 20261115,
+  "population": 38,
+  "sample_size": 8,
+  "sample": ["G3-002", "G3-011", "G3-012", "G3-020", "G3-021", "G3-023", "G3-029", "G3-031"],
+  "results": [
+    {"id": "G3-002", "image_recheck": "PASS", "urls": "200/200", "note": "biały cokół, ciemne żebrowane panele, przezroczyste panele, zielone słupy, pas trawy — zgodne. Kierunek pozostaje UNVERIFIED."},
+    {"id": "G3-011", "image_recheck": "PASS", "urls": "200/200", "note": "ekran z jasnym betonowym dołem i pasem żebrowanych paneli, klin z kreskowaniem i niebieski znak — zgodne."},
+    {"id": "G3-012", "image_recheck": "FIX", "urls": "200/200", "note": "było „podwójna bariera W zakończona łukiem” — na kadrze jedna bariera W wzdłuż prawej krawędzi rampy zawinięta łukiem na nosie klina; dopisano też obserwację znaku pasów z symbolem zakazu dla ciężarówek na lewym pasie. Poprawiono rows.py i manifest."},
+    {"id": "G3-020", "image_recheck": "PASS", "urls": "200/200", "note": "pomost NE, czerwony gzyms drugiego pomostu po lewej, bariera z linami po prawej, brak tablic — zgodne."},
+    {"id": "G3-021", "image_recheck": "PASS", "urls": "200/200", "note": "zgodne; mały niebieski element widoczny tylko w wycinku G3-021_crop_right.jpg — opis mówi „nieczytelny”."},
+    {"id": "G3-023", "image_recheck": "PASS", "urls": "200/200", "note": "2021, czerwony pas po lewej, bariera z linami po prawej, brak tablic — zgodne."},
+    {"id": "G3-029", "image_recheck": "FIX", "urls": "200/NA (WMS GetMap w sources.md)", "note": "obiekt jest w ciemnym pasie trawy MIĘDZY barierą łącznicy a krawędzią pomostu, a nie „przy krawędzi łącznicy w cieniu” — doprecyzowano opis (wynik pomiaru bez zmian)."},
+    {"id": "G3-031", "image_recheck": "PASS", "urls": "200/200", "note": "żwir pod pomostem, bariera W, krawężnik + jasny pas, ochrowe podpory, ekrany na cokole w tle — zgodne."}
+  ],
+  "summary": {"PASS": 6, "FIX": 2, "FAIL": 0}
+}
