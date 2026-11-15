@@ -1,0 +1,937 @@
+physics-runner  commit=8962caf66  out=/workspace/wt-axleloads/artifacts/axleloads-0201b/exp-n1-repro
+[PASS] air_leak_park_circuit@laden40  (1.0s wall)
+    trailer_emergency = 1 [1, +inf] PASS
+    min_speed_kmh = 0.00021295 [-inf, 0.5] PASS
+    low_air_warning = 1 [1, +inf] PASS
+[PASS] air_leak_rear_circuit@laden40  (0.4s wall)
+    low_air_warning = 1 [1, +inf] PASS
+    min_air_service_bar = 0 [-inf, 1] PASS
+    stop_distance_m = 32.766 [-inf, 52.4] PASS
+    max_lateral_deviation_m = 4.3223E-07 [-inf, 1] PASS
+[PASS] brake_80_0_dry  (0.0s wall)
+    stop_distance_m = 34.717 [32, 55] PASS
+    mfdd_ms2 = 7.5054 [5, 8] PASS
+    max_lateral_deviation_m = 1.5308E-07 [-inf, 0.5] PASS
+    max_yaw_rate_dps = 0 [-inf, 2] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+[PASS] brake_80_0_dry_abs_comb@empty  (0.1s wall)
+    max_dv_step_ms = 0.076691 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.01256 [-inf, 5] PASS
+    stop_distance_m = 39.288 [35, 61.2] PASS
+    mfdd_ms2 = 7.3905 [5, 8] PASS
+    max_lateral_deviation_m = 4.7513E-06 [-inf, 0.5] PASS
+    max_articulation_deg = 0 [-inf, 2] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+    trailer_lock_time_s = 0 [-inf, 0.05] PASS
+[PASS] brake_80_0_dry_abs_comb@laden40  (0.1s wall)
+    max_dv_step_ms = 0.075758 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.015083 [-inf, 5] PASS
+    stop_distance_m = 41.222 [35, 61.2] PASS
+    mfdd_ms2 = 6.9115 [5, 8] PASS
+    max_lateral_deviation_m = 9.3037E-06 [-inf, 0.5] PASS
+    max_articulation_deg = 0 [-inf, 2] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+    trailer_lock_time_s = 0 [-inf, 0.05] PASS
+[PASS] brake_80_0_dry_noabs_comb@solo  (0.0s wall)
+    max_dv_step_ms = 0.078834 [-inf, 0.35] PASS
+    rear_lock_time_s = 3.32 [0.3, +inf] PASS
+    stop_distance_m = 44.413 [30, 150] PASS
+    stop_distance_m = 44.413 [33, 150] PASS
+[PASS] brake_80_0_dry_noabs_comb@empty  (0.1s wall)
+    max_dv_step_ms = 0.075331 [-inf, 0.35] PASS
+    stop_distance_m = 43.774 [30, 150] PASS
+    stop_distance_m = 43.774 [33, 150] PASS
+[PASS] brake_80_0_dry_noabs_comb@laden40  (0.1s wall)
+    max_dv_step_ms = 0.074276 [-inf, 0.35] PASS
+    stop_distance_m = 49.212 [30, 150] PASS
+    stop_distance_m = 49.212 [33, 150] PASS
+[PASS] brake_80_0_wet  (0.0s wall)
+    stop_distance_m = 50.746 [45, 85] PASS
+    mfdd_ms2 = 4.9384 [3, 5.5] PASS
+    max_lateral_deviation_m = 7.4475E-08 [-inf, 0.5] PASS
+    max_yaw_rate_dps = 0 [-inf, 2] PASS
+[PASS] brake_80_0_wet_abs_comb@empty  (0.1s wall)
+    max_dv_step_ms = 0.051065 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.00822 [-inf, 5] PASS
+    stop_distance_m = 55.042 [45, 95] PASS
+    mfdd_ms2 = 4.8249 [3, 5.5] PASS
+    max_lateral_deviation_m = 3.7408E-06 [-inf, 0.5] PASS
+    max_articulation_deg = 0 [-inf, 2] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+    trailer_lock_time_s = 0 [-inf, 0.05] PASS
+[PASS] brake_80_0_wet_abs_comb@laden40  (0.1s wall)
+    max_dv_step_ms = 0.054066 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.011039 [-inf, 5] PASS
+    stop_distance_m = 57.048 [45, 95] PASS
+    mfdd_ms2 = 4.6616 [3, 5.5] PASS
+    max_lateral_deviation_m = 7.5163E-06 [-inf, 0.5] PASS
+    max_articulation_deg = 1.1544E-05 [-inf, 2] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+    trailer_lock_time_s = 0 [-inf, 0.05] PASS
+[PASS] brake_80_0_wet_noabs_comb@solo  (0.0s wall)
+    max_dv_step_ms = 0.04848 [-inf, 0.35] PASS
+    rear_lock_time_s = 5.97 [0.3, +inf] PASS
+    stop_distance_m = 75.459 [30, 150] PASS
+[PASS] brake_80_0_wet_noabs_comb@empty  (0.1s wall)
+    max_dv_step_ms = 0.049323 [-inf, 0.35] PASS
+    stop_distance_m = 78.259 [30, 150] PASS
+[PASS] brake_80_0_wet_noabs_comb@laden40  (0.1s wall)
+    max_dv_step_ms = 0.05106 [-inf, 0.35] PASS
+    stop_distance_m = 81.996 [30, 150] PASS
+[PASS] brake_response_static@solo  (0.0s wall)
+    brake_response_s = 0.25 [-inf, 0.6] PASS
+    brake_response_s(1) = 0.31 [-inf, 0.6] PASS
+    brake_response_s = 0.25 [0.15, +inf] PASS
+[PASS] brake_response_static@empty  (0.0s wall)
+    brake_response_s = 0.25 [-inf, 0.6] PASS
+    brake_response_s(1) = 0.31 [-inf, 0.6] PASS
+    brake_response_s = 0.25 [0.15, +inf] PASS
+    brake_response_s(2) = 0.54 [-inf, 0.6] PASS
+[PASS] brake_response_static@laden40  (0.0s wall)
+    brake_response_s = 0.25 [-inf, 0.6] PASS
+    brake_response_s(1) = 0.31 [-inf, 0.6] PASS
+    brake_response_s = 0.25 [0.15, +inf] PASS
+    brake_response_s(2) = 0.53 [-inf, 0.6] PASS
+    brake_response_s(2) = 0.53 [0.3, +inf] PASS
+[PASS] circle_r25_10kmh  (0.1s wall)
+    radius_error_m = 0.023056 [-inf, 0.5] PASS
+    lat_accel_ms2 = 0.30823 [0.278, 0.34] PASS
+    steer_vs_ackermann(3.7) = 1.0111 [0.9, 1.6] PASS
+    max_abs_roll_deg = 0.16407 [-inf, 3] PASS
+    mean_speed_kmh = 9.9989 [8.5, 11.5] PASS
+[PASS] circle_r25_20kmh  (0.1s wall)
+    radius_error_m = 0.093152 [-inf, 0.5] PASS
+    lat_accel_ms2 = 1.2292 [1.111, 1.358] PASS
+    steer_vs_ackermann(3.7) = 1.0421 [0.9, 1.6] PASS
+    max_abs_roll_deg = 0.65359 [-inf, 3] PASS
+    mean_speed_kmh = 20 [18.5, 21.5] PASS
+[PASS] circle_r50_10kmh_comb@empty  (0.2s wall)
+    radius_error_m = 0.018945 [-inf, 0.6] PASS
+    lat_accel_ms2 = 0.15426 [0.13889, 0.16975] PASS
+    trailer_offtracking_m = 0.60834 [0.4, 0.8] PASS
+    max_dv_step_ms = 0.025469 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0060367 [-inf, 5] PASS
+[PASS] circle_r50_10kmh_comb@laden40  (0.3s wall)
+    radius_error_m = 0.026315 [-inf, 0.6] PASS
+    lat_accel_ms2 = 0.15423 [0.13889, 0.16975] PASS
+    trailer_offtracking_m = 0.6033 [0.4, 0.8] PASS
+    max_dv_step_ms = 0.01419 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0066764 [-inf, 5] PASS
+[PASS] circle_r50_20kmh  (0.1s wall)
+    radius_error_m = 0.045406 [-inf, 0.5] PASS
+    lat_accel_ms2 = 0.61661 [0.556, 0.679] PASS
+    steer_vs_ackermann(3.7) = 1.0439 [0.9, 1.6] PASS
+    max_abs_roll_deg = 0.32806 [-inf, 3] PASS
+    mean_speed_kmh = 20 [18.5, 21.5] PASS
+[PASS] circle_r50_35kmh  (0.1s wall)
+    radius_error_m = 0.24465 [-inf, 0.5] PASS
+    lat_accel_ms2 = 1.8804 [1.701, 2.079] PASS
+    steer_vs_ackermann(3.7) = 1.1322 [0.9, 1.6] PASS
+    max_abs_roll_deg = 0.99849 [-inf, 3] PASS
+    mean_speed_kmh = 35 [33.5, 36.5] PASS
+[PASS] circle_r50_35kmh_comb@empty  (0.2s wall)
+    radius_error_m = 0.24764 [-inf, 0.6] PASS
+    lat_accel_ms2 = 1.8814 [1.7014, 2.0795] PASS
+    trailer_offtracking_m = 0.48262 [-0.5, 0.55] PASS
+    max_trailer_roll_deg = 0.70498 [-inf, 4] PASS
+    max_dv_step_ms = 0.026403 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.08623 [-inf, 5] PASS
+[PASS] circle_r50_35kmh_comb@laden40  (0.2s wall)
+    radius_error_m = 0.28185 [-inf, 0.6] PASS
+    lat_accel_ms2 = 1.8794 [1.7014, 2.0795] PASS
+    trailer_offtracking_m = 0.41322 [-0.5, 0.55] PASS
+    max_trailer_roll_deg = 2.5699 [-inf, 4] PASS
+    max_dv_step_ms = 0.022199 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.077344 [-inf, 5] PASS
+[PASS] couple_miss_25cm@empty  (0.1s wall)
+    coupling_events = 0 [0, 0] PASS
+    coupled_final = 0 [0, 0] PASS
+[PASS] couple_miss_25cm@laden40  (0.1s wall)
+    coupling_events = 0 [0, 0] PASS
+    coupled_final = 0 [0, 0] PASS
+[PASS] couple_offset_left_18cm@empty  (0.2s wall)
+    coupling_events = 1 [1, 1] PASS
+    max_kingpin_long_kn = 56.265 [-inf, 150] PASS
+    kingpin_load_vs_static = 1.0154 [0.97, 1.03] PASS
+    max_fifth_wheel_error_mm = 5.9935E-07 [-inf, 5] PASS
+[PASS] couple_offset_left_18cm@laden40  (0.2s wall)
+    coupling_events = 1 [1, 1] PASS
+    max_kingpin_long_kn = 101.53 [-inf, 150] PASS
+    kingpin_load_vs_static = 1.0189 [0.97, 1.03] PASS
+    max_fifth_wheel_error_mm = 7.8447E-06 [-inf, 5] PASS
+[PASS] couple_offset_right_15cm@empty  (0.2s wall)
+    coupling_events = 1 [1, 1] PASS
+    max_kingpin_long_kn = 68.763 [-inf, 150] PASS
+    kingpin_load_vs_static = 1.0158 [0.97, 1.03] PASS
+    max_fifth_wheel_error_mm = 6.4031E-07 [-inf, 5] PASS
+[PASS] couple_offset_right_15cm@laden40  (0.2s wall)
+    coupling_events = 1 [1, 1] PASS
+    max_kingpin_long_kn = 108.14 [-inf, 150] PASS
+    kingpin_load_vs_static = 1.0189 [0.97, 1.03] PASS
+    max_fifth_wheel_error_mm = 1.6754E-06 [-inf, 5] PASS
+[PASS] couple_standstill_locked@empty  (0.3s wall)
+    coupling_events = 1 [1, 1] PASS
+    kingpin_load_vs_static = 1.0032 [0.97, 1.03] PASS
+    max_speed_after_ms = 5.6317E-05 [-inf, 0.005] PASS
+    max_dv_step_ms = 0.10947 [-inf, 0.35] PASS
+[PASS] couple_standstill_locked@laden40  (0.3s wall)
+    coupling_events = 1 [1, 1] PASS
+    kingpin_load_vs_static = 1.0101 [0.97, 1.03] PASS
+    max_speed_after_ms = 0.00040333 [-inf, 0.005] PASS
+    max_dv_step_ms = 0.13847 [-inf, 0.35] PASS
+[PASS] couple_uncouple@empty  (0.3s wall)
+    coupling_events = 1 [1, 1] PASS
+    kingpin_load_vs_static = 0.98668 [0.9, 1.1] PASS
+    uncoupling_events = 1 [1, 1] PASS
+    tractor_trailer_distance_m = 81.553 [8, +inf] PASS
+    trailer_drift_m = 0.001355 [-inf, 0.03] PASS
+    max_dv_step_ms = 0.10947 [-inf, 0.35] PASS
+    max_kingpin_long_kn = 73.337 [-inf, 150] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+[PASS] couple_uncouple@laden40  (0.3s wall)
+    coupling_events = 1 [1, 1] PASS
+    kingpin_load_vs_static = 0.97463 [0.9, 1.1] PASS
+    uncoupling_events = 1 [1, 1] PASS
+    tractor_trailer_distance_m = 81.159 [8, +inf] PASS
+    trailer_drift_m = 0.0031612 [-inf, 0.03] PASS
+    max_dv_step_ms = 0.13847 [-inf, 0.35] PASS
+    max_kingpin_long_kn = 45.85 [-inf, 150] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+[PASS] curb_15cm_both  (0.1s wall)
+    max_dv_step_ms = 0.096433 [-inf, 0.35] PASS
+    max_pos_jump_m = 1.0471E-14 [-inf, 1E-06] PASS
+    final_z_m = 65.718 [45, +inf] PASS
+    max_fz_ratio = 3.0728 [-inf, 4] PASS
+    max_abs_roll_deg = 0 [-inf, 6] PASS
+[PASS] curb_15cm_left  (0.1s wall)
+    max_dv_step_ms = 0.050401 [-inf, 0.35] PASS
+    max_pos_jump_m = 1.0457E-14 [-inf, 1E-06] PASS
+    final_z_m = 65.713 [45, +inf] PASS
+    max_fz_ratio = 2.6331 [-inf, 4] PASS
+    max_abs_roll_deg = 5.7928 [-inf, 8] PASS
+[PASS] curb_15cm_left_comb@empty  (0.1s wall)
+    max_dv_step_ms = 0.050285 [-inf, 0.35] PASS
+    max_pos_jump_m = 1.0221E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 3.8624 [-inf, 4] PASS
+    max_trailer_roll_deg = 2.7632 [-inf, 8] PASS
+    max_fifth_wheel_error_mm = 0.038191 [-inf, 5] PASS
+[PASS] curb_15cm_left_comb@laden40  (0.1s wall)
+    max_dv_step_ms = 0.060572 [-inf, 0.35] PASS
+    max_pos_jump_m = 1.0582E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 3.0235 [-inf, 4] PASS
+    max_trailer_roll_deg = 3.3449 [-inf, 8] PASS
+    max_fifth_wheel_error_mm = 0.042246 [-inf, 5] PASS
+[PASS] curb_8cm_both  (0.1s wall)
+    max_dv_step_ms = 0.067536 [-inf, 0.35] PASS
+    max_pos_jump_m = 1.0551E-14 [-inf, 1E-06] PASS
+    final_z_m = 65.716 [45, +inf] PASS
+    max_fz_ratio = 1.9582 [-inf, 4] PASS
+    max_abs_roll_deg = 0 [-inf, 6] PASS
+[FAIL] curb_strike_14cm_50kmh_comb@empty  (0.1s wall)
+    max_dv_step_ms = 0.068022 [-inf, 0.35] PASS
+    max_pos_jump_m = 3.5971E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 4.3063 [-inf, 4.2] FAIL
+    max_trailer_roll_deg = 2.5592 [-inf, 8] PASS
+    max_fifth_wheel_error_mm = 0.057975 [-inf, 5] PASS
+    wheel_off_ground_time_s = 0.75 [-inf, 0.75] PASS
+    max_wheel_airtime_s(1) = 0.23 [-inf, 0.15] FAIL
+    max_wheel_airtime_s = 0.23 [-inf, 0.25] PASS
+[PASS] curb_strike_14cm_50kmh_comb@laden40  (0.0s wall)
+    max_dv_step_ms = 0.082656 [-inf, 0.35] PASS
+    max_pos_jump_m = 3.8525E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 3.4067 [-inf, 4.2] PASS
+    max_trailer_roll_deg = 2.2422 [-inf, 8] PASS
+    max_fifth_wheel_error_mm = 0.11158 [-inf, 5] PASS
+    wheel_off_ground_time_s = 0.22 [-inf, 0.28] PASS
+    max_wheel_airtime_s(1) = 0.09 [-inf, 0.12] PASS
+    max_wheel_airtime_s = 0.09 [-inf, 0.12] PASS
+[PASS] curb_strike_5cm_50kmh_comb@empty  (0.0s wall)
+    max_dv_step_ms = 0.035227 [-inf, 0.35] PASS
+    max_pos_jump_m = 2.09E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 1.8347 [-inf, 2.2] PASS
+    max_trailer_roll_deg = 0.76204 [-inf, 8] PASS
+    max_fifth_wheel_error_mm = 0.0031687 [-inf, 5] PASS
+    wheel_off_ground_time_s = 0.05 [-inf, 0.08] PASS
+    max_wheel_airtime_s(1) = 0 [-inf, 0.03] PASS
+    max_wheel_airtime_s = 0.02 [-inf, 0.05] PASS
+[PASS] curb_strike_5cm_50kmh_comb@laden40  (0.0s wall)
+    max_dv_step_ms = 0.034286 [-inf, 0.35] PASS
+    max_pos_jump_m = 3.8886E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 1.6757 [-inf, 2.2] PASS
+    max_trailer_roll_deg = 0.71366 [-inf, 8] PASS
+    max_fifth_wheel_error_mm = 0.0060871 [-inf, 5] PASS
+    wheel_off_ground_time_s = 0 [-inf, 0.03] PASS
+    max_wheel_airtime_s(1) = 0 [-inf, 0.03] PASS
+    max_wheel_airtime_s = 0 [-inf, 0.03] PASS
+[PASS] downhill_7pct_brake_cruise_60@laden40  (0.6s wall)
+    mean_speed_kmh = 60 [59, 61.5] PASS
+    speed_range_kmh = 5.8077E-10 [-inf, 2] PASS
+    max_retarder_torque_nm = 2854.2 [1000, 4000] PASS
+    max_service_demand = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.0068454 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 9.5009E-05 [-inf, 5] PASS
+[PASS] downhill_7pct_full_lever@laden40  (0.4s wall)
+    speed_range_kmh = 0.00088496 [-inf, 3] PASS
+    max_speed_kmh = 70.599 [-inf, 71] PASS
+    max_engine_brake_torque_nm = 1155.1 [500, +inf] PASS
+    max_dv_step_ms = 0.012594 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0014076 [-inf, 5] PASS
+[PASS] downhill_7pct_service_pumping@laden40  (0.9s wall)
+    min_air_service_bar = 5.2769 [-inf, 9] PASS
+    min_air_service_bar = 5.2769 [3, +inf] PASS
+    low_air_warning = 1 [1, +inf] PASS
+    max_speed_kmh = 45.865 [-inf, 50] PASS
+    max_dv_step_ms = 0.039947 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.010267 [-inf, 5] PASS
+[PASS] downhill_7pct_typeIIA@laden40  (2.4s wall)
+    mean_speed_kmh = 30.002 [25, 35] PASS
+    max_service_demand = 0 [-inf, 0] PASS
+    max_rpm = 1929.7 [-inf, 2400] PASS
+    max_speed_kmh = 31.662 [-inf, 40] PASS
+    max_dv_step_ms = 0.036589 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.00074821 [-inf, 5] PASS
+[PASS] downhill_8pct_retarder_comb@laden40  (1.0s wall)
+    mean_speed_kmh = 40 [35, 45] PASS
+    speed_range_kmh = 2.1577E-07 [-inf, 2] PASS
+    max_service_demand = 0 [-inf, 0] PASS
+    max_retarder_torque_nm = 2191 [-inf, 4000] PASS
+    max_rpm = 2026.1 [-inf, 2400] PASS
+    max_dv_step_ms = 0.036003 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.00023887 [-inf, 5] PASS
+[PASS] free_fall_drop_comb  (0.0s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    free_flight_s = 1.06 [0.3, +inf] PASS
+    max_free_flight_energy_gain_j = 0 [-inf, 1] PASS
+    max_free_flight_accel_error_ms2 = 0.0076636 [-inf, 0.05] PASS
+    max_body_penetration_m = 0.015878 [-inf, 0.05] PASS
+    min_com_height_m = 0.73491 [0.5, +inf] PASS
+    max_fifth_wheel_error_mm = 1.491 [-inf, 15] PASS
+[PASS] fuzz_concrete_solo  (0.1s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 1.1102E-16 [-inf, 0.0001] PASS
+    max_dv_step_ms = 1.7053E-15 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 5.8265E-16 [-inf, 1.001] PASS
+    min_air_all_bar = 0 [0, +inf] PASS
+[PASS] fuzz_flat_dry_laden40  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 4.9268E-16 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.00037377 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 0.0070114 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 1.189E-06 [-inf, 5] PASS
+    min_air_all_bar = 8.5 [0, +inf] PASS
+[PASS] fuzz_flat_wet_laden40  (0.3s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 4.9585E-16 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.00037377 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 0.011778 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 1.1807E-06 [-inf, 5] PASS
+    min_air_all_bar = 7.9505 [0, +inf] PASS
+[PASS] fuzz_grade8_dry_laden40  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 2.719E-15 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.087582 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 1 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 1.4773 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 0.090736 [-inf, 5] PASS
+    min_air_all_bar = 8.5 [0, +inf] PASS
+[PASS] fuzz_gradedown8_wet_empty  (0.3s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 4.5721E-16 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.01448 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 0.92508 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 0.0004253 [-inf, 5] PASS
+    min_air_all_bar = 8.3671 [0, +inf] PASS
+[PASS] fuzz_gravel_cargo24  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 4.9482E-16 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.00034102 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 0.010523 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 1.05E-06 [-inf, 5] PASS
+    min_air_all_bar = 8.5 [0, +inf] PASS
+[PASS] fuzz_kerb8cm_dry_laden40  (0.3s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 4.9238E-16 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.00037377 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 0.0070102 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 1.1889E-06 [-inf, 5] PASS
+    min_air_all_bar = 8.5 [0, +inf] PASS
+[PASS] fuzz_mud_gradedown5_laden40  (0.3s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 7.4245E-15 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.017437 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 1 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 0.010228 [-inf, 5] PASS
+    min_air_all_bar = 8.5 [0, +inf] PASS
+[PASS] fuzz_shrink_articulation_stop_fulllock  (0.1s wall)
+    articulation_limit_excess_deg = 1.6683 [-inf, 3.5] PASS
+    max_articulation_deg = 91.668 [0, +inf] PASS
+    nan_detected = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.17665 [-inf, 0.35] PASS
+[PASS] fuzz_shrink_speed_runaway_fulllock  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 6.686E-15 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.104 [-inf, 0.35] PASS
+    max_dv_step_ms = 0.69003 [-inf, 4.2] PASS
+    max_tire_friction_ratio = 1 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 0.73439 [-inf, 5] PASS
+    max_fifth_wheel_error_mm = 5.862 [-inf, 50] PASS
+    min_air_all_bar = 8.5 [0, +inf] PASS
+    max_speed_kmh = 30.235 [-inf, 90.5] PASS
+    min_com_height_m = 1.045 [0.9, +inf] PASS
+    max_body_penetration_m = 0.094464 [-inf, 0.1] PASS
+    max_body_penetration_m = 0.028952 [-inf, 0.035] PASS
+    body_contact_s = 25.9 [1, +inf] PASS
+    max_free_flight_energy_gain_j = 0 [-inf, 1] PASS
+    max_energy_j = 2.054E+06 [-inf, 2.133E+06] PASS
+    max_speed_after_ms = 5.4333E-07 [-inf, 0.05] PASS
+[PASS] fuzz_touch_dry_laden40  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 1.8241E-15 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.0041408 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 1 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 0.044099 [-inf, 5] PASS
+    min_air_all_bar = 8.5 [0, +inf] PASS
+[PASS] fuzz_touch_wet_empty  (0.2s wall)
+    nan_detected = 0 [-inf, 0] PASS
+    max_pos_jump_m = 2.6219E-15 [-inf, 0.0001] PASS
+    max_dv_step_ms = 0.076531 [-inf, 0.35] PASS
+    max_tire_friction_ratio = 1 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0.65838 [-inf, 3.5] PASS
+    max_fifth_wheel_error_mm = 0.58126 [-inf, 5] PASS
+    min_air_all_bar = 8.5 [0, +inf] PASS
+[PASS] grade_5pct_steady@laden40  (0.7s wall)
+    mean_speed_kmh = 49.779 [44, 60] PASS
+    speed_range_kmh = 0.053384 [-inf, 6] PASS
+    min_rpm = 1463.6 [1000, +inf] PASS
+    max_dv_step_ms = 0.0069306 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.00074875 [-inf, 5] PASS
+[PASS] grade_6pct_steady_comb@laden40  (0.6s wall)
+    mean_speed_kmh = 42.638 [38, 54] PASS
+    speed_range_kmh = 6.1561E-05 [-inf, 6] PASS
+    downshift_count = 0 [-inf, 0] PASS
+    min_rpm = 1639.8 [1000, +inf] PASS
+    max_dv_step_ms = 0.008295 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.001249 [-inf, 5] PASS
+[PASS] jackknife_wet_curve_abs_100@empty  (0.1s wall)
+    max_articulation_deg = 4.677 [-inf, 10] PASS
+    rear_lock_time_s = 0 [-inf, 0.1] PASS
+    max_dv_step_ms = 0.050395 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_abs_100@laden40  (0.1s wall)
+    max_articulation_deg = 5.2401 [-inf, 10] PASS
+    rear_lock_time_s = 0 [-inf, 0.1] PASS
+    max_dv_step_ms = 0.049064 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_abs_50@empty  (0.1s wall)
+    max_articulation_deg = 6.7427 [-inf, 10] PASS
+    rear_lock_time_s = 0 [-inf, 0.1] PASS
+    max_dv_step_ms = 0.038747 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_abs_50@laden40  (0.1s wall)
+    max_articulation_deg = 5.2401 [-inf, 10] PASS
+    rear_lock_time_s = 0 [-inf, 0.1] PASS
+    max_dv_step_ms = 0.03884 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_noabs@empty  (0.1s wall)
+    max_articulation_deg = 85.292 [30, +inf] PASS
+    rear_lock_time_s = 2.67 [0.5, +inf] PASS
+    max_dv_step_ms = 0.048421 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_noabs@laden40  (0.1s wall)
+    rear_lock_time_s = 4.49 [0.5, +inf] PASS
+    max_dv_step_ms = 0.040029 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_retarder_noabs@empty  (0.1s wall)
+    max_articulation_deg = 92.352 [30, +inf] PASS
+    rear_lock_time_s = 2.14 [0.2, +inf] PASS
+    max_dv_step_ms = 0.23492 [-inf, 0.35] PASS
+[PASS] jackknife_wet_curve_retarder_noabs@laden40  (0.1s wall)
+    rear_lock_time_s = 1.71 [0.2, +inf] PASS
+    max_dv_step_ms = 0.25313 [-inf, 0.35] PASS
+[PASS] kerb_step_27cm_42kmh_comb@laden40  (0.0s wall)
+    max_dv_step_ms = 0.31617 [-inf, 0.35] PASS
+    max_pos_jump_m = 1.4031E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 6.198 [5.2, 7.5] PASS
+    max_wheel_airtime_s(1) = 0.41 [-inf, 0.5] PASS
+    max_fifth_wheel_error_mm = 2.6827 [-inf, 5] PASS
+    max_body_penetration_m = 0.037337 [-inf, 0.05] PASS
+[PASS] lane_change_60@empty  (0.1s wall)
+    max_articulation_deg = 1.3387 [-inf, 6] PASS
+    rearward_amplification = 0.95723 [0.8, 1.6] PASS
+    articulation_settle_deg = 0.00040742 [-inf, 0.5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_lat_accel_ms2 = 0.87386 [-inf, 2.5] PASS
+    max_yaw_rate_dps = 3.0587 [-inf, 10] PASS
+    max_dv_step_ms = 0.008572 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0050818 [-inf, 5] PASS
+[PASS] lane_change_60@laden40  (0.1s wall)
+    max_articulation_deg = 1.3115 [-inf, 6] PASS
+    rearward_amplification = 0.96589 [0.8, 1.6] PASS
+    articulation_settle_deg = 0.00040326 [-inf, 0.5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_lat_accel_ms2 = 0.8724 [-inf, 2.5] PASS
+    max_yaw_rate_dps = 3.074 [-inf, 10] PASS
+    max_dv_step_ms = 0.0084109 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0048631 [-inf, 5] PASS
+[PASS] lane_change_80@solo  (0.1s wall)
+    max_articulation_deg = 0 [-inf, 6] PASS
+    articulation_settle_deg = 0 [-inf, 0.5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_lat_accel_ms2 = 0.9253 [-inf, 2.5] PASS
+    max_yaw_rate_dps = 2.4384 [-inf, 10] PASS
+    max_dv_step_ms = 0.0091526 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0 [-inf, 5] PASS
+[PASS] lane_change_80@empty  (0.1s wall)
+    max_articulation_deg = 0.85748 [-inf, 6] PASS
+    rearward_amplification = 0.98925 [0.8, 1.6] PASS
+    articulation_settle_deg = 0.00018784 [-inf, 0.5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_lat_accel_ms2 = 0.93993 [-inf, 2.5] PASS
+    max_yaw_rate_dps = 2.4803 [-inf, 10] PASS
+    max_dv_step_ms = 0.0091626 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0035452 [-inf, 5] PASS
+[PASS] lane_change_80@laden40  (0.1s wall)
+    max_articulation_deg = 0.82668 [-inf, 6] PASS
+    rearward_amplification = 0.99548 [0.8, 1.6] PASS
+    articulation_settle_deg = 0.00037544 [-inf, 0.5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_lat_accel_ms2 = 0.97099 [-inf, 2.5] PASS
+    max_yaw_rate_dps = 2.5607 [-inf, 10] PASS
+    max_dv_step_ms = 0.0094667 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0035642 [-inf, 5] PASS
+[PASS] launch_0_80_flat  (0.1s wall)
+    rollback_m = 0 [-inf, 0.02] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 600 [550, +inf] PASS
+    time_to_kmh(60) = 10.18 [7, 20] PASS
+    time_to_kmh(80) = 14.541 [12, 32] PASS
+    max_dv_step_ms = 0.037234 [-inf, 0.1] PASS
+    max_rpm_in_gear(6) = 1602.3 [-inf, 1900] PASS
+[PASS] launch_12pct_uphill_comb@laden40  (0.2s wall)
+    rollback_m = 0.0052282 [-inf, 0.05] PASS
+    stalled = 0 [-inf, 0] PASS
+    time_to_kmh(15) = 10.047 [5, 15] PASS
+    shift_count = 4 [-inf, 6] PASS
+    downshift_count = 0 [-inf, 0] PASS
+    min_speed_kmh = 19.505 [18, +inf] PASS
+    max_dv_step_ms = 0.029402 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.018968 [-inf, 5] PASS
+[PASS] launch_6pct_uphill  (0.0s wall)
+    rollback_m = 0.0016827 [-inf, 0.05] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 600 [550, +inf] PASS
+    time_to_kmh(30) = 6.6167 [4, 25] PASS
+[PASS] launch_6pct_uphill_cargo24_comb@cargo24  (0.2s wall)
+    rollback_m = 0.0024279 [-inf, 0.05] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 600 [550, +inf] PASS
+    time_to_kmh(15) = 4.8365 [3, 35] PASS
+    max_clutch_temp_c = 36.771 [-inf, 250] PASS
+    shift_count = 5 [-inf, 14] PASS
+    downshift_count = 0 [-inf, 0] PASS
+    min_speed_kmh = 29.736 [10, +inf] PASS
+    max_dv_step_ms = 0.020284 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.010103 [-inf, 5] PASS
+[PASS] launch_6pct_uphill_comb@empty  (0.2s wall)
+    rollback_m = 0.0022482 [-inf, 0.05] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 600 [550, +inf] PASS
+    time_to_kmh(15) = 2.9678 [1.5, 20] PASS
+    max_clutch_temp_c = 29.553 [-inf, 250] PASS
+    shift_count = 7 [-inf, 14] PASS
+    downshift_count = 0 [-inf, 0] PASS
+    min_speed_kmh = 54.942 [10, +inf] PASS
+    max_dv_step_ms = 0.020786 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0075659 [-inf, 5] PASS
+[PASS] launch_6pct_uphill_comb@laden40  (0.2s wall)
+    rollback_m = 0.0024149 [-inf, 0.05] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 600 [550, +inf] PASS
+    time_to_kmh(15) = 4.926 [3, 35] PASS
+    max_clutch_temp_c = 37.325 [-inf, 250] PASS
+    time_to_kmh(15) = 4.926 [4.39, 5.29] PASS
+    shift_count = 5 [-inf, 14] PASS
+    downshift_count = 0 [-inf, 0] PASS
+    min_speed_kmh = 28.689 [10, +inf] PASS
+    max_dv_step_ms = 0.02004 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0099851 [-inf, 5] PASS
+[PASS] launch_6pct_uphill_light_comb@laden40  (0.2s wall)
+    rollback_m = 0.0024148 [-inf, 0.05] PASS
+    stalled = 0 [-inf, 0] PASS
+    time_to_kmh(10) = 20.131 [3, 45] PASS
+    max_dv_step_ms = 0.010211 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.001857 [-inf, 5] PASS
+[PASS] launch_6pct_uphill_light_throttle  (0.1s wall)
+    rollback_m = 0.0016824 [-inf, 0.05] PASS
+    stalled = 0 [-inf, 0] PASS
+    time_to_kmh(15) = 2.47 [2, 25] PASS
+[FAIL] launch_flat_comb@empty  (0.4s wall)
+    rollback_m = 2.4006E-05 [-inf, 0.02] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 600 [550, +inf] PASS
+    time_to_kmh(60) = 13.523 [12, 35] PASS
+    time_to_kmh(80) = 20.943 [20, 55] PASS
+    max_speed_kmh = 89.384 [-inf, 90.5] PASS
+    max_rpm_in_gear(6) = 1600.4 [-inf, 1900] PASS
+    max_shift_retard_torque_nm = 0 [-inf, 1] PASS
+    min_accel_shift_gap_ms2 = -0.2069 [-0.3, +inf] PASS
+    max_shift_eye_pitch_swing_deg(1.5) = 4.3727 [-inf, 4] FAIL
+    max_clutch_temp_c = 28.545 [-inf, 250] PASS
+    max_dv_step_ms = 0.026047 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0081592 [-inf, 5] PASS
+[PASS] launch_flat_comb@laden40  (0.4s wall)
+    rollback_m = 0.00015589 [-inf, 0.02] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 600 [550, +inf] PASS
+    time_to_kmh(60) = 28.041 [25, 60] PASS
+    time_to_kmh(80) = 47.574 [40, 95] PASS
+    max_speed_kmh = 89.166 [-inf, 90.5] PASS
+    max_rpm_in_gear(6) = 1677.7 [-inf, 1900] PASS
+    max_shift_retard_torque_nm = 0 [-inf, 1] PASS
+    min_accel_shift_gap_ms2 = -0.11781 [-0.3, +inf] PASS
+    max_shift_eye_pitch_swing_deg(1.5) = 3.1315 [-inf, 4] PASS
+    max_clutch_temp_c = 38.199 [-inf, 250] PASS
+    max_dv_step_ms = 0.020929 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0082113 [-inf, 5] PASS
+[PASS] launch_flat_comb_part60@empty  (0.2s wall)
+    rollback_m = 2.4005E-05 [-inf, 0.02] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 600 [550, +inf] PASS
+    time_to_kmh(50) = 15.056 [8, 30] PASS
+    max_shift_retard_torque_nm = 0 [-inf, 1] PASS
+    max_shift_eye_pitch_swing_deg(1.5) = 3.5547 [-inf, 3.8] PASS
+    max_clutch_temp_c = 28.413 [-inf, 250] PASS
+    max_dv_step_ms = 0.02572 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0067351 [-inf, 5] PASS
+[PASS] launch_flat_comb_part60@laden40  (0.2s wall)
+    rollback_m = 0.00015589 [-inf, 0.02] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 600 [550, +inf] PASS
+    time_to_kmh(50) = 34.136 [15, 45] PASS
+    max_shift_retard_torque_nm = 0 [-inf, 1] PASS
+    max_shift_eye_pitch_swing_deg(1.5) = 2.2161 [-inf, 3.8] PASS
+    max_clutch_temp_c = 35.716 [-inf, 250] PASS
+    max_dv_step_ms = 0.012656 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0041385 [-inf, 5] PASS
+[PASS] limiter_downhill_2pct_comb@laden40  (0.6s wall)
+    max_speed_kmh = 94.341 [-inf, 96] PASS
+    min_speed_kmh = 93.785 [88, +inf] PASS
+    max_service_demand = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.0036231 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.00014506 [-inf, 5] PASS
+[PASS] limiter_downhill_5pct_comb@laden40  (0.6s wall)
+    max_speed_kmh = 95.295 [-inf, 96] PASS
+    mean_speed_kmh = 94 [92.5, 95] PASS
+    speed_range_kmh = 6.1252E-10 [-inf, 1.5] PASS
+    max_retarder_torque_nm = 1731.6 [300, 4000] PASS
+    max_service_demand = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.0064525 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 7.8483E-05 [-inf, 5] PASS
+[PASS] manual_mode_shifts@laden40  (0.1s wall)
+    max_gear = 5 [5, 5] PASS
+    rejected_shifts = 4 [1, +inf] PASS
+    max_rpm = 2072.8 [-inf, 2130] PASS
+    stalled = 0 [-inf, 0] PASS
+[PASS] park_12pct_down_comb@empty  (1.0s wall)
+    creep_m = 0.0024757 [-inf, 0.005] PASS
+    creep_m = 6.3728E-06 [-inf, 0.0005] PASS
+    drift_m = 0.0042952 [-inf, 0.012] PASS
+    max_speed_after_ms = 0.00045618 [-inf, 0.001] PASS
+    trailer_creep_m = 0.0049086 [-inf, 0.005] PASS
+    max_dv_step_ms = 0.010157 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 9.4066E-05 [-inf, 5] PASS
+[PASS] park_12pct_down_comb@laden40  (1.0s wall)
+    creep_m = 0.0015912 [-inf, 0.005] PASS
+    creep_m = 4.008E-05 [-inf, 0.0005] PASS
+    drift_m = 0.0043145 [-inf, 0.012] PASS
+    max_speed_after_ms = 0.00055883 [-inf, 0.001] PASS
+    trailer_creep_m = 0.0047787 [-inf, 0.005] PASS
+    max_dv_step_ms = 0.010214 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.00031729 [-inf, 5] PASS
+[PASS] park_12pct_up_comb@empty  (1.0s wall)
+    creep_m = 0.0017951 [-inf, 0.005] PASS
+    creep_m = 9.0569E-06 [-inf, 0.0005] PASS
+    drift_m = 0.0054684 [-inf, 0.012] PASS
+    max_speed_after_ms = 0.00040621 [-inf, 0.001] PASS
+    trailer_creep_m = 0.0049549 [-inf, 0.005] PASS
+    max_dv_step_ms = 0.01014 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 8.6799E-05 [-inf, 5] PASS
+[PASS] park_12pct_up_comb@laden40  (1.0s wall)
+    creep_m = 0.0011228 [-inf, 0.005] PASS
+    creep_m = 3.5684E-05 [-inf, 0.0005] PASS
+    drift_m = 0.0032882 [-inf, 0.012] PASS
+    max_speed_after_ms = 0.00048586 [-inf, 0.001] PASS
+    trailer_creep_m = 0.0036699 [-inf, 0.005] PASS
+    max_dv_step_ms = 0.01016 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.00025518 [-inf, 5] PASS
+[PASS] park_brake_drive_away_comb@empty  (0.1s wall)
+    max_speed_kmh = 0.00062393 [-inf, 0.5] PASS
+    creep_m = 1.0814E-05 [-inf, 0.05] PASS
+    park_warning = 1 [1, +inf] PASS
+    park_warning = 0 [-inf, 0] PASS
+    max_clutch_temp_c = 26.616 [-inf, 120] PASS
+    stalled = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.026536 [-inf, 0.35] PASS
+[PASS] park_brake_drive_away_comb@laden40  (0.1s wall)
+    max_speed_kmh = 0.0029781 [-inf, 0.5] PASS
+    creep_m = 6.553E-05 [-inf, 0.05] PASS
+    park_warning = 1 [1, +inf] PASS
+    park_warning = 0 [-inf, 0] PASS
+    max_clutch_temp_c = 31.866 [-inf, 120] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_speed_kmh = 46.726 [25, +inf] PASS
+    max_dv_step_ms = 0.020648 [-inf, 0.35] PASS
+[PASS] park_brake_hold_no_interlock_comb@laden40  (0.0s wall)
+    max_speed_kmh = 0.044199 [-inf, 1] PASS
+    creep_m = 0.027025 [-inf, 0.15] PASS
+    max_dv_step_ms = 0.0014546 [-inf, 0.35] PASS
+[PASS] park_flat_5min_comb@empty  (1.0s wall)
+    drift_m = 5.2861E-05 [-inf, 0.005] PASS
+    max_speed_after_ms = 3.7071E-06 [-inf, 0.001] PASS
+    max_dv_step_ms = 2.1187E-05 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 4.5068E-08 [-inf, 5] PASS
+[PASS] park_flat_5min_comb@laden40  (1.0s wall)
+    drift_m = 0.00035352 [-inf, 0.005] PASS
+    max_speed_after_ms = 3.393E-05 [-inf, 0.001] PASS
+    max_dv_step_ms = 0.00037377 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 1.1792E-06 [-inf, 5] PASS
+[PASS] park_low_air_drive_away_comb@laden40  (0.0s wall)
+    max_speed_kmh = 0.002978 [-inf, 0.5] PASS
+    park_warning = 1 [1, +inf] PASS
+    max_clutch_temp_c = 25 [-inf, 60] PASS
+[PASS] reverse_dock_s_maneuver_comb@empty  (0.1s wall)
+    max_articulation_deg = 91.355 [20, 95] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_speed_kmh = -9.6594 [-15, -2] PASS
+    final_z_m = -29.301 [-inf, -3] PASS
+    max_dv_step_ms = 0.11726 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.17602 [-inf, 5] PASS
+[PASS] reverse_dock_s_maneuver_comb@laden40  (0.1s wall)
+    max_articulation_deg = 91.621 [20, 95] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_speed_kmh = -9.6774 [-15, -2] PASS
+    final_z_m = -22.769 [-inf, -3] PASS
+    max_dv_step_ms = 0.16323 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.14218 [-inf, 5] PASS
+[PASS] reverse_grade6pct_comb@empty  (0.1s wall)
+    min_speed_kmh = -4.7307 [-12, +inf] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 599.5 [550, +inf] PASS
+    drift_m = 44.411 [8, +inf] PASS
+    final_z_m = -44.331 [-inf, -5] PASS
+    max_articulation_deg = 0 [-inf, 20] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.021091 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0054158 [-inf, 5] PASS
+[PASS] reverse_grade6pct_comb@laden40  (0.1s wall)
+    min_speed_kmh = -5.9313 [-12, +inf] PASS
+    stalled = 0 [-inf, 0] PASS
+    min_rpm = 599.5 [550, +inf] PASS
+    drift_m = 61.23 [8, +inf] PASS
+    final_z_m = -61.118 [-inf, -5] PASS
+    max_articulation_deg = 0 [-inf, 20] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.017457 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0025402 [-inf, 5] PASS
+[PASS] rollover_r50_cog_high@laden40  (0.2s wall)
+    lat_accel_at_first_lift = 0.34497 [0.25, 0.55] PASS
+    max_fifth_wheel_error_mm = 0.12249 [-inf, 5] PASS
+[FAIL] rollover_r50_cog_low@laden40  (0.5s wall)
+    lat_accel_at_first_lift = NaN [0.25, 0.55] FAIL
+    max_fifth_wheel_error_mm = 0.15984 [-inf, 5] PASS
+[PASS] slalom_70_comb@empty  (0.1s wall)
+    max_articulation_deg = 1.5425 [-inf, 6] PASS
+    rearward_amplification = 0.96752 [0.8, 1.6] PASS
+    articulation_settle_deg = 0.000165 [-inf, 0.5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_lat_accel_ms2 = 1.3312 [-inf, 3.5] PASS
+    max_yaw_rate_dps = 4.0075 [-inf, 10] PASS
+    max_dv_step_ms = 0.012875 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0088351 [-inf, 5] PASS
+[PASS] slalom_70_comb@laden40  (0.1s wall)
+    max_articulation_deg = 1.6193 [-inf, 6] PASS
+    rearward_amplification = 0.98887 [0.8, 1.6] PASS
+    articulation_settle_deg = 0.00023489 [-inf, 0.5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_lat_accel_ms2 = 1.4364 [-inf, 3.5] PASS
+    max_yaw_rate_dps = 4.3246 [-inf, 10] PASS
+    max_dv_step_ms = 0.013938 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.010021 [-inf, 5] PASS
+[FAIL] soak_30min_cycle@laden40  (7.8s wall)
+    max_fifth_wheel_error_mm = 0.018626 [-inf, 5] PASS
+    max_dv_step_ms = 0.1836 [-inf, 0.35] PASS
+    mean_speed_kmh = 73.024 [60, 82] PASS
+    mean_speed_kmh = 72.455 [60, 82] PASS
+    max_speed_after_ms = 0.00012865 [-inf, 0.002] PASS
+    max_speed_after_ms = 0.00013863 [-inf, 0.002] PASS
+    min_air_service_bar = 11.339 [8, +inf] PASS
+    max_articulation_deg = 2.2301 [-inf, 12] PASS
+    nan_detected = 0 [-inf, 0] PASS
+    max_tire_friction_ratio = 0.89791 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 0] PASS
+    min_air_all_bar = 8.0302 [0, +inf] PASS
+    max_pos_jump_m = 0.0036683 [-inf, 0.01] PASS
+    energy_drift_j = 44.924 [-inf, 5] FAIL
+    cab_spectrum_peak_amp_dps = 0.15626 [-inf, 1] PASS
+[PASS] soak_30min_parked@laden40  (6.6s wall)
+    drift_m = 0.00035331 [-inf, 0.005] PASS
+    max_speed_after_ms = 3.3232E-05 [-inf, 0.001] PASS
+    max_kinetic_energy_j = 1.7284E-05 [-inf, 0.001] PASS
+    min_air_service_bar = 12.5 [10.5, +inf] PASS
+    max_dv_step_ms = 0.0013785 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 1.1018E-06 [-inf, 5] PASS
+    nan_detected = 0 [-inf, 0] PASS
+    max_tire_friction_ratio = 0.0083603 [-inf, 1.001] PASS
+    articulation_limit_excess_deg = 0 [-inf, 0] PASS
+    min_air_all_bar = 8.3622 [0, +inf] PASS
+    energy_drift_j = -6.9314 [-inf, 5] PASS
+    max_pos_jump_m = 9.0785E-08 [-inf, 0.001] PASS
+    cab_spectrum_peak_amp_dps = 2.2808E-14 [-inf, 0.01] PASS
+[PASS] speed_bump_comb@solo  (0.0s wall)
+    max_dv_step_ms = 0.068082 [-inf, 0.35] PASS
+    max_pos_jump_m = 1.0402E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 1.8479 [-inf, 4] PASS
+    max_cab_heave_mm = 33.451 [-inf, 50] PASS
+[PASS] speed_bump_comb@empty  (0.0s wall)
+    max_dv_step_ms = 0.0658 [-inf, 0.35] PASS
+    max_pos_jump_m = 1.0589E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 1.7065 [-inf, 4] PASS
+    max_cab_heave_mm = 32.08 [-inf, 50] PASS
+[PASS] speed_bump_comb@laden40  (0.1s wall)
+    max_dv_step_ms = 0.068406 [-inf, 0.35] PASS
+    max_pos_jump_m = 1.0061E-14 [-inf, 1E-06] PASS
+    max_fz_ratio = 1.8051 [-inf, 4] PASS
+    max_cab_heave_mm = 42.882 [-inf, 50] PASS
+[PASS] standstill_12pct_downhill_parking  (0.6s wall)
+    creep_m = 7.8594E-06 [-inf, 0.005] PASS
+    creep_m = 4.794E-09 [-inf, 0.0005] PASS
+    drift_m = 0.0044607 [-inf, 0.012] PASS
+    max_speed_after_ms = 0.00022418 [-inf, 0.001] PASS
+    max_abs_roll_deg = 5.1701E-15 [-inf, 0.5] PASS
+[PASS] standstill_12pct_uphill_parking  (0.5s wall)
+    creep_m = 6.2881E-06 [-inf, 0.005] PASS
+    creep_m = 2.4856E-09 [-inf, 0.0005] PASS
+    drift_m = 0.002895 [-inf, 0.012] PASS
+    max_speed_after_ms = 0.00017266 [-inf, 0.001] PASS
+    max_abs_roll_deg = 0 [-inf, 0.5] PASS
+[PASS] standstill_flat_parking  (0.4s wall)
+    creep_m = 3.4815E-33 [-inf, 0.005] PASS
+    creep_m = 0 [-inf, 0.0005] PASS
+    drift_m = 2.2204E-16 [-inf, 0.012] PASS
+    max_speed_after_ms = 1.1688E-14 [-inf, 0.001] PASS
+    max_abs_roll_deg = 0 [-inf, 0.5] PASS
+[PASS] steer_sign_forward_left  (0.0s wall)
+    yaw_rate_mean_dps = -10.846 [-inf, -1] PASS
+    lateral_displacement_m = -19.079 [-inf, -0.5] PASS
+[PASS] steer_sign_forward_right  (0.0s wall)
+    yaw_rate_mean_dps = 10.846 [1, +inf] PASS
+    lateral_displacement_m = 19.079 [0.5, +inf] PASS
+[PASS] steer_sign_reverse_right  (0.0s wall)
+    yaw_rate_mean_dps = -3.8759 [-inf, -1] PASS
+    stalled = 0 [-inf, 0] PASS
+[PASS] steer_sign_reverse_right_comb@empty  (0.0s wall)
+    yaw_rate_mean_dps = -3.9923 [-inf, -0.3] PASS
+    max_dv_step_ms = 0.015991 [-inf, 0.35] PASS
+[PASS] steer_sign_reverse_right_comb@laden40  (0.0s wall)
+    yaw_rate_mean_dps = -3.1617 [-inf, -0.3] PASS
+    max_dv_step_ms = 0.0077174 [-inf, 0.35] PASS
+[PASS] steer_sign_right_comb@empty  (0.0s wall)
+    yaw_rate_mean_dps = 21.132 [1, +inf] PASS
+    max_dv_step_ms = 0.030774 [-inf, 0.35] PASS
+[PASS] steer_sign_right_comb@laden40  (0.0s wall)
+    yaw_rate_mean_dps = 17.19 [1, +inf] PASS
+    max_dv_step_ms = 0.02286 [-inf, 0.35] PASS
+[PASS] straight_0_80_0@solo  (0.2s wall)
+    rollback_m = 0 [-inf, 0.02] PASS
+    stalled = 0 [-inf, 0] PASS
+    time_to_kmh(60) = 10.18 [7, 20] PASS
+    time_to_kmh(80) = 14.541 [12, 32] PASS
+    max_speed_kmh = 80.576 [-inf, 83] PASS
+    stop_distance_m = 35.615 [32, 55] PASS
+    mfdd_ms2 = 7.6107 [5, 8] PASS
+    max_lateral_deviation_m = 3.6731E-08 [-inf, 0.5] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+    max_dv_step_ms = 0.079151 [-inf, 0.35] PASS
+    nan_detected = 0 [-inf, 0] PASS
+[PASS] straight_0_80_0@empty  (0.5s wall)
+    rollback_m = 2.4009E-05 [-inf, 0.02] PASS
+    stalled = 0 [-inf, 0] PASS
+    time_to_kmh(60) = 13.523 [12, 35] PASS
+    time_to_kmh(80) = 20.943 [20, 55] PASS
+    max_speed_kmh = 80.402 [-inf, 83] PASS
+    stop_distance_m = 40.016 [35, 61.2] PASS
+    mfdd_ms2 = 7.3975 [5, 8] PASS
+    max_lateral_deviation_m = 2.0006E-07 [-inf, 0.5] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+    max_dv_step_ms = 0.076927 [-inf, 0.35] PASS
+    nan_detected = 0 [-inf, 0] PASS
+    trailer_lock_time_s = 0 [-inf, 0.05] PASS
+    max_fifth_wheel_error_mm = 0.013086 [-inf, 5] PASS
+    max_articulation_deg = 0 [-inf, 2] PASS
+[PASS] straight_0_80_0@laden40  (0.5s wall)
+    rollback_m = 0.00015588 [-inf, 0.02] PASS
+    stalled = 0 [-inf, 0] PASS
+    time_to_kmh(60) = 28.041 [25, 60] PASS
+    time_to_kmh(80) = 47.574 [40, 95] PASS
+    max_speed_kmh = 80.022 [-inf, 83] PASS
+    stop_distance_m = 41.141 [35, 61.2] PASS
+    mfdd_ms2 = 6.9031 [5, 8] PASS
+    max_lateral_deviation_m = 1.199E-07 [-inf, 0.5] PASS
+    rear_lock_time_s = 0 [-inf, 0.03] PASS
+    max_dv_step_ms = 0.076404 [-inf, 0.35] PASS
+    nan_detected = 0 [-inf, 0] PASS
+    trailer_lock_time_s = 0 [-inf, 0.05] PASS
+    max_fifth_wheel_error_mm = 0.022604 [-inf, 5] PASS
+    max_articulation_deg = 4.1538E-07 [-inf, 2] PASS
+[PASS] straight_after_steer_pulse@solo  (0.0s wall)
+    max_articulation_deg = 0 [-inf, 0.05] PASS
+    max_yaw_rate_dps = 1.1559E-05 [-inf, 0.05] PASS
+    max_articulation_deg = 0 [-inf, 5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.013476 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0 [-inf, 5] PASS
+[PASS] straight_after_steer_pulse@empty  (0.1s wall)
+    max_articulation_deg = 0.00045683 [-inf, 0.05] PASS
+    max_yaw_rate_dps = 8.3697E-05 [-inf, 0.05] PASS
+    max_articulation_deg = 2.3091 [-inf, 5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.01316 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0077224 [-inf, 5] PASS
+[PASS] straight_after_steer_pulse@laden40  (0.1s wall)
+    max_articulation_deg = 0.0026449 [-inf, 0.05] PASS
+    max_yaw_rate_dps = 0.0010395 [-inf, 0.05] PASS
+    max_articulation_deg = 2.436 [-inf, 5] PASS
+    wheel_lift = 0 [-inf, 0] PASS
+    max_dv_step_ms = 0.012292 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0086523 [-inf, 5] PASS
+[PASS] top_speed_flat  (0.2s wall)
+    max_speed_kmh = 89.343 [-inf, 90.5] PASS
+    mean_speed_kmh = 89.343 [88, 90] PASS
+[PASS] top_speed_flat_comb@empty  (0.4s wall)
+    max_speed_kmh = 89.384 [-inf, 90.5] PASS
+    mean_speed_kmh = 89.384 [88, 90] PASS
+    final_gear = 12 [12, 12] PASS
+    max_dv_step_ms = 0.0079942 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.0003634 [-inf, 5] PASS
+[PASS] top_speed_flat_comb@laden40  (0.4s wall)
+    max_speed_kmh = 89.166 [-inf, 90.5] PASS
+    mean_speed_kmh = 89.166 [88, 90] PASS
+    final_gear = 12 [12, 12] PASS
+    max_dv_step_ms = 0.0027809 [-inf, 0.35] PASS
+    max_fifth_wheel_error_mm = 0.00011811 [-inf, 5] PASS
+  repeatability 0-60 km/h [s]: [10.180, 10.180, 10.180] mean 10.180, max dev 0.00%
+  repeatability 0-80 km/h [s]: [14.541, 14.541, 14.541] mean 14.541, max dev 0.00%
+  launch_0_80_flat:time_to_kmh(80) @dt 50Hz/60Hz/100Hz/120Hz: [14.284, 14.313, 14.541, 14.612] mean 14.437, max dev 1.21%
+  brake_80_0_dry:stop_distance_m(0) @dt 50Hz/60Hz/100Hz/120Hz: [34.410, 34.595, 34.717, 34.668] mean 34.597, max dev 0.54%
+  circle_r25_20kmh:lat_accel_ms2(0) @dt 50Hz/60Hz/100Hz/120Hz: [1.219, 1.218, 1.218, 1.218] mean 1.218, max dev 0.02%
+  brake_80_0_dry_abs_comb@laden40:stop_distance_m(0) @dt 50Hz/60Hz/100Hz/120Hz: [40.958, 40.855, 41.222, 41.352] mean 41.097, max dev 0.62%
+  lane_change_80@laden40:max_articulation_deg(0) @dt 50Hz/60Hz/100Hz/120Hz: [0.823, 0.824, 0.827, 0.827] mean 0.825, max dev 0.28%
+  launch_flat_comb@laden40:time_to_kmh(60) @dt 50Hz/60Hz/100Hz/120Hz: [28.392, 28.279, 28.041, 28.160] mean 28.218, max dev 0.63%
+  brake_80_0_dry:stop_distance_m(0) @substeps 2/4/8: [34.572, 34.717, 34.639] mean 34.643, max dev 0.21%
+  brake_80_0_dry_abs_comb@laden40:stop_distance_m(0) @substeps 2/4/8: [41.010, 41.222, 41.259] mean 41.164, max dev 0.37%
+  bench full 40 t combination (10 wheel ends x 15 rays, 4 substeps, fifth wheel 8 it.), desktop Release: mean 15.5 us/step, p50 14.0, p99 30.2, max 3897.0 us
+4 OF 135 SCENARIO(S) FAILED
