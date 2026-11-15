@@ -1,11 +1,11 @@
 """Far-field backdrop generator beyond the 2x2 km region tile (ADR 0085).
 
 Extracts real open GIS data in a ~1-4.5 km ring outside the region bbox:
-  - BDOT10k (powiat 2061): OT_PTLZ_A (forests), OT_BUBD_A (buildings), OT_BUWT_P (chimneys, HV pylons, towers),
-    OT_SULN_L (high-voltage overhead lines)
-  - GUGiK LoD1 2024 (2061_lod1_2061.zip): measuredHeight per buildingId
-  - OpenStreetMap (podlaskie-261108.osm.pbf): forests, landuse, buildings (incl. powiat 2002 north of the city limit),
-    chimneys, power lines and towers
+  - BDOT10k of EVERY powiat the ring bbox overlaps (ADR 0219, `powiaty.powiaty_for_bbox`; was powiat 2061 only):
+    OT_PTLZ_A (forests), OT_BUBD_A (buildings), OT_BUWT_P (chimneys, HV pylons, towers), OT_SULN_L (HV lines)
+  - GUGiK LoD1 2024 of the same powiaty (<teryt>_lod1_2024.zip): measuredHeight per buildingId
+  - OpenStreetMap (podlaskie-261108.osm.pbf): forests, landuse, buildings, chimneys, power lines and towers in the
+    lon/lat window of the ring (ADR 0219; was a fixed Białystok window, empty for Knyszyn / Mońki / Tykocin)
 
 Builds 4 sector nodes (`far_north`, `far_east`, `far_south`, `far_west`), each with at most 2 primitives:
   - Submesh 0 (`far_field_buildings`, Kamion/World Surface + _FAR_FACADE): vertex-coloured (COLOR_0.rgb = linear
@@ -44,6 +44,7 @@ from roads import pipeline                # noqa: E402
 from roads import profile as RP           # noqa: E402
 from terrain_mesh.gltf import GLB, GLTF_AXES  # noqa: E402
 
+import powiaty as PW                       # noqa: E402  (ADR 0219)
 from streetscape import forest_hlod as FH  # noqa: E402
 from streetscape import materials as SM    # noqa: E402
 
@@ -67,7 +68,11 @@ SKYLINE_FLAG_BEYOND = 4096.0   # visible only beyond the far plane (stand-in for
 SKYLINE_MIN_BUILDING_H_M = 24.0   # WORKING_VALUE: >= 8 storeys reads above the tree line from >= 900 m (1.5 deg)
 SKYLINE_MIN_CHIMNEY_H_M = 40.0    # WORKING_VALUE
 SKYLINE_PROXY_MERGE_M = 25.0      # a ring chimney this close to a region landmark stack is the same object
-GIS_CACHE_SCHEMA = "far-field-gis-cache/11"
+GIS_CACHE_SCHEMA = "far-field-gis-cache/12"   # 12: BDOT10k / LoD1 of every ring powiat, ring OSM window (0219)
+BDOT_LAYERS = ("OT_PTLZ_A", "OT_BUBD_A", "OT_BUWT_P", "OT_SULN_L")
+OSM_WINDOW_MARGIN_DEG = (0.08, 0.05)   # lon, lat (~5.3 / 5.6 km): a feature is tested by its FIRST node, so the window
+#                                        reaches past the ring; for C it contains the old fixed window 23.08-23.30 E,
+#                                        53.10-53.24 N (test_qa_tools_0219), i.e. nothing C read before is dropped
 
 # Linear RGB albedos calibrated to docs/06 §3 and streetscape/materials.py
 PALETTE_BLOCK = [
@@ -410,26 +415,109 @@ def building_rectangle_outside_region(rect, half: float, exclusion=None) -> bool
     return building_outside_region(Polygon(mapped), half, exclusion)
 
 
+def _bdot_layer_file(teryt: str, layer: str) -> Path | None:
+    """Extracted BDOT10k GeoPackage of one layer of one powiat (Data/raw/gugik/bdot10k-<t>/gpkg/...<t>__<layer>.gpkg),
+    extracted from the manifest's ZIP on first use; None when the powiat ships no file for the layer (ADR 0204) or
+    the package is not on disk."""
+    gdir = REPO / "Data" / "raw" / "gugik" / f"bdot10k-{teryt}" / "gpkg"
+    hit = sorted(gdir.glob(f"*BDOT10k.{teryt}__{layer}.gpkg")) if gdir.exists() else []
+    if hit:
+        return hit[0]
+    zips = PW.package_files("bdot10k", teryt) or []
+    if not zips or not zips[0].exists():
+        return None
+    import zipfile as _zf
+    with _zf.ZipFile(zips[0]) as zf:
+        name = next((n for n in zf.namelist() if n.endswith(f"__{layer}.gpkg")), None)
+        if name is None:
+            return None
+        dest = gdir / Path(name).name
+        if not dest.exists():
+            gdir.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(zf.read(name))
+    return dest
+
+
+def ring_sources(ox: float, oy: float) -> dict:
+    """ADR 0219: per-powiat BDOT10k layer files and LoD1 ZIPs for the ring bbox, plus what is missing on disk."""
+    ring_powiaty = PW.powiaty_for_bbox(PW.ring_bbox((ox, oy), RING_MAX_M))
+    bdot = {layer: [] for layer in BDOT_LAYERS}
+    lod1, missing = [], []
+    for t in ring_powiaty:
+        files = {layer: _bdot_layer_file(t, layer) for layer in BDOT_LAYERS}
+        if not any(files.values()):
+            missing.append(f"bdot10k-{t}")
+        for layer, f in files.items():
+            if f is not None:
+                bdot[layer].append(f)
+        lz = PW.package_files("lod1-2024", t)
+        if not lz or not lz[0].exists():
+            missing.append(f"lod1-2024-{t}")
+        else:
+            lod1.append(lz[0])
+    return {"powiaty": list(ring_powiaty), "bdot": bdot, "lod1": lod1, "missing": missing}
+
+
+def _read_bdot(pyogrio, files: list, bbox):
+    """One dataframe over the ring powiaty: the first powiat's rows as before, later powiaty append only objects
+    whose LOKALNYID is new (a feature on a powiat boundary can be in both packages)."""
+    if not files:
+        return None
+    dfs = [pyogrio.read_dataframe(f, bbox=bbox) for f in files]
+    if len(dfs) == 1:
+        return dfs[0]
+    import pandas as pd
+    col = lambda df: "LOKALNYID" if "LOKALNYID" in df.columns else ("lokalnyId" if "lokalnyId" in df.columns else None)
+    out = [dfs[0]]
+    seen = set(dfs[0][col(dfs[0])].astype(str)) if col(dfs[0]) else set()
+    for df in dfs[1:]:
+        c = col(df)
+        if c is not None:
+            df = df[~df[c].astype(str).isin(seen)]
+            seen |= set(df[c].astype(str))
+        out.append(df)
+    return pd.concat(out, ignore_index=True)
+
+
+def osm_lonlat_window(ox: float, oy: float) -> tuple[float, float, float, float]:
+    """(lon0, lat0, lon1, lat1) of the ring bbox + OSM_WINDOW_MARGIN_DEG (ADR 0219)."""
+    from pyproj import Transformer
+    tr = Transformer.from_crs("EPSG:2180", "EPSG:4326", always_xy=True)
+    x0, y0, x1, y1 = PW.ring_bbox((ox, oy), RING_MAX_M)
+    lon, lat = tr.transform([x0, x1, x0, x1], [y0, y0, y1, y1])
+    mx, my = OSM_WINDOW_MARGIN_DEG
+    return (round(min(lon) - mx, 4), round(min(lat) - my, 4), round(max(lon) + mx, 4), round(max(lat) + my, 4))
+
+
+def _merge_lod1(zips: list, audit: dict) -> dict[str, float]:
+    """LoD1 heights of every ring powiat; a buildingId already read from an earlier powiat keeps its height."""
+    heights: dict[str, float] = {}
+    for z in zips:
+        a = {}
+        h = _extract_lod1_heights(z, a)
+        for k, v in h.items():
+            heights.setdefault(k, v)
+        for k, v in a.items():
+            audit[k] = audit.get(k, 0) + v
+    if len(zips) > 1:
+        audit["usable_ids"] = len(heights)
+    return heights
+
+
 def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0) -> dict:
-    """Extract and cache real ring features from BDOT10k (gpkg), GUGiK LoD1 2024, and OSM PBF."""
+    """Extract and cache real ring features from BDOT10k (gpkg), GUGiK LoD1 2024 (every ring powiat, ADR 0219) and
+    OSM PBF."""
     import pyogrio
 
-    bdot_dir = REPO / "Data" / "raw" / "gugik" / "bdot10k-2061" / "gpkg"
-    lod1_zip = REPO / "Data" / "raw" / "gugik" / "lod1-2024-2061" / "2061_lod1_2024.zip"
     osm_pbf = REPO / "Data" / "raw" / "osm" / "podlaskie-261108.osm.pbf"
-
-    bdot_files = {
-        "OT_PTLZ_A": bdot_dir / "PL.PZGiK.335.BDOT10k.2061__OT_PTLZ_A.gpkg",
-        "OT_BUBD_A": bdot_dir / "PL.PZGiK.335.BDOT10k.2061__OT_BUBD_A.gpkg",
-        "OT_BUWT_P": bdot_dir / "PL.PZGiK.335.BDOT10k.2061__OT_BUWT_P.gpkg",
-        "OT_SULN_L": bdot_dir / "PL.PZGiK.335.BDOT10k.2061__OT_SULN_L.gpkg",
-    }
+    src = ring_sources(ox, oy)
+    bdot_files = src["bdot"]
     sources_sha = {}
-    for k, p in bdot_files.items():
-        if p.exists():
+    for layer in BDOT_LAYERS:
+        for p in bdot_files[layer]:
             sources_sha[f"bdot10k/{p.name}"] = _sha256(p)
-    if lod1_zip.exists():
-        sources_sha[f"lod1/{lod1_zip.name}"] = _sha256(lod1_zip)
+    for z in src["lod1"]:
+        sources_sha[f"lod1/{z.name}"] = _sha256(z)
     if osm_pbf.exists():
         sources_sha[f"osm/{osm_pbf.name}"] = _sha256(osm_pbf)
     region_buildings = REPO / "Data" / "Regions" / region_id / "buildings.geojson"
@@ -444,7 +532,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                     and cached.get("schema") == GIS_CACHE_SCHEMA
                     and cached.get("origin_epsg2180") == [ox, oy]
                     and cached.get("half_m") == half
-                    and cached.get("ring_max_m") == RING_MAX_M):
+                    and cached.get("ring_max_m") == RING_MAX_M
+                    and cached.get("powiaty") == src["powiaty"]):
                 return cached
         except Exception:
             pass
@@ -459,7 +548,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
     bbox_2180 = (ox - RING_MAX_M, oy - RING_MAX_M, ox + RING_MAX_M, oy + RING_MAX_M)
 
     lod1_audit = {}
-    lod1_h = _extract_lod1_heights(lod1_zip, lod1_audit)
+    lod1_h = _merge_lod1(src["lod1"], lod1_audit)
+    lon0, lat0, lon1, lat1 = osm_lonlat_window(ox, oy)
 
     forests = []
     buildings = []
@@ -471,8 +561,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
     power_lines = []
 
     # 1. BDOT10k OT_PTLZ_A (forests)
-    if bdot_files["OT_PTLZ_A"].exists():
-        df = pyogrio.read_dataframe(bdot_files["OT_PTLZ_A"], bbox=bbox_2180)
+    df = _read_bdot(pyogrio, bdot_files["OT_PTLZ_A"], bbox_2180)
+    if df is not None:
         for _, row in df.iterrows():
             geom = shapely.affinity.translate(row.geometry, xoff=-ox, yoff=-oy)
             geom = shapely.make_valid(geom)
@@ -488,8 +578,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                         forests.append({"coords": np.round(np.asarray(gs.exterior.coords), 1).tolist(), "mix": mix, "src": "bdot10k"})
 
     # 2. BDOT10k OT_BUBD_A (buildings) + LoD1 2024 heights
-    if bdot_files["OT_BUBD_A"].exists():
-        df = pyogrio.read_dataframe(bdot_files["OT_BUBD_A"], bbox=bbox_2180)
+    df = _read_bdot(pyogrio, bdot_files["OT_BUBD_A"], bbox_2180)
+    if df is not None:
         for _, row in df.iterrows():
             geom = shapely.affinity.translate(row.geometry, xoff=-ox, yoff=-oy)
             if not building_outside_region(geom, half, building_exclusion):
@@ -569,8 +659,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
             })
 
     # 3. BDOT10k OT_BUWT_P (chimneys, HV pylons, towers)
-    if bdot_files["OT_BUWT_P"].exists():
-        df = pyogrio.read_dataframe(bdot_files["OT_BUWT_P"], bbox=bbox_2180)
+    df = _read_bdot(pyogrio, bdot_files["OT_BUWT_P"], bbox_2180)
+    if df is not None:
         for _, row in df.iterrows():
             c = row.geometry.centroid
             e, n = float(c.x - ox), float(c.y - oy)
@@ -592,8 +682,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                                "h": round(float(h_m or 26.0), 1), "kind": kind, "src": "bdot10k"})
 
     # 4. BDOT10k OT_SULN_L (overhead power lines -> line directions & additional pylon spans)
-    if bdot_files["OT_SULN_L"].exists():
-        df = pyogrio.read_dataframe(bdot_files["OT_SULN_L"], bbox=bbox_2180)
+    df = _read_bdot(pyogrio, bdot_files["OT_SULN_L"], bbox_2180)
+    if df is not None:
         for _, row in df.iterrows():
             geom = shapely.affinity.translate(row.geometry, xoff=-ox, yoff=-oy)
             if not ring_zone.intersects(geom):
@@ -624,7 +714,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                 pw = tags.get("power")
                 if mm != "chimney" and pw != "tower":
                     return
-                if not (23.08 <= n.location.lon <= 23.30 and 53.10 <= n.location.lat <= 53.24):
+                if not (lon0 <= n.location.lon <= lon1 and lat0 <= n.location.lat <= lat1):
                     return
                 x, y = tr.transform(n.location.lon, n.location.lat)
                 el, nl = x - ox, y - oy
@@ -652,8 +742,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                     return
                 if len(lonlat) < 2:
                     return
-                lon0, lat0 = lonlat[0]
-                if not (23.08 <= lon0 <= 23.30 and 53.10 <= lat0 <= 53.24):
+                f_lon, f_lat = lonlat[0]
+                if not (lon0 <= f_lon <= lon1 and lat0 <= f_lat <= lat1):
                     return
                 lons, lats = zip(*lonlat)
                 xs, ys = tr.transform(lons, lats)
@@ -683,8 +773,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                     return
                 if not lonlat:
                     return
-                lon0, lat0 = lonlat[0]
-                if not (23.08 <= lon0 <= 23.30 and 53.10 <= lat0 <= 53.24):
+                f_lon, f_lat = lonlat[0]
+                if not (lon0 <= f_lon <= lon1 and lat0 <= f_lat <= lat1):
                     return
                 lons, lats = zip(*lonlat)
                 xs, ys = tr.transform(lons, lats)
@@ -791,6 +881,9 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         "origin_epsg2180": [ox, oy],
         "half_m": half,
         "ring_max_m": RING_MAX_M,
+        "powiaty": src["powiaty"],
+        "powiaty_missing": src["missing"],
+        "osm_lonlat_window": [lon0, lat0, lon1, lat1],
         "sources_sha256": sources_sha,
         "forests": forests,
         "buildings": buildings,
@@ -1747,25 +1840,28 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         "region_inputs_sha256": {k: v for k, v in gis["sources_sha256"].items() if k.startswith("region/")},
         "lod1_height_audit": gis["lod1_height_audit"],
         "building_height_sources": gis["building_height_sources"],
+        "ring_powiaty": gis["powiaty"],                    # ADR 0219: every powiat the ring bbox overlaps
+        "ring_powiaty_missing": gis["powiaty_missing"],    # packages not on disk (ring part from OSM only)
+        "osm_lonlat_window": gis["osm_lonlat_window"],
         "sources": [
             {
-                "id": "gugik-bdot10k-2061",
+                "id": "gugik-bdot10k-" + "+".join(gis["powiaty"]),
                 "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)",
-                "dataset": "BDOT10k powiat 2061 (m. Białystok): OT_PTLZ_A, OT_BUBD_A, OT_BUWT_P, OT_SULN_L",
+                "dataset": "BDOT10k powiaty " + ", ".join(gis["powiaty"]) + ": OT_PTLZ_A, OT_BUBD_A, OT_BUWT_P, OT_SULN_L",
                 "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. a Prawa geodezyjnego i kartograficznego (Dz.U. 2020 poz. 276)",
                 "files": {k: v for k, v in gis["sources_sha256"].items() if k.startswith("bdot10k/")},
             },
             {
-                "id": "gugik-lod1-2024-2061",
+                "id": "gugik-lod1-2024-" + "+".join(gis["powiaty"]),
                 "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)",
-                "dataset": "Modele 3D budynków LoD1 (2024) powiat 2061 (m. Białystok)",
+                "dataset": "Modele 3D budynków LoD1 (2024) powiaty " + ", ".join(gis["powiaty"]),
                 "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. i Prawa geodezyjnego i kartograficznego",
                 "files": {k: v for k, v in gis["sources_sha256"].items() if k.startswith("lod1/")},
             },
             {
                 "id": "geofabrik-osm-podlaskie-261108",
                 "provider": "OpenStreetMap contributors / Geofabrik GmbH",
-                "dataset": "podlaskie-261108.osm.pbf (ring outside tile incl. powiat 2002)",
+                "dataset": "podlaskie-261108.osm.pbf (ring outside the tile, lon/lat window osm_lonlat_window)",
                 "license": "ODbL 1.0 (© OpenStreetMap contributors)",
                 "files": {k: v for k, v in gis["sources_sha256"].items() if k.startswith("osm/")},
             },
