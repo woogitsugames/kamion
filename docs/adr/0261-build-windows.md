@@ -64,8 +64,9 @@ Maszyna deweloperska (Ultra 7 270K Plus, 64 GB, RTX 5070, D3D12) — **NIE refer
 - **Zrzuty obejrzane** (`artifacts/win/runs/*/shot.png`): widok z kabiny, zegary, lusterka-wstawki, zabudowa Knyszyna,
   niebo; dotykowy HUD (kierownica, pedały, selektor) jest widoczny na PC. **Zapora na starcie:** start bez autopilota
   (`…-213125-keys/shot.png`) pokazuje betonową zaporę w poprzek jezdni ok. 60–80 m przed ciężarówką; w przebiegach z
-  autopilotem ciężarówka dojeżdża do niej i stoi (0 km/h, bieg D3, blok zapory przy lewym narożniku kabiny) — także z
-  `-route_s 300`. To ten sam problem, który właściciel zgłosił na A16 (naprawia `spawn-fix-0262`); tu tylko opisany.
+  autopilotem ciężarówka dojeżdża do niej i stoi (0 km/h, bieg D3, szary blok przy lewym narożniku kabiny — odległości
+  i identyfikacja bloku to ocena ze zrzutu, nie pomiar). Próba startu dalej (`-route_s 300`) nie zadziałała: log
+  nadal `[START] … route_s=12.0` (przyczyna niezbadana), więc nie ma pomiaru z jazdy. To ten sam problem, który właściciel zgłosił na A16 (naprawia `spawn-fix-0262`); tu tylko opisany.
 - **Klawiatura w playerze: UNVERIFIED.** Kod klawiatury jest wspólny z edytorem i Input System jest aktywny, ale próba
   wstrzyknięcia klawisza (`scripts/win-key-drive.ps1`, SendInput) nie powiodła się: Windows nie oddał fokusu oknu
   uruchomionemu z procesu w tle. Pad: UNVERIFIED (brak pada przy maszynie w tej sesji). Do sprawdzenia przez właściciela.
@@ -74,14 +75,21 @@ Maszyna deweloperska (Ultra 7 270K Plus, 64 GB, RTX 5070, D3D12) — **NIE refer
   `m_BuildTarget: Standalone` (static 1 / dynamic 0). Jeśli lider chce mieć to jawnie w gicie — jego decyzja.
 - `build_info` w playerze ma etykietę `ab4e89799e-dirty` (HEAD w chwili preprocessu + efekty uboczne Unity), a nazwa
   folderu `4ee3e02626` (HEAD przy starcie skryptu); kod identyczny (ab4e89799 dodaje tylko ten ADR).
-- **Testy EditMode** (`scripts/test.ps1 -Platform EditMode -BuildTarget Win64`, worktree): 633 razem, 630 zaliczonych,
-  1 pominięty, **2 niezaliczone**: `CarPaintMaterialTests.DepositionChannel_RequiresScopedYardOptInOrExistingCar`
-  (przypadki `tractor_paint_blue` i `car_paint_blue`, `WorldPbrMaterials.Channels` — kod nieruszany w tym ADR; te same
-  przypadki przechodzą w przebiegach main z 20:20). Przyczyna UNVERIFIED (hipoteza: zestaw tekstur `car_grime_clean`
-  niewidoczny w danych worktree albo zależność od platformy edytora) — do sprawdzenia przez lidera przy scalaniu.
-  `WindowsBuildTests` 5/5, `RegionSelectTests` 16/16. Wynik: `artifacts/win-build-0261/tests/editmode-20261115-213516.xml`.
+- **Testy EditMode** (`scripts/test.ps1 -Platform EditMode -BuildTarget Win64`, worktree): przebieg pełny 633 razem,
+  630 zaliczonych, 1 pominięty, 2 niezaliczone (`CarPaintMaterialTests.DepositionChannel_…`). Przyczyna środowiskowa,
+  potwierdzona: `WorldPbrMaterials.Has` wymaga plików PNG zestawu `car_grime_clean` z `art-source/world/materials`
+  (poza gitem; main 534 pliki, świeży worktree 27 — `new-agent-worktree.ps1` ich nie kopiuje). Po skopiowaniu katalogu
+  z main: `-Filter CarPaintMaterialTests` 11/11. Nie było jednego pełnego zielonego przebiegu po kopii (630 + te 2).
+  `WindowsBuildTests` 5/5, `RegionSelectTests` 16/16. Wyniki: `artifacts/win-build-0261/tests/editmode-20261115-213516.xml`
+  i `…-214026.xml`.
+- Ścieżka Androida po wydzieleniu `ComposeBuildScenes` jest skompilowana i objęta testami `RegionSelectTests`; build
+  APK po tej zmianie nie był wykonywany (UNVERIFIED).
 
 ## Otwarte
+- **Jazda po Knyszynie tym exe nie jest możliwa dalej niż do zapory** — po `spawn-fix-0262` potrzebny reimport regionów
+  i ponowny build (regiony w worktree to kopia `_Generated` z main z 15.11 ~20:50).
+- Player ma etykietę `-dirty` przy każdym buildzie Windows, dopóki wpis batchingu Standalone nie trafi do
+  `ProjectSettings.asset` (decyzja lidera).
 - Kierownica z FFB (D56/D73) — nie w tym ADR.
 - Dotykowy HUD (kierownica, pedały ekranowe) jest widoczny także na PC; ukrycie / układ PC — zadanie gameplay-ui.
 - Mapowanie klawiszy i pada nie jest konfigurowalne w panelu ustawień (stałe w kodzie); brak podpowiedzi klawiszy w HUD.
