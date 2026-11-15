@@ -36,7 +36,8 @@ bez objazdu, place budowy obok; p.6: nowa jezdnia DK65 (OSM `primary` ref 65 od 
    szew W = start `knyszyn-s` (762635; 609811). Powiat (jeden kod na region): udział pokrycia BDOT10k (warstwy
    `OT_PT*_A`) w kaflu — 10: 62 % 2002 / 32 % 2008, 11: 25 % / 75 %. W `dk65-10` trasa przechodzi do powiatu 2008
    na km 23,67 → ~780 m trasy (km 23,67–24,45) bez budynków/pokrycia BDOT 2008 (LoD1 z 2002 nie sięga). **r3:** `teryt_powiat_extra` (mechanizm ADR 0208, po scaleniu main) — `dk65-10` 2002 + 2008,
-   `dk65-11` 2008 + 2002: BDOT10k / LoD1 / LoD2 z obu powiatów.
+   `dk65-11` 2008 + 2002: BDOT10k / LoD1 / LoD2 z obu powiatów. Skutek zmierzony: liczba budynków bez zmian
+   (10: 49, 11: 18), w `dk65-10` drzew LOD0 253 176 → 268 044; czy pokrycie km 23,67–24,45 jest pełne — niesprawdzone.
 2. **Źródła** (`ingest.py`): NMT 2025 1 m, ortofoto 2024-05-27 0,25 m RGB (nowe arkusze), BDOT10k / LoD1 2024 /
    LoD2 2017 powiatów 2002 i 2008 (już były). **`dk65-11` przypięty do NMT 2022** (`sources.authored.json`, wzorzec
    0209): z NMT 2025 szew z `knyszyn-s` (NMT 2022) różnił się o mediana 0,07 / p95 0,64 / **max 2,70 m** (nasypy S19
@@ -82,7 +83,7 @@ bez objazdu, place budowy obok; p.6: nowa jezdnia DK65 (OSM `primary` ref 65 od 
 | `dk65-07` | Kozińce: skrzyżowanie z 1392B, domy, barierka | latarnie tylko przy ulicach wsi |
 | `dk65-08` | las / pola, place budowy km 19,7 i 20,8, płot tymczasowy | piasek tam, gdzie orto 2024 ma jeszcze las (stan 2026 wg osi OSM) |
 | `dk65-09` | 352 m lasu | — |
-| `dk65-10` | las, przecięcie z osią S19 km 23,5, skrzyżowanie km 22,7 | budynki / pokrycie z obu powiatów (r3) |
+| `dk65-10` | las, przecięcie z osią S19 km 23,5, skrzyżowanie km 22,7 | `teryt_powiat_extra` 2008 (r3), pokrycie km 23,67–24,45 niesprawdzone |
 | `dk65-11` | pola, plac po prawej, szew W z `knyszyn-s` | przekrój = `knyszyn-s` |
 
 Dowody: `artifacts/dk65-tiles2-0214/dk65-NN/r3/view/{grid-top,grid-drive-*}.jpg`, pełne klatki `r3/Low-clear/`.
