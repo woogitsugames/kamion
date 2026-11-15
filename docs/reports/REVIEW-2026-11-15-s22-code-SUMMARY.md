@@ -93,3 +93,88 @@ Nieuruchomione wszędzie: kompilacja Unity, EditMode/PlayMode, visual-qa, APK, A
 
 ## Część B — #117–#125
 _(dopisuje drugi agent w tym pliku)_
+
+## Część B — #117–#125 (recenzent D9-B)
+
+| PR | gałąź / ADR | werdykt | najważniejsze poprawki | kolejność |
+|---|---|---|---|---|
+| #117 | controls-0243 / 0243 | **SCAL** (po EditMode/PlayMode + A/B `mirrorrate` A16) | P2: płynność okienek 10 Hz / wypukłych 1,9 Hz na Low do oceny właściciela; zapisane 900° zostaje po migracji v5 (logcat `range=`) | dowolnie (C#) |
+| #118 | perf-loop-0244 / 0244 | **SCAL** (po EditMode/PlayMode + Profiler A16) | P2: otwarte P1 raycasty i `WriteSummary` jako osobne zadania z pomiarem | dowolnie (C#) |
+| #119 | tests-hygiene-0245 / 0245 | **SCAL** | zmienia strumień losowy płaszcza lasu we wszystkich regionach z BDOT, więc scalić **przed** przebudową C; P2: zapisać to w ADR | C-1 |
+| #120 | summer-cd-0216b / 0216b | **SCAL** (po EditMode) | P2: `lamp_policy()` bierze pierwszy override (walidacja ≤ 1); `STATUS.md` z main | C-2 |
+| #122 | dojlidy-0242 / 0242 | **SCAL** (po kompilacji C# + renderze Dojlid) | musi wejść **przed #123** (baseline i `storey_plan`) | C-3 |
+| #123 | typology-0238 / 0238 | **FIX** | P1 `test_typology_0238.py:305` ma wpisane na sztywno `2022535`, test pada po budget-fix (1 986 314); P1 baseline Dojlid przeliczyć po #122 (`:324` pada w scaleniu); P1 konflikt `storey_plan` z #122 (usunąć zduplikowane `lo, hi`) | C-4 (rebase po #122) |
+| #124 | signs-c-0236 / 0236 | **SCAL** (po przebudowie C + kamerach Low) | P1-L: po buildzie `gate3_landmarks.stale` i kratownica LOD1 na Low; P2: skip `test_every_gate3_sign_is_placed` zawęzić do 4 nowych E-15 | C-5 |
+| #125 | kerbs-0237 / 0237 | **SCAL** (łatka haka osobnym commitem) | P1-L: `0237-build-world-hook.patch` nałożyć po budget-fix, przed przebudową; P2: zamiast `.patch` rebase z hakiem w kodzie; P2: próg `test_yard_wear` | C-6 |
+
+### Pytania lidera — rozstrzygnięcia
+- **#124, skip i progi:** skip `test_gate3_landmarks.py:142` zdejmuje się sam po przebudowie, bo `signs_route.py:407` zawsze
+  zapisuje `diagrams_replaced`. Jest więc uczciwy, ale za szeroki (P2). Progi LOD1 kratownicy 300→200 i 150→100 wynikają ze
+  zmiany konstrukcji (krzyżulce LOD1 jako paski). Przeliczone prototypy: bramownica 16 m LOD1 552 → 232, wysięgnik 240 → 112.
+  Tablica 0,85 m wynika z Tab. 9.5.4, a LOD1 tablicy = 4 tris z nowej konstrukcji. **Uczciwe.**
+- **#123, `BASE_M` 1,5:** pomiar odtworzony niezależnie. n = 8821, mediana `h − 3n` = 1,50, MAE 1,295 (1,5) < 1,353 (2,0) < 1,365 (1,0).
+  Wartość 2,0 z recenzji była gorsza od dotychczasowej. **Autor ma rację.**
+- **#125, behaton:** pobrałem skan Poly Haven `concrete_pavers` (1,92 m) i policzyłem autokorelację FFT: 274,7 mm wzdłuż i
+  319,7 mm na dwa rzędy, czyli liczby autora. Kostka była o 37 % za długa i trzeba ją zmniejszyć (×0,732).
+  **Mnożnik ×1,16 z recenzji działał w złą stronę.**
+- **#125, łatka a budget-fix-s21:** `git apply --check` przechodzi na drzewie main + budget-fix + wszystkie PR C/D. Budget-fix
+  zmienia w `build_world.py` tylko `_src_tally` (diagnostyka), więc hunki nie kolidują. Decymacja obrzeży z budget-fix
+  (`paved._edge_keep`) obejmuje też nowe materiały `EDGED` z #125.
+
+### Konflikty grupy C/D — scalenie próbne
+Kolejność próby: `origin/main` → budget-fix-s21 → #120 → #123 → #124 → #125 → #122.
+- Jedyny **rzeczywisty** konflikt jest w `streetscape/buildings_mesh.py:storey_plan` (#122 × #123). Rozwiązanie: zostawić
+  `if p.get("storeys_fixed"): return …` z #122 i usunąć jego linię `lo, hi = …`, którą #123 przeniósł wyżej. Gdyby linia
+  została, nadpisałaby zakres kondygnacji kamienicy. To cichy błąd.
+- `overrides.yaml` C i Dojlid (#120 × #125, oba dopisują na końcu): suma bloków. YAML poprawny, bez duplikatów id
+  (C 190, Dojlidy 47 wpisów).
+- `docs/LICENSES.md` (#123) i `docs/adr/README.md` (#119 × #125): suma. `STATUS.md`: add/add w każdym PR, brać wersję z main.
+- `stage.py` (#124 +1, #125 +5, budget-fix), `materials.py` (#122, #123, #125), `props.py`/`furniture.py` (#124, #120,
+  budget-fix): git scala czysto.
+- Testy w scaleniu próbnym (`test_typology_0238`, `test_dojlidy_0242`, `test_pavements_0237`, `test_direction_signs_0236`,
+  `test_summer_cd_0216b`, `test_lamp_led_0216`, `test_dojbld_0185`, `test_dojind_0196`, `test_budget_0221`, `test_gate3_landmarks`,
+  `test_g3b_lowread`, `test_furniture_0162`): **150 passed, 2 failed, 2 skipped, 1 xfailed**. Oba faile pochodzą z #123
+  (P1 wyżej).
+
+### Budżet kamer C (High; ESTIMATED do `build_world`)
+| kamera | main | budget-fix-s21 | #123 | #124 | #125 / #120 / #122 | suma |
+|---|---|---|---|---|---|---|
+| stretch_04 | 2 022 535 | 1 986 314 | −693 | −224 | 0 | **≈ 1 985 397** |
+| route_onramp_andersa_above | 1 993 338 | 1 966 981 | −885 | −544 | 0 | **≈ 1 965 552** |
+| route_onramp_andersa | 1 884 422 | 1 852 645 | −1 053 | −544 | 0 | ≈ 1 851 048 |
+| fire_station_abeam | 1 183 284 | ≤ main | −382 | +448 | 0 | +66 względem main |
+
+Low: stretch_04 938 349 −299 (#123). Słupki E-15 z #124 dają +40/+48 na 3 kamerach; #123 kompensuje to z nawiązką
+(−227…−279). Delty #123 odtworzyłem harness'em autora, a baseline wygenerowałem niezależnie kodem z main (wyszedł
+identyczny). Delty #124 zgadzają się z przeliczonymi prototypami. #125 daje 0 tris z konstrukcji (asercja w
+`pavements.run`). Wpływ #119 (las) jest UNVERIFIED, to szum. Materiały: +6 submeshy LOD0 C (#123) i +1…3 (#125), bez
+ryzyka przy budżecie draws High 800 (stretch_04 ma 153).
+
+### Kolejność scalania C/D i jedna przebudowa
+1. budget-fix-s21 (0221, lokalnie) → 2. #119 → 3. #120 → 4. #122 → 5. #123 po FIX (rebase na main z #122, nowy baseline Dojlid,
+bez `2022535`) → 6. #124 → 7. #125 + commit z łatką haka. #117 i #118 można scalić niezależnie (C#).
+Potem **jedna przebudowa**:
+1. opcjonalnie `uv run tools/worldgen/build_region.py --region bialystok-industrial-c` (BASE_M 1,5 i tagi OSM z #123; wymaga
+   Data/raw, po nim ponowny pomiar);
+2. `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` oraz `--region bialystok-dojlidy`;
+3. `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -Build` (i Dojlidy);
+4. `uv run --project tools/worldgen python -m pytest tests/gis -q` (gate3 ma się wykonać, nie skip);
+5. kontrola `streetscape_qa.json`: `mesh_budget.frame_estimate` (stretch_04 < 2 M), `pavements.tris_in == tris_out`, `gate3_landmarks.stale`;
+6. visual-qa WorldC Low/High i Dojlidy;
+7. `pwsh scripts/test.ps1 -Platform EditMode`;
+8. APK + pomiar na A16.
+
+### Testy części B (chmura)
+`dotnet test` (SDK 8.0 user-local): controls-runner 13/13 (#117), loop-runner 30/30 (#118). pytest na gałęziach (deselect znanego
+`test_frame_budget_with_forest_hlod`):
+
+| PR | wynik |
+|---|---|
+| #124 | 295 passed, 3 skipped |
+| #125 | 119 passed, 2 skipped |
+| #123 | 250 passed, 5 skipped, 1 xfailed |
+| #120 | 90 passed, 1 skipped |
+| #122 | 173 passed, 4 skipped, 1 xfailed |
+| #119 | 27 passed, 1 skipped (LFS), 1 xfailed; na main te same pliki: 3 failed |
+
+Nieuruchomione: Unity (EditMode/PlayMode), build_world, kamery, visual-critic, APK, A16.
