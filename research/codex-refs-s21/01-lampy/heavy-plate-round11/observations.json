@@ -1,0 +1,66 @@
+{
+  "method": "Publiczna galeria Chrome CUA: wszystkie cztery kadry obejrzane indywidualnie. Trzy wybrane dokładne adresy odczytano z publicznego IMG.currentSrc, następnie każdy otwarto bezpośrednio i wizualnie sprawdzono. Nie zapisano obrazów ani screenshotów.",
+  "dedup": {
+    "main_manifest_rows": 45,
+    "search_all_01": "Brak wcześniejszych trafień 003389 / 003 389 / offer3385622405 / HTP0000001961 / identyfikatorów trzech obrazów; dodatkowo brak RADRIEL/2KA/Trucklite przed przeglądem.",
+    "distinct_part_vs_photo": "SOURCED [galeria]: co najmniej jedna fizyczna część; nie trzy egzemplarze. Tożsamość konkretnego modelu pozostaje sporna."
+  },
+  "source": "https://www.kleinanzeigen.de/s-anzeige/original-hella-kennzeichenbeleuchtung-2ka-003-389-061-neu/3385622405-223-8005",
+  "seller": "CampRent GmbH",
+  "source_claim": "Nowa HELLA 2KA003389-061, HTP0000001961; brak konkretnej ciężarówki w opisie.",
+  "photographed_box": "2KA003389-011; EAN4082300050479; HTP0000001961",
+  "unselected_view": {
+    "gallery": "1/4",
+    "seen": "Ta sama mała lampa obok żółtego pudełka na jasnym podłożu; nie wybrano, gdyż dokładniejsze ujęcia 2/4 i 4/4 zastępują ten kadr."
+  },
+  "external_text_check": {
+    "url": "https://www.kfzparts24.de/de/i219223/hella-kennzeichenleuchte-2ka-003-389-011/788886",
+    "access": "Pełna publiczna strona tekstowa web open, 359 linii; bez pobierania zdjęć.",
+    "sourced": "Dla modelu -011 strona wymienia OE DAF TP03007069 i VDL30061095, funkcję tablicową oraz E1 22819 jako numer użytkowy.",
+    "limit": "To źródłowa deklaracja kompatybilności modelu, nie obserwacja znaku na części i nie rozwiązanie rozbieżności aukcji. Nie przypisano E1 22819 fotografowanej lampie. Nie ustalono modelu ciężarówki ani montażu.",
+    "other_routes": "WMShop pełne otwarcie timeout; camp-parts2972 niedostępne w web. Nie ponawiano, nie logowano."
+  },
+  "counts": {
+    "selected_link_only_frames": 3,
+    "physical_part_frames": 2,
+    "packaging_aux": 1,
+    "downloaded_media": 0,
+    "confirmed_heavy_plate_parts_strict": 0,
+    "confirmed_physical_E_L": 0,
+    "confirmed_full_approval": 0,
+    "confirmed_emission": 0,
+    "new_family_candidate": 1
+  },
+  "observations": [
+    {
+      "id": "01-HP11-01",
+      "url": "https://img.kleinanzeigen.de/api/v1/prod-ads/images/a9/a945e84e-70ce-4ef9-a589-904768b68ac1?rule=$_59.AUTO",
+      "gallery": "2/4",
+      "status": "KONTEKST_OPTYKI_PENDING_APPLICATION",
+      "seen": "Na jasnoszarym podłożu odłożona niewielka lampa. Jedno wspólne bezbarwne okno o trapezowym obrysie, jasna obwódka i szeroka czarna listwa u dołu. Boczne pola mają pionowe rowki, środkowe pole gęsty drobny wzór wypukłości. Po lewej owalny znak wyglądający na logo; nie odczytano pewnego E ani L. Nie widać emisji.",
+      "color": "bezbarwny klosz; jasna szarokremowa obwódka; czarna podstawa",
+      "shape": "trapezowe okno z zaokrąglonymi narożami, prostokątna podstawa",
+      "chambers": "UNVERIFIED: jedno wspólne okno, odmienne faktury nie dowodzą osobnych komór"
+    },
+    {
+      "id": "01-HP11-02",
+      "url": "https://img.kleinanzeigen.de/api/v1/prod-ads/images/7d/7dcf19d4-0627-452e-b3a7-d07a5ac95947?rule=$_59.AUTO",
+      "gallery": "3/4",
+      "status": "AUX_MOCOWANIE",
+      "seen": "Czarna prostokątna spodnia płyta z ziarnistym obrzeżem. Pośrodku dwa duże okrągłe miejsca, dolne otwarte, górne z wypełnieniem; dwa mniejsze ciemne otwory po bokach. Na prawej górnej białej etykiecie czytelne Made in Romania i 149. Brak pewnego fizycznego E/L; optyka poza widokiem.",
+      "color": "czarny; biała etykieta",
+      "shape": "prostokątna płyta z zaokrąglonymi narożami",
+      "chambers": "UNVERIFIED: optyka niewidoczna"
+    },
+    {
+      "id": "01-HP11-03",
+      "url": "https://img.kleinanzeigen.de/api/v1/prod-ads/images/ac/ac1f22ea-d044-4c77-b31f-fc7a305a2a12?rule=$_59.AUTO",
+      "gallery": "4/4",
+      "status": "AUX_OPAKOWANIE_ROZBIEZNOSC",
+      "seen": "Żółte pudełko z dwiema etykietami. Duża biała: KENNZEICHENLEUCHTE, ANBAU i HTP0000001961. Niżej druk Licence Plate Light, R10W oraz 2KA 003.389-011; kod kreskowy 4082300050479. Numer kończy się -011, chociaż tytuł i opis oferty podają -061. To opakowanie, nie oznakowanie homologacyjne fizycznej lampy.",
+      "color": "żółty karton; biała etykieta; czarny druk",
+      "shape": "prostokątne pudełko",
+      "chambers": "nie dotyczy: opakowanie"
+    }
+  ]
+}

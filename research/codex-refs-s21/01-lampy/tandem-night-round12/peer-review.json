@@ -1,0 +1,38 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "reviewer": "niezależny agent knyszyn",
+  "result": "PASS jako AUX kontrastu i oświetlenia podłoża; bez kwalifikacji homologacyjnej M59",
+  "method": "Najpierw obejrzano istniejący lokalny oryginał przez view_image, dopiero potem odczytano stronę Commons. Bez nowego pobrania, kopii, upscalingu, wycinków lub screenshotów.",
+  "local_source": "Data/raw/refs/codex-s21/01-lampy/tandem-night-round12/tandem-night-original.jpg",
+  "source_page": "https://commons.wikimedia.org/wiki/File:Tandem_and_backup_lighting_system_in_the_dark.jpg",
+  "source_metadata_verified_after_view": {
+    "author": "Joe Kiser",
+    "licence": "CC BY-SA 3.0 Unported",
+    "licence_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "image_date_source": "2013-02-10 00:25:24",
+    "timezone": "UNVERIFIED",
+    "dimensions_source_px": [1127, 674],
+    "source_description": "Autor opisuje wykorzystanie tandem & backup lighting przy dokowaniu naczepy. Jest to źródłowe objaśnienie funkcji sceny, oddzielone od obserwacji obrazu."
+  },
+  "independent_observation_before_source": {
+    "scene": "Bardzo ciemny widok tylnej części dużego pojazdu i kół po prawej, nadwozie w dużej części ginie w czerni. Widoczne czerwone okrągłe jasne pola po lewej i w środkowej grupie, dodatkowy mały czerwony punkt przy niej; w dalszej prawej części osobna drobna grupa świateł. Nie przypisano jej do konkretnego kolejnego pojazdu.",
+    "light_and_ground": "Wyraźne chłodne białawe/niebieskawe pasy oświetlenia na podłożu pod tyłem i przy kołach, kontrastujące z głębokimi ciemnymi obszarami. Podłoże ma jasną ziarnistą powierzchnię i ciemne pasy; materiał i stan nawierzchni UNVERIFIED. Mały ciemny klinowaty przedmiot leży po prawej.",
+    "plate_and_bright_strips": "Prostokątna tablica po lewej od środka oświetlona cieplejszym żółtawym światłem; napis nieczytelny. Jasne poziome pasy na dole tyłu i nad kołami mogą odbijać światło; nie uznano ich za osobne emitujące lampy.",
+    "unknowns": "Nie ustalono kraju, europejskiego zastosowania, ECE, funkcji każdej czerwonej lampy, liczby komór, chemii zabrudzeń, śniegu/lodu ani parametrów ekspozycji. Nie odczytano pełnego numeru rejestracyjnego."
+  },
+  "qualification": {
+    "aux_contrast_ground_lighting": "PASS — przydatny rzeczywisty nocny kontrast i rozkład jasnych pól na podłożu.",
+    "ece_read": "UNVERIFIED — brak czytelnego znaku lub numeru homologacji.",
+    "european_vehicle": "UNVERIFIED — nie wynika z obrazu ani odczytanego opisu.",
+    "licence_plate_lamp_count": "Nie zwiększać; małe oświetlone pole tablicy nie jest tu odrębnym zakwalifikowanym zbliżeniem lampki.",
+    "M59_threshold_increment": 0,
+    "main_manifest_increment": 0
+  },
+  "limits": [
+    "Pojedynczy kadr nie pokazuje sekwencji manewru ani migania.",
+    "Jasne prześwietlone centra nie dają wartości fotometrycznych lub temperatury barwowej.",
+    "Nie zamieniać jasnych pasów odblaskowych w emitujące źródła.",
+    "Źródłowa data nie zawiera potwierdzonej strefy, nie ustala stanu 2026."
+  ]
+}

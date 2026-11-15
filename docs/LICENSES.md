@@ -567,3 +567,7 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 07/route-c-public-plans-round6:publiczny opisPABARKAS-PROJEKT zBIP UM Białystok. Nie przypisanoCC ani domenypublicznej zewnętrznemu opracowaniu. WGit wyłącznie własne streszczenie,fakty/odsyłacze/recenzja, bez źródłowegoPDF11.67MB i renderów; pozaGitread-only. Bez fotografii i bez kopiowania plansz.
 
 05/crossing-category-source-round6:obwieszczenieWojewodyPodlaskiego18.11.2025 z publicznejstronyUMMońki; własne fakty/streszczenie/linki, bez przypisywaniaCC. PDF i renderyskanów pozaGit; nieudostępnione jako fotografie/tekstury.
+
+01/heavy-plate-round11:CampRentGmbH,3fotografie link-only, all rights reserved,0kopii/screenshotów. Rozbieżność oferty/pudełka nie rozstrzygnięta, numeru homologacji z katalogu nie przypisano obrazowi.
+
+01/tandem-night-round12/files/AUX12-01.jpg:JoeKiser, WikimediaCommons, CC BY-SA3.0 (https://creativecommons.org/licenses/by-sa/3.0),2013-02-10; źródło konkretnego pliku i SHA w podmanifeście/source-review. Pochodna zmniejszona≤800px bez kadrowania/upscalingu; licencjaBY-SA3 zachowana, oryginał pozaGit. Tylko referencjaAUX, nie pomiar ani dowódECE.

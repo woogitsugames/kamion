@@ -126,3 +126,9 @@ Główny manifest45rekordów kadrów (8lokalnych/37link-only). [Heavy-plate-roun
 ## Ponowny audyt wizualny — obieg10
 
 [Raport i10indywidualnych oglądów](qualification-audit-round10/README.md):10/45=22.22%, opisy zgodne10/sprzeczne0. Dobór celowy, seed2026111510 wyłącznie porządkuje wybraneID; nie losowa próba ani ocena pozostałych35.8dużychtylnychoptyk ma geometrię≥10%, z czego4mają potwierdzony właściwy typciągnik/naczepa; nie oznacza to4nowych pełnychodczytówECE ani pełnejkwalifikacjiM59. Inne4konfiguracjęstrict mająUNVERIFIED. RN3-04 rzeczywiście noc/emisja, ale rozmiar pojedynczej lampy nie potwierdza progu zbliżenia, więc0nocnych/włączonychzbliżeń ztejpróbki. HP7to1tablicowaczęść, nie4urządzenia. Główny snapshot45hash sprawdzony przez koordynatora, ID/jawne wyniki10/45 zgodne. Koordynator nie dopisał nowych oglądów do10agenta. Progi15/4/3/5 pozostająotwarte;35NOT_REVIEWED tejrundy nie uznano za złe ani zaliczone.
+
+## Kandydat Hella i nocny AUX — bez wzrostu kwalifikacji
+
+[Hella003389](heavy-plate-round11/README.md):3link-onlykadry, w tym2części i1opakowania,0pobrań. Oferta-061, pudełko-011; nie rozstrzygnięto tożsamości egzemplarza i ciężkiego zastosowania. KatalogoweE122819 nie jest odczytem fotografii. 1nowa rodzina-kandydat,0strictciężkichtablicowych; pozostaje tylko w osobnym podmanifeście, nie zwiększa głównego45.
+
+[Tandem-night-round12](tandem-night-round12/README.md):1nowy kadrCCBY-SA3JoeKiser,1oryginał1127×674 pozaGit,1miniatura≤800. Koordynator i niezależnypeer osobno obejrzeli oryginał. Chłodnobiałe pola podłoża przy manewrowaniu i czerwone poświaty, bez fizycznegoE/kraju/systemuECE. TylkoAUXkontrastu, bez wzrostu15/4/3/5 i bez dodania do45głównychrekordów. Jasnego poziomego pasa nie utożsamiono z emiterem, koloru zLED/CCT ani powierzchni z solą/śniegiem. Oba podpakiety mają jawne źródła/opisy/ograniczenia.
