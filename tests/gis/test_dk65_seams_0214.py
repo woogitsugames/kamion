@@ -205,3 +205,26 @@ def test_construction_site_heaps_inside_tile_and_deterministic():
     assert z[outside].max() < 0.05
     assert z[_ras([road], hf)].max() == 0.0
     assert 1.0 < z.max() < 3.5
+
+
+def test_construction_site_sand_is_identical_on_both_sides_of_a_seam():
+    """ADR 0215 r2: a corridor crossing a tile seam at an angle gets the same sand weight on the shared grid row in
+    both tiles (the blur sees the corridor beyond the tile, not its mirror image)."""
+    from streetscape import construction_site as CS
+    ov = [{"id": "t", "kind": "construction_site", "platform_m": 0.0, "heaps_per_ha": 0.0,
+           "axes": [{"osm_way": 1, "half_width_m": 10.0, "line_epsg2180": [[-60.0, -80.0], [45.0, 60.0]]}]}]
+    n = 200
+    south = SimpleNamespace(x0=-100.0, y1=0.0, z=np.zeros((n + 1, n + 1)))       # rows N = 0 ... -200, seam = row 0
+    north = SimpleNamespace(x0=-100.0, y1=200.0, z=np.zeros((n + 1, n + 1)))     # rows N = 200 ... 0, seam = last row
+    rows = {}
+    for name, hf, row in (("s", south, 0), ("n", north, -1)):
+        rep = {}
+        sites = CS.plan(ov, (0, 0), None, rep)
+        _, m = CS.shape_terrain(hf.z.copy(), np.zeros(hf.z.shape, bool), hf, sites, _ras, rep)
+        col = CS.ground_colour(np.zeros(hf.z.shape + (4,), np.float32), m, hf, sites, _ras)
+        rows[name] = col[row, :, 3]
+        old = CS.ground_colour(np.zeros(hf.z.shape + (4,), np.float32), m, hf)[row, :, 3]
+        rows[name + "_mirror"] = old
+    assert rows["s"].max() > 0.8
+    assert np.abs(rows["s"] - rows["n"]).max() < 1e-4
+    assert np.abs(rows["s_mirror"] - rows["n_mirror"]).max() > 0.05, "the unpadded blur is what differed at the seam"
