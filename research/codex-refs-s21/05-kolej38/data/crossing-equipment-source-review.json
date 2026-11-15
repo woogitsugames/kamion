@@ -1,0 +1,78 @@
+{
+  "review_date": "2026-11-15",
+  "reviewed_files": [
+    "files/05-O05.jpg",
+    "data/crossing-ortho-review.json"
+  ],
+  "crossing_candidate": {
+    "identifier": "038010194",
+    "osm_node": 2070722551,
+    "lat": 53.1675484,
+    "lon": 23.0564732,
+    "identity_limit": "Identyfikatory i współrzędne przyjęte z pakietu; nie potwierdzono ich niezależnym wykazem PLK."
+  },
+  "visual_peer_review": {
+    "verdict": "PASS",
+    "image_sha256": "b3989b1ca90fe694ca252dcefa6d0e6d0cbdcf5e2c17cc52b29aef64cc8d477b",
+    "observed": "Jeden tor przecina ukośnie wąską drogę. W obrębie przejazdu jasne prostokątne powierzchnie między szynami i obok szyn. Widoczne ciemne równoległe linie szyn, powtarzalne poprzeczne podkłady, szarobrązowy pas podsypki oraz sąsiednia roślinność. Po zachodniej stronie słupy z cienkimi elementami i liniowe cienie. Drobne obiekty przy drodze nie mają z tego kadru pewnej funkcji.",
+    "limits_accepted": [
+      "Materiał paneli nieustalony.",
+      "Rodzaj podkładów i kruszywa nieustalony.",
+      "Kategoria A–D, rogatki, sygnalizacja oraz G-3/G-4 nieustalone.",
+      "Brak rozpoznanego urządzenia z góry nie dowodzi jego nieobecności.",
+      "Data arkusza WFS nie gwarantuje daty niezwiązanego czasowo WMS.",
+      "Opis słupów nie dowodzi napięcia ani aktualnego stanu zasilania."
+    ]
+  },
+  "official_sources_reviewed": [
+    {
+      "url": "https://www.plk-sa.pl/o-spolce/biuro-prasowe/informacje-prasowe/szczegoly/bezpieczniej-na-przejazdach-kolejowych-w-wojewodztwie-podlaskim-2719",
+      "date": "2015-02-04",
+      "read": "pełna treść publiczna",
+      "finding": "Ogólna zapowiedź modernizacji dwóch przejazdów na linii Białystok–Ełk. Brak numeru038010194, współrzędnych i indywidualnej kategorii. Nie przypisano ogólnych zapowiedzi temu punktowi."
+    },
+    {
+      "url": "https://www.rail-baltica.pl/aktualnosci/beda-lepsze-podroze-rail-baltica-min-z-bialegostoku-do-elku-id2270/",
+      "date": "2017-12-27",
+      "read": "pełna treść publiczna projektu PLK",
+      "finding": "Zapowiedź projektu modernizacji Białystok–Ełk i dodatkowego wyposażenia przejazdów. Brak identyfikacji tego konkretnego punktu; plan nie potwierdza wykonania ani wyposażenia w2026."
+    },
+    {
+      "url": "https://www.plk-sa.pl/klienci-i-kontrahenci/zamowienia-publiczne",
+      "read": "pełna treść publiczna",
+      "finding": "Oficjalne przekierowanie na platformę zakupową. Platforma zwróciła web pustą treść; nie odczytano dokumentacji indywidualnego przejazdu."
+    },
+    {
+      "url": "https://platformazakupowa.plk-sa.pl/",
+      "read": "brak dostępnej treści w web",
+      "finding": "Nie znaleziono pełnego publicznie odczytanego dokumentu przypisującego kategorię i urządzenia."
+    },
+    {
+      "url": "https://www.plk-sa.pl/klienci-i-kontrahenci/api-otwarte-dane",
+      "read": "pełna treść publiczna",
+      "finding": "Opisane API dotyczy planowanego i realizowanego ruchu pasażerskiego; wskazuje rejestrację. Nie użyto go jako inwentaryzacji przejazdów, nie rejestrowano konta."
+    }
+  ],
+  "search_scope": {
+    "queries": [
+      "038010194",
+      "038 010 194",
+      "10,194 +przejazd",
+      "10+194 +linia38",
+      "PLK +Fasty +kategoria",
+      "PLK +Giełdowa +Hydroforowa"
+    ],
+    "result": "Nie odnaleziono źródła PLK bezpośrednio przypisującego kategorię lub wyposażenie. To ograniczony wynik poszukiwania, nie dowód nieistnienia dokumentu."
+  },
+  "unaccepted_lead": {
+    "status": "UNVERIFIED; nie użyto jako źródła",
+    "detail": "Wyszukiwarka wskazała zewnętrzną kopię projektu E75_1-12.10-M-8+917-OPIS.pdf, wzmianka o istniejącym km10,194 i projektowanym8+917. Domeny kopii nie ma na liście dozwolonych źródeł, nie pobierano ani nie użyto do ustaleń. Tylko trop do odnalezienia dokumentu na serwerze PLK; nie łączyć kilometracji projektowanej i istniejącej bez pełnego źródła."
+  },
+  "conclusion": {
+    "visual_description": "PASS",
+    "category_A_to_D": "UNVERIFIED",
+    "barriers_and_signals": "UNVERIFIED",
+    "signs_G3_G4": "UNVERIFIED",
+    "next_evidence_needed": "Publiczny wykaz/metryka przejazdu PLK z identyfikatorem lub kilometracją i datą, albo kadry naziemne z jednoznacznie tym punktem. Nie nadawać kategorii na podstawie braku tagówOSM czy nierozpoznania urządzenia na ortofoto."
+  }
+}
