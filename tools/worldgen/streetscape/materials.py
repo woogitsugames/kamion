@@ -39,6 +39,24 @@ M = {
     "yard_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "path_asphalt": {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
     "cycle_red": {"color": [0.20, 0.06, 0.05], "rough": 0.88, "surface": "asphalt", "texture_set": "paving_red"},
+    # ADR 0188 (updated M65): asphalt surfaces of cycle tracks (DDR). Set `asphalt_tint` = the asphalt_worn scan as a
+    # neutral modulation map (engine albedo = 2 x colour x map): the normal, roughness, cracks and grime are those of
+    # the grey asphalt, only the colour differs.
+    # - `cycle_asphalt`: warm dark-grey asphalt of standard DDRs (all DDRs in bialystok-dojlidy including Kuronia
+    #   P11-001 and Mickiewicza/Kuronia P11-063, plus the grey DDRs in bialystok-industrial-c). Calibrated in the Low
+    #   overcast render of P11-001 against the photo's DDR / carriageway / sidewalk ratios (M65 §2.1 / §5 A: DDR sRGB
+    #   ~109/104/101 vs carriageway 87/87/88 and sidewalk 129/123/113). WORKING_VALUE.
+    # - `cycle_asphalt_red`: weathered red-brown / burgundy asphalt of the Rondo Putry / Andersa cycle tracks in
+    #   bialystok-industrial-c (11 OSM ways verified on GUGiK 0.08 m 2024 orthophoto and Mapillary, M65 §2.1 / §5 A).
+    #   WORKING_VALUE.
+    # - `cycle_crossing_red`: thin red thermoplastic / resin surfacing of the 25 verified red P-11 cycle crossings
+    #   (9 in Dojlidy including P11-056 Dywizjonu 303, 16 in Region C; M65 §2.2 / §5 B). WORKING_VALUE.
+    "cycle_asphalt": {"color": [0.160, 0.151, 0.145], "rough": 0.9, "surface": "asphalt",
+                      "texture_set": "asphalt_tint", "uv": "planar", "ground_grime": {"damp_darkening": 0.22}},
+    "cycle_asphalt_red": {"color": [0.220, 0.138, 0.130], "rough": 0.9, "surface": "asphalt",
+                          "texture_set": "asphalt_tint", "uv": "planar", "ground_grime": {"damp_darkening": 0.22}},
+    "cycle_crossing_red": {"color": [0.134, 0.093, 0.093], "rough": 0.88, "surface": "asphalt",
+                           "texture_set": "asphalt_tint", "uv": "planar", "decal": True, "depth_offset_m": 0.003},
     # buildings
     "hall_wall_grey": {"color": [0.46, 0.47, 0.46], "rough": 0.5, "metal": 0.2, "texture_set": "sandwich_ribbed"},
     "hall_wall_silver": {"color": [0.40, 0.42, 0.43], "rough": 0.45, "metal": 0.4, "texture_set": "sandwich_ribbed"},

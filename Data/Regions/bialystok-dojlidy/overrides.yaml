@@ -567,3 +567,30 @@ overrides:
       a road-edge matter, not corrected here.
     confidence: medium
     verify: owner photo session (paving pattern, kerb line)
+  # ================================================================ ADR 0188 (ddr-0188): cycle tracks (updated M65)
+  - id: kuronia-mickiewicza-ddr-away-from-road
+    kind: cycleway
+    target: {osm_way: [212811563, 180233649]}
+    cycle_side: away
+    colour: grey
+    reason: >-
+      Photos P11-001 (Kuronia 3, looking east along the path north of the carriageway) and P11-063 (Mickiewicza /
+      Kuronia junction), confirmed by GUGiK 0.25 m 2024 orthophoto (research M65 §2.1 & §3): on both ways the
+      warm-grey asphalt cycle track (cycle_asphalt, NOT red) is the half AWAY from the carriageway and the
+      block-paved footway is the half beside the verge / kerb. OSM only tags segregated=yes (cycleway:surface=asphalt,
+      footway:surface=paving_stones). Widths: 212811563 total 5.0 m (BDOT10k) with 2.6 m DDR; 180233649 total 4.55 m
+      with 2.75 m DDR.
+    confidence: high
+    verify: none
+  - id: kuronia3-gate-driveway
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180: [[780307.5, 590548.8], [780314.0, 590549.6], [780312.1, 590562.5], [780305.6, 590561.7]]
+    reason: >-
+      Photo P11-001 and GUGiK 0.25 m 2024 orthophoto (research M65 §2.2 node 2226186747 / C65-170): the block-paved
+      industrial driveway to the west gate of Kuronia 3 (OSM way 553106095, tagged service=parking_aisle so excluded
+      from roads.graph.json) cuts across the segregated path of Kuronia (way 212811563) between the carriageway kerb
+      and the plot gate (node 2226186752). The DDR asphalt, concrete divider and white lines break at the driveway
+      edges with P-23 bicycle symbols on both sides and no red crossing carpet.
+    confidence: high
+    verify: none

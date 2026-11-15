@@ -7337,6 +7337,7 @@
    3000011323,
    3000011320,
    2999986094,
+   2999986094,
    3868637953,
    2813998270,
    3000025162,
@@ -7344,27 +7345,28 @@
    8219705139,
    2999931483,
    2814000907,
+   2163381064,
    2130929725,
-   2895147444,
    2163381534,
+   3889955473,
    3889955473,
    2895147403,
    3868637951,
-   3323249091,
    5175466035,
    2998184558,
    6284342139,
+   6284342139,
+   2163381053,
    2163381053,
    2999986091,
-   2798751918,
    3867824944,
+   2226186646,
+   3051047426,
    3051047426,
    3867824988,
-   3867825011,
+   3051047427,
    3867824987,
    2999986093,
-   2814000923,
-   3323247500,
    3867824983,
    3867824947,
    2163381533,
@@ -7376,36 +7378,40 @@
    2814000942,
    5906745186,
    5810311651,
+   5810311651,
    2814000936,
    2814000941,
-   5499949617,
    8219705140,
    5775179569,
    2130929733,
    7089516575,
    6505679117,
    5825973689,
+   5825973689,
    6284342138,
+   6284342138,
+   5169862895,
    5169862895,
    2798751924,
    9045029624
   ],
   "crossings_merged": 0,
-  "crossings_p11": 6,
+  "crossings_p11": 20,
   "crossings_skipped": [
    2163381064,
    3051047427,
    2226186639,
+   5169862896,
    5169862896
   ],
-  "crossings_snapped": 75,
+  "crossings_snapped": 83,
   "decals": {
    "gullies": 989,
-   "oil": 262,
-   "patches": 416
+   "oil": 271,
+   "patches": 285
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 455500,
+  "footprint_nodes": 459396,
   "fork_abreast": [],
   "fork_shifts": [
    {
@@ -7871,12 +7877,13 @@
   "markings": {
    "P-1 centre line": 31,
    "P-1 lane line": 72,
-   "P-10 crossing": 65,
-   "P-10 crossing in junction": 50,
-   "P-11 cycle crossing": 6,
-   "P-11 cycle crossing in junction": 6,
+   "P-10 crossing": 60,
+   "P-10 crossing in junction": 46,
+   "P-11 cycle crossing": 18,
+   "P-11 cycle crossing in junction": 15,
+   "P-11 red surfacing": 9,
    "P-13": 4,
-   "P-14": 15,
+   "P-14": 17,
    "P-7b edge line": 60,
    "P-8 arrow": 27,
    "P-8 skipped (lane too narrow)": 4,
@@ -7886,14 +7893,7 @@
   "markings_overlap_removed_tris": 21,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 0,
-  "overrides_applied": [
-   {
-    "id": "mickiewicza-u-turn-not-signalised",
-    "targets": [
-     "n3541204205"
-    ]
-   }
-  ],
+  "overrides_applied": [],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -7902,10 +7902,10 @@
   "roundabout_junctions": 0,
   "sides_on_carriageway_culled": {
    "kerb_tris": 1676,
-   "parts": 259,
-   "side_tris": 450
+   "parts": 253,
+   "side_tris": 436
   },
-  "signalised_junctions": 5,
+  "signalised_junctions": 6,
   "through_lines": {
    "crossing_pairs_skipped": 59,
    "junctions": 41,
@@ -7919,7 +7919,7 @@
   },
   "verge_strips": {
    "chunks": 44,
-   "tris": 39571
+   "tris": 39673
   },
   "walled_ramps": []
  }
