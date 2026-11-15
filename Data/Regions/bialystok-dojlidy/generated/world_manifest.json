@@ -4954,19 +4954,19 @@
     "z_max_evrf2007": 159.83,
     "z_min_evrf2007": 138.43
    },
-   "bytes": 15722304,
+   "bytes": 15729032,
    "file": "Data/raw/derived/bialystok-dojlidy/world/chunk_5_0.glb",
    "forest_cells": [],
    "id": "5_0",
    "instances": {
     "count": 239,
     "file": "Data/raw/derived/bialystok-dojlidy/world/instances_5_0.json",
-    "sha256": "a7e97714670a2a561b18657c60358c58e8ad41963f271a429407bb99068590dc"
+    "sha256": "e18788b9a2333a62d28070eadd49c30f2d077169f5fee1f6d23d84ff90e173a5"
    },
    "low": {
-    "bytes": 7668728,
+    "bytes": 7670076,
     "file": "Data/raw/derived/bialystok-dojlidy/world/chunk_5_0.low.glb",
-    "sha256": "aa2d57be6a2db315f32b5ac6ca6bd03673203d878379f0658e980b0f07c36f41"
+    "sha256": "4bfd89d6af38d047363274f7e34e7837840cdba4ffa2a42ff15baa0c77c1ca1a"
    },
    "materials": [
     "balcony_slab",
@@ -5008,6 +5008,7 @@
     "plaster_accent_ochre__far_block",
     "plaster_beige",
     "plaster_beige__far_office",
+    "plaster_beige__far_ribbon",
     "plaster_cream",
     "plaster_grey",
     "plaster_grey__far_office",
@@ -5020,8 +5021,6 @@
     "plaster_peach__far_block",
     "plaster_white",
     "plaster_white__far_office",
-    "plaster_yellow",
-    "plaster_yellow__far_ribbon",
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
@@ -5044,7 +5043,7 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "9e4cf1ca741ec554cab7e583ad46ed8d5658bcb6dac4abd048ba8d8eebb22fd4",
+   "sha256": "fa22f16a9a87dd09d09f61587c21a775b2618c00ba6c2071258b63ed700f017b",
    "triangles": {
     "buildings": 42592,
     "buildings_lod1": 4491,
@@ -5052,8 +5051,8 @@
     "markings": 3080,
     "paved": 7862,
     "plot_ground": 4996,
-    "plots": 6040,
-    "plots_low": 4767,
+    "plots": 6235,
+    "plots_low": 4787,
     "road": 17600,
     "road_collision": 15185,
     "terrain_lod0": 137390,
@@ -13720,7 +13719,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "7fe46a77c2fdf9c32cda2d24ee6fda251603d12c3f0597c046aabbd4926f2cb9",
   "heightmap.r16 (Data/raw)": "eed51fa1f1822a60dd8818ce8b8a4bc92836d1225c2973e53d3bf47a563f6ede",
-  "overrides.yaml": "5edbcce3f8e35c0f31b3f9dcdf8482d1e288a1d52fe33e81705becc53a566ca0",
+  "overrides.yaml": "cec40361a749f3a18c2574dd33a9e36eeef08c78df972c6de6eeed227aa9e9ee",
   "roads.graph.json": "2d2b55077377c0ccfad5d57330cd556155b95a2351116ab69aee1b2679539a4b",
   "terrain.json": "418b090c0f03230e9c1df3f0830e330ffb32921279faa4bcd5ee0344ee16d2ed"
  },

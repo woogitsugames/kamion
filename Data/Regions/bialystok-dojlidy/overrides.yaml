@@ -200,8 +200,8 @@ overrides:
         faces: [{face: B-2, z_m: 2.10, size_m: 0.6}]
     boom: {at_la: [3.35, 1.8], toward: left, length_m: 5.2, replace_radius_m: 8.0, own_mesh: true}
     chimneys:
-      - {at_la: [1.8, -56.0], height_m: 24.0, r_m: 0.38}
-      - {at_la: [0.4, -57.5], height_m: 24.0, r_m: 0.38}
+      - {at_la: [1.8, -56.0], height_m: 13.5, r_m: 0.25}
+      - {at_la: [0.4, -57.5], height_m: 13.5, r_m: 0.25}
     conifers:
       - {at_la: [-4.6, -1.8], h_m: 8.0, r_m: 1.0}
       - {at_la: [-6.2, -1.6], h_m: 8.6, r_m: 1.0}
@@ -250,7 +250,7 @@ overrides:
       with flat roofs seen behind the boom and B-2 in P11-129. WORKING_VALUE.
     confidence: medium
     verify: owner photo session
-    set: {typology: office, wall_material: plaster_yellow, bands: false}
+    set: {typology: office, wall_material: plaster_beige, bands: false}
   - id: zurawia-hospital-bg-cream
     kind: building_part
     name: low cream service building behind the hospital gate (P11-129, M62-FIX P19-058)
