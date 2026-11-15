@@ -99,6 +99,19 @@ for reg, a in (("bialystok-industrial-c", "trasa_c"), ("bialystok-dojlidy", "doj
 add(kategoria="dostępność_danych", przedmiot="GUGiK LoD2 powiat 2061", wartość="HTTP 200; 23 454 471 B; Last-Modified 2018-11-14", status="SOURCED", metoda="curl -I", cytat="Content-Length: 23454471", url_źródła="https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD2/2061_gml.zip", licencja="GUGiK CC BY 4.0", autor="GUGiK", uwagi="stan 2017 (repo: gugik-lod2-2017-2061); …/LOD2/2024/20/2061.zip → 404")
 add(kategoria="dostępność_danych", przedmiot="GUGiK WCS NMPT/NMT GetCoverage", wartość="HTTP 200 dla image/x-aaigrid; image/tiff = RGB 8-bit (nieużyteczne)", status="SOURCED", metoda="curl, patrz sources.md", cytat="<ows:Fees>none", url_źródła="https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WCS/DigitalTerrainModel", licencja="GUGiK dane publiczne", autor="GUGiK", uwagi="CoverageId DSM_PL-EVRF2007-NH / DTM_PL-EVRF2007-NH; SUBSET x=easting, y=northing EPSG:2180")
 add(kategoria="walidacja", przedmiot="NMPT−NMT (h_med) vs LoD1 2024, n=20 budynków próbki", wartość="mediana różnicy +0,015; mediana |różnicy| 0,195", jednostka="m", status="ESTIMATED", metoda="data/nmpt_sample.csv, wiersze z lod1_2024", uwagi="h_p95 − LoD1: mediana +0,73 m")
+# sha256 kadrow z 2026-11-14 (pliki lokalne mogly zniknac; fetch.py zapisuje je jako files/<zrodlo>/<id>.jpg)
+for r in rows:
+    if r["kategoria"] == "kadr" and not r["sha256"]: r["sha256"] = json.load(open(ROOT / "data/frames_sha_2026-11-14.json")).get(r["id"], "")
+# --- 2026-11-15: kadry Commons (24 obejrzane; dane z commons_get.py w data/commons_fetched.jsonl, opisy w data/commons_viewed.json)
+CV = json.load(open(ROOT / "data/commons_viewed.json"))
+for l in open(ROOT / "data/commons_fetched.jsonl"):
+    c = json.loads(l); key = next(k for k in CV if not k.startswith("_") and c["title"][5:].startswith(k)); area, typ, d = CV[key]
+    p = ROOT / "files" / "commons" / pathlib.Path(c["local"]).name
+    add(kategoria="kadr", przedmiot=f"Commons: {c['title'][5:]} — typ: {typ}", status="SOURCED", metoda="MediaWiki imageinfo (extmetadata) → miniatura ≤1600 px → obejrzenie 960 px (Read), 2026-11-15",
+        cytat=f"LicenseShortName={c['license']}; Artist={c['artist']}; DateTimeOriginal={c['date']}", url_źródła=c["page"], url_pliku=c["thumb_url"], licencja=c["license"] + " (referencja, nie tekstura)", autor=c["artist"],
+        sha256=hashlib.sha256(p.read_bytes()).hexdigest(), lat=f"{float(c['lat']):.6f}" if c["lat"] else "", lon=f"{float(c['lon']):.6f}" if c["lon"] else "", kierunek_deg="UNVERIFIED",
+        opis_co_widać=d, obszar=area, uwagi=f"plik files/commons/{p.name} (w repo, ≤1600 px); data zdjęcia {c['date'][:10]}; współrzędne z EXIF/Commons (kamery, nie budynku); budynek OSM nieprzypisany")
+    rows[-1]["data_dostępu"] = "2026-11-15"
 with open(ROOT / "manifest.csv", "w", newline="", encoding="utf-8") as f:
     w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(rows)
 ids = sorted(r["id"] for r in rows); k = -(-len(ids) // 5)

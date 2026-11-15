@@ -14,6 +14,12 @@
 - Dokumenty producentów w files/docs (płyta warstwowa, doki, bramy segmentowe).
 - NASTĘPNY KROK: `python3 research/cloud2/bialystok-building-typology/tools/commons_scan.py` → wybór i obejrzenie kadrów Commons.
 
+## Krok 5 (2026-11-15, sesja s21) — kadry Commons, dokończenie
+- 24 pliki Commons pobrane (≤1600 px, files/commons/, w repo) i obejrzane: 16 Dojlidy, 8 trasa C; opisy w data/commons_viewed.json; manifest 150 wierszy (R4-127…150).
+- Razem 40 obejrzanych kadrów (37 z elewacją, Dojlidy 15). Audyt uzupełniający seed 20261115: 4 PASS / 1 FIX. REVIEW.md: PASS z uwagami P2.
+- fetch.py: kadry Commons weryfikowane z pliku w repo; files/jpg1600/ = kopie 16 kadrów z 2026-11-14.
+- NASTĘPNY KROK (opcjonalny): przypisanie kadrów do way OSM: `python3 -I tools/build_manifest.py` po dopisaniu osm_way w data/commons_viewed.json.
+
 ## Krok 3–4 (2026-11-14 ~17:50 UTC) — zamknięcie na polecenie lidera (limit sesji)
 - `data/nmpt_sample.csv` (56 budynków), `data/commons_{trasa_c,dojlidy}.json` (1170 / 351 plików), manifest 126 wierszy, fetch.py OK (16 plików, 17,8 MB), audyt 26 PASS / 0 FAIL, README z lukami.
 - Poprawka do kroku 2: godzina tamtego wpisu to ok. 17:22 UTC.

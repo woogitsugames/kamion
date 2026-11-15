@@ -1,8 +1,10 @@
 # R4 — typologia zabudowy Białegostoku: trasa C i Dojlidy (pakiet cloud2)
 
-Data: 2026-11-14 · gałąź `research/cloud2-bialystok-building-typology` · wierszy manifestu: **126** · obejrzanych kadrów: **16 (wszystkie trasa C; Dojlidy 0)** · samokontrola: **26 PASS / 0 FAIL** (seed 20261114).
+**Dokończenie 2026-11-15:** obejrzałem 24 pliki Commons (16 Dojlidy, 8 trasa C; 23 × CC0 + 1 × CC BY-SA 3.0) w 960 px i opisałem elewacje. Razem teraz **40 obejrzanych kadrów**: 16 z 2026-11-14 i 24 nowe. 3 z nich (R4-140 Dojlidy-las, R4-144 Andersa zimą, R4-150 estakada) nie pokazują elewacji, więc kadrów z elewacjami jest **37**, w tym **15 w Dojlidach**. Manifest: **150 wierszy**; nowe to R4-127…R4-150, wiersze R4-001…126 się nie zmieniły. Samokontrola nowych: seed 20261115, próba 5, wynik **4 PASS / 1 FIX**. Recenzja: `REVIEW.md`. Zdjęcia w repo: `files/commons/` (24, ≤ 1600 px) i `files/jpg1600/` (16 kadrów z 2026-11-14) + `INDEX.csv`.
 
-**Stan: NIEDOKOŃCZONE — praca przerwana poleceniem lidera (limit sesji).** Cel 30 kadrów (12 + 12) nie jest spełniony, a opisy elewacji z kadrów (kolory po termomodernizacji, balkony, rytm okien) nie powstały. Gotowe są: statystyki, wysokości z NMPT−NMT i cytaty do hal.
+**Stan pierwotny —** Data: 2026-11-14 · gałąź `research/cloud2-bialystok-building-typology` · wierszy manifestu: **126** · obejrzanych kadrów: **16 (wszystkie trasa C; Dojlidy 0)** · samokontrola: **26 PASS / 0 FAIL** (seed 20261114).
+
+*(Nieaktualne od 2026-11-15 — patrz „Kadry Commons i opisy elewacji”.)* **Stan 2026-11-14: NIEDOKOŃCZONE — praca przerwana poleceniem lidera (limit sesji).** Cel 30 kadrów (12 + 12) nie jest spełniony, a opisy elewacji z kadrów (kolory po termomodernizacji, balkony, rytm okien) nie powstały. Gotowe są: statystyki, wysokości z NMPT−NMT i cytaty do hal.
 
 ## Metoda
 1. OSM Overpass dla dwóch prostokątów (kafel regionu + ulice z zadania), statystyka tagów i wymiarów obrysu — `tools/overpass.py`, `tools/stats.py`.
@@ -53,19 +55,39 @@ Duże hale z próbki NMPT (Dojlidy): 12,2–13,0 m przy rzucie 135–155 × 83�
 ### Kadry (16, trasa C)
 Z poziomu kierowcy na Andersa i Maczka elewacje są w większości zasłonięte: ekrany akustyczne (betonowy cokół, panele ryflowane jasnoszare lub ciemne szarozielone, przezroczysta góra na zielonych słupkach), estakady na piaskowożółtych podporach, las. Widoczne budynki: jeden dom z białą elewacją i stromym ciemnym dachem dwuspadowym, jeden budynek około 4-kondygnacyjny o beżowożółtej elewacji z płaskim dachem, niskie pawilony handlowe w bieli i błękicie. Żadnego kadru nie przypisałem do way OSM.
 
+### Kadry Commons i opisy elewacji (2026-11-15; 24 obejrzane, ESTIMATED z obrazu)
+Liczbę kondygnacji liczyłem z rzędów okien, kolory podaję słownie. Pełne opisy są w `data/commons_viewed.json` i w kolumnie `opis_co_widać`. Pozycje to współrzędne aparatu (EXIF/Commons), nie budynku. Kierunek kadru: UNVERIFIED.
+
+| Typ | Kadry | Co widać (wspólne cechy) |
+|---|---|---|
+| **Hale magazynowe/produkcyjne, Dojlidy (strefa przy Kuronia)** | R4-127, 128, 129, 130, 131, 134 | długie bryły z **płaskim dachem**, okładzina z paneli: **biała / jasnoszara** (większość), **czerwona** (1 hala); szare cokoły; niższe przybudówki biurowe grafitowe lub szaro-białe z pasem okien; ogrodzenia panelowe z **czerwonymi słupkami**; 2 hale w budowie (prefabrykowany szkielet betonowy, stalowe kratownice, dźwig) |
+| Biurowce, Dojlidy | R4-132, 133, 141 | 3–5 kondygnacji, płaski dach; elewacje: jasnobeżowa z ciemnografitową attyką i cokołem, szare panele z pasami okien, biały tynk z regularnymi oknami; ogrodzenia z czerwonej cegły z metalowymi przęsłami, tuje |
+| Mniejsze budynki usługowe, Dojlidy | R4-135, 136, 142 | starsza hala parterowa szaroniebieska z żółtymi pasami i żółtą attyką; budynek 2-kondygnacyjny w **szachownicę** jasnoszaro-średnioszaro-czerwoną; parterowy budynek z łukowym zwieńczeniem w beżu i brązie |
+| Domy jednorodzinne, Dojlidy | R4-137, 138, 139 | parter + poddasze lub 2 kondygnacje; tynk beżowy/szary, cegła silikatowa, klinkier pomarańczowo-czerwony; dachy dwuspadowe/czterospadowe z blachy lub dachówki czerwonobrązowej, grafitowe; PV na dachu; ogrodzenia z siatki, desek, kutych prętów; ulice z szarej kostki, chodniki z czerwonej kostki |
+| Biurowce/usługi, trasa C | R4-145, 148 | Andersa 38A: 2 kondygnacje, jasnoszary tynk, ciemny pas attyki, klimatyzatory; budynek 8–9 kondygnacji w jasnozielonym/oliwkowym kolorze z regularną siatką okien |
+| Bloki, trasa C | R4-146, 147 | 5 kondygnacji, biała elewacja z poziomymi pasami balkonów; nowe bloki 5–7 kondygnacji przy Tysiąclecia PP z białymi/jasnoszarymi elewacjami i szklanymi balustradami |
+| Hala duża, trasa C | R4-143 | długi zakład z ciemnoniebieską okładziną i jasnymi pasami, płaski dach (z daleka) |
+| Dom, okolica trasy C (ul. — UNVERIFIED; współrzędne 53.1566, 23.1859) | R4-149 | 2 kondygnacje, różowo-beżowy tynk, dach czterospadowy z czerwonobrązowej blachy, balkony z kutą balustradą, ogrodzenie z czerwonej cegły |
+
+Wnioski dla generatora:
+- W strefie przemysłowej Dojlid dominują **białe i jasnoszare hale z płaskim dachem**; czerwona okładzina to wyjątek (1 z 6 hal).
+- Ogrodzenia mają charakterystyczne czerwone słupki.
+- Biurowce mają 3–5 kondygnacji, ciemną attykę i pasy okien.
+- Domy: tynk w jasnych beżach i szarościach, dachy czerwonobrązowe lub grafitowe.
+
 ## Co już było w repo / co nowe
 | Temat | W repo | Nowe tutaj |
 |---|---|---|
 | Systemy wielkiej płyty per osiedle (OWT-67/75) | `research/mistral/p3-buildings-2` | dosłowne cytaty modułów z oldid |
 | Wysokości LoD1 per budynek, kolory elewacji Białostoczka | `mistral/p3-buildings-2`, `gptpro/p3` | niezależna kontrola NMPT−NMT (56 budynków) |
 | Typologia Dojlid z BDOT/LoD1 | `mistral/p12-dojlidy-landmarks` | tabela kondygnacji/rzutów per typ dla obu kafli |
-| Zdjęcia Dojlid (Commons) | `mistral/p11-dojlidy-photos` | nic (kadry nieobejrzane) |
+| Zdjęcia Dojlid (Commons) | `mistral/p11-dojlidy-photos` | 16 obejrzanych plików z opisem elewacji (2026-11-15). Część tytułów może się pokrywać z p11 — nie sprawdzałem tego kadr po kadrze |
 | Okładziny, bramy, doki hal | brak | 19 wierszy z cytatami producentów |
 | Statystyka tagów OSM | brak | pełna, z zapytaniem i datą |
 
 ## Luki
-- **Dojlidy: 0 obejrzanych kadrów.** Panoramax i KartaView nie mają tam zdjęć; 30 kandydatów Commons (i 34 dla trasy C) wybrano w `tools/commons_pick.py`, ale pobieranie przerwano i żadnego nie obejrzano.
-- Brak opisów bloków z kadrów: kolory po termomodernizacji, balkony, loggie, klatki, rytm okien. Brak opisu domów-kostek i hal z kadrów (attyki, świetliki, kolory).
+- Dojlidy: 16 kadrów Commons obejrzanych 2026-11-15, 15 z elewacją. Wszystkie są jednego autora (Commons), więc to wąskie spojrzenie; Panoramax i KartaView nie mają tam zdjęć.
+- Bloki wielkiej płyty z bliska: tylko 2 kadry (R4-146, 147), oba bez widocznych klatek i loggii z bliska. Świetliki dachowe hal nie są widoczne z poziomu ulicy (UNVERIFIED).
 - Brak przypisania kadrów do way OSM.
 - Filtr „użyte w repo” w `commons_scan.py` jest niepełny (dopasowanie po tytule); `commons_pick.py` sprawdza znacznik czasu, ale wynik nie został zapisany.
 - Samokontrola wysokości nie powtarzała wywołań WCS (porównanie z CSV i LoD1). Dwa obiekty szpitalne (R4-070, R4-071) różnią się od LoD1 o około −2 m: jeden obrys OSM obejmuje bryły o różnej wysokości.

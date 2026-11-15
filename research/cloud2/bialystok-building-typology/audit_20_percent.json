@@ -214,5 +214,44 @@
    "ustalenie": "manifest 12.97 = CSV 12.97; LoD1 13.08 m, różnica -0.11 m",
    "korekta": ""
   }
- ]
+ ],
+ "uzupelnienie_2026_11_15": {
+  "seed": 20261115,
+  "metoda": "random.Random(20261115).sample(sorted(id > R4-126), ceil(n/5))",
+  "n_nowych": 24,
+  "n_proba": 5,
+  "wynik": "4 PASS / 1 FIX",
+  "wiersze": [
+   {
+    "id": "R4-127",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): czerwona hala z płaskim dachem, biało-szara część biurowa, DDR, chodnik z kostki — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R4-136",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): szachownica jasnoszara/średnioszara/czerwona, 2 kondygnacje, parterowa przybudówka z bramą — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R4-142",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): budynek parterowy z łukowym zwieńczeniem, beż/brąz/szary ryzalit — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R4-148",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): przeliczone rzędy okien: 8 nad parterową przybudówką",
+    "wynik": "FIX",
+    "korekta": "„9 kondygnacji” → „8 widocznych rzędów okien nad przybudówką (8–9 kondygnacji)”"
+   },
+   {
+    "id": "R4-149",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): dom 2 kondygnacje, różowo-beżowy tynk, dach czterospadowy czerwonobrązowy, balkony kute — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   }
+  ]
+ }
 }
