@@ -10,6 +10,7 @@ import shapely
 
 from streetscape import forest_hlod as FH
 from streetscape import vegetation as VG
+from conftest import require_lfs
 from test_house_greenery_0163 import _forest_src
 
 REPO = Path(__file__).resolve().parents[2]
@@ -105,6 +106,7 @@ def test_edge_texture_has_wall_and_mantle_rows():
         e = f["edge"]
         vm = FH.edge_v_main(e)
         assert vm == 0.75 and e["mantle"]["h_m"] == 8.0, mix
+        require_lfs(VEG / e["png"])                 # ADR 0245: LFS pointer (checkout without LFS) -> explicit skip
         a = np.asarray(Image.open(VEG / e["png"]).convert("RGBA"))[..., 3] > 127
         h = a.shape[0]
         cut = int(round(h * (1 - vm)))              # image row 0 = v 1 = ground line of the mantle strip
