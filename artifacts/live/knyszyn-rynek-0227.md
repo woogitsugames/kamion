@@ -142,3 +142,7 @@
 - 2026-11-15 21:57 +01:00 — Właściciel wskazał targowicę: Jagiellońska 50, 19-120 Knyszyn; trwa identyfikacja z danymi. R5 build w toku, fidelity regionu C przeliczony; test 9 passed, 1 xfailed. EditMode 626 passed, 2 skipped.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r5.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r5.done`
 
+
+- 2026-11-15 22:01 +01:00 — Targowica: adres GUGiK Jagiellońska 50 (760825.18, 613384.98 EPSG:2180) w budynku BDOT; poligon OSM marketplace way 704368699 24,38 m od punktu po drugiej stronie ulicy, mocny kandydat. Pytanie o potwierdzenie właścicielowi; układ nowych wiat UNVERIFIED. R5 trwa.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r5.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r5.done`
+
