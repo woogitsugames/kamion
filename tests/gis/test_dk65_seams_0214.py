@@ -17,12 +17,12 @@ sys.path.insert(0, str(ROOT / "tools" / "worldgen"))
 TILES = ["dk65-05", "dk65-06", "dk65-07", "dk65-08", "dk65-09", "dk65-10", "dk65-11", "knyszyn-s"]
 SEAMS = list(zip(TILES, TILES[1:]))
 # Ełcka / Studzienna: owner D66 = 6.6 m in dk65-02..06 (ADR 0215 r2) - the seam 05/06 is asserted, no xfail.
-# Research K1 (research/dk65-knyszyn-refs): edge lines 6.0-6.4 m apart up to km 25.0 -> dk65-06..10 carry 2 x 3.1 + 2 x 0.2 m
-# (`dk65-xsec-k1`); dk65-11 keeps the knyszyn-s set (2 x 3.4 + 2 x 0.35 m) so the seam with knyszyn-s (x = 762635) is
-# identical, until dk65-11 and knyszyn-s get the K1 correction together (knyszyn-s is not this task's tile).
-PENDING_K1 = {("dk65-10", "dk65-11")}
+# Research K1 (research/dk65-knyszyn-refs): edge lines 6.0-6.4 m apart up to km 25.0 -> dk65-06..11 carry 2 x 3.1 + 2 x 0.2 m
+# (`dk65-xsec-k1`). ADR 0233: knyszyn-s keeps that section on its first 484 m through a `width` profile on the seam edge
+# (the knyszyn-s set starts at the repaving joint km 25.32), so the set of the overrides differs across that seam while
+# the built section is the same - checked on the network and on the meshes in test_dk65_seam_knyszyn_0233.py.
+PROFILED_SEAM = {("dk65-11", "knyszyn-s")}
 K1_SET = (2, 3.1, 0.2)
-KNYSZYN_SET = (2, 3.4, 0.35)
 
 
 def _load(t):
@@ -62,32 +62,34 @@ def test_seam_cross_section_matches(a, b):
     last, first = ea[ra[-1]], eb[rb[0]]
     assert last["osm_way"] == first["osm_way"], f"{a}->{b}: route leaves via way {last['osm_way']}, enters via {first['osm_way']}"
     va, vb = _effective(last, oa), _effective(first, ob)
-    if (a, b) in PENDING_K1:
+    if (a, b) in PROFILED_SEAM:
+        from test_dk65_seam_knyszyn_0233 import _section_at
         assert (va["lanes"], va["lane_width"], va["edge_strip"]) == K1_SET
-        assert (vb["lanes"], vb["lane_width"], vb["edge_strip"]) == KNYSZYN_SET
         assert va["edge_lines"] == vb["edge_lines"] == "both" and va["lamps"] == vb["lamps"]
-        pytest.xfail("0.45 m step per side at dk65-10/11 until dk65-11 + knyszyn-s get the K1 section")
+        pt = (762635.0, 609811.108)
+        sa, sb = _section_at(a, pt), _section_at(b, pt)
+        assert sa["width"] == pytest.approx(sb["width"], abs=1e-6) and sa["spacing"] == pytest.approx(sb["spacing"], abs=1e-6)
+        return
     if b == "knyszyn-s" and vb["edge_lines"] is None and {k for k in va if va[k] != vb[k]} == {"edge_lines"}:
         pytest.xfail("knyszyn-s DK65 edge lines come with ADR 0212 (branch knyszyn-edges-0212, not merged yet)")
     assert va == vb
 
 
-def test_dk65_section_k1_06_to_10_knyszyn_set_from_11():
-    """Old DK65 (208187096 / 27718745): K1 section through 06..10, the knyszyn-s section in dk65-11 and knyszyn-s."""
-    for t in TILES[1:]:
+def test_dk65_section_k1_06_to_11():
+    """Old DK65 (208187096 / 27718745): K1 section through 06..11 (ADR 0233; knyszyn-s: test_dk65_seam_knyszyn_0233)."""
+    for t in TILES[1:7]:
         e, r, o = _load(t)
         vals = set()
         for eid in r:
             if e[eid]["osm_way"] in (208187096, 27718745, 1111506754):
                 v = _effective(e[eid], o)
                 vals.add((v["lanes"], v["lane_width"], v["edge_strip"], v["edge_lines"], v["lamps"]))
-        want = KNYSZYN_SET if t in ("dk65-11", "knyszyn-s") else K1_SET
-        assert vals == {want + ("both", False)}, (t, vals)
+        assert vals == {K1_SET + ("both", False)}, (t, vals)
 
 
-def test_k1_entry_verbatim_06_to_10():
+def test_k1_entry_verbatim_06_to_11():
     ent = []
-    for t in TILES[1:6]:
+    for t in TILES[1:7]:
         ov = (yaml.safe_load((REG / t / "overrides.yaml").read_text(encoding="utf-8")) or {}).get("overrides", [])
         ent.append(next(o for o in ov if o["id"] == "dk65-xsec-k1"))
         assert not any(o["id"] in ("dk65-carriageway-width", "dk65-old-xsec") for o in ov), t
