@@ -80,3 +80,9 @@ Cztery początkowe wartości fotometryczne poddano niezależnemu audytowi i doda
 used-parts-round3:7 indywidualnie obejrzanych kadrów z3 galerii, tylko link-only. Rozmieszczenie pól i optyki, złącze oraz dolne okienko; E nieodczytane, funkcja tablicy z samego okienka UNVERIFIED. Dwa Iveco mają inne konfiguracje, nie utożsamiono egzemplarzy.
 
 rear-night-round3:01-RN3-04 OathOn, CC BY-SA4.0, Gillingham2025-10-16, nocny zestaw. Agent i koordynator osobno obejrzeli czerwone tylne pola ciągnika pod przodem naczepy oraz czerwone odbicia na mokrej kostce. To1 przyjęty kontekst nocnej emisji, bez odczytuE i bez rozstrzygnięcia stop/pozycja. Nie liczyć go jako pełnego zbliżenia homologacyjnego. Główny manifest teraz29 kadrów:22 link-only i7 lokalnych; progi M59 nadal otwarte.
+
+## Starsze R4/R6/R7 — odrębne datowane źródła
+
+legacy-regulations-round2/regulations.csv:13 wierszy (11SOURCED,2UNVERIFIED). Odczytano pełne oficjalne R4Rev.3 z19.08.2013 iR7Rev.6 z22.11.2012: symbole, serie i warunki fotometrii. Numer rewizji dokumentu nie jest serią homologacji. R6 pozostaje luką po403 oficjalnych plików; przykład2a/01 wR4 nie zastępuje pełnej normyR6. Nie przypisano certyfikatu5497 ani aktualności2026. Nowe ustalenia są w osobnym CSV z punktami, nie powielają24-wierszowej tabeli bazowej.
+
+rear-night-round4:2 kolejne kadry obejrzane i odrzucone jako przód/bok,1NOT_REVIEWED. Brak nowych przyjętych tylnych emisji, brak zachowanych obrazów. RN3-04 pozostaje1nocnym kontekstem, bez czytelnegoE.

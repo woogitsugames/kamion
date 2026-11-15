@@ -1,0 +1,48 @@
+{
+  "counts": {
+    "individual_images_viewed": 2,
+    "accepted_rear_emission": 0,
+    "rejected_after_view": 2,
+    "not_reviewed": 1,
+    "retained_images": 0,
+    "readable_E_delta": 0,
+    "new_vehicles_counted": 0
+  },
+  "frames": [
+    {
+      "id": "01-RN4-01",
+      "title": "File:DAF CF Warburtons delivery truck parked on High Street, Gillingham at dawn.jpg",
+      "status": "ODRZUCONY",
+      "viewed": true,
+      "observation": "Indywidualnie obejrzany frontalny widok czerwonej ciężarówki DAF Warburtons; świecące białe pola reflektorów u dołu kabiny i małe jasne pola powyżej szyby. Niebieskie niebo, ciemna ulica. Tył niewidoczny.",
+      "limit": "Brak tylnego ujęcia; nie dodaje referencji emisji tylnych lamp.",
+      "source": "https://commons.wikimedia.org/wiki/File:DAF_CF_Warburtons_delivery_truck_parked_on_High_Street%2C_Gillingham_at_dawn.jpg"
+    },
+    {
+      "id": "01-RN4-02",
+      "title": "File:Night-time road resurfacing operation during Chatham Waterfront Bus Station improvement works showing Tarmac vehicles, workers, and road closure on Globe Lane, Chatham, Kent, England.jpg",
+      "status": "ODRZUCONY",
+      "viewed": true,
+      "observation": "Indywidualnie obejrzane nocne roboty drogowe: biała ciężarówka z niebiesko-białą skrzynią Tarmac widziana z przodu i boku, pracownicy, pachołki, znaki ROAD CLOSED i CCTV in operation, niebieskie wygrodzenia. Tylnych lamp nie da się pewnie odczytać.",
+      "limit": "Brak pewnej obserwacji tylnych lamp. Konfiguracja wygląda na samochód sztywny; nie utożsamiać z ciągnikiem/naczepą Superdrug.",
+      "source": "https://commons.wikimedia.org/wiki/File:Night-time_road_resurfacing_operation_during_Chatham_Waterfront_Bus_Station_improvement_works_showing_Tarmac_vehicles%2C_workers%2C_and_road_closure_on_Globe_Lane%2C_Chatham%2C_Kent%2C_England.jpg"
+    },
+    {
+      "id": "01-RN4-03",
+      "title": "File:Night-time road resurfacing works during Chatham Waterfront Bus Station safety improvement project showing Tarmac tipper truck, excavator, and road closure barriers on Globe Lane, Chatham, Kent, England.jpg",
+      "status": "NOT_REVIEWED",
+      "viewed": false,
+      "observation": "Nie obejrzano obrazu; wyłącznie metadane Commons. Nie tworzono opisu sceny z tytułu.",
+      "limit": "Nie pobierano kolejnego ujęcia z tej samej sesji robót: brak potwierdzenia, że przyniesie tylną emisję. Tożsamość pojazdu między ujęciami UNVERIFIED.",
+      "source": "https://commons.wikimedia.org/wiki/File:Night-time_road_resurfacing_works_during_Chatham_Waterfront_Bus_Station_safety_improvement_project_showing_Tarmac_tipper_truck%2C_excavator%2C_and_road_closure_barriers_on_Globe_Lane%2C_Chatham%2C_Kent%2C_England.jpg"
+    }
+  ],
+  "search_queries": [
+    "filetype:bitmap \"delivery\" \"Gillingham\"",
+    "filetype:bitmap \"night\" \"Gillingham\" truck",
+    "filetype:bitmap \"OathOn\" truck",
+    "filetype:bitmap \"OathOn\" (lorry OR truck) (rear OR night OR evening)"
+  ],
+  "conclusion": "Wyselekcjonowany wynik Superdrug pozostaje jedynym przyjętym tylnym nocnym kadrem w tej serii. Nie dodano nowych referencji emisji i nie policzono nowych pojazdów.",
+  "cleanup": "Dwie własne robocze miniatury odrzuconych ujęć usunięte po oglądzie; pozostały pełne metadane i dziennik."
+}
