@@ -34,7 +34,7 @@ Literature quoted in check rationales but **not opened** (UNVERIFIED): static ro
 | Curb mass (sum of mass elements) | 7500 | kg | WORKING_VALUE | Task brief (~7.5 t), typical for this class. There is no cited OEM document. |
 | Mass breakdown (frame 900, engine+gearbox 1500, cab 1300, front axle+wheels 800, rear axle+duals 1300, fuel 600, misc 600, fifth wheel 200, cooling/bumper 300) | — | kg | WORKING_VALUE | Engineering split that adds up to 7500 kg |
 | Centre of mass (vehicle frame) | x 0, y 1.09, z 2.37 | m | DERIVED | Mass-weighted mean of the elements (`MassProperties.Compute`) |
-| Static axle loads | front 4806, rear 2694 | kg | DERIVED | Lever rule from the CoM and the axle positions |
+| Static axle loads | front 4806, rear 2694 | kg | DERIVED | Lever rule from the CoM and the axle positions. 64 / 36 % vs 73 / 27 % on a manufacturer sheet (S9 R3-013/014, 0 l fuel): front axle low — see "Axle-load check" below (ADR 0201, not changed). |
 | Inertia tensor | computed | kg m² | DERIVED | Box elements plus the parallel-axis theorem. It is **not** taken from a collider. |
 | Wheelbase | 3.70 | m | WORKING_VALUE | Typical 4x2 long-haul tractor; no cited OEM document |
 | Front track (wheel centres) | 2.04 | m | WORKING_VALUE | |
@@ -47,7 +47,8 @@ Literature quoted in check rationales but **not opened** (UNVERIFIED): static ro
 | Parameter | Value | Unit | Status | Source / derivation |
 |---|---|---|---|---|
 | Nominal unloaded diameter | 1.0755 | m | DERIVED | S4: 22.5 × 25.4 + 2 × 0.80 × 315 mm |
-| Effective radius (geometry + kinematics) | 0.51 | m | WORKING_VALUE | Between the static loaded and unloaded radius (0.538 m unloaded). It is a single value for both uses (simplification). |
+| Geometric (loaded) radius `radius` — contact rays, suspension hardpoint, visual contact-patch plane | 0.51 | m | WORKING_VALUE | Between the static loaded radius at rated load (0.500–0.507 m: S9 R3-108…110, S7) and the unloaded radius (0.538 m S4 geometry, 0.539–0.546 m S9 diameters). Used only for geometry since ADR 0201. |
+| Effective rolling radius `rollingRadius` — wheel speed ↔ road speed, tire force ↔ wheel torque (drive, brake, rolling resistance), AMT/rpm, audio shaft rpm | 0.524 | m | DERIVED (S9) | ADR 0201. Rolling circumference / 2π from three data books for 315/80 R22.5 (S9 R3-108 3294 mm → 0.5243 m; R3-109 3319 mm → 0.5282 m; R3-110 3272 mm → 0.5208 m; R3-117 range 0.521–0.528 m). 0.524 = the R3-108 card, mid-range. Before ADR 0201 one radius 0.51 m was used for both roles (−2.7 % against 0.524: speed and rpm at a given wheel speed were 2.7 % off). Loader rule: 0 = use `radius`; else must be in [radius, 1.15 radius]. |
 | Width | 0.315 | m | SOURCED | S4 |
 | Wheel inertia per tire (tire + rim + hub + rotor) | 20 | kg m² | WORKING_VALUE | ≈ 70 kg tire at r ≈ 0.45 m plus rim and rotor |
 | Radial stiffness per tire | 1.0e6 | N/m | DERIVED (S7, S6 status) | Secant: free radius 546 mm − static loaded radius 507 mm = 39 mm at 4000 kg (LI 156) → 39.2 kN / 0.039 m = 1.01e6 N/m. The secant at rated load. The tangent at the lighter steer-axle load and the radial damping were not measured (no damping in the model; the tire is a spring in series with the suspension). Checked 2026-11-09 for the kerb-strike task; value unchanged. |
@@ -112,7 +113,7 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Forward ratios 1–12 | 12.92, 9.98, 7.69, 5.94, 4.57, 3.53, 2.83, 2.19, 1.68, 1.30, 1.00, 0.77 | – | SOURCED | S2 (opened): TraXon standard ratio set |
 | Reverse ratio | 12.03 | – | SOURCED | S2 (R1; R2–R4 9.29 / 2.64 / 2.04 not used) |
 | Gearbox efficiency | 0.97 | – | WORKING_VALUE | |
-| Final drive ratio | 3.40 | – | DERIVED | Chosen so that 12th gear runs at ~1160 rpm at 85 km/h and ~1225 rpm at 90 km/h, inside the S1 optimum band 1100–1300 rpm. Calculation: 23.6 m/s / 0.51 m × 0.77 × 3.40 = 121 rad/s. |
+| Final drive ratio | 3.40 | – | DERIVED | Chosen so that 12th gear runs inside the S1 optimum band 1100–1300 rpm. With the rolling radius 0.524 m (ADR 0201): 23.6 m/s / 0.524 m × 0.77 × 3.40 = 118.0 rad/s = **1126 rpm at 85 km/h**, 1193 rpm at 90 km/h (S9 R3-107: 1127 rpm). Before ADR 0201 (r 0.51 m): 1158 / 1225 rpm. Still inside the band; ratio unchanged. |
 | Final drive efficiency | 0.97 | – | WORKING_VALUE | |
 | Clutch capacity | 4000 | N m | WORKING_VALUE | About 1.6 × peak engine torque |
 | Clutch thermal: heat capacity / cooling τ / warning | 25 000 J/K / 300 s / 250 °C | – | WORKING_VALUE | Energy from slip power; measured 37 °C peak for a 40 t start on 6 % |
@@ -150,8 +151,8 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Build-up τ front / rear | 0.18 / 0.22 | s | WORKING_VALUE | Measured 75 % times 0.25 / 0.31 s (vehicle at rest) ≤ 0.6 s (S5 4.1.1) |
 | Build-up trailer (two cascaded lags) | 0.15 + 0.20 | s | WORKING_VALUE | Measured 0.53–0.54 s ≤ 0.6 s (S5 4.1.1) |
 | Release τ front / rear / trailer | 0.25 / 0.28 / 0.30 | s | WORKING_VALUE | |
-| Service brake torque per wheel end front / rear / trailer | 20 000 / 24 000 / 18 000 | N m | WORKING_VALUE | Laden rear needs ≥ 22 kN m to reach μ = 0.8 (DERIVED: 55 kN × 0.8 × 0.51 m) |
-| Spring brake torque per wheel end, tractor rear | 16 000 | N m | DERIVED + WORKING margin | S5 2.3.2: the tractor alone must hold 40 t on 12 %: 40 t × 9.81 × 0.119 × 0.51 m / 2 = 11.9 kN m; ×1.35 margin |
+| Service brake torque per wheel end front / rear / trailer | 20 000 / 24 000 / 18 000 | N m | WORKING_VALUE | Laden rear needs ≥ 23.1 kN m to reach μ = 0.8 (DERIVED: 55 kN × 0.8 × 0.524 m rolling radius, ADR 0201; was 22.4 kN m with 0.51 m) |
+| Spring brake torque per wheel end, tractor rear | 16 000 | N m | DERIVED + WORKING margin | S5 2.3.2: the tractor alone must hold 40 t on 12 %: 40 t × 9.81 × 0.119 × 0.524 m / 2 = 12.2 kN m (rolling radius, ADR 0201; was 11.9 kN m with 0.51 m) → margin ×1.31 (was ×1.35); runner `park_12pct*` scenarios still hold |
 | Spring brake torque per wheel end, trailer axles 1–2 | 12 000 | N m | WORKING_VALUE | |
 | Trailer control (yellow) line with the parking lever in park | 7.5 | bar | WORKING_VALUE | European hand control valve with trailer control brakes the trailer in park (UNVERIFIED, data sheet not opened); ADR 0004 addendum 2026-11-10 |
 | AMT drive-away interlock: parking brake counts as applied above / launch allowed below | spring state 0.05 / 1.0 m/s | – | WORKING_VALUE | Design rule, production behaviour UNVERIFIED; ADR 0004 addendum 2026-11-10 |
@@ -222,7 +223,7 @@ Frame: origin on the ground below the kingpin, axles at negative z.
 
 ### Tire 385/65 R22.5 (`tire_385_65_r22_5.tire.json`)
 
-Same model and shape factors as 315/80 R22.5 (all WORKING_VALUE) except: effective radius 0.515 m (unloaded 0.536 m by S4 geometry), width 0.385 m (S4), wheel inertia 22 kg m², radial stiffness 1.1e6 N/m (DERIVED, S7: 543 − 502 = 41 mm at 4500 kg (LI 160, S6) → 1.08e6 N/m secant), nominal load 35 kN (S6 bound 44 kN per tire), rolling resistance 0.0050.
+Same model and shape factors as 315/80 R22.5 (all WORKING_VALUE) except: geometric (loaded) radius 0.515 m (unloaded 0.536 m by S4 geometry; static loaded 0.498–0.502 m S9 R3-114…116), effective rolling radius **0.524 m** (DERIVED S9, ADR 0201: rolling circumference 3293 / 3302 / 3277 mm → 0.5241 / 0.5255 / 0.5216 m, R3-114…116, R3-118 range 0.522–0.526 m), width 0.385 m (S4), wheel inertia 22 kg m², radial stiffness 1.1e6 N/m (DERIVED, S7: 543 − 502 = 41 mm at 4500 kg (LI 160, S6) → 1.08e6 N/m secant), nominal load 35 kN (S6 bound 44 kN per tire), rolling resistance 0.0050.
 
 ### Load cases (runner presets; cargo is not part of the trailer data)
 
@@ -234,6 +235,8 @@ Same model and shape factors as 315/80 R22.5 (all WORKING_VALUE) except: effecti
 | cargo24 | 24 t | 38.5 t | – | – |
 
 The 40 t validation set uses GCW = 40.0 t exactly (the legal maximum, worst case). Limits (Directive 96/53/EC Annex I section 3, numbering and values quoted from the owner's reference list, text UNVERIFIED): drive axle 11.5 t, non-driving single axle 10 t, tridem 24 t. The laden40 loads 6.62 / 10.76 / 22.62 t are all within them (drive axle margin 0.74 t; 0.39 t before ADR 0019). Cargo CoG height and position are scenario parameters (rollover scenarios use 1.9 m and 2.6 m).
+
+**Axle-load check against a manufacturer sheet (ADR 0201, S9).** One 4x2 tractor model-range sheet (S9 R3-012…016, wheelbase 3500–3800 mm): kerb 6845–6870 kg (oil, water, AdBlue, **0 l fuel**, no driver), front axle 5030 kg, rear 1815–1840 kg (**73 / 27 %**); plated 7.5 / 11.5 t, GCW 40 t. The game tractor without its 600 kg fuel element is 6900 kg (+0.4 %, OK) but 4.52 / 2.38 t (**65.5 / 34.5 %**): front −10 %, rear +30 % — **outside** the sheet (one source; equipment and wheelbase vary across a model range, so the band is wider than ±3 % but not ±10 %). With fuel: 4.81 / 2.69 t. Laden40 6.62 / 10.76 / 22.62 t is inside every SOURCED limit (R3-008/009/010/016: 10 / 11.5 / 24 t, plated front 7.5 t). **Not changed in ADR 0201**: an experiment (frame z 1.6→2.0, misc 1.5→2.3, engine+gearbox 3.3→3.7, cab 3.9→4.0 m → solo 5.24 / 2.26 t with fuel, 4.94 t front without fuel, −1.7 %) moved solo 0–80 +7 % and failed 4 of 135 runner scenarios that guard feel/stability (curb strike 14 cm wheel airtime/load peak, shift eye-pitch swing, rollover first-lift detection, 30-min soak energy drift). The mass breakdown stays WORKING_VALUE; a calibrated redistribution with suspension/feel retuning is a follow-up (ADR 0201 §Otwarte).
 
 ## Solver settings (not vehicle data)
 
