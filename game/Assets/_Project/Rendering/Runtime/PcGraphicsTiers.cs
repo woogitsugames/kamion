@@ -28,7 +28,21 @@ namespace Game.Rendering
         public static bool IsDesktopPlayer(RuntimePlatform p) =>
             p == RuntimePlatform.WindowsPlayer || p == RuntimePlatform.OSXPlayer || p == RuntimePlatform.LinuxPlayer;
 
-        public static bool Enabled => ForceEnabled ?? IsDesktopPlayer(Application.platform);
+        public static bool Enabled => ForceEnabled ?? (IsDesktopPlayer(Application.platform) && !DisabledByArgument());
+
+        static int s_ArgOff = -1;
+        /// <summary>A/B: launch argument "-pc_tiers 0" runs a desktop player on the mobile URP assets / values (measurement only).</summary>
+        static bool DisabledByArgument()
+        {
+            if (s_ArgOff < 0)
+            {
+                s_ArgOff = 0;
+                var args = Environment.GetCommandLineArgs();
+                for (int i = 0; i < args.Length - 1; i++)
+                    if (string.Equals(args[i], "-pc_tiers", StringComparison.OrdinalIgnoreCase) && args[i + 1] == "0") s_ArgOff = 1;
+            }
+            return s_ArgOff == 1;
+        }
 
         static bool s_HasCurrent;
         static PcTier s_Current = PcTier.High;

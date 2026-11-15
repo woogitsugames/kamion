@@ -62,8 +62,6 @@ namespace Game.Gameplay
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Platform = PlatformServices.Create();
 
-            // ADR 0269 A/B: -pc_tiers 0 runs a desktop player on the mobile URP assets / values (measurement only).
-            if (Platform.GetLaunchArgument("pc_tiers") == "0") PcGraphicsTiers.ForceEnabled = false;
             string tierArg = Platform.GetLaunchArgument("tier");
             string desktopTier = DesktopDefaultTier(Application.platform);
             if (QualityTiers.Apply(tierArg) || QualityTiers.Apply(QualityTiers.SavedTier)) { }
