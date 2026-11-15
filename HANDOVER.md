@@ -151,6 +151,21 @@
 - [15.11 ~16:5x] **A16 gate3 G3-B WAŻNY** (af2570fccd): 29,94 FPS, p95 33,46, p99 33,61, max 83,3, > 50 ms 3 klatki, PSS 933,8 MB, 46/46 kamer. Oba segmenty w budżecie, wpis w docs/reports/GATE-3.md. S24+ niepodłączony. #90 po weryfikacji: solo 0–80 14,06 s (było 13,58), hamowanie 35,39 m; 40 t 47,58 s / 41,20 m.
 - [15.11 ~17:3x] Scalono 0213 (woda dk65-02/03: trzcina r7, brzegi, kolor; pytest 1313 ok, 1 fail na nieaktualnych danych C w worktree). Otwarte z obejrzenia water-close-bank Low: schodkowa, ciemna krawędź wody widoczna spod trawy przy brzegu; łaty zmarszczek na High. EditMode po scaleniu do powtórzenia. #80 (Ełcka) można teraz weryfikować.
 - [15.11 ~18:0x] Scalono Argona 0188 (DDR M65), 0187 (las M68, recenzja: SCAL warunkowo, szwy HLOD Low) i 0189 (brama szpitala M62). Konflikty: overrides D = suma; vegetation.py = priorytet authored 0186 + wyjątek tree_floor 0187; stage.py = fences z decks (0208) + cięcie bram (0189). Generated z gałęzi; `regen4.ps1` przebudowuje D i C, potem EditMode i pytest. Argon skończył wszystko (6/6).
+- [15.11 ~18:3x] STOP PRZY LIMICIE. Stan:
+  - **Scalone:** 0214 (kafle dk65-06…11, 21 regionów w regions.py). D66 zapisana: ul. Ełcka 6,6 m (właściciel), więc #80 scalić ze zmianą 6,9 → 6,6.
+  - **W tle:** `regen4.ps1` (D i C po Argonie: build, import, EditMode, pytest; status w `artifacts/lead-s20/regen4.status`). Niezacommitowane zmiany w generated D i w M_Sky.mat w main pochodzą z regen4 (M_Sky przywróci `git checkout` na końcu skryptu). Generated D zacommitować po REGEN4 DONE.
+  - **Agenci w toku:**
+    - 0211 tunel (kleeberga, r4 w tle);
+    - summer-led-0216 (Knyszyn LED, rendery i pytest);
+    - verify-cloud-b (#96 rail: tykocin import i vqa; #90 i #95 SCAL, raporty VERIFY-*);
+    - verify-cloud-c (#80 i #82; #80 buduje dk65-05 „road_gravel 7,5 m”, a 0214 wycina te same waye w dk65-06: dwa mechanizmy placu budowy, do ujednolicenia).
+  - **Do zrobienia po 0214:**
+    - przebudować dk65-06…11 na bieżącym main: `pwsh artifacts/dk65-tiles2-0214/tools/chain.ps1 -Tiles dk65-06,dk65-07,dk65-08,dk65-09,dk65-10,dk65-11 -Tag r4`;
+    - szew 10/11 i knyszyn-s (K1 razem);
+    - `teryt_powiat_extra` dk65-10/11 zaakceptowany;
+    - droga 1392B bez latarni: do potwierdzenia przez właściciela.
+  - **Następny APK:** zrzuty z telefonu dla Argona 0188/0187/0189 oraz gate3.
+  - **Chmura C:** #95/#96/#97 w toku weryfikacji. PR #92 M59-FIX = FIX.
 - **Ostatni przydzielony ADR: 0220 (0217–0220 zarezerwowane dla chmury C).** Kolejność integracji: krytycy 0181/0172 + domknięcia 0170/0184/0183 → scal (generated → --ours, overrides = suma) → JEDNA regeneracja → pytest → BuildBatch truck/trailer → EditMode → czysty APK → PSO → APK → gate3 A16 + gate12-phone. Nowe ADR 0185–0196 scalać po tej regeneracji (druga regeneracja).
 
 # STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
