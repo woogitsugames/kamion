@@ -205,7 +205,8 @@
    "length_m": 587.4,
    "max_grade": 0.0142,
    "overrides": [
-    "dk65-carriageway-width"
+    "dk65-carriageway-width",
+    "dk65-fields-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
@@ -255,7 +256,7 @@
    "length_m": 606.7,
    "max_grade": 0.0199,
    "overrides": [
-    "dk65-carriageway-width"
+    "dk65-fields-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
@@ -280,7 +281,7 @@
    "length_m": 132.1,
    "max_grade": 0.0081,
    "overrides": [
-    "dk65-carriageway-width"
+    "dk65-fields-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
@@ -305,7 +306,7 @@
    "length_m": 78.3,
    "max_grade": 0.0043,
    "overrides": [
-    "dk65-carriageway-width"
+    "dk65-fields-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
@@ -330,7 +331,7 @@
    "length_m": 59.0,
    "max_grade": 0.0106,
    "overrides": [
-    "dk65-carriageway-width"
+    "dk65-fields-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.005,
    "sidewalk_frac": 0.0,
@@ -745,7 +746,9 @@
    ],
    "length_m": 1906.5,
    "max_grade": 0.0757,
-   "overrides": [],
+   "overrides": [
+    "field-roads-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.017,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -837,7 +840,9 @@
    ],
    "length_m": 65.3,
    "max_grade": 0.0078,
-   "overrides": [],
+   "overrides": [
+    "field-roads-unlit"
+   ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1120,6 +1125,23 @@
      "w232511647:1134828656-1134832955",
      "w232511647:1134832955-1134821394",
      "w232511647:1134837275-1134828656"
+    ]
+   },
+   {
+    "id": "dk65-fields-unlit",
+    "targets": [
+     "w232511647:1134811124-1134837275",
+     "w232511647:1134821394-1134824484",
+     "w232511647:1134828656-1134832955",
+     "w232511647:1134832955-1134821394",
+     "w232511647:1134837275-1134828656"
+    ]
+   },
+   {
+    "id": "field-roads-unlit",
+    "targets": [
+     "w98072121:1842392508-1134832955",
+     "w98072355:1134824484-13523625036"
     ]
    }
   ],
