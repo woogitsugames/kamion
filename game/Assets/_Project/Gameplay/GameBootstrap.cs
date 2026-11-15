@@ -109,7 +109,9 @@ namespace Game.Gameplay
             if (Application.CanStreamedLevelBeLoaded(WorldCSceneName))
             {
                 // Same values as the launch arguments route_s / route_end (consumed by DrivingLabBootstrap in WorldC).
-                entries.Add(("Trasa G3-A — Kwadrat Park, brama, Bieżeństwa", () =>
+                // Labels name streets and generic places only, never a company or a commercial site (CLAUDE.md rule 8,
+                // BRAND-SWEEP-S20 #3: the depot start used to carry the name of the logistics park).
+                entries.Add(("Trasa G3-A — baza, brama, Bieżeństwa", () =>
                 {
                     StartRequest.Set("G3-A", StartRequest.G3AStartS, StartRequest.G3AEndS, options.LightingId);
                     SceneManager.LoadScene(WorldCSceneForTier());
@@ -121,7 +123,7 @@ namespace Game.Gameplay
                 }));
             }
             ControlSettings.Load().Log("boot");
-            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings);
+            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout);
             m_Menu.transform.SetParent(transform, false);
             Debug.Log("[CONTROLS] menu shown light=" + options.LightingId + " tier=" + options.Tier + " fps=" + options.Fps);
 
@@ -132,6 +134,7 @@ namespace Game.Gameplay
         }
 
         ControlSettingsPanel m_Settings;
+        AboutPanel m_About;
         BootMenu m_Menu;
 
         public BootMenu Menu => m_Menu;
@@ -141,6 +144,14 @@ namespace Game.Gameplay
             if (m_Settings != null) return;
             m_Settings = ControlSettingsPanel.Create(null, ControlSettings.Load(), null, null);
             m_Settings.transform.SetParent(transform, false);
+        }
+
+        /// <summary>"Informacje": attributions and licence texts (Resources/About/attributions.txt; LICENSES-AUDIT-S20 R-P0-1).</summary>
+        void OpenAbout()
+        {
+            if (m_About != null) return;
+            m_About = AboutPanel.Create(null, null);
+            m_About.transform.SetParent(transform, false);
         }
     }
 }

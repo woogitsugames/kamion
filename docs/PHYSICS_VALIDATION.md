@@ -107,7 +107,7 @@ Values are for solo / empty / 40 t where the item has variants. ✅ = all checks
 | 6 | downhill_7pct_brake_cruise_60 | 60.0 km/h ± 0.000; EB ≈ 200 kW + retarder ≈ 170 kW (≤ 3103 Nm) | 59–61.5; ≤ 4000 Nm | S2 retarder limit ✅ |
 | 6 | downhill_7pct_full_lever | speed settles (range 0.001 km/h over 40 s), EB torque 1173 Nm | stabilises | WORKING ✅ |
 | 6 | downhill_7pct_service_pumping (endurance brakes off) | service circuits fall to 5.06 bar, warning on | ≤ 9 bar, ≥ 3 bar, warning | WORKING (real consequence) ✅ |
-| 6 | air_leak_rear_circuit (burst at 60 km/h) | warning; rear circuit 0 bar; stop 33.1 m on the remaining circuits | ≤ 64.4 m | **SOURCED** S5 2.2 secondary braking ✅ |
+| 6 | air_leak_rear_circuit (burst at 60 km/h) | warning; rear circuit 0 bar; stop 33.1 m on the remaining circuits | ≤ 52.4 m (residual braking, N3 laden, from **40 km/h**: 0.15 v + (100/30)·v²/115, dm ≥ 1.3) | **SOURCED** S5 2.4.1 / S9 R3-161. The game test starts at 60 km/h, a harder case than the regulation's 40 km/h. Errata ADR 0201: was "≤ 64.4 m, S5 2.2" (0.15 v + 2v²/130 from 60 km/h = M2/M3 formula); secondary braking cat. N is 0.15 v + 2v²/115 from 40 km/h = 33.8 m ✅ |
 | 6 | air_leak_park_circuit | trailer emergency braking + spring brakes stop the combination | stops | WORKING ✅ |
 | 7 | circle_r50_10/35kmh_comb | offtracking 0.61 / 0.60 m at 10 km/h, 0.48 / 0.41 m at 35 km/h; a_y within 1 % of v²/R | 0.4–0.8 m at 10 km/h | DERIVED (√(R²+e²) − √(R²+e²−L²) = 0.59 m) ✅ |
 | 7 | rollover_r50_cog_low / high (40 t, speed ramp) | first wheel lift at **0.462 g** (CoG 1.9 m) / **0.341 g** (CoG 2.6 m) | 0.25–0.55 g; high < low | WORKING (literature 0.3–0.45 g, UNVERIFIED) ✅ |

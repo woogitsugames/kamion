@@ -469,6 +469,10 @@ def doors_and_gaps():
 # r8 (ADR 0061): stroke = 2.2 x the SVG width = 28 mm at the 150 mm cap height (1.8 = 24 mm): 3.5 px in truck-34 at the
 # Low tier's 0.75 render scale. Counters stay open (R bowl 36 x 57 mm). WORKING_VALUE
 WORDMARK_WEIGHT = 2.2
+# Brand on the grille band. Owner decision 2026-11-15 (BRAND-SWEEP-S20 #5): no TRAKT name in the build, no trademark
+# search - the truck ships brand-neutral: "none" = no letters and no emblem (the black band stays plain). "trakt" keeps
+# the old letters for comparison renders only. Set by --badge in build.py / a6_export.py.
+BADGE = "none"
 LOUVRE_TILT = 20.0   # deg, WORKING_VALUE: lamella faces look down at the road, not at the sky (ADR 0047 r4)
 
 
@@ -534,8 +538,9 @@ def front_face_modern(strokes):
         hw = st[1][0] + (st[2][0] - st[1][0]) * (zc - st[1][1]) / (st[2][1] - st[1][1]) - 0.006
         grille_bar(f"grille_bar_l{k}", zc, hgt, 0.052, hw, "mask_gloss", nose=-0.004, tilt=LOUVRE_TILT)
         lane_dash(f"lane_dash{k}", CAB, zc, hgt - 0.016, louvre_mid(hgt) + 0.0015, tilt=LOUVRE_TILT)
-    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=24.0, mat="alu_brushed",
-             name="badge_trakt", weight=WORDMARK_WEIGHT, depth=0.004, on_face=True)
+    if BADGE == "trakt":
+        wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=24.0, mat="alu_brushed",
+                 name="badge_trakt", weight=WORDMARK_WEIGHT, depth=0.004, on_face=True)
     # r7c: 2 -> 4 mm off the skin. The hidden-face test starts 3 mm above a face, so the paint under a 2 mm cowl
     # counted as visible, stayed in the mesh and came through the cowl as white shards once LOD2 had collapsed it
     CAB.patch("cowl", "plastic_satin", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.21, 1.21, off=0.004, nz=3, npar=48)
@@ -571,14 +576,15 @@ def front_face(feathers, strokes):
     fw = [0.008 if abs(p[1] - top) < 1e-6 and abs(outline[(i + 1) % len(outline)][1] - top) < 1e-6 else 0.022
           for i, p in enumerate(outline)]
     ribbon("grille_frame", outline, fw, "trim_graphite", off=-0.004, thick=0.010)
-    if CFG["emblem_z"] is not None:
+    if CFG["emblem_z"] is not None and BADGE == "trakt":
         emblem(feathers)
     # B2 v2: real satin-silver letters (3 mm) on the black band - kept as game geometry ('badge_'), not the
     # paint-slot decal (a decal can only tint the Paint slot, it cannot draw light letters on dark trim)
     # B2.2: letters lie in the raked band, 1.6x stroke (12 mm at 80 mm cap height), 4 mm deep, 1.2 mm chamfer,
     # brushed aluminium (bright, anisotropic) so the A crossbar and the R leg survive a 3/4 view on a phone
-    wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=16.0, mat="alu_brushed",
-             name="badge_trakt", weight=1.6, depth=0.004, on_face=True, bev=0.0012)
+    if BADGE == "trakt":
+        wordmark(strokes, z_c=CFG["wordmark_z"], height=CFG["wordmark_h"], spacing=16.0, mat="alu_brushed",
+                 name="badge_trakt", weight=1.6, depth=0.004, on_face=True, bev=0.0012)
     # flush cowl (wiper panel) in the same plane, between the service flap and the glass edge
     CAB.patch("cowl", "plastic", "front", WS_Z0 - 0.082, WS_Z0 - 0.012, -1.12, 1.12, off=0.002, nz=3, npar=40)
     # B2 v2: no slot row - in the game atlas it baked into a black/grey comb; the plain black cowl now merges with

@@ -4,6 +4,7 @@ glass interface for the interior, QA renders.
 
     blender -b --factory-startup --python tools/blender/truck/exterior/a6_export.py -- \
         [--out ABS_DIR] [--renders ABS_DIR] [--bake-scale 1.0] [--ao-samples 256] [--no-renders] [--blend ABS.blend]
+        [--badge none|trakt]   # none (default) = brand-neutral front, owner decision 2026-11-15 (BRAND-SWEEP-S20 #5)
 
 Pipeline (all from the A4 generator, nothing hand-edited):
  1. build the A4 exterior (body.py / chassis.py, classic mirrors), keep a full-detail copy as the bake source (HIGH);
@@ -2808,9 +2809,12 @@ def main():
     p.add_argument("--lods", default="0,1,2")   # LOD3 (traffic, ~5k) is a draft: wheels/fenders break at that
                                                  # budget - opt in with --lods 0,1,2,3 once it is reworked
     p.add_argument("--blend", default="")
+    p.add_argument("--badge", default="none", choices=["none", "trakt"],
+                   help="grille brand: none = brand-neutral (owner 2026-11-15, BRAND-SWEEP-S20 #5); trakt = comparison only")
     a = p.parse_args(argv)
     a.out = os.path.abspath(a.out)            # Blender resolves relative output paths against the drive root
     a.renders = "" if a.no_renders else os.path.abspath(a.renders)
+    B.BADGE = a.badge                          # before build_source(): front_face reads it
     t0 = time.time()
     subpaths, strokes, wm = build_source()
     srcs = [o for o in bpy.data.objects if o.type == "MESH" and o.get("group") in TRUCK_GROUPS]

@@ -206,7 +206,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     lin = FU.Lin(w.buf, zsurf)
     # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
     FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep,
-              styles=FU.fence_styles(overrides), net=w.net)
+              styles=FU.fence_styles(overrides), net=w.net,
+              decks=[p for p in w.buf.parts if p.layer == "bridge" and p.mat.startswith("road_")])
     def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
     FU.guardrails(lin, w.net, znat, frep)
@@ -280,7 +281,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     if getattr(w, "water", None) is not None:      # ADR 0210: no trees in the water
         blocked |= w.water.blocked()
     vrep = {}
-    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides)
+    trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides, hard=mask | bmask)
     forest_mix = vrep.pop("_forest_mix")
     forest_cleared = vrep.pop("_forest_cleared", [])
     rep["vegetation"] = vrep
@@ -304,6 +305,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         PT.garden_trees(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2, region_trees=trees)
         log("garden trees", {k: v for k, v in rep["garden_trees"].items() if k not in ("list", "conifers")})
         ptrees = VG.garden_canopies(ptrees, plot_plan, rep)
+    if any(o.get("kind") == "tree_groups" and o.get("form") == "kit" for o in overrides or []):     # ADR 0186
+        PT.authored_trees(w.buf, overrides, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2)
+        log("authored trees", {k: v for k, v in rep["authored_trees"].items() if k != "list"})
     rep["plots"]["inst_trees_kept"] = len(ptrees)
     for t_ in ptrees:
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1

@@ -220,7 +220,7 @@ sc("downhill_7pct_brake_cruise_60", "40 t, 7% down, brake cruise at 60 km/h with
    {"type": "speedhold", "targetKmh": 60, "enduranceOnly": True},
    [chk("mean_speed_kmh", mn=59, mx=61.5, frm=60, source="speed stabilised at the set speed"),
     chk("speed_range_kmh", mx=2, frm=60, source="no hunting / limit cycle of the downhill speed control"),
-    chk("max_retarder_torque_nm", mn=1000, mx=4000, status=S, source="S2: Intarder up to 4000 Nm / 600 kW (class reference)"),
+    chk("max_retarder_torque_nm", mn=1000, mx=4000, status=S, source="S2: secondary retarder up to 4000 Nm / 600 kW (class reference)"),
     chk("max_service_demand", mx=0, source="service brake not needed")] + stable,
    variants=["laden40"], ground={"gradePercent": -7, "surface": "dry_asphalt"}, initial={"speedKmh": 60})
 
@@ -228,7 +228,7 @@ sc("downhill_7pct_full_lever", "40 t, 7% down from 70 km/h, endurance lever at m
    {"type": "timeline", "keys": [key(0, lever=5)]},
    [chk("speed_range_kmh", mx=3, frm=80, source="speed stabilises (endurance brakes stronger than gravity at 70 km/h)"),
     chk("max_speed_kmh", mx=71, source="no runaway"),
-    chk("max_engine_brake_torque_nm", mn=500, source="engine brake active (VEB+ class; S1 375 kW at 2300 rpm)")] + stable,
+    chk("max_engine_brake_torque_nm", mn=500, source="engine brake active (S1 class: 375 kW at 2300 rpm)")] + stable,
    variants=["laden40"], ground={"gradePercent": -7, "surface": "dry_asphalt"}, initial={"speedKmh": 70})
 
 sc("downhill_7pct_service_pumping", "40 t, 7% down at 40 km/h with service brake only (endurance brakes off), driver pumps the pedal",
@@ -245,7 +245,7 @@ sc("air_leak_rear_circuit", "60 km/h, circuit 2 (rear) bursts at t=3 s, then eme
    {"type": "timeline", "keys": [key(0, throttle=0.4), key(15, brake=1)]},
    [chk("low_air_warning", mn=1, source="low-pressure warning must come on"),
     chk("min_air_service_bar", mx=1.0, source="rear circuit empties"),
-    chk("stop_distance_m", mx=64.4, status=S, source=f"{R13} 2.2: secondary braking N: s <= 0.15 v + 2 v^2/130 at 60 km/h"),
+    chk("stop_distance_m", mx=52.4, status=S, source=f"{R13} 2.4.1: residual braking N3 laden from 40 km/h: s <= 0.15 v + (100/30) v^2/115 = 52.4 m (test from 60 km/h is harder; ADR 0201 errata, was 2 v^2/130 at 60 km/h = M2/M3)"),
     chk("max_lateral_deviation_m", mx=1.0, source="stable straight-line stop on the remaining circuits")],
    variants=["laden40"], initial={"speedKmh": 60}, events=[{"t": 3, "type": "leak", "circuit": 2, "lpm": 3000}])
 
