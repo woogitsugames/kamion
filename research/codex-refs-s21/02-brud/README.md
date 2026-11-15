@@ -1,5 +1,7 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
+Aktualny manifest:20 rekordów=18 kadrów(13 lokalnych,5 link-only)+2 dokumenty; obejmuje odrzucenia i pomocnicze, nie20kwalifikowanych zdjęć.
+
 Cel: ≥20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥6 zimowych i ≥6 europejskich. **Stan po recenzji koordynatora:1/20 nowych przyjętych kadrów,0/6 zimowych,0/6 europejskich — kryteria całości niespełnione.**
 
 Główny manifest ma16 rekordów:14 kadrów (9 lokalnych i5 link-only) oraz2 dokumenty. Tylko02-CR6-001 jest nowym przyjętym kadrem po sprawdzeniu oryginału i źródłowego typu naczepy. Pozostałe wiersze obejmują odrzucenia, wzorce czyste, zużycie, niejednoznaczną powierzchnię oraz znane P18. Wycinki nie są nowymi zdjęciami. Starsze sekcje poniżej zachowują chronologię poszukiwań; ich 0/20 nie jest stanem bieżącym.
@@ -150,3 +152,6 @@ Creator-round7: koordynator osobno obejrzał oryginał Premier1118×1487, miniat
 
 
 Europe-link-only-round9:2 osobno obejrzane pomocnicze obrazy komercyjne, tylko link-only ARR, bez kopii. Myjnia: niepotwierdzona konstrukcja drzwi/mechanizm pasmowania i około230–250px tylnej powierzchni. OLX: śnieg widoczny, ale przeważają ubytki powłoki i około440–470px drzwi. Nie zwiększają ścisłegoM61, zimy ani Europy; main17rekordów bez zmian, dziennik pomocniczy odrębny. Lokalizacja firmy/ogłoszenia nie jest geotagiem fotografii.
+
+
+Europe-visual-round10:3 nowe referencjeAUX/6pochodnych≤800px, koordynator osobno obejrzał wszystkie zachowane pełne miniatury i cropy. PostiFinlandia2026 potwierdzonego typu w śniegu: drzwi850–950px, jasna siatka o mechanizmieUNVERIFIED. ScaniaSzwajcaria2013: pionowe smugi dolnego boku, bez tylnych drzwi. MB1850Sinsheim2013: ciemna reklama/odblaski i plamista belka, muzeum/znany pojazdP18-141, nowy kadr nie nowy pojazd. Żaden nie zwiększa ścisłych1/20, zimowych0/6 ani europejskich0/6. Łącznie w selekcji9indywidualnie obejrzanych fotografii, wsparcie typuPosti001/002 nie liczone jako kolejne tyły.
