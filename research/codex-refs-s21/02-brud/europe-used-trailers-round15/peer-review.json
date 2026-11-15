@@ -1,7 +1,7 @@
 {
   "status": "PASS ograniczonej treściA; FAIL proguB",
   "reviewer": "niezależny agent knyszyn",
-  "reviewed_at_brussels": "2026-11-15T23:39:00+01:00",
+  "reviewed_at_brussels": "2026-11-15",
   "subject_id": "EUR15-A01",
   "exact_cdn": "https://ireland.apollo.olxcdn.com/v1/files/mpwsrr1ixzzq-PL/image;s=1000x700",
   "source_page": "https://www.olx.pl/d/oferta/krone-sdr-27-naczepa-chlodnia-krone-2002-CID5-ID1daY3C.html",
@@ -46,5 +46,7 @@
     "B_ge1000": 0,
     "european_road_frames": 0,
     "new_downloads": 0
-  }
+  },
+  "review_time_precision": "DATE_ONLY; exact review time UNVERIFIED, unmeasured manual time retracted",
+  "review_time_errata_reference": "research/codex-refs-s21/review-time-audit/corrections.json"
 }

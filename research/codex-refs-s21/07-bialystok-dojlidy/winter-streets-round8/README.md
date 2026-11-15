@@ -1,6 +1,6 @@
 # B123 — zimowe Batorego / Brzeska–Buska / Maczka
 
-15.11.2026, 23:49 czasu Brukseli. **Wynik: 0 nowych kwalifikowanych zdjęć zimowych.** Obejrzano indywidualnie 1 nowy podgląd Commons CC BY-SA 4.0 i odrzucono go z powodu braku widocznego śniegu lub błota pośniegowego. Nie rozszerzano zakresu o przypadkowe ulice.
+15.11.2026; godzina oględzin niezmierzona. **Wynik: 0 nowych kwalifikowanych zdjęć zimowych.** Obejrzano indywidualnie 1 nowy podgląd Commons CC BY-SA 4.0 i odrzucono go z powodu braku widocznego śniegu lub błota pośniegowego. Nie rozszerzano zakresu o przypadkowe ulice.
 
 ## Oględziny
 

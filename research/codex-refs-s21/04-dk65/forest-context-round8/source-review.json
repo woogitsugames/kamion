@@ -1,6 +1,6 @@
 {
   "status": "STABLE — jedno rzeczywiste wydzielenie, bez fotografii",
-  "reviewed_at_brussels": "2026-11-15T23:23:00+01:00",
+  "reviewed_at_brussels": "2026-11-15",
   "documentation": [
     {
       "url": "https://bdl.lasy.gov.pl/portal/uslugi-ogc",
@@ -132,5 +132,7 @@
     "GetMap": 2,
     "GetFeatureInfo": 1,
     "new_photo_frames": 0
-  }
+  },
+  "review_time_precision": "DATE_ONLY; exact review time UNVERIFIED, unmeasured manual time retracted",
+  "review_time_errata_reference": "research/codex-refs-s21/review-time-audit/corrections.json"
 }

@@ -1,6 +1,6 @@
 # Kontekst lasu przy korytarzu DK65 — BDL
 
-Stan odczytu: 15.11.2026, 23:23 czasu Brukseli. **Jedno rzeczywiste wydzielenie, 0 fotografii.**
+Stan odczytu: 15.11.2026; godzina odczytu niezmierzona. **Jedno rzeczywiste wydzielenie, 0 fotografii.**
 
 Oficjalny [katalog usług BDL, pkt 1.7](https://bdl.lasy.gov.pl/portal/uslugi-ogc) wskazuje WMS mapy drzewostanów. Odczytano GetCapabilities, obejrzano mapę i wykonano jedno GetFeatureInfo w widocznym brunatnym poligonie. Dokumentację zapytań, pełne odpowiedzi tekstowe i ograniczenia zachowano obok. Obraz mapy pozostał poza gitem w Data/raw. Nie przypisano licencji CC.
 

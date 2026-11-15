@@ -1,0 +1,182 @@
+{
+  "status": "APPLIED_BY_COORDINATOR — 10 manual time fields reduced to confirmed dates; 2 README occurrences corrected",
+  "audit_recorded_at_brussels": "2026-11-16T00:00:51.394679+01:00",
+  "audit_record_time_source": "Rzeczywisty odczyt zegara Python przy tworzeniu tego raportu; nie czas wcześniejszych oględzin.",
+  "scope": "Własne JSON s21 agenta knyszyn; dodatkowo2własne README powtarzające błędne godziny. Nie podmieniać dat źródłowych, EXIF, odpowiedziHTTP ani godzin innych autorów.",
+  "confirmed_manual_json_fields": [
+    {
+      "file": "research/codex-refs-s21/01-lampy/lit-rear-round13/peer-review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-15T23:43:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    },
+    {
+      "file": "research/codex-refs-s21/01-lampy/retroreflection-round14/peer-review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-16T00:05:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    },
+    {
+      "file": "research/codex-refs-s21/02-brud/europe-used-trailers-round15/peer-review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-15T23:39:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    },
+    {
+      "file": "research/codex-refs-s21/02-brud/roadtour-original-check-round19/peer-review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-15T23:53:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    },
+    {
+      "file": "research/codex-refs-s21/02-brud/winter-world-round17/peer-review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-15T23:34:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    },
+    {
+      "file": "research/codex-refs-s21/04-dk65/forest-context-round8/dictionary-check.json",
+      "json_pointer": "/checked_at_brussels",
+      "current_timestamp": "2026-11-15T23:30:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    },
+    {
+      "file": "research/codex-refs-s21/04-dk65/forest-context-round8/source-review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-15T23:23:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    },
+    {
+      "file": "research/codex-refs-s21/04-dk65/temporary-marking-round7/peer-review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-15T23:26:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    },
+    {
+      "file": "research/codex-refs-s21/06-region-ring/monki-landmark-round7/review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-15T23:59:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    },
+    {
+      "file": "research/codex-refs-s21/07-bialystok-dojlidy/winter-streets-round8/review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-15T23:49:00+01:00",
+      "author": "agent knyszyn",
+      "time_source": "Ręcznie wpisana orientacyjna godzina bez odczytu zegara w chwili oględzin; potwierdzone z własnych wywołań zapisujących te pliki.",
+      "precision_status": "UNVERIFIED — dokładny czas niezmierzony",
+      "confirmed_actual_review_date": "2026-11-15",
+      "date_evidence": "Oględziny nastąpiły przed recenzją Actrosa, której zapis po oględzinach odczytał zegar 15.11.2026 23:55:02+01:00; własna chronologia narzędzi potwierdza dzień15.11.",
+      "recommended_action": "Usunąć godzinę, sekundy i strefę. Zachować wyłącznie datę2026-11-15 z jawną erratą o niezmierzonym czasie; nie zastępować czasem root ani NTFS/commit.",
+      "proposed_date_only": "2026-11-15"
+    }
+  ],
+  "keep_measured_json_fields": [
+    {
+      "file": "research/codex-refs-s21/01-lampy/front-approval-round15/peer-review.json",
+      "json_pointer": "/reviewed_at_brussels",
+      "current_timestamp": "2026-11-15T23:55:02.030719+01:00",
+      "time_source": "Rzeczywisty odczyt datetime.now(ZoneInfo(Europe/Brussels)) przez Python w wywołaniu zapisującym JSON, po oględzinach.",
+      "status": "KEEP_CLOCK_READ",
+      "limit": "Dokładny moment zapisu recenzji po oględzinach, nie zmierzony początek oglądania ani data ekspozycji zdjęć."
+    }
+  ],
+  "additional_readme_occurrences": [
+    {
+      "file": "research/codex-refs-s21/04-dk65/forest-context-round8/README.md",
+      "locator": "akapit Stan odczytu",
+      "current_text": "15.11.2026, 23:23 czasu Brukseli",
+      "status": "UNVERIFIED_MANUAL_TIME",
+      "recommended_date_only": "15.11.2026; godzina odczytu niezmierzona",
+      "literal_present_now": true
+    },
+    {
+      "file": "research/codex-refs-s21/07-bialystok-dojlidy/winter-streets-round8/README.md",
+      "locator": "pierwszy akapit",
+      "current_text": "15.11.2026, 23:49 czasu Brukseli",
+      "status": "UNVERIFIED_MANUAL_TIME",
+      "recommended_date_only": "15.11.2026; godzina oględzin niezmierzona",
+      "literal_present_now": true
+    }
+  ],
+  "summary": {
+    "confirmed_manual_json_fields": 10,
+    "affected_json_files": 10,
+    "additional_readme_occurrences": 2,
+    "clock_read_own_review_fields_preserved": 1,
+    "edited_prior_source_files": 0
+  },
+  "coverage": "Przeszukano wszystkieJSON pod research/codex-refs-s21 pod kątem dat z godziną oraz pól review/inspect/check/snapshot/created. Wszystkie odnalezione własne dokładne godziny audytu to10ręcznych pól powyżej i1odczyt zegara Actros. Starsze własne pliki zawierające tylko datę nie wymagają usunięcia godziny. Inne znalezione precyzyjne timestampy należą do agentów/root lub źródłowych danych i nie są oznaczane automatycznie jako błędne.",
+  "date_correction_note": "R150 ma błędny również dzień16.11 w ręcznej wartości; rzeczywisty audyt odbył się15.11. Mońki23:59 także wpisano orientacyjnie. Żadnej z10wartości nie wolno traktować jako dokładnego pomiaru czasu.",
+  "explicit_exclusions": [
+    "Daty zdjęć Commons/EXIF, daty wynikające z nazw prywatnych zdjęć i daty publikacji.",
+    "HTTP/OSM/ArcGIS/GUGiK timestampy i wersje źródeł.",
+    "Snapshoty w observations.json/screening.json innych agentów; nie jestem ich autorem i nie ustalam tutaj ich pochodzenia.",
+    "reviewed_at_brussels Actros15: odczyt zegara zachowany."
+  ],
+  "future_rule": "Każdą nową dokładną godzinę poprzedzi odczyt clock/tool lub zegara systemowego; bez dowodu momentu wydarzenia zapiszę tylko datę z informacją o braku zmierzonej godziny.",
+  "application": {
+    "applied_at_brussels_from_system_clock": "2026-11-16T00:02:19.9143366+01:00",
+    "metadata_files_changed": 12,
+    "actual_review_date": "2026-11-15",
+    "precise_event_times": "UNVERIFIED; not replaced with application time, commit time or NTFS",
+    "source_photo_EXIF_dates_untouched": true,
+    "HTTP_source_timestamps_untouched": true,
+    "measured_Actros_peer_time_preserved": true,
+    "old_values_kept_in_this_audit_for_traceability": true
+  }
+}

@@ -1,7 +1,7 @@
 {
   "status": "PASS identyfikacji obrazu i wymiarów; kwalifikacja treści zależna od deklaracji źródła",
   "reviewer": "niezależny agent knyszyn",
-  "reviewed_at_brussels": "2026-11-15T23:34:00+01:00",
+  "reviewed_at_brussels": "2026-11-15",
   "exact_image_url": "https://static.wixstatic.com/media/609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg/v1/fill/w_1290,h_1364,al_c,q_85,enc_auto/609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg",
   "source_page": "https://www.roadtour.net/post/leaving-snow-on-your-car-or-truck-is-dangerous",
   "method": "Najpierw indywidualnie otwarto dokładny CDN i obejrzano obraz, potem odczytano źródłowy artykuł i otwarto Expand image. Obraz galerii wizualnie i currentSrc zgodny z dokładnym CDN. Bez pobrania obrazu, zapisu screenshotów, cropu, upscalingu i zgadywania wariantów URL.",
@@ -43,5 +43,7 @@
     "distinct_vehicles": 1,
     "new_media_files": 0,
     "new_B_ge1000": 0
-  }
+  },
+  "review_time_precision": "DATE_ONLY; exact review time UNVERIFIED, unmeasured manual time retracted",
+  "review_time_errata_reference": "research/codex-refs-s21/review-time-audit/corrections.json"
 }

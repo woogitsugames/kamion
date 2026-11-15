@@ -1,7 +1,7 @@
 {
   "status": "PASS — dokładne3URL zgodne z fotografiami i zasadniczymi opisami",
   "reviewer": "niezależny agent knyszyn",
-  "reviewed_at_brussels": "2026-11-15T23:26:00+01:00",
+  "reviewed_at_brussels": "2026-11-15",
   "method": "Każdy dokładny URL z manifestu otwarto oddzielnie w natywnym Chrome i obejrzano pełny obraz; bez pobrania, kopiowania i plików screenshotów. CUA completion_summary wykonano.",
   "observations": [
     {
@@ -40,5 +40,7 @@
     "new_photographs": 0,
     "verified_yellow_horizontal_marking_frames": 1,
     "verified_vertical_striped_devices_frames": 3
-  }
+  },
+  "review_time_precision": "DATE_ONLY; exact review time UNVERIFIED, unmeasured manual time retracted",
+  "review_time_errata_reference": "research/codex-refs-s21/review-time-audit/corrections.json"
 }

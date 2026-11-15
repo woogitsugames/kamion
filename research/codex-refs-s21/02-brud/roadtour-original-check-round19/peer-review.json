@@ -1,7 +1,7 @@
 {
   "status": "PASS odczytu bazowego zasobu; B nadal FAIL",
   "reviewer": "niezależny agent knyszyn",
-  "reviewed_at_brussels": "2026-11-15T23:53:00+01:00",
+  "reviewed_at_brussels": "2026-11-15",
   "exact_base_url": "https://static.wixstatic.com/media/609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg",
   "method": "Jedno bezpośrednie otwarcie podanego publicznego bazowego URL w natywnym Chrome. Obraz obejrzany w podglądzie CUA; nie zapisano obrazu ani screenshotu do pliku. Odczytano tylko tytuł strony i wymiary/currentSrc widocznego elementu img. Bez pobierania narzędziem HTTP, wariantów URL, cropów, upscalingu, edycji ani ponowienia.",
   "standalone_dimensions": {
@@ -39,5 +39,7 @@
     "new_qualifying_B": 0
   },
   "preserved_snapshots": "Nie zmieniano katalogów winter-world-round17 ani qualification-ledger-round18; tylko własny peer w round19.",
-  "browser_status": "Zwolniony po completion_summary."
+  "browser_status": "Zwolniony po completion_summary.",
+  "review_time_precision": "DATE_ONLY; exact review time UNVERIFIED, unmeasured manual time retracted",
+  "review_time_errata_reference": "research/codex-refs-s21/review-time-audit/corrections.json"
 }
