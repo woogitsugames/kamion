@@ -41,7 +41,7 @@
    ],
    "to_chain": "c:w978807338:9056790525-9056790523",
    "turn_lanes": null,
-   "what": "verge_grass"
+   "what": "none"
   },
   {
    "chain": "c:w98072526:1134825950-1134839334",
@@ -97,7 +97,12 @@
  },
  "region": "knyszyn-w",
  "route_band_m": 30.0,
- "route_segments_s_m": null,
+ "route_segments_s_m": [
+  [
+   0.0,
+   1988.0
+  ]
+ ],
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 63,

@@ -14,3 +14,22 @@ overrides:
     confidence: high
     verify: none
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35}
+  - id: dk65-fields-unlit
+    target: {osm_way: [232511647]}
+    reason: >-
+      DK65 north-west of the town between fields (way 232511647, from the Goniadzka fork to the north tile edge):
+      GUGiK orthophoto 0.1 m 2025 (crop EPSG:2180 759700 613250 - 759900 613450, artifacts/knyszyn-w-0209/
+      ortho_lamps_b.jpg) shows no lamp columns or their shadows, only tree rows on both sides; the lamp rule put
+      columns there (render r1 dk65-fields-nw). The lit part of DK65 (columns with arms on the east side every
+      ~40 m, ortho_lamps_a.jpg) is way 232511646 through the town, left to the rule. The fork-to-Polna stretch
+      (~250 m) of 232511647 is not verified (open).
+    confidence: medium
+    verify: owner - where the street lights on DK65 end towards Monki
+    set: {lamps: false}
+  - id: field-roads-unlit
+    target: {osm_way: [98072121, 98072355]}
+    reason: >-
+      Unclassified field roads (gravel on the 2025 orthophoto, plan view r1 polna.jpg): no street lighting.
+    confidence: medium
+    verify: none
+    set: {lamps: false}
