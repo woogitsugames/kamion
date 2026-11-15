@@ -1,0 +1,167 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\logs\test-editmode-20261115-211904.log -buildTarget Android -runTests -testPlatform EditMode -testResults C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\tests\editmode-20261115-211904.xml -testFilter Game.Tests.StartClearanceTests
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 78156)
+EditMode: 45 total, 4 passed, 41 failed, 0 skipped (Failed(Child)) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\tests\editmode-20261115-211904.xml
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("bialystok-maczka"):   bialystok-maczka: startS 12.0 m, closures on the route at 61.2 (entry), 1993.8 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  86.155174255371094d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("bialystok-kleeberga"):   bialystok-kleeberga: startS 12.0 m, closures on the route at 60.0 (entry), 2161.0 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.000442504882813d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("bialystok-knyszynska"):   bialystok-knyszynska: startS 12.0 m, closures on the route at 20.8 (entry), 2902.2 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  45.825218200683594d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-01"):   dk65-01: startS 12.0 m, closures on the route at 60.0 (entry), 571.6 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999801635742188d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-02"):   dk65-02: startS 12.0 m, closures on the route at 60.0 (entry), 2340.7 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.0499267578125d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-03"):   dk65-03: startS 12.0 m, closures on the route at 60.0 (entry) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999526977539063d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-04"):   dk65-04: startS 12.0 m, closures on the route at 60.0 (entry), 2074.5 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.00030517578125d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-05"):   dk65-05: startS 12.0 m, closures on the route at 14.5 (entry), 2141.9 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  39.541324615478516d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-06"):   dk65-06: startS 12.0 m, closures on the route at 54.6 (entry), 1641.8 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  79.572189331054688d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-07"):   dk65-07: startS 12.0 m, closures on the route at 60.0 (entry), 862.4 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999847412109375d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-08"):   dk65-08: startS 12.0 m, closures on the route at 60.0 (entry), 2295.1 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999923706054688d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-09"):   dk65-09: startS 12.0 m, closures on the route at 60.0 (entry) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.997871398925781d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-10"):   dk65-10: startS 12.0 m, closures on the route at 60.0 (entry), 2555.4 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999725341796875d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-11"):   dk65-11: startS 12.0 m, closures on the route at 60.0 (entry) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999946594238281d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("knyszyn-s"):   knyszyn-s: startS 12.0 m, closures on the route at 60.0 (entry), 2360.7 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.992767333984375d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("knyszyn"):   knyszyn: startS 12.0 m, closures on the route at 60.0 (entry) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.000282287597656d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("knyszyn-w"):   knyszyn-w: startS 12.0 m, closures on the route at 53.9 (entry), 1928.7 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  78.862747192382813d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dk65-monki-01"):   dk65-monki-01: startS 12.0 m, closures on the route at 60.0 (entry), 1125.0 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.991485595703125d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("dw671-tykocin-01"):   dw671-tykocin-01: startS 12.0 m, closures on the route at 60.0 (entry), 2567.3 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999755859375d
+
+  FAILED Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen("bialystok-dojlidy"):   bialystok-dojlidy: startS 12.0 m, closures on the route at 60.3 (entry), 2129.9 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.277969360351563d
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("bialystok-industrial-c"):   bialystok-industrial-c: collider 'DepotBarrier_0' on the route at 244.0 m (232.0 m after the start)
+  Expected: null
+  But was:  <DepotBarrier_0 (UnityEngine.BoxCollider)>
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("bialystok-maczka"):   bialystok-maczka: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 86.2 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("bialystok-kleeberga"):   bialystok-kleeberga: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("bialystok-knyszynska"):   bialystok-knyszynska: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 45.8 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-01"):   dk65-01: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-02"):   dk65-02: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-03"):   dk65-03: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-04"):   dk65-04: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-05"):   dk65-05: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 39.5 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-06"):   dk65-06: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 79.5 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-07"):   dk65-07: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-08"):   dk65-08: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-09"):   dk65-09: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-10"):   dk65-10: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-11"):   dk65-11: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("knyszyn-s"):   knyszyn-s: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("knyszyn"):   knyszyn: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("knyszyn-w"):   knyszyn-w: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 78.9 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dk65-monki-01"):   dk65-monki-01: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("dw671-tykocin-01"):   dw671-tykocin-01: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+
+  FAILED Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead("bialystok-dojlidy"):   bialystok-dojlidy: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.3 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+

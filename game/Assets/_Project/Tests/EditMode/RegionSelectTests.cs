@@ -306,7 +306,7 @@ namespace Game.Tests
                 var road = RegionStart.FindRoad(g, en);
                 Assert.GreaterOrEqual(road.Edge, 0, r.id + ": start point " + en + " not on a graph road");
                 Assert.LessOrEqual(road.Distance, RegionStart.SnapMaxM, r.id);
-                StringAssert.StartsWith("[START] region=" + r.id + " route_s=12.0", RegionStart.Describe(r.id, s, en, road));
+                StringAssert.StartsWith("[START] region=" + r.id + " route_s=" + s.ToString("F1", CultureInfo.InvariantCulture), RegionStart.Describe(r.id, s, en, road));
                 checkedRegions++;
             }
             Assert.GreaterOrEqual(checkedRegions, 1, "at least region C ships a routing graph");

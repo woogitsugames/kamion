@@ -812,3 +812,45 @@ overrides:
       edges with P-23 bicycle symbols on both sides and no red crossing carpet.
     confidence: high
     verify: none
+  # ---------------------------------------------------------------- ADR 0216b: LED heads on the city LED tender streets
+  - id: lamp-policy-led-tender-0216b
+    kind: lamp_policy
+    family: led
+    cct_k: 4000
+    # every roads.graph way named like a street of the awarded LED contract (lot II); the generator changes only the
+    # older side-street poles (sodium head -> flat LED head, same pole and position) on these ways
+    target: {osm_way: [13960984, 25447110, 107761797, 107761798, 142912580, 203121432, 206333509, 236885858, 236885859,
+                       236885860, 258564444, 258564446, 258564447, 258564448, 258564452, 275237226, 275237230, 275237231,
+                       275237232, 275237234, 275237242, 275244659, 275253388, 275255319, 275255320, 275256822, 279876738,
+                       279881972, 335052157, 335052159, 353943956, 353943959, 443103344, 529725120, 532805223, 532805224,
+                       538810157, 552379030, 553322811, 553322812, 553323253, 553323254, 609748642, 609748643, 616184917,
+                       616184918, 616184920, 616184922, 616185295, 631663133, 671082727, 671082729, 691820489, 691820490,
+                       691820491, 691820492, 977514047, 977514050, 1363833563, 1540798842, 1563021884, 1564083903,
+                       1564083904, 1564109694]}
+    streets:   # OSM name -> item of TED 769998-2024 (contract award, 2024-12-17)
+      Myśliwska: "14) na ul. Myśliwskiej"
+      Sępia: "15) na ul. Sępiej"
+      Kormoranów: "16) na ul. Kormoranów"
+      Adama Mickiewicza: "18) na ul. A.Mickiewicza"
+      Franciszka Karpińskiego: "19) na ul. F. Karpińskiego"
+      Jacka Kuronia: "22) na ul. J. Kuronia"
+      Dywizjonu 303: "23) na ul. Dywizjonu 303"
+      Spadochroniarzy: "24) na ul. Spadochroniarzy"
+      Pułkownika Czesława Hake: "25) na ul. Cz.Hake"
+      Konstantego Ciołkowskiego: "28) na ul. K. Ciołkowskiego"
+    unverified_streets: [Borsucza, Grabowa, Jaskółcza, Krecia, Królicza, Praw Kobiet, Szpacza, Wiewiórcza, Zajęcza,
+                         Żurawia, "(unnamed living_street / service)"]
+    sources: ["https://ted.europa.eu/pl/notice/-/detail/769998-2024", "https://ted.europa.eu/pl/notice/-/detail/122818-2024",
+              "https://miastobialystok.ezamawiajacy.pl/pn/miastobialystok/demand/notice/public/122716/details (ZDM-VII.7021.1.7.2024 s. 1 pkt 2a: 4000 K)",
+              "research/led-tenders-0216b/ted_notices.json", "research/night-lamps-s21/README.md section 4"]
+    reason: >-
+      City of Bialystok LED tender lot II (TED contract notice 122818-2024, contract award 769998-2024 of 2024-12-17):
+      "dostawa i montaz energooszczednych opraw ledowych" on 31 streets, among them the Dojlidy streets listed above;
+      ZDM technical conditions of the same procedure (platform notice 122716) require 4000 K (K69 section 4). The
+      older side-street poles of these streets keep their shape and position and get the flat LED head of ADR 0216.
+      Streets in `unverified_streets` are in no LED notice of the city (TED search 2022-2026) and OSM has no lamp
+      tags here (0 street_lamp nodes in the tile): their sodium head stays, type UNVERIFIED. The notice names the
+      street, not the section or the installation date: installed state 2026 UNVERIFIED (no night photo after the
+      replacement).
+    confidence: medium
+    verify: owner - night photo of Mickiewicza / Kormoranow (LED or sodium) and of one unlisted street (Zurawia, Krecia)

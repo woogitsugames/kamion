@@ -18,3 +18,5 @@
 *.pbf filter=lfs diff=lfs merge=lfs -text
 *.glb filter=lfs diff=lfs merge=lfs -text
 docs/**/*.png -filter -diff -merge binary
+# ADR 0219: PRG boundaries are hashed in their manifest; keep bytes identical on every OS (no CRLF on Windows)
+Data/Admin/*.geojson -text
