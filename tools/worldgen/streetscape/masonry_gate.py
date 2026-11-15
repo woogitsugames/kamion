@@ -46,7 +46,7 @@ BRICK_BELOW_M = 0.25          # the band starts this far under the ground line (
 COPING_ROWS = (340, 372)      # rowlock course, 8.0 m x 0.25 m
 CONC_RECT = (0, 380, 512, 520)        # grey concrete (caps, platform), 4.0 m x 1.1 m
 WHITE_RECT = (512, 380, 1024, 520)    # painted concrete (canopy)
-FACE_PX_M = 256.0
+FACE_PX_M = 200.0
 SILICATE = (168, 163, 150)    # sand-lime brick, weathered (sRGB, read off the CC0 photo P11-129; WORKING_VALUE)
 MORTAR = (118, 115, 108)
 PLAQUE_RED = (122, 28, 40)
@@ -185,30 +185,24 @@ def text_board(w, h, header, lines, bg, header_fill, fill, italic_gap=0.0):
 
 
 def info_board(w, h):
-    """Blue information board of an admissions desk: white pictogram tile (letter H, no protected emblem), a yellow
-    header and lines of small neutral text (not legible from the drive)."""
+    """Blue information board of an admissions desk: yellow header and lines of small neutral text (not legible from the
+    drive), matching the blue board on its white post in P11-129."""
     im = Image.new("RGB", (w, h), INFO_BLUE)
     d = ImageDraw.Draw(im)
     d.rectangle([1, 1, w - 2, h - 2], outline=(230, 230, 230), width=2)
-    s = int(w * 0.26)
-    x0, y0 = int(w * 0.08), int(h * 0.06)
-    d.rounded_rectangle([x0, y0, x0 + s, y0 + s], radius=4, fill=(240, 240, 238))
-    t = max(3, s // 6)
-    d.rectangle([x0 + s * 0.22, y0 + s * 0.18, x0 + s * 0.22 + t, y0 + s * 0.82], fill=INFO_BLUE)
-    d.rectangle([x0 + s * 0.78 - t, y0 + s * 0.18, x0 + s * 0.78, y0 + s * 0.82], fill=INFO_BLUE)
-    d.rectangle([x0 + s * 0.22, y0 + s * 0.5 - t / 2, x0 + s * 0.78, y0 + s * 0.5 + t / 2], fill=INFO_BLUE)
     yel = (246, 214, 40)
-    f = _font(h * 0.085)
+    f = _font(h * 0.105)
     for k, t_ in enumerate(("IZBA", "PRZYJĘĆ")):
-        d.text((x0 + s + w * 0.06, y0 + k * h * 0.10), t_, font=f, fill=yel)
-    fs = _font(h * 0.045)
-    y = y0 + s + h * 0.05
+        bb = d.textbbox((0, 0), t_, font=f)
+        d.text(((w - bb[2]) / 2, h * (0.10 + k * 0.12)), t_, font=f, fill=yel)
+    fs = _font(h * 0.048)
+    y = h * 0.38
     for k, t_ in enumerate(("wejście od strony", "budynku głównego", "", "rejestracja", "całodobowo", "",
                             "informacja", "w portierni")):
         if t_:
             bb = d.textbbox((0, 0), t_, font=fs)
             d.text(((w - bb[2]) / 2, y), t_, font=fs, fill=(236, 240, 244) if k % 3 else yel)
-        y += h * 0.075
+        y += h * 0.072
     return im
 
 
@@ -250,12 +244,12 @@ BOARDS = {
     "entry_rules": lambda w, h: text_board(w, h, "WJAZD NA PODSTAWIE", ["- przepustki", "- skierowania", "- biletu"],
                                            BOARD_BLUE, (236, 238, 242), (236, 238, 242)),
     "admissions": lambda w, h: info_board(w, h),
-    "fee": lambda w, h: text_board(w, h, "OPŁATA", ["ZA WJAZD"], BOARD_BLUE, (236, 238, 242), (236, 238, 242)),
+    "fee": lambda w, h: text_board(w, h, "OPŁATA", ["ZA WJAZD", "3 zł"], BOARD_BLUE, (236, 238, 242), (236, 238, 242)),
 }
 PLAQUE_TEXTS = [("SZPITAL", "Oddział I"), ("SZPITAL", "Oddział II"), ("SZPITAL", "Poradnie"), ("SZPITAL", "Pracownie"),
                 ("SZPITAL", "Administracja"), ("SZPITAL", "Apteka")]
 SWATCH = {"galv": (146, 149, 150), "roof": (58, 60, 62), "back": SG.GREY_BACK, "white": (226, 226, 220),
-          "glass": (214, 208, 180), "green": (52, 92, 66)}
+          "glass": (214, 208, 180), "green": (52, 92, 66), "boom_red": (188, 38, 34)}
 
 
 class Atlas:
@@ -404,7 +398,7 @@ class Kit:
         self._col("collision_building", *_col_ring(ring, z1))
         return ring
 
-    def wall(self, P, h, thick, coping):
+    def wall(self, P, h, thick, coping, concrete_coping=False):
         P = [np.asarray(p, float) for p in P]
         for a, b in zip(P[:-1], P[1:]):
             L = float(np.hypot(*(b - a)))
@@ -418,11 +412,15 @@ class Kit:
                 self.base([s0, s1])                       # the wall steps with the ground, courses stay level
                 self.wall_face(s0 + n, s1 + n, -BRICK_BELOW_M + 0.05, h)        # right face
                 self.wall_face(s1 - n, s0 - n, -BRICK_BELOW_M + 0.05, h)        # left face
-                # coping: rowlock course 2 cm proud on both sides
+                # coping: 2 cm proud on both sides (flat precast concrete or rowlock brick)
                 nn = n * (1 + 0.04 / thick)
-                x0 = int(self.rng.integers(0, ATLAS - int(L / k * BRICK_PX_M) - 1))
-                rc = (x0, COPING_ROWS[0], x0 + int(L / k * BRICK_PX_M), COPING_ROWS[1])
-                rs = (x0, COPING_ROWS[0], x0 + int(L / k * BRICK_PX_M), COPING_ROWS[0] + 15)
+                if concrete_coping:
+                    rc = self.conc_rect(L / k, thick + 0.04)
+                    rs = self.conc_rect(L / k, coping)
+                else:
+                    x0 = int(self.rng.integers(0, ATLAS - int(L / k * BRICK_PX_M) - 1))
+                    rc = (x0, COPING_ROWS[0], x0 + int(L / k * BRICK_PX_M), COPING_ROWS[1])
+                    rs = (x0, COPING_ROWS[0], x0 + int(L / k * BRICK_PX_M), COPING_ROWS[0] + 15)
                 self.rect_side(s0 + nn, s1 + nn, h, h + coping, rs)
                 self.rect_side(s1 - nn, s0 - nn, h, h + coping, rs)
                 self.rect_top([s0 + nn, s1 + nn, s1 - nn, s0 - nn], h + coping, rc)
@@ -546,6 +544,19 @@ def fence_cut(kits):
     return out
 
 
+def conifers(kits):
+    """Columnar thuja entries for streetscape.plantings.garden_trees."""
+    out = []
+    for k in kits:
+        fr = k["frame"]
+        for i, c in enumerate(k["spec"].get("conifers", [])):
+            en = fr.en(c["at_la"])
+            out.append({"p": [float(en[0]), float(en[1])], "r": float(c.get("r_m", 0.9)),
+                        "key": f"{k['key']}:c{i}", "plot": k["id"], "kind": "conifer",
+                        "columnar": True, "h_m": float(c.get("h_m", 8.5)), "authored": True, "in_plot": True})
+    return out
+
+
 def build_kit(k, zrel=None):
     """(lod0, lod1, collision, atlas image, tris) of one planned kit; vertices relative to the anchor, x east, y north."""
     o, fr = k["spec"], k["frame"]
@@ -554,7 +565,7 @@ def build_kit(k, zrel=None):
     along = fr.right                                                     # the gate line
     for w in o.get("walls", []):
         h, th, cop = float(w.get("height_m", 1.75)), float(w.get("thick_m", 0.25)), float(w.get("coping_m", 0.12))
-        kit.wall([rel(p) for p in w["line_la"]], h, th, cop)
+        kit.wall([rel(p) for p in w["line_la"]], h, th, cop, bool(w.get("coping_concrete", False)))
         ps, ph = float(w.get("pillar_m", 0.38)), float(w.get("pillar_h_m", h + cop + 0.12))
         P = [rel(p) for p in w["line_la"]]
         for p in w.get("pillars_la", []):
@@ -586,8 +597,10 @@ def build_kit(k, zrel=None):
             pw, phh = pq.get("size_m", [0.70, 0.28])
             cols, count = int(pq.get("cols", 2)), int(pq.get("count", 5))
             texts = pq.get("texts") or PLAQUE_TEXTS
-            for i in range(count):
-                r_, c_ = divmod(i, cols)
+            # P11-129: 5 plaques in 2 columns = 2 in the left column + 3 in the right column (next to the end pillar)
+            slots = [(0, 0), (0, 1), (1, 0), (1, 1), (2, 1)] if (count == 5 and cols == 2) else [
+                divmod(i, cols) for i in range(count)]
+            for i, (r_, c_) in enumerate(slots):
                 im = plaque(int(pw * FACE_PX_M), int(phh * FACE_PX_M), texts[i % len(texts)], f"{k['key']}:{i}")
                 rect = kit.atlas.put(im)
                 cc = c0 + right * ((c_ - (cols - 1) / 2) * (pw + 0.03))
@@ -636,9 +649,10 @@ def build_kit(k, zrel=None):
         kit.panel(rel(b["at_la"]), fr.facing(b), float(w_), float(h_), float(b["z_m"]), rect)
     for p in o.get("posts", []):
         c = rel(p["at_la"])
+        kit.base([c])
         hp = float(p.get("height_m", 3.0))
         r = float(p.get("d_m", 0.076)) / 2
-        kit.tube(c, -0.05, hp, r, "galv")
+        kit.tube(c, -0.05, hp, r, p.get("color", "galv"))
         kit.col.tube("collision_steel", [c[0], c[1], kit.dz], [c[0], c[1], kit.dz + min(hp, 2.6)], 0.05, None, 4)
         if p.get("lantern"):                             # park lantern: opal bowl under a flat hood
             kit.tube(c, hp, hp + 0.30, 0.13, "glass", seg=8)
@@ -646,6 +660,10 @@ def build_kit(k, zrel=None):
         f = fr.facing(p)
         for s in p.get("faces", []):
             kit.face(c + f * r, f, s["face"], float(s.get("size_m", 0.6)), float(s["z_m"]), fade=float(s.get("fade", 0.0)))
+        for b in p.get("boards", []):
+            w_, h_ = b["size_m"]
+            rect = kit.atlas.put(BOARDS[b["board"]](int(w_ * FACE_PX_M), int(h_ * FACE_PX_M)))
+            kit.panel(c + f * r, f, float(w_), float(h_), float(b["z_m"]), rect)
         pt = p.get("plate")
         if pt:
             w_, h_ = pt.get("size_m", [0.40, 0.14])
@@ -655,6 +673,36 @@ def build_kit(k, zrel=None):
             z = float(pt["z_m"])
             kit.flat([a[0], a[1], z - h_ / 2], [b[0], b[1], z - h_ / 2], [b[0], b[1], z + h_ / 2], [a[0], a[1], z + h_ / 2],
                      "white")
+    bm = o.get("boom")
+    if bm and bm.get("own_mesh", True):
+        c = rel(bm["at_la"])
+        kit.base([c])
+        d = fr.right * (-1.0 if bm.get("toward", "left") == "left" else 1.0)
+        hr = kit.box_ring(c, d, 0.17, 0.17)
+        kit.prism(hr, -0.05, 1.05,
+                  lambda a, b, za, zb: kit.flat([a[0], a[1], za], [b[0], b[1], za], [b[0], b[1], zb], [a[0], a[1], zb],
+                                                "boom_red"),
+                  lambda r_, z: kit.flat(*[[p[0], p[1], z] for p in r_], "boom_red"))
+        kit._col("collision_steel", *_col_ring(hr, 1.05))
+        arm_len = float(bm.get("length_m", 5.2))
+        seg_l = 0.50
+        n_seg = max(1, int(round(arm_len / seg_l)))
+        step = arm_len / n_seg
+        for i in range(n_seg):
+            mat = "white" if i % 2 == 0 else "boom_red"
+            sc = c + d * (0.17 + (i + 0.5) * step)
+            sr = kit.box_ring(sc, d, step / 2, 0.028)
+            kit.prism(sr, 0.91, 0.99,
+                      lambda a, b, za, zb, m=mat: kit.flat([a[0], a[1], za], [b[0], b[1], za], [b[0], b[1], zb],
+                                                           [a[0], a[1], zb], m),
+                      lambda r_, z, m=mat: kit.flat(*[[p[0], p[1], z] for p in r_], m), bottom=True)
+        fw, fh = 0.58, 0.30
+        rect = kit.atlas.put(BOARDS["fee"](int(fw * FACE_PX_M), int(fh * FACE_PX_M)))
+        kit.panel(c + d * (0.17 + arm_len * 0.44), fr.out, fw, fh, 0.76, rect, proud=0.03)
+    for ch in o.get("chimneys", []):
+        c = rel(ch["at_la"])
+        kit.base([c])
+        kit.tube(c, -0.2, float(ch.get("height_m", 24.0)), float(ch.get("r_m", 0.36)), ch.get("mat", "white"), seg=8)
     k["levels"] = (min(kit.levels), max(kit.levels))
     return (*kit.meshes(), kit.atlas.im, kit.tris)
 
@@ -714,8 +762,9 @@ def build(pl, kits, boards, report, carriage=None):
                                                   math.hypot(it["e"] - fr.o[0], it["n"] - fr.o[1]) < rr)]
             replaced = len(pl.items) - len(keep)
             pl.items[:] = keep
-            d = fr.right * (-1.0 if bm.get("toward", "left") == "left" else 1.0)     # prototype +x = along the boom
-            pl.add("lift_gate", fr.en(bm["at_la"]), math.atan2(d[1], d[0]), src=f"override:{k['id']}:boom")
+            if not bm.get("own_mesh", True):
+                d = fr.right * (-1.0 if bm.get("toward", "left") == "left" else 1.0)     # prototype +x = along the boom
+                pl.add("lift_gate", fr.en(bm["at_la"]), math.atan2(d[1], d[0]), src=f"override:{k['id']}:boom")
         rep["kits"].append({"id": k["id"], "proto": proto, "anchor": [round(float(v), 1) for v in fr.o],
                             "z": round(z, 2), "levels_m": [round(float(v), 2) for v in k["levels"]], "tris": int(tris),
                             "wall_m": round(float(sum(np.hypot(*np.diff(ln, axis=0).T).sum() for ln in k["wall_lines"])), 1),

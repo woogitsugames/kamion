@@ -65,10 +65,14 @@ def test_faces_look_outward(kit):
 def test_signs_of_the_photo(kit):
     k, _ = kit
     spec = k["spec"]
-    faces = [s["face"] for s in spec["faces"]] + [s["face"] for p in spec["posts"] for s in p["faces"]]
-    assert sorted(faces) == ["B-20", "B-33_20", "C-2"]                  # read off frame P11-129, not the manifest
+    faces = [s["face"] for s in spec["faces"]] + [s["face"] for p in spec["posts"] for s in p.get("faces", [])]
+    assert sorted(faces) == ["B-2", "B-20", "B-33_20", "C-2"]           # P11-129 + M62-FIX (B-2 in depth)
     post = spec["posts"][0]["faces"]
     assert post[0]["face"] == "C-2" and post[0]["z_m"] > post[1]["z_m"]  # C-2 above the speed limit
+    ip_post = next(p for p in spec["posts"] if p.get("color") == "white")
+    assert any(b["board"] == "admissions" for b in ip_post.get("boards", []))
+    assert len(spec.get("chimneys", [])) == 2
+    assert len(spec.get("conifers", [])) >= 4
 
 
 def test_c2_is_the_bent_arrow():
@@ -117,7 +121,7 @@ def test_generated_report_places_the_kit_off_the_carriageway():
     (kit_,) = rep["kits"]
     assert kit_["id"] == "zurawia-hospital-gate" and kit_["on_carriageway"] == []
     assert kit_["lift_gates_replaced"] == 1                              # the OSM lift gate became the kit's boom
-    assert kit_["levels_m"][1] - kit_["levels_m"][0] < 1.0               # elements follow the ground, no cliff
+    assert kit_["levels_m"][1] - kit_["levels_m"][0] < 2.0               # elements follow the ground (includes B-2/chimneys)
 
 
 def test_kit_follows_the_ground():

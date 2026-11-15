@@ -145,102 +145,124 @@ overrides:
       (the reference region C keeps its output byte for byte).
     confidence: high
     verify: none
-  # ---------------------------------------------------------------- hospital gate, Żurawia 14 (photo P11-129, ADR 0189)
+  # ---------------------------------------------------------------- hospital gate, Żurawia 14 (photo P11-129, ADR 0189, r4 / M62-FIX)
   - id: zurawia-hospital-gate
     kind: masonry_gate
     anchor: {at_en: [327.1, 808.4], enter_bearing_deg: 242.0, osm_node_tag: "barrier=lift_gate"}
     reason: >-
-      CC0 photo P11-129 (Rakoon, Commons, 2019-11-10; read at 1600 px, signs from the frame itself, not from the P11
-      manifest): the drive into the hospital grounds passes between (left) a grey sand-lime brick wall with square
-      pillars under concrete caps and a block of five dark red enamel name plates next to the gate pillar, and
-      (right) a brick porch - a wide pier with two short piers on it and slender piers under a flat white concrete
-      canopy with a dark sheet roof, on a concrete step. On the wide pier: a sun-faded B-20 STOP and a blue board
-      (white text) under it; on a lamp post beside it C-2 (bent arrow = right turn after the sign) over B-33 "20"
-      and a small white plate; between the slender piers a blue admissions board with a yellow header. The boom of
-      the lift gate (OSM node, rule prototype) stays where OSM has it. Plate and board texts are neutral words - no
-      name or emblem of the real institution (CLAUDE.md rule 8). Position: gate frame on the generated drive
-      (OSM ways 883955523 / 73881452, bearing 242 deg at the lift_gate node). Left wall end = end of the OSM
-      barrier way (local 328.5 805.4) and of the wall line on the GUGiK HighResolution orthophoto (328.3 806.8);
-      its first 4 m are kept straight along the gate line as on the photo (two bays seen frontally), the OSM way
-      curves 1-1.5 m earlier. The porch stands 3.4 m toward the street: in the data the drive runs 20 deg off the
-      real axis, which puts the real porch position inside the BDOT10k outline of the gatehouse (bdot:8243ac9d).
-      Sizes from the photo, WORKING_VALUE (UNVERIFIED until research task M62): wall 23 courses = 1.75 m + rowlock
-      coping, pillars 0.38 m at ~2 m, wide pier 1.5 x 0.5 x 1.95 m, canopy underside 2.55 m, STOP 0.8 m, discs 0.6 m.
+      CC0 photo P11-129 (Rakoon, Commons, 2019-11-10) and M62-FIX (research/mistral/p19-hospital-gate/): drive into
+      the hospital grounds (~242 deg in EPSG:2180 from Zurawia, ~16.4 m E/NE). Left (SE): light sand-lime brick wall
+      limited to the ~6 m visible in F01 (no full wall along the rest of fence 883955509, WORKING_VALUE), 1.85 m +
+      0.06 m flat concrete coping, single end pillar (2.12 m + cap, no canopy), 5 horizontal burgundy plaques (2 + 3).
+      Right (N): two light-brick piers under a shared dark trapezoidal sheet canopy on a white concrete beam (~2.65 m
+      underside); B-20 STOP + blue entry-rules board on the wide pier; blue admissions (IP) board on its own white
+      post in front of the right pier. Red boom housing + red-white boom arm with blue "OPLATA ZA WJAZD 3 zl" plate;
+      sign post with lantern, C-2 above B-33 "20" and small plate; B-2 on its own post ~24 m behind the gate; two
+      slender boiler-house chimneys in the background; columnar thujas behind the left wall. Neutral texts only.
     confidence: medium
-    verify: research task M62 (wall material and extent, pillar spacing, porch plan, sign sizes); owner photo session
+    verify: owner photo session (3 sides, M62 gap); B-2 distance and sign sizes WORKING_VALUE
     fence_cut_m: 1.5
     walls:
-      - line_la: [[-3.6, 0.0], [-7.7, 0.3], [-9.3, 1.6], [-10.1, 3.6], [-10.3, 4.4], [-17.1, 4.2]]
-        height_m: 1.75
+      - line_la: [[-3.6, 0.0], [-7.7, 0.3], [-9.3, 1.6]]
+        height_m: 1.85
         thick_m: 0.25
-        coping_m: 0.12
-        pillar_m: 0.38
-        pillars_la: [[-3.6, 0.0], [-5.65, 0.15], [-7.7, 0.3], [-10.3, 4.4], [-13.7, 4.3], [-17.1, 4.2]]
-        plaques: {at_la: [-4.62, 0.08], cols: 2, count: 5, size_m: [0.70, 0.28], z_m: 1.47}
+        coping_m: 0.06
+        coping_concrete: true
+        pillar_m: 0.42
+        pillar_h_m: 2.12
+        pillars_la: [[-3.6, 0.0]]
+        plaques: {at_la: [-4.62, 0.08], cols: 2, count: 5, size_m: [0.65, 0.26], z_m: 1.62}
     piers:
-      - {at_la: [4.45, 3.4], size_m: [1.5, 0.5], height_m: 1.95, cap: true}
-      - {at_la: [3.9, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 2.02}
-      - {at_la: [4.85, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 2.02}
-      - {at_la: [6.6, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 0.2}
-      - {at_la: [7.9, 3.4], size_m: [0.38, 0.38], height_m: 2.55, z0_m: 0.2}
-    platform: {rect_la: [3.62, 2.3, 8.3, 4.5], height_m: 0.22}
-    canopy: {rect_la: [3.6, 2.2, 8.3, 4.2], z_m: 2.55, thick_m: 0.2}
+      - {at_la: [4.45, 3.4], size_m: [1.5, 0.5], height_m: 2.00, cap: true}
+      - {at_la: [3.9, 3.4], size_m: [0.38, 0.38], height_m: 2.65, z0_m: 2.07}
+      - {at_la: [4.85, 3.4], size_m: [0.38, 0.38], height_m: 2.65, z0_m: 2.07}
+      - {at_la: [6.4, 3.4], size_m: [0.38, 0.38], height_m: 2.65, z0_m: 0.2}
+    platform: {rect_la: [3.62, 2.3, 6.9, 4.5], height_m: 0.22}
+    canopy: {rect_la: [3.6, 2.2, 7.0, 4.2], z_m: 2.65, thick_m: 0.20}
     faces:
-      - {face: B-20, at_la: [4.5, 3.65], z_m: 1.72, size_m: 0.8, fade: 0.8}
+      - {face: B-20, at_la: [4.5, 3.65], z_m: 1.78, size_m: 0.8, fade: 0.8}
     boards:
-      - {board: entry_rules, at_la: [4.5, 3.66], z_m: 1.02, size_m: [0.8, 0.42]}
-      - {board: admissions, at_la: [7.25, 3.45], z_m: 1.6, size_m: [0.75, 0.95]}
+      - {board: entry_rules, at_la: [4.5, 3.66], z_m: 1.05, size_m: [0.80, 0.45]}
     posts:
-      - at_la: [3.3, 2.7]
-        height_m: 3.9
+      - at_la: [3.3, 2.5]
+        height_m: 3.4
         lantern: true
-        faces: [{face: C-2, z_m: 2.62, size_m: 0.6}, {face: B-33_20, z_m: 1.98, size_m: 0.6}]
-        plate: {z_m: 1.55, size_m: [0.42, 0.14]}
-    boom: {at_la: [3.35, -0.8], toward: left, replace_radius_m: 8.0}
-  - id: zurawia-hospital-gate-greenery
-    kind: tree_groups
-    lines:
-      - {line_epsg2180: [[780369.9, 590879.3], [780373.6, 590872.3]]}
-    group_size: [3, 3]
-    in_group_m: [3.0, 3.8]
-    gap_m: [0.5, 1.0]      # short line: a clump starts within gap_max / 2 of its beginning
-    depth_m: 1.5
-    rows_replace_m: 0.0
-    species: {linden: 0.5, maple: 0.5}
-    reason: >-
-      Photo P11-129: behind the wall left of the gate stands a dense dark mass of tall conifers (thuja, 8-10 m) and
-      shrubs that hides the three-storey ward block; without it the generated frame is dominated by that block
-      (render r1, ADR 0189). The region has no thuja / spruce tree prototype (HEIGHT: pine, birch, alder, maple,
-      linden, shrub), so the screen is the nearest existing plants: tall shrubs right behind the wall and a clump
-      of broadleaf trees behind them (the HighResolution orthophoto shows tree crowns at local 328-340 780-800).
-      Species WORKING_VALUE; replace by columnar conifers when a prototype exists.
-    confidence: low
-    verify: conifer prototype (thuja / spruce); research task M62
+        faces: [{face: C-2, z_m: 2.80, size_m: 0.6}, {face: B-33_20, z_m: 2.00, size_m: 0.6}]
+        plate: {z_m: 1.50, size_m: [0.42, 0.14]}
+      - at_la: [5.85, 3.85]
+        height_m: 2.55
+        d_m: 0.06
+        color: white
+        boards: [{board: admissions, z_m: 1.80, size_m: [0.80, 1.00]}]
+      - at_la: [-1.8, -24.0]
+        height_m: 2.45
+        d_m: 0.076
+        faces: [{face: B-2, z_m: 2.10, size_m: 0.6}]
+    boom: {at_la: [3.35, 1.8], toward: left, length_m: 5.2, replace_radius_m: 8.0, own_mesh: true}
+    chimneys:
+      - {at_la: [1.8, -56.0], height_m: 24.0, r_m: 0.38}
+      - {at_la: [0.4, -57.5], height_m: 24.0, r_m: 0.38}
+    conifers:
+      - {at_la: [-4.6, -1.8], h_m: 8.0, r_m: 1.0}
+      - {at_la: [-6.2, -1.6], h_m: 8.6, r_m: 1.0}
+      - {at_la: [-7.8, -1.4], h_m: 9.0, r_m: 1.0}
+      - {at_la: [-9.4, -1.2], h_m: 9.4, r_m: 1.0}
+      - {at_la: [-2.6, -16.0], h_m: 9.5, r_m: 0.9}
   - id: zurawia-hospital-gate-shrubs
     kind: tree_groups
     lines:
       - {line_epsg2180: [[780370.6, 590882.6], [780377.0, 590877.5]]}
-    group_size: [5, 6]
+    group_size: [4, 5]
     in_group_m: [1.5, 1.9]
-    gap_m: [0.5, 1.0]      # short line: a clump starts within gap_max / 2 of its beginning
+    gap_m: [0.5, 1.0]
     depth_m: 0.8
     rows_replace_m: 0.0
     species: {shrub: 1.0}
     reason: >-
-      Tall shrubs right behind the wall of the hospital gate, the lower part of the green screen described in
-      zurawia-hospital-gate-greenery (photo P11-129). WORKING_VALUE.
+      Low shrubs behind the left wall of the hospital gate (photo P11-129). WORKING_VALUE.
     confidence: low
-    verify: conifer prototype (thuja / spruce); research task M62
+    verify: M62 gap
   - id: zurawia-gatehouse
     target: {building: "bdot:8243ac9d-5800-466d-861f-c4aad27247c5"}
     reason: >-
-      Gatehouse of the hospital gate (BDOT10k "budynek gospodarczy", LoD1 3.33 m, 37 m2). The rule made it a shed:
-      a blank beige box right behind the porch (REVIEW s19 0179: "pusty bezowy prostopadloscian bez otworow -
-      placeholder"). A gatehouse has a door and windows; grey render separates it from the white canopy of the
-      porch. Facade not visible on photo P11-129 (WORKING_VALUE).
+      Gatehouse of the hospital gate (BDOT10k, LoD1 3.33 m, 37 m2). WORKING_VALUE.
     confidence: low
-    verify: research task M62; owner photo session
+    verify: owner photo session
     set: {typology: office, wall_material: plaster_grey, bands: false}
+  - id: zurawia-hospital-ward-low
+    target: {building: "bdot:2BE4B431-AAE9-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      P11-129 (2019) and M62-FIX P19-057: background buildings behind the gate are low 1-2 storey beige/yellow
+      hospital buildings, not a 4-storey grey block (BDOT10k 2024 has the newer 13.14 m ward block). Lowered to 2
+      storeys beige so the P11-129 skyline reads as low hospital buildings + 2 slender chimneys. WORKING_VALUE.
+    confidence: medium
+    verify: owner photo session
+    set: {typology: office, height_m: 6.2, storeys: 2, wall_material: plaster_beige, bands: false}
+  - id: zurawia-hospital-bg-yellow
+    kind: building_part
+    name: low yellow service building behind the hospital gate (P11-129, M62-FIX P19-058)
+    polygon_en: [[294.8, 783.9], [291.5, 790.1], [299.5, 794.3], [302.8, 788.1]]
+    height_m: 4.2
+    storeys: 1
+    function: gospodarczy
+    reason: >-
+      M62-FIX P19-058 (OSM way 883955525, ~31 m behind the gate): low single-storey yellow/cream service buildings
+      with flat roofs seen behind the boom and B-2 in P11-129. WORKING_VALUE.
+    confidence: medium
+    verify: owner photo session
+    set: {typology: office, wall_material: plaster_yellow, bands: false}
+  - id: zurawia-hospital-bg-cream
+    kind: building_part
+    name: low cream service building behind the hospital gate (P11-129, M62-FIX P19-058)
+    polygon_en: [[292.4, 790.5], [288.9, 797.2], [296.4, 801.1], [299.9, 794.5]]
+    height_m: 4.0
+    storeys: 1
+    function: gospodarczy
+    reason: >-
+      M62-FIX P19-058: adjoining single-storey cream building behind B-2 in P11-129. WORKING_VALUE.
+    confidence: medium
+    verify: owner photo session
+    set: {typology: office, wall_material: plaster_beige, bands: false}
   - id: mickiewicza-kuronia-chain-posts-p11-063
     kind: chain_bollards
     line_epsg2180: [[780013.35, 590461.80], [780018.27, 590448.69]]

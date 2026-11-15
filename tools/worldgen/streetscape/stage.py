@@ -305,6 +305,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         dd, _ = kd.query(np.array([[t_["e"], t_["n"]] for t_ in ptrees]))
         ptrees = [t_ for t_, d_ in zip(ptrees, dd) if d_ >= 2.5]
     if gardens_0163:
+        mg_conifers = MG.conifers(mg_kits)
+        if mg_conifers:
+            plot_plan.setdefault("garden_trees", []).extend(mg_conifers)
         PT.garden_trees(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2, region_trees=trees)
         log("garden trees", {k: v for k, v in rep["garden_trees"].items() if k not in ("list", "conifers")})
         ptrees = VG.garden_canopies(ptrees, plot_plan, rep)
