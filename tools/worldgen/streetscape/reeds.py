@@ -1,0 +1,247 @@
+"""Bank vegetation geometry of the opt-in water stage (ADR 0213): reed / tall-herb belt ribbons and willow / alder
+shrub instances along the shore, placed from Data/Regions/<id>/water_banks.json (streetscape.water_banks, orthophoto).
+
+Reed belt. Common reed (Phragmites australis), reed canary grass, sedges and nettle stand along the Supraśl / Biała in a
+belt 2-25 m wide (orthophoto 2024-05-27). Built as ROWS of alpha-clip ribbons that follow the shore (not crossed
+cards per tuft): a ribbon is 2 triangles per SEG_M along the bank, with a zig-zag in plan (volume from oblique views)
+and a height noise along it; the texture (`water_reeds`, drawn here, no photo) tiles in u and carries the ragged top,
+the stems and leaves and a few panicles. Row 0 stands just inside the water line (its foot hidden by the opaque sheet),
+the rows behind it are lower (sedge / tall herbs). High: up to ROWS_HIGH rows, Low / Medium: ROWS_LOW rows with
+twice the segment length - same rows, fewer triangles. Material `water_reeds` (Kamion/World PlotKit: two-sided foliage
+lit by COLOR_0 normals, occlusion at the foot). Layer `banks` / `banks_low`: chunk LOD0 / LOD1 only, no shadows.
+
+Shrubs. Woody crowns of the orthophoto within 18 m of the water (outside forests) -> instances of the existing
+procedural prototypes: crowns r < 2.2 m -> `tree_shrub` (grey / purple willow scrub, 2-4 m), larger -> `tree_alder`
+(black alder: the riparian tree of the Podlasie lowland rivers). Never closer than 2.5 m to a tree the region already
+has, never on a road / building / paved keep-out. Seeded per position (sha1), so nothing else in the region shifts.
+All dimensions WORKING_VALUE (no field survey; orthophoto + general botany of Podlasie river valleys).
+"""
+from __future__ import annotations
+
+import hashlib
+import math
+
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter
+
+TEX_W, TEX_H = 1024, 512           # final texture px (u tiles)
+TEX_M = 4.0                        # metres of bank one texture width stands for
+SEG_M = 2.0                        # ribbon segment along the bank (High); Low: 2 x
+ROWS_HIGH = 3
+ROWS_LOW = 2
+ROW_GAP_M = 1.7                    # distance between rows (outward)
+ROW0_D_M = -0.35                   # row 0 stands in the water margin (foot under the sheet)
+HEIGHT_M = (2.3, 1.75, 1.45)       # mean top height of row 0 / 1 / 2+ (reed at the water, sedge / herbs behind)
+ZIGZAG_M = 0.28
+LEAN_M = 0.12
+SHRUB_MAX_R = 2.2
+TREE_KEEP_M = 2.5
+
+
+def _h(*key):
+    return int(hashlib.sha1(":".join(str(k) for k in key).encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+
+
+# ------------------------------------------------------------------------------------------------ texture
+def texture(seed=213):
+    """RGBA sRGB, TEX_W x TEX_H, tiles in u; v = 0 at the image bottom is the foot of the belt."""
+    S = 2
+    W, H = TEX_W * S, TEX_H * S
+    rng = np.random.default_rng(seed)
+    im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    px_m = W / TEX_M
+    # palette (sRGB): fresh reed leaf, blue-green reed, olive sedge, last year's straw stems, dark base, panicle
+    fresh = np.array([88, 116, 52])
+    blue = np.array([84, 110, 76])
+    olive = np.array([104, 112, 60])
+    straw = np.array([150, 134, 92])
+    dark = np.array([42, 50, 30])
+    pan = np.array([104, 82, 70])
+
+    def col(c, k):
+        c = np.clip(c * (0.85 + 0.3 * k), 0, 255)
+        return tuple(int(x) for x in c) + (255,)
+
+    def stroke(pts, w0, w1, c):
+        for x_off in (-W, 0, W):
+            q = [(x + x_off, y) for x, y in pts]
+            n = len(q)
+            for i in range(n - 1):
+                w = w0 + (w1 - w0) * i / max(n - 2, 1)
+                d.line([q[i], q[i + 1]], fill=c, width=max(1, int(round(w))))
+
+    # dense dark base (litter, stems in shade): the belt reads as a mass, not single blades
+    for _ in range(900):
+        x = rng.uniform(0, W)
+        h = rng.uniform(0.10, 0.42) * H
+        lean = rng.normal(0, 0.10)
+        pts = [(x + lean * h * t * t, H - h * t) for t in np.linspace(0, 1, 6)]
+        stroke(pts, 5 * S, 1.2 * S, col(dark * rng.uniform(0.8, 1.4), rng.random()))
+    # stems with leaves
+    n_st = 520
+    for k in range(n_st):
+        x = rng.uniform(0, W)
+        tall = rng.random()
+        h = (0.50 + 0.48 * tall ** 0.7) * H
+        lean = rng.normal(0, 0.06)
+        dry = rng.random() < 0.22
+        base = straw if dry else (fresh, blue, olive)[int(rng.integers(0, 3))]
+        c = col(base, rng.random())
+        pts = [(x + lean * h * t * t, H - h * t) for t in np.linspace(0, 1, 8)]
+        stroke(pts, 2.4 * S, 0.9 * S, c)
+        if not dry:
+            # leaves: broad blades leaving the stem upward and arching over (Phragmites), 2-5 per stem
+            for j in range(int(rng.integers(2, 6))):
+                t0 = rng.uniform(0.25, 0.85)
+                x0, y0 = x + lean * h * t0 * t0, H - h * t0
+                side = rng.choice([-1, 1])
+                L = rng.uniform(0.10, 0.30) * H
+                ang = math.radians(rng.uniform(25, 60))
+                droop = rng.uniform(0.2, 0.9)
+                lp = []
+                for t in np.linspace(0, 1, 7):
+                    lp.append((x0 + side * math.sin(ang) * L * t,
+                               y0 - math.cos(ang) * L * t + droop * L * t * t))
+                stroke(lp, 3.2 * S, 0.8 * S, col(base * rng.uniform(0.85, 1.15), rng.random()))
+        if (not dry and tall > 0.72 and rng.random() < 0.35) or (dry and rng.random() < 0.5):
+            # panicle: a loose purple-brown (dry: grey-straw) plume at the top
+            tx, ty = pts[-1]
+            pc = straw * 1.08 if dry else pan
+            for _ in range(26):
+                a = rng.normal(0, 0.35)
+                L = rng.uniform(0.03, 0.09) * H
+                stroke([(tx, ty + rng.uniform(0, 0.05) * H),
+                        (tx + math.sin(a) * L, ty + rng.uniform(0, 0.05) * H - math.cos(a) * L * 0.6)],
+                       1.6 * S, 0.8 * S, col(pc * rng.uniform(0.8, 1.2), rng.random()))
+    im = im.resize((TEX_W, TEX_H), Image.LANCZOS)
+    a = np.asarray(im).astype(np.float32)
+    # premultiplied-style edge fix: transparent texels take the mean colour of the belt (no dark fringe in mips)
+    m = a[..., 3] > 8
+    mean = a[m][:, :3].mean(0)
+    a[~m, :3] = mean
+    # vertical darkening toward the foot (inside the belt), ~0.6 at v = 0
+    v = 1.0 - (np.arange(TEX_H) + 0.5) / TEX_H
+    a[..., :3] *= (0.62 + 0.38 * np.clip(v / 0.55, 0, 1))[:, None, None]
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
+
+
+def textures():
+    return {"water_reeds": texture()}
+
+
+# ------------------------------------------------------------------------------------------------ geometry
+def _fol(nrm, occ):
+    n = np.asarray(nrm, float)
+    n = n / max(float(np.linalg.norm(n)), 1e-9) * min(max(float(occ), 0.05), 1.0)
+    return [n[0] * 0.5 + 0.5, n[1] * 0.5 + 0.5, n[2] * 0.5 + 0.5, 1.0]
+
+
+def _runs(doc):
+    for r in doc.get("runs", []):
+        a = np.asarray(r, float).reshape(-1, 5)
+        if len(a) >= 3:
+            yield a
+
+
+def build(buf, doc, zground, zlevel, keep_out, rep, layer="banks", low=False):
+    """Reed ribbons of every belt run. zground(e, n) / zlevel(e, n): terrain and water level (nan off the water);
+    keep_out: shapely geometry (roads / paved / buildings) no ribbon vertex may enter."""
+    import shapely
+    rows_max = ROWS_LOW if low else ROWS_HIGH
+    step = 2 if low else 1                       # doc samples are SEG_M apart; Low takes every second one
+    shapely.prepare(keep_out)
+    ntri = 0
+    nrib = 0
+    for ri, a in enumerate(_runs(doc)):
+        a = a[::step] if len(a[::step]) >= 2 else a
+        P, Nm, wd = a[:, :2], a[:, 2:4], a[:, 4]
+        T_ = np.gradient(P, axis=0)
+        T_ /= np.maximum(np.linalg.norm(T_, axis=1, keepdims=True), 1e-9)
+        key0 = f"{P[0, 0]:.1f}:{P[0, 1]:.1f}"
+        for row in range(rows_max):
+            dist = ROW0_D_M + row * ROW_GAP_M
+            on = wd >= dist + 0.8 if row else wd >= 1.5
+            if on.sum() < 2:
+                continue
+            # contiguous stretches of this row
+            idx = np.nonzero(on)[0]
+            splits = np.split(idx, np.nonzero(np.diff(idx) > 1)[0] + 1)
+            for sp in splits:
+                if len(sp) < 2:
+                    continue
+                k = np.arange(len(sp))
+                jit = np.array([_h(key0, row, int(i), "z") for i in sp]) - 0.5
+                zz = np.where(k % 2 == 0, 1.0, -1.0) * ZIGZAG_M + jit * 0.25
+                Q = P[sp] + Nm[sp] * (dist + zz)[:, None] + T_[sp] * ((np.array([_h(key0, row, int(i), "t") for i in sp]) - 0.5) * 0.4)[:, None]
+                inside = shapely.contains_xy(keep_out, Q[:, 0], Q[:, 1])
+                if inside.all():
+                    continue
+                hm = HEIGHT_M[min(row, len(HEIGHT_M) - 1)]
+                hn = np.array([_h(key0, row, int(i), "h") for i in sp])
+                h = hm * (0.72 + 0.50 * hn)
+                # taper the ends of a stretch (a belt fades out, never ends in a cut wall)
+                ramp = np.minimum(np.minimum(k + 1, len(sp) - k) / 3.0, 1.0)
+                h = h * (0.35 + 0.65 * ramp)
+                h[inside] = 0.0
+                zg = np.asarray(zground(Q[:, 0], Q[:, 1]), float)
+                zl = np.asarray(zlevel(Q[:, 0], Q[:, 1]), float)
+                foot = np.where(np.isfinite(zl) & (zg < zl - 0.25), zl - 0.25, zg) - 0.12
+                top = foot + h
+                lean = -Nm[sp] * LEAN_M * (1.0 if row == 0 else -0.5)       # row 0 leans over the water
+                s = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))])
+                u0 = _h(key0, row, "u")
+                u = u0 + s / TEX_M
+                V = np.zeros((2 * len(sp), 3))
+                V[0::2, :2], V[0::2, 2] = Q, foot
+                V[1::2, :2], V[1::2, 2] = Q + lean, top
+                UV = np.zeros((2 * len(sp), 2))
+                UV[0::2, 0] = UV[1::2, 0] = u
+                UV[0::2, 1] = 0.0
+                UV[1::2, 1] = np.clip(h / 2.5, 0.05, 1.0)    # texture spans 2.5 m: lower rows use the lower part
+                nrm = np.column_stack([-Nm[sp] * 0.35, np.full(len(sp), 0.94)])
+                C = np.zeros((2 * len(sp), 4))
+                for i_ in range(len(sp)):
+                    C[2 * i_] = _fol([nrm[i_, 0], nrm[i_, 1], nrm[i_, 2]], 0.45)
+                    C[2 * i_ + 1] = _fol([nrm[i_, 0], nrm[i_, 1], nrm[i_, 2]], 1.0)
+                Tr = []
+                for i_ in range(len(sp) - 1):
+                    if h[i_] <= 0 and h[i_ + 1] <= 0:
+                        continue
+                    a_, b_, c_, d_ = 2 * i_, 2 * i_ + 2, 2 * i_ + 3, 2 * i_ + 1
+                    Tr += [(a_, b_, c_), (a_, c_, d_)]
+                if not Tr:
+                    continue
+                buf.add(layer, "water_reeds", V, UV, np.asarray(Tr), src=f"water:reeds:{ri}:{row}", COL=C)
+                ntri += len(Tr)
+                nrib += 1
+    rep[layer] = {"ribbons": nrib, "triangles": ntri}
+    return ntri
+
+
+def shrubs(doc, zground, trees, blocked_fn, rep):
+    """Willow scrub / alder instances from the bank crowns (see the module docstring)."""
+    out = []
+    have = np.array([[t["e"], t["n"]] for t in trees]) if trees else np.zeros((0, 2))
+    from scipy.spatial import cKDTree
+    kd = cKDTree(have) if len(have) else None
+    skipped = {"near_tree": 0, "blocked": 0}
+    for e, n, r in doc.get("crowns", []):
+        if kd is not None and kd.query([e, n])[0] < TREE_KEEP_M:
+            skipped["near_tree"] += 1
+            continue
+        if blocked_fn(e, n):
+            skipped["blocked"] += 1
+            continue
+        key = f"{e:.2f}:{n:.2f}"
+        if r < SHRUB_MAX_R:
+            p, h = "tree_shrub", float(np.clip(1.6 * r + 0.8 + 0.8 * _h(key, "h"), 2.0, 4.5))
+        else:
+            p, h = "tree_alder", float(np.clip(3.2 * r + 2.0 * _h(key, "h"), 8.0, 16.0))
+        z = float(np.asarray(zground(np.array([e]), np.array([n]))).ravel()[0])
+        out.append({"p": p, "v": int(_h(key, "v") * 3) % 3, "e": round(float(e), 2), "n": round(float(n), 2),
+                    "z": round(z, 2), "h": round(h, 1), "yaw": round(_h(key, "y") * 6.2832, 3),
+                    "lean": round(_h(key, "l") * 0.06, 3), "src": "water_banks:crown"})
+    rep["bank_shrubs"] = {"tree_shrub": sum(1 for t in out if t["p"] == "tree_shrub"),
+                          "tree_alder": sum(1 for t in out if t["p"] == "tree_alder"), "skipped": skipped}
+    return out

@@ -37,9 +37,16 @@ br = [G.LineString(e["geometry"]) for e in g["edges"] if (e["attrs"].get("bridge
 if br:
     water = water.difference(shapely.union_all(br).buffer(14.0))
 shapely.prepare(water)
+land = shapely.box(-1e7, -1e7, 1e7, 1e7).difference(water.buffer(28.0))
+shapely.prepare(land)
 
 
 def stats(rgb, E, N, name):
+    ml = shapely.contains_xy(land, E.ravel(), N.ravel()).reshape(E.shape) & (rgb.sum(2) > 0)
+    lp = rgb[ml].astype(float) @ np.array([0.2126, 0.7152, 0.0722])
+    land_med = float(np.median(lp)) if len(lp) else float("nan")
+    if len(lp):
+        print(f"{name:28s} land median sRGB", np.median(rgb[ml].astype(float), 0))
     m = shapely.contains_xy(water, E.ravel(), N.ravel()).reshape(E.shape) & (rgb.sum(2) > 0)
     px = rgb[m].astype(float)
     if not len(px):
@@ -50,7 +57,8 @@ def stats(rgb, E, N, name):
     lum = 0.2126 * mean[0] + 0.7152 * mean[1] + 0.0722 * mean[2]
     print(f"{name:28s} n={len(px):7d} mean sRGB {mean[0]:5.1f} {mean[1]:5.1f} {mean[2]:5.1f}  median {med[0]:4.0f} {med[1]:4.0f} "
           f"{med[2]:4.0f}  luma {lum:5.1f}  p10/p90 luma {np.percentile(px @ [0.2126, 0.7152, 0.0722], 10):5.1f}/"
-          f"{np.percentile(px @ [0.2126, 0.7152, 0.0722], 90):5.1f}")
+          f"{np.percentile(px @ [0.2126, 0.7152, 0.0722], 90):5.1f}  land median luma {land_med:5.1f}  "
+          f"water/land (median luma, linear) {(np.median(px @ [0.2126, 0.7152, 0.0722]) / 255) ** 2.2 / max((land_med / 255) ** 2.2, 1e-6):.3f}")
 
 
 o = json.loads((R / "ortho.json").read_text(encoding="utf-8"))
