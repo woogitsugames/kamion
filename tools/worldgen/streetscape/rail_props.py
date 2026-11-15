@@ -25,6 +25,9 @@ import numpy as np
 from . import props as PP
 
 PROTOS = {}                   # prototype name -> (lod0, lod1, collision); filled by place()
+# Prototype names start with `signal_`: the instance LOD rule of that class (LOD1 from 50 m, culled at 250 m, both in
+# roads.build_world.lod_ends and Game.World.Import.InstanceImporter) instead of the default 30 / 120 m - a barrier
+# must be seen from the whole approach.
 
 # ------------------------------------------------------------------------------------------------ dimensions
 POST_D_M = 0.06               # Ø60 mm sign post (roads.standards.SIGN_POST_D)
@@ -159,25 +162,25 @@ def _vec(heading_deg):
 def proto_name(mk):
     """Prototype of one rail.json marker (None: no mesh for this kind)."""
     if mk["kind"] == "sign":
-        return f"rail_saltire_{mk['code'].replace('-', '').lower()}"
+        return f"signal_rail_saltire_{mk['code'].replace('-', '').lower()}"
     if mk["kind"] == "light":
-        return "rail_signal"
+        return "signal_rail_lamps"
     if mk["kind"] == "barrier":
-        return f"rail_barrier_{int(round(mk['boom_len_m'] * 2)) * 5:03d}"      # boom length in 0.5 m classes (dm)
+        return f"signal_rail_barrier_{int(round(mk['boom_len_m'] * 2)) * 5:03d}"      # boom length in 0.5 m classes (dm)
     return None
 
 
 def build(name, mk=None):
-    if name.startswith("rail_saltire_"):
+    if name.startswith("signal_rail_saltire_"):
         kw = {}
         if mk is not None:
             kw = {"arm_l": mk["arm_l_m"], "arm_w": mk["arm_w_m"], "arm_angle": mk["arm_angle_deg"], "bottom_z": mk["bottom_z_m"]}
         return saltire("G-4" if name.endswith("g4") else "G-3", **kw)
-    if name == "rail_signal":
+    if name == "signal_rail_lamps":
         return signal()
-    if name == "rail_signal_bell":
+    if name == "signal_rail_lamps_bell":
         return signal(bell=True)
-    if name.startswith("rail_barrier_"):
+    if name.startswith("signal_rail_barrier_"):
         return barrier(int(name.rsplit("_", 1)[1]) / 10.0)
     raise KeyError(name)
 
@@ -194,8 +197,8 @@ def place(pl, plan, zroad_at, report):
             name = proto_name(mk)
             if name is None:
                 continue
-            if name == "rail_signal" and ci in bells and not rung and mk.get("side", "right") == "right":
-                name, rung = "rail_signal_bell", True           # the bell rides the first right-hand signal mast
+            if name == "signal_rail_lamps" and ci in bells and not rung and mk.get("side", "right") == "right":
+                name, rung = "signal_rail_lamps_bell", True           # the bell rides the first right-hand signal mast
             if name not in PROTOS:
                 PROTOS[name] = build(name, mk)
             pl.add(name, (mk["e"], mk["n"]), yaw_of(_vec(mk["heading_deg"])), src=f"rail:crossing:{ci}:{mk['kind']}")

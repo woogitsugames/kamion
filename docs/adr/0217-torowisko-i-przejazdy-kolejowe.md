@@ -84,9 +84,9 @@ ADR 0210) — odrzucone.
      `light_left`); `bell` — jeden przy przejeździe.
    **Obiekty w scenie** (rail-fix-s21, FIX 4; `streetscape/rail_props.py`): markery stają się zwykłymi instancjami
    biblioteki `street_props.glb` regionu (ten sam import, LOD i kolizja co znaki i sygnalizatory — bez zmian w C#):
-   `rail_saltire_g3` / `rail_saltire_g4` (białe ramiona z czerwoną obwódką na słupku Ø60; G-4 = krzyż + półkrzyż
-   niżej), `rail_barrier_<dm>` (pomarańczowa szafa napędu + ramię w biało-czerwone pasy 0,5 m, podniesione 86° —
-   przejazd otwarty, ruchu pociągów nie symulujemy; kolizja tylko szafy), `rail_signal` / `rail_signal_bell` (maszt
+   `signal_rail_saltire_g3` / `signal_rail_saltire_g4` (białe ramiona z czerwoną obwódką na słupku Ø60; G-4 = krzyż + półkrzyż
+   niżej), `signal_rail_barrier_<dm>` (pomarańczowa szafa napędu + ramię w biało-czerwone pasy 0,5 m, podniesione 86° —
+   przejazd otwarty, ruchu pociągów nie symulujemy; kolizja tylko szafy), `signal_rail_lamps` / `signal_rail_lamps_bell` (maszt
    3,0 m, dwie czerwone komory obok siebie na okrągłych czarnych tarczach, zgaszone). Prototypy rejestruje tylko etap
    rail (`rail_props.PROTOS`, wzorem `gate3_landmarks.PROTOS`); używają wyłącznie istniejących materiałów. Wymiary
    WORKING_VALUE ze zdjęć Mapillary; rysunki G-3 / G-4 z rozporządzenia nie sprawdzone (UNVERIFIED).

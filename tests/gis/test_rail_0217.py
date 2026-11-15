@@ -472,10 +472,10 @@ def test_crossing_devices_are_instances():
     p, _ = _plan(barrier="no")
     pl, rep = _Placer(), {}
     assert RP.place(pl, p, road_z_at, rep) == 2
-    assert rep["rail_crossing_devices"] == {"rail_saltire_g3": 2} and set(RP.prototypes()) == {"rail_saltire_g3"}
+    assert rep["rail_crossing_devices"] == {"signal_rail_saltire_g3": 2} and set(RP.prototypes()) == {"signal_rail_saltire_g3"}
     north = [it for it in pl.items if it["n"] < 500][0]     # northbound driver: the face looks south (yaw: +y -> -N)
     assert abs(np.cos(north["yaw"] + np.pi / 2) - 0.0) < 1e-6 and np.sin(north["yaw"] + np.pi / 2) < -0.99
-    lod0, lod1, col = RP.prototypes()["rail_saltire_g3"]
+    lod0, lod1, col = RP.prototypes()["signal_rail_saltire_g3"]
     mats = {q["mat"] for q in lod0.out()}
     assert {"paint_white_reflective", "paint_ral3020"} <= mats and mats <= set(M) and col is not None
     V = np.concatenate([q["V"] for q in lod0.out() if q["mat"] == "paint_white_reflective"])
@@ -487,9 +487,9 @@ def test_crossing_devices_are_instances():
     p, _ = _plan(barrier="double_half", light=True, bell=True)
     pl, rep = _Placer(), {}
     RP.place(pl, p, road_z_at, rep)
-    assert rep["rail_crossing_devices"] == {"rail_barrier_040": 4, "rail_signal": 1, "rail_signal_bell": 1}
-    assert "rail_saltire_g3" not in RP.prototypes()         # the registry holds this region's prototypes only
-    boom, _, bcol = RP.prototypes()["rail_barrier_040"]
+    assert rep["rail_crossing_devices"] == {"signal_rail_barrier_040": 4, "signal_rail_lamps": 1, "signal_rail_lamps_bell": 1}
+    assert "signal_rail_saltire_g3" not in RP.prototypes()         # the registry holds this region's prototypes only
+    boom, _, bcol = RP.prototypes()["signal_rail_barrier_040"]
     Vb = np.concatenate([q["V"] for q in boom.out() if q["mat"] in ("paint_ral3020", "paint_white_reflective")])
     assert Vb[:, 2].max() > RP.BOOM_PIVOT_Z_M + 3.9          # boom raised: the crossing is open, nothing over the lanes
     assert Vb[:, 1].max() < 0.6
