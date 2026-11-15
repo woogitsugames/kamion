@@ -591,3 +591,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 02/winter-world-round17 iroadtour-original-check-round19:1fotografia zadeklarowanaPhoto©RoadTour.Net, fotografosobistyUNVERIFIED; wyłącznie link-only, all rights reserved. Wariant i publicznybazowyzasób osobiścieobejrzane bez kopii/screenshotów. Bezredystrybucji,AItraining/datasetu źródłowych obrazów; własne obserwacje/fakty i odsyłacze. To1kadr, nie2 przez różneURL; typ źródłowozadeklarowany/EXIFniezależnynieustalony.
 
 02/qualification-ledger-round18 to własny rejestr istniejących odczytów/aliasów, bez nowej fotografii lub rozszerzania licencji źródeł. StatusyP18 z niedozwolonym filtremFlickr(PublicDomainMark) nie stają się zgodnymi licencyjnie przez ten rejestr; nie użyto ich jako nowego zaakceptowanegoA/B.
+
+06/monki-landmark-round7:2miniatury≤800px pochodnepodglądówCommons, ZalaCCBY-SA4.0(2018) iKrzysztofKundziczCCBY-SA3.0(2010). Pełnelinki/atrybucje/licencje permanifest,0pełnychoryginałów; surowepodglądy pozaGit. Plik lokalny wpodmanifeściefiles/, SHAminiatury nieudaje oryginału.

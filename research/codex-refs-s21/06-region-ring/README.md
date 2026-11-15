@@ -63,3 +63,7 @@ Aktualny główny manifest25rekordów. [Most w Tykocinie](tykocin-bridge-round5/
 ## Rondo DW671/DK64 — widoki naziemne, obieg6
 
 Główny manifest27rekordów. [Dwa kadryMapillary](dw671-roundabout-ground-round6/README.md),grobin2019/2020,0pobrań/2link-only: jeden pokazuje łuk ronda i jasny pierścień z podziałem na małe elementy, drugi samo północne ramię/wyspęrozdzielającą/żółtąosłonę i kreskowanie. To nie pełny ogląd4ramion ani dwa różne ronda. Punkt wzięto z06-O03/data, OSMpodkład jawnie sprawdzony;viewport nie jest GPSkamery. Nie zmierzono wysokości/materiału/przejezdności pierścienia ani nie odczytano małych ograniczeń. Stan2026UNVERIFIED. Każdy wybrany obraz agent obejrzał osobno.
+
+## Rozpoznawalna bryła Mońk — obieg7
+
+Główny manifest29rekordów. [Kościół](monki-landmark-round7/README.md):2nowe fotografieCC po2osobnychoglądach, front2018ZalaBY-SA4 i bok2010KrzysztofKundziczBY-SA3.2pobrane podglądy/2miniatury≤800,0pełnychoryginałów. Jedna świątynia:stepniowana wieża, jasne gzymsy/portal/balustrady, czerwone dachy, cokół/schody/bruk. Formalnekondygnacje/metraż/RAL/stan2026UNVERIFIED; rozbieżność adresu1/2 zmeta nie została rozstrzygnięta. Nie nowy skwer ani2obiekty.
