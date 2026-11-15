@@ -51,7 +51,6 @@ namespace PhysicsRunner
                 {
                     foreach (var d in ScenarioRunner.Defs.Vehicles.Values) foreach (var a in d.axles) a.suspension.bumpStopHysteresis = 0;
                     foreach (var d in ScenarioRunner.Defs.Trailers.Values) foreach (var a in d.axles) a.suspension.bumpStopHysteresis = 0;
-                    foreach (var d in ScenarioRunner.Defs.Tires.Values) d.radialDamping = 0;
                 }
             }
             if (bench) { Bench(); return 0; }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "drop_05m_comb",
-  "description": "ADR 0228 (B-077, ADR 0158 Open 4): the coupled combination lifted 0.5 m above its equilibrium pose and released at standstill. Before ADR 0228 it bounced back to ~85 % of the drop height (elastic bump stops, undamped tyres). Checks the share of the drop energy returned as the first rebound and the time spent airborne again.",
+  "description": "ADR 0228 (B-077, ADR 0158 Open 4): the coupled combination lifted 0.5 m above its equilibrium pose and released at standstill. Before ADR 0228 the laden combination gave back 68 % of the drop energy and took off again (elastic bump stops, lossless tyres). Checks the share of the drop energy returned as the first rebound and the time spent airborne again.",
   "spec": "docs/04 s6.9/s6.10, ADR 0228 (B-077, gate 2)",
   "variants": [
     "empty",
@@ -55,7 +55,7 @@
     {
       "metric": "drop_rebound_ratio",
       "status": "WORKING_VALUE",
-      "source": "damped landing: <= 45 % of the drop energy comes back as the first rebound (ADR 0228 criterion; before ADR 0228: 0.68 laden40 / 0.37 empty, measured after: 0.38 / 0.16)",
+      "source": "damped landing: <= 45 % of the drop energy comes back as the first rebound (ADR 0228 criterion; before ADR 0228: 0.68 laden40 / 0.37 empty, measured after: 0.35 / 0.14)",
       "max": 0.45
     },
     {

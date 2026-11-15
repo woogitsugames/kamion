@@ -186,10 +186,7 @@ namespace Game.Vehicle.Physics
                 if (Math.Abs(dfs) < 1e-3) break;
             }
             double sEff = Math.Min(w.S + Math.Max(fs, 0) / kt, su.travel);
-            double tireDefl = Math.Max(fs, 0) / kt;
-            // ADR 0228: radial tyre damping on the deflection rate (same quasi-static series approximation as the suspension damper).
-            double tireRate = w.HasPrev ? MathUtil.Clamp((tireDefl - w.TireDeflection) / dt, -2.0, 2.0) : 0;
-            w.TireDeflection = tireDefl;
+            w.TireDeflection = Math.Max(fs, 0) / kt;
 
             double rate = w.HasPrev ? (w.SPrev - sEff) / dt : 0;
             rate = MathUtil.Clamp(rate, -2.0, 2.0);
@@ -197,17 +194,18 @@ namespace Game.Vehicle.Physics
             w.SPrev = sEff;
             w.HasPrev = true;
             w.Compression = w.SStatic - sEff;
-            w.SuspensionForce = SpringForce(su, w, sEff) + DamperForce(su, rate) + BumpStopDamping(su, sEff, rate)
-                + w.Tire.Def.radialDamping * w.TireCount * tireRate;
+            w.SuspensionForce = SpringForce(su, w, sEff) + DamperForce(su, rate) + BumpStopUnloading(su, sEff, rate);
         }
 
         /// <summary>
-        /// ADR 0228: Hunt-Crossley hysteresis of the bump stop, rate b^2 h b_dot, limited so that the total stop force
-        /// rate b^2 (1 + h b_dot) never pulls. Zero off the stop or with bumpStopHysteresis = 0.
+        /// ADR 0228: unloading hysteresis of the elastomer bump stop. While the stop extends (b_dot &lt; 0) its force is
+        /// lowered to rate b^2 (1 + h b_dot) (Hunt-Crossley form, K. H. Hunt, F. R. E. Crossley, J. Appl. Mech. 42(2), 1975),
+        /// never below 0; on compression it stays elastic, so impact peaks (kerb Fz ceilings) are unchanged and only the
+        /// energy given back is reduced. Zero off the stop or with bumpStopHysteresis = 0.
         /// </summary>
-        static double BumpStopDamping(SuspensionDefinition su, double s, double rate)
+        static double BumpStopUnloading(SuspensionDefinition su, double s, double rate)
         {
-            if (su.bumpStopHysteresis <= 0 || s >= su.bumpStopClearance) return 0;
+            if (su.bumpStopHysteresis <= 0 || s >= su.bumpStopClearance || rate >= 0) return 0;
             double b = su.bumpStopClearance - s;
             double elastic = su.bumpStopRate * b * b;
             return Math.Max(-elastic, elastic * su.bumpStopHysteresis * rate);

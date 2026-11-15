@@ -146,10 +146,10 @@ namespace Game.Vehicle.Physics
         public double bumpStopClearance = 0.03;
         public double bumpStopRate = 3.0e7;
         /// <summary>
-        /// Bump-stop hysteresis [s/m] (ADR 0228): Hunt-Crossley damping of the elastomer stop, F = rate b^2 (1 + h b_dot),
-        /// b = engagement, b_dot = compression rate; the force never pulls (F &gt;= 0). For a single impact the restitution is
-        /// e ~ 1 - (2/3) h v (K. H. Hunt, F. R. E. Crossley, J. Appl. Mech. 42(2), 1975, 440-445). 0 = elastic stop
-        /// (before ADR 0228). WORKING_VALUE: no measured hysteresis of this fictional truck's stops.
+        /// Bump-stop unloading hysteresis [s/m] (ADR 0228): while the elastomer stop extends (b_dot &lt; 0) its force is
+        /// rate b^2 (1 + h b_dot), never below 0 (Hunt-Crossley form: K. H. Hunt, F. R. E. Crossley, J. Appl. Mech. 42(2),
+        /// 1975, 440-445); compression stays elastic, so impact peaks are unchanged. b = engagement, b_dot = compression rate.
+        /// 0 = elastic stop (before ADR 0228). WORKING_VALUE: no measured hysteresis of this fictional truck's stops.
         /// </summary>
         public double bumpStopHysteresis;
         /// <summary>Damping per side [N s/m] (bump / rebound), linear up to knee velocity, then highSpeedFactor slope.</summary>

@@ -72,8 +72,8 @@
     {
       "metric": "max_articulation_deg",
       "status": "WORKING_VALUE",
-      "source": "folds past the old 90 deg stop and stays clear of the cab (first contact of the level combination at 117.12 deg (trailer side wall, half width 1.275 m, on the cab rear corner x 1.245 m, 2.07 m ahead of the kingpin; CouplingContact.FirstContactArticulationDeg, analytic in JackknifeContactTests))",
-      "min": 90,
+      "source": "folds past the old 90 deg angular stop plus its 3.5 deg F1 tolerance (93.5 deg) and stays clear of the cab (first contact of the level combination at 117.12 deg (trailer side wall, half width 1.275 m, on the cab rear corner x 1.245 m, 2.07 m ahead of the kingpin; CouplingContact.FirstContactArticulationDeg, analytic in JackknifeContactTests))",
+      "min": 95,
       "max": 112
     },
     {

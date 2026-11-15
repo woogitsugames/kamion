@@ -80,7 +80,7 @@ for sid, comb, brake_t in (("jackknife_fold_90_reverse_comb", "laden40", 5.15), 
        "is the body contact at 117.1 deg, so the fold passes 90 deg freely and nothing touches.",
        10, [key(0, brake=1), key(1, throttle=0.3, steer=1), key(brake_t, brake=1, steer=1)],
        robust() + [
-           chk("max_articulation_deg", mn=90, mx=112, source=f"folds past the old 90 deg stop and stays clear of the cab ({GEO})"),
+           chk("max_articulation_deg", mn=95, mx=112, source=f"folds past the old 90 deg angular stop plus its 3.5 deg F1 tolerance (93.5 deg) and stays clear of the cab ({GEO})"),
            chk("coupling_contact_s", mx=0, source="no tractor-trailer contact below the geometric contact angle"),
            chk("max_coupling_penetration_m", mx=0, source="no tractor-trailer penetration"),
        ], combination=comb)
@@ -132,14 +132,14 @@ sc("jackknife_reverse_countersteer_comb",
 # 5. Heavy landing: 0.5 m drop at standstill.
 sc("drop_05m_comb",
    "ADR 0228 (B-077, ADR 0158 Open 4): the coupled combination lifted 0.5 m above its equilibrium pose and released at "
-   "standstill. Before ADR 0228 it bounced back to ~85 % of the drop height (elastic bump stops, undamped tyres). "
+   "standstill. Before ADR 0228 the laden combination gave back 68 % of the drop energy and took off again (elastic bump stops, lossless tyres). "
    "Checks the share of the drop energy returned as the first rebound and the time spent airborne again.",
    6, [key(0, sel="D")],
    [
        chk("nan_detected", mx=0, source="no NaN"),
        chk("free_flight_s", mn=0.2, status=D, source="the drop is a flight: sqrt(2 * 0.4 / 9.81) = 0.29 s (wheels hang below the static pose)"),
        chk("max_free_flight_energy_gain_j", mx=1, source="E = KE + PE does not grow in free flight"),
-       chk("drop_rebound_ratio", mx=0.45, source="damped landing: <= 45 % of the drop energy comes back as the first rebound (ADR 0228 criterion; before ADR 0228: 0.68 laden40 / 0.37 empty, measured after: 0.38 / 0.16)"),
+       chk("drop_rebound_ratio", mx=0.45, source="damped landing: <= 45 % of the drop energy comes back as the first rebound (ADR 0228 criterion; before ADR 0228: 0.68 laden40 / 0.37 empty, measured after: 0.35 / 0.14)"),
        chk("drop_relaunch_s", mx=0.1, source="the combination does not take off again after the landing"),
        chk("max_body_penetration_m", mx=0.05, source="chassis does not dig into the road (ADR 0165 bumper-crush bound)"),
        chk("min_com_height_m", mn=0.5, source="no fall-through"),
