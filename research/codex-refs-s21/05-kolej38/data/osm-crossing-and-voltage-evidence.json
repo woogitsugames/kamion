@@ -1,0 +1,113 @@
+{
+  "source_copy": "research\\dk65-knyszyn-refs\\data\\osm_corridor.json",
+  "source_copy_sha256": "e3cf84d4fd6764151331a7389c2b09f502af0b3112c8c31bbdbfcbca16326526",
+  "source_query_time_utc": "2026-11-15T10:17:47Z",
+  "license": "ODbL1.0; © OpenStreetMap contributors",
+  "nodes": [
+    {
+      "osm_node_id": 2070722551,
+      "lat": 53.1675484,
+      "lon": 23.0564732,
+      "tags": {
+        "railway": "level_crossing",
+        "ref": "038 010 194",
+        "source:ref": "#ŻółtaNaklejkaPLK"
+      },
+      "element_timestamp": "2020-06-28T18:05:38Z"
+    },
+    {
+      "osm_node_id": 2335160489,
+      "lat": 53.1755275,
+      "lon": 23.0263884,
+      "tags": {
+        "railway": "level_crossing",
+        "ref": "038 012 443",
+        "source:ref": "#ŻółtaNaklejkaPLK"
+      },
+      "element_timestamp": "2020-06-28T18:05:39Z"
+    },
+    {
+      "osm_node_id": 2559254736,
+      "lat": 53.1706241,
+      "lon": 23.0464631,
+      "tags": {
+        "railway": "level_crossing",
+        "ref": "038 010 956",
+        "source:ref": "#ŻółtaNaklejkaPLK"
+      },
+      "element_timestamp": "2020-06-28T18:05:38Z"
+    }
+  ],
+  "ways": [
+    {
+      "osm_way_id": 173466803,
+      "tags": {
+        "electrified": "contact_line",
+        "frequency": "0",
+        "gauge": "1435",
+        "maxspeed": "100",
+        "name": "Rail Baltica",
+        "operator": "PKP Polskie Linie Kolejowe",
+        "operator:short": "PKP PLK",
+        "passenger_lines": "1",
+        "railway": "rail",
+        "railway:track_class": "D3",
+        "railway:track_ref": "1",
+        "ref": "38",
+        "usage": "main",
+        "voltage": "3000",
+        "workrules": "PL:Ir-1"
+      },
+      "element_timestamp": "2026-11-02T15:06:44Z"
+    },
+    {
+      "osm_way_id": 41533341,
+      "tags": {
+        "bridge": "yes",
+        "electrified": "contact_line",
+        "frequency": "0",
+        "gauge": "1435",
+        "layer": "1",
+        "maxspeed": "100",
+        "operator": "PKP Polskie Linie Kolejowe",
+        "operator:short": "PKP PLK",
+        "passenger_lines": "1",
+        "proposed:electrified": "contact_line",
+        "proposed:frequency": "50",
+        "proposed:voltage": "25000",
+        "railway": "rail",
+        "railway:track_class": "D3",
+        "ref": "38",
+        "usage": "main",
+        "voltage": "3000",
+        "workrules": "PL:Ir-1"
+      },
+      "element_timestamp": "2025-09-24T13:21:05Z"
+    },
+    {
+      "osm_way_id": 406675496,
+      "tags": {
+        "electrified": "contact_line",
+        "frequency": "0",
+        "gauge": "1435",
+        "maxspeed": "100",
+        "name": "Rail Baltica",
+        "operator": "PKP Polskie Linie Kolejowe",
+        "operator:short": "PKP PLK",
+        "passenger_lines": "1",
+        "proposed:electrified": "contact_line",
+        "proposed:frequency": "50",
+        "proposed:voltage": "25000",
+        "railway": "rail",
+        "railway:track_class": "D3",
+        "ref": "38",
+        "source": "GPS",
+        "usage": "main",
+        "voltage": "3000",
+        "workrules": "PL:Ir-1"
+      },
+      "element_timestamp": "2025-09-24T13:21:09Z"
+    }
+  ],
+  "interpretation": "SOURCED only as tags in snapshot. Proposed voltage is separate from voltage. Missing crossing equipment tags do not prove absence. No A–D category assigned."
+}

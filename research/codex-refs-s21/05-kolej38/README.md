@@ -23,3 +23,7 @@ StarszyURL Id12 z lutego2025 zwraca404; aktualny odnaleziono przez oficjalny kat
 ## Historyczny kadr stacji
 
 05-P01: ponownie obejrzana fotografia K1-P32 z2013r. SOURCED [obraz, link w manifeście] — poprzeczna brama kratowa sieci trakcyjnej, ukośne wsporniki, podwieszenia i przewody, latarnie peronowe, ciemne podkłady i miejscowa roślinność w torowisku. Typ podkładów i uziarnienie podsypki UNVERIFIED. To 1 miniatura istniejącego kadru,0 nowych pobrań zdjęć; nie jest kadrem przejazdu ani potwierdzeniem wyglądu stacji po modernizacji2026.
+
+## OSM — punkty dalszego poszukiwania, nie inwentaryzacja
+
+05-O01…O03 zachowują identyfikatory trzech węzłów przejazdowych blisko korytarza z istniejącego zapytania K1. Ich tagi nie zawierają wystarczających danych do A–D; brak tagu rogatki nie dowodzi braku rogatki. 05-O04 rozdziela tagi istniejącego napięcia i proposed na moście. Dane, identyfikatory, czasy edycji i hash źródła w `data/osm-crossing-and-voltage-evidence.json`. To ponowne wykorzystanie otwartych danych K1, bez nowego zapytaniaOverpass i bez nowych fotografii. Napięcie3000V jest SOURCED jako tag OSM, ale pozostaje niepotwierdzone niezależnym dokumentem zarządcy. Proponowane25000V nie są dowodem wykonania.
