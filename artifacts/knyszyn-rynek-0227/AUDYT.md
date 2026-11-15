@@ -23,3 +23,21 @@ Osie alejek ESTIMATED: SW (760883,612375)–(760930,612383); NE (760950,612385)�
 Zdjęcia 3/4 potwierdzają urząd `bdot:2002917F-46DC-5C99-E053-CC2BA8C01CFC` i skrzydło kultury `bdot:2002917F-4817-5C99-E053-CC2BA8C01CFC`: jasny krem, żółte opaski, czerwony dach z lukarnami. Zdjęcia 5–7: kościół `bdot:2002917F-8DAE-5C99-E053-CC2BA8C01CFC`, biały, czerwony dach i hełm. Identyfikacja SOURCED obrysem i zdjęciem, proporcje detali ESTIMATED.
 
 Pary adres OSM → obrys BDOT (położenie SOURCED, wygląd poszczególnych fasad UNVERIFIED): Rynek 1 → `2002917F-3002-5C99-E053-CC2BA8C01CFC` (LoD1 7,50 m); Rynek 2 → `2002917F-3031-5C99-E053-CC2BA8C01CFC` (5,98 m); Rynek 3 → `2002917F-3066-5C99-E053-CC2BA8C01CFC` (6,77 m); Rynek 4 → `2002917F-2D30-5C99-E053-CC2BA8C01CFC` (7,79 m); Rynek 5 → `2002917F-3078-5C99-E053-CC2BA8C01CFC` (6,18 m); Rynek 9 → `2002917F-2E16-5C99-E053-CC2BA8C01CFC`. K1-P19 może pokazywać Rynek 9, lecz geotag dotyczy aparatu, a azymut i aktualność fasady są UNVERIFIED. Nie przypisywać kolorów po samym geotagu ani niejednoznacznym tytule K1-P02.
+
+## Zdjęcia właściciela 15.11 — mapa porównań (WIP)
+
+| Zdjęcie | Co widać | Kamera planowana | Stan porównania |
+|---|---|---|---|
+| 1 | Urząd i pomnik od ulicy | `rynek_owner_01` | Brak renderu po zmianach; ujęcie aparatu ESTIMATED. |
+| 2 | Urząd i portyk od dziedzińca | `rynek_owner_02` | Brak renderu po zmianach; sprawdzić skrzydła L, kolumny i schody. |
+| 3 | Trawnik, lipy i urząd | `rynek_owner_03` | Baseline z góry pokazuje zwarty las; po zmianach brak renderu z tego miejsca. |
+| 4 | Sucha fontanna i obelisk ku urzędowi | `rynek_owner_04` | Dawna kamera patrzyła na plac wschodni; nowy kadr wymaga dopasowania. |
+| 5 | Działająca fontanna i kościół | `rynek_owner_05` | Dysze i obwódka przygotowane; strumienie OPEN, brak renderu. |
+| 6 | Główna aleja w stronę kościoła | `rynek_owner_06` | Kamera szacunkowa, należy dopasować jej pozycję i oś. |
+| 7 | Alejki, obelisk i kościół z boku | `rynek_owner_07` | Brak renderu; położenie i azymut kamery ESTIMATED. |
+| 8 | Pomnik króla, blok i maszt | `rynek_owner_08` | Sylwetka PROXY_NOT_APPROVED; brak renderu i weryfikacji rozpoznawalności. |
+| 9 | Rondo z góry | `rondo_owner_09` | Kadr drona ESTIMATED; opaska z #97 nie jest scalona, wymiar rzeczywisty UNVERIFIED. |
+| 10 | Rondo i otoczenie z drona | `rondo_owner_10` | Brak renderu; punkt, wysokość i kierunek ESTIMATED. |
+| 11 | Rondo i DK65 z drona | `rondo_owner_11` | Brak renderu; punkt, wysokość i kierunek ESTIMATED. |
+
+Pary są przygotowywane wyłącznie lokalnie przez `compare.py`; nie zamieszczać zdjęć ani wyników par w Git. Zdjęcia targowicy z drona pozostają opisem, bez lokalnego pliku do bezpośredniego SBS.
