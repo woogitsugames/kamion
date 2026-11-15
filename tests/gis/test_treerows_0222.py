@@ -158,6 +158,90 @@ def test_vegetation_place_opt_in():
     assert all(12.0 <= t["h"] <= 16.0 for t in new)
 
 
+def _half_taken():
+    """A BDOT row in a 200 m tile that the plan takes over in half: the line runs 10 m north of the major road
+    (y = 60, taken), leaves the tile at x = 200, comes back at y = 150 (100 m from the road: outside `corridor_m`)."""
+    import shapely
+    coords = [[10.0, 60.0], [190.0, 60.0], [230.0, 60.0], [230.0, 150.0], [190.0, 150.0], [10.0, 150.0]]
+    src = {"bdot10k": {"OT_PTLZ_A": [], "OT_PTRK_A": [], "OT_OIPR_P": [], "OT_PTNZ_A": [], "OT_PTTR_A": [],
+                       "OT_OIPR_L": [{"id": "PL.TEST.ROW.2", "props": {"rodzaj": "rząd drzew"},
+                                      "geometry": {"coordinates": coords}}]},
+           "osm": {"nodes": []}}
+    graph = {"edges": [_edge("m", "A", "B", [[0.0, 50.0], [200.0, 50.0]])]}
+    lines = TR.row_lines(src, (0.0, 0.0), None, {"id": "t"}, shapely.box(0.0, 0.0, 200.0, 200.0))
+    plan = TR.plan(lines, TR.roads_from_graph(graph, (0, 0)), {"missing_share": 0.0}, graph=graph)
+    for r in plan["rows"]:
+        r["key"] = f"treerow:{r['key']}"
+    plan["height_m"] = {r["key"]: r["height_m"] for r in plan["rows"]}
+    return src, lines, plan
+
+
+def _place(src, plan, rep=None):
+    blocked = np.zeros((201, 261), bool)
+    hf = SimpleNamespace(x0=0.0, y1=200.0)
+    out, _ = VG.place(src, (0.0, 0.0), hf, np.zeros(blocked.shape, np.float32), blocked, {} if rep is None else rep,
+                      overrides=[], tree_rows=plan)
+    return out
+
+
+def test_partly_taken_bdot_row_keeps_old_trees_on_the_rest():
+    """Review of PR #101, FIX 1: one taken part used to mark the whole BDOT line handled - the other half lost its
+    trees. Now the half that is not taken keeps the 8 m rule, the taken half has the tree_rows trees only."""
+    src, lines, plan = _half_taken()
+    assert sorted(k for k, *_ in lines) == ["bdot:PL.TEST.ROW.2#0", "bdot:PL.TEST.ROW.2#1"]
+    assert plan["taken"] == {"bdot:PL.TEST.ROW.2#0"} and plan["handled"] == set()
+    assert list(plan["fallback"]) == ["bdot:PL.TEST.ROW.2"]
+    assert plan["fallback"]["bdot:PL.TEST.ROW.2"].length == pytest.approx(190.0)       # the y = 150 half inside the tile
+    rep = {}
+    new = _place(src, plan, rep)
+    old = [t for t in new if t["src"] == "bdot:PL.TEST.ROW.2"]
+    row = [t for t in new if t["src"].startswith("treerow:")]
+    assert len(old) + len(row) == len(new)
+    # the half that is not taken: the old rule, 8 m apart, inside the tile only
+    assert 22 <= len(old) <= 24 and all(abs(t["n"] - 150.0) < 1.5 and 9.0 <= t["e"] <= 201.0 for t in old)
+    xs = sorted(t["e"] for t in old)
+    assert all(5.5 < b - a < 10.5 for a, b in zip(xs, xs[1:]))
+    # ... and they are the very trees the rule alone puts there (same stream: nothing shifts along the line)
+    base = [t for t in _place(src, None) if abs(t["n"] - 150.0) < 1.5 and t["e"] <= 201.0]
+    assert json.dumps(old) == json.dumps(base)
+    # the taken half: tree_rows trees only (no 8 m tree doubled under the row), nothing outside the tile
+    assert 9 <= len(row) <= 16 and all(abs(t["n"] - 60.0) < 4.0 and t["e"] <= 200.0 for t in row)
+    assert not [t for t in new if t["e"] > 201.0 or 64.0 < t["n"] < 148.0]
+    assert rep["tree_rows"]["lines_handled"] == 0 and rep["tree_rows"]["lines_partly_handled"] == 1
+    assert rep["tree_rows"]["fallback_trees"] == len(old)
+    assert rep["tree_rows"]["blocked_dropped"] == 0 and rep["tree_rows"]["plan"]["lines_partly_taken"] == 1
+
+
+def test_partly_taken_bdot_row_respects_sight_fields():
+    """The trees the old rule keeps on a partly taken line stay out of the sight fields of the plan."""
+    from shapely.geometry import box
+    src, _, plan = _half_taken()
+    free = [t for t in _place(src, plan) if t["src"].startswith("bdot:")]
+    plan["cuts"] = list(plan["cuts"]) + [box(60.0, 140.0, 110.0, 160.0)]
+    cut = [t for t in _place(src, plan) if t["src"].startswith("bdot:")]
+    assert not [t for t in cut if 60.0 <= t["e"] <= 110.0]
+    assert 4 <= len(free) - len(cut) <= 8                                    # 50 m / 8 m
+    assert json.dumps([t for t in free if not 60.0 <= t["e"] <= 110.0]) == json.dumps(cut)
+
+
+def test_coverage_whole_line_taken_or_not():
+    a, b = LineString([(0, 0), (10, 0)]), LineString([(20, 0), (30, 0)])
+    lines = [("bdot:A#0", a, "bdot"), ("bdot:A#1", b, "bdot"), ("bdot:B", a, "bdot"), ("bdot:C", b, "bdot")]
+    handled, fb = TR.coverage(lines, {"bdot:A#0", "bdot:A#1", "bdot:B"})
+    assert handled == {"bdot:A", "bdot:B"} and fb == {}                       # every part taken; C is all the old rule's
+    handled, fb = TR.coverage(lines, {"bdot:A#1"})
+    assert handled == set() and list(fb) == ["bdot:A"] and fb["bdot:A"].equals(a)
+
+
+def test_height_per_line_reaches_the_plan():
+    """Review of PR #101, FIX 2: `height_m` of a line (passes the yaml schema) was ignored."""
+    graph, roads, _, _ = _scene()
+    lines = [("override:x:0", LineString([(-500.0, 7.0), (-300.0, 7.0)]), "authored", {"height_m": [5.0, 6.0]}),
+             ("override:x:1", LineString([(-500.0, -7.0), (-300.0, -7.0)]), "authored", {})]
+    rows = {r["key"]: r for r in TR.plan(lines, roads, {"height_m": [14.0, 15.0]}, graph=graph)["rows"]}
+    assert rows["override:x:0"]["height_m"] == (5.0, 6.0) and rows["override:x:1"]["height_m"] == (14.0, 15.0)
+
+
 @pytest.fixture(scope="module")
 def plans():
     out = {}

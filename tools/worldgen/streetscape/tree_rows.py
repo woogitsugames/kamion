@@ -332,9 +332,33 @@ def row_lines(src: dict, origin, osm_probe: dict | None, entry: dict, tile=None)
     return _clip(out, tile)
 
 
+def coverage(lines, taken) -> tuple[set, dict]:
+    """Which source lines the plan took over. lines: [(key, LineString, ...)] with `key` = "<base>" or "<base>#k"
+    (parts of one source line after the tile clip); taken: set of part keys laid out by the plan (or replaced by an
+    authored trace). Returns (handled, fallback):
+      handled   base keys with EVERY part taken - the old 8 m BDOT row rule skips the line;
+      fallback  {base: geometry of the parts NOT taken} for lines taken only in part - the old rule keeps its trees
+                on these parts and only there (review of PR #101, FIX 1: before, one taken part marked the whole
+                line handled and the rest of it lost its trees)."""
+    parts = {}
+    for x in lines:
+        parts.setdefault(x[0].split("#")[0], []).append((x[0], x[1]))
+    handled, fallback = set(), {}
+    for base, pl in parts.items():
+        rest = [ln for k, ln in pl if k not in taken]
+        if len(rest) == len(pl):
+            continue
+        if rest:
+            fallback[base] = shapely.union_all(rest)
+        else:
+            handled.add(base)
+    return handled, fallback
+
+
 def plan(lines, roads: list[Road], prm: dict, *, tracks=(), culverts=(), crossings=(), graph=None) -> dict:
-    """Lay out the rows. lines: [(key, LineString, source)]. Returns {"rows": [{key, P, species, source}],
-    "handled": set(keys taken over), "cuts": [polygons], "report": {...}}."""
+    """Lay out the rows. lines: [(key, LineString, source)]. Returns {"rows": [{key, P, species, source, height_m}],
+    "handled": set(base keys taken over completely), "fallback": {base key: geometry left to the old row rule},
+    "taken": set(part keys), "cuts": [polygons], "report": {...}} - see coverage()."""
     prm = {**DEFAULTS, **prm}
     majors = set(prm["major_highways"])
     mroads = [r for r in roads if r.highway in majors]
@@ -343,7 +367,7 @@ def plan(lines, roads: list[Road], prm: dict, *, tracks=(), culverts=(), crossin
            "dropped_too_close": 0, "trees": 0, "in_lsbp0_existing": 0, "junctions": 0, "accesses": 0,
            "sight_fields": 0, "by_source": {}}
     if not mroads:
-        return {"rows": [], "handled": set(), "cuts": [], "report": rep}
+        return {"rows": [], "handled": set(), "fallback": {}, "taken": set(), "cuts": [], "report": rep}
     J = junctions(graph, roads, majors) if graph is not None else []
     J += track_accesses(list(tracks), roads, majors)
     rep["junctions"] = sum(1 for j in J if j["kind"] == "junction")
@@ -359,7 +383,7 @@ def plan(lines, roads: list[Road], prm: dict, *, tracks=(), culverts=(), crossin
                                 for c in culv]) if culv else Polygon()
     lc = [p for p in crossings if min(r.line.distance(p) for r in roads) <= 15.0]
     lc_u = shapely.union_all([p.buffer(prm["level_crossing_clear_m"]) for p in lc]) if lc else Polygon()
-    rows, handled = [], set()
+    rows, taken = [], set()
     lines = [x if len(x) == 4 else (*x, {}) for x in lines]
     authored = [x[1] for x in lines if x[2] == "authored"]
     rep["replaced_by_authored"] = 0
@@ -369,13 +393,13 @@ def plan(lines, roads: list[Road], prm: dict, *, tracks=(), culverts=(), crossin
         if source != "authored" and authored:
             vv = shapely.points(np.asarray(line.coords))
             if min(float(np.mean(shapely.distance(a, vv))) for a in authored) <= prm["replace_m"]:
-                handled.add(key.split("#")[0])  # the orthophoto trace replaces this row (ADR 0222)
+                taken.add(key)                  # the orthophoto trace replaces this row (ADR 0222)
                 rep["replaced_by_authored"] += 1
                 continue
         verts = shapely.points(np.asarray(line.coords))
         if float(np.mean(shapely.distance(near_road, verts))) > prm["corridor_m"]:
             continue
-        handled.add(key.split("#")[0])
+        taken.add(key)
         rep["lines_taken"] += 1
         rep["length_taken_m"] += line.length
         P, S, K = layout_line(line, {**prm, **lprm}, f"treerow:{key}")
@@ -397,11 +421,14 @@ def plan(lines, roads: list[Road], prm: dict, *, tracks=(), culverts=(), crossin
         d, ix = edge_distance(roads, P)
         lz = np.array([lsbp0_existing(roads[i].vmax, prm["sdrr_class"]) if roads[i].highway in majors else 0.0 for i in ix])
         rep["in_lsbp0_existing"] += int((live & (d < lz)).sum())
-        rows.append({"key": key, "source": source, "P": P[live], "species": [s for s, k in zip(S, live) if k]})
+        rows.append({"key": key, "source": source, "P": P[live], "species": [s for s, k in zip(S, live) if k],
+                     "height_m": tuple(float(v) for v in {**prm, **lprm}["height_m"])})
         rep["trees"] += int(live.sum())
         rep["by_source"][source] = rep["by_source"].get(source, 0) + int(live.sum())
     rep["length_taken_m"] = round(rep["length_taken_m"], 1)
-    return {"rows": rows, "handled": handled, "cuts": sight, "report": rep}
+    handled, fallback = coverage(lines, taken)
+    rep["lines_partly_taken"] = len(fallback)
+    return {"rows": rows, "handled": handled, "fallback": fallback, "taken": taken, "cuts": sight, "report": rep}
 
 
 def load_entries(rid: str, overrides=()) -> list[dict]:
@@ -428,18 +455,22 @@ def region_plan(rid: str, overrides, src: dict, graph: dict, origin) -> dict | N
     crossings = [Point(np.asarray(t["xy_epsg2180"], float) - o) for t in (probe or {}).get("level_crossing", [])]
     bb = yaml.safe_load((REGIONS / rid / "region.yaml").read_text(encoding="utf-8"))["bbox"]
     tile = shapely.box(bb["xmin"] - o[0], bb["ymin"] - o[1], bb["xmax"] - o[0], bb["ymax"] - o[1])
-    res = {"rows": [], "handled": set(), "cuts": [], "report": {}, "height_m": {}}
+    res = {"rows": [], "handled": set(), "fallback": {}, "cuts": [], "report": {}, "height_m": {}}
+    taken, seen = set(), {}
     for e in entries:
         prm = {k: v for k, v in e.items() if k in DEFAULTS}
         prm_full = {**DEFAULTS, **prm}
         roads = roads_from_graph(graph, origin, overrides, prm_full["default_speed_kmh"])
-        lines = [x for x in row_lines(src, origin, probe, e, tile) if x[0] not in res["handled"]]
+        every = row_lines(src, origin, probe, e, tile)
+        seen.update({x[0]: x for x in every})
+        lines = [x for x in every if x[0] not in taken]           # a part taken by an earlier entry stays with it
         r = plan(lines, roads, prm, tracks=tracks, culverts=culverts, crossings=crossings, graph=graph)
         for row in r["rows"]:
             row["key"] = f"treerow:{row['key']}"
-            res["height_m"][row["key"]] = tuple(float(v) for v in prm_full["height_m"])
+            res["height_m"][row["key"]] = row["height_m"]         # per line (`height_m` of a line) or of the entry
         res["rows"] += r["rows"]
-        res["handled"] |= r["handled"]
+        taken |= r["taken"]
         res["cuts"] += r["cuts"]
         res["report"][e["id"]] = r["report"]
+    res["handled"], res["fallback"] = coverage(list(seen.values()), taken)
     return res

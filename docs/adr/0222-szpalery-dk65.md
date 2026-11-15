@@ -102,6 +102,16 @@ przejazd kolejowy — 20 m (§ 81 ust. 1 pkt 9 bez liczby; na trasie A brak prze
 - `vegetation.place(…, tree_rows=plan)`: przejęte linie BDOT pomijane w regule 8 m, drzewa planu przez `emit`
   (ta sama siatka `blocked`, te same prototypy/LOD/impostory). `stage.py`: `TRW.region_plan(rid, …)` (None bez opt-in).
   Raport: `streetscape_qa.json` → `vegetation.tree_rows`.
+- **Linia przejęta tylko w części** (zmiana 2026-11-15 po recenzji `docs/reports/REVIEW-2026-11-15-s21-code-101.md`,
+  FIX 1): przycięcie do kafla może podzielić linię BDOT na części `klucz#k`; każda część jest przejmowana osobno
+  (korytarz `corridor_m`, zastąpienie linią autorską). `coverage()` zwraca `handled` = linie z **każdą** częścią przejętą
+  (reguła 8 m je pomija) i `fallback` = geometria części nieprzejętych. Na `fallback` reguła 8 m stawia swoje drzewa
+  jak dotąd (te same stacje i ten sam strumień losowy — kandydaci spoza `fallback` odpadają po losowaniu, ADR 0173),
+  bez drzew 8 m pod częścią przejętą i bez pni w polach widoczności planu. Przedtem jedna przejęta część oznaczała całą
+  linię i reszta zostawała bez drzew. Na danych 14 kafli z 2026-11-15: 0 linii przejętych częściowo (55 przejętych w
+  całości, 371 drzew planu — bez zmian), więc budżet i liczby z §4 się nie zmieniają.
+- `height_m` ustawione per linia działa (FIX 2; przedtem brane tylko z wpisu). Raport `vegetation.tree_rows` ma nowe
+  pola `blocked_dropped` (= planned − placed), `lines_partly_handled`, `fallback_trees` (FIX 3).
 
 ### 4. Budżet (ESTIMATED; LOD z `art-source/world/vegetation/trees_meta.json`, polityka z ADR 0012 / `QualityProfile.cs`)
 Prototypy szpaleru: klon 2450–2520 / 524–586, lipa 3128–3272 / 684–720, brzoza 3380–3534 / 908–970, olsza 4024–4130 /
@@ -125,7 +135,9 @@ prototyp i komórka 64 m — ESTIMATED +0…+4 na komórkę z nowym gatunkiem. L
 - Trójkąty L1 (180 m przy 90 km/h, 10 m w głąb) czyszczą też istniejące drzewa przy wlotach (dk65-05 km 14,6: 3 pnie
   N końca rzędu W). To świadome: zadanie żąda cięć wg przepisów; jeśli zdjęcie właściciela pokaże drzewa w polu
   widoczności, override per linia (`sight_obs_m`/kolejne pole) — do decyzji po zdjęciach.
-- Drzewa 3,0–~4,5 m od krawędzi mogą wypaść na siatce `blocked` (dylatacja 3 m od pobocza) — raport `placed < planned`.
+- Drzewa 3,0–~4,5 m od krawędzi mogą wypaść na siatce `blocked` (dylatacja 3 m od pobocza) — raport `placed < planned`,
+  licznik `blocked_dropped`. Skuteczne odsunięcie pnia wyznacza więc `blocked`, nie samo 3,0 m: pień przesunięty przez
+  plan na minimalne odsunięcie (`moved_to_min_offset`) zwykle kończy w `blocked_dropped`, czyli znika.
 
 ## Otwarte
 1. Gatunki (UNVERIFIED) — zdjęcia właściciela DK65 / Ełckiej; rozstaw linii BDOT bez ortofoto (12–18 m WORKING_VALUE).
