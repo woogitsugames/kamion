@@ -178,3 +178,7 @@
 - 2026-11-15 22:54 +01:00 — R7 build OK po scaleniu main, import Unity trwa. Pełny GIS po poprawce far_field kontynuuje >9%. Fidelity po merge przeliczone, 9 passed/1 xfailed; kierunkowo far_field 10 passed, urząd 11 passed.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r7.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/gis-r7.log -Tail 10`
 
+
+- 2026-11-15 23:11 +01:00 — Pełny GIS po scaleniu i fix far_field: 1472 passed, 33 skipped, 3 xfailed, exit 0 (21:56); przywrócono wyłącznie efekty uboczne testu w generated C. R7: poprawa lukarn w obu profilach, Low nadal +6 draws/+1832 tris na wspólnych kamerach.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python artifacts/knyszyn-rynek-0227/budget-compare.py r7`
+
