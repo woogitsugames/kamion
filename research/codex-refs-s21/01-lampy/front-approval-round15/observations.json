@@ -1,0 +1,73 @@
+{
+  "reviewed_at_brussels": "2026-11-15T23:52:15.019838+01:00",
+  "source": {
+    "url": "https://allegro.pl/produkt/mercedes-actros-bi-xenon-lewa-przednia-lampa-9618202639-oryginal-1e515ebb-4729-4c7e-b3e5-56e83ebc1563",
+    "offer_id": "14731209728",
+    "seller": "lusterka_2009",
+    "vehicle_application": "SOURCED [publiczna oferta]: Mercedes Actros; lampa lewa BI XENON, A9618202639, samochody ciężarowe, wersja Europejska",
+    "source_claim_vs_image": "Zastosowanie z oferty, fizyczny numer A9618202639 odczytany również na etykiecie. Nie wnioskowano modelu wyłącznie z kształtu."
+  },
+  "dedup": {
+    "scope": "główny manifest i wszystkie CSV/JSON01 przed zapisem",
+    "keys": [
+      "A9618202639",
+      "14731209728",
+      "lusterka_2009",
+      "9b925546466da198ed9c62d0af15"
+    ],
+    "prior_match": false,
+    "distinct_physical_parts": 1,
+    "distinct_frames": 2,
+    "full_readable_E_label_frames": 1,
+    "new_rear_frames": 0,
+    "new_emitting_frames": 0,
+    "new_night_frames": 0
+  },
+  "method": [
+    "Każdy kadr oglądano w galerii oraz oddzielnie pod dokładnym URL.",
+    "Oba dokładne URL ponownie otwarto przez reload i ponownie obejrzano przed zapisem.",
+    "Obrazy wyświetlano w przeglądarce; zero zapisu obrazów lub screenshotów na dysku.",
+    "Zachowane w manifeście są wyłącznie dwa indywidualnie obejrzane kadry, nie15 zdjęć całej galerii."
+  ],
+  "observations": [
+    {
+      "id": "01-FA15-01",
+      "url": "https://a.allegroimg.com/original/116f4f/9b925546466da198ed9c62d0af15",
+      "native_px": [
+        500,
+        434
+      ],
+      "gallery": "15/15",
+      "description": "Biała prostokątna etykieta na zakurzonej czarnej obudowie. Logo Mercedes i KOITO, kod A 961 820 26 39, MADE IN CZECH REPUBLIC; dolny wiersz:27.5, E13 w okręgu,13106,00DCR,PL,01 1a,02 A,00 RL; dwie strzałki skierowane w prawo. Znak ostrzeżenia elektrycznego i kod kreskowy.",
+      "colour": "biała etykieta, czarne napisy/obudowa",
+      "shape": "prostokątna etykieta na fizycznej obudowie",
+      "optical_chambers": "nie dotyczy: optyka poza kadrem",
+      "marking": "SOURCED [ogląd]: E13 w okręgu;13106;00DCR;PL;01 1a;02 A;00 RL;27.5.",
+      "limits": "Etykieta fizycznego reflektora; nie jest kloszem.27.5 zapisano jako oznaczenie, nie pomiar cd. Data19-10-2016 na etykiecie nie jest datą ekspozycji. Nie przypisano aktualnej serii regulaminu do całej części.",
+      "classification": "FIZYCZNA_ETYKIETA_PRZÓD_E_NUMER_SYMBOLE"
+    },
+    {
+      "id": "01-FA15-02",
+      "url": "https://a.allegroimg.com/original/112754/f40c2cd84ed1a16f529e68580d8f/MERCEDES-ACTROS-BI-XENON-LEWA-PRZEDNIA-LAMPA-9618202639-ORYGINAL",
+      "native_px": [
+        500,
+        384
+      ],
+      "gallery": "1/15",
+      "description": "Odłożony na warsztatowej powierzchni niesymetryczny reflektor: przezroczysty klosz na czarnym tle, duża okrągła soczewka w dolnej środkowej części, drugi okrągły segment odbłyśnika powyżej po prawej i kilka jasnych poziomych elementów w dolnym lewym występie. Górna krawędź tworzy jasny wąski łuk; uchwyty wystają po lewej. Na kloszu odbija się okno i otoczenie.",
+      "colour": "bezbarwny klosz, czarna obudowa, srebrzyste wnętrze",
+      "shape": "asymetryczny obrys rozszerzony ku górze, niski boczny występ",
+      "optical_chambers": "UNVERIFIED: dwa widoczne okrągłe segmenty oraz pozioma grupa; nie utożsamiono z liczbą funkcjonalnych komór",
+      "marking": "UNVERIFIED: brak czytelnego E/funkcji w tym ujęciu",
+      "limits": "Jasne plamy odbić nie dowodzą świecenia. Funkcji poszczególnych segmentów nie przypisano z samego wyglądu.",
+      "classification": "KONTEKST_GEOMETRII_PRZÓD"
+    }
+  ],
+  "limits": [
+    "Żaden odczyt nie pochodzi z rekonstrukcji przetartego numeru.",
+    "Nie utożsamiono oznaczenia części, CE/MD/10R z fotometrią. W zachowanym detalu odczytano DCR i symbole dodatkowe; nie zaobserwowano oddzielnego10R.",
+    "Nie przeliczano referencji27.5 na cd.",
+    "To przód ciężarówki, nie tylna lampa naczepy.",
+    "Nie pobrano wszystkich zdjęć galerii i nie podjęto masowego scrapowania."
+  ]
+}

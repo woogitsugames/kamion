@@ -140,3 +140,10 @@ Główny manifest45rekordów kadrów (8lokalnych/37link-only). [Heavy-plate-roun
 ## Optyka i świecenie — obieg13 po niezależnej recenzji
 
 [Lit-rear-round13](lit-rear-round13/README.md):2fotografie producentów,0pobrań/2link-onlyARR, obie obejrzane osobno przez2agentów. Knapen:duża zamontowanaEuropointIII, szerokośćEST35–45%obrazu; czerwone pasma/refleks nie rozstrzygają załączenia wobec silnego słońca, emisjaUNVERIFIED. Ermax:rzeczywiste jasne czerwonepunkty/białeźródło/bursztynowepunkty, emisjaPASS, lecz pojedyncze okrągłe modułyEST7–8%szerokości i<300px. Nie zsumowano trzech lamp do jednej kwalifikacji ani szerokości zpowierzchnią. Ciemne wnętrze przy jasnym plenerze nie dowodzi nocy.0nowych włączonych/nocnychzbliżeń i0E. Osobny podmanifest, główny45bez zmian.
+
+
+## Actros i uzupełnienie odblasków — obiegi14–15
+
+Główny manifest47kadrów(8lokalnych/39link-only). [Actros](front-approval-round15/README.md):2nowe fotografie1fizycznego reflektoraKOITO zofertyA9618202639,0pobrań. DokładnyetykietowyURLpo dwukrotnymodczycie autora i niezależnympeer: E13wokręgu/13106,00DCR PL 01 1a 02 A 00 RL oraz27.5na tej samej naklejce. NieWatt, nieR27.5, nie zmierzonaświatłość. Pełnyklosz ietykieta to2kadry1części, bez wzrostu15tylnych/4włączonych/3nocnych. Historycznyaudyt10/45pozostajesnapshotem, nie zmieniono jego daty/denominatora po dodaniu2nowych.
+
+[R150](retroreflection-round14/README.md):2020ma3potwierdzone tekstowowarunki i3macierzeUNVERIFIED, wyłączone z parametrów generatora. Woddzielnym2021HTMLtabela5rzeczywiścieobejrzana:3osobne wiarygodne rekordyCIL dlaIIIA/IIIBz jednostkami/kątami; nieemitowanecd. Nieutożsamiono snapshotów2020/2021ani aktualności2026. Metryki czasu recenzji obejmuje jawnaerrata review-time-audit, bez ruszaniaEXIF/dat źródeł.

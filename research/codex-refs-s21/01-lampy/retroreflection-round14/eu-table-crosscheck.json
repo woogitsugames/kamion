@@ -1,0 +1,36 @@
+{
+  "result": "UNVERIFIED_TABLE_MAPPING",
+  "scope": "Odrębne sprawdzenie urzędowej publikacji UE; bez zmiany norms.csv lub kwalifikacji UNECE2020.",
+  "candidate": {
+    "celex": "42021X1721",
+    "title": "UN Regulation No150 [2021/1721]",
+    "publication": "OJ L347,30.09.2021,pp297–387",
+    "indexed_version": "Supplement3 to original version; entry into force30.09.2021",
+    "version_evidence": "Wyłącznie indeks wyszukiwarki urzędowej strony; pełnego XHTML nie odczytano. Nie utożsamiono z UNECE13.01.2020.",
+    "url": "https://eur-lex.europa.eu/eli/reg/2021/1721/oj/eng",
+    "canonical_html_attempt": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:42021X1721"
+  },
+  "access_log": [
+    {
+      "url": "https://eur-lex.europa.eu/eli/reg/2021/1721/oj/eng",
+      "tool_result": "turn529view0",
+      "result": "Jedynie3linie bramki JavaScript/robot; dokument nieosiągnięty."
+    },
+    {
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:42021X1721",
+      "tool_result": "turn531view0",
+      "result": "Jedynie3linie tej samej bramki; brak wglądu w rzeczywiste komórki tabeli."
+    }
+  ],
+  "indexed_table_signal": {
+    "status": "UNVERIFIED: nie dowód układu XHTML",
+    "tool_ref": "turn530search1",
+    "summary": "Indeks pokazuje tabelę5: nagłówki V0/±10/±5 i H0/0/±20;20′450/200/150;1°30′12/8/8. Nie zaobserwowano granic komórek ani atrybutów rowspan/colspan."
+  },
+  "conclusion": [
+    "Nie ma niezależnego potwierdzenia macierzy z pełnego HTML.",
+    "Zachować osobny snapshot2021 jako kandydat, nie podmieniać cytowań2020.",
+    "Brak dalszych prób PDF, brak wykonywania challenge i brak użycia Chrome.",
+    "norms.csv nie zmieniono; decyzja integracyjna pozostaje u koordynatora."
+  ]
+}

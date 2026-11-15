@@ -1,0 +1,73 @@
+{
+  "result": "PASS_VISUAL_HTML_TABLE_2021",
+  "source": {
+    "celex": "42021X1721",
+    "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:42021X1721",
+    "entry_url": "https://eur-lex.europa.eu/eli/reg/2021/1721/oj/eng",
+    "publication": "OJ L347,30.09.2021,pp297–387",
+    "version": "Supplement3 to original version of R150; stated entry into force30September2021",
+    "legal_scope": "Dokumentacyjna publikacja; nagłówek wskazuje pierwotne teksty UNECE jako mające skutek prawny. Nie deklarujemy aktualności prawnej2026."
+  },
+  "method": [
+    "Jedno zwykłe otwarcie ELI w Chrome; pełna strona załadowana bez CAPTCHA,robotwall,DeviceCheck ani logowania.",
+    "Z widocznego linku HTML English przejście do pełnego XHTML.",
+    "Odczyt nagłówka wersji z pełnego DOM; osobny ogląd bitmapy widocznej tabeli5 po kliknięciu jej nagłówka.",
+    "Wiersze i pionowe granice komórek tabeli były widoczne w przeglądarce; nie rekonstruowano układu z płaskiego ciągu PDF.",
+    "Po zaobserwowaniu tabeli natychmiast completion_summary; Chrome zwolniony."
+  ],
+  "table": {
+    "locator": "5.2.3.1; Table5 Requirements for CIL values (Classes IIIA and IIIB)",
+    "unit": "mcd·lx^-1",
+    "colour": "red",
+    "classes": [
+      "IIIA",
+      "IIIB"
+    ],
+    "columns": [
+      {
+        "V_deg": "0",
+        "H_deg": "0"
+      },
+      {
+        "V_deg": "±10",
+        "H_deg": "0"
+      },
+      {
+        "V_deg": "±5",
+        "H_deg": "±20"
+      }
+    ],
+    "rows": [
+      {
+        "alpha": "20′",
+        "CIL_min": [
+          450,
+          200,
+          150
+        ]
+      },
+      {
+        "alpha": "1°30′",
+        "CIL_min": [
+          12,
+          8,
+          8
+        ]
+      }
+    ],
+    "mapping": "PASS dla snapshotu2021, potwierdzone widocznymi komórkami"
+  },
+  "comparison": {
+    "earlier2020": "norms.csv pozostaje nietknięty. Brak obejrzanej bitmapy UNECE13.01.2020; 2021niejest automatycznym dowodem identyczności całego wcześniejszego wydania.",
+    "separate_csv": "eu-2021-norms.csv",
+    "changed_2020_rows": 0,
+    "new_photographs": 0,
+    "new_documents": "Odrębne wydanie dokumentacyjne2021, nie nowa fotografia.",
+    "pending": "Decyzja koordynatora o sposobie przytoczenia osobnego snapshotu2021."
+  },
+  "downloads": {
+    "pdf": 0,
+    "photographs": 0,
+    "screenshots_saved_to_disk": 0
+  }
+}

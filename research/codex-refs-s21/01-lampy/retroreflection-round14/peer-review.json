@@ -1,0 +1,59 @@
+{
+  "status": "PARTIAL — 3 tekstowe wiersze PASS; 3 przypisania tabeli UNVERIFIED",
+  "reviewer": "niezależny agent knyszyn",
+  "reviewed_at_brussels": "2026-11-15",
+  "source": "https://unece.org/sites/default/files/2021-05/R150e.pdf",
+  "document": "E/ECE/TRANS/505/Rev.3/Add.149, oryginalny snapshot 13.01.2020; aktualność prawna2026 niebadana",
+  "access": "Jedno otwarcie bezpośredniegoURL zwróciło403. Następnie odczytano istniejący cached pełny tekst oficjalnegoPDF, poza CSV lampy. Nie ponawiano pobrań, nie użytoChrome ani screenshotów. Bitmapa tabeli nieobejrzana.",
+  "reviews": [
+    {
+      "id": "01-RR14-01",
+      "verdict": "UNVERIFIED_TABLE_MAPPING",
+      "locator": "5.2.3.1, tabela5, drukowana22; tekst linie583–600",
+      "finding": "Jednostka mcd/lx oraz klasyIIIA/IIIB potwierdzone. Ekstrakcja przeplata wartości dwóch wierszy; przypisania200 do20′/V±10°/H0° nie potwierdzono niezależną bitmapą."
+    },
+    {
+      "id": "01-RR14-02",
+      "verdict": "UNVERIFIED_TABLE_MAPPING",
+      "locator": "5.2.3.1, tabela5, drukowana22; linie583–601",
+      "finding": "150 i ograniczenie kąta bryłowego występują. Przypisanie150 do20′/V±5°/H±20° pozostaje nieweryfikowane wizualnie."
+    },
+    {
+      "id": "01-RR14-03",
+      "verdict": "UNVERIFIED_TABLE_MAPPING",
+      "locator": "5.2.3.1, tabela5, drukowana22; linie588–599",
+      "finding": "20′ i1°30′ są różnymi wierszami. Ciągi450/12,200/8,150/8 sugerują kolumny, lecz nie dowodzą niezależnie macierzy12/8/8."
+    },
+    {
+      "id": "01-RR14-04",
+      "verdict": "PASS_TEXT_ONLY",
+      "locator": "5.2.3.2, drukowana22; linie601–604",
+      "finding": "Potwierdzone: H poniżej750mm, sprawdzenie tylko do5° wdół. To warunek badania, nie zalecenie montażowe."
+    },
+    {
+      "id": "01-RR14-05",
+      "verdict": "PASS_TEXT_ONLY",
+      "locator": "4.2.1.2, drukowana16, linie392–398;5.2.4.1,drukowana22,linie605–607",
+      "finding": "Potwierdzone: CIEA, α1/3°, V=H=0°; przy odbiciu bezbarwnym V±5°/H0°. Nocna czerwień odsyła doR48."
+    },
+    {
+      "id": "01-RR14-06",
+      "verdict": "PASS_TEXT_ONLY",
+      "locator": "załącznik4,3.2/3.4,drukowane48–49;linie1323–1330",
+      "finding": "Potwierdzone: CIEA i≥10m lub równoważnik optyczny, ponadto graniceδ/γ/η. Pełny schemat stanowiska niepotwierdzony."
+    }
+  ],
+  "unit_check": "CIL w mcd/lx nie jest emitowaną światłością wcd; przeliczeń na moc/światłość lampy nie wykonywano.",
+  "not_an_independent_table_matrix": "Ten peer niezależnie odczytuje oficjalny tekst, ale to ta sama reprezentacja ekstrakcyjna co wcześniejszy odczyt lampy. Nie udaje niezależnego dowodu układu komórek.",
+  "recommended_status": "Wiersze01–03 mogą zachować literalną obecność liczb i jednostki, ale pełne paryV/H/α→wartość oznaczyćUNVERIFIED do obejrzenia autorytatywnej tabeli. Wiersze04–06 mają realne punktowe źródło tekstowe.",
+  "counts": {
+    "rows_reviewed": 6,
+    "rows_pass_text": 3,
+    "rows_unverified_matrix": 3,
+    "new_documents_downloaded": 0,
+    "new_images": 0
+  },
+  "scope": "Tylko własny peer-review.json; norms.csv i pliki rodzica niezmienione.",
+  "review_time_precision": "DATE_ONLY; exact review time UNVERIFIED, unmeasured manual time retracted",
+  "review_time_errata_reference": "research/codex-refs-s21/review-time-audit/corrections.json"
+}

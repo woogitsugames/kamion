@@ -582,7 +582,7 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 
 04/temporary-marking-round7:3fotografie publicznej strony kontraktuS19Krynice–Dobrzyniewo–BiałystokZachód, autorUNVERIFIED, tylko link-only, all rights reserved. DokładneURL i podpisyDK65/daty permanifest, wszystkiepo niezależnympeer; bez zdjęć/screenshotów wGit/na dysku. LogoGDDKiA nie uznane za licencjęCC.
 
-04/forest-context-round8:publiczne usługiBDL/LasówPaństwowych,1identyfikacjawydzielenia i literalneodpowiedzi/metadane + własnepara frazy. Nie przypisanoCC; mapaWMSwyłącznie pozaGit, bez redystrybucji geometrii(granicegeometrynull). Użycie nie rozszerza warunków źródła i nie identyfikuje szpaleru.
+04/forest-context-round8:publiczne usługiBDL/LasówPaństwowych,1identyfikacjawydzielenia i literalneodpowiedzi/metadane + własne parafrazy. Nie przypisanoCC; mapaWMSwyłącznie pozaGit, bez redystrybucji geometrii(granicegeometrynull). Użycie nie rozszerza warunków źródła i nie identyfikuje szpaleru.
 
 06/dw671-roundabout-ground-round6:2fotografieMapillary, grobin2019/2020, CC BY-SA4.0 według oficjalnej pomocy wskazanej wmanifeście. Wyłącznie linki i własne opisy,0kopii/screenshotów/API/tokenów. PodkładOSM, dokładnepKey/datowania/ograniczenia permanifest.
 
@@ -593,3 +593,8 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 02/qualification-ledger-round18 to własny rejestr istniejących odczytów/aliasów, bez nowej fotografii lub rozszerzania licencji źródeł. StatusyP18 z niedozwolonym filtremFlickr(PublicDomainMark) nie stają się zgodnymi licencyjnie przez ten rejestr; nie użyto ich jako nowego zaakceptowanegoA/B.
 
 06/monki-landmark-round7:2miniatury≤800px pochodnepodglądówCommons, ZalaCCBY-SA4.0(2018) iKrzysztofKundziczCCBY-SA3.0(2010). Pełnelinki/atrybucje/licencje permanifest,0pełnychoryginałów; surowepodglądy pozaGit. Plik lokalny wpodmanifeściefiles/, SHAminiatury nieudaje oryginału.
+
+
+01/front-approval-round15:2fotografie rzeczywistej lampyKOITO/Actros, publikacja lusterka_2009/Allegro14731209728, fotografUNVERIFIED, tylko link-only, all rights reserved. Całyklosz iexactetykieta po ponownymodczycie i niezależnympeer; bezpobrań/screenshotów/plikówmediów.
+
+01/retroreflection-round14:własne liczby/parafrazy i odsyłacze do urzędowychUNECE2020/UE2021. Bez źródłowychPDF/screenshotów/wizualnychkopii. Trzy2020macierze jawnieUNVERIFIED;3osobne zweryfikowane wiązania tabeli2021z dokładnym źródłem/wersją wCSV, niepodmiana licencji ani wersjinormy.
