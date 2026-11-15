@@ -109,7 +109,9 @@ namespace Game.Gameplay
             if (Application.CanStreamedLevelBeLoaded(WorldCSceneName))
             {
                 // Same values as the launch arguments route_s / route_end (consumed by DrivingLabBootstrap in WorldC).
-                entries.Add(("Trasa G3-A — Kwadrat Park, brama, Bieżeństwa", () =>
+                // Labels name streets and generic places only, never a company or a commercial site (CLAUDE.md rule 8,
+                // BRAND-SWEEP-S20 #3: the depot start used to carry the name of the logistics park).
+                entries.Add(("Trasa G3-A — baza, brama, Bieżeństwa", () =>
                 {
                     StartRequest.Set("G3-A", StartRequest.G3AStartS, StartRequest.G3AEndS, options.LightingId);
                     SceneManager.LoadScene(WorldCSceneForTier());

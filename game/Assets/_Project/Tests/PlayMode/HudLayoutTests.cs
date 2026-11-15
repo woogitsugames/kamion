@@ -422,7 +422,7 @@ namespace Game.Tests
             var starts = new List<(string, Action)>
             {
                 ("DrivingLab — plac testowy", () => { }),
-                ("Trasa G3-A — Kwadrat Park, brama, Bieżeństwa", () => { }),
+                ("Trasa G3-A — baza, brama, Bieżeństwa", () => { }),
                 ("Trasa G3-B — Andersa, Rondo Putry", () => { }),
             };
             var menu = BootMenu.Create(m_Cam, StartMenuOptions.Load(), starts, null);
@@ -526,7 +526,7 @@ namespace Game.Tests
                 var starts = new List<(string, Action)>
                 {
                     ("DrivingLab — plac testowy", () => { }),
-                    ("Trasa G3-A — Kwadrat Park, brama, Bieżeństwa", () => { }),
+                    ("Trasa G3-A — baza, brama, Bieżeństwa", () => { }),
                     ("Trasa G3-B — Andersa, Rondo Putry", () => { }),
                 };
                 var menu = BootMenu.Create(cam, StartMenuOptions.Load(), starts, null);

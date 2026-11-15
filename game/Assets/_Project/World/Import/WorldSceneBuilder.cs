@@ -115,7 +115,7 @@ namespace Game.World.Import
             const float spawnS = 12f;
             Vector3 spawnPos = route.points.Length > 1 ? route.PointAt(spawnS) : Vector3.zero;
             Vector3 spawnFwd = route.points.Length > 1 ? route.TangentAt(spawnS) : Vector3.forward;
-            var spawn = new GameObject("Spawn_KwadratParkGate").transform;
+            var spawn = new GameObject("Spawn_DepotGate").transform;
             spawn.SetPositionAndRotation(spawnPos, Quaternion.LookRotation(spawnFwd, Vector3.up));
 
             var truck = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
