@@ -112,6 +112,7 @@ def test_materials_and_sets():
     assert "hall_wall_smooth" not in sys.modules["streetscape.buildings_mesh"].HALL_WALLS   # never a hashed pick
 
 
+@pytest.mark.xfail(reason="s20 lead reverted the fence mip exclusion (route C fence lost mesh at 10 m); follow-up alpha-to-coverage", strict=False)
 def test_fence_mesh_mips_do_not_preserve_coverage():
     src = (REPO / "game/Assets/_Project/World/Import/InstanceImporter.cs").read_text(encoding="utf-8")
     assert 'ti.mipMapsPreserveCoverage = alpha && !file.StartsWith("fence_");' in src
