@@ -74,3 +74,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 20:29 +01:00 — R1: build/import/4 rendery OK; 11 lokalnych par High clear gotowych. Ocena wizualna FAIL; Low max drawsEst 429→440, High 760→774; 15/18 drzew. R2: płaskie ścieżki, lepszy urząd/drzewa, redukcja draw calls.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/AUDYT.md -Tail 15; uv run --project tools/worldgen python artifacts/knyszyn-rynek-0227/budget-r1.py`
+- 2026-11-15 20:33 +01:00 — R2 WIP: park_flush + dopasowanie terenu, 4 szacowane kolory dachów, 2 lipy kit zamiast instancji; testy kierunkowe zielone. Urząd i sylwetka króla poprawiane osobno. R1 FAIL wizualnie/budżet Low.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis/test_knyszyn_*_0227.py -q` (po zakończeniu prac agentów), potem build r2
