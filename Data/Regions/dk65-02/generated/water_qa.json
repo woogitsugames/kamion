@@ -79,12 +79,6 @@
    "src": "bdot10k:OT_PTWP_A:b7b3f375-77f9-46ae-aef9-f3bbad771d80:0"
   },
   {
-   "area_m2": 25476,
-   "kind": "river",
-   "name": null,
-   "src": "osm:way/227056750:0"
-  },
-  {
    "area_m2": 318,
    "kind": "pond",
    "name": null,
@@ -97,40 +91,10 @@
    "src": "osm:way/298099992:0"
   },
   {
-   "area_m2": 7437,
-   "kind": "river",
-   "name": null,
-   "src": "osm:way/309441964:0"
-  },
-  {
    "area_m2": 339,
    "kind": "pond",
    "name": null,
    "src": "osm:way/494289616:0"
-  },
-  {
-   "area_m2": 10138,
-   "kind": "river",
-   "name": null,
-   "src": "osm:way/779502412:0"
-  },
-  {
-   "area_m2": 15579,
-   "kind": "river",
-   "name": null,
-   "src": "osm:way/779502413:0"
-  },
-  {
-   "area_m2": 5237,
-   "kind": "river",
-   "name": null,
-   "src": "osm:way/779502414:0"
-  },
-  {
-   "area_m2": 4535,
-   "kind": "river",
-   "name": null,
-   "src": "osm:way/779670095:0"
   },
   {
    "area_m2": 297,
@@ -152,10 +116,10 @@
   }
  ],
  "carve": {
-  "bank_nodes_lowered": 41500,
+  "bank_nodes_lowered": 39240,
   "bed_lowered_m_max": 3.23,
-  "bed_nodes": 84554,
-  "lip_nodes_raised": 115,
+  "bed_nodes": 78164,
+  "lip_nodes_raised": 354,
   "water_nodes_kept_by_road": 75
  },
  "profiles": [
@@ -181,7 +145,7 @@
    "name": "Supraśl",
    "raw_min_max_m": [
     110.12,
-    110.95
+    110.96
    ],
    "reversed": false,
    "src": "osm:way/1068670427:0",
@@ -247,13 +211,37 @@
  "region": "dk65-02",
  "schema": "truck-sim-pl/water-qa/1",
  "sheet": {
-  "area_m2": 88700,
-  "triangles": 16704
+  "area_m2": 82341,
+  "triangles": 15631
  },
  "skipped": [
   {
+   "src": "osm:way/227056750:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/309441964:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
    "src": "osm:way/779486072:0",
    "why": "intermittent=yes"
+  },
+  {
+   "src": "osm:way/779502412:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/779502413:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/779502414:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/779670095:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
   },
   {
    "src": "osm:way/1458011753:0",
@@ -358,5 +346,5 @@
    "nodes": 243
   }
  ],
- "water_nodes": 84629
+ "water_nodes": 78239
 }

@@ -82,7 +82,29 @@ draw na chunk z wodą) i ≤ +4,6 tys. trójkątów na klatkę. Kamery wodne (no
 - `tests/gis/test_water_0210.py` 9/9 (opt-in, strażnicy w stage/build_world, poziomy w dół rzeki, staw, pominięcie
   `intermittent`, dno/brzeg/próg, drogi nietknięte, tafla bez jezdni i w granicach chunków, kolory brzegu,
   dane Supraśli/Białej na `dk65-02`).
-TODO_VAL
+- `build_world dk65-02` r3: 19 ciał wody (6 OSM `intermittent` i 6 zarysów OSM pokrytych przez BDOT pominiętych),
+  78 239 węzłów wody, dno do 3,23 m pod NMT (krawędzie zarysu na skarpie), 39 240 węzłów brzegu obniżonych,
+  354 podniesionych (próg), 75 węzłów wody przy drogach nietkniętych; tafla 82 341 m², 15 631 trójkątów.
+  Ściany terenu (22, max 0,665 m) i spójność dróg (4 × `lane_blind_end`, 0 na trasie) — jak w ADR 0207 (bez zmian).
+- Import: bez błędów shadera / C#; `WORLD_MEMORY` water 0,3 MB (Low i High).
+- Pętla wizualna (3 rundy): `artifacts/water-0210/dk65-02/r{1,2,3}/view/` — pary `pair-{low,high}-top-bridge.jpg`
+  (render | ortofoto 2024-05-27), `{low,high}-water-bank-west / -deck-east / -oblique-bridge.jpg`,
+  `*-drive-bridge-approach.jpg`. r1: Low wyglądał jak asfalt (SH zamiast sondy), na High szwy zmarszczek w ujściu
+  (adwekcja bez ograniczenia) → r2: dwufazowa mapa przepływu, wygładzone pole kierunku, Low = rozmyta sonda; r3:
+  jaśniejsza, oliwkowa toń. Przebieg, szerokość i ujście Białej zgodne z ortofoto (para top-bridge).
+- EditMode: TODO_EM. Krytyk `visual-critic`: nie uruchamiany (agent nie tworzy subagentów) — do zlecenia przez lidera.
 
 ## Otwarte
-TODO_OPEN
+1. **Kolor toni** z góry nadal ciemniejszy i bardziej neutralny niż na ortofoto (render ~30/30/28 sRGB vs ~40/50/40);
+   z bliska na Low tafla pod stromym kątem prawie czarna. Strojenie po zdjęciu właściciela z brzegu (WORKING_VALUE).
+2. **Brzegi zbyt czyste**: równa linia trawy przy wodzie; na ortofoto szuwary, krzewy i olchy wzdłuż Białej —
+   potrzebny pas roślinności nadbrzeżnej (trzciny jako karty / instancje) — osobne zadanie.
+3. Podpory mostu kończą się na pierwotnym NMT (≈ poziom wody), dno jest niżej — pod nieprzezroczystą taflą
+   niewidoczne; przy przezroczystej wodzie trzeba by przedłużyć filary.
+4. Rzeka biegnie dalej przez `dk65-03` (Supraśl ~2,3 km) — włączyć `water=True` i sprawdzić ciągłość poziomu na
+   szwie (koniec `dk65-02` ~110,24 m na W krawędzi). `dk65-04/05`: tylko stawy (Glinianki, ppoż.) — opcjonalnie.
+5. **C (Biała 937 m) i Dojlidy (strumienie)** — świadomie wyłączone; włączenie zmieni ich wynik (nowa linia
+   bazowa determinizmu, fidelity C) — decyzja lidera/właściciela.
+6. Rowy/dreny (`ditch`/`drain`) bez wody i bez wcięcia; przepusty pod drogami nieodtworzone.
+7. `Gate3Audit` (Editor/VisualQA, poza obszarem) nie zna węzła `water` — dopisać do listy powierzchni.
+8. Telefon: brak pomiaru (koszt shadera High: 4 × NoiseGrad + sonda na piksel wody — UNVERIFIED na Mali).
