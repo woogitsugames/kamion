@@ -1,7 +1,7 @@
 {
  "chains": [
   {
-   "axis_smoothing_dev_max_m": 0.07,
+   "axis_smoothing_dev_max_m": 0.08,
    "bridge_m": 88.4,
    "grade_limit": 0.11,
    "highway": [
@@ -13,13 +13,21 @@
    ],
    "length_m": 1105.5,
    "max_grade": 0.0236,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.026,
+   "overrides": [
+    "dk65-02-fasty-edge-lines",
+    "dk65-02-supraslbridge",
+    "dk65-elcka-xsec"
+   ],
+   "profile_rms_vs_nmt_m": 0.027,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.5
+    6.5,
+    7.5,
+    7.6
    ],
    "width_src": [
+    "authored_override:dk65-02-supraslbridge",
+    "authored_override:dk65-elcka-xsec",
     "bdot10k (clamped to PTB2022 §17 ust.1 range)"
    ]
   },
@@ -312,7 +320,9 @@
    ],
    "length_m": 120.5,
    "max_grade": 0.0399,
-   "overrides": [],
+   "overrides": [
+    "dk65-02-fasty-edge-lines"
+   ],
    "profile_rms_vs_nmt_m": 1.466,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -335,7 +345,9 @@
    ],
    "length_m": 43.1,
    "max_grade": 0.0046,
-   "overrides": [],
+   "overrides": [
+    "dk65-02-fasty-edge-lines"
+   ],
    "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -358,7 +370,9 @@
    ],
    "length_m": 94.9,
    "max_grade": 0.0103,
-   "overrides": [],
+   "overrides": [
+    "dk65-02-fasty-edge-lines"
+   ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -381,7 +395,9 @@
    ],
    "length_m": 43.9,
    "max_grade": 0.018,
-   "overrides": [],
+   "overrides": [
+    "dk65-02-fasty-edge-lines"
+   ],
    "profile_rms_vs_nmt_m": 0.028,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -404,7 +420,9 @@
    ],
    "length_m": 33.9,
    "max_grade": 0.0048,
-   "overrides": [],
+   "overrides": [
+    "dk65-02-fasty-edge-lines"
+   ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -427,7 +445,10 @@
    ],
    "length_m": 137.7,
    "max_grade": 0.0181,
-   "overrides": [],
+   "overrides": [
+    "dk65-02-fasty-edge-lines",
+    "dk65-02-knyszynska-396566354"
+   ],
    "profile_rms_vs_nmt_m": 0.013,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -680,7 +701,9 @@
    ],
    "length_m": 71.5,
    "max_grade": 0.0045,
-   "overrides": [],
+   "overrides": [
+    "dk65-02-fasty-edge-lines"
+   ],
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -703,7 +726,9 @@
    ],
    "length_m": 209.7,
    "max_grade": 0.0058,
-   "overrides": [],
+   "overrides": [
+    "dk65-02-fasty-edge-lines"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -981,7 +1006,9 @@
    ],
    "length_m": 498.1,
    "max_grade": 0.0323,
-   "overrides": [],
+   "overrides": [
+    "dk65-02-knyszynska-396566354"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1359,7 +1386,7 @@
    "patches": 157
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 190620,
+  "footprint_nodes": 191532,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -1444,12 +1471,51 @@
    "P-10 crossing": 3,
    "P-10 crossing in junction": 3,
    "P-13": 3,
-   "P-7b edge line": 44
+   "P-7b edge line": 74
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 1153,
-  "overrides_applied": [],
+  "nmt_nodes_replaced_under_decks": 1167,
+  "overrides_applied": [
+   {
+    "id": "dk65-02-knyszynska-396566354",
+    "targets": [
+     "w396566354:1782932318-841774187",
+     "w396566354:2559254743-1782932318"
+    ]
+   },
+   {
+    "id": "dk65-02-fasty-edge-lines",
+    "targets": [
+     "w1321811065:10712325525-13239544653",
+     "w1321811066:3020060352-3020063156",
+     "w1321811066:3020060360-3020060369",
+     "w1321811066:3020060369-10712325525",
+     "w1321811066:3020063156-3020060360",
+     "w1321811066:841774187-3020060352",
+     "w1442886949:13239544652-14315720110",
+     "w1442886949:14315720110-3147719960",
+     "w1442886950:13239544653-13239544652",
+     "w234919340:3147719960-8197807803",
+     "w234919340:7283285517-1197260556",
+     "w234919340:8197807803-7283285517",
+     "w716806122:1197260556-131613582"
+    ]
+   },
+   {
+    "id": "dk65-02-supraslbridge",
+    "targets": [
+     "w41533342:131613582-508881726"
+    ]
+   },
+   {
+    "id": "dk65-elcka-xsec",
+    "targets": [
+     "w1024956365:2295268357-839431354",
+     "w716806121:508881726-2295268357"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -1466,10 +1532,12 @@
    "crossing_pairs_skipped": 4,
    "junctions": 8,
    "lines": {
+    "P-7a": 7,
+    "P-7b": 8,
     "lane": 8
    },
    "pairs": 18,
-   "unmatched": 2
+   "unmatched": 5
   },
   "verge_strips": {
    "chunks": 24,
