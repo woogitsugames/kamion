@@ -1,9 +1,12 @@
 # Status codex-refs-s21
 
-Cel aktywny. Gałąź research/codex-refs-s21, bez scalenia.
-01 lampy: WIP, 5 kadrów pomocniczych / 0 link-only; 0 ciągników/naczep z czytelnym E. Kryteria M59-FIX niespełnione.
-02 brud: WIP, 4 obejrzane kadry / 0 link-only; 3 odrzucone, 1 wzorzec czysty (znany P18-107). 0 kwalifikowanych, 0 zimowych, 0 europejskich brudnych drzwi. Kryteria M61-FIX niespełnione.
+Cel ciągły aktywny;3agenci:01lampy/Flickr,02brud/Flickr,03Knyszyn i06regionring. Koordynator:04DK65,05kolej38,integracja i PR100.
+01:5kadrów pomocniczych,8normatywnych wpisów;Eciągnik/naczepa0,brakiM59niespełnione.
+02:5kadrów manifestu,8nowychkandydatów obejrzanych;3odrzucone1czysty1rdza;kwalifikowany brud0,zima0,Europa0.
+03:5K1ponownie obejrzanych+1noweorto fontanny+2dokumentyUM;obrys~5,5×5,6m ESTIMATED;stanfasad2026UNVERIFIED.
+04:4rekordy dokumentacyjne+1ponownie obejrzaneorto drzew;GDDKiA potwierdza otwarcie S19;aktualne utrudnienia DK65UNVERIFIED.
+05:3rekordy dokumentacyjne;Id12PKP2026 elektryfikacja tak,3kVUNVERIFIED;przejazdyA–D i kadryterenowe nadalbrak.
+06:2orto+2dokumenty w recenzji;jeszcze niecommitowane.
+07:4rekordy;B040/B131nadalotwarte.
 
-03 Knyszyn: 5 kadrów K1 ponownie obejrzanych; nowe opisy brył i detali. 0 nowych pobrań; 5 miniatur z istniejących kopii; 0 link-only. Stan 2026 historycznych fasad UNVERIFIED.
-
-Następny krok: dalsze otwarte źródła tyłów naczep i lamp; przegląd Knyszyna w kolejnym obiegu. Żaden pakiet nie ma odbioru. PR zwykły, gotowość do scalenia NIE. Openverse API 403; Commons po przerwie ponownie działało, oryginały rozdzielone 12 s.
+Następny krok:integracja06 po korekcie opisu dachów;następnie kolejne kadry01/02 i03 odagentów.Komenda stanu:git status --short --branch.Nie scalono;PR100zwykły,gotowośćNIE.
