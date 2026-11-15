@@ -76,7 +76,7 @@ A16, najlepiej w ramach planowanej jednej przebudowy C (HANDOVER s22).
 | #114 | `pytest tests/gis/test_tile_graph_0235.py` | 7 passed |
 | #115 | `pytest tests/gis/test_ring_0231.py test_knyszynska_0208.py` | 42 passed |
 | #116 | `dotnet test tests/g3poses/G3PoseTests.csproj`; `pytest tests/gate3`; `g3_poses.py check` | 16/16; 24 passed + 1 fail znany z main; OK (42) |
-| scalenie 8 PR | `pytest tests/gis tests/gate3` + `tools/perf/tests` na `rv-combo` | _wynik dopisany niżej_ |
+| scalenie 8 PR | `pytest tests/gis tests/gate3` (bez znanego faila gate3) + `tools/perf/tests` (61 passed) na scaleniu wszystkich 8 gałęzi | **1391 passed, 54 skipped, 4 xfailed, 3 failed** — dokładnie 3 znane faile main (forest_0187 edge texture, road_fidelity stale, world_v31 forest HLOD); 0 nowych |
 
 **Nowy znany czerwony test spoza listy preambuły:** `tests/gate3/test_gate3_meta.py::test_evidence_apk_info_legacy_and_dirty`
 pada na czystym main `bfe10923f` (`discover_apk_info` zwraca `git_sha=None` dla nazwy `…-f6abb8b001-dirty.apk`). Nie jest
