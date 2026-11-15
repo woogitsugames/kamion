@@ -489,3 +489,5 @@ Inne pliki osób trzecich w katalogu research (nie są „zasobami” wg reguły
 ## Referencje codex-refs-s21 (2026-11-15; WIP)
 
 Fotografie i wycinki w `research/codex-refs-s21/01-lampy/files/` oraz `02-brud/files/` są referencjami do obejrzenia, bez tekstur w buildzie. Licencje CC BY-SA 2.0 / 3.0 / 4.0 i szczegółowa atrybucja per oryginał w `manifest.csv` każdego katalogu. Zmiany: pomniejszenie do ≤ 800 px i jawnie oznaczone wycinki. Oryginały poza gitem w `Data/raw/refs/codex-s21/`. Wiersze odrzucone i wzorzec czysty nie są liczone jako dowody brudnych drzwi. Dokument UNECE R148 jest linkowany i parafrazowany z numerami punktów; kopii PDF nie redystrybuowano.
+
+Knyszyn: `research/codex-refs-s21/03-knyszyn/files/` — 5 pomniejszeń istniejących kadrów K1 (Henryk Borawski CC BY-SA 3.0; Athantor i Zala CC BY-SA 4.0). Tytuły, źródła, zmiany i licencje w manifeście; aktualne metadane Commons w `data/licences-commons.json`. Bez nowych kopii oryginałów; osobno wykonany przegląd obrazu.
