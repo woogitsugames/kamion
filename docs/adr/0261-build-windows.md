@@ -48,7 +48,33 @@ Draws/tris: bez zmian treści (te same sceny High co `-worldHigh` w APK). Rozmia
 Budżety PC (docs/03) nie są jeszcze zdefiniowane (ADR 0260): pomiary poniżej to maszyna deweloperska, NIE referencja.
 
 ## Walidacja
-(uzupełniane po buildzie i przebiegu — patrz niżej „Wyniki”)
+Maszyna deweloperska (Ultra 7 270K Plus, 64 GB, RTX 5070, D3D12) — **NIE referencja** (ADR 0260).
+- **Build** `pwsh scripts/build-windows.ps1 -Slot -Regions 'd67,knyszyn-w,dk65-monki-01,dw671-tykocin-01,bialystok-dojlidy'`
+  (kod z 4ee3e0262): `BUILD_RESULT: Succeeded errors=0 warnings=7`, 628 s BuildPlayer / 813 s razem z reimportem Library
+  pod Win64; `artifacts/win/kamion-0.1.0-4ee3e02626-regions/Kamion.exe`, sha256 `fbd073ca…17492b`, folder 4 923 MB
+  (188 plików). Zawartość świata przed kompresją 8 372 MB (siatki High 3 231 MB, tekstury PBR 2 085 MB, siatki Low
+  1 059 MB); 5 052 warianty shaderów. Log `artifacts/logs/build-win-20261115-211152.log`.
+- **Start w Knyszynie** (`-scene knyszyn-w -autopilot route -speed 50 -fps 1000`, okno 1600×900): log
+  `[BOOT] … api='Direct3D 12' tier=High`, `[START] region=knyszyn-w route_s=12.0 road='Obozowa'`, scena
+  `World_knyszyn-w_High`, wyjście 0, brak wyjątków. Bez `-tier` log `[BOOT] desktop default tier High`, menu `fps=60`,
+  a [DIAG] pokazuje równe 60,0 fps (p99 16,7 ms).
+- **FPS bez limitu, tier High, 1600×900:** 360–445 fps w oknach 5 s (średnia sesji 423–430, p95 3,1–3,9 ms, p99
+  3,4–6,0 ms; `artifacts/win/runs/20261115-212548` i `…-213342`). **Uwaga: to pomiar w większości na postoju** —
+  autopilot po ok. 40 m staje na zaporze (niżej), więc nie jest to FPS z jazdy przez region.
+- **Zrzuty obejrzane** (`artifacts/win/runs/*/shot.png`): widok z kabiny, zegary, lusterka-wstawki, zabudowa Knyszyna,
+  niebo; dotykowy HUD (kierownica, pedały, selektor) jest widoczny na PC. **Zapora na starcie:** start bez autopilota
+  (`…-213125-keys/shot.png`) pokazuje betonową zaporę w poprzek jezdni ok. 60–80 m przed ciężarówką; w przebiegach z
+  autopilotem ciężarówka dojeżdża do niej i stoi (0 km/h, bieg D3, blok zapory przy lewym narożniku kabiny) — także z
+  `-route_s 300`. To ten sam problem, który właściciel zgłosił na A16 (naprawia `spawn-fix-0262`); tu tylko opisany.
+- **Klawiatura w playerze: UNVERIFIED.** Kod klawiatury jest wspólny z edytorem i Input System jest aktywny, ale próba
+  wstrzyknięcia klawisza (`scripts/win-key-drive.ps1`, SendInput) nie powiodła się: Windows nie oddał fokusu oknu
+  uruchomionemu z procesu w tle. Pad: UNVERIFIED (brak pada przy maszynie w tej sesji). Do sprawdzenia przez właściciela.
+- **Efekty uboczne Unity po buildzie** (cofnięte `git checkout`): `M_Sky.mat`, `URP_Ultra.asset`,
+  `UniversalRenderPipelineGlobalSettings.asset` oraz `ProjectSettings.asset` — Unity dopisał wpis batchingu dla
+  `m_BuildTarget: Standalone` (static 1 / dynamic 0). Jeśli lider chce mieć to jawnie w gicie — jego decyzja.
+- `build_info` w playerze ma etykietę `ab4e89799e-dirty` (HEAD w chwili preprocessu + efekty uboczne Unity), a nazwa
+  folderu `4ee3e02626` (HEAD przy starcie skryptu); kod identyczny (ab4e89799 dodaje tylko ten ADR).
+- Testy EditMode (Win64): wynik w raporcie agenta / `artifacts/win-build-0261/test.out.log`.
 
 ## Otwarte
 - Kierownica z FFB (D56/D73) — nie w tym ADR.
