@@ -10,7 +10,7 @@ Powiązane: D63, D65 p.7–8 (`docs/11`), ADR 0182/0199 (LP_Dusk, zegar), 0191/0
   generatora są letnie (`leaf_textures.py`, `hedge_textures.py`: „summer, muted”) — potwierdzone na renderach dziennych.
 - Latarnie: barwa LED jest globalną stałą `StreetLamps.k_Led` (1; 0,93; 0,82). Rodzina „starych” słupów ulic bocznych
   (`lamp_old_concrete_9m`, `lamp_old_steel_8m`) ma głowicę sodową (`lamp_glass_sodium`, pomarańczowa pula i halo):
-  `knyszyn` 216 z 479 latarni, `knyszyn-w` 72 z 167, `bialystok-knyszynska` 311 z 910, `knyszyn-s` 0.
+  `knyszyn` 216 z 479 latarni, `knyszyn-w` 72 z 167, `bialystok-knyszynska` 311 z 907 (audyt `lamp_audit.py`), `knyszyn-s` 0.
 - K1: na DK65 poza zabudową latarni brak (ortofoto, OSM 0 węzłów `street_lamp`). W `knyszyn` reguła stawiała 15 słupów
   na DK65 (Obozowa, way 286990127) na południe od miasta — w ADR 0204 zostawione jako „niezweryfikowane”.
 
@@ -47,7 +47,7 @@ Powiązane: D63, D65 p.7–8 (`docs/11`), ADR 0182/0199 (LP_Dusk, zegar), 0191/0
    i `knyszyn-w` miały to już (ADR 0204/0209). `bialystok-knyszynska`: Szosa Knyszyńska/Ełcka leży w granicach miasta,
    na ortofoto widać słupy po stronie N — zostawione regule (UNVERIFIED, otwarte p. 3).
 
-## Budżet (przed → po, edytor, te same kamery)
+## Budżet (przed → po, edytor, kamery o tych samych id)
 `scripts/visual-qa.ps1`, kamery świata wspólne dla obu przebiegów (bez kabiny/pojazdu), `stats.txt` (szacunek edytora
 przed SRP batching), narzędzie `artifacts/summer-led-0216/tools/budget.py`. Wartości identyczne dla clear/dusk/night.
 
@@ -62,7 +62,15 @@ przed SRP batching), narzędzie `artifacts/summer-led-0216/tools/budget.py`. War
   `bialystok-knyszynska` 907 → 907, sód 311 → 0; `knyszyn-s` 0 → 0.
 - Jedyne pogorszenie: `knyszyn` Low, najgorsza kamera +1 draw instancji (498 → 499; prototypy LED starej rodziny są
   osobnymi prototypami obok zwykłych LED). W `bialystok-knyszynska` suma draws instancji +27 na 17 kamer przy −51 draws
-  zwykłych (kamery szwów przesunęły się po odświeżeniu `control_cameras.json`, ADR 0208) — maksimum bez zmian.
+  zwykłych i −240 tys. tris na High — w całości z jednej kamery `seam-e-into-tile`, która po regeneracji stoi w innym
+  miejscu (`control_cameras.json`, ADR 0208), więc nie jest to porównanie tego samego kadru. Bez czterech kamer `seam-*`
+  (13 kamer): Low draws 2283 → 2283, draws instancji 753 → 753, tris 2 091 272 → 2 091 513; High draws 4296 → 4297,
+  draws instancji 1217 → 1217, tris 4 537 263 → 4 538 010; maks. na kamerę Low 498 → 498, High 1171 → 1171.
+  Pozostałe kamery: +2…+159 tris na kamerę w siatkach statycznych (źródło nierozdzielone — regeneracja świata, nie
+  instancje latarni: tris instancji bez zmian).
+- Odniesienie do `docs/PERFORMANCE_BUDGETS.md` (draw calls przed SRP batching: Low 250, High 800): najgorsze kamery były
+  ponad budżetem już przed zmianą (knyszyn Low 498, High 843; bialystok-knyszynska Low 498, High 1246) — to szacunek
+  edytora dla kamer przeglądowych, stan zastany; ta zmiana dokłada +1 (knyszyn Low).
 - Dane: `Data/raw/derived/<id>/world` knyszyn 793 → 794 MB, bialystok-knyszynska 979 → 979 MB; `_Generated/World`
   knyszyn 758 → 759 MB, bialystok-knyszynska 887 → 888 MB. Biblioteka `street_props.glb`: +2 prototypy (2 × 174/91 tris).
 - Shadery, tekstury, liczba świateł i pul: bez zmian (zmienia się kolor globalny, nie liczba próbek).
@@ -78,13 +86,16 @@ przed SRP batching), narzędzie `artifacts/summer-led-0216/tools/budget.py`. War
     jako neutralnie białe na tle nieba zmierzchu, bez przepalenia i bez bloomu większego niż przed zmianą.
   - `dk65-inlet-south` (DK65 na południe od Knyszyna): przed — rząd słupów i pula na jezdni; po — brak słupów,
     droga ciemna (kamera kontrolna bez reflektorów pojazdu), w tle widać dopiero latarnie miasta.
+  - Low (tier telefonu minimum) obejrzany osobno: `after/knyszyn/Low-dusk/rynek-fountain`, `Low-night/dk65-poludniowa`,
+    `after/bialystok-knyszynska/Low-night/route-s0925`, `Low-dusk/route-s2404` — ta sama biel, bez sodu.
+    W `bialystok-knyszynska` zamianę głowic na ulicach bocznych potwierdza tylko audyt (kamery ich nie pokazują).
   - Zmierzch: okna biurowe wg zegara 21:00 (pojedyncze zamiast rzędów), mieszkalne bez zmian. Dzień bez zmian.
   - `bialystok-knyszynska`: na kamerach trasy stoją słupy LED głównej ulicy — różnica to nieco chłodniejsza biel
     soczewek i pul; głowice sodowe były na ulicach bocznych (311 → 0, audyt niżej).
 - **Audyt latarni** (`artifacts/summer-led-0216/tools/lamp_audit.py`, wyniki `after/data/<id>/lamp_audit.json`):
   głowice sodowe 0 we wszystkich czterech regionach. DK65: `knyszyn-s` 0 latarni na całej długości; `knyszyn`
-  way 286990127 (528 m, 2,7 bud./100 m) 15 → 0; `knyszyn-w` way 232511647 (pola, 0 bud./100 m) 1 słup przy rozwidleniu
-  Goniądzkiej, odcinek przez miasto (way 232511646, 6,9 bud./100 m) 31 słupów — oświetlony wg ortofoto (ADR 0209).
+  way 286990127 (528 m, 2,7 bud./100 m) 15 → 0; `knyszyn-w` way 232511647 (pola, 0 bud./100 m) 1 słup przypisany
+  przez audyt do najbliższej krawędzi (położenie UNVERIFIED, way ma `lamps: false`), odcinek przez miasto (way 232511646, 6,9 bud./100 m) 31 słupów — oświetlony wg ortofoto (ADR 0209).
 - **Testy:** __TESTS__
 - **Telefon:** nie mierzono — brak p50/p95/p99, PSS i temperatury dla tej zmiany (lider, po scaleniu; zakaz procesów
   Unity podczas przebiegów na telefonie). Oczekiwanie (nie pomiar): bez zmiany kosztu klatki — te same siatki, materiały,
