@@ -58,3 +58,7 @@ Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr pręd
 ## Pierwszy urzędowy punkt kategorii — obieg6
 
 [ObwieszczenieWojewody18.11.2025](crossing-category-source-round6/README.md), publiczneUMMońki, powołana decyzja13.11.2025. SOURCED[s3/17pkt5]:przejazdLK38kmistn29+522(kat.B) w wykazie planowanych rozbiórek. SOURCED[s2/17pkt4lit.b]:projektowanywiaduktkm29+394, odrębna konstrukcja/miara. Trzy skany obejrzane przez agenta i koordynatora. Nie przypisano doDW671/fotografii2019/IDPLK bez źródłowego mapowania; nie dowodzi wykonania ani obecnego statusu2026. G3/G4 i wyposażenie UNVERIFIED. 0nowychfotografii, PDF/rendery wyłącznie pozaGit. Wskazane na s3sieciLPN15kV nie są napięciem trakcyjnym.
+
+## Mapowanie punktu — obieg7 bez potwierdzenia
+
+[Celowana kontrola](crossing-location-round7/README.md):brak poszukiwanego punktu w zapisanymK1;1Overpass406 i1OSMAPI429, po429STOPbezretry/hostwariantów. Nie uzyskano węzła,ref ani topologiiDW671;nie przypisano hipotezy038029522 jako odczytanegoIDPLK. Główny manifest nadal15rekordów. Dowódkat.Bzobwieszczenia pozostaje wyłącznieprzy swoimkm29+522. Nie stwierdzono braku przejazdu wOSM/terenie.

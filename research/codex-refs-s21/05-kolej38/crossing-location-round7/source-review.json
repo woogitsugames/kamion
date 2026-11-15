@@ -1,0 +1,34 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "status": "STABLE — lokalizacja niepotwierdzona, bez nowego rekordu referencji",
+  "new_documents": 0,
+  "new_images": 0,
+  "confirmed_osm_nodes": 0,
+  "existing_sources_checked": [
+    "research/dk65-knyszyn-refs/data/osm_corridor.json: pełny słownik nodes; brak level_crossing w bbox53.289,22.882–53.295,22.889 i brak literalnego ref038029522 po usunięciu spacji.",
+    "research/codex-refs-s21/05-kolej38/data/osm-crossing-and-voltage-evidence.json:3punktyFasty, nieKnyszyn.",
+    "Całe research: literalne038029522 oraz038 029 522 wJSON/CSV/OSM/XML — brak trafienia."
+  ],
+  "network_checks": [
+    {
+      "type": "Overpass",
+      "log": "query-log.json",
+      "result": "HTTP406,1zapytanie, bez retry i bez odpowiedzi danych."
+    },
+    {
+      "type": "publicOSM API map GET",
+      "log": "osm-api-log.json",
+      "result": "HTTP429,1odczyt zapasowy w tym samym małym bbox. Zatrzymano zapytania i nie zmieniano wariantów/hostów."
+    }
+  ],
+  "official_search": "Wyszukiwanie29+522 +DW671 z wykluczeniem mirroru nie dało oficjalnego mapowania; dokładnyciąg038029522 w indeksie zwracał nietrafne numery telefoniczne, nieprzyjęte jako źródła. Mirror nieotwarty.",
+  "hypotheses_not_promoted": [
+    "038029522 jest hipotezą poszukiwanego oznaczenia z polecenia, nie odczytem tagu OSM ani żółtej naklejki.",
+    "Nie uzyskano węzła, jego ref/railway:position ani drogi ref671 współdzielącej identyczny node. Nie zbudowano wniosku topologicznego.",
+    "Pola viewportu Mapillary nie są GPS kamery i nie zastępują brakującej topologii."
+  ],
+  "unchanged_evidence": "Runda6: obwieszczenie18.11.2025 s3/17 pkt5 potwierdza kat.B dla km istn.29+522. Tożsamość zDW671/kadrami2019 pozostajeUNVERIFIED; projekt29+394 odrębny.",
+  "result": "FrameID→node, formalneDW671→29+522, identyfikatorPLK, G3/G4 i aktualność2026 pozostająUNVERIFIED. Brak nowego zdjęcia lub przepisanej normy.",
+  "method_limit": "Brak nowych oględzin UI; Chrome pozostawiony innemu agentowi. Nie wykonano APIMapillary, logowania, odczytu tokenów ani pobrań fotografii."
+}
