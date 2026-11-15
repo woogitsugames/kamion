@@ -21,7 +21,7 @@ Powiązane: D63, D65 p.7–8 (`docs/11`), ADR 0182/0199 (LP_Dusk, zegar), 0191/0
    Maczka, Kleeberga — bez zmian; test EditMode i pytest to sprawdzają).
 2. **Lato** (`summer-dk65-knyszyn`): `bialystok-knyszynska`, `dk65-01…11`, `knyszyn-s`, `knyszyn`, `knyszyn-w`,
    `dk65-monki-01`, `dw671-tykocin-01`. `LP_Dusk` zachowuje słońce (−6°, az. 300° = wartość właściciela) i ekspozycję;
-   zegar zmierzchu 21:00 zamiast 16:10 (udział okien biurowych 0,4 → wartość `OfficeShareAtHour(21)`). `LP_Clear`,
+   zegar zmierzchu 21:00 zamiast 16:10 (udział świecących okien biurowych 0,40 → 0,05, `OfficeShareAtHour`). `LP_Clear`,
    `LP_LowSun`, `LP_Night` bez zmian (noc 22:00 jest zgodna z lipcem: Słońce ok. −8°). Sceny dostają profil przy
    następnym imporcie; w tej gałęzi zaimportowane są cztery regiony z p. 3 (kafli `dk65-*` nie dotykano).
    Astronomia (`artifacts/summer-led-0216/sun_summer.json`, Białystok 53,13° N): koniec zmierzchu cywilnego (−6°)
@@ -48,7 +48,25 @@ Powiązane: D63, D65 p.7–8 (`docs/11`), ADR 0182/0199 (LP_Dusk, zegar), 0191/0
    na ortofoto widać słupy po stronie N — zostawione regule (UNVERIFIED, otwarte p. 3).
 
 ## Budżet (przed → po, edytor, te same kamery)
-__BUDGET__
+`scripts/visual-qa.ps1`, kamery świata wspólne dla obu przebiegów (bez kabiny/pojazdu), `stats.txt` (szacunek edytora
+przed SRP batching), narzędzie `artifacts/summer-led-0216/tools/budget.py`. Wartości identyczne dla clear/dusk/night.
+
+| region / tier | kamer | draws suma | draws instancji suma | tris suma | maks. draws na kamerę | maks. tris na kamerę |
+|---|---|---|---|---|---|---|
+| knyszyn Low | 26 | 4517 → 4516 | 1276 → 1279 | 4 380 430 → 4 378 600 | 498 → **499** | 388 839 → 388 805 |
+| knyszyn High | 26 | 6542 → 6541 | 2230 → 2210 | 9 821 658 → 9 819 996 | 843 → 843 | 1 008 653 → 1 008 637 |
+| bialystok-knyszynska Low | 17 | 2975 → 2924 | 970 → 997 | 2 732 055 → 2 708 931 | 498 → 498 | 296 646 → 296 658 |
+| bialystok-knyszynska High | 17 | 6005 → 5951 | 1593 → 1618 | 6 331 951 → 6 092 373 | 1246 → 1246 | 868 712 → 868 816 |
+
+- Latarnie: `knyszyn` 479 → 464 (−15 na DK65 płd.), głowice sodowe 216 → 0; `knyszyn-w` 167 → 167, sód 72 → 0;
+  `bialystok-knyszynska` 907 → 907, sód 311 → 0; `knyszyn-s` 0 → 0.
+- Jedyne pogorszenie: `knyszyn` Low, najgorsza kamera +1 draw instancji (498 → 499; prototypy LED starej rodziny są
+  osobnymi prototypami obok zwykłych LED). W `bialystok-knyszynska` suma draws instancji +27 na 17 kamer przy −51 draws
+  zwykłych (kamery szwów przesunęły się po odświeżeniu `control_cameras.json`, ADR 0208) — maksimum bez zmian.
+- Dane: `Data/raw/derived/<id>/world` knyszyn 793 → 794 MB, bialystok-knyszynska 979 → 979 MB; `_Generated/World`
+  knyszyn 758 → 759 MB, bialystok-knyszynska 887 → 888 MB. Biblioteka `street_props.glb`: +2 prototypy (2 × 174/91 tris).
+- Shadery, tekstury, liczba świateł i pul: bez zmian (zmienia się kolor globalny, nie liczba próbek).
+- Telefon: nie mierzono (lider).
 
 ## Walidacja
 __VALIDATION__
