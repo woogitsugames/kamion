@@ -1,102 +1,137 @@
 # K67 (blok M67) — dachowe instalacje GSM: geometria elementów
 
-Sesja chmurowa s21, 2026-11-15. Gałąź `research/rooftop-gsm-s21`.
+Sesja chmurowa s21, 2026-11-15. Gałąź `research/rooftop-gsm-s21` (PR #89). Wersja **FIX r2** — poprawki z
+`docs/reports/REVIEW-2026-11-15-s20-cloudB-rooftop-gsm.md` §5.
+
+## 0. Kryteria M67 — stan po FIX r2
+
+| kryterium | stan | dowód |
+|---|---|---|
+| katalog ≥ 8 typów z wymiarami i kolorem | **SPEŁNIONE** | §1, K67-001…013 (13 typów, 6 z kart) |
+| ≥ 5 dachów z rozkładem wysokości masztu (min / mediana / max, z metodą) | **SPEŁNIONE** | §2: 5 dachów z pomiarem LIDAR (Skorupska 17, Dobra 3, Zwierzyniecka 4, Kopernika 5A/7, wieżowiec M57 jako kontrola) + Hallera 19 jako zmierzony negatyw; 23 pomiary K67-036…058 |
+| ≥ 15 obejrzanych kadrów | **SPEŁNIONE** (ortofoto 16 + 7 nowych wycinków + 6 map LIDAR + 23 profile boczne LIDAR + 9 naziemnych) | §5 |
+| — w tym kadry naziemne / sylwetka na tle nieba | **CZĘŚCIOWO**: 9 kadrów Commons (5 negatywów dachów, 1 wieża wolnostojąca, 3 ulice Dobra/Kopernika — cel poza kadrem); kadrów z boku dachów z masztami 0 (Zwierzyniecka 2× nadal 429) | §3, §6 |
+| odsyłacz do M57 bez powielania | **SPEŁNIONE**, wysokości wg M57-FIX #88: **9–12 m** | §2 |
+| brak nazw producentów/operatorów w opisach | **SPEŁNIONE** (operatorzy A/B/C) | manifest |
 
 ## Uzgodnienie z M57
-To uzupełnienie M57. **Lokalizacji ani układu masztów na wieżowcu przy Andersa nie powtarzam.**
-Z recenzji `docs/reports/REVIEW-2026-11-14-s20-mistral-m57.md` (§4, §6) przyjmuję tylko to, co recenzja potwierdziła:
-- maszt kratowy środkowy ok. 10–12 m nad dachem;
-- maszty ok. 4–6 m przy końcu NE;
-- maszt W z odciągami;
-- panele wzdłuż krawędzi SE.
-
-Odrzucone przez recenzję tezy M57 (nadbudówka, siatka NW, P14-007) nie są tu używane.
-
-Pliki w katalogu:
-- `manifest.csv` — 35 wierszy K67-001…035. Kolumny jak w bloku M67, na końcu dopisane `plik` i `sha256_pliku`.
-- `sources.md`, `audit_20_percent.json`.
-- `files/` — 16 wycinków ortofoto GUGiK, 1,9 MB.
-- `uke_match.json`, `uke_tall.json`, `roof_masts.json` — dopasowania.
-- `tools/`.
+Uzupełnienie M57; lokalizacji ani układu masztów na wieżowcu przy Andersa nie powtarzam. Przyjmuję wysokości po
+**M57-FIX (#88): maszt główny 9–12 m nad dachem**, maszty ok. 4–6 m przy końcu NE, maszt W z odciągami, panele wzdłuż SE.
+Kontrola krzyżowa z LIDAR 2025-04-18 (tylko liczby, bez układu): najwyższy maszt (z odciągami, koniec SW / narożnik W)
+**≥ 10,95 m**, pięć pozostałych 4,55–5,35 m. **Przy środku krawędzi SE w danych 2025 jest element 5,25 m, nie 10–12 m**
+— sygnał dla M57 (K67-054), nie rozstrzygam tu.
 
 ## 1. Katalog elementów (13 wierszy, ≥ 8 typów)
 
 | # | element | wymiary | kolor (opis) | status |
 |---|---|---|---|---|
-| 1 | antena sektorowa panelowa, długa | 2688 × 498 × 197 mm, 56,5 kg; pochylenie elektryczne 2–12° | jasnoszary matowy radom (RAL 7035) | SOURCED (karta) |
+| 1 | antena sektorowa panelowa, długa | 2688 × 498 × 197 mm, 56,5 kg | jasnoszary matowy radom (RAL 7035) | SOURCED (karta) |
 | 2 | antena sektorowa panelowa, krótka | 1499 × 498 × 197 mm, 35 kg | jw. | SOURCED |
-| 3 | antena radioliniowa 0,6 m | Ø 0,6 m, 6,7 kg, rura 48–120 mm | czasza biała, radom szary | SOURCED |
+| 3 | antena radioliniowa 0,6 m | Ø 0,6 m, 6,7 kg | czasza biała, radom szary | SOURCED |
 | 4 | antena radioliniowa 0,3 m | Ø 0,3 m, 4,08 kg | jw. | SOURCED |
 | 5 | antena radioliniowa 0,9 / 1,2 m | — | — | UNVERIFIED |
-| 6 | moduł RRU przy antenie | 425 × 296 × 130 mm, 18,3 kg, IP65 | UNVERIFIED | SOURCED (wymiary) |
+| 6 | moduł RRU przy antenie | 425 × 296 × 130 mm, 18,3 kg | UNVERIFIED | SOURCED (wymiary) |
 | 7 | szafa/kontener na dachu | rzut ok. 2 × 1 m | jasnoszary | ESTIMATED (ortofoto) |
-| 8 | rama krzyżowa (X) pod maszt | rozpiętość ramion ok. 12 (11–13) m | stal szara | ESTIMATED (ortofoto 0,05 m/px) |
-| 9 | maszt rurowy z odciągami | 6–8 odciągów, kotwienie w promieniu ok. 3–4 m | stal | ESTIMATED |
-| 10 | maszt kratowy 3-nożny | 10–12 m (środkowy), 4–6 m | stal | SOURCED_SECONDARY (M57) |
-| 11 | koryto kablowe drabinkowe | szer. 0,4–0,5 m, wzdłuż attyk do narożników | stal ocynkowana, jasna | ESTIMATED |
-| 12 | wysięgnik/maszt narożny przy attyce | położenie: narożniki dachu | szary | VERIFIED_WIZJA (rzut) |
-| 13 | rozmieszczenie sektorów | 3 × 120° — typowe przyjęcie | — | UNVERIFIED |
+| 8 | rama krzyżowa (X) pod maszt | ramiona ok. 12 (11–13) m | stal szara | ESTIMATED |
+| 9 | maszt rurowy z odciągami | 6–8 odciągów, kotwienie r ≈ 3–4 m; **≥ 8,55 m nad dachem (Zwierzyniecka 4, LIDAR)** | stal | ESTIMATED / MEASURED |
+| 10 | maszt kratowy | **9–12 m (wieżowiec, M57-FIX #88)**; 4–6 m | stal | SOURCED_SECONDARY (+ LIDAR) |
+| 11 | koryto kablowe drabinkowe | szer. 0,4–0,5 m | stal ocynk., jasna | ESTIMATED |
+| 12 | wysięgnik/maszt narożny przy attyce | **4,35–4,75 m (Skorupska 17), 7,65 m (Dobra 3 NW)** | szary | MEASURED (LIDAR) |
+| 13 | rozmieszczenie sektorów | 3 × 120° — przyjęcie typowe | — | UNVERIFIED |
 
-Nazwy producentów występują wyłącznie w URL. Kolumny opisu ich nie zawierają.
+## 2. Dachy — wysokości urządzeń nad dachem
 
-## 2. Dachy w Białymstoku
+**Metoda główna: chmura punktów LIDAR GUGiK** (skorowidz WFS `DanePomiaroweLidarEVRF2007` →
+`gugik:SkorowidzDanychPomiarowychLIDAR2025`, arkusze 1:1250, **nalot 2025-04-18, 12 p/m²**, PL-1992 / PL-EVRF2007-NH;
+`out/skorowidz.json`). Ortofoto z tego samego dnia (`gugik:SkorowidzOrtofomapy2025`, 0,05 m).
+- `tools/lidar_roofs.py` → mapa wysokości nad dachem 70 × 70 m (`out/lidar_<dach>.png`) i automatyczne skupiska > 1 m.
+- Urządzenia wybrane po obejrzeniu map i ortofoto → `masts_xy.json`; `tools/lidar_masts.py` → `out/lidar_masts.json`
+  i profile boczne `out/prof_<dach>_<id>_zS|zW.png` (obejrzane — maszty widać jako pionowe ciągi punktów, odciągi jako skosy).
+- **Wzór:** h = Z_max (walec r = 1 m wokół osi) − Z_dachu (dominanta histogramu 0,1 m w pierścieniu 2–6 m).
+  **Niepewność:** ± 0,15 m (ESTIMATED) i h jest **dolną granicą** — przy 12 p/m² odstęp punktów ≈ 1/√12 ≈ 0,29 m,
+  szczyt cienkiej rury może nie mieć trafienia. Drugi najwyższy punkt (h2) podany w manifeście — różni się o 0,0–0,9 m.
+- Czas skanu (gps_time → UTC): 08:26–09:12 UTC.
 
-Wybór dachów oparłem na skrzyżowaniu dwóch źródeł:
-- OSM: `man_made=mast|antenna|tower` w obrysie budynku;
-- wykaz UKE (xlsx „stan na 2026-10-26”): adres stacji w Białymstoku dopasowany do budynków OSM z `building:levels` ≥ 8.
-
-| dach | źródło | operatorzy (UKE) | rzut z ortofoto | wysokość masztu nad dachem |
+| dach | operatorzy (UKE) | urządzenia (n) | **min / mediana / max [m]** | uwagi |
 |---|---|---|---|---|
-| Skorupska 17 | OSM + UKE | B | rama X przez całą szerokość, maszt w środku z odciągami, koryta do narożników NE i SW | **UNVERIFIED** |
-| Dobra 3 | OSM + UKE | A | skupisko wsporników i talerzy przy narożniku NW, rama z urządzeniami | UNVERIFIED |
-| Zwierzyniecka 4 (11 kond., 34 m) | OSM (guyed_tube) | brak dopasowania | maszt w środku podwyższenia SE z odciągami | UNVERIFIED |
-| Hallera 19 | OSM (tower) | brak | masztu nie rozpoznano | UNVERIFIED |
-| Kopernika 5A / 7 (12 kond.) | UKE | B / A | skupiska szaf ok. 2 × 1 m | UNVERIFIED |
-| wieżowiec przy Kwadrat Park | M57 (odsyłacz) | B, C | — | **10–12; 4–6** (SOURCED_SECONDARY) |
+| Skorupska 17 (4 kond., dach 19,3 m npt) | B | 4 | **4,3 / 4,5 / 11,6** | maszt na ramie X ≥ 11,55; wsporniki narożne NE/SW/W 4,35–4,75 |
+| Dobra 3 (dach 16,8 m npt) | A | 2 | **7,7 / 8,6 / 9,6** | maszt przy węźle skrzydeł ≥ 9,55; narożnik NW ≥ 7,65 |
+| Zwierzyniecka 4 (11 kond., dach 35,2 m npt) | — | 1 | **8,6** (n = 1) | maszt rurowy z odciągami ≥ 8,55; element przy krawędzi N 5,85 m — przynależność UNVERIFIED, poza statystyką |
+| Kopernika 5A / 7 (12 kond., dach 34,5 m npt) | B / A | 6 | **2,5 / 2,7 / 3,4** | wsporniki/platformy przy końcach bloków 2,55–3,35 |
+| wieżowiec M57 (kontrola, dach 41,1 m npt) | B, C | 6 | 4,5 / 5,1 / 10,9 | przyjęte do gry: **9–12 m (M57-FIX #88)** |
+| Hallera 19 | — | 0 | **brak > 1,3 m** | nadbudówki 1,05–1,25 m; OSM `man_made=tower` niepotwierdzony w danych 2025 |
 
-**Negatyw.** Na 8 innych blokach z ≥ 12 kondygnacjami masztów w rzucie nie ma. Były to Tysiąclecia 10A, Waszyngtona 36, Łąkowa 7, Kraszewskiego 45A/B, Mieszka I 11, Wąska 4, Wasilkowska 47 i Towarowa 8A. Ta próba jest nielosowa.
+Łącznie 23 pomiary (19 telekom.). Zwierzyniecka 4: arkusz LAZ kończy się ok. 22 m na N od punktu — budynek w całości w arkuszu (mapa `out/lidar_zwierzyniecka4.png`). Rozkład dla gry: **dwie klasy** — (a) maszt główny 7,5–11,5 m (4 dachy),
+(b) wsporniki/maszty przy attyce 2,5–5,3 m (wszystkie dachy ze stacją). Progi art. 29 Pb (3 m / 12 m) obejmują obie klasy.
 
-**Rozkład wysokości masztu nad dachem (min / mediana / max): NIE SPEŁNIONO.** Wartości z metodą są tylko dla 1 dachu (M57). Na pozostałych 5 dachach wysokości nie da się wiarygodnie odczytać z ortofoto: budynki są w nim przechylone, a cień masztu jest nieczytelny. Kadrów z boku nie pozyskałem (luka 1).
+**Metoda cieni (wymagana w FIX) — wykonana jako kontrola, nie jako metoda główna.**
+`tools/sun.py` (algorytm NOAA) dla 2025-04-18: 08:30 UTC az 140,1° / el 41,8°; 09:00 UTC az 149,5° / el 44,4°
+(zgodne z M64: 44,4°). Godzina nalotu ortofoto nie jest w skorowidzu → wyznaczona z azymutu cienia.
+- Zwierzyniecka 4 (`files/shadow_zwierzyniecka4.jpg`): cień masztu na NW, az ≈ 319° → Słońce 139° → ≈ 08:30 UTC ± 20 min
+  → el 41,8° ± 1,5°. Koniec cienia wchodzi w cień podwyższonej części dachu po ≥ 6,3 m → **h > 6,3 × tan 41,8° = 5,6 m**,
+  zgodne z LIDAR ≥ 8,55 m (K67-059).
+- Skorupska 17, Dobra 3, Kopernika: cień masztu pada w cień własny budynku / dziedziniec — **nieczytelny** (obejrzane
+  `files/shadow_*.jpg`). Dlatego wysokości podaję z LIDAR (dopuszczony w FIX wariant „NMPT/model wysokości”;
+  chmura LAZ jest źródłem NMPT, więc jest dokładniejsza niż siatka 0,5 m).
 
-Kontekst prawny dla zakresu wysokości (nie jest to pomiar): instalacja radiokomunikacyjna na obiekcie budowlanym wymaga
-- zgłoszenia, gdy ma **> 3 m i ≤ 12 m** (art. 29 ust. 3 pkt 3 lit. a Prawa budowlanego);
-- niczego, gdy ma **≤ 3 m** (art. 29 ust. 4 pkt 3 lit. a).
+**Negatyw.** Na 8 innych blokach ≥ 12 kond. masztów w rzucie nie ma (K67-020…027; próba nielosowa). Waszyngtona 36
+i Tysiąclecia 10A potwierdzone też z ziemi (Commons 2013).
 
-Wieżowiec z M57 (10–12 m) mieści się w zakresie zgłoszenia.
+**Oznakowanie przeszkodowe (ESTIMATED, nie pomiar świateł):** szczyt masztu nad terenem = Z_top − mediana gruntu w 70 m:
+Zwierzyniecka 4 ≈ 196,5 − 150,8 = **45,7 m**, wieżowiec ≈ 193,3 − 141,4 = **51,9 m** — ≥ 45 m, czyli wg § 36 rozp. 2021/264
+światła średniej intensywności; pozostałe < 45 m (§ 35: małej intensywności). Czy światła faktycznie są — UNVERIFIED.
 
 ## 3. Wygląd na tle nieba
-**UNVERIFIED.** Nie ma obejrzanych kadrów z boku z odległości 100–200 m (luka 1). Opisy z M57 zostają w M57.
+Kadry Commons (9; CC BY-SA 3.0/4.0, CC BY 3.0, CC0 — atrybucja w manifeście K67-073…081; `files/commons_*.jpg`, opisy w `commons_opisy.json`):
+- Wieża wolnostojąca (Cieszyńska, zmierzch 2014): na jasnym niebie wszystko czyta się jako ciemnoszara sylwetka —
+  panele pionowe (wąskie prostokąty ok. 3–5 : 1), czasze jako krążki z boku, platformy prostokątne. Elementy ≤ 0,1 m
+  (pręty, kable) znikają; panele i czasze pozostają czytelne. Na dachu budynku w tle: 2 cienkie pręty.
+- Waszyngtona 36 (3 kadry) / Tysiąclecia 10A (2 kadry), 2013: attyki gładkie, na Waszyngtona 1 cienki pręt ok. 2–3 m (ESTIMATED), bez masztów.
+- Ulica Dobra (2020) i Kopernika (2020, ok. 450 m od bloków): budynków z masztami w kadrze brak — nieprzydatne do sylwetki.
+- **Dachów z masztami z boku nie pozyskano** (luka 1). Profile LIDAR (`out/prof_*`) dają sylwetkę geometryczną:
+  Skorupska — maszt z głowicą paneli w górnych ~1,5 m; Dobra — maszt z gęstszym skupiskiem punktów w górnych ~1,5 m (głowica anten);
+  Zwierzyniecka — pojedyncza rura bez głowicy w chmurze (anteny drobne); wieżowiec W — kratownica z odciągami.
 
 ## 4. Przepisy i UKE
-- **Wykaz UKE** ma kolumny: operator, nr decyzji, rodzaj, data ważności, dł./szer. geogr., miejscowość, lokalizacja (adres), IdStacji, TERYT.
-  - **Nie zawiera wysokości anteny** ani azymutów.
-  - W Białymstoku w 4 plikach (LTE800, LTE1800, GSM900, 5G3600) jest 419 wierszy i 124 lokalizacje.
-  - Operatorów oznaczam A, B, C (bez nazw firm).
-- **Prawo budowlane art. 29:** progi 3 m i 12 m, jak wyżej. Cytat ze standardyprawa.pl; potwierdzenie w ISAP nie zostało wykonane.
-- **Rozporządzenie MI z 12.01.2021 w sprawie przeszkód lotniczych** (Dz.U. 2021 poz. 264):
-  - § 35 ust. 1: przeszkoda < 45 m npt — światła małej intensywności typu A lub B na szczycie;
-  - § 36: od 45 m — średniej intensywności;
-  - § 46 ust. 1 pkt 1: zwolnienie z oznakowania dziennego budynków mieszkalnych i użyteczności publicznej, chyba że dominanta przewyższa budynek o ≥ 5 m.
-  - Kolor świateł: rozporządzenie odsyła do Załącznika 14 ICAO, sam tekst go nie podaje.
-  - Biało-czerwonego malowania nie widać na żadnym z obejrzanych dachów (rzut).
+- **Prawo budowlane art. 29 — POTWIERDZONE w tekście urzędowym**: t.j. **Dz.U. 2026 poz. 524** (obwieszczenie Marszałka
+  Sejmu z 27.03.2026), pobrany z API ELI Sejmu `https://api.sejm.gov.pl/eli/acts/DU/2026/524/text.pdf`
+  (sha256 `4a33b840…7826`; ISAP id `WDU20260000524` — strona isap.sejm.gov.pl zwróciła 403 dla klienta skryptowego,
+  ten sam tekst z ELI).
+  - ust. 3 pkt 3 lit. a (s. 26): instalowanie na obiektach budowlanych instalacji radiokomunikacyjnych „… oraz antenowe
+    konstrukcje wsporcze, o wysokości większej niż 3 m i niewiększej niż 12 m” — **zgłoszenie** (art. 30);
+  - ust. 4 pkt 3 lit. a (s. 27): „… o wysokości niewiększej niż 3 m” — bez pozwolenia i bez zgłoszenia;
+  - ust. 1 pkt 37 lit. b: wolno stojące maszty bezodciągowe dla urządzeń radiokomunikacyjnych ≤ 7 m (nie dachy).
+- Rozp. MI z 12.01.2021 (Dz.U. 2021 poz. 264): § 35, § 36, § 46 — bez zmian względem r1.
+- Wykaz UKE: bez wysokości anteny i azymutów; 419 wierszy, 124 lokalizacje w Białymstoku; operatorzy A/B/C.
 
-## 5. Kadry
-Obejrzałem 16 wycinków ortofoto (80 m przy 0,1 m/px oraz 45 m przy 0,05 m/px), a także wycinek 2× do audytu.
-- Kryterium „≥ 15 obejrzanych kadrów” jest spełnione **tylko jako ortofoto**.
-- **Kadrów naziemnych 0.**
-- Data arkusza ortofoto jest UNVERIFIED (mozaika WMS). Sezon z obrazu: wiosna. Cienie padają na NW.
+## 5. Kadry (obejrzane)
+- Ortofoto: 16 wycinków r1 + **7 nowych 0,05 m/px** (`ortho_dobra_c` — **przecentrowany**, cały dach skrzydła NW;
+  `ortho_kopernika_s/_n`; `shadow_*` ×4 — środek = maszt z LIDAR + 6 m w kierunku cienia).
+  Przecentrowanie: środek wycinka liczony z położenia urządzeń w LIDAR (prawdziwa pozycja), z zapasem na przechył
+  budynku w mozaice (ESTIMATED z widocznej elewacji: Dobra 3 ok. 3 m przy 17 m wysokości, Zwierzyniecka 4 do ok. 7 m przy 35 m). `ortho_dobra_z` (r1) zostaje,
+  ale jest zastąpiony przez `ortho_dobra_c`.
+- LIDAR: 6 map wysokości + 23 profile boczne (×2 widoki).
+- Naziemne: 9 Commons (jeden tytuł okazał się duplikatem — usunięty, zapis w logu).
 
-## 6. Luki (uczciwie)
-1. **Kadry naziemne niedostępne w tej sesji.**
-   - Commons API i `upload.wikimedia.org` zwracały HTTP 429 („robot policy”), więc nie pobrałem m.in. „Antenna tower in Białystok (Cieszyńska/Kawaleryjska)”, „Waszyngtona 36 Białystok 2/3”, „Tysiąclecia 10A Białystok 1/2” ani zdjęć ulic Zwierzyniecka, Dobra i Kopernika.
-   - Próba obejścia przez obcy CDN obrazów została zablokowana i jej nie ponawiałem.
-   - KartaView API niedostępne (certyfikat). Panoramax nie ma pokrycia przy tych dachach.
-   - Listę tytułów do pobrania wpisałem w `sources.md`.
-2. Wysokości masztów nad dachem dla 5 dachów: UNVERIFIED.
-3. Karty szaf zewnętrznych i anten radioliniowych 0,9/1,2 m nie zostały zweryfikowane.
-4. Data arkusza ortofoto.
+## 6. Luki
+1. **Kadry naziemne dachów z masztami: brak.** Commons API zwracało HTTP 429 naprzemiennie z 200
+   (`out/commons_log.json` — wszystkie próby z czasem; przerwy ≥ 6 s, po 429 — 60 s, UA generyczny, tylko domeny
+   Wikimedia), 3 przebiegi 13:32–14:00 UTC. Pobrano 9 z 15 tytułów; 4 nadal 429 (m.in. oba kadry ul. Zwierzynieckiej), 1 brak pliku, 1 duplikat — K67-082.
+2. Godzina nalotu ortofoto — tylko z azymutu cienia (± 20 min).
+3. Przynależność telekom. elementów Kopernika i elementu N Zwierzyniecka — z rzutu, bez kadru z boku.
+4. Karty szaf i anten 0,9/1,2 m — niezweryfikowane.
 
 ## 7. Samokontrola
-Seed 20261115, próba 7/35. Wynik: **7 PASS, 0 FIX**.
-- Ponownie pobrałem 2 karty i tekst art. 29.
-- Ponownie obejrzałem 3 obrazy, w tym wycinek 2×.
+r1: seed 20261115, 7/35 PASS. r2: `audit_20_percent.json` — próba 10/47 z wierszy K67-036…082 (seed 2026111502 + 2026111503): **10 PASS**; audyt K67-044 wykrył błąd w metodzie kontrolnej (klasa 6 zawiera ściany) — poprawiono metodę audytu, wynik pomiaru bez zmian.
+
+## Odtworzenie
+```
+uv run --no-project --with pyproj python -I tools/skorowidz.py tools out/skorowidz.json
+# LAZ (5+1 arkuszy, ~380 MB) — URL-e w out/skorowidz.json / manifeście; pobrane do katalogu roboczego (nie w gicie)
+uv run --no-project --with "laspy[lazrs]" --with numpy --with pillow --with pyproj --with scipy python -I tools/lidar_roofs.py <laz_dir> out/
+uv run --no-project --with "laspy[lazrs]" --with numpy --with pillow --with pyproj python -I tools/lidar_masts.py <laz_dir> out/
+uv run --no-project --with pyproj --with pillow python -I tools/shadow_crops.py tools files/
+python3 -I tools/sun.py
+python3 -I tools/commons_fetch.py tools files/ out/commons_log.json
+python3 -I build_manifest.py
+```

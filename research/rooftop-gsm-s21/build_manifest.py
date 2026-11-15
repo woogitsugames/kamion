@@ -215,9 +215,10 @@ for r in CL:
         data_zdjęcia=r.get('data_zdjecia', ''), sezon=o.get('sezon', ''), pora_dnia=o.get('pora', ''), opis_co_widać=o.get('opis', 'NIEOBEJRZANE'),
         url_źródła=r.get('page', ''), licencja=r.get('licencja', ''), autor=r.get('user', ''), status='VERIFIED_WIZJA' if o else 'UNVERIFIED',
         uwagi=o.get('uwagi', ''), plik='files/' + fn, sha256_pliku=sha(fn))
-fails = sorted({r['title'] for r in CL if not r.get('plik')} - seen)
+fails = sorted({r['title'] for r in CL if not r.get('plik')} - seen - {r['title'] for r in CL if r.get('note')})
+other = sorted({'%s — %s' % (r['title'], r['note']) for r in CL if r.get('note')})
 add(kategoria='luka', element='Commons — kadry niepobrane (HTTP 429)', parametr='tytuły', wartość='%d' % len(fails), jednostka='szt.',
-    opis_co_widać='; '.join(fails), url_źródła='https://commons.wikimedia.org/w/api.php', status='UNVERIFIED',
+    opis_co_widać='; '.join(fails) + ('. Inne: ' + '; '.join(other) if other else ''), url_źródła='https://commons.wikimedia.org/w/api.php', status='UNVERIFIED',
     uwagi='%d prób API w %s (przerwy ≥ 6 s, po 429 — 60 s), UA generyczny, bez obcych CDN; log: out/commons_log.json' % (len(CL), CL[0]['ts_utc'][:10] if CL else ''))
 
 for i, r in enumerate(rows, 1):
