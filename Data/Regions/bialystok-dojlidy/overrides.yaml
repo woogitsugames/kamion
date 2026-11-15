@@ -328,6 +328,124 @@ overrides:
       (the reference region C keeps its output byte for byte).
     confidence: high
     verify: none
+  # ---------------------------------------------------------------- hospital gate, Żurawia 14 (photo P11-129, ADR 0189, r4 / M62-FIX)
+  - id: zurawia-hospital-gate
+    kind: masonry_gate
+    anchor: {at_en: [327.1, 808.4], enter_bearing_deg: 242.0, osm_node_tag: "barrier=lift_gate"}
+    reason: >-
+      CC0 photo P11-129 (Rakoon, Commons, 2019-11-10) and M62-FIX (research/mistral/p19-hospital-gate/): drive into
+      the hospital grounds (~242 deg in EPSG:2180 from Zurawia, ~16.4 m E/NE). Left (SE): light sand-lime brick wall
+      limited to the ~6 m visible in F01 (no full wall along the rest of fence 883955509, WORKING_VALUE), 1.85 m +
+      0.06 m flat concrete coping, single end pillar (2.12 m + cap, no canopy), 5 horizontal burgundy plaques (2 + 3).
+      Right (N): two light-brick piers under a shared dark trapezoidal sheet canopy on a white concrete beam (~2.65 m
+      underside); B-20 STOP + blue entry-rules board on the wide pier; blue admissions (IP) board on its own white
+      post in front of the right pier. Red boom housing + red-white boom arm with blue "OPLATA ZA WJAZD 3 zl" plate;
+      sign post with lantern, C-2 above B-33 "20" and small plate; B-2 on its own post ~24 m behind the gate; two
+      slender boiler-house chimneys in the background; columnar thujas behind the left wall. Neutral texts only.
+    confidence: medium
+    verify: owner photo session (3 sides, M62 gap); B-2 distance and sign sizes WORKING_VALUE
+    fence_cut_m: 1.5
+    walls:
+      - line_la: [[-3.6, 0.0], [-7.7, 0.3], [-9.3, 1.6]]
+        height_m: 1.85
+        thick_m: 0.25
+        coping_m: 0.06
+        coping_concrete: true
+        pillar_m: 0.42
+        pillar_h_m: 2.12
+        pillars_la: [[-3.6, 0.0]]
+        plaques: {at_la: [-4.62, 0.08], cols: 2, count: 5, size_m: [0.65, 0.26], z_m: 1.62}
+    piers:
+      - {at_la: [4.45, 3.4], size_m: [1.5, 0.5], height_m: 2.00, cap: true}
+      - {at_la: [3.9, 3.4], size_m: [0.38, 0.38], height_m: 2.65, z0_m: 2.07}
+      - {at_la: [4.85, 3.4], size_m: [0.38, 0.38], height_m: 2.65, z0_m: 2.07}
+      - {at_la: [6.4, 3.4], size_m: [0.38, 0.38], height_m: 2.65, z0_m: 0.2}
+    platform: {rect_la: [3.62, 2.3, 6.9, 4.5], height_m: 0.22}
+    canopy: {rect_la: [3.6, 2.2, 7.0, 4.2], z_m: 2.65, thick_m: 0.20}
+    faces:
+      - {face: B-20, at_la: [4.5, 3.65], z_m: 1.78, size_m: 0.8, fade: 0.8}
+    boards:
+      - {board: entry_rules, at_la: [4.5, 3.66], z_m: 1.05, size_m: [0.80, 0.45]}
+    posts:
+      - at_la: [3.3, 2.5]
+        height_m: 3.4
+        lantern: true
+        faces: [{face: C-2, z_m: 2.80, size_m: 0.6}, {face: B-33_20, z_m: 2.00, size_m: 0.6}]
+        plate: {z_m: 1.50, size_m: [0.42, 0.14]}
+      - at_la: [5.85, 3.85]
+        height_m: 2.55
+        d_m: 0.06
+        color: white
+        boards: [{board: admissions, z_m: 1.80, size_m: [0.80, 1.00]}]
+      - at_la: [-1.8, -24.0]
+        height_m: 2.45
+        d_m: 0.076
+        faces: [{face: B-2, z_m: 2.10, size_m: 0.6}]
+    boom: {at_la: [3.35, 1.8], toward: left, length_m: 5.2, replace_radius_m: 8.0, own_mesh: true}
+    chimneys:
+      - {at_la: [1.8, -56.0], height_m: 13.5, r_m: 0.25}
+      - {at_la: [0.4, -57.5], height_m: 13.5, r_m: 0.25}
+    conifers:
+      - {at_la: [-4.6, -1.8], h_m: 8.0, r_m: 1.0}
+      - {at_la: [-6.2, -1.6], h_m: 8.6, r_m: 1.0}
+      - {at_la: [-7.8, -1.4], h_m: 9.0, r_m: 1.0}
+      - {at_la: [-9.4, -1.2], h_m: 9.4, r_m: 1.0}
+      - {at_la: [-2.6, -16.0], h_m: 9.5, r_m: 0.9}
+  - id: zurawia-hospital-gate-shrubs
+    kind: tree_groups
+    lines:
+      - {line_epsg2180: [[780370.6, 590882.6], [780377.0, 590877.5]]}
+    group_size: [4, 5]
+    in_group_m: [1.5, 1.9]
+    gap_m: [0.5, 1.0]
+    depth_m: 0.8
+    rows_replace_m: 0.0
+    species: {shrub: 1.0}
+    reason: >-
+      Low shrubs behind the left wall of the hospital gate (photo P11-129). WORKING_VALUE.
+    confidence: low
+    verify: M62 gap
+  - id: zurawia-gatehouse
+    target: {building: "bdot:8243ac9d-5800-466d-861f-c4aad27247c5"}
+    reason: >-
+      Gatehouse of the hospital gate (BDOT10k, LoD1 3.33 m, 37 m2). WORKING_VALUE.
+    confidence: low
+    verify: owner photo session
+    set: {typology: office, wall_material: plaster_grey, bands: false}
+  - id: zurawia-hospital-ward-low
+    target: {building: "bdot:2BE4B431-AAE9-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      P11-129 (2019) and M62-FIX P19-057: background buildings behind the gate are low 1-2 storey beige/yellow
+      hospital buildings, not a 4-storey grey block (BDOT10k 2024 has the newer 13.14 m ward block). Lowered to 2
+      storeys beige so the P11-129 skyline reads as low hospital buildings + 2 slender chimneys. WORKING_VALUE.
+    confidence: medium
+    verify: owner photo session
+    set: {typology: office, height_m: 6.2, storeys: 2, wall_material: plaster_beige, bands: false}
+  - id: zurawia-hospital-bg-yellow
+    kind: building_part
+    name: low yellow service building behind the hospital gate (P11-129, M62-FIX P19-058)
+    polygon_en: [[294.8, 783.9], [291.5, 790.1], [299.5, 794.3], [302.8, 788.1]]
+    height_m: 4.2
+    storeys: 1
+    function: gospodarczy
+    reason: >-
+      M62-FIX P19-058 (OSM way 883955525, ~31 m behind the gate): low single-storey yellow/cream service buildings
+      with flat roofs seen behind the boom and B-2 in P11-129. WORKING_VALUE.
+    confidence: medium
+    verify: owner photo session
+    set: {typology: office, wall_material: plaster_beige, bands: false}
+  - id: zurawia-hospital-bg-cream
+    kind: building_part
+    name: low cream service building behind the hospital gate (P11-129, M62-FIX P19-058)
+    polygon_en: [[292.4, 790.5], [288.9, 797.2], [296.4, 801.1], [299.9, 794.5]]
+    height_m: 4.0
+    storeys: 1
+    function: gospodarczy
+    reason: >-
+      M62-FIX P19-058: adjoining single-storey cream building behind B-2 in P11-129. WORKING_VALUE.
+    confidence: medium
+    verify: owner photo session
+    set: {typology: office, wall_material: plaster_beige, bands: false}
   - id: mickiewicza-kuronia-chain-posts-p11-063
     kind: chain_bollards
     line_epsg2180: [[780013.35, 590461.80], [780018.27, 590448.69]]
