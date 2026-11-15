@@ -571,3 +571,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 01/heavy-plate-round11:CampRentGmbH,3fotografie link-only, all rights reserved,0kopii/screenshotów. Rozbieżność oferty/pudełka nie rozstrzygnięta, numeru homologacji z katalogu nie przypisano obrazowi.
 
 01/tandem-night-round12/files/AUX12-01.jpg:JoeKiser, WikimediaCommons, CC BY-SA3.0 (https://creativecommons.org/licenses/by-sa/3.0),2013-02-10; źródło konkretnego pliku i SHA w podmanifeście/source-review. Pochodna zmniejszona≤800px bez kadrowania/upscalingu; licencjaBY-SA3 zachowana, oryginał pozaGit. Tylko referencjaAUX, nie pomiar ani dowódECE.
+
+07/dojlidy-signs-round7:3fotografie opublikowaneUM Białystok, MarcinJakowiak(kredyt na obrazach), link-only, all rights reserved. Każdy dokładny URL osobno obejrzany; brak pobrań/screenshotów/kopii. WGitwyłącznie własne opisy i odsyłacze, data publikacji oddzielona od ekspozycji.

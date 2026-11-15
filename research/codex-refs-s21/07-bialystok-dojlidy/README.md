@@ -1,8 +1,8 @@
 # 07 — Białystok trasa C / Dojlidy: referencje i luki — WIP
 
-Stan bieżący:7 wierszy —6 dokumentacyjnych i1 ponownie obejrzany istniejący kadr ronda. Nowych fotografii0; błędną etykietę śnieg z P1-004 wskazano w erracie, B-123 nadalotwarte.
+Stan bieżący:15rekordów głównego manifestu. Są dokumenty, znany kadr ronda,2historyczneMapillary i3nowe link-only fotografieUM. Liczba rekordów nie jest liczbą zdjęć ani kwalifikacji. Poniższe starsze sekcje zachowują historię poprzednich przeglądów; bieżące dodatki wostatnichsekcjach.
 
-Cel: uzupełnić backlog S21 źródłami, nie zmieniając generatorów. W tym przeglądzie: **0 kadrów pobranych, 0 kadrów link-only**, 4 wiersze dokumentacyjne (3 fakty z jednego komunikatu + 1 kontrola publicznych metadanych). To nie jest pakiet zdjęciowy. Nie pobrano ani nie opisano zdjęć z galerii miejskiej.
+Cel: uzupełnić backlog S21 źródłami, nie zmieniając generatorów. W pierwszym przeglądzie historycznym: **0 kadrów pobranych, 0 kadrów link-only**, 4 wiersze dokumentacyjne (3 fakty z jednego komunikatu + 1 kontrola publicznych metadanych). To nie jest pakiet zdjęciowy. Nie pobrano ani nie opisano zdjęć z galerii miejskiej.
 
 ## B-040 — ruch ciężarowy w Dojlidach
 
@@ -46,3 +46,7 @@ Mapillary-gates-round4:2 nowe, indywidualnie obejrzane link-only obrazy czadzik2
 ## Publiczny projekt Alei Tysiąclecia — obieg6
 
 Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.md):1nowy opisPAB,0fotografii. PDF9/druk13 iPDF14/druk18 obejrzane przezagenta i koordynatora: projekt2×2,pas3.50m,chodnik2m,DDR3m,mediana2.5–6m;7projektowanych przystanków z zatokami(5Aleja+1Sokólska+1Kombatantów),zatoka3m/peronokoło20m. ZakresWileńska–teren kolejowyPoleska, data2017.07.05 wyłączniezDocumentInfo, nie datarealizacji. Materiał pomaga parametrom projektowym; nie potwierdza stanu wykonanego ani675Centrum/bramownic2024+. PDF11.67MB i rendery pozaGit, wyłącznie własneparafrazy/link.
+
+## Dojlidy — trzy rzeczywiste widoki UM, obieg7
+
+[Doilidy-signs-round7](dojlidy-signs-round7/README.md):3nowe indywidualnie obejrzane kadry galerii UM19.11.2025, MarcinJakowiak;0pobrań/3link-onlyARR. TablicaZmianaorganizacjiruchu/dojazd, wlotrondaMeyera z dwoma pasami/kreskowaniem/zebrami i czerwonymi przejazdami oraz narożnikSuchowolca/Plażowa z czytelnymi nazwamiulic/wysięgnikami. B5/B18 i wyjątki nie zostały odczytane; materiał nie zamykaB040 i nie potwierdza obecnejprzejezdnościHGV. Koordynator ponownie odczytał pełny tekstUM:tranzyt3.5t osobno odMickiewicza8t; wchwili artykułu znaki ciężarowe dopiero planowano w dalszym etapie. Publikacja nie jest ekspozycją ani stanem2026. Oglądy obrazów wykonałagent, kontrola koordynatora wtejrundzie dotyczyła tekstu.
