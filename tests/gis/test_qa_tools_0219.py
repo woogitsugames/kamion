@@ -153,3 +153,180 @@ def test_node_arm_check_runs_for_every_region(rid):
     rows = Mx.node_arm_check(ctx, nodes)
     assert len(rows) == len(nodes)
     assert sum(1 for r in rows if r.get("skipped")) == sum(1 for n in nodes if n.startswith("B"))
+
+
+# ================================================================================ (b) powiaty for a bbox (ADR 0219)
+import powiaty as PW  # noqa: E402
+import regions  # noqa: E402
+from shapely.geometry import box  # noqa: E402
+
+# synthetic: powiat "A" west of x = 0, "B" east of it, AOI = both
+SYN = {"A": box(-10_000, -10_000, 0, 10_000), "B": box(0, -10_000, 10_000, 10_000)}
+SYN_AOI = (-10_000, -10_000, 10_000, 10_000)
+# PRG divergence of the hand-kept registry (regions.py) for the TILE bbox, known and reported in ADR 0219;
+# knyszyn* is another agent's zone, so the registry is not changed here. Remove the entry when it is fixed.
+KNOWN_REGISTRY_GAPS = {"knyszyn-s": {"2002"}}
+
+
+def test_bbox_across_two_powiaty_gets_both_largest_share_first():
+    assert PW.powiaty_for_bbox((-300, 0, 700, 1000), SYN, SYN_AOI) == ("B", "A")
+    sh = PW.powiat_shares((-300, 0, 700, 1000), SYN, SYN_AOI)
+    assert sh == pytest.approx({"B": 0.7, "A": 0.3})
+
+
+def test_bbox_in_one_powiat_gets_one():
+    assert PW.powiaty_for_bbox((-900, 0, -100, 800), SYN, SYN_AOI) == ("A",)
+    assert PW.powiaty_for_bbox((0, 0, 800, 800), SYN, SYN_AOI) == ("B",)   # touching the border is not overlapping
+
+
+def test_bbox_outside_the_data_fails_loudly():
+    with pytest.raises(ValueError, match="AOI"):
+        PW.powiaty_for_bbox((9_000, 0, 11_000, 100), SYN, SYN_AOI)
+    with pytest.raises(ValueError, match="no powiat"):
+        PW.powiaty_for_bbox((0, 0, 10, 10), {"A": box(100, 100, 200, 200)}, SYN_AOI)
+
+
+def test_ring_size_is_the_far_field_ring():
+    from streetscape import far_field as FF
+    assert PW.RING_MAX_M == FF.RING_MAX_M
+
+
+def test_committed_prg_boundaries_and_manifest():
+    import hashlib
+    aoi, geoms = PW.load()
+    assert {"2061", "2002", "2008"} <= set(geoms)
+    man = json.loads(PW.MANIFEST.read_text(encoding="utf-8"))
+    assert man["files"][0]["sha256"] == hashlib.sha256(PW.BOUNDARIES.read_bytes()).hexdigest()
+    assert man["aoi_epsg2180"] == list(aoi)
+    for r in regions.REGIONS.values():               # every tile and far-field ring lies inside the data
+        PW.powiaty_for_bbox(r.bbox)
+        PW.powiaty_for_bbox(PW.ring_bbox(r.origin))
+
+
+def test_region_c_and_single_powiat_tiles_unchanged():
+    assert PW.powiaty_for_bbox(regions.get(C).bbox) == ("2061",)
+    assert PW.powiaty_for_bbox(regions.get("dk65-02").bbox) == ("2002",)          # the only water region today
+    assert PW.powiaty_for_bbox(PW.ring_bbox(regions.get(C).origin)) == ("2061", "2002")  # C ring: 72 % / 28 %
+
+
+@pytest.mark.parametrize("rid", sorted(regions.REGIONS))
+def test_tile_powiaty_match_the_registry_except_known_gaps(rid):
+    r = regions.get(rid)
+    prg = set(PW.powiaty_for_bbox(r.bbox))
+    assert prg - set(r.powiaty) == KNOWN_REGISTRY_GAPS.get(rid, set())
+    assert set(r.powiaty) <= prg
+
+
+def test_knyszynska_tile_is_two_powiaty():
+    assert set(PW.powiaty_for_bbox(regions.get("bialystok-knyszynska").bbox)) == {"2061", "2002"}
+
+
+def test_merge_layers_keeps_first_and_adds_new_ids():
+    a = {"L": [{"id": "x:0", "v": 1}, {"id": "y:0", "v": 1}]}
+    b = {"L": [{"id": "x:0", "v": 2}, {"id": "a:0", "v": 2}], "M": [{"id": "m:0"}]}
+    m = PW.merge_layers(a, b)
+    assert m["L"] == [{"id": "a:0", "v": 2}, {"id": "x:0", "v": 1}, {"id": "y:0", "v": 1}]
+    assert m["M"] == [{"id": "m:0"}]
+
+
+def _fake_bdot(root, t, layers):
+    for layer in layers:
+        f = root / "Data/raw/gugik" / f"bdot10k-{t}" / "gpkg" / f"PL.PZGiK.{t}.BDOT10k.{t}__{layer}.gpkg"
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_bytes(b"fixture")
+
+
+def test_far_field_ring_reads_every_ring_powiat(tmp_path, monkeypatch):
+    from streetscape import far_field as FF
+    _fake_bdot(tmp_path, "2061", FF.BDOT_LAYERS)
+    _fake_bdot(tmp_path, "2002", ("OT_PTLZ_A", "OT_BUBD_A"))
+    monkeypatch.setattr(FF, "REPO", tmp_path)
+    monkeypatch.setattr(PW, "package_files", lambda product, t: None)
+    src = FF.ring_sources(*regions.get(C).origin)
+    assert src["powiaty"] == ["2061", "2002"]
+    assert [p.parent.parent.name for p in src["bdot"]["OT_BUBD_A"]] == ["bdot10k-2061", "bdot10k-2002"]
+    assert [p.parent.parent.name for p in src["bdot"]["OT_SULN_L"]] == ["bdot10k-2061"]
+    assert src["missing"] == ["lod1-2024-2061", "lod1-2024-2002"]
+    src = FF.ring_sources(*regions.get("knyszyn").origin)      # was: only 2061 files -> 0 buildings, 0 forests
+    assert src["powiaty"] == ["2008", "2002"] and src["bdot"]["OT_BUBD_A"][0].parent.parent.name == "bdot10k-2002"
+    assert "bdot10k-2008" in src["missing"]
+
+
+def test_far_field_read_bdot_single_powiat_is_unchanged_and_merge_dedupes():
+    import pandas as pd
+    from streetscape import far_field as FF
+    frames = {"a": pd.DataFrame({"LOKALNYID": ["1", "2", "2"], "v": [1, 2, 3]}),
+              "b": pd.DataFrame({"LOKALNYID": ["2", "9"], "v": [8, 9]})}
+    fake = SimpleNamespace(read_dataframe=lambda f, bbox=None: frames[f])
+    assert FF._read_bdot(fake, ["a"], None) is frames["a"]          # one powiat: the same frame, duplicates kept
+    m = FF._read_bdot(fake, ["a", "b"], None)
+    assert m["LOKALNYID"].tolist() == ["1", "2", "2", "9"] and m["v"].tolist() == [1, 2, 3, 9]
+    assert FF._read_bdot(fake, [], None) is None
+
+
+def test_far_field_osm_window_contains_the_old_window_for_c_and_reaches_knyszyn():
+    from streetscape import far_field as FF
+    lon0, lat0, lon1, lat1 = FF.osm_lonlat_window(*regions.get(C).origin)
+    assert lon0 <= 23.08 and lat0 <= 53.10 and lon1 >= 23.30 and lat1 >= 53.24
+    lon0, lat0, lon1, lat1 = FF.osm_lonlat_window(*regions.get("knyszyn").origin)
+    assert lon0 < 22.90 < lon1 and lat0 < 53.31 < lat1                  # Knyszyn (outside 23.08-23.30 E)
+
+
+def test_far_field_lod1_merge_single_is_unchanged(monkeypatch):
+    from streetscape import far_field as FF
+    data = {"a": ({"x": 1.0, "y": 2.0}, {"members": 1, "usable_ids": 2}),
+            "b": ({"y": 9.0, "z": 3.0}, {"members": 2, "usable_ids": 2})}
+
+    def fake(z, audit):
+        audit.update(data[z][1])
+        return dict(data[z][0])
+    monkeypatch.setattr(FF, "_extract_lod1_heights", fake)
+    a1 = {}
+    assert FF._merge_lod1(["a"], a1) == {"x": 1.0, "y": 2.0} and a1 == {"members": 1, "usable_ids": 2}
+    a2 = {}
+    assert FF._merge_lod1(["a", "b"], a2) == {"x": 1.0, "y": 2.0, "z": 3.0}
+    assert a2 == {"members": 3, "usable_ids": 3}
+
+
+def test_lod2_extract_reads_every_powiat_of_the_window(tmp_path, monkeypatch):
+    from streetscape import lod2_extract as L2
+    z = {t: tmp_path / f"{t}_lod2_gml.zip" for t in ("2061", "2002")}
+    z["2061"].write_bytes(b"x")
+    monkeypatch.setattr(PW, "package_files", lambda product, t: [z[t]] if product == "lod2-2017" and t in z else None)
+    kb = regions.get("bialystok-knyszynska").bbox
+    zips, missing = L2.lod2_zips(kb)
+    assert [t for t, _ in zips] == ["2061"] and missing == ["2002"]   # 2002 not on disk -> reported, not silent
+    z["2002"].write_bytes(b"x")
+    zips, missing = L2.lod2_zips(kb)
+    assert sorted(t for t, _ in zips) == ["2002", "2061"] and not missing
+    assert [t for t, _ in L2.lod2_zips(regions.get(C).bbox)[0]] == ["2061"]
+
+
+def test_water_extract_reads_every_tile_powiat_and_single_is_unchanged(monkeypatch):
+    import build_region
+    import fetch_osm
+    from streetscape import water as W
+    calls = []
+    monkeypatch.setattr(build_region, "manifest_files", lambda ds: [Path(f"/zip/{ds}")])
+    monkeypatch.setattr(fetch_osm, "download", lambda: Path("/pbf"))
+    monkeypatch.setattr(W, "extract_osm", lambda bbox, pbf: {"ways": []})
+
+    def fake_bdot(bbox, z, gdir):
+        calls.append((z.name, gdir.parent.name))
+        t = z.name.rsplit("-", 1)[1]
+        return {"OT_SWRS_L": [{"id": "shared:0", "t": t}, {"id": f"only{t}:0", "t": t}]}
+    monkeypatch.setattr(W, "extract_bdot", fake_bdot)
+
+    def reg(rid):
+        x0, y0, x1, y1 = regions.get(rid).bbox
+        return {"bbox": {"xmin": x0, "ymin": y0, "xmax": x1, "ymax": y1},
+                "teryt_powiat": regions.get(rid).teryt_powiat}
+    d = W.extract(reg("dk65-02"))
+    assert calls == [("gugik-bdot10k-2002", "bdot10k-2002")]
+    assert d["license"]["bdot10k"].startswith("GUGiK BDOT10k (powiat 2002),")
+    assert d["bdot10k"] == {"OT_SWRS_L": [{"id": "shared:0", "t": "2002"}, {"id": "only2002:0", "t": "2002"}]}
+    calls.clear()
+    d = W.extract(reg("bialystok-knyszynska"))
+    assert [c[1] for c in calls] == ["bdot10k-2002", "bdot10k-2061"]
+    assert [f["id"] for f in d["bdot10k"]["OT_SWRS_L"]] == ["only2002:0", "only2061:0", "shared:0"]
+    assert "powiat 2002, 2061" in d["license"]["bdot10k"]
