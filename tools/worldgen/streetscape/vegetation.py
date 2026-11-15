@@ -258,6 +258,16 @@ def forest_stands(overrides):
     return out
 
 
+def park_replacements(overrides):
+    """BDOT wooded polygons explicitly represented as maintained parks, not forests.
+
+    An opted-in feature contributes neither forest trees, mantle nor HLOD/forest-floor
+    masks. Individually sourced park trees are supplied via tree_groups points.
+    """
+    return {str(o["target"]["bdot"]): o["id"] for o in overrides or []
+            if o.get("kind") == "park_replacement"}
+
+
 def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list.
     hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems."""
@@ -321,10 +331,16 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
     crep = {"applied": [], "stale": []}
     hit = set()
     stands = forest_stands(overrides)
+    parks = park_replacements(overrides)
+    park_hits = set()
     srep = {"applied": [], "stale": []}
     shit = set()
     cleared = []                            # cleared parts of the forest: sand on the orthophoto -> bare ground mask
     for f in src["bdot10k"]["OT_PTLZ_A"]:
+        park_id = str(f["id"]).split(":")[0]
+        if park_id in parks:
+            park_hits.add(park_id)
+            continue
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
         if not poly.is_valid:
             poly = shapely.make_valid(poly)
@@ -447,6 +463,8 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
     report["forest_clearings"] = crep
     srep["stale"] = [{"id": st["id"], "bdot": bid} for bid, st in stands.items() if bid not in shit]
     report["forest_stands"] = srep
+    report["park_replacements"] = {"applied": sorted(parks[k] for k in park_hits),
+                                   "stale": sorted(v for k, v in parks.items() if k not in park_hits)}
     # ADR 0187: authored `kind: tree_stand` - wooded land that is no BDOT10k forest (allotment gardens, a park
     # wood) but closes the horizon on the photos. `polygons_en` (region-local E/N rings, like open_ground),
     # `height_m` [lo, hi] of its trees, `mix` {species: weight}, `spacing_m`, `category` (HLOD texture mix, default

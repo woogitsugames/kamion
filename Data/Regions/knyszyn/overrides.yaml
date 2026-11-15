@@ -19,6 +19,243 @@ overrides:
     verify: none
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
   # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
+  - id: rynek-fountain-plate-0227
+    kind: paved_area
+    material: yard_concrete
+    polygon_epsg2180:
+    - - 760946.98
+      - 612379.81
+    - - 760946.27
+      - 612385.56
+    - - 760940.02
+      - 612384.79
+    - - 760940.73
+      - 612379.04
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto K1-124, ~6.3 x 5.8 m; flush plate, no basin. Jet layout and material
+      pending visual QA.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-central-plaza-0227
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760956.0
+      - 612382.3
+    - - 760955.76
+      - 612379.86
+    - - 760955.05
+      - 612377.52
+    - - 760953.89
+      - 612375.36
+    - - 760952.34
+      - 612373.46
+    - - 760950.44
+      - 612371.91
+    - - 760948.28
+      - 612370.75
+    - - 760945.94
+      - 612370.04
+    - - 760943.5
+      - 612369.8
+    - - 760941.06
+      - 612370.04
+    - - 760938.72
+      - 612370.75
+    - - 760936.56
+      - 612371.91
+    - - 760934.66
+      - 612373.46
+    - - 760933.11
+      - 612375.36
+    - - 760931.95
+      - 612377.52
+    - - 760931.24
+      - 612379.86
+    - - 760931.0
+      - 612382.3
+    - - 760931.24
+      - 612384.74
+    - - 760931.95
+      - 612387.08
+    - - 760933.11
+      - 612389.24
+    - - 760934.66
+      - 612391.14
+    - - 760936.56
+      - 612392.69
+    - - 760938.72
+      - 612393.85
+    - - 760941.06
+      - 612394.56
+    - - 760943.5
+      - 612394.8
+    - - 760945.94
+      - 612394.56
+    - - 760948.28
+      - 612393.85
+    - - 760950.44
+      - 612392.69
+    - - 760952.34
+      - 612391.14
+    - - 760953.89
+      - 612389.24
+    - - 760955.05
+      - 612387.08
+    - - 760955.76
+      - 612384.74
+    reason: 'ESTIMATED: central park paving traced from GUGiK 2025 orthophoto; granite setts approximated with existing
+      paving material.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-main-sw-0227
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760942.7
+      - 612384.4
+    - - 760944.3
+      - 612380.2
+    - - 760882.8
+      - 612356.9
+    - - 760881.2
+      - 612361.1
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-main-ne-0227
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760986.28
+      - 612399.13
+    - - 760987.72
+      - 612394.87
+    - - 760944.22
+      - 612380.17
+    - - 760942.78
+      - 612384.43
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-north-0227
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760924.66
+      - 612416.32
+    - - 760924.5
+      - 612416.91
+    - - 760923.5
+      - 612433.91
+    - - 760926.5
+      - 612434.09
+    - - 760927.48
+      - 612417.4
+    - - 760944.84
+      - 612382.98
+    - - 760942.16
+      - 612381.62
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-west-0227
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760912.42
+      - 612393.62
+    - - 760911.79
+      - 612394.11
+    - - 760900.79
+      - 612409.11
+    - - 760903.21
+      - 612410.89
+    - - 760913.96
+      - 612396.22
+    - - 760944.08
+      - 612383.68
+    - - 760942.92
+      - 612380.92
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-path-south-0227
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760934.35
+      - 612362.34
+    - - 760926.37
+      - 612344.39
+    - - 760923.63
+      - 612345.61
+    - - 760931.63
+      - 612363.61
+    - - 760931.68
+      - 612363.72
+    - - 760942.18
+      - 612383.02
+    - - 760944.82
+      - 612381.58
+    reason: 'ESTIMATED: GUGiK 2025 orthophoto, owner photos 3-7; widths working values; verify against rendering.'
+    confidence: medium
+    verify: compare against owner photos and GUGiK orthophoto
+  - id: rynek-park-not-forest-0227
+    kind: park_replacement
+    target:
+      bdot: 20029180-A4BE-5C99-E053-CC2BA8C01CFC
+    reason: 'SOURCED: OSM leisure=park and owner photos 3-7; BDOT wooded polygon is maintained lawn with separate
+      broadleaf trees, not forest.'
+    confidence: high
+    verify: owner visual review
+  - id: rynek-park-broadleaf-0227
+    kind: tree_groups
+    points_en:
+    - - -687.0
+      - -167.2
+    - - -674.0
+      - -171.2
+    - - -662.0
+      - -182.2
+    - - -648.5
+      - -185.7
+    - - -639.5
+      - -192.2
+    - - -702.0
+      - -180.2
+    - - -696.0
+      - -192.2
+    - - -706.5
+      - -209.2
+    - - -697.0
+      - -222.2
+    - - -702.0
+      - -243.2
+    - - -685.5
+      - -248.2
+    - - -676.0
+      - -254.2
+    - - -661.0
+      - -247.2
+    - - -646.0
+      - -240.2
+    - - -638.0
+      - -227.2
+    - - -651.0
+      - -210.2
+    - - -689.0
+      - -205.2
+    - - -677.0
+      - -195.2
+    species:
+      linden: 1.0
+    height_m:
+    - 15.0
+    - 20.0
+    reason: ESTIMATED crown locations from GUGiK 2025 orthophoto; owner photos indicate mature lindens; heights WORKING_VALUE.
+      Avoid forest mantle and HLOD.
+    confidence: medium
+    verify: owner photos and individual stem positions
   - id: rynek-plaza-east
     kind: paved_area
     material: yard_paving
@@ -33,17 +270,6 @@ overrides:
       paving); granite sett in arcs is not in the library (open, later polish).
     confidence: medium
     verify: owner photo of the whole plaza from a corner
-  - id: rynek-fountain-plate
-    kind: paved_area
-    material: yard_slabs
-    polygon_epsg2180: [[761031.2, 612400.4], [761040.2, 612400.4], [761040.2, 612393.4], [761031.2, 612393.4]]
-    reason: >-
-      Ground-level fountain of Rynek (owner frames: jets from a flush rectangular plate ~9 x 7 m in the sett
-      paving). Position ESTIMATED from the ring pattern of the paving on the 2025 orthophoto (centre 761035.7
-      612396.9, +-5 m); size WORKING_VALUE read off the owner frame (a child ~1 m tall beside a plate ~8-9 m wide).
-      Only the plate is laid; water jets and night lighting are not modelled (open).
-    confidence: low
-    verify: owner - where on the plaza the fountain is (which corner / distance from Grodzienska)
   - id: field-roads-unlit
     target: {osm_way: [305910057, 1111506743, 1111506749]}
     reason: >-
@@ -53,21 +279,6 @@ overrides:
     confidence: medium
     verify: none
     set: {lamps: false}
-  - id: rynek-park-trees
-    kind: forest_stand
-    target: {bdot: "20029180-A4BE-5C99-E053-CC2BA8C01CFC"}
-    reason: >-
-      West half of Rynek is a town park (OSM way 300660468 leisure=park, 0.74 ha): mown lawn, paths to a monument
-      and large single broadleaf trees. BDOT10k has it as OT_PTLZ_A "zadrzewienie, lisciaste", which the class
-      default plants as a closed wood (render r2 rynek-above: a dark block of trunks). GUGiK orthophoto 0.1 m
-      2025-05-27: ~60 separate crowns of 8-14 m diameter on 0.9 ha -> one tree per ~12 m; owner frames
-      20240730_190331 / 20250729_1825xx: old trees ~2.5-3x the height of the two-storey houses behind. Heights
-      14-22 m and the linden/maple shares are WORKING_VALUE (species read from crown shape only).
-    confidence: medium
-    verify: owner - species of the Rynek trees (lindens?)
-    height_m: [14.0, 22.0]
-    spacing_m: 12.0
-    mix: {linden: 0.7, maple: 0.3}
   - id: lamp-policy-led-0216
     kind: lamp_policy
     family: led
@@ -93,3 +304,51 @@ overrides:
     confidence: high
     verify: none
     set: {lamps: false}
+
+  - id: rynek-mown-open-ground-0227
+    kind: open_ground
+    polygons_en:
+    - - - -743.54
+        - -244.06
+      - - -723.43
+        - -213.1
+      - - -696.52
+        - -172.13
+      - - -692.92
+        - -166.14
+      - - -686.64
+        - -156.47
+      - - -680.64
+        - -160.58
+      - - -668.49
+        - -168.06
+      - - -655.23
+        - -174.99
+      - - -637.45
+        - -186.05
+      - - -625.55
+        - -192.59
+      - - -624.33
+        - -194.72
+      - - -622.71
+        - -205.04
+      - - -626.99
+        - -218.78
+      - - -637.69
+        - -248.95
+      - - -649.22
+        - -275.48
+      - - -658.62
+        - -290.45
+      - - -698.05
+        - -266.13
+      - - -720.21
+        - -254.26
+      - - -730.85
+        - -249.33
+      - - -743.54
+        - -244.06
+    reason: 'SOURCED: owner photos 3–7 and GUGiK orthophoto show mown park lawn; exclude
+      incidental self-seeded rule trees; preserve authored points.'
+    confidence: high
+    verify: visual comparison
