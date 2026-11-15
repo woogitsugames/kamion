@@ -1,6 +1,6 @@
 # 03 — Knyszyn: bryły i detale fasad — WIP
 
-Stan bieżący:SOURCED [manifest]32rekordy, w tym4nowe kadry pracującej fontanny(3dzień+1noc), wszystkie link-onlyARR. Nocna fotografia pokazuje tony niebieskie/cyjanowe/różowofioletowe w wodzie i osobne odbicia. Liczba dysz, obiegów, metryka, typ lamp/program oraz aktualność2026UNVERIFIED; projekt2019 nie jest dokumentacją wykonawczą. Szczegóły fountain-active-round7 i fountain-night-round8.
+Stan bieżący:SOURCED [manifest]36rekordy, w tym4nowe kadry pracującej fontanny(3dzień+1noc), wszystkie link-onlyARR. Nocna fotografia pokazuje tony niebieskie/cyjanowe/różowofioletowe w wodzie i osobne odbicia. Liczba dysz, obiegów, metryka, typ lamp/program oraz aktualność2026UNVERIFIED; projekt2019 nie jest dokumentacją wykonawczą. Szczegóły fountain-active-round7 i fountain-night-round8.
 
 Cel: dać sesji rynku rozróżnienia brył, kolorów i detali, które gubią się w ogólnym opisie „1–2 kondygnacje”. Pięć kadrów obejrzano osobno ponownie. To pogłębienie istniejącego K1, **0 nowych pobrań zdjęć**, 5 pomniejszeń lokalnych kopii K1, 0 kadrów link-only. Licencje i autorów ponownie sprawdzono przez Commons API; zapis w `data/licences-commons.json`. Daty 2009/2012/2024, aktualny stan 2026 UNVERIFIED. Miniatury ≤ 800 px. To nie są zdjęcia właściciela.
 
@@ -115,10 +115,14 @@ Mapillary-town-round6: dwa nowe, osobno obejrzane kadry picturehoover z 27.06.20
 Fountain-active-round7:3nowe indywidualnie obejrzane dzienne kadry pracującej fontanny, wszystkie link-onlyARR,0pobrań. DwaUM(seriaUrszulaCitkowska, publikacja30.06.2020) i jedenOnet(MartynaBielska, publikacja29.08.2022), dokładne daty ekspozycjiUNVERIFIED. Drugi agent sprawdził każdy dokładnyURL i mapowanie Onet6/13→Knyszyn. Wysoki środek/niższe spienione strugi i płaska mokra posadzka; widoczne minima5/4/7strugESTIMATED, nie dysze. Dzienny niebieskawy cień nie dowodziLED. Main31rekordów.
 
 
-Fountain-night-round8:1 nowy nocny link-only kadrEdytyRożko, NowyGoniecKnyszyńskiNr8(188),sierpień2020,s3. Dwóch agentów osobno obejrzało okładkę, całą fotografię i podpis. Wysoki środek niebieski; niższe strugi cyjanowo-turkusowe oraz różowo-fioletowe; jasne podstawy mogą być prześwietlone, nie dowodzą białego kanału. Odbicia na mokrych płytach odrębne. ESTIMATED minimum1wysoka+4niższe, nie dysze. Jedna chwila nie dowodzi przebiegu animacji. Zero kopii zdjęć/PDF/screenshotów; main32rekordy.
+Fountain-night-round8:1 nowy nocny link-only kadrEdytyRożko, NowyGoniecKnyszyńskiNr8(188),sierpień2020,s3. Dwóch agentów osobno obejrzało okładkę, całą fotografię i podpis. Wysoki środek niebieski; niższe strugi cyjanowo-turkusowe oraz różowo-fioletowe; jasne podstawy mogą być prześwietlone, nie dowodzą białego kanału. Odbicia na mokrych płytach odrębne. ESTIMATED minimum1wysoka+4niższe, nie dysze. Jedna chwila nie dowodzi przebiegu animacji. Zero kopii zdjęć/PDF/screenshotów; main36rekordy.
 
 Datowanie zachowuje dwa odrębne komunikaty: UM4246 jest oznaczony30.06.2020 i ogłasza koniec rewitalizacji; podpis Gońca8/2020 opisuje działanie fontanny„od sierpnia”. Nie ustalono dokładnego pierwszego uruchomienia ani dat ekspozycji. Nie utożsamiamy daty publikacji strony, aktualnego zestawu zdjęć i momentu ich wykonania. Nie przeniesiono planu3typówdysz/4obiegów/2.5m z2019 na stan wykonany.
 
 ## Prywatna nocna referencja — tylko opis
 
 [Owner-night-text-round9](owner-night-text-round9/README.md):istniejący lokalny kadr właściciela obejrzany przez agenta,0pobrań/0kopii/0miniatur/0nowychpublicznychlinków. Opis kolorów wody, mokrej nawierzchni, rusztu i małej architektury służy generatorowi. Nie włączono prywatnego obrazu do głównego manifestu32publicznychrekordów. DateTimeOriginal/DateTimeDigitized/OffsetTimeOriginal nieobecne; datowanie z nazwy plikuUNVERIFIED. Brak ustaleń liczby dysz,kanałów,programu,RGB i obecnego stanu2026. Historyczny zapis nieobejrzenia wdata/owner-fontanna-observations.json pozostaje historią, niniejsza późniejsza obserwacja jest osobna. Bez kopii obrazu w repo.
+
+## Kościół i powierzchnie — obieg10
+
+Główny manifest36rekordów. [Cztery nowe kadry2024](church-surfaces-round10/README.md),ZalaCCBY-SA4.0:fasada, długi bok zplacem, bliższe wejście i wielobocznytył.4pobrane podglądy/4miniatury≤800,0pełnychoryginałów; każdy obraz obejrzany także osobno przez koordynatora. Wyraźny kontrast gładkich jasnych płaszczyzn i ziarnistej wieży, czerwone obróbki, szorstki ciemny mur, szara modułowa kostka/czerwone pasy, stopnie i spusty. Są to4fotografie1kościoła, nie4obiekty. DedupK1/03:02/05/08/17nowe, znane01/11/15pominięte. Materiałdachu,RAL,metryka i aktualność2026UNVERIFIED; daty/GPS zmetadanych, nie pomiar zobrazu.
