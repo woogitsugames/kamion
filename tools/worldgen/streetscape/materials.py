@@ -797,3 +797,20 @@ for _k in ("office", "ribbon"):
     M[f"cladding_vertical_grey__far_{_k}"] = {
         "color": M["cladding_vertical_grey"]["color"], "rough": 0.45, "base": "cladding_vertical_grey",
         "texture_set": "facade_far", "set_tile": True, "tint_linear": True, "sky_occ": [SKY_OCC_STRUCT_X, 0.9]}
+# ADR 0242 (Dojlidy, review s20-0185 P1-1 / P1-4; additive, no existing entry changed except the new key below):
+# - cladding_cassette_grey: cassette panels with dominant HORIZONTAL joints (review: joints every ~1 m, vertical
+#   butt joints every 3-4 m) for the office block at Kuronia 3 - the existing set sandwich_smooth (courses of
+#   1.15 m) with `panel_m` 3.5 m, colour of cladding_vertical_grey (measured in ADR 0185). No new texture set.
+#   Module 3.5 x 1.15 m = WORKING_VALUE (the review reads the photo as "ok. 1 m" / "ok. 3-4 m").
+# - `runoff_strength` (new optional key, WorldPbrMaterials): multiplier of the run-off layer strength of ONE
+#   material. hall_wall_smooth 0.25 (WORKING_VALUE of review s20-0185 P1-4: the plant hall is new and clean on the
+#   photo; the hashed halls keep 1). hall_wall_smooth is used by region bialystok-dojlidy only (test_dojbld_0185).
+M["hall_wall_smooth"]["runoff_strength"] = 0.25
+M["cladding_cassette_grey"] = {"color": [0.33, 0.335, 0.34], "rough": 0.45, "metal": 0.2,
+                               "texture_set": "sandwich_smooth", "set_tile": True, "tint_linear": True,
+                               "panel_m": [3.5, 1.15], "runoff": True, "runoff_strength": 0.5, "splash_h": 0.6,
+                               "sky_occ": SKY_OCC_STRUCT}
+for _k in ("office", "ribbon"):
+    M[f"cladding_cassette_grey__far_{_k}"] = {
+        "color": M["cladding_cassette_grey"]["color"], "rough": 0.45, "base": "cladding_cassette_grey",
+        "texture_set": "facade_far", "set_tile": True, "tint_linear": True, "sky_occ": [SKY_OCC_STRUCT_X, 0.9]}

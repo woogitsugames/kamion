@@ -131,6 +131,10 @@ namespace Game.World.Import
         /// zone (UV0.y = metres above ground) and run-off space (TEXCOORD_1) of the generated hall walls.</summary>
         static bool Runoff(Dictionary<string, object> def) => def.Get("weather") is bool b && b;
 
+        /// <summary>ADR 0242: manifest "runoff_strength" (0..2) scales the run-off layer of one material; absent = 1.</summary>
+        public static float RunoffStrengthScale(Dictionary<string, object> def) =>
+            def != null && def.Get("runoff_strength") != null ? Mathf.Clamp((float)Num(def.Get("runoff_strength")), 0f, 2f) : 1f;
+
         /// <summary>Procedural stripe sets: (direction in UV metres, period m, colour A, colour B), linear colours.</summary>
         static (Vector2 dir, float period, Color a, Color b)? Stripes(Dictionary<string, object> def)
         {
@@ -439,7 +443,8 @@ namespace Game.World.Import
                     // light cladding shows run-off most; dark graphite / accent sheet hides soot (rust still shows)
                     float lum = 0.2126f * col.x + 0.7152f * col.y + 0.0722f * col.z;
                     // mineral render soaks the dirt in: softer than on coated sheet (WORKING_VALUE, judged on the r10 renders)
-                    mat.SetFloat("_RunoffStrength", Mathf.Lerp(0.55f, 0.9f, Mathf.InverseLerp(0.08f, 0.5f, lum)) * (plasterRunoff ? 0.6f : 1f));
+                    // ADR 0242: manifest "runoff_strength" = per-material multiplier (a new, clean hall; default 1)
+                    mat.SetFloat("_RunoffStrength", Mathf.Lerp(0.55f, 0.9f, Mathf.InverseLerp(0.08f, 0.5f, lum)) * (plasterRunoff ? 0.6f : 1f) * RunoffStrengthScale(def));
                 }
             }
 
