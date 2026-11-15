@@ -1,0 +1,13 @@
+{
+ "provenance": "authored_override (ADR 0214): control route for cameras/QA = the D64 truck route Białystok -> Knyszyn (variant A of ADR 0203, owner D65 p.4: old DK65, no diversion) inside this tile",
+ "description": "Old DK65 north-westbound from the south edge (seam with dk65-09) to the north edge (seam with dk65-11). Route variant A km 21.839-24.453 of docs/reports/map/dk65_route_plan.json.",
+ "start_epsg2180": [
+  764498.6,
+  607487.0
+ ],
+ "end_epsg2180": [
+  762893.0,
+  609535.0
+ ],
+ "confidence": "high (OSM geometry; plan tile entry/exit points snapped to the tile edge; seam points identical to the neighbour tiles)"
+}
