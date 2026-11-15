@@ -4,3 +4,6 @@
 - 01:58 r1: build_world 2913 s (+ --context potrzebne dla nowego regionu), import OK chunks=64, WORLD_MEMORY Low 156,6 MB / High 356,8 MB; vqa r1 Low OK (route 7 kamer). 8 par ortho|top (junctions/), 56 kadrów pasów (lanes/sheet_*), profile linii (line_profile.py): pasy i szerokości trunk zgodne z OSM/BDOT (2 pasy ~7,4 m między liniami krawędziowymi, 3 pasy ~11 m). Krytyczne: DK8 w wykopie pod rondem Szymańskiego (OSM tunnel=yes layer=-1, generator nie zna tuneli) — wyspa ronda otwarta na wykop.
 - W TLE: all2.ps1 (rebuild z 5 kamerami place -> import -> vqa r2 Low+High -> EditMode).
 - NASTĘPNY KROK: `cat artifacts/bialystok-dk65-t2-0206/all2.status`
+- 03:30 r2: EditMode 580/0 (1 skip), pytest gis 1163 ok / 1 fail = test_dojbld_0185 (na main xfail 3f625052c, baza 0203 go nie ma). vqa r2 Low/High + 5 kamer place. KRYTYCZNE: probe_lod2.py — kolizja terenu (terrain_lod2) 0,27–4 m nad jezdnią DK8 pod rondem Szymańskiego (trasa zablokowana). Poprawka: klucz override `bridge` (network.py, ADR 0206) + łuki ronda 257353773/74 jako pomosty.
+- W TLE: all3.ps1 (rebuild -> probe -> import -> topview -> vqa r3 Low/High).
+- NASTĘPNY KROK: `cat artifacts/bialystok-dk65-t2-0206/all3.status artifacts/bialystok-dk65-t2-0206/probe_lod2_r3.txt`
