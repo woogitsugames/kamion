@@ -74,11 +74,18 @@ def covers(rows: list[dict], bbox) -> float:
     return u.intersection(tile).area / tile.area
 
 
-def pick_latest(rows: list[dict], bbox, pred) -> list[dict]:
-    """Latest akt_data series (all sheets with that date) satisfying `pred` that fully covers the tile."""
+def pick_latest(rows: list[dict], bbox, pred, key: str = "akt_data") -> list[dict]:
+    """Latest series (all sheets with the same `key`: akt_data by default) satisfying `pred` that fully covers the
+    tile. key="akt_rok" (ADR 0212, pinned survey year) joins the flight days of one year: the NMT 2022 of tile
+    (-9,9) is flown on 2022-07-29 and 2022-08-27; one sheet per godlo (the latest date when a sheet repeats)."""
     cand = [r for r in rows if pred(r)]
-    for date in sorted({r["akt_data"] for r in cand}, reverse=True):
-        series = [r for r in cand if r["akt_data"] == date]
+    for val in sorted({r[key] for r in cand}, reverse=True):
+        series = [r for r in cand if r[key] == val]
+        if key != "akt_data":
+            last: dict[str, dict] = {}
+            for r in sorted(series, key=lambda r: r["akt_data"]):
+                last[r.get("godlo") or r["url_do_pobrania"]] = r
+            series = list(last.values())
         if covers(series, bbox) > 0.9999:
             return sorted(series, key=lambda r: r["url_do_pobrania"])
     return []
@@ -115,7 +122,7 @@ def main() -> None:
     pin = regions.source_pins(region.id).get("nmt_year")
     nmt = pick_latest(P["NMT"], bb, lambda r: r.get("char_przestrz") == "1.00 m"
                       and r.get("format", "").startswith("ARC/INFO") and r.get("uklad_h") == "PL-EVRF2007-NH"
-                      and (pin is None or r.get("akt_rok") == str(pin)))
+                      and (pin is None or r.get("akt_rok") == str(pin)), key="akt_rok" if pin else "akt_data")
     if not nmt:
         sys.exit("no NMT 1 m series fully covers the tile")
     yr = nmt[0]["akt_rok"]

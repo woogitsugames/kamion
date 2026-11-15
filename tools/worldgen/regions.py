@@ -125,6 +125,18 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0209, owner D64; tile = lattice (-9,8) of the ADR 0203 plan)",
     ),
+    # ADR 0212 (owner D64): lattice (-9,9), north of `knyszyn-w` (shared edge y = 613631): DK65 further towards Monki
+    # through the fields NW of Knyszyn. Powiat moniecki 2008. NMT survey year pinned to 2022 (sources.authored.json)
+    # like knyszyn-w, so the terrain of the shared edge comes from the same sheets.
+    "dk65-monki-01": Region(
+        id="dk65-monki-01",
+        title="DK65 w stronę Moniek 01 — pola na północny zachód od Knyszyna",
+        candidate="K_knyszyn_w",
+        bbox=(758539.0, 613631.0, 760587.0, 615679.0),
+        origin=(759563.0, 614655.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,9) of the ADR 0203 plan)",
+    ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
     "dk65-02": Region(
         id="dk65-02",
