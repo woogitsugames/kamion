@@ -45,11 +45,11 @@ RINGS = {"bieżeństwa": "Rondo Pamięci Bieżeństwa 1915 roku", "putry": "Rond
 PHOTOS = {
     "G3-A": [
         {"file": "20201102_152339_Rondo_Pamięci_Bieżeństwa_1915_roku_Białystok.jpg", "licence": "CC0", "camera": "photo_biezenstwa_ground",
-         "shows": "Rondo Bieżeństwa under the Andersa viaduct: red deck edge, round piers, railing, planting, zebra P-10, lamps"},
+         "shows": "Rondo Bieżeństwa under the Andersa viaduct: red deck edge, grey rounded-rectangle piers, railing, planting, zebra P-10, lamps"},
     ],
     "G3-B": [
         {"file": "7204_May_2021_in_Białystok.jpg", "licence": "CC0", "camera": "g3b_rondo_putry_approach",
-         "shows": "Andersa/Putry viaduct: green deck edge, yellow round piers, transparent noise screens, sign gantry, P-8 arrows, wet asphalt, kerb + paving-block path"},
+         "shows": "Andersa/Putry viaduct: green deck edge, ochre chamfered rectangular piers with caps, transparent noise screens, sign gantry, P-8 arrows, wet asphalt, kerb + paving-block path"},
         {"file": "7197_May_2021_in_Białystok.jpg", "licence": "CC0", "camera": "(street furniture / building)",
          "shows": "Al. Tysiąclecia: sign gantry, fire-station building behind a hedge, grass verge, lamp type (overcast)"},
         {"file": "20240626_103137_June_2024_in_Białystok.jpg", "licence": "CC0", "camera": "(sun, vegetation)",
