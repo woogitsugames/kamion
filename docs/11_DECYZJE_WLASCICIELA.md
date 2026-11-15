@@ -116,3 +116,6 @@ Właściciel: (1) **APK D67** — dodać zestaw regionów **`d67-full`** = obecn
 
 ## D72 — Limit rozmiaru APK 10 GB (2026-11-15, s22)
 Właściciel: limit rozmiaru APK z regionami podniesiony z 2 GB (D67/D71) do **10 GB**. Uwaga techniczna: pojedynczy plik APK powyżej ~4 GB nie jest obsługiwany przez Androida i format ZIP32 (UNVERIFIED dla Unity 6000.3 — sprawdzić przy buildzie); powyżej tej granicy regiony muszą iść jako osobne paczki (PR #112, ADR 0234) albo asset packs.
+
+## D73 — Windows jako platforma główna, telefon później (2026-11-15, s22)
+Właściciel: na telefon „jednak za ciężkie” → **Windows (PC) jest teraz platformą główną**; Android/iOS później jako lżejsza wersja. **Silnik bez zmian: Unity 6 URP** (właściciel wybrał wariant rekomendowany zamiast Unreal 5). Zastępuje kolejność z D56 (PC po bramce 3). D67/D71/D72 (APK z korytarzem, limit rozmiaru) stają się drugorzędne. Budżety i bramki PC: do zdefiniowania (referencyjny PC, FPS, wejście — pytanie do właściciela); do czasu pomiaru WORKING_VALUE. Dotychczasowe budżety mobilne (np. < 2 M tris High) zostają jako zabezpieczenie dla przyszłej wersji telefonowej. ADR 0260.
