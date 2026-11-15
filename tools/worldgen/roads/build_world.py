@@ -494,7 +494,7 @@ def cameras_generic(region_id, w):
         hw = float(c.hw_at(cs))
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
-        lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)
+        lat_l = -trav * (hw - sec.edge_strip - float(sec.lane_w_at(hw)) / 2)
         if getattr(sec, "lane_edges", None):
             lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)
@@ -579,7 +579,7 @@ def cameras_industrial_c(region_id, w):
         # rightmost lane centre in travel direction
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
-        lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)     # rightmost lane of travel
+        lat_l = -trav * (hw - sec.edge_strip - float(sec.lane_w_at(hw)) / 2)     # rightmost lane of travel
         if getattr(sec, "lane_edges", None):
             lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)

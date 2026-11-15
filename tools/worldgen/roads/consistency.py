@@ -194,7 +194,7 @@ def _lane_bands(c, secs, s):
     hw = float(c.hw_at(s))
     dirn = int(c.dirn[c.idx(s)]) or 1
     _, _, cen = lane_layout(sec, hw, dirn)
-    hb = max(0.3, sec.lane_w / 2 - LANE_INSET_M)
+    hb = max(0.3, float(sec.lane_w_at(hw)) / 2 - LANE_INSET_M)
     out = []
     if sec.oneway:
         for i, lat in enumerate(cen["fwd"]):

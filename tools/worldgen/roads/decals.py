@@ -140,7 +140,7 @@ def gullies(buf, net, report):
 def wheel_path_lat(c, sec, hw, key):
     """ADR 0194: lateral offset of a wheel path of a hashed lane. Lanes are counted from the right edge strip like
     the trench patches; on two-way roads the kerb-side path of each half is the outer one."""
-    lw = max(float(sec.lane_w), 2.0)
+    lw = max(float(sec.lane_w_at(hw)), 2.0)
     nl = max(1, int(round((2 * hw - 2 * sec.edge_strip) / lw)))
     lane = int(hf(*key, "wl") * nl)
     centre = -hw + sec.edge_strip + (lane + 0.5) * lw
@@ -181,11 +181,11 @@ def build(buf, net, juncs, report):
                 hw = float(c.hw_at(sc))
                 kind = hf(*key, i, "kind")
                 if kind < 0.35:              # full-lane trench / overlay patch
-                    width = min(sec.lane_w * (0.9 + 0.2 * hf(*key, i, "w")), 2 * hw - 0.2)
+                    width = min(float(sec.lane_w_at(hw)) * (0.9 + 0.2 * hf(*key, i, "w")), 2 * hw - 0.2)
                     length = 1.2 + hf(*key, i, "l") * 5.8
                     nl = max(1, sec.lanes)
                     lane = int(hf(*key, i, "lane") * nl)
-                    lat = -hw + sec.edge_strip + (lane + 0.5) * sec.lane_w
+                    lat = -hw + sec.edge_strip + (lane + 0.5) * float(sec.lane_w_at(hw))
                 elif kind < 0.7:             # wheel-path patch (ADR 0194: in a wheel path of a lane)
                     width = 0.8 + hf(*key, i, "w") * 0.6
                     length = 2.0 + hf(*key, i, "l") * 5.0
