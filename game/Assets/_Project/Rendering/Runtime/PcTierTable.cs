@@ -124,7 +124,8 @@ namespace Game.Rendering
         static readonly string[] k_IntegratedMarkers =
         {
             "Intel(R) HD", "Intel(R) UHD", "Intel(R) Iris", "Intel HD", "Intel UHD", "Iris(R) Xe", "Iris Xe",
-            "AMD Radeon(TM) Graphics", "AMD Radeon Graphics", "Radeon(TM) Vega", "Radeon Vega", "Radeon(TM) 7", "Radeon 780M", "Radeon 760M",
+            "AMD Radeon(TM) Graphics", "AMD Radeon Graphics", "Radeon(TM) Vega", "Radeon Vega",
+            "Radeon(TM) 740M", "Radeon(TM) 760M", "Radeon(TM) 780M", "Radeon(TM) 880M", "Radeon(TM) 890M", "Radeon 760M", "Radeon 780M",
         };
         static readonly string[] k_SoftwareMarkers = { "Microsoft Basic Render", "llvmpipe", "SwiftShader", "WARP" };
 
