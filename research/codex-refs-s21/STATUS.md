@@ -1,5 +1,7 @@
 # Status codex-refs-s21
 
-Cel ciągłego researchu aktywny. Pakiet 01 WIP: 4 kadry pomocnicze obejrzane osobno, w tym 3 nowe całe kadry i 3 wycinki; 0 kwalifikowanych ciągnik/naczepa z czytelnym E. Brak kadrów link-only. Progi M59-FIX niespełnione.
+Cel aktywny. Pakiet 01 WIP: 5 kadrów referencyjnych w manifeście, 0 link-only; w tym 1 tył naczepy, 0 potwierdzonych czytelnych E ciągnika/naczepy. Nowy tył naczepy obejrzany osobno z wycinkiem. Progi M59-FIX niespełnione.
 
-Następny krok: Commons/Openverse — tylne lampy ciągników i naczep; każdą obejrzeć i sprawdzić znaki na wycinku. Potem pakiet 02.
+Wikimedia zwróciła HTTP 429 przy kolejnym oryginale; przerwano pobieranie, bez prób obejścia. Kandydat nieobejrzany nie jest liczony.
+
+Następny krok: alternatywne otwarte źródła lamp; pierwszy przegląd pakietu 02 brud naczep, z powrotem do luk 01 w kolejnym obiegu. Żaden pakiet jeszcze nie ma odbioru.

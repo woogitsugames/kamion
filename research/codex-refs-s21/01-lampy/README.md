@@ -24,3 +24,5 @@ Dalszy krok: wyszukiwać osobno fotografie tylnych lamp zespołów drogowych i z
 ## Dalszy przegląd
 
 01-002…004: trzy europejskie ciężarówki, fotografie Cjp24 (CC BY-SA 4.0). Obejrzano całe kadry i osobno wycinki oryginałów. Żaden nie umożliwia odczytania homologacji. Materiał pomocniczy dla kształtów przednich lamp; nie zwiększa liczników M59-FIX. Liczba komór funkcjonalnych pozostaje UNVERIFIED. Zachowane są miniatury całych kadrów oraz wycinki.
+
+01-005 — SOURCED [obraz w manifeście]: cztery pola poziomego klosza naczepy, widoczna rozetowa i żebrowana optyka. Góra lampy ucięta. E-numer pozostaje UNVERIFIED; biała obudowa przy tablicy nie potwierdza funkcji lampki. Wycinek obejrzany osobno.
