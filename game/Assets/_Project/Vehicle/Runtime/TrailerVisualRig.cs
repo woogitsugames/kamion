@@ -28,7 +28,7 @@ namespace Game.Vehicle.Runtime
         [Tooltip("Manifest lod_screen_size_suggestion: LOD0 0.4, LOD1 0.16, LOD2 0.05, cull 0.005")]
         public float[] screenSizes = { 0.4f, 0.16f, 0.05f, 0.005f };
         [Tooltip("-1 = follow QualitySettings")] public int forceLevel = -1;
-        [Tooltip("Trailer tyre rolling radius from the physics definition (m); the wheel meshes (free radius 0.536 m) are flattened at it. 0 = off")]
+        [Tooltip("Trailer geometric tyre radius (contact plane, ADR 0201) from the physics definition (m); the wheel meshes (free radius 0.536 m) are flattened at it. 0 = off")]
         public float tyreFlatRadius;
 
         [Header("Moving parts")]

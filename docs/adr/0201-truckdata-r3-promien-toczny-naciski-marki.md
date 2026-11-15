@@ -12,7 +12,7 @@ ciągnika solo 64/36 % vs 73/27 % karty (R3-012…014); (c) docs/04 podawał opo
 hamulca awaryjnego kat. N wzór M2/M3 (/130, 60 km/h); (e) nazwy marek w danych/kodzie gry.
 
 ## Decyzja
-1. **Dwa promienie opony** (`TireDefinition`): `radius` = promień geometryczny (obciążony) — promienie kontaktu, punkt mocowania
+1. **Dwa promienie opony** (`TireDefinition`): `radius` = promień geometryczny (w modelu kontaktu: sztywny dysk; ugięcie opony dodawane szeregowo, więc środek koła statycznie = radius − ugięcie — patrz „Recenzja drugim modelem”) — promienie kontaktu, punkt mocowania
    zawieszenia, płaszczyzna styku wizualnego koła (`tyreFlatRadius`); `rollingRadius` = efektywny promień toczny — ω ↔ v (poślizg),
    Fx ↔ moment koła (napęd, hamulec, opór toczenia), `WheelRadiusRef` (AMT, obroty, dźwięk wału), `InitializeMoving`, trzymanie
    postojowe naczepy. Ten sam promień dla kinematyki i momentu = zgodność mocy (Fx·v = T·ω przy zerowym poślizgu).
@@ -22,7 +22,7 @@ hamulca awaryjnego kat. N wzór M2/M3 (/130, 60 km/h); (e) nazwy marek w danych/
    statycznym przy nośności 0,498–0,507 m a swobodnym 0,536–0,546 m).
    Przegląd konsumentów (grep `Radius`/`RollingRadius`/`WheelRadiusRef`): `WheelGroup` (kontakt 129 → `Radius` ✔; hardpoint 62 →
    `radius` ✔; moment 345, poślizg 368, opór toczenia 429, przyspieszenie bieżnika 457 → `RollingRadius` ✔), `VehicleModel`
-   (`_wheelRadiusRef`, `InitializeMoving` → toczny ✔), `TrailerModel` (136, 236 → toczny ✔), `TruckAssetBuilder`/`TrailerAssetBuilder`
+   (`_wheelRadiusRef`, `InitializeMoving` → toczny ✔), `TrailerModel` (135, 236 → toczny ✔), `TruckAssetBuilder`/`TrailerAssetBuilder`
    `tyreFlatRadius` i graybox → `Radius` ✔ (geometria), `VehicleVisuals`/`TrailerVisuals` obrót = ∫ω dt (koło wizualnie toczy się
    jak realna opona — obwód toczny > 2π·r_obciążony), `TruckAudioController` `ShaftRpm` ← `WheelRadiusRef` (−2,7 % wysokości tonu wału
    przy danej prędkości — fizycznie poprawne).
@@ -72,3 +72,7 @@ na telefonie oczekiwane analogicznie, **niezmierzone** (lider: APK + `gate12-pho
 - Siodło 0,68 m vs karta 0,375 m przed osią (R3-019, jedno źródło; ADR 0019) — bez zmian.
 - EditMode/PlayMode i APK nieuruchomione w tej rundzie (chmura bez Unity); scena/prefaby nie zmieniane — `tyreFlatRadius` dalej = `radius`.
 - Bramki 1–2 na telefonie po scaleniu (lider).
+
+
+## Recenzja drugim modelem (2026-11-15)
+Darmowe modele OpenRouter (`nvidia/nemotron-3-ultra-550b-a55b:free`, `cohere/north-mini-code:free`; zasady: `docs/owner/OPENROUTER-FREE-MODELS.md`), każde zgłoszenie zweryfikowane w kodzie. Potwierdzone: wszyscy konsumenci używają właściwego promienia (kontakt/hardpoint → `radius`; moment, poślizg, opór toczenia, AMT, audio, naczepa → `rollingRadius`), Fx·v = T·ω. Poprawione opisy: `radius` to promień geometryczny modelu kontaktu (środek koła statycznie = radius − ugięcie opony), nie „obciążony”; tooltipy `tyreFlatRadius` (to promień geometryczny, nie toczny); numer linii `TrailerModel`. Otwarte: (1) jeśli 0,51 m pochodzi z karty jako promień statyczny OBCIĄŻONY, model odejmuje ugięcie drugi raz (środek koła niżej o refLoad/radialStiffness) — do sprawdzenia w zadaniu strojenia nacisków (gałąź `axleloads-tuning-0201b`); (2) sprzed tego PR: `TireDefinition` nie odrzuca `radius = NaN` (`double.IsFinite`).
