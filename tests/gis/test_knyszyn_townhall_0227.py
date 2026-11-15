@@ -155,3 +155,22 @@ def test_estimated_office_entrances_replace_ground_floor_windows():
         high_glass=next(v for ly,mat,v,tris,src in buf.parts if ly=="buildings" and mat=="glass")
         nearby=high_glass[np.linalg.norm(high_glass[:,:2]-p,axis=1)<1.0]
         assert len(nearby) and nearby[:,2].min() > 129.0
+
+
+def test_culture_roof_reaches_real_eaves_and_has_upward_normals():
+    fc=source(); blds=BM.load(fc,[761611,612607],[],hero=townhall.hero_targets("knyszyn",fc))
+    poly=next(b["poly"] for b in blds if b["id"]==townhall.CULTURE)
+    triangles=townhall._culture_roof_triangles(poly, 10., 13.)
+    assert triangles
+    for tri in triangles:
+        assert poly.buffer(1e-7).covers(Polygon(tri[:,:2]))
+        assert np.cross(tri[1]-tri[0],tri[2]-tri[0])[2]>0
+        for p in tri:
+            if poly.boundary.distance(Point(*p[:2]))<1e-7:
+                assert abs(p[2]-10.)<1e-6
+    roof=shapely.union_all([Polygon(t[:,:2]) for t in triangles])
+    assert poly.difference(roof).area<1e-6
+    assert poly.boundary.difference(roof.boundary.buffer(1e-6)).length<1e-5
+    for tri in triangles[::10]:
+        xy=tri[:,:2].mean(axis=0)
+        assert np.isclose(townhall._culture_roof_sample(triangles,xy),tri[:,2].mean())

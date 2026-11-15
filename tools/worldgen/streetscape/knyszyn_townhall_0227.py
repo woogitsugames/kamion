@@ -17,7 +17,7 @@ import math
 
 import numpy as np
 import shapely
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, MultiPoint
 
 from . import buildings_mesh as BM
 
@@ -197,9 +197,51 @@ def _hip_roof(acc, layer, footprint, center, axis, normal, length, width, eave, 
                 acc.add(layer, "roof_tiles_red", np.column_stack((xy, zz)), [[0, 1, 2]])
 
 
-def _dormer(acc, layer, center, axis, out, eave, rise, window_material="glass"):
+def _culture_roof_height(poly, xy, eave, ridge):
+    """ESTIMATED roof profile, meeting every actual BDOT boundary at the eave."""
+    return eave + (ridge-eave)*min(poly.boundary.distance(shapely.Point(*xy))/4.0, 1.0)
+
+
+def _culture_roof_triangles(poly, eave, ridge):
+    """Tessellated pitched roof within the concave footprint; no detached eaves."""
+    boundary = shapely.segmentize(poly.boundary, 3.0)
+    points = list(boundary.coords)
+    triangles = []
+    x0, y0, x1, y1 = poly.bounds
+    for x in np.arange(x0+1.5, x1, 3.0):
+        for y in np.arange(y0+1.5, y1, 3.0):
+            if poly.contains(shapely.Point(x, y)):
+                points.append((x, y))
+    for triangle in shapely.delaunay_triangles(MultiPoint(points)).geoms:
+        clipped = triangle.intersection(poly)
+        for piece in getattr(clipped, "geoms", [clipped]):
+            if piece.geom_type != "Polygon" or piece.area < 1e-8:
+                continue
+            for tri in shapely.constrained_delaunay_triangles(piece).geoms:
+                xy = np.asarray(tri.exterior.coords, float)[:3]
+                a,b=xy[1]-xy[0],xy[2]-xy[0]
+                signed=a[0]*b[1]-a[1]*b[0]
+                if abs(signed)<1e-9:
+                    continue
+                if signed<0:
+                    xy=xy[::-1]
+                heights=[_culture_roof_height(poly,p,eave,ridge) for p in xy]
+                triangles.append(np.column_stack((xy,heights)))
+    return triangles
+
+
+def _culture_roof_sample(triangles, xy):
+    """Interpolate the emitted triangles, not the analytical profile between vertices."""
+    for tri in triangles:
+        if Polygon(tri[:,:2]).buffer(1e-7).covers(shapely.Point(*xy)):
+            coeff=np.linalg.solve(np.column_stack((tri[:,:2],np.ones(3))),tri[:,2])
+            return float(np.r_[xy,1.] @ coeff)
+    return None
+
+
+def _dormer(acc, layer, center, axis, out, eave, rise, window_material="glass", roof_base=None):
     """Modest white dormer with a red gable, standing on the roof plane."""
-    z0 = eave + rise * .25
+    z0 = eave + rise * .25 if roof_base is None else roof_base-.15
     # Half axes in E,N,Z. The roof plane rises inward; this box partly intersects it.
     acc.box(layer, "plaster_white", _pt(center, z0+.40), np.r_[axis*.57, 0],
             np.r_[out*.55, 0], [0, 0, .50], skip=(0,))
@@ -263,6 +305,7 @@ def build(buf, region, blds, zsmooth, report):
         center, axis, normal, length, width = frames[bid]
         eave_h, top_h = _heights(b["props"])
         eave, top = z+eave_h, z+top_h
+        culture_roof = _culture_roof_triangles(poly, eave, top) if bid == CULTURE else None
         # Unlike the roof's bounding rectangle, each facade is an actual BDOT exterior edge.
         facade_len, front, face_axis, out = facades[bid]
         for layer in LAYERS:
@@ -275,7 +318,11 @@ def build(buf, region, blds, zsmooth, report):
                 else:
                     base = z-.15 if low else z+.55
                     acc.quad(layer, "plaster_white", _pt(a,base), _pt(c,base), _pt(c,eave), _pt(a,eave))
-            _hip_roof(acc, layer, poly, center, axis, normal, length, width, eave, top)
+            if bid == CULTURE:
+                for triangle in culture_roof:
+                    acc.add(layer,"roof_tiles_red",triangle,[[0,1,2]])
+            else:
+                _hip_roof(acc, layer, poly, center, axis, normal, length, width, eave, top)
             # Each axis is projected to its own BDOT wall, including split wall runs.
             for p,window_axis,window_out in plans[bid]:
                 for z0 in (z+1.0, z+4.55):
@@ -306,8 +353,11 @@ def build(buf, region, blds, zsmooth, report):
                 outline = Polygon([dormer_center + face_axis*a + out*n
                                    for a, n in [(-.8,-.65),(.8,-.65),(.8,.65),(-.8,.65)]])
                 if poly.covers(outline):
+                    roof_base = _culture_roof_sample(culture_roof,dormer_center) if bid == CULTURE else None
+                    if bid == CULTURE and roof_base is None:
+                        continue
                     _dormer(acc, layer, dormer_center, face_axis, out, eave, top-eave,
-                            window_material="plinth_dark" if low else "glass")
+                            window_material="plinth_dark" if low else "glass", roof_base=roof_base)
         if bid == CULTURE:
             # Four full-height cream columns and two storeys of recessed loggia; no signs or emblems.
             for layer in LAYERS:
