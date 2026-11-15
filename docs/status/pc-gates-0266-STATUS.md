@@ -4,3 +4,4 @@ Agent chmurowy (bez Unity/dotnet/pwsh; Python przez uv). Gałąź `pc-gates-0266
 
 - [15.11] Start. Przeczytane: CLAUDE.md, AGENT-RULES, D56/D67–D73, ADR 0260, HANDOVER s22, docs/01/03/09/10, device-metrics.ps1, Telemetry/*. NASTĘPNY KROK: przepisać docs/03 pod PC.
 - [15.11] docs/03 przepisany pod PC (klasy min/zalecany/wysoki, wszystko WORKING_VALUE, 🔒 mobilne zostają). NASTĘPNY KROK: tools/pcperf (budżety JSON + parser + pytest).
+- [15.11] C#: Telemetry/PcMetricsMath.cs (percentyle, opcje CLI), Telemetry/PcFrameMetricsRecorder.cs (samostartujący przy -metrics, zero GC, zapis na końcu), Tests/EditMode/PcMetricsMathTests.cs (NIEuruchomiony — brak Unity). NASTĘPNY KROK: tools/pcperf parser + pytest.
