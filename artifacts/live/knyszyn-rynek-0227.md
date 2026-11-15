@@ -206,3 +206,7 @@
 - 2026-11-16 00:29 +01:00 — Scalono origin/main 2d125e171 bez konfliktów; testy far_field/fidelity 12 passed, 1 xfailed. R11 uruchomiona po wycofaniu FAIL R10; dodatkowo powstaje niezintegrowany prototyp lipy 3D. Układ wiat targowicy nadal bez zdjęć OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r11.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r11.done`
 
+
+- 2026-11-16 00:34 +01:00 — Izolowany prototyp lipy 3D wyeksportowany i obejrzany w 16 kadrach LOD0/LOD1: FAIL, zbyt rzadka wąska korona i wyraźny spadek pokrycia LOD1; nie w grze. Druga próba prototypu w przygotowaniu. R11 build trwa.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r11.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r11.done`
+
