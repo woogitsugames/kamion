@@ -1,0 +1,24 @@
+[out:json][timeout:120][bbox:53.1480,23.1400,53.1700,23.1800];
+(
+  node["traffic_sign"];
+  way["traffic_sign"];
+  way["highway"]["destination"];
+  way["highway"]["destination:ref"];
+  way["highway"]["destination:lanes"];
+  way["highway"]["destination:forward"];
+  way["highway"]["destination:backward"];
+  way["highway"]["destination:symbol"];
+  way["highway"]["destination:street"];
+  way["highway"]["destination:ref:lanes"];
+  relation["type"="destination_sign"];
+  node["highway"="motorway_junction"];
+  node["man_made"="gantry"];
+  way["man_made"="gantry"];
+  node["highway"="traffic_sign"];
+  node["tourism"="information"]["information"="guidepost"];
+  way["highway"~"^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$"];
+  way["junction"="roundabout"];
+);
+out body meta;
+>;
+out skel qt;
