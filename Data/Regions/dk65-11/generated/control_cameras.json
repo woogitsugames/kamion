@@ -1,0 +1,149 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0063",
+   "look_at": [
+    -850.063,
+    -934.154,
+    139.779
+   ],
+   "note": "driver eye 2.5 m, control route s = 63 m of 378 m (unnamed)",
+   "pos": [
+    -807.879,
+    -976.853,
+    138.021
+   ],
+   "route_s_m": 62.97,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0189",
+   "look_at": [
+    -935.997,
+    -842.088,
+    145.053
+   ],
+   "note": "driver eye 2.5 m, control route s = 189 m of 378 m (unnamed)",
+   "pos": [
+    -893.812,
+    -884.789,
+    144.28
+   ],
+   "route_s_m": 188.909,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0315",
+   "look_at": [
+    -1021.972,
+    -750.061,
+    145.429
+   ],
+   "note": "driver eye 2.5 m, control route s = 315 m of 378 m (unnamed)",
+   "pos": [
+    -979.759,
+    -792.734,
+    147.169
+   ],
+   "route_s_m": 314.848,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_s",
+   "look_at": [
+    -778.6,
+    -908.2,
+    -57012.229
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 20 m: DK65 at the seam with dk65-10; pair = ortho/top_seam_s.jpg",
+   "pos": [
+    -778.6,
+    -1008.2,
+    283.492
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_site_165",
+   "look_at": [
+    -877.4,
+    -802.4,
+    -57005.056
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 165 m: construction roads beside DK65; pair = ortho/top_site_165.jpg",
+   "pos": [
+    -877.4,
+    -902.4,
+    290.666
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_w",
+   "look_at": [
+    -1011.8,
+    -658.5,
+    -57001.325
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 360 m: DK65 at the seam with knyszyn-s (site of ADR 0204 continues); pair = ortho/top_seam_w.jpg",
+   "pos": [
+    -1011.8,
+    -758.5,
+    294.396
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_11",
+   "look_at": [
+    -888.0,
+    -890.965,
+    136.326
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 80 m: DK65 between the S19 sites",
+   "pos": [
+    -819.8,
+    -964.1,
+    138.945
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rev_11",
+   "look_at": [
+    -929.773,
+    -846.216,
+    144.554
+   ],
+   "note": "place camera: driver eye 2.5 m, against the route, route s = 340 m: back from the knyszyn-s seam",
+   "pos": [
+    -998.1,
+    -773.2,
+    147.173
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 291.814,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-11",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

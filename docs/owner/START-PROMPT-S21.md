@@ -1,22 +1,43 @@
-# Prompt startowy — sesja 21 (przejęcie po s20)
+# Prompt startowy — sesja 21 (przejęcie po s20, stan 15.11 ~19:00)
 
-Kontynuujesz projekt Kamion (Unity 6000.3.28f1 URP, Białystok 1:1) w `C:\Users\matma\Documents\Claude\kamion`. Jesteś liderem i jedynym integratorem main. Repo: https://github.com/woogitsugames/kamion.
+```
+Kontynuujesz projekt Kamion (mobilny symulator ciężarówki, Unity 6000.3.28f1 URP, Białystok 1:1) w C:\Users\matma\Documents\Claude\kamion. Jesteś liderem i jedynym integratorem main. Repo: https://github.com/woogitsugames/kamion. Komunikacja po polsku.
 
-**Przeczytaj:** `HANDOVER.md` — blok „SESJA 20” (wpisy chronologicznie od góry bloku w dół; NAJNOWSZE są tuż nad linią „Ostatni przydzielony ADR: 0198”), `CLAUDE.md`, `docs/owner/AGENT-RULES.md`, `docs/owner/S20-AGENT-PREAMBLE.md`, `docs/owner/S20-PR-REVIEW-BRIEF.md`.
+PRZECZYTAJ NAJPIERW:
+- HANDOVER.md, blok „SESJA 20”: wpisy idą chronologicznie, najnowsze są tuż nad linią „Ostatni przydzielony ADR: 0220”;
+- CLAUDE.md;
+- docs/owner/AGENT-RULES.md;
+- docs/owner/S20-AGENT-PREAMBLE.md;
+- docs/owner/S20-PR-REVIEW-BRIEF.md;
+- docs/11_DECYZJE_WLASCICIELA.md (D63–D66).
 
-**Zasady właściciela (s20):** maks. 4 agentów naraz (Fable/Opus); nie wznawiaj skończonych/przerwanych agentów bez zgody; nie zabijaj działających; crony :07/:17/:47 (sesyjne — po restarcie aplikacji załóż od nowa; sprawdź CronList, nie dubluj). ≥ 85 % 5 h: nowi agenci tylko gdy działa < 2. Godziny resetu podawaj w czasie Brukseli.
+ZASADY WŁAŚCICIELA:
+- Agenci:
+  - najwyżej 5 lokalnych agentów naraz; nowi na Fable, recenzje na Opusie;
+  - nie zabijaj działających agentów; skończonych nie wznawiaj bez zgody;
+  - agentom Fable każ ZAWSZE uruchamiać długie kroki w tle i od razu kończyć turę, bo watchdog zabija ich po 10 minutach bez postępu.
+- Budzenie: załóż crony :07 (ZIP-y w Downloads), :17 (agenci i kolejka) i :47 (PR-y). Najpierw sprawdź CronList, żeby ich nie zdublować.
+- Telefony: wolno ich używać. A16 to RFGL34SJYDZ. S24+ (RZCX60VE8ZY): bateria co najmniej 40 % na start, przerwij poniżej 30 %.
+- Godziny podawaj w czasie Brukseli.
+- Kierunek (D63/D64): najpierw z grubsza, potem detale; Białystok → DK65 → Knyszyn.
+- Zakazy: Google Maps, Street View, Earth i 3D Tiles; marki i logo w grze. Zdjęcia właściciela tylko jako referencja: nie do gita i nie jako tekstury.
 
-**Kto co robi poza Tobą (stan 14.11 wieczór):**
-- **Argon (Antigravity, lokalnie)** — gałęzie 0194, 0188, 0193, 0187, 0186, 0189 (`docs/owner/ARGON-PROMPT-S20.md`, wejście `docs/reports/ARGON-INPUT-S20.md`); raporty `docs/reports/ARGON-S20-*.md`, recenzje `REVIEW-ARGON-*.md`. Ty ich NIE wznawiasz; scalasz po przeglądzie.
-- **Sesja kodu (2× Opus)** — ADR 0197 lights-0197 i 0198 piers-0198 (`docs/owner/CODE-SESSION-PROMPT-S20.md`, raporty `docs/reports/CODE-S20-*.md`) — jeśli właściciel zlecił.
-- **Mistral** — do wklejenia `docs/owner/MISTRAL-FIXES-12.md` (aktualne bloki: M57, M59, M60*, M61); `MISTRAL-DOKONCZ-S20.md`; #57 M60 zamknąć/zawęzić; M63 w toku.
-- **Chmura #1** (M58/M60/M65/M66/M68 — scalone poza M68 w przeglądzie), **chmura #2** (R1–R9: scalone R1/R3/R5/R7/R8; R9 FIX; R2/R4/R6 drafty do dokończenia — blok na końcu `CLOUD2-PROMPT-S20.md`), **GPT Chrome** (`research/_incoming/gpt-s20-*`: G3, M67, M69, M64).
+STAN:
+- W regions.py jest 21 regionów: C, Dojlidy, maczka, kleeberga, knyszynska, dk65-01…11, knyszyn, knyszyn-s, knyszyn-w, dk65-monki-01, dw671-tykocin-01.
+- Bramka 3 na A16, czysty APK af2570fccd: segmenty G3-A i G3-B ważne, w budżecie (docs/reports/GATE-3.md).
+- Później scalono Argona 0188/0187/0189 i 0214. Po regen4 pytest gis ma 2 czerwone testy budżetu trójkątów High: stretch_04 ma 2,02 mln przy limicie 2 mln oraz test_world_v31. NAPRAW TO przed kolejnym APK i bramką.
 
-**Następne kroki lidera:**
-1. A16 offline w adb (od 19:43) — właściciel: odłączyć/podłączyć USB. Potem gate3 G3-B na APK `kamion-0.1.0-edb5524993.apk` (komenda w HANDOVER).
-2. Przeglądy PR (brief) i raportów Argona/sesji kodu → scalenia → JEDNA regeneracja C + Dojlid → trucks/NightWindows → EditMode → APK → A16 gate3 + zrzuty.
-3. Follow-upy gry zebrane w HANDOVER (s20): kalibracja zmierzchu/nocy (M60), światła R148 (0197), podpory Putry (0198), ściana NW wieżowca (M57), fizyka R3 (promień opony, naciski, marki w JSON), U-12b słupki (M58), pas Krywlany (M58), zieleń znaków (R1, ADR), A/B `androidBlitType` (R8), płot alpha-to-coverage (0185).
+AGENCI, KTÓRZY MOGLI JESZCZE DZIAŁAĆ (sprawdź artifacts/live/<nazwa>.md i gałęzie):
+- tunnel-0211: tunel w kleeberga, r4;
+- summer-led-0216: białe LED w Knyszynie;
+- verify-cloud-b: #96 tory w Tykocinie; #90 i #95 mają werdykt SCAL, raporty w docs/reports/VERIFY-*;
+- verify-cloud-c: #80 Ełcka i plac budowy, #82 podpory Putry.
+Jeśli agent nie żyje, przejmij jego worktree nowym agentem (za zgodą właściciela).
 
-**Ostatni przydzielony ADR: 0213.**
-
-**Aktualizacja 15.11 rano (D63/D64, noc):** w grze 12 regionów: C, Dojlidy, bialystok-maczka, bialystok-kleeberga, dk65-01…05, knyszyn-s, knyszyn, knyszyn-w (+ woda dk65-02). W toku: 0208 bialystok-knyszynska (ostatni kafel miasta), 0211 tunel ronda Szymańskiego, 0212 Knyszyn krańce + linie, 0213 woda/brzegi. Kafle dk65-06…11 czekają na odpowiedzi właściciela (ADR 0203/0204/0207: wariant A/B, objazdy budowy S19, szerokość Ełckiej, wiadukt S19 Fasty, rondo DK65×DW671). BEZ telefonu (właściciel). Nowi agenci tylko Opus (Fable 95 % tygodnia do 16.11 05:00).
+NASTĘPNE KROKI LIDERA:
+1. Scalić zweryfikowane PR chmur: #90, #95, #96 (#96 nie obsługuje warstw rail_* w imporcie Unity, więc to FIX), #80 (zmienić Ełcką z 6,9 na 6,6 m według D66; ujednolicić plac budowy na szwie dk65-05/06 z mechanizmem 0214), #82, #97 (rondo Knyszyn, po 0216). PR #79 (światła) wymaga renderów; #92 M59-FIX = FIX.
+2. Przebudować dk65-06…11 na bieżącym main: `pwsh artifacts/dk65-tiles2-0214/tools/chain.ps1 -Tiles dk65-06,dk65-07,dk65-08,dk65-09,dk65-10,dk65-11 -Tag r4`. Poprawić szew 10/11 z knyszyn-s (przekrój K1).
+3. Naprawić budżet trójkątów High, potem EditMode, nowy APK, gate3 na A16 i zrzuty z telefonu dla Argona 0188/0187/0189.
+4. Kolejka D65: szlif Knyszyna według zdjęć (Rynek), torowisko wzdłuż DK65 (generator z #96), szpalery, ujednolicenie szwów DK65.
+5. Inne sesje: chmura C ma prompt docs/owner/CLOUD-C-PROMPT-S20.md (ADR 0217–0220 zarezerwowane). Kolejne prompty dla chmur pisz do docs/owner/.
+```

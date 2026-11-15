@@ -61,6 +61,66 @@
    "fov_deg": 60.0,
    "pitch_deg": -1.5,
    "note": "driver eye 2.5 m, against the route, route s = 400 m: Elcka towards Bialystok"
+  },
+  {
+   "id": "top_water_seam",
+   "pos_en": [
+    930.0,
+    -330.0
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 150,
+   "fov_deg": 50,
+   "pitch_deg": -89.9,
+   "note": "ADR 0213: QA top view (north up, 140 m x 249 m) of the Supraśl at the seam with dk65-02 (E edge e = 1024 m); pair = GUGiK orto 2024 crop, water RGB measured"
+  },
+  {
+   "id": "top_water_mid",
+   "pos_en": [
+    381.0,
+    -240.0
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 150,
+   "fov_deg": 50,
+   "pitch_deg": -89.9,
+   "note": "ADR 0213: QA top view of the Supraśl in the middle of dk65-03 (bends, banks); pair = GUGiK orto 2024 crop"
+  },
+  {
+   "id": "water_bank_mid",
+   "pos_en": [
+    395.0,
+    -205.0
+   ],
+   "heading_deg": 250.0,
+   "eye_m": 1.7,
+   "fov_deg": 55.0,
+   "pitch_deg": -3.0,
+   "note": "ADR 0213: pedestrian eye on the north bank of the Supraśl, looking downstream (W) along the reed / willow banks"
+  },
+  {
+   "id": "water_close_bank",
+   "pos_en": [
+    930.0,
+    -300.0
+   ],
+   "heading_deg": 190.0,
+   "eye_m": 3.0,
+   "fov_deg": 60.0,
+   "pitch_deg": -22.0,
+   "note": "ADR 0213: close look down at the water from the north bank near the seam (Low must not read black)"
+  },
+  {
+   "id": "water_oblique_east",
+   "pos_en": [
+    760.0,
+    -470.0
+   ],
+   "heading_deg": 335.0,
+   "eye_m": 45.0,
+   "fov_deg": 55.0,
+   "pitch_deg": -22.0,
+   "note": "ADR 0213: oblique from S at 45 m (over the tree tops) onto the Supraśl bends downstream of the seam: banks, reed belt, shrubs"
   }
  ]
 }

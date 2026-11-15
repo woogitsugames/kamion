@@ -19,7 +19,7 @@ def test_stage_is_opt_in():
     import regions
     from streetscape import water as WT
     on = sorted(r.id for r in regions.REGIONS.values() if r.water)
-    assert on == ["dk65-02"]
+    assert on == ["dk65-02", "dk65-03"]      # ADR 0213: + dk65-03
     for rid in ("bialystok-industrial-c", "bialystok-dojlidy"):
         ry = yaml.safe_load((REGIONS_DIR / rid / "region.yaml").read_text(encoding="utf-8"))
         assert "water" not in ry and not WT.enabled(ry)
@@ -33,7 +33,7 @@ def test_stage_is_opt_in():
 def test_stage_hooks_guarded():
     """Without a plan (w.water is None) the streetscape stage and build_world touch no array (determinism of C)."""
     st = (REPO / "tools" / "worldgen" / "streetscape" / "stage.py").read_text(encoding="utf-8")
-    assert st.count('getattr(w, "water", None) is not None') == 2
+    assert st.count('getattr(w, "water", None) is not None') == 3      # ADR 0213: + bank vegetation
     bw = (REPO / "tools" / "worldgen" / "roads" / "build_world.py").read_text(encoding="utf-8")
     assert 'mask if w.water is None else (mask | w.water.lod_mask())' in bw
     assert '"materials": MATERIALS if w.water is None else {**MATERIALS, **WATER_MATERIALS}' in bw

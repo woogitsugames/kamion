@@ -1390,7 +1390,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
                        for t in plan if t.get("kind") == "conifer"]
     for t in extra_conifers:                                 # spruces whose crowns hang over the fence (G7 # 8-10)
         p, r, key = np.asarray(t["p"], float), float(t["r"]), t["key"]
-        if kd is not None and kd.query(p)[0] < 2.5:
+        if kd is not None and not t.get("authored") and kd.query(p)[0] < 2.5:
             rep["skipped"]["region_tree_within_2.5m"] = rep["skipped"].get("region_tree_within_2.5m", 0) + 1
             continue
         kit = PLT.Kit()
@@ -1399,7 +1399,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
         if columnar:                                         # Thuja occidentalis 'Smaragd' left to grow: a dark column
             kit.tag = "g7_thuja_column"
             lo, hi = G7["thuja_column_h_m"]
-            h = lo + (hi - lo) * PLT.hfloat(key, "h")
+            h = float(t["h_m"]) if "h_m" in t else (lo + (hi - lo) * PLT.hfloat(key, "h"))
             rr = (0.26 + 0.07 * h) * (0.9 + 0.3 * PLT.hfloat(key, "w"))
             kit.low = False
             PLT.thuja(kit, p, z, h, rr, key)
@@ -1410,7 +1410,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
             kit.tag = "g7_spruce"
             h = min(3.2 + 3.4 * r, 14.0) * (0.9 + 0.2 * PLT.hfloat(key, "h"))
             PLT.spruce(kit, p, z, h, key)
-        if _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
+        if _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep, strict=not t.get("authored")):
             rep["conifers"].append({"e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "r_m": round(r, 2), "h_m": round(h, 1),
                                     "kind": "thuja" if columnar else "spruce", "claimed": bool(t.get("claimed")),
                                     "converted": bool(t.get("converted"))})
