@@ -16,7 +16,7 @@ bbox:
 origin:
   x: 759563.0
   y: 612607.0
-  z: 120.26
+  z: 120.21
   note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
 teryt_powiat: '2008'
 products:
@@ -33,12 +33,12 @@ sources:
   attribution: © OpenStreetMap contributors
   manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
   manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
-- id: gugik-nmt-2025-knyszyn-w
+- id: gugik-nmt-2022-knyszyn-w
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
   attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
-  manifest: Data/SourceManifests/gugik-nmt-2025-knyszyn-w.json
-  manifest_sha256: da9046e676725e9bcc0ef52be3c00a5f242a9ad459c863f102004d8a5a1dd50b
+  manifest: Data/SourceManifests/gugik-nmt-2022-knyszyn-w.json
+  manifest_sha256: cb75026b10f16554c277a37611064929248cbc985eebb45568a72e62bd42ae40
 - id: gugik-orto-2025-rgb-0p10-knyszyn-w
   license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
     ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'

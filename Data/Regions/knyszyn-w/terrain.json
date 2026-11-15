@@ -10,9 +10,9 @@
   "dtype": "uint16 little-endian",
   "file": "Data/raw/derived/knyszyn-w/heightmap_2049.r16",
   "offset_m": 113.0,
-  "quantisation_step_mm": 0.412,
-  "scale_m_per_unit": 0.0004119935912108034,
-  "span_m": 27.0
+  "quantisation_step_mm": 0.4273,
+  "scale_m_per_unit": 0.0004272526131074998,
+  "span_m": 28.0
  },
  "height_datum": "PL-EVRF2007-NH (EPSG:9651)",
  "missing_samples": 0,
@@ -22,14 +22,14 @@
   2049
  ],
  "sampling": "exact: tile nodes coincide with NMT cell centres (xllcenter at integer metres); no interpolation",
- "sha256_r16": "593dfdb3d4bf75d03cd4d0e9b9c920274fc407113acea4298343832496c7c2b5",
+ "sha256_r16": "861cf0933601737545f63ad6d59059d538a843ce208e6e9704aaf0a942c08b32",
  "source_crs": "EPSG:2180",
- "source_manifest": "gugik-nmt-2025-knyszyn-w",
+ "source_manifest": "gugik-nmt-2022-knyszyn-w",
  "spacing_m": 1.0,
  "stats_m": {
-  "max": 138.98,
-  "mean": 123.911,
-  "min": 114.73
+  "max": 139.13,
+  "mean": 123.856,
+  "min": 114.9
  },
  "unity_hint": "Unity Terrain RAW import: 16-bit, Windows byte order, flip vertically (Unity row 0 = south); terrain size x/z = bbox width/height, y = span_m, position y = offset_m - origin_z"
 }

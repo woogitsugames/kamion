@@ -185,6 +185,15 @@ HEIGHT_CRS = "EPSG:9651"   # EVRF2007-PL height (= GUGiK "PL-EVRF2007-NH")
 COMPOUND_CRS = "EPSG:2180+9651"  # no single EPSG code exists for CS92 + EVRF2007-PL (checked in PROJ db)
 
 
+def source_pins(region_id: str) -> dict:
+    """ADR 0209: optional authored source pins of a region (Data/Regions/<id>/sources.authored.json), e.g.
+    {"nmt_year": "2022"} = take that NMT survey year instead of the newest one. Empty dict when absent."""
+    import json
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[2] / "Data" / "Regions" / region_id / "sources.authored.json"
+    return json.loads(p.read_text(encoding="utf-8")).get("pins", {}) if p.exists() else {}
+
+
 def get(region_id: str) -> Region:
     try:
         return REGIONS[region_id]

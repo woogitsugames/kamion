@@ -110,9 +110,12 @@ def main() -> None:
     idx = load_or_query_index(region, a.refresh_index)
     P = idx["products"]
 
-    # 2. NMT 1 m, EVRF2007
+    # 2. NMT 1 m, EVRF2007 (ADR 0209: an authored per-region pin `nmt_year` keeps the survey year of a neighbour tile,
+    # so the shared seam column comes from the same sheets and both terrains meet exactly)
+    pin = regions.source_pins(region.id).get("nmt_year")
     nmt = pick_latest(P["NMT"], bb, lambda r: r.get("char_przestrz") == "1.00 m"
-                      and r.get("format", "").startswith("ARC/INFO") and r.get("uklad_h") == "PL-EVRF2007-NH")
+                      and r.get("format", "").startswith("ARC/INFO") and r.get("uklad_h") == "PL-EVRF2007-NH"
+                      and (pin is None or r.get("akt_rok") == str(pin)))
     if not nmt:
         sys.exit("no NMT 1 m series fully covers the tile")
     yr = nmt[0]["akt_rok"]
