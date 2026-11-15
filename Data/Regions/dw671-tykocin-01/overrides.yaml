@@ -1,0 +1,15 @@
+# Authored overrides of region dw671-tykocin-01 (ADR 0212). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 759563, 610559) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 0.1 m 2025 (Data/raw/gugik/gugik-orto-2025-rgb-0p10-dw671-tykocin-01), BDOT10k 2008, LoD1 2024. No lettering, no brands.
+# Rough version (D63): DW671 keeps the BDOT10k width (6.5-7.0 m, as in knyszyn-w where the same way 70329870 has no
+# override) and no edge lines: the orthophoto shows the dashed centre line and no consistent edge line (integrated
+# brightness excess at 25 stations of ways 70329870 / 286989055 / 145989268: edge/centre ratio mostly < 0.5).
+overrides:
+  - id: tertiary-west-unlit
+    target: {osm_way: [98072327]}
+    reason: >-
+      Tertiary road west from the DW671 village across the fields (orange in artifacts/knyszyn-edges-0212/view/
+      tyk_all.jpg): no lamp columns on the 2025 orthophoto at 2 m overview; not checked at 0.1 m (open).
+    confidence: low
+    verify: none
+    set: {lamps: false}

@@ -10,9 +10,14 @@ overrides:
       760683 611909; 761079 611483; 761559 610967; tool artifacts/knyszyn-0204/profile10.py): edge line to edge
       line 6.8 m (lanes 3.3-3.5 m), asphalt 7.3-7.6 m, then a pale shoulder. Set 2 x 3.4 m + 0.35 m edge strips
       = 7.5 m (+-0.3 m).
+      ADR 0212: solid edge lines P-7b on both sides (edge_lines: both, GUGiK orthophoto 0.1 m 2025: integrated
+      brightness excess across the carriageway at 4 stations on ways 286990127 / 232511646, peaks 3.2-3.6 m left and
+      right of the OSM axis; median 3.4-3.55 m). The generator paints them 0.12 m wide (pkt 2.2.2: 0.24 m only on dual
+      carriageways and international routes; DK65 is neither) with the axis 0.20 m inside the carriageway edge =
+      3.55 m off the axis. Same set in knyszyn-w and knyszyn-s, so the lines run through both seams.
     confidence: high
     verify: none
-    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35}
+    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
   # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
   - id: rynek-plaza-east
     kind: paved_area

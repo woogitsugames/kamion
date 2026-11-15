@@ -1,0 +1,6 @@
+{
+ "provenance": "authored_override (ADR 0212): source pins of region dk65-monki-01, read by ingest.py and build_region.py",
+ "pins": {"nmt_year": "2022"},
+ "reason": "The south edge y = 613631 is shared with tile knyszyn-w, which is pinned to the NMT 2022 series (ADR 0209). The same survey year gives the same samples on the shared edge.",
+ "verify": "none (move together with the pins of knyszyn and knyszyn-w)"
+}

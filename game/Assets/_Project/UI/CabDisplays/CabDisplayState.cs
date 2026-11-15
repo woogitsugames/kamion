@@ -49,7 +49,7 @@ namespace Game.UI.CabDisplays
         public bool FlasherOn;
 
         // ---- trip computer
-        public float FuelLitres, FuelCapacityLitres, AdBlueFraction;
+        public float FuelLitres, FuelCapacityLitres, ScrFluidFraction;
         /// <summary>Coolant temperature [deg C] (first-order warm-up model, <c>CoolantModel</c>).</summary>
         public float CoolantC;
         public float RangeKm;

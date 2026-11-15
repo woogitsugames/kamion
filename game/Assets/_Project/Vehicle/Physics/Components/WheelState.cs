@@ -14,7 +14,10 @@ namespace Game.Vehicle.Physics
 
         // Geometry (vehicle frame)
         public Vec3 HardpointLocal;
+        /// <summary>Geometric (loaded) radius: contact geometry and hardpoint (ADR 0201).</summary>
         public double Radius;
+        /// <summary>Effective rolling radius: ω ↔ v and Fx ↔ torque (ADR 0201).</summary>
+        public double RollingRadius;
         public double Inertia;
         /// <summary>Static load of the current configuration (solo / coupled) [N].</summary>
         public double StaticLoad;

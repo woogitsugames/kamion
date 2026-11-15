@@ -132,7 +132,7 @@ namespace Game.Vehicle.Physics
 
         public void InitializeMoving(double speed)
         {
-            foreach (var w in Wheels) { w.Omega = speed / w.Radius; w.OmegaPrevStep = w.Omega; }
+            foreach (var w in Wheels) { w.Omega = speed / w.RollingRadius; w.OmegaPrevStep = w.Omega; }
         }
 
         /// <summary>Puts the landing gear in a state without the crank transient.</summary>
@@ -233,7 +233,7 @@ namespace Game.Vehicle.Physics
                 double target = 0;
                 if (w.Contact && w.BrakeTorque > 0 && w.Fz > 0)
                 {
-                    double cap = w.BrakeTorque / w.Radius;
+                    double cap = w.BrakeTorque / w.RollingRadius;
                     double f = MathUtil.Clamp(w.Fz * tanTheta, -cap, cap);
                     double kx = w.Tire.LongitudinalDeflectionStiffness(w.Fz, w.TireCount);
                     if (kx > 0) target = f / kx;

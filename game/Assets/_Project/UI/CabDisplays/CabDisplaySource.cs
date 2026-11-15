@@ -9,7 +9,7 @@ namespace Game.UI.CabDisplays
     /// <summary>
     /// Reads the cab-screen state from the solver (<see cref="VehicleModel"/>: speed, engine, AMT, air circuits, retarder,
     /// ABS, parking brake), the lamp state (<see cref="TruckLights"/>) and the sun, and runs a small trip computer
-    /// (odometer, trip, fuel and AdBlue use, range, tachograph driving time). Read-only towards the physics: nothing here
+    /// (odometer, trip, fuel and exhaust-fluid (AUS 32) use, range, tachograph driving time). Read-only towards the physics: nothing here
     /// feeds back into the vehicle. Zero allocations per <see cref="Sample"/>.
     /// </summary>
     public sealed class CabDisplaySource
@@ -17,10 +17,10 @@ namespace Game.UI.CabDisplays
         // ---- trip computer constants (no fuel model in the solver; display-side estimate) ----
         // Fuel flow: FuelFlowModel (BSFC map over load, idle floor); coolant: CoolantModel (first-order warm-up); clock: GameClock.
         // All WORKING_VALUE, documented in Game.Controls.CabInstrumentModels.
-        /// <summary>AdBlue dosing as a share of fuel volume. WORKING_VALUE (SCR Euro VI, typical 3-6 %).</summary>
-        public const double AdBlueShare = 0.045;
+        /// <summary>Diesel exhaust fluid (AUS 32, ISO 22241) dosing as a share of fuel volume. WORKING_VALUE (SCR Euro VI, typical 3-6 %).</summary>
+        public const double ScrFluidShare = 0.045;
         /// <summary>Tank sizes of the fictional TRAKT [l]. WORKING_VALUE (not modelled in the art yet).</summary>
-        public const float FuelTankLitres = 600f, AdBlueTankLitres = 85f;
+        public const float FuelTankLitres = 600f, ScrFluidTankLitres = 85f;
         /// <summary>Consumption used for the range until the trip average is meaningful [l/100 km]. WORKING_VALUE.</summary>
         public const float ReferenceConsumption = 30f;
         /// <summary>Trip distance after which the average is shown [km].</summary>
@@ -40,7 +40,7 @@ namespace Game.UI.CabDisplays
         public double OdometerKm = 184327.0;   // WORKING_VALUE: start reading of the fictional truck (no save game yet)
         public double TripKm;
         public double FuelLitres = 0.62 * FuelTankLitres;
-        public double AdBlueLitres = 0.80 * AdBlueTankLitres;
+        public double ScrFluidLitres = 0.80 * ScrFluidTankLitres;
         public double TripFuelLitres;
         public double DrivingSeconds;
 
@@ -106,7 +106,7 @@ namespace Game.UI.CabDisplays
                 }
                 CoolantC = CoolantModel.Step(CoolantC, dt, !model.Engine.Stalled, load, OutsideTempC);
                 FuelLitres = Math.Max(0, FuelLitres - litres);
-                AdBlueLitres = Math.Max(0, AdBlueLitres - litres * AdBlueShare);
+                ScrFluidLitres = Math.Max(0, ScrFluidLitres - litres * ScrFluidShare);
                 TripFuelLitres += litres;
                 if (Math.Abs(model.SpeedForward) > 0.5) DrivingSeconds += dt;
             }
@@ -115,7 +115,7 @@ namespace Game.UI.CabDisplays
             s.CoolantC = (float)CoolantC;
             s.FuelCapacityLitres = FuelTankLitres;
             s.FuelLitres = (float)FuelLitres;
-            s.AdBlueFraction = (float)(AdBlueLitres / AdBlueTankLitres);
+            s.ScrFluidFraction = (float)(ScrFluidLitres / ScrFluidTankLitres);
             s.AvgConsumption = TripKm >= AverageMinKm ? (float)(TripFuelLitres / TripKm * 100.0) : float.NaN;
             float cons = float.IsNaN(s.AvgConsumption) ? ReferenceConsumption : Mathf.Clamp(s.AvgConsumption, 15f, 80f);
             s.RangeKm = s.FuelLitres / cons * 100f;

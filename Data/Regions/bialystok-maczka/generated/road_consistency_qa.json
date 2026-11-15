@@ -1,7 +1,6 @@
 {
  "by_kind": {
   "arrow_no_exit": 7,
-  "furniture_in_lane": 2,
   "lane_blind_end": 40,
   "marking_off_carriageway": 1,
   "obstacle_in_lane": 3
@@ -74,38 +73,6 @@
    ],
    "turn_lanes": "right",
    "what": "right"
-  },
-  {
-   "chain": "c:w173990798:1847317033-1847317040",
-   "e": 922.5,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.159414,
-   "lon": 23.1431098,
-   "n": 30.92,
-   "on_route": true,
-   "osm_ways": [
-    23982184,
-    173990798,
-    249740764
-   ],
-   "what": "furniture"
-  },
-  {
-   "chain": "c:w173990798:1847317033-1847317040",
-   "e": 926.45,
-   "junction": null,
-   "kind": "furniture_in_lane",
-   "lat": 53.1594166,
-   "lon": 23.1431691,
-   "n": 31.44,
-   "on_route": true,
-   "osm_ways": [
-    23982184,
-    173990798,
-    249740764
-   ],
-   "what": "furniture"
   },
   {
    "chain": "c:w214404798:2776364331-9679697186",
@@ -1037,11 +1004,10 @@
    "what": "verge_grass"
   }
  ],
- "count": 53,
+ "count": 51,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
  "on_route": {
   "arrow_no_exit": 4,
-  "furniture_in_lane": 2,
   "lane_blind_end": 2,
   "marking_off_carriageway": 1,
   "obstacle_in_lane": 3

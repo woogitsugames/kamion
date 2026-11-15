@@ -1,0 +1,152 @@
+{
+ "audyt": "M61-FIX s21 (zastępuje audyt M61 z 2026-11-14, który wybierał „co piąty” i używał pytania sugerującego)",
+ "data": "2026-11-15",
+ "seed": 20261115,
+ "kod_losowania": "ids = sorted(id wszystkich 109 wierszy manifest.csv); sample = sorted(random.Random(20261115).sample(ids, ceil(109/5)))",
+ "populacja": 109,
+ "proba": 22,
+ "pokrycie_pct": 20.2,
+ "metoda": "Literatura: ponowne otwarcie źródła (Crossref / strona repozytorium / nagłówki HTTP) i porównanie z cytatem. Kadry: obraz pobrany ponownie albo odczytany z files/, obejrzany osobnym wywołaniem w dniu audytu (bez narzędzia wizyjnego z pytaniem), porównany z wierszem po jego napisaniu.",
+ "wynik": {
+  "PASS": 14,
+  "FIX (poprawione w manifeście)": 8,
+  "NIE OBEJRZANY": 0
+ },
+ "kadry_w_probie": 18,
+ "kadry_obejrzane_ponownie": 18,
+ "wiersze": [
+  {
+   "id": "P18-004",
+   "rodzaj": "literatura",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Crossref (DOI 10.1016/j.jweia.2018.11.024): tytuł, czasopismo JWEIA i rok 2019 zgodne. Cytatu „bow wave, side splash wave, tread pickup and capillary adhesion” nie dało się sprawdzić (Crossref bez abstraktu). Dopisane w uwagach: cytat UNVERIFIED w dniu audytu."
+  },
+  {
+   "id": "P18-006",
+   "rodzaj": "literatura",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "wrap.warwick.ac.uk/id/eprint/143065: w abstrakcie dosłownie „The rear surfaces of blunt-ended vehicles, such as SUVs, are vulnerable to the build-up of contaminants thrown up from wet road surfaces by their tyres.” Autor i rok (Gaylard 2019) zgodne."
+  },
+  {
+   "id": "P18-013",
+   "rodzaj": "literatura",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Crossref (DOI 10.3389/fenvs.2023.1258922): tytuł „Shades of grey—tire characteristics and road surface influence tire and road wear particle (TRWP) abundance and physicochemical properties”, Frontiers in Environmental Science, 2023-11-07 — zgodne z cytatem z tytułu."
+  },
+  {
+   "id": "P18-021",
+   "rodzaj": "literatura",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Link UNECE zwraca HTTP 403 klientowi automatycznemu; wiersz i tak nie cytuje treści. Dopisane w uwagach: UNVERIFIED w dniu audytu."
+  },
+  {
+   "id": "P18-102",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px): wywrotka wojskowa w hali wystawowej, nie „zderzak ciągnika” i nie „zimowe brudzenie belki”. Odrzucenie słuszne; opis i uwagi poprawione."
+  },
+  {
+   "id": "P18-103",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px): ciągnik z naczepą wywrotką przy hali, widok z boku i przodu; drzwi brak — zgodne z wierszem."
+  },
+  {
+   "id": "P18-104",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1067×1600): ciemny, pod światło, ciemnogranatowa grafika, w tle śmigłowiec i antena, śnieg, lewa żółta tablica z odpryskiem — zgodne; brud nieoceniany."
+  },
+  {
+   "id": "P18-110",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px, drugie podejście): naczepa koncepcyjna na targach, tył zamknięty żaluzją z poziomych lameli, lampy w kształcie L, napis ostrzegawczy; wszystko czyste. „Drobny osad biały/kurzowy na belce, progu i lampach” — nie widać. Odrzucenie słuszne; opis poprawiony."
+  },
+  {
+   "id": "P18-118",
+   "rodzaj": "kadr",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie: drzwi zamknięte, panele aerodynamiczne rozłożone, cętki na dole — zgodne; krycie „słabe–średnie” było zawyżone → poprawione na „słabe”."
+  },
+  {
+   "id": "P18-125",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px, drugie podejście): czerwony ciągnik z szarą firanką na parkingu z kostki, widok z przodu i boku; tyłu nie widać — zgodne z odrzuceniem („widok boczny”)."
+  },
+  {
+   "id": "P18-137",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (975×1413): białawy nalot w dolnej połowie, duża roztarta plama na prawym skrzydle, ciemny posmużony próg, lampy świecą — zgodne."
+  },
+  {
+   "id": "P18-140",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1280×1427): pikowana lustrzana blacha, szary próg z zaciekami, czysta belka z taśmą — zgodne."
+  },
+  {
+   "id": "P18-146",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px): lekka skrzyniówka z windą na autostradzie, tył wygląda na czysty; „brud na progu i belce, rozbryzg kropel” nie do zobaczenia przy ok. 180 px. Odrzucenie słuszne; opis poprawiony."
+  },
+  {
+   "id": "P18-157",
+   "rodzaj": "kadr odrzucony przez M61",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany (960 px): naczepa wyścigowa z boku, z opuszczoną tylną rampą, przy budynku toru — widok boczny, zgodne z wierszem."
+  },
+  {
+   "id": "P18-160",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1200×1600): ściana PRZEDNIA naczepy z dwiema skrzynkami gaśnic, listwą złączy, kanistrami, miotłą i podporami — zgodne z odrzuceniem."
+  },
+  {
+   "id": "P18-164",
+   "rodzaj": "kadr",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (500×451): tył jest oświetlony, nie „w cieniu”; drzwi z czterema ryglami i tablicami wyglądają na czyste. Opis poprawiony; brud nadal nieoceniany (260 px)."
+  },
+  {
+   "id": "P18-167",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany osobno w 900 px po napisaniu wiersza: czerwona solówka z podniesioną windą załadowczą na placu z kostki — zgodne z odrzuceniem."
+  },
+  {
+   "id": "P18-169",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (500×375): wąska droga, platforma wioząca jasną skrzynię, zestaw ok. 130 px — zgodne z odrzuceniem."
+  },
+  {
+   "id": "P18-171",
+   "rodzaj": "kadr",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany osobno w 900 px po napisaniu wiersza: zbliżenie ręcznie malowanej klapy i zderzaka, sznury plandeki — zgodne z odrzuceniem."
+  },
+  {
+   "id": "P18-177",
+   "rodzaj": "kadr nowy",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1024×681): ziarnisty film błotny na całych drzwiach, napisy cyrylicą na obu skrzydłach, zachlapana tablica i lampy, bezlistne drzewa — zgodne."
+  },
+  {
+   "id": "P18-178",
+   "rodzaj": "kadr nowy",
+   "wynik": "FIX",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1024×680): brud w pasie nad dolną listwą — zgodne; błędne było zdanie „listwa progu usmarowana przy nitach” (listwa jest czystsza od pasa nad nią) i „belka przykurzona” (odpryski lakieru, rdza, otarcia na odbojach). Poprawione."
+  },
+  {
+   "id": "P18-185",
+   "rodzaj": "kadr nowy",
+   "wynik": "PASS",
+   "co_sprawdzono_i_co_poprawiono": "Obejrzany ponownie (1024×766): białawoszary zaschnięty nalot na całych drzwiach furgonu, dziesiątki wymytych ścieżek na szybach i pod klamką — zgodne."
+  }
+ ],
+ "uwaga": "8 poprawek: 2 × literatura (cytat/link niesprawdzalne w dniu audytu → dopisane UNVERIFIED), 3 × nieścisłość w wierszach napisanych w s21 (P18-118 krycie, P18-164 „tył w cieniu”, P18-178 zdanie o listwie), 3 × opis brudu odrzuconych kandydatów M61 niezgodny z obrazem (P18-102, P18-110, P18-146). Klasa kadru nie zmieniła się w żadnym wierszu próby. P18-110 i P18-125 obejrzane w drugim podejściu (pierwsze: HTTP 429). Pozostałych 38 wierszy odrzuconych kandydatów M61 poza próbą NIE oglądałem (UNVERIFIED)."
+}

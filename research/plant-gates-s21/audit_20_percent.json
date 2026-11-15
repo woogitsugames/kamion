@@ -1,0 +1,249 @@
+{
+ "seed": 20261116,
+ "metoda_losowania": "random.Random(20261116).sample(lista id z manifest.csv, ceil(n/5))",
+ "n_wierszy": 89,
+ "n_próby": 18,
+ "próba": [
+  "K63-001",
+  "K63-002",
+  "K63-025",
+  "K63-027",
+  "K63-028",
+  "K63-032",
+  "K63-042",
+  "K63-044",
+  "K63-047",
+  "K63-052",
+  "K63-065",
+  "K63-067",
+  "K63-073",
+  "K63-074",
+  "K63-081",
+  "K63-082",
+  "K63-083",
+  "K63-089"
+ ],
+ "PASS": 18,
+ "FIX": 0,
+ "data": "2026-11-15",
+ "dodatkowo": [
+  "cytaty z 2 kart katalogowych bram pobranych ponownie (pdftotext) — zgodne z wierszami K63-034/035",
+  "mediany okien P20 powtórzone na NMPT 2023 (A1 18,13; A2 14,35; A3 13,39; A4 13,83; B-F 11,37; B-M 12,51; B-E 12,91)"
+ ],
+ "wiersze": [
+  {
+   "id": "K63-001",
+   "kategoria": "A",
+   "element": "segment",
+   "parametr": "obrys OSM (way 471492583)",
+   "http": {
+    "https://api.openstreetmap.org/api/0.6/map?bbox=23.182,53.1025,23.2005,53.1075": 200
+   },
+   "sprawdzenie": "ponownie pobrano api/0.6/way/471492583/full.json i przeliczono obwód w EPSG:2180",
+   "wynik": "PASS",
+   "uwagi": "15 węzłów, 515,7 m, wersja 4"
+  },
+  {
+   "id": "K63-002",
+   "kategoria": "A",
+   "element": "segment",
+   "parametr": "działka ewidencyjna",
+   "http": {
+    "https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaEwidencjiGruntow": 200
+   },
+   "sprawdzenie": "ponowne GetFeatureInfo KIEG w 2 punktach hali A",
+   "wynik": "PASS",
+   "uwagi": "206101_1.0021.767/20"
+  },
+  {
+   "id": "K63-025",
+   "kategoria": "A",
+   "element": "ściana",
+   "parametr": "ściany hali S (S i W)",
+   "http": {},
+   "sprawdzenie": "ponownie obejrzane kadry 124755 i 124743 (plansza kontrolna)",
+   "wynik": "PASS",
+   "uwagi": "opis zgodny; przypisanie do hali S pozostaje ESTIMATED"
+  },
+  {
+   "id": "K63-027",
+   "kategoria": "A",
+   "element": "brama",
+   "parametr": "brama 1 (bliżej narożnika E): położenie na ścianie NNE",
+   "http": {},
+   "sprawdzenie": "położenie bramy 1 przeliczone drugą kalibracją (narożnik N z NMPT zamiast z OSM)",
+   "wynik": "PASS",
+   "uwagi": "12,0–17,3 m wobec 11,9–17,0 m"
+  },
+  {
+   "id": "K63-028",
+   "kategoria": "A",
+   "element": "brama",
+   "parametr": "brama 1 (bliżej narożnika E): szerokość × wysokość",
+   "http": {},
+   "sprawdzenie": "szerokość z obu kalibracji (5,3 / 5,1 m); wysokość: stosunek px brama/ściana 147/423 na P11-094 i ~5,2 modułu panelu na P11-095",
+   "wynik": "PASS",
+   "uwagi": "zakres 5,5–6,4 m utrzymany jako ESTIMATED"
+  },
+  {
+   "id": "K63-032",
+   "kategoria": "A",
+   "element": "brama",
+   "parametr": "typ, podział, okienka, kolor",
+   "http": {},
+   "sprawdzenie": "ponownie obejrzany wycinek bramy 1 (3×, autokontrast)",
+   "wynik": "PASS",
+   "uwagi": "gęste poziome przetłoczenia; typ segmentowa/rolowana nadal nierozstrzygalny"
+  },
+  {
+   "id": "K63-042",
+   "kategoria": "B",
+   "element": "ściana",
+   "parametr": "hala główna — okładzina",
+   "http": {},
+   "sprawdzenie": "ponownie obejrzane 141331 i 182816",
+   "wynik": "PASS",
+   "uwagi": "antracytowa hala, panele, napis — zgodne"
+  },
+  {
+   "id": "K63-044",
+   "kategoria": "B",
+   "element": "ogrodzenie",
+   "parametr": "ogrodzenie i brama wjazdowa",
+   "http": {},
+   "sprawdzenie": "ponownie obejrzane 141331 i 6724 (wycinek)",
+   "wynik": "PASS",
+   "uwagi": "brama kratownicowa przesuwna i ciemne ogrodzenie panelowe — zgodne"
+  },
+  {
+   "id": "K63-047",
+   "kategoria": "A",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:8866_November_2022_in_Bia%C5%82ystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/2/24/8866_November_2022_in_Bia%C5%82ystok.jpg": 206
+   },
+   "sprawdzenie": "ponownie obejrzany 8866; test punkt-w-wielokącie GPS EXIF vs obrys OSM",
+   "wynik": "PASS",
+   "uwagi": "GPS wewnątrz obrysu (True) — uwaga o błędnej pozycji potwierdzona"
+  },
+  {
+   "id": "K63-052",
+   "kategoria": "B",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:20240623_124644_June_2024_in_Bia%C5%82ystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/2/29/20240623_124644_June_2024_in_Bia%C5%82ystok.jpg": "429/timeout"
+   },
+   "sprawdzenie": "ponownie obejrzany P11-063 (+ wycinek 3×)",
+   "wynik": "PASS",
+   "uwagi": "dwie antracytowe skrzynie z napisem, niższa jasna hala w głębi"
+  },
+  {
+   "id": "K63-065",
+   "kategoria": "A",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY, ODRZUCONY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:8867_November_2022_in_Bia%C5%82ystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/e/ea/8867_November_2022_in_Bia%C5%82ystok.jpg": "429/timeout"
+   },
+   "sprawdzenie": "ponownie obejrzany",
+   "wynik": "PASS",
+   "uwagi": "domy za łąką — odrzucenie słuszne"
+  },
+  {
+   "id": "K63-067",
+   "kategoria": "A",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY, ODRZUCONY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:8869_November_2022_in_Bia%C5%82ystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/2/2d/8869_November_2022_in_Bia%C5%82ystok.jpg": "429/timeout"
+   },
+   "sprawdzenie": "ponownie obejrzany",
+   "wynik": "PASS",
+   "uwagi": "fragment białej hali bez cech przypisania — odrzucenie słuszne"
+  },
+  {
+   "id": "K63-073",
+   "kategoria": "B",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY, ODRZUCONY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:6709_Adama_Mickiewicza_Street_in_Bia%C5%82ystok_November_2019_in_Bialystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/b/b3/6709_Adama_Mickiewicza_Street_in_Bia%C5%82ystok_November_2019_in_Bia": "429/timeout"
+   },
+   "sprawdzenie": "ponownie obejrzany",
+   "wynik": "PASS",
+   "uwagi": "stacja transformatorowa — nie B"
+  },
+  {
+   "id": "K63-074",
+   "kategoria": "B",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY, ODRZUCONY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:6710_Adama_Mickiewicza_Street_in_Bia%C5%82ystok_November_2019_in_Bialystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/c/cf/6710_Adama_Mickiewicza_Street_in_Bia%C5%82ystok_November_2019_in_Bia": "429/timeout"
+   },
+   "sprawdzenie": "ponownie obejrzany",
+   "wynik": "PASS",
+   "uwagi": "widok na centrum — nie B"
+  },
+  {
+   "id": "K63-081",
+   "kategoria": "B",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY, ODRZUCONY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:20240623_124711_June_2024_in_Bia%C5%82ystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/5/54/20240623_124711_June_2024_in_Bia%C5%82ystok.jpg": "429/timeout"
+   },
+   "sprawdzenie": "ponownie obejrzany",
+   "wynik": "PASS",
+   "uwagi": "odległe hale — nie B"
+  },
+  {
+   "id": "K63-082",
+   "kategoria": "B",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY, ODRZUCONY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:20240623_124718_June_2024_in_Bia%C5%82ystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/b/b0/20240623_124718_June_2024_in_Bia%C5%82ystok.jpg": "429/timeout"
+   },
+   "sprawdzenie": "ponownie obejrzany",
+   "wynik": "PASS",
+   "uwagi": "skrzyżowanie — nie B"
+  },
+  {
+   "id": "K63-083",
+   "kategoria": "B",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY, ODRZUCONY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:20240623_124734_June_2024_in_Bia%C5%82ystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/3/3a/20240623_124734_June_2024_in_Bia%C5%82ystok.jpg": "429/timeout"
+   },
+   "sprawdzenie": "ponownie obejrzany",
+   "wynik": "PASS",
+   "uwagi": "przeszklony biurowiec — nie B"
+  },
+  {
+   "id": "K63-089",
+   "kategoria": "B",
+   "element": "kadr",
+   "parametr": "kadr — co widać (OBEJRZANY, ODRZUCONY)",
+   "http": {
+    "https://commons.wikimedia.org/wiki/File:20240623_141915_June_2024_in_Bia%C5%82ystok.jpg": 200,
+    "https://upload.wikimedia.org/wikipedia/commons/c/ca/20240623_141915_June_2024_in_Bia%C5%82ystok.jpg": "429/timeout"
+   },
+   "sprawdzenie": "ponownie obejrzany",
+   "wynik": "PASS",
+   "uwagi": "Kuronia, budynki daleko — nie B"
+  }
+ ]
+}

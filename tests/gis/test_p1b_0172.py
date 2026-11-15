@@ -49,7 +49,7 @@ def test_mast_with_two_arm_heads_and_pole_head():
           {"id": "nopole", "kind": "gate3_signal", "at_en": [50.0, 0.0], "travel_bearing_deg": 0, "arm_bearing_deg": 270,
            "pole_head": False}]
     pl, g = _build(ov)
-    assert [i[0] for i in pl.items] == ["signal_mast_9m", "signal_head_red", "signal_head_red", "signal_head_red",
+    assert [i[0] for i in pl.items] == ["signal_mast_9m", "signal_head_red", "signal_head_red", "signal_head_side_red",
                                         "signal_mast", "signal_head_red"]
     assert [i[1] for i in pl.items[1:4]] == [[4.5, 0.0], [1.7, 0.0], [10.0, -0.15]]
     assert pl.items[1][3] == pl.items[2][3] == pytest.approx(140.0 + S.SIGNAL_MAST_H - 1.25)

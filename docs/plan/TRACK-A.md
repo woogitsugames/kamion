@@ -90,7 +90,7 @@ Pliki: `art-source/truck/brand/{trakt,bielik,narew}.svg` (generator `tools/blend
 | **BIELIK** | orzeł bielik, ptak bagien Podlasia | jedno zamaszyste skrzydło z trzech piór (celowo nie podwójny szewron) | „Bielik” to też polska nazwa samolotu M-346 w Siłach Powietrznych — skojarzenie wojskowe |
 | **NAREW** | rzeka płynąca obok Białegostoku | pierścień przecięty meandrem rzeki | „Narew” to też nazwa polskiego programu obrony przeciwlotniczej — skojarzenie wojskowe |
 
-Wszystkie trzy wymagają przed decyzją wyszukania w bazach znaków towarowych (EUIPO eSearch, UPRP) — **nie zrobione** (brak zgody na zewnętrzne zapytania w tym zadaniu). Żadna nazwa ani znak nie nawiązuje do Volvo, Scania, MAN, DAF, Mercedes-Benz, Iveco, Renault, Jelcz, Star.
+Wszystkie trzy wymagałyby wyszukania w bazach znaków towarowych (EUIPO eSearch, UPRP). **Decyzja właściciela 2026-11-15: bez badania — ciężarówka neutralna**, żadna z nazw nie trafia do buildu (generatory: `--badge none` domyślnie w `exterior/build.py`, `exterior/a6_export.py`, `interior/build_interior.py`; BRAND-SWEEP-S20 #5). SVG zostają jako archiwum kandydatów. Żadna nazwa ani znak nie nawiązuje do Volvo, Scania, MAN, DAF, Mercedes-Benz, Iveco, Renault, Jelcz, Star.
 
 ## 6. Odtworzenie (wszystko skryptami)
 ```
@@ -127,7 +127,7 @@ Duże mapy kafelkowane i atlas AO są generowane (pomijane w git przez `art-sour
 
 ## 9. Decyzja: sylwetka B + marka TRAKT (właściciel, 2026-11-09)
 - **Sylwetka B** (aero, szyba ~19°) potwierdzona przez właściciela 2026-11-09 jako baza (wcześniej rekomendacja `visual-critic` i robocze założenie lidera; A — „lata 90.”, C — „USA/retro”).
-- **Marka: TRAKT** (`art-source/truck/brand/trakt.svg`). Wyszukanie w EUIPO/UPRP **nadal do zrobienia** przed publikacją czegokolwiek z nazwą.
+- **Marka: TRAKT** (`art-source/truck/brand/trakt.svg`) — **wycofana 2026-11-15** (decyzja właściciela: neutralna, bez badania EUIPO/UPRP; w buildzie brak napisu i emblematu, patrz §5).
 - Generator zewnętrza jest parametryczny (`tools/blender/truck/exterior/body.py`, słownik `CFG`: profile kabiny, kształt grilla, lamp, podpisu LED), więc zmiana frontu/marki to zmiana danych, nie kodu.
 
 ## 10. A3 — blockout w skali, punkt oczu, widoczność (właściciel: `truck-artist`)

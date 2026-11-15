@@ -31,7 +31,14 @@ class Region:
     teryt_powiat: str                       # GUGiK per-powiat datasets (BDOT10k, LoD1/2, trees)
     status: str
     min_route_margin_m: float = 280.0
+    # ADR 0208: a tile across a powiat boundary (bialystok-knyszynska: city 2061 + powiat 2002) reads the BDOT10k /
+    # LoD1 / LoD2 of every listed powiat; () = single-powiat region, outputs byte-identical to before the field.
+    teryt_powiat_extra: tuple[str, ...] = ()
     water: bool = False                     # ADR 0210: surface-water stage (rivers, ponds) opt-in per region
+
+    @property
+    def powiaty(self) -> tuple[str, ...]:
+        return (self.teryt_powiat,) + tuple(self.teryt_powiat_extra)
 
     @property
     def width(self) -> float:
@@ -90,6 +97,20 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2061",
         status="WORKING_ASSUMPTION (ADR 0203, owner D64 chose the direction; tile = lattice neighbour of C)",
     ),
+    # ADR 0208 (owner D64): third Białystok tile on the truck route to Knyszyn, lattice (-3,0) of the ADR 0203 plan
+    # (route variant A km 5.80-8.76: end of Kleeberga, slip road, rondo Pamięci Męczeństwa Kresowian, Szosa Ełcka,
+    # city limit at 772066, Szosa Knyszyńska). Shares x = 772875 with bialystok-kleeberga (ADR 0206) and
+    # x = 770827 with dk65-01 (ADR 0205). Two powiaty: Białystok 2061 + powiat białostocki 2002.
+    "bialystok-knyszynska": Region(
+        id="bialystok-knyszynska",
+        title="Białystok — Kleeberga / rondo Pamięci Męczeństwa Kresowian / Szosa Ełcka → Szosa Knyszyńska (granica miasta)",
+        candidate="F_dk65_corridor",
+        bbox=(770827.0, 595199.0, 772875.0, 597247.0),
+        origin=(771851.0, 596223.0),
+        teryt_powiat="2061",
+        teryt_powiat_extra=("2002",),
+        status="WORKING_ASSUMPTION (ADR 0208, owner D64; tile = lattice (-3,0) of the ADR 0203 plan)",
+    ),
     # ADR 0204 (owner D64): Knyszyn. Two tiles of the 2048 m lattice reserved by ADR 0203 (x = 776971 + 2048*i,
     # y = 595199 + 2048*j). `knyszyn` (i = -8, j = 8): the town - Rynek, DW671 Tykocka/Bialostocka, the DK65/DW671
     # roundabout (37 m inside the west edge). `knyszyn-s` (i = -8, j = 7): DK65 inlet from the corridor seam
@@ -124,6 +145,29 @@ REGIONS: dict[str, Region] = {
         origin=(759563.0, 612607.0),
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0209, owner D64; tile = lattice (-9,8) of the ADR 0203 plan)",
+    ),
+    # ADR 0212 (owner D64): lattice (-9,9), north of `knyszyn-w` (shared edge y = 613631): DK65 further towards Monki
+    # through the fields NW of Knyszyn. Powiat moniecki 2008. NMT survey year pinned to 2022 (sources.authored.json)
+    # like knyszyn-w, so the terrain of the shared edge comes from the same sheets.
+    "dk65-monki-01": Region(
+        id="dk65-monki-01",
+        title="DK65 w stronę Moniek 01 — pola na północny zachód od Knyszyna",
+        candidate="K_knyszyn_w",
+        bbox=(758539.0, 613631.0, 760587.0, 615679.0),
+        origin=(759563.0, 614655.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,9) of the ADR 0203 plan)",
+    ),
+    # ADR 0212: lattice (-9,7), south of `knyszyn-w` (y = 611583) and west of `knyszyn-s` (x = 760587): DW671 Tykocka
+    # from Knyszyn towards Tykocin. Powiat moniecki 2008. NMT pinned to 2022 like both neighbours.
+    "dw671-tykocin-01": Region(
+        id="dw671-tykocin-01",
+        title="DW671 w stronę Tykocina 01 — na południowy zachód od Knyszyna",
+        candidate="K_knyszyn_w",
+        bbox=(758539.0, 609535.0, 760587.0, 611583.0),
+        origin=(759563.0, 610559.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,7) of the ADR 0203 plan)",
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
     "dk65-02": Region(
