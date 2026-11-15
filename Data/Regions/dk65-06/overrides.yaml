@@ -16,8 +16,8 @@ overrides:
     set: {width: 6.6, edge_lines: both}
   # Old DK65 km 16.7-24.45 (ways 208187096, 27718745, link 1151531610): research K1 (research/dk65-knyszyn-refs/README.md,
   # table (a)): edge line to edge line 6.0-6.4 m at 8 stations of these tiles (km 17.0 6.1, 18.0 6.0, 19.0 6.4, 20.0 6.0,
-  # 21.0 6.25, 24.6 6.0; corridor median 6.2 m, n = 25), 6.8 m only from km 26 (knyszyn-s). Same entry verbatim in 06..10.
-  # dk65-11 keeps the knyszyn-s set (seam x = 762635 identical) until 11 + knyszyn-s get this correction together.
+  # 21.0 6.25, 24.6 6.0; corridor median 6.2 m, n = 25), 6.8 m only from km 26 (knyszyn-s). Same entry verbatim in 06..11.
+  # ADR 0233: dk65-11 carries this entry too; the knyszyn-s section starts at the repaving joint km 25.32 in knyszyn-s.
   - id: dk65-xsec-k1
     target: {osm_way: [208187096, 27718745, 1151531610]}
     reason: >-
