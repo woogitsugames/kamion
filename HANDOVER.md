@@ -166,6 +166,10 @@
     - droga 1392B bez latarni: do potwierdzenia przez właściciela.
   - **Następny APK:** zrzuty z telefonu dla Argona 0188/0187/0189 oraz gate3.
   - **Chmura C:** #95/#96/#97 w toku weryfikacji. PR #92 M59-FIX = FIX.
+- [15.11 ~18:5x] regen4 DONE: D i C przebudowane i zaimportowane, EditMode zielony, generated zacommitowane (80345541c). **pytest 1373/1375, 2 FAIL budżetu trójkątów High po scaleniu Argona 0187/0188/0189:**
+  - `test_hero_bridge::test_asset_lods_and_budget`: kamera stretch_04 ma 2 022 535 tris przy limicie 2 000 000 (+1,1 %);
+  - `test_world_v31::test_frame_budget_with_forest_hlod`: kilka kamer C ponad progiem.
+  Do naprawy (prawdopodobnie las HLOD 0187 i rośliny): następny agent albo przycięcie budżetu w 0187. **Bramki nie mierzyć na tym stanie bez tej poprawki.**
 - **Ostatni przydzielony ADR: 0220 (0217–0220 zarezerwowane dla chmury C).** Kolejność integracji: krytycy 0181/0172 + domknięcia 0170/0184/0183 → scal (generated → --ours, overrides = suma) → JEDNA regeneracja → pytest → BuildBatch truck/trailer → EditMode → czysty APK → PSO → APK → gate3 A16 + gate12-phone. Nowe ADR 0185–0196 scalać po tej regeneracji (druga regeneracja).
 
 # STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
