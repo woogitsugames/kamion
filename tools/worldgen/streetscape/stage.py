@@ -223,6 +223,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     SR.osm_signs(pl, w.net, src, origin, w.junctions, frep, codes)
     SR.roundabout_signs(pl, w.net, w.junctions, attrs, frep, codes, boards, src=src, origin=origin)
     LM.build(pl, w.net, graph, overrides, origin, boards, frep)
+    SR.drop_rule_diagrams_near_gantries(pl, boards, frep)       # ADR 0236: the authored portal replaces the rule E-1
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep, overrides)
     FU.bridge_median_lamps(pl, w.net, frep)          # ADR 0123: twin-arm lamps between the decks (bridge_style `lamps`)

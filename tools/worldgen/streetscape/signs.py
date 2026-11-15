@@ -420,6 +420,11 @@ def panel_board(panels, size_m=None, row_m=None, px_m=160, green=True, d_m=None,
         y0 += hp
     if single_frame:
         N.frame(d, 0, 0, W, H)
+    if size_m and W > int(round(float(size_m[0]) * px_m)):
+        # the measured board is narrower than the norm's inscriptions at this letter height (the stand-in typeface
+        # and our spacing): keep the measured footprint, squeeze the face
+        W = int(round(float(size_m[0]) * px_m))
+        im = im.resize((W, H), Image.LANCZOS)
     return im, W / px_m, H / px_m
 
 

@@ -302,7 +302,7 @@ def test_photo_matched_overrides_applied(qa):
 def test_overhead_board_layout():
     from streetscape import signs as SG
     im, w, h = SG.overhead_board([(["E67"], "Warszawa"), (["65"], "Ełk")])
-    assert 1.0 < h < 2.0 and w > h
+    assert 0.8 < h < 0.9 and w > h          # ADR 0236: 0.50 + 0.35 m (Tabela 9.5.4), was 0.62 m rows
     r, g, b = im.convert("RGB").getpixel((im.size[0] // 2, im.size[1] - 2))
     assert g > r                                            # green field (white border is inside the edge)
 
