@@ -10,9 +10,9 @@
    ],
    "note": "driver eye 2.5 m, control route s = 63 m of 378 m (unnamed)",
    "pos": [
-    -807.879,
-    -976.853,
-    138.021
+    -807.989,
+    -976.955,
+    138.026
    ],
    "route_s_m": 62.97,
    "type": "persp"
@@ -23,13 +23,13 @@
    "look_at": [
     -935.997,
     -842.088,
-    145.053
+    145.055
    ],
    "note": "driver eye 2.5 m, control route s = 189 m of 378 m (unnamed)",
    "pos": [
-    -893.812,
-    -884.789,
-    144.28
+    -893.922,
+    -884.891,
+    144.287
    ],
    "route_s_m": 188.909,
    "type": "persp"
@@ -40,13 +40,13 @@
    "look_at": [
     -1021.972,
     -750.061,
-    145.429
+    145.433
    ],
    "note": "driver eye 2.5 m, control route s = 315 m of 378 m (unnamed)",
    "pos": [
-    -979.759,
-    -792.734,
-    147.169
+    -979.869,
+    -792.836,
+    147.174
    ],
    "route_s_m": 314.848,
    "type": "persp"
@@ -132,11 +132,75 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "seam_s_top40",
+   "look_at": [
+    -766.1,
+    -924.0,
+    -57122.819
+   ],
+   "note": "place camera: QA seam top view (north up, 66.3 m x 37.3 m, ADR 0233): DK65 on the seam with dk65-10 (this tile = north half); pair = artifacts/dk65-r4-s21/seam/ortho/pair_seam_s_top40.jpg",
+   "pos": [
+    -766.1,
+    -1024.0,
+    172.902
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "seam_w_top40",
+   "look_at": [
+    -1024.0,
+    -647.9,
+    -57111.539
+   ],
+   "note": "place camera: QA seam top view (north up, 66.3 m x 37.3 m, ADR 0233): DK65 on the seam with knyszyn-s (this tile = east half); pair = artifacts/dk65-r4-s21/seam/ortho/pair_seam_w_top40.jpg",
+   "pos": [
+    -1024.0,
+    -747.9,
+    184.182
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "seam_s_drive",
+   "look_at": [
+    -835.927,
+    -946.884,
+    132.867
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 4 m (ADR 0233): first metres after the dk65-10 seam",
+   "pos": [
+    -767.6,
+    -1019.9,
+    135.486
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "seam_w_drive",
+   "look_at": [
+    -1051.327,
+    -716.284,
+    144.587
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 318 m (ADR 0233): last 60 m before the knyszyn-s seam",
+   "pos": [
+    -983.0,
+    -789.3,
+    147.205
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0
    ],
-   "height": 291.814,
+   "height": 291.818,
    "id": "ortho_tile",
    "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
    "size_m": 2048.0,
