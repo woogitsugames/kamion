@@ -1,0 +1,26 @@
+# Authored overrides of region dk65-monki-07 (ADR 0231, rough definition: the tile is NOT ingested or built yet).
+# Every entry survives a re-import; coordinates are region-local E/N (origin EPSG:2180 753419, 620799)
+# or EPSG:2180 where the key says so. Source of the targets: OSM via Overpass 2026-11-15
+# (Data/Plans/ring-0231/osm_ring_extract.json); the pipeline builds from the pbf of 2026-11-08, so a way id
+# that is missing there shows up as overrides_stale in build_world. No lettering, no brands.
+overrides:
+  - id: dk65-carriageway-width
+    target: {osm_way: [286989049]}
+    reason: >-
+      DK65 towards Monki, rural single carriageway (OSM: highway=primary, lanes=2). WORKING_VALUE: the cross-section
+      of dk65-monki-01 / knyszyn-w (ADR 0204/0209/0212: 2 x 3.4 m + 0.35 m edge strips = 7.5 m, solid edge lines on
+      both sides) is continued so that the seam keeps one width and one set of lines. NOT measured in this tile
+      (no orthophoto in the session that wrote ADR 0231); BDOT10k width unknown until build_region runs.
+    confidence: low
+    verify: orthophoto 0.1 m cross profiles after the ingest (tool of ADR 0212: artifacts/knyszyn-edges-0212/tools/linew.py); owner drive
+    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  - id: dk65-fields-unlit
+    target: {osm_way: [286989049]}
+    reason: >-
+      DK65 outside built-up areas (OSM: no street name on these ways, maxspeed=90 where tagged, no `lit` tag).
+      WORKING_VALUE: continues dk65-fields-unlit of dk65-monki-01 (orthophoto 2025 there: no lamp columns); the
+      lamp rule would light every class G road. NOT checked on the orthophoto of this tile - villages along the
+      road may have columns.
+    confidence: low
+    verify: orthophoto 0.1 m after the ingest
+    set: {lamps: false}

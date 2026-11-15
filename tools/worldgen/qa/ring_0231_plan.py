@@ -64,6 +64,28 @@ CORRIDORS: dict[str, dict] = {
         "tiles": [("dw671-jasionowka-01", -8, 9)],
     },
 }
+# regions.py titles (Polish, like the existing entries): road, km of the corridor from the built tile (plan json),
+# places = OSM place=town|village nodes inside the tile (not necessarily on the road)
+TITLES: dict[str, str] = {
+    "dk65-monki-02": "DK65 w stronę Moniek 02 — km 0,0–2,1 za dk65-monki-01, most na Nareśli",
+    "dk65-monki-03": "DK65 w stronę Moniek 03 — narożnik kafla, km 2,1–2,5 (w kaflu Czechowizna)",
+    "dk65-monki-04": "DK65 w stronę Moniek 04 — km 2,5–5,4 (w kaflu linia kolejowa)",
+    "dk65-monki-05": "DK65 w stronę Moniek 05 — narożnik kafla, km 5,4–5,5 (w kaflu Konopczyn, Przytulanka)",
+    "dk65-monki-06": "DK65 w stronę Moniek 06 — km 5,5–7,6 (w kaflu Magnusze)",
+    "dk65-monki-07": "DK65 w stronę Moniek 07 — km 7,6–9,9, wjazd do Moniek (Białostocka; w kaflu Ciesze)",
+    "monki-e": "Mońki wschód — DK65 Białostocka, narożnik kafla km 9,9–10,2 (w kaflu Świerzbienie)",
+    "monki": "Mońki — DK65 Białostocka/Ełcka przez miasto, przejazd kolejowy, km 10,2–12,9",
+    "dw671-tykocin-02": "DW671 w stronę Tykocina 02 — narożnik kafla (0,1 km), linia kolejowa",
+    "dw671-tykocin-03": "DW671 w stronę Tykocina 03 — km 0,1–2,3 (w kaflu Krypno Kościelne, Krypno Wielkie)",
+    "dw671-tykocin-04": "DW671 w stronę Tykocina 04 — km 2,3–4,2",
+    "dw671-tykocin-05": "DW671 w stronę Tykocina 05 — km 4,2–4,9",
+    "dw671-tykocin-06": "DW671 w stronę Tykocina 06 — km 4,9–7,0 (w kaflu Zygmunty)",
+    "dw671-tykocin-07": "DW671 w stronę Tykocina 07 — km 7,0–8,0 (w kaflu Morusy)",
+    "dw671-tykocin-08": "DW671 w stronę Tykocina 08 — km 8,0–9,7",
+    "dw671-tykocin-09": "DW671 w stronę Tykocina 09 — km 9,7–10,8 (w kaflu Tatary)",
+    "tykocin": "Tykocin — DW671 przez miasto i most na Narwi, km 10,8–13,3",
+    "dw671-jasionowka-01": "DW671 w stronę Jasionówki 01 — Grodzieńska na północ od Knyszyna, km 0,0–2,4",
+}
 # the DK65 cross-section and lamp rule of dk65-monki-01 (ADR 0212), continued on the rural DK65 of the corridor
 DK65_SET = {"lanes": 2, "lane_width": 3.4, "edge_strip": 0.35, "edge_lines": "both"}
 TAGS_KEPT = ("highway", "ref", "name", "lanes", "maxspeed", "lit", "surface", "width", "bridge", "tunnel", "layer",
@@ -602,7 +624,7 @@ def main() -> None:
     if a.init_regions:
         print("written:", init_regions(plan, json.loads(NMT.read_text(encoding="utf-8"))))
     if a.print_regions:
-        print(print_regions(plan, {}))
+        print(print_regions(plan, TITLES))
     if a.png:
         render(plan, extract, PNG)
         print("png", PNG)
