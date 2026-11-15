@@ -1,7 +1,11 @@
 # ADR 0235 — płynne przejście między kaflami: addytywne wczytywanie sąsiednich regionów w trakcie jazdy
 
 Status: Proposed (chmura D, zadanie F2, gałąź `streaming-0235`, stacked na `region-select-0229` / PR #104), 2026-11-15.
-Kod C# **nieskompilowany w chmurze** (brak Unity i .NET); Python uruchomiony. Do weryfikacji i scalenia przez lidera.
+Kod C# **nieskompilowany w Unity**; Python uruchomiony. Do weryfikacji i scalenia przez lidera.
+**FIX s22 (D12, ADR 0273):** streaming **opt-in** (`stream=1`), kafel odrodzenia przypięty (nigdy pustka pod resetem),
+budżety PC osobno (Low 640 / Medium 800 / High 1450 / Ultra 2000 MB) i pamięć High per kafel, kafle także z paczek
+regionów (#112: `ITileSceneSource`, dzierżawy `Acquire/Release`). Gałąź ma scalone `origin/main` i `regionpacks-0234`;
+PR #114 zamknięty — do ponownego otwarcia / nowego PR po scaleniu #112 (ADR 0273 „Kolejność”).
 Powiązane: ADR 0003 (skala, floating origin > 2 km), 0011 (import glTFast, sceny `_Generated`), 0012 §6 (cooking kolizji
 przy wczytaniu), 0082 (krawędź regionu, safety net), 0085 (far field, kontrakt hierarchii), 0169 (jedno źródło zamknięć,
 60 m przed krawędzią), 0205/0207/0214 (kafle korytarza), 0224 (szwy ±0,10 m), 0229 (sceny regionów w buildzie, menu).
@@ -42,13 +46,14 @@ field, a scena zawiera też słońce, wolumen, kamerę, ciężarówkę i bootstr
    - kolejka: najbliższy pierwszy, **1 wczytanie naraz**, maks. **4 kafle** (bieżący + 3 w narożniku), budżet pamięci
      sumą `worldMemoryMB`; brak miejsca → wyrzucenie najdalszego kafla z pasma histerezy; kafel niedostępny w buildzie
      nigdy nie jest chciany (szew zostaje zamknięty).
-4. **Budżet pamięci per tier (WORKING_VALUE):** cel PSS − (PSS C − WORLD_MEMORY C). A16 Low: 1000 − (899,8…926,2 − 124,2)
+4. **Budżet pamięci per tier (WORKING_VALUE; PC: ADR 0273 §6 — `BudgetForTier(tier, desktop)`, tier High liczony
+   `worldMemoryHighMB`):** cel PSS − (PSS C − WORLD_MEMORY C). A16 Low: 1000 − (899,8…926,2 − 124,2)
    = 198…224 → **200 MB**; A16 Medium (cel 1,2 GB) **400 MB**; High/Ultra **600 MB**. Para C + Maczka (277), Maczka +
    Kleeberga (310), Kleeberga + Knyszyńska (273) **przekracza 200 MB Low**: polityka wczytuje wtedy jeden kafel przed
    pojazdem ponad budżet (`allowOneOverBudget`, log `[STREAM] over budget`) — zamknięta droga jest gorsza niż przekroczenie,
    które pomiar na A16 ma potwierdzić albo obalić. Odcinek DK65 mieści się w 200 MB (maks. 3 kafle ≈ 187 MB przy dk65-03).
-5. **Runtime `WorldStreamer`** (instaluje go `DrivingLabBootstrap`, gdy w buildzie jest choć jedna scena `_Tile` sąsiada;
-   `stream=0` wyłącza): decyzja co 0,25 s; `SceneManager.LoadSceneAsync(…, Additive)` z `allowSceneActivation = false`,
+5. **Runtime `WorldStreamer`** (instaluje go `DrivingLabBootstrap` **tylko z launch argumentem `stream=1`** — ADR 0273 §7,
+   do czasu pomiaru na Windows i A16 — gdy w buildzie albo w zainstalowanej paczce jest choć jedna scena `_Tile` sąsiada): decyzja co 0,25 s; `SceneManager.LoadSceneAsync(…, Additive)` z `allowSceneActivation = false`,
    aktywacja przy 90 % i tylko gdy żaden kafel się nie aktywuje; `Application.backgroundLoadingPriority = Low` na czas
    streamingu (przywracane); w `sceneLoaded` (po Awake/OnEnable, przed renderem) root ustawiany dla bieżącego originu i
    start bake joba kolizji; chunki włączane ≤ **2 ms/klatkę** (Stopwatch, min. 1 chunk), collidery 16/klatkę
@@ -72,6 +77,10 @@ field, a scena zawiera też słońce, wolumen, kamerę, ciężarówkę i bootstr
 ## Testy
 - Python: `tests/gis/test_tile_graph_0235.py` — **7/7** (świeżość json, siatka 2048 m, symetria, łańcuch D67 z portalami,
   brak fałszywych sąsiadów, JsonUtility-friendly).
+- FIX s22: EditMode +8 (przypięty kafel, budżety PC z danych, pamięć High, korytarz PC z przypiętym C dla Low…Ultra,
+  źródło build/paczka) — **24/25 pod .NET 8** (harness bez Unity, bez testów z `GameObject`/`RegionBuildList`); jedyny
+  czerwony `Decide_AllocatesNothing` to 24 B jednorazowo w runtime .NET — pomiar per wywołanie `Decide` = 0 B, ten sam wynik
+  na kodzie sprzed FIX; w Unity (Mono) do potwierdzenia przez lidera.
 - EditMode `WorldStreamingPolicyTests` (20, **nieuruchomione**): dane z Resources, promień, histereza, kolejka, narożnik,
   budżet/eksmisja, look-ahead, przejazd całego korytarza D67 przy 90 km/h dla Low i Medium (nigdy w kaflu nie-Ready),
   zero alokacji, placement/rebase, strony krawędzi, lista scen buildu.
@@ -87,7 +96,13 @@ field, a scena zawiera też słońce, wolumen, kamerę, ciężarówkę i bootstr
 - Odbiorcy `FloatingOrigin.Moved` poza tymi trzema (cząsteczki w world space, ślady, audio) — przegląd po pierwszym
   przejeździe; obiekty `DontDestroyOnLoad` nie są przesuwane. Interpolacja Rigidbody przy rebase — UNVERIFIED (PlayMode
   loguje skok).
-- Po wyładowaniu startowego kafla `RecoverToSpawn` (brak bezpiecznej pozy) postawiłby zestaw nad pustką — rzadkie,
-  do poprawienia razem z zapisem pozycji.
+- ~~Po wyładowaniu startowego kafla `RecoverToSpawn` postawiłby zestaw nad pustką~~ — **naprawione (ADR 0273 §8):**
+  `StreamingPolicy.Pinned` = kafel najnowszej bezpiecznej pozy (starszej niż `safeMinAge`) albo kafel startowy, gdy jej brak;
+  nigdy nie wyładowany ani eksmitowany (log `[STREAM] pinned …`). Bez zmian w spawn/route_start.
+- Do BACKLOG (lider nadaje numery; recenzja #114 P2): (P2-3) `StreetLamps.SetHeads` globalne — ostatni kafel wygrywa;
+  (P2-5) GPS/ekrany kabiny tylko region startowy — graf nawigacji per kafel; (P2-4) po `build_region` nowych kafli uruchomić
+  `uv run --project tools/worldgen python tools/worldgen/streaming/tile_graph.py` (+ `--check`) — dopisać do kroku
+  „Regeneracja mapy” w CLAUDE.md (plik lidera).
+- (P2-6) Interpolacja `Rigidbody` przy rebase: PlayMode ma teraz asercję skoku pozy renderowanej < 0,05 m (WORKING_VALUE).
 - Liczby do zmierzenia na A16: czas `load`/`activation` z logu `[STREAM] ready`, hitch `UnloadUnusedAssets`, PSS przy
   2–3 kaflach (zwłaszcza C + Maczka + Kleeberga), p95/p99 klatki w oknie wczytania.

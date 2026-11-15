@@ -53,8 +53,15 @@ namespace Game.World.Streaming
         public float currentHysteresisM = 30f;
         /// <summary>Most tiles in memory at once (current + 3 at a corner). WORKING_VALUE.</summary>
         public int maxTiles = 4;
-        /// <summary>Sum of worldMemoryMB of resident tiles [MB]; set per tier by <see cref="BudgetForTier"/>. WORKING_VALUE.</summary>
+        /// <summary>Sum of the world memory of resident tiles [MB]; set per platform and tier by <see cref="BudgetForTier"/>.
+        /// WORKING_VALUE.</summary>
         public float memoryBudgetMB = 200f;
+        /// <summary>The High content tier streams (World_&lt;id&gt;_High_Tile): count worldMemoryHighMB instead of the Low value
+        /// (ADR 0273). A graph without High values falls back to Low x <see cref="HighOverLowFallback"/>.</summary>
+        public bool highContent;
+        /// <summary>High / Low WORLD_MEMORY when a tile has no High value: max ratio of the tabulated imports
+        /// (Maczka 420.4 / 153.2 = 2.74, ADR 0234 §7) - conservative. ESTIMATED.</summary>
+        public const float HighOverLowFallback = 2.75f;
         /// <summary>When the budget leaves no room, the single best tile ahead is still loaded (a closed road is worse
         /// than a PSS overshoot that the device run measures). WORKING_VALUE decision, ADR 0235 §4.</summary>
         public bool allowOneOverBudget = true;
@@ -70,12 +77,32 @@ namespace Game.World.Streaming
         public float LookAheadS => loadTimeS + activationTimeS + cookTimeS;
 
         /// <summary>
-        /// World budget per quality tier [MB] (WORKING_VALUE, ADR 0235 §4): PSS target minus the PSS of region C minus
-        /// its WORLD_MEMORY. A16 Low: 1000 - (899.8..926.2 - 124.2) = 198..224 -> 200; A16 Medium: target 1.2 GB -> 400;
+        /// World budget per quality tier on a phone [MB] (WORKING_VALUE, ADR 0235 §4): PSS target minus the PSS of region C
+        /// minus its WORLD_MEMORY. A16 Low: 1000 - (899.8..926.2 - 124.2) = 198..224 -> 200; A16 Medium: target 1.2 GB -> 400;
         /// High / Ultra (S24+, 2.0 GB): 600.
         /// </summary>
-        public static float BudgetForTier(string tier)
+        public static float BudgetForTier(string tier) => BudgetForTier(tier, false);
+
+        /// <summary>
+        /// World budget per platform and quality tier [MB] (WORKING_VALUE, ADR 0273 §6). Desktop (D73 main platform, D74
+        /// classes: minimum 8 GB RAM / 2 GB VRAM, recommended 12 GB RAM): the worst 3-tile set of the corridor (C + Maczka +
+        /// Kleeberga: Low 434.1, High 1044.2 MB, tile_graph.json) + the pinned respawn tile (worst case C: Low 124.2, High
+        /// 267.0) + ~10 %: Low 640, Medium 800 (Low content + one corner tile), High 1450, Ultra 2000. Phone: see
+        /// <see cref="BudgetForTier(string)"/>.
+        /// </summary>
+        public static float BudgetForTier(string tier, bool desktop)
         {
+            if (desktop)
+            {
+                switch (tier)
+                {
+                    case "Low": return 640f;
+                    case "Medium": return 800f;
+                    case "High": return 1450f;
+                    case "Ultra": return 2000f;
+                    default: return 640f;
+                }
+            }
             switch (tier)
             {
                 case "Low": return 200f;
@@ -83,6 +110,13 @@ namespace Game.World.Streaming
                 case "High": case "Ultra": return 600f;
                 default: return 200f;
             }
+        }
+
+        /// <summary>World memory of a tile for the configured content tier [MB].</summary>
+        public float MemoryOf(TileData t)
+        {
+            if (!highContent) return t.worldMemoryMB;
+            return t.worldMemoryHighMB > 0f ? t.worldMemoryHighMB : t.worldMemoryMB * HighOverLowFallback;
         }
     }
 
@@ -96,7 +130,9 @@ namespace Game.World.Streaming
     ///   of the look-ahead segment p -> p + v x (load + activation + cook time);
     /// - a resident tile is unloaded when it is not wanted and further than load radius + hysteresis;
     /// - loads go nearest first, one at a time, within <see cref="StreamingSettings.maxTiles"/> and the memory budget;
-    ///   a resident tile in the hysteresis band (not wanted, not yet far) is evicted for a wanted one when needed.
+    ///   a resident tile in the hysteresis band (not wanted, not yet far) is evicted for a wanted one when needed;
+    /// - the pinned tile (<see cref="Pinned"/>, ADR 0273 §8: the tile the safety net would put the truck back into) is
+    ///   never unloaded or evicted; its memory counts against the budget.
     /// </summary>
     public sealed class StreamingPolicy
     {
@@ -111,6 +147,9 @@ namespace Game.World.Streaming
         readonly int[] m_Order;         // candidate indices sorted by score
 
         public int Current { get; private set; } = -1;
+        /// <summary>Tile that must stay in memory (-1 = none): the respawn / recovery tile, set by the streamer before
+        /// each decision (ADR 0273 §8). A pinned tile that is unloaded is not loaded back by this rule - only kept.</summary>
+        public int Pinned { get; private set; } = -1;
         /// <summary>A wanted tile was skipped for the budget on the last decision (logged by the streamer).</summary>
         public bool BudgetBlocked { get; private set; }
         /// <summary>The last decision loaded a tile beyond the memory budget (allowOneOverBudget).</summary>
@@ -130,6 +169,9 @@ namespace Game.World.Streaming
         }
 
         public TileState StateOf(int tile) => m_State[tile];
+
+        /// <summary>Pins one tile (or -1 for none); out-of-range values clear the pin.</summary>
+        public void SetPinned(int tile) => Pinned = tile >= 0 && tile < m_State.Length ? tile : -1;
         public void SetState(int tile, TileState s) => m_State[tile] = s;
 
         /// <summary>The tile of the start scene: already in memory and ready.</summary>
@@ -155,7 +197,7 @@ namespace Game.World.Streaming
         public float ResidentMemoryMB()
         {
             float m = 0f;
-            for (int i = 0; i < m_State.Length; i++) if (m_State[i] != TileState.Unloaded) m += Graph.Tiles[i].worldMemoryMB;
+            for (int i = 0; i < m_State.Length; i++) if (m_State[i] != TileState.Unloaded) m += Settings.MemoryOf(Graph.Tiles[i]);
             return m;
         }
 
@@ -223,7 +265,7 @@ namespace Game.World.Streaming
             // 1. Unload resident tiles that are far behind (beyond the hysteresis band). Never the current tile.
             for (int i = 0; i < n && count < output.Length; i++)
             {
-                if (i == cur || m_Wanted[i]) continue;
+                if (i == cur || i == Pinned || m_Wanted[i]) continue;
                 var s = m_State[i];
                 if ((s == TileState.Ready || s == TileState.Activating) && m_Dist[i] > unloadR)
                 {
@@ -248,7 +290,7 @@ namespace Game.World.Streaming
             float mem = ResidentMemoryMB();
             int resident = ResidentCount();
             bool fitsCount = resident + 1 <= Settings.maxTiles;
-            bool fitsMem = mem + Graph.Tiles[best].worldMemoryMB <= Settings.memoryBudgetMB;
+            bool fitsMem = mem + Settings.MemoryOf(Graph.Tiles[best]) <= Settings.memoryBudgetMB;
             if (fitsCount && fitsMem)
             {
                 if (count < output.Length) { output[count++] = new StreamCommand { op = StreamOp.Load, tile = best }; m_State[best] = TileState.Loading; }
@@ -258,7 +300,7 @@ namespace Game.World.Streaming
             int evict = -1;
             for (int i = 0; i < n; i++)
             {
-                if (i == cur || m_Wanted[i]) continue;
+                if (i == cur || i == Pinned || m_Wanted[i]) continue;
                 if (m_State[i] != TileState.Ready && m_State[i] != TileState.Activating) continue;
                 if (evict < 0 || m_Dist[i] > m_Dist[evict]) evict = i;
             }
@@ -279,11 +321,13 @@ namespace Game.World.Streaming
             return count;
         }
 
-        /// <summary>True when the resident set without the current tile already exceeds the budget on its own share.</summary>
+        /// <summary>True when the resident set without the current (and pinned) tile already exceeds the budget on its own share.</summary>
         bool AnyOverBudgetBeyondCurrent(int cur)
         {
             float mem = ResidentMemoryMB();
-            return cur >= 0 && mem > Graph.Tiles[cur].worldMemoryMB && mem > Settings.memoryBudgetMB;
+            float own = cur >= 0 ? Settings.MemoryOf(Graph.Tiles[cur]) : 0f;
+            if (Pinned >= 0 && Pinned != cur && m_State[Pinned] != TileState.Unloaded) own += Settings.MemoryOf(Graph.Tiles[Pinned]);
+            return cur >= 0 && mem > own && mem > Settings.memoryBudgetMB;
         }
     }
 }

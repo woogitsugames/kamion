@@ -29,6 +29,13 @@ namespace Game.Tests
     {
         const string StartScene = "World_dk65-03";
         const double SeamY = 599295.0;
+        /// <summary>Max jump of the rendered vehicle pose in the rebase frame beyond the origin offset and its own motion
+        /// [m] (review s22 #114 P2-6: Rigidbody interpolation across the rebase was only logged). WORKING_VALUE.</summary>
+        const float MaxRebaseJumpM = 0.05f;
+
+        // Streaming is opt-in (ADR 0273 §7, launch argument stream=1); the test switches it on for its scene only.
+        [SetUp] public void EnableStreaming() => WorldStreamer.EnabledOverride = true;
+        [TearDown] public void ResetStreaming() => WorldStreamer.EnabledOverride = null;
 
         [UnityTest, Timeout(300000)]
         public IEnumerator Dk65_03_To_04_RouteAutopilot_LoadsTheNeighbourAdditively()
@@ -65,10 +72,24 @@ namespace Game.Tests
             float readyMarginM = float.NaN;
             int gcFrames = 0; long gcMax = 0;
             int resets0 = boot.SafetyNet != null ? boot.SafetyNet.ResetCount : 0;
+            Vector3 lastOffset = Vector3.zero;
+            System.Action<Vector3> onMoved = o => lastOffset = o;
+            FloatingOrigin.Moved += onMoved;
+            Vector3 prevPos = body.transform.position;
+            int prevShifts = FloatingOrigin.ShiftCount;
+            float rebaseJumpM = -1f;
             while (Time.time - t0 < 180f)
             {
                 yield return null;
                 Vector3 p = body.transform.position;
+                if (FloatingOrigin.ShiftCount != prevShifts)
+                {
+                    // Rendered pose change in the rebase frame minus the world offset minus the vehicle's own travel.
+                    float travel = body.SpeedKmh / 3.6f * Time.deltaTime;
+                    rebaseJumpM = Mathf.Max(rebaseJumpM, Mathf.Max(0f, ((p - prevPos) - lastOffset).magnitude - travel));
+                    prevShifts = FloatingOrigin.ShiftCount;
+                }
+                prevPos = p;
                 double x = streamer.AnchorX + p.x, y = streamer.AnchorY + p.z;
                 var s04 = streamer.StateOf("dk65-04");
                 if (float.IsNaN(readyMarginM) && s04 == TileState.Ready) readyMarginM = (float)(SeamY - y);
@@ -97,6 +118,7 @@ namespace Game.Tests
                 }
                 if (y >= SeamY + 300.0) break;
             }
+            FloatingOrigin.Moved -= onMoved;
             string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "artifacts", "streaming-0235"));
             Directory.CreateDirectory(dir);
             var csv = new StringBuilder("t_s,dt_ms,gc_bytes,state_03,state_04,x_epsg,y_epsg,speed_kmh,resets\n");
@@ -106,8 +128,8 @@ namespace Game.Tests
             dts.Sort();
             float P(float q) => dts.Count > 0 ? dts[Mathf.Clamp(Mathf.CeilToInt(q * dts.Count) - 1, 0, dts.Count - 1)] : 0f;
             Debug.Log(string.Format(ci, "[STREAM-TEST] frames {0}: dt p50 {1:F1} / p95 {2:F1} / p99 {3:F1} / max {4:F1} ms; GC frames {5} (max {6} B); " +
-                "dk65-04 ready {7:F0} m before the seam; load {8:F0} ms, activation {9:F0} ms, rebase {10:F2} ms",
-                dts.Count, P(0.5f), P(0.95f), P(0.99f), P(1f), gcFrames, gcMax, readyMarginM, streamer.LastLoadMs, streamer.LastActivationMs, streamer.LastRebaseMs));
+                "dk65-04 ready {7:F0} m before the seam; load {8:F0} ms, activation {9:F0} ms, rebase {10:F2} ms, rebase jump {11:F3} m",
+                dts.Count, P(0.5f), P(0.95f), P(0.99f), P(1f), gcFrames, gcMax, readyMarginM, streamer.LastLoadMs, streamer.LastActivationMs, streamer.LastRebaseMs, rebaseJumpM));
 
             Assert.IsTrue(crossed, "the truck reached the seam with dk65-04 within 180 s");
             Assert.Greater(readyMarginM, 0f, "ready before the seam");
@@ -116,6 +138,8 @@ namespace Game.Tests
             if (boot.SafetyNet != null) Assert.AreEqual(resets0, boot.SafetyNet.ResetCount, "no safety-net reset across the seam");
             Assert.Greater(FloatingOrigin.ShiftCount, rebases0, "origin moved to dk65-04");
             Assert.Less(new Vector2(pe.x, pe.z).magnitude, 1500f, "truck near the new origin after the rebase");
+            Assert.GreaterOrEqual(rebaseJumpM, 0f, "a rebase frame was observed");
+            Assert.Less(rebaseJumpM, MaxRebaseJumpM, $"rendered vehicle pose jumped {rebaseJumpM:F3} m in the rebase frame");
         }
 
         static void AssertSeamOpen(WorldStreamer streamer)

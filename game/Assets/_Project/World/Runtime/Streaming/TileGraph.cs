@@ -27,6 +27,8 @@ namespace Game.World.Streaming
         public double anchorX, anchorY, anchorZ;
         /// <summary>WORLD_MEMORY Low of the region import [MB] (ESTIMATED, ADR 0229 table).</summary>
         public float worldMemoryMB;
+        /// <summary>WORLD_MEMORY High of the region import [MB] (ESTIMATED, ADR 0234 §7 table; ADR 0273). 0 in an old graph.</summary>
+        public float worldMemoryHighMB;
         public string memorySource;
         public NeighborData[] neighbors = Array.Empty<NeighborData>();
     }

@@ -2,7 +2,7 @@
  "schema": "truck-sim-pl/tile-graph/1",
  "generator": "tools/worldgen/streaming/tile_graph.py (ADR 0235)",
  "crs": "EPSG:2180 (x east, y north) + PL-EVRF2007-NH heights; Unity X = east, Z = north (ADR 0003)",
- "memoryNote": "worldMemoryMB = WORLD_MEMORY Low of the region import as quoted in ADR 0229; ESTIMATED",
+ "memoryNote": "worldMemoryMB / worldMemoryHighMB = WORLD_MEMORY Low / High of the region import as quoted in ADR 0229 / ADR 0234 §7; ESTIMATED",
  "tiles": [
   {
    "id": "bialystok-dojlidy",
@@ -14,6 +14,7 @@
    "anchorY": 590079.0,
    "anchorZ": 156.96,
    "worldMemoryMB": 99.6,
+   "worldMemoryHighMB": 214.9,
    "memorySource": "ADR 0188 via ADR 0229",
    "neighbors": []
   },
@@ -27,6 +28,7 @@
    "anchorY": 596223.0,
    "anchorZ": 131.14,
    "worldMemoryMB": 124.2,
+   "worldMemoryHighMB": 267.0,
    "memorySource": "ADR 0188 via ADR 0229",
    "neighbors": [
     {
@@ -46,6 +48,7 @@
    "anchorY": 596223.0,
    "anchorZ": 118.16,
    "worldMemoryMB": 156.7,
+   "worldMemoryHighMB": 356.8,
    "memorySource": "ADR 0206 via ADR 0229",
    "neighbors": [
     {
@@ -70,6 +73,7 @@
    "anchorY": 596223.0,
    "anchorZ": 138.0,
    "worldMemoryMB": 116.0,
+   "worldMemoryHighMB": 260.2,
    "memorySource": "ADR 0208 via ADR 0229",
    "neighbors": [
     {
@@ -99,6 +103,7 @@
    "anchorY": 596223.0,
    "anchorZ": 130.0,
    "worldMemoryMB": 153.2,
+   "worldMemoryHighMB": 420.4,
    "memorySource": "ADR 0203/0208 via ADR 0229",
    "neighbors": [
     {
@@ -123,6 +128,7 @@
    "anchorY": 596223.0,
    "anchorZ": 138.38,
    "worldMemoryMB": 68.2,
+   "worldMemoryHighMB": 165.9,
    "memorySource": "ADR 0205 via ADR 0229",
    "neighbors": [
     {
@@ -152,6 +158,7 @@
    "anchorY": 598271.0,
    "anchorZ": 111.24,
    "worldMemoryMB": 60.2,
+   "worldMemoryHighMB": 139.3,
    "memorySource": "ADR 0210 via ADR 0229",
    "neighbors": [
     {
@@ -186,6 +193,7 @@
    "anchorY": 598271.0,
    "anchorZ": 111.63,
    "worldMemoryMB": 50.5,
+   "worldMemoryHighMB": 131.7,
    "memorySource": "ADR 0207 via ADR 0229",
    "neighbors": [
     {
@@ -215,6 +223,7 @@
    "anchorY": 600319.0,
    "anchorZ": 126.63,
    "worldMemoryMB": 76.1,
+   "worldMemoryHighMB": 181.5,
    "memorySource": "ADR 0207 via ADR 0229",
    "neighbors": [
     {
@@ -244,6 +253,7 @@
    "anchorY": 602367.0,
    "anchorZ": 141.44,
    "worldMemoryMB": 75.5,
+   "worldMemoryHighMB": 176.5,
    "memorySource": "ADR 0207 via ADR 0229",
    "neighbors": [
     {
@@ -273,6 +283,7 @@
    "anchorY": 604415.0,
    "anchorZ": 168.11,
    "worldMemoryMB": 59.0,
+   "worldMemoryHighMB": 136.1,
    "memorySource": "ADR 0214 via ADR 0229",
    "neighbors": [
     {
@@ -302,6 +313,7 @@
    "anchorY": 604415.0,
    "anchorZ": 138.79,
    "worldMemoryMB": 59.1,
+   "worldMemoryHighMB": 136.5,
    "memorySource": "ADR 0214 via ADR 0229",
    "neighbors": [
     {
@@ -336,6 +348,7 @@
    "anchorY": 606463.0,
    "anchorZ": 137.86,
    "worldMemoryMB": 55.5,
+   "worldMemoryHighMB": 122.7,
    "memorySource": "ADR 0214 via ADR 0229",
    "neighbors": [
     {
@@ -370,6 +383,7 @@
    "anchorY": 606463.0,
    "anchorZ": 127.16,
    "worldMemoryMB": 51.4,
+   "worldMemoryHighMB": 122.4,
    "memorySource": "ADR 0214 via ADR 0229",
    "neighbors": [
     {
@@ -399,6 +413,7 @@
    "anchorY": 608511.0,
    "anchorZ": 121.8,
    "worldMemoryMB": 49.0,
+   "worldMemoryHighMB": 117.3,
    "memorySource": "ADR 0214 via ADR 0229",
    "neighbors": [
     {
@@ -433,6 +448,7 @@
    "anchorY": 610559.0,
    "anchorZ": 141.16,
    "worldMemoryMB": 48.2,
+   "worldMemoryHighMB": 113.0,
    "memorySource": "ADR 0214 via ADR 0229",
    "neighbors": [
     {
@@ -462,6 +478,7 @@
    "anchorY": 614655.0,
    "anchorZ": 134.64,
    "worldMemoryMB": 46.6,
+   "worldMemoryHighMB": 113.6,
    "memorySource": "ADR 0212 via ADR 0229",
    "neighbors": [
     {
@@ -486,6 +503,7 @@
    "anchorY": 610559.0,
    "anchorZ": 125.02,
    "worldMemoryMB": 45.7,
+   "worldMemoryHighMB": 119.4,
    "memorySource": "ADR 0212 via ADR 0229",
    "neighbors": [
     {
@@ -515,6 +533,7 @@
    "anchorY": 612607.0,
    "anchorZ": 119.22,
    "worldMemoryMB": 95.5,
+   "worldMemoryHighMB": 216.7,
    "memorySource": "ADR 0212 via ADR 0229",
    "neighbors": [
     {
@@ -554,6 +573,7 @@
    "anchorY": 610559.0,
    "anchorZ": 125.08,
    "worldMemoryMB": 40.8,
+   "worldMemoryHighMB": 106.8,
    "memorySource": "ADR 0212 via ADR 0229",
    "neighbors": [
     {
@@ -593,6 +613,7 @@
    "anchorY": 612607.0,
    "anchorZ": 120.21,
    "worldMemoryMB": 54.0,
+   "worldMemoryHighMB": 129.2,
    "memorySource": "ADR 0212 via ADR 0229",
    "neighbors": [
     {

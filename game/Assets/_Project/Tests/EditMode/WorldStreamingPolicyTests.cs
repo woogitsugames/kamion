@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Game.Editor.Build;
 using Game.World;
+using Game.World.Packs;
 using Game.World.Streaming;
 using NUnit.Framework;
 using UnityEngine;
@@ -132,6 +133,7 @@ namespace Game.Tests
             Assert.AreEqual(30f * 10f + 150f, s.LoadRadiusFor(30f), 1e-3f, "faster: own speed");
             Assert.AreEqual(200f, StreamingSettings.BudgetForTier("Low"));
             Assert.AreEqual(400f, StreamingSettings.BudgetForTier("Medium"));
+            Assert.AreEqual(StreamingSettings.BudgetForTier("High"), StreamingSettings.BudgetForTier("High", false), "phone overload");
         }
 
         [Test]
@@ -455,6 +457,225 @@ namespace Game.Tests
             var cmd = new StreamCommand[8];
             Assert.AreEqual(0, p.Decide(2000, 1024, 25f, 0f, cmd));
             Assert.IsFalse(p.NeighborReady(0, TileSide.E));
+        }
+
+        // ------------------------------------------------------------------ ADR 0273: pinned respawn tile, PC budgets, packs
+
+        [Test]
+        public void PinnedTile_IsNeverUnloaded_WhileAnUnpinnedOneIs()
+        {
+            foreach (bool pin in new[] { true, false })
+            {
+                var g = Grid(4, 1);
+                var p = new StreamingPolicy(g, new StreamingSettings());
+                p.InitResident(0);
+                if (pin) p.SetPinned(0);
+                var f = new FakeStreamer(p);
+                double x = 1024; float v = 25f, dt = 0.25f;
+                for (float t = 0f; x < 7500; t += dt, x += v * dt) f.Step(t, x, 1024, v, 0f);
+                if (pin) Assert.AreEqual(TileState.Ready, p.StateOf(0), "pinned start tile stays (no reset over a void)\n" + string.Join("\n", f.Log));
+                else Assert.AreEqual(TileState.Unloaded, p.StateOf(0), "without the pin the tile 6 km behind is gone");
+                Assert.LessOrEqual(f.MaxResident, p.Settings.maxTiles);
+            }
+        }
+
+        [Test]
+        public void PinnedTile_CountsInTheBudget_ButTheTileAheadStillLoads()
+        {
+            // A16 Low: pinned C-like 124 MB far behind, current 60 MB, next 60 MB: 244 > 200, still one ahead (closed road worse).
+            float[] mem = { 124f, 60f, 60f, 60f };
+            var g = Grid(4, 1, (c, r) => mem[c]);
+            var p = new StreamingPolicy(g, new StreamingSettings { memoryBudgetMB = 200f });
+            p.InitResident(0);
+            p.SetPinned(0);
+            p.SetState(1, TileState.Ready);
+            p.SetState(0, TileState.Ready);
+            var cmd = new StreamCommand[8];
+            p.UpdateCurrent(2048 + 1500, 1024);
+            int n = p.Decide(2048 + 1900, 1024, 25f, 0f, cmd);   // 148 m before the seam with tile 2
+            Assert.AreEqual(1, n);
+            Assert.AreEqual(StreamOp.Load, cmd[0].op);
+            Assert.AreEqual(2, cmd[0].tile);
+            Assert.IsTrue(p.OverBudget);
+            Assert.AreEqual(TileState.Ready, p.StateOf(0), "the pinned tile is not evicted to make room");
+            p.SetPinned(-1);
+            Assert.AreEqual(-1, p.Pinned);
+            p.SetPinned(99);
+            Assert.AreEqual(-1, p.Pinned, "out of range clears the pin");
+        }
+
+        [Test]
+        public void Budgets_DesktopTiers_CoverTheWorstCorridorSetPlusPinnedC_PhoneUnchanged()
+        {
+            Assert.AreEqual(200f, StreamingSettings.BudgetForTier("Low", false));
+            Assert.AreEqual(400f, StreamingSettings.BudgetForTier("Medium", false));
+            Assert.AreEqual(600f, StreamingSettings.BudgetForTier("Ultra", false));
+            Assert.AreEqual(640f, StreamingSettings.BudgetForTier("Low", true));
+            Assert.AreEqual(800f, StreamingSettings.BudgetForTier("Medium", true));
+            Assert.AreEqual(1450f, StreamingSettings.BudgetForTier("High", true));
+            Assert.AreEqual(2000f, StreamingSettings.BudgetForTier("Ultra", true));
+            var g = TileGraph.LoadDefault();
+            int c = g.IndexOf("bialystok-industrial-c");
+            foreach (bool high in new[] { false, true })
+            {
+                var st = new StreamingSettings { highContent = high };
+                float worst3 = 0f;
+                for (int i = 0; i < g.Count; i++)
+                {
+                    float a = 0f, b = 0f;   // two heaviest neighbours
+                    foreach (int j in g.Neighbors[i])
+                    {
+                        float m = st.MemoryOf(g.Tiles[j]);
+                        if (m > a) { b = a; a = m; } else if (m > b) b = m;
+                    }
+                    worst3 = Math.Max(worst3, st.MemoryOf(g.Tiles[i]) + a + b);
+                }
+                float need = worst3 + st.MemoryOf(g.Tiles[c]);
+                float budget = StreamingSettings.BudgetForTier(high ? "High" : "Low", true);
+                TestContext.WriteLine($"{(high ? "High" : "Low")}: worst 3 tiles {worst3:F1} MB + pinned C {st.MemoryOf(g.Tiles[c]):F1} = {need:F1} <= {budget}");
+                Assert.LessOrEqual(need, budget, high ? "PC High" : "PC Low");
+            }
+        }
+
+        [Test]
+        public void MemoryOf_HighContentUsesHighValues_OrAConservativeFallback()
+        {
+            var t = new TileData { worldMemoryMB = 100f, worldMemoryHighMB = 230f };
+            Assert.AreEqual(100f, new StreamingSettings().MemoryOf(t));
+            Assert.AreEqual(230f, new StreamingSettings { highContent = true }.MemoryOf(t));
+            t.worldMemoryHighMB = 0f;   // graph without High values
+            Assert.AreEqual(100f * StreamingSettings.HighOverLowFallback, new StreamingSettings { highContent = true }.MemoryOf(t), 1e-3f);
+            var g = TileGraph.LoadDefault();
+            for (int i = 0; i < g.Count; i++) Assert.Greater(g.Tiles[i].worldMemoryHighMB, g.Tiles[i].worldMemoryMB, g.Tiles[i].id);
+        }
+
+        [Test]
+        public void ShippedCorridor_PcTiers_PinnedStart_NeverOverBudgetNorInATileNotReady()
+        {
+            // Worst case of ADR 0273 §8: no safe pose ever, so the start tile C stays pinned for the whole corridor.
+            var g = TileGraph.LoadDefault();
+            CorridorData d67 = null;
+            foreach (var cor in g.Corridors) if (cor.tiles[0] == "bialystok-industrial-c") d67 = cor;
+            var pts = new List<Vector2d>();
+            int c = g.IndexOf(d67.tiles[0]);
+            pts.Add(new Vector2d(g.Tiles[c].anchorX, g.Tiles[c].anchorY));
+            for (int i = 1; i < d67.tiles.Length; i++)
+                foreach (var po in g.Portals)
+                    if (po.from == d67.tiles[i - 1] && po.to == d67.tiles[i]) pts.Add(new Vector2d(po.x, po.y));
+            int k = g.IndexOf("knyszyn");
+            pts.Add(new Vector2d(g.Tiles[k].anchorX, g.Tiles[k].anchorY));
+            foreach (string tier in new[] { "Low", "Medium", "High", "Ultra" })
+            {
+                var p = new StreamingPolicy(g, new StreamingSettings
+                {
+                    memoryBudgetMB = StreamingSettings.BudgetForTier(tier, true),
+                    highContent = tier == "High" || tier == "Ultra",
+                });
+                p.InitResident(c);
+                p.SetPinned(c);
+                var f = new FakeStreamer(p);
+                float t = 0f, v = 25f, dt = 0.25f;
+                int over = 0;
+                for (int i = 1; i < pts.Count; i++)
+                {
+                    double ex = pts[i].x - pts[i - 1].x, ey = pts[i].y - pts[i - 1].y, len = Math.Sqrt(ex * ex + ey * ey);
+                    float vx = (float)(ex / len * v), vy = (float)(ey / len * v);
+                    for (double s = 0; s < len; s += v * dt, t += dt)
+                    {
+                        double x = pts[i - 1].x + ex / len * s, y = pts[i - 1].y + ey / len * s;
+                        f.Step(t, x, y, vx, vy);
+                        if (p.OverBudget) over++;
+                        for (int j = 0; j < g.Count; j++)
+                            if (g.Contains(j, x, y, -0.5))
+                                Assert.AreEqual(TileState.Ready, p.StateOf(j), $"[PC {tier}] t={t:F1}s in {g.Tiles[j].id} before ready\n" + string.Join("\n", f.Log));
+                    }
+                }
+                Assert.AreEqual(TileState.Ready, p.StateOf(c), $"[PC {tier}] pinned C kept");
+                Assert.AreEqual(0, over, $"[PC {tier}] no over-budget load");
+                Assert.LessOrEqual(f.MaxMemory, p.Settings.memoryBudgetMB, $"[PC {tier}]");
+                TestContext.WriteLine($"[PC {tier}] budget {p.Settings.memoryBudgetMB} MB: loads {f.Loads}, unloads {f.Unloads}, max {f.MaxResident} tiles / {f.MaxMemory:F1} MB (ESTIMATED)");
+            }
+        }
+
+        sealed class FakePacks : IRegionPackProvider
+        {
+            public readonly HashSet<string> Installed = new HashSet<string>();
+            public bool WithTileScene = true, FailLoad;
+            public int Acquired, Released;
+            public RegionPackInfo GetInfo(string region, string tier, bool sceneInBuild) =>
+                sceneInBuild ? new RegionPackInfo(RegionPackState.InBase, "", 0)
+                : Installed.Contains(region + "|" + tier) ? new RegionPackInfo(RegionPackState.Installed, "", 0)
+                : new RegionPackInfo(RegionPackState.NotInstalled, "", 0);
+            public bool DownloadEnabled => false;
+            public System.Collections.IEnumerator Prepare(string region, string tier, Action<RegionPackLoadResult> done) => Acquire(region, tier, done);
+            public System.Collections.IEnumerator Acquire(string region, string tier, Action<RegionPackLoadResult> done)
+            {
+                yield return null;
+                if (FailLoad) { done(new RegionPackLoadResult(null, "load failed")); yield break; }
+                Acquired++;
+                done(new RegionPackLoadResult(RegionScenes.SceneNameFor(region, tier), null,
+                    WithTileScene ? RegionScenes.TileSceneNameFor(region, tier) : null));
+            }
+            public void Release(string region, string tier) => Released++;
+            public System.Collections.IEnumerator Download(string region, string tier, Action<string> done) { yield break; }
+            public RegionPackInstallResult InstallIncoming() => new RegionPackInstallResult();
+            public event Action Changed { add { } remove { } }
+        }
+
+        /// <summary>Runs a coroutine to the end without Unity (nested IEnumerators are entered).</summary>
+        static void Drain(System.Collections.IEnumerator e)
+        {
+            var stack = new Stack<System.Collections.IEnumerator>();
+            stack.Push(e);
+            int guard = 0;
+            while (stack.Count > 0 && guard++ < 10000)
+            {
+                var top = stack.Peek();
+                if (!top.MoveNext()) { stack.Pop(); continue; }
+                if (top.Current is System.Collections.IEnumerator inner) stack.Push(inner);
+            }
+        }
+
+        [Test]
+        public void TileSource_BuildFirst_ThenPack_WithOneLeasePerAcquire()
+        {
+            var packs = new FakePacks();
+            packs.Installed.Add("dk65-07|Low");
+            string inBuildPath = RegionScenes.TileScenePathFor("dk65-06", "Low");
+            var src = new BuildOrPackTileSource(packs, path => path == inBuildPath);
+            Assert.IsTrue(src.IsAvailable("dk65-06", "Low"));
+            Assert.IsFalse(src.FromPack("dk65-06", "Low"), "a region in the player build never takes a pack lease");
+            Assert.IsTrue(src.IsAvailable("dk65-07", "Low"));
+            Assert.IsTrue(src.FromPack("dk65-07", "Low"));
+            Assert.IsFalse(src.IsAvailable("dk65-08", "Low"), "neither in the build nor installed: seam stays closed");
+
+            bool ok = false;
+            Drain(src.Acquire("dk65-06", "Low", r => ok = r));
+            Assert.IsTrue(ok);
+            Assert.AreEqual(0, packs.Acquired);
+            Drain(src.Acquire("dk65-07", "Low", r => ok = r));
+            Assert.IsTrue(ok);
+            Assert.AreEqual(1, packs.Acquired);
+            src.Release("dk65-07", "Low");
+            src.Release("dk65-06", "Low");
+            Assert.AreEqual(1, packs.Released, "release only what was acquired from a pack");
+        }
+
+        [Test]
+        public void TileSource_PackWithoutTileScene_OrFailedLoad_IsRefusedAndReleased()
+        {
+            var packs = new FakePacks { WithTileScene = false };
+            packs.Installed.Add("knyszyn|High");
+            var src = new BuildOrPackTileSource(packs, path => false);
+            bool ok = true;
+            Drain(src.Acquire("knyszyn", "High", r => ok = r));
+            Assert.IsFalse(ok, "old pack (before ADR 0273) has no tile scene");
+            Assert.AreEqual(1, packs.Released, "its lease is given back at once");
+            packs.FailLoad = true;
+            ok = true;
+            Drain(src.Acquire("knyszyn", "High", r => ok = r));
+            Assert.IsFalse(ok);
+            Assert.IsFalse(new BuildOrPackTileSource(null, path => false).IsAvailable("knyszyn", "High"), "packs off");
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -51,6 +52,24 @@ namespace Game.World.Streaming
         [Tooltip("Async loading priority while streaming (Low = smallest main-thread slice per frame)")]
         public ThreadPriority loadingPriority = ThreadPriority.Low;
 
+        /// <summary>
+        /// Launch-time switch for tests and tools (ADR 0273 §7): non-null overrides the launch argument <c>stream</c>
+        /// (streaming is opt-in, <c>stream=1</c>, until measured on Windows and the A16). Reset it after use.
+        /// </summary>
+        public static bool? EnabledOverride;
+
+        /// <summary>World-space point the safety net would restore the vehicle to (ADR 0273 §8). false = no safe pose yet,
+        /// the scene spawn of the start tile would be used.</summary>
+        public delegate bool RecoveryPointProvider(out Vector3 worldPosition);
+
+        /// <summary>Set by the installer (DrivingLabBootstrap: newest safe pose of WorldSafetyNet). The tile containing the
+        /// point - or the start tile while there is none - is pinned: never unloaded, so a reset never lands over a void.
+        /// Called every decision (0.25 s); must not allocate.</summary>
+        public RecoveryPointProvider recoveryPoint;
+
+        /// <summary>Source of tile scenes: player build or region pack (ADR 0273 §3). Set before <see cref="Init"/>.</summary>
+        public ITileSceneSource source;
+
         public TileGraph Graph { get; private set; }
         public StreamingPolicy Policy { get; private set; }
         /// <summary>World anchor: EPSG:2180 x / y and EVRF2007 height of Unity (0, 0, 0).</summary>
@@ -64,6 +83,8 @@ namespace Game.World.Streaming
         public int LoadCount { get; private set; }
         public int UnloadCount { get; private set; }
         public int RebaseCount { get; private set; }
+        /// <summary>Index of the tile of the start scene (the scene spawn lives there).</summary>
+        public int StartTile { get; private set; } = -1;
 
         sealed class Tile
         {
@@ -88,6 +109,7 @@ namespace Game.World.Streaming
             public GameObject[] farSectors; public TileSide[] farSide;
             public GameObject apronWhole; public GameObject[] apronPieces; public TileSide[] apronSide;
             public bool warnedApron;
+            public bool acquiring, leased;   // pack lease taken through ITileSceneSource (ADR 0273)
         }
 
         Tile[] m_Tiles;
@@ -108,28 +130,44 @@ namespace Game.World.Streaming
         /// Adds the streamer to <paramref name="host"/> when the start region is in the tile graph and at least one
         /// neighbour tile scene is in the build (else streaming stays off and the region behaves as before: closed edges).
         /// </summary>
-        public static WorldStreamer TryInstall(GameObject host, WorldRegionRoot start, Transform vehicle, Rigidbody body, string contentTier)
+        public static WorldStreamer TryInstall(GameObject host, WorldRegionRoot start, Transform vehicle, Rigidbody body, string contentTier) =>
+            TryInstall(host, start, vehicle, body, contentTier, StreamingSettings.BudgetForTier(Game.Rendering.QualityTiers.Current, !Application.isMobilePlatform), null);
+
+        /// <summary>As above with the world memory budget [MB] and the tile source (null = player build, then the region
+        /// pack service if the menu created it).</summary>
+        public static WorldStreamer TryInstall(GameObject host, WorldRegionRoot start, Transform vehicle, Rigidbody body, string contentTier,
+                                               float memoryBudgetMB, ITileSceneSource tileSource)
         {
             if (host == null || start == null) return null;
             var graph = TileGraph.LoadDefault();
             if (graph == null) { Debug.LogWarning("[STREAM] off: Resources/" + TileGraph.ResourcePath + " missing"); return null; }
             int idx = graph.IndexOf(start.regionId);
             if (idx < 0) { Debug.Log($"[STREAM] off: region {start.regionId} not in the tile graph"); return null; }
-            int available = 0;
+            var src = tileSource ?? new BuildOrPackTileSource(Game.World.Packs.RegionPackService.Existing);
+            int available = 0, fromPacks = 0;
             foreach (int j in graph.Neighbors[idx])
-                if (Application.CanStreamedLevelBeLoaded(RegionScenes.TileSceneNameFor(graph.Tiles[j].id, contentTier))) available++;
+            {
+                string id = graph.Tiles[j].id;
+                if (!src.IsAvailable(id, contentTier)) continue;
+                available++;
+                if (src.FromPack(id, contentTier)) fromPacks++;
+            }
             if (available == 0)
             {
-                Debug.Log($"[STREAM] off: no neighbour tile scene of {start.regionId} in the build (tier {contentTier}; build with -Regions ... and scripts/import-region.ps1)");
+                Debug.Log($"[STREAM] off: no neighbour tile scene of {start.regionId} in the build or in installed packs (tier {contentTier}; build with -Regions ... and scripts/import-region.ps1)");
                 return null;
             }
             var s = host.AddComponent<WorldStreamer>();
             s.vehicle = vehicle;
             s.vehicleBody = body;
             s.contentTier = contentTier;
+            s.source = src;
+            s.settings.highContent = contentTier == RegionScenes.HighTier;
+            s.settings.memoryBudgetMB = memoryBudgetMB;
             s.Init(graph, idx, start);
-            Debug.Log($"[STREAM] on: start {start.regionId}, {available}/{graph.Neighbors[idx].Length} neighbour tile scenes in the build, " +
-                      $"load radius {s.settings.BaseLoadRadiusM:F0} m, unload +{s.settings.hysteresisM:F0} m, max {s.settings.maxTiles} tiles, budget {s.settings.memoryBudgetMB:F0} MB");
+            Debug.Log($"[STREAM] on: start {start.regionId}, {available}/{graph.Neighbors[idx].Length} neighbour tile scenes available ({fromPacks} from packs), " +
+                      $"load radius {s.settings.BaseLoadRadiusM:F0} m, unload +{s.settings.hysteresisM:F0} m, max {s.settings.maxTiles} tiles, " +
+                      $"budget {s.settings.memoryBudgetMB:F0} MB ({(s.settings.highContent ? "High" : "Low")} content, {(Application.isMobilePlatform ? "phone" : "desktop")})");
             return s;
         }
 
@@ -137,7 +175,9 @@ namespace Game.World.Streaming
         public void Init(TileGraph graph, int startTile, WorldRegionRoot start)
         {
             Graph = graph;
+            if (source == null) source = new BuildOrPackTileSource(null);
             Policy = new StreamingPolicy(graph, settings);
+            StartTile = startTile;
             m_Tiles = new Tile[graph.Count];
             for (int i = 0; i < m_Tiles.Length; i++)
                 m_Tiles[i] = new Tile { index = i, sceneName = RegionScenes.TileSceneNameFor(graph.Tiles[i].id, contentTier) };
@@ -152,7 +192,8 @@ namespace Game.World.Streaming
             t.nextChunk = t.chunks.Length;   // already active
             Policy.InitResident(startTile);
             for (int i = 0; i < m_Tiles.Length; i++)
-                if (i != startTile && !Application.CanStreamedLevelBeLoaded(m_Tiles[i].sceneName)) Policy.SetUnavailable(i);
+                if (i != startTile && !source.IsAvailable(graph.Tiles[i].id, contentTier)) Policy.SetUnavailable(i);
+            Policy.SetPinned(startTile);
             Place(t);
         }
 
@@ -203,6 +244,7 @@ namespace Game.World.Streaming
             Vector3 p = vehicle.position;
             Vector3 v = vehicleBody != null ? vehicleBody.linearVelocity : Vector3.zero;
             double x = m_Wx + p.x, y = m_Wy + p.z;
+            UpdatePin();
             int n = Policy.Decide(x, y, v.x, v.z, m_Cmd);
             for (int k = 0; k < n; k++)
             {
@@ -221,18 +263,78 @@ namespace Game.World.Streaming
             }
         }
 
+        int m_LoggedPin = -2;
+
+        /// <summary>ADR 0273 §8: pin the tile of the point the safety net would restore to (no allocation).</summary>
+        void UpdatePin()
+        {
+            int pin = StartTile;
+            bool safe = false;
+            if (recoveryPoint != null && recoveryPoint(out Vector3 rp))
+            {
+                int t = Graph.TileAt(m_Wx + rp.x, m_Wy + rp.z);
+                if (t >= 0) { pin = t; safe = true; }
+            }
+            Policy.SetPinned(pin);
+            if (pin != m_LoggedPin)
+            {
+                m_LoggedPin = pin;
+                if (pin >= 0) Debug.Log($"[STREAM] pinned {Graph.Tiles[pin].id} ({(safe ? "newest safe pose" : "start tile: no safe pose yet")})");
+            }
+        }
+
         void BeginLoad(Tile t)
+        {
+            string region = Graph.Tiles[t.index].id;
+            if (source.FromPack(region, contentTier))
+            {
+                // Pack: take a lease (verify + load the bundles) first; the policy keeps the tile Loading meanwhile.
+                t.acquiring = true;
+                t.loadStart = Time.realtimeSinceStartup;
+                StartCoroutine(AcquireThenLoad(t, region));
+                return;
+            }
+            StartLoad(t);
+        }
+
+        IEnumerator AcquireThenLoad(Tile t, string region)
+        {
+            bool ok = false;
+            yield return source.Acquire(region, contentTier, r => ok = r);
+            t.acquiring = false;
+            if (!ok)
+            {
+                Debug.LogWarning($"[STREAM] {t.sceneName}: pack not usable (verify / load / no tile scene): seam stays closed");
+                MarkMissing(t.index);
+                yield break;
+            }
+            t.leased = true;
+            if (Policy.StateOf(t.index) != TileState.Loading) { ReleaseLease(t); yield break; }
+            Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] pack {0}/{1} acquired in {2:F0} ms", region, contentTier,
+                (Time.realtimeSinceStartup - t.loadStart) * 1000f));
+            StartLoad(t);
+        }
+
+        void ReleaseLease(Tile t)
+        {
+            if (!t.leased) return;
+            t.leased = false;
+            source.Release(Graph.Tiles[t.index].id, contentTier);
+        }
+
+        void StartLoad(Tile t)
         {
             if (!Application.CanStreamedLevelBeLoaded(t.sceneName))
             {
                 // Not in this APK: stay Unloaded; the seam stays closed (the road ends at the closure as before).
                 Debug.LogWarning($"[STREAM] {t.sceneName} not in the build: seam stays closed");
+                ReleaseLease(t);
                 MarkMissing(t.index);
                 return;
             }
-            t.loadStart = Time.realtimeSinceStartup;
+            if (!t.leased) t.loadStart = Time.realtimeSinceStartup;   // a pack load counts from the start of its Acquire
             t.op = SceneManager.LoadSceneAsync(t.sceneName, LoadSceneMode.Additive);
-            if (t.op == null) { MarkMissing(t.index); return; }
+            if (t.op == null) { ReleaseLease(t); MarkMissing(t.index); return; }
             t.op.allowSceneActivation = false;
             LoadCount++;
             Debug.Log($"[STREAM] load {t.sceneName} (resident {Policy.ResidentCount()} tiles)");
@@ -348,7 +450,7 @@ namespace Game.World.Streaming
             }
             Clear(t);
             t.op = t.scene.IsValid() && t.scene.isLoaded ? SceneManager.UnloadSceneAsync(t.scene) : null;
-            if (t.op == null) Policy.SetState(i, TileState.Unloaded);
+            if (t.op == null) { Policy.SetState(i, TileState.Unloaded); ReleaseLease(t); }
             Debug.Log($"[STREAM] unload {t.sceneName}");
         }
 
@@ -361,6 +463,7 @@ namespace Game.World.Streaming
                 if (t.op != null && !t.op.isDone) continue;
                 t.op = null;
                 Policy.SetState(i, TileState.Unloaded);
+                ReleaseLease(t);   // the scene is gone: its pack bundles may go (ref-counted, ADR 0273 §4)
                 m_UnloadAssetsPending = true;
             }
             // Scene unload does not free the meshes / textures: Resources.UnloadUnusedAssets, throttled, never while loading.
@@ -646,6 +749,8 @@ namespace Game.World.Streaming
         void OnDestroy()
         {
             if (Active == this) Active = null;
+            // Scene change (menu, other region): the tile scenes go with it; give back every pack lease still held.
+            if (m_Tiles != null) for (int i = 0; i < m_Tiles.Length; i++) ReleaseLease(m_Tiles[i]);
         }
     }
 }

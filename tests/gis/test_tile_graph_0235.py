@@ -30,6 +30,7 @@ def test_every_region_is_a_2048_m_tile_with_a_centred_anchor():
         assert abs(t["anchorX"] - (t["xmin"] + t["xmax"]) / 2) < 0.01, t["id"]
         assert abs(t["anchorY"] - (t["ymin"] + t["ymax"]) / 2) < 0.01, t["id"]
         assert t["worldMemoryMB"] > 0
+        assert t["worldMemoryHighMB"] > t["worldMemoryMB"], t["id"]   # ADR 0273: High content is heavier
 
 
 def test_adjacency_is_symmetric_with_opposite_sides():

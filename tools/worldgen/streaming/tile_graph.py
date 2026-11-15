@@ -17,6 +17,8 @@ Corridors are the chains of portals (the D67 corridor Bialystok C -> DK65 -> Kny
 worldMemoryMB: WORLD_MEMORY Low of the import of each region, as cited in ADR 0229 (table "Szacunek rozmiaru APK i
 pamieci", sources ADR 0188 / 0203 / 0205-0214). ESTIMATED: values from different days; a regeneration can change them.
 The run-time streamer uses them only to keep the sum of loaded tiles under the tier budget (WORKING_VALUE).
+worldMemoryHighMB (ADR 0273): WORLD_MEMORY High of the same imports, as tabulated in ADR 0234 §7 (sources: the region
+ADRs 0188 / 0204-0214, also in scripts/estimate-region-packs.py); used when the High content tier streams (PC High/Ultra).
 Standard library + PyYAML (worldgen project).
 """
 from __future__ import annotations
@@ -59,7 +61,32 @@ WORLD_MEMORY_LOW_MB = {
     "dk65-monki-01": (46.6, "ADR 0212 via ADR 0229"),
     "dw671-tykocin-01": (45.7, "ADR 0212 via ADR 0229"),
 }
+# WORLD_MEMORY High [MB] per region, ADR 0234 §7 table (ESTIMATED; same imports as the Low values above).
+WORLD_MEMORY_HIGH_MB = {
+    "bialystok-industrial-c": (267.0, "ADR 0188 via ADR 0234"),
+    "bialystok-dojlidy": (214.9, "ADR 0188 via ADR 0234"),
+    "bialystok-maczka": (420.4, "ADR 0208 via ADR 0234"),
+    "bialystok-kleeberga": (356.8, "ADR 0206 via ADR 0234"),
+    "bialystok-knyszynska": (260.2, "ADR 0208 via ADR 0234"),
+    "dk65-01": (165.9, "ADR 0205 via ADR 0234"),
+    "dk65-02": (139.3, "ADR 0210 via ADR 0234"),
+    "dk65-03": (131.7, "ADR 0207 via ADR 0234"),
+    "dk65-04": (181.5, "ADR 0207 via ADR 0234"),
+    "dk65-05": (176.5, "ADR 0207 via ADR 0234"),
+    "dk65-06": (136.1, "ADR 0214 via ADR 0234"),
+    "dk65-07": (136.5, "ADR 0214 via ADR 0234"),
+    "dk65-08": (122.7, "ADR 0214 via ADR 0234"),
+    "dk65-09": (122.4, "ADR 0214 via ADR 0234"),
+    "dk65-10": (117.3, "ADR 0214 via ADR 0234"),
+    "dk65-11": (113.0, "ADR 0214 via ADR 0234"),
+    "knyszyn-s": (106.8, "ADR 0204 via ADR 0234"),
+    "knyszyn": (216.7, "ADR 0204/0212 via ADR 0234"),
+    "knyszyn-w": (129.2, "ADR 0209 via ADR 0234"),
+    "dk65-monki-01": (113.6, "ADR 0212 via ADR 0234"),
+    "dw671-tykocin-01": (119.4, "ADR 0212 via ADR 0234"),
+}
 UNKNOWN_MEMORY_MB = 160.0   # a region without a measurement counts as the heaviest measured one (conservative)
+UNKNOWN_MEMORY_HIGH_MB = 420.4   # same rule for High: the heaviest measured High import (Maczka)
 
 
 def load_tiles(regions_dir: Path = REGIONS) -> list[dict]:
@@ -69,11 +96,12 @@ def load_tiles(regions_dir: Path = REGIONS) -> list[dict]:
         b, o = d["bbox"], d["origin"]
         rid = d["id"]
         mem, src = WORLD_MEMORY_LOW_MB.get(rid, (UNKNOWN_MEMORY_MB, "UNKNOWN: conservative default"))
+        mem_high, _ = WORLD_MEMORY_HIGH_MB.get(rid, (UNKNOWN_MEMORY_HIGH_MB, "UNKNOWN"))
         t = {
             "id": rid,
             "xmin": float(b["xmin"]), "ymin": float(b["ymin"]), "xmax": float(b["xmax"]), "ymax": float(b["ymax"]),
             "anchorX": float(o["x"]), "anchorY": float(o["y"]), "anchorZ": float(o["z"]),
-            "worldMemoryMB": mem, "memorySource": src,
+            "worldMemoryMB": mem, "worldMemoryHighMB": mem_high, "memorySource": src,
             "routeEntry": None, "routeExit": None,
         }
         ep = ry.parent / "route_endpoints.json"
@@ -183,13 +211,14 @@ def build(regions_dir: Path = REGIONS) -> dict:
     out_tiles = []
     for t in tiles:
         out_tiles.append({k: t[k] for k in ("id", "xmin", "ymin", "xmax", "ymax", "anchorX", "anchorY", "anchorZ",
-                                             "worldMemoryMB", "memorySource")} |
+                                             "worldMemoryMB", "worldMemoryHighMB", "memorySource")} |
                          {"neighbors": sorted(t["neighbors"], key=lambda n: (len(n["side"]), n["side"], n["id"]))})
     return {
         "schema": SCHEMA,
         "generator": "tools/worldgen/streaming/tile_graph.py (ADR 0235)",
         "crs": "EPSG:2180 (x east, y north) + PL-EVRF2007-NH heights; Unity X = east, Z = north (ADR 0003)",
-        "memoryNote": "worldMemoryMB = WORLD_MEMORY Low of the region import as quoted in ADR 0229; ESTIMATED",
+        "memoryNote": "worldMemoryMB / worldMemoryHighMB = WORLD_MEMORY Low / High of the region import as quoted in "
+                      "ADR 0229 / ADR 0234 §7; ESTIMATED",
         "tiles": out_tiles,
         "portals": portals,
         "corridors": corridors,

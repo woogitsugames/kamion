@@ -229,13 +229,16 @@ namespace Game.Gameplay
                 SafetyNet.bootstrap = this;
                 SafetyNet.vehicle = vehicle;
                 SafetyNet.region = regionRoot;
-                // Additive streaming of neighbouring tiles (ADR 0235); off with launch argument stream=0 or when no
-                // neighbour tile scene is in the build (then the region edge stays closed as before).
-                if (platform.GetLaunchArgument("stream") != "0")
+                // Additive streaming of neighbouring tiles (ADR 0235/0273): OPT-IN with launch argument stream=1 until it is
+                // measured on Windows and the A16 (ADR 0273 §7). Without it, or when no neighbour tile scene is in the build
+                // or in an installed pack, the region edge stays closed as before.
+                bool streamOn = Game.World.Streaming.WorldStreamer.EnabledOverride ?? platform.GetLaunchArgument("stream") == "1";
+                if (streamOn)
                 {
                     string contentTier = regionRoot.gameObject.scene.name.EndsWith("_High") ? Game.World.RegionScenes.HighTier : Game.World.RegionScenes.LowTier;
-                    Streamer = Game.World.Streaming.WorldStreamer.TryInstall(gameObject, regionRoot, vehicle.transform, vehicle.Body, contentTier);
-                    if (Streamer != null) Streamer.settings.memoryBudgetMB = Game.World.Streaming.StreamingSettings.BudgetForTier(QualityTiers.Current);
+                    float budget = Game.World.Streaming.StreamingSettings.BudgetForTier(QualityTiers.Current, !Application.isMobilePlatform);
+                    Streamer = Game.World.Streaming.WorldStreamer.TryInstall(gameObject, regionRoot, vehicle.transform, vehicle.Body, contentTier, budget, null);
+                    if (Streamer != null) Streamer.recoveryPoint = m_RecoveryPoint = TryRecoveryPoint;
                 }
             }
             m_OnOriginMoved = OnOriginMoved;
@@ -820,6 +823,18 @@ namespace Game.Gameplay
 
         /// <summary>Additive tile streamer of world scenes (ADR 0235); null in the lab or when streaming is off.</summary>
         public Game.World.Streaming.WorldStreamer Streamer { get; private set; }
+        Game.World.Streaming.WorldStreamer.RecoveryPointProvider m_RecoveryPoint;   // cached: no allocation per decision
+
+        /// <summary>ADR 0273 §8 (streamer side only): the point the safety net would restore the truck to - its newest safe
+        /// pose older than safeMinAge (WorldSafetyNet.Recover uses the same query). false = it would use the scene spawn,
+        /// so the streamer keeps the start tile.</summary>
+        bool TryRecoveryPoint(out Vector3 position)
+        {
+            var net = SafetyNet;
+            if (net != null && net.SafePoses.TryGet(Time.time, net.safeMinAge, out var pose)) { position = pose.position; return true; }
+            position = default;
+            return false;
+        }
         System.Action<Vector3> m_OnOriginMoved;
 
         /// <summary>Floating-origin rebase (ADR 0235): world-space copies held here move with the world.</summary>
