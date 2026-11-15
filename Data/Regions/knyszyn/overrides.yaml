@@ -2,6 +2,28 @@
 # region-local E/N (origin EPSG:2180 761611, 612607) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
 # 2022 0.25 m (Data/raw/derived/knyszyn/ortho_0p25m.tif), BDOT10k 2008, LoD1 2024. No lettering, no brands.
 overrides:
+  # ADR 0218 (int-dk65-s22): entry copied verbatim from tools/worldgen/roads/examples/knyszyn-roundabout-apron.yaml;
+  # sizes WORKING_VALUE / ESTIMATED (see reason), surface per owner decision D71 (light concrete block paving).
+  - id: knyszyn-roundabout-truck-apron
+    target: {osm_way: [1426801304]}
+    reason: >-
+      Roundabout DK65 x DW671 (D65 p.2: as in OSM). OSM gives the ring axis only (diameter ~17.6 m, r 8.61-8.98 m);
+      the BDOT10k width 4.0 m on two ring edges is from 2008, before the roundabout was built, so the ring width is
+      set: 5.0 m asphalt (ESTIMATED, outer diameter 22.6 m). A 16.47 m tractor + 13.6 m semitrailer (art-source/truck/
+      dims.json) straight on needs the inner tyre path down to r 5.89 m, left 262 deg 4.31 m, U-turn 3.65 m (ADR 0218,
+      kinematic swept path, outer front tyre 0.5 m inside the outer kerb): the 6.3 m inner ring edge is not enough,
+      so a mountable truck apron 3.2 m wide with a 4 cm lip, light grey block paving (owner drone photos 9-11,
+      docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md), is laid inside the ring; the island kerb face moves
+      to r 3.1 m on a circle, 2.74-3.21 m on the generated ring (smoothed OSM axis r 8.44-8.91 m). Tightest sector
+      (outer kerb r 10.94): U-turn tyre path r 3.03 = 0.29 m clear of the kerb face (>= 0.25 m clearance, ADR 0218,
+      test_knyszyn_ring_sectors_clear_the_u_turn). Ring + apron 8.2 m (WR-D-31-3 range 6.0-8.5 m, secondary
+      quote). The owner's photos confirm 4 single-lane arms, the two-zone island and the light apron; ring width,
+      apron width and lip are still not measured (no orthophoto after construction) - to be scaled on photos 9-11.
+    confidence: low
+    verify: measure ring / apron width on the owner's drone photos 9-11 (Data/raw/refs/owner-knyszyn-2026-11-15), then rerun swept_path.py
+    set:
+      width: 5.0
+      truck_apron: {width_m: 3.2, height_m: 0.04, material: kostka_jasna}
   - id: dk65-carriageway-width
     target: {osm_way: [232511646, 286990127]}
     reason: >-
