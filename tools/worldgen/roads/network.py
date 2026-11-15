@@ -912,7 +912,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
         # with no footway within RURAL_FOOT_M on either side (urban kerbed streets keep URBAN). WORKING_VALUE rule.
         sec_mid = net.sec_list[int(c.sec_idx[len(c.sec_idx) // 2])]
         fast = (built_up and sec_mid.cls in ("GP", "G", "S", "A") and (sec_mid.maxspeed or 50) >= S.RURAL_MIN_SPEED
-                and not c.roundabout and not c.bridge.all() and wk_tree is not None)
+                and not c.roundabout and not c.bridge.all())      # ADR 0204: also in a tile with no footway at all
         # A footway / cycle path set back from the carriageway (within RURAL_FOOT_M, e.g. the cycle path
         # along DK8) no longer turns the edge into an urban kerb: at >= 70 km/h the edge stays without a
         # kerb (paved shoulder + verge, PTB2022 § 23 ust. 10) and only the ditch becomes a shallow swale
@@ -926,7 +926,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 hits = np.zeros(len(idx))
                 for j, i in enumerate(idx):
                     q = Point(*(c.line.p[i] + c.line.n[i] * sg * (c.hw[i] + S.RURAL_FOOT_M / 2)))
-                    hits[j] = 1.0 if len(wk_tree.query(q.buffer(S.RURAL_FOOT_M / 2 + 1.0))) else 0.0
+                    hits[j] = 1.0 if wk_tree is not None and len(wk_tree.query(q.buffer(S.RURAL_FOOT_M / 2 + 1.0))) else 0.0
                 hs = np.array([hits[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) >= 0.2
                 path_d[side_] = np.interp(np.arange(n), idx, hs.astype(float)) > 0.5
                 rural_d[side_] = np.ones(n, bool)
