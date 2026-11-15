@@ -44,5 +44,12 @@ if ($ok) {
     tools/worldgen/.venv/Scripts/python.exe "artifacts/$n/route_sweep.py" *> "artifacts/$n/route_sweep-$Tag.txt"
     "sweeps done $(Get-Date -Format s)" | Add-Content $st
 }
+if ($ok) {
+    pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $n | Out-Null
+    "pytest start $(Get-Date -Format s)" | Add-Content $st
+    uv run --project tools/worldgen python -m pytest tests/gis -q *> "artifacts/$n/pytest-$Tag.log"
+    "pytest exit=$LASTEXITCODE $(Get-Date -Format s)" | Add-Content $st
+    pwsh scripts/unity-slot.ps1 -Release -Pool heavy -Owner $n | Out-Null
+}
 if ($ok) { "CHAIN DONE $(Get-Date -Format s)" | Add-Content $st } else { "CHAIN FAILED $(Get-Date -Format s)" | Add-Content $st }
 
