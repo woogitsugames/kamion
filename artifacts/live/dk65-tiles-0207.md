@@ -1,0 +1,12 @@
+# dk65-tiles-0207 (ADR 0207) — live
+- 11-15 01:4x: worktree `.claude/worktrees/dk65-tiles-0207`, regiony dk65-02..05 w regions.py, ingest (NMT 2025, orto 2024-05-27 0,25 m; BDOT/LoD 2002 już były) + build_region OK (02: 99 węzłów/293 bud.; 03: 54/280; 04: 145/788; 05: 139/473). route_endpoints z planu 0203.
+- 01:57: build_world r1 dk65-02 (2401 m) i dk65-03 OK; 04/05 w toku (`artifacts/dk65-tiles-0207/logs/chain.status`). Narzędzia ortofoto: tools/ortho_strip.py (pasek), strip_zoom.py, ortho_crop.py, mosaic.py.
+- NASTĘPNY KROK: przekrój dk65-02 z ortofoto (strip_zoom), overrides.yaml + kamery authored, potem `pwsh artifacts/dk65-tiles-0207/tools/chain.ps1 -Tiles dk65-02 -Tag r2`
+- 02:3x: przekrój z ortofoto: Szosa Knyszyńska 6,4–6,6 m (BDOT 6,5 zostaje = szew z dk65-01) + linie krawędziowe; Ełcka/Studzienna 7,2–8,0 m → override 7,6 m + linie (BDOT 6,0–6,5 za wąskie), way-level w 02–05; most nad Supraślą 7,5 m. S19 (wiadukt OSM 2025) nad drogą w dk65-02 s≈930 — na ortofoto 2024-05-27 go nie ma (konflikt dat). Kamery authored 9/5/8/8. tests/gis/test_dk65_seams_0207.py 5/5.
+- W TLE: chain r2 dk65-02 (world+import+vqa Low) oraz world r2 dk65-03..05; status `artifacts/dk65-tiles-0207/logs/chain.status`.
+- NASTĘPNY KROK: po CHAIN DONE r2 dk65-02 obejrzeć `artifacts/dk65-tiles-0207/dk65-02/r2/Low-clear/*.png` vs ortho/top_*.jpg; potem `pwsh artifacts/dk65-tiles-0207/tools/chain.ps1 -Tiles dk65-03,dk65-04,dk65-05 -Tag r2 -NoWorld`
+- 02:5x: dk65-02 r2 gotowy (import 59,9/139,0 MB, vqa Low, pary góra/ortofoto; S19 wiadukt z OSM brak na orto 2024; rzeki Supraśl brak). ADR 0207 sekcja dk65-02 zacommitowana. dk65-03..05 world r2 → W TLE `tools/imports.ps1` (import+vqa Low 03,04; 05 Low+High).
+- NASTĘPNY KROK: po `CHAIN DONE r2 dk65-05` w logs/chain.status: `uv run --project tools/worldgen python artifacts/dk65-tiles-0207/tools/pair.py dk65-0N r2`, obejrzeć, sekcje ADR 03–05, pytest.
+- 03:2x: 03/04/05 import + vqa Low (05 też High) OK: WORLD_MEMORY Low/High 03 50,5/131,7; 04 76,1/181,5; 05 75,5/176,5 MB. Pary góra/ortofoto obejrzane, ADR 0207 kompletny (sekcje 02–05, budżet, otwarte). pytest seams+edge 9/9.
+- KONIEC. Dla lidera: `git merge --no-ff origin/dk65-tiles-0207`; visual-critic na `artifacts/dk65-tiles-0207/dk65-0N/r2/view/`; pytania właściciela: S19 w Fastach (OSM 2025 vs orto 2024), plac budowy przy Chabrowej.
+- 03:4x: pytest plików 35 passed; ADR uzupełniony (sprzeczność szerokość/linie Ełckiej, brak etapu wody, DK65 primary vs orto). KONIEC.

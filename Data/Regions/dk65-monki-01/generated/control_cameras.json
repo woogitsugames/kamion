@@ -1,0 +1,182 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0148",
+   "look_at": [
+    -287.412,
+    -882.363,
+    125.2
+   ],
+   "note": "driver eye 2.5 m, control route s = 148 m of 1185 m (Obozowa)",
+   "pos": [
+    -242.304,
+    -921.962,
+    126.055
+   ],
+   "route_s_m": 148.112,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0444",
+   "look_at": [
+    -504.4,
+    -680.708,
+    129.117
+   ],
+   "note": "driver eye 2.5 m, control route s = 444 m of 1185 m (Obozowa)",
+   "pos": [
+    -459.292,
+    -720.308,
+    129.997
+   ],
+   "route_s_m": 444.335,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0741",
+   "look_at": [
+    -722.395,
+    -480.166,
+    130.878
+   ],
+   "note": "driver eye 2.5 m, control route s = 741 m of 1185 m (unnamed)",
+   "pos": [
+    -677.209,
+    -519.677,
+    131.425
+   ],
+   "route_s_m": 740.559,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1037",
+   "look_at": [
+    -954.073,
+    -295.806,
+    133.167
+   ],
+   "note": "driver eye 2.5 m, control route s = 1037 m of 1185 m (unnamed)",
+   "pos": [
+    -905.484,
+    -331.048,
+    134.594
+   ],
+   "route_s_m": 1036.782,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_seam_south_out",
+   "look_at": [
+    -303.135,
+    -866.8,
+    122.578
+   ],
+   "note": "place camera: driver eye on DK65 ~130 m from the south seam (past the 60 m world-edge closure), outbound NW towards Monki",
+   "pos": [
+    -230.0,
+    -935.0,
+    126.07
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_inbound_to_knyszyn",
+   "look_at": [
+    -376.865,
+    -800.2,
+    126.408
+   ],
+   "note": "place camera: driver eye on DK65 inbound SE towards Knyszyn (tile knyszyn-w)",
+   "pos": [
+    -450.0,
+    -732.0,
+    129.9
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_junction_approach",
+   "look_at": [
+    -618.135,
+    -574.8,
+    127.138
+   ],
+   "note": "place camera: DK65 outbound ~85 m before the two offset junctions (gravel SW 98072355, asphalt/gravel NE 98072389/179127761)",
+   "pos": [
+    -545.0,
+    -643.0,
+    130.63
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_west_edge_in",
+   "look_at": [
+    -850.529,
+    -393.606,
+    130.628
+   ],
+   "note": "place camera: driver eye ~130 m inside the west tile edge, inbound SE towards Knyszyn",
+   "pos": [
+    -926.0,
+    -328.0,
+    134.12
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "junction_above",
+   "look_at": [
+    -600.0,
+    -490.0,
+    88.15
+   ],
+   "note": "place camera: plan-like view of the two offset junctions, pair with orthophoto crop 758870 613990 - 759030 614150",
+   "pos": [
+    -600.0,
+    -590.0,
+    188.15
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "seam_south_above",
+   "look_at": [
+    -140.0,
+    -885.0,
+    83.798
+   ],
+   "note": "place camera: south seam with knyszyn-w from above",
+   "pos": [
+    -140.0,
+    -985.0,
+    177.05
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 278.166,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-monki-01",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

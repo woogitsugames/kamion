@@ -278,19 +278,20 @@ namespace Game.World.Import
 
         // plot_ground (ADR 0114): lawn / driveway of house plots, LOD0 / LOD1 only, no shadows.
         // Layers per LOD (ADR 0012). Distances: manifest switch distances (camera to near chunk edge) + 0.7 chunk.
+        // water (ADR 0210): the sheet stays on every LOD (one cheap opaque mesh; a river is visible from far)
         static readonly string[][] k_LowLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots" },
-            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
-            new[] { "terrain_lod3", "bridge", "buildings_lod1" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water" },
+            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water" },
         };
         static readonly string[][] k_HighLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots" },
-            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
-            new[] { "terrain_lod3", "bridge", "buildings_lod1" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water" },
+            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water" },
         };
         static readonly HashSet<string> k_ShadowCasters = new HashSet<string> { "bridge", "buildings", "buildings_lod1", "furniture", "plots" };
         // plots (ADR 0124): kit geometry of the house plots (fences, gates, plants) - LOD0 / LOD1, shadow caster; with

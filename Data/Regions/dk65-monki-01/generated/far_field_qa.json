@@ -1,0 +1,156 @@
+{
+  "appearance_policy": {
+    "classification": "declared function; height alone does not imply an energy plant",
+    "industrial_panel_min_height_m": 12.0,
+    "not_measured": [
+      "wall_colour",
+      "cladding_modules",
+      "glazing_band",
+      "roof_fascia"
+    ],
+    "panel_alpha": 0.25,
+    "panel_ribbon_alpha": 0.65,
+    "schema": "far-field-appearance/1",
+    "source_hall_counts": {
+      "energy": 0,
+      "industrial": 0,
+      "other": 0
+    },
+    "source_panel_hall_count": 0,
+    "status": "WORKING_VALUE"
+  },
+  "boundary_exclusions": {
+    "bdot_rectangle": 0,
+    "bdot_source": 0,
+    "osm_rectangle": 0,
+    "osm_source": 0
+  },
+  "building_height_sources": {},
+  "feature_counts": {
+    "buildings": 0,
+    "buildings_by_typology": {
+      "block": 0,
+      "hall": 0,
+      "house": 0,
+      "office": 0
+    },
+    "chimneys": 0,
+    "forest_polygons": 0,
+    "power_lines": 2,
+    "pylons": 25
+  },
+  "lod1_height_audit": {
+    "buildings": 36971,
+    "conflicting_ids": 0,
+    "duplicate_records": 0,
+    "invalid_or_missing": 0,
+    "members": 31,
+    "usable_ids": 36971
+  },
+  "region": "dk65-monki-01",
+  "schema": "truck-sim-pl/far-field-qa/1",
+  "tiers": {
+    "High": {
+      "bytes": 158848,
+      "file": "Data/raw/derived/dk65-monki-01/world/far_field.glb",
+      "sectors": {
+        "far_east": {
+          "by_material": {
+            "far_field_buildings": 264
+          },
+          "submeshes": 1,
+          "triangles": 264,
+          "vertices": 616
+        },
+        "far_north": {
+          "by_material": {
+            "far_field_buildings": 31,
+            "forest_edge_mixed": 1688
+          },
+          "submeshes": 2,
+          "triangles": 1719,
+          "vertices": 1833
+        },
+        "far_south": {
+          "by_material": {
+            "far_field_buildings": 36
+          },
+          "submeshes": 1,
+          "triangles": 36,
+          "vertices": 84
+        },
+        "far_west": {
+          "by_material": {
+            "far_field_buildings": 20,
+            "forest_edge_mixed": 1092
+          },
+          "submeshes": 2,
+          "triangles": 1112,
+          "vertices": 1192
+        }
+      },
+      "sha256": "824c59767dc8605e9b0b584faee9b726c17b74d100a1429c608adee84647015d",
+      "skyline": {
+        "landmark_stack_proxies": [],
+        "min_building_h_m": 24.0,
+        "min_chimney_h_m": 40.0,
+        "node": "far_skyline",
+        "submeshes": 0,
+        "triangles": 0
+      },
+      "total_triangles": 3131,
+      "total_vertices": 3725
+    },
+    "Low": {
+      "bytes": 44536,
+      "file": "Data/raw/derived/dk65-monki-01/world/far_field.low.glb",
+      "sectors": {
+        "far_east": {
+          "by_material": {
+            "far_field_buildings": 144
+          },
+          "submeshes": 1,
+          "triangles": 144,
+          "vertices": 336
+        },
+        "far_north": {
+          "by_material": {
+            "far_field_buildings": 31,
+            "forest_edge_mixed": 286
+          },
+          "submeshes": 2,
+          "triangles": 317,
+          "vertices": 407
+        },
+        "far_south": {
+          "by_material": {
+            "far_field_buildings": 36
+          },
+          "submeshes": 1,
+          "triangles": 36,
+          "vertices": 84
+        },
+        "far_west": {
+          "by_material": {
+            "far_field_buildings": 20,
+            "forest_edge_mixed": 178
+          },
+          "submeshes": 2,
+          "triangles": 198,
+          "vertices": 258
+        }
+      },
+      "sha256": "6d47a79604eb32a135408ee82d7d81ed64ba6631f8825123bc3e214129e8d79f",
+      "skyline": {
+        "landmark_stack_proxies": [],
+        "min_building_h_m": 24.0,
+        "min_chimney_h_m": 40.0,
+        "node": "far_skyline",
+        "submeshes": 0,
+        "triangles": 0
+      },
+      "total_triangles": 695,
+      "total_vertices": 1085
+    }
+  }
+}

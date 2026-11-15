@@ -34,6 +34,7 @@ class Region:
     # ADR 0208: a tile across a powiat boundary (bialystok-knyszynska: city 2061 + powiat 2002) reads the BDOT10k /
     # LoD1 / LoD2 of every listed powiat; () = single-powiat region, outputs byte-identical to before the field.
     teryt_powiat_extra: tuple[str, ...] = ()
+    water: bool = False                     # ADR 0210: surface-water stage (rivers, ponds) opt-in per region
 
     @property
     def powiaty(self) -> tuple[str, ...]:
@@ -110,6 +111,117 @@ REGIONS: dict[str, Region] = {
         teryt_powiat_extra=("2002",),
         status="WORKING_ASSUMPTION (ADR 0208, owner D64; tile = lattice (-3,0) of the ADR 0203 plan)",
     ),
+    # ADR 0204 (owner D64): Knyszyn. Two tiles of the 2048 m lattice reserved by ADR 0203 (x = 776971 + 2048*i,
+    # y = 595199 + 2048*j). `knyszyn` (i = -8, j = 8): the town - Rynek, DW671 Tykocka/Bialostocka, the DK65/DW671
+    # roundabout (37 m inside the west edge). `knyszyn-s` (i = -8, j = 7): DK65 inlet from the corridor seam
+    # (x = 762635) and the expressway construction zone (roundabout under construction at 762502, 609913).
+    # Powiat moniecki 2008; the SE corner of knyszyn-s lies in powiat 2002 (see ADR 0204).
+    "knyszyn": Region(
+        id="knyszyn",
+        title="Knyszyn — miasto: Rynek, DW671, rondo DK65/DW671",
+        candidate="K_knyszyn",
+        bbox=(760587.0, 611583.0, 762635.0, 613631.0),
+        origin=(761611.0, 612607.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0204, owner D64; tile = lattice (-8,8) of the ADR 0203 plan)",
+    ),
+    "knyszyn-s": Region(
+        id="knyszyn-s",
+        title="Knyszyn — wlot DK65 od Białegostoku i strefa budowy ekspresówki",
+        candidate="K_knyszyn_s",
+        bbox=(760587.0, 609535.0, 762635.0, 611583.0),
+        origin=(761611.0, 610559.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0204, owner D64; tile = lattice (-8,7) of the ADR 0203 plan)",
+    ),
+    # ADR 0209 (owner D64): west part of Knyszyn, lattice (-9,8) (shares its east edge x = 760587 with `knyszyn`, 37 m
+    # west of the DK65/DW671 roundabout). DK65 outlet towards Monki, DW671 towards Tykocin, west streets of the town.
+    # 100 % powiat moniecki 2008 (OSM admin relations: gmina Knyszyn 97.6 %, gmina Krypno 2.4 %).
+    "knyszyn-w": Region(
+        id="knyszyn-w",
+        title="Knyszyn — zachód: wylot DK65 na Mońki, DW671 na Tykocin",
+        candidate="K_knyszyn_w",
+        bbox=(758539.0, 611583.0, 760587.0, 613631.0),
+        origin=(759563.0, 612607.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0209, owner D64; tile = lattice (-9,8) of the ADR 0203 plan)",
+    ),
+    # ADR 0212 (owner D64): lattice (-9,9), north of `knyszyn-w` (shared edge y = 613631): DK65 further towards Monki
+    # through the fields NW of Knyszyn. Powiat moniecki 2008. NMT survey year pinned to 2022 (sources.authored.json)
+    # like knyszyn-w, so the terrain of the shared edge comes from the same sheets.
+    "dk65-monki-01": Region(
+        id="dk65-monki-01",
+        title="DK65 w stronę Moniek 01 — pola na północny zachód od Knyszyna",
+        candidate="K_knyszyn_w",
+        bbox=(758539.0, 613631.0, 760587.0, 615679.0),
+        origin=(759563.0, 614655.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,9) of the ADR 0203 plan)",
+    ),
+    # ADR 0212: lattice (-9,7), south of `knyszyn-w` (y = 611583) and west of `knyszyn-s` (x = 760587): DW671 Tykocka
+    # from Knyszyn towards Tykocin. Powiat moniecki 2008. NMT pinned to 2022 like both neighbours.
+    "dw671-tykocin-01": Region(
+        id="dw671-tykocin-01",
+        title="DW671 w stronę Tykocina 01 — na południowy zachód od Knyszyna",
+        candidate="K_knyszyn_w",
+        bbox=(758539.0, 609535.0, 760587.0, 611583.0),
+        origin=(759563.0, 610559.0),
+        teryt_powiat="2008",
+        status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,7) of the ADR 0203 plan)",
+    ),
+    # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
+    "dk65-02": Region(
+        id="dk65-02",
+        title="DK65 korytarz 02 — Szosa Knyszyńska / Ełcka przez Fasty (południe), most km 10,85 (gm. Dobrzyniewo Duże)",
+        candidate="F_dk65_corridor",
+        bbox=(768779.0, 597247.0, 770827.0, 599295.0),
+        origin=(769803.0, 598271.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-4,1) of the ADR 0203 plan)",
+        water=True,      # ADR 0210: Supraśl + Biała under the DK65 bridge (km 10.85)
+    ),
+    # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,1) of the ADR 0203 plan, route variant A km 11.80-12.28. Powiat 2002.
+    "dk65-03": Region(
+        id="dk65-03",
+        title="DK65 korytarz 03 — Ełcka na północ od Fast (gm. Dobrzyniewo Duże)",
+        candidate="F_dk65_corridor",
+        bbox=(766731.0, 597247.0, 768779.0, 599295.0),
+        origin=(767755.0, 598271.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,1) of the ADR 0203 plan)",
+    ),
+    # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,2) of the ADR 0203 plan, route variant A km 12.28-14.36. Powiat 2002.
+    "dk65-04": Region(
+        id="dk65-04",
+        title="DK65 korytarz 04 — Ełcka przez Fasty (północ): Białostocka/Kościelna, Szkolna (gm. Dobrzyniewo Duże)",
+        candidate="F_dk65_corridor",
+        bbox=(766731.0, 599295.0, 768779.0, 601343.0),
+        origin=(767755.0, 600319.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,2) of the ADR 0203 plan)",
+    ),
+    # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,3) of the ADR 0203 plan, route variant A km 14.36-16.56. Powiat 2002.
+    "dk65-05": Region(
+        id="dk65-05",
+        title="DK65 korytarz 05 — Ełcka/Studzienna przez Dobrzyniewo Duże (gm. Dobrzyniewo Duże)",
+        candidate="F_dk65_corridor",
+        bbox=(766731.0, 601343.0, 768779.0, 603391.0),
+        origin=(767755.0, 602367.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,3) of the ADR 0203 plan)",
+    ),
+    # ADR 0206 (owner D64): second Białystok tile on the truck route to Knyszyn, lattice i = -2, j = 0 (shares its
+    # east edge x = 774923 with bialystok-maczka). DK8/DK65: west end of Gen. Maczka, Gen. Kleeberga with the
+    # interchange towards rondo Pamięci Męczeństwa Kresowian (km 3.58-5.80 of route variant A, ADR 0203 plan).
+    "bialystok-kleeberga": Region(
+        id="bialystok-kleeberga",
+        title="Białystok — DK8/DK65 Gen. Maczka (zachód) i Gen. Kleeberga, kafel -2,0 w stronę Knyszyna",
+        candidate="E_dk65_kleeberga",
+        bbox=(772875.0, 595199.0, 774923.0, 597247.0),
+        origin=(773899.0, 596223.0),
+        teryt_powiat="2061",
+        status="WORKING_ASSUMPTION (ADR 0206, tile id/bbox reserved by the ADR 0203 plan, lattice -2,0)",
+    ),
 }
 
 TILE_SIZE_M = 2048.0
@@ -117,6 +229,15 @@ WORK_CRS = "EPSG:2180"
 # Compound horizontal + vertical CRS of GUGiK NMT/NMPT/LiDAR (PL-1992 + PL-EVRF2007-NH).
 HEIGHT_CRS = "EPSG:9651"   # EVRF2007-PL height (= GUGiK "PL-EVRF2007-NH")
 COMPOUND_CRS = "EPSG:2180+9651"  # no single EPSG code exists for CS92 + EVRF2007-PL (checked in PROJ db)
+
+
+def source_pins(region_id: str) -> dict:
+    """ADR 0209: optional authored source pins of a region (Data/Regions/<id>/sources.authored.json), e.g.
+    {"nmt_year": "2022"} = take that NMT survey year instead of the newest one. Empty dict when absent."""
+    import json
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[2] / "Data" / "Regions" / region_id / "sources.authored.json"
+    return json.loads(p.read_text(encoding="utf-8")).get("pins", {}) if p.exists() else {}
 
 
 def get(region_id: str) -> Region:

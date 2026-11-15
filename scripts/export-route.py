@@ -54,7 +54,11 @@ def main() -> int:
         return min(graph["nodes"], key=lambda n: math.hypot(n["x"] - xy[0], n["y"] - xy[1]))["id"]
 
     g = roadgraph.to_digraph(graph)
-    path = nx.shortest_path(g, nearest(route["start_epsg2180"]), nearest(route["end_epsg2180"]), weight="length")
+    # ADR 0204: optional via points, same rule as build_world.route_polyline
+    stops = [nearest(p) for p in [route["start_epsg2180"], *route.get("via_epsg2180", []), route["end_epsg2180"]]]
+    path = [stops[0]]
+    for u, v in zip(stops, stops[1:]):
+        path += nx.shortest_path(g, u, v, weight="length")[1:]
     edges = {e["id"]: e for e in graph["edges"]}
 
     # lane path on the generated network (fork shifts, lane layout), not the raw OSM axis (ADR 0076)

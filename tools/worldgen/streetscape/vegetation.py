@@ -51,6 +51,8 @@ def _seed(key):
 
 
 def _scatter(poly, spacing, rng):
+    if poly.is_empty:      # ADR 0204: a sliver of forest vanishes under the inward buffer (bounds = nan)
+        return np.zeros((0, 2))
     x0, y0, x1, y1 = poly.bounds
     gx, gy = np.meshgrid(np.arange(x0, x1, spacing), np.arange(y0, y1, spacing))
     P = np.column_stack([gx.ravel(), gy.ravel()]) + rng.uniform(-spacing * 0.45, spacing * 0.45, (gx.size, 2))

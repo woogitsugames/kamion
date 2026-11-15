@@ -173,7 +173,8 @@ def main() -> None:
     tile = shapely.box(*region.bbox)
     hashes: dict[str, str] = {}
 
-    nmt_id = find_manifest("gugik-nmt-", f"-{region.id}")
+    nmt_pin = regions.source_pins(region.id).get("nmt_year")    # ADR 0209: authored survey-year pin (seam match)
+    nmt_id = f"gugik-nmt-{nmt_pin}-{region.id}" if nmt_pin else find_manifest("gugik-nmt-", f"-{region.id}")
     orto_id = find_manifest("gugik-orto-", f"-{region.id}")
     src_ids = ["osm-geofabrik-podlaskie", nmt_id, orto_id, f"gugik-bdot10k-{t}", f"gugik-lod1-2024-{t}",
                f"gugik-lod2-2017-{t}"]
@@ -210,7 +211,10 @@ def main() -> None:
 
     # --- road graph
     print("[build] road graph")
-    graph = roadgraph.build(layers["roads"], layers["points"], region.bbox, bdot_roads=bdot_roads)
+    gf_path = out_dir / "graph_filter.authored.json"      # ADR 0204: authored_override, optional per region
+    gf = json.loads(gf_path.read_text(encoding="utf-8")) if gf_path.exists() else {}
+    graph = roadgraph.build(layers["roads"], layers["points"], region.bbox, bdot_roads=bdot_roads,
+                            drop_service=gf.get("drop_service", ()), drop_ways=gf.get("drop_osm_ways", ()))
     for n in graph["nodes"]:
         zz = terrain.sample(z, region.bbox, n["x"], n["y"])
         n["z_terrain"] = None if np.isnan(zz) else round(zz, 2)
@@ -278,6 +282,15 @@ def main() -> None:
         "rebuild": [f"uv run --project tools/worldgen tools/worldgen/ingest.py --region {region.id}",
                     f"uv run --project tools/worldgen tools/worldgen/build_region.py --region {region.id}"],
     }
+    if getattr(region, "water", False):
+        # ADR 0210: opt-in surface-water stage; the key (and the sources file) exist only in regions that enable it
+        ry["water"] = {"enabled": True, "sources": f"Data/Regions/{region.id}/generated/water_sources.json",
+                       "note": "BDOT10k OT_PTWP_A / OT_SWRS_L + OSM waterway / natural=water (ADR 0210)"}
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from streetscape import water as WT
+        print("[build] water sources")
+        WT.write(region.id, WT.extract(ry))
     text = yaml.safe_dump(ry, allow_unicode=True, sort_keys=False, width=120)
     write_if_changed(out_dir / "region.yaml", text)
     hashes["region.yaml"] = sha_bytes(text.encode("utf-8"))
