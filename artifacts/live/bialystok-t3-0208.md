@@ -1,0 +1,22 @@
+# bialystok-t3-0208 (ADR 0208) — live
+- 0206 buduje `bialystok-kleeberga`, więc ten agent bierze `bialystok-knyszynska` (−3,0). regions.py: wpis + pole `teryt_powiat_extra` ("2002"); ingest/build_region/sources/preview_trees czytają oba powiaty (puste pole = bez zmian).
+- build_region knyszynska GOTOWE: 438 węzłów, 461 krawędzi, 1061 budynków (LoD1 900), NMT 2022. Override szwu W: way 234919333 width 6.0 + edge_lines both (jak dk65-01).
+- Szew E z kleeberga (0206): różnice szerokości BDOT na 561326924 (7,5 vs 6,0) i 222579345 (None vs 6,0), 224161424 liczba krawędzi — do sprawdzenia z ortofoto.
+- Fix maczka: `furniture.DeckKeepout` — ściana/płot wycinane z trójkątów jezdni pomostu, gdy jej góra wystaje ponad nawierzchnię −0,3 m (zsurf pod pomostem jest obniżany, stały prześwit nie działał).
+- W tle (02:08): chain maczka r1 (build_world→export→import→vqa Low), chain knyszynska r1 (--context), ctest (test_world_roads = determinizm C).
+- NASTĘPNY KROK: `cat artifacts/bialystok-t3-0208/*/chain.status artifacts/bialystok-t3-0208/ctest.status`
+- PRZEJĘCIE (15.11 10:3x, nowy agent): r1 obu łańcuchów DONE (ctest 15 ok). Scalono origin/main (regions.py = suma wpisów, 15 regionów) → 443ab640f.
+- Obejrzane r1 knyszynska (vqa Low, 8 kamer trasy) + plan z góry vs ortofoto (`artifacts/bialystok-t3-0208/junctions-r1/j1…j9.jpg`, nowy `junction_checks.authored.json`): układ zgodny (łącznica, rondo pod wiaduktem, Ełcka, Knyszyńska, szwy).
+- Maczka r1: poprawka NIE zadziałała (nadal 2× furniture_in_lane E 922–924 N 31; wycięte tylko 2 m): mur 130,54 jest pod jezdnią pomostu 131,31, w pas wystawała balustrada (131,64). `_retaining_top` liczy teraz mur + RAILING_H.
+- Szew E: topologia 13/13 zgodna; szerokości wyrównane do kleeberga overrides po krawędzi (561326924 → 6,0; 222579345 → 6,0; 224161424 → 4,0), pomiar ortofoto w `seam-e/strip_*.jpg` (561326924 to w rzeczywistości 3. pas 3,4 m przy jezdni — otwarte dla obu kafli). Szew W: 6/6, 234919333 = 6,0 po obu stronach.
+- Kamery place: 4 na szwach knyszynska, 1 na murze maczka (`deck_end_wall_0208`). Testy `tests/gis/test_knyszynska_0208.py` 10 ok. Commit 01c564ddf.
+- W tle od 10:51: chain r2 knyszynska (--context) i maczka (build_world → export → import → vqa Low; blokada Unity między łańcuchami `unity.lock`).
+- NASTĘPNY KROK: `cat artifacts/bialystok-t3-0208/*-r2/chain.status` → po CHAIN DONE: `python - < sprawdź Data/Regions/bialystok-maczka/generated/road_consistency_qa.json (furniture_in_lane = 0)`, obejrzyj `*-r2/vqa/Low-overcast/{seam_*,deck_end_wall_0208,route-*}.png`, `uv run --project tools/worldgen python tools/worldgen/qa/junction_topview.py --region bialystok-knyszynska --out artifacts/bialystok-t3-0208/junctions-r2`
+- r2 DONE (11:16 knyszynska, 11:41 maczka). Maczka: furniture_in_lane 2 → 0 (wycięte 6 m muru z balustradą), kamera `deck-end-wall-0208` — pasy wolne. Knyszynska: sweep trasy 2961 m / 4437 próbek: 0 dziur, 0 przeszkód; szew E skok jezdni ≤ 0,03 m, szew W trasa 0,07 m (boczne do 0,31 m, teren do 1,28 m).
+- Budżet: knyszynska 116,0 MB Low / 260,2 MB High, 8 kamer trasy Low 79–395 draws; maczka 153,2 / 420,4 MB bez zmian.
+- pytest tests/gis: 1240 ok, 1 fail `test_road_fidelity::test_report_not_stale` (hash build_world.py w fidelity_qa.json regionu C; nieaktualny też na main). W tle: `fidelity/run.py --region bialystok-industrial-c`.
+- Dane świata skopiowane do main (Data/raw/derived + game/Assets/_Generated/World, oba regiony, 11:44).
+- NASTĘPNY KROK: `git -C . status --short` → jeśli fidelity zmieniło tylko hashe: commit; `uv run --project tools/worldgen python -m pytest tests/gis/test_road_fidelity.py tests/gis/test_knyszynska_0208.py -q`; `robocopy artifacts\bialystok-t3-0208 C:\Users\matma\Documents\Claude\kamion\artifacts\bialystok-t3-0208 /E`
+- fidelity_qa.json regionu C odświeżony (zmienił się tylko hash build_world.py); test_road_fidelity + test_knyszynska_0208: 19 ok. Dowody skopiowane do main artifacts/bialystok-t3-0208/.
+- KONIEC. Gotowe do scalenia: TAK (pełny pytest: 1240 ok + 1 fail naprawiony odświeżeniem hasha; visual-critic i EditMode nie uruchamiane). NASTĘPNY KROK (lider): `git merge --no-ff bialystok-t3-0208`
+- 12:09 pełny pytest tests/gis na 524f1b034: 1241 ok, 3 skip, 3 xfail. KONIEC, gotowe do scalenia: TAK.

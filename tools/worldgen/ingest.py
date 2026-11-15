@@ -151,33 +151,34 @@ def main() -> None:
             **LIC_GUGIK, "used_by": [used_by],
         }, sheet_files(orto))
 
-    # 4. BDOT10k (powiat, schema 2021, GeoPackage)
+    # 4.-5. BDOT10k (powiat, schema 2021, GeoPackage) + 3D buildings, for every powiat of the tile (ADR 0208)
+    for t in region.powiaty:
+        woj = t[:2]
+        ingest_dataset(dl, {
+            "id": f"gugik-bdot10k-{t}", "name": f"GUGiK BDOT10k powiat {t} (schemat 2021, GPKG)",
+            "provider": "Główny Urząd Geodezji i Kartografii", "product": "BDOT10k", "region": f"powiat {t}",
+            "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k (GetFeatureInfo, layer Powiaty)",
+            "format": "GeoPackage in ZIP", "crs": "EPSG:2180 (PL-1992)", "scale": "1:10 000",
+            **LIC_GUGIK, "used_by": [used_by], "raw_subdir": f"gugik/bdot10k-{t}",
+        }, [{"url": f"{OPENDATA}/bdot10k/schemat2021/GPKG/{woj}/{t}_GPKG.zip", "name": f"{t}_GPKG.zip"}])
+
+        # 5. 3D buildings
+        ingest_dataset(dl, {
+            "id": f"gugik-lod2-2017-{t}", "name": f"GUGiK 3D building models LoD2 (state 2017), powiat {t}",
+            "provider": "Główny Urząd Geodezji i Kartografii", "product": "Budynki3D LoD2", "region": f"powiat {t}",
+            "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD2_2017)",
+            "format": "CityGML 2.0 in ZIP", "crs": "EPSG:2180 + PL-KRON86-NH heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:PL-KRON86-NH in files)",
+            **LIC_GUGIK_3D, "used_by": [used_by], "raw_subdir": f"gugik/lod2-2017-{t}",
+        }, [{"url": f"{OPENDATA}/InneDane/Budynki3D/LOD2/{t}_gml.zip", "name": f"{t}_lod2_gml.zip"}])
+        ingest_dataset(dl, {
+            "id": f"gugik-lod1-2024-{t}", "name": f"GUGiK 3D building models LoD1 (2024), powiat {t}",
+            "provider": "Główny Urząd Geodezji i Kartografii", "product": "Budynki3D LoD1", "region": f"powiat {t}",
+            "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD1_2024)",
+            "format": "CityGML 2.0 in ZIP", "crs": "EPSG:2180 + EPSG:9651 EVRF2007 heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:EPSG::9651 in files)",
+            **LIC_GUGIK_3D, "used_by": [used_by], "raw_subdir": f"gugik/lod1-2024-{t}",
+        }, [{"url": f"{OPENDATA}/InneDane/Budynki3D/LOD1/2024/{woj}/{t}.zip", "name": f"{t}_lod1_2024.zip"}])
+
     t = region.teryt_powiat
-    woj = t[:2]
-    ingest_dataset(dl, {
-        "id": f"gugik-bdot10k-{t}", "name": f"GUGiK BDOT10k powiat {t} (schemat 2021, GPKG)",
-        "provider": "Główny Urząd Geodezji i Kartografii", "product": "BDOT10k", "region": f"powiat {t}",
-        "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k (GetFeatureInfo, layer Powiaty)",
-        "format": "GeoPackage in ZIP", "crs": "EPSG:2180 (PL-1992)", "scale": "1:10 000",
-        **LIC_GUGIK, "used_by": [used_by], "raw_subdir": f"gugik/bdot10k-{t}",
-    }, [{"url": f"{OPENDATA}/bdot10k/schemat2021/GPKG/{woj}/{t}_GPKG.zip", "name": f"{t}_GPKG.zip"}])
-
-    # 5. 3D buildings
-    ingest_dataset(dl, {
-        "id": f"gugik-lod2-2017-{t}", "name": f"GUGiK 3D building models LoD2 (state 2017), powiat {t}",
-        "provider": "Główny Urząd Geodezji i Kartografii", "product": "Budynki3D LoD2", "region": f"powiat {t}",
-        "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD2_2017)",
-        "format": "CityGML 2.0 in ZIP", "crs": "EPSG:2180 + PL-KRON86-NH heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:PL-KRON86-NH in files)",
-        **LIC_GUGIK_3D, "used_by": [used_by], "raw_subdir": f"gugik/lod2-2017-{t}",
-    }, [{"url": f"{OPENDATA}/InneDane/Budynki3D/LOD2/{t}_gml.zip", "name": f"{t}_lod2_gml.zip"}])
-    ingest_dataset(dl, {
-        "id": f"gugik-lod1-2024-{t}", "name": f"GUGiK 3D building models LoD1 (2024), powiat {t}",
-        "provider": "Główny Urząd Geodezji i Kartografii", "product": "Budynki3D LoD1", "region": f"powiat {t}",
-        "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD1_2024)",
-        "format": "CityGML 2.0 in ZIP", "crs": "EPSG:2180 + EPSG:9651 EVRF2007 heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:EPSG::9651 in files)",
-        **LIC_GUGIK_3D, "used_by": [used_by], "raw_subdir": f"gugik/lod1-2024-{t}",
-    }, [{"url": f"{OPENDATA}/InneDane/Budynki3D/LOD1/2024/{woj}/{t}.zip", "name": f"{t}_lod1_2024.zip"}])
-
     # 6. Opt-in heavy datasets
     if "nmpt" in a.extra:
         nmpt = pick_latest(P["NMPT"], bb, lambda r: r.get("uklad_h") == "PL-EVRF2007-NH")

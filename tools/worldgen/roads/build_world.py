@@ -758,6 +758,11 @@ def preview_trees(region_id, w, zc, mask, out: Path):
     pts = []
     for layer, spacing, kind in (("OT_PTLZ_A", 4.5, "forest"), ("OT_PTRK_A", 3.5, "shrub")):
         df = pyogrio.read_dataframe(extract_from_zip(z, f"__{layer}.gpkg", gdir), bbox=box)
+        for tx in w.region.get("teryt_powiat_extra") or []:     # ADR 0208: tile across a powiat boundary
+            import pandas as pd
+            df = pd.concat([df, pyogrio.read_dataframe(extract_from_zip(
+                manifest_files(f"gugik-bdot10k-{tx}")[0], f"__{layer}.gpkg",
+                REPO / "Data" / "raw" / "gugik" / f"bdot10k-{tx}" / "gpkg"), bbox=box)], ignore_index=True)
         geom = shapely.intersection(shapely.union_all(df.geometry.values), tile)
         x0, y0, x1, y1 = geom.bounds
         gx, gy = np.meshgrid(np.arange(x0, x1, spacing), np.arange(y0, y1, spacing))

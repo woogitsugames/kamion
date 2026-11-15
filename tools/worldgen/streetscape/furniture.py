@@ -1072,6 +1072,9 @@ def cut_by(line, poly):
     return [p for p in getattr(g, "geoms", [g]) if p.geom_type == "LineString" and p.length > 1.0]
 
 
+_cut_by = cut_by
+
+
 def concrete_fence(lin, line, key, style_key):
     """Prefabricated concrete fence (ADR 0081, typical plot fence of the Bialystok industrial area): bays of
     S.CONCRETE_FENCE_POST between H-posts; every bay is level and steps at the posts with the ground (the plates are
@@ -1312,20 +1315,82 @@ def ramp_wall_keepout(net, r=2.5):
     return shapely.union_all(polys) if polys else None
 
 
-def fences(lin, src, origin, roads_poly, report, styles=None, net=None):
-    """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles)."""
+LANE_FLOOR_M = 0.3         # the QA furniture_in_lane window starts 0.3 m below the lane surface (roads/consistency.py)
+
+
+class DeckKeepout:
+    """ADR 0208: walls and fences must not stand on a deck carriageway. roads_poly (the road-layer cut of fences()) has
+    no bridge-layer triangles, so at a deck end where the width of the next way (lane gain) is already blended into
+    the deck, a BDOT10k retaining wall on the deck edge line stood ~1 m high in the added lane (bialystok-maczka,
+    E 919-926 N 30-31, ADR 0203 Otwarte 1). A wall point is blocked when it lies on a deck carriageway triangle and its
+    top - as retaining() / panel_fence() build it from the ground beside it - rises above that lane surface less
+    LANE_FLOOR_M (the same window as the QA). A wall under a deck that clears it stays. The cut polygon is the union of
+    the blocking triangles + 0.3 m (as the road cut)."""
+
+    def __init__(self, lin, decks):
+        tris = [p.V[p.T] for p in decks or [] if len(p.T)]
+        self.T = np.concatenate(tris) if tris else np.zeros((0, 3, 3))
+        if len(self.T):
+            a2 = np.abs((self.T[:, 1, 0] - self.T[:, 0, 0]) * (self.T[:, 2, 1] - self.T[:, 0, 1])
+                        - (self.T[:, 2, 0] - self.T[:, 0, 0]) * (self.T[:, 1, 1] - self.T[:, 0, 1]))
+            self.T = self.T[a2 > 2e-4]
+        self.lin = lin
+        self.poly = shapely.polygons(np.concatenate([self.T[:, :, :2], self.T[:, :1, :2]], axis=1))             if len(self.T) else None
+        self.tree = shapely.STRtree(self.poly) if self.poly is not None else None
+        self.cut_m = 0.0
+
+    def cut(self, line, top_above_ground):
+        """Parts of `line` off the blocking deck triangles. top_above_ground(za, zb) -> wall top z per point."""
+        if self.tree is None or not len(self.tree.query(line)):
+            return [line]
+        P = self.lin.dens(line, 0.5)
+        d = np.gradient(P, axis=0)
+        d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
+        nrm = np.column_stack([-d[:, 1], d[:, 0]])
+        top = top_above_ground(self.lin.z(P + nrm * 2.0), self.lin.z(P - nrm * 2.0))
+        pi, ti = self.tree.query(shapely.points(P), predicate="within")
+        hit = set()
+        for a, b in zip(pi.tolist(), ti.tolist()):
+            if top[a] > self.T[b, :, 2].min() - LANE_FLOOR_M:
+                hit.add(b)
+        if not hit:
+            return [line]
+        ko = shapely.union_all(self.poly[sorted(hit)], grid_size=0.01).buffer(0.3)
+        out = _cut_by(line, ko)
+        self.cut_m += line.length - sum(q.length for q in out)
+        return out
+
+
+def _retaining_top(za, zb):
+    """Highest point of what retaining() builds: wall top = max(ground) + 0.15, at least 1.0 m over min(ground) - 0.4,
+    plus the railing that stands on it. r1 of bialystok-maczka judged the wall alone: its top (130.54) stayed 0.8 m
+    under the deck lane (131.31) and only the railing (131.64) came up through the asphalt."""
+    return np.maximum(np.maximum(za, zb) + 0.15, np.minimum(za, zb) - 0.4 + 1.0) + S.RAILING_H
+
+
+def _fence_top(za, zb):                # panel / concrete fence: posts on the ground, ~2 m high
+    return np.maximum(za, zb) + S.FENCE_H
+
+
+def fences(lin, src, origin, roads_poly, report, styles=None, net=None, decks=None):
+    """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles).
+    decks: bridge-layer carriageway parts (low_deck_keepout, ADR 0208)."""
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0, "retaining_on_ramp_wall_m": 0.0}
     ramp_cut = ramp_wall_keepout(net) if net is not None else None
     styles = styles or {}
     seen = set()
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
+    dk = DeckKeepout(lin, decks)
+
+    def road_cut(line, top):           # the road cut, then the deck carriageways the wall would stand in (ADR 0208)
+        return [y for x in cut_by(line, cutter) for y in dk.cut(x, top)]
     for f in src["osm"]["ways"]:
         b = f["tags"].get("barrier")
         if b not in ("fence", "yes", "wall", "retaining_wall") or is_noise_wall(f["tags"]):
             continue                         # noise walls: noise_barriers() (ADR 0069)
         line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         key = f"osm:way/{f['osm_way']}:{f['part']}"
-        for part in cut_by(line, cutter):
+        for part in road_cut(line, _retaining_top if b == "retaining_wall" else _fence_top):
             P = lin.dens(part, 2.0)              # 2 m: the Low terrain band is 2 m, posts sample the ground themselves
             if b in ("fence", "yes"):
                 col = FENCE_COLOURS[_h(key) % 3]
@@ -1348,11 +1413,13 @@ def fences(lin, src, origin, roads_poly, report, styles=None, net=None):
                 n["retaining_on_ramp_wall_m"] += part.length - sum(x.length for x in cut_by(part, ramp_cut))
     for f in src["bdot10k"]["OT_BUUO_L"]:
         line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
-        for part in cut_by(line, cutter):
+        for part in road_cut(line, _retaining_top):
             for sub in cut_by(part, ramp_cut):
                 retaining(lin, lin.dens(sub, 1.0), f"bdot:{f['id']}")
                 n["retaining_m"] += sub.length
             n["retaining_on_ramp_wall_m"] += part.length - sum(x.length for x in cut_by(part, ramp_cut))
+    if dk.cut_m > 0:
+        n["cut_on_deck_carriageway_m"] = dk.cut_m
     report["fences"] = {k: round(v) for k, v in n.items()}
     if styles:      # a styled way that is no longer in the data is reported, never silently dropped
         report["fences"]["styled_ways"] = sorted(seen)
