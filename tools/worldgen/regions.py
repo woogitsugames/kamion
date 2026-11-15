@@ -190,6 +190,7 @@ REGIONS: dict[str, Region] = {
         origin=(767755.0, 598271.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,1) of the ADR 0203 plan)",
+        water=True,      # ADR 0213: the Supraśl continues west of the dk65-02 confluence (level continuous at the seam)
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-5,2) of the ADR 0203 plan, route variant A km 12.28-14.36. Powiat 2002.
     "dk65-04": Region(
@@ -210,6 +211,76 @@ REGIONS: dict[str, Region] = {
         origin=(767755.0, 602367.0),
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,3) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-5,4) of the ADR 0203 plan, route variant A km 16.56-18.26
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002.
+    "dk65-06": Region(
+        id="dk65-06",
+        title="DK65 korytarz 06 — stara DK65, km 16,6–18,3",
+        candidate="F_dk65_corridor",
+        bbox=(766731.0, 603391.0, 768779.0, 605439.0),
+        origin=(767755.0, 604415.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-5,4) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-6,4) of the ADR 0203 plan, route variant A km 18.26-19.13
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002.
+    "dk65-07": Region(
+        id="dk65-07",
+        title="DK65 korytarz 07 — stara DK65, km 18,3–19,1",
+        candidate="F_dk65_corridor",
+        bbox=(764683.0, 603391.0, 766731.0, 605439.0),
+        origin=(765707.0, 604415.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-6,4) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-6,5) of the ADR 0203 plan, route variant A km 19.13-21.49
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002.
+    "dk65-08": Region(
+        id="dk65-08",
+        title="DK65 korytarz 08 — stara DK65, km 19,1–21,5",
+        candidate="F_dk65_corridor",
+        bbox=(764683.0, 605439.0, 766731.0, 607487.0),
+        origin=(765707.0, 606463.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-6,5) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-7,5) of the ADR 0203 plan, route variant A km 21.49-21.84
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002.
+    "dk65-09": Region(
+        id="dk65-09",
+        title="DK65 korytarz 09 — stara DK65, km 21,5–21,8",
+        candidate="F_dk65_corridor",
+        bbox=(762635.0, 605439.0, 764683.0, 607487.0),
+        origin=(763659.0, 606463.0),
+        teryt_powiat="2002",
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-7,5) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-7,6) of the ADR 0203 plan, route variant A km 21.84-24.45
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2002: land cover 62 % 2002 / 32 % 2008;
+    # the route crosses into powiat 2008 at km 23.67 (one teryt per region - see ADR 0214).
+    "dk65-10": Region(
+        id="dk65-10",
+        title="DK65 korytarz 10 — stara DK65, km 21,8–24,4",
+        candidate="F_dk65_corridor",
+        bbox=(762635.0, 607487.0, 764683.0, 609535.0),
+        origin=(763659.0, 608511.0),
+        teryt_powiat="2002",
+        teryt_powiat_extra=("2008",),      # ADR 0208 mechanism: the route crosses into powiat moniecki at km 23.67
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-7,6) of the ADR 0203 plan)",
+    ),
+    # ADR 0214 (owner D64/D65): DK65 corridor tile, lattice (-7,7) of the ADR 0203 plan, route variant A km 24.45-24.83
+    # (old DK65, D65 p.4: no diversion, expressway sites beside the road). Powiat 2008: BDOT10k land cover 75 % 2008 / 25 % 2002,
+    # the route of the tile lies in powiat moniecki (admin crossings km 23.67 / 25.22 of the plan).
+    "dk65-11": Region(
+        id="dk65-11",
+        title="DK65 korytarz 11 — stara DK65, km 24,4–24,8",
+        candidate="F_dk65_corridor",
+        bbox=(762635.0, 609535.0, 764683.0, 611583.0),
+        origin=(763659.0, 610559.0),
+        teryt_powiat="2008",
+        teryt_powiat_extra=("2002",),      # ADR 0208 mechanism: 25 % of the tile is powiat białostocki
+        status="WORKING_ASSUMPTION (ADR 0214, owner D64/D65; tile = lattice (-7,7) of the ADR 0203 plan)",
     ),
     # ADR 0206 (owner D64): second Białystok tile on the truck route to Knyszyn, lattice i = -2, j = 0 (shares its
     # east edge x = 774923 with bialystok-maczka). DK8/DK65: west end of Gen. Maczka, Gen. Kleeberga with the

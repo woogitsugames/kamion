@@ -132,6 +132,86 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "top_water_seam",
+   "look_at": [
+    930.0,
+    -230.0,
+    -57035.431
+   ],
+   "note": "place camera: ADR 0213: QA top view (north up, 140 m x 249 m) of the Supraśl at the seam with dk65-02 (E edge e = 1024 m); pair = GUGiK orto 2024 crop, water RGB measured",
+   "pos": [
+    930.0,
+    -330.0,
+    260.29
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_water_mid",
+   "look_at": [
+    381.0,
+    -140.0,
+    -57035.631
+   ],
+   "note": "place camera: ADR 0213: QA top view of the Supraśl in the middle of dk65-03 (bends, banks); pair = GUGiK orto 2024 crop",
+   "pos": [
+    381.0,
+    -240.0,
+    260.09
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "water_bank_mid",
+   "look_at": [
+    301.031,
+    -239.202,
+    107.689
+   ],
+   "note": "place camera: ADR 0213: pedestrian eye on the north bank of the Supraśl, looking downstream (W) along the reed / willow banks",
+   "pos": [
+    395.0,
+    -205.0,
+    112.93
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "water_close_bank",
+   "look_at": [
+    912.635,
+    -398.481,
+    74.247
+   ],
+   "note": "place camera: ADR 0213: close look down at the water from the north bank near the seam (Low must not read black)",
+   "pos": [
+    930.0,
+    -300.0,
+    114.65
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "water_oblique_east",
+   "look_at": [
+    717.738,
+    -379.369,
+    117.737
+   ],
+   "note": "place camera: ADR 0213: oblique from S at 45 m (over the tree tops) onto the Supraśl bends downstream of the seam: banks, reed belt, shrubs",
+   "pos": [
+    760.0,
+    -470.0,
+    158.14
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

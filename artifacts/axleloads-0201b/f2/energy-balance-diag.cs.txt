@@ -1,0 +1,60 @@
+using System; using System.Linq; using Game.Vehicle.Physics; using PhysicsRunner.Sim;
+class P {
+  static void Main(string[] a) {
+    double k = a.Length > 0 ? double.Parse(a[0]) : 250000;
+    double t0 = a.Length > 1 ? double.Parse(a[1]) : 4.5, t1 = a.Length > 2 ? double.Parse(a[2]) : 5.5;
+    var defs = DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir);
+    defs.Vehicles["tractor_4x2_generic"].axles[0].suspension.springRate = k;
+    var fd = defs.Vehicles["tractor_4x2_generic"].fifthWheel;
+    if (a.Length > 3) fd.stopDampingRatio = double.Parse(a[3]);
+    if (a.Length > 4) fd.rollDamping = double.Parse(a[4]);
+    var rr = Environment.GetEnvironmentVariable("RECOV"); if (rr != null) fd.stopRecoveryRateDegS = double.Parse(rr);
+    if (a.Length > 5) fd.rollStiffness = double.Parse(a[5]);
+    var sc = Scenario.Load(System.IO.Path.Combine(RepoPaths.ScenariosDir, "fuzz_shrink_speed_runaway_fulllock.json"));
+    var opt = new RunOptions { DisableBodyContact = true };
+    var s = ScenarioRunner.Setup(sc, opt, defs);
+    var tilt = Environment.GetEnvironmentVariable("TILT"); if (tilt != null) { double c = Math.Cos(double.Parse(tilt) * Math.PI / 180); s.Tractor.Group.MinContactCos = c; s.Trailer.Group.MinContactCos = c; }
+    var drv = ScenarioRunner.CreateDriver(sc, s, out _);
+    double dt = sc.dt;
+    { Vec3 f = new Vec3(0,0,1), r = new Vec3(1,0,0); var IA = s.Tractor.MassProps.Inertia.Inverse(); var IB = s.Trailer.MassProps.Inertia.Inverse();
+      double mr = 1/(Vec3.Dot(f, IA*f)+Vec3.Dot(f, IB*f)), mp = 1/(Vec3.Dot(r, IA*r)+Vec3.Dot(r, IB*r));
+      if (Environment.GetEnvironmentVariable("INERT")=="1") Console.WriteLine($"mRoll {mr:F0} mPitch {mp:F0} IA {s.Tractor.MassProps.Inertia.m00:F0} {s.Tractor.MassProps.Inertia.m11:F0} {s.Tractor.MassProps.Inertia.m22:F0} IB {s.Trailer.MassProps.Inertia.m00:F0} {s.Trailer.MassProps.Inertia.m11:F0} {s.Trailer.MassProps.Inertia.m22:F0} zetaRoll {fd.rollDamping/(2*Math.Sqrt(fd.rollStiffness*mr)):F3} fRoll {Math.Sqrt(fd.rollStiffness/mr)/2/Math.PI:F2}"); } double t = 0; double maxGain = 0, maxT = 0; string maxLine = ""; double maxW = 0; double prevE = double.NaN; bool prevFF = false;
+    var A = s.Body; var B = s.TrailerBody; var fw = s.Combo.FifthWheel; var fwd = s.Tractor.Def.fifthWheel;
+    for (int i = 0; i < (int)(sc.duration / dt); i++) {
+      var inp = drv.Update(t, dt, s);
+      var sa = A.State; var sb = B.State;
+      s.Combo.Step(dt, sa, sb, inp, s.Ground);
+      Vec3 vA0 = A.Velocity, wA0 = A.AngularVelocity, vB0 = B.Velocity, wB0 = B.AngularVelocity;
+      double E0 = A.KineticEnergy + B.KineticEnergy + 9.81 * (A.Mass * A.CenterOfMassWorld.y + B.Mass * B.CenterOfMassWorld.y);
+      Vec3 fA = s.Tractor.TotalForce, tA = s.Tractor.TotalTorque, fB = s.Trailer.TotalForce, tB = s.Trailer.TotalTorque;
+      Vec3 FA = s.Combo.TractorForce, TA = s.Combo.TractorTorque, FB = s.Combo.TrailerForce, TB = s.Combo.TrailerTorque;
+      double rollE = fw.RollSpringEnergy, stopE = fw.StopSpringEnergy;
+      double err = fw.PositionError;
+      ScenarioRunner.StepBodies(s, dt);
+      t += dt;
+      double E1 = A.KineticEnergy + B.KineticEnergy + 9.81 * (A.Mass * A.CenterOfMassWorld.y + B.Mass * B.CenterOfMassWorld.y);
+      // Work by model forces / coupling (mid-velocity).
+      Vec3 vAm = (vA0 + A.Velocity) * 0.5, wAm = (wA0 + A.AngularVelocity) * 0.5, vBm = (vB0 + B.Velocity) * 0.5, wBm = (wB0 + B.AngularVelocity) * 0.5;
+      double Wmodel = (Vec3.Dot(fA, vAm) + Vec3.Dot(tA, wAm) + Vec3.Dot(fB, vBm) + Vec3.Dot(tB, wBm)) * dt;
+      double Wcoup = (Vec3.Dot(FA - fA, vAm) + Vec3.Dot(TA - tA, wAm) + Vec3.Dot(FB - fB, vBm) + Vec3.Dot(TB - tB, wBm)) * dt;
+      double Wgrav = -9.81 * dt * (A.Mass * vAm.y + B.Mass * vBm.y);
+      double dPE = 9.81 * (A.Mass * (A.Velocity.y) + B.Mass * B.Velocity.y) * dt;
+      Vec3 wr = wBm - wAm;
+      double wRoll = fw.ImpRoll * Vec3.Dot(fw.AxisRoll, wr), wRS = fw.ImpRollStop * Vec3.Dot(fw.AxisRoll, wr), wPS = fw.ImpPitchStop * Vec3.Dot(fw.AxisPitch, wr), wYS = fw.ImpYawStop * Vec3.Dot(fw.AxisYaw, wr), wFr = fw.ImpFriction * Vec3.Dot(fw.AxisYaw, wr);
+      Vec3 pk = fw.KingpinWorld; Vec3 pa = sa.LocalToWorld(s.Tractor.Def.fifthWheel.position);
+      Vec3 vrel = (vBm + Vec3.Cross(wBm, pk - B.CenterOfMassWorld)) - (vAm + Vec3.Cross(wAm, pa - A.CenterOfMassWorld));
+      double wPt = Vec3.Dot(fw.ForceOnTrailer * dt, vrel);
+      int touch = s.AllWheels.Count(w => w.Contact) + (s.Trailer.LandingGearLoad > 0 ? 1 : 0);
+      bool ff = touch == 0;
+      string line = $"{t:F2} touch {touch} dE {E1 - E0,9:F1} Wmod {Wmodel,9:F1} Wcoup {Wcoup,9:F1} [pt {wPt,7:F1} roll {wRoll,7:F1} rStop {wRS,7:F1} pStop {wPS,7:F1} yStop {wYS,6:F1} fr {wFr,5:F1}] gravErr {-(Wgrav + dPE),7:F1} rollE {rollE,7:F1} stopE {stopE,8:F1} roll {fw.RollAngle * 57.3,6:F2} pitch {fw.PitchAngle*57.3,6:F2} err {err * 1000,6:F2}mm |fA| {fA.Magnitude:F0} |tA| {tA.Magnitude:F0} |tB| {tB.Magnitude:F0} wA {A.AngularVelocity.Magnitude:F2} wB {B.AngularVelocity.Magnitude:F2}";
+      if (ff && prevFF) maxW = Math.Max(maxW, Wcoup);
+      if (ff && prevFF && E1 - prevE > maxGain) { maxGain = E1 - prevE; maxT = t; maxLine = line; }
+      if (t >= t0 && t <= t1) { Console.WriteLine(line);
+        if (Environment.GetEnvironmentVariable("WHEELS")=="1") { var upA = A.Rotation * Vec3.Up; var upB = B.Rotation * Vec3.Up;
+          foreach (var w in s.Tractor.Wheels) if (w.Contact) Console.WriteLine($"   T {w.Name} S {w.S:F3} Fz {w.Fz:F0} cosN {Vec3.Dot(w.Normal, upA):F2} comp {w.Compression:F3} rate {w.CompressionRate:F2} hpY {sa.LocalToWorld(w.HardpointLocal).y:F2}");
+          foreach (var w in s.Trailer.Wheels) if (w.Contact) Console.WriteLine($"   R {w.Name} S {w.S:F3} Fz {w.Fz:F0} cosN {Vec3.Dot(w.Normal, upB):F2} comp {w.Compression:F3} rate {w.CompressionRate:F2} hpY {sb.LocalToWorld(w.HardpointLocal).y:F2}"); } }
+      prevE = E1; prevFF = ff;
+    }
+    Console.WriteLine($"k {k} maxGain {maxGain:F1} at {maxT:F2} maxWcoup {maxW:F1} | {maxLine}");
+  }
+}

@@ -1,0 +1,42 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Sim -> /workspace/wt-axleloads/tools/physics-runner/Sim/bin/Debug/net8.0/PhysicsRunner.Sim.dll
+  Tests -> /workspace/wt-axleloads/tools/physics-runner/Tests/bin/Debug/net8.0/Tests.dll
+Test run for /workspace/wt-axleloads/tools/physics-runner/Tests/bin/Debug/net8.0/Tests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 17.11.2 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.85]     PhysicsRunner.Tests.BodyContactTests.F2_Repro_FailsWithoutChassisContact_PassesWithIt [FAIL]
+  Failed PhysicsRunner.Tests.BodyContactTests.F2_Repro_FailsWithoutChassisContact_PassesWithIt [504 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at PhysicsRunner.Tests.BodyContactTests.F2_Repro_FailsWithoutChassisContact_PassesWithIt() in /workspace/wt-axleloads/tools/physics-runner/Tests/BodyContactTests.cs:line 38
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Standard Output Messages:
+ without contact: nan_detected = 0 [-inf, 0] PASS
+ without contact: max_pos_jump_m = 2.4473E-13 [-inf, 0.0001] PASS
+ without contact: max_dv_step_ms = 0.13114 [-inf, 0.35] PASS
+ without contact: max_dv_step_ms = 0.57752 [-inf, 4.2] PASS
+ without contact: max_tire_friction_ratio = 1 [-inf, 1.001] PASS
+ without contact: articulation_limit_excess_deg = 3.6529 [-inf, 3.5] FAIL
+ without contact: max_fifth_wheel_error_mm = 0.75781 [-inf, 5] PASS
+ without contact: max_fifth_wheel_error_mm = 1.5885 [-inf, 50] PASS
+ without contact: min_air_all_bar = 8.5 [0, +inf] PASS
+ without contact: max_speed_kmh = 45.701 [-inf, 90.5] PASS
+ without contact: min_com_height_m = -3032 [0.9, +inf] FAIL
+ without contact: max_body_penetration_m = 0 [-inf, 0.1] PASS
+ without contact: max_body_penetration_m = 0 [-inf, 0.035] PASS
+ without contact: body_contact_s = 0 [1, +inf] FAIL
+ without contact: max_free_flight_energy_gain_j = 92.476 [-inf, 1] FAIL
+ without contact: max_energy_j = 2.055E+06 [-inf, 2.133E+06] PASS
+ without contact: max_speed_after_ms = 214.12 [-inf, 0.05] FAIL
+
+
+
+Failed!  - Failed:     1, Passed:   273, Skipped:     0, Total:   274, Duration: 1 m 50 s - Tests.dll (net8.0)
+VSTEST_ARTIFACTS_DIRECTORY environment variable was not found, falling back to a user-private temporary directory. This is most likely caused by an outdated Microsoft.NET.Test.Sdk package reference in the test project.

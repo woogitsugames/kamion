@@ -329,6 +329,38 @@
    "type": "persp"
   },
   {
+   "fov_deg": 60.0,
+   "id": "water_deck_west",
+   "look_at": [
+    -937.027,
+    -346.917,
+    105.149
+   ],
+   "note": "place camera: ADR 0213: driver-height view (eye ~2.5 m over the deck) from the DK65 bridge west along the Supraśl towards the dk65-03 seam (~185 m)",
+   "pos": [
+    -838.0,
+    -333.0,
+    115.66
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_water_seam_w",
+   "look_at": [
+    -910.0,
+    -230.0,
+    -57034.781
+   ],
+   "note": "place camera: ADR 0213: QA top view of the Supraśl between the bridge and the W seam (dk65-03); pair = GUGiK orto 2024 crop",
+   "pos": [
+    -910.0,
+    -330.0,
+    260.94
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0
