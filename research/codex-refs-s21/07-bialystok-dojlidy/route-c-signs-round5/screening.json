@@ -1,0 +1,74 @@
+{
+  "snapshot_brussels": "2026-11-15T22:34:10+01:00 Bruksela/CET",
+  "qualified_new_frames": 0,
+  "commons_individually_observed": 3,
+  "panoramax_images_observed": 0,
+  "raw_previews_retained": 3,
+  "git_miniatures_retained": 0,
+  "method": "Selekcja9 metadanych Commons po kategorii/dacie/GPS,3 podglądy osobno obejrzane lokalnie. Potem dokumentacja Panoramax, landing i2 celowane GET search bbox+datetime, bez obrazów i logowania.",
+  "commons_observations": [
+    {
+      "id": "07RC5-001",
+      "observation": "Boczny widok wielokondygnacyjnego jasnego budynku z balkonami, samochody na parkingu, żółta barierka, fragment ciągu rowerowego/chodnika. Brak bramownicy i tablic kierunkowych.",
+      "status": "REJECT — poza celem B-006/B-007"
+    },
+    {
+      "id": "07RC5-002",
+      "observation": "Niski szary dom, ogrodzenie siatkowe i zieleń; przy chodniku kamienny krzyż, niebieski okrągły znak drogi rowerowej widziany z ukosa i szafa techniczna. Brak bramownicy oraz tablic kierunkowych.",
+      "status": "REJECT — poza celem B-006/B-007"
+    },
+    {
+      "id": "07RC5-003",
+      "observation": "Trawnik i młode drzewa ze słupkami, chodnik i czerwonawy ciąg z namalowanym rowerem; starsze bezlistne drzewa i budynek techniczny z graffiti w tle. Brak portalu/bramownicy i tablic kierunkowych.",
+      "status": "REJECT — poza celem B-006/B-007"
+    }
+  ],
+  "panoramax_documentation_read_before_query": [
+    {
+      "url": "https://docs.panoramax.fr/backend/api/api/",
+      "finding": "Oficjalne HTTP API kolekcji/obrazów zgodne STAC; publiczny odczyt bez logowania."
+    },
+    {
+      "url": "https://docs.panoramax.fr/backend/dev/STAC_compatibility/",
+      "finding": "Oficjalny schemat metadanych konkretnego obrazu i kolekcji, różne pola geovisio/quality."
+    },
+    {
+      "url": "https://docs.panoramax.fr/federated-catalog/",
+      "finding": "Federacja kopiuje metadane, obrazy pozostają na instancjach; nie utożsamiać katalogu z kompletem wszystkich niezgłoszonych instancji."
+    },
+    {
+      "url": "https://panoramax.gitlab.io/gitlab-profile/backend/install/settings/",
+      "finding": "Oficjalna konfiguracja wymaga licencji konkretnej instancji; link rel=license na landing/configuration. Nie przypisano licencji nieotrzymanym fotografiom."
+    }
+  ],
+  "panoramax_results": [
+    {
+      "file": "panoramax-search-2024plus.json",
+      "bbox_wgs84": [
+        23.145,
+        53.153,
+        23.174,
+        53.165
+      ],
+      "period": "2024-01-01T00:00:00Z/2026-11-15T23:59:59Z",
+      "features_returned": 0,
+      "qualification": "Brak wyników tego zapytania, nie dowód braku zdjęć w każdym źródle."
+    },
+    {
+      "file": "panoramax-wysockiego-2024plus.json",
+      "bbox_wgs84": [
+        23.174,
+        53.15,
+        23.192,
+        53.166
+      ],
+      "period": "2024-01-01T00:00:00Z/2026-11-15T23:59:59Z",
+      "features_returned": 0,
+      "qualification": "Odrębny wschodni obszar Wysockiego; brak wyników tego zapytania."
+    }
+  ],
+  "transcription_675_Centrum": "UNVERIFIED — brak czytelnej docelowej tablicy",
+  "panel_rows_count": "UNVERIFIED",
+  "camera_height": "UNVERIFIED; GPS/EXIF datetime nie ustalają wysokości montażu kamery",
+  "backlog_status": "B-006/B-007 pozostają otwarte; historycznych P1B nie zamieniono na aktualny stan"
+}

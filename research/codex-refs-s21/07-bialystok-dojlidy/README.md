@@ -38,3 +38,7 @@ KartaView-licence-round3: indeks oficjalnej sekcji4 wskazuje BY-SA4.0 fotografii
 
 
 Mapillary-gates-round4:2 nowe, indywidualnie obejrzane link-only obrazy czadzik2018 i zsolt2017. Dojazd Mickiewicza/Karpińskiego z wyspami/kreskowaniem/zieleń oraz rozpoznany szyldem sklepBIAFORM z jasnym pawilonem i żółtą szczeblową bramą. Nadruk20m nie jest pomiarem; małeSTOP na bramie nie zostało zakwalifikowane do kodeksowegoB-20. Nie potwierdzono bramKAN/Rosti, funkcji logistycznej i przejezdności ciężarówki. Danehistoryczne nie domykają B040/B123. Main11rekordów,0pobrań.
+
+## TrasaC — kontrola nowszego materiału, obieg5
+
+[Celowany screening](route-c-signs-round5/README.md):3pobrane i osobno obejrzane podglądyCC0 z2024 odrzucono jako boczne elewacje/parking/zieleń, bez portalu. Żadnych nowych obrazów wGit ani przyjętych kadrów; główny manifest nadal11rekordów. Dwa ograniczone zapytania publicznego katalogu federacyjnegoPanoramax dla2024–15.11.2026 zwróciły features[]; nie dowód braku zdjęć we wszystkich instancjach. B006/B007, treść tablicy675Centrum, liczba paneli/wierszy/wysięgników i wysokość kamery pozostająUNVERIFIED. Nie opisano zdjęć z tytułów.
