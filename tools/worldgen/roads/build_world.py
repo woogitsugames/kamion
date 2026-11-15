@@ -180,8 +180,8 @@ _GLB_MATS = None
 # brown-olive water, sRGB ~30/34/28 in the open channel). Linear albedo of the deep body, shallow tint at the shore,
 # Low: a dimmed sky gloss only; High: + two moving ripple octaves along the flow + sun glint. All WORKING_VALUE.
 WATER_MATERIALS = {
-    "water": {"color": [0.024, 0.029, 0.018], "rough": 0.08, "metal": 0.0, "shader": "water",
-              "shallow": [0.052, 0.052, 0.030], "reflect": 0.80, "reflect_low": 0.55, "flow_mps": 0.25},
+    "water": {"color": [0.034, 0.041, 0.024], "rough": 0.08, "metal": 0.0, "shader": "water",
+              "shallow": [0.060, 0.060, 0.034], "reflect": 0.80, "reflect_low": 0.55, "flow_mps": 0.25},
 }
 
 

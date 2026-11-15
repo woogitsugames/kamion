@@ -146,7 +146,7 @@ Shader "Kamion/World Water"
                 // turbid body: sky from above + a little sun scattered in the water column
                 half3 body = lerp(_ShallowColor.rgb, _BaseColor.rgb, saturate(shore));
                 half3 amb = SampleSH(half3(0, 1, 0)) * giK;
-                half3 col = body * (amb + L.color * (0.35h * saturate(L.direction.y) * sh));
+                half3 col = body * (amb + L.color * (0.55h * saturate(L.direction.y) * sh));
                 col = lerp(col, env, fres);
 
                 // sun on the water
