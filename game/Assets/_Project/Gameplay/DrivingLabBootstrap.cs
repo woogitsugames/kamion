@@ -213,6 +213,7 @@ namespace Game.Gameplay
             if (trailer == null) m_Spawn = LabSpawn.Solo;
             m_IgnoreRoots = new[] { vehicle.transform, trailer != null ? trailer.transform : null };
             ReadRouteArguments(platform);
+            ResolveRouteStart();
             m_StartTime = Time.time;
             if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
             else if (ap == StraightRunMode) ConfigureStraightRun(platform.GetLaunchArgument("speed"));
@@ -367,6 +368,42 @@ namespace Game.Gameplay
             if (float.TryParse(platform.GetLaunchArgument("route_end"), NumberStyles.Float, ci, out float e) && e > 0f) m_RouteEndS = Mathf.Min(e, route.Length);
         }
 
+        /// <summary>
+        /// ADR 0262: a route start (menu / route_s / the baked spawn point of a world scene) never stands outside or inside
+        /// a region-edge closure nor inside a static collider. When the requested place is not free the start moves
+        /// along the route (<see cref="SpawnSafety"/>) and the spawn uses the route path. Once per start / respawn request.
+        /// </summary>
+        void ResolveRouteStart()
+        {
+            if (route == null || route.points.Length < 2) return;
+            bool requestedByArgument = m_RouteS >= 0f;
+            if (!requestedByArgument && spawnPoint == null) return;
+            float requested = requestedByArgument ? m_RouteS : NearestRouteS(route, spawnPoint.position);
+            var boundary = FindAnyObjectByType<Game.World.WorldBoundary>();
+            float s = SpawnSafety.ResolveStartS(route, boundary, requested, m_IgnoreRoots, out string reason);
+            if (reason == null) return;   // free: the requested distance / the baked spawn point stay as they are
+            var ci = CultureInfo.InvariantCulture;
+            Debug.LogWarning("[START] start moved along the route: route_s " + requested.ToString("F1", ci) + " -> " + s.ToString("F1", ci) +
+                             " (" + reason + "); regenerate the region start (ADR 0262)");
+            m_RouteS = s;
+        }
+
+        /// <summary>Route distance of the polyline point nearest to a world position (horizontal).</summary>
+        static float NearestRouteS(Game.World.WorldRoute r, Vector3 world)
+        {
+            Vector3 l = r.transform.InverseTransformPoint(world);
+            float best = float.MaxValue, bestS = 0f;
+            for (int i = 1; i < r.points.Length; i++)
+            {
+                Vector3 a = r.points[i - 1], b = r.points[i];
+                float dx = b.x - a.x, dz = b.z - a.z, len2 = dx * dx + dz * dz;
+                float t = len2 > 1e-8f ? Mathf.Clamp01(((l.x - a.x) * dx + (l.z - a.z) * dz) / len2) : 0f;
+                float ex = a.x + dx * t - l.x, ez = a.z + dz * t - l.z, d2 = ex * ex + ez * ez;
+                if (d2 < best) { best = d2; bestS = Mathf.Lerp(r.distances[i - 1], r.distances[i], t); }
+            }
+            return bestS;
+        }
+
         /// <summary>Start log of a world scene (ADR 0229): region id + region-local start point + road of the routing graph.
         /// Runs once after the spawn (loads the region graph once; not part of the driving loop).</summary>
         void LogRegionStart(string sceneRegion, string menuRegion)
@@ -384,6 +421,7 @@ namespace Game.Gameplay
         {
             if (route == null || route.points.Length < 2) return;
             m_RouteS = Mathf.Clamp(s, 0f, route.Length);
+            ResolveRouteStart();
             Spawn(m_Spawn);
         }
 
