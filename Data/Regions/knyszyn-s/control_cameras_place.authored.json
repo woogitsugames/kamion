@@ -97,6 +97,54 @@
    "fov_deg": 60,
    "pitch_deg": -2,
    "note": "DK65 60 m before the north tile edge (seam with knyszyn)"
+  },
+  {
+   "id": "seam_e_top40",
+   "pos_en": [
+    1024.0,
+    -747.9
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 40.0,
+   "fov_deg": 50.0,
+   "pitch_deg": -89.9,
+   "note": "QA seam top view (north up, 66.3 m x 37.3 m, ADR 0233): DK65 on the seam with dk65-11 (this tile = west half); pair = artifacts/dk65-r4-s21/seam/ortho/pair_seam_e_top40.jpg"
+  },
+  {
+   "id": "k1_widening_top40",
+   "pos_en": [
+    689.7,
+    -389.6
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 40.0,
+   "fov_deg": 50.0,
+   "pitch_deg": -89.9,
+   "note": "QA seam top view (north up, 66.3 m x 37.3 m, ADR 0233): DK65 widens from the K1 section (lines 6.2 m) to the knyszyn-s section (7.1 m), km 25.32; pair = artifacts/dk65-r4-s21/seam/ortho/pair_k1_widening_top40.jpg"
+  },
+  {
+   "id": "seam_e_drive",
+   "pos_en": [
+    1022.5,
+    -743.8
+   ],
+   "heading_deg": 316.9,
+   "eye_m": 2.5,
+   "fov_deg": 60.0,
+   "pitch_deg": -1.5,
+   "note": "driver eye 2.5 m, along the route, route s = 4 m (ADR 0233): first metres after the dk65-11 seam"
+  },
+  {
+   "id": "k1_widening_drive",
+   "pos_en": [
+    725.1,
+    -424.8
+   ],
+   "heading_deg": 316.8,
+   "eye_m": 2.5,
+   "fov_deg": 60.0,
+   "pitch_deg": -1.5,
+   "note": "driver eye 2.5 m, along the route, route s = 440 m (ADR 0233): 50 m before the widening at km 25.32"
   }
  ]
 }

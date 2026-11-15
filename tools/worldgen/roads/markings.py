@@ -20,6 +20,7 @@ from shapely import affinity
 from shapely.geometry import Polygon, box
 
 from . import standards as S
+from .network import lane_w_of
 from .geom import ear_clip, polygon_area
 from .meshing import MeshBuf
 
@@ -49,6 +50,8 @@ def _paint_uv1(c, s, lat, kind):
     else:
         lw, edge, ring = 3.5, 0.0, False
     hw = np.asarray(c.hw_at(s), float)
+    if _SECS and getattr(sec, "lane_follow", False):
+        lw = np.maximum(lane_w_of(sec, hw), 2.0)
     lanec = (lat + hw - edge) / lw if ring else np.abs(lat) / lw
     if _SECS and getattr(sec, "lane_edges", None):
         lanec = sec.lane_coord(lat, hw, int(c.dirn[c.idx(sm)]) or 1)
@@ -148,7 +151,7 @@ def arrow_glyph(turns: list, long: bool):
 
 def lane_layout(sec, hw, dirn):
     """Return (centre_line_lat or None, [lane boundary lats], lane centres by travel dir)."""
-    lw, e = sec.lane_w, sec.edge_strip
+    lw, e = lane_w_of(sec, hw), sec.edge_strip        # ADR 0233: local lane width on `lanes_follow_width` sections
     le = getattr(sec, "lane_edges", None)
     if le and sec.oneway:
         # ADR 0095: measured lane edges, distances from the left edge in the direction of travel
