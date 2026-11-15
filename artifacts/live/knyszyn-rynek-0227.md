@@ -84,3 +84,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
 - 2026-11-15 20:47 +01:00 — Budżet r1 z instancjami: Low max suma drawsEst 500→493, ale na części wspólnych kamer wzrost do +12; warunek bez pogorszenia nadal FAIL. Narzędzie budget-compare.py obejmuje osobne instancje.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
+- 2026-11-15 20:52 +01:00 — Wierzba: opt-in generator i 3 testy, uruchomione izolowane studium Blender z osobnym slotem; bez integracji do świata. R2 nadal buduje.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/willow-study.done; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
