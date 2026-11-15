@@ -198,9 +198,9 @@ Determinizm C/Dojlidy (bez flagi): `build_world` dla `bialystok-industrial-c` i 
    pierwszym kaflu (`rail.json` + render).
 4. Brak: słupków G-1a…f przed przejazdem, znaków A-9/A-10, linii P-12 przed rogatkami, sieci trakcyjnej (3 kV),
    rozjazdów, peronów, mostów kolejowych z podporami, przejść dla pieszych `railway=crossing`.
+5. Bardzo skośne przejazdy: sinθ obcięty do 0,2 (≈ 11,5°) przy liczeniu szerokości jezdni.
 6. Przejazd DW671 × linia 38 wobec orto GUGiK 2025 — brak w grze: linii P-12 i linii ciągłej P-4 przed przejazdem,
    czerwonych pasów akustycznych, barier energochłonnych przy torze, słupów sieci trakcyjnej, biało-czerwonych
    słupków sygnalizatorów (są szare); jezdnia ma krawężniki, na orto pobocze gruntowe (poza zakresem toru).
 7. Barwa podsypki: tor / asfalt 0,81–0,83 zamiast 0,44 z orto (patrz „Wyniki s22”) — zdjęcie właściciela rozstrzygnie.
 8. `PANEL_LIFT` 0,015 m to obejście siatki `road_z` 1 m; docelowo próbnik z siatki jezdni (trójkąty), wtedy 0,005 m.
-5. Bardzo skośne przejazdy: sinθ obcięty do 0,2 (≈ 11,5°) przy liczeniu szerokości jezdni.
