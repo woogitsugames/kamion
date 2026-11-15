@@ -58,7 +58,21 @@ Dlatego etap „automatycznie, gdy są dane” zmieniłby C i Dojlidy — odrzuc
 ## Budżet (visual-qa 1920×1080, edytor, szacunek przed SRP batching)
 `WORLD_MEMORY` (import r1): water 0,4 MB Low i High; razem Low 60,2 MB (0207: 59,9), High 139,3 MB (0207: 139,0).
 Tafla `dk65-02`: 88 700 m², 16 704 trójkąty (cały kafel). A/B na kamerach wspólnych z ADR 0207 r2 (Low):
-TODO_AB
+| kamera (Low) | draws A → B | trójkąty A → B |
+|---|---|---|
+| `top-bridge` | 19 → 21 | 49,3 → 51,3 tys. |
+| `drive-bridge-approach` | 31 → 32 | 73,5 → 74,6 tys. |
+| `rev-elcka` | 41 → 45 | 82,9 → 86,4 tys. |
+| `route-s0450` (max trasy) | 196 → 201 | 220,1 → 224,7 tys. |
+| `drive-s19-approach` | 119 → 123 | 153,7 → 157,3 tys. |
+| pozostałe 15 kamer (route-s1651+, edge-*, top-*) | bez zmian | bez zmian |
+
+A = `artifacts/dk65-tiles-0207/dk65-02/r2/Low-clear/stats.txt` (kod main przed scaleniem 0206, ta sama scena bez
+wody), B = `artifacts/water-0210/dk65-02/r2/Low-clear/stats.txt`. Koszt wody: ≤ +5 draws (jeden materiał, jeden
+draw na chunk z wodą) i ≤ +4,6 tys. trójkątów na klatkę. Kamery wodne (nowe, bez A), Low / High: `water-bank-west`
+149 / 435 draws, 159 / 531 tys. tris (las przy brzegu); `water-deck-east` 87 / 322, 138 / 452 tys.;
+`water-oblique-bridge` 31 / 54, 72 / 122 tys. Odniesienie docs/06 §6 (hipotezy): Samsung A ≤ 300–400 draws,
+≤ 400–600 tys. tris — Low mieści się. Telefon: nie mierzono (zadanie bez telefonu).
 
 ## Walidacja
 - Determinizm (stage off): `build_world` na tej gałęzi dla `bialystok-industrial-c` i `bialystok-dojlidy` —
