@@ -95,7 +95,12 @@ SRP batchingiem), 131–215 tys. trójkątów. **Telefon: nie mierzono** (zadani
 do pomiaru na A16.
 
 ## Walidacja
-- `uv run --project tools/worldgen python -m pytest tests/gis` — wynik w `artifacts/dk65-tiles2-0214/logs/pytest-gis-r3.log`.
+- `uv run --project tools/worldgen python -m pytest tests/gis` (po pierwszym scaleniu main, `artifacts/dk65-tiles2-0214/logs/pytest-gis-r3.log`):
+  **1335 passed, 1 failed, 2 skipped, 5 xfailed**. Błąd: `test_p1_0161.py::test_ring_mast_survives_the_carriageway_clearing`
+  — czyta `Data/raw/derived/bialystok-industrial-c/world` worktree sprzed ADR 0193 (nieprzebudowany tu region; w main 9/9).
+  `test_knyszynska_0208.py`: strażnik „jeden powiat” dopuszcza teraz `dk65-10` / `dk65-11`.
+- Dane r3 zbudowane na main z `44ab8422c`+147; drugie scalenie main (0213 woda, Argon 0187–0189: roślinność, płoty) bez
+  przebudowy kafli — regeneracja po stronie lidera.
 - `tests/gis/test_dk65_seams_0214.py`: szwy 05…knyszyn-s — ta sama droga OSM, punkty trasy < 2 m, teren (max 0,48 m na
   10/11 przez rok NMT, reszta 0), osie placów ciągłe; przekrój: K1 w 06…10 (wpis dosłownie ten sam), zestaw `knyszyn-s`
   w 11 = `knyszyn-s`; xfail: 05/06 (Ełcka 7,6 m z 0207 do korekty 02…05), 10/11 (K1).
