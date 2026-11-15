@@ -31,8 +31,9 @@ sys.path.insert(0, str(REPO / "tools/worldgen"))
 from streetscape.foliage_policy import crown_opening, leaf_lod_indices
 VEG = REPO / "art-source" / "world" / "vegetation"
 ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-if "--park-linden-study" in ARGV or "--park-linden-study-r2" in ARGV:
-    if "--park-linden-study" in ARGV and "--park-linden-study-r2" in ARGV:
+STUDY_OPTIONS = ("--park-linden-study", "--park-linden-study-r2", "--park-linden-study-r3")
+if any(option in ARGV for option in STUDY_OPTIONS):
+    if sum(option in ARGV for option in STUDY_OPTIONS) != 1:
         raise ValueError("choose one park linden study")
     if "--out" not in ARGV or ARGV.index("--out")+1 >= len(ARGV):
         raise ValueError("--park-linden-study requires --out under this worktree's artifacts")
@@ -296,6 +297,39 @@ def grow_park_linden_r2(g, height, variant, lod):
     crown=V((0.,0.,height*.60)); up=V((0.,0.,1.))
     for i,(point,normal,size) in enumerate(cards):
         if lod and i%2: continue
+        g.card("leaves_linden",V(point),V(normal),up,size,crown)
+    return g
+
+
+def park_linden_blueprint_r3(height, variant=0):
+    """WORKING_VALUE: vary contour of r2 while retaining shared LOD candidates."""
+    trunk,limbs,cards=park_linden_blueprint_r2(height,variant)
+    result=[]
+    for i,(point,normal,size) in enumerate(cards):
+        sector=i//48
+        az=2*math.pi*(sector+.5)/12
+        p=point.copy()
+        # Continuous azimuthal differences avoid the r2 flat crown skirt and top.
+        p[2]+=height*(.045*math.sin(az+.6)+.025*math.sin(3*az+.2))
+        zf=p[2]/height
+        taper=1.0-.38*max(0.,(zf-.73)/.30)
+        p[:2]*=max(.60,taper)*(1.+.08*math.sin(2*az+.5))
+        p[2]=min(height*.99,max(height*.18,p[2]))
+        result.append((p,normal,size))
+    return trunk,limbs,result
+
+
+def grow_park_linden_r3(g, height, variant, lod):
+    """LOD1 retains six of eight exact candidates in every sector and band."""
+    trunk,limbs,cards=park_linden_blueprint_r3(height,variant)
+    V=lambda p: Vector(tuple(float(x) for x in p))
+    g.crown_height=0
+    g.tube("bark_linden",[V(p) for p in trunk],[.27,.21,.12,.025],seg=8 if lod==0 else 5)
+    for root,mid,tip in limbs:
+        g.tube("bark_linden",[V(root),V(mid),V(tip)],[.10,.06,.012],seg=5 if lod==0 else 3)
+    crown=V((0.,0.,height*.60)); up=V((0.,0.,1.))
+    for i,(point,normal,size) in enumerate(cards):
+        if lod and i%8 in (2,6): continue
         g.card("leaves_linden",V(point),V(normal),up,size,crown)
     return g
 
@@ -1351,16 +1385,16 @@ def bake_forest(mix, src, href, seed):
 
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    if "--park-linden-study" in ARGV or "--park-linden-study-r2" in ARGV:
+    if any(option in ARGV for option in STUDY_OPTIONS):
         # Isolated geometry-only prototype: no shared tree library or forest bake.
         import shutil
         source_dir = REPO / "art-source/world/vegetation"
         for name in ("bark_linden.png", "leaves_linden.png"):
             shutil.copyfile(source_dir / name, VEG / name)
-        r2 = "--park-linden-study-r2" in ARGV
-        study_name = "tree_linden_park_1" if r2 else "tree_linden_park_0"
-        study_file = "tree_linden_park_study_r2" if r2 else "tree_linden_park_study"
-        study_grow = grow_park_linden_r2 if r2 else grow_park_linden
+        version = 2 if "--park-linden-study-r3" in ARGV else 1 if "--park-linden-study-r2" in ARGV else 0
+        study_name = f"tree_linden_park_{version}"
+        study_file = ("tree_linden_park_study", "tree_linden_park_study_r2", "tree_linden_park_study_r3")[version]
+        study_grow = (grow_park_linden, grow_park_linden_r2, grow_park_linden_r3)[version]
         models=[]; info={}
         for lod in (0,1):
             obj=to_object(study_name + (".lod1" if lod else ""), study_grow(Geo(),13.5,0,lod))
