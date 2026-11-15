@@ -169,6 +169,7 @@ REGIONS: dict[str, Region] = {
         origin=(759563.0, 610559.0),
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,7) of the ADR 0203 plan)",
+        rail=True,       # VERIFY-ONLY (verify-cloud-b, PR #96): do not merge
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
     "dk65-02": Region(

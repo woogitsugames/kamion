@@ -636,8 +636,8 @@ namespace Game.World.Import
 
         // ------------------------------------------------------------------------------------------------- meshes
         // water (ADR 0210): only regions with the opt-in water stage have the node
-        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "plots", "wires", "water" };   // plot_ground: ADR 0114
-        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "plots", "wires", "water" };   // plots: ADR 0124
+        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "plots", "wires", "water", "rail_lod1", "rail_lod2", "rail_crossing" };   // plot_ground: ADR 0114; rail_*: VERIFY-ONLY (ADR 0217 integration)
+        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "plots", "wires", "water", "rail_lod0", "rail_lod1", "rail_lod2", "rail_crossing" };   // plots: ADR 0124
 
         static void BakeVisual(Result r, Chunk ch, GlbReader g, string tier, GlbReader.MeshNode extraBuildingsLod0 = null)
         {
