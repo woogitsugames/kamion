@@ -20,3 +20,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
 - 2026-11-15 18:23 +01:00 — Inwentaryzacja budynków w promieniu 85 m od fontanny zapisana z ID BDOT i wysokościami GUGiK; build baseline trwa.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 30; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
+- 2026-11-15 18:36 +01:00 — Przeczytano owner feedback z origin/main: priorytet skwer liściasty, kościół, urząd, czerwona kostka, pierzeje; targowica osobno, zdjęcie | render dla każdego kadru. Stary raport roślinności: override parku 49 drzew. Merge main po zakończeniu trwającego baseline.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/baseline2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/baseline.done`
