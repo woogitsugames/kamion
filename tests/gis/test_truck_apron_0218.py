@@ -151,7 +151,8 @@ def test_island_shrinks_by_the_extra_apron_width():
     assert r0 - r1 == pytest.approx(3.0 - S.ROUNDABOUT_APRON_W, abs=0.15)
 
 
-@pytest.mark.parametrize("mat,expect", [("beton", "road_concrete"), ("asfalt", "road_asphalt")])
+@pytest.mark.parametrize("mat,expect", [("beton", "road_concrete"), ("asfalt", "road_asphalt"),
+                                        ("kostka_jasna", "sidewalk_paving")])
 def test_truck_apron_other_surfaces(mat, expect):
     net = _net(_ov(width_m=2.5, height_m=0.03, material=mat))
     r, z = _radii(_mesh(net), expect)
@@ -159,8 +160,48 @@ def test_truck_apron_other_surfaces(mat, expect):
     assert r[inner].max() - r[inner].min() == pytest.approx(2.5, abs=0.2)
 
 
-@pytest.mark.parametrize("bad", [{"width_m": 0.2}, {"width_m": 9.0}, {"width_m": 2.0, "height_m": 0.15},
-                                 {"width_m": 2.0, "material": "marble"}, {"height_m": 0.04}, "3.0"])
+def test_width_only_moves_the_island_kerb_and_keeps_the_rule_surface():
+    """ADR 0226 form (Rondo Putry): `truck_apron: {width_m}` alone = where the island kerb stands; sett and 4 cm lip stay."""
+    net = _net(_ov(width_m=0.4))
+    assert not net.overrides_stale
+    for c in _rings(net):
+        d = c.side[_island_side(c)]
+        assert np.allclose(d["raw"]["w"], 0.4) and (d["mat"] == 0).all()
+        ta = net.sec_list[int(c.sec_idx[0])].truck_apron
+        assert ta == {"width_m": 0.4, "height_m": None, "material": None, "code": None}
+    r, z = _radii(_mesh(net), "apron_sett")
+    assert r.max() - r.min() == pytest.approx(0.4, abs=0.2)       # chord sag of the 16-point test arcs
+    assert z.min() == pytest.approx(S.KERB_HEIGHT_APRON, abs=1e-6)
+
+
+def test_width_only_with_apron_asphalt_is_a_flush_strip():
+    """`apron: asphalt` (ADR 0123) + `truck_apron: {width_m}`: plain carriageway up to the island kerb, no sett."""
+    net = _net([{"id": "putry-like", "target": {"osm_way": RING_WAY},
+                 "set": {"apron": "asphalt", "truck_apron": {"width_m": 0.4}}}])
+    assert not net.overrides_stale
+    for c in _rings(net):
+        d = c.side[_island_side(c)]
+        assert np.allclose(d["raw"]["w"], 0.4) and (d["mat"] == Nw.MAT_FLUSH_ROAD).all()
+    assert not [p for p in _mesh(net).parts if p.mat == "apron_sett" and len(p.T)]
+
+
+def test_one_mechanism_for_the_island_strip():
+    """ADR 0218 + 0226: `truck_apron` is the only key / field / validator for the strip at the island kerb."""
+    assert "apron_w" not in Nw.EdgeSection.__dataclass_fields__ and not hasattr(Nw, "APRON_W_MIN")
+    net = Nw.load(_graph(), (0.0, 0.0), [{"id": "old", "target": {"osm_way": RING_WAY}, "set": {"apron_width": 0.4}}])
+    assert all(s.truck_apron is None for s in net.sec_list), "`apron_width` is not a key (ADR 0226 uses truck_apron)"
+    assert Nw.TRUCK_APRON_W == (0.2, 6.0) and Nw.TRUCK_APRON_H == (0.0, 0.08)
+    assert Nw.TRUCK_APRON_MATS[Nw.TRUCK_APRON_CODE["kostka_jasna"]] == "sidewalk_paving"
+    root = Path(__file__).resolve().parents[2]
+    hits = [str(p.relative_to(root)) for p in sorted((root / "Data/Regions").glob("*/overrides.yaml"))
+            if "apron_width" in p.read_text(encoding="utf-8")]
+    assert not hits, hits
+
+
+@pytest.mark.parametrize("bad", [{"width_m": 0.1}, {"width_m": 0.0}, {"width_m": 9.0},
+                                 {"width_m": 2.0, "height_m": 0.15}, {"width_m": 2.0, "material": "marble"},
+                                 {"width_m": 2.0, "colour": "grey"}, {"width_m": "wide"}, {"width_m": None},
+                                 {"height_m": 0.04}, "3.0", 0.4])
 def test_invalid_truck_apron_is_stale_and_changes_nothing(bad):
     net = Nw.load(_graph(), (0.0, 0.0), [{"id": "bad", "target": {"osm_way": RING_WAY}, "set": {"truck_apron": bad}}])
     assert "bad" in net.overrides_stale
@@ -181,6 +222,14 @@ def test_knyszyn_example_override_is_valid():
     ov = yaml.safe_load(p.read_text(encoding="utf-8"))["overrides"]
     assert len(ov) == 1 and ov[0]["target"] == {"osm_way": [1426801304]}
     ta = Nw._truck_apron(ov[0]["set"]["truck_apron"])
-    assert ta is not None and ta["material"] == "apron_sett"
+    # owner drone photos 9-11 (docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md): "pierścień przejezdny z jasnej kostki/betonu
+    # (opaska dla naczep, wyraźnie jaśniejsza od asfaltu)" - light grey block paving, not the brown-red sett
+    assert ta is not None and ta["material"] == "sidewalk_paving" and ta["height_m"] == pytest.approx(0.04)
+    from roads import build_world as BW
+    lum = lambda c: 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]   # noqa: E731
+    apron, asphalt, sett = (BW.MATERIALS[k]["color"] for k in ("sidewalk_paving", "road_asphalt", "apron_sett"))
+    assert lum(apron) > 2.5 * lum(asphalt), "clearly lighter than the asphalt"
+    assert max(apron) - min(apron) < 0.02 < max(sett) - min(sett), "neutral grey, the sett is brown"
+    assert BW.MATERIALS["sidewalk_paving"].get("texture_set"), "existing library texture set, no new texture"
     # ring asphalt + apron within 6.0-8.5 m (WR-D-31-3 as quoted in ADR 0218, secondary source)
     assert 6.0 <= ov[0]["set"]["width"] + ta["width_m"] <= 8.5

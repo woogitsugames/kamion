@@ -3,9 +3,12 @@
 # (command in docs/adr/0218-rondo-knyszyn-opaska-dla-naczepy.md) and rebuilds the region.
 # Values: ring axis diameter 17.6 m SOURCED (OSM geometry, research/dk65-knyszyn-refs/README.md K1); ring asphalt
 # 5.0 m ESTIMATED (outer diameter 22.6 m = lower bound of a single-lane roundabout per WR-D-31-3 as quoted
-# secondary, UNVERIFIED on the roundabout itself); apron 3.2 m / 0.04 m lip / sett WORKING_VALUE from the swept path
+# secondary, UNVERIFIED on the roundabout itself); apron 3.2 m / 0.04 m lip WORKING_VALUE from the swept path
 # (tools/worldgen/roads/swept_path.py): on a 22.6 m circle the U-turn needs 2.90 m, left turn 262 deg (return
 # Rynek -> Bialystok) 2.24 m; 3.2 m keeps 0.25 m clearance also in the tightest sector of the generated ring.
+# Surface: `kostka_jasna` (library material sidewalk_paving, light grey block paving) per the owner's drone photos
+# 9-11 (docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md, "Rondo DK65 x Tykocka": the mountable outer ring of the island is
+# "z jasnej kostki/betonu (opaska dla naczep, wyraznie jasniejsza od asfaltu)") - not the brown-red sett.
 overrides:
   - id: knyszyn-roundabout-truck-apron
     target: {osm_way: [1426801304]}
@@ -15,14 +18,15 @@ overrides:
       set: 5.0 m asphalt (ESTIMATED, outer diameter 22.6 m). A 16.47 m tractor + 13.6 m semitrailer (art-source/truck/
       dims.json) straight on needs the inner tyre path down to r 5.89 m, left 262 deg 4.31 m, U-turn 3.65 m (ADR 0218,
       kinematic swept path, outer front tyre 0.5 m inside the outer kerb): the 6.3 m inner ring edge is not enough,
-      so a mountable sett truck apron 3.2 m wide with a 4 cm lip is laid inside the ring; the island kerb face moves
+      so a mountable truck apron 3.2 m wide with a 4 cm lip, light grey block paving (owner drone photos 9-11,
+      docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md), is laid inside the ring; the island kerb face moves
       to r 3.1 m on a circle, 2.74-3.21 m on the generated ring (smoothed OSM axis r 8.44-8.91 m). Tightest sector
       (outer kerb r 10.94): U-turn tyre path r 3.03 = 0.29 m clear of the kerb face (>= 0.25 m clearance, ADR 0218,
       test_knyszyn_ring_sectors_clear_the_u_turn). Ring + apron 8.2 m (WR-D-31-3 range 6.0-8.5 m, secondary
-      quote). Width, lip and island content
-      UNVERIFIED on site (no orthophoto after construction) - owner photo of the island wanted.
+      quote). The owner's photos confirm 4 single-lane arms, the two-zone island and the light apron; ring width,
+      apron width and lip are still not measured (no orthophoto after construction) - to be scaled on photos 9-11.
     confidence: low
-    verify: owner photo of the roundabout island and apron (ring width, apron width, kerb lip)
+    verify: measure ring / apron width on the owner's drone photos 9-11 (Data/raw/refs/owner-knyszyn-2026-11-15), then rerun swept_path.py
     set:
       width: 5.0
-      truck_apron: {width_m: 3.2, height_m: 0.04, material: kostka}
+      truck_apron: {width_m: 3.2, height_m: 0.04, material: kostka_jasna}

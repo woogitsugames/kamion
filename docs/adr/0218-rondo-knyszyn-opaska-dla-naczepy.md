@@ -109,19 +109,20 @@ jezdnia + opaska 5,0 + 3,2 = 8,2 m mieści się w 6,0–8,5 m.
 1. **Nowy klucz danych `truck_apron`** w `set` override'u celującego w way pierścienia (`target: {osm_way: …}`), zgodnie
    z istniejącym mechanizmem `overrides.yaml` (stale/applied, przeżywa reimport) — nie osobna sekcja `roundabouts:`:
    ```yaml
-   set: {truck_apron: {width_m: 3.2, height_m: 0.04, material: kostka}}   # kostka|beton|asfalt (sett|concrete|asphalt)
+   set: {truck_apron: {width_m: 3.2, height_m: 0.04, material: kostka_jasna}}   # kostka|kostka_jasna|beton|asfalt
    ```
-   `network._truck_apron` waliduje: `width_m` 0,5–6,0, `height_m` 0–0,08 (WORKING_VALUE; wyżej to nie krawężnik
+   `network._truck_apron` waliduje: `width_m` 0,2–6,0 (FIX s22, było 0,5–6,0), `height_m` 0–0,08 (WORKING_VALUE; wyżej to nie krawężnik
    najazdowy), znany materiał; błąd albo way nie-rondowy → `overrides_stale`, nic się nie zmienia. W `assign_sides` stacje
    pierścienia z tym override dostają szerokość, wysokość progu i kod materiału (5 kostka `apron_sett`, 6 beton
-   `road_concrete`, 7 asfalt `road_asphalt`); `side_profile(ISLAND)` używa progu `h` zamiast stałej 0,04. Krawężnik
+   `road_concrete`, 7 asfalt `road_asphalt`, 8 kostka_jasna `sidewalk_paving` — FIX s22); `side_profile(ISLAND)` używa progu `h` zamiast stałej 0,04. Krawężnik
    wyspy przesuwa się do środka o szerokość opaski → **wyspa mniejsza** (topologia profilu bez zmian, ta sama siatka
    pasów, łączenie z wlotami bez zmian). Kolizja: kostka jak dotąd `collision_paving`, beton/asfalt `collision_asphalt`.
 2. **Bez override = zero zmian**: test na syntetycznym rondzie (tablice profilu i wierzchołki identyczne) oraz porównanie
    tablic profilu wszystkich łańcuchów 9 regionów z gita (`bialystok-*`, `dk65-01`, `knyszyn`, `knyszyn-s`,
    `knyszyn-w`): sha256 stary `network.py` (origin/main) == nowy.
 3. **Knyszyn — przygotowany, NIE nałożony** (`tools/worldgen/roads/examples/knyszyn-roundabout-apron.yaml`):
-   `width: 5.0` (jezdnia pierścienia, ESTIMATED — BDOT 4,0 m jest sprzed ronda) + opaska z kostki **3,2 m**, próg
+   `width: 5.0` (jezdnia pierścienia, ESTIMATED — BDOT 4,0 m jest sprzed ronda) + opaska z jasnej szarej kostki
+   (`kostka_jasna`, patrz §5a) **3,2 m**, próg
    0,04 m (WORKING_VALUE). Na kole Ø 22,6 lico wyspy r 3,1 m (Ø ~6,2 m); na pierścieniu generatora r 2,74–3,21 m.
    Najciaśniejszy sektor (krawężnik zewn. r 10,94): zawracanie r 3,03 m = 0,29 m od lica wyspy; każdy z 8 łańcuchów
    sprawdzony w teście (`test_knyszyn_ring_sectors_clear_the_u_turn`). 3,0 m wystarczało na idealnym kole, ale nie
@@ -129,9 +130,40 @@ jezdnia + opaska 5,0 + 3,2 = 8,2 m mieści się w 6,0–8,5 m.
 4. Wysokość opaski względem jezdni (próg 4 cm + 2 % spadku → 0,04–0,10 m) i krawężnik wyspy 0,13 m to WORKING_VALUE;
    fizyka najazdu na próg — istniejące testy `KerbStrike*` (PlayMode, lider).
 
+## 5a. FIX s22 (recenzja `docs/reports/REVIEW-2026-11-15-s21-code-97.md` FIX 1–2, `-93.md` FIX 2)
+1. **Materiał opaski Knyszyna: jasna szara kostka, nie brązowa.** Właściciel (3 zdjęcia z drona, 9–11.webp, lokalnie
+   w `Data/raw/refs/owner-knyszyn-2026-11-15/`; opis w `docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md`, „Rondo DK65 ×
+   Tykocka”): „Wyspa środkowa okrągła, dwustrefowa: zewnętrzny pierścień przejezdny z jasnej kostki/betonu (opaska
+   dla naczep, wyraźnie jaśniejsza od asfaltu), wewnątrz okrąg z piaskiem/żwirem i małymi nasadzeniami (krzewy,
+   kamienie), bez drzew i bez rzeźby.” Dotychczasowe `material: kostka` = `apron_sett`, albedo [0,27, 0,24, 0,21]
+   (ciepły brąz, bez zestawu tekstur). Nowy kod 8 `kostka_jasna` (`paving`) = **istniejący materiał biblioteki
+   `sidewalk_paving`**: albedo [0,26, 0,255, 0,245] (neutralna szarość, 3,2× jaśniejsza od `road_asphalt` 0,08),
+   zestaw tekstur `paving_20x10_grey` — bez nowego materiału i bez nowych tekstur. Świadomie nie `road_concrete` /
+   `road_paving`: materiały klasy jezdni (`CULL_CARRIAGEWAY`, `consistency.CARRIAGEWAY`) — próg 4 cm opaski
+   zostałby wycięty jako „krawężnik na jezdni” (`meshing.cull_sides_on_carriageway`), a `road_concrete` wymaga UV1
+   wzdłuż osi. `sidewalk_paving` ma tę samą klasę kolizji co `apron_sett` (`collision_paving`). Skutek uboczny:
+   `consistency.py` klasyfikuje tę opaskę jako `sidewalk` (nie `apron`) — pas ruchu pierścienia (5,0 m, 1 pas) na
+   nią nie wchodzi; lider sprawdza `road_consistency_qa.json` po przebudowie (UNVERIFIED w chmurze). Wartości 5,0 /
+   3,2 / 0,04 m bez zmian — nadal ESTIMATED / WORKING_VALUE do pomiaru na zdjęciach 9–11.
+2. **Jeden mechanizm z ADR 0226 (#93, rondo Putry).** #93 miał osobne pole `apron_width` (`EdgeSection.apron_w`)
+   zapisujące tę samą szerokość strony ISLAND. Zostaje **jeden klucz `truck_apron`, jedno pole
+   `EdgeSection.truck_apron`, jedna funkcja `network._truck_apron`**; `apron_width` nie istnieje. Postać
+   `{width_m}` (bez `material` i `height_m`) = tylko położenie krawężnika wyspy, nawierzchnia i próg z reguły albo z
+   `apron: asphalt` (ADR 0123) — tak zapisane jest rondo Putry (`{apron: asphalt, truck_apron: {width_m: 0.4}}`).
+   Z `material` / `height_m` = opaska z własną nawierzchnią i progiem (Knyszyn). Zakres szerokości wspólny 0,2–6,0 m
+   (dół z ADR 0226: poniżej pas dałby zdegenerowane trójkąty; góra z tego ADR). Nieznane klucze w słowniku →
+   `overrides_stale`. Bloki mechanizmu w `network.py` są na obu gałęziach bajt w bajt takie same, więc drugi scalany
+   PR nie ma w nich konfliktu. Kolejność: **#93, potem #97** (jak w recenzji); przy odwrotnej nic do poprawiania.
+
 ## 6. Otwarte
-- Rzeczywista szerokość jezdni, opaski, materiał, Ø wyspy i jej zawartość — **zdjęcie właściciela** (wyspa + opaska z
-  poziomu jezdni i z góry, jeśli możliwe); po nim korekta override i ponowne `swept_path`.
+- Zdjęcia właściciela już są (15.11; §5a): potwierdzają 4 wloty jednopasowe, wyspę dwustrefową i jasną opaskę.
+  Nadal niezmierzone: szerokość jezdni i opaski, Ø wyspy, wysokość progu — lider skaluje na zdjęciach 9–11
+  (szerokość pasa wlotu albo długość samochodu jako skala), poprawia override i ponownie liczy `swept_path`.
+- Wyspa wewnętrzna: wg właściciela piasek/żwir + niskie krzewy i kamienie, bez drzew — generator zostawia teren/trawę
+  (następne zadanie; krzewy i kamienie ≥ 0,5 m od lica krawężnika wyspy, bo nadwozie naczepy wchodzi nad wyspę).
+  Sprawdzić na kamerze z góry, że na wyspie nie ma drzew.
+- Wlot południowy DK65: długa wysepka dzieląca z azylem (opis właściciela) nie jest modelowana — obowiązkowa kamera
+  i przejazd A16 „w prawo” (Białystok → Rynek) przy tej wysepce.
 - Wloty: łuki krawężników i wysepki rozdzielające (w prawo 98° decyduje tył ciągnika na łuku wlotu/wylotu,
   min r 7,93–8,37 m od środka) — tor śladu względem narożników wlotów nie liczony; sprawdzić na kamerach kontrolnych.
 - WR-D-31-3 w oryginale (pierścień przejezdny: szerokość, wysokość, pojazd miarodajny).
@@ -154,5 +186,5 @@ pwsh scripts/import-region.ps1 -Region knyszyn -Build
 pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting clear -OutputDir artifacts/visual-qa/knyszyn-0218
 ```
 Po przebudowie: `Data/Regions/knyszyn/generated/roads_qa.json` — `knyszyn-roundabout-truck-apron` w `applied`, nie w
-`stale`; `road_consistency_qa.json` bez nowych błędów; kamera `roundabout_*_above` dla ronda — opaska z kostki
-widoczna, wyspa mniejsza; jazda A16: zawracanie na rondzie bez wjazdu na wyspę.
+`stale`; `road_consistency_qa.json` bez nowych błędów; kamera `roundabout_*_above` dla ronda — opaska z jasnej szarej kostki
+(zestawienie ze zdjęciami właściciela 9–11), wyspa mniejsza, próg 4 cm obecny na całym obwodzie; jazda A16: zawracanie na rondzie bez wjazdu na wyspę.
