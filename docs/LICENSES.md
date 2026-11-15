@@ -608,3 +608,9 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 04/tree-inventory-round9 i tree-table-search-round10: publiczne dokumenty Gminy Dobrzyniewo Duże / opracowanie Value Engineering. W Git wyłącznie własne fakty, parafrazy, sześć wybranych nazw gatunków i odsyłacze. Bez automatycznego CC dla projektu, bez PDF/renderów w repo; plik źródłowy i dwa rendery poza Git. Map nie otwierano i nie redystrybuowano geometrii ani danych osobowych.
 
 02/baseline-remote-round23: metadane i cztery indywidualne oglądy źródełCC według source-metadata.json; dwie zachowane pochodne jednego starego kadruP18-122 (pełny kadr i jawny crop) ≤800px. Atrybucja, konkretne źródło i licencja per manifest; oryginał/podglądy pozaGit. Nie są nowymi zdjęciami przez ponowne pobranie; licencje źródeł zachowane.
+
+01/highbeam-reference-round16: własne parafrazy/obliczenia i linki do publicznych regulaminówUNECE; bez źródłowychPDF wGit. Ograniczona wersja2020 i statusESTIMATED przykładowych przeliczeń jawne.
+
+01/live-light-demonstrations-round17: publiczny film oficjalnegoERMAX, tylko link/timecode i własne obserwacje. Bez plików filmu, stillów, pobrań i zapisanych screenshotów. Nie przypisanoCC, nie ogłoszono fizycznej techniki nagrania ani trzech nowych fotografii.
+
+01/rear-mark-closeup-round18:2fotografie klosza publikowaneCzarnyStg/Allegro18809276824, tylko link-only, all rights reserved, fotografUNVERIFIED. KażdyexactURL ponownie sprawdzony i niezależnie obejrzany;0plików mediów. Numer6611489 z kataloguKögel nie stał się numerem samego klosza; pełnyE-number pozostajeUNVERIFIED.

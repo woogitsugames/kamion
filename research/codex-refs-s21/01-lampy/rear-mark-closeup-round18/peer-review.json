@@ -1,0 +1,69 @@
+{
+  "status": "PARTIAL — E9 i podzbiór symboli potwierdzone; pełny numer niezatwierdzony",
+  "reviewer": "niezależny agent knyszyn",
+  "record_created_at_brussels": "2026-11-16T00:32:30.561475+01:00",
+  "record_created_time_source": "Rzeczywisty zegar Python przy zapisie po oględzinach, nie zmierzona chwila oglądania.",
+  "visual_review_date": "2026-11-16",
+  "visual_review_time": "Nie mierzono osobno; tylko data.",
+  "method": "Dwa dokładneURL od root otwarto indywidualnie w natywnym Chrome, obejrzano pełne obrazy. Nadruk obrócony w zdjęciu o 180° odczytywano bez obracania/obróbki pliku, cropów, pobrania lub zapisu screenshotów. Znany brief zawierał kandydatów odczytu, więc nie deklaruję ślepego testu. W momencie własnego oglądu manifest jeszcze nie istniał.",
+  "macro": {
+    "url": "https://a.allegroimg.com/original/110be7/70a822a244609edcf8834f7bbc3e/SZKLO-LAMPA-TYLNA-LEWA-ECOPOINT-II-Aspock-KOGEL-KOEGEL-6611489-Strona-zabudowy-lewa",
+    "browser_title_px": [
+      1054,
+      790
+    ],
+    "observation": "Detal rzeczywistego klosza leżącego na jasnym kartonie. Duże czerwone pryzmatyczne pole z trójkątną strefą i poziomymi żebrami; z prawej bezbarwne/żółtawe żebrowane pole. Nisko przy czerwonym zagłębieniu mocującym mały odwrócony nadruk. Jasna biała smuga połysku przecina rejon oznaczeń.",
+    "sure_transcription": [
+      "E9 w okręgu",
+      "S1",
+      "2a",
+      "IIIA",
+      "AR",
+      "F1",
+      "SM1"
+    ],
+    "approval_number": {
+      "status": "UNVERIFIED",
+      "candidate_from_brief_and_appearance": "1853",
+      "reason": "Nie uzyskałem dostatecznej pewności wszystkich cyfr w małym, skośnym, odwróconym nadruku. Nie podaję pełnego E9/1853 jako niezależnie potwierdzonego odczytu."
+    },
+    "other_marks": {
+      "R1": "UNVERIFIED — znak po S1 nieprzesądzony.",
+      "series_digits": "UNVERIFIED — nie transkrybowano niepewnych małych 00/02 ani przypisania ich do funkcji.",
+      "meaning": "Symbole to transkrypcja, nie pełne przypisanie do regulaminów/serii/parametrów fotometrycznych."
+    },
+    "mark_location": "Nadruk na rzeczywistym kloszu, nie tabliczka z rysunku katalogowego."
+  },
+  "whole": {
+    "url": "https://a.allegroimg.com/original/11f2d2/fa7790ee451dba0c57f6a3e591be/SZKLO-LAMPA-TYLNA-LEWA-ECOPOINT-II-Aspock-KOGEL-KOEGEL-6611489",
+    "browser_title_px": [
+      1054,
+      790
+    ],
+    "observation": "Cały wydłużony zaokrąglony prostokątny klosz na kartonie. Z lewej wąskie pionowe czerwone pole, środkowa część duża czerwona z wyraźnym trójkątem, po bokach bezbarwne żebrowane strefy i żółtawe obrzeże po prawej. Okrągłe miejsca mocowania widoczne w powierzchni. Duże białe odbicie przy dolnym prawym fragmencie; brak korpusu/źródeł światła i montażu na pojeździe w tym kadrze.",
+    "chambers": "UNVERIFIED — barwne/ryflowane strefy nie są policzonymi komorami funkcjonalnymi.",
+    "emission": "UNVERIFIED/NOT_COUNTED — połysk nie jest dowodem zasilania ani emisji.",
+    "night": "NOT_COUNTED — zwykła oświetlona scena części na kartonie."
+  },
+  "part_identity_limit": "To sam klosz. Z tytułu oferty nie potwierdzono 6611489 jako numeru klosza; wskazany przez root katalog Kögel przypisuje ten kod całej lewej lampie Hybrid. Wtym peer nie audytowano katalogu ani aplikacji ciężarowej od nowa.",
+  "comparison_with_manifest": {
+    "status": "PASS ograniczonego mapowania po zapisie manifestu",
+    "rows": [
+      "01-RM18-01",
+      "01-RM18-02"
+    ],
+    "finding": "Oba dokładneURL zgodne z oglądanymi obrazami. Manifest zachowuje1853/R1/serie jako UNVERIFIED i fullnumbercount0 zgodnie z peer; nie potwierdzono pełnego numeru przez samo uzgodnienie tekstów."
+  },
+  "source_page_supplied_by_lampy": "https://allegro.pl/produkt/szklo-lampa-tylna-lewa-ecopoint-ii-aspock-kogel-koegel-6611489-e96b13c9-5574-4fe2-81f5-85cf64059ba3",
+  "rights": "link-only, all rights reserved; tylko 2 bezpieczne URL i własne obserwacje, brak kopii mediów.",
+  "counts": {
+    "exact_photo_urls_viewed": 2,
+    "physical_lens_references": 1,
+    "E_country_mark_confirmed": 1,
+    "full_approval_number_independently_confirmed": 0,
+    "new_lit_frames": 0,
+    "new_night_frames": 0,
+    "saved_media_files": 0
+  },
+  "browser_status": "Zwolniony po completion_summary; brud powiadomiony."
+}

@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-16",
+  "sources": {
+    "R149": {
+      "url": "https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2020/R149e.pdf",
+      "document": "E/ECE/TRANS/505/Rev.3/Add.148",
+      "date": "2020-01-13",
+      "annex_entry_into_force": "2019-11-15",
+      "cover": "Dokumentacyjne zestawienie; okładka wskazuje autentyczny tekst ECE/TRANS/WP.29/2018/158/Rev.1.",
+      "method": "Pełny tekst6864linie web turn538view1, turn539view0/3, turn541view0; wzór i lista czytelne.",
+      "current_validity_2026": "UNVERIFIED"
+    },
+    "R98": {
+      "url": "https://unece.org/sites/default/files/2024-06/R098r4e.pdf",
+      "document": "E/ECE/TRANS/505/Rev.1/Add.97/Rev.4",
+      "date": "2022-12-30",
+      "scope": "Do suplementu1serii02,EIF29.05.2020; URL2024niejestdatą dokumentu.",
+      "method": "Pełny tekst2058linie web turn538view0, turn539view1/4.",
+      "use_limit": "Nie użyto do rozstrzygania dokładnej starszej serii00 Actrosa ani certyfikatu Volvo. Błąd ekstrakcji prima i numeracji wzoru nie został naprawiony z pamięci."
+    }
+  },
+  "dedup": {
+    "read": "base24regulations.csv i istniejące CSV/MD01; P4 wyszukane po reference mark/430000/6.1.9/4300",
+    "new_conditions": 4,
+    "excluded": [
+      "Ponowne publikowanie maksimum IM215000cd z N12",
+      "Limit instalacyjny430000cd/100 i reguły R48 nie są nowymi wierszami tej rundy."
+    ],
+    "new_photographs": 0
+  },
+  "existing_photo_links": {
+    "Actros": {
+      "evidence": "../front-approval-round15/manifest.csv:01-FA15-01;../front-approval-round15/peer-review.json",
+      "observed_mark": "27.5 na tej samej etykiecie co E13/13106,00DCR",
+      "new_visual_review": false
+    },
+    "Volvo": {
+      "evidence": "../link-only-candidates/volvo-fh4-observations.json:VOL-003",
+      "observed_mark": "30 oddzielone od6243 przy E9; symbole DCR i inne",
+      "new_visual_review": false
+    }
+  },
+  "interpretation": {
+    "reference_number": "Sposób oznaczenia zaokrąglonego maksimum wiązki drogowej, zgodny z kategorią oznaczeń opisaną w odczytanym R149; nie W/24V/numer części.",
+    "specific_approval_basis": "UNVERIFIED: brak indywidualnych certyfikatów E13/13106 i E9/6243; nie przypisano starych DCR do aktualnego R149.",
+    "exact_IM_of_parts": "UNVERIFIED: sama wartość oznaczenia nie daje dokładnego pomiaru ani bieżącej jasności używanej części.",
+    "rounding_limit": "W odczytanym5.1.3.6 jest lista zaokrąglonych wartości. Nie dodano reguły nearest/tie ani granic odwróconych przedziałów bez dalszego tekstu.",
+    "game": "Nie ustawiaj emisji ani ekspozycji bezpośrednio z tej liczby. Potrzebny rozsył i stan działania."
+  },
+  "illustrative_examples": [
+    {
+      "status": "ESTIMATED: algebraiczny punkt orientacyjny, NIE pomiar Actrosa",
+      "reference": 27.5,
+      "calculation": "27.5×4300",
+      "nominal_cd": 118250,
+      "rounding": "Znak należy do dyskretnej listy; rzeczywisty iloraz podlega zaokrągleniu, więc działanie odwrotne nie odzyskuje dokładnego IM."
+    },
+    {
+      "status": "ESTIMATED: algebraiczny punkt orientacyjny, NIE pomiar Volvo",
+      "reference": 30,
+      "calculation": "30×4300",
+      "nominal_cd": 129000,
+      "rounding": "Znak należy do dyskretnej listy; nie wyliczono przedziału ani tolerancji dla części."
+    }
+  ],
+  "downloads": 0,
+  "chrome_used": false,
+  "timestamp_policy": "Tylko data; nie zadeklarowano niezmierzonej godziny."
+}

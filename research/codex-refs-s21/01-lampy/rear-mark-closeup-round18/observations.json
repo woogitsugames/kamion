@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-16",
+  "source": {
+    "url": "https://allegro.pl/produkt/szklo-lampa-tylna-lewa-ecopoint-ii-aspock-kogel-koegel-6611489-e96b13c9-5574-4fe2-81f5-85cf64059ba3",
+    "offer_id": "18809276824",
+    "publisher": "CzarnyStg",
+    "photographer": "UNVERIFIED",
+    "claim": "Używany lewy klosz Ecopoint II Kogel/Koegel, numer6611489; typ samochody ciężarowe/dostawcze.",
+    "application_crosscheck": {
+      "url": "https://www.koegel.com/wp-content/uploads/2022/02/Ersatzteilkatalog_EN_web.pdf",
+      "access": "Pełny publiczny tekst4769linii, web turn560view1; bez kopiiPDF lub ilustracji.",
+      "locator": "Lighting Accessories; Rear lights/tracking lights ASS; Left-hand rear light Hybrid, item6611489. Wprowadzenie katalogu Kögel Trailer GmbH dotyczy części do trailer.",
+      "finding": "6611489 jest numerem CAŁEJ lewej lampy Hybrid. Sprzedawca używa go do przypisania klosza; to nie udowadnia samodzielnego numeru OEM klosza ani zgodności konkretnego egzemplarza.",
+      "specific_semitrailer_model": "UNVERIFIED"
+    }
+  },
+  "dedup": {
+    "scope": "Wszystkie CSV/JSON01: część, sprzedawca, oferta, id obrazu przed zapisem.",
+    "keys": ["18809276824", "CzarnyStg", "6611489", "70a822a244609edcf8834f7bbc3e", "A25-4122-031", "mengood2"],
+    "prior_match": false
+  },
+  "observations": [
+    {
+      "id": "01-RM18-01",
+      "url": "https://a.allegroimg.com/original/110be7/70a822a244609edcf8834f7bbc3e/SZKLO-LAMPA-TYLNA-LEWA-ECOPOINT-II-Aspock-KOGEL-KOEGEL-6611489-Strona-zabudowy-lewa",
+      "gallery": "4/4",
+      "native_px": [1054,790],
+      "observation": "Zbliżenie czerwonego żebrowanego klosza i części trójkątnego pola o drobnej fakturze. Po prawej bezbarwne poziome rowki z bursztynowym fragmentem przy brzegu; okrągłe czerwone gniazdo mocowania. Na czerwonej powierzchni drobne rysy oraz jasny refleks. Fizyczny znak i napisy przy krawędzi odwrócone względem ekranu; nie obracano zdjęcia.",
+      "colour": "czerwony, bezbarwny, wąski bursztynowy fragment, jasny refleks",
+      "shape": "fragment trójkątnej czerwonej strefy i prostokątnej bezbarwnej strefy",
+      "chambers": "UNVERIFIED: klosz bez obudowy i źródeł światła; barwne strefy nie dowodzą liczby komór.",
+      "certain_symbols_after_peer": ["E9 w okręgu", "S1", "2a", "IIIA", "AR", "F1", "SM1"],
+      "full_approval_number": "UNVERIFIED: wstępny odczyt1853, niezależny recenzent nie potwierdził wszystkich cyfr; nie liczyć jako pewny pełny numer.",
+      "other_uncertain": ["R1 poS1", "dwucyfrowe indeksy serii"],
+      "geometry": "ESTIMATED [ogląd]: fragment klosza zdecydowanie ponad10% szerokości kadru; nie tworzono nowego cropu.",
+      "emission": "UNVERIFIED: jasny pas ma charakter refleksu; brak dowodu zasilenia.",
+      "regulation_assignment": "Nie przypisano numeru do konkretnego certyfikatu, serii R148/R150 lub historycznego regulaminu."
+    },
+    {
+      "id": "01-RM18-02",
+      "url": "https://a.allegroimg.com/original/11f2d2/fa7790ee451dba0c57f6a3e591be/SZKLO-LAMPA-TYLNA-LEWA-ECOPOINT-II-Aspock-KOGEL-KOEGEL-6611489",
+      "gallery": "1/4",
+      "native_px": [1054,790],
+      "observation": "Cały odłożony pojedynczy klosz bez korpusu. Po lewej pionowy czerwony segment z poziomymi rowkami; szerokie bezbarwne rowkowane pole pośrodku i prawej, bursztynowy fragment przy prawym brzegu. Centralna duża czerwona strefa trójkątna z drobną fakturą obrzeża i mniejszym trójkątem wewnątrz, obok czerwone gładziej żebrowane pole. Okrągłe punkty mocowania i długi biały refleks. Znaki w pełnym ujęciu są zbyt małe do niezależnego odczytu.",
+      "colour": "czerwony, bezbarwny, bursztynowy; jasne odbicie",
+      "shape": "poziomy prostokąt z zaokrąglonymi narożnikami i centralną trójkątną strefą",
+      "chambers": "UNVERIFIED: sam klosz; nie utożsamiono grup optycznych z komorami.",
+      "directly_readable_E": "UNVERIFIED w tym ujęciu; odczytu macro nie przeniesiono do pola czytelności whole.",
+      "geometry": "ESTIMATED [ogląd]: około80% szerokości kadru, ponad10%; brak wymiaru mm.",
+      "emission": "UNVERIFIED: sam odłożony klosz bez źródeł światła."
+    }
+  ],
+  "url_verification": "Oba dokładne URL otwarto oddzielnie, przeładowano i ponownie obejrzano przed zapisem. Macro i whole zgodne.",
+  "peer_handoff": "Agent knyszyn niezależnie obejrzał2dokładneURL. Potwierdził E9 i wymienione symbole; numer1853/R1/serie pozostawił UNVERIFIED. Jego pełny plik recenzji osobno.",
+  "counters": {
+    "retained_photographs": 2,
+    "distinct_physical_lenses": 1,
+    "macro_with_E_and_functions": 1,
+    "certain_full_approval_numbers": 0,
+    "confirmed_emission": 0,
+    "confirmed_night": 0
+  },
+  "limits": [
+    "Pełny klosz nie oznacza całej sprawnej lampy.",
+    "III A/IIIA na znaku nie dowodzi własnej emisji odblasku.",
+    "Nie uzupełniano numeru z katalogu Aspock; katalog Kögel wykorzystano wyłącznie do kontroli przypisania części.",
+    "Źródłowy kontekst ciężkich przyczep/naczep nie potwierdza konkretnego modelu ani montażu egzemplarza."
+  ],
+  "downloaded_images": 0,
+  "saved_screenshot_files": 0,
+  "git_operations": 0,
+  "browser": "Zwolniony przez completion_summary po oględzinach; brak nieukończonego zadania UI."
+}

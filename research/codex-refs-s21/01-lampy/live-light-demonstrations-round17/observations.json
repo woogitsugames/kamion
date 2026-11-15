@@ -1,0 +1,101 @@
+{
+  "date": "2026-11-16",
+  "retained_video": {
+    "url": "https://www.youtube.com/watch?v=lcsHKSUwwI0",
+    "title": "ERMAX TM17 Tail Light LED",
+    "publisher": "ERMAX Lighting Systems",
+    "duration_from_video_element_s": 40.341,
+    "decoded_video_px": [
+      1920,
+      1080
+    ],
+    "source_chain": [
+      "Publiczna strona ERMAX /news -> TM17 news-page; nagłówek TM17 i data10/09/2024 odczytane w DOM.",
+      "Link Ermax YouTube w stopce prowadził do kanału UC-By32MqGq9kg-2mN_bUjew.",
+      "Na oficjalnym kanale kliknięto publiczny film TM17; nie użyto logowania, API ani danych playera spoza DOM."
+    ],
+    "application": "SOURCED [strona producenta/news]: rodzina TM17 w dziale oświetlenia ciężkich pojazdów. Konkretne zastosowanie do modelu naczepy/ciągnika UNVERIFIED. Nie nazwano stołowego układu zamontowaną naczepą.",
+    "context_sources": [
+      "https://en.ermax.dk/news/news-item/tm17-led-tail-light-1?PID=15384&M=NewsV2&Action=1",
+      "https://en.ermax.dk/news",
+      "https://en.ermax.dk/"
+    ],
+    "technique": "UNVERIFIED: produktowa demonstracja, możliwe rzeczywiste nagranie z montażem lub technika mieszana; brak bezpośredniego potwierdzenia fizycznego ON/OFF. Nie sklasyfikowano jako CGI pewne ani fizyczny dowód pewny.",
+    "states": [
+      {
+        "time_s": 10,
+        "timecode": "00:10.000",
+        "url": "https://www.youtube.com/watch?v=lcsHKSUwwI0&t=10s",
+        "observation": "Dwie prostokątne lampy stoją na ciemnym podłożu. Po obu stronach trójkątnych centralnych pól widoczne intensywne czerwone poziome pasy; niższe bezbarwne listwy nie mają bursztynowego świecenia. Na podłożu czerwone rozmyte pola. Widoczny podpis Position light.",
+        "interpretation": "SOURCED [ogląd odtwarzacza]: prezentowany stan pozycyjny; nie dowód techniki fizycznego nagrania ani pomiar cd."
+      },
+      {
+        "time_s": 16.225247,
+        "timecode": "00:16.225",
+        "url": "https://www.youtube.com/watch?v=lcsHKSUwwI0&t=16s",
+        "observation": "Te same czerwone poziome pasy; dolny długi pas prawej lampy ma intensywne bursztynowe punkty/pola, a odpowiadający pas lewej jest bezbarwny. Na prawym skraju lewej lampy i skrajach kloszy są także białe refleksy.",
+        "interpretation": "Zmiana względem00:10 widoczna. Próbka pojedynczej fazy; nie zmierzono częstotliwości, czasu narastania ani kompletnego cyklu kierunkowskazu. Link16s prowadzi do początku sekundy, nie gwarantuje tej samej podklatki."
+      },
+      {
+        "time_s": 20,
+        "timecode": "00:20.000",
+        "url": "https://www.youtube.com/watch?v=lcsHKSUwwI0&t=20s",
+        "observation": "Czerwone poziome pasy pozostają jasne, dolny pas prawej lampy znów bezbarwny. W zewnętrznych pionowych polach obu lamp pojawiają się bardzo jasne, częściowo prześwietlone punkty z czerwoną poświatą wokół; widoczny podpis Stop light.",
+        "interpretation": "SOURCED [ogląd]: odmienny prezentowany stan stopu; nie wyprowadzono proporcji jasności stop/pozycja z ekspozycji filmu."
+      }
+    ],
+    "additional_screened_times": [
+      "00:05 plansza tytułowa, bez lampy",
+      "00:30 odłożone klosze/tylna obudowa i tekst marketingowy; nie dowód zmiany zasilania"
+    ],
+    "limits": [
+      "Białe refleksy studyjne są widoczne także na kloszach; nie utożsamiono ich z własną emisją.",
+      "Różne stany i podpisy odtwarzacza potwierdzają prezentację funkcji, nie technikę uzyskania efektu.",
+      "Nie kalibrowano barw, czasu reakcji ani jasności z wideo.",
+      "Nie mierzono odsetka kadru do fotograficznego progu M59; to1film, nie3fotografie."
+    ]
+  },
+  "rejected_screenings": [
+    {
+      "url": "https://www.youtube.com/watch?v=UXBUqUPRjko",
+      "publisher": "ERMAX Lighting Systems",
+      "title": "ERMAX the right solution",
+      "viewed_times_s": [
+        34.032,
+        56.72,
+        68.064,
+        79.407999
+      ],
+      "reason": "Fizyczna scena, ale przy34/56/79 sek. pojazd jest miniaturowym modelem, nie pełnowymiarowym ciężkim pojazdem. Lampa przy56sek. jako ładunek w rękach, bez potwierdzonego ON/OFF. Nie zatrzymano jako referencji emisji."
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=EIpjixf4Um4",
+      "publisher": "BPWBergischeAchsen",
+      "source_page": "https://www.mynewsdesk.com/uk/bpw-bergische-achsen-kg/pressreleases/hammer-proof-tail-lamps-ease-costs-and-nerves-in-transport-industry-thanks-to-wonder-material-polycarbonate-2613311",
+      "viewed_times_s": [
+        9.48,
+        23.7,
+        33.18,
+        37.92
+      ],
+      "reason": "Fizyczne ręce i test lampy; przy33/37sek. silne zewnętrzne światło i odblaski/rozmycie, bez pewnego rozdzielenia zasilania lampy od oświetlenia zewnętrznego. Nie kwalifikowano jako ON/OFF ani pomiaru odporności."
+    }
+  ],
+  "counters": {
+    "retained_video_sources": 1,
+    "retained_time_states": 3,
+    "new_photographs": 0,
+    "new_strict_M59_rear_photos": 0,
+    "new_verified_physical_emission_demonstrations": 0,
+    "readable_E": 0,
+    "verified_night_scenes": 0
+  },
+  "storage": {
+    "downloaded_videos": 0,
+    "downloaded_photographs": 0,
+    "saved_stills": 0,
+    "saved_screenshot_files": 0,
+    "git_operations": 0
+  },
+  "browser": "Zwoleniony przez completion_summary po ostatnim obejrzanym kandydacie; bez otwartych zadań UI."
+}
