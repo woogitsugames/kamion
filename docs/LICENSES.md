@@ -484,3 +484,16 @@ Inne pliki osób trzecich w katalogu research (nie są „zasobami” wg reguły
 - Sekcja „Fonts” zawiera głównie wiersze zasobów ciężarówki, naczepy i nawigacji (nie tylko fonty) — nazwa sekcji historyczna; wiersze obowiązują.
 - `research/gptpro/p7-s8-signs-2/LICENSE-DATA.md:7` podaje „ODbL 1.1” — OSM i pakiet G3 używają ODbL 1.0 (`Data/SourceManifests/osm-geofabrik-podlaskie.json`, `research/gptpro/3-s8-signs/LICENSE-DATA.md:5`); wersja 1.1 nie występuje w żadnym innym dokumencie repo — traktować jako błąd zapisu.
 - Licencja KartaView w narzędziu jest stałą w kodzie (`tools/refs/open_sources.py:65`, :89), a nie wartością odczytaną z API — przy następnym pobraniu warto ją potwierdzić u źródła.
+
+
+## Referencje codex-refs-s21 (2026-11-15; WIP)
+
+Fotografie i wycinki w `research/codex-refs-s21/01-lampy/files/` oraz `02-brud/files/` są referencjami do obejrzenia, bez tekstur w buildzie. Licencje CC BY-SA 2.0 / 3.0 / 4.0 i szczegółowa atrybucja per oryginał w `manifest.csv` każdego katalogu. Zmiany: pomniejszenie do ≤ 800 px i jawnie oznaczone wycinki. Oryginały poza gitem w `Data/raw/refs/codex-s21/`. Wiersze odrzucone i wzorzec czysty nie są liczone jako dowody brudnych drzwi. Dokument UNECE R148 jest linkowany i parafrazowany z numerami punktów; kopii PDF nie redystrybuowano.
+
+Knyszyn: `research/codex-refs-s21/03-knyszyn/files/` — 5 pomniejszeń istniejących kadrów K1 (Henryk Borawski CC BY-SA 3.0; Athantor i Zala CC BY-SA 4.0). Tytuły, źródła, zmiany i licencje w manifeście; aktualne metadane Commons w `data/licences-commons.json`. Bez nowych kopii oryginałów; osobno wykonany przegląd obrazu.
+
+Rozszerzenia s21: 03-knyszyn i04-dk65 zawierają wycinki orto GUGiK (bbox iźródła wmanifestach),tekstowe parafrazy komunikatówUM/GDDKiA. 05-kolej38 i07-bialystok-dojlidy zawierają linki/parafrazy dokumentów oraz metadane publiczne,bez kopii zdjęć urzędowych/PDFPKP. Dane miejskich osi dróg mają LEGAL_REVIEW_REQUIRED: publiczny dostęp nie jest licencją. 02-005 EricPolk,CCBY-SA4.0,zmniejszenie iwycinek,autorstwo iURL wmanifeście.
+
+Uzupełnienie s21: 01-006 Asurnipal, CC BY-SA4.0, zmniejszenie i wycinek istniejącej lokalnej kopii (atrybucja w manifeście). 03-L01/L02 to obejrzane fotografie UM Knyszyn wyłącznie link-only, all rights reserved, bez lokalnych kopii. 06-region-ring: dwa wycinki GUGiK (atrybucja i bbox w manifeście) oraz osobna pochodna OSM na ODbL1.0 (© OpenStreetMap contributors; metadane źródła w data/osm-source.json). 05-kolej38: własne parafrazy aktu Dz.U.2025poz.1105 z paragrafami, bez redystrybucji PDF.
+
+Dalsze s21: 05-P01 Henryk Borawski, CC BY-SA3.0 (zmniejszenie istniejącego K1-P32, źródło i data w manifeście). Dokument Nowy Goniec Knyszyński12(181), grudzień2019, tylko link/parafraza; PDF poza gitem, fotografii z numeru nie redystrybuowano. Wpisy R149/R150 są parafrazami z odniesieniami do wersji2020; źródłowych PDF nie dodano do gita.

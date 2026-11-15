@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding="UTF-8" ?>
+<wfs:FeatureCollection
+   xmlns:gugik="http://www.gugik.gov.pl"
+   xmlns:wfs="http://www.opengis.net/wfs"
+   xmlns:gml="http://www.opengis.net/gml"
+   xmlns:ogc="http://www.opengis.net/ogc"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd 
+                       http://www.gugik.gov.pl https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&amp;VERSION=1.0.0&amp;REQUEST=DescribeFeatureType&amp;TYPENAME=gugik:SkorowidzOrtofomapy2024&amp;OUTPUTFORMAT=XMLSCHEMA">
+      <gml:boundedBy>
+      	<gml:Box srsName="EPSG:2180">
+      		<gml:coordinates>751183.160000,621190.820000 753382.050000,623616.800000</gml:coordinates>
+      	</gml:Box>
+      </gml:boundedBy>
+    <gml:featureMember>
+      <gugik:SkorowidzOrtofomapy2024 fid="SkorowidzOrtofomapy2024.1377729">
+        <gml:boundedBy>
+        	<gml:Box srsName="EPSG:2180">
+        		<gml:coordinates>751183.160000,621190.820000 753382.050000,623616.800000</gml:coordinates>
+        	</gml:Box>
+        </gml:boundedBy>
+        <gugik:msGeometry>
+        <gml:Polygon srsName="EPSG:2180">
+          <gml:outerBoundaryIs>
+            <gml:LinearRing>
+              <gml:coordinates>751213.880000,622927.480000 751183.160000,623506.220000 751701.920000,623533.780000 752220.670000,623561.400000 752739.420000,623589.070000 753258.170000,623616.800000 753289.140000,623038.060000 753320.120000,622459.110000 753351.090000,621880.160000 753382.050000,621301.430000 752863.050000,621273.690000 752344.040000,621246.010000 751825.040000,621218.390000 751306.030000,621190.820000 751275.320000,621769.570000 751244.600000,622348.520000 751213.880000,622927.480000 </gml:coordinates>
+            </gml:LinearRing>
+          </gml:outerBoundaryIs>
+        </gml:Polygon>
+        </gugik:msGeometry>
+        <gugik:godlo>N-34-94-D-c-1-2</gugik:godlo>
+        <gugik:akt_rok>2024</gugik:akt_rok>
+        <gugik:piksel>0.25</gugik:piksel>
+        <gugik:kolor>CIR</gugik:kolor>
+        <gugik:zrodlo_danych>Zdj. cyfrowe</gugik:zrodlo_danych>
+        <gugik:uklad_xy>PL-1992</gugik:uklad_xy>
+        <gugik:modul_archiwizacji>1:5000</gugik:modul_archiwizacji>
+        <gugik:nr_zglosz>DFT.7201.011.2024</gugik:nr_zglosz>
+        <gugik:akt_data>2024-05-27</gugik:akt_data>
+        <gugik:czy_ark_wypelniony>TAK</gugik:czy_ark_wypelniony>
+        <gugik:url_do_pobrania>https://opendata.geoportal.gov.pl/ortofotomapa/81424/81424_1377729_N-34-94-D-c-1-2.tif</gugik:url_do_pobrania>
+        <gugik:dt_pzgik>2025-04-09</gugik:dt_pzgik>
+        <gugik:wlk_pliku_mb>44</gugik:wlk_pliku_mb>
+      </gugik:SkorowidzOrtofomapy2024>
+    </gml:featureMember>
+    <gml:featureMember>
+      <gugik:SkorowidzOrtofomapy2024 fid="SkorowidzOrtofomapy2024.1380627">
+        <gml:boundedBy>
+        	<gml:Box srsName="EPSG:2180">
+        		<gml:coordinates>751183.160000,621190.820000 753382.050000,623616.800000</gml:coordinates>
+        	</gml:Box>
+        </gml:boundedBy>
+        <gugik:msGeometry>
+        <gml:Polygon srsName="EPSG:2180">
+          <gml:outerBoundaryIs>
+            <gml:LinearRing>
+              <gml:coordinates>751213.880000,622927.480000 751183.160000,623506.220000 751701.920000,623533.780000 752220.670000,623561.400000 752739.420000,623589.070000 753258.170000,623616.800000 753289.140000,623038.060000 753320.120000,622459.110000 753351.090000,621880.160000 753382.050000,621301.430000 752863.050000,621273.690000 752344.040000,621246.010000 751825.040000,621218.390000 751306.030000,621190.820000 751275.320000,621769.570000 751244.600000,622348.520000 751213.880000,622927.480000 </gml:coordinates>
+            </gml:LinearRing>
+          </gml:outerBoundaryIs>
+        </gml:Polygon>
+        </gugik:msGeometry>
+        <gugik:godlo>N-34-94-D-c-1-2</gugik:godlo>
+        <gugik:akt_rok>2024</gugik:akt_rok>
+        <gugik:piksel>0.25</gugik:piksel>
+        <gugik:kolor>RGB</gugik:kolor>
+        <gugik:zrodlo_danych>Zdj. cyfrowe</gugik:zrodlo_danych>
+        <gugik:uklad_xy>PL-1992</gugik:uklad_xy>
+        <gugik:modul_archiwizacji>1:5000</gugik:modul_archiwizacji>
+        <gugik:nr_zglosz>DFT.7201.011.2024</gugik:nr_zglosz>
+        <gugik:akt_data>2024-05-27</gugik:akt_data>
+        <gugik:czy_ark_wypelniony>TAK</gugik:czy_ark_wypelniony>
+        <gugik:url_do_pobrania>https://opendata.geoportal.gov.pl/ortofotomapa/81425/81425_1380627_N-34-94-D-c-1-2.tif</gugik:url_do_pobrania>
+        <gugik:dt_pzgik>2025-04-09</gugik:dt_pzgik>
+        <gugik:wlk_pliku_mb>43</gugik:wlk_pliku_mb>
+      </gugik:SkorowidzOrtofomapy2024>
+    </gml:featureMember>
+</wfs:FeatureCollection>
+

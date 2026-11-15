@@ -1,0 +1,56 @@
+{
+  "retrieved_utc": "2026-11-15T17:26:31.767325+00:00",
+  "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolution?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=Raster&STYLES=&SRS=EPSG%3A2180&BBOX=760931.1913780256%2C612354.2748399237%2C760979.1913780256%2C612402.2748399237&WIDTH=480&HEIGHT=480&FORMAT=image%2Fjpeg",
+  "bbox_epsg2180": [
+    760931.1913780256,
+    612354.2748399237,
+    760979.1913780256,
+    612402.2748399237
+  ],
+  "size_px": [
+    480,
+    480
+  ],
+  "pixel_m": 0.1,
+  "sha256": "08995f8233f506acd05a3a64b858a65f89d9820ec9f88d1b6647f82cbee96ad8",
+  "date_of_imagery": "WMS not time-fixed; 2025-05-27 latest sheet found in 2025/2026 footprint query; 2026 collection empty",
+  "sheet_date_sourced": "2025-05-27",
+  "sheet_resolution_m": 0.1,
+  "sheet_url": "https://opendata.geoportal.gov.pl/ortofotomapa/83186/83186_1484208_N-34-106-B-b-1-4.tif",
+  "outline_measurement": {
+    "status": "ESTIMATED from visible dark outline; not surveyed extent of hydraulic fountain equipment",
+    "corners_xy_px": [
+      [
+        91,
+        179
+      ],
+      [
+        145,
+        169
+      ],
+      [
+        156,
+        223
+      ],
+      [
+        102,
+        234
+      ]
+    ],
+    "corner_pick_uncertainty_px": 2,
+    "scale_m_per_px": 0.1,
+    "sides_m_unrounded": [
+      5.491812087098393,
+      5.510898293381942,
+      5.510898293381942,
+      5.608921464952064
+    ],
+    "area_m2_unrounded": 30.585,
+    "rounded_summary": "approx. 5.5 x 5.6 m; outline approx. 31 m2; sides uncertainty conservatively +/-0.4 m",
+    "axes": "image top = EPSG2180 grid north, camera vertical downward; neither geographic nor magnetic azimuth"
+  },
+  "sheet_queries": {
+    "2025": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2025&SRSNAME=EPSG%3A2180&BBOX=760931%2C612354%2C760979%2C612402",
+    "2026": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=gugik%3ASkorowidzOrtofomapy2026&SRSNAME=EPSG%3A2180&BBOX=760931%2C612354%2C760979%2C612402"
+  }
+}
