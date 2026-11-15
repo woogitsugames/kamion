@@ -50,6 +50,11 @@ niż tu opisany — komunikat asercji (`mix`, wartość) wskaże który.
 
 Żaden limit budżetu ani próg testu nie został podniesiony.
 
+**Wynik (chmura, bez Data/raw, checkout bez LFS, `uv run --project tools/worldgen python -m pytest tests tools/worldgen/tests -q`):**
+przed (main 830b077b) 6 failed / 1419 passed / 68 skipped / 5 xfailed → po 1 failed / 1426 passed / 69 skipped /
+5 xfailed (+3 nowe testy reguł staleness, +1 skip LFS tekstury brzegu). Jedyny fail: budżet stretch_04 (0221).
+Z pobranym LFS (`git lfs pull --include="art-source/world/vegetation/forest_edge_*.png"`) test tekstury przechodzi.
+
 ## Konsekwencje
 - **Zmiana wyjścia generatora (punkt 2):** przy następnej regeneracji regionów z lasami BDOT (C, Dojlidy, DK65, Knyszyn
   i inne) zmienią się drzewa płaszcza `:edge` (pozycje, gatunki, wysokości, liczba — inny strumień) i atrybuty runa
