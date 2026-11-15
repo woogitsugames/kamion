@@ -1,0 +1,59 @@
+{
+  "status": "STABLE — 0 kwalifikowanych nowych kadrów lokalnych",
+  "record_created_at_brussels": "2026-11-16T00:09:03.159586+01:00",
+  "record_created_time_source": "Rzeczywisty odczyt datetime.now(ZoneInfo(Europe/Brussels)) podczas zapisu raportu; nie zmierzony dokładny czas oględzin.",
+  "visual_review_date": "2026-11-16",
+  "visual_review_time": "UNVERIFIED — nie zapisano osobnego pomiaru chwili oglądania.",
+  "scope": "Publiczne komunikaty PKP i bank multimediów, LK38 przy Fastach/Dobrzyniewie/Knyszynie; bez ilustracyjnego przypisywania stacji Białystok.",
+  "sources": [
+    {
+      "url": "https://www.plk-sa.pl/o-spolce/biuro-prasowe/informacje-prasowe/szczegoly/rail-baltica-bialystok-elk-rekordowa-umowa-i-inwestycja-11736",
+      "publication_date": "2026-09-15 wg strony",
+      "already_in_manifest": "05-D03 — nie nowy dokument",
+      "review_method": "Odczyt strony i rzeczywistych podpisów linkowanych elementów galerii w HTML, nie oględziny wszystkich grafik.",
+      "selection_result": "Podpisy galerii wskazują konferencję i dwie plansze informacyjne projektu. Brak podpisanego lokalnego zdjęcia torów/przejazdu w Fastach, Dobrzyniewie lub Knyszynie; nie otwierano plansz/map."
+    },
+    {
+      "url": "https://www.plk-inwestycje.pl/projekty/instrument-laczac-europe-connecting-europe-facility-cef/prace-na-linii-kolejowej-e75-rail-baltica-na-odcinku-bialystok-knyszyn/",
+      "review_method": "Odczyt opisu zakresu projektu.",
+      "selection_result": "Zakres obejmuje miejscowości celu, lecz nie zidentyfikowano opisanej lokalnej fotografii terenowej. Plany nie stanowią dowodu wykonania."
+    },
+    {
+      "url": "https://www.plk-sa.pl/o-spolce/biuro-prasowe/informacje-prasowe/szczegoly/bezpieczniej-na-przejazdach-kolejowych-w-wojewodztwie-podlaskim-2719",
+      "publication_date": "2015-02-04 wg strony",
+      "already_in_research": "05/data/crossing-equipment-source-review.json",
+      "review_method": "Odczyt tekstu i etykiet obrazów; bez opisu nieobejrzanych fotografii.",
+      "selection_result": "Tekst ogólny, obrazy bez indywidualnego wskazania punktów celu. Nie przypisano ich do konkretnego przejazdu."
+    }
+  ],
+  "rejected_visual": [
+    {
+      "source_page": "https://multimedia.plk-sa.pl/folder/file/f88d98c4-6c2f-4ba0-af46-82bd350aa20a/show",
+      "source_title": "PLK 2017-12-27 Będą lepsze podróże Rail Baltica, m.in. z Białegostoku do Ełku IP_2.jpg",
+      "author_source": "PLK",
+      "upload_source_literal": "09/01/2018 14:57 — data przesłania, nie ekspozycji",
+      "exposure_date": "UNVERIFIED; data2017-12-27 w nazwie nie jest EXIF",
+      "licence_source_literal": "CC BY-NC-ND4.0 według jawnego pola PRAWA DO WYKORZYSTANIA",
+      "licence_handling": "Poza dopuszczonym zestawem licencji do pobierania; wyłącznie link-only, bez kopii mediów. Nie przypisano CC BY/SA ani domeny publicznej.",
+      "view_method": "Pojedyncza fotostrona publicznego banku obejrzana indywidualnie w natywnym Chrome; brak kliknięcia pobierania/oryginału.",
+      "visual_observation": "Kadr wnętrza z biurkiem, otwartymi dokumentami i flagami; podpisywanie dokumentów przy stole. Brak torów, podsypki, słupów trakcyjnych, jezdni lub wyposażenia przejazdu. Nie opisywano tożsamości osób.",
+      "verdict": "REJECT_LOCATION_AND_SUBJECT — nazwy Knyszyn/Fasty/Dobrzyniewo są tagami całego komunikatu, nie dowodem miejsca fotografii.",
+      "basemap": "Na stronie jawny Leaflet/OpenStreetMap; nie otwierano mapy ani Google."
+    }
+  ],
+  "limits": [
+    "0 wyników tej selekcji nie dowodzi braku publicznych lokalnych zdjęć PKP.",
+    "Nie odczytywano napięcia z fotografii ani kategorii A–D z rogatek.",
+    "Nie utożsamiono planu drugiego toru/nowych wiaduktów ze stanem wykonanym na całejLK38.",
+    "Nie skopiowano starychK1/Mapillary2019 ani zdjęć właściciela.",
+    "Nie pobierano ani nie zapisywano fotografii, PDF lub screenshotów; brak Google/OSMAPI/Overpass."
+  ],
+  "counts": {
+    "new_qualified_local_photo_frames": 0,
+    "individually_viewed_rejected_photo_frames": 1,
+    "new_downloaded_media": 0,
+    "new_git_images": 0,
+    "accepted_link_only_frames": 0
+  },
+  "browser_status": "Zwolniony po completion_summary."
+}

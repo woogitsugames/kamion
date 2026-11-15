@@ -62,3 +62,7 @@ Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr pręd
 ## Mapowanie punktu — obieg7 bez potwierdzenia
 
 [Celowana kontrola](crossing-location-round7/README.md):brak poszukiwanego punktu w zapisanymK1;1Overpass406 i1OSMAPI429, po429STOPbezretry/hostwariantów. Nie uzyskano węzła,ref ani topologiiDW671;nie przypisano hipotezy038029522 jako odczytanegoIDPLK. Główny manifest nadal15rekordów. Dowódkat.Bzobwieszczenia pozostaje wyłącznieprzy swoimkm29+522. Nie stwierdzono braku przejazdu wOSM/terenie.
+
+## Galerie modernizacji — obieg8 bez nowej lokalnej fotografii
+
+[Modernisation-photos-round8](modernisation-photos-round8/README.md):sprawdzono znane komunikaty/projekt i jeden kandydat banku zdjęćPKP osobiście obejrzany. Fotografia pokazuje podpisywanie dokumentów przy stole; szerokie tagiFasty/Knyszyn nie są lokalizacją fotograficzną toru ani przejazdu. Odrzucono, nie opisano jej jako podsypki/słupów.0nowych kwalifikowanych kadrów/0pobrań,0zmiany głównego15. Podpisy konferencji/plansz i brak pewnego punktu nie dowodzą nieistnienia zdjęć wcałym archiwum. LicencjaBY-NC-ND odrzuconego źródła nie jest otwartą licencją gry; pozostały tylko własne uwagi i odsyłacze.
