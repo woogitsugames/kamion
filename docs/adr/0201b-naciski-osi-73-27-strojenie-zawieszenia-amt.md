@@ -89,13 +89,45 @@ Runner: **135/135 PASS (789 kontroli)**, tolerancje bez zmian. Goldeny: 6 nagran
 `brake_80_0_dry_abs_comb_laden40`, `brake_80_0_wet_abs_comb_laden40`, `jackknife_wet_curve_noabs_empty`, `launch_0_80_flat`,
 `launch_6pct_uphill_comb_laden40`) — przyczyny na nakładkach `artifacts/axleloads-0201b/plots/golden-*.png` (obejrzane): statyczne Fz
 przód/tył (+2,1 / −2,0 kN na koło solo), ciśnienie EBS tyłu niższe (sygnał = siła miecha), inna sekwencja biegów solo (4-6-8-10-12
-z pominięciem, poprawka AMT). 3 pozostałe goldeny przechodzą bez zmian. Testy .NET **273/274**: nie przechodzi
-`BodyContactTests.F2_Repro_FailsWithoutChassisContact_PassesWithIt` — asercja `max_free_flight_energy_gain_j ≤ 1 J` w przebiegu
-**mutacyjnym bez kolizji nadwozia** (pojazd spada przez grunt). Wynik jest chaotyczny względem trajektorii przed upadkiem: przód
-237/245/249/250/251/255 kN/m → 93 / 0 / 218 / 92 / 198 / 1059 J; zysk występuje w 1–3 krokach tuż po utracie kontaktu (t≈4,91 s)
-i odpowiada uwolnieniu energii sprężystej sprzęgu siodła (sprężyna przechyłu 1e7 N·m/rad, ~6 kJ zmagazynowane) i korekcji Baumgarte
-pozycji sworznia (błąd 1,4 mm). Dodanie ½k·φ² siodła do bilansu usuwa część (255 kN/m: 1059→0 J, 249: 218→0), ale nie wszystko
-(250: 95 J) — reszta to korekcja Baumgarte. Nie zmieniono testu ani metryki; decyzja lidera (pkt Otwarte).
+z pominięciem, poprawka AMT). 3 pozostałe goldeny przechodzą bez zmian. Testy .NET po poprawce F2 (niżej): **277/277** (274 + 3 nowe).
+
+## F2 — źródło energii w locie swobodnym (decyzja właściciela 2026-11-15: naprawić fizykę, nie test)
+Przed: `BodyContactTests.F2_Repro_FailsWithoutChassisContact_PassesWithIt` (przebieg mutacyjny bez kolizji nadwozia, pojazd
+spada przez jezdnię) — `max_free_flight_energy_gain_j` ≤ 1 J chaotycznie 0–2044 J dla przodu 230–260 kN/m (42/61 wartości > 1 J).
+**Bilans energii na krok** (`artifacts/axleloads-0201b/f2/energy-balance.txt`, program `energy-balance-diag.cs.txt`): praca sił
+modelu, praca więzu siodła rozbita na wiersze (punkt sworznia z Baumgarte, sprężyna przechyłu, odboje przechyłu/pochylenia/skrętu,
+tarcie płyty), błąd grawitacji całkowania półjawnego (−m g² dt²/2 = −185 J/krok, metryka go zawiera), energia sprężysta
+sprężyny przechyłu i odbojów. Wyniki:
+1. **Baumgarte/punkt sworznia nie jest źródłem**: ≤ 40 J na krok, w krokach zysku zwykle ujemny (−74…+5 J). Hipoteza poprzedniego przebiegu obalona.
+2. **Odboje siodła (sprężyna-tłumik Kelvina-Voigta, miękki więz Catto) oddają zmagazynowaną energię jako prędkość względną.**
+   250 kN/m: płyta uderza w odbój pochylenia 12° w locie (relatywnie ~1 rad/s), odbój magazynuje 4,6 kJ, oddaje +260/+330 J w 2 krokach.
+   Z usuniętym wtryskiem z kół (pkt 3) zostaje samo uderzenie: 58 kJ pochłonięte, 30 kJ zmagazynowane, ~4,5 kJ oddane (234 kN/m);
+   przy innych sztywnościach — odbój skrętu 90° (3 Hz, ζ 1: +400–460 J). Tłumienie samo nie wystarcza (skan ζ 1/2/5/10: max 1,2–1,9 kJ).
+3. **Wtrysk energii przez kontakt opony pod kątem ślizgowym** (to faktyczne źródło energii w układzie): przy przewracaniu przez
+   jezdnię promień zawieszenia jest prawie równoległy do gruntu, skok S = d/cos(przechył) − r jest nadczuły; koła naczepy w jednym
+   kroku S +0,075…0,19 → −0,47…−0,50 m, 1,5–1,6 MN na koło, praca kół +52 kJ w 10 ms (+185 kJ w 12 krokach). Część trafia do
+   sprężyny przechyłu siodła (1e7 N·m/rad, do 18 kJ przy 3,4°), która po utracie ostatniego kontaktu oddaje +1864 J w jednym kroku (252 kN/m).
+   KE + PE + energia sprężysta sprzęgu w locie nie rośnie w żadnym kroku — w locie energia nie powstaje, uwalnia się zmagazynowana.
+**Poprawka (kod fizyki, wspólny dla runnera i Unity):**
+- `FifthWheel.Limit`: odboje bez odbicia — na dojeździe ta sama sprężyna-tłumik (rozłożenie uderzenia na kilka kroków, bez zmiany
+  jerku), ale impuls nigdy nie rozpycha ciał szybciej niż `stopRecoveryRateDegS` = **0,5 °/s** (WORKING_VALUE z ograniczenia energii:
+  bezwładność wiersza ≤ największa główna bezwładność ciągnika 22 719 kg·m² → ½·I·ω² ≤ 0,87 J ≤ 1 J; zgniot odboju 1° wraca w ≥ 2 s
+  bez obciążenia — histereza gumy/stali odboju, niezmierzona). Technika: ograniczenie prędkości korekcji pozycji jak `maxCorrectionSpeed`
+  sworznia / „push-out velocity” kontaktów Box2D (Catto) — korekcja penetracji nie wnosi energii kinetycznej ponad ograniczenie.
+- `WheelGroup`: brak kontaktu opony, gdy normalna powierzchni odchyla się od osi zawieszenia o > `maxContactTiltDeg` = **72,5°**
+  (= acos 0,3, istniejący próg, poniżej którego model i tak przestawał stosować F/cos; WORKING_VALUE). Dalej pojazd leży na boku
+  i niosą go kolizje nadwozia (Unity: PhysX, runner: `BodyGroundContact`). Odrzuca też promień muskający pionową ścianę krawężnika.
+- Diagnostyka bez alokacji: `FifthWheel.RollSpringEnergy`, `StopSpringEnergy`, impulsy wierszy; `stopDampingRatio` (0,7, było stałą w kodzie).
+- Sprężyny przechyłu (1e7 / 2e5, ζ 0,45 przy 7,2 Hz) **nie zmieniono** — to podatność skrętna ramy, jej oddawanie energii jest fizyczne;
+  bez wtrysku z kół jej uwolnienie w locie ≤ 143 J/krok (poniżej strat aero + grawitacji całkowania, bilans KE+PE ≤ 0).
+**Wynik:** skan F2 230–260 kN/m co 0,5: **0/61 > 1 J (max 0,000 J)** (`f2/f2-scan.png`, `scan-before.csv`/`scan-after.csv`); nowe testy
+`F2CouplingEnergyTests` (odbój pochylenia w próżni: zysk 0,000 J, kontrola ze starym odbojem 1578 J; kontakt przy 70° jest, przy 75° nie ma —
+sprawdzone, że bez progu 75° daje kontakt). Runner **135/135 (789)**, tolerancje bez zmian: 772 kontrole bit w bit, 17 zmienionych, wszystkie
+PASS (`f2/runner-diff.txt`): przypisanie — próg przechyłu: krawężnik 15 cm przechył +0,007° (solo) / naczepa +0,010°, rollover F2 z kolizjami
+max dv/krok 0,67→0,82 m/s (≤ 4,2) i błąd sworznia 5,7→14,0 mm (≤ 50; leżące koła już nie pchają, ciało niosą kolizje, wynik końcowy ten sam —
+`f2/fuzz_shrink-contact-*.png`); odbój bez odbicia: cofanie do rampy 40 t final z −17,33→−17,25 m, przekroczenie skrętu fuzz_touch 0,7068→0,7065°;
+reszta to szum 1e-14 m. **Tabela A16 bez zmian (0,00 %):** solo 0–80 14,06 s / 80→0 35,39 m, 40 t 47,58 s / 41,20 m (identyczne bit w bit),
+pusty 21,14 s. Goldeny: żaden nie wymagał ponownego nagrania.
 
 ## Uwaga z recenzji #77 (koordynator): hardpoint i promień 0,51 m
 `WheelGroup` stawia hardpoint na `radius + SStatic − refLoad/k_opony`. Ugięcie opony nie jest liczone drugi raz: okrąg kontaktu jest
@@ -110,8 +142,8 @@ Nowa oś przednia: ugięcie referencyjne 23,6→26,2 mm, hardpoint 2,6 mm niżej
 
 ## Otwarte
 - **Feel test właściciela na telefonie** (start solo z ASR, przysiad/kiwnięcie, praca przodu na 250 kN/m, krawężnik) — wymagany.
-- F2 mutacja (273/274): lider decyduje: (a) metryka lotu swobodnego z energią sprzęgu siodła i bez kroków korekcji pozycji, albo
-  (b) asercja energii tylko w przebiegu z kolizjami. Bez decyzji nie scalać.
+- F2: naprawione w fizyce (sekcja F2). Do sprawdzenia przez lidera w Unity: leżący zestaw (koła > 72,5° bez kontaktu) i uderzenie
+  w odbój 90° na telefonie (brak odbicia od kabiny — odczucie).
 - Cienkie zapasy: pełzanie 12 % 4,97/5 mm, krawężnik Fz OK 3,66/4,2, `kerb_step_27cm` dv 0,32/0,35, MFDD solo 7,73/8.
 - 0–80 solo vs testy prasowe — brak danych w VRD; bramki telefonu (A16) do ponownego pomiaru (solo 0–80 oczekiwane ~+3,5 %).
 - EditMode/PlayMode, APK nieuruchomione (chmura bez Unity). Unity-adapter używa `VehicleModel` — poprawka AMT działa także tam.

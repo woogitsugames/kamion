@@ -1,9 +1,16 @@
-**axleloads-tuning-0201b (ADR 0201b)** — PR bazuje na `truckdata-0201` (PR #77; scalić po nim). Naciski ciągnika wg karty S9 + strojenie.
-- **Zmienione:** masy ciągnika skalibrowane (rama wg dims.json, oś tył 1300→1100 kg, przód/osłona 300→500 kg, osprzęt z 1,5→2,6 m; masa 7500 kg bez zmian) → solo bez paliwa **5,06/1,84 t = 73,3 %** (karta 73,2–73,5 %), z paliwem 5,35/2,15 t, 40 t 7,20/10,26/22,55 t (≤ 7,5/11,5/24 t). Przód resor 213→250 kN/m (mod podskoku solo = base), tłumiki przodu 10/20 kN·s/m, stabilizatory 222/240 kN·m/rad, miech tyłu ten sam (73 kN/m przy nowym odniesieniu), odbój tyłu 25→15 mm; kabina bez zmian. AMT: harmonogram biegów z pedału kierowcy (nie z momentu po ASR), anty-zgaśnięcie sprzęgła 8/s. 6 goldenów nagranych ponownie (nakładki `artifacts/axleloads-0201b/plots/`). VRD, PV §6g, ADR 0201b.
-- **4 scenariusze n1:** krawężnik 0,11 s/Fz 3,66 (base 0,12/3,94), kiwnięcie oka 3,64° (3,79°), rollover 0,458 g (0,460), soak −2,8 J (1,4); dryf n1 44,9 J identyczny przy dt 0,005 i 8 sub-krokach → osiadanie, nie integrator.
-- **Bramki (runner):** solo 0–80 13,58→**14,06 s** (+3,5 %: trakcja lżejszej osi; same masy +8,2 %, AMT −1,3 %), 80→0 35,77→35,39 m; 40 t 47,54→47,58 s, 41,02→41,20 m. Danych prasowych 0–80 solo w VRD brak.
-- **Uruchomione:** runner `dotnet run -c Release --project tools/physics-runner/Runner` → **135/135 PASS (789)**, tolerancje bez zmian; `dotnet test tools/physics-runner/PhysicsRunner.sln` → **273/274**: FAIL `BodyContactTests.F2_Repro…` (mutacja bez kolizji nadwozia, `max_free_flight_energy_gain_j` chaotyczny 0–1059 J przy przodzie 237–255 kN/m; zysk tuż po utracie kontaktu: sprężyna przechyłu siodła + Baumgarte; test i metryka NIE zmienione).
-- **NIEuruchomione:** EditMode, PlayMode, build APK, telefon, feel test właściciela.
-- **Komendy dla lidera:** `pwsh scripts/test.ps1 -Platform EditMode`; `pwsh scripts/test.ps1 -Platform PlayMode`; `pwsh scripts/build-android.ps1`; `pwsh scripts/gate12-phone.ps1 -Apk artifacts/apk/kamion-<ver>-<sha>.apk -UseExistingLock -Only s080_solo_1,s080_solo_2,s080_solo_3,s080_empty,s080_40t`.
-- **Otwarte:** feel test właściciela (start solo z ASR, przód 250 kN/m, kiwnięcie, krawężnik); decyzja F2 (metryka z energią sprzęgu albo asercja tylko z kolizjami); cienkie zapasy (pełzanie 12 % 4,97/5 mm); bramki A16 do ponownego pomiaru (solo 0–80 ~+3,5 %); odbój tyłu bez źródła (R3-157).
-- **Gotowe do scalenia po weryfikacji lidera: NIE** — wymaga decyzji o F2 (1/274) i feel testu; reszta zielona.
+**axleloads-tuning-0201b (ADR 0201b)**: baza `main` (PR #77 scalony; main wmergowany e342deea7). Naciski ciągnika według karty S9, strojenie zawieszenia i poprawka źródła energii F2.
+- **Naciski / strojenie:** solo bez paliwa **5,06/1,84 t = 73,3 %** (karta 73,2–73,5 %), 40 t 7,20/10,26/22,55 t (w limitach). Resor przedni 250 kN/m, tłumiki przodu 10/20 kN·s/m, stabilizatory 222/240 kN·m/rad, miech tyłu bez zmian sprzętu, odbój tyłu 15 mm. AMT: harmonogram z pedału kierowcy, anty-zgaśnięcie 8/s. 6 goldenów nagranych z nakładkami (`plots/`).
+- **F2 (decyzja właściciela: naprawić fizykę):** bilans energii na krok (`f2/energy-balance.txt`). Baumgarte sworznia ≤ 40 J/krok, więc nie jest źródłem. Źródłem było (1) odbicie miękkich odbojów siodła (oddają zmagazynowaną energię sprężystą, np. 4,5 kJ z 58 kJ) i (2) wtrysk przez kontakt opony przy przechyle ~90° (S = d/cos; 1,6 MN/koło, +52 kJ w 10 ms), oddawany potem w locie przez sprężynę przechyłu. Poprawka: odboje bez odbicia (rozpychanie ≤ 0,5 °/s, ≤ 0,87 J), brak kontaktu opony przy normalnej odchylonej > 72,5° (acos 0,3). Skan 230–260 kN/m co 0,5: przed 42/61 > 1 J (max 2044 J), po **0/61** (`f2/f2-scan.png`). Test, metryka i tolerancje bez zmian.
+- **Uruchomione (chmura, .NET):** `dotnet test tools/physics-runner/PhysicsRunner.sln` → **277/277** (274 + 3 nowe `F2CouplingEnergyTests`). Runner → **135/135 PASS (789)**, tolerancje bez zmian; względem e342deea7 772 kontrole są bit w bit, 17 zmienionych (wszystkie PASS, `f2/runner-diff.txt`). Solo 0–80 14,06 s / 80→0 35,39 m oraz 40 t 47,58 s / 41,20 m są identyczne.
+- **NIE uruchomione:** EditMode, PlayMode, build APK, telefon, feel test właściciela.
+- **Komendy dla lidera (Windows):**
+  - `pwsh scripts/test.ps1 -Platform EditMode`
+  - `pwsh scripts/test.ps1 -Platform PlayMode`
+  - `pwsh scripts/build-android.ps1`
+  - `pwsh scripts/gate12-phone.ps1 -Apk artifacts/apk/kamion-<ver>-<sha>.apk -UseExistingLock -Only s080_solo_1,s080_solo_2,s080_solo_3,s080_empty,s080_40t`
+- **Otwarte:**
+  - feel test (start solo z ASR, przód 250 kN/m, kiwnięcie, krawężnik, brak odbicia naczepy od odboju 90°);
+  - cienkie zapasy (pełzanie 12 % 4,97/5 mm);
+  - bramki A16 na telefonie (solo 0–80 ~+3,5 %);
+  - odbój tyłu i 0,5 °/s bez źródła (WORKING_VALUE).
+- **Gotowe do scalenia po weryfikacji lidera: TAK** (po zielonych EditMode/PlayMode/APK; feel test właściciela przed bramką etapu).

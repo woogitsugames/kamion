@@ -194,7 +194,8 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Parameter | Value | Unit | Status | Source / derivation |
 |---|---|---|---|---|
 | Jaw position (tractor frame) | (0, 1.15, 0.68) | m | WORKING_VALUE | 0.68 m ahead of the drive axle (was 0.55 until ADR 0019: 1.45 + 3.70 − 0.55 + 12.00 = 16.60 m exceeded the 16.50 m limit of 96/53/EC Annex I 1.1; now 16.47 m); 1.15 m height = dims.json fifth_wheel_height_m (brief class range 1.10-1.15 m; ISO 1726 not opened, UNVERIFIED). Was 1.20 until ADR 0014 |
-| Pitch (fore/aft plate) limit | ±12 | deg | WORKING_VALUE | Soft stop, 10 Hz |
+| Pitch (fore/aft plate) limit | ±12 | deg | WORKING_VALUE | Soft stop, 10 Hz, damping ratio `stopDampingRatio` 0.7 (also the roll stop) |
+| Stop recovery rate (`stopRecoveryRateDegS`) | 0.5 | deg/s | WORKING_VALUE | ADR 0201b F2: pitch / roll / articulation stops do not rebound: soft spring-damper on approach, the push-out rate is capped. Derivation: the row inertia is ≤ the tractor's largest principal inertia 22 719 kg m², so the KE a stop can give is ≤ ½·22 719·(0.5°/s)² = 0.87 J (≤ 1 J free-flight criterion). The old elastic stop returned up to 4.5 kJ of a 58 kJ plate-pitch impact. A 1° stop crush recovers in ≥ 2 s while unloaded (rubber/steel stop hysteresis, not measured) |
 | Roll coupling stiffness / damping / hard limit | 1.0e7 N m/rad / 2.0e5 N m s/rad / ±4° | – | WORKING_VALUE | Implicit soft constraint (unconditionally stable) |
 | Articulation stop (cab/frame contact) | ±90 | deg | WORKING_VALUE | Soft stop 3 Hz, critically damped (deformable contact) |
 | Plate friction | μ 0.08 × kingpin load × 0.35 m | – | WORKING_VALUE | Greased plate. Order of magnitude: patent US 6045148 (semi-trailer coupling) specifies friction-lining segments with μ 0.1–0.2 for "comfortable sliding" (design target for a non-greased lining, not a measurement of a greased plate); patent US 5746438 calls grease the usual way to cut plate friction and links high break-away friction to trailer swing. No measured greased-plate μ found (UNVERIFIED) |
@@ -202,6 +203,7 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Capture window | 0.05 m horizontal, 0.12 m vertical, < 1.5 m/s | – | WORKING_VALUE | |
 | Jaw engagement | 0.4 s compliant phase, 4 Hz critically damped | – | WORKING_VALUE | Spreads the coupling bump (measured ≤ 62 kN, dv ≤ 0.14 m/s per step) |
 | Baumgarte factor / speed cap / iterations | 0.2 / 0.5 m/s / 8 | – | Solver setting | Max kingpin separation in all scenarios 0.16 mm |
+| Tyre contact tilt limit (`SolverSettings.maxContactTiltDeg`) | 72.5 | deg | WORKING_VALUE (solver setting) | ADR 0201b F2: no tyre contact when the ground-surface normal is more than 72.5° (acos 0.3, the existing F/cos clamp in `WheelGroup`) from the suspension axis. The raycast travel S = d/cos(tilt) − r is hypersensitive near 90°: a lying combination got 1.6 MN per wheel and +52 kJ of work in one 10 ms step. Beyond the limit the chassis colliders carry the body |
 
 ## Semi-trailer (`curtainsider_tridem_13_6.trailer.json`)
 
