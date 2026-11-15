@@ -76,3 +76,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/AUDYT.md -Tail 15; uv run --project tools/worldgen python artifacts/knyszyn-rynek-0227/budget-r1.py`
 - 2026-11-15 20:33 +01:00 — R2 WIP: park_flush + dopasowanie terenu, 4 szacowane kolory dachów, 2 lipy kit zamiast instancji; testy kierunkowe zielone. Urząd i sylwetka króla poprawiane osobno. R1 FAIL wizualnie/budżet Low.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis/test_knyszyn_*_0227.py -q` (po zakończeniu prac agentów), potem build r2
+- 2026-11-15 20:38 +01:00 — R2 uruchomione: park_flush, 4 barwy dachów, 2 lipy kit, poprawione kamery, urząd i pomnik oraz ograniczenie materiałów Low. Testy kierunkowe 25 passed; RAM 23,7 GiB, C: 472,7 GiB.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r2.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r2.done`
