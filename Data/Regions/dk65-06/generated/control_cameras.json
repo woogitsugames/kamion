@@ -199,6 +199,150 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "top_seam_s",
+   "look_at": [
+    -105.8,
+    -907.4,
+    -56981.766
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 20 m: Ełcka at the seam with dk65-04/05 (6.9 m, edge lines); pair = ortho/top_seam_s.jpg",
+   "pos": [
+    -105.8,
+    -1007.4,
+    313.956
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_rondo",
+   "look_at": [
+    -89.6,
+    -809.4,
+    -56977.036
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 140 m: roundabout (OSM 2026-10; SE arm = new DK65, not open D65 p.6 -> site); pair = ortho/top_rondo.jpg",
+   "pos": [
+    -89.6,
+    -909.4,
+    318.686
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_s19_cross",
+   "look_at": [
+    -233.8,
+    -713.8,
+    -56977.235
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 330 m: S19 corridor under construction crossing the old DK65 (OSM 1511762681/83); pair = ortho/top_s19_cross.jpg",
+   "pos": [
+    -233.8,
+    -813.8,
+    318.486
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_mid",
+   "look_at": [
+    -561.5,
+    -246.6,
+    -56979.573
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 900 m: old DK65 in the pine wood, service road under construction 63 m E; pair = ortho/top_mid.jpg",
+   "pos": [
+    -561.5,
+    -346.6,
+    316.148
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_w",
+   "look_at": [
+    -1011.0,
+    391.8,
+    -56990.439
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 1680 m: old DK65 at the seam with dk65-07; pair = ortho/top_seam_w.jpg",
+   "pos": [
+    -1011.0,
+    291.8,
+    305.282
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_rondo",
+   "look_at": [
+    -155.291,
+    -898.446,
+    164.632
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 40 m: approach to the roundabout from Ełcka",
+   "pos": [
+    -116.7,
+    -990.7,
+    167.251
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_s19",
+   "look_at": [
+    -254.485,
+    -806.226,
+    167.68
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 250 m: old DK65 through the S19 construction corridor",
+   "pos": [
+    -178.9,
+    -871.7,
+    170.299
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_wood",
+   "look_at": [
+    -734.101,
+    -100.985,
+    162.669
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 1100 m: old DK65 in the pine wood",
+   "pos": [
+    -676.6,
+    -182.8,
+    165.288
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rev_site",
+   "look_at": [
+    -228.042,
+    -821.815,
+    168.656
+   ],
+   "note": "place camera: driver eye 2.5 m, against the route, route s = 420 m: back towards the roundabout: sand platform of the new DK65",
+   "pos": [
+    -285.4,
+    -739.9,
+    171.275
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

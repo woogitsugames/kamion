@@ -52,6 +52,102 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "top_seam_e",
+   "look_at": [
+    1013.8,
+    424.5,
+    -56990.318
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 20 m: old DK65 at the seam with dk65-06; pair = ortho/top_seam_e.jpg",
+   "pos": [
+    1013.8,
+    324.5,
+    305.403
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_kozince",
+   "look_at": [
+    725.1,
+    833.9,
+    -56998.458
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 520 m: junction 1392B / Kozińce, 208187096 -> 27718745; pair = ortho/top_kozince.jpg",
+   "pos": [
+    725.1,
+    733.9,
+    297.264
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_n",
+   "look_at": [
+    551.4,
+    1108.0,
+    -56999.141
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 845 m: DK65 at the seam with dk65-08; pair = ortho/top_seam_n.jpg",
+   "pos": [
+    551.4,
+    1008.0,
+    296.58
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_wood",
+   "look_at": [
+    909.472,
+    471.413,
+    153.34
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 100 m: old DK65 out of the pine wood towards Kozińce",
+   "pos": [
+    967.4,
+    389.9,
+    155.959
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_kozince",
+   "look_at": [
+    718.972,
+    741.614,
+    145.865
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 430 m: approach to the junction in Kozińce",
+   "pos": [
+    775.9,
+    659.4,
+    148.483
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rev_kozince",
+   "look_at": [
+    681.835,
+    801.474,
+    147.431
+   ],
+   "note": "place camera: driver eye 2.5 m, against the route, route s = 700 m: back towards Kozińce",
+   "pos": [
+    628.4,
+    886.0,
+    150.05
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

@@ -137,6 +137,150 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "top_seam_s",
+   "look_at": [
+    830.5,
+    -906.1,
+    -57016.654
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 20 m: DK65 at the seam with dk65-09; pair = ortho/top_seam_s.jpg",
+   "pos": [
+    830.5,
+    -1006.1,
+    279.067
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_site_819",
+   "look_at": [
+    410.9,
+    -224.5,
+    -57020.326
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 819 m: secondary road under construction crossing DK65; pair = ortho/top_site_819.jpg",
+   "pos": [
+    410.9,
+    -324.5,
+    275.396
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_s19_1667",
+   "look_at": [
+    -118.4,
+    433.9,
+    -57022.042
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 1667 m: S19 axes crossing DK65 (1511762695/6); pair = ortho/top_s19_1667.jpg",
+   "pos": [
+    -118.4,
+    333.9,
+    273.68
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_mid",
+   "look_at": [
+    167.6,
+    128.7,
+    -57022.248
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 1250 m: DK65 Szaciły; pair = ortho/top_mid.jpg",
+   "pos": [
+    167.6,
+    28.7,
+    273.474
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_n",
+   "look_at": [
+    -752.6,
+    1112.0,
+    -57013.329
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 2595 m: DK65 at the seam with dk65-11; pair = ortho/top_seam_n.jpg",
+   "pos": [
+    -752.6,
+    1012.0,
+    282.392
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_819",
+   "look_at": [
+    400.404,
+    -307.511,
+    125.909
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 740 m: approach to the construction crossing",
+   "pos": [
+    453.1,
+    -392.5,
+    128.528
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_1667",
+   "look_at": [
+    -133.327,
+    349.916,
+    123.423
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 1590 m: DK65 through the S19 corridor",
+   "pos": [
+    -65.0,
+    276.9,
+    126.041
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_2300",
+   "look_at": [
+    -584.4,
+    832.235,
+    130.103
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 2250 m: DK65 towards Knyszyn",
+   "pos": [
+    -516.2,
+    759.1,
+    132.721
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rev_1700",
+   "look_at": [
+    -140.2,
+    357.365,
+    123.868
+   ],
+   "note": "place camera: driver eye 2.5 m, against the route, route s = 1800 m: back through the S19 corridor",
+   "pos": [
+    -208.4,
+    430.5,
+    126.487
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

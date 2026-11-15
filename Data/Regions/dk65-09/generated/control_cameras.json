@@ -52,6 +52,70 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "top_seam_e",
+   "look_at": [
+    1017.0,
+    838.3,
+    -57015.423
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 15 m: DK65 at the seam with dk65-08, S19 corridor 26 m; pair = ortho/top_seam_e.jpg",
+   "pos": [
+    1017.0,
+    738.3,
+    280.298
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_n",
+   "look_at": [
+    849.4,
+    1111.2,
+    -57016.511
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 335 m: DK65 at the seam with dk65-10; pair = ortho/top_seam_n.jpg",
+   "pos": [
+    849.4,
+    1011.2,
+    279.21
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_09",
+   "look_at": [
+    941.601,
+    860.973,
+    130.266
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 60 m: DK65 beside the S19 corridor",
+   "pos": [
+    994.0,
+    775.8,
+    132.884
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rev_09",
+   "look_at": [
+    920.699,
+    895.327,
+    129.331
+   ],
+   "note": "place camera: driver eye 2.5 m, against the route, route s = 300 m: back towards dk65-08",
+   "pos": [
+    868.3,
+    980.5,
+    131.95
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

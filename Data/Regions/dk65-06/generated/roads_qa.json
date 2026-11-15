@@ -83,7 +83,7 @@
    "length_m": 1474.0,
    "max_grade": 0.0288,
    "overrides": [
-    "dk65-old-xsec"
+    "dk65-old-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.03,
    "sidewalk_frac": 0.0,
@@ -1243,7 +1243,7 @@
    "P-10 crossing": 2,
    "P-10 crossing in junction": 1,
    "P-13": 3,
-   "P-7b edge line": 4
+   "P-7b edge line": 8
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
@@ -1258,6 +1258,13 @@
    },
    {
     "id": "dk65-old-xsec",
+    "targets": [
+     "w1151531610:10712325637-10712325634",
+     "w208187096:10712325634-897574830"
+    ]
+   },
+   {
+    "id": "dk65-old-unlit",
     "targets": [
      "w1151531610:10712325637-10712325634",
      "w208187096:10712325634-897574830"
@@ -1281,7 +1288,7 @@
    "junctions": 0,
    "lines": {},
    "pairs": 26,
-   "unmatched": 4
+   "unmatched": 6
   },
   "verge_strips": {
    "chunks": 28,

@@ -272,7 +272,7 @@
    "length_m": 118.0,
    "max_grade": 0.0297,
    "overrides": [
-    "dk65-old-xsec"
+    "dk65-old-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.015,
    "sidewalk_frac": 0.0,
@@ -297,7 +297,7 @@
    "length_m": 252.6,
    "max_grade": 0.0537,
    "overrides": [
-    "dk65-old-xsec"
+    "dk65-old-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.023,
    "sidewalk_frac": 0.0,
@@ -322,7 +322,7 @@
    "length_m": 132.1,
    "max_grade": 0.0201,
    "overrides": [
-    "dk65-old-xsec"
+    "dk65-old-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.026,
    "sidewalk_frac": 0.0,
@@ -347,7 +347,7 @@
    "length_m": 150.3,
    "max_grade": 0.0154,
    "overrides": [
-    "dk65-old-xsec"
+    "dk65-old-unlit"
    ],
    "profile_rms_vs_nmt_m": 0.02,
    "sidewalk_frac": 0.0,
@@ -917,7 +917,8 @@
   "markings": {
    "P-1 centre line": 5,
    "P-10 crossing": 1,
-   "P-13": 4
+   "P-13": 4,
+   "P-7b edge line": 10
   },
   "markings_overlap_removed_tris": 0,
   "median_fills": [],
@@ -945,6 +946,15 @@
      "w208187096:4090471704-897574830",
      "w208187096:897574830-897574813"
     ]
+   },
+   {
+    "id": "dk65-old-unlit",
+    "targets": [
+     "w208187096:10712325634-4090471697",
+     "w208187096:4090471697-4090471704",
+     "w208187096:4090471704-897574830",
+     "w208187096:897574830-897574813"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -963,10 +973,12 @@
    "crossing_pairs_skipped": 2,
    "junctions": 4,
    "lines": {
+    "P-7a": 3,
+    "P-7b": 4,
     "lane": 4
    },
    "pairs": 17,
-   "unmatched": 1
+   "unmatched": 4
   },
   "verge_strips": {
    "chunks": 24,

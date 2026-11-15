@@ -137,6 +137,150 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "top_seam_s",
+   "look_at": [
+    529.6,
+    -906.4,
+    -56998.097
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 20 m: DK65 at the seam with dk65-07; pair = ortho/top_seam_s.jpg",
+   "pos": [
+    529.6,
+    -1006.4,
+    297.624
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_site_597",
+   "look_at": [
+    166.4,
+    -463.0,
+    -56997.803
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 597 m: construction road (tertiary) beside DK65 at 0-11 m; pair = ortho/top_site_597.jpg",
+   "pos": [
+    166.4,
+    -563.0,
+    297.918
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_mid",
+   "look_at": [
+    -226.0,
+    -71.6,
+    -57004.429
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 1150 m: S19 corridor 30 m E of DK65; pair = ortho/top_mid.jpg",
+   "pos": [
+    -226.0,
+    -171.6,
+    291.292
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_site_1656",
+   "look_at": [
+    -582.3,
+    288.0,
+    -57012.637
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 1656 m: construction road crossing DK65; pair = ortho/top_site_1656.jpg",
+   "pos": [
+    -582.3,
+    188.0,
+    283.084
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_w",
+   "look_at": [
+    -1013.1,
+    809.3,
+    -57015.507
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 2335 m: DK65 at the seam with dk65-09; pair = ortho/top_seam_w.jpg",
+   "pos": [
+    -1013.1,
+    709.3,
+    280.215
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_597",
+   "look_at": [
+    149.589,
+    -545.989,
+    148.312
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 520 m: DK65 with the S19 works on the right",
+   "pos": [
+    220.3,
+    -616.7,
+    150.93
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_1150",
+   "look_at": [
+    -247.334,
+    -150.513,
+    141.857
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 1080 m: DK65 beside the S19 corridor",
+   "pos": [
+    -176.5,
+    -221.1,
+    144.476
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_1656",
+   "look_at": [
+    -613.411,
+    219.111,
+    135.113
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 1600 m: construction crossing",
+   "pos": [
+    -542.7,
+    148.4,
+    137.732
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rev_2000",
+   "look_at": [
+    -795.989,
+    390.972,
+    129.89
+   ],
+   "note": "place camera: driver eye 2.5 m, against the route, route s = 2050 m: back along the S19 corridor",
+   "pos": [
+    -860.0,
+    467.8,
+    132.508
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

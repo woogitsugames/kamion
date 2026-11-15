@@ -4,6 +4,26 @@
  },
  "cases": [
   {
+   "chain": "c:w27718745:897574813-897574857",
+   "dist_from_stop_m": 13.5,
+   "e": 540.62,
+   "junction": "j:n897574857",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.2472299,
+   "lon": 22.9922543,
+   "n": 1024.94,
+   "on_route": true,
+   "osm_ways": [
+    27718745
+   ],
+   "to_chain": "c:w27718745:897574857-1134817563",
+   "turn_lanes": null,
+   "what": "none"
+  },
+  {
    "chain": "c:w1474400575:897574855-9751656071",
    "dist_from_stop_m": 4.1,
    "e": -207.29,
@@ -23,31 +43,13 @@
    "to_chain": "c:w76085939:9568536697-897574855",
    "turn_lanes": null,
    "what": "kerb"
-  },
-  {
-   "chain": "c:w27718745:897574813-897574857",
-   "dist_from_stop_m": 13.5,
-   "e": 540.62,
-   "junction": "j:n897574857",
-   "kind": "lane_blind_end",
-   "lane": 0,
-   "lanes_in": 1,
-   "lanes_out": 1,
-   "lat": 53.2472299,
-   "lon": 22.9922543,
-   "n": 1024.94,
-   "on_route": false,
-   "osm_ways": [
-    27718745
-   ],
-   "to_chain": "c:w27718745:897574857-1134817563",
-   "turn_lanes": null,
-   "what": "none"
   }
  ],
  "count": 2,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
- "on_route": {},
+ "on_route": {
+  "lane_blind_end": 1
+ },
  "params": {
   "dz_m": 0.8,
   "kerb_ring_m": 0.3,
@@ -58,13 +60,18 @@
  },
  "region": "dk65-07",
  "route_band_m": 30.0,
- "route_segments_s_m": null,
+ "route_segments_s_m": [
+  [
+   0.0,
+   864.0
+  ]
+ ],
  "schema": "truck-sim-pl/road-consistency-qa/1",
  "stats": {
   "approach_lanes": 52,
   "kerb_tris": 17284,
   "lane_samples": 24024,
-  "marking_tris": 292,
-  "props_checked": 348
+  "marking_tris": 1776,
+  "props_checked": 330
  }
 }
