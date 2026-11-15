@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-15",
+  "timezone": "Europe/Brussels",
+  "counts": {"new_individually_viewed_frames": 2, "link_only_frames": 2, "downloaded_images": 0, "saved_screenshots": 0},
+  "method": "Chrome CUA, zwykłe UI Mapillary. Każdy obraz sprawdzony po załadowaniu, osobno również w dużym widoku. Bez API i narzędzi deweloperskich.",
+  "basemap": "Mapillary light na początku; następnie jawnie wybrany OpenStreetMap w UI. Bez podkładów Google, bez widoku 3D.",
+  "authentication": "Nie wykonywano logowania ani zmiany konta; publiczne kadry oglądano w zastanej sesji przeglądarki. Nie zapisano identyfikatorów tej sesji.",
+  "frames": [
+    {
+      "id": "04M2-001",
+      "public_image_id": "3977085245704474",
+      "url_from_ui": "https://www.mapillary.com/app/?lat=53.303888888889&lng=22.9200756&z=17&focus=photo&mapStyle=OpenStreetMap&pKey=3977085245704474",
+      "author_as_displayed": "picturehoover",
+      "date_as_displayed": "27 cze 2020",
+      "place_evidence": "Wybrany punkt na podkładzie UI przy 65 / Obwodowa na południe od Knyszyna; nie kilometraż",
+      "viewed": true,
+      "coordinates_status": "lat/lng widoku UI, nie odrębnie zweryfikowany GPS kamery",
+      "heading": "UNVERIFIED"
+    },
+    {
+      "id": "04M2-002",
+      "public_image_id": "903725897143608",
+      "url_from_ui": "https://www.mapillary.com/app/?lat=53.31296259999999&lng=22.919088600001942&z=17&focus=photo&mapStyle=OpenStreetMap&pKey=903725897143608",
+      "author_as_displayed": "picturehoover",
+      "date_as_displayed": "27 cze 2020",
+      "place_evidence": "Obraz otwarty po kliknięciu wyniku wyszukiwania ulica Rynek, 19-120 Knyszyn, Poland; dokładna granica ulic nieustalona",
+      "viewed": true,
+      "dk65_assignment": "Nie przypisano; dodatkowy kadr otoczenia Rynku",
+      "coordinates_status": "lat/lng widoku UI, nie odrębnie zweryfikowany GPS kamery",
+      "heading": "UNVERIFIED"
+    }
+  ],
+  "third_image_attempt": "Kliknięcia zielonej linii w centrum nie zmieniły pKey; nie zaliczono trzeciego kadru.",
+  "current_2026_state": "UNVERIFIED — fotografie 2020",
+  "tokens_read_or_recorded": false,
+  "image_api_used": false,
+  "image_files_downloaded": false,
+  "owner_photos_used": false,
+  "metric_estimates_made": false,
+  "completion_summary_sent": true
+}

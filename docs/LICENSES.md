@@ -517,3 +517,5 @@ Knyszyn03/new-round2:3 miniatury nowych względemK1 źródeł Henryka Borawskieg
 06/monki-ground-round2/files:2 miniatury Henryka Borawskiego, CC BY-SA3.0 i4.0 perwiersz, zmniejszenie pełnego kadru bez kadrowania. URL, autor, daty i metadane w lokalnym manifeście oraz data/. Oryginałów nie pobrano.
 
 01/used-parts-round3:7 firmowych kadrów wyłącznie link-only, all rights reserved, autor zdjęcia nieustalony perwiersz. 01/rear-night-round3/files/01-RN3-04.jpg: OathOn, CC BY-SA4.0, źródło Commons, zmniejszenie pełnego kadru800×400, bez kadrowania. Autor, licencja, data i geotag w manifeście oraz data/commons-metadata.json; osobna niezależna kontrola koordynatora.
+
+04/mapillary-browser-round2: picturehoover,2 indywidualnie obejrzane obrazy2020, wyłącznie linki/permalinki i własne opisy, bez kopii. Oficjalna pomoc Mapillary wskazujeCC BY-SA4.0 i atrybucję; dowód z adresem i datą w licence-check.json. PełnychTerms nie odczytano (Not Logged In), nie logowano się. BrakAPI/tokenów; jawny podkładOpenStreetMap, bezGoogle.
