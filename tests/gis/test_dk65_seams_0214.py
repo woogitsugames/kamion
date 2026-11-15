@@ -16,9 +16,7 @@ REG = ROOT / "Data" / "Regions"
 sys.path.insert(0, str(ROOT / "tools" / "worldgen"))
 TILES = ["dk65-05", "dk65-06", "dk65-07", "dk65-08", "dk65-09", "dk65-10", "dk65-11", "knyszyn-s"]
 SEAMS = list(zip(TILES, TILES[1:]))
-# dk65-05 still carries the ADR 0207 Ełcka section (7.6 m); owner D65 p.5 (6.9 m) is applied in dk65-06 here and in
-# dk65-02..05 by the separately queued correction task (HANDOVER D65 (b)).
-PENDING_0207 = {("dk65-05", "dk65-06")}
+# Ełcka / Studzienna: owner D66 = 6.6 m in dk65-02..06 (ADR 0215 r2) - the seam 05/06 is asserted, no xfail.
 # Research K1 (research/dk65-knyszyn-refs): edge lines 6.0-6.4 m apart up to km 25.0 -> dk65-06..10 carry 2 x 3.1 + 2 x 0.2 m
 # (`dk65-xsec-k1`); dk65-11 keeps the knyszyn-s set (2 x 3.4 + 2 x 0.35 m) so the seam with knyszyn-s (x = 762635) is
 # identical, until dk65-11 and knyszyn-s get the K1 correction together (knyszyn-s is not this task's tile).
@@ -63,8 +61,6 @@ def test_seam_cross_section_matches(a, b):
     eb, rb, ob = _load(b)
     last, first = ea[ra[-1]], eb[rb[0]]
     assert last["osm_way"] == first["osm_way"], f"{a}->{b}: route leaves via way {last['osm_way']}, enters via {first['osm_way']}"
-    if (a, b) in PENDING_0207:
-        pytest.xfail("dk65-05 Ełcka 7.6 m (ADR 0207) until the D65 p.5 correction of dk65-02..05 lands")
     va, vb = _effective(last, oa), _effective(first, ob)
     if (a, b) in PENDING_K1:
         assert (va["lanes"], va["lane_width"], va["edge_strip"]) == K1_SET

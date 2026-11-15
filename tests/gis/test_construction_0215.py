@@ -2,7 +2,12 @@
 
 Authored override `set: {construction: true}` (schema: tools/worldgen/roads/closures.py) -> no horizontal markings,
 no rule lamps, building-site surface (WORKING_VALUE), no edge in the routing graph. Synthetic geometry only (no
-Data/raw); the last tests read the committed dk65-05 region data (roads.graph.json + overrides.yaml)."""
+Data/raw).
+
+ADR 0215 r2 (PR #80 verification, owner decision): dk65-05 itself no longer uses the flag - its new DK65 carriageway
+is cut from the road graph (graph_filter.authored.json) and reproduced as a `construction_site` corridor, the mechanism
+of dk65-06 (ADR 0214), so the site is continuous across the seam. The last tests read the committed dk65-05 region
+data and guard that state; the `construction: true` schema stays available and is covered by the synthetic tests."""
 import json
 import sys
 from pathlib import Path
@@ -187,37 +192,55 @@ def dk65_05():
     g = json.loads((d / "roads.graph.json").read_text(encoding="utf-8"))
     ov = yaml.safe_load((d / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
     route = json.loads((d / "route_start.json").read_text(encoding="utf-8"))
-    return g, ov, route
+    gf = json.loads((d / "graph_filter.authored.json").read_text(encoding="utf-8"))
+    return g, ov, route, gf
 
 
-def test_dk65_05_new_carriageway_is_closed(dk65_05):
-    g, ov, route = dk65_05
-    closed = closures.construction_edge_ids(g["edges"], ov)
-    by_id = {e["id"]: e for e in g["edges"]}
-    assert {by_id[i]["osm_way"] for i in closed} == NEW_DK65 and len(closed) == 3
-    # every primary ref-65 edge of the tile is the new carriageway, and all of it is closed
-    assert closed == {e["id"] for e in g["edges"] if e["attrs"]["highway"]["v"] == "primary"}
-    assert not closed & set(route["edge"]), "the control route (old DK65: Ełcka / Studzienna) stays open"
-    entry = next(o for o in ov if o["set"].get("construction"))
-    assert "D65" in entry["source"] and entry["confidence"] and entry["reason"]
-
-
-def test_dk65_05_closed_ways_touch_no_open_road(dk65_05):
-    """The closed carriageways share no node with the open network inside the tile, so nothing has to be closed at a
-    junction here (the junction-arm case is an open item of ADR 0215)."""
-    g, ov, _ = dk65_05
-    closed = closures.construction_edge_ids(g["edges"], ov)
-    cn = {n for e in g["edges"] if e["id"] in closed for n in (e["from"], e["to"])}
-    on = {n for e in g["edges"] if e["id"] not in closed for n in (e["from"], e["to"])}
-    assert not cn & on
-
-
-def test_dk65_05_routing_graph_drops_the_new_carriageway(dk65_05):
-    g, ov, route = dk65_05
+def test_dk65_05_new_carriageway_is_not_in_the_road_graph(dk65_05):
+    """r2: the three ways are dropped by the authored graph filter - no ribbon is built, nothing routes over them."""
+    g, ov, route, gf = dk65_05
+    assert set(gf["drop_osm_ways"]) == NEW_DK65 and "D65" in gf["reason"]
+    assert not {e["osm_way"] for e in g["edges"]} & NEW_DK65
+    assert not [e for e in g["edges"] if e["attrs"]["highway"]["v"] == "primary"], "every primary edge was the new DK65"
+    assert route["edge"] and set(route["edge"]) <= {e["id"] for e in g["edges"]}, "control route (Ełcka / Studzienna) intact"
     origin = brg.read_origin(str(REPO / "Data" / "Regions" / "dk65-05"))
-    closed = closures.construction_edge_ids(g["edges"], ov)
-    full, t = brg.build(g, origin, []), brg.build(g, origin, [], closed_edges=closed)
-    assert len(full["edges"]) - len(t["edges"]) == 3
-    assert not {e["osm_way"] for e in t["edges"]} & NEW_DK65
-    assert set(route["edge"]) <= {e["id"] for e in t["edges"]}
-    assert brg.load_closed_edges("dk65-05", g) == closed
+    assert not {e["osm_way"] for e in brg.build(g, origin, [])["edges"]} & NEW_DK65
+
+
+def test_dk65_05_uses_one_site_mechanism(dk65_05):
+    """No `construction: true` ribbon left in dk65-05 (it ended at the seam with dk65-06); the carriageway is a
+    construction_site corridor with the three ways as `not_open` axes, 10 m half-width like the arm in dk65-06."""
+    g, ov, _, _ = dk65_05
+    assert not closures.construction_edge_ids(g["edges"], ov)
+    assert not [o for o in ov if (o.get("set") or {}).get("construction")]
+    sites = [o for o in ov if o.get("kind") == "construction_site"]
+    assert len(sites) == 1
+    axes = [a for a in sites[0]["axes"] if a["class"] == "not_open"]
+    assert {a["osm_way"] for a in axes} == NEW_DK65 and all(a["half_width_m"] == 10.0 for a in axes)
+
+
+def test_site_corridor_meets_dk65_06_at_the_seam(dk65_05):
+    """Seam y = 603391 (dk65-05 north / dk65-06 south): every not-open axis of dk65-06 that reaches the seam has an
+    axis of the same way in dk65-05 crossing the seam at the same x (+-0.1 m) with the same half-width."""
+    _, ov, _, _ = dk65_05
+    ov6 = yaml.safe_load((REPO / "Data" / "Regions" / "dk65-06" / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    Y = 603391.0
+
+    def crossings(ovs):
+        out = {}
+        for o in ovs:
+            if o.get("kind") != "construction_site":
+                continue
+            for a in o["axes"]:
+                if a["class"] != "not_open":
+                    continue
+                L = a["line_epsg2180"]
+                for (x0, y0), (x1, y1) in zip(L, L[1:]):
+                    if min(y0, y1) <= Y <= max(y0, y1) and y0 != y1:
+                        out[a["osm_way"]] = (x0 + (x1 - x0) * (Y - y0) / (y1 - y0), a["half_width_m"])
+        return out
+
+    c5, c6 = crossings(ov), crossings(ov6)
+    assert c6 and set(c6) == set(c5) == {1151531608, 1151531613}
+    for w in c6:
+        assert abs(c5[w][0] - c6[w][0]) <= 0.1 and c5[w][1] == c6[w][1], (w, c5[w], c6[w])
