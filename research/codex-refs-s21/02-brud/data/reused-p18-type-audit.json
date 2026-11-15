@@ -1,0 +1,39 @@
+{
+  "audit_date": "2026-11-15",
+  "method": "Ponowne osobne obejrzenie lokalnych pełnych kadrów oraz odczyt zachowanej extmetadata Commons; bez sieci/pobrań/nowych wycinków.",
+  "metadata_snapshot": "data/reused-p18-source-metadata.json",
+  "items": [
+    {
+      "id": "02-008",
+      "p18": "P18-121",
+      "source": "https://commons.wikimedia.org/wiki/File:Rear_of_a_long_lorry_parked_on_the_A419_in_Gloucestershire_-_geograph.org.uk_-_7372866.jpg",
+      "author": "Jaggery (geograph)",
+      "license": "CC BY-SA2.0",
+      "source_description_verbatim": "Rear of a long lorry parked on the A419 in Gloucestershire",
+      "source_description_field": "Commons imageinfo extmetadata.ImageDescription, zapisany snapshot",
+      "source_categories": "Images from Geograph Britain and Ireland | Eastington, Stroud; bez kategorii semi-trailer w zachowanej metadanej",
+      "image_type_evidence": "Widoczny wyłącznie tył skrzyni z podwójnymi drzwiami, dolną belką i kołami; brak kabiny, sprzęgu/siodła, podpór i pełnej długości podwozia. Napisy LONG VEHICLE i marka na belce nie rozstrzygają naczepa/solówka/przyczepa dyszlowa.",
+      "verdict": "FIX — naczepa vs solówka/drawbar UNVERIFIED",
+      "confirmed": "Dwuskrzydłowe drzwi skrzyni pojazdu ciężarowego, film/smugi i zabrudzony próg/belka.",
+      "why": "Słowo lorry nie jest niezależnym potwierdzeniem konstrukcji naczepy.",
+      "retain_as": "Znany pozytywny wzorzec brudu dwuskrzydłowych drzwi; nie potwierdzony typ naczepy."
+    },
+    {
+      "id": "02-009",
+      "p18": "P18-158",
+      "source": "https://commons.wikimedia.org/wiki/File:Knight_transportation_trailer_-_rear.jpg",
+      "author": "Eric Polk",
+      "license": "CC BY-SA4.0",
+      "source_description_verbatim": "Rear of a Knight Transportation semi-trailer in Los Angeles, California, USA.",
+      "source_description_field": "Commons imageinfo extmetadata.ImageDescription, zapisany snapshot",
+      "source_categories": "Box semi-trailers in the United States | Knight Transportation semi-trailers; pomocnicza klasyfikacja Commons, nie samodzielny dowód techniczny",
+      "image_type_evidence": "Sam tylny kadr pokazuje skrzynię z podwójnymi drzwiami, czterema prętami, tylnymi kołami i belką; brak widoku sprzęgu/siodła, podpór/kabiny i pełnego podwozia. Obraz sam nie rozstrzyga całej konfiguracji.",
+      "verdict": "PASS źródłowy dla semi-trailer — SOURCED [opis autora Commons]; bez niezależnej wizualnej identyfikacji sprzęgu",
+      "confirmed": "Autor w ImageDescription wyraźnie pisze semi-trailer, a nie jedynie trailer/lorry; to podstawa identyfikacji typu.",
+      "eu_category": "UNVERIFIED; z amerykańskiego semi-trailer nie wyprowadzono kategorii UE O3/O4, liczby osi ani parametrów homologacji.",
+      "retain_as": "Znany pozytywny wzorzec filmu i wycierek na drzwiach naczepy identyfikowanej wprost przez autora."
+    }
+  ],
+  "counting_note": "Dwa znane wzorce brudu zachowują wartość. W tej parze typ semi-trailer ma bezpośrednie potwierdzenie tekstowe tylko02-009;02-008 wymaga neutralnego opisu skrzyni. Nowe fotografie0; ścisły przyrost M61>=1000px0, niezależnie od typu.",
+  "scope": "Zapisano tylko nowy data/reused-p18-type-audit.json. Manifest/README i pierwotne obserwacje bez zmian."
+}

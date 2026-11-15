@@ -123,3 +123,12 @@ Siatkę zimowych wyników Finlandii potraktowano wyłącznie jako selekcję; dom
 ## Korekta typu pojazdu02-010
 
 Audyt data/flickr-230839170-type-audit.json: z tylnego kadru pewne są drzwi skrzyni, koła i belka; brak potwierdzenia sprzęgu/siodła, podpór, kabiny lub całego podwozia. Naczepa vs solówka/drawbar pozostaje UNVERIFIED. Poprawiono wcześniejsze bezwarunkowe określenie naczepa w głównym manifeście i obserwacjach. Wzorzec filmu/smug pozostaje jakościowo użyteczny, ale nie kwalifikuje rodzaju pojazdu do M61; ścisły licznik nadal0.
+
+
+### Kontrola typu przed pobraniem — nowy obieg Commons
+
+Selekcja metadanych `intitle:trailer intitle:rear filetype:bitmap` zwróciła30 plików, w tym9 znanychP18. Żaden nowy nie przeszedł jednocześnie warunków: jawne semi-trailer w opisie autora, skrzynia z podwójnymi drzwiami, odpowiednia licencja i szansa1000px drzwi. Nowe tytuły dotyczyły m.in. cysterny, przyczep specjalnych, wagonu i pojazdów wystawowych; słowa trailer nie zamieniano automatycznie na naczepę. Dodatkowy opis Groenewegen potwierdzał naczepę, lecz płaską platformę. ICR end doors to znane kadry rdzyP18, bez ponownego zliczania.
+
+Brak nowych pobrań, brak nowych oględzin i brak wzrostu liczników. To wynik selekcji metadanych, nie opis obrazów. Dziennik `data/semitrailer-preselection-result-2026-11-15.json` wskazuje dwa selektywne snapshoty źródłowe. Dwa nieprzydatne pełne zestawy początkowych wyników (główniePDF/niepasujące obrazy) usunięto; ukończonych audytów nie zmieniano.
+
+Dalszy audyt typu istniejących P18: 02-008 autor opisuje tylko jako long lorry, więc naczepa/solówka/drawbar UNVERIFIED. 02-009 autor Commons wprost identyfikuje semi-trailer — typ SOURCED z opisu autora, nie z samego tylnego kadru. Nie wyprowadzono kategorii UE. Dwa pozytywne wzorce rozkładu brudu nie oznaczają dwóch niezależnie potwierdzonych naczep; nowe ścisłe M61 nadal0. Dowód w data/reused-p18-type-audit.json.

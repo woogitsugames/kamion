@@ -1,0 +1,51 @@
+{
+  "scope": "Mała selekcja metadanych przed oględzinami/pobraniem: typ wprost z opisu autora, CC0/BY/BY-SA, szansa1000px drzwi, brak dublaP18.",
+  "images_downloaded": 0,
+  "images_new_viewed": 0,
+  "qualifying_delta": 0,
+  "result": "Brak nowego kandydata spełniającego wszystkie warunki selekcji. Nie rozpoczęto niepotrzebnego pobierania obrazów.",
+  "title_filtered_search": {
+    "query": "intitle:trailer intitle:rear filetype:bitmap",
+    "results": 30,
+    "already_known_p18": 9,
+    "new_titles_but_not_usable": 21,
+    "new_usable": 0,
+    "details": "Nowe tytuły obejmowały przyczepy specjalne/cysternę/kolej/pojazdy wystawowe lub opisy tylko trailer bez potwierdzenia semi-trailer. Żadnego typu/brudu nie opisano z tytułu; to selekcja metadanych, nie ocena obrazów."
+  },
+  "other_queries": [
+    {
+      "query": "Sattelauflieger hinten filetype:bitmap",
+      "results": 0
+    },
+    {
+      "query": "semi-trailer doors filetype:bitmap",
+      "results": 10
+    }
+  ],
+  "examples_excluded_before_image": [
+    {
+      "title": "Rear view of a 2012 tank truck trailer, Eurotank ET-38-5, in Brastad.jpg",
+      "reason": "Autor identyfikuje tank trailer; brak skrzyni z dwuskrzydłowymi drzwiami w opisie. Nie opisano obrazu."
+    },
+    {
+      "title": "Mollie King's Pedal Power BBC Radio1 OB Trailer Rear.jpg",
+      "reason": "Autor podaje outside broadcast trailer, bez niezależnego potwierdzenia konstrukcji semi-trailer. Nie opisano obrazu."
+    },
+    {
+      "title": "Semi-trailer Groenewegen, twin tires, suspension IMG20211110 153847.jpg",
+      "reason": "Autor wprost opisuje flatbed semi-trailer i zawieszenie; brak zamkniętej skrzyni. Nie opisano obrazu."
+    },
+    {
+      "title": "ICR trailer end doors (cropped).jpg / steps.jpg",
+      "reason": "Znane P18-139/P18-153, wcześniej kategoria rdza/wiek. Nie są nowymi kadrami."
+    }
+  ],
+  "source_of_details": [
+    "data/new-rear-trailer-filtered-metadata-2026-11-15.json",
+    "data/semitrailer-description-selection-2026-11-15.json"
+  ],
+  "broad_initial_search_note": "Wstępny sort od najnowszych zwracał w większości PDF i niestosowne fotografie. Zbędne dwa pełne pliki wyników usunięto po zawężeniu; nie są referencjami.",
+  "http429_observed": false,
+  "browser_used": false,
+  "stable_audits_edited": false
+}
