@@ -1,6 +1,7 @@
 """Hero viaducts: authored override `kind: hero_bridge` (ADR 0067).
 
-A generic bridge (roads.meshing: flat soffit, painted band, railing, round piers by rule) is replaced by an authored
+A generic bridge (roads.meshing: flat soffit, painted band, railing, cylindrical piers by rule - the generic stand-in
+only, no real object is described by it) is replaced by an authored
 Blender asset that follows the generated road exactly:
 
   1. `plan()`   after the roads, profiles and the conformed terrain exist: writes the *spec* of every hero bridge
@@ -89,7 +90,7 @@ def _chains(net, ways):
     for c in net.chains:
         if c.meta.get("absorbed") or c.bridge is None or not c.bridge.any():
             continue
-        if {str(e).split(":")[0].lstrip("w") for e, _ in c.edges} & ways:
+        if chain_ways(c) & ways:
             out.append(c)
     return sorted(out, key=lambda c: c.id)
 
@@ -139,6 +140,50 @@ def _station(c, s):
 BLOCKED_COLS = []      # ADR 0144: columns of measured pier rows (`pier_lines_en`) that stand on a carriageway (QA, last plan())
 
 
+def column_points(left_xy, right_xy, col_offset_m):
+    """Axes of the two columns of one pier row: `col_offset_m` either side of the deck centre, on the line through
+    the deck edge rails of the station (`_station(...)["l"]` / `["r"]`). Shared with the keep-out check of ADR 0198
+    (tools/worldgen/qa/check_piers_vs_roads.py), so the check and the generator cannot drift apart."""
+    l_, r_ = np.asarray(left_xy, float)[:2], np.asarray(right_xy, float)[:2]
+    mid = (l_ + r_) / 2
+    nn = l_ - r_
+    nn /= np.linalg.norm(nn)
+    return [mid + nn * f * col_offset_m for f in (-1.0, 1.0)]
+
+
+def keepout(hf, mask, reach: int = 2):
+    """blocked(q) of build_spec / roads.meshing.build_bridge_supports: True where a column axis may not stand - a
+    node of the ground footprint `mask` (terrain grid of `hf`, 1 m; roads incl. kerbs, sidewalks and aprons, plus the
+    paved areas in the full build) within `reach` nodes of q, i.e. about 2.5 m in E and N. Outside the grid: free."""
+    def blocked(q):
+        i = int(round(q[0] - hf.x0))
+        j = int(round(hf.y1 - q[1]))
+        if 0 <= j < mask.shape[0] and 0 <= i < mask.shape[1]:
+            return bool(mask[max(0, j - reach):j + reach + 1, max(0, i - reach):i + reach + 1].any())
+        return False
+    return blocked
+
+
+def chain_ways(c) -> set:
+    """OSM way ids (strings) of the edges of a chain."""
+    return {str(e).split(":")[0].lstrip("w") for e, _ in c.edges}
+
+
+def underdeck_rows(cfg: dict, c):
+    """ADR 0198: authored pier rows of one deck of the under-deck dressing (`viaduct_underdeck.json`), or None.
+
+    `pier_lines_en` = {"<osm way id of the deck chain>": [[E, N], ...]}: a point of every pier row on or near the axis
+    of THAT deck (local E, N). Every deck of the under-deck dressing is its own spec, so a flat list (the form of a
+    `hero_bridge` override, ADR 0123) would be projected onto both decks; the rows are therefore keyed by deck.
+    A deck without a key keeps the span rule. `pier_lines_en_held` (same form) is documentation only: rows that are
+    known from photos but cannot stand in the generated world yet - it is never read here."""
+    rows = cfg.get("pier_lines_en") or {}
+    hit = sorted(k for k in rows if str(k) in chain_ways(c))
+    if len(hit) > 1:
+        raise ValueError(f"viaduct_underdeck.json: pier_lines_en keys {hit} all match chain {c.id}")
+    return [list(map(float, q)) for q in rows[hit[0]]] if hit else None
+
+
 def build_spec(w, o, zground, blocked) -> dict | None:
     """Spec of one hero bridge. zground(e, n) -> conformed terrain height; blocked(q) -> True where a column may not
     stand (carriageway or paved surface underneath)."""
@@ -160,10 +205,7 @@ def build_spec(w, o, zground, blocked) -> dict | None:
 
     def cols_at(c, s):
         st = _station(c, s)
-        mid = (np.array(st["l"][:2]) + np.array(st["r"][:2])) / 2
-        nn = np.array(st["l"][:2]) - np.array(st["r"][:2])
-        nn /= np.linalg.norm(nn)
-        return [mid + nn * f * prm["col_offset_m"] for f in (-1.0, 1.0)]
+        return column_points(st["l"], st["r"], prm["col_offset_m"])
 
     def on(c, p):
         s, _ = c.line.project(np.asarray(p, float))
@@ -366,7 +408,9 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
             if any(c.id in {ch.id for ch in h["chains"]} for h in out):
                 continue
             local = SimpleNamespace(net=SimpleNamespace(chains=[c]), region=w.region)
-            spec = build_spec(local, cfg, zground, blocked)
+            rows = underdeck_rows(cfg, c)          # ADR 0198: authored pier rows per deck instead of the span rule
+            spec = build_spec(local, cfg if rows is None else {**cfg, "set": {**cfg["set"], "pier_lines_en": rows}},
+                              zground, blocked)
             if spec is not None:
                 # Ground samples are authored into the spec, so stairs cannot float
                 # above an imagined planar embankment. Never write to raw junctions.
@@ -405,6 +449,8 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
                         if not blocked(xy):
                             spec["self_seeded_grass"].append([_r(xy[0]), _r(xy[1]), _r(zground(*xy))])
                 out.append({"underdeck": True, "spec": spec, "chains": [c], "override": cfg})
+        # ADR 0198: the authored rows of the under-deck decks are reported too (the list was written before this loop)
+        rep["pier_cols_on_carriageway"] = [list(q) for q in BLOCKED_COLS]
         sp = spec_path(region_id, cfg["asset"])
         sp.parent.mkdir(parents=True, exist_ok=True)
         sp.write_text(json.dumps([h["spec"] for h in out if h.get("underdeck")],
