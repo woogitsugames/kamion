@@ -43,3 +43,5 @@ regulations-vegetation.csv zawiera5 wierszy z paragrafami i datowanymi źródła
 ## Uzupełnienie listy GDDKiA — pełne rekordy S16
 
 04-D05/D06: odczytano pełną oficjalną tabelę z innego publicznego URL, bez wykonywania skryptu challenge z wcześniejszej próby. Dane i metoda w data/gddkia-dk65-table-records.json. SOURCED jako treść rejestru: ręczne wahadło148+968–149+556, dojazd Chraboły147+713; osobno bypass przy152,3km. Zakres4,8km dotyczy obwiedni robót, nie długości wahadła. Terminy są planem w rejestrze; bez gwarancji faktycznego zakończenia. Dokładny stan terenowy15.11 i wygląd znaków nadal UNVERIFIED. Wcześniejszy04-D04 zachowuje dziennik nieskutecznego odczytu nr65; nie oznacza już braku jakichkolwiek pełnych danych o utrudnieniach.
+
+Recenzja04/data/current-records-peer-review.json: pełne rekordy GDDKiA PASS. Skorygowano04-V04 o istotne wyjątki§80ust2 (warunki i wymagane zgody dla zmniejszonej skrajni). Bazowych wysokości nie stosować bezwarunkowo do istniejących wiaduktów. Doprecyzowano04-V05 o zamkniętym katalogu wyjątków noweli2025.

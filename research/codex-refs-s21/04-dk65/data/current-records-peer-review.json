@@ -1,0 +1,86 @@
+{
+  "review_date": "2026-11-15",
+  "method": "Niezależnie odczytana pełna oficjalna tabela GDDKiA oraz pełny HTML2022 i czterostronicowy PDF2025 ELI. Bez wykonywania challenge i bez Chrome.",
+  "reviewed_files": [
+    "data/gddkia-dk65-table-records.json",
+    "regulations-vegetation.csv"
+  ],
+  "gddkia": {
+    "source": "https://drogi.gddkia.gov.pl/informacje-drogowe/lista-utrudnien?odcinek_id=40",
+    "verdict": "PASS",
+    "freshness": "Indeksowana pełna tabela zmieniła długość766→727linii pomiędzy odpowiedziami; badane rekordy pozostają zgodne. To kontrola publikowanych informacji, nie inspekcja terenu.",
+    "timezone": "Niepodana w źródle; zachowano ciągi dat bez konwersji.",
+    "records": [
+      {
+        "id": "04-D05",
+        "section": "Knyszyn–Krynice",
+        "source_locator": "Wiersz tabeli534 w drugim odczycie",
+        "start": "2026-05-14 08:50",
+        "end": "2028-06-30 15:00",
+        "km_start": 145.0,
+        "affected_envelope_km": 4.8,
+        "speed_kmh": 50,
+        "overtaking_prohibited": true,
+        "Chrabol_access_km": 147.713,
+        "alternating_traffic_km": [
+          148.968,
+          149.556
+        ],
+        "traffic_control": "ręczne",
+        "project": "S16 Knyszyn–Krynice",
+        "scope_limit": "4,8km oznacza obszar rekordu; wahadło dotyczy tylko wskazanego przedziału kilometrażu."
+      },
+      {
+        "id": "04-D06",
+        "section": "Kozińce–Krynice",
+        "source_locator": "Wiersz tabeli491 w drugim odczycie",
+        "start": "2026-07-30 11:00",
+        "end": "2027-11-30 15:00",
+        "km_start": 152.3,
+        "affected_envelope_km": 0.6,
+        "speed_kmh": 50,
+        "overtaking_prohibited": true,
+        "work": "Wyjazd z budowy oraz bypass przy budowieS16 Knyszyn–Krynice.",
+        "alternating_traffic": "Nie podano w tym rekordzie; nie dopisywać."
+      }
+    ],
+    "schedule_limit": "Terminy publikowane/plany, nie dowód wykonania ani gwarancja czasu utrzymywania organizacji."
+  },
+  "V04": {
+    "verdict": "FIX — wartości ust.1 poprawne, pominięto istotny ust.2",
+    "source": "https://eli.gov.pl/api/acts/DU/2022/1518/text.html",
+    "locator": "§80 ust.1 pkt1–3 oraz ust.2 pkt1–2",
+    "baseline_m": {
+      "A_S": 5.0,
+      "GP_G_Z_L_D": 4.5,
+      "pedestrian_cycle": 2.5
+    },
+    "missing_exception": "W trudnych warunkach albo gdy obiekt nad drogą lub droga pod obiektem nie są budowane/przebudowywane można zmniejszyć wysokość.",
+    "carriageway": "Do4,20m: zgoda zarządcy drogi i organu zarządzającego ruchem; poniżej4,20m dodatkowo właściwy komendant wojewódzki PSP.",
+    "pedestrian_cycle": "Zmniejszenie za zgodą zarządcy drogi i organu zarządzającego ruchem; ust.2pkt2 nie podaje liczbowego minimum.",
+    "recommendation": "Dodać warunkowy wyjątek i odesłanie doV05; nie traktować bazowych minimów jako bezwarunkowego pomiaru istniejącej drogi."
+  },
+  "entry_and_transition": [
+    {
+      "source": "https://eli.gov.pl/api/acts/DU/2022/1518/text.html",
+      "status_url": "https://eli.gov.pl/eli/DU/2022/1518/ogl",
+      "entry_into_force": "2022-09-21",
+      "locator": "§115 ust.1–2",
+      "finding": "Wcześniejsze wnioski, zgłoszenia lub wszczęte zamówienia na projekt/projekt+roboty wskazane w tym przepisie kierują budowę/przebudowę do wcześniejszych przepisów techniczno-budowlanych."
+    },
+    {
+      "source": "https://eli.gov.pl/api/acts/DU/2025/1352/text.pdf",
+      "status_url": "https://eli.gov.pl/eli/DU/2025/1352/ogl",
+      "entry_into_force": "2025-10-22; §1pkt3 od2026-10-08",
+      "locator": "§1 pełna lista zmian; §2–3, s4",
+      "finding": "§80 niezmieniony. Dla wcześniejszych postępowań zasadą jest brzmienie po noweli; zachowano opcję starych §13ust1pkt3,15ust7,17ust5,34ust2–3,83ust6 i zał.3ust9/74pkt3 oraz niestosowania9ust1a. To nie ogólne pozwolenie na stosowanie całego starego aktu."
+    }
+  ],
+  "V05_note": "Ogólna uwaga o reżimach przejściowych jest słuszna; konkretna inwestycja nie została przypisana. Przy rozwinięciu2025 zachować zamknięty katalog wyjątków §2.",
+  "not_verified": [
+    "Rzeczywisty reżim projektowy każdego obiektu DK65.",
+    "Zgody wymagane dla ewentualnej zmniejszonej skrajni.",
+    "Fizyczny stan znaków, bypassu i wahadła w dniu odczytu."
+  ],
+  "files_changed": "Wyłącznie ten nowyJSON; źródłowe pliki koordynatora pozostawiono bez zmian."
+}
