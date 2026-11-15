@@ -157,6 +157,15 @@ namespace Game.UI
 
             // Left column: wheel + pedals
             float y = 0f;
+            // ADR 0264: PC keyboard + pad screen first (installed by Game.Gameplay.PcInputBridge). Kept away from the
+            // pedals block, which ADR 0265 extends, so the two PRs merge without a conflict.
+            if (OpenInputBindings != null)
+            {
+                Header(content, "KLAWIATURA I PAD", left, ref y);
+                var kb = TextButton(content, "Przypisania i czułość…", Vector2.zero, new Vector2(ColW, 64f), () => OpenInputBindings?.Invoke(transform));
+                PlaceTop((RectTransform)kb.transform, left, y, new Vector2(ColW, 64f));
+                y += 64f + 8f + 18f;
+            }
             Header(content, "KIEROWNICA DOTYKOWA", left, ref y);
             Segment(content, left, ref y, "Chwyt", "obrót", "przesuw", () => Settings.wheelDragGrab, v => Settings.wheelDragGrab = v);
             Stepper(content, left, ref y, "Zakres kierownicy", () => F0(Settings.wheelRangeDeg) + "°", d => Settings.wheelRangeDeg = Step(Settings.wheelRangeDeg, d, 90f, ControlSettings.RangeMin, ControlSettings.RangeMax));
@@ -168,14 +177,6 @@ namespace Game.UI
             Header(content, "PEDAŁY", left, ref y);
             Segment(content, left, ref y, "Krzywa gazu", "liniowa", "progresywna", () => Settings.throttleProgressive, v => Settings.throttleProgressive = v);
             Segment(content, left, ref y, "Krzywa hamulca", "liniowa", "progresywna", () => Settings.brakeProgressive, v => Settings.brakeProgressive = v);
-            if (OpenInputBindings != null)   // ADR 0264: PC keyboard + pad screen (installed by Game.Gameplay.PcInputBridge)
-            {
-                y += 18f;
-                Header(content, "KLAWIATURA I PAD", left, ref y);
-                var kb = TextButton(content, "Przypisania i czułość…", Vector2.zero, new Vector2(ColW, 64f), () => OpenInputBindings?.Invoke(transform));
-                PlaceTop((RectTransform)kb.transform, left, y, new Vector2(ColW, 64f));
-                y += 64f + 8f;
-            }
             float leftEnd = y;
 
             // Right column (or continued below in one column): gyro + camera
