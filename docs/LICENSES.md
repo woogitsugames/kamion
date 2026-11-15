@@ -521,3 +521,5 @@ Knyszyn03/new-round2:3 miniatury nowych względemK1 źródeł Henryka Borawskieg
 04/mapillary-browser-round2: picturehoover,2 indywidualnie obejrzane obrazy2020, wyłącznie linki/permalinki i własne opisy, bez kopii. Oficjalna pomoc Mapillary wskazujeCC BY-SA4.0 i atrybucję; dowód z adresem i datą w licence-check.json. PełnychTerms nie odczytano (Not Logged In), nie logowano się. BrakAPI/tokenów; jawny podkładOpenStreetMap, bezGoogle.
 
 02/creator-round6/files/CR6-001*.jpg: EricPolk, Commons Western_Express_semi-trailer.jpg, CC BY-SA4.0; zmniejszenie pełnego kadru i jawny wycinek dolnych drzwi/progu. Oryginał poza gitem, SHA w manifeście, metadane/licencje w selected.json. Pochodne to1kadr. Dealer-round2 wyłącznie link-only ARR; Flickr-recheck-round4 BillStilwell CC BY-SA2.0 tylko link i niejednoznaczny mechanizm powierzchni po recenzji, bez obrazu.
+
+03/mapillary-town-round6 i 04/mapillary-corridor-round3: picturehoover, historyczne kadry z 27.06.2020, CC BY-SA4.0 według oficjalnej pomocy wskazanej w manifestach. Wyłącznie permalinki i własne opisy po oględzinach, bez pobrań zdjęć lub zapisanych screenshotów; podkład OSM, bez API i tokenów.

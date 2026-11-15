@@ -105,3 +105,6 @@ Cztery nowe dokumenty tekstowe (manifest główny teraz21 wierszy), bez nowych z
 Fontanna-round5:1 nowy dokument gminny z15.12.2023 o zimowej bombce w miejscu letniej fontanny; fotografii nie oglądano i nie opisano. To nie dowód świecącej wody ani parametrów dysz. Łącznie główny manifest26 rekordów; nowe lokalne rastry w tych dwóch porcjach0.
 
 Dodatkowy historyczny kadr ulicy przy Rynku:04-dk65/mapillary-browser-round2,04M2-002 (picturehoover,27.06.2020, CC BY-SA4.0 wg oficjalnej pomocy). Chodniki, schody, drewniana fasada i przewody, bez odczytu adresu. Nie zdublowano rekordu w manifeście03 ani licznikach; GPS kamery i stan2026 UNVERIFIED.
+
+
+Mapillary-town-round6: dwa nowe, osobno obejrzane kadry picturehoover z 27.06.2020: Kościelna (zielona bryła ze szczytem, chodnik i łaty asfaltu) oraz Rynek (ceglana poczta, schody, sąsiednia drewniana fasada). Obserwacje i ograniczenia w podkatalogu. SOURCED [manifest i przegląd UI]: główny manifest 28 rekordów; ta porcja 2 link-only, 0 pobrań. Nie potwierdzają stanu 2026, GPS kamery ani formalnej liczby kondygnacji.
