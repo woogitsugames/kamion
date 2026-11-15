@@ -577,3 +577,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 03/church-surfaces-round10:4miniatury≤800px pochodnepodglądówCommons, Zala, CC BY-SA4.0,21.07.2024. Dokładne4URL/daty/atrybucje/licencja permanifest. Pełnekadry bezcropów/upscalingu,0pełnychoryginałów; rawpodglądy pozaGit. Nie są kopiami właściciela ani znanychK1-01/11/15.
 
 01/rear-approval-round12:3fotografie publikowaneAUTO CZĘŚCI KACZMAREK SEWERYN/Otomoto6144759743, autorfotografiiUNVERIFIED; tylko link-only, all rights reserved. Każdy dokładny adres obejrzany osobno, bez kopii/screenshotów; wGitwłasne obserwacje,0nowych odczytówE/funkcji.
+
+02/europe-used-trailers-round15:1fotografiaOLX/Otomoto1110839344/ID1daY3C, autorUNVERIFIED, tylko link-only, all rights reserved; bez pobrań/screenshotów. Typ i rozmiar obrazu sprawdzone oddzielnie, natywnyoryginałUNVERIFIED. 02/commons-europe-round16:0obrazówGit;1podglądMarkAhsmannCCBY-SA3.0 do audytu znanegoP18-131 wyłącznie pozaGit,2zestawy metadanychCommons i własne opisy wrepo.

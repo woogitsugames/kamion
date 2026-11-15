@@ -1,6 +1,6 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Aktualny manifest:21 rekordów=19 kadrów(14 lokalnych,5 link-only)+2 dokumenty; obejmuje odrzucenia i pomocnicze. Nowo przyjęty do s21:1kadr; nie21przyjętych zdjęć. Łączna unikalna bazaP18+s21 w audycie.
+Aktualny manifest:22 rekordy=20 kadrów(14 lokalnych,6 link-only)+2 dokumenty; obejmuje odrzucenia i pomocnicze. Nowo przyjęty do s21:1kadr; nie22przyjęte zdjęcia. Łączna unikalna bazaP18+s21 w audycie.
 
 Cel: ≥20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥6 zimowych i ≥6 europejskich. **Do s21 przyjęto1nowy względem własnego manifestu kadr,0zimowych i0europejskich. Wymaganie użytkownika:≥20łącznie; M61-FIX pkt8 wymaga≥12NOWYCH. Unia zP18 i nowość dla całego projektu wymagają deduplikacji, nie są sumą liczników. Kryteria całości niepotwierdzone.**
 
@@ -172,3 +172,11 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Pozostałe lokalne obrazy — obieg14
 
 [21nowych oglądów](baseline-audit-round14/README.md),0pobrań/0sieci, bez powtarzania poprzednich23. Oba audytyłącznie44/88rekordów;dalsze44NOT_REVIEWED nie są zerem/odrzuceniem. W nowejpróbce bez nowego pewnego strictkadru; wcześniejsze158/182/183zachowane, globalna liczbaUNVERIFIED. Potwierdzono wizualnie139/153ten samICR, rdza/wiek; prawdopodobnycrop tej samej ekspozycji wymaga źródłowejdeduplikacji. 138pusta rama,156tyłkabiny,160przódnaczepy,150roleta; nie są tylną parądrzwi. Śnieg104/105/111 potwierdza zimowy kontekst, nie drogowy osad na drzwiach. Dat/licencji/rozmiarówźródła nie weryfikowano ponownie wtejrundzie; nie awansowano deklaracjiP18 do nowegoSOURCED. CałośćM61 nadalniepotwierdzona.
+
+## Europejskie używane naczepy — obieg15
+
+[NowyAUXKrone](europe-used-trailers-round15/README.md),1kadr link-onlyARR,0pobrań. Subtelne szare zmatowienie i smugi przy dolnych zamkach; typnaczepy potwierdzony opisem oraz konstrukcją na pełnym widoku. Wyświetlany bitmap539×700/drzwiEST450–520px; parametrURL1000×700 nie gwarantuje1000pxdrzwi. Pełnyoryginał i zarazpo trasieUNVERIFIED, bez wzrostuFIX≥12/1000px. Trawa/bezśniegu nie datują sezonu, lokalizacjaoferty nie jest GPSfotografii. Inne3galerie odrzucone jako zasłonięte/prawieczyste/słabyfilm.
+
+## CommonsEuropa — kontrola znanych tropów, obieg16
+
+[131/133](commons-europe-round16/README.md) to exactduplikatyP18,0nowych.133ma terazźródłowo potwierdzony typnaczepy, ale drzwi pozostają prawieczyste. Nowo obejrzany podgląd131Maastricht: mały dwuskrzydłowy tył faktyczniejestwidoczny, więc dawne słowa o całkowitym braku tyłu nieprecyzyjne; brakczytelnego filmu i rozmiaru dla nowegoFIX.1podglądCC pozaGit,0nowychrastrówGit. Uniaaudytu23+21+131=45/88,43NOT_REVIEWED, nie pełna liczba kwalifikacji. Nie zmieniono cudzychCSV.

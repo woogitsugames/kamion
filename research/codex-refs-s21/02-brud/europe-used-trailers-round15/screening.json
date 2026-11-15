@@ -1,0 +1,66 @@
+{
+  "snapshot_brussels": "2026-11-15 23:11CET/Bruksela",
+  "photos_downloaded": 0,
+  "local_photo_or_screenshot_files": 0,
+  "reviewed_galleries": 4,
+  "manifest_frames": 1,
+  "manifest_vehicles": 1,
+  "confirmed_strict_new_fix": 0,
+  "confirmed_winter_dirty_frames": 0,
+  "dedup": "rg URL/photoID/vehicleID against P18+s21: no matches for four selected sources before write; exact photo equivalence beyond available records UNVERIFIED",
+  "notes": "No login/CAPTCHA/challenge encountered; no directcdn download or parameter variants; viewed public supplied galleries only",
+  "candidates": [
+    {
+      "id": "EUR15-S01",
+      "source": "https://www.trucks.nl/krone-sd-refrigerated-freezer-trailer-inspected-9299674-vd",
+      "vehicle": "ATS10952",
+      "source_type": "Koel-vries oplegger,used2013; source listing category and Blocket27997334 placeNjurunda",
+      "reviewed": "Chrome full modal5/31 individually",
+      "visible": "Dwa jasne skrzydła z pionowymi ryglami i celowo zapikselowanym oznaczeniem; dolna belka mocno brązowordzawa. Pola drzwi z tego małego obrazu nie dają pewnego filmu. Plac bez śniegu.",
+      "rendered_image": "https://cdn.trucks.nl/tms/d/5/d52de11ae28751c8adb73705b4c025c3.jpg?width=3840&height=2160&quality=90",
+      "natural_px": [
+        512,
+        384
+      ],
+      "door_height_estimated_px": "220–250",
+      "verdict": "REJECT_RESOLUTION_AND_UNCONFIRMED_DIRT; high query3840 does not create native detail",
+      "license": "link-only, all rights reserved"
+    },
+    {
+      "id": "EUR15-S02",
+      "source": "https://psauction.com/item/view/756877/truck-trailer-fridge-freezer-trailer-3-axle-krone-sd-2013",
+      "vehicle": "PS756877-DRN953",
+      "source_type": "KRONE SD2013 freezer trailer; description explicitly dolly mounted and not included, gallery1 shows landing/front configuration",
+      "reviewed": "Chrome full lightbox photo756877-8 individually; image1 viewed for construction",
+      "visible": "Dwa białe skrzydła z czerwonym obrysem i logotypami; gałęzie przed górą drzwi. Pola w większości czyste, drobne ciemne ślady przy dolnym zamku. Wyraźniejsze pionowe szare smugi pod progiem na metalowej listwie; niżej brązowa rdza ramy. Nie kwalifikuję czystych pól z brudnego progu.",
+      "rendered_image": "https://d2q01ftr6ua4w.cloudfront.net/assets/images/b008077b4cb2f6ad7887bc3b575b2b491106ed23.jpeg?t=1615974521",
+      "natural_px": [
+        1080,
+        1620
+      ],
+      "door_height_estimated_px": "UNVERIFIED for complete1000 threshold: oblique view with near upper frame at image edge; not needed for rejection of dirt",
+      "date": "SOURCED auction end25.03.2021 13:28CET; photo dateUNVERIFIED; operation until09.03.2021 does not date photo or prove immediately-after-route",
+      "location": "SOURCED lotGöteborg; no photograph geotag",
+      "verdict": "OUTSIDE_DIRT_CORE; useful threshold-only but not added as anotherAUX manifest row",
+      "license": "link-only, all rights reserved"
+    },
+    {
+      "id": "EUR15-S03",
+      "source": "https://www.trucksnl.com/schmitz-cargobull-sko-24-kuhlkoffer-mit-frigoblock-ladebordwand-9177833-vd",
+      "vehicle": "Hamm-A66",
+      "source_type": "SOURCED refrigerated semi trailer2010; German Auflieger; dealerHamm",
+      "reviewed": "Chrome full displayed photo6/11 individually",
+      "visible": "Pełny zestaw chłodniczy z trzema osiami naczepy. Tylny otwór zasłonięty wielką pionową platformą windy z czerwonym obrysem i dwiema czerwono-białymi tablicami; górny fragment z poziomymi podziałami. Brak oglądu wymaganej pary skrzydeł.",
+      "verdict": "REJECT_NO_VISIBLE_DOUBLE_REAR_DOORS; no original/zoom needed",
+      "license": "link-only, all rights reserved"
+    },
+    {
+      "id": "EUR15-A01",
+      "source": "https://www.olx.pl/d/oferta/krone-sdr-27-naczepa-chlodnia-krone-2002-CID5-ID1daY3C.html",
+      "vehicle": "OLX1110839344-OTOMOTO-ID6Ijtsh",
+      "reviewed": "Chrome full1/8 and3/8",
+      "verdict": "AUX_LOCAL_FILM; no confirmed≥1000 door native and no immediately-after-route evidence",
+      "license": "link-only, all rights reserved"
+    }
+  ]
+}
