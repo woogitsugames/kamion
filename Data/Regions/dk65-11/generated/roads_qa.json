@@ -1,0 +1,182 @@
+{
+ "chains": [
+  {
+   "axis_smoothing_dev_max_m": 0.06,
+   "bridge_m": 0.0,
+   "grade_limit": 0.11,
+   "highway": [
+    "unclassified"
+   ],
+   "id": "c:w1111506749:5408160935-10230952007",
+   "lanes": [
+    2
+   ],
+   "length_m": 2432.4,
+   "max_grade": 0.0699,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.015,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.5
+   ],
+   "width_src": [
+    "PTB2022 §17 ust.1 standard"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 1.06,
+   "bridge_m": 0.0,
+   "grade_limit": 0.12,
+   "highway": [
+    "service"
+   ],
+   "id": "c:w1118649159:10230952007-10230952009",
+   "lanes": [
+    2
+   ],
+   "length_m": 102.7,
+   "max_grade": 0.0528,
+   "overrides": [],
+   "profile_rms_vs_nmt_m": 0.018,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    5.0
+   ],
+   "width_src": [
+    "PTB2022 §17 ust.1 standard"
+   ]
+  },
+  {
+   "axis_smoothing_dev_max_m": 0.0,
+   "bridge_m": 0.0,
+   "grade_limit": 0.07,
+   "highway": [
+    "primary"
+   ],
+   "id": "c:w27718745:897574813-1134817563",
+   "lanes": [
+    2
+   ],
+   "length_m": 377.8,
+   "max_grade": 0.0539,
+   "overrides": [
+    "rural-roads-unlit"
+   ],
+   "profile_rms_vs_nmt_m": 0.008,
+   "sidewalk_frac": 0.0,
+   "width_m": [
+    7.5
+   ],
+   "width_src": [
+    "authored_override:dk65-carriageway-width"
+   ]
+  }
+ ],
+ "junction_notes": {},
+ "region": "dk65-11",
+ "schema": "truck-sim-pl/roads-qa/1",
+ "summary": {
+  "authored_paint": [],
+  "axis_smoothing_deviation_m": {
+   "max": 1.055,
+   "p50": 0.0,
+   "p95": 0.006
+  },
+  "bridges": [],
+  "chains": 3,
+  "clearance_by_class_m": {
+   "A": 5.0,
+   "D": 4.5,
+   "G": 4.5,
+   "GP": 4.5,
+   "L": 4.5,
+   "S": 5.0,
+   "Z": 4.5
+  },
+  "crossings_in_junction": [],
+  "crossings_merged": 0,
+  "crossings_p11": 0,
+  "crossings_skipped": [],
+  "crossings_snapped": 0,
+  "decals": {
+   "gullies": 146,
+   "oil": 0,
+   "patches": 25
+  },
+  "emergency_signal_junctions": [],
+  "footprint_nodes": 48487,
+  "fork_abreast": [],
+  "fork_shifts": [],
+  "fork_tapers": [],
+  "gores": {
+   "gores": [],
+   "islands": [],
+   "kerb_dropped_m": 0.0,
+   "kerb_tris_in_fill": 0,
+   "paved": {},
+   "rejected": [],
+   "rule": {
+    "max_slope": 0.1,
+    "min_island_m2": 5.0,
+    "min_island_w_m": 2.0,
+    "sliver_max_len_m": 60.0,
+    "status": "WORKING_VALUE"
+   }
+  },
+  "grade_over_limit": [],
+  "junction_patches": {},
+  "junctions": 0,
+  "junctions_earclip": [],
+  "junctions_repaired": [],
+  "low_confidence": [
+   "bridge deck heights interpolated between abutments (NMT = ground under deck); piers by rule",
+   "sidewalks inferred from parallel OSM footways (≤ 1.4 m from the sidewalk centre line)",
+   "kerb returns: WORKING_VALUE radii by class (standards.CURB_RADIUS)",
+   "carriageway width: BDOT10k clamped to PTB2022 §17 ranges, else class standard"
+  ],
+  "markings": {
+   "P-1 centre line": 1
+  },
+  "markings_overlap_removed_tris": 0,
+  "median_fills": [],
+  "nmt_nodes_replaced_under_decks": 0,
+  "overrides_applied": [
+   {
+    "id": "dk65-carriageway-width",
+    "targets": [
+     "w27718745:897574813-1134817563"
+    ]
+   },
+   {
+    "id": "rural-roads-unlit",
+    "targets": [
+     "w27718745:897574813-1134817563"
+    ]
+   }
+  ],
+  "overrides_stale": [],
+  "paint_clear_tris": {},
+  "paint_erased_in_zones_tris": 0,
+  "painted_zones": [],
+  "profile_ties": [],
+  "roundabout_junctions": 0,
+  "sides_on_carriageway_culled": {
+   "kerb_tris": 0,
+   "parts": 0,
+   "side_tris": 0
+  },
+  "signalised_junctions": 0,
+  "through_lines": {
+   "crossing_pairs_skipped": 0,
+   "junctions": 0,
+   "lines": {},
+   "pairs": 0,
+   "unmatched": 0
+  },
+  "verge_strips": {
+   "chunks": 14,
+   "tris": 1416
+  },
+  "walled_ramps": []
+ }
+}

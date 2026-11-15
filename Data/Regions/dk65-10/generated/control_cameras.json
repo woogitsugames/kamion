@@ -1,0 +1,154 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0163",
+   "look_at": [
+    722.521,
+    -833.666,
+    130.169
+   ],
+   "note": "driver eye 2.5 m, control route s = 163 m of 2615 m (unnamed)",
+   "pos": [
+    755.398,
+    -883.885,
+    131.228
+   ],
+   "route_s_m": 163.441,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0490",
+   "look_at": [
+    551.392,
+    -555.159,
+    129.886
+   ],
+   "note": "driver eye 2.5 m, control route s = 490 m of 2615 m (unnamed)",
+   "pos": [
+    584.244,
+    -605.394,
+    132.139
+   ],
+   "route_s_m": 490.323,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0817",
+   "look_at": [
+    379.894,
+    -276.88,
+    125.948
+   ],
+   "note": "driver eye 2.5 m, control route s = 817 m of 2615 m (unnamed)",
+   "pos": [
+    412.584,
+    -327.205,
+    127.907
+   ],
+   "route_s_m": 817.204,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1144",
+   "look_at": [
+    197.903,
+    -6.29,
+    124.808
+   ],
+   "note": "driver eye 2.5 m, control route s = 1144 m of 2615 m (unnamed)",
+   "pos": [
+    239.124,
+    -50.029,
+    126.471
+   ],
+   "route_s_m": 1144.086,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1471",
+   "look_at": [
+    -25.579,
+    232.263,
+    124.677
+   ],
+   "note": "driver eye 2.5 m, control route s = 1471 m of 2615 m (unnamed)",
+   "pos": [
+    16.664,
+    189.619,
+    125.82
+   ],
+   "route_s_m": 1470.968,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1798",
+   "look_at": [
+    -249.099,
+    470.77,
+    125.278
+   ],
+   "note": "driver eye 2.5 m, control route s = 1798 m of 2615 m (unnamed)",
+   "pos": [
+    -206.537,
+    428.43,
+    126.44
+   ],
+   "route_s_m": 1797.849,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2125",
+   "look_at": [
+    -472.301,
+    709.584,
+    130.629
+   ],
+   "note": "driver eye 2.5 m, control route s = 2125 m of 2615 m (unnamed)",
+   "pos": [
+    -430.108,
+    666.892,
+    131.718
+   ],
+   "route_s_m": 2124.731,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2452",
+   "look_at": [
+    -695.439,
+    948.458,
+    132.517
+   ],
+   "note": "driver eye 2.5 m, control route s = 2452 m of 2615 m (unnamed)",
+   "pos": [
+    -653.21,
+    905.801,
+    133.205
+   ],
+   "route_s_m": 2451.613,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 273.274,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-10",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

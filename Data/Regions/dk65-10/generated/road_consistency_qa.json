@@ -1,0 +1,26 @@
+{
+ "by_kind": {},
+ "cases": [],
+ "count": 0,
+ "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
+ "on_route": {},
+ "params": {
+  "dz_m": 0.8,
+  "kerb_ring_m": 0.3,
+  "lane_inset_m": 0.45,
+  "prop_inset_m": 0.2,
+  "station_m": 2.0,
+  "through_deg": 35.0
+ },
+ "region": "dk65-10",
+ "route_band_m": 30.0,
+ "route_segments_s_m": null,
+ "schema": "truck-sim-pl/road-consistency-qa/1",
+ "stats": {
+  "approach_lanes": 19,
+  "kerb_tris": 7901,
+  "lane_samples": 17034,
+  "marking_tris": 860,
+  "props_checked": 162
+ }
+}

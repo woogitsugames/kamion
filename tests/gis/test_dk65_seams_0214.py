@@ -59,7 +59,10 @@ def test_seam_cross_section_matches(a, b):
     assert last["osm_way"] == first["osm_way"], f"{a}->{b}: route leaves via way {last['osm_way']}, enters via {first['osm_way']}"
     if (a, b) in PENDING_0207:
         pytest.xfail("dk65-05 Ełcka 7.6 m (ADR 0207) until the D65 p.5 correction of dk65-02..05 lands")
-    assert _effective(last, oa) == _effective(first, ob)
+    va, vb = _effective(last, oa), _effective(first, ob)
+    if b == "knyszyn-s" and vb["edge_lines"] is None and {k for k in va if va[k] != vb[k]} == {"edge_lines"}:
+        pytest.xfail("knyszyn-s DK65 edge lines come with ADR 0212 (branch knyszyn-edges-0212, not merged yet)")
+    assert va == vb
 
 
 def test_dk65_section_same_from_06_to_knyszyn_s():

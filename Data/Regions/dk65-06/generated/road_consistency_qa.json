@@ -1,0 +1,109 @@
+{
+ "by_kind": {
+  "lane_blind_end": 4
+ },
+ "cases": [
+  {
+   "chain": "c:w1151531609:10712325641-10712325633",
+   "dist_from_stop_m": 12.5,
+   "e": -128.32,
+   "junction": "j:n10712325633",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.2287139,
+   "lon": 23.011208,
+   "n": -962.03,
+   "on_route": false,
+   "osm_ways": [
+    1151531609
+   ],
+   "to_chain": "c:w1448265994:10712325630-10712325633",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w406675599:13287792749-5000792978",
+   "dist_from_stop_m": 11.6,
+   "e": -76.5,
+   "junction": "j:n13287792748",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.2295535,
+   "lon": 23.0120637,
+   "n": -865.51,
+   "on_route": false,
+   "osm_ways": [
+    406675599
+   ],
+   "to_chain": "c:w1448265996:13287792748-10712325651",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w76085945:13371361361-4087227386",
+   "dist_from_stop_m": 20.5,
+   "e": 352.08,
+   "junction": "j:n4087227386",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.2362192,
+   "lon": 23.0191157,
+   "n": -98.28,
+   "on_route": false,
+   "osm_ways": [
+    76085945
+   ],
+   "to_chain": "c:w76085945:4087227393-12529420150",
+   "turn_lanes": null,
+   "what": "kerb"
+  },
+  {
+   "chain": "c:w200160202:2101502716-2118965592",
+   "dist_from_stop_m": 11.0,
+   "e": 938.42,
+   "junction": "j:n2118965592",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.2424996,
+   "lon": 23.0285,
+   "n": 634.95,
+   "on_route": false,
+   "osm_ways": [
+    200160202
+   ],
+   "to_chain": "c:w200160202:2118965592-897574852",
+   "turn_lanes": null,
+   "what": "kerb"
+  }
+ ],
+ "count": 4,
+ "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
+ "on_route": {},
+ "params": {
+  "dz_m": 0.8,
+  "kerb_ring_m": 0.3,
+  "lane_inset_m": 0.45,
+  "prop_inset_m": 0.2,
+  "station_m": 2.0,
+  "through_deg": 35.0
+ },
+ "region": "dk65-06",
+ "route_band_m": 30.0,
+ "route_segments_s_m": null,
+ "schema": "truck-sim-pl/road-consistency-qa/1",
+ "stats": {
+  "approach_lanes": 53,
+  "kerb_tris": 18036,
+  "lane_samples": 25275,
+  "marking_tris": 687,
+  "props_checked": 415
+ }
+}

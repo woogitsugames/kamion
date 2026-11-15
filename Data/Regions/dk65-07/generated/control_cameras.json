@@ -1,0 +1,69 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0144",
+   "look_at": [
+    905.908,
+    473.868,
+    149.926
+   ],
+   "note": "driver eye 2.5 m, control route s = 144 m of 866 m (unnamed)",
+   "pos": [
+    941.952,
+    425.868,
+    154.298
+   ],
+   "route_s_m": 144.276,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0433",
+   "look_at": [
+    739.262,
+    709.42,
+    148.07
+   ],
+   "note": "driver eye 2.5 m, control route s = 433 m of 866 m (unnamed)",
+   "pos": [
+    774.789,
+    661.038,
+    148.369
+   ],
+   "route_s_m": 432.829,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0721",
+   "look_at": [
+    584.253,
+    952.78,
+    147.145
+   ],
+   "note": "driver eye 2.5 m, control route s = 721 m of 866 m (unnamed)",
+   "pos": [
+    617.721,
+    902.952,
+    149.489
+   ],
+   "route_s_m": 721.382,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 295.903,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-07",
+ "schema": "truck-sim-pl/control-cameras/1"
+}
