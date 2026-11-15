@@ -708,3 +708,37 @@ Manifest pakietu: `research/cloud2/pavements-kerbs/manifest.csv`, indeks kopii: 
 | `research/cloud2/pavements-kerbs/files/jpg1600/F38_commons_P11-063.jpg` | F38 | Commons: https://commons.wikimedia.org/wiki/File:20240623_124644_June_2024_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
 | `research/cloud2/pavements-kerbs/files/jpg1600/F39_commons_P11-056.jpg` | F39 | Commons: https://commons.wikimedia.org/wiki/File:20230814_175724_August_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
 | `research/cloud2/pavements-kerbs/files/jpg1600/F40_commons_P11-079.jpg` | F40 | Commons: https://commons.wikimedia.org/wiki/File:20230814_174936_August_2023_in_Bia%C5%82ystok.jpg | CC0 | Rakoon |
+
+### `research/cloud2/direction-signs-route-c/` (R2) — 27 plików
+
+Manifest pakietu: `research/cloud2/direction-signs-route-c/manifest.csv`, indeks kopii: `research/cloud2/direction-signs-route-c/files/jpg1600/INDEX.csv`. Rozkład: KartaView CC BY-SA 4.0 15; Panoramax CC BY-SA 4.0 12. W buildzie: nie. Status: SOURCED 27/27, UNVERIFIED 0.
+
+| Plik | Id w manifeście | Źródło | Licencja | Autor |
+|---|---|---|---|---|
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_03ec4841.jpg` | R2-006 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/03ec4841-1311-4c3c-95ec-4a52ba4b2184 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_5f92573a.jpg` | R2-011 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/5f92573a-5245-46f9-98cc-850a9de7d703 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_6248550a.jpg` | R2-004 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/6248550a-d237-4124-95ec-8a4f910d95d6 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_6ded8ec0.jpg` | R2-008 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/6ded8ec0-a24e-45d0-a6a0-ff0e4ab164a5 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_7196532e.jpg` | R2-010 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/7196532e-a8d7-4929-9043-e41b22db3450 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_8376e36d.jpg` | R2-002 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/8376e36d-7391-4145-b6e3-2d57115731b6 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_844e35c7.jpg` | R2-007 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/844e35c7-bcd0-43e7-a8ac-16931cf7e96b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_9f85aac8.jpg` | R2-005 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/9f85aac8-a36c-40fe-a4ad-4c1c66e66940 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_9ff60a64.jpg` | R2-009 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/9ff60a64-4f25-4237-96bd-1120f301bfbb | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_b27d2652.jpg` | R2-003 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/b27d2652-67ac-4f41-b762-c4a57f226f26 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmx_e11bd6e4.jpg` | R2-001 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/e11bd6e4-802b-4b66-8ea9-02a043df9910 | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/jpg1600/pmxhd_390ca2c2.jpg` | R2-012 | Panoramax: https://api.panoramax.xyz/api/collections/b3131ba1-86e3-4528-a0ff-a754528bba5b/items/390ca2c2-d23e-4e1e-9d50-e6ea9927673b | CC BY-SA 4.0 | stanton |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0211.jpg` | R2-058 | KartaView: https://kartaview.org/details/3686129/211 (zdjęcie 1326673405) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0247.jpg` | R2-059 | KartaView: https://kartaview.org/details/3686129/247 (zdjęcie 1326673549) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0253.jpg` | R2-060 | KartaView: https://kartaview.org/details/3686129/253 (zdjęcie 1326673573) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0258.jpg` | R2-061 | KartaView: https://kartaview.org/details/3686129/258 (zdjęcie 1326673593) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0264.jpg` | R2-062 | KartaView: https://kartaview.org/details/3686129/264 (zdjęcie 1326673617) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0279.jpg` | R2-063 | KartaView: https://kartaview.org/details/3686129/279 (zdjęcie 1326673681) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0281.jpg` | R2-064 | KartaView: https://kartaview.org/details/3686129/281 (zdjęcie 1326673689) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0286.jpg` | R2-065 | KartaView: https://kartaview.org/details/3686129/286 (zdjęcie 1326673709) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0303.jpg` | R2-066 | KartaView: https://kartaview.org/details/3686129/303 (zdjęcie 1326673777) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0306.jpg` | R2-067 | KartaView: https://kartaview.org/details/3686129/306 (zdjęcie 1326673789) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0313.jpg` | R2-068 | KartaView: https://kartaview.org/details/3686129/313 (zdjęcie 1326673817) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0338.jpg` | R2-069 | KartaView: https://kartaview.org/details/3686129/338 (zdjęcie 1326673917) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0342.jpg` | R2-070 | KartaView: https://kartaview.org/details/3686129/342 (zdjęcie 1326673933) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0347.jpg` | R2-071 | KartaView: https://kartaview.org/details/3686129/347 (zdjęcie 1326673953) | CC BY-SA 4.0 | TMishaaa (userId 479) |
+| `research/cloud2/direction-signs-route-c/files/kv_3686129_0350.jpg` | R2-072 | KartaView: https://kartaview.org/details/3686129/350 (zdjęcie 1326673965) | CC BY-SA 4.0 | TMishaaa (userId 479) |
