@@ -29,3 +29,6 @@ Trzecia przebudowa i cztery warianty renderów zakończone; lokalne pary zdjęci
 
 ## Iteracja r4
 R4 z lokalną próbą dwóch koron, wejściami urzędu i placykiem pomnika: cztery warianty ukończone, pary zdjęć lokalnie. Wizualnie FAIL: dach portyku niewidoczny w obu profilach; plac ciągły i kamera na osi, ale park nadal odbiega od zdjęć. Low na wspólnej kamerze +6 szacowanych draw calls i +1704 tris z instancjami; High max 1 229 693 tris. Pełny GIS 1410 passed, 2 failed: test nazwy poprawiony kierunkowo, raport fidelity po zmianach main przeliczany. EditMode otwarty.
+
+## Iteracja r5 i walidacja
+Dach skrzydła kultury jest widoczny po poprawce geometrii; jego kształt i lukarny nadal wymagają pracy. Ocena całości FAIL. Low bez pogorszenia FAIL: max wzrost na wspólnych kamerach +6 szacowanych draw calls z instancjami, +1825 tris; High max 1 229 814 tris. EditMode 626 passed, 2 skipped; pełny GIS wymaga ponowienia po usunięciu dwóch błędów wykrytych w poprzednim przebiegu. Targowica: właściciel potwierdził plac po drugiej stronie Jagiellońskiej od nr 50, kandydat OSM way 704368699; brak zdjęć dronowych i pomiarów wiat, niezintegrowany prototyp nie jest źródłem ich położeń.
