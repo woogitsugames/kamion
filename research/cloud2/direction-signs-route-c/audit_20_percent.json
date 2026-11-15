@@ -91,5 +91,57 @@
    "wynik": "PASS",
    "korekta": ""
   }
- ]
+ ],
+ "uzupelnienie_2026_11_15": {
+  "seed": 20261115,
+  "metoda": "random.Random(20261115).sample(sorted(id > R2-057), ceil(0.2*n))",
+  "n_nowych_wierszy": 26,
+  "n_proba": 6,
+  "PASS": 5,
+  "FIX": 1,
+  "wiersze": [
+   {
+    "id": "R2-058",
+    "kategoria": "kadr",
+    "sprawdzono": "Ponownie obejrzano files/kv_3686129_0211.jpg (960 px) i wycinek tablicy 3×: tablica-schemat 19 Kuźnica PL BY / 65 Ełk / Warszawa, Centrum, 676 Krynki, znak zakazu ciężarówek — zgodne; zdanie o drugiej tablicy w głębi podawało treść „Kuźnica/Ełk/Warszawa” bez wycinka",
+    "wynik": "FIX",
+    "korekta": "opis drugiej tablicy zmieniony na „czytelne tylko Warszawa; reszta UNVERIFIED”"
+   },
+   {
+    "id": "R2-067",
+    "kategoria": "kadr",
+    "sprawdzono": "Ponownie obejrzano files/kv_3686129_0306.jpg (960 px): 2 zielone tablice na bramownicy kratowej, zakaz zawracania nad nakazem prosto po obu stronach, żółte tablice, biała tablica na 2 słupkach po prawej — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R2-073",
+    "kategoria": "tablica",
+    "sprawdzono": "Ponownie obejrzano wycinek 3× z kv_3686129_0211: treść, schemat (dwie pary równoległych), białe pole Centrum, żółte 676, zakaz ciężarówek z tabliczką — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R2-077",
+    "kategoria": "tablica",
+    "sprawdzono": "Ponownie obejrzano kv_3686129_0281 (960 px): czerwone tablice „19” nad „65” na pojedynczych słupkach po obu stronach — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R2-079",
+    "kategoria": "tablica",
+    "sprawdzono": "Ponownie obejrzano wycinek 5× z kv_3686129_0303: 8 E67 Warszawa / 65 Ełk; 8 E67 Augustów / 19 Kuźnica PL BY; żółte pole (cyfry wyglądają na 675, pozostawione UNVERIFIED) i białe pole nieczytelne — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R2-080",
+    "kategoria": "tablica",
+    "sprawdzono": "Ponownie obejrzano kv_3686129_0306 + wycinek 4×: lewa ↑ Warszawa/Ełk, prawa Augustów/Kuźnica ↗ z żółtym i białym polem — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   }
+  ]
+ }
 }

@@ -80,6 +80,63 @@ add(kategoria='osm_fakt',przedmiot='węzły traffic_sign=PL:E-* w bbox',wartoś�
 for nm in ('Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP','Rondo Pamięci Bieżeństwa 1915 roku'):
     w=[e for e in o['elements'] if e['type']=='way' and e.get('tags',{}).get('name')==nm][0]; n=nodes[w['nodes'][0]]
     add(kategoria='osm_fakt',przedmiot='nazwa ronda w OSM',wartość=nm,status='SOURCED',metoda=UO,cytat=f'name={nm}',url_źródła=f"https://www.openstreetmap.org/way/{w['id']}",licencja='ODbL 1.0',autor='© OpenStreetMap contributors',lat=f"{n['lat']:.6f}",lon=f"{n['lon']:.6f}",kierunek_deg='UNVERIFIED',uwagi='w OSM nie ma ulicy „Bieżeńców/Bieżeństwa” wśród dróg klasy ≥ tertiary w bbox; jest rondo o tej nazwie')
+# ---- Krok 3 (2026-11-15): ul. gen. Andersa i Maczka — KartaView sekwencja 3686129 (2021-06-23), obejrzane 1280 px (lth) + wycinki 3–5×
+DATE2='2026-11-15'
+kvd={int(x['sequenceIndex']):x for x in json.load(open(f'{D}/kartaview/seq_3686129_trasaC.json'))['zdjec']}
+def kv_track(i):
+    a=kvd[i]; b=kvd.get(i+1) or kvd.get(i+2)
+    if not b: return 'UNVERIFIED'
+    return round(brg((float(a['lat']),float(a['lng'])),(float(b['lat']),float(b['lng']))),0)
+K=[ # sequenceIndex, opis (tylko to, co widać)
+(211,'Andersa (DK19/DK65) w kierunku NW, zjazd do wykopu: jezdnia 2-pasowa, po prawej oporowa ściana betonowa z zielonym oczepem i stalową balustradą, po lewej mur wykopu i wiadukt w głębi. Nad prawym poboczem kratowa konstrukcja wsporcza (słup kratowy + rygiel kratowy) z dużą zieloną tablicą-schematem: góra „19 Kuźnica PL BY / 65 Ełk / Warszawa”, w lewo białe pole „Centrum”, w prawo żółte pole „676” + „Krynki”; schemat = dwie równoległe drogi przecinające dwie równoległe; na prawym ramieniu biało-czerwony znak zakazu z symbolem ciężarówki i tabliczką (tekst nieczytelny); widoczny poziomy styk paneli tablicy. W głębi, nad wlotem wykopu, druga mniejsza zielona tablica (czytelne tylko „Warszawa”; reszta drobna, UNVERIFIED) i niebieskie znaki.'),
+(247,'Andersa NW, jezdnia 3-pasowa, obszar otwarty; po obu stronach okrągły znak „70” nad niebieskim nakazem jazdy prosto; po prawej na 2 słupkach zielona tablica: „19 Kuźnica / 65 Ełk” ze strzałką prosto, odgałęzienie w prawo do białych pól „Os. Białostoczek” i „Centrum handlowe” (wycinek 4×); słup kratowy linii WN po prawej, zbiornik walcowy biało-niebieski po lewej; w głębi bramownica z 2 małymi zielonymi tablicami.'),
+(253,'Andersa NW: bramownica kratowa (2 słupy kratowe, rygiel kratowy) nad całą jezdnią; lewa zielona tablica „↑ 19 Kuźnica / 65 Ełk” (numery w czerwonych polach), prawa zielona „Os. Białostoczek / Centrum handlowe ↗” (białe pola, ciemny napis); pod bramownicą latarnie dwuramienne; po obu stronach małe białe tablice z pomarańczowym kwadratem nad niebieskim znakiem „i”; bariery stalowe.'),
+(258,'Andersa NW przed estakadą: lewa jezdnia wznosi się na estakadę (bariery na krawędzi), prawa jezdnia zbiorcza zjeżdża w prawo do ronda (pole wyłączone białymi pasami ukośnymi, żółty słupek z niebieskim znakiem nakazu „obok z prawej lub lewej”); po prawej na słupkach zielona tablica-schemat ronda: góra „19 Kuźnica / 65 Ełk”, w lewo białe „Os. Białostoczek”, w prawo białe „Centrum handlowe” (wycinek 4×, drobny tekst rozmyty); znaki „70” po obu stronach.'),
+(264,'Estakada Andersa nad rondem Pamięci Bieżeństwa (kadr ok. 100 m od pierwszego węzła way ronda w OSM): jezdnia 2-pasowa, po obu stronach bariery stalowe i balustrada z poziomymi linkami; latarnie dwuramienne; brak tablic kierunkowych w kadrze; po prawej blok z pionowym napisem (nie odtwarzamy).'),
+(279,'Andersa NW za estakadą: po obu stronach „70” nad niebieskim nakazem jazdy prosto; nad lewym poboczem wysięgnik/bramownica z tablicami widzianymi od tyłu lub z boku (treść niewidoczna); w głębi po obu stronach niebieskie tablice z 3 strzałkami pasów; po prawej mała zielona tablica „WJAZD 2” ze strzałką (dojazd do obiektu) i billboardy z napisami firmowymi (nie odtwarzamy).'),
+(281,'Andersa NW: po obu stronach na pojedynczych słupkach czerwone tablice „19” nad „65” (białe cyfry, biała ramka); po lewej słup kratowy bramownicy z ryglem nad lewym poboczem (lico niewidoczne); latarnie dwuramienne; w głębi niebieska tablica pasów; po prawej billboard (nie odtwarzamy).'),
+(286,'Andersa NW: po prawej na 2 słupkach niebieska tablica pasów „↑ ↑ ↱” (3 pasy: 2 prosto, prawy w prawo); obok tabliczka „1km” ze strzałką zawracania na tablicy reklamowej stacji (napis firmowy, nie odtwarzamy); żółte ogrodzenie, wiata przystanku z czerwonym dachem; pylon stacji paliw (nie odtwarzamy).'),
+(303,'Andersa NW, ok. 500 m przed rondem Putry (odległość od środka ronda, ESTIMATED z współrzędnych): bramownica kratowa (2 słupy kratowe, rygiel kratowy) nad jezdnią i poboczem; jedna zielona tablica-przeddrogowskaz po lewej części rygla: góra „8 E 67 Warszawa / 65 Ełk” (strzałka prosto), odgałęzienie w prawo „8 E 67 Augustów / 19 Kuźnica PL BY” + żółte pole z 3-cyfrowym numerem (odczyt UNVERIFIED) i białe pole (nieczytelne) — wycinek 5×; na jezdni strzałki kierunkowe; po prawej młode drzewa, chodnik.'),
+(306,'Andersa NW, ok. 440 m przed rondem Putry: bramownica kratowa z 2 zielonymi tablicami nad pasami — lewa „↑ 8 E 67 Warszawa / 65 Ełk ↑”, prawa „8 E 67 Augustów / 19 Kuźnica PL BY ↗” + żółte pole i białe pole (nieczytelne, wycinek 4×); po obu stronach znak zakazu zawracania nad nakazem jazdy prosto; żółte tablice na słupkach (treść nieczytelna); po prawej biała tablica informacyjna na 2 słupkach.'),
+(313,'Estakada Andersa ok. 240 m przed rondem Putry: po prawej przezroczysty ekran akustyczny na zielonych słupach, z poziomymi paskami na szybach, pod nim czerwonobrązowy pas chodnika/kapy; za ekranem zielona tablica-schemat: „8 E 67 Warszawa / 65 Ełk”, po lewej żółte pole z 3-cyfrowym numerem i białe „Centrum” przekreślone ukośnym krzyżem (zaklejone), po prawej (zasłonięte słupem) „…E 67 …ów / Ku… PL BY” (wycinek 4×); w tle słup kratowy bramownicy; po lewej znaki ostrzegawcze tyłem.'),
+(338,'DK8 ul. gen. Maczka w kierunku W, ok. 260 m za rondem Putry (las po obu stronach): bramownica kratowa (2 słupy kratowe, rygiel kratowy) nad całą jezdnią, jedna zielona tablica: „8 E 67 Warszawa / 65 Ełk” ze strzałką prosto i odgałęzieniem w prawo do białego pola „Dziesięciny” (wycinek 4×); po lewej szary słup z oprawą/kamerą, za nim druga bramownica (tył) nad przeciwną jezdnią; ciężarówka chłodnia przed nami.'),
+(342,'Maczka W, ok. 360 m za rondem Putry: bramownica kratowa nad jezdnią z 2 zielonymi tablicami — lewa „↑ 8 E 67 Warszawa / 65 Ełk ↑”, prawa mniejsza „Dziesięciny ↗” (białe pole) (wycinek 4×); po lewej tył bramownicy nad przeciwną jezdnią i ciężarówka z napisem firmowym (nie odtwarzamy); las sosnowo-brzozowy.'),
+(347,'Maczka W przed zjazdem: po prawej bramownica kratowa (słupy kratowe) z zieloną tablicą-schematem ronda (treść drobna: m.in. „Warszawa”, „Ełk”; reszta nieczytelna); wysepka z żółtym słupkiem i niebieskim nakazem „obok z prawej lub lewej”, pole wyłączone białymi pasami; znaki „70”; zielona tablica reklamowa sklepu (napis firmowy, nie odtwarzamy); las.'),
+(350,'Maczka W na obiekcie (estakada/wiadukt): jezdnia 2-pasowa, po obu stronach bariery stalowe i balustrady, latarnie dwuramienne, las sosnowy; brak tablic kierunkowych w kadrze; ciężarówka chłodnia z napisem firmowym (nie odtwarzamy).'),
+]
+kfr={}
+for i,op in K:
+    x=kvd[i]; fn=f'kv_3686129_{i:04d}.jpg'
+    sha=hashlib.sha256(open(f'{D}/files/{fn}','rb').read()).hexdigest(); tr=kv_track(i)
+    uw=f"plik files/{fn}; data zdjęcia {x['shotDate']}; oglądany 1280→960 px + wycinki 3–5×; heading z API = kompas urządzenia (do gry użyj kursu toru)"
+    r=add(kategoria='kadr',przedmiot=f'KartaView {x["id"]} (sekw. 3686129, indeks {i})',status='SOURCED',metoda='KartaView API /2.0/photo/?sequenceId=3686129 (fileurlLTh, 1280 px); kurs toru = azymut do następnego kadru sekwencji (ESTIMATED)',
+        cytat=f'"heading": "{x["heading"]}"',url_źródła=f'https://kartaview.org/details/3686129/{i}',url_pliku=x['fileurlLTh'],licencja='CC BY-SA 4.0 (KartaView)',autor='KartaView, userId 479 (sekwencja 3686129)',
+        sha256=sha,lat=x['lat'],lon=x['lng'],kierunek_deg=x['heading'],kurs_toru_deg=tr,opis_co_widać=op,kamery_kontrolne=camvis(float(x['lat']),float(x['lng'])),uwagi=uw)
+    r['data_dostępu']=DATE2; kfr[i]=r
+cam_az={c['id']:c['az'] for c in cams}
+def face_cams(f):
+    if f['kurs_toru_deg']=='UNVERIFIED': return 'UNVERIFIED'
+    keep=[x for x in f['kamery_kontrolne'].split('; ') if x.split(' (')[0] in cam_az and abs((cam_az[x.split(' (')[0]]-float(f['kurs_toru_deg'])+180)%360-180)<90]
+    return '; '.join(keep) or 'żadna (w FOV i zwrócona do lica)'
+KT=[ # kadr, typ (wizualnie), treść, montaż, tło
+(211,'E-1 (wizualnie; schemat skrzyżowania — dwie pary równoległych)','19 Kuźnica PL BY | 65 Ełk | Warszawa (na wprost); ← Centrum (białe pole); → 676 (żółte) Krynki; na ramieniu prawym znak zakazu ciężarówek z tabliczką','konstrukcja kratowa nad prawym poboczem (słup kratowy + rygiel)','zielone; drogi krajowe czerwone pola, wojewódzka żółte pole, cel lokalny białe pole'),
+(247,'E-1 (wizualnie; przeddrogowskaz z odgałęzieniem w prawo)','↑ 19 Kuźnica | 65 Ełk; → Os. Białostoczek | Centrum handlowe (białe pola)','2 słupki po prawej','zielone; białe pola z ciemnym napisem'),
+(253,'E-2 ×2 (wizualnie; drogowskazy tablicowe nad jezdnią)','L: ↑ 19 Kuźnica | 65 Ełk; P: Os. Białostoczek | Centrum handlowe ↗','bramownica kratowa nad całą jezdnią','zielone'),
+(258,'E-1 (wizualnie; schemat ronda)','góra: 19 Kuźnica | 65 Ełk; lewo: Os. Białostoczek; prawo: Centrum handlowe','słupki po prawej (≥ 2)','zielone; białe pola'),
+(281,'E-15 ×2 (wizualnie; numery dróg krajowych)','19 nad 65 (białe cyfry na czerwonym, biała ramka)','pojedynczy słupek po obu stronach jezdni','czerwone'),
+(286,'F-10 (wizualnie; kierunki ruchu na pasach)','↑ | ↑ | ↱ (3 pasy)','2 słupki po prawej','niebieskie'),
+(303,'E-1 (wizualnie; przeddrogowskaz z odgałęzieniem w prawo)','↑ 8 E 67 Warszawa | 65 Ełk; → 8 E 67 Augustów | 19 Kuźnica PL BY | żółte pole (numer UNVERIFIED) + białe pole (nieczytelne)','bramownica kratowa','zielone; E 67 zielone pole z białą ramką'),
+(306,'E-2 ×2 (wizualnie)','L: ↑ 8 E 67 Warszawa | 65 Ełk ↑; P: 8 E 67 Augustów | 19 Kuźnica PL BY ↗ + żółte pole i białe pole (nieczytelne)','bramownica kratowa','zielone'),
+(313,'E-1 (wizualnie; schemat skrzyżowania)','8 E 67 Warszawa | 65 Ełk (na wprost); ← żółte pole + „Centrum” przekreślone (zaklejone krzyżem, stan 2021); → …E 67 …ów | Ku… PL BY (zasłonięte)','za przezroczystym ekranem, po prawej (konstrukcja UNVERIFIED)','zielone'),
+(338,'E-1 (wizualnie; przeddrogowskaz z odgałęzieniem w prawo)','↑ 8 E 67 Warszawa | 65 Ełk; → Dziesięciny (białe pole)','bramownica kratowa nad całą jezdnią','zielone'),
+(342,'E-2 ×2 (wizualnie)','L: ↑ 8 E 67 Warszawa | 65 Ełk ↑; P: Dziesięciny ↗ (białe pole)','bramownica kratowa','zielone'),
+]
+for i,typ,tr,mon,tlo in KT:
+    f=kfr[i]
+    r=add(kategoria='tablica',przedmiot=tr,status='ESTIMATED',metoda=f'odczyt z kadru {f["id"]} (wycinek 3–5×); pozycja = pozycja KADRU (tablica leży przed kadrem wzdłuż kursu toru, odległość UNVERIFIED); lico zwrócone przeciwnie do kursu toru',
+        url_źródła=f['url_źródła'],licencja='CC BY-SA 4.0 (referencja, nie tekstura)',autor=f['autor'],lat=f['lat'],lon=f['lon'],kierunek_deg=f['kurs_toru_deg'],typ_znaku=typ,montaż=mon,tło=tlo,wymiary='UNVERIFIED',
+        kamery_kontrolne=face_cams(f),uwagi=f'stan 2021-06-23; typ wg wyglądu (nie z rejestru znaków); kadr {f["id"]}; kamery: tylko te z FOV kadru, których oś różni się od kursu toru o < 90° (widzą lico, nie tył)')
+    r['data_dostępu']=DATE2
 seen={}
 for r in rows:
     if r['sha256']:
