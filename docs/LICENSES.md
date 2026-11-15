@@ -529,3 +529,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 02/creator-round7/files/CR7-A01*.jpg: EricPolk, Commons Premier_Trailer_leasing_semi-trailer.jpg, CC BY-SA4.0; miniatura całego kadru i jawny wycinek lewego skrzydła, obie pochodne≤800px. Autor/licencja/oryginał/SHA w lokalnym manifeście, koordynator obejrzał oryginał i obie pochodne. Jeden kadr pomocniczy, poza progiem M61.
 
 06/tykocin-landmarks-round3/files: Lollencja, CC BY-SA3.0pl (Kościół_w_Tykocinie.JPG) oraz Ymblanter, CC BY-SA4.0 (Tykocin_plac_Stefana_Czarnieckiego.jpg). URL/autor/licencja/daty perwiersz manifestu, metadata Commons i hashe w podkatalogu. Zmniejszenie pełnych podglądów960px do≤800px, bez kadrowania. Pełnych oryginałów nie pobrano, podglądy poza gitem; osobny peer-review.
+
+01/used-parts-round4:4 indywidualnie obejrzane fotografie firmowe Renault i DAF/Vignal, wyłącznie link-only, all rights reserved; bez pobrań i screenshotów. Autorzy fotografii nieustaleni, publikujący i źródła perwiersz; E2 w01-UP4-03 ma niezależną recenzję bez pewnego pełnego numeru.

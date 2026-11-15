@@ -90,3 +90,6 @@ rear-night-round4:2 kolejne kadry obejrzane i odrzucone jako przód/bok,1NOT_REV
 ## R6 — pełny starszy tekst odnaleziony
 
 r6-source-round3/regulations.csv:9SOURCED z pełnego R6Rev.5,07.10.2011, Supplement21 serii01. Kategorie2a/2b, amber, znak/seria i kierunkowa fotometria z warunkami oraz ograniczeniem nocnego sterowania2b. Koordynator odczytał także tabelę i6.6.2 w pełnym tekście. Wcześniejsze403 Rev.7 pozostają dziennikiem dostępu; nie oznaczają już braku jakiegokolwiek pełnego R6. Snapshot2011 nie jest deklaracją aktualnej wersji2026. Tabele:24 bazowe +13legacy +9R6, z odrębnymi wersjami i statusami.
+
+
+Used-parts-round4:4 nowe indywidualnie obejrzane kadry firmowe, wyłącznie link-only ARR. Fizyczne E2 DAF/Vignal potwierdzone przez dwóch agentów, pełny numer/funkcje UNVERIFIED; nie zwiększa pełnego licznika homologacji. Oferta DAF części nowej, Renault używanego kompletu. Kolory kloszy i optyczne pola nie dowodzą emisji ani liczby komór. Manifest główny33 rekordy kadrów(7 lokalnych,26 link-only).
