@@ -1,0 +1,71 @@
+{
+  "snapshot_brussels": "2026-11-15T23:48:41.172616+01:00",
+  "selected_source_leads": 5,
+  "new_individual_images_viewed": 3,
+  "browser_flickr_individual": 1,
+  "local_cc_thumbnails_individual": 2,
+  "new_manifest_aux_frames": 1,
+  "new_accepted_A": 0,
+  "new_accepted_B": 0,
+  "new_accepted_winter_A_or_B": 0,
+  "new_accepted_Europe_A_or_B": 0,
+  "photo_downloads": 2,
+  "download_kind": "2officialCCthumbnails only, nooriginal, rawoutsideGit; eachviewed",
+  "git_photo_files": 0,
+  "Flickrphoto_downloads": 0,
+  "Commons_metadata_requests": 1,
+  "Commons_search_small_requests": 3,
+  "Flickr_search_UI_queries": 1,
+  "notes": "No429/403/challenge encountered; optionalsignupmodalafterlimitedscrollingnotusedforlogin; no staticdownload/retry;0upscale; stopped weakcandidatesbeforeoriginal",
+  "candidates": [
+    {
+      "id": "WCC20-A01",
+      "source": "https://www.flickr.com/photos/anokarina/40380181694/",
+      "stage": "INDIVIDUALLY_VIEWED+CClicense+originalmenusize",
+      "verdict": "A_PENDING_SURFACE_REVIEW; B_FAIL_GE1000; CwintercontextnotcountedAorB; noautomaticledger18change"
+    },
+    {
+      "id": "WCC20-X02",
+      "source": "https://commons.wikimedia.org/wiki/File:FedEx_Express_truck_in_the_snow_2011-02-09_Memphis_TN.jpg",
+      "stage": "CC BY3.0 verifiedimageinfo then1officialthumbnailviewed",
+      "own_observation": "Ciągnik FedEx Express od przodu/z boku, długa naczepa za kabiną częściowo przesłonięta samochodem z prawej. Padający śnieg, śnieg na ziemi i kabinie; tylnych drzwi nie widać.",
+      "verdict": "REJECT_NO_REAR_DOORS",
+      "raw": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\02-brud\\winter-cc-round20\\fedex-memphis-preview.jpg",
+      "local_preview_px": [
+        960,
+        720
+      ],
+      "sha256": "78a1bdcbce3134d90dd90d8848226355474996de63b76b8c8f41cbddb39bf149"
+    },
+    {
+      "id": "WCC20-X03",
+      "source": "https://commons.wikimedia.org/wiki/File:19070-MN_snow_(14570857623).jpg",
+      "stage": "CC BY2.0 verifiedimageinfo then1officialthumbnailviewed",
+      "own_observation": "Kilka zaparkowanych ciągników, najbliższy biały Mack od przodu, obok ciemny Freightliner. Śnieg na placu i pojazdach. Fragment przedniej części skrzyni z prawej, brak tylnego widoku lub podwójnych drzwi.",
+      "verdict": "REJECT_NO_REAR_DOORS",
+      "raw": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\02-brud\\winter-cc-round20\\mn-snow-preview.jpg",
+      "local_preview_px": [
+        960,
+        720
+      ],
+      "sha256": "5acb7f297483e0fa6f92888f2fd06f718ee2bb595df78b9747b08b88dfd7ad8d"
+    },
+    {
+      "id": "WCC20-X04",
+      "source": "https://commons.wikimedia.org/wiki/File:TrucksTrailersCrane_In_CO_Snow.JPG",
+      "stage": "METADATA_ONLY_NOT_REVIEWED",
+      "source_native_px": [
+        640,
+        480
+      ],
+      "verdict": "LOW_RESOLUTION; bitmapdiagonal800px precludes1000pxdoor; noimageobservation/download, do not describecontentsfromtitle"
+    },
+    {
+      "id": "WCC20-D05",
+      "source": "https://commons.wikimedia.org/wiki/File:Semi_truck_in_the_snow_Church_Avenue_Jan_2026.jpg",
+      "stage": "EXISTING_DEDUP_NOT_REVIEWED_AGAIN",
+      "existing_evidence": "../screening-2026-11-15.csv row12, same filename/hash6097b190...",
+      "verdict": "Alreadyindividuallyreviewedandrejectedbasecontext; no repeatdownload; source metadata fresh only"
+    }
+  ]
+}

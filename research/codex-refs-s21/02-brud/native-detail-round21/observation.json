@@ -1,0 +1,72 @@
+{
+  "id": "P18-143",
+  "reviewed_at_brussels": "2026-11-16T00:03:40.790215+01:00",
+  "new_photo": false,
+  "source": "https://commons.wikimedia.org/wiki/File:Schneider_national_truck_rear_view.JPG",
+  "source_metadata": "../baseline-audit-round13/source-metadata-snapshot.json#page10965831",
+  "author": "Dwight Burdette",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "photo_date_sourced": "2010-07-21; timezone of exposure UNVERIFIED",
+  "source_location": "U.S. 23 north, south of Ann Arbor, Michigan, USA; SOURCE description",
+  "original_px": [
+    4636,
+    2713
+  ],
+  "original_sha256": "f4953814f0e1844821bc909d4237b7850492b069972a9ce778c845eb99a03230",
+  "full_view": "files/P18-143-full-800.jpg; individually viewed",
+  "native_crop": {
+    "path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\02-brud\\native-detail-round21\\P18-143-doors-native.jpg",
+    "box_xyxy": [
+      3150,
+      1000,
+      4250,
+      2290
+    ],
+    "px": [
+      1100,
+      1290
+    ],
+    "resampling": "NONE; pixel crop, saved JPEG quality95",
+    "individually_viewed": true
+  },
+  "crop_thumbnail": "files/P18-143-doors-800.jpg; individually viewed; max800px",
+  "doors_native_height_px": {
+    "status": "ESTIMATED",
+    "range": [
+      1010,
+      1050
+    ],
+    "method": "visible door panels upper edge approx source y1080 to lower edge y2110; uncertainty from perspective/blur; crop height1290 is NOT door height"
+  },
+  "construction": {
+    "status": "PASS_VISUAL_AND_SOURCE_CATEGORY",
+    "observation": "Full rear-three-quarter highway view shows tractor at front left of long trailer, landing area and rear tandem group; source categories include semi-trailer trucks in Michigan. Rear has two vertically hinged orange door leaves with central seam and separate locking rods."
+  },
+  "visual_surface": {
+    "upper": "Orange fields relatively uniform; black Schneider lettering/strips and pale rectangular stickers are graphics, not dirt.",
+    "middle": "Darker vertical bands alongside rods may be cast shadows; no defensible dirt attribution based on those bands alone.",
+    "lower": "Gray localized marks around latch regions, small irregular losses/patches near bottom, dark mottled metal threshold and frame. Can reflect finish wear/corrosion, road deposit or mixed mechanisms; this image does not isolate the mechanism.",
+    "road": "Vehicle on paved highway amid traffic, green vegetation, bright blue sky; no visible snow/slush.",
+    "chemical_composition": "UNVERIFIED; no salt diagnosis"
+  },
+  "A_content": "PENDING_SURFACE_MECHANISM; do not increment confirmed A",
+  "B_new_fix": "FAIL_NOT_NEW; baseline P18-143 even if native door height exceeds1000",
+  "C_winter": "NO_VISIBLE_WINTER_CONTEXT",
+  "C_european_roads": "FAIL_SOURCE_USA",
+  "counts_delta": {
+    "A_confirmed": 0,
+    "B_new": 0,
+    "winter_confirmed": 0,
+    "european_road_confirmed": 0
+  },
+  "downloads": {
+    "original_photographs": 1,
+    "other_photographs": 0,
+    "http429": 0
+  },
+  "limitations": [
+    "Native detail improves construction and size assessment but does not independently establish road grime.",
+    "No modification of old P18, round13 or ledger18. Existing record is re-examined, never a new photo."
+  ]
+}

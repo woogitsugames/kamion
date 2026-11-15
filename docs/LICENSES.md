@@ -598,3 +598,9 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 01/front-approval-round15:2fotografie rzeczywistej lampyKOITO/Actros, publikacja lusterka_2009/Allegro14731209728, fotografUNVERIFIED, tylko link-only, all rights reserved. Całyklosz iexactetykieta po ponownymodczycie i niezależnympeer; bezpobrań/screenshotów/plikówmediów.
 
 01/retroreflection-round14:własne liczby/parafrazy i odsyłacze do urzędowychUNECE2020/UE2021. Bez źródłowychPDF/screenshotów/wizualnychkopii. Trzy2020macierze jawnieUNVERIFIED;3osobne zweryfikowane wiązania tabeli2021z dokładnym źródłem/wersją wCSV, niepodmiana licencji ani wersjinormy.
+
+02/winter-cc-round20:anokarina/Flickr40380181694, CC BY-SA2.0 zweryfikowane nafotostronie, tylko link-onlyCCbez pobrania;nieARR. Odmienne daty wykonania/uploadu opisanojawnie.2odrzuconepodglądyCommonsCCwyłącznie rawpozaGit.
+
+02/native-detail-round21/files/P18-143*.jpg:DwightBurdette, WikimediaCommonsFile:Schneider_national_truck_rear_view.JPG, CC BY3.0 (https://creativecommons.org/licenses/by/3.0),21.07.2010. Zmiany:zmniejszeniepełnegokadru i jawnycropdrzwi, oba≤800px;SHAoryginału/URL wsource-fetch.json. JedenznanyP18kadr,nie2zdjęcia. Oryginał/natywnycrop pozaGit.
+
+02/europe-worksites-round22:0obrazówwGit/0pobrań; tylko własne opisyodrzuceń i linki publicznychgaleriikontraktuS19,allrightsreserved/autorUNVERIFIED. Nie nadanoCC zlogoGDDKiA.

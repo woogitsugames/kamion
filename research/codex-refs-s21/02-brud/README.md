@@ -184,3 +184,11 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Zimowy kadr i rozdzielone kwalifikacje — obiegi17–19
 
 [RoadTour17](winter-world-round17/README.md):1nowy link-onlykadr,0pobrań; typPhoto/SemiTruck wg jawnego podpisu, dwa indywidualne oglądy. Jasne fragmenty nad dachem i lokalny szary film drzwi potwierdzają zimową treść z ograniczeniem źródłowym; nie skład soli. [Rejestr18](qualification-ledger-round18/README.md) liczyA5jako dolnągranicę z ograniczeniami, B1 iC osobno. Krone popeerA1zlekkim miejscowymfilmem,0C,nieślepy peerjawnie. [Kontrola19](roadtour-original-check-round19/README.md) otworzyła publicznyzasóbbazowy, też1290×1364; nie uzyskano2550×2696 ani1000pxdrzwi. Bniezwiększone, to ten samkadr/0nowychzdjęć. Większyoryginał gdzieindziejUNVERIFIED. Bez kopii obrazów/WixCDNwariantówupscale/AItraining.
+
+## Dalsza zima i natywny detal — obiegi20–22
+
+[W20](winter-cc-round20/README.md):5tropów/3nowe indywidualneobrazy,1zimowyFlickrCCBY-SA2 link-onlyAUX. Naczepa konstrukcyjnieczytelna, ale obróbkaB&W/ziarno i drobneślady nie dały pewnej mapybrudu;A_PENDING/B_FAIL,0nowychA/B/C.2odrzuconepodglądyCommons tylko raw,0Flickrdownload/0obrazówGit.
+
+[R21](native-detail-round21/README.md):znanyP18-143w rzeczywistym oryginale4636×2713/CCBY3DwightBurdette,1oryginał+nativecrop pozaGit,2miniatury≤800. Same drzwiEST1010–1050px, potwierdzone naczepa/ruch/USA, lecz ostre piony przyprętach mogąbyćcieniem, dolne szareplamy powłoką/zużyciem. Koordynatorobejrzał wyłącznie nativecrop, zgodnyPENDING_SURFACE. Większe piksele nie zapewniły detalu rozstrzygającego brud;A0/B_NOT_NEW,niepodniesiono zimy/Europy. To ponowny ogląd staregoźródła,nie nowafotografia.
+
+[R22](europe-worksites-round22/README.md):3zimowekadry kontraktuS19osobnoobejrzane jako potencjalneEUdrogi, ale podpisyS8/DK8 i widocznefronty/boki/teren nie dają wymaganych drzwi.0kwalifikacji/0pobrań,sourceARRwyłącznie linki wscreeningu. Bezpowielaniapodglądów ani zamianyS8wDK65. Głównymanifest nadal23, dolnegraniceA5(zograniczeniami)/B1bez zmian; pełnywynikniepotwierdzony.
