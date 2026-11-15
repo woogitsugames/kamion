@@ -85,7 +85,10 @@ SIGN_ARM_ANGLE = 50.0       # WORKING_VALUE: angle between the arms (deg)
 SIGN_BOTTOM_Z = 1.50        # WORKING_VALUE: lower edge of the cross above the road
 BARRIERS = ("no", "half", "double_half", "full", "gate", "chain", "yes")
 OVERRIDE_KIND = "rail_crossing"      # overrides.yaml: authored facts of one level crossing (Plan._apply_override)
-OVERRIDE_KEYS = ("barrier", "light", "light_left", "bell", "saltire", "panel_margin_m", "guide_post")
+OVERRIDE_KEYS = ("barrier", "light", "light_left", "bell", "saltire", "panel_margin_m", "guide_post",
+                 "approach_speed_kmh")
+# approach_speed_kmh (ADR 0268): permitted speed on the approaches where the warning sign stands, when the graph has
+# no maxspeed tag (attrs.maxspeed.src == "default") - decides the 150-300 m / up-to-100 m rule of the sign distance
 # guide_post (ADR 0268): style of the guide posts of the approaches seen on a photo ("red_white"); default U-1a
 
 # Clearance envelope (skrajnia budowli) - simplified cross-section, (lateral m, height above top of rail m).

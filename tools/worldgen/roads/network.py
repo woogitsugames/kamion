@@ -62,6 +62,7 @@ class EdgeSection:
     center_offset_end: float | None = None   # authored: offset at the END of the edge (linear from center_offset)
     center_offset_profile: list | None = None  # authored: [[t, offset], ...], t = 0..1 along the edge (ADR 0095)
     width_profile: list | None = None          # authored: [[t, width], ...] along the edge (ADR 0095); `width` = max
+    maxspeed_src: str | None = None  # ADR 0268: `src` of the graph attribute (osm | default | ...); 'default' = no tag
     edge_lines: str | None = None   # painted edge lines in the direction of travel: none | left | right | both
     apron: str | None = None        # authored (ADR 0123): roundabout apron "asphalt" = no mountable sett apron, the ring
                                     # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
@@ -133,7 +134,8 @@ def edge_section(e: dict) -> EdgeSection:
         lane_w=round(lw, 3), edge_strip=edge, width=round(width, 3), width_src=wsrc,
         surface_mat=SURFACE_MAT.get(surf, "road_asphalt"), bridge=bool(_v(a, "bridge")),
         layer=int(_v(a, "layer", 0) or 0), roundabout=roundabout, maxspeed=float(ms) if ms else None,
-        turn_fwd=split(tl if oneway else tf), turn_bwd=split(None if oneway else tb), provenance=prov)
+        turn_fwd=split(tl if oneway else tf), turn_bwd=split(None if oneway else tb), provenance=prov,
+        maxspeed_src=(a.get("maxspeed") or {}).get("src"))
 
 
 @dataclass

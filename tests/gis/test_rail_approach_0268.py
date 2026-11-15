@@ -360,7 +360,27 @@ def test_override_guide_post_key_and_unknown_key():
     assert posts and all(m["style"] == "red_white" for m in posts)
     with pytest.raises(ValueError):
         _syn(overrides=[{"id": "bad", "kind": "rail_crossing", "target": {"osm_node": 1}, "set": {"colour": 1}}])
-    assert set(RL.OVERRIDE_KEYS) == {"barrier", "light", "light_left", "bell", "saltire", "panel_margin_m", "guide_post"}
+    assert set(RL.OVERRIDE_KEYS) == {"barrier", "light", "light_left", "bell", "saltire", "panel_margin_m", "guide_post",
+                                     "approach_speed_kmh"}
+
+
+def test_speed_source_is_reported_and_override_wins():
+    """A graph default (attrs.maxspeed.src == 'default') is never reported as a known limit; the authored
+    approach_speed_kmh of the crossing decides the § 3 ust. 2 bracket (150-300 m above 60 km/h)."""
+    from roads import network as NW
+    from streetscape import rail_approach as RA
+    e = {"id": "e", "attrs": {"highway": {"v": "secondary", "src": "osm"}, "maxspeed": {"v": 50, "src": "default"}}}
+    assert NW.edge_section(e).maxspeed_src == "default"
+    c = _syn(barrier="half", light="yes").crossings[0]
+    assert RA.rule(c, 50.0, 500.0, speed_src="default")["speed_src"] == "default"
+    assert RA.rule(c, 50.0, 500.0, speed_src="osm")["speed_src"] == "osm"
+    assert RA.rule(c, None, 500.0, speed_src="osm")["speed_src"] == "default"
+    ov = [{"id": "o", "kind": "rail_crossing", "target": {"osm_node": 1},
+           "set": {"barrier": "double_half", "light": True, "approach_speed_kmh": 90}}]
+    r = [x for x in RA.plan(_syn(overrides=ov), speed_kmh=50.0)["rules"] if "sign" in x]
+    assert r and all(x["speed_src"] == "authored_override" and x["speed_kmh"] == 90.0 and x["dist_m"] == 150.0
+                     for x in r)
+    assert all([round(p["dist_m"], 1) for p in x["posts"]] == [150.0, 100.0, 50.0] for x in r)
 
 
 def test_dw671_override_builds_in_the_real_tile():

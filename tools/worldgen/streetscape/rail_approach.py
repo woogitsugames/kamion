@@ -79,9 +79,11 @@ def device_line_m(c) -> float:
 
 
 # ------------------------------------------------------------------------------------------------ rule (pure)
-def rule(c, speed_kmh, avail_m, left=False) -> dict:
+def rule(c, speed_kmh, avail_m, left=False, speed_src=None) -> dict:
     """What stands on ONE approach of crossing `c`: distances are metres along the road from the outer rail.
-    avail_m: road available upstream of the outer rail (to the end of the road / the tile edge)."""
+    avail_m: road available upstream of the outer rail (to the end of the road / the tile edge).
+    speed_src: where speed_kmh comes from ("osm" tag, "authored_override", ...); "default" = the graph has no maxspeed
+    tag (low confidence) - reported so, never as a known limit."""
     v = float(speed_kmh or DEFAULT_SPEED_KMH)
     fast = v > SPEED_FAST_KMH
     code = "A-9" if has_barriers(c) else "A-10"
@@ -90,7 +92,7 @@ def rule(c, speed_kmh, avail_m, left=False) -> dict:
     lo = nominal if fast else SIGN_DIST_MIN_SLOW_M
     room = float(avail_m) - SIGN_END_CLEAR_M
     min_room = device_line_m(c) - outer_rail_m(c) + 5.0          # the sign never stands among the crossing devices
-    out = {"sign": code, "board": "T-SA" in top, "speed_kmh": v, "speed_src": "maxspeed" if speed_kmh else "default",
+    out = {"sign": code, "board": "T-SA" in top, "speed_kmh": v, "speed_src": (speed_src or "maxspeed") if speed_kmh else "default",
            "nominal_m": nominal, "posts": [], "dropped": []}
     g = (lambda k: f"G-1{'def'[k] if left else 'abc'[k]}")        # k: 0 = three bars, 1 = two, 2 = one
     if room >= lo:
@@ -137,6 +139,7 @@ class StraightPath:
         self.right = np.array([self.drive[1], -self.drive[0]])
         self.pc = np.asarray(c["p"], float)
         self.speed_kmh, self.avail_m, self.oneway = speed_kmh, float(avail_m), oneway
+        self.speed_src = None
         self.marked = True
 
     def at(self, d_centre, side, off):
@@ -163,6 +166,7 @@ class NetPath:
         self.legs = []                       # (chain, s at d0, trav (+1: travel towards +s), d0)
         self.avail_m = 0.0
         self.speed_kmh, self.oneway, self.marked = None, False, False
+        self.speed_src = None
         if hit is None:
             return
         _, ch, s, _ = hit
@@ -170,6 +174,7 @@ class NetPath:
         trav = 1.0 if float(np.dot(t, drive)) >= 0 else -1.0
         sec = ch.section(s, net.sec_list)
         self.speed_kmh = float(sec.maxspeed) if sec.maxspeed else None
+        self.speed_src = getattr(sec, "maxspeed_src", None) if sec.maxspeed else None
         self.oneway = bool(sec.oneway)
         from roads import markings as MK
         self.marked = bool(sec.highway in MK.MARKED) and not MK.unmarked(sec)
@@ -273,11 +278,15 @@ def plan(rail_plan, net=None, speed_kmh=None, avail_m=None, devices=None) -> dic
                     d += 1.0
                 avail = min(avail, d)
             left = bool(path.oneway)
-            r = rule(c, path.speed_kmh, avail, left=False)
+            # permitted speed where the warning sign stands: authored fact of the crossing > graph (tag or default)
+            v, v_src = path.speed_kmh, getattr(path, "speed_src", None)
+            if c.get("approach_speed_kmh"):
+                v, v_src = float(c["approach_speed_kmh"]), "authored_override"
+            r = rule(c, v, avail, left=False, speed_src=v_src)
             r.update(crossing=ci, approach=a, avail_m=round(avail, 1), marked=bool(path.marked),
                      left_posts=left, left_posts_basis="G-1d-f only on one-way carriageways: WORKING_VALUE, the "
                      "condition in Dz.U. 2019 poz. 2311 zał. 1 was not read (UNVERIFIED)")
-            sides = [(1, r["posts"])] + ([(-1, rule(c, path.speed_kmh, avail, left=True)["posts"])] if left else [])
+            sides = [(1, r["posts"])] + ([(-1, rule(c, v, avail, left=True)["posts"])] if left else [])
             for side, posts in sides:
                 for d, plates in posts:
                     if side < 0:

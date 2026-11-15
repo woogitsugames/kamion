@@ -32,4 +32,11 @@ overrides:
       read from the orthophoto only. Open: guard rails and the red transverse strips before the crossing are not built.
       ADR 0268: guide_post red_white = the white posts with red bands along both verges of the approach on Mapillary
       1832769196903759 (reference only).
-    set: {barrier: double_half, light: true, light_left: true, panel_margin_m: 1.5, guide_post: red_white}
+      approach_speed_kmh 90 (rail-dk65-s22, confidence LOW, UNVERIFIED): the graph has no maxspeed tag on DW671 here
+      (attrs.maxspeed src=default 50). Mapillary map feature regulatory--maximum-speed-limit-50 (last seen 2019-07-03)
+      stands 57 m south-west of the crossing on the right of the north-east-bound approach, so the limit before it is
+      above 50; the photos show open fields (no built-up area) -> general limit outside built-up areas assumed
+      (90 km/h, quoted from memory, statute not read). Only the bracket matters: above 60 km/h the warning sign
+      stands 150-300 m before the crossing (Dz.U. 2019 poz. 2310 par. 3 ust. 2). The B-33 "50" itself is not built.
+    set: {barrier: double_half, light: true, light_left: true, panel_margin_m: 1.5, guide_post: red_white,
+          approach_speed_kmh: 90}
