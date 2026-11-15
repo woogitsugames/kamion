@@ -66,9 +66,9 @@ dla Knyszyna kafle siatki 2048 m: `knyszyn-s` (−8,7) i `knyszyn` (−8,8), z o
 ## Budżet (edytor, overcast, `stats.txt`; hipotezy `docs/06` §6: Low ≤ 300–400 draws / ≤ 600 tys. tris, High ≤ 1000 / ≤ 2 mln)
 | | `knyszyn` Low | `knyszyn` High | `knyszyn-s` Low | `knyszyn-s` High |
 |---|---|---|---|---|
-| WORLD_MEMORY | 95,5 MB | 216,7 MB | 39,9 MB (r1) | 105,8 MB (r1) |
-| draws max (kamery świata) | 429 (`tykocka-into-town`), 412 (`goniadzka-jagiellonska`) | 768 | patrz „Wyniki” | patrz „Wyniki” |
-| tris max | 370 tys. | 1,66 mln | | |
+| WORLD_MEMORY | 95,5 MB | 216,7 MB | 40,7 MB | 106,8 MB |
+| draws max (kamery świata) | 429 (`tykocka-into-town`), 412 (`goniadzka-jagiellonska`) | 768 | 90 | 155 |
+| tris max | 370 tys. | 1,66 mln | 106 tys. | 642 tys. |
 Dwie kamery `knyszyn` Low są 3–7 % ponad górną hipotezę draws (ulice z gęstą zabudową jednorodzinną: ogrodzenia
 i działki) — do pomiaru na telefonie przez lidera, nie strojone tutaj. Czas `build_world`: `knyszyn` 771–1091 s,
 `knyszyn-s` 60–90 s; import 9 min na region.
@@ -82,7 +82,13 @@ i działki) — do pomiaru na telefonie przez lidera, nie strojone tutaj. Czas `
   + kamery trasy); zdjęcia właściciela oglądane tylko z `research/_incoming` (nie kopiowane).
 - Region C i Dojlidy: `build_region` po zmianie BBOX — `roads.graph.json` i `buildings.geojson` bajt w bajt
   (sha w `build_manifest.json` bez zmian).
-- Testy: patrz „Wyniki”.
+- Testy: `tests/gis` pełny przebieg 1163 passed, 1 failed, 2 xfailed (943 s; `test_road_fidelity::test_report_not_stale`
+  pominięty — sha `build_world.py`, lider uruchamia `fidelity/run.py` po scaleniu). Czerwony:
+  `test_dojbld_0185::test_fence_mesh_mips_do_not_preserve_coverage` — sprawdza tekst w `InstanceImporter.cs` (wyłączenie cofnięte przez lidera s20, komentarz w kodzie), którego ta
+  gałąź nie zmienia (`git diff main -- game/` pusty) — czerwony także w main. Nowe `test_region_knyszyn_0204.py`
+  zielone. Testy C przepisały pliki C w drzewie — przywrócone `git checkout`.
+- **EditMode nie uruchomione** (limit tygodniowy, polecenie lidera „bez nowych rund”); kod C# bez zmian.
+- Ocena `visual-critic` nie wykonana (subagent nie tworzy subagentów) — rendery do przeglądu lidera.
 
 ## Otwarte (backlog szlifu)
 1. Kafel (−9,8) `knyszyn-w`: wylot DK65, zachodnia część miasta; dziś 37 m za rondem stoi zapora końca świata.

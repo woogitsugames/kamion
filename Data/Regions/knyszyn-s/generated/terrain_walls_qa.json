@@ -1,25 +1,26 @@
 {
  "by_source": {
-  "skirt:yard_gravel": 1
+  "skirt:yard_gravel": 1,
+  "steep_grass:verge_grass": 8
  },
- "count": 1,
- "max_m": 0.343,
- "p99_m": 0.343,
+ "count": 9,
+ "max_m": 0.744,
+ "p99_m": 0.744,
  "skirt_area": [
   {
    "e": 835.8,
-   "exposed_m2": 0.032,
+   "exposed_m2": 0.125,
    "mat": "yard_gravel",
-   "max_h": 0.343,
+   "max_h": 0.49,
    "n": -560.6,
    "points": 1,
-   "run_m": 0.461,
+   "run_m": 1.053,
    "src": "s-construction-earthworks#0:edge",
    "visible": true
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 0,
+ "thin_steep_faces_skipped": 1,
  "thresh_m": 0.15,
  "verge_strips": {
   "max_m": 0.0,
@@ -29,12 +30,76 @@
  },
  "worst": [
   {
+   "e": 237.1,
+   "h": 0.744,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 87.1,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 236.2,
+   "h": 0.744,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 87.2,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 240.9,
+   "h": 0.665,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 82.4,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 236.6,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 86.6,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 240.4,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 82.0,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 235.6,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 86.6,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 240.2,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 82.6,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
    "e": 835.8,
-   "h": 0.343,
+   "h": 0.49,
    "kind": "skirt",
    "mat": "yard_gravel",
    "n": -560.6,
    "src": "s-construction-earthworks#0:edge"
+  },
+  {
+   "e": 240.6,
+   "h": 0.206,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 83.0,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
   }
  ]
 }

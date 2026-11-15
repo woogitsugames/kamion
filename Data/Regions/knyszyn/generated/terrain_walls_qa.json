@@ -1,9 +1,9 @@
 {
  "by_source": {
   "skirt:yard_asphalt": 1,
-  "steep_grass:verge_grass": 10
+  "steep_grass:verge_grass": 14
  },
- "count": 11,
+ "count": 15,
  "max_m": 0.702,
  "p99_m": 0.702,
  "skirt_area": [
@@ -20,12 +20,12 @@
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 23,
+ "thin_steep_faces_skipped": 25,
  "thresh_m": 0.15,
  "verge_strips": {
   "max_m": 0.795,
   "skirt": 0,
-  "steep_grass": 40,
+  "steep_grass": 25,
   "worst": [
    "steep_grass",
    "j:n13115969575:corner0:vg",
@@ -39,51 +39,51 @@
    "h": 0.702,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -649.1,
+   "n": -650.3,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -972.2,
+   "e": -972.1,
    "h": 0.702,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -650.0,
+   "n": -651.1,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -955.8,
+   "e": -952.2,
+   "h": 0.7,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -678.7,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -952.1,
+   "h": 0.7,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -679.5,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -956.2,
    "h": 0.665,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -673.8,
+   "n": -674.1,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -956.3,
-   "h": 0.5,
+   "e": -975.6,
+   "h": 0.665,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -674.2,
+   "n": -645.4,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -972.6,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -649.4,
-   "src": "c:w286990127:1134813637-4898926854:L"
-  },
-  {
-   "e": -976.5,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": -644.7,
-   "src": "c:w286990127:1134813637-4898926854:L"
-  },
-  {
-   "e": -955.6,
+   "e": -956.7,
    "h": 0.5,
    "kind": "steep_grass",
    "mat": "verge_grass",
@@ -91,19 +91,43 @@
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -972.9,
+   "e": -972.6,
    "h": 0.5,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -650.4,
+   "n": -650.7,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
-   "e": -976.0,
+   "e": -976.2,
    "h": 0.5,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -645.3,
+   "n": -645.7,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -956.0,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -674.8,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -972.8,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -651.6,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -975.6,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -646.2,
    "src": "c:w286990127:1134813637-4898926854:L"
   },
   {
@@ -115,11 +139,19 @@
    "src": "osm:way/300808373:0#0:edge"
   },
   {
-   "e": -955.2,
+   "e": -975.1,
+   "h": 0.169,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -645.9,
+   "src": "c:w286990127:1134813637-4898926854:L"
+  },
+  {
+   "e": -955.6,
    "h": 0.158,
    "kind": "steep_grass",
    "mat": "verge_grass",
-   "n": -674.2,
+   "n": -674.5,
    "src": "c:w286990127:1134813637-4898926854:L"
   }
  ]
