@@ -1,0 +1,43 @@
+{
+  "status": "PASS odczytu bazowego zasobu; B nadal FAIL",
+  "reviewer": "niezależny agent knyszyn",
+  "reviewed_at_brussels": "2026-11-15T23:53:00+01:00",
+  "exact_base_url": "https://static.wixstatic.com/media/609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg",
+  "method": "Jedno bezpośrednie otwarcie podanego publicznego bazowego URL w natywnym Chrome. Obraz obejrzany w podglądzie CUA; nie zapisano obrazu ani screenshotu do pliku. Odczytano tylko tytuł strony i wymiary/currentSrc widocznego elementu img. Bez pobierania narzędziem HTTP, wariantów URL, cropów, upscalingu, edycji ani ponowienia.",
+  "standalone_dimensions": {
+    "document_title": "609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg (1290×1364)",
+    "currentSrc": "https://static.wixstatic.com/media/609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg",
+    "naturalWidth": 1290,
+    "naturalHeight": 1364,
+    "displayWidth": 913,
+    "displayHeight": 965,
+    "status": "SOURCED z tytułu i DOM samodzielnej strony obrazu; bez inspekcji kodera pobranego pliku."
+  },
+  "visual_identity": "Ten sam kadr co wariant W17: duży jasny płat nad dachem, dwa skrzydła, dwa pionowe rygle, nierówny szary film i dolne smugi, watermark RoadTour.Net, rozproszony zielonkawo-niebieski zafarb. Bazowy adres nie ujawnił szerszego kadru ani bardziej szczegółowego obrazu.",
+  "door_height": {
+    "status": "ESTIMATED",
+    "pixels_estimate": "około 800–850 px w naturalnej wysokości 1364 px",
+    "basis": "Obejrzany cały obraz: górna rama około 35% wysokości, dolna krawędź drzwi około 96%. Różnica około 61% × 1364 ≈ 830 px. To przybliżenie z pełnego podglądu, nie pomiar edytorem ani crop; górna i dolna rama skośne.",
+    "not_metric": "Nie jest wysokością fizyczną naczepy."
+  },
+  "qualification": {
+    "B_new_ge1000": "FAIL_AVAILABLE — samych widocznych drzwi poniżej 1000 px w faktycznie dostępnym bazowym zasobie.",
+    "new_B_frames": 0,
+    "new_A_frames": 0,
+    "new_winter_frames": 0,
+    "reason_no_new_A": "To ponowna kontrola tej samej fotografii, nie nowy kadr ani pojazd. W17 źródłowo zależny wynik A/C nie jest tutaj zmieniany.",
+    "original_larger_elsewhere": "UNVERIFIED — nie dowiedziono istnienia ani braku większej wersji gdzie indziej; nie szukano wariantów.",
+    "prior_gallery_2550": "2550×2696 z DOM galerii nie jest niezależnym dowodem większego pliku; bazowy URL ma naturalne 1290×1364."
+  },
+  "rights": "Wyłącznie link-only, all rights reserved. Brak kopii do gita/raw, tekstowej reprodukcji pikseli, udostępniania pliku, użycia źródłowego obrazu jako AI training/dataset.",
+  "counts": {
+    "base_url_navigation": 1,
+    "new_media_files": 0,
+    "saved_screenshots": 0,
+    "image_edits": 0,
+    "new_downloads": 0,
+    "new_qualifying_B": 0
+  },
+  "preserved_snapshots": "Nie zmieniano katalogów winter-world-round17 ani qualification-ledger-round18; tylko własny peer w round19.",
+  "browser_status": "Zwolniony po completion_summary."
+}

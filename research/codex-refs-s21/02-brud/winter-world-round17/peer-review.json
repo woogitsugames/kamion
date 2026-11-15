@@ -1,0 +1,47 @@
+{
+  "status": "PASS identyfikacji obrazu i wymiarów; kwalifikacja treści zależna od deklaracji źródła",
+  "reviewer": "niezależny agent knyszyn",
+  "reviewed_at_brussels": "2026-11-15T23:34:00+01:00",
+  "exact_image_url": "https://static.wixstatic.com/media/609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg/v1/fill/w_1290,h_1364,al_c,q_85,enc_auto/609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg",
+  "source_page": "https://www.roadtour.net/post/leaving-snow-on-your-car-or-truck-is-dangerous",
+  "method": "Najpierw indywidualnie otwarto dokładny CDN i obejrzano obraz, potem odczytano źródłowy artykuł i otwarto Expand image. Obraz galerii wizualnie i currentSrc zgodny z dokładnym CDN. Bez pobrania obrazu, zapisu screenshotów, cropu, upscalingu i zgadywania wariantów URL.",
+  "independent_visual_observation": "Wysoka biała skrzynia oglądana od tyłu z fragmentem lewego boku. Dwa wyraźne skrzydła drzwi, szczelina środkowa, dwa pionowe rygle, poprzeczne klamki i po trzy widoczne zawiasy na zewnętrznych krawędziach. Na dolnej części drzwi ciemniejszy szaro-beżowy film i długie pionowe smugi; nierównomiernie ciemniejsza strefa pośrodku/dole prawego skrzydła i ukośno-łukowa plama na lewym. Przy dolnych krawędziach i okuciach białe nagromadzenia. W powietrzu liczne białe fragmenty i duży jasny płat ponad dachem. Tło z bezlistnymi gałęziami, rozproszony niebieskawo-zielony zafarb i obniżona czytelność sceny. Dwie ciemne równoległe linie wysoko nad pojazdem oraz plamy optyczne mogą wynikać z fotografowania przez szybę, ale nie ustalono techniki. Wyraźny watermark RoadTour.Net.",
+  "source_vs_visual": {
+    "vehicle_type": "SOURCE_DECLARES_SEMI_TRUCK: podpis źródła wskazuje semi truck. Widoczna długa skrzynia z podwójnymi drzwiami zgodna z naczepą, sprzęg/siodło poza obrazem; sam obraz nie jest niezależnym dowodem połączenia.",
+    "photographic_provenance": "Źródło nazywa obraz Photo i podaje copyrightRoadTour.Net. To deklaracja wydawcy, nie EXIF/techniczne uwierzytelnienie. Czy to pojedyncza ekspozycja, klatka filmu lub materiał przetworzony pozostajeUNVERIFIED; nie twierdzę, że wykazano brakAI.",
+    "winter": "Widoczne białe fragmenty nad pojazdem i na okuciach, bezlistne tło; podpis źródła określa odrywający się duży kawałek lodu. Zimowy kontekst wsparty obrazem i źródłem. Sól/chemia/błoto pośniegowe na drzwiachUNVERIFIED.",
+    "surface_vs_optics": "Smugi na dolnej części drzwi są widoczne, lecz globalny blado-zielony zafarb/miękkość i część białych punktów mogą być efektem szyby/powietrza. Nie przypisuj całego zamglenia warstwie brudu na pojeździe.",
+    "date_country": "W źródle widoczne Feb4 bez roku; rok/dzień ekspozycji i kraj kadruUNVERIFIED. Nie potwierdzono Europy."
+  },
+  "pixel_check": {
+    "direct_image_title": "609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg (1290×1364)",
+    "direct_image_naturalWidth": 1290,
+    "direct_image_naturalHeight": 1364,
+    "direct_image_displayWidth": 913,
+    "direct_image_displayHeight": 965,
+    "gallery_same_currentSrc": true,
+    "gallery_naturalWidth": 2550,
+    "gallery_naturalHeight": 2696,
+    "gallery_srcset_max_w": 1290,
+    "conclusion": "Niezależnie potwierdzono wariant1290×1364. Liczb2550×2696 zgalerii nie traktować jako zakodowanych pikseli oryginału. Nie pobierano pliku do inspekcji kodera.",
+    "door_height_px": "ESTIMATED około780–850px wwariancie1290×1364, położenie górnej ramy i dolnej krawędzi drzwi wobrazie; nie pomiar metryczny.",
+    "ge1000_door_pixels": false
+  },
+  "separate_ledgers": {
+    "A_user_total20": "PASS_CONTENT_SOURCE_DEPENDENT:1obejrzany kadr,2skrzydła i widoczny film/smugi; typ semi oparty na deklaracji źródła. Nie jest niezależnie zweryfikowaną technicznie fotografią naczepy. Root decyduje o zaliczeniu do sumyA ztym ograniczeniem.",
+    "B_fix_new12_ge1000": "FAIL_VERIFIED_RENDITION: samych drzwi poniżej1000px;0doB, niezależnie od treściA.",
+    "C_winter_A": "PASS_CONTEXT_SOURCE_DEPENDENT — zimowy kadr i źródłowo lód, bez potwierdzenia soli/błota pośniegowego.",
+    "C_winter_B": "0, bo brakB.",
+    "europe": "0; krajUNVERIFIED.",
+    "global_totals": "Nie przeliczonoA20/B12 ani pozostałych progów globalnych."
+  },
+  "licence": "link-only, all rights reserved; wyłącznie linki i własna recenzja,0kopii mediów",
+  "counts": {
+    "source_frames_reviewed": 1,
+    "exact_cdn_views": 1,
+    "gallery_views_same_frame": 1,
+    "distinct_vehicles": 1,
+    "new_media_files": 0,
+    "new_B_ge1000": 0
+  }
+}

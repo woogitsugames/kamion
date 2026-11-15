@@ -1,10 +1,10 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Aktualny manifest:22 rekordy=20 kadrów(14 lokalnych,6 link-only)+2 dokumenty; obejmuje odrzucenia i pomocnicze. Nowo przyjęty do s21:1kadr; nie22przyjęte zdjęcia. Łączna unikalna bazaP18+s21 w audycie.
+Aktualny manifest:23rekordy=21kadrów(14lokalnych/7link-only)+2dokumenty, w tym odrzucenia/AUX. Nie23kwalifikacje. [RejestrA/B/C](qualification-ledger-round18/README.md) rozdziela wymagania bez ich obniżania.
 
-Cel: ≥20 kadrów brudnych dwuskrzydłowych drzwi naczep, w tym ≥6 zimowych i ≥6 europejskich. **Do s21 przyjęto1nowy względem własnego manifestu kadr,0zimowych i0europejskich. Wymaganie użytkownika:≥20łącznie; M61-FIX pkt8 wymaga≥12NOWYCH. Unia zP18 i nowość dla całego projektu wymagają deduplikacji, nie są sumą liczników. Kryteria całości niepotwierdzone.**
+A:≥20łącznie — rozpoznana dolna granica5treściowych źródeł (3rdzeniowe158/182/183 +1Krone zlekkim miejscowymfilmem +1RoadTour source-dependent). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 45/88rekordówP18 obejrzanych,43NOT_REVIEWED. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
 
-Historyczny stan przed kolejnymi obiegami:16rekordów,14kadrów i2dokumenty (bieżący stan21rekordów powyżej). Tylko02-CR6-001 jest nowym przyjętym kadrem po sprawdzeniu oryginału i źródłowego typu naczepy. Pozostałe wiersze obejmują odrzucenia, wzorce czyste, zużycie, niejednoznaczną powierzchnię oraz znane P18. Wycinki nie są nowymi zdjęciami. Starsze sekcje poniżej zachowują chronologię poszukiwań; ich 0/20 nie jest stanem bieżącym.
+Źródłowy typnaczepy, brud zamiast powłoki/rdzy, zimowy kontekst i europejska droga mają osobne dowody. Stare kadry nie stają się nowymiB; mniejszy nowy kadrA nie spełniaB. Wycinki/aliasy jednego zdjęcia nie zwiększają wyniku. Szczegółowe historyczne poszukiwania i erraty poniżej.
 
 ## Wynik przeglądu
 
@@ -180,3 +180,7 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## CommonsEuropa — kontrola znanych tropów, obieg16
 
 [131/133](commons-europe-round16/README.md) to exactduplikatyP18,0nowych.133ma terazźródłowo potwierdzony typnaczepy, ale drzwi pozostają prawieczyste. Nowo obejrzany podgląd131Maastricht: mały dwuskrzydłowy tył faktyczniejestwidoczny, więc dawne słowa o całkowitym braku tyłu nieprecyzyjne; brakczytelnego filmu i rozmiaru dla nowegoFIX.1podglądCC pozaGit,0nowychrastrówGit. Uniaaudytu23+21+131=45/88,43NOT_REVIEWED, nie pełna liczba kwalifikacji. Nie zmieniono cudzychCSV.
+
+## Zimowy kadr i rozdzielone kwalifikacje — obiegi17–19
+
+[RoadTour17](winter-world-round17/README.md):1nowy link-onlykadr,0pobrań; typPhoto/SemiTruck wg jawnego podpisu, dwa indywidualne oglądy. Jasne fragmenty nad dachem i lokalny szary film drzwi potwierdzają zimową treść z ograniczeniem źródłowym; nie skład soli. [Rejestr18](qualification-ledger-round18/README.md) liczyA5jako dolnągranicę z ograniczeniami, B1 iC osobno. Krone popeerA1zlekkim miejscowymfilmem,0C,nieślepy peerjawnie. [Kontrola19](roadtour-original-check-round19/README.md) otworzyła publicznyzasóbbazowy, też1290×1364; nie uzyskano2550×2696 ani1000pxdrzwi. Bniezwiększone, to ten samkadr/0nowychzdjęć. Większyoryginał gdzieindziejUNVERIFIED. Bez kopii obrazów/WixCDNwariantówupscale/AItraining.

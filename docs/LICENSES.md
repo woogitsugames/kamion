@@ -587,3 +587,7 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 06/dw671-roundabout-ground-round6:2fotografieMapillary, grobin2019/2020, CC BY-SA4.0 według oficjalnej pomocy wskazanej wmanifeście. Wyłącznie linki i własne opisy,0kopii/screenshotów/API/tokenów. PodkładOSM, dokładnepKey/datowania/ograniczenia permanifest.
 
 01/lit-rear-round13:2fotografie KnapenTrailers iErmax, fotografUNVERIFIED; tylko link-only, all rights reserved. DokładneURL/stronyźródłowe i własne opisy permanifest. Bez plików zdjęć/screenshotów. Niezależny peer obu obrazów nieprzypisuje E/funkcji zlogo ani emisji zkoloru samego klosza.
+
+02/winter-world-round17 iroadtour-original-check-round19:1fotografia zadeklarowanaPhoto©RoadTour.Net, fotografosobistyUNVERIFIED; wyłącznie link-only, all rights reserved. Wariant i publicznybazowyzasób osobiścieobejrzane bez kopii/screenshotów. Bezredystrybucji,AItraining/datasetu źródłowych obrazów; własne obserwacje/fakty i odsyłacze. To1kadr, nie2 przez różneURL; typ źródłowozadeklarowany/EXIFniezależnynieustalony.
+
+02/qualification-ledger-round18 to własny rejestr istniejących odczytów/aliasów, bez nowej fotografii lub rozszerzania licencji źródeł. StatusyP18 z niedozwolonym filtremFlickr(PublicDomainMark) nie stają się zgodnymi licencyjnie przez ten rejestr; nie użyto ich jako nowego zaakceptowanegoA/B.

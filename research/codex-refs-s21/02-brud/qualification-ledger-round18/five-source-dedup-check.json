@@ -1,0 +1,82 @@
+{
+  "method": "Five keys matched actual source URLs/photoIDs and existing evidence files; not parent numerical assertion. No new HTTP or photo review.",
+  "distinct_keys": 5,
+  "checks": [
+    {
+      "id": "P18-158",
+      "source_key": "commons:Knight transportation trailer - rear.jpg",
+      "source_urls": [
+        "https://commons.wikimedia.org/wiki/File:Knight_transportation_trailer_-_rear.jpg"
+      ],
+      "aliases": [
+        "P18-158",
+        "CR7-A02",
+        "02-009"
+      ],
+      "evidence_files_exist": true,
+      "A": "PASS_CONTENT",
+      "B": "NOT_NEW_BASELINE",
+      "CwinterA": "NOT_CONFIRMED_WINTER"
+    },
+    {
+      "id": "P18-182",
+      "source_key": "commons:Western Express semi-trailer.jpg",
+      "source_urls": [
+        "https://commons.wikimedia.org/wiki/File:Western_Express_semi-trailer.jpg"
+      ],
+      "aliases": [
+        "P18-182",
+        "CR6-001",
+        "02-CR6-001"
+      ],
+      "evidence_files_exist": true,
+      "A": "PASS_CONTENT",
+      "B": "PASS_NEW_GE1000_TRAFFIC",
+      "CwinterA": "NOT_CONFIRMED_WINTER"
+    },
+    {
+      "id": "P18-183",
+      "source_key": "commons:Premier Trailer leasing semi-trailer.jpg",
+      "source_urls": [
+        "https://commons.wikimedia.org/wiki/File:Premier_Trailer_leasing_semi-trailer.jpg"
+      ],
+      "aliases": [
+        "P18-183",
+        "CR7-A01",
+        "02-CR7-A01"
+      ],
+      "evidence_files_exist": true,
+      "A": "PASS_CONTENT",
+      "B": "FAIL_GE1000_AVAILABLE",
+      "CwinterA": "NOT_CONFIRMED_WINTER"
+    },
+    {
+      "id": "EUR15-A01",
+      "source_key": "olx-image:mpwsrr1ixzzq-PL",
+      "source_urls": [
+        "https://www.olx.pl/d/oferta/krone-sdr-27-naczepa-chlodnia-krone-2002-CID5-ID1daY3C.html"
+      ],
+      "aliases": [
+        "EUR15-A01"
+      ],
+      "evidence_files_exist": true,
+      "A": "PASS_LIMITED_CONTENT_PEER",
+      "B": "FAIL_GE1000_AVAILABLE_ROUTE_UNVERIFIED",
+      "CwinterA": "NOT_CONFIRMED_WINTER"
+    },
+    {
+      "id": "WW17-A01",
+      "source_key": "wix-image:609dc9_bae2413ee20f49e984a094efa83e2f3a~mv2.jpg",
+      "source_urls": [
+        "https://www.roadtour.net/post/leaving-snow-on-your-car-or-truck-is-dangerous"
+      ],
+      "aliases": [
+        "WW17-A01"
+      ],
+      "evidence_files_exist": true,
+      "A": "PASS_CONTENT_SOURCE_DEPENDENT_PEER",
+      "B": "FAIL_GE1000_AVAILABLE",
+      "CwinterA": "PASS_CONTEXT_SOURCE_DEPENDENT_PEER"
+    }
+  ]
+}

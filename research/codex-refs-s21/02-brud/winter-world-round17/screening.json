@@ -1,0 +1,25 @@
+{
+  "sources": [
+    {
+      "source": "https://www.flickr.com/search/?text=semi%20snow%20rear&license=4%2C5%2C9",
+      "mode": "publicCC filtered search UI only",
+      "result": "20results; no promising qualified rear selected; grid only not individually described or counted"
+    },
+    {
+      "source": "https://www.flickr.com/search/?license=4%2C5%2C9&text=truck+snow+rear",
+      "mode": "one broadened UI query preserving licenses",
+      "result": "41results; no promising new rear selected; grid not qualified; no photo download or ARR Flickr use"
+    },
+    {
+      "source": "https://commons.wikimedia.org/wiki/File:Truck_stuck_in_the_snow_(2929723050).jpg",
+      "mode": "search metadata only",
+      "result": "native800×600 in indexedCommons metadata; no chance1000pxdoor; NOT_REVIEWED picture, not downloaded"
+    },
+    {
+      "source": "https://www.roadtour.net/post/leaving-snow-on-your-car-or-truck-is-dangerous",
+      "mode": "single individual photo reviewed in public browsergallery+exactCDN",
+      "result": "1AUX winterfilm, originalresolutionpending; same image two renditions, not2frames"
+    }
+  ],
+  "constraints": "No Shutterstock/Flickrstatic retry, noGettyBosnia/FR4repeat, no login/challenge; no massive queries or media downloads."
+}

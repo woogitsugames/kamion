@@ -1,0 +1,58 @@
+{
+  "snapshot_brussels": "2026-11-15T23:31:45.287106+01:00",
+  "requirements": {
+    "A_total_frames": 20,
+    "B_new_frames_ge1000_traffic_or_immediately_after": 12,
+    "C_winter_total": 6,
+    "C_europe_total": 6,
+    "C_winter_in_newB": 6,
+    "C_europe_in_newB": 6,
+    "strict_type": "semi-trailer; not arbitrary rigidboxes/vans",
+    "chemistry": "snow/pale deposits do not establish salt chemistry",
+    "C_europe_context": "Current user asks European-road frames; European dealer address alone is not photograph geolocation or road context."
+  },
+  "union_inventory": {
+    "P18_frame_rows": 88,
+    "P18_unique_source_URL_keys": 87,
+    "P18_counting_units_after_ICR139153merge": 86,
+    "ledger_units_all_sources": 108,
+    "manifest_alias_rows_P18_and_S21": 128,
+    "P18_frame_records_personally_reviewed_existing_audits": 45,
+    "P18_frame_records_NOT_REVIEWED": 43
+  },
+  "recognized_lower_bounds": {
+    "A_accepted_content_source_units_with_stated_limits": 5,
+    "A_regular_confirmed": 3,
+    "A_limited_local_dirt_peer_nonblind": 1,
+    "A_source_dependent_peer": 1,
+    "B_confirmed_new_ge1000_traffic_units": 1,
+    "C_winter_A_source_dependent_context_pass": 1,
+    "C_winter_A_without_source_dependent_condition": 0,
+    "C_confirmed_european_road_A": 0,
+    "C_confirmed_winter_B_in_Bpass": 0,
+    "C_confirmed_europe_B_in_Bpass": 0
+  },
+  "global_project_result": "UNVERIFIED — recognized lowerbound5A/1B is not exact global acceptance; unreviewed and pending not zero",
+  "key_overlap": {
+    "P18-158": [
+      "02-009",
+      "CR7-A02"
+    ],
+    "P18-182": [
+      "CR6-001",
+      "02-CR6-001"
+    ],
+    "P18-183": [
+      "CR7-A01",
+      "02-CR7-A01"
+    ],
+    "P18-144/P18-159": "same Commons sourcefile",
+    "P18-139/P18-153": "same ICRvehicle/probablecrop; FIX countonce"
+  },
+  "dedup_rule": "MediaWikiFile titles decodepercent+underscoretospace+NFC, FlickrphotoID acrossauthorhandles, GettyphotoID acrossdomains, OLXfileID acrossresolutions, WixmediaID acrossrenditions, otherCDNpublicpath withouttrackingquery. Nevercountcrop/full/preview twice. Samevehicle not universally samephoto; explicit139153exception retained.",
+  "limits": "No new photos/HTTPrequests/browser; classifications reference existing individualreviews/source metadata, not newvisualreview18. Unreviewed and pending remainunknown, not zero. No closing20/12/6/6.",
+  "peer_status": {
+    "roadtour": "existing winter-world-round17/peer-review.json; source-dependentA/C accepted as limited lowerbound, Bfail",
+    "krone": "existing europe-used-trailers-round15/peer-review.json; nonblind independent peer, limitedA, Bfail"
+  }
+}

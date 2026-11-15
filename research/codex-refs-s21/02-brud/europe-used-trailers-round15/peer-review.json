@@ -1,0 +1,50 @@
+{
+  "status": "PASS ograniczonej treściA; FAIL proguB",
+  "reviewer": "niezależny agent knyszyn",
+  "reviewed_at_brussels": "2026-11-15T23:39:00+01:00",
+  "subject_id": "EUR15-A01",
+  "exact_cdn": "https://ireland.apollo.olxcdn.com/v1/files/mpwsrr1ixzzq-PL/image;s=1000x700",
+  "source_page": "https://www.olx.pl/d/oferta/krone-sdr-27-naczepa-chlodnia-krone-2002-CID5-ID1daY3C.html",
+  "method": "Otworzono indywidualnie dokładnyCDN, obejrzano pełny obraz wrozmiarze539×700, następnie publiczną ofertę i pełną galerię1/8 dla konstrukcji pojazdu. Nie pobierano/cropowano/upscalowano zdjęć ani nie zapisywano screenshotów. To niezależny ogląd, lecz nie ślepa recenzja: krótki opis manifestu i brief były znane przed obrazem.",
+  "own_surface_observation": "Dwa białe wysokie skrzydła drzwi, środkowa szczelina, po dwa pionowe pręty i nisko umieszczone cztery uchwyty/klamki, duże zawiasy, czarne uszczelnienie zczerwoną taśmą obrysową. Pola są dość jasne i względnie czyste. Lokalnie wniższej części widać łagodne szare nierówne przyciemnienia i cienkie pionowe ślady poniżej okuć/klamek; wyraźniejsze ciemne zabrudzenie przy dolnym obrzeżu i metalowej belce. Poniżej drzwi żółtawo-brunatne zacieki na białych elementach wokół lamp oraz dolnej osłonie. Część ciemności jest cieniem okuć i uszczelek, zaś punktowe brunatne ślady na dole mogą być korozją; nie traktuję ich jako dowodu jednolitego filmu brudu na całej powierzchni. Brak czytelnych dużych płatów złuszczonej powłoki na płaskich polach drzwi. Tło trawiaste zkrzewami, bez widocznego śniegu.",
+  "dirt_assessment": {
+    "result": "PASS_LIGHT_LOCAL_DIRT — słaby, miejscowy film/smugi są widoczne; obraz nie nadaje się do szczegółowej maski brudu ani rozdzielania każdej smugi od powłoki/cienia.",
+    "not_claimed": [
+      "Silny brud na całości drzwi",
+      "Źródłowy skład chemiczny osadu",
+      "Sól lub błoto pośniegowe",
+      "Każda brunatna plama to brud zamiast korozji",
+      "Otwory lub płaty łuszczenia niewidoczne wtej bitmapie"
+    ]
+  },
+  "vehicle_type_check": {
+    "source_text": "Oferta jawnie Naczepa chłodnia, ID1110839344; parametry3osie.",
+    "visual_gallery_1_of_8": "Pełny długi korpus chłodni z agregatem zprzodu, dwiema podporami pod przednią częścią, otwartą przestrzenią przed tylnym zespołem3osi; brak kabiny i przedniej osi pojazdu silnikowego. Obejrzany pełny1/8 wspiera rzeczywistą naczepę, nie tylko tytuł.",
+    "same_gallery_rear": "DokładnyCDN tyłu występuje wDOM tej samej publicznej galerii; miniatura tylna odpowiada obejrzanemuCDN. Nie liczyć pełnego1/8 jako drugiego kadru brudu tylnych drzwi."
+  },
+  "pixel_check": {
+    "browser_exact_title": "image (539×700)",
+    "same_cdn_gallery_naturalWidth": 539,
+    "same_cdn_gallery_naturalHeight": 700,
+    "source_parameter_limit_not_actual_width": "s=1000x700 nie oznacza1000px szerokości pliku.",
+    "B_ge1000": "FAIL — cała bitmapa ma tylko700px wysokości, samych drzwi jeszcze mniej."
+  },
+  "separate_ledgers": {
+    "A_user_total20": "PASS_LIMITED_CONTENT:1kadr podwójnych drzwi rzeczywistej naczepy z miejscowym lekkim filmem/smugami. DoA nie dodano wymogu ruchu ani1000px.",
+    "B_fix_new12_ge1000": "0 — FAIL bitmapy539×700.",
+    "winter": "0 — brak zimowego kontekstu.",
+    "european_roads": "0 — trawa/plac; lokalizacja oferty Przybiernów nie dowodzi jazdy ani kadru na europejskiej drodze.",
+    "global_totals": "Nie przeliczono globalnegoA20/B12."
+  },
+  "date": "Dodane09.11.2026 to publikacja oferty; ekspozycjaUNVERIFIED.",
+  "licence": "link-only, all rights reserved;0kopii zdjęć",
+  "counts": {
+    "rear_door_frame_reviewed": 1,
+    "context_vehicle_frame_reviewed": 1,
+    "vehicles": 1,
+    "A_rear_frame": 1,
+    "B_ge1000": 0,
+    "european_road_frames": 0,
+    "new_downloads": 0
+  }
+}
