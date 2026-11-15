@@ -570,7 +570,7 @@ namespace Game.Vehicle.Physics
                     if (dx * dx + dz * dz > rr * rr) continue;
                     // Height slices: the common height range of both boxes at the column of the tractor box centre. A pitched /
                     // rolled trailer leans, so its footprint changes with height: the 2D test runs at the bottom and at the top
-                    // of the common range (one slice when the range is thin or empty: vertical contact candidates).
+                    // of the common range (one slice when the range is thin).
                     Vec3 qc = relInv * (cA - t);
                     double yb0 = (rel * new Vec3(qc.x, _bC[j].y - hB.y, qc.z) + t).y, yb1 = (rel * new Vec3(qc.x, _bC[j].y + hB.y, qc.z) + t).y;
                     if (yb0 > yb1) { double tmp = yb0; yb0 = yb1; yb1 = tmp; }
@@ -582,14 +582,14 @@ namespace Game.Vehicle.Physics
                         double ys = slices == 1 ? 0.5 * (lo + hi) : (k == 0 ? lo + inset : hi - inset);
                         double lam = (ys - cB.y) / upR.y;
                         var rb = new Rect { cx = cB.x + upR.x * lam, cz = cB.z + upR.z * lam, e0x = ux, e0z = uz, e1x = -uz, e1z = ux, h0 = hB.x, h1 = hB.z };
-                        Collide(a, qa, rel, relInv, t, i, j, ra, rb, ys, k == 0);
+                        Collide(a, qa, rel, relInv, t, i, j, ra, rb, ys);
                         if (Count >= MaxPoints - 1) return;
                     }
                 }
             }
         }
 
-        void Collide(in ChassisState a, Quat qa, Quat rel, Quat relInv, Vec3 t, int i, int j, in Rect ra, in Rect rb, double ys, bool allowVertical)
+        void Collide(in ChassisState a, Quat qa, Quat rel, Quat relInv, Vec3 t, int i, int j, in Rect ra, in Rect rb, double ys)
         {
             double sA = MaxSeparation(ra, rb, out double nAx, out double nAz, out double hNA, out double tAx, out double tAz, out double hTA);
             if (sA > Margin) return;
@@ -602,13 +602,13 @@ namespace Game.Vehicle.Physics
             IncidentEdge(inc, nx, nz, out double p1x, out double p1z, out double p2x, out double p2z);
             double s1 = tx * (p1x - rf.cx) + tz * (p1z - rf.cz), s2 = tx * (p2x - rf.cx) + tz * (p2z - rf.cz);
             if (!Clip(ref p1x, ref p1z, ref s1, ref p2x, ref p2z, ref s2, -hT, hT)) return;
-            AddPoint(a, qa, rel, relInv, t, i, j, rf, refB, nx, nz, hN, p1x, p1z, ys, allowVertical);
+            AddPoint(a, qa, rel, relInv, t, i, j, rf, refB, nx, nz, hN, p1x, p1z, ys);
             if (Count >= MaxPoints) return;
-            AddPoint(a, qa, rel, relInv, t, i, j, rf, refB, nx, nz, hN, p2x, p2z, ys, allowVertical);
+            AddPoint(a, qa, rel, relInv, t, i, j, rf, refB, nx, nz, hN, p2x, p2z, ys);
         }
 
         void AddPoint(in ChassisState a, Quat qa, Quat rel, Quat relInv, Vec3 t, int i, int j, in Rect rf, bool refB,
-            double nx, double nz, double hN, double px, double pz, double ys, bool allowVertical)
+            double nx, double nz, double hN, double px, double pz, double ys)
         {
             double sep = nx * (px - rf.cx) + nz * (pz - rf.cz) - hN;
             if (sep > Margin) return;

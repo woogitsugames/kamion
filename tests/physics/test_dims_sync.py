@@ -99,6 +99,58 @@ def test_trailer_landing_gear():
     check("leg lowered foot", lg["lowered_foot_y"], g["loweredFootY"])
 
 
+def _boxes(defn):
+    return {b["name"]: b for b in defn["bodyBoxes"]}
+
+
+def _check_box(b, center, size, ground, coupling):
+    for ax, c, s in zip("xyz", center, size):
+        check(f"{b['name']} centre {ax}", c, b["center"][ax])
+        check(f"{b['name']} size {ax}", s, b["size"][ax])
+    assert b["ground"] is ground and b["coupling"] is coupling, f"{b['name']}: flags ground={b['ground']} coupling={b['coupling']}"
+
+
+def test_body_boxes_tractor():
+    """ADR 0228: tractor body boxes (one geometry source for the chassis-ground and tractor-trailer contact) = the
+    graybox colliders (GrayboxTractorBuilder 'Colliders': Frame, Cab, Bumper) + the graybox rear mudguards, from dims.json.
+    Builder constants (frame depth 0.22, bumper 0.60 / 0.50 / 0.20, cab gap 0.05, mudguard 1.12 / 0.70 x 0.03 x 1.20)."""
+    b = _boxes(veh)
+    wb, front, rear = d("wheelbase_m"), d("wheelbase_m") + d("front_overhang_m"), -d("rear_overhang_m")
+    cab_rear = wb - d("cab_back_behind_front_axle_m")
+    cab_len, cab_h = front - 0.05 - cab_rear, d("overall_height_m") - d("cab_body_bottom_m")
+    _check_box(b["Frame"], (0, d("frame_top_height_m") - 0.11, rear + (front - rear) / 2), (d("frame_width_outer_m"), 0.22, front - rear), True, True)
+    _check_box(b["Cab"], (0, d("cab_body_bottom_m") + cab_h / 2, cab_rear + cab_len / 2), (d("cab_width_m"), cab_h, cab_len), True, True)
+    _check_box(b["Bumper"], (0, 0.60, front - 0.10), (d("cab_width_m") - 0.04, 0.50, 0.20), True, False)
+    for side, s in (("Mudguard_L", -1), ("Mudguard_R", 1)):
+        _check_box(b[side], (s * d("rear_track_m") / 2, 1.12, 0), (0.70, 0.03, 1.20), False, True)
+    assert len(b) == 5
+
+
+def test_body_boxes_trailer():
+    """ADR 0228: trailer body boxes = GrayboxTrailerBuilder colliders (Body, Beams, RearUnderrun). Builder constants: front wall
+    0.05 ahead of the cargo front, plate bottom 1.15 (+0.07), beam bottom 0.92, floor - 0.10, underrun 0.40-0.55 / 2.35 x 0.12."""
+    b = _boxes(trl)
+    cb, lg = trl["cargoBay"], trl["landingGear"]["positionZ"]
+    fz = cb["frontZ"] + 0.05
+    rz = fz - d("trailer_body_length_m")
+    h, w = d("trailer_overall_height_m"), d("max_width_m")
+    floor_bottom = cb["floorHeight"] - 0.10
+    _check_box(b["Body"], (0, (1.15 + 0.07 + h) / 2, (fz + rz) / 2), (w, h - 1.15 - 0.07, d("trailer_body_length_m")), True, True)
+    _check_box(b["Beams"], (0, (0.92 + floor_bottom) / 2, (lg - 0.4 + rz + 0.1) / 2), (1.2, floor_bottom - 0.92, lg - 0.4 - rz - 0.1), True, True)
+    _check_box(b["RearUnderrun"], (0, (0.40 + 0.55) / 2, rz + 0.25), (2.35, 0.15, 0.12), True, True)
+    assert len(b) == 3
+
+
+def test_body_box_swing_clearance():
+    """ADR 0228 finding: the graybox front corner (cargo front + 0.05 m wall, half width 1.275 m) swings at 2.063 m, the cab
+    back is 2.07 m ahead of the kingpin: 7 mm clearance, so a slightly pitched trailer front touches the cab at ~45-55 deg.
+    Pinned here so a dims change that closes the gap fails loudly (the legal 2.04 m swing radius has 3 cm)."""
+    fz = trl["cargoBay"]["frontZ"] + 0.05
+    swing = (fz ** 2 + (d("max_width_m") / 2) ** 2) ** 0.5
+    cab_back = d("wheelbase_m") - d("cab_back_behind_front_axle_m") - veh["fifthWheel"]["position"]["z"]
+    assert cab_back - swing > 0, f"graybox trailer front corner ({swing:.3f} m) reaches the cab back ({cab_back:.3f} m) when level"
+
+
 if __name__ == "__main__":
     for n, f in list(globals().items()):
         if n.startswith("test_"):
