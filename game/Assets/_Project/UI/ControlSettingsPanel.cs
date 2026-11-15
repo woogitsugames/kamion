@@ -200,7 +200,11 @@ namespace Game.UI
             Segment3(content, left, ref y, "Pokazuj", TouchControlsPolicy.Label(TouchControlsMode.Auto), TouchControlsPolicy.Label(TouchControlsMode.Always),
                 TouchControlsPolicy.Label(TouchControlsMode.Never), () => (int)UiPreferences.TouchControls, v => UiPreferences.TouchControls = (TouchControlsMode)v);
             Stepper(content, left, ref y, "Skala HUD (monitor)", () => Pct(UiPreferences.HudScale),
-                d => UiPreferences.HudScale = Step(UiPreferences.HudScale, d, 0.1f, HudScaleModel.UserScaleMin, HudScaleModel.UserScaleMax));
+                d =>
+                {
+                    UiPreferences.HudScale = Step(UiPreferences.HudScale, d, 0.1f, HudScaleModel.UserScaleMin, HudScaleModel.UserScaleMax);
+                    Game.UI.Settings.PcSettingsRuntime.NoteHudScaleChanged(UiPreferences.HudScale);   // ADR 0270 file follows (review #136 P2-1)
+                });
             float leftEnd = y;
 
             // Right column (or continued below in one column): gyro + camera

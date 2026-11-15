@@ -186,13 +186,21 @@ namespace Game.UI.Settings
             AudioListener.volume = AudioMixLevels.Master;
         }
 
-        /// <summary>HUD scale goes to the PlayerPrefs key of ADR 0265 (#131 <c>UiPreferences.PrefHudScale</c>). After #131 is
-        /// merged also call <c>UiPreferences.Reload()</c> here so the HUD picks it up at once.</summary>
+        /// <summary>HUD scale goes through <see cref="Game.Controls.UiPreferences.HudScale"/> (ADR 0265, review #136 P2-1): it
+        /// owns the PlayerPrefs key <c>ui.hudScale</c> (= <see cref="PcSettingsJson.HudScaleKey"/>), sanitises, saves only
+        /// on a change and bumps its version, so the HUD and menus lay out again at once (no restart).</summary>
         public static void ApplyHudScale(float scale)
         {
-            if (PlayerPrefs.HasKey(PcSettingsJson.HudScaleKey) && Mathf.Approximately(PlayerPrefs.GetFloat(PcSettingsJson.HudScaleKey), scale)) return;
-            PlayerPrefs.SetFloat(PcSettingsJson.HudScaleKey, scale);
-            PlayerPrefs.Save();
+            Game.Controls.UiPreferences.HudScale = scale;
+        }
+
+        /// <summary>The control-settings screen changed the HUD scale (its own row, ADR 0265): keep the file in step, so
+        /// the next start does not put the old value back (review #136 P2-1: one value, two screens).</summary>
+        public static void NoteHudScaleChanged(float scale)
+        {
+            if (Mathf.Approximately(Current.hudScale, scale)) return;
+            var s = Current.Clone(); s.hudScale = scale;
+            SaveOnly(s);
         }
 
         static string Describe(PcSettingsData s)
