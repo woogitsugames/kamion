@@ -138,3 +138,7 @@
 - 2026-11-15 21:51 +01:00 — EditMode 626 passed, 2 skipped, 0 failed. R5 wystartowała z poprawką dachu portyku: r4 GLB ma materiał i normalne w górę, ale połać nie jest skierowana ku kamerze; nowa geometria wymaga renderu. Fidelity regionu C nadal liczy się.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r5.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/fidelity-refresh.done`
 
+
+- 2026-11-15 21:57 +01:00 — Właściciel wskazał targowicę: Jagiellońska 50, 19-120 Knyszyn; trwa identyfikacja z danymi. R5 build w toku, fidelity regionu C przeliczony; test 9 passed, 1 xfailed. EditMode 626 passed, 2 skipped.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r5.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r5.done`
+
