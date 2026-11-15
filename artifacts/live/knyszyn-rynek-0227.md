@@ -122,3 +122,7 @@
 - 2026-11-15 21:33 +01:00 — R4 build trwa. Pełny pytest GIS uruchomiony w slocie heavy; jego proces potomny build_region był Suspended, wznowiono tylko własne PID 13432 i 68456 zgodnie z dyspozycją użytkownika; ponownie aktywny.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r4.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r4.log -Tail 10`
 
+
+- 2026-11-15 21:40 +01:00 — R4 i pełny GIS w toku (>14%). #97 OPEN, DIRTY, GIS FAILURE; orto GUGiK 2025 pokazuje stan sprzed ronda, warstwa 2026 dla punktu pusta, wymiary nowej wyspy niezweryfikowane.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r4.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r4.log -Tail 10`
+
