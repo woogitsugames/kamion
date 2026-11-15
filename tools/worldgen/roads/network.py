@@ -15,6 +15,7 @@ import shapely
 from shapely.geometry import LineString, Point
 
 from . import standards as S
+from .closures import CONSTRUCTION_SURFACE_MAT
 from .geom import Polyline, cumlen, smooth_1d, smooth_open
 
 DENSE = 0.5          # m, dense polyline spacing used for evaluation
@@ -61,10 +62,23 @@ class EdgeSection:
     center_offset_end: float | None = None   # authored: offset at the END of the edge (linear from center_offset)
     center_offset_profile: list | None = None  # authored: [[t, offset], ...], t = 0..1 along the edge (ADR 0095)
     width_profile: list | None = None          # authored: [[t, width], ...] along the edge (ADR 0095); `width` = max
+    # ADR 0233: with a width profile the lanes share the LOCAL width (2 x hw - 2 x edge strip) / lanes instead of keeping
+    # the lane width of the widest station - a road whose whole cross-section changes along one graph edge (repaving
+    # joint), not a lane that widens beside a gore (ADR 0095, the default)
+    lane_follow: bool = False
     edge_lines: str | None = None   # painted edge lines in the direction of travel: none | left | right | both
     apron: str | None = None        # authored (ADR 0123): roundabout apron "asphalt" = no mountable sett apron, the ring
                                     # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
+    construction: bool = False      # authored (ADR 0215, owner D65 p.6): carriageway not open to traffic - no markings,
+                                    # no lamps, no route-graph edge (roads.closures)
     provenance: dict = field(default_factory=dict)
+
+    def lane_w_at(self, hw):
+        """Lane width at half-width hw (scalar or array): `lane_w`, or the local share of the carriageway where the
+        section is authored with `lanes_follow_width` (ADR 0233)."""
+        if not self.lane_follow or self.lanes < 1 or self.lane_edges:
+            return self.lane_w
+        return np.maximum((2.0 * np.asarray(hw, float) - 2.0 * self.edge_strip) / self.lanes, 2.0)
 
     def lane_coord(self, lat, hw, dirn=1):
         """Lane coordinate across the carriageway (0 = first lane boundary, +1 per lane) for wheel-path weathering
@@ -74,7 +88,13 @@ class EdgeSection:
             x = np.asarray(hw, float) - (float(dirn) or 1.0) * lat
             le = np.asarray(self.lane_edges, float)
             return np.interp(x, le, np.arange(len(le), dtype=float))
-        return (lat + np.asarray(hw, float) - self.edge_strip) / max(float(self.lane_w), 2.0)
+        return (lat + np.asarray(hw, float) - self.edge_strip) / np.maximum(self.lane_w_at(hw), 2.0)
+
+
+def lane_w_of(sec, hw):
+    """`sec.lane_w_at(hw)` (ADR 0233) for EdgeSection; plain `lane_w` for duck-typed sections of unit tests."""
+    f = getattr(sec, "lane_w_at", None)
+    return f(hw) if f is not None else sec.lane_w
 
 
 def _v(a, k, default=None):
@@ -286,6 +306,8 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 sec.width = float(st["width"])
                 sec.lane_w = round((sec.width - 2 * sec.edge_strip) / max(sec.lanes, 1), 3)
                 sec.width_src = f"authored_override:{ov['id']}"
+            if "lanes_follow_width" in st:
+                sec.lane_follow = bool(st["lanes_follow_width"])      # ADR 0233
             if "lane_edges" in st:
                 # ADR 0095: lanes as measured on the orthophoto (count, widths and edge strip in one list)
                 le = [float(v) for v in st["lane_edges"]]
@@ -336,6 +358,17 @@ def apply_edge_overrides(net: Network, edges, overrides):
             for side in ("left", "right"):
                 if f"side_{side}" in st:
                     sec.side_override[side] = st[f"side_{side}"]
+            if st.get("construction"):
+                # ADR 0215 (owner D65 p.6): a carriageway that is not open to traffic. Markings / decals / navgraph
+                # read sec.construction; the rule lamps are dropped like `lamps: false`
+                sec.construction = True
+                sec.provenance["construction"] = f"authored_override:{ov['id']}"
+                sec.provenance["no_lamps"] = ov["id"]
+                sec.edge_lines = "none"
+                sec.turn_fwd = sec.turn_bwd = None
+                if "surface" not in st:
+                    sec.surface_mat = CONSTRUCTION_SURFACE_MAT      # WORKING_VALUE (roads.closures)
+                    sec.provenance["surface_override"] = "construction (WORKING_VALUE)"
             if "surface" in st:
                 sec.surface_mat = SURFACE_MAT.get(st["surface"], "road_asphalt")
                 sec.provenance["surface_override"] = st["surface"]

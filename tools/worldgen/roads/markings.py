@@ -20,6 +20,7 @@ from shapely import affinity
 from shapely.geometry import Polygon, box
 
 from . import standards as S
+from .network import lane_w_of
 from .geom import ear_clip, polygon_area
 from .meshing import MeshBuf
 
@@ -49,6 +50,8 @@ def _paint_uv1(c, s, lat, kind):
     else:
         lw, edge, ring = 3.5, 0.0, False
     hw = np.asarray(c.hw_at(s), float)
+    if _SECS and getattr(sec, "lane_follow", False):
+        lw = np.maximum(lane_w_of(sec, hw), 2.0)
     lanec = (lat + hw - edge) / lw if ring else np.abs(lat) / lw
     if _SECS and getattr(sec, "lane_edges", None):
         lanec = sec.lane_coord(lat, hw, int(c.dirn[c.idx(sm)]) or 1)
@@ -148,7 +151,7 @@ def arrow_glyph(turns: list, long: bool):
 
 def lane_layout(sec, hw, dirn):
     """Return (centre_line_lat or None, [lane boundary lats], lane centres by travel dir)."""
-    lw, e = sec.lane_w, sec.edge_strip
+    lw, e = lane_w_of(sec, hw), sec.edge_strip        # ADR 0233: local lane width on `lanes_follow_width` sections
     le = getattr(sec, "lane_edges", None)
     if le and sec.oneway:
         # ADR 0095: measured lane edges, distances from the left edge in the direction of travel
@@ -178,7 +181,7 @@ def edge_lines(sec, hw, dirn):
     """[(lat, kind)] of the painted edge lines of a section at half-width hw (scalar or array). Default rule:
     P-7b on both sides of class A / S / GP roads with an edge strip. `edge_lines` (override, direction of travel)
     narrows it; a section with measured `lane_edges` paints only what `edge_lines` names (ADR 0095)."""
-    if sec.roundabout:
+    if sec.roundabout or unmarked(sec):
         return []
     el = getattr(sec, "edge_lines", None)
     le = getattr(sec, "lane_edges", None)
@@ -204,6 +207,12 @@ def edge_lines(sec, hw, dirn):
             if el in ("both", name):
                 out.append(((d if sec.oneway else 1) * sg * (hw - S.EDGE_LINE_INSET_MINOR), "P-7b"))
     return out
+
+
+def unmarked(sec) -> bool:
+    """ADR 0215 (owner D65 p.6): a carriageway under construction / not open to traffic carries no horizontal
+    markings at all (authored `set: {construction: true}`, roads.closures)."""
+    return bool(getattr(sec, "construction", False))
 
 
 def edge_line_width(sec):
@@ -466,6 +475,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 sb = s1
             if sb - sa < 1.0:
                 continue
+            if unmarked(sec):
+                cnt("construction section (no markings)")     # ADR 0215: not open to traffic, no horizontal signs
+                continue
             marked = sec.highway in MARKED or sec.roundabout
             hw = float(c.hw_at(0.5 * (sa + sb)))
             dirn = int(c.dirn[a_]) or 1
@@ -542,6 +554,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         cnt("P-8 arrow")
         # crossings on this chain
         for s_c, osm, ckind, cwid in crossings.get(c.id, []):
+            if unmarked(c.section(s_c, secs)):
+                cnt("crossing skipped (construction)")
+                continue
             hw = float(c.hw_at(s_c))
             if ckind == "P-11":
                 clear = cwid - 2 * S.P11_SQUARE            # 2.0 m (ADR 0093) or 3.0 m two-way (ADR 0188)

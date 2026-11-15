@@ -142,12 +142,31 @@ def shape_terrain(zc, mask, hf, sites, rasterize, report):
     return zc + dz, site_mask
 
 
-def ground_colour(col, site_mask, hf):
+SEAM_PAD = 6        # grid nodes (m) beyond the tile used for the soft sand edge, ~5 sigma of the 1.2 m blur
+
+
+def _soft_mask(site_mask, hf, sites, rasterize):
+    """Blurred site mask. With `sites` + `rasterize` the corridor is rasterised SEAM_PAD nodes beyond the tile before
+    the blur (the axes of a site reach past the tile edge), so the blur sees the real corridor across a seam instead
+    of its mirror image: both tiles of a seam get the same sand weight on the shared row (ADR 0215 r2 - on a corridor
+    crossing the seam at an angle the mirrored blur moved the sand edge by up to 1 m between dk65-05 and dk65-06)."""
+    if not sites or rasterize is None:
+        return ndimage.gaussian_filter(site_mask.astype(np.float32), 1.2)
+    p = SEAM_PAD
+    H, W = site_mask.shape
+    big = type("PaddedGrid", (), {})()
+    big.z, big.x0, big.y1 = np.empty((H + 2 * p, W + 2 * p)), hf.x0 - p, hf.y1 + p
+    m = rasterize([s["poly"] for s in sites], big)
+    m[p:-p, p:-p] = site_mask                    # inside the tile: exactly the mask the terrain stage used
+    return ndimage.gaussian_filter(m.astype(np.float32), 1.2)[p:-p, p:-p]
+
+
+def ground_colour(col, site_mask, hf, sites=None, rasterize=None):
     """Sand (channel A) on the stripped corridor, no forest floor (G), slightly patchy so it does not read as a decal."""
     if not site_mask.any():
         return col
     east, north = _grid_en(hf)
-    w = ndimage.gaussian_filter(site_mask.astype(np.float32), 1.2)
+    w = _soft_mask(site_mask, hf, sites, rasterize)
     E, N = np.meshgrid(east, north)
     patch = 0.88 + 0.12 * np.sin(E * 0.37 + np.sin(N * 0.11) * 3.0) * np.sin(N * 0.29 + np.sin(E * 0.07) * 2.0)
     col = col.copy()

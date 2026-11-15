@@ -23,6 +23,7 @@ import numpy as np
 
 from . import standards as S
 from .markings import RANK, lane_layout
+from .network import lane_w_of
 
 LIFT_PATCH = 0.002
 LIFT_OIL = 0.0035
@@ -140,7 +141,7 @@ def gullies(buf, net, report):
 def wheel_path_lat(c, sec, hw, key):
     """ADR 0194: lateral offset of a wheel path of a hashed lane. Lanes are counted from the right edge strip like
     the trench patches; on two-way roads the kerb-side path of each half is the outer one."""
-    lw = max(float(sec.lane_w), 2.0)
+    lw = max(float(lane_w_of(sec, hw)), 2.0)
     nl = max(1, int(round((2 * hw - 2 * sec.edge_strip) / lw)))
     lane = int(hf(*key, "wl") * nl)
     centre = -hw + sec.edge_strip + (lane + 0.5) * lw
@@ -178,14 +179,16 @@ def build(buf, net, juncs, report):
                 if c.bridge[c.idx(sc)]:
                     continue
                 sec = c.section(sc, secs)
+                if getattr(sec, "construction", False):
+                    continue             # ADR 0215: never opened to traffic - no repair patches
                 hw = float(c.hw_at(sc))
                 kind = hf(*key, i, "kind")
                 if kind < 0.35:              # full-lane trench / overlay patch
-                    width = min(sec.lane_w * (0.9 + 0.2 * hf(*key, i, "w")), 2 * hw - 0.2)
+                    width = min(float(lane_w_of(sec, hw)) * (0.9 + 0.2 * hf(*key, i, "w")), 2 * hw - 0.2)
                     length = 1.2 + hf(*key, i, "l") * 5.8
                     nl = max(1, sec.lanes)
                     lane = int(hf(*key, i, "lane") * nl)
-                    lat = -hw + sec.edge_strip + (lane + 0.5) * sec.lane_w
+                    lat = -hw + sec.edge_strip + (lane + 0.5) * float(lane_w_of(sec, hw))
                 elif kind < 0.7:             # wheel-path patch (ADR 0194: in a wheel path of a lane)
                     width = 0.8 + hf(*key, i, "w") * 0.6
                     length = 2.0 + hf(*key, i, "l") * 5.0
@@ -222,6 +225,8 @@ def build(buf, net, juncs, report):
             t = j.trims[ai]
             s_stop = float(a.s(t + 1.5))
             sec = c.section(s_stop, secs)
+            if getattr(sec, "construction", False):
+                continue                 # ADR 0215: no traffic ever queued here - no oil stains
             hw = float(c.hw_at(s_stop))
             dirn_here = int(c.dirn[c.idx(s_stop)]) or 1
             _, _, lanes = lane_layout(sec, hw, dirn_here)

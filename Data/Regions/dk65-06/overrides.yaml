@@ -3,18 +3,21 @@
 # Source: GUGiK orthophoto 2024-05-27 0.25 m (Data/raw/derived/dk65-06/ortho_0p25m.tif) read on straightened strips along
 # route_start.json (artifacts/dk65-tiles2-0214/dk65-06/ortho/; reading +-0.4 m, WORKING_VALUE) and owner answers D65.
 overrides:
-  # Ełcka / Studzienna (90 km/h) north end into the roundabout. Owner D65 p.5: narrow, ~7 m -> 6.9 m (ADR 0207 had 7.6 m;
-  # the same correction of dk65-02..05 is a separate queued task - until it lands the seam with dk65-05 steps 0.7 m).
+  # Ełcka / Studzienna (90 km/h) north end into the roundabout. Owner D65 p.5: narrow, ~7 m; D66: 6.6 m (ADR 0207 had
+  # 7.6 m). Same `set` as dk65-02..05 (ADR 0215 r2) - way 1560819273 crosses the seam with dk65-05 (y = 603391).
   - id: dk65-elcka-xsec
     target: {osm_way: [1560819273, 1448265994]}
-    reason: "Owner D65 p.5: Ełcka/Studzienna ~7 m wide (6.9 m), solid edge lines both sides (orthophoto, ADR 0207)."
+    reason: >-
+      Owner D66 (2026-11-15): Ełcka/Studzienna carriageway 6.6 m (D65 p.5 said ~6.9 m; 0.1 m orthophoto: asphalt
+      6.5-7.1 m, edge lines 6.1-6.4 m apart), solid edge lines both sides (orthophoto, ADR 0207). D66 names
+      dk65-02..05; this tile carries the same value so the shared way has no width step at the seam.
     confidence: medium
     verify: owner drive / owner photo of Ełcka
-    set: {width: 6.9, edge_lines: both}
+    set: {width: 6.6, edge_lines: both}
   # Old DK65 km 16.7-24.45 (ways 208187096, 27718745, link 1151531610): research K1 (research/dk65-knyszyn-refs/README.md,
   # table (a)): edge line to edge line 6.0-6.4 m at 8 stations of these tiles (km 17.0 6.1, 18.0 6.0, 19.0 6.4, 20.0 6.0,
-  # 21.0 6.25, 24.6 6.0; corridor median 6.2 m, n = 25), 6.8 m only from km 26 (knyszyn-s). Same entry verbatim in 06..10.
-  # dk65-11 keeps the knyszyn-s set (seam x = 762635 identical) until 11 + knyszyn-s get this correction together.
+  # 21.0 6.25, 24.6 6.0; corridor median 6.2 m, n = 25), 6.8 m only from km 26 (knyszyn-s). Same entry verbatim in 06..11.
+  # ADR 0233: dk65-11 carries this entry too; the knyszyn-s section starts at the repaving joint km 25.32 in knyszyn-s.
   - id: dk65-xsec-k1
     target: {osm_way: [208187096, 27718745, 1151531610]}
     reason: >-
