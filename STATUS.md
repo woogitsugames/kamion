@@ -1,4 +1,5 @@
-# STATUS — F10 docs/gates-status-s21 (chmura D r2)
-- Krok 1: `docs/reports/GATES-STATUS-S21.md` (A16 af2570fccd G3-A/B, bramki 1–2 + 0201b, S24+, 66 scaleń s20/s21, D63–D68, korytarz DK65 w APK).
-- Krok 2: `docs/owner/BACKLOG-S21.md` — kolumna „status s21 (15.11)” dla 133 wierszy + Top 15; zamknięte 17, w toku 22, częściowo 18, bez zmian 74.
-- NASTĘPNY KROK: PR do main (REST `gh api repos/woogitsugames/kamion/pulls -f head=docs/gates-status-s21 -f base=main ...`).
+# STATUS — G2 perf-loop-0244 (chmura G, s21)
+- Krok 1: audyt 47 plików z metodami co klatkę/krok → `docs/adr/0244-audyt-petli-jazdy-zero-gc-koszt-cpu.md` (5 poprawek, 14 znalezisk z priorytetem, plan pomiaru A16).
+- Krok 2: poprawki: `FrameCsvFormat` (frametimes.csv bez alokacji + brakujące kolumny mirror_n/ab), `KamionHeadlamps.Resolve` bez FindObjectsOfTypeAll+LINQ, `CabInteriorLighting` throttling wyszukiwania środowiska (DrivingLab), cache id shaderów, `TryGetComponent`.
+- Testy w chmurze: `dotnet test tools/loop-runner/Tests/LoopTests.csproj -c Release` 30/30, `dotnet test tools/physics-runner -c Release` 277/277; Roslyn: 0 błędów składni w 9 plikach C#. Unity EditMode/PlayMode NIEuruchomione (brak Unity).
+- NASTĘPNY KROK (lider): `pwsh scripts/test.ps1 -Platform EditMode; pwsh scripts/test.ps1 -Platform PlayMode` → APK `-Development` A (main) / B (ta gałąź) → Profiler GC Alloc wg ADR 0244 §Plan.
