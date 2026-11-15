@@ -484,3 +484,8 @@ Inne pliki osób trzecich w katalogu research (nie są „zasobami” wg reguły
 - Sekcja „Fonts” zawiera głównie wiersze zasobów ciężarówki, naczepy i nawigacji (nie tylko fonty) — nazwa sekcji historyczna; wiersze obowiązują.
 - `research/gptpro/p7-s8-signs-2/LICENSE-DATA.md:7` podaje „ODbL 1.1” — OSM i pakiet G3 używają ODbL 1.0 (`Data/SourceManifests/osm-geofabrik-podlaskie.json`, `research/gptpro/3-s8-signs/LICENSE-DATA.md:5`); wersja 1.1 nie występuje w żadnym innym dokumencie repo — traktować jako błąd zapisu.
 - Licencja KartaView w narzędziu jest stałą w kodzie (`tools/refs/open_sources.py:65`, :89), a nie wartością odczytaną z API — przy następnym pobraniu warto ją potwierdzić u źródła.
+
+
+## Referencje codex-refs-s21 (2026-11-15; WIP)
+
+Fotografie i wycinki w `research/codex-refs-s21/01-lampy/files/` oraz `02-brud/files/` są referencjami do obejrzenia, bez tekstur w buildzie. Licencje CC BY-SA 2.0 / 3.0 / 4.0 i szczegółowa atrybucja per oryginał w `manifest.csv` każdego katalogu. Zmiany: pomniejszenie do ≤ 800 px i jawnie oznaczone wycinki. Oryginały poza gitem w `Data/raw/refs/codex-s21/`. Wiersze odrzucone i wzorzec czysty nie są liczone jako dowody brudnych drzwi. Dokument UNECE R148 jest linkowany i parafrazowany z numerami punktów; kopii PDF nie redystrybuowano.

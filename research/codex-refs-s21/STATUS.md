@@ -1,7 +1,7 @@
 # Status codex-refs-s21
 
-Cel aktywny. Pakiet 01 WIP: 5 kadrów referencyjnych w manifeście, 0 link-only; w tym 1 tył naczepy, 0 potwierdzonych czytelnych E ciągnika/naczepy. Nowy tył naczepy obejrzany osobno z wycinkiem. Progi M59-FIX niespełnione.
+Cel aktywny. Gałąź research/codex-refs-s21, bez scalenia.
+01 lampy: WIP, 5 kadrów pomocniczych / 0 link-only; 0 ciągników/naczep z czytelnym E. Kryteria M59-FIX niespełnione.
+02 brud: WIP, 4 obejrzane kadry / 0 link-only; 3 odrzucone, 1 wzorzec czysty (znany P18-107). 0 kwalifikowanych, 0 zimowych, 0 europejskich brudnych drzwi. Kryteria M61-FIX niespełnione.
 
-Wikimedia zwróciła HTTP 429 przy kolejnym oryginale; przerwano pobieranie, bez prób obejścia. Kandydat nieobejrzany nie jest liczony.
-
-Następny krok: alternatywne otwarte źródła lamp; pierwszy przegląd pakietu 02 brud naczep, z powrotem do luk 01 w kolejnym obiegu. Żaden pakiet jeszcze nie ma odbioru.
+Następny krok: dalsze otwarte źródła tyłów naczep i lamp; przegląd Knyszyna w kolejnym obiegu. Żaden pakiet nie ma odbioru. PR zwykły, gotowość do scalenia NIE. Openverse API 403; Commons po przerwie ponownie działało, oryginały rozdzielone 12 s.
