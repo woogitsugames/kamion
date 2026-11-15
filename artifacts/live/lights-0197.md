@@ -5,6 +5,6 @@
 - Krok 2: ADR 0197 (PROPOSED), poprawki tekstu ADR 0178 pkt 2 i ADR 0181 (R4 → R148 5.11.3 SOURCED).
 - Ustalenie: obszar bursztynu R48 leży POZA sRGB (granica bieli y ≥ 0,790 − 0,670x) — recenzja M59 G3 się myliła;
   (1, 0.22, 0) = najbliższy punkt z zapasem do granicy zieleni (0,0159 xy od obszaru; minimum 0,0153 przy g 0,24).
-- NASTĘPNY KROK (lider, Windows): eksport naczepy w Blenderze, potem
+- NASTĘPNY KROK (lider, Windows): komendy z artifacts/lights-0197/PR-BODY.md (Blender trailer_export → BuildBatch ×3 → visual-qa → EditMode)
   `pwsh -c ". scripts/env.ps1; Invoke-UnityBatch -LogFile artifacts/lights-0197/build-trailer.log -Arguments @('-executeMethod','Game.Editor.Setup.TrailerAssetBuilder.BuildBatch')"`
   i `pwsh scripts/test.ps1 -Platform EditMode` — pełne komendy w artifacts/lights-0197/PR-BODY.md.
