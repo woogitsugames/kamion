@@ -6,3 +6,8 @@
   BDOT10k OT_OIPR_L „rząd drzew” (już w streetscape_sources.json).
 - NASTĘPNY KROK: moduł `tools/worldgen/streetscape/tree_rows.py` + testy
   `uv run --project tools/worldgen python -m pytest tests/gis -k "treerow" -q`
+- Kroki 2–3, 5: `tools/worldgen/streetscape/tree_rows.py` (rytm, odsunięcie ≥ 3,0 m, trójkąty widoczności L1/L2,
+  wyloty dróg polnych, przepusty, przejazdy), opt-in plikiem `Data/Regions/<id>/tree_rows.yaml` (14 kafli; linie z
+  ortofoto K1 km 11,7 i 14,6), hook w vegetation.place (`tree_rows=`) + stage.py. Testy: 13 nowych, `-k "treerow or
+  vegetation or planting"` 27 passed / 1 skip (lfs). Plan drzew: dk65-02 60, -04 60, -05 53, -08 33, knyszyn-w 105 …
+- NASTĘPNY KROK: ADR 0222 (budżet per tier) + LICENSES + PR; lider: build_world + import + visual-qa (komendy w ADR).

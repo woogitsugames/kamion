@@ -258,9 +258,11 @@ def forest_stands(overrides):
     return out
 
 
-def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
+def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list.
-    hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems."""
+    hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems.
+    tree_rows (ADR 0222, opt-in): streetscape.tree_rows.region_plan() - the rows it took over are laid out by it
+    (rhythm, set-back, sight cuts) instead of the 8 m BDOT row rule below; None = the rule unchanged."""
     out = []
     H, W = zc.shape
 
@@ -500,8 +502,11 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
     report["_forest_cleared"] = cleared
     groups = _tree_group_overrides(overrides, np.asarray(origin, float))
     grep = {"lines": len(groups), "trees": 0, "groups": 0, "rows_grouped": 0}
+    tr_handled = tree_rows["handled"] if tree_rows else set()
     for f in src["bdot10k"]["OT_OIPR_L"]:
         if f["props"].get("rodzaj") != "rząd drzew":
+            continue
+        if f"bdot:{f['id']}" in tr_handled:     # ADR 0222: laid out by streetscape.tree_rows below
             continue
         line = shapely.LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         rng = np.random.default_rng(_seed(f["id"]))
@@ -527,6 +532,14 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
         emit(P, [gsp[g] for g in G], rng, key)
         grep["trees"] += len(out) - n0
         grep["groups"] += int(G.max()) + 1 if len(G) else 0
+    if tree_rows:                               # ADR 0222: roadside rows (positions + species from the plan)
+        n_tr = len(out)
+        for row in tree_rows["rows"]:
+            if len(row["P"]):
+                rng = np.random.default_rng(_seed(row["key"]) + 1)
+                emit(row["P"], row["species"], rng, row["key"], hrange=tree_rows["height_m"].get(row["key"]))
+        report["tree_rows"] = {"planned": sum(len(r["P"]) for r in tree_rows["rows"]), "placed": len(out) - n_tr,
+                               "lines_handled": len(tr_handled), "plan": tree_rows["report"]}
     tpts = _tree_point_overrides(overrides)
     if tpts:
         grep["points"], grep["points_refused"] = 0, []
