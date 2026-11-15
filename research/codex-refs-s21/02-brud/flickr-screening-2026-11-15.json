@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-15",
+  "queries": [
+    {
+      "query": "rear truck snow",
+      "licenses_filter": "4,5,9",
+      "public_search_http": 200,
+      "results": 25,
+      "metadata_only": true,
+      "visual_observation": false
+    },
+    {
+      "query": "dirty trailer",
+      "licenses_filter": "4,5,9",
+      "public_search_http": 200,
+      "results": 25,
+      "metadata_only": true,
+      "visual_observation": false
+    },
+    {
+      "query": "trailer rear",
+      "licenses_filter": "4,5,9",
+      "public_search_http": 200,
+      "results": 25,
+      "metadata_only": true,
+      "visual_observation": false
+    },
+    {
+      "query": "lorry snow",
+      "licenses_filter": "4,5,9",
+      "public_search_http": 200,
+      "results": 25,
+      "metadata_only": true,
+      "visual_observation": false
+    }
+  ],
+  "candidates": [
+    {
+      "id": "173665329",
+      "url": "https://www.flickr.com/photos/haroldhollingsworth/173665329/",
+      "title_metadata_only": "Always Dirty Trailer",
+      "license_from_search": 5,
+      "image_download_result": "HTTP403; image not acquired",
+      "viewed": false,
+      "qualified": false
+    },
+    {
+      "id": "5763820041",
+      "url": "https://www.flickr.com/photos/punktoad/5763820041/",
+      "title_metadata_only": "Rear Trailer",
+      "license_from_search": 4,
+      "image_download_result": "HTTP403; image not acquired",
+      "viewed": false,
+      "qualified": false
+    },
+    {
+      "id": "4874408570",
+      "url": "https://www.flickr.com/photos/daveseven/4874408570/",
+      "title_metadata_only": "van trailer",
+      "license_from_search": 4,
+      "image_download_result": "HTTP403; image not acquired",
+      "viewed": false,
+      "qualified": false
+    },
+    {
+      "id": "28551267407",
+      "url": "https://www.flickr.com/photos/lavulv/28551267407/",
+      "title_metadata_only": "XV88069 (17.05.02, Motorvej 501, Viby)DSC_6767_Balancer",
+      "license_from_search": 4,
+      "image_download_result": "HTTP403; image not acquired",
+      "viewed": false,
+      "qualified": false
+    }
+  ],
+  "browser_test": {
+    "url": "https://www.flickr.com/photos/punktoad/5763820041/",
+    "browser": "Chrome via CUA",
+    "photo_page_load": "metadata rendered; license CC BY2.0 visible",
+    "image_render": "hero image remained black after cookie banner closed; screenshot inspected",
+    "image_viewed": false,
+    "observation": "No visual description inferred from title/caption.",
+    "files_downloaded": 0
+  },
+  "rate_limit_handling": "live.staticflickr.com paused after parallel lamp worker reported429; no further direct/static attempts; Commons originals remain paused",
+  "new_qualified_frames": 0,
+  "new_downloaded_frames": 0,
+  "new_link_only_viewed_frames": 0
+}
