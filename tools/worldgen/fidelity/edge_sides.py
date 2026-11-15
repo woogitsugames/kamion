@@ -21,13 +21,13 @@ from roads import pipeline  # noqa: E402
 
 def main():
     region = sys.argv[1]
-    ways = set(sys.argv[2:])
+    ways = {int(a.removeprefix("w")) for a in sys.argv[2:]}   # "123" or "w123" (ADR 0219)
     reg = pipeline.load_region(region)
     rdir = pipeline.REGIONS / region
     route, r_edges = route_edges(rdir)
     g = G.build(region)
     ctx = Mx.Ctx(reg, g, osm_truth.extract(reg), O.Ortho(reg), np.array(route["points_en"]))
-    eids = [e for e in ctx.net.sections if e.split(":")[0].lstrip("w") in ways] if ways else r_edges
+    eids = [e for e in ctx.net.sections if Mx.way_of(e) in ways] if ways else r_edges
     for eid in eids:
         c = ctx.chain_of_edge.get(eid)
         if c is None:
