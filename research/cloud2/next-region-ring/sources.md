@@ -75,3 +75,10 @@ Każdy URL z czasem UTC i kodem HTTP: `gugik/skorowidze_summary.json` (27 zapyta
 
 ## Zapytania o zdjęcia
 `panoramax/search_log.json`, `kartaview/search_log.json` (161 URL-i), `kartaview/sequences.json`, `commons/geosearch_landmarks.json`.
+
+## Poprawki 2026-11-15 (FIX po recenzji lidera REVIEW-2026-11-14-s20-cloud2-r9.md)
+- **User-Agent:** do 2026-11-14 zapytania wysyłano z UA zawierającym nazwę projektu; poprawione — wszystkie skrypty (`fetch.py`, `tools/*.py`) używają ogólnego `research-fetch/1.0`.
+- **Commons geosearch:** powtórzone 2026-11-15 dla wszystkich 24 punktów (`tools/commons_landmarks.py` traktuje odpowiedź 200 z kluczem `error` lub bez `query` jako błąd i ponawia). Wynik w `commons/geosearch_landmarks.json`.
+- **Kadry Commons** (5, obejrzane): `commons/frames_desc.json`; pliki ≤1600 px w `files/commons/` (CC0 i CC BY-SA 4.0, autorzy w manifeście, wiersze „kadr Commons”).
+- **Pomiar recenzenta (drogi < primary, budynki):** `overpass/reviewer_pbf_measure.json` — przepisany z §4 recenzji, ESTIMATED.
+- **Zdjęcia w repozytorium:** polecenie właściciela z 2026-11-15 — kopie ≤1600 px (JPG q82) kadrów Panoramax/KartaView w `files/jpg1600/` + `INDEX.csv` (sha256 kopii i oryginału). `fetch.py` dalej pobiera oryginały do `files/frames/` (ignorowane).
