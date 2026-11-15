@@ -5989,7 +5989,7 @@
   },
   {
    "axis_smoothing_dev_max_m": 0.14,
-   "bridge_m": 0.0,
+   "bridge_m": 34.7,
    "grade_limit": 0.11,
    "highway": [
     "secondary"
@@ -5999,9 +5999,11 @@
     2
    ],
    "length_m": 34.7,
-   "max_grade": 0.0112,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 3.938,
+   "max_grade": 0.0062,
+   "overrides": [
+    "rondo-szymanskiego-ring-over-dk8-cutting"
+   ],
+   "profile_rms_vs_nmt_m": 0.0,
    "sidewalk_frac": 1.0,
    "width_m": [
     7.0
@@ -6012,7 +6014,7 @@
   },
   {
    "axis_smoothing_dev_max_m": 0.19,
-   "bridge_m": 0.0,
+   "bridge_m": 35.4,
    "grade_limit": 0.11,
    "highway": [
     "secondary"
@@ -6022,9 +6024,11 @@
     2
    ],
    "length_m": 35.4,
-   "max_grade": 0.0126,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 3.905,
+   "max_grade": 0.009,
+   "overrides": [
+    "rondo-szymanskiego-ring-over-dk8-cutting"
+   ],
+   "profile_rms_vs_nmt_m": 0.0,
    "sidewalk_frac": 1.0,
    "width_m": [
     7.0
@@ -14115,6 +14119,20 @@
     "span_m": 158.9
    },
    {
+    "chain": "c:w257353773:2629122142-2629122161",
+    "confidence": "low",
+    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
+    "piers": 0,
+    "span_m": 34.7
+   },
+   {
+    "chain": "c:w257353774:2629122147-2629122136",
+    "confidence": "low",
+    "note": "deck height interpolated between abutments; piers placed by rule (no data)",
+    "piers": 0,
+    "span_m": 35.4
+   },
+   {
     "chain": "c:w257355874:2563060438-5749430007",
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
@@ -15997,7 +16015,7 @@
     {
      "area_m2": 2.2,
      "reason": "carriageways at different heights",
-     "step_m": 5.85,
+     "step_m": 5.86,
      "why": "sliver",
      "xy": [
       -128.0,
@@ -16071,7 +16089,15 @@
   "markings_overlap_removed_tris": 179,
   "median_fills": [],
   "nmt_nodes_replaced_under_decks": 1728,
-  "overrides_applied": [],
+  "overrides_applied": [
+   {
+    "id": "rondo-szymanskiego-ring-over-dk8-cutting",
+    "targets": [
+     "w257353773:2629122142-2629122161",
+     "w257353774:2629122147-2629122136"
+    ]
+   }
+  ],
   "overrides_stale": [],
   "paint_clear_tris": {},
   "paint_erased_in_zones_tris": 0,
@@ -16107,20 +16133,6 @@
     "max_wall_h_m": 4.17,
     "nmt_fill_max_m": 0.35,
     "walled_m": 108.5
-   },
-   {
-    "chain": "c:w257353773:2629122142-2629122161",
-    "confidence": "medium",
-    "max_wall_h_m": 5.74,
-    "nmt_fill_max_m": 5.83,
-    "walled_m": 24.8
-   },
-   {
-    "chain": "c:w257353774:2629122147-2629122136",
-    "confidence": "medium",
-    "max_wall_h_m": 5.74,
-    "nmt_fill_max_m": 5.96,
-    "walled_m": 25.0
    },
    {
     "chain": "c:w301459395:3055186971-3055191492",

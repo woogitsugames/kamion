@@ -184,3 +184,189 @@ WORLD_MEMORY: tier=Low render_meshes=122.0 MB instances=11.6 MB collision_src=23
 WORLD_MEMORY: tier=High render_meshes=322.2 MB instances=11.6 MB collision_src=23.0 MB total=356.8 MB [terrain 155,9, road 16,6, markings 1,9, paved 3,0, buildings 103,3, furniture 7,3, plot_ground 7,8, plots 19,7, wires 0,9, bridge 1,3, far_field 4,5]
 WORLD_TERRAIN_BAND: fine fraction Low 58 % High 65 %
 log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\artifacts\logs\import-region-bialystok-kleeberga-20261115-030432.log
+13 assets, 65 files, 0 problems
+PBR sets: 2 missing, 0 older than _src for Medium - running art-source/world/materials/_src/build_all.py
+set asphalt_sma_fresh
+  18.4 s
+set asphalt_worn
+  8.3 s
+set asphalt_patch
+  18.5 s
+set concrete_cast_5m_joints
+  35.8 s
+set concrete_slab_3x1.5
+  24.6 s
+set kerb_concrete_1m
+  10.6 s
+set behaton_i_grey
+  20.3 s
+set paving_20x10_grey
+  13.6 s
+set grass_verge
+  20.7 s
+set gravel_compacted
+  17.7 s
+set oil_stain_alpha
+  8.2 s
+set viaduct_concrete
+  36.1 s
+set fire_station
+  30.4 s
+facade set sandwich_ribbed
+  5.7 s
+facade set sandwich_smooth
+  1.0 s
+facade set cladding_vertical
+  1.0 s
+facade set trapezoid_sheet
+  8.6 s
+facade set concrete_precast
+  12.0 s
+facade set sectional_door
+  1.9 s
+facade set plaster
+  3.1 s
+facade set large_panel_joints
+  16.5 s
+facade set brick
+  9.9 s
+facade set concrete_blocks_split
+  0.8 s
+facade set concrete_panels_wall
+  1.9 s
+facade set roof_tiles
+  0.5 s
+facade set curtain_folds
+  4.1 s
+facade set container_corrugation
+  1.4 s
+facade set barrier_galv
+  0.3 s
+facade set noise_cassette
+  2.1 s
+facade set concrete_fence_panel
+  1.2 s
+facade set hedge_foliage
+  0.4 s
+facade set soil_bed
+  0.4 s
+facade set car_grime_clean
+  1.0 s
+facade set car_grime
+  0.9 s
+facade set box_panel
+  0.8 s
+building set facade_atlas
+  19.5 s
+building set facade_far
+  6.6 s
+building set fence_concrete
+  11.9 s
+scan-only set sidewalk_slab_35
+scan-only set bark_pine
+layer asphalt_cracks_layer
+layer macro_variation
+layer parapet_runoff
+layer asphalt_detail_photo
+  SKIP asphalt_detail_photo: source photo not found (C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\Data\photos\nowe\Worn_cracked_asphalt_pavement.jpg); pass --photo
+wrote C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\art-source\world\materials\materials_spec.json total 427 s
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\artifacts\logs\import-region-bialystok-kleeberga-20261115-040416.log -buildTarget Android -quit -executeMethod Game.World.Import.RegionImporter.ImportBatch -region bialystok-kleeberga -tiers Low,High -materialTier Medium
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 54500)
+IMPORT_RESULT: OK region=bialystok-kleeberga chunks=64 corridor=33 tiers=Low+High
+WORLD_MEMORY: tier=Low render_meshes=122.0 MB instances=11.6 MB collision_src=23.0 MB total=156.7 MB [terrain 34,9, road 16,6, markings 1,9, paved 3,0, buildings 32,4, furniture 7,3, plot_ground 7,8, plots 14,8, wires 0,9, bridge 1,3, far_field 1,1]
+WORLD_MEMORY: tier=High render_meshes=322.2 MB instances=11.6 MB collision_src=23.0 MB total=356.8 MB [terrain 155,9, road 16,6, markings 1,9, paved 3,0, buildings 103,3, furniture 7,3, plot_ground 7,8, plots 19,7, wires 0,9, bridge 1,3, far_field 4,5]
+WORLD_TERRAIN_BAND: fine fraction Low 58 % High 65 %
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\artifacts\logs\import-region-bialystok-kleeberga-20261115-040416.log
+13 assets, 65 files, 0 problems
+PBR sets: 2 missing, 0 older than _src for Medium - running art-source/world/materials/_src/build_all.py
+set asphalt_sma_fresh
+  19.0 s
+set asphalt_worn
+  8.4 s
+set asphalt_patch
+  19.1 s
+set concrete_cast_5m_joints
+  35.2 s
+set concrete_slab_3x1.5
+  25.4 s
+set kerb_concrete_1m
+  10.9 s
+set behaton_i_grey
+  20.5 s
+set paving_20x10_grey
+  13.8 s
+set grass_verge
+  21.0 s
+set gravel_compacted
+  18.0 s
+set oil_stain_alpha
+  8.2 s
+set viaduct_concrete
+  36.5 s
+set fire_station
+  31.4 s
+facade set sandwich_ribbed
+  5.9 s
+facade set sandwich_smooth
+  1.0 s
+facade set cladding_vertical
+  1.0 s
+facade set trapezoid_sheet
+  8.8 s
+facade set concrete_precast
+  11.8 s
+facade set sectional_door
+  1.9 s
+facade set plaster
+  3.2 s
+facade set large_panel_joints
+  17.0 s
+facade set brick
+  10.0 s
+facade set concrete_blocks_split
+  0.8 s
+facade set concrete_panels_wall
+  1.9 s
+facade set roof_tiles
+  0.5 s
+facade set curtain_folds
+  4.2 s
+facade set container_corrugation
+  1.4 s
+facade set barrier_galv
+  0.3 s
+facade set noise_cassette
+  2.2 s
+facade set concrete_fence_panel
+  1.2 s
+facade set hedge_foliage
+  0.3 s
+facade set soil_bed
+  0.4 s
+facade set car_grime_clean
+  1.0 s
+facade set car_grime
+  1.0 s
+facade set box_panel
+  0.8 s
+building set facade_atlas
+  19.9 s
+building set facade_far
+  6.7 s
+building set fence_concrete
+  12.2 s
+scan-only set sidewalk_slab_35
+scan-only set bark_pine
+layer asphalt_cracks_layer
+layer macro_variation
+layer parapet_runoff
+layer asphalt_detail_photo
+  SKIP asphalt_detail_photo: source photo not found (C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\Data\photos\nowe\Worn_cracked_asphalt_pavement.jpg); pass --photo
+wrote C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\art-source\world\materials\materials_spec.json total 435 s
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\artifacts\logs\import-region-bialystok-kleeberga-20261115-050731.log -buildTarget Android -quit -executeMethod Game.World.Import.RegionImporter.ImportBatch -region bialystok-kleeberga -tiers Low,High -materialTier Medium
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 58440)
+IMPORT_RESULT: OK region=bialystok-kleeberga chunks=64 corridor=33 tiers=Low+High
+WORLD_MEMORY: tier=Low render_meshes=122.0 MB instances=11.6 MB collision_src=23.0 MB total=156.7 MB [terrain 34,9, road 16,6, markings 1,9, paved 3,0, buildings 32,4, furniture 7,3, plot_ground 7,8, plots 14,8, wires 0,9, bridge 1,3, far_field 1,1]
+WORLD_MEMORY: tier=High render_meshes=322.2 MB instances=11.6 MB collision_src=23.0 MB total=356.8 MB [terrain 155,9, road 16,6, markings 1,9, paved 3,0, buildings 103,3, furniture 7,3, plot_ground 7,8, plots 19,7, wires 0,9, bridge 1,3, far_field 4,5]
+WORLD_TERRAIN_BAND: fine fraction Low 58 % High 65 %
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\bialystok-dk65-t2-0206\artifacts\logs\import-region-bialystok-kleeberga-20261115-050731.log

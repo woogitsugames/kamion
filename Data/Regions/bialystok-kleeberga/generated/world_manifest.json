@@ -3953,19 +3953,19 @@
     "z_max_evrf2007": 130.94,
     "z_min_evrf2007": 115.55
    },
-   "bytes": 12604720,
+   "bytes": 12611240,
    "file": "Data/raw/derived/bialystok-kleeberga/world/chunk_3_4.glb",
    "forest_cells": [],
    "id": "3_4",
    "instances": {
     "count": 746,
     "file": "Data/raw/derived/bialystok-kleeberga/world/instances_3_4.json",
-    "sha256": "2d494ea94cf1d173768772be224aa1479ed9bb3aa39ee390139f09dafc700fdb"
+    "sha256": "ba8f2ac9bf3e9afee5ca68e1c01d5c0020c6c41f8aedcf0a23937f07f7b9ffb7"
    },
    "low": {
-    "bytes": 7741648,
+    "bytes": 7746520,
     "file": "Data/raw/derived/bialystok-kleeberga/world/chunk_3_4.low.glb",
-    "sha256": "656b2553e512ebe3bf46a73f57a361abd17847f124523d2e596fee51cb25436a"
+    "sha256": "9ef01ffe6678b2562f8c6667cc2960e92ea83016d213546dbd77d822c2ba47d0"
    },
    "materials": [
     "apron_sett",
@@ -3974,6 +3974,7 @@
     "brick_red__far_ribbon",
     "bridge_concrete",
     "bridge_kerb",
+    "bridge_soffit",
     "canopy_fascia",
     "canopy_steel",
     "chimney_brick",
@@ -4005,7 +4006,6 @@
     "plinth_dark",
     "plot_kit",
     "plot_lawn",
-    "ramp_wall_blocks",
     "reveal_plaster",
     "road_asphalt",
     "road_asphalt_new",
@@ -4026,9 +4026,9 @@
     "yard_gravel",
     "yard_paving"
    ],
-   "sha256": "18ebfebbe1bca9089e6a50939cdabe218728bf5c0684d2cf36d6521e53117b1c",
+   "sha256": "506d05f1ffc69ebf958208daca315e15e8c1dcdb09e24c6d7ec509d710a2d8ed",
    "triangles": {
-    "bridge": 1356,
+    "bridge": 1446,
     "buildings": 2462,
     "buildings_lod1": 578,
     "furniture": 5614,
@@ -4038,7 +4038,7 @@
     "plots": 457,
     "plots_low": 388,
     "road": 35563,
-    "road_collision": 17720,
+    "road_collision": 17724,
     "terrain_lod0": 137826,
     "terrain_lod1": 36450,
     "terrain_lod2": 8704,
@@ -11698,14 +11698,22 @@
   "x": 773899.0,
   "y": 596223.0
  },
- "overrides_applied": [],
+ "overrides_applied": [
+  {
+   "id": "rondo-szymanskiego-ring-over-dk8-cutting",
+   "targets": [
+    "w257353773:2629122142-2629122161",
+    "w257353774:2629122147-2629122136"
+   ]
+  }
+ ],
  "overrides_stale": [],
  "region": "bialystok-kleeberga",
  "schema": "truck-sim-pl/world-manifest/1",
  "sources_sha256": {
   "generated/osm_context.json": "634efd6120dded520cfd0be575e4eafeb740fc23d1b04dc9743625e211e000da",
   "heightmap.r16 (Data/raw)": "fb6cb4ad005109dac1a03e70ca90d48f523e394c92231b7ae74240efa5a8396f",
-  "overrides.yaml": "e4b215af8e6a7377a2ef7e2cee7e3cc5935ef27419442fba3d5f3e3fd405ee6c",
+  "overrides.yaml": "c2e3bd33be92cd7b6604698172ea44eef38cd6a4abec84957d82a7eefdb09043",
   "roads.graph.json": "4d17e2e12d1b70d5d5413a1151759a20614278d7acf3ecc8728a919bb283184e",
   "terrain.json": "728b0d57099f3f83542862a59816ad2b7bf456cf4782ffe5b8f54b364431f9a2"
  },

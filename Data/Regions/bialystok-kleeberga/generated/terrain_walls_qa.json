@@ -5,29 +5,29 @@
   "skirt:yard_asphalt": 10
  },
  "count": 12,
- "max_m": 0.816,
- "p99_m": 0.78,
+ "max_m": 5.117,
+ "p99_m": 4.844,
  "skirt_area": [
   {
-   "e": -124.0,
-   "exposed_m2": 1.536,
-   "mat": "yard_asphalt",
-   "max_h": 0.49,
-   "n": -221.1,
-   "points": 3,
-   "run_m": 6.092,
-   "src": "osm:way/279905436:0#0",
-   "visible": true
-  },
-  {
    "e": -96.0,
-   "exposed_m2": 1.408,
+   "exposed_m2": 4.605,
    "mat": "cycle_red",
-   "max_h": 0.816,
+   "max_h": 1.39,
    "n": -204.9,
    "points": 1,
    "run_m": 5.992,
    "src": "bdot:5e7cad97-d25f-11ef-92d2-480fcf3c9bd7:0#1",
+   "visible": true
+  },
+  {
+   "e": -124.0,
+   "exposed_m2": 3.124,
+   "mat": "yard_asphalt",
+   "max_h": 5.117,
+   "n": -221.1,
+   "points": 3,
+   "run_m": 6.092,
+   "src": "osm:way/279905436:0#0",
    "visible": true
   },
   {
@@ -135,28 +135,36 @@
  },
  "worst": [
   {
-   "e": -96.0,
-   "h": 0.816,
-   "kind": "skirt",
-   "mat": "cycle_red",
-   "n": -204.9,
-   "src": "bdot:5e7cad97-d25f-11ef-92d2-480fcf3c9bd7:0#1"
-  },
-  {
-   "e": -124.0,
-   "h": 0.49,
+   "e": -120.8,
+   "h": 5.117,
    "kind": "skirt",
    "mat": "yard_asphalt",
-   "n": -221.1,
+   "n": -220.0,
    "src": "osm:way/279905436:0#0"
   },
   {
    "e": -123.8,
-   "h": 0.476,
+   "h": 2.635,
    "kind": "skirt",
    "mat": "yard_asphalt",
    "n": -221.1,
    "src": "osm:way/279905436:0#0"
+  },
+  {
+   "e": -124.0,
+   "h": 1.703,
+   "kind": "skirt",
+   "mat": "yard_asphalt",
+   "n": -221.1,
+   "src": "osm:way/279905436:0#0"
+  },
+  {
+   "e": -96.0,
+   "h": 1.39,
+   "kind": "skirt",
+   "mat": "cycle_red",
+   "n": -204.9,
+   "src": "bdot:5e7cad97-d25f-11ef-92d2-480fcf3c9bd7:0#1"
   },
   {
    "e": 1024.0,
@@ -173,14 +181,6 @@
    "mat": "yard_asphalt",
    "n": -143.0,
    "src": "osm:way/1191504597:0#0:edge"
-  },
-  {
-   "e": -120.8,
-   "h": 0.313,
-   "kind": "skirt",
-   "mat": "yard_asphalt",
-   "n": -220.0,
-   "src": "osm:way/279905436:0#0"
   },
   {
    "e": -489.8,
