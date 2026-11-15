@@ -17,6 +17,7 @@ that camera draws (same wedge rule as roads.build_world.mesh_budget).
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -39,7 +40,7 @@ class Buf:
         self.parts = []
 
     def add(self, layer, mat, V, UV, T, **kw):
-        self.parts.append((layer, mat, np.asarray(V, float), np.asarray(T).reshape(-1, 3)))
+        self.parts.append((layer, mat, np.asarray(V, float), np.asarray(T).reshape(-1, 3), kw.get("src")))
 
 
 def region_inputs(rid):
@@ -101,20 +102,27 @@ def build(rid):
         ids[(round(b["e_min"] / size), round(b["n_min"] / size))] = ch["id"]
     per = {}
     mats = {l: set() for l in LAYERS}
-    for layer, mat, V, T in buf.parts:
+    pb = {}
+    for layer, mat, V, T, src in buf.parts:
         if layer not in LAYERS or not len(T):
             continue
         mats[layer].add(mat)
+        e = pb.setdefault(str(src).split("#")[0], {})
+        e[(layer, mat)] = e.get((layer, mat), 0) + len(T)
         c = V[T].mean(1)[:, :2]
         cells = np.floor(c / size).astype(int)
         for cell, n in zip(*np.unique(cells, axis=0, return_counts=True)):
             cid = ids.get((int(cell[0]), int(cell[1])), f"out:{int(cell[0])}:{int(cell[1])}")
             per.setdefault(cid, {l: 0 for l in LAYERS})[layer] += int(n)
     tot = {l: sum(v[l] for v in per.values()) for l in LAYERS}
+    per_b = {k: [sum(n for (l, _), n in v.items() if l == "buildings"),
+                 sum(n for (l, _), n in v.items() if l == "buildings_low"),
+                 hashlib.sha1(repr(sorted(v.items())).encode()).hexdigest()[:10]] for k, v in sorted(pb.items())}
     return {"region": rid, "typologies": rep["typologies"], "subtypes": rep.get("subtypes"),
             "roofs_other": rep.get("roofs_other"), "pavilion_fronts": rep.get("pavilion_fronts"),
             "house_roofs": rep.get("house_roofs"), "total": tot,
-            "materials": {l: len(mats[l]) for l in LAYERS}, "per_chunk": dict(sorted(per.items()))}, man
+            "materials": {l: len(mats[l]) for l in LAYERS}, "per_chunk": dict(sorted(per.items())),
+            "per_building": per_b}, man
 
 
 def cameras(rid, man, per, base=None):
@@ -173,8 +181,8 @@ def main():
         res["manifest_total"] = mt
         res["harness_over_manifest"] = {l: round(res["total"][l] / max(mt[l], 1), 4) for l in LAYERS}
     if a.out:
-        Path(a.out).write_text(json.dumps(res, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({k: v for k, v in res.items() if k not in ("per_chunk", "cameras")}, sort_keys=True))
+        Path(a.out).write_text(json.dumps(res, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
+    print(json.dumps({k: v for k, v in res.items() if k not in ("per_chunk", "cameras", "per_building")}, sort_keys=True))
     for r in res["cameras"]:
         if base is not None:
             print(f"{r['camera']:32s} dHigh {r['delta_high']:+8d} dLow {r['delta_low']:+7d}"
