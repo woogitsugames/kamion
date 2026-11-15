@@ -67,6 +67,8 @@ class EdgeSection:
     # joint), not a lane that widens beside a gore (ADR 0095, the default)
     lane_follow: bool = False
     edge_lines: str | None = None   # painted edge lines in the direction of travel: none | left | right | both
+    edge_line_spacing: float | None = None  # authored (ADR 0220): override edge lines (class < GP) this far apart,
+                                            # axis to axis, symmetric about the carriageway centre (measured)
     apron: str | None = None        # authored (ADR 0123): roundabout apron "asphalt" = no mountable sett apron, the ring
                                     # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
     construction: bool = False      # authored (ADR 0215, owner D65 p.6): carriageway not open to traffic - no markings,
@@ -339,6 +341,11 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 sec.provenance["bridge"] = f"authored_override:{ov['id']}"
             if "edge_lines" in st:
                 sec.edge_lines = str(st["edge_lines"])
+            if "edge_line_spacing" in st:
+                # ADR 0220: measured line-to-line distance (research K1, orthophoto 0.1 m); markings.edge_lines keeps
+                # the lines markings.EDGE_LINE_MIN_INSET inside the carriageway edge where the carriageway is narrower
+                sec.edge_line_spacing = float(st["edge_line_spacing"])
+                sec.provenance["edge_line_spacing"] = f"authored_override:{ov['id']}"
             if "apron" in st:
                 sec.apron = str(st["apron"])
             if "turn_lanes" in st:
