@@ -72,3 +72,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 20:24 +01:00 — QA generatora r1: kościół, urząd, props i fontanna applied; park_replacement bez stale; 15/18 authored drzew przyjętych, 3 odrzucone przez maskę, do oceny i korekty w r2. Strumienie OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 20:29 +01:00 — R1: build/import/4 rendery OK; 11 lokalnych par High clear gotowych. Ocena wizualna FAIL; Low max drawsEst 429→440, High 760→774; 15/18 drzew. R2: płaskie ścieżki, lepszy urząd/drzewa, redukcja draw calls.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/AUDYT.md -Tail 15; uv run --project tools/worldgen python artifacts/knyszyn-rynek-0227/budget-r1.py`
