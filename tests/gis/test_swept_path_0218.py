@@ -91,7 +91,7 @@ def test_knyszyn_ring_sectors_clear_the_u_turn():
         side = "L" if (c.dirn > 0).mean() >= 0.5 else "R"
         r_axis = float(np.hypot(*(c.line.p - ctr).T).mean())
         hw, w = float(c.hw.mean()), float(c.side[side]["w"].mean())
-        assert w == pytest.approx(3.2) and (c.side[side]["mat"] == 5).all()
+        assert w == pytest.approx(3.2) and (c.side[side]["mat"] == 8).all()      # kostka_jasna (owner photos 9-11)
         R_ext = round(r_axis + hw, 2)
         if R_ext not in cache:
             cache[R_ext] = SP.required(R_ext, 360.0)["tyre_min_r"]
