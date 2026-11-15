@@ -38,3 +38,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 19:00 +01:00 — Niezależny przegląd: docelowy poligon jest wyłączony z forest/HLOD i maski leśnej, bez wymuszenia piasku; 18 punktów drzew poza nowymi alejkami. Położenie fontanny zgodne z dopasowaniem orto na poziomie ESTIMATED.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 19:08 +01:00 — Review wykrył odstające okna/portyk i dachy landmarków; urząd poprawiony i testy 4 passed, kościół poprawiany. R1 nie korzysta jeszcze z tych modułów.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
