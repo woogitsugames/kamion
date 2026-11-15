@@ -22,7 +22,8 @@ import hashlib
 import math
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw
+from scipy.ndimage import gaussian_filter as ndimage_gauss
 
 TEX_W, TEX_H = 1024, 512           # final texture px (u tiles)
 TEX_M = 4.0                        # metres of bank one texture width stands for
@@ -72,54 +73,59 @@ def texture(seed=213):
                 d.line([q[i], q[i + 1]], fill=c, width=max(1, int(round(w))))
 
     # dense dark base (litter, stems in shade): the belt reads as a mass, not single blades
-    for _ in range(900):
+    for _ in range(1400):
         x = rng.uniform(0, W)
-        h = rng.uniform(0.10, 0.42) * H
-        lean = rng.normal(0, 0.10)
+        h = rng.uniform(0.10, 0.50) * H
+        lean = rng.normal(0, 0.12)
         pts = [(x + lean * h * t * t, H - h * t) for t in np.linspace(0, 1, 6)]
-        stroke(pts, 5 * S, 1.2 * S, col(dark * rng.uniform(0.8, 1.4), rng.random()))
+        stroke(pts, 6 * S, 1.5 * S, col(dark * rng.uniform(0.8, 1.5), rng.random()))
     # stems with leaves
-    n_st = 520
-    for k in range(n_st):
+    for k in range(820):
         x = rng.uniform(0, W)
         tall = rng.random()
-        h = (0.50 + 0.48 * tall ** 0.7) * H
-        lean = rng.normal(0, 0.06)
-        dry = rng.random() < 0.22
+        h = (0.42 + 0.56 * tall ** 0.8) * H
+        lean = rng.normal(0, 0.07)
+        dry = rng.random() < 0.20
         base = straw if dry else (fresh, blue, olive)[int(rng.integers(0, 3))]
         c = col(base, rng.random())
         pts = [(x + lean * h * t * t, H - h * t) for t in np.linspace(0, 1, 8)]
-        stroke(pts, 2.4 * S, 0.9 * S, c)
+        stroke(pts, 3.0 * S, 1.1 * S, c)
         if not dry:
-            # leaves: broad blades leaving the stem upward and arching over (Phragmites), 2-5 per stem
-            for j in range(int(rng.integers(2, 6))):
-                t0 = rng.uniform(0.25, 0.85)
+            # leaves: broad blades leaving the stem upward, arching and drooping (Phragmites), 3-7 per stem
+            for j in range(int(rng.integers(3, 8))):
+                t0 = rng.uniform(0.15, 0.9)
                 x0, y0 = x + lean * h * t0 * t0, H - h * t0
                 side = rng.choice([-1, 1])
-                L = rng.uniform(0.10, 0.30) * H
-                ang = math.radians(rng.uniform(25, 60))
-                droop = rng.uniform(0.2, 0.9)
+                L = rng.uniform(0.12, 0.34) * H
+                ang = math.radians(rng.uniform(20, 65))
+                droop = rng.uniform(0.3, 1.2)
                 lp = []
-                for t in np.linspace(0, 1, 7):
+                for t in np.linspace(0, 1, 8):
                     lp.append((x0 + side * math.sin(ang) * L * t,
                                y0 - math.cos(ang) * L * t + droop * L * t * t))
-                stroke(lp, 3.2 * S, 0.8 * S, col(base * rng.uniform(0.85, 1.15), rng.random()))
-        if (not dry and tall > 0.72 and rng.random() < 0.35) or (dry and rng.random() < 0.5):
-            # panicle: a loose purple-brown (dry: grey-straw) plume at the top
+                stroke(lp, 4.5 * S, 1.0 * S, col(base * rng.uniform(0.8, 1.15), rng.random()))
+        if (not dry and tall > 0.75 and rng.random() < 0.18) or (dry and tall > 0.4 and rng.random() < 0.45):
+            # panicle: a narrow plume hanging to one side from the stem top (purple-brown; old ones grey-straw)
             tx, ty = pts[-1]
-            pc = straw * 1.08 if dry else pan
-            for _ in range(26):
-                a = rng.normal(0, 0.35)
-                L = rng.uniform(0.03, 0.09) * H
-                stroke([(tx, ty + rng.uniform(0, 0.05) * H),
-                        (tx + math.sin(a) * L, ty + rng.uniform(0, 0.05) * H - math.cos(a) * L * 0.6)],
-                       1.6 * S, 0.8 * S, col(pc * rng.uniform(0.8, 1.2), rng.random()))
+            pc = straw * 1.05 if dry else pan
+            side = rng.choice([-1, 1])
+            Lp = rng.uniform(0.07, 0.13) * H
+            for q in range(34):
+                t = q / 33.0
+                sx, sy = tx + side * 0.25 * Lp * t, ty + 0.85 * Lp * t                 # rachis bending down
+                a = side * rng.uniform(0.2, 1.1)
+                Ls = rng.uniform(0.15, 0.35) * Lp * (1.0 - 0.6 * t)
+                stroke([(sx, sy), (sx + math.sin(a) * Ls, sy + math.cos(a) * Ls * 0.6)],
+                       1.8 * S, 0.8 * S, col(pc * rng.uniform(0.8, 1.15), rng.random()))
     im = im.resize((TEX_W, TEX_H), Image.LANCZOS)
     a = np.asarray(im).astype(np.float32)
     # premultiplied-style edge fix: transparent texels take the mean colour of the belt (no dark fringe in mips)
     m = a[..., 3] > 8
     mean = a[m][:, :3].mean(0)
     a[~m, :3] = mean
+    # texel-scale value noise (leaf sheen / spots): the flat drawn strokes must not read as vector art
+    nz = ndimage_gauss(np.random.default_rng(seed + 1).random((TEX_H, TEX_W)), 0.8)
+    a[..., :3] *= (0.86 + 0.28 * (nz - nz.min()) / max(float(nz.max() - nz.min()), 1e-6))[..., None]
     # vertical darkening toward the foot (inside the belt), ~0.6 at v = 0
     v = 1.0 - (np.arange(TEX_H) + 0.5) / TEX_H
     a[..., :3] *= (0.62 + 0.38 * np.clip(v / 0.55, 0, 1))[:, None, None]

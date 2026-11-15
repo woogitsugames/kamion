@@ -181,8 +181,13 @@ _GLB_MATS = None
 # brown-olive water, sRGB ~30/34/28 in the open channel). Linear albedo of the deep body, shallow tint at the shore,
 # Low: a dimmed sky gloss only; High: + two moving ripple octaves along the flow + sun glint. All WORKING_VALUE.
 WATER_MATERIALS = {
-    "water": {"color": [0.034, 0.041, 0.024], "rough": 0.08, "metal": 0.0, "shader": "water",
-              "shallow": [0.060, 0.060, 0.034], "reflect": 0.80, "reflect_low": 0.55, "flow_mps": 0.25},
+    # ADR 0213: body lit like the ground (shader), re-tuned on the orthophoto median of the open water (dk65-02 bridge
+    # 44/50/54, dk65-03 46/50/54 and 52/53/57 sRGB; water / meadow luminance ~0.3-0.4): the old 0.034 olive body gave
+    # 31/33/32 (Low) and read black from the bank. Blue of the orthophoto water is partly haze -> body kept neutral-warm.
+    "water": {"color": [0.120, 0.120, 0.115], "rough": 0.08, "metal": 0.0, "shader": "water",
+              "shallow": [0.150, 0.145, 0.115], "reflect": 0.80, "reflect_low": 0.70, "flow_mps": 0.25,
+              "flow_cycle_s": 6.0, "ripple_m": 2.4, "ripple_slope": 0.05, "smoothness": 0.93,
+              "bank_tint": [0.050, 0.065, 0.035], "bank_horizon": 0.10},
     # ADR 0213: reed / tall-herb belt on the banks (streetscape.reeds): alpha-clip ribbons, foliage lit by COLOR_0
     "water_reeds": {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "water_reeds", "alpha_cutoff": 0.5,
                     "vertex_color": True, "shader": "Kamion/World PlotKit"},
