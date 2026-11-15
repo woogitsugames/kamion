@@ -26,7 +26,6 @@ namespace Game.Rendering
     /// camera culling mask AND), rq_props (0 = no instanced props/vehicles, trees kept), rq_hud (0 = no screen-space
     /// canvases); rq_ab keys lod, scale, far, props, trees, truck, hud (ExtraViewCostMonitor.Describe).
     /// ADR 0113: rq_forestfast (0/1 forest fast path), rq_ab keys forestfast, vegfast, hlod1pass, canopyfast, veganiso.
-    /// ADR 0241: rq_depthtex, rq_opaquetex, rq_impostors, rq_hlodpart, rq_abtag live in <see cref="GpuAbOverrides"/>.
     /// </summary>
     public static class RenderOverrides
     {
@@ -174,7 +173,7 @@ namespace Game.Rendering
                          $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
                          $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun} " +
                          $"clouds={Clouds} haze={GroundHaze} ssao={Ssao} look={WorldAtmosphere.LookVariant} ev={LightingPreset.ExposureBiasOverride} wet={WorldAtmosphere.WetOverride} " +
-                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull} grime={Grime}" + GpuAbOverrides.Describe() : null;
+                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull} grime={Grime}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>

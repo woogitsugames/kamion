@@ -25,7 +25,7 @@ opaque texture) i wyłączenia impostorów oraz części HLOD lasu **na cały pr
    `rq_depthtex 0|1`, `rq_opaquetex 0|1` (zapis do aktywnego assetu URP tylko w pamięci, jak dotychczasowe `rq_msaa`),
    `rq_impostors 0`, `rq_hlodpart 1|2` (te same haki `WorldInstances`, których używa `rq_ab`: `AbImpostorOff`, `AbHlodPart`),
    `rq_abtag <id>` (etykieta wariantu; tylko log `[GPUAB] … abtag=<id>`, nie włącza ścieżki override). Haki w istniejącym kodzie:
-   trzy jednowierszowe (`RenderOverrides.Any`, `RenderOverrides.Parse`, `QualityProfileApplier.ApplyPipelineOverrides`) + ogon linii logu.
+   trzy jednowierszowe (`RenderOverrides.Any`, `RenderOverrides.Parse`, `QualityProfileApplier.ApplyPipelineOverrides`).
 2. **Żadne ustawienie domyślne się nie zmienia.** Nie dotknięto `QualityProfile.cs`, `QualityProfile.asset`, `ProjectSetup.cs`,
    assetów URP ani `ProjectSettings/`. Bez argumentu każdy przełącznik jest `null`, współdzielone flagi A/B nie są zapisywane,
    `RenderOverrides.ApplyTo` zwraca tier bez zmian — pilnują tego testy EditMode `GpuAbOverridesTests` (m.in.
@@ -87,16 +87,21 @@ Kopie głębi/koloru i post są na Low wyłączone — warianty `*-on` mierzą k
 - Kamera główna z własnym ustawieniem „Depth/Opaque Texture = On/Off” ignoruje asset URP — `rq_depthtex`/`rq_opaquetex` działają
   tylko dla kamer „Use Pipeline Settings” (UNVERIFIED dla kamery kabiny; sprawdzić w Frame Debuggerze, czy pojawia się CopyDepth/CopyColor).
 
-## Konflikty przewidywane (F6 = 0239 płoty, F7 = 0240 cienie pracują równolegle)
-- `QualityProfile.cs`, `QualityProfile.asset`, `ProjectSetup.cs`: **brak zmian w tej gałęzi** → brak konfliktu. Jeśli F6/F7 dodają
-  pola tieru + `CurrentRevision` + blok migracji w `ProjectSetup.LoadTiers`, scalają się niezależnie od 0241.
-- `RenderOverrides.cs`: 4 miejsca — linia w komentarzu klasy, ogon wyrażenia `Any` (`|| GpuAbOverrides.Any`), jedna linia przed
-  `PsoWarmup.Init(arg)`, ogon linii logu (`+ GpuAbOverrides.Describe()`). Jeśli F7 dopisze własny `rq_*` (np. cienie) w tych samych
-  liniach `Any` / logu → konflikt tekstowy; rozwiązanie: zostawić oba dopiski (kolejność bez znaczenia).
-- `QualityProfileApplier.cs`: jedna linia na końcu `ApplyPipelineOverrides`; F7 może dopisać tam `urp.*` cieni → zostawić obie.
-- `WorldInstances.cs` (F6 płoty): nie zmieniane; używane są istniejące flagi `AbImpostorOff` / `AbHlodPart`.
-- Po scaleniu F7: warianty `shadows-off` / `shadow-25` / `shadow-50` dalej działają (`rq_shadow` nadpisuje dystans tieru); jeśli
-  F7 zmieni domyślny dystans Low z 35 m, zaktualizować opis `baseline` i ewentualnie wartości w katalogu.
+## Konflikty i kolejność scalania (F7 = PR #110 `shadows-0240`, F6 = 0239 płoty)
+Sprawdzone `git merge-tree` względem `origin/shadows-0240`: jedyny konflikt to `STATUS.md` (plik roboczy obu gałęzi — wziąć
+dowolny / usunąć). Pliki wspólne z #110: `RenderOverrides.cs` (scala się automatycznie: 0241 dopisuje tylko ogon wyrażenia `Any`
+i jedną linię przed `PsoWarmup.Init(arg)`; #110 dopisuje `rq_thinshadow` w innych liniach), `docs/PERFORMANCE_BUDGETS.md`
+(dopiski w różnych miejscach), `STATUS.md`. 0241 **nie zmienia** `QualityProfile.cs`, `QualityProfile.asset`, `URP_Low.asset`,
+`ProjectSetup.cs`, `WorldInstances.cs` i **nie podbija `CurrentRevision`** (przełączniki runtime nie wymagają migracji).
+- Nazwy: 0241 nie wprowadza żadnego klucza `rq_shadow*` / `rq_thinshadow`. Warianty cieni używają klucza `rq_shadow` (dystans,
+  0 = wyłączone), który istnieje w main od ADR 0013/0106; nowe klucze 0241 to tylko `rq_depthtex`, `rq_opaquetex`, `rq_impostors`,
+  `rq_hlodpart`, `rq_abtag`.
+- **Proponowana kolejność: #110 (0240) → 0241.** Powód: #110 zmienia stan bazowy Low (bias cieni 1,0/1,0 → 0,4/0,3, cienkie obiekty
+  bez cienia), więc sesję A/B warto mierzyć na APK już z #110 — wtedy `baseline` = docelowy Low. Odwrotna kolejność też się scala.
+- Po scaleniu #110 (osobny mały commit, nie w tej gałęzi — klucza nie ma jeszcze w main i test katalogu by nie przeszedł): dodać do
+  `tools/perf/gpu-ab-variants.json` wariant kontrolny `thinshadow-on` = `{"rq_thinshadow": "1"}` (koszt cieni cienkich obiektów na
+  Low; szacunek z ADR 0240) i ewentualnie `shadowbias-old` = `rq_shadowbias 1` + `rq_shadownormal 1`.
+- F6 (płoty, `WorldInstances.cs`): 0241 tego pliku nie zmienia; używa istniejących flag `AbImpostorOff` / `AbHlodPart`.
 
 ## Weryfikacja
 Uruchomione w chmurze: `uv run --project tools/perf pytest tools/perf/tests -q` → 61 passed (18 nowych w `test_gpuab.py`: katalog,

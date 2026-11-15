@@ -62,7 +62,7 @@ namespace Game.Rendering
             if (Any || Tag != null) UnityEngine.Debug.Log("[GPUAB]" + Describe());
         }
 
-        /// <summary>Suffix of the RenderOverrides log line ("" when nothing was given).</summary>
+        /// <summary>Text of the "[GPUAB]" log line ("" when nothing was given).</summary>
         public static string Describe() =>
             Any || Tag != null ? $" depthtex={DepthTexture} opaquetex={OpaqueTexture} impostors={Impostors} hlodpart={HlodPart} abtag={Tag}" : "";
 

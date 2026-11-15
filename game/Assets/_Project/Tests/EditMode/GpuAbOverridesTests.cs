@@ -83,7 +83,8 @@ namespace Game.Tests.EditMode
         [TestCase("off", false)]
         public void DepthAndOpaqueTexture_Parse(string value, bool expected)
         {
-            string log = RenderOverrides.Parse(Args(GpuAbOverrides.DepthTextureKey, value, GpuAbOverrides.OpaqueTextureKey, value));
+            RenderOverrides.Parse(Args(GpuAbOverrides.DepthTextureKey, value, GpuAbOverrides.OpaqueTextureKey, value));
+            string log = GpuAbOverrides.Describe();   // the "[GPUAB]" line of the launch
             Assert.AreEqual(expected, GpuAbOverrides.DepthTexture);
             Assert.AreEqual(expected, GpuAbOverrides.OpaqueTexture);
             Assert.IsTrue(RenderOverrides.Any);
