@@ -92,7 +92,14 @@ def test_edges_mesh_has_no_flat_run_of_2m_segments():
     hf = _plane_hf()
     PV._edges(buf, item, zgrid, hf)
     edge = [p for p in buf.parts if p.src.endswith(":edge")]
-    assert sum(len(p.T) for p in edge) == 4 * 3 * 2
+    # 4 sides + 2 dense neighbours at each of the 3 corners inside the ring (the normal turns there; the ring's own
+    # start has one-sided normals) = 10 segments of 3 faces; was (30 + 15) * 2 segments = 540 triangles
+    assert sum(len(p.T) for p in edge) == 10 * 3 * 2
+    top = max(edge, key=lambda p: len(p.T)).V
+    outer = top[np.isclose(top[:, 2], 140.0 + PV.S.EDGING_H)]
+    d = shapely.distance(shapely.points(outer[:, :2]), shapely.box(0, 0, 60, 30).exterior)
+    # full 8 cm edging width everywhere but at the 4 corner vertices themselves (bisector normal, as before ADR 0221)
+    assert np.sum(np.isclose(d, PV.S.EDGING_W, atol=1e-6)) >= len(d) - 5 - np.sum(np.isclose(d, 0.0, atol=1e-6))
     assert {p.mat for p in edge} == {"curb_concrete"}
     V = np.concatenate([p.V for p in edge])
     assert V[:, 2].max() == pytest.approx(140.0 + PV.S.EDGING_H) and V[:, 2].min() == pytest.approx(140.0 - PV.S.PAVED_FLANGE)

@@ -292,12 +292,16 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
 
 
 EDGE_TOL_XY_M = 0.002       # ADR 0221: an edge vertex may be dropped when it lies this close to the chord in plan
+EDGE_NORMAL_COS = 0.9998    # normals of neighbouring edge samples more than ~1 deg apart = the outline turns there
 EDGE_TOL_Z_M = 0.005        # ... and this close in height (edging top is 30 mm proud, the skirt 300 mm deep) WORKING_VALUE
 
 
-def _edge_keep(P, Z, skip):
+def _edge_keep(P, Z, skip, nout=None):
     """Indices of the edge vertices that carry shape (Douglas-Peucker in plan and in height, ADR 0221). Vertices where
-    the built / skipped state changes are always kept, so every remaining segment is built or skipped as a whole."""
+    the built / skipped state changes are always kept, so every remaining segment is built or skipped as a whole.
+    nout: outward normals of the dense vertices; where a kept vertex has a normal that differs from its dense
+    neighbours (a corner: the normal there is the bisector) the neighbours stay too, so the edging keeps its full
+    width and the skirt its batter right up to the corner instead of tapering along the whole side."""
     n = len(P)
     Q = np.column_stack([P * (EDGE_TOL_Z_M / EDGE_TOL_XY_M), Z])
     must = np.zeros(n, bool)
@@ -324,6 +328,13 @@ def _edge_keep(P, Z, skip):
         if d[k] > EDGE_TOL_Z_M:
             keep[a + 1 + k] = True
             stack += [(a, a + 1 + k), (a + 1 + k, b)]
+    if nout is not None and n > 2:
+        turn = np.einsum("ij,ij->i", nout[1:], nout[:-1]) < EDGE_NORMAL_COS      # dense segment k: normals k, k+1 differ
+        for i in np.flatnonzero(keep):
+            if i > 0 and turn[i - 1]:
+                keep[i - 1] = True
+            if i < n - 1 and turn[i]:
+                keep[i + 1] = True
     return np.flatnonzero(keep)
 
 
@@ -376,7 +387,7 @@ def _edges(buf, item, zgrid, hf, roads_poly=None):
             skip |= shapely.distance(shapely.points(0.5 * (P[1:] + P[:-1])), item["skip_edge"]) < 0.3
         # ADR 0221: the 2 m samples are needed only where the ground bends; on a straight edge over smoothed ground
         # they were 6 triangles every 2 m for nothing (77 k triangles in one view of region C)
-        keep = _edge_keep(P, Z, skip)
+        keep = _edge_keep(P, Z, skip, nout)
         rows = [r_[keep] for r_ in rows]
         skip = skip[keep[:-1]]
         s, n = s[keep], len(keep)
