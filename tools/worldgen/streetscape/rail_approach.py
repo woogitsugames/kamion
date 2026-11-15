@@ -49,6 +49,7 @@ SIGN_DIST_FAST_M = 150.0     # § 3 ust. 2: 150-300 m; WORKING_VALUE choice: the
 SIGN_DIST_SLOW_M = 100.0     # § 3 ust. 2: "do 100 m"; WORKING_VALUE choice: the upper bound
 SIGN_DIST_MIN_SLOW_M = 60.0  # WORKING_VALUE: below this the three posts would stand < 20 m apart -> § 78 ust. 3
 SIGN_NEAR_M = 30.0           # WORKING_VALUE for "w bezpośredniej bliskości przejazdu" (§ 78 ust. 3 zd. 2)
+SIGN_SLIDE_MAX_M = 12.0      # WORKING_VALUE: a post that falls on a side-road carriageway slides at most this far
 SIGN_END_CLEAR_M = 2.0       # WORKING_VALUE: sign this far inside the end of the road / the tile edge
 DEFAULT_SPEED_KMH = 50.0     # road without maxspeed: as roads.markings (`sec.maxspeed or 50`)
 U1_FIRST_M = 4.0             # § 79 pkt 5 lit. a: nearest posts 4 m from the outer rails
@@ -293,6 +294,28 @@ def plan(rail_plan, net=None, speed_kmh=None, avail_m=None, devices=None) -> dic
                         plates = [q for q in plates if q.startswith("G-1")]      # the warning sign stands on the right
                     dc = rail_d + d
                     p, drive = path.at(dc, side, path.sign_off(dc, side))
+                    # never on a carriageway: the nominal station can fall in the mouth of a side road (DW671, G-1c
+                    # of the south-west approach 50 m before the crossing = the junction with a service road). The
+                    # post slides along the road to the nearest clear station (first away from the crossing).
+                    shift = 0.0
+                    if road is not None and not road.is_empty and road.buffer(-0.05).contains(Point(p)):
+                        for k in range(1, int(SIGN_SLIDE_MAX_M) + 1):
+                            hit = None
+                            for dd in (float(k), -float(k)):
+                                if dc + dd <= device_line_m(c) + 1.0 or d + dd > avail:
+                                    continue
+                                q, dq = path.at(dc + dd, side, path.sign_off(dc + dd, side))
+                                if not road.buffer(-0.05).contains(Point(q)):
+                                    hit = (dd, q, dq)
+                                    break
+                            if hit:
+                                shift, p, drive = hit
+                                break
+                        else:
+                            r["dropped"].append({"what": plates, "why": "on a carriageway (side road), no clear "
+                                                 f"station within {SIGN_SLIDE_MAX_M:.0f} m"})
+                            continue
+                        dc += shift
                     if getattr(path, "on_bridge", lambda _d: False)(dc):
                         r["dropped"].append({"what": plates, "why": "on a bridge"})
                         continue
@@ -300,6 +323,9 @@ def plan(rail_plan, net=None, speed_kmh=None, avail_m=None, devices=None) -> dic
                          "e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "heading_deg": RL._heading(-drive),
                          "dist_m": round(d, 1), "plates": plates,
                          "bottom_z_m": G1_BOTTOM_Z_M if plates[-1].startswith("G-1") else None}
+                    if shift:
+                        m["shifted_m"] = shift            # along the road, + = away from the crossing
+                        m["dist_m"] = round(d + shift, 1)
                     if not keep(m):
                         r["dropped"].append({"what": plates, "why": "outside the tile"})
             for d in r.pop("guide_m"):

@@ -364,6 +364,22 @@ def test_override_guide_post_key_and_unknown_key():
                                      "approach_speed_kmh"}
 
 
+def test_approach_post_never_stands_on_a_side_road():
+    """A G-1 post whose nominal station falls in the mouth of a side road slides along the road (shifted_m)."""
+    from shapely.geometry import box
+    from streetscape import rail_approach as RA
+    p = _syn(barrier="half", light="yes")
+    base = [m for m in RA.plan(p, speed_kmh=90.0)["markers"] if m["kind"] == "approach" and m["plates"] == ["G-1c"]]
+    g = [m for m in base if m["approach"] == 1][0]
+    assert "shifted_m" not in g
+    p.road_poly = p.road_poly.union(box(g["e"] - 2.0, g["n"] - 2.5, g["e"] + 30.0, g["n"] + 2.5))   # side road, 5 m
+    out = RA.plan(p, speed_kmh=90.0)
+    h = [m for m in out["markers"] if m["kind"] == "approach" and m["plates"] == ["G-1c"] and m["approach"] == 1][0]
+    assert h["shifted_m"] and 2.0 <= abs(h["shifted_m"]) <= 4.0
+    assert not p.road_poly.buffer(-0.05).contains(Point(h["e"], h["n"]))
+    assert abs(h["dist_m"] - (g["dist_m"] + h["shifted_m"])) < 0.11
+
+
 def test_speed_source_is_reported_and_override_wins():
     """A graph default (attrs.maxspeed.src == 'default') is never reported as a known limit; the authored
     approach_speed_kmh of the crossing decides the § 3 ust. 2 bracket (150-300 m above 60 km/h)."""

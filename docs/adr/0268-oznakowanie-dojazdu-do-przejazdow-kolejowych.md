@@ -79,14 +79,6 @@ płyty i szyny (krytyk wizualny: FAIL). Właściciel (D71 pkt 3) zlecił oznakow
    wzorem); słupki dojazdu DW671 `guide_post: red_white` (authored override, widoczne na Mapillary) — domyślnie U-1a.
 6. **Kamery** (`artifacts/rail-dk65-s22/tools/cams.py`, authored): na przejazd `rail_x<k>_far_{a,b}` (165 m),
    `_near_{a,b}` (30 m), `_side_eye` (1,6 m, 13 m z boku — skala urządzeń, P2-12), `_top`.
-
-## Budżet (z generatora; pomiar kadrów: sekcja Walidacja)
-Na przejazd dwuwlotowy: 6 słupków znaków (2 × [A-x + tablica + G-1a], 2 × G-1b, 2 × G-1c) + do 24 słupków
-prowadzących + 2 × G-2. Nowe materiały: `sign_A-9` / `sign_A-10`, `sign_T-SA`, `sign_G-1a..c`, `sign_G-2`
-(tekstury 256², jak inne znaki) i `drive_cabinet_faded` (kolor). Słupek prowadzący: 3–4 boksy (≤ 60 tris),
-prototyp `signal_rail_guide_*` (klasa LOD urządzeń przejazdu). Oznakowanie poziome: P-4 2 wstęgi × ~100 m, P-14
-≤ 4 prostokąty na wlot. WORKING_VALUE do pomiaru w kadrze (niżej).
-
 7. **Prędkość dopuszczalna na dojeździe** (decyduje o przedziale § 3 ust. 2). Graf dróg wpisuje `maxspeed` 50 także
    wtedy, gdy OSM nie ma tagu (`attrs.maxspeed.src = default`, conf low). Raport `approach_rules[].speed_src` podaje
    teraz źródło (`osm` / `default` / `authored_override`; `EdgeSection.maxspeed_src`), a przejazd może dostać fakt
@@ -96,13 +88,26 @@ prototyp `signal_rail_guide_*` (klasa LOD urządzeń przejazdu). Oznakowanie poz
    niż 50; zdjęcia Mapillary 828893548045009 / 1832769196903759 / 955575365206348 pokazują pola (brak zabudowy).
    90 km/h = ogólny limit poza obszarem zabudowanym cytowany z pamięci (ustawa nieczytana, UNVERIFIED); istotny jest
    tylko przedział „> 60 km/h” → znak 150 m. **Do potwierdzenia zdjęciem właściciela / wizją lokalną** (rzeczywista
-   odległość A-9, czy B-33 „50” nadal stoi). Sam B-33 nie jest budowany.
+   odległość A-9, czy B-33 „50” nadal stoi). Sam B-33 nie jest budowany. Dowód: `artifacts/rail-dk65-s22/tools/
+   mapillary_features_dw671.py` → `artifacts/rail-dk65-s22/logs/mapillary_features_dw671.txt`.
+8. **Znak nigdy na jezdni drogi bocznej**: stacja nominalna słupka (np. G-1c 50 m wlotu SW DW671 = wylot drogi
+   serwisowej w węźle 839431484) jest sprawdzana z obrysem jezdni; słupek przesuwa się wzdłuż drogi do najbliższej
+   wolnej stacji (najpierw od przejazdu, maks. `SIGN_SLIDE_MAX_M` 12 m, WORKING_VALUE) i dostaje `shifted_m`;
+   bez wolnej stacji → `dropped`.
+
+## Budżet (z generatora; pomiar kadrów: sekcja Walidacja)
+Na przejazd dwuwlotowy: 6 słupków znaków (2 × [A-x + tablica + G-1a], 2 × G-1b, 2 × G-1c) + do 24 słupków
+prowadzących + 2 × G-2. Nowe materiały: `sign_A-9` / `sign_A-10`, `sign_T-SA`, `sign_G-1a..c`, `sign_G-2`
+(tekstury 256², jak inne znaki) i `drive_cabinet_faded` (kolor). Słupek prowadzący: 3–4 boksy (≤ 60 tris),
+prototyp `signal_rail_guide_*` (klasa LOD urządzeń przejazdu). Oznakowanie poziome: P-4 2 wstęgi × ~100 m, P-14
+≤ 4 prostokąty na wlot. WORKING_VALUE do pomiaru w kadrze (niżej).
 
 ## Walidacja (s22, dw671-tykocin-01; dk65-01..04 czekają na scalenie int-dk65-s22 + PR #138 / ADR 0272)
 - **Build** `build_world --region dw671-tykocin-01` exit 0 (96 s): 1 przejazd, `approach_attach` = {crossings 1,
   kerb_cut_m 17,9, missed []}; `roads_qa`: „P-4 level crossing approach” 1, „P-14 level crossing” 2; `rail.json`
   `approach_rules` oba wloty: A-9 + T-SA, `speed_kmh` 90 `speed_src` authored_override, `dist_m` 150 (avail 170),
-  słupki 150 / 100 / 50 m, `dropped` []; 24 słupki prowadzące `red_white` (4,6–19,6 m od skrajnej szyny, co 3 m).
+  słupki 150 / 100 / 50 m (po buildzie r2b, bez Unity: G-1c wlotu SW 45 m, `shifted_m: -5` — p. 8; render r2
+  pokazuje jeszcze pozycję 50 m w wylocie drogi serwisowej, do obejrzenia w r3), `dropped` []; 24 słupki prowadzące `red_white` (4,6–19,6 m od skrajnej szyny, co 3 m).
 - **Zgodność z aktami** (tekst przeczytany ponownie z lokalnych kopii `Data/raw/refs/codex-s21/05-kolej38/
   D20251105-signs-19/20.png` i `…/D20192310.html.txt`): § 79 pkt 1 lit. a (rogatki → A-9), pkt 3 (G-1a–c po prawej),
   pkt 4 lit. b i e (P-4, P-14), pkt 5 lit. b (słupki na zewnątrz rogatek), pkt 6 (tablica dla kat. B); § 80 ust. 1
