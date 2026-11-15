@@ -109,10 +109,11 @@ namespace Game.Editor.Setup
             AssetDatabase.SaveAssets();
         }
 
-        /// <summary>ADR 0181: number-plate luminance as a fraction of the plate lamp's lens luminance at the plate's top
-        /// edge (2 000 cd/m2 lens -> ~8 cd/m2 on a white plate; UN R4 asks for >= 2.5 cd/m2 - quoted from memory,
-        /// UNVERIFIED). WORKING_VALUE, tuned on the dusk control cameras.</summary>
-        public const float PlateIllum = 0.005f;
+        /// <summary>ADR 0181 / 0197: number-plate luminance (reflectance 1) as a fraction of the plate lamp's lens luminance
+        /// at the plate's top edge. 0.006: 2 000 cd/m2 lens -> 11.8 cd/m2 top centre, >= 2.9 cd/m2 over every 25 mm
+        /// measuring circle (UN R148 5.11.3 (a): >= 2.5 cd/m2, SOURCED; checked by LampPhotometry / tools/lamp-check).
+        /// WORKING_VALUE.</summary>
+        public const float PlateIllum = Game.Vehicle.Runtime.LampPhotometry.PlateIllum;
 
         /// <summary>ADR 0181: lens optics parameters of a Kamion/Truck Exterior material (tractor and trailer). Set here on
         /// every rebuild: an existing material asset keeps its serialized values when the shader default changes.</summary>

@@ -78,7 +78,10 @@ MAT_SLOT = {
 # B2.2: a lit LED module's chrome reflector carries scattered light round the lens: same group, 30 % emission mask
 REFL_GLOW = 0.30
 LIGHT_GROUPS = ["NONE", "DRL", "LOW_BEAM", "HIGH_BEAM", "IND_L", "IND_R", "TAIL_BRAKE", "REVERSE", "MARKER_FRONT",
-                "MARKER_SIDE", "MARKER_REAR", "FOG", "WORK", "PLATE", "FOG_REAR", "REFLEX"]
+                "MARKER_SIDE", "MARKER_REAR", "FOG", "WORK", "PLATE", "FOG_REAR", "REFLEX", "TAIL", "STOP"]
+# ADR 0197: 16 = TAIL, 17 = STOP - the separate tail and stop chambers of the trailer combination lamp (trailer_export;
+# they shared TAIL_BRAKE, so the stop chamber glowed at tail level and both jumped to stop level together). The tractor's
+# single red chamber stays TAIL_BRAKE (6). TruckLights / the shader read a 32 x 1 state texture (LampPhotometry.StateTexels).
 # ADR 0175: 13 = PLATE (trailer plate lamp; the id the trailer manifest and TruckLights already used), 14 = FOG_REAR
 # (rear fog lamps of the tractor and the trailer; FOG = 11 stays the front fog / cornering lamps), 15 = REFLEX:
 # retro-reflectors and conspicuity tape (R3 / R104). Emission mask is always 0 and TruckLights never writes id 15:
@@ -86,11 +89,14 @@ LIGHT_GROUPS = ["NONE", "DRL", "LOW_BEAM", "HIGH_BEAM", "IND_L", "IND_R", "TAIL_
 # retro-reflection term in the shader instead of leaving them indistinguishable from unlit trim (NONE).
 REFLEX_PREFIXES = ("side_reflex", "rear_reflex", "front_reflex", "side_marker_reflex", "tri_reflector", "side_reflector",
                    "contour_")
+# Linear sRGB, = LampPhotometry (ADR 0178 / 0197): red (1, 0, 0) and amber (1, 0.22, 0) are the nearest sRGB points to the
+# UN R48 2.11.1 red / amber areas (both lie outside the sRGB gamut). Preview renders and the manifest only; the game reads
+# TruckLights.
 LIGHT_COLOUR = {"DRL": (1.0, 0.97, 0.92), "LOW_BEAM": (1.0, 0.96, 0.90), "HIGH_BEAM": (1.0, 0.97, 0.94),
-                "IND_L": (1.0, 0.42, 0.02), "IND_R": (1.0, 0.42, 0.02), "TAIL_BRAKE": (1.0, 0.03, 0.01),
-                "REVERSE": (1.0, 1.0, 1.0), "MARKER_FRONT": (1.0, 0.97, 0.92), "MARKER_SIDE": (1.0, 0.42, 0.02),
-                "MARKER_REAR": (1.0, 0.03, 0.01), "FOG": (1.0, 0.95, 0.85), "WORK": (1.0, 0.98, 0.95), "PLATE": (1.0, 0.98, 0.95),
-                "FOG_REAR": (1.0, 0.03, 0.01), "REFLEX": (0.0, 0.0, 0.0)}
+                "IND_L": (1.0, 0.22, 0.0), "IND_R": (1.0, 0.22, 0.0), "TAIL_BRAKE": (1.0, 0.0, 0.0),
+                "REVERSE": (1.0, 1.0, 1.0), "MARKER_FRONT": (1.0, 0.97, 0.92), "MARKER_SIDE": (1.0, 0.22, 0.0),
+                "MARKER_REAR": (1.0, 0.0, 0.0), "FOG": (1.0, 0.95, 0.85), "WORK": (1.0, 0.98, 0.95), "PLATE": (1.0, 0.98, 0.95),
+                "FOG_REAR": (1.0, 0.0, 0.0), "REFLEX": (0.0, 0.0, 0.0), "TAIL": (1.0, 0.0, 0.0), "STOP": (1.0, 0.0, 0.0)}
 LIVERIES = {   # game material variants of MI_Ext_Paint (linear colours, same as the A4 render materials)
     "white": {"_PaintColor": [0.78, 0.785, 0.78], "_PaintRoughness": 0.32, "_PaintMetallic": 0.0, "_ClearCoat": 1.0,
               "_DecalColor": [0.10, 0.104, 0.11], "_DecalMetallic": 1.0, "_DecalRoughness": 0.30,
