@@ -575,3 +575,5 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 07/dojlidy-signs-round7:3fotografie opublikowaneUM Białystok, MarcinJakowiak(kredyt na obrazach), link-only, all rights reserved. Każdy dokładny URL osobno obejrzany; brak pobrań/screenshotów/kopii. WGitwyłącznie własne opisy i odsyłacze, data publikacji oddzielona od ekspozycji.
 
 03/church-surfaces-round10:4miniatury≤800px pochodnepodglądówCommons, Zala, CC BY-SA4.0,21.07.2024. Dokładne4URL/daty/atrybucje/licencja permanifest. Pełnekadry bezcropów/upscalingu,0pełnychoryginałów; rawpodglądy pozaGit. Nie są kopiami właściciela ani znanychK1-01/11/15.
+
+01/rear-approval-round12:3fotografie publikowaneAUTO CZĘŚCI KACZMAREK SEWERYN/Otomoto6144759743, autorfotografiiUNVERIFIED; tylko link-only, all rights reserved. Każdy dokładny adres obejrzany osobno, bez kopii/screenshotów; wGitwłasne obserwacje,0nowych odczytówE/funkcji.

@@ -132,3 +132,7 @@ Główny manifest45rekordów kadrów (8lokalnych/37link-only). [Heavy-plate-roun
 [Hella003389](heavy-plate-round11/README.md):3link-onlykadry, w tym2części i1opakowania,0pobrań. Oferta-061, pudełko-011; nie rozstrzygnięto tożsamości egzemplarza i ciężkiego zastosowania. KatalogoweE122819 nie jest odczytem fotografii. 1nowa rodzina-kandydat,0strictciężkichtablicowych; pozostaje tylko w osobnym podmanifeście, nie zwiększa głównego45.
 
 [Tandem-night-round12](tandem-night-round12/README.md):1nowy kadrCCBY-SA3JoeKiser,1oryginał1127×674 pozaGit,1miniatura≤800. Koordynator i niezależnypeer osobno obejrzeli oryginał. Chłodnobiałe pola podłoża przy manewrowaniu i czerwone poświaty, bez fizycznegoE/kraju/systemuECE. TylkoAUXkontrastu, bez wzrostu15/4/3/5 i bez dodania do45głównychrekordów. Jasnego poziomego pasa nie utożsamiono z emiterem, koloru zLED/CCT ani powierzchni z solą/śniegiem. Oba podpakiety mają jawne źródła/opisy/ograniczenia.
+
+## Pionowa Hella naczepy — kontekst, obieg12
+
+[Rear-approval-round12](rear-approval-round12/README.md):3fotografie rzeczywistej części link-only,0pobrań; jeden pełny klosz i2AUXtyłu/etykiety. Oferta wiąże używanąHella2VP340961-531 z naczepąSchmitz, lecz etykieta czytelna tylko2VP340.961-53; nie dopisano końcówki ztytułu. CE,24V/21W i dataetykiety nie są ECE, pomiaremświatłości ani datąfotografii. Cztery duże strefy nie dowodzą4komór. FizycznyE/funkcje i emisja nieodczytane;1nowa rodzina kontekstowa,0nowych homologacji. Zachowano osobny podmanifest, bez wzrostu45głównych ani15/4/3/5.
