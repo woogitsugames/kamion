@@ -8,3 +8,5 @@
 - 00:5x: r1 import+vqa OK (WORLD_MEMORY Low 68,2 / High 165,9 MB). r2: overrides przekroju (6,0 m, linie krawędziowe; zmiana markings.py tylko przez override), 7 kamer authored; pary góra/ortofoto `artifacts/dk65-corridor-0205/r2/view/pair-*.jpg` — układ skrzyżowania, pętli i zjazdów zgodny.
 - W TLE: `pwsh artifacts/dk65-corridor-0205/tools/post.ps1` (pytest tests/gis → EditMode), koniec `POST DONE` w logs/chain.status.
 - NASTĘPNY KROK: budżet ze stats.txt, ADR 0205 (docs/adr/0205-*.md), robocopy dowodów, raport.
+- 01:2x: pytest tests/gis 1158 passed, 2 xfailed, 1 failed (test_dojbld_0185 fence — xfail w main; po `git merge origin/main` 6 passed + 1 xfailed), region C po testach bez różnic treści. EditMode 587: 586 passed, 0 failed, 1 skipped. ADR `docs/adr/0205-korytarz-dk65-kafel-dk65-01.md` (kolejne kafle dk65-02…-11).
+- KONIEC. Dla lidera: `git merge --no-ff origin/dk65-corridor-0205`; visual-critic na `artifacts/dk65-corridor-0205/r2/{Low,High}-clear` + `r2/view/pair-top-*.jpg`.
