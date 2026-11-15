@@ -208,6 +208,7 @@ namespace Game.Vehicle.Physics
             double pedal = Math.Min(MathUtil.Clamp01(input.Throttle), SpeedLimiterFactor) * AsrFactor;
             DriverInput amtInput = input;
             amtInput.Throttle = pedal;
+            Amt.ShiftSchedulePedal = Math.Min(MathUtil.Clamp01(input.Throttle), SpeedLimiterFactor);
             Amt.AbsActive = Air.AbsAnyActive;
             Amt.EngineBrakeRequest = EngineBrakeCommand > 0.01;
             // Spring brakes count as applied until fully released (the AMT waits for the release, ~0.7 s).
