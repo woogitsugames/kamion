@@ -217,10 +217,19 @@ def extract(region: dict) -> dict:
     t = region["teryt_powiat"]
     z = manifest_files(f"gugik-bdot10k-{t}")[0]
     gdir = REPO / "Data" / "raw" / "gugik" / f"bdot10k-{t}" / "gpkg"
+    bdot = extract_bdot(bbox, z, gdir)
+    extra = region.get("teryt_powiat_extra") or []
+    for tx in extra:                 # ADR 0208: tile across a powiat boundary - every powiat's package, merged by id
+        more = extract_bdot(bbox, manifest_files(f"gugik-bdot10k-{tx}")[0],
+                            REPO / "Data" / "raw" / "gugik" / f"bdot10k-{tx}" / "gpkg")
+        for layer, feats in more.items():
+            seen = {f["id"] for f in bdot[layer]}
+            bdot[layer] = sorted(bdot[layer] + [f for f in feats if f["id"] not in seen], key=lambda f: f["id"])
+        t = ", ".join([t, tx])
     return {"schema": SCHEMA, "crs": "EPSG:2180", "bbox": list(bbox),
             "license": {"osm": "ODbL 1.0, © OpenStreetMap contributors",
                         "bdot10k": "GUGiK BDOT10k (powiat %s), free use, art. 40a ust. 2 pkt 1 Pgik" % t},
-            "osm": extract_osm(bbox, download()), "bdot10k": extract_bdot(bbox, z, gdir)}
+            "osm": extract_osm(bbox, download()), "bdot10k": bdot}
 
 
 def write(region_id: str, data: dict) -> Path:

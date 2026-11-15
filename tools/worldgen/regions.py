@@ -31,6 +31,13 @@ class Region:
     teryt_powiat: str                       # GUGiK per-powiat datasets (BDOT10k, LoD1/2, trees)
     status: str
     min_route_margin_m: float = 280.0
+    # ADR 0208: a tile across a powiat boundary (bialystok-knyszynska: city 2061 + powiat 2002) reads the BDOT10k /
+    # LoD1 / LoD2 of every listed powiat; () = single-powiat region, outputs byte-identical to before the field.
+    teryt_powiat_extra: tuple[str, ...] = ()
+
+    @property
+    def powiaty(self) -> tuple[str, ...]:
+        return (self.teryt_powiat,) + tuple(self.teryt_powiat_extra)
 
     @property
     def width(self) -> float:
@@ -88,6 +95,20 @@ REGIONS: dict[str, Region] = {
         origin=(775947.0, 596223.0),
         teryt_powiat="2061",
         status="WORKING_ASSUMPTION (ADR 0203, owner D64 chose the direction; tile = lattice neighbour of C)",
+    ),
+    # ADR 0208 (owner D64): third Białystok tile on the truck route to Knyszyn, lattice (-3,0) of the ADR 0203 plan
+    # (route variant A km 5.80-8.76: end of Kleeberga, slip road, rondo Pamięci Męczeństwa Kresowian, Szosa Ełcka,
+    # city limit at 772066, Szosa Knyszyńska). Shares x = 772875 with bialystok-kleeberga (ADR 0206) and
+    # x = 770827 with dk65-01 (ADR 0205). Two powiaty: Białystok 2061 + powiat białostocki 2002.
+    "bialystok-knyszynska": Region(
+        id="bialystok-knyszynska",
+        title="Białystok — Kleeberga / rondo Pamięci Męczeństwa Kresowian / Szosa Ełcka → Szosa Knyszyńska (granica miasta)",
+        candidate="F_dk65_corridor",
+        bbox=(770827.0, 595199.0, 772875.0, 597247.0),
+        origin=(771851.0, 596223.0),
+        teryt_powiat="2061",
+        teryt_powiat_extra=("2002",),
+        status="WORKING_ASSUMPTION (ADR 0208, owner D64; tile = lattice (-3,0) of the ADR 0203 plan)",
     ),
 }
 
