@@ -71,9 +71,17 @@ namespace Game.UI.Settings
             try { Store.Save(s); }
             catch (System.Exception e) { Debug.LogWarning("[SETTINGS] pc save failed: " + e.Message); }
             s_Current = s;
-            bool desktop = IsDesktopPlayer || Application.isEditor;
-            if (applyDisplay && IsDesktopPlayer) ApplyDisplay(s.display);
+            bool desktop = IsDesktopPlayer;
+            if (applyDisplay && desktop) ApplyDisplay(s.display);
             if (desktop) { ApplyFramePacing(s); ApplyTier(s.graphicsTier, startup: false); }
+            else if (Application.isEditor)
+            {
+                // Review #136 P2-3: in the editor QualitySettings.vSyncCount and the quality level are fields of
+                // ProjectSettings/QualitySettings.asset and would stay modified after Play. Only the frame cap is applied
+                // (Application.targetFrameRate is not a project setting); vsync and tier take effect in a desktop player.
+                FramePacing.Map(s.vsync, s.fpsCap, out _, out int target);
+                Application.targetFrameRate = target;
+            }
             ApplyAudio(s.volumes);
             ApplyHudScale(s.hudScale);
             Debug.Log("[SETTINGS] pc commit " + Describe(s));
