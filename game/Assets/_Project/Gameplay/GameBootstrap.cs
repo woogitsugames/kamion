@@ -123,7 +123,7 @@ namespace Game.Gameplay
                 }));
             }
             ControlSettings.Load().Log("boot");
-            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings);
+            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout);
             m_Menu.transform.SetParent(transform, false);
             Debug.Log("[CONTROLS] menu shown light=" + options.LightingId + " tier=" + options.Tier + " fps=" + options.Fps);
 
@@ -134,6 +134,7 @@ namespace Game.Gameplay
         }
 
         ControlSettingsPanel m_Settings;
+        AboutPanel m_About;
         BootMenu m_Menu;
 
         public BootMenu Menu => m_Menu;
@@ -143,6 +144,14 @@ namespace Game.Gameplay
             if (m_Settings != null) return;
             m_Settings = ControlSettingsPanel.Create(null, ControlSettings.Load(), null, null);
             m_Settings.transform.SetParent(transform, false);
+        }
+
+        /// <summary>"Informacje": attributions and licence texts (Resources/About/attributions.txt; LICENSES-AUDIT-S20 R-P0-1).</summary>
+        void OpenAbout()
+        {
+            if (m_About != null) return;
+            m_About = AboutPanel.Create(null, null);
+            m_About.transform.SetParent(transform, false);
         }
     }
 }
