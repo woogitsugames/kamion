@@ -956,4 +956,6 @@ def build_all(sign_codes, boards):
     P.update(G3.prototypes())
     from . import masonry_gate as MG            # ADR 0189: brick gate kits registered by masonry_gate.build
     P.update(MG.prototypes())
+    from . import rail_props as RP              # ADR 0217: level-crossing devices, only in regions with the rail stage
+    P.update(RP.prototypes())
     return P

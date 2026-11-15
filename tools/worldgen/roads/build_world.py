@@ -908,7 +908,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
                 if len(run) >= 2 and on[run[0]]:
                     ground_lines.append(_LS(c.line.p[run]))
         w.rail = RL.Plan(rsrc, w.origin, tile_local,
-                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines)
+                         PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines,
+                         overrides=pipeline.load_overrides(region_id))
         log("rail plan:", len(w.rail.tracks), "tracks,", len(w.rail.crossings), "level crossings")
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
     if w.water is not None:
@@ -971,8 +972,10 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]
     n0 = w.region["bbox"]["ymax"] - w.origin[1]
-    terrain = CH.build_chunks(zc, mask if w.water is None else (mask | w.water.lod_mask()), e0, n0,
-                              w.region["bbox"]["width_m"], col=st["col"])
+    _lod_mask = mask if w.water is None else (mask | w.water.lod_mask())
+    if w.rail is not None and w.rail.lod_mask() is not None:      # ADR 0217: coarse LoDs never above the ballast
+        _lod_mask = _lod_mask | w.rail.lod_mask()
+    terrain = CH.build_chunks(zc, _lod_mask, e0, n0, w.region["bbox"]["width_m"], col=st["col"])
     log("terrain chunks", len(terrain))
     w.stats["verge_strips"] = merge_verge_into_terrain(terrain, w.buf.parts, half, st["col"], e0, n0)
     log("verge strips in terrain", w.stats["verge_strips"])
@@ -980,9 +983,13 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         w.water.sheet(w.buf, CH.CHUNK_M, log)
     if w.rail is not None:
         from scipy import ndimage as _nd
-        _ground = RL.grid_sampler(_nd.gaussian_filter(zc, RL.GROUND_SMOOTH_M), w.hf)
+        # the profile stands on the smoothed ground that the terrain was levelled to (Plan.conform in the stage)
+        _gg = w.rail.ground_grid if w.rail.ground_grid is not None else _nd.gaussian_filter(zc, RL.GROUND_SMOOTH_M)
+        _ground = RL.grid_sampler(_gg, w.hf)
         _zc = RL.grid_sampler(zc, w.hf)
-        w.rail.build(w.buf, _ground, RL.grid_sampler(road_z, w.hf, fallback=_zc), log)
+        _rz = RL.grid_sampler(road_z, w.hf, fallback=_zc)
+        w.rail.build(w.buf, _ground, _rz, log)
+        log("rail bed QA", w.rail.bed_qa(_zc, _ground, _rz))
     roads = assemble([p for p in w.buf.parts if not _is_verge(p)], LAYERS, half)
     log("road chunks", len(roads))
 
@@ -993,6 +1000,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
     props_meta = PR.export(st["codes"], st["boards"], props_library_dir(region_id, out_root))
+    if w.rail is not None:             # ADR 0217: rail_bed.png beside the region's generated textures
+        _pdr = props_library_dir(region_id, out_root)
+        w.rail.export_textures((Path(_pdr).parent / "textures") if _pdr else (PR.ART / "textures"))
     if w.water is not None:            # ADR 0213: water_reeds.png beside the region's generated textures
         _pd = props_library_dir(region_id, out_root)
         w.water.export_textures((Path(_pd).parent / "textures") if _pd else (PR.ART / "textures"))
@@ -1133,14 +1143,16 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         manifest["materials"] = {**manifest["materials"], **RL.RAIL_MATERIALS}
         srcs["generated/rail_sources.json"] = sha(RL.sources_path(region_id).read_bytes().replace(b"\r\n", b"\n"))
         for k, what in (("rail_lod0", "ballast + sleepers + rails (5 m stations)"),
-                        ("rail_lod1", "ballast + rails (10 m stations), sleepers as a texture stripe"),
-                        ("rail_lod2", "flat ballast band (20 m stations)")):
-            manifest["nodes"][k] = (f"railway track bed (ADR 0217) {k[-4:]}: {what}; UV0 = (lateral m, along m); "
+                        ("rail_lod1", "ballast + rails (10 m stations), sleepers painted in the rail_bed tile"),
+                        ("rail_lod2", "flat bed band (20 m stations), sleepers and rails painted in the tile")):
+            manifest["nodes"][k] = (f"railway track bed (ADR 0217) {k[-4:]}: {what}; bed UV0 = (0.5 + lateral m / "
+                                    f"{RL.RT.TEX_W_M} m from the track axis, along m / {RL.TILE_M} m); "
                                     "High GLB carries LoD0-2, Low GLB LoD1-2")
         manifest["nodes"]["rail_crossing"] = ("level-crossing panels at road height + %.3f m (ADR 0217); "
                                               "UV0 = local metres" % RL.PANEL_LIFT)
         manifest["rail"] = {"triangles": w.rail.report["triangles"], "track_km": w.rail.report["track_km"],
-                            "crossings": len(w.rail.crossings), "markers": "generated/rail.json"}
+                            "crossings": len(w.rail.crossings), "markers": "generated/rail.json",
+                            "conform": w.rail.report.get("conform"), "bed_qa": w.rail.report.get("bed_qa")}
         write_json(gen / "rail.json", w.rail.out_json(region_id))
     write_json(gen / "world_manifest.json", manifest)
     qa = qa_report(w, mk_report, mask)
