@@ -28,7 +28,14 @@ from dataclasses import dataclass, field
 import numpy as np
 
 import dsp
+import physics_params as pp
 from dsp import FS, bp, chain, highshelf, hp, lp, peak, periodic_sosfilt
+
+# Synthesis model. "main" = the model before ADR 0232 (kept bit-identical for the A/B renders),
+# "0232" = load-dependent pulse shape, mass-flow turbulence, idle-governor fuelling in the load-0 cells
+# near idle, engine-brake level from the physics torque curve (see docs/adr/0232).
+MODELS = ("main", "0232")
+DEFAULT_MODEL = "0232"
 
 FIRING_ORDER = (1, 5, 3, 6, 2, 4)
 ENGINE_SEED = 13_062  # fixed engine "personality": identical across every loop of the set
@@ -211,7 +218,31 @@ def _bank(x: np.ndarray, modes) -> np.ndarray:
     return out
 
 
-def render_sources(op: OperatingPoint, geo: LoopGeometry, seed: int) -> Sources:
+def idle_governor_fuel(rpm: float) -> float:
+    """Fuel fraction the idle governor injects in a "load 0" cell (ADR 0232).
+
+    Engine.ComputeTorque never cuts the fuel at or below the idle speed: the governor holds
+    load >= drag / full-load torque there, and lets go as the speed rises above idle. The fade-out
+    span (idle .. idle + 150 rpm) is a WORKING_VALUE; the level is the physics drag / torque ratio."""
+    idle = float(pp.engine()["idleRpm"])
+    hold = float(pp.drag_torque(idle) / pp.full_load_torque(idle))
+    return hold * float(np.clip((idle + 150.0 - rpm) / 150.0, 0.0, 1.0))
+
+
+def engine_brake_level(rpm: float) -> float:
+    """Compression-release pulse amplitude relative to maximum engine speed (ADR 0232).
+
+    The cylinder pressure released at TDC is what makes the retarding work, so the pulse amplitude
+    follows the physics engine-brake torque curve (EngineDefinition.engineBrakeCurve*) instead of a
+    free rpm law. A floor keeps the layer audible where the physics torque fades out (WORKING_VALUE)."""
+    ref = float(pp.engine_brake_extra(RPM_MAX))
+    return float(max(0.15, pp.engine_brake_extra(rpm) / ref))
+
+
+def render_sources(op: OperatingPoint, geo: LoopGeometry, seed: int, model: str = DEFAULT_MODEL) -> Sources:
+    if model not in MODELS:
+        raise ValueError(f"unknown synthesis model {model!r}")
+    new = model == "0232"
     rng = np.random.default_rng(seed)
     p = PERSONALITY
     n = geo.n_samples
@@ -243,6 +274,23 @@ def render_sources(op: OperatingPoint, geo: LoopGeometry, seed: int) -> Sources:
 
     tau_r = max(0.00045, 7.0 * ds)
     crack = 0.18 + 0.25 * fuel
+    decay_scale = 1.0
+    cyl_spread = 1.0
+    if new:
+        # (ADR 0232, WORKING_VALUE) The cylinder pressure at exhaust-valve opening grows with the fuel burnt:
+        # under load the blow-down front is steep (more energy in firing orders 6, 9, 12 ...), on the
+        # overrun the cylinder only re-expands the air it compressed: a soft, rounded pulse.
+        sharp = fuel ** 0.6
+        tau_r = max(0.00030, 7.0 * ds * (1.9 - 1.25 * sharp))
+        crack = 0.04 + 0.46 * sharp
+        decay_scale = 1.25 - 0.40 * sharp
+        # the softer pulse carries less energy for the same peak: keep the part-load and overrun layers at the
+        # loudness they have in the main bank (the change is the character of the layer, not the mix)
+        flow *= 1.0 + 0.28 * (1.0 - sharp)
+        # injected quantity per stroke is smallest at idle, so the injector-to-injector spread is
+        # relatively largest there (lope: half orders 0.5, 1, 1.5 of the 4-stroke cycle)
+        if fuel > 0:
+            cyl_spread = 1.0 + 1.2 * idle_ness
     blow_len = int(min(n, max(0.012, 6 * 42.0 * ds) * FS))
     comb_len = int(min(n, max(0.02, 6 * 30.0 * ds) * FS))
     knock_len = int(0.004 * FS)
@@ -252,6 +300,7 @@ def render_sources(op: OperatingPoint, geo: LoopGeometry, seed: int) -> Sources:
     for cyc in range(geo.n_cycles):
         for slot, cyl in enumerate(FIRING_ORDER):
             c = cyl - 1
+            amp_c = p.amp_bias[c] if cyl_spread == 1.0 else 1.0 + (p.amp_bias[c] - 1.0) * cyl_spread
             # loop sample 0 sits LOOP_ORIGIN_DEG before cylinder-1 firing TDC (quiet part of the
             # cycle, so no sharp event lands on the seam; shared by all clips for phase alignment)
             tdc = (LOOP_ORIGIN_DEG + 720.0 * cyc + 120.0 * slot + p.timing_bias_deg[c]
@@ -259,14 +308,14 @@ def render_sources(op: OperatingPoint, geo: LoopGeometry, seed: int) -> Sources:
             a_rand = 1.0 + rng.normal(0.0, amp_jit)
             # exhaust valve opens ~130 deg after firing TDC
             t_ex = crank.sample_of(tdc + 130.0) + p.exh_delay_ms[c] * 1e-3 * FS
-            tau_d = 40.0 * ds * p.width_bias[c] * (1.0 + rng.normal(0.0, 0.06))
+            tau_d = 40.0 * ds * decay_scale * p.width_bias[c] * (1.0 + rng.normal(0.0, 0.06))
             dsp.add_kernel_circular(exh, t_ex, k_blowdown(tau_r, tau_d, crack), blow_len,
-                                    flow * p.amp_bias[c] * a_rand)
+                                    flow * amp_c * a_rand)
             # combustion (start of injection ~ 4 deg BTDC, premixed burn just after TDC)
             t_c = crank.sample_of(tdc + 2.0)
             if fuel > 0:
                 dsp.add_kernel_circular(comb_p, t_c, k_alpha(6.0 * ds, 22.0 * ds), comb_len,
-                                        comb_amp * p.amp_bias[c] * a_rand)
+                                        comb_amp * amp_c * a_rand)
                 kk = clatter * p.clatter_bias[c] * (1.0 + rng.normal(0, 0.15))
                 dsp.add_kernel_circular(knock, t_c, k_alpha(0.00004, 0.0003), knock_len, kk)
                 t_inj = crank.sample_of(tdc - 6.0)
@@ -279,7 +328,8 @@ def render_sources(op: OperatingPoint, geo: LoopGeometry, seed: int) -> Sources:
             if op.engine_brake:
                 # compression release just before TDC: very sharp, high-energy blow-down
                 t_j = crank.sample_of(tdc - 4.0) + p.exh_delay_ms[c] * 1e-3 * FS
-                ja = (0.35 + 0.65 * rpm_n) ** 1.2 * p.amp_bias[c] * (1.0 + rng.normal(0, 0.05))
+                ja_rpm = engine_brake_level(rpm) if new else (0.35 + 0.65 * rpm_n) ** 1.2
+                ja = ja_rpm * p.amp_bias[c] * (1.0 + rng.normal(0, 0.05))
                 dsp.add_kernel_circular(jake, t_j, k_blowdown(0.00012, 11.0 * ds * p.width_bias[c], 0.6),
                                         blow_len, ja)
                 dsp.add_kernel_circular(comb_p, crank.sample_of(tdc - 20.0),
@@ -303,7 +353,12 @@ def render_sources(op: OperatingPoint, geo: LoopGeometry, seed: int) -> Sources:
         raw = dsp.soft_clip(raw / (np.max(np.abs(raw)) + 1e-9), 1.4) * np.max(np.abs(raw))
     else:
         turb_band = periodic_sosfilt(noise, chain(hp(120.0, 0.7), lp(2800.0, 0.7)))
-        turb = turb_band * (0.10 + env ** 1.3) * (0.25 + 0.55 * fuel) * flow
+        if new:
+            # gas turbulence follows the mass flow through the pipe: charge density (boost) x fuelling
+            turb_gain = 0.15 + 0.85 * fuel * (0.45 + 0.55 * op.boost)
+        else:
+            turb_gain = 0.25 + 0.55 * fuel
+        turb = turb_band * (0.10 + env ** 1.3) * turb_gain * flow
         raw = exh + turb
 
     exhaust_out = periodic_sosfilt(raw, EXH_EXT)
@@ -355,12 +410,15 @@ def mix_cab(s: Sources) -> np.ndarray:
 
 
 def render_loop(rpm: float, load: float, engine_brake: bool = False, target_s: float = 4.0,
-                seed: int | None = None) -> tuple[dict[str, np.ndarray], LoopGeometry]:
+                seed: int | None = None, model: str = DEFAULT_MODEL) -> tuple[dict[str, np.ndarray], LoopGeometry]:
     geo = loop_geometry(rpm, target_s)
     if seed is None:
         seed = int(rpm * 10 + load * 1000 + (7 if engine_brake else 0))
-    op = OperatingPoint(geo.rpm_exact, load, engine_brake)
-    s = render_sources(op, geo, seed)
+    fuel_load = load
+    if model == "0232" and not engine_brake:
+        fuel_load = max(load, idle_governor_fuel(geo.rpm_exact))
+    op = OperatingPoint(geo.rpm_exact, fuel_load, engine_brake)
+    s = render_sources(op, geo, seed, model)
     if engine_brake:
         # engine-brake layer holds only the brake-specific components (added on top of the
         # off-load layer at runtime), so drop mechanics/intake.
