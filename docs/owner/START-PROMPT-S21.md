@@ -17,4 +17,6 @@ Kontynuujesz projekt Kamion (Unity 6000.3.28f1 URP, Białystok 1:1) w `C:\Users\
 2. Przeglądy PR (brief) i raportów Argona/sesji kodu → scalenia → JEDNA regeneracja C + Dojlid → trucks/NightWindows → EditMode → APK → A16 gate3 + zrzuty.
 3. Follow-upy gry zebrane w HANDOVER (s20): kalibracja zmierzchu/nocy (M60), światła R148 (0197), podpory Putry (0198), ściana NW wieżowca (M57), fizyka R3 (promień opony, naciski, marki w JSON), U-12b słupki (M58), pas Krywlany (M58), zieleń znaków (R1, ADR), A/B `androidBlitType` (R8), płot alpha-to-coverage (0185).
 
-**Ostatni przydzielony ADR: 0210.**
+**Ostatni przydzielony ADR: 0213.**
+
+**Aktualizacja 15.11 rano (D63/D64, noc):** w grze 12 regionów: C, Dojlidy, bialystok-maczka, bialystok-kleeberga, dk65-01…05, knyszyn-s, knyszyn, knyszyn-w (+ woda dk65-02). W toku: 0208 bialystok-knyszynska (ostatni kafel miasta), 0211 tunel ronda Szymańskiego, 0212 Knyszyn krańce + linie, 0213 woda/brzegi. Kafle dk65-06…11 czekają na odpowiedzi właściciela (ADR 0203/0204/0207: wariant A/B, objazdy budowy S19, szerokość Ełckiej, wiadukt S19 Fasty, rondo DK65×DW671). BEZ telefonu (właściciel). Nowi agenci tylko Opus (Fable 95 % tygodnia do 16.11 05:00).
