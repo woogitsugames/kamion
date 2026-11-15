@@ -20,7 +20,7 @@ namespace Game.UI.CabDisplays
         public static readonly Color32 Needle = new Color32(205, 52, 38, 255);
         public static readonly Color32 Band = new Color32(74, 150, 92, 255);
         public static readonly Color32 RedZone = new Color32(120, 36, 30, 255);
-        public static readonly Color32 AdBlue = new Color32(110, 160, 210, 255);
+        public static readonly Color32 ScrFluid = new Color32(110, 160, 210, 255);
 
         public static readonly Color32 TellRed = new Color32(205, 52, 38, 255);
         public static readonly Color32 TellAmber = new Color32(226, 150, 28, 255);
