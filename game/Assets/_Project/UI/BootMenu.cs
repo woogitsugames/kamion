@@ -44,17 +44,22 @@ namespace Game.UI
 
         void OnRectTransformDimensionsChange() { m_View?.Invalidate(); }
 
-        /// <summary>Builds the menu. <paramref name="cam"/> null = screen-space overlay; a camera = capture/test.</summary>
-        public static BootMenu Create(Camera cam, StartMenuOptions options, IReadOnlyList<(string label, Action action)> starts, Action openSettings)
+        /// <summary>Label of the button that opens the attributions / licences screen (<see cref="AboutPanel"/>).</summary>
+        public const string AboutLabel = "Informacje";
+
+        /// <summary>Builds the menu. <paramref name="cam"/> null = screen-space overlay; a camera = capture/test.
+        /// <paramref name="openAbout"/> null = the menu opens its own <see cref="AboutPanel"/> (screen-space overlay).</summary>
+        public static BootMenu Create(Camera cam, StartMenuOptions options, IReadOnlyList<(string label, Action action)> starts, Action openSettings,
+                                      Action openAbout = null)
         {
             var go = new GameObject("BootMenu");
             var menu = go.AddComponent<BootMenu>();
             menu.Options = options;
-            menu.Build(cam, starts, openSettings);
+            menu.Build(cam, starts, openSettings, openAbout ?? (() => AboutPanel.Create(null, null)));
             return menu;
         }
 
-        void Build(Camera cam, IReadOnlyList<(string label, Action action)> starts, Action openSettings)
+        void Build(Camera cam, IReadOnlyList<(string label, Action action)> starts, Action openSettings, Action openAbout)
         {
             var canvas = gameObject.AddComponent<Canvas>();
             canvas.renderMode = cam != null ? RenderMode.ScreenSpaceCamera : RenderMode.ScreenSpaceOverlay;
@@ -104,7 +109,10 @@ namespace Game.UI
                 () => Array.IndexOf(QualityTiers.SupportedFrameRates, Options.Fps),
                 i => Options.SetFps(QualityTiers.SupportedFrameRates[i]));
             oy -= 8f;
-            Button(m_Safe, "Ustawienia sterowania", new Vector2(right, oy - 80f), new Vector2(ColW, 80f), 32, TextAnchor.MiddleCenter, () => openSettings?.Invoke());
+            // Settings and "Informacje" (attributions + licences, LICENSES-AUDIT-S20 R-P0-1) share one row: the block height is unchanged.
+            const float aboutW = 250f;
+            Button(m_Safe, "Ustawienia sterowania", new Vector2(right, oy - 80f), new Vector2(ColW - aboutW - Gap, 80f), 32, TextAnchor.MiddleCenter, () => openSettings?.Invoke());
+            Button(m_Safe, AboutLabel, new Vector2(right + ColW - aboutW, oy - 80f), new Vector2(aboutW, 80f), 32, TextAnchor.MiddleCenter, () => openAbout?.Invoke());
             Label(m_Safe, "Footer", "DrivingLab ma stałe światło. W jeździe: przycisk Menu wraca tutaj bez restartu aplikacji.\nWersja: " + BuildInfo.Current.ShortLabel,
                 22, TextAnchor.UpperLeft, k_Muted, new Vector2(right, oy - 80f - 12f - 70f), new Vector2(ColW, 70f)).horizontalOverflow = HorizontalWrapMode.Wrap;
 

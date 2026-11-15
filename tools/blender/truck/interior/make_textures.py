@@ -373,7 +373,7 @@ def cluster_display():
     """12.3-inch class instrument cluster screen (aspect ~ 2.6:1), daytime driving state (A6 layout).
 
     One primary speed readout (large digital, centre) as on 2020s EU truck clusters; rev counter as an arc with the
-    green economy band (left); fuel + AdBlue (bottom left) and both air-brake circuit pressures (bottom right) are on
+    green economy band (left); fuel + AUS 32 (bottom left) and both air-brake circuit pressures (bottom right) are on
     the screen now, because the physical round dials were dropped (they sat behind the rim from the eye point).
     Telltale row along the top edge (only lit telltales are drawn). Region boxes match sightline_test.CLUSTER_REGIONS.
     Calm palette: near-black background, warm-white graphics, one green band, a red needle.
@@ -423,8 +423,8 @@ def cluster_display():
         d.text((x0 + (i % 2) * 200, 70 + (i // 2) * 60), txt, fill=col, font=fs)
     d.line([(x0, 205), (W - 40, 205)], fill=dim, width=2)
     d.text((x0, 228), "Ø 28,4 l/100 km", fill=grey, font=fs)
-    # ---- bottom left: fuel + AdBlue level bars with pump / drop glyphs
-    for i, (lab, frac, col) in enumerate((("D", 0.62, white), ("AdBlue", 0.80, blue))):
+    # ---- bottom left: fuel + exhaust-fluid (AUS 32) level bars; generic name, no trademark (BRAND-SWEEP-S20 #2)
+    for i, (lab, frac, col) in enumerate((("D", 0.62, white), ("AUS 32", 0.80, blue))):
         y = 470 + i * 52
         d.text((40, y - 10), lab, fill=grey, font=font(26))
         d.rectangle([150, y, 350, y + 18], outline=dim, width=2)

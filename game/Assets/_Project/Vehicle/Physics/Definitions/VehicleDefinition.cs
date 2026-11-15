@@ -236,7 +236,7 @@ namespace Game.Vehicle.Physics
         public double baselineConsumptionLpm = 8;
     }
 
-    /// <summary>Secondary hydrodynamic retarder on the gearbox output (Intarder class).</summary>
+    /// <summary>Secondary hydrodynamic retarder on the gearbox output (class reference S2).</summary>
     [Serializable]
     public class RetarderDefinition
     {

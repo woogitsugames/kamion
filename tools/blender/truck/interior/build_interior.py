@@ -9,7 +9,8 @@ Run headless (Blender 4.2 LTS), textures first (once):
 Everything is generated here: no hand-edited .blend. Frame = A2 blockout frame (dims.json):
 1 unit = 1 m, Z up, truck faces +Y, driver side (LHD) = -X, origin = ground under front axle centre.
 Ergonomic values are WORKING_VALUE unless marked; table with sources: docs/reports/visual/truck-A5/README.md.
-Owner decisions 2026-11-09: concept B + TRAKT (--rake 19, --badge trakt), trim koniak, digital-only cluster. The other
+Owner decisions 2026-11-09: concept B (--rake 19), trim koniak, digital-only cluster; 2026-11-15: no brand name in the
+build (--badge none = blank hub plate, the default; trakt/bielik/narew only for comparison renders). The other
 values stay as switches (--trim, --badge, --rake: A/C ~3-5 deg); everything else is the shared cab shell.
 Rake = windscreen lean BACK from vertical (top edge further rearward, -Y), as in exterior/body.py.
 """
@@ -358,7 +359,8 @@ def parse_args():
     p.add_argument("--cams", default="all")
     p.add_argument("--light", default="overcast,lowsun")
     p.add_argument("--trim", default="koniak", choices=sorted(TRIMS))
-    p.add_argument("--badge", default="trakt", choices=["none", "trakt", "bielik", "narew"])
+    # Owner decision 2026-11-15 (BRAND-SWEEP-S20 #5): brand-neutral truck, no TRAKT name in the build -> hub = blank plate.
+    p.add_argument("--badge", default="none", choices=["none", "trakt", "bielik", "narew"])
     p.add_argument("--paint", default="0.70,0.70,0.68")
     p.add_argument("--rake", type=float, default=None, help="default: glass_interface.json rake (exterior)")
     p.add_argument("--res", default="1600x900")
@@ -1707,7 +1709,7 @@ def build_wheel(badge):
     cov = loft("wheel_hub", cover, "dash_soft", closed=True, cap1=True, sharp=80)
     # horn is pressed with the heel of the hand on the lower half of the pad: slight polish
     set_wear(cov, lambda co: 0.35 * smooth(0.035, -0.02, (co - C).dot(v)) * smooth(d0 + 0.010, d0 + 0.016, (co - C).dot(n)))
-    # emblem (swappable): TRAKT wordmark embossed tone-on-tone on the cover (graphite satin, 0.6 mm proud)
+    # emblem (swappable, default none = blank plate, owner 2026-11-15): with --badge trakt the old wordmark embossed tone-on-tone
     emblem(badge, C + n * (d0 + 0.0176), n, v, mat="emboss", rise=0.0002, h=0.0016)
 
     # ---- column: two-shell shroud (wider combination-switch housing), parting line, gaiters, adjust lever -------

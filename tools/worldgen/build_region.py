@@ -173,10 +173,13 @@ def main() -> None:
     tile = shapely.box(*region.bbox)
     hashes: dict[str, str] = {}
 
-    nmt_id = find_manifest("gugik-nmt-", f"-{region.id}")
+    nmt_pin = regions.source_pins(region.id).get("nmt_year")    # ADR 0209: authored survey-year pin (seam match)
+    nmt_id = f"gugik-nmt-{nmt_pin}-{region.id}" if nmt_pin else find_manifest("gugik-nmt-", f"-{region.id}")
     orto_id = find_manifest("gugik-orto-", f"-{region.id}")
     src_ids = ["osm-geofabrik-podlaskie", nmt_id, orto_id, f"gugik-bdot10k-{t}", f"gugik-lod1-2024-{t}",
                f"gugik-lod2-2017-{t}"]
+    for tx in region.teryt_powiat_extra:      # ADR 0208: tile across a powiat boundary
+        src_ids += [f"gugik-bdot10k-{tx}", f"gugik-lod1-2024-{tx}", f"gugik-lod2-2017-{tx}"]
 
     # --- terrain
     print("[build] terrain")
@@ -190,15 +193,21 @@ def main() -> None:
     # --- BDOT10k
     bdot_zip = manifest_files(f"gugik-bdot10k-{t}")[0]
     gpkg_dir = RAW_ROOT / "gugik" / f"bdot10k-{t}" / "gpkg"
+    bdot_src = [(bdot_zip, gpkg_dir)] + [(manifest_files(f"gugik-bdot10k-{tx}")[0],
+                                          RAW_ROOT / "gugik" / f"bdot10k-{tx}" / "gpkg")
+                                         for tx in region.teryt_powiat_extra]
     bdot_cols = ["LOKALNYID", "KLASADROGI", "MATERIALNAWIERZCHNI", "SZEROKOSCNAWIERZCHNI", "LICZBAJEZDNIDROGI"]
     bdot_roads = []
     for L in ("OT_SKJZ_L", "OT_SKDR_L"):
-        p = extract_from_zip(bdot_zip, f"__{L}.gpkg", gpkg_dir)
-        df = pyogrio.read_dataframe(p, columns=bdot_cols, bbox=tuple(tile.buffer(50).bounds))
-        df["layer"] = L
-        bdot_roads.append(df)
+        for bz, gd in bdot_src:
+            p = extract_from_zip(bz, f"__{L}.gpkg", gd)
+            df = pyogrio.read_dataframe(p, columns=bdot_cols, bbox=tuple(tile.buffer(50).bounds))
+            df["layer"] = L
+            bdot_roads.append(df)
     import pandas as pd
     bdot_roads = pd.concat(bdot_roads, ignore_index=True).sort_values(["layer", "LOKALNYID"]).reset_index(drop=True)
+    if region.teryt_powiat_extra:             # a feature on the powiat boundary may be in both packages
+        bdot_roads = bdot_roads.drop_duplicates(["layer", "LOKALNYID"]).reset_index(drop=True)
 
     # --- road graph
     print("[build] road graph")
@@ -224,9 +233,20 @@ def main() -> None:
     l1m, l2m = load_manifest(f"gugik-lod1-2024-{t}"), load_manifest(f"gugik-lod2-2017-{t}")
     lod1 = bld.cached_citygml(REPO_ROOT / l1m["files"][0]["local_path"], region.bbox, 1, cache, l1m["files"][0]["sha256"])
     lod2 = bld.cached_citygml(REPO_ROOT / l2m["files"][0]["local_path"], region.bbox, 2, cache, l2m["files"][0]["sha256"])
+    if region.teryt_powiat_extra:             # ADR 0208: footprints and 3D models of every powiat of the tile
+        parts = [bubd]
+        for (bz, gd), tx in zip(bdot_src[1:], region.teryt_powiat_extra):
+            parts.append(pyogrio.read_dataframe(extract_from_zip(bz, "__OT_BUBD_A.gpkg", gd), bbox=tuple(region.bbox)))
+            for lod, d in ((1, lod1), (2, lod2)):
+                mx = load_manifest(f"gugik-lod{lod}-{'2024' if lod == 1 else '2017'}-{tx}")
+                for k, v in bld.cached_citygml(REPO_ROOT / mx["files"][0]["local_path"], region.bbox, lod, cache,
+                                               mx["files"][0]["sha256"]).items():
+                    d.setdefault(k, v)
+        bubd = pd.concat(parts, ignore_index=True).drop_duplicates("LOKALNYID").reset_index(drop=True)
     feats = bld.merge(bubd, lod1, lod2, layers["buildings"], region.bbox)
     gj = buildings_geojson(feats)
     gj["sources"] = {"footprints": f"gugik-bdot10k-{t}", "heights": [f"gugik-lod1-2024-{t}", f"gugik-lod2-2017-{t}"],
+                     **({"powiaty": list(region.powiaty)} if region.teryt_powiat_extra else {}),
                      "osm_only": "osm-geofabrik-podlaskie",
                      "citygml_srs": {"lod1": sorted({s for r in lod1.values() for s in r.get("srs", [])}),
                                      "lod2": sorted({s for r in lod2.values() for s in r.get("srs", [])})}}
@@ -255,12 +275,22 @@ def main() -> None:
                    "z": round(terrain.sample(z, region.bbox, *region.origin), 2),
                    "note": "floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)"},
         "teryt_powiat": t,
+        **({"teryt_powiat_extra": list(region.teryt_powiat_extra)} if region.teryt_powiat_extra else {}),
         "products": {k: f"Data/Regions/{region.id}/{k}" for k in sorted(hashes)},
         "big_products_not_in_git": [tmeta["encoding"]["file"], f"Data/raw/derived/{region.id}/ortho_0p25m.tif"],
         "sources": srcs,
         "rebuild": [f"uv run --project tools/worldgen tools/worldgen/ingest.py --region {region.id}",
                     f"uv run --project tools/worldgen tools/worldgen/build_region.py --region {region.id}"],
     }
+    if getattr(region, "water", False):
+        # ADR 0210: opt-in surface-water stage; the key (and the sources file) exist only in regions that enable it
+        ry["water"] = {"enabled": True, "sources": f"Data/Regions/{region.id}/generated/water_sources.json",
+                       "note": "BDOT10k OT_PTWP_A / OT_SWRS_L + OSM waterway / natural=water (ADR 0210)"}
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from streetscape import water as WT
+        print("[build] water sources")
+        WT.write(region.id, WT.extract(ry))
     text = yaml.safe_dump(ry, allow_unicode=True, sort_keys=False, width=120)
     write_if_changed(out_dir / "region.yaml", text)
     hashes["region.yaml"] = sha_bytes(text.encode("utf-8"))

@@ -1,0 +1,33 @@
+# Authored overrides of region dk65-monki-01 (ADR 0212). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 759563, 614655) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 0.1 m 2025 (Data/raw/gugik/gugik-orto-2025-rgb-0p10-dk65-monki-01), BDOT10k 2008, LoD1 2024. No lettering, no brands.
+overrides:
+  - id: dk65-carriageway-width
+    target: {osm_way: [232511647, 98070954]}
+    reason: >-
+      DK65 between fields and forest NW of Knyszyn, from the south seam with knyszyn-w (y = 613631, way 232511647
+      at x 759428.1) to the west tile edge (way 98070954 at y 614412.8, towards Monki). BDOT10k gives 5.6 m. Same
+      cross-section as the measured override of knyszyn-w / knyszyn (ADR 0204/0209: 2 x 3.4 m + 0.35 m edge
+      strips = 7.5 m) so the seam keeps one width. Edge lines (ADR 0212): GUGiK orthophoto 0.1 m 2025, integrated
+      brightness excess across DK65 at 7 stations: peaks 3.1-3.85 m left and right of the OSM axis (generator:
+      0.12 m line, axis 0.20 m inside the edge = 3.55 m); interrupted at the two junction mouths (crop
+      758870 613990 - 759030 614150).
+    confidence: medium
+    verify: owner drive towards Monki
+    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  - id: dk65-fields-unlit
+    target: {osm_way: [232511647, 98070954]}
+    reason: >-
+      DK65 in the fields: no lamp columns or their shadows on the 2025 orthophoto 0.1 m (crop 758870 613990 -
+      759030 614150 and the whole tile at 2 m), only tree rows; continues dk65-fields-unlit of knyszyn-w.
+    confidence: medium
+    verify: none
+    set: {lamps: false}
+  - id: field-roads-unlit
+    target: {osm_way: [179127751, 179127761, 98072355, 98072389]}
+    reason: >-
+      Unclassified field / forest roads (gravel 179127761 and 98072355 on the 2025 orthophoto, narrow asphalt
+      98072389 to the north): no street lighting.
+    confidence: medium
+    verify: none
+    set: {lamps: false}

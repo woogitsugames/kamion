@@ -74,11 +74,18 @@ def covers(rows: list[dict], bbox) -> float:
     return u.intersection(tile).area / tile.area
 
 
-def pick_latest(rows: list[dict], bbox, pred) -> list[dict]:
-    """Latest akt_data series (all sheets with that date) satisfying `pred` that fully covers the tile."""
+def pick_latest(rows: list[dict], bbox, pred, key: str = "akt_data") -> list[dict]:
+    """Latest series (all sheets with the same `key`: akt_data by default) satisfying `pred` that fully covers the
+    tile. key="akt_rok" (ADR 0212, pinned survey year) joins the flight days of one year: the NMT 2022 of tile
+    (-9,9) is flown on 2022-07-29 and 2022-08-27; one sheet per godlo (the latest date when a sheet repeats)."""
     cand = [r for r in rows if pred(r)]
-    for date in sorted({r["akt_data"] for r in cand}, reverse=True):
-        series = [r for r in cand if r["akt_data"] == date]
+    for val in sorted({r[key] for r in cand}, reverse=True):
+        series = [r for r in cand if r[key] == val]
+        if key != "akt_data":
+            last: dict[str, dict] = {}
+            for r in sorted(series, key=lambda r: r["akt_data"]):
+                last[r.get("godlo") or r["url_do_pobrania"]] = r
+            series = list(last.values())
         if covers(series, bbox) > 0.9999:
             return sorted(series, key=lambda r: r["url_do_pobrania"])
     return []
@@ -110,9 +117,12 @@ def main() -> None:
     idx = load_or_query_index(region, a.refresh_index)
     P = idx["products"]
 
-    # 2. NMT 1 m, EVRF2007
+    # 2. NMT 1 m, EVRF2007 (ADR 0209: an authored per-region pin `nmt_year` keeps the survey year of a neighbour tile,
+    # so the shared seam column comes from the same sheets and both terrains meet exactly)
+    pin = regions.source_pins(region.id).get("nmt_year")
     nmt = pick_latest(P["NMT"], bb, lambda r: r.get("char_przestrz") == "1.00 m"
-                      and r.get("format", "").startswith("ARC/INFO") and r.get("uklad_h") == "PL-EVRF2007-NH")
+                      and r.get("format", "").startswith("ARC/INFO") and r.get("uklad_h") == "PL-EVRF2007-NH"
+                      and (pin is None or r.get("akt_rok") == str(pin)), key="akt_rok" if pin else "akt_data")
     if not nmt:
         sys.exit("no NMT 1 m series fully covers the tile")
     yr = nmt[0]["akt_rok"]
@@ -141,33 +151,34 @@ def main() -> None:
             **LIC_GUGIK, "used_by": [used_by],
         }, sheet_files(orto))
 
-    # 4. BDOT10k (powiat, schema 2021, GeoPackage)
+    # 4.-5. BDOT10k (powiat, schema 2021, GeoPackage) + 3D buildings, for every powiat of the tile (ADR 0208)
+    for t in region.powiaty:
+        woj = t[:2]
+        ingest_dataset(dl, {
+            "id": f"gugik-bdot10k-{t}", "name": f"GUGiK BDOT10k powiat {t} (schemat 2021, GPKG)",
+            "provider": "Główny Urząd Geodezji i Kartografii", "product": "BDOT10k", "region": f"powiat {t}",
+            "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k (GetFeatureInfo, layer Powiaty)",
+            "format": "GeoPackage in ZIP", "crs": "EPSG:2180 (PL-1992)", "scale": "1:10 000",
+            **LIC_GUGIK, "used_by": [used_by], "raw_subdir": f"gugik/bdot10k-{t}",
+        }, [{"url": f"{OPENDATA}/bdot10k/schemat2021/GPKG/{woj}/{t}_GPKG.zip", "name": f"{t}_GPKG.zip"}])
+
+        # 5. 3D buildings
+        ingest_dataset(dl, {
+            "id": f"gugik-lod2-2017-{t}", "name": f"GUGiK 3D building models LoD2 (state 2017), powiat {t}",
+            "provider": "Główny Urząd Geodezji i Kartografii", "product": "Budynki3D LoD2", "region": f"powiat {t}",
+            "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD2_2017)",
+            "format": "CityGML 2.0 in ZIP", "crs": "EPSG:2180 + PL-KRON86-NH heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:PL-KRON86-NH in files)",
+            **LIC_GUGIK_3D, "used_by": [used_by], "raw_subdir": f"gugik/lod2-2017-{t}",
+        }, [{"url": f"{OPENDATA}/InneDane/Budynki3D/LOD2/{t}_gml.zip", "name": f"{t}_lod2_gml.zip"}])
+        ingest_dataset(dl, {
+            "id": f"gugik-lod1-2024-{t}", "name": f"GUGiK 3D building models LoD1 (2024), powiat {t}",
+            "provider": "Główny Urząd Geodezji i Kartografii", "product": "Budynki3D LoD1", "region": f"powiat {t}",
+            "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD1_2024)",
+            "format": "CityGML 2.0 in ZIP", "crs": "EPSG:2180 + EPSG:9651 EVRF2007 heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:EPSG::9651 in files)",
+            **LIC_GUGIK_3D, "used_by": [used_by], "raw_subdir": f"gugik/lod1-2024-{t}",
+        }, [{"url": f"{OPENDATA}/InneDane/Budynki3D/LOD1/2024/{woj}/{t}.zip", "name": f"{t}_lod1_2024.zip"}])
+
     t = region.teryt_powiat
-    woj = t[:2]
-    ingest_dataset(dl, {
-        "id": f"gugik-bdot10k-{t}", "name": f"GUGiK BDOT10k powiat {t} (schemat 2021, GPKG)",
-        "provider": "Główny Urząd Geodezji i Kartografii", "product": "BDOT10k", "region": f"powiat {t}",
-        "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/BDOT/WMS/PobieranieBDOT10k (GetFeatureInfo, layer Powiaty)",
-        "format": "GeoPackage in ZIP", "crs": "EPSG:2180 (PL-1992)", "scale": "1:10 000",
-        **LIC_GUGIK, "used_by": [used_by], "raw_subdir": f"gugik/bdot10k-{t}",
-    }, [{"url": f"{OPENDATA}/bdot10k/schemat2021/GPKG/{woj}/{t}_GPKG.zip", "name": f"{t}_GPKG.zip"}])
-
-    # 5. 3D buildings
-    ingest_dataset(dl, {
-        "id": f"gugik-lod2-2017-{t}", "name": f"GUGiK 3D building models LoD2 (state 2017), powiat {t}",
-        "provider": "Główny Urząd Geodezji i Kartografii", "product": "Budynki3D LoD2", "region": f"powiat {t}",
-        "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD2_2017)",
-        "format": "CityGML 2.0 in ZIP", "crs": "EPSG:2180 + PL-KRON86-NH heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:PL-KRON86-NH in files)",
-        **LIC_GUGIK_3D, "used_by": [used_by], "raw_subdir": f"gugik/lod2-2017-{t}",
-    }, [{"url": f"{OPENDATA}/InneDane/Budynki3D/LOD2/{t}_gml.zip", "name": f"{t}_lod2_gml.zip"}])
-    ingest_dataset(dl, {
-        "id": f"gugik-lod1-2024-{t}", "name": f"GUGiK 3D building models LoD1 (2024), powiat {t}",
-        "provider": "Główny Urząd Geodezji i Kartografii", "product": "Budynki3D LoD1", "region": f"powiat {t}",
-        "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD1_2024)",
-        "format": "CityGML 2.0 in ZIP", "crs": "EPSG:2180 + EPSG:9651 EVRF2007 heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:EPSG::9651 in files)",
-        **LIC_GUGIK_3D, "used_by": [used_by], "raw_subdir": f"gugik/lod1-2024-{t}",
-    }, [{"url": f"{OPENDATA}/InneDane/Budynki3D/LOD1/2024/{woj}/{t}.zip", "name": f"{t}_lod1_2024.zip"}])
-
     # 6. Opt-in heavy datasets
     if "nmpt" in a.extra:
         nmpt = pick_latest(P["NMPT"], bb, lambda r: r.get("uklad_h") == "PL-EVRF2007-NH")

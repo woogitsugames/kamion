@@ -1,0 +1,78 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0212): control cameras on DK65 towards Monki. Position region-local E/N (origin 759563, 614655), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions traced on the OSM axes of the road graph (+-3 m).",
+ "cameras": [
+  {
+   "id": "dk65_seam_south_out",
+   "pos_en": [
+    -230,
+    -935
+   ],
+   "heading_deg": 313,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DK65 ~130 m from the south seam (past the 60 m world-edge closure), outbound NW towards Monki"
+  },
+  {
+   "id": "dk65_inbound_to_knyszyn",
+   "pos_en": [
+    -450,
+    -732
+   ],
+   "heading_deg": 133,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DK65 inbound SE towards Knyszyn (tile knyszyn-w)"
+  },
+  {
+   "id": "dk65_junction_approach",
+   "pos_en": [
+    -545,
+    -643
+   ],
+   "heading_deg": 313,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DK65 outbound ~85 m before the two offset junctions (gravel SW 98072355, asphalt/gravel NE 98072389/179127761)"
+  },
+  {
+   "id": "dk65_west_edge_in",
+   "pos_en": [
+    -926,
+    -328
+   ],
+   "heading_deg": 131,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye ~130 m inside the west tile edge, inbound SE towards Knyszyn"
+  },
+  {
+   "id": "junction_above",
+   "pos_en": [
+    -600,
+    -590
+   ],
+   "heading_deg": 0,
+   "eye_m": 60.0,
+   "fov_deg": 60,
+   "pitch_deg": -45,
+   "note": "plan-like view of the two offset junctions, pair with orthophoto crop 758870 613990 - 759030 614150"
+  },
+  {
+   "id": "seam_south_above",
+   "pos_en": [
+    -140,
+    -985
+   ],
+   "heading_deg": 0,
+   "eye_m": 55.0,
+   "fov_deg": 60,
+   "pitch_deg": -43,
+   "note": "south seam with knyszyn-w from above"
+  }
+ ]
+}

@@ -1,0 +1,84 @@
+# Ekran „Informacje” — tekst atrybucji i licencji (PL). Ładowany z Resources: About/attributions.
+# Źródła: docs/owner/ATTRIBUTION-SCREEN-DRAFT.md (blok „DO WKLEJENIA”), docs/reports/LICENSES-AUDIT-S20.md,
+# docs/LICENSES.md (tabela zbiorcza). Format (parser: Game.Core.About.AttributionDocument):
+#   # ...        komentarz, nie jest pokazywany (uwagi UNVERIFIED / WARUNKOWO zostają tylko tutaj)
+#   = Tytuł      nagłówek sekcji
+#   == Tytuł     nagłówek pozycji
+#   @include P   pełny tekst innego pliku tekstowego z Resources (ścieżka bez rozszerzenia)
+#   pusta linia  koniec akapitu; pozostałe linie = tekst akapitu (łamania linii zachowane)
+# Pilnowane testami: tools/licenses/tests/test_attributions.py (każde źródło z obowiązkiem atrybucji),
+# Game.Tests.AttributionDocumentTests (EditMode) i tools/about-runner (czysty .NET).
+
+= Mapy i dane
+
+== OpenStreetMap
+Dane map, dróg, nazw ulic i budynków: © OpenStreetMap contributors.
+Gra zawiera informacje z bazy OpenStreetMap, udostępnione na licencji Open Database License (ODbL) 1.0.
+www.openstreetmap.org/copyright · opendatacommons.org/licenses/odbl/1-0/
+Dane pochodne użyte w grze (sieć dróg i nawigacja) są udostępnione na licencji ODbL 1.0.
+# R-P0-2 (LICENSES-AUDIT-S20): oferta bazy pochodnej (ODbL §4.6) — dopisać tu adres publikacji danych/metody,
+# gdy właściciel go wybierze. Do tego czasu NIE dystrybuować APK poza urządzenia właściciela.
+
+== Główny Urząd Geodezji i Kartografii
+Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl) — numeryczny model terenu, ortofotomapa (pomiary), Baza Danych Obiektów Topograficznych BDOT10k.
+Modele 3D budynków LoD1 (2024) i LoD2 (2017): Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), licencja CC BY 4.0 (creativecommons.org/licenses/by/4.0/legalcode.pl). Dane zostały przetworzone (wysokości i kształty dachów przeniesione do własnych modeli budynków).
+
+== Treść tablic drogowych
+Treść tablic kierunkowych: opracowanie „research G3 s8-signs” na licencji ODbL 1.0, na podstawie danych OpenStreetMap contributors i zdjęć Mapillary contributors.
+
+== Znaki drogowe
+Wzory znaków drogowych według rozporządzenia Ministra Infrastruktury w sprawie szczegółowych warunków technicznych dla znaków i sygnałów drogowych oraz urządzeń bezpieczeństwa ruchu drogowego i warunków ich umieszczania na drogach (t.j. Dz.U. 2019 poz. 2311); znaki narysowane od nowa.
+# Informacja dobrowolna — akt normatywny nie wymaga atrybucji.
+
+= Modele, tekstury, niebo
+
+== Poly Haven
+Skany materiałów, niebo i gałązki drzew: Poly Haven (polyhaven.com), licencja CC0 1.0 (creativecommons.org/publicdomain/zero/1.0/). Autorzy: Amal Kumar, Charlotte Baglioni, Dario Barresi, Dimitrios Savva, Greg Zaal, Jan Burghardt, Jarod Guest, Jenelle van Heerden, Rico Cilliers, Rob Tuytel, Sergej Majboroda.
+# Atrybucja dobrowolna — CC0 jej nie wymaga.
+
+== Wikimedia Commons
+Detal nawierzchni asfaltu na podstawie zdjęcia „Worn cracked asphalt pavement” — John Harvey, Wikimedia Commons, domena publiczna.
+
+# WARUNKOWO (Fab, ADR 0084): tylko gdy build zawiera lokalnie zaimportowane zasoby Fab, wpis dobrowolny
+# „Wybrane skany roślin, kamieni i elementów ulicy: Quixel Megascans (Fab).” — przed wstawieniem sprawdzić pełny EULA (UNVERIFIED).
+
+Pozostałe modele, tekstury i dźwięki — własne, wygenerowane kodem projektu.
+
+= Dźwięk
+
+Dźwięki silnika, pneumatyki i otoczenia: synteza własna projektu oraz nagrania wygenerowane w ElevenLabs Sound Effects i przetworzone przez projekt.
+# Wzmianka dobrowolna; Service-Specific Terms SFX UNVERIFIED (R-P1-4) — sprawdzić przed wydaniem, czy nie ma wymogu brzmienia.
+
+= Czcionki
+
+== Inter
+© 2016–2020 The Inter Project Authors (github.com/rsms/inter). SIL Open Font License 1.1 — pełny tekst na końcu. „Inter” jest zastrzeżoną nazwą fontu (Reserved Font Name).
+
+== DejaVu Sans
+Bitstream Vera License oraz zmiany DejaVu w domenie publicznej (użyty jako obraz w teksturach znaków i tablic).
+
+= Oprogramowanie
+
+== Unity
+Gra stworzona w Unity.
+# UNVERIFIED (R-P1-3): dokładne brzmienie wymaganej informacji o Unity i ewentualnych „Third Party Notices” silnika
+# — odczytać z warunków Unity na koncie właściciela; ekran powitalny Unity jest włączony.
+# UNVERIFIED: Universal Render Pipeline (fragmenty shadera, Unity Companion License) i pozostałe pakiety w APK
+# (Burst, Collections, Mathematics, Input System, uGUI, AI Navigation) — dopisać po odczytaniu Library/PackageCache/*/LICENSE.md.
+
+== glTFast
+glTFast (com.unity.cloud.gltfast 6.20.0) — Unity glTFast copyright © 2023 Unity Technologies and the Unity glTFast authors. Apache License 2.0 — pełny tekst na końcu.
+# Wiersz „copyright” przepisany dosłownie z LICENSE.md pakietu 6.20.0 (tarball download.packages.unity.com,
+# sha256 bc51a487caf6c75c93c69bfc272a7cd13a0e9f5b8738594b7661d45e3fc1e136); pakiet nie ma pliku NOTICE.
+
+= Pełne teksty licencji
+
+Open Database License 1.0: opendatacommons.org/licenses/odbl/1-0/
+CC BY 4.0: creativecommons.org/licenses/by/4.0/legalcode.pl
+CC0 1.0: creativecommons.org/publicdomain/zero/1.0/
+
+== SIL Open Font License 1.1 (Inter)
+@include Fonts/Inter-OFL
+
+== Apache License 2.0 (glTFast)
+@include About/gltfast-apache-license
