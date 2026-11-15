@@ -8,3 +8,10 @@
 - Plan: (1) test EditMode na prawdziwych zamknięciach + pytest katalogu (czerwone na main); (2) startS w katalogu = za zamknięciem wjazdowym;
   importer spawn z tej samej funkcji; (3) runtime: start za zamknięciem z WorldBoundary sceny + OverlapBox (naprawia APK bez reimportu scen).
 NASTĘPNY KROK: implementacja `SpawnClearance` (Gameplay) + testy; `pwsh scripts/test.ps1 -Platform EditMode` pod slotem unity.
+## 15.11 krok 2 — kod + testy (commit f95c31b44, push)
+- `World/Runtime/StartClearance.cs` (geometria: przecięcia trasy z rzędami zapór, SafeStartS, FreeAround), `Gameplay/SpawnSafety.cs`
+  (OverlapBoxNonAlloc + przesunięcie wzdłuż trasy), `DrivingLabBootstrap.ResolveRouteStart` (menu, route_s i zapieczony spawn),
+  importer: spawn z katalogu + SafeStartS; `export-region-catalog.py`: trasa od krawędzi kafla -> startS 85 m (60 + 25).
+- pytest `tests/gis/test_start_clear_0262.py` na katalogu z main: 21 failed / 23 passed (`artifacts/spawn-fix-0262/pytest-red-main-catalog.log`).
+- W TLE: EditMode `StartClearanceTests` na starym katalogu (dowód czerwony + kompilacja) -> `artifacts/spawn-fix-0262/editmode-red.done|.log|.xml`.
+NASTĘPNY KROK: po `editmode-red.done`: `python scripts/export-region-catalog.py` ; `pwsh artifacts/spawn-fix-0262/run-editmode.ps1 -Tag green`
