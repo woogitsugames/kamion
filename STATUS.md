@@ -5,3 +5,5 @@
 - NASTEPNY KROK: ADR 0223 + LICENSES, potem `uv run --project tools/worldgen python -m pytest tests/gis -q`
 - krok 5: ADR 0223 (tabela kafli, mapowanie A-F z Dz.U. 2025 poz. 1105, budzet ESTIMATED, kolejnosc scalania, komendy lidera) + LICENSES (osm-api-0.6-rail-l38).
 - NASTEPNY KROK: wynik pelnego `uv run --project tools/worldgen python -m pytest tests/gis -q`, PR (baza rail-0217).
+- krok 6: pelny pytest tests/gis: 1319 passed, 48 skipped (Data/raw), 3 xfailed; deselected road_fidelity::test_report_not_stale (jak w 0217). Render kontrolny: artifacts/rail-dk65-0223/line38_tiles.png (poza gitem).
+- NASTEPNY KROK (lider): po #96 + FIX #95/#96 komendy z ADR 0223 "Odtworzenie" dla dk65-01..04, dw671-tykocin-01.
