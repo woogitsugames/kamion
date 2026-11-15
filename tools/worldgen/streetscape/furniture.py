@@ -523,7 +523,18 @@ def clear_narrow_islands(pl, parts, net, report):
 
 
 # ------------------------------------------------------------------------------------------- lamps
-def lamps(pl, net, osm_nodes, origin, report):
+def lamp_policy(overrides):
+    """ADR 0216: the region's authored `kind: lamp_policy` override ({} when absent). `family: led` = every street
+    luminaire of the region is LED (owner D65 p.8): the older side-street poles keep their shape and stand where the
+    rule puts them, with the LED retrofit head (props.lamp_old(led=True)) instead of the sodium one."""
+    for o in overrides or []:
+        if o.get("kind") == "lamp_policy":
+            return o
+    return {}
+
+
+def lamps(pl, net, osm_nodes, origin, report, overrides=None):
+    led = lamp_policy(overrides).get("family") == "led"
     n0 = 0
     for nd in osm_nodes:
         if nd["tags"].get("highway") == "street_lamp":
@@ -548,6 +559,8 @@ def lamps(pl, net, osm_nodes, origin, report):
             res = sec.highway in ("residential", "living_street")
             if u < (65 if res else 30):
                 proto = "lamp_old_concrete_9m" if (res and u < 50) or (not res and u < 8) else "lamp_old_steel_8m"
+                if led:                                  # ADR 0216: same pole, LED head
+                    proto = proto.replace("lamp_old_concrete_", "lamp_old_concrete_led_").replace("lamp_old_steel_", "lamp_old_steel_led_")
         oneway = sec.oneway
         sides = ["R"] if (oneway and (c.dirn > 0).mean() >= 0.5) or not oneway else ["L"]
         s0, s1 = c.t_a + 4, c.length - c.t_b - 4
@@ -576,7 +589,7 @@ def lamps(pl, net, osm_nodes, origin, report):
                 pl.add(proto if z is None else f"lamp_{int(spec['h'])}m", p, yaw_of(face), z=z, src=f"rule:{c.id}",
                        group="lamp")
                 n += 1
-    report["lamps"] = {"osm": n0, "rule": n,
+    report["lamps"] = {"osm": n0, "rule": n, **({"policy": "led"} if led else {}),
                        "support_adjustments": pl.support_moves,
                        "by_family": {k: sum(1 for it in pl.items if it["p"] == k) for k in
                                      sorted({it["p"] for it in pl.items if it["p"].startswith("lamp_")})}}

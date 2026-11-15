@@ -32,7 +32,26 @@ namespace Game.Rendering
     {
         public const float LensLuminance = 2.0e5f;
         public const float DownIntensityCd = 2500f;
-        static readonly Color k_Led = new Color(1f, 0.93f, 0.82f), k_Sodium = new Color(1f, 0.62f, 0.25f);
+        static readonly Color k_LedDefault = new Color(1f, 0.93f, 0.82f), k_Sodium = new Color(1f, 0.62f, 0.25f);
+        static Color k_Led = k_LedDefault;
+
+        /// <summary>LED luminaire colour in use (linear Rec.709, max channel 1): the default, or a region's (ADR 0216).</summary>
+        public static Color LedColour => k_Led;
+        public static Color DefaultLedColour => k_LedDefault;
+
+        /// <summary>
+        /// ADR 0216: LED colour of the loaded region (EnvironmentLighting.Apply; alpha 0 = the default). Sodium luminaires keep
+        /// their colour (SodiumLightColor = k_Led x SodiumTintRatio does not depend on k_Led). Re-tints the registered LED lenses.
+        /// </summary>
+        public static void SetLedColour(Color c)
+        {
+            Color led = c.a > 0f ? new Color(c.r, c.g, c.b, 1f) : k_LedDefault;
+            if (led == k_Led) return;
+            k_Led = led;
+            foreach (var m in s_Glass)
+                if (m != null && !m.name.Contains("sodium")) m.SetVector(k_Emission, new Vector4(led.r * LensLuminance, led.g * LensLuminance, led.b * LensLuminance, 0f));
+            LampGlare.Invalidate();   // halo vertex colours are baked per head
+        }
 
         static readonly List<Material> s_Glass = new List<Material>();
         static Vector3[] s_Heads = new Vector3[0];
