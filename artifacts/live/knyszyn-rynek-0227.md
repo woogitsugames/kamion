@@ -62,3 +62,5 @@
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
 - 2026-11-15 20:13 +01:00 — Uzupełniono audyt 11 kadrów właściciela, z rozróżnieniem brakujących renderów i niepewności; generator r1 nadal pracuje.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
+- 2026-11-15 20:16 +01:00 — Plan czterech korekt barw dachów wg orto w roof-plan.md, ESTIMATED; brak obsługi roof_material w generatorze. R1 w trakcie przebudowy.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r1-resume.log -Tail 20; Get-Content artifacts/knyszyn-rynek-0227/r1.done`
