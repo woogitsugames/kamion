@@ -189,3 +189,11 @@ Not done: the world goal <= 60 MB is still not met (133.5 MB packed uncompressed
 ProjectSettings patch for the lead (not committed): (1) `managedStrippingLevel: Android: 1 -> 3` (High), test with a device run (reflection users: glTFast, Json); -2.6 MB. (2) `m_ShowUnitySplashLogo: 1 -> 0`, -1.2 MB, only if the licence allows; (3) `il2cppCompilerConfiguration` stays Release; consider `il2cppCodeGeneration: OptimizeSize` (not measured). (4) mipmap limit groups per quality (Unity 6 `mipmapLimitGroupName`) would let one APK drop top mips on Low at load time - saves RAM, not APK size.
 
 High tier as a separate package (options, nothing deployed): (a) status quo: two APKs, `-WorldHigh` ships WorldC_High + High sets (sideload/test; Play needs one artifact). (b) AAB + Play Asset Delivery install-time/fast-follow packs: High world + High truck/trailer textures as an asset pack, loaded via Addressables (Unity 6 supports Android asset packs through Addressables Play Asset Delivery); needs `buildAppBundle`, an Addressables group per tier, and the High sets taken out of Resources; Play delivers only to devices matching a texture-compression/device-tier targeting rule (device tier targeting can send the pack only to flagships). (c) Addressables remote groups on a CDN: no Play dependency, adds hosting and a download UI. Recommended: (b) once streaming chunks (ADR 0003) lands; until then the build flag (this change) is the cheap equivalent.
+
+## Fence mesh coverage shader (ADR 0239, B-082) - ESTIMATED, not measured
+
+`Kamion/World FenceMesh` replaces URP Lit on `fence_*_mesh`: about +20 ALU per fragment net (UV derivatives, `fwidth`, screen
+noise, 3-level quantisation; URP `AlphaClip` removed), no extra texture sample, same triangles / textures / forward draw calls.
+The mesh no longer draws into the shadow map (15.7 km of panel fence in region C). Forward overdraw is unchanged (2 layers:
+doubled geometry + Cull Off - follow-up O-4 in the ADR would halve it). To measure on the A16 after reimport:
+`pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90 -Serial RFGL34SJYDZ` on route C Low against the last main run.
