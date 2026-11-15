@@ -267,6 +267,40 @@ def _is_verge(p):
     return p.layer == "road" and p.src.endswith(":vg")
 
 
+TUNNEL_BAND_M = 6          # ADR 0206: cells around a tunnel carriageway kept at the NMT (median, kerbs, cut toe)
+TUNNEL_LIFT_MIN_M = 1.0    # only cells the conform lifted more than this above the NMT (= an at-grade road over it)
+
+
+def keep_tunnel_cut(w, region_id, zc):
+    """ADR 0206: a road tagged tunnel=yes (OSM layer < 0) under an at-grade road (rondo Szymańskiego over the DK8
+    cutting) is not modelled as a tunnel. The terrain conform takes the HIGHER road per node, so it lifted the terrain
+    to the upper road across the cutting and the terrain collision (terrain_lod2) closed the lower road 0.3-4 m above
+    its surface. Here the lifted nodes over and around tunnel carriageways go back to the NMT (which has the cutting:
+    bridges and roofs are not in the bare-earth NMT), and nodes under the tunnel carriageway to just below its
+    surface. In place on zc (row-major, like hf.z). The upper road keeps its own mesh and collision."""
+    g = json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
+    ways = {e["osm_way"] for e in g["edges"]
+            if str(e["attrs"].get("tunnel", {}).get("v", "no")) not in ("no", "building_passage")
+            and e["attrs"]["highway"]["v"] not in ("service", "living_street", "footway", "path", "cycleway")}
+    out = {"ways": sorted(ways), "cells": 0, "max_drop_m": 0.0}
+    if not ways:
+        return out
+    parts = [p for p in w.buf.parts if p.layer == "road" and p.footprint
+             and any(p.src.startswith(f"c:w{wid}:") for wid in ways)]
+    if not parts:
+        return out
+    tz, tmask = CF.rasterise(parts, w.hf)
+    from scipy.ndimage import binary_dilation
+    band = binary_dilation(tmask, iterations=TUNNEL_BAND_M)
+    nmt = w.hf.z
+    lifted = band & (zc - nmt > TUNNEL_LIFT_MIN_M)
+    new = np.where(tmask, np.minimum(nmt, tz - 0.35), nmt)
+    drop = np.where(lifted, zc - new, 0.0)
+    zc[lifted] = new[lifted]
+    out.update(cells=int(lifted.sum()), max_drop_m=round(float(drop.max()), 2))
+    return out
+
+
 def merge_verge_into_terrain(terrain, parts, half, col, e0, n0):
     """ADR 0110: the grass strips behind kerbs (roads.meshing._emit_verge, src "...:vg") become part of the terrain
     primitives of their chunk (LOD0: the 128 m sub-grid they lie in, and LOD1) instead of a `verge_grass` primitive
@@ -776,6 +810,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         mid = p + d * (0.5 * (u0 + u1))
         w.stats["hero_docks"].append({"mid": mid, "d": d, "nout": nout, "z": dk["yard_z"], "n": len(dk["docks"])})
     log(f"terrain conformed: footprint {int(rmask.sum())} road + {int(mask.sum() - rmask.sum())} paved nodes")
+    w.stats["tunnel_cut"] = keep_tunnel_cut(w, region_id, zc)
+    if w.stats["tunnel_cut"]["cells"]:
+        log("tunnel cuttings kept open (ADR 0206):", w.stats["tunnel_cut"])
 
     def on_ground_road(q):
         i = int(round(q[0] - w.hf.x0))
