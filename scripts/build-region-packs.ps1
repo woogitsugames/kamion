@@ -7,7 +7,12 @@
   pwsh scripts/build-region-packs.ps1 -Tiers Both                       # Low + High packs (+ <region>-data bundles)
   pwsh scripts/build-region-packs.ps1 -Push -Serial RFGL34SJYDZ         # build, then adb push the set into incoming/
   pwsh scripts/build-region-packs.ps1 -SkipBuild -SetDir artifacts/regionpacks/0.1.0-abc -Push -Serial RFGL34SJYDZ -Only dk65-06
+  pwsh scripts/build-region-packs.ps1 -Target Win64 -Regions dk65-06,dk65-07 -InstallLocal   # PC (D73): copy into the player's incoming/
 .NOTES
+  ADR 0273: every pack holds the full region scene AND its tile scene (World_<id>[_High]_Tile, ADR 0235) when imported,
+  so the streamer can open a region from a pack like one in the player build. -Target Win64 builds Windows bundles
+  (folder <ver>-win64); -InstallLocal copies them into %USERPROFILE%/AppData/LocalLow/<company>/<product>/regionpacks/incoming
+  (Application.persistentDataPath of the Windows player), the player installs them at the next start.
   Output: artifacts/regionpacks/<bundleVersion>-<sha>[-dirty]/{common.bundle, <region>.bundle, regionpacks.json,
   SHA256SUMS, regionpacks.plan.txt}. Log: artifacts/logs/regionpacks-<ts>.log. Exit 0 = everything requested succeeded.
   Regions must be imported first (scripts/import-region.ps1 -Region <id>); the scenes are gitignored.
@@ -19,6 +24,8 @@
 param(
     [string[]]$Regions = @('all'),
     [ValidateSet('Low', 'High', 'Both')] [string]$Tiers = 'Low',
+    [ValidateSet('Android', 'Win64')] [string]$Target = 'Android',
+    [switch]$InstallLocal,          # -Target Win64: copy the set into the local Windows player's incoming/ folder
     [string]$Version = '',          # default: <bundleVersion>-<sha>[-dirty], same as the APK name
     [int]$MinAppVersionCode = -1,   # default: git commit count of HEAD
     [int]$MaxAppVersionCode = 0,
@@ -42,16 +49,17 @@ if (-not $SkipBuild) {
         $sha = Get-GitShortSha
         if (& git -C $RepoRoot status --porcelain --untracked-files=no) { $sha = "$sha-dirty" }
         $Version = "$bundleVersion-$sha"
+        if ($Target -eq 'Win64') { $Version = "$Version-win64" }
     }
     $SetDir = Join-Path $packRoot $Version
     $log = Join-Path $LogsDir "regionpacks-$ts.log"
     $unityArgs = @('-executeMethod', 'Game.Editor.Build.RegionPackCommands.BuildRegionPacks',
         '-regions', ($Regions -join ','), '-packTiers', $Tiers, '-packOutput', $packRoot, '-packSetVersion', $Version,
-        '-maxAppVersionCode', "$MaxAppVersionCode")
+        '-maxAppVersionCode', "$MaxAppVersionCode", '-packTarget', $Target)
     if ($MinAppVersionCode -ge 0) { $unityArgs += @('-minAppVersionCode', "$MinAppVersionCode") }
     if ($ExtraUnityArgs) { $unityArgs += $ExtraUnityArgs }
     $sw = [Diagnostics.Stopwatch]::StartNew()
-    $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs
+    $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs -BuildTarget $Target
     $result = Select-String -Path $log -Pattern 'REGIONPACKS_RESULT:.*' -ErrorAction SilentlyContinue | Select-Object -Last 1
     if ($code -ne 0 -or -not $result -or $result.Line -notmatch 'REGIONPACKS_RESULT: Succeeded') {
         Write-Host "REGION PACKS FAILED (exit $code) after $([int]$sw.Elapsed.TotalSeconds)s, log: $log" -ForegroundColor Red
@@ -91,7 +99,20 @@ $sums | Set-Content (Join-Path $SetDir 'SHA256SUMS') -Encoding ascii
 Write-Host ("TOTAL  {0:N1} MB in {1} bundles -> {2}" -f ($total / 1MB), @($manifest.packs).Count, $SetDir)
 if ($bad -gt 0) { Write-Host "$bad bundle(s) missing or not matching the manifest" -ForegroundColor Red; exit 5 }
 
+if ($InstallLocal) {
+    if ($manifest.buildTarget -ne 'Win64') { throw "-InstallLocal needs a Win64 set (this one is '$($manifest.buildTarget)')" }
+    $settings = "$ProjectPath/ProjectSettings/ProjectSettings.asset"
+    $company = (Select-String -Path $settings -Pattern '^\s*companyName:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
+    $product = (Select-String -Path $settings -Pattern '^\s*productName:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
+    $incoming = Join-Path $env:USERPROFILE "AppData/LocalLow/$company/$product/regionpacks/incoming"
+    New-Item -ItemType Directory -Force $incoming | Out-Null
+    foreach ($p in $manifest.packs) { Copy-Item (Join-Path $SetDir $p.file) (Join-Path $incoming $p.file) -Force }
+    Copy-Item $manifestPath (Join-Path $incoming 'regionpacks.json') -Force   # manifest last
+    Write-Host "installed into $incoming - start Kamion.exe; player log line '[PACKS] install ...' confirms"
+}
+
 if (-not $Push) { exit 0 }
+if ($manifest.buildTarget -and $manifest.buildTarget -ne 'Android') { throw "-Push needs an Android set (this one is '$($manifest.buildTarget)')" }
 
 # ---------------------------------------------------------------- push into the app's incoming/ folder
 $ids = @($manifest.packs | ForEach-Object { $_.id })

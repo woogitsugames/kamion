@@ -10,10 +10,10 @@ namespace Game.Editor.Build
 {
     /// <summary>
     /// Region packs as AssetBundles (ADR 0234), no extra packages. Batchmode:
-    ///   Unity.exe -batchmode -quit -buildTarget Android -projectPath game
+    ///   Unity.exe -batchmode -quit -buildTarget Android|Win64 -projectPath game
     ///     -executeMethod Game.Editor.Build.RegionPackCommands.BuildRegionPacks
     ///     [-regions "all" | "dojlidy,dk65-01,..."] [-packTiers Low|High|Both] [-packOutput dir]
-    ///     [-packSetVersion v] [-minAppVersionCode n] [-maxAppVersionCode n]
+    ///     [-packSetVersion v] [-minAppVersionCode n] [-maxAppVersionCode n] [-packTarget Android|Win64]
     /// Output: &lt;packOutput&gt;/&lt;packSetVersion&gt;/{common.bundle, &lt;region&gt;.bundle, &lt;region&gt;-high.bundle,
     /// &lt;region&gt;-data.bundle, regionpacks.json, regionpacks.plan.txt}. Prints "REGIONPACKS_RESULT: Succeeded|Failed ...";
     /// exit 0 on success. Scenes come from scripts/import-region.ps1 (Assets/_Generated/World/&lt;id&gt;/, gitignored).
@@ -35,7 +35,8 @@ namespace Game.Editor.Build
                     EditorTools.Arg("-packOutput", Path.Combine(EditorTools.RepoRoot, "artifacts", "regionpacks")),
                     EditorTools.Arg("-packSetVersion", null),
                     ParseInt(EditorTools.Arg("-minAppVersionCode", null), -1),
-                    ParseInt(EditorTools.Arg("-maxAppVersionCode", null), 0));
+                    ParseInt(EditorTools.Arg("-maxAppVersionCode", null), 0),
+                    EditorTools.Arg("-packTarget", RegionPackManifest.TargetAndroid));
             }
             catch (Exception e)
             {
@@ -46,9 +47,12 @@ namespace Game.Editor.Build
         }
 
         [MenuItem("Kamion/Build/Region packs (all, Low)")]
-        static void MenuBuild() => Build("all", "Low", Path.Combine(EditorTools.RepoRoot, "artifacts", "regionpacks"), null, -1, 0);
+        static void MenuBuild() => Build("all", "Low", Path.Combine(EditorTools.RepoRoot, "artifacts", "regionpacks"), null, -1, 0, RegionPackManifest.TargetAndroid);
 
         static int ParseInt(string s, int fallback) => int.TryParse(s, out int v) ? v : fallback;
+
+        static string ExistingOrNull(string projectRelativePath) =>
+            File.Exists(Path.Combine(EditorTools.ProjectRoot, projectRelativePath)) ? projectRelativePath : null;
 
         /// <summary>Regions with an imported Low scene (Assets/_Generated/World/&lt;id&gt;/World_&lt;id&gt;.unity).</summary>
         public static List<string> AvailableRegions()
@@ -64,12 +68,17 @@ namespace Game.Editor.Build
             return list;
         }
 
-        public static int Build(string regionsArg, string tiersArg, string outputRoot, string setVersion, int minAppVersionCode, int maxAppVersionCode)
+        public static int Build(string regionsArg, string tiersArg, string outputRoot, string setVersion, int minAppVersionCode, int maxAppVersionCode,
+                                string packTarget = RegionPackManifest.TargetAndroid)
         {
-            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android &&
-                !EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android))
+            // ADR 0273: packs are per build target - Windows (D73, main platform: DLC / updates) or Android (lite version).
+            BuildTarget target; BuildTargetGroup group;
+            if (packTarget == RegionPackManifest.TargetWin64) { target = BuildTarget.StandaloneWindows64; group = BuildTargetGroup.Standalone; }
+            else if (packTarget == RegionPackManifest.TargetAndroid) { target = BuildTarget.Android; group = BuildTargetGroup.Android; }
+            else { Debug.LogError("REGIONPACKS_RESULT: Failed (-packTarget must be Android or Win64, got '" + packTarget + "')"); return 4; }
+            if (EditorUserBuildSettings.activeBuildTarget != target && !EditorUserBuildSettings.SwitchActiveBuildTarget(group, target))
             {
-                Debug.LogError("REGIONPACKS_RESULT: Failed (cannot switch to Android; start Unity with -buildTarget Android)");
+                Debug.LogError("REGIONPACKS_RESULT: Failed (cannot switch to " + packTarget + "; start Unity with -buildTarget " + packTarget + ")");
                 return 2;
             }
 
@@ -85,12 +94,26 @@ namespace Game.Editor.Build
 
             bool low = tiersArg != "High", high = tiersArg == "High" || tiersArg == "Both";
             var scenes = new List<RegionPackScene>();
+            int withTile = 0;
             foreach (var r in regions)
             {
-                if (low) scenes.Add(new RegionPackScene(RegionPackPlanner.PackId(r, "Low"), r, "Low", RegionPackPlanner.ScenePath(r, "Low")));
+                // ADR 0273: the tile scene (ADR 0235) of the same tier goes into the same bundle, so additive streaming
+                // can open a region from a pack exactly like a region in the player build.
+                if (low)
+                {
+                    string lt = ExistingOrNull(RegionPackPlanner.TileScenePath(r, "Low"));
+                    if (lt != null) withTile++;
+                    else Debug.LogWarning("[PACKS] " + r + ": no tile scene " + RegionPackPlanner.TileScenePath(r, "Low") + " (import before ADR 0235?) - pack opens from the menu only, its seams stay closed");
+                    scenes.Add(new RegionPackScene(RegionPackPlanner.PackId(r, "Low"), r, "Low", RegionPackPlanner.ScenePath(r, "Low"), lt));
+                }
                 if (!high) continue;
                 string hp = RegionPackPlanner.ScenePath(r, "High");
-                if (File.Exists(Path.Combine(EditorTools.ProjectRoot, hp))) scenes.Add(new RegionPackScene(RegionPackPlanner.PackId(r, "High"), r, "High", hp));
+                if (File.Exists(Path.Combine(EditorTools.ProjectRoot, hp)))
+                {
+                    string ht = ExistingOrNull(RegionPackPlanner.TileScenePath(r, "High"));
+                    if (ht != null) withTile++;
+                    scenes.Add(new RegionPackScene(RegionPackPlanner.PackId(r, "High"), r, "High", hp, ht));
+                }
                 else Debug.LogWarning("[PACKS] " + r + ": no High scene " + hp + " (import-region.ps1 without High?) - High pack skipped");
             }
 
@@ -119,17 +142,20 @@ namespace Game.Editor.Build
             foreach (var kv in plan.RegionData)
                 builds.Add(new AssetBundleBuild { assetBundleName = RegionPackPlanner.DataPackId(kv.Key) + RegionPackPaths.BundleExtension, assetNames = kv.Value.ToArray() });
             foreach (var s in scenes)
-                builds.Add(new AssetBundleBuild { assetBundleName = s.Id + RegionPackPaths.BundleExtension, assetNames = new[] { s.ScenePath } });
+                builds.Add(new AssetBundleBuild { assetBundleName = s.Id + RegionPackPaths.BundleExtension, assetNames = s.ScenePaths });
             WritePlan(Path.Combine(outDir, "regionpacks.plan.txt"), plan, scenes);
-            Debug.Log($"[PACKS] set {setVersion}: {scenes.Count} scene packs, common {plan.Common.Count} assets, " +
+            Debug.Log($"[PACKS] set {setVersion}: {scenes.Count} scene packs ({withTile} with a tile scene), common {plan.Common.Count} assets, " +
                       $"data packs {plan.RegionData.Count}, skipped {plan.Skipped.Count} (scripts/scenes/editor)");
+            if (plan.ResourcesCopies.Count > 0)
+                Debug.LogWarning($"[PACKS] {plan.ResourcesCopies.Count} asset(s) under Resources/ referenced by region scenes: second copy in common " +
+                                 "(another instance than Resources.Load) - see regionpacks.plan.txt [resources-copies]");
 
             // LZ4 (ChunkBasedCompression): LoadFromFile reads chunks on demand; LZMA would be decompressed whole into RAM
             // (ScriptReference AssetBundle.LoadFromFile). StrictMode: any build error fails the run.
             ShaderVariantStripper.Enabled = !EditorTools.HasArg("-noShaderStrip");
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var abManifest = BuildPipeline.BuildAssetBundles(outDir, builds.ToArray(),
-                BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.StrictMode, BuildTarget.Android);
+                BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.StrictMode, target);
             if (abManifest == null) { Debug.LogError("REGIONPACKS_RESULT: Failed (BuildPipeline.BuildAssetBundles returned null)"); return 1; }
 
             var manifest = new RegionPackManifest
@@ -137,7 +163,7 @@ namespace Game.Editor.Build
                 schema = RegionPackManifest.SchemaId,
                 packSetVersion = setVersion,
                 unityVersion = Application.unityVersion,
-                buildTarget = "Android",
+                buildTarget = packTarget,
                 minAppVersionCode = minAppVersionCode,
                 maxAppVersionCode = maxAppVersionCode,
                 gitSha = sha + (dirty ? "-dirty" : ""),
@@ -164,7 +190,7 @@ namespace Game.Editor.Build
                     sizeBytes = new FileInfo(path).Length,
                     sha256 = RegionPackHash.Sha256File(path),
                     crc = crc,
-                    scenes = scene.ScenePath != null ? new[] { RegionPackPlanner.SceneName(scene.Region, scene.Tier) } : Array.Empty<string>(),
+                    scenes = scene.ScenePath != null ? scene.SceneNames : Array.Empty<string>(),
                     dependencies = deps,
                 };
                 total += e.sizeBytes;
@@ -197,8 +223,10 @@ namespace Game.Editor.Build
             foreach (var s in scenes)
             {
                 plan.Unique.TryGetValue(s.Id, out var u);
-                sb.Append('[').Append(s.Id).Append("] ").Append(s.ScenePath).Append(" implicit=").Append(u?.Count ?? 0).Append('\n');
+                sb.Append('[').Append(s.Id).Append("] ").Append(string.Join(" + ", s.ScenePaths)).Append(" implicit=").Append(u?.Count ?? 0).Append('\n');
             }
+            sb.Append("[resources-copies] ").Append(plan.ResourcesCopies.Count).Append('\n');
+            foreach (var a in plan.ResourcesCopies) sb.Append("  ").Append(a).Append('\n');
             sb.Append("[skipped] ").Append(plan.Skipped.Count).Append('\n');
             File.WriteAllText(path, sb.ToString());
         }

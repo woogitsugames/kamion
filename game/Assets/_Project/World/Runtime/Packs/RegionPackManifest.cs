@@ -22,6 +22,15 @@ namespace Game.World.Packs
         public string packSetVersion = "";
         /// <summary>Exact Unity editor version that built the bundles (the player must match, ADR 0234 §3).</summary>
         public string unityVersion = "";
+        /// <summary>Build target names of a set (ADR 0273): the player compares them with <see cref="TargetFor"/>.</summary>
+        public const string TargetAndroid = "Android", TargetWin64 = "Win64";
+
+        /// <summary>Set target name of a running platform: Android, Win64 (Windows player and editor), else the enum name.</summary>
+        public static string TargetFor(UnityEngine.RuntimePlatform p) =>
+            p == UnityEngine.RuntimePlatform.Android ? TargetAndroid
+            : p == UnityEngine.RuntimePlatform.WindowsPlayer || p == UnityEngine.RuntimePlatform.WindowsEditor ? TargetWin64
+            : p.ToString();
+
         public string buildTarget = "";
         /// <summary>Lowest Android versionCode (git commit count, BuildInfoWriter) whose scripts can read these bundles.</summary>
         public int minAppVersionCode;

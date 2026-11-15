@@ -1,5 +1,7 @@
 # ADR 0234 — osobne paczki regionów (AssetBundles bez nowych pakietów), APK bazowy z regionem C
 Status: Proposed (chmura D, zadanie F1, gałąź `regionpacks-0234`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+**Zmieniony przez ADR 0273 (FIX s22, D12):** paczka niesie też scenę kafla `World_<id>[_High]_Tile` (ADR 0235), bundle są
+liczone referencjami (wiele regionów naraz — streaming), cel budowy `-Target Android|Win64` (D73). Sekcje niżej poprawione.
 Powiązane: D67 (`docs/11` — „docelowo regiony jako osobne paczki do pobrania”, APK ≤ 2 GB, instaluje właściciel),
 D24 (świat w APK ≤ 110 MB, bez Play Asset Delivery), ADR 0011 (import, `_Generated` poza gitem), ADR 0012 (tiery treści
 Low/High, „Addressables — wrócić przy streamingu”), ADR 0229 / PR #104 (wybór regionu w buildzie i menu, katalog regionów).
@@ -36,6 +38,10 @@ z #104 = 224 MB). Region w APK ma pierwszeństwo przed paczką (`RegionPackState
   `-packSetVersion`, `-minAppVersionCode`, `-maxAppVersionCode`, `-noShaderStrip`. Wynik w logu:
   `REGIONPACKS_RESULT: Succeeded|Failed …`, exit 0/1/2/4 jak `BuildAndroidApk`.
 - Nazwy bundli w pamięci (`AssetBundleBuild[]`), bez `assetBundleName` w `.meta` — import i sceny nietknięte.
+- **Bundel sceny = pełna scena + scena kafla** tego samego regionu i tieru, jeśli zaimportowana (ADR 0273); brak kafla =
+  ostrzeżenie `[PACKS] … no tile scene` (paczka działa tylko z menu, szwy zamknięte). Manifest `scenes[]` wymienia obie.
+- Cel: `-packTarget Android|Win64` (skrypt `-Target`); manifest `buildTarget` = `Android`/`Win64`, player porównuje z
+  `RegionPackManifest.TargetFor(Application.platform)` (Windows player i edytor = `Win64`).
 - Plan zależności (`RegionPackPlanner`, czysta logika, testy): zasób idzie do `common`, gdy (a) używają go sceny ≥ 2
   regionów albo (b) leży poza `Assets/_Generated/World/<region>/` (ciężarówka, PBR, shadery, URP). Zasób folderu regionu
   używany przez obie sceny tego regionu (Low+High) → `<region>-data`; reszta zostaje niejawnie w bundlu sceny.
@@ -73,8 +79,12 @@ Menu używa sprawdzenia płytkiego (rozmiary, bez hashowania); przed wczytaniem 
 na wątku roboczym (`Task.Run`), potem `AssetBundle.LoadFromFileAsync` (`LoadOrder`: common → data → scena) i zwraca nazwę sceny.
 `Application.CanStreamedLevelBeLoaded`: „Verify if the named scene exists in either the Player build or currently loaded
 AssetBundles” (ScriptReference 6000.3) — więc po `Prepare` działa istniejąca ścieżka `SceneManager.LoadScene` z #104.
-Zmiana aktywnej sceny na scenę spoza wczytanych bundli (menu, DrivingLab, C) → `UnloadAll(true)`. Brak `Update()` —
-pętla jazdy nie dotyka paczek (zero alokacji GC w jeździe).
+**Liczenie referencji (ADR 0273, recenzja P1-2):** `Acquire(region, tier)` / `Release(region, tier)` na
+`RegionPackLeases` — bundel ładowany przy 0 → 1 dzierżaw, zwalniany (`Unload(true)`) przy 1 → 0; `common` znika dopiero,
+gdy nie jest trzymany żaden region. `Prepare` (menu) = `Acquire` pod dzierżawą menu, oddawaną, gdy aktywna scena opuści
+region; streamer trzyma po jednej dzierżawie na kafel i oddaje ją po `UnloadSceneAsync`. Globalne `UnloadAll` zostało tylko
+jako jawne „zwolnij wszystko” (testy/wyjście), nie w ścieżce ładowania. Brak `Update()` — pętla jazdy nie dotyka paczek;
+streamer woła `Acquire/Release` tylko przy zdarzeniu kafla.
 
 ### 5. Instalacja i pobieranie
 - Układ: `persistentDataPath/regionpacks/{regionpacks.json, *.bundle, incoming/}`. Na Androidzie
@@ -94,8 +104,8 @@ pętla jazdy nie dotyka paczek (zero alokacji GC w jeździe).
 Interfejs `IRegionPackProvider` (`GetInfo`, `DownloadEnabled`, `Prepare`, `Download`, `InstallIncoming`, `Changed`),
 implementacja `RegionPackService.Instance`, teksty `RegionPackLabels` (`Detail` do linii szczegółów, `Action` na
 przycisk, `ActionDownloads`). Po scaleniu #104 lider (albo F-zadanie) nakłada diff z załącznika A (GameBootstrap +
-BootMenu, ~35 linii). Uwaga: `RegionPackPlanner.SceneName` powtarza regułę `Game.World.RegionScenes` z #104 (ta klasa
-nie istnieje na main) — po scaleniu #104 delegować do niej.
+BootMenu, ~35 linii). `RegionPackPlanner.SceneName/ScenePath/TileSceneName` delegują do `Game.World.RegionScenes`
+(jest na main od scalenia #104; `TileSceneNameFor` dodany identycznie jak w #114).
 
 ### 7. Rozmiary paczek (ESTIMATED, `python scripts/estimate-region-packs.py`)
 Metoda: paczka ≈ k × `WORLD_MEMORY` z importu (wartości cytowane w ADR regionów, różne daty), k = 0,81–1,18 (ADR 0229:
@@ -126,7 +136,15 @@ APK — górna granica bardziej prawdopodobna.
 
 Wniosek: APK zostaje 224 MB (C), pojedynczy kafel DK65 to ~40–70 MB (+ `common` raz), cały korytarz Low ≈ 1,0–1,5 GB
 na urządzeniu — tyle co wariant „wszystko w APK”, ale doinstalowywany i wymieniany kaflami. Miejsce na urządzeniu:
-`common` dubluje kopie z APK (+44–74 MB). Tier High paczkami tylko dla flagowca (nie A16).
+`common` dubluje kopie z APK (+44–74 MB). Tier High paczkami tylko dla flagowca (nie A16). Scena kafla w bundlu dodaje
+niewiele (te same zasoby regionu; własne obiekty tylko root + trasa) — rozmiar do odczytu z `REGIONPACK:` w logu.
+
+**Pamięć (recenzja P2-5):** przy przejściu C (z APK) → region z paczki materiały/tekstury PBR i ciężarówka są w pamięci
+**drugi raz** (kopie z `common`, inne instancje niż w buildzie): +44–74 MB PSS ESTIMATED przy budżecie A16 Low ~1000 MB.
+Zmierzyć pierwszym przebiegiem `-Push` (`device-metrics.ps1`: PSS sceny z paczki vs ta sama scena w APK). Na PC gra bazowa
+jest w buildzie, a paczki są dodatkami (ADR 0273 §5) — dubel dotyczy tylko pierwszego regionu dodatku.
+Zasoby spod `Resources/` użyte przez sceny regionów nie są wykluczane (niejawna kopia trafiłaby do każdego bundla sceny),
+tylko wypisywane w `regionpacks.plan.txt [resources-copies]` i ostrzeżeniem — naprawa po stronie importera.
 
 ### 8. Propozycja dla lidera (NIE wdrażane): Addressables + Play Asset Delivery
 Kiedy: dopiero przy publikacji w Google Play (zgoda właściciela, konto). Limity Play (support.google.com/googleplay/
@@ -143,6 +161,9 @@ Rekomendacja: zostać przy AssetBundles (ten ADR) w fazie sideload; jednostki (`
 mapują się 1:1 na grupy Addressables / asset packi on-demand, więc przejście nie zmienia podziału treści.
 
 ## Weryfikacja w chmurze (bez Unity)
+- FIX s22 (ADR 0273): +7 testów (dzierżawy, kafel w bundlu, kopie z Resources, nazwy przez RegionScenes, cel Win64) —
+  **50/50** pod .NET 8 + NUnit 3.14 (ten sam harness); `RegionPackService`/`RegionPackCommands` po zmianach kompilują się
+  na zaślepkach API (Build succeeded) — nadal **nieskompilowane w Unity**.
 - `RegionPackTests` (EditMode, 43 przypadki z TestCase): skompilowane i uruchomione pod .NET 8 + NUnit 3.14 z prawdziwymi
   plikami `Packs/*.cs` (bez `RegionPackService`) i `RegionPackPlanner.cs`, `JsonUtility` zastąpione System.Text.Json:
   **43/43 zielone**. `RegionPackService.cs` i `RegionPackCommands.cs` skompilowane na zaślepkach API Unity (sygnatury
@@ -154,7 +175,9 @@ mapują się 1:1 na grupy Addressables / asset packi on-demand, więc przejście
    materiałów; brakujący wariant = różowy/zastępczy materiał. Sprawdzić visual-qa / zrzut z A16 sceny z paczki.
 2. Cache PSO/rozgrzewka shaderów bazy nie obejmuje kopii shaderów z `common` → możliwe przycięcia pierwszych klatek.
 3. PSS sceny z bundla vs ta sama scena w APK (nagłówki LZ4, `common` w pamięci) — zmierzyć `device-metrics.ps1`.
-4. Zasoby z `Resources/` użyte w scenach trafiają też do `common` (kopia); `unity_builtin_extra` dublowane w bundlach (małe).
+4. Zasoby z `Resources/` użyte w scenach trafiają też do `common` (kopia, lista w planie); `unity_builtin_extra` dublowane w bundlach (małe).
+6. Windows: instalator zastępuje pliki bundli w `incoming/` → zainstalowane; plik trzymany przez załadowany bundel jest na
+   Windows zablokowany — instalacja tylko przy starcie (przed jakimkolwiek `Acquire`), pobieranie w trakcie jazdy nieobsługiwane.
 5. Czas weryfikacji SHA-256 na A16 (~1 s / 100 MB — ESTIMATED) przy starcie regionu.
 
 ## Załącznik A — diff dla plików PR #104 (do nałożenia po scaleniu #104; nie w tej gałęzi)

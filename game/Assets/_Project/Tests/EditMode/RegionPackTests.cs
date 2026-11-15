@@ -553,5 +553,125 @@ namespace Game.Tests
             Assert.IsTrue(RegionPackPlanner.IsExcluded("Packages/com.x/Editor/Foo.asset"));
             Assert.IsFalse(RegionPackPlanner.IsExcluded("Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader"));
         }
+
+        // ------------------------------------------------------------------ ADR 0273: tile scenes in packs, leases, targets
+
+        static readonly Dictionary<string, string[]> DepsWithTile = new Dictionary<string, string[]>
+        {
+            ["Assets/_Generated/World/dk65-06/World_dk65-06.unity"] = new[]
+            {
+                "Assets/_Generated/World/dk65-06/Meshes/Low/chunk_0_0.asset",
+                "Assets/_Generated/World/dk65-06/Lights/sun.asset",                 // full scene only
+                "Assets/_Generated/Truck/TRAKT.prefab",
+            },
+            ["Assets/_Generated/World/dk65-06/World_dk65-06_Tile.unity"] = new[]
+            {
+                "Assets/_Generated/World/dk65-06/World_dk65-06_Tile.unity",
+                "Assets/_Generated/World/dk65-06/Meshes/Low/chunk_0_0.asset",       // shared by both scenes of the bundle
+                "Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/tile_graph.json",
+            },
+        };
+
+        [Test]
+        public void Plan_TileSceneSharesTheSceneBundle_NotRegionData()
+        {
+            var s = new RegionPackScene("dk65-06", "dk65-06", "Low", RegionPackPlanner.ScenePath("dk65-06", "Low"), RegionPackPlanner.TileScenePath("dk65-06", "Low"));
+            CollectionAssert.AreEqual(new[]
+            {
+                "Assets/_Generated/World/dk65-06/World_dk65-06.unity",
+                "Assets/_Generated/World/dk65-06/World_dk65-06_Tile.unity",
+            }, s.ScenePaths);
+            CollectionAssert.AreEqual(new[] { "World_dk65-06", "World_dk65-06_Tile" }, s.SceneNames);
+            var plan = RegionPackPlanner.Build(new List<RegionPackScene> { s }, p => DepsWithTile[p]);
+            Assert.AreEqual(0, plan.RegionData.Count, "full + tile scene of one pack are one user: no data bundle");
+            CollectionAssert.AreEqual(new[]
+            {
+                "Assets/_Generated/World/dk65-06/Lights/sun.asset",
+                "Assets/_Generated/World/dk65-06/Meshes/Low/chunk_0_0.asset",
+            }, plan.Unique["dk65-06"]);
+            CollectionAssert.AreEqual(new[]
+            {
+                "Assets/_Generated/Truck/TRAKT.prefab",
+                "Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/tile_graph.json",
+            }, plan.Common);
+            CollectionAssert.AreEqual(new[] { "Assets/_Project/World/Runtime/Streaming/Resources/WorldStreaming/tile_graph.json" },
+                plan.ResourcesCopies, "Resources/ assets are listed as second copies (review P2-4)");
+        }
+
+        [Test]
+        public void Plan_NoTileScene_KeepsOneScene()
+        {
+            var s = new RegionPackScene("dk65-06", "dk65-06", "Low", RegionPackPlanner.ScenePath("dk65-06", "Low"), "");
+            Assert.IsNull(s.TileScenePath);
+            Assert.AreEqual(1, s.ScenePaths.Length);
+            CollectionAssert.AreEqual(new[] { "World_dk65-06" }, s.SceneNames);
+        }
+
+        [Test]
+        public void Names_DelegateToRegionScenes()
+        {
+            Assert.AreEqual(Game.World.RegionScenes.SceneNameFor("knyszyn", "High"), RegionPackPlanner.SceneName("knyszyn", "High"));
+            Assert.AreEqual("World_knyszyn_High_Tile", RegionPackPlanner.TileSceneName("knyszyn", "High"));
+            Assert.AreEqual("WorldC_Tile", RegionPackPlanner.TileSceneName("bialystok-industrial-c", "Low"));
+            Assert.AreEqual("Assets/_Generated/World/dk65-06/World_dk65-06_Tile.unity", RegionPackPlanner.TileScenePath("dk65-06", "Low"));
+            Assert.IsTrue(RegionPackLoadResult.IsTileScene("World_dk65-06_High_Tile"));
+            Assert.IsFalse(RegionPackLoadResult.IsTileScene("World_dk65-06_High"));
+            Assert.IsFalse(RegionPackLoadResult.IsTileScene(null));
+            Assert.IsTrue(RegionPackPlanner.IsUnderResources("Assets/_Project/Gameplay/Resources/Regions/region_catalog.json"));
+            Assert.IsFalse(RegionPackPlanner.IsUnderResources("Assets/_Generated/World/dk65-06/Meshes/Low/chunk_0_0.asset"));
+        }
+
+        [Test]
+        public void Target_NamesMatchTheRunningPlatform()
+        {
+            Assert.AreEqual("Android", RegionPackManifest.TargetFor(RuntimePlatform.Android));
+            Assert.AreEqual("Win64", RegionPackManifest.TargetFor(RuntimePlatform.WindowsPlayer));
+            Assert.AreEqual("Win64", RegionPackManifest.TargetFor(RuntimePlatform.WindowsEditor));
+            var m = new RegionPackManifest { schema = RegionPackManifest.SchemaId, unityVersion = Unity, buildTarget = "Win64", minAppVersionCode = 1 };
+            Assert.IsNull(RegionPackResolver.CompatibilityProblem(m, new RegionPackAppIdentity(500, Unity, "Win64")));
+            Assert.IsNotNull(RegionPackResolver.CompatibilityProblem(m, App), "a Windows set never loads on Android");
+        }
+
+        [Test]
+        public void Leases_TwoRegionsAtOnce_CommonStaysUntilTheLast()
+        {
+            var l = new RegionPackLeases();
+            string a = RegionPackLeases.Key("dk65-06", "Low"), b = RegionPackLeases.Key("dk65-07", "Low");
+            CollectionAssert.AreEqual(new[] { "common", "dk65-06" }, l.Acquire(a, new[] { "common", "dk65-06" }));
+            CollectionAssert.AreEqual(new[] { "dk65-07" }, l.Acquire(b, new[] { "common", "dk65-07" }), "common already loaded");
+            Assert.AreEqual(2, l.BundleRefs("common"));
+            // Releasing A must not touch B (the old Prepare unloaded every other region: review s22 #112 P1-2).
+            CollectionAssert.AreEqual(new[] { "dk65-06" }, l.Release(a));
+            Assert.IsTrue(l.IsHeld(b));
+            Assert.AreEqual(1, l.BundleRefs("common"));
+            CollectionAssert.AreEqual(new[] { "dk65-07", "common" }, l.Release(b), "reverse load order, common last");
+            Assert.AreEqual(0, l.LoadedBundleCount);
+            Assert.AreEqual(0, l.HeldKeyCount);
+        }
+
+        [Test]
+        public void Leases_SameRegionTwice_MenuAndStreamer()
+        {
+            var l = new RegionPackLeases();
+            string k = RegionPackLeases.Key("knyszyn", "High");
+            Assert.AreEqual(3, l.Acquire(k, new[] { "common", "knyszyn-data", "knyszyn-high" }).Count);
+            Assert.AreEqual(0, l.Acquire(k, null).Count, "second holder only counts");
+            Assert.AreEqual(2, l.LeaseCount(k));
+            Assert.AreEqual(0, l.Release(k).Count, "one holder left: nothing unloads");
+            CollectionAssert.AreEqual(new[] { "knyszyn-high", "knyszyn-data", "common" }, l.Release(k));
+            Assert.AreEqual(0, l.Release(k).Count, "releasing a key that is not held is a no-op");
+        }
+
+        [Test]
+        public void Leases_DuplicateIdsAndClear()
+        {
+            var l = new RegionPackLeases();
+            CollectionAssert.AreEqual(new[] { "common", "x" }, l.Acquire("x|Low", new[] { "common", "common", "", null, "x" }));
+            l.Acquire("y|Low", new[] { "common", "y" });
+            var all = l.Clear();
+            Assert.AreEqual(3, all.Count);
+            Assert.AreEqual(0, l.LoadedBundleCount);
+            Assert.Throws<ArgumentException>(() => l.Acquire("", new[] { "a" }));
+        }
     }
 }

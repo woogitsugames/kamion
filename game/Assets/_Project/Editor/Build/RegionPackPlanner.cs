@@ -1,16 +1,31 @@
 using System;
 using System.Collections.Generic;
+using Game.World;
 
 namespace Game.Editor.Build
 {
-    /// <summary>One scene bundle to build: pack id, region, content tier, scene path.</summary>
+    /// <summary>
+    /// One scene bundle to build: pack id, region, content tier, the full region scene and - when imported - the streamed
+    /// tile scene of the same region and tier (ADR 0235 <c>World_&lt;id&gt;[_High]_Tile</c>). ADR 0273: a pack carries every
+    /// scene the runtime may open for that region and tier (menu start = full scene, additive streaming = tile scene); both
+    /// scenes go into ONE bundle so their shared region assets are stored once.
+    /// </summary>
     public readonly struct RegionPackScene
     {
-        public readonly string Id, Region, Tier, ScenePath;
-        public RegionPackScene(string id, string region, string tier, string scenePath)
+        public readonly string Id, Region, Tier, ScenePath, TileScenePath;
+        public RegionPackScene(string id, string region, string tier, string scenePath, string tileScenePath = null)
         {
             Id = id; Region = region; Tier = tier; ScenePath = scenePath;
+            TileScenePath = string.IsNullOrEmpty(tileScenePath) ? null : tileScenePath;
         }
+
+        /// <summary>Scene paths of the bundle: the full scene first, then the tile scene (if any).</summary>
+        public string[] ScenePaths => TileScenePath == null ? new[] { ScenePath } : new[] { ScenePath, TileScenePath };
+
+        /// <summary>Scene names for the manifest (<c>scenes[]</c>), same order as <see cref="ScenePaths"/>.</summary>
+        public string[] SceneNames => TileScenePath == null
+            ? new[] { RegionPackPlanner.SceneName(Region, Tier) }
+            : new[] { RegionPackPlanner.SceneName(Region, Tier), RegionPackPlanner.TileSceneName(Region, Tier) };
     }
 
     /// <summary>
@@ -37,6 +52,15 @@ namespace Game.Editor.Build
             public readonly Dictionary<string, List<string>> Unique = new Dictionary<string, List<string>>();
             /// <summary>Assets skipped because they cannot or must not be in a bundle (scripts, editor-only, scenes).</summary>
             public readonly List<string> Skipped = new List<string>();
+            /// <summary>
+            /// Subset of <see cref="Common"/> under a <c>Resources/</c> folder (review s22 #112 P2-4). Such an asset is
+            /// always in the player too, and a bundle cannot reference the player's copy (manual "Avoiding asset
+            /// duplication": content is not shared between builds), so a scene from a pack gets a SECOND instance -
+            /// not the object Resources.Load returns. Excluding it would not help: an unassigned dependency is copied
+            /// implicitly into every scene bundle. It stays in common (one copy) and is listed for review: a region
+            /// scene must not reference Resources/ assets (fix at the importer, not here).
+            /// </summary>
+            public readonly List<string> ResourcesCopies = new List<string>();
         }
 
         /// <summary>True for dependencies that never go into a bundle: scripts and assemblies (code lives in the player),
@@ -55,6 +79,14 @@ namespace Game.Editor.Build
             return false;
         }
 
+        /// <summary>True for an asset in a Resources/ folder (always in the player as well).</summary>
+        public static bool IsUnderResources(string assetPath)
+        {
+            if (string.IsNullOrEmpty(assetPath)) return false;
+            string p = assetPath.Replace('\\', '/');
+            return p.Contains("/Resources/") || p.StartsWith("Resources/", StringComparison.Ordinal);
+        }
+
         public static string RegionFolder(string region) => GeneratedWorldRoot + region + "/";
 
         /// <param name="scenes">Pack scenes of this build run.</param>
@@ -66,13 +98,17 @@ namespace Game.Editor.Build
             var skipped = new HashSet<string>(StringComparer.Ordinal);
             for (int i = 0; i < scenes.Count; i++)
             {
-                foreach (var raw in dependencies(scenes[i].ScenePath) ?? Array.Empty<string>())
+                // Full scene and tile scene of one pack are one user: assets only they share stay implicit in the bundle.
+                foreach (var scenePath in scenes[i].ScenePaths)
                 {
-                    string a = raw.Replace('\\', '/');
-                    if (a == scenes[i].ScenePath) continue;
-                    if (IsExcluded(a)) { skipped.Add(a); continue; }
-                    if (!users.TryGetValue(a, out var list)) users[a] = list = new List<int>();
-                    if (!list.Contains(i)) list.Add(i);
+                    foreach (var raw in dependencies(scenePath) ?? Array.Empty<string>())
+                    {
+                        string a = raw.Replace('\\', '/');
+                        if (a == scenePath) continue;
+                        if (IsExcluded(a)) { skipped.Add(a); continue; }
+                        if (!users.TryGetValue(a, out var list)) users[a] = list = new List<int>();
+                        if (!list.Contains(i)) list.Add(i);
+                    }
                 }
             }
             foreach (var kv in users)
@@ -94,6 +130,7 @@ namespace Game.Editor.Build
                 }
             }
             plan.Common.Sort(StringComparer.Ordinal);
+            foreach (var a in plan.Common) if (IsUnderResources(a)) plan.ResourcesCopies.Add(a);
             foreach (var u in plan.Unique.Values) u.Sort(StringComparer.Ordinal);
             foreach (var d in plan.RegionData.Values) d.Sort(StringComparer.Ordinal);
             plan.Skipped.AddRange(skipped);
@@ -137,13 +174,19 @@ namespace Game.Editor.Build
 
         public static string DataPackId(string region) => region + "-data";
 
-        /// <summary>Scene name rule of ADR 0011/0229 (same as Game.World.RegionScenes in PR #104).</summary>
-        public static string SceneName(string region, string tier, string regionC = "bialystok-industrial-c")
-        {
-            string b = region == regionC ? "WorldC" : "World_" + region;
-            return tier == "High" ? b + "_High" : b;
-        }
+        /// <summary>Scene name rule of ADR 0011/0229: delegates to <see cref="RegionScenes"/> (one rule for importer, build,
+        /// menu and packs; review s22 #112 P2-3).</summary>
+        public static string SceneName(string region, string tier) =>
+            RegionScenes.SceneNameFor(region, tier == "High" ? RegionScenes.HighTier : RegionScenes.LowTier);
 
-        public static string ScenePath(string region, string tier) => RegionFolder(region) + SceneName(region, tier) + ".unity";
+        public static string ScenePath(string region, string tier) =>
+            RegionScenes.ScenePathFor(region, tier == "High" ? RegionScenes.HighTier : RegionScenes.LowTier);
+
+        /// <summary>Streamed tile scene (ADR 0235/0273), e.g. World_dk65-06_Tile, World_knyszyn_High_Tile.</summary>
+        public static string TileSceneName(string region, string tier) =>
+            RegionScenes.TileSceneNameFor(region, tier == "High" ? RegionScenes.HighTier : RegionScenes.LowTier);
+
+        public static string TileScenePath(string region, string tier) =>
+            RegionScenes.TileScenePathFor(region, tier == "High" ? RegionScenes.HighTier : RegionScenes.LowTier);
     }
 }

@@ -13,7 +13,8 @@ namespace Game.World.Packs
     /// <summary>
     /// Runtime side of region packs (ADR 0234): installed set on <c>persistentDataPath/regionpacks</c>, install from
     /// <c>incoming/</c> (adb push), optional download from a configured URL (UnityWebRequest, default none), SHA-256 +
-    /// version check before loading, AssetBundle load/unload around region scenes.
+    /// version check before loading, AssetBundle load/unload around region scenes with reference counting (ADR 0273:
+    /// the menu start and the additive streamer hold regions at the same time, see <see cref="RegionPackLeases"/>).
     /// One instance (<see cref="Instance"/>, DontDestroyOnLoad). All work happens in the start menu or on the loading step
     /// before a region scene; the driving loop never calls into this class (no per-frame allocations: no Update method).
     /// </summary>
@@ -45,9 +46,8 @@ namespace Game.World.Packs
         RegionPackManifest m_Remote;
         string m_RemoteJson;
         string m_RemoteError;
-        readonly List<AssetBundle> m_Loaded = new List<AssetBundle>();
-        readonly List<string> m_LoadedScenePaths = new List<string>();
-        string m_LoadedKey;              // "<region>|<tier>" of the loaded bundles
+        readonly RegionPackLeases m_Leases = new RegionPackLeases();
+        readonly Dictionary<string, AssetBundle> m_Bundles = new Dictionary<string, AssetBundle>(StringComparer.Ordinal);   // pack id -> bundle
         string m_DownloadingKey;
         float m_DownloadProgress;
         long m_DownloadBytes;
@@ -58,8 +58,7 @@ namespace Game.World.Packs
         public string RemoteError => m_RemoteError;
 
         public static RegionPackAppIdentity CurrentApp => new RegionPackAppIdentity(
-            BuildInfo.Current.versionCode, Application.unityVersion,
-            Application.platform == RuntimePlatform.Android ? "Android" : Application.platform.ToString());
+            BuildInfo.Current.versionCode, Application.unityVersion, RegionPackManifest.TargetFor(Application.platform));
 
         public string BaseUrl
         {
@@ -118,8 +117,8 @@ namespace Game.World.Packs
         public RegionPackInfo GetInfo(string region, string tier, bool sceneInBuild)
         {
             if (sceneInBuild) return new RegionPackInfo(RegionPackState.InBase, "", 0);
-            string key = region + "|" + tier;
-            if (key == m_LoadedKey && m_Loaded.Count > 0) return new RegionPackInfo(RegionPackState.Loaded, "", 0);
+            string key = RegionPackLeases.Key(region, tier);
+            if (m_Leases.IsHeld(key)) return new RegionPackInfo(RegionPackState.Loaded, "", 0);
             if (key == m_DownloadingKey) return new RegionPackInfo(RegionPackState.Downloading, "", m_DownloadBytes, m_DownloadProgress);
             var info = RegionPackResolver.Resolve(m_Installed, region, tier, CurrentApp, m_Paths, RegionPackDiskFiles.Instance, false);
             // Not installed / incompatible locally but offered by the download folder: show the download size of the remote set.
@@ -133,50 +132,119 @@ namespace Game.World.Packs
             return info;
         }
 
-        // ------------------------------------------------------------------ load / unload
+        // ------------------------------------------------------------------ load / unload (reference counted, ADR 0273)
 
+        /// <summary>Leases of the menu start (<see cref="Prepare"/>): released when the active scene leaves that region.</summary>
+        string m_MenuKey;
+        bool m_Busy;   // one Acquire at a time: overlapping loads of a shared bundle (common) must not race
+
+        public RegionPackLeases Leases => m_Leases;
+
+        /// <summary>Menu start (ADR 0234 §4): <see cref="Acquire"/> with the menu's own lease; a previous menu lease is
+        /// given back first. Regions held by the streamer stay loaded (no global unload, review s22 #112 P1-2).</summary>
         public IEnumerator Prepare(string region, string tier, Action<RegionPackLoadResult> done)
         {
-            string key = region + "|" + tier;
-            if (key == m_LoadedKey && m_Loaded.Count > 0 && m_LoadedScenePaths.Count > 0)
+            string key = RegionPackLeases.Key(region, tier);
+            if (m_MenuKey == key && m_Leases.IsHeld(key))
             {
-                done?.Invoke(new RegionPackLoadResult(Path.GetFileNameWithoutExtension(m_LoadedScenePaths[0]), null));
+                done?.Invoke(new RegionPackLoadResult(SceneOf(key, false), null));
                 yield break;
             }
-            UnloadAll(true);
-
-            // Deep check (SHA-256 of the pack and its dependencies) on a worker thread, once per start from the menu.
-            var installed = m_Installed;
-            var app = CurrentApp;
-            var paths = m_Paths;
-            var task = Task.Run(() => RegionPackResolver.Resolve(installed, region, tier, app, paths, RegionPackDiskFiles.Instance, true));
-            while (!task.IsCompleted) yield return null;
-            if (task.IsFaulted) { Fail(done, "verify failed: " + task.Exception?.GetBaseException().Message); yield break; }
-            var info = task.Result;
-            if (info.State != RegionPackState.Installed) { Fail(done, region + "/" + tier + ": " + info); yield break; }
-
-            var entry = installed.FindRegion(region, tier);
-            var order = installed.LoadOrder(entry);
-            order.Add(entry);
-            foreach (var e in order)
+            RegionPackLoadResult result = default;
+            yield return Acquire(region, tier, r => result = r);
+            if (result.Ok)
             {
-                var req = AssetBundle.LoadFromFileAsync(paths.Installed(e.file));
-                yield return req;
-                if (req.assetBundle == null)
+                if (m_MenuKey != null && m_MenuKey != key) ReleaseKey(m_MenuKey);
+                m_MenuKey = key;
+            }
+            done?.Invoke(result);
+        }
+
+        public IEnumerator Acquire(string region, string tier, Action<RegionPackLoadResult> done)
+        {
+            while (m_Busy) yield return null;
+            m_Busy = true;
+            try
+            {
+                string key = RegionPackLeases.Key(region, tier);
+                if (m_Leases.IsHeld(key))
                 {
-                    UnloadAll(true);
-                    Fail(done, "AssetBundle.LoadFromFileAsync failed: " + e.file);
+                    m_Leases.Acquire(key, null);
+                    done?.Invoke(new RegionPackLoadResult(SceneOf(key, false), null, SceneOf(key, true)));
                     yield break;
                 }
-                m_Loaded.Add(req.assetBundle);
-                if (req.assetBundle.isStreamedSceneAssetBundle) m_LoadedScenePaths.AddRange(req.assetBundle.GetAllScenePaths());
+
+                // Deep check (SHA-256) of the bundles this key still has to load, on a worker thread. Bundles already
+                // loaded for another region (common) were verified when they were loaded.
+                var installed = m_Installed;
+                var app = CurrentApp;
+                var paths = m_Paths;
+                var task = Task.Run(() => RegionPackResolver.Resolve(installed, region, tier, app, paths, RegionPackDiskFiles.Instance, true));
+                while (!task.IsCompleted) yield return null;
+                if (task.IsFaulted) { Fail(done, "verify failed: " + task.Exception?.GetBaseException().Message); yield break; }
+                var info = task.Result;
+                if (info.State != RegionPackState.Installed) { Fail(done, region + "/" + tier + ": " + info); yield break; }
+
+                var entry = installed.FindRegion(region, tier);
+                var order = installed.LoadOrder(entry);
+                order.Add(entry);
+                var ids = new List<string>(order.Count);
+                foreach (var e in order) ids.Add(e.id);
+                var toLoad = m_Leases.Acquire(key, ids);
+                foreach (var id in toLoad)
+                {
+                    var e = installed.Find(id);
+                    var req = e != null ? AssetBundle.LoadFromFileAsync(paths.Installed(e.file)) : null;
+                    if (req != null) yield return req;
+                    if (req == null || req.assetBundle == null)
+                    {
+                        ReleaseKey(key);   // unloads what this key loaded so far; bundles of other keys keep their count
+                        Fail(done, "AssetBundle.LoadFromFileAsync failed: " + (e?.file ?? id));
+                        yield break;
+                    }
+                    m_Bundles[id] = req.assetBundle;
+                }
+                string full = SceneOf(key, false);
+                if (string.IsNullOrEmpty(full)) { ReleaseKey(key); Fail(done, entry.file + " has no region scene"); yield break; }
+                Debug.Log("[PACKS] acquire " + entry.id + " set=" + installed.packSetVersion + " scene=" + full + " tile=" + (SceneOf(key, true) ?? "-") +
+                          " loaded " + toLoad.Count + " bundle(s), held regions " + m_Leases.HeldKeyCount + ", bundles " + m_Leases.LoadedBundleCount);
+                Changed?.Invoke();
+                done?.Invoke(new RegionPackLoadResult(full, null, SceneOf(key, true)));
             }
-            if (m_LoadedScenePaths.Count == 0) { UnloadAll(true); Fail(done, entry.file + " has no scene"); yield break; }
-            m_LoadedKey = key;
-            string scene = Path.GetFileNameWithoutExtension(m_LoadedScenePaths[0]);
-            Debug.Log("[PACKS] loaded " + entry.id + " set=" + installed.packSetVersion + " scene=" + scene + " bundles=" + m_Loaded.Count);
-            Changed?.Invoke();
-            done?.Invoke(new RegionPackLoadResult(scene, null));
+            finally { m_Busy = false; }
+        }
+
+        public void Release(string region, string tier) => ReleaseKey(RegionPackLeases.Key(region, tier));
+
+        void ReleaseKey(string key)
+        {
+            if (key == m_MenuKey && m_Leases.LeaseCount(key) <= 1) m_MenuKey = null;
+            var toUnload = m_Leases.Release(key);
+            foreach (var id in toUnload)
+            {
+                // true: the region's meshes/textures go with it. Callers release only after the scene is unloaded.
+                if (m_Bundles.TryGetValue(id, out var ab) && ab != null) ab.Unload(true);
+                m_Bundles.Remove(id);
+            }
+            if (toUnload.Count > 0)
+            {
+                Debug.Log("[PACKS] release " + key + ": unloaded [" + string.Join(",", toUnload) + "], held regions " + m_Leases.HeldKeyCount);
+                Changed?.Invoke();
+            }
+        }
+
+        /// <summary>Scene name of a held key from its loaded scene bundle: the full region scene, or the tile scene.</summary>
+        string SceneOf(string key, bool tile)
+        {
+            var bundles = m_Leases.BundlesOf(key);
+            if (bundles.Count == 0) return null;
+            if (!m_Bundles.TryGetValue(bundles[bundles.Count - 1], out var ab) || ab == null || !ab.isStreamedSceneAssetBundle) return null;
+            foreach (var path in ab.GetAllScenePaths())
+            {
+                string name = Path.GetFileNameWithoutExtension(path);
+                if (RegionPackLoadResult.IsTileScene(name) == tile) return name;
+            }
+            return null;
         }
 
         static void Fail(Action<RegionPackLoadResult> done, string error)
@@ -185,26 +253,26 @@ namespace Game.World.Packs
             done?.Invoke(new RegionPackLoadResult(null, error));
         }
 
-        /// <summary>Unloads every loaded pack bundle. <paramref name="unloadAllObjects"/> true also destroys their assets
-        /// (only when no scene of them is open).</summary>
+        /// <summary>Unloads every loaded pack bundle and drops every lease (tests, shutdown). <paramref name="unloadAllObjects"/>
+        /// true also destroys their assets - only when no scene of them is open.</summary>
         public void UnloadAll(bool unloadAllObjects)
         {
-            if (m_Loaded.Count == 0) return;
-            for (int i = m_Loaded.Count - 1; i >= 0; i--)
-                if (m_Loaded[i] != null) m_Loaded[i].Unload(unloadAllObjects);
-            m_Loaded.Clear();
-            m_LoadedScenePaths.Clear();
-            m_LoadedKey = null;
-            Debug.Log("[PACKS] unloaded (objects=" + unloadAllObjects + ")");
+            var all = m_Leases.Clear();
+            m_MenuKey = null;
+            if (all.Count == 0) return;
+            foreach (var id in all)
+                if (m_Bundles.TryGetValue(id, out var ab) && ab != null) ab.Unload(unloadAllObjects);
+            m_Bundles.Clear();
+            Debug.Log("[PACKS] unloaded all (objects=" + unloadAllObjects + ")");
         }
 
-        // Leaving a pack region (menu, DrivingLab, a region in the APK): free the bundles and their meshes/textures.
+        // Leaving the menu-started pack region (menu, DrivingLab, a region in the build): give back the menu lease only.
+        // Leases of the streamer are released by the streamer when it unloads its tile scenes (or is destroyed).
         void OnActiveSceneChanged(Scene from, Scene to)
         {
-            if (m_Loaded.Count == 0) return;
-            if (m_LoadedScenePaths.Contains(to.path)) return;
-            UnloadAll(true);
-            Changed?.Invoke();
+            if (m_MenuKey == null) return;
+            if (to.name == SceneOf(m_MenuKey, false)) return;
+            ReleaseKey(m_MenuKey);
         }
 
         // ------------------------------------------------------------------ download (optional, URL configured)
@@ -261,7 +329,7 @@ namespace Game.World.Packs
                 if (RegionPackResolver.CheckFile(dep, m_Paths, RegionPackDiskFiles.Instance, false) != RegionPackState.Installed) todo.Add(dep);
             if (RegionPackResolver.CheckFile(entry, m_Paths, RegionPackDiskFiles.Instance, false) != RegionPackState.Installed) todo.Add(entry);
 
-            m_DownloadingKey = region + "|" + tier;
+            m_DownloadingKey = RegionPackLeases.Key(region, tier);
             m_DownloadBytes = 0;
             foreach (var e in todo) m_DownloadBytes += e.sizeBytes;
             m_DownloadProgress = 0f;
