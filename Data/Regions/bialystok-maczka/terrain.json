@@ -1,0 +1,35 @@
+{
+ "bbox": [
+  774923.0,
+  595199.0,
+  776971.0,
+  597247.0
+ ],
+ "encoding": {
+  "decode": "z_m = offset_m + value * scale_m_per_unit",
+  "dtype": "uint16 little-endian",
+  "file": "Data/raw/derived/bialystok-maczka/heightmap_2049.r16",
+  "offset_m": 114.0,
+  "quantisation_step_mm": 0.6561,
+  "scale_m_per_unit": 0.0006561379415579462,
+  "span_m": 43.0
+ },
+ "height_datum": "PL-EVRF2007-NH (EPSG:9651)",
+ "missing_samples": 0,
+ "node_ij_to_xy": "x = bbox.xmin + i, y = bbox.ymax - j  (row 0 = north edge)",
+ "samples": [
+  2049,
+  2049
+ ],
+ "sampling": "exact: tile nodes coincide with NMT cell centres (xllcenter at integer metres); no interpolation",
+ "sha256_r16": "0918dded2823c634701c00fae1e131aab00c6195e02b3c8f68c3fd5b757d48fd",
+ "source_crs": "EPSG:2180",
+ "source_manifest": "gugik-nmt-2025-bialystok-maczka",
+ "spacing_m": 1.0,
+ "stats_m": {
+  "max": 155.45,
+  "mean": 132.394,
+  "min": 115.26
+ },
+ "unity_hint": "Unity Terrain RAW import: 16-bit, Windows byte order, flip vertically (Unity row 0 = south); terrain size x/z = bbox width/height, y = span_m, position y = offset_m - origin_z"
+}

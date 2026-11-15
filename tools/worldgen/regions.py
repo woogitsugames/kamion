@@ -76,6 +76,19 @@ REGIONS: dict[str, Region] = {
         teryt_powiat="2002",
         status="WORKING_ASSUMPTION (ADR 0205, owner D64; tile = lattice (-4,0) of the ADR 0203 plan)",
     ),
+    # ADR 0203 (owner D64): first Białystok tile on the truck route to Knyszyn, lattice i = -1, j = 0 (shares its
+    # east edge x = 776971 with tile C). DK8/DK65 Gen. Maczka ("Trasa Generalska"), 2.05 km of dual carriageway
+    # with grade-separated junctions. Route + tile plan: tools/worldgen/qa/dk65_route_plan.py,
+    # docs/reports/map/dk65_route_plan.json. Next tiles (-2,0) bialystok-kleeberga, (-3,0) bialystok-knyszynska.
+    "bialystok-maczka": Region(
+        id="bialystok-maczka",
+        title="Białystok — DK8/DK65 Gen. Maczka (Trasa Generalska), kafel na zachód od C w stronę Knyszyna",
+        candidate="E_dk65_maczka",
+        bbox=(774923.0, 595199.0, 776971.0, 597247.0),
+        origin=(775947.0, 596223.0),
+        teryt_powiat="2061",
+        status="WORKING_ASSUMPTION (ADR 0203, owner D64 chose the direction; tile = lattice neighbour of C)",
+    ),
 }
 
 TILE_SIZE_M = 2048.0
