@@ -1,4 +1,0 @@
-# STATUS — dk65-k1-0220 (PR #98), FIX po recenzji s21 (runda 3, D6)
-- FIX 1: `markings.edge_dashed_spans` — odcinek sięga końca łańcucha tylko przy przejściu na inny łańcuch; dziura (próbki bez łańcucha) kończy odcinek na jej krawędzi. Dane 01–05: 20 odcinków bez zmian (0,01 m). +3 testy (21/21 w test_dk65_k1_0220).
-- FIX 2: ADR 0220 zgodny z D66 (Ełcka 6,6 m); Otwarte 5 zamknięte, Otwarte 6 (inner_m zatok 3,45 → 3,30) zostawione liderowi — pliki dk65-04/05 w pracy fix-pr80-s21. LICENSES: wiersz dla evidence/*.jpg.
-- NASTĘPNY KROK (lider, po scaleniu poprawki #80): `git merge origin/main` (konflikt dk65-03/control_cameras_place.authored.json — zachować obie listy), potem `uv run --project tools/worldgen python tools/worldgen/qa/dk65_k1_elements.py --check && uv run --project tools/worldgen python -m pytest tests/gis -k "marking or 0220" -q`
