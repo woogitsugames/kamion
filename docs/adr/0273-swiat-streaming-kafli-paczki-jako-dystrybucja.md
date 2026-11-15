@@ -70,8 +70,8 @@ spinane przez punkty wejścia).
    pamięci procesu). VRAM 2 GB klasy minimalnej: tekstury świata są częścią `WORLD_MEMORY` — ryzyko do pomiaru na iGPU (D74).
 7. **Streaming opt-in** do czasu pomiaru: launch argument `stream=1` (Windows `-stream 1`, Android `adb … -e stream 1`).
    Kryterium włączenia domyślnego na danej platformie/tierze (lider, z logów):
-   przejazd korytarza C → Knyszyn autopilotem 90 km/h: **0 resetów safety net**, **0 dojazdów do zamkniętego szwu**
-   (`[STREAM] … not ready` przed pojazdem), klatki: PC ≤ **12 klatek > 33,3 ms** na przejazd przy celu 60 fps (analogia D69
+   przejazd korytarza C → Knyszyn autopilotem 90 km/h: **0 resetów safety net**, **0 kafli gotowych za późno**
+   (`[STREAM] ready …, vehicle 0 m from the tile` = pojazd już w kaflu; `scripts/stream-report.py --gate`), klatki: PC ≤ **12 klatek > 33,3 ms** na przejazd przy celu 60 fps (analogia D69
    dla A16: ≤ 12 klatek > 40 ms) — WORKING_VALUE; pamięć: szczyt working set ≤ cel z pkt 6 (PC), PSS ≤ 1000 MB (A16 Low).
 8. **Odrodzenie nigdy nad pustką** (recenzja #114 P1-2) — warunek tylko po stronie streamera, bez zmian spawn/route_start:
    `StreamingPolicy` ma **kafel przypięty**, którego nie wyładowuje ani nie eksmituje (pamięć liczy się do budżetu). Streamer
@@ -101,7 +101,9 @@ streaming. Załącznik A ADR 0234 (menu) — po obu, osobnym commitem lidera.
 ## Testy
 - EditMode `RegionPackTests` (+7: dzierżawy dwóch regionów, ta sama paczka menu + streamer, plan z kaflem w jednym bundlu,
   kopie z `Resources/`, nazwy przez `RegionScenes`, cel Win64/Android) — 50/50 pod .NET 8 z zaślepką `JsonUtility`.
-- EditMode `WorldStreamingPolicyTests` (+ przypięty kafel, budżety PC, pamięć High, źródło z paczki) — patrz ADR 0235.
+- EditMode `WorldStreamingPolicyTests` (+8: przypięty kafel, budżety PC z danych, pamięć High, korytarz D67 przy 90 km/h dla
+  PC Low…Ultra z przypiętym C — 0 decyzji ponad budżet, maks. 434,1 MB Low / 1044,2 MB High; źródło build/paczka) —
+  24/25 pod .NET 8 (`Decide_AllocatesNothing`: 24 B jednorazowo w runtime .NET także na kodzie sprzed FIX, 0 B na wywołanie).
 - Python `tests/gis/test_tile_graph_0235.py` (świeżość + `worldMemoryHighMB`), `tests/gis/test_stream_report_0273.py`.
 
 ## Komendy dla lidera (Windows = główny pomiar, A16 Low = drugi)
@@ -112,7 +114,9 @@ uv run --project tools/worldgen python tools/worldgen/streaming/tile_graph.py --
 pwsh scripts/import-region.ps1 -Region bialystok-maczka   # ... kleeberga, knyszynska, dk65-01..11, knyszyn-s, knyszyn (Tiers Low,High)
 pwsh scripts/build-windows.ps1 -Regions 'd67' -Slot
 pwsh scripts/build-windows.ps1 -SkipBuild -Run -Tier High -Scene bialystok-industrial-c -Autopilot route -Speed 90 -Fps 60 -RunSeconds 1500 -ShotSeconds 60 -ExtraPlayerArgs '-stream','1'
-uv run python scripts/stream-report.py --log artifacts/logs/win-run-<ts>.log --frames "$env:USERPROFILE/AppData/LocalLow/woogitsugames/Kamion/diag/frametimes.csv" --threshold-ms 33.3
+# w drugim oknie pwsh, w trakcie przejazdu (próbki pamięci procesu co 1 s):
+$o='artifacts/win/mem.csv'; 't_s,working_set_mb,private_mb' | Set-Content $o; $t0=Get-Date; while ($p = Get-Process Kamion -ErrorAction SilentlyContinue) { '{0:F0},{1:F1},{2:F1}' -f ((Get-Date)-$t0).TotalSeconds,($p.WorkingSet64/1MB),($p.PrivateMemorySize64/1MB) | Add-Content $o; Start-Sleep 1 }
+uv run python scripts/stream-report.py --log artifacts/logs/win-run-<ts>.log --frames "$env:USERPROFILE/AppData/LocalLow/woogitsugames/Kamion/diag/frametimes.csv" --memory artifacts/win/mem.csv --threshold-ms 33.3 --memory-limit-mb 6144 --gate
 # paczki PC (dodatek): pwsh scripts/build-region-packs.ps1 -Target Win64 -Regions dk65-06,dk65-07 -Tiers Both -InstallLocal
 # A16 Low:
 pwsh scripts/build-android.ps1 -Regions 'bialystok-industrial-c,bialystok-maczka,bialystok-kleeberga' -Install -Serial RFGL34SJYDZ
