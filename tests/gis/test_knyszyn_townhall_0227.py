@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 
 import numpy as np
+import shapely
+from shapely.geometry import MultiPoint, Point, Polygon
 
 from streetscape import buildings_mesh as BM
 from streetscape import knyszyn_townhall_0227 as townhall
@@ -50,3 +52,29 @@ def test_generic_geometry_is_not_doubled_if_replacement_not_activated():
     buf = Buffer()
     result = townhall.build(buf, "knyszyn", blds, lambda e,n: np.zeros_like(e), {})
     assert result["status"] == "skipped" and not buf.parts
+
+
+def test_real_roof_and_facades_stay_on_bdot_footprints():
+    """Regression: rectangle facade floated 3–5 m and roof exceeded footprint by ~150 m²."""
+    fc = source()
+    blds = BM.load(fc, [761611, 612607], [], hero=townhall.hero_targets("knyszyn", fc))
+    by_id = {b["id"]: b["poly"] for b in blds}
+    buf = Buffer()
+    assert townhall.build(buf, "knyszyn", blds, lambda e,n: np.zeros_like(e)+125, {})["status"] == "applied"
+    allowed = shapely.union_all(list(by_id.values())).buffer(1e-5)
+    for layer, mat, vertices, triangles, _ in buf.parts:
+        if mat == "roof_tiles_red":
+            for tri in triangles:
+                shape = MultiPoint(vertices[tri,:2]).convex_hull
+                assert allowed.covers(shape), (layer, shape.difference(allowed).area)
+        if mat == "glass":
+            # Floor windows (not dormers): all vertices sit within 6 cm of an actual source wall.
+            lower = vertices[vertices[:,2] < 132.0]
+            assert len(lower) > 0
+            assert max(min(p.exterior.distance(Point(x,y)) for p in by_id.values()) for x,y in lower[:,:2]) < .06
+        if mat == "plaster_cream":
+            # Only the portico columns have this material at ground level.
+            feet = vertices[np.isclose(vertices[:,2],125.0)]
+            assert len(feet) >= 16
+            wall = by_id[townhall.CULTURE].exterior
+            assert max(wall.distance(Point(x,y)) for x,y in feet[:,:2]) < .71
