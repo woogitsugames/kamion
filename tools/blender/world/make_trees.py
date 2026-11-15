@@ -134,6 +134,55 @@ def bend_path(p0, d, L, n, rng, wobble, gravity=0.0):
     return pts
 
 
+def willow_leaf_atlas(size=256, seed=22027):
+    """Original prototype atlas: thin twigs and lanceolate leaves, RGBA uint8.
+
+    Procedurally drawn from mathematical ellipses; no photo/scan input. The
+    shape and colour are WORKING_VALUE, not a botanical or albedo measurement.
+    Transparent margins reduce mip bleed and permit gaps between hanging twigs.
+    """
+    if int(size) < 64:
+        raise ValueError("willow atlas size must be at least 64")
+    size=int(size)
+    rng=np.random.default_rng(seed)
+    yy,xx=np.mgrid[0:size,0:size].astype(float)
+    x=(xx+.5)/size; y=(yy+.5)/size
+    alpha=np.zeros((size,size),float)
+    # Fine, slightly bowed central twig, with margins at all four edges.
+    stem_x=.5+.028*np.sin(y*math.pi*1.5)
+    stem=np.clip((.004-np.abs(x-stem_x))*size+.5,0.,1.)
+    alpha=np.maximum(alpha,stem*((y>.08)&(y<.92)))
+    for i in range(11):
+        cy=.14+i*.067+rng.uniform(-.008,.008)
+        for sign in (-1.,1.):
+            cx=.5+sign*rng.uniform(.075,.13)
+            slope=sign*rng.uniform(.32,.53)
+            dx=x-cx; dy=y-cy-slope*dx
+            # Narrow elongated foliage, anti-aliased by a one-pixel transition.
+            radius=np.sqrt((dx/rng.uniform(.065,.105))**2+(dy/rng.uniform(.010,.017))**2)
+            alpha=np.maximum(alpha,np.clip((1.-radius)*size*.025+.5,0.,1.))
+    rgb=np.empty((size,size,3),dtype=np.uint8)
+    # Slight deterministic, restrained within-card colour variation; WORKING_VALUE.
+    tint=np.clip(1.+rng.normal(0.,.025,(size,size,1)),.92,1.08)
+    rgb[:]=np.clip(np.array([79.,101.,57.])[None,None,:]*tint,0,255).astype(np.uint8)
+    rgba=np.dstack((rgb,np.rint(alpha*255).astype(np.uint8)))
+    return rgba
+
+
+def write_willow_leaf_atlas(path):
+    """Write only during an explicitly requested willow bake, never on import."""
+    pixels=willow_leaf_atlas()
+    h,w=pixels.shape[:2]
+    im=bpy.data.images.new("leaves_willow_generated",width=w,height=h,alpha=True)
+    try:
+        im.pixels.foreach_set((pixels.astype(np.float32)/255.).ravel())
+        im.filepath_raw=str(path)
+        im.file_format="PNG"
+        im.save()
+    finally:
+        bpy.data.images.remove(im)
+
+
 def willow_blueprint(height, variant=0):
     """Deterministic 0227 weeping-willow study; all proportions WORKING_VALUE.
 
@@ -146,26 +195,29 @@ def willow_blueprint(height, variant=0):
         raise ValueError("willow height must be positive and finite")
     rng = random.Random(220270 + int(variant))
     trunk = [np.array(p, float)*H for p in
-             ((0., 0., -.02), (.006, -.004, .24), (.015, .006, .68), (.004, .010, .92))]
+             ((0., 0., -.02), (.006, -.004, .24), (.015, .006, .68), (.004, .010, .82))]
     limbs, strands = [], []
-    for i in range(10):
-        angle = 2*math.pi*(i/10.) + rng.uniform(-.17, .17)
+    for i in range(12):
+        angle = 2*math.pi*(i/12.) + rng.uniform(-.17, .17)
         radial = np.array([math.cos(angle), math.sin(angle), 0.])
         side = np.array([-math.sin(angle), math.cos(angle), 0.])
-        root = trunk[1]*(1.-i/10.) + trunk[2]*(i/10.)
+        root = trunk[1]*(1.-i/12.) + trunk[2]*(i/12.)
         root = root + np.array([0., 0., H*rng.uniform(-.035,.045)])
-        span = H*rng.uniform(.25,.40)
-        tip = root + radial*span + np.array([0.,0.,H*rng.uniform(.20,.30)])
-        bend = (root+tip)*.5 + side*(H*rng.uniform(-.025,.025)) + np.array([0.,0.,H*.065])
+        span = H*rng.uniform(.35,.48)
+        tip = root + radial*span + np.array([0.,0.,H*rng.uniform(.24,.36)])
+        bend = (root+tip)*.5 + side*(H*rng.uniform(-.025,.025)) + np.array([0.,0.,H*.08])
         limbs.append((root,bend,tip))
-        for j in range(6):
-            f = .28 + .68*(j+rng.uniform(.15,.85))/6.
-            p = bend*(1.-f)+tip*f + side*(H*rng.uniform(-.035,.035))
-            drop = H*rng.uniform(.22,.46)
+        for j in range(10):
+            # Cover the whole arch of the limb; clustered endpoints alone make
+            # disconnected upright columns rather than a broad drooping crown.
+            f = .06 + .92*(j+rng.uniform(.15,.85))/10.
+            p = root*(1.-f)**2+2.*bend*f*(1.-f)+tip*f*f
+            p = p + side*(H*rng.uniform(-.025,.025))
+            drop = H*rng.uniform(.25,.52)
             end = p + radial*(H*rng.uniform(.025,.075)) + side*(H*rng.uniform(-.025,.025))
             end[2] = max(H*.12,p[2]-drop)
             middle = (p+end)*.5 + radial*(H*rng.uniform(.01,.04))
-            width = H*rng.uniform(.055,.10)
+            width = H*rng.uniform(.045,.085)
             strands.append((p,middle,end,side,radial,width))
     return trunk, limbs, strands
 
@@ -173,9 +225,9 @@ def willow_blueprint(height, variant=0):
 def grow_willow(g, height, variant, lod):
     """Experimental weeping silhouette using only existing, licensed project assets.
 
-    Uses linden bark and birch leaf cards as temporary, visibly non-botanical
-    stand-ins. No owner photo pixels are used. Proportions, leaf shape and total
-    cost are WORKING_VALUE and must pass visual / budget QA before game use.
+    Uses existing project linden bark as a temporary stand-in and an original
+    procedural twig atlas. No owner photo pixels are used. Proportions, leaf
+    shape and total cost are WORKING_VALUE and need visual / budget QA.
     """
     trunk, limbs, strands = willow_blueprint(height, variant)
     V = lambda p: Vector(tuple(float(x) for x in p))
@@ -184,7 +236,7 @@ def grow_willow(g, height, variant, lod):
         g.tube("bark_linden", [V(root),V(bend),V(tip)], [.105,.065,.018], seg=5 if lod == 0 else 3)
     for index,(top,middle,end,side,radial,width) in enumerate(strands):
         # LOD1 selects the same strand positions; no unrelated random redraw.
-        if lod > 0 and index % 3 != 0:
+        if lod > 0 and index % 2 != 0:
             continue
         for a,b in ((top,middle),(middle,end)):
             # Two crossed, vertically hanging cards; gaps between strands remain.
@@ -195,7 +247,7 @@ def grow_willow(g, height, variant, lod):
                 if norm < 1e-8:
                     continue
                 normal=normal/norm
-                g.quad("leaves_birch", V(a-delta),V(a+delta),V(b+delta),V(b-delta),
+                g.quad("leaves_willow", V(a-delta),V(a+delta),V(b+delta),V(b-delta),
                        ((0,1),(1,1),(1,0),(0,0)),V(normal))
     return g
 
@@ -1158,6 +1210,10 @@ def main():
     # The full opt-in export includes all existing species plus tree_willow_0 in
     # trees.glb / trees_lod2.glb / trees_meta.json, with the normal impostor bake.
     experimental = ("willow",) if "--include-willow" in argv or quick == "tree_willow_0" else ()
+    if experimental:
+        # This writes only the requested output directory and must not run during
+        # module import, on normal species-only exports, or while r2 is active.
+        write_willow_leaf_atlas(VEG / "leaves_willow.png")
     for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES + experimental:
         for v in range(NVAR.get(sp, 3)):
             name = f"tree_{sp}_{v}"
@@ -1180,7 +1236,7 @@ def main():
             png = VEG / f"impostor_{name}.png"
             prior = cached.get("trees", {}).get(name)
             res = tuple(int(r * IMP_SCALE.get(sp, 1.0)) for r in IMP_RES)
-            if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists() and sp not in rebake:
+            if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists() and sp not in rebake and sp != "willow":
                 half_w = max(math.hypot(v[0], v[1]) for v in o0.bound_box)
                 S = max(H * 1.05, 2.0 * half_w * 1.04 * IMP_RES[1] / IMP_RES[0])
             else:
