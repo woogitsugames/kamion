@@ -27,11 +27,7 @@ namespace Game.World.Import
     /// </summary>
     public static class WorldSceneBuilder
     {
-        public static string SceneNameFor(string region, string tier = "Low")
-        {
-            string b = region == "bialystok-industrial-c" ? "WorldC" : "World_" + region;
-            return tier == "High" ? b + "_High" : b;
-        }
+        public static string SceneNameFor(string region, string tier = "Low") => RegionScenes.SceneNameFor(region, tier);   // one rule (ADR 0229)
 
         /// <summary>Builds the scene of one content tier: "Low" (Low + Medium quality, WorldC) or "High" (WorldC_High).</summary>
         public static void Build(RegionImporter.Result r, string tier)
@@ -173,7 +169,7 @@ namespace Game.World.Import
             // The tractor at the gate (truck on the imported ground, contact shadows) and the cab view down the access road.
             Vector3 side = Vector3.Cross(Vector3.up, spawnFwd);
             Qa(qa, "truck-at-gate", spawnPos + spawnFwd * 11f + side * 7f + Vector3.up * 2.6f, spawnPos + Vector3.up * 1.6f - spawnFwd * 3f, 50f,
-                "Tractor + trailer at the Kwadrat Park spawn: wheels on the imported collision, shadows, scale against the road.");
+                "Tractor + trailer at the depot gate spawn: wheels on the imported collision, shadows, scale against the road.");
             Vector3 eye = spawnPos + spawn.rotation * dims.EyePointVehicle;
             Qa(qa, "cab-gate", eye, eye + spawnFwd * 30f - Vector3.up * 2.2f, 55f, "Driver eye at the spawn, looking along the depot access road.");
             AddEdgeCameras(qa);
@@ -287,19 +283,21 @@ namespace Game.World.Import
         // Layers per LOD (ADR 0012). Distances: manifest switch distances (camera to near chunk edge) + 0.7 chunk.
         // water (ADR 0210): the sheet stays on every LOD (one cheap opaque mesh; a river is visible from far)
         // banks (ADR 0213): reed belt ribbons of the water stage - LOD0 / LOD1 like the plots, no shadows
+        // rail_* (ADR 0217): opt-in rail stage - LOD0 full track on High (rail_lod0) / LoD1 on Low, flat ballast strip (rail_lod2)
+        // from LOD2 on, crossing panels up to LOD2; no shadows. Regions without the stage have no such nodes (skipped).
         static readonly string[][] k_LowLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks" },
-            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water" },
-            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod1", "rail_crossing" },
+            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod1", "rail_crossing" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water", "rail_lod2", "rail_crossing" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water", "rail_lod2" },
         };
         static readonly string[][] k_HighLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks" },
-            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks" },
-            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water" },
-            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod0", "rail_crossing" },
+            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots", "water", "banks", "rail_lod1", "rail_crossing" },
+            new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires", "water", "rail_lod2", "rail_crossing" },
+            new[] { "terrain_lod3", "bridge", "buildings_lod1", "water", "rail_lod2" },
         };
         static readonly HashSet<string> k_ShadowCasters = new HashSet<string> { "bridge", "buildings", "buildings_lod1", "furniture", "plots" };
         // plots (ADR 0124): kit geometry of the house plots (fences, gates, plants) - LOD0 / LOD1, shadow caster; with

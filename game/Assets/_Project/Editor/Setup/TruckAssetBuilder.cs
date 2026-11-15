@@ -1297,7 +1297,7 @@ namespace Game.Editor.Setup
             // r10 (ADR 0083): the views the player really has of the exterior - the chase camera (CameraRig with a trailer:
             // 26 m behind, 7.5 m up, 50 deg), the tractor side (steps, tank, skirt, wheels, cab back / trailer gap), the
             // tractor from behind the cab on the driver side, the trailer side (curtain, rail, side guards, tridem) and the
-            // passenger side 3/4 (exhaust, battery box, AdBlue).
+            // passenger side 3/4 (exhaust, battery box, AUS 32 tank).
             void QL(string id, Vector3 p, Vector3 l, float fov, string note) => Q(id, p, Quaternion.LookRotation(l - p, Vector3.up), fov, note);
             QL("chase", new Vector3(0f, 7.5f, -26f), new Vector3(0f, 2f, 3f), 50f, "r10: chase camera framing with the trailer (rear doors, lamps, roof, cab over the trailer).");
             QL("truck-side", new Vector3(-9.5f, 1.7f, 1.9f), new Vector3(0f, 1.6f, 1.9f), 42f, "r10: tractor driver side, square on (door, steps, arch, tank, skirt, rear wheels, gap to the trailer).");

@@ -1,0 +1,865 @@
+{
+ "sample_rate": 48000,
+ "banks": {
+  "A": "main",
+  "B": "0232"
+ },
+ "scenes": {
+  "1_ruszanie_40t": {
+   "title": "Ruszanie z ładunkiem 40 t pod górę 3 %, pełny gaz przez biegi, odpuszczenie gazu, częściowy gaz",
+   "scenario": "a0232_launch_laden@laden40",
+   "window_s": [
+    0.0,
+    27.0
+   ],
+   "files": {
+    "1_ruszanie_40t_ext_A.flac": {
+     "lufs": -16.943928841493587,
+     "peak_dbfs": -1.652683639105494,
+     "scene_gain_db": 3.3114674792672543,
+     "click_ratio": 1.780078780990648,
+     "seconds": 27.0
+    },
+    "1_ruszanie_40t_ext_B.flac": {
+     "lufs": -17.008484901812086,
+     "peak_dbfs": -0.9999999999999997,
+     "scene_gain_db": 3.3114674792672543,
+     "click_ratio": 1.4949775902302755,
+     "seconds": 27.0
+    },
+    "1_ruszanie_40t_cab_A.flac": {
+     "lufs": -14.85948708556791,
+     "peak_dbfs": -1.4081339425767507,
+     "scene_gain_db": 4.038509541661485,
+     "click_ratio": 1.4658706832428547,
+     "seconds": 27.0
+    },
+    "1_ruszanie_40t_cab_B.flac": {
+     "lufs": -14.917376579091714,
+     "peak_dbfs": -0.9999999999999997,
+     "scene_gain_db": 4.038509541661485,
+     "click_ratio": 1.413087223999062,
+     "seconds": 27.0
+    }
+   },
+   "markers": [
+    [
+     1.51,
+     "pedał gazu 0 % → 100 %"
+    ],
+    [
+     5.69,
+     "AMT: początek zmiany biegu z 4 (1854 obr/min)"
+    ],
+    [
+     6.59,
+     "AMT: bieg 5 włączony (1436 obr/min)"
+    ],
+    [
+     8.37,
+     "AMT: początek zmiany biegu z 5 (1853 obr/min)"
+    ],
+    [
+     9.27,
+     "AMT: bieg 6 włączony (1419 obr/min)"
+    ],
+    [
+     12.1,
+     "AMT: początek zmiany biegu z 6 (1810 obr/min)"
+    ],
+    [
+     13.0,
+     "AMT: bieg 7 włączony (1427 obr/min)"
+    ],
+    [
+     18.48,
+     "AMT: początek zmiany biegu z 7 (1851 obr/min)"
+    ],
+    [
+     19.38,
+     "AMT: bieg 8 włączony (1406 obr/min)"
+    ],
+    [
+     21.01,
+     "pedał gazu 100 % → 0 %"
+    ],
+    [
+     21.01,
+     "AMT: początek zmiany biegu z 8 (1441 obr/min)"
+    ],
+    [
+     21.91,
+     "AMT: bieg 9 włączony (1074 obr/min)"
+    ],
+    [
+     24.01,
+     "pedał gazu 0 % → 50 %"
+    ]
+   ],
+   "events_ext": [
+    [
+     1.6166666666666667,
+     "zwolnienie hamulca roboczego (szczyt 1.00)"
+    ],
+    [
+     5.816666666666666,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.93"
+    ],
+    [
+     5.883333333333333,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     6.233333333333333,
+     "AMT: włączenie biegu 5"
+    ],
+    [
+     6.583333333333333,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     8.5,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.93"
+    ],
+    [
+     8.566666666666666,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     8.916666666666666,
+     "AMT: włączenie biegu 6"
+    ],
+    [
+     9.266666666666666,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     12.233333333333333,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.93"
+    ],
+    [
+     12.3,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     12.65,
+     "AMT: włączenie biegu 7"
+    ],
+    [
+     13.0,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     18.616666666666667,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.92"
+    ],
+    [
+     18.666666666666668,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     19.016666666666666,
+     "AMT: włączenie biegu 8"
+    ],
+    [
+     19.366666666666667,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     21.0,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.99"
+    ],
+    [
+     21.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     21.55,
+     "AMT: włączenie biegu 9"
+    ],
+    [
+     21.9,
+     "AMT: sprzęgło zamknięte"
+    ]
+   ],
+   "events_cab": [
+    [
+     1.6166666666666667,
+     "zwolnienie hamulca roboczego (szczyt 1.00)"
+    ],
+    [
+     5.816666666666666,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.93"
+    ],
+    [
+     5.883333333333333,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     6.233333333333333,
+     "AMT: włączenie biegu 5"
+    ],
+    [
+     6.583333333333333,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     8.5,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.93"
+    ],
+    [
+     8.566666666666666,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     8.916666666666666,
+     "AMT: włączenie biegu 6"
+    ],
+    [
+     9.266666666666666,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     12.233333333333333,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.93"
+    ],
+    [
+     12.3,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     12.65,
+     "AMT: włączenie biegu 7"
+    ],
+    [
+     13.0,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     18.616666666666667,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.92"
+    ],
+    [
+     18.666666666666668,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     19.016666666666666,
+     "AMT: włączenie biegu 8"
+    ],
+    [
+     19.366666666666667,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     21.0,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.99"
+    ],
+    [
+     21.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     21.55,
+     "AMT: włączenie biegu 9"
+    ],
+    [
+     21.9,
+     "AMT: sprzęgło zamknięte"
+    ]
+   ]
+  },
+  "2_biegi_pusty": {
+   "title": "Przyspieszanie pustym zestawem przez biegi: gaz 55 %, potem 100 %, odpuszczenie, gaz 70 %",
+   "scenario": "a0232_gears@empty",
+   "window_s": [
+    0.0,
+    25.0
+   ],
+   "files": {
+    "2_biegi_pusty_ext_A.flac": {
+     "lufs": -19.16327530190001,
+     "peak_dbfs": -2.705475466499698,
+     "scene_gain_db": 3.119026431984433,
+     "click_ratio": 1.782331974919776,
+     "seconds": 25.0
+    },
+    "2_biegi_pusty_ext_B.flac": {
+     "lufs": -19.287497467186537,
+     "peak_dbfs": -0.9999999999999997,
+     "scene_gain_db": 3.119026431984433,
+     "click_ratio": 1.516237913037362,
+     "seconds": 25.0
+    },
+    "2_biegi_pusty_cab_A.flac": {
+     "lufs": -16.10383102563197,
+     "peak_dbfs": -1.3808689863796793,
+     "scene_gain_db": 4.934665373936732,
+     "click_ratio": 1.595728910758475,
+     "seconds": 25.0
+    },
+    "2_biegi_pusty_cab_B.flac": {
+     "lufs": -16.172725565983608,
+     "peak_dbfs": -0.9999999999999997,
+     "scene_gain_db": 4.934665373936732,
+     "click_ratio": 1.544488267143429,
+     "seconds": 25.0
+    }
+   },
+   "markers": [
+    [
+     1.01,
+     "pedał gazu 0 % → 55 %"
+    ],
+    [
+     3.29,
+     "AMT: początek zmiany biegu z 4 (1517 obr/min)"
+    ],
+    [
+     4.19,
+     "AMT: bieg 5 włączony (1330 obr/min)"
+    ],
+    [
+     4.61,
+     "AMT: początek zmiany biegu z 5 (1489 obr/min)"
+    ],
+    [
+     5.51,
+     "AMT: bieg 6 włączony (1254 obr/min)"
+    ],
+    [
+     6.09,
+     "AMT: początek zmiany biegu z 6 (1418 obr/min)"
+    ],
+    [
+     6.99,
+     "AMT: bieg 7 włączony (1196 obr/min)"
+    ],
+    [
+     8.31,
+     "AMT: początek zmiany biegu z 7 (1459 obr/min)"
+    ],
+    [
+     9.21,
+     "AMT: bieg 8 włączony (1160 obr/min)"
+    ],
+    [
+     10.01,
+     "pedał gazu 55 % → 100 %"
+    ],
+    [
+     11.77,
+     "AMT: początek zmiany biegu z 8 (1681 obr/min)"
+    ],
+    [
+     12.67,
+     "AMT: bieg 9 włączony (1302 obr/min)"
+    ],
+    [
+     15.78,
+     "AMT: początek zmiany biegu z 9 (1712 obr/min)"
+    ],
+    [
+     16.68,
+     "AMT: bieg 10 włączony (1325 obr/min)"
+    ],
+    [
+     18.01,
+     "pedał gazu 100 % → 0 %"
+    ],
+    [
+     18.01,
+     "AMT: początek zmiany biegu z 10 (1411 obr/min)"
+    ],
+    [
+     18.91,
+     "AMT: bieg 11 włączony (1060 obr/min)"
+    ],
+    [
+     20.51,
+     "pedał gazu 0 % → 70 %"
+    ]
+   ],
+   "events_ext": [
+    [
+     1.0,
+     "zwolnienie hamulca roboczego (szczyt 1.00)"
+    ],
+    [
+     3.4833333333333334,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     3.8333333333333335,
+     "AMT: włączenie biegu 5"
+    ],
+    [
+     4.183333333333334,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     4.8,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     5.15,
+     "AMT: włączenie biegu 6"
+    ],
+    [
+     5.5,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     6.283333333333333,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     6.633333333333333,
+     "AMT: włączenie biegu 7"
+    ],
+    [
+     6.983333333333333,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     8.5,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     8.85,
+     "AMT: włączenie biegu 8"
+    ],
+    [
+     9.2,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     11.9,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.93"
+    ],
+    [
+     11.966666666666667,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     12.316666666666666,
+     "AMT: włączenie biegu 9"
+    ],
+    [
+     12.666666666666666,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     15.916666666666666,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.92"
+    ],
+    [
+     15.966666666666667,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     16.316666666666666,
+     "AMT: włączenie biegu 10"
+    ],
+    [
+     16.666666666666668,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     18.0,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.98"
+    ],
+    [
+     18.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     18.55,
+     "AMT: włączenie biegu 11"
+    ],
+    [
+     18.9,
+     "AMT: sprzęgło zamknięte"
+    ]
+   ],
+   "events_cab": [
+    [
+     1.0,
+     "zwolnienie hamulca roboczego (szczyt 1.00)"
+    ],
+    [
+     3.4833333333333334,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     3.8333333333333335,
+     "AMT: włączenie biegu 5"
+    ],
+    [
+     4.183333333333334,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     4.8,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     5.15,
+     "AMT: włączenie biegu 6"
+    ],
+    [
+     5.5,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     6.283333333333333,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     6.633333333333333,
+     "AMT: włączenie biegu 7"
+    ],
+    [
+     6.983333333333333,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     8.5,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     8.85,
+     "AMT: włączenie biegu 8"
+    ],
+    [
+     9.2,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     11.9,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.93"
+    ],
+    [
+     11.966666666666667,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     12.316666666666666,
+     "AMT: włączenie biegu 9"
+    ],
+    [
+     12.666666666666666,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     15.916666666666666,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.92"
+    ],
+    [
+     15.966666666666667,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     16.316666666666666,
+     "AMT: włączenie biegu 10"
+    ],
+    [
+     16.666666666666668,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     18.0,
+     "turbo: odpuszczenie gazu przy doładowaniu 0.98"
+    ],
+    [
+     18.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     18.55,
+     "AMT: włączenie biegu 11"
+    ],
+    [
+     18.9,
+     "AMT: sprzęgło zamknięte"
+    ]
+   ]
+  },
+  "3_zjazd_hamulce_dlugotrwale": {
+   "title": "Zjazd 7 % z 75 km/h, 40 t: wybieg, dźwignia stopień 2, maksimum, zwolnienie, gaz 60 %",
+   "scenario": "a0232_downhill@laden40",
+   "window_s": [
+    0.0,
+    26.0
+   ],
+   "files": {
+    "3_zjazd_hamulce_dlugotrwale_ext_A.flac": {
+     "lufs": -17.041304338394887,
+     "peak_dbfs": -0.9999999999999997,
+     "scene_gain_db": 2.6527755687136274,
+     "click_ratio": 1.5873392147290908,
+     "seconds": 26.0
+    },
+    "3_zjazd_hamulce_dlugotrwale_ext_B.flac": {
+     "lufs": -17.413262171452484,
+     "peak_dbfs": -1.377315388205713,
+     "scene_gain_db": 2.6527755687136274,
+     "click_ratio": 1.5751959109994143,
+     "seconds": 26.0
+    },
+    "3_zjazd_hamulce_dlugotrwale_cab_A.flac": {
+     "lufs": -14.461562568039385,
+     "peak_dbfs": -0.9999999999999997,
+     "scene_gain_db": 5.997744392179777,
+     "click_ratio": 1.2422877398041963,
+     "seconds": 26.0
+    },
+    "3_zjazd_hamulce_dlugotrwale_cab_B.flac": {
+     "lufs": -14.886058048369721,
+     "peak_dbfs": -1.3884930458540974,
+     "scene_gain_db": 5.997744392179777,
+     "click_ratio": 1.245061340184492,
+     "seconds": 26.0
+    }
+   },
+   "markers": [
+    [
+     0.91,
+     "AMT: bieg 12 włączony (1017 obr/min)"
+    ],
+    [
+     3.01,
+     "dźwignia hamulców długotrwałych 0 → 2"
+    ],
+    [
+     3.01,
+     "AMT: początek zmiany biegu z 12 (1073 obr/min)"
+    ],
+    [
+     3.96,
+     "AMT: bieg 10 włączony (1836 obr/min)"
+    ],
+    [
+     9.01,
+     "dźwignia hamulców długotrwałych 2 → 5"
+    ],
+    [
+     19.01,
+     "dźwignia hamulców długotrwałych 5 → 0"
+    ],
+    [
+     19.01,
+     "AMT: początek zmiany biegu z 10 (1625 obr/min)"
+    ],
+    [
+     19.97,
+     "AMT: bieg 12 włączony (1009 obr/min)"
+    ],
+    [
+     21.51,
+     "pedał gazu 0 % → 60 %"
+    ]
+   ],
+   "events_ext": [
+    [
+     0.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     0.55,
+     "AMT: włączenie biegu 12"
+    ],
+    [
+     0.9,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     3.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     3.6,
+     "AMT: włączenie biegu 10"
+    ],
+    [
+     3.9499999999999997,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     4.0,
+     "hamulec silnikowy: włączenie"
+    ],
+    [
+     19.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     19.616666666666667,
+     "AMT: włączenie biegu 12"
+    ],
+    [
+     19.966666666666665,
+     "AMT: sprzęgło zamknięte"
+    ]
+   ],
+   "events_cab": [
+    [
+     0.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     0.55,
+     "AMT: włączenie biegu 12"
+    ],
+    [
+     0.9,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     3.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     3.6,
+     "AMT: włączenie biegu 10"
+    ],
+    [
+     3.9499999999999997,
+     "AMT: sprzęgło zamknięte"
+    ],
+    [
+     4.0,
+     "hamulec silnikowy: włączenie"
+    ],
+    [
+     19.2,
+     "AMT: wysprzęglenie, bieg neutralny"
+    ],
+    [
+     19.616666666666667,
+     "AMT: włączenie biegu 12"
+    ],
+    [
+     19.966666666666665,
+     "AMT: sprzęgło zamknięte"
+    ]
+   ]
+  },
+  "4_postoj_pneumatyka": {
+   "title": "Postój 40 t: sprężarka na podwyższonych obrotach, odcięcie regulatora (osuszacz), zwolnienie hamulca postojowego, ruszenie, zatrzymanie, zaciągnięcie postojowego",
+   "scenario": "a0232_standstill_air@laden40",
+   "window_s": [
+    32.0,
+    60.0
+   ],
+   "files": {
+    "4_postoj_pneumatyka_ext_A.flac": {
+     "lufs": -20.661051989031385,
+     "peak_dbfs": -0.9999999999999997,
+     "scene_gain_db": 4.957162239752567,
+     "click_ratio": 1.7133717076808146,
+     "seconds": 28.0
+    },
+    "4_postoj_pneumatyka_ext_B.flac": {
+     "lufs": -21.611955480549568,
+     "peak_dbfs": -2.0949652795843527,
+     "scene_gain_db": 4.957162239752567,
+     "click_ratio": 1.729120475092731,
+     "seconds": 28.0
+    },
+    "4_postoj_pneumatyka_cab_A.flac": {
+     "lufs": -15.92474274973639,
+     "peak_dbfs": -0.9999999999999997,
+     "scene_gain_db": 9.68477252847945,
+     "click_ratio": 1.428197717647559,
+     "seconds": 28.0
+    },
+    "4_postoj_pneumatyka_cab_B.flac": {
+     "lufs": -17.082706343625354,
+     "peak_dbfs": -1.1596554958435334,
+     "scene_gain_db": 9.68477252847945,
+     "click_ratio": 1.4933316455644567,
+     "seconds": 28.0
+    }
+   },
+   "markers": [
+    [
+     6.049999999999997,
+     "sprężarka: odcięcie (12.5 bar)"
+    ],
+    [
+     8.009999999999998,
+     "pedał gazu 14 % → 0 %"
+    ],
+    [
+     14.009999999999998,
+     "pedał gazu 0 % → 45 %"
+    ],
+    [
+     19.009999999999998,
+     "pedał gazu 45 % → 0 %"
+    ]
+   ],
+   "events_ext": [
+    [
+     6.05,
+     "odcięcie regulatora przy 12.5 bar: wydmuch osuszacza"
+    ],
+    [
+     12.516666666666666,
+     "hamulec postojowy: zwolnienie"
+    ],
+    [
+     14.016666666666666,
+     "zwolnienie hamulca roboczego (szczyt 1.00)"
+    ],
+    [
+     19.05,
+     "hamulec silnikowy: włączenie"
+    ],
+    [
+     19.683333333333334,
+     "hamulec silnikowy: wyłączenie"
+    ],
+    [
+     24.016666666666666,
+     "hamulec postojowy: zaciągnięcie"
+    ],
+    [
+     25.016666666666666,
+     "zwolnienie hamulca roboczego (szczyt 0.41)"
+    ]
+   ],
+   "events_cab": [
+    [
+     6.05,
+     "odcięcie regulatora przy 12.5 bar: wydmuch osuszacza"
+    ],
+    [
+     12.516666666666666,
+     "hamulec postojowy: zwolnienie"
+    ],
+    [
+     14.016666666666666,
+     "zwolnienie hamulca roboczego (szczyt 1.00)"
+    ],
+    [
+     19.05,
+     "hamulec silnikowy: włączenie"
+    ],
+    [
+     19.683333333333334,
+     "hamulec silnikowy: wyłączenie"
+    ],
+    [
+     24.016666666666666,
+     "hamulec postojowy: zaciągnięcie"
+    ],
+    [
+     25.016666666666666,
+     "zwolnienie hamulca roboczego (szczyt 0.41)"
+    ]
+   ]
+  }
+ }
+}
