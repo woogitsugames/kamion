@@ -153,5 +153,43 @@ namespace Game.Tests
             Assert.IsNotNull(boot.Menu, "start menu missing after returning");
             Assert.IsNull(UnityEngine.Object.FindAnyObjectByType<DrivingLabBootstrap>());
         }
+
+        /// <summary>ADR 0229: the region picker starts on the first region in the APK, greys out a missing one (start
+        /// button disabled, no action), starts an available one and remembers it.</summary>
+        [UnityTest]
+        public IEnumerator Menu_RegionPicker_GreysMissing_StartsAvailable_RemembersPick()
+        {
+            PlayerPrefs.DeleteKey(BootMenu.PrefRegion);
+            string started = null;
+            var regions = new List<BootRegionChoice>
+            {
+                new BootRegionChoice("missing-a", "Brak A", "brak w tym APK", false, () => started = "missing-a"),
+                new BootRegionChoice("ok-b", "Region B", "trasa 1,0 km", true, () => started = "ok-b"),
+                new BootRegionChoice("ok-c", "Region C", "trasa 2,0 km", true, () => started = "ok-c"),
+            };
+            var menu = BootMenu.Create(null, StartMenuOptions.Load(), new List<(string, Action)> { ("A", () => { }) }, null, null, regions);
+            yield return null;
+            Assert.AreEqual(1, menu.RegionIndex, "first region present in the APK");
+            Click(menu.gameObject, BootMenu.RegionPrevName);
+            Assert.AreEqual(0, menu.RegionIndex);
+            Button start = null;
+            foreach (var b in menu.GetComponentsInChildren<Button>(true)) if (b.name == BootMenu.RegionStartName) start = b;
+            Assert.IsNotNull(start);
+            Assert.IsFalse(start.interactable, "missing region: start disabled");
+            start.onClick.Invoke();
+            Assert.IsNull(started, "missing region never starts");
+            Click(menu.gameObject, BootMenu.RegionPrevName);   // wraps to the last one
+            Assert.AreEqual(2, menu.RegionIndex);
+            Assert.IsTrue(start.interactable);
+            LogAssert.Expect(LogType.Log, new Regex(@"\[CONTROLS\] menu-start scene=region ok-c"));
+            Click(menu.gameObject, BootMenu.RegionStartName);
+            Assert.AreEqual("ok-c", started);
+            Assert.AreEqual("ok-c", PlayerPrefs.GetString(BootMenu.PrefRegion));
+            Assert.AreEqual(2, BootMenu.InitialRegionIndex(regions, "ok-c"), "stored pick comes back");
+            Assert.AreEqual(1, BootMenu.InitialRegionIndex(regions, "missing-a"), "stored pick missing from the APK: first available");
+            Assert.AreEqual(-1, BootMenu.InitialRegionIndex(new List<BootRegionChoice> { regions[0] }, ""), "nothing in the APK: no picker");
+            PlayerPrefs.DeleteKey(BootMenu.PrefRegion);
+            UnityEngine.Object.Destroy(menu.gameObject);
+        }
     }
 }
