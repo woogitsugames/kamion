@@ -1,3 +1,7 @@
+# STATUS — D39 roofs-noise-s23 (ADR 0238 dopisek D39)
+- Krok 1: `roofs.stable_rect` (remis MRR → kanoniczny prostokąt), `_frame` remis boków, `_angle` mod π (świetliki), kopia bram w `build` (BC59), `roof_vents` 1 mm margines; skan 1e-12…1e-6 m: w toku.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis/test_typology_0238.py -q` + przeliczenie baseline (procedura FIX-2026-11-16).
+
 # STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
 - Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
 - Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.

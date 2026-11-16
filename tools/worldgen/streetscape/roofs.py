@@ -74,6 +74,50 @@ PROFILE_DECIMALS = 6
 SLIVER_M = 5e-3
 
 
+# ADR 0238 (dopisek D39): two hull edges whose bounding rectangles differ in area by less than this are a tie of the
+# minimum rotated rectangle, m^2. shapely picks the smaller area, so a footprint with two near-equal candidates (Dojlidy
+# house `…A8BC`: 67.6097 m^2 at 4.58 deg and at 4.20 deg) flipped its roof frame under a 1e-9 m translation. Within the
+# tie the rectangle whose axis angle modulo pi/2 is smallest wins - a choice float noise cannot move.
+RECT_TIE_M2 = 1e-3
+RECT_TIE_RAD = 1e-6
+
+
+def stable_rect(poly):
+    """poly.minimum_rotated_rectangle, made independent of floating-point noise (ADR 0238 D39): when another hull
+    direction gives a rectangle within RECT_TIE_M2 of the minimum area, the tied direction with the smallest angle
+    modulo pi/2 is used (corners from the min-min corner, counter-clockwise). Without a tie: shapely's rectangle as is."""
+    r = poly.minimum_rotated_rectangle
+    hull = poly.convex_hull
+    if hull.geom_type != "Polygon":
+        return r
+    P = np.asarray(hull.exterior.coords)
+    D = np.diff(P, axis=0)
+    L = np.hypot(D[:, 0], D[:, 1])
+    D, L = D[L > 1e-9], L[L > 1e-9]
+    if not len(L):
+        return r
+    U = D / L[:, None]
+    a = (P[:, None, :] * U[None, :, :]).sum(2)                       # along each edge
+    b = P[:, 0, None] * -U[None, :, 1] + P[:, 1, None] * U[None, :, 0]  # across
+    area = (a.max(0) - a.min(0)) * (b.max(0) - b.min(0))
+    ang = np.mod(np.arctan2(U[:, 1], U[:, 0]), math.pi / 2)
+    ang = np.where(ang > math.pi / 2 - RECT_TIE_RAD, ang - math.pi / 2, ang)   # an axis 1 ulp off east stays east
+    tied = np.flatnonzero(area <= area.min() + RECT_TIE_M2)
+    if len(tied) < 2:
+        return r
+    # Also a tie of parallel / perpendicular edges (one rectangle): shapely starts its ring at the corner of the edge it
+    # picked, so the long axis of `_frame` / the roof vents flipped sign (Dojlidy `rosti-west-wing`, 168 / 192 vent
+    # triangles under a 1e-12 m translation). The canonical rectangle fixes the start corner too.
+    t = ang[tied]
+    k = int(tied[np.argmin(t)])
+    th = float(ang[k])
+    eu = np.array([math.cos(th), math.sin(th)])
+    ev = np.array([-eu[1], eu[0]])
+    pa, pb = P @ eu, P @ ev
+    a0, a1, b0, b1 = pa.min(), pa.max(), pb.min(), pb.max()
+    return Polygon([eu * x + ev * y for x, y in ((a0, b0), (a1, b0), (a1, b1), (a0, b1))])
+
+
 def _qprof(prof):
     return [(round(float(u), PROFILE_DECIMALS), round(float(z), PROFILE_DECIMALS)) for u, z in prof]
 
@@ -656,12 +700,18 @@ def _multi_roof(c, eu, ev, rects, s, zeave, source):
 
 
 def _frame(poly):
-    """(centre, long axis, half long, half short) of the minimum rotated rectangle."""
-    r = np.asarray(poly.minimum_rotated_rectangle.exterior.coords)[:4]
+    """(centre, long axis, half long, half short) of the minimum rotated rectangle (stable_rect). A near-square one
+    (sides within PLAN_TOL_M) takes the side nearer to east-west as the long axis (ADR 0238 D39), not the one float
+    noise made longer."""
+    r = np.asarray(stable_rect(poly).exterior.coords)[:4]
     e0, e1 = r[1] - r[0], r[2] - r[1]
     l0, l1 = float(np.hypot(*e0)), float(np.hypot(*e1))
     c = r.mean(0)
-    if l0 >= l1:
+    if abs(l0 - l1) <= PLAN_TOL_M:
+        tie = abs(e0[0]) >= abs(e1[0])
+    else:
+        tie = l0 >= l1
+    if tie:
         return c, e0 / max(l0, 1e-6), l0 / 2, l1 / 2
     return c, e1 / max(l1, 1e-6), l1 / 2, l0 / 2
 
@@ -691,7 +741,7 @@ def plan(poly, props, h, zref, key_float, others=(), wooden=False, shape=None, m
         if shape == "flat":
             return None
         rt = {"gable": "1030", "hip": "1040", "mono": "1010"}[shape]
-    rect = poly.minimum_rotated_rectangle
+    rect = stable_rect(poly)
     if rt == "1000" or poly.interiors or poly.area > max_area:
         return None
     c, eu, hu, hv = _frame(poly)
