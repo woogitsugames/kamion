@@ -202,6 +202,12 @@ namespace Game.UI
             float top = 400f;   // block top (centre-anchored, y up)
 
             Label(m_Safe, "Title", "TRUCK SIM PL — TEST WRAŻEŃ", 28, TextAnchor.LowerLeft, k_Amber, new Vector2(left, top + 52f), new Vector2(total, 44f));
+            // ADR 0277 notice (hidden until ShowNotice): one line between the title (top + 52) and the column headers (top + 28),
+            // shrinks to fit the block width instead of running into them.
+            m_Notice = Label(m_Safe, NoticeName, "", 20, TextAnchor.MiddleLeft, k_Amber, new Vector2(left, top + 26f), new Vector2(total, 26f));
+            m_Notice.horizontalOverflow = HorizontalWrapMode.Wrap; m_Notice.verticalOverflow = VerticalWrapMode.Truncate;
+            m_Notice.resizeTextForBestFit = true; m_Notice.resizeTextMinSize = 14; m_Notice.resizeTextMaxSize = 20;
+            m_Notice.gameObject.SetActive(false);
 
             // ---- left: starts
             Label(m_Safe, "HeaderStart", "WYBIERZ START", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(left, top - 8f), new Vector2(ColW, 36f));
@@ -262,6 +268,24 @@ namespace Game.UI
         }
 
         void OnDestroy() => UiFocus.Pop(this, false);
+
+        /// <summary>Name of the notice line (tests).</summary>
+        public const string NoticeName = "Notice";
+        Text m_Notice;
+
+        /// <summary>Notice text shown under the title ("" = none; tests).</summary>
+        public string NoticeText => m_Notice != null ? m_Notice.text : "";
+
+        /// <summary>
+        /// One amber line under the title, e.g. why the last start failed (ADR 0277). Plain text, no dialog: the menu stays
+        /// usable and the notice disappears with the next start. Empty / null hides it.
+        /// </summary>
+        public void ShowNotice(string text)
+        {
+            if (m_Notice == null) return;
+            m_Notice.text = text ?? "";
+            m_Notice.gameObject.SetActive(!string.IsNullOrEmpty(text));
+        }
 
         /// <summary>Re-reads tier / fps / lighting (the options can also change from outside, e.g. a launch argument).</summary>
         public void RefreshNow() { foreach (var r in m_Refresh) r(); }
