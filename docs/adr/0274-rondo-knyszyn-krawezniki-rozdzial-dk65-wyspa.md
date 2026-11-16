@@ -109,7 +109,7 @@ nowe `--out-dir`), `scripts/export-route.py`, `build_world.route_polyline` (kame
 `scripts/map-audit-cameras.py` (`graph_and_route`: `graph_nodes` z `route_start.json` tłumaczone aliasem),
 `validate/common.py` (`graph_edges`: wstęgi jezdni bez pokrywania wysepki), `streetscape/water_banks.py` (maska dróg).
 
-**Graf z pliku — celowo:** `fidelity/run.py`, `qa_report.py`, `qa/roundabout_ortho.py`, `qa/ortho_xsec.py`,
+**Graf z pliku — celowo:** `fidelity/run.py` i `fidelity/inputs.py` (hash pliku grafu), `qa/typology_budget.py` (maska dróg z osi OSM, tylko C/Dojlidy — bez rozdziału, ADR 0238), `qa_report.py`, `qa/roundabout_ortho.py`, `qa/ortho_xsec.py`,
 `qa/median_lamp_row.py`, `qa/junction_lane_*.py`, `qa/region_landmarks.py`, `qa/depot_ortho.py` (porównują dane
 źródłowe z OSM / ortofoto — override jest właśnie odstępstwem od OSM, który mierzą); `streetscape/stage.py`,
 `streetscape/pavements.py`, `roads/tunnels.py`, `build_world.graph_name` (tylko atrybuty / id krawędzi — id krawędzi
