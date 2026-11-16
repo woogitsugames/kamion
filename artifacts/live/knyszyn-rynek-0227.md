@@ -254,3 +254,7 @@
 - 2026-11-16 03:01 +01:00 — R16 uruchomione: eksperyment czterech obwodowych kart koron Low bez wzrostu tris oraz korekta korony/łańcucha figury PROXY_NOT_APPROVED. 21 testów kierunkowych passed; pełne GIS i EditMode po zmianie OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r16.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r16.done` 
 
+
+- 2026-11-16 03:16 +01:00 — R16 build zakończony, import/render trwa. Orto GUGiK arkusz 2025 0,1 m sprawdzony lokalnie dla wlotu Tykockiej: granice chodnika ze zjazdami niejednoznaczne, geometria OPEN. GIS i EditMode zielone dla R14; finalne testy po R16 OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r16.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r16.done` 
+
