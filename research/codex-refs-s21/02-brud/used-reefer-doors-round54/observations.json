@@ -1,0 +1,120 @@
+{
+  "review_date": "2026-11-16",
+  "review_time": "date-only; indywidualnych godzin nie zmierzono",
+  "record_time_brussels": "2026-11-16 05:17:31 +01:00 SOURCED clock, nie czas każdego oglądu",
+  "counts": {
+    "rear_exposures": 3,
+    "vehicles": 3,
+    "additional_type_context_frames": 3,
+    "new_A": 1,
+    "new_B": 0,
+    "new_winter_A": 0,
+    "new_european_road_A": 0,
+    "downloads": 0,
+    "saved_screenshots": 0
+  },
+  "items": [
+    {
+      "id": "54-001",
+      "photo_number": "4/9",
+      "source": "https://autoline.info/-/sale/refrigerated-semi-trailers/Lamberet--26092414085873764900",
+      "exact_seen_image": "https://img.linemedia.com/img/s/refrigerated-semi-trailer-Lamberet---1790248732091834421_big--26092414085873764900.jpg",
+      "type_evidence": "refrigerated semi-trailer wprost w źródle; 1/9 osobiście obejrzany cały zestaw z ciągnikiem i trzema osiami naczepy",
+      "seller": "SRL LS TRUCKS IMPEX, Belgia Sombreffe",
+      "listing_date": "2026-11-11 SOURCED source UI",
+      "photo_date": "UNVERIFIED",
+      "native_pixels": [
+        768,
+        1024
+      ],
+      "door_height_estimated_px": [
+        580,
+        650
+      ],
+      "zones_estimated_h_from_bottom": {
+        "right_film": [
+          0.1,
+          0.7
+        ],
+        "right_fine_vertical_marks": [
+          0.1,
+          0.95
+        ],
+        "local_handle_corrosion": [
+          0.0,
+          0.15
+        ]
+      },
+      "A": "PASS",
+      "B": "FAIL_GE1000_AND_ROUTE_UNVERIFIED",
+      "root_review_received": "Root niezależnie obejrzał exact asset IAB768x1024; potwierdził film i asymetrię, oddzielił anonimizację i korozję. To otrzymana recenzja, nie drugi własny ogląd."
+    },
+    {
+      "id": "54-002",
+      "photo_number": "3/7",
+      "source": "https://autoline.info/-/sale/refrigerated-semi-trailers/Lamberet/Refrigeration-Trailer--24080212513194207900",
+      "exact_seen_image": "https://img.linemedia.com/img/s/refrigerated-semi-trailer-Lamberet-Refrigeration-Trailer---1722592293107439995_big--24080212513194207900.jpg",
+      "type_evidence": "source explicit refrigerated semi-trailer; 1/7 osobiście obejrzany cały zestaw z ciągnikiem",
+      "seller_stock_id": "2772",
+      "visible_vehicle_code": "T347",
+      "source_title_id": "DX41408",
+      "listing_date": "2026-11-13 SOURCED UI",
+      "photo_date": "UNVERIFIED",
+      "native_pixels": [
+        1280,
+        576
+      ],
+      "door_height_estimated_px": [
+        350,
+        420
+      ],
+      "zone_estimated_h_from_bottom": "górne delikatne szare piony około0.65–1; mechanizm UNVERIFIED",
+      "A": "PENDING_SURFACE",
+      "B": "FAIL_GE1000_AND_ROUTE_UNVERIFIED"
+    },
+    {
+      "id": "54-003",
+      "photo_number": "3/8",
+      "source": "https://autoline.info/-/sale/refrigerated-semi-trailers/Lamberet/Refrigeration-Trailer--24080212513661135000",
+      "exact_seen_image": "https://img.linemedia.com/img/s/refrigerated-semi-trailer-Lamberet-Refrigeration-Trailer---1722592297793139228_big--24080212513661135000.jpg",
+      "type_evidence": "source explicit refrigerated semi-trailer; 1/8 osobiście obejrzany cały zestaw z ciągnikiem",
+      "seller_stock_id": "6100",
+      "visible_vehicle_code": "T348",
+      "source_title_id": "EX41408",
+      "listing_date": "2026-10-27 SOURCED UI",
+      "photo_date": "UNVERIFIED",
+      "native_pixels": [
+        1280,
+        576
+      ],
+      "door_height_estimated_px": [
+        350,
+        420
+      ],
+      "zone_estimated_h_from_bottom": "brunatne ścieki pod naprawami górnymi około0.65–0.95, lokalnie pod zamkiem0–0.15; korozja/film UNVERIFIED",
+      "A": "PENDING_SURFACE",
+      "B": "FAIL_GE1000_AND_ROUTE_UNVERIFIED"
+    }
+  ],
+  "dedup": {
+    "scope": "s21 i research/mistral/p18-trailer-soiling, md/csv/json",
+    "result": "brak trafień ID/URL/assetID",
+    "timing": "JF52527 i DX41408 po pierwszym obejrzeniu, przed zapisem; EX41408 po oglądzie przed zapisem",
+    "visual_identity": "EURO-FRUITS inny pojazd niż flota Kaslita; T347 i T348 mają różne tabliczki, naprawy, otoczenie i source stockIDs. Kadry CSS i standalone liczone raz."
+  },
+  "not_reviewed_leads": [
+    {
+      "source": "https://www.kleyntrucks.com/en/vehicle/details/323364",
+      "reason": "Cloudflare security verification w normalnym UI; STOP bez działania na challenge lub CDN"
+    },
+    {
+      "source": "https://autoline.info/-/sale/refrigerated-semi-trailers/Schmitz-Cargobull--26041617442790275900",
+      "reason": "w normalnym UI przekierowanie do kategorii, nie aktualna galeria; użyto obserwowanej oferty Lamberet z tej strony, nie zgadywano URL"
+    },
+    {
+      "source": "https://www.trucksnl.com/schmitz-cargobull-scb-s3b-meat-rails-fleisch-haken-hangwerk-cargobull-tkm-d-e-8476491-vd",
+      "reason": "404 w normalnym UI, STOP bez obrazów CDN"
+    }
+  ],
+  "rights": "ARR wyłącznie link-only; 0 kopii mediów, 0 zapisanych screenshotów, brak pobrań Commons/Flickr, brak Google Maps/StreetView."
+}
