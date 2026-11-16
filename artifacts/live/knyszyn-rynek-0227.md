@@ -282,3 +282,7 @@
 - 2026-11-16 04:23 +01:00 — GIS R18 1647 passed, 21 skipped, 3 xfailed; EditMode 677 passed, 2 skipped. Poprawione dwie diagnostyczne kamery pomnika; R19 build/import/render uruchomione. Budżet Low vs before FAIL, jakość pomnika i lip OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r19.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r19.done` 
 
+
+- 2026-11-16 05:01 +01:00 — GIS R19 1647 passed, 21 skipped, 3 xfailed; EditMode 677 passed, 2 skipped. Dodano orientacyjną kamerę placu targowego od Jagiellońskiej; usunięto niepodłączony prototyp wiat niezgodny ze zdjęciami 12–14. R20 build uruchomiony; georeferencja wiat OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r20.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r20.done` 
+
