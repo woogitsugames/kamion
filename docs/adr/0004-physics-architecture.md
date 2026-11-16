@@ -96,5 +96,7 @@ Decision.
   xUnit run in CI stays as it is: parallel runs are now a check of run isolation, not something to work around.
 
 Proof (loops of `dotnet test tools/physics-runner/Tests -c Release`, 4 vCPU, .NET 8.0.428, numbers in the PR):
-before the fix, `RobustnessTests` + `TouchSteeringTests.Residual_PlateFrictionSweep_Diagnostic` in one process failed in
-every iteration; after the fix the same filter, `RobustnessTests` alone, and the full suite give 0 failures.
+- `RobustnessTests` + `TouchSteeringTests.Residual_PlateFrictionSweep_Diagnostic` in one process (xUnit runs them in parallel
+  as in CI): before the fix **198 / 200** iterations failed (`fuzz_flat_wet_laden40` DIFFERS); after the fix **0 / 200**.
+- `RobustnessTests` alone: 0 / 200 before and 0 / 200 after. On its own the class does not show the bug, which is why CI saw it only rarely.
+- Full suite (as in CI): 0 / 30 before (287 tests; the CI rate is a few failures over about 100 runs) and 0 / 30 after (289 tests).
