@@ -101,7 +101,8 @@ Ten sam bieg na main i na gałęzi + `uv run --project tools/worldgen python too
   Na C plan działek to po tej zmianie 26 % czasu builda (największy etap); na kleeberga było 63 %.
 - **Determinizm:** `tools/worldgen/tests/test_determinism_0173.py::test_vegetation_local_edit_stays_local` pada na
   main tak samo jak na gałęzi (`1160 > 200 and 1437 < 1160`, plik i `vegetation.py` niezmienione) — błąd istniejący, nie
-  maskowany, do osobnego zgłoszenia; pozostałe 4 testy tego pliku zielone.
+  maskowany; pozostałe 4 testy tego pliku zielone. Na aktualnym main (`518a4e419`, test poprawiony w main) po scaleniu
+  z tą gałęzią: 6/6 zielone.
 
 ## Konsekwencje
 - Wynik `build_world` bajtowo ten sam na C (wyżej) — przebudowa world3 u lidera nie zmienia kafli z powodu tego ADR.
