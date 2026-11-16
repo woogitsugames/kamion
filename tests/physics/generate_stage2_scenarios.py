@@ -450,6 +450,10 @@ for h_cm, (ft, fzmax, fzsrc, off_e, off_l, ax_e, all_e, ax_l, all_l) in KERB.ite
 
 # Phone event reconstruction (DEVICE-RUN-2026-11-09 r3, s = 598 m): the per-step suspension + tyre travel on the phone
 # shows a ~27 cm effective step at 42 km/h with 40 t, not a 14 cm kerb (PHYSICS_VALIDATION s3a). Regression guards.
+# ADR 0158 had this scenario run without the chassis colliders (overrides.bodyContact = false) while the bumper strike
+# was open. Owner decision D58 (ADR 0165, 2026-11-13): compliant 4 Hz body contact, jerk limits unchanged -> the
+# scenario runs WITH the colliders and the bumper penetration is bounded instead (committed JSON since 04c2a68ef /
+# c87faf4b1; this generator was not updated then, ADR 0280 s(d)).
 sc("kerb_step_27cm_42kmh_comb",
    "Phone event reconstruction (DEVICE-RUN-2026-11-09 r3, s = 598 m): 40 t at 42 km/h, left wheels hit a 27 cm effective step (kerb on a higher carriageway edge)",
    "docs/04 s6.11; docs/PHYSICS_VALIDATION.md s3a", 6,
@@ -458,14 +462,10 @@ sc("kerb_step_27cm_42kmh_comb",
     chk("max_pos_jump_m", mx=1e-6, source="no teleport"),
     chk("max_fz_ratio", mn=5.2, mx=7.5, source="regression guard on measured 6.50 (phone 6.8x); a 27 cm step is above the tyre envelope a vertical-ray contact can climb smoothly"),
     chk("max_wheel_airtime_s", mx=0.5, arg=1, source="regression guard on measured 0.42 s (phone: both front wheels unloaded ~0.4 s)"),
-    chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds")],
+    chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds"),
+    chk("max_body_penetration_m", mx=0.05, source="ADR 0165: bumper strike on the 27 cm kerb crushes the bumper cover <= 5 cm (4 Hz contact, impact ~3.5 m/s limited by the jerk ceiling); measured 0.038 m (tractor Bumper corner, t 2.88 s)")],
    variants=["laden40"], initial={"speedKmh": 42},
-   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(0.27, 30, 33)]},
-   # ADR 0158 Open: with the chassis colliders the right bumper corner (0.35 m above the road) strikes the road at
-   # t ~2.83 s (11.5 cm geometric overlap without contact) -> max_dv_step_ms 0.755 m/s, kingpin error 7.9 mm (Unity
-   # PlayMode on the same event: 0.968 m/s, 28 body contacts). These guards were authored without colliders; the
-   # strike vs. ceiling decision belongs to the leader/owner, so this scenario keeps running without them for now.
-   overrides={"bodyContact": False})
+   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(0.27, 30, 33)]})
 
 sc("speed_bump_comb","Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs/04 s6.11", 12,
    {"type": "speedhold", "targetKmh": 15},

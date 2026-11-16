@@ -35,6 +35,8 @@ CEILINGS = {
     ("curb_strike_14cm_50kmh_comb", "max_wheel_airtime_s", 0, "laden40"): 0.12,
     ("kerb_step_27cm_42kmh_comb", "max_fz_ratio", 0, None): 7.5,
     ("kerb_step_27cm_42kmh_comb", "max_wheel_airtime_s", 1, None): 0.5,
+    # ADR 0165 / D58: the 27 cm step runs with the compliant chassis colliders; bumper crush bounded at 5 cm.
+    ("kerb_step_27cm_42kmh_comb", "max_body_penetration_m", 0, None): 0.05,
 }
 for _s in ("curb_strike_5cm_50kmh_comb", "curb_strike_14cm_50kmh_comb", "kerb_step_27cm_42kmh_comb"):
     CEILINGS[(_s, "max_dv_step_ms", 0, None)] = 0.35
