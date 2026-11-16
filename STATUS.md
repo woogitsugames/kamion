@@ -10,7 +10,9 @@
   `tests/gis/test_effective_graph_readers.py` 18 passed (syntetyczne rondo + knyszyn read-only + klasyfikacja wszystkich czytników).
   `pytest tests/gis -k "graph or route or nav or 0274 or roundabout or camera"` 174 passed, 4 skipped. navgraph/tests: 51 passed,
   1 znany czerwony (test_region_file_is_reproducible — czerwony też na bazie bez zmian, plik .bytes nieaktualny).
-- NASTĘPNY KROK: dopisek ADR 0274 „Czytniki grafu”, PR.
+- [4] Dopisek ADR 0274 „Czytniki grafu”. Całe `tests/gis`: 1857 passed, 59 skipped, 2 xfailed, 1 znany czerwony (test_report_not_stale).
+- NASTĘPNY KROK (lider, po world3): `uv run --project tools/worldgen python tools/worldgen/navgraph/build_route_graph.py --region knyszyn`
+  i `uv run --project tools/worldgen python tools/ui/build_nav_map.py --region knyszyn` (PR otwarty, zależny od #144).
 
 # STATUS — D14 roundabout2-0274 (rondo Knyszyn, ADR 0274)
 
