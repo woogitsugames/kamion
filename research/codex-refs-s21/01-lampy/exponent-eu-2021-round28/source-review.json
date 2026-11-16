@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-16",
+  "result": "PASS_VISUAL_HTML_2021_ONLY",
+  "source": {
+    "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:42021X1719",
+    "celex": "42021X1719",
+    "regulation": "UN Regulation No 148 [2021/1719]",
+    "publication": "OJ L347, 30.09.2021, starting page 123",
+    "scope_from_header": "Supplement 3 to the original version; stated entry into force 30 September 2021",
+    "authentic_documents_listed_in_header": ["ECE/TRANS/WP.29/2018/157", "ECE/TRANS/WP.29/2019/81", "ECE/TRANS/WP.29/2020/32", "ECE/TRANS/WP.29/2021/45"],
+    "legal_limit": "Documentation publication; no claim of current 2026 law. Header points to authentic UN/ECE texts."
+  },
+  "access": {
+    "webtool": "Single open returned JavaScript robot-verification message; no retry or host variants.",
+    "browser": "Normal Chrome public HTML loaded without CAPTCHA, login or robotwall. Full document header and relevant table/paragraphs read.",
+    "visual": "Table 8 clicked by its visible heading; actual viewport bitmap inspected with row/column borders and four numerical cells visible. Followed by read-only rendered table DOM, not PDF text extraction.",
+    "pdf_downloaded": 0,
+    "screenshots_saved": 0,
+    "new_photographs": 0
+  },
+  "table": {
+    "locator": "5.6.1, Table 8; conditions 5.6.1(a), 5.6.1(b), 5.6.4",
+    "unit": "cd",
+    "printed_format": "decimal numbers, no scientific exponents in the four cells",
+    "cells": [
+      {"category":"5", "column":"minimum", "printed":"0,6", "value_cd":0.6, "condition":"minimum in direction A per Annex 2 under 5.6.1(b); 5.6.4 also requires 0.6 cd to rear throughout fields of Annex 2 Part A"},
+      {"category":"11a", "column":"maximum, single lamp", "printed":"1 000", "value_cd":1000, "condition":"maximum in any direction; not D column"},
+      {"category":"11b", "column":"maximum, single lamp", "printed":"1 200", "value_cd":1200, "condition":"maximum in any direction; not D column"},
+      {"category":"11c", "column":"maximum, single lamp", "printed":"1 200", "value_cd":1200, "condition":"maximum in any direction; not D column"}
+    ],
+    "D_scope": "N.A. displayed for 11a/11b/11c; no division by two.",
+    "reference_axis_limit": "5.6.1(a) defines reference-axis minima for 11a/11b/11c, not a narrowing of the table's any-direction maximum.",
+    "annex_angles": "UNVERIFIED in this round; no annex diagrams viewed or angles added."
+  },
+  "comparison": {
+    "requested_prior_folder": "regulation-extraction-comparison-round9 — not present in read worktree",
+    "actual_prior_evidence": "../table8-comparison-round6/comparison.csv",
+    "earlier_discrepancies": "category 5 min and 11a/11b/11c max single in Am5 vs Rev1Am2 extraction",
+    "important_2021_difference": "11a maximum single is 1000, not 1200.",
+    "old_rows_changed": 0,
+    "status_old_2020_or_later_extraction": "UNVERIFIED unchanged. No source identity or amendment chain established by this 2021 table."
+  }
+}
