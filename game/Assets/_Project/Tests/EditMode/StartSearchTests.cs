@@ -256,8 +256,11 @@ namespace Game.Tests
             var probe = new FreeAbove { from = 150f };
             StartSearch.Resolve(rows, 300f, 100f, ref probe);   // warm-up (JIT)
 #if UNITY_5_3_OR_NEWER
-            Assert.That(() => { StartSearch.Resolve(rows, 300f, 100f, ref probe); StartSearch.Resolve(rows, 300f, 12f, ref probe); },
-                UnityEngine.TestTools.Constraints.Is.Not.AllocatingGCMemory());
+            // Repo convention for zero-GC tests (GcAllocCounter: Recorder "GC.Alloc" with a 64 B control); int-h3-s23: the
+            // Is.Not.AllocatingGCMemory() extension did not compile here (CS1061, missing UnityEngine.TestTools.Constraints).
+            GcAllocCounter.AssertZero(
+                () => { StartSearch.Resolve(rows, 300f, 100f, ref probe); StartSearch.Resolve(rows, 300f, 12f, ref probe); },
+                message: "two start searches with a struct probe must not allocate");
 #else
             long before = System.GC.GetAllocatedBytesForCurrentThread();
             var r = StartSearch.Resolve(rows, 300f, 100f, ref probe);
