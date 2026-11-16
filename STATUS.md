@@ -9,3 +9,4 @@
 - krok 3: C# RouteLinks.cs (JsonUtility, filtr celu, -route_to, domyślnie tykocin) + WorldStreamer.ContinueRoute/FindLinkAt (link zastępuje trasę knyszyn; bez alokacji); EditMode WorldStreamerRouteLinksTests (5 testów, nieuruchomione w Unity); pytest tests/gis/test_route_links_s23.py 8/8 + tile_graph 7/7 PASS.
 - NASTĘPNY KROK: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter 'WorldStreamer|WorldStreaming|RouteLinks' (przez unity-slot, odłączone)
 - krok 4: ADR 0283 (numer tymczasowy) z diagnozą, planem Dojlid i znaleziskami szwów. EditMode w toku (artifacts/stream-gaps-s23/editmode1.status). NASTĘPNY KROK: po exit= — kopia _Generated/World + Library z int-stream-s23, build -Regions 19 -Slot, przejazd -scene knyszyn-s -stream 1 -Autopilot route.
+- krok 5: EditMode Win64 filtr streamingu 46/46 PASS (w tym 5 nowych RouteLinks). Kopia _Generated + Library z int-stream-s23 (sceny _Tile 19 regionów) w toku: artifacts/stream-gaps-s23/copy.status
