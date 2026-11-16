@@ -325,3 +325,59 @@ def test_pavilion_entry_must_target_the_pavilion():
     o = dict(_knyszyn_pavilion_override()[0], target={"building": KMB.SHOP})
     rep, _, _ = _pavilion_build([o])
     assert rep["pavilion_override_stale"] and rep["pavilion_roof"] == "hip"
+
+
+# ------------------------------------------------------------------------------------------ (c) linden crown shape
+from streetscape import plantings as PL  # noqa: E402
+
+
+class _AnyBuf:
+    parts = []
+
+    def add(self, layer, mat, V, UV, T, src="", **kw):
+        pass
+
+
+def _kit_group(gid, pts):
+    return {"id": gid, "kind": "tree_groups", "form": "kit", "species": {"linden": 1.0}, "points_en": pts}
+
+
+def _shape(**kw):
+    return {"id": "shape", "kind": PL.CROWN_SHAPE_KIND, "targets": ["g"], "species": "linden", "height_to_spread": 1.75,
+            **kw}
+
+
+def test_crown_shape_sets_the_spread_from_the_height():
+    pts = [[0.0, 0.0, 17.5, 13.0, "linden"], [20.0, 0.0, 14.0, 12.0, "linden"]]
+    rep = {}
+    PL.authored_trees(_AnyBuf(), [_kit_group("g", pts), _shape()],
+                      lambda p: 120.0, rep)
+    crowns = [t["crown_m"] for t in rep["authored_trees"]["list"]]
+    assert crowns == pytest.approx([10.0, 8.0])
+    assert rep["authored_trees"]["crown_shapes"] == {"g:linden": 1.75}
+    assert all(t["h_m"] / t["crown_m"] == pytest.approx(1.75) for t in rep["authored_trees"]["list"])
+
+
+def test_without_a_shape_entry_the_authored_diameter_stays():
+    rep = {}
+    PL.authored_trees(_AnyBuf(), [_kit_group("g", [[0.0, 0.0, 17.5, 13.0, "linden"]])], lambda p: 120.0, rep)
+    assert rep["authored_trees"]["list"][0]["crown_m"] == 13.0 and "crown_shapes" not in rep["authored_trees"]
+
+
+@pytest.mark.parametrize("bad", [{"height_to_spread": 0.5}, {"height_to_spread": True}, {"height_to_spread": "2"},
+                                 {"targets": ["nope"]}, {"targets": []}, {"species": "palm"}])
+def test_bad_shape_entry_is_stale(bad):
+    rep = {}
+    PL.authored_trees(_AnyBuf(), [_kit_group("g", [[0.0, 0.0, 17.5, 13.0, "linden"]]), _shape(**bad)],
+                      lambda p: 120.0, rep)
+    assert rep["authored_trees"]["crown_shapes_stale"] == ["shape"]
+    assert rep["authored_trees"]["list"][0]["crown_m"] == 13.0
+
+
+def test_knyszyn_linden_shape_entry_cites_its_source_and_targets_kit_groups():
+    import yaml
+    ov = yaml.safe_load((ROOT / "Data/Regions/knyszyn/overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    shapes = PL.crown_shapes(ov)
+    assert shapes == {("rynek-lindens-r8-trial-0227", "linden"): 1.75, ("rynek-near-lindens-kit-0227", "linden"): 1.75}
+    o = next(o for o in ov if o["id"] == "rynek-linden-crown-shape-d41")
+    assert "ESTIMATED" in o["reason"] and "2901-1055" in o["reason"]

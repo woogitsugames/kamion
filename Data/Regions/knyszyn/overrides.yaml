@@ -824,3 +824,19 @@ overrides:
       (orthophoto, about 3.5 x 4 m) - not modelled (no footprint, colour unknown).
     confidence: medium
     verify: render market_owner_13 next to owner photo 13 (yellow walls readable, tent roof, no ridge)
+  # (c) linden crown shape as data: crown spread = height / height_to_spread for the Rynek park lindens (both kit
+  # groups above stay as authored; streetscape/plantings.py crown_shapes).
+  - id: rynek-linden-crown-shape-d41
+    kind: tree_crown_shape
+    targets: [rynek-lindens-r8-trial-0227, rynek-near-lindens-kit-0227]
+    species: linden
+    height_to_spread: 1.75
+    reason: >-
+      ESTIMATED from literature: Tilia cordata, height 70 ft, spread 40 ft, shape "upright oval" (A. X. Niemiera,
+      Littleleaf Linden (Tilia cordata), Virginia Cooperative Extension publication 2901-1055, 2018, Summary) ->
+      height : spread 1.75. Replaces the per-point crown diameters of the two kit groups, which were WORKING_VALUE
+      (GLB AABB spans scaled by height, not measured): crowns 8.8-11.4 m instead of 9.3-12.9 m at 15.4-19.9 m height,
+      i.e. narrower, more upright ovoid crowns (review 2026-11-16 P1: crowns read flat). Park trees in Knyszyn may
+      be broader than this open-grown nursery figure; the owner's photos 3-6 decide (local only).
+    confidence: low
+    verify: render rynek owner frames 03 and 05 (Low, High) next to photos 3-6; change only height_to_spread
