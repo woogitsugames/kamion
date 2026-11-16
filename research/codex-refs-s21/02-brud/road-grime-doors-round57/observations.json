@@ -1,0 +1,83 @@
+{
+  "review_date": "2026-11-16",
+  "individual_review_time": "date-only; nie zmierzono godzin każdego oglądu",
+  "record_time_brussels": "2026-11-16 05:37:23 +01:00 SOURCED clock, czas zapisu",
+  "items": [
+    {
+      "id": "57-001",
+      "url": "https://alfaleasing.ru/rasprodazha-avto-s-probegom/pricepy/tonar/9888-shtorno-bortovoj/019dcf5f-2db7-742e-add2-31f823764f56/",
+      "source": "https://alfaleasing.ru/rasprodazha-avto-s-probegom/pricepy/tonar/9888-shtorno-bortovoj/019dcf5f-2db7-742e-add2-31f823764f56/",
+      "author": "UNVERIFIED; publikujący Alfa-Leasing",
+      "license": "link-only, all rights reserved",
+      "date": "UNVERIFIED; rok2021 oznacza produkcję, nie ekspozycję",
+      "obs": "Pełna długa kurtynowa naczepa z trzema tylnymi osiami i zamkniętą parą jasnych drzwi. Oba skrzydła pokrywa mocny szarobrunatny film oraz gęste cienkie pionowe smugi niemal całej wysokości; na lewym skrzydle centralne piony ciemniejsze, obrysy i dolne odblaski pozostają czytelne. Brak dużych ostrych krawędzi złuszczenia na polach. Mokry błotnisty plac, kałuże i opadłe liście; śniegu nie widać.",
+      "use": "Wzorzec silnego pełnopowierzchniowego filmu z pionowymi ściekami na obu skrzydłach. Zachować różnice gęstości, nie dodawać chemii soli.",
+      "A": "A_CONTENT_PASS",
+      "B": "FAIL_GE1000_AND_ROUTE_UNVERIFIED",
+      "pixels": "1275x717 SOURCED DOM main image; w3840 w URL nie jest bitmapą3840",
+      "door_px": "380–450 ESTIMATED; cały obraz717px już wyklucza1000px drzwi",
+      "asset_seen": "https://alfaleasing.ru/_next/image/?url=https://storage.yandexcloud.net/car-search-public/b9d97a7940913339aff282df26de0f87.jpeg&w=3840&q=70",
+      "zones": "h0–1 film na obu skrzydłach; gęste piony h0.1–0.95 ESTIMATED; mechanizm chemiczny UNVERIFIED",
+      "type": "Model9888 w ofercie; instrukcja producenta2026 s1/s3 identyfikuje9888/98881 jako trzyosiowe naczepy z tylnymi drzwiami rozwiernymi. Własny ogląd pełnej kurtynowej konstrukcji i grupy3osi. Nie przenoszono wymiarów instrukcji2026 na jednostkę2021."
+    },
+    {
+      "id": "57-002",
+      "url": "https://fototruck.ru/photo/414004/",
+      "source": "https://fototruck.ru/photo/414004/",
+      "author": "kda1981 SOURCED fotostrona",
+      "license": "Copyright ©; link-only, all rights reserved",
+      "date": "2024-10-30 SOURCED autor; publikacja2024-11-01 05:11MSK oddzielnie",
+      "obs": "Zamknięte dwa wysokie skrzydła z czterema pionowymi prętami, mocny szary film i gęste jasne/czarne pionowe smugi. Jasne czystsze nieregularne pasy przy bokach, dolny metalowy pas jaśniejszy. Pojazd na asfaltowej drodze;3osie blisko siebie w konstrukcji z kabiną. Obraz spójny z solówką, źródło podaje ScaniaR143M i furgon, bez jednoznacznego typu naczepy. Brak śniegu.",
+      "use": "AUX rozkładu brudu, poza strictA z powodu niepotwierdzonej naczepy. Nie przejmować geometrii solówki jako naczepy.",
+      "A": "OUT_TYPE_SEMI_UNVERIFIED",
+      "B": "FAIL_TYPE_AND_GE1000",
+      "pixels": "1200x800 SOURCED DOM img#ph",
+      "door_px": "470–540 ESTIMATED",
+      "asset_seen": "https://fototruck.ru/photo/04/14/00/414004.jpg",
+      "zones": "mocny film h0.15–1; czystsze piony boczne i dolny pas h0–0.15 ESTIMATED",
+      "type": "Scania (III)R143M, furgon: źródło i obraz nie potwierdzają semi-trailer; nie promowano na podstawie brudnej pary."
+    },
+    {
+      "id": "57-003",
+      "url": "https://www.licitatii-unpir.ro/images/detailed/5/remorca_q1mz-77.png",
+      "source": "https://www.licitatii-unpir.ro/auto/camioane/semiremorca-o4-marca-schmitz-s01/",
+      "author": "UNVERIFIED; publikujący Business Support Solutions / UNPIR",
+      "license": "link-only, all rights reserved",
+      "date": "UNVERIFIED; publikacja oferty2023-02-06 09:23 nie data ekspozycji",
+      "obs": "Długa trzyosiowa naczepa Schmitz, zamknięta niebieska para z centralną pionową szczeliną. Ostry ukośny cień przecina niebieskie pola; przy dole białe nieregularne ubytki i ostro odcięte ciemniejsze pionowe pola. Śnieg na ziemi i ciemny mokry przejazd między pojazdami. Brak pewnego szarobrunatnego filmu na niebieskich polach; nie traktuję cienia i powłoki jako osadu.",
+      "use": "AUX zimowego placu i zużytej powłoki, bez przyrostu brudnych tyłów.",
+      "A": "PENDING_SURFACE_NOT_ACCEPTED",
+      "B": "FAIL_GE1000_AND_ROUTE_UNVERIFIED",
+      "pixels": "655x488 SOURCED standalone title",
+      "door_px": "300–360 ESTIMATED",
+      "asset_seen": "https://www.licitatii-unpir.ro/images/detailed/5/remorca_q1mz-77.png",
+      "zones": "ubytki/przebarwienia h0–0.4; ukośny cień osobno, film UNVERIFIED",
+      "type": "SemiremorcaO4 SchmitzS01 wprost w opisie; source wiąże jednostkę z numeremTR-40-MGD iVIN, typSOURCED."
+    }
+  ],
+  "A_increment": 1,
+  "B_increment": 0,
+  "winter_A_increment": 0,
+  "european_road_A_increment": 0,
+  "photographs_individually_reviewed": 3,
+  "media_downloads": 0,
+  "saved_screenshots": 0,
+  "type_primary_source": {
+    "url": "https://tonar.info/api/manual-download?key=manual_models%2F%D0%A2%D0%B5%D0%BD%D1%82%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5+%D0%BF%D0%BE%D0%BB%D1%83%D0%BF%D1%80%D0%B8%D1%86%D0%B5%D0%BF%D1%8B%2F9888%2C+98881+%28T3-13+%D0%B8+%D0%A23-16%29+%D0%BF%D0%BE%D0%BB%D1%83%D0%BF%D1%80%D0%B8%D1%86%D0%B5%D0%BF+%D0%B3%D1%80%D1%83%D0%B7%D0%BE%D0%B2%D0%BE%D0%B9+%D0%A2%D0%BE%D0%BD%D0%B0%D1%80%2C+2026.pdf",
+    "read": "okładka s1 i tekst s3, odczyt pełnego tekstu web;0lokalnegoPDF",
+    "version": "redakcja19.02.2026, rok2026",
+    "use": "wyłącznie identyfikacja rodzaju konstrukcji modelu9888, nie parametry i nie data ekspozycji2021"
+  },
+  "received_root_review": {
+    "kind": "RECEIVED_INDEPENDENT_PEER_NOT_OWN_SECOND_VIEW",
+    "id": "57-001",
+    "review_date": "2026-11-16",
+    "review_time": "UNVERIFIED",
+    "surface": "Root obejrzał normalną stronę w IAB i główny obraz1/7. Potwierdził zamkniętą parę, gęsty szarobrunatny film i liczne pionowe smugi na obu skrzydłach niemal pełnej wysokości. Nie otwierał proxy/storage. A_PASS, BFAIL, brak śniegu i dowoduEurope-road/trasy."
+  },
+  "asset_identity": "Wynik image_query pokazywał stary81b6682..., normalna oferta aktualnie ładuje b9d97a.... Opis i kwalifikacja dotyczą WYŁĄCZNIE rzeczywiście obejrzanego b9d.... Stary obraz nie obejrzany i nie liczony.",
+  "access_stop": "Jedno standalone otwarcie exact proxy zDOM było ERR_BLOCKED_BY_CLIENT. Nie powtarzano proxy ani nie przechodzono na storage/rozmiary. Główny render normalnej strony został obejrzany. Próba wyboru drugiej miniatury nie dała udokumentowanego drugiego oglądu; liczę tylko1/7.",
+  "dedup": "rg sourceIDs i actualasset b9d97a7940913339aff282df26de0f87 oraz414004/remorca_q1mz-77 w s21/P18: brak trafień. Źródła wybrane przed oglądem; actualasset sprawdzono przed zapisem. Niepowtórzono znanegoR9Kögel ani AutoReviewR39.",
+  "not_reviewed_lead": "ANAF auction12600012241000000000594: tylko tekst, bez oglądu zdjęć i bez kwalifikacji; źródło zawiera jawne ograniczenie użycia danych także narzędziami AI bez zgody, więc nie rozwijano tego tropu.",
+  "no_claims": "Samara to miejsce oględzin podane w ofercie, nie dowód GPS fotografii ani europejskiej drogi. Tyumen/Sverdlovsk rozdzielone: region autora/fotografii versus rejestr pojazdu. Śnieg w UNPIR nie identyfikuje chemii, nie zwiększa winterA gdyA nieprzyjęte."
+}
