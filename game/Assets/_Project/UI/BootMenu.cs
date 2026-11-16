@@ -57,10 +57,10 @@ namespace Game.UI
         public RectTransform SafeAreaRect => m_Safe;
 
         /// <summary>Tests / captures: lay out for a device screen (pixels, safe area in pixels, DPI; 0 = unknown).</summary>
-        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi); m_View.Refresh(); }
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi); m_View.Refresh(); SyncBackdropPanel(); RefreshFooter(); }
 
         /// <summary>Tests / captures: lay out for a screen of the given form factor (ADR 0265: monitors 16:9 .. 32:9).</summary>
-        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi, desktop); m_View.Refresh(); }
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi, desktop); m_View.Refresh(); SyncBackdropPanel(); RefreshFooter(); }
 
         /// <summary>Vertical shift of the menu block applied to make room for the diagnostics overlay (ADR 0276; tests).</summary>
         public float BlockShift => float.IsNaN(m_AppliedShift) ? 0f : m_AppliedShift;
@@ -85,11 +85,16 @@ namespace Game.UI
             if (r.MenuShiftY == m_AppliedShift) return;
             m_AppliedShift = r.MenuShiftY;
             m_Block.anchoredPosition = new Vector2(0f, r.MenuShiftY);
+            SyncBackdropPanel();
         }
 
         void Update()
         {
-            m_View?.Refresh();   // rotation, fold / unfold: scale + safe area follow, the block stays centred
+            if (m_View != null && m_View.Refresh())   // rotation, fold / unfold: scale + safe area follow, the block stays centred
+            {
+                SyncBackdropPanel();
+                RefreshFooter();
+            }
             ApplyOverlayLayout();
             UiFocus.RestoreIfLost(this, m_FirstItem);   // ADR 0265: the pad never gets stuck without a selection
         }
@@ -215,6 +220,68 @@ namespace Game.UI
             return y;
         }
 
+        // ---- background (D87): a still from the game, darkened evenly, with a matte panel behind the menu block
+        /// <summary>Resources path of the menu photo (file: <c>_Project/UI/Resources/UI/MenuBackground/menu_bg.png</c>, supplied
+        /// by the lead from a game capture; no brands). Missing file = plain dark background.</summary>
+        public const string BackgroundResource = "UI/MenuBackground/menu_bg";
+        public const string BackdropName = "MenuBackdrop", BackdropPhotoName = "Photo", BackdropPanelName = "BlockPanel";
+        /// <summary>Panel margin around the menu items (canvas units).</summary>
+        public const float PanelPad = 48f;
+
+        Texture2D m_BackgroundTex;
+        RectTransform m_BackdropSafe, m_BackdropPanel;
+
+        /// <summary>True when the menu photo was found and is shown (tests, captures).</summary>
+        public bool HasBackgroundPhoto => m_BackgroundTex != null;
+
+        /// <summary>
+        /// Full-screen layer under the safe area (first sibling of the canvas root, never part of the menu block, so the
+        /// safe-area / overlay checks of the menu items stay as they were). Photo: cover the screen without stretching
+        /// (AspectRatioFitter, envelope), even scrim. Panel: tracks the block (safe-area anchors + diagnostics shift).
+        /// </summary>
+        void BuildBackdrop(Transform canvasRoot)
+        {
+            var root = Rect(BackdropName, canvasRoot);
+            root.anchorMin = Vector2.zero; root.anchorMax = Vector2.one; root.offsetMin = root.offsetMax = Vector2.zero;
+            root.SetAsFirstSibling();
+
+            m_BackgroundTex = Resources.Load<Texture2D>(BackgroundResource);
+            var baseImg = root.gameObject.AddComponent<Image>();
+            baseImg.color = m_BackgroundTex != null ? Color.black : Game.Controls.UiPalette.MenuFallback;
+            baseImg.raycastTarget = false;
+            if (m_BackgroundTex != null)
+            {
+                var photo = Rect(BackdropPhotoName, root);
+                photo.anchorMin = Vector2.zero; photo.anchorMax = Vector2.one; photo.offsetMin = photo.offsetMax = Vector2.zero;
+                var raw = photo.gameObject.AddComponent<RawImage>();
+                raw.texture = m_BackgroundTex; raw.raycastTarget = false;
+                var fit = photo.gameObject.AddComponent<AspectRatioFitter>();
+                fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+                fit.aspectRatio = m_BackgroundTex.width / (float)Mathf.Max(1, m_BackgroundTex.height);
+                var scrim = Rect("Scrim", root);
+                scrim.anchorMin = Vector2.zero; scrim.anchorMax = Vector2.one; scrim.offsetMin = scrim.offsetMax = Vector2.zero;
+                var si = scrim.gameObject.AddComponent<Image>(); si.color = Game.Controls.UiPalette.MenuPhotoScrim; si.raycastTarget = false;
+            }
+            else Debug.Log("[UI] menu background " + BackgroundResource + " missing - plain dark background");
+
+            m_BackdropSafe = Rect("SafeMirror", root);
+            m_BackdropPanel = Rect(BackdropPanelName, m_BackdropSafe);
+            var pi = m_BackdropPanel.gameObject.AddComponent<Image>(); pi.color = Game.Controls.UiPalette.MenuPanel; pi.raycastTarget = false;
+            m_BackdropPanel.gameObject.SetActive(false);   // placed once the block is measured
+        }
+
+        /// <summary>Keeps the panel behind the block: same anchors as the safe area, same shift as the block.</summary>
+        void SyncBackdropPanel()
+        {
+            if (m_BackdropSafe == null || m_Safe == null || m_Block == null) return;
+            m_BackdropSafe.anchorMin = m_Safe.anchorMin; m_BackdropSafe.anchorMax = m_Safe.anchorMax;
+            m_BackdropSafe.offsetMin = m_Safe.offsetMin; m_BackdropSafe.offsetMax = m_Safe.offsetMax;
+            if (m_BlockBounds.width <= 0f) return;
+            Place(m_BackdropPanel, m_BlockBounds.min - new Vector2(PanelPad, PanelPad) + m_Block.anchoredPosition,
+                m_BlockBounds.size + new Vector2(2f * PanelPad, 2f * PanelPad));
+            m_BackdropPanel.gameObject.SetActive(true);
+        }
+
         void Build(Camera cam, IReadOnlyList<(string label, Action action)> starts, Action openSettings, Action openAbout,
                    IReadOnlyList<BootRegionChoice> regions)
         {
@@ -232,6 +299,7 @@ namespace Game.UI
             m_Block = Rect("Block", m_Safe);
             m_Block.anchorMin = Vector2.zero; m_Block.anchorMax = Vector2.one;
             m_Block.offsetMin = m_Block.offsetMax = Vector2.zero;
+            BuildBackdrop(canvas.transform);
 
             // Centred block: left column starts, gap 80, right column options.
             float total = 2 * ColW + 80f, left = -total * 0.5f, right = left + ColW + 80f;
@@ -293,13 +361,14 @@ namespace Game.UI
             if (tabbed) settingsBtn.name = PcSettingsName;
             var aboutBtn = Button(m_Block, AboutLabel, new Vector2(right + ColW - aboutW, oy - 80f), new Vector2(aboutW, 80f), 32, TextAnchor.MiddleCenter, () => openAbout?.Invoke());
             m_Nav[1].Add(new[] { settingsBtn.GetComponent<Selectable>(), aboutBtn.GetComponent<Selectable>() });
-            Label(m_Block, "Footer", (m_View.Desktop ? "Plac testowy ma stałe światło. W jeździe Esc (pad: Start) wraca tutaj." : "Plac testowy ma stałe światło. W jeździe przycisk Menu wraca tutaj.")
-                + "\nWersja: " + BuildInfo.Current.IdentityLabel,
-                22, TextAnchor.UpperLeft, k_Muted, new Vector2(right, oy - 80f - 12f - 70f), new Vector2(ColW, 70f)).horizontalOverflow = HorizontalWrapMode.Wrap;
+            m_Footer = Label(m_Block, "Footer", "", 22, TextAnchor.UpperLeft, k_Muted, new Vector2(right, oy - 80f - 12f - 70f), new Vector2(ColW, 70f));
+            m_Footer.horizontalOverflow = HorizontalWrapMode.Wrap;
+            RefreshFooter();
 
             m_BlockBounds = MeasureBlock(m_Block);
             PublishBlock();
             ApplyOverlayLayout();
+            SyncBackdropPanel();
 
             UiFocus.EnsureEventSystem();
             UiFocus.ApplyGrid(m_Nav);
@@ -312,6 +381,7 @@ namespace Game.UI
         {
             UiFocus.Pop(this, false);
             MenuOverlayBoard.MenuActive = false;
+            if (m_BackgroundTex != null) { Resources.UnloadAsset(m_BackgroundTex); m_BackgroundTex = null; }   // not kept while driving
         }
 
         /// <summary>Bounding box of the direct children (all centre-anchored with a bottom-left pivot, see <see cref="Place"/>).</summary>
@@ -326,6 +396,28 @@ namespace Game.UI
                 xMax = Mathf.Max(xMax, p.x + s.x); yMax = Mathf.Max(yMax, p.y + s.y);
             }
             return xMin > xMax ? default(UnityEngine.Rect) : UnityEngine.Rect.MinMaxRect(xMin, yMin, xMax, yMax);
+        }
+
+        Text m_Footer;
+        bool? m_FooterDesktop;
+
+        /// <summary>Footer hint (int-ui-s23 §7 p.2): a monitor names the key, a phone the on-screen button. Pure (tests).</summary>
+        public static string FooterHint(bool desktop) => desktop
+            ? "Plac testowy ma stałe światło. W jeździe Esc (pad: Start) wraca tutaj."
+            : "Plac testowy ma stałe światło. W jeździe przycisk Menu wraca tutaj.";
+
+        /// <summary>Footer text shown now (tests).</summary>
+        public string FooterText => m_Footer != null ? m_Footer.text : "";
+
+        /// <summary>The form factor is known only after the viewport settles (the launch argument <c>ui_touch</c> and the
+        /// D85 migration can change it after Build): the footer follows every change instead of the value at Build.</summary>
+        void RefreshFooter()
+        {
+            if (m_Footer == null || m_View == null) return;
+            bool d = m_View.Desktop;
+            if (m_FooterDesktop == d) return;
+            m_FooterDesktop = d;
+            m_Footer.text = FooterHint(d) + "\nWersja: " + BuildInfo.Current.IdentityLabel;
         }
 
         /// <summary>Name of the notice line (tests).</summary>
