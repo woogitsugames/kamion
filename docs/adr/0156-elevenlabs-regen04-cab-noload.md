@@ -1,5 +1,5 @@
 # ADR 0156 — ElevenLabs REGEN-04: kabina bez obciążenia 900–1500 obr/min
-Status: Proposed (agent audio, s16), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
+Status: przyjęty (scalony do main 2026-11-12, `81ab77881`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent audio, s16), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
 
 ## Kontekst
 ADR 0148 (pkt 6): w zestawie ElevenLabs komórki **kabina / bez obciążenia 1200 i 1500 obr/min** (źródło

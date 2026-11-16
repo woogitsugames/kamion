@@ -1,6 +1,6 @@
 # ADR 0131 — Render P1 fixes on main (s12): crack sealant, road covers at night, FurnitureSign variants, retro bridge GC
 
-Status: implemented on branch `render-p1` (base main `587adc32`, 2026-11-12); not merged.
+Status: Accepted (merged to main 2026-11-12, `2fbab3657`; status updated 2026-11-16); originally: implemented on branch `render-p1` (base main `587adc32`, 2026-11-12); not merged.
 Source: `docs/reports/visual/REVIEW-2026-11-12-s12-gpt-batch-d.md` (asphalt P1 "white chalk sealant", "black ellipse"
 on Putry) and `-batch-c.md` §6 (FurnitureSign full `multi_compile`, FurnitureRetroSource allocations).
 Evidence: `artifacts/render-p1/` (before = this worktree with main's shaders and main's materials, after = branch).

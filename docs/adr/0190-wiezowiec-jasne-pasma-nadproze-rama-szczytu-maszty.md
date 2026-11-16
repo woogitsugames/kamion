@@ -1,6 +1,6 @@
 # ADR 0190 — wieżowiec przy Kwadracie: jasne okna pasm pod ciemną linią nadproża, białe ramy kolumny szczytu, maszty na dachu (override `roof_masts`)
 
-Status: PROPOSED (s20, 2026-11-14; do recenzji visual-critic). Źródło: `docs/reports/REVIEW-2026-11-13-s19-0180-r2.md` (P2-3, P2-4, P2-5, „skok LOD
+Status: przyjęty (scalony do main 2026-11-14, `baae5f0e0`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED (s20, 2026-11-14; do recenzji visual-critic). Źródło: `docs/reports/REVIEW-2026-11-13-s19-0180-r2.md` (P2-3, P2-4, P2-5, „skok LOD
 NW”), ADR 0180 §4. Gałąź `tower2-0190` (main fd5f124a7 scalony; poprawka `FAR_PLAIN_U` z ADR 0184 wzięta ze
 scalenia, nie powielona).
 

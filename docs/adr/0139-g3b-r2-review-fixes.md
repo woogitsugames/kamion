@@ -1,6 +1,6 @@
 # ADR 0139 — G3-B fixes after review s13-0127: clear viaduct screen, portal boards, HV tower, dark screen posts
 
-Status: implemented on branch `g3b-r2` (main merged in at `9a1961db0`, 2026-11-12); not merged. Gate 3 is NOT re-judged here
+Status: Accepted (merged to main 2026-11-12, `97996ef6b`; status updated 2026-11-16); originally: implemented on branch `g3b-r2` (main merged in at `9a1961db0`, 2026-11-12); not merged. Gate 3 is NOT re-judged here
 (visual-critic). Source: `docs/reports/visual/REVIEW-2026-11-12-s13-0127.md` (P1-1, P2-1..4). Starting point: ADR 0127.
 SBS camera poses are not touched (ADR 0140 stream).
 

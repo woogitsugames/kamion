@@ -1,6 +1,6 @@
 # ADR 0200 — wieżowiec Andersa 38: ściana NW w pasmach (6 grup okien na kondygnację), maszt środkowy i maszty końca NE, anteny zamiast „kul”, parterowa przybudówka SE
 
-Status: PROPOSED (s20, 2026-11-14; do recenzji visual-critic). Gałąź `tower3-0200` (od main a08f9935d).
+Status: przyjęty (scalony do main 2026-11-14, `6031883c7`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED (s20, 2026-11-14; do recenzji visual-critic). Gałąź `tower3-0200` (od main a08f9935d).
 Źródła zadania: `docs/reports/REVIEW-2026-11-14-s20-mistral-m57.md` §6 („Poprawki dla gry”; recenzent sam obejrzał
 kadry — opisy Mistrala M57 mają werdykt FIX i nie były używane), `docs/reports/REVIEW-2026-11-14-s20-0190.md`
 (P2-A, P2-B, P2-G). Kontynuacja ADR 0180 / 0190.

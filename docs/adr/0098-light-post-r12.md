@@ -1,5 +1,5 @@
 # 0098 — światło i post-process r12
-Data: 2026-11-11. Status: wdrożone w `gpt-light-r12`, niezależny przegląd PASS; bez merge na main.
+Data: 2026-11-11. Status: przyjęty (scalony do main 2026-11-11, `bfdde95f5`; status zaktualizowany 2026-11-16); pierwotnie: wdrożone w `gpt-light-r12`, niezależny przegląd PASS; bez merge na main.
 Problem: High wzmacniał szum nieba i prześwietlał jasne ściany; cienie hali tworzyły pasy i trójkątne plamy.
 Decyzja: wyłączyć dithering nieba przed LUT na profilach post; zachować końcowy dithering URP chroniący przed pasami.
 High zachowuje FSR/EASU, przy jawnym `fsrSharpness=0`; zainstalowany URP pomija wtedy keyword RCAS.

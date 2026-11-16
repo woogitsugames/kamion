@@ -1,5 +1,5 @@
 # ADR 0165 — Podatny kontakt nadwozia z ziemią (4 Hz, ζ 1), limity penetracji, F1 3,5°
-Status: Proposed (agent fizyki, s17, gałąź `phys-0165`), 2026-11-13. Wynika z decyzji właściciela D58 i D59 (ADR 0158).
+Status: przyjęty (scalony do main 2026-11-13, `4c71a1dc7`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent fizyki, s17, gałąź `phys-0165`), 2026-11-13. Wynika z decyzji właściciela D58 i D59 (ADR 0158).
 
 ## Kontekst
 ADR 0158 dodał do runnera .NET kolidery nadwozia (lustro BoxColliderów z `GrayboxTractorBuilder`/`GrayboxTrailerBuilder`)

@@ -1,6 +1,6 @@
 # 0181 — Struktura soczewek lamp (ciągnik + naczepa) i podświetlenie tablicy rejestracyjnej
 
-Status: kandydat (gałąź `lamplens-0181`), nie scalone. Data: 2026-11-13.
+Status: przyjęty (scalony do main 2026-11-13, `b823e3c49`; status zaktualizowany 2026-11-16); pierwotnie: kandydat (gałąź `lamplens-0181`), nie scalone. Data: 2026-11-13.
 
 ## Problem
 Recenzje s18 (0178 P2, 0175 P2): każda lampa sygnałowa to jednolity prostokąt koloru z twardą krawędzią — bez komór,

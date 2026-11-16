@@ -1,6 +1,6 @@
 # ADR 0144: Węzły r7 — jeden system barier na krawędzi pomostu, zakończenia taśm, rzędy filarów z danych, kruszywo i spód pomostu
 
-Status: do review lidera (world-builder, gałąź `junctions-r7`, baza main e79c5cc3 + scalony main 70b67fc7 z ADR 0143 / 0139), 2026-11-12.
+Status: przyjęty (scalony do main 2026-11-12, `48905cb7d`; status zaktualizowany 2026-11-16); pierwotnie: do review lidera (world-builder, gałąź `junctions-r7`, baza main e79c5cc3 + scalony main 70b67fc7 z ADR 0143 / 0139), 2026-11-12.
 Wynika z `docs/reports/visual/REVIEW-2026-11-12-s14-0123.md` (P1-1, P1-2, P2-3…5) i `REVIEW-2026-11-12-s14-0128.md` (P1-2)
 oraz z „world findings” 4–5 ADR 0143. Powiązane: ADR 0123 (bariery r6), 0128 (nos wysepki), 0117, 0110, 0067 (wiadukt hero),
 0060 (`sky_occ`). Dowody: `artifacts/junctions-r7/` (STATUS.md, `logs/`, `ortho/`, `plan_r7c/`, `renders_r7c_low_{clear,overcast}/`,

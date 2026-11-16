@@ -1,6 +1,6 @@
 # ADR 0135: kierownica dotykowa „przesuw kciukiem” i orientacja ekranu na składanym telefonie
 
-Status: proponowany (2026-11-12, gałąź `steer-fold`). Źródło: test właściciela na Samsungu Galaxy Fold (APK `11db0552`,
+Status: przyjęty (scalony do main 2026-11-12, `5636fe043`; status zaktualizowany 2026-11-16); pierwotnie: proponowany (2026-11-12, gałąź `steer-fold`). Źródło: test właściciela na Samsungu Galaxy Fold (APK `11db0552`,
 ekran wewnętrzny, film 82 s): (1) „ciężko, nieprzyjemnie się kieruje kierownicą”, (2) „na foldzie obraca obraz
 o 45° w lewo, tak jakby na normalnym zmieniało z pionu na poziom”. Zakres: tylko kierownica i orientacja; pełne
 dopasowanie HUD do Folda po bramce 3 (decyzja właściciela). Fizyki napędu/zawieszenia nie ruszano (ADR 0134).

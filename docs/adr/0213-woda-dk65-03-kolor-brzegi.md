@@ -1,5 +1,5 @@
 # ADR 0213 — woda w dk65-03 (ciągłość na szwie), kolor tafli wg ortofoto, pas trzciny i krzewów na brzegach
-Status: Proposed (agent world-builder, s20, gałąź `water2-0213`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `2ff133e21`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `water2-0213`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: ADR 0210 (etap wody, otwarte p. 1, 2, 4, 5), ADR 0132 (korony z ortofoto, `plot_canopy`), ADR 0124
 (Kamion/World PlotKit), ADR 0173 (determinizm), docs/06 §6 (budżety).
 

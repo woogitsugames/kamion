@@ -1,6 +1,6 @@
 # ADR 0150: mapa, minimapa i GPS z własnego grafu
 
-Status: proponowany (2026-11-12, gałąź `gps-map`, gameplay-ui). Polecenie właściciela 12.11 20:5x: „trzeba dodać mapę, żeby
+Status: przyjęty (scalony do main 2026-11-12, `bbf601d7d`; status zaktualizowany 2026-11-16); pierwotnie: proponowany (2026-11-12, gałąź `gps-map`, gameplay-ui). Polecenie właściciela 12.11 20:5x: „trzeba dodać mapę, żeby
 ustawić trasę, i podgląd mały mapy, żeby wiedzieć, gdzie jest, i żeby GPS kierował”; doprecyzowanie 21:0x: „głos GPS potem,
 teraz aby było sobie można ustawić”. Etap 5 (`docs/03`): „HUD + GPS z własnego grafu + nazwy ulic” — tu najmniejsza
 kompletna wersja dla regionu `bialystok-industrial-c`. Bez zmian ProjectSettings / Packages / asmdef.

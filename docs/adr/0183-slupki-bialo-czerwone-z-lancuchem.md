@@ -1,6 +1,6 @@
 # 0183 — Słupki biało-czerwone z łańcuchem (prototyp mebla ulicznego + override `chain_bollards`)
 
-Status: kandydat (gałąź `bollards-0183`), nie scalone. Data: 2026-11-13.
+Status: przyjęty (scalony do main 2026-11-14, `1e5f38f47`; status zaktualizowany 2026-11-16); pierwotnie: kandydat (gałąź `bollards-0183`), nie scalone. Data: 2026-11-13.
 
 ## Problem
 Agent 0179 (Dojlidy) znalazł na zdjęciu P11-063 (Wikimedia Commons, CC0, Rakoon; w rejestrze `refs-commons` w `docs/LICENSES.md`) (ul. Mickiewicza przy Kuronia) rząd biało-czerwonych

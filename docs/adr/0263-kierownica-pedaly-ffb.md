@@ -1,6 +1,6 @@
 # ADR 0263 — Kierownica, pedały, skrzynia H i force feedback na PC
 
-Status: zaproponowany (gałąź `wheel-0263`, zadanie H1). Kontekst: D56, D73 / ADR 0260 (Windows platformą główną, „sterowanie klawiatura/pad/kierownica”), docs/04 §2.5 i §3.
+Status: przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: zaproponowany (gałąź `wheel-0263`, zadanie H1). Kontekst: D56, D73 / ADR 0260 (Windows platformą główną, „sterowanie klawiatura/pad/kierownica”), docs/04 §2.5 i §3.
 
 ## Kontekst
 - Wejście gry idzie przez `IDriverInput` → `DriverInputMixer` → `DriverIntent` (dotyk, gyro, klawiatura, autopiloty). Kierownica w kabinie to `SteeringColumn` (ADR 0058): model rąk z limitem prędkości/przyspieszenia i samopowrotem z momentu powrotnego z modelu opon.

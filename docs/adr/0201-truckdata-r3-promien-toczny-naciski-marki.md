@@ -1,6 +1,6 @@
 # ADR 0201 — Dane ciężarówki z R3: promień toczny vs geometryczny, naciski osi, marki, errata R13
 
-Status: Proposed (agent vehicle-physics, gałąź `truckdata-0201`), 2026-11-15. Scalenie: lider.
+Status: przyjęty (scalony do main 2026-11-15, `a31939ef5`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent vehicle-physics, gałąź `truckdata-0201`), 2026-11-15. Scalenie: lider.
 Dotyczy: ADR 0004 (rdzeń fizyki w czystym C#), 0019 (siodło 0,68 m), 0195 (autopilot prosta 0–80–0), `docs/04` §2.4 i §6.3/§6.5,
 `docs/VEHICLE_REFERENCE_DATA.md` (VRD), `docs/PHYSICS_VALIDATION.md` (PV). Źródło liczb: pakiet R3 `research/cloud2/truck-parameters/`
 (VRD S9, przegląd `docs/reports/REVIEW-2026-11-14-s20-cloud2-r3.md`).

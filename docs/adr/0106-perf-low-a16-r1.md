@@ -1,6 +1,6 @@
 # ADR 0106: Wydajność Low/Medium na A16 r1 — rozkład GPU klatki, szybka ścieżka szyby kabiny
 
-Status: propozycja (rendering-perf, gałąź `perf-low-r1`, z main `7c094c3f` po 0097), 2026-11-11.
+Status: przyjęty (scalony do main 2026-11-11, `1791a0ed8`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (rendering-perf, gałąź `perf-low-r1`, z main `7c094c3f` po 0097), 2026-11-11.
 Powiązane: ADR 0010 (tiery), 0013 (A16, MSAA), 0042/0046/0068 (lusterka, A/B przebiegów), 0045/0048/0059 (szyba),
 0015/0023 (HLOD lasu, impostory), 0062 (skala renderu).
 

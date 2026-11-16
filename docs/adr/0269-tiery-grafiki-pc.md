@@ -1,5 +1,5 @@
 # ADR 0269 — tiery grafiki PC (Low / Medium / High / Ultra)
-Status: Proposed (chmura H r2, zadanie H7, gałąź `pc-tiers-0269`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (chmura H r2, zadanie H7, gałąź `pc-tiers-0269`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
 Powiązane: D73 / ADR 0260 (Windows platformą główną), D74 (klasy sprzętu PC), ADR 0261 (build Windows, desktop domyślnie
 High / 60 fps), ADR 0010 (tiery = poziomy jakości + `QualityProfile`), ADR 0012 (tier treści), ADR 0080 (SSAO Ultra),
 ADR 0270 (menu ustawień PC — woła API z tego ADR).

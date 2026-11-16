@@ -1,6 +1,6 @@
 # ADR 0107: Zabudowa r6 + działki domów — spody balkonów, ślady spod parapetów, MultiRoof bez daszków i szczelin, ogrodzone działki z instancji
 
-Status: propozycja (world-builder, gałąź `buildings-r6`, z main `ff400569`), 2026-11-11. Kontynuacja ADR 0097; odpowiedź
+Status: przyjęty (scalony do main 2026-11-11, `615d7e6e7`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (world-builder, gałąź `buildings-r6`, z main `ff400569`), 2026-11-11. Kontynuacja ADR 0097; odpowiedź
 na `docs/reports/visual/REVIEW-2026-11-11-s10-0097.md` (P1-e..h, P2-h..n). Zrzut z A16 (pkt 8 recenzji) robi lider.
 
 ## Kontekst

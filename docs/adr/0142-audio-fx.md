@@ -1,5 +1,5 @@
 # ADR 0142 — Efekty ElevenLabs (sekcje B–G + REGEN-02), turbo v2, miks kabiny, usunięcie „syreny”
-Status: Proposed (agent audio, s13), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
+Status: przyjęty (scalony do main 2026-11-12, `b596efe9a`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent audio, s13), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
 Kontynuacja ADR 0137/0138: przełącznik synteza/ElevenLabs obejmuje teraz cały zestaw dźwięków pojazdu.
 
 ## Kontekst

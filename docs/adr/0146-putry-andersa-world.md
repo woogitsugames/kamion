@@ -1,6 +1,6 @@
 # ADR 0146 — G3-B world fixes: Putry deck lamps and verge, Andersa SE ramp level (810896), portal follow-ups
 
-Status: PROPOSED on branch `putry-andersa` (2026-11-12, s14-s16); not merged. Validation below (r5 on main 700517b22);
+Status: Accepted (merged to main 2026-11-12, `430f7e93b`; status updated 2026-11-16); originally: PROPOSED on branch `putry-andersa` (2026-11-12, s14-s16); not merged. Validation below (r5 on main 700517b22);
 a visual-critic review is still required.
 Source: ADR 0143 "World findings" 1-3, `docs/reports/visual/REVIEW-2026-11-12-s14-0133.md` P2-4..7,
 `docs/reports/visual/REVIEW-2026-11-12-s14-0139.md` P1-1, P2-2..5 (lead request, s14).

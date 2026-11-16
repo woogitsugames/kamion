@@ -1,6 +1,6 @@
 # ADR 0068 - Fixed-pass cost: cheaper mirror renders, pass telemetry and on-device A/B
 
-Status: proposed (rendering-perf), 2026-11-10. Phone verification UNVERIFIED (no adb used by this agent; the A/B is the
+Status: Accepted (merged to main 2026-11-10, `1ff9fb59a`; status updated 2026-11-16); originally: proposed (rendering-perf), 2026-11-10. Phone verification UNVERIFIED (no adb used by this agent; the A/B is the
 lead's). Extends ADR 0042 / 0046 (mirror budget), 0056 (reflection capture), 0062 (S24+ High ≈ 13 ms of
 resolution-independent GPU work). Goal: S24+ High steady 60 FPS without visible quality loss.
 
