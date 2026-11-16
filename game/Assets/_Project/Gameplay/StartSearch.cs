@@ -141,6 +141,20 @@ namespace Game.Gameplay
             return true;
         }
 
+        /// <summary>
+        /// Baked spawn of the importer (WorldSceneBuilder, ADR 0262 p. 3 + ADR 0277): the catalog start snapped into the
+        /// drivable zone of the closures built in the same import - the same zone rule the runtime uses, without the
+        /// physics probe (the runtime adds it on every start). False = the route has no usable zone (the importer logs
+        /// an error and keeps the catalog start; the runtime then refuses the start). Editor only, allocates.
+        /// </summary>
+        public static bool BakedSpawnS(Vector3[] points, float[] distances, IList<WorldBoundary.Closure> closures, float catalogStartS, out float spawnS)
+        {
+            var crossings = new List<StartClearance.Crossing>();
+            StartClearance.Crossings(points, distances, closures, crossings);
+            float length = distances != null && distances.Length > 0 ? distances[distances.Length - 1] : 0f;
+            return SnapToZone(crossings, length, catalogStartS, out spawnS, out _, out _, out _);
+        }
+
         /// <summary>Full search (zones, then the probe forward and back). Generic probe: no boxing of a struct probe.</summary>
         public static StartSearchResult Resolve<TProbe>(List<StartClearance.Crossing> crossings, float routeLength, float requestedS, ref TProbe probe)
             where TProbe : IStartSpaceProbe
