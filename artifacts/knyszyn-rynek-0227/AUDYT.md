@@ -140,3 +140,16 @@ Rendery i szacunki r17 obejmują 70 kamer na wariant; dane `r17/{Low,High}-{clea
 R16 → r17: 70 wspólnych kamer, draws i shadow draws bez zmian; Low na ośmiu kamerach wzrost o 1 tris, High na siedmiu o 1 tris, przyczyna niezmierzona. R14 → r17: 70 wspólnych kamer, draws i shadow draws bez zmian, maksymalny wzrost tris o 22 w Low i High. `rynek-owner-08` Low względem r16 bez zmian: 351 draws i 295 904 tris. Clear i dusk dają identyczne wartości geometryczne.
 
 Before zawiera 51 nazw kamer, r17 70, literalnie wspólnych jest 50; dawna `rynek-fountain` nie ma potwierdzonego odpowiednika do porównania. Dwie dodatkowe kamery diagnostyczne planowane do r18 nie mają baseline before ani r17 i należy je raportować oddzielnie, nie włączać do porównań par. Zastrzeżenia dotyczące zmian main i interpretacji pierwotnego baseline opisane dla r14 pozostają aktualne. Wszystkie liczby to szacunki CPU edytora z instancjami przed SRP batchingiem, nie pomiary GPU ani telefonu.
+
+## R18 — diagnostyka wkładu pojazdu i dalekiego planu
+
+Dodatkowy pomiar jednej kamery `dk65-inlet-south`, Low-clear, w tej samej scenie i pozycji pojazdu; `diag-r18/dk65-inlet-south_diagnostic.txt`. To szacunek CPU edytora przed SRP batchingiem, nie pomiar GPU ani wynik telefonu. Każda wartość draws poniżej zawiera siatki i 39 draws instancji; shadow draws podano osobno.
+
+| Wariant diagnostyczny | Draws | Tris z instancjami | Shadow draws |
+|---|---:|---:|---:|
+| Pełna scena | 303 | 162 026 | 56 |
+| Bez ciągnika i naczepy | 240 | 135 693 | 2 |
+| Bez sektorów far-field | 299 | 156 852 | 56 |
+| Bez pojazdu i far-field | 236 | 130 519 | 2 |
+
+W tej scenie i tym kadrze pojazd odpowiada za 63 szacowane draws i 26 333 tris, far-field za 4 draws i 5 174 tris. Ukrycie rendererów służyło wyłącznie diagnozie; formalnym wynikiem pozostaje pełna scena: Low względem before **FAIL**. Zbieżność 240 draws bez pojazdu z 240 w historycznym before nie dowodzi przyczyny całej różnicy: brakuje analogicznego rozbicia i jednakowego stanu dawnej sceny. Runner QA przywrócono bajtowo po pomiarze; diagnostyki nie włączono do produktu ani do testu akceptacyjnego.
