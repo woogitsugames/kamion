@@ -155,3 +155,6 @@ Dwa nowe NID kadry stanu2015, Joanna Kotyńska-Stetkiewicz, agent i root obejrze
 
 
 R19 lamus: dwa nowe pełne widoki dachu/podcienia/przyziemia, lipiec i marzec2020 według podpisów NID. Root oba obejrzał:6podpór, ukośne miecze, centralne drzwi, łukowy otwór dachu, podest i drobna kostka. Drugi to front+bok, nie tył. Jeden nazwany lamus. NID osobno opisuje dach czterospadowy, gont i lukarnę powiekową; nie wywiedziono materiału z koloru. NCND tylko linki. Główny46.
+
+
+R21: dwa nowe ujęcia z gminnego Gońca nr11(203), listopad2021, s7, Anna Aneta Molska. Root obejrzał oba w Chrome200%: czarna pompa na podwyższonym kwadratowym cokole z kratką i biały/bordowy słup bez takiego cokołu. To nowa ekspozycja znanego słupa, nie drugi egzemplarz. Publikacja nie jest datą zdjęć; metryka/GPS/pikseleUNVERIFIED.0kopiiPDF/zdjęć. Główny48.
