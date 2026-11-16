@@ -1,0 +1,50 @@
+{
+ "by_kind": {
+  "lane_blind_end": 1
+ },
+ "cases": [
+  {
+   "chain": "c:w98071822:1134820455-1134814927",
+   "dist_from_stop_m": 13.9,
+   "e": -393.61,
+   "junction": "j:n1134820455",
+   "kind": "lane_blind_end",
+   "lane": 0,
+   "lanes_in": 1,
+   "lanes_out": 1,
+   "lat": 53.3232076,
+   "lon": 22.9237595,
+   "n": -1024.09,
+   "on_route": false,
+   "osm_ways": [
+    98071822
+   ],
+   "to_chain": "c:w98071822:1134818366-1134820455",
+   "turn_lanes": null,
+   "what": "none"
+  }
+ ],
+ "count": 1,
+ "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
+ "on_route": {},
+ "params": {
+  "dz_m": 0.8,
+  "kerb_ring_m": 0.3,
+  "lane_inset_m": 0.45,
+  "prop_inset_m": 0.2,
+  "station_m": 2.0,
+  "through_deg": 35.0
+ },
+ "region": "dw671-jasionowka-01",
+ "route_band_m": 30.0,
+ "route_segments_s_m": null,
+ "schema": "truck-sim-pl/road-consistency-qa/1",
+ "stats": {
+  "approach_lanes": 19,
+  "kerb_tris": 13792,
+  "lane_samples": 18934,
+  "lane_samples_in_taper": 2,
+  "marking_tris": 763,
+  "props_checked": 285
+ }
+}
