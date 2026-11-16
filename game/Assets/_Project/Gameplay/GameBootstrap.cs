@@ -155,6 +155,8 @@ namespace Game.Gameplay
             m_Catalog = RegionCatalog.Load();
             var regions = BuildRegionChoices(m_Catalog, options);
             ControlSettings.Load().Log("boot");
+            // Evidence runs (int-ui-s23): -ui_touch / -ui_hud / -ui_mirror / -ui_settings_tab, session only, never stored.
+            Game.UI.UiCaptureArgs.Apply(Platform.GetLaunchArgument);
             m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout, regions,
                 Application.isMobilePlatform ? null : (System.Action)OpenPcSettings);
             m_Menu.transform.SetParent(transform, false);
@@ -175,6 +177,11 @@ namespace Game.Gameplay
             if (TakeLaunchArguments())
             {
                 DesktopAutoShot.StartFromArguments(Platform.GetLaunchArgument);   // shot=<png> shot_t=<s> quit_t=<s> (ADR 0261 evidence run)
+                if (Game.UI.UiCaptureArgs.SettingsTab >= 0 && !Application.isMobilePlatform)
+                {
+                    OpenPcSettings();
+                    m_PcSettings.ShowTab(Game.UI.UiCaptureArgs.SettingsTab);
+                }
                 string scene = Platform.GetLaunchArgument("scene");
                 if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : LaunchSceneFor(scene);
             }

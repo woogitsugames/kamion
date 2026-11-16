@@ -73,7 +73,27 @@ namespace Game.Editor.VisualQA
             if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
                 throw new InvalidOperationException("No graphics device (-nographics?) — visual QA needs a GPU.");
 
+            // ADR 0269 propozycja 2 (night-pc-s23): -qaPcTiers 1 renders the PC tier (URP_PC_<tier> asset + PcGraphicsTiers.Overlay
+            // of the quality tier) instead of the phone tier; editor state is restored at the end.
+            bool pc = EditorTools.Arg("-qaPcTiers", "0") == "1";
+            if (pc) PcGraphicsTiers.ForceEnabled = true;
+            try
+            {
+                return RenderTier(sceneName, width, height, tier, outDir, lighting, onlyCameras, pc);
+            }
+            finally
+            {
+                if (pc) { PcGraphicsTiers.RestoreEditorState(); PcGraphicsTiers.ForceEnabled = null; }
+            }
+        }
+
+        static int RenderTier(string sceneName, int width, int height, string tier, string outDir, string lighting, string onlyCameras, bool pc)
+        {
+            string scenePath = AssetDatabase.FindAssets("t:Scene " + sceneName)
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == sceneName);
             QualityTiers.Apply(tier);
+            if (pc) Debug.Log($"[VISUALQA] PC tier {tier}: pipeline {QualitySettings.renderPipeline?.name}");
             ShaderUtil.allowAsyncCompilation = false; // avoid cyan placeholder shaders in captures
             EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
             Directory.CreateDirectory(outDir);
@@ -88,6 +108,7 @@ namespace Game.Editor.VisualQA
             var profile = QualityProfile.Load();
             QualityProfile.Tier tierSettings = default;
             bool hasTier = profile != null && profile.TryGet(tier, out tierSettings);
+            if (hasTier && pc) tierSettings = PcGraphicsTiers.Overlay(tierSettings);
             // Ablation renders in the editor (same keys as the phone launch overrides): -qaRq "rq_hlod=0,rq_trees=0".
             string rq = EditorTools.Arg("-qaRq", null);
 

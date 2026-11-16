@@ -45,7 +45,9 @@ param(
     # Measurement mask: '<renderer>[:<slot>][;...]' also writes <id>_mask.png with those slots flat magenta.
     [string]$Mask = '',
     # ADR 0056: also write <id>_envcube.png (the vehicle reflection cube of that frame, 6 faces).
-    [switch]$EnvDump
+    [switch]$EnvDump,
+    # ADR 0269 propozycja 2: render the PC tier (URP_PC_<tier> + PcGraphicsTiers.Overlay) instead of the phone tier.
+    [switch]$Pc
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -73,6 +75,7 @@ if ($Gate3) { $qaArgs += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, (Get-Locat
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
+if ($Pc) { $qaArgs += @('-qaPcTiers', '1') }
 $runStart = Get-Date
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 

@@ -65,5 +65,66 @@ namespace Game.Tests
                 Assert.AreEqual(0, allocs, $"{px}: 500 monitor-HUD refreshes allocated {allocs} GC.Alloc samples (expected 0)");
             }
         }
+
+        /// <summary>
+        /// ADR 0283: the monitor strip (speed / gear / air, telltale row, warning tiles) and the extended row (key I) refresh
+        /// without allocation, also while the extended detail and the mirror preferences change (re-layout on
+        /// <see cref="Game.Controls.HudPreferences.Version"/>), on 16:9 and 32:9.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator DesktopStrip_Extended_PrefsChanging_ZeroGcAlloc()
+        {
+            var saved = Game.Controls.HudPreferences.Current;
+            m_Mirror = new RenderTexture(110, 200, 16);
+            float cruise = 0f; int lever = 0, signal = 0; bool abs = false;
+            var ctx = new DrivingHudContext
+            {
+                IsGyroMode = () => false,
+                LeftMirrorTexture = () => m_Mirror,
+                RightMirrorTexture = () => m_Mirror,
+                BrakeCruiseKmh = () => cruise,
+                RetarderLever = () => lever,
+                TurnSignalLever = () => signal,
+                TurnSignalLit = () => signal != 0,
+                AbsFault = () => abs,
+            };
+            try
+            {
+                var ext = saved; ext.Detail = Game.Controls.HudDetail.Extended;
+                Game.Controls.HudPreferences.Set(ext);
+                m_Hud = DrivingHud.Create(null, ctx, overlay: true);
+                yield return null;
+                foreach (var px in new[] { new Vector2(1920f, 1080f), new Vector2(5120f, 1440f) })
+                {
+                    m_Hud.OverrideScreen(px, new Rect(0f, 0f, px.x, px.y), 96f, desktop: true);
+                    m_Hud.RefreshNow();
+                    yield return null;
+                    Assert.IsTrue(m_Hud.DesktopVisibility.Extended, px + ": extended detail");
+                    Assert.IsTrue(m_Hud.DesktopLayout.ShowStrip, px + ": strip");
+                    Assert.IsTrue(m_Hud.Layout.ShowMirrorLeft && m_Hud.Layout.ShowMirrorRight, px + ": mirror windows");
+                    var a = ext; var b = ext; b.MirrorSize = 0.5f; b.MirrorDrop = 0.4f;
+                    for (int i = 0; i < 20; i++) { abs = i % 2 == 0; m_Hud.RefreshNow(); }
+                    Game.Controls.HudPreferences.Set(b); m_Hud.RefreshNow();
+                    Game.Controls.HudPreferences.Set(a); m_Hud.RefreshNow();   // warm-up of the re-layout path
+                    int allocs = GcAllocCounter.Count(() =>
+                    {
+                        for (int i = 0; i < 500; i++)
+                        {
+                            cruise = i % 3 == 0 ? 0f : 30f + (i % 61);
+                            lever = i % 6;
+                            signal = (i / 25) % 4 - 1;
+                            abs = (i / 50) % 2 == 0;
+                            m_Hud.RefreshNow();
+                        }
+                    });
+                    yield return null;
+                    Assert.AreEqual(0, allocs, $"{px}: 500 strip refreshes allocated {allocs} GC.Alloc samples (expected 0)");
+                }
+            }
+            finally
+            {
+                Game.Controls.HudPreferences.Set(saved);
+            }
+        }
     }
 }
