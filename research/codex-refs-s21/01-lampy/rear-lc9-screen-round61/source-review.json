@@ -1,0 +1,50 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE_SCREENING_NO_QUALIFICATION",
+  "counts": {"individually_viewed_exposures": 2, "source_offers": 2, "new_qualified_E": 0, "new_ON": 0, "new_night": 0, "new_AUX": 0, "downloads": 0, "saved_screenshots": 0, "documentary_manifest_rows": 1},
+  "dedup": {"scope": "Wszystkie CSV/JSON/README 01-lampy", "new_source_keys": ["Recoautos 5368997/580855", "2687119", "Autoline QK39961/1911613/24050113114894221400"], "model_already_seen": "159010 w rear-approval-screening-round53, stock 1083233/EV21076; nie nowa rodzina", "physical_identity_limit": "Dwie oferty i dwie ekspozycje nie dowodzą dwóch różnych fizycznych urządzeń; nie dodano urządzeń do licznika."},
+  "images": [
+    {
+      "id": "LC61-SCREEN-A",
+      "source_url": "https://recoautos.com/en/vehicle-parts/580855-rear-left-tail-light74208023487420802348renaultpremiumdistribution.html",
+      "image_url": "https://recoautos.com/2687119-large_default/rear-left-tail-light74208023487420802348renaultpremiumdistribution.jpg",
+      "publisher": "Recoautos Desguace Premium S.L; fotograf UNVERIFIED",
+      "licence": "link-only, all rights reserved",
+      "viewed": true,
+      "native_pixels_dom": [726, 539],
+      "source_claim": "Renault Premium Distribution; tylna lewa lampa, OE 7420802348, ID 5368997; nie rozstrzygnięto podtypu ciągnika.",
+      "observed": "Czerwona wydłużona prostokątna optyka z zaokrąglonymi narożami, jasne prostokątne pole po prawej, sześć widocznych mocowań. W czerwonym polu okrągłe wzory; środek poziomo prążkowany. Rysy i przetarcia. Ciemne wsporniki pod lampą, porysowany stół i dwubarwna ściana.",
+      "E": "UNVERIFIED",
+      "functions": "UNVERIFIED",
+      "functional_chambers": "UNKNOWN",
+      "emission": "UNVERIFIED; brak dowodu ON",
+      "photo_date": "UNVERIFIED",
+      "camera_gps_heading": "UNVERIFIED",
+      "not_reviewed": "Pozostałe cztery kadry galerii",
+      "decision": "Nie przyjęto do głównego korpusu ani AUX"
+    },
+    {
+      "id": "LC61-SCREEN-B",
+      "source_url": "https://autoline.info/-/sale/tail-lights/truck-tractor/GAUCHE-T-01-13---24050113114894221400",
+      "image_url": "https://img.linemedia.com/img/s/spare-part-tail-light-GAUCHE-T-01-13---1714558309746646199_big--24050113114894221400.jpg",
+      "publisher": "TruckParts Eesti OÜ; fotograf UNVERIFIED",
+      "licence": "link-only, all rights reserved",
+      "viewed": true,
+      "method": "Pełny lightbox, następnie dokładny currentSrc w zwykłym podglądzie obrazu; ogląd dopasowany i natywny. Bez plików/cropów/transformacji.",
+      "native_pixels_dom": [1024, 1024],
+      "source_claim": "Autoline QK39961; stock 1911613; used; Left T (01.13-) 159010 tail light for Renault T truck tractor. Lista OE 20769775/20802346/7420802348/7420769775 to deklaracja oferty, nie odczyt fizycznego nadruku.",
+      "observed": "Podłużny czerwony klosz o zaokrąglonych narożach. Duże jasne prostokątne pole po lewej z drobną kratką, środkowy czerwony pas o poziomej fakturze, po prawej czerwone pole z okrągłym ciemniejszym wzorem. Sześć wkrętów, ciemny brzeg i szeroka jasna smuga odbicia. Przy lewym brzegu jasnego pola drobny okrągły odlew, którego znaków nie odczytano pewnie.",
+      "geometry": "PASS wizualny: klosz zajmuje większość szerokości natywnego obrazu; bez deklaracji dokładnego procentu.",
+      "E": "UNVERIFIED; nie odtworzono litery/kodu kraju ani numeru z odlewu",
+      "functions": "UNVERIFIED",
+      "functional_chambers": "UNKNOWN",
+      "emission": "UNVERIFIED; szeroka biała smuga jest odbiciem, nie dowodem świecenia",
+      "photo_technique_limit": "Wygląd używanej fizycznej części; jasne tło może być przygotowane lub retuszowane. Nie twierdzono braku retuszu.",
+      "photo_date": "UNVERIFIED; 2016 w ofercie nie jest ekspozycją",
+      "camera_gps_heading": "UNVERIFIED; Tallinn nie jest GPS fotografii",
+      "not_reviewed": "Pozostałe pięć kadrów galerii; ich DOM URL nie oznacza oglądu",
+      "decision": "Brak awansu ECE/ON/noc/AUX; dokładny asset zachowany do ewentualnego niezależnego odczytu"
+    }
+  ],
+  "limits": ["Nie wymagano pełnego numeru aprobaty lub udowodnionego montażu jako dodatkowej bramki.", "Nie zaliczono PN/OE do homologacji ani podobieństwa do wcześniej znanej lampy do odczytu znaku.", "W tej rundzie brak nowego pewnego odczytu fotometrii lub EMC.", "Nie wykonywano żadnych żądań Commons/Flickr."]
+}
