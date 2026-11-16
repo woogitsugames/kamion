@@ -54,3 +54,8 @@ Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.m
 ## B123 — ograniczony przegląd zimowych ulic, obieg8
 
 [Winter-streets-round8](winter-streets-round8/README.md):6konkretnych metadanychMaczka,1podglądCCosobnoobejrzany z25.03.2015. Suchaasfaltowa jezdnia/zieleń i bezlistne drzewa, bezśniegu lub czytelnegobłotapośniegowego — nie zakwalifikowano jako zimowy.0nowychkadrów/0rastrówGit,1podgląd tylko raw. Brak dokładnych kategorii ulic nie dowodzi braku zdjęćtychulic. B123pozostajeotwarte; nieopisanoPDF jako fotografii. BezOSM/Overpass/Chrome, bezstwierdzania nieistnienia obrazów. Głównymanifest15bez zmian.
+
+
+## Identyfikator organizacji ruchu — runda9
+
+[traffic-order-round9](traffic-order-round9/README.md):publiczny tropSOR200/25/S z rejestruumów pozycja2070,s84PDF, potwierdzony tekstowo także przezroot. Publiczne postępowanie176716 ma19nazw/rozmiarów załączników wedługUI; zawartość nieodczytana,0pobranychSOR/0rysunków/0zdjęć. Nie działało zwykłe pobranie, sessionURLsbezutrwalania i bezobejść. B5/B18/wyjątki/stan2026nadalUNVERIFIED. Cel umowy i jej terminy nie są treścią znaku/datą zatwierdzenia. Główny07ma16rekordów.
