@@ -1,3 +1,8 @@
+# STATUS — s8-loop-s23 (D82: pętla S8 ↔ DW671 ↔ Tykocin, ADR 0288 — numer do potwierdzenia przez lidera)
+- Baza: origin/map-plan-0278 + merge origin/main (baza była 555 commitów za main). Worktree `.claude/worktrees/s8-loop-s23`, Data/raw/derived = junction.
+- Krok 1 (33bb671bd): 15 kafli zdefiniowanych — `tools/worldgen/qa/s8_loop_plan.py` (pinned pbf, okno 22.60 E), blok `ADR 0288` w `tools/worldgen/regions.py`, `Data/Regions/{s8-01..12,dw671-jezewo-01..03}/{overrides.yaml,route_endpoints.json}`, plan `docs/reports/map/s8_loop_plan.{json,png}` (obejrzany). Trasy kontrolne 26,07 km. Węzły (OSM motorway_junction): Choroszcz (s8-01), Tykocin (s8-03), Rzędziany (s8-07), Jeżewo (s8-11/12).
+- Krok 2 (w toku): ingest s8-01..05 (NMT 2025 = jak dk65-01, orto 2024) → `artifacts/s8-loop-s23/run/ingest-<id>.{log,exit}`.
+- NASTĘPNY KROK: `uv run tools/worldgen/build_region.py --region s8-01` → `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region s8-01 --context` (slot heavy) → fidelity → export-route → katalog → import-region → visual-qa.
 # STATUS — D19 map-plan-0278 (chmura D r6, ADR 0278)
 - Krok 1: `tools/worldgen/qa/map_plan_0278.py` + wycinek OSM API 0.6 (21 kandydatów + 3 kalibracyjne + 2 miasta, relacje DK8/19/65, DW671/678) `Data/Plans/map-plan-0278/`, indeks GUGiK (bez pobierania), budżet z generated/*, plan + render `docs/reports/map/map_plan_0278.{json,png}` (14 kafli w kolejce).
 - Krok 2: definicje 3 kafli (regions.py + overrides/sources.authored/route_endpoints): bialystok-porosly, dk8-s8-jeroniki, bialystok-dojlidy-gorne; `tests/gis/test_map_plan_0278.py` 26 passed; test_knyszynska_0208 / test_qa_tools_0219 zielone (powiaty wg ADR 0219).
