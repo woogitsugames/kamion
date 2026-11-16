@@ -53,3 +53,5 @@ M61: runda38 obejmuje 6 indywidualnie obejrzanych nowych fotografii Flickr, bez 
 Knyszyn: dokumenty fontanny wskazują przetarg GK.271.1.2019 oraz umowę22.11.2019, nie rysunek wymiarowany ani odbiór. DK65: metadaneUI dwóch istniejących RV12 potwierdzają czas źródłowego capture i deklarację1280×720, bezGPS/heading. Białystok: jeden ogląd Andersa nie dokumentuje bramy Kwadrat Park. Główne manifesty pozostają49/23/38/25/17/34/18; pomocnicze metadane i odrzucenia nie zwiększają tych liczników.
 
 Kontrola po integracji: 380 poprawnych JSON, 91 obrazów do800px, prostokątne manifestyCSV, brak plików ponad5MB; zakres zmian wyłącznie research/codex-refs-s21 i docs/LICENSES.md. Gotowe do scalenia po recenzji lidera: NIE. Cel ciągły aktywny; trzej agenci pogłębiają lampy, brud i dokumentację infrastruktury.
+
+S16 round14: dwa pełne komunikaty GDDKiA odczytane przez agenta, daty2024/2026 rozdzielone. Projekt bitumiczny/KR6/11,5t/oś/2×2 pasy3,5m w2026; różnica12/14 obiektów nie jest wyjaśnioną formalną zmianą. Brak wykonania/as-built. Odrębne root webopen timeout, bez deklaracji ponownego odczytu. Główny04 pozostaje25; 381 poprawnychJSON po walidacji nowego pliku.
