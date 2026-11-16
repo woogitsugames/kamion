@@ -177,6 +177,56 @@ Zastępuje §5a pkt 1 w części „istniejący materiał `sidewalk_paving`”.
 4. Testy: `tests/gis/test_truck_apron_0218.py` (23 passed) — m.in. opaska > 1,4× jaśniejsza od chodnika i > 4× od
    asfaltu, neutralna szarość, zestaw `paving_20x10_grey`.
 
+## 5c. Rondo kompaktowe jako jedno skrzyżowanie (int-dk65-s22, 2026-11-16; D75)
+**Problem (render knyszyn r1, pierwszy render PR #97).** Pierścień way 1426801304 ma 8 węzłów na obwodzie 54 m (oś
+R 8,65 m; krawędzie 1,6–11,6 m), bo każde z 4 ramion rozdziela się na jednokierunkowy wlot i wylot. Generator
+sklejał rondo w 4 klastry {węzeł wylotu, węzeł wlotu, węzeł rozdziału}; łańcuch pierścienia między wylotem a wlotem
+jednego ramienia wchodził do klastra oboma końcami → 4 samoprzecinające się płyty, opaska w 8 klinach, wyspa =
+czworokąt trawy (`artifacts/int-dk65-s22/rondo-proto/r1_junction_patches_selfintersecting.png`). To nie parametr.
+
+**Decyzja.** Nowy tryb w osobnym module `tools/worldgen/roads/compact_roundabout.py`, włączany WYŁĄCZNIE jawnym
+kluczem na way pierścienia: `set: {compact_roundabout: {closing_r_m, splitter_w_m, splitter_gap_m, lane_w_m,
+lane_clear_m, island_fill}}` (pole `EdgeSection.compact`; zły słownik albo way niebędący pierścieniem →
+`overrides_stale`). Bez klucza kod nie jest wykonywany — pozostałe regiony bez zmian.
+1. **Jeden klaster** (`junctions.build_junctions`): węzły pierścienia + węzły rozdziału jezdni jednokierunkowych
+   (łańcuch jednokierunkowy ≤ 60 m z jednym końcem na pierścieniu); pierścień i te jezdnie są wchłonięte (bez
+   wstęg), ramiona skrzyżowania = drogi odchodzące z węzłów rozdziału.
+2. **Obrys płyty** = koło R_zewn (oś dopasowana + szer. pierścienia / 2) ∪ jezdnie jednokierunkowe (oś ± hw) ∪
+   końcówki ramion, domknięte morfologicznie promieniem `closing_r_m` (wyokrąglenia wylot → następny wlot). Odcinki
+   obrysu między ramionami to narożniki skrzyżowania (`Corner.kind = "fillet"` z jawną łamaną i normalnymi
+   `Corner.out`), więc krawężniki / chodniki / pobocza ramion biegną po nich zwykłymi `build_corner_strips`.
+   Odrzucony wariant: 4 ramiona dwukierunkowe + wyokrąglenia R 12 — środek→krawężnik 9,56 m (< 11,3), krawędzie
+   pasów do 3,18 m poza asfaltem.
+3. **Wyspa środkowa**: opaska jako pełny pierścień (`meshing._emit_strip` z profilem ISLAND: próg, 2 % spadku,
+   materiał z `truck_apron`), krawężnik wyspy, wnętrze = nowy materiał `island_sand` (piasek / drobny żwir, albedo
+   [0,30 0,265 0,21] WORKING_VALUE, zestaw `gravel_compacted`; wyraźnie ciemniejszy od opaski — uwaga lidera do r2).
+   Asfalt płyty pod wyspą jest przycięty na okręgu progu i obniżony o 0,25 m (ślad terenu i kolizja zostają, nic
+   nie przebija przez opaskę na pochylonym terenie).
+4. **Wysepki dzielące**: to, co zostaje między wlotem a wylotem jednego ramienia po zostawieniu pasa `lane_w_m`
+   wzdłuż zewnętrznego krawężnika i `lane_clear_m` od osi jezdni, najwyżej `splitter_w_m` wokół linii środkowej,
+   od `splitter_gap_m` za krawędzią pierścienia do zwężenia < 0,6 m; kerbowane wyspy `gores.Island`
+   (`sidewalk_paving`), min. 3 m².
+5. **Materiał opaski**: `apron_paving_light` dostał `ground_grime` (kałuże wilgoci prawie wyłączone) — domyślne
+   ustawienie importera dla zestawów kostki dawało szare plamy na jasnej opasce (r2).
+
+**Knyszyn (dane, `Data/Regions/knyszyn/overrides.yaml`).** `knyszyn-roundabout-compact`: closing_r_m 6,0,
+splitter_w_m 3,6, lane_w_m 4,0 (WORKING_VALUE wg zdjęcia 9); `knyszyn-roundabout-dk65-feeders-width`: jezdnie
+jednokierunkowe DK65 4,5 m zamiast 6,0 m z BDOT10k (zdjęcie 9: ~4,2 m, ESTIMATED). Wynik `pipeline.build`: środek
+−987,29 / −610,73, asfalt pierścienia 5,00 m (r 6,15–11,15), opaska 3,2 m (próg 0,04), wyspa r 2,95, 4 wysepki
+(33,7 / 20,5 / 8,6 / 13,0 m²), `overrides_stale` puste.
+
+**Testy.** `tests/gis/test_compact_roundabout_0218.py` (9): bez klucza bez zmian; jeden klaster, obrys prosty
+(bez samoprzecięć), asfalt pierścienia ≥ autorskiej szerokości, pasy jezdni w obrysie, normalne narożników; 4 wąskie
+wysepki poza pasami; pełny pierścień opaski (promienie, próg, spadek), wyspa, asfalt nie przebija; klucz błędny /
+nie na pierścieniu = stale; klucz tylko w kaflu knyszyn.
+
+**Znane / otwarte.** (a) Wysepka na wlocie S jest krótka (OSM rozdziela jezdnie 17 m przed pierścieniem; długa
+wysepka z azylem ze zdjęcia 9 wymaga poszerzenia jezdni DK65 przed rondem — osobny override). (b) Brak nasadzeń i
+kamieni na wyspie. (c) Linie P-13 / przejścia stoją na końcach ramion dwukierunkowych (przy węźle rozdziału), nie
+przy samym pierścieniu. (d) Tor śladu zestawu (§3) policzony dla pierścienia 5,0 + 3,2 m nadal obowiązuje, ale
+przejazd przez wloty z wysepkami 12 cm wymaga jazdy próbnej (PlayMode / właściciel). (e) Trasa startowa knyszyn
+wymaga ponownego eksportu po zmianie obrysu.
+
 ## 6. Otwarte
 - Zdjęcia właściciela już są (15.11; §5a): potwierdzają 4 wloty jednopasowe, wyspę dwustrefową i jasną opaskę.
   Nadal niezmierzone: szerokość jezdni i opaski, Ø wyspy, wysokość progu — lider skaluje na zdjęciach 9–11

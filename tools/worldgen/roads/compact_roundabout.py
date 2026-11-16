@@ -38,10 +38,12 @@ KEY = "compact_roundabout"
 DEFAULTS = {"closing_r_m": 8.0,        # WORKING_VALUE: radius of the kerb returns exit -> next entry (photo 9: 6-10 m)
             "splitter_w_m": 2.4,       # WORKING_VALUE: widest part of a splitter island (photo 9: ~2-3 m at the ring)
             "splitter_gap_m": 0.6,     # WORKING_VALUE: splitter nose this far outside the outer ring edge
-            "island_fill": "island_gravel"}
+            "lane_w_m": 4.5,           # WORKING_VALUE: entry / exit lane kept clear along the outer kerb (photo 9: ~4.2)
+            "lane_clear_m": 1.9,       # WORKING_VALUE: no island this close to a feeder axis (truck half width + 0.6)
+            "island_fill": "island_sand"}
 FEEDER_MAX_M = 60.0          # one-way carriageway between the ring and its split node (Knyszyn: 16.7-29.9 m)
 SPLITTER_MIN_M2 = 3.0        # WORKING_VALUE: smaller splitters are left as asphalt
-SPLITTER_MIN_W = 0.8         # WORKING_VALUE: narrower tips of a splitter are cut (kerb 2 x 0.15 + top)
+SPLITTER_MIN_W = 0.6         # WORKING_VALUE: narrower tips of a splitter are cut (kerb 2 x 0.15 + top)
 STUB_MAX_M = 30.0
 ISLAND_SKIRT_M = 0.35
 RING_STEP_M = 0.6
@@ -227,18 +229,23 @@ def corners(net, j, spec: Spec, max_trim=None):
         cs.append(Corner(kind="fillet", k=i, k1=i1, R=rc, center=None, tau_k=trims[i], tau_k1=trims[i1], arc=pts,
                          out=out))
     spec.outline = paved
-    spec.splitters = _splitters(net, spec, ribs)
+    spec.splitters = _splitters(net, spec, paved)
     return cs, trims
 
 
-def _splitters(net, spec: Spec, ribs):
+def _splitters(net, spec: Spec, paved):
+    """Splitter islands: what is left between the entry and the exit of one arm when a lane `lane_w_m` wide is kept
+    clear along the outer kerb (and `lane_clear_m` about each feeder axis), at most `splitter_w_m` wide about the
+    middle line, from `splitter_gap_m` outside the ring to where it gets narrower than SPLITTER_MIN_W."""
     ring_nodes = {x for c in spec.ring for x in (c.node_a, c.node_b)}
     by_far = {}
     for c in spec.feeders:
         far = c.node_b if c.node_a in ring_nodes else c.node_a
         by_far.setdefault(far, []).append(c)
     wmax, gap = float(spec.opts["splitter_w_m"]), float(spec.opts["splitter_gap_m"])
-    keep_out = shapely.union_all(ribs + [Point(*spec.center).buffer(spec.r_out + gap, 96)])
+    lane = paved.exterior.buffer(float(spec.opts["lane_w_m"]), 16)
+    keep_out = shapely.union_all([LineString(c.line.p).buffer(float(spec.opts["lane_clear_m"]), 8)
+                                  for c in spec.feeders] + [lane, Point(*spec.center).buffer(spec.r_out + gap, 96)])
     out = []
     for far in sorted(by_far):
         pair = by_far[far]
@@ -308,8 +315,14 @@ def build(buf, net, juncs) -> list:
         u_in, dz_top = prof[-1][0], prof[-2][3]            # inner edge of the kerb top band, kerb top above the gutter
         r0 = ri - u_in
         rings = [r0] + list(np.arange(math.floor(r0), 0.5, -1.0))
-        V = [np.column_stack([spec.center + r * cs_[:-1], zg[:-1] + dz_top]) for r in rings]
-        V.append(np.array([[spec.center[0], spec.center[1], float(np.mean(zg[:-1])) + dz_top]]))
+        # top of the fill: the plane fitted to the kerb line + the kerb line's own deviation fading to the centre
+        # (copying the rim heights to every ring made a faceted cone on a tilted site: render knyszyn r2)
+        rim = spec.center + r0 * cs_[:-1]
+        pl = np.linalg.lstsq(np.column_stack([rim - spec.center, np.ones(n)]), zg[:-1], rcond=None)[0]
+        dev = zg[:-1] - (rim - spec.center) @ pl[:2] - pl[2]
+        V = [np.column_stack([spec.center + r * cs_[:-1], (r * cs_[:-1]) @ pl[:2] + pl[2] + dev * (r / r0) + dz_top])
+             for r in rings]
+        V.append(np.array([[spec.center[0], spec.center[1], float(pl[2]) + dz_top]]))
         V = np.vstack(V)
         T = []
         for k in range(len(rings) - 1):

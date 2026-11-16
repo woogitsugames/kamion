@@ -37,7 +37,7 @@ overrides:
     confidence: medium
     verify: compare render rondo_dk65_top with owner photo 9 (Data/raw/refs/owner-knyszyn-2026-11-15)
     set:
-      compact_roundabout: {closing_r_m: 8.0, splitter_w_m: 2.4}
+      compact_roundabout: {closing_r_m: 6.0, splitter_w_m: 3.6, lane_w_m: 4.0}
   - id: knyszyn-roundabout-dk65-feeders-width
     target: {osm_way: [1464342634, 1464342635, 1464342638, 1464342640]}
     reason: >-

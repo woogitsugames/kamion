@@ -410,7 +410,7 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 co_ = st["compact_roundabout"]
                 co_ = {} if co_ in (None, True) else co_
                 ok_ = isinstance(co_, dict) and set(co_) <= {"closing_r_m", "splitter_w_m", "splitter_gap_m",
-                                                              "island_fill"}
+                                                              "island_fill", "lane_w_m", "lane_clear_m"}
                 if not ok_ or not sec.roundabout:
                     if ov["id"] not in net.overrides_stale:
                         net.overrides_stale.append(ov["id"])
@@ -1277,6 +1277,11 @@ def structure_sides(c: Chain, mask: np.ndarray):
         d["h"], d["w"], d["depth"] = smooth_1d(raw["h"], sig), smooth_1d(raw["w"], sig), smooth_1d(raw["depth"], sig)
 
 
+def walk_mat(mat: int) -> str:
+    """Material name of a side `mat` code (shoulder codes of ADR 0272 have no walk material)."""
+    return WALK_MATS[mat] if 0 <= mat < len(WALK_MATS) else WALK_MATS[0]
+
+
 def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
     """Profile as list of (u0, dz0, u1, dz1, material) from the gutter outward (u >= 0).
 
@@ -1323,7 +1328,7 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
                 (u2, z1 - d, u3, z1 - d, "verge_grass"),
                 (u3, z1 - d, u4, 0.0, "verge_grass"),
                 (u4, 0.0, u4, -depth, "verge_grass")]
-    m = WALK_MATS[mat]
+    m = walk_mat(mat)
     tw = S.KERB_TOP_W
     zw = h + S.SIDEWALK_CROSSFALL * w
     if mat == MAT_FLUSH_ROAD:
