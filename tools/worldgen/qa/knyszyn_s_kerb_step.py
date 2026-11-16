@@ -5,7 +5,7 @@ Stations every 1 m from 2 to 24 m from the (moved) split node of `knyszyn-rounda
 centre; at each station a perpendicular cross-section on both sides, 0..16 m from the axis, 0.05 m step:
   hard   = triangles of node `road` / `paved` whose material is not grass (carriageway, kerb, sidewalk, paving),
   ground = the highest of `terrain_lod0`, `plot_ground` and grass materials of `road`.
-The hard edge is the outermost lateral reached from the axis without a gap > 0.3 m in `hard`; the step is
+The hard edge is the outermost lateral with `hard` within EDGE_MAX_M of the axis (skips the grass median of the split arm); the step is
 z(hard edge) - z(ground at edge + 1.5 m). Output JSON: per side max / median step and the stations.
     uv run --project tools/worldgen python tools/worldgen/qa/knyszyn_s_kerb_step.py [out.json]"""
 import json, sys
@@ -20,6 +20,7 @@ SPLIT_NODE = "n4898926854"       # OSM split node of the S arm (override knyszyn
 TOWARD = "n1134813637"           # far end of way 286990127 (the split moves out along it)
 LAT = np.arange(0.0, 16.0001, 0.05)
 BEHIND_M = 1.5
+EDGE_MAX_M = 12.0                # outer hard edge searched within this lateral (carriageway + sidewalk)
 GRASS = ("grass", "verge")
 
 
@@ -52,16 +53,12 @@ def main(out=None):
             pts = p0 + np.outer(LAT, nrm * sg)
             zh = S.locate(hard, pts)
             ok = ~np.isnan(zh)
-            if not ok[0]:
+            if not ok.any():
                 continue
-            gap = 0; edge = 0
-            for i in range(len(LAT)):
-                if ok[i]:
-                    edge, gap = i, 0
-                else:
-                    gap += 1
-                    if gap * 0.05 > 0.3:
-                        break
+            near = ok & (LAT <= EDGE_MAX_M)
+            if not near.any():
+                continue
+            edge = int(np.nonzero(near)[0][-1])   # outermost hard hit (skips the grass median of the split arm)
             q = p0 + nrm * sg * (LAT[edge] + BEHIND_M)
             zg = S.locate(ground, q[None])[0]
             if np.isnan(zg):
