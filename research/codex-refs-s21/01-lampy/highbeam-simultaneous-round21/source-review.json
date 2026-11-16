@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-16",
+  "photographs": 0,
+  "r48": {
+    "url": "http://www.unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2015/R048r12e.pdf",
+    "local_pdf": "C:/Users/matma/Documents/Claude/kamion/research/gptpro/p4-truck-regulations/files/P4-001.pdf",
+    "sha256": "20300c933bfbd4557ed30245fe4365a0e8808c3d5014e66168fda23a6ec918dc",
+    "read": "Pełny istniejący dokument; okładka i wydrukowana s32 odczytane pypdf, s32 także bitmapa.",
+    "version": "16.10.2014 Rev12;seria06 doSupp4EIF09.10.2014;URL2015",
+    "precise_scope": "which can be switched on simultaneously",
+    "implication_status": "INFERENCE: badać możliwe równoczesne kombinacje, nie tylko lampy aktualnieON. Konkretne okablowanieUNVERIFIED.",
+    "printed_anomaly": "W pierwszym zdaniu6.1.9.2 występuje urwana fraza on the several. Potwierdzona w tekście i bitmapie; nie uzupełniono jej rzekomym dosłownym brzmieniem."
+  },
+  "r149": {
+    "url": "https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2020/R149e.pdf",
+    "version": "13.01.2020;oryginalnytekst",
+    "locator": "5.1.3.6,s30",
+    "evidence_reuse": "../highbeam-reference-round16/norms.csv i source-review.json; wcześniejszy pełny odczyt, nie nowy pełny audyt.",
+    "finding": "Dyskretna kwantyzacja nie ma jednoznacznej odwrotności.27.5/30 nie są pomiarem rzeczywistego IM.",
+    "limits": "Nie wyznaczano nowego przedziału odwrotnego/reguły remisu ani homologacji poszczególnych etykiet."
+  },
+  "proposal": {
+    "url": "https://documents.un.org/api/symbol/access?l=E&s=ECE%2FTRANS%2FWP.29%2FGRE%2F2024%2F5",
+    "symbol": "ECE/TRANS/WP.29/GRE/2024/5",
+    "date": "2024-02-06",
+    "pages": 2,
+    "status": "PROPOSAL_NOT_ADOPTION_PROOF",
+    "scope": "GTB proposal supplement09seriesR48;90GREsession29.04–03.05.2024",
+    "read": "Web pełny tekst44linie turn626view0; następnie lokalny pełnyPDF, pypdf i bitmapy obu stron.",
+    "redline_seen": "S2,I: dodano pogrubione odniesienie do reference value; skreślono fragment430000cd z powiązaniem do ref; proponowane zdanie pozostawia100.",
+    "reason": "S2,II.1–2: autorzy powołują zaokrąglenie do najbliższej wartości i nierówne kroki jako przyczynę możliwego przekroczenia sumycd pomimo sumy referencji. To argumentacja projektu, nie pomiar/nowy przepis.",
+    "not_checked": [
+      "adoption by GRE/WP29",
+      "published adopted amendment",
+      "entry into force",
+      "full amendment chain",
+      "current legal text2026"
+    ],
+    "download_attempts": 1,
+    "bytes": 101570,
+    "sha256": "4539ee801a40662ce2e8c15d173b436ea3e2aa58743579039d8d443df1ac3c10",
+    "web_screenshot": "TimeoutError; potem jeden zwykły download UN, bez403 i bez hostvariant.",
+    "render_warning": "Poppler Symbol/ArialUnicode missingfont warning; istotne cyfry/tekst i redline czytelne na obejrzanych bitmapach."
+  },
+  "raw_directory": "C:/Users/matma/Documents/Claude/kamion/Data/raw/refs/codex-s21/01-lampy/highbeam-simultaneous-round21",
+  "git_policy": "Tylko własne parafrazyCSVJSONREADME, bezPDFbitmap/parent/git",
+  "counts": {
+    "photographs": 0,
+    "norm_condition_rows": 4,
+    "documentary_manifest_rows": 3
+  }
+}

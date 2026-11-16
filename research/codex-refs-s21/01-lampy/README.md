@@ -160,3 +160,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## VignalLC8 — kontekst fizycznej części, runda20
 
 [physical-rear-approval-round20](physical-rear-approval-round20/README.md):3indywidualnie obejrzane kadry jednej realnej części156780/RIGHT,1600×1200 wUI; link-onlyARR,0pobrań. Przód/tył/etykieta, kolor/kształt/komorylubUNKNOWN wchildmanifest. Producent potwierdza zastosowanieTrucks/ScaniaP&R, sprzeczny parametr osobowe wofercie ujawniony. E/numer/funkcje nieczytelne na realnymkloszu, katalogowegoE2/2040 nie przeniesiono.0nowychpotwierdzonych homologacji/ON/noc. PozostajeAUX poza głównym49; nie3lampy i nie nowa rodzina wobec istniejącegoLC8, tylko odrębny model156780 vs156290.
+
+
+## Światła drogowe: możliwe kombinacje — runda21
+
+[highbeam-simultaneous-round21](highbeam-simultaneous-round21/README.md):4warunki/interpretacje,0fotografii. R48Rev12/16.10.2014,s32,6.1.9.1–.2:430000cd/ref100 dla reflektorów mogących być jednocześnie załączone, sumowanie znaków odniesienia; literalne stareR/CR→10 nie tylneR1. R149kwantyzacja uniemożliwia dokładne odtworzenieIM z27.5/30, bez nowychpomiarów. UNGRE2024/5 projekt redline usuwa podwójnyfragmentcd/przyref100, PROPOSAL_NOT_ADOPTION_PROOF, bez twierdzeniaEIF/aktualności2026. Agent obejrzał pełne dokumenty i bitmapy, root osobno R48s32/projekts2. Dokumenty/rendery pozaGit; nie zmieniono bazowych24norm ani HR16.
