@@ -21,11 +21,11 @@ roundabout becomes one junction:
     middle line: kerbed traffic islands (gores.Island), at least `SPLITTER_MIN_M2`.
 
 ADR 0274 (kerb mode, on when the key carries `entry_r_m` / `exit_r_m`):
-  * the outline no longer follows the outer edges of the mapped one-way carriageways (GPS-traced, nearly tangent to
-    the ring: wide funnels and fat asphalt patches between the arms). Each arm gets a mouth strip about the middle
-    line of its entry / exit pair, half width = half the lane separation + half a lane, between the arm's own half
-    width and `splitter_w_m / 2 + lane_w_m`; the kerb returns into the ring are fillets of `entry_r_m` (kerb on the
-    right of the entering lane) and `exit_r_m`, a corridor `lane_clear_m` about every mapped lane axis stays paved;
+  * the one-way lanes are not the mapped lines (GPS-traced, nearly tangent to the ring: wide funnels and fat asphalt
+    patches between the arms) but designed lanes (lay_lanes): parallel to the arm axis, at most `splitter_w_m / 2 +
+    lane_w_m / 2` from it, joining the ring axis with an arc whose outer kerb has the radius `entry_r_m` (kerb on
+    the right of the entering lane) / `exit_r_m`; the outline is the ring disc + these lanes + the arm ends, with
+    the same radii as fillets wherever a concave corner is left;
   * `crossings: [osm way of the arm, ...]`: pedestrian crossing P-10 across the entry and the exit lane,
     `crossing_offset_m` outside the ring carriageway, the splitter island is cut through at road level (refuge);
   * P-13 across every entry lane along the edge of the ring carriageway (Dz.U. 2019 poz. 2311 zal. 2 pkt 4.2.4 with
@@ -207,6 +207,138 @@ def specs(net, junction_nodes=None) -> list:
     return out
 
 
+LANE_ARC_STEP_M = 0.5
+LANE_AXIS_MISS_M = 3.0       # an arm whose axis passes further from the ring centre keeps its mapped lanes
+LANE_AXIS_AT_M = 14.0        # the arm axis is read off the pair of lanes this far outside the ring axis
+
+
+def _arc(q, p0, p1, step=LANE_ARC_STEP_M):
+    """Points of the shorter arc about q from p0 to p1 (p0 excluded)."""
+    a0, a1 = math.atan2(*(p0 - q)[::-1]), math.atan2(*(p1 - q)[::-1])
+    da = (a1 - a0 + math.pi) % (2 * math.pi) - math.pi
+    r = float(np.hypot(*(p0 - q)))
+    t = a0 + da * np.linspace(0.0, 1.0, max(2, int(abs(da) * r / step) + 2))[1:]
+    return q + r * np.column_stack([np.cos(t), np.sin(t)])
+
+
+def _reline_new(c, pts):
+    """Give the chain a new centre line of another length: resampled to network.DENSE, the per-station arrays
+    carried over by the fraction of the length (a feeder is one section, one direction)."""
+    from .geom import Polyline, cumlen
+    from .network import DENSE
+    s_new = cumlen(pts)
+    L = float(s_new[-1])
+    n = max(2, int(round(L / DENSE)) + 1)
+    t = np.linspace(0.0, L, n)
+    q = np.column_stack([np.interp(t, s_new, pts[:, 0]), np.interp(t, s_new, pts[:, 1])])
+    m = len(c.hw)
+    j = np.clip(np.round(t / max(L, 1e-9) * (m - 1)).astype(int), 0, m - 1)
+    c.hw = np.interp(t / max(L, 1e-9) * (m - 1), np.arange(m), c.hw)
+    c.sec_idx, c.dirn, c.bridge = c.sec_idx[j], c.dirn[j], c.bridge[j]
+    c.meta["rev"] = c.meta["rev"][j]
+    if "center_offset" in c.meta:
+        del c.meta["center_offset"]
+    c.line = Polyline(q)
+
+
+def lay_lanes(net) -> list:
+    """ADR 0274 (kerb mode): the one-way lanes of every arm are laid as designed lanes instead of the mapped GPS
+    traces. Seen along the arm axis (the middle line of the pair LANE_AXIS_AT_M outside the ring axis, straight
+    from there to the ring) a lane keeps its mapped distance from the axis up to `splitter_w_m / 2 + lane_w_m / 2`, runs parallel to the axis at
+    that distance and joins the ring axis with an arc of the kerb radius + half the lane (entry_r_m / exit_r_m: the
+    kerb on the outside of the turn then has exactly that radius), then follows the ring axis to its mapped ring
+    node - or, when that node lies before the point where the arc would touch the ring axis, an arc of the same
+    radius runs from the lane line into the node. Further out than LANE_AXIS_AT_M the mapped / authored line stays.
+    A lane that cannot be laid like that (axis misses the centre, no room for the arc) keeps its mapped line; the reason is returned and reported in the roundabout's notes.
+    Idempotent (chain.meta["cr_lane"]); nothing happens for rings without the kerb-mode key."""
+    notes = []
+    for spec in specs(net):
+        if not kerb_mode(spec.opts):
+            continue
+        o = spec.opts
+        ring_nodes = {x for c in spec.ring for x in (c.node_a, c.node_b)}
+        off = float(o["splitter_w_m"]) / 2 + float(o["lane_w_m"]) / 2
+        by_far = {}
+        for c in spec.feeders:
+            by_far.setdefault(c.node_b if c.node_a in ring_nodes else c.node_a, []).append(c)
+        for far in sorted(by_far):
+            pair = by_far[far]
+            if len(pair) != 2 or any(c.meta.get("cr_lane") for c in pair):
+                continue
+            # local axis of the arm near the ring: the middle line of the pair LANE_AXIS_AT_M outside the ring axis
+            # (a long arm is not straight back to its split node)
+            f = np.linspace(0.0, 1.0, 160)
+            L2 = [c.line.point(f * c.length if c.node_a == far else (1.0 - f) * c.length) for c in pair]
+            mid = (L2[0] + L2[1]) / 2
+            k = int(np.argmax(np.hypot(*(mid - spec.center).T) <= spec.r_axis + LANE_AXIS_AT_M))
+            S0 = mid[k]
+            d = sum((q[min(k + 3, len(f) - 1)] - q[max(k - 3, 0)]) for q in L2)
+            d = d / max(float(np.hypot(*d)), 1e-9)             # inward along the arm axis
+            nl = np.array([-d[1], d[0]])
+            xo, yo = float((spec.center - S0) @ d), float((spec.center - S0) @ nl)
+            if abs(yo) > LANE_AXIS_MISS_M or xo <= 0:
+                notes.append((spec.id, f"arm at {far}: axis passes {abs(yo):.1f} m from the ring centre, mapped lanes kept"))
+                continue
+            new = []
+            for c in pair:
+                P = c.line.p if c.node_a == far else c.line.p[::-1]       # split node -> ring node
+                x, y = (P - S0) @ d, (P - S0) @ nl
+                sg = 1.0 if y[-1] >= 0 else -1.0
+                toward = 1 if c.node_b in ring_nodes else -1
+                entry = int(c.dirn[len(c.dirn) // 2]) * toward > 0
+                hw = float(np.mean(c.hw))
+                rk = float(o["entry_r_m"] if entry else o["exit_r_m"])
+                node = P[-1]
+                xn, yn = float((node - S0) @ d), float((node - S0) @ nl)
+                a_node = math.atan2(*(node - spec.center)[::-1])
+                i0 = int(np.argmax(x >= 0.0))                  # mapped / authored line up to the local axis origin
+                pts = None
+                for rc in (rk + hw, 0.8 * rk + hw, 0.6 * rk + hw):
+                    yq = sg * (off + rc)
+                    tail = None
+                    disc_ = (spec.r_axis + rc) ** 2 - (yq - yo) ** 2
+                    if disc_ > 0:
+                        xq = xo - math.sqrt(disc_)
+                        q = S0 + d * xq + nl * yq
+                        t_ring = spec.center + (q - spec.center) * spec.r_axis / (spec.r_axis + rc)
+                        a_t = math.atan2(*(t_ring - spec.center)[::-1])
+                        # counter-clockwise ring: an entry meets the ring before its node, an exit after it
+                        da = (a_node - a_t) % (2 * math.pi) if entry else (a_t - a_node) % (2 * math.pi)
+                        if da <= math.pi / 2:
+                            ang = a_t + (1.0 if entry else -1.0) * da * np.linspace(
+                                0.0, 1.0, max(2, int(da * spec.r_axis / LANE_ARC_STEP_M) + 2))[1:]
+                            ring_arc = spec.center + spec.r_axis * np.column_stack([np.cos(ang), np.sin(ang)])
+                            ring_arc[-1] = node
+                            tail = np.vstack([_arc(q, S0 + d * xq + nl * sg * off, t_ring), ring_arc])
+                    if tail is None and rc ** 2 - (yn - yq) ** 2 > 0:
+                        # the mapped ring node lies before the point where the arc would touch the ring axis: the
+                        # arc of the same radius runs from the lane line straight into the node
+                        xq = xn - math.sqrt(rc ** 2 - (yn - yq) ** 2)
+                        q = S0 + d * xq + nl * yq
+                        tail = _arc(q, S0 + d * xq + nl * sg * off, node)
+                    keep = (x >= 0.0) & (x < xq - 0.25) & (np.arange(len(x)) >= i0)
+                    if tail is None or xq < 0.5:
+                        continue
+                    head = S0 + np.outer(x[keep], d) + np.outer(sg * np.minimum(np.abs(y[keep]), off), nl)
+                    pts = np.vstack([P[:i0], head, S0 + d * xq + nl * sg * off, tail])
+                    break
+                if pts is None and abs(yn) <= off + 0.05:
+                    # the ring node itself lies inside the designed lane line: the mapped line, held within it
+                    keep = np.arange(len(x)) >= i0
+                    pts = np.vstack([P[:i0], S0 + np.outer(x[keep], d) + np.outer(sg * np.minimum(np.abs(y[keep]), off), nl)])
+                    pts[-1] = node
+                if pts is None:
+                    notes.append((spec.id, f"lane {c.id}: no room for the designed lane, mapped line kept"))
+                    new = None
+                    break
+                new.append((c, pts if c.node_a == far else pts[::-1]))
+            for c, pts in new or []:
+                _reline_new(c, pts)
+                c.meta["cr_lane"] = True
+    net.cr_lane_notes = getattr(net, "cr_lane_notes", []) + notes
+    return notes
+
+
 def _ribbon(c, s0=None, s1=None, n=None):
     s0 = 0.0 if s0 is None else s0
     s1 = c.length if s1 is None else s1
@@ -214,6 +346,33 @@ def _ribbon(c, s0=None, s1=None, n=None):
     s = np.linspace(s0, s1, n)
     hw = c.hw_at(s)
     return Polygon(np.vstack([c.line.offset_point(s, hw), c.line.offset_point(s, -hw)[::-1]])).buffer(0)
+
+
+def _corner_points(ext, k0, k1, p0, p1, direction):
+    """Outline vertices k0 .. k1 (counter-clockwise, wrapping) as the polyline of one corner, with its ends put on
+    the gutter points p0 / p1 and vertices closer than 0.25 m dropped. Always >= 2 distinct points (review s23 D18
+    P2-4: k0 == k1 - two arms meeting in one outline vertex - gave one point and np.gradient raised, aborting
+    build_world); returns (points, True) when the corner had to be made up."""
+    m = len(ext)
+    seq, k = [k0], k0
+    while k != k1 and len(seq) <= m:
+        k = (k + 1) % m
+        seq.append(k)
+    pts = ext[seq].copy()
+    touch = len(pts) < 2
+    if touch:
+        pts = np.vstack([pts[0], pts[0]])
+    pts[0], pts[-1] = p0, p1
+    keep = [0]
+    for q in range(1, len(pts) - 1):
+        if np.hypot(*(pts[q] - pts[keep[-1]])) >= 0.25 and np.hypot(*(pts[q] - pts[-1])) >= 0.25:
+            keep.append(q)
+    keep.append(len(pts) - 1)
+    pts = pts[keep]
+    if np.hypot(*(pts[-1] - pts[0])) < 1e-6:
+        pts = np.vstack([pts[0], pts[0] + np.asarray(direction, float) * 0.01])
+        touch = True
+    return pts, touch
 
 
 def _on_boundary(pg, p, tol=0.03):
@@ -280,26 +439,10 @@ def corners(net, j, spec: Spec, max_trim=None):
     m = len(ext)
     for i in range(n):
         i1 = (i + 1) % n
-        k0, k1 = idxL[i], idxR[i1]
-        seq = [k0]
-        k = k0
-        while k != k1 and len(seq) <= m:
-            k = (k + 1) % m
-            seq.append(k)
-        pts = ext[seq].copy()
-        if len(pts) < 2:
-            # review s23 D18 P2-4: two arms meet in one outline vertex - a straight two-point corner, not a crash
-            pts = np.vstack([pts[0], pts[0]])
+        pts, touch = _corner_points(ext, idxL[i], idxR[i1], arms[i].gutter(trims[i], +1), arms[i1].gutter(trims[i1], -1),
+                                    arms[i].direction(trims[i]))
+        if touch:
             spec.notes.append(f"corner {arms[i].chain.id} -> {arms[i1].chain.id}: arms touch on the outline")
-        pts[0], pts[-1] = arms[i].gutter(trims[i], +1), arms[i1].gutter(trims[i1], -1)
-        keep = [0]
-        for q in range(1, len(pts) - 1):
-            if np.hypot(*(pts[q] - pts[keep[-1]])) >= 0.25 and np.hypot(*(pts[q] - pts[-1])) >= 0.25:
-                keep.append(q)
-        keep.append(len(pts) - 1)
-        pts = pts[keep]
-        if np.hypot(*(pts[-1] - pts[0])) < 1e-6:
-            pts = np.vstack([pts[0], pts[0] + arms[i].direction(trims[i]) * 0.01])
         tg = np.gradient(pts, axis=0)
         tg /= np.maximum(np.hypot(*tg.T), 1e-9)[:, None]
         out = np.column_stack([tg[:, 1], -tg[:, 0]])          # CCW boundary: outside is to the right of travel
@@ -333,61 +476,39 @@ def _legs(spec: Spec, n=80):
     return out
 
 
-def _wedge(center, a0, a1, r=400.0):
-    """Sector of the plane about `center` from bearing a0 counter-clockwise to a1."""
-    if a1 <= a0:
-        a1 += 2 * math.pi
-    t = np.linspace(a0, a1, max(3, int((a1 - a0) / 0.1) + 2))
-    return Polygon(np.vstack([center, center + r * np.column_stack([np.cos(t), np.sin(t)])]))
-
-
 def _kerb_outline(net, spec: Spec, arms, disc, stubs):
-    """ADR 0274: paved area with explicit kerb returns (see the module docstring). Right-hand traffic: arms are
+    """ADR 0274: paved area = ring disc + the designed lanes (lay_lanes) + the arm ends, with the kerb returns as
+    fillets (see the module docstring). Right-hand traffic: arms are
     sorted counter-clockwise, the lane entering from arm i is on its counter-clockwise side, so the corner between
     arm i and arm i + 1 starts with the entry return of arm i and ends with the exit return of arm i + 1."""
     o = spec.opts
-    off_max = float(o["splitter_w_m"]) / 2 + float(o["lane_w_m"])
     legs = _legs(spec)
-    parts = [disc] + list(stubs)
-    paired = set()
-    spec.mouths = {}
+    spec.mouths, strips = {}, []
     for a in arms:
         if a.node not in legs:
             continue
         pair, (l0, l1) = legs[a.node]
-        paired |= {c.id for c in pair}
-        mid = (l0 + l1) / 2
-        sep = np.hypot(*(l0 - l1).T) / 2
         hw_f = float(np.mean([np.mean(c.hw) for c in pair]))
+        mid, half = (l0 + l1) / 2, np.hypot(*(l0 - l1).T) / 2 + hw_f
+        spec.mouths[a.node] = {"mid": mid, "half_w": half}
+        # at the split node the two lanes lie on each other: the carriageway is never narrower than the arm (or than
+        # the mouth at its widest, where the arm is wider than that: it then narrows 1 : MOUTH_TAPER per side)
         hw_arm = float(a.chain.hw_at(a.s(0.0)))
-        off = np.maximum.accumulate(np.clip(sep + hw_f, hw_arm, max(off_max, hw_arm)))
-        tg = np.gradient(mid, axis=0)
-        tg /= np.maximum(np.hypot(*tg.T), 1e-9)[:, None]
-        nl = np.column_stack([-tg[:, 1], tg[:, 0]])
-        strip = Polygon(np.vstack([mid + nl * off[:, None], (mid - nl * off[:, None])[::-1]])).buffer(0)
-        parts.append(strip)
-        spec.mouths[a.node] = {"mid": mid, "half_w": off}
-    clear = float(o["lane_clear_m"])
-    for c in spec.feeders:
-        parts.append(LineString(c.line.p).buffer(clear, 8, cap_style="flat") if c.id in paired else _ribbon(c))
-    raw = shapely.union_all(parts)
-    raw = raw.buffer(0.3, 8).buffer(-0.3, 8)                 # slivers between a corridor and its mouth strip
-    bear = [math.atan2(*(a.gutter(min(6.0, a.L * 0.5), 0) - spec.center)[::-1]) for a in arms]
-    n = len(arms)
-    we, wx = [], []
-    for i in range(n):
-        b0, b1 = bear[i], bear[(i + 1) % n]
-        if b1 <= b0:
-            b1 += 2 * math.pi
-        bm = (b0 + b1) / 2
-        we.append(_wedge(spec.center, b0, bm))
-        wx.append(_wedge(spec.center, bm, b1))
-    re_, rx = float(o["entry_r_m"]), float(o["exit_r_m"])
-    fill_e = raw.buffer(re_, 32).buffer(-re_, 32).difference(raw).intersection(shapely.union_all(we))
-    fill_x = raw.buffer(rx, 32).buffer(-rx, 32).difference(raw).intersection(shapely.union_all(wx))
-    out = shapely.union_all([raw, fill_e, fill_x])
-    out = out.buffer(NOSE_R_M, 16).buffer(-NOSE_R_M, 16)     # the cusp / step where the two returns of a corner meet
-    return out.buffer(-1.0, 16).buffer(1.0, 16)              # nubs: corners of corridors / strips proud of a return
+        dist = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(mid, axis=0).T))])
+        w = np.maximum(half, np.maximum(min(hw_arm, float(half.max())), hw_arm - dist / MOUTH_TAPER))
+        k = int(np.argmax(w <= half + 1e-9)) if (w <= half + 1e-9).any() else len(half) - 1
+        if k >= 1:
+            sl = slice(0, min(k + 2, len(mid)))
+            tg = np.gradient(mid[sl], axis=0)
+            tg /= np.maximum(np.hypot(*tg.T), 1e-9)[:, None]
+            nl = np.column_stack([-tg[:, 1], tg[:, 0]])
+            strips.append(Polygon(np.vstack([mid[sl] + nl * w[sl, None], (mid[sl] - nl * w[sl, None])[::-1]])).buffer(0))
+    spec.notes += [t for sid, t in getattr(net, "cr_lane_notes", []) if sid == spec.id and t not in spec.notes]
+    raw = shapely.union_all([disc] + list(stubs) + strips + [_ribbon(c) for c in spec.feeders])
+    # the kerb radii are in the lanes already (lay_lanes); what is left are the cusps where the returns of two
+    # neighbouring arms meet before the ring kerb and the slivers where a return runs into the ring disc
+    out = raw.buffer(NOSE_R_M, 32).buffer(-NOSE_R_M, 32)
+    return out.buffer(-1.0, 16).buffer(1.0, 16)              # nubs: corners of ribbons proud of a return
 
 
 def _splitters(net, spec: Spec, paved):
@@ -415,6 +536,7 @@ def _splitters(net, spec: Spec, paved):
     return out
 
 
+MOUTH_TAPER = 5.0            # WORKING_VALUE: the arm narrows to its two lanes 1 : 5 per side behind the split node
 NOSE_R_M = 4.0               # WORKING_VALUE: kerb nose between two returns that meet before the ring kerb
 P13_INSET_M = 0.15           # WORKING_VALUE: bases of the P-13 triangles this far outside the ring carriageway edge
 P13_SIDE_M = 0.30            # WORKING_VALUE: P-13 / P-10 end this far from a kerb face
@@ -462,13 +584,31 @@ def _plan_crossings(net, spec: Spec, arms):
                 h = S_.P10_WIDTH / 2
                 band = Polygon([c0 - t * h - nrm * reach, c0 + t * h - nrm * reach, c0 + t * h + nrm * reach,
                                 c0 - t * h + nrm * reach])
-                across = LineString([c0 - nrm * reach, c0 + nrm * reach]).intersection(spec.outline.difference(uncut))
+                # lanes: what all three lines across the band (near edge, middle, far edge) have in common - the kerb
+                # returns and the island nose curve inside the 4 m of the crossing
+                free = spec.outline.difference(uncut)
+                spans = {}
+                for dt in (-h, 0.0, h):
+                    cut_ = LineString([c0 + t * dt - nrm * reach, c0 + t * dt + nrm * reach]).intersection(free)
+                    seen = set()
+                    for seg in getattr(cut_, "geoms", [cut_]):
+                        if seg.geom_type != "LineString" or seg.length < 1.0:
+                            continue
+                        la = np.sort((np.asarray(seg.coords) - c0) @ nrm)
+                        # no island on this line (beyond its tail): both lanes, up to the middle line
+                        both = la[0] < -0.5 and la[-1] > 0.5
+                        for sd, lo_, hi_ in ((-1, la[0], 0.0), (1, 0.0, la[-1])) if both else (
+                                (1 if 0.5 * (la[0] + la[-1]) > 0 else -1, la[0], la[-1]),):
+                            if sd not in seen:
+                                seen.add(sd)
+                                spans.setdefault(sd, []).append((lo_, hi_))
                 stripes, lanes = [], []
-                for seg in getattr(across, "geoms", [across]):
-                    if seg.geom_type != "LineString" or seg.length < 2 * P13_SIDE_M + 2 * S_.P10_STRIPE:
+                for sd in sorted(spans):
+                    if len(spans[sd]) != 3:
                         continue
-                    q = np.asarray(seg.coords)
-                    la = np.sort((q - c0) @ nrm)
+                    la = (max(v[0] for v in spans[sd]), min(v[1] for v in spans[sd]))
+                    if la[-1] - la[0] < 2 * P13_SIDE_M + 2 * S_.P10_STRIPE:
+                        continue
                     lo, hi = la[0] + P13_SIDE_M, la[-1] - P13_SIDE_M
                     nb = int(math.floor((hi - lo + S_.P10_GAP) / (S_.P10_STRIPE + S_.P10_GAP)))
                     if nb < 2:
@@ -515,7 +655,7 @@ def _plan_crossings(net, spec: Spec, arms):
         u_out = mid[min(k + 4, len(mid) - 1)] - mid[k]
         u_out /= max(float(np.hypot(*u_out)), 1e-9)
         lat = ((spec.center + rp * cs_) - mid[k]) @ np.array([-u_out[1], u_out[0]])
-        ok = np.abs(lat) <= float(m["half_w"].max()) - P13_SIDE_M
+        ok = np.abs(lat) <= float(m["half_w"][::-1][k]) + 0.5
         for rr in (rp + 0.05, rp + 0.4, rp + 0.75, spec.r_out + 1.3):
             pt = spec.center + rr * cs_
             ok &= shapely.contains_xy(lane_ok, pt[:, 0], pt[:, 1])
@@ -593,7 +733,7 @@ def island_fill_mesh(center, r0, z_rim, dz_top=0.0):
 
     radii, counts = [r0], [n]
     r = r0 - FILL_RIM_BAND_M
-    if r > 0.5:
+    if r > 0.3:
         radii.append(r)
         counts.append(n)
         r -= FILL_RING_M
@@ -601,8 +741,11 @@ def island_fill_mesh(center, r0, z_rim, dz_top=0.0):
             radii.append(r)
             counts.append(int(min(n, max(8, round(2 * math.pi * r / FILL_SEG_M)))))
             r -= FILL_RING_M
-        radii.append(min(0.5, radii[-1] * 0.5))
-        counts.append(8)
+    for k in range(1, len(counts)):                           # a ring has at least half the segments of the one outside
+        counts[k] = max(counts[k], -(-counts[k - 1] // 2))
+    while counts[-1] > 8:                                     # ... down to 8 around the centre vertex
+        radii.append(radii[-1] * 0.6)
+        counts.append(max(8, -(-counts[-1] // 2)))
     V, start = [], []
     for k, (rr, m) in enumerate(zip(radii, counts)):
         a = np.arange(m) * 2 * math.pi / m

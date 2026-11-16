@@ -288,6 +288,8 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     net.chains = build_chains(nodes, edges)
     for c in net.chains:
         prepare_chain(c, net, sec_index)
+    from . import compact_roundabout as CR_          # ADR 0274: designed lanes of kerb-mode compact roundabouts
+    CR_.lay_lanes(net)
     return net
 
 
