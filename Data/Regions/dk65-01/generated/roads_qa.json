@@ -903,7 +903,7 @@
    "length_m": 46.5,
    "max_grade": 0.0257,
    "overrides": [
-    "knyszynska-xsec-c"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
@@ -3161,7 +3161,7 @@
    "length_m": 79.4,
    "max_grade": 0.0112,
    "overrides": [
-    "knyszynska-xsec-e"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.0,
@@ -3439,7 +3439,7 @@
    "length_m": 28.5,
    "max_grade": 0.0171,
    "overrides": [
-    "knyszynska-xsec-d"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
@@ -4040,7 +4040,7 @@
    "patches": 307
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 299546,
+  "footprint_nodes": 300973,
   "fork_abreast": [],
   "fork_shifts": [
    {
@@ -4812,6 +4812,7 @@
    "P-1 lane line": 37,
    "P-10 crossing": 3,
    "P-13": 5,
+   "P-7a edge line span (authored)": 2,
    "P-7b edge line": 70,
    "P-8 arrow": 2,
    "P-8 skipped (lane too narrow)": 9,
@@ -4851,6 +4852,27 @@
     "targets": [
      "w396566354:2559254743-1782932318"
     ]
+   },
+   {
+    "id": "dk65-k1-edge-line-spacing",
+    "targets": [
+     "w1281925347:2559254737-2559254740",
+     "w1281925347:3993784057-2559254737",
+     "w396566354:2559254743-1782932318",
+     "w623133896:2559254740-2559254743"
+    ]
+   },
+   {
+    "id": "dk65-01-k1-dashed-km8.81-l",
+    "targets": [
+     "c:w234919333:2430405905-3993784057"
+    ]
+   },
+   {
+    "id": "dk65-01-k1-dashed-km8.81-p",
+    "targets": [
+     "c:w234919333:2430405905-3993784057"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -4878,7 +4900,7 @@
   },
   "verge_strips": {
    "chunks": 48,
-   "tris": 27792
+   "tris": 27812
   },
   "walled_ramps": [
    {

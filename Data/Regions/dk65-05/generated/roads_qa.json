@@ -37,7 +37,7 @@
    "length_m": 332.7,
    "max_grade": 0.0258,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.018,
    "sidewalk_frac": 0.0,
@@ -62,7 +62,7 @@
    "length_m": 88.3,
    "max_grade": 0.0188,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.018,
    "sidewalk_frac": 0.0,
@@ -87,7 +87,7 @@
    "length_m": 102.4,
    "max_grade": 0.0253,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.016,
    "sidewalk_frac": 0.0,
@@ -112,7 +112,7 @@
    "length_m": 267.0,
    "max_grade": 0.019,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.017,
    "sidewalk_frac": 0.0,
@@ -137,7 +137,7 @@
    "length_m": 226.0,
    "max_grade": 0.0183,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.017,
    "sidewalk_frac": 0.0,
@@ -162,7 +162,7 @@
    "length_m": 18.2,
    "max_grade": 0.0135,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.024,
    "sidewalk_frac": 0.0,
@@ -787,7 +787,7 @@
    "length_m": 45.8,
    "max_grade": 0.0062,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.016,
    "sidewalk_frac": 0.0,
@@ -812,7 +812,7 @@
    "length_m": 355.2,
    "max_grade": 0.0315,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.019,
    "sidewalk_frac": 0.0,
@@ -837,7 +837,7 @@
    "length_m": 243.9,
    "max_grade": 0.0339,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.02,
    "sidewalk_frac": 0.0,
@@ -862,7 +862,7 @@
    "length_m": 431.1,
    "max_grade": 0.0452,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.017,
    "sidewalk_frac": 0.0,
@@ -887,7 +887,7 @@
    "length_m": 84.7,
    "max_grade": 0.021,
    "overrides": [
-    "dk65-elcka-xsec"
+    "dk65-k1-edge-line-spacing"
    ],
    "profile_rms_vs_nmt_m": 0.015,
    "sidewalk_frac": 0.0,
@@ -2685,7 +2685,7 @@
    "patches": 228
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 297313,
+  "footprint_nodes": 297358,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -2758,6 +2758,7 @@
    "P-11 cycle crossing": 3,
    "P-11 cycle crossing in junction": 3,
    "P-13": 8,
+   "P-7a edge line span (authored)": 2,
    "P-7b edge line": 24
   },
   "markings_overlap_removed_tris": 0,
@@ -2780,6 +2781,36 @@
      "w1399803717:3320819900-11243685503",
      "w1399803717:8191275972-304399045",
      "w1560819273:12931448128-10712325630"
+    ]
+   },
+   {
+    "id": "dk65-k1-edge-line-spacing",
+    "targets": [
+     "w1024956364:1151902694-2295268360",
+     "w1024956364:2123507327-3314359764",
+     "w1024956364:2295268360-7567235096",
+     "w1024956364:3314359764-3320819900",
+     "w1024956364:7567235096-2123507327",
+     "w1024956364:839428386-1151902694",
+     "w1399803717:11243685503-11243685516",
+     "w1399803717:11243685516-11676804120",
+     "w1399803717:11676804120-8191275972",
+     "w1399803717:304399045-12931448128",
+     "w1399803717:3320819900-11243685503",
+     "w1399803717:8191275972-304399045",
+     "w1560819273:12931448128-10712325630"
+    ]
+   },
+   {
+    "id": "dk65-05-k1-dashed-bay-km14.44",
+    "targets": [
+     "c:w1024956364:1151902694-2295268360"
+    ]
+   },
+   {
+    "id": "dk65-05-k1-dashed-inlet-km15.51",
+    "targets": [
+     "c:w1399803717:11243685516-11676804120"
     ]
    }
   ],

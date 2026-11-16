@@ -268,9 +268,11 @@ def park_replacements(overrides):
             if o.get("kind") == "park_replacement"}
 
 
-def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
+def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None):
     """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list.
-    hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems."""
+    hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems.
+    tree_rows (ADR 0222, opt-in): streetscape.tree_rows.region_plan() - the rows it took over are laid out by it
+    (rhythm, set-back, sight cuts) instead of the 8 m BDOT row rule below; None = the rule unchanged."""
     out = []
     H, W = zc.shape
 
@@ -279,10 +281,12 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
         j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
         return ~blocked[j, i], zc[j, i]
 
-    def emit(P, species, rng, src_id, hscale=1.0, fk=None, hrange=None, spruce_v=None, tier=None):
+    def emit(P, species, rng, src_id, hscale=1.0, fk=None, hrange=None, spruce_v=None, tier=None, keep=None):
         if not len(P):
             return
         good, z = ok(P)
+        if keep is not None:                    # ADR 0222: candidates outside the part left to this rule; like the
+            good = good & keep                  # clearance test they are dropped after their draws (ADR 0173)
         # ADR 0173: the attributes are drawn for EVERY candidate point (same calls, same order as before), and the
         # clearance test only drops the tree afterwards. Before, a tree dropped by a new kerb / paved area / building
         # skipped its draws and shifted the random stream of every later tree of the same BDOT feature or group
@@ -518,8 +522,28 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
     report["_forest_cleared"] = cleared
     groups = _tree_group_overrides(overrides, np.asarray(origin, float))
     grep = {"lines": len(groups), "trees": 0, "groups": 0, "rows_grouped": 0}
+    tr_handled = tree_rows["handled"] if tree_rows else set()
+    tr_fallback = tree_rows.get("fallback", {}) if tree_rows else {}
+    tr_cuts = shapely.union_all(tree_rows["cuts"]) if tr_fallback and tree_rows.get("cuts") else None
+    n_fb = 0
+
+    def tr_keep(f, line, P0, P):
+        """ADR 0222: a BDOT row the tree_rows plan took over only in part keeps the trees of this rule on the rest of
+        it (`fallback` geometry): candidates P0 (on the line) nearer to the taken / out-of-tile part are dropped, so
+        are trunks P in the sight fields of the plan. None = the line is all this rule's (unchanged path)."""
+        fb = tr_fallback.get(f"bdot:{f['id']}")
+        if fb is None or not len(P0):
+            return None
+        rest = line.difference(fb.buffer(0.01))
+        pts = shapely.points(np.asarray(P0, float))
+        keep = np.ones(len(P0), bool) if rest.is_empty else shapely.distance(fb, pts) <= shapely.distance(rest, pts)
+        if tr_cuts is not None:
+            keep &= ~shapely.contains_xy(tr_cuts, P[:, 0], P[:, 1])
+        return keep
     for f in src["bdot10k"]["OT_OIPR_L"]:
         if f["props"].get("rodzaj") != "rząd drzew":
+            continue
+        if f"bdot:{f['id']}" in tr_handled:     # ADR 0222: laid out by streetscape.tree_rows below
             continue
         line = shapely.LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         rng = np.random.default_rng(_seed(f["id"]))
@@ -528,12 +552,18 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
             P, _ = group_positions(line, rng, near)
             names = list(near["species"])
             w = np.array([near["species"][k] for k in names], float)
-            emit(P, rng.choice(names, size=len(P), p=w / w.sum()), rng, f"bdot:{f['id']}:groups")
+            n0 = len(out)
+            emit(P, rng.choice(names, size=len(P), p=w / w.sum()), rng, f"bdot:{f['id']}:groups",
+                 keep=tr_keep(f, line, P, P))
+            n_fb += (len(out) - n0) if f"bdot:{f['id']}" in tr_fallback else 0
             grep["rows_grouped"] += 1
             continue
         P = np.array([line.interpolate(s).coords[0] for s in np.arange(2.0, line.length, 8.0)]).reshape(-1, 2)
         sp = [["linden", "maple"][_seed(f["id"]) % 2]] * len(P)
-        emit(P + rng.normal(0, 0.3, P.shape), sp, rng, f"bdot:{f['id']}")
+        Pj = P + rng.normal(0, 0.3, P.shape)
+        n0 = len(out)
+        emit(Pj, sp, rng, f"bdot:{f['id']}", keep=tr_keep(f, line, P, Pj))
+        n_fb += (len(out) - n0) if f"bdot:{f['id']}" in tr_fallback else 0
     for gl, prm, key in groups:
         rng = np.random.default_rng(_seed(key))
         P, G = group_positions(gl, rng, prm)
@@ -545,6 +575,19 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None):
         emit(P, [gsp[g] for g in G], rng, key)
         grep["trees"] += len(out) - n0
         grep["groups"] += int(G.max()) + 1 if len(G) else 0
+    if tree_rows:                               # ADR 0222: roadside rows (positions + species from the plan)
+        n_tr = len(out)
+        for row in tree_rows["rows"]:
+            if len(row["P"]):
+                rng = np.random.default_rng(_seed(row["key"]) + 1)
+                emit(row["P"], row["species"], rng, row["key"], hrange=tree_rows["height_m"].get(row["key"]))
+        planned = sum(len(r["P"]) for r in tree_rows["rows"])
+        # blocked_dropped: planned trunks the clearance grid (roads / yards / buildings, dilated) refused - a trunk
+        # the plan moved to the minimum set-back usually ends here (review of PR #101, FIX 3)
+        report["tree_rows"] = {"planned": planned, "placed": len(out) - n_tr,
+                               "blocked_dropped": planned - (len(out) - n_tr),
+                               "lines_handled": len(tr_handled), "lines_partly_handled": len(tr_fallback),
+                               "fallback_trees": n_fb, "plan": tree_rows["report"]}
     tpts = _tree_point_overrides(overrides)
     if tpts:
         grep["points"], grep["points_refused"] = 0, []

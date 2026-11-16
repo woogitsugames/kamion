@@ -2594,8 +2594,8 @@
     "materials": 26,
     "trees": 2909,
     "tris_forest_hlod": 1566,
-    "tris_high_static": 139001,
-    "tris_low_static": 37028
+    "tris_high_static": 138971,
+    "tris_low_static": 36998
    },
    {
     "chunk": "3_7",
@@ -2792,8 +2792,8 @@
     "materials": 25,
     "trees": 708,
     "tris_forest_hlod": 258,
-    "tris_high_static": 137010,
-    "tris_low_static": 34732
+    "tris_high_static": 136945,
+    "tris_low_static": 34667
    },
    {
     "chunk": "6_5",
@@ -2801,8 +2801,8 @@
     "materials": 42,
     "trees": 1109,
     "tris_forest_hlod": 637,
-    "tris_high_static": 157257,
-    "tris_low_static": 50398
+    "tris_high_static": 156692,
+    "tris_low_static": 49833
    },
    {
     "chunk": "6_6",
@@ -2819,8 +2819,8 @@
     "materials": 28,
     "trees": 4478,
     "tris_forest_hlod": 2277,
-    "tris_high_static": 140096,
-    "tris_low_static": 37956
+    "tris_high_static": 140018,
+    "tris_low_static": 37878
    },
    {
     "chunk": "7_0",
@@ -2828,8 +2828,8 @@
     "materials": 16,
     "trees": 291,
     "tris_forest_hlod": 203,
-    "tris_high_static": 136621,
-    "tris_low_static": 34615
+    "tris_high_static": 136567,
+    "tris_low_static": 34561
    },
    {
     "chunk": "7_1",
@@ -2864,8 +2864,8 @@
     "materials": 33,
     "trees": 1982,
     "tris_forest_hlod": 1219,
-    "tris_high_static": 147339,
-    "tris_low_static": 42058
+    "tris_high_static": 146945,
+    "tris_low_static": 41664
    },
    {
     "chunk": "7_5",
@@ -2873,8 +2873,8 @@
     "materials": 29,
     "trees": 2104,
     "tris_forest_hlod": 1404,
-    "tris_high_static": 141832,
-    "tris_low_static": 38932
+    "tris_high_static": 141594,
+    "tris_low_static": 38694
    },
    {
     "chunk": "7_6",
@@ -3949,6 +3949,37 @@
    "lines": 0,
    "rows_grouped": 0,
    "trees": 0
+  },
+  "tree_rows": {
+   "blocked_dropped": 0,
+   "fallback_trees": 0,
+   "lines_handled": 0,
+   "lines_partly_handled": 0,
+   "placed": 0,
+   "plan": {
+    "dk65-10-roadside-rows": {
+     "accesses": 1,
+     "by_source": {},
+     "cut_culvert": 0,
+     "cut_level_crossing": 0,
+     "cut_sight": 0,
+     "cut_track_mouth": 0,
+     "dropped_too_close": 0,
+     "in_lsbp0_existing": 0,
+     "junctions": 4,
+     "length_taken_m": 0.0,
+     "lines_partly_taken": 0,
+     "lines_taken": 0,
+     "lines_total": 5,
+     "missing": 0,
+     "moved_to_min_offset": 0,
+     "replaced_by_authored": 0,
+     "sight_fields": 17,
+     "stations": 0,
+     "trees": 0
+    }
+   },
+   "planned": 0
   },
   "tree_stands": [],
   "trees": {
