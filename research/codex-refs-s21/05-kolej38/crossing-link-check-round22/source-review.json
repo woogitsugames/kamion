@@ -1,0 +1,39 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE_LINK_UNVERIFIED_NO_NEW_DOCUMENT",
+  "counts": {"new_documents_accepted": 0, "known_documents_reopened_full_text": 1, "photographs_viewed": 0, "downloads": 0, "browser_use": 0, "documentary_manifest_rows": 1},
+  "question": "Czy istnieje dozwolony publiczny dokument jednoznacznie łączący DW671 Knyszyn–Krypno z kilometrem LK38 i pozwalający powiązać historyczną kategorię B?",
+  "prior_read": ["knyszyn-equipment-round14/README.md", "rail-crossing-budget-round15/README.md", "crossing-location-round7/README.md", "crossing-location-round17/README.md"],
+  "known_source_rechecked": {
+    "original_record": "06-region-ring/manifest.csv 06-D01 oraz data/municipal-sources.json",
+    "source_url": "https://www.knyszyn.pl/asp/podpisanie-umowy-na-opracowanie-dokumentacji-projektowej-rozbudowe-drogi-wojewodzkiej-nr-671-w-zakresie-budowy-drogi-dla,239,artykul,1,6670",
+    "read_url": "https://www.knyszyn.pl/asp/core/drukuj.asp?akcja=artykul&artykul=6670&menu=239",
+    "publisher": "Urząd Miejski w Knyszynie",
+    "publication_date": "2026-07-03",
+    "method": "Pełny tekst web open, cached ref turn1271view0; merytoryczny korpus linie22–48. Nie używano formularza polecania strony ani jego zabezpieczeń.",
+    "sourced": "Akapit zakresu podaje około47+800–53+600, około5.8km oraz dowiązanie projektowanego wiaduktu na skrzyżowaniu LK38 i DW671.",
+    "meaning": "Zakres kilometrów opisuje zadanie drogowe, nie kilometr LK38 konkretnego przejazdu. Nie utożsamiono żadnego końca zakresu z osią przecięcia.",
+    "absent_in_read_text": ["29+522", "29+394", "038029522", "Kategoria przejazdu A–D", "Tabela droga→kilometr kolejowy"],
+    "new_source": false
+  },
+  "search_scope": [
+    "Łączne DW671/29+522 i nazwy Knyszyn/Krypno z wariantami spacji/kropki/przecinka.",
+    "Knyszyn-Zamek, wiadukt, LK38, dokumentacja i źródła gov/PLK/Knyszyn/Krypno.",
+    "Publiczna dokumentacja projektowa i portal zamówień PLK; brak nowego dozwolonego, jednoznacznego źródła."
+  ],
+  "excluded": [
+    {"source": "files.girlc.at — mirror dokumentacji", "opened": false, "downloaded": false, "evidence_used": false, "reason": "Poza dozwoloną listą; fragment wyniku wyszukiwania nie zastępuje oficjalnego pełnego dokumentu."},
+    {"source": "Znany budżet/sprawozdanie2011", "reopened": false, "new_document": false, "reason": "Już opracowane w R15; nie powtarzano jako nowego dowodu."},
+    {"source": "Rozkłady autobusowe i ogólne budżety2026", "accepted": false, "reason": "Brak łącznika numeru drogi i kilometra kolejowego; nie rozszerzano nieistotnego materiału."}
+  ],
+  "conclusion": {
+    "dw671_to_lk38_km29522": "UNVERIFIED",
+    "identifier038029522": "UNVERIFIED; nie konstruowano z numeru linii i kilometra",
+    "categoryB2011_to_specific_present_crossing": "UNVERIFIED",
+    "crossing_photo_identity": "UNVERIFIED",
+    "current2026_category": "UNVERIFIED",
+    "not_an_absence_claim": true
+  },
+  "no_requests": ["Commons", "Flickr", "Mapillary API", "OSM API", "Overpass"],
+  "parent_files_changed": false
+}
