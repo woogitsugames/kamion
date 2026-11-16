@@ -1,7 +1,8 @@
 # STATUS — D19 map-plan-0278 (chmura D r6, ADR 0278)
 - Krok 1: `tools/worldgen/qa/map_plan_0278.py` + wycinek OSM API 0.6 (21 kandydatów + 3 kalibracyjne + 2 miasta, relacje DK8/19/65, DW671/678) `Data/Plans/map-plan-0278/`, indeks GUGiK (bez pobierania), budżet z generated/*, plan + render `docs/reports/map/map_plan_0278.{json,png}` (14 kafli w kolejce).
 - Krok 2: definicje 3 kafli (regions.py + overrides/sources.authored/route_endpoints): bialystok-porosly, dk8-s8-jeroniki, bialystok-dojlidy-gorne; `tests/gis/test_map_plan_0278.py` 26 passed; test_knyszynska_0208 / test_qa_tools_0219 zielone (powiaty wg ADR 0219).
-- NASTĘPNY KROK: ADR 0278 + raport `docs/reports/MAP-PLAN-2026-11-16.md`, LICENSES, indeks ADR, PR.
+- Krok 3: ADR 0278, raport `docs/reports/MAP-PLAN-2026-11-16.md`, LICENSES (2 wpisy), indeks ADR; PR do main.
+- NASTĘPNY KROK (lider): `uv run --project tools/worldgen tools/worldgen/ingest.py --region dk8-s8-jeroniki` → build_region → build_world → export-route → katalog → import-region (ADR 0278 „Odtworzenie”).
 
 # STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
 - Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
