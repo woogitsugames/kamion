@@ -80,6 +80,17 @@ namespace Game.World.Streaming
         [Tooltip("Max horizontal gap between the autopilot path end and a tile route start to chain them [m]")]
         public float routeJoinM = 3f;
 
+        /// <summary>
+        /// Destination of the route autopilot across forks of the corridor (stream-gaps-s23): route links
+        /// (Resources/WorldStreaming/route_links.json) of another destination are never appended. Launch argument
+        /// <c>-route_to tykocin|monki</c> (<see cref="TryInstallFromLaunch"/>); default <see cref="RouteLinks.DefaultDestination"/>.
+        /// </summary>
+        public string routeDestination = RouteLinks.DefaultDestination;
+
+        /// <summary>Route links bound to <see cref="Graph"/> (set in <see cref="Init"/>; empty when the json is missing).</summary>
+        public RouteLinks Links { get; private set; }
+        bool[] m_LinkChained;
+
         public TileGraph Graph { get; private set; }
         public StreamingPolicy Policy { get; private set; }
         /// <summary>World anchor: EPSG:2180 x / y and EVRF2007 height of Unity (0, 0, 0).</summary>
@@ -217,6 +228,7 @@ namespace Game.World.Streaming
             s.AddOriginListener(onOriginMoved);
             s.routePath = onOriginMoved?.Target as IStreamedRoute;   // the hook passes RouteDriver.Offset
             s.m_Tiles[s.StartTile].routeChained = true;               // the start route already is the autopilot path
+            s.routeDestination = RouteLinks.DestinationFromArgs(System.Environment.GetCommandLineArgs());
             s.WidenStartBoundary(start);
             return s;
         }
@@ -345,6 +357,14 @@ namespace Game.World.Streaming
                 if (i != startTile && !source.IsAvailable(graph.Tiles[i].id, contentTier)) Policy.SetUnavailable(i);
             Policy.SetPinned(startTile);
             Place(t);
+            SetRouteLinks(RouteLinks.LoadDefault(graph));
+        }
+
+        /// <summary>Route links to continue the autopilot with (Init loads the shipped ones; tests replace them after Init).</summary>
+        public void SetRouteLinks(RouteLinks links)
+        {
+            Links = links;
+            m_LinkChained = new bool[links != null ? links.Count : 0];
         }
 
         void OnEnable()
@@ -417,19 +437,35 @@ namespace Game.World.Streaming
 
         /// <summary>
         /// Appends the start route of every Ready tile that begins at the autopilot path end (chained, so a tile that became
-        /// Ready earlier is picked up after the one before it). No allocation unless a route is appended (a tile event).
+        /// Ready earlier is picked up after the one before it), or a route link of the chosen destination
+        /// (<see cref="routeDestination"/>) whose tile is Ready and whose first point meets the path end. A link with
+        /// <c>replacesRoute</c> = tile X is appended instead of X's start route (same first point; e.g. the knyszyn control
+        /// route ends at Rynek, the Tykocin link leaves the roundabout on DW671). No allocation unless a route is appended.
         /// </summary>
         void ContinueRoute()
         {
             if (routePath == null || !routePath.TryGetPathEnd(out Vector3 end)) return;
             float join2 = routeJoinM * routeJoinM;
-            for (int guard = 0; guard < m_Tiles.Length; guard++)
+            for (int guard = 0; guard < m_Tiles.Length + (Links != null ? Links.Count : 0); guard++)
             {
+                int link = FindLinkAt(end, join2);
+                if (link >= 0)
+                {
+                    m_LinkChained[link] = true;
+                    int rt = Links.ReplacesTile[link];
+                    if (rt >= 0) m_Tiles[rt].routeChained = true;   // its start route is not appended any more
+                    routePath.AppendPath(Links.WorldPoints(link, Graph, m_Wx, m_Wy), Links.Links[link].maxspeedKmh);
+                    Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] route continued by link {0} in {1} (to {2}): +{3:F0} m",
+                        Links.Links[link].id, Links.Links[link].tile, routeDestination, Links.Links[link].lengthM));
+                    if (!routePath.TryGetPathEnd(out end)) return;
+                    continue;
+                }
                 int hit = -1;
                 for (int i = 0; i < m_Tiles.Length; i++)
                 {
                     var t = m_Tiles[i];
                     if (t.routeChained || t.routeComp == null || t.route == null || Policy.StateOf(i) != TileState.Ready) continue;
+                    if (Links != null && Links.IsRouteReplaced(i, routeDestination)) continue;
                     var pts = t.routeComp.points;
                     if (pts == null || pts.Length < 2) continue;
                     Vector3 a = t.route.TransformPoint(pts[0]);
@@ -443,6 +479,23 @@ namespace Game.World.Streaming
                 Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] route continued into {0}: +{1:F0} m", Graph.Tiles[hit].id, h.routeComp.Length));
                 if (!routePath.TryGetPathEnd(out end)) return;
             }
+        }
+
+        /// <summary>First not yet appended link of the chosen destination whose tile is Ready and whose first point is within
+        /// sqrt(<paramref name="join2"/>) of <paramref name="end"/>; -1 = none. No allocation.</summary>
+        int FindLinkAt(Vector3 end, float join2)
+        {
+            if (Links == null || m_LinkChained == null) return -1;
+            for (int i = 0; i < Links.Count; i++)
+            {
+                int ti = Links.TileOf[i];
+                if (m_LinkChained[i] || ti < 0 || Links.Links[i].e.Length < 2 || !Links.Applies(i, routeDestination)) continue;
+                if (Policy.StateOf(ti) != TileState.Ready) continue;
+                Vector3 a = Links.WorldPoint(i, 0, Graph, m_Wx, m_Wy);
+                float dx = a.x - end.x, dz = a.z - end.z;
+                if (dx * dx + dz * dz <= join2) return i;
+            }
+            return -1;
         }
 
         int m_LoggedPin = -2;
