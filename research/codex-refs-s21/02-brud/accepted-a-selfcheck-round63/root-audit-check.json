@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-16",
+  "checks": [
+    "Snapshot SHA256 matches sample metadata",
+    "Exact random.Random(20261115).sample(sorted(ids),3) reproduces all3IDs",
+    "11 unique canonical population IDs",
+    "3/3 reviewed,0replacement,0NOT_REVIEWED in agent selfcheck"
+  ],
+  "scope": "Root validates deterministic selection and evidence structure; does not relabel selfcheck as independent visual audit. Root had separately viewed FR60 andUR54 earlier.",
+  "result": "PASS"
+}

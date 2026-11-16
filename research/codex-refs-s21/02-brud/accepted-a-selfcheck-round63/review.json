@@ -1,0 +1,62 @@
+{
+  "review_date": "2026-11-16",
+  "time_precision": "date-only",
+  "snapshot_sha256": "12f6d1170e1de1a0fa96b27dc4dc3ffb8ec0213d947a09cd56e12f4546299c41",
+  "sample_order": [
+    "02-FR60-003",
+    "02-009",
+    "02-UR54-001"
+  ],
+  "method": "Self-check, nie blind peer i nie niezależna recenzja; wcześniejsze kwalifikacje znane. Trzy wylosowane obrazy ponownie osobiście obejrzane, brak podmian.",
+  "reviewed": 3,
+  "not_reviewed": 0,
+  "new_photographs": 0,
+  "new_downloads": 0,
+  "saved_ARR_screenshots": 0,
+  "confirmed_content": 3,
+  "new_B": 0,
+  "observations": [
+    {
+      "id": "02-FR60-003",
+      "view": "Normalna fotostrona i pełny obraz #ph w Chrome; rzeczywisty ponowny ogląd",
+      "pixels": "1200 × 800 SOURCED DOM",
+      "doors": "380–420 px ESTIMATED",
+      "description": "Zamknięta jasna para z czterema pionowymi prętami. Drobny szary ziarnisty nalot na polach, mocniejszy w dolnej połowie; nie jest to gęsty pełny film. Rude ostro ograniczone odpryski/korozja przy zamkach i środku, czarne resztki grafiki na prawym skrzydle oraz cienie prętów rozdzielone od nalotu. Pełny zestaw na asfaltowej drodze, trzy osie naczepy, bez śniegu.",
+      "A": "PASS_LIMITED_LOWER_FILM_CONFIRMED",
+      "B": "FAIL_GE1000_AVAILABLE",
+      "type": "SOURCED z aktualnie przeczytanej fotostrony: Schmitz Cargobull S.KO i Полуприцепы фургоны; obraz potwierdza ciągnik i trzy osie naczepy.",
+      "soil": "Słaby lokalny dolny nalot; nie utożsamiono korozji z brudem.",
+      "evidence": "../fototruck-model-rears-round60/manifest.csv#60-003 + nowy osobny ogląd R63",
+      "new_photo": false
+    },
+    {
+      "id": "02-009",
+      "view": "view_image istniejącego lokalnego pliku; bez HTTP",
+      "pixels": "1093 × 1365 SOURCED z Pillow dla faktycznie obejrzanego pliku; inny niż historyczna miniatura 960 × 1199",
+      "doors": "740–800 px ESTIMATED dla tego dostępnego pliku",
+      "description": "Bordowa zamknięta para z czterema prętami i dużym drukowanym logo Knight. Jasne drobne nakrapianie/film na panelach, ciemne odręczne linie w środkowej części prawego skrzydła i nieregularne łukowe wytarcia przy dole. Prostokątne cienie pod górnymi okuciami i wąskie ciemne piony przy prętach nie są smugami. Metalowa dolna belka osobno zmatowiona; asfaltowa droga i pojazd z lewej, bez śniegu.",
+      "A": "PASS_LIGHT_FILM_AND_WIPES_CONFIRMED",
+      "B": "NOT_NEW_BASELINE; dostępne drzwi dodatkowo poniżej1000px",
+      "type": "SOURCED z istniejącego odczytu ImageDescription autora Eric Polk: Rear of a Knight Transportation semi-trailer in Los Angeles, California, USA. Sam ponowny tył nie pokazuje sprzęgu.",
+      "soil": "Lekki film z czytelnymi ciemnymi wytarciami, nie pełna gęsta warstwa; nadruki i cienie odrębnie.",
+      "evidence": "../data/reused-p18-type-audit.json#02-009; ../qualified-zone-atlas-round35/review-log.json; lokalny raw135156613.jpg ponownie obejrzany",
+      "local_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\02-brud\\creator-round7\\135156613.jpg",
+      "local_sha256": "1bff63daea91848f8b7e7dfa21f7e4aa2e3196a134057d2946ba67d8158a87fc",
+      "new_photo": false
+    },
+    {
+      "id": "02-UR54-001",
+      "view": "Dokładny już znany publiczny asset ARR w Chrome; osobny ponowny ogląd",
+      "pixels": "768 × 1024 SOURCED tytuł standalone",
+      "doors": "580–650 px ESTIMATED",
+      "description": "Zamknięta biała para Lamberet z żółtym obrysem i centralną czarną uszczelką. Prawe skrzydło wyraźnie szare i drobno pionowo smużone, lewy panel znacznie jaśniejszy. Mała rdza przy dolnych uchwytach, krawędzie metalowej dolnej osłony i twarde linie okuć odrębnie. Białe nieprzezroczyste pociągnięcia zasłaniają dane oferty i tablicę, nie są brudem ani naturalnym wytarciem. Plac/chodnik, bez śniegu.",
+      "A": "PASS_RIGHT_PANEL_FILM_CONFIRMED",
+      "B": "FAIL_GE1000_AVAILABLE_AND_ROUTE_UNVERIFIED",
+      "type": "Źródłowo oferta refrigerated-semi-trailers/Lamberet; istniejący R54 obejmował pełny kadr konstrukcji. W ponownie obejrzanym tylnym ujęciu sprzęg niewidoczny; nie uznano samego logo za dowód typu.",
+      "soil": "Prawy szary film i piony odróżnione od rdzy, geometrii i redakcyjnego białego zamazania.",
+      "evidence": "../used-reefer-doors-round54/manifest.csv#54-001 i observations.json; nowy osobny ogląd exact asset R63",
+      "new_photo": false
+    }
+  ],
+  "important_limits": "Próbka 3/11 nie dowodzi jakości całej unii. Dolny nalot FR60 i lekki film Knight zachowują ograniczenia, nie są mocnym brudem całej powierzchni. B nie zmienione. Snapshot nie jest globalnym ledgerem ani nową akceptacją11."
+}
