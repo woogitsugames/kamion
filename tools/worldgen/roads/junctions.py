@@ -371,6 +371,10 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
                 mt[i] = a.L - 0.5
         return mt
 
+    # ADR 0237 D38: a node where only a minor way (parking aisle, yard road, track) leaves a public road is not merged
+    # into the neighbouring junction along that road (see MINOR_TEE_*); it stays its own T with its own patch
+    keep_apart = {n for n in jn if _minor_tee(net, n, ends)}
+
     # iterative clustering
     for _it in range(8):
         groups = {}
@@ -391,6 +395,9 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
             if c.node_a in parent and c.node_b in parent and find(c.node_a) != find(c.node_b):
                 ta, tb = trims.get((c.id, "a"), 0), trims.get((c.id, "b"), 0)
                 if c.length < ta + tb + 1.0:
+                    if (c.node_a in keep_apart or c.node_b in keep_apart) and c.length >= MINOR_TEE_MIN_M \
+                            and _road_highway(net, c) not in MINOR_HIGHWAYS:
+                        continue
                     ga = [n for n in jn if find(n) == find(c.node_a)]
                     gb = [n for n in jn if find(n) == find(c.node_b)]
                     pts = np.array([net.nodes[n]["xy"] for n in ga + gb])
@@ -471,6 +478,33 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
     for j in juncs:
         j.boundary = patch_boundary(j)
     return juncs
+
+
+# ADR 0237 D38 (Knyszyn, Poludniowa x Szkolna, OSM node 7015352011): a parking aisle leaving Poludniowa 23 m from the
+# crossroads was merged into the crossroads cluster. Its first leg (13 m) runs almost parallel to the Szkolna arm, so
+# the corner between them became a median "nose" (R 21.8 m semicircle across the mouth of the aisle) and the aisle arm
+# was trimmed past its bend (28 m): a teardrop of asphalt that joins nothing (docs/reports/knyszyn-szkolna/).
+# A minor way is a driveway into a yard, not an arm of the crossroads: the node keeps its own T junction and the
+# public-road chain between the two is shared by `max_trims` (half each), as for any two junctions >= 30 m apart.
+MINOR_HIGHWAYS = ("service", "track", "path", "footway", "cycleway")   # OSM highway of a minor (yard / field) way
+MINOR_TEE_MIN_M = 15.0     # WORKING_VALUE: a shorter public-road stub is merged as before (two T patches would touch)
+
+
+def _road_highway(net, c, end=None):
+    """OSM highway of a chain (its first / last section for end 'a' / 'b', the middle one otherwise)."""
+    i = {"a": 0, "b": -1}.get(end, len(c.sec_idx) // 2)
+    return net.sec_list[int(c.sec_idx[i])].highway
+
+
+def _minor_tee(net, n, ends) -> bool:
+    """Node where a public road passes straight through (exactly two public-road chain ends) and only minor ways
+    (MINOR_HIGHWAYS) leave it. Node override `cluster: merge` keeps the old behaviour, `cluster: separate` forces it."""
+    ov = net.nodes[n].get("override", {}).get("cluster")
+    if ov in ("merge", "separate"):
+        return ov == "separate"
+    lst = ends.get(n, [])
+    minor = sum(1 for c, e in lst if _road_highway(net, c, e) in MINOR_HIGHWAYS)
+    return minor >= 1 and len(lst) - minor == 2 and not any(c.roundabout for c, _ in lst)
 
 
 def _radius_override(net, j):
