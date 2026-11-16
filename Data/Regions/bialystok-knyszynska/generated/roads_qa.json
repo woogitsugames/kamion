@@ -3930,7 +3930,9 @@
    ],
    "length_m": 25.9,
    "max_grade": 0.0074,
-   "overrides": [],
+   "overrides": [
+    "dk8-seam-kerb-od005"
+   ],
    "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -8733,7 +8735,7 @@
    "patches": 567
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 664684,
+  "footprint_nodes": 664682,
   "fork_abreast": [
    {
     "beside": "c:w261104557:2927425559-2504239797",
@@ -9184,6 +9186,12 @@
      "w303739903:2632811417-841774154",
      "w303739903:3081410944-2632811417"
     ]
+   },
+   {
+    "id": "dk8-seam-kerb-od005",
+    "targets": [
+     "w261104557:2927425559-2504239797"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -9192,6 +9200,45 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 8,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [
+   {
+    "chain": "c:w222579345:2315344515-2315344551",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 6.0,
+    "width_seam": 5.75
+   },
+   {
+    "chain": "c:w224161424:2329921567-2329921561",
+    "end": "a",
+    "in_tile_m": 10.42,
+    "length_m": 20.84,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.5,
+    "width_other": 5.0,
+    "width_own": 4.0,
+    "width_seam": 4.5
+   },
+   {
+    "chain": "c:w561326924:3626955261-2504239797",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-kleeberga",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 6.0,
+    "width_seam": 5.75
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 848,
    "parts": 207,
@@ -9211,7 +9258,7 @@
   },
   "verge_strips": {
    "chunks": 59,
-   "tris": 53914
+   "tris": 53866
   },
   "walled_ramps": [
    {
