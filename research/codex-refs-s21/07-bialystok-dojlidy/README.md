@@ -1,6 +1,6 @@
 # 07 — Białystok trasa C / Dojlidy: referencje i luki — WIP
 
-Stan ewidencji głównej na 16.11.2026: **20 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **22 rekordy** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Wcześniejszy etap:15rekordów głównego manifestu. Są dokumenty, znany kadr ronda,2historyczneMapillary i3nowe link-only fotografieUM. Liczba rekordów nie jest liczbą zdjęć ani kwalifikacji. Poniższe starsze sekcje zachowują historię poprzednich przeglądów; bieżące dodatki wostatnichsekcjach.
 
@@ -78,3 +78,8 @@ Główny manifest12rekordów. [DokumentBIP](route-c-public-plans-round6/README.m
 ## Batorego — pierwsze nowe historyczne kadry, runda14
 
 [batorego-street-round14](batorego-street-round14/README.md):2nowe link-onlyMapillary grobin18/20.10.2019. Dzień główny: asfalt, krawężniki, lewa zabudowana strona z ogrodzeniami/balkonami i prawa zielona; root dodatkowo obejrzał ten kadr. NocAUX: krawędzie/żywopłot/latarnie, bez identyfikacji technologii i znaków. KomunikatUM05.11.2026 zapowiada roboty wylotu naAndersa do18.12, więc obraz2019 nie potwierdza układu2026. Główny20,0pobrań.
+
+
+### Putry B-023 — odsyłacze do istniejących G3
+
+Dwa nowe rekordy odsyłaczowe,0nowych fotografii i0kopii. Agent i root ponownie obejrzeli legalne G3-001/003: widoczny styk obrzeża, utwardzonej nawierzchni, trawy i podstawy ekranu z terenem, bez odsłoniętego spodu. Nie dowodzi to braku ukrytej płyty konstrukcyjnej. Nie przeniesiono niezmierzonych wymiarów i azymutów z wcześniejszego raportu. Właściwego przekroju miejskiego tego miejsca nadal brak. [PG16](putry-ground-contact-round16/README.md).
