@@ -145,6 +145,23 @@ def _built(a, b):
     return seam_section.measure(ROOT, [(a, b)])["seams"][0]
 
 
+def _taper_asphalt_delta(a, b, inside_m):
+    """Planned asphalt width of tile a minus tile b at `inside_m` from the seam (ADR 0275 seam transition; 0 without one).
+
+    Read from roads_qa.json summary.seam_tapers of tile a (written by build_world): nominal widths + paved shoulder
+    parts of both tiles, transition length L; both tiles lay half of one curve v(x) = A + (B - A) * smoothstep(0.5 + x / L).
+    """
+    q = json.loads((REG / a / "generated" / "roads_qa.json").read_text(encoding="utf-8"))
+    tapers = [t for t in (q.get("summary") or {}).get("seam_tapers") or [] if t.get("neighbour") == b and "shoulder_cm" in t]
+    if not tapers:
+        return 0.0
+    t = max(tapers, key=lambda x: x["step_m"])            # the route road is the only primary on these seams
+    paved = sum(t["shoulder_cm"][s]["own"][0] - t["shoulder_cm"][s]["other"][0] for s in ("L", "R")) / 100.0
+    full = (t["width_own"] - t["width_other"]) + paved    # nominal asphalt a - b, far from the seam
+    u = min(1.0, 0.5 + inside_m / t["length_m"])
+    return full * (2.0 * (3 * u * u - 2 * u ** 3) - 1.0)
+
+
 @pytest.mark.parametrize("a,b,pt", SEAMS)
 def test_seam_built_geometry(a, b, pt):
     row = _built(a, b)
@@ -161,7 +178,10 @@ def test_seam_built_geometry(a, b, pt):
             assert abs(x["edge_line_spacing"] - K1_MEDIAN) <= TOL
             assert len(x["asphalt"]) == 1 and abs(sum(x["edge_lines"])) <= 0.05          # one carriageway, lines symmetric
             assert [ln for ln in x["lines"] if abs(ln[0]) <= 2.0] == [] or abs([ln for ln in x["lines"] if abs(ln[0]) <= 2.0][0][0]) <= 0.1
-        assert abs(xa["asphalt_width"] - xb["asphalt_width"]) <= TOL
+        # ADR 0275: where the generator joins two nominal cross-sections with a seam transition, the asphalt widths
+        # at the same distance on both sides differ by the planned S-curve (0 on the seam itself), not by 0
+        want = _taper_asphalt_delta(a, b, xa["inside_m"])
+        assert abs((xa["asphalt_width"] - xb["asphalt_width"]) - want) <= TOL, (a, b, xa["inside_m"], want)
         assert abs(xa["edge_line_spacing"] - xb["edge_line_spacing"]) <= TOL
     d = row["delta"]
     assert abs(d["z_seam"]) <= TOL, d            # axis height across the seam
