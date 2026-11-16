@@ -1,5 +1,4 @@
-# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
-- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
-- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
-- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
-- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
+# STATUS — D35 navgraph-eps-s23 (reprodukowalność grafu nawigacji, dopisek ADR 0168)
+- Krok 1: `axis_span_slice` (eps 1e-6 m, oba końce włącznie) w `tools/worldgen/navgraph/build_route_graph.py`; przyczyna D31 potwierdzona (8 granic = koniec łańcucha, `s1*k` o 1,8e-15…3,6e-15 m poniżej `s[-1]`).
+- Krok 2: testy regresji w `test_carriageway_axis.py`; pytest navgraph 53 passed / 1 skipped / 1 failed (`test_region_file_is_reproducible` — czeka na regenerację `.bytes` u lidera); `dotnet test tools/nav-runner/Tests` 94/94 (na zatwierdzonym `.bytes`).
+- NASTĘPNY KROK (lider, Windows): `uv run --project tools/worldgen python tools/worldgen/navgraph/build_route_graph.py --region bialystok-industrial-c` (+ pozostałe regiony z listy w ADR 0168 §D35) → `dotnet run -c Release --project tools/nav-runner/Runner -- --write-golden` → przegląd diffu (8 par, ≤ +0,5 m) → `dotnet test tools/nav-runner/Tests -c Release` → pytest navgraph.
