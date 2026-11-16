@@ -1,5 +1,5 @@
-# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
-- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
-- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
-- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
-- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
+# STATUS — build-hygiene-s23 (porządki przed pełnym buildem Windows)
+- Krok 1: `scripts/check-build-scenes.py` — lista scen regionów z katalogu (te same reguły co RegionBuildList/RegionCatalog.Resolve), braki Low/Tile/High, pokrycie katalogu (d67-full = każdy region katalogu, każdy Data/Regions/<id> w katalogu), porównanie z logiem buildu. Main: d67-full 21/21 Low+High, 0/21 scen `_Tile`; ostatni pełny build (log 20261116-035803) zawiera dk65-03/04, 44 sceny. Pierścień (ADR 0231, 18 kafli) tylko na `origin/world2-s23` (katalog 39, check OK).
+- Krok 2: `postbuild-windows.py` — korytarz tylko gdy w buildzie jest `World_knyszyn-s_Tile` (bez kafla streaming trzyma szew zamknięty); nowe `Kamion-d3d11.cmd` i `Kamion-korytarz-d3d11.cmd` (`-force-d3d11`); nazwy zastrzeżone. README w zipie: korytarz, skróty regionów, D3D11, CrashDumps. `collect-logs.ps1`: `%LOCALAPPDATA%\CrashDumps\Kamion*.dmp` (2 najnowsze, ≤ 1 GB, `-NoCrashes` honorowane; przetestowane PS 5.1 i 7).
+- pytest tests/dist: 48 passed.
+- NASTĘPNY KROK: `python scripts/package-windows.py artifacts/win/kamion-0.1.0-e28533ca31-regions --dry-run` (z main) + analiza import-region (zadania 3–5).
