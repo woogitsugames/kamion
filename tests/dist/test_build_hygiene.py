@@ -193,10 +193,10 @@ def test_scene_check_catalog_coverage(tmp_path):
     proj = fake_project(tmp_path / "game", region_scenes("a-1", False) + region_scenes("b-2", False))
     cat = fake_catalog(tmp_path, ["a-1", "b-2"], ["a-1"])                 # b-2 in the catalog, not in d67-full
     rd = fake_regions_dir(tmp_path, ["a-1", "b-2", "ring-9"])             # ring-9 has data, no catalog entry
-    fails = cbs.check("d67-full", proj, cat, rd, False, False)["failures"]
-    assert any("ring-9" in f and "not in the catalog" in f for f in fails)
-    assert any("b-2 is not in set d67-full" in f for f in fails)
-    assert not any("d67-full" in f for f in cbs.check("a-1", proj, cat, rd, False, False)["failures"])
+    res = cbs.check("d67-full", proj, cat, rd, False, False)
+    assert len(res["failures"]) == 1 and "ring-9" in res["failures"][0] and "not in the catalog" in res["failures"][0]
+    assert res["warnings"] == ["catalog region b-2 is not in set d67-full"]      # warning only (no owner rule)
+    assert cbs.check("a-1", proj, cat, rd, False, False)["warnings"] == []
 
 
 def test_scene_check_against_a_build_log(tmp_path):
@@ -223,11 +223,11 @@ def test_scene_check_cli_exit_codes(tmp_path, capsys):
 
 # ---------------------------------------------------------------- the real catalog (data-driven, no hard-coded counts)
 
-def test_real_full_set_covers_every_catalog_region_and_region_data():
+def test_real_catalog_resolves_and_covers_region_data():
     cat = json.loads(pw.REGION_CATALOG.read_text(encoding="utf-8-sig"))
     errors: list[str] = []
     full = pw.resolve_regions(cat, cbs.FULL_SET, errors)
     assert errors == []
-    assert cbs.catalog_problems(cat, REPO / "Data/Regions", full, cbs.FULL_SET) == []
+    assert cbs.catalog_problems(cat, REPO / "Data/Regions") == []
     # the regions this task was asked about by name
     assert {"dk65-03", "dk65-04"} <= set(full)

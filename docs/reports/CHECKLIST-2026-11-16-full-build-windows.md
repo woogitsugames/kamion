@@ -15,12 +15,17 @@ Dla lidera, przed buildem dla właściciela. Liczby: zmierzone (źródło w nawi
 - **Pierścień (ADR 0231, 18 kafli) nie jest w main.** Jest na `origin/world2-s23`: tam katalog ma 39 regionów,
   `d67-full` = 39, a `check-build-scenes.py` na tym katalogu i scenach z worktree world2 daje OK (39/39 Low i High).
   Warunek: scalić world2-s23 przed buildem.
-- **D86 (właściciel, docs/11): dk65-03 i dk65-04 wchodzą do buildu dopiero z treścią High.** Powód (#168,
+- **D86 (właściciel, docs/11): „najpierw zbudować treść High dla dk65-03 i dk65-04, potem dodać je do EditorBuildSettings
+  każdego buildu”.** Powód (#168,
   `StreamingContentChoice.HighCoversLow`): jeden region z kaflem Low bez kafla High przełącza streaming PC (tier
   High/Ultra) na treść Low w całym grafie (zmierzone w int-ui-s23: dk65-04 z samym `_Tile` → `FALLBACK Low`).
-  `check-build-scenes.py` ma tę regułę zawsze przy `-worldHigh`: FAIL „D86 Low tile without High tile”. Do
-  EditorBuildSettings tych scen nie dodawać (trafiłyby do każdego buildu, też APK) — wchodzą przez `-Regions d67-full`,
-  gdy check jest zielony. Import zawsze `-Tiers Low,High` (domyślne `import-region.ps1`).
+  `check-build-scenes.py` ma tę regułę zawsze przy `-worldHigh`: FAIL „D86 Low tile without High tile” (jak
+  `HighCoversLow`: kafel z Low bez High; region startowy bez kafla High też daje fallback — to łapie `--require-tiles`).
+  **Otwarte dla lidera/właściciela:** D86 mówi „EditorBuildSettings”, ale (a) `BuildScenes.Apply` przy każdym imporcie
+  nadpisuje listę z `BuildScenes.Paths` (Boot, DrivingLab, WorldC) — ręczny wpis nie przetrwa, trzeba zmienić kod
+  `BuildScenes.Paths` (asset/Editor, lider); (b) sceny z EditorBuildSettings idą też do APK; (c) `-Regions d67-full` już je
+  dokłada do buildu PC. Stan main 17.11 ~00:00: dk65-03/04 mają Low i High, 0 kafli `_Tile` → po reimporcie z
+  `-Tiers Low,High` (domyślne) D86 będzie spełnione; dziś nie jest sprawdzone na buildzie. Nie zmieniam ProjectSettings.
 - **Brakuje kafli `_Tile`:** main 0/21 (stan 17.11 ~00:00), world2 0/39; checkout `win-build-0261` (był 19/21 o
   20:00) już nie istnieje. Żaden dotychczasowy build nie ma sceny `_Tile`. Bez nich `-stream 1` nie otworzy
   szwu (`WorldStreamer`: „not in the build: seam stays closed”), a `Kamion-korytarz.cmd` nie powstanie
@@ -40,10 +45,12 @@ Dla lidera, przed buildem dla właściciela. Liczby: zmierzone (źródło w nawi
   - `-Build` pisze `Data/raw/derived/<id>` przez junction do main, więc dwa procesy na tym samym regionie się nadpiszą;
   - `unity-slot.ps1` daje najwyżej 4 sloty `unity` na cały komputer, dzielone z innymi agentami.
 - Czasy:
-  - Unity w `import-region` trwa 72–211 s na region (Android, 45 logów w `artifacts/logs/import-region-*` 15–16.11,
-    czas od utworzenia do ostatniego zapisu logu);
-  - starty kolejnych importów w łańcuchu są co ok. 10 min;
-  - reimport Win64 ok. 10 min na region (HANDOVER 16.11 10:19: kleeberga 618 s, knyszynska 585 s).
+  - Unity w `import-region` trwa 72–211 s na region, **Win64** (45 logów w main `artifacts/logs/import-region-*`
+    16.11, log ma „Targeting platform: Win64”; czas od utworzenia do ostatniego zapisu logu). Library main jest więc
+    pod Win64;
+  - HANDOVER podaje dwie liczby: ≈ 90 s/region (15.11 23:19) i ok. 10 min/region (16.11 10:19, kleeberga 618 s,
+    knyszynska 585 s — reimport w checkoucie z innym stanem Library); 10 min traktuj jako górną granicę;
+  - starty kolejnych importów w łańcuchu main były co ok. 10 min (między nimi inne kroki łańcucha).
 - **Wniosek: nie warto zrównoleglać.** Kopiowanie i ponowny import w checkoucie buildu zjada zysk, a ryzyko kolizji
   derived rośnie. Lepiej sekwencyjnie w checkoucie buildu (Win64), tylko regiony bez `_Tile`/High
   (`check-build-scenes.py` je wypisuje). Gdyby czas był krytyczny, najwięcej dałoby wiele regionów w jednej sesji Unity
@@ -52,7 +59,7 @@ Dla lidera, przed buildem dla właściciela. Liczby: zmierzone (źródło w nawi
 
 ## Kroki (zadanie 5)
 
-Checkout buildu: nowy worktree z main z Library pod Win64 (`win-build-0261` usunięty; pierwszy build w checkoucie z
+Checkout buildu: main (Library pod Win64 wg logów importu 16.11) albo nowy worktree z kopią Library main (`win-build-0261` usunięty; pierwszy build w checkoucie z
 Library pod Androida = pełny reimport Win64, ADR 0261). Najpierw scal world2-s23 i tę gałąź do main. Każdy krok uruchamiaj z katalogu checkoutu w PowerShell 7.
 
 0. Warunki: `world2-s23` (pierścień) i `build-hygiene-s23` scalone; `git status` czysty (inaczej nazwa `-dirty` i
@@ -67,12 +74,14 @@ Library pod Androida = pełny reimport Win64, ADR 0261). Najpierw scal world2-s2
    z `-Tiers Low,High` albo usunięcie go z listy (`-Regions` bez niego); dk65-03/04 szczególnie (D86).
 3. Import brakujących (sekwencyjnie, z Win64):
    ```
-   pwsh scripts/unity-slot.ps1 -Acquire -Owner lead-build -Priority
-   foreach ($r in <regiony z FAIL kroku 2>) { pwsh scripts/import-region.ps1 -Region $r -BuildTarget Win64; if ($LASTEXITCODE) { break } }
-   pwsh scripts/unity-slot.ps1 -Release -Owner lead-build
+   foreach ($r in <regiony z FAIL kroku 2>) {
+     pwsh scripts/unity-slot.ps1 -Acquire -Owner lead-build -Priority   # odświeża slot (slot > 3 h = usuwany jako martwy)
+     pwsh scripts/import-region.ps1 -Region $r -BuildTarget Win64; $c = $LASTEXITCODE
+     pwsh scripts/unity-slot.ps1 -Release -Owner lead-build
+     if ($c) { break } }
    ```
-   Czas: do ok. 10 min na region (Win64). 39 regionów to ok. 6,5 h, **ESTIMATED** (21 zmierzonych × 10 min
-   ekstrapolowane na 39). Z samym brakiem `_Tile` krótszy import (Unity ok. 1,5 min) **UNVERIFIED** dla Win64.
+   Czas: Unity 72–211 s na region (zmierzone, Win64) + kroki Pythona skryptu (`build_all.py --check`, cc0) →
+   39 regionów ok. 1–2,5 h, **ESTIMATED**; górna granica przy pełnym reimporcie ok. 10 min/region → 6,5 h.
 4. Ponownie krok 2 → exit 0 (w tym 0 × D86).
 5. Build:
    `pwsh scripts/build-windows.ps1 -Slot -Regions d67-full`
@@ -108,7 +117,7 @@ Library pod Androida = pełny reimport Win64, ADR 0261). Najpierw scal world2-s2
 | Build | Wynik `--dry-run` | Korytarz / README gracza |
 |---|---|---|
 | `artifacts/win/kamion-0.1.0-e28533ca31-regions` (d67-full, 21 regionów, 04:06) | exit 0; 185 plików, 4 941 MB; `build-id.json` brak → generowany; bloker R-P0-2 (paczka tylko dla testerów) | **brak `Kamion-korytarz.cmd`** (build sprzed launchera, w katalogu tylko okno, knyszyn, knyszyn-w; wszystkie trzy idą do zipu). README.txt dodany. Postbuild z tej gałęzi na jego logu: 21 regionów, 0 kafli → korytarza by nie napisał |
-| `win-build-0261/.../kamion-0.1.0-13104cf215-regions` (tylko knyszyn) | exit 0; 186 plików, 753 MB; R-P0-2 | brak korytarza (brak knyszyn-s). README dodany |
+| `win-build-0261/.../kamion-0.1.0-13104cf215-regions` (tylko knyszyn; worktree usunięty po pomiarze 16.11 ~20:00) | exit 0; 186 plików, 753 MB; R-P0-2 | brak korytarza (brak knyszyn-s). README dodany |
 
 Nowe launchery w zipie (korytarz, D3D11, README z ich opisem) są pokryte testem
 `test_postbuild_launchers_reach_the_zip_with_readme` na syntetycznym buildzie. **Na prawdziwym buildzie nie są

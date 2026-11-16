@@ -71,7 +71,7 @@ Kolejność ważności: argument > zapisany wybór > wartość domyślna.
 | `-trailer` | `solo`, `empty`/`pusta`, `24`/`24t`, `40`/`40t` | plac: zapisany wybór (pierwszy raz 24 t); region: zestaw z naczepą | `solo` = sam ciągnik. |
 | `-lighting` | `clear`, `overcast`, `lowsun`, `dusk` | wybór „Pora dnia” z menu | Nieznana nazwa → ostrzeżenie w logu. |
 | `-screen-fullscreen`, `-screen-width`, `-screen-height` | Unity: `0`/`1`, piksele | — | Jeśli podasz dowolny `-screen-*`, `-window-mode` albo `-popupwindow`, gra **nie** nakłada trybu ekranu z pliku ustawień (sekcja 1.5). |
-| `-window-mode` | Unity (tylko Windows): `exclusive` / `borderless` | — | Rodzaj pełnego ekranu; używa go `Kamion-korytarz.cmd` (`borderless`). |
+| `-window-mode` | Unity (tylko Windows): `exclusive` / `borderless` | — | Rodzaj pełnego ekranu. Żaden launcher go nie podaje (od alt-window-s23 korytarz bierze tryb z ustawień). |
 | `-force-d3d11` / `-force-d3d12` | Unity (tylko Windows), **bez wartości** | API wybrane przez Unity (sekcja 1.6) | Wymusza Direct3D 11 / 12. Awaryjnie przy crashu D3D12 (sekcja 1.6). |
 
 **Pomiarowe (nie dla zwykłej gry)**

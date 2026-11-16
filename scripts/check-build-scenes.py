@@ -23,9 +23,9 @@ Checks (exit 1 when one fails):
   - D86 (always with -worldHigh): no region whose Low tile scene exists without its High tile scene (one such tile
     makes PC streaming fall back to Low content, StreamingContentChoice.HighCoversLow; owner: dk65-03/04 enter the
     build only with their High content);
-  - catalog coverage: every Data/Regions/<id> with route_start.json is in the catalog, and every catalog region is in
-    the spec when the spec is d67-full (owner decision: the full build carries every region; ring tiles ADR 0231
-    included once they are in the catalog);
+  - catalog coverage: every Data/Regions/<id> with route_start.json is in the catalog (failure); a catalog region
+    outside d67-full is only a WARNING (no owner rule says d67-full = every region; e.g. dk19-tiles-s23 adds regions
+    outside it);
   - --log: every expected scene that exists on disk is in the "[BUILD] Windows x64 ... scenes=[...]" line.
 Standard library only.
 """
@@ -92,7 +92,8 @@ def compose(rows: list[dict], with_high: bool = True) -> list[str]:
     return out
 
 
-def catalog_problems(cat: dict, regions_dir: Path, spec_regions: list[str], spec: str) -> list[str]:
+def catalog_problems(cat: dict, regions_dir: Path) -> list[str]:
+    """Regions with route data but no catalog entry (the menu and -Regions cannot reach them)."""
     ids = [r["id"] for r in cat.get("regions", [])]
     problems = []
     if regions_dir.is_dir():
@@ -100,11 +101,14 @@ def catalog_problems(cat: dict, regions_dir: Path, spec_regions: list[str], spec
             if (p / "route_start.json").is_file() and p.name not in ids:
                 problems.append(f"Data/Regions/{p.name} has route_start.json but is not in the catalog "
                                 "(add it, then python scripts/export-region-catalog.py)")
-    if spec.strip().lower() == FULL_SET:
-        for i in ids:
-            if i not in spec_regions:
-                problems.append(f"catalog region {i} is not in set {FULL_SET} (scripts/export-region-catalog.py DERIVED_SETS)")
     return problems
+
+
+def coverage_warnings(cat: dict, spec_regions: list[str], spec: str) -> list[str]:
+    """Catalog regions left out of d67-full (informational)."""
+    if spec.strip().lower() != FULL_SET:
+        return []
+    return [f"catalog region {r['id']} is not in set {FULL_SET}" for r in cat.get("regions", []) if r["id"] not in spec_regions]
 
 
 def log_scenes(log_text: str) -> list[str]:
@@ -135,7 +139,7 @@ def check(spec: str, project: Path, catalog: Path, regions_dir: Path, require_ti
         failures += [f"{r['region']}: D86 Low tile without High tile {r['highTile']['path']} - PC streaming would fall back "
                      "to Low; import -Tiers Low,High or leave the region out" for r in rows
                      if r["low"]["exists"] and r["lowTile"]["exists"] and not r["highTile"]["exists"]]
-    failures += catalog_problems(cat, regions_dir, regions, spec)
+    failures += catalog_problems(cat, regions_dir)
     expected = compose(rows, with_high)
     result = {"spec": spec, "regions": regions, "rows": rows, "expectedRegionScenes": expected,
               "counts": {k: sum(1 for r in rows if r[k]["exists"]) for k in ("low", "lowTile", "high", "highTile")}}
@@ -146,6 +150,7 @@ def check(spec: str, project: Path, catalog: Path, regions_dir: Path, require_ti
                          "regionsInLog": pb.regions_from_log(log_text), "tileRegionsInLog": pb.tile_regions_from_log(log_text)}
         failures += [f"log: expected scene not in the build: {s}" for s in missing_in_log]
     result["failures"] = failures
+    result["warnings"] = coverage_warnings(cat, regions, spec)
     return result
 
 
@@ -181,6 +186,8 @@ def main(argv: list[str] | None = None) -> int:
         if "log" in res:
             print(f"log: {res['log']['scenes']} scenes, regions {len(res['log']['regionsInLog'])}, "
                   f"tile regions {len(res['log']['tileRegionsInLog'])}, missing in log {len(res['log']['missingInLog'])}")
+        for w in res["warnings"]:
+            print("WARNING " + w)
         for f in res["failures"]:
             print("FAIL " + f)
         print("OK" if not res["failures"] else f"{len(res['failures'])} problem(s)")
