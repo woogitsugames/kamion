@@ -298,3 +298,7 @@
 - 2026-11-16 06:16 +01:00 — R23 po merge ronda i szpalerów nadal buduje świat; kontrola źródeł tree_rows nie wykazała linii w parku (wynik instancji po build OPEN). Pełne GIS/EditMode i budżet po merge OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r23.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r23.done` 
 
+
+- 2026-11-16 06:38 +01:00 — R23 po integracji 74 kamery, High max 1 248 992 tris PASS, Low vs before 240→304 draws FAIL. EditMode 955 passed, 2 skipped; pełny GIS trwa, jedno F prawdopodobnie stare instancje regionu C względem nowego manifestu. Analiza regeneracji C trwa.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r23.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/gis-r23.done` 
+
