@@ -1,0 +1,93 @@
+13 assets, 65 files, 0 problems
+PBR sets: 2 missing, 0 older than _src for Medium - running art-source/world/materials/_src/build_all.py
+set asphalt_sma_fresh
+  19.8 s
+set asphalt_worn
+  10.3 s
+set asphalt_patch
+  22.8 s
+set concrete_cast_5m_joints
+  40.6 s
+set concrete_slab_3x1.5
+  28.8 s
+set kerb_concrete_1m
+  11.7 s
+set behaton_i_grey
+  21.1 s
+set paving_20x10_grey
+  14.3 s
+set grass_verge
+  23.4 s
+set gravel_compacted
+  20.1 s
+set oil_stain_alpha
+  9.0 s
+set viaduct_concrete
+  40.5 s
+set fire_station
+  41.2 s
+facade set sandwich_ribbed
+  8.0 s
+facade set sandwich_smooth
+  1.3 s
+facade set cladding_vertical
+  1.5 s
+facade set trapezoid_sheet
+  10.8 s
+facade set concrete_precast
+  15.8 s
+facade set sectional_door
+  2.3 s
+facade set plaster
+  3.9 s
+facade set large_panel_joints
+  22.0 s
+facade set brick
+  17.0 s
+facade set concrete_blocks_split
+  0.9 s
+facade set concrete_panels_wall
+  2.3 s
+facade set roof_tiles
+  0.5 s
+facade set curtain_folds
+  4.8 s
+facade set container_corrugation
+  1.8 s
+facade set barrier_galv
+  0.4 s
+facade set noise_cassette
+  2.8 s
+facade set concrete_fence_panel
+  1.6 s
+facade set hedge_foliage
+  0.4 s
+facade set soil_bed
+  0.6 s
+facade set car_grime_clean
+  1.3 s
+facade set car_grime
+  1.2 s
+facade set box_panel
+  1.5 s
+building set facade_atlas
+  24.5 s
+building set facade_far
+  7.6 s
+building set fence_concrete
+  14.4 s
+scan-only set sidewalk_slab_35
+scan-only set asphalt_tint
+scan-only set bark_pine
+layer asphalt_cracks_layer
+layer macro_variation
+layer parapet_runoff
+layer asphalt_detail_photo
+  SKIP asphalt_detail_photo: source photo not found (C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\Data\photos\nowe\Worn_cracked_asphalt_pavement.jpg); pass --photo
+wrote C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\art-source\world\materials\materials_spec.json total 516 s
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\logs\import-region-dk65-03-20261115-232053.log -buildTarget Android -quit -executeMethod Game.World.Import.RegionImporter.ImportBatch -region dk65-03 -tiers Low -materialTier Medium
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 41136)
+IMPORT_RESULT: OK region=dk65-03 chunks=64 corridor=7 tiers=Low
+WORLD_MEMORY: tier=Low render_meshes=33.7 MB instances=6.0 MB collision_src=11.4 MB total=51.1 MB [terrain 24,5, water 0,2, banks 0,1, road 2,1, markings 0,1, plot_ground 1,7, buildings 1,2, plots 3,1, wires 0,2, paved 0,0, furniture 0,3, far_field 0,0]
+WORLD_TERRAIN_BAND: fine fraction Low 14 % High 0 %
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\logs\import-region-dk65-03-20261115-232053.log
