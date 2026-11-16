@@ -1,0 +1,48 @@
+{
+  "review_date": "2026-11-16",
+  "status": "SCREENED_NO_QUALIFIED_STOP",
+  "counts": {"images_individually_viewed": 2, "qualified_stop_frames": 0, "downloads": 0, "aux_added": 0, "documentary_manifest_rows": 1},
+  "selection": {
+    "source": "research/dk65-knyszyn-refs/data/osm_corridor.json",
+    "queried_at": "2026-11-15T10:17:47Z",
+    "osm_node": 14067837808,
+    "tags": {"public_transport": "platform"},
+    "lat": 53.2179555,
+    "lon": 23.01845,
+    "k1_route_km": 15.314,
+    "k1_side": "R",
+    "limits": "Lokalny wariant A korytarza, nie kilometraż państwowy DK65 ani GPS kamery; brak nazwy i shelter w tagach nie dowodzi braku wyposażenia."
+  },
+  "browser": {"map_style_visually_confirmed": "OpenStreetMap", "captures_layer": "All captures", "images_saved": false, "screenshots_saved": false, "api_used": false},
+  "images": [
+    {
+      "pkey": "542797913772543",
+      "url": "https://www.mapillary.com/app/?pKey=542797913772543&focus=photo",
+      "author_ui": "szurek for Here",
+      "date_ui": "10 sie 2017",
+      "date": "2017-08-10",
+      "viewed": true,
+      "observations": "Asfaltowa droga z białymi przerywanymi liniami, wąskim szarym poboczem i trawą. Po prawej ogrodzenie, tablica handlowa, słup i drzewa; w oddali zielona tablica miejscowości. Brak rozpoznanej wiaty, D-15 i pewnej geometrii zatoki w kadrze.",
+      "time_travel_ui": "No compatible captures found",
+      "qualification": "NOT_QUALIFIED_FOR_STOP",
+      "camera_coordinates": null,
+      "heading": "UNVERIFIED"
+    },
+    {
+      "pkey": "138750054907318",
+      "url": "https://www.mapillary.com/app/?pKey=138750054907318&focus=photo",
+      "author_ui": "picturehoover",
+      "date_ui": "27 cze 2020",
+      "date": "2020-06-27",
+      "viewed": true,
+      "observations": "Prosta asfaltowa droga z białymi przerywanymi liniami osi i krawędzi, jasnym ziarnistym poboczem i szeregiem drzew. W oddali po prawej mała niebieska tablica i lokalna zmiana przebiegu krawędzi.",
+      "limits": "Symbol, napis i funkcja tablicy nieczytelne. Nie potwierdzono D-15, wiaty ani zatoki. Nie utożsamiono niepewnego elementu z węzłem platformy na podstawie bliskości viewportu.",
+      "qualification": "UNVERIFIED_STOP_EQUIPMENT",
+      "camera_coordinates": null,
+      "heading": "UNVERIFIED"
+    }
+  ],
+  "licence_context": {"source": "../mapillary-browser-round2/licence-check.json", "note": "Istniejąca kontrola warunków Mapillary; w tej rundzie wyłącznie publiczne odnośniki, bez redystrybucji obrazów."},
+  "dedup": {"scope": "research/dk65-knyszyn-refs oraz research/codex-refs-s21/04-dk65; CSV, README i JSON", "result": "Brak wcześniejszych trafień obu pKey. Node znajdował się wyłącznie w lokalnym osm_corridor.json."},
+  "limitations": ["Dwa historyczne kadry nie dowodzą stanu w 2026 ani nieistnienia przystanku.", "Nie pobrano obrazu i nie ustalono naturalnej rozdzielczości.", "Nie dodano nowej referencji AUX tylko za ogólne pobocze i drzewa."]
+}
