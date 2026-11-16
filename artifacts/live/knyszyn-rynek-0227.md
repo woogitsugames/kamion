@@ -314,3 +314,7 @@
 - 2026-11-16 07:34 +01:00 — R23 po merge: GIS 1769 passed, 22 skipped, 2 xfailed; EditMode 955 passed, 2 skipped. High max 1 248 992 tris PASS; Low 240→304 draws vs before FAIL. Rondo z main widoczne, pomnik/lipy i targowica nadal OPEN; gotowość do scalenia NIE. Sandbox C pozostał po odmowie kontroli polecenia usunięcia.
 - NASTĘPNY KROK: `gh pr create --base main --head knyszyn-rynek-0227 --title 'Knyszyn: park Rynku i kamery kontrolne' --body-file artifacts/knyszyn-rynek-0227/pr-body.md` 
 
+
+- 2026-11-16 07:35 +01:00 — PR niedraftowy #139 otwarty do main, MERGEABLE; werdykt NIE ze względu na Low FAIL i otwarte porównania wizualne/targowicę. GIS 1769 passed, 22 skipped, 2 xfailed; EditMode 955 passed, 2 skipped. Bez scalenia.
+- NASTĘPNY KROK: `gh pr view 139` 
+
