@@ -294,3 +294,7 @@
 - 2026-11-16 06:07 +01:00 — Scalono nowe main 537fda427: rondo/szpalery oraz park zachowane; konflikt vegetation 29 testów kierunkowych passed, historyczny duplikat rynek_fountain usunięty, generated Knyszyn z main do przebudowy. R23 build/import/QA trwa; pełne testy i budżet po merge OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r23.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r23.done` 
 
+
+- 2026-11-16 06:16 +01:00 — R23 po merge ronda i szpalerów nadal buduje świat; kontrola źródeł tree_rows nie wykazała linii w parku (wynik instancji po build OPEN). Pełne GIS/EditMode i budżet po merge OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r23.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r23.done` 
+
