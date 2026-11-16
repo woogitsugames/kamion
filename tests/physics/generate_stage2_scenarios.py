@@ -1,6 +1,9 @@
 """Generates the Stage 2 validation scenarios (combination, air brakes, endurance brakes, AMT).
 
-Usage (from the repo root):  uv run python tests/physics/generate_stage2_scenarios.py tests/physics/scenarios
+Usage (from the repo root):
+  uv run python tests/physics/generate_stage2_scenarios.py tests/physics/scenarios [tests/physics/scenarios_expected_fail]
+The optional second folder receives the generated known-failure scenarios (ring_96_53_comb, ADR 0280); without it they
+are not written.
 
 The JSON files in tests/physics/scenarios are the authority that the runner and the tests read. This script
 is how the Stage 2 files were produced (keeps the solo / empty / 40 t variants and the check sources
@@ -11,6 +14,7 @@ Stage 1 solo scenarios are hand-written and not touched by this script. So are t
 import json, os, sys
 
 OUT = sys.argv[1]
+OUT_XFAIL = sys.argv[2] if len(sys.argv) > 2 else None
 W = "WORKING_VALUE"; D = "DERIVED"; S = "SOURCED"
 R13 = "UN R13 Annex 4"
 # UN R13 Annex 4 para 2.1.1 table, category N3, "Type-0 test with engine disconnected": v = 60 km/h,
@@ -39,7 +43,7 @@ def key(t, throttle=0, brake=0, steer=0, park=False, sel="D", lever=0, manual=Fa
     return k
 
 
-def sc(id, desc, spec, duration, driver, checks, variants=None, ground=None, initial=None, **kw):
+def sc(id, desc, spec, duration, driver, checks, variants=None, ground=None, initial=None, out=None, **kw):
     d = {"schemaVersion": 1, "id": id, "description": desc, "spec": spec}
     if variants: d["variants"] = variants
     d["ground"] = ground or {"gradePercent": 0, "surface": "dry_asphalt"}
@@ -48,7 +52,8 @@ def sc(id, desc, spec, duration, driver, checks, variants=None, ground=None, ini
     d["duration"] = duration
     d["driver"] = driver
     d["checks"] = checks
-    with open(os.path.join(OUT, id + ".json"), "w", encoding="utf-8") as f:
+    out = out or OUT
+    with open(os.path.join(out, id + ".json"), "w", encoding="utf-8") as f:
         json.dump(d, f, indent=2)
 
 
@@ -559,6 +564,44 @@ sc("couple_uncouple", "Trailer on landing gear; tractor reverses under it, coupl
    variants=COMB, overrides={"coupled": False, "trailerGap": 2.0},
    events=[{"t": 0.5, "type": "couple_arm"}, {"t": 8, "type": "landing_gear_up"},
            {"t": 31, "type": "landing_gear_down"}, {"t": 48, "type": "uncouple"}])
+
+# ---------------- turning ring, Directive 96/53/EC Annex I 1.5 (ADR 0280) ----------------
+# CELEX 01996L0053-20190814, Annex I point 1.5: "Any motor vehicle or vehicle combination which is in motion must be able
+# to turn within a swept circle having an outer radius of 12,50 m and an inner radius of 5,30 m". Steady circle at 5 km/h,
+# driver radius 10.12 m at the tractor rear axle (outer footprint corner = front bumper corner just inside 12.50 m),
+# evaluated from t = 120 s (fit rms ~1e-4 m). Footprint from dims.json (mirrors excluded). The current trailer geometry
+# (kingpin -> tridem centre 7.70 m) does not fit -> known failure; the proposal of ADR 0280 (7.60 m, axle overrides, no
+# game data changed) fits with >= 5 cm ring-width margin.
+RING_ENV = {"tractorFrontZ": round(dv("wheelbase_m") + dv("front_overhang_m"), 4), "tractorRearZ": -dv("rear_overhang_m"),
+            "tractorHalfWidth": round(dv("cab_width_m") / 2, 4),
+            "trailerFrontZ": dv("trailer_kingpin_to_front_m"), "trailerRearZ": -dv("semitrailer_kingpin_to_rear_m"),
+            "trailerHalfWidth": round(dv("max_width_m") / 2, 4)}
+RING_SRC = "Directive 96/53/EC Annex I 1.5 (CELEX 01996L0053-20190814): swept circle outer radius 12,50 m, inner radius 5,30 m"
+
+
+def ring_checks(width_max, width_src, width_status):
+    return [chk("swept_outer_radius_m", mx=12.50, frm=120, status=S, source=RING_SRC + "; no footprint point beyond the outer circle"),
+            chk("swept_inner_radius_m", mn=5.30, frm=120, status=S, source=RING_SRC + "; no footprint point inside the inner circle"),
+            chk("swept_ring_width_m", mx=width_max, frm=120, status=width_status, source=width_src),
+            chk("swept_fit_rms_m", mx=0.01, frm=120, source="steady state: rear-axle path is a circle (Kasa fit residual)"),
+            chk("mean_speed_kmh", mn=4, mx=6, frm=120, source="crawl speed, kinematic regime"),
+            chk("max_dv_step_ms", mx=0.35, source="no solver spikes")]
+
+
+ring_drv = {"type": "circle", "targetKmh": 5, "radius": 10.12, "direction": 1}
+if OUT_XFAIL:
+    sc("ring_96_53_comb", "Turning ring 12.50 / 5.30 m (96/53/EC Annex I 1.5), current trailer geometry (kingpin -> tridem centre 7.70 m)",
+       "docs/04 s6.7; ADR 0280", 240, ring_drv,
+       ring_checks(7.20, "12.50 - 5.30 = 7.20 m (DERIVED from the SOURCED radii; necessary condition at any placement)", D),
+       variants=COMB, envelope=RING_ENV, out=OUT_XFAIL,
+       expectedFailReason="ADR 0280: kingpin -> tridem centre 7.70 m (curtainsider_tridem_13_6.trailer.json, WORKING_VALUE) with the "
+                          "tridem scrub (effective wheelbase ~7.88 m) puts the trailer side ~4-6 cm inside 5.30 m when the bumper "
+                          "corner is on 12.50 m. Proposal 7.60 m: ring_96_53_comb_rwb760. Decision of the leader/owner (game data).",
+       expectedFailMetrics=["swept_inner_radius_m", "swept_ring_width_m"])
+sc("ring_96_53_comb_rwb760", "Turning ring 12.50 / 5.30 m (96/53/EC Annex I 1.5), PROPOSED trailer axles (kingpin -> tridem centre 7.60 m, ADR 0280; overrides only)",
+   "docs/04 s6.7; ADR 0280", 240, ring_drv,
+   ring_checks(7.15, "12.50 - 5.30 - 0.05 m margin (ADR 0280 target: >= 5 cm of ring width left)", W),
+   variants=COMB, envelope=RING_ENV, overrides={"trailerAxlePositionsZ": [-6.29, -7.60, -8.91]})
 
 # ---------------- AMT manual ----------------
 sc("manual_mode_shifts", "Manual mode: start in 2nd, shift up by hand, try an over-revving downshift at speed (must be rejected)",
