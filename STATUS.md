@@ -33,3 +33,4 @@
 - NASTĘPNY KROK (lider): przegląd `git diff origin/main...trailer-763-s23`, visual-critic na `artifacts/trailer-763-s23/`, scalenie;
   po scaleniu w main: `TrailerAssetBuilder.BuildBatch` + `WorldTruckInstaller.InstallBatch` (artefakty _Generated poza gitem).
 - r3 krok 1: noStart dla kafli narożnych dk65-monki-05/dw671-tykocin-02 (route_endpoints no_standalone_start -> katalog noStart -> menu/importer/testy, ADR 0231 §5a); tykocin teryt_powiat_extra 2008. pytest start_clear+qa_tools_0219: 231 passed. NASTĘPNY KROK: łańcuch przebudowy 26 kafli (25 + bialystok-industrial-c; tykocin z build_region).
+- r3 krok 2/3 START 2026-11-17T00:34:00: artifacts/world2-s23/tools/r3.ps1 (world + unity), status artifacts/world2-s23/logs/r3-world.status / r3-unity.status. NASTĘPNY KROK: czekać na 'R3 WORLD DONE' i 'R3 UNITY DONE', potem kopia derived /E do main + pytest tests/gis.
