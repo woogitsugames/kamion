@@ -1,0 +1,227 @@
+{
+  "source": "../data/osm-selected-roads.json",
+  "provenance": "../data/osm-source.json",
+  "snapshot": "2026-11-08",
+  "licence": "© OpenStreetMap contributors; ODbL 1.0",
+  "target_viewport_only": {
+    "lat": 53.3088,
+    "lng": 22.9135
+  },
+  "ways": [
+    {
+      "id": 1426600413,
+      "timestamp": "2026-02-02 09:26:35+00:00",
+      "tags": {
+        "destination": "Korycin",
+        "destination:ref": "671",
+        "highway": "secondary",
+        "highway:category:pl": "2",
+        "lanes": "1",
+        "name": "Tykocka",
+        "oneway": "yes",
+        "ref": "671",
+        "surface": "asphalt"
+      },
+      "points_lonlat": [
+        [
+          22.9136523,
+          53.3088287
+        ],
+        [
+          22.9136785,
+          53.3088481
+        ],
+        [
+          22.913779,
+          53.3089022
+        ],
+        [
+          22.9139162,
+          53.3089954
+        ]
+      ],
+      "towns": []
+    },
+    {
+      "id": 1464342636,
+      "timestamp": "2026-01-05 11:42:10+00:00",
+      "tags": {
+        "highway": "secondary",
+        "highway:category:pl": "2",
+        "lanes": "1",
+        "name": "Tykocka",
+        "oneway": "yes",
+        "ref": "671",
+        "surface": "asphalt"
+      },
+      "points_lonlat": [
+        [
+          22.9139162,
+          53.3089954
+        ],
+        [
+          22.9137386,
+          53.3089452
+        ],
+        [
+          22.9136311,
+          53.3089216
+        ],
+        [
+          22.9135655,
+          53.3089107
+        ]
+      ],
+      "towns": []
+    },
+    {
+      "id": 1464342637,
+      "timestamp": "2026-02-02 09:26:35+00:00",
+      "tags": {
+        "destination": "Tykocin",
+        "destination:ref": "671",
+        "highway": "secondary",
+        "highway:category:pl": "2",
+        "lanes": "1",
+        "name": "Tykocka",
+        "oneway": "yes",
+        "ref": "671",
+        "surface": "asphalt"
+      },
+      "points_lonlat": [
+        [
+          22.9133891,
+          53.3088402
+        ],
+        [
+          22.9133582,
+          53.3088071
+        ],
+        [
+          22.9132936,
+          53.3087607
+        ],
+        [
+          22.9131986,
+          53.3087095
+        ],
+        [
+          22.9130953,
+          53.3086388
+        ]
+      ],
+      "towns": []
+    },
+    {
+      "id": 1464342639,
+      "timestamp": "2026-01-05 11:42:10+00:00",
+      "tags": {
+        "highway": "secondary",
+        "highway:category:pl": "2",
+        "lanes": "1",
+        "name": "Tykocka",
+        "oneway": "yes",
+        "ref": "671",
+        "surface": "asphalt"
+      },
+      "points_lonlat": [
+        [
+          22.9130953,
+          53.3086388
+        ],
+        [
+          22.9132499,
+          53.3086705
+        ],
+        [
+          22.9133295,
+          53.3087035
+        ],
+        [
+          22.9134167,
+          53.3087471
+        ],
+        [
+          22.9134719,
+          53.3087632
+        ]
+      ],
+      "towns": []
+    },
+    {
+      "id": 1464342641,
+      "timestamp": "2026-02-15 10:54:12+00:00",
+      "tags": {
+        "highway": "secondary",
+        "highway:category:pl": "2",
+        "lanes": "2",
+        "name": "Tykocka",
+        "ref": "671",
+        "surface": "asphalt"
+      },
+      "points_lonlat": [
+        [
+          22.9139162,
+          53.3089954
+        ],
+        [
+          22.9140329,
+          53.3090486
+        ],
+        [
+          22.9141658,
+          53.3091092
+        ]
+      ],
+      "towns": []
+    },
+    {
+      "id": 1478765548,
+      "timestamp": "2026-02-15 10:54:12+00:00",
+      "tags": {
+        "check_date": "2024-06-07",
+        "highway": "secondary",
+        "highway:category:pl": "2",
+        "lanes": "3",
+        "lanes:backward": "1",
+        "lanes:forward": "2",
+        "name": "Tykocka",
+        "ref": "671",
+        "surface": "asphalt",
+        "turn:lanes:forward": "none|right"
+      },
+      "points_lonlat": [
+        [
+          22.9130953,
+          53.3086388
+        ],
+        [
+          22.9128969,
+          53.3085473
+        ],
+        [
+          22.9128698,
+          53.3085348
+        ],
+        [
+          22.9127718,
+          53.3084896
+        ],
+        [
+          22.9126117,
+          53.3084158
+        ],
+        [
+          22.9125492,
+          53.308387
+        ],
+        [
+          22.9124705,
+          53.3083519
+        ]
+      ],
+      "towns": []
+    }
+  ],
+  "limitations": "Selekcja celu z lokalnej bazy; nie fotografia, nie stan organizacji ruchu 2026, nie GPS kamery. Odcinki jednokierunkowe nie potwierdzają same w sobie ronda."
+}
