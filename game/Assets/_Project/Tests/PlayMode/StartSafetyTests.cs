@@ -115,12 +115,21 @@ namespace Game.Tests
 
             Object.Destroy(boot.spawnPoint.gameObject);
             boot.spawnPoint = SpawnPointAt(route, 120f);
-            Assert.IsTrue(boot.RestartFromSceneStart());
-            Assert.AreEqual(StartOutcome.Unchanged, boot.LastStart.outcome);
+            // int-h3-s23: only the [START] lines matter here. LogAssert.NoUnexpectedReceived() also failed on an unrelated
+            // PhysX cooking warning of the lab's HillRamp mesh (Win64 editor, "triangles ... greater than 500 units").
+            int startLines = 0;
+            Application.LogCallback count = (msg, _, __) => { if (msg != null && msg.StartsWith("[START]")) startLines++; };
+            Application.logMessageReceived += count;
+            try
+            {
+                Assert.IsTrue(boot.RestartFromSceneStart());
+                Assert.AreEqual(StartOutcome.Unchanged, boot.LastStart.outcome);
+            }
+            finally { Application.logMessageReceived -= count; }
+            Assert.AreEqual(0, startLines, "a free baked spawn is used silently (no [START] move / error line)");
             yield return new WaitForFixedUpdate();
             Vector3 e = body.transform.position - boot.spawnPoint.position; e.y = 0f;
             Assert.Less(e.magnitude, 1.5f, "a free baked spawn point is used as it is");
-            LogAssert.NoUnexpectedReceived();
             Object.Destroy(boundary.gameObject);
         }
 
