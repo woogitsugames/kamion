@@ -145,3 +145,9 @@ Właściciel: skrócić rozstaw sworzeń–środek tridemu naczepy z 7,70 m do *
 ## D80 — Pad: warstwa „przytrzymaj Back + przycisk” (2026-11-16, s23)
 Właściciel: 6 akcji bez wolnego przycisku pada dostaje warstwę modyfikatora **Back (przytrzymany) + przycisk**; Back przestaje być wstecznym (R) — wsteczny przechodzi na inny przycisk ustalony w implementacji (ADR 0264, propozycja w raporcie sesji P r4 / docs/owner/JAK-GRAC-PC.md). Do oceny w feel teście (D77).
 
+## D81 — Trasa C ↔ Dojlidy przez DK19 Piastowska–Branickiego (2026-11-16, s23)
+Właściciel: trasa ciężarówki C ↔ Dojlidy idzie DK19 przez ul. Piastowską, pl. Antonowicza i Branickiego do ronda Meyera, ze skrętem w Ciołkowskiego (za rondem Meyera zakaz 3,5 t). Podstawa: plan UM Białegostoku (2018, 40 t) + OSM bez ograniczeń tonażowych; brak zdjęcia znaków → WORKING_VALUE do potwierdzenia. Nocne 40 km/h na Piastowskiej jako WORKING_VALUE. Kafle bialystok-mickiewicza, -bojary, -wygoda wg ADR 0278. Research: docs/owner/MAP-DECISIONS-2026-11-16.md (a).
+
+## D82 — Kierunek Podlasia: najpierw pętla S8 ↔ DW671 ↔ Tykocin (2026-11-16, s23)
+Właściciel: po kaflach Białegostoku z ADR 0278 pierwszym kierunkiem Podlasia jest **pętla S8 ↔ DW671 ↔ Tykocin** (15 kafli: S8 z węzłami i MOP, powrót przez Tykocin–Knyszyn, strefa przemysłowa przy dk65-01); zgoda na S8 mimo D64. Mońki → Grajewo później (kafel Grajewa > 2 M High wymaga redukcji). Research: docs/owner/MAP-DECISIONS-2026-11-16.md (b).
+
