@@ -16,8 +16,9 @@
 ## Zmiany (plik:linia)
 1. **Konflikt `storey_plan` (P1)** — `tools/worldgen/streetscape/buildings_mesh.py:98-122` (`:112-114`). Zostaje
    `if p.get("storeys_fixed"): return int(nb), shb, zb` z #122. Usunięta linia `lo, hi = …` z #122, bo
-   nadpisywała `storey_fit_m` kamienicy (#123, `:104-107` w `storey_plan`). W jej miejscu jest komentarz. Wysokości z NMPT (#122) są w
-   danych i `buildings.py`, a scalenie ich nie dotyka. `tools/worldgen/generated/` i `Data/` nie mają różnic względem main.
+   nadpisywała `storey_fit_m` kamienicy (#123, `:104-107` w `storey_plan`). W jej miejscu jest komentarz. Diff gałęzi względem
+   `origin/main` obejmuje tylko pliki #123 (8 plików `tools/worldgen`, testy, ADR, docs/05, LICENSES). Kod #122 z main
+   jest więc nietknięty poza tą jedną linią. `Data/` i `tools/worldgen/generated/` nie mają różnic względem main.
 2. **Test regresji scalenia** — `tests/gis/test_typology_0238.py:196-207`
    `test_storey_plan_keeps_the_kamienica_fit_with_the_0242_storeys_fixed_rule`. Kamienica 2 × 3,9 m mieści się w
    zakresie kamienicy 2,8–4,0, ale nie w zakresie bloku 2,6–3,8, więc wynik musi być (2, 3,9, 0,6). `storeys_fixed` daje
@@ -31,7 +32,11 @@
 4. **Baseline Dojlid i C (P1)** — `tests/gis/data/typology_0238_baseline_bialystok-{dojlidy,industrial-c}.json`.
    Przeliczone harnessem `tools/worldgen/qa/typology_budget.py` (z PR) na **kodzie generatora i danych z `origin/main`
    `ade885234`** (`git archive` do scratchpada, bez `streetscape/typology.py`, raport `subtypes: null`, czyli kod sprzed
-   #123). Stare baseline nie zgadzały się z main w obu regionach: Dojlidy 31/415 budynków (#122), C 43/644.
+   #123). Stare baseline nie zgadzały się z main w obu regionach: Dojlidy w 31 z 415 budynków, C w 43 z 644. Przyczyna w C
+   jest UNVERIFIED (recenzja podawała, że #122 nie zmienia C). Możliwe źródła to inne PR-y scalone do main po baseline
+   #123 albo dane po c-regen2. Dojlidy prawdopodobnie zmienił #122 (recenzja: hala `bdot:2058ad2f-…`).
+   Baseline z wyciętego drzewa zgadza się z pełnym worktree, bo test bit-identyczności przechodzi na > 250 budynkach
+   na region. Nie zadziałał więc cichy fallback.
    - Dojlidy: 501 031 / 68 367 → **500 537 / 68 404** (LOD0 / LOD1, harness)
    - C: 964 087 / 101 067 → **964 112 / 101 095**
 5. **P2 udział bloków nieocieplonych** — `buildings_mesh.py:82-85` (stała `BLOCK_ETICS_SHARE = 0.7`, WORKING_VALUE, ze
@@ -56,6 +61,10 @@ liczbę kondygnacji i pasów okien. Wpływ UNVERIFIED, trzeba go zmierzyć po pr
 ## Testy
 - `uv run --project tools/worldgen python -m pytest tests/gis -q -k "typology or 0238 or buildings or storey or 0242"`:
   **124 passed, 1635 deselected, 0 failed** (259,6 s; uruchomione na drzewie z `BLOCK_ETICS_SHARE`).
+- Szerszy zestaw z recenzji (`building or facade or frontage or typology or doj or roof or house or materials`),
+  uzupełnienie w 3 przebiegach: `test_dojbld_0185.py test_dojind_0196.py test_dojlidy_0242.py` **27 passed, 1 skipped**;
+  `-k "(facade or frontage or roof) and not (…)"` **45 passed, 1 skipped**; `-k "(doj or house or materials or building)
+  and not (…)"` **93 passed, 2 skipped**. Razem z zestawem wyżej: **289 passed, 4 skipped, 0 failed**.
 - `tests/gis/test_typology_0238.py` osobno: **22 passed** (22,8 s).
 - `python scripts/export-region-catalog.py --check`: **exit 0**.
 
@@ -67,6 +76,8 @@ liczbę kondygnacji i pasów okien. Wpływ UNVERIFIED, trzeba go zmierzyć po pr
   generatora budynków, test bit-identyczności znów padnie. Wtedy trzeba przeliczyć baseline tak jak w pkt 4.
 
 ## Komendy dla lidera
+Head PR #123 (`origin/typology-0238`) jest bez zmian (`243b3065b`). Poprawki są tylko na `origin/typology-fix-s23`.
+Trzeba scalić tę gałąź albo przepiąć PR na nią.
 ```
 # scalenie (gałąź już zawiera main ade885234)
 git -C C:\Users\matma\Documents\Claude\kamion merge --no-ff origin/typology-fix-s23
