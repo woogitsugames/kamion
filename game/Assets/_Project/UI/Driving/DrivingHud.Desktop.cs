@@ -224,6 +224,12 @@ namespace Game.UI.Driving
             m_DesktopApplied = desktop;
             m_ClusterRt.gameObject.SetActive(!desktop);
             m_ParkWarnRt.gameObject.SetActive(!desktop);
+            if (desktop)
+            {
+                // Touch controls are never on a monitor (the touch branch re-enables them from its own layout).
+                m_TurnRt.gameObject.SetActive(false); m_StalkRt.gameObject.SetActive(false); m_BrakeRt.gameObject.SetActive(false);
+                m_ThrottleRt.gameObject.SetActive(false); m_GearsRt.gameObject.SetActive(false);
+            }
             if (m_DStrip != null) m_DStrip.gameObject.SetActive(desktop && m_D.ShowStrip);
             if (m_DTell != null) m_DTell.gameObject.SetActive(desktop);
             if (!desktop && !m_DevToggleRt.gameObject.activeSelf) m_DevToggleRt.gameObject.SetActive(true);

@@ -76,6 +76,8 @@ namespace Game.Controls
         public static readonly Color Row = C(30, 33, 37);
         public static readonly Color Button = C(43, 47, 52);
         public static readonly Color ButtonPressed = C(52, 57, 63);
+        /// <summary>Switched-on toggle in the older panels that keep light text on it (control settings, bindings, about).</summary>
+        public static readonly Color ButtonActive = C(64, 78, 70);
         /// <summary>Selected segment / active tab: inverted (light fill, dark text) - reads as "chosen" without colour.</summary>
         public static readonly Color SegmentOn = C(236, 233, 225);
 
@@ -129,6 +131,7 @@ namespace Game.Controls
             new Pair("tekst drugorzędny / wiersz", InkMuted, Row, Use.Text),
             new Pair("tekst drugorzędny / przycisk", InkMuted, Button, Use.Text),
             new Pair("tekst wybranego segmentu", InkOnLight, SegmentOn, Use.Text),
+            new Pair("tekst / przycisk włączony", Ink, ButtonActive, Use.Text),
             new Pair("akcent (nagłówek, licznik) / panel", Accent, Panel, Use.Text),
             new Pair("akcent / wiersz", Accent, Row, Use.Text),
             new Pair("ramka fokusu / panel", Accent, Panel, Use.Graphic),
