@@ -9,3 +9,6 @@ Tył to czarna, użebrowana obudowa z owalnymi wnękami, centralnym zagłębieni
 [Producent](https://www.vignal-group.com/en/rear-lamp-right-with-amp-15-7-pin-side-connector-247.html), sekcje Technical characteristics/Applications, podaje dla156780 rodzinęLC8, Trucks, Scania Serie P&R,12/24V i ECE E2 2040. To źródłowe zastosowanie i deklaracja tekstowa, oddzielone od oglądu. Sprzedawca podaje Nowy i Europejska, lecz parametr Typ samochodu błędnie wskazuje osobowe; nie korzystamy z niego do kwalifikacji ciężarowej. Numer na etykiecie daje mocniejsze powiązanie niż sam tytuł.
 
 Dedup: dokładny model156780 nie występował w odczytanych manifestach/JSON01. RodzinaLC8 była już reprezentowana156290 — **nie ogłaszamy nowej rodziny konstrukcji**. Wynik: **3 nowe kadry kontekstowe /1 fizyczna część /0 nowych pewnych homologacji /0 włączonych /0 nocnych**. Numery i marka identyfikują referencję; nie są poleceniem kopiowania oznaczeń na fikcyjny pojazd.
+
+
+Koordynator16.11.2026 osobno obejrzałPR20-01 wukrytejIAB: dopasowany obraz i naturalne1600×1200 po kliknięciu. To nieślepapeer, wcześniejszy opis i kandydatkatalogowyznane. Kształt/czerwień/bezbarwnepole/4śruby/odbicia zgodne; drobnyokrągłyznak widoczny, alekraju i pełnegonumeru nie rozstrzygnięto. E/ON/nocbezawansu,0nowychekspozycji/0pobrań/zapisanychscreenshotów. Obserwacja2pozostałychkadrów tylkoautor, nie root.
