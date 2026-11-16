@@ -77,3 +77,8 @@ Główny manifest: 22 rekordy. [Dokument gminny](tree-inventory-round9/README.md
 ## Przystanek Ełcka — runda11
 
 [bus-stop-round11](bus-stop-round11/README.md):1nowy Mapillary picturehoover27.06.2020,pKey1452388251821206,0pobrań. Indywidualnie obejrzana pełna jasna wiata/graffiti/ciemny dach, znakautobusu, peron/krawężnik/asfaltowazatoka i bariera. Ławka kompletna/nazwa/kosz/nawierzchniadotykowa niepotwierdzone. SelekcjaK1km14.261/L to lokalna miara korytarza, nie państwowy pikietaż; viewport nie GPS, kierunek kuBiałemustokowiESTIMATED, stan2026UNVERIFIED. Główny04ma23rekordy. Koordynator odczytał artefakty; indywidualny ogląd źródłowego kadru tylkoagent, nie drugi nowy oglądroot.
+
+
+## Leśne pobocza i wjazd — runda12
+
+[rural-verges-round12](rural-verges-round12/README.md):2 nowe kadry Mapillary picturehoover z27.06.2020, każdy osobno obejrzany przez agenta po powiększeniu i jawnym wyborze OSM. Wąski pas pobocza/trawa/obniżenie/ściana lasu oraz jasny kruszywowy klin i rzeczywisty wjazd.0 widocznych otworów rur/czół przepustów. Gatunki, odstępy, odsunięcie pni, metryka, przejezdność i stan2026 UNVERIFIED. K1km20/22 to punkty selekcji, nie kamera; dokładnego kafla/km nie przypisano.2 link-only/0pobrań/API/Commons. Główny04ma25 rekordów; koordynator sprawdził artefakty, nie deklaruje dodatkowego oglądu kadrów.

@@ -1,0 +1,12 @@
+{
+  "record_created_date": "2026-11-16",
+  "source": "research/dk65-knyszyn-refs/data/km_points.json — istniejący plik lokalny K1, bez nowych żądań OSM",
+  "points": [
+    {"route_km_K1":20,"lat":53.253363,"lon":22.984289,"tile_K1":"dk65-08","OSM_way_K1":27718745,"OSM_ref_K1":"65"},
+    {"route_km_K1":22,"lat":53.267746,"lon":22.966646,"tile_K1":"dk65-10","OSM_way_K1":27718745,"OSM_ref_K1":"65"}
+  ],
+  "point_limit": "To punkty selekcji na osi przyjętej w K1. Kilometraż jest lokalnym dystansem trasy K1, nie krajowym kilometrażem DK65 i nie lokalizacją aparatu. Przypisanie wybranego kadru do konkretnego km/kafla wymaga dodatkowego dowodu z UI/osi; sam viewport nie wystarcza.",
+  "excluded_existing_frames": ["214528376891610","1452388251821206","375494957174776","187847706528601","471918647449079","373571227374075"],
+  "method": "Mapillary wyłącznie publiczny browser z jawnym OSM, bez API/tokenów/pobierania i zapisanych screenshotów. Commons/Overpass/OSM API nadal STOP.",
+  "visual_status": "DONE — dwa nowe kadry wybrane z zielonego pokrycia na jawnie wskazanej osi65 OSM, oba osobno obejrzane także w maksymalizacji. Dodatkowe szczegóły w observations.json."
+}
