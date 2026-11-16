@@ -158,6 +158,13 @@ namespace Game.Gameplay
             m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout, regions,
                 Application.isMobilePlatform ? null : (System.Action)OpenPcSettings);
             m_Menu.transform.SetParent(transform, false);
+            // ADR 0277: a region start that found no free place for the combination came back here; say why, once.
+            string failure = StartRequest.ConsumeStartFailure();
+            if (!string.IsNullOrEmpty(failure))
+            {
+                m_Menu.ShowNotice(failure);
+                Debug.LogWarning("[START] start menu notice: start failed, no free place (ADR 0277)");
+            }
             Debug.Log("[CONTROLS] menu shown light=" + options.LightingId + " tier=" + options.Tier + " fps=" + options.Fps);
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
