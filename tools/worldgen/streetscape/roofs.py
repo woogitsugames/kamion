@@ -75,10 +75,12 @@ SLIVER_M = 5e-3
 
 
 # ADR 0238 (dopisek D39): two hull edges whose bounding rectangles differ in area by less than this are a tie of the
-# minimum rotated rectangle, m^2. shapely picks the smaller area, so a footprint with two near-equal candidates (Dojlidy
-# house `…A8BC`: 67.6097 m^2 at 4.58 deg and at 4.20 deg) flipped its roof frame under a 1e-9 m translation. Within the
-# tie the rectangle whose axis angle modulo pi/2 is smallest wins - a choice float noise cannot move.
-RECT_TIE_M2 = 1e-3
+# minimum rotated rectangle, m^2. shapely picks the smaller area, so a footprint with two candidates equal up to float
+# noise (Dojlidy house `…A8BC`: 67.6097 m^2 at 4.58 deg and at 4.20 deg) flipped its roof frame under a 1e-9 m
+# translation. Within the tie the rectangle whose axis angle modulo pi/2 is smallest wins - a choice noise cannot move.
+# 1e-6 m^2: far above the noise of the area at km coordinates (~1e-10 m^2), far below a real difference (a footprint
+# with candidates 5e-6 m^2 apart picks the same one on every machine and keeps shapely's rectangle).
+RECT_TIE_M2 = 1e-6
 RECT_TIE_RAD = 1e-6
 
 

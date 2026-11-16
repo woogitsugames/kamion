@@ -617,26 +617,39 @@ def roof_flat(acc, layer, poly, z, mat="roof_membrane", attic=0.3, skylights=Fal
         core = poly.buffer(-8.0)
         if core.is_empty:
             return
+        # ADR 0238 D39: the grid starts 3 m in from one corner of the rotated core; the two directions of the long
+        # axis (ang, ang - pi) start it from opposite corners. Both are built and the one with fewer skylights is used
+        # (equal: ang) - the same pick whatever corner shapely starts its rectangle at, never more than before.
         ang = _angle(poly)
-        ca, sa = math.cos(ang), math.sin(ang)
-        x0, y0, x1, y1 = shapely.affinity.rotate(core, -ang, origin=(0, 0), use_radians=True).bounds
-        for gx in np.arange(x0 + 3, x1 - 3, 12.0):
-            for gy in np.arange(y0 + 3, y1 - 3, 9.0):
-                cx, cy = gx * ca - gy * sa, gx * sa + gy * ca
-                if not core.contains(shapely.Point(cx, cy)):
-                    continue
-                acc.box(layer, "skylight", [cx, cy, z - attic + 0.25], [ca * 1.5, sa * 1.5, 0], [-sa * 1.0, ca * 1.0, 0],
-                        [0, 0, 0.25])
+        grids = [_skylight_grid(core, a) for a in (ang, ang - math.pi)]
+        for cx, cy, ca, sa in min(grids, key=len):
+            acc.box(layer, "skylight", [cx, cy, z - attic + 0.25], [ca * 1.5, sa * 1.5, 0], [-sa * 1.0, ca * 1.0, 0],
+                    [0, 0, 0.25])
+
+
+def _skylight_grid(core, ang):
+    """Skylight centres (x, y, cos, sin): a 12 x 9 m grid along ang from the corner of the rotated core, inside it."""
+    ca, sa = math.cos(ang), math.sin(ang)
+    x0, y0, x1, y1 = shapely.affinity.rotate(core, -ang, origin=(0, 0), use_radians=True).bounds
+    out = []
+    for gx in np.arange(x0 + 3, x1 - 3, 12.0):
+        for gy in np.arange(y0 + 3, y1 - 3, 9.0):
+            cx, cy = gx * ca - gy * sa, gx * sa + gy * ca
+            if core.contains(shapely.Point(cx, cy)):
+                out.append((cx, cy, ca, sa))
+    return out
 
 
 def _angle(poly):
-    """Direction of the long side of the minimum rotated rectangle, modulo pi (ADR 0238 D39: the same side walked the
-    other way round - which one shapely starts the ring at moves with float noise - gave the skylight grid another
-    origin: Dojlidy `…BAD2` 600 / 660 triangles under a 1e-12 m translation)."""
+    """Direction of the long side of the minimum rotated rectangle (roofs.stable_rect), modulo pi, in [0, pi) (ADR 0238
+    D39: the same side walked the other way round - which one shapely starts the ring at moves with float noise - gave
+    the skylight grid another origin: Dojlidy `…BAD2` 600 / 660 triangles under a 1e-12 m translation). An edge within
+    RF.RECT_TIE_RAD of east-west counts as east (not 0 on one machine and pi - 1e-16 on another)."""
     r = np.asarray(RF.stable_rect(poly).exterior.coords)
     d = np.diff(r, axis=0)
     k = int(np.argmax(np.hypot(d[:, 0], d[:, 1])))
-    return math.atan2(d[k, 1], d[k, 0]) % math.pi
+    a = math.atan2(d[k, 1], d[k, 0]) % math.pi
+    return a - math.pi if a > math.pi - RF.RECT_TIE_RAD else a
 
 
 def gable(acc, layer, rect, zeave, zridge, wall_mat, roof_mat):

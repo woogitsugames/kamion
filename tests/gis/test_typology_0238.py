@@ -368,11 +368,9 @@ UNSTABLE_HOUSES = {
 }
 
 
-@pytest.mark.parametrize("rid", sorted(UNSTABLE_HOUSES))
-def test_house_triangles_do_not_depend_on_float_noise(rid):
-    """ADR 0238 (dopisek D32): the roof covering pieces and the wall profiles of a house are cleaned on a 1 mm plan
-    grid (roofs.PLAN_TOL_M), so the per-(layer, material) triangle counts do not change when the footprint moves by
-    1e-9 / 1e-7 m - the size of the floating-point differences between machines that broke the bit-identity test."""
+def _noise_counter(rid):
+    """(buildings, counts(b, dx)): per-(layer, material) triangles of one building built alone with its footprint
+    moved by (dx, 0.7 dx) m."""
     import typology_budget as TB
     from shapely import affinity
     from streetscape import buildings_mesh as BM
@@ -389,11 +387,70 @@ def test_house_triangles_do_not_depend_on_float_noise(rid):
             if layer in TB.LAYERS:
                 out[(layer, mat)] = out.get((layer, mat), 0) + len(T)
         return out
+    return blds, counts
+
+
+@pytest.mark.parametrize("rid", sorted(UNSTABLE_HOUSES))
+def test_house_triangles_do_not_depend_on_float_noise(rid):
+    """ADR 0238 (dopisek D32): the roof covering pieces and the wall profiles of a house are cleaned on a 1 mm plan
+    grid (roofs.PLAN_TOL_M), so the per-(layer, material) triangle counts do not change when the footprint moves by
+    1e-9 / 1e-7 m - the size of the floating-point differences between machines that broke the bit-identity test."""
+    blds, counts = _noise_counter(rid)
     for k in UNSTABLE_HOUSES[rid]:
         b = next(x for x in blds if x["id"] == k)
         assert b["typ"] == "house"
         c0 = counts(b, 0.0)
         assert c0 and all(counts(b, dx) == c0 for dx in (1e-12, 1e-9, 1e-7)), (rid, k)
+
+
+# ADR 0238 (dopisek D39): the buildings left after D32 r2, each with the piece that flipped (pytest ids = short names)
+NOISE_D39 = {
+    "bialystok-dojlidy": {
+        "bdot:2BE4B431-A8BC-1BF0-E053-CC2BA8C0D140": "house",   # two minimum rectangles 67.6097 m^2 (_frame axis)
+        "bdot:2BE4B431-BC59-1BF0-E053-CC2BA8C0D140": "hall",    # docks + authored gates (gate `done` kept on the input)
+        "override:rosti-west-wing": "hall",                     # smoke vents: rectangle ring start (axis sign)
+        "bdot:2BE4B431-BAD2-1BF0-E053-CC2BA8C0D140": "hall",    # skylights: _angle +-pi (600 / 660)
+        "bdot:ed098300-a823-11ef-a156-1866da21c735": "hall",    # skylights: _angle +-pi (120 / 144)
+        "bdot:2BE4B431-A92F-1BF0-E053-CC2BA8C0D140": "block",   # vent stack ON the 2 m inner line
+    },
+    "bialystok-industrial-c": {
+        "bdot:2BE4B431-C4AC-1BF0-E053-CC2BA8C0D140": "hall",    # skylights at 1e-7 m (1932 / 2016)
+    },
+}
+
+
+@pytest.mark.parametrize("rid", sorted(NOISE_D39))
+def test_frames_skylights_docks_and_vents_do_not_depend_on_float_noise(rid):
+    """ADR 0238 (dopisek D39): roofs.stable_rect (a tie of the minimum rotated rectangle -> one canonical rectangle),
+    _angle modulo pi (skylight grid), gates placed on a copy (build() leaves its input as it was - a second build of a
+    hall drew it without its gates) and the 1 mm margin of the vent line: the same triangles per (layer, material)
+    under a translation of 1e-12 ... 1e-6 m and on a repeated build."""
+    blds, counts = _noise_counter(rid)
+    for k, typ in NOISE_D39[rid].items():
+        b = next(x for x in blds if x["id"] == k)
+        assert b["typ"] == typ, k
+        c0 = counts(b, 0.0)
+        assert c0 and counts(b, 0.0) == c0, (rid, k, "repeated build")
+        bad = [dx for dx in (1e-12, 1e-9, 1e-7, 1e-6) if counts(b, dx) != c0]
+        assert not bad, (rid, k, bad)
+
+
+def test_stable_rect_breaks_ties_the_same_way_under_noise():
+    """roofs.stable_rect: without a tie it is shapely's rectangle; with one (a square, two equal candidate areas) the
+    same canonical rectangle - same corners in the same order - whatever the float noise of the input."""
+    from shapely import affinity
+    from shapely.geometry import Polygon
+    from streetscape import roofs as RF
+    skew = Polygon([(0, 0), (20, 1), (19, 9), (-1, 7)])
+    assert RF.stable_rect(skew).equals_exact(skew.minimum_rotated_rectangle, 0.0)
+    for poly in (orient(box(100.0, 200.0, 110.0, 210.0)),                                # square: 4 tied edges
+                 affinity.rotate(orient(box(0.0, 0.0, 12.0, 7.0)), 23.0, origin=(0, 0))):  # rectangle: 2 + 2 tied
+        ref = np.asarray(RF.stable_rect(poly).exterior.coords)
+        for dx in (1e-12, 1e-9, 1e-7, 1e-6):
+            got = np.asarray(RF.stable_rect(affinity.translate(poly, dx, 0.7 * dx)).exterior.coords)
+            assert got.shape == ref.shape and np.allclose(got - [dx, 0.7 * dx], ref, atol=1e-9), dx
+        c, eu, hu, hv = RF._frame(poly)
+        assert hu >= hv and abs(abs(float(eu[0])) - abs(float(RF._frame(affinity.translate(poly, 1e-9, 0))[1][0]))) < 1e-9
 
 
 # ------------------------------------------------------------------------------------------- buildings.py
