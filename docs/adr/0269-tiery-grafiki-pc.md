@@ -1,5 +1,5 @@
 # ADR 0269 — tiery grafiki PC (Low / Medium / High / Ultra)
-Status: Proposed (chmura H r2, zadanie H7, gałąź `pc-tiers-0269`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (chmura H r2, zadanie H7, gałąź `pc-tiers-0269`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
 Powiązane: D73 / ADR 0260 (Windows platformą główną), D74 (klasy sprzętu PC), ADR 0261 (build Windows, desktop domyślnie
 High / 60 fps), ADR 0010 (tiery = poziomy jakości + `QualityProfile`), ADR 0012 (tier treści), ADR 0080 (SSAO Ultra),
 ADR 0270 (menu ustawień PC — woła API z tego ADR).
@@ -134,4 +134,8 @@ Budżety mobilne (PERFORMANCE_BUDGETS: High < 1,5–2 M tris) — bez zmian; tre
 - Visual QA tierów PC (patch pkt 2) + krytyk wizualny: MSAA 8×, cienie 250 m, SSAO na High.
 - Trawa: brak systemu — osobne zadanie świata, wtedy dodać pola gęstości/dystansu do `PcTierSettings`.
 - Lusterka przez renderer SSAO na High/Ultra (koszt).
+- **Lista iGPU po nazwie jest zamknięta** (`PcTierTable`: Intel HD/UHD/Iris/Xe, Radeon Graphics/Vega/740M–890M): nowe
+  iGPU trafią do reguły VRAM, a na iGPU `graphicsMemorySize` bywa częścią RAM z BIOS-u (512 MB → Low, ale 4 GB UMA →
+  Medium). Listę trzeba aktualizować przy nowych generacjach albo dodać heurystykę pamięci współdzielonej (`gpuVendor` +
+  typ urządzenia) — wymaga pomiaru na iGPU (ADR 0276, recenzja #135 P2-5).
 - Cienie drzew za zasięgiem kart LOD1 (Low/Medium 30–60/100 m, High 45–150 m): impostory i HLOD lasu nie rzucają cienia. Opcje (wymagają pomiaru): wyższy `treeCardLodScale` na PC albo osobny caster LOD1 dla passu cieni (pc-shadows-s23).

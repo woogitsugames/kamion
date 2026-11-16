@@ -1,5 +1,5 @@
 # ADR 0236 — drogowskazy (znaki E) trasy C wg rozporządzenia i researchu R2
-Status: Proposed (agent world, s21 chmura D runda 2, gałąź `signs-c-0236`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `e4fad6868`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world, s21 chmura D runda 2, gałąź `signs-c-0236`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: research R2 (`research/cloud2/direction-signs-route-c`, PR #62) i jego recenzja
 `docs/reports/REVIEW-2026-11-15-s21-cloudD-62-direction-signs-route-c.md` (SCAL z erratą), research R1
 (`research/cloud2/traffic-signs-catalog`), ADR 0069/0127/0139/0162 (bramownice, rozmiary z kadrów), 0125 (`gate3_sign`).

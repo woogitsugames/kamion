@@ -958,10 +958,14 @@ def build_patch(buf, net, j, coarse=False, stats=None):
     mat = "collision_asphalt" if coarse else _patch_mat(net, j)
     layer = "collision" if coarse else ("bridge" if _patch_on_bridge(j) else "road")
     c = _star_center(poly)
-    if c is not None and coarse and float(np.max(np.hypot(*(poly - c).T))) > 15.0:
+    if c is not None and (coarse or getattr(j, "compact", None) is not None) \
+            and float(np.max(np.hypot(*(poly - c).T))) > 15.0:
         # long collision patches (fork trims of 65-68 m): the polar fan from one centre gave long slivers whose
         # linear facets cut 5-8 cm under the blended surface (route_start s = 1422 m); boundary-conforming
-        # Delaunay with interior points instead
+        # Delaunay with interior points instead.
+        # ADR 0274: the same for the render patch of a compact roundabout - its kerb-mode outline is star-shaped
+        # about the ring centre (straight mouths) and 50 m long: one polar ring of all ~650 outline vertices every
+        # 2.5 m was 25 194 triangles, the Delaunay fill 1 840
         c = None
     if c is not None:
         rmax = float(np.max(np.hypot(*(poly - c).T)))

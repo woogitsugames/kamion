@@ -1,5 +1,5 @@
 # ADR 0211 — tunel / płyta nad wykopem (OSM `tunnel=yes`): rondo Szymańskiego nad DK8, ściany oporowe wykopu
-Status: Proposed (agent world-builder, s20–s22, gałąź `tunnel-0211`, baza main a594ef2aa, scalone origin/main 7f830369c; stan r5), 2026-11-15.
+Status: przyjęty (scalony do main 2026-11-15, `1990afc8d`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20–s22, gałąź `tunnel-0211`, baza main a594ef2aa, scalone origin/main 7f830369c; stan r5), 2026-11-15.
 Powiązane: ADR 0206 (kafel `bialystok-kleeberga`, `keep_tunnel_cut`, override `bridge` łuków ronda), ADR 0110 (pasy
 zieleni scalane z terenem), ADR 0064 (bake oświetlenia gruntu: `bridge` = bryła), ADR 0146 (ściany ramp).
 

@@ -1,5 +1,5 @@
 # ADR 0189 — Brama szpitala przy Żurawiej (P11-129): zestaw `masonry_gate`
-Status: PROPOSED (runda `r4`, gałąź `hospgate-0189`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `35aecd6f1`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED (runda `r4`, gałąź `hospgate-0189`), 2026-11-15. Do scalenia przez lidera.
 Poprzednik: ADR 0179 (P11-129 poza zakresem), `REVIEW-2026-11-13-s19-0179.md` (P11-129 = N, „dla bramki 3 P0”), `REVIEW-2026-11-14-s20-mistral-m62.md` §7, `REVIEW-2026-11-14-s20-mistral-m62-fix.md` (`M62-FIX`).
 
 ## Kontekst

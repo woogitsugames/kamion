@@ -86,8 +86,6 @@ namespace Game.Gameplay
         float m_StatusUntil;
         ReversingCamera m_TractorCam, m_TrailerCam, m_ActiveRevCam;
         RenderTextureMirror m_MirrorL, m_MirrorR;
-        bool m_MirrorInsets;
-        const string PrefMirrorInsets = "lab.mirrorInsets";
         bool m_AutopilotStart;
         float m_RouteS = -1f, m_RouteEndS = -1f;
         bool m_RouteDoneLogged;
@@ -161,8 +159,9 @@ namespace Game.Gameplay
             foreach (var mir in vehicle.GetComponentsInChildren<RenderTextureMirror>(true))
                 if (!mir.main) continue;
                 else if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
-            m_MirrorInsets = PlayerPrefs.GetInt(PrefMirrorInsets, 1) != 0;
-            PcInputBridge.ToggleMirrorInsets = () => { m_MirrorInsets = !m_MirrorInsets; PlayerPrefs.SetInt(PrefMirrorInsets, m_MirrorInsets ? 1 : 0); };   // L key (ADR 0264)
+            // D70 / ADR 0243: the mirror windows are a control setting (schema 5, saved with the controls), not a lab pref.
+            // One toggle for the HUD developer page and the PC key L (ADR 0264); the old "lab.mirrorInsets" pref is retired.
+            PcInputBridge.ToggleMirrorInsets = ToggleMirrorInsets;
 
             // engine_audio=el|synth: engine sound set for the owner's A/B (ADR 0137); saved like the settings-panel choice.
             Game.Core.AudioPreferences.ApplyArgument(platform.GetLaunchArgument("engine_audio"));
@@ -200,8 +199,8 @@ namespace Game.Gameplay
                 // (usable at any head angle); look-around still shows the real glass. Toggle in the lab menu.
                 LeftMirrorTexture = () => MirrorInsetsOn && m_MirrorL != null ? m_MirrorL.Texture : null,
                 RightMirrorTexture = () => MirrorInsetsOn && m_MirrorR != null ? m_MirrorR.Texture : null,
-                MirrorInsets = () => m_MirrorInsets,
-                ToggleMirrorInsets = () => { m_MirrorInsets = !m_MirrorInsets; PlayerPrefs.SetInt(PrefMirrorInsets, m_MirrorInsets ? 1 : 0); },
+                MirrorInsets = () => Controls.mirrorInsets,
+                ToggleMirrorInsets = ToggleMirrorInsets,
             }, overlay: true);
             m_Hud.transform.SetParent(transform, false);
             NavigationInstaller.Install(m_Hud, vehicle, gameObject);   // GPS: minimap, full map, cab route (ADR 0150)
@@ -218,7 +217,13 @@ namespace Game.Gameplay
             if (trailer == null) m_Spawn = LabSpawn.Solo;
             m_IgnoreRoots = new[] { vehicle.transform, trailer != null ? trailer.transform : null };
             ReadRouteArguments(platform);
-            ResolveRouteStart();
+            if (!ResolveRouteStart())
+            {
+                // ADR 0277: no free place between the region-edge closures. The combination is NOT placed: vehicle and
+                // trailer are switched off before the first physics step, the player gets a message in the start menu.
+                FailStart();
+                return;
+            }
             m_StartTime = Time.time;
             if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
             else if (ap == StraightRunMode) ConfigureStraightRun(platform.GetLaunchArgument("speed"));
@@ -232,6 +237,8 @@ namespace Game.Gameplay
                 SafetyNet.bootstrap = this;
                 SafetyNet.vehicle = vehicle;
                 SafetyNet.region = regionRoot;
+                // ADR 0235/0273 §10: the ONLY streaming hook here - additive tile streaming, opt-in with launch argument stream=1.
+                Game.World.Streaming.WorldStreamer.TryInstallFromLaunch(gameObject, regionRoot, vehicle.transform, vehicle.Body, platform.GetLaunchArgument("stream"), SafetyNet.SafePoses, SafetyNet.safeMinAge, RouteDriver.Offset);
             }
             // Region start (menu or adb scene=...): one log line with region, route distance, local point and road (ADR 0229).
             string menuRegion = StartRequest.ConsumeRegion();
@@ -298,7 +305,7 @@ namespace Game.Gameplay
         public void SetSteerMode(SteerMode mode)
         {
             Controls.gyroEnabled = mode == SteerMode.Gyro;
-            if (mode != SteerMode.Gyro) Controls.wheelRangeDeg = mode == SteerMode.Wheel900 ? 900f : 270f;
+            if (mode != SteerMode.Gyro) Controls.SetTouchWheelPreset(mode == SteerMode.Wheel900);
             Controls.Save();
             Controls.Log("steer-mode");
             ApplyControls();
@@ -310,7 +317,7 @@ namespace Game.Gameplay
             bool wasGyro = Gyro.Enabled;
             Controls.ApplyTo(Wheel, Gyro, Touch, Column);
             ScreenOrientationGuard.GyroSteeringActive = Controls.gyroEnabled;   // ADR 0135: no autorotation while steering by tilt
-            m_SteerMode = Controls.gyroEnabled ? SteerMode.Gyro : (Controls.wheelRangeDeg >= 600f ? SteerMode.Wheel900 : SteerMode.Wheel270);
+            m_SteerMode = Controls.gyroEnabled ? SteerMode.Gyro : (Controls.TouchWheelSimRange ? SteerMode.Wheel900 : SteerMode.Wheel270);
             if (Gyro.Enabled && !wasGyro) Gyro.Calibrate();
             if (!Controls.gyroEnabled) Gyro.Suspend();
             if (m_Rig != null)
@@ -374,27 +381,77 @@ namespace Game.Gameplay
         }
 
         /// <summary>
-        /// ADR 0262: a route start (menu / route_s / the baked spawn point of a world scene) never stands outside or inside
-        /// a region-edge closure nor inside a static collider. When the requested place is not free the start moves
-        /// along the route (<see cref="SpawnSafety"/>) and the spawn uses the route path. Once per start / respawn request.
+        /// ADR 0262 / ADR 0277: a route start (menu / route_s / the baked spawn point of a world scene) never stands outside
+        /// or inside a region-edge closure, inside a static collider or straight across a bend. When the requested place is
+        /// not free the start moves along the route - forward, then back to the entry closure (<see cref="SpawnSafety"/>,
+        /// <see cref="StartSearch"/>) - and the spawn uses the route path. False = no free place at all: the caller must not
+        /// place the combination. Once per start / respawn request, never in the driving loop.
         /// </summary>
-        void ResolveRouteStart()
+        bool ResolveRouteStart()
         {
-            if (route == null || route.points.Length < 2) return;
+            LastStart = default;
+            if (route == null || route.points.Length < 2) return true;
             bool requestedByArgument = m_RouteS >= 0f;
-            if (!requestedByArgument && spawnPoint == null) return;
+            if (!requestedByArgument && spawnPoint == null) return true;
             float requested = requestedByArgument ? m_RouteS : NearestRouteS(route, spawnPoint.position);
             var boundary = FindAnyObjectByType<Game.World.WorldBoundary>();
-            float s = SpawnSafety.ResolveStartS(route, boundary, requested, m_IgnoreRoots, out string reason);
-            if (reason == null) return;   // free: the requested distance / the baked spawn point stay as they are
+            var r = SpawnSafety.Resolve(route, boundary, requested, m_IgnoreRoots, out string blocker);
+            LastStart = r;
+            if (r.outcome == StartOutcome.Unchanged) return true;   // free: the requested distance / the baked spawn point stay as they are
+            string reason = StartSearch.Describe(r.reasons, r.firstBlock, blocker);
+            if (r.outcome == StartOutcome.NoSpace)
+            {
+                Debug.LogError(SpawnSafety.NoSpaceLog(r, reason));
+                return false;
+            }
             var ci = CultureInfo.InvariantCulture;
-            Debug.LogWarning("[START] start moved along the route: route_s " + requested.ToString("F1", ci) + " -> " + s.ToString("F1", ci) +
+            Debug.LogWarning("[START] start moved along the route: route_s " + requested.ToString("F1", ci) + " -> " + r.s.ToString("F1", ci) +
                              " (" + reason + "); regenerate the region start (ADR 0262)");
-            m_RouteS = s;
+            m_RouteS = r.s;
+            return true;
         }
 
-        /// <summary>Route distance of the polyline point nearest to a world position (horizontal).</summary>
-        static float NearestRouteS(Game.World.WorldRoute r, Vector3 world)
+        /// <summary>Result of the last start search (tests, log); default before the first route start.</summary>
+        public StartSearchResult LastStart { get; private set; }
+
+        /// <summary>True after a start that found no free place (ADR 0277): the combination was not placed.</summary>
+        public bool StartFailed { get; private set; }
+
+        /// <summary>
+        /// ADR 0277: no free place for the combination. Vehicle and trailer are deactivated (no collider, no rigidbody, no
+        /// physics step inside a barrier: the owner's report of a trailer thrown upwards), this bootstrap stops, and the
+        /// game returns to the start menu with a message (<see cref="StartRequest.SetStartFailure"/>) where the player picks
+        /// another region or start. Without a Boot scene in the build (tests) the scene stays with the vehicle switched off.
+        /// </summary>
+        void FailStart()
+        {
+            StartFailed = true;
+            if (vehicle != null) vehicle.gameObject.SetActive(false);
+            if (trailer != null) trailer.gameObject.SetActive(false);
+            StartRequest.ConsumeRegion();
+            StartRequest.ConsumeLighting();
+            StartRequest.SetStartFailure(StartSafetyTexts.NoSpaceMessage);
+            enabled = false;
+            if (Application.CanStreamedLevelBeLoaded(StartSafetyTexts.MenuScene)) SceneManager.LoadScene(StartSafetyTexts.MenuScene);
+        }
+
+        /// <summary>
+        /// Repeats the scene start exactly as <c>Awake</c> does it after the launch arguments: forgets any route_s (the
+        /// menu / adb request is consumed in Awake), resolves the baked spawn point of the scene through the same safety
+        /// net and spawns - or fails the start (ADR 0277). Tests of the "old scene, no menu, no route_s" path (review 0262
+        /// P2-5) call this after giving the scene its spawn point, route and closures.
+        /// </summary>
+        public bool RestartFromSceneStart()
+        {
+            m_RouteS = -1f;
+            if (!ResolveRouteStart()) { FailStart(); return false; }
+            Spawn(m_Spawn);
+            return true;
+        }
+
+        /// <summary>Route distance of the polyline point nearest to a world position (horizontal). Public for the tests of the
+        /// baked spawn point (ADR 0277).</summary>
+        public static float NearestRouteS(Game.World.WorldRoute r, Vector3 world)
         {
             Vector3 l = r.transform.InverseTransformPoint(world);
             float best = float.MaxValue, bestS = 0f;
@@ -422,13 +479,24 @@ namespace Game.Gameplay
             Debug.Log(RegionStart.Describe(sceneRegion, s, en, road));
         }
 
-        /// <summary>Respawns the current preset at route distance s (same as launch argument route_s; also used by tests).</summary>
-        public void SetRouteSpawn(float s)
+        /// <summary>
+        /// Respawns the current preset at route distance s (same as launch argument route_s; also used by tests). False =
+        /// no free place (ADR 0277): the combination stays where it is (it is driving already, so it is not in a collider)
+        /// and the HUD says why.
+        /// </summary>
+        public bool SetRouteSpawn(float s)
         {
-            if (route == null || route.points.Length < 2) return;
+            if (route == null || route.points.Length < 2) return false;
+            float previous = m_RouteS;
             m_RouteS = Mathf.Clamp(s, 0f, route.Length);
-            ResolveRouteStart();
+            if (!ResolveRouteStart())
+            {
+                m_RouteS = previous;
+                ShowStatus(StartSafetyTexts.NoSpaceRespawn, 6f);
+                return false;
+            }
             Spawn(m_Spawn);
+            return true;
         }
 
         /// <summary>Spawn pose at route distance s: ground height from the road collision when present (else the route's own y).</summary>
@@ -769,7 +837,7 @@ namespace Game.Gameplay
             }
             int edge = Signals.Step(Time.deltaTime, roadWheelNorm);
             if (m_Audio != null) m_Audio.OnFlasherEdge(edge);
-            if (m_Lights == null) m_Lights = vehicle.GetComponent<TruckLights>();
+            if (m_Lights == null) vehicle.TryGetComponent(out m_Lights);   // ADR 0244: no editor fake-null alloc while missing (graybox)
             if (m_Lights != null) { m_Lights.indicatorLever = Signals.Lever; m_Lights.flasherLit = Signals.Lit; }
         }
 
@@ -825,7 +893,15 @@ namespace Game.Gameplay
             Flash(t.LandingGearDown ? "Nogi podporowe: opuszczanie" : "Nogi podporowe: podnoszenie");
         }
 
-        bool MirrorInsetsOn => m_MirrorInsets && m_Rig != null && m_Rig.mode == CameraMode.Cab;
+        void ToggleMirrorInsets()
+        {
+            if (Controls == null) return;
+            Controls.mirrorInsets = !Controls.mirrorInsets;
+            Controls.Save();
+            Controls.Log("mirrors-toggle");
+        }
+
+        bool MirrorInsetsOn => Controls != null && Controls.mirrorInsets && m_Rig != null && m_Rig.mode == CameraMode.Cab;
 
         string CouplingStatus()
         {

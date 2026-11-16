@@ -39,7 +39,9 @@ def main() -> int:
 
     rdir = REPO / "Data" / "Regions" / a.region
     region = yaml.safe_load((rdir / "region.yaml").read_text(encoding="utf-8"))
-    graph = json.loads((rdir / "roads.graph.json").read_text(encoding="utf-8"))
+    from roads import pipeline as _pl
+    # ADR 0274: the graph with the authored carriageway splits - the same nodes / edges as the generated network
+    graph = _pl.effective_graph(a.region, json.loads((rdir / "roads.graph.json").read_text(encoding="utf-8")))
     # ADR 0166/0174: a region with authored route ends (route_endpoints.json) uses them, like build_world.route_polyline;
     # otherwise the D4 candidate route (region C).
     re_f = rdir / "route_endpoints.json"
@@ -49,6 +51,8 @@ def main() -> int:
         cand = json.loads((REPO / "docs/reports/map/candidates.json").read_text(encoding="utf-8"))
         route = next(c for c in cand["candidates"] if c["id"] == region["candidate"])["route"]
     ox, oy = region["origin"]["x"], region["origin"]["y"]
+
+    _moved = {n["id"] for n in graph["nodes"] if n.get("authored") and n["id"].endswith("s")}
 
     def nearest(xy):
         return min(graph["nodes"], key=lambda n: math.hypot(n["x"] - xy[0], n["y"] - xy[1]))["id"]
@@ -87,7 +91,9 @@ def main() -> int:
         "points_en": [[round(float(x), 3), round(float(y), 3)] for x, y in R],
         "maxspeed_kmh": spd_pt,
         "edge": eid_pt,
-        "graph_nodes": path,
+        # nodes of roads.graph.json: a split node moved by an authored carriageway_split (id + "s") is listed under
+        # the id of the node it replaces, so readers that look the route up in the ingested graph keep working
+        "graph_nodes": [n[:-1] if n in _moved else n for n in path],
     }
     dst = rdir / "route_start.json"
     dst.write_text(json.dumps(out, ensure_ascii=False, indent=None, sort_keys=True) + "\n", encoding="utf-8")

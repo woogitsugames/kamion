@@ -1,5 +1,5 @@
 # ADR 0232 — Dźwięk silnika i układu sterowany fizyką: barwa zależna od obciążenia, turbo, pneumatyka, odsłuch A/B
-Status: Proposed (agent audio, chmura E, s21), 2026-11-15. Ocena brzmienia: właściciel (głośnik telefonu i słuchawki).
+Status: przyjęty (scalony do main 2026-11-15, `63baf7776`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent audio, chmura E, s21), 2026-11-15. Ocena brzmienia: właściciel (głośnik telefonu i słuchawki).
 Kontynuacja ADR 0007 (warstwy sterowane fizyką), 0012 (kabina), 0134 (AMT + hamulec silnikowy), 0176 (retarder, AMT, osuszacz).
 Zadanie: `docs/owner/CLOUD-E-PROMPT-S21.md` E5, BACKLOG B-098.
 

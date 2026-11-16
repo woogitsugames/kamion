@@ -17,6 +17,7 @@ import tempfile
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 GEN = ROOT / "tests/physics/generate_stage2_scenarios.py"
 SCEN = ROOT / "tests/physics/scenarios"
+XFAIL = ROOT / "tests/physics/scenarios_expected_fail"
 DIMS = json.loads((ROOT / "art-source/truck/dims.json").read_text(encoding="utf-8"))["values"]
 
 # (scenario, metric, arg, variant) -> maximum allowed "max" (None variant = any)
@@ -35,6 +36,8 @@ CEILINGS = {
     ("curb_strike_14cm_50kmh_comb", "max_wheel_airtime_s", 0, "laden40"): 0.12,
     ("kerb_step_27cm_42kmh_comb", "max_fz_ratio", 0, None): 7.5,
     ("kerb_step_27cm_42kmh_comb", "max_wheel_airtime_s", 1, None): 0.5,
+    # ADR 0165 / D58: the 27 cm step runs with the compliant chassis colliders; bumper crush bounded at 5 cm.
+    ("kerb_step_27cm_42kmh_comb", "max_body_penetration_m", 0, None): 0.05,
 }
 for _s in ("curb_strike_5cm_50kmh_comb", "curb_strike_14cm_50kmh_comb", "kerb_step_27cm_42kmh_comb"):
     CEILINGS[(_s, "max_dv_step_ms", 0, None)] = 0.35
@@ -47,16 +50,35 @@ def _load(p):
 
 
 def test_generator_reproduces_committed_scenarios():
-    with tempfile.TemporaryDirectory() as tmp:
-        r = subprocess.run([sys.executable, str(GEN), tmp], capture_output=True, text=True)
+    with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as tmp_xfail:
+        r = subprocess.run([sys.executable, str(GEN), tmp, tmp_xfail], capture_output=True, text=True)
         assert r.returncode == 0, f"generator failed: {r.stdout}{r.stderr}"
         diffs = []
-        for f in sorted(pathlib.Path(tmp).glob("*.json")):
-            committed = SCEN / f.name
-            assert committed.exists(), f"generator emits {f.name} but it is not committed"
-            if _load(f) != _load(committed):
-                diffs.append(f.name)
+        for out, committed_dir in ((tmp, SCEN), (tmp_xfail, XFAIL)):
+            for f in sorted(pathlib.Path(out).glob("*.json")):
+                committed = committed_dir / f.name
+                assert committed.exists(), f"generator emits {f.name} but it is not committed in {committed_dir.name}"
+                if _load(f) != _load(committed):
+                    diffs.append(f"{committed_dir.name}/{f.name}")
         assert not diffs, f"regeneration differs from committed scenarios (loosened or hand-edited): {diffs}"
+        # D79 / ADR 0280: the turning ring is a regular (must-pass) scenario now, not a known failure
+        assert (pathlib.Path(tmp) / "ring_96_53_comb.json").exists(), "generator no longer emits ring_96_53_comb"
+        assert not (pathlib.Path(tmp_xfail) / "ring_96_53_comb.json").exists(), "ring_96_53_comb went back to known failures"
+
+
+def test_ring_limits_pinned():
+    """ADR 0280: the 96/53/EC Annex I 1.5 radii are pinned here, independently of the generator."""
+    for path in (SCEN / "ring_96_53_comb.json",):
+        sc = _load(path)
+        assert "expectedFailMetrics" not in sc and "expectedFailReason" not in sc, path.name
+        assert not sc.get("overrides"), f"{path.name}: the ring must run on the game geometry (no overrides)"
+        checks = {c["metric"]: c for c in sc["checks"]}
+        assert checks["swept_outer_radius_m"]["max"] <= 12.50 + 1e-12, path.name
+        assert checks["swept_inner_radius_m"]["min"] >= 5.30 - 1e-12, path.name
+        assert checks["swept_ring_width_m"]["max"] <= 7.18 + 1e-12, path.name     # 7.20 minus the 2 cm margin (D79 correction 7.63 m)
+        env = _load(path)["envelope"]
+        assert abs(env["trailerHalfWidth"] * 2 - DIMS["max_width_m"]["value"]) < 1e-9
+        assert abs(env["tractorFrontZ"] - DIMS["wheelbase_m"]["value"] - DIMS["front_overhang_m"]["value"]) < 1e-9
 
 
 def test_kerb_ceilings_not_loosened():

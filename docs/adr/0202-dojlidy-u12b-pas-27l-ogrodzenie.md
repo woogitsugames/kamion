@@ -1,6 +1,6 @@
 # ADR 0202 — Dojlidy: ogrodzenie łańcuchowe U-12b zamiast słupków U-12c, pas 09R/27L z „27 L”, zielone ogrodzenie lotniska
 
-Status: Proposed (agent world-builder, s20, gałąź `dojfix-0202`), 2026-11-14. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-14, `e4bd4f95c`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `dojfix-0202`), 2026-11-14. Do scalenia przez lidera.
 Poprzednicy: ADR 0183 (słupki z łańcuchem), ADR 0196 (farba pasa). Podstawa: recenzja cloud M58
 `docs/reports/REVIEW-2026-11-14-s20-cloud-m58.md` §5 i paczka `research/cloud/p15-dojlidy-details/` z erratą.
 Zakres: tylko region `bialystok-dojlidy`. Nie ruszane: zieleń (`dojgreen-0186`), brama szpitala (`hospgate-0189`),

@@ -1,6 +1,6 @@
 # ADR 0114: Zabudowa r7 — działki „wąsko i dobrze”: geometria chunka w jednym materiale, płoty wg typologii, zjazd z obniżonym krawężnikiem, trawnik, zacieki od końców parapetu
 
-Status: propozycja (world-builder, gałąź `buildings-r7`, z main `dd45e00c`), 2026-11-11. Kontynuacja ADR 0107; odpowiedź na
+Status: przyjęty (scalony do main 2026-11-11, `3540bbdf7`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (world-builder, gałąź `buildings-r7`, z main `dd45e00c`), 2026-11-11. Kontynuacja ADR 0107; odpowiedź na
 `docs/reports/visual/REVIEW-2026-11-11-s10-0107.md` (P1-r7-a..g, P2-r7-a/b/d/g). Referencje: `docs/refs/posesje-bialystok.md`
 (33 klatki Mapillary CC BY-SA + 7 Commons — oglądane, żaden piksel nie wchodzi do tekstur). Nic z telefonu.
 

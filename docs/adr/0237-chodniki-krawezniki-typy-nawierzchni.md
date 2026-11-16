@@ -1,5 +1,5 @@
 # ADR 0237 — chodniki i krawężniki Białegostoku: typy nawierzchni, obniżenia na przejściach, czerwona kostka, skala behatonu
-Status: Proposed (agent world-builder, chmura D runda 2, s21, gałąź `kerbs-0237`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `e4fad6868`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, chmura D runda 2, s21, gałąź `kerbs-0237`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: research R6 (PR #65, `origin/research/cloud2-pavements-kerbs`), recenzja
 `docs/reports/REVIEW-2026-11-15-s21-cloudD-65-pavements-kerbs.md` (`origin/reviews-0225`), ADR 0063 (skany CC0), 0114
 (obniżenia przy zjazdach), 0123 (`bridge_kerb` jako zmiana nazwy przy eksporcie), 0188 (DDR), 0221 (budżet dróg C).

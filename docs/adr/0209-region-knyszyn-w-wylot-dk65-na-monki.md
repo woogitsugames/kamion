@@ -1,5 +1,5 @@
 # ADR 0209 — region `knyszyn-w`: zachodnia część Knyszyna i wylot DK65 na Mońki (z grubsza, D63/D64)
-Status: Proposed (agent world-builder, s20, gałąź `knyszyn-w-0209`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `d4914ba6e`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `knyszyn-w-0209`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: D63, D64 (`docs/11`), ADR 0203 (siatka kafli), ADR 0204 (`knyszyn`, `knyszyn-s`; otwarte p. 1 = ten kafel),
 brief `docs/owner/S20-REGION-RING-BRIEF.md` (DROGI NAJPIERW).
 

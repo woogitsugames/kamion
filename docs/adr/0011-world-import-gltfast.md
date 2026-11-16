@@ -41,7 +41,8 @@ scene placed relative to the region anchor (ADR 0003).
 - APK: meshes are **220.8 MB uncompressed** of 974 MB build content (APK 159.7 MB): a glTFast asset is included whole, so
   the far chunks' unused LOD0/1 still ship. On a 4 GB A16 this is the first memory risk (PSS unmeasured). Next steps, in
   order: (1) import only the needed nodes per chunk (glTFast import settings or a post-import mesh copy), (2) mesh vertex
-  compression (half normals/UVs), (3) chunk streaming with Addressables — also the basis for the floating-origin shift.
+  compression (half normals/UVs), (3) chunk streaming with Addressables — also the basis for the floating-origin shift. **Wycofane w s23, patrz `docs/10` §3:**
+  streaming kafli bez Addressables (sceny `_Tile` z buildu, ADR 0235/0273).
 - The generator is not byte-reproducible across Python environments (a fresh `uv` venv on this machine gave different
   sha256 for 10 of 64 chunks vs the committed manifest; triangle counts identical). Reported to world-builder; until fixed
   the importer only warns.

@@ -75,8 +75,15 @@ namespace PhysicsRunner.Sim
 
     public static class ScenarioRunner
     {
-        static DefinitionSet _defs;
-        public static DefinitionSet Defs => _defs ??= DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir);
+        // D42 (ADR 0004 addendum 2026-11-16): the cache is shared by every xUnit test class, and xUnit runs test classes in parallel in
+        // one process. Lazy<T> (ExecutionAndPublication) makes the first load race-free, so every caller sees one instance and
+        // ApplyGeometry's ReferenceEquals guard holds. Scenario runs never use it (see Setup): definitions are mutable
+        // public-field objects, and a test that tweaked one through its model (s.Combo.FifthWheel.Def...) changed the
+        // physics of every combination run in flight on other threads - the CI bit-determinism flake of lane_change_80@laden40 /
+        // fuzz_flat_wet_laden40.
+        static readonly Lazy<DefinitionSet> s_Defs = new Lazy<DefinitionSet>(() => DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir));
+        /// <summary>Shared read-only view of the production JSONs for tests that inspect definitions. Do not mutate; scenario runs load their own copy.</summary>
+        public static DefinitionSet Defs => s_Defs.Value;
 
         public static Quat LookRotation(Vec3 forward, Vec3 up)
         {
@@ -148,10 +155,16 @@ namespace PhysicsRunner.Sim
             return c;
         }
 
-        /// <summary>Creates the models and bodies placed at static equilibrium on the ground. defs = test-provided definition set (comparison tests); null = the production JSONs.</summary>
+        /// <summary>
+        /// Creates the models and bodies placed at static equilibrium on the ground. defs = test-provided definition set (comparison
+        /// tests); null = a fresh load of the production JSONs owned by this run (0.7 ms), never the shared <see cref="Defs"/>:
+        /// the models keep references to their definitions, so a run must not share mutable definitions with runs on other
+        /// threads (D42, ADR 0004 addendum 2026-11-16).
+        /// </summary>
         public static SimContext Setup(Scenario sc, RunOptions opt, DefinitionSet defs = null)
         {
-            defs ??= Defs;
+            defs ??= DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir);
+            if (sc.overrides.HasGeometry) defs = ApplyGeometry(defs, sc);
             var settings = new SolverSettings { substeps = opt.Substeps ?? sc.substeps };
             var tractor = defs.CreateModel(sc.vehicle, settings);
             TrailerModel trailer = null;
@@ -280,6 +293,34 @@ namespace PhysicsRunner.Sim
                 if ((fm < 0) == (flo < 0)) { lo = mid; flo = fm; } else hi = mid;
             }
             return 0.5 * (lo + hi);
+        }
+
+        /// <summary>
+        /// Geometry what-if overrides (ADR 0280) on a definition set that is private to this run (a fresh load of the
+        /// production JSONs, or a test-provided set). Never touches the cached <see cref="Defs"/> or any file.
+        /// </summary>
+        public static DefinitionSet ApplyGeometry(DefinitionSet defs, Scenario sc)
+        {
+            if (s_Defs.IsValueCreated && ReferenceEquals(defs, s_Defs.Value)) defs = DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir);
+            var o = sc.overrides;
+            if (o.fifthWheelZ.HasValue)
+            {
+                var fw = defs.Vehicles[sc.vehicle].fifthWheel;
+                fw.position = new Vec3(fw.position.x, fw.position.y, o.fifthWheelZ.Value);
+            }
+            if (o.trailerAxlePositionsZ != null && sc.HasTrailer)
+            {
+                var t = defs.Trailers[sc.trailer];
+                if (o.trailerAxlePositionsZ.Length != t.axles.Length)
+                    throw new FormatException($"{sc.id}: overrides.trailerAxlePositionsZ has {o.trailerAxlePositionsZ.Length} values, trailer '{t.id}' has {t.axles.Length} axles");
+                double before = 0, after = 0;
+                for (int i = 0; i < t.axles.Length; i++) { before += t.axles[i].positionZ; after += o.trailerAxlePositionsZ[i]; t.axles[i].positionZ = o.trailerAxlePositionsZ[i]; }
+                double shift = (after - before) / t.axles.Length;
+                foreach (var e in t.massElements)
+                    if (e.name == "tridem_axles_wheels_brakes") e.center = new Vec3(e.center.x, e.center.y, e.center.z + shift);
+                t.Validate();
+            }
+            return defs;
         }
 
         public static IDriver CreateDriver(Scenario sc, SimContext s, out Vec3 center)
@@ -494,6 +535,7 @@ namespace PhysicsRunner.Sim
                         maxFric = Math.Max(maxFric, Math.Sqrt(w.Fx * w.Fx + w.Fy * w.Fy) / (w.Mu * w.Fz));
                 }
                 Vec3 tright = tb.Rotation * Vec3.Right;
+                smp.TrailerFwd = tb.Rotation * Vec3.Forward; smp.TrailerRight = tright;
                 smp.HasTrailer = true; smp.Coupled = fw.Coupled;
                 smp.TrailerPos = tb.Position; smp.TrailerAxlePos = tb.State.LocalToWorld(new Vec3(0, 0, AxleMeanZ(tr))); smp.TrailerComPos = tb.CenterOfMassWorld; smp.TrailerVel = tb.Velocity;
                 smp.Articulation = fw.Articulation; smp.KingpinFz = fw.KingpinLoadLocal.y; smp.KingpinFx = fw.KingpinLoadLocal.z; smp.KingpinFy = fw.KingpinLoadLocal.x;

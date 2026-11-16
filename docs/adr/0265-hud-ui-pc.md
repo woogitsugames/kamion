@@ -1,6 +1,6 @@
 # ADR 0265 — HUD i UI na monitor (PC): kontrolki dotykowe, skala 16:9…32:9, nawigacja myszą i padem, okna lusterek
 
-Status: proponowany (chmura H3, gałąź `pc-ui-0265`), 2026-11-15. Napisane i sprawdzone na czystej logice poza Unity
+Status: przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: proponowany (chmura H3, gałąź `pc-ui-0265`), 2026-11-15. Napisane i sprawdzone na czystej logice poza Unity
 (dotnet + NUnitLite ze stubami UnityEngine); **kompilacja w Unity, testy EditMode/PlayMode i pętla wizualna — NIE
 uruchomione** (chmura bez Unity). Rozszerza ADR 0079 (adaptacyjny HUD dotykowy) — nie zmienia go na telefonie.
 

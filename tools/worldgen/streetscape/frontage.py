@@ -166,9 +166,10 @@ def openings(spec, nout, L, zref, zt):
     return ops
 
 
-def wall(acc, wwo, spec, a, c_, nout, L, zbot, zref, zt, u_acc, ground=None):
+def wall(acc, wwo, spec, a, c_, nout, L, zbot, zref, zt, u_acc, ground=None, layers=(FK.L0, FK.L1)):
     """One wall edge of a pavilion on both LODs: plinth, wall colour (accent fields), fascia band, glazed runs with
-    mullions, roof slab or coping. wwo = buildings_mesh.wall_with_openings. Returns the openings."""
+    mullions, roof slab or coping. wwo = buildings_mesh.wall_with_openings. Returns the openings.
+    layers (ADR 0238): the rule shopfront of a pavilion draws LOD0 here and its LOD1 with wall_lod1_flat."""
     d = (c_ - a) / L
     wmat = wall_material(spec, nout)
     zpl = zref + spec["plinth_m"]
@@ -191,7 +192,7 @@ def wall(acc, wwo, spec, a, c_, nout, L, zbot, zref, zt, u_acc, ground=None):
     zs = [zpl, zf] + [z for x in acc_here for z in x[2:4]]
     us = [FK.safe_u(u, ops, L) for x in acc_here for u in x[:2]]
     d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
-    for layer in (FK.L0, FK.L1):
+    for layer in layers:
         low = layer == FK.L1
         gl1 = spec.get("glass_lod1") if low else None
         FK.wall_pieces(wwo, acc, a, d, nout, L, zbot, zt, [(*o[:6], gl1 or o[6]) for o in ops], u_acc, zref, zs, us,
@@ -233,6 +234,44 @@ def wall(acc, wwo, spec, a, c_, nout, L, zbot, zref, zt, u_acc, ground=None):
         else:
             FK.coping(acc, a, c_, nout, zt, mat=FRAME)
     return ops
+
+
+def wall_lod1_flat(acc, spec, a, c_, nout, L, zbot, zref, zt, u_acc, ground=None):
+    """LOD1 of a rule shopfront (ADR 0238) at the cost of the office LOD1 wall it replaces (10 triangles): plinth,
+    wall, fascia band, coping ledge and every glazed run as ONE quad LOD1_PANE_PROUD_M proud of the wall (no hole,
+    no reveals) in the LOD1 pane material - the same rectangles FR.wall cuts on LOD0."""
+    d = (c_ - a) / L
+    wmat = wall_material(spec, nout)
+    zpl = zref + spec["plinth_m"]
+    f = spec["fascia"] if spec["fascia"] and faces(nout, spec["fascia"]["facings"]) else None
+    zf = zt - f["height_m"] if f else zt
+    lay = FK.L1
+
+    def P(q, z):
+        return [float(q[0]), float(q[1]), float(z)]
+
+    def band(z0, z1, mat, v=None):
+        if z1 - z0 < 0.02:
+            return
+        v0, v1 = v if v is not None else ((z0 - zref, z0 - zref), (z1 - zref, z1 - zref))
+        acc.quad(lay, mat, P(a, z0), P(c_, z0), P(c_, z1), P(a, z1),
+                 uv=[[u_acc, v0[0]], [u_acc + L, v0[1]], [u_acc + L, v1[1]], [u_acc, v1[0]]])
+    if ground is not None:                   # plinth: v above the terrain, as LOD0
+        ga, gb = ground(u_acc), ground(u_acc + L)
+        band(zbot, zpl, "plinth_dark", ((zbot - ga, zbot - gb), (zpl - ga, zpl - gb)))
+    else:
+        band(zbot, zpl, "plinth_dark")
+    band(zpl, zf, wmat)
+    if f:
+        band(zf, zt, f["material"])
+    pane = spec.get("glass_lod1") or spec["glass"]
+    o = nout * LOD1_PANE_PROUD_M
+    for (u0, u1, z0, z1, *_r) in openings(spec, nout, L, zref, zt):
+        acc.quad(lay, pane, P(a + d * u0 + o, z0), P(a + d * u1 + o, z0), P(a + d * u1 + o, z1), P(a + d * u0 + o, z1))
+    acc.quad(lay, FRAME, P(a + nout * 0.12, zt - 0.25), P(c_ + nout * 0.12, zt - 0.25), P(c_, zt + 0.05), P(a, zt + 0.05))
+
+
+LOD1_PANE_PROUD_M = 0.05       # as the LOD1 openings of houses (buildings_mesh, ADR 0124)
 
 
 # --------------------------------------------------------------------------------------------- props

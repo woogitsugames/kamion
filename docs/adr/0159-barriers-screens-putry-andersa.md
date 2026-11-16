@@ -1,6 +1,6 @@
 # ADR 0159 — P1 after the s16 world integration: barriers and screens at Putry / Andersa
 
-Status: PROPOSED on branch `barriers-0159` (2026-11-13, s16); not merged. Numbers in "Validation" are measured on
+Status: Accepted (merged to main 2026-11-13, `230fa0f14`; status updated 2026-11-16); originally: PROPOSED on branch `barriers-0159` (2026-11-13, s16); not merged. Numbers in "Validation" are measured on
 the regenerated world of this branch (build after6, on main 24de4d95c); a visual-critic review is still required (a
 subagent may not start one). Builds 1-3 are the first agent's; after4-after6 correct them after all pairs were looked
 at (§2, §10-§12).

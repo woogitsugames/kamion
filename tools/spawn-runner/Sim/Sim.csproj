@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Plain .NET 8 host for the pure start search of ADR 0277 (Game.Gameplay.StartSearch + Game.World.StartClearance).
+    The sources are NOT copied: they are compiled straight from the Unity project folder (same pattern as
+    tools/physics-runner and tools/nav-runner), with a minimal UnityEngine stand-in (UnityShim.cs) and a stand-in of
+    the WorldBoundary.Closure data struct (the real WorldBoundary is a MonoBehaviour).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>SpawnRunner.Sim</RootNamespace>
+    <AssemblyName>SpawnRunner.Sim</AssemblyName>
+    <!-- Unity 6 compiles C# 9; keep the shared sources within that language version. -->
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../../game/Assets/_Project/Gameplay/StartSearch.cs" Link="Game/StartSearch.cs" />
+    <Compile Include="../../../game/Assets/_Project/World/Runtime/StartClearance.cs" Link="Game/StartClearance.cs" />
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+</Project>

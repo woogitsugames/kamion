@@ -1,0 +1,14 @@
+# Zlecenie dla chmury „D” — runda 8 (s23, 16.11 popołudnie) — do 8 agentów, MODEL: Opus
+
+Wklej do TEJ SAMEJ sesji chmury D:
+```
+Runda 8. MODEL: Opus. Zasady jak dotąd (bez Unity/telefonów/Data/raw, każdy na swojej gałęzi z origin/main, NIE scalasz, raport ≤ 20 linii po polsku z komendami i „Gotowe do scalenia po weryfikacji lidera: TAK/NIE”). Dziękuję za r7: #155 scalony (bbfe256a0). #153, #154 (+ #147, #150) idą do lokalnej przebudowy world3; #143 + #115 buduje world2-s23; #119 i #93 (rebased) już w main (c-regen3). Analiza sesji P: docs/reports/ANALYSIS-2026-11-16-regionpacks-pc.md (w main) — paczki nie są potrzebne do dystrybucji PC, streaming tak.
+NIE dotykaj: generated/*, Data/Regions/{kafle w przebudowie: dk65-*, dw671-*, knyszyn*, bialystok-*, dk65-monki-*, monki*, tykocin*}, game/Assets/_Project/{UI,Gameplay}/** (trwa lokalna integracja PR chmury H: #113 #117 #118 #141 #142 — dotyka BootMenu, GameBootstrap, DrivingLabBootstrap, SpawnSafety). Nowe ADR: brak (używaj istniejących numerów).
+
+D30 streaming kafli (gałąź streaming-pc-s23 z origin/streaming-0235 + merge origin/main; ADR 0235/0273/0234): wg rekomendacji analizy §5 — opt-in `stream`, kontrakt paczek tylko w teście; minimalny styk z DrivingLabBootstrap.cs (jeden hak, opisany — lider rozwiąże konflikt z int-h3), zero GC w pętli jazdy (testy GC jak w #118). Otwórz nowy PR „Streaming kafli + kontrakt paczek (ADR 0235/0234/0273)”; w opisie: #112 do zamknięcia jako wchłonięty. Testy EditMode pisane (Unity uruchomi lider).
+D31 złote trasy nawigacji (gałąź nav-golden-s23): po przebudowie C z rondem Putry (#93, c-regen3) trasy G04, G05, G29 wychodzą ~2 m krótsze przy tolerancji 2 m — ustal z geometrii (graf w gicie), czy to poprawna zmiana (rondo z ortofoto), i odśwież wzorce z uzasadnieniem liczbowym; NIE poszerzaj tolerancji.
+D32 `test_typology_0238::…bit_identical` dla C i Dojlid (18 rozbieżności Dojlidy, 43 C) — znajdź przyczynę (#123 baseline vs dane po c-regen3 / BASE_M / storey_plan #122), napraw u źródła albo przelicz baseline wg procedury z docs/reports/FIX-2026-11-16-typology-fix-s23.md z uzasadnieniem; bez osłabiania testu. Gałąź typology-bitid-s23.
+D33 A-7 z T-1 (gałąź signs-a7-s23, kontynuacja ADR 0279; baza origin/main + merge origin/signs-p1-s23): dziś nie powstaje nigdzie, bo drogi podporządkowane z krawężnikiem liczą się jako zabudowa 50 km/h — popraw klasyfikację (np. znak teren zabudowany D-42 z danych, nie z krawężnika), testy na danych syntetycznych.
+D34 K3b planowanie działek (gałąź plots-k3b-analysis, tylko raport docs/reports/WORLDGEN-K3B-2026-11-16.md): przyspieszenie, które zmienia bajty wyniku — co dokładnie by się zmieniło (geometria? kolejność? liczby), wpływ na wygląd i testy determinizmu, zysk czasu, rekomendacja dla lidera.
+Na końcu podsumowanie z numerami PR.
+```

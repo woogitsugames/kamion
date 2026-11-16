@@ -1,0 +1,11 @@
+# Zlecenie dla sesji „P” (Claude Pro) — runda 7 (s23, 16.11 wieczór) — do 3 agentów, MODEL: Opus
+
+Wklej do sesji P:
+```
+Runda 7. Zasady jak dotąd (bez Unity, telefonów i Data/raw; do 3 agentów, Opus; każdy na swojej gałęzi z origin/main; NIE scalasz; raport ≤ 15 linii z komendami i „Gotowe do scalenia po weryfikacji lidera: TAK/NIE”). Runda 6 scalona do main (naczepa 7,63 m — dziękuję za uczciwą poprawkę pełzania; emulacja PC; recenzja Rynku). Nie dotykaj: generated/*, tools/worldgen/*, Data/Regions/*, game/**.
+
+P19 instrukcja gracza po zmianach s23 (gałąź player-guide-r2, docs/owner/JAK-GRAC-PC.md): ciągła jazda — `Kamion-korytarz.cmd` (`-scene knyszyn -stream 1`, pełny ekran), co jest w korytarzu (19 regionów) i gdzie są przerwy (Knyszyn-W, Tykocin), skróty per region, pełny ekran/okno (`-screen-fullscreen 1 -window-mode borderless`, Alt+Enter), awaryjnie `-force-d3d11` (crash D3D12 16.11), ustawienie „kontrolki dotykowe: Auto/Wyłącz”, gdzie są logi i zrzuty awarii (`%USERPROFILE%\AppData\LocalLow\woogitsugames\Kamion\Player.log`, `%LOCALAPPDATA%\CrashDumps`). Wszystko wyczytane z kodu/skryptów (plik:linia w komentarzu HTML).
+P20 crash D3D12 — research (gałąź d3d12-crash-research, docs/reports/RESEARCH-2026-11-16-d3d12-device-removed.md): w playerze Unity 6000.3 URP na RTX 5070 (sterownik 32.0.16.1088) `d3d12: Device failed error (887a0001)` → device removed, raz przy pełnym ekranie borderless pod obciążeniem GPU, wcześniej crash przy zamykaniu 1/5. Zbierz z publicznych źródeł (Unity issue tracker, release notes 6000.x, dokumentacja NVIDIA/Microsoft o DXGI_ERROR_*/TDR): znane przyczyny, sposoby diagnozy (`-force-d3d12-debug`, DRED, logi), obejścia (D3D11 jako domyślne API, wyłączenia funkcji URP), rekomendacja dla Windows z listą kroków do weryfikacji lokalnej. Cytuj źródła z datą.
+P21 aktualizacja promptu startowego s24 (gałąź start-prompt-s24-r2, docs/owner/START-PROMPT-S24.md): dopisz stan po popołudniu s23 z HANDOVER (SESJA 23): scalone (c-regen3, Rynek+rondo r2, int-h3, streaming, naczepa 7,63, emulacja PC, chmura D r6–r9), decyzje D76–D84, zasada derived (junction, kopiowanie przed usunięciem worktree), otwarte prace (world2, world3, int-ui, model naczepy w Blenderze, pomiar budżetów PC w nocy, crash D3D12), liczniki ADR (0283). Zostaw sekcje „DO UZUPEŁNIENIA PRZEZ LIDERA”.
+Na końcu podsumowanie z numerami PR.
+```

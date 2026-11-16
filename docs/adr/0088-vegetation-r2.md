@@ -1,6 +1,6 @@
 # ADR 0088: Roślinność r2
 
-Status: implemented in gpt-vegetation-r2; scoped independent PASS, GIS364/2xfail, EditMode218/218; no main merge by GPT.
+Status: przyjęty (scalony do main 2026-11-11, `6b8f9123c`; status zaktualizowany 2026-11-16); pierwotnie: implemented in gpt-vegetation-r2; scoped independent PASS, GIS364/2xfail, EditMode218/218; no main merge by GPT.
 
 ## Problem
 

@@ -654,6 +654,22 @@ namespace Game.World.Import
         }
 
         /// <summary>Copies an art-source PNG into the generated textures folder with mobile import settings.</summary>
+        /// <summary>
+        /// ADR 0239 fallback (review s23 P1): the shader, or null when it is missing OR has a compile error. Shader.Find
+        /// also returns a shader that failed to compile - the fence then rendered magenta and its texture lost the
+        /// coverage-preserving mips (c-regen2-s23). Null keeps URP Lit and the s20 mips.
+        /// </summary>
+        public static Shader UsableShaderOrNull(Shader shader)
+        {
+            if (shader == null) return null;
+            if (!ShaderUtil.ShaderHasError(shader)) return shader;
+            Debug.LogWarning($"[IMPORT] shader '{shader.name}' has compile errors - fallback path used (ADR 0239)");
+            return null;
+        }
+
+        /// <summary>Kamion/World FenceMesh when it exists and compiles; the one lookup both importers use.</summary>
+        public static Shader FenceShaderOrNull() => UsableShaderOrNull(Shader.Find(Game.Rendering.FenceMeshCoverage.ShaderName));
+
         public static Texture2D ImportTexture(RegionImporter.Result r, string png, bool clamp, bool linear = false)
         {
             string file = Path.GetFileName(png);
@@ -676,8 +692,7 @@ namespace Game.World.Import
             // mean alpha as coverage (sharp wires near, a ~15 % veil far). History: coverage-preserving mips + cutoff drew
             // a white moire lattice at 40 m on Low (review 0179, P11-094); plain mips + cutoff (ADR 0185) lost the mesh
             // from ~10 m (s20 lead, kwadrat-park-gate Low). Without the shader the old moire variant stays.
-            bool fenceCoverage = Game.Rendering.FenceMeshCoverage.IsFenceMeshTexture(file)
-                && Shader.Find(Game.Rendering.FenceMeshCoverage.ShaderName) != null;
+            bool fenceCoverage = Game.Rendering.FenceMeshCoverage.IsFenceMeshTexture(file) && FenceShaderOrNull() != null;
             ti.mipMapsPreserveCoverage = Game.Rendering.FenceMeshCoverage.PreserveCoverageMips(file, alpha, fenceCoverage);
             if (fenceCoverage) ti.mipmapFilter = TextureImporterMipFilter.BoxFilter;   // no Kaiser ringing in the alpha
             ti.alphaTestReferenceValue = 0.5f;

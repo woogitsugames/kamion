@@ -1,6 +1,6 @@
 # ADR 0168 — Navigation: roundabout exit counting, three voice tiers, ETA at 1 Hz, no-return zone
 
-Status: implemented on branch `nav-0168` (2026-11-13, s17); not merged. Tests: nav-runner (xUnit) and Unity EditMode;
+Status: Accepted (merged to main 2026-11-13, `668b027b7`; status updated 2026-11-16); originally: implemented on branch `nav-0168` (2026-11-13, s17); not merged. Tests: nav-runner (xUnit) and Unity EditMode;
 phone NOT measured (the change is CPU-light and allocation-free, see "Evidence").
 Source: open points of the Mistral r6 review of the GPS (exit numbering, repeated announcements, ETA cost, GC proof)
 and the dead-end audit of ADR 0169 (`tools/worldgen/navgraph/dead_ends.py`).
@@ -67,3 +67,24 @@ Tests that used the old Andersa NW point (`NavRoutingTests`, `RoundaboutExitTest
 3. The no-return rule depends on node boundary flags (bit0). Graph files without them have no zone (old behaviour).
 4. `GoalOffReach` text says "poza zasięgiem mapy"; for the zone it is correct in effect (the road leaves the map) but
    a dedicated text could be clearer - owner's call.
+
+## Dopisek s23 (D31): złote trasy po c-regen3 (#93, rondo Putry z ortofoto)
+
+CI `nav` na main: G04/G05/G29 ~2 m krótsze niż wzorzec (tolerancja 2,0 m). Ustalone z geometrii w gicie, nie na ślepo:
+- `bialystok-industrial-c_route.bytes` przed (`be35fbc36^`) i po (`be35fbc36`, c-regen3): węzły, długości OSM (koszt A*),
+  flagi, zakazy — bez zmian; zmieniła się geometria JEDNEJ krawędzi: 157 = `w180144451:2629251364-4075461271` (pierścień S
+  ronda Putry), przez override `putry-ring-s-placement` z ADR 0226 (MA-010: oś 2,9 m w lewo na całej długości →
+  profil 1,2 m na zachodnim końcu, ~0,2 m w środku). Promień pierścienia praktycznie bez zmian (dopasowanie okręgu do
+  4 krawędzi pierścienia: R 32,10 → 32,22 m) — skrócenie NIE pochodzi z Δr × kąt.
+- `RoutePath.Length` sumuje odcinki narysowanej trasy, łącznie ze skokiem z końca poprzedniej krawędzi (węzeł OSM 293)
+  na początek osi jezdni krawędzi 157. Skok = przesunięcie osi na zachodnim końcu: 2,900 → 1,196 m (Δ −1,704).
+  Rzut celu „Putry” (-555,6; -10,18) na oś 157: 22,973 → 22,690 m od początku (Δ −0,283; cel 2,87 → 1,20 m od osi).
+  Długość osi 157: 46,020 → 46,093 m (Δ +0,073); koniec osi (węzeł 394) bez zmian.
+- Przewidywanie vs pomiar (C# RoutePlanner, `dotnet test` na obu wersjach `.bytes`):
+  dojazd do Putry (G04, G05, G24, G29) −1,704 − 0,283 = **−1,987** / zmierzone −1,986; przejazd przez 157 (G26)
+  −1,704 + 0,073 = **−1,631** / −1,631; start w Putry (G36) (46,093 − 22,690) − (46,020 − 22,973) = **+0,356** / +0,355.
+  Manewry, numery zjazdów i `costS` (koszt liczony po długościach OSM + rzut) bez zmian.
+Wzorce przepisane `--write-golden` (wynik identyczny z ręczną zmianą 6 pól `lengthM`): G04 564,6→562,6, G05 1107,5→1105,5,
+G24 791,1→789,1, G26 3001,3→2999,7, G29 1221,9→1219,9, G36 2436,8→2437,2. Tolerancja 2,0 m bez zmian.
+Otwarte (bez zmian tutaj): skok węzeł OSM → oś przesuniętej jezdni wlicza się w długość trasy (artefakt ADR 0144 —
+oś generowana vs węzły OSM); osobny problem `test_region_file_is_reproducible` — patrz raport PR D31.

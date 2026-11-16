@@ -1,6 +1,6 @@
 # ADR 0101: Kalibracja pigmentów r2 po kontrakcie `_Tint` (0086) — metoda stosunkowa na ≥ 2 kamerach
 
-Status: zaimplementowane na gałęzi `tint-r2` (rendering-perf), 2026-11-11. Do recenzji visual-critic. Kontrakt ADR 0086
+Status: przyjęty (scalony do main 2026-11-11, `4c63f4c4c`; status zaktualizowany 2026-11-16); pierwotnie: zaimplementowane na gałęzi `tint-r2` (rendering-perf), 2026-11-11. Do recenzji visual-critic. Kontrakt ADR 0086
 (jeden liniowy `_Tint`, `SetLinearTint`) zostaje bez zmian; zmieniają się wyłącznie wartości pigmentów i metoda
 kalibracji. Źródło zadań: `docs/reports/visual/REVIEW-2026-11-11-s10-0086.md` (P0-1, P0-2, P1-2, P2-1, P2-2, P2-4).
 

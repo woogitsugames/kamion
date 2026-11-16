@@ -1,6 +1,6 @@
 # 0195 — Autopilot „prosta 0–80–0” (straight080) dla bramek 1–2 + prosta pomiarowa 1300 m
 
-Status: kandydat (gałąź `autopilot-0195`), nie scalone. Data: 2026-11-13. Dotyczy: ADR 0004 (rdzeń fizyki w czystym C#), 0058 (kolumna kierownicy), docs/03 bramki 1–2, docs/04 §6.3/§6.5, `docs/reports/GATE-1.md`/`GATE-2.md` (gates-s19).
+Status: przyjęty (scalony do main 2026-11-13, `ea6fdf840`; status zaktualizowany 2026-11-16); pierwotnie: kandydat (gałąź `autopilot-0195`), nie scalone. Data: 2026-11-13. Dotyczy: ADR 0004 (rdzeń fizyki w czystym C#), 0058 (kolumna kierownicy), docs/03 bramki 1–2, docs/04 §6.3/§6.5, `docs/reports/GATE-1.md`/`GATE-2.md` (gates-s19).
 
 ## Kontekst
 Bramka 1 wymaga „3 przejazdy 0–80 km/h powtarzalne ±3 %” na telefonie, bramka 2 — pakietu §6 dla pustego zestawu i 40 t, w tym hamowania awaryjnego.

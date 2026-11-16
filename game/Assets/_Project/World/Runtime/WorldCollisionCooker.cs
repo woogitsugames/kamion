@@ -19,6 +19,17 @@ namespace Game.World
     {
         [Tooltip("World MeshColliders saved disabled by the scene builder")]
         public MeshCollider[] colliders = System.Array.Empty<MeshCollider>();
+        [Tooltip("Streamed tile scene (ADR 0235): no cooking in Awake; Game.World.Streaming.WorldStreamer calls BeginCook / PollCook " +
+                 "so the bake runs on worker threads over several frames and the colliders are enabled in batches")]
+        public bool deferCook;
+
+        // Deferred cook state (streamed tiles).
+        JobHandle m_Handle;
+        NativeArray<EntityId> m_Ids;
+        NativeArray<MeshColliderCookingOptions> m_Opts;
+        bool m_Scheduled, m_Baked;
+        int m_EnableNext;
+        readonly Stopwatch m_Deferred = new Stopwatch();
 
         /// <summary>Wall-clock time of the last cook (ms) and the number of meshes (diagnostics / device report).</summary>
         public static float LastCookMs { get; private set; }
@@ -39,7 +50,74 @@ namespace Game.World
         {
             int kerb = LayerMask.NameToLayer(KerbLayerName), vehicle = LayerMask.NameToLayer(VehicleLayerName);
             if (kerb >= 0 && vehicle >= 0) Physics.IgnoreLayerCollision(vehicle, kerb, true);
-            Cook();
+            if (!deferCook) Cook();
+        }
+
+        /// <summary>
+        /// Streamed tiles (ADR 0235): schedules the parallel bake without waiting for it. Returns false when there is
+        /// nothing to cook (then <see cref="PollCook"/> only enables). Call once.
+        /// </summary>
+        public bool BeginCook()
+        {
+            if (m_Scheduled) return true;
+            m_Scheduled = true;
+            m_Deferred.Restart();
+            int n = 0;
+            foreach (var c in colliders) if (c != null && c.sharedMesh != null && !c.enabled) n++;
+            if (n == 0) { m_Baked = true; return false; }
+            m_Ids = new NativeArray<EntityId>(n, Allocator.Persistent);
+            m_Opts = new NativeArray<MeshColliderCookingOptions>(n, Allocator.Persistent);
+            int k = 0;
+            foreach (var c in colliders)
+            {
+                if (c == null || c.sharedMesh == null || c.enabled) continue;
+                m_Ids[k] = c.sharedMesh.GetEntityId();
+                m_Opts[k] = c.cookingOptions;
+                k++;
+            }
+            m_Handle = new BakeJob { meshIds = m_Ids, options = m_Opts }.Schedule(n, 1);
+            JobHandle.ScheduleBatchedJobs();
+            return true;
+        }
+
+        /// <summary>
+        /// Streamed tiles: once the bake job has finished, enables at most <paramref name="maxEnablePerCall"/> colliders per
+        /// call. Returns true when every collider is enabled (the tile may then open its edges). Never blocks on the job.
+        /// </summary>
+        public bool PollCook(int maxEnablePerCall)
+        {
+            if (!m_Scheduled) BeginCook();
+            if (!m_Baked)
+            {
+                if (!m_Handle.IsCompleted) return false;
+                m_Handle.Complete();
+                if (m_Ids.IsCreated) m_Ids.Dispose();
+                if (m_Opts.IsCreated) m_Opts.Dispose();
+                m_Baked = true;
+            }
+            int end = Mathf.Min(colliders.Length, m_EnableNext + Mathf.Max(1, maxEnablePerCall));
+            for (; m_EnableNext < end; m_EnableNext++)
+            {
+                var c = colliders[m_EnableNext];
+                if (c != null && c.sharedMesh != null) c.enabled = true;
+            }
+            if (m_EnableNext < colliders.Length) return false;
+            if (m_Deferred.IsRunning)
+            {
+                m_Deferred.Stop();
+                LastCookMs = (float)m_Deferred.Elapsed.TotalMilliseconds;
+                LastCookCount = colliders.Length;
+                Debug.Log($"[WORLD] collision cooked deferred (streamed tile {name}): {colliders.Length} colliders, {LastCookMs:F0} ms wall clock over frames");
+            }
+            return true;
+        }
+
+        void OnDestroy()
+        {
+            // A tile unloaded while its bake is still running: finish the job before freeing its input.
+            if (m_Scheduled && !m_Baked) m_Handle.Complete();
+            if (m_Ids.IsCreated) m_Ids.Dispose();
+            if (m_Opts.IsCreated) m_Opts.Dispose();
         }
 
         public void Cook()

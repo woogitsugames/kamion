@@ -1,5 +1,5 @@
 # ADR 0222 — szpalery drzew wzdłuż DK65 i dróg dojazdowych do Knyszyna (reguła `tree_rows`, opt-in per kafel)
-Status: Proposed (agent chmurowy D1, s21, gałąź `treerows-0222`), 2026-11-15. Do scalenia przez lidera po przebudowie
+Status: przyjęty (scalony do main 2026-11-16, `5824464bd`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent chmurowy D1, s21, gałąź `treerows-0222`), 2026-11-15. Do scalenia przez lidera po przebudowie
 kafli i visual-qa.
 Powiązane: D64/D65 (`docs/11`), research K1 `research/dk65-knyszyn-refs/README.md` (g) + `manifest.csv` K1-132…134,
 ADR 0012 (instancje/LOD drzew), 0015 (forest HLOD: szpaler ≤ 12 m od drogi nigdy nie jest zastępowany), 0069

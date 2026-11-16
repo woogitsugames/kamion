@@ -7,7 +7,7 @@ namespace Game.Controls
     /// route test. Speed: min(target, per-point limit, curvature limit v = sqrt(a_lat · R)), brakes to a stop at the end.
     /// Allocation-free; the path is set once.
     /// </summary>
-    public sealed class PathFollowerDriverInput : IDriverInput
+    public sealed class PathFollowerDriverInput : IDriverInput, Game.Core.IStreamedRoute
     {
         public string Name => "route";
         public bool Enabled { get; set; }
@@ -58,6 +58,54 @@ namespace Game.Controls
             }
             m_LimitKmh = speedLimitsKmh != null && speedLimitsKmh.Length == m_Points.Length ? speedLimitsKmh : new float[m_Points.Length];
             m_Seg = 0; Progress = 0f; Finished = false;
+        }
+
+        /// <summary>Floating-origin rebase (ADR 0235): moves the path with the world. Distances are unchanged.</summary>
+        public void Offset(Vector3 offset)
+        {
+            for (int i = 0; i < m_Points.Length; i++) m_Points[i] += offset;
+        }
+
+        /// <summary>
+        /// Last path point for the world streamer's route continuation (ADR 0235, int-stream-s23). false while disabled,
+        /// without a path, or with an explicit end (route_end: a measured segment must stop where it was asked to).
+        /// </summary>
+        public bool TryGetPathEnd(out Vector3 worldEnd)
+        {
+            if (!Enabled || m_Points.Length < 2 || EndS > 1f) { worldEnd = default; return false; }
+            worldEnd = m_Points[m_Points.Length - 1];
+            return true;
+        }
+
+        /// <summary>
+        /// Appends points to the path (route continues into a streamed tile, ADR 0235). Allocates the new arrays once per
+        /// call (a tile event, not the driving loop); keeps the current segment and progress.
+        /// </summary>
+        public void AppendPath(Vector3[] worldPoints, float[] speedLimitsKmh = null)
+        {
+            if (worldPoints == null || worldPoints.Length == 0) return;
+            int n0 = m_Points.Length, start = 0;
+            if (n0 > 0)
+            {
+                Vector3 d = worldPoints[0] - m_Points[n0 - 1]; d.y = 0f;
+                if (d.sqrMagnitude < 0.25f) start = 1;   // first point repeats the seam point
+            }
+            int add = worldPoints.Length - start;
+            var pts = new Vector3[n0 + add];
+            var s = new float[n0 + add];
+            var lim = new float[n0 + add];
+            System.Array.Copy(m_Points, pts, n0);
+            System.Array.Copy(m_S, s, n0);
+            System.Array.Copy(m_LimitKmh, lim, System.Math.Min(n0, m_LimitKmh.Length));
+            for (int k = 0; k < add; k++)
+            {
+                int i = n0 + k;
+                pts[i] = worldPoints[start + k];
+                if (i > 0) { Vector3 d = pts[i] - pts[i - 1]; d.y = 0f; s[i] = s[i - 1] + d.magnitude; }
+                lim[i] = speedLimitsKmh != null && speedLimitsKmh.Length == worldPoints.Length ? speedLimitsKmh[start + k] : 0f;
+            }
+            m_Points = pts; m_S = s; m_LimitKmh = lim;
+            Finished = false;
         }
 
         public void Sample(float dt, in VehicleFeedback fb, ref DriverIntent intent)

@@ -1,6 +1,6 @@
 # ADR 0151: pełzanie płyty siodła, pasek kierunkowskazów oddaje przesuw kierownicy, a_lat/mm stałe także powyżej 60 km/h (steer r3)
 
-Status: proponowany (2026-11-12, gałąź `steer-r3`). Kontynuacja ADR 0149 (Fold, „szybko się traci kontrolę”),
+Status: przyjęty (scalony do main 2026-11-12, `e364975f1`; status zaktualizowany 2026-11-16); pierwotnie: proponowany (2026-11-12, gałąź `steer-r3`). Kontynuacja ADR 0149 (Fold, „szybko się traci kontrolę”),
 otwarte punkty 4, 1 i 3 z §5 tamtego ADR. Gest obwodowy (punkt 2) czeka na test r2 przez właściciela.
 
 ## 1. Zestaw po puszczonym impulsie skrętu nie jechał prosto (fizyka)

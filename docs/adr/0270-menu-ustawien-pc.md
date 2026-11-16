@@ -1,5 +1,5 @@
 # ADR 0270 — menu ustawień PC (ekran, grafika, interfejs, dźwięk)
-Status: Proposed (chmura H r2, zadanie H8, gałąź `pc-settings-0270`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (chmura H r2, zadanie H8, gałąź `pc-settings-0270`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
 Powiązane: ADR 0260 (D73: Windows platformą główną), ADR 0261 (build Windows: desktop High / 60 fps), ADR 0265 (#131 HUD PC:
 `UiPreferences`, `ui.hudScale`, `UiFocus`), ADR 0264 (#133 pad/klawiatura), ADR 0269 (H7 tiery PC, `PcGraphicsTiers`), D74.
 
@@ -95,3 +95,14 @@ Brak wpływu na treść i pętlę jazdy: panel i zapis tylko w menu; w jeździe 
 - Odliczanie 15 s, skok głośności 5 %, minimalny rozmiar okna 640×360 — WORKING_VALUE.
 - Kanał „pojazd” (opony, wiatr, pneumatyka) osobno od silnika — decyzja właściciela po odsłuchu.
 - mph — patrz pkt 7.
+
+## Uzupełnienie s23 (zgodność z kodem), 2026-11-16
+Stan `origin/main` `0d91ee7db`. W §4 „auto = High jak ADR 0261” jest nieaktualne: **auto = dobór sprzętowy ADR 0269**.
+- Kto liczy: przy starcie `GameBootstrap.Awake` — gdy nie ma `-tier` ani zapisanego wyboru — woła
+  `PcGraphicsTiers.DetectHardware()` (`SystemInfo.graphicsDeviceName`, `graphicsMemorySize`, `systemMemorySize`;
+  `PcGraphicsTiers.cs:70-71`) i `PcTierTable.DefaultFor` (`GameBootstrap.cs:71-76`, `PcTierTable.cs:154`). W menu
+  wybór „auto” kasuje zapisany tier i stosuje ten sam wynik bez zapisu (`PcSettingsRuntime.cs:184-188`,
+  `PcTierChoice.cs:37-44`); etykieta „auto (…)” pokazuje wynik (`PcTierChoice.cs:21`).
+- Progi (WORKING_VALUE z klas D74, `PcTierTable.cs:115-125`, kolejność `PcTierTable.cs:154-170`): renderer programowy
+  albo GPU zintegrowane → Low; RAM < 7000 MB → Low; VRAM nieznany → Medium; VRAM < 3500 MB → Low; < 5500 MB → Medium;
+  inaczej High, ale High tylko przy RAM ≥ 11000 MB (inaczej Medium). **Nigdy Ultra** (`AutoCeiling = High`).
