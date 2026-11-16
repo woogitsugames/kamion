@@ -17,6 +17,9 @@ namespace Game.UI
     /// Adaptive (ADR 0079): the panel always fits the safe area - two columns when the width allows, otherwise one;
     /// the rows scroll between a fixed title and a fixed footer when they are taller than the screen; it is laid
     /// out again when the screen changes (rotation, folding a foldable).
+    /// ADR 0265: section EKRAN (touch controls auto / always / never, HUD scale on a monitor; stored in
+    /// <see cref="UiPreferences"/>, not in the control-settings schema); pad / keyboard navigation with a focus frame,
+    /// Esc / pad B closes, the selected row scrolls into view.
     /// </summary>
     public sealed class ControlSettingsPanel : MonoBehaviour
     {
@@ -31,12 +34,16 @@ namespace Game.UI
 
         const float RowH = 66f, ColW = 700f, Pad = 40f, Edge = 20f, HeaderH = 86f, FooterH = 108f;
 
+        /// <summary>Opens the keyboard / pad bindings screen as a child of the given transform (ADR 0264); null = no PC input installed, row hidden.</summary>
+        public static Action<Transform> OpenInputBindings;
+
         public ControlSettings Settings { get; private set; }
         Action m_OnChanged, m_OnClose, m_OnCalibrate;
         Font m_Font;
         RectTransform m_Safe;
         UiViewport m_View;
         readonly List<Action> m_Refresh = new List<Action>();
+        GameObject m_FirstItem;
 
         /// <summary>The panel rect (tests: must lie inside the safe area).</summary>
         public RectTransform PanelRect { get; private set; }
@@ -87,6 +94,17 @@ namespace Game.UI
             BuildContent();
         }
 
+        /// <summary>Tests / captures: lay out for a screen of the given form factor (ADR 0265: monitors 16:9 .. 32:9).</summary>
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop)
+        {
+            m_View.OverrideScreen(pixelSize, safeAreaPx, dpi, desktop);
+            m_View.Refresh();
+            BuildContent();
+        }
+
+        /// <summary>The item the pad / keyboard selection starts on (tests).</summary>
+        public GameObject FirstItem => m_FirstItem;
+
         // ------------------------------------------------------------------ build
 
         void Build(Camera cam)
@@ -105,17 +123,18 @@ namespace Game.UI
 
             m_View = new UiViewport(canvas);
             m_Safe = m_View.SafeArea;
+            UiFocus.EnsureEventSystem();
             m_View.Refresh();
             BuildContent();
-
-            if (UnityEngine.Object.FindAnyObjectByType<EventSystem>() == null)
-                new GameObject("EventSystem", typeof(EventSystem)).AddComponent<InputSystemUIInputModule>().AssignDefaultActions();
         }
 
         void Update()
         {
-            if (m_View != null && m_View.Refresh()) BuildContent();   // rotation, fold / unfold, split screen
+            if (m_View != null && m_View.Refresh()) BuildContent();   // rotation, fold / unfold, split screen, touch / monitor switch
+            UiFocus.RestoreIfLost(this, m_FirstItem);
         }
+
+        void OnDestroy() => UiFocus.Pop(this, true);   // the pad selection goes back to the menu below
 
         void OnRectTransformDimensionsChange() { m_View?.Invalidate(); }
 
@@ -129,6 +148,7 @@ namespace Game.UI
                 if (Application.isPlaying) Destroy(c.gameObject); else DestroyImmediate(c.gameObject);
             }
             m_Refresh.Clear();
+            m_FirstItem = null;
 
             Vector2 avail = m_View.SizeUnits - new Vector2(2f * Edge, 2f * Edge);
             float twoW = 2f * ColW + 3f * Pad;
@@ -154,10 +174,19 @@ namespace Game.UI
 
             // Left column: wheel + pedals
             float y = 0f;
+            // ADR 0264: PC keyboard + pad screen first (installed by Game.Gameplay.PcInputBridge). Kept away from the
+            // pedals block, which ADR 0265 extends, so the two PRs merge without a conflict.
+            if (OpenInputBindings != null)
+            {
+                Header(content, "KLAWIATURA I PAD", left, ref y);
+                var kb = TextButton(content, "Przypisania i czułość…", Vector2.zero, new Vector2(ColW, 64f), () => OpenInputBindings?.Invoke(transform));
+                PlaceTop((RectTransform)kb.transform, left, y, new Vector2(ColW, 64f));
+                y += 64f + 8f + 18f;
+            }
             Header(content, "KIEROWNICA DOTYKOWA", left, ref y);
             Segment(content, left, ref y, "Chwyt", "obrót", "przesuw", () => Settings.wheelDragGrab, v => Settings.wheelDragGrab = v);
             // D70 / ADR 0243: 270 deg comfort is the default, 900 deg simulator one tap away; the stepper keeps the grid between.
-            Segment(content, left, ref y, "Zakres: komfort/sym.", "270°", "900°", () => Settings.WheelSimRange, v => Settings.SetWheelRangePreset(v));
+            Segment(content, left, ref y, "Zakres: komfort/sym.", "270°", "900°", () => Settings.TouchWheelSimRange, v => Settings.SetTouchWheelPreset(v));
             Stepper(content, left, ref y, "Zakres kierownicy", () => F0(Settings.wheelRangeDeg) + "°", d => Settings.wheelRangeDeg = Step(Settings.wheelRangeDeg, d, 90f, ControlSettings.RangeMin, ControlSettings.RangeMax));
             Stepper(content, left, ref y, "Czułość", () => Pct(Settings.wheelSensitivity), d => Settings.wheelSensitivity = Step(Settings.wheelSensitivity, d, 0.1f, ControlSettings.GainMin, ControlSettings.GainMax));
             Stepper(content, left, ref y, "Samocentrowanie", () => Settings.centreStrength <= 0.001f ? "wyłączone" : Pct(Settings.centreStrength), d => Settings.centreStrength = Step(Settings.centreStrength, d, 0.1f, ControlSettings.CentreMin, ControlSettings.CentreMax));
@@ -167,6 +196,17 @@ namespace Game.UI
             Header(content, "PEDAŁY", left, ref y);
             Segment(content, left, ref y, "Krzywa gazu", "liniowa", "progresywna", () => Settings.throttleProgressive, v => Settings.throttleProgressive = v);
             Segment(content, left, ref y, "Krzywa hamulca", "liniowa", "progresywna", () => Settings.brakeProgressive, v => Settings.brakeProgressive = v);
+            y += 18f;
+            // ADR 0265: monitor / touch. UiPreferences (own PlayerPrefs keys), so the ControlSettings schema stays untouched.
+            Header(content, "KONTROLKI DOTYKOWE I EKRAN", left, ref y);
+            Segment3(content, left, ref y, "Pokazuj", TouchControlsPolicy.Label(TouchControlsMode.Auto), TouchControlsPolicy.Label(TouchControlsMode.Always),
+                TouchControlsPolicy.Label(TouchControlsMode.Never), () => (int)UiPreferences.TouchControls, v => UiPreferences.TouchControls = (TouchControlsMode)v);
+            Stepper(content, left, ref y, "Skala HUD (monitor)", () => Pct(UiPreferences.HudScale),
+                d =>
+                {
+                    UiPreferences.HudScale = Step(UiPreferences.HudScale, d, 0.1f, HudScaleModel.UserScaleMin, HudScaleModel.UserScaleMax);
+                    Game.UI.Settings.PcSettingsRuntime.NoteHudScaleChanged(UiPreferences.HudScale);   // ADR 0270 file follows (review #136 P2-1)
+                });
             float leftEnd = y;
 
             // Right column (or continued below in one column): gyro + camera
@@ -250,6 +290,7 @@ namespace Game.UI
             var close = TextButton(panel, "Zamknij", new Vector2(panelW - Pad - closeW, 20f), new Vector2(closeW, 72f), Close);
             close.GetComponent<Image>().color = k_ButtonOn;
 
+            UiFocus.Push(this, m_FirstItem != null ? m_FirstItem : close, m_View.Desktop);
             foreach (var r in m_Refresh) r();
         }
 
@@ -291,6 +332,22 @@ namespace Game.UI
             var bb = TextButton(row, b, new Vector2(ColW - w - 12f, 6f), new Vector2(w, RowH - 20f), () => { set(true); Commit(); });
             var ia = ba.GetComponent<Image>(); var ib = bb.GetComponent<Image>();
             m_Refresh.Add(() => { bool on = isB(); ia.color = on ? k_Button : k_ButtonOn; ib.color = on ? k_ButtonOn : k_Button; });
+        }
+
+        /// <summary>Three-way segment (ADR 0265: touch controls auto / always / never).</summary>
+        void Segment3(RectTransform parent, float x, ref float y, string label, string a, string b, string c, Func<int> current, Action<int> set)
+        {
+            var row = Row(parent, label, x, ref y, 250f);
+            const float w = 132f, gap = 6f;
+            var imgs = new Image[3];
+            string[] names = { a, b, c };
+            for (int i = 0; i < 3; i++)
+            {
+                int idx = i;
+                var btn = TextButton(row, names[i], new Vector2(ColW - (3 - i) * (w + gap) - 6f, 6f), new Vector2(w, RowH - 20f), () => { set(idx); Commit(); });
+                imgs[i] = btn.GetComponent<Image>();
+            }
+            m_Refresh.Add(() => { int on = current(); for (int i = 0; i < 3; i++) imgs[i].color = i == on ? k_ButtonOn : k_Button; });
         }
 
         // ------------------------------------------------------------------ helpers
@@ -356,6 +413,8 @@ namespace Game.UI
             var b = rt.gameObject.AddComponent<Button>();
             b.targetGraphic = img;
             b.onClick.AddListener(onClick);
+            UiFocus.Decorate(b, Close);   // ADR 0265: focus frame; Esc / pad B closes the panel
+            if (m_FirstItem == null) m_FirstItem = rt.gameObject;
             Label(rt, "Label", text, 30, TextAnchor.MiddleCenter, k_Text, Vector2.zero, size);
             return rt.gameObject;
         }

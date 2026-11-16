@@ -176,7 +176,7 @@ def conform(hf, road, mask, soft=None):
 
 WALL_MAX = 0.15            # m: visible vertical step between a ground surface edge and the terrain (REVIEW r4 W-H5)
 WALL_STEEP_NZ = 0.26       # |normal.z| below this = "vertical" face (steeper than ~75 deg)
-WALL_SKIP_MATS = ("curb_concrete", "edging_concrete", "bridge_concrete", "bridge_soffit", "apron_sett",
+WALL_SKIP_MATS = ("curb_concrete", "edging_concrete", "bridge_concrete", "bridge_soffit", "apron_sett", "apron_paving_light",
                   # ADR 0092: the gate closure line (panel fence on a plinth, steel posts) lives in the paved layer
                   # (streetscape.gate._closure) - fence faces are not terrain walls
                   "concrete_plinth", "fence_anthracite", "fence_anthracite_mesh", "paint_yellow")

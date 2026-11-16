@@ -25,7 +25,7 @@ referuje `Game.UI`, więc `HudLayout` testują tylko PlayMode).
 ## 2. Decyzja
 
 1. **Ustawienia, schemat 5** (`ControlSettings`): pole `mirrorInsets` (domyślnie `true`), stałe
-   `WheelRangeComfortDeg = 270`, `WheelRangeSimDeg = 900`, `SetWheelRangePreset(bool)`, `WheelSimRange` (próg 600°,
+   `TouchHalfRangeComfortDeg = 270`, `TouchHalfRangeSimDeg = 900`, `SetTouchWheelPreset(bool)`, `TouchWheelSimRange` (próg 600°,
    jak dotychczasowy podział trybu „Ster.”). Linia `[CONTROLS]` dostaje `mirrors=insets|look`.
 2. **Migracja v4→v5**: `mirrorInsets = true` (decyzja właściciela, ten sam wzór co v3→v4 w ADR 0135). Stary klucz
    `lab.mirrorInsets` nie jest już czytany. **Zakres kierownicy NIE jest resetowany**: 270° było domyślne od zawsze,

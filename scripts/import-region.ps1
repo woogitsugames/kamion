@@ -5,6 +5,7 @@
   pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
   pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -Build      # also run the world generator first
   pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -Tiers Low  # only the Low/Medium content (WorldC)
+  pwsh scripts/import-region.ps1 -Region knyszyn-w -BuildTarget Win64        # checkout whose Library is imported for Windows
 .NOTES
   Inputs : Data/Regions/<id>/generated/world_manifest.json (git), Data/raw/derived/<id>/world/chunk_*.glb, *.low.glb,
            instances_*.json (not in git), art-source/world/{props,vegetation,signs,textures} (git),
@@ -25,7 +26,10 @@ param(
     [Parameter(Mandatory)] [string]$Region,
     [switch]$Build,
     [string]$Tiers = 'Low,High',
-    [ValidateSet('High', 'Medium', 'Low')] [string]$MaterialTier = 'Medium'
+    [ValidateSet('High', 'Medium', 'Low')] [string]$MaterialTier = 'Medium',
+    # Editor platform of the run. A checkout whose Library is imported for Win64 (scripts/build-windows.ps1) must import
+    # with Win64, otherwise Unity switches back to Android and re-imports every asset (ADR 0261).
+    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android'
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -72,7 +76,7 @@ if ($missing -gt 0 -or $stale -gt 0) {
 
 $log = Join-Path $LogsDir "import-region-$Region-$(Get-Timestamp).log"
 $unityArgs = @('-executeMethod', 'Game.World.Import.RegionImporter.ImportBatch', '-region', $Region, '-tiers', $Tiers, '-materialTier', $MaterialTier)
-$code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs
+$code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs -BuildTarget $BuildTarget
 $result = Select-String -Path $log -Pattern 'IMPORT_RESULT:.*' | Select-Object -Last 1
 if ($code -ne 0 -or -not $result -or $result.Line -notmatch 'IMPORT_RESULT: OK') {
     Write-Host "import FAILED (exit $code), log: $log" -ForegroundColor Red

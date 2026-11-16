@@ -291,7 +291,9 @@ def test_photo_matched_overrides_applied(qa):
                                                  "andersa-putry-cantilever-p37", "andersa-putry-portal-p40",
                                                  # ADR 0162 (G3 2024 photos): al. Tysiąclecia S of rondo Putry
                                                  "tysiaclecia-s-putry-portal", "tysiaclecia-its-vms-gantry",
-                                                 "tysiaclecia-s-putry-e1-portal"}
+                                                 "tysiaclecia-s-putry-e1-portal",
+                                                 # ADR 0236 (research R2): advance E-1 gantry before rondo Putry
+                                                 "andersa-putry-e1-advance-gantry"}
     assert len(lm["landmarks"]) == 2
     man = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
     ids = {o["id"] for o in man["overrides_applied"]}
@@ -302,7 +304,7 @@ def test_photo_matched_overrides_applied(qa):
 def test_overhead_board_layout():
     from streetscape import signs as SG
     im, w, h = SG.overhead_board([(["E67"], "Warszawa"), (["65"], "Ełk")])
-    assert 1.0 < h < 2.0 and w > h
+    assert 0.8 < h < 0.9 and w > h          # ADR 0236: 0.50 + 0.35 m (Tabela 9.5.4), was 0.62 m rows
     r, g, b = im.convert("RGB").getpixel((im.size[0] // 2, im.size[1] - 2))
     assert g > r                                            # green field (white border is inside the edge)
 

@@ -1,8 +1,8 @@
 """Vertical signs from OSM `traffic_sign` tags, roundabout signing and the sign audit of the start route (v3.4).
 
 Rules (rozporządzenie w sprawie szczegółowych warunków technicznych dla znaków i sygnałów drogowych, Dz.U. 2019
-poz. 2311 = [ZNAKI-Z1], Załącznik 1 (A-D) and 4 (E); placement distances WORKING_VALUE until checked against the
-tables of [ZNAKI-Z1]):
+poz. 2311 = [ZNAKI-Z1], Załącznik 1: A-D in parts 2-5, the direction signs E in part 6 (s. 256-321) and rys. 9.5.x;
+the numbers used for E boards are in sign_norms.py with their table / point, ADR 0236):
   osm          node `traffic_sign=PL:<code>[;PL:<code>]` (values like `PL:B-33[40]`, `PL:A-7,B-33[50]`,
                `PL:B-1`), facing from `direction` / `traffic_sign:direction` (`forward` / `backward` along the nearest
                chain, or degrees clockwise from north = the direction the traffic travels); `highway=give_way` / `stop`
@@ -19,6 +19,9 @@ tables of [ZNAKI-Z1]):
                limit != 50 km/h without a B-33 within 80 m after the junction.
 Board colours follow the existing generator (green with red route shields where a national road number is signed,
 white with black text for local destinations); our own schematic drawing, not the official typeface.
+ADR 0236: an E-1 by rule is dropped where an authored `sign_gantry` stands on the same approach (the photos show the
+portal, not a second board on posts beside it); the boards by rule keep their stations (80 m <= the 100 m of pkt
+6.3.1.4 "bliżej, jeżeli wymagają tego warunki lokalne"; exit boards within the 50 m of pkt 6.3.2.2).
 """
 
 from __future__ import annotations
@@ -33,10 +36,12 @@ from roads.network import RURAL
 
 from . import brand_filter as BF
 from . import furniture as FU
+from . import sign_norms as SN
 from . import signs as SG
 
 CODE_RE = re.compile(r"([A-GPT]-\d+[a-z]?)(?:\[([^\]]+)\])?")
-DIAGRAM_BEFORE_M = 80.0         # WORKING_VALUE (urban GP/G approach)
+DIAGRAM_BEFORE_M = 80.0         # WORKING_VALUE (urban GP/G approach); pkt 6.3.1.4: 100 m in towns or nearer
+GANTRY_REPLACES_DIAGRAM_M = 40.0   # an authored portal / cantilever this near replaces the E-1 by rule (ADR 0236)
 EXIT_BOARD_AFTER_M = 7.0        # board on the exit, metres after the ring edge, WORKING_VALUE
 MIN_RING_R_DIAGRAM = 18.0
 DIAGRAM_MIN_M = 40.0            # shorter approach chains (split by nodes) carry the board at L - 10 m, >= 40 m
@@ -254,15 +259,22 @@ def roundabout_signs(pl, net, juncs, graph_attrs, report, codes, boards, src=Non
                     continue
                 # right side of the outbound traffic = left of the outward direction is wrong: outward IS the travel
                 kind, h, w, ext = FU.side_surface_offset(a.chain, "R" if a.end == "a" else "L", float(a.s(d)))
-                off = S.KERB_TOP_W + 1.0 if kind != RURAL else ext + 1.0
+                key = f"E-2a_{FU._h(';'.join(lines) + ','.join(refs)) % 100000:05d}"
+                new_board = None
+                if key in boards:
+                    wm, hm, _ = boards[key]
+                else:
+                    im, wm, hm = SG.direction_board(lines, refs, green=bool(refs))
+                    new_board = (round(wm, 3), round(hm, 3), im)
+                # the board edge keeps >= 0.50 m from the carriageway edge (pkt 1.5.3 [ZNAKI-Z1])
+                clear = max(1.0, wm / 2 + SN.LATERAL_MIN_M)
+                off = S.KERB_TOP_W + clear if kind != RURAL else ext + clear
                 p, mv = _in_front_of_barrier(a.gutter(d, -1, extra=0.0), a.gutter(d, -1, extra=off), rep["_barriers"])
                 rep["moved_before_barrier"] += int(mv)
                 if pl.near("sign", p, 2.0):
                     continue
-                key = f"E-2a_{FU._h(';'.join(lines) + ','.join(refs)) % 100000:05d}"
-                if key not in boards:
-                    im, wm, hm = SG.direction_board(lines, refs, green=bool(refs))
-                    boards[key] = (round(wm, 3), round(hm, 3), im)
+                if new_board:
+                    boards[key] = new_board
                 wm, hm, _ = boards[key]
                 face = -a.direction(d)                     # readable by the ring traffic approaching the exit
                 src = f"rule:roundabout_exit:{j.id}"
@@ -363,3 +375,35 @@ def route_audit(items, route_P, net, juncs, report):
                        "E-1": any(r["code"].startswith("E-1") and r["faces_route_driver"]
                                   for r in out if s - 140 < r["s_m"] < s)})
     report["route_checks"] = checks
+
+
+def drop_rule_diagrams_near_gantries(pl, boards, report):
+    """ADR 0236: remove the E-1 board by rule (board + its posts) where an authored sign gantry / cantilever stands
+    within GANTRY_REPLACES_DIAGRAM_M - the authored structure is what the photos show there (research G3 / R2), a
+    second diagram board on posts beside the portal is not. Board keys nobody uses any more leave `boards` (no
+    texture, no material). Call after streetscape.landmarks.build. report["roundabout_signs"]["diagrams_replaced"]."""
+    gantries = [(it["e"], it["n"], it.get("src", "")) for it in pl.items
+                if it["p"].startswith(("sign_gantry_", "sign_cantilever_"))]
+    groups = {}
+    for it in pl.items:
+        if str(it.get("src", "")).startswith("rule:roundabout_diagram:") and it["p"].startswith("board_"):
+            groups[it["src"]] = it
+    dropped = []
+    for src, b in sorted(groups.items()):
+        near = [(math.hypot(b["e"] - e, b["n"] - n), g) for e, n, g in gantries]
+        near = [x for x in near if x[0] <= GANTRY_REPLACES_DIAGRAM_M]
+        if near:
+            dist, g = min(near)
+            dropped.append({"rule": src, "board": b["p"][len("board_"):], "by": g, "dist_m": round(dist, 1),
+                            "at": [round(b["e"], 1), round(b["n"], 1)]})
+    if dropped:
+        gone = {x["rule"] for x in dropped}
+        pl.items[:] = [it for it in pl.items if it.get("src") not in gone]
+        used = {it["p"][len("board_"):] for it in pl.items if it["p"].startswith("board_")}
+        for x in dropped:
+            if x["board"] not in used:
+                boards.pop(x["board"], None)
+    rep = report.setdefault("roundabout_signs", {})
+    rep["diagrams_replaced"] = dropped
+    rep["diagrams"] = rep.get("diagrams", 0) - len(dropped)
+    return dropped

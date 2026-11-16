@@ -3,6 +3,7 @@
 // is tested directly. The EditMode suite remains the reference (lead runs it in Unity).
 using System;
 using System.Globalization;
+using Game.Cameras;
 using Game.Controls;
 using Game.Vehicle.Runtime;
 using UnityEngine;
@@ -13,6 +14,14 @@ namespace ControlsRunner.Tests
 {
     public class Controls0243RunnerTests
     {
+        /// <summary>Touch layout of the one mirror-window layout (Game.Cameras.MirrorWindowLayout.SolveTouch).</summary>
+        static bool Place(float w, Rect cl, float top, float gap, float margin, float bottom, out Rect l, out Rect r)
+        {
+            MirrorWindowLayout.SolveTouch(w, cl, top, gap, margin, bottom, out var m);
+            l = m.Left; r = m.Right;
+            return m.Fits;
+        }
+
         readonly ITestOutputHelper m_Out;
         public Controls0243RunnerTests(ITestOutputHelper o) { m_Out = o; }
 
@@ -24,9 +33,9 @@ namespace ControlsRunner.Tests
             var d = ControlSettings.Defaults();
             Assert.Equal(5, ControlSettings.CurrentSchema);
             Assert.Equal(270f, d.wheelRangeDeg);
-            Assert.Equal(900f, ControlSettings.WheelRangeSimDeg);
-            Assert.Equal(ControlSettings.RangeMax, ControlSettings.WheelRangeSimDeg);
-            Assert.False(d.WheelSimRange);
+            Assert.Equal(900f, ControlSettings.TouchHalfRangeSimDeg);
+            Assert.Equal(ControlSettings.RangeMax, ControlSettings.TouchHalfRangeSimDeg);
+            Assert.False(d.TouchWheelSimRange);
             Assert.True(d.mirrorInsets);
             Assert.Contains("mirrors=insets", d.LogLine("t"));
         }
@@ -37,7 +46,7 @@ namespace ControlsRunner.Tests
             const string key = "runner.controls";
             PlayerPrefs.DeleteKey(key);
             var s = ControlSettings.Defaults();
-            s.SetWheelRangePreset(true); s.mirrorInsets = false;
+            s.SetTouchWheelPreset(true); s.mirrorInsets = false;
             s.Save(key);
             var l = ControlSettings.Load(key, null);
             Assert.Equal(900f, l.wheelRangeDeg);
@@ -97,12 +106,12 @@ namespace ControlsRunner.Tests
             foreach (bool sim in new[] { false, true })
             foreach (bool drag in new[] { true, false })
             {
-                var s = ControlSettings.Defaults(); s.SetWheelRangePreset(sim); s.wheelDragGrab = drag;
+                var s = ControlSettings.Defaults(); s.SetTouchWheelPreset(sim); s.wheelDragGrab = drag;
                 Assert.True(WheelSteer(s, 1f) > 0.02f, $"sim {sim} drag {drag} right");
                 Assert.True(WheelSteer(s, -1f) < -0.02f, $"sim {sim} drag {drag} left");
             }
             var c = ControlSettings.Defaults(); c.wheelDragGrab = false; c.speedSensitiveSteering = false; c.wheelDeadZone = 0f;
-            var m = c.Clone(); m.SetWheelRangePreset(true);
+            var m = c.Clone(); m.SetTouchWheelPreset(true);
             Assert.InRange(WheelSteer(m, 1f) / WheelSteer(c, 1f), 270f / 900f - 0.02f, 270f / 900f + 0.02f);
         }
 
@@ -138,29 +147,29 @@ namespace ControlsRunner.Tests
                 float ppu = PixelsPerUnit(sc.safe);
                 float w = sc.safe.width / ppu, h = sc.safe.height / ppu, top = h - margin;
                 var cl = new Rect(w * 0.5f - 220f, top - 156f, 440f, 156f);
-                Assert.True(MirrorInsetLayout.Place(w, cl, top, gap, margin, margin, out Rect l, out Rect r), sc.name);
+                Assert.True(Place(w, cl, top, gap, margin, margin, out Rect l, out Rect r), sc.name);
                 var canvas = new Rect(0f, 0f, w, h);
-                Assert.True(MirrorInsetLayout.Inside(l, canvas) && MirrorInsetLayout.Inside(r, canvas), sc.name);
+                Assert.True(MirrorWindowLayout.Inside(l, canvas) && MirrorWindowLayout.Inside(r, canvas), sc.name);
                 Assert.False(l.Overlaps(cl) || r.Overlaps(cl), sc.name);
                 Assert.True(l.xMax <= cl.xMin + 1e-3f && r.xMin >= cl.xMax - 1e-3f, sc.name);
                 Assert.InRange((w * 0.5f - l.center.x) - (r.center.x - w * 0.5f), -1e-3f, 1e-3f);
-                var lp = MirrorInsetLayout.ToScreenPixels(l, sc.safe, ppu);
-                var rp = MirrorInsetLayout.ToScreenPixels(r, sc.safe, ppu);
-                Assert.True(MirrorInsetLayout.Inside(lp, sc.safe), sc.name + " left px " + lp);
-                Assert.True(MirrorInsetLayout.Inside(rp, sc.safe), sc.name + " right px " + rp);
+                var lp = MirrorWindowLayout.ToScreenPixels(l, sc.safe, ppu);
+                var rp = MirrorWindowLayout.ToScreenPixels(r, sc.safe, ppu);
+                Assert.True(MirrorWindowLayout.Inside(lp, sc.safe), sc.name + " left px " + lp);
+                Assert.True(MirrorWindowLayout.Inside(rp, sc.safe), sc.name + " right px " + rp);
                 var road = new Rect(w / 3f, 0f, w / 3f, h * 0.6f);
                 Assert.False(l.Overlaps(road) || r.Overlaps(road), sc.name + " over the road");
-                m_Out.WriteLine($"{sc.name}: ppu {ppu:F3}, canvas {w:F0}x{h:F0}, left px {lp}, right px {rp}, Low texel/px {MirrorInsetLayout.TexelsPerPixel(168, ppu):F2}");
+                m_Out.WriteLine($"{sc.name}: ppu {ppu:F3}, canvas {w:F0}x{h:F0}, left px {lp}, right px {rp}, Low texel/px {MirrorWindowLayout.TexelsPerPixel(168, ppu):F2}");
             }
         }
 
         [Fact]
         public void Windows_DoNotFit_Reported()
         {
-            Assert.False(MirrorInsetLayout.Place(700f, new Rect(100f, 900f, 440f, 156f), 1056f, 12f, 24f, 24f, out _, out _));
-            Assert.False(MirrorInsetLayout.Place(1100f, new Rect(500f, 900f, 440f, 156f), 1056f, 12f, 24f, 24f, out _, out _));
-            Assert.False(MirrorInsetLayout.Place(1680f, new Rect(620f, 150f, 440f, 156f), 306f, 12f, 24f, 24f, out _, out _));
-            Assert.Equal(0.6f, MirrorInsetLayout.TexelsPerPixel(168, 1f), 4);
+            Assert.False(Place(700f, new Rect(100f, 900f, 440f, 156f), 1056f, 12f, 24f, 24f, out _, out _));
+            Assert.False(Place(1100f, new Rect(500f, 900f, 440f, 156f), 1056f, 12f, 24f, 24f, out _, out _));
+            Assert.False(Place(1680f, new Rect(620f, 150f, 440f, 156f), 306f, 12f, 24f, 24f, out _, out _));
+            Assert.Equal(0.6f, MirrorWindowLayout.TexelsPerPixel(168, 1f), 4);
         }
 
         [Fact]
@@ -169,14 +178,14 @@ namespace ControlsRunner.Tests
             var cl = new Rect(620f, 900f, 440f, 156f);
             var safe = new Rect(80f, 0f, 2260f, 1080f);
             float acc = 0f;
-            MirrorInsetLayout.Place(1680f, cl, 1056f, 12f, 24f, 24f, out _, out _);
+            Place(1680f, cl, 1056f, 12f, 24f, 24f, out _, out _);
             MirrorInsetBudget.ExpectedRendersPerFrame(2, false);
             long before = GC.GetAllocatedBytesForCurrentThread();
             for (int i = 0; i < 1000; i++)
             {
-                MirrorInsetLayout.Place(1680f + i, cl, 1056f, 12f, 24f, 24f, out Rect l, out Rect r);
-                acc += MirrorInsetLayout.ToScreenPixels(l, safe, 1.2f).x + (MirrorInsetLayout.Inside(r, safe) ? 1f : 0f)
-                    + MirrorInsetLayout.TexelsPerPixel(168, 1f) + MirrorInsetBudget.Interval(4, i % 2 == 0)
+                Place(1680f + i, cl, 1056f, 12f, 24f, 24f, out Rect l, out Rect r);
+                acc += MirrorWindowLayout.ToScreenPixels(l, safe, 1.2f).x + (MirrorWindowLayout.Inside(r, safe) ? 1f : 0f)
+                    + MirrorWindowLayout.TexelsPerPixel(168, 1f) + MirrorInsetBudget.Interval(4, i % 2 == 0)
                     + MirrorInsetBudget.ExpectedRendersPerFrame(i % 5, false);
             }
             long bytes = GC.GetAllocatedBytesForCurrentThread() - before;

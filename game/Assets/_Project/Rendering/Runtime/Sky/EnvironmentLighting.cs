@@ -83,7 +83,14 @@ namespace Game.Rendering
             Shader.SetGlobalFloat("_KamionDimColourDesaturation",0f);
             QualityProfileApplier.Applied -= OnTierApplied;
             RenderPipelineManager.beginContextRendering -= OnBeginRendering;
-            if (Instance == this) Instance = null;
+            if (Instance == this)
+            {
+                Instance = null;
+                // lamp-test-s23: the region's LED colour (ADR 0216) is static StreetLamps state written by Apply(); give it
+                // back with the region, or the next scene / test inherits it (an older env disabled after a newer one
+                // enabled is not Instance and leaves the newer region's colour alone).
+                StreetLamps.SetLedColour(new Color(0f, 0f, 0f, 0f));
+            }
         }
 
         void OnDestroy()

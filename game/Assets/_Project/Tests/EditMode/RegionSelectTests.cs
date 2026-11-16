@@ -8,6 +8,7 @@ using Game.Gameplay;
 using Game.World;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Game.Tests
 {
@@ -126,6 +127,89 @@ namespace Game.Tests
             Assert.AreEqual("knyszyn", regions[regions.Count - 1]);
         }
 
+        // ------------------------------------------------------------------ ADR 0267 (follow-up of the #104 review)
+
+        [Test]
+        public void ShippedCatalog_D67Full_IsD67PlusTheD71Regions()
+        {
+            var catalog = RegionCatalog.Load();
+            Assert.IsNotNull(catalog, "Resources/Regions/region_catalog.json");
+            var errors = new List<string>();
+            var d67 = catalog.Resolve("d67", errors);
+            var full = catalog.Resolve("d67-full", errors);
+            CollectionAssert.IsEmpty(errors);
+            Assert.AreEqual(17, d67.Count, "d67 stays the lighter main-route variant (ADR 0229)");
+            Assert.AreEqual(21, full.Count, "d67 (17) + Dojlidy, Knyszyn-W, Monki, Tykocin");
+            CollectionAssert.AreEqual(d67, full.GetRange(0, d67.Count), "d67-full starts with d67");
+            CollectionAssert.AreEqual(new[] { "bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01" }, full.GetRange(17, 4));
+            CollectionAssert.AllItemsAreUnique(full);
+        }
+
+        [Test]
+        public void ResolveRegions_NotGiven_IsNull_GivenButEmpty_IsAnError()
+        {
+            var c = Test();
+            var errors = new List<string>();
+            Assert.IsNull(RegionBuildList.ResolveRegions(null, null, EditorTools.RepoRoot, c, errors), "default build");
+            CollectionAssert.IsEmpty(errors);
+
+            CollectionAssert.AreEqual(new[] { "bialystok-industrial-c" }, RegionBuildList.ResolveRegions("c", null, EditorTools.RepoRoot, c, errors));
+            CollectionAssert.IsEmpty(errors);
+
+            foreach (var spec in new[] { ",", "", " ; , " })
+            {
+                errors.Clear();
+                CollectionAssert.IsEmpty(RegionBuildList.ResolveRegions(spec, null, EditorTools.RepoRoot, c, errors));
+                Assert.AreEqual(1, errors.Count, "-regions '" + spec + "' resolves to no region");
+                StringAssert.Contains("no region", errors[0]);
+            }
+
+            string tmp = Path.Combine(Path.GetTempPath(), "kamion-build-regions-empty-test.json");
+            File.WriteAllText(tmp, @"{""schema"": ""truck-sim-pl/build-regions/1"", ""regions"": []}");
+            try
+            {
+                errors.Clear();
+                CollectionAssert.IsEmpty(RegionBuildList.ResolveRegions(null, tmp, EditorTools.RepoRoot, c, errors));
+                Assert.AreEqual(1, errors.Count, "file with regions: [] is an error");
+            }
+            finally { File.Delete(tmp); }
+
+            errors.Clear();
+            RegionBuildList.ResolveRegions("warszawa", null, EditorTools.RepoRoot, c, errors);
+            Assert.AreEqual(1, errors.Count, "an unknown name is reported once, not also as 'no region'");
+        }
+
+        [Test]
+        public void RegionsArg_ValueSplitAtSpaces_IsJoined_SpacesAndSemicolonsSeparate()
+        {
+            Assert.IsNull(RegionBuildList.RegionsArgFrom(new[] { "Unity", "-batchmode", "-buildOutput", "a.apk" }));
+            Assert.AreEqual("c", RegionBuildList.RegionsArgFrom(new[] { "Unity", "-regions", "c", "-regionsFile", "x.json" }));
+            Assert.AreEqual("c,dojlidy,knyszyn", RegionBuildList.RegionsArgFrom(new[] { "Unity", "-REGIONS", "c", "dojlidy", "knyszyn", "-regionsAllowMissing" }),
+                "Start-Process split 'c dojlidy knyszyn' into three arguments");
+            Assert.AreEqual("", RegionBuildList.RegionsArgFrom(new[] { "Unity", "-regions", "-buildOutput", "a.apk" }));
+            Assert.AreEqual("", RegionBuildList.RegionsArgFrom(new[] { "Unity", "-regions" }));
+
+            var c = Test();
+            var want = new[] { "bialystok-industrial-c", "bialystok-dojlidy", "knyszyn" };
+            CollectionAssert.AreEqual(want, Resolve(c, "c dojlidy  knyszyn"));
+            CollectionAssert.AreEqual(want, Resolve(c, "c;dojlidy;knyszyn"));
+            CollectionAssert.AreEqual(want, Resolve(c, " c ;, dojlidy\tknyszyn\u00A0"));
+            CollectionAssert.AreEqual(want, Resolve(c, RegionBuildList.RegionsArgFrom(new[] { "-regions", "c", "dojlidy;knyszyn" })));
+        }
+
+        [Test]
+        public void Catalog_BrokenJson_GivesNullWithoutAnException()
+        {
+            foreach (var json in new[] { "{ \"schema\": ", "not json at all", "[1,2,", TestCatalog.Replace("region-catalog/1", "region-catalog/9"), "" })
+            {
+                LogAssert.Expect(LogType.Error, new Regex(@"^\[REGIONS\] region catalog unreadable"));
+                RegionCatalog parsed = null;
+                Assert.DoesNotThrow(() => parsed = RegionCatalog.ParseOrNull(json), json);
+                Assert.IsNull(parsed, json);
+            }
+            Assert.IsNotNull(RegionCatalog.ParseOrNull(TestCatalog));
+        }
+
         // ------------------------------------------------------------------ scene list composition
 
         static readonly string[] k_Base =
@@ -222,7 +306,7 @@ namespace Game.Tests
                 var road = RegionStart.FindRoad(g, en);
                 Assert.GreaterOrEqual(road.Edge, 0, r.id + ": start point " + en + " not on a graph road");
                 Assert.LessOrEqual(road.Distance, RegionStart.SnapMaxM, r.id);
-                StringAssert.StartsWith("[START] region=" + r.id + " route_s=12.0", RegionStart.Describe(r.id, s, en, road));
+                StringAssert.StartsWith("[START] region=" + r.id + " route_s=" + s.ToString("F1", CultureInfo.InvariantCulture), RegionStart.Describe(r.id, s, en, road));
                 checkedRegions++;
             }
             Assert.GreaterOrEqual(checkedRegions, 1, "at least region C ships a routing graph");

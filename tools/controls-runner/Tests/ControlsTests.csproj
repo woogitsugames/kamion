@@ -2,7 +2,7 @@
 
   <!--
     Plain .NET 8 check of the Unity-independent control / mirror-window logic of ADR 0243 (D70):
-    ControlSettings (schema 5 migration, presets), TouchSteeringWheel direction, MirrorInsetLayout (safe area),
+    ControlSettings (schema 5 migration, presets), TouchSteeringWheel direction, MirrorWindowLayout touch + monitor (safe area),
     MirrorInsetBudget + MirrorRefreshSchedule (Low refresh policy). The sources are compiled straight from the Unity
     project (same pattern as tools/nav-runner, ADR 0150); UnityShim.cs stands in for the few UnityEngine types used.
     The Unity EditMode suite (Controls0243Tests) stays the reference; this runner exists because cloud sessions have no Unity.
@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <Compile Include="../../../game/Assets/_Project/Input/ControlSettings.cs" LinkBase="Input" />
-    <Compile Include="../../../game/Assets/_Project/Input/MirrorInsetLayout.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Camera/MirrorWindowLayout.cs" LinkBase="Camera" />
     <Compile Include="../../../game/Assets/_Project/Input/TouchSteeringWheel.cs" LinkBase="Input" />
     <Compile Include="../../../game/Assets/_Project/Input/SteeringMath.cs" LinkBase="Input" />
     <Compile Include="../../../game/Assets/_Project/Input/SteeringColumn.cs" LinkBase="Input" />

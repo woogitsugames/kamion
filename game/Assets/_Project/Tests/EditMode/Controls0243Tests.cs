@@ -1,3 +1,4 @@
+using Game.Cameras;
 using Game.Controls;
 using Game.Vehicle.Runtime;
 using NUnit.Framework;
@@ -12,6 +13,14 @@ namespace Game.Tests.EditMode
     /// </summary>
     public class Controls0243Tests
     {
+        /// <summary>Touch layout of the one mirror-window layout (Game.Cameras.MirrorWindowLayout.SolveTouch).</summary>
+        static bool Place(float w, Rect cl, float top, float gap, float margin, float bottom, out Rect l, out Rect r)
+        {
+            MirrorWindowLayout.SolveTouch(w, cl, top, gap, margin, bottom, out var m);
+            l = m.Left; r = m.Right;
+            return m.Fits;
+        }
+
         const string TestKey = "test.controls0243.settings";
 
         [SetUp] public void SetUp() => PlayerPrefs.DeleteKey(TestKey);
@@ -24,11 +33,11 @@ namespace Game.Tests.EditMode
         {
             var d = ControlSettings.Defaults();
             Assert.AreEqual(5, ControlSettings.CurrentSchema);
-            Assert.AreEqual(ControlSettings.WheelRangeComfortDeg, d.wheelRangeDeg);
-            Assert.AreEqual(270f, ControlSettings.WheelRangeComfortDeg);
-            Assert.AreEqual(900f, ControlSettings.WheelRangeSimDeg);
-            Assert.AreEqual(ControlSettings.RangeMax, ControlSettings.WheelRangeSimDeg, "900 is reachable in the settings");
-            Assert.IsFalse(d.WheelSimRange);
+            Assert.AreEqual(ControlSettings.TouchHalfRangeComfortDeg, d.wheelRangeDeg);
+            Assert.AreEqual(270f, ControlSettings.TouchHalfRangeComfortDeg);
+            Assert.AreEqual(900f, ControlSettings.TouchHalfRangeSimDeg);
+            Assert.AreEqual(ControlSettings.RangeMax, ControlSettings.TouchHalfRangeSimDeg, "900 is reachable in the settings");
+            Assert.IsFalse(d.TouchWheelSimRange);
             Assert.IsTrue(d.mirrorInsets);
             StringAssert.Contains("mirrors=insets", d.LogLine("t"));
             StringAssert.Contains("wheelRange=270", d.LogLine("t"));
@@ -38,9 +47,9 @@ namespace Game.Tests.EditMode
         public void Preset_SetsExactValues_AndSurvivesSaveLoad()
         {
             var s = ControlSettings.Defaults();
-            s.SetWheelRangePreset(true);
+            s.SetTouchWheelPreset(true);
             Assert.AreEqual(900f, s.wheelRangeDeg);
-            Assert.IsTrue(s.WheelSimRange);
+            Assert.IsTrue(s.TouchWheelSimRange);
             s.mirrorInsets = false;
             s.Save(TestKey);
             var l = ControlSettings.Load(TestKey, null);
@@ -48,9 +57,9 @@ namespace Game.Tests.EditMode
             Assert.IsFalse(l.mirrorInsets, "explicit v5 choice kept");
             Assert.AreEqual(5, l.schema);
             StringAssert.Contains("mirrors=look", l.LogLine("t"));
-            l.SetWheelRangePreset(false);
+            l.SetTouchWheelPreset(false);
             Assert.AreEqual(270f, l.wheelRangeDeg);
-            Assert.IsFalse(l.WheelSimRange);
+            Assert.IsFalse(l.TouchWheelSimRange);
         }
 
         [Test]
@@ -108,13 +117,13 @@ namespace Game.Tests.EditMode
             foreach (bool sim in new[] { false, true })
             foreach (bool drag in new[] { true, false })
             {
-                var s = ControlSettings.Defaults(); s.SetWheelRangePreset(sim); s.wheelDragGrab = drag;
+                var s = ControlSettings.Defaults(); s.SetTouchWheelPreset(sim); s.wheelDragGrab = drag;
                 Assert.Greater(WheelSteer(s, 1f), 0.02f, $"sim {sim} drag {drag} right");
                 Assert.Less(WheelSteer(s, -1f), -0.02f, $"sim {sim} drag {drag} left");
             }
             // Same finger travel: the simulator range turns less than the comfort range (rotate gesture is 1:1 on screen).
             var c = ControlSettings.Defaults(); c.wheelDragGrab = false; c.speedSensitiveSteering = false; c.wheelDeadZone = 0f;
-            var m = c.Clone(); m.SetWheelRangePreset(true);
+            var m = c.Clone(); m.SetTouchWheelPreset(true);
             Assert.AreEqual(270f / 900f, WheelSteer(m, 1f) / WheelSteer(c, 1f), 0.02f);
         }
 
@@ -153,11 +162,11 @@ namespace Game.Tests.EditMode
                 float ppu = PixelsPerUnit(sc.safe);
                 float w = sc.safe.width / ppu, h = sc.safe.height / ppu, top = h - margin;
                 var cl = new Rect(w * 0.5f - cluster.x * 0.5f, top - cluster.y, cluster.x, cluster.y);
-                bool fits = MirrorInsetLayout.Place(w, cl, top, gap, margin, margin, out Rect l, out Rect r);
+                bool fits = Place(w, cl, top, gap, margin, margin, out Rect l, out Rect r);
                 Assert.IsTrue(fits, sc.name + ": windows fit");
                 var canvas = new Rect(0f, 0f, w, h);
-                Assert.IsTrue(MirrorInsetLayout.Inside(l, canvas), sc.name + " left in canvas " + l);
-                Assert.IsTrue(MirrorInsetLayout.Inside(r, canvas), sc.name + " right in canvas " + r);
+                Assert.IsTrue(MirrorWindowLayout.Inside(l, canvas), sc.name + " left in canvas " + l);
+                Assert.IsTrue(MirrorWindowLayout.Inside(r, canvas), sc.name + " right in canvas " + r);
                 Assert.IsFalse(l.Overlaps(cl), sc.name + ": left over cluster");
                 Assert.IsFalse(r.Overlaps(cl), sc.name + ": right over cluster");
                 Assert.Less(l.xMax, cl.xMin + 1e-3f, sc.name + ": left window is left of the cluster");
@@ -166,11 +175,11 @@ namespace Game.Tests.EditMode
                 Assert.AreEqual(l.yMax, r.yMax, 1e-3f);
                 Assert.AreEqual(top, l.yMax, 1e-3f, sc.name + ": hangs from the top margin");
                 // In screen pixels: inside Screen.safeArea (notch, punch hole, gesture bar never covered).
-                var lp = MirrorInsetLayout.ToScreenPixels(l, sc.safe, ppu);
-                var rp = MirrorInsetLayout.ToScreenPixels(r, sc.safe, ppu);
-                Assert.IsTrue(MirrorInsetLayout.Inside(lp, sc.safe), sc.name + " left px " + lp + " safe " + sc.safe);
-                Assert.IsTrue(MirrorInsetLayout.Inside(rp, sc.safe), sc.name + " right px " + rp);
-                Assert.IsTrue(MirrorInsetLayout.Inside(lp, new Rect(0f, 0f, sc.w, sc.h)), sc.name + " on screen");
+                var lp = MirrorWindowLayout.ToScreenPixels(l, sc.safe, ppu);
+                var rp = MirrorWindowLayout.ToScreenPixels(r, sc.safe, ppu);
+                Assert.IsTrue(MirrorWindowLayout.Inside(lp, sc.safe), sc.name + " left px " + lp + " safe " + sc.safe);
+                Assert.IsTrue(MirrorWindowLayout.Inside(rp, sc.safe), sc.name + " right px " + rp);
+                Assert.IsTrue(MirrorWindowLayout.Inside(lp, new Rect(0f, 0f, sc.w, sc.h)), sc.name + " on screen");
                 // The road ahead (centre third of the width, lower 60 %) is not covered by a window.
                 var road = new Rect(w / 3f, 0f, w / 3f, h * 0.6f);
                 Assert.IsFalse(l.Overlaps(road) || r.Overlaps(road), sc.name + ": windows over the road ahead");
@@ -181,10 +190,10 @@ namespace Game.Tests.EditMode
         public void Windows_DoNotFit_ReportedNotForced()
         {
             var cl = new Rect(100f, 900f, 440f, 156f);
-            Assert.IsFalse(MirrorInsetLayout.Place(700f, cl, 1056f, 12f, 24f, 24f, out _, out _), "left window off the canvas");
+            Assert.IsFalse(Place(700f, cl, 1056f, 12f, 24f, 24f, out _, out _), "left window off the canvas");
             var mid = new Rect(500f, 900f, 440f, 156f);
-            Assert.IsFalse(MirrorInsetLayout.Place(1100f, mid, 1056f, 12f, 24f, 24f, out _, out _), "right window off the canvas");
-            Assert.IsFalse(MirrorInsetLayout.Place(1680f, new Rect(620f, 150f, 440f, 156f), 306f, 12f, 24f, 24f, out _, out _), "below the bottom limit");
+            Assert.IsFalse(Place(1100f, mid, 1056f, 12f, 24f, 24f, out _, out _), "right window off the canvas");
+            Assert.IsFalse(Place(1680f, new Rect(620f, 150f, 440f, 156f), 306f, 12f, 24f, 24f, out _, out _), "below the bottom limit");
         }
 
         [Test]
@@ -192,10 +201,10 @@ namespace Game.Tests.EditMode
         {
             // A16 Low: class II texture 224 x mirrorResolutionScale 0.75 = 168 rows (ADR 0136 r2); image 280 units at
             // 1 px/unit on a 1080-px-high screen -> 0.6 texel per pixel (magnified 1.67x).
-            Assert.AreEqual(new Vector2(150f, 280f), MirrorInsetLayout.ImageSize);
-            Assert.AreEqual(0.6f, MirrorInsetLayout.TexelsPerPixel(168, 1f), 1e-4f);
-            Assert.AreEqual(1f, MirrorInsetLayout.TexelsPerPixel(280, 1f), 1e-4f);
-            Assert.AreEqual(0f, MirrorInsetLayout.TexelsPerPixel(168, 0f));
+            Assert.AreEqual(new Vector2(150f, 280f), MirrorWindowLayout.TouchImageSize);
+            Assert.AreEqual(0.6f, MirrorWindowLayout.TexelsPerPixel(168, 1f), 1e-4f);
+            Assert.AreEqual(1f, MirrorWindowLayout.TexelsPerPixel(280, 1f), 1e-4f);
+            Assert.AreEqual(0f, MirrorWindowLayout.TexelsPerPixel(168, 0f));
             Assert.AreEqual(168, Mathf.RoundToInt(VehicleCameraBudget.MirrorHeightFor(0) * 0.75f));
         }
 
@@ -205,13 +214,13 @@ namespace Game.Tests.EditMode
             var cl = new Rect(620f, 900f, 440f, 156f);
             var safe = new Rect(80f, 0f, 2260f, 1080f);
             float acc = 0f;
-            MirrorInsetLayout.Place(1680f, cl, 1056f, 12f, 24f, 24f, out _, out _);   // JIT
+            Place(1680f, cl, 1056f, 12f, 24f, 24f, out _, out _);   // JIT
             long before = System.GC.GetAllocatedBytesForCurrentThread();
             for (int i = 0; i < 1000; i++)
             {
-                MirrorInsetLayout.Place(1680f + i, cl, 1056f, 12f, 24f, 24f, out Rect l, out Rect r);
-                acc += MirrorInsetLayout.ToScreenPixels(l, safe, 1.2f).x + (MirrorInsetLayout.Inside(r, safe) ? 1f : 0f)
-                    + MirrorInsetLayout.TexelsPerPixel(168, 1f) + MirrorInsetBudget.Interval(4, i % 2 == 0)
+                Place(1680f + i, cl, 1056f, 12f, 24f, 24f, out Rect l, out Rect r);
+                acc += MirrorWindowLayout.ToScreenPixels(l, safe, 1.2f).x + (MirrorWindowLayout.Inside(r, safe) ? 1f : 0f)
+                    + MirrorWindowLayout.TexelsPerPixel(168, 1f) + MirrorInsetBudget.Interval(4, i % 2 == 0)
                     + MirrorInsetBudget.ExpectedRendersPerFrame(i % 5, false);
             }
             Assert.AreEqual(0, System.GC.GetAllocatedBytesForCurrentThread() - before, "layout / budget maths must not allocate");

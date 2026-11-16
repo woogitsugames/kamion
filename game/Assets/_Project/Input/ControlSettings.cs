@@ -16,14 +16,19 @@ namespace Game.Controls
         public const string PrefKey = "controls.settings";
         /// <summary>Pre-settings-menu key: 0 = wheel 270, 1 = wheel 900, 2 = gyro (Stage 1/2 builds).</summary>
         public const string LegacySteerModeKey = "controls.steerMode";
+        /// <summary>Retired developer-page pref of the mirror windows (before schema 5; ADR 0243). Deleted on load, never read.</summary>
+        public const string RetiredMirrorInsetsKey = "lab.mirrorInsets";
         public const int CurrentSchema = 5;
 
         public const float RangeMin = 180f, RangeMax = 900f;
-        /// <summary>D70 (owner, 2026-11-15; ADR 0243): default on-screen wheel range = comfort 270 deg; the simulator range
-        /// 900 deg is a choice in the settings (stepper and the 270 / 900 segment).</summary>
-        public const float WheelRangeComfortDeg = 270f, WheelRangeSimDeg = 900f;
+        /// <summary>D70 (owner, 2026-11-15; ADR 0243): default on-screen (touch) wheel half range = comfort 270 deg; the simulator
+        /// range 900 deg is a choice in the settings (stepper and the 270 / 900 segment).
+        /// <para>Only the TOUCH wheel (<see cref="TouchSteeringWheel.HalfRangeDeg"/>, +-deg from centre). A physical PC wheel has
+        /// its own single source: <see cref="WheelSettings.rangeDeg"/> (lock-to-lock 270-900, soft lock) mapped by
+        /// <see cref="WheelSteeringMap"/> (ADR 0263); the two are different devices and never read each other.</para></summary>
+        public const float TouchHalfRangeComfortDeg = 270f, TouchHalfRangeSimDeg = 900f;
         /// <summary>Range from which the wheel counts as the simulator mode (segment, steer-mode log); between the presets.</summary>
-        public const float WheelRangeSimThresholdDeg = 600f;
+        public const float TouchHalfRangeSimThresholdDeg = 600f;
         public const float GainMin = 0.5f, GainMax = 2f;
         public const float CentreMin = 0f, CentreMax = 2f;
         public const float DeadMin = 0f, DeadMax = 0.15f;
@@ -33,8 +38,9 @@ namespace Game.Controls
         public const float BaseLookDegPerPixel = 0.12f, BaseHeadGain = 0.006f;
 
         public int schema = CurrentSchema;
-        /// <summary>On-screen wheel half range [deg]: 270 comfort, 900 simulator (docs/04 section 3).</summary>
-        public float wheelRangeDeg = WheelRangeComfortDeg;
+        /// <summary>On-screen (touch) wheel half range [deg, +- from centre]: 270 comfort, 900 simulator (docs/04 section 3).
+        /// JSON key kept as "wheelRangeDeg" (saves since schema 1). The PC wheel range is <see cref="WheelSettings.rangeDeg"/>.</summary>
+        public float wheelRangeDeg = TouchHalfRangeComfortDeg;
         /// <summary>Output gain of the wheel (1 = full lock at the full range).</summary>
         public float wheelSensitivity = 1f;
         /// <summary>Multiplier of the self-centring speed of the cab wheel when released (0 = stays where left; ADR 0058).</summary>
@@ -73,11 +79,11 @@ namespace Game.Controls
         /// </summary>
         public bool mirrorInsets = true;
 
-        /// <summary>The wheel is in the simulator range (900 deg preset or anything from <see cref="WheelRangeSimThresholdDeg"/>).</summary>
-        public bool WheelSimRange => wheelRangeDeg >= WheelRangeSimThresholdDeg;
+        /// <summary>The wheel is in the simulator range (900 deg preset or anything from <see cref="TouchHalfRangeSimThresholdDeg"/>).</summary>
+        public bool TouchWheelSimRange => wheelRangeDeg >= TouchHalfRangeSimThresholdDeg;
 
         /// <summary>Sets the wheel to one of the two D70 presets (270 comfort / 900 simulator).</summary>
-        public void SetWheelRangePreset(bool simulator) => wheelRangeDeg = simulator ? WheelRangeSimDeg : WheelRangeComfortDeg;
+        public void SetTouchWheelPreset(bool simulator) => wheelRangeDeg = simulator ? TouchHalfRangeSimDeg : TouchHalfRangeComfortDeg;
 
         public const float ProgressiveThrottleExponent = 1.6f, ProgressiveBrakeExponent = 1.4f;
         public const float BaseGyroMaxTiltDeg = 35f;
@@ -165,6 +171,8 @@ namespace Game.Controls
 
         public static ControlSettings Load(string key = PrefKey, string legacyKey = LegacySteerModeKey)
         {
+            // D70: the windows are a control setting now (schema 5); drop the old lab toggle so no code path can revive it.
+            if (PlayerPrefs.HasKey(RetiredMirrorInsetsKey)) PlayerPrefs.DeleteKey(RetiredMirrorInsetsKey);
             if (PlayerPrefs.HasKey(key)) return FromJson(PlayerPrefs.GetString(key, ""));
             if (legacyKey != null && PlayerPrefs.HasKey(legacyKey)) return FromLegacySteerMode(PlayerPrefs.GetInt(legacyKey, 0));
             return Defaults();
