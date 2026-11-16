@@ -70,6 +70,9 @@ namespace Game.Rendering
         public float treeCardLodScale;
         public float treeThinStartM;
         public float treeCullM;
+        /// <summary>Tree LODs that cast (bit 0 LOD0, bit 1 LOD1 cards; impostors never). PC: 3 on every tier - with
+        /// treeCardLodScale 0.5 and the tree LOD ends 20/60 m, LOD0 alone reaches only 10 m from the camera, i.e. no tree
+        /// shadow on the road from the cab (pc-shadows-s23). The mobile value 1 (A16 shadow-pass cost) is not inherited.</summary>
         public int treeShadowLodMask;
         public float forestHlodM;
         [UnityEngine.Tooltip("0 = no limit")] public float forestHlodCullM;
@@ -189,7 +192,7 @@ namespace Game.Rendering
                 softShadows = false, softShadowQuality = 1, shadowDepthBias = 0.4f, shadowNormalBias = 0.3f,
                 lodBias = 1.0f, maximumLodLevel = 0, textureMipmapLimit = 1, anisotropicFiltering = 1, worldTextureAniso = 4,
                 cameraFarClip = 1500f, additionalLightsPerObject = 4, ssao = false,
-                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, forestHlodM = 70f, forestHlodCullM = 1500f,
+                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, forestHlodM = 70f, forestHlodCullM = 1500f,
                 vehicleCullM = 200f, simpleFoliage = true, forestFast = true, glassFast = true,
                 envCaptureSize = 64, envCaptureInterval = 6, streetLights = 0, lampPools = 6, cloudQuality = 1, mirrorResolutionScale = 1f,
                 targetFps = 30, status = "WORKING_VALUE (D74 minimum: GTX 660 2 GB / i5-6400 / 8 GB, 1080p 30 fps) - UNMEASURED",
@@ -203,7 +206,7 @@ namespace Game.Rendering
                 softShadows = true, softShadowQuality = 1, shadowDepthBias = 0.4f, shadowNormalBias = 0.3f,
                 lodBias = 1.25f, maximumLodLevel = 0, textureMipmapLimit = 0, anisotropicFiltering = 1, worldTextureAniso = 8,
                 cameraFarClip = 2000f, additionalLightsPerObject = 4, ssao = false,
-                treeCardLodScale = 0.5f, treeThinStartM = 120f, treeCullM = 800f, treeShadowLodMask = 1, forestHlodM = 90f, forestHlodCullM = 0f,
+                treeCardLodScale = 0.5f, treeThinStartM = 120f, treeCullM = 800f, treeShadowLodMask = 3, forestHlodM = 90f, forestHlodCullM = 0f,
                 vehicleCullM = 300f, simpleFoliage = true, forestFast = false, glassFast = false,
                 envCaptureSize = 128, envCaptureInterval = 4, streetLights = 2, lampPools = 8, cloudQuality = 1, mirrorResolutionScale = 1f,
                 targetFps = 60, status = "WORKING_VALUE (between D74 classes, 4 GB VRAM) - UNMEASURED",

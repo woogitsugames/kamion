@@ -62,7 +62,7 @@ Pomiar dev (RTX 5070, ADR 0261: High mobilny ~425 fps na postoju) nie jest refer
 | SSAO | off | off | tak | tak | renderer z ADR 0080 (po opaque, połowa rozdz., słabe 1,0 / 0,6 m) |
 | Drzewa: start przerzedzania / cull | 90 / 600 m | 120 / 800 m | 150 / 1 000 m | 200 / 1 500 m | mobilne 90/600 m wszędzie; `WorldInstances` (× LOD bias) |
 | Karty liści (treeCardLodScale) | 0,5 | 0,5 | 0,75 | 1,0 | mobilne 0,5 |
-| Cienie drzew (LOD mask) | LOD0 | LOD0 | LOD0+1 | LOD0+1 | jak mobilny Ultra |
+| Cienie drzew (LOD mask) | LOD0+1 | LOD0+1 | LOD0+1 | LOD0+1 | pc-shadows-s23 (2026-11-16): sam LOD0 przy karcie 0,5 i końcach LOD drzew 20/60 m = cień tylko do 10 m od kamery → brak cieni drzew na jezdni z kabiny (player knyszyn-s). LOD0+1 = zasięg 30 m (Low/Medium), 45 m (High), 60 m (Ultra). Mobilne Low/Medium zostają przy LOD0 (koszt A16). Koszt na GTX 660-klasie ESTIMATED |
 | Las HLOD przełącz. / cull | 70 / 1 500 m | 90 / ∞ | 150 / ∞ | 200 / ∞ | ADR 0015; mobilne 70–120 m |
 | Pojazdy parkujące cull | 200 m | 300 m | 400 m | 600 m | ADR 0136 r2 (mobilny Low 150 m, reszta 300 m) |
 | Szybkie ścieżki (foliage / forest / glass) | tak/tak/tak | tak/nie/nie | tak/nie/nie | tak/nie/nie | `simpleFoliage` wszędzie (wygląd zatwierdzony ADR 0013; Lit liście = zmiana wyglądu bez visual QA); forest/glass fast tylko Low |
@@ -134,3 +134,4 @@ Budżety mobilne (PERFORMANCE_BUDGETS: High < 1,5–2 M tris) — bez zmian; tre
 - Visual QA tierów PC (patch pkt 2) + krytyk wizualny: MSAA 8×, cienie 250 m, SSAO na High.
 - Trawa: brak systemu — osobne zadanie świata, wtedy dodać pola gęstości/dystansu do `PcTierSettings`.
 - Lusterka przez renderer SSAO na High/Ultra (koszt).
+- Cienie drzew za zasięgiem kart LOD1 (Low/Medium 30–60/100 m, High 45–150 m): impostory i HLOD lasu nie rzucają cienia. Opcje (wymagają pomiaru): wyższy `treeCardLodScale` na PC albo osobny caster LOD1 dla passu cieni (pc-shadows-s23).
