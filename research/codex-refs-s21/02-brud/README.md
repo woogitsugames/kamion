@@ -212,3 +212,8 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Pozostałe stareID — runda28
 
 [baseline-remaining-round28](baseline-remaining-round28/README.md):6nowychID101/102/103/106/113/117 indywidualnie obejrzanych, root osobno2/6.6fotografii,0nowychA/B; pokrycie65/88rekordów,23NOT_REVIEWED.113odbicie drogi/złotych wzgórz na polerowanej dennicy, nie potwierdzony brązowyosad;117samciągnik bez naczepy i bez widocznego śniegu;103/106przednio-boczne widoki, nie tyły. Metadane1132019vs kategoriaAugust2013 pozostawione konfliktem, nie arbitralną datą.0nowychminiaturGit, rawpozaGit.
+
+
+## FirmowePDF — runda29
+
+[winter-company-pdf-round29](winter-company-pdf-round29/README.md):natywnyChrome, bez żadnych kopii/screenshotów/ekstrakcji. BroszuraKässbohrer czystytył wśnieżnej scenerii, technikaUNVERIFIED;0A. KnapenK100DEKRA07.02.2024 Fot4/s6 iFot5/s7:2kadry1pojazdu, ślady w dolnychpolach i przyśrodku mogą być zarysowaniami/powłoką (tekstekspertyzy), AUX/PENDING_SURFACE, nie potwierdzonyfilm.0śniegu/0dowodupo trasie/0potwierdzonychA/B/zimy/Europy. Natywnepiksele drzwiUNVERIFIED, PDF150%niepomiarźródła. Główny23bez zmian; własneopisy+link-onlyARRwchildmanifest.
