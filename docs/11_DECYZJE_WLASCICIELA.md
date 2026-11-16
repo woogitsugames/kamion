@@ -154,3 +154,5 @@ Właściciel: po kaflach Białegostoku z ADR 0278 pierwszym kierunkiem Podlasia 
 ## D83 — Budżety kafli dla PC: pomiar per tier zamiast limitu z telefonu (2026-11-16, s23)
 Właściciel: limit 2 mln trójkątów na kamerę High pochodzi z telefonu (A16) i nie jest automatycznie limitem PC. Budżety trójkątów i draw calls ustalamy **pomiarem per tier** (emulacja klas D74 na RTX 5070 wg D76; skalowanie na inne karty tylko z cytowanych porównań, ESTIMATED): Low (GTX 660 / HD 630) ostrożnie, High/Ultra wyżej. Do czasu pomiaru gęste kafle Białegostoku (2,6–3,75 mln) i kafel Grajewa czekają; budżety mobilne zostają jako zabezpieczenie. ADR 0266, 0269, 0278, 0282.
 
+**D79 — korekta (2026-11-16, s23, po raporcie sesji P r5):** brak karty producenta z 7,60 m; najbliższa realna wartość **7,63 m** (7 kart, rozstaw osi 1,31 m) przechodzi pierścień skrętu (zapas ~2,9 cm). Przy 7,60 m wychodziło pełzanie pustej naczepy na 12 % 5,04 mm (> 5 mm), które przechodzi dopiero od ~7,69 m. Właściciel: **7,63 m + uczciwa poprawka modelu hamulca postojowego/tarcia statycznego naczepy** (bez osłabiania testu). Zastępuje 7,60 m.
+
