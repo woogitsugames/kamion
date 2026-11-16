@@ -1,0 +1,81 @@
+{
+  "date": "2026-11-16",
+  "source": "https://shop.ferikas.lt/products/rear-tail-light-a0035446803-mercedes-benz-trucks-actros-mp4-mp5-2018-left",
+  "source_read": "Pełny tekst i publiczna galeria; jawny Mercedes-Benz Trucks ACTROS MP4/MP5, Left, A0035446803. Stan used konkretnej części nie jest osobnym jednoznacznym polem strony, zużycie wynika z oglądu.",
+  "dedup": "rg A0035446803 / 0035446803 / ferikas po całym 01 nie wykazał źródła. Iveco 17187061721 odrzucono tekstowo jako istniejący UP3-01/02, bez ponownych oględzin.",
+  "method": "Wybrane dwa dokładne URL odczytano z DOM galerii. Każdy obejrzano indywidualnie i otwarto ponownie; bez pobrań ARR, screenshotów na dysk, cropów, obrotów i wyostrzania.",
+  "selected": [
+    {
+      "id": "01-RS42-01",
+      "url": "https://shop.ferikas.lt/cdn/shop/files/IMG_5700-Photoroom_4bb89fed-0f85-47ae-8f97-5ae21b4460cd.jpg?v=1791976207&width=1946",
+      "gallery": "3/7",
+      "natural_px": [
+        960,
+        720
+      ],
+      "observation": "Zużyty ciemny tył podłużnej lampy z cienkim czerwonym brzegiem klosza, jasnymi nieregularnymi zabrudzeniami i dwiema wystającymi gwintowanymi szpilkami z nakrętkami. Duże prostokątne bezbarwne prążkowane okno w bocznej ściance; widać srebrzyste wnętrze. Biała etykieta pod kątem po lewej. Prostokątne i okrągłe otwory w spodzie. Nie odczytano E/L. Sama geometria okna nie dowodzi funkcji ani zasilania."
+    },
+    {
+      "id": "01-RS42-02",
+      "url": "https://shop.ferikas.lt/cdn/shop/files/IMG_5704-Photoroom_473789cc-f111-4445-a59b-e38783724307.jpg?v=1791976207&width=1946",
+      "gallery": "6/7",
+      "natural_px": [
+        960,
+        720
+      ],
+      "observation": "Makro jasnej etykiety na porysowanej i zabrudzonej czarnej obudowie. Czytelne logo i MERCEDES-BENZ, A 003 544 6803, ZGS 001, DATE: 15/11/21, TIME: DAYS oraz 464/38/09. Dolny wiersz częściowo zabrudzony: LEFT HAND LAMP …NCE PLATE 60S; nie odtworzono brakujących liter. Widoczne okrągłe przetłoczenia i prostokątny otwór. Brak pewnego znaku E/L. Data etykiety nie jest datą ekspozycji."
+    }
+  ],
+  "screening_actual_views": [
+    {
+      "url": "https://shop.ferikas.lt/cdn/shop/files/IMG_5698-Photoroom_a2afaa23-4a04-45e9-8824-2f16b7070773.jpg?v=1791976207",
+      "natural_px": [
+        960,
+        720
+      ],
+      "observation": "Cały czerwony prostokątny klosz, po lewej szerokie czerwone pole, bliżej środka bezbarwny pionowy pas, dalej czerwone i bursztynowe pole, cztery widoczne wkręty. Duże białe odbicie biegnie poziomo przez optykę. Nie odczytano E ani dowodu ON.",
+      "status": "SCREENING_ONLY_NOT_NEW_COLLECTION_FRAME"
+    },
+    {
+      "url": "https://shop.ferikas.lt/cdn/shop/files/IMG_5703-Photoroom_890f81f3-8a0b-4331-b5f8-77b4052a7236.jpg?v=1791976207&width=1946",
+      "natural_px": [
+        960,
+        720
+      ],
+      "observation": "Makro zaokrąglonego prostokątnego gniazda w zabrudzonej obudowie, widoczne metalowe styki i zielony ręczny ślad obok. Brak pewnego E.",
+      "status": "SCREENING_ONLY_NO_EXTRA_CONNECTOR_REFERENCE"
+    }
+  ],
+  "resolution_limit": "DOM galerii dla modalnych obrazów zwracał także 2198×1648, lecz bezpośrednie dokładne publiczne URL faktycznie obejrzane zwracają naturalnie 960×720. Raport używa wyłącznie 960×720, nie obiecuje makra 2198px. Nie konstruowano większego rozmiaru URL.",
+  "geometry": {
+    "status": "ESTIMATED",
+    "rear_housing_width_percent": [
+      90,
+      100
+    ],
+    "limits": "Zdjęcie 3/7 przedstawia dużą część obudowy, ale brak E pozostaje niezależnym niespełnionym warunkiem. Nie przeliczano proporcji na metry."
+  },
+  "function_chain": {
+    "status": "CONDITIONAL_SUPPORT_NOT_PLATE_PASS",
+    "physical_text": "LEFT HAND LAMP …NCE PLATE 60S — część wiersza zabrudzona, bez rekonstrukcji brakujących znaków.",
+    "comparison_source": "https://www.ebay.co.uk/itm/185809140710",
+    "comparison_read": "Pełny tekst odczytany przez web. Tytuł Rear Lamp With Number Plate Light, lista MPN obejmuje A0035446803, AdditionalInfo Complete with Number Plate Light.",
+    "limits": "To aftermarket MVS o zbiorczej liście OE i niespójności Left w tytule/Right w polu. Nie utożsamiono produktu ani znaków z FERIKAS i nie przeniesiono homologacji. Sama zgodność numeru oraz częściowo czytelna etykieta to SUPPORT, nie bezwarunkowe ustalenie funkcji konkretnego okna."
+  },
+  "physical_approval": "UNVERIFIED: brak pewnego E/L, bez numeru i funkcji; etykietowy 464/38/09 to literalny ciąg, nie zidentyfikowany regulamin.",
+  "technique": "Fotograficzny wygląd rzeczywistej zużytej części; białe tło wycięte/opracowane, nazwy plików zawierają Photoroom. Metoda obróbki nieudokumentowana; nie generowano ani nie edytowano obrazu.",
+  "counts": {
+    "individually_viewed_unique_source_images": 4,
+    "selected_support_frames": 2,
+    "represented_part_designs": 1,
+    "new_ECE_PASS": 0,
+    "new_plate_PASS": 0,
+    "confirmed_ON": 0,
+    "night": 0,
+    "ARR_downloads": 0,
+    "saved_screenshots": 0,
+    "Commons_requests": 0,
+    "Flickr_downloads": 0,
+    "parent_edits": 0
+  }
+}
