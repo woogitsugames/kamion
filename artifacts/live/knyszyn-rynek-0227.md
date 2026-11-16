@@ -226,3 +226,7 @@
 - 2026-11-16 01:47 +01:00 — GIS R13: 1632 passed, 29 skipped, 3 xfailed, 4 failed; brak instancji Białystok C i stary cache GIS. Cache przebudowany lokalnie schema 12; trwa weryfikacja instancji i testów. R13 Low względem R11 maks. +14 tris, draws bez zmian; względem before budżet Low nadal OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/cache-c.done; git status -sb` 
 
+
+- 2026-11-16 01:54 +01:00 — Cztery testy GIS wcześniej błędne: 4 passed po lokalnej odbudowie cache oraz weryfikacji i kopii instancji. Sylwetka króla i ptaka oraz maszt Low zmienione, test park_props 9 passed; R14 build/import/visual QA uruchomione. Pełny GIS i EditMode finalnego stanu OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r14.log -Tail 10; Get-Content artifacts/knyszyn-rynek-0227/r14.done` 
+
