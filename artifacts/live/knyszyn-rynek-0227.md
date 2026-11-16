@@ -290,3 +290,7 @@
 - 2026-11-16 05:19 +01:00 — R20 cztery warianty OK; porównania 1–11 i orientacyjne 12–14 lokalnie, wiat brak. Scalono origin/main 1e06a9072 bez konfliktów; R21 build/import/render uruchomiony. Po merge wymagane ponownie GIS/EditMode i budżet; wcześniejsze wyniki nie są końcowe.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r21.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r21.done` 
 
+
+- 2026-11-16 06:07 +01:00 — Scalono nowe main 537fda427: rondo/szpalery oraz park zachowane; konflikt vegetation 29 testów kierunkowych passed, historyczny duplikat rynek_fountain usunięty, generated Knyszyn z main do przebudowy. R23 build/import/QA trwa; pełne testy i budżet po merge OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r23.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r23.done` 
+
