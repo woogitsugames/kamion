@@ -1,8 +1,14 @@
-# ADR 0280 — Pierścień skrętu 12,50/5,30 m (96/53/WE): metryka obwiedni w runnerze, rozstaw sworzeń–tridem 7,60 m (D79)
+# ADR 0280 — Pierścień skrętu 12,50/5,30 m (96/53/WE): metryka obwiedni w runnerze, rozstaw sworzeń–tridem 7,63 m (D79, korekta)
 
-Status: **Accepted (D79)** — właściciel przyjął wariant A (7,60 m, WORKING_VALUE), 2026-11-16. Wdrożenie (agent P13, gałąź
-`trailer-760-d79`, §7–§9): dane zmienione, **scalenie wstrzymane** — `park_12pct_up_comb@empty` przekracza limit pełzania
-naczepy (5,04 > 5 mm, §8.3). Historia: Proposed (agent P10, gałąź `turning-circle-s23`, 2026-11-16).
+Status: **Accepted (D79, korekta 7,63 m)** — 2026-11-16. Rozstaw sworzeń → środek tridemu **7,63 m** (wartość z 7 kart
+producentów, §7; rozstaw osi 1,31 m), dane gry zmienione, wszystkie kontrole zielone (agent P16, gałąź `trailer-763-d79`, §10).
+Historia decyzji:
+1. Proposed (agent P10, gałąź `turning-circle-s23`): 7,70 m w danych gry **nie mieści się** w pierścieniu (wewn. 5,228 m, FAIL);
+   propozycja 7,60 m przez `overrides`.
+2. **D79** (właściciel): wariant A 7,60 m, WORKING_VALUE. Wdrożenie P13 (gałąź `trailer-760-d79`, §7–§9): pierścień PASS,
+   ale `park_12pct_up_comb@empty` pełzanie naczepy 5,04 > 5 mm (§8.3) → scalenie wstrzymane.
+3. **D79 korekta** (właściciel): 7,63 m = wartość z kart (§7), status SOURCED. Pełzanie miało przyczynę w modelu postoju, nie
+   w geometrii; poprawione w fizyce (§10.3). Kontrola zapasu szerokości pierścienia 7,15 → 7,18 m (WORKING, §10.2).
 Dotyczy: ADR 0004 (rdzeń fizyki kompilowany z `game/` przez `tools/physics-runner/Sim`), 0019 (siodło 0,68 m, długość 16,47 m),
 0158/0165 (kontakt nadwozia), 0201/0201b (naciski osi), raport `docs/reports/PHYSICS-VALIDATION-2026-11-16.md` §3 i §6 pkt 5,
 `docs/04` §6.5/§6.7, `docs/VEHICLE_REFERENCE_DATA.md` (VRD), R3-004 (`research/cloud2/truck-parameters/manifest.csv`).
@@ -253,7 +259,7 @@ tests/physics/scenarios_expected_fail --only ring_96_53_comb`). PO = gałąź `t
 | `pytest tests/physics` | — | 18 passed, 14 skipped (bramka 3: świat niezbudowany) | ✅ |
 | `pytest tests/gis/test_swept_path_0218.py` | 6 / 6 | **5 / 6** (`test_combination_matches_dims_json`, §9.3) | czeka na zmianę lidera |
 
-### 8.3 Co pada i dlaczego (stop — limity nie były ruszane)
+### 8.3 Co pada i dlaczego (stop — limity nie były ruszane; rozwiązane w §10)
 
 1. **`park_12pct_up_comb@empty`, `trailer_creep_m` = 5,043 mm > 5 mm** (WORKING „bez pełzania”, 12 % z R13 zał. 4 pkt 2.3.2).
    Przed zmianą 4,972 mm (zapas 0,6 %, opisany w ADR 0201b jako cienki). To osiadanie w pierwszych ~60 s (podatność zawieszenia
@@ -283,25 +289,29 @@ positions”, „Empty CoG / static kingpin load” → z −5,907 m / 1559 kg, 
 5,45 t, sworzeń 1,56 t; 40 t 7,17 / 10,01 / 22,84 t, sworzeń 9,67 t) **nie zostały odświeżone** na tej gałęzi, bo wynik nie
 jest zielony. Liczby do wpisania są w §8.2 i w `artifacts/t760/run/summary.md`.
 
-## 9. Kroki dla agenta lokalnego (Windows, Blender + Unity; po rozwiązaniu §8.3)
+## 9. Kroki dla agenta lokalnego (Windows, Blender + Unity) — pod 7,63 m
 
-### 9.1 Blender (model naczepy) — nie ruszane przez P13
+Stan po §10: dane fizyki, `dims.json`, `TrailerAssetBuilder` i testy mają osie **−6.32 / −7.63 / −8.94** (rozstaw 1,31 m).
+Model 3D, prefab i shader mają jeszcze −6.39 / −7.70 / −9.01. Przesunięcie względem modelu: **+0,07 m w stronę sworznia**
+(oś środkowa 7,70 → 7,63 m). Agent P16 nie uruchamiał Unity ani Blendera.
+
+### 9.1 Blender (model naczepy)
 
 Wszystko czyta osie z `art-source/truck/dims.json` → `trailer_axle_z_m` (`tools/blender/truck/trailer/trailer_build.py:37`
-`AXLES = D("trailer_axle_z_m")`; komentarz z dawnymi wartościami w tej linii do poprawienia). Od pozycji osi zależą (przesuną się
-o +0,10 m w stronę sworznia same, z kodu):
+`AXLES = D("trailer_axle_z_m")`; komentarz `# [-6.39, -7.70, -9.01]` w tej linii poprawić na `# [-6.32, -7.63, -8.94]`).
+Od pozycji osi zależą (przesuną się same, z kodu, o +0,07 m):
 - `axles_and_suspension()` (belki osi, wsporniki, wahacze, miechy), `wheels()` (`WHEEL_1x..3x`, piwoty kół);
-- `mudguards()` (błotniki `mudguard_*`, kołnierze, wsporniki) i chlapacze `MUDFLAP_L/R` (`AXLES[-1] − 0,66`, także w
+- `mudguards()` (błotniki `mudguard_*`, kołnierze, wsporniki) i chlapacze `MUDFLAP_L/R` (`AXLES[-1] − 0,66` = −9,60 m, także w
   `trailer_export.py:636` — pozycja piwotu chlapacza);
-- `side_guards()` (osłony boczne UN R73: koniec `AXLES[0] + TYRE_R + 0,22` — osłona wydłuży się o 0,10 m do tyłu,
+- `side_guards()` (osłony boczne UN R73: koniec `AXLES[0] + TYRE_R + 0,22` — osłona wydłuży się o 0,07 m do tyłu,
   przerwa do opony bez zmian 0,22 m ≤ 0,30 m);
 - wysięgniki ramy nad kołami (`over_wheels`, l. ~682), materiał zabrudzenia firanki (węzły `AXLES[0] + 0,9 … AXLES[-1] − 1,2`
   i pętla po `AXLES`, l. ~105 i ~352);
-- światła obrysowe boczne: lampa `side_marker_*_3` w `(AXLES[0] + AXLES[1]) / 2` przesunie się z −7,045 na −6,945 m;
-  odstępy do sąsiadów −4,05 / −9,58 m: 2,895 / 2,635 m (≤ 3 m, R48 6.18.4.3 — sprawdzi `regs_check.py`);
+- światła obrysowe boczne: lampa `side_marker_*_3` w `(AXLES[0] + AXLES[1]) / 2` przesunie się z −7,045 na −6,975 m;
+  odstępy do sąsiadów −4,05 / −9,58 m: 2,925 / 2,605 m (≤ 3 m, R48 6.18.4.3 — sprawdzi `regs_check.py`);
 - **bez zmian** (stałe z obrysem, nie z osi): zderzak / belka RUPD, tylne lampy i odboje (od `Y_REAR` = −12,00), podpory
   (`trailer_landing_gear_m` z −2,2), skrzynka paletowa (−3,98 … −5,50), koło zapasowe (−3,32), skrzynka narzędziowa,
-  kliny. Zwis za ostatnią osią rośnie 2,99 → 3,09 m (obrys niezmieniony).
+  kliny. Zwis za ostatnią osią rośnie 2,99 → 3,06 m (obrys niezmieniony).
 
 Komendy (wzorce z nagłówków skryptów, ADR 0175):
 ```
@@ -310,26 +320,161 @@ blender -b --factory-startup --python-exit-code 1 --python tools/blender/truck/t
 blender -b --factory-startup --python tools/blender/truck/regs_audit.py -- --out <ABS>/art-source/truck/regs/trailer.json --what trailer
 python tools/blender/truck/regs_check.py --tractor art-source/truck/regs/tractor.json --trailer art-source/truck/regs/trailer.json
 ```
-`trailer_export.py` sam porównuje osie modelu z fizyką (l. 861–863, tolerancja 1 mm) — po zmianie dims.json i trailer.json
-musi przejść. Regenerowane: `art-source/truck/trailer/export/trailer_manifest.json` (pola `axle`/`art`/`physics` z −6.39 /
-−7.7 / −9.01), `art-source/truck/regs/trailer.json` (`axles`, l. 2654–2656), rendery kontrolne (skill `blender-hero-asset`,
-`visual-qa`: koła w nadkolach, błotniki, osłony boczne).
+`trailer_export.py` sam porównuje osie modelu z fizyką (l. 861–863, tolerancja 1 mm) — po zmianie dims.json musi przejść.
+Regenerowane: `art-source/truck/trailer/export/trailer_manifest.json` (pola `axle`/`art`/`physics` z −6.39 / −7.7 / −9.01),
+`art-source/truck/regs/trailer.json` (`axles`, l. 2654–2656), rendery kontrolne (skill `blender-hero-asset`, `visual-qa`:
+koła w nadkolach, błotniki, osłony boczne).
 
 ### 9.2 Unity
 
 - `-executeMethod Game.Editor.Setup.TrailerAssetBuilder.BuildBatch` (przebudowa `Assets/_Generated/Trailer`, materiały z nowym
-  `_CurtainAxles`), potem `Game.World.Import.WorldTruckInstaller.InstallBatch` (WorldC).
+  `_CurtainAxles` = (−6.32, −7.63, −8.94)), potem `Game.World.Import.WorldTruckInstaller.InstallBatch` (WorldC).
 - Prefab `game/Assets/_Project/Vehicle/Runtime/Prefabs/Trailer_Curtainsider_Graybox.prefab` ma osie −6.39 / −7.7 / −9.01
-  (8 transformów przy osiach). Generuje go `GrayboxTrailerBuilder` z `TrailerDefinition` — przebudować w Unity (wspólny
-  prefab = lider), nie edytować ręcznie.
-- `game/Assets/_Project/Rendering/Shaders/TruckExterior.shader:63` — domyślna wartość `_CurtainAxles` (−6.39, −7.7, −9.01);
-  builder ją nadpisuje, ale dla spójności poprawić razem z modelem.
+  (8 transformów przy osiach, np. l. 241). Generuje go `GrayboxTrailerBuilder` z `TrailerDefinition` — przebudować w Unity
+  (wspólny prefab = lider), nie edytować ręcznie.
+- `game/Assets/_Project/Rendering/Shaders/TruckExterior.shader:63` — domyślna wartość `_CurtainAxles` (−6.39, −7.7, −9.01)
+  → (−6.32, −7.63, −8.94); builder ją nadpisuje, ale dla spójności poprawić razem z modelem.
+- Fizyka (§10.3) jest wspólna dla Unity i runnera (ADR 0004): `CombinationModel` przekazuje koła ciągnika naczepie sam, adapter
+  Unity nie wymaga zmian. Sprawdzić w Play Mode postój 12 % (pusty) — naczepa nie powinna osiadać po zatrzymaniu.
 - Visual QA naczepy (`pwsh scripts/visual-qa.ps1 …`) i build Windows (DoD).
 
-### 9.3 Lider: `tools/worldgen/roads/swept_path.py:43` (zakazane dla P13)
+### 9.3 Lider: `tools/worldgen/roads/swept_path.py:43` (zakazane dla P13/P16)
 
-`trailer_axles: tuple = (6.39, 7.70, 9.01)` → **`(6.29, 7.60, 8.91)`**. Bez tego pada
-`tests/gis/test_swept_path_0218.py::test_combination_matches_dims_json` (porównuje z dims.json). `L2` (domyślnie
-`trailer_axles[1]`) zmieni się na 7,60 → przeliczyć testy `tests/gis` obwiedni (ADR 0218) i analizę bramki 3
-(`uv run --project tools/worldgen python tests/physics/swept_path_gate3.py`, `docs/PHYSICS_VALIDATION.md` §9; P13 zmienił tylko
-stałą `KP_TRIDEM`). Scalić razem z danymi.
+`trailer_axles: tuple = (6.39, 7.70, 9.01)` → **`(6.32, 7.63, 8.94)`** — w tym samym commicie co ta gałąź albo zaraz po
+scaleniu. `tests/gis/test_swept_path_0218.py::test_combination_matches_dims_json` (l. 23) porównuje tę krotkę z
+`dims.json` `trailer_axle_z_m` (z odwróconym znakiem) **dokładnie**, więc oba pliki muszą się zmienić razem — inaczej test pada
+(na tej gałęzi pada, bo dims.json już ma 7,63). `L2` (domyślnie `trailer_axles[1]`) zmieni się na 7,63 → przeliczyć testy
+`tests/gis` obwiedni (ADR 0218) i analizę bramki 3 (`tests/physics/swept_path_gate3.py` ma już `KP_TRIDEM = 7.63`).
+`tests/gis/test_swept_path_0218.py::test_knyszyn_ring_sectors_clear_the_u_turn` pada też na `origin/main` (niezależnie od
+osi; nie badane).
+
+## 10. Korekta D79: 7,63 m i przyczyna pełzania (P16, gałąź `trailer-763-d79`, 2026-11-16)
+
+Gałąź z `origin/trailer-760-d79` @ `5fe05662c` + `git merge origin/main` (@ `8133dfd7f`). Runner: `dotnet run -c Release
+--project tools/physics-runner/Runner -- --out <dir>` (Linux, .NET SDK 8, dt 0,01 s, 4 podkroki). Bez Unity i Blendera.
+
+### 10.1 Dane (commit `feat(physics): trailer kingpin to tridem centre 7.63 m`)
+
+| Plik | Klucz | 7,60 (r5) → 7,63 |
+|---|---|---|
+| `curtainsider_tridem_13_6.trailer.json` | `axles[0..2].positionZ` | −6.29 / −7.6 / −8.91 → **−6.32 / −7.63 / −8.94** (7,63 ± 1,31) |
+| to samo | `massElements[tridem_axles_wheels_brakes].center.z` | −7.6 → **−7.63**; pusty CoG naczepy z = −5,917 m, nacisk statyczny sworznia (dźwignia na środek tridemu) 1 572 kg (7,70: −5,89 / 1 645 kg w VRD) |
+| `art-source/truck/dims.json` | `trailer_axle_z_m` | → [−6.32, −7.63, −8.94], **WORKING_VALUE → SOURCED**: 7 630 mm sworzeń → oś środkowa i 1 310/1 310 mm w 7 kartach (§7); nazwy producentów tylko tu, w ADR |
+| `TrailerAssetBuilder.cs:216` | `_CurtainAxles` | → (−6.32f, −7.63f, −8.94f) |
+| `tests/physics/swept_path_gate3.py:51` | `KP_TRIDEM` | 7.60 → 7.63 |
+| `generate_stage2_scenarios.py`, `circle_r50_10kmh_comb.json` | opis offtrackingu | „L = 7.63 m (D79) → 0.59 m” (wzór daje 0,586 m; limity 0,4–0,8 bez zmian) |
+| to samo, `ring_96_53_comb.json` | opis, kontrola zapasu szerokości | §10.2 |
+| `test_scenario_strictness.py` | `test_ring_limits_pinned` | szerokość przypięta ≤ 7,18 (było ≤ 7,15); 12,50 / 5,30 bez zmian |
+| `SweptPathTests.cs` | `GeometryOverrides_*`, `ShorterKingpinToTridem_*` | produkcyjna oś −7,63; masa tridemu −0,07 m względem 7,70; wrażliwość dzielona przez 0,07 m |
+
+### 10.2 Pierścień 96/53/WE przy 7,63 m
+
+Zmierzone (`ring_96_53_comb`, od t = 120 s): zewn. **12,486 / 12,482 m**, wewn. **5,309 / 5,312 m**, szerokość
+**7,177 / 7,170 m** (pusty / 40 t). Przepis (zał. I pkt 1.5, SOURCED): zewn. ≤ 12,50 ✅ (zapas 14 / 18 mm), wewn. ≥ 5,30 ✅
+(zapas 9 / 12 mm), szerokość ≤ 7,20 ✅ (warunek konieczny, DERIVED).
+
+Kontrola **zapasu** szerokości (WORKING_VALUE, nie przepis) była ≤ 7,15 m (5 cm) przy 7,60 m. 7,63 m daje 7,177 m, więc 7,15
+nie da się utrzymać bez łamania decyzji właściciela. Nowa wartość **≤ 7,18 m = 2 cm zapasu do 7,20 m** (zapas względem pomiaru
+3,2 mm przy pustym). Uzasadnienie: zapas ma łapać pogorszenie geometrii (opony, siodło, zawieszenie), a 2 cm to ~2 cm na
+promieniu wewnętrznym przy wrażliwości ~1,15 cm/cm rozstawu (§4). Historia w polu `source` scenariusza: „7.15 (5 cm) with the
+7.60 m axles (D79); 7.18 (2 cm) since the owner's D79 correction to the datasheet value 7.63 m”. Limity przepisu bez zmian.
+Ryzyko: każda zmiana, która zmniejszy promień wewnętrzny o > 9 mm, przewróci kontrolę przepisu (5,30) — to właściwość wybranej
+geometrii, nie testu.
+
+### 10.3 Pełzanie 12 %: przyczyna w modelu i poprawka (commit `fix(physics): trailer standstill relaxation …`)
+
+Pomiar przy 7,63 m przed poprawką: `park_12pct_up_comb@empty` `trailer_creep_m` (od 5 s) = **5,021 mm** > 5 mm. Rozkład
+(sonda na `ScenarioRunner.Setup` + pętla kroków, osie świata):
+- koła naczepy są zahamowane (hamulec roboczy przez zawór ręczny ciągnika w pozycji „park”, 1,92 bar po korekcji obciążenia,
+  3 370 N m ≫ potrzebne; ω = 0) — nie ślizgają się; oś 3 bez siłownika sprężynowego (`parkingBrakeTorque` 0, osie 1–2
+  12 000 N m) nie ma znaczenia, bo w zestawie sprzężonym siłowniki naczepy są zwolnione (przewód zasilający pod ciśnieniem);
+- po puszczeniu zestawu na 12 % siła spadku rozkłada się **sprężyście**: wszystkie zahamowane koła przesuwają się razem (sworzeń
+  sztywny), więc każde niesie k_x·u. Sześć sztywnych opon 385/65 pustej naczepy niesie po 1,6–1,9 kN (razem ~11 kN, więcej niż
+  8,2 kN spadku samej naczepy; sworzeń pcha ciągnik w górę +2,9 kN);
+- relaksacja postoju R6 (`TrailerModel.RelaxStickAtStandstill`, τ 2 s) ciągnęła każde zahamowane koło naczepy do „własnego
+  udziału” F_z·tanθ = 1,07 kN. Różnica (~3–5 kN) przechodziła przez ~60 s na sworzeń (kpFx +1,40 → −1,85 kN od 5 s);
+- ciągnik przyjmował ją podatnością: ugięcie opon napędu +1,9 mm (ux tylnych 4,3 → 6,2 mm) i osiadanie miecha tyłu 3,1 → 8,0 mm
+  wewnątrz strefy martwej zaworu poziomującego 8 mm (pochylenie 2,1 mrad → 2,4 mm na wysokości siodła); do tego pochylenie
+  naczepy 0,64 mrad × 1,15 m = 0,7 mm. Razem 1,9 + 2,4 + 0,7 ≈ 5,0 mm. Od 60 s stoi (`creep_m` od 60 s ≈ 0).
+- Kontrola: z wyłączoną relaksacją (τ = 0) naczepa po 5 s **nie rusza się wcale** (0,000 mm); zmiana strefy martwej 8 → 4 / 2 mm
+  zmniejsza tylko składową ciągnika (3,26 / 2,39 mm), przyczyny nie usuwa. Wstępne ustawienie ux kół naczepy na „własny udział”
+  przed pierwszym krokiem pogarsza (6,3 mm), bo puszczenie i tak rozkłada siłę sprężyście.
+
+Mechanizmy wykluczone: tarcie statyczne / poślizg (ω = 0, siła ≪ μF_z i ≪ momentu hamulca), sztywność wzdłużna opony
+(nie zmieniana; daje tylko rozkład sprężysty, który bez relaksacji stoi), rozkład nacisków pustej naczepy przy krótszym
+rozstawie (sworzeń −0,3 kN; wpływ 5,04 vs 4,97 mm to skutek, nie przyczyna), podatność siodła (błąd sworznia ≤ 0,0003 mm).
+
+**Co jest niefizyczne:** relaksacja R6 ma zdejmować **wewnętrzne napięcie między bryłami** (niedopasowanie geometrii przy
+zmianie pochylenia: nacisk przechodzi z podpór na siodło, poziomowanie miechów; ADR 0009 R6, `PHYSICS_VALIDATION.md` §2a),
+nie obciążenie od spadku. Cel „własny udział” zdejmował też sprężysty udział naczepy w sile spadku i przenosił go na ciągnik
+— zestaw osiadał po zatrzymaniu, choć w realnym zestawie guma wszystkich opon relaksuje tak samo, więc podział sprężysty
+zostaje. Zestaw bez napięcia wewnętrznego ma na każdym zahamowanym kole to samo ugięcie u.
+
+**Poprawka** (`game/Assets/_Project/Vehicle/Physics/TrailerModel.cs:218–272`, `CombinationModel.cs:59, 109`):
+- zahamowane koła naczepy relaksują do **ugięcia wspólnego zahamowanych kół ciągnika** u_ref = Σk_i·u_i / Σk_i (siła netto
+  zahamowanych kół ciągnika / ich sztywność), z ograniczeniem do momentu hamulca; niezahamowane do 0 (bez zmian);
+- średnia ważona sztywnością: napięcie między osiami samego ciągnika (przód pcha, tył ciągnie po cofaniu i hamowaniu,
+  `couple_standstill_locked`: ux przodu +7,0 mm, tyłu −17,4 mm) znosi się w niej — zwykła średnia dawała tam
+  `kingpin_load_vs_static` 1,03–1,04 (FAIL);
+- „własny udział” F_z·tanθ zostaje jako wyjście awaryjne, gdy ciągnik nie ma zahamowanego koła w kontakcie;
+- `CombinationModel` ustawia `TrailerModel.TowingWheels = Tractor.Wheels` przy sprzęgnięciu (null po rozprzęgnięciu / zmianie
+  naczepy). Bez alokacji w pętli, C# 9.
+- Status: **WORKING_VALUE (wybór modelu z uzasadnieniem fizycznym)**, τ = 2 s bez zmian. Brak źródła liczbowego — to definicja,
+  co relaksuje, nie nowy parametr. Limit 5 mm i test bez zmian.
+
+Wynik: `park_12pct_up_comb` naczepa **0,69 / 0,29 mm** (pusty / 40 t; zapas 86 % / 94 % do 5 mm), w dół 0,69 / 0,65 mm.
+
+### 10.4 Golden telemetry (commit `test(physics): regenerate golden …`)
+
+Przegenerowany **tylko** `tests/golden/brake_80_0_wet_noabs_comb_empty.csv` (`--update-golden --only brake_80_0_wet_noabs_comb`).
+Pada już przy samych danych 7,63 (bez poprawki fizyki): `rear_L_fz` 4,0 % odchyleń > 3 %. Przyczyna: golden sprzed ADR 0201b
+(przy t = 0,1 s `front_L_fz` 25,10 → 27,70 kN, `rear_L_fz` 19,59 → 16,83 kN, `rear_L_p_bar` na końcu 2,72 → 2,31 bar — te same
+wartości co `origin/main`), więc main był blisko progu; 7,63 m dokłada `rear_L_fz` −0,12 kN i sworzeń −0,29 kN (15,74 → 15,45 kN
+przy 0,1 s) i przekracza 3 %. Poprawka §10.3 zmienia tylko ogon po zatrzymaniu (t ≳ 14 s): przy 20 s `rear_L_fz` 15,92 →
+16,49 kN, `kingpin_fz` 14,74 → 15,10 kN (sworzeń nie przejmuje już udziału naczepy). Maks. |różnica| nowy − stary golden:
+prędkość 0,42 km/h, `kingpin_fz` 1,97 kN, `front_L_fz` 3,86 kN, `rear_L_fz` 3,21 kN. `launch_6pct_uphill_comb@laden40`, który
+padał przy 7,60, przy 7,63 przechodzi bez regeneracji; pozostałe 7 goldenów bez zmian.
+
+### 10.5 PRZED (main, 7,70) / r5 (7,60) / PO (7,63 + poprawka)
+
+Pary: pusty / 40 t. Naciski: średnia z `park_flat_5min_comb` dla t ≥ 60 s. Pełzanie: `trailer_creep_m` od 5 s (300 s).
+Kolumna „7,63 bez poprawki” = commit danych (`bec798465`).
+
+| Pozycja | PRZED 7,70 (main) | r5 7,60 | 7,63 bez poprawki | **PO 7,63 + poprawka** | Limit / status |
+|---|---|---|---|---|---|
+| Pierścień zewn. [m] | 12,486 / 12,483 | 12,486 / 12,482 | 12,486 / 12,482 | **12,486 / 12,482** | ≤ 12,50 (S) ✅ |
+| Pierścień wewn. [m] | 5,228 / 5,230 FAIL | 5,343 / 5,347 | 5,309 / 5,312 | **5,309 / 5,312** | ≥ 5,30 (S) ✅ |
+| Pierścień szerokość [m] | 7,258 / 7,253 | 7,143 / 7,135 | 7,177 / 7,170 | **7,177 / 7,170** | ≤ 7,20 (D) ✅; zapas ≤ 7,18 (W, było 7,15) ✅ |
+| Naciski pusty: przód / napęd / tridem [t], sworzeń [kN] | 5,646 / 3,452 / 5,402; 15,68 | 5,639 / 3,418 / 5,443; 15,27 | 5,641 / 3,428 / 5,431; 15,40 | **5,642 / 3,427 / 5,431; 15,39** | — |
+| Naciski 40 t: przód / napęd / tridem [t] (osie 1/2/3), sworzeń [kN] | 7,214 / 10,221 / 22,565 (7,51/7,52/7,53); 97,46 | 7,165 / 10,005 / 22,831 (7,59/7,61/7,63); 94,86 | 7,179 / 10,071 / 22,750; 95,64 | **7,178 / 10,073 / 22,749 (7,56/7,58/7,60); 95,65** | 7,5 t (S9); 11,5 t; 24 t (zał. I 3.4.1, 3.3.2) ✅ |
+| Pełzanie naczepy 12 % w górę [mm] | 4,97 / 3,26 | 5,04 FAIL / 3,13 | 5,02 FAIL / 3,17 | **0,69 / 0,29** | ≤ 5 (W) ✅ |
+| Pełzanie naczepy 12 % w dół [mm] | 4,69 / 4,55 | 4,76 / 4,47 | 4,74 / 4,50 | **0,69 / 0,65** | ≤ 5 (W) ✅ |
+| Pełzanie ciągnika 12 % w górę / w dół [mm] | 1,90 / 0,97; 2,71 / 1,48 | — | 1,91 / –; – | **0,21 / 0,06; 0,26 / 0,20** | ≤ 5 (S 12 % + W) ✅ |
+| Postój płasko 5 min: dryf [mm] | 0,06 / 0,34 | 0,06 / 0,35 | — | **0,06 / 0,20** | ≤ 5 (W) ✅ |
+| Jackknife bez ABS / z retarderem (pusty) [°] | 87,45 / 92,63 | 87,44 / 92,66 | 87,44 / 92,65 | **87,44 / 92,65** | ≥ 30 ✅ |
+| Jackknife ABS 50 / 100 [°] | 7,77 / 4,59 (pusty), 5,14 / 5,14 (40 t) | 7,64 / 4,54; 5,17 / 5,17 | 7,67 / 4,55; 5,16 / 5,16 | **7,67 / 4,55; 5,16 / 5,16** | ≤ 10 ✅ |
+| 0–80 km/h solo / pusty / 40 t [s] | 14,06 / 21,14 / 47,58 | 14,06 / 21,19 / 47,59 | 14,06 / 21,19 / 47,59 | **14,06 / 21,19 / 47,59** | pusty ≥ 20; 40 t 40–95 ✅ |
+| Hamowanie 60–0 ABS [m] | 23,19 / 24,10 | 23,16 / 24,14 | 23,13 / 24,08 | **23,13 / 24,08** | ≤ 36,7 (S, R13) ✅ |
+| Hamowanie 80–0 ABS sucho / mokro [m] | 39,19 / 41,31; 55,20 / 56,84 | 39,16 / 41,29; 55,18 / 56,84 | 39,03 / 41,31; 55,18 / 56,90 | **39,03 / 41,31; 55,18 / 56,90** | ≤ 61,2 (D); 45–95 (W) ✅ |
+| Offtracking R 50 m, 10 km/h [m] | 0,609 / 0,603 | 0,593 / 0,588 | 0,598 / 0,593 | **0,598 / 0,593** | 0,4–0,8 (D 0,59) ✅ |
+| Sworzeń / statyczny po sprzęgnięciu na zablokowanych hamulcach | 1,006 / 1,013 | 1,006 / 1,014 | 1,006 / 1,014 | **1,010 / 1,000** | 0,97–1,03 ✅ |
+| Sprzęganie z przesunięciem L18 / P15: sworzeń / statyczny | 1,019 / 1,023; 1,020 / 1,023 | — | 1,020 / 1,024; 1,021 / 1,023 | **1,024 / 1,010; 1,023 / 1,011** | 0,97–1,03 ✅ |
+| Runner | 141 / 833 PASS (pierścień w `expected_fail`: FAIL) | 140 / 141, 832 / 833 | 140 / 141, 832 / 833 | **141 / 141, 833 / 833 PASS** | — |
+| `dotnet test tools/physics-runner -c Release` | 287 / 287 | 284 / 287 | golden 8 / 9 (tylko filtr `GoldenTelemetry`) | **287 / 287** | — |
+| `pytest tests/physics` | — | 18 passed, 14 skipped | — | **18 passed, 14 skipped** (bramka 3: świat niezbudowany) | — |
+
+Skutki uboczne poprawki (wszystkie w limitach; pełna lista różnic main → PO w `artifacts`, niecommitowane):
+`park_brake_hold_no_interlock_comb@laden40` (pełny gaz 10 s przeciw hamulcom, bez blokady) `creep_m` 26,8 → **55,2 mm**
+(limit 150 mm, „tylko naprężenie opon / układu napędowego”): naczepa przejmuje teraz swój sprężysty udział także w tej walce
+(relaksuje do ugięcia kół ciągnika, które ciągnie silnik) — fizycznie spójne z §10.3, ale zapas spadł z 82 % do 63 %.
+`soak_30min_cycle` dryf energii −2,84 → +0,32 J (≤ 5 J), sprzęganie z przesunięciem 40 t maks. siła wzdłużna sworznia
+100 → 77 kN (≤ 150 kN).
+
+### 10.6 Ryzyka
+
+- Poprawka sprawdzona tylko w solverze .NET (ADR 0004: ten sam kod w Unity, ale bez PhysX i bez Windows playera).
+- Odniesienie u_ref zakłada małą artykulację (ux kół ciągnika i naczepy w ich własnych osiach); przy dużym kącie postoju
+  przegubu kierunki się różnią — nieprzetestowane poza scenariuszami z repo (jackknife kończy się w ruchu, cofanie z
+  artykulacją `reverse_*` przechodzi).
+- Kontrola pierścienia wewn. ≥ 5,30 ma 9 mm zapasu przy pustym (§10.2); zapas szerokości 3,2 mm do 7,18.
+- `tests/gis/test_swept_path_0218.py` czeka na zmianę lidera (§9.3).
