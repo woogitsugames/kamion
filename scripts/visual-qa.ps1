@@ -45,7 +45,10 @@ param(
     # Measurement mask: '<renderer>[:<slot>][;...]' also writes <id>_mask.png with those slots flat magenta.
     [string]$Mask = '',
     # ADR 0056: also write <id>_envcube.png (the vehicle reflection cube of that frame, 6 faces).
-    [switch]$EnvDump
+    [switch]$EnvDump,
+    # Unity -buildTarget of the batch run (Windows primary, ADR 0261): Win64 avoids a platform switch after
+    # import-region.ps1 -BuildTarget Win64 in the same checkout.
+    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android'
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -74,7 +77,7 @@ if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
 $runStart = Get-Date
-$code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
+$code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs -BuildTarget $BuildTarget
 
 $result = Select-String -Path $log -Pattern 'VISUALQA_RESULT:.*' | Select-Object -Last 1
 
