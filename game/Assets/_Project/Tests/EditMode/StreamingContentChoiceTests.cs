@@ -122,5 +122,51 @@ namespace Game.Tests
             Assert.IsFalse(StreamingContentChoice.AnyNeighbourAvailable(g, "zz", src, High), "not in the graph");
             Assert.IsFalse(StreamingContentChoice.AnyNeighbourAvailable(null, "a", src, High));
         }
+
+        static void Both(Source s, params string[] ids)
+        {
+            foreach (var id in ids) { s.Scenes.Add(RegionScenes.TileSceneNameFor(id, Low)); s.Scenes.Add(RegionScenes.TileSceneNameFor(id, High)); }
+        }
+
+        /// <summary>Review #168 P1-1: the start region without a _High_Tile blocks High (it could not be loaded back after unpinning).</summary>
+        [Test]
+        public void HighCoversLow_StartRegionWithoutHighTile_FallsBackLow()
+        {
+            var g = Line();
+            var src = new Source();
+            Both(src, "b", "c");
+            src.Scenes.Add(RegionScenes.TileSceneNameFor("a", Low));
+            Assert.IsFalse(StreamingContentChoice.HighCoversLow(g, "a", src, out string missing));
+            Assert.AreEqual("a", missing);
+            var c = StreamingContentChoice.Choose(true, "High", false, false, missing);
+            Assert.AreEqual(Low, c.contentTier);
+            Assert.IsTrue(c.highFallback);
+            StringAssert.Contains("tile a", c.reason);
+        }
+
+        /// <summary>Review #168 P1-2: a tile further along with only a Low tile scene blocks High (its seam would close).</summary>
+        [Test]
+        public void HighCoversLow_LowOnlyTileFurtherAlong_FallsBackLow()
+        {
+            var g = Line();
+            var src = new Source();
+            Both(src, "a", "b");
+            src.Scenes.Add(RegionScenes.TileSceneNameFor("c", Low));
+            Assert.IsFalse(StreamingContentChoice.HighCoversLow(g, "a", src, out string missing));
+            Assert.AreEqual("c", missing);
+        }
+
+        [Test]
+        public void HighCoversLow_EveryLowTileHasHigh_ChoosesHigh()
+        {
+            var g = Line();
+            var src = new Source();
+            Both(src, "a", "b", "c");
+            Assert.IsTrue(StreamingContentChoice.HighCoversLow(g, "a", src, out string missing));
+            Assert.IsNull(missing);
+            Assert.AreEqual(High, StreamingContentChoice.Choose(true, "High", false, true, missing).contentTier);
+            Assert.IsFalse(StreamingContentChoice.HighCoversLow(g, "d", src, out _), "no neighbour with High");
+            Assert.IsFalse(StreamingContentChoice.HighCoversLow(g, "zz", src, out _), "not in the graph");
+        }
     }
 }

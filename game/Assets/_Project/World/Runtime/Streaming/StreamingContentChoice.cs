@@ -41,7 +41,9 @@ namespace Game.World.Streaming
     /// </summary>
     public static class StreamingContentChoice
     {
-        public static StreamingContent Choose(bool desktop, string qualityTier, bool startSceneHigh, bool highTilesAvailable)
+        /// <param name="highTilesAvailable">High content is usable for the whole graph (<see cref="HighCoversLow"/>).</param>
+        /// <param name="highMissing">For the log: the first tile that has a Low tile scene but no High one (null = none / unknown).</param>
+        public static StreamingContent Choose(bool desktop, string qualityTier, bool startSceneHigh, bool highTilesAvailable, string highMissing = null)
         {
             float budget = StreamingSettings.BudgetForTier(qualityTier, desktop);
             string q = string.IsNullOrEmpty(qualityTier) ? "?" : qualityTier;
@@ -55,7 +57,31 @@ namespace Game.World.Streaming
                 return new StreamingContent(RegionScenes.HighTier, budget, false,
                     "desktop tier " + q + (startSceneHigh ? "" : ", start scene Low (no _High scene of the start region)"));
             return new StreamingContent(RegionScenes.LowTier, budget, true,
-                "desktop tier " + q + " FALLBACK Low: no neighbour _High_Tile scene in the build or packs (build without -WorldLow, import -Tiers Low,High)");
+                "desktop tier " + q + " FALLBACK Low: " + (string.IsNullOrEmpty(highMissing)
+                    ? "no neighbour _High_Tile scene in the build or packs"
+                    : "tile " + highMissing + " has a Low tile scene but no _High_Tile (High would close its seams)")
+                + " (build without -WorldLow, import -Tiers Low,High)");
+        }
+
+        /// <summary>
+        /// Review #168 P1-1 / P1-2 (int-ui-s23): High content may be chosen only when it loses no tile - the start region and
+        /// every tile of the graph whose Low tile scene is available also have a High tile scene, and at least one
+        /// neighbour of the start has one. Otherwise a tile reachable in Low (on main) would be marked unavailable in High
+        /// and its seam would stay closed (the start tile after unpinning, or a Low-only import further along).
+        /// <paramref name="missing"/> = first tile that blocks High (null when High covers Low). Install time only.
+        /// </summary>
+        public static bool HighCoversLow(TileGraph graph, string startRegionId, ITileSceneSource source, out string missing)
+        {
+            missing = null;
+            if (graph == null || source == null) return false;
+            if (graph.IndexOf(startRegionId) < 0) return false;
+            if (!source.IsAvailable(startRegionId, RegionScenes.HighTier)) { missing = startRegionId; return false; }
+            for (int i = 0; i < graph.Count; i++)
+            {
+                string id = graph.Tiles[i].id;
+                if (source.IsAvailable(id, RegionScenes.LowTier) && !source.IsAvailable(id, RegionScenes.HighTier)) { missing = id; return false; }
+            }
+            return AnyNeighbourAvailable(graph, startRegionId, source, RegionScenes.HighTier);
         }
 
         /// <summary>True when at least one neighbour of <paramref name="regionId"/> has its tile scene of

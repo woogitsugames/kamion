@@ -232,8 +232,10 @@ namespace Game.World.Streaming
             bool desktop = !Application.isMobilePlatform;
             string quality = Game.Rendering.QualityTiers.Current;
             bool startHigh = StreamingContentChoice.IsHighScene(start.gameObject.scene.name);
-            bool highTiles = desktop && StreamingContentChoice.AnyNeighbourAvailable(TileGraph.LoadDefault(), start.regionId, new BuildTileSource(), RegionScenes.HighTier);
-            var c = StreamingContentChoice.Choose(desktop, quality, startHigh, highTiles);
+            // Review #168 P1-1/P1-2: High only when it covers every tile available in Low (start region included).
+            string highMissing = null;
+            bool highTiles = desktop && StreamingContentChoice.HighCoversLow(TileGraph.LoadDefault(), start.regionId, new BuildTileSource(), out highMissing);
+            var c = StreamingContentChoice.Choose(desktop, quality, startHigh, highTiles, highMissing);
             string saved = Game.Rendering.QualityTiers.SavedTier;
             string origin = string.IsNullOrEmpty(saved) ? "no saved choice (launch -tier or PC hardware default)"
                 : string.Equals(saved, quality, System.StringComparison.OrdinalIgnoreCase) ? "saved choice " + saved + " (menu / PC settings)"
