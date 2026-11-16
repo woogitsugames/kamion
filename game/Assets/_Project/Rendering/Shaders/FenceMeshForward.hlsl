@@ -12,7 +12,9 @@ void FenceMeshFragment(Varyings input, out half4 outColor : SV_Target0)
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(input.uv, surfaceData);
     // Derivatives are taken before the discard inside.
-    half coverage = FenceMeshAlpha(surfaceData.alpha, _Cutoff, input.uv, input.positionCS.xy, IsAlphaToMaskAvailable());
+    // URP declares IsAlphaToMaskAvailable() only under _ALPHATEST_ON (ShaderVariablesFunctions.hlsl), which this pass does not
+    // compile; the global behind it (Input.hlsl) is always declared. With the helper the pass failed to compile (magenta fence).
+    half coverage = FenceMeshAlpha(surfaceData.alpha, _Cutoff, input.uv, input.positionCS.xy, _AlphaToMaskAvailable != 0.0);
 
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
