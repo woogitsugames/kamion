@@ -121,6 +121,7 @@ namespace Game.Tests
                         if (i == 2 || i == 7 || !r.Zone(i, out Rect a)) continue;   // reverse view, telemetry (developer)
                         Assert.IsFalse(DesktopHudLayout.Intersects(a, r.ClearView), $"{what}: {DesktopHudResult.ZoneName(i)} {a} in the clear view {r.ClearView}");
                     }
+                    if ((flags & (16 | 32)) == 0) Assert.IsTrue(r.ShowMirrorLeft && r.ShowMirrorRight, what + ": mirrors give way only to developer overlays");
                     if (r.ShowMirrorLeft && r.ShowMirrorRight)
                     {
                         Assert.AreEqual(0.55f, r.MirrorLeft.width / r.MirrorLeft.height, 1e-3f, what + ": glass aspect kept");
