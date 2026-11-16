@@ -9,6 +9,8 @@ namespace Game.Gameplay
     /// Launch arguments of the photo-pair capture mode (ADR 0246), adb: <c>am start ... -e scene WorldC -e g3pose 1
     /// -e g3pose_run 20261115-120000 [-e g3pose_only 1-5,cm924] [-e lighting overcast]</c>. Parsing only; the runner
     /// (<see cref="G3PoseRunner"/>) does the work. Every timing below is a WORKING_VALUE (ADR 0246), not a measurement.
+    /// Windows player (D73, scripts/g3-poses.ps1 -Exe): the same keys on the command line (<c>Kamion.exe -scene WorldC
+    /// -g3pose 1 -g3pose_run ... -g3pose_dir &lt;folder&gt; -g3pose_quit 1</c>, read by DefaultPlatformServices).
     /// </summary>
     public sealed class G3PoseArgs
     {
@@ -20,6 +22,11 @@ namespace Game.Gameplay
         public const string KeySettle = "g3pose_settle_s";
         public const string KeySettleFrames = "g3pose_settle_frames";
         public const string KeyMaxWait = "g3pose_wait_s";
+        /// <summary>Desktop players only: write the PNGs and the manifest into exactly this folder instead of
+        /// persistentDataPath/g3poses/&lt;run&gt; (the runner ignores it on mobile platforms).</summary>
+        public const string KeyDir = "g3pose_dir";
+        /// <summary>"1": quit the player after the DONE line (exit code 0 = clean run, 1 = failures, 2 = refused).</summary>
+        public const string KeyQuit = "g3pose_quit";
         /// <summary>Read for the file names only; DrivingLabBootstrap applies the preset (launch argument "lighting").</summary>
         public const string KeyLighting = "lighting";
 
@@ -40,6 +47,8 @@ namespace Game.Gameplay
         public int SettleFrames = DefaultSettleFrames;
         public float MaxWaitSeconds = DefaultMaxWaitSeconds;
         public string Lighting = "";
+        public string OutDir = "";
+        public bool Quit;
 
         /// <summary>Parses the arguments from <paramref name="get"/> (key → value or null). Bad values fall back to the
         /// defaults with a warning; nothing throws.</summary>
@@ -60,6 +69,9 @@ namespace Game.Gameplay
             }
             a.Filter = (Safe(get, KeyOnly) ?? "").Trim();
             a.Lighting = SanitizeToken(Safe(get, KeyLighting) ?? "", 32);
+            a.OutDir = (Safe(get, KeyDir) ?? "").Trim().Trim('"');
+            string quit = Safe(get, KeyQuit);
+            a.Quit = quit == "1" || string.Equals(quit, "true", StringComparison.OrdinalIgnoreCase);
 
             a.Width = ReadInt(get, KeyWidth, DefaultWidth, MinWidth, MaxWidth, warnings);
             a.WarmupSeconds = ReadFloat(get, KeyWarmup, DefaultWarmupSeconds, 0f, 300f, warnings);

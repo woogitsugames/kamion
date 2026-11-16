@@ -214,6 +214,24 @@ namespace Game.Tests.EditMode
         }
 
         [Test]
+        public void Args_DesktopOutputDirAndQuit()
+        {
+            var d = G3PoseArgs.Parse(Args("g3pose", "1"));
+            Assert.AreEqual("", d.OutDir);
+            Assert.IsFalse(d.Quit);
+            var a = G3PoseArgs.Parse(Args("g3pose", "1", "g3pose_run", "r1", "g3pose_dir", " \"C:\\k amion\\artifacts\\g3-poses\\win\\t\\overcast\" ", "g3pose_quit", "1"));
+            Assert.AreEqual("C:\\k amion\\artifacts\\g3-poses\\win\\t\\overcast", a.OutDir);   // kept as given (spaces, separators), quotes dropped
+            Assert.IsTrue(a.Quit);
+            Assert.IsFalse(G3PoseArgs.Parse(Args("g3pose", "1", "g3pose_quit", "0")).Quit);
+
+            // Desktop: the given folder; mobile or no argument: persistentDataPath/g3poses/<run> as before.
+            Assert.AreEqual(a.OutDir, G3PoseCapture.ResolveOutputDir("/data", a.RunId, a.OutDir, false));
+            Assert.AreEqual(G3PoseCapture.OutputDir("/data", "r1"), G3PoseCapture.ResolveOutputDir("/data", a.RunId, a.OutDir, true));
+            Assert.AreEqual(G3PoseCapture.OutputDir("/data", "r1"), G3PoseCapture.ResolveOutputDir("/data", "r1", "  ", false));
+            Assert.AreEqual(G3PoseCapture.OutputDir("/data", "r1"), G3PoseCapture.ResolveOutputDir("/data", "r1", null, false));
+        }
+
+        [Test]
         public void ShouldRun_OnlyInDevelopmentBuildsWhenRequested()
         {
             var on = G3PoseArgs.Parse(Args("g3pose", "1"));

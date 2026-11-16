@@ -31,6 +31,15 @@ namespace Game.Gameplay
             return Path.Combine(persistentDataPath ?? "", DirName, run.Length > 0 ? run : "run");
         }
 
+        /// <summary>The folder a run writes to: <paramref name="overrideDir"/> (launch argument g3pose_dir, desktop players:
+        /// scripts/g3-poses.ps1 -Exe points it into artifacts/) unless empty or on a mobile platform, else
+        /// <see cref="OutputDir"/>.</summary>
+        public static string ResolveOutputDir(string persistentDataPath, string runId, string overrideDir, bool isMobile)
+        {
+            if (!isMobile && !string.IsNullOrWhiteSpace(overrideDir)) return overrideDir.Trim();
+            return OutputDir(persistentDataPath, runId);
+        }
+
         /// <summary>
         /// Output size at <paramref name="width"/>: the file's out_width/out_height when the width matches (the editor pair
         /// size), otherwise the height from the reference photo aspect, rounded like PowerShell [int] (half to even).

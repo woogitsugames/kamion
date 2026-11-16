@@ -12,13 +12,15 @@ using UnityEngine.SceneManagement;
 namespace Game.Gameplay
 {
     /// <summary>
-    /// Photo-pair capture on the phone (ADR 0246, BACKLOG B-111). Development builds only, launch argument g3pose=1
+    /// Photo-pair capture in the player - Windows (D73, scripts/g3-poses.ps1 -Exe) or the phone (ADR 0246, BACKLOG
+    /// B-111). Development builds only, launch argument g3pose=1
     /// (<see cref="G3PoseArgs"/>). Hooked from code (<see cref="RuntimeInitializeOnLoadMethodAttribute"/>), no scene or prefab
     /// change: when a scene with a <see cref="WorldRegionRoot"/> loads, it waits for the warm-up, then for every pose of
     /// Resources/g3_poses.json places an off-screen camera at the pose (same pose function as the editor pairs), renders it
     /// into a render texture at the tier render scale and MSAA until streaming has settled (<see cref="G3PoseSettle"/>),
     /// downsamples to the editor pair size (1280 x photo aspect) and writes a PNG to
-    /// persistentDataPath/g3poses/&lt;run&gt;/. Every step is logged with <c>[G3POSE]</c>; the run always ends with a DONE line.
+    /// persistentDataPath/g3poses/&lt;run&gt;/ (desktop: the folder of g3pose_dir when given). Every step is logged with
+    /// <c>[G3POSE]</c>; the run always ends with a DONE line, and with g3pose_quit=1 the player quits after it.
     /// The player's view, HUD and vehicle are left as they are (the capture camera never draws to the screen).
     /// </summary>
     public sealed class G3PoseRunner : MonoBehaviour
@@ -45,8 +47,12 @@ namespace Game.Gameplay
             {
                 Debug.LogWarning($"{G3PoseCapture.Tag} {reason}");
                 Debug.Log(G3PoseCapture.DoneLine(s_Args.RunId, 0, 0, 0, "-"));
+                if (s_Args.Quit) Application.Quit(2);
                 return;
             }
+            // ProjectSettings runInBackground is off: an unattended desktop capture must not pause when the window
+            // loses focus (the settle rule counts rendered frames). Process-wide, this Development run only.
+            Application.runInBackground = true;
             Debug.Log($"{G3PoseCapture.Tag} armed: {s_Args} (waiting for a world scene, e.g. -e scene WorldC)");
             SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -99,7 +105,7 @@ namespace Game.Gameplay
         IEnumerator Run()
         {
             var a = m_Args;
-            string dir = G3PoseCapture.OutputDir(Application.persistentDataPath, a.RunId);
+            string dir = G3PoseCapture.ResolveOutputDir(Application.persistentDataPath, a.RunId, a.OutDir, Application.isMobilePlatform);
             var man = new Manifest
             {
                 run = a.RunId, scene = m_Scene, build = BuildInfo.Current != null ? BuildInfo.Current.ShortLabel : "?",
@@ -199,6 +205,7 @@ namespace Game.Gameplay
             catch (Exception e) { Debug.LogWarning($"{G3PoseCapture.Tag} manifest not written: {e.Message}"); }
             Cleanup();
             Debug.Log(G3PoseCapture.DoneLine(a.RunId, captured, man.failed, timedOut, Directory.Exists(dir) ? dir : "-"));
+            if (a.Quit) Application.Quit(man.failed == 0 && captured == poses.Count && captured > 0 ? 0 : 1);
         }
 
         void CreateCamera(bool hasTier, QualityProfile.Tier tier)

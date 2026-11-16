@@ -1,5 +1,7 @@
 # ADR 0246 — zrzuty z telefonu dla póz par zdjęciowych bramki 3 (automat)
 Status: Proposed (chmura G, agent G4, gałąź `g3-poses-0246`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Uzupełnienie 2026-11-16 (s23, FIX PR #116): po D73 / ADR 0260 dowodem bramki są kadry z **playera Windows** — patrz sekcja
+„Windows (D73)”. Tryb telefonu (`-Serial`) zostaje bez zmian zachowania, jako **odroczony**.
 Powiązane: BACKLOG B-111, `docs/reports/GATE-3.md` (checklista kamer, pkt 2: „brak zrzutów A16 dla 42 póz par
 zdjęciowych”), ADR 0010 (kamery kontrolne świata), ADR 0103/0160/0172 (pozy par SBS), ADR 0044 r9 (`ViewCameraResolver`),
 `scripts/sbs-gate3.ps1` (pary z edytora), `scripts/gate3-run.ps1` (kamery kontrolne na telefonie).
@@ -68,6 +70,59 @@ G3-A 22, G3-B 20). Historia pliku jest spłaszczona w scaleniu `cae0c95f`, więc
 - Nowy plik w `Game.Rendering` (`CaptureCameraTier.cs`) — bo `Game.Gameplay` nie referencjonuje URP, a asmdef się nie
   zmienia.
 
+## Windows (D73) — `scripts/g3-poses.ps1 -Exe <Kamion.exe>`
+**Wariant: jeden proces na oświetlenie, wszystkie pozy w istniejącym runnerze** (nie „exe na pozę”). Uzasadnienie:
+- runner już czyta argumenty na desktopie: `G3PoseArgs.Parse(platform.GetLaunchArgument)`, a
+  `DefaultPlatformServices.GetLaunchArgument` szuka `-klucz wartość` w `Environment.GetCommandLineArgs()` — te same klucze
+  co intent extras (`-scene WorldC -tier High -lighting overcast -g3pose 1 -g3pose_run <id> ...`);
+- „exe na pozę” (`-scene` + `-shot` + `-quit_t`, `DesktopAutoShot`) dałoby zrzut **ekranu** (z HUD-em, w rozdzielczości
+  okna, z kamery gracza — pozy kamery argumentem ustawić się nie da) i 84 ładowania WorldC; runner renderuje poza
+  ekranem w 1280 px × proporcja zdjęcia, tą samą funkcją pozy co pary z edytora, bez HUD-u.
+
+Zmiany w C# (tylko pliki tego PR, bez `ProjectSettings/`, asmdef):
+- `g3pose_dir <folder>` — tylko desktop (`G3PoseCapture.ResolveOutputDir`, na platformach mobilnych ignorowany): PNG +
+  `manifest.json` trafiają wprost do katalogu wyniku, bez zgadywania `%USERPROFILE%\AppData\LocalLow\woogitsugames\Kamion`
+  (domyślnie dalej `persistentDataPath/g3poses/<run>`);
+- `g3pose_quit 1` — `Application.Quit` po linii DONE (kod 0 = czysto, 1 = błędy, 2 = odmowa poza Development);
+- `Application.runInBackground = true` na czas przebiegu (w `ProjectSettings` jest 0: okno bez fokusu wstrzymałoby
+  render i regułę „ustabilizowane”) — tylko gdy tryb uzbrojony, czyli Development + `g3pose 1`.
+
+Skrypt (bez adb, bez Unity; zestaw parametrów `-Exe` wyklucza `-Serial`/`-Build`/`-Apk`): na każde oświetlenie
+(domyślnie overcast, clear) uruchamia `Kamion.exe -screen-fullscreen 0 -screen-width 1600 -screen-height 900 -logFile
+<root>/Player-<światło>.log -scene WorldC -tier <Tier> -g3pose 1 -g3pose_run <ts>-<światło> -g3pose_width 1280 -lighting
+<światło> -g3pose_dir <root>/<światło> -g3pose_quit 1 [-fps N] [-g3pose_only ...]`; `<root>` =
+`artifacts/g3-poses/win/<ts>/`, układ jak w trybie telefonu (`<światło>/NN_<id>_<światło>.png` + `manifest.json`,
+`sbs/<światło>/*.jpg`, `g3poses-result.json`). Tier domyślnie **High** (D74, klasa „zalecany”); okno 1600×900 jak
+launchery ADR 0261 — rozmiar okna nie wpływa na kadr (render poza ekranem). Czeka na `[G3POSE] DONE` w logu, po
+`-TimeoutSeconds` (900 s, WORKING_VALUE) zabija proces (TIMEOUT); gracza, który nie zamknął się 20 s po DONE, zamyka sam.
+Linia poleceń i werdykt pochodzą z `scripts/g3_poses.py` (`winargs`, `verify`): exit 6, gdy brakuje PNG / PNG nie jest
+PNG-iem / dwa kadry identyczne (MD5) / brak lub niespójny manifest / brak DONE / linia FAIL lub REFUSED / wyjątek lub
+crash w `Player.log` (`\w*Exception`, `Crash!!!`, `Shader error`) / kod wyjścia gracza ≠ 0 / TIMEOUT.
+`-DryRun` drukuje plan i linie poleceń bez exe i bez Windows.
+
+P2 z recenzji s22 (`REVIEW-2026-11-15-s22-code-116.md`):
+1. `CaptureCameraTier.Apply` — poprawiony opis: to pełne `QualityProfileApplier.Apply` (volume/tekstury = null), więc
+   ustawia też `Current`, słowa kluczowe, nadpisania potoku i zdarzenie `Applied`; wolno wołać tylko z bieżącym tierem
+   (runner tak robi — idempotentne). Wydzielenie `ApplyCamera` w `QualityProfileApplier` (plik spoza PR) — nie zrobione.
+2. `Resources/g3_poses.json` w buildzie Release (~52 KB, ścieżki zdjęć referencyjnych, bez samych zdjęć) —
+   **zaakceptowane na razie**; wykluczenie wymaga zmiany `BuildCommands` (spoza PR). Do decyzji lidera przed wydaniem.
+3. Indeks `docs/adr/README.md` — wiersz 0246 dodany.
+4. `-Lighting dusk` — skrypt odmawia (exit 2) w obu trybach; `g3_poses.py winargs` też.
+
+**Uruchomione w chmurze (Linux, 2026-11-16):** pytest `tests/gate3/test_g3_poses.py` 19/19 — w tym 6 testów
+uruchamiających `g3-poses.ps1 -Exe` w PowerShell 7.4.6 przeciwko **atrapie gracza** (`tests/gate3/fake_g3_player.py`:
+pisze PNG/manifest/log jak runner; ścieżki: 42×2 kadry OK, brak PNG, wyjątek w logu, odmowa, TIMEOUT, `-DryRun` bez exe,
+wykluczenie `-Exe`/`-Serial`); `dotnet test tests/g3poses` 17/17; parser PowerShell: 0 błędów.
+**NIEuruchomione:** kompilacja C# w Unity, EditMode, build playera Windows, prawdziwy `Kamion.exe` (start procesu
+i cytowanie argumentów na Windows, `-logFile`, `runInBackground`, tier High z nakładką PC, czasy rozgrzewki — **UNVERIFIED**).
+
+Komendy dla lidera (Windows):
+```
+pwsh scripts/build-windows.ps1 -Development -Slot            # -> artifacts/win/kamion-<ver>-<sha>-dev/Kamion.exe (WorldC w buildzie domyślnym)
+pwsh scripts/g3-poses.ps1 -Exe artifacts/win/kamion-<ver>-<sha>-dev/Kamion.exe -Only 1-2 -Lighting overcast   # dymny test 2 póz
+pwsh scripts/g3-poses.ps1 -Exe artifacts/win/kamion-<ver>-<sha>-dev/Kamion.exe -RefDir <folder ze zdjęciami>  # 42 × overcast+clear, High
+```
+
 ## Weryfikacja (stan w chmurze, bez Unity i telefonu)
 - `dotnet test tests/g3poses/G3PoseTests.csproj`: 16/16 zielone.
 - `uv run --project tools/worldgen --with pytest pytest tests/gate3 -q`: 24/25; jedyny FAIL
@@ -75,7 +130,7 @@ G3-A 22, G3-B 20). Historia pliku jest spłaszczona w scaleniu `cae0c95f`, więc
 - `pwsh` 7.4: parsowanie skryptu OK; `-DryRun` (plan, 42 pozy, filtr, exit 2 dla pustego filtra) OK.
 - **NIEuruchomione:** kompilacja w Unity, EditMode w Unity, build Development APK, przebieg na A16.
 
-## Komendy dla lidera
+## Komendy dla lidera — telefon (odroczone, D73)
 ```
 pwsh scripts/test.ps1 -Platform EditMode                                    # G3PoseTests + reszta
 pwsh scripts/g3-poses.ps1 -Serial RFGL34SJYDZ -Build -Only 1-2 -Lighting overcast   # dymny test 2 póz
