@@ -67,11 +67,19 @@ Pliki: `artifacts/int-ui-s23/shots/*.png` (+ `.log`), podgląd 1280 px `artifact
 
 - Zapis właściciela ma **Medium**: `[STREAM] content Low, budget 800 MB: desktop tier Medium; quality tier Medium from saved choice Medium (menu / PC settings)` (`endofmap-probe-16x9.log`, bez `-tier`). Przyczyna „Low content, 800 MB” = zapisany wybór gracza, nie błąd kodu (zgodnie z ADR 0269/0270). Menu startowe na zrzucie też pokazuje „Medium”.
 - Poprawki recenzji `REVIEW-2026-11-16-pr168.md` P1-1/P1-2 (`25a66cf98`): `StreamingContentChoice.HighCoversLow` — High tylko gdy region startowy ma `_High_Tile` i każdy kafel dostępny w Low ma też High; inaczej `FALLBACK Low` z nazwą kafla. +3 testy EditMode. Zadziałało na żywo: build z dk65-04 tylko Low → `FALLBACK Low: tile dk65-04 has a Low tile scene but no _High_Tile`.
-- Wynik `-tier High` po usunięciu dk65 z EditorBuildSettings: §6.
+- Wynik `-tier High` po usunięciu dk65 z EditorBuildSettings: High content, 1450 MB (§6).
 
 ## 6. Kontrola High po przebudowie
 
-(uzupełnione po przebiegu `step3c`)
+Build `kamion-0.1.0-0274114dbc-dirty-regions` (bez dk65-03/04 w EditorBuildSettings; „dirty” = `M_Sky.mat` dotknięty przez Unity), `-tier High -scene dk65-11 -stream 1 -autopilot route` (`shots/stream-high-16x9.log`):
+
+```
+[STREAM] content High, budget 1450 MB: desktop tier High; quality tier High from launch -tier (saved choice Medium), start scene World_dk65-11_High
+[STREAM] on: start dk65-11, 1/3 neighbour tile scenes available (0 from packs), ... budget 1450 MB (High content, desktop)
+[STREAM] ready World_knyszyn-s_High_Tile: load 275 ms, activation 128 ms (64 chunks), ... resident 2 tiles / 220 MB (ESTIMATED)
+```
+
+Oczekiwane „High content” — **potwierdzone**. Bez `-tier` gra bierze zapisany wybór właściciela (Medium → Low/800 MB) — to wybór gracza; „auto” w ustawieniach PC przywraca autodetekcję (RTX 5070 → High). Klatki w tym przebiegu: p50 16,67 ms, p99 ≤ 22,6 ms po rozgrzewce (60 fps cap, maszyna obciążona innymi agentami — liczby orientacyjne, nie pomiar budżetu).
 
 ## 7. Ocena wizualna wg docs/06 §2 i §7 — co nadal wygląda „jak AI slop” / gra mobilna
 
