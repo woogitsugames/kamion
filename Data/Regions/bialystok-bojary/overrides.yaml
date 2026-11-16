@@ -1,6 +1,28 @@
 # Authored overrides of region bialystok-bojary (ADR 0278, owner D81). Every entry survives a re-import; coordinates are
 # region-local E/N (origin EPSG:2180 780043, 594175) or EPSG:2180 where the key says so.
 overrides:
+  - id: dk19-piastowska-seam-s-widening
+    target: {osm_way: [1329465432]}
+    reason: >-
+      DK19 Piastowska southbound, last 79 m before the south seam with bialystok-mickiewicza: the carriageway
+      widens from 2 lanes to the 4-lane approach of the junction that lies in the next tile (OSM way 440321719,
+      lanes=4). GUGiK orthophoto WMS cross-sections (ortho_xsec, step 10 m): asphalt run 9.05 m at s = 25 m,
+      10.90 m at 35 m, 13.45 m at 45 m; the 4-lane way behind the seam 13.60-14.15 m (2 stations). Without the
+      profile this tile ends 8.0 m wide and the neighbour starts mid-transition (qa/seams.py: 8.00 | 10.82 m).
+      Profile t = 0..1 along the edge (north to the seam): 8.0 m to t 0.25, 13.6 m at t 0.63, 14.0 m at the seam.
+    confidence: medium
+    verify: tools/worldgen/qa/seams.py row w1329465432 (both tiles equal on the seam)
+    set: {width: [[0.0, 8.0], [0.25, 8.0], [0.63, 13.6], [1.0, 14.0]]}
+  - id: dk19-piastowska-seam-n-transition
+    target: {osm_way: [440321721]}
+    reason: >-
+      DK19 Piastowska northbound, first 65 m after the south seam (3 lanes, BDOT rule 9.5 m): the neighbour
+      bialystok-mickiewicza is still inside its 15 m width transition from the 2-lane way before (8.0 m) on the
+      seam (qa/seams.py: 9.50 | 9.04 m). The profile continues that transition here (t = 0 at the seam; 8.9 m gives 9.04 m after the 15 m smoothing). The
+      orthophoto run at s = 25 m is 10.3 m (one station, bus bay beside it): width itself not changed.
+    confidence: low
+    verify: tools/worldgen/qa/seams.py row w440321721
+    set: {width: [[0.0, 8.9], [0.15, 9.5], [1.0, 9.5]]}
   - id: dk19-piastowska-70-carriageway-width
     target: {osm_way: [137540631, 194922745, 665625574, 672162901]}
     reason: >-

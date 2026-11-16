@@ -1,6 +1,18 @@
 # Authored overrides of region bialystok-mickiewicza (ADR 0278, owner D81). Every entry survives a re-import; coordinates are
 # region-local E/N (origin EPSG:2180 780043, 592127) or EPSG:2180 where the key says so.
 overrides:
+  - id: dk19-piastowska-seam-s-approach-width
+    target: {osm_way: [1329465432, 440321719, 564770249]}
+    reason: >-
+      DK19 Piastowska southbound from the north seam with bialystok-bojary: 4-lane approach (OSM lanes=4,
+      left|through|through|right; way 1329465432 is its 1.3 m stub inside this tile). BDOT10k gives 8.0 m (rejected
+      by the generator, standard 4 x 3.5 + 0.5 = 14.5 m). GUGiK orthophoto WMS cross-sections (ortho_xsec, step
+      6 m, 2 usable stations on way 440321719): asphalt run 13.60 and 14.15 m incl. the kerb line. Set to 14.0 m
+      (WORKING_VALUE inside the measured range) = the width bialystok-bojary reaches on the seam
+      (dk19-piastowska-seam-s-widening).
+    confidence: medium
+    verify: tools/worldgen/qa/seams.py row w1329465432
+    set: {width: 14.0}
   - id: dk19-branickiego-carriageway-width
     target: {osm_way: [25447094, 279890330, 405335405]}
     reason: >-
