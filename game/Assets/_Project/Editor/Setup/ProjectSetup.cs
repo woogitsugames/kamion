@@ -247,6 +247,11 @@ namespace Game.Editor.Setup
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.Android, false);
             PlayerSettings.SetGraphicsAPIs(BuildTarget.Android, new[] { GraphicsDeviceType.Vulkan, GraphicsDeviceType.OpenGLES3 });
+            // Windows player: Direct3D 11 first, Direct3D 12 second (-force-d3d12 still works). crash-diag-s23 (16.11.2026):
+            // D3D12SwapChain::Present -> CheckDeviceStatus 887a0001 in full screen (docs/reports/CRASH-2026-11-16-d3d12.md);
+            // DRAFT-d3d11-default ADR. Leader's decision; takes effect only after `pwsh scripts/setup-project.ps1` + rebuild.
+            PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64, false);
+            PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64, new[] { GraphicsDeviceType.Direct3D11, GraphicsDeviceType.Direct3D12 });
             PlayerSettings.colorSpace = ColorSpace.Linear;
             PlayerSettings.Android.minSdkVersion = (AndroidSdkVersions)MinSdk;
             PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)TargetSdk;
