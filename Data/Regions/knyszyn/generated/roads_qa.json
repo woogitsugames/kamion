@@ -1155,9 +1155,7 @@
    ],
    "length_m": 98.6,
    "max_grade": 0.0357,
-   "overrides": [
-    "market-interior-service-paving-0227"
-   ],
+   "overrides": [],
    "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -1203,9 +1201,7 @@
    ],
    "length_m": 41.7,
    "max_grade": 0.0199,
-   "overrides": [
-    "market-crossing-service-paving-0227"
-   ],
+   "overrides": [],
    "profile_rms_vs_nmt_m": 0.002,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -3086,7 +3082,7 @@
    "patches": 256
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 433880,
+  "footprint_nodes": 431826,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3426,18 +3422,6 @@
     "targets": [
      "w286990127:1134813637-4898926854",
      "w286990127:2906549567-1134813637"
-    ]
-   },
-   {
-    "id": "market-interior-service-paving-0227",
-    "targets": [
-     "w498482913:4898870294-4898870293"
-    ]
-   },
-   {
-    "id": "market-crossing-service-paving-0227",
-    "targets": [
-     "w498483028:4898906615-4898870293"
     ]
    }
   ],

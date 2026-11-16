@@ -1,6 +1,6 @@
 # ADR 0134 - Truck feel after the Fold test: gear-change nod, light-load skip shifts, smooth AMT torque, cab damping
 
-Status: proposed (2026-11-12, agent truck-feel, session 12). Touches `AmtController`, `Engine` (engine brake during
+Status: Accepted (merged to main 2026-11-12, `d38c2e847`; status updated 2026-11-16); originally: proposed (2026-11-12, agent truck-feel, session 12). Touches `AmtController`, `Engine` (engine brake during
 up-shift sync), `VehicleModel` (one line), `GearboxDefinition`, the gearbox and tractor JSON, the physics runner (one metric,
 one sample field) and the Stage 2 scenario generator. No UI, input, camera or ProjectSettings change.
 

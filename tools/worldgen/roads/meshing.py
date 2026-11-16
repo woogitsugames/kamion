@@ -200,6 +200,11 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
             kr, fl = kl[a]
             prm = [(kr, p[1], p[2], p[3], MAT_FLUSH_ROAD if fl else (0 if p[4] == MAT_FLUSH_ROAD else p[4]))
                    for p in params[lo:hi]]
+            if r and kr == RURAL and len(prm) > 1 and prm[0][4] != prm[1][4]:
+                # ADR 0272 (REVIEW #138 P2-1): the borrowed station carries the `mat` of the previous family (kerb /
+                # bridge = legacy 1.00 m paved shoulder); with a coded shoulder that was a 0.92 m asphalt wedge over
+                # one station. The run starts with its own shoulder widths.
+                prm[0] = (*prm[0][:4], prm[1][4])
             if r and c.meta.get("gore_flush") and len(prm) > 1:
                 # the station borrowed from the previous run carries the height of ANOTHER profile family. Next to
                 # a paved gore (ADR 0077) that is the dropped kerb (-0.06, which side_profile reads as "default

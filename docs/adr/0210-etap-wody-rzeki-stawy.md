@@ -1,5 +1,5 @@
 # ADR 0210 — etap wody w generatorze świata (rzeki, strumienie, stawy) + Supraśl pod mostem DK65
-Status: Proposed (agent world-builder, s20, gałąź `water-0210`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `e243e3e86`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `water-0210`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: ADR 0207 (otwarte p. 1: brak rzeki pod mostem km 10,85), ADR 0173 / 0096 (determinizm), ADR 0064 (bake
 widoczności nieba), docs/06 §6 (budżety).
 

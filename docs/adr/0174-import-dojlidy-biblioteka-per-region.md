@@ -1,5 +1,5 @@
 # ADR 0174 — import regionu Dojlidy/Krywlany do Unity: biblioteka ulicy per region, trasa i kamery foto
-Status: Proposed (agent world-builder, s17, gałąź `dojlidy-import-0174`), 2026-11-13. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-13, `110c756fe`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s17, gałąź `dojlidy-import-0174`), 2026-11-13. Do scalenia przez lidera.
 Poprzednik: ADR 0166 (dane regionu `bialystok-dojlidy`), ADR 0011/0012 (import glTFast, warstwy treści).
 
 ## Kontekst

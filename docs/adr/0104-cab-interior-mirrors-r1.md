@@ -1,6 +1,6 @@
 # ADR 0104 — Cab r1: interior audit and mirror presentation
 
-Status: implemented; editor validation, independent review and device gate are distinct. Stream K only, base main `9e6e9fde`.
+Status: Accepted (merged to main 2026-11-11, `1c894f25d`; status updated 2026-11-16); originally: implemented; editor validation, independent review and device gate are distinct. Stream K only, base main `9e6e9fde`.
 
 ## Problem
 

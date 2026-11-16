@@ -1,5 +1,5 @@
 # ADR 0261 — build Windows x64 (pierwszy player PC, korytarz regionów)
-Status: Proposed (agent `win-build-0261`, s22), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `6182b3966`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent `win-build-0261`, s22), 2026-11-15. Do weryfikacji i scalenia przez lidera.
 Powiązane: ADR 0260 (D73: Windows platformą główną), ADR 0229 (`-regions`), ADR 0012 (tiery treści, `-worldHigh`),
 ADR 0058 (kolumna kierownicy), ADR 0150 (trasy regionów).
 

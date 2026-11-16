@@ -1,6 +1,6 @@
 # ADR 0105 — DK8 / Rondo Putry: konstrukcja pod pomostem
 
-Status: gotowe do niezależnej recenzji lidera; testy i budżet edytora spełnione. 2026-11-11.
+Status: przyjęty (scalony do main 2026-11-11, `68ca9fd86`; status zaktualizowany 2026-11-16); pierwotnie: gotowe do niezależnej recenzji lidera; testy i budżet edytora spełnione. 2026-11-11.
 
 ## Zakres i źródła
 

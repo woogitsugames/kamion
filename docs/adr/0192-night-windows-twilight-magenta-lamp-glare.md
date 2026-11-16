@@ -1,6 +1,6 @@
 # 0192 — Okna zapalone o zmierzchu/nocą, magenta horyzontu, glare opraw
 
-Status: kandydat (gałąź `nightwin-0192`), nie scalone. Data: 2026-11-13 (s20). Dotyczy: ADR 0182 (zmierzch), 0081 (atlas fasad), 0062 (pule latarni), 0015/0141 (dalekie fasady).
+Status: przyjęty (scalony do main 2026-11-14, `1d72f829c`; status zaktualizowany 2026-11-16); pierwotnie: kandydat (gałąź `nightwin-0192`), nie scalone. Data: 2026-11-13 (s20). Dotyczy: ADR 0182 (zmierzch), 0081 (atlas fasad), 0062 (pule latarni), 0015/0141 (dalekie fasady).
 Źródło: `docs/reports/REVIEW-2026-11-13-s19-0182.md` P2-6 (okna), P2-7 (magenta), P2-8 (rozbłysk/glare).
 
 ## Kontekst

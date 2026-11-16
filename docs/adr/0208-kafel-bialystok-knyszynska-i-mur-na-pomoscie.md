@@ -1,6 +1,6 @@
 # ADR 0208: kafel `bialystok-knyszynska` (−3,0, dwa powiaty) i mur z balustradą na pasie niskiego pomostu (maczka)
 
-Status: PROPOSED (2026-11-15, agent `bialystok-t3-0208`, gałąź `bialystok-t3-0208`)
+Status: przyjęty (scalony do main 2026-11-15, `134298d01`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED (2026-11-15, agent `bialystok-t3-0208`, gałąź `bialystok-t3-0208`)
 
 ## Kontekst
 - D64: trasa ciężarówki Białystok → Knyszyn (wariant A, ADR 0203). Kafle miasta: `bialystok-maczka` (0203),

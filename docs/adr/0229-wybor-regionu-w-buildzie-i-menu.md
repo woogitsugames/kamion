@@ -1,5 +1,5 @@
 # ADR 0229 — wybór regionów w buildzie (`-Regions`) i wybór regionu w menu startowym
-Status: Proposed (chmura E, agent E2, gałąź `region-select-0229`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `90426fdd2`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (chmura E, agent E2, gałąź `region-select-0229`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
 Powiązane: D67 (`HANDOVER.md`, s21: korytarz Białystok → DK65 → Knyszyn w następnym APK), ADR 0011 (import glTFast,
 sceny `_Generated`), ADR 0012 (tiery treści, `-worldHigh`), ADR 0025 (udział świata w APK, `-noWorld`), ADR 0150 (graf
 nawigacji `*_route.bytes`), ADR 0169 (zamknięcie drogi 60 m przed krawędzią kafla), ADR 0203–0214 (kafle korytarza).

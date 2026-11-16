@@ -1,5 +1,5 @@
 # ADR 0188 — Drogi dla rowerów (DDR): ciepłoszary i czerwonobrązowy asfalt, przejazdy P-11 oraz układ w przekroju
-Status: PROPOSED (gałąź `ddr-0188`, `875719b70`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `5a5ee9166`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED (gałąź `ddr-0188`, `875719b70`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: ADR 0093 (przejście P-10 / przejazd P-11), ADR 0092 (shader asfaltu/nawierzchni), przegląd M65 `docs/reports/REVIEW-2026-11-14-s20-cloud-m65.md` (`research/cloud/p22-red-bike-paths`).
 
 ## Kontekst

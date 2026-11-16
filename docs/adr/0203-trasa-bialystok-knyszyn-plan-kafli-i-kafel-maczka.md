@@ -1,5 +1,5 @@
 # ADR 0203 — trasa ciężarówki Białystok → Knyszyn (D64): plan kafli i pierwszy kafel `bialystok-maczka`
-Status: Proposed (agent world-builder/geo-worldgen, s20, gałąź `bialystok-dk65-0203`), 2026-11-14. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `67eea261c`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder/geo-worldgen, s20, gałąź `bialystok-dk65-0203`), 2026-11-14. Do scalenia przez lidera.
 Powiązane: D63, D64 (`docs/11`), ADR 0166 (potok dla regionu ≠ C), ADR 0174 (import regionu), brief
 `docs/owner/S20-REGION-RING-BRIEF.md`. Kolejne: ADR 0204 (Knyszyn), ADR 0205 (korytarz).
 
