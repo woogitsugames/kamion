@@ -20,3 +20,6 @@ Normalne otwarcie EUR-Lex w Chrome zadziałało bez bramki, CAPTCHA i logowania.
 ## Końcowa kwalifikacja źródeł
 
 Koordynator obniżył2020RR14-01…03:bezbitmapy nie potwierdzono mapowania kolumn. Liczby zachowano wjawnie niezweryfikowanym polu, aktywna wartość toUNVERIFIED/nieparametrgeneratora.2020RR14-04…06potwierdzone niezależnym pełnymtekstem. Odrębna publikacjaUE[2021/1721],suplement3,EIF30.09.2021:normalne otwarcie wChrome bezchallenge pozwoliło obejrzeć rzeczywistą tabelę5z granicamikomórek. Stąd3osobneSOURCEDwiersze2021(200/150mcd/lx i12/8/8zprzypisanymiV/H), nie podmiana dowodu2020. Jednostkaodblasku nie jest emitowanąświatłościącd. Zgodnośćdzisiejszaseria/aktualność2026i konkretna etykietaEUPniezostałyzbadane. Dokładnepeerowe godziny skorygowano do daty15.11wg jawnegoaudytumetryk, bez datowania przezroot.
+
+
+Uzupełnienie16.11.2026: [osobny pakiet R43](../r150-table-bitmap-round43/README.md) zawiera rzeczywiście obejrzaną bitmapę tekstu ECE/TRANS/WP.29/2018/159/Rev.1 z3stycznia2019, wskazanego na okładce dokumentu2020 jako tekst autentyczny. Sześć wartości i układ tabeli5 potwierdziły dwa niezależne oglądy. Nie jest to bitmapa samego snapshotu2020, którego trzy UNVERIFIED_TABLE_MAPPING pozostają bez podmiany źródła. Aktualność2026 w tym uzupełnieniu niebadana.

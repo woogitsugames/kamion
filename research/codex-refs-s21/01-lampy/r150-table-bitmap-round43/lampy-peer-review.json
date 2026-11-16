@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-16",
+  "reviewer": "lampy",
+  "method": "Niezależny bezpośredni ogląd lokalnej bitmapy przez view_image. Przed oglądem nie odczytano wartości z norms/raportu koordynatora; przekazano wyłącznie osie do sprawdzenia.",
+  "image_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\01-lampy\\r150-table-bitmap-round43\\authentic-page21.png",
+  "sha256": "dbe167366065c92fa2c70a1735c279fa358270725a2230555ee87a09931b6e21",
+  "visible_document_header": "ECE/TRANS/WP.29/2018/159/Rev.1",
+  "visible_page": 21,
+  "scope": "§5.2.3.1 / tabela 5, klasy IIIA i IIIB, czerwone urządzenia odblaskowe, minima CIL.",
+  "result": "PASS_VISUAL_TABLE_MAPPING_FOR_THIS_BITMAP",
+  "unit": {
+    "visible": "mcd·lx⁻¹",
+    "meaning": "milikandela na luks; współczynnik odblasku, nie emitowana światłość lampy w cd"
+  },
+  "matrix": [
+    {
+      "alpha": "20′",
+      "V": "0°",
+      "H": "0°",
+      "minimum_CIL_mcd_per_lx": 450
+    },
+    {
+      "alpha": "1°30′",
+      "V": "0°",
+      "H": "0°",
+      "minimum_CIL_mcd_per_lx": 12
+    },
+    {
+      "alpha": "20′",
+      "V": "±10°",
+      "H": "0°",
+      "minimum_CIL_mcd_per_lx": 200
+    },
+    {
+      "alpha": "1°30′",
+      "V": "±10°",
+      "H": "0°",
+      "minimum_CIL_mcd_per_lx": 8
+    },
+    {
+      "alpha": "20′",
+      "V": "±5°",
+      "H": "±20°",
+      "minimum_CIL_mcd_per_lx": 150
+    },
+    {
+      "alpha": "1°30′",
+      "V": "±5°",
+      "H": "±20°",
+      "minimum_CIL_mcd_per_lx": 8
+    }
+  ],
+  "axes": "Każda kolumna ma V nad H: 0/0, ±10/0, ±5/±20. Wiersze α: 20′ nad 1°30′. Wszystkie sześć wartości jest czytelne z bitmapy.",
+  "conditions": "Widoczny §5.2.3.1 wymaga wartości równych lub większych od tabeli dla czerwonych odblasków, z pomiarem według załącznika 4 oraz wskazanych kątów.",
+  "version_limits": {
+    "publication_date": "Koordynator identyfikuje dokument jako tekst 2019; na samej obejrzanej stronie nie widać daty publikacji, więc peer nie potwierdza jej samodzielnie.",
+    "snapshot_2020": "Bitmapa nie jest stroną R150 z datą 13.01.2020 i sama nie usuwa UNVERIFIED_TABLE_MAPPING w tamtym snapshotcie bez dowodu zgodności.",
+    "current_2026": "UNVERIFIED — nie badano aktualnej mocy prawnej ani całego łańcucha zmian.",
+    "source_provenance": "Nie pobierano ponownie dokumentu; oficjalne pochodzenie pliku i wskazanie jako authentic podał koordynator. Peer potwierdza wygląd tabeli oraz nagłówek dokumentu z obrazu."
+  },
+  "edits": "Wyłącznie ten nowy peer JSON; norms i parent bez zmian."
+}
