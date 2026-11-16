@@ -108,3 +108,5 @@ R15: dwa nowe uliczne kadry Ełckiej w Mońkach, szurek forHere10.08.2017. Root 
 16.11.2026 R17: jeden nowy Mapillary2017 wlot Tykockiej/DW671 przy Obozowej/DK65, root celowany ogląd. Szeroki boczny wlot, czerwone poręcze, niebieski nakaz omijania, trawiasty narożnik. Nie potwierdzono ronda, materiałów ani metryki. Mała mapa zasłania część lewego dołu. 1link-only,0pobrań; główny46.
 
 16.11.2026 R18:2nowe NIDlink-only ekspozycje alumnatu (stan2016), root obaobejrzał. PierwszyAUX placu z częściowo zasłoniętym niskim budynkiem obokkościoła; drugi długa elewacja/zaokrąglona partia/gzyms/ubytekpowłoki/bruk. Nie przypisywać wieżkościoła alumnatowi.1nazwanyobiekt, nieodkrycie nigdy niewidzianejbryły; pierwszykredytautora niejednoznaczny. NCND3PL,0kopii, metryka/dataEXIF/2026UNVERIFIED. Główny48.
+
+R19: nowy komunikatGDDKiA27.02.2026 o przebudowieDK65/DW671Knyszyn na rondo, jezdnia7→12m i pobocza0,75m. Zakres prac, nie dowód odbioru;12mnieśrednica.0obejrzanych zdjęć,1dokument, główny manifest49.
