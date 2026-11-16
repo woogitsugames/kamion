@@ -1,0 +1,76 @@
+{
+  "review_date": "2026-11-16",
+  "request": {
+    "url": "https://mapy.geoportal.gov.pl/wss/ext/wfs/KrajowaIntegracjaNumeracjiAdresowej?service=WFS&version=2.0.0&request=GetFeature&typenames=adresyUlice%3AA07_Punkty_adresowe&bbox=612199.0950950328%2C760719.9455844907%2C612499.0950950328%2C761019.9455844907%2Curn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A2180&srsName=urn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A2180&count=100",
+    "bbox_axis": "northing,easting; EPSG:2180 URN, WFS2.0",
+    "bbox_extent_m": [
+      300,
+      300
+    ],
+    "timeout_seconds": 20,
+    "user_agent": "Mozilla/5.0",
+    "max_features": 100,
+    "new_data_queries": 1,
+    "http": 200,
+    "bytes": 60127,
+    "sha256": "611a8da8a6fe092c608efd24623d579cbac0a8fd3a57776f0c1ca8e23c93e4e8",
+    "numberMatched": "51",
+    "numberReturned": "51",
+    "timeStamp": "2026-11-16T07:35:15.253Z"
+  },
+  "raw_directory": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\03-knyszyn\\rynek3-4-model-round29",
+  "prg_targets": [
+    {
+      "NAZWA_MIEJSCOWOSCI": "Knyszyn",
+      "NAZWA_ULICY": "Rynek",
+      "NUMER_PORZADKOWY": "4",
+      "ID_IIP": "PL.PZGIK.200.PRG_896a7265-d721-41cd-bfac-9b78b6071094_2025-10-01T14:00:58+02:00",
+      "literal_pos": "612326.58 760910.8",
+      "point_en": [
+        760910.8,
+        612326.58
+      ]
+    },
+    {
+      "NAZWA_MIEJSCOWOSCI": "Knyszyn",
+      "NAZWA_ULICY": "Rynek",
+      "NUMER_PORZADKOWY": "3",
+      "ID_IIP": "PL.PZGIK.200.PRG_a67dada4-5505-4d2d-9a20-ebd2aed3d28e_2025-10-01T14:00:58+02:00",
+      "literal_pos": "612337.13 760894.58",
+      "point_en": [
+        760894.58,
+        612337.13
+      ]
+    }
+  ],
+  "raw_response_timestamp_meaning": "timeStamp w request.json pochodzi literalnie z odpowiedzi WFS; nie jest czasem własnego oglądu.",
+  "coordinate_order": "WFS2.0/EPSG2180URN: bbox i literalne gml:pos w kolejności N,E; własne obliczenia i rysunek w E,N. Punkt3: N612337.13 E760894.58; punkt4: N612326.58 E760910.8.",
+  "selection": "Wybrano tylko Rynek3. Punkt leży w jednym lokalnym poligonieBDOT i obu modelach CityGML; adres→model nadal ESTIMATED, nie wspólny formalny klucz.",
+  "dedup": "ID3066 i IDEGIB2460_BUD nie występowały we wcześniejszych 03/K1 po tych literalnych kluczach. Brak twierdzenia, że bryła nie pojawiła się w tle zdjęć. R22/25inneIDniepowielone.",
+  "identity_sourced": "CityGML buildingId=BDOT LOKALNYID=2002917F-3066-5C99-E053-CC2BA8C01CFC, namespacePL.PZGiK.335.BDOT10k. IDEGIB to jedynie literalny wskaźnik, bez kontroli EGiB i danych właścicieli.",
+  "geometry_method": "Parsergml:pos i gml:posList; poligony przyziemia na własnym minimalnymZ; max-min osobno w każdym produkcie; bez łączenia bezwzględnychZ dwóch różnych datum.",
+  "figure": {
+    "path": "files/03-RM29-models.png",
+    "pixels": [
+      800,
+      480
+    ],
+    "sha256": "17263c0b22d840513fea4dea95d189c824c275073fb25480734483f7cf0b42f0",
+    "individually_viewed": true,
+    "legend_layout_improved_and_re_viewed": true,
+    "observation": "Rzut pokazuje punktRynek3 wewnątrz niemal zgodnych obrysów. LoD2 zawiera spadziste połacie i mały uskok dachu, LoD1 jest blokiem o poziomej górze. Barwy oznaczają produkty, nie materiały.",
+    "attribution": "GUGiK CityGML CC BY4.0 wg metadanychR22; lokalneBDOT/PRG; opracowanie własne."
+  },
+  "license_limits": "ModeleCCBY4.0 z istniejącego indeksuR22; nie przypisano CC samym danym PRG/BDOT. Publiczne rekody adresowe bez danych osób.",
+  "counts": {
+    "new_data_queries": 1,
+    "new_archive_downloads": 0,
+    "new_models_analysed": 1,
+    "new_figures": 1,
+    "new_photos": 0
+  },
+  "shared_sources_modified": false,
+  "parent_files_modified": false,
+  "chrome_used": false,
+  "new_Overpass_OSM_Commons_Flickr_requests": 0
+}

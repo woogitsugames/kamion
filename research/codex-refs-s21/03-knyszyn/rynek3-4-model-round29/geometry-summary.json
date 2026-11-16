@@ -1,0 +1,79 @@
+{
+  "review_date": "2026-11-16",
+  "buildingId": "2002917F-3066-5C99-E053-CC2BA8C01CFC",
+  "prg": {
+    "label": "Knyszyn Rynek 3",
+    "point_en": [
+      760894.58,
+      612337.13
+    ],
+    "crs": "EPSG:2180",
+    "id_iip": "PL.PZGIK.200.PRG_a67dada4-5505-4d2d-9a20-ebd2aed3d28e_2025-10-01T14:00:58+02:00",
+    "source": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\03-knyszyn\\rynek3-4-model-round29\\kina-addresses.gml",
+    "inside_bdot": true,
+    "formal_address_join": "UNVERIFIED — brak wspólnego klucza adresu i modelu; wynik punkt-w-poligonie ESTIMATED"
+  },
+  "bdot": {
+    "LOKALNYID": "2002917F-3066-5C99-E053-CC2BA8C01CFC",
+    "PRZESTRZENNAZW": "PL.PZGiK.335.BDOT10k",
+    "WERSJA": "2025-10-16T00:00:00.000",
+    "IDEGIB": "200804_4.0054.2460_BUD"
+  },
+  "models": [
+    {
+      "label": "LoD2 2017",
+      "archive": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\gugik\\lod2-2017-2008\\2008_lod2_gml.zip",
+      "archive_sha256": "cd65ee91e327e37e4ca567a3b25e817e139bbd9974d4f0182ada94b2dff23a09",
+      "member": "Modele_3D/2008_N-34-106-B-b-1-4.gml",
+      "citygml_id": "ID-2008-2002917F-3066-5C99-E053-CC2BA8C01CFC",
+      "attributes": {
+        "buildingId": "2002917F-3066-5C99-E053-CC2BA8C01CFC",
+        "przestNazw": "PL.PZGiK.335.BDOT10k",
+        "wersjaId": "2018-01-16T00:00:00",
+        "zrodloDach": "ALS_I",
+        "aktZrodla": "2016"
+      },
+      "roofType_literal": "1130",
+      "crs": "urn:ogc:def:crs,crs:EPSG::2180,crs:PL-KRON86-NH",
+      "measuredHeight": null,
+      "uom": null,
+      "z_min": 127.12,
+      "z_max": 135.22,
+      "vertical_extent_m": 8.099999999999994,
+      "ground_area_m2": 124.77935000017284,
+      "point_inside": true,
+      "bdot_ground_iou": 0.9984943343236055
+    },
+    {
+      "label": "LoD1 2024",
+      "archive": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\gugik\\lod1-2024-2008\\2008_lod1_2024.zip",
+      "archive_sha256": "02e9139142864bcb63ab3a781281cbd3f87eb58a54dfad0306f67bf8175f7f80",
+      "member": "2008_N-34-106-b-b-1-4.gml",
+      "citygml_id": "ID-2008-2002917F-3066-5C99-E053-CC2BA8C01CFC",
+      "attributes": {
+        "buildingId": "2002917F-3066-5C99-E053-CC2BA8C01CFC",
+        "przestNazw": "PL.PZGiK.335.BDOT10k",
+        "wersjaId": "2023-11-10T00:00:00",
+        "zrodloDach": "ALS_I",
+        "aktZrodla": "2016"
+      },
+      "roofType_literal": "1000",
+      "crs": "urn:ogc:def:crs,crs:EPSG::2180,crs:EPSG::9651",
+      "measuredHeight": "6.77",
+      "uom": "meter",
+      "z_min": 127.32000000000001,
+      "z_max": 134.085,
+      "vertical_extent_m": 6.765000000000001,
+      "ground_area_m2": 124.79095000018279,
+      "point_inside": true,
+      "bdot_ground_iou": 1.0
+    }
+  ],
+  "limitations": [
+    "Źródło dachu obu produktów ALS_I/2016; produkt2024 nie dowodzi nowego pomiaru ani stanu2026.",
+    "Różne pionowe układy odniesienia; bez odejmowania bezwzględnychZ między produktami.",
+    "measuredHeight6.77m to przybliżona miara LoD1; własny zakres geometrii LoD1 to6.765m, a LoD2 to8.10m.",
+    "6.77–8.10m nie jest przedziałem tolerancji rzeczywistej wysokości.",
+    "Formalny adres→model UNVERIFIED; relacja punkt-w-poligonie ESTIMATED. Nie wnioskowano kondygnacji, materiałów lub przebudowy."
+  ]
+}

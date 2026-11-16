@@ -168,3 +168,5 @@ R21: dwa nowe ujęcia z gminnego Gońca nr11(203), listopad2021, s7, Anna Aneta 
 16.11.2026 R26: nowa ekspozycja znanego domuKlattów przyKościelnej6, HenrykBorawski11.06.2012/CCBY-SA3.0. Root obejrzał oryginał i miniaturę800×600; oryginał3,12MB wewłasnymraw, Gittylkominiatura. Czerwono-brunatny dach, jasna fasada/brązoweokna, ganek/kratownica/pnącza, sztachety/chodnik.0nowychobiektów,1nowafotografia, bezstanu2026/metrów. Główny55.
 
 R27: nowy link-only szczegół donicy, k11.jpg z gminnego artykułu publikowanego21.07.2022. Root obejrzał skrzynię z poziomych desek i łukowy bruk; dół ucięty, bez metrów/podparcia. Tekst03-D02 już istniał, nie policzono go ponownie. Główny manifest56 rekordów.
+
+R29: nowa bryła3066 przy punkciePRGRynek3 (adresESTIMATED),jedno zapytanie51punktów,1własnafigura800×480,0fotografii/ZIP. Root obejrzał figurę i niezależnie odczytałkluczePRG/BDOT/CityGML. SOURCED LoD1measuredHeight6,77m vs ESTIMATEDzasięgLoD2 8,10m,obieźródłoALS2016. Manifest57.

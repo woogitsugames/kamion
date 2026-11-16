@@ -659,3 +659,7 @@ Dwa wycinki ortofotomapy GUGiK w `research/codex-refs-s21/04-dk65/tree-crowns-ro
 ### Codex refs S21 — Kościelna6 Knyszyn1, R26
 
 `research/codex-refs-s21/03-knyszyn/openverse-facade-round26/files/03-OV26-001.jpg`: Henryk Borawski, „Kościelna 6 Knyszyn 1.jpg”,11.06.2012. Źródło https://commons.wikimedia.org/w/index.php?curid=19875630 , CC BY-SA3.0 Unported https://creativecommons.org/licenses/by-sa/3.0/ . Zmiana: zmniejszenie4000×3000 do800×600, bezkadrowania/korektybarw, JPEGquality90. OryginałwyłącznieData/raw/refs/codex-s21/03-knyszyn/openverse-facade-round26; hasheoddzielnie wdownload.json. Nie zdjęcie właściciela.
+
+### Codex refs S21 — Rynek3, R29
+
+`research/codex-refs-s21/03-knyszyn/rynek3-4-model-round29/files/03-RM29-models.png`: GUGiK CityGML LoD2/LoD1, CC BY4.0 https://creativecommons.org/licenses/by/4.0/ według metadanych źródeł wR22. Własny rzut/bryły z osobnymi podstawamiZ i barwami analitycznymi; nie fotografia2026. PRG/BDOT: publiczne źródła, bez automatycznego przypisaniaCC; linki i dokładneklucze wpakiecie.0nowycharchiwów/zdjęć.
