@@ -151,3 +151,6 @@ Właściciel: trasa ciężarówki C ↔ Dojlidy idzie DK19 przez ul. Piastowską
 ## D82 — Kierunek Podlasia: najpierw pętla S8 ↔ DW671 ↔ Tykocin (2026-11-16, s23)
 Właściciel: po kaflach Białegostoku z ADR 0278 pierwszym kierunkiem Podlasia jest **pętla S8 ↔ DW671 ↔ Tykocin** (15 kafli: S8 z węzłami i MOP, powrót przez Tykocin–Knyszyn, strefa przemysłowa przy dk65-01); zgoda na S8 mimo D64. Mońki → Grajewo później (kafel Grajewa > 2 M High wymaga redukcji). Research: docs/owner/MAP-DECISIONS-2026-11-16.md (b).
 
+## D83 — Budżety kafli dla PC: pomiar per tier zamiast limitu z telefonu (2026-11-16, s23)
+Właściciel: limit 2 mln trójkątów na kamerę High pochodzi z telefonu (A16) i nie jest automatycznie limitem PC. Budżety trójkątów i draw calls ustalamy **pomiarem per tier** (emulacja klas D74 na RTX 5070 wg D76; skalowanie na inne karty tylko z cytowanych porównań, ESTIMATED): Low (GTX 660 / HD 630) ostrożnie, High/Ultra wyżej. Do czasu pomiaru gęste kafle Białegostoku (2,6–3,75 mln) i kafel Grajewa czekają; budżety mobilne zostają jako zabezpieczenie. ADR 0266, 0269, 0278, 0282.
+
