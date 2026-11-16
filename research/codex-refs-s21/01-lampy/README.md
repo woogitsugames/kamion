@@ -185,3 +185,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Lampka tablicy: znak L/E9 — runda25
 
 [heavy-plate-round25](heavy-plate-round25/README.md):3nowe rzeczywiste link-onlyARR kadry1obudowy/optyki. MakroL / E9wokręgu /00 4127 zgodnie odczytane przezautora i root woddzielnychprzeglądarkach (peer nieślepy). Wnętrzeniekompletne; producentowyPN/konkretne ciężkie zastosowanieUNVERIFIED, sellerL004127nieuznanyzaPN.0ON/noc,0pobrań/screenshotów. Liczba funkcjonalnychkomórUNKNOWN. AUXpoza głównym49,3kadry nie3części ani arbitralny nowywymóg5rodzin; kwalifikacjaheavyoddzielonaodczytelnegoznaku.
+
+
+## Scania — fizyczna geometria bez pewnego znaku, runda26
+
+[rear-combination-approval-round26](rear-combination-approval-round26/README.md):1 odrębna fotografia jednej deklarowanej części Scania2860829, naturalne2048×1536, tylko link-onlyARR. Agent obejrzał ją w galerii i osobno pod dokładnym URL. Obudowa/klosz i odbicie fotografa są widoczne; tło opracowano na biało. Małych tłoczeń E/numer/funkcje nie odczytano pewnie.0 nowych potwierdzonych homologacji/ON/noc,0pobrań i zapisanych screenshotów. Źródłowe ciężarowe zastosowanie to deklaracja sprzedawcy. AUX poza głównym49, bez wymuszania numeru z małych znaków.
