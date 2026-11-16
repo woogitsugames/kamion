@@ -146,6 +146,18 @@ namespace Game.Controls
             ControlInputLogger.WriteNoStack(LogLine(v));
         }
 
+        /// <summary>
+        /// Evidence runs (launch arguments <c>ui_hud</c> / <c>ui_mirror</c>, int-ui-s23): applies <paramref name="v"/> for this
+        /// process only, without writing PlayerPrefs (the player's stored HUD / mirror choice stays untouched).
+        /// </summary>
+        public static void OverrideForSession(HudPrefsData v)
+        {
+            Load();
+            v.Sanitize();
+            s_Data = v; Version++;
+            ControlInputLogger.WriteNoStack(LogLine(v) + " (session only, not stored)");
+        }
+
         /// <summary>The HUD detail key (default I, rebindable; ADR 0283): minimal &lt;-&gt; extended. A key press, not per frame.</summary>
         public static void ToggleDetail()
         {
