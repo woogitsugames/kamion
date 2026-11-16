@@ -1,5 +1,4 @@
-# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
-- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
-- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
-- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
-- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
+# STATUS — D37 docs10-s23 (docs/10 §3: model treści s23)
+- Zrobione: docs/10 §3 przepisany (build z regionami, streaming kafli po #157, zip testera, kontrakt paczek w teście, DLC krajów A/A2/B/C, diagram mermaid); Addressables oznaczone jako wycofane w docs/02, 03, 05, PERFORMANCE_BUDGETS, ADR 0011, 0012.
+- Bez nowego ADR; ADR 0234/0273 (gałąź streaming-pc-s23) nie ruszane — po scaleniu #157 ostatni punkt 0234 §9 („docs/10 §3 nadal mówi o Addressables”) jest załatwiony tym PR.
+- NASTĘPNY KROK: lider — przegląd i scalenie PR; `git grep -n Addressables -- docs ':!docs/reports' ':!docs/owner'`

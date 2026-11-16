@@ -50,7 +50,7 @@ Nie używaj publicznych serwerów kafli/Overpass jako masowego źródła — pob
 8. **Otoczenie**: drzewa (gatunki: sosna, brzoza, lipa, klon, kasztanowiec w mieście; olsza i świerk poza nim), trawniki, żywopłoty, ogrodzenia, latarnie (typy białostockie z referencji), wiaty przystankowe, słupy, hydranty, kosze, reklamy (fikcyjne marki).
 9. **Kolizje**: osobny, gładki mesh kolizyjny jezdni i krawężników (nie wizualny LOD0), proste collidery budynków.
 10. **Metadane nawigacji/AI**: graf pasów (środek pasa, nie oś drogi), połączenia na skrzyżowaniach, sygnalizacja, ograniczenia dla ciężarówek.
-11. **Chunki, LOD/HLOD, impostory**, Addressables, manifest regionu.
+11. **Chunki, LOD/HLOD, impostory**, sceny regionu (pełna, `_High`, `_Tile`), graf kafli `tile_graph.json`, wpis w `region_catalog.json` (model treści: `docs/10` §3; Addressables wycofane w s23).
 12. **Raport QA**: brakujące tagi, ostre kąty, zerowe długości, mosty bez `layer`, rozłączone ważne drogi, odchyłki geometrii, szczeliny teren/droga, dziury kolizji — z listą punktów do ręcznej weryfikacji.
 
 Ręczne poprawki: osobne pliki `authored_overrides` (np. GeoJSON/YAML z ID), aplikowane po generacji. **Jeśli generator kłamie — popraw generator**, nie łataj wyniku ręcznie po cichu.
