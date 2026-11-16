@@ -1,6 +1,6 @@
-# ADR 0283 — trasy łączące korytarza streamingu (Białystok → Knyszyn → Tykocin bez przerw)
+# ADR DRAFT — trasy łączące korytarza streamingu (Białystok → Knyszyn → Tykocin bez przerw)
 
-Status: Proposed (agent stream-gaps-s23, 2026-11-16). Numer tymczasowy — lider może przenumerować przy scalaniu.
+Status: Proposed (agent stream-gaps-s23, 2026-11-16). Numer nadaje lider przy scalaniu (0283 zajęty przez HUD/menu #166).
 Powiązane: ADR 0235 (streaming kafli), 0273 (jeden model świata), 0231 (pierścień, gałąź world2-s23), 0203/0204/0209/0212
 (trasy kontrolne kafli Knyszyna), D63 (najpierw przejezdne), raport integracji `docs/reports/INTEGRATION-2026-11-16-int-stream-s23.md`.
 
@@ -52,6 +52,17 @@ Właściciel chce jechać bez przerwy Białystok → Knyszyn → Tykocin (`-scen
 - **Znaleziska do właścicieli kafli (nie naprawiane tutaj):** knyszyn-s | knyszyn — asfalt 9,48 m vs 7,64 m 2 m od szwu (skok
   szerokości 1,84 m; world2 / ADR 0275 seam_taper); knyszyn | knyszyn-w na DW671 — linie ±1,75 m po stronie knyszyn, tylko −1,75
   po stronie knyszyn-w (linia urywa się na szwie; int-world3); C | Maczka — linia 2,91 m tylko po stronie Maczka.
+
+## Przejazd w buildzie Windows (exe `kamion-0.1.0-14243bcc83-regions`, 19 regionów, High, 60 fps, RTX 5070 — maszyna dewelopera)
+`Kamion.exe -scene knyszyn-s -stream 1 -autopilot route -speed 70 -route_s 1900` (domyślny cel tykocin):
+log `[STREAM] route continued by link knyszyn-dk65-to-dw671-w in knyszyn (to tykocin): +618 m` → `… knyszyn-w-dw671 in
+knyszyn-w … +596 m` → `route continued into dw671-tykocin-01: +2608 m`; rebase origin ×3 (0,73–1,60 ms), wyładowane knyszyn
+i knyszyn-s. Run B: `stream-report.py --gate` **PASS** (loads 3, closed seams 0, resets 0, ładowanie kafla p50 250 / max
+677 ms, gotowy przy ≥ 380 m, klatek > 33,3 ms: 6, max 1201 ms = klatka startowa). Run A: zawieszenie playera ok. t = 145 s
+(klatka 1849 ms, potem brak logu, kill po 290 s) tuż przed rebase do dw671-tykocin-01 — **nie powtórzyło się** w run B ani C;
+podejrzenie: znana niestabilność D3D12 przy równoległym obciążeniu GPU (crash 887a0001, HANDOVER 16.11 15:2x) — UNVERIFIED.
+Zrzuty: `artifacts/stream-gaps-s23/shotA-60s.jpg` (DK65 przed Knyszynem), `shotB-95s.jpg` (DW671 Tykocka za rondem, szew
+knyszyn | knyszyn-w), `shotC-135s.jpg` (szew knyszyn-w | dw671-tykocin-01).
 
 ## Plan dla Dojlid (trzecia przerwa, bez realizacji w tym zadaniu)
 Najkrótsze połączenie krawędziowe: 3 nowe kafle siatki 2048 m — (779019, 591103) N Dojlid, (779019, 593151), (779019, 595199)
