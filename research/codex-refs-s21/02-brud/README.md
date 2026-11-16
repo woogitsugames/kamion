@@ -4,7 +4,7 @@ Stan ewidencji głównej na 16.11.2026: **24 rekordy** (SOURCED: lokalny `manife
 
 Aktualny manifest:24 rekordy =22 kadry (14 lokalnych/8 link-only)+2 dokumenty, w tym odrzucenia/AUX. Nie24 kwalifikacje. [RejestrA/B/C](qualification-ledger-round18/README.md) rozdziela wymagania bez ich obniżania.
 
-A:≥20łącznie — rozpoznana dolna granica6 treściowych źródeł (3 rdzeniowe158/182/183 +1 Krone z lekkim miejscowym filmem +1 RoadTour source-dependent +1 AutoReview39-A01). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 71/88 rekordów P18 obejrzanych, 17 NOT_REVIEWED. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
+A:≥20łącznie — rozpoznana dolna granica6 treściowych źródeł (3 rdzeniowe158/182/183 +1 Krone z lekkim miejscowym filmem +1 RoadTour source-dependent +1 AutoReview39-A01). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 77/88 rekordów P18 obejrzanych, 11 NOT_REVIEWED. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
 
 Źródłowy typnaczepy, brud zamiast powłoki/rdzy, zimowy kontekst i europejska droga mają osobne dowody. Stare kadry nie stają się nowymiB; mniejszy nowy kadrA nie spełniaB. Wycinki/aliasy jednego zdjęcia nie zwiększają wyniku. Szczegółowe historyczne poszukiwania i erraty poniżej.
 
@@ -261,3 +261,7 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Kontrolowany powrótCommons — runda44
 
 [commons-access-check-round44](commons-access-check-round44/README.md): po prawie3h1API i1originalGET zwróciły200; CC BY-SA3.0/Xnatedawgx przed pobraniem. P18-168 osobnoobejrzany640×480: przewrócony pojazd i kontener, śnieg, brak tylnychdrzwi. Pokrycie71/88,17NOT_REVIEWED; A6zograniczeniami/B1 bez zmian.1oryginałraw/0kopiiGit. Wznowiona tylko ograniczona kolejka jednego agenta z odstępami iSTOPna429, nie cała usługa naraz.
+
+## Pozostałe źródła — runda45
+
+[baseline-remaining-round45](baseline-remaining-round45/README.md):6nowych źródłowychID112/114/116/146/147/175 indywidualnieobejrzanych, APIlicencjeCCprzedobrazami,12HTTP200zodstępami≥10s. Root dodatkowo obejrzał147/175. Wszystkiepozakryteriumparytylnychdrzwi;0A/B. Bieżące77/88,11NOT_REVIEWED, nie77zaakceptowanychfotografii. Wszystkie6obrazówtylkoRAW,0kopiiGit.
