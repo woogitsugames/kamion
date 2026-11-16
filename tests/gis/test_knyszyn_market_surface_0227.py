@@ -130,7 +130,8 @@ def test_bare_soil_opt_in_is_bounded_and_keeps_hard_mask_unchanged():
     without_optin = [{k: v for k, v in unpaved.items() if k != "bare_soil"}]
     assert np.array_equal(vegetation.authored_bare_ground(col, hf, (0, 0), without_optin, hard), col)
     painted = vegetation.authored_bare_ground(col, hf, (0, 0), [unpaved], hard)
-    assert painted[16, 14, 3] > 0
+    assert painted[16, 14, 3] == pytest.approx(.94)
+    assert painted[16, 14, 1] == 0
     assert np.array_equal(painted[15, 15], col[15, 15])  # road / paving preserved
     assert np.array_equal(painted[0, 0], col[0, 0])    # no spill outside island
     assert np.array_equal(painted[..., :1], col[..., :1])

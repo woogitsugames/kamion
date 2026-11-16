@@ -717,7 +717,6 @@ def authored_bare_ground(col, hf, origin, overrides, hard_mask):
     mask, collision, or vegetation placement. No opt-in means an exact no-op.
     """
     from shapely.geometry import Polygon
-    from . import construction_site as CS
 
     origin = np.asarray(origin, float)
     polys = []
@@ -734,11 +733,11 @@ def authored_bare_ground(col, hf, origin, overrides, hard_mask):
     soil = PV.rasterize_polys(polys, hf) & ~np.asarray(hard_mask, dtype=bool)
     if not soil.any():
         return col
-    # ground_colour provides the existing soil tone; restrict its soft falloff
-    # back to the authored grid cells so it cannot colour nearby driveways.
-    painted = CS.ground_colour(col, soil, hf)
+    # WORKING_VALUE: strong soil coverage on opted-in cells. Terrain vertex
+    # interpolation softens the boundary; never paint across the hard mask.
     out = col.copy()
-    out[soil] = painted[soil]
+    out[..., 3][soil] = np.maximum(out[..., 3][soil], .94)
+    out[..., 1][soil] = 0.0
     return out
 
 
