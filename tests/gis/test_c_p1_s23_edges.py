@@ -67,6 +67,19 @@ def test_back_flange_next_to_hard_footprint_is_kept():
     assert np.array_equal(p.V, V0) and not any(q.src.endswith(":vg") for q in buf.parts)
 
 
+def test_partly_free_flange_has_no_vertical_grass():
+    buf = M.MeshBuf()
+    _flange(buf, -10, 10, 0.0, 100.30, S.FLANGE_DEPTH, stations=11)
+    hard = np.zeros((41, 41), bool)
+    hard[:20, 20:] = True                     # paving beyond the east half only
+    M.back_flange_batter(buf, hard, _hf())
+    g = [q for q in buf.parts if q.src.endswith(":vg")][0]
+    a, b, c = (g.V[g.T[:, k]] for k in range(3))
+    nrm = np.cross(b - a, c - a)
+    nz = np.abs(nrm[:, 2]) / np.linalg.norm(nrm, axis=1)
+    assert nz.min() > CF.GRASS_STEEP_NZ                  # no face steeper than the verge-strip QA limit
+
+
 def test_untagged_flange_untouched():
     buf = M.MeshBuf()
     xs = np.linspace(-5, 5, 4)

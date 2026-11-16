@@ -318,6 +318,11 @@ def back_flange_batter(buf, hard_mask, hf):
         conv = free[ts] | free[ts + 1]
         if not conv.any():
             continue
+        # every station of a converted pair gets the batter (a 0-run station made a vertical grass face: the
+        # verge-strip QA counted it as a wall, test_junctions_r4 ratchet)
+        free = np.zeros(n, bool)
+        free[ts[conv]] = True
+        free[ts[conv] + 1] = True
         rep["stations_battered"] += int(free.sum())
         # concrete: only the edging remains at the free stations
         Vc = p.V.copy()
@@ -326,7 +331,7 @@ def back_flange_batter(buf, hard_mask, hf):
         p.V = Vc
         # grass batter from the edging foot outward down to the old flange foot
         g0 = np.column_stack([top[:, :2], top[:, 2] - BACK_EDGE_FACE_M])
-        run = np.where(free, (depth - BACK_EDGE_FACE_M) * S.VERGE_SKIRT_SLOPE, 0.0)
+        run = np.where(free, np.maximum(depth - BACK_EDGE_FACE_M, 0.0) * S.VERGE_SKIRT_SLOPE, 0.0)
         g1 = np.column_stack([top[:, :2] + ou * run[:, None], bot[:, 2]])
         Vg = np.empty((2 * n, 3))
         Vg[0::2], Vg[1::2] = g0, g1
