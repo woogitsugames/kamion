@@ -82,10 +82,17 @@ if ($Scene) { $argv += @('-scene', $Scene) }
 foreach ($kv in ($Extra -split ',' | Where-Object { $_ })) { $k, $v = $kv -split '=', 2; $argv += @("-$k", $v) }
 
 $sha = (Get-FileHash -Algorithm SHA256 $exePath).Hash.ToLowerInvariant()
+# ADR 0276: Kamion.exe is the same Unity stub in every build - the build is identified by build-id.json next to it
+# (git sha of the build + content hash of Kamion_Data, scripts/postbuild-windows.py); absent for builds before ADR 0276.
+$buildId = $null
+$buildIdPath = Join-Path (Split-Path $exePath -Parent) 'build-id.json'
+if (Test-Path -LiteralPath $buildIdPath) { try { $buildId = Get-Content -LiteralPath $buildIdPath -Raw | ConvertFrom-Json } catch { $buildId = $null } }
 $meta = [ordered]@{
     tool = 'scripts/pc-metrics.ps1'; adr = '0266'; timestamp = $ts; machine = $machine
     exe = $exePath; exeSha256 = $sha; arguments = $argv; class = $Class
     gitSha = (Get-GitShortSha)
+    buildGitSha = $(if ($buildId) { $buildId.gitSha } else { $null })
+    contentHash = $(if ($buildId) { $buildId.contentHash } else { $null })
 }
 
 # --- run + sample process memory / VRAM ----------------------------------------------------------------------------
