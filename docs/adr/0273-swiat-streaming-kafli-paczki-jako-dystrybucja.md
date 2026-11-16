@@ -164,7 +164,7 @@ Podstawa: `docs/reports/ANALYSIS-2026-11-16-regionpacks-pc.md` §5 (sesja P): na
      (bariery + kolider, ADR 0169) stoją; wyjazd w pustkę łapie detekcja spadku / braku podłoża (`WorldExitMonitor`) i reset
      na przypiętą bezpieczną pozę;
    - po wyładowaniu regionu startowego (`region == null`) sieć działa jak dziś bez granic (tylko spadek / brak podłoża).
-5. **Poprawka dla lidera po int-h3 (opcjonalna, NIE w tym PR):** dokładna krawędź sumy gotowych kafli w `WorldSafetyNet.Check`:
+5. **WDROŻONE w s23 (D36, PR stacked na #157 — patrz §11).** Pierwotny opis: dokładna krawędź sumy gotowych kafli w `WorldSafetyNet.Check`:
    ```csharp
    var streamer = Game.World.Streaming.WorldStreamer.Active;
    if (streamer != null && streamer.TryInsideDistance(p, out float streamed)) inside = streamed;
@@ -203,3 +203,98 @@ pwsh scripts/build-android.ps1 -Regions 'bialystok-industrial-c,bialystok-maczka
 pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -DurationSeconds 180 -Tier Low -Scene WorldC -Autopilot route -Speed 50 -Extra 'stream=1'
 ```
 W logu przy `-stream 1`: `[STREAM] on: …`, `[STREAM] safety-net rectangle of … widened …`, `[STREAM] pinned …`.
+
+## §11 Uzupełnienie s23 (D36, chmura D r9): §10 pkt 5 wdrożone — „Koniec mapy” na zewnętrznej krawędzi korytarza
+Gałąź `safetynet-corridor-s23` = `streaming-pc-s23` (#157) + merge `origin/main` (16.11); PR stacked na #157. Kod
+**nieskompilowany w Unity**.
+
+1. **Problem (§10 pkt 4):** prostokąt `WorldBoundary` regionu startowego poszerzony do obwiedni kafli dostępnych
+   (`LocalUnionBounds`) obejmuje zewnętrzne krawędzie korytarza leżące wewnątrz obwiedni (np. krawędź S `dk65-03`:
+   `dk65-01` sięga dalej na S) — tam nie było ostrzeżenia ani zatrzymania `OutOfBounds`.
+2. **Reguła krawędzi** (`Game.World.Streaming.CorridorEdge`, czysta logika, zero alokacji): świat jezdny = suma
+   prostokątów jezdnych kafli **Ready**. Bok kafla jest krawędzią zewnętrzną („Koniec mapy” + stop przy 3 m), chyba że
+   jest szwem z sąsiadem kardynalnym z `tile_graph.json` w stanie **Ready, Loading albo Activating**. Sąsiad w drodze
+   (streamer go wczytuje, zamknięcia wciąż stoją) to zator wczytywania, nie koniec mapy — bez ostrzeżenia; jego obszar
+   nie należy jednak do świata, póki nie jest Ready. Sąsiad **Unloaded / Unloading** (zostawiony za plecami, spoza
+   buildu, ponad budżet) przywraca krawędź. Narożnik z dwoma otwartymi bokami i brakującym/nieotwartym kaflem po
+   przekątnej (wewnętrzny narożnik litery L) liczy się jako punkt (narożnik prostokąta kafla). Otwarty bok sięga do
+   krawędzi prostokąta kafla + 0,5 m (`SeamToleranceM`, WORKING_VALUE), więc szczelina między prostokątami jezdnymi
+   wciętymi względem kafli nie jest „poza mapą”. Szwy cząstkowe (kafle różnej wielkości) nie występują w grafie
+   (wszystkie kafle 2048 m w siatce) — reguła ich nie obsługuje.
+3. **Start sceny:** przed pierwszą decyzją streamera dostępny kafel Unloaded liczy się jak Loading (spawn trasy
+   `dk65-03` stoi ~1 m od szwu z `dk65-02`; pierwsza decyzja i tak go wczyta). Bez tego pierwszy `Check` mógłby dać
+   `OutOfBounds` na spawnie.
+4. **Kod:** `WorldStreamer.TryInsideDistance` deleguje do `CorridorEdge` (bufory stanów i prostokątów alokowane raz
+   w `Init`, flaga `m_Decided`); `WorldSafetyNet.Check` (jedyny plik Gameplay, +3 linie) bierze odległość ze
+   `WorldStreamer.Active.TryInsideDistance`, a prostokąt `WorldBoundary` zostaje rezerwą (brak streamera / brak kafla
+   Ready). `WidenStartBoundary` zostaje bez zmian (rezerwa). Bez subskrypcji `SafePoses.Offset` w `WorldSafetyNet`
+   (bufor przesuwa streamer, §10 pkt 5). `DrivingLabBootstrap.cs` bez zmian.
+5. **Budżet:** brak zmian w `generated/*`, scenach i danych → 0 tris. Koszt zapytania: pętla po kaflach grafu (21)
+   co 0,1 s czasu fizyki, bez alokacji.
+
+### Testy (D36, chmura)
+- .NET 8 + NUnit (harness z §10 + `CorridorEdge.cs`): `CorridorEdgeTests` 8 (szew vs krawędź, L z narożnikiem
+  wewnętrznym, kafel wyładowany → krawędź, sąsiad Loading/Activating → szew otwarty, wcięcie prostokątów jezdnych,
+  `InsideDistance_AllocatesNothing` = 0 B) + testy z §10 (polityka, kontrakt, `LocalUnionBounds`) — **40/40**.
+- NIEuruchomione (lider): EditMode w Unity (`CorridorEdgeTests`, zmieniona asercja w
+  `WorldStreamerHook0273Tests.WidenStartBoundary_CoversTheConnectedAvailableTiles_Only`: przed pierwszą decyzją 924 m,
+  po `Unloading` 100 m; `SteadyFrameLoop_UpdateAndSafetyQueries_AllocateNothing` pokrywa nowe `TryInsideDistance`),
+  PlayMode `WorldSafetyNetCorridorPlayModeTests` (krawędź S `dk65-03` → ostrzeżenie + reset `OutOfBounds`; szew
+  `dk65-03`→`dk65-04` → brak ostrzeżenia i resetu) i `WorldStreamingPlayModeTests`.
+
+```powershell
+pwsh scripts/test.ps1 -Platform EditMode -Filter 'Game.Tests.CorridorEdgeTests;Game.Tests.WorldStreamerHook0273Tests;Game.Tests.WorldStreamingPolicyTests'
+pwsh scripts/test.ps1 -Platform PlayMode -Filter 'Game.Tests.WorldSafetyNetCorridorPlayModeTests;Game.Tests.WorldStreamingPlayModeTests;Game.Tests.WorldEdgeRecoveryTests'
+```
+
+## §12 Dopisek D44 (2026-11-16, chmura D r10): treść i budżet streamingu z tieru PC na desktopie
+
+**Objaw.** Start `Kamion-korytarz.cmd` (`-scene knyszyn -stream 1`, bez `-tier`) na maszynie dev (RTX 5070, ADR 0261) dał
+`[STREAM] on: … budget 800 MB (Low content, desktop)`, a przejazd z `-Tier High` (raport int-stream-s23) — High/1450 MB.
+
+**Przyczyna (z kodu main po #157).** Kolejność inicjalizacji jest poprawna: `GameBootstrap.Awake` stosuje tier (`-tier` →
+zapisany wybór `diag.qualityTier` → plik ustawień PC → domyślny sprzętowy D74) **przed** `LaunchSceneFor`, a hak streamingu
+czyta `QualityTiers.Current` dopiero w `DrivingLabBootstrap.Start` sceny świata. Budżet 800 MB w tabeli §6 ma wyłącznie
+**PC Medium**, więc w tym uruchomieniu bieżący poziom jakości był **Medium**; scena startowa `World_knyszyn` (bez `_High`)
+wynika z tego samego (`RegionSceneForTier` daje `_High` tylko dla High/Ultra). Źródło Medium nie było logowane w linii
+streamingu; możliwe (do potwierdzenia w `Player.log` właściciela): zapisany wybór Medium (menu / „Zastosuj” w ustawieniach PC —
+zapis w PlayerPrefs jest wspólny dla wszystkich buildów Windows), albo `VRAM unknown` → `PcTierTable.UnknownVramTier = Medium`
+przy `-force-d3d11` (UNVERIFIED). Drugi, niezależny błąd projektu: tier treści kafli brano **wyłącznie z nazwy sceny
+startowej**, więc na desktopie High/Ultra bez sceny `_High` regionu startowego (import `-Tiers Low`, build `-WorldLow`) całe
+streamowanie szło w Low mimo dostępnych `_High_Tile` sąsiadów, bez śladu w logu.
+
+**Decyzja.** Nowa czysta klasa `StreamingContentChoice` (`World/Runtime/Streaming/StreamingContentChoice.cs`), wołana przez
+`WorldStreamer.TryInstallFromLaunch`:
+
+| platforma | tier jakości | treść kafli | budżet |
+|---|---|---|---|
+| desktop | Low / Medium | Low (High tylko gdy scena startowa już jest `_High`) | 640 / 800 MB |
+| desktop | High / Ultra | **High**, gdy co najmniej jeden sąsiad ma `World_<id>_High_Tile` w buildzie; inaczej **jawny fallback Low** (`LogWarning … FALLBACK Low`) | 1450 / 2000 MB (tieru, także przy fallbacku) |
+| telefon | dowolny | jak dotąd: z nazwy sceny startowej | 200 / 400 / 600 MB |
+
+Przy scenie startowej Low i treści High kafel startowy liczy się wartością High (zachowawczo). Nowa linia logu przed
+`[STREAM] on:`: `[STREAM] content <tier>, budget <MB> MB: <powód>; quality tier <T> from <saved choice X | no saved choice
+(launch -tier or PC hardware default) | launch -tier (saved choice X)>, start scene <nazwa>` — rozstrzyga źródło tieru.
+Bez zmian: `BudgetForTier`, `GameBootstrap`, `DrivingLabBootstrap`, UI, tabela §6, autodetekcja ADR 0269.
+
+**Kolejność scalania z #163.** Hunki tej zmiany w `WorldStreamer.cs`: komentarz `<item>` haka (l. ~192), dwie linie tier/budżet
+w `TryInstallFromLaunch` (l. ~208) i nowa metoda `ChooseContentForLaunch` za nim. #163 zmienia bufory `CorridorEdge`,
+`TryInsideDistance` i (na swojej starej bazie) linie `routePath`; `git merge-tree` main+D44+#163: `WorldStreamer.cs` scala się
+automatycznie (konflikt tylko `STATUS.md`). Kolejność dowolna; zalecane D44 po #163.
+
+**Testy.** EditMode `StreamingContentChoiceTests` (23: desktop Low…Ultra × scena startowa Low/High, fallback High/Ultra bez
+`_High_Tile`, telefon bez zmian, tier nieznany, `IsHighScene`, dostępność sąsiadów z atrapą `ITileSceneSource`) — 23/23 pod
+.NET 8 + NUnit z zaślepkami Unity (chmura). `WorldStreamer.cs` nieskompilowany w chmurze.
+
+**Komendy dla lidera.**
+```powershell
+pwsh scripts/test.ps1 -Platform EditMode -Filter 'Game.Tests.StreamingContentChoiceTests;Game.Tests.WorldStreamingPolicyTests;Game.Tests.WorldStreamerHook0273Tests'
+pwsh scripts/test.ps1 -Platform EditMode
+pwsh scripts/build-windows.ps1 -Slot -Regions '<19 regionów korytarza jak w INTEGRATION-2026-11-16-int-stream-s23>'
+pwsh scripts/build-windows.ps1 -SkipBuild -Run -Tier High -Scene knyszyn -RunSeconds 60 -ExtraPlayerArgs '-stream','1'
+# oczekiwane: "[STREAM] content High, budget 1450 MB: desktop tier High" i "[STREAM] on: … budget 1450 MB (High content, desktop)"
+# bez -Tier (jak Kamion-korytarz.cmd) — linia "[STREAM] content" podaje źródło tieru; dodatkowo w Player.log właściciela:
+Select-String -Path "$env:USERPROFILE\AppData\LocalLow\woogitsugames\Kamion\Player.log" -Pattern '\[BOOT\] desktop default tier|\[SETTINGS\] pc (load|apply)|\[BOOT\] Kamion|\[STREAM\] (content|on)'
+```
+Jeśli źródłem jest zapisany wybór Medium — to zgodne z ADR 0269/0270 (jawny wybór gracza wygrywa); „auto” w ustawieniach PC
+przywraca autodetekcję. Jeśli `VRAM unknown` przy D3D11 — osobna poprawka detekcji (ADR 0269, właściciel kodu Rendering).
