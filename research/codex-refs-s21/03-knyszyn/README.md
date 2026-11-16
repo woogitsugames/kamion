@@ -164,3 +164,5 @@ R21: dwa nowe ujęcia z gminnego Gońca nr11(203), listopad2021, s7, Anna Aneta 
 16.11.2026 R23: dokładny klucz CityGML→BDOT i publiczny punkt PRG Rynek1 wspierają identyfikację. Root niezależnie odczytał jeden rekord SQLite oraz GML/XSD. Adres→model nadal ESTIMATED przestrzennie, nie urzędowy join; IDEGIB to literalne pole, bez weryfikacji EGiB/właścicieli. 2 rekordy dokumentacyjne, 0 zdjęć.
 
 16.11.2026 R25: nowa analiza ID3031 przy punkciePRG Rynek2. Root obejrzał figurę i niezależnie odczytał klucze XML/BDOT oraz5.98meter i2016. Własny zasięg LoD2 około7.62m jest inną miarą, nie końcem przedziału wysokości terenowej. Adres pozostaje ESTIMATED przestrzennie.1nowa figura,0fotografii/ZIP/zapytań; główny54.
+
+16.11.2026 R26: nowa ekspozycja znanego domuKlattów przyKościelnej6, HenrykBorawski11.06.2012/CCBY-SA3.0. Root obejrzał oryginał i miniaturę800×600; oryginał3,12MB wewłasnymraw, Gittylkominiatura. Czerwono-brunatny dach, jasna fasada/brązoweokna, ganek/kratownica/pnącza, sztachety/chodnik.0nowychobiektów,1nowafotografia, bezstanu2026/metrów. Główny55.

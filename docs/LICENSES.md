@@ -655,3 +655,7 @@ Dwa wycinki ortofotomapy GUGiK w `research/codex-refs-s21/04-dk65/tree-crowns-ro
 ### Codex refs S21 — R25 bryła przy punkcie Rynek2
 
 `research/codex-refs-s21/03-knyszyn/rynek2-model-round25/files/03-RM25-models.png`: własne opracowanie geometrii CityGML GUGiK CC BY4.0 (https://creativecommons.org/licenses/by/4.0/), lokalne publiczne BDOT/PRG bez automatycznego przypisania imCC. Źródła archiwów/metadane w source-review.json; atrybucja na figurze. Każdy model przesunięto do własnej podstawy Z; barwy analityczne, nie rzeczywisty materiał.0nowycharchiwów/zdjęć.
+
+### Codex refs S21 — Kościelna6 Knyszyn1, R26
+
+`research/codex-refs-s21/03-knyszyn/openverse-facade-round26/files/03-OV26-001.jpg`: Henryk Borawski, „Kościelna 6 Knyszyn 1.jpg”,11.06.2012. Źródło https://commons.wikimedia.org/w/index.php?curid=19875630 , CC BY-SA3.0 Unported https://creativecommons.org/licenses/by-sa/3.0/ . Zmiana: zmniejszenie4000×3000 do800×600, bezkadrowania/korektybarw, JPEGquality90. OryginałwyłącznieData/raw/refs/codex-s21/03-knyszyn/openverse-facade-round26; hasheoddzielnie wdownload.json. Nie zdjęcie właściciela.
