@@ -116,7 +116,7 @@ nowe `--out-dir`), `scripts/export-route.py`, `build_world.route_polyline` (kame
 rozdział zachowuje; `sign_gantry.before_node` to id węzła z pliku); `scripts/export-region-catalog.py`,
 `scripts/gate3-segment.py`, `qa/seam_section.py` (kontrakt: `route_start.graph_nodes` = id z pliku; końce krawędzi na
 szwach bez zmian); jednorazowe narzędzia regionu C bez rozdziału (`photolist/*`, `tools/refs/veg0163_cameras.py`,
-`scripts/map-audit-near.py`). `build_region.py` zapisuje plik. Klasyfikację pilnuje
+`scripts/map-audit-near.py`); `qa/map_plan_0278.py` (plan nowych kafli: węzły brzegowe zbudowanych sąsiadów, id bez zmian) i `qa/knyszyn_s_kerb_step.py` (id węzła rozdziału z override'u + koniec jego drogi OSM; tylko sonda GLB) — dopisane przy world3 (int-world3-s23). `build_region.py` zapisuje plik. Klasyfikację pilnuje
 `tests/gis/test_effective_graph_readers.py::test_every_graph_reader_is_classified` (nowy czytnik = czerwony test).
 
 Zmierzone na knyszyn (dane z gita): KRTG z grafu z pliku ma lukę węzeł ↔ początek geometrii do **26,99 m na 6
@@ -124,3 +124,9 @@ krawędziach** (węzeł w starym miejscu, oś jezdni od nowego); z grafu efektyw
 `route_start.json` knyszyn i C po zmianie `export-route.py` bajt w bajt; KNAV C bajt w bajt z wersją sprzed zmiany,
 KNAV knyszyn 516 → 521 punktów dróg. Wpływ przy world3: KRTG / KNAV knyszyn, `water_banks` i raport walidatora knyszyn
 (tylko w pasie DK65 ±45 m od ronda); regiony bez `carriageway_split` — bez zmian (`apply` zwraca ten sam obiekt).
+
+**world3 (int-world3-s23, 17.11):** po scaleniu z #169 (D41 `compact_roundabout.outer_diameter_m` = 26 m) luka KRTG
+knyszyn węzeł ↔ geometria rośnie do **1,73 m na 8 krawędziach pierścienia** (oś pierścienia na r 10,5 m, węzły
+pierścienia z pliku na r OSM 8,65 m; recenzja #169 P2-7). `test_knyszyn_route_graph_has_the_dk65_splits_and_consistent_geometry`
+(próg 1,0 m) czerwony w integracji — OTWARTE (do decyzji lidera: przeniesienie węzłów pierścienia na promień
+z override'u w grafie efektywnym albo próg dla krawędzi pierścienia).
