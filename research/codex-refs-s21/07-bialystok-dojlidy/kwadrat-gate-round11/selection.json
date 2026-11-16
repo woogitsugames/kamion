@@ -1,0 +1,17 @@
+{
+  "record_created_date": "2026-11-16",
+  "backlog_id": "B-131",
+  "related_context": "B-132 — tablica i zamknięcie bramy Kwadrat Park; trasa C, nie utożsamiana z bramami Dojlid",
+  "objective": "Najwyżej dwa rzeczywiste kadry tablicy/pylonu i zamknięcia bramy lub urządzeń wjazdu Kwadrat Park przy Andersa 38. Bez kolejnej suchej Maczka lub dojazdu BIAFORM/Karpińskiego.",
+  "local_selection_source": "research/gptpro/p6-next-regions-2/manifest.csv, P6-G02; research/mistral/p6-dojlidy-gates/manifest.csv, M49-016. Istniejący punkt wyboru, bez nowych OSM/Overpass.",
+  "selection_point": {"lat":53.155279,"lon":23.166431,"OSM_node_prior_source":10024132807},
+  "selection_limit": "To dawny punkt mapowy bramy, nie GPS fotografii, nie aktualne uprawnienie wjazdu i nie źródło szerokości/promieni w tej rundzie.",
+  "dedup": "S21 MG4 przedstawia Mickiewicza/Karpińskiego i wejście BIAFORM, bez bramy Kwadrat Park. Dawne P6-G02 to ortofoto i dane; nowe ujęcie naziemne należy sprawdzić po dokładnym pKey. Nie kopiujemy dawnych wartości wymiarów/przejezdności.",
+  "text_screening": [
+    {"url":"https://kwadratpark.pl/","status":"TIMEOUT_WEB","result":"Nie uzyskano pełnego tekstu lub kadru; brak opisu obrazu."},
+    {"url":"https://kwadratpark.pl/galeria/","status":"TIMEOUT_WEB","result":"Obserwowany w wyszukiwaniu link galerii, ale otwarcie nie dostarczyło strony. Nie ponawiano wariantów."},
+    {"url":"https://adresowo.pl/o/lokal-wynajem-bialystok-ul-gen-wladyslawa-andersa-o2p4f0","status":"EXCLUDED_AI_EDITED_SOURCE_DECLARATION","result":"Wynik źródłowy jawnie deklaruje zdjęcia edytowane za pomocą modelu SI. Nie otwierano/pobierano obrazów i nie wykorzystano jako referencji wyglądu."}
+  ],
+  "visual_status":"DONE_LIMITED — jeden kadr Mapillary rzeczywiście obejrzany i odrzucony jako referencja zamknięcia bramy. Galeria firmowa niedostępna z powodu błędu certyfikatu, bez obchodzenia.",
+  "restrictions":"Commons STOP. Mapillary wyłącznie browser z OSM, bez API/tokenów/pobierania/zapisanych screenshotów i bez Google."
+}
