@@ -96,3 +96,6 @@ Dwa nowe kadry Katarzyny Niedźwieckiej/NID uzupełniają znany dworzec o elewac
 
 
 R13: dwa nowe widoki dawnego zespołu Bernardynów w Tykocinie, Klasztorna1, Katarzyna Niedźwiecka, listopad2025 według NID. Agent i root obejrzeli oba osobno; cały widoczny obrys dachów, dwa poziomy okien, dziedziniec i zewnętrzna długa elewacja. Jeden kompleks, nie dwa budynki. CC BY-NC-ND3.0PL wyłącznie link-only. Główny40.
+
+
+R14:1nowa panorama UMMonki, root obejrzał. AUX centralnej bryły z dachem/placem; nazwaMediatekaESTIMATED,0nowych potwierdzonych nazwanych budynków i0pełnych naziemnych fasad. Autor/dataekspozycjiUNVERIFIED; ARRtylkolink. Główny41.
