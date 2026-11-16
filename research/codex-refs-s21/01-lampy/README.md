@@ -155,3 +155,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 [HR16](highbeam-reference-round16/README.md):cztery źródłowe warunki R1492020 wyjaśniają ilorazIM/4300, dyskretną listę wartości, zakres oznaczenia grupy oraz CoP.27.5×4300 i30×4300 to wyłącznie ESTIMATED algebraiczne przykłady, nie dokładne pomiary Actrosa/Volvo ani automatyczne przypisanie dawnychDCR doR149. Konkretne wersje/punkty/ograniczenia wCSV.
 
 [LL17](live-light-demonstrations-round17/README.md):jeden oficjalny filmERMAX i trzy faktycznie obejrzane stany ztimecode’ami. Nie trzy fotografie. Technika fizycznego nagrania/montażu pozostajeUNVERIFIED, więc nie zwiększono fizycznychON/OFF ani progówM59. Tylko link i własne opisy,0pobrań/stillów. Pozostają otwarte15tylnych/4włączone/3nocne/5ciężkichtablicowych.
+
+
+## VignalLC8 — kontekst fizycznej części, runda20
+
+[physical-rear-approval-round20](physical-rear-approval-round20/README.md):3indywidualnie obejrzane kadry jednej realnej części156780/RIGHT,1600×1200 wUI; link-onlyARR,0pobrań. Przód/tył/etykieta, kolor/kształt/komorylubUNKNOWN wchildmanifest. Producent potwierdza zastosowanieTrucks/ScaniaP&R, sprzeczny parametr osobowe wofercie ujawniony. E/numer/funkcje nieczytelne na realnymkloszu, katalogowegoE2/2040 nie przeniesiono.0nowychpotwierdzonych homologacji/ON/noc. PozostajeAUX poza głównym49; nie3lampy i nie nowa rodzina wobec istniejącegoLC8, tylko odrębny model156780 vs156290.
