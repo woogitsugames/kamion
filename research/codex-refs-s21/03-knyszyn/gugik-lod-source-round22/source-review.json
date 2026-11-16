@@ -1,0 +1,155 @@
+{
+  "review_date": "2026-11-16",
+  "own_exact_time_recorded": false,
+  "status": "Nowe porównanie i weryfikacja dostępności istniejących danych; adres nadal ESTIMATED",
+  "documentation": {
+    "url": "https://www.geoportal.gov.pl/pl/dane/inne-dane/modele-3d-budynkow/",
+    "locators": [
+      "sekcja standardu LoD1",
+      "założenia generowania LoD1",
+      "atrybut measuredHeight w produkcie2024",
+      "dostępność do pobierania"
+    ],
+    "source_findings": "Uproszczenie medianowe, NMT PL-EVRF2007-NH, przybliżony measuredHeight; brak liczbowej tolerancji badanego obiektu.",
+    "accuracy_numeric_bound": "UNVERIFIED"
+  },
+  "index": {
+    "service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D",
+    "get_capabilities_http": 200,
+    "get_feature_info_request": {
+      "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&LAYERS=Modele_3D_budynkow_LoD1_2024%2CModele_3D_budynkow_LoD2_2017&QUERY_LAYERS=Modele_3D_budynkow_LoD1_2024%2CModele_3D_budynkow_LoD2_2017&STYLES=&CRS=EPSG%3A2180&BBOX=612339.0950950328%2C760859.9455844907%2C612359.0950950328%2C760879.9455844907&WIDTH=101&HEIGHT=101&I=50&J=50&INFO_FORMAT=text%2Fhtml&FEATURE_COUNT=5",
+      "http": 200,
+      "selection_lonlat": [
+        22.917499129327783,
+        53.31188024002093
+      ],
+      "selection_epsg2180_en": [
+        760869.9455844907,
+        612349.0950950328
+      ],
+      "source_selection": "existing OSM way300667350, candidate linked to K1-061/P02 by prior context; not authoritative address proof",
+      "axis_order": "EPSG:2180 WMS1.3 BBOX northing,easting"
+    },
+    "response_raw_file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\03-knyszyn\\gugik-lod-source-round22\\feature-info.html",
+    "response_licence": "CC BY 4.0 — oba produkty, bezpośredni link w GetFeatureInfo",
+    "response_county": "powiat moniecki, TERYT 2008",
+    "archive_heads": [
+      {
+        "url": "https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD1/2024/20/2008.zip",
+        "http": 200,
+        "content_length": "8267243",
+        "last_modified": "Wed, 26 Mar 2025 09:47:58 GMT",
+        "etag": "\"67e3cd4e-7e25eb\""
+      },
+      {
+        "url": "https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD2/2008_gml.zip",
+        "http": 200,
+        "content_length": "14184918",
+        "last_modified": "Wed, 29 Aug 2018 11:39:39 GMT",
+        "etag": "\"5b8685fb-d871d6\""
+      }
+    ],
+    "all_poland_download_followed": false
+  },
+  "data_handling": {
+    "new_archive_downloads": 0,
+    "existing_shared_archives_modified": false,
+    "existing_shared_archives_read": 2,
+    "own_building_extracts": 2,
+    "own_extract_location": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\03-knyszyn\\gugik-lod-source-round22",
+    "new_direct_http_calls": {
+      "GetCapabilities": 1,
+      "GetFeatureInfo": 1,
+      "HEAD": 2
+    },
+    "google_or_3dtiles": false,
+    "chrome_used": false,
+    "osm_api_or_overpass": false,
+    "commons_or_flickr": false
+  },
+  "selection_and_identity": {
+    "K1_record": "K1-061 / K1-P02, Rynek 1 wg podpisu, bez GPS",
+    "local_osm_way": 300667350,
+    "local_osm_source_json": "../data/osm-target-buildings.json",
+    "osm_licence": "© OpenStreetMap contributors, ODbL 1.0",
+    "selected_point_wgs84": [
+      22.917499129327783,
+      53.31188024002093
+    ],
+    "selected_point_epsg2180_en": [
+      760869.9455844907,
+      612349.0950950328
+    ],
+    "point_meaning": "Środek lokalnego obrysu OSM, nie GPS aparatu ani narożnik; wyłącznie selekcja skorowidza.",
+    "same_citygml_id_across_products": "ID-2008-2002917F-3002-5C99-E053-CC2BA8C01CFC",
+    "id_match_status": "SOURCED literalnie w obu archiwach, ten sam buildingId i przestrzeń nazw",
+    "address_match_status": "ESTIMATED; nie ma urzędowego adresu w odczytanym CityGML",
+    "ground_match_osm_iou": {
+      "LoD2 2017": 0.672704879201248,
+      "LoD1 2024": 0.6193032959290876
+    },
+    "lod1_lod2_ground_iou": 0.6400350192816129
+  },
+  "model_source_files": [
+    {
+      "label": "LoD2 2017",
+      "archive": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\gugik\\lod2-2017-2008\\2008_lod2_gml.zip",
+      "archive_bytes": 14184918,
+      "archive_sha256": "cd65ee91e327e37e4ca567a3b25e817e139bbd9974d4f0182ada94b2dff23a09",
+      "member": "Modele_3D/2008_N-34-106-B-b-1-4.gml",
+      "crs_literal": "urn:ogc:def:crs,crs:EPSG::2180,crs:PL-KRON86-NH",
+      "attributes": {
+        "buildingId": "2002917F-3002-5C99-E053-CC2BA8C01CFC",
+        "przestNazw": "PL.PZGiK.335.BDOT10k",
+        "wersjaId": "2013-01-01T00:00:00",
+        "zrodloDach": "ALS_I",
+        "aktZrodla": "2016"
+      },
+      "measuredHeight_literal": null,
+      "measuredHeight_unit": null,
+      "own_extracted_file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\03-knyszyn\\gugik-lod-source-round22\\one-lod2-building.gml"
+    },
+    {
+      "label": "LoD1 2024",
+      "archive": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\gugik\\lod1-2024-2008\\2008_lod1_2024.zip",
+      "archive_bytes": 8267243,
+      "archive_sha256": "02e9139142864bcb63ab3a781281cbd3f87eb58a54dfad0306f67bf8175f7f80",
+      "member": "2008_N-34-106-b-b-1-4.gml",
+      "crs_literal": "urn:ogc:def:crs,crs:EPSG::2180,crs:EPSG::9651",
+      "attributes": {
+        "buildingId": "2002917F-3002-5C99-E053-CC2BA8C01CFC",
+        "przestNazw": "PL.PZGiK.335.BDOT10k",
+        "wersjaId": "2023-11-10T00:00:00",
+        "zrodloDach": "ALS_I",
+        "aktZrodla": "2016"
+      },
+      "measuredHeight_literal": "7.5",
+      "measuredHeight_unit": "meter",
+      "own_extracted_file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\03-knyszyn\\gugik-lod-source-round22\\one-lod1-building.gml"
+    }
+  ],
+  "derived_geometry_status": "ESTIMATED parametry geometrii źródłowej, nie obecny pomiar terenowy",
+  "visual_review": {
+    "file": "files/03-GL22-model-comparison.png",
+    "dimensions": [
+      800,
+      500
+    ],
+    "sha256": "50e531e1e5701ad71207eb1bdf653708d469c0b038685611f55bc3d361635a8b",
+    "individually_viewed": true,
+    "legend_fixed_and_re_viewed": true,
+    "meaning": "2 rzuty/bryły tego samego ID odczytane ze ścian CityGML; barwy produktu, nie materiału. Osobne minima Z obu modeli, północ siatkowa EPSG:2180 w rzucie.",
+    "new_ground_photographs": 0
+  },
+  "limits": [
+    "Produkt 2024 nadal ma aktZrodla 2016; nie dowodzi nowego ALS ani stanu 2026.",
+    "WersjaId BDOT 2023 nie jest datą pomiaru dachu.",
+    "LoD1 measuredHeight nie jest kalenicą; płaski model nie dowodzi płaskiego rzeczywistego dachu.",
+    "Różne pionowe układy odniesienia: bez odejmowania bezwzględnych Z między produktami.",
+    "Różne obrysy i uproszczenia nie dowodzą fizycznej przebudowy.",
+    "Minimalny prostokąt nie jest automatycznie długością elewacji; pole modelu nie jest powierzchnią użytkową.",
+    "Ilościowa dokładność terenowa i formalne przypisanie adresu niepotwierdzone."
+  ],
+  "parser_quality": "Obsługa gml:pos i gml:posList; pierwsza próba tylko posList dała brak geometrii LoD2 i została poprawiona przed obliczeniami. Nie generowano wniosków z pustego wyniku.",
+  "parent_files_changed": false
+}

@@ -1,0 +1,156 @@
+{
+  "selection": "K1-061/P02 Rynek 1 według podpisu; istniejący OSM way300667350 jako lokalizacja kandydata; to nie urzędowe mapowanie adresu",
+  "lod1_lod2_ground_iou": 0.6400350192816129,
+  "height_comparison_limit": "Różne pionowe układy odniesienia; porównywać względne zasięgi od własnego przyziemia, nie mieszać bezwzględnego Z ani traktować różnicy jako przebudowy.",
+  "osm_match": {
+    "source_local_json": "../data/osm-target-buildings.json",
+    "way": 300667350,
+    "address_status": "ESTIMATED przestrzenne powiązanie; nie urzędowa identyfikacja adresowa",
+    "ground_xy": [
+      [
+        760876.8201770002,
+        612350.9173262706
+      ],
+      [
+        760869.8020089536,
+        612340.610655739
+      ],
+      [
+        760866.0212883882,
+        612343.0784400813
+      ],
+      [
+        760868.3704598398,
+        612346.7411963362
+      ],
+      [
+        760863.5474422972,
+        612349.8317425633
+      ],
+      [
+        760867.8527428453,
+        612356.5337064127
+      ],
+      [
+        760876.8201770002,
+        612350.9173262706
+      ]
+    ]
+  },
+  "models": [
+    {
+      "label": "LoD2 2017",
+      "archive_file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\gugik\\lod2-2017-2008\\2008_lod2_gml.zip",
+      "archive_sha256": "cd65ee91e327e37e4ca567a3b25e817e139bbd9974d4f0182ada94b2dff23a09",
+      "archive_bytes": 14184918,
+      "member": "Modele_3D/2008_N-34-106-B-b-1-4.gml",
+      "citygml_id": "ID-2008-2002917F-3002-5C99-E053-CC2BA8C01CFC",
+      "crs": "urn:ogc:def:crs,crs:EPSG::2180,crs:PL-KRON86-NH",
+      "attributes": {
+        "buildingId": "2002917F-3002-5C99-E053-CC2BA8C01CFC",
+        "przestNazw": "PL.PZGiK.335.BDOT10k",
+        "wersjaId": "2013-01-01T00:00:00",
+        "zrodloDach": "ALS_I",
+        "aktZrodla": "2016"
+      },
+      "measuredHeight": null,
+      "measuredHeight_uom": null,
+      "z_min": 127.32,
+      "z_max": 136.05,
+      "vertical_extent_m": 8.730000000000018,
+      "footprint_area_m2": 95.0186000000981,
+      "oriented_bbox_short_m": 8.368763349529507,
+      "oriented_bbox_long_m": 13.533576021633603,
+      "ground_xy": [
+        [
+          760864.66,
+          612348.31
+        ],
+        [
+          760869.32,
+          612356.75
+        ],
+        [
+          760876.61,
+          612352.64
+        ],
+        [
+          760871.38,
+          612344.61
+        ],
+        [
+          760869.36,
+          612341.2
+        ],
+        [
+          760865.46,
+          612343.39
+        ],
+        [
+          760867.3,
+          612346.8
+        ],
+        [
+          760864.66,
+          612348.31
+        ]
+      ],
+      "ground_osm_iou": 0.672704879201248
+    },
+    {
+      "label": "LoD1 2024",
+      "archive_file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\gugik\\lod1-2024-2008\\2008_lod1_2024.zip",
+      "archive_sha256": "02e9139142864bcb63ab3a781281cbd3f87eb58a54dfad0306f67bf8175f7f80",
+      "archive_bytes": 8267243,
+      "member": "2008_N-34-106-b-b-1-4.gml",
+      "citygml_id": "ID-2008-2002917F-3002-5C99-E053-CC2BA8C01CFC",
+      "crs": "urn:ogc:def:crs,crs:EPSG::2180,crs:EPSG::9651",
+      "attributes": {
+        "buildingId": "2002917F-3002-5C99-E053-CC2BA8C01CFC",
+        "przestNazw": "PL.PZGiK.335.BDOT10k",
+        "wersjaId": "2023-11-10T00:00:00",
+        "zrodloDach": "ALS_I",
+        "aktZrodla": "2016"
+      },
+      "measuredHeight": "7.5",
+      "measuredHeight_uom": "meter",
+      "z_min": 127.5,
+      "z_max": 135.005,
+      "vertical_extent_m": 7.5049999999999955,
+      "footprint_area_m2": 68.72139999950551,
+      "oriented_bbox_short_m": 8.415123337488616,
+      "oriented_bbox_long_m": 8.677626403595596,
+      "ground_xy": [
+        [
+          760868.13,
+          612355.86
+        ],
+        [
+          760875.69,
+          612351.6
+        ],
+        [
+          760871.34,
+          612345.21
+        ],
+        [
+          760870.9,
+          612344.64
+        ],
+        [
+          760867.3,
+          612346.8
+        ],
+        [
+          760864.19,
+          612348.61
+        ],
+        [
+          760868.13,
+          612355.86
+        ]
+      ],
+      "ground_osm_iou": 0.6193032959290876
+    }
+  ]
+}

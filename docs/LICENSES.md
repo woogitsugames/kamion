@@ -643,3 +643,7 @@ Dwie miniatury w research/codex-refs-s21/06-region-ring/tykocin-facades-round8/f
 ### codex-refs-s21: korony drzew DK65 (runda17)
 
 Dwa wycinki ortofotomapy GUGiK w `research/codex-refs-s21/04-dk65/tree-crowns-round17/files/TC17-01.jpg` i `TC17-02.jpg`: źródło publiczny WMS GUGiK, bbox, parametry, daty pobrania i atrybucja w manifest.csv i sources.json. Każdy800×800px, skala mapowa0,3m/px nie oznacza źródłowego GSD. Zasady bezpłatnego wykorzystania ortofotomapy z oficjalnej informacji GUGiK wskazane w pakiecie; bez przypisania fikcyjnej licencji CC. Nie dodano podpisów, prywatnych zdjęć ani materiałów komercyjnych.
+
+### Codex refs S21 — R22 porównanie modeli GUGiK
+
+`research/codex-refs-s21/03-knyszyn/gugik-lod-source-round22/files/03-GL22-model-comparison.png`: własna analiza CityGML GUGiK, dane CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); © OpenStreetMap contributors, ODbL 1.0 (https://www.openstreetmap.org/copyright). Źródła produktów i potwierdzenie licencji w source-review.json pakietu. Zmieniono sposób prezentacji: rzut obrysów i bryły z osobnymi podstawami Z; kolory analityczne, bez twierdzenia o rzeczywistych materiałach. Bez nowych kopii wspólnych ZIP i bez fotografii właściciela.
