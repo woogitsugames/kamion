@@ -262,3 +262,7 @@
 - 2026-11-16 03:21 +01:00 — R16: korony z czterech kart FAIL wizualnie, wycofane; styk korony figury lepszy, łańcuch i ocena z boku OPEN. High max 1 250 401 tris PASS, Low vs before +63 draws FAIL. R17 build/import/visual QA uruchomiony po wycofaniu, testy kierunkowe 19 passed.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r17.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r17.done` 
 
+
+- 2026-11-16 03:38 +01:00 — R17 build/import i 4 warianty renderów OK, 22 pary lokalne; dodano dwie szacunkowe kamery boczną/tylną figury na wysokości 1,7 m, R18 build uruchomiony. Budżet R17 w ocenie, końcowy GIS/EditMode po R18 OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r18.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r18.done` 
+
