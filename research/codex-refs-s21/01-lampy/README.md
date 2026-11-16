@@ -170,3 +170,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Etap przyjęcia zmiany — runda22
 
 [highbeam-adoption-round22](highbeam-adoption-round22/README.md):3oficjalne dokumenty/4etapy/0fotografii. GRE90odroczeniepoGRE2024/5→WP29/2025/36ref≤100→WP29/1184tabelas21AC1przyjęcieSupp1do09,34/0/0. Pkt69usuwa tylko6.2.6.1.2, nie6.1.9.1; zachowanie limituref100 w przyjętym pakiecie to jawna syntezaźródeł. Root osobnoobejrzałbitmapy§69/s15 i tabelis21, agentpełne3dokumenty. AC1_ADOPTION_CONFIRMED nieEIF; aktualnytekst2026/przejściowedlastarychciężarówek nadalUNVERIFIED. Runda21 pozostajehistoryczna, niepodmienionojejdowodów.2PDFraportówrawpozaGit, trzecidokumentodczytanyfullwebbezlokalnegoPDFpo404STOP.
+
+
+## Definitywne wejście w życie — runda24
+
+[highbeam-entry-force-round24](highbeam-entry-force-round24/README.md):pełna notaONZC.N.513.2025z06.10.2025potwierdza skutki od26.09.2025 i dokładnie wskazujeWP29/2025/36z§69raportu1184. Root+agentosobnoobejrzeli całąstronę;3ustalenia/2źródła/0fotografii. PowiązanieSupp1do09/ref100 jawnie złańcuchemHA22, nota sama nieprzepisujebrzmienia6.1.9.1. Stan całego tekstu2026/przejściowedlastarychDCR nadalUNVERIFIED. R21/R22historyczneniezmienione; późniejszydowód zamykaEIFwoddzielnymkatalogu.
