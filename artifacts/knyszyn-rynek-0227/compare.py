@@ -8,9 +8,20 @@ tier=sys.argv[2] if len(sys.argv)>2 else 'High-clear'
 photos=Path('Data/raw/refs/owner-knyszyn-2026-11-15')
 out=root/'compare'/iteration/tier
 out.mkdir(parents=True,exist_ok=True)
-for n in range(1,12):
- photo=photos/f'{n}.webp'; camera = 'rynek' if n <= 8 else 'rondo'
- render=root/iteration/tier/f'{camera}-owner-{n:02}.png'
+market = {
+ 12: ('12-targowica-pion.jpg', 'market-owner-12.png'),
+ 13: ('13-targowica-ukos.jpg', 'market-owner-13.png'),
+ 14: ('14-targowica-wiaty-poziom.jpg', 'market-jagiellonska-qa.png'),
+}
+for n in range(1,15):
+ if n in market:
+  photo=photos/market[n][0]; render=root/iteration/tier/market[n][1]
+ else:
+  photo=photos/f'{n}.webp'; camera = 'rynek' if n <= 8 else 'rondo'
+  render=root/iteration/tier/f'{camera}-owner-{n:02}.png'
+ if not photo.exists():
+  print(f'{n}: missing local reference {photo}')
+  continue
  if not render.exists():
   print(f'{n}: missing {render}')
   continue
