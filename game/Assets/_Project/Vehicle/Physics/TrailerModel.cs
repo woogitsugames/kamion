@@ -214,6 +214,8 @@ namespace Game.Vehicle.Physics
         /// </summary>
         public double StandstillRelaxTau = 2.0;
         public const double RelaxMaxSpeed = 0.05;
+        /// <summary>Driveline torque on a towing wheel [N m] above which it counts as driven (ADR 0280 section 10 addendum D42).</summary>
+        public const double DrivenTorqueEpsilon = 1.0;
         /// <summary>Set by <see cref="CombinationModel"/>: the kingpin is in the jaw, so the tractor can take the load the relaxed trailer wheels give up.</summary>
         public bool Coupled;
         /// <summary>
@@ -240,11 +242,20 @@ namespace Game.Vehicle.Physics
             // towing vehicle has no braked wheel in contact (then the tractor rolls and only the trailer brakes hold).
             // The reference is the stiffness-weighted mean (net braked-wheel force of the tractor / their stiffness): a preload
             // between the tractor's own axles (front pushing, rear pulling after a reverse-and-brake) cancels out of it.
+            // ADR 0280 section 10 addendum (D42, 2026-11-16): a towing wheel that carries driveline torque is not a reaction to
+            // a load shared with the trailer, it is the action (engine pushing against the brakes, e.g. full throttle with the
+            // parking brake on and the interlock off). Its deflection points the other way from what the braked trailer wheels
+            // hold, and relaxing towards it (or towards the own share, 0 on the flat) bled the trailer's reaction off at
+            // (u_trailer - u_ref) / tau ~ 4 mm/s without end: park_brake_hold_no_interlock_comb crept 55 mm in 11 s and
+            // 251 mm in 60 s. While the driveline pushes, the braked trailer wheels hold their deflection (only the elastic
+            // wind-up remains, which stops); the driven wheels never enter the reference.
+            bool towingDriven = false;
             double sumKu = 0, sumK = 0; int nRef = 0;
             if (TowingWheels != null)
                 for (int i = 0; i < TowingWheels.Length; i++)
                 {
                     var tw = TowingWheels[i];
+                    if (tw.Contact && Math.Abs(tw.DriveTorque) > DrivenTorqueEpsilon) { towingDriven = true; continue; }
                     if (!tw.Contact || tw.BrakeTorque <= 0 || tw.Fz <= 0) continue;
                     double kt = tw.Tire.LongitudinalDeflectionStiffness(tw.Fz, tw.TireCount);
                     sumKu += kt * tw.Ux; sumK += kt; nRef++;
@@ -259,6 +270,7 @@ namespace Game.Vehicle.Physics
                 double target = 0;
                 if (w.Contact && w.BrakeTorque > 0 && w.Fz > 0)
                 {
+                    if (towingDriven) continue;
                     double cap = w.BrakeTorque / w.RollingRadius;
                     double kx = w.Tire.LongitudinalDeflectionStiffness(w.Fz, w.TireCount);
                     if (kx > 0)

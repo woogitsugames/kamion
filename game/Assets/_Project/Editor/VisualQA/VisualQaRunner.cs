@@ -39,17 +39,7 @@ namespace Game.Editor.VisualQA
                 // ADR 0043 option (c) A/B: phone-style white-balance adaptation strength (not a default).
                 string wb = EditorTools.Arg("-qaWbAdapt", null);
                 if (!string.IsNullOrEmpty(wb)) EnvironmentLighting.WhiteBalanceOverride = float.Parse(wb, System.Globalization.CultureInfo.InvariantCulture);
-                // ADR 0269 §Propozycje 2 (pc-visual-s23): -qaPcTiers 1 renders the PC tier (URP_PC_<tier> asset, QualitySettings
-                // fields and PcGraphicsTiers.Overlay values) instead of the mobile tier of the same name. The editor's
-                // QualitySettings are restored afterwards (AGENT-RULES §2: QualitySettings.asset stays clean).
-                bool pc = EditorTools.Arg("-qaPcTiers", "0") == "1";
-                int count;
-                if (pc) PcGraphicsTiers.ForceEnabled = true;
-                try { count = Render(scene, w, h, tier, outDir, lighting, only); }
-                finally
-                {
-                    if (pc) { PcGraphicsTiers.RestoreEditorState(); PcGraphicsTiers.ForceEnabled = null; }
-                }
+                int count = Render(scene, w, h, tier, outDir, lighting, only);
                 exit = count > 0 ? 0 : 1;
                 Debug.Log($"VISUALQA_RESULT: {(exit == 0 ? "OK" : "NO_CAMERAS")} rendered={count} dir={outDir}");
             }
@@ -83,7 +73,27 @@ namespace Game.Editor.VisualQA
             if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
                 throw new InvalidOperationException("No graphics device (-nographics?) — visual QA needs a GPU.");
 
+            // ADR 0269 propozycja 2 (night-pc-s23): -qaPcTiers 1 renders the PC tier (URP_PC_<tier> asset + PcGraphicsTiers.Overlay
+            // of the quality tier) instead of the phone tier; editor state is restored at the end.
+            bool pc = EditorTools.Arg("-qaPcTiers", "0") == "1";
+            if (pc) PcGraphicsTiers.ForceEnabled = true;
+            try
+            {
+                return RenderTier(sceneName, width, height, tier, outDir, lighting, onlyCameras, pc);
+            }
+            finally
+            {
+                if (pc) { PcGraphicsTiers.RestoreEditorState(); PcGraphicsTiers.ForceEnabled = null; }
+            }
+        }
+
+        static int RenderTier(string sceneName, int width, int height, string tier, string outDir, string lighting, string onlyCameras, bool pc)
+        {
+            string scenePath = AssetDatabase.FindAssets("t:Scene " + sceneName)
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == sceneName);
             QualityTiers.Apply(tier);
+            if (pc) Debug.Log($"[VISUALQA] PC tier {tier}: pipeline {QualitySettings.renderPipeline?.name}");
             ShaderUtil.allowAsyncCompilation = false; // avoid cyan placeholder shaders in captures
             EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
             Directory.CreateDirectory(outDir);
@@ -98,11 +108,7 @@ namespace Game.Editor.VisualQA
             var profile = QualityProfile.Load();
             QualityProfile.Tier tierSettings = default;
             bool hasTier = profile != null && profile.TryGet(tier, out tierSettings);
-            if (hasTier && PcGraphicsTiers.Enabled)
-            {
-                tierSettings = PcGraphicsTiers.Overlay(tierSettings);   // ADR 0269: PC values (-qaPcTiers 1)
-                Debug.Log($"[VISUALQA] PC tier {tier}: urp={(QualitySettings.renderPipeline != null ? QualitySettings.renderPipeline.name : "none")} msaa={tierSettings.msaa} shadows={tierSettings.shadowDistance}m/{tierSettings.shadowCascades}c/{tierSettings.shadowResolution} lodBias={QualitySettings.lodBias} aniso={QualitySettings.anisotropicFiltering}");
-            }
+            if (hasTier && pc) tierSettings = PcGraphicsTiers.Overlay(tierSettings);
             // Diagnostic A/B (pc-visual-s23): -qaAniso 0|1|2 overrides QualitySettings.anisotropicFiltering for this render
             // (restored by PcGraphicsTiers.RestoreEditorState with -qaPcTiers 1; without it the editor value is put back below).
             string anisoArg = EditorTools.Arg("-qaAniso", null);

@@ -1,0 +1,680 @@
+{
+ "schema": "kamion/research-s8-loop-tiles/1",
+ "loop": "S8 <-> DW671 <-> Tykocin (D82, docs/11_DECYZJE_WLASCICIELA.md; research docs/owner/MAP-DECISIONS-2026-11-16.md sekcja (b))",
+ "lattice": "ADR 0203: x = 776971 + 2048*i, y = 595199 + 2048*j, EPSG:2180, kafel 2048 x 2048 m",
+ "cell_set": "(-5..-9,0), (-9..-12,-1), (-12..-14,-2), (-13,-1..1) = 15 kafli (MAP-DECISIONS-2026-11-16 (b): komórki (-13,-2) i (-14,-2) mają obie drogi — węzeł S8/DW671 przy Jeżewie)",
+ "id_convention": "s8-NN w kolejności jazdy po S8 od dk65-01 do Jeżewa; dw671-jezewo-NN w kolejności jazdy powrotnej DW671 (istnieją już dw671-tykocin-01..09 w pierścieniu 0231 PR #115 i dw671-tykocin-01 zbudowany)",
+ "drive_order": "dk65-01 -> s8-01..s8-12 (S8: Białystok Zachód -> Choroszcz -> Tykocin -> Rzędziany -> Jeżewo) -> dw671-jezewo-01..03 (DW671: Jeżewo -> Broniszewo -> Tykocin-Kolonia -> Zimna Woda) -> tykocin (pierścień 0231) -> knyszyn-w / dw671-tykocin-01 (powrót przez zbudowane kafle)",
+ "sources": [
+  "docs/owner/MAP-DECISIONS-2026-11-16.md sekcja (b) — 15 kafli, styki z dk65-01 i tykocin, 21,2 km S8 + 8,6 km DW671 (dane planu map_plan_0278, 2026-11-16)",
+  "docs/11_DECYZJE_WLASCICIELA.md D82 — zgoda na pętlę S8↔DW671↔Tykocin",
+  "docs/adr/0203-...md — siatka 2048 m, x=776971+2048i, y=595199+2048j",
+  "OSM API 0.6 (raw/osm/manifest.json, 2026-11-16+ sesja) — treść kafli: klasy dróg, węzły, miejscowości (poniżej per kafel)",
+  "Data/Regions/*/region.yaml — bbox istniejących regionów do styków"
+ ],
+ "tiles": [
+  {
+   "id": "s8-01",
+   "order": 1,
+   "lattice_ij": [
+    -5,
+    0
+   ],
+   "bbox_epsg2180": {
+    "xmin": 766731.0,
+    "ymin": 595199.0,
+    "xmax": 768779.0,
+    "ymax": 597247.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.990927,
+    "lat_min": 53.154097,
+    "lon_max": 23.023208,
+    "lat_max": 53.173497
+   },
+   "route_note": "S8: granica z dk65-01 / węzeł Białystok Zachód → węzeł Choroszcz",
+   "stays_with_existing": [
+    {
+     "region": "dk65-01",
+     "shared_edge_m": 2048.0,
+     "source": "Data/Regions/dk65-01/region.yaml"
+    }
+   ],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 4.69,
+     "motorway_link": 1.53,
+     "residential": 4.61,
+     "service": 11.67,
+     "tertiary": 5.82,
+     "unclassified": 2.63
+    },
+    "buildings": 340,
+    "places": [
+     "Nowosiółki (neighbourhood)",
+     "Żółtki-Kolonia (village)"
+    ],
+    "junctions": [
+     "Białystok Zachód",
+     "Choroszcz"
+    ],
+    "services": [],
+    "fuel": 2
+   }
+  },
+  {
+   "id": "s8-02",
+   "order": 2,
+   "lattice_ij": [
+    -6,
+    0
+   ],
+   "bbox_epsg2180": {
+    "xmin": 764683.0,
+    "ymin": 595199.0,
+    "xmax": 766731.0,
+    "ymax": 597247.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.960365,
+    "lat_min": 53.155127,
+    "lon_max": 22.992634,
+    "lat_max": 53.17452
+   },
+   "route_note": "S8: węzeł Choroszcz → w stronę węzła Tykocin (Żółtki)",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 4.45,
+     "residential": 5.33,
+     "service": 2.83,
+     "tertiary": 2.84,
+     "unclassified": 2.32
+    },
+    "buildings": 450,
+    "places": [
+     "Szulaki (locality)",
+     "Żółtki (village)"
+    ],
+    "junctions": [
+     "Choroszcz"
+    ],
+    "services": [],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "s8-03",
+   "order": 3,
+   "lattice_ij": [
+    -7,
+    0
+   ],
+   "bbox_epsg2180": {
+    "xmin": 762635.0,
+    "ymin": 595199.0,
+    "xmax": 764683.0,
+    "ymax": 597247.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.9298,
+    "lat_min": 53.156148,
+    "lon_max": 22.962059,
+    "lat_max": 53.175534
+   },
+   "route_note": "S8: węzeł Tykocin (S8/DW671 w kierunku Tykocina) — węzeł na południu kafla",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 3.89,
+     "motorway_link": 2.03,
+     "residential": 0.54,
+     "rest_area": 0.84,
+     "service": 3.64,
+     "tertiary": 4.48,
+     "unclassified": 3.54
+    },
+    "buildings": 307,
+    "places": [
+     "Pławuli (hamlet)",
+     "Szulaki (locality)"
+    ],
+    "junctions": [
+     "Tykocin"
+    ],
+    "services": [
+     "way/916677534"
+    ],
+    "fuel": 1
+   }
+  },
+  {
+   "id": "s8-04",
+   "order": 4,
+   "lattice_ij": [
+    -8,
+    0
+   ],
+   "bbox_epsg2180": {
+    "xmin": 760587.0,
+    "ymin": 595199.0,
+    "xmax": 762635.0,
+    "ymax": 597247.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.899234,
+    "lat_min": 53.157162,
+    "lon_max": 22.931482,
+    "lat_max": 53.176541
+   },
+   "route_note": "S8: od węzła Tykocin w stronę Rzędzian (Babino)",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 3.95,
+     "motorway_link": 0.0,
+     "residential": 1.3,
+     "service": 1.05,
+     "tertiary": 1.84,
+     "unclassified": 4.77
+    },
+    "buildings": 173,
+    "places": [
+     "Babino (village)",
+     "Cegielnia-Złotoria (hamlet)"
+    ],
+    "junctions": [
+     "Tykocin"
+    ],
+    "services": [],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "s8-05",
+   "order": 5,
+   "lattice_ij": [
+    -9,
+    0
+   ],
+   "bbox_epsg2180": {
+    "xmin": 758539.0,
+    "ymin": 595199.0,
+    "xmax": 760587.0,
+    "ymax": 597247.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.868666,
+    "lat_min": 53.158168,
+    "lon_max": 22.900902,
+    "lat_max": 53.17754
+   },
+   "route_note": "S8: ku Rzędzianom",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 1.49,
+     "residential": 1.8,
+     "service": 3.38,
+     "tertiary": 0.09,
+     "unclassified": 6.48
+    },
+    "buildings": 193,
+    "places": [
+     "Kolonia Babino (hamlet)"
+    ],
+    "junctions": [],
+    "services": [],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "s8-06",
+   "order": 6,
+   "lattice_ij": [
+    -9,
+    -1
+   ],
+   "bbox_epsg2180": {
+    "xmin": 758539.0,
+    "ymin": 593151.0,
+    "xmax": 760587.0,
+    "ymax": 595199.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.867012,
+    "lat_min": 53.139796,
+    "lon_max": 22.899234,
+    "lat_max": 53.159167
+   },
+   "route_note": "S8: zakręt na południowy zachód",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 3.46,
+     "motorway_link": 0.06,
+     "residential": 1.9,
+     "service": 0.64,
+     "tertiary": 0.94,
+     "unclassified": 0.91
+    },
+    "buildings": 149,
+    "places": [],
+    "junctions": [
+     "Rzędziany"
+    ],
+    "services": [],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "s8-07",
+   "order": 7,
+   "lattice_ij": [
+    -10,
+    -1
+   ],
+   "bbox_epsg2180": {
+    "xmin": 756491.0,
+    "ymin": 593151.0,
+    "xmax": 758539.0,
+    "ymax": 595199.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.836456,
+    "lat_min": 53.140793,
+    "lon_max": 22.868666,
+    "lat_max": 53.160157
+   },
+   "route_note": "S8: węzeł Rzędziany",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 3.18,
+     "motorway_link": 1.68,
+     "residential": 0.99,
+     "service": 1.33,
+     "tertiary": 5.17,
+     "unclassified": 6.17
+    },
+    "buildings": 196,
+    "places": [
+     "Kolonia Rzędziany (hamlet)",
+     "Rzędziany (village)"
+    ],
+    "junctions": [
+     "Rzędziany"
+    ],
+    "services": [],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "s8-08",
+   "order": 8,
+   "lattice_ij": [
+    -11,
+    -1
+   ],
+   "bbox_epsg2180": {
+    "xmin": 754443.0,
+    "ymin": 593151.0,
+    "xmax": 756491.0,
+    "ymax": 595199.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.805897,
+    "lat_min": 53.141783,
+    "lon_max": 22.838096,
+    "lat_max": 53.16114
+   },
+   "route_note": "S8: od Rzędzian ku Jeżewu",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 3.75,
+     "service": 2.47,
+     "tertiary": 2.1,
+     "unclassified": 6.62
+    },
+    "buildings": 133,
+    "places": [
+     "Kolonia Radule (hamlet)"
+    ],
+    "junctions": [],
+    "services": [],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "s8-09",
+   "order": 9,
+   "lattice_ij": [
+    -12,
+    -1
+   ],
+   "bbox_epsg2180": {
+    "xmin": 752395.0,
+    "ymin": 593151.0,
+    "xmax": 754443.0,
+    "ymax": 595199.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.775336,
+    "lat_min": 53.142765,
+    "lon_max": 22.807524,
+    "lat_max": 53.162114
+   },
+   "route_note": "S8 + MOP Radule (pobocze)",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 3.21,
+     "motorway_link": 0.29,
+     "residential": 0.09,
+     "service": 7.55,
+     "services": 1.01,
+     "tertiary": 1.05,
+     "unclassified": 5.39
+    },
+    "buildings": 117,
+    "places": [],
+    "junctions": [],
+    "services": [
+     "way/222577666"
+    ],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "s8-10",
+   "order": 10,
+   "lattice_ij": [
+    -12,
+    -2
+   ],
+   "bbox_epsg2180": {
+    "xmin": 752395.0,
+    "ymin": 591103.0,
+    "xmax": 754443.0,
+    "ymax": 593151.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.773724,
+    "lat_min": 53.12439,
+    "lon_max": 22.805897,
+    "lat_max": 53.143739
+   },
+   "route_note": "S8: ku Jeżewu",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 2.05,
+     "motorway_link": 0.08,
+     "residential": 0.91,
+     "service": 1.94,
+     "services": 0.0,
+     "tertiary": 0.73,
+     "unclassified": 3.32
+    },
+    "buildings": 184,
+    "places": [],
+    "junctions": [],
+    "services": [
+     "way/222577666"
+    ],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "s8-11",
+   "order": 11,
+   "lattice_ij": [
+    -13,
+    -2
+   ],
+   "bbox_epsg2180": {
+    "xmin": 750347.0,
+    "ymin": 591103.0,
+    "xmax": 752395.0,
+    "ymax": 593151.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.743174,
+    "lat_min": 53.125364,
+    "lon_max": 22.775336,
+    "lat_max": 53.144705
+   },
+   "route_note": "S8: węzeł Jeżewo (S8/DW671/DK64) — strona wschodnia",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 4.69,
+     "motorway_link": 3.2,
+     "residential": 1.13,
+     "secondary": 0.38,
+     "service": 2.13,
+     "tertiary": 2.96,
+     "unclassified": 3.7
+    },
+    "buildings": 183,
+    "places": [
+     "Pajewo (village)"
+    ],
+    "junctions": [
+     "Jeżewo"
+    ],
+    "services": [],
+    "fuel": 1
+   }
+  },
+  {
+   "id": "s8-12",
+   "order": 12,
+   "lattice_ij": [
+    -14,
+    -2
+   ],
+   "bbox_epsg2180": {
+    "xmin": 748299.0,
+    "ymin": 591103.0,
+    "xmax": 750347.0,
+    "ymax": 593151.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.712623,
+    "lat_min": 53.126329,
+    "lon_max": 22.744774,
+    "lat_max": 53.145664
+   },
+   "route_note": "S8: węzeł Jeżewo — strona zachodnia (Jeżewo Stare/Nowe)",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "motorway": 4.26,
+     "motorway_link": 1.5,
+     "primary": 2.64,
+     "residential": 4.54,
+     "secondary": 2.18,
+     "service": 4.69,
+     "tertiary": 2.41,
+     "unclassified": 2.65
+    },
+    "buildings": 226,
+    "places": [
+     "Jeżewo Nowe (village)",
+     "Jeżewo Stare (village)",
+     "Kolonia Nowe Jeżewo (hamlet)",
+     "Stelmachowo-Kolonia (village)"
+    ],
+    "junctions": [
+     "Jeżewo"
+    ],
+    "services": [],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "dw671-jezewo-01",
+   "order": 13,
+   "lattice_ij": [
+    -13,
+    -1
+   ],
+   "bbox_epsg2180": {
+    "xmin": 750347.0,
+    "ymin": 593151.0,
+    "xmax": 752395.0,
+    "ymax": 595199.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.744774,
+    "lat_min": 53.143739,
+    "lon_max": 22.776951,
+    "lat_max": 53.163081
+   },
+   "route_note": "DW671: od węzła Jeżewo na północny wschód (Broniszewo)",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "residential": 0.99,
+     "secondary": 1.86,
+     "service": 2.82,
+     "unclassified": 4.9
+    },
+    "buildings": 190,
+    "places": [
+     "Broniszewo (village)",
+     "Kolonia Broniszewo (hamlet)"
+    ],
+    "junctions": [],
+    "services": [],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "dw671-jezewo-02",
+   "order": 14,
+   "lattice_ij": [
+    -13,
+    0
+   ],
+   "bbox_epsg2180": {
+    "xmin": 750347.0,
+    "ymin": 595199.0,
+    "xmax": 752395.0,
+    "ymax": 597247.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.746376,
+    "lat_min": 53.162114,
+    "lon_max": 22.778567,
+    "lat_max": 53.181457
+   },
+   "route_note": "DW671: Tykocin-Kolonia",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [],
+   "content_osm": {
+    "km_by_class": {
+     "residential": 1.57,
+     "secondary": 1.78,
+     "service": 5.65,
+     "unclassified": 0.86
+    },
+    "buildings": 116,
+    "places": [
+     "Tykocin-Kolonia (neighbourhood)"
+    ],
+    "junctions": [],
+    "services": [],
+    "fuel": 0
+   }
+  },
+  {
+   "id": "dw671-jezewo-03",
+   "order": 15,
+   "lattice_ij": [
+    -13,
+    1
+   ],
+   "bbox_epsg2180": {
+    "xmin": 750347.0,
+    "ymin": 597247.0,
+    "xmax": 752395.0,
+    "ymax": 599295.0,
+    "width_m": 2048.0,
+    "height_m": 2048.0
+   },
+   "bbox_wgs84": {
+    "lon_min": 22.747979,
+    "lat_min": 53.18049,
+    "lon_max": 22.780185,
+    "lat_max": 53.199833
+   },
+   "route_note": "DW671: Zimna Woda → granica z regionem tykocin (pierścień 0231, PR #115)",
+   "stays_with_existing": [],
+   "styk_z_planowanymi": [
+    {
+     "region": "tykocin",
+     "note": "pierścień 0231 (PR #115, nie w main); wg MAP-DECISIONS-2026-11-16 (b) ostatni kafel pętli styka się z tykocin"
+    }
+   ],
+   "content_osm": {
+    "km_by_class": {
+     "residential": 0.33,
+     "secondary": 2.49,
+     "service": 1.57,
+     "unclassified": 5.59
+    },
+    "buildings": 36,
+    "places": [
+     "Zimna Woda (neighbourhood)"
+    ],
+    "junctions": [],
+    "services": [],
+    "fuel": 0
+   }
+  }
+ ]
+}

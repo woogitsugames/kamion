@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Plain .NET 8 check of the Unity-independent HUD / menu / mirror-window logic of ADR 0283 (D84): UiPalette + UiContrast
+    (WCAG AA), DesktopHudLayout (16:9 / 21:9 / 32:9), HudModel (warnings, visibility, Polish texts), HudPreferences
+    (sanitising), MenuCommandMap (keyboard / mouse / pad). Sources compiled straight from the Unity project (pattern of
+    tools/controls-runner, ADR 0243); UnityShim.cs stands in for the few UnityEngine types used. The Unity EditMode suite
+    (HudRedesign0283Tests) stays the reference; this runner exists because cloud sessions have no Unity.
+    Run: dotnet test tools/hud-runner/Tests/HudTests.csproj
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>HudRunner.Tests</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RollForward>Major</RollForward>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../../game/Assets/_Project/Input/Display/UiPalette.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/Display/HudPreferences.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/Display/DesktopHudLayout.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/Display/HudModel.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/Display/MenuCommandMap.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/Display/HudScaleModel.cs" LinkBase="Input" />
+    <Compile Include="../../../game/Assets/_Project/Input/DrivingActionCatalog.cs" LinkBase="Input" />
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+</Project>

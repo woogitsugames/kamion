@@ -470,6 +470,40 @@ Skutki uboczne poprawki (wszystkie w limitach; pełna lista różnic main → PO
 `soak_30min_cycle` dryf energii −2,84 → +0,32 J (≤ 5 J), sprzęganie z przesunięciem 40 t maks. siła wzdłużna sworznia
 100 → 77 kN (≤ 150 kN).
 
+### 10.5a Dopisek D42 (2026-11-16): `park_brake_hold_no_interlock` 26,8 → 55,2 mm to artefakt relaksacji, nie 7,63 m
+
+Źródło przyrostu: commit `b0a59d936` (relaksacja postoju naczepy do odniesienia ciągnika), nie dane 7,63 m (`bec798465`).
+Pomiar sondą (przemieszczenie ciągnika 0–12 s) na drzewach z gita: 7,60 m (`0b817f51c`) 26,68 mm, 7,63 m bez poprawki
+(`bec798465`) 26,70 mm, main 7,70 m: `creep_m` 26,8 mm (§10.5). Rozstaw zmienia wynik o mniej niż 0,1 mm. Sonda (pętla kroków jak w §10.3,
+40 t, płasko, P włączone, blokada wyłączona, pełny gaz od 1 s): oś napędowa ciągnika jest jednocześnie hamowana
+(sprężynowe 16,0 kN m) i napędzana (22,4 kN m). Jej opony popychają zestaw z siłą 2 × 12,0 kN (ux +5,53 mm), a zahamowane koła naczepy trzymają
+−23,6 kN (ux −2,61 mm). Odniesienie §10.3 („wspólne ugięcie zahamowanych kół ciągnika”) bierze właśnie te koła, więc koła
+naczepy relaksowały do +5,53 mm, czyli w stronę *przeciwną* do siły, którą niosą. Szybkość pełzania wynosi
+(−2,61 − 5,53) mm / τ 2 s = 4,07 mm/s. Zmierzone 3,9–4,1 mm/s, liniowo i bez końca: 55,2 mm po 12 s, **128 mm po 30 s,
+251 mm po 60 s** (limit 150 mm przekroczony po ~36 s). Stary cel („własny udział” F_z·tanθ = 0 na płaskim) dawał
+2,61 / 2 = 1,3 mm/s, więc 26,8 mm też było przeciekiem, a nie podatnością. Oba wyniki nie zależą od kroku całkowania
+(szybkość ustala τ), więc nie jest to błąd całkowania ani tarcia statycznego, tylko relaksacja obciążenia zewnętrznego,
+które model traktuje jak naprężenie wewnętrzne. Dłuższy rozstaw 7,63 m nie ma tu udziału.
+
+Poprawka (`TrailerModel.RelaxStickAtStandstill`): koło ciągnika z momentem napędowym (|DriveTorque| > 1 N m) nie wchodzi do
+odniesienia. Dopóki jakiekolwiek takie koło ma kontakt, zahamowane koła naczepy zachowują ugięcie, bo siła napędu idzie
+przez sworzeń do ich hamulców jako obciążenie zewnętrzne. Niezahamowane koła relaksują do 0 jak dotąd. Gdy sprzęgło jest
+otwarte (każdy postój z blokadą, §10.3 na 12 %), nic się nie zmienia.
+
+| `park_brake_hold_no_interlock_comb@laden40` | przed | po |
+|---|---|---|
+| `creep_m` 0–12 s [mm] | 55,15 | **14,36** (limit 150) |
+| pełzanie po 30 / 60 s [mm] (sonda) | 128,2 / 251,0 | **14,02 / 13,95** (ustala się) |
+| prędkość pod koniec [km/h] | 0,0148 stała | → 0,001 i maleje |
+| `creep_m` przy dt 1/50, 1/60, 1/100, 1/120 s (substepy 8/7/4/3) | — | 14,37 / 14,37 / 14,36 / 14,36 |
+| τ = 0 (relaksacja wyłączona), kontrola | — | 14,29 |
+
+14,4 mm to sprężyste ugięcie opon napędu (5,5 mm), opon naczepy (2,6–3,2 mm) i zawieszenia/siodła. Wartość nie zależy od
+kroku i jest równa przypadkowi bez relaksacji. Zapas do limitu: 90 %. Pozostałe scenariusze runnera: 141 / 141, 833 / 833.
+65 metryk zmieniło się o mniej niż 1 % (ruszanie zestawem, sprzęganie na postoju: `couple_standstill_locked@empty`
+sworzeń/statyczny 1,010 → 1,001). Golden telemetry bez zmian (287 + 2 testy zielone). Wykresy przed i po:
+`tools/telemetry/plot.py` na CSV `park_brake_hold_no_interlock_comb@laden40` (przed: prędkość stała 0,015 km/h; po: zanika).
+
 ### 10.6 Ryzyka
 
 - Poprawka sprawdzona tylko w solverze .NET (ADR 0004: ten sam kod w Unity, ale bez PhysX i bez Windows playera).

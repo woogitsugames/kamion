@@ -88,3 +88,53 @@ def test_axis_offsets_are_pure_lateral():
         d0 = math.hypot(e["pts"][0][0] - a[0], e["pts"][0][1] - a[1])
         d1 = math.hypot(e["pts"][-1][0] - b[0], e["pts"][-1][1] - b[1])
         assert d0 < 10.0 and d1 < 10.0, f"{e['id']}: end {d0:.1f} / {d1:.1f} m off its node"
+
+
+PERTURBATIONS = (0.0, 1e-14, -1e-14, 1e-13, -1e-13, 1e-12, -1e-12, 1e-9, -1e-9)
+
+
+def test_axis_span_slice_is_stable_on_float_noise():
+    """D35 regression (synthetic): a span boundary that IS a sample (the chain end, an interior vertex) is kept no
+    matter on which side of the sample float noise puts raw_span * k. The old rule (no tolerance) flipped on +-1e-14:
+    that alone moved one axis end by a 0.5 m sampling step between Windows and Linux (D31)."""
+    import numpy as np
+    n = 61
+    s = np.cumsum(np.r_[0.0, np.full(n - 1, 0.4958)])          # 0.5 m-ish sampling like roads.pipeline
+    end, mid = float(s[-1]), float(s[30])
+    for d in PERTURBATIONS:
+        assert brg.axis_span_slice(s, 0.0 + d, end + d) == (0, n)          # whole chain, both ends inclusive
+        assert brg.axis_span_slice(s, 0.0 + d, mid + d) == (0, 31)         # interior vertex kept on the first span
+        assert brg.axis_span_slice(s, mid + d, end + d) == (30, n)         # ... and on the next one (shared vertex)
+    # Non-boundary values are cut as before (no sample within eps): 0.2 m off a sample changes nothing.
+    assert brg.axis_span_slice(s, float(s[3]) + 0.2, float(s[10]) - 0.2) == (4, 10)
+    # The old rule was unstable exactly here (documents the D31 cause; not used by the pipeline any more).
+    assert int(np.searchsorted(s, end - 1e-14, side="right")) == n - 1
+    assert int(np.searchsorted(s, end, side="right")) == n
+
+
+def test_region_axis_slices_stable_under_perturbation():
+    """D35 (region C): every edge span cut out of every chain gives the same sample range when its boundaries are
+    shifted by +-1e-14 ... +-1e-9 m, and a span that ends at the chain end keeps the chain's last sample."""
+    import numpy as np
+    graph, _, _ = _region()
+    sys.path.insert(0, os.path.join(brg.REPO, "tools", "worldgen"))
+    from roads import pipeline
+    net, _, _, _ = pipeline.build_network(REGION, graph)
+    spans = ends = 0
+    for c in net.chains:
+        if c.line is None:
+            continue
+        k = c.length / max(c.raw_spans[-1][1], 1e-9)
+        s = c.line.s
+        last = c.raw_spans[-1][1]
+        for s0, s1, eid, _rev in c.raw_spans:
+            ref = brg.axis_span_slice(s, s0 * k, s1 * k)
+            for d in PERTURBATIONS[1:]:
+                assert brg.axis_span_slice(s, s0 * k + d, s1 * k + d) == ref, (eid, d)
+            if s0 == 0.0:
+                assert ref[0] == 0, eid
+            if s1 == last:
+                assert ref[1] == len(s), eid
+                ends += 1
+            spans += 1
+    assert spans > 500 and ends > 100
