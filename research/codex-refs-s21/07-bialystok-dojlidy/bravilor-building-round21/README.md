@@ -1,0 +1,11 @@
+# Bravilor — kontrola luki B-051 / B-056, runda 21
+
+**SOURCED [screening.csv, własny indywidualny ogląd UI]: 2 nowe obejrzane ekspozycje, 0 przyjętych fotografii docelowego obiektu, 0 pobrań i 0 zapisanych screenshotów.** Manifest ma tylko wymagany nagłówek. Nie doliczono dwóch oglądów jako dwóch budynków ani nowych referencji elewacji.
+
+Po odczycie aktualnego BACKLOG-S21 wybrano relację wyższego frontu i niskiej hali Bravilor, B-051 / B-056. Kuronia 2 z lokalnego kontekstu wyboru nie jest tu potwierdzonym adresem zakładu. Nowy odczyt tekstu Unibep wskazuje Myśliwską 18 i dojazd z Kuronia; nie utożsamiamy go automatycznie z sąsiednim Rosti/Kuronia 2. Oficjalna [strona Bravilor](https://www.bravilor.com/pl/) podaje adres produkcji, a lokalny landmarks_d51 wskazuje way 513010463 / P11-063; nie użyto parametrów modelu jako dowodu zdjęciowego. Parent07 ma sąsiednią Rosti / ogrodzenia z 2017 r., więc wykluczono stare ID 285739329929948 i 1094523344376103. Brzeska i Buska nie były ponawiane.
+
+Kadr 361520199626176, d3mol3k, 19.04.2024, pokazuje jezdnię i sygnalizację przy skrzyżowaniu. Nie pokazuje docelowej pełnej bryły, więc nie zamyka luki. Kadr 2258512840946312, richlv, 15.07.2017, pokazuje w oddali jasne bryły, lecz ich identyfikacja jest UNVERIFIED. Nie przypisano ich Bravilor po samej etykiecie podkładu ani nie utożsamiono z gotową elewacją z 2026 r.. Oba obrazy otwarto w dużym widoku. Przesunięcie drugiego obrazu w UI nie jest nową ekspozycją.
+
+Podkład OSM; bez API, tokenów, Google, Commons i Flickr. Licencja obrazów CC BY-SA 4.0 według uprzednio odczytanej oficjalnej pomocy zapisanej w 04-dk65/mapillary-browser-round2/licence-check.json; tylko linki. Współrzędne URL są viewportem, GPS aparatu i azymut UNVERIFIED. Ogląd 16.11.2026, date-only. Bez zmian parentów/Git; Chrome zwolniony lampy.
+
+Dalszy konkretny trop: [oficjalna galeria Unibep](https://unibep.pl/realizacje/11-obiekty-energetyczno-przemyslowe/2625-zaklad-produkcyjny-bravilor-bonamat-w-bialymstoku.html). Tekst źródłowo wiąże realizację z Bravilor i zjazdem z Kuronia. Fotografie **NOT_REVIEWED** w tej rundzie; bez ich pobierania i opisywania z nazwy. Ten trop nie jest przyjętym kadrem. B-051 / B-056 pozostają otwarte.
