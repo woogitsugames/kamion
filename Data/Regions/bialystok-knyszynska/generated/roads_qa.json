@@ -4604,7 +4604,9 @@
    ],
    "length_m": 68.1,
    "max_grade": 0.02,
-   "overrides": [],
+   "overrides": [
+    "szosa-elcka-keep-paved-shoulder"
+   ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -4627,7 +4629,9 @@
    ],
    "length_m": 560.0,
    "max_grade": 0.0146,
-   "overrides": [],
+   "overrides": [
+    "szosa-elcka-keep-paved-shoulder"
+   ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -8692,17 +8696,24 @@
    8394134421,
    11499499561,
    2398464760,
+   2398464760,
+   5303217294,
    5303217294,
    5303217293,
+   5303217293,
+   3139676246,
    3139676246,
    3140046746,
    3139676238,
+   3139676238,
+   3081400709,
    3081400709,
    3081400702,
    3140046739,
    3140046748,
    4152917525,
    4152917528,
+   5174927883,
    5174927883,
    5174927891,
    7418729428,
@@ -8711,16 +8722,18 @@
    4152871186
   ],
   "crossings_merged": 0,
-  "crossings_p11": 0,
-  "crossings_skipped": [],
-  "crossings_snapped": 43,
+  "crossings_p11": 12,
+  "crossings_skipped": [
+   5174927891
+  ],
+  "crossings_snapped": 55,
   "decals": {
-   "gullies": 1284,
+   "gullies": 1283,
    "oil": 273,
    "patches": 567
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 663237,
+  "footprint_nodes": 664684,
   "fork_abreast": [
    {
     "beside": "c:w261104557:2927425559-2504239797",
@@ -9123,8 +9136,10 @@
   "markings": {
    "P-1 centre line": 52,
    "P-1 lane line": 29,
-   "P-10 crossing": 43,
-   "P-10 crossing in junction": 23,
+   "P-10 crossing": 42,
+   "P-10 crossing in junction": 22,
+   "P-11 cycle crossing": 12,
+   "P-11 cycle crossing in junction": 8,
    "P-13": 12,
    "P-7b edge line": 34,
    "P-8 arrow": 7,
@@ -9162,6 +9177,13 @@
     "targets": [
      "w224161424:2329921567-2329921561"
     ]
+   },
+   {
+    "id": "szosa-elcka-keep-paved-shoulder",
+    "targets": [
+     "w303739903:2632811417-841774154",
+     "w303739903:3081410944-2632811417"
+    ]
    }
   ],
   "overrides_stale": [],
@@ -9172,8 +9194,8 @@
   "roundabout_junctions": 8,
   "sides_on_carriageway_culled": {
    "kerb_tris": 848,
-   "parts": 210,
-   "side_tris": 167
+   "parts": 207,
+   "side_tris": 161
   },
   "signalised_junctions": 0,
   "through_lines": {
@@ -9189,7 +9211,7 @@
   },
   "verge_strips": {
    "chunks": 59,
-   "tris": 53676
+   "tris": 53914
   },
   "walled_ramps": [
    {
