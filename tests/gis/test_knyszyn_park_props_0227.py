@@ -122,12 +122,17 @@ def test_memorial_forecourt_and_sundial_face_town_hall():
 def test_proxy_bird_and_sundial_are_on_monuments_and_double_sided():
     for layer in props.LAYERS:
         acc=Acc(); props._obelisk(acc,layer,[0.,0.],0.)
-        bird=acc.d[(layer,"steel_painted")][-1]
+        bird,other=acc.d[(layer,"steel_painted")][-2:]
         v,t=bird[:2]
         assert v[:,2].min() >= 3.2 and v[:,2].max() <= 3.5
         assert len(t)==4 and np.isclose(np.ptp(v[:,0]),.64)
         assert np.allclose(np.cross(v[t[0,1]]-v[t[0,0]],v[t[0,2]]-v[t[0,0]]),
                            -np.cross(v[t[2,1]]-v[t[2,0]],v[t[2,2]]-v[t[2,0]]))
+        ov,ot=other[:2]
+        assert np.isclose(np.ptp(ov[:,1]),.64) and np.isclose(np.ptp(ov[:,0]),0.)
+        n1=np.cross(v[t[0,1]]-v[t[0,0]],v[t[0,2]]-v[t[0,0]])
+        n2=np.cross(ov[ot[0,1]]-ov[ot[0,0]],ov[ot[0,2]]-ov[ot[0,0]])
+        assert np.isclose(n1@n2,0.)
         acc=Acc(); props._king(acc,layer,[0.,0.],0.)
         disc,gnomon=acc.d[(layer,"steel_painted")][-2:]
         dv,dt=disc[:2]; gv,gt=gnomon[:2]
@@ -135,4 +140,56 @@ def test_proxy_bird_and_sundial_are_on_monuments_and_double_sided():
         assert len(dt)==8 and np.allclose(dv[:,2],.758)
         assert np.allclose(dv[0,:2],expected)
         assert len(gt)==2 and np.allclose(gv[:2,2],.762) and np.isclose(gv[2,2],.96)
+
+
+def test_king_arms_and_crown_are_separate_and_low_has_beard():
+    acc=Acc(); props._king(acc,"buildings_low",[0.,0.],0.)
+    pieces=acc.d[("buildings_low","steel_painted")]
+    crowns=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].max(),3.39)]
+    assert len(crowns)==3
+    assert all(np.isclose(v[:,2].min(),3.25) for v in crowns)
+    beard=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].min(),2.75)
+           and np.isclose(v[:,2].max(),3.02)]
+    assert beard
+    arms=[v for v,t,*_ in pieces if len(t)==2 and np.isclose(v[:,2].min(),1.73)
+          and np.isclose(v[:,2].max(),2.57)]
+    assert arms
+
+
+def test_flagpole_low_preserves_spiral_and_high_geometry():
+    from math import cos, pi, sin
+
+    layers = {}
+    for layer, sides in (("buildings", 12), ("buildings_low", 8)):
+        acc = Acc()
+        props._flagpole(acc, layer, [0., 0.], 0.)
+        layers[layer] = acc
+        assert set(acc.d) == {(layer, "paint_white_reflective"), (layer, "brick_red")}
+        for key, quads in acc.d.items():
+            assert len(quads) == 28*sides//2
+            for vertices, triangles, uv, _ in quads:
+                assert len(triangles) == 2
+                np.testing.assert_allclose(np.linalg.norm(vertices[:, :2], axis=1), .065)
+                assert vertices[:, 2].min() >= 0 and vertices[:, 2].max() <= 7
+                j = round(float(vertices[0, 2]) * 4)
+                angle = (np.arctan2(vertices[0, 1], vertices[0, 0]) + 2*pi) % (2*pi)
+                i = round(angle*sides/(2*pi)) % sides
+                expected = "paint_white_reflective" if (j + i//(sides//4)) % 2 == 0 else "brick_red"
+                assert key[1] == expected
+                assert np.linalg.norm(np.cross(vertices[1]-vertices[0], vertices[2]-vertices[0])) > 0
+        assert sum(len(q[1]) for quads in acc.d.values() for q in quads) == 28*sides*2
+
+    # Compare against the original 12-sided High surface, including UV and winding.
+    previous = Acc()
+    for j in range(28):
+        z0, z1 = 7*j/28, 7*(j+1)/28
+        for i in range(12):
+            a, b = 2*pi*i/12, 2*pi*(i+1)/12
+            p, q = .065*np.array([cos(a),sin(a)]), .065*np.array([cos(b),sin(b)])
+            mat = "paint_white_reflective" if (j+i//3)%2 == 0 else "brick_red"
+            previous.quad("buildings", mat, props._p(p,z0), props._p(q,z0), props._p(q,z1), props._p(p,z1))
+    for key, quads in previous.d.items():
+        for old, new in zip(quads, layers["buildings"].d[key]):
+            for before, after in zip(old[:3], new[:3]):
+                np.testing.assert_array_equal(before, after)
 

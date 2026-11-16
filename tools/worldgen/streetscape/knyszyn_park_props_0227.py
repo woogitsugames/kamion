@@ -82,6 +82,8 @@ def _obelisk(acc, layer, at, z):
     v=np.asarray([_p(c+[-.32,0.],z+3.35), _p(c+[0.,0.],z+3.26),
                   _p(c+[0.,0.],z+3.48), _p(c+[.32,0.],z+3.35)],float)
     acc.add(layer,"steel_painted",v,[[0,1,2],[2,1,3],[2,1,0],[3,1,2]])
+    v2=v.copy(); v2[:,:2]=np.column_stack((-(v[:,1]-c[1]),v[:,0]-c[0]))+c
+    acc.add(layer,"steel_painted",v2,[[0,1,2],[2,1,3],[2,1,0],[3,1,2]])
 
 
 def _king(acc, layer, at, z):
@@ -97,21 +99,24 @@ def _king(acc, layer, at, z):
     _frustum(acc,layer,bronze,body,z+1.05,z+2.64,1.00,.58)
     _box(acc,layer,bronze,body,z+2.49,z+2.73,.34,.21,KING_TANGENT)  # shoulders
     for side in (-1, 1):
-        c = pos(side*.36,.22)
+        c = pos(side*.49,.24)
         acc.box(layer,bronze,_p(c,z+2.15),np.r_[KING_TANGENT*.10,0],
-                np.r_[KING_FORWARD*.09,0],np.r_[-side*KING_TANGENT*.055,.42],skip=(0,))
+                np.r_[KING_FORWARD*.10,0],np.r_[-side*KING_TANGENT*.035,.42],skip=(0,))
     _box(acc,layer,bronze,body,z+2.72,z+2.84,.10,.10,KING_TANGENT)  # neck
     _box(acc,layer,bronze,body,z+2.82,z+3.18,.19,.17,KING_TANGENT)  # head
     _box(acc,layer,bronze,body,z+3.16,z+3.25,.22,.19,KING_TANGENT)  # crown band
     # The narrow raised points make the crown readable even on the cheap LOD.
     # Keep the top at the earlier proxy's height; no emblem or lettering.
     for x in (-.15, 0., .15):
-        _box(acc,layer,bronze,pos(x,0),z+3.25,z+3.39,.04,.16,KING_TANGENT)
+        triangle=[_p(pos(x-.04,.19),z+3.25),_p(pos(x+.04,.19),z+3.25),
+                  _p(pos(x,.19),z+3.39)]
+        acc.add(layer,bronze,triangle,[[0,1,2],[2,1,0]])
+    # A small projecting beard also survives Low; the statue remains a proxy.
+    _box(acc,layer,bronze,pos(0,.18),z+2.75,z+3.02,.12,.045,KING_TANGENT)
     if layer == "buildings":
-        # Small projecting beard and hands add depth in the close High view.
-        _box(acc,layer,bronze,pos(0,.18),z+2.75,z+3.02,.12,.045,KING_TANGENT)
+        # Small projecting hands add depth in the close High view.
         for side in (-1, 1):
-            _box(acc,layer,bronze,pos(side*.39,.23),z+1.72,z+1.88,.09,.10,KING_TANGENT)
+            _box(acc,layer,bronze,pos(side*.49,.24),z+1.72,z+1.88,.09,.10,KING_TANGENT)
     # Separate sundial/plaque block on paving in front of figure, blank.
     p=body+KING_FORWARD*KING_BLOCK_DISTANCE_M
     _box(acc,layer,"plinth_grey",p,z,z+.75,.65,.40,KING_TANGENT)
@@ -127,7 +132,9 @@ def _king(acc, layer, at, z):
 
 def _flagpole(acc, layer, at, z):
     # Alternating diagonal bands, geometry only. Height is WORKING_VALUE.
-    r, seg, rows, h = .065, 12, 28, 7.0
+    r, rows, h = .065, 28, 7.0
+    seg = 8 if layer == "buildings_low" else 12
+    sector_width = seg // 4
     c=np.asarray(at,float)
     for j in range(rows):
         z0,z1=z+h*j/rows,z+h*(j+1)/rows
@@ -135,7 +142,7 @@ def _flagpole(acc, layer, at, z):
             a=2*math.pi*i/seg; b=2*math.pi*(i+1)/seg
             p=c+r*np.array([math.cos(a),math.sin(a)])
             q=c+r*np.array([math.cos(b),math.sin(b)])
-            mat = "paint_white_reflective" if (j+i//3)%2 == 0 else "brick_red"
+            mat = "paint_white_reflective" if (j+i//sector_width)%2 == 0 else "brick_red"
             acc.quad(layer,mat,_p(p,z0),_p(q,z0),_p(q,z1),_p(p,z1))
 
 
