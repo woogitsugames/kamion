@@ -1,0 +1,2559 @@
+{
+ "schema": "kamion/research-s8-loop-signs/1",
+ "source": "OSM API 0.6 (raw/osm/manifest.json), ODbL 1.0, (c) OpenStreetMap contributors; przepisy: Dz.U. (cytaty w SIGNS.md)",
+ "osm_sign_nodes": [
+  {
+   "osm_node": 2329859397,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "60",
+    "side": "right"
+   },
+   "wgs84": [
+    22.7403479,
+    53.1377077
+   ],
+   "epsg2180": [
+    750091.9,
+    592357.8
+   ],
+   "cell": [
+    -14,
+    -2
+   ],
+   "tile": "s8-12",
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3054467143,
+   "sign": "PL:A-2",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "right"
+   },
+   "wgs84": [
+    22.7411273,
+    53.1344567
+   ],
+   "epsg2180": [
+    750162.9,
+    591999.2
+   ],
+   "cell": [
+    -14,
+    -2
+   ],
+   "tile": "s8-12",
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3054505447,
+   "sign": "overtaking",
+   "extra_tags": {
+    "direction": "forward",
+    "overtaking": "no",
+    "side": "both"
+   },
+   "wgs84": [
+    22.7402698,
+    53.1377117
+   ],
+   "epsg2180": [
+    750086.6,
+    592357.9
+   ],
+   "cell": [
+    -14,
+    -2
+   ],
+   "tile": "s8-12",
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012412413,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "50",
+    "side": "right"
+   },
+   "wgs84": [
+    23.0055262,
+    53.1536661
+   ],
+   "epsg2180": [
+    767715.4,
+    595091.2
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 2240228458,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "40",
+    "side": "right"
+   },
+   "wgs84": [
+    22.9814897,
+    53.1592528
+   ],
+   "epsg2180": [
+    766075.0,
+    595622.4
+   ],
+   "cell": [
+    -6,
+    0
+   ],
+   "tile": "s8-02",
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012179430,
+   "sign": "PL:B-18",
+   "extra_tags": {
+    "direction": "backward",
+    "maxweight": "10",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9808246,
+    53.1588144
+   ],
+   "epsg2180": [
+    766033.3,
+    595571.2
+   ],
+   "cell": [
+    -6,
+    0
+   ],
+   "tile": "s8-02",
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012179734,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "50",
+    "side": "right"
+   },
+   "wgs84": [
+    22.9806075,
+    53.1589893
+   ],
+   "epsg2180": [
+    766017.7,
+    595589.8
+   ],
+   "cell": [
+    -6,
+    0
+   ],
+   "tile": "s8-02",
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 1123401563,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "40",
+    "side": "right"
+   },
+   "wgs84": [
+    22.7714868,
+    53.2122444
+   ],
+   "epsg2180": [
+    751736.0,
+    600751.4
+   ],
+   "cell": [
+    -13,
+    2
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3052003093,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "40",
+    "side": "both"
+   },
+   "wgs84": [
+    22.7733473,
+    53.2080987
+   ],
+   "epsg2180": [
+    751884.4,
+    600297.1
+   ],
+   "cell": [
+    -13,
+    2
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3052003097,
+   "sign": "PL:B-16",
+   "extra_tags": {
+    "direction": "backward",
+    "maxheight": "3.7",
+    "side": "right"
+   },
+   "wgs84": [
+    22.773344,
+    53.2081627
+   ],
+   "epsg2180": [
+    751883.8,
+    600304.3
+   ],
+   "cell": [
+    -13,
+    2
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3052126457,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "40",
+    "side": "both"
+   },
+   "wgs84": [
+    22.7772889,
+    53.204102
+   ],
+   "epsg2180": [
+    752170.9,
+    599866.8
+   ],
+   "cell": [
+    -13,
+    2
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3052178769,
+   "sign": "PL:B-18",
+   "extra_tags": {
+    "direction": "forward",
+    "maxweight": "12",
+    "side": "both"
+   },
+   "wgs84": [
+    22.7679393,
+    53.2042045
+   ],
+   "epsg2180": [
+    751546.4,
+    599845.3
+   ],
+   "cell": [
+    -13,
+    2
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3053366233,
+   "sign": "PL:B-16",
+   "extra_tags": {
+    "direction": "forward",
+    "maxheight": "3.7",
+    "side": "right"
+   },
+   "wgs84": [
+    22.7733099,
+    53.2102317
+   ],
+   "epsg2180": [
+    751869.4,
+    600534.1
+   ],
+   "cell": [
+    -13,
+    2
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3054040913,
+   "sign": "PL:A-4",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "right"
+   },
+   "wgs84": [
+    22.7733035,
+    53.2104184
+   ],
+   "epsg2180": [
+    751867.9,
+    600554.8
+   ],
+   "cell": [
+    -13,
+    2
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3144063330,
+   "sign": "PL:B-35",
+   "extra_tags": {
+    "direction": "forward",
+    "parking_lane:right": "no_parking",
+    "side": "both"
+   },
+   "wgs84": [
+    23.081861,
+    53.1520245
+   ],
+   "epsg2180": [
+    772825.3,
+    595197.3
+   ],
+   "cell": [
+    -3,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3144063340,
+   "sign": "PL:B-35",
+   "extra_tags": {
+    "direction": "backward",
+    "parking_lane:right": "no_parking",
+    "side": "both"
+   },
+   "wgs84": [
+    23.0826844,
+    53.1527688
+   ],
+   "epsg2180": [
+    772875.6,
+    595283.2
+   ],
+   "cell": [
+    -2,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3144063342,
+   "sign": "PL:B-35",
+   "extra_tags": {
+    "direction": "forward",
+    "parking_lane:right": "no_parking",
+    "side": "both"
+   },
+   "wgs84": [
+    23.0827557,
+    53.1527895
+   ],
+   "epsg2180": [
+    772880.2,
+    595285.7
+   ],
+   "cell": [
+    -2,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3144063343,
+   "sign": "PL:B-35",
+   "extra_tags": {
+    "direction": "backward",
+    "parking_lane:right": "no_parking",
+    "side": "both"
+   },
+   "wgs84": [
+    23.0837736,
+    53.1530967
+   ],
+   "epsg2180": [
+    772946.3,
+    595323.8
+   ],
+   "cell": [
+    -2,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3144066743,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "30",
+    "side": "both",
+    "source:maxspeed": "zone"
+   },
+   "wgs84": [
+    23.0816666,
+    53.152295
+   ],
+   "epsg2180": [
+    772810.6,
+    595226.6
+   ],
+   "cell": [
+    -3,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3144095647,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "40",
+    "side": "both"
+   },
+   "wgs84": [
+    23.0853953,
+    53.1521173
+   ],
+   "epsg2180": [
+    773060.8,
+    595221.1
+   ],
+   "cell": [
+    -2,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3144095882,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "40",
+    "side": "both"
+   },
+   "wgs84": [
+    23.0885778,
+    53.1528058
+   ],
+   "epsg2180": [
+    773269.1,
+    595309.8
+   ],
+   "cell": [
+    -2,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3144227219,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "30",
+    "side": "both",
+    "source:maxspeed": "zone"
+   },
+   "wgs84": [
+    23.0870343,
+    53.1542543
+   ],
+   "epsg2180": [
+    773156.8,
+    595464.9
+   ],
+   "cell": [
+    -2,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 457689685,
+   "sign": "city_limit",
+   "extra_tags": {
+    "name": "Klepacze"
+   },
+   "wgs84": [
+    23.0787169,
+    53.1103989
+   ],
+   "epsg2180": [
+    772879.2,
+    590559.4
+   ],
+   "cell": [
+    -2,
+    -3
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 2426035260,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "40",
+    "side": "both"
+   },
+   "wgs84": [
+    23.0473675,
+    53.0891099
+   ],
+   "epsg2180": [
+    770916.7,
+    588074.4
+   ],
+   "cell": [
+    -3,
+    -4
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 841774276,
+   "sign": "city_name",
+   "extra_tags": {
+    "name": "Białystok"
+   },
+   "wgs84": [
+    23.0723143,
+    53.1599106
+   ],
+   "epsg2180": [
+    772137.6,
+    596037.3
+   ],
+   "cell": [
+    -3,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3144201324,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "30",
+    "side": "both",
+    "source:maxspeed": "zone"
+   },
+   "wgs84": [
+    23.0843403,
+    53.1534757
+   ],
+   "epsg2180": [
+    772981.7,
+    595368.0
+   ],
+   "cell": [
+    -2,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 11762324853,
+   "sign": "PL:D-51",
+   "extra_tags": {},
+   "wgs84": [
+    23.0546752,
+    53.169037
+   ],
+   "epsg2180": [
+    770901.9,
+    596984.6
+   ],
+   "cell": [
+    -3,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 11762324857,
+   "sign": "PL:D-51",
+   "extra_tags": {},
+   "wgs84": [
+    23.0596509,
+    53.1682809
+   ],
+   "epsg2180": [
+    771238.9,
+    596919.4
+   ],
+   "cell": [
+    -3,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 2305516708,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "30",
+    "side": "right"
+   },
+   "wgs84": [
+    23.0419127,
+    53.152226
+   ],
+   "epsg2180": [
+    770155.2,
+    595068.0
+   ],
+   "cell": [
+    -4,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012503985,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "40",
+    "side": "right"
+   },
+   "wgs84": [
+    23.0461687,
+    53.1513982
+   ],
+   "epsg2180": [
+    770444.8,
+    594992.1
+   ],
+   "cell": [
+    -4,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 2070722303,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "40",
+    "side": "right"
+   },
+   "wgs84": [
+    23.0271698,
+    53.1546022
+   ],
+   "epsg2180": [
+    769155.4,
+    595276.5
+   ],
+   "cell": [
+    -4,
+    0
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 2378899978,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9947317,
+    53.145651
+   ],
+   "epsg2180": [
+    767044.0,
+    594160.1
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010309959,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9889656,
+    53.1462077
+   ],
+   "epsg2180": [
+    766655.3,
+    594200.5
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010828054,
+   "sign": "ES:s15b",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "right"
+   },
+   "wgs84": [
+    22.9928905,
+    53.1455283
+   ],
+   "epsg2180": [
+    766921.7,
+    594139.6
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010834725,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9947621,
+    53.1456277
+   ],
+   "epsg2180": [
+    767046.2,
+    594157.7
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012056973,
+   "sign": "PL:B-18",
+   "extra_tags": {
+    "direction": "forward",
+    "maxweight": "10",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9924781,
+    53.1430077
+   ],
+   "epsg2180": [
+    766909.8,
+    593858.0
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012066526,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9943729,
+    53.142765
+   ],
+   "epsg2180": [
+    767037.9,
+    593838.1
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012066527,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9943432,
+    53.1427688
+   ],
+   "epsg2180": [
+    767035.9,
+    593838.4
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012066529,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9935719,
+    53.1428676
+   ],
+   "epsg2180": [
+    766983.8,
+    593846.5
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012066530,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9935508,
+    53.1428703
+   ],
+   "epsg2180": [
+    766982.4,
+    593846.7
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012081673,
+   "sign": "PL:D-4a",
+   "extra_tags": {
+    "direction": "backward",
+    "noexit": "yes",
+    "side": "right"
+   },
+   "wgs84": [
+    22.9965979,
+    53.1440455
+   ],
+   "epsg2180": [
+    767178.7,
+    593988.7
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012092748,
+   "sign": "PL:A-17",
+   "extra_tags": {
+    "direction": "backward",
+    "highway": "passing_place",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9982002,
+    53.1437528
+   ],
+   "epsg2180": [
+    767287.6,
+    593962.1
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012425960,
+   "sign": "PL:D-4a",
+   "extra_tags": {
+    "direction": "forward",
+    "noexit": "yes",
+    "side": "right"
+   },
+   "wgs84": [
+    23.0053143,
+    53.1538538
+   ],
+   "epsg2180": [
+    767700.0,
+    595111.3
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3379303514,
+   "sign": "city_limit",
+   "extra_tags": {},
+   "wgs84": [
+    22.996428,
+    53.1425456
+   ],
+   "epsg2180": [
+    767176.6,
+    593821.3
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 9111121147,
+   "sign": "city_limit",
+   "extra_tags": {},
+   "wgs84": [
+    22.9976964,
+    53.1428924
+   ],
+   "epsg2180": [
+    767259.2,
+    593864.6
+   ],
+   "cell": [
+    -5,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 2398464902,
+   "sign": "PL:A-17",
+   "extra_tags": {
+    "direction": "backward",
+    "highway": "passing_place",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9851912,
+    53.1346031
+   ],
+   "epsg2180": [
+    766475.0,
+    592896.7
+   ],
+   "cell": [
+    -6,
+    -2
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 840039845,
+   "sign": "city_limit",
+   "extra_tags": {
+    "direction": "backward",
+    "name": "Dobrzyniewo Duże",
+    "traffic_sign:direction": "backward"
+   },
+   "wgs84": [
+    23.0197122,
+    53.2093918
+   ],
+   "epsg2180": [
+    768314.7,
+    601337.5
+   ],
+   "cell": [
+    -5,
+    2
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 840039870,
+   "sign": "city_limit",
+   "extra_tags": {
+    "name": "Gniła"
+   },
+   "wgs84": [
+    22.9749829,
+    53.2175096
+   ],
+   "epsg2180": [
+    765280.2,
+    602072.7
+   ],
+   "cell": [
+    -6,
+    3
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3008919346,
+   "sign": "PL:B-18",
+   "extra_tags": {
+    "direction": "backward",
+    "maxweight": "8",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9771303,
+    53.1376935
+   ],
+   "epsg2180": [
+    765917.1,
+    593210.2
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010181668,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "30",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9835853,
+    53.1446975
+   ],
+   "epsg2180": [
+    766305.1,
+    594012.6
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010192173,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "30",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9838194,
+    53.14535
+   ],
+   "epsg2180": [
+    766316.7,
+    594086.0
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010273398,
+   "sign": "PL:A-17",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9877201,
+    53.148178
+   ],
+   "epsg2180": [
+    766559.8,
+    594414.8
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010280598,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9878895,
+    53.1473558
+   ],
+   "epsg2180": [
+    766576.2,
+    594324.1
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010280599,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9879042,
+    53.1473625
+   ],
+   "epsg2180": [
+    766577.2,
+    594324.9
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010282199,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9869712,
+    53.147497
+   ],
+   "epsg2180": [
+    766514.0,
+    594336.3
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010282200,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9869737,
+    53.1475083
+   ],
+   "epsg2180": [
+    766514.1,
+    594337.6
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010285045,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9868823,
+    53.147046
+   ],
+   "epsg2180": [
+    766510.9,
+    594285.9
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010285046,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.986885,
+    53.1470606
+   ],
+   "epsg2180": [
+    766511.0,
+    594287.5
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010285050,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9873209,
+    53.1470958
+   ],
+   "epsg2180": [
+    766539.9,
+    594293.1
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010285051,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9873349,
+    53.1471022
+   ],
+   "epsg2180": [
+    766540.8,
+    594293.8
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010306770,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9879617,
+    53.1458765
+   ],
+   "epsg2180": [
+    766590.2,
+    594159.9
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010306771,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.987942,
+    53.1458894
+   ],
+   "epsg2180": [
+    766588.8,
+    594161.3
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010306773,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.987466,
+    53.1461996
+   ],
+   "epsg2180": [
+    766555.1,
+    594194.0
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010306774,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9874516,
+    53.146209
+   ],
+   "epsg2180": [
+    766554.1,
+    594195.0
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010309933,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9883505,
+    53.145932
+   ],
+   "epsg2180": [
+    766615.9,
+    594167.6
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010309934,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9883644,
+    53.1459383
+   ],
+   "epsg2180": [
+    766616.8,
+    594168.3
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010309958,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9889517,
+    53.1462015
+   ],
+   "epsg2180": [
+    766654.4,
+    594199.7
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010325315,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.988393,
+    53.1467819
+   ],
+   "epsg2180": [
+    766613.4,
+    594262.2
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010325316,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9884118,
+    53.1467904
+   ],
+   "epsg2180": [
+    766614.7,
+    594263.2
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010328006,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9877735,
+    53.1465017
+   ],
+   "epsg2180": [
+    766573.8,
+    594228.7
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010328007,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9877913,
+    53.1465098
+   ],
+   "epsg2180": [
+    766574.9,
+    594229.7
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010338771,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "40",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9876607,
+    53.1480472
+   ],
+   "epsg2180": [
+    766556.7,
+    594400.1
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010338772,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "40",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9878311,
+    53.1480869
+   ],
+   "epsg2180": [
+    766567.8,
+    594405.1
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010348234,
+   "sign": "PL:A-11",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "both",
+    "traffic_calming": "rumble_strip"
+   },
+   "wgs84": [
+    22.9864486,
+    53.1491687
+   ],
+   "epsg2180": [
+    766468.7,
+    594520.2
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010808380,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "30",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9862108,
+    53.1481037
+   ],
+   "epsg2180": [
+    766459.4,
+    594400.9
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010808381,
+   "sign": "PL:A-11",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "both",
+    "traffic_calming": "rumble_strip"
+   },
+   "wgs84": [
+    22.9862138,
+    53.1481173
+   ],
+   "epsg2180": [
+    766459.6,
+    594402.5
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3010808382,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "30",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9864518,
+    53.1491832
+   ],
+   "epsg2180": [
+    766468.9,
+    594521.8
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012145635,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "40",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9862909,
+    53.1520065
+   ],
+   "epsg2180": [
+    766440.6,
+    594835.0
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012152861,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "forward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9857066,
+    53.1534615
+   ],
+   "epsg2180": [
+    766392.6,
+    594994.5
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012152862,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "forward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9857019,
+    53.1534739
+   ],
+   "epsg2180": [
+    766392.2,
+    594995.9
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012152864,
+   "sign": "PL:A-11a",
+   "extra_tags": {
+    "direction": "backward",
+    "side": "right",
+    "traffic_calming": "bump"
+   },
+   "wgs84": [
+    22.9855247,
+    53.1539432
+   ],
+   "epsg2180": [
+    766377.4,
+    595047.4
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 3012152865,
+   "sign": "maxspeed",
+   "extra_tags": {
+    "direction": "backward",
+    "maxspeed": "20",
+    "side": "both"
+   },
+   "wgs84": [
+    22.9855186,
+    53.1539594
+   ],
+   "epsg2180": [
+    766376.9,
+    595049.1
+   ],
+   "cell": [
+    -6,
+    -1
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 840039844,
+   "sign": "city_limit",
+   "extra_tags": {
+    "name": "Pogorzałki"
+   },
+   "wgs84": [
+    22.9615082,
+    53.217393
+   ],
+   "epsg2180": [
+    764382.0,
+    602009.8
+   ],
+   "cell": [
+    -7,
+    3
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 839430606,
+   "sign": "city_limit",
+   "extra_tags": {
+    "name": "Borsukówka"
+   },
+   "wgs84": [
+    22.940179,
+    53.2371279
+   ],
+   "epsg2180": [
+    762838.2,
+    604124.4
+   ],
+   "cell": [
+    -7,
+    4
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  },
+  {
+   "osm_node": 840039900,
+   "sign": "city_limit",
+   "extra_tags": {
+    "name": "Pogorzałki"
+   },
+   "wgs84": [
+    22.9492858,
+    53.2246373
+   ],
+   "epsg2180": [
+    763522.2,
+    602769.7
+   ],
+   "cell": [
+    -7,
+    3
+   ],
+   "confidence": "OSM-only (tag traffic_sign); brak zdjęcia -> UNVERIFIED"
+  }
+ ],
+ "way_restrictions": {
+  "S8_motorway": {
+   "ways": 99,
+   "maxspeed": {
+    "120": 99
+   },
+   "maxspeed_hgv": {
+    "80": 99
+   },
+   "toll_hgv": {
+    "yes": 95,
+    "null": 4
+   },
+   "surface": {
+    "asphalt": 99
+   },
+   "lanes": {
+    "3": 31,
+    "2": 68
+   }
+  },
+  "motorway_links": {
+   "maxspeed": {
+    "null": 86,
+    "40": 7,
+    "30": 2,
+    "60": 28,
+    "50": 21,
+    "70": 2
+   },
+   "lanes": {
+    "1": 86,
+    "2": 41,
+    "null": 14,
+    "3": 5
+   }
+  },
+  "DW671": {
+   "maxspeed": {
+    "null": 31,
+    "90": 6,
+    "70": 2,
+    "50": 1,
+    "40": 2,
+    "60": 1
+   },
+   "lanes": {
+    "2": 20,
+    "1": 6,
+    "null": 16,
+    "3": 1
+   },
+   "width": {
+    "null": 43
+   }
+  },
+  "ways_with_maxweight": [
+   {
+    "way": 297345991,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 1.5,
+    "cells": [
+     [
+      -5,
+      0
+     ]
+    ],
+    "tiles": [
+     "s8-01"
+    ]
+   },
+   {
+    "way": 888490257,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 676.8,
+    "cells": [
+     [
+      -6,
+      -1
+     ],
+     [
+      -6,
+      0
+     ],
+     [
+      -5,
+      0
+     ]
+    ],
+    "tiles": [
+     "s8-01",
+     "s8-02"
+    ]
+   },
+   {
+    "way": 888490258,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 12.9,
+    "cells": [
+     [
+      -5,
+      0
+     ]
+    ],
+    "tiles": [
+     "s8-01"
+    ]
+   },
+   {
+    "way": 1293065571,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 65.8,
+    "cells": [
+     [
+      -5,
+      0
+     ]
+    ],
+    "tiles": [
+     "s8-01"
+    ]
+   },
+   {
+    "way": 1293065572,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 118.7,
+    "cells": [
+     [
+      -5,
+      0
+     ]
+    ],
+    "tiles": [
+     "s8-01"
+    ]
+   },
+   {
+    "way": 297342246,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 518.9,
+    "cells": [
+     [
+      -6,
+      -1
+     ],
+     [
+      -6,
+      0
+     ]
+    ],
+    "tiles": [
+     "s8-02"
+    ]
+   },
+   {
+    "way": 99623056,
+    "highway": "residential",
+    "maxweight": "12",
+    "length_m": 235.9,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 99623288,
+    "highway": "tertiary",
+    "maxweight": "12",
+    "length_m": 92.9,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 99623738,
+    "highway": "residential",
+    "maxweight": "6",
+    "length_m": 67.5,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 99623761,
+    "highway": "residential",
+    "maxweight": "6",
+    "length_m": 272.3,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 99624299,
+    "highway": "residential",
+    "maxweight": "6",
+    "length_m": 147.9,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 99624319,
+    "highway": "residential",
+    "maxweight": "6",
+    "length_m": 267.1,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 99624439,
+    "highway": "residential",
+    "maxweight": "6",
+    "length_m": 281.3,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 220328691,
+    "highway": "track",
+    "maxweight": "5",
+    "length_m": 161.5,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 301348402,
+    "highway": "track",
+    "maxweight": "5",
+    "length_m": 4.8,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 630270652,
+    "highway": "residential",
+    "maxweight": "12",
+    "length_m": 253.1,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 630270665,
+    "highway": "residential",
+    "maxweight": "6",
+    "length_m": 112.1,
+    "cells": [
+     [
+      -13,
+      2
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 239913129,
+    "highway": "tertiary",
+    "maxweight": "15",
+    "length_m": 1851.4,
+    "cells": [
+     [
+      -3,
+      -4
+     ],
+     [
+      -3,
+      -3
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 378302101,
+    "highway": "tertiary",
+    "maxweight": "15",
+    "length_m": 12.4,
+    "cells": [
+     [
+      -3,
+      -3
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 378302102,
+    "highway": "tertiary",
+    "maxweight": "15",
+    "length_m": 173.4,
+    "cells": [
+     [
+      -3,
+      -3
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 523779976,
+    "highway": "tertiary",
+    "maxweight": "15",
+    "length_m": 13.7,
+    "cells": [
+     [
+      -3,
+      -3
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 641551114,
+    "highway": "tertiary",
+    "maxweight": "15",
+    "length_m": 42.2,
+    "cells": [
+     [
+      -3,
+      -3
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 641551118,
+    "highway": "tertiary",
+    "maxweight": "15",
+    "length_m": 201.9,
+    "cells": [
+     [
+      -3,
+      -3
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1236410011,
+    "highway": "tertiary",
+    "maxweight": "15",
+    "length_m": 15.8,
+    "cells": [
+     [
+      -3,
+      -3
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1442577506,
+    "highway": "tertiary",
+    "maxweight": "15",
+    "length_m": 560.3,
+    "cells": [
+     [
+      -3,
+      -3
+     ],
+     [
+      -2,
+      -3
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 56473014,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 404.7,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 274092430,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 223.1,
+    "cells": [
+     [
+      -4,
+      -4
+     ],
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 375831040,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 217.7,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 403511349,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 154.5,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 403511379,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 155.2,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 998558642,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 42.1,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1125224891,
+    "highway": "tertiary",
+    "maxweight": "15",
+    "length_m": 179.8,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1220481505,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 29.0,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1220481506,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 29.5,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1225048348,
+    "highway": "residential",
+    "maxweight": "10",
+    "length_m": 55.7,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1516190652,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 14.1,
+    "cells": [
+     [
+      -3,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 394573014,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 1226.0,
+    "cells": [
+     [
+      -4,
+      -5
+     ],
+     [
+      -4,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 84867140,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 1116.2,
+    "cells": [
+     [
+      -5,
+      -1
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1235817195,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 190.9,
+    "cells": [
+     [
+      -5,
+      -1
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 274084180,
+    "highway": "unclassified",
+    "maxweight": "10",
+    "length_m": 2250.7,
+    "cells": [
+     [
+      -5,
+      -4
+     ],
+     [
+      -5,
+      -3
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1472665328,
+    "highway": "unclassified",
+    "maxweight": "10",
+    "length_m": 12.4,
+    "cells": [
+     [
+      -5,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1553393177,
+    "highway": "unclassified",
+    "maxweight": "10",
+    "length_m": 267.9,
+    "cells": [
+     [
+      -5,
+      -4
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 84955435,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 78.7,
+    "cells": [
+     [
+      -6,
+      -1
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 297342245,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 56.8,
+    "cells": [
+     [
+      -6,
+      -1
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 634210339,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 129.1,
+    "cells": [
+     [
+      -6,
+      -1
+     ]
+    ],
+    "tiles": []
+   },
+   {
+    "way": 1285245975,
+    "highway": "tertiary",
+    "maxweight": "10",
+    "length_m": 4.3,
+    "cells": [
+     [
+      -6,
+      -1
+     ]
+    ],
+    "tiles": []
+   }
+  ]
+ },
+ "photo_verification": {
+  "mapillary": "niedostępne — API wymaga tokenu właściciela (jak w G10, MAP-DECISIONS A11); wszystkie znaki z OSM zostają UNVERIFIED do zdjęcia",
+  "panoramax": "sprawdzone API api.panoramax.xyz dla bbox pętli (22.71262,53.11736,23.02493,53.20079): pojedyncze zdjęcia na trasie S8/DW671; CC BY 4.0; bez detekcji znaków — tylko pokrycie"
+ }
+}
