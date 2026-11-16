@@ -9,3 +9,6 @@ Gałąź `int-world3-s23` z origin/main 64e54592e; worktree `.claude/worktrees/i
 - visual-qa.ps1: nowy parametr -BuildTarget (Win64 bez przełączania platformy).
 - NASTĘPNY KROK: łańcuch world+unity: `artifacts/int-world3-s23/tools/chain.ps1` (status `artifacts/int-world3-s23/logs/chain-*.status`, czytać `exit=`).
 - Kafle world2 (dk65-11, knyszyn-s, dk65-06, dw671-tykocin-01, knyszynska, maczka, kleeberga + 18 pierścienia) NIE przebudowywane do scalenia world2 w main.
+- 19:3x łańcuch próbny t1 (knyszyn-w, world PID 65404 + unity PID 39788) — czeka w kolejce heavy (4/4 zajęte: dk19-tiles ×3, crash-diag).
+- Znany czerwony po scaleniu #153×#169: `test_effective_graph_readers::test_knyszyn_route_graph_has_the_dk65_splits_and_consistent_geometry` (luka węzeł↔oś 1,73 m na 8 krawędziach pierścienia; = review #169 P2-7: pierścień na r 10,5 m z `outer_diameter_m`, węzły KRTG na r OSM 8,65 m). Przy #165 zielony. Do decyzji lidera.
+- Sonda uskoku DK65 płd. (`tools/worldgen/qa/knyszyn_s_kerb_step.py`) na derived sprzed #169: W max 0,506 / E max 0,652 m.
