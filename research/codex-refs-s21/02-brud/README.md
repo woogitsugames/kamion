@@ -1,10 +1,10 @@
 # 02 — Brud tylnych drzwi naczepy — WIP
 
-Stan ewidencji głównej na 16.11.2026: **26 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **27 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
-Aktualny manifest: 26 rekordów = 24 kadry (14 lokalnych / 10 link-only) + 2 dokumenty, w tym odrzucenia i AUX. To nie 25 kwalifikacji. [Rejestr A/B/C](qualification-ledger-round18/README.md) zachowuje historyczny snapshot.
+Aktualny manifest: 27 rekordów = 25 kadrów (14 lokalnych / 11 link-only) + 2 dokumenty, w tym odrzucenia i AUX. To nie 25 kwalifikacji. [Rejestr A/B/C](qualification-ledger-round18/README.md) zachowuje historyczny snapshot.
 
-A ≥20 łącznie: rozpoznana dolna granica 8 źródeł z ograniczeniami — Knight/Western/Premier, Krone z lekkim filmem, RoadTour source-dependent, AutoReview39, RI49-001 i nowy UR54-001. B ≥12 nowych z drzwiami ≥1000px i ruchem/zaraz po trasie: nadal 1 źródło WesternExpress, liczone raz z P18-182/CR6. Zima-A: 2 (1 starszy source-dependent i 1 RI49 z widocznym śniegiem); Europa-droga-A: 1 (RI49, A1 w Polsce). Zima-B i Europa-B: 0 potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. RI49 ma cały obraz 1201×904px i drzwi ESTIMATED 500–560px, więc B nie spełnia.
+A ≥20 łącznie: rozpoznana dolna granica 9 źródeł z ograniczeniami — Knight/Western/Premier, Krone z lekkim filmem, RoadTour source-dependent, AutoReview39, RI49-001, UR54-001 i UR55-004 z niewielkimi miejscowymi smugami. B ≥12 nowych z drzwiami ≥1000px i ruchem/zaraz po trasie: nadal 1 źródło WesternExpress, liczone raz z P18-182/CR6. Zima-A: 2 (1 starszy source-dependent i 1 RI49 z widocznym śniegiem); Europa-droga-A: 1 (RI49, A1 w Polsce). Zima-B i Europa-B: 0 potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. RI49 ma cały obraz 1201×904px i drzwi ESTIMATED 500–560px, więc B nie spełnia.
 
 88/88 rekordów P18 ma odsyłacz do zapisanego oglądu w [indeksie R47](baseline-remaining-round47/coverage-88-id-index.csv). 87 znormalizowanych URL obejmuje aliasy i rozpoznany render; nie oznacza 88 fotografii ani kwalifikacji. Wymagania 20/12/6/6 pozostają otwarte.
 
@@ -270,3 +270,6 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 
 
 R54: trzy odrębne tyły chłodni i trzy konteksty typu, bez podwójnego liczenia galerii/standalone. Do głównego manifestu tylko UR54-001: asymetryczny szary film na prawym skrzydle. Dwa pozostałe PENDING powierzchni. Dolna granicaA8 z wcześniejszymi ograniczeniami, B1 i podzbiory zima/Europa bez przyrostu. Wszystkie zdjęcia link-onlyARR,0kopii.
+
+
+R55: cztery nowe tylne ekspozycje; do głównego manifestu tylko UR55-004, A_PASS_LIMITED_LOCAL. Krótkie szare piony na samym czerwonym prawym skrzydle pod odblaskiem, h0–0.08 ESTIMATED; reszta pól przeważnie czysta, metalowa rama oceniana osobno. Nie jest to pełny film ani dowód chemii/zimy/europejskiej drogi. A9 z ograniczeniami, B1 bez przyrostu.
