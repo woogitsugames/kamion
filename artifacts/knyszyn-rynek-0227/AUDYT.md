@@ -215,3 +215,12 @@ R27: wykonano opt-in wizualny podział łaty wlotu bez zmiany kolizji; cztery wa
 ## R28 — wycofanie próby R27
 
 Wizualna łata wlotu z R27 została wycofana w commicie `96df3b6cf` po ocenie zbyt jasnego, sztucznego pasa; nie oznacza to usunięcia przyczyny ciemnego wlotu. Przebudowa i rendery R28 są w toku, więc ich wygląd, budżet i wynik testów pozostają **OPEN**. Pełny GIS R27 zakończył się wynikiem **1801 passed, 22 skipped, 2 xfailed, 1 failed**: `test_road_fidelity.py::test_report_not_stale` wskazał nieaktualny raport fidelity względem `meshing.py`, `pipeline.py` i `standards.py`. Po wycofaniu R27 test kierunkowy nadal zgłaszał niezgodność dla `pipeline.py` i `standards.py`; wymagane przeliczenie raportu na ostatecznym stanie oraz ponowienie testów. Wynik GIS R28 pozostaje **OPEN**. Szerszy wielokąt z ortofoto nadal pozostaje wyłącznie propozycją bez renderu.
+
+
+## R28 — obraz i budżet po wycofaniu próby
+
+R28: build_world, import i cztery warianty Low/High × clear/dusk zakończone OK. W katalogach `compare/r28/Low-clear/` oraz `compare/r28/High-clear/` znajduje się po 14 lokalnych par zdjęcie–render; fotografie pozostają poza Git. Na porównaniu zdjęcia 12 znikł sztuczny jasny pas wprowadzony w R27, jednak ciemny wjazd i plamy nawierzchni nadal są widoczne. Ocena wyglądu przez właściciela **OPEN**.
+
+Szacunek CPU edytora z instancjami: High maksimum **1 250 321 tris** oraz **848 draw calls**; Low maksimum **485 draw calls** oraz **372 304 tris**. Na `dk65-inlet-south` Low wzrasta z 240 do 304 draw calls względem before — formalny **FAIL** braku pogorszenia. Wspólnych jest 50 nazw kamer; stan sceny po scaleniu main różni się od before. Dane nie stanowią pomiaru GPU ani telefonu.
+
+Fidelity regionu C przeliczono po wycofaniu R27; wyniki lokalne `artifacts/knyszyn-rynek-0227/fidelity-after-r27-revert/`, testy kierunkowe **9 passed, 1 xfailed**. Pełny GIS R28 uruchomiony, a jego końcowy wynik pozostaje **OPEN**.
