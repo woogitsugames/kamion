@@ -20,3 +20,5 @@
 docs/**/*.png -filter -diff -merge binary
 # ADR 0219: PRG boundaries are hashed in their manifest; keep bytes identical on every OS (no CRLF on Windows)
 Data/Admin/*.geojson -text
+# ADR 0231: the Overpass extract is hashed in its manifest (tests/gis/test_ring_0231.py); keep bytes identical on Windows
+Data/Plans/ring-0231/osm_ring_extract.json -text
