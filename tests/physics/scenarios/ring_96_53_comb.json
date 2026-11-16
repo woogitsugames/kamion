@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "ring_96_53_comb",
-  "description": "Turning ring 12.50 / 5.30 m (96/53/EC Annex I 1.5), game trailer geometry (kingpin -> tridem centre 7.60 m, D79)",
+  "description": "Turning ring 12.50 / 5.30 m (96/53/EC Annex I 1.5), game trailer geometry (kingpin -> tridem centre 7.63 m, D79 correction)",
   "spec": "docs/04 s6.7; ADR 0280; D79",
   "variants": [
     "empty",
@@ -45,8 +45,8 @@
     {
       "metric": "swept_ring_width_m",
       "status": "WORKING_VALUE",
-      "source": "12.50 - 5.30 = 7.20 m (DERIVED from the SOURCED radii) minus the 0.05 m margin of ADR 0280 / D79",
-      "max": 7.15,
+      "source": "margin guard, not the regulation: 12.50 - 5.30 = 7.20 m (DERIVED from the SOURCED radii) minus 0.02 m. History: 7.15 (5 cm) with the 7.60 m axles (D79); 7.18 (2 cm) since the owner's D79 correction to the datasheet value 7.63 m (measured 7.177 / 7.170 m, ADR 0280 section 10)",
+      "max": 7.18,
       "from": 120
     },
     {

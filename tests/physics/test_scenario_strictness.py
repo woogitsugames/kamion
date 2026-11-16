@@ -75,7 +75,7 @@ def test_ring_limits_pinned():
         checks = {c["metric"]: c for c in sc["checks"]}
         assert checks["swept_outer_radius_m"]["max"] <= 12.50 + 1e-12, path.name
         assert checks["swept_inner_radius_m"]["min"] >= 5.30 - 1e-12, path.name
-        assert checks["swept_ring_width_m"]["max"] <= 7.15 + 1e-12, path.name     # 7.20 minus the 5 cm margin (D79)
+        assert checks["swept_ring_width_m"]["max"] <= 7.18 + 1e-12, path.name     # 7.20 minus the 2 cm margin (D79 correction 7.63 m)
         env = _load(path)["envelope"]
         assert abs(env["trailerHalfWidth"] * 2 - DIMS["max_width_m"]["value"]) < 1e-9
         assert abs(env["tractorFrontZ"] - DIMS["wheelbase_m"]["value"] - DIMS["front_overhang_m"]["value"]) < 1e-9

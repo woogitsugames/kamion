@@ -48,7 +48,7 @@ SMOOTH_M = 4.0                  # WORKING_VALUE: driver-line smoothing (Gaussian
 # = ground below kingpin). Tyre lateral positions: centre of each tyre, half tread width.
 WB = 3.70
 FW_LEAD = 0.68
-KP_TRIDEM = 7.60                # kingpin -> tridem centre (dims.json trailer_axle_z_m; D79 / ADR 0280, was 7.70)
+KP_TRIDEM = 7.63                # kingpin -> tridem centre (dims.json trailer_axle_z_m; D79 / ADR 0280: 7.70 -> 7.60 -> 7.63)
 TYRES = {   # name: (frame, z, lateral centre |x|, half tread)
     "steer":   ("T", WB, 1.02, 0.1575),                          # 315/80 R22.5, track 2.04
     "drive_o": ("T", 0.0, 0.91 + 0.17, 0.1575),                  # duals, pair centre 0.91, spacing 0.34

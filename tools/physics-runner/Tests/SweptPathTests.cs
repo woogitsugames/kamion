@@ -115,7 +115,7 @@ namespace PhysicsRunner.Tests
         [Fact]
         public void GeometryOverrides_ApplyToARunCopyOnly()
         {
-            // D79 / ADR 0280: the game data has the 7.60 m axles; the override puts the former 7.70 m set on a run copy
+            // D79 / ADR 0280: the game data has the 7.63 m axles (owner correction of 7.60); the override puts the former 7.70 m set on a run copy
             var sc = Scenario.Load(System.IO.Path.Combine(RepoPaths.ScenariosDir, "ring_96_53_comb.json"));
             sc.combination = "laden40";
             sc.overrides.trailerAxlePositionsZ = new[] { -6.39, -7.70, -9.01 };
@@ -129,16 +129,16 @@ namespace PhysicsRunner.Tests
             foreach (var m in t.massElements) if (m.name == "tridem_axles_wheels_brakes") massZ = m.center.z;
             var prod = ScenarioRunner.Defs.Trailers[sc.trailer];
             foreach (var m in prod.massElements) if (m.name == "tridem_axles_wheels_brakes") prodMassZ = m.center.z;
-            Assert.Equal(prodMassZ - 0.10, massZ, 9);          // axle group mass moves with the mean axle position
+            Assert.Equal(prodMassZ - 0.07, massZ, 9);          // axle group mass moves with the mean axle position
             // production set untouched
-            Assert.Equal(-7.60, prod.axles[1].positionZ, 12);
+            Assert.Equal(-7.63, prod.axles[1].positionZ, 12);
             Assert.Equal(0.68, ScenarioRunner.Defs.Vehicles[sc.vehicle].fifthWheel.position.z, 12);
         }
 
         [Fact]
         public void ShorterKingpinToTridem_WidensTheInnerRadius()
         {
-            // Same driver radius, only the axle positions differ (7.70 -> 7.60 m): inner radius must grow by roughly
+            // Same driver radius, only the axle positions differ (7.70 -> 7.63 m, D79 correction): inner radius must grow by roughly
             // dRa/dL = L_eff / Ra ~ 1.1-1.2 cm per cm (ADR 0280 sensitivity), outer unchanged (tractor bumper corner).
             // (D79: "after" = the game data, "before" = the former 7.70 m set through the run-copy override)
             var after = Scenario.Load(System.IO.Path.Combine(RepoPaths.ScenariosDir, "ring_96_53_comb.json"));
@@ -149,7 +149,7 @@ namespace PhysicsRunner.Tests
             double ia = ra.Metric("swept_inner_radius_m", 0, 100), ib = rb.Metric("swept_inner_radius_m", 0, 100);
             double oa = ra.Metric("swept_outer_radius_m", 0, 100), ob = rb.Metric("swept_outer_radius_m", 0, 100);
             _out.WriteLine($"inner {ib:F4} -> {ia:F4} m, outer {ob:F4} -> {oa:F4} m");
-            Assert.InRange((ia - ib) / 0.10, 0.9, 1.4);
+            Assert.InRange((ia - ib) / 0.07, 0.9, 1.4);
             Assert.InRange(Math.Abs(oa - ob), 0, 0.005);
         }
     }
