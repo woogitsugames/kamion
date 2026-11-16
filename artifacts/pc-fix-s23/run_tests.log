@@ -1,0 +1,138 @@
+PASS Game.Tests.MenuInputGateTests.Closed_DeviceDrives_AsBefore
+PASS Game.Tests.MenuInputGateTests.Open_MenuDevice_GivesEmptyIntent
+PASS Game.Tests.MenuInputGateTests.Open_AutopilotAndTouch_StillDrive
+PASS Game.Tests.MenuInputGateTests.CloseFrame_UiBeforeSample_ButtonEdgeDoesNotReachVehicle
+PASS Game.Tests.MenuInputGateTests.CloseFrame_SampleBeforeUi_ButtonEdgeDoesNotReachVehicle
+PASS Game.Tests.MenuInputGateTests.ButtonHeldAcrossClose_IsNotANewPress
+PASS Game.Tests.MenuInputGateTests.Open_RampsAreDropped_NoThrottleLeftOverAfterClose
+PASS Game.Tests.MenuInputGateTests.Reopen_GatesAgain_AndDisabledSourceStaysDisabled
+FAIL Game.Tests.MenuInputGateTests.Gate_DoesNotAllocate: SecurityException: ECall methods must be packaged into a system module.
+PASS Game.Tests.PcAutoTierTests.AutoChoice_HasNoQualityLevel
+PASS Game.Tests.PcAutoTierTests.AutoTierName_FollowsHardware_D74
+FAIL Game.Tests.PcAutoTierTests.FirstStart_Auto_DoesNotSaveTier_AndKeepsBootstrapPick: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PcAutoTierTests.FirstStart_Auto_RecommendedHardware_StaysHigh_NotSaved: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PcAutoTierTests.ExplicitChoice_IsAppliedAndSaved_AsBefore: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PcAutoTierTests.ExplicitChoice_EqualToDetectedTier_IsStillSaved: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PcAutoTierTests.ExplicitAtStartup_FromSettingsFile_IsSaved: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PcAutoTierTests.ManualChoice_ThenBackToAuto_DetectionWorksAgain: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PcAutoTierTests.BackToAuto_ClearsSavedTier_AlsoWhenLevelDoesNotChange: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PcAutoTierTests.ClearSavedTier_DoesNotChangeTheActiveLevel: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.Stage1LogicTests.Inertia_Diagonalize_Reconstructs: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.Stage1LogicTests.VehicleData_DefaultAsset_Parses: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.Stage1LogicTests.TractorDimensions_InSyncWith_DimsJson: AssertionException:   Expected: No Exception to be thrown
+  But was:  <System.Security.SecurityException: ECall methods must be packaged into a system module.
+   at UnityEngine.Application.get_dataPath_Injected(ManagedSpanWrapper& ret)
+   at UnityEngine.Application.get_dataPath()
+   at Game.Editor.Build.EditorTools.get_ProjectRoot() in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\pc-fix-s23\game\Assets\_Project\Editor\Build\EditorTools.cs:line 11
+   at Game.Editor.Build.EditorTools.get_RepoRoot() in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\pc-fix-s23\game\Assets\_Project\Editor\Build\EditorTools.cs:line 12
+   at Game.Editor.Setup.DrivingLabSceneBuilder.ReadAndCheckDims() in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\pc-fix-s23\game\Assets\_Project\Editor\Setup\DrivingLabSceneBuilder.cs:line 294
+   at Game.Tests.Stage1LogicTests.<>c.<TractorDimensions_InSyncWith_DimsJson>b__2_0() in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\pc-fix-s23\game\Assets\_Project\Tests\EditMode\Stage1LogicTests.cs:line 40
+   at NUnit.Framework.Constraints.ThrowsConstraint.VoidInvocationDescriptor.Invoke()
+   at NUnit.Framework.Constraints.ThrowsConstraint.ExceptionInterceptor.Intercept(Object invocation)>
+
+PASS Game.Tests.Stage1LogicTests.Steering_DeadZone_And_Curve
+PASS Game.Tests.Stage1LogicTests.TouchWheel_HandOverHand_AndSelfCentre
+PASS Game.Tests.Stage1LogicTests.Gyro_SignAndCalibration_BothSensorConventions
+PASS Game.Tests.Stage1LogicTests.OneEuro_SmoothsJitter_TracksSteps
+PASS Game.Tests.Stage1LogicTests.Mixer_SteerPriority_PedalMax_CommandsMerged
+PASS Game.Tests.Stage1LogicTests.Csv_FixedFormatter
+PASS Game.Tests.TurnSignalAndInstrumentTests.Request_LeftRightHazard_Toggle
+PASS Game.Tests.TurnSignalAndInstrumentTests.Flasher_IsOnePointFiveHz_WithinR48Band
+PASS Game.Tests.TurnSignalAndInstrumentTests.Flasher_FirstFlashIsLitImmediately_AndStopsDarkOnCancel
+PASS Game.Tests.TurnSignalAndInstrumentTests.Flasher_RateIsClampedToR48Band
+PASS Game.Tests.TurnSignalAndInstrumentTests.Hazard_LightsBothSides
+PASS Game.Tests.TurnSignalAndInstrumentTests.SelfCancel_AfterTurnAndReturn_Right
+PASS Game.Tests.TurnSignalAndInstrumentTests.SelfCancel_Left_UsesNegativeAngles
+PASS Game.Tests.TurnSignalAndInstrumentTests.Hazard_NeverSelfCancels
+PASS Game.Tests.TurnSignalAndInstrumentTests.Cancel_ClearsEverything
+PASS Game.Tests.TurnSignalAndInstrumentTests.TouchButton_QueuesOneShotRequest_AndMixerForwardsIt
+PASS Game.Tests.TurnSignalAndInstrumentTests.FuelFlow_IdleFloor_AndPartLoadPenalty
+PASS Game.Tests.TurnSignalAndInstrumentTests.FuelFlow_MoreWorkMoreFuel
+PASS Game.Tests.TurnSignalAndInstrumentTests.Coolant_WarmsUpFirstOrder_AndRegulatesAtThermostat
+PASS Game.Tests.TurnSignalAndInstrumentTests.Coolant_ColdStartTakesMinutes_NotSeconds
+PASS Game.Tests.TurnSignalAndInstrumentTests.Coolant_LoadWarmsFasterAndRunsHotter
+PASS Game.Tests.TurnSignalAndInstrumentTests.Coolant_EngineOff_CoolsSlowlyTowardsAmbient
+PASS Game.Tests.TurnSignalAndInstrumentTests.Coolant_NonPositiveDt_IsNoOp
+PASS Game.Tests.TurnSignalAndInstrumentTests.GameClock_AnchorsToSun_ThenFollowsGameTime
+PASS Game.Tests.TurnSignalAndInstrumentTests.GameClock_WrapsAtMidnight
+PASS Game.Tests.PcWheelInputTests.Steer_OffCentreCalibration_GivesZeroAtCentreAndUnitAtStops
+PASS Game.Tests.PcWheelInputTests.Steer_DescendingAxis_RightStillPositive
+PASS Game.Tests.PcWheelInputTests.Steer_Invert_FlipsDirection
+PASS Game.Tests.PcWheelInputTests.Steer_CentreDeadZone_RescaledWithoutStep
+PASS Game.Tests.PcWheelInputTests.Pedal_Inverted_ReleasedHighPressedLow
+PASS Game.Tests.PcWheelInputTests.Pedal_DeadZones_RestAndSaturation
+PASS Game.Tests.PcWheelInputTests.Pedal_DegenerateCalibration_IsSafe
+PASS Game.Tests.PcWheelInputTests.CombinedPedals_SplitIntoThrottleAndBrake
+PASS Game.Tests.PcWheelInputTests.Calibrator_DetectsInvertedPedalFromReleasedReading
+PASS Game.Tests.PcWheelInputTests.Calibrator_SteeringWithCentre
+PASS Game.Tests.PcWheelInputTests.AutoPedal_UncalibratedInvertedAxis_RestIsZeroAndLightTouchIsNotFull
+PASS Game.Tests.PcWheelInputTests.AutoSteer_Uncalibrated_CentreFromFirstReadingAndLearnsSpan
+PASS Game.Tests.PcWheelInputTests.AutoDetect_FindsMovedAxis
+PASS Game.Tests.PcWheelInputTests.Range_ClampedTo270_900AndDevice
+PASS Game.Tests.PcWheelInputTests.SoftLock_RangeSmallerThanDevice_ClampsAndReportsOvershoot
+PASS Game.Tests.PcWheelInputTests.OneToOne_DeviceDegreeIsCabDegree
+PASS Game.Tests.PcWheelInputTests.Direction_RightRimGivesPositiveSteerInEveryMapping
+PASS Game.Tests.PcWheelInputTests.HShifter_FromNeutralIntoFirst_RequestsDrive
+PASS Game.Tests.PcWheelInputTests.HShifter_QuickShiftThroughNeutral_GivesDeltaNotNeutral
+PASS Game.Tests.PcWheelInputTests.HShifter_RangeHigh_AddsGates
+PASS Game.Tests.PcWheelInputTests.HShifter_HeldNeutral_AndReverse
+PASS Game.Tests.PcWheelInputTests.HShifter_SlotFromGates
+PASS Game.Tests.PcWheelInputTests.ButtonEdges_OnlyOnPress
+PASS Game.Tests.PcWheelInputTests.Mixer_WheelSteersDirectly_KeysOverrideWhileHeld_PedalsMerge
+PASS Game.Tests.PcWheelInputTests.Profiles_MatchByIdsThenNameThenVendorThenGeneric
+PASS Game.Tests.PcWheelInputTests.Profiles_ActionNamesParse
+PASS Game.Tests.PcWheelInputTests.Profiles_SanitizeClampsRangesAndCalibrations
+FAIL Game.Tests.PcWheelDataTests.ShippedProfiles_ParseUniqueIdsGenericAndSteerAxis: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PcWheelDataTests.ShippedProfiles_MatchSourcedIds: SecurityException: ECall methods must be packaged into a system module.
+PASS Game.Tests.PcWheelDataTests.CorruptProfiles_StillGiveGeneric
+FAIL Game.Tests.PcWheelDataTests.Settings_RoundTripAndClamp: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PcWheelDataTests.Settings_MigrateFromNoSchemaAndFromNewer: AssertionException:   Expected: 540.0f
+  But was:  0.0f
+
+FAIL Game.Tests.PcWheelDataTests.PerStepPath_DoesNotAllocate: SecurityException: ECall methods must be packaged into a system module.
+PASS Game.Tests.PcWheelDataTests.Settings_SetCalibrationReplacesSameProfile
+PASS Game.Tests.PcGraphicsTierTableTests.Defaults_AreValid
+PASS Game.Tests.PcGraphicsTierTableTests.Defaults_OrderAndNamesMatchTheQualityLevels
+PASS Game.Tests.PcGraphicsTierTableTests.Defaults_DistancesAndResolutionsAreMonotonic
+PASS Game.Tests.PcGraphicsTierTableTests.Defaults_KeepMirrorsAndFoliageCoverageOnEveryTier
+PASS Game.Tests.PcGraphicsTierTableTests.Validate_RejectsBrokenTables
+PASS Game.Tests.PcGraphicsTierTableTests.DefaultFor_D74Classes
+PASS Game.Tests.PcGraphicsTierTableTests.DefaultFor_EdgesAndCeiling
+PASS Game.Tests.PcGraphicsTierTableTests.DefaultFor_IsMonotonicInVram
+PASS Game.Tests.PadKeyboardInputTests.DeadZone_ZeroInside_ContinuousAtEdge_SaturatesOutside_Symmetric
+PASS Game.Tests.PadKeyboardInputTests.Expo_Monotonic_EndpointsFixed_FinerNearCentre
+PASS Game.Tests.PadKeyboardInputTests.Shape_IsDeadZoneThenCurve
+PASS Game.Tests.PadKeyboardInputTests.SpeedAmplitude_FullLockWhenManoeuvring_ShrinksWithSpeed_RespectsLatAccelAndFloor
+PASS Game.Tests.PadKeyboardInputTests.PadRateLimit_DependsOnSpeed_StepNeverFasterThanTable
+PASS Game.Tests.PadKeyboardInputTests.PadRelease_ToPhysics_HandsOff_RegrabContinuesFromWheel
+PASS Game.Tests.PadKeyboardInputTests.PadRelease_RampMode_ReturnsToCentreAtReturnRate
+PASS Game.Tests.PadKeyboardInputTests.SteeringDirection_RightIsPositive_PadAndKeyboard
+PASS Game.Tests.PadKeyboardInputTests.KeyboardRamp_PedalsRiseAndFallAtTheirRates
+PASS Game.Tests.PadKeyboardInputTests.KeyboardRamp_SteerLimitedBySpeed_ReturnsWhenReleased_ScaleApplies
+PASS Game.Tests.PadKeyboardInputTests.KeyboardRamp_Reversal_GoesThroughCentreAtReturnRate
+FAIL Game.Tests.PadKeyboardInputTests.Steps_AllocateNothing: SecurityException: ECall methods must be packaged into a system module.
+FAIL Game.Tests.PadKeyboardInputTests.FeelJson_MatchesCSharpDefaults_AndSanitizeRepairsBrokenTables: SecurityException: ECall methods must be packaged into a system module.
+PASS Game.Tests.PadKeyboardInputTests.Catalogue_NamesUnique_DefaultsWithoutDuplicates_KeyboardKeepsOldKeys
+PASS Game.Tests.PadKeyboardInputTests.AssetJson_StableIds_UniqueAndRepeatable
+PASS Game.Tests.PadKeyboardInputTests.GamepadLabels_GenericPositions_NoMakerGlyphs
+PASS Game.Tests.PadKeyboardInputTests.Store_RoundTrip_KeepsOverridesAndTuning
+PASS Game.Tests.PadKeyboardInputTests.Store_MigratesV0_BareOverrides_AndRejectsCorrupt_AndClamps
+PASS Game.Tests.PadKeyboardInputTests.Store_RenameActions_ExactQuotedMatchOnly
+PASS Game.Tests.PadKeyboardInputTests.Store_File_AtomicRoundTrip_MissingFileGivesDefaults
+FAIL Game.Tests.PadKeyboardInputTests.Actions_OverridesRoundTrip_ThroughStore_AndReset: SecurityException: ECall methods must be packaged into a system module.
+PASS Game.Tests.PcHudLayoutTests.Monitor_UltrawideHudNotStretched_SameUnitsAs16by9
+PASS Game.Tests.PcHudLayoutTests.Monitor_OsScaling_EnlargesButKeepsAtLeast1080UnitsHigh
+PASS Game.Tests.PcHudLayoutTests.Monitor_SmallWindow_NotShrunkBelowFloor_WidthGuaranteed
+PASS Game.Tests.PcHudLayoutTests.Monitor_UserScale_ClampedAndApplied
+PASS Game.Tests.PcHudLayoutTests.Phone_TouchScale_Unchanged_NoContentClamp
+PASS Game.Tests.PcHudLayoutTests.TouchControls_AutoShowsOnPhone_HidesOnPcWithoutTouch
+PASS Game.Tests.PcHudLayoutTests.TouchControls_AlwaysAndNeverOverrideEverything
+PASS Game.Tests.PcHudLayoutTests.TouchControls_StoredValueParsedSafely
+FAIL Game.Tests.PcHudLayoutTests.UiPreferences_SaveAndReload: SecurityException: ECall methods must be packaged into a system module.
+PASS Game.Tests.PcHudLayoutTests.Mirrors_FlankCluster_InsideContent_NoOverlap
+PASS Game.Tests.PcHudLayoutTests.Mirrors_TooNarrow_HiddenNotSquashed_AndTextureAspectUsed
+PASS Game.Tests.PcHudLayoutTests.Nav_UpDownWithinColumn_NoWrap
+PASS Game.Tests.PcHudLayoutTests.Nav_LeftRight_WithinRow_ThenAcrossColumns
+PASS Game.Tests.PcHudLayoutTests.Nav_EveryItemReachable_AndMovesAreReversibleVertically
+PASS Game.Tests.PcHudLayoutTests.Nav_EmptyRowsSkipped_InvalidInputSafe
+TOTAL pass=104 fail=21

@@ -206,7 +206,7 @@
     -907.4,
     -56981.766
    ],
-   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 20 m: Ełcka at the seam with dk65-04/05 (6.9 m, edge lines); pair = ortho/top_seam_s.jpg",
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 20 m: Ełcka at the seam with dk65-04/05 (6.6 m D66, edge lines); pair = ortho/top_seam_s.jpg",
    "pos": [
     -105.8,
     -1007.4,
@@ -339,6 +339,38 @@
     -285.4,
     -739.9,
     171.275
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_site_seam",
+   "look_at": [
+    -20.0,
+    -864.0,
+    -56976.351
+   ],
+   "note": "place camera: QA top view (north up, 249 m E-W x 140 m N-S, seam 60 m from the centre): SE arm of the roundabout = construction_site corridor at the seam with dk65-05 (ADR 0215 r2); pairs with dk65-05 top_site_seam",
+   "pos": [
+    -20.0,
+    -964.0,
+    319.37
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "site_seam_oblique",
+   "look_at": [
+    21.603,
+    -1025.0,
+    147.259
+   ],
+   "note": "place camera: 35 m up (above the pines) between Ełcka and the site, looking ESE across the construction_site corridor just north of the seam with dk65-05 (ADR 0215 r2)",
+   "pos": [
+    -65.0,
+    -975.0,
+    200.43
    ],
    "type": "persp"
   },

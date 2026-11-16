@@ -110,6 +110,9 @@ namespace TruckSim.Audio
         /// </summary>
         public float CabEngineScale { get; set; } = 1f;
 
+        /// <summary>Player volume of the engine channel 0..1 (ADR 0270 settings, set by TruckAudioController). 1 = unchanged.</summary>
+        public float ChannelGain { get; set; } = 1f;
+
         /// <summary>Turbo v2 layers in use (ElevenLabs set).</summary>
         public bool TurboV2 => _turboWhine != null;
         /// <summary>Current whine / rush output gain (before the perspective split). For tests.</summary>
@@ -273,7 +276,7 @@ namespace TruckSim.Audio
             float b = interiorBlend * Mathf.PI * 0.5f;
             float extW = Mathf.Cos(b), cabW = Mathf.Sin(b);
             // fades the loops out while the engine stalls / is switched off; _runGate adds the start/stop gating (ADR 0137)
-            float runGain = Mathf.Clamp01((_rpm - 80f) / 300f) * _runGate;
+            float runGain = Mathf.Clamp01((_rpm - 80f) / 300f) * _runGate * ChannelGain;
 
             Tick(_extEngine, exteriorMix.engine * extW * runGain, _load, dt);
             Tick(_cabEngine, cabMix.engine * CabEngineScale * cabW * runGain, _load, dt);
@@ -328,7 +331,7 @@ namespace TruckSim.Audio
             bool cabView = interiorBlend > 0.5f;
             var clip = cabView && cab != null ? cab : ext;
             _events.spatialBlend = cabView ? 0f : (exteriorEngine != null ? exteriorEngine.spatialBlend : 1f);
-            _events.PlayOneShot(clip, startStopVolume);
+            _events.PlayOneShot(clip, startStopVolume * ChannelGain);
         }
 
         void Tick(EngineLayerGrid g, float gain, float load, float dt)
@@ -359,7 +362,7 @@ namespace TruckSim.Audio
         {
             if (_turbo == null || turboWhistleLoop == null) return;
             float mixT = exteriorMix.turbo * extW + cabMix.turbo * cabW;
-            float vol = _turboWhine != null ? 0f : mixT * Mathf.Pow(_boost, 1.5f) * (0.35f + 0.65f * _throttle);
+            float vol = _turboWhine != null ? 0f : mixT * Mathf.Pow(_boost, 1.5f) * (0.35f + 0.65f * _throttle) * ChannelGain;
             if (vol > 1e-4f)
             {
                 if (!_turbo.isPlaying) _turbo.Play();
@@ -379,7 +382,7 @@ namespace TruckSim.Audio
             {
                 float mixL = exteriorMix.turboLiftoff * extW + cabMix.turboLiftoff * cabW;
                 var clip = interiorBlend > 0.5f && turboLiftoffCab != null ? turboLiftoffCab : turboLiftoff;
-                _oneShot.PlayOneShot(clip, mixL * _boost);
+                _oneShot.PlayOneShot(clip, mixL * _boost * ChannelGain);
                 _liftoffTimer = liftoffCooldown;
             }
         }

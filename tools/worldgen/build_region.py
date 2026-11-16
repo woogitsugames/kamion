@@ -291,6 +291,15 @@ def main() -> None:
         from streetscape import water as WT
         print("[build] water sources")
         WT.write(region.id, WT.extract(ry))
+    if getattr(region, "rail", False):
+        # ADR 0217: opt-in railway stage; the key (and the sources file) exist only in regions that enable it
+        ry["rail"] = {"enabled": True, "sources": f"Data/Regions/{region.id}/generated/rail_sources.json",
+                      "note": "OSM railway=rail + railway=level_crossing (ADR 0217)"}
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from streetscape import rail as RL
+        print("[build] rail sources")
+        RL.write(region.id, RL.extract(ry))
     text = yaml.safe_dump(ry, allow_unicode=True, sort_keys=False, width=120)
     write_if_changed(out_dir / "region.yaml", text)
     hashes["region.yaml"] = sha_bytes(text.encode("utf-8"))

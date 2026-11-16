@@ -59,7 +59,9 @@ def test_tysiaclecia_screen_posts_are_dark():
 def test_overhead_board_authored_size_and_arrows():
     rows = [(["8", "E67"], "Warszawa"), (["65"], "Ełk")]
     im0, w0, h0 = SG.overhead_board(rows)
-    assert abs(w0 - 4.0625) < 0.01 and abs(h0 - 1.41875) < 0.01               # rule layout unchanged
+    # ADR 0236: the rule layout follows Tabela 9.5.4 of Dz.U. 2019 poz. 2311 zał. 1 (d = 210 mm: 0.50 m for the first
+    # row + 0.35 m per further row), not the WORKING_VALUE 0.62 m row (4.06 x 1.42 m)
+    assert abs(h0 - 0.85) < 0.01 and 2.5 < w0 < 3.75
     im, w, h = SG.overhead_board(rows, size_m=(3.75, 0.82), arrows=2)
     assert abs(w - 3.75) < 0.02 and abs(h - 0.82) < 0.02
     a = np.asarray(im.convert("RGB")).astype(int)

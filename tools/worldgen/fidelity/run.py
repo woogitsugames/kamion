@@ -438,7 +438,8 @@ def main(argv=None):
     conn = Mx.connectivity(ctx)
     route_nodes = route.get("graph_nodes", [])
     arms = Mx.node_arm_check(ctx, route_nodes)
-    log("roundabouts / connectivity done")
+    n_skip = sum(1 for r in arms if r.get("skipped"))
+    log(f"roundabouts / connectivity done (route nodes {len(arms)}, tile-boundary cuts skipped {n_skip}, ADR 0219)")
 
     # ---------------- summary
     def lanes_ok(rows):

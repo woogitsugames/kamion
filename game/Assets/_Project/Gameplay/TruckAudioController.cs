@@ -73,6 +73,7 @@ namespace Game.Gameplay
         float m_RetToneGain, m_RetFlowGain;
         bool m_EngageAlt;
         int m_PrefVersion = -1;
+        int m_MixVersion = -1;
         readonly PerspectiveLoop[] m_Tyre = new PerspectiveLoop[LayerMath.SurfaceCount];
         readonly float[] m_SurfaceTarget = new float[LayerMath.SurfaceCount];
         readonly float[] m_SurfaceWeight = new float[LayerMath.SurfaceCount];
@@ -278,6 +279,15 @@ namespace Game.Gameplay
             Debug.Log($"[AUDIO] engine source switched to {m_Engine.Source}");
         }
 
+        /// <summary>Player channel volumes (ADR 0270 settings, <see cref="AudioMixLevels"/>): one int compare per frame.</summary>
+        void ApplyMixLevelsIfChanged()
+        {
+            if (m_MixVersion == AudioMixLevels.Version) return;
+            m_MixVersion = AudioMixLevels.Version;
+            m_Engine.ChannelGain = AudioMixLevels.Engine;
+            if (m_Ambient != null) m_Ambient.ChannelGain = AudioMixLevels.Ambient;
+        }
+
         AudioSource Source(string name, AudioClip clip, bool loop, Vector3 local, int priority)
         {
             var go = new GameObject(name);
@@ -305,6 +315,7 @@ namespace Game.Gameplay
         {
             if (m_Engine == null || vehicle == null || !vehicle.Initialized) return;
             ApplyEngineSourceIfChanged();
+            ApplyMixLevelsIfChanged();
             float target = rig == null || rig.mode == CameraMode.Cab ? 1f : 0f;
             m_Interior = Mathf.MoveTowards(m_Interior, target, dt / 0.15f);
             m_Engine.InteriorBlend = m_Interior;

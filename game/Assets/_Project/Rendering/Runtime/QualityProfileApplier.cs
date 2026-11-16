@@ -68,6 +68,7 @@ namespace Game.Rendering
             m_AppliedLevel = QualitySettings.GetQualityLevel();
             var profile = QualityProfile.Load();
             if (profile == null || !profile.TryGet(QualityTiers.Current, out var t)) return;
+            if (PcGraphicsTiers.Enabled) t = PcGraphicsTiers.Overlay(t);   // ADR 0269: PC tier values (desktop player)
             if (RenderOverrides.Any)
             {
                 t = RenderOverrides.ApplyTo(t);
@@ -102,6 +103,7 @@ namespace Game.Rendering
             if (RenderOverrides.FsrSharpness.HasValue || (t.name == "High" && t.upscalingFilter == UpscalingFilterSelection.FSR))
             { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
             if (RenderOverrides.LodBias.HasValue && Application.isPlaying) QualitySettings.lodBias = t.lodBias;   // ADR 0106
+            GpuAbOverrides.ApplyPipeline(urp);   // ADR 0241: rq_depthtex / rq_opaquetex (no-op unless given)
         }
 
         /// <summary>Raised after a tier was applied (vegetation reads <see cref="Current"/>).</summary>
@@ -128,6 +130,8 @@ namespace Game.Rendering
                 var data = cam.GetUniversalAdditionalCameraData();
                 data.renderPostProcessing = t.postProcessing;
                 data.antialiasing = t.postProcessing ? t.postAntialiasing : AntialiasingMode.None;
+                if (PcGraphicsTiers.Enabled && PcTierTable.TryParse(t.name, out var pcTier))   // ADR 0269: SMAA quality of the PC tier
+                    data.antialiasingQuality = (AntialiasingQuality)PcTierTable.Get(pcTier).smaaQuality;
                 // ADR 0108: High RCAS uses a final pass whose dither raises clean-sky RMS above the review limit.
                 // Measured native PNG A/B: sky 0.64 -> 0.14, asphalt detail retained. Other tiers keep their policy.
                 data.dithering = RenderOverrides.Dither ?? (t.postProcessing && t.name != "High");

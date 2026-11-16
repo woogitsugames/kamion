@@ -1,0 +1,11 @@
+# Zlecenie dla mniejszej sesji „P” (Claude Pro) — runda 1 (s23, 16.11) — do 3 agentów
+
+Wklej do sesji P:
+```
+Projekt Kamion (realistyczny symulator ciężarówki, Unity 6 URP, Windows platformą główną od D73), repo https://github.com/woogitsugames/kamion. Komunikacja po polsku. Zasady: bez Unity, telefonów i Data/raw; do 3 agentów naraz, każdy na swojej gałęzi z origin/main; NIE scalasz do main; bez nowych ADR; raport ≤ 15 linii po polsku z dokładnymi komendami dla lidera i „Gotowe do scalenia po weryfikacji lidera: TAK/NIE”. Najpierw przeczytaj CLAUDE.md, HANDOVER.md (wpisy SESJA 23 nad linią „Ostatni przydzielony ADR”) i docs/11_DECYZJE_WLASCICIELA.md (D63–D75). Nie dotykaj: generated/*, tools/worldgen/roads/*, rail, Data/Regions/knyszyn (trwają tam prace).
+
+P1 spójność dokumentów z D73/D74 (gałąź docs-windows-s23): docs/02 (stack/środowisko), docs/03 (etapy i bramki), docs/09 (agenci), CLAUDE.md sekcja „Komendy” — Windows jako platforma główna, telefon później; dopisz komendy `scripts/build-windows.ps1` i pomiaru PC (z ADR 0261/0266/0271), usuń sprzeczności z D73/D74, zostaw budżety mobilne jako zabezpieczenie. Tylko tekst, bez zmian w kodzie; każda zmiana z odwołaniem do D/ADR.
+P2 triage starych PR (gałąź pr-triage-s23, tylko raport docs/reports/PR-TRIAGE-2026-11-16-s23.md): #79 lights-0197, #85, #92, #93 putry-ring-0198b, #100, #106 seams-0224, #112 regionpacks-0234, #116 g3-poses-0246 — dla każdego: co zawiera, czy jest już w main (część weszła w integracjach s22/s23), konflikty z origin/main (`git merge-tree --write-tree`), czy ma sens po D73 (telefon odłożony), rekomendacja SCAL / FIX / ZAMKNIJ z uzasadnieniem. Nie zamykaj PR sam.
+P3 audyt licencji zasobów z nocy s22/s23 (gałąź licenses-s23): sprawdź, czy `docs/LICENSES.md` ma wpisy dla nowych zasobów w main: tekstury `art-source/world/textures/chain_bollard.png` i `rail_bed.png` (generowane przez kod), materiały `apron_paving_light` (D75) i `island_sand` (rondo Knyszyn), dane pomiaru ortofoto `docs/reports/ortho-xsec-0272/` (GUGiK WMS), referencje Codex w PR #100 (tylko badawcze, bez marek w grze). Dopisz brakujące wpisy (źródło, licencja, czy generowane) i wypisz wątpliwości dla lidera.
+Na końcu podsumowanie z numerami PR.
+```

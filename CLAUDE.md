@@ -3,11 +3,11 @@
 Ten plik jest ładowany na starcie każdej sesji. Trzymaj go aktualnym i krótkim; szczegóły są w `docs/`.
 
 ## Projekt w jednym akapicie
-Mobilny (Android → iOS) realistyczny symulator ciężarówki z naczepą. Unity 6.3 LTS + URP + C#. Własna fizyka pojazdu. Świat z danych OSM + GUGiK: Białystok 1:1, potem obrzeża, Podlasie, Polska, kraje jako DLC. Jedna fikcyjna ciężarówka zrobiona perfekcyjnie. Budżet zakupów 0 zł. Jakość > tempo.
+Realistyczny symulator (**Windows jako platforma główna od D73/ADR 0260**; Android → iOS później, lżej) ciężarówki z naczepą. Unity 6.3 LTS + URP + C#. Własna fizyka pojazdu. Świat z danych OSM + GUGiK: Białystok 1:1, potem obrzeża, Podlasie, Polska, kraje jako DLC. Jedna fikcyjna ciężarówka zrobiona perfekcyjnie. Budżet zakupów 0 zł. Jakość > tempo.
 
 ## Żelazne zasady
 1. **Jakość > tempo > zakres.** Nie dodajesz funkcji spoza bieżącego etapu.
-2. **Telefon jest prawdą.** Edytor kłamie o mobile GPU. Każda bramka = APK na Samsungu A (`adb`) + liczby. Profil High/Ultra stroimy na flagowcu, gdy będzie dostępny.
+2. **Build jest prawdą.** Edytor kłamie o wydajności. Bramka = build Windows (player, nie edytor) + zmierzone liczby; referencyjny PC i FPS — do ustalenia z właścicielem (do tego czasu `WORKING_VALUE`). Wersja telefonowa (APK na Samsungu A przez `adb`) odroczona (D73), ale budżety mobilne zostają jako zabezpieczenie.
 3. **Nie zmyślaj.** FPS, droga hamowania, wersje, szerokości pasów, parametry pojazdu — zmierzone, zacytowane ze źródła albo oznaczone `UNVERIFIED`/`WORKING_VALUE`.
 4. **Pętla wizualna obowiązkowa** (skill `visual-qa`): render kamer kontrolnych → obejrzyj PNG → porównaj z referencją → popraw. Nigdy „skrypt przeszedł, więc wygląda dobrze”.
 5. **Zero AI slop** — patrz `docs/06`. Jeśli coś wygląda jak typowa gra mobilna albo render z generatora, to nie jest gotowe.
@@ -45,7 +45,7 @@ Definicje w `.claude/agents/`. Lider = jedyny integrator. Worktree + gałąź na
 - **Ciągły zapis:** każdy agent commituje WIP i dopisuje STATUS.md (z następnym krokiem jako komendą) po każdym kroku; lider aktualizuje górę `HANDOVER.md` (main sha, tabela agentów: worktree, gałąź, STATUS, stan; następne kroki; licznik ADR) po każdym scaleniu/starcie/końcu agenta i pushuje — nowa sesja musi móc kontynuować z samego `HANDOVER.md`. Zasady dla agentów: `docs/owner/AGENT-RULES.md` (wersja w gicie).
 
 ## Definition of Done (każde zadanie)
-Kompiluje się na Androidzie · testy zielone · brak nowych krytycznych ostrzeżeń · dowód (log/zrzut/telemetria) · budżet wydajności nie pogorszony · review innego agenta · docs/ADR/licencje zaktualizowane · commit.
+Kompiluje się na Windows (i nadal na Androidzie) · testy zielone · brak nowych krytycznych ostrzeżeń · dowód (log/zrzut/telemetria) · budżet wydajności nie pogorszony · review innego agenta · docs/ADR/licencje zaktualizowane · commit.
 
 ## Mapa dokumentów
 01 wizja · 02 stack/środowisko/MCP · 03 etapy i bramki · 04 fizyka · 05 mapa Białystok i dane · 06 grafika i anti-slop · 07 ciężarówka 3D · 08 audio · 09 agenci i workflow · 10 architektura i DLC · 11 decyzje właściciela
