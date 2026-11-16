@@ -1,0 +1,32 @@
+{
+  "review_date": "2026-11-16",
+  "time_precision": "date-only",
+  "photos_actually_reviewed": 3,
+  "distinct_vehicles": 3,
+  "new_A_accepted": 1,
+  "new_A_pending": 1,
+  "new_B": 0,
+  "winter_A": 0,
+  "downloads": 0,
+  "saved_screenshots": 0,
+  "method": "Zwykły publiczny UI Fototruck: katalog modeli przyczep i naczep → konkretny S.KO → 3 wybrane pojazdy → pojedyncze tylne fotografie. Miniatury służyły tylko selekcji; opisy z pełnych jednostkowych obrazów. Bez API/scrapowania/logowania.",
+  "dedup": "rg P18 i 02-brud po photoID 370005/475763/348842 i vehicle8339/330635/250758: brak wcześniejszych trafień; wizualnie różne tablice, grafiki i sceny.",
+  "assets": {
+    "60-001": "https://fototruck.ru/photo/03/70/00/370005.jpg",
+    "60-002": "https://fototruck.ru/photo/04/75/76/475763.jpg",
+    "60-003": "https://fototruck.ru/photo/03/48/84/348842.jpg"
+  },
+  "identity_evidence": "Każda indywidualna strona podaje Schmitz S.KO i przeznaczenie Полуприцепы фургоны. Pełne obrazy potwierdzają ciągnik, długą skrzynię i trzy osie naczepy. Nie bazowano na samej nazwie Scania lub Volvo.",
+  "country_caution": "Region rejestracji w tytule oraz region przy autorze nie są podpisem miejsca fotografii. Dla370005 fotografia Gruzja wobec rejestracji Austria; dla475763 fotografia Leningrad wobec rejestracji Archangielsk i autora Tyumen; dla348842 fotografia Twer wobec rejestracji Murmańsk.",
+  "interpretation": "60-003 lokalny szary nalot odróżniono od mocnych rudych ubytków, ale A nadal PENDING do niezależnej recenzji. 60-002 nie awansowany za same odblaski/belkę. Żadnego wniosku o chemii soli.",
+  "independent_peer_root": {
+    "reviewed_at_brussels": "2026-11-16 05:59",
+    "image": "60-003 / 348842",
+    "scope": "Pełny kadr obejrzany niezależnie przez root",
+    "verdict": "A_PASS_LIMITED_LOWER_FILM",
+    "observation": "Drobny nalot dolnych pól obu drzwi; korozja zamków osobno.",
+    "B": 0,
+    "winter": 0,
+    "european_subset": "PENDING geograficznego źródła dla obwodu twerskiego, nie rejestracji"
+  }
+}

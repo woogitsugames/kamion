@@ -276,3 +276,6 @@ R55: cztery nowe tylne ekspozycje; do głównego manifestu tylko UR55-004, A_PAS
 
 
 R57: RG57-001 Tonar potwierdzony przez root w zwykłej galerii1/7; gęsty szarobrunatny film i pionowe smugi prawie pełnej wysokości obu zamkniętych skrzydeł. Silniejszy pełny wzorzec niż miejscowe UR55. A10 z dotychczasowymi ograniczeniami; B1, zimaA2 iEuropa-drogaA1 bez przyrostu. Drzwi poniżej1000px, plac nie dowodzi chwili po trasie. Nie ponawiano zablokowanego proxy ani storage, nie pobrano mediów.
+
+
+R59: trzy obejrzane sceny, bez nowej kwalifikacji. R60: trzy nowe tyły S.KO, root potwierdził 348842 jako lekki nalot dolnych pól obu drzwi. A11 z ograniczeniami/B1; zimaA2, Europa-drogaA1 bez awansu do ustalenia źródła geograficznego. Drzwi380–420px ESTIMATED, B poniżej1000px. Główny29:27kadrów (14lokalnych/13link-only) i2dokumenty.
