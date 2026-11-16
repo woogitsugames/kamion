@@ -1230,30 +1230,36 @@
   "osm_drivable_ways_in_tile": 553
  },
  "inputs_sha256": {
-  "overrides.yaml": "30509fc749d292076813dfef5f100c5a86ed1ad4fd49433283e1b1efed0d0ad5",
+  "overrides.yaml": "f6d2fbb0a0b8e22186366355ca4026c0e57b7202b149b2c81cab1034a63e7b01",
   "roads.graph.json": "0d37d43aefef84c2301309e746a40951cb000bccab0aaac9367bfcaa36ddad1f",
   "route_start.json": "b705b4dcc30e73795642d399e8b6fd5cbe792a3585676c6781408da24d3332e1",
   "tools/worldgen/roads/__init__.py": "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
   "tools/worldgen/roads/barrier_audit.py": "786d6dfd30de7dd51f60c793136839d43fcd9d214e103f392d613b68f1b18103",
-  "tools/worldgen/roads/build_world.py": "976b9d35b9ab9bcaf39556b6c411e05c6128bf8fe9cc1859b5c12a160d017794",
-  "tools/worldgen/roads/consistency.py": "379c5a94bb0e81ef1910e459930d55ccd0460ae1bed3ee132727486897ee99bc",
+  "tools/worldgen/roads/build_world.py": "2d90d9266a7e5b288907cb216bb94ee3435efa755dbade4379d78541c26bc18f",
+  "tools/worldgen/roads/closures.py": "608718189eb6680ca61538d47acb021d1be85e4dbbd001f315a0f2caffb45fa9",
+  "tools/worldgen/roads/compact_roundabout.py": "3003262b1efc4c9ab1e71566863f4066c30956743f630c9fa380b387fae3ef73",
+  "tools/worldgen/roads/consistency.py": "1a500ba1bad92f6c745c65ba2a84764e3558f5263725bb6767c6388a0cd574dc",
   "tools/worldgen/roads/context.py": "90f3a943cc21d0be5c46f4346c01c02dfa52ef7abb3d850c0fbe20f31fe37aa2",
-  "tools/worldgen/roads/decals.py": "2e3a058461a0554b1213496a4a8e41272e483cf470182e079de7600e206784fd",
+  "tools/worldgen/roads/decals.py": "b371e415bf5dd322bd9358b34b046678bc689a68baf4d25b55ac1335a35d3f3e",
   "tools/worldgen/roads/geom.py": "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
   "tools/worldgen/roads/gores.py": "29d5e7ce8c78202826b403ad573a6c757b82a3bc716abeea00d98ed1c15c6dff",
-  "tools/worldgen/roads/junctions.py": "4c867afe4bc48ce9426014be8c5230226bd69b05e8ad1f99b9150184c87da5d8",
-  "tools/worldgen/roads/markings.py": "40d90c97314afc44677cdf80dce48140240fec3062949adffb974b63a7a8a8f1",
-  "tools/worldgen/roads/meshing.py": "11f7e96ce854bd105e024c85b49c65a163991e502f77f36196c19f1814146835",
-  "tools/worldgen/roads/network.py": "57dfac6875ca5ba32504768d33def91009ece187a835b97b089db6bdc8fab8e8",
+  "tools/worldgen/roads/junctions.py": "036639450a4336c14a43f64e530a87b2e7be86e13570d2b5d4e14d562fab7fd3",
+  "tools/worldgen/roads/markings.py": "3f4636eea4e4098e4474f127d88c131d0383e5793a3f1a3f1c0f85def94e1c77",
+  "tools/worldgen/roads/meshing.py": "f430787d3b8986ff98224a87e674c6661f5374853d791645c0e0241d624396df",
+  "tools/worldgen/roads/network.py": "f02327931943068c1d993ed4336dc00180ead06531942d77d54f3ba7ae64cfbb",
   "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
-  "tools/worldgen/roads/pipeline.py": "ba4d06ba9c1c0e043e694abe8ad05e790df6ca1ab421beb5b0b0cb67350a2c9b",
+  "tools/worldgen/roads/pipeline.py": "1caa765a3b9d1f46f21965b55df8d6c463921fe1e1d9cd0d7ff3978227edc674",
   "tools/worldgen/roads/profile.py": "667f2de75831484dd23a9f1506260d256802af1f974c0c003baf1137ec2b2a36",
   "tools/worldgen/roads/qa_ortho.py": "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
   "tools/worldgen/roads/route.py": "e8bb7cd40bd2bf4dfef526aff16bafda35e2b8e68d64f2a8fb576818a453c5b4",
-  "tools/worldgen/roads/standards.py": "62df057b5cab22d38b34387fd24edd3162c5144a9825908afc4ff0bcbf406ce6",
-  "tools/worldgen/roads/through_lines.py": "be22b6b67118b50577e67ae1520287dcd5831b39400e7f2b805fde1b6e2795c5"
+  "tools/worldgen/roads/route_km.py": "4e961cd1608d6265c3fd27edd2690830628bffec0ec8f65bec44659b06143086",
+  "tools/worldgen/roads/standards.py": "9170af51f9b10c41bb08512384136687f3c485de2fed524ff69c6345d51b1fc3",
+  "tools/worldgen/roads/swept_path.py": "9548f2ff0e99e0fc00ef6c24a7b9291ee4c7771a4c9986b431385dd61743c77d",
+  "tools/worldgen/roads/through_lines.py": "be22b6b67118b50577e67ae1520287dcd5831b39400e7f2b805fde1b6e2795c5",
+  "tools/worldgen/roads/tunnels.py": "457ebe6b41c49ce56af52d2a3ac5db2b170e9be2644745ad3c9de441447bd88f",
+  "tools/worldgen/roads/xsec.py": "df88d8f332b8ec24ab2645c7039f3a55832c2e844056637a08b45b648dee7805"
  },
  "lane_into_island": [
   {
@@ -5666,14 +5672,14 @@
      "chain": "c:w177903962:1883043012-1882953792",
      "kind": "P-13",
      "ortho": {
-      "band_frac": 0.378,
-      "offset_m": 5.4,
+      "band_frac": 0.367,
+      "offset_m": 5.7,
       "present": true
      },
-     "s": 16.72,
+     "s": 16.47,
      "xy": [
-      538.234,
-      -752.384
+      538.358,
+      -752.171
      ]
     },
     {
@@ -8544,14 +8550,14 @@
      "chain": "c:w173956083:1852129066-2629251371",
      "kind": "P-14",
      "ortho": {
-      "band_frac": 0.122,
-      "offset_m": 5.9,
+      "band_frac": 0.089,
+      "offset_m": 6.1,
       "present": false
      },
-     "s": 72.47,
+     "s": 72.22,
      "xy": [
-      -518.751,
-      36.396
+      -518.566,
+      36.226
      ]
     },
     {
@@ -8586,14 +8592,14 @@
      "chain": "c:w257367421:1847044943-4075461271",
      "kind": "P-14",
      "ortho": {
-      "band_frac": 0.422,
-      "offset_m": -1.7,
+      "band_frac": 0.4,
+      "offset_m": 6.2,
       "present": true
      },
-     "s": 24.81,
+     "s": 24.79,
      "xy": [
-      -538.038,
-      -47.19
+      -538.041,
+      -47.21
      ]
     }
    ]

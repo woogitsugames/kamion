@@ -33,6 +33,8 @@ namespace TruckSim.Audio
         /// <summary>Set every frame by the vehicle controller: 0 outside, 1 in the cab.</summary>
         public float Interior { get; set; } = 1f;
         public float SpeedMs { get; set; }
+        /// <summary>Player volume of the ambient channel 0..1 (ADR 0270 settings, set by TruckAudioController). 1 = unchanged.</summary>
+        public float ChannelGain { get; set; } = 1f;
 
         PerspectiveLoop m_Bed, m_Forklift;
         AudioSource m_Bird;
@@ -75,7 +77,7 @@ namespace TruckSim.Audio
             float dt = Time.deltaTime;
             float target = zone == AmbientZone.IndustrialYard ? zoneLevel : 0f;
             m_Level = LayerMath.ExponentialStep(m_Level, target, dt, 2f, 2f); // zone borders fade over seconds
-            float masked = 1f - 0.55f * Mathf.Clamp01(SpeedMs / 20f);
+            float masked = (1f - 0.55f * Mathf.Clamp01(SpeedMs / 20f)) * ChannelGain;
             float cab = Mathf.Lerp(1f, cabBedFactor, Interior);
             m_Bed.Set(bedVolume * m_Level * masked * cab, 1f, Interior);
 
@@ -89,7 +91,7 @@ namespace TruckSim.Audio
             {
                 m_NextBird = Time.time + Random.Range(birdInterval.x, birdInterval.y);
                 float speedFade = 1f - Mathf.Clamp01(SpeedMs / birdMaxSpeed);
-                float v = birdVolume * m_Level * speedFade;
+                float v = birdVolume * m_Level * speedFade * ChannelGain;
                 if (v > 0.02f) PlayBird(v);
             }
         }

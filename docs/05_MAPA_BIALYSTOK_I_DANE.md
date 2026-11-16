@@ -54,6 +54,7 @@ Nie używaj publicznych serwerów kafli/Overpass jako masowego źródła — pob
 12. **Raport QA**: brakujące tagi, ostre kąty, zerowe długości, mosty bez `layer`, rozłączone ważne drogi, odchyłki geometrii, szczeliny teren/droga, dziury kolizji — z listą punktów do ręcznej weryfikacji.
 
 Ręczne poprawki: osobne pliki `authored_overrides` (np. GeoJSON/YAML z ID), aplikowane po generacji. **Jeśli generator kłamie — popraw generator**, nie łataj wyniku ręcznie po cichu.
+Pobocze dróg bez krawężnika (rodzaj, szerokości, kiedy krawężnik) — dane w `tools/worldgen/roads/xsec_rules.yaml`: reguła klasy, tagi OSM `shoulder*`, nadpisanie `set: {shoulder: …}` per odcinek (ADR 0272).
 
 ## 5. Kontrola jakości mapy (każdy fragment)
 - % sieci zgodnej ze źródłem, rozłączenia, błędy topologii.

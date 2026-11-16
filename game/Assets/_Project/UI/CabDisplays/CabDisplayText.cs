@@ -13,7 +13,7 @@ namespace Game.UI.CabDisplays
         public const string Bar = "bar";
         public const string RpmUnit = "1/min x100";
         public const string Fuel = "ON";               // olej napędowy
-        public const string AdBlue = "AdBlue";
+        public const string ScrFluid = "AUS 32";        // płyn do układu SCR wg ISO 22241 (nazwa ogólna, bez znaku towarowego; BRAND-SWEEP-S20 #1)
         public const string Coolant = "Chł";          // płyn chłodzący
         public const string AvgPrefix = "Ø ";
         public const string AvgUnit = " l/100 km";
@@ -43,7 +43,7 @@ namespace Game.UI.CabDisplays
         // DIN units
         public const string TachoHours = "h";
         public const string RadioBand = "FM";
-        public const string RadioFreq = "98,4";
+        public const string RadioFreq = "98,4";       // UNVERIFIED: czy częstotliwość nie jest zajęta przez stację w regionie (wykaz UKE; BRAND-SWEEP-S20 #16)
         public const string CbChannel = "CH 19";
         public const string CbMode = "AM";
 

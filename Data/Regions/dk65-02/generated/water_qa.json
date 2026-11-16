@@ -1,0 +1,397 @@
+{
+ "banks": {
+  "bank_shrubs": {
+   "skipped": {
+    "blocked": 131,
+    "near_tree": 15
+   },
+   "tree_alder": 34,
+   "tree_shrub": 271
+  },
+  "banks": {
+   "ribbons": 3645,
+   "triangles": 122300
+  },
+  "banks_low": {
+   "ribbons": 316,
+   "triangles": 7114
+  }
+ },
+ "bodies": [
+  {
+   "area_m2": 409,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-8FC7-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 85,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-9174-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 175,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-93A5-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 701,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-9BBB-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 332,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:2C9A9AB7-9CF9-0F0D-E053-CA2BA8C04DCD:0"
+  },
+  {
+   "area_m2": 209,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:345bc25b-498d-4abe-9456-b53ccd9a6411:0"
+  },
+  {
+   "area_m2": 28575,
+   "kind": "woda płynąca",
+   "name": "Biała",
+   "src": "bdot10k:OT_PTWP_A:437d2d7c-c17c-4dc3-8a6e-133633b7240d:0"
+  },
+  {
+   "area_m2": 282,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:5ea7e03c-aad8-4617-a9c1-efa0ae44b66c:0"
+  },
+  {
+   "area_m2": 450,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:9aaea6f0-eb02-11e9-a9e4-b8ca3a7f05dc:0"
+  },
+  {
+   "area_m2": 206,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:9ac7d440-eb02-11e9-b01a-b8ca3a7f05dc:0"
+  },
+  {
+   "area_m2": 516,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:9ace3ce1-eb02-11e9-a92d-b8ca3a7f05dc:0"
+  },
+  {
+   "area_m2": 824,
+   "kind": "woda stojąca",
+   "name": null,
+   "src": "bdot10k:OT_PTWP_A:9ae52040-eb02-11e9-b2e0-b8ca3a7f05dc:0"
+  },
+  {
+   "area_m2": 40683,
+   "kind": "woda płynąca",
+   "name": "Supraśl",
+   "src": "bdot10k:OT_PTWP_A:b7b3f375-77f9-46ae-aef9-f3bbad771d80:0"
+  },
+  {
+   "area_m2": 318,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/298099990:0"
+  },
+  {
+   "area_m2": 991,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/298099992:0"
+  },
+  {
+   "area_m2": 339,
+   "kind": "pond",
+   "name": null,
+   "src": "osm:way/494289616:0"
+  },
+  {
+   "area_m2": 297,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/881468868:0"
+  },
+  {
+   "area_m2": 412,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/881468869:0"
+  },
+  {
+   "area_m2": 779,
+   "kind": "water",
+   "name": null,
+   "src": "osm:way/881757009:0"
+  }
+ ],
+ "carve": {
+  "bank_nodes_lowered": 39140,
+  "bed_lowered_m_max": 3.23,
+  "bed_nodes": 78164,
+  "lip_nodes_raised": 355,
+  "water_nodes_kept_by_road": 75
+ },
+ "profiles": [
+  {
+   "kind": "river",
+   "len_m": 2086,
+   "level_first_m": 111.28,
+   "level_last_m": 110.17,
+   "name": "Biała",
+   "raw_min_max_m": [
+    110.17,
+    111.28
+   ],
+   "reversed": false,
+   "src": "osm:way/372018273:0",
+   "stations": 418
+  },
+  {
+   "kind": "river",
+   "len_m": 2944,
+   "level_first_m": 110.66,
+   "level_last_m": 110.13,
+   "name": "Supraśl",
+   "raw_min_max_m": [
+    110.12,
+    110.96
+   ],
+   "reversed": false,
+   "src": "osm:way/1068670427:0",
+   "stations": 589
+  },
+  {
+   "kind": "river",
+   "len_m": 8,
+   "level_first_m": 110.21,
+   "level_last_m": 110.18,
+   "name": "Biała",
+   "raw_min_max_m": [
+    110.18,
+    110.21
+   ],
+   "reversed": true,
+   "src": "bdot10k:OT_SWRS_L:2C9A9ABA-0435-0F0D-E053-CA2BA8C04DCD:0",
+   "stations": 2
+  },
+  {
+   "kind": "river",
+   "len_m": 272,
+   "level_first_m": 110.21,
+   "level_last_m": 110.13,
+   "name": "Supraśl",
+   "raw_min_max_m": [
+    110.12,
+    110.29
+   ],
+   "reversed": true,
+   "src": "bdot10k:OT_SWRS_L:2C9A9ABA-04DF-0F0D-E053-CA2BA8C04DCD:0",
+   "stations": 55
+  },
+  {
+   "kind": "river",
+   "len_m": 2635,
+   "level_first_m": 110.64,
+   "level_last_m": 110.24,
+   "name": "Supraśl",
+   "raw_min_max_m": [
+    110.24,
+    110.97
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:2C9A9ABA-0CE0-0F0D-E053-CA2BA8C04DCD:0",
+   "stations": 527
+  },
+  {
+   "kind": "river",
+   "len_m": 2092,
+   "level_first_m": 111.31,
+   "level_last_m": 110.18,
+   "name": "Biała",
+   "raw_min_max_m": [
+    110.18,
+    112.09
+   ],
+   "reversed": false,
+   "src": "bdot10k:OT_SWRS_L:2C9A9ABA-0D57-0F0D-E053-CA2BA8C04DCD:0",
+   "stations": 419
+  }
+ ],
+ "region": "dk65-02",
+ "schema": "truck-sim-pl/water-qa/1",
+ "seams": [
+  {
+   "edge": "W",
+   "level_m": 110.179,
+   "nodes": 24,
+   "own_m": [
+    110.161,
+    110.193
+   ]
+  },
+  {
+   "edge": "E",
+   "level_m": 110.666,
+   "nodes": 12,
+   "own_m": [
+    110.644,
+    110.656
+   ]
+  },
+  {
+   "edge": "E",
+   "level_m": 111.292,
+   "nodes": 13,
+   "own_m": [
+    111.177,
+    111.211
+   ]
+  }
+ ],
+ "sheet": {
+  "area_m2": 82341,
+  "triangles": 15631
+ },
+ "skipped": [
+  {
+   "src": "osm:way/227056750:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/309441964:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/779486072:0",
+   "why": "intermittent=yes"
+  },
+  {
+   "src": "osm:way/779502412:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/779502413:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/779502414:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/779670095:0",
+   "why": "river outline also in BDOT10k OT_PTWP_A"
+  },
+  {
+   "src": "osm:way/1458011753:0",
+   "why": "intermittent=yes"
+  },
+  {
+   "src": "osm:way/1458044066:0",
+   "why": "intermittent=yes"
+  },
+  {
+   "src": "osm:way/1458044069:0",
+   "why": "intermittent=yes"
+  },
+  {
+   "src": "osm:way/1458064892:0",
+   "why": "intermittent=yes"
+  },
+  {
+   "src": "osm:way/1484503988:0",
+   "why": "intermittent=yes"
+  }
+ ],
+ "still_levels": [
+  {
+   "at_local_en": [
+    400.2,
+    842.9
+   ],
+   "level_m": 116.38,
+   "nodes": 241
+  },
+  {
+   "at_local_en": [
+    510.7,
+    795.9
+   ],
+   "level_m": 117.04,
+   "nodes": 324
+  },
+  {
+   "at_local_en": [
+    613.7,
+    359.4
+   ],
+   "level_m": 111.41,
+   "nodes": 926
+  },
+  {
+   "at_local_en": [
+    -161.4,
+    -486.5
+   ],
+   "level_m": 110.62,
+   "nodes": 479
+  },
+  {
+   "at_local_en": [
+    -146.9,
+    -508.8
+   ],
+   "level_m": 110.81,
+   "nodes": 1256
+  },
+  {
+   "at_local_en": [
+    357.9,
+    -679.3
+   ],
+   "level_m": 111.84,
+   "nodes": 590
+  },
+  {
+   "at_local_en": [
+    371.5,
+    -683.7
+   ],
+   "level_m": 111.61,
+   "nodes": 344
+  },
+  {
+   "at_local_en": [
+    735.1,
+    -767.7
+   ],
+   "level_m": 110.99,
+   "nodes": 511
+  },
+  {
+   "at_local_en": [
+    179.3,
+    -819.3
+   ],
+   "level_m": 116.73,
+   "nodes": 108
+  },
+  {
+   "at_local_en": [
+    946.8,
+    -841.7
+   ],
+   "level_m": 111.25,
+   "nodes": 243
+  }
+ ],
+ "water_nodes": 78239
+}

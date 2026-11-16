@@ -39,6 +39,24 @@ M = {
     "yard_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "path_asphalt": {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt", "texture_set": "asphalt_worn"},
     "cycle_red": {"color": [0.20, 0.06, 0.05], "rough": 0.88, "surface": "asphalt", "texture_set": "paving_red"},
+    # ADR 0188 (updated M65): asphalt surfaces of cycle tracks (DDR). Set `asphalt_tint` = the asphalt_worn scan as a
+    # neutral modulation map (engine albedo = 2 x colour x map): the normal, roughness, cracks and grime are those of
+    # the grey asphalt, only the colour differs.
+    # - `cycle_asphalt`: warm dark-grey asphalt of standard DDRs (all DDRs in bialystok-dojlidy including Kuronia
+    #   P11-001 and Mickiewicza/Kuronia P11-063, plus the grey DDRs in bialystok-industrial-c). Calibrated in the Low
+    #   overcast render of P11-001 against the photo's DDR / carriageway / sidewalk ratios (M65 §2.1 / §5 A: DDR sRGB
+    #   ~109/104/101 vs carriageway 87/87/88 and sidewalk 129/123/113). WORKING_VALUE.
+    # - `cycle_asphalt_red`: weathered red-brown / burgundy asphalt of the Rondo Putry / Andersa cycle tracks in
+    #   bialystok-industrial-c (11 OSM ways verified on GUGiK 0.08 m 2024 orthophoto and Mapillary, M65 §2.1 / §5 A).
+    #   WORKING_VALUE.
+    # - `cycle_crossing_red`: thin red thermoplastic / resin surfacing of the 25 verified red P-11 cycle crossings
+    #   (9 in Dojlidy including P11-056 Dywizjonu 303, 16 in Region C; M65 §2.2 / §5 B). WORKING_VALUE.
+    "cycle_asphalt": {"color": [0.160, 0.151, 0.145], "rough": 0.9, "surface": "asphalt",
+                      "texture_set": "asphalt_tint", "uv": "planar", "ground_grime": {"damp_darkening": 0.22}},
+    "cycle_asphalt_red": {"color": [0.220, 0.138, 0.130], "rough": 0.9, "surface": "asphalt",
+                          "texture_set": "asphalt_tint", "uv": "planar", "ground_grime": {"damp_darkening": 0.22}},
+    "cycle_crossing_red": {"color": [0.134, 0.093, 0.093], "rough": 0.88, "surface": "asphalt",
+                           "texture_set": "asphalt_tint", "uv": "planar", "decal": True, "depth_offset_m": 0.003},
     # buildings
     "hall_wall_grey": {"color": [0.46, 0.47, 0.46], "rough": 0.5, "metal": 0.2, "texture_set": "sandwich_ribbed"},
     "hall_wall_silver": {"color": [0.40, 0.42, 0.43], "rough": 0.45, "metal": 0.4, "texture_set": "sandwich_ribbed"},
@@ -121,10 +139,12 @@ M = {
     "plate_back": {"color": [1, 1, 1], "rough": 0.5, "metal": 0.6, "texture": "plate_back"},
     "signal_housing": {"color": [0.03, 0.03, 0.03], "rough": 0.6},
     "signal_backplate": {"color": [0.02, 0.02, 0.02], "rough": 0.7},
-    "signal_border": {"color": [0.7, 0.7, 0.7], "rough": 0.5},
+    # ADR 0193 (M66, Dz.U. 2019 poz. 2311 zał. 3 pkt 3.3.5.6, s. 715, rys. 10.28): white border of the black contrast plate
+    "signal_border": {"color": [0.55, 0.55, 0.54], "rough": 0.4},
     "signal_red_on": {"color": [0.9, 0.05, 0.02], "rough": 0.3, "emissive": [6.0, 0.3, 0.1]},
     "signal_red_off": {"color": [0.12, 0.02, 0.02], "rough": 0.3},
     "signal_yellow_off": {"color": [0.15, 0.10, 0.02], "rough": 0.3},
+    "signal_yellow_on": {"color": [0.95, 0.60, 0.03], "rough": 0.3, "emissive": [5.0, 2.6, 0.1]},
     "signal_green_on": {"color": [0.05, 0.9, 0.5], "rough": 0.3, "emissive": [0.2, 5.0, 2.5]},
     "signal_green_off": {"color": [0.02, 0.10, 0.06], "rough": 0.3},
     "shelter_roof": {"color": [0.15, 0.16, 0.16], "rough": 0.5, "metal": 0.4},
@@ -614,6 +634,17 @@ M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "pa
 # WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
 # Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
 M["decal_oil"]["traffic_opacity_scale"] = 1.15
+# ADR 0194 (REVIEW s19-0179 P2 "jasne rozmyte splaty"): oil soaked into asphalt stays matt; the atlas cores carried
+# smoothness ~0.5 on a flat decal normal, so the overcast sky reflected off them at grazing angles. Smoothness of an old
+# stain / the freshest film (asphalt_worn = 0.09) and a coverage gamma < 1 for a denser core. WORKING_VALUE.
+M["decal_oil"]["oil_look"] = {"smooth_aged": 0.10, "smooth_fresh": 0.22, "coverage_gamma": 0.7}
+# ADR 0194: yard grime follows the traffic (paved UV1 = distance to area edge, to a building wall): damp / oily pools
+# along dock walls (trucks stand) and edges (water, fines), the open middle swept clean. Threshold offsets on the
+# ADR 0060 macro pool (0.62 = ~16 % of the area). WORKING_VALUE, judged on the chase / route_s1066 frames.
+_GRIME_TRAFFIC = {"open_clean": 0.07, "busy_damp": 0.04, "wall_zone_m": 18.0}
+for _k in ("yard_paving", "yard_concrete", "yard_slabs", "yard_asphalt", "yard_behaton", "yard_concrete_worn"):
+    if _k in M:
+        M[_k] = {**M[_k], "grime_traffic": dict(_GRIME_TRAFFIC)}
 
 
 def _underdeck_pier_paint(default):
@@ -681,6 +712,25 @@ M["sidewalk_paving"] = {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface":
 for _asphalt_ground_id in ("curb_concrete", "sidewalk_paving"):
     M[_asphalt_ground_id]["ground_wear_exclude_local_en"] = [400.0, -700.0, 850.0, -250.0]
 
+# ADR 0237 (research R6 pavements-kerbs): surface types of footways beside `sidewalk_paving` (grey 20 x 10 blocks).
+# streetscape.pavements chooses the type per piece of footway; the wear parameters are those of sidewalk_paving.
+# - `sidewalk_slabs`: 35 x 35 cm concrete slabs (R6-025; set sidewalk_slab_35, CC0 scan scaled to 35 cm, ADR 0063).
+#   Colour = the set's calibrated mean (tint 1).
+# - `sidewalk_paving_red`: red-brown 20 x 10 concrete blocks. Set paving_20x10_tint = the grey block scan as a neutral
+#   modulation map (engine albedo = 2 x colour x map), so joints, relief and per-block tone are those of the grey
+#   blocks. Colour: WORKING_VALUE from frame F38 (owner photo P11-063, Mickiewicza, overcast): reddest pixels of the
+#   strip sRGB 97/76/75 against the grey concrete edging 84/82/82 beside it (R/G 1.28 vs 1.02); one frame, 20 m away,
+#   JPEG - to be judged in the render of camera photo_P11-063.
+# - `cycle_red` (cycle paths BDOT10k says are laid in blocks): was a flat colour (0.20, 0.06, 0.05) because its set
+#   `paving_red` never existed in materials_spec.json; now the same red blocks.
+_FOOTWAY_GRIME = M["sidewalk_paving"]["ground_grime"]
+M["sidewalk_slabs"] = {"color": [0.27, 0.267, 0.258], "rough": 0.85, "surface": "paving_stones",
+                       "texture_set": "sidewalk_slab_35", "ground_grime": dict(_FOOTWAY_GRIME)}
+M["sidewalk_paving_red"] = {"color": [0.26, 0.125, 0.11], "rough": 0.85, "surface": "paving_stones",
+                            "texture_set": "paving_20x10_tint", "uv": "planar", "ground_grime": dict(_FOOTWAY_GRIME)}
+M["cycle_red"] = {"color": [0.26, 0.125, 0.11], "rough": 0.85, "surface": "asphalt",
+                  "texture_set": "paving_20x10_tint", "uv": "planar", "ground_grime": dict(_FOOTWAY_GRIME)}
+
 
 # ADR 0129 (G3-B frontage round 2, review 0126 P2; additive block, parameters of the existing Kamion/World PBR
 # material - no shader change, no new pass):
@@ -718,6 +768,52 @@ M["shelter_glass_clear"] = {"color": [0.030, 0.040, 0.040], "rough": 0.04, "alph
                             "shader": "car_glass", "dust": 0.5, "screen": {"horizon_sky": 0.85, "haze": 0.03}}
 M["paint_ral1012"] = {"color": [0.52, 0.42, 0.06], "rough": 0.5}
 M["paint_ral3020"] = {"color": [0.55, 0.012, 0.009], "rough": 0.5}
+# ADR 0268 (REVIEW s22 0217 visual P2-11): drive cabinet of a level-crossing barrier - sun-faded orange instead of the
+# saturated cone_orange (WORKING_VALUE read off Mapillary 1832769196903759 / 1569863873404925, reference only)
+M["drive_cabinet_faded"] = {"color": [0.50, 0.21, 0.07], "rough": 0.75}
 for _k in ("shelter_paint", "paint_ral1012", "paint_ral3020"):
     M[_k].setdefault("sky_occ", SKY_OCC_STRUCT)
 M["shelter_glass_clear"].setdefault("sky_occ", SKY_OCC_GLASS)
+
+
+# ADR 0183 (additive): red-white blocking posts with chains (streetscape.chain_bollards) - ONE alpha-clip atlas for
+# the post, its eyelets and both chains, colours in the texture (sRGB). Satin foil / paint, no metal (WORKING_VALUE).
+M["chain_bollard"] = {"color": [1.0, 1.0, 1.0], "rough": 0.5, "texture": "chain_bollard", "alpha_cutoff": 0.5,
+                      "sky_occ": SKY_OCC_STRUCT}
+# ADR 0185 (Dojlidy, review 0179 P1; additive block, no existing entry changed):
+# - hall_wall_smooth: flat-faced sandwich panels laid horizontally (set sandwich_smooth: courses of 1.15 m, no
+#   baked streaks) with butt joints every 6 m and one tone per panel (`panel_m`, the shader of ADR 0092). The rule
+#   cladding (sandwich_ribbed sampled at the 4 m default, 10 % streak noise in the albedo) read as a grid of blocks
+#   on the north hall of the Kuronia plant (CC0 photo P11-094: 16 courses, vertical joints at the column grid).
+#   Colour = hall_wall_white (accepted in ADR 0179). `hall_wall_` prefix: wall-top TEXCOORD_1, run-off, splash zone.
+# - cladding_vertical_grey: flat panels laid vertically, 1.0 m wide (set cladding_vertical), the light silver grey
+#   office block at Kuronia 3 (CC0 photo P11-001). Not a hall_wall_* name: an office wall has no wall-top UV1 on
+#   LOD1, so the run-off layer is switched on by `runoff` like on the plaster walls. Colour 0.33 (r1 at 0.47 read
+#   white): measured with artifacts/dojbld-0185/measure.py, long wall of the block / white hall across the street =
+#   129 / 140 sRGB on the photo (linear 0.85), 107 / 113 in render r3 (0.89). WORKING_VALUE.
+M["hall_wall_smooth"] = {"color": [0.55, 0.56, 0.55], "rough": 0.45, "metal": 0.2, "texture_set": "sandwich_smooth",
+                         "set_tile": True, "tint_linear": True, "panel_m": [6.0, 1.15], "sky_occ": SKY_OCC_STRUCT}
+M["cladding_vertical_grey"] = {"color": [0.33, 0.335, 0.34], "rough": 0.45, "metal": 0.2,
+                               "texture_set": "cladding_vertical", "set_tile": True, "tint_linear": True,
+                               "runoff": True, "splash_h": 0.6, "sky_occ": SKY_OCC_STRUCT}
+for _k in ("office", "ribbon"):
+    M[f"cladding_vertical_grey__far_{_k}"] = {
+        "color": M["cladding_vertical_grey"]["color"], "rough": 0.45, "base": "cladding_vertical_grey",
+        "texture_set": "facade_far", "set_tile": True, "tint_linear": True, "sky_occ": [SKY_OCC_STRUCT_X, 0.9]}
+# ADR 0242 (Dojlidy, review s20-0185 P1-1 / P1-4; additive, no existing entry changed except the new key below):
+# - cladding_cassette_grey: cassette panels with dominant HORIZONTAL joints (review: joints every ~1 m, vertical
+#   butt joints every 3-4 m) for the office block at Kuronia 3 - the existing set sandwich_smooth (courses of
+#   1.15 m) with `panel_m` 3.5 m, colour of cladding_vertical_grey (measured in ADR 0185). No new texture set.
+#   Module 3.5 x 1.15 m = WORKING_VALUE (the review reads the photo as "ok. 1 m" / "ok. 3-4 m").
+# - `runoff_strength` (new optional key, WorldPbrMaterials): multiplier of the run-off layer strength of ONE
+#   material. hall_wall_smooth 0.25 (WORKING_VALUE of review s20-0185 P1-4: the plant hall is new and clean on the
+#   photo; the hashed halls keep 1). hall_wall_smooth is used by region bialystok-dojlidy only (test_dojbld_0185).
+M["hall_wall_smooth"]["runoff_strength"] = 0.25
+M["cladding_cassette_grey"] = {"color": [0.33, 0.335, 0.34], "rough": 0.45, "metal": 0.2,
+                               "texture_set": "sandwich_smooth", "set_tile": True, "tint_linear": True,
+                               "panel_m": [3.5, 1.15], "runoff": True, "runoff_strength": 0.5, "splash_h": 0.6,
+                               "sky_occ": SKY_OCC_STRUCT}
+for _k in ("office", "ribbon"):
+    M[f"cladding_cassette_grey__far_{_k}"] = {
+        "color": M["cladding_cassette_grey"]["color"], "rough": 0.45, "base": "cladding_cassette_grey",
+        "texture_set": "facade_far", "set_tile": True, "tint_linear": True, "sky_occ": [SKY_OCC_STRUCT_X, 0.9]}

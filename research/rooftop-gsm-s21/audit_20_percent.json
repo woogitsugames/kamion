@@ -1,0 +1,196 @@
+{
+ "r1": {
+  "seed": 20261115,
+  "method": "random.Random(20261115).sample(range(35), 7) na manifest.csv",
+  "date": "2026-11-15",
+  "sample": [
+   {
+    "id": "K67-002",
+    "check": "ponowne pobranie strony karty (WebFetch)",
+    "result": "PASS",
+    "note": "1499 / 498 / 197 mm, Light Gray RAL 7035 — zgodne"
+   },
+   {
+    "id": "K67-006",
+    "check": "ponowne pobranie strony karty",
+    "result": "PASS",
+    "note": "425 × 296 × 130 mm, 18,3 kg, IP65 — zgodne"
+   },
+   {
+    "id": "K67-011",
+    "check": "ponowne obejrzenie wycinka 2× z ortho_skor_z (0,05 m/px)",
+    "result": "PASS",
+    "note": "szerokość koryta 8–10 px → 0,4–0,5 m"
+   },
+   {
+    "id": "K67-012",
+    "check": "jw.",
+    "result": "PASS",
+    "note": "przy narożniku NE skupisko jasnych elementów i szafka na końcu koryta; SW — w kadrze 960 px"
+   },
+   {
+    "id": "K67-020",
+    "check": "ponowne obejrzenie ortho_tys10a (800 px)",
+    "result": "PASS",
+    "note": "dach z panelami PV, bez masztów"
+   },
+   {
+    "id": "K67-023",
+    "check": "ponowne obejrzenie ortho_kraszewskiego45a (800 px, wcześniej tylko w arkuszu 480 px)",
+    "result": "PASS",
+    "note": "wywiewki i urządzenia, bez masztów"
+   },
+   {
+    "id": "K67-031",
+    "check": "ponowne pobranie tekstu art. 29 (standardyprawa.pl)",
+    "result": "PASS",
+    "note": "ust. 3 pkt 3 lit. a: > 3 m i ≤ 12 m, zgłoszenie z art. 30"
+   }
+  ],
+  "summary": {
+   "PASS": 7,
+   "FIX": 0,
+   "rows": 7,
+   "share": "7/35 = 20 %"
+  }
+ },
+ "r2": {
+  "seed": 2026111502,
+  "method": "random.Random(2026111502).sample(range(47), 9) na wierszach K67-036…082 (nowe w FIX r2); +1 losowanie random.Random(2026111503).choice z pozostałych → K67-059",
+  "date": "2026-11-15",
+  "sample": [
+   {
+    "id": "K67-038",
+    "check": "niezależne przeliczenie tools/audit_lidar.py (walec 1,5 m, mediana klas 6/12)",
+    "result": "PASS",
+    "note": "h_alt 4,80 vs 4,75 (Δ 0,05)"
+   },
+   {
+    "id": "K67-044",
+    "check": "jw.",
+    "result": "PASS (po poprawce metody audytu)",
+    "note": "1. wersja audytu (mediana klasy 6 wokół p25) dała 22,47 m — klasa 6 zawiera ściany (Hallera: dach częściowo klasa 12); po zawężeniu do pasma top−12 m: h_alt 1,07 vs 1,05"
+   },
+   {
+    "id": "K67-048",
+    "check": "jw.",
+    "result": "PASS",
+    "note": "2,60 vs 2,65"
+   },
+   {
+    "id": "K67-049",
+    "check": "jw.",
+    "result": "PASS",
+    "note": "2,71 vs 2,75"
+   },
+   {
+    "id": "K67-069",
+    "check": "mapa lidar_zwierzyniecka4.png obejrzana w tej sesji; zgodność z opisem i z lidar_roofs.json",
+    "result": "PASS",
+    "note": "podwyższona część SE (żółta) + maszt; północna część arkusza bez danych (granica arkusza) — opisane w README nie było → dopisane"
+   },
+   {
+    "id": "K67-070",
+    "check": "mapa lidar_hallera19.png obejrzana",
+    "result": "PASS",
+    "note": "2 nadbudówki ~1 m, brak skupisk > 1,3 m"
+   },
+   {
+    "id": "K67-071",
+    "check": "mapa lidar_kopernika5a.png obejrzana",
+    "result": "PASS",
+    "note": "oba bloki w kadrze, punkt dachu między blokami; skupiska 2,5–3,4 m przy końcach"
+   },
+   {
+    "id": "K67-077",
+    "check": "licencja i autor z out/commons_log.json vs manifest; obraz obejrzany",
+    "result": "PASS",
+    "note": "CC BY-SA 4.0, 2014-03-27 19:02 — zgodne"
+   },
+   {
+    "id": "K67-082",
+    "check": "liczba tytułów bez pliku vs log (3 przebiegi)",
+    "result": "PASS",
+    "note": "4 × 429 + 1 missing + 1 duplikat = 6 z 15; pobrane 9"
+   },
+   {
+    "id": "K67-059",
+    "check": "przeliczenie: az cienia = 360 − atan(83/95); tan(el); tools/sun.py 08:30 UTC",
+    "result": "PASS",
+    "note": "az 318.9°, 6,3 × tan 41,8° = 5.63 m; sun.py 08:30 → az 140,1 / el 41,8 — zgodne"
+   }
+  ],
+  "summary": {
+   "PASS": 10,
+   "FIX": 0,
+   "rows": 10,
+   "share": "10/47 = 21,3 %"
+  }
+ },
+ "r3_s21b": {
+  "zakres": "nowe wiersze K67-083…148 (66)",
+  "seed": 2026111521,
+  "metoda": "random.seed(2026111521); random.sample(K67-083…148, 14) — 14/66 = 21 %; ponowne obejrzenie pliku z files/ i ponowne sprawdzenie URL",
+  "data": "2026-11-15",
+  "proba": {
+   "K67-087": [
+    "PASS",
+    "kadr ponownie obejrzany (files/): estakada, akumulator ciepła, drzewa; wieży brak — zgodne"
+   ],
+   "K67-091": [
+    "PASS",
+    "chodnik, bloki z żółtymi/zielonymi balkonami zasłaniają kierunek celu — zgodne"
+   ],
+   "K67-114": [
+    "PASS",
+    "drewniany dom za zielonym ogrodzeniem — zgodne"
+   ],
+   "K67-122": [
+    "PASS",
+    "dom jednorodzinny, samochód przed bramą — zgodne"
+   ],
+   "K67-123": [
+    "PASS",
+    "biały drewniany dom za białym płotem — zgodne"
+   ],
+   "K67-125": [
+    "PASS",
+    "ogrodzenie budowy z graffiti, w tle domy i blok 4 kond. — zgodne"
+   ],
+   "K67-128": [
+    "PASS",
+    "budynek 4 kond. + poddasze, kominy wentylacyjne na dachu, masztów brak — zgodne"
+   ],
+   "K67-131": [
+    "PASS",
+    "ulica z domami, antena TV na maszcie przy domu — zgodne"
+   ],
+   "K67-136": [
+    "PASS",
+    "skrzyżowanie, baner, w tle blok — zgodne"
+   ],
+   "K67-137": [
+    "FIX",
+    "opis „dach dwuspadowy niski” — kształtu dachu w kadrze nie widać; poprawiono na „krawędź dachu bez masztów (kształt dachu niewidoczny)”"
+   ],
+   "K67-142": [
+    "PASS",
+    "budynek szkolny 3 kond. z ulicy, drzewa bez liści — zgodne"
+   ],
+   "K67-144": [
+    "PASS",
+    "boisko, w tle bloki 5 kond. — zgodne"
+   ],
+   "K67-145": [
+    "PASS",
+    "URL itemu Panoramax ponownie: HTTP 200; liczby zgodne z wynikiem tools/s21b/pnx.py"
+   ],
+   "K67-148": [
+    "PASS",
+    "node/11285970200 ponownie z API OSM: communication:radio=yes, man_made=mast, tower:construction=guyed_tube — zgodne"
+   ]
+  },
+  "wynik": "13 PASS, 1 FIX (K67-137 — opis poprawiony)",
+  "dodatkowo": "pomiary K67-094…096: drugi odczyt na innym kadrze (1326673581) — różnica 0,09–0,12 kond."
+ }
+}

@@ -1,22 +1,22 @@
 {
  "summary": {
   "n_loops": 122,
-  "max_seam_ratio_d1": 0.7101449274238162,
-  "max_seam_ratio_d2": 0.09999999967232,
+  "max_seam_ratio_d1": 0.7142857141662973,
+  "max_seam_ratio_d2": 0.19999999934464,
   "max_abs_f0_err_pct": 2.1862844580946636e-14,
-  "min_firing_over_half_orders_db": 15.873823827002756,
-  "max_firing_over_half_orders_db": 24.469253479775563,
-  "max_peak_dbfs": -3.0,
+  "min_firing_over_half_orders_db": 15.879366140821249,
+  "max_firing_over_half_orders_db": 24.987549030160523,
+  "max_peak_dbfs": -1.95,
   "failures": []
  },
  "loops": [
   {
    "name": "engine_ext_off_0600",
-   "peak_dbfs": -22.83,
-   "rms_dbfs": -36.32,
-   "seam_jump": 0.0,
-   "seam_ratio_d1": 0.0,
-   "seam_ratio_d2": 0.00194931773866691,
+   "peak_dbfs": -19.96,
+   "rms_dbfs": -34.19,
+   "seam_jump": 6.103515625e-05,
+   "seam_ratio_d1": 0.00119402985072291,
+   "seam_ratio_d2": 0.000623440230460638,
    "f_fire_expected": 30.0,
    "f0_estimate": 30.0,
    "top5_cycle_orders": [
@@ -31,12 +31,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.871700138766702,
+   "firing_over_half_orders_db": 21.992297880284966,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -16.2,
-    "1000-4000": -13.5,
-    "4000-16000": -15.9
+    "200-1000": -14.9,
+    "1000-4000": -14.2,
+    "4000-16000": -13.0
    },
    "checks": {
     "clip": 1.0,
@@ -49,11 +49,11 @@
   },
   {
    "name": "engine_cab_off_0600",
-   "peak_dbfs": -25.56,
-   "rms_dbfs": -34.15,
-   "seam_jump": 9.1552734375e-05,
-   "seam_ratio_d1": 0.02325581394758103,
-   "seam_ratio_d2": 0.018181818170985783,
+   "peak_dbfs": -23.89,
+   "rms_dbfs": -31.86,
+   "seam_jump": 6.103515625e-05,
+   "seam_ratio_d1": 0.014814595335731628,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 30.0,
    "f0_estimate": 30.0,
    "top5_cycle_orders": [
@@ -61,19 +61,19 @@
     12,
     18,
     24,
-    30
+    10
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 30.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.508463480620698,
+   "firing_over_half_orders_db": 21.94441889080606,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -20.0,
-    "1000-4000": -25.8,
-    "4000-16000": -35.5
+    "200-1000": -21.2,
+    "1000-4000": -28.4,
+    "4000-16000": -36.0
    },
    "checks": {
     "clip": 1.0,
@@ -86,11 +86,11 @@
   },
   {
    "name": "engine_ext_off_0700",
-   "peak_dbfs": -22.24,
-   "rms_dbfs": -35.26,
-   "seam_jump": 0.000152587890625,
-   "seam_ratio_d1": 0.007636560798096326,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -19.45,
+   "rms_dbfs": -34.46,
+   "seam_jump": 0.000335693359375,
+   "seam_ratio_d1": 0.006423395172987407,
+   "seam_ratio_d2": 0.003578359512939166,
    "f_fire_expected": 35.00002641910207,
    "f0_estimate": 35.00002641910206,
    "top5_cycle_orders": [
@@ -105,12 +105,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.188453620014673,
+   "firing_over_half_orders_db": 22.511223688062884,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -15.5,
-    "1000-4000": -14.0,
-    "4000-16000": -16.1
+    "200-1000": -14.6,
+    "1000-4000": -13.5,
+    "4000-16000": -12.0
    },
    "checks": {
     "clip": 1.0,
@@ -123,11 +123,11 @@
   },
   {
    "name": "engine_cab_off_0700",
-   "peak_dbfs": -24.25,
-   "rms_dbfs": -32.18,
-   "seam_jump": 0.000213623046875,
-   "seam_ratio_d1": 0.053846153832581296,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -23.64,
+   "rms_dbfs": -31.18,
+   "seam_jump": 9.1552734375e-05,
+   "seam_ratio_d1": 0.021164767711777877,
+   "seam_ratio_d2": 0.011363636359404959,
    "f_fire_expected": 35.00002641910207,
    "f0_estimate": 35.00002641910206,
    "top5_cycle_orders": [
@@ -142,12 +142,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.12296184257322,
+   "firing_over_half_orders_db": 23.809894229271627,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -19.9,
-    "1000-4000": -27.1,
-    "4000-16000": -36.5
+    "200-1000": -21.3,
+    "1000-4000": -28.3,
+    "4000-16000": -36.1
    },
    "checks": {
     "clip": 1.0,
@@ -160,11 +160,11 @@
   },
   {
    "name": "engine_ext_off_0800",
-   "peak_dbfs": -23.12,
-   "rms_dbfs": -34.59,
-   "seam_jump": 3.0517578125e-05,
-   "seam_ratio_d1": 0.001459854014528706,
-   "seam_ratio_d2": 0.014372901330981994,
+   "peak_dbfs": -23.58,
+   "rms_dbfs": -34.99,
+   "seam_jump": 6.103515625e-05,
+   "seam_ratio_d1": 0.003169572107600855,
+   "seam_ratio_d2": 0.01169590643200146,
    "f_fire_expected": 40.0,
    "f0_estimate": 40.0,
    "top5_cycle_orders": [
@@ -179,12 +179,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.629580425206456,
+   "firing_over_half_orders_db": 21.76427720213807,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -14.1,
-    "1000-4000": -13.8,
-    "4000-16000": -16.0
+    "200-1000": -16.3,
+    "1000-4000": -14.3,
+    "4000-16000": -16.4
    },
    "checks": {
     "clip": 1.0,
@@ -197,11 +197,11 @@
   },
   {
    "name": "engine_cab_off_0800",
-   "peak_dbfs": -23.62,
-   "rms_dbfs": -30.71,
+   "peak_dbfs": -24.24,
+   "rms_dbfs": -30.86,
    "seam_jump": 6.103515625e-05,
-   "seam_ratio_d1": 0.014925373130678547,
-   "seam_ratio_d2": 0.0,
+   "seam_ratio_d1": 0.01612903225380229,
+   "seam_ratio_d2": 0.018181818170985783,
    "f_fire_expected": 40.0,
    "f0_estimate": 40.0,
    "top5_cycle_orders": [
@@ -209,92 +209,18 @@
     12,
     18,
     24,
-    30
+    9
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 40.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.696624319053225,
+   "firing_over_half_orders_db": 23.93690131228184,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -18.9,
-    "1000-4000": -27.7,
-    "4000-16000": -37.4
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_off_0900",
-   "peak_dbfs": -23.12,
-   "rms_dbfs": -33.56,
-   "seam_jump": 0.00048828125,
-   "seam_ratio_d1": 0.023188405796000237,
-   "seam_ratio_d2": 0.0017636684302331715,
-   "f_fire_expected": 45.0,
-   "f0_estimate": 45.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    30
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 45.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.740126836544704,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -14.4,
-    "1000-4000": -14.5,
-    "4000-16000": -16.7
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_0900",
-   "peak_dbfs": -22.06,
-   "rms_dbfs": -29.88,
-   "seam_jump": 3.0517578125e-05,
-   "seam_ratio_d1": 0.007751937982527011,
-   "seam_ratio_d2": 0.0,
-   "f_fire_expected": 45.0,
-   "f0_estimate": 45.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    30
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 45.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.649620928431784,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -19.3,
-    "1000-4000": -28.2,
+    "200-1000": -21.4,
+    "1000-4000": -28.3,
     "4000-16000": -37.9
    },
    "checks": {
@@ -307,14 +233,14 @@
    }
   },
   {
-   "name": "engine_ext_off_1000",
-   "peak_dbfs": -22.48,
-   "rms_dbfs": -32.03,
-   "seam_jump": 0.000396728515625,
-   "seam_ratio_d1": 0.019345238094294784,
-   "seam_ratio_d2": 0.008849557521610651,
-   "f_fire_expected": 50.0,
-   "f0_estimate": 50.0,
+   "name": "engine_ext_off_0900",
+   "peak_dbfs": -25.02,
+   "rms_dbfs": -33.88,
+   "seam_jump": 0.0003662109375,
+   "seam_ratio_d1": 0.018867924527329775,
+   "seam_ratio_d2": 0.0,
+   "f_fire_expected": 45.0,
+   "f0_estimate": 45.0,
    "top5_cycle_orders": [
     6,
     12,
@@ -323,16 +249,16 @@
     30
    ],
    "f0_err_pct": 0.0,
-   "low_peak_hz": 50.0,
+   "low_peak_hz": 45.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.82087524490651,
+   "firing_over_half_orders_db": 22.77369126924105,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -13.3,
-    "1000-4000": -16.0,
-    "4000-16000": -17.8
+    "200-1000": -16.7,
+    "1000-4000": -15.0,
+    "4000-16000": -17.2
    },
    "checks": {
     "clip": 1.0,
@@ -344,14 +270,14 @@
    }
   },
   {
-   "name": "engine_cab_off_1000",
-   "peak_dbfs": -20.56,
-   "rms_dbfs": -28.89,
-   "seam_jump": 0.0001220703125,
-   "seam_ratio_d1": 0.031496062983999505,
+   "name": "engine_cab_off_0900",
+   "peak_dbfs": -22.45,
+   "rms_dbfs": -29.98,
+   "seam_jump": 9.1552734375e-05,
+   "seam_ratio_d1": 0.02521008402667156,
    "seam_ratio_d2": 0.0,
-   "f_fire_expected": 50.0,
-   "f0_estimate": 50.0,
+   "f_fire_expected": 45.0,
+   "f0_estimate": 45.0,
    "top5_cycle_orders": [
     6,
     12,
@@ -360,16 +286,16 @@
     15
    ],
    "f0_err_pct": 0.0,
-   "low_peak_hz": 50.0,
+   "low_peak_hz": 45.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 24.160008850983488,
+   "firing_over_half_orders_db": 24.696892927280054,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -16.9,
-    "1000-4000": -28.8,
-    "4000-16000": -38.3
+    "200-1000": -21.7,
+    "1000-4000": -28.7,
+    "4000-16000": -38.4
    },
    "checks": {
     "clip": 1.0,
@@ -381,31 +307,31 @@
    }
   },
   {
-   "name": "engine_ext_off_1100",
-   "peak_dbfs": -21.87,
-   "rms_dbfs": -31.22,
-   "seam_jump": 3.0517578125e-05,
-   "seam_ratio_d1": 0.001419936188001616,
-   "seam_ratio_d2": 0.011986301369190468,
-   "f_fire_expected": 55.00012903558802,
-   "f0_estimate": 55.00012903558802,
+   "name": "engine_ext_off_1000",
+   "peak_dbfs": -23.03,
+   "rms_dbfs": -32.35,
+   "seam_jump": 0.000457763671875,
+   "seam_ratio_d1": 0.02419354838581811,
+   "seam_ratio_d2": 0.011518017057458523,
+   "f_fire_expected": 50.0,
+   "f0_estimate": 50.0,
    "top5_cycle_orders": [
     6,
     12,
     18,
     24,
-    30
+    9
    ],
    "f0_err_pct": 0.0,
-   "low_peak_hz": 55.00012903558802,
+   "low_peak_hz": 50.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.93599058336419,
+   "firing_over_half_orders_db": 23.702124312470666,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -13.4,
-    "1000-4000": -16.0,
+    "200-1000": -15.4,
+    "1000-4000": -16.6,
     "4000-16000": -18.3
    },
    "checks": {
@@ -418,12 +344,49 @@
    }
   },
   {
-   "name": "engine_cab_off_1100",
-   "peak_dbfs": -20.18,
-   "rms_dbfs": -28.37,
-   "seam_jump": 0.00018310546875,
-   "seam_ratio_d1": 0.044444444433656624,
-   "seam_ratio_d2": 0.016666666657564444,
+   "name": "engine_cab_off_1000",
+   "peak_dbfs": -21.21,
+   "rms_dbfs": -29.04,
+   "seam_jump": 3.0517578125e-05,
+   "seam_ratio_d1": 0.008474576268833094,
+   "seam_ratio_d2": 0.018867924516636526,
+   "f_fire_expected": 50.0,
+   "f0_estimate": 50.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 50.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 24.987549030160523,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -19.1,
+    "1000-4000": -29.4,
+    "4000-16000": -38.9
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_off_1100",
+   "peak_dbfs": -22.61,
+   "rms_dbfs": -31.48,
+   "seam_jump": 9.1552734375e-05,
+   "seam_ratio_d1": 0.004620666392273835,
+   "seam_ratio_d2": 0.012987012986223454,
    "f_fire_expected": 55.00012903558802,
    "f0_estimate": 55.00012903558802,
    "top5_cycle_orders": [
@@ -438,12 +401,49 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 24.1705934503403,
+   "firing_over_half_orders_db": 23.699033999797198,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -17.2,
-    "1000-4000": -28.7,
-    "4000-16000": -38.7
+    "200-1000": -15.5,
+    "1000-4000": -16.7,
+    "4000-16000": -18.9
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_off_1100",
+   "peak_dbfs": -20.61,
+   "rms_dbfs": -28.51,
+   "seam_jump": 0.00030517578125,
+   "seam_ratio_d1": 0.08064516126901144,
+   "seam_ratio_d2": 0.0,
+   "f_fire_expected": 55.00012903558802,
+   "f0_estimate": 55.00012903558802,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 55.00012903558802,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 24.703768827597084,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -19.1,
+    "1000-4000": -29.2,
+    "4000-16000": -39.3
    },
    "checks": {
     "clip": 1.0,
@@ -456,11 +456,11 @@
   },
   {
    "name": "engine_ext_off_1200",
-   "peak_dbfs": -21.34,
-   "rms_dbfs": -31.02,
+   "peak_dbfs": -22.5,
+   "rms_dbfs": -31.22,
    "seam_jump": 0.000274658203125,
-   "seam_ratio_d1": 0.012857142856540996,
-   "seam_ratio_d2": 0.006908462866621112,
+   "seam_ratio_d1": 0.013975155278792022,
+   "seam_ratio_d2": 0.005628517823293743,
    "f_fire_expected": 60.0,
    "f0_estimate": 60.0,
    "top5_cycle_orders": [
@@ -475,12 +475,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.768525148711838,
+   "firing_over_half_orders_db": 22.537634524269883,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -13.5,
-    "1000-4000": -15.9,
-    "4000-16000": -18.5
+    "200-1000": -15.4,
+    "1000-4000": -16.6,
+    "4000-16000": -19.1
    },
    "checks": {
     "clip": 1.0,
@@ -493,11 +493,11 @@
   },
   {
    "name": "engine_cab_off_1200",
-   "peak_dbfs": -19.87,
-   "rms_dbfs": -28.34,
-   "seam_jump": 0.0003662109375,
-   "seam_ratio_d1": 0.08888888886731325,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -20.54,
+   "rms_dbfs": -28.45,
+   "seam_jump": 0.000457763671875,
+   "seam_ratio_d1": 0.12096774190351717,
+   "seam_ratio_d2": 0.018181818170985783,
    "f_fire_expected": 60.0,
    "f0_estimate": 60.0,
    "top5_cycle_orders": [
@@ -512,12 +512,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.95379196756311,
+   "firing_over_half_orders_db": 23.405572027011978,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -17.5,
-    "1000-4000": -28.5,
-    "4000-16000": -38.6
+    "200-1000": -19.3,
+    "1000-4000": -29.1,
+    "4000-16000": -39.2
    },
    "checks": {
     "clip": 1.0,
@@ -530,48 +530,11 @@
   },
   {
    "name": "engine_ext_off_1300",
-   "peak_dbfs": -21.03,
-   "rms_dbfs": -30.88,
+   "peak_dbfs": -21.44,
+   "rms_dbfs": -31.08,
    "seam_jump": 0.000274658203125,
-   "seam_ratio_d1": 0.01223692314749811,
-   "seam_ratio_d2": 0.02479338842840921,
-   "f_fire_expected": 65.00002624355065,
-   "f0_estimate": 65.00002624355064,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": -2.1862844580946636e-14,
-   "low_peak_hz": 65.00002624355065,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.2820014929637,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -13.6,
-    "1000-4000": -15.7,
-    "4000-16000": -17.8
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_1300",
-   "peak_dbfs": -19.91,
-   "rms_dbfs": -28.43,
-   "seam_jump": 0.000274658203125,
-   "seam_ratio_d1": 0.06382978721920869,
-   "seam_ratio_d2": 0.0,
+   "seam_ratio_d1": 0.013284544612548008,
+   "seam_ratio_d2": 0.02152543588881113,
    "f_fire_expected": 65.00002624355065,
    "f0_estimate": 65.00002624355064,
    "top5_cycle_orders": [
@@ -586,640 +549,11 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.148680486169315,
+   "firing_over_half_orders_db": 21.84104012727307,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -18.0,
-    "1000-4000": -28.1,
-    "4000-16000": -37.6
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_off_1400",
-   "peak_dbfs": -20.38,
-   "rms_dbfs": -30.65,
-   "seam_jump": 0.000762939453125,
-   "seam_ratio_d1": 0.03328894806778854,
-   "seam_ratio_d2": 0.013093289688332177,
-   "f_fire_expected": 70.00015514218782,
-   "f0_estimate": 70.00015514218782,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    24
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 70.00015514218781,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.77260639072297,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -9.2,
-    "1000-4000": -15.1,
-    "4000-16000": -17.4
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_1400",
-   "peak_dbfs": -19.04,
-   "rms_dbfs": -28.51,
-   "seam_jump": 0.0006103515625,
-   "seam_ratio_d1": 0.1379310344515881,
-   "seam_ratio_d2": 0.01547221189956702,
-   "f_fire_expected": 70.00015514218782,
-   "f0_estimate": 70.00015514218782,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    24
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 70.00015514218781,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.1305459785956,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -11.9,
-    "1000-4000": -27.3,
-    "4000-16000": -37.0
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_off_1500",
-   "peak_dbfs": -20.65,
-   "rms_dbfs": -30.53,
-   "seam_jump": 0.00054931640625,
-   "seam_ratio_d1": 0.023904318978191983,
-   "seam_ratio_d2": 0.006420545746050741,
-   "f_fire_expected": 75.0,
-   "f0_estimate": 75.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 75.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.52326302814855,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -9.4,
-    "1000-4000": -15.0,
-    "4000-16000": -17.4
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_1500",
-   "peak_dbfs": -19.76,
-   "rms_dbfs": -28.6,
-   "seam_jump": 0.000335693359375,
-   "seam_ratio_d1": 0.07746478871451853,
-   "seam_ratio_d2": 0.01587301586475989,
-   "f_fire_expected": 75.0,
-   "f0_estimate": 75.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    24
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 75.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.622926524956465,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -12.3,
-    "1000-4000": -27.0,
-    "4000-16000": -37.0
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_off_1600",
-   "peak_dbfs": -20.07,
-   "rms_dbfs": -30.17,
-   "seam_jump": 0.00030517578125,
-   "seam_ratio_d1": 0.013315579227115414,
-   "seam_ratio_d2": 0.02225755166815686,
-   "f_fire_expected": 80.0,
-   "f0_estimate": 80.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 80.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.383376192840615,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -9.6,
-    "1000-4000": -14.9,
-    "4000-16000": -17.3
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_1600",
-   "peak_dbfs": -19.62,
-   "rms_dbfs": -28.35,
-   "seam_jump": 0.000701904296875,
-   "seam_ratio_d1": 0.15949848126080407,
-   "seam_ratio_d2": 0.046874999976000004,
-   "f_fire_expected": 80.0,
-   "f0_estimate": 80.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    3
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 80.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.243294153384124,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -12.8,
-    "1000-4000": -25.7,
-    "4000-16000": -36.8
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_off_1700",
-   "peak_dbfs": -20.19,
-   "rms_dbfs": -29.64,
-   "seam_jump": 6.103515625e-05,
-   "seam_ratio_d1": 0.002663566275405646,
-   "seam_ratio_d2": 0.028753993608718515,
-   "f_fire_expected": 85.00018122601992,
-   "f0_estimate": 85.00018122601992,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    15
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 85.00018122601992,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.377553767672858,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -10.1,
-    "1000-4000": -15.5,
-    "4000-16000": -17.9
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_1700",
-   "peak_dbfs": -19.61,
-   "rms_dbfs": -27.84,
-   "seam_jump": 0.000640869140625,
-   "seam_ratio_d1": 0.1478873239095354,
-   "seam_ratio_d2": 0.03174603172951978,
-   "f_fire_expected": 85.00018122601992,
-   "f0_estimate": 85.00018122601992,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    3
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 85.00018122601992,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.28439591680432,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -13.6,
-    "1000-4000": -26.0,
-    "4000-16000": -37.5
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_off_1800",
-   "peak_dbfs": -19.9,
-   "rms_dbfs": -28.81,
-   "seam_jump": 0.001251220703125,
-   "seam_ratio_d1": 0.054161162481143,
-   "seam_ratio_d2": 0.004777070063445008,
-   "f_fire_expected": 90.0,
-   "f0_estimate": 90.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    15
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 90.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.874147254586642,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -11.0,
-    "1000-4000": -15.9,
-    "4000-16000": -19.0
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_1800",
-   "peak_dbfs": -18.74,
-   "rms_dbfs": -26.96,
-   "seam_jump": 0.001068115234375,
-   "seam_ratio_d1": 0.23333333328236086,
-   "seam_ratio_d2": 0.04545454543197796,
-   "f_fire_expected": 90.0,
-   "f0_estimate": 90.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    3
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 90.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.16250796737079,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -14.9,
-    "1000-4000": -26.6,
-    "4000-16000": -38.8
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_off_1900",
-   "peak_dbfs": -18.48,
-   "rms_dbfs": -27.62,
-   "seam_jump": 0.00030517578125,
-   "seam_ratio_d1": 0.012690145974220883,
-   "seam_ratio_d2": 0.01883706254749507,
-   "f_fire_expected": 95.00023561566374,
-   "f0_estimate": 95.00023561566374,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 95.00023561566373,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.77761668857492,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -12.0,
-    "1000-4000": -16.5,
-    "4000-16000": -20.0
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_1900",
-   "peak_dbfs": -17.9,
-   "rms_dbfs": -25.68,
-   "seam_jump": 0.00103759765625,
-   "seam_ratio_d1": 0.22366508122767806,
-   "seam_ratio_d2": 0.014492753616305818,
-   "f_fire_expected": 95.00023561566374,
-   "f0_estimate": 95.00023561566374,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    3,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 95.00023561566373,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.48177235456271,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -16.4,
-    "1000-4000": -27.7,
-    "4000-16000": -39.8
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_off_2000",
-   "peak_dbfs": -17.77,
-   "rms_dbfs": -26.39,
-   "seam_jump": 0.000335693359375,
-   "seam_ratio_d1": 0.013580246913030869,
-   "seam_ratio_d2": 0.06595092024208424,
-   "f_fire_expected": 100.0,
-   "f0_estimate": 100.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 100.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.393073416331468,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -7.3,
+    "200-1000": -15.4,
     "1000-4000": -16.4,
-    "4000-16000": -21.1
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_2000",
-   "peak_dbfs": -16.97,
-   "rms_dbfs": -24.27,
-   "seam_jump": 0.001678466796875,
-   "seam_ratio_d1": 0.34591194961424626,
-   "seam_ratio_d2": 0.055555555530271604,
-   "f_fire_expected": 100.0,
-   "f0_estimate": 100.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    3,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 100.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.405651373394285,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -9.6,
-    "1000-4000": -28.3,
-    "4000-16000": -41.7
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_off_2100",
-   "peak_dbfs": -16.9,
-   "rms_dbfs": -25.77,
-   "seam_jump": 0.00018310546875,
-   "seam_ratio_d1": 0.007308125173276153,
-   "seam_ratio_d2": 0.05757575757289903,
-   "f_fire_expected": 105.0,
-   "f0_estimate": 105.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    3,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 105.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.67494943934689,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -7.0,
-    "1000-4000": -16.7,
-    "4000-16000": -21.0
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_off_2100",
-   "peak_dbfs": -15.92,
-   "rms_dbfs": -23.46,
-   "seam_jump": 0.001861572265625,
-   "seam_ratio_d1": 0.3696969696235501,
-   "seam_ratio_d2": 0.013513513507529584,
-   "f_fire_expected": 105.0,
-   "f0_estimate": 105.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    3,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 105.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 24.091205759460458,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -9.7,
-    "1000-4000": -28.9,
-    "4000-16000": -41.3
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_mid_0600",
-   "peak_dbfs": -15.57,
-   "rms_dbfs": -28.24,
-   "seam_jump": 0.00030517578125,
-   "seam_ratio_d1": 0.005571024433297237,
-   "seam_ratio_d2": 0.0011641402881956133,
-   "f_fire_expected": 30.0,
-   "f0_estimate": 30.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    30
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 30.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.289465458223354,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -13.1,
-    "1000-4000": -16.5,
     "4000-16000": -18.4
    },
    "checks": {
@@ -1232,12 +566,641 @@
    }
   },
   {
-   "name": "engine_cab_mid_0600",
-   "peak_dbfs": -17.03,
-   "rms_dbfs": -25.65,
-   "seam_jump": 0.000335693359375,
-   "seam_ratio_d1": 0.07586206894837345,
-   "seam_ratio_d2": 0.010869565213519849,
+   "name": "engine_cab_off_1300",
+   "peak_dbfs": -20.1,
+   "rms_dbfs": -28.54,
+   "seam_jump": 0.0003662109375,
+   "seam_ratio_d1": 0.09230769228442508,
+   "seam_ratio_d2": 0.017241379300604043,
+   "f_fire_expected": 65.00002624355065,
+   "f0_estimate": 65.00002624355064,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    24
+   ],
+   "f0_err_pct": -2.1862844580946636e-14,
+   "low_peak_hz": 65.00002624355065,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 22.41754709912191,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -19.6,
+    "1000-4000": -28.7,
+    "4000-16000": -38.2
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_off_1400",
+   "peak_dbfs": -21.5,
+   "rms_dbfs": -30.88,
+   "seam_jump": 0.000640869140625,
+   "seam_ratio_d1": 0.030346820807811557,
+   "seam_ratio_d2": 0.012433392539240822,
+   "f_fire_expected": 70.00015514218782,
+   "f0_estimate": 70.00015514218782,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    24
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 70.00015514218781,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.14049131929641,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -10.5,
+    "1000-4000": -15.9,
+    "4000-16000": -18.1
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_off_1400",
+   "peak_dbfs": -19.52,
+   "rms_dbfs": -28.63,
+   "seam_jump": 0.000640869140625,
+   "seam_ratio_d1": 0.15555555551779818,
+   "seam_ratio_d2": 0.04999999997269333,
+   "f_fire_expected": 70.00015514218782,
+   "f0_estimate": 70.00015514218782,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    4
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 70.00015514218781,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.235022079088388,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -13.0,
+    "1000-4000": -27.9,
+    "4000-16000": -37.6
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_off_1500",
+   "peak_dbfs": -21.15,
+   "rms_dbfs": -30.77,
+   "seam_jump": 0.000640869140625,
+   "seam_ratio_d1": 0.030346645393675667,
+   "seam_ratio_d2": 0.0034903648476376265,
+   "f_fire_expected": 75.0,
+   "f0_estimate": 75.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    24
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 75.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.897991640740265,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -10.5,
+    "1000-4000": -15.8,
+    "4000-16000": -18.0
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_off_1500",
+   "peak_dbfs": -20.14,
+   "rms_dbfs": -28.71,
+   "seam_jump": 0.000396728515625,
+   "seam_ratio_d1": 0.09848484846040036,
+   "seam_ratio_d2": 0.016949152532959495,
+   "f_fire_expected": 75.0,
+   "f0_estimate": 75.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    3
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 75.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.72813035608131,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -13.2,
+    "1000-4000": -27.6,
+    "4000-16000": -37.6
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_off_1600",
+   "peak_dbfs": -20.9,
+   "rms_dbfs": -30.42,
+   "seam_jump": 0.000274658203125,
+   "seam_ratio_d1": 0.01302079565680233,
+   "seam_ratio_d2": 0.022444635126655666,
+   "f_fire_expected": 80.0,
+   "f0_estimate": 80.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 80.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.677878195298444,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -10.5,
+    "1000-4000": -15.7,
+    "4000-16000": -17.9
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_off_1600",
+   "peak_dbfs": -20.06,
+   "rms_dbfs": -28.46,
+   "seam_jump": 0.000701904296875,
+   "seam_ratio_d1": 0.1729323307844613,
+   "seam_ratio_d2": 0.016949152532959495,
+   "f_fire_expected": 80.0,
+   "f0_estimate": 80.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    3
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 80.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.309911637779937,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -13.5,
+    "1000-4000": -26.3,
+    "4000-16000": -37.3
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_off_1700",
+   "peak_dbfs": -20.82,
+   "rms_dbfs": -29.88,
+   "seam_jump": 9.1552734375e-05,
+   "seam_ratio_d1": 0.004341534008477188,
+   "seam_ratio_d2": 0.02772963604695209,
+   "f_fire_expected": 85.00018122601992,
+   "f0_estimate": 85.00018122601992,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    15
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 85.00018122601992,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.558930703795454,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -10.8,
+    "1000-4000": -16.2,
+    "4000-16000": -18.5
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_off_1700",
+   "peak_dbfs": -19.92,
+   "rms_dbfs": -27.96,
+   "seam_jump": 0.000701904296875,
+   "seam_ratio_d1": 0.1755725190400522,
+   "seam_ratio_d2": 0.03389830506591899,
+   "f_fire_expected": 85.00018122601992,
+   "f0_estimate": 85.00018122601992,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    3
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 85.00018122601992,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.313744773354987,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -14.1,
+    "1000-4000": -26.6,
+    "4000-16000": -38.0
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_off_1800",
+   "peak_dbfs": -20.46,
+   "rms_dbfs": -29.07,
+   "seam_jump": 0.001007080078125,
+   "seam_ratio_d1": 0.04748201438625052,
+   "seam_ratio_d2": 0.0034602076122605815,
+   "f_fire_expected": 90.0,
+   "f0_estimate": 90.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    15
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 90.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.013767454298325,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -11.5,
+    "1000-4000": -16.6,
+    "4000-16000": -19.5
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_off_1800",
+   "peak_dbfs": -19.02,
+   "rms_dbfs": -27.12,
+   "seam_jump": 0.0010986328125,
+   "seam_ratio_d1": 0.260865784491891,
+   "seam_ratio_d2": 0.04918032784243376,
+   "f_fire_expected": 90.0,
+   "f0_estimate": 90.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    3
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 90.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.186605014977182,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -15.2,
+    "1000-4000": -27.2,
+    "4000-16000": -39.3
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_off_1900",
+   "peak_dbfs": -18.97,
+   "rms_dbfs": -27.9,
+   "seam_jump": 0.000457763671875,
+   "seam_ratio_d1": 0.02068928419120943,
+   "seam_ratio_d2": 0.02040767736708782,
+   "f_fire_expected": 95.00023561566374,
+   "f0_estimate": 95.00023561566374,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 95.00023561566373,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.78764479754269,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -12.3,
+    "1000-4000": -17.2,
+    "4000-16000": -20.4
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_off_1900",
+   "peak_dbfs": -18.21,
+   "rms_dbfs": -25.87,
+   "seam_jump": 0.00103759765625,
+   "seam_ratio_d1": 0.2411347517170106,
+   "seam_ratio_d2": 0.015624999992,
+   "f_fire_expected": 95.00023561566374,
+   "f0_estimate": 95.00023561566374,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    3,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 95.00023561566373,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 22.4369731923265,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -16.5,
+    "1000-4000": -28.1,
+    "4000-16000": -40.2
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_off_2000",
+   "peak_dbfs": -18.44,
+   "rms_dbfs": -26.69,
+   "seam_jump": 0.000518798828125,
+   "seam_ratio_d1": 0.022788203752350238,
+   "seam_ratio_d2": 0.06322795340753436,
+   "f_fire_expected": 100.0,
+   "f0_estimate": 100.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 100.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 22.340434906891055,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -7.2,
+    "1000-4000": -17.0,
+    "4000-16000": -21.5
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_off_2000",
+   "peak_dbfs": -17.28,
+   "rms_dbfs": -24.51,
+   "seam_jump": 0.001678466796875,
+   "seam_ratio_d1": 0.37414965978054326,
+   "seam_ratio_d2": 0.04545454543197796,
+   "f_fire_expected": 100.0,
+   "f0_estimate": 100.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    3,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 100.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 23.407665567134735,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -9.5,
+    "1000-4000": -28.7,
+    "4000-16000": -42.1
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_off_2100",
+   "peak_dbfs": -17.67,
+   "rms_dbfs": -26.11,
+   "seam_jump": 0.000244140625,
+   "seam_ratio_d1": 0.010582010581551917,
+   "seam_ratio_d2": 0.05756578947058172,
+   "f_fire_expected": 105.0,
+   "f0_estimate": 105.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 105.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 22.533651197644005,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -6.7,
+    "1000-4000": -17.2,
+    "4000-16000": -21.3
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_off_2100",
+   "peak_dbfs": -16.36,
+   "rms_dbfs": -23.75,
+   "seam_jump": 0.001861572265625,
+   "seam_ratio_d1": 0.3986928103721283,
+   "seam_ratio_d2": 0.028985507232611635,
+   "f_fire_expected": 105.0,
+   "f0_estimate": 105.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    3,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 105.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 24.0957712779096,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -9.4,
+    "1000-4000": -29.2,
+    "4000-16000": -41.7
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_mid_0600",
+   "peak_dbfs": -17.23,
+   "rms_dbfs": -29.2,
+   "seam_jump": 0.000244140625,
+   "seam_ratio_d1": 0.004836753522572205,
+   "seam_ratio_d2": 0.0006317107421649129,
    "f_fire_expected": 30.0,
    "f0_estimate": 30.0,
    "top5_cycle_orders": [
@@ -1252,12 +1215,49 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.395603557481184,
+   "firing_over_half_orders_db": 21.187964767804136,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -18.9,
+    "200-1000": -14.7,
+    "1000-4000": -17.3,
+    "4000-16000": -18.3
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_mid_0600",
+   "peak_dbfs": -17.91,
+   "rms_dbfs": -26.53,
+   "seam_jump": 0.00030517578125,
+   "seam_ratio_d1": 0.07462686565339273,
+   "seam_ratio_d2": 0.011764705877817578,
+   "f_fire_expected": 30.0,
+   "f0_estimate": 30.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    10
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 30.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.28753414807918,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -20.5,
     "1000-4000": -33.4,
-    "4000-16000": -41.8
+    "4000-16000": -41.5
    },
    "checks": {
     "clip": 1.0,
@@ -1270,11 +1270,11 @@
   },
   {
    "name": "engine_ext_mid_0700",
-   "peak_dbfs": -15.54,
-   "rms_dbfs": -27.3,
-   "seam_jump": 0.00030517578125,
-   "seam_ratio_d1": 0.005348322899552942,
-   "seam_ratio_d2": 0.0022309178441786287,
+   "peak_dbfs": -16.68,
+   "rms_dbfs": -28.05,
+   "seam_jump": 0.000213623046875,
+   "seam_ratio_d1": 0.004060925484840758,
+   "seam_ratio_d2": 0.002421330957152445,
    "f_fire_expected": 35.00002641910207,
    "f0_estimate": 35.00002641910206,
    "top5_cycle_orders": [
@@ -1289,12 +1289,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.875784674878638,
+   "firing_over_half_orders_db": 21.00042612526442,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -12.8,
-    "1000-4000": -17.2,
-    "4000-16000": -18.7
+    "200-1000": -14.5,
+    "1000-4000": -18.2,
+    "4000-16000": -18.8
    },
    "checks": {
     "clip": 1.0,
@@ -1307,11 +1307,11 @@
   },
   {
    "name": "engine_cab_mid_0700",
-   "peak_dbfs": -16.13,
-   "rms_dbfs": -23.83,
-   "seam_jump": 0.000274658203125,
-   "seam_ratio_d1": 0.05844155842912329,
-   "seam_ratio_d2": 0.01063829786863196,
+   "peak_dbfs": -17.07,
+   "rms_dbfs": -24.44,
+   "seam_jump": 0.000244140625,
+   "seam_ratio_d1": 0.05594405593123653,
+   "seam_ratio_d2": 0.01149425286923398,
    "f_fire_expected": 35.00002641910207,
    "f0_estimate": 35.00002641910206,
    "top5_cycle_orders": [
@@ -1319,18 +1319,18 @@
     12,
     18,
     24,
-    30
+    9
    ],
    "f0_err_pct": -2.030120569772785e-14,
    "low_peak_hz": 35.00002641910206,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.133031628565718,
+   "firing_over_half_orders_db": 22.302490164116936,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -18.9,
-    "1000-4000": -34.5,
+    "200-1000": -20.5,
+    "1000-4000": -34.8,
     "4000-16000": -42.9
    },
    "checks": {
@@ -1344,11 +1344,11 @@
   },
   {
    "name": "engine_ext_mid_0800",
-   "peak_dbfs": -14.6,
-   "rms_dbfs": -26.68,
-   "seam_jump": 9.1552734375e-05,
-   "seam_ratio_d1": 0.0015819380639335405,
-   "seam_ratio_d2": 0.0037857994661348576,
+   "peak_dbfs": -15.81,
+   "rms_dbfs": -27.18,
+   "seam_jump": 3.0517578125e-05,
+   "seam_ratio_d1": 0.0005724734171861203,
+   "seam_ratio_d2": 0.00410553572834539,
    "f_fire_expected": 40.0,
    "f0_estimate": 40.0,
    "top5_cycle_orders": [
@@ -1363,12 +1363,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.893820546795414,
+   "firing_over_half_orders_db": 21.162314835888836,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -12.3,
-    "1000-4000": -17.2,
-    "4000-16000": -18.7
+    "200-1000": -13.9,
+    "1000-4000": -18.6,
+    "4000-16000": -19.0
    },
    "checks": {
     "clip": 1.0,
@@ -1381,11 +1381,11 @@
   },
   {
    "name": "engine_cab_mid_0800",
-   "peak_dbfs": -14.98,
-   "rms_dbfs": -22.43,
-   "seam_jump": 0.00018310546875,
-   "seam_ratio_d1": 0.039473684202016614,
-   "seam_ratio_d2": 0.010416666663111111,
+   "peak_dbfs": -15.74,
+   "rms_dbfs": -22.77,
+   "seam_jump": 0.0001220703125,
+   "seam_ratio_d1": 0.028571428564741222,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 40.0,
    "f0_estimate": 40.0,
    "top5_cycle_orders": [
@@ -1400,12 +1400,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.417412793542166,
+   "firing_over_half_orders_db": 23.646567366580634,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -18.4,
-    "1000-4000": -35.1,
-    "4000-16000": -43.7
+    "200-1000": -19.8,
+    "1000-4000": -35.6,
+    "4000-16000": -44.0
    },
    "checks": {
     "clip": 1.0,
@@ -1418,11 +1418,11 @@
   },
   {
    "name": "engine_ext_mid_0900",
-   "peak_dbfs": -14.29,
-   "rms_dbfs": -25.55,
-   "seam_jump": 0.0001220703125,
-   "seam_ratio_d1": 0.002093140569005287,
-   "seam_ratio_d2": 0.005729121907803596,
+   "peak_dbfs": -15.32,
+   "rms_dbfs": -25.85,
+   "seam_jump": 0.000152587890625,
+   "seam_ratio_d1": 0.002836071654999283,
+   "seam_ratio_d2": 0.005084711289998516,
    "f_fire_expected": 45.0,
    "f0_estimate": 45.0,
    "top5_cycle_orders": [
@@ -1437,12 +1437,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.350729391428736,
+   "firing_over_half_orders_db": 21.733749543916772,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -12.5,
-    "1000-4000": -17.6,
-    "4000-16000": -19.3
+    "200-1000": -14.1,
+    "1000-4000": -19.2,
+    "4000-16000": -19.8
    },
    "checks": {
     "clip": 1.0,
@@ -1455,10 +1455,10 @@
   },
   {
    "name": "engine_cab_mid_0900",
-   "peak_dbfs": -13.65,
-   "rms_dbfs": -21.57,
-   "seam_jump": 9.1552734375e-05,
-   "seam_ratio_d1": 0.019999999995630933,
+   "peak_dbfs": -14.17,
+   "rms_dbfs": -21.72,
+   "seam_jump": 6.103515625e-05,
+   "seam_ratio_d1": 0.014492543582882834,
    "seam_ratio_d2": 0.0,
    "f_fire_expected": 45.0,
    "f0_estimate": 45.0,
@@ -1474,12 +1474,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.762598647540905,
+   "firing_over_half_orders_db": 24.062476514976257,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -18.8,
-    "1000-4000": -35.3,
-    "4000-16000": -44.1
+    "200-1000": -20.1,
+    "1000-4000": -36.0,
+    "4000-16000": -44.6
    },
    "checks": {
     "clip": 1.0,
@@ -1492,11 +1492,11 @@
   },
   {
    "name": "engine_ext_mid_1000",
-   "peak_dbfs": -13.03,
-   "rms_dbfs": -24.14,
-   "seam_jump": 0.000396728515625,
-   "seam_ratio_d1": 0.0067082163264466,
-   "seam_ratio_d2": 0.006129184828530456,
+   "peak_dbfs": -14.02,
+   "rms_dbfs": -24.4,
+   "seam_jump": 0.000274658203125,
+   "seam_ratio_d1": 0.00503659365088955,
+   "seam_ratio_d2": 0.004988913525408273,
    "f_fire_expected": 50.0,
    "f0_estimate": 50.0,
    "top5_cycle_orders": [
@@ -1511,10 +1511,454 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.401459623650407,
+   "firing_over_half_orders_db": 22.768830869590126,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -12.2,
+    "200-1000": -13.4,
+    "1000-4000": -20.3,
+    "4000-16000": -20.8
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_mid_1000",
+   "peak_dbfs": -12.85,
+   "rms_dbfs": -20.89,
+   "seam_jump": 9.1552734375e-05,
+   "seam_ratio_d1": 0.021751424713148036,
+   "seam_ratio_d2": 0.0,
+   "f_fire_expected": 50.0,
+   "f0_estimate": 50.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    15
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 50.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 24.498736522042286,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -17.5,
+    "1000-4000": -36.5,
+    "4000-16000": -44.7
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_mid_1100",
+   "peak_dbfs": -13.06,
+   "rms_dbfs": -23.52,
+   "seam_jump": 0.00079345703125,
+   "seam_ratio_d1": 0.014364640883717845,
+   "seam_ratio_d2": 0.012033312584769393,
+   "f_fire_expected": 55.00012903558802,
+   "f0_estimate": 55.00012903558802,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 55.00012903558802,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 23.025771972663065,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -13.4,
+    "1000-4000": -20.5,
+    "4000-16000": -21.4
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_mid_1100",
+   "peak_dbfs": -12.06,
+   "rms_dbfs": -20.33,
+   "seam_jump": 0.0008544921875,
+   "seam_ratio_d1": 0.19858156023753812,
+   "seam_ratio_d2": 0.032258064504763095,
+   "f_fire_expected": 55.00012903558802,
+   "f0_estimate": 55.00012903558802,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 55.00012903558802,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 24.541035910562208,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -17.6,
+    "1000-4000": -36.7,
+    "4000-16000": -45.3
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_mid_1200",
+   "peak_dbfs": -13.11,
+   "rms_dbfs": -23.34,
+   "seam_jump": 0.00048828125,
+   "seam_ratio_d1": 0.008903728436120336,
+   "seam_ratio_d2": 0.01055405629304267,
+   "f_fire_expected": 60.0,
+   "f0_estimate": 60.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 60.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.748375098121674,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -13.0,
+    "1000-4000": -20.1,
+    "4000-16000": -21.3
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_mid_1200",
+   "peak_dbfs": -11.88,
+   "rms_dbfs": -20.34,
+   "seam_jump": 0.001312255859375,
+   "seam_ratio_d1": 0.3049645389362193,
+   "seam_ratio_d2": 0.010869565213519849,
+   "f_fire_expected": 60.0,
+   "f0_estimate": 60.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 60.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 23.168778860073367,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -17.8,
+    "1000-4000": -36.2,
+    "4000-16000": -44.9
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_mid_1300",
+   "peak_dbfs": -12.63,
+   "rms_dbfs": -23.17,
+   "seam_jump": 0.001373291015625,
+   "seam_ratio_d1": 0.02441671188236566,
+   "seam_ratio_d2": 0.0010357542362172385,
+   "f_fire_expected": 65.00002624355065,
+   "f0_estimate": 65.00002624355064,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": -2.1862844580946636e-14,
+   "low_peak_hz": 65.00002624355065,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.358219016097063,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -12.8,
+    "1000-4000": -19.6,
+    "4000-16000": -21.0
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_mid_1300",
+   "peak_dbfs": -11.81,
+   "rms_dbfs": -20.39,
+   "seam_jump": 0.00067138671875,
+   "seam_ratio_d1": 0.14765100667893805,
+   "seam_ratio_d2": 0.021052631571685763,
+   "f_fire_expected": 65.00002624355065,
+   "f0_estimate": 65.00002624355064,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    24
+   ],
+   "f0_err_pct": -2.1862844580946636e-14,
+   "low_peak_hz": 65.00002624355065,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 22.522008422782143,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -18.0,
+    "1000-4000": -35.7,
+    "4000-16000": -44.5
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_mid_1400",
+   "peak_dbfs": -12.47,
+   "rms_dbfs": -23.0,
+   "seam_jump": 0.000244140625,
+   "seam_ratio_d1": 0.004338394793849154,
+   "seam_ratio_d2": 0.0025896108953812487,
+   "f_fire_expected": 70.00015514218782,
+   "f0_estimate": 70.00015514218782,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    24
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 70.00015514218781,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.551811872121473,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -8.9,
+    "1000-4000": -19.0,
+    "4000-16000": -20.4
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_mid_1400",
+   "peak_dbfs": -11.52,
+   "rms_dbfs": -20.54,
+   "seam_jump": 0.001312255859375,
+   "seam_ratio_d1": 0.27922077916136684,
+   "seam_ratio_d2": 0.020408163258482298,
+   "f_fire_expected": 70.00015514218782,
+   "f0_estimate": 70.00015514218782,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    24
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 70.00015514218781,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.331247973178293,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -12.0,
+    "1000-4000": -34.9,
+    "4000-16000": -43.6
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_mid_1500",
+   "peak_dbfs": -11.63,
+   "rms_dbfs": -22.79,
+   "seam_jump": 0.000701904296875,
+   "seam_ratio_d1": 0.012105250415317058,
+   "seam_ratio_d2": 0.0029940074939517627,
+   "f_fire_expected": 75.0,
+   "f0_estimate": 75.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 75.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.288112670577615,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -8.8,
+    "1000-4000": -18.8,
+    "4000-16000": -20.2
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_mid_1500",
+   "peak_dbfs": -11.78,
+   "rms_dbfs": -20.57,
+   "seam_jump": 0.001922607421875,
+   "seam_ratio_d1": 0.40384097631289234,
+   "seam_ratio_d2": 0.009900990095797667,
+   "f_fire_expected": 75.0,
+   "f0_estimate": 75.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    24
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 75.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.738315246463593,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -12.0,
+    "1000-4000": -34.4,
+    "4000-16000": -43.3
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_mid_1600",
+   "peak_dbfs": -11.81,
+   "rms_dbfs": -22.47,
+   "seam_jump": 6.103515625e-05,
+   "seam_ratio_d1": 0.0010511897891447278,
+   "seam_ratio_d2": 0.00932558360959684,
+   "f_fire_expected": 80.0,
+   "f0_estimate": 80.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 80.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 19.82086716904391,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -8.7,
     "1000-4000": -18.8,
     "4000-16000": -20.3
    },
@@ -1528,476 +1972,32 @@
    }
   },
   {
-   "name": "engine_cab_mid_1000",
-   "peak_dbfs": -12.35,
-   "rms_dbfs": -20.75,
-   "seam_jump": 6.103515625e-05,
-   "seam_ratio_d1": 0.013422818788994368,
-   "seam_ratio_d2": 0.0099999999967232,
-   "f_fire_expected": 50.0,
-   "f0_estimate": 50.0,
+   "name": "engine_cab_mid_1600",
+   "peak_dbfs": -11.88,
+   "rms_dbfs": -20.39,
+   "seam_jump": 0.001617431640625,
+   "seam_ratio_d1": 0.33544303790511515,
+   "seam_ratio_d2": 0.009708737860988971,
+   "f_fire_expected": 80.0,
+   "f0_estimate": 80.0,
    "top5_cycle_orders": [
     6,
     12,
     18,
-    24,
-    15
+    9,
+    24
    ],
    "f0_err_pct": 0.0,
-   "low_peak_hz": 50.0,
+   "low_peak_hz": 80.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 24.246358275161107,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -16.8,
-    "1000-4000": -35.8,
-    "4000-16000": -44.2
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_mid_1100",
-   "peak_dbfs": -12.16,
-   "rms_dbfs": -23.28,
-   "seam_jump": 0.000946044921875,
-   "seam_ratio_d1": 0.01579008759397389,
-   "seam_ratio_d2": 0.013094832778768897,
-   "f_fire_expected": 55.00012903558802,
-   "f0_estimate": 55.00012903558802,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    30
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 55.00012903558802,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.811239679908294,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -12.4,
-    "1000-4000": -19.1,
-    "4000-16000": -20.8
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_mid_1100",
-   "peak_dbfs": -11.65,
-   "rms_dbfs": -20.19,
-   "seam_jump": 0.0008544921875,
-   "seam_ratio_d1": 0.1830065359085179,
-   "seam_ratio_d2": 0.009974266389443803,
-   "f_fire_expected": 55.00012903558802,
-   "f0_estimate": 55.00012903558802,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 55.00012903558802,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 24.42184708721015,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -17.1,
-    "1000-4000": -36.0,
-    "4000-16000": -44.8
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_mid_1200",
-   "peak_dbfs": -12.25,
-   "rms_dbfs": -23.11,
-   "seam_jump": 0.00048828125,
-   "seam_ratio_d1": 0.00821353549568211,
-   "seam_ratio_d2": 0.011181315729550865,
-   "f_fire_expected": 60.0,
-   "f0_estimate": 60.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 60.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.594870289336892,
+   "firing_over_half_orders_db": 20.202485560716124,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -12.2,
-    "1000-4000": -18.7,
-    "4000-16000": -20.7
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_mid_1200",
-   "peak_dbfs": -11.56,
-   "rms_dbfs": -20.21,
-   "seam_jump": 0.00140380859375,
-   "seam_ratio_d1": 0.3026315788821274,
-   "seam_ratio_d2": 0.01010101009766677,
-   "f_fire_expected": 60.0,
-   "f0_estimate": 60.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 60.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.090864481592316,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -17.2,
-    "1000-4000": -35.5,
-    "4000-16000": -44.4
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_mid_1300",
-   "peak_dbfs": -11.82,
-   "rms_dbfs": -22.94,
-   "seam_jump": 0.001495361328125,
-   "seam_ratio_d1": 0.024481895637774496,
-   "seam_ratio_d2": 0.0038151193177969715,
-   "f_fire_expected": 65.00002624355065,
-   "f0_estimate": 65.00002624355064,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": -2.1862844580946636e-14,
-   "low_peak_hz": 65.00002624355065,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.339921363258263,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -12.1,
-    "1000-4000": -18.3,
-    "4000-16000": -20.4
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_mid_1300",
-   "peak_dbfs": -11.49,
-   "rms_dbfs": -20.26,
-   "seam_jump": 0.000640869140625,
-   "seam_ratio_d1": 0.13043478258214852,
-   "seam_ratio_d2": 0.039032006232636515,
-   "f_fire_expected": 65.00002624355065,
-   "f0_estimate": 65.00002624355064,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    24
-   ],
-   "f0_err_pct": -2.1862844580946636e-14,
-   "low_peak_hz": 65.00002624355065,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.546915386514414,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -17.5,
-    "1000-4000": -35.0,
-    "4000-16000": -44.0
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_mid_1400",
-   "peak_dbfs": -11.8,
-   "rms_dbfs": -22.77,
-   "seam_jump": 0.00030517578125,
-   "seam_ratio_d1": 0.004993431141251814,
-   "seam_ratio_d2": 0.0023871726708459655,
-   "f_fire_expected": 70.00015514218782,
-   "f0_estimate": 70.00015514218782,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    24
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 70.00015514218781,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.571973696694272,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -8.8,
-    "1000-4000": -17.7,
-    "4000-16000": -19.9
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_mid_1400",
-   "peak_dbfs": -11.23,
-   "rms_dbfs": -20.41,
-   "seam_jump": 0.001373291015625,
-   "seam_ratio_d1": 0.27108433729588616,
-   "seam_ratio_d2": 0.009433962261234602,
-   "f_fire_expected": 70.00015514218782,
-   "f0_estimate": 70.00015514218782,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    24
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 70.00015514218781,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.36461664381907,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -12.0,
-    "1000-4000": -34.2,
-    "4000-16000": -43.1
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_mid_1500",
-   "peak_dbfs": -10.79,
-   "rms_dbfs": -22.56,
-   "seam_jump": 0.00079345703125,
-   "seam_ratio_d1": 0.012609105131608372,
-   "seam_ratio_d2": 0.0022967386311092053,
-   "f_fire_expected": 75.0,
-   "f0_estimate": 75.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 75.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.38352364723712,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -8.7,
-    "1000-4000": -17.5,
-    "4000-16000": -19.7
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_mid_1500",
-   "peak_dbfs": -11.48,
-   "rms_dbfs": -20.43,
-   "seam_jump": 0.0020751953125,
-   "seam_ratio_d1": 0.40476190468295686,
-   "seam_ratio_d2": 0.009259259256449931,
-   "f_fire_expected": 75.0,
-   "f0_estimate": 75.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    24
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 75.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.797182911780073,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -12.1,
-    "1000-4000": -33.8,
-    "4000-16000": -42.8
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_mid_1600",
-   "peak_dbfs": -11.02,
-   "rms_dbfs": -22.24,
-   "seam_jump": 0.000244140625,
-   "seam_ratio_d1": 0.0038677163648267515,
-   "seam_ratio_d2": 0.01084891395574656,
-   "f_fire_expected": 80.0,
-   "f0_estimate": 80.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 80.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 19.928103173486292,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -8.7,
-    "1000-4000": -17.6,
-    "4000-16000": -19.8
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_mid_1600",
-   "peak_dbfs": -11.68,
-   "rms_dbfs": -20.23,
-   "seam_jump": 0.00164794921875,
-   "seam_ratio_d1": 0.31952662715698077,
-   "seam_ratio_d2": 0.008928571425959184,
-   "f_fire_expected": 80.0,
-   "f0_estimate": 80.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    9,
-    3
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 80.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.258658639287738,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -12.4,
-    "1000-4000": -32.3,
-    "4000-16000": -42.7
+    "1000-4000": -32.9,
+    "4000-16000": -43.2
    },
    "checks": {
     "clip": 1.0,
@@ -2010,11 +2010,11 @@
   },
   {
    "name": "engine_ext_mid_1700",
-   "peak_dbfs": -10.58,
-   "rms_dbfs": -21.69,
-   "seam_jump": 0.000213623046875,
-   "seam_ratio_d1": 0.0033430871881391,
-   "seam_ratio_d2": 0.011653966830846312,
+   "peak_dbfs": -11.3,
+   "rms_dbfs": -21.93,
+   "seam_jump": 0.00018310546875,
+   "seam_ratio_d1": 0.0031120331949678554,
+   "seam_ratio_d2": 0.010705596106885254,
    "f_fire_expected": 85.00018122601992,
    "f0_estimate": 85.00018122601992,
    "top5_cycle_orders": [
@@ -2029,12 +2029,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.24710187527794,
+   "firing_over_half_orders_db": 20.057059455741054,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -9.1,
-    "1000-4000": -17.8,
-    "4000-16000": -20.1
+    "200-1000": -9.0,
+    "1000-4000": -19.0,
+    "4000-16000": -20.6
    },
    "checks": {
     "clip": 1.0,
@@ -2047,11 +2047,11 @@
   },
   {
    "name": "engine_cab_mid_1700",
-   "peak_dbfs": -10.99,
-   "rms_dbfs": -19.73,
-   "seam_jump": 0.001953125,
-   "seam_ratio_d1": 0.369942196461721,
-   "seam_ratio_d2": 0.035398230078230716,
+   "peak_dbfs": -11.28,
+   "rms_dbfs": -19.9,
+   "seam_jump": 0.0018310546875,
+   "seam_ratio_d1": 0.3726708073775672,
+   "seam_ratio_d2": 0.03809523808334948,
    "f_fire_expected": 85.00018122601992,
    "f0_estimate": 85.00018122601992,
    "top5_cycle_orders": [
@@ -2066,12 +2066,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.524018709933188,
+   "firing_over_half_orders_db": 20.465806831649587,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -13.3,
-    "1000-4000": -32.5,
-    "4000-16000": -43.0
+    "200-1000": -13.0,
+    "1000-4000": -33.1,
+    "4000-16000": -43.5
    },
    "checks": {
     "clip": 1.0,
@@ -2084,11 +2084,11 @@
   },
   {
    "name": "engine_ext_mid_1800",
-   "peak_dbfs": -9.91,
-   "rms_dbfs": -20.86,
-   "seam_jump": 0.00347900390625,
-   "seam_ratio_d1": 0.053320860616582214,
-   "seam_ratio_d2": 0.003984042581389136,
+   "peak_dbfs": -10.8,
+   "rms_dbfs": -21.09,
+   "seam_jump": 0.003021240234375,
+   "seam_ratio_d1": 0.050304826925151105,
+   "seam_ratio_d2": 0.0048053404631011295,
    "f_fire_expected": 90.0,
    "f0_estimate": 90.0,
    "top5_cycle_orders": [
@@ -2103,12 +2103,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.466140174255525,
+   "firing_over_half_orders_db": 20.220238774016806,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -9.9,
-    "1000-4000": -18.2,
-    "4000-16000": -20.7
+    "200-1000": -9.8,
+    "1000-4000": -19.5,
+    "4000-16000": -21.2
    },
    "checks": {
     "clip": 1.0,
@@ -2121,11 +2121,11 @@
   },
   {
    "name": "engine_cab_mid_1800",
-   "peak_dbfs": -10.65,
-   "rms_dbfs": -18.87,
-   "seam_jump": 0.002960205078125,
-   "seam_ratio_d1": 0.5388829012029741,
-   "seam_ratio_d2": 0.0170940170892296,
+   "peak_dbfs": -10.93,
+   "rms_dbfs": -19.05,
+   "seam_jump": 0.002716064453125,
+   "seam_ratio_d1": 0.5297619046585759,
+   "seam_ratio_d2": 0.02777700618583816,
    "f_fire_expected": 90.0,
    "f0_estimate": 90.0,
    "top5_cycle_orders": [
@@ -2140,12 +2140,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.114807543646936,
+   "firing_over_half_orders_db": 21.01989745439436,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -14.4,
-    "1000-4000": -33.1,
-    "4000-16000": -43.7
+    "200-1000": -14.1,
+    "1000-4000": -33.7,
+    "4000-16000": -44.1
    },
    "checks": {
     "clip": 1.0,
@@ -2158,11 +2158,11 @@
   },
   {
    "name": "engine_ext_mid_1900",
-   "peak_dbfs": -9.73,
-   "rms_dbfs": -19.72,
-   "seam_jump": 0.00067138671875,
-   "seam_ratio_d1": 0.010261131812010188,
-   "seam_ratio_d2": 0.01006124234456269,
+   "peak_dbfs": -10.54,
+   "rms_dbfs": -19.96,
+   "seam_jump": 0.000823974609375,
+   "seam_ratio_d1": 0.013677811549924927,
+   "seam_ratio_d2": 0.00854700854687556,
    "f_fire_expected": 95.00023561566374,
    "f0_estimate": 95.00023561566374,
    "top5_cycle_orders": [
@@ -2177,233 +2177,11 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.169697920317564,
+   "firing_over_half_orders_db": 20.879039077416678,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -10.8,
-    "1000-4000": -19.0,
-    "4000-16000": -21.9
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_mid_1900",
-   "peak_dbfs": -9.83,
-   "rms_dbfs": -17.66,
-   "seam_jump": 0.002197265625,
-   "seam_ratio_d1": 0.38095238088633304,
-   "seam_ratio_d2": 0.0085470085446148,
-   "f_fire_expected": 95.00023561566374,
-   "f0_estimate": 95.00023561566374,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    3,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 95.00023561566373,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.144782062541676,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -15.7,
-    "1000-4000": -34.0,
-    "4000-16000": -45.2
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_mid_2000",
-   "peak_dbfs": -8.37,
-   "rms_dbfs": -18.45,
-   "seam_jump": 0.00225830078125,
-   "seam_ratio_d1": 0.033318325078301764,
-   "seam_ratio_d2": 0.0012505210504206014,
-   "f_fire_expected": 100.0,
-   "f0_estimate": 100.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    3
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 100.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.09376303974416,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -7.3,
-    "1000-4000": -19.3,
-    "4000-16000": -22.5
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_mid_2000",
-   "peak_dbfs": -8.89,
-   "rms_dbfs": -16.23,
-   "seam_jump": 0.004486083984375,
-   "seam_ratio_d1": 0.7101449274238162,
-   "seam_ratio_d2": 0.016260162597294202,
-   "f_fire_expected": 100.0,
-   "f0_estimate": 100.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    3,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 100.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.386945938373533,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -9.8,
-    "1000-4000": -34.7,
-    "4000-16000": -46.4
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_mid_2100",
-   "peak_dbfs": -8.47,
-   "rms_dbfs": -17.75,
-   "seam_jump": 0.000946044921875,
-   "seam_ratio_d1": 0.013932546698545142,
-   "seam_ratio_d2": 0.017154725582731838,
-   "f_fire_expected": 105.0,
-   "f0_estimate": 105.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    3
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 105.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.471796012610366,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -7.0,
-    "1000-4000": -19.6,
-    "4000-16000": -22.8
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_mid_2100",
-   "peak_dbfs": -7.96,
-   "rms_dbfs": -15.34,
-   "seam_jump": 0.0048828125,
-   "seam_ratio_d1": 0.7079583365492171,
-   "seam_ratio_d2": 0.03278688523709541,
-   "f_fire_expected": 105.0,
-   "f0_estimate": 105.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    3,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 105.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 24.188547939213944,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -9.9,
-    "1000-4000": -35.4,
-    "4000-16000": -46.4
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_on_0600",
-   "peak_dbfs": -10.71,
-   "rms_dbfs": -24.05,
-   "seam_jump": 6.103515625e-05,
-   "seam_ratio_d1": 0.0011025334012294654,
-   "seam_ratio_d2": 0.005681808496811466,
-   "f_fire_expected": 30.0,
-   "f0_estimate": 30.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    30
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 30.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.30985988944991,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -9.7,
-    "1000-4000": -14.5,
+    "200-1000": -10.6,
+    "1000-4000": -20.3,
     "4000-16000": -22.3
    },
    "checks": {
@@ -2416,11 +2194,233 @@
    }
   },
   {
+   "name": "engine_cab_mid_1900",
+   "peak_dbfs": -10.2,
+   "rms_dbfs": -17.85,
+   "seam_jump": 0.0023193359375,
+   "seam_ratio_d1": 0.42458100550886774,
+   "seam_ratio_d2": 0.009259259256449931,
+   "f_fire_expected": 95.00023561566374,
+   "f0_estimate": 95.00023561566374,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    9,
+    3
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 95.00023561566373,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 22.094153710136823,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -15.3,
+    "1000-4000": -34.6,
+    "4000-16000": -45.6
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_mid_2000",
+   "peak_dbfs": -9.08,
+   "rms_dbfs": -18.7,
+   "seam_jump": 0.001739501953125,
+   "seam_ratio_d1": 0.027845627747478043,
+   "seam_ratio_d2": 0.000452275238421489,
+   "f_fire_expected": 100.0,
+   "f0_estimate": 100.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 100.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 21.748566492396773,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -6.7,
+    "1000-4000": -20.4,
+    "4000-16000": -22.9
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_mid_2000",
+   "peak_dbfs": -9.08,
+   "rms_dbfs": -16.45,
+   "seam_jump": 0.0042724609375,
+   "seam_ratio_d1": 0.7142857141662973,
+   "seam_ratio_d2": 0.017543859644080024,
+   "f_fire_expected": 100.0,
+   "f0_estimate": 100.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    3,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 100.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 23.355059358064114,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -9.2,
+    "1000-4000": -35.2,
+    "4000-16000": -46.7
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_mid_2100",
+   "peak_dbfs": -8.95,
+   "rms_dbfs": -18.0,
+   "seam_jump": 0.0003662109375,
+   "seam_ratio_d1": 0.005856515373259196,
+   "seam_ratio_d2": 0.015901754417610447,
+   "f_fire_expected": 105.0,
+   "f0_estimate": 105.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 105.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 22.062135039475894,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -6.3,
+    "1000-4000": -20.8,
+    "4000-16000": -23.2
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_mid_2100",
+   "peak_dbfs": -8.26,
+   "rms_dbfs": -15.58,
+   "seam_jump": 0.004730224609375,
+   "seam_ratio_d1": 0.7013574659593571,
+   "seam_ratio_d2": 0.03508771928816005,
+   "f_fire_expected": 105.0,
+   "f0_estimate": 105.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    3,
+    9
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 105.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 24.165031463827795,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -9.2,
+    "1000-4000": -35.9,
+    "4000-16000": -46.7
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_on_0600",
+   "peak_dbfs": -11.79,
+   "rms_dbfs": -24.8,
+   "seam_jump": 6.103515625e-05,
+   "seam_ratio_d1": 0.0011954558332630913,
+   "seam_ratio_d2": 0.0037036831276112342,
+   "f_fire_expected": 30.0,
+   "f0_estimate": 30.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    30
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 30.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 20.70639665056614,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -12.1,
+    "1000-4000": -17.5,
+    "4000-16000": -22.5
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
    "name": "engine_cab_on_0600",
-   "peak_dbfs": -11.37,
-   "rms_dbfs": -21.56,
-   "seam_jump": 0.00146484375,
-   "seam_ratio_d1": 0.30768836290506085,
+   "peak_dbfs": -13.09,
+   "rms_dbfs": -22.02,
+   "seam_jump": 0.000885009765625,
+   "seam_ratio_d1": 0.20714285709437386,
    "seam_ratio_d2": 0.0,
    "f_fire_expected": 30.0,
    "f0_estimate": 30.0,
@@ -2436,12 +2436,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.692302424967398,
+   "firing_over_half_orders_db": 20.946597926677125,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -16.3,
-    "1000-4000": -35.0,
-    "4000-16000": -45.8
+    "200-1000": -17.5,
+    "1000-4000": -36.6,
+    "4000-16000": -46.0
    },
    "checks": {
     "clip": 1.0,
@@ -2454,11 +2454,11 @@
   },
   {
    "name": "engine_ext_on_0700",
-   "peak_dbfs": -9.31,
-   "rms_dbfs": -22.96,
-   "seam_jump": 0.00189208984375,
-   "seam_ratio_d1": 0.03351813357998041,
-   "seam_ratio_d2": 0.022231633613379997,
+   "peak_dbfs": -10.62,
+   "rms_dbfs": -23.55,
+   "seam_jump": 0.000885009765625,
+   "seam_ratio_d1": 0.017051351025251196,
+   "seam_ratio_d2": 0.012673506336502544,
    "f_fire_expected": 35.00002641910207,
    "f0_estimate": 35.00002641910206,
    "top5_cycle_orders": [
@@ -2473,12 +2473,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.976520626678727,
+   "firing_over_half_orders_db": 20.409218840439376,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -9.5,
-    "1000-4000": -14.5,
-    "4000-16000": -22.6
+    "200-1000": -11.5,
+    "1000-4000": -17.7,
+    "4000-16000": -23.0
    },
    "checks": {
     "clip": 1.0,
@@ -2491,10 +2491,10 @@
   },
   {
    "name": "engine_cab_on_0700",
-   "peak_dbfs": -10.9,
-   "rms_dbfs": -19.64,
-   "seam_jump": 0.000823974609375,
-   "seam_ratio_d1": 0.1646341463085687,
+   "peak_dbfs": -12.01,
+   "rms_dbfs": -20.05,
+   "seam_jump": 0.000946044921875,
+   "seam_ratio_d1": 0.20529801320048208,
    "seam_ratio_d2": 0.0,
    "f_fire_expected": 35.00002641910207,
    "f0_estimate": 35.00002641910206,
@@ -2510,12 +2510,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.673502821934154,
+   "firing_over_half_orders_db": 21.883434368062282,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -16.6,
-    "1000-4000": -36.0,
-    "4000-16000": -46.8
+    "200-1000": -17.3,
+    "1000-4000": -37.6,
+    "4000-16000": -47.1
    },
    "checks": {
     "clip": 1.0,
@@ -2528,11 +2528,11 @@
   },
   {
    "name": "engine_ext_on_0800",
-   "peak_dbfs": -8.08,
-   "rms_dbfs": -22.37,
-   "seam_jump": 0.001220703125,
-   "seam_ratio_d1": 0.021406377601703448,
-   "seam_ratio_d2": 0.004889662059068661,
+   "peak_dbfs": -8.75,
+   "rms_dbfs": -22.84,
+   "seam_jump": 0.0008544921875,
+   "seam_ratio_d1": 0.016273374086201536,
+   "seam_ratio_d2": 0.004125390659682041,
    "f_fire_expected": 40.0,
    "f0_estimate": 40.0,
    "top5_cycle_orders": [
@@ -2547,12 +2547,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.68231020080354,
+   "firing_over_half_orders_db": 19.917242874088878,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -9.3,
-    "1000-4000": -14.7,
-    "4000-16000": -22.7
+    "200-1000": -10.6,
+    "1000-4000": -17.8,
+    "4000-16000": -23.2
    },
    "checks": {
     "clip": 1.0,
@@ -2565,11 +2565,11 @@
   },
   {
    "name": "engine_cab_on_0800",
-   "peak_dbfs": -10.05,
-   "rms_dbfs": -18.26,
-   "seam_jump": 0.00079345703125,
-   "seam_ratio_d1": 0.1520467835965949,
-   "seam_ratio_d2": 0.010416666663111111,
+   "peak_dbfs": -10.5,
+   "rms_dbfs": -18.59,
+   "seam_jump": 6.103515625e-05,
+   "seam_ratio_d1": 0.012987012984249618,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 40.0,
    "f0_estimate": 40.0,
    "top5_cycle_orders": [
@@ -2584,12 +2584,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.484418109611703,
+   "firing_over_half_orders_db": 22.60404521118099,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -16.8,
-    "1000-4000": -36.7,
-    "4000-16000": -47.8
+    "200-1000": -16.7,
+    "1000-4000": -38.2,
+    "4000-16000": -48.1
    },
    "checks": {
     "clip": 1.0,
@@ -2602,11 +2602,11 @@
   },
   {
    "name": "engine_ext_on_0900",
-   "peak_dbfs": -8.43,
-   "rms_dbfs": -21.22,
-   "seam_jump": 0.00238037109375,
-   "seam_ratio_d1": 0.04113919710984041,
-   "seam_ratio_d2": 0.004208298132600256,
+   "peak_dbfs": -9.14,
+   "rms_dbfs": -21.49,
+   "seam_jump": 0.001556396484375,
+   "seam_ratio_d1": 0.029176201372450774,
+   "seam_ratio_d2": 0.0022844049952656193,
    "f_fire_expected": 45.0,
    "f0_estimate": 45.0,
    "top5_cycle_orders": [
@@ -2621,12 +2621,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.09008724018475,
+   "firing_over_half_orders_db": 20.304443960449653,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -9.7,
-    "1000-4000": -15.1,
-    "4000-16000": -23.5
+    "200-1000": -10.7,
+    "1000-4000": -17.9,
+    "4000-16000": -24.1
    },
    "checks": {
     "clip": 1.0,
@@ -2639,11 +2639,11 @@
   },
   {
    "name": "engine_cab_on_0900",
-   "peak_dbfs": -8.9,
-   "rms_dbfs": -17.36,
-   "seam_jump": 0.00054931640625,
-   "seam_ratio_d1": 0.09890109888329235,
-   "seam_ratio_d2": 0.020833333326222222,
+   "peak_dbfs": -9.3,
+   "rms_dbfs": -17.53,
+   "seam_jump": 0.000762939453125,
+   "seam_ratio_d1": 0.15060240960882565,
+   "seam_ratio_d2": 0.011235955052042924,
    "f_fire_expected": 45.0,
    "f0_estimate": 45.0,
    "top5_cycle_orders": [
@@ -2658,12 +2658,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.74893591759823,
+   "firing_over_half_orders_db": 22.902725576038403,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -16.9,
-    "1000-4000": -36.9,
-    "4000-16000": -48.3
+    "200-1000": -16.8,
+    "1000-4000": -38.4,
+    "4000-16000": -48.8
    },
    "checks": {
     "clip": 1.0,
@@ -2676,11 +2676,11 @@
   },
   {
    "name": "engine_ext_on_1000",
-   "peak_dbfs": -7.53,
-   "rms_dbfs": -19.8,
-   "seam_jump": 0.001983642578125,
-   "seam_ratio_d1": 0.03339272100273804,
-   "seam_ratio_d2": 0.009768637531969101,
+   "peak_dbfs": -7.64,
+   "rms_dbfs": -20.0,
+   "seam_jump": 0.001068115234375,
+   "seam_ratio_d1": 0.01954300633939346,
+   "seam_ratio_d2": 0.007803790412343526,
    "f_fire_expected": 50.0,
    "f0_estimate": 50.0,
    "top5_cycle_orders": [
@@ -2695,85 +2695,11 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.339972298779067,
+   "firing_over_half_orders_db": 21.574621935347675,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -10.1,
-    "1000-4000": -15.9,
-    "4000-16000": -24.4
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_cab_on_1000",
-   "peak_dbfs": -7.79,
-   "rms_dbfs": -16.52,
-   "seam_jump": 9.1552734375e-05,
-   "seam_ratio_d1": 0.015384615382030137,
-   "seam_ratio_d2": 0.03032661766228239,
-   "f_fire_expected": 50.0,
-   "f0_estimate": 50.0,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    15
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 50.0,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 24.469253479775563,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -16.0,
-    "1000-4000": -37.2,
-    "4000-16000": -48.4
-   },
-   "checks": {
-    "clip": 1.0,
-    "seam": true,
-    "pitch": true,
-    "low_peak_on_order": true,
-    "firing_dominates": true,
-    "half_orders_present": true
-   }
-  },
-  {
-   "name": "engine_ext_on_1100",
-   "peak_dbfs": -7.88,
-   "rms_dbfs": -19.04,
-   "seam_jump": 0.001800537109375,
-   "seam_ratio_d1": 0.030021518813578014,
-   "seam_ratio_d2": 0.012978857441015741,
-   "f_fire_expected": 55.00012903558802,
-   "f0_estimate": 55.00012903558802,
-   "top5_cycle_orders": [
-    6,
-    12,
-    18,
-    24,
-    9
-   ],
-   "f0_err_pct": 0.0,
-   "low_peak_hz": 55.00012903558802,
-   "low_peak_order_cycle": 6.0,
-   "low_peak_firing_harmonic": 1.0,
-   "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.326421522576318,
-   "bands_db": {
-    "20-200": 0.0,
-    "200-1000": -10.4,
-    "1000-4000": -16.3,
+    "200-1000": -10.2,
+    "1000-4000": -18.0,
     "4000-16000": -24.9
    },
    "checks": {
@@ -2786,12 +2712,49 @@
    }
   },
   {
-   "name": "engine_cab_on_1100",
-   "peak_dbfs": -7.19,
-   "rms_dbfs": -16.04,
-   "seam_jump": 0.000518798828125,
-   "seam_ratio_d1": 0.08133971290590745,
-   "seam_ratio_d2": 0.049999999983616,
+   "name": "engine_cab_on_1000",
+   "peak_dbfs": -7.86,
+   "rms_dbfs": -16.66,
+   "seam_jump": 0.00030517578125,
+   "seam_ratio_d1": 0.05291005290087959,
+   "seam_ratio_d2": 0.03263601056243012,
+   "f_fire_expected": 50.0,
+   "f0_estimate": 50.0,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    15
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 50.0,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 23.70313762309792,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -15.1,
+    "1000-4000": -38.5,
+    "4000-16000": -48.9
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_ext_on_1100",
+   "peak_dbfs": -7.31,
+   "rms_dbfs": -19.2,
+   "seam_jump": 0.00152587890625,
+   "seam_ratio_d1": 0.02762038760192315,
+   "seam_ratio_d2": 0.012999266624476992,
    "f_fire_expected": 55.00012903558802,
    "f0_estimate": 55.00012903558802,
    "top5_cycle_orders": [
@@ -2799,19 +2762,56 @@
     12,
     18,
     24,
-    9
+    30
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 55.00012903558802,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.99781577740695,
+   "firing_over_half_orders_db": 21.591889980430174,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -16.0,
-    "1000-4000": -37.2,
-    "4000-16000": -49.0
+    "200-1000": -10.1,
+    "1000-4000": -17.5,
+    "4000-16000": -25.4
+   },
+   "checks": {
+    "clip": 1.0,
+    "seam": true,
+    "pitch": true,
+    "low_peak_on_order": true,
+    "firing_dominates": true,
+    "half_orders_present": true
+   }
+  },
+  {
+   "name": "engine_cab_on_1100",
+   "peak_dbfs": -6.96,
+   "rms_dbfs": -16.15,
+   "seam_jump": 0.000274658203125,
+   "seam_ratio_d1": 0.04265402842939484,
+   "seam_ratio_d2": 0.04301075267301746,
+   "f_fire_expected": 55.00012903558802,
+   "f0_estimate": 55.00012903558802,
+   "top5_cycle_orders": [
+    6,
+    12,
+    18,
+    24,
+    15
+   ],
+   "f0_err_pct": 0.0,
+   "low_peak_hz": 55.00012903558802,
+   "low_peak_order_cycle": 6.0,
+   "low_peak_firing_harmonic": 1.0,
+   "low_peak_on_engine_order": true,
+   "firing_over_half_orders_db": 23.44020754885083,
+   "bands_db": {
+    "20-200": 0.0,
+    "200-1000": -15.0,
+    "1000-4000": -38.1,
+    "4000-16000": -49.5
    },
    "checks": {
     "clip": 1.0,
@@ -2824,11 +2824,11 @@
   },
   {
    "name": "engine_ext_on_1200",
-   "peak_dbfs": -5.33,
-   "rms_dbfs": -18.77,
-   "seam_jump": 0.0062255859375,
-   "seam_ratio_d1": 0.10302988674622565,
-   "seam_ratio_d2": 0.007163221157177026,
+   "peak_dbfs": -5.83,
+   "rms_dbfs": -18.95,
+   "seam_jump": 0.0047607421875,
+   "seam_ratio_d1": 0.0855731370548114,
+   "seam_ratio_d2": 0.005181282719711848,
    "f_fire_expected": 60.0,
    "f0_estimate": 60.0,
    "top5_cycle_orders": [
@@ -2836,19 +2836,19 @@
     12,
     18,
     24,
-    9
+    30
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 60.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.5842333571689,
+   "firing_over_half_orders_db": 20.69904151415232,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -9.8,
-    "1000-4000": -15.8,
-    "4000-16000": -24.6
+    "200-1000": -9.4,
+    "1000-4000": -16.4,
+    "4000-16000": -25.1
    },
    "checks": {
     "clip": 1.0,
@@ -2861,11 +2861,11 @@
   },
   {
    "name": "engine_cab_on_1200",
-   "peak_dbfs": -5.76,
-   "rms_dbfs": -15.99,
-   "seam_jump": 0.001983642578125,
-   "seam_ratio_d1": 0.2981651375698611,
-   "seam_ratio_d2": 0.009900990095797667,
+   "peak_dbfs": -5.72,
+   "rms_dbfs": -16.12,
+   "seam_jump": 0.001495361328125,
+   "seam_ratio_d1": 0.21491228067086732,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 60.0,
    "f0_estimate": 60.0,
    "top5_cycle_orders": [
@@ -2880,12 +2880,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.343266904958693,
+   "firing_over_half_orders_db": 22.739065981414285,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -15.7,
-    "1000-4000": -36.7,
-    "4000-16000": -48.4
+    "200-1000": -14.8,
+    "1000-4000": -37.2,
+    "4000-16000": -48.9
    },
    "checks": {
     "clip": 1.0,
@@ -2898,11 +2898,11 @@
   },
   {
    "name": "engine_ext_on_1300",
-   "peak_dbfs": -7.02,
-   "rms_dbfs": -18.68,
-   "seam_jump": 0.0029296875,
-   "seam_ratio_d1": 0.048338368579262866,
-   "seam_ratio_d2": 0.024408818417527192,
+   "peak_dbfs": -6.61,
+   "rms_dbfs": -18.79,
+   "seam_jump": 0.002410888671875,
+   "seam_ratio_d1": 0.043169398906330834,
+   "seam_ratio_d2": 0.02329965474107506,
    "f_fire_expected": 65.00002624355065,
    "f0_estimate": 65.00002624355064,
    "top5_cycle_orders": [
@@ -2910,19 +2910,19 @@
     12,
     18,
     24,
-    9
+    30
    ],
    "f0_err_pct": -2.1862844580946636e-14,
    "low_peak_hz": 65.00002624355065,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.83798420054148,
+   "firing_over_half_orders_db": 20.04270408791218,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -10.3,
+    "200-1000": -9.3,
     "1000-4000": -16.2,
-    "4000-16000": -24.4
+    "4000-16000": -24.9
    },
    "checks": {
     "clip": 1.0,
@@ -2935,31 +2935,31 @@
   },
   {
    "name": "engine_cab_on_1300",
-   "peak_dbfs": -6.85,
-   "rms_dbfs": -16.08,
-   "seam_jump": 0.001983642578125,
-   "seam_ratio_d1": 0.2901785713861224,
-   "seam_ratio_d2": 0.009708737860988971,
+   "peak_dbfs": -6.35,
+   "rms_dbfs": -16.18,
+   "seam_jump": 0.0015869140625,
+   "seam_ratio_d1": 0.2113821137929814,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 65.00002624355065,
    "f0_estimate": 65.00002624355064,
    "top5_cycle_orders": [
     6,
     12,
     18,
-    9,
-    24
+    24,
+    9
    ],
    "f0_err_pct": -2.1862844580946636e-14,
    "low_peak_hz": 65.00002624355065,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.142263768604465,
+   "firing_over_half_orders_db": 21.682279398845175,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -16.4,
-    "1000-4000": -36.6,
-    "4000-16000": -48.1
+    "200-1000": -15.2,
+    "1000-4000": -36.8,
+    "4000-16000": -48.6
    },
    "checks": {
     "clip": 1.0,
@@ -2972,31 +2972,31 @@
   },
   {
    "name": "engine_ext_on_1400",
-   "peak_dbfs": -5.29,
-   "rms_dbfs": -18.41,
-   "seam_jump": 0.00286865234375,
-   "seam_ratio_d1": 0.04698517617614608,
-   "seam_ratio_d2": 0.0075963886767047685,
+   "peak_dbfs": -4.53,
+   "rms_dbfs": -18.43,
+   "seam_jump": 0.0023193359375,
+   "seam_ratio_d1": 0.04120889548157896,
+   "seam_ratio_d2": 0.007211796025560411,
    "f_fire_expected": 70.00015514218782,
    "f0_estimate": 70.00015514218782,
    "top5_cycle_orders": [
     6,
     12,
     18,
-    9,
-    24
+    24,
+    9
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 70.00015514218781,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.008417030579373,
+   "firing_over_half_orders_db": 19.321409559000745,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -7.4,
-    "1000-4000": -15.1,
-    "4000-16000": -23.9
+    "200-1000": -6.1,
+    "1000-4000": -14.5,
+    "4000-16000": -24.3
    },
    "checks": {
     "clip": 1.0,
@@ -3009,11 +3009,11 @@
   },
   {
    "name": "engine_cab_on_1400",
-   "peak_dbfs": -5.56,
-   "rms_dbfs": -16.19,
-   "seam_jump": 0.003387451171875,
-   "seam_ratio_d1": 0.4500650769175079,
-   "seam_ratio_d2": 0.03773584904493841,
+   "peak_dbfs": -5.03,
+   "rms_dbfs": -16.26,
+   "seam_jump": 0.0028076171875,
+   "seam_ratio_d1": 0.3297491039039239,
+   "seam_ratio_d2": 0.030612244887723447,
    "f_fire_expected": 70.00015514218782,
    "f0_estimate": 70.00015514218782,
    "top5_cycle_orders": [
@@ -3028,12 +3028,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.883810998672864,
+   "firing_over_half_orders_db": 20.567184412624798,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -11.5,
-    "1000-4000": -35.5,
-    "4000-16000": -47.3
+    "200-1000": -10.1,
+    "1000-4000": -35.3,
+    "4000-16000": -47.7
    },
    "checks": {
     "clip": 1.0,
@@ -3046,11 +3046,11 @@
   },
   {
    "name": "engine_ext_on_1500",
-   "peak_dbfs": -6.14,
+   "peak_dbfs": -5.21,
    "rms_dbfs": -18.18,
-   "seam_jump": 0.00469970703125,
-   "seam_ratio_d1": 0.07515861395682635,
-   "seam_ratio_d2": 0.011241202002822175,
+   "seam_jump": 0.003875732421875,
+   "seam_ratio_d1": 0.06723133933181417,
+   "seam_ratio_d2": 0.011178844747509735,
    "f_fire_expected": 75.0,
    "f0_estimate": 75.0,
    "top5_cycle_orders": [
@@ -3065,12 +3065,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 19.88026906443252,
+   "firing_over_half_orders_db": 18.965528827847397,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -7.3,
-    "1000-4000": -15.0,
-    "4000-16000": -23.8
+    "200-1000": -6.0,
+    "1000-4000": -14.4,
+    "4000-16000": -24.2
    },
    "checks": {
     "clip": 1.0,
@@ -3083,11 +3083,11 @@
   },
   {
    "name": "engine_cab_on_1500",
-   "peak_dbfs": -6.08,
-   "rms_dbfs": -16.2,
-   "seam_jump": 0.00457763671875,
-   "seam_ratio_d1": 0.5905511810261764,
-   "seam_ratio_d2": 0.0733944953907799,
+   "peak_dbfs": -5.93,
+   "rms_dbfs": -16.28,
+   "seam_jump": 0.004058837890625,
+   "seam_ratio_d1": 0.46020761240456715,
+   "seam_ratio_d2": 0.07843137252382315,
    "f_fire_expected": 75.0,
    "f0_estimate": 75.0,
    "top5_cycle_orders": [
@@ -3095,19 +3095,19 @@
     12,
     18,
     9,
-    3
+    24
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 75.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.63898758773906,
+   "firing_over_half_orders_db": 20.197729457122424,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -11.5,
-    "1000-4000": -35.1,
-    "4000-16000": -47.0
+    "200-1000": -10.2,
+    "1000-4000": -34.9,
+    "4000-16000": -47.5
    },
    "checks": {
     "clip": 1.0,
@@ -3120,11 +3120,11 @@
   },
   {
    "name": "engine_ext_on_1600",
-   "peak_dbfs": -5.57,
-   "rms_dbfs": -17.86,
-   "seam_jump": 0.000946044921875,
-   "seam_ratio_d1": 0.014946962391277827,
-   "seam_ratio_d2": 0.035610483163425785,
+   "peak_dbfs": -5.08,
+   "rms_dbfs": -17.87,
+   "seam_jump": 0.00115966796875,
+   "seam_ratio_d1": 0.019872377499525907,
+   "seam_ratio_d2": 0.03458442490366785,
    "f_fire_expected": 80.0,
    "f0_estimate": 80.0,
    "top5_cycle_orders": [
@@ -3132,19 +3132,19 @@
     12,
     18,
     24,
-    9
+    15
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 80.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 19.779512821081013,
+   "firing_over_half_orders_db": 18.99154343117133,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -7.3,
-    "1000-4000": -14.9,
-    "4000-16000": -23.7
+    "200-1000": -6.1,
+    "1000-4000": -14.4,
+    "4000-16000": -24.2
    },
    "checks": {
     "clip": 1.0,
@@ -3157,11 +3157,11 @@
   },
   {
    "name": "engine_cab_on_1600",
-   "peak_dbfs": -6.24,
-   "rms_dbfs": -15.99,
-   "seam_jump": 0.00299072265625,
-   "seam_ratio_d1": 0.3670411984568269,
-   "seam_ratio_d2": 0.008928571425959184,
+   "peak_dbfs": -5.76,
+   "rms_dbfs": -16.1,
+   "seam_jump": 0.002532958984375,
+   "seam_ratio_d1": 0.2794612794304465,
+   "seam_ratio_d2": 0.009708737860988971,
    "f_fire_expected": 80.0,
    "f0_estimate": 80.0,
    "top5_cycle_orders": [
@@ -3169,19 +3169,19 @@
     12,
     18,
     9,
-    3
+    24
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 80.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.306539485548626,
+   "firing_over_half_orders_db": 19.93873200226784,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -11.7,
+    "200-1000": -10.4,
     "1000-4000": -33.5,
-    "4000-16000": -46.7
+    "4000-16000": -47.2
    },
    "checks": {
     "clip": 1.0,
@@ -3194,11 +3194,11 @@
   },
   {
    "name": "engine_ext_on_1700",
-   "peak_dbfs": -5.31,
-   "rms_dbfs": -17.3,
-   "seam_jump": 0.002838134765625,
-   "seam_ratio_d1": 0.044267311731146286,
-   "seam_ratio_d2": 0.015068493150459467,
+   "peak_dbfs": -4.63,
+   "rms_dbfs": -17.35,
+   "seam_jump": 0.002349853515625,
+   "seam_ratio_d1": 0.039816471918628804,
+   "seam_ratio_d2": 0.015362703518404236,
    "f_fire_expected": 85.00018122601992,
    "f0_estimate": 85.00018122601992,
    "top5_cycle_orders": [
@@ -3213,12 +3213,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 19.84143740964805,
+   "firing_over_half_orders_db": 18.916134442779672,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -7.8,
-    "1000-4000": -15.1,
-    "4000-16000": -24.0
+    "200-1000": -6.6,
+    "1000-4000": -14.6,
+    "4000-16000": -24.5
    },
    "checks": {
     "clip": 1.0,
@@ -3231,11 +3231,11 @@
   },
   {
    "name": "engine_cab_on_1700",
-   "peak_dbfs": -5.92,
-   "rms_dbfs": -15.47,
-   "seam_jump": 0.00390625,
-   "seam_ratio_d1": 0.46545454539908354,
-   "seam_ratio_d2": 0.008771929822040012,
+   "peak_dbfs": -5.77,
+   "rms_dbfs": -15.62,
+   "seam_jump": 0.003326416015625,
+   "seam_ratio_d1": 0.353896103858453,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 85.00018122601992,
    "f0_estimate": 85.00018122601992,
    "top5_cycle_orders": [
@@ -3243,19 +3243,19 @@
     12,
     18,
     9,
-    3
+    15
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 85.00018122601992,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.50172662144832,
+   "firing_over_half_orders_db": 20.072792526953233,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -12.7,
+    "200-1000": -11.3,
     "1000-4000": -33.9,
-    "4000-16000": -47.0
+    "4000-16000": -47.5
    },
    "checks": {
     "clip": 1.0,
@@ -3268,11 +3268,11 @@
   },
   {
    "name": "engine_ext_on_1800",
-   "peak_dbfs": -4.78,
-   "rms_dbfs": -16.47,
-   "seam_jump": 0.000823974609375,
-   "seam_ratio_d1": 0.012778028605548499,
-   "seam_ratio_d2": 0.026129005542953058,
+   "peak_dbfs": -4.22,
+   "rms_dbfs": -16.51,
+   "seam_jump": 0.000457763671875,
+   "seam_ratio_d1": 0.007716041444271715,
+   "seam_ratio_d2": 0.02354606643701543,
    "f_fire_expected": 90.0,
    "f0_estimate": 90.0,
    "top5_cycle_orders": [
@@ -3280,19 +3280,19 @@
     12,
     18,
     24,
-    9
+    15
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 90.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.42704122659531,
+   "firing_over_half_orders_db": 19.484011642223674,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -8.4,
-    "1000-4000": -15.6,
-    "4000-16000": -24.7
+    "200-1000": -7.2,
+    "1000-4000": -15.1,
+    "4000-16000": -25.2
    },
    "checks": {
     "clip": 1.0,
@@ -3305,11 +3305,11 @@
   },
   {
    "name": "engine_cab_on_1800",
-   "peak_dbfs": -5.69,
-   "rms_dbfs": -14.62,
-   "seam_jump": 0.00445556640625,
-   "seam_ratio_d1": 0.4965986394004335,
-   "seam_ratio_d2": 0.026086956514305936,
+   "peak_dbfs": -5.58,
+   "rms_dbfs": -14.76,
+   "seam_jump": 0.00396728515625,
+   "seam_ratio_d1": 0.40123456786065537,
+   "seam_ratio_d2": 0.00934579438966128,
    "f_fire_expected": 90.0,
    "f0_estimate": 90.0,
    "top5_cycle_orders": [
@@ -3324,12 +3324,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.36190096724475,
+   "firing_over_half_orders_db": 21.04518102502626,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -13.6,
+    "200-1000": -12.3,
     "1000-4000": -34.4,
-    "4000-16000": -48.1
+    "4000-16000": -48.5
    },
    "checks": {
     "clip": 1.0,
@@ -3342,11 +3342,11 @@
   },
   {
    "name": "engine_ext_on_1900",
-   "peak_dbfs": -4.06,
-   "rms_dbfs": -15.28,
-   "seam_jump": 0.005096435546875,
-   "seam_ratio_d1": 0.07717190388053198,
-   "seam_ratio_d2": 0.00130433194724464,
+   "peak_dbfs": -3.71,
+   "rms_dbfs": -15.38,
+   "seam_jump": 0.004241943359375,
+   "seam_ratio_d1": 0.06981370789528239,
+   "seam_ratio_d2": 0.0033049610297368774,
    "f_fire_expected": 95.00023561566374,
    "f0_estimate": 95.00023561566374,
    "top5_cycle_orders": [
@@ -3354,19 +3354,19 @@
     12,
     18,
     24,
-    9
+    15
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 95.00023561566373,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.069190603273626,
+   "firing_over_half_orders_db": 20.21193568480139,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -9.4,
-    "1000-4000": -16.4,
-    "4000-16000": -25.6
+    "200-1000": -8.3,
+    "1000-4000": -16.0,
+    "4000-16000": -26.1
    },
    "checks": {
     "clip": 1.0,
@@ -3379,31 +3379,31 @@
   },
   {
    "name": "engine_cab_on_1900",
-   "peak_dbfs": -5.01,
-   "rms_dbfs": -13.33,
-   "seam_jump": 0.00347900390625,
-   "seam_ratio_d1": 0.34969325149859276,
-   "seam_ratio_d2": 0.03361344536889542,
+   "peak_dbfs": -4.44,
+   "rms_dbfs": -13.51,
+   "seam_jump": 0.003387451171875,
+   "seam_ratio_d1": 0.3135593220048737,
+   "seam_ratio_d2": 0.036363636352803964,
    "f_fire_expected": 95.00023561566374,
    "f0_estimate": 95.00023561566374,
    "top5_cycle_orders": [
     6,
     12,
     18,
-    3,
-    9
+    9,
+    3
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 95.00023561566373,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.326088038483512,
+   "firing_over_half_orders_db": 22.021151630875973,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -14.9,
+    "200-1000": -13.6,
     "1000-4000": -35.2,
-    "4000-16000": -49.2
+    "4000-16000": -49.6
    },
    "checks": {
     "clip": 1.0,
@@ -3416,11 +3416,11 @@
   },
   {
    "name": "engine_ext_on_2000",
-   "peak_dbfs": -3.24,
-   "rms_dbfs": -14.07,
-   "seam_jump": 0.012939453125,
-   "seam_ratio_d1": 0.19194205522576296,
-   "seam_ratio_d2": 0.07091471112920864,
+   "peak_dbfs": -1.95,
+   "rms_dbfs": -14.18,
+   "seam_jump": 0.010894775390625,
+   "seam_ratio_d1": 0.17551260003197872,
+   "seam_ratio_d2": 0.0719509193895995,
    "f_fire_expected": 100.0,
    "f0_estimate": 100.0,
    "top5_cycle_orders": [
@@ -3428,19 +3428,19 @@
     12,
     18,
     24,
-    3
+    15
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 100.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.974690609294715,
+   "firing_over_half_orders_db": 21.121431891775956,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -6.5,
-    "1000-4000": -16.9,
-    "4000-16000": -26.3
+    "200-1000": -5.5,
+    "1000-4000": -16.4,
+    "4000-16000": -26.7
    },
    "checks": {
     "clip": 1.0,
@@ -3453,11 +3453,11 @@
   },
   {
    "name": "engine_cab_on_2000",
-   "peak_dbfs": -4.07,
-   "rms_dbfs": -11.95,
-   "seam_jump": 0.0052490234375,
-   "seam_ratio_d1": 0.47252747248493465,
-   "seam_ratio_d2": 0.03278688523709541,
+   "peak_dbfs": -3.98,
+   "rms_dbfs": -12.14,
+   "seam_jump": 0.005157470703125,
+   "seam_ratio_d1": 0.4278481012303298,
+   "seam_ratio_d2": 0.026548672558673037,
    "f_fire_expected": 100.0,
    "f0_estimate": 100.0,
    "top5_cycle_orders": [
@@ -3472,12 +3472,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 23.669066690388675,
+   "firing_over_half_orders_db": 23.460880769004145,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -9.5,
-    "1000-4000": -35.9,
-    "4000-16000": -50.7
+    "200-1000": -8.5,
+    "1000-4000": -35.8,
+    "4000-16000": -51.0
    },
    "checks": {
     "clip": 1.0,
@@ -3490,11 +3490,11 @@
   },
   {
    "name": "engine_ext_on_2100",
-   "peak_dbfs": -3.0,
-   "rms_dbfs": -13.52,
-   "seam_jump": 0.011505126953125,
-   "seam_ratio_d1": 0.17120799273133053,
-   "seam_ratio_d2": 0.018945634266630637,
+   "peak_dbfs": -2.83,
+   "rms_dbfs": -13.63,
+   "seam_jump": 0.010101318359375,
+   "seam_ratio_d1": 0.1633761105600427,
+   "seam_ratio_d2": 0.018344469768491866,
    "f_fire_expected": 105.0,
    "f0_estimate": 105.0,
    "top5_cycle_orders": [
@@ -3502,19 +3502,19 @@
     12,
     18,
     24,
-    3
+    15
    ],
    "f0_err_pct": 0.0,
    "low_peak_hz": 105.0,
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.285442270072814,
+   "firing_over_half_orders_db": 21.52304905781417,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -6.4,
-    "1000-4000": -17.1,
-    "4000-16000": -26.6
+    "200-1000": -5.3,
+    "1000-4000": -16.6,
+    "4000-16000": -26.9
    },
    "checks": {
     "clip": 1.0,
@@ -3527,11 +3527,11 @@
   },
   {
    "name": "engine_cab_on_2100",
-   "peak_dbfs": -3.0,
-   "rms_dbfs": -11.21,
-   "seam_jump": 0.00762939453125,
-   "seam_ratio_d1": 0.6249999999488,
-   "seam_ratio_d2": 0.04958677684607554,
+   "peak_dbfs": -2.72,
+   "rms_dbfs": -11.39,
+   "seam_jump": 0.007904052734375,
+   "seam_ratio_d1": 0.606557377002633,
+   "seam_ratio_d2": 0.06249999998171429,
    "f_fire_expected": 105.0,
    "f0_estimate": 105.0,
    "top5_cycle_orders": [
@@ -3546,12 +3546,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 24.23007073742065,
+   "firing_over_half_orders_db": 24.067866893436104,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -9.7,
+    "200-1000": -8.7,
     "1000-4000": -36.5,
-    "4000-16000": -50.7
+    "4000-16000": -51.1
    },
    "checks": {
     "clip": 1.0,
@@ -3564,11 +3564,11 @@
   },
   {
    "name": "ebrake_ext_0900",
-   "peak_dbfs": -8.81,
-   "rms_dbfs": -22.6,
-   "seam_jump": 0.00048828125,
-   "seam_ratio_d1": 0.0238449363775644,
-   "seam_ratio_d2": 0.04545299590365568,
+   "peak_dbfs": -13.11,
+   "rms_dbfs": -28.89,
+   "seam_jump": 0.000518798828125,
+   "seam_ratio_d1": 0.04086538461216568,
+   "seam_ratio_d2": 0.0746235242832827,
    "f_fire_expected": 45.0,
    "f0_estimate": 45.0,
    "top5_cycle_orders": [
@@ -3583,12 +3583,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 16.456202376329326,
+   "firing_over_half_orders_db": 16.27631055505889,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -5.8,
-    "1000-4000": -19.7,
-    "4000-16000": -54.6
+    "200-1000": -5.4,
+    "1000-4000": -16.2,
+    "4000-16000": -48.6
    },
    "checks": {
     "clip": 1.0,
@@ -3601,11 +3601,11 @@
   },
   {
    "name": "ebrake_cab_0900",
-   "peak_dbfs": -10.64,
-   "rms_dbfs": -19.69,
-   "seam_jump": 0.00048828125,
-   "seam_ratio_d1": 0.08695652172364461,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -16.44,
+   "rms_dbfs": -25.91,
+   "seam_jump": 0.000274658203125,
+   "seam_ratio_d1": 0.08737864074890074,
+   "seam_ratio_d2": 0.14285714218840817,
    "f_fire_expected": 45.0,
    "f0_estimate": 45.0,
    "top5_cycle_orders": [
@@ -3620,12 +3620,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 19.085962070802445,
+   "firing_over_half_orders_db": 19.03461497953748,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -10.9,
-    "1000-4000": -43.1,
-    "4000-16000": -82.9
+    "200-1000": -10.8,
+    "1000-4000": -39.9,
+    "4000-16000": -76.8
    },
    "checks": {
     "clip": 1.0,
@@ -3638,11 +3638,11 @@
   },
   {
    "name": "ebrake_ext_1000",
-   "peak_dbfs": -7.76,
-   "rms_dbfs": -21.38,
-   "seam_jump": 0.001190185546875,
-   "seam_ratio_d1": 0.056439942110203443,
-   "seam_ratio_d2": 0.021739130427039698,
+   "peak_dbfs": -10.39,
+   "rms_dbfs": -25.02,
+   "seam_jump": 0.001007080078125,
+   "seam_ratio_d1": 0.06496062991706962,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 50.0,
    "f0_estimate": 50.0,
    "top5_cycle_orders": [
@@ -3657,12 +3657,12 @@
    "low_peak_order_cycle": 12.0,
    "low_peak_firing_harmonic": 2.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 17.701539017126095,
+   "firing_over_half_orders_db": 17.632204757421185,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -5.6,
-    "1000-4000": -20.4,
-    "4000-16000": -55.7
+    "200-1000": -5.4,
+    "1000-4000": -18.9,
+    "4000-16000": -52.5
    },
    "checks": {
     "clip": 1.0,
@@ -3675,11 +3675,11 @@
   },
   {
    "name": "ebrake_cab_1000",
-   "peak_dbfs": -9.36,
-   "rms_dbfs": -18.83,
-   "seam_jump": 0.001129150390625,
-   "seam_ratio_d1": 0.19270833330044443,
-   "seam_ratio_d2": 0.09999999967232,
+   "peak_dbfs": -12.64,
+   "rms_dbfs": -22.41,
+   "seam_jump": 0.000701904296875,
+   "seam_ratio_d1": 0.1729323307844613,
+   "seam_ratio_d2": 0.124999999488,
    "f_fire_expected": 50.0,
    "f0_estimate": 50.0,
    "top5_cycle_orders": [
@@ -3694,12 +3694,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.196049885327927,
+   "firing_over_half_orders_db": 20.18814174455676,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -9.6,
-    "1000-4000": -43.3,
-    "4000-16000": -83.6
+    "1000-4000": -42.0,
+    "4000-16000": -80.1
    },
    "checks": {
     "clip": 1.0,
@@ -3712,11 +3712,11 @@
   },
   {
    "name": "ebrake_ext_1100",
-   "peak_dbfs": -7.59,
-   "rms_dbfs": -20.77,
-   "seam_jump": 0.001007080078125,
-   "seam_ratio_d1": 0.043650793648901655,
-   "seam_ratio_d2": 0.01010101009766677,
+   "peak_dbfs": -9.58,
+   "rms_dbfs": -23.25,
+   "seam_jump": 0.000732421875,
+   "seam_ratio_d1": 0.03986710963238146,
+   "seam_ratio_d2": 0.023809523800235828,
    "f_fire_expected": 55.00012903558802,
    "f0_estimate": 55.00012903558802,
    "top5_cycle_orders": [
@@ -3731,12 +3731,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 17.93788060167675,
+   "firing_over_half_orders_db": 17.920626770924915,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -5.7,
-    "1000-4000": -20.3,
-    "4000-16000": -55.7
+    "200-1000": -5.6,
+    "1000-4000": -19.5,
+    "4000-16000": -53.9
    },
    "checks": {
     "clip": 1.0,
@@ -3749,11 +3749,11 @@
   },
   {
    "name": "ebrake_cab_1100",
-   "peak_dbfs": -8.92,
-   "rms_dbfs": -18.32,
-   "seam_jump": 0.000946044921875,
-   "seam_ratio_d1": 0.1476190475960134,
-   "seam_ratio_d2": 0.090909090638281,
+   "peak_dbfs": -11.17,
+   "rms_dbfs": -20.74,
+   "seam_jump": 0.000701904296875,
+   "seam_ratio_d1": 0.14024390241100296,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 55.00012903558802,
    "f0_estimate": 55.00012903558802,
    "top5_cycle_orders": [
@@ -3768,12 +3768,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.68961305980047,
+   "firing_over_half_orders_db": 20.70114150578491,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -10.0,
-    "1000-4000": -43.1,
-    "4000-16000": -84.0
+    "1000-4000": -42.4,
+    "4000-16000": -81.7
    },
    "checks": {
     "clip": 1.0,
@@ -3786,11 +3786,11 @@
   },
   {
    "name": "ebrake_ext_1200",
-   "peak_dbfs": -7.93,
-   "rms_dbfs": -20.97,
-   "seam_jump": 0.0003662109375,
-   "seam_ratio_d1": 0.01610733930844759,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -9.26,
+   "rms_dbfs": -22.53,
+   "seam_jump": 0.00030517578125,
+   "seam_ratio_d1": 0.015649452268368075,
+   "seam_ratio_d2": 0.011627906972313683,
    "f_fire_expected": 60.0,
    "f0_estimate": 60.0,
    "top5_cycle_orders": [
@@ -3805,12 +3805,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 17.008605851954883,
+   "firing_over_half_orders_db": 16.991956035518964,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -5.7,
-    "1000-4000": -19.6,
-    "4000-16000": -55.9
+    "1000-4000": -19.3,
+    "4000-16000": -55.1
    },
    "checks": {
     "clip": 1.0,
@@ -3823,11 +3823,11 @@
   },
   {
    "name": "ebrake_cab_1200",
-   "peak_dbfs": -9.0,
-   "rms_dbfs": -18.55,
-   "seam_jump": 0.000885009765625,
-   "seam_ratio_d1": 0.14009661833531067,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -10.39,
+   "rms_dbfs": -20.05,
+   "seam_jump": 0.000762939453125,
+   "seam_ratio_d1": 0.14124293782695904,
+   "seam_ratio_d2": 0.19999999934464,
    "f_fire_expected": 60.0,
    "f0_estimate": 60.0,
    "top5_cycle_orders": [
@@ -3842,12 +3842,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.086521281195985,
+   "firing_over_half_orders_db": 20.08624338964691,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -10.7,
-    "1000-4000": -42.5,
-    "4000-16000": -83.9
+    "200-1000": -10.6,
+    "1000-4000": -42.2,
+    "4000-16000": -82.6
    },
    "checks": {
     "clip": 1.0,
@@ -3860,11 +3860,11 @@
   },
   {
    "name": "ebrake_ext_1300",
-   "peak_dbfs": -7.55,
-   "rms_dbfs": -20.8,
+   "peak_dbfs": -8.64,
+   "rms_dbfs": -22.03,
    "seam_jump": 0.000244140625,
-   "seam_ratio_d1": 0.010062893081346239,
-   "seam_ratio_d2": 0.038834951443955885,
+   "seam_ratio_d1": 0.011412268187768963,
+   "seam_ratio_d2": 0.02197802197010796,
    "f_fire_expected": 65.00002624355065,
    "f0_estimate": 65.00002624355064,
    "top5_cycle_orders": [
@@ -3879,12 +3879,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 16.602818242075962,
+   "firing_over_half_orders_db": 16.58869088734629,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -5.8,
-    "1000-4000": -19.4,
-    "4000-16000": -55.3
+    "1000-4000": -19.2,
+    "4000-16000": -54.8
    },
    "checks": {
     "clip": 1.0,
@@ -3897,11 +3897,11 @@
   },
   {
    "name": "ebrake_cab_1300",
-   "peak_dbfs": -8.78,
-   "rms_dbfs": -18.6,
-   "seam_jump": 0.000823974609375,
-   "seam_ratio_d1": 0.11999999998252373,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -9.88,
+   "rms_dbfs": -19.77,
+   "seam_jump": 0.000732421875,
+   "seam_ratio_d1": 0.1212121211920612,
+   "seam_ratio_d2": 0.09999999967232,
    "f_fire_expected": 65.00002624355065,
    "f0_estimate": 65.00002624355064,
    "top5_cycle_orders": [
@@ -3916,12 +3916,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 19.59183529284176,
+   "firing_over_half_orders_db": 19.585921460691708,
    "bands_db": {
     "20-200": 0.0,
-    "200-1000": -11.2,
-    "1000-4000": -42.1,
-    "4000-16000": -83.7
+    "200-1000": -11.1,
+    "1000-4000": -41.9,
+    "4000-16000": -82.7
    },
    "checks": {
     "clip": 1.0,
@@ -3934,11 +3934,11 @@
   },
   {
    "name": "ebrake_ext_1400",
-   "peak_dbfs": -7.05,
-   "rms_dbfs": -20.5,
-   "seam_jump": 0.0003662109375,
-   "seam_ratio_d1": 0.014446848238900635,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -7.91,
+   "rms_dbfs": -21.44,
+   "seam_jump": 0.00030517578125,
+   "seam_ratio_d1": 0.013333333332750791,
+   "seam_ratio_d2": 0.020618556694065683,
    "f_fire_expected": 70.00015514218782,
    "f0_estimate": 70.00015514218782,
    "top5_cycle_orders": [
@@ -3953,12 +3953,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 16.287254727013494,
+   "firing_over_half_orders_db": 16.27894674052653,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -2.3,
-    "1000-4000": -17.8,
-    "4000-16000": -54.8
+    "1000-4000": -17.7,
+    "4000-16000": -54.6
    },
    "checks": {
     "clip": 1.0,
@@ -3971,11 +3971,11 @@
   },
   {
    "name": "ebrake_cab_1400",
-   "peak_dbfs": -8.81,
-   "rms_dbfs": -18.75,
-   "seam_jump": 0.00067138671875,
-   "seam_ratio_d1": 0.09442060084509023,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -9.66,
+   "rms_dbfs": -19.63,
+   "seam_jump": 0.0006103515625,
+   "seam_ratio_d1": 0.09478672984309966,
+   "seam_ratio_d2": 0.090909090638281,
    "f_fire_expected": 70.00015514218782,
    "f0_estimate": 70.00015514218782,
    "top5_cycle_orders": [
@@ -3990,12 +3990,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 18.909265511132133,
+   "firing_over_half_orders_db": 18.905899281301252,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -5.9,
-    "1000-4000": -40.3,
-    "4000-16000": -82.9
+    "1000-4000": -40.2,
+    "4000-16000": -82.2
    },
    "checks": {
     "clip": 1.0,
@@ -4008,11 +4008,11 @@
   },
   {
    "name": "ebrake_ext_1500",
-   "peak_dbfs": -7.16,
-   "rms_dbfs": -20.38,
+   "peak_dbfs": -7.86,
+   "rms_dbfs": -21.07,
    "seam_jump": 0.0,
    "seam_ratio_d1": 0.0,
-   "seam_ratio_d2": 0.035398230078230716,
+   "seam_ratio_d2": 0.038461538449420116,
    "f_fire_expected": 75.0,
    "f0_estimate": 75.0,
    "top5_cycle_orders": [
@@ -4027,7 +4027,7 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 16.107307123626363,
+   "firing_over_half_orders_db": 16.108099298806323,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -2.5,
@@ -4045,11 +4045,11 @@
   },
   {
    "name": "ebrake_cab_1500",
-   "peak_dbfs": -8.83,
-   "rms_dbfs": -18.96,
-   "seam_jump": 0.000762939453125,
-   "seam_ratio_d1": 0.10775862067443519,
-   "seam_ratio_d2": 0.07692307672918343,
+   "peak_dbfs": -9.46,
+   "rms_dbfs": -19.59,
+   "seam_jump": 0.00067138671875,
+   "seam_ratio_d1": 0.10185185183640054,
+   "seam_ratio_d2": 0.08333333310577778,
    "f_fire_expected": 75.0,
    "f0_estimate": 75.0,
    "top5_cycle_orders": [
@@ -4064,12 +4064,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 18.575637482255367,
+   "firing_over_half_orders_db": 18.575942533707085,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -6.3,
     "1000-4000": -39.5,
-    "4000-16000": -82.4
+    "4000-16000": -82.0
    },
    "checks": {
     "clip": 1.0,
@@ -4082,11 +4082,11 @@
   },
   {
    "name": "ebrake_ext_1600",
-   "peak_dbfs": -7.65,
-   "rms_dbfs": -20.27,
-   "seam_jump": 0.000640869140625,
-   "seam_ratio_d1": 0.02439024390151078,
-   "seam_ratio_d2": 0.017699115039115358,
+   "peak_dbfs": -8.29,
+   "rms_dbfs": -20.89,
+   "seam_jump": 0.0006103515625,
+   "seam_ratio_d1": 0.025031289110362672,
+   "seam_ratio_d2": 0.019230769224710058,
    "f_fire_expected": 80.0,
    "f0_estimate": 80.0,
    "top5_cycle_orders": [
@@ -4101,12 +4101,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 15.998866798096525,
+   "firing_over_half_orders_db": 16.000751221733484,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -2.8,
-    "1000-4000": -17.2,
-    "4000-16000": -54.2
+    "1000-4000": -17.3,
+    "4000-16000": -54.3
    },
    "checks": {
     "clip": 1.0,
@@ -4119,11 +4119,11 @@
   },
   {
    "name": "ebrake_cab_1600",
-   "peak_dbfs": -9.48,
-   "rms_dbfs": -19.04,
-   "seam_jump": 0.000823974609375,
-   "seam_ratio_d1": 0.11936233983822613,
-   "seam_ratio_d2": 0.08194706197771472,
+   "peak_dbfs": -10.05,
+   "rms_dbfs": -19.59,
+   "seam_jump": 0.00079345703125,
+   "seam_ratio_d1": 0.12264150941500604,
+   "seam_ratio_d2": 0.08333333310577778,
    "f_fire_expected": 80.0,
    "f0_estimate": 80.0,
    "top5_cycle_orders": [
@@ -4138,12 +4138,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 18.32341984729465,
+   "firing_over_half_orders_db": 18.323219340757724,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -6.8,
     "1000-4000": -39.2,
-    "4000-16000": -82.5
+    "4000-16000": -82.1
    },
    "checks": {
     "clip": 1.0,
@@ -4156,10 +4156,10 @@
   },
   {
    "name": "ebrake_ext_1700",
-   "peak_dbfs": -7.01,
-   "rms_dbfs": -19.7,
-   "seam_jump": 0.000732421875,
-   "seam_ratio_d1": 0.02578224956482207,
+   "peak_dbfs": -7.61,
+   "rms_dbfs": -20.25,
+   "seam_jump": 0.00067138671875,
+   "seam_ratio_d1": 0.025320156109316053,
    "seam_ratio_d2": 0.0,
    "f_fire_expected": 85.00018122601992,
    "f0_estimate": 85.00018122601992,
@@ -4175,12 +4175,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 15.873823827002756,
+   "firing_over_half_orders_db": 15.879366140821249,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -3.3,
-    "1000-4000": -17.2,
-    "4000-16000": -54.6
+    "1000-4000": -17.3,
+    "4000-16000": -54.7
    },
    "checks": {
     "clip": 1.0,
@@ -4193,11 +4193,11 @@
   },
   {
    "name": "ebrake_cab_1700",
-   "peak_dbfs": -9.5,
-   "rms_dbfs": -18.57,
-   "seam_jump": 0.000518798828125,
-   "seam_ratio_d1": 0.07456140349805601,
-   "seam_ratio_d2": 0.07692307672918343,
+   "peak_dbfs": -10.0,
+   "rms_dbfs": -19.06,
+   "seam_jump": 0.00048828125,
+   "seam_ratio_d1": 0.0744186046398207,
+   "seam_ratio_d2": 0.08333333310577778,
    "f_fire_expected": 85.00018122601992,
    "f0_estimate": 85.00018122601992,
    "top5_cycle_orders": [
@@ -4212,12 +4212,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 18.354854206243058,
+   "firing_over_half_orders_db": 18.357019034978173,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -7.6,
-    "1000-4000": -39.1,
-    "4000-16000": -83.0
+    "1000-4000": -39.2,
+    "4000-16000": -82.7
    },
    "checks": {
     "clip": 1.0,
@@ -4230,11 +4230,11 @@
   },
   {
    "name": "ebrake_ext_1800",
-   "peak_dbfs": -6.43,
-   "rms_dbfs": -19.13,
-   "seam_jump": 0.000762939453125,
-   "seam_ratio_d1": 0.026852846400773456,
-   "seam_ratio_d2": 0.008064516126901145,
+   "peak_dbfs": -6.98,
+   "rms_dbfs": -19.63,
+   "seam_jump": 0.000732421875,
+   "seam_ratio_d1": 0.027459954232380086,
+   "seam_ratio_d2": 0.008620689652737218,
    "f_fire_expected": 90.0,
    "f0_estimate": 90.0,
    "top5_cycle_orders": [
@@ -4249,12 +4249,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 16.21106668825526,
+   "firing_over_half_orders_db": 16.21606039920566,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -4.1,
     "1000-4000": -17.6,
-    "4000-16000": -54.7
+    "4000-16000": -54.9
    },
    "checks": {
     "clip": 1.0,
@@ -4267,11 +4267,11 @@
   },
   {
    "name": "ebrake_cab_1800",
-   "peak_dbfs": -9.08,
-   "rms_dbfs": -17.96,
-   "seam_jump": 0.00054931640625,
-   "seam_ratio_d1": 0.07758620688559334,
-   "seam_ratio_d2": 0.0,
+   "peak_dbfs": -9.55,
+   "rms_dbfs": -18.4,
+   "seam_jump": 0.000518798828125,
+   "seam_ratio_d1": 0.07727272726121785,
+   "seam_ratio_d2": 0.07692307672918343,
    "f_fire_expected": 90.0,
    "f0_estimate": 90.0,
    "top5_cycle_orders": [
@@ -4286,12 +4286,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 19.13630943711294,
+   "firing_over_half_orders_db": 19.136732192930463,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -8.8,
     "1000-4000": -39.4,
-    "4000-16000": -83.5
+    "4000-16000": -83.2
    },
    "checks": {
     "clip": 1.0,
@@ -4304,11 +4304,11 @@
   },
   {
    "name": "ebrake_ext_1900",
-   "peak_dbfs": -6.0,
-   "rms_dbfs": -18.21,
-   "seam_jump": 0.000335693359375,
-   "seam_ratio_d1": 0.011422637590473213,
-   "seam_ratio_d2": 0.03906249999,
+   "peak_dbfs": -6.61,
+   "rms_dbfs": -18.79,
+   "seam_jump": 0.00030517578125,
+   "seam_ratio_d1": 0.011135857460618152,
+   "seam_ratio_d2": 0.04201680671111927,
    "f_fire_expected": 95.00023561566374,
    "f0_estimate": 95.00023561566374,
    "top5_cycle_orders": [
@@ -4323,12 +4323,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 16.942714016387466,
+   "firing_over_half_orders_db": 16.94671442912287,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -5.2,
-    "1000-4000": -18.7,
-    "4000-16000": -55.7
+    "1000-4000": -18.8,
+    "4000-16000": -55.8
    },
    "checks": {
     "clip": 1.0,
@@ -4341,11 +4341,11 @@
   },
   {
    "name": "ebrake_cab_1900",
-   "peak_dbfs": -8.43,
-   "rms_dbfs": -16.91,
+   "peak_dbfs": -8.95,
+   "rms_dbfs": -17.42,
    "seam_jump": 0.000640869140625,
-   "seam_ratio_d1": 0.08399999998898995,
-   "seam_ratio_d2": 0.07692307672918343,
+   "seam_ratio_d1": 0.08935675897532815,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 95.00023561566374,
    "f0_estimate": 95.00023561566374,
    "top5_cycle_orders": [
@@ -4360,12 +4360,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 20.497013601717732,
+   "firing_over_half_orders_db": 20.497952158928467,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -10.3,
     "1000-4000": -40.6,
-    "4000-16000": -84.6
+    "4000-16000": -84.3
    },
    "checks": {
     "clip": 1.0,
@@ -4378,11 +4378,11 @@
   },
   {
    "name": "ebrake_ext_2000",
-   "peak_dbfs": -5.18,
-   "rms_dbfs": -17.04,
-   "seam_jump": 0.001251220703125,
-   "seam_ratio_d1": 0.03999836104148777,
-   "seam_ratio_d2": 0.037313432826696365,
+   "peak_dbfs": -5.83,
+   "rms_dbfs": -17.68,
+   "seam_jump": 0.00115966796875,
+   "seam_ratio_d1": 0.0399999999986203,
+   "seam_ratio_d2": 0.04065040649323551,
    "f_fire_expected": 100.0,
    "f0_estimate": 100.0,
    "top5_cycle_orders": [
@@ -4397,12 +4397,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 17.743500686521916,
+   "firing_over_half_orders_db": 17.746101219094385,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -1.9,
     "1000-4000": -17.7,
-    "4000-16000": -55.6
+    "4000-16000": -55.7
    },
    "checks": {
     "clip": 1.0,
@@ -4415,11 +4415,11 @@
   },
   {
    "name": "ebrake_cab_2000",
-   "peak_dbfs": -7.54,
-   "rms_dbfs": -15.54,
-   "seam_jump": 0.00067138671875,
-   "seam_ratio_d1": 0.08029197079331749,
-   "seam_ratio_d2": 0.07142857126138775,
+   "peak_dbfs": -8.12,
+   "rms_dbfs": -16.12,
+   "seam_jump": 0.000640869140625,
+   "seam_ratio_d1": 0.0820312499895,
+   "seam_ratio_d2": 0.0,
    "f_fire_expected": 100.0,
    "f0_estimate": 100.0,
    "top5_cycle_orders": [
@@ -4434,12 +4434,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 21.877024665279144,
+   "firing_over_half_orders_db": 21.87826341674382,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -5.0,
     "1000-4000": -39.9,
-    "4000-16000": -85.0
+    "4000-16000": -84.7
    },
    "checks": {
     "clip": 1.0,
@@ -4452,11 +4452,11 @@
   },
   {
    "name": "ebrake_ext_2100",
-   "peak_dbfs": -4.98,
-   "rms_dbfs": -16.55,
+   "peak_dbfs": -5.69,
+   "rms_dbfs": -17.26,
    "seam_jump": 0.00048828125,
-   "seam_ratio_d1": 0.015340364333170976,
-   "seam_ratio_d2": 0.007518796990628751,
+   "seam_ratio_d1": 0.01666663194394776,
+   "seam_ratio_d2": 0.024390243895941306,
    "f_fire_expected": 105.0,
    "f0_estimate": 105.0,
    "top5_cycle_orders": [
@@ -4471,7 +4471,7 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 18.205859965347013,
+   "firing_over_half_orders_db": 18.20586026558496,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -1.8,
@@ -4489,11 +4489,11 @@
   },
   {
    "name": "ebrake_cab_2100",
-   "peak_dbfs": -6.75,
-   "rms_dbfs": -14.88,
+   "peak_dbfs": -7.4,
+   "rms_dbfs": -15.53,
    "seam_jump": 9.1552734375e-05,
-   "seam_ratio_d1": 0.01048951048830867,
-   "seam_ratio_d2": 0.07692307672918343,
+   "seam_ratio_d1": 0.011278195487332466,
+   "seam_ratio_d2": 0.08333333310577778,
    "f_fire_expected": 105.0,
    "f0_estimate": 105.0,
    "top5_cycle_orders": [
@@ -4508,12 +4508,12 @@
    "low_peak_order_cycle": 6.0,
    "low_peak_firing_harmonic": 1.0,
    "low_peak_on_engine_order": true,
-   "firing_over_half_orders_db": 22.727430782388,
+   "firing_over_half_orders_db": 22.727424635300125,
    "bands_db": {
     "20-200": 0.0,
     "200-1000": -5.2,
     "1000-4000": -41.1,
-    "4000-16000": -85.8
+    "4000-16000": -85.4
    },
    "checks": {
     "clip": 1.0,
@@ -4528,13 +4528,13 @@
  "sfx": [
   {
    "name": "turbo_whistle_loop",
-   "peak_dbfs": -6.0,
-   "rms_dbfs": -13.23,
-   "seam_jump": 0.13385009765625,
-   "seam_ratio_d1": 0.5770285790942348,
-   "seam_ratio_d2": 0.5519977433953418,
-   "seam_vs_max_d1": 0.4946988495357309,
-   "seam_vs_max_d2": 0.4886222589954466,
+   "peak_dbfs": -3.35,
+   "rms_dbfs": -13.26,
+   "seam_jump": 0.147186279296875,
+   "seam_ratio_d1": 0.5225917168490019,
+   "seam_ratio_d2": 0.6465025517830705,
+   "seam_vs_max_d1": 0.3850391186322356,
+   "seam_vs_max_d2": 0.4715349244563772,
    "ok": true
   },
   {
@@ -4594,8 +4594,8 @@
   },
   {
    "name": "air_brake_release",
-   "peak_dbfs": -1.0,
-   "rms_dbfs": -22.92,
+   "peak_dbfs": -4.07,
+   "rms_dbfs": -23.53,
    "edge_abs_first_last": [
     0.0,
     0.0
@@ -4604,8 +4604,8 @@
   },
   {
    "name": "air_brake_release_cab",
-   "peak_dbfs": -4.07,
-   "rms_dbfs": -25.76,
+   "peak_dbfs": -14.67,
+   "rms_dbfs": -34.45,
    "edge_abs_first_last": [
     0.0,
     0.0
@@ -4614,8 +4614,8 @@
   },
   {
    "name": "parking_brake_set",
-   "peak_dbfs": -1.0,
-   "rms_dbfs": -22.88,
+   "peak_dbfs": -3.75,
+   "rms_dbfs": -24.67,
    "edge_abs_first_last": [
     0.0,
     0.0
@@ -4624,8 +4624,8 @@
   },
   {
    "name": "parking_brake_set_cab",
-   "peak_dbfs": -3.52,
-   "rms_dbfs": -25.41,
+   "peak_dbfs": -14.49,
+   "rms_dbfs": -33.77,
    "edge_abs_first_last": [
     0.0,
     0.0
@@ -4675,7 +4675,7 @@
   {
    "name": "turbo_liftoff",
    "peak_dbfs": -1.0,
-   "rms_dbfs": -17.1,
+   "rms_dbfs": -19.36,
    "edge_abs_first_last": [
     0.0,
     0.0
@@ -4708,11 +4708,11 @@
    "name": "tyre_concrete_loop",
    "peak_dbfs": -5.65,
    "rms_dbfs": -18.14,
-   "seam_jump": 0.005126953125,
-   "seam_ratio_d1": 0.07973414358286639,
-   "seam_ratio_d2": 0.09476285595039442,
-   "seam_vs_max_d1": 0.056603773584280724,
-   "seam_vs_max_d2": 0.0681410639556289,
+   "seam_jump": 0.005096435546875,
+   "seam_ratio_d1": 0.07925961081983997,
+   "seam_ratio_d2": 0.09393183707142315,
+   "seam_vs_max_d1": 0.05626684636056477,
+   "seam_vs_max_d2": 0.06750298685650422,
    "ok": true
   },
   {
@@ -4721,9 +4721,9 @@
    "rms_dbfs": -17.51,
    "seam_jump": 0.00506591796875,
    "seam_ratio_d1": 0.3624454148212301,
-   "seam_ratio_d2": 0.49999999976594284,
+   "seam_ratio_d2": 0.5072463765707036,
    "seam_vs_max_d1": 0.2573643410721964,
-   "seam_vs_max_d2": 0.34653465335291833,
+   "seam_vs_max_d2": 0.349999999885312,
    "ok": true
   },
   {
@@ -4794,24 +4794,46 @@
   },
   {
    "name": "tyre_squeal_loop",
-   "peak_dbfs": -6.0,
-   "rms_dbfs": -11.18,
-   "seam_jump": 0.063568115234375,
-   "seam_ratio_d1": 0.30677412646545155,
-   "seam_ratio_d2": 0.42394904946233586,
-   "seam_vs_max_d1": 0.24411109808883172,
-   "seam_vs_max_d2": 0.2892156862719289,
+   "peak_dbfs": -4.52,
+   "rms_dbfs": -15.92,
+   "seam_jump": 0.055877685546875,
+   "seam_ratio_d1": 0.570581313596378,
+   "seam_ratio_d2": 0.46207556241953607,
+   "seam_vs_max_d1": 0.29031235135412825,
+   "seam_vs_max_d2": 0.2589764754419137,
    "ok": true
   },
   {
    "name": "tyre_squeal_cab_loop",
-   "peak_dbfs": -11.08,
-   "rms_dbfs": -18.33,
-   "seam_jump": 0.01885986328125,
-   "seam_ratio_d1": 0.6280487804668904,
-   "seam_ratio_d2": 0.6907216493678682,
-   "seam_vs_max_d1": 0.6029268292490179,
-   "seam_vs_max_d2": 0.6536585364808825,
+   "peak_dbfs": -7.73,
+   "rms_dbfs": -19.36,
+   "seam_jump": 0.00079345703125,
+   "seam_ratio_d1": 0.03159173754430717,
+   "seam_ratio_d2": 0.34117647045670974,
+   "seam_vs_max_d1": 0.023550724636982146,
+   "seam_vs_max_d2": 0.2478632477938292,
+   "ok": true
+  },
+  {
+   "name": "tyre_scrub_loop",
+   "peak_dbfs": -5.41,
+   "rms_dbfs": -17.36,
+   "seam_jump": 0.006439208984375,
+   "seam_ratio_d1": 0.10629712211701195,
+   "seam_ratio_d2": 0.489464178196244,
+   "seam_vs_max_d1": 0.04753322820419969,
+   "seam_vs_max_d2": 0.3004434589764061,
+   "ok": true
+  },
+  {
+   "name": "tyre_scrub_cab_loop",
+   "peak_dbfs": -8.37,
+   "rms_dbfs": -21.03,
+   "seam_jump": 0.002410888671875,
+   "seam_ratio_d1": 0.18329466355915033,
+   "seam_ratio_d2": 0.18918918902163914,
+   "seam_vs_max_d1": 0.14442413161840498,
+   "seam_vs_max_d2": 0.09090909087040377,
    "ok": true
   },
   {
@@ -4839,22 +4861,22 @@
   {
    "name": "compressor_loop",
    "peak_dbfs": -6.0,
-   "rms_dbfs": -19.95,
+   "rms_dbfs": -19.99,
    "seam_jump": 0.000640869140625,
    "seam_ratio_d1": 0.016431899167185526,
-   "seam_ratio_d2": 0.00158227097015067,
+   "seam_ratio_d2": 0.001623368717273758,
    "seam_vs_max_d1": 0.012711864406527516,
    "seam_vs_max_d2": 0.0008006405123889229,
    "ok": true
   },
   {
    "name": "compressor_cab_loop",
-   "peak_dbfs": -5.5,
+   "peak_dbfs": -5.52,
    "rms_dbfs": -18.4,
    "seam_jump": 0.0006103515625,
-   "seam_ratio_d1": 0.044543429840847214,
+   "seam_ratio_d1": 0.04494361822761907,
    "seam_ratio_d2": 0.0,
-   "seam_vs_max_d1": 0.03623188405582021,
+   "seam_vs_max_d1": 0.03610108303035567,
    "seam_vs_max_d2": 0.0,
    "ok": true
   },
@@ -5016,6 +5038,210 @@
    "name": "indicator_tock",
    "peak_dbfs": -8.49,
    "rms_dbfs": -26.78,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "retarder_tone_loop",
+   "peak_dbfs": -6.0,
+   "rms_dbfs": -14.46,
+   "seam_jump": 0.04107666015625,
+   "seam_ratio_d1": 0.6956072351303392,
+   "seam_ratio_d2": 0.6931034481975461,
+   "seam_vs_max_d1": 0.6549878345394342,
+   "seam_vs_max_d2": 0.6380952380288599,
+   "ok": true
+  },
+  {
+   "name": "retarder_tone_cab_loop",
+   "peak_dbfs": -8.91,
+   "rms_dbfs": -16.53,
+   "seam_jump": 0.0130615234375,
+   "seam_ratio_d1": 0.40150093807396214,
+   "seam_ratio_d2": 0.923591869403496,
+   "seam_vs_max_d1": 0.38078291813836523,
+   "seam_vs_max_d2": 0.8580645159476318,
+   "ok": true
+  },
+  {
+   "name": "retarder_flow_loop",
+   "peak_dbfs": -6.0,
+   "rms_dbfs": -20.93,
+   "seam_jump": 0.032562255859375,
+   "seam_ratio_d1": 0.3597435200610784,
+   "seam_ratio_d2": 0.27841130294703825,
+   "seam_vs_max_d1": 0.2585413133005883,
+   "seam_vs_max_d2": 0.18903005887629556,
+   "ok": true
+  },
+  {
+   "name": "retarder_flow_cab_loop",
+   "peak_dbfs": -9.6,
+   "rms_dbfs": -22.52,
+   "seam_jump": 0.0037841796875,
+   "seam_ratio_d1": 0.2283609576289449,
+   "seam_ratio_d2": 0.4854368930494486,
+   "seam_vs_max_d1": 0.15656565655917887,
+   "seam_vs_max_d2": 0.34965034957022834,
+   "ok": true
+  },
+  {
+   "name": "ebrake_engage",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -14.97,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "ebrake_engage_cab",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -14.61,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "ebrake_release",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -25.27,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "ebrake_release_cab",
+   "peak_dbfs": -2.15,
+   "rms_dbfs": -26.27,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "amt_disengage",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -22.8,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "amt_disengage_cab",
+   "peak_dbfs": -5.22,
+   "rms_dbfs": -28.6,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "amt_engage",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -21.69,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "amt_engage_cab",
+   "peak_dbfs": -2.09,
+   "rms_dbfs": -21.09,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "amt_engage_b",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -21.56,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "amt_engage_b_cab",
+   "peak_dbfs": -2.6,
+   "rms_dbfs": -20.87,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "amt_clutch_chuff",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -21.24,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "amt_clutch_chuff_cab",
+   "peak_dbfs": -6.54,
+   "rms_dbfs": -24.72,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "air_dryer_purge_v2",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -25.62,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "air_dryer_purge_v2_cab",
+   "peak_dbfs": -6.12,
+   "rms_dbfs": -33.6,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "air_dryer_purge_v2b",
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -25.9,
+   "edge_abs_first_last": [
+    0.0,
+    0.0
+   ],
+   "ok": true
+  },
+  {
+   "name": "air_dryer_purge_v2b_cab",
+   "peak_dbfs": -4.15,
+   "rms_dbfs": -33.67,
    "edge_abs_first_last": [
     0.0,
     0.0

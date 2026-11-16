@@ -1,0 +1,346 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0151",
+   "look_at": [
+    880.304,
+    -592.987,
+    139.483
+   ],
+   "note": "driver eye 2.5 m, control route s = 151 m of 2421 m (unnamed)",
+   "pos": [
+    922.229,
+    -635.937,
+    142.192
+   ],
+   "route_s_m": 151.291,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0454",
+   "look_at": [
+    673.362,
+    -372.239,
+    129.022
+   ],
+   "note": "driver eye 2.5 m, control route s = 454 m of 2421 m (unnamed)",
+   "pos": [
+    715.56,
+    -414.921,
+    130.69
+   ],
+   "route_s_m": 453.874,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0756",
+   "look_at": [
+    467.124,
+    -150.832,
+    131.636
+   ],
+   "note": "driver eye 2.5 m, control route s = 756 m of 2421 m (unnamed)",
+   "pos": [
+    509.206,
+    -193.636,
+    131.915
+   ],
+   "route_s_m": 756.457,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1059",
+   "look_at": [
+    260.965,
+    70.645,
+    130.238
+   ],
+   "note": "driver eye 2.5 m, control route s = 1059 m of 2421 m (unnamed)",
+   "pos": [
+    302.65,
+    27.456,
+    133.701
+   ],
+   "route_s_m": 1059.04,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1362",
+   "look_at": [
+    55.119,
+    292.417,
+    121.741
+   ],
+   "note": "driver eye 2.5 m, control route s = 1362 m of 2421 m (Obozowa)",
+   "pos": [
+    97.203,
+    249.616,
+    123.992
+   ],
+   "route_s_m": 1361.622,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1664",
+   "look_at": [
+    -150.732,
+    514.186,
+    117.737
+   ],
+   "note": "driver eye 2.5 m, control route s = 1664 m of 2421 m (Obozowa)",
+   "pos": [
+    -108.63,
+    471.403,
+    119.514
+   ],
+   "route_s_m": 1664.205,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1967",
+   "look_at": [
+    -356.745,
+    735.805,
+    117.574
+   ],
+   "note": "driver eye 2.5 m, control route s = 1967 m of 2421 m (Obozowa)",
+   "pos": [
+    -314.665,
+    693.001,
+    118.734
+   ],
+   "route_s_m": 1966.788,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2269",
+   "look_at": [
+    -563.032,
+    957.165,
+    117.622
+   ],
+   "note": "driver eye 2.5 m, control route s = 2269 m of 2421 m (unnamed)",
+   "pos": [
+    -520.916,
+    914.397,
+    118.867
+   ],
+   "route_s_m": 2269.371,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_seam_east",
+   "look_at": [
+    920.8,
+    -636.865,
+    142.168
+   ],
+   "note": "place camera: driver eye on DK65 35 m inside the east tile edge (seam with dk65-11, ADR 0203), looking NW; construction corridor on the left",
+   "pos": [
+    989.0,
+    -710.0,
+    145.66
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "construction_from_dk65",
+   "look_at": [
+    862.397,
+    -617.0,
+    140.098
+   ],
+   "note": "place camera: driver eye on DK65 beside the construction zone, looking NW-W at the roundabout under construction (762490 609931)",
+   "pos": [
+    949.0,
+    -667.0,
+    143.59
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "construction_above",
+   "look_at": [
+    884.721,
+    -702.396,
+    138.62
+   ],
+   "note": "place camera: QA only: 80 m above the corridor looking NW and down - site outline against DK65",
+   "pos": [
+    949.0,
+    -779.0,
+    222.53
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "construction_back",
+   "look_at": [
+    837.2,
+    -547.135,
+    129.778
+   ],
+   "note": "place camera: driver eye on DK65 south-eastbound 200 m before the zone (as owner frame 20260728_072233: site on the right - direction of that frame is not known)",
+   "pos": [
+    769.0,
+    -474.0,
+    133.27
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_forest",
+   "look_at": [
+    520.8,
+    -205.865,
+    126.988
+   ],
+   "note": "place camera: DK65 through the pine wood NW of the zone",
+   "pos": [
+    589.0,
+    -279.0,
+    130.48
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_fields",
+   "look_at": [
+    -119.2,
+    480.135,
+    116.978
+   ],
+   "note": "place camera: DK65 across the fields, tile centre",
+   "pos": [
+    -51.0,
+    407.0,
+    120.47
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_side_road",
+   "look_at": [
+    20.8,
+    326.135,
+    120.388
+   ],
+   "note": "place camera: DK65 at the field road junction (unclassified road to the west)",
+   "pos": [
+    89.0,
+    253.0,
+    123.88
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dk65_seam_north",
+   "look_at": [
+    -649.2,
+    1049.135,
+    115.528
+   ],
+   "note": "place camera: DK65 60 m before the north tile edge (seam with knyszyn)",
+   "pos": [
+    -581.0,
+    976.0,
+    119.02
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "seam_e_top40",
+   "look_at": [
+    1024.0,
+    -647.9,
+    -57111.539
+   ],
+   "note": "place camera: QA seam top view (north up, 66.3 m x 37.3 m, ADR 0233): DK65 on the seam with dk65-11 (this tile = west half); pair = artifacts/dk65-r4-s21/seam/ortho/pair_seam_e_top40.jpg",
+   "pos": [
+    1024.0,
+    -747.9,
+    184.182
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "k1_widening_top40",
+   "look_at": [
+    689.7,
+    -289.6,
+    -57127.655
+   ],
+   "note": "place camera: QA seam top view (north up, 66.3 m x 37.3 m, ADR 0233): DK65 widens from the K1 section (lines 6.2 m) to the knyszyn-s section (7.1 m), km 25.32; pair = artifacts/dk65-r4-s21/seam/ortho/pair_k1_widening_top40.jpg",
+   "pos": [
+    689.7,
+    -389.6,
+    168.066
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "seam_e_drive",
+   "look_at": [
+    954.173,
+    -670.784,
+    143.971
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 4 m (ADR 0233): first metres after the dk65-11 seam",
+   "pos": [
+    1022.5,
+    -743.8,
+    146.59
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "k1_widening_drive",
+   "look_at": [
+    656.645,
+    -351.903,
+    128.353
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 440 m (ADR 0233): 50 m before the widening at km 25.32",
+   "pos": [
+    725.1,
+    -424.8,
+    130.972
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 275.651,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "knyszyn-s",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

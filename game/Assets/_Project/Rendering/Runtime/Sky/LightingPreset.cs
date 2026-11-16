@@ -17,6 +17,9 @@ namespace Game.Rendering
         [Tooltip("Compass azimuth, 0 = north, 90 = east (world X = east, Z = north)")]
         [Range(0f, 360f)] public float sunAzimuthDeg = 200f;
 
+        [Tooltip("ADR 0199: local clock hour of the scene (0-24). Drives what follows the clock, not the sun (lit office windows, NightWindows.OfficeShareAtHour).")]
+        [Range(0f, 24f)] public float clockHour = 12f;
+
         [Header("Atmosphere")]
         [Tooltip("Preetham turbidity: 2 very clear, 3 clear continental, 5 hazy")]
         [Range(1.7f, 8f)] public float turbidity = 2.5f;
@@ -196,6 +199,7 @@ namespace Game.Rendering
             p.name = "LP_Dusk";
             p.sunElevationDeg = DuskSunElevationDeg; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
             p.autoExposure = false; p.ev100 = DuskEv100;
+            p.clockHour = DuskClockHour;
             p.lookSaturation = -3f;
             // r5 (review s19 P1-4: no lamp pools on the plaza - the D23 toe lifted the sky-lit paving to 32-35 % and the
             // shoulder compressed the pools, pool/background read ~2:1 instead of the ~6:1 of the photometry): the ADR 0080
@@ -208,6 +212,18 @@ namespace Game.Rendering
 
         /// <summary>ADR 0182: sun elevation of LP_Dusk (end of civil twilight).</summary>
         public const float DuskSunElevationDeg = -6f;
+        /// <summary>
+        /// ADR 0199: clock hour of LP_Dusk = 16:10, the end of civil twilight in mid-November in Białystok
+        /// (research/cloud/p17-dusk-lighting sun.py: 2026-11-15 16:11), offices still at work. The preset's sun azimuth (300°)
+        /// is a summer evening (−6° at az 300° ≈ mid-August 20:30) - season mismatch kept until the owner picks the game
+        /// season (R7: winter az 238-245°). WORKING_VALUE.
+        /// </summary>
+        public const float DuskClockHour = 16f + 10f / 60f;
+        /// <summary>ADR 0108 reviewed −3 EV, ADR 0199 −0.405 EV = log2(0.461 / 0.348) for the twilight table at −8°.</summary>
+        public const float NightExposureCompensation = -3.405f;
+        /// <summary>ADR 0199: clock hour of LP_Night (a late evening; the sun stays at the model's −8° floor). WORKING_VALUE.</summary>
+        public const float NightClockHour = 22f;
+
         /// <summary>ADR 0182: fixed camera EV100 of LP_Dusk (lamp-anchored, see <see cref="CreateDusk"/>). WORKING_VALUE.</summary>
         public const float DuskEv100 = 3.7f;
         /// <summary>ADR 0182 r5: contrast toe of LP_Dusk (strength, half-point scene linear). WORKING_VALUE.</summary>
@@ -221,9 +237,14 @@ namespace Game.Rendering
             var p = CreateDusk();
             p.name = "LP_Night";
             p.sunElevationDeg = SkyModel.MinTwilightElevationDeg;
+            p.clockHour = NightClockHour;
             p.autoExposure = true; // ADR 0182: Night keeps the reviewed twilight-following table (dusk is fixed now)
             p.lookToe = 0f; p.lookToeP = 0.12f; // ADR 0182 r5: the dusk contrast toe is not part of the reviewed Night look
-            p.exposureCompensation = -3f; // reviewed Night appearance; preserve lamp/cab visibility.
+            // reviewed Night appearance; preserve lamp/cab visibility. ADR 0199: the twilight table puts −8° at 0.348 lx
+            // (was 0.461): the auto exposure would follow by +0.405 EV and lift the lamps, pools, cab and windows (High gate:
+            // clipped paving 3 % -> 12 %). −0.405 EV more keeps the reviewed display of everything lamp-lit; the sky-lit
+            // background is that much darker on screen, as the sky is.
+            p.exposureCompensation = NightExposureCompensation;
             p.skyDisplayGain = 0.125f;
             p.skyDisplayDesaturation = 0.85f;
             p.dimColourDesaturation = 0.65f; // ADR 0108 r4: reviewed 0/.35/.65/1 appearance ablation.

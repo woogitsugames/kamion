@@ -1,0 +1,141 @@
+# Authored overrides of region knyszyn (ADR 0204). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 761611, 612607) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 2022 0.25 m (Data/raw/derived/knyszyn/ortho_0p25m.tif), BDOT10k 2008, LoD1 2024. No lettering, no brands.
+overrides:
+  # ADR 0218 (int-dk65-s22): entry copied verbatim from tools/worldgen/roads/examples/knyszyn-roundabout-apron.yaml;
+  # sizes WORKING_VALUE / ESTIMATED (see reason), surface per owner decision D71 (light concrete block paving).
+  - id: knyszyn-roundabout-truck-apron
+    target: {osm_way: [1426801304]}
+    reason: >-
+      Roundabout DK65 x DW671 (D65 p.2: as in OSM). OSM gives the ring axis only (diameter ~17.6 m, r 8.61-8.98 m);
+      the BDOT10k width 4.0 m on two ring edges is from 2008, before the roundabout was built, so the ring width is
+      set: 5.0 m asphalt (ESTIMATED, outer diameter 22.6 m). A 16.47 m tractor + 13.6 m semitrailer (art-source/truck/
+      dims.json) straight on needs the inner tyre path down to r 5.89 m, left 262 deg 4.31 m, U-turn 3.65 m (ADR 0218,
+      kinematic swept path, outer front tyre 0.5 m inside the outer kerb): the 6.3 m inner ring edge is not enough,
+      so a mountable truck apron 3.2 m wide with a 4 cm lip, light grey block paving (owner drone photos 9-11,
+      docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md), is laid inside the ring; the island kerb face moves
+      to r 3.1 m on a circle, 2.74-3.21 m on the generated ring (smoothed OSM axis r 8.44-8.91 m). Tightest sector
+      (outer kerb r 10.94): U-turn tyre path r 3.03 = 0.29 m clear of the kerb face (>= 0.25 m clearance, ADR 0218,
+      test_knyszyn_ring_sectors_clear_the_u_turn). Ring + apron 8.2 m (WR-D-31-3 range 6.0-8.5 m, secondary
+      quote). The owner's photos confirm 4 single-lane arms, the two-zone island and the light apron; ring width,
+      apron width and lip are still not measured (no orthophoto after construction) - to be scaled on photos 9-11.
+    confidence: low
+    verify: measure ring / apron width on the owner's drone photos 9-11 (Data/raw/refs/owner-knyszyn-2026-11-15), then rerun swept_path.py
+    set:
+      width: 5.0
+      truck_apron: {width_m: 3.2, height_m: 0.04, material: kostka_jasna}
+  # ADR 0218 5c (int-dk65-s22, owner D75): the roundabout is built as ONE junction (roads/compact_roundabout.py).
+  - id: knyszyn-roundabout-compact
+    target: {osm_way: [1426801304]}
+    reason: >-
+      The ring (axis r 8.65 m, 8 ring nodes on 54 m, ring edges 1.6-11.6 m) with four arms split into one-way entry /
+      exit carriageways cannot be built node by node: the generic junction patches self-intersect and the apron
+      breaks into 8 wedges (render int-dk65-s22 knyszyn r1). Compact mode: paved outline = outer ring disc + the 8
+      one-way carriageways + arm ends, closed with 8 m kerb returns; truck apron as a full annulus, gravel island
+      inside, 4 narrow kerbed splitter islands (owner drone photo 9). closing_r_m / splitter_w_m WORKING_VALUE
+      (photo 9, ESTIMATED 6-10 m returns, splitters 2-3 m wide at the ring).
+    confidence: medium
+    verify: compare render rondo_dk65_top with owner photo 9 (Data/raw/refs/owner-knyszyn-2026-11-15)
+    set:
+      compact_roundabout: {closing_r_m: 6.0, splitter_w_m: 3.6, lane_w_m: 4.0}
+  - id: knyszyn-roundabout-dk65-feeders-width
+    target: {osm_way: [1464342634, 1464342635, 1464342638, 1464342640]}
+    reason: >-
+      One-way entry / exit carriageways of DK65 (Obozowa) at the roundabout. BDOT10k gives 6.0 m (the two-way road
+      before the roundabout was built); owner drone photo 9 scaled by the outer ring diameter 22.6 m: entry and exit
+      lanes ~4.2 m (ESTIMATED, +-0.5 m), with a long kerbed splitter island between them. Set 4.5 m.
+    confidence: low
+    verify: measure on an orthophoto taken after the roundabout was built
+    set:
+      width: 4.5
+  - id: dk65-carriageway-width
+    target: {osm_way: [232511646, 286990127]}
+    reason: >-
+      DK65 single carriageway. BDOT10k gives 6.0 m (or nothing), the generator drew 2 x 3.0 m. GUGiK orthophoto
+      0.1 m of 2025-05-27, cross profiles averaged over 6-10 m at four stations (EPSG:2180 760751 611837;
+      760683 611909; 761079 611483; 761559 610967; tool artifacts/knyszyn-0204/profile10.py): edge line to edge
+      line 6.8 m (lanes 3.3-3.5 m), asphalt 7.3-7.6 m, then a pale shoulder. Set 2 x 3.4 m + 0.35 m edge strips
+      = 7.5 m (+-0.3 m).
+      ADR 0212: solid edge lines P-7b on both sides (edge_lines: both, GUGiK orthophoto 0.1 m 2025: integrated
+      brightness excess across the carriageway at 4 stations on ways 286990127 / 232511646, peaks 3.2-3.6 m left and
+      right of the OSM axis; median 3.4-3.55 m). The generator paints them 0.12 m wide (pkt 2.2.2: 0.24 m only on dual
+      carriageways and international routes; DK65 is neither) with the axis 0.20 m inside the carriageway edge =
+      3.55 m off the axis. Same set in knyszyn-w and knyszyn-s, so the lines run through both seams.
+    confidence: high
+    verify: none
+    set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
+  - id: rynek-plaza-east
+    kind: paved_area
+    material: yard_paving
+    polygon_epsg2180: [[761009.8, 612431.3], [761034.6, 612426.7], [761066.6, 612408.3], [761071.2, 612399.2],
+                       [761066.6, 612392.3], [761039.2, 612376.3], [761016.2, 612371.7], [761002.5, 612376.3],
+                       [760999.0, 612385.4], [761002.0, 612408.3], [761005.9, 612429.0]]
+    reason: >-
+      East half of Rynek: a paved plaza between Grodzienska (west) and the two streets of the market's east corner.
+      BDOT10k OT_PTPL_A has it as gravel (older state); the 2025 orthophoto and owner frames 20240730_190331 /
+      20250729_1825xx show light granite setts laid in arcs. Outline traced on the 2025 orthophoto, +-3 m, the two
+      lawns (north triangle, south oval) are not cut out (open). yard_paving = the closest existing set (block
+      paving); granite sett in arcs is not in the library (open, later polish).
+    confidence: medium
+    verify: owner photo of the whole plaza from a corner
+  - id: rynek-fountain-plate
+    kind: paved_area
+    material: yard_slabs
+    polygon_epsg2180: [[761031.2, 612400.4], [761040.2, 612400.4], [761040.2, 612393.4], [761031.2, 612393.4]]
+    reason: >-
+      Ground-level fountain of Rynek (owner frames: jets from a flush rectangular plate ~9 x 7 m in the sett
+      paving). Position ESTIMATED from the ring pattern of the paving on the 2025 orthophoto (centre 761035.7
+      612396.9, +-5 m); size WORKING_VALUE read off the owner frame (a child ~1 m tall beside a plate ~8-9 m wide).
+      Only the plate is laid; water jets and night lighting are not modelled (open).
+    confidence: low
+    verify: owner - where on the plaza the fountain is (which corner / distance from Grodzienska)
+  - id: field-roads-unlit
+    target: {osm_way: [305910057, 1111506743, 1111506749]}
+    reason: >-
+      Unclassified roads across the fields east of the town (x > 761700): no street lighting on the 2025
+      orthophoto (no columns, no shadows); the lamp rule would light them. DK65 south of the town (way 286990127)
+      is left to the rule - not verified (open).
+    confidence: medium
+    verify: none
+    set: {lamps: false}
+  - id: rynek-park-trees
+    kind: forest_stand
+    target: {bdot: "20029180-A4BE-5C99-E053-CC2BA8C01CFC"}
+    reason: >-
+      West half of Rynek is a town park (OSM way 300660468 leisure=park, 0.74 ha): mown lawn, paths to a monument
+      and large single broadleaf trees. BDOT10k has it as OT_PTLZ_A "zadrzewienie, lisciaste", which the class
+      default plants as a closed wood (render r2 rynek-above: a dark block of trunks). GUGiK orthophoto 0.1 m
+      2025-05-27: ~60 separate crowns of 8-14 m diameter on 0.9 ha -> one tree per ~12 m; owner frames
+      20240730_190331 / 20250729_1825xx: old trees ~2.5-3x the height of the two-storey houses behind. Heights
+      14-22 m and the linden/maple shares are WORKING_VALUE (species read from crown shape only).
+    confidence: medium
+    verify: owner - species of the Rynek trees (lindens?)
+    height_m: [14.0, 22.0]
+    spacing_m: 12.0
+    mix: {linden: 0.7, maple: 0.3}
+  - id: lamp-policy-led-0216
+    kind: lamp_policy
+    family: led
+    cct_k: 4000
+    sources: ["docs/11_DECYZJE_WLASCICIELA.md D65 p.8", "research/dk65-knyszyn-refs/README.md (e)",
+              "research/night-lamps-s21/README.md section 4"]
+    reason: >-
+      Owner D65 p.8: street lighting on the DK65 / Knyszyn route is white LED. The older side-street poles
+      (spun concrete with an arc arm, thin grey steel) keep their shape and positions and carry a flat LED head
+      instead of the sodium one (ADR 0216). Nominal 4000 K: ZDM Bialystok tenders 2023-2024 (K69, SOURCED for
+      Bialystok streets); type, height and spacing in Knyszyn UNVERIFIED (K1) - the generator's WORKING_VALUE.
+    confidence: medium
+    verify: owner - a night photo of a Knyszyn street lamp (pole type, light colour)
+  - id: dk65-obozowa-south-unlit-0216
+    target: {osm_way: [286990127]}
+    sources: ["artifacts/summer-led-0216/ortho/knyszyn_w286990127_f030.jpg", "artifacts/summer-led-0216/ortho/knyszyn_w286990127_f080.jpg",
+              "research/dk65-knyszyn-refs/README.md (e)"]
+    reason: >-
+      DK65 (Obozowa) south of the town, 528 m across fields (2.7 buildings per 100 m within 60 m): GUGiK orthophoto
+      0.1 m of 2025-05-27, two 120 m crops (EPSG:2180 760878 611699 and 760698 611892) show road signs but no lamp
+      columns or column shadows; the rule put 15 columns here. Same way as knyszyn-s `set: {lamps: false}`.
+      K1: no street lamps on DK65 outside built-up areas; OSM has no street_lamp nodes on the route.
+    confidence: high
+    verify: none
+    set: {lamps: false}

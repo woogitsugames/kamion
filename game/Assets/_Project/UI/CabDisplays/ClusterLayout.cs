@@ -12,7 +12,7 @@ namespace Game.UI.CabDisplays
     ///   coolant, belt, beam) - only lit lamps are drawn, in full ISO 2575 colour (review r4 C-N2); turn-signal arrows at
     ///   the ends;
     /// - left: rev counter 0-2500 1/min with the green band at the engine's torque plateau and the red zone above the
-    ///   governed speed; fuel and AdBlue bars below;
+    ///   governed speed; fuel and exhaust-fluid (AUS 32) bars below;
     /// - centre: digital road speed, brake cruise and endurance-brake stage, AMT gear box (A/M, gear or N/R, shift arrow);
     /// - right: clock, outside temperature, odometer, trip, trip average, range; both air-brake circuits with the
     ///   low-pressure mark.
@@ -193,14 +193,14 @@ namespace Game.UI.CabDisplays
             d.Text(m_B, Width - 40f, 309f, 30f, C(s.FuelLitres < 0.1f * s.FuelCapacityLitres ? P.TellAmber : P.White), DisplayCanvas.Align.Right);
         }
 
-        // ------------------------------------------------------------------ fuel / AdBlue (left bottom)
+        // ------------------------------------------------------------------ fuel / exhaust fluid AUS 32 (left bottom)
 
         void Levels(DisplayCanvas d, in CabDisplayState s)
         {
             float fuel = s.FuelCapacityLitres > 0f ? Mathf.Clamp01(s.FuelLitres / s.FuelCapacityLitres) : 0f;
             Bar(d, 446f, T.Fuel, fuel, fuel < 0.1f ? P.TellAmber : P.White);
-            float ad = Mathf.Clamp01(s.AdBlueFraction);
-            Bar(d, 494f, T.AdBlue, ad, ad < 0.1f ? P.TellAmber : P.AdBlue);
+            float ad = Mathf.Clamp01(s.ScrFluidFraction);
+            Bar(d, 494f, T.ScrFluid, ad, ad < 0.1f ? P.TellAmber : P.ScrFluid);
             // Coolant temperature: gauge range 40..120 C, red above the overheat threshold (CoolantModel, WORKING_VALUE).
             bool hot = s.CoolantC >= (float)CoolantModel.WarnC;
             float cf = Mathf.Clamp01((s.CoolantC - (float)CoolantModel.GaugeMinC) / (float)(CoolantModel.GaugeMaxC - CoolantModel.GaugeMinC));

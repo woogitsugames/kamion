@@ -94,6 +94,7 @@ class Corner:
     tau_k: float = 0.0       # tangent station on arm k (left gutter)
     tau_k1: float = 0.0      # tangent station on arm k+1 (right gutter)
     arc: np.ndarray | None = None   # points from arm k gutter to arm k+1 gutter (excluding gutter pieces)
+    out: np.ndarray | None = None   # per-point outward unit normals of `arc` (explicit outline: compact_roundabout)
 
 
 @dataclass
@@ -111,6 +112,7 @@ class Junction:
     boundary: list = field(default_factory=list)    # [(xy, tag)] CCW
     notes: list = field(default_factory=list)
     internal: list = field(default_factory=list)    # absorbed chains inside the cluster (their surface shapes the patch)
+    compact: object = None                          # compact_roundabout.Spec when the junction is a whole roundabout
 
 
 def _ang(v):
@@ -295,15 +297,28 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
             x = parent[x]
         return x
 
+    # ADR 0218 5c: a compact roundabout (authored key on its ring way) is ONE junction - ring nodes and the split
+    # nodes of its one-way feeders in one cluster, ring + feeders absorbed. No key = nothing changes.
+    from . import compact_roundabout as CR
+    cr_specs = CR.specs(net, set(jn))
+    for sp in cr_specs:
+        ns = [n for n in sp.nodes if n in parent]
+        for n in ns[1:]:
+            parent[find(n)] = find(ns[0])
+
+    def spec_for(nodeset):
+        return next((sp for sp in cr_specs if nodeset.issuperset(n for n in sp.nodes if n in parent)), None)
+
     def make(cluster_nodes):
         nodes = sorted(cluster_nodes)
         arms = []
         nodeset = set(nodes)
+        sp = spec_for(nodeset) if cr_specs else None
         for c in net.chains:
             if c.closed:
                 continue
             ina, inb = c.node_a in nodeset, c.node_b in nodeset
-            if ina and inb and not c.roundabout and c.length < 40.0 and len(nodes) > 1:
+            if ina and inb and (sp is not None or (not c.roundabout and c.length < 40.0 and len(nodes) > 1)):
                 continue        # internal (absorbed) chain
             if ina:
                 arms.append(Arm(c, "a", c.node_a))
@@ -311,7 +326,11 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
                 arms.append(Arm(c, "b", c.node_b))
         ctr = np.mean([net.nodes[n]["xy"] for n in nodes], axis=0)
         arms.sort(key=lambda a: (_ang(a.gutter(min(6.0, a.L * 0.5), 0) - ctr), a.key))
+        if sp is not None:
+            ctr = np.asarray(sp.center, float)
+            arms.sort(key=lambda a: (_ang(a.gutter(min(6.0, a.L * 0.5), 0) - ctr), a.key))
         j = Junction(id="j:" + nodes[0], nodes=nodes, arms=arms, center=ctr)
+        j.compact = sp if (sp is not None and len(arms) >= 3) else None
         return j
 
     def max_trims(j, assume_half=True):
@@ -370,8 +389,11 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
             key2j[a.key] = (j, i)
     for j in juncs:
         mt = max_trims(j)
-        j.corners, j.trims = compute_corners(net, j, mt, _radius_override(net, j))
-        j.roundabout = any(a.is_ring() for a in j.arms)
+        if j.compact is not None:
+            j.corners, j.trims = CR.corners(net, j, j.compact, mt)
+        else:
+            j.corners, j.trims = compute_corners(net, j, mt, _radius_override(net, j))
+        j.roundabout = any(a.is_ring() for a in j.arms) or j.compact is not None
         # traffic_signals=emergency (fire-station exits: dark / flashing amber for road users, ADR 0074) is not a
         # signal-controlled junction: no P-14, no P-2a, no arrows, no S-1 heads of a junction. roadgraph marks any
         # signal within 15 m as `signals_nearby`, so that flag only counts when a non-emergency signal is near.
@@ -398,6 +420,13 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
                     j.signalized = True
             j.emergency_signals = (not j.signalized) and any(
                 math.hypot(p["e"] - j.center[0], p["n"] - j.center[1]) < r for p in emerg)
+        # ADR 0186: authored node override `set: {signalized: false | true}` - a junction the proximity rule above
+        # gets wrong (a U-turn gap 20 m before the stop line of the next junction is not signal-controlled itself)
+        for n in j.nodes:
+            ov = net.nodes[n].get("override", {})
+            if "signalized" in ov:
+                j.signalized = bool(ov["signalized"])
+                j.emergency_signals = False
     for j in juncs:
         for i, a in enumerate(j.arms):
             if a.end == "a":

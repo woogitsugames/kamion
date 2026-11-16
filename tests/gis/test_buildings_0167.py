@@ -166,9 +166,10 @@ def test_overrides_point_at_buildings_of_the_region_inside_the_frames():
     fc, ovr = _region()
     ids = {f["id"] for f in fc["features"]}
     mine = [o for o in ovr if str(o.get("id", "")).startswith(("g3a-ec-", "g3a-kwadrat-blue", "g3a-office-tower"))]
-    assert len(mine) == 7
+    assert len(mine) == 8                      # ADR 0200: + the building_part of the tower's SE annex
     for o in mine:
-        assert o["target"]["building"] in ids and o.get("reason") and o.get("confidence") and o.get("verify")
+        assert o.get("reason") and o.get("confidence") and o.get("verify")
+        assert o.get("kind") == "building_part" or o["target"]["building"] in ids
     cams = {c["id"]: c for c in json.loads((REGION_DIR / "sbs_cameras.json").read_text(encoding="utf-8"))["cameras"]}
     cam = cams["sbs-g3-a-cm92458760"]
     from shapely.geometry import shape

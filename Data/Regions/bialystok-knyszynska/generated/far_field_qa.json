@@ -1,0 +1,165 @@
+{
+  "appearance_policy": {
+    "classification": "declared function; height alone does not imply an energy plant",
+    "industrial_panel_min_height_m": 12.0,
+    "not_measured": [
+      "wall_colour",
+      "cladding_modules",
+      "glazing_band",
+      "roof_fascia"
+    ],
+    "panel_alpha": 0.25,
+    "panel_ribbon_alpha": 0.65,
+    "schema": "far-field-appearance/1",
+    "source_hall_counts": {
+      "energy": 3,
+      "industrial": 303,
+      "other": 776
+    },
+    "source_panel_hall_count": 19,
+    "status": "WORKING_VALUE"
+  },
+  "boundary_exclusions": {
+    "bdot_rectangle": 2,
+    "bdot_source": 985,
+    "osm_rectangle": 2,
+    "osm_source": 18
+  },
+  "building_height_sources": {
+    "WORKING_VALUE-bdot-storeys-typology": 269,
+    "WORKING_VALUE-osm-storeys-typology": 2041,
+    "gugik-lod1-measuredHeight": 2472,
+    "osm-height-tag-UNVERIFIED": 4
+  },
+  "feature_counts": {
+    "buildings": 4786,
+    "buildings_by_typology": {
+      "block": 1079,
+      "hall": 1082,
+      "house": 425,
+      "office": 2200
+    },
+    "chimneys": 11,
+    "forest_polygons": 517,
+    "power_lines": 187,
+    "pylons": 413
+  },
+  "lod1_height_audit": {
+    "buildings": 133679,
+    "conflicting_ids": 0,
+    "duplicate_records": 0,
+    "invalid_or_missing": 0,
+    "members": 620,
+    "usable_ids": 133679
+  },
+  "region": "bialystok-knyszynska",
+  "schema": "truck-sim-pl/far-field-qa/1",
+  "tiers": {
+    "High": {
+      "bytes": 5885580,
+      "file": "Data/raw/derived/bialystok-knyszynska/world/far_field.glb",
+      "sectors": {
+        "far_east": {
+          "by_material": {
+            "far_field_buildings": 23336,
+            "forest_edge_mixed": 3916
+          },
+          "submeshes": 2,
+          "triangles": 27252,
+          "vertices": 51728
+        },
+        "far_north": {
+          "by_material": {
+            "far_field_buildings": 3453,
+            "forest_edge_mixed": 4206
+          },
+          "submeshes": 2,
+          "triangles": 7659,
+          "vertices": 12099
+        },
+        "far_south": {
+          "by_material": {
+            "far_field_buildings": 13968,
+            "forest_edge_mixed": 5636
+          },
+          "submeshes": 2,
+          "triangles": 19604,
+          "vertices": 34942
+        },
+        "far_west": {
+          "by_material": {
+            "far_field_buildings": 6176,
+            "forest_edge_mixed": 5648
+          },
+          "submeshes": 2,
+          "triangles": 11824,
+          "vertices": 19166
+        }
+      },
+      "sha256": "4ee8e5a65f2f3f0cd3797423aa2e8f46fb631f38f2a2568474489d6c20813ac8",
+      "skyline": {
+        "landmark_stack_proxies": [],
+        "min_building_h_m": 24.0,
+        "min_chimney_h_m": 40.0,
+        "node": "far_skyline",
+        "submeshes": 1,
+        "triangles": 1574
+      },
+      "total_triangles": 67913,
+      "total_vertices": 121083
+    },
+    "Low": {
+      "bytes": 1160392,
+      "file": "Data/raw/derived/bialystok-knyszynska/world/far_field.low.glb",
+      "sectors": {
+        "far_east": {
+          "by_material": {
+            "far_field_buildings": 5972,
+            "forest_edge_mixed": 830
+          },
+          "submeshes": 2,
+          "triangles": 6802,
+          "vertices": 13394
+        },
+        "far_north": {
+          "by_material": {
+            "far_field_buildings": 1290,
+            "forest_edge_mixed": 744
+          },
+          "submeshes": 2,
+          "triangles": 2034,
+          "vertices": 3856
+        },
+        "far_south": {
+          "by_material": {
+            "far_field_buildings": 3323,
+            "forest_edge_mixed": 1304
+          },
+          "submeshes": 2,
+          "triangles": 4627,
+          "vertices": 8523
+        },
+        "far_west": {
+          "by_material": {
+            "far_field_buildings": 1254,
+            "forest_edge_mixed": 1182
+          },
+          "submeshes": 2,
+          "triangles": 2436,
+          "vertices": 4122
+        }
+      },
+      "sha256": "4ab864983ee229ea76b44a046dabe1c7c43313cda89dd2e6984e6e1ae594c732",
+      "skyline": {
+        "landmark_stack_proxies": [],
+        "min_building_h_m": 24.0,
+        "min_chimney_h_m": 40.0,
+        "node": "far_skyline",
+        "submeshes": 1,
+        "triangles": 476
+      },
+      "total_triangles": 16375,
+      "total_vertices": 30847
+    }
+  }
+}

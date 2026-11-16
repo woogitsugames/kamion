@@ -1,0 +1,257 @@
+{
+ "seed": 20261114,
+ "metoda": "random.Random(20261114).sample(sorted(ids), ceil(n/5))",
+ "n_wierszy": 126,
+ "n_proba": 26,
+ "wynik_zbiorczy": "26 PASS / 0 FAIL",
+ "uwagi": "2 kadry w próbie obejrzane ponownie; 2 wiersze wysokości (R4-070, R4-071) PASS z zastrzeżeniem (różnica ok. −2 m względem LoD1).",
+ "pozycje": [
+  {
+   "id": "R4-009",
+   "kategoria": "kadr",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, 960 px) i porównanie z opis_co_widać; sha256 potwierdzone przez fetch.py",
+   "wynik": "PASS",
+   "ustalenie": "widać: zielona tablica kierunkowa, słup kratowy WN, walcowy zbiornik w poziome pasy za pomarańczowym ogrodzeniem — zgodne",
+   "korekta": ""
+  },
+  {
+   "id": "R4-031",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 3.91 = CSV 3.91; brak LoD1 w buildings.geojson",
+   "korekta": ""
+  },
+  {
+   "id": "R4-071",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 5.34 = CSV 5.34; LoD1 7.43 m, różnica -2.09 m",
+   "korekta": "różnica > 1,5 m względem LoD1 (zespół szpitalny o kilku wysokościach w jednym obrysie) — wartość zostaje ESTIMATED, opisane w lukach README"
+  },
+  {
+   "id": "R4-076",
+   "kategoria": "wielka_płyta",
+   "co_sprawdzono": "ponowne wyszukanie dosłownego cytatu w zapisanym tekście źródła (pdftotext / extract API)",
+   "wynik": "PASS",
+   "ustalenie": "cytat znaleziony dosłownie",
+   "korekta": ""
+  },
+  {
+   "id": "R4-119",
+   "kategoria": "statystyka_BDOT_LoD",
+   "co_sprawdzono": "niezależne przeliczenie z surowych danych (Counter w osobnym skrypcie)",
+   "wynik": "PASS",
+   "ustalenie": "liczby zgodne",
+   "korekta": ""
+  },
+  {
+   "id": "R4-062",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 7.7 = CSV 7.7; brak LoD1 w buildings.geojson",
+   "korekta": ""
+  },
+  {
+   "id": "R4-065",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 7.86 = CSV 7.86; brak LoD1 w buildings.geojson",
+   "korekta": ""
+  },
+  {
+   "id": "R4-098",
+   "kategoria": "hala_dok",
+   "co_sprawdzono": "ponowne wyszukanie dosłownego cytatu w zapisanym tekście źródła (pdftotext / extract API)",
+   "wynik": "PASS",
+   "ustalenie": "cytat znaleziony dosłownie",
+   "korekta": ""
+  },
+  {
+   "id": "R4-017",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 15.01 = CSV 15.01; brak LoD1 w buildings.geojson",
+   "korekta": ""
+  },
+  {
+   "id": "R4-064",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 7.62 = CSV 7.62; brak LoD1 w buildings.geojson",
+   "korekta": ""
+  },
+  {
+   "id": "R4-004",
+   "kategoria": "kadr",
+   "co_sprawdzono": "PONOWNE obejrzenie obrazu (Read, 960 px) i porównanie z opis_co_widać; sha256 potwierdzone przez fetch.py",
+   "wynik": "PASS",
+   "ustalenie": "widać: łącznica, bariery, ekran po prawej (ciemny dół, przezroczysta góra), wiadukt w głębi, brak budynków — zgodne",
+   "korekta": ""
+  },
+  {
+   "id": "R4-057",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 11.06 = CSV 11.06; brak LoD1 w buildings.geojson",
+   "korekta": ""
+  },
+  {
+   "id": "R4-101",
+   "kategoria": "statystyka_OSM",
+   "co_sprawdzono": "niezależne przeliczenie z surowych danych (Counter w osobnym skrypcie)",
+   "wynik": "PASS",
+   "ustalenie": "liczby zgodne",
+   "korekta": ""
+  },
+  {
+   "id": "R4-109",
+   "kategoria": "statystyka_OSM",
+   "co_sprawdzono": "niezależne przeliczenie z surowych danych (Counter w osobnym skrypcie)",
+   "wynik": "PASS",
+   "ustalenie": "liczby zgodne",
+   "korekta": ""
+  },
+  {
+   "id": "R4-125",
+   "kategoria": "dostępność_danych",
+   "co_sprawdzono": "ponowne wywołanie GetCoverage (curl)",
+   "wynik": "PASS",
+   "ustalenie": "HTTP 200, AAIGrid",
+   "korekta": ""
+  },
+  {
+   "id": "R4-056",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 12.19 = CSV 12.19; LoD1 12.17 m, różnica +0.02 m",
+   "korekta": ""
+  },
+  {
+   "id": "R4-095",
+   "kategoria": "hala_dok",
+   "co_sprawdzono": "ponowne wyszukanie dosłownego cytatu w zapisanym tekście źródła (pdftotext / extract API)",
+   "wynik": "PASS",
+   "ustalenie": "cytat znaleziony dosłownie",
+   "korekta": ""
+  },
+  {
+   "id": "R4-020",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 18.29 = CSV 18.29; brak LoD1 w buildings.geojson",
+   "korekta": ""
+  },
+  {
+   "id": "R4-116",
+   "kategoria": "statystyka_BDOT_LoD",
+   "co_sprawdzono": "niezależne przeliczenie z surowych danych (Counter w osobnym skrypcie)",
+   "wynik": "PASS",
+   "ustalenie": "liczby zgodne",
+   "korekta": ""
+  },
+  {
+   "id": "R4-054",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 10.36 = CSV 10.36; brak LoD1 w buildings.geojson",
+   "korekta": ""
+  },
+  {
+   "id": "R4-079",
+   "kategoria": "wielka_płyta",
+   "co_sprawdzono": "ponowne wyszukanie dosłownego cytatu w zapisanym tekście źródła (pdftotext / extract API)",
+   "wynik": "PASS",
+   "ustalenie": "cytat znaleziony dosłownie",
+   "korekta": ""
+  },
+  {
+   "id": "R4-084",
+   "kategoria": "hala_okładzina",
+   "co_sprawdzono": "ponowne otwarcie strony producenta (HTML)",
+   "wynik": "PASS",
+   "ustalenie": "etykieta „Profile Height”, wartość „34” + jednostka „mm” w wierszu tabeli; cytat złożony z etykiety i wartości",
+   "korekta": ""
+  },
+  {
+   "id": "R4-099",
+   "kategoria": "hala_dok",
+   "co_sprawdzono": "status",
+   "wynik": "PASS",
+   "ustalenie": "wiersz UNVERIFIED bez cytatu — status poprawny",
+   "korekta": ""
+  },
+  {
+   "id": "R4-070",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 11.12 = CSV 11.12; LoD1 13.14 m, różnica -2.02 m",
+   "korekta": "różnica > 1,5 m względem LoD1 (zespół szpitalny o kilku wysokościach w jednym obrysie) — wartość zostaje ESTIMATED, opisane w lukach README"
+  },
+  {
+   "id": "R4-049",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 11.31 = CSV 11.31; LoD1 11.86 m, różnica -0.55 m",
+   "korekta": ""
+  },
+  {
+   "id": "R4-051",
+   "kategoria": "wysokość_budynku",
+   "co_sprawdzono": "porównanie wartości z data/nmpt_sample.csv (wynik WCS) oraz z LoD1 2024, jeśli jest; bez ponownego wywołania WCS",
+   "wynik": "PASS",
+   "ustalenie": "manifest 12.97 = CSV 12.97; LoD1 13.08 m, różnica -0.11 m",
+   "korekta": ""
+  }
+ ],
+ "uzupelnienie_2026_11_15": {
+  "seed": 20261115,
+  "metoda": "random.Random(20261115).sample(sorted(id > R4-126), ceil(n/5))",
+  "n_nowych": 24,
+  "n_proba": 5,
+  "wynik": "4 PASS / 1 FIX",
+  "wiersze": [
+   {
+    "id": "R4-127",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): czerwona hala z płaskim dachem, biało-szara część biurowa, DDR, chodnik z kostki — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R4-136",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): szachownica jasnoszara/średnioszara/czerwona, 2 kondygnacje, parterowa przybudówka z bramą — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R4-142",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): budynek parterowy z łukowym zwieńczeniem, beż/brąz/szary ryzalit — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   },
+   {
+    "id": "R4-148",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): przeliczone rzędy okien: 8 nad parterową przybudówką",
+    "wynik": "FIX",
+    "korekta": "„9 kondygnacji” → „8 widocznych rzędów okien nad przybudówką (8–9 kondygnacji)”"
+   },
+   {
+    "id": "R4-149",
+    "sprawdzono": "PONOWNE obejrzenie files/commons/view (Read 960 px): dom 2 kondygnacje, różowo-beżowy tynk, dach czterospadowy czerwonobrązowy, balkony kute — zgodne",
+    "wynik": "PASS",
+    "korekta": ""
+   }
+  ]
+ }
+}

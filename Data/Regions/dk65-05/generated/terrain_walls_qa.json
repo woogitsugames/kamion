@@ -1,0 +1,102 @@
+{
+ "by_source": {
+  "skirt:yard_asphalt": 1,
+  "steep_grass:verge_grass": 7
+ },
+ "count": 8,
+ "max_m": 0.62,
+ "p99_m": 0.614,
+ "skirt_area": [
+  {
+   "e": 216.0,
+   "exposed_m2": 0.152,
+   "mat": "yard_asphalt",
+   "max_h": 0.24,
+   "n": -905.7,
+   "points": 1,
+   "run_m": 1.695,
+   "src": "osm:way/1547473813:0#1:edge",
+   "visible": true
+  }
+ ],
+ "sliver_m2": 0.02,
+ "thin_steep_faces_skipped": 12,
+ "thresh_m": 0.15,
+ "verge_strips": {
+  "max_m": 0.521,
+  "skirt": 0,
+  "steep_grass": 11,
+  "worst": [
+   "steep_grass",
+   "c:w1443817972:13248867439-13248867441:L:vg",
+   665.4,
+   -420.2
+  ]
+ },
+ "worst": [
+  {
+   "e": 454.2,
+   "h": 0.62,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -278.6,
+   "src": "c:w1024956364:2123507327-3314359764:R"
+  },
+  {
+   "e": 454.9,
+   "h": 0.535,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -282.5,
+   "src": "c:w1024956364:2123507327-3314359764:R"
+  },
+  {
+   "e": 455.7,
+   "h": 0.535,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -283.1,
+   "src": "c:w1024956364:2123507327-3314359764:R"
+  },
+  {
+   "e": 454.9,
+   "h": 0.532,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -283.2,
+   "src": "c:w1024956364:2123507327-3314359764:R"
+  },
+  {
+   "e": 454.8,
+   "h": 0.529,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -278.5,
+   "src": "c:w1024956364:2123507327-3314359764:R"
+  },
+  {
+   "e": 454.7,
+   "h": 0.529,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -279.2,
+   "src": "c:w1024956364:2123507327-3314359764:R"
+  },
+  {
+   "e": 454.4,
+   "h": 0.498,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": -282.6,
+   "src": "c:w1024956364:2123507327-3314359764:R"
+  },
+  {
+   "e": 216.0,
+   "h": 0.24,
+   "kind": "skirt",
+   "mat": "yard_asphalt",
+   "n": -905.7,
+   "src": "osm:way/1547473813:0#1:edge"
+  }
+ ]
+}

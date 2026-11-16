@@ -1,0 +1,6 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\logs\visual-qa-World_knyszyn-s-20261116-005610.log -buildTarget Android -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene World_knyszyn-s -qaWidth 1280 -qaHeight 720 -qaTier Low -qaOutput C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\spawn-fix-0262\renders\knyszyn-s -qaLighting clear -qaCameras truck-at-gate,cab-gate
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 22028)
+VISUALQA_RESULT: OK rendered=2 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\spawn-fix-0262\renders\knyszyn-s
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\spawn-fix-0262\renders\knyszyn-s\cab-gate.png  1 291 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\spawn-fix-0262\renders\knyszyn-s\truck-at-gate.png  1 346 KB
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\artifacts\logs\visual-qa-World_knyszyn-s-20261116-005610.log

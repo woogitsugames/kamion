@@ -174,8 +174,18 @@ namespace Game.UI.Driving
         public void OverrideSafeAreaNormalized(Rect n) { m_View.OverrideSafeAreaNormalized(n); UpdateLayout(); }
 
         /// <summary>Tests / captures: lay out for a device screen (pixels, safe area in pixels, DPI; 0 = unknown). The
-        /// canvas camera must render at the same pixel size.</summary>
+        /// canvas camera must render at the same pixel size. A device screen is a touch screen (ADR 0079).</summary>
         public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi); UpdateLayout(); }
+
+        /// <summary>Tests / captures: lay out for a screen of the given form factor (ADR 0265: <paramref name="desktop"/> =
+        /// monitor without touch controls, 16:9 .. 32:9, 1080p .. 4K).</summary>
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi, desktop); UpdateLayout(); }
+
+        /// <summary>Captures: force the form factor (true = monitor, false = touch, null = <see cref="TouchControlsPolicy"/>).</summary>
+        public void OverrideDesktop(bool? desktop) { m_View.OverrideDesktop(desktop); UpdateLayout(); }
+
+        /// <summary>Touch controls (wheel, pedals, gear selector, stalk, turn-signal buttons) on screen in the last layout.</summary>
+        public bool TouchControlsShown => m_L.ShowTouchControls;
 
         public void SetTelemetryVisible(bool on)
         {
@@ -568,11 +578,16 @@ namespace Game.UI.Driving
             bool changed = m_View.Refresh();
             HudLayoutInput s;
             s.Width = m_View.SizeUnits.x; s.Height = m_View.SizeUnits.y;
+            s.HideTouchControls = m_View.Desktop;   // ADR 0265: one source of truth with the canvas scale
             s.Gyro = m_Ctx.IsGyroMode != null && m_Ctx.IsGyroMode();
             s.DevPanelOpen = m_DevOpen;
             s.Telemetry = TelemetryVisible;
-            s.MirrorLeft = m_Ctx.LeftMirrorTexture != null && m_Ctx.LeftMirrorTexture() != null;
-            s.MirrorRight = m_Ctx.RightMirrorTexture != null && m_Ctx.RightMirrorTexture() != null;
+            Texture texL = m_Ctx.LeftMirrorTexture != null ? m_Ctx.LeftMirrorTexture() : null;
+            Texture texR = m_Ctx.RightMirrorTexture != null ? m_Ctx.RightMirrorTexture() : null;
+            s.MirrorLeft = texL != null;
+            s.MirrorRight = texR != null;
+            Texture texA = texL != null ? texL : texR;
+            s.MirrorAspect = texA != null && texA.height > 0 ? texA.width / (float)texA.height : 0f;
             s.ReverseView = m_Ctx.ReverseCameraTexture != null && m_Ctx.ReverseCameraTexture() != null;
             s.DevText = DevDiagnostics;
             if (!changed && m_LayoutValid && s.SameAs(m_In)) return;
@@ -589,7 +604,7 @@ namespace Game.UI.Driving
             SetRect(m_LabRt, m_L.DevPanel);
             if (s.Telemetry) SetRect(m_TelemetryRt, m_L.Telemetry);
             SetRect(m_WheelRt, new Rect(m_L.Steering.x, m_L.Steering.y, HudLayout.WheelSize, HudLayout.WheelSize));
-            if (m_GrabRt != null)
+            if (m_GrabRt != null && m_L.ShowTouchControls)
             {
                 Rect g = HudLayout.WheelGrabRect(m_L, s.Width, s.Height, HudLayout.GrabMarginUnits(m_View.PixelsPerUnit, DeviceDisplay.Dpi));
                 m_GrabRt.offsetMin = new Vector2(g.xMin - m_L.Steering.x, g.yMin - m_L.Steering.y);
@@ -603,6 +618,14 @@ namespace Game.UI.Driving
             SetRect(m_ThrottleRt, m_L.Throttle);
             SetRect(m_GearsRt, m_L.Gears);
             SetRect(m_DevTextRt, m_L.DevText);
+
+            // ADR 0265: touch controls off on a monitor (the wheel / gyro panel follow in RefreshNow).
+            bool touch = m_L.ShowTouchControls;
+            if (m_TurnRt.gameObject.activeSelf != touch) m_TurnRt.gameObject.SetActive(touch);
+            if (m_StalkRt.gameObject.activeSelf != touch) m_StalkRt.gameObject.SetActive(touch);
+            if (m_BrakeRt.gameObject.activeSelf != touch) m_BrakeRt.gameObject.SetActive(touch);   // PedalWidget.OnDisable releases the pedal
+            if (m_ThrottleRt.gameObject.activeSelf != touch) m_ThrottleRt.gameObject.SetActive(touch);
+            if (m_GearsRt.gameObject.activeSelf != touch) m_GearsRt.gameObject.SetActive(touch);
 
             if (m_LogGrab) { m_LogGrab = false; LogTouchZones(s.Width, s.Height); }
 
@@ -704,6 +727,19 @@ namespace Game.UI.Driving
 
         // ------------------------------------------------------------------ update
 
+        /// <summary>
+        /// ADR 0265: a HUD button clicked with the mouse becomes the EventSystem selection, and the pad's A / the Enter key
+        /// (UI Submit) would then press it again while driving (Reset, Menu ...). The HUD is pointer-only: its selection is
+        /// dropped every frame. No allocation (IsChildOf walks the parents).
+        /// </summary>
+        void ReleaseHudSelection()
+        {
+            var es = EventSystem.current;
+            if (es == null) return;
+            var sel = es.currentSelectedGameObject;
+            if (sel != null && sel.transform.IsChildOf(transform)) es.SetSelectedGameObject(null);
+        }
+
         void Update()
         {
             PollDevGesture();
@@ -714,9 +750,12 @@ namespace Game.UI.Driving
         {
             UpdateLayout();
             var v = m_Ctx.Vehicle;
+            ReleaseHudSelection();
             bool gyro = m_Ctx.IsGyroMode != null && m_Ctx.IsGyroMode();
-            if (m_WheelGo.activeSelf == gyro) m_WheelGo.SetActive(!gyro);
-            if (m_GyroGo.activeSelf != gyro) m_GyroGo.SetActive(gyro);
+            bool touch = m_L.ShowTouchControls;
+            bool showWheel = touch && !gyro, showGyro = touch && gyro;
+            if (m_WheelGo.activeSelf != showWheel) m_WheelGo.SetActive(showWheel);
+            if (m_GyroGo.activeSelf != showGyro) m_GyroGo.SetActive(showGyro);
 
             int speed = 0; string gear = "N"; float rpm = 600f; bool park = true; float rpmMax = 2100f;
             GearSelector sel = GearSelector.Neutral; bool manual = false;
@@ -1038,16 +1077,12 @@ namespace Game.UI.Driving
             var b = rt.gameObject.AddComponent<Button>();
             b.targetGraphic = image;
             b.onClick.AddListener(onClick);
+            UiFocus.PointerOnly(b);   // ADR 0265: mouse hover frame; never the pad / keyboard selection while driving
             var label = Label(rt, "Label", name, fontSize, TextAnchor.MiddleCenter, Vector2.zero, size);
             return label;
         }
 
-        static void EnsureEventSystem()
-        {
-            if (FindAnyObjectByType<EventSystem>() != null) return;
-            var go = new GameObject("EventSystem", typeof(EventSystem));
-            go.AddComponent<InputSystemUIInputModule>().AssignDefaultActions();
-        }
+        static void EnsureEventSystem() => UiFocus.EnsureEventSystem();
 
         static Sprite s_WheelSprite;
 

@@ -1,0 +1,45 @@
+{
+  "zadanie": "M62-FIX — mistral-p19-hospital-gate (brama szpitala Żurawia 14, kadr P11-129)",
+  "data": "2026-11-14",
+  "seed": 20261114,
+  "poprzedni_audyt": {
+    "seed": 20261113,
+    "data": "2026-11-13",
+    "uwaga": "Poprzedni audyt (13 wierszy, 11 PASS) przepuścił błędny P19-033 (daszki „na obu słupach”) i skorygował P19-054 w złą stronę; zastąpiony niniejszym audytem. Seed 20261113 da się odtworzyć poleceniem z poprzedniej wersji pliku (git log)."
+  },
+  "populacja": {
+    "plik": "manifest.csv",
+    "liczba_wierszy": 68,
+    "zakres_id": "P19-001…P19-068"
+  },
+  "losowanie": "random.Random(20261114).sample(ids, ceil(0.2*68)) — 14 wierszy (20,6 %)",
+  "polecenie_odtwarzajace": "python3 -I -c \"import random,math; ids=[f'P19-{i:03d}' for i in range(1,69)]; print(sorted(random.Random(20261114).sample(ids, math.ceil(0.2*68))))\"",
+  "proba": ["P19-002", "P19-009", "P19-010", "P19-016", "P19-017", "P19-028", "P19-029", "P19-031", "P19-032", "P19-048", "P19-051", "P19-055", "P19-062", "P19-065"],
+  "metoda": [
+    "wiersze z kadru: NOWE wywołanie modelu wizyjnego na obrazie (świeże wycinki F01 z miniatury 3840 px: A_barrier_road, A_pillars_lamp, A_plate_ip_top; F05 960 px) i porównanie z OBRAZEM, nie z poprzednim opisem",
+    "wiersze OSM: ponowne przeliczenie z pobranego OSM API 0.6 (map?bbox=23.1880,53.1085,23.1935,53.1105; way/73881451/full) w układzie lokalnym od node 2448457849"
+  ],
+  "wyniki": [
+    {"id": "P19-002", "typ": "OSM", "wynik": "ZGODNY", "szczegoly": "874174759→brama 245,5°, brama→874174701 246,2° (geogr.); w siatce EPSG:2180 ~242° (zbieżność ~3,4°)"},
+    {"id": "P19-009", "typ": "OSM", "wynik": "ZGODNY", "szczegoly": "way 73881451: maxspeed=40, hgv=no, maxweight=3.5, surface=paved; odległość prostopadła 16,4 m w kierunku ~68°"},
+    {"id": "P19-010", "typ": "OSM", "wynik": "ZGODNY", "szczegoly": "najbliższy odcinek way 236884780: 43,8 m (manifest 43,9 m; różnica w granicach przybliżenia)"},
+    {"id": "P19-016", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "ramię poziome, opuszczone w poprzek wjazdu"},
+    {"id": "P19-017", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "ramię przy górnej części obudowy napędu; ponowny odczyt ~0,9 m przy tej samej kotwicy (zakres ESTIMATED ~1,0)"},
+    {"id": "P19-028", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "filary z jasnej szarobeżowej cegły jak mur"},
+    {"id": "P19-029", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "lewy filar zadaszony szeroki, powyżej odsadzki na wysokości góry STOP węższy słup do belki"},
+    {"id": "P19-031", "typ": "OSM", "wynik": "ZGODNY", "szczegoly": "node 3000014175 = (+0,9; +3,4), node 8220895799 = (+1,2; −3,1)"},
+    {"id": "P19-032", "typ": "kadr F01", "wynik": "NIEZGODNY → POPRAWIONY", "szczegoly": "opis pomijał małą latarenkę na szczycie słupka ze znakami C-2/B-33; poprawiono P19-032, P19-047, P19-060"},
+    {"id": "P19-048", "typ": "OSM", "wynik": "NIEZGODNY (nie poprawiono)", "szczegoly": "node 14123795058 = (+13,8 E; −3,1 N); manifest: +14,0 E, −2,3 N — różnica 0,8 m na osi N. Wiersz na liście „nie ruszaj” zadania M62-FIX, więc pozostawiony; do decyzji lidera"},
+    {"id": "P19-051", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "żółta kartka na białej tabliczce pod B-33 i żółta tabliczka przy szczycie białego słupka tablicy IP"},
+    {"id": "P19-055", "typ": "kadr F01", "wynik": "ZGODNY (doprecyzowano)", "szczegoly": "za ramieniem kostka szara prostokątna, przed ramieniem asfalt z łatami i dwoma włazami; słowo „bruk” zastąpione „kostka prostokątna”"},
+    {"id": "P19-062", "typ": "kadr F05", "wynik": "ZGODNY", "szczegoly": "budynek z wielospadowymi brązowymi dachami, maszt kratowy, ogrodzenie z żółtymi ceglanymi słupkami, B-2 na bramie"},
+    {"id": "P19-065", "typ": "kadr F01", "wynik": "ZGODNY", "szczegoly": "biała tabliczka z czarnym napisem (widoczne „Obowiązuje…”) zaklejona żółtą kartką"}
+  ],
+  "podsumowanie": {
+    "wierszy": 14,
+    "zgodne": 12,
+    "niezgodne": 2,
+    "z_kadru": {"wierszy": 9, "zgodne": 8, "niezgodne": 1},
+    "z_OSM": {"wierszy": 5, "zgodne": 4, "niezgodne": 1}
+  }
+}

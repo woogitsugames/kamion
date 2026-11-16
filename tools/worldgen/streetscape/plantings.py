@@ -91,9 +91,26 @@ SPECIES = {
                      sprig=0.34, sprig_wh=((0.16, 0.28), (0.12, 0.22))),
     "thuja": dict(tex="thuja", h=(1.6, 2.2), plant=(0.6, 0.8), bulge=0.10, dome=0.24, gap_p=0.09, sigma=0.27,
                   sprig=0.40, sprig_wh=((0.12, 0.2), (0.12, 0.2))),
+    # ADR 0186: unclipped roadside thicket (dogwood / ninebark / willow scrub grown into one mass, CC0 photo P11-063
+    # Mickiewicza / Kuronia): no missing plants (a closed wall, nothing shows through), bushes 1.1-1.7 m apart as
+    # 0.4 m lumps of the side, a rounded shoulder and a crown that rises and falls by ~ +-0.4 m, long loose shoots.
+    # Hornbeam leaf textures (the largest broadleaf of the hedge set). Height from the bed (`height_m`), else 2.2-3.0 m.
+    # WORKING_VALUE (read off the photo, not surveyed).
+    # r2 (first render: read as a clipped hedge with a 0.6 m leaf pattern and a dark skirting): leaf tile x 3 (sprays
+    # of leaves, no pattern at 60 m), shell down to 4 % of the height, crown relief +-0.5 m, shoots 0.5-1.1 m.
+    # r4 (review B-r3 P1-1 / P1-2): denser ring & interior fill + local_top + flatter dome (0.24) remove the sharp
+    # triangular "tent" peaks between perimeter and interior vertices; smaller, steeper side sprigs remove horizontal
+    # shadow shelves on High while keeping the lower 2 m closed.
+    "thicket": dict(tex="hornbeam", h=(2.2, 3.0), plant=(1.3, 1.9), bulge=0.28, dome=0.24, gap_p=0.0, sigma=0.45,
+                    sprig=0.70, sprig_wh=((0.42, 0.75), (0.38, 0.68)), prof="thicket", tile_scale=3.0, foot=0.04,
+                    ring_step=0.45, fill=(1.2, 0.75), top_sprigs=0.40, side_tilt=(0.35, 0.80), side_share=0.18,
+                    local_top=True),
 }
 # cross-sections (inset m, height share, bulge share), foot first
 PROFILES = {
+    # ADR 0186: a grown bush mass - belly at 0.3-0.5 h, shoulder rounded over the upper 0.9 m of the plan
+    "thicket": [(0.0, -0.05, 0.3), (-0.10, 0.28, 0.9), (-0.04, 0.52, 1.0), (0.16, 0.74, 0.9), (0.45, 0.89, 0.6),
+                (0.90, 1.0, 0.3)],
     "box": [(-0.04, -0.03, 0.2), (0.0, 0.45, 0.8), (0.05, 0.86, 1.0), (0.14, 0.97, 0.7), (0.24, 1.0, 0.4)],
     "cushion": [(-0.03, -0.03, 0.2), (-0.04, 0.32, 0.8), (0.0, 0.62, 1.0), (0.09, 0.84, 0.9), (0.22, 0.95, 0.6),
                 (0.40, 1.0, 0.3)],
@@ -194,9 +211,12 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     perimeter (thin / missing plants), a lumpy crown and loose shoot cards on the top edge, sides and top."""
     from .hedge_textures import HEDGE_TILE_M
     S = species(plant)
+    HEDGE_TILE_M = HEDGE_TILE_M * S.get("tile_scale", 1.0)     # ADR 0186: thicket - sprays of leaves, not a leaf pattern
     core_m, shell_m, sprig_m = hedge_mats(plant)
     h = h if h is not None else S["h"][0] + _h(key, "h") * (S["h"][1] - S["h"][0])
-    R = _ccw_ring(poly.buffer(0), 0.3)
+    if S.get("ring_step"):                 # coarse mass: drop the arc vertices of the buffered bed outline
+        poly = poly.simplify(0.25)
+    R = _ccw_ring(poly.buffer(0), S.get("ring_step", 0.3))
     if len(R) < 3:
         return 0
     N = _ring_normals(R)
@@ -243,7 +263,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     nt += strip(core, core_m, np.column_stack([np.tile(per[cs], len(core)),
                                                np.concatenate([np.full(nc, f * h) for _, f, _ in prof])]))
     try:
-        P2, Tt = _fill(core[-1][0], 1.0)
+        P2, Tt = _fill(core[-1][0], S.get("fill", (1.0, 0.6))[0])
         zt = zground(P2[:, 0], P2[:, 1])
         z2 = (zt + _local_top_height(P2, top_xy, top_h) - 0.5 * S["dome"] * h - SHELL_D if local_top
               else zt + h * (1.0 - 0.6 * S["dome"]) - SHELL_D)
@@ -253,7 +273,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     except Exception:
         pass
     # shell: open foot; UV in shell tiles with a per-hedge offset / rotation (no aligned repeats between beds)
-    sprof = [(0.02, SHELL_FOOT, 0.6)] + prof[1:]
+    sprof = [(0.02, S.get("foot", SHELL_FOOT), 0.6)] + prof[1:]
     shell = rings(R, hl, sprof)
     uo, vo = _h(key, "uo"), _h(key, "vo")
     nt += strip(shell, shell_m, np.column_stack([
@@ -261,7 +281,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
         np.concatenate([(z - zg) / HEDGE_TILE_M + vo for _, z in shell])]))
     stop = shell[-1][0]
     try:
-        P2, Tt = _fill(stop, 0.6)
+        P2, Tt = _fill(stop, S.get("fill", (1.0, 0.6))[1])
         zt = zground(P2[:, 0], P2[:, 1])
         z2 = np.empty(len(P2))
         z2[:n] = shell[-1][1]
@@ -278,7 +298,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
         buf.add("furniture", shell_m, np.column_stack([P2, z2]), UVt, Tt, src=src)
         nt += len(Tt)
         if len(P2) > n:            # loose shoots on the crown, ~1.4 per m2 (fill spacing 0.6 m)
-            sel = np.array([j for j in range(len(P2) - n) if _h(key, "tc", j) < 0.45], int)
+            sel = np.array([j for j in range(len(P2) - n) if _h(key, "tc", j) < S.get("top_sprigs", 0.45)], int)
             if len(sel):
                 a2 = np.array([_h(key, "ta", j) * 6.283 for j in sel])
                 nt += _sprig_cards(buf, sprig_m, P2[n:][sel], np.column_stack([np.cos(a2), np.sin(a2)]),
@@ -295,9 +315,11 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     # clipped band: edge shoots lean further out (ADR 0060: upright cards read as a dark seam along the arris)
     etilt = (0.5, 1.1) if S.get("prof") == "clipped" else (0.2, 0.8)
     nt += _sprig_cards(buf, sprig_m, shell[-2][0][idx], N[idx], shell[-2][1][idx], (*key, "edge"), S, src, tilt=etilt)
-    # clipped band: few shoots on the side (a straight cut face, r7 N-4), cushion / box: 35 %
+    # clipped band: few shoots on the side (a straight cut face, r7 N-4), cushion / box: 35 %, thicket: steeper 18 %
+    stilt = S.get("side_tilt", (1.0, 1.35))
+    sshare = S.get("side_share", 0.12 if S.get("prof") == "clipped" else 0.35)
     nt += _sprig_cards(buf, sprig_m, shell[-3][0][idx] + N[idx] * 0.02, N[idx], shell[-3][1][idx] - 0.12 * h,
-                       (*key, "side"), S, src, tilt=(1.0, 1.35), share=0.12 if S.get("prof") == "clipped" else 0.35)
+                       (*key, "side"), S, src, tilt=stilt, share=sshare)
     if stats is not None:
         stats["tris"] = stats.get("tris", 0) + nt
     return 1
@@ -563,8 +585,11 @@ G7 = {
     "hedge_share": 0.40,            # 15 (E, 25-55 %): plots with a hedge >= 1.2 m along the street
     "low_share": 0.25,              # 16 (E): plots with a strip of low shrubs 0.5-1.2 m
     "thuja_of_hedges": 0.70,        # 18 (W): Thuja occidentalis 'Smaragd' / 'Brabant'; the rest broadleaf
-    "thuja_h_m": (2.0, 2.5),        # 19 (E, +-0.5 m)
-    "thuja_corner_h_m": 3.0,        # 19: up to 3.0 m on the corners, rounded
+    # 19 said 2.0-2.5 m (E, +-0.5 m). ADR 0170 (review s17 0163 P2: the wall barely cleared the fences): re-read on the
+    # two photos # 19 cites - G7-P11 thujas stand ~2.3 fence heights (1.5 m picket fence) = ~3.5 m, G7-P12 clipped
+    # wall 2.5 m rising to ~3.0 m at the corner (storey line of the house behind). WORKING_VALUE
+    "thuja_h_m": (2.4, 3.6),
+    "thuja_corner_h_m": 4.0,        # 19: taller on the corners, rounded (was 3.0 m)
     "thuja_w_m": (0.8, 1.2),        # 19
     "hedge_gap_m": (0.3, 0.6),      # 19: 0.3-1.0 m behind the fence line (skin of the hedge, not its axis)
     "broadleaf_h_m": (1.2, 1.5),    # 20 (0.8-1.5 m) cut to the part that counts as a hedge >= 1.2 m (# 15)
@@ -589,13 +614,25 @@ TREE_H_MIN_M = 4.0
 OVATE_SHARE = 0.3                 # share of the round-habit species drawn with the ovate card (W: no two neighbours alike)
 FRUIT_R_MAX_M = 2.3               # orchard trees are the small crowns (W)
 CARD_STRETCH = (0.80, 1.30)       # a crown card is drawn at most this far off its painted width / height
-THUJA_PITCH_M = (1.2, 3.2)        # station pitch of a thuja wall: High, Low
+# plant pitch of a thuja wall: High, Low. Review s17 0170 P2 (the wall was one green box with a flat top; G7-P11 is a
+# row of separate columns with round tips): the wall body keeps sparse stations and every plant's tip is one card of
+# the thuja sprite's top standing out of the crest (2 triangles a plant). Build 4 drew High as stations per plant (two
+# shoulders + a trough per gap, 61 triangles / m): garden fronts High 12 058 -> 27 558 triangles and the stretch_04
+# frame over its 2 M cap (test_world_v31 / test_hero_bridge). High now uses the Low design with denser wall stations
+# (~14 triangles / m). WORKING_VALUE (G7 # 19: plants 0.8-1.2 m wide)
+THUJA_PITCH_M = (1.0, 1.1)
+THUJA_WALL_PITCH_M = (2.0, 3.2)   # station pitch of the wall body: High, Low (Low as before ADR 0170); High 1.5 m left stretch_04 84 tris under 2 M
+THUJA_TIP_LOW_M = (0.50, 0.60)    # the wall's crest stands this far below the nominal height; the tips rise this far above it + 0.25
 # cross-section of a clipped thuja wall per side, foot -> shoulder: (half-thickness factor, height factor, normal out,
 # normal up, occlusion); the crest (centre line, full height) closes it. Photos G7-P11 / P12: battered sides, a
 # rounded top, a dark foot.
-_THUJA_PROFILE = ((0.84, 0.00, 0.95, 0.05, 0.42), (1.00, 0.42, 1.00, 0.10, 0.80), (0.97, 0.80, 0.90, 0.35, 0.95),
+# ADR 0170: one more row at 0.21 h - walls are 2.4-3.6 m now and the 1 m twig row is still drawn about 1 : 1 on High
+_THUJA_PROFILE = ((0.84, 0.00, 0.95, 0.05, 0.42), (0.95, 0.21, 0.98, 0.07, 0.62), (1.00, 0.42, 1.00, 0.10, 0.80),
+                  (0.97, 0.80, 0.90, 0.35, 0.95),
                   (0.60, 0.955, 0.50, 0.80, 1.0))
-_THUJA_PROFILE_LOW = ((0.86, 0.00, 0.95, 0.05, 0.45), (1.00, 0.70, 1.00, 0.20, 0.90), (0.60, 0.955, 0.50, 0.80, 1.0))
+# Low: one more row at 0.36 h (review s17 0170 P2: the twig row was stretched ~2.8x over a 3 m wall; now ~1.2x)
+_THUJA_PROFILE_LOW = ((0.86, 0.00, 0.95, 0.05, 0.45), (0.99, 0.36, 1.00, 0.08, 0.74), (1.00, 0.70, 1.00, 0.20, 0.90),
+                      (0.60, 0.955, 0.50, 0.80, 1.0))
 
 
 def _fold(v, step, lo, hi, d):
@@ -616,42 +653,52 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
         return 0.0
     t = (b - a) / L
     prof = _THUJA_PROFILE_LOW if low else _THUJA_PROFILE
-    nb = max(2, int(round(L / THUJA_PITCH_M[1 if low else 0])))
+    npl = max(1, int(round(L / THUJA_PITCH_M[1 if low else 0])))              # plants
+    pitch = L / npl
+    nw = max(2, int(round(L / THUJA_WALL_PITCH_M[1 if low else 0])))         # stations (s, noise index, kind)
+    st = [(L * k / nw, k, "end" if k in (0, nw) else "wall") for k in range(nw + 1)]
+    nb = len(st) - 1
+
+    def crest(s):                                            # nominal top of the wall at s, without the per-plant noise
+        return h + raise_ends[0] * max(0.0, 1.0 - s / 4.0) ** 0.7 + raise_ends[1] * max(0.0, 1.0 - (L - s) / 4.0) ** 0.7             + 0.07 * math.sin(ph0 + s * 0.8) - THUJA_TIP_LOW_M[0]
     v0, v1 = PLT.PK.row("thuja")
     dv = v1 - v0
     row_m = PLT.PK.ROW_H_M["thuja"]
     ulo, uhi = 0.02, PLT.PK.THUJA_GREEN_U - 0.03             # the live stretch of the row
     ph0, ph1 = PLT.hfloat(key, "tp0") * 6.2832, PLT.hfloat(key, "tp1") * 6.2832
-    pts = [(thick / 2 * kw, h * kh) for kw, kh, *_ in prof] + [(0.0, h)]
+    hb = h - THUJA_TIP_LOW_M[0]                              # the body under the tip cards: its twig row is drawn ~1 : 1
+    pts = [(thick / 2 * kw, hb * kh) for kw, kh, *_ in prof] + [(0.0, hb)]
     vs, vv, dd = [0.04], 0.04, 1
     for i in range(1, len(pts)):
         arc = math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])
-        vv, dd = _fold(vv, min(arc / row_m / (1.9 if low else 1.0), 0.90), 0.04, 0.96, dd)
+        vv, dd = _fold(vv, min(arc / row_m, 0.90), 0.04, 0.96, dd)
         vs.append(vv)
     mp = len(pts)                                            # vertices per side and station
     V, UV, C = [], [], []
     us = [[ulo + (uhi - ulo) * PLT.hfloat(key, "tu", sd), 1] for sd in range(2)]
-    for k in range(nb + 1):
-        s = L * k / nb
-        endf = 0.62 if k in (0, nb) else 1.0
+    s_prev = 0.0
+    for k, (s, ip, kind) in enumerate(st):
+        endf = 0.62 if kind == "end" else 1.0
         c = a + t * s + n * (0.05 * (PLT.hfloat(key, "to", k) * 2 - 1))
         zz = zf(a + t * s) - 0.03
-        up = raise_ends[0] * max(0.0, 1.0 - s / 4.0) ** 0.7 + raise_ends[1] * max(0.0, 1.0 - (L - s) / 4.0) ** 0.7
-        hh = (h + up + 0.07 * math.sin(ph0 + s * 0.8) + (0.06 if low else 0.09) * (PLT.hfloat(key, "th", k) * 2 - 1)) \
-            * (0.94 if k in (0, nb) else 1.0)
+        # height: the wall's slow wander + the plant's own + a little per shoulder (no flat tops)
+        hh = (crest(s) + (0.06 if low else 0.09) * (PLT.hfloat(key, "th", ip) * 2 - 1)) * (0.94 if kind == "end" else 1.0)
         w = thick / 2 * (1.0 + 0.08 * math.sin(ph1 + s * 1.1) + 0.06 * (PLT.hfloat(key, "tw", k) * 2 - 1)) * endf
+        dip, og = 0.0, 1.0
+        du, s_prev = (s - s_prev) / PLT.PK.KIT_M, s
         for sd, sg in enumerate((1.0, -1.0)):
             if k:
-                us[sd][0], us[sd][1] = _fold(us[sd][0], L / nb / PLT.PK.KIT_M, ulo, uhi, us[sd][1])
+                us[sd][0], us[sd][1] = _fold(us[sd][0], du, ulo, uhi, us[sd][1])
             for i in range(mp):
                 if i < len(prof):
                     kw, kh, no, nu, occ = prof[i]
                 else:
                     kw, kh, no, nu, occ = 0.0, 1.0, 0.0, 1.0, 1.0
                 q = c + n * (sg * w * kw)
-                V.append([q[0], q[1], zz + hh * kh])
+                # the dip takes the top of the wall down (shoulder and crest), not its foot
+                V.append([q[0], q[1], zz + hh * kh - dip * min(kh / 0.7, 1.0)])
                 UV.append([us[sd][0], v0 + dv * vs[i]])
-                C.append(PLT._fol([n[0] * sg * no, n[1] * sg * no, nu], occ))
+                C.append(PLT._fol([n[0] * sg * no, n[1] * sg * no, nu], occ * og))
     m = 2 * mp
     T = []
     for k in range(nb):
@@ -665,6 +712,22 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
         for i in range(1, len(ring) - 1):
             T.append((ring[0], ring[i + 1], ring[i]) if not flip else (ring[0], ring[i], ring[i + 1]))
     kit.tris(V, UV, T, C)
+    # the plants' tips: the top of a thuja silhouette card per plant, standing in the wall's axis with its cut
+    # lower edge inside the body - a scalloped line of round, ragged tips instead of a ruled top (2 triangles a plant)
+    for i in range(npl):
+        s = (i + 0.5 + 0.2 * (PLT.hfloat(key, "cs", i) - 0.5)) * pitch
+        wc = pitch * (1.38 + 0.14 * PLT.hfloat(key, "cw", i))       # the card's column is 0.72 of its width: tips touch
+        hc_ = 0.45 + THUJA_TIP_LOW_M[1] + 0.25 * PLT.hfloat(key, "ch", i)
+        c = a + t * s + n * (0.10 * (PLT.hfloat(key, "cn", i) * 2 - 1))
+        z0 = zf(a + t * s) - 0.03 + crest(s) - 0.45                # the cut edge: 0.45 m under the wall's crest
+        u0, u1, sv0, sv1 = PLT.PK.sprite("thuja_a" if PLT.hfloat(key, "cp", i) < 0.5 else "thuja_b")
+        if PLT.hfloat(key, "cf", i) < 0.5:
+            u0, u1 = u1, u0
+        vb = sv1 - (sv1 - sv0) * 0.42                    # the round top of the card (squashed to ~0.75 : 1)
+        A, B = c - t * (wc / 2), c + t * (wc / 2)
+        kit.quad([[*A, z0], [*B, z0], [*B, z0 + hc_], [*A, z0 + hc_]], [[u0, vb], [u1, vb], [u1, sv1], [u0, sv1]],
+                 [PLT._fol([-t[0] * 0.5, -t[1] * 0.5, 0.7], 0.92), PLT._fol([t[0] * 0.5, t[1] * 0.5, 0.7], 0.92),
+                  PLT._fol([t[0] * 0.3, t[1] * 0.3, 0.9]), PLT._fol([-t[0] * 0.3, -t[1] * 0.3, 0.9])])
     return L
 
 
@@ -692,7 +755,8 @@ def plan_house_greenery(rp, report=None):
     if report is not None:
         cnt = {k: sum(1 for v in kinds.values() if v == k) for k in ("thuja", "broadleaf", "low", "none")}
         report["garden_plan"] = {"source": "research/g7-street-greenery/README.md (G7 # 15-18)", "plots": len(plots),
-                                 "plots_with_front": len(order), **cnt}
+                                 "plots_with_front": len(order), **cnt,
+                                 "by_plot": {str(p["id"]): kinds[p["id"]] for p in order}}
     return kinds
 
 
@@ -883,11 +947,14 @@ def tree_dims(r, species, key, in_plot=True):
     return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
 
 
-def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None):
+def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False):
     """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
     crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
     core and leaf sprays lying on its skin, so it is a volume from every side and from above, not a paper cross.
-    lite: two stem strips + `cards` crossed cards (8-10 triangles) - Low / Medium and the trees away from the street."""
+    lite: two stem strips + `cards` crossed cards (8-10 triangles) - Low / Medium and the trees away from the street;
+    core (ADR 0170, lite trees near the street): the crown cards darken towards the axis (PLT.card occ_mid, + 2 triangles
+    per card) and two shoulder sprays stand in front of them (+ 4) - 10 triangles more than the plain lite tree. No
+    separate dark core: build 2 had one and it showed as a box under the cards (review s17 0170 P1)."""
     p = np.asarray(p, float)
     sprite = sprite or HABIT[species]
     hc = H - cb
@@ -909,11 +976,23 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         wj = 0.90 + 0.20 * PLT.hfloat(key, "cw", i)          # the crown is not a ball from any side (same in full / lite)
         hj = 0.97 + 0.10 * PLT.hfloat(key, "ch", i)
         off = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.24 * r
-        PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards)
+        shade = 0.50 + 0.10 * PLT.hfloat(key, "co", i) if lite and core and DENSE[species] > 0.0 else None
+        PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards, occ_mid=shade)
     dense = DENSE[species]
+    occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
+    if lite and core and dense > 0.0:
+        # review s17 0170 P1 (g7_p07_b: the 4-sided dark core of build 2 hung under the cards as a black box with a
+        # straight lower edge; tried next in the offline preview, tools/worldgen/streetscape/preview_kit.py: dark leaf sprays
+        # and smaller dark crown cards inside - every dark plane that crosses a lit card shows the straight line of
+        # the crossing). No dark geometry in the lite crown: its shaded middle is the occlusion gradient of the crown
+        # cards themselves (PLT.card occ_mid). Two lit shoulder sprays as before.
+        for i in range(2):
+            az = a0 + 0.8 + math.pi * i
+            c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.30
+            PLT._skin_card(kit, c, z + cb + hc * 0.30, az, r * 1.05, hc * 0.42, "shrub_a", 0.36 + 0.14 * PLT.hfloat(key, "ut", i), occ,
+                           flip=i % 2 == 1)
     if lite or dense <= 0.0:
         return
-    occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
     # the sprays sit INSIDE the habit's silhouette (the crossed cards own the outline; sprays that reached it gave the
     # crown a flat, boxy skirt): they close the gaps between the cards from oblique views and from above
     PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=4, occ=0.26 * occ, rings=2)
@@ -929,6 +1008,176 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.24
         PLT._skin_card(kit, c, z + cb + hc * 0.48, az, r * 0.95, hc * 0.34, "shrub_a", 0.42 + 0.14 * PLT.hfloat(key, "ut", i), occ,
                        flip=i % 2 == 1)
+
+
+KIT_SPECIES = set(HABIT) | {"fruit", "shrub", "berberis_red"}
+
+
+def _kit_quad(kit, center_xy, z0, z1, w, a, sp, occ_lo=0.74, occ_hi=0.98, flip=False, tilt_z=0.0, vlo_frac=0.0):
+    """2-triangle foliage card without a 4-triangle center fan (`occ_mid`), avoiding diagonal Mach-band 'X' seams."""
+    u0, u1, v0, v1 = PLT.PK.sprite(sp)
+    if flip:
+        u0, u1 = u1, u0
+    v_lo = v0 + (v1 - v0) * vlo_frac
+    c, s = math.cos(a), math.sin(a)
+    r = np.array([c, s, 0.0])
+    fn = np.array([-s, c, 0.0])
+    p0 = np.array([center_xy[0], center_xy[1], z0])
+    p1 = np.array([center_xy[0], center_xy[1], z1]) + fn * tilt_z
+    V = [p0 - r * (w * 0.5), p0 + r * (w * 0.5), p1 + r * (w * 0.5), p1 - r * (w * 0.5)]
+    UV = [[u0, v_lo], [u1, v_lo], [u1, v1], [u0, v1]]
+    C = [PLT._fol([-r[0] * 0.35, -r[1] * 0.35, 0.72], occ_lo),
+         PLT._fol([r[0] * 0.35, r[1] * 0.35, 0.72], occ_lo),
+         PLT._fol([r[0] * 0.35, r[1] * 0.35, 0.96], occ_hi),
+         PLT._fol([-r[0] * 0.35, -r[1] * 0.35, 0.96], occ_hi)]
+    kit.quad(V, UV, C)
+
+
+def _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False):
+    """Multi-lobed open crown / ground-reaching shrub for authored kit plants (ADR 0186 r4, review B-r3 P1-3).
+    Front lobes face WNW (`a_face ~ 1.25 rad`) while side/depth cards sit behind the front plane (`-0.42 r f`) at
+    +-42 deg so no edge-on card cuts through the front face in the depth buffer or creates an 'X' seam on Low."""
+    p = np.asarray(p, float)
+    a_face = 1.25 + 0.12 * (PLT.hfloat(key, "af") - 0.5)
+    s = np.array([math.cos(a_face), math.sin(a_face)])
+    f = np.array([-math.sin(a_face), math.cos(a_face)])
+
+    if sp == "berberis_red":
+        # Ground-reaching dark reddish-burgundy shrub (`shrub_b` bottom tint), no bare stem
+        occ_lo, occ_hi = 0.62, 0.86
+        _kit_quad(kit, p - s * (0.20 * r) + f * (0.12 * r), z - 0.08, z + H * 0.96, 1.75 * r,
+                  a_face - 0.08, "shrub_b", occ_lo, occ_hi, flip=False)
+        _kit_quad(kit, p + s * (0.22 * r) + f * (0.06 * r), z - 0.08, z + H * 1.02, 1.70 * r,
+                  a_face + 0.10, "shrub_b", occ_lo + 0.03, occ_hi, flip=True)
+        _kit_quad(kit, p - f * (0.35 * r), z - 0.06, z + H * 0.94, 1.65 * r,
+                  a_face + 0.68, "shrub_b", occ_lo - 0.04, occ_hi - 0.04, flip=False)
+        if not lite:
+            _kit_quad(kit, p - f * (0.35 * r), z - 0.06, z + H * 0.94, 1.65 * r,
+                      a_face - 0.68, "shrub_b", occ_lo - 0.04, occ_hi - 0.04, flip=True)
+            for i in range(3):
+                az = a_face + (i - 1) * 0.55
+                off = s * ((i - 1) * 0.30 * r) + f * (0.18 * r)
+                _kit_quad(kit, p + off, z - 0.04, z + H * (0.72 + 0.08 * (i % 2)), 1.25 * r,
+                          az, "shrub_b", occ_lo + 0.02, occ_hi, flip=(i % 2 == 1), tilt_z=0.12 * r)
+        return
+
+    bark = PLT.PK.SWATCH["trunk"]
+    if sp in ("shrub", "fruit"):
+        # Low-crowned multi-stemmed green bush / small fruit tree reaching near the ground (no 'lollipop on a stick')
+        cb_s = min(cb, 0.11 * H if sp == "fruit" else 0.06 * H)
+        hc = H - cb_s
+        tr = max(0.04, H * 0.013)
+        zt = z + cb_s + hc * 0.28
+        if lite:
+            for k in range(2):
+                d = np.array([math.cos(a_face + k * 1.5708), math.sin(a_face + k * 1.5708)]) * tr
+                kit.quad([[*(p - d), z - 0.1], [*(p + d), z - 0.1], [*(p + d), zt], [*(p - d), zt]], [bark] * 4)
+        else:
+            kit.box(p, s, tr, tr, z - 0.1, zt, bark, top=False)
+            for sgn in (-1.0, 1.0):
+                b1 = p + s * (sgn * r * 0.32)
+                kit.box(p, s, tr * 0.65, tr * 0.65, z + cb_s * 0.7, z + cb_s + hc * 0.34, bark, top=False, shift=b1 - p)
+        occ_lo, occ_hi = 0.72, 0.96
+        _kit_quad(kit, p - s * (0.22 * r) + f * (0.14 * r), z + cb_s * 0.5, z + cb_s + hc * 0.90, 1.60 * r,
+                  a_face - 0.06, "shrub_a", occ_lo, occ_hi, flip=False)
+        _kit_quad(kit, p + s * (0.20 * r) + f * (0.06 * r), z + cb_s * 0.7, z + cb_s + hc * 1.02, 1.55 * r,
+                  a_face + 0.08, "apple_b", occ_lo + 0.02, occ_hi, flip=True, vlo_frac=0.22)
+        _kit_quad(kit, p - s * (0.18 * r) - f * (0.38 * r), z + cb_s * 0.6, z + cb_s + hc * 0.94, 1.50 * r,
+                  a_face + 0.70, "shrub_a", occ_lo - 0.04, occ_hi - 0.03, flip=True)
+        _kit_quad(kit, p + s * (0.18 * r) - f * (0.38 * r), z + cb_s * 0.6, z + cb_s + hc * 0.94, 1.50 * r,
+                  a_face - 0.70, "apple_b", occ_lo - 0.04, occ_hi - 0.03, flip=False, vlo_frac=0.22)
+        if not lite:
+            for i, sgn in enumerate((-0.34, 0.0, 0.34)):
+                off = s * (sgn * r) + f * (0.20 * r)
+                _kit_quad(kit, p + off, z + cb_s + hc * 0.08, z + cb_s + hc * (0.78 + 0.12 * (i == 1)), 1.18 * r,
+                          a_face + sgn * 0.45, "shrub_a", occ_lo + 0.02, occ_hi, flip=(i % 2 == 1), tilt_z=0.10 * r)
+        return
+
+    # Mature broadleaf tree (ash / maple / linden / chestnut / birch): open, multi-lobed crown with spreading lower
+    # boughs (`apple_b` cropped above its bottom fan) and irregular upper leaders (`shrub_a`) with sky bays between lobes
+    cb = min(cb, 0.21 * H)
+    hc = H - cb
+    lean = (PLT.hfloat(key, "ln") - 0.5) * 0.14 * r
+    top_xy = p + s * lean
+    tr = (0.035 + 0.011 * H) * (0.8 if sp == "birch" else 1.0)
+    zt = z + cb + hc * 0.18
+    if lite:
+        for k in range(2):
+            d = np.array([math.cos(a_face + k * 1.5708), math.sin(a_face + k * 1.5708)]) * tr
+            kit.quad([[*(p - d), z - 0.1], [*(p + d), z - 0.1], [*(top_xy + d), zt], [*(top_xy - d), zt]], [bark] * 4)
+    else:
+        kit.box(p, s, tr, tr, z - 0.1, zt, bark, top=False, shift=top_xy - p)
+        for sgn, dz, reach in ((-1.0, 0.44, 0.42), (1.0, 0.48, 0.40)):
+            b1 = top_xy + s * (sgn * r * reach)
+            kit.box(top_xy, s, tr * 0.55, tr * 0.55, z + cb + hc * 0.12, z + cb + hc * dz, bark, top=False, shift=b1 - top_xy)
+
+    occ_lo, occ_hi = 0.72, 0.96
+    # Lower spreading boughs (wide lateral lobes, front-facing)
+    _kit_quad(kit, top_xy - s * (0.28 * r) + f * (0.16 * r), z + cb - 0.03 * hc, z + cb + hc * 0.72,
+              1.56 * r, a_face - 0.06, "apple_b", occ_lo, occ_hi - 0.02, flip=False, vlo_frac=0.22)
+    _kit_quad(kit, top_xy + s * (0.26 * r) + f * (0.10 * r), z + cb, z + cb + hc * 0.76,
+              1.52 * r, a_face + 0.08, "apple_b", occ_lo + 0.02, occ_hi, flip=True, vlo_frac=0.22)
+    # Upper irregular crown lobes (`shrub_a`: 3-lobed silhouette with natural sky bays)
+    _kit_quad(kit, top_xy - s * (0.22 * r) + f * (0.08 * r), z + cb + hc * 0.20, z + cb + hc * 1.00,
+              1.48 * r, a_face + 0.04, "shrub_a", occ_lo + 0.04, occ_hi, flip=False)
+    # Side/depth lobes placed behind the front lobes (-0.42 r f) at +-42 deg so their edges never poke through front
+    _kit_quad(kit, top_xy - s * (0.24 * r) - f * (0.42 * r), z + cb + hc * 0.04, z + cb + hc * 0.92,
+              1.50 * r, a_face + 0.72, "shrub_a", occ_lo - 0.04, occ_hi - 0.03, flip=True)
+    _kit_quad(kit, top_xy + s * (0.24 * r) - f * (0.42 * r), z + cb + hc * 0.06, z + cb + hc * 0.94,
+              1.50 * r, a_face - 0.72, "apple_b", occ_lo - 0.04, occ_hi - 0.03, flip=False, vlo_frac=0.22)
+    if not lite:
+        _kit_quad(kit, top_xy + s * (0.20 * r) + f * (0.04 * r), z + cb + hc * 0.16, z + cb + hc * 0.98,
+                  1.42 * r, a_face - 0.05, "shrub_a", occ_lo + 0.04, occ_hi, flip=True)
+        for i, (sx, fy, z_lo, z_hi, ww, sp_l) in enumerate((
+            (-0.42, 0.22, 0.06, 0.64, 1.08, "shrub_a"),
+            (0.40, 0.20, 0.10, 0.68, 1.06, "apple_b"),
+            (-0.08, 0.18, 0.28, 0.96, 1.15, "shrub_a"),
+        )):
+            off = s * (sx * r) + f * (fy * r)
+            _kit_quad(kit, top_xy + off, z + cb + hc * z_lo, z + cb + hc * z_hi, ww * r,
+                      a_face + sx * 0.35, sp_l, occ_lo + 0.03, occ_hi, flip=(i % 2 == 1),
+                      tilt_z=0.08 * r, vlo_frac=0.22 if sp_l == "apple_b" else 0.0)
+
+
+def authored_trees(buf, overrides, zf, report, half=1024.0):
+    """ADR 0186: grown broadleaf trees and corner shrubs of an authored `kind: tree_groups` with `form: kit` -
+    `points_en` rows `[E, N, height m, crown diameter m[, species]]` traced from the orthophoto / a photo, meshed as
+    multi-lobed plot-kit plants on every tier (not as instances of the region's tree library, whose crowns of 3-6
+    leaf clumps on a bare stem read as saplings at 10 m; review s19 0179 P1, review B-r3 P1-3). Species from `q[4]`
+    if given, else drawn per stem from `species` weights; crown base 0.21 H (`crown_base_m` overrides). May open a
+    plot-kit group in a chunk that has none (one draw call): the trees are authored, they are never left out."""
+    rep = {"trees": 0, "tris_high": 0, "tris_low": 0, "skipped": {}, "list": []}
+    groups = None
+    for o in overrides or []:
+        if o.get("kind") != "tree_groups" or o.get("form") != "kit":
+            continue
+        spw = o.get("species") or {"maple": 1.0}
+        if any(s not in KIT_SPECIES for s in spw):
+            raise ValueError(f"tree_groups {o['id']}: form kit knows {sorted(KIT_SPECIES)}")
+        for k, q in enumerate(o.get("points_en", [])):
+            if len(q) < 4:
+                raise ValueError(f"tree_groups {o['id']}: form kit needs [E, N, height m, crown diameter m]")
+            p, H, r = np.asarray(q[:2], float), float(q[2]), float(q[3]) / 2.0
+            key = ("authored-tree", o["id"], k)
+            sp = str(q[4]) if len(q) >= 5 and q[4] else PLT._pick_w(sorted(spw.items()), key, "sp")
+            if sp not in KIT_SPECIES:
+                raise ValueError(f"tree_groups {o['id']}: unknown species {sp!r}, knows {sorted(KIT_SPECIES)}")
+            cb = float(o.get("crown_base_m", (0.0 if sp == "berberis_red" else 0.08 if sp in ("shrub", "fruit") else 0.21) * H))
+            z = zf(p)
+            kit = PLT.Kit()
+            kit.tag = "authored_tree"
+            kit.low = False
+            _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=False)
+            kit.low = "only"
+            _authored_kit_plant(kit, p, z, r, H, cb, sp, key, lite=True)
+            if groups is None:
+                groups = _garden_groups(buf, half)
+            _emit(buf, kit, groups, half, f"override:{o['id']}:kit", rep, strict=False)
+            rep["trees"] += 1
+            rep["list"].append({"id": o["id"], "e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "h_m": H,
+                                "crown_m": round(2 * r, 2), "crown_base_m": round(cb, 2), "species": sp})
+    report["authored_trees"] = rep
+    return rep
 
 
 STRIP_REACH_M = 6.0              # a crown up to this far outside a plot belongs to a tree of that garden (plots.STREET_STRIP_M)
@@ -1127,7 +1376,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
                 kit.low = False
                 garden_tree(kit, p, z, r, H, cb, sp, key, sprite=sprite)
                 kit.low = "only"
-            garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2, sprite=sprite)
+            garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2, sprite=sprite, core=bool(t["near"]))
         if not _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
             continue
         rep["trees"] += 1
@@ -1141,7 +1390,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
                        for t in plan if t.get("kind") == "conifer"]
     for t in extra_conifers:                                 # spruces whose crowns hang over the fence (G7 # 8-10)
         p, r, key = np.asarray(t["p"], float), float(t["r"]), t["key"]
-        if kd is not None and kd.query(p)[0] < 2.5:
+        if kd is not None and not t.get("authored") and kd.query(p)[0] < 2.5:
             rep["skipped"]["region_tree_within_2.5m"] = rep["skipped"].get("region_tree_within_2.5m", 0) + 1
             continue
         kit = PLT.Kit()
@@ -1150,7 +1399,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
         if columnar:                                         # Thuja occidentalis 'Smaragd' left to grow: a dark column
             kit.tag = "g7_thuja_column"
             lo, hi = G7["thuja_column_h_m"]
-            h = lo + (hi - lo) * PLT.hfloat(key, "h")
+            h = float(t["h_m"]) if "h_m" in t else (lo + (hi - lo) * PLT.hfloat(key, "h"))
             rr = (0.26 + 0.07 * h) * (0.9 + 0.3 * PLT.hfloat(key, "w"))
             kit.low = False
             PLT.thuja(kit, p, z, h, rr, key)
@@ -1161,7 +1410,7 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
             kit.tag = "g7_spruce"
             h = min(3.2 + 3.4 * r, 14.0) * (0.9 + 0.2 * PLT.hfloat(key, "h"))
             PLT.spruce(kit, p, z, h, key)
-        if _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
+        if _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep, strict=not t.get("authored")):
             rep["conifers"].append({"e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "r_m": round(r, 2), "h_m": round(h, 1),
                                     "kind": "thuja" if columnar else "spruce", "claimed": bool(t.get("claimed")),
                                     "converted": bool(t.get("converted"))})

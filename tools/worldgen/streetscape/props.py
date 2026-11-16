@@ -164,8 +164,10 @@ def lamp_y(h=10.3, reach=1.3, rise=1.0, console=False, sink=0.0):
     return m, l1, col
 
 
-def lamp_old(h, kind):
-    """Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
+def lamp_old(h, kind, led=False):
+    """led=True (ADR 0216, owner D65 p.8 "white LED"): the same pole and arm with the sodium head replaced by a flat LED
+    housing and clear glass (materials of lamp(): luminaire_housing, lamp_glass) - a retrofit, triangle count unchanged.
+    Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
     and industrial access roads (shapes typical, no product copied; dimensions WORKING_VALUE).
       kind "concrete": spun-concrete pole (żerdź wirowana, 0.30 -> 0.14 m) with a steel arm rising in an arc and an
         elongated "cobra" sodium luminaire (orange-tinted bowl);
@@ -194,9 +196,13 @@ def lamp_old(h, kind):
                                     [-.17,-.05,.10], [.17,-.05,.10], [-.16,.78,.06], [.16,.78,.06]])
             faces = [(0,2,3,1), (4,5,7,6), (0,1,5,4), (2,6,7,3), (0,4,6,2), (1,3,7,5)]
             triangles = [t for a,b,c,d in faces for t in ((a,b,c),(a,c,d))]
-            mm.add("luminaire_old", housing, triangles)
-            mm.quad("lamp_glass_sodium", e + [-.10,.09,-.102], e + [-.11,.63,-.102],
-                    e + [.11,.63,-.102], e + [.10,.09,-.102])
+            if led:                                    # flat LED box on the arm end (12 triangles, as the old housing)
+                mm.box("luminaire_housing", e + [0, 0.36, -0.03], 0.16, 0.34, 0.05)
+                mm.quad("lamp_glass", e + [-.13,.08,-.081], e + [.13,.08,-.081], e + [.13,.64,-.081], e + [-.13,.64,-.081])
+            else:
+                mm.add("luminaire_old", housing, triangles)
+                mm.quad("lamp_glass_sodium", e + [-.10,.09,-.102], e + [-.11,.63,-.102],
+                        e + [.11,.63,-.102], e + [.10,.09,-.102])
         else:
             mm.box("concrete_base", [0, 0, -0.01], 0.2, 0.2, 0.09)
             mm.tube("steel_painted_grey", [0, 0, 0.06], [0, 0, h - 0.2], 0.075, 0.05, seg)
@@ -205,8 +211,8 @@ def lamp_old(h, kind):
             top = np.array([0, 0, h - 0.35])
             end = top + np.array([0, 1.4 * math.cos(math.radians(15)), 1.4 * math.sin(math.radians(15))])
             mm.tube("steel_painted_grey", top, end, 0.03, 0.03, max(4, seg // 2))
-            mm.box("luminaire_old", end + [0, 0.28, 0.0], 0.14, 0.3, 0.07)
-            mm.quad("lamp_glass_sodium", end + [-0.11, 0.04, -0.072], end + [0.11, 0.04, -0.072],
+            mm.box("luminaire_housing" if led else "luminaire_old", end + [0, 0.28, 0.0], 0.14, 0.3, 0.07 if not led else 0.05)
+            mm.quad("lamp_glass" if led else "lamp_glass_sodium", end + [-0.11, 0.04, -0.072], end + [0.11, 0.04, -0.072],
                     end + [0.11, 0.52, -0.072], end + [-0.11, 0.52, -0.072])
     col.tube("collision_steel", [0, 0, 0], [0, 0, h],
              0.16 if kind == "concrete" else 0.13, 0.08 if kind == "concrete" else 0.13, 6)
@@ -260,13 +266,26 @@ def plate(code):
     WORKING_VALUE): face (retroreflective foil, our weathered texture), rim, grey mill-finish back with a label
     (signs.plate_back) and two galvanised clamps (obejmy) around the Ø60 mm post."""
     shape, _ = SG.face(code)
-    size = S.SIGN_SIZE[shape]
+    size = S.SIGN_SIZE["triangle" if shape == "triangle_up" else "square" if shape == "rect" else shape]
     m, l1 = Mesh(), Mesh()
     rim = 0.025
     y = S.SIGN_POST_D / 2 + 0.012 + rim             # face; the back clears the post by 12 mm
-    n = {"disc": 32, "octagon": 8, "triangle": 3, "diamond": 4, "square": 4}[shape]
+    n = {"disc": 32, "octagon": 8, "triangle": 3, "diamond": 4, "square": 4, "triangle_up": 3, "rect": 4}[shape]
     r = size / 2
-    if shape == "triangle":         # inverted triangle (A-7), side = size
+    uvc = (0.5, 0.5)                # texture coordinate of the fan centre (plate origin)
+    rect_h = None
+    if shape == "triangle_up":      # ADR 0268: upright warning triangle (A-9 / A-10), origin at the centroid
+        h = size * math.sqrt(3) / 2
+        pts2 = [(-size / 2, -h / 3), (size / 2, -h / 3), (0, 2 * h / 3)]
+        top = SG.TRI_UP_TOP
+        hp = (SG.S - 16) * math.sqrt(3) / 2
+        uvs = [(8 / 512, 1 - (top + hp) / 512), (504 / 512, 1 - (top + hp) / 512), (0.5, 1 - top / 512)]
+        uvc = (0.5, 1 - (top + 2 * hp / 3) / 512)
+    elif shape == "rect":           # ADR 0268: rectangular plate (G-1, G-2, board), size per code (signs.RECT)
+        rw, rect_h = SG.RECT[code]
+        pts2 = [(-rw / 2, -rect_h / 2), (rw / 2, -rect_h / 2), (rw / 2, rect_h / 2), (-rw / 2, rect_h / 2)]
+        uvs = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0)]
+    elif shape == "triangle":       # inverted triangle (A-7), side = size
         h = size * math.sqrt(3) / 2
         pts2 = [(-size / 2, h / 3), (size / 2, h / 3), (0, -2 * h / 3)]
         top = (512 - 496 * math.sqrt(3) / 2) / 2          # signs.a7(): side 496 px centred in 512
@@ -285,12 +304,12 @@ def plate(code):
     if area2 > 0:
         pts2, uvs = pts2[::-1], uvs[::-1]
     k_ = len(pts2)
-    hh = size * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
+    hh = rect_h if rect_h else size * (math.sqrt(3) / 2 if shape in ("triangle", "triangle_up") else 1.0)
     for mm, full in ((m, True), (l1, False)):
         V = [[0, y, 0]] + [[x, y, z] for x, z in pts2]
         # u runs against local +x: seen from the front (+y) in Unity, local +x is on the viewer's left (the C-12 arrows
         # turned clockwise and digits would read mirrored; checked on route-putry-entry-signs, ADR 0023)
-        UV = [(0.5, 0.5)] + [(1.0 - u, v) for u, v in uvs]
+        UV = [(1.0 - uvc[0], uvc[1])] + [(1.0 - u, v) for u, v in uvs]
         T = [(0, 1 + (k + 1) % k_, 1 + k) for k in range(k_)]
         T = [(a, c, b) for a, b, c in T]        # face +y
         mm.add(f"sign_{code}", V, T, UV)
@@ -307,7 +326,11 @@ def plate(code):
                 o = len(Vr)
                 Vr += [[x0, y, z0], [x1, y, z1], [x1, yb, z1], [x0, yb, z0]]
                 UVr += [(0.05, 0.05), (0.20, 0.05), (0.20, 0.20), (0.05, 0.20)]
-                Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2), (o, o + 1, o + 2), (o, o + 2, o + 3)]   # both sides
+                # ADR 0236 (budget): outward side only. The rim closes the volume between face and back, its inner
+                # side can never be seen (it was 64 of the 240 triangles of a disc).
+                nrm = np.cross(np.subtract(Vr[o + 2], Vr[o]), np.subtract(Vr[o + 1], Vr[o]))
+                out_ = nrm[0] * (x0 + x1) + nrm[2] * (z0 + z1) > 0
+                Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2)] if out_ else [(o, o + 1, o + 2), (o, o + 2, o + 3)]
             mm.add("plate_back", Vr, Tr, UVr)
     for zc in (-hh * 0.28, hh * 0.22):              # clamps around the post, behind the plate
         m.box("steel_galv", [0, 0.0, zc], S.SIGN_POST_D / 2 + 0.008, S.SIGN_POST_D / 2 + 0.008, 0.022)
@@ -332,53 +355,165 @@ BOARD_BACK_SRGB = (126, 128, 128)        # = materials "board_back" colour 0.21/
 
 
 def board(code, w, h):
-    m = Mesh()
+    m, l1 = Mesh(), Mesh()
     y = 0.06
     band = BOARD_BAND.get(code) if code.startswith("OB_") else None
     v0 = band or 0.0
     # face normal +y like the plates (the old winding showed every E-2 / gantry board's grey back to the driver)
-    m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
-           uv=((1, v0), (1, 1), (0, 1), (0, v0)))   # u mirrored as on the plates
+    # ADR 0236 (budget): LOD1 = face + back sheet (4 triangles); the two rails behind the sheet (24 of the 28
+    # triangles) are not visible from the LOD1 distance (>= 50 m at lodBias 1).
+    for mm in (m, l1):
+        mm.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
+                uv=((1, v0), (1, 1), (0, 1), (0, v0)))   # u mirrored as on the plates
     if band:
         # overhead board with a back band: back sheet + rails sample the band centre (plain grey, ADR 0127)
         buv = (0.5, band / 2)
-        m.quad(f"sign_{code}", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
-               [-w / 2, y - 0.01, -h / 2], uv=(buv,) * 4)
+        for mm in (m, l1):
+            mm.quad(f"sign_{code}", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+                    [-w / 2, y - 0.01, -h / 2], uv=(buv,) * 4)
         tmp = Mesh()
         for sx in (-1, 1):
             tmp.box("rail", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)
         for V, T, _ in zip(*tmp.prims["rail"]):
             m.add(f"sign_{code}", V, T - T.min(), np.tile(buv, (len(V), 1)))
-        return m, m, None
+        return m, l1, None
     # overhead boards (gantries, "OB_") without a band: plain grey sheet back (ADR 0127), other boards the plate back
-    m.quad("board_back" if code.startswith("OB_") else "plate_back",
-           [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
-           [-w / 2, y - 0.01, -h / 2],
-           uv=((0.05, 0.05), (0.05, 0.20), (0.20, 0.20), (0.20, 0.05)))
+    for mm in (m, l1):
+        mm.quad("board_back" if code.startswith("OB_") else "plate_back",
+                [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+                [-w / 2, y - 0.01, -h / 2],
+                uv=((0.05, 0.05), (0.05, 0.20), (0.20, 0.20), (0.20, 0.05)))
     for sx in (-1, 1):
         m.box("steel_galv", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)   # rails (Z-profile)
-    return m, m, None
+    return m, l1, None
 
 
-def signal_head(lit):
-    """S-1 three-aspect head (Ø300 mm lenses) with a black contrast back plate and white border."""
+# Signal head variants (ADR 0193, research M66 / Dz.U. 2019 poz. 2311 zał. 3 pkt 3.3.5.6 & rys. 10.28).
+# key -> (chambers, lens diameter m, contrast back plate, lit sequence top->bottom)
+# Overhead heads on mast arms (`signal_head`) carry the 0.85 x 1.40 m black contrast plate with a 40 mm white border
+# inset 20 mm from the R70 outer edge, behind the 280 mm deep housing, tilted 7 deg down toward oncoming traffic.
+# Side-mounted pole heads (`signal_head_side`) and pedestrian heads (`signal_ped`, S-5) have NO contrast plate.
+SIGNAL_VARIANTS = {
+    "signal_head": (3, 0.30, True, ("red", "yellow", "green")),
+    "signal_head_side": (3, 0.30, False, ("red", "yellow", "green")),
+    "signal_head2": (2, 0.30, True, ("red", "green")),
+    "signal_head1": (1, 0.30, True, ("red",)),
+    "signal_ped": (2, 0.20, False, ("red", "green")),
+    "signal_bike": (3, 0.20, False, ("red", "yellow", "green")),
+}
+
+SIGNAL_PLATE_W_M = 0.85              # Dz.U. rys. 10.28a: 850 x 1400 mm overhead contrast plate for S-1 (Ø300)
+SIGNAL_PLATE_H_M = 1.40
+SIGNAL_PLATE_R_M = 0.070             # R70 corner radius
+SIGNAL_BORDER_W_M = 0.040            # 40 mm white border strip
+SIGNAL_BORDER_MARGIN_M = 0.020       # 20 mm black outer margin
+SIGNAL_VISOR_L_M = 0.22              # >= 0.20 m (Dz.U. s. 709), WORKING_VALUE 0.22 m (M66)
+SIGNAL_OVERHEAD_TILT_DEG = 7.0       # 5-10 deg downward toward oncoming traffic (Dz.U. s. 755), WORKING_VALUE 7 deg
+
+
+def _rrect_cw(hx, hz, r, seg):
+    """Clockwise 2D rounded-rectangle perimeter in (x, z) with half-extents (hx, hz) and corner radius r."""
+    r = max(0.0, min(float(r), float(hx) - 1e-4, float(hz) - 1e-4))
+    corners = (
+        (-hx + r, hz - r, math.pi, math.pi / 2),
+        (hx - r, hz - r, math.pi / 2, 0.0),
+        (hx - r, -hz + r, 0.0, -math.pi / 2),
+        (-hx + r, -hz + r, -math.pi / 2, -math.pi),
+    )
+    pts = []
+    for cx, cz, a0, a1 in corners:
+        for k in range(seg + 1):
+            a = a0 + (a1 - a0) * k / seg
+            pts.append((cx + r * math.cos(a), cz + r * math.sin(a)))
+    return pts
+
+
+def _tilt_mesh_down(mm, deg):
+    if not deg:
+        return
+    a = math.radians(deg)
+    ca, sa = math.cos(a), math.sin(a)
+    for Vs, _, _ in mm.prims.values():
+        for V in Vs:
+            y, z = V[:, 1].copy(), V[:, 2].copy()
+            V[:, 1] = y * ca + z * sa
+            V[:, 2] = -y * sa + z * ca
+
+
+def _signal_head(lit, n=3, d=0.30, plate=True, order=("red", "yellow", "green"), tilt_deg=None):
+    """Signal head, front (lenses) towards +y, stack symmetric in z.
+
+    Layout (head frame, before tilt): housing y = -0.080..+0.200 (280 mm deep); when `plate=True`, contrast backplate
+    (tarcza kontrastowa, 0.85 x 1.40 m, R70 corners) sits at the rear plane of the chamber (y = -0.085..-0.075, BEHIND
+    the housing) so the 280 mm black housing and 220 mm visors protrude in front of the plate toward the driver, while
+    the rear of both plate and housing is black. White border (`signal_border`, 40 mm wide, inset 20 mm from the outer
+    edge) sits 3 mm proud of the plate front face (`y = -0.072`, normal +y). Overhead (`plate=True`) heads tilt 7 deg
+    downward toward oncoming traffic (+y)."""
+    if tilt_deg is None:
+        tilt_deg = SIGNAL_OVERHEAD_TILT_DEG if plate else 0.0
     m, l1 = Mesh(), Mesh()
-    for mm in (m, l1):
-        mm.box("signal_housing", [0, 0.0, 0], 0.18, 0.13, 0.52)
-        mm.box("signal_backplate", [0, -0.14, 0], 0.33, 0.01, 0.68)
-        mm.box("signal_border", [0, -0.152, 0], 0.36, 0.002, 0.71)
-    for k, col in enumerate(("red", "yellow", "green")):
-        z = 0.34 - k * 0.34
+    pitch = d + 0.06
+    hw = d / 2 + 0.04
+    hh = n * pitch / 2 + 0.02
+    ph = SIGNAL_PLATE_W_M / 2
+    pz = SIGNAL_PLATE_H_M / 2 - (3 - n) * pitch / 2
+    yb0, yb1 = -0.085, -0.075
+    yh0, yh1 = -0.080, 0.200                             # 280 mm deep black chamber housing
+    for mm, cseg in ((m, 3), (l1, 1)):
+        mm.box("signal_housing", [0, (yh0 + yh1) / 2, 0], hw, (yh1 - yh0) / 2, hh)
+        if plate:
+            outer = _rrect_cw(ph, pz, SIGNAL_PLATE_R_M, cseg)
+            K = len(outer)
+            Vf = [[0.0, yb1, 0.0]] + [[x, yb1, z] for x, z in outer]
+            Vb = [[0.0, yb0, 0.0]] + [[x, yb0, z] for x, z in outer]
+            mm.add("signal_backplate", Vf, [(0, 1 + i, 1 + (i + 1) % K) for i in range(K)])
+            mm.add("signal_backplate", Vb, [(0, 1 + (i + 1) % K, 1 + i) for i in range(K)])
+            if mm is m:
+                Vr, Tr = [], []
+                for i in range(K):
+                    (x0, z0), (x1, z1) = outer[i], outer[(i + 1) % K]
+                    o = len(Vr)
+                    Vr += [[x0, yb1, z0], [x1, yb1, z1], [x1, yb0, z1], [x0, yb0, z0]]
+                    Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2)]
+                mm.add("signal_backplate", Vr, Tr)
+            bm, bw = SIGNAL_BORDER_MARGIN_M, SIGNAL_BORDER_W_M
+            b_out = _rrect_cw(ph - bm, pz - bm, SIGNAL_PLATE_R_M - bm, cseg)
+            b_in = _rrect_cw(ph - bm - bw, pz - bm - bw, SIGNAL_PLATE_R_M - bm - bw, cseg)
+            yb = yb1 + 0.003                             # 3 mm proud of the plate front face, normal +y
+            Vb_ring, Tb_ring = [], []
+            for i in range(K):
+                j = (i + 1) % K
+                o = len(Vb_ring)
+                Vb_ring += [[b_out[i][0], yb, b_out[i][1]], [b_out[j][0], yb, b_out[j][1]],
+                            [b_in[j][0], yb, b_in[j][1]], [b_in[i][0], yb, b_in[i][1]]]
+                Tb_ring += [(o, o + 1, o + 2), (o, o + 2, o + 3)]
+            mm.add("signal_border", Vb_ring, Tb_ring)
+    y0 = yh1 + 0.003
+    seq = order[:n] if n == len(order) else tuple(order)
+    for k in range(n):
+        col = seq[k]
+        z = (n - 1) / 2 * pitch - k * pitch
         on = col == lit
         mat = f"signal_{col}_{'on' if on else 'off'}"
-        n = 16
-        pts = [(0.15 * math.cos(2 * math.pi * i / n), 0.15 * math.sin(2 * math.pi * i / n)) for i in range(n)]
-        V = [[0, 0.135, z]] + [[x, 0.135, z + zz] for x, zz in pts]
-        T = [(0, 1 + i, 1 + (i + 1) % n) for i in range(n)]
+        N = 16
+        ang = [-2 * math.pi * i / N for i in range(N)]       # clockwise in (x, z) = normal +y
+        V = [[0, y0, z]] + [[d / 2 * math.cos(t), y0, z + d / 2 * math.sin(t)] for t in ang]
+        T = [(0, 1 + i, 1 + (i + 1) % N) for i in range(N)]
         m.add(mat, V, T)
         l1.add(mat, V, T)
-        m.box("signal_housing", [0, 0.25, z + 0.13], 0.17, 0.12, 0.01)      # visor (simplified)
+        t_, L = 0.008, SIGNAL_VISOR_L_M                      # visor: top slab + cheeks, projecting L = 0.22 m from the face
+        yc = yh1 + L / 2
+        m.box("signal_housing", [0, yc, z + d / 2 + 0.03], d / 2 + 0.03, L / 2, t_ / 2)
+        for sx in (-1, 1):
+            m.box("signal_housing", [sx * (d / 2 + 0.03), yc, z + d * 0.12], t_ / 2, L / 2 * 0.85, d / 2 * 0.85 + 0.01)
+    _tilt_mesh_down(m, tilt_deg)
+    _tilt_mesh_down(l1, tilt_deg)
     return m, l1, None
+
+
+def signal_head(lit, variant="signal_head"):
+    n, d, plate, order = SIGNAL_VARIANTS[variant]
+    return _signal_head(lit, n, d, plate, order)
 
 
 def signal_pole(h=S.SIGNAL_POLE_H, arm=0.0):
@@ -807,6 +942,7 @@ def build_all(sign_codes, boards):
         P[f"lamp_{int(d['h'])}m"] = lamp(d["h"], d["bracket"])
     for kind, hh in LAMP_OLD:
         P[f"lamp_old_{kind}_{hh}m"] = lamp_old(float(hh), kind)
+        P[f"lamp_old_{kind}_led_{hh}m"] = lamp_old(float(hh), kind, led=True)     # ADR 0216: LED retrofit of the family
     P["lamp_arc_9m"] = lamp_arc(9.0)
     P["lamp_arc_9m_double"] = lamp_arc(9.0, double=True)
     # ADR 0133 / 0146: DK8 median row (authored lamp_rows.json). Luminaires LAMP_Y_H_M above the road; in the gap
@@ -818,8 +954,9 @@ def build_all(sign_codes, boards):
         P[f"plate_{c}"] = plate(c)
     for c, (w, h) in sorted(boards.items()):
         P[f"board_{c}"] = board(c, w, h)
-    for lit in ("red", "green", "off"):          # off: emergency signals at rest (ADR 0074)
-        P[f"signal_head_{lit}"] = signal_head(lit)
+    for lit in ("red", "yellow", "green", "off"):    # off: emergency signals at rest (ADR 0074)
+        for var in SIGNAL_VARIANTS:                   # ADR 0193: overhead S-1, side S-1, 2- / 1-chamber, pedestrian, cyclist
+            P[f"{var}_{lit}"] = signal_head(lit, var)
     P["signal_pole"] = signal_pole()
     for name, arm in S.SIGNAL_MAST_ARMS.items():     # ADR 0172: signal_mast (6.0 m, rule) / signal_mast_9m (8.8 m)
         P[name] = signal_pole(S.SIGNAL_MAST_H, arm)
@@ -842,6 +979,12 @@ def build_all(sign_codes, boards):
     from . import life_props as LP
     P.update(LP.build_all())
     P.update(LP.build_registered())
+    from . import chain_bollards as CB          # ADR 0183: red-white posts with chains
+    P.update(CB.prototypes())
     from . import gate3_landmarks as G3          # ADR 0125: sign assemblies registered by gate3_landmarks.build
     P.update(G3.prototypes())
+    from . import masonry_gate as MG            # ADR 0189: brick gate kits registered by masonry_gate.build
+    P.update(MG.prototypes())
+    from . import rail_props as RP              # ADR 0217: level-crossing devices, only in regions with the rail stage
+    P.update(RP.prototypes())
     return P

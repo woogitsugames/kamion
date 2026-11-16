@@ -5,6 +5,7 @@ using Game.Platform;
 using Game.Rendering;
 using Game.Telemetry;
 using Game.UI;
+using Game.World;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,6 +33,18 @@ namespace Game.Gameplay
             return high && Application.CanStreamedLevelBeLoaded(WorldCHighSceneName) ? WorldCHighSceneName : WorldCSceneName;
         }
         [SerializeField] int defaultTargetFps = 30;
+
+        /// <summary>Desktop frame-rate cap when neither a launch argument nor a saved choice exists (ADR 0261). WORKING_VALUE
+        /// until the owner names the reference PC (ADR 0260); "-fps N" overrides it (e.g. -fps 1000 for an uncapped measurement).</summary>
+        public const int DesktopTargetFps = 60;
+
+        public static bool IsDesktopPlayer(RuntimePlatform p) =>
+            p == RuntimePlatform.WindowsPlayer || p == RuntimePlatform.OSXPlayer || p == RuntimePlatform.LinuxPlayer;
+
+        /// <summary>First-launch tier of a desktop player ("High"); null on phones and in the editor (device rules / saved tier).</summary>
+        public static string DesktopDefaultTier(RuntimePlatform p) => IsDesktopPlayer(p) ? "High" : null;
+
+        public static int DesktopDefaultFps(RuntimePlatform p, int mobileDefault) => IsDesktopPlayer(p) ? DesktopTargetFps : mobileDefault;
         [SerializeField] bool showOverlay = true;
 
         public IPlatformServices Platform { get; private set; }
@@ -50,7 +63,19 @@ namespace Game.Gameplay
             Platform = PlatformServices.Create();
 
             string tierArg = Platform.GetLaunchArgument("tier");
-            if (!QualityTiers.Apply(tierArg) && !QualityTiers.Apply(QualityTiers.SavedTier))
+            string desktopTier = DesktopDefaultTier(Application.platform);
+            bool tierFromArg = QualityTiers.Apply(tierArg);
+            if (tierFromArg || QualityTiers.Apply(QualityTiers.SavedTier)) { }
+            else if (desktopTier != null)
+            {
+                // Desktop player (ADR 0261, ADR 0269): the device rules are a phone GPU list; the PC tier comes from the
+                // VRAM / RAM / GPU class (D74), at most High (desktopTier), not saved. QualityTiers.Apply adds the PC values.
+                var hw = PcGraphicsTiers.DetectHardware();
+                var pcTier = PcGraphicsTiers.DefaultFor(hw, out string why);
+                if (!PcGraphicsTiers.Apply(pcTier)) QualityTiers.Apply(desktopTier);
+                Debug.Log($"[BOOT] desktop default tier {QualityTiers.Current}: {why} (gpu='{hw.gpuName}' vram={hw.vramMb}MB ram={hw.systemRamMb}MB)");
+            }
+            else
             {
                 // First launch: tier by device class (data in QualityProfile.deviceRules; not saved, so a rule update
                 // reaches players who never chose a tier themselves).
@@ -76,12 +101,16 @@ namespace Game.Gameplay
             string rq = RenderOverrides.Parse(Platform.GetLaunchArgument);
             if (rq != null) Debug.Log("[BOOT] render overrides (profiling): " + rq);
 
-            int fps = defaultTargetFps;
-            if (int.TryParse(Platform.GetLaunchArgument("fps"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int argFps) && argFps > 0)
+            int fps = DesktopDefaultFps(Application.platform, defaultTargetFps);
+            bool fpsFromArg = int.TryParse(Platform.GetLaunchArgument("fps"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int argFps) && argFps > 0;
+            if (fpsFromArg)
                 fps = argFps;
             else if (QualityTiers.SavedFrameRate > 0)
                 fps = QualityTiers.SavedFrameRate;
             QualityTiers.SetTargetFrameRate(fps);
+            // ADR 0270: PC settings file (display, vsync / cap, tier, volumes, HUD scale). Desktop player only for display,
+            // tier and pacing; -tier / -fps still win for this run (measurements, ADR 0261).
+            Game.UI.Settings.PcSettingsRuntime.ApplyAtStartup(tierFromArg, fpsFromArg);
             AdaptiveFrameDriver.ThermalStatusProvider = Platform.GetThermalStatus;   // ADR 0046 thermal fallback
 
             var build = BuildInfo.Current;
@@ -109,7 +138,9 @@ namespace Game.Gameplay
             if (Application.CanStreamedLevelBeLoaded(WorldCSceneName))
             {
                 // Same values as the launch arguments route_s / route_end (consumed by DrivingLabBootstrap in WorldC).
-                entries.Add(("Trasa G3-A — Kwadrat Park, brama, Bieżeństwa", () =>
+                // Labels name streets and generic places only, never a company or a commercial site (CLAUDE.md rule 8,
+                // BRAND-SWEEP-S20 #3: the depot start used to carry the name of the logistics park).
+                entries.Add(("Trasa G3-A — baza, brama, Bieżeństwa", () =>
                 {
                     StartRequest.Set("G3-A", StartRequest.G3AStartS, StartRequest.G3AEndS, options.LightingId);
                     SceneManager.LoadScene(WorldCSceneForTier());
@@ -120,18 +151,63 @@ namespace Game.Gameplay
                     SceneManager.LoadScene(WorldCSceneForTier());
                 }));
             }
+            // Region starts (ADR 0229): every catalog region; the ones whose scene is not in this APK are greyed out.
+            m_Catalog = RegionCatalog.Load();
+            var regions = BuildRegionChoices(m_Catalog, options);
             ControlSettings.Load().Log("boot");
-            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings);
+            m_Menu = BootMenu.Create(Camera.main, options, entries, OpenControlSettings, OpenAbout, regions,
+                Application.isMobilePlatform ? null : (System.Action)OpenPcSettings);
             m_Menu.transform.SetParent(transform, false);
             Debug.Log("[CONTROLS] menu shown light=" + options.LightingId + " tier=" + options.Tier + " fps=" + options.Fps);
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
             // arguments (autopilot, speed) are read by that scene's bootstrap.
+            DesktopAutoShot.StartFromArguments(Platform.GetLaunchArgument);   // shot=<png> shot_t=<s> quit_t=<s> (ADR 0261 evidence run)
             string scene = Platform.GetLaunchArgument("scene");
-            if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : scene;
+            if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : LaunchSceneFor(scene);
+        }
+
+        RegionCatalog m_Catalog;
+
+        /// <summary>Launch argument scene=&lt;region id or alias&gt; (adb -e scene knyszyn) loads that region's scene for the
+        /// active tier; any other value is a scene name as before.</summary>
+        string LaunchSceneFor(string scene)
+        {
+            string id = m_Catalog?.ResolveId(scene);
+            return id != null ? RegionSceneForTier(id) : scene;
+        }
+
+        /// <summary>The scene of a region matching the active quality tier: High content when shipped (ADR 0012), else Low.</summary>
+        public static string RegionSceneForTier(string region)
+        {
+            string high = RegionScenes.SceneNameFor(region, RegionScenes.HighTier);
+            return RegionScenes.UsesHighContent(QualityTiers.Current) && Application.CanStreamedLevelBeLoaded(high)
+                ? high : RegionScenes.SceneNameFor(region);
+        }
+
+        static System.Collections.Generic.List<BootRegionChoice> BuildRegionChoices(RegionCatalog catalog, StartMenuOptions options)
+        {
+            var list = new System.Collections.Generic.List<BootRegionChoice>();
+            if (catalog == null) return list;
+            var ci = CultureInfo.InvariantCulture;
+            foreach (var r in catalog.regions)
+            {
+                string id = r.id, label = r.label;
+                bool inBuild = Application.CanStreamedLevelBeLoaded(RegionScenes.SceneNameFor(id));
+                float s = RegionStart.ClampStartS(r.startS, r.routeLengthM);
+                string km = (r.routeLengthM / 1000f).ToString("0.0", ci).Replace('.', ',');
+                string detail = inBuild ? $"{r.group} · trasa {km} km · start na początku trasy" : $"{r.group} · brak w tym APK";
+                list.Add(new BootRegionChoice(id, label, detail, inBuild, () =>
+                {
+                    StartRequest.SetRegion("region " + id, id, s, options.LightingId);
+                    SceneManager.LoadScene(RegionSceneForTier(id));
+                }));
+            }
+            return list;
         }
 
         ControlSettingsPanel m_Settings;
+        AboutPanel m_About;
         BootMenu m_Menu;
 
         public BootMenu Menu => m_Menu;
@@ -141,6 +217,24 @@ namespace Game.Gameplay
             if (m_Settings != null) return;
             m_Settings = ControlSettingsPanel.Create(null, ControlSettings.Load(), null, null);
             m_Settings.transform.SetParent(transform, false);
+        }
+
+        Game.UI.Settings.PcSettingsPanel m_PcSettings;
+
+        /// <summary>"Ekran, grafika, dźwięk" (ADR 0270): PC settings screen.</summary>
+        void OpenPcSettings()
+        {
+            if (m_PcSettings != null) return;
+            m_PcSettings = Game.UI.Settings.PcSettingsPanel.Create(null, () => m_Menu?.RefreshNow());
+            m_PcSettings.transform.SetParent(transform, false);
+        }
+
+        /// <summary>"Informacje": attributions and licence texts (Resources/About/attributions.txt; LICENSES-AUDIT-S20 R-P0-1).</summary>
+        void OpenAbout()
+        {
+            if (m_About != null) return;
+            m_About = AboutPanel.Create(null, null);
+            m_About.transform.SetParent(transform, false);
         }
     }
 }

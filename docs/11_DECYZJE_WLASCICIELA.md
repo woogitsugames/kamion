@@ -83,3 +83,49 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 
 ## D62 — 0162: +10 draws na dojeździe do ronda Putry od Al. Tysiąclecia przyjęte (2026-11-13, s17)
 Kamera `g3b-rondo-putry-approach` 421 → 431 wywołań (Low, ok. +2 %) przez 3 rzeczywiste konstrukcje oznakowania z 2024 (5 tablic; portal P005–P008, E-1 P009, VMS P010). Pozostałe kamery −10…+3. Przyjęte bez wtapiania tablic w siatkę bramownicy; weryfikacja pomiarem A16 po wspólnej regeneracji świata.
+
+## D63 — Najpierw z grubsza, potem detale (2026-11-14, s20)
+Właściciel: „nie możesz z grubsza zrobić a potem detale? W takim tempie to nic nie zrobimy”. Nowe regiony (od obwodnicy S8/DK8/DK19) powstają najpierw w wersji przejezdnej z danych (drogi, teren, zabudowa LoD1, podstawowe oznakowanie z OSM, roślinność z generatora, kamery kontrolne, trasa jazdy), bez dopracowywania punktów do bramki; szlif detali w osobnych, późniejszych rundach. Limit lokalnych agentów pozostaje 4 (decyzja z tego samego dnia). Zasady jakości (docs/06, CLAUDE.md) obowiązują przy szlifie; wersja „z grubsza” musi być przejezdna, bez błędów krytycznych (dziury, latające obiekty, crash) i zmierzona na A16.
+
+## D64 — Kierunek rozbudowy: Białystok → droga do Knyszyna → Knyszyn (2026-11-14, s20)
+Właściciel: „chcę rozbudować Białystok, a potem drogę do Knyszyna i sam Knyszyn, bo to moje miasto”. Kolejność regionów (wg D63: najpierw z grubsza, potem detale): (1) rozbudowa Białegostoku kaflami w stronę wylotu na Knyszyn (łączenie z obecnymi regionami C i Dojlidy), (2) korytarz drogowy Białystok → Knyszyn (trasę wybrać z OSM — najkrótsza sensowna dla ciężarówki; uzasadnić w ADR), (3) Knyszyn (miasto) — z grubsza, potem szczególnie staranny szlif (miasto właściciela: zdjęcia od właściciela mile widziane). Obwodnica S8/DK8 spada na później, chyba że leży na trasie.
+D64 uzupełnienie (2026-11-14): na razie trasa **zwykłą drogą (krajówka/wojewódzka), nie ekspresówką**. W rejonie Knyszyna trwa budowa drogi ekspresowej — uważać: dane (OSM `highway=construction`/`proposed`, objazdy, ortofoto starsze niż budowa, NMT sprzed robót) mogą się wykluczać. Odtwarzamy stan BIEŻĄCY przejezdny dla ciężarówki (drogi otwarte, objazdy z OSM), plac budowy jako uproszczona strefa (ogrodzenie, ziemia, sprzęt bez marek) oznaczona WORKING_VALUE; rozbieżności źródeł opisać w ADR i zapytać właściciela (może zrobić zdjęcia).
+D63/D64 uzupełnienie (2026-11-14 23:1x): w wersji „z grubsza” PRIORYTETEM jest **wierność sieci drogowej**: te same drogi co w rzeczywistości (OSM + ortofoto), te same układy pasów, skrzyżowania, ronda, wloty, zjazdy, przejazdy, pierwszeństwo/oznakowanie wynikające z układu; budynki, roślinność i podobieństwo detali — później.
+
+## D65 — Odpowiedzi właściciela do tras DK65/Knyszyn (2026-11-15)
+1. Trasa Białystok → Knyszyn: **wariant A** (stara droga przez Fasty i Dobrzyniewo Duże). 2. Knyszyn DK65 × DW671: **rondo** (jak OSM). 3. Wiadukt S19 w Fastach: **stoi, otwarty**. 4. Budowa przy DK65 km 16,7–25: **jazda starą DK65, bez objazdu** (place budowy obok). 5. Ełcka/Studzienna: **wąska ~7 m** (zwęzić z 7,6 do ~6,9 m). 6. Nowa jezdnia DK65 w dk65-05: **nieotwarta** — plac budowy, trasa po starej. 7. Domyślna pora roku/światło: **lato** (zmierzch ~21:00, azymut ~300°). 8. Latarnie na trasie DK65/Knyszyn: **białe LED**.
+
+## D66 — Szerokość ul. Ełckiej (2026-11-15)
+Właściciel wybrał **6,6 m** szerokości jezdni (`width`) ul. Ełckiej / Studziennej w kaflach dk65-02…05 zamiast 6,9 m z D65. Powód: ortofoto 0,1 m pokazuje asfalt 6,5–7,1 m i linie krawędziowe 6,1–6,4 m od siebie (research K1, weryfikacja PR #80); przy 6,6 m generator rysuje linie ok. 6,2 m od siebie.
+
+## D67 — Korytarz do Knyszyna w APK (2026-11-15, s21)
+Właściciel: „dodaj korytarz do następnego APK”. Następny APK (po naprawie budżetu trójkątów C, ADR 0221) zawiera oprócz WorldC sceny regionów korytarza Białystok → DK65 → Knyszyn (Dojlidy, bialystok-knyszynska, dk65-01…11, knyszyn-s, knyszyn; w miarę rozmiaru także knyszyn-w, dk65-monki-01, dw671-tykocin-01, kleeberga, maczka) z wyborem regionu/trasy w menu. Na start bez płynnego przejścia między kaflami. Kod: chmura E, E2 (ADR 0229); lider weryfikuje i mierzy na A16 (rozmiar APK, PSS, gate3 w C bez pogorszenia). Punkt odniesienia: APK z samym C ma 224 MB.
+Uzupełnienie (właściciel, 15.11): APK instaluje sam, więc **nie może być duży**. Do korytarza wchodzi tylko tyle regionów, ile mieści się w limicie ≤ 2 GB (właściciel 15.11: instaluje sam, 2 GB akceptowalne), w razie potrzeby sama trasa główna. Docelowo regiony jako osobne paczki do pobrania (podział: osobne zadanie po tym APK).
+
+## D68 — Pora roku i zmierzch (2026-11-15, s21)
+Właściciel (decyzje z ADR 0216 §Otwarte): (1) azymut zmierzchu **300°** (ok. 15 sierpnia, −6°) — zostaje obecne LP_Dusk; (2) **lato wszędzie**: letni preset (zmierzch ok. 21:00) także w Białymstoku C i na Dojlidach — przebudowa C i D po scaleniu naprawy budżetu (0221), potem pomiar na telefonie; (3) LED Knyszyna zostaje **4000 K** (WORKING_VALUE, bez nocnego zdjęcia).
+
+## D69 — Drobne potwierdzenia (2026-11-15, s21)
+Właściciel: (1) droga **1392B** (dk65-10/11) poza zabudową **bez latarni** — potwierdzone; (2) metryka bramki 3 (B-112): **≤ 12 klatek > 40 ms na przejazd**; (3) weryfikację/recenzję kodu PR robi sesja w chmurze (prompt docs/owner/CLOUD-REVIEW-PROMPT-S21.md), lokalny lider robi budowę świata, rendery i telefon.
+
+## D70 — Sterowanie i lusterka (2026-11-15, s21; B-076)
+Właściciel: domyślny zakres kierownicy dotykowej **270°** (900° w ustawieniach); lusterka jako **stałe okienka na ekranie**; feel test bramki 2 (B-075) **później** — po bramce 3.
+
+## D71 — Decyzje po recenzji kodu s21 (2026-11-15, s21; REVIEW-2026-11-15-s21-code-*)
+Właściciel: (1) **APK D67** — dodać zestaw regionów **`d67-full`** = obecny `d67` + Dojlidy, Knyszyn-W, Mońki, Tykocin (ESTIMATED do ~1,95 GB; limit 2 GB z D67 mierzyć na buildzie); `d67` zostaje jako lżejszy wariant (PR #104, ADR 0229). (2) **Opaska ronda Knyszyn** (DK65×Tykocka, PR #97, ADR 0218) — **jasna kostka betonowa**: nowy jasny materiał z fakturą kostki zgodny ze zdjęciami S21 (nie ciepły brąz `apron_sett`, nie gładki beton). (3) **Oznakowanie dojazdu do przejazdów kolejowych** (Dz.U. 2025 poz. 1105 § 79: A-9/A-10, G-1a–f, tablica „Sygnalizacja automatyczna”, U-1) — **osobne zadanie teraz**, po scaleniu rail-fix-s21 i #102.
+
+## D72 — Limit rozmiaru APK 10 GB (2026-11-15, s22)
+Właściciel: limit rozmiaru APK z regionami podniesiony z 2 GB (D67/D71) do **10 GB**. Uwaga techniczna: pojedynczy plik APK powyżej ~4 GB nie jest obsługiwany przez Androida i format ZIP32 (UNVERIFIED dla Unity 6000.3 — sprawdzić przy buildzie); powyżej tej granicy regiony muszą iść jako osobne paczki (PR #112, ADR 0234) albo asset packs.
+
+## D73 — Windows jako platforma główna, telefon później (2026-11-15, s22)
+Właściciel: na telefon „jednak za ciężkie” → **Windows (PC) jest teraz platformą główną**; Android/iOS później jako lżejsza wersja. **Silnik bez zmian: Unity 6 URP** (właściciel wybrał wariant rekomendowany zamiast Unreal 5). Zastępuje kolejność z D56 (PC po bramce 3). D67/D71/D72 (APK z korytarzem, limit rozmiaru) stają się drugorzędne. Budżety i bramki PC: do zdefiniowania (referencyjny PC, FPS, wejście — pytanie do właściciela); do czasu pomiaru WORKING_VALUE. Dotychczasowe budżety mobilne (np. < 2 M tris High) zostają jako zabezpieczenie dla przyszłej wersji telefonowej. ADR 0260.
+
+## D74 — Wymagania sprzętowe PC jak w ETS2/ATS (2026-11-15, s22)
+Właściciel: „zobacz wymagania Euro i American Truck Simulator 2 i zrób podobne”. Przyjęte klasy (Windows 10 64-bit; źródło: karta Steam ATS 270880 i serwisy cytujące kartę ETS2 227300, stan 15.11.2026 — ETS2 do potwierdzenia na samej karcie Steam):
+- **Minimalne:** Intel Core i5-6400 / AMD Ryzen 3 1200, NVIDIA GTX 660 / AMD RX 460 / Intel HD 630 (2 GB VRAM), 8 GB RAM. Cel: tier Low, 1080p, **30 fps** (WORKING_VALUE).
+- **Zalecane:** Intel Core i5-9600 / AMD Ryzen 5 3600, NVIDIA GTX 1660 / AMD RX 590, 12 GB RAM. Cel: tier High, 1080p, **60 fps** (WORKING_VALUE).
+- Dysk: jak u nich ≤ 25 GB na grę bazową (WORKING_VALUE).
+Progi FPS i dysk to propozycja lidera (SCS nie publikuje FPS) — do potwierdzenia przy pierwszym pomiarze. Ryzyko: Intel HD 630 przy obecnym świecie (do 2 M tris High) — pomiar Low na iGPU konieczny przed obietnicą. Pomiar na maszynie deweloperskiej (RTX 5070) nie zastępuje klas minimalnej/zalecanej. ADR 0260 (uzupełnienie), chmura H zadanie H4 (0266).
+
+## D75 — Rondo Knyszyn: nowy jasny materiał i przejezdność (2026-11-15, s22)
+Właściciel: (1) opaska ronda DK65×Tykocka = **nowy jasny materiał kostki betonowej z fakturą** (nie istniejący materiał chodnika, albedo ok. 0,26 ≈ odrzucony brąz); (2) wymiary: **przejezdność przed wiernością** — asfalt pierścienia 5,0 m + opaska 3,2 m (zawracanie zestawu 16,5 m), choć na zdjęciu ok. 3,1 + 2,4 m (ESTIMATED). ADR 0218.

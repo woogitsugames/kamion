@@ -27,8 +27,9 @@ MonoBehaviour:
     cascade4Split: {x: 0.067, y: 0.2, z: 0.467}
     softShadows: 0
     softShadowQuality: 1
-    shadowDepthBias: 1
-    shadowNormalBias: 1
+    shadowDepthBias: 0.4
+    shadowNormalBias: 0.3
+    thinCasterShadowsOff: 1
     anisotropic: 1
     worldTextureAniso: 2
     worldMipBias: 0
@@ -60,6 +61,10 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 0
     lampPools: 4
+    lampPoolSpecular: 0
+    nightWindowsOff: 0
+    lampGlareOff: 0
+    lampFloorOff: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 0
@@ -91,6 +96,7 @@ MonoBehaviour:
     softShadowQuality: 1
     shadowDepthBias: 0.4
     shadowNormalBias: 0.3
+    thinCasterShadowsOff: 0
     anisotropic: 1
     worldTextureAniso: 4
     worldMipBias: 0
@@ -122,6 +128,10 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 0
     lampPools: 6
+    lampPoolSpecular: 0
+    nightWindowsOff: 0
+    lampGlareOff: 0
+    lampFloorOff: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 1
@@ -153,6 +163,7 @@ MonoBehaviour:
     softShadowQuality: 1
     shadowDepthBias: 0.4
     shadowNormalBias: 0.3
+    thinCasterShadowsOff: 0
     anisotropic: 1
     worldTextureAniso: 8
     worldMipBias: 0
@@ -184,6 +195,10 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 4
     lampPools: 8
+    lampPoolSpecular: 1
+    nightWindowsOff: 0
+    lampGlareOff: 0
+    lampFloorOff: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 1
@@ -215,6 +230,7 @@ MonoBehaviour:
     softShadowQuality: 3
     shadowDepthBias: 0.6
     shadowNormalBias: 0.6
+    thinCasterShadowsOff: 0
     anisotropic: 2
     worldTextureAniso: 16
     worldMipBias: 0
@@ -246,6 +262,10 @@ MonoBehaviour:
     cabShadowLift: 8
     streetLights: 6
     lampPools: 8
+    lampPoolSpecular: 1
+    nightWindowsOff: 0
+    lampGlareOff: 0
+    lampFloorOff: 0
     worldSkyVisOff: 0
     worldBakedSunOff: 0
     cloudQuality: 2
@@ -261,7 +281,7 @@ MonoBehaviour:
     budgetTextureMB: 384
     budgetShadowMs: 3
     budgetStatus: UNMEASURED (no flagship attached)
-  revision: 113
+  revision: 240
   deviceRules:
   - gpuContains: Mali-G57
     modelContains: 

@@ -21,7 +21,7 @@ namespace Game.Vehicle.Runtime
 
         public const string ResourcesPrefix = "TRAKT/TruckMaterials_";
         /// <summary>Rendering layer bit of the wheel renderers: Kamion/Truck Exterior flattens the tyre at the physics
-        /// rolling radius (global _KamionTyreFlatRadius from <see cref="tyreFlatRadius"/>) - model free radius 0.538 m vs 0.51 m.</summary>
+        /// geometric tyre radius, ADR 0201 (global _KamionTyreFlatRadius from <see cref="tyreFlatRadius"/>) - model free radius 0.538 m vs 0.51 m.</summary>
         public const uint TyreRenderingLayer = 1u << 8;
         public static readonly string[] TierNames = { "Low", "Medium", "High", "High" };
         /// <summary>Interior LOD per tier name. Review r3 C3: LOD1/LOD2 facet visibly at 0.3-1.2 m from the driver's eye,
@@ -43,7 +43,7 @@ namespace Game.Vehicle.Runtime
         [Tooltip("Interior is culled below this screen height (it is only seen through the glass from near)")]
         public float interiorCull = 0.12f;
         [Tooltip("-1 = follow QualitySettings")] public int forceLevel = -1;
-        [Tooltip("Physics tyre rolling radius (m), written by TruckAssetBuilder from the vehicle definition. The wheel meshes " +
+        [Tooltip("Physics geometric tyre radius (contact plane, ADR 0201) (m), written by TruckAssetBuilder from the vehicle definition. The wheel meshes " +
                  "(free radius 0.538 m) are flattened at this distance below the wheel centre; 0 = off")]
         public float tyreFlatRadius;
         static readonly int k_TyreFlat = Shader.PropertyToID("_KamionTyreFlatRadius");

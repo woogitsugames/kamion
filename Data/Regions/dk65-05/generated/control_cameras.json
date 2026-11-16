@@ -1,0 +1,377 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0157",
+   "look_at": [
+    542.318,
+    -810.045,
+    154.813
+   ],
+   "note": "driver eye 2.5 m, control route s = 157 m of 2201 m (Ełcka)",
+   "pos": [
+    554.156,
+    -868.885,
+    154.681
+   ],
+   "route_s_m": 157.226,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0472",
+   "look_at": [
+    487.876,
+    -500.341,
+    160.764
+   ],
+   "note": "driver eye 2.5 m, control route s = 472 m of 2201 m (Ełcka)",
+   "pos": [
+    499.809,
+    -559.163,
+    161.396
+   ],
+   "route_s_m": 471.678,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0786",
+   "look_at": [
+    432.746,
+    -190.76,
+    157.563
+   ],
+   "note": "driver eye 2.5 m, control route s = 786 m of 2201 m (Ełcka)",
+   "pos": [
+    444.766,
+    -249.564,
+    159.775
+   ],
+   "route_s_m": 786.13,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1101",
+   "look_at": [
+    377.144,
+    118.736,
+    158.773
+   ],
+   "note": "driver eye 2.5 m, control route s = 1101 m of 2201 m (Studzienna)",
+   "pos": [
+    389.376,
+    59.977,
+    159.295
+   ],
+   "route_s_m": 1100.582,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1415",
+   "look_at": [
+    316.771,
+    426.947,
+    156.06
+   ],
+   "note": "driver eye 2.5 m, control route s = 1415 m of 2201 m (Studzienna)",
+   "pos": [
+    334.68,
+    369.639,
+    159.097
+   ],
+   "route_s_m": 1415.034,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1729",
+   "look_at": [
+    145.551,
+    689.756,
+    149.923
+   ],
+   "note": "driver eye 2.5 m, control route s = 1729 m of 2201 m (Studzienna)",
+   "pos": [
+    181.329,
+    641.57,
+    150.996
+   ],
+   "route_s_m": 1729.486,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2044",
+   "look_at": [
+    -35.015,
+    947.192,
+    160.412
+   ],
+   "note": "driver eye 2.5 m, control route s = 2044 m of 2201 m (unnamed)",
+   "pos": [
+    1.036,
+    899.206,
+    159.122
+   ],
+   "route_s_m": 2043.939,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_01_above",
+   "look_at": [
+    279.061,
+    -1009.249,
+    138.826
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1270347375:11795254100-11795254109",
+   "pos": [
+    349.061,
+    -929.249,
+    180.826
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_02_above",
+   "look_at": [
+    292.346,
+    -1013.051,
+    138.818
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1362045957:11795254109-11795254106",
+   "pos": [
+    362.346,
+    -933.051,
+    180.818
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_03_above",
+   "look_at": [
+    289.481,
+    -998.561,
+    138.993
+   ],
+   "note": "roundabout from ~40 m: ring_c:w1362045958:11795254106-11795254100",
+   "pos": [
+    359.481,
+    -918.561,
+    180.993
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_swierkowa",
+   "look_at": [
+    577.8,
+    -904.0,
+    -56996.362
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 20 m: junction Swierkowa at the seam with dk65-04; pair = ortho/top_swierkowa.jpg",
+   "pos": [
+    577.8,
+    -1004.0,
+    299.36
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_debowa",
+   "look_at": [
+    463.5,
+    -253.4,
+    -56986.599
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 680 m: junction Debowa / Podlesna; pair = ortho/top_debowa.jpg",
+   "pos": [
+    463.5,
+    -353.4,
+    309.122
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_mid",
+   "look_at": [
+    371.7,
+    258.8,
+    -56987.348
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 1200 m: Studzienna, 6.6 m (D66) with edge lines; pair = ortho/top_mid.jpg",
+   "pos": [
+    371.7,
+    158.8,
+    308.373
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_chabrowa",
+   "look_at": [
+    186.3,
+    734.5,
+    -56997.158
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 1720 m: junctions unclassified (s 1686) and Chabrowa (s 1770); proposed S19 service roads in OSM nearby; pair = ortho/top_chabrowa.jpg",
+   "pos": [
+    186.3,
+    634.5,
+    298.563
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_north",
+   "look_at": [
+    -80.9,
+    1109.3,
+    -56983.279
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 2180 m: seam with dk65-06 (rondo DK65 is 70 m further north); pair = ortho/top_seam_north.jpg",
+   "pos": [
+    -80.9,
+    1009.3,
+    312.443
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_debowa",
+   "look_at": [
+    456.535,
+    -314.119,
+    159.56
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 620 m: approach to Debowa / Podlesna",
+   "pos": [
+    473.9,
+    -412.6,
+    162.178
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_north",
+   "look_at": [
+    -61.17,
+    986.412,
+    156.815
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 2050 m: towards the DK65 roundabout (dk65-06)",
+   "pos": [
+    -3.1,
+    905.0,
+    159.434
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rev_mid",
+   "look_at": [
+    371.593,
+    158.889,
+    158.907
+   ],
+   "note": "place camera: driver eye 2.5 m, against the route, route s = 1300 m: Studzienna towards Bialystok",
+   "pos": [
+    354.4,
+    257.4,
+    161.526
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_site_seam",
+   "look_at": [
+    -20.0,
+    1064.0,
+    -56984.571
+   ],
+   "note": "place camera: QA top view (north up, 249 m E-W x 140 m N-S, seam 60 m from the centre): new DK65 carriageway = construction_site corridor at the seam with dk65-06 (ADR 0215 r2); pairs with dk65-06 top_site_seam",
+   "pos": [
+    -20.0,
+    964.0,
+    311.15
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "site_seam_oblique",
+   "look_at": [
+    11.604,
+    997.279,
+    141.309
+   ],
+   "note": "place camera: 35 m up (above the pines) between Studzienna and the site, looking NE across the construction_site corridor just south of the seam with dk65-06 (ADR 0215 r2)",
+   "pos": [
+    -65.0,
+    933.0,
+    194.48
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "k1_bay_1447_top",
+   "look_at": [
+    544.607,
+    -813.489,
+    -57099.409
+   ],
+   "note": "place camera: ADR 0220: bus bay P km 14.440-14.506 + broken P edge line; pair = evidence/dk65-05_km14.40-14.55_bay-P.jpg (top view, route up)",
+   "pos": [
+    561.8,
+    -912.0,
+    196.312
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "k1_bay_1447_drive",
+   "look_at": [
+    557.107,
+    -885.389,
+    145.142
+   ],
+   "note": "place camera: ADR 0220: driver view towards the bus bay P km 14.44-14.51",
+   "pos": [
+    574.3,
+    -983.9,
+    152.134
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 306.826,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-05",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

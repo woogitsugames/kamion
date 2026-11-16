@@ -1,0 +1,34 @@
+{
+  "_doc": "ADR 0216 (owner D65 p.7-8) and 0216b (owner D68). Per-region lighting data read by the Unity world import (WorldSceneBuilder -> EnvironmentLighting). A region not listed keeps the global behaviour (e.g. Maczka, Kleeberga). Later profiles override earlier ones field by field. All values WORKING_VALUE unless stated.",
+  "profiles": [
+    {
+      "id": "summer-dk65-knyszyn",
+      "_doc": "Summer as the default season of the DK65 corridor and Knyszyn (D65 p.7: dusk ~21:00, sun azimuth ~300 deg). LP_Dusk keeps its sun (-6 deg, azimuth 300 deg); the clock hour that drives lit office windows becomes 21:00 instead of the November 16:10 of ADR 0199. Astronomy (artifacts/summer-led-0216/sun_summer.json): -6 deg on 31 July = 21:07 CEST at azimuth 311 deg; -6 deg at azimuth 300 deg = mid August 20:34.",
+      "regions": ["bialystok-knyszynska", "dk65-01", "dk65-02", "dk65-03", "dk65-04", "dk65-05", "dk65-06", "dk65-07", "dk65-08", "dk65-09", "dk65-10", "dk65-11", "knyszyn-s", "knyszyn", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01"],
+      "season": "summer",
+      "duskClockHour": 21.0
+    },
+    {
+      "id": "led-white-4000k",
+      "_doc": "White LED street lighting (D65 p.8). Nominal CCT 4000 K: ZDM Bialystok tenders 2023-2024 (research/night-lamps-s21 section 4, SOURCED for Bialystok; Knyszyn UNVERIFIED - owner declaration). ledColour is the display colour under the game's fixed daylight white balance, WORKING_VALUE chosen on the dusk control cameras so the lens and pool read white (the global default 1/0.93/0.82 reads warm against the twilight sky); it is not a colorimetric 4000 K (that would be 1/0.68/0.36 against D65).",
+      "regions": ["bialystok-knyszynska", "knyszyn-s", "knyszyn", "knyszyn-w"],
+      "ledCctK": 4000,
+      "ledColour": [1.0, 0.96, 0.9]
+    },
+    {
+      "id": "summer-bialystok-cd",
+      "_doc": "ADR 0216b, owner D68 p.2: summer everywhere - the summer preset of ADR 0216 also in Bialystok tile C and Dojlidy. D68 p.1: the dusk sun stays at azimuth 300 deg (LP_Dusk unchanged, -6 deg). duskClockHour 21.0 = owner value (D65 p.7 'about 21:00'), WORKING_VALUE: the NOAA solar equations for Bialystok 53.13 N 23.16 E (tools/worldgen/qa/sun_noaa.py, year 2026) put the -6 deg crossing at 21:06 CEST / azimuth 311.4 deg on 31 July and at 20:22 CEST / azimuth 299.7 deg on 20 August - the pair 21:00 + 300 deg does not occur at the same time (as in ADR 0216).",
+      "regions": ["bialystok-industrial-c", "bialystok-dojlidy"],
+      "season": "summer",
+      "duskClockHour": 21.0
+    },
+    {
+      "id": "led-white-4000k-bialystok",
+      "_doc": "ADR 0216b: display colour of the LED street lamps in tile C and Dojlidy = the Knyszyn value of ADR 0216 (WORKING_VALUE chosen on the dusk cameras, not a colorimetric 4000 K). Nominal 4000 K SOURCED for the streets named in the City of Bialystok LED tenders: C - Andersa, al. 1000-lecia, Maczka (ZDM-VII.7021.1.14.2023, e-procurement notice 93688, TED award 658997-2023); Dojlidy - Kuronia, Dywizjonu 303, Mickiewicza and 7 more (ZDM-VII.7021.1.7.2024, notice 122716, TED award 769998-2024). Installed state 2026 UNVERIFIED (no night photo after the replacement). Older side-street heads: LED only on the Dojlidy tender streets (override lamp-policy-led-tender-0216b); sodium elsewhere, UNVERIFIED (override lamp-policy-unverified-0216b in C).",
+      "regions": ["bialystok-industrial-c", "bialystok-dojlidy"],
+      "ledCctK": 4000,
+      "ledColour": [1.0, 0.96, 0.9],
+      "sources": ["research/night-lamps-s21/README.md section 4", "research/led-tenders-0216b/ted_notices.json", "https://ted.europa.eu/pl/notice/-/detail/658997-2023", "https://ted.europa.eu/pl/notice/-/detail/769998-2024"]
+    }
+  ]
+}

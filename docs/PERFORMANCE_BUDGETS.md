@@ -1,5 +1,17 @@
 # Performance budgets (initial, Stage 0)
 
+## PC (Windows) — platforma główna od D73 (ADR 0260, ADR 0266) — wszystko `WORKING_VALUE`
+Klasy **min / zalecany / wysoki** (FPS, rozdzielczość, tier, p50/p95/p99, klatki > progi, RAM/VRAM procesu, czas ładowania
+regionu, draw calls, trójkąty, GC): tabela w `docs/03` § „Klasy sprzętu PC i budżety”, dane dla parsera w
+`tools/pcperf/budgets/pc-budgets.json` (jedno źródło — test `test_docs03_table_matches_budget_file` pilnuje zgodności).
+Narzędzie: `PcFrameMetricsRecorder` (player, `-metrics <dir>`) + `scripts/pc-metrics.ps1` + `tools/pcperf/pc_metrics.py`.
+Klasy min / zalecany = wymagania sprzętowe z **D74** (min: i5-6400 / GTX 660 / 8 GB → Low 1080p 30 fps; zalecany:
+i5-9600 / GTX 1660 / 12 GB → High 1080p 60 fps; dysk ≤ 25 GB — wszystko `WORKING_VALUE`).
+**Zmierzone na PC dla klas: nic** (stan 15.11.2026). Jedyny pomiar to informacyjny przebieg ADR 0261 na maszynie deweloperskiej
+(RTX 5070, High, 1600×900, bez limitu, głównie na postoju) — nie jest referencją i nie zalicza żadnej klasy.
+
+Wszystko poniżej to budżety **mobilne** — od D73 🔒 zabezpieczenie dla przyszłej wersji telefonowej (odroczone, nie usunięte).
+
 Status: **initial**. Targets are `WORKING_VALUE`s until measured scenes exist; rendering-perf owns refinement.
 Measurement tool: Boot diagnostics (`DiagnosticsSampler`, rolling 600-frame window, nearest-rank percentiles) +
 `scripts/device-metrics.ps1` (full-session CSV, percentiles after a 5 s warm-up, `dumpsys meminfo` PSS, battery temperature).
@@ -109,7 +121,7 @@ ADR 0021. Same APK (734e0d8 + A8 commits), WorldC overcast, uncapped, `rq_a8=0` 
 A16 Low: no measurable GPU cost (no capture on Low; clear coat and contact patch within noise; budget was 2 ms). S24+ High:
 GPU within the thermal drift (< 0.4 ms), capture +0.5 ms CPU main (one 128 px face every 2 frames, Reflection camera type -
 the first version, which let WorldInstances submit the instanced forest for every face, cost +4 ms CPU). Not measured: 30 min
-thermal run with A8, dusk lamp point lights on High (4 pixel lights, uniform loop in Kamion/World Surface). ADR 0062: World Surface no longer reads the point lights; dusk pools are analytic on every tier (lampPools Low 4 / Medium 6 / High 8, ≤ 8 × ~20 ALU per world pixel at dusk only) - A16 cost UNVERIFIED.
+thermal run with A8, dusk lamp point lights on High (4 pixel lights, uniform loop in Kamion/World Surface). ADR 0062: World Surface no longer reads the point lights; dusk pools are analytic on every tier (lampPools Low 4 / Medium 6 / High 8, ≤ 8 × ~20 ALU per world pixel at dusk only) - A16 cost UNVERIFIED. ADR 0191: road-luminaire footprint per luminaire (~24 ALU/pool), GGX lamp highlight High/Ultra only (`lampPoolSpecular`, +~14 ALU/pool, A/B `rq_lampspec`); draws/tris unchanged (WorldC stats A/B) - GPU cost UNVERIFIED.  s20 night-int: pool soft tail (~4 ALU/pool), night floor `lampFloorOff` (~4 ALU/px, A/B `rq_lampfloor`), lamp glare +1 draw (`lampGlareOff`, `rq_glare`), lit windows (`nightWindowsOff`, `rq_nightwin`); WorldC draws/tris identical on/off (ADR 0192 Integracja s20) - GPU cost UNVERIFIED.
 
 **Correction (ADR 0056, 2026-11-10):** the capture above rendered the skybox only (no depth buffer) and never reached the
 truck shaders, so "capture +0.5 ms CPU" is the cost of a sky-only capture. Since ADR 0056 every tier captures real geometry:
@@ -143,6 +155,15 @@ surfaces, not fragment ALU or texture filtering. PSO warm-up (GraphicsStateColle
 load): frames > 40 ms in the first 5 s of G3-A 17 -> 3, the Bieżeństwa roundabout burst is gone. Gate result (clean APK
 6b6c1d8003): G3-A p99 33.6 ms without the capture window (official 49.9: `device-metrics.ps1` screencap + meminfo add ~12
 frames > 40 ms at the end of every run), G3-B p99 33.6, GPU p95 31.7 / 32.2 ms. ADR 0113 "Wynik".
+
+## Low shadows: thin casters and bias (ADR 0240, B-088) - UNVERIFIED on the phone
+Low main-light shadow map unchanged (35 m, 1 cascade, 1024 px, hard; texel ~7.8 cm ESTIMATED). Bias 1.0 / 1.0 -> 0.4 / 0.3
+(normal bias 1.0 removed ~16 cm of every caster silhouette: signal arm kept 33 % of its shadow area, 80 % at 0.3 - data
+audit `tools/rendering/thin_shadow_audit.py`). Thin casters (`ThinShadowCasterPolicy`: lamps, sign / signal posts, bollards,
+railings, fence posts, lattice gantries; 46 of 153 prop prototypes) cast nothing on Low (`thinCasterShadowsOff`,
+A/B `rq_thinshadow`). ESTIMATED per G3 frame: -10..-30 instanced caster draws, -2..-10 k caster triangles, GPU -0.0..-0.1 ms
+of the 0.9 ms shadow cost (ADR 0106); memory 0. Rejected by estimate: Low 2048 px (+6 MB, +0.3-0.8 ms), screen-space
+contact shadows (>= 1-2 ms, no depth texture on Low). Measure: visual-qa `stats.txt` `shadowCasterDraws`, A16 G3-A/B.
 
 ## World content v2 (ADR 0012) — build and memory, 2026-11-09
 Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
@@ -189,3 +210,34 @@ Not done: the world goal <= 60 MB is still not met (133.5 MB packed uncompressed
 ProjectSettings patch for the lead (not committed): (1) `managedStrippingLevel: Android: 1 -> 3` (High), test with a device run (reflection users: glTFast, Json); -2.6 MB. (2) `m_ShowUnitySplashLogo: 1 -> 0`, -1.2 MB, only if the licence allows; (3) `il2cppCompilerConfiguration` stays Release; consider `il2cppCodeGeneration: OptimizeSize` (not measured). (4) mipmap limit groups per quality (Unity 6 `mipmapLimitGroupName`) would let one APK drop top mips on Low at load time - saves RAM, not APK size.
 
 High tier as a separate package (options, nothing deployed): (a) status quo: two APKs, `-WorldHigh` ships WorldC_High + High sets (sideload/test; Play needs one artifact). (b) AAB + Play Asset Delivery install-time/fast-follow packs: High world + High truck/trailer textures as an asset pack, loaded via Addressables (Unity 6 supports Android asset packs through Addressables Play Asset Delivery); needs `buildAppBundle`, an Addressables group per tier, and the High sets taken out of Resources; Play delivers only to devices matching a texture-compression/device-tier targeting rule (device tier targeting can send the pack only to flagships). (c) Addressables remote groups on a CDN: no Play dependency, adds hosting and a download UI. Recommended: (b) once streaming chunks (ADR 0003) lands; until then the build flag (this change) is the cheap equivalent.
+
+## PC tiers (D74, ADR 0269) — all WORKING_VALUE, UNMEASURED
+Source of the values: `game/Assets/_Project/Rendering/Runtime/PcTierTable.cs` (+ `Resources/PcTiers/URP_PC_*.asset`), table with
+sources in `docs/adr/0269-tiery-grafiki-pc.md`. Content (draws / triangles) = the same Low / `_High` scenes as the phone, so the
+mobile content budgets above stay. Measurement: `scripts/build-windows.ps1 -Run … -Width 1920 -Height 1080` (or
+`scripts/pc-metrics.ps1` once PR #130 is merged); the dev RTX 5070 is NOT a reference (ADR 0260).
+
+| Tier | Reference class (D74) | Target | Frame-time p95 | Frame-time p99 | VRAM | Status |
+|---|---|---|---|---|---|---|
+| Low | GTX 660 2 GB / RX 460 / Intel HD 630, i5-6400, 8 GB | 1080p 30 fps | ≤ 34 ms | ≤ 40 ms | ≤ 1.8 GB | WORKING_VALUE, UNMEASURED |
+| Medium | 4 GB class (GTX 1050 Ti / RX 570 4 GB) | 1080p 60 fps | ≤ 17 ms | ≤ 20 ms | ≤ 3.5 GB | WORKING_VALUE, UNMEASURED |
+| High | GTX 1660 / RX 590, i5-9600, 12 GB | 1080p 60 fps | ≤ 17 ms | ≤ 20 ms | ≤ 5 GB | WORKING_VALUE, UNMEASURED |
+| Ultra | above recommended (opt-in, never auto) | 1080p 60 fps | ≤ 17 ms | ≤ 20 ms | — | WORKING_VALUE, UNMEASURED |
+VRAM column = budget ≈ 85–90 % of the class card memory (headroom for the driver / OS), not a measurement.
+
+## Fence mesh coverage shader (ADR 0239, B-082) - ESTIMATED, not measured
+
+`Kamion/World FenceMesh` replaces URP Lit on `fence_*_mesh`: about +20 ALU per fragment net (UV derivatives, `fwidth`, screen
+noise, 3-level quantisation; URP `AlphaClip` removed), no extra texture sample, same triangles / textures / forward draw calls.
+The mesh no longer draws into the shadow map (15.7 km of panel fence in region C). Forward overdraw is unchanged (2 layers:
+doubled geometry + Cull Off - follow-up O-4 in the ADR would halve it). To measure on the A16 after reimport:
+`pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90 -Serial RFGL34SJYDZ` on route C Low against the last main run.
+
+## GPU A/B procedure on the A16 (ADR 0241, backlog B-113) — NOT MEASURED YET
+Open gap: A16 Low, 30 FPS cap, APK `77cfd94bf8`: GPU p95 34.3–34.5 ms against the 33.3 ms frame (HANDOVER s20). Candidate
+levers and their expected gains (ESTIMATED / UNVERIFIED, with sources) are data in `tools/perf/gpu-ab-variants.json`; none of
+them is a default. One session = same APK, launch-argument variants, ≥ 3 repeats, battery < 36 °C before each run, keyguard
+checks: `pwsh scripts/gpu-ab-a16.ps1 -Apk <apk> [-Mode Camera -Uncapped | -Segments A,B -Fps 30]` →
+`artifacts/gpu-ab/<ts>/REPORT.md` (`uv run --project tools/perf python -m perfgate.gpuab report <dir>`). Write the measured
+table here once the leader has run it; a tier value changes only after that table, the visual review and (for visible
+changes: render scale, LOD bias, far clip) the owner's decision.

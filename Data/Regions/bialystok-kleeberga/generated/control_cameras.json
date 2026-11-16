@@ -1,0 +1,313 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0159",
+   "look_at": [
+    805.511,
+    -32.26,
+    120.524
+   ],
+   "note": "driver eye 2.5 m, control route s = 159 m of 2220 m (Generała Stanisława Maczka)",
+   "pos": [
+    865.462,
+    -32.008,
+    122.237
+   ],
+   "route_s_m": 158.601,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0476",
+   "look_at": [
+    488.725,
+    -18.98,
+    118.832
+   ],
+   "note": "driver eye 2.5 m, control route s = 476 m of 2220 m (Generała Stanisława Maczka)",
+   "pos": [
+    548.727,
+    -18.498,
+    120.516
+   ],
+   "route_s_m": 475.803,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0793",
+   "look_at": [
+    175.483,
+    -57.988,
+    118.473
+   ],
+   "note": "driver eye 2.5 m, control route s = 793 m of 2220 m (Generała Stanisława Maczka)",
+   "pos": [
+    233.461,
+    -42.664,
+    119.607
+   ],
+   "route_s_m": 793.005,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1110",
+   "look_at": [
+    -110.657,
+    -193.36,
+    118.972
+   ],
+   "note": "driver eye 2.5 m, control route s = 1110 m of 2220 m (Generała Stanisława Maczka)",
+   "pos": [
+    -58.862,
+    -163.029,
+    120.059
+   ],
+   "route_s_m": 1110.207,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1427",
+   "look_at": [
+    -387.549,
+    -348.093,
+    122.752
+   ],
+   "note": "driver eye 2.5 m, control route s = 1427 m of 2220 m (unnamed)",
+   "pos": [
+    -336.376,
+    -316.679,
+    123.457
+   ],
+   "route_s_m": 1427.409,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1745",
+   "look_at": [
+    -660.605,
+    -509.503,
+    128.228
+   ],
+   "note": "driver eye 2.5 m, control route s = 1745 m of 2220 m (Generała Franciszka Kleeberga)",
+   "pos": [
+    -609.933,
+    -477.332,
+    126.936
+   ],
+   "route_s_m": 1744.611,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2062",
+   "look_at": [
+    -936.945,
+    -665.135,
+    129.384
+   ],
+   "note": "driver eye 2.5 m, control route s = 2062 m of 2220 m (Generała Franciszka Kleeberga)",
+   "pos": [
+    -884.734,
+    -635.526,
+    131.081
+   ],
+   "route_s_m": 2061.812,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_01_above",
+   "look_at": [
+    -783.033,
+    -589.478,
+    130.996
+   ],
+   "note": "roundabout from ~40 m: Rondo Majora Antoniego Wiszowatego",
+   "pos": [
+    -713.033,
+    -509.478,
+    172.996
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "roundabout_02_above",
+   "look_at": [
+    -127.882,
+    -210.015,
+    117.894
+   ],
+   "note": "roundabout from ~40 m: Rondo prof. Juliana Juliusza Szymańskiego",
+   "pos": [
+    -57.882,
+    -130.015,
+    159.894
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "underpass_wb_szymanskiego",
+   "look_at": [
+    -160.631,
+    -215.262,
+    120.13
+   ],
+   "note": "place camera: DK8/DK65 westbound (route), ~30 m before the underpass below rondo Szymańskiego (way 76073122, tunnel=yes layer=-1)",
+   "pos": [
+    -70.0,
+    -173.0,
+    120.13
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "underpass_eb_szymanskiego",
+   "look_at": [
+    -98.397,
+    -197.0,
+    120.71
+   ],
+   "note": "place camera: DK8/DK65 eastbound, ~30 m before the underpass (way 23982181)",
+   "pos": [
+    -185.0,
+    -247.0,
+    120.71
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "produkcyjna_to_rondo_szymanskiego",
+   "look_at": [
+    -86.715,
+    -235.068,
+    126.27
+   ],
+   "note": "place camera: Produkcyjna (way 263791494, 3 lanes) north-westbound towards rondo Szymańskiego, which spans the DK8 cutting",
+   "pos": [
+    -9.0,
+    -298.0,
+    126.27
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "tertiary_to_rondo_under_kleeberga",
+   "look_at": [
+    -749.399,
+    -633.899,
+    130.68
+   ],
+   "note": "place camera: tertiary street (way 548982172) towards the roundabout under the Kleeberga viaduct (km 5.45-5.61)",
+   "pos": [
+    -704.0,
+    -723.0,
+    130.68
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "tunnel_eb_inside",
+   "look_at": [
+    -51.638,
+    -172.019,
+    123.828
+   ],
+   "note": "place camera: ADR 0211: inside the cut-and-cover tunnel below rondo Szymańskiego, eastbound (way 23982181, 30 % of its 77 m): soffit, tunnel and central walls, east portal",
+   "pos": [
+    -139.1,
+    -220.5,
+    120.336
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "tunnel_wb_inside",
+   "look_at": [
+    -204.262,
+    -245.181,
+    123.8
+   ],
+   "note": "place camera: ADR 0211: inside the tunnel, westbound (way 76073122, 30 %)",
+   "pos": [
+    -116.8,
+    -196.7,
+    120.308
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rondo_szymanskiego_island_nw",
+   "look_at": [
+    -78.489,
+    -259.511,
+    111.074
+   ],
+   "note": "place camera: ADR 0211: pedestrian eye on the NW side of rondo Szymańskiego (bank top), across the ring and the island on the slab towards the SE portal",
+   "pos": [
+    -149.2,
+    -188.8,
+    125.128
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "cut_wall_oblique_sw",
+   "look_at": [
+    -130.066,
+    -208.534,
+    107.164
+   ],
+   "note": "place camera: ADR 0211: raised view from the south bank over the open cut west of the tunnel: retaining walls, coping, railing, west portal",
+   "pos": [
+    -202.0,
+    -278.0,
+    128.42
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "collector_wb_km52",
+   "look_at": [
+    -466.904,
+    -390.919,
+    123.76
+   ],
+   "note": "place camera: westbound collector / slip road (way 249810914) beside Kleeberga at km 5.2",
+   "pos": [
+    -384.0,
+    -335.0,
+    123.76
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 267.592,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "bialystok-kleeberga",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

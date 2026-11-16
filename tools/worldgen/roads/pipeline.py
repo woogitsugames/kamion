@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
+from . import compact_roundabout as CR
 from . import gores as GO
 from . import junctions as J
 from . import meshing as M
@@ -78,6 +79,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     ctx = json.loads((rdir / "generated" / "osm_context.json").read_text(encoding="utf-8"))
     terrain_meta = json.loads((rdir / "terrain.json").read_text(encoding="utf-8"))
     net, graph, overrides, net_stats = build_network(region_id)
+    net.region_id = region_id
     net.authored = overrides                         # painted_zone etc. read by the marking stage (ADR 0093)
     from shapely.geometry import LineString as _LS
     net.foot_lines = [(_LS(np.array(f["geometry"]) - np.array(origin)), f["highway"]) for f in ctx["footways"]
@@ -112,6 +114,14 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
         polys += [Polygon(np.array(o["polygon_epsg2180"]) - np.array(origin)) for o in overrides if o.get("kind") == "paved_area"]
         yards = shapely.union_all([shapely.make_valid(p) for p in polys])
         shapely.prepare(yards)
+    # ADR 0188: cycle tracks (OSM) planned once on the network; markings (P-11 + red crossing), the kerb drops of
+    # build_world and the streetscape stage (surfaces, paint) all read net.cycle_items
+    from streetscape import cycleways as CY
+    net.cycle_report = {}
+    net.cycle_items = CY.plan(CY.load(region_id), origin, overrides,
+                              src["bdot10k"]["OT_SKRP_L"] if ss.exists() else [],
+                              [LineString(c.line.p) for c in net.chains], net.cycle_report)
+    net.overrides_stale += net.cycle_report.get("overrides_stale", [])
     Nw.assign_sides(net, foot, built_up=built_up, walkways=walk, yards=yards)
     juncs = J.build_junctions(net, pts)
     # second pass now that the junction trims are known: side profiles beside another carriageway are checked
@@ -124,6 +134,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     prof["walled_ramps"] = P.mark_walled_ramps(net, hf)
     # gaps between carriageways: island only where OSM / the orthophoto says so, otherwise paved (ADR 0077)
     gore_plan = GO.plan(net, juncs, overrides, origin)
+    CR.plan_islands(net, juncs, gore_plan)           # ADR 0218 5c: splitter islands of compact roundabouts
     net.overrides_applied += gore_plan.overrides_applied
     net.overrides_stale += gore_plan.overrides_stale
 
@@ -139,6 +150,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
         M.build_patch(buf, net, j, stats=stats["patch"])
         M.build_patch(buf, net, j, coarse=True)
     GO.build(buf, net, gore_plan)                                    # paved gores / P-21 (ADR 0077)
+    stats["compact_roundabouts"] = CR.build(buf, net, juncs)         # ADR 0218 5c: apron annulus + centre island
     stats["sides_on_carriageway_culled"] = M.cull_sides_on_carriageway(buf)
     stats["kerb_tris_dropped_in_fills"] = GO.drop_kerbs_in_fills(buf, gore_plan)     # ADR 0093: removed, not sunk
     w = World(region=region, origin=origin, net=net, junctions=juncs, hf=hf, ctx={"points": pts, "foot": foot},

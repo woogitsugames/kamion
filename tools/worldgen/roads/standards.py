@@ -167,6 +167,7 @@ BRIDGE_PIER_W = 1.2                 # WORKING_VALUE
 LINE_W_NARROW = 0.12                # rys. 2.2.1.1 / 2.2.1.2 / 2.2.1.6 (P-1a, P-1b, P-2a)
 LINE_W_WIDE = 0.24                  # rys. 2.2.1.7 (P-2b), 2.2.2.2 (P-7a); pkt 2.2.2: P-7a/P-7b 0.24 m on
                                     # dual carriageways and roads with international route numbers
+EDGE_LINE_INSET_MINOR = 0.20        # WORKING_VALUE (ADR 0205): axis of an override edge line (0.12 m) inside the edge, class < GP
 DASH = {                            # (dash, gap)
     "P-1a": (4.0, 8.0),             # rys. 2.2.1.1, roads > 70 km/h
     "P-1b": (2.0, 4.0),             # rys. 2.2.1.2, roads <= 70 km/h
@@ -183,6 +184,9 @@ P12_W = 0.50                        # rys. 4.2.3.1: STOP line 0.5 m
 # D2019000231102.pdf on isap.sejm.gov.pl): 0.5 m squares with 0.5 m gaps; pkt 4.2.2 (str. 569): crossing
 # width >= 1.8 m (one-way) / 3.0 m (two-way). Rows 2.0 m apart (inner edges) per ADR 0093.
 P11_SQUARE, P11_GAP, P11_CLEAR = 0.50, 0.50, 2.0
+# ADR 0188: a two-way cycle track crosses on a 3.0 m crossing (pkt 4.2.2, str. 569: >= 3.0 m two-way; re-read in
+# research M52, branch research/mistral-p2-surfaces-2). One-way and unknown tracks keep the 2.0 m of ADR 0093.
+P11_CLEAR_TWO_WAY = 3.0
 P8_MIN_LANE_W = 2.5                 # ADR 0093: no arrow in a lane narrower than this (taper of a slip lane)
 P13_BASE, P13_GAP, P13_H = 0.50, 0.25, 0.70   # rys. 4.2.4.1: triangles
 P14_LEN, P14_GAP, P14_DEPTH = 0.75, 0.25, 0.50  # rys. 4.2.5.1: rectangles 0.5 deep (0.375 m2/mb)
@@ -209,6 +213,7 @@ EDGING_W = 0.08             # concrete edging (obrzeże betonowe 8 x 30 cm), com
 EDGING_H = 0.03             # top of edging above the block paving WORKING_VALUE
 SETBACK_PATH_W = 2.0        # default width of a set-back footpath without BDOT SZEROKOSC (PTB2022 § 29: >= 1.80 m)
 SURFACE_OF = {"yard_paving": "paving", "yard_behaton": "paving", "sidewalk_paving": "paving", "cycle_red": "asphalt",
+              "cycle_asphalt": "asphalt", "cycle_asphalt_red": "asphalt",
               "yard_concrete": "asphalt", "yard_concrete_worn": "asphalt", "yard_slabs": "asphalt", "yard_asphalt": "asphalt",
               "path_asphalt": "asphalt", "yard_gravel": "grass",
               "plot_lawn": "grass"}   # -> collision_<x> materials

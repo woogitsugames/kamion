@@ -25,8 +25,9 @@ from shapely import wkb
 from fetch_osm import REPO_ROOT, download, load_manifest
 
 WORK_CRS = "EPSG:2180"
-# Białystok + ring road/S8/S19 surroundings, WGS84 (lon_min, lat_min, lon_max, lat_max)
-BBOX_WGS84 = (22.98, 53.05, 23.32, 53.20)
+# Białystok + ring road/S8/S19 surroundings + the DK65 corridor to Knyszyn (ADR 0203/0204), WGS84
+# (lon_min, lat_min, lon_max, lat_max). The bbox is part of the cache key.
+BBOX_WGS84 = (22.80, 53.05, 23.32, 53.38)
 
 ROAD_TAGS = (
     "highway", "name", "ref", "lanes", "lanes:forward", "lanes:backward", "maxspeed",
@@ -35,6 +36,8 @@ ROAD_TAGS = (
     "width", "sidewalk", "lit", "destination", "destination:ref", "int_ref", "service",
     # ADR 0164: truck limits (kept in sync with roadgraph.TRUCK_LIMIT_TAGS)
     "maxaxleload", "maxlength", "maxweight:hgv", "hgv:conditional", "maxgvweightrating:hgv",
+    # ADR 0272: shoulder of the carriageway (kept in sync with roadgraph.SHOULDER_TAGS)
+    "shoulder", "shoulder:width", "shoulder:surface",
 )
 AREA_KEYS_LANDUSE = {"industrial", "railway", "commercial", "retail", "farmyard", "construction"}
 POINT_KEYS = {
@@ -124,7 +127,8 @@ def load_layers() -> dict[str, gpd.GeoDataFrame]:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     # the kept tag list is part of the key (ADR 0069 added destination:ref; a stale pickle silently dropped it)
     tags_key = hashlib.sha1(repr(ROAD_TAGS).encode()).hexdigest()[:8]
-    cache = CACHE_DIR / f"bialystok_layers_{sha[:16]}_{tags_key}.pkl"
+    bbox_key = hashlib.sha1(repr(BBOX_WGS84).encode()).hexdigest()[:8]
+    cache = CACHE_DIR / f"bialystok_layers_{sha[:16]}_{tags_key}_{bbox_key}.pkl"
     if cache.exists():
         raw = pickle.loads(cache.read_bytes())
     else:

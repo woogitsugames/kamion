@@ -1,0 +1,150 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0204): control cameras of knyszyn-s. Position region-local E/N (origin 761611, 610559) on the DK65 axis shifted by eye; height = terrain + eye_m, heading compass, fov vertical, pitch up.",
+ "cameras": [
+  {
+   "id": "dk65_seam_east",
+   "pos_en": [
+    989,
+    -710
+   ],
+   "heading_deg": 317,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DK65 35 m inside the east tile edge (seam with dk65-11, ADR 0203), looking NW; construction corridor on the left"
+  },
+  {
+   "id": "construction_from_dk65",
+   "pos_en": [
+    949,
+    -667
+   ],
+   "heading_deg": 300,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DK65 beside the construction zone, looking NW-W at the roundabout under construction (762490 609931)"
+  },
+  {
+   "id": "construction_above",
+   "pos_en": [
+    949,
+    -779
+   ],
+   "heading_deg": 320,
+   "eye_m": 80.0,
+   "fov_deg": 50,
+   "pitch_deg": -40,
+   "note": "QA only: 80 m above the corridor looking NW and down - site outline against DK65"
+  },
+  {
+   "id": "construction_back",
+   "pos_en": [
+    769,
+    -474
+   ],
+   "heading_deg": 137,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DK65 south-eastbound 200 m before the zone (as owner frame 20260728_072233: site on the right - direction of that frame is not known)"
+  },
+  {
+   "id": "dk65_forest",
+   "pos_en": [
+    589,
+    -279
+   ],
+   "heading_deg": 317,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DK65 through the pine wood NW of the zone"
+  },
+  {
+   "id": "dk65_fields",
+   "pos_en": [
+    -51,
+    407
+   ],
+   "heading_deg": 317,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DK65 across the fields, tile centre"
+  },
+  {
+   "id": "dk65_side_road",
+   "pos_en": [
+    89,
+    253
+   ],
+   "heading_deg": 317,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DK65 at the field road junction (unclassified road to the west)"
+  },
+  {
+   "id": "dk65_seam_north",
+   "pos_en": [
+    -581,
+    976
+   ],
+   "heading_deg": 317,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DK65 60 m before the north tile edge (seam with knyszyn)"
+  },
+  {
+   "id": "seam_e_top40",
+   "pos_en": [
+    1024.0,
+    -747.9
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 40.0,
+   "fov_deg": 50.0,
+   "pitch_deg": -89.9,
+   "note": "QA seam top view (north up, 66.3 m x 37.3 m, ADR 0233): DK65 on the seam with dk65-11 (this tile = west half); pair = artifacts/dk65-r4-s21/seam/ortho/pair_seam_e_top40.jpg"
+  },
+  {
+   "id": "k1_widening_top40",
+   "pos_en": [
+    689.7,
+    -389.6
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 40.0,
+   "fov_deg": 50.0,
+   "pitch_deg": -89.9,
+   "note": "QA seam top view (north up, 66.3 m x 37.3 m, ADR 0233): DK65 widens from the K1 section (lines 6.2 m) to the knyszyn-s section (7.1 m), km 25.32; pair = artifacts/dk65-r4-s21/seam/ortho/pair_k1_widening_top40.jpg"
+  },
+  {
+   "id": "seam_e_drive",
+   "pos_en": [
+    1022.5,
+    -743.8
+   ],
+   "heading_deg": 316.9,
+   "eye_m": 2.5,
+   "fov_deg": 60.0,
+   "pitch_deg": -1.5,
+   "note": "driver eye 2.5 m, along the route, route s = 4 m (ADR 0233): first metres after the dk65-11 seam"
+  },
+  {
+   "id": "k1_widening_drive",
+   "pos_en": [
+    725.1,
+    -424.8
+   ],
+   "heading_deg": 316.8,
+   "eye_m": 2.5,
+   "fov_deg": 60.0,
+   "pitch_deg": -1.5,
+   "note": "driver eye 2.5 m, along the route, route s = 440 m (ADR 0233): 50 m before the widening at km 25.32"
+  }
+ ]
+}

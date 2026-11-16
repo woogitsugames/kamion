@@ -1,0 +1,89 @@
+tier=Low lighting=clear msaa=2 renderScale=0.75
+cab-dash: objects=45 drawsEst=213 shadowDrawsEst=73 trisK=199 trisExact=199771 (estimate, before SRP batching)
+  cab-dash instanced (props+trees): draws 44, instances 54, triangles 4k, cells 133, forest HLOD cells 5, trianglesExact 4295
+cab-driver: objects=45 drawsEst=227 shadowDrawsEst=73 trisK=212 trisExact=212790 (estimate, before SRP batching)
+  cab-driver instanced (props+trees): draws 45, instances 58, triangles 4k, cells 161, forest HLOD cells 5, trianglesExact 4343
+cab-gate: objects=46 drawsEst=228 shadowDrawsEst=73 trisK=220 trisExact=220652 (estimate, before SRP batching)
+  cab-gate instanced (props+trees): draws 45, instances 58, triangles 4k, cells 155, forest HLOD cells 5, trianglesExact 4343
+cab-grain: objects=9 drawsEst=30 shadowDrawsEst=73 trisK=132 trisExact=132808 (estimate, before SRP batching)
+  cab-grain instanced (props+trees): draws 17, instances 11, triangles 2k, cells 2, forest HLOD cells 0, trianglesExact 2084
+cab-left: objects=32 drawsEst=124 shadowDrawsEst=73 trisK=189 trisExact=189691 (estimate, before SRP batching)
+  cab-left instanced (props+trees): draws 44, instances 40, triangles 2k, cells 131, forest HLOD cells 3, trianglesExact 2870
+cab-materials: objects=18 drawsEst=45 shadowDrawsEst=73 trisK=148 trisExact=148668 (estimate, before SRP batching)
+  cab-materials instanced (props+trees): draws 23, instances 19, triangles 2k, cells 3, forest HLOD cells 0, trianglesExact 2180
+cab-mirror-front: objects=14 drawsEst=37 shadowDrawsEst=73 trisK=135 trisExact=135733 (estimate, before SRP batching)
+  cab-mirror-front instanced (props+trees): draws 30, instances 36, triangles 2k, cells 8, forest HLOD cells 0, trianglesExact 2501
+cab-mirrors-left: objects=26 drawsEst=93 shadowDrawsEst=73 trisK=208 trisExact=208941 (estimate, before SRP batching)
+  cab-mirrors-left instanced (props+trees): draws 44, instances 40, triangles 2k, cells 106, forest HLOD cells 2, trianglesExact 2870
+cab-mirrors-right: objects=16 drawsEst=39 shadowDrawsEst=73 trisK=135 trisExact=135003 (estimate, before SRP batching)
+  cab-mirrors-right instanced (props+trees): draws 23, instances 28, triangles 2k, cells 5, forest HLOD cells 0, trianglesExact 2288
+cab-right: objects=21 drawsEst=66 shadowDrawsEst=73 trisK=161 trisExact=161290 (estimate, before SRP batching)
+  cab-right instanced (props+trees): draws 31, instances 44, triangles 2k, cells 26, forest HLOD cells 0, trianglesExact 2720
+cab-seat: objects=23 drawsEst=56 shadowDrawsEst=73 trisK=167 trisExact=167118 (estimate, before SRP batching)
+  cab-seat instanced (props+trees): draws 26, instances 22, triangles 2k, cells 36, forest HLOD cells 2, trianglesExact 2307
+cab-seat-entry: objects=23 drawsEst=58 shadowDrawsEst=73 trisK=157 trisExact=157735 (estimate, before SRP batching)
+  cab-seat-entry instanced (props+trees): draws 23, instances 19, triangles 2k, cells 3, forest HLOD cells 0, trianglesExact 2180
+chase: objects=74 drawsEst=251 shadowDrawsEst=54 trisK=137 trisExact=137029 (estimate, before SRP batching)
+  chase instanced (props+trees): draws 38, instances 49, triangles 2k, cells 143, forest HLOD cells 5, trianglesExact 2386
+drive-koscielna: objects=42 drawsEst=226 shadowDrawsEst=54 trisK=158 trisExact=158994 (estimate, before SRP batching)
+  drive-koscielna instanced (props+trees): draws 94, instances 124, triangles 10k, cells 206, forest HLOD cells 40, trianglesExact 10194
+drive-village: objects=42 drawsEst=200 shadowDrawsEst=0 trisK=129 trisExact=129447 (estimate, before SRP batching)
+  drive-village instanced (props+trees): draws 85, instances 498, triangles 44k, cells 211, forest HLOD cells 13, trianglesExact 44261
+edge-east: objects=4 drawsEst=12 shadowDrawsEst=2 trisK=39 trisExact=39835 (estimate, before SRP batching)
+  edge-east instanced (props+trees): draws 30, instances 32, triangles 3k, cells 5, forest HLOD cells 0, trianglesExact 3228
+edge-north: objects=3 drawsEst=5 shadowDrawsEst=0 trisK=19 trisExact=19229 (estimate, before SRP batching)
+  edge-north instanced (props+trees): draws 17, instances 19, triangles 6k, cells 5, forest HLOD cells 0, trianglesExact 6460
+edge-south: objects=5 drawsEst=10 shadowDrawsEst=0 trisK=33 trisExact=33215 (estimate, before SRP batching)
+  edge-south instanced (props+trees): draws 15, instances 17, triangles 3k, cells 4, forest HLOD cells 0, trianglesExact 3392
+edge-west: objects=4 drawsEst=6 shadowDrawsEst=0 trisK=32 trisExact=32710 (estimate, before SRP batching)
+  edge-west instanced (props+trees): draws 24, instances 27, triangles 4k, cells 4, forest HLOD cells 0, trianglesExact 4416
+lamp-trailer: objects=20 drawsEst=83 shadowDrawsEst=73 trisK=88 trisExact=88493 (estimate, before SRP batching)
+  lamp-trailer instanced (props+trees): draws 27, instances 39, triangles 2k, cells 31, forest HLOD cells 0, trianglesExact 2388
+lamp-truck: objects=50 drawsEst=159 shadowDrawsEst=73 trisK=223 trisExact=223710 (estimate, before SRP batching)
+  lamp-truck instanced (props+trees): draws 31, instances 46, triangles 2k, cells 58, forest HLOD cells 0, trianglesExact 2705
+plate-trailer: objects=82 drawsEst=268 shadowDrawsEst=54 trisK=176 trisExact=176202 (estimate, before SRP batching)
+  plate-trailer instanced (props+trees): draws 41, instances 43, triangles 3k, cells 140, forest HLOD cells 5, trianglesExact 3891
+plate-truck-bobtail: objects=73 drawsEst=256 shadowDrawsEst=47 trisK=245 trisExact=245973 (estimate, before SRP batching)
+  plate-truck-bobtail instanced (props+trees): draws 45, instances 56, triangles 4k, cells 134, forest HLOD cells 5, trianglesExact 4280
+rev-szkolna: objects=38 drawsEst=194 shadowDrawsEst=3 trisK=141 trisExact=141113 (estimate, before SRP batching)
+  rev-szkolna instanced (props+trees): draws 57, instances 76, triangles 11k, cells 212, forest HLOD cells 30, trianglesExact 11100
+route-s0149: objects=38 drawsEst=205 shadowDrawsEst=18 trisK=118 trisExact=118311 (estimate, before SRP batching)
+  route-s0149 instanced (props+trees): draws 54, instances 55, triangles 9k, cells 173, forest HLOD cells 16, trianglesExact 9000
+route-s0446: objects=40 drawsEst=243 shadowDrawsEst=28 trisK=132 trisExact=132595 (estimate, before SRP batching)
+  route-s0446 instanced (props+trees): draws 58, instances 88, triangles 7k, cells 178, forest HLOD cells 35, trianglesExact 7758
+route-s0743: objects=49 drawsEst=281 shadowDrawsEst=21 trisK=144 trisExact=144221 (estimate, before SRP batching)
+  route-s0743 instanced (props+trees): draws 80, instances 102, triangles 8k, cells 205, forest HLOD cells 43, trianglesExact 8470
+route-s1040: objects=44 drawsEst=207 shadowDrawsEst=4 trisK=134 trisExact=134285 (estimate, before SRP batching)
+  route-s1040 instanced (props+trees): draws 72, instances 103, triangles 9k, cells 219, forest HLOD cells 23, trianglesExact 9401
+route-s1337: objects=40 drawsEst=208 shadowDrawsEst=18 trisK=177 trisExact=177007 (estimate, before SRP batching)
+  route-s1337 instanced (props+trees): draws 60, instances 70, triangles 7k, cells 181, forest HLOD cells 7, trianglesExact 7266
+route-s1634: objects=26 drawsEst=121 shadowDrawsEst=16 trisK=105 trisExact=105291 (estimate, before SRP batching)
+  route-s1634 instanced (props+trees): draws 37, instances 72, triangles 3k, cells 86, forest HLOD cells 0, trianglesExact 3836
+route-s1931: objects=15 drawsEst=47 shadowDrawsEst=17 trisK=69 trisExact=69191 (estimate, before SRP batching)
+  route-s1931 instanced (props+trees): draws 49, instances 58, triangles 6k, cells 15, forest HLOD cells 0, trianglesExact 6957
+top-koscielna: objects=30 drawsEst=136 shadowDrawsEst=0 trisK=134 trisExact=134032 (estimate, before SRP batching)
+  top-koscielna instanced (props+trees): draws 27, instances 34, triangles 2k, cells 18, forest HLOD cells 2, trianglesExact 2010
+top-parking: objects=26 drawsEst=126 shadowDrawsEst=0 trisK=101 trisExact=101143 (estimate, before SRP batching)
+  top-parking instanced (props+trees): draws 20, instances 35, triangles 0k, cells 21, forest HLOD cells 0, trianglesExact 994
+top-seam-south: objects=47 drawsEst=98 shadowDrawsEst=0 trisK=74 trisExact=74471 (estimate, before SRP batching)
+  top-seam-south instanced (props+trees): draws 12, instances 13, triangles 0k, cells 7, forest HLOD cells 0, trianglesExact 279
+top-sosnowa: objects=17 drawsEst=67 shadowDrawsEst=0 trisK=97 trisExact=97146 (estimate, before SRP batching)
+  top-sosnowa instanced (props+trees): draws 25, instances 31, triangles 1k, cells 20, forest HLOD cells 1, trianglesExact 1875
+top-szkolna: objects=12 drawsEst=43 shadowDrawsEst=0 trisK=44 trisExact=44397 (estimate, before SRP batching)
+  top-szkolna instanced (props+trees): draws 19, instances 24, triangles 0k, cells 14, forest HLOD cells 0, trianglesExact 692
+trailer-34: objects=56 drawsEst=163 shadowDrawsEst=54 trisK=94 trisExact=94602 (estimate, before SRP batching)
+  trailer-34 instanced (props+trees): draws 34, instances 39, triangles 2k, cells 74, forest HLOD cells 3, trianglesExact 2648
+trailer-side: objects=26 drawsEst=54 shadowDrawsEst=54 trisK=61 trisExact=61866 (estimate, before SRP batching)
+  trailer-side instanced (props+trees): draws 23, instances 23, triangles 0k, cells 4, forest HLOD cells 0, trianglesExact 467
+truck-34: objects=56 drawsEst=99 shadowDrawsEst=73 trisK=165 trisExact=165594 (estimate, before SRP batching)
+  truck-34 instanced (props+trees): draws 29, instances 21, triangles 4k, cells 3, forest HLOD cells 0, trianglesExact 4544
+truck-34r: objects=56 drawsEst=99 shadowDrawsEst=73 trisK=165 trisExact=165594 (estimate, before SRP batching)
+  truck-34r instanced (props+trees): draws 17, instances 12, triangles 2k, cells 2, forest HLOD cells 0, trianglesExact 2084
+truck-at-gate: objects=56 drawsEst=99 shadowDrawsEst=75 trisK=165 trisExact=165594 (estimate, before SRP batching)
+  truck-at-gate instanced (props+trees): draws 17, instances 12, triangles 2k, cells 2, forest HLOD cells 0, trianglesExact 2084
+truck-front: objects=56 drawsEst=99 shadowDrawsEst=73 trisK=165 trisExact=165594 (estimate, before SRP batching)
+  truck-front instanced (props+trees): draws 18, instances 12, triangles 2k, cells 2, forest HLOD cells 0, trianglesExact 2096
+truck-rear34: objects=51 drawsEst=140 shadowDrawsEst=73 trisK=178 trisExact=178815 (estimate, before SRP batching)
+  truck-rear34 instanced (props+trees): draws 31, instances 43, triangles 2k, cells 46, forest HLOD cells 0, trianglesExact 2669
+truck-side: objects=46 drawsEst=83 shadowDrawsEst=73 trisK=161 trisExact=161291 (estimate, before SRP batching)
+  truck-side instanced (props+trees): draws 31, instances 24, triangles 7k, cells 4, forest HLOD cells 0, trianglesExact 7127

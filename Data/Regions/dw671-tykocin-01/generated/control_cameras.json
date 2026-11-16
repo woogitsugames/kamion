@@ -1,0 +1,522 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0163",
+   "look_at": [
+    395.492,
+    880.524,
+    125.504
+   ],
+   "note": "driver eye 2.5 m, control route s = 163 m of 2608 m (Tykocka)",
+   "pos": [
+    440.402,
+    920.344,
+    124.561
+   ],
+   "route_s_m": 162.992,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0489",
+   "look_at": [
+    149.853,
+    666.258,
+    134.784
+   ],
+   "note": "driver eye 2.5 m, control route s = 489 m of 2608 m (Tykocka)",
+   "pos": [
+    193.206,
+    707.81,
+    134.283
+   ],
+   "route_s_m": 488.975,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0815",
+   "look_at": [
+    -88.34,
+    443.707,
+    134.768
+   ],
+   "note": "driver eye 2.5 m, control route s = 815 m of 2608 m (Tykocka)",
+   "pos": [
+    -45.67,
+    485.916,
+    135.165
+   ],
+   "route_s_m": 814.959,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1141",
+   "look_at": [
+    -325.922,
+    220.504,
+    133.571
+   ],
+   "note": "driver eye 2.5 m, control route s = 1141 m of 2608 m (unnamed)",
+   "pos": [
+    -283.186,
+    262.646,
+    136.081
+   ],
+   "route_s_m": 1140.942,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1467",
+   "look_at": [
+    -492.872,
+    -56.929,
+    126.319
+   ],
+   "note": "driver eye 2.5 m, control route s = 1467 m of 2608 m (unnamed)",
+   "pos": [
+    -467.408,
+    -2.576,
+    128.287
+   ],
+   "route_s_m": 1466.926,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s1793",
+   "look_at": [
+    -639.113,
+    -348.269,
+    124.899
+   ],
+   "note": "driver eye 2.5 m, control route s = 1793 m of 2608 m (unnamed)",
+   "pos": [
+    -613.648,
+    -293.916,
+    126.404
+   ],
+   "route_s_m": 1792.909,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2119",
+   "look_at": [
+    -784.178,
+    -640.187,
+    120.383
+   ],
+   "note": "driver eye 2.5 m, control route s = 2119 m of 2608 m (unnamed)",
+   "pos": [
+    -759.103,
+    -585.654,
+    122.082
+   ],
+   "route_s_m": 2118.893,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s2445",
+   "look_at": [
+    -929.536,
+    -931.965,
+    117.031
+   ],
+   "note": "driver eye 2.5 m, control route s = 2445 m of 2608 m (unnamed)",
+   "pos": [
+    -903.967,
+    -877.662,
+    118.302
+   ],
+   "route_s_m": 2444.876,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dw671_seam_north_out",
+   "look_at": [
+    390.396,
+    875.721,
+    120.008
+   ],
+   "note": "place camera: driver eye on DW671 ~130 m from the north seam (past the 60 m world-edge closure), outbound SW towards Tykocin",
+   "pos": [
+    467.0,
+    940.0,
+    123.5
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dw671_inbound_to_knyszyn",
+   "look_at": [
+    337.471,
+    830.606,
+    126.998
+   ],
+   "note": "place camera: driver eye on DW671 inbound NE towards Knyszyn (tile knyszyn-w)",
+   "pos": [
+    262.0,
+    765.0,
+    130.49
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dw671_village_approach",
+   "look_at": [
+    -203.135,
+    333.8,
+    133.408
+   ],
+   "note": "place camera: DW671 outbound ~110 m before the village junctions (-212,328 / -375,168)",
+   "pos": [
+    -130.0,
+    402.0,
+    136.9
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "village_above",
+   "look_at": [
+    -300.0,
+    350.0,
+    103.25
+   ],
+   "note": "place camera: plan-like view of the village junctions on DW671, pair with orthophoto",
+   "pos": [
+    -300.0,
+    250.0,
+    203.25
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dw671_south_junction_approach",
+   "look_at": [
+    -695.399,
+    -469.101,
+    122.098
+   ],
+   "note": "place camera: DW671 outbound before the two junctions at -716,-501 / -755,-581",
+   "pos": [
+    -650.0,
+    -380.0,
+    125.59
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "south_junction_above",
+   "look_at": [
+    -735.0,
+    -440.0,
+    79.27
+   ],
+   "note": "place camera: plan-like view of the south junctions",
+   "pos": [
+    -735.0,
+    -540.0,
+    179.27
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "dw671_south_edge_in",
+   "look_at": [
+    -871.601,
+    -818.899,
+    114.848
+   ],
+   "note": "place camera: driver eye ~130 m inside the south tile edge, inbound NE towards Knyszyn",
+   "pos": [
+    -917.0,
+    -908.0,
+    118.34
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "seam_north_above",
+   "look_at": [
+    480.0,
+    1060.0,
+    81.199
+   ],
+   "note": "place camera: north seam with knyszyn-w from above",
+   "pos": [
+    480.0,
+    960.0,
+    174.45
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_xing_from_ne",
+   "look_at": [
+    -745.42,
+    -560.893,
+    119.781
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): driver eye ~70 m before the DW671 level crossing, outbound SW",
+   "pos": [
+    -700.8,
+    -471.4,
+    123.273
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_xing_close_ne",
+   "look_at": [
+    -769.92,
+    -610.093,
+    107.758
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): driver eye ~15 m before the crossing, outbound SW",
+   "pos": [
+    -725.3,
+    -520.6,
+    121.812
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_xing_from_sw",
+   "look_at": [
+    -707.48,
+    -484.807,
+    118.446
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): driver eye ~45 m before the crossing, inbound NE",
+   "pos": [
+    -752.1,
+    -574.3,
+    121.938
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_xing_above",
+   "look_at": [
+    -732.0,
+    -504.0,
+    89.91
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): plan-like view of the crossing, pair with orthophoto",
+   "pos": [
+    -732.0,
+    -604.0,
+    189.91
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_track_along",
+   "look_at": [
+    -701.829,
+    -560.206,
+    115.556
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): on the track 60 m NW of the crossing, looking SE along the track",
+   "pos": [
+    -777.3,
+    -494.6,
+    122.548
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_track_side",
+   "look_at": [
+    -713.397,
+    -510.0,
+    114.89
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): field SW of the track, oblique view of track bed and crossing",
+   "pos": [
+    -800.0,
+    -560.0,
+    125.4
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "rail_xing_top",
+   "look_at": [
+    -732.15,
+    -435.4,
+    -2682.328
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21): top view of the DW671 level crossing (~60 m window), pair with artifacts/rail-fix-s21/ref/ortho_0p10_crossing_60m.jpg",
+   "pos": [
+    -732.15,
+    -535.4,
+    181.297
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_bed_close",
+   "look_at": [
+    -692.529,
+    -573.606,
+    95.787
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21): standing beside the track 45 m NW of the crossing: ballast, sleepers, rails at eye height",
+   "pos": [
+    -768.0,
+    -508.0,
+    120.72
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_xing_devices_sw",
+   "look_at": [
+    -697.98,
+    -465.507,
+    121.782
+   ],
+   "note": "place camera: ADR 0217 (rail-fix-s21): driver eye ~22 m before the crossing, inbound NE - pose of Mapillary 828893548045009 (barriers, signals)",
+   "pos": [
+    -742.6,
+    -555.0,
+    121.782
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_far_a",
+   "look_at": [
+    -704.851,
+    -474.426,
+    123.13
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 165 m before level crossing osm:node/1778182481, approach a - approach signs / posts",
+   "pos": [
+    -660.7,
+    -384.7,
+    125.749
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_near_a",
+   "look_at": [
+    -764.451,
+    -595.526,
+    115.033
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 30 m before level crossing osm:node/1778182481, approach a - approach signs / posts",
+   "pos": [
+    -720.3,
+    -505.8,
+    122.026
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_far_b",
+   "look_at": [
+    -759.449,
+    -592.374,
+    118.333
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 165 m before level crossing osm:node/1778182481, approach b - approach signs / posts",
+   "pos": [
+    -803.6,
+    -682.1,
+    120.951
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_near_b",
+   "look_at": [
+    -699.849,
+    -471.274,
+    114.787
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 30 m before level crossing osm:node/1778182481, approach b - approach signs / posts",
+   "pos": [
+    -744.0,
+    -561.0,
+    121.78
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rail_x0_side_eye",
+   "look_at": [
+    -682.63,
+    -602.812,
+    116.641
+   ],
+   "note": "place camera: rail-dk65-s22 (REVIEW s22 0217 visual P2-12): pedestrian eye 1.6 m, 13 m beside the road, looking at level crossing osm:node/1778182481 - scale of devices, kerb cut",
+   "pos": [
+    -740.7,
+    -521.4,
+    120.133
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_top",
+   "look_at": [
+    -732.1,
+    -433.9,
+    -5571.686
+   ],
+   "note": "place camera: rail-dk65-s22: top view of level crossing osm:node/1778182481 (panels, kerb cut, P-4, P-14)",
+   "pos": [
+    -732.1,
+    -533.9,
+    157.31
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 279.931,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dw671-tykocin-01",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

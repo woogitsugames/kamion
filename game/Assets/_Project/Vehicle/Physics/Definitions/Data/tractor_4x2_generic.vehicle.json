@@ -3,7 +3,7 @@
   "id": "tractor_4x2_generic",
   "description": "Generic modern EU 4x2 long-haul tractor, high sleeper cab. Solo or with a semi-trailer (fifth wheel). Provenance: docs/VEHICLE_REFERENCE_DATA.md",
   "engineId": "diesel_r6_13l_368kw",
-  "gearboxId": "amt12_od_traxon_class",
+  "gearboxId": "amt12_od_class",
   "massElements": [
     {
       "name": "frame_rails_crossmembers",
@@ -11,12 +11,12 @@
       "center": {
         "x": 0,
         "y": 0.95,
-        "z": 1.6
+        "z": 2.1
       },
       "size": {
         "x": 0.9,
         "y": 0.3,
-        "z": 6.0
+        "z": 5.8
       }
     },
     {
@@ -63,7 +63,7 @@
     },
     {
       "name": "rear_axle_duals_brakes",
-      "massKg": 1300,
+      "massKg": 1100,
       "center": {
         "x": 0,
         "y": 0.51,
@@ -95,7 +95,7 @@
       "center": {
         "x": 0,
         "y": 1.0,
-        "z": 1.5
+        "z": 2.6
       },
       "size": {
         "x": 2.2,
@@ -119,7 +119,7 @@
     },
     {
       "name": "cooling_front_bumper",
-      "massKg": 300,
+      "massKg": 500,
       "center": {
         "x": 0,
         "y": 1.0,
@@ -143,17 +143,17 @@
       "tireId": "tire_315_80_r22_5",
       "suspension": {
         "type": "parabolic_leaf",
-        "springRate": 213000,
+        "springRate": 250000,
         "progressiveRate": 2000000.0,
         "travel": 0.18,
         "staticPositionFraction": 0.5,
         "bumpStopClearance": 0.025,
         "bumpStopRate": 40000000.0,
-        "damperBump": 9000,
-        "damperRebound": 18000,
+        "damperBump": 10000,
+        "damperRebound": 20000,
         "damperKneeVelocity": 0.3,
         "damperHighSpeedFactor": 0.4,
-        "antiRollStiffness": 200000
+        "antiRollStiffness": 222000
       },
       "serviceBrakeTorque": 20000,
       "parkingBrakeTorque": 0,
@@ -175,17 +175,17 @@
       "tireId": "tire_315_80_r22_5",
       "suspension": {
         "type": "air_4_bellows",
-        "springRate": 91000,
+        "springRate": 73000,
         "progressiveRate": 1500000.0,
         "travel": 0.2,
         "staticPositionFraction": 0.5,
-        "bumpStopClearance": 0.025,
+        "bumpStopClearance": 0.015,
         "bumpStopRate": 40000000.0,
         "damperBump": 5000,
         "damperRebound": 10000,
         "damperKneeVelocity": 0.3,
         "damperHighSpeedFactor": 0.4,
-        "antiRollStiffness": 300000,
+        "antiRollStiffness": 240000,
         "airLevelling": true,
         "levellingTimeConstant": 8.0,
         "levellingDeadband": 0.008,
@@ -304,6 +304,8 @@
     "rollLimitDeg": 4,
     "yawLimitDeg": 90,
     "stopFrequencyHz": 10,
+    "stopDampingRatio": 0.7,
+    "stopRecoveryRateDegS": 0.5,
     "yawStopFrequencyHz": 3,
     "plateFrictionCoeff": 0.08,
     "plateFrictionRadius": 0.35,

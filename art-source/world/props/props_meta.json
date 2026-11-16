@@ -1,76 +1,72 @@
 {
  "boards_m": {
   "E-1_57412": [
-   2.444,
-   2.0
-  ],
-  "E-1_79161": [
-   2.444,
+   4.675,
    2.0
   ],
   "E-1_82686": [
-   2.444,
+   4.675,
    2.0
   ],
   "E-1_92106": [
-   2.444,
-   2.0
+   4.59,
+   1.56
   ],
   "E-2_41037": [
-   1.16,
-   0.183
+   1.744,
+   0.316
   ],
   "E-2_57737": [
-   1.429,
-   0.309
+   2.144,
+   0.534
   ],
   "E-2_60520": [
-   1.049,
-   0.309
+   1.45,
+   0.534
   ],
   "E-2_65161": [
-   1.468,
-   0.309
+   2.188,
+   0.534
   ],
   "E-2_76988": [
-   1.088,
-   0.309
+   1.587,
+   0.534
   ],
   "E-2_80201": [
-   1.232,
-   0.309
+   1.825,
+   0.534
   ],
   "E-2_90339": [
-   0.852,
-   0.309
+   1.169,
+   0.534
   ],
   "E-2a_32638": [
-   0.973,
-   0.183
+   1.509,
+   0.316
   ],
   "E-2a_41037": [
-   1.16,
-   0.183
+   1.744,
+   0.316
   ],
   "E-2a_57737": [
-   1.429,
-   0.309
+   2.144,
+   0.534
   ],
   "E-2a_60520": [
-   1.049,
-   0.309
+   1.45,
+   0.534
   ],
   "E-2a_71003": [
-   1.45,
-   0.309
+   2.125,
+   0.534
   ],
   "E-2a_80201": [
-   1.232,
-   0.309
+   1.825,
+   0.534
   ],
   "E-2a_90339": [
-   0.852,
-   0.309
+   1.169,
+   0.534
   ],
   "G302fbfd35": [
    0.957,
@@ -87,6 +83,10 @@
   "G3518e7fb6": [
    0.807,
    1.35
+  ],
+  "G35e7b81b7": [
+   0.527,
+   0.6
   ],
   "G36d823cb6": [
    1.057,
@@ -116,6 +116,10 @@
    0.957,
    1.379
   ],
+  "G3d9d7190e": [
+   0.852,
+   0.6
+  ],
   "G3ee8d02e9": [
    0.957,
    0.55
@@ -128,13 +132,17 @@
    3.75,
    0.819
   ],
+  "OB_370408b8": [
+   4.6,
+   1.85
+  ],
   "OB_38f28ad5": [
    3.8,
-   1.194
+   1.2
   ],
   "OB_4d205e4f": [
-   4.325,
-   1.681
+   4.331,
+   1.7
   ],
   "OB_4e2b750e": [
    6.1,
@@ -142,15 +150,15 @@
   ],
   "OB_6a9707a8": [
    2.938,
-   0.662
-  ],
-  "OB_6bbf26a1": [
-   4.606,
-   3.275
+   0.669
   ],
   "OB_8288a4df": [
-   4.275,
-   1.175
+   4.281,
+   1.188
+  ],
+  "OB_ae590feb": [
+   3.3,
+   1.8
   ],
   "OB_df66f90d": [
    5.0,
@@ -158,7 +166,7 @@
   ],
   "OB_e2240cee": [
    4.4,
-   1.7
+   1.719
   ]
  },
  "prototypes": {
@@ -258,16 +266,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
-  },
-  "board_E-1_79161": {
-   "materials": [
-    "plate_back",
-    "sign_E-1_79161",
-    "steel_galv"
-   ],
-   "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-1_82686": {
    "materials": [
@@ -276,7 +275,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-1_92106": {
    "materials": [
@@ -285,7 +284,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2_41037": {
    "materials": [
@@ -294,7 +293,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2_57737": {
    "materials": [
@@ -303,7 +302,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2_60520": {
    "materials": [
@@ -312,7 +311,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2_65161": {
    "materials": [
@@ -321,7 +320,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2_76988": {
    "materials": [
@@ -330,7 +329,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2_80201": {
    "materials": [
@@ -339,7 +338,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2_90339": {
    "materials": [
@@ -348,7 +347,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2a_32638": {
    "materials": [
@@ -357,7 +356,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2a_41037": {
    "materials": [
@@ -366,7 +365,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2a_57737": {
    "materials": [
@@ -375,7 +374,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2a_60520": {
    "materials": [
@@ -384,7 +383,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2a_71003": {
    "materials": [
@@ -393,7 +392,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2a_80201": {
    "materials": [
@@ -402,7 +401,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_E-2a_90339": {
    "materials": [
@@ -411,7 +410,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G302fbfd35": {
    "materials": [
@@ -420,7 +419,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G3044f8e65": {
    "materials": [
@@ -429,7 +428,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G33c600842": {
    "materials": [
@@ -438,7 +437,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G3518e7fb6": {
    "materials": [
@@ -447,7 +446,16 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
+  },
+  "board_G35e7b81b7": {
+   "materials": [
+    "plate_back",
+    "sign_G35e7b81b7",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 4
   },
   "board_G36d823cb6": {
    "materials": [
@@ -456,7 +464,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G390e84fe0": {
    "materials": [
@@ -465,7 +473,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G39d7dde6e": {
    "materials": [
@@ -474,7 +482,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G3ae1e4f1d": {
    "materials": [
@@ -483,7 +491,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G3d0460cfb": {
    "materials": [
@@ -492,7 +500,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G3d34c990e": {
    "materials": [
@@ -501,7 +509,7 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_G3d380d5d4": {
    "materials": [
@@ -510,7 +518,16 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
+  },
+  "board_G3d9d7190e": {
+   "materials": [
+    "plate_back",
+    "sign_G3d9d7190e",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 4
   },
   "board_G3ee8d02e9": {
    "materials": [
@@ -519,77 +536,84 @@
     "steel_galv"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_OB_1600630d": {
    "materials": [
     "sign_OB_1600630d"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_OB_287c4a39": {
    "materials": [
     "sign_OB_287c4a39"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
+  },
+  "board_OB_370408b8": {
+   "materials": [
+    "sign_OB_370408b8"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 4
   },
   "board_OB_38f28ad5": {
    "materials": [
     "sign_OB_38f28ad5"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_OB_4d205e4f": {
    "materials": [
     "sign_OB_4d205e4f"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_OB_4e2b750e": {
    "materials": [
     "sign_OB_4e2b750e"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_OB_6a9707a8": {
    "materials": [
     "sign_OB_6a9707a8"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
-  },
-  "board_OB_6bbf26a1": {
-   "materials": [
-    "sign_OB_6bbf26a1"
-   ],
-   "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_OB_8288a4df": {
    "materials": [
     "sign_OB_8288a4df"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
+  },
+  "board_OB_ae590feb": {
+   "materials": [
+    "sign_OB_ae590feb"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 4
   },
   "board_OB_df66f90d": {
    "materials": [
     "sign_OB_df66f90d"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "board_OB_e2240cee": {
    "materials": [
     "sign_OB_e2240cee"
    ],
    "tris_lod0": 28,
-   "tris_lod1": 28
+   "tris_lod1": 4
   },
   "bollard": {
    "materials": [
@@ -605,6 +629,27 @@
    ],
    "tris_lod0": 128,
    "tris_lod1": 40
+  },
+  "bollard_rw": {
+   "materials": [
+    "chain_bollard"
+   ],
+   "tris_lod0": 78,
+   "tris_lod1": 15
+  },
+  "bollard_rw_chain": {
+   "materials": [
+    "chain_bollard"
+   ],
+   "tris_lod0": 270,
+   "tris_lod1": 79
+  },
+  "bollard_rw_chain_b": {
+   "materials": [
+    "chain_bollard"
+   ],
+   "tris_lod0": 270,
+   "tris_lod1": 79
   },
   "bus_shelter": {
    "materials": [
@@ -1633,12 +1678,32 @@
    "tris_lod0": 174,
    "tris_lod1": 91
   },
+  "lamp_old_concrete_led_9m": {
+   "materials": [
+    "furniture_concrete",
+    "furniture_grey",
+    "lamp_glass",
+    "luminaire_housing"
+   ],
+   "tris_lod0": 174,
+   "tris_lod1": 91
+  },
   "lamp_old_steel_8m": {
    "materials": [
     "furniture_footing",
     "furniture_grey",
     "lamp_glass_sodium",
     "luminaire_old"
+   ],
+   "tris_lod0": 83,
+   "tris_lod1": 53
+  },
+  "lamp_old_steel_led_8m": {
+   "materials": [
+    "furniture_footing",
+    "furniture_grey",
+    "lamp_glass",
+    "luminaire_housing"
    ],
    "tris_lod0": 83,
    "tris_lod1": 53
@@ -1695,7 +1760,7 @@
     "sign_A-7",
     "steel_galv"
    ],
-   "tris_lod0": 66,
+   "tris_lod0": 60,
    "tris_lod1": 30
   },
   "plate_B-33_20": {
@@ -1704,7 +1769,7 @@
     "sign_B-33_20",
     "steel_galv"
    ],
-   "tris_lod0": 240,
+   "tris_lod0": 176,
    "tris_lod1": 88
   },
   "plate_B-33_30": {
@@ -1713,7 +1778,7 @@
     "sign_B-33_30",
     "steel_galv"
    ],
-   "tris_lod0": 240,
+   "tris_lod0": 176,
    "tris_lod1": 88
   },
   "plate_B-33_40": {
@@ -1722,7 +1787,7 @@
     "sign_B-33_40",
     "steel_galv"
    ],
-   "tris_lod0": 240,
+   "tris_lod0": 176,
    "tris_lod1": 88
   },
   "plate_B-33_70": {
@@ -1731,7 +1796,7 @@
     "sign_B-33_70",
     "steel_galv"
    ],
-   "tris_lod0": 240,
+   "tris_lod0": 176,
    "tris_lod1": 88
   },
   "plate_C-12": {
@@ -1740,7 +1805,7 @@
     "sign_C-12",
     "steel_galv"
    ],
-   "tris_lod0": 240,
+   "tris_lod0": 176,
    "tris_lod1": 88
   },
   "plate_C-9": {
@@ -1749,7 +1814,7 @@
     "sign_C-9",
     "steel_galv"
    ],
-   "tris_lod0": 240,
+   "tris_lod0": 176,
    "tris_lod1": 88
   },
   "plate_D-1": {
@@ -1758,7 +1823,7 @@
     "sign_D-1",
     "steel_galv"
    ],
-   "tris_lod0": 72,
+   "tris_lod0": 64,
    "tris_lod1": 32
   },
   "plate_D-6": {
@@ -1767,7 +1832,7 @@
     "sign_D-6",
     "steel_galv"
    ],
-   "tris_lod0": 72,
+   "tris_lod0": 64,
    "tris_lod1": 32
   },
   "power_pole": {
@@ -1809,12 +1874,12 @@
    "tris_lod0": 24,
    "tris_lod1": 12
   },
-  "sign_cantilever_L8_86": {
+  "sign_cantilever_L8_72": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 528,
-   "tris_lod1": 240
+   "tris_lod0": 412,
+   "tris_lod1": 108
   },
   "sign_g3_G302fbfd35": {
    "materials": [
@@ -1843,6 +1908,13 @@
    ],
    "tris_lod0": 28,
    "tris_lod1": 16
+  },
+  "sign_g3_G35e7b81b7": {
+   "materials": [
+    "sign_G35e7b81b7"
+   ],
+   "tris_lod0": 32,
+   "tris_lod1": 20
   },
   "sign_g3_G36d823cb6": {
    "materials": [
@@ -1893,6 +1965,13 @@
    "tris_lod0": 54,
    "tris_lod1": 42
   },
+  "sign_g3_G3d9d7190e": {
+   "materials": [
+    "sign_G3d9d7190e"
+   ],
+   "tris_lod0": 32,
+   "tris_lod1": 20
+  },
   "sign_g3_G3ee8d02e9": {
    "materials": [
     "sign_G3ee8d02e9"
@@ -1904,36 +1983,43 @@
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 1072,
-   "tris_lod1": 480
+   "tris_lod0": 840,
+   "tris_lod1": 208
   },
   "sign_gantry_11_68": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 960,
-   "tris_lod1": 444
+   "tris_lod0": 756,
+   "tris_lod1": 196
   },
-  "sign_gantry_14_61_b6": {
+  "sign_gantry_13_68_b6": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 1008,
-   "tris_lod1": 480
+   "tris_lod0": 780,
+   "tris_lod1": 204
   },
-  "sign_gantry_16_66": {
+  "sign_gantry_14_62_b6": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 1040,
-   "tris_lod1": 504
+   "tris_lod0": 792,
+   "tris_lod1": 208
+  },
+  "sign_gantry_16_67": {
+   "materials": [
+    "gantry_steel"
+   ],
+   "tris_lod0": 816,
+   "tris_lod1": 216
   },
   "sign_gantry_26_61": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 1200,
-   "tris_lod1": 624
+   "tris_lod0": 936,
+   "tris_lod1": 256
   },
   "sign_post": {
    "materials": [
@@ -1941,6 +2027,130 @@
    ],
    "tris_lod0": 30,
    "tris_lod1": 12
+  },
+  "signal_bike_green": {
+   "materials": [
+    "signal_green_on",
+    "signal_housing",
+    "signal_red_off",
+    "signal_yellow_off"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_bike_off": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off",
+    "signal_yellow_off"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_bike_red": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_on",
+    "signal_yellow_off"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_bike_yellow": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off",
+    "signal_yellow_on"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_head1_green": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 60
+  },
+  "signal_head1_off": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 60
+  },
+  "signal_head1_red": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_housing",
+    "signal_red_on"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 60
+  },
+  "signal_head1_yellow": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 160,
+   "tris_lod1": 60
+  },
+  "signal_head2_green": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_on",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 212,
+   "tris_lod1": 76
+  },
+  "signal_head2_off": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 212,
+   "tris_lod1": 76
+  },
+  "signal_head2_red": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_on"
+   ],
+   "tris_lod0": 212,
+   "tris_lod1": 76
+  },
+  "signal_head2_yellow": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 212,
+   "tris_lod1": 76
   },
   "signal_head_green": {
    "materials": [
@@ -1951,8 +2161,8 @@
     "signal_red_off",
     "signal_yellow_off"
    ],
-   "tris_lod0": 120,
-   "tris_lod1": 84
+   "tris_lod0": 264,
+   "tris_lod1": 92
   },
   "signal_head_off": {
    "materials": [
@@ -1963,8 +2173,8 @@
     "signal_red_off",
     "signal_yellow_off"
    ],
-   "tris_lod0": 120,
-   "tris_lod1": 84
+   "tris_lod0": 264,
+   "tris_lod1": 92
   },
   "signal_head_red": {
    "materials": [
@@ -1975,8 +2185,60 @@
     "signal_red_on",
     "signal_yellow_off"
    ],
-   "tris_lod0": 120,
-   "tris_lod1": 84
+   "tris_lod0": 264,
+   "tris_lod1": 92
+  },
+  "signal_head_side_green": {
+   "materials": [
+    "signal_green_on",
+    "signal_housing",
+    "signal_red_off",
+    "signal_yellow_off"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_head_side_off": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off",
+    "signal_yellow_off"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_head_side_red": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_on",
+    "signal_yellow_off"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_head_side_yellow": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off",
+    "signal_yellow_on"
+   ],
+   "tris_lod0": 168,
+   "tris_lod1": 60
+  },
+  "signal_head_yellow": {
+   "materials": [
+    "signal_backplate",
+    "signal_border",
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off",
+    "signal_yellow_on"
+   ],
+   "tris_lod0": 264,
+   "tris_lod1": 92
   },
   "signal_mast": {
    "materials": [
@@ -1991,6 +2253,42 @@
    ],
    "tris_lod0": 170,
    "tris_lod1": 45
+  },
+  "signal_ped_green": {
+   "materials": [
+    "signal_green_on",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 116,
+   "tris_lod1": 44
+  },
+  "signal_ped_off": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 116,
+   "tris_lod1": 44
+  },
+  "signal_ped_red": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_on"
+   ],
+   "tris_lod0": 116,
+   "tris_lod1": 44
+  },
+  "signal_ped_yellow": {
+   "materials": [
+    "signal_green_off",
+    "signal_housing",
+    "signal_red_off"
+   ],
+   "tris_lod0": 116,
+   "tris_lod1": 44
   },
   "signal_pole": {
    "materials": [

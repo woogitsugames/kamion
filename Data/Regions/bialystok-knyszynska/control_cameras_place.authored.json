@@ -1,0 +1,14 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0208): driver-eye control cameras at the two seams of the D64 truck route that the route cameras (every ~370 m, first at s = 185 m) do not show. Position region-local E/N (origin 771851, 596223) taken from route_start.json (centre of the rightmost lane), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical.",
+ "cameras": [
+  {"id": "seam_e_into_tile", "pos_en": [993.1, -729.7], "heading_deg": 242.3, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "Kleeberga westbound 36 m inside the east edge (seam with bialystok-kleeberga; the control truck stands on the first 20 m of the route, r2 at 4 m rendered the inside of its trailer): mainline, added lane 561326924 on the right, exit to rondo Pamieci Meczenstwa Kresowian ahead"},
+  {"id": "seam_e_back_to_edge", "pos_en": [971.8, -740.9], "heading_deg": 62.2, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "same carriageway 60 m inside, looking back east at the tile edge: carriageway, kerbs, barriers and terrain must end flush at x = 772875"},
+  {"id": "seam_w_to_edge", "pos_en": [-965.1, 772.0], "heading_deg": 282.6, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "Szosa Knyszynska westbound 60 m before the west edge (seam with dk65-01): 6.0 m carriageway with edge lines up to x = 770827"},
+  {"id": "seam_w_back_into_tile", "pos_en": [-1019.8, 784.2], "heading_deg": 103.0, "eye_m": 2.5, "fov_deg": 60.0, "pitch_deg": 0.0,
+   "note": "Szosa Knyszynska 4 m inside the west edge, looking east (the view of a truck arriving from dk65-01)"}
+ ]
+}

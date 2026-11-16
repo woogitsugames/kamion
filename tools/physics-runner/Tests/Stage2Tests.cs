@@ -68,7 +68,7 @@ namespace PhysicsRunner.Tests
             Assert.True(low > high + 0.05, $"low {low} high {high}");
         }
 
-        /// <summary>Endurance brake ratings vs the class-reference sources (S1 VEB+ 375 kW at 2300 rpm, S2 Intarder 4000 Nm / 600 kW).</summary>
+        /// <summary>Endurance brake ratings vs the class-reference sources (S1 engine brake 375 kW at 2300 rpm, S2 retarder 4000 Nm / 600 kW).</summary>
         [Fact]
         public void EnduranceBrakes_MatchClassReference()
         {

@@ -1,0 +1,144 @@
+"""ADR 0186 - greenery of the frame P11-063 (Mickiewicza / Kuronia, region bialystok-dojlidy): the `thicket` shrub
+mass, traced tree stems (`points_en`), the node override `signalized` and the camera of the frame.
+
+Everything is opt-in: region C has no such data, so its output cannot change (asserted on the data)."""
+import json
+import math
+import sys
+from pathlib import Path
+
+import numpy as np
+import pytest
+import yaml
+
+REPO = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO / "tools" / "worldgen"))
+
+DOJ = REPO / "Data" / "Regions" / "bialystok-dojlidy"
+C = REPO / "Data" / "Regions" / "bialystok-industrial-c"
+
+
+def _ov(d):
+    return (yaml.safe_load((d / "overrides.yaml").read_text(encoding="utf-8")) or {}).get("overrides", [])
+
+
+class _Buf:
+    def __init__(self):
+        self.tris, self.V = {}, []
+
+    def add(self, layer, mat, V, UV, T, src="", **kw):
+        self.tris[mat] = self.tris.get(mat, 0) + len(T)
+        self.V.append(np.asarray(V, float))
+
+
+def test_region_c_uses_none_of_it():
+    ov = _ov(C)
+    assert not [o["id"] for o in ov if o.get("kind") == "tree_groups" and o.get("points_en")]
+    assert not [o["id"] for o in ov if "signalized" in (o.get("set") or {})]
+    assert not [o["id"] for o in ov if o.get("kind") == "plantings"
+                and any(b.get("plant") == "thicket" for b in o.get("beds", []))]
+
+
+def test_thicket_is_a_closed_mass_on_the_ground():
+    from shapely.geometry import Polygon
+    from streetscape import plantings as PT
+    S = PT.SPECIES["thicket"]
+    assert S["gap_p"] == 0.0                     # no missing plants: nothing shows through
+    assert max(S["plant"]) <= 1.9                # bushes closer than 2 m (review s19 0179: gaps between the balls)
+    assert S["local_top"] is True and S["ring_step"] <= 0.45 and S["dome"] <= 0.25      # review B-r3 P1-1: no tent peaks
+    assert S["side_tilt"][1] <= 0.85 and S["side_share"] <= 0.20                        # review B-r3 P1-2: no shadow shelves
+    buf = _Buf()
+    st = {}
+    PT.hedge_mass(buf, Polygon([(0, 0), (15, 0), (15, 4.4), (0, 4.4)]), lambda x, y: np.zeros(len(np.atleast_1d(x))),
+                  ("t", 0, 0), h=2.6, plant="thicket", stats=st)
+    assert set(buf.tris) == {"hedge_hornbeam", "hedge_shell_hornbeam", "hedge_sprig_hornbeam"}      # no new material
+    V = np.vstack(buf.V)
+    assert V[:, 2].min() < 0.0                   # the core goes into the ground, no floating foot
+    assert 2.5 < V[:, 2].max() < 3.6
+    assert st["tris"] < 4200                     # 15 m of thicket; the 2 x 8 shrub instances it replaces: ~6 000
+    assert PT.SPECIES["berberis_red"].get("tile_scale") is None and PT.SPECIES["privet"].get("foot") is None
+
+
+def test_kit_trees_are_dense_crowns_on_both_tiers():
+    from streetscape import plantings as PT
+    ov = [{"id": "c", "kind": "tree_groups", "form": "kit",
+           "points_en": [[5.0, 5.0, 10.5, 7.5], [11.0, 6.0, 6.0, 3.4], [16.0, 7.0, 2.8, 4.5, "berberis_red"]],
+           "species": {"maple": 1.0}}]
+
+    class B(_Buf):
+        parts = []
+
+        def add(self, layer, mat, V, UV, T, src="", **kw):
+            self.tris[layer] = self.tris.get(layer, 0) + len(T)
+            self.V.append(np.asarray(V, float))
+    buf, rep = B(), {}
+    PT.authored_trees(buf, ov, lambda p: 100.0, rep, half=1024.0)
+    at = rep["authored_trees"]
+    assert at["trees"] == 3 and at["tris_low"] > 0 and at["tris_high"] > at["tris_low"]
+    assert [x["species"] for x in at["list"]] == ["maple", "maple", "berberis_red"]
+    V = np.vstack(buf.V)
+    assert V[:, 2].min() < 100.0 and 110.0 < V[:, 2].max() < 112.0       # stem/shrub into the ground, top ~10.5 m
+    assert V[:, 0].max() - V[:, 0].min() > 7.0                           # crown of the grown tree ~7.5 m wide
+    from streetscape import vegetation as VG
+    assert VG._tree_point_overrides(ov) == []                            # not also an instance of the tree library
+    PT.authored_trees(B(), [{"id": "l", "kind": "tree_groups", "lines": []}], lambda p: 0.0, rep)
+    assert rep["authored_trees"]["trees"] == 0
+
+
+def test_tree_points_keep_their_place_and_height():
+    from streetscape import vegetation as VG
+    ov = [{"id": "c", "kind": "tree_groups", "points_en": [[1.0, 2.0, 10.5], [3.0, 4.0]], "height_m": [9.0, 11.0],
+           "species": {"maple": 1.0}}]
+    (P, hs, sp, hr, key), = VG._tree_point_overrides(ov)
+    assert P.tolist() == [[1.0, 2.0], [3.0, 4.0]] and hs == [10.5, None] and hr == (9.0, 11.0)
+    assert key == "override:c:points"
+    assert VG._tree_group_overrides(ov, np.zeros(2)) == []        # a points-only override draws no line clumps
+    with pytest.raises(ValueError):
+        VG._tree_point_overrides([{"id": "x", "kind": "tree_groups", "points_en": [[0, 0]], "height_m": [5, 2]}])
+
+
+def test_dojlidy_data_and_report():
+    ov = {o["id"]: o for o in _ov(DOJ)}
+    band = ov["mickiewicza-kuronia-shrub-band"]
+    assert band["kind"] == "plantings" and len(band["beds"]) >= 5
+    assert all(b["plant"] == "thicket" and 2.1 <= b["height_m"] <= 2.75 for b in band["beds"])
+    hs = [b["height_m"] for b in band["beds"]]
+    # review B-r3 P1-1: smooth height transitions along both staggered rows (T1..T15 and T16..T31)
+    assert max(abs(hs[i + 1] - hs[i]) for i in range(14)) <= 0.30
+    assert max(abs(hs[i + 1] - hs[i]) for i in range(15, len(hs) - 1)) <= 0.30
+    trees = ov["mickiewicza-kuronia-corner-trees"]
+    assert trees["form"] == "kit" and 3 <= len(trees["points_en"]) <= 6
+    assert sum(1 for p in trees["points_en"] if 9.0 <= p[2] <= 11.0 and 5.5 <= p[3] <= 8.0) >= 2      # the grown ones
+    assert any(len(p) >= 5 and p[4] == "berberis_red" and p[2] <= 3.2 for p in trees["points_en"])    # review B-r3 P1-3
+    assert sum(1 for p in trees["points_en"] if p[2] <= 5.5) >= 3                                     # low/mid shrubs on left
+    skyline = ov["kuronia-north-park-skyline-trees"]
+    assert skyline["form"] == "kit" and len(skyline["points_en"]) >= 2
+    assert ov["mickiewicza-kuronia-shrub-strip-no-rule-trees"]["kind"] == "open_ground"
+    assert ov["mickiewicza-u-turn-not-signalised"]["set"] == {"signalized": False}
+    for o in ov.values():
+        assert o.get("reason") and o.get("confidence"), o["id"]
+    rep = json.loads((DOJ / "generated" / "streetscape_qa.json").read_text(encoding="utf-8"))
+    at = rep["authored_trees"]
+    kit_n = sum(len(o["points_en"]) for o in ov.values() if o.get("kind") == "tree_groups" and o.get("form") == "kit")
+    assert at["trees"] == kit_n and not at["skipped"]
+    assert at["tris_low"] <= 40 * at["trees"] and at["tris_high"] <= 400 * at["trees"]
+    assert rep["plantings"]["hedges"] == len(band["beds"]) and not rep["plantings"]["stale"]
+    assert any(g["id"] == "mickiewicza-kuronia-shrub-strip-no-rule-trees" and g["trees_removed"] >= 1
+               for g in rep["vegetation"]["open_ground"])
+    man = json.loads((DOJ / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
+    assert not man.get("overrides_stale")
+
+
+def test_camera_063_looks_at_the_frame():
+    cams = json.loads((DOJ / "control_cameras_photo.authored.json").read_text(encoding="utf-8"))["cameras"]
+    cam = next(c for c in cams if c["id"] == "photo_P11-063")
+    e, n = cam["pos_en"]
+    f = 1255.0                                   # px at 1600 px width, hFOV 65 deg
+
+    def x_of(pe, pn):
+        d = (math.degrees(math.atan2(pe - e, pn - n)) - cam["heading_deg"] + 180) % 360 - 180
+        return 800 + f * math.tan(math.radians(d))
+    # objects of the photo (x in the 1600 px frame) against the orthophoto / BDOT10k positions, +-1 deg = 22 px
+    for (pe, pn), x in (((47.8, 337.4), 1160), ((-15.3, 371.0), 1102), ((-35.5, 368.0), 1492), ((-13.0, 372.5), 1037)):
+        assert abs(x_of(pe, pn) - x) < 22, (pe, pn, x_of(pe, pn))
+    assert x_of(-35.5, 368.0) > 1400              # the signal mast stands at the right edge of the frame

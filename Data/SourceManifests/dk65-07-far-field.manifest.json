@@ -1,0 +1,107 @@
+{
+  "adr": "0085-far-field-backdrop",
+  "appearance_policy": {
+    "classification": "declared function; height alone does not imply an energy plant",
+    "industrial_panel_min_height_m": 12.0,
+    "not_measured": [
+      "wall_colour",
+      "cladding_modules",
+      "glazing_band",
+      "roof_fascia"
+    ],
+    "panel_alpha": 0.25,
+    "panel_ribbon_alpha": 0.65,
+    "schema": "far-field-appearance/1",
+    "source_hall_counts": {
+      "energy": 0,
+      "industrial": 11,
+      "other": 127
+    },
+    "source_panel_hall_count": 0,
+    "status": "WORKING_VALUE"
+  },
+  "building_height_sources": {
+    "WORKING_VALUE-bdot-storeys-typology": 53,
+    "WORKING_VALUE-osm-storeys-typology": 440,
+    "gugik-lod1-measuredHeight": 530
+  },
+  "feature_counts": {
+    "buildings": 1023,
+    "buildings_by_typology": {
+      "block": 5,
+      "hall": 138,
+      "house": 59,
+      "office": 821
+    },
+    "chimneys": 2,
+    "forest_polygons": 868,
+    "power_lines": 116,
+    "pylons": 307
+  },
+  "id": "dk65-07-far-field",
+  "lod1_height_audit": {
+    "buildings": 132928,
+    "conflicting_ids": 0,
+    "duplicate_records": 0,
+    "invalid_or_missing": 0,
+    "members": 822,
+    "usable_ids": 132928
+  },
+  "osm_lonlat_window": [
+    22.8371,
+    53.1485,
+    23.1297,
+    53.3281
+  ],
+  "region": "dk65-07",
+  "region_inputs_sha256": {
+    "region/buildings.geojson": "248897cc4c58970303ec4fb2da06a943cf46dc779cbf88999420f29471154158"
+  },
+  "ring_bounds_local_m": {
+    "inner_half_m": 1024.0,
+    "outer_half_m": 4200.0
+  },
+  "ring_powiaty": [
+    "2002",
+    "2008"
+  ],
+  "ring_powiaty_missing": [],
+  "schema": "truck-sim-pl/source-manifest/1",
+  "sources": [
+    {
+      "dataset": "BDOT10k powiaty 2002, 2008: OT_PTLZ_A, OT_BUBD_A, OT_BUWT_P, OT_SULN_L",
+      "files": {
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_BUBD_A.gpkg": "19da71661a8ca20b7ac1aa6b55f5e821ff50504899d6889c75eb01797fe73225",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_BUWT_P.gpkg": "5646dcd6360cb1da020ca83b946d974d5cbabdd151d533d5fe9c2cfb6b184f10",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_PTLZ_A.gpkg": "24cf9f283d4b346be6e361452d3a25a1ccd0bedeada64dcdf35cfd1bcc4dfc6b",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2002__OT_SULN_L.gpkg": "2b2578512c0cc784525a562b5d643becab1be007e4000e9ffbfcc68b770ae8df",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2008__OT_BUBD_A.gpkg": "129ad2e4a48c0e3b783fa2765c9e1da84f4b8d9db161000e05a1a40b090cdfd3",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2008__OT_BUWT_P.gpkg": "662e72d30a8011dccf072aff1cc9734c3390d2d91a32dc6599fee24092878510",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2008__OT_PTLZ_A.gpkg": "2f3a7c9fb90a6293711419ca6f8a3fc9fc2cafcb331490872a3027964d807cb5",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2008__OT_SULN_L.gpkg": "cd8844221f39995058d84971fe7953c8876ef29ffe79768c37794c1279899982"
+      },
+      "id": "gugik-bdot10k-2002+2008",
+      "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. a Prawa geodezyjnego i kartograficznego (Dz.U. 2020 poz. 276)",
+      "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
+    },
+    {
+      "dataset": "Modele 3D budynków LoD1 (2024) powiaty 2002, 2008",
+      "files": {
+        "lod1/2002_lod1_2024.zip": "337f8abdc4e8e94cda1d45d07afa7f6faf684f6ac2b7f0c6e85321b4522305e9",
+        "lod1/2008_lod1_2024.zip": "02e9139142864bcb63ab3a781281cbd3f87eb58a54dfad0306f67bf8175f7f80"
+      },
+      "id": "gugik-lod1-2024-2002+2008",
+      "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. i Prawa geodezyjnego i kartograficznego",
+      "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
+    },
+    {
+      "dataset": "podlaskie-261108.osm.pbf (ring outside the tile, lon/lat window osm_lonlat_window)",
+      "files": {
+        "osm/podlaskie-261108.osm.pbf": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d"
+      },
+      "id": "geofabrik-osm-podlaskie-261108",
+      "license": "ODbL 1.0 (© OpenStreetMap contributors)",
+      "provider": "OpenStreetMap contributors / Geofabrik GmbH"
+    }
+  ]
+}

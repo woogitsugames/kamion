@@ -105,6 +105,8 @@ namespace Game.World.Import
             // Trees: the forest along DK8 is the worst view - with 30/100 m it drew 0.78 M instanced triangles on
             // Medium (budget 0.55 M for everything); 20/60 m keeps Medium at ~0.3 M there.
             if (proto.StartsWith("tree_shrub")) e = new[] { 12f, 40f, 300f };
+            // ADR 0187: forest floor plants (bilberry / fern mounds, High tier only, no impostor): gone beyond 90 m.
+            else if (proto.StartsWith("tree_floor")) e = new[] { 25f, 90f };
             else if (proto.StartsWith("tree_")) e = new[] { 20f, 60f, 1000f };
             else if (proto.StartsWith("fab_")) e = new[] { 12f, 30f, 65f };
             else if (proto.StartsWith("lamp_")) e = new[] { 60f, 400f };
@@ -670,7 +672,14 @@ namespace Game.World.Import
             ti.mipmapEnabled = true;
             ti.alphaSource = TextureImporterAlphaSource.FromInput;
             ti.alphaIsTransparency = alpha;
-            ti.mipMapsPreserveCoverage = alpha;
+            // ADR 0239 (B-082): the welded fence mesh gets plain box mips - its shader (Kamion/World FenceMesh) spends the
+            // mean alpha as coverage (sharp wires near, a ~15 % veil far). History: coverage-preserving mips + cutoff drew
+            // a white moire lattice at 40 m on Low (review 0179, P11-094); plain mips + cutoff (ADR 0185) lost the mesh
+            // from ~10 m (s20 lead, kwadrat-park-gate Low). Without the shader the old moire variant stays.
+            bool fenceCoverage = Game.Rendering.FenceMeshCoverage.IsFenceMeshTexture(file)
+                && Shader.Find(Game.Rendering.FenceMeshCoverage.ShaderName) != null;
+            ti.mipMapsPreserveCoverage = Game.Rendering.FenceMeshCoverage.PreserveCoverageMips(file, alpha, fenceCoverage);
+            if (fenceCoverage) ti.mipmapFilter = TextureImporterMipFilter.BoxFilter;   // no Kaiser ringing in the alpha
             ti.alphaTestReferenceValue = 0.5f;
             ti.wrapMode = clamp ? TextureWrapMode.Clamp : TextureWrapMode.Repeat;
             // Forest HLOD edge walls tile along the edge (u) but not vertically: with v repeating, the filter / mips at the

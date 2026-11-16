@@ -1,0 +1,93 @@
+using System.Linq;
+using Game.Core.About;
+using NUnit.Framework;
+using UnityEngine;
+
+namespace Game.Tests
+{
+    /// <summary>
+    /// "Informacje" screen text (Resources/About/attributions.txt, LICENSES-AUDIT-S20 R-P0-1): parser contract and the
+    /// notices every build must show. The same assertions run in plain .NET: tools/about-runner (dotnet test).
+    /// </summary>
+    public class AttributionDocumentTests
+    {
+        static string Resolve(string resourcePath)
+        {
+            var ta = Resources.Load<TextAsset>(resourcePath);
+            return ta != null ? ta.text : null;
+        }
+
+        static AttributionDocument Real()
+        {
+            string text = Resolve(AttributionDocument.ResourcePath);
+            Assert.IsNotNull(text, "Resources/" + AttributionDocument.ResourcePath + " missing");
+            return AttributionDocument.Parse(text);
+        }
+
+        [Test]
+        public void Parse_SplitsHeadingsParagraphsIncludesAndDropsComments()
+        {
+            var d = AttributionDocument.Parse("# note UNVERIFIED\r\n= Mapy\n== OSM\nline 1\n# hidden\nline 2\n\nnext\n@include Fonts/X\n");
+            CollectionAssert.AreEqual(new[] { AttributionBlockKind.Section, AttributionBlockKind.Entry, AttributionBlockKind.Paragraph,
+                                              AttributionBlockKind.Paragraph, AttributionBlockKind.Include }, d.Blocks.Select(b => b.Kind).ToArray());
+            Assert.AreEqual("line 1\nline 2", d.Blocks[2].Text);
+            Assert.AreEqual("Fonts/X", d.Blocks[4].Text);
+            StringAssert.DoesNotContain("UNVERIFIED", d.VisibleText(_ => "x"));
+        }
+
+        [Test]
+        public void Problems_FlagVisibleMarkersAndMissingIncludes()
+        {
+            var p = AttributionDocument.Parse("= A\nadres: [ADRES]\n@include Missing\n").Problems(_ => null);
+            Assert.IsTrue(p.Any(x => x.Contains("[ADRES")));
+            Assert.IsTrue(p.Any(x => x.Contains("missing include Missing")));
+        }
+
+        [Test]
+        public void Problems_FlagHeadingsWithoutText()
+        {
+            // ADR 0230: no empty attribution entries on screen.
+            var p = AttributionDocument.Parse("= A\n== Empty\n== Full\ntext\n= B\n= C\n== Last\n").Problems(null);
+            CollectionAssert.Contains(p, "heading without text: Entry: Empty");
+            CollectionAssert.Contains(p, "heading without text: Section: B");
+            CollectionAssert.Contains(p, "heading without text: Entry: Last");
+            Assert.IsFalse(p.Any(x => x.EndsWith(": Full") || x.EndsWith(": A") || x.EndsWith(": C")));
+        }
+
+        [Test]
+        public void Chunk_KeepsTextAndLimit()
+        {
+            string text = string.Join("\n", Enumerable.Range(0, 400).Select(i => i % 9 == 0 ? "" : new string((char)('a' + i % 26), 1 + i % 5)));
+            var c = AttributionDocument.Chunk(text, 64);
+            Assert.IsTrue(c.All(s => s.Length <= 64));
+            Assert.AreEqual(text, string.Join("\n", c));
+        }
+
+        [Test]
+        public void RealText_HasNoProblems()
+        {
+            var d = Real();
+            CollectionAssert.IsNotEmpty(d.Blocks);
+            CollectionAssert.IsEmpty(d.Problems(Resolve));
+        }
+
+        [TestCase("© OpenStreetMap contributors")]
+        [TestCase("Open Database License (ODbL) 1.0")]
+        [TestCase("Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)")]
+        [TestCase("CC BY 4.0")]
+        [TestCase("research G3 s8-signs")]
+        [TestCase("Mapillary contributors")]
+        [TestCase("SIL OPEN FONT LICENSE Version 1.1")]
+        [TestCase("Unity glTFast copyright © 2023 Unity Technologies and the Unity glTFast authors")]
+        [TestCase("TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION")]
+        [TestCase("Bank Danych o Lasach")]
+        [TestCase("pozyskano 14.11.2026")]
+        [TestCase("Open Database License 1.0: opendatacommons.org/licenses/odbl/1-0/")]
+        [TestCase("CC BY-SA 4.0: creativecommons.org/licenses/by-sa/4.0/legalcode.pl")]
+        [TestCase("Mapillary contributors, CC BY-SA 4.0")]
+        public void RealText_ShowsRequiredNotice(string needle)
+        {
+            StringAssert.Contains(needle, Real().VisibleText(Resolve));
+        }
+    }
+}

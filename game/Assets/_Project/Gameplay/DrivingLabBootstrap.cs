@@ -19,8 +19,10 @@ namespace Game.Gameplay
     /// touch pedals) through <see cref="DriverInputMixer"/> into <see cref="VehicleBody.Input"/>, owns the driver
     /// state (selector, manual mode, parking brake, endurance-brake stalk, brake cruise), the trailer and its
     /// coupling, the camera rig, mirrors, reversing camera, HUD, audio, telemetry recorder and diagnostics.
-    /// Launch arguments: <c>autopilot</c> (circle50 | circle25), <c>speed</c> (km/h) and <c>trailer</c>
+    /// Launch arguments: <c>autopilot</c> (circle50 | circle25 | straight080), <c>speed</c> (km/h) and <c>trailer</c>
     /// (solo | empty | 24 | 40) for scripted device runs. An autopilot run without <c>trailer</c> is solo (Stage 1 measurement).
+    /// straight080 (ADR 0195): on the measurement straight, settle, full throttle 0 -&gt; speed (default 80), hold, emergency
+    /// stop; the commands come from <see cref="StraightRunPilot"/> in the fixed step (same source as the .NET runner).
     /// </summary>
     [DefaultExecutionOrder(-200)]
     public sealed class DrivingLabBootstrap : MonoBehaviour
@@ -52,15 +54,22 @@ namespace Game.Gameplay
         public readonly KeyboardDriverInput Keyboard = new KeyboardDriverInput();
         public readonly TouchSteeringWheel Wheel = new TouchSteeringWheel();
         public readonly GyroSteering Gyro = new GyroSteering();
+        /// <summary>PC wheel + pedals + shifter and its force feedback (ADR 0263); null FFB backend until a native plugin exists.</summary>
+        public readonly PcWheel PcWheel = new PcWheel();
         /// <summary>The simulated cab steering wheel (ADR 0058): driver target → hand-rate-limited wheel → Steering command, in the fixed step.</summary>
         public readonly SteeringColumn Column = new SteeringColumn();   // tuning loaded in Awake (Resources)
         float m_SteerTarget;
-        bool m_SteerHandsOn, m_SteerBypass, m_SteerHasTarget;
+        bool m_SteerHandsOn, m_SteerBypass, m_SteerHasTarget, m_SteerDirect;
         public readonly TouchControls Touch = new TouchControls();
         /// <summary>Turn-signal stalk + flasher (self-cancelling, 1.5 Hz); drives the lamps, the cluster arrows and the relay click.</summary>
         public readonly TurnSignal Signals = new TurnSignal();
         TruckLights m_Lights;
         public readonly PathFollowerDriverInput RouteDriver = new PathFollowerDriverInput();
+        /// <summary>Gate 1-2 straight run (launch argument autopilot=straight080), stepped in <see cref="FixedUpdate"/>.</summary>
+        public readonly StraightRunPilot StraightPilot = new StraightRunPilot();
+        public bool StraightRunActive { get; private set; }
+        bool m_StraightBegin, m_StraightDoneLogged;
+        public const string StraightRunMode = "straight080";
 
         CameraRig m_Rig;
         DrivingHud m_Hud;
@@ -120,7 +129,8 @@ namespace Game.Gameplay
 
             m_Mixer.Add(Autopilot);
             m_Mixer.Add(RouteDriver);
-            m_Mixer.Add(Keyboard);
+            m_Mixer.Add(Keyboard);   // the gamepad and rebindable keyboard (ADR 0264) are inserted before it by PcInputBridge
+            m_Mixer.Add(PcWheel.Input);   // absolute wheel (ADR 0263): after the pad / keys (they override while used), before the always-active touch wheel
             m_Mixer.Add(Wheel);
             m_Mixer.Add(Gyro);
             m_Mixer.Add(Touch);
@@ -130,6 +140,7 @@ namespace Game.Gameplay
             Column.LockDeg = HandwheelLockDeg();
             GyroSteering.EnableSensors();
             Controls = ControlSettings.Load();
+            PcWheel.Load();
             ApplyControls();
             Controls.Log("loaded");
             m_InputLog = new ControlInputLogger();
@@ -151,6 +162,7 @@ namespace Game.Gameplay
                 if (!mir.main) continue;
                 else if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
             m_MirrorInsets = PlayerPrefs.GetInt(PrefMirrorInsets, 1) != 0;
+            PcInputBridge.ToggleMirrorInsets = () => { m_MirrorInsets = !m_MirrorInsets; PlayerPrefs.SetInt(PrefMirrorInsets, m_MirrorInsets ? 1 : 0); };   // L key (ADR 0264)
 
             // engine_audio=el|synth: engine sound set for the owner's A/B (ADR 0137); saved like the settings-panel choice.
             Game.Core.AudioPreferences.ApplyArgument(platform.GetLaunchArgument("engine_audio"));
@@ -171,7 +183,7 @@ namespace Game.Gameplay
                 OpenSettings = OpenControlSettings,
                 ResetVehicle = () => Spawn(m_Spawn),
                 OpenMenu = ReturnToMenu,
-                StatusLine = () => Time.unscaledTime < m_StatusUntil ? m_Status : (Autopilot.Enabled || RouteDriver.Enabled ? "AUTOPILOT (pomiar)" : ""),
+                StatusLine = () => Time.unscaledTime < m_StatusUntil ? m_Status : (Autopilot.Enabled || RouteDriver.Enabled || StraightRunActive ? "AUTOPILOT (pomiar)" : ""),
                 Spawn = i => Spawn((LabSpawn)i, persist: true),
                 CurrentSpawn = () => (int)m_Spawn,
                 ToggleAbsFault = () => SetAbsFault(!m_AbsFault),
@@ -206,8 +218,10 @@ namespace Game.Gameplay
             if (trailer == null) m_Spawn = LabSpawn.Solo;
             m_IgnoreRoots = new[] { vehicle.transform, trailer != null ? trailer.transform : null };
             ReadRouteArguments(platform);
+            ResolveRouteStart();
             m_StartTime = Time.time;
             if (ap == "route") { if (!StartRouteDriver(platform.GetLaunchArgument("speed"))) ap = null; }
+            else if (ap == StraightRunMode) ConfigureStraightRun(platform.GetLaunchArgument("speed"));
             else if (!string.IsNullOrEmpty(ap)) { ConfigureAutopilot(ap, platform.GetLaunchArgument("speed")); m_AutopilotStart = true; }
             Spawn(m_Spawn);
             // World scenes: edge-of-region warning and recovery when the vehicle leaves the world (ADR 0082).
@@ -219,6 +233,9 @@ namespace Game.Gameplay
                 SafetyNet.vehicle = vehicle;
                 SafetyNet.region = regionRoot;
             }
+            // Region start (menu or adb scene=...): one log line with region, route distance, local point and road (ADR 0229).
+            string menuRegion = StartRequest.ConsumeRegion();
+            if (regionRoot != null && route != null && route.points.Length > 1) LogRegionStart(regionRoot.regionId, menuRegion);
             // lighting=<preset> (clear | overcast | lowsun | dusk): device frames of the control set under the same light (A7).
             string menuLighting = StartRequest.ConsumeLighting();   // start menu choice; a launch argument wins
             string lighting = platform.GetLaunchArgument("lighting");
@@ -233,7 +250,7 @@ namespace Game.Gameplay
             // telemetry=1: record the vehicle CSV from the first physics step (device runs, e.g. the route jolt check).
             m_AutoRecord = platform.GetLaunchArgument("telemetry") == "1";
             m_Recorder.RouteProgress = () => RouteDriver.Enabled ? RouteDriver.Progress : 0f;
-            Debug.Log($"[LAB] DrivingLab ready: vehicle={vehicle.name} trailer={(trailer != null ? trailer.name : "none")} spawn={m_Spawn} steer={m_SteerMode} autopilot={(Autopilot.Enabled || RouteDriver.Enabled ? ap : "off")} fixedDt={Time.fixedDeltaTime}");
+            Debug.Log($"[LAB] DrivingLab ready: vehicle={vehicle.name} trailer={(trailer != null ? trailer.name : "none")} spawn={m_Spawn} steer={m_SteerMode} autopilot={(Autopilot.Enabled || RouteDriver.Enabled || StraightRunActive ? ap : "off")} fixedDt={Time.fixedDeltaTime}");
         }
 
         /// <summary>
@@ -356,11 +373,61 @@ namespace Game.Gameplay
             if (float.TryParse(platform.GetLaunchArgument("route_end"), NumberStyles.Float, ci, out float e) && e > 0f) m_RouteEndS = Mathf.Min(e, route.Length);
         }
 
+        /// <summary>
+        /// ADR 0262: a route start (menu / route_s / the baked spawn point of a world scene) never stands outside or inside
+        /// a region-edge closure nor inside a static collider. When the requested place is not free the start moves
+        /// along the route (<see cref="SpawnSafety"/>) and the spawn uses the route path. Once per start / respawn request.
+        /// </summary>
+        void ResolveRouteStart()
+        {
+            if (route == null || route.points.Length < 2) return;
+            bool requestedByArgument = m_RouteS >= 0f;
+            if (!requestedByArgument && spawnPoint == null) return;
+            float requested = requestedByArgument ? m_RouteS : NearestRouteS(route, spawnPoint.position);
+            var boundary = FindAnyObjectByType<Game.World.WorldBoundary>();
+            float s = SpawnSafety.ResolveStartS(route, boundary, requested, m_IgnoreRoots, out string reason);
+            if (reason == null) return;   // free: the requested distance / the baked spawn point stay as they are
+            var ci = CultureInfo.InvariantCulture;
+            Debug.LogWarning("[START] start moved along the route: route_s " + requested.ToString("F1", ci) + " -> " + s.ToString("F1", ci) +
+                             " (" + reason + "); regenerate the region start (ADR 0262)");
+            m_RouteS = s;
+        }
+
+        /// <summary>Route distance of the polyline point nearest to a world position (horizontal).</summary>
+        static float NearestRouteS(Game.World.WorldRoute r, Vector3 world)
+        {
+            Vector3 l = r.transform.InverseTransformPoint(world);
+            float best = float.MaxValue, bestS = 0f;
+            for (int i = 1; i < r.points.Length; i++)
+            {
+                Vector3 a = r.points[i - 1], b = r.points[i];
+                float dx = b.x - a.x, dz = b.z - a.z, len2 = dx * dx + dz * dz;
+                float t = len2 > 1e-8f ? Mathf.Clamp01(((l.x - a.x) * dx + (l.z - a.z) * dz) / len2) : 0f;
+                float ex = a.x + dx * t - l.x, ez = a.z + dz * t - l.z, d2 = ex * ex + ez * ez;
+                if (d2 < best) { best = d2; bestS = Mathf.Lerp(r.distances[i - 1], r.distances[i], t); }
+            }
+            return bestS;
+        }
+
+        /// <summary>Start log of a world scene (ADR 0229): region id + region-local start point + road of the routing graph.
+        /// Runs once after the spawn (loads the region graph once; not part of the driving loop).</summary>
+        void LogRegionStart(string sceneRegion, string menuRegion)
+        {
+            if (!string.IsNullOrEmpty(menuRegion) && menuRegion != sceneRegion)
+                Debug.LogWarning("[START] menu region " + menuRegion + " but the scene holds " + sceneRegion);
+            // Baked spawn point used as is (no route_s, nothing moved): log where it stands, not the 12 m default (ADR 0262).
+            float s = m_RouteS >= 0f ? m_RouteS : spawnPoint != null ? NearestRouteS(route, spawnPoint.position) : RegionStart.DefaultStartS;
+            Vector2 en = RegionStart.LocalPointAt(route.points, route.distances, s);
+            var road = RegionStart.FindRoad(Game.Core.Navigation.RouteGraph.Load(sceneRegion), en);
+            Debug.Log(RegionStart.Describe(sceneRegion, s, en, road));
+        }
+
         /// <summary>Respawns the current preset at route distance s (same as launch argument route_s; also used by tests).</summary>
         public void SetRouteSpawn(float s)
         {
             if (route == null || route.points.Length < 2) return;
             m_RouteS = Mathf.Clamp(s, 0f, route.Length);
+            ResolveRouteStart();
             Spawn(m_Spawn);
         }
 
@@ -372,8 +439,60 @@ namespace Game.Gameplay
             rot = Quaternion.LookRotation(route.TangentAt(s), Vector3.up);
         }
 
+        /// <summary>
+        /// Gate 1-2 straight run (ADR 0195): the preset (solo / empty / 24 t / 40 t, coupled) at the start of the
+        /// measurement straight heading east; the pilot begins on the first fixed step after the spawn.
+        /// </summary>
+        public void StartStraightRun(LabSpawn spawn, string speedArg = null)
+        {
+            ConfigureStraightRun(speedArg);
+            Spawn(spawn);
+        }
+
+        void ConfigureStraightRun(string speedArg)
+        {
+            Autopilot.Enabled = false;
+            RouteDriver.Enabled = false;
+            m_AutopilotStart = false;
+            StraightPilot.TargetKmh = float.TryParse(speedArg, NumberStyles.Float, CultureInfo.InvariantCulture, out float s) && s > 0 ? s : 80f;
+            var axles = vehicle.Model.Def.axles;
+            StraightPilot.Wheelbase = axles[0].positionZ - axles[1].positionZ;
+            StraightPilot.MaxRoadWheelAngle = vehicle.Model.Steering.MaxAngle;
+            StraightRunActive = true;
+            m_StraightBegin = true;
+            m_StraightDoneLogged = false;
+        }
+
+        /// <summary>Fixed step: the straight-run pilot writes the driver's commands just before the vehicle step (no allocation).</summary>
+        void StepStraightRun(float dt)
+        {
+            var m = vehicle.Model;
+            var rb = vehicle.Body;
+            Vector3 p = rb.position, f = rb.rotation * Vector3.forward;
+            if (m_StraightBegin) { m_StraightBegin = false; StraightPilot.Begin(p.x, p.z, f.x, f.z, dt); }
+            var input = vehicle.Input;
+            StraightPilot.Step(dt, p.x, p.z, f.x, f.z, m.SpeedForward, ref input);
+            vehicle.Input = input;
+            m_SteerTarget = (float)input.Steer; m_SteerHasTarget = true;
+            Column.SnapTo(m_SteerTarget * Column.LockDeg);
+            Wheel.FollowColumn(Column.Normalized);
+            if (StraightPilot.Phase == StraightRunPhase.Stopped && !m_StraightDoneLogged)
+            {
+                m_StraightDoneLogged = true;   // once per run: this summary line is the only allocation of the scenario
+                var r = StraightPilot.Result;
+                var ci = CultureInfo.InvariantCulture;
+                Debug.Log("[AUTOPILOT] straight080 done: preset=" + m_Spawn + " mass_t=" + (m.TotalMass / 1000).ToString("F1", ci)
+                    + " t60_s=" + r.TimeTo60.ToString("F2", ci) + " t80_s=" + r.TimeTo80.ToString("F2", ci) + " s80_m=" + r.DistanceTo80.ToString("F1", ci)
+                    + " hold_kmh=" + r.HoldSpeedMean.ToString("F2", ci) + " hold_std=" + r.HoldSpeedStd.ToString("F2", ci)
+                    + " v_brake_kmh=" + r.BrakeSpeedKmh.ToString("F2", ci) + " stop_m=" + r.StopDistance.ToString("F2", ci) + " stop_s=" + r.StopTime.ToString("F2", ci)
+                    + " mfdd=" + r.Mfdd.ToString("F2", ci) + " max_decel=" + r.MaxDecel.ToString("F2", ci) + " lat_dev_m=" + r.MaxLateralDeviation.ToString("F3", ci)
+                    + " sim_t=" + StraightPilot.Time.ToString("F2", ci));
+            }
+        }
+
         void ConfigureAutopilot(string mode, string speedArg)
         {
+            StraightRunActive = false;
             bool r25 = mode == "circle25";
             Autopilot.CircleCenter = r25 ? DrivingLabLayout.CircleR25Center : DrivingLabLayout.CircleR50Center;
             Autopilot.Radius = r25 ? DrivingLabLayout.CircleR25 : DrivingLabLayout.CircleR50;
@@ -392,6 +511,13 @@ namespace Game.Gameplay
             m_Spawn = spawn;
             if (persist) PlayerPrefs.SetInt(PrefSpawn, (int)spawn);
             bool coupled = spawn != LabSpawn.Solo && trailer != null;
+            if (StraightRunActive)
+            {
+                // Measurement straight, heading east; a solo tractor leaves the trailer parked in its bay (as the circle runs).
+                m_StraightBegin = true; m_StraightDoneLogged = false;
+                SpawnAt(spawn, DrivingLabLayout.StraightStart, Quaternion.LookRotation(Vector3.right, Vector3.up), DrivingLabLayout.CouplingKingpin);
+                return;
+            }
             if (route != null && m_RouteS >= 0f && !m_AutopilotStart)
             {
                 RouteSpawnPose(route, m_RouteS, m_IgnoreRoots, out Vector3 rp, out Quaternion rr);
@@ -447,7 +573,7 @@ namespace Game.Gameplay
             m_CouplingEvents = 0;
             m_Lever = 0; m_CruiseKmh = 0f;
             Signals.Cancel();
-            m_Parking = !Autopilot.Enabled && !RouteDriver.Enabled;
+            m_Parking = !Autopilot.Enabled && !RouteDriver.Enabled && !StraightRunActive;
             m_Selector = GearSelector.Drive;
             m_Manual = false;
             Wheel.SetWheelDeg(0f);
@@ -527,12 +653,31 @@ namespace Game.Gameplay
             if (!vehicle.Initialized || UnityEngine.Physics.simulationMode != SimulationMode.FixedUpdate) return;   // scripted stepping (tests) drives Input itself
             var m = vehicle.Model;
             Column.LockDeg = HandwheelLockDeg();
+            StepPcWheelForceFeedback(m);   // before any early return: autopilots get an inactive (zero) force
+            if (StraightRunActive) { StepStraightRun(Time.fixedDeltaTime); return; }
             if (m_SteerBypass) { if (m_SteerHasTarget) Column.SnapTo(m_SteerTarget * Column.LockDeg); }
+            else if (m_SteerDirect) Column.SnapTo(m_SteerTarget * Column.LockDeg);   // PC wheel: the player's hands are the hand model (ADR 0263)
             else Column.Step(Time.fixedDeltaTime, m_SteerTarget * Column.LockDeg, m_SteerHandsOn, (float)m.SpeedForward * 3.6f, (float)m.AligningTorqueTotal);
             var input = vehicle.Input;
             input.Steer = Column.Normalized;
             vehicle.Input = input;
             Wheel.FollowColumn(Column.Normalized);
+        }
+
+        /// <summary>Force feedback from the physics of the last step (ADR 0263): steered-axle aligning torque and loads.</summary>
+        void StepPcWheelForceFeedback(VehicleModel m)
+        {
+            float loadL = 0f, loadR = 0f;
+            var wheels = m.Wheels;
+            for (int i = 0; i < wheels.Length; i++)
+            {
+                var w = wheels[i];
+                if (!w.Steered || !w.Contact) continue;
+                if (w.Side < 0) loadL += (float)w.Fz; else loadR += (float)w.Fz;
+            }
+            bool driving = !m_SteerBypass && Time.timeScale > 0f && m_SettingsPanel == null;
+            PcWheel.StepForceFeedback(Time.fixedDeltaTime, driving, (float)m.SpeedForward, (float)m.AligningTorqueTotal,
+                (float)m.Steering.Def.steeringRatio, loadL, loadR);
         }
 
         void Update()
@@ -554,21 +699,30 @@ namespace Game.Gameplay
                 Position = vehicle.transform.position,
                 Forward = vehicle.transform.forward,
             };
+            // Review #131 P1-1: a settings panel / modal owns the pad, keyboard and wheel buttons (they navigate it), so
+            // those sources give an empty intent - also in the frame the panel closes (the mixer holds one more sample).
+            m_Mixer.MenuOpen = m_SettingsPanel != null || Game.UI.Layout.UiFocus.HasModal;
             var intent = m_Mixer.Sample(Time.deltaTime, fb);
-            m_SteerBypass = Autopilot.Enabled || RouteDriver.Enabled;
+            bool menuGate = m_Mixer.MenuGateActive;
+            m_SteerBypass = Autopilot.Enabled || RouteDriver.Enabled || StraightRunActive;
             m_SteerHasTarget = intent.SteerActive;
             m_SteerTarget = intent.SteerActive ? Mathf.Clamp(intent.Steer, -1f, 1f) : 0f;
             m_SteerHandsOn = intent.SteerActive && intent.HandsOn;
+            m_SteerDirect = intent.SteerActive && intent.DirectSteer;
             if (!m_SteerBypass) m_InputLog.Observe(Time.unscaledTime, intent, vehicle.SpeedKmh, Column.AngleDeg);
             if (m_Rig.mode != m_LoggedCamMode) { m_LoggedCamMode = m_Rig.mode; m_InputLog.Event(Time.unscaledTime, k_CamModeEvents[(int)m_LoggedCamMode]); }
             m_InputLog.TryFlush(Time.unscaledTime, intent.Throttle < 0.01f && intent.Brake < 0.01f && !intent.SteerActive);   // batched; allocates only on that frame
             var kb = UnityEngine.InputSystem.Keyboard.current;   // Android back key arrives as Escape
-            if (kb != null && kb.escapeKey.wasPressedThisFrame)
+            var pad = UnityEngine.InputSystem.Gamepad.current;   // ADR 0261: Start = menu / back (not a rebindable driving action)
+            if ((kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.startButton.wasPressedThisFrame))
             {
                 if (Game.UI.Navigation.FullMapView.HandleBack()) { }   // back closes the map first (ADR 0150)
                 else if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
             }
-            Game.Core.AudioCues.HornHeld = kb != null && kb.kKey.isPressed;   // horn (ADR 0142; touch button: gameplay-ui TODO)
+            // Camera (C / top face button), pad look-around and pad horn come from the rebindable actions of PcInputBridge
+            // (ADR 0264, one source). It disables the fixed-key Keyboard source; until it is installed C still works here.
+            if (!menuGate && Keyboard.Enabled && kb != null && kb.cKey.wasPressedThisFrame) m_Rig.NextMode();   // C: cab → chase → orbit
+            Game.Core.AudioCues.HornHeld = !menuGate && kb != null && kb.kKey.isPressed;   // horn (ADR 0142); PcInputBridge ORs the Horn action in after this
             ApplyCommands(intent);
             UpdateTurnSignals(intent, fb.RoadWheelAngleNormalized);
 
@@ -704,9 +858,10 @@ namespace Game.Gameplay
             Touch.ThrottleRaw = 0f;
             Touch.BrakeRaw = 0f;
             Wheel.PointerUp();
+            PcWheel.Stop();   // no force left on the rim while the game is not running (ADR 0263)
         }
 
-        void OnDestroy() { m_InputLog?.Flush(Time.unscaledTime); }
+        void OnDestroy() { m_InputLog?.Flush(Time.unscaledTime); PcWheel.Dispose(); }
 
         void OnApplicationFocus(bool focus) { if (!focus) OnApplicationPause(true); }
     }

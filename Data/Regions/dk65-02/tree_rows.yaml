@@ -1,0 +1,25 @@
+# Roadside tree rows of region dk65-02 (ADR 0222, owner D64/D65, research K1 = research/dk65-knyszyn-refs/).
+# Authored data: survives every re-import (like lamp_rows.json, ADR 0133). The presence of this file opts the region in
+# to streetscape.tree_rows; without it vegetation.place keeps the default BDOT10k row rule (8 m).
+# Row lines: BDOT10k OT_OIPR_L "rząd drzew" + OSM natural=tree_row (tree_rows_osm.json, live probe 2026-11-15) within
+# corridor_m of the major roads, plus the `lines` traced here. Legal set-back / sight values: tools/worldgen/streetscape/
+# tree_rows.py (Dz.U. 2016 poz. 124 § 53 ust. 3, zał. 3 ust. 4.1 / 5; Dz.U. 2022 poz. 1518 § 26, § 81, § 82 ust. 4).
+tree_rows:
+  - id: dk65-02-roadside-rows
+    reason: >-
+      Owner D64/D65: Białystok -> Knyszyn on the old DK65 (variant A); K1 (g): rows along Ełcka km ~11.7 (one-sided W,
+      ~20-25 m, 8-12 m from the edge), km ~14.6 (W ~15 m, 5-10 m; E single trees), DK65 km ~20.5 (~8 trees at the bus
+      bay). Species UNVERIFIED (K1: no source) - the default mix of tree_rows.DEFAULTS is a WORKING_VALUE.
+    confidence: medium
+    verify: owner photo / drive along DK65 (species, spacing, gaps)
+    major_highways: [primary, secondary, tertiary]
+    spacing_m: [12.0, 18.0]
+    lines:
+      # Ełcka km ~11.6-11.8, west row (K1-132; orthophoto GUGiK 2025-05-25 0.1 m, research/dk65-knyszyn-refs/files/orto/
+      # junctions/T_km11_7_north.jpg, crowns traced at px (720,200) (780,640) (830,870) (870,1220) (935,1610) (955,1950),
+      # E = 768700 + 0.1 px, N = 598800 - 0.1 px; +-1.5 m). 11.5-14.5 m crown centre - asphalt edge. Shared by dk65-02 /
+      # dk65-03 (clipped at the seam E 768779).
+      - line_epsg2180: [[768772.0, 598780.0], [768778.0, 598736.0], [768783.0, 598713.0], [768787.0, 598678.0],
+                        [768793.5, 598639.0], [768795.5, 598605.0]]
+        spacing_m: [20.0, 25.0]
+        missing_share: 0.05

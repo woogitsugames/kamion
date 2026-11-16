@@ -236,7 +236,7 @@ namespace Game.Vehicle.Physics
         public double baselineConsumptionLpm = 8;
     }
 
-    /// <summary>Secondary hydrodynamic retarder on the gearbox output (Intarder class).</summary>
+    /// <summary>Secondary hydrodynamic retarder on the gearbox output (class reference S2).</summary>
     [Serializable]
     public class RetarderDefinition
     {
@@ -313,6 +313,10 @@ namespace Game.Vehicle.Physics
         public double yawLimitDeg = 90;
         /// <summary>Stop compliance: natural frequency of the pitch/roll stops and of the articulation (cab contact) stop [Hz].</summary>
         public double stopFrequencyHz = 10;
+        /// <summary>Damping ratio of the pitch and roll stops (relative to each row's effective inertia).</summary>
+        public double stopDampingRatio = 0.7;
+        /// <summary>Largest relative rate [deg/s] at which a compressed pitch / roll / articulation stop pushes the bodies apart (no rebound, ADR 0201b F2).</summary>
+        public double stopRecoveryRateDegS = 0.5;
         public double yawStopFrequencyHz = 3;
         /// <summary>Plate friction (greased): Coulomb yaw torque = coeff * kingpin vertical load * radius.</summary>
         public double plateFrictionCoeff = 0.08;

@@ -107,7 +107,7 @@ Values are for solo / empty / 40 t where the item has variants. ✅ = all checks
 | 6 | downhill_7pct_brake_cruise_60 | 60.0 km/h ± 0.000; EB ≈ 200 kW + retarder ≈ 170 kW (≤ 3103 Nm) | 59–61.5; ≤ 4000 Nm | S2 retarder limit ✅ |
 | 6 | downhill_7pct_full_lever | speed settles (range 0.001 km/h over 40 s), EB torque 1173 Nm | stabilises | WORKING ✅ |
 | 6 | downhill_7pct_service_pumping (endurance brakes off) | service circuits fall to 5.06 bar, warning on | ≤ 9 bar, ≥ 3 bar, warning | WORKING (real consequence) ✅ |
-| 6 | air_leak_rear_circuit (burst at 60 km/h) | warning; rear circuit 0 bar; stop 33.1 m on the remaining circuits | ≤ 64.4 m | **SOURCED** S5 2.2 secondary braking ✅ |
+| 6 | air_leak_rear_circuit (burst at 60 km/h) | warning; rear circuit 0 bar; stop 33.1 m on the remaining circuits | ≤ 52.4 m (residual braking, N3 laden, from **40 km/h**: 0.15 v + (100/30)·v²/115, dm ≥ 1.3) | **SOURCED** S5 2.4.1 / S9 R3-161. The game test starts at 60 km/h, a harder case than the regulation's 40 km/h. Errata ADR 0201: was "≤ 64.4 m, S5 2.2" (0.15 v + 2v²/130 from 60 km/h = M2/M3 formula); secondary braking cat. N is 0.15 v + 2v²/115 from 40 km/h = 33.8 m ✅ |
 | 6 | air_leak_park_circuit | trailer emergency braking + spring brakes stop the combination | stops | WORKING ✅ |
 | 7 | circle_r50_10/35kmh_comb | offtracking 0.61 / 0.60 m at 10 km/h, 0.48 / 0.41 m at 35 km/h; a_y within 1 % of v²/R | 0.4–0.8 m at 10 km/h | DERIVED (√(R²+e²) − √(R²+e²−L²) = 0.59 m) ✅ |
 | 7 | rollover_r50_cog_low / high (40 t, speed ramp) | first wheel lift at **0.462 g** (CoG 1.9 m) / **0.341 g** (CoG 2.6 m) | 0.25–0.55 g; high < low | WORKING (literature 0.3–0.45 g, UNVERIFIED) ✅ |
@@ -300,6 +300,22 @@ implicit gyroscopic update (the explicit one gained +136 % KE in a 30 s torque-f
 |a_CoM − g| 0.0077 m/s², E gain 0. Runner: 129 scenarios / 730 checks green; the 707 pre-existing values unchanged except 33 at
 ≤ 0.15 %. `kerb_step_27cm_42kmh_comb` runs without colliders for now: its bumper corner strikes the road (dv 0.755 m/s;
 Unity PlayMode on the same event 0.968 m/s), which is a decision for the leader (ADR 0158 Open 1).
+
+### 6f. Straight run 0–80–0 autopilot for gates 1–2 (ADR 0195, 2026-11-13)
+`StraightRunPilot` (Vehicle/Physics/Pilots) drives only the pedals, selector and wheel: brake 1 s → full throttle to 80 km/h →
+PI hold 4 s → full brake to a stop. The same source drives the runner (`straightrun`, scenario `straight_0_80_0`, solo/empty/laden40,
+39/39 checks) and the game (`autopilot=straight080`, fixed step, new 1300 m measurement straight in DrivingLab, z = 300).
+Runner → Unity editor: 0–80 13.60 → 13.67 s / 20.54 → 20.68 s / 47.52 → 47.80 s; 80→0 35.69 → 35.62 m / 39.49 → 39.45 m /
+40.52 → 40.78 m; MFDD 7.0–7.5 m/s², no wheel lock, lateral ≤ 4 mm; solo ×3 0.00 %. `Metrics.FirstBrake` is now the first
+rising edge of the pedal (unchanged for all `brake_*` scenarios). Phone numbers: `gate12-phone.ps1 -Only s080_*` (leader).
+
+### 6g. Axle loads 73/27 % and suspension retune, ADR 0201b (2026-11-15)
+
+- Mass split calibrated to the S9 sheet (R3-013/014): solo without fuel 5.06 / 1.84 t (73.3 %), with fuel 5.35 / 2.15 t, 40 t 7.20 / 10.26 / 22.55 t. Front leaf 250 kN/m, front dampers 10/20 kN s/m, anti-roll 222 / 240 kN m/rad, rear air spring unchanged hardware (73 kN/m at the new reference load), rear bump stop 15 mm. AMT: shift schedule from the driver pedal (not the ASR-cut torque request), anti-stall clutch opening 8/s.
+- Runner 135/135 (`artifacts/axleloads-0201b/final/`), tolerances unchanged; the 4 scenarios that the uncalibrated shift (ADR 0201 n1) broke: kerb 0.11 s / 3.66 (base 0.12 / 3.94), eye nod 3.64° (3.79°), rollover first lift 0.458 g (0.460 g), soak drift −2.8 J (1.4 J). The n1 soak drift (44.9 J) is the same at dt 0.005 s and 8 substeps (`soak-dt/`): physical settling after the stop, not the integrator.
+- Solo 0–80 13.58 → 14.06 s (+3.5 %; masses alone +8.2 %, AMT fix −1.3 %): ASR-limited launch on the lighter drive axle. Solo 80→0 35.77 → 35.39 m; 40 t 47.54 → 47.58 s, 41.02 → 41.20 m.
+- Goldens: 6 re-recorded (overlays `artifacts/axleloads-0201b/plots/golden-*.png`).
+- **F2 energy source (owner decision 2026-11-15: fix the physics, not the test).** Per-step energy balance of the F2 mutation run without chassis colliders (`artifacts/axleloads-0201b/f2/energy-balance.txt`): the kingpin point / Baumgarte row does ≤ 40 J per step (mostly negative); the free-flight KE + PE gain came from (1) the **rebound of the compliant fifth-wheel stops** (pitch 10 Hz ζ 0.7, roll stop, yaw 3 Hz ζ 1: stored spring energy returned as relative velocity, e.g. 4.5 kJ of a 58 kJ plate-pitch impact) and (2) the **roll spring releasing energy injected by raycast tyre contact at grazing incidence** (lying combination: S = d/cos(tilt) − r jumped +0.19 → −0.50 m in one step, 1.6 MN per wheel, +52 kJ of wheel work in 10 ms). KE + PE + coupling elastic energy never grew in free flight. Fix: stops keep the soft spring-damper on approach but push the bodies apart at ≤ `stopRecoveryRateDegS` 0.5 deg/s (no rebound; ≤ 0.87 J of KE); no tyre contact when the surface normal is > `maxContactTiltDeg` 72.5° (acos 0.3, the existing clamp) from the suspension axis. F2 scan 230–260 kN/m step 0.5: before 42/61 values > 1 J (max 2044 J), after **0/61 (max 0.000 J)** (`f2/f2-scan.png`). .NET **277/277** (3 new tests in `F2CouplingEnergyTests`); runner 135/135 (789), 772 checks bit-identical, 17 changed (all PASS, `f2/runner-diff.txt`): A16 launch/brake values identical; kerb 15 cm roll +0.007° / trailer +0.010° (ray grazing the kerb's vertical face no longer loads the suspension); with-collider rollover F2 max dv/step 0.67 → 0.82 m/s (≤ 4.2) and kingpin error 5.7 → 14.0 mm (≤ 50), lying wheels no longer push; reverse dock laden final z −17.33 → −17.25 m (yaw stop without rebound).
 
 ## 7. Known gaps / not modelled
 

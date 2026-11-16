@@ -100,6 +100,7 @@ GARAGE_ZONE_M = 5.5           # clear, paved depth in front of a garage door, m
 HOUSE_KERB_M = 0.10           # kerb height on the streets of single-family houses (refs P08, P13, P24: 8-12 cm,
                               # WORKING_VALUE from proportion; main roads keep roads.standards.KERB_HEIGHT 0.13)
 HOUSE_KERB_HW_M = 4.0         # ... only carriageways up to this half width (no collector / arterial)
+KERB_ONLY_SKIP_MAT = 2        # roads.network.WALK_MATS index of bridge_concrete: a deck cap is never lowered (ADR 0237)
 KERB_BAND_M = 0.17            # kerb stone top (standards.KERB_TOP_W 0.15) + joint: the driveway paving starts behind it
 WIRE_H_M = 7.4                # low-voltage bundle (AsXSn) on the street-lamp poles of the house streets, m above ground
 DROP_H_HOUSE_M = 4.2          # service drop: height of the anchor on the house wall, m (clamped below the eaves)
@@ -680,7 +681,7 @@ def gate_access(m, n, w, net, carriage, block=None):
         _, c, s, side, i = best
         d = c.side[side]
         kind, mat = int(d["kind"][i]), int(d["mat"][i])
-        acc.update(chain=c.id, side=side, s=float(s), kind=kind, walk=NW.WALK_MATS[mat], ok=True,
+        acc.update(chain=c.id, side=side, s=float(s), kind=kind, walk=NW.walk_mat(mat), ok=True,
                    kerbed=kind == NW.URBAN and mat != NW.MAT_FLUSH_ROAD)
         if kind in (NW.URBAN, NW.RURAL) and mat != NW.MAT_FLUSH_ROAD:
             drop = {"chain": c.id, "side": side, "s": float(s), "half": w / 2 + 0.4}
@@ -787,15 +788,20 @@ def apply_drops(net, drops):
             continue
         d = c.side[dr["side"]]
         s = np.asarray(c.line.s)
-        k = np.clip((np.abs(s - dr["s"]) - dr["half"]) / DROP_RAMP_M, 0.0, 1.0)      # 0 on the driveway, 1 outside
+        # ADR 0237: a drop may carry its own kerb height `h` and ramp length `ramp` (pedestrian crossings:
+        # streetscape.pavements.crossing_drops); `kerb_only` = a street kerb only, no ditch fill, no bridge cap
+        h_drop, ramp = float(dr.get("h", DROP_H_M)), float(dr.get("ramp", DROP_RAMP_M))
+        k = np.clip((np.abs(s - dr["s"]) - dr["half"]) / ramp, 0.0, 1.0)      # 0 on the driveway, 1 outside
         sel = k < 1.0
         if not sel.any():
             continue
         kind = np.asarray(d["kind"])
         h = np.asarray(d["h"], float)
-        urban = sel & (kind == NW.URBAN) & (np.asarray(d["mat"]) != NW.MAT_FLUSH_ROAD) & (h > DROP_H_M)
-        h[urban] = np.minimum(h[urban], DROP_H_M + (h[urban] - DROP_H_M) * k[urban])
-        rural = sel & (kind == NW.RURAL)
+        urban = sel & (kind == NW.URBAN) & (np.asarray(d["mat"]) != NW.MAT_FLUSH_ROAD) & (h > h_drop)
+        if dr.get("kerb_only"):
+            urban &= np.asarray(d["mat"]) != KERB_ONLY_SKIP_MAT
+        h[urban] = np.minimum(h[urban], h_drop + (h[urban] - h_drop) * k[urban])
+        rural = sel & (kind == NW.RURAL) & (not dr.get("kerb_only"))
         he = np.where((h > 0.05) & (h < 1.5), h, S.DITCH_DEPTH)
         h[rural] = np.minimum(he[rural], DITCH_FILL_M + (he[rural] - DITCH_FILL_M) * k[rural])
         d["h"] = h
@@ -1207,17 +1213,25 @@ def gate_geo(kit, g, style, h, z, key, col=None):
         col.append((m - t * (W / 2), m + t * (W / 2), z - 0.1, z + hg))
 
 
-def card(kit, p, z, sprite, W, H, ang, z_off=0.0):
+def card(kit, p, z, sprite, W, H, ang, z_off=0.0, occ_mid=None, mid=0.46):
     """Upright plant card W x H centred on p, in the vertical plane at angle ang. Foliage normals point away from the
-    plant's axis and up (ADR 0124, review 0114 P1-r8-e: crossed cards lit per card showed a seam through the crown)."""
+    plant's axis and up (ADR 0124, review 0114 P1-r8-e: crossed cards lit per card showed a seam through the crown).
+    occ_mid (ADR 0170, review s17 0170 P1): the card is a fan of four triangles around a vertex on the plant's axis at
+    `mid` of its height whose occlusion is occ_mid - the foliage darkens smoothly towards the axis (it stands in the
+    plant's own shade there): a shaded middle with no edge of its own, where a separate dark body shows its outline."""
     u0, u1, v0, v1 = PK.sprite(sprite)
     r = np.array([math.cos(ang), math.sin(ang)])
     d = r * (W / 2)
     A, B = np.asarray(p) - d, np.asarray(p) + d
-    kit.quad([[*A, z + z_off], [*B, z + z_off], [*B, z + z_off + H], [*A, z + z_off + H]],
-             [[u0, v0], [u1, v0], [u1, v1], [u0, v1]],
-             [_fol([-r[0] * 0.9, -r[1] * 0.9, 0.35]), _fol([r[0] * 0.9, r[1] * 0.9, 0.35]),
-              _fol([r[0] * 0.6, r[1] * 0.6, 0.8]), _fol([-r[0] * 0.6, -r[1] * 0.6, 0.8])])
+    P = [[*A, z + z_off], [*B, z + z_off], [*B, z + z_off + H], [*A, z + z_off + H]]
+    UV = [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]
+    C = [_fol([-r[0] * 0.9, -r[1] * 0.9, 0.35]), _fol([r[0] * 0.9, r[1] * 0.9, 0.35]),
+         _fol([r[0] * 0.6, r[1] * 0.6, 0.8]), _fol([-r[0] * 0.6, -r[1] * 0.6, 0.8])]
+    if occ_mid is None:
+        kit.quad(P, UV, C)
+        return
+    kit.tris(P + [[p[0], p[1], z + z_off + H * mid]], UV + [[(u0 + u1) / 2, v0 + (v1 - v0) * mid]],
+             [(0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)], C + [_fol([0.0, 0.0, 1.0], occ_mid)])
 
 
 def thuja(kit, p, z, h, r, key, dead=False):
@@ -1328,14 +1342,17 @@ def fruit_tree_lite(kit, p, z, h, key, r=None):
 
 def spruce(kit, p, z, h, key):
     """Blue spruce (świerk kłujący, refs P02 / P17 / P18). ADR 0124: three crossed silhouette cards of photographed
-    twigs (whorls, scalloped outline) and a trunk - 14 triangles (ADR 0114: up to 108 in drooping skirts that showed
+    twigs (whorls, scalloped outline) and a trunk - 20 triangles (ADR 0114: up to 108 in drooping skirts that showed
     their construction from above)."""
     sp = "spruce_a" if hfloat(key, "ss") < 0.5 else "spruce_b"
     W = 0.40 * h + 0.9
     a0 = hfloat(key, "sa") * 3.1416
     kit.box(np.asarray(p, float), np.array([1.0, 0.0]), 0.07, 0.07, z - 0.1, z + h * 0.14, PK.SWATCH["trunk"], top=False)
+    # ADR 0170 (reviews s16b P2 / s17 0163 P1-P2: "half-transparent pale cone" far away, "flat wall of cards" beside
+    # the camera): the cards darken towards the bole (occ_mid; + 6 triangles). Build 2 had a dark 4-sided cone inside
+    # the cards instead: next to the camera it stood out as a dark striped seam (review s17 0170 P1, g7_p03_a).
     for i in range(3):
-        card(kit, p, z, sp, W, h * 0.96, a0 + i * math.pi / 3, z_off=h * 0.04)
+        card(kit, p, z, sp, W, h * 0.96, a0 + i * math.pi / 3, z_off=h * 0.04, occ_mid=0.46 + 0.10 * hfloat(key, "so", i), mid=0.36)
 
 
 def big_tree(kit, p, z, h, key):
@@ -1738,10 +1755,12 @@ def build(buf, rp, zf, surf_top, report, items=None):
     items: placed street furniture (the lamp poles carry the overhead line of the house streets)."""
     import shapely.ops                                       # noqa: F401
     plots = rp["plots"]
-    rep = {"plots": len(plots), "fence_m": {}, "gates": 0, "sliding_gates": 0, "wickets": 0, "drives": 0, "kerb_drops": len(rp["drops"]),
+    rep = {"plots": len(plots), "fence_m": {}, "gates": 0, "sliding_gates": 0, "wickets": 0, "drives": 0,
+           "kerb_drops": sum(1 for d in rp["drops"] if not d.get("kerb_only")),          # driveways (ADR 0114)
+           "crossing_kerb_drops": sum(1 for d in rp["drops"] if d.get("kerb_only")),     # pedestrian crossings (ADR 0237)
            "verge_overlays": 0, "thujas": 0, "spruces": 0, "fruit_trees": 0, "big_trees": 0, "shrubs": 0, "hedge_m": 0.0,
            "flower_cards": 0, "bins": 0, "tris": 0, "tris_low": 0, "tris_by": {}, "tris_by_low": {}, "instances": 0, "plot_m2_median": 0.0, "age": {}, "styles_front": {},
-           "styles_side": {}, "access": rp.get("access_stats", {}), "fence_step_zone_hits": 0,
+           "styles_side": {}, "access": rp.get("access_stats", {}), "crossing_kerb": rp.get("crossing_drops", {}), "fence_step_zone_hits": 0,
            "track_drives": sum(1 for p in plots if p.get("tracks")), "inst_trees": 0, "inst_trees_street": 0, "bushes": 0, "overgrowth": 0, "canopy": rp.get("canopy") is not None}
     keepout = []
     trees = []                                               # ADR 0132: grown garden trees -> region instances

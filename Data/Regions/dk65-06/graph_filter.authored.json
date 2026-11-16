@@ -1,0 +1,7 @@
+{
+ "provenance": "authored_override (ADR 0214): ways left out of the drivable road graph of this region",
+ "drop_service": [],
+ "drop_osm_ways": [1557884361, 1557884362, 1151531608, 1151531613],
+ "reason": "Owner D65 p.6: the new DK65 carriageway (OSM primary ref 65, edited 2026-10; dual carriageway from the roundabout south-east towards dk65-05) is not open - construction site, the route stays on the old road (Ełcka -> roundabout -> old DK65). The four ways are the SE arm of the roundabout inside this tile; tools/worldgen/qa/construction_sites.py --ways turns them into site corridor instead.",
+ "verify": "owner: is the roundabout itself open (OSM 2026-10 maps it as a finished road; the GUGiK orthophoto 2024-05-27 shows a plain T junction here)"
+}

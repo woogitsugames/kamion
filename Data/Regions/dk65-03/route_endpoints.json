@@ -1,0 +1,15 @@
+{
+ "provenance": "authored_override (ADR 0207): control route for cameras/QA = the D64 truck route Białystok -> Knyszyn (variant A of ADR 0203) inside this tile",
+ "description": "Ełcka northbound: from the east edge (seam with dk65-02, x = 768779) to the north edge (seam with dk65-04, y = 599295). Route variant A km 11.796-12.280 of docs/reports/map/dk65_route_plan.json (branch bialystok-dk65-0203).",
+ "start_epsg2180": [
+  768779.0,
+  598818.2
+ ],
+ "end_epsg2180": [
+  768695.0,
+  599295.0
+ ],
+ "start_osm_way": 1024956365,
+ "end_osm_way": 1024956365,
+ "confidence": "high (OSM geometry; plan tile entry/exit points snapped to the tile edge)"
+}

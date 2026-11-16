@@ -1,0 +1,245 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0081",
+   "look_at": [
+    999.676,
+    685.531,
+    115.413
+   ],
+   "note": "driver eye 2.5 m, control route s = 81 m of 484 m (Ełcka)",
+   "pos": [
+    1011.548,
+    626.697,
+    116.444
+   ],
+   "route_s_m": 80.739,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0242",
+   "look_at": [
+    971.67,
+    844.562,
+    116.783
+   ],
+   "note": "driver eye 2.5 m, control route s = 242 m of 484 m (Ełcka)",
+   "pos": [
+    983.61,
+    785.742,
+    117.622
+   ],
+   "route_s_m": 242.217,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0404",
+   "look_at": [
+    943.581,
+    1003.577,
+    116.523
+   ],
+   "note": "driver eye 2.5 m, control route s = 404 m of 484 m (Ełcka)",
+   "pos": [
+    955.52,
+    944.757,
+    118.114
+   ],
+   "route_s_m": 403.694,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_east",
+   "look_at": [
+    1022.0,
+    666.9,
+    -57031.905
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 20 m: Elcka at the seam with dk65-02; pair = ortho/top_seam_east.jpg",
+   "pos": [
+    1022.0,
+    566.9,
+    263.816
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_mid",
+   "look_at": [
+    983.9,
+    883.8,
+    -57030.591
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 240 m: Elcka between Fasty S and N, 7.6 m with edge lines; pair = ortho/top_mid.jpg",
+   "pos": [
+    983.9,
+    783.8,
+    265.131
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_seam_north",
+   "look_at": [
+    944.9,
+    1104.5,
+    -57030.45
+   ],
+   "note": "place camera: QA top view (north up, 140 m x 249 m), route s = 465 m: Elcka at the seam with dk65-04; pair = ortho/top_seam_north.jpg",
+   "pos": [
+    944.9,
+    1004.5,
+    265.272
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "drive_mid",
+   "look_at": [
+    982.135,
+    793.481,
+    114.182
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 150 m: Elcka northbound",
+   "pos": [
+    999.5,
+    695.0,
+    116.8
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rev_mid",
+   "look_at": [
+    973.465,
+    843.019,
+    115.485
+   ],
+   "note": "place camera: driver eye 2.5 m, against the route, route s = 400 m: Elcka towards Bialystok",
+   "pos": [
+    956.1,
+    941.5,
+    118.104
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_water_seam",
+   "look_at": [
+    930.0,
+    -230.0,
+    -57035.431
+   ],
+   "note": "place camera: ADR 0213: QA top view (north up, 140 m x 249 m) of the Supraśl at the seam with dk65-02 (E edge e = 1024 m); pair = GUGiK orto 2024 crop, water RGB measured",
+   "pos": [
+    930.0,
+    -330.0,
+    260.29
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "top_water_mid",
+   "look_at": [
+    381.0,
+    -140.0,
+    -57035.631
+   ],
+   "note": "place camera: ADR 0213: QA top view of the Supraśl in the middle of dk65-03 (bends, banks); pair = GUGiK orto 2024 crop",
+   "pos": [
+    381.0,
+    -240.0,
+    260.09
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "water_bank_mid",
+   "look_at": [
+    301.031,
+    -239.202,
+    107.689
+   ],
+   "note": "place camera: ADR 0213: pedestrian eye on the north bank of the Supraśl, looking downstream (W) along the reed / willow banks",
+   "pos": [
+    395.0,
+    -205.0,
+    112.93
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "water_close_bank",
+   "look_at": [
+    912.635,
+    -398.481,
+    74.247
+   ],
+   "note": "place camera: ADR 0213: close look down at the water from the north bank near the seam (Low must not read black)",
+   "pos": [
+    930.0,
+    -300.0,
+    114.65
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "water_oblique_east",
+   "look_at": [
+    717.738,
+    -379.369,
+    117.737
+   ],
+   "note": "place camera: ADR 0213: oblique from S at 45 m (over the tree tops) onto the Supraśl bends downstream of the seam: banks, reed belt, shrubs",
+   "pos": [
+    760.0,
+    -470.0,
+    158.14
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "k1_dashed_1200_drive",
+   "look_at": [
+    976.435,
+    827.181,
+    110.178
+   ],
+   "note": "place camera: ADR 0220: Ełcka with broken edge lines both sides (K1 km 12.00), lines 6.2 m apart",
+   "pos": [
+    993.8,
+    728.7,
+    117.171
+   ],
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 265.152,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-03",
+ "schema": "truck-sim-pl/control-cameras/1"
+}

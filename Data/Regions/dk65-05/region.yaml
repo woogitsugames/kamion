@@ -1,0 +1,68 @@
+id: dk65-05
+title: DK65 korytarz 05 — Ełcka/Studzienna przez Dobrzyniewo Duże (gm. Dobrzyniewo Duże)
+status: WORKING_ASSUMPTION (ADR 0207, owner D64; tile = lattice (-5,3) of the ADR 0203 plan)
+candidate: F_dk65_corridor
+crs:
+  horizontal: EPSG:2180 (ETRF2000-PL / CS92)
+  vertical: PL-EVRF2007-NH (EPSG:9651)
+  axes_unity: X = east (EPSG:2180 x), Y = up, Z = north (EPSG:2180 y)  [ADR 0003]
+bbox:
+  xmin: 766731.0
+  ymin: 601343.0
+  xmax: 768779.0
+  ymax: 603391.0
+  width_m: 2048.0
+  height_m: 2048.0
+origin:
+  x: 767755.0
+  y: 602367.0
+  z: 141.44
+  note: 'floating-origin anchor: Unity (0,0,0) = this point; z = NMT height at the point (EVRF2007)'
+teryt_powiat: '2002'
+products:
+  buildings.geojson: Data/Regions/dk65-05/buildings.geojson
+  ortho.json: Data/Regions/dk65-05/ortho.json
+  roads.graph.json: Data/Regions/dk65-05/roads.graph.json
+  terrain.json: Data/Regions/dk65-05/terrain.json
+big_products_not_in_git:
+- Data/raw/derived/dk65-05/heightmap_2049.r16
+- Data/raw/derived/dk65-05/ortho_0p25m.tif
+sources:
+- id: osm-geofabrik-podlaskie
+  license: ODbL 1.0
+  attribution: © OpenStreetMap contributors
+  manifest: Data/SourceManifests/osm-geofabrik-podlaskie.json
+  manifest_sha256: 908e1138300c429a2acc8ea875036fd4fffa2350059686992786340ead9fc409
+- id: gugik-nmt-2025-dk65-05
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-nmt-2025-dk65-05.json
+  manifest_sha256: 5ef7257e4112907d522d924a17cdc9d47596b7ec0c126df0a9e58a3fe1830dae
+- id: gugik-orto-2024-rgb-0p25-dk65-05
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-orto-2024-rgb-0p25-dk65-05.json
+  manifest_sha256: fe01cb390832279f0f27aff82a26d64bf830fc62487dbcc2ce2ddf1027114bf3
+- id: gugik-bdot10k-2002
+  license: 'GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a
+    ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)'
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)'
+  manifest: Data/SourceManifests/gugik-bdot10k-2002.json
+  manifest_sha256: 0530d930aa45984c5024b8c55911969caa517cfad911cbea6d2efa158bd48151
+- id: gugik-lod1-2024-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod1-2024-2002.json
+  manifest_sha256: 208717117ca8ef4ee81ecfb500ad0f36b31ea36d02c8c8873f488d3a625d4133
+- id: gugik-lod2-2017-2002
+  license: 'CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: ''dostępne
+    bezpłatnie i możliwe do dowolnego wykorzystania'''
+  attribution: 'Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0'
+  manifest: Data/SourceManifests/gugik-lod2-2017-2002.json
+  manifest_sha256: 57606993ad174e3b804cd0353a8dd45cc5ef661f81f6d8d2cb3cfb52c2575d1c
+rebuild:
+- uv run --project tools/worldgen tools/worldgen/ingest.py --region dk65-05
+- uv run --project tools/worldgen tools/worldgen/build_region.py --region dk65-05

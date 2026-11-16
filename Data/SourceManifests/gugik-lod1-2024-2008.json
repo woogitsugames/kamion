@@ -1,0 +1,27 @@
+{
+  "id": "gugik-lod1-2024-2008",
+  "name": "GUGiK 3D building models LoD1 (2024), powiat 2008",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "Budynki3D LoD1",
+  "region": "powiat 2008",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/FOTO/WMS/ModeleBudynkow3D (layer Modele_3D_budynkow_LoD1_2024)",
+  "format": "CityGML 2.0 in ZIP",
+  "crs": "EPSG:2180 + EPSG:9651 EVRF2007 heights (srsName urn:ogc:def:crs,crs:EPSG::2180,crs:EPSG::9651 in files)",
+  "license": "CC BY 4.0 (stated in GUGiK WMS GetFeatureInfo download panel, checked 2026-11-09); geoportal.gov.pl: 'dostępne bezpłatnie i możliwe do dowolnego wykorzystania'",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/legalcode.pl",
+  "license_status": "VERIFIED_FROM_PROVIDER_UI (attribution required by CC BY 4.0)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl), CC BY 4.0",
+  "used_by": [
+    "tools/worldgen/build_region.py --region knyszyn"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD1/2024/20/2008.zip",
+      "local_path": "Data/raw/gugik/lod1-2024-2008/2008_lod1_2024.zip",
+      "sha256": "02e9139142864bcb63ab3a781281cbd3f87eb58a54dfad0306f67bf8175f7f80",
+      "size_bytes": 8267243,
+      "downloaded_utc": "2026-11-14T22:12:24+00:00"
+    }
+  ]
+}

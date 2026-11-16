@@ -1,0 +1,27 @@
+# Roadside tree rows of region dk65-05 (ADR 0222, owner D64/D65, research K1 = research/dk65-knyszyn-refs/).
+# Authored data: survives every re-import (like lamp_rows.json, ADR 0133). The presence of this file opts the region in
+# to streetscape.tree_rows; without it vegetation.place keeps the default BDOT10k row rule (8 m).
+# Row lines: BDOT10k OT_OIPR_L "rząd drzew" + OSM natural=tree_row (tree_rows_osm.json, live probe 2026-11-15) within
+# corridor_m of the major roads, plus the `lines` traced here. Legal set-back / sight values: tools/worldgen/streetscape/
+# tree_rows.py (Dz.U. 2016 poz. 124 § 53 ust. 3, zał. 3 ust. 4.1 / 5; Dz.U. 2022 poz. 1518 § 26, § 81, § 82 ust. 4).
+tree_rows:
+  - id: dk65-05-roadside-rows
+    reason: >-
+      Owner D64/D65: Białystok -> Knyszyn on the old DK65 (variant A); K1 (g): rows along Ełcka km ~11.7 (one-sided W,
+      ~20-25 m, 8-12 m from the edge), km ~14.6 (W ~15 m, 5-10 m; E single trees), DK65 km ~20.5 (~8 trees at the bus
+      bay). Species UNVERIFIED (K1: no source) - the default mix of tree_rows.DEFAULTS is a WORKING_VALUE.
+    confidence: medium
+    verify: owner photo / drive along DK65 (species, spacing, gaps)
+    major_highways: [primary, secondary, tertiary]
+    spacing_m: [12.0, 18.0]
+    lines:
+      # Ełcka km ~14.5-14.7 (K1-133; orthophoto GUGiK 2025-05-25 0.1 m, research/dk65-knyszyn-refs/files/orto/junctions/
+      # T_km14_6_north.jpg; E = 768190 + 0.1 px, N = 601680 - 0.1 px; +-1.5 m). West: ~13 trees / 200 m, crowns at px
+      # (820,150) (890,700) (935,1400) (935,1950), 3.5 m (N end) to 12-18 m (S end) from the asphalt edge.
+      - line_epsg2180: [[768272.0, 601665.0], [768279.0, 601610.0], [768283.5, 601540.0], [768283.5, 601485.0]]
+        spacing_m: [13.0, 17.0]
+        missing_share: 0.08
+      # East: single trees in a loose line, px (1125,600) (1160,1230) (1235,1520) (1290,1880), 8-13 m from the edge.
+      - line_epsg2180: [[768302.5, 601620.0], [768306.0, 601557.0], [768313.5, 601528.0], [768319.0, 601492.0]]
+        spacing_m: [18.0, 30.0]
+        missing_share: 0.30

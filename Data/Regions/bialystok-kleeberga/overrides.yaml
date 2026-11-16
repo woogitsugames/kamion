@@ -1,0 +1,20 @@
+# Authored overrides of region bialystok-kleeberga (ADR 0206). Every entry survives a re-import; coordinates are
+# region-local E/N (origin EPSG:2180 773899, 596223) or EPSG:2180 where the key says so. Sources: GUGiK orthophoto
+# 2024 0.25 m (Data/raw/derived/bialystok-kleeberga/ortho_0p25m.tif), BDOT10k, LoD1 2024. No lettering, no brands.
+# Evidence pairs [orthophoto | generated top view]: artifacts/bialystok-dk65-t2-0206/{junctions,lanes}/ (ADR 0206).
+schema: truck-sim-pl/overrides/1
+overrides:
+  - id: rondo-szymanskiego-ring-over-dk8-cutting
+    target: {osm_way: [257353773, 257353774]}
+    reason: >-
+      Rondo prof. Szymańskiego spans the DK8/DK65 cutting: OSM tags the two DK8 carriageways below it tunnel=yes
+      layer=-1 (ways 23982181, 76073122, 77 m each) and leaves the ring at grade; the generator does not model
+      tunnels. The two ring arcs that cross the cutting (25 m of their 35 m within 7 m of the DK8 axes) are carried
+      as decks, so they get the bridge cross-section (deck edge, parapet) over the cutting and the profile solver
+      holds them at the road below + clearance (orthophoto 2024: ring over the cutting, portals in shadow at both
+      arcs, junctions/j5_interchange_773800.jpg; render vqa-r3/place_High.jpg). The decks alone did NOT reopen the
+      terrain under the ring (r3: terrain collision still 0.54 m over the DK8 road, lifted by the ring's junction
+      plate and pavements) - that is done by roads/build_world.keep_tunnel_cut (ADR 0206).
+    confidence: high
+    verify: probe_lod2.py / probe_underpass.py after the rebuild (nothing lower than 4.5 m above the DK8 road collision)
+    set: {bridge: true}

@@ -1,0 +1,282 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0212): control cameras on DW671 towards Tykocin. Position region-local E/N (origin 759563, 610559), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions sampled on the OSM axis of DW671 in the road graph.",
+ "cameras": [
+  {
+   "id": "dw671_seam_north_out",
+   "pos_en": [
+    467,
+    940
+   ],
+   "heading_deg": 230,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DW671 ~130 m from the north seam (past the 60 m world-edge closure), outbound SW towards Tykocin"
+  },
+  {
+   "id": "dw671_inbound_to_knyszyn",
+   "pos_en": [
+    262,
+    765
+   ],
+   "heading_deg": 49,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye on DW671 inbound NE towards Knyszyn (tile knyszyn-w)"
+  },
+  {
+   "id": "dw671_village_approach",
+   "pos_en": [
+    -130,
+    402
+   ],
+   "heading_deg": 227,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DW671 outbound ~110 m before the village junctions (-212,328 / -375,168)"
+  },
+  {
+   "id": "village_above",
+   "pos_en": [
+    -300,
+    250
+   ],
+   "heading_deg": 0,
+   "eye_m": 70.0,
+   "fov_deg": 60,
+   "pitch_deg": -45,
+   "note": "plan-like view of the village junctions on DW671, pair with orthophoto"
+  },
+  {
+   "id": "dw671_south_junction_approach",
+   "pos_en": [
+    -650,
+    -380
+   ],
+   "heading_deg": 207,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "DW671 outbound before the two junctions at -716,-501 / -755,-581"
+  },
+  {
+   "id": "south_junction_above",
+   "pos_en": [
+    -735,
+    -540
+   ],
+   "heading_deg": 0,
+   "eye_m": 60.0,
+   "fov_deg": 60,
+   "pitch_deg": -45,
+   "note": "plan-like view of the south junctions"
+  },
+  {
+   "id": "dw671_south_edge_in",
+   "pos_en": [
+    -917,
+    -908
+   ],
+   "heading_deg": 27,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "driver eye ~130 m inside the south tile edge, inbound NE towards Knyszyn"
+  },
+  {
+   "id": "seam_north_above",
+   "pos_en": [
+    480,
+    960
+   ],
+   "heading_deg": 0,
+   "eye_m": 55.0,
+   "fov_deg": 60,
+   "pitch_deg": -43,
+   "note": "north seam with knyszyn-w from above"
+  },
+  {
+   "id": "rail_xing_from_ne",
+   "pos_en": [
+    -700.8,
+    -471.4
+   ],
+   "heading_deg": 206.5,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): driver eye ~70 m before the DW671 level crossing, outbound SW"
+  },
+  {
+   "id": "rail_xing_close_ne",
+   "pos_en": [
+    -725.3,
+    -520.6
+   ],
+   "heading_deg": 206.5,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -8,
+   "note": "ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): driver eye ~15 m before the crossing, outbound SW"
+  },
+  {
+   "id": "rail_xing_from_sw",
+   "pos_en": [
+    -752.1,
+    -574.3
+   ],
+   "heading_deg": 26.5,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -2,
+   "note": "ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): driver eye ~45 m before the crossing, inbound NE"
+  },
+  {
+   "id": "rail_xing_above",
+   "pos_en": [
+    -732,
+    -604
+   ],
+   "heading_deg": 0,
+   "eye_m": 70.0,
+   "fov_deg": 60,
+   "pitch_deg": -45,
+   "note": "ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): plan-like view of the crossing, pair with orthophoto"
+  },
+  {
+   "id": "rail_track_along",
+   "pos_en": [
+    -777.3,
+    -494.6
+   ],
+   "heading_deg": 131,
+   "eye_m": 3.0,
+   "fov_deg": 60,
+   "pitch_deg": -4,
+   "note": "ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): on the track 60 m NW of the crossing, looking SE along the track"
+  },
+  {
+   "id": "rail_track_side",
+   "pos_en": [
+    -800,
+    -560
+   ],
+   "heading_deg": 60,
+   "eye_m": 6.0,
+   "fov_deg": 60,
+   "pitch_deg": -6,
+   "note": "ADR 0217 (rail-fix-s21, same pose as verify-cloud-b): field SW of the track, oblique view of track bed and crossing"
+  },
+  {
+   "id": "rail_xing_top",
+   "pos_en": [
+    -732.15,
+    -535.4
+   ],
+   "heading_deg": 0,
+   "eye_m": 62.0,
+   "fov_deg": 50,
+   "pitch_deg": -88,
+   "note": "ADR 0217 (rail-fix-s21): top view of the DW671 level crossing (~60 m window), pair with artifacts/rail-fix-s21/ref/ortho_0p10_crossing_60m.jpg"
+  },
+  {
+   "id": "rail_bed_close",
+   "pos_en": [
+    -768.0,
+    -508.0
+   ],
+   "heading_deg": 131,
+   "eye_m": 1.7,
+   "fov_deg": 60,
+   "pitch_deg": -14,
+   "note": "ADR 0217 (rail-fix-s21): standing beside the track 45 m NW of the crossing: ballast, sleepers, rails at eye height"
+  },
+  {
+   "id": "rail_xing_devices_sw",
+   "pos_en": [
+    -742.6,
+    -555.0
+   ],
+   "heading_deg": 26.5,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": 0,
+   "note": "ADR 0217 (rail-fix-s21): driver eye ~22 m before the crossing, inbound NE - pose of Mapillary 828893548045009 (barriers, signals)"
+  },
+  {
+   "id": "rail_x0_far_a",
+   "pos_en": [
+    -660.7,
+    -384.7
+   ],
+   "heading_deg": 206.2,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -1.5,
+   "note": "rail-dk65-s22 (ADR 0268): driver eye 165 m before level crossing osm:node/1778182481, approach a - approach signs / posts"
+  },
+  {
+   "id": "rail_x0_near_a",
+   "pos_en": [
+    -720.3,
+    -505.8
+   ],
+   "heading_deg": 206.2,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -4.0,
+   "note": "rail-dk65-s22 (ADR 0268): driver eye 30 m before level crossing osm:node/1778182481, approach a - approach signs / posts"
+  },
+  {
+   "id": "rail_x0_far_b",
+   "pos_en": [
+    -803.6,
+    -682.1
+   ],
+   "heading_deg": 26.2,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -1.5,
+   "note": "rail-dk65-s22 (ADR 0268): driver eye 165 m before level crossing osm:node/1778182481, approach b - approach signs / posts"
+  },
+  {
+   "id": "rail_x0_near_b",
+   "pos_en": [
+    -744.0,
+    -561.0
+   ],
+   "heading_deg": 26.2,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -4.0,
+   "note": "rail-dk65-s22 (ADR 0268): driver eye 30 m before level crossing osm:node/1778182481, approach b - approach signs / posts"
+  },
+  {
+   "id": "rail_x0_side_eye",
+   "pos_en": [
+    -740.7,
+    -521.4
+   ],
+   "heading_deg": 144.5,
+   "eye_m": 1.6,
+   "fov_deg": 55,
+   "pitch_deg": -2.0,
+   "note": "rail-dk65-s22 (REVIEW s22 0217 visual P2-12): pedestrian eye 1.6 m, 13 m beside the road, looking at level crossing osm:node/1778182481 - scale of devices, kerb cut"
+  },
+  {
+   "id": "rail_x0_top",
+   "pos_en": [
+    -732.1,
+    -533.9
+   ],
+   "heading_deg": 0.0,
+   "eye_m": 38.0,
+   "fov_deg": 60,
+   "pitch_deg": -89.0,
+   "note": "rail-dk65-s22: top view of level crossing osm:node/1778182481 (panels, kerb cut, P-4, P-14)"
+  }
+ ]
+}

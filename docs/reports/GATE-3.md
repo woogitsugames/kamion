@@ -105,3 +105,32 @@ pwsh scripts/gate3-run.ps1 -Serial RFGL34SJYDZ -Tier Low -Fps 30 -SkipBuild -Apk
 uv run --project tools/perf python tools/perf/p99_spikes.py --summary <ts-A> <ts-B>                                              # klatki > 40 ms
 ```
 Liczby dopisać tutaj jako „pomiar kontrolny s19” obok D57 (nie zastępują przebiegów zaliczenia).
+
+## Pomiar kontrolny s20 (2026-11-14, A16 RFGL34SJYDZ, Low/30, APK kamion-0.1.0-77cfd94bf8, czyste drzewo)
+Po integracji s20 (0170, 0172, 0181, 0184, 0191+0192, regeneracja C, PSO odświeżone).
+| odcinek | FPS | p50/p95/p99/max ms | > 50 ms | GPU p50/p95/p99 ms | CPU main p50/p99 ms | PSS MB | kamery | budżet |
+|---|---|---|---|---|---|---|---|---|
+| G3-A | 29,99 | 33,33 / 33,46 / 33,57 / 50,2 | 2 | 32,1 / 34,5 / 35,7 | 21,6 / 31,1 | 917,5 | 57/57 | OK |
+| G3-B | 29,95 | 33,33 / 33,45 / 33,62 / 50,1 | 6 | 31,3 / 34,3 / 37,1 | 21,9 / 33,5 | 877,8 | 46/46 | OK |
+Dane: `artifacts/gate3/20261114-063715`, `artifacts/gate3/20261114-071223`. GPU p50 ~31–32 ms przy 33,3 ms klatki — mały zapas na Low. Przegląd wizualny zrzutów: `docs/reports/REVIEW-2026-11-14-s20-gate3-phone.md`.
+
+### S24+ (RZCX60VE8ZY, właściciela) High/30, APK kamion-0.1.0-18e368be69-high (świat High), s20 2026-11-14
+| odcinek | FPS | p95/p99/max ms | > 50 ms | GPU p50 ms | PSS MB | temp. °C | kamery |
+|---|---|---|---|---|---|---|---|
+| G3-A | 29,96 | 33,54 / 33,79 / 66,8 | 3 | 23,0 | 1670 | 27,9 | 56/57 |
+| G3-B | 29,97 | 33,62 / 34,31 / 66,3 | 1 | 22,5 | 1644 | 34,5 | 46/46 |
+Thermal 0. Budżet w skrypcie dla High = 60 FPS (p95 ≤ 17 ms) → „OVER” wynika z limitu 30 FPS; GPU p50 ~23 ms oznacza, że High/60 nie jest osiągalne bez optymalizacji. Bateria 94 → 60 % (dwa odcinki). Dane: `artifacts/gate3/20261114-074426`, `artifacts/gate3/20261114-081950`.
+
+### A16 Low/30, APK kamion-0.1.0-edb5524993 (po drugiej rundzie s20: 0183/0185/0190/0196, płot z siatką), 2026-11-14
+| odcinek | FPS | p95/p99/max ms | > 50 ms | GPU p50/p95 ms | PSS MB | kamery | budżet |
+|---|---|---|---|---|---|---|---|
+| G3-A | 29,97 | 33,43 / 33,56 / 50,2 | 4 | 32,1 / 34,4 | 900,8 | 57/57 | OK |
+| G3-B | — | — | — | — | — | — | NIEZMIERZONY: instalacja APK nieudana, A16 offline w adb (19:43) — do powtórzenia |
+Dane: `artifacts/gate3/20261114-182955`.
+
+## 2026-11-15 — A16 (SM-A165F), Low/30, czysty APK `kamion-0.1.0-af2570fccd.apk` (lider s20)
+| Segment | ważny | śr. FPS | p95 ms | p99 ms | max ms | > 50 ms | GPU p95 ms | PSS MB | kamery | dowód |
+|---|---|---|---|---|---|---|---|---|---|---|
+| G3-A | TAK | 30,0 | 33,46 | 33,55 | 49,97 | 0 | 34,65 | 930,5 | 57/57 | `artifacts/gate3/20261115-141511/RFGL34SJYDZ/` |
+| G3-B | TAK | 29,94 | 33,46 | 33,61 | 83,29 | 3 | 34,39 | 933,8 | 46/46 | `artifacts/gate3/20261115-145242/RFGL34SJYDZ/` |
+Budżet (docs/PERFORMANCE_BUDGETS.md, WORKING_VALUE: p95 ≤ 34, p99 ≤ 40, PSS ≤ 1000): oba segmenty OK. Zawiera scalenia z 15.11 (Argon 0193/0186/0194, 0208, 0212, fizyka #77, marki #78). Zrzuty kamer do obejrzenia (pętla wizualna) — w katalogach `cam/`.

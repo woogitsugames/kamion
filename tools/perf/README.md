@@ -12,6 +12,8 @@ uv run --project tools/perf perfgate compare <dirA> <dirB>            # przed/po
 uv run --project tools/perf perfgate history artifacts/perf-low-r2/final --out artifacts/perf-low-r2/final/perfgate-history.md
 uv run --project tools/perf perfgate check artifacts/perf-low-r1/diag0/base0   # exit 1 = do odrzucenia
 uv run --project tools/perf perfgate formats                           # lista formatów + wersje
+uv run --project tools/perf python -m perfgate.gpuab report artifacts/gpu-ab/<ts>   # tabela A/B GPU (ADR 0241; sesja z scripts/gpu-ab-a16.ps1)
+uv run --project tools/perf python -m perfgate.gpuab catalog --sources game/Assets/_Project   # warianty + czy gra czyta każdy klucz
 uv run --project tools/perf pytest tools/perf/tests -q                 # testy
 ```
 

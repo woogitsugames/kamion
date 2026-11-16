@@ -53,6 +53,7 @@ from roads import standards as S
 from roads.network import RURAL, side_extent, side_params
 
 from . import props as PP
+from . import sign_norms as SN
 from . import signs as SG
 
 KIND = "gate3_sign"
@@ -89,7 +90,24 @@ FACE_DIM = {
     "C-12": ("disc", 0.60, 0.60),
     "plate": ("rect", 0.60, 0.45),
     "street_name": ("rect", 1.00, 0.25),
+    # ADR 0236: route numbers used on their own (E-15a national road, E-16 international route), research R2-017 /
+    # R2-077. Height 300 mm (pkt 6.3.7.8 and Tabela 9.5.3 of [ZNAKI-Z1], values marked with an asterisk); the width
+    # follows from the digits (face_dim), the entries here are the two-digit / "E 67" nominal sizes.
+    "E-15": ("rect", 0.413, 0.30),
+    "E-16": ("rect", 0.602, 0.30),
 }
+ROUTE_NO_GAP_M = 0.03         # two numbers side by side on one bracket ("8" "19", R2-017): WORKING_VALUE gap
+
+
+def face_dim(code, text=None):
+    """(shape, width m, height m) of a face; E-15 / E-16 take their width from the number(s) in `text`
+    ("8|19" = two plates side by side) by rys. 9.5.46 / 9.5.47: 2 m + digits at d1 = 162 mm."""
+    if code in ("E-15", "E-16") and text:
+        dims = {k: v / 1000.0 for k, v in SN.ROUTE_NO_STANDALONE_MM.items()}
+        refs = [r for r in str(text).split("|") if r.strip()]
+        w = sum(SN.route_no_width_m(r, dims) for r in refs) + ROUTE_NO_GAP_M * (len(refs) - 1)
+        return ("rect", round(w, 3), dims["h"])
+    return FACE_DIM[code]
 TWO_POSTS = {"F-10", "F-10-ls"}          # faces carried by two posts (0.3 x plate width either side of the middle)
 PROTOS = {}                   # prototype name -> (lod0, lod1, collision), registered by build(), read by props.build_all
 
@@ -204,6 +222,15 @@ def draw_face(code, w_px, h_px, text=None):
         src = SG.square("D-6") if code == "D-6" else SG.d1() if code == "D-1" else SG.c12()
         bg = Image.new("RGBA", src.size, (*(SG.YELLOW if code == "D-1" else SG.BLUE), 255))
         return Image.alpha_composite(bg, src.convert("RGBA")).convert("RGB").resize((w_px, h_px), Image.LANCZOS)
+    if code in ("E-15", "E-16"):                         # ADR 0236: route number plates, our own drawing by the norm
+        px_m = h_px / (SN.ROUTE_NO_STANDALONE_MM["h"] / 1000.0)
+        N = SG._Norm(0.210, px_m)
+        N.no = {k: v / 1000.0 * px_m for k, v in SN.ROUTE_NO_STANDALONE_MM.items()}
+        im = Image.new("RGBA", (w_px, h_px), (*BACK, 255))
+        x = 0.0
+        for r in [r for r in str(text or "").split("|") if r.strip()]:
+            x += N.ref(im, x, h_px / 2, r.strip()) + ROUTE_NO_GAP_M * px_m
+        return im.convert("RGB")
     if code == "street_name":
         im = Image.new("RGB", (w_px, h_px), TEAL)
         d = ImageDraw.Draw(im)
@@ -233,7 +260,7 @@ def atlas(parts, post):
     """(image, cells): faces stacked top to bottom, post / back swatches in a strip on the right.
     cells = [(code, w_m, h_m, shape, (x0, y0, x1, y1) px)], swatch pixel centres under "post" / "back"."""
     P = _norm_parts(parts)
-    dims = [(c, t) + FACE_DIM[c] for c, t in P]
+    dims = [(c, t) + face_dim(c, t) for c, t in P]
     wmax = max(d[3] for d in dims)
     W = int(round(wmax * PX_M)) + SWATCH_PX
     H = sum(int(round(d[4] * PX_M)) for d in dims)
@@ -418,7 +445,8 @@ def build(pl, net, graph, overrides, origin, boards, report, carriage=None, isla
                              "snapped_m": round(moved, 2), "under_deck": bool(under),
                              **({"island": isl.id} if isl is not None else {}),
                              "travel_bearing_deg": round(math.degrees(math.atan2(travel[0], travel[1])) % 360, 1),
-                             "mapillary": o.get("mapillary", [])})
+                             "mapillary": o.get("mapillary", []),
+                             **({"r2": o["r2"]} if o.get("r2") else {})})
     _signals(pl, overrides, rep, carriage, islands)
     _lamps(pl, overrides, rep, carriage)
     report["gate3_landmarks"] = rep
@@ -489,7 +517,7 @@ def _signals(pl, overrides, rep, carriage, islands):
         else:
             z = pl.add("signal_pole", p, PP_yaw(face), src=src, **zkw)
         if o.get("pole_head", True) or not mast:
-            pl.add(f"signal_head_{lit}", p + face * 0.15, PP_yaw(face), z=z + 2.9, src=src)
+            pl.add(f"signal_head_side_{lit}", p + face * 0.15, PP_yaw(face), z=z + 2.9, src=src)
         rep.setdefault("signals", []).append({"id": o["id"], "at": [round(float(v), 1) for v in p], "mast": mast,
                                               "snapped_m": round(moved, 2), "lit": lit,
                                               **({"arm_heads_m": heads} if mast else {})})

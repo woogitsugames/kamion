@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="45" result="Failed(Child)" total="45" passed="4" failed="41" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:20:27Z" duration="34,8524379">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="673" result="Failed" site="Child" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:20:27Z" duration="34.852438" total="45" passed="4" failed="41" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1814" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/spawn-fix-0262/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="673" result="Failed" site="Child" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:20:27Z" duration="34.843657" total="45" passed="4" failed="41" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="31252" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1815" name="Game" fullname="Game" runstate="Runnable" testcasecount="673" result="Failed" site="Child" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:20:27Z" duration="34.839407" total="45" passed="4" failed="41" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1816" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="673" result="Failed" site="Child" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:20:27Z" duration="34.835138" total="45" passed="4" failed="41" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1388" name="StartClearanceTests" fullname="Game.Tests.StartClearanceTests" classname="Game.Tests.StartClearanceTests" runstate="Runnable" testcasecount="45" result="Failed" site="Child" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:20:27Z" duration="34.828375" total="45" passed="4" failed="41" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="ParameterizedMethod" id="1413" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" testcasecount="21" result="Failed" site="Child" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.387274" total="21" passed="1" failed="20" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1392" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-industrial-c&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-industrial-c&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="40386751" result="Passed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.063565" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1393" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-maczka&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-maczka&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1645740823" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.043922" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  bialystok-maczka: startS 12.0 m, closures on the route at 61.2 (entry), 1993.8 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  86.155174255371094d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1394" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-kleeberga&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-kleeberga&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="288274043" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.040768" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  bialystok-kleeberga: startS 12.0 m, closures on the route at 60.0 (entry), 2161.0 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.000442504882813d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1395" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-knyszynska&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-knyszynska&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1838114950" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.028924" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  bialystok-knyszynska: startS 12.0 m, closures on the route at 20.8 (entry), 2902.2 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  45.825218200683594d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1396" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-01&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-01&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1169076777" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.019797" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-01: startS 12.0 m, closures on the route at 60.0 (entry), 571.6 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999801635742188d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1397" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-02&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-02&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1761852621" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.013597" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-02: startS 12.0 m, closures on the route at 60.0 (entry), 2340.7 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.0499267578125d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1398" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-03&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-03&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="545265013" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.006734" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-03: startS 12.0 m, closures on the route at 60.0 (entry) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999526977539063d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1399" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-04&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-04&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1579698490" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.050606" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-04: startS 12.0 m, closures on the route at 60.0 (entry), 2074.5 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.00030517578125d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1400" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-05&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-05&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="616928826" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.012548" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-05: startS 12.0 m, closures on the route at 14.5 (entry), 2141.9 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  39.541324615478516d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1401" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-06&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-06&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="2089945204" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.008082" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-06: startS 12.0 m, closures on the route at 54.6 (entry), 1641.8 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  79.572189331054688d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1402" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-07&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-07&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1230108226" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.005893" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-07: startS 12.0 m, closures on the route at 60.0 (entry), 862.4 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999847412109375d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1403" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-08&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-08&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1761593568" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.006072" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-08: startS 12.0 m, closures on the route at 60.0 (entry), 2295.1 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999923706054688d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1404" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-09&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-09&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="611099043" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.004493" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-09: startS 12.0 m, closures on the route at 60.0 (entry) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.997871398925781d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1405" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-10&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-10&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="178358782" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.009386" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-10: startS 12.0 m, closures on the route at 60.0 (entry), 2555.4 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999725341796875d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1406" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-11&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-11&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1241602001" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.003419" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-11: startS 12.0 m, closures on the route at 60.0 (entry) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999946594238281d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1407" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn-s&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn-s&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="548025414" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.005539" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  knyszyn-s: startS 12.0 m, closures on the route at 60.0 (entry), 2360.7 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.992767333984375d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1408" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1366504135" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.011935" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  knyszyn: startS 12.0 m, closures on the route at 60.0 (entry) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.000282287597656d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1409" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn-w&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn-w&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="78645886" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.007052" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  knyszyn-w: startS 12.0 m, closures on the route at 53.9 (entry), 1928.7 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  78.862747192382813d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1410" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-monki-01&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-monki-01&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="751425758" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.004727" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-monki-01: startS 12.0 m, closures on the route at 60.0 (entry), 1125.0 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.991485595703125d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1411" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dw671-tykocin-01&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dw671-tykocin-01&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="964537382" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.008421" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dw671-tykocin-01: startS 12.0 m, closures on the route at 60.0 (entry), 2567.3 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  84.999755859375d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1412" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-dojlidy&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-dojlidy&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="119510795" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.024463" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  bialystok-dojlidy: startS 12.0 m, closures on the route at 60.3 (entry), 2129.9 (exit) m - the start is outside / too close to the closure the route enters through (python scripts/export-region-catalog.py)
+  Expected: 12.0d +/- 0.0099999997764825821d
+  But was:  85.277969360351563d
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen (System.String region) [0x000ad] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:156
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1390" name="Crossings_EntryAtTheStart_ExitAtTheEnd_AndRowsBesideTheRouteAreIgnored" fullname="Game.Tests.StartClearanceTests.Crossings_EntryAtTheStart_ExitAtTheEnd_AndRowsBesideTheRouteAreIgnored" methodname="Crossings_EntryAtTheStart_ExitAtTheEnd_AndRowsBesideTheRouteAreIgnored" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="668710834" result="Passed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.002351" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1391" name="Crossings_RouteNodeExactlyOnTheRow_CountsOnce" fullname="Game.Tests.StartClearanceTests.Crossings_RouteNodeExactlyOnTheRow_CountsOnce" methodname="Crossings_RouteNodeExactlyOnTheRow_CountsOnce" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1257960137" result="Passed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.000261" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1389" name="Footprint_FollowsTheVehicleDefinitions" fullname="Game.Tests.StartClearanceTests.Footprint_FollowsTheVehicleDefinitions" methodname="Footprint_FollowsTheVehicleDefinitions" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1357253190" result="Passed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:52Z" duration="0.001089" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1435" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" testcasecount="21" result="Failed" site="Child" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:20:27Z" duration="34.430647" total="21" passed="0" failed="21" inconclusive="0" skipped="0" asserts="0">
+              <properties>
+                <property name="Category" value="WorldScenes" />
+              </properties>
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1414" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-industrial-c&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-industrial-c&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="794776330" result="Failed" start-time="2026-11-15 20:19:52Z" end-time="2026-11-15 20:19:56Z" duration="3.609936" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  bialystok-industrial-c: collider 'DepotBarrier_0' on the route at 244.0 m (232.0 m after the start)
+  Expected: null
+  But was:  <DepotBarrier_0 (UnityEngine.BoxCollider)>
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x001a7] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:198
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1415" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-maczka&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-maczka&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1289293906" result="Failed" start-time="2026-11-15 20:19:56Z" end-time="2026-11-15 20:19:59Z" duration="2.890341" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  bialystok-maczka: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 86.2 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1416" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-kleeberga&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-kleeberga&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1766555644" result="Failed" start-time="2026-11-15 20:19:59Z" end-time="2026-11-15 20:20:01Z" duration="1.854121" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  bialystok-kleeberga: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1417" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-knyszynska&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-knyszynska&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1294004805" result="Failed" start-time="2026-11-15 20:20:01Z" end-time="2026-11-15 20:20:02Z" duration="1.650871" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  bialystok-knyszynska: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 45.8 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1418" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-01&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-01&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1075979225" result="Failed" start-time="2026-11-15 20:20:02Z" end-time="2026-11-15 20:20:04Z" duration="1.264662" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-01: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1419" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-02&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-02&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="858224587" result="Failed" start-time="2026-11-15 20:20:04Z" end-time="2026-11-15 20:20:05Z" duration="1.310726" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-02: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1420" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-03&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-03&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1331700548" result="Failed" start-time="2026-11-15 20:20:05Z" end-time="2026-11-15 20:20:07Z" duration="1.725647" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-03: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1421" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-04&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-04&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1351096896" result="Failed" start-time="2026-11-15 20:20:07Z" end-time="2026-11-15 20:20:08Z" duration="1.490095" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-04: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1422" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-05&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-05&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="314693865" result="Failed" start-time="2026-11-15 20:20:08Z" end-time="2026-11-15 20:20:10Z" duration="1.537436" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-05: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 39.5 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1423" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-06&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-06&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="638769330" result="Failed" start-time="2026-11-15 20:20:10Z" end-time="2026-11-15 20:20:11Z" duration="1.472485" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-06: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 79.5 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1424" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-07&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-07&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1843831057" result="Failed" start-time="2026-11-15 20:20:11Z" end-time="2026-11-15 20:20:13Z" duration="1.408199" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-07: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1425" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-08&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-08&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="246520330" result="Failed" start-time="2026-11-15 20:20:13Z" end-time="2026-11-15 20:20:14Z" duration="1.364291" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-08: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1426" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-09&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-09&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1572487919" result="Failed" start-time="2026-11-15 20:20:14Z" end-time="2026-11-15 20:20:15Z" duration="1.265395" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-09: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1427" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-10&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-10&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="921822370" result="Failed" start-time="2026-11-15 20:20:15Z" end-time="2026-11-15 20:20:16Z" duration="1.276079" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-10: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1428" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-11&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-11&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="603395540" result="Failed" start-time="2026-11-15 20:20:16Z" end-time="2026-11-15 20:20:18Z" duration="1.272837" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-11: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1429" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn-s&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn-s&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="584430970" result="Failed" start-time="2026-11-15 20:20:18Z" end-time="2026-11-15 20:20:19Z" duration="1.154737" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  knyszyn-s: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1430" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1712662125" result="Failed" start-time="2026-11-15 20:20:19Z" end-time="2026-11-15 20:20:21Z" duration="1.785857" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  knyszyn: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1431" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn-w&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn-w&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="453581472" result="Failed" start-time="2026-11-15 20:20:21Z" end-time="2026-11-15 20:20:22Z" duration="1.515979" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  knyszyn-w: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 78.9 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1432" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-monki-01&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-monki-01&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1594957969" result="Failed" start-time="2026-11-15 20:20:22Z" end-time="2026-11-15 20:20:24Z" duration="1.433570" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dk65-monki-01: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1433" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dw671-tykocin-01&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dw671-tykocin-01&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1008781635" result="Failed" start-time="2026-11-15 20:20:24Z" end-time="2026-11-15 20:20:25Z" duration="1.389547" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  dw671-tykocin-01: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.0 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1434" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-dojlidy&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-dojlidy&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="536616585" result="Failed" start-time="2026-11-15 20:20:25Z" end-time="2026-11-15 20:20:27Z" duration="1.754417" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  bialystok-dojlidy: start at route_s 12.0 m is not free (region-edge closure on the route), first free place 85.3 m
+  Expected: null
+  But was:  "region-edge closure on the route"
+]]></message>
+                  <stack-trace><![CDATA[at Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead (System.String region) [0x00113] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\spawn-fix-0262\game\Assets\_Project\Tests\EditMode\StartClearanceTests.cs:191
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

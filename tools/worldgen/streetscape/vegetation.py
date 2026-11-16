@@ -31,17 +31,58 @@ from scipy import ndimage
 from . import paved as PV
 from .foliage_policy import metric_patch_field, osm_tree_species
 
-SPECIES = ["pine", "birch", "alder", "maple", "linden", "shrub"]
-MIX = {"iglasty": [0.82, 0.12, 0.02, 0.02, 0.02, 0.0], "mieszany": [0.45, 0.25, 0.10, 0.10, 0.10, 0.0],
-       "liściasty": [0.08, 0.32, 0.25, 0.20, 0.15, 0.0], None: [0.4, 0.3, 0.1, 0.1, 0.1, 0.0]}
-HEIGHT = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0)}
+# ADR 0187: "spruce" (Norway spruce) joins the canopy species. Pine / spruce stands (bor mieszany swiezy) are the
+# stands of Puszcza Knyszynska and of the forests south of Krywlany; shares WORKING_VALUE (pine clearly dominant,
+# spruce the second conifer; not read from a forest inventory). make_trees.py FOREST_MIX bakes the same mixes.
+SPECIES = ["pine", "birch", "alder", "maple", "linden", "shrub", "spruce"]
+MIX = {"iglasty": [0.64, 0.10, 0.02, 0.02, 0.02, 0.0, 0.20], "mieszany": [0.36, 0.24, 0.10, 0.08, 0.08, 0.0, 0.14],
+       # ADR 0170: no Scots pine in "liściasty" stands. The 8 % pines of 14-24 m stood above every broadleaf stand
+       # as flat "stone pine" crowns (review s17 0163 P1 / P2); same weights in make_trees.py FOREST_MIX (HLOD bake).
+       "liściasty": [0.0, 0.36, 0.26, 0.22, 0.16, 0.0, 0.0], None: [0.4, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0]}
+HEIGHT = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0),
+          "spruce": (14, 25), "pineyoung": (1.5, 5.0), "birchyoung": (2.0, 6.5), "floor": (0.45, 0.9)}
+# Prototype variants per species (make_trees.py NVAR; 3 when not listed). The variant is drawn from 0..2 for every
+# tree (unchanged random stream) and folded: spruce canopy trees take the stand forms 0 / 1, young spruce and the
+# open side of a stand take variant 2 (boughs to the ground).
+NVAR = {"pineyoung": 1, "birchyoung": 1, "floor": 2}
+SPRUCE_OPEN = 2
 SPACING = {"las": 4.5, "zagajnik": 3.2, "zadrzewienie": 6.0}
 # Understorey of a Podlasie pine / mixed stand (v3.4, review r3 X4 "trunks like a fence", r4 W-H8): hazel and
 # young pine / birch under the canopy, so the boles do not stand in an empty, swept hall. species -> (h min, h max,
 # weight), one plant per UNDER_SPACING^2 (~60 m2). WORKING_VALUE (forest-inventory classes, not measured here);
 # tools/blender/world/make_trees.py UNDER_SPECIES bakes the same mix into the HLOD edge texture.
-UNDERSTOREY = {"shrub": (1.2, 3.5, 0.55), "pine": (3.0, 7.0, 0.2), "birch": (3.0, 7.5, 0.25)}
-UNDER_SPACING = 7.75
+# ADR 0187: the young trees are their own prototypes (a mature pine scaled to 5 m was a bare pole with a tuft: the
+# "trunks with detached balls of leaves" of review s19 0179), spruce regeneration under the pines is the commonest
+# second storey of these stands, and the storey is twice as dense (one plant per ~30 m2).
+UNDERSTOREY = {"shrub": (1.2, 3.5, 0.55), "birchyoung": (2.5, 7.0, 0.20), "spruce": (1.5, 8.0, 0.15),
+               "maple": (1.5, 5.0, 0.10)}
+UNDER_SPACING = 5.5
+CANOPY_SPECIES = ("pine", "birch", "alder", "maple", "linden", "spruce")
+# Stand edge (mantle): three bands with rising height instead of one row, so a stand does not end in a vertical cut
+# of bare boles (review s19 0179 "like a theatre flat"). (band inner offset, outer offset [m, + = outside the BDOT
+# outline], grid step, {species: (weight, h lo, h hi)}); "canopy" = the stand's own mix at 0.55-0.8 of its height.
+# M68 measurement (REVIEW-2026-11-14-s20-cloud-m68.md): outer shrub belt 3.0-5.0 m appears on ~15-20% of edges,
+# inner young-tree belt on ~50-65%, leaving pine trunks + understorey visible in the lower 1/4-1/3 elsewhere.
+MANTLE_BAND_KEEP = (0.18, 0.58, 1.0)
+MANTLE_SEG_M = 18.0
+MANTLE = {
+    "conifer": [(0.0, 4.0, 2.6, {"shrub": (0.55, 3.0, 5.0), "birchyoung": (0.20, 3.0, 5.0), "pineyoung": (0.25, 3.0, 5.0)}),
+                (-5.0, 0.0, 2.8, {"birchyoung": (0.30, 3.0, 7.0), "pineyoung": (0.28, 2.5, 6.0), "spruce": (0.24, 3.0, 9.0),
+                                  "shrub": (0.18, 2.0, 3.8)}),
+                (-11.0, -5.0, 4.6, {"spruce": (0.45, 8.0, 15.0), "birch": (0.35, 8.0, 13.0), "pine": (0.20, 9.0, 14.0)})],
+    "broadleaf": [(0.0, 4.0, 2.6, {"shrub": (0.70, 3.0, 5.0), "birchyoung": (0.30, 3.0, 5.0)}),
+                  (-5.0, 0.0, 2.8, {"birchyoung": (0.42, 3.0, 7.0), "shrub": (0.28, 2.0, 3.8), "alder": (0.15, 4.5, 8.0),
+                                    "maple": (0.15, 4.0, 7.5)}),
+                  (-11.0, -5.0, 4.6, {"birch": (0.5, 7.0, 12.0), "alder": (0.25, 7.0, 11.0), "maple": (0.25, 6.0, 10.0)})],
+}
+MANTLE["mixed"] = MANTLE["conifer"]
+# Forest floor plants (bilberry / fern / seedlings, prototype tree_floor): only where a driver can see the floor -
+# within FLOOR_ROAD_M of a road / yard - and only on the High tier ("tier": "high"), one per FLOOR_SPACING^2.
+FLOOR_ROAD_M = 45.0
+FLOOR_SPACING = 3.4
+# Self-seeded land (OT_PTNZ_A / OT_PTTR_A): species of the old rule -> young prototypes (same positions and draws).
+SELF_SEEDED = {"pine": "pineyoung", "birch": "birchyoung", "alder": "birchyoung", "maple": "shrub", "linden": "shrub",
+               "shrub": "shrub", "spruce": "pineyoung"}
 
 
 def _seed(key):
@@ -49,6 +90,8 @@ def _seed(key):
 
 
 def _scatter(poly, spacing, rng):
+    if poly.is_empty:      # ADR 0204: a sliver of forest vanishes under the inward buffer (bounds = nan)
+        return np.zeros((0, 2))
     x0, y0, x1, y1 = poly.bounds
     gx, gy = np.meshgrid(np.arange(x0, x1, spacing), np.arange(y0, y1, spacing))
     P = np.column_stack([gx.ravel(), gy.ravel()]) + rng.uniform(-spacing * 0.45, spacing * 0.45, (gx.size, 2))
@@ -92,8 +135,28 @@ def _tree_group_overrides(overrides, origin):
         if o.get("kind") != "tree_groups":
             continue
         prm = {**TREE_GROUP_DEFAULTS, **{k: v for k, v in o.items() if k in TREE_GROUP_DEFAULTS}}
-        for k, ln in enumerate(o["lines"]):
+        for k, ln in enumerate(o.get("lines", [])):
             out.append((shapely.LineString(np.asarray(ln["line_epsg2180"], float) - origin), prm, f"override:{o['id']}:{k}"))
+    return out
+
+
+def _tree_point_overrides(overrides):
+    """ADR 0186: `points_en` of an authored `kind: tree_groups` - stems traced one by one from the orthophoto
+    (region-local [E, N] or [E, N, height m]); `species` as for the lines (one species per override, drawn by the
+    id), `height_m: [lo, hi]` for points without their own height (default: the species range). The stems are only
+    refused on a road / paved surface / building itself, not within the 3 m rule clearance: a traced tree stands
+    where the orthophoto shows it, e.g. on a lawn island between two footways."""
+    out = []
+    for o in overrides or []:
+        if o.get("kind") != "tree_groups" or not o.get("points_en") or o.get("form") == "kit":
+            continue                        # form kit: meshed by streetscape.plantings.authored_trees
+        sp = o.get("species") or TREE_GROUP_DEFAULTS["species"]
+        hr = o.get("height_m")
+        if hr is not None and not (0 < float(hr[0]) <= float(hr[1])):
+            raise ValueError(f"tree_groups {o['id']}: height_m must be [lo, hi] with 0 < lo <= hi")
+        out.append((np.asarray([q[:2] for q in o["points_en"]], float),
+                    [float(q[2]) if len(q) > 2 else None for q in o["points_en"]],
+                    sp, tuple(float(v) for v in hr) if hr is not None else None, f"override:{o['id']}:points"))
     return out
 
 
@@ -118,8 +181,88 @@ def forest_clearings(overrides, origin):
     return out
 
 
-def place(src, origin, hf, zc, blocked, report, overrides=None):
-    """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list."""
+_DIR_VEC = {"N": (0.0, 1.0), "NE": (0.7071, 0.7071), "E": (1.0, 0.0), "SE": (0.7071, -0.7071),
+            "S": (0.0, -1.0), "SW": (-0.7071, -0.7071), "W": (-1.0, 0.0), "NW": (-0.7071, 0.7071)}
+
+
+def _in_facing_edge(poly, P, width_m, facing):
+    """Boolean mask of points P within `width_m` of `poly.exterior` on the side facing `facing`."""
+    if not len(P):
+        return np.zeros(0, bool)
+    vx, vy = _DIR_VEC[facing]
+    ext = poly.exterior
+    pts = shapely.points(P)
+    d = shapely.distance(ext, pts)
+    near = d <= width_m
+    if not near.any():
+        return near
+    s = shapely.line_locate_point(ext, pts[near])
+    bpts = shapely.get_coordinates(shapely.line_interpolate_point(ext, s))
+    dx = bpts[:, 0] - P[near, 0]
+    dy = bpts[:, 1] - P[near, 1]
+    nrm = np.hypot(dx, dy)
+    dot = np.where(nrm > 1e-6, (dx * vx + dy * vy) / np.maximum(nrm, 1e-6), 1.0)
+    out = np.zeros(len(P), bool)
+    out[near] = dot > 0.3
+    return out
+
+
+def _mantle_keep(poly, P, key, bi):
+    """Deterministic segment-hash mask for partial mantle belts (M68)."""
+    keep_rate = MANTLE_BAND_KEEP[bi]
+    if keep_rate >= 1.0 or not len(P):
+        return np.ones(len(P), bool)
+    s = shapely.line_locate_point(poly.exterior, shapely.points(P))
+    segs = np.floor(s / MANTLE_SEG_M).astype(int)
+    cache = {}
+    mask = np.empty(len(P), bool)
+    for k, seg in enumerate(segs):
+        val = cache.get(int(seg))
+        if val is None:
+            val = (_seed(f"{key}:m:{bi}:{int(seg)}") % 1000) < int(round(keep_rate * 1000))
+            cache[int(seg)] = val
+        mask[k] = val
+    return mask
+
+
+def forest_stands(overrides):
+    """Authored `kind: forest_stand` (ADR 0170): measured character of one BDOT10k OT_PTLZ_A stand, where the class
+    defaults (HEIGHT / MIX / SPACING) contradict the orthophoto and the photos. {bdot id: params}:
+      height_m   [lo, hi] of the canopy trees (replaces HEIGHT[species]; shrubs keep theirs; the edge row keeps its
+                 0.6 factor on this range)
+      mix        {species: weight} (replaces MIX[kategoria])
+      spacing_m  jittered grid step (replaces SPACING[rodzaj])
+      emergent   {share, height_m: [lo, hi]}: a few taller trees standing above the canopy (chosen by position hash)
+      young_edge {width_m, height_m: [lo, hi], facing}: young regrowth belt along one facing edge (M68)
+    Keyed by the BDOT id like forest_clearing; a target missing from the source data is reported as stale."""
+    out = {}
+    for o in overrides or []:
+        if o.get("kind") != "forest_stand":
+            continue
+        prm = {"id": o["id"], "height_m": tuple(float(v) for v in o["height_m"])}
+        if prm["height_m"][0] <= 0 or prm["height_m"][1] < prm["height_m"][0]:
+            raise ValueError(f"forest_stand {o['id']}: height_m must be [lo, hi] with 0 < lo <= hi")
+        if "mix" in o:
+            unknown = set(o["mix"]) - set(SPECIES)
+            if unknown:
+                raise ValueError(f"forest_stand {o['id']}: unknown species {sorted(unknown)}")
+            prm["mix"] = [float(o["mix"].get(k, 0.0)) for k in SPECIES]
+        if "spacing_m" in o:
+            prm["spacing_m"] = float(o["spacing_m"])
+        if "emergent" in o:
+            prm["emergent"] = (float(o["emergent"]["share"]), tuple(float(v) for v in o["emergent"]["height_m"]))
+        if "young_edge" in o:
+            ye = o["young_edge"]
+            prm["young_edge"] = (float(ye["width_m"]), tuple(float(v) for v in ye["height_m"]), str(ye["facing"]))
+        out[str(o["target"]["bdot"])] = prm
+    return out
+
+
+def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_rows=None):
+    """blocked: bool grid (1 m nodes) of roads + paved + buildings (dilated). Returns instance list.
+    hard (ADR 0186): the same grid before the dilation - the only clearance of authored `points_en` stems.
+    tree_rows (ADR 0222, opt-in): streetscape.tree_rows.region_plan() - the rows it took over are laid out by it
+    (rhythm, set-back, sight cuts) instead of the 8 m BDOT row rule below; None = the rule unchanged."""
     out = []
     H, W = zc.shape
 
@@ -128,18 +271,24 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
         return ~blocked[j, i], zc[j, i]
 
-    def emit(P, species, rng, src_id, hscale=1.0, fk=None):
+    def emit(P, species, rng, src_id, hscale=1.0, fk=None, hrange=None, spruce_v=None, tier=None, keep=None):
         if not len(P):
             return
         good, z = ok(P)
+        if keep is not None:                    # ADR 0222: candidates outside the part left to this rule; like the
+            good = good & keep                  # clearance test they are dropped after their draws (ADR 0173)
         # ADR 0173: the attributes are drawn for EVERY candidate point (same calls, same order as before), and the
         # clearance test only drops the tree afterwards. Before, a tree dropped by a new kerb / paved area / building
         # skipped its draws and shifted the random stream of every later tree of the same BDOT feature or group
         # (trees changed far outside an edited spot). Features with no dropped candidate keep their exact stream.
         for (x, y), zz, sp, g in zip(P, z, species, good):
-            lo, hi = HEIGHT[sp]
+            lo, hi = hrange if hrange and sp in CANOPY_SPECIES else HEIGHT[sp]
             h = rng.uniform(lo, hi) * hscale
             v = int(rng.integers(0, 3))
+            if sp == "spruce":
+                v = SPRUCE_OPEN if spruce_v == "open" else v % 2
+            else:
+                v %= NVAR.get(sp, 3)
             yaw = float(rng.uniform(0, 6.2832))
             lean = float(rng.uniform(0, 0.05))
             if not g:
@@ -149,15 +298,35 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
                         "lean": round(lean, 3), "src": src_id})
             if fk:
                 out[-1]["fk"] = fk          # forest stand tree (texture mix of the forest HLOD, forest_hlod.py)
+            if tier:
+                out[-1]["tier"] = tier
 
     def pick(rng, mix, n):
-        return rng.choice(SPECIES, size=n, p=np.asarray(mix) / np.sum(mix))
+        return rng.choice(SPECIES[:len(mix)], size=n, p=np.asarray(mix) / np.sum(mix))   # 6-weight mixes: no spruce
+
+    def ranged(n0, table):
+        """Heights of out[n0:] from table {species: (.., lo, hi)}: position hash, not the stream (like the understorey)."""
+        for t in out[n0:]:
+            lo, hi = table[t["p"][5:]][-2:]
+            t["h"] = round(float(lo + (hi - lo) * ((_seed(f"{t['e']},{t['n']}") % 1000) / 999.0)), 1)
+
+    from scipy import ndimage as _ndi
+    road_dist = _ndi.distance_transform_edt(~blocked)       # metres to the nearest road / yard / building (1 m nodes)
+
+    def near_road(P, lim):
+        i = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
+        j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
+        return road_dist[j, i] <= lim
 
     forests = []
     forest_mix = []
+    n_floor = 0
     clear = forest_clearings(overrides, origin)
     crep = {"applied": [], "stale": []}
     hit = set()
+    stands = forest_stands(overrides)
+    srep = {"applied": [], "stale": []}
+    shit = set()
     cleared = []                            # cleared parts of the forest: sand on the orthophoto -> bare ground mask
     for f in src["bdot10k"]["OT_PTLZ_A"]:
         poly = PV._poly_local(f["geometry"]["coordinates"], origin)
@@ -180,24 +349,80 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         forest_mix.append((poly, fk))
         rng = np.random.default_rng(_seed(f["id"]))
         rodzaj = f["props"].get("rodzaj", "las")
-        P = _scatter(full, SPACING.get(rodzaj, 4.5), rng)
-        sp = pick(rng, MIX.get(kat, MIX[None]), len(P))
-        emit(P, sp, rng, f"bdot:{f['id']}", 0.7 if rodzaj == "zagajnik" else 1.0, fk=fk)
+        sk = f["id"] if f["id"] in stands else str(f["id"]).split(":")[0]
+        st = stands.get(sk)                 # measured stand (ADR 0170), else the class defaults
+        hr = st["height_m"] if st else None
+        if st:
+            shit.add(sk)
+        P = _scatter(full, st.get("spacing_m", SPACING.get(rodzaj, 4.5)) if st else SPACING.get(rodzaj, 4.5), rng)
+        sp = pick(rng, st.get("mix", MIX.get(kat, MIX[None])) if st else MIX.get(kat, MIX[None]), len(P))
+        emit(P, sp, rng, f"bdot:{f['id']}", 1.0 if hr else (0.7 if rodzaj == "zagajnik" else 1.0), fk=fk, hrange=hr)
+        if st:
+            ye_mask = np.zeros(len(out) - n_stand, bool)
+            if "young_edge" in st and len(out) > n_stand:
+                yw, (ylo, yhi), ydir = st["young_edge"]
+                TP = np.array([[t["e"], t["n"]] for t in out[n_stand:]])
+                ye_mask = _in_facing_edge(full, TP, yw, ydir)
+                for t, is_ye in zip(out[n_stand:], ye_mask):
+                    if is_ye and t["p"] != "tree_shrub":
+                        u = (_seed(f"ye:{t['e']},{t['n']}") % 1000) / 999.0
+                        t["h"] = round(float(ylo + (yhi - ylo) * u), 1)
+                        if t["p"] == "tree_pine":
+                            t["p"], t["v"] = "tree_pineyoung", 0
+                        elif t["p"] == "tree_birch":
+                            t["p"], t["v"] = "tree_birchyoung", 0
+                        elif t["p"] == "tree_spruce":
+                            t["v"] = SPRUCE_OPEN
+            n_em = 0
+            if "emergent" in st:
+                share, (elo, ehi) = st["emergent"]
+                for t, is_ye in zip(out[n_stand:], ye_mask):
+                    if is_ye:
+                        continue
+                    u = (_seed(f"em:{t['e']},{t['n']}") % 100000) / 99999.0
+                    if t["p"] != "tree_shrub" and u < share:
+                        t["h"] = round(float(elo + (ehi - elo) * u / share), 1)
+                        n_em += 1
+            hs = [t["h"] for t in out[n_stand:] if t["p"] != "tree_shrub"]
+            srep["applied"].append({"id": st["id"], "bdot": f["id"], "trees": len(hs), "emergent": n_em,
+                                    "h_median_m": round(float(np.median(hs)), 1) if hs else None,
+                                    "h_max_m": round(float(max(hs)), 1) if hs else None})
         if rodzaj == "las":
             P = _scatter(full.buffer(-2.0), UNDER_SPACING, rng)
             names = list(UNDERSTOREY)
             w = np.array([UNDERSTOREY[k][2] for k in names])
             sp = rng.choice(names, size=len(P), p=w / w.sum())
+            if fk == "broadleaf":           # no conifer regeneration under a broadleaf stand
+                sp = np.array([{"spruce": "birchyoung", "pineyoung": "shrub"}.get(k, k) for k in sp])
             n0 = len(out)
-            emit(P, sp, rng, f"bdot:{f['id']}:under", 1.0, fk=fk)
-            for t in out[n0:]:
-                lo, hi = UNDERSTOREY[t["p"][5:]][:2]
-                t["h"] = round(float(lo + (hi - lo) * ((_seed(f"{t['e']},{t['n']}") % 1000) / 999.0)), 1)
-        # edge: shrubs + young deciduous along the outline
-        edge = full.buffer(3.0).difference(full.buffer(-5.0))
-        P = _scatter(edge, 3.0, rng)
-        sp = pick(rng, [0.0, 0.25, 0.15, 0.05, 0.0, 0.55], len(P))
-        emit(P, sp, rng, f"bdot:{f['id']}:edge", 0.6, fk=fk)
+            emit(P, sp, rng, f"bdot:{f['id']}:under", 1.0, fk=fk, spruce_v="open")
+            ranged(n0, {k: v[:2] for k, v in UNDERSTOREY.items()})
+            # forest floor plants where the floor is seen from a road (High tier only)
+            P = _scatter(full.buffer(-1.0), FLOOR_SPACING, rng)
+            if len(P):
+                P = P[near_road(P, FLOOR_ROAD_M)]
+            n0 = len(out)
+            emit(P, ["floor"] * len(P), rng, f"bdot:{f['id']}:floor", 1.0, tier="high")
+            n_floor += len(out) - n0
+        # edge (ADR 0187): mantle of three bands with rising height along the outline (partial by segment hash, M68)
+        for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk]):
+            band = full.buffer(d_out).difference(full.buffer(d_in))
+            P = _scatter(band, step, rng)
+            keep = _mantle_keep(full, P, f["id"], bi)
+            if bi == 1 and st and "young_edge" in st and len(P):
+                yw, _, ydir = st["young_edge"]
+                keep = keep | _in_facing_edge(full, P, yw, ydir)
+            P = P[keep]
+            names = list(table)
+            w = np.array([table[k][0] for k in names])
+            sp = rng.choice(names, size=len(P), p=w / w.sum()) if len(P) else []
+            n0 = len(out)
+            emit(P, sp, rng, f"bdot:{f['id']}:edge", 1.0, fk=fk, spruce_v="open")
+            ranged(n0, table)
+            if hr:                          # measured stand (ADR 0170): the mantle stays under 0.6 of its canopy
+                for t in out[n0:]:
+                    if t["p"] != "tree_shrub":
+                        t["h"] = round(min(t["h"], hr[1] * 0.6 * (0.5 + 0.25 * bi)), 1)
         if cut is not None and len(out) > n_stand:
             Q = np.array([[t["e"], t["n"]] for t in out[n_stand:]])
             gone = shapely.contains_xy(cut, Q[:, 0], Q[:, 1])
@@ -224,11 +449,83 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             emit(P, pick(rng, [0.05, 0.3, 0.05, 0.3, 0.3, 0.0], k), rng, f"bdot:{f['id']}")
     crep["stale"] = [{"id": oid, "bdot": bid} for bid, (_, oid) in clear.items() if bid not in hit]
     report["forest_clearings"] = crep
+    srep["stale"] = [{"id": st["id"], "bdot": bid} for bid, st in stands.items() if bid not in shit]
+    report["forest_stands"] = srep
+    # ADR 0187: authored `kind: tree_stand` - wooded land that is no BDOT10k forest (allotment gardens, a park
+    # wood) but closes the horizon on the photos. `polygons_en` (region-local E/N rings, like open_ground),
+    # `height_m` [lo, hi] of its trees, `mix` {species: weight}, `spacing_m`, `category` (HLOD texture mix, default
+    # broadleaf), `mantle: true` for the two outer mantle bands of a wood (gardens end at a fence, not in a mantle).
+    # Laid out like a forest stand (canopy grid, no understorey, no forest floor) and merged into forest HLOD cells far away, so it is a continuous line at any distance. Source ids start
+    # with "override:" (open_ground keeps them); the ground mask stays grass.
+    trep = []
+    for o in overrides or []:
+        if o.get("kind") != "tree_stand":
+            continue
+        hr = tuple(float(v) for v in o["height_m"])
+        unknown = set(o["mix"]) - set(SPECIES)
+        if unknown or hr[0] <= 0 or hr[1] < hr[0]:
+            raise ValueError(f"tree_stand {o['id']}: bad height_m or unknown species {sorted(unknown)}")
+        mix = [float(o["mix"].get(k, 0.0)) for k in SPECIES]
+        fk = o.get("category", "broadleaf")
+        n_before = len(out)
+        area = 0.0
+        for k, ring in enumerate(o["polygons_en"]):
+            poly = shapely.make_valid(shapely.Polygon(np.asarray(ring, float)))
+            key = f"override:{o['id']}:{k}"
+            rng = np.random.default_rng(_seed(key))
+            P = _scatter(poly, float(o.get("spacing_m", 6.0)), rng)
+            emit(P, pick(rng, mix, len(P)), rng, key, 1.0, fk=fk, hrange=hr, spruce_v="open")
+            for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk][:2] if o.get("mantle") else []):
+                band = poly.buffer(d_out).difference(poly.buffer(d_in))
+                P = _scatter(band, step, rng)
+                P = P[_mantle_keep(poly, P, key, bi)]
+                names = list(table)
+                w = np.array([table[n_][0] for n_ in names])
+                sp = rng.choice(names, size=len(P), p=w / w.sum()) if len(P) else []
+                n0 = len(out)
+                emit(P, sp, rng, f"{key}:edge", 1.0, fk=fk, spruce_v="open")
+                ranged(n0, table)
+                for t in out[n0:]:
+                    if t["p"] != "tree_shrub":
+                        t["h"] = round(min(t["h"], hr[1] * 0.6 * (0.5 + 0.25 * bi)), 1)
+            forest_mix.append((poly, fk))
+            area += poly.area
+        if "emergent" in o:
+            share = float(o["emergent"]["share"])
+            elo, ehi = (float(v) for v in o["emergent"]["height_m"])
+            for t in out[n_before:]:
+                if t["p"] == "tree_shrub" or t["src"].endswith(":edge"):
+                    continue
+                u = (_seed(f"em:{t['e']},{t['n']}") % 100000) / 99999.0
+                if u < share:
+                    t["h"] = round(float(elo + (ehi - elo) * u / share), 1)
+        trep.append({"id": o["id"], "area_m2": round(area, 1), "trees": len(out) - n_before})
+    report["tree_stands"] = trep
     report["_forest_cleared"] = cleared
     groups = _tree_group_overrides(overrides, np.asarray(origin, float))
     grep = {"lines": len(groups), "trees": 0, "groups": 0, "rows_grouped": 0}
+    tr_handled = tree_rows["handled"] if tree_rows else set()
+    tr_fallback = tree_rows.get("fallback", {}) if tree_rows else {}
+    tr_cuts = shapely.union_all(tree_rows["cuts"]) if tr_fallback and tree_rows.get("cuts") else None
+    n_fb = 0
+
+    def tr_keep(f, line, P0, P):
+        """ADR 0222: a BDOT row the tree_rows plan took over only in part keeps the trees of this rule on the rest of
+        it (`fallback` geometry): candidates P0 (on the line) nearer to the taken / out-of-tile part are dropped, so
+        are trunks P in the sight fields of the plan. None = the line is all this rule's (unchanged path)."""
+        fb = tr_fallback.get(f"bdot:{f['id']}")
+        if fb is None or not len(P0):
+            return None
+        rest = line.difference(fb.buffer(0.01))
+        pts = shapely.points(np.asarray(P0, float))
+        keep = np.ones(len(P0), bool) if rest.is_empty else shapely.distance(fb, pts) <= shapely.distance(rest, pts)
+        if tr_cuts is not None:
+            keep &= ~shapely.contains_xy(tr_cuts, P[:, 0], P[:, 1])
+        return keep
     for f in src["bdot10k"]["OT_OIPR_L"]:
         if f["props"].get("rodzaj") != "rząd drzew":
+            continue
+        if f"bdot:{f['id']}" in tr_handled:     # ADR 0222: laid out by streetscape.tree_rows below
             continue
         line = shapely.LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         rng = np.random.default_rng(_seed(f["id"]))
@@ -237,12 +534,18 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             P, _ = group_positions(line, rng, near)
             names = list(near["species"])
             w = np.array([near["species"][k] for k in names], float)
-            emit(P, rng.choice(names, size=len(P), p=w / w.sum()), rng, f"bdot:{f['id']}:groups")
+            n0 = len(out)
+            emit(P, rng.choice(names, size=len(P), p=w / w.sum()), rng, f"bdot:{f['id']}:groups",
+                 keep=tr_keep(f, line, P, P))
+            n_fb += (len(out) - n0) if f"bdot:{f['id']}" in tr_fallback else 0
             grep["rows_grouped"] += 1
             continue
         P = np.array([line.interpolate(s).coords[0] for s in np.arange(2.0, line.length, 8.0)]).reshape(-1, 2)
         sp = [["linden", "maple"][_seed(f["id"]) % 2]] * len(P)
-        emit(P + rng.normal(0, 0.3, P.shape), sp, rng, f"bdot:{f['id']}")
+        Pj = P + rng.normal(0, 0.3, P.shape)
+        n0 = len(out)
+        emit(Pj, sp, rng, f"bdot:{f['id']}", keep=tr_keep(f, line, P, Pj))
+        n_fb += (len(out) - n0) if f"bdot:{f['id']}" in tr_fallback else 0
     for gl, prm, key in groups:
         rng = np.random.default_rng(_seed(key))
         P, G = group_positions(gl, rng, prm)
@@ -254,6 +557,43 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         emit(P, [gsp[g] for g in G], rng, key)
         grep["trees"] += len(out) - n0
         grep["groups"] += int(G.max()) + 1 if len(G) else 0
+    if tree_rows:                               # ADR 0222: roadside rows (positions + species from the plan)
+        n_tr = len(out)
+        for row in tree_rows["rows"]:
+            if len(row["P"]):
+                rng = np.random.default_rng(_seed(row["key"]) + 1)
+                emit(row["P"], row["species"], rng, row["key"], hrange=tree_rows["height_m"].get(row["key"]))
+        planned = sum(len(r["P"]) for r in tree_rows["rows"])
+        # blocked_dropped: planned trunks the clearance grid (roads / yards / buildings, dilated) refused - a trunk
+        # the plan moved to the minimum set-back usually ends here (review of PR #101, FIX 3)
+        report["tree_rows"] = {"planned": planned, "placed": len(out) - n_tr,
+                               "blocked_dropped": planned - (len(out) - n_tr),
+                               "lines_handled": len(tr_handled), "lines_partly_handled": len(tr_fallback),
+                               "fallback_trees": n_fb, "plan": tree_rows["report"]}
+    tpts = _tree_point_overrides(overrides)
+    if tpts:
+        grep["points"], grep["points_refused"] = 0, []
+        for P, hs, spw, hr, key in tpts:
+            rng = np.random.default_rng(_seed(key))
+            names = list(spw)
+            w = np.array([spw[k] for k in names], float)
+            sp = str(rng.choice(names, p=w / w.sum()))
+            i = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
+            j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
+            free = ~(hard if hard is not None else blocked)[j, i]
+            for (x, y), zz, h0, g in zip(P, zc[j, i], hs, free):
+                lo, hi = hr if hr and sp != "shrub" else HEIGHT[sp]
+                h = h0 if h0 is not None else float(rng.uniform(lo, hi))
+                v = int(rng.integers(0, 3))
+                yaw = float(rng.uniform(0, 6.2832))
+                lean = float(rng.uniform(0, 0.05))
+                if not g:
+                    grep["points_refused"].append({"src": key, "at": [round(float(x), 1), round(float(y), 1)]})
+                    continue
+                out.append({"p": f"tree_{sp}", "v": v, "e": round(float(x), 2), "n": round(float(y), 2),
+                            "z": round(float(zz), 2), "h": round(float(h), 1), "yaw": round(yaw, 3),
+                            "lean": round(lean, 3), "src": key})
+                grep["points"] += 1
     report["tree_groups"] = grep
     for nd in src["osm"]["nodes"]:
         if nd["tags"].get("natural") == "tree":
@@ -268,7 +608,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             P = _scatter(poly, 14.0, rng)
             P = P[rng.uniform(0, 1, len(P)) < 0.45]
             sp = pick(rng, [0.2, 0.35, 0.05, 0.05, 0.0, 0.35], len(P))
-            emit(P, sp, rng, f"bdot:{f['id']}:self", 0.5)
+            emit(P, [SELF_SEEDED[k] for k in sp], rng, f"bdot:{f['id']}:self", 1.0)
     # ADR 0179: authored open ground (override `kind: open_ground`, `polygons_en`: region-local E/N rings) - land the
     # orthophoto / photos show mown or bare (an airfield meadow) where the BDOT grass layers self-seed trees. Rule
     # trees inside are dropped after generation (the random streams of the features are untouched, ADR 0173);
@@ -285,21 +625,36 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
                 out = [t for t, g in zip(out, gone) if not g]
                 orep.append({"id": o["id"], "area_m2": round(area.area, 1), "trees_removed": int(gone.sum())})
         report["open_ground"] = orep
+    # ADR 0186: no rule tree within 2.5 m of the stem of an authored kit tree (plantings.authored_trees)
+    kpts = [q[:2] for o in overrides or [] if o.get("kind") == "tree_groups" and o.get("form") == "kit"
+            for q in o.get("points_en", [])]
+    if kpts and out:
+        from scipy.spatial import cKDTree as _KD
+        dk, _ = _KD(np.asarray(kpts, float)).query(np.array([[t["e"], t["n"]] for t in out]))
+        report["tree_groups"]["rule_trees_at_kit_stems"] = int((dk < 2.5).sum())
+        out = [t for t, d in zip(out, dk) if d >= 2.5]
     # thin out overlaps (< 1.8 m between trunks), deterministic order
     if out:
         P = np.array([[t["e"], t["n"]] for t in out])
         from scipy.spatial import cKDTree
         tree = cKDTree(P)
         keep = np.ones(len(P), bool)
+        auth = np.array([str(t.get("src", "")).endswith(":points") for t in out])     # ADR 0186: traced stems stay
+        floor = np.array([t["p"] == "tree_floor" for t in out])    # floor plants grow between the trunks (ADR 0187)
         for i, j in sorted(tree.query_pairs(1.8)):
-            if keep[i] and keep[j]:
-                keep[j] = False
+            if keep[i] and keep[j] and not floor[i] and not floor[j]:
+                if auth[j] and not auth[i]:
+                    keep[i] = False
+                else:
+                    keep[j] = False
         out = [t for t, k in zip(out, keep) if k]
     cnt = {}
     for t in out:
         cnt[t["p"]] = cnt.get(t["p"], 0) + 1
     report["trees"] = cnt
     report["understorey"] = sum(1 for t in out if t["src"].endswith(":under"))
+    report["forest_floor"] = sum(1 for t in out if t["src"].endswith(":floor"))
+    report["forest_mantle"] = sum(1 for t in out if t["src"].endswith(":edge"))
     report["_forest_mix"] = forest_mix
     return out, forests
 

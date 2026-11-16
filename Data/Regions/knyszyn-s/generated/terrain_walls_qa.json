@@ -1,0 +1,105 @@
+{
+ "by_source": {
+  "skirt:yard_gravel": 1,
+  "steep_grass:verge_grass": 8
+ },
+ "count": 9,
+ "max_m": 0.74,
+ "p99_m": 0.74,
+ "skirt_area": [
+  {
+   "e": 835.8,
+   "exposed_m2": 0.042,
+   "mat": "yard_gravel",
+   "max_h": 0.413,
+   "n": -560.6,
+   "points": 1,
+   "run_m": 0.461,
+   "src": "s-construction-earthworks#0:edge",
+   "visible": true
+  }
+ ],
+ "sliver_m2": 0.02,
+ "thin_steep_faces_skipped": 1,
+ "thresh_m": 0.15,
+ "verge_strips": {
+  "max_m": 0.0,
+  "skirt": 0,
+  "steep_grass": 0,
+  "worst": []
+ },
+ "worst": [
+  {
+   "e": 237.5,
+   "h": 0.74,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 87.5,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 236.7,
+   "h": 0.74,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 87.6,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 241.4,
+   "h": 0.662,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 82.9,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 237.0,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 87.0,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 240.9,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 82.4,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 236.1,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 87.1,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 240.7,
+   "h": 0.5,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 83.1,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  },
+  {
+   "e": 835.8,
+   "h": 0.413,
+   "kind": "skirt",
+   "mat": "yard_gravel",
+   "n": -560.6,
+   "src": "s-construction-earthworks#0:edge"
+  },
+  {
+   "e": 241.1,
+   "h": 0.202,
+   "kind": "steep_grass",
+   "mat": "verge_grass",
+   "n": 83.5,
+   "src": "c:w1111506750:1134839226-10168944517:R:2"
+  }
+ ]
+}

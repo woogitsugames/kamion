@@ -1,0 +1,42 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0196): control cameras at named places that match no photo. Position region-local E/N, height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up.",
+ "cameras": [
+  {
+   "id": "krywlany_runway",
+   "pos_en": [
+    21.1,
+    -121.0
+   ],
+   "heading_deg": 252.5,
+   "eye_m": 1.7,
+   "fov_deg": 14.0,
+   "pitch_deg": -0.6,
+   "note": "pedestrian eye 1.7 m at the fence of the Krywlany aerodrome (0.6 m inside the OSM fence line local -160.8 233.4 -> 24.4 -126.0, 6 m from its corner), looking WSW over asphalt runway 09R/27L: the turn pad is 145 m away (bearing 240 deg), the west edge of the tile 1050 m (265 deg); depression 0.31-0.96 deg -> a 14 deg lens (long tele, as a spotter at the fence would use). 83 % of the runway is in sight over the NMT (10 m grid). Rejected by render: r1 the same spot with a 30 deg lens aimed at 261 deg (runway = a 3 px strip at the frame edge); r2 the east fence on the runway axis (local 205.6 -184.3): the wood between that fence and the turn pad hides the runway"
+  },
+  {
+   "id": "krywlany_runway_paint",
+   "pos_en": [
+    -100.0,
+    -192.6
+   ],
+   "heading_deg": 268.5,
+   "eye_m": 14.0,
+   "fov_deg": 40.0,
+   "pitch_deg": -9.0,
+   "note": "QA only (not a place a person stands): 14 m above the east end of runway 09R/27L, on its axis, looking west and 9 deg down - shows the side stripes and the displaced-threshold arrows traced on the 2024 orthophoto (r2 at 1.7 m showed the side stripes only)"
+  },
+  {
+   "id": "kuronia2_front",
+   "pos_en": [
+    15.0,
+    360.1
+   ],
+   "heading_deg": 127.0,
+   "eye_m": 2.5,
+   "fov_deg": 40.0,
+   "pitch_deg": 3.0,
+   "note": "plant at Kuronia 2 from the pose of CC0 photo P11-005 (Commons GPS local 15.0 360.1, camera ~2.5 m per the manifest); heading 127 deg: the west corner of the plant (BDOT10k vertex 47.8 337.4) set 5 deg right of centre as in the frame (x 875/1500) by the r2 render (119 deg from the GPS bearing put it 13 deg right); compare with research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-005.jpg"
+  }
+ ]
+}

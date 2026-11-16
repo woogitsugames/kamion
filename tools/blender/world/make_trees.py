@@ -34,7 +34,26 @@ ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 if "--out" in ARGV:
     VEG = Path(ARGV[ARGV.index("--out") + 1]).resolve()
 VEG.mkdir(parents=True, exist_ok=True)
-HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8}
+HREF = {"pine": 19.0, "birch": 14.0, "alder": 13.0, "maple": 12.0, "linden": 13.5, "shrub": 2.8,
+        "spruce": 21.0, "pineyoung": 5.0, "birchyoung": 6.0, "floor": 0.7}
+# ADR 0187 (forest wall): species of a Podlasie pine / spruce stand that the first six could not stand in for.
+#   spruce      Norway spruce (Picea abies): variants 0, 1 = stand form (live crown from ~0.36-0.46 H, dead stubs
+#               below), variant 2 = open-grown / young form with boughs to the ground (understorey, stand edge).
+#   pineyoung   Scots pine thicket (mlodnik, 1.5-8 m): whorls of ascending branches from the ground up. A mature
+#               pine scaled to 4 m is a bare pole with a tuft - the "stick saplings" of review s19 0179.
+#   birchyoung  young silver birch (2-8 m): slender stem, steep thin branches, foliage along the whole stem.
+#   floor       forest floor plants (bilberry / fern / seedlings, 0.4-0.9 m): a low mound of cards, no stem, no
+#               impostor (culled beyond its LOD1 distance; High tier only, vegetation.place).
+# They reuse the existing materials (bark_pine_lower, bark_pine, bark_birch, leaves_pine, leaves_birch,
+# leaves_shrub); the only new texture is leaves_spruce.png (streetscape/leaf_textures.py spruce_spray).
+NEW_SPECIES = ("spruce", "pineyoung", "birchyoung", "floor")
+# Variants: one per young species (a thicket is uniform; yaw and height vary per instance) - every variant costs the
+# Low tier up to three instanced draws (LOD1 bark + foliage, impostor). Build 1 with 2 + 2 young variants raised the
+# instanced draws of the forest cameras by 8-30 (artifacts/forest-0187/compare1-dojlidy-Low.tsv).
+NVAR = {"spruce": 3, "pineyoung": 1, "birchyoung": 1, "floor": 2}       # others: 3
+IMP_SCALE = {"pineyoung": 0.5}    # impostor views of the pine thicket at half resolution (a filled cone; the airy
+# young birch at half resolution left the trim polygon of ImpostorTrim over 60 % of the frame)
+NO_IMPOSTOR = ("floor",)
 BARK = {"pine": ["bark_pine_lower", "bark_pine"], "birch": ["bark_birch"], "alder": ["bark_alder"],
         "maple": ["bark_maple"], "linden": ["bark_linden"], "shrub": ["bark_shrub"]}
 
@@ -70,6 +89,16 @@ class Geo:
             for k in range(seg):
                 a = base + i * n + k
                 F.append((a, a + 1, a + n + 1, a + n))
+
+    def quad(self, mat, a, b, c, d, uvs, n):
+        """Free quad a-b-c-d with its own UVs and one shading normal (spruce boughs, ADR 0187)."""
+        V, F, UV, N = self._p(mat)
+        base = len(V)
+        for v, uv in zip((a, b, c, d), uvs):
+            V.append(v.copy())
+            UV.append(uv)
+            N.append(n)
+        F.append((base, base + 1, base + 2, base + 3))
 
     def card(self, mat, c, normal, up, size, crown_c):
         if self.crown_height and crown_opening(c, crown_c, self.crown_height, self.crown_phase):
@@ -159,7 +188,8 @@ def grow(species, variant, lod):
                 p0 = trunk[min(int(k), 13)].lerp(trunk[min(int(k) + 1, 14)], k - int(k))
                 br = bend_path(p0, d, L, 5, rng, 0.22, gravity=-0.04)
                 if lod == 0 or L > 1.8:
-                    g.tube("bark_twig", br, [0.07 * (1 - f * 0.4) * (1 - i / 6) + 0.012 for i in range(6)],
+                    # ADR 0187: limbs carry the orange upper bark (one material less per pine at both LODs)
+                    g.tube("bark_pine", br, [0.07 * (1 - f * 0.4) * (1 - i / 6) + 0.012 for i in range(6)],
                            max(3, seg // 2))
                 # foliage clumps: 1-3 dense clusters near the limb end (sparse inside the crown)
                 for cl in range(rng.randint(2, 4)):
@@ -188,16 +218,26 @@ def grow(species, variant, lod):
                 g.tube("bark_pine_lower", [p0, p0 + Vector((math.cos(a), math.sin(a), -0.1)) * rng.uniform(0.2, 0.8)],
                        [0.025, 0.008], 3)
         return g, H
+    if species in NEW_SPECIES:
+        g.crown_height = 0                  # no crown windows (crown_opening): conifers and saplings are closed
+        return grow_0187(species, variant, lod, rng, crng, g, H), H
     # broadleaf + shrub
     if species == "shrub":
+        # ADR 0187: hazel / buckthorn clump. The stems splay less and carry leaves from 10 % of their length, with
+        # a leafy middle at the base: the old clump (cards from 25 %, wobble 0.2) left single stems standing apart
+        # with a detached ball of leaves on top (review s19 0179: crowns not joined to the stems).
         stems = rng.randint(5, 8)
-        cc = Vector((0, 0, H * 0.55))
+        cc = Vector((0, 0, H * 0.5))
         for _ in range(stems):
             a = rng.uniform(0, 2 * math.pi)
-            d = Vector((math.cos(a) * 0.4, math.sin(a) * 0.4, 1))
-            st = bend_path(Vector((0, 0, -0.1)), d, H * rng.uniform(0.8, 1.1), 5, rng, 0.2)
+            d = Vector((math.cos(a) * 0.32, math.sin(a) * 0.32, 1))
+            st = bend_path(Vector((0, 0, -0.1)), d, H * rng.uniform(0.8, 1.1), 5, rng, 0.11)
             g.tube("bark_shrub", st, [0.03 * (1 - i / 6) + 0.006 for i in range(6)], 4)
-            cards_along(st, 0.9, 10, cc, start=0.25)
+            cards_along(st, 0.9, 9, cc, start=0.10)
+        for _ in range(6 if lod == 0 else 3):
+            pc = Vector((crng.uniform(-0.45, 0.45), crng.uniform(-0.45, 0.45), H * crng.uniform(0.16, 0.42)))
+            g.card(leaf, pc, Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(0.2, 1.2))),
+                   Vector((0, 0, 1)), 1.0 * csize_k * crng.uniform(0.85, 1.15), cc)
         return g, H
     trunk_frac = {"birch": 0.30, "alder": 0.28, "maple": 0.28, "linden": 0.30}[species]
     r0 = {"birch": 0.17, "alder": 0.18, "maple": 0.22, "linden": 0.25}[species]
@@ -235,9 +275,14 @@ def grow(species, variant, lod):
             if lod == 0:
                 g.tube("bark_twig", sub, [0.03 * (1 - i / 5) + 0.006 for i in range(5)], 3)
             csz = {"birch": 0.85, "alder": 1.0, "maple": 1.05, "linden": 1.0}[species]
-            dens = {"birch": 14, "alder": 12, "maple": 14, "linden": 15}[species]
+            dens = {"birch": 10, "alder": 12, "maple": 14, "linden": 15}[species]
             cards_along(sub, csz, dens, cc, droop=0.4 if species == "birch" else 0.0, start=0.1)
-        cards_along(br, {"birch": .9, "alder": 1.0, "maple": 1.05, "linden": 1.0}[species], 6, cc, start=0.20)
+        # ADR 0187: birch limbs are leafy from the stem outwards (10 cards from 6 % of the limb; 2 fewer on every
+        # twig), so the crown is one mass on the stem instead of separate tufts at the limb ends
+        cards_along(br, {"birch": .9, "alder": 1.0, "maple": 1.05, "linden": 1.0}[species],
+                    10 if species == "birch" else 6, cc, start=0.06 if species == "birch" else 0.20)
+        if species == "birch":              # hanging twigs under the limb (Betula pendula)
+            cards_along(br, 0.9, 8, cc, droop=0.55, start=0.15)
     if species == "birch":
         # v3.1 (REVIEW r2 #7, "birches without crowns"): the white stem ran bare through the open, drooping crown
         # and read as a pole at 60-250 m. Foliage clumps hug the stem over the whole crown height.
@@ -251,6 +296,138 @@ def grow(species, variant, lod):
                 nrm = Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.6, 1.0)))
                 g.card(leaf, pc, nrm, Vector((0, 0, 1)), 1.0 * csize_k * crng.uniform(0.8, 1.2), cc)
     return g, H
+
+
+def grow_0187(species, variant, lod, rng, crng, g, H):
+    """Spruce, young pine, young birch and forest-floor plants (ADR 0187). Returns g."""
+    up_z = Vector((0, 0, 1))
+
+    def stem(z_top, n, r0, wob, mat, seg, lean=0.02, hidden=False):
+        ln = Vector((rng.uniform(-lean, lean), rng.uniform(-lean, lean), 1))
+        pts = bend_path(Vector((0, 0, -0.3)), ln, z_top + 0.3, n, rng, wob)
+        if not (hidden and lod == 1):       # LOD1 of a tree that is foliage to the ground: no bark submesh (one draw)
+            g.tube(mat, pts, [r0 * (1 - i / n) ** 0.9 + 0.012 for i in range(n + 1)], seg)
+
+        def at(z):
+            k = min(max((z + 0.3) / (z_top + 0.3) * n, 0.0), n - 1e-3)
+            return pts[int(k)].lerp(pts[int(k) + 1], k - int(k))
+        return at
+
+    if species == "spruce":
+        leaf = "leaves_spruce"
+        full = variant == 2
+        at = stem(H, 14, 0.25 if not full else 0.21, 0.012, "bark_pine_lower", 8 if lod == 0 else 5, hidden=full)
+        z0 = H * (0.05 if full else 0.36 + 0.05 * variant + rng.uniform(-0.02, 0.02))
+        rb = H * (0.185 if full else 0.150)                     # crown radius at its base: ~3.2 / 3.9 m at 21 m
+        step = H * (0.031 if lod == 0 else 0.056)
+        nb = 6 if lod == 0 else 5
+        z, a0 = z0, rng.uniform(0, 2 * math.pi)
+        while z < H * 0.955:
+            f = (z - z0) / (H - z0)
+            R = rb * (1 - f) ** 0.85
+            if not full:
+                R *= 0.6 + 0.4 * min(1.0, f / 0.18)             # the lowest live whorls of a stand tree are short
+            a0 += 2.4
+            for k in range(nb):
+                if lod == 0 and rng.random() < 0.06:
+                    continue
+                a = a0 + 2 * math.pi * k / nb + rng.uniform(-0.22, 0.22)
+                L = max(0.35, R * rng.uniform(0.82, 1.12))
+                rise = -0.42 + 0.66 * f + rng.uniform(-0.06, 0.06)     # lower boughs droop, the top ones ascend
+                p0 = at(z + rng.uniform(-0.15, 0.15) * step)
+                dh = Vector((math.cos(a), math.sin(a), 0))
+                d = (dh + Vector((0, 0, rise))).normalized()
+                tip = p0 + d * L + Vector((0, 0, 0.10 * L))            # sabre: the bough end sweeps up
+                side = Vector((-math.sin(a), math.cos(a), 0))
+                w = max(0.30, 0.40 * L) * (1.0 if lod == 0 else 1.3)
+                nout = (dh + Vector((0, 0, 0.30))).normalized()      # curtain: faces out of the crown
+                ntop = (dh * 0.45 + Vector((0, 0, 1.0))).normalized()  # bough top: faces the sky (lighter tier above
+                b0 = p0 + d * 0.04 * L                                 # the dark curtain, not one flat green)
+                g.quad(leaf, b0 - side * w, b0 + side * w, tip + side * w * 0.9, tip - side * w * 0.9,
+                       [(0, 0), (1, 0), (1, 1), (0, 1)], ntop)
+                hang = max(0.45, 0.80 * L) * (1 - 0.35 * f) * (1.0 if lod == 0 else 1.25)    # curtain of hanging twigs
+                g.quad(leaf, b0, tip, tip - up_z * hang * 0.7, b0 - up_z * hang,
+                       [(0.5, 0), (0.5, 1), (1, 1), (1, 0)], nout)
+            z += step * rng.uniform(0.85, 1.15)
+        top = at(H * 0.90)
+        for k in range(2):                                             # pointed leader
+            a = a0 + k * math.pi / 2
+            sv = Vector((math.cos(a), math.sin(a), 0)) * H * 0.020
+            g.quad(leaf, top - sv, top + sv, top + sv + up_z * H * 0.105, top - sv + up_z * H * 0.105,
+                   [(0, 0), (1, 0), (1, 1), (0, 1)], (Vector((-sv.y, sv.x, 0)).normalized() * 0.4 + up_z * 0.9).normalized())
+        if not full and lod == 0:                                      # dead branch stubs under the live crown
+            for _ in range(12):
+                p0 = at(rng.uniform(H * 0.14, z0))
+                a = rng.uniform(0, 2 * math.pi)
+                g.tube("bark_pine_lower", [p0, p0 + Vector((math.cos(a), math.sin(a), -0.25)) * rng.uniform(0.4, 1.3)],
+                       [0.022, 0.007], 3)
+        return g
+    if species == "pineyoung":
+        leaf = "leaves_pine"
+        at = stem(H, 8, 0.055, 0.02, "bark_pine", 5 if lod == 0 else 4, lean=0.03, hidden=True)
+        cc = Vector((0, 0, H * 0.5))
+        z0 = H * (0.08 + 0.05 * variant)
+        nwh = 10 if lod == 0 else 7
+        a0 = rng.uniform(0, 2 * math.pi)
+        for wi in range(nwh):
+            f = (wi + 0.5) / nwh
+            z = z0 + (H * 0.93 - z0) * f
+            R = H * (0.34 + 0.05 * variant) * (1 - f) ** 0.72 * (0.72 + 0.28 * min(1.0, f / 0.15))
+            nb = 5
+            a0 += 1.9
+            for k in range(nb):
+                a = a0 + 2 * math.pi * k / nb + rng.uniform(-0.3, 0.3)
+                d = Vector((math.cos(a), math.sin(a), 0.55 + 0.55 * f + rng.uniform(-0.1, 0.1))).normalized()
+                L = max(0.45, R / max(math.hypot(d.x, d.y), 0.3) * rng.uniform(0.8, 1.15))
+                p0 = at(z + rng.uniform(-0.1, 0.1))
+                c = p0 + d * L * 0.52
+                sidev = Vector((-math.sin(a), math.cos(a), 0))
+                g.card(leaf, c, d.cross(sidev), d, L * 1.18 * (1.0 if lod == 0 else 1.3), cc)
+                if lod == 0:
+                    g.card(leaf, c, sidev, d, L * 1.05, cc)
+        for k in range(2):                                             # leader shoot
+            a = a0 + k * math.pi / 2
+            g.card(leaf, at(H * 0.86) + up_z * H * 0.02, Vector((math.cos(a), math.sin(a), 0)), up_z, H * 0.30, cc)
+        return g
+    if species == "birchyoung":
+        leaf = "leaves_birch"
+        csz = 1.0 if lod == 0 else 1.3
+        at = stem(H * 0.97, 8, 0.045, 0.03, "bark_birch", 5 if lod == 0 else 4, lean=0.05)
+        cc = Vector((0, 0, H * 0.6))
+        nbr = 13 if lod == 0 else 10
+        lo = 0.16 + 0.05 * variant
+        for b in range(nbr):
+            f = lo + (0.93 - lo) * (b + rng.random()) / nbr
+            rel = (f - lo) / (0.93 - lo)
+            L = H * 0.27 * max(0.3, math.sin(math.pi * (0.12 + rel * 0.8)) ** 0.7) * rng.uniform(0.8, 1.15)
+            a = rng.uniform(0, 2 * math.pi)
+            d = Vector((math.cos(a), math.sin(a), 1.0 + 0.7 * rel))
+            br = bend_path(at(f * H), d, L, 3, rng, 0.12, gravity=0.06)
+            if lod == 0:
+                g.tube("bark_birch", br, [0.016 * (1 - i / 4) + 0.005 for i in range(4)], 3)
+            for i in range(4 if lod == 0 else 3):
+                t = 0.25 + 0.75 * crng.random()
+                k = t * 3
+                q = br[min(int(k), 2)].lerp(br[min(int(k) + 1, 3)], k - int(k))
+                q = q + Vector((crng.uniform(-0.15, 0.15), crng.uniform(-0.15, 0.15), crng.uniform(-0.3, 0.1)))
+                g.card(leaf, q, Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.3, 1.0))), up_z,
+                       0.78 * csz * crng.uniform(0.8, 1.2), cc)
+        nst = 10 if lod == 0 else 6
+        for i in range(nst):                                           # foliage hugging the stem, top tuft
+            f = lo + 0.05 + (0.99 - lo - 0.05) * (i + crng.random()) / nst
+            q = at(min(f, 0.96) * H) + Vector((crng.uniform(-0.3, 0.3), crng.uniform(-0.3, 0.3), crng.uniform(-0.2, 0.2)))
+            g.card(leaf, q, Vector((crng.uniform(-1, 1), crng.uniform(-1, 1), crng.uniform(-0.3, 1.0))), up_z,
+                   0.80 * csz * crng.uniform(0.8, 1.2), cc)
+        return g
+    # floor: low mound of leaf cards (bilberry, fern, seedlings); the cards dip into the ground
+    n = 7 if lod == 0 else 4
+    for i in range(n):
+        a = 2 * math.pi * i / n + rng.uniform(-0.3, 0.3)
+        r = H * rng.uniform(0.2, 0.9)
+        c = Vector((math.cos(a) * r, math.sin(a) * r, H * rng.uniform(0.28, 0.45)))
+        nrm = Vector((math.cos(a) * 0.9, math.sin(a) * 0.9, rng.uniform(0.8, 1.3)))
+        g.card("leaves_shrub", c, nrm, up_z, H * rng.uniform(1.3, 1.75) * (1.0 if lod == 0 else 1.25), Vector((0, 0, -3)))
+    return g
 
 
 def reuse_leaf_lod(g0, g1, seed):
@@ -494,10 +671,10 @@ def render_passes(objs, path_stem):
         bpy.ops.render.render(write_still=True)
 
 
-def bake_impostor(ob, name, H):
+def bake_impostor(ob, name, H, res=IMP_RES):
     """IMP_NF orthographic views of LOD0 around the tree (frame k: camera at azimuth 2 pi k / IMP_NF from -Y,
     counter-clockwise seen from above), each covering the whole crown. Returns frame height S (model metres)."""
-    sc, cam = bake_setup(True, IMP_RES, 24)
+    sc, cam = bake_setup(True, res, 24)
     for o in sc.objects:
         o.hide_render = o is not ob and o.type == "MESH"
     ob.hide_render = False
@@ -550,11 +727,61 @@ def impostor_object(name, H, png, S):
 # the same LOD0 trees, so the silhouette (tall bare pine boles, flat clumped pine crowns, white birch stems with
 # their own crowns) is the one of the near trees. Species mixes = vegetation.MIX for the BDOT10k forest
 # categories (iglasty / mieszany / liściasty).
-FOREST_MIX = {"conifer": {"pine": 0.82, "birch": 0.12, "alder": 0.02, "maple": 0.02, "linden": 0.02},
-              "mixed": {"pine": 0.45, "birch": 0.25, "alder": 0.10, "maple": 0.10, "linden": 0.10},
-              "broadleaf": {"pine": 0.08, "birch": 0.32, "alder": 0.25, "maple": 0.20, "linden": 0.15}}
-TREE_H = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0)}
+# ADR 0187: spruce in the conifer / mixed stands (same weights as streetscape/vegetation.py MIX).
+FOREST_MIX = {"conifer": {"pine": 0.64, "birch": 0.10, "alder": 0.02, "maple": 0.02, "linden": 0.02, "spruce": 0.20},
+              "mixed": {"pine": 0.36, "birch": 0.24, "alder": 0.10, "maple": 0.08, "linden": 0.08, "spruce": 0.14},
+              "broadleaf": {"birch": 0.36, "alder": 0.26, "maple": 0.22, "linden": 0.16}}    # ADR 0170: no pine
+TREE_H = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0),
+          "spruce": (14, 25)}
 EDGE_W, EDGE_H, EDGE_DEPTH = 48.0, 24.0, 16.0   # edge texture covers 48 m x 24 m of stand (tileable along u)
+# ADR 0187 layout of forest_edge_<mix>.png (1024 x 512, unchanged size): rows v 0 .. EDGE_V_MAIN = the wall picture
+# (48 x 24 m), rows EDGE_V_MAIN .. 1 = the mantle strip (48 x MANTLE_H m of shrubs and young trees, no boles behind
+# it), stored upside down (v = 1 is its ground line) so that both pictures meet with their empty sky sides and
+# the mips never bleed opaque rows into the sky above the stand. streetscape/forest_hlod.py draws the strip on a
+# low skirt wall in front of the stand edge.
+EDGE_V_MAIN = 0.75
+MANTLE_H = 8.0
+# Mantle of the baked stand (same bands as streetscape/vegetation.py MANTLE): (y range in front of / inside the
+# stand edge at y = 0, plants per metre of edge, {species: (weight, h lo, h hi)}).
+MANTLE_BANDS = {
+    "conifer": [((-4.0, 0.0), 0.60, {"shrub": (0.55, 1.2, 3.0), "birchyoung": (0.20, 1.5, 3.5), "pineyoung": (0.25, 1.0, 3.0)}),
+                ((0.0, 5.0), 0.64, {"birchyoung": (0.30, 3.0, 7.0), "pineyoung": (0.28, 2.5, 6.0), "spruce": (0.24, 3.0, 9.0),
+                                    "shrub": (0.18, 2.0, 3.8)}),
+                ((5.0, 11.0), 0.28, {"spruce": (0.45, 8.0, 15.0), "birch": (0.35, 8.0, 13.0), "pine": (0.20, 9.0, 14.0)})],
+    "broadleaf": [((-4.0, 0.0), 0.60, {"shrub": (0.70, 1.2, 3.2), "birchyoung": (0.30, 1.5, 3.5)}),
+                  ((0.0, 5.0), 0.64, {"birchyoung": (0.42, 3.0, 7.0), "shrub": (0.28, 2.0, 3.8), "alder": (0.15, 4.5, 8.0),
+                                      "maple": (0.15, 4.0, 7.5)}),
+                  ((5.0, 11.0), 0.28, {"birch": (0.5, 7.0, 12.0), "alder": (0.25, 7.0, 11.0), "maple": (0.25, 6.0, 10.0)})],
+}
+MANTLE_BANDS["mixed"] = MANTLE_BANDS["conifer"]
+
+
+def _variant(rng, s, open_form=False):
+    v = rng.randrange(3)
+    if s == "spruce":
+        return 2 if open_form else v % 2
+    return v % NVAR.get(s, 3)
+
+
+def _dome(x, w, seed):
+    """Height factor of the canopy along the edge: +-9 % over 12-16 m (review s20 0170 P1-1: the top of the baked
+    wall was a level comb; real stand tops are domes of unequal height). Periodic in w."""
+    a, b = (seed % 7) * 0.9, (seed % 5) * 1.3
+    return 1.0 + 0.055 * math.sin(2 * math.pi * 3 * x / w + a) + 0.04 * math.sin(2 * math.pi * 4 * x / w + b)
+
+
+def _mantle(mix, seed, w, bands=(0, 1, 2)):
+    rng = random.Random(seed + 31)
+    out = []
+    for bi in bands:
+        (y0, y1), per_m, table = MANTLE_BANDS[mix][bi]
+        names = list(table)
+        for _ in range(int(w * per_m * (y1 - y0) / 2.6)):
+            s = rng.choices(names, [table[n][0] for n in names])[0]
+            out.append((s, _variant(rng, s, True), rng.uniform(0, w), rng.uniform(y0, y1),
+                        rng.uniform(*table[s][1:]), rng.uniform(0, 2 * math.pi)))
+    return out
+
 CANOPY_W = 48.0                                  # canopy texture tile, 48 x 48 m (tileable both ways)
 
 
@@ -571,27 +798,26 @@ def _stand(mix, seed, w, depth, edge_row, under=True):
             x = (gx + 0.5) * w / int(w / 4.5) + rng.uniform(-2.0, 2.0)
             y = (gy + 0.5) * 4.5 + rng.uniform(-2.0, 2.0)
             s = rng.choices(sp, wt)[0]
-            out.append((s, rng.randrange(3), x % w, y, rng.uniform(*TREE_H[s]), rng.uniform(0, 2 * math.pi)))
+            # the tallest domes stay inside the picture (EDGE_H): a clipped crown is a level cut in the silhouette
+            out.append((s, _variant(rng, s), x % w, y, min(rng.uniform(*TREE_H[s]) * _dome(x % w, w, seed), EDGE_H - 1.3),
+                        rng.uniform(0, 2 * math.pi)))
     if under:
-        names = list(UNDER_SPECIES)
+        names = [n for n in UNDER_SPECIES if mix != "broadleaf" or n in ("shrub", "birchyoung")]
         for _ in range(int(w * depth / UNDER_M2)):
             s = rng.choices(names, [UNDER_SPECIES[n][2] for n in names])[0]
             lo, hi = UNDER_SPECIES[s][:2]
-            out.append((s, rng.randrange(3), rng.uniform(0, w), rng.uniform(0, depth), rng.uniform(lo, hi),
+            out.append((s, _variant(rng, s, True), rng.uniform(0, w), rng.uniform(0, depth), rng.uniform(lo, hi),
                         rng.uniform(0, 2 * math.pi)))
     if edge_row:
-        for k in range(int(w / 3.0)):
-            x = (k + rng.random()) * 3.0
-            s = rng.choices(["shrub", "birch", "alder", "pine"], [0.5, 0.25, 0.1, 0.15])[0]
-            h = rng.uniform(*TREE_H[s]) * (0.5 if s != "shrub" else 1.0)
-            out.append((s, rng.randrange(3), x % w, rng.uniform(-3.0, 1.0), h, rng.uniform(0, 2 * math.pi)))
+        out += _mantle(mix, seed, w)
     return out
 
 
 # understorey of a Podlasie pine stand (WORKING_VALUE, same table as streetscape/vegetation.py UNDERSTOREY):
 # species -> (h min, h max, weight); one plant per UNDER_M2 square metres
-UNDER_SPECIES = {"shrub": (1.2, 3.5, 0.55), "pine": (3.0, 7.0, 0.2), "birch": (3.0, 8.0, 0.25)}
-UNDER_M2 = 60.0
+UNDER_SPECIES = {"shrub": (1.2, 3.5, 0.38), "spruce": (1.5, 8.0, 0.30), "birchyoung": (2.5, 7.0, 0.16),
+                 "pineyoung": (1.5, 5.0, 0.16)}
+UNDER_M2 = 30.0
 
 
 def _place_stand(trees, src, href, offsets):
@@ -717,6 +943,38 @@ def pack(stems, out_png, out_n, min_island=0, open_r=1, canopy=False):
     canopy: opaque, albedo x visibility^0.7 in one RGB texture (the canopy stays an opaque URP Lit surface)."""
     cols, nrms, alphas = [], [], []
     for stem in stems:
+        rgb, n, al = _pack_stem(stem, min_island, open_r)
+        cols.append(rgb)
+        nrms.append(n)
+        alphas.append(al)
+    _pack_write(np.concatenate(cols, 1), np.concatenate(nrms, 1), np.concatenate(alphas, 1), out_png, out_n, canopy)
+
+
+def _resize_rows(a, rows):
+    """Area-ish resample of the image rows (linear between the two nearest source rows)."""
+    h = a.shape[0]
+    y = (np.arange(rows) + 0.5) * h / rows - 0.5
+    y0 = np.clip(np.floor(y).astype(int), 0, h - 1)
+    y1 = np.clip(y0 + 1, 0, h - 1)
+    t = (y - y0).reshape((-1,) + (1,) * (a.ndim - 1))
+    return a[y0] * (1 - t) + a[y1] * t
+
+
+def pack_edge(mix, out_png, out_n):
+    """ADR 0187 edge texture: wall picture in the rows below EDGE_V_MAIN, mantle strip above it, upside down."""
+    rgb, n, al = _pack_stem(f"forest_edge_{mix}", 600, 1)
+    h = rgb.shape[0]
+    rows = int(round(h * EDGE_V_MAIN))
+    rgb, n, al = _resize_rows(rgb, rows), _resize_rows(n, rows), _resize_rows(al, rows)
+    mr, mn, ma = _pack_stem(f"forest_mantle_{mix}", 120, 1)
+    mr, mn, ma = (_resize_rows(x, h - rows)[::-1] for x in (mr, mn, ma))
+    mn = mn.copy()
+    mn[..., 1] = 1.0 - mn[..., 1]              # the picture is flipped: so is the up component of its normals
+    _pack_write(np.concatenate([rgb, mr], 0), np.concatenate([n, mn], 0), np.concatenate([al, ma], 0), out_png, out_n, False)
+
+
+def _pack_stem(stem, min_island, open_r):
+    if True:
         alb = _load(RAW / f"{stem}_alb.png")
         nrm = _load(RAW / f"{stem}_nrm.png")
         occ = _load(RAW / f"{stem}_occ.png")
@@ -732,16 +990,14 @@ def pack(stems, out_png, out_n, min_island=0, open_r=1, canopy=False):
         seed = inner if inner.any() else cov
         rgb = _dilate_colour(alb[..., :3], seed)
         n = _dilate_colour(np.concatenate([nrm[..., :2], occ[..., :1]], -1), seed)
-        cols.append(rgb)
-        nrms.append(n)
         # outside the kept coverage the alpha is 0 except a one-texel anti-aliasing ring: the soft alpha of removed
         # twigs / specks (0.1-0.45) was raised over the cut-off by the coverage-preserving mips far away and drew
         # dotted arcs along the HLOD wall tops (artifacts/vqa/abl: gone with the edge walls skipped)
         ring = np.any([_shift(cov, dy, dx) for dy, dx in N8], axis=0) & ~cov
-        alphas.append(np.where(cov, np.maximum(a, 0.5), np.where(ring, np.minimum(a, 0.45), 0.0)))
-    rgb = np.concatenate(cols, 1)
-    n = np.concatenate(nrms, 1)
-    al = np.concatenate(alphas, 1)
+        return rgb, n, np.where(cov, np.maximum(a, 0.5), np.where(ring, np.minimum(a, 0.45), 0.0))
+
+
+def _pack_write(rgb, n, al, out_png, out_n, canopy):
     if canopy:
         lin = _srgb_to_lin(rgb) * np.clip(n[..., 2:3], 0.05, 1) ** 0.7
         _save(np.concatenate([_lin_to_srgb(lin), np.ones_like(al)[..., None]], -1), out_png)
@@ -768,7 +1024,8 @@ def bake_forest(mix, src, href, seed):
     objs = _place_stand(trees, src, href, [(-EDGE_W, 0), (0, 0), (EDGE_W, 0)])
     hs = sorted(t[4] for t in trees if t[0] != "shrub" and t[4] > 8)
     h_med = hs[len(hs) // 2]
-    deep = [(s, v, x, y + EDGE_DEPTH, h, yaw) for s, v, x, y, h, yaw in _stand(mix, seed + 7, EDGE_W, 36.0, False)]
+    # the interior stays just under the front domes, so the silhouette is the front row's (ADR 0187)
+    deep = [(s, v, x, y + EDGE_DEPTH, h * 0.93, yaw) for s, v, x, y, h, yaw in _stand(mix, seed + 7, EDGE_W, 36.0, False)]
     objs += _place_stand(deep, src, href, [(-EDGE_W, 0), (0, 0), (EDGE_W, 0)])
     back = _flat("st_back", [(-60, 56, -0.5), (EDGE_W + 60, 56, -0.5), (EDGE_W + 60, 56, h_med * 0.6),
                              (-60, 56, h_med * 0.6)], (0.030, 0.032, 0.022))
@@ -781,9 +1038,23 @@ def bake_forest(mix, src, href, seed):
     render_passes(objs + [back, floor], f"forest_edge_{mix}")
     for o in objs + [back, floor]:
         bpy.data.objects.remove(o, do_unlink=True)
-    pack([f"forest_edge_{mix}"], VEG / f"forest_edge_{mix}.png", VEG / f"forest_edge_{mix}_n.png", min_island=600)
+    # mantle strip: shrubs and young trees only (bands 0, 1), other seed than the wall picture
+    mt = [(s, v, x, y, min(h, MANTLE_H - 0.9), yaw) for s, v, x, y, h, yaw in _mantle(mix, seed + 13, EDGE_W, bands=(0, 1))]
+    objs = _place_stand(mt, src, href, [(-EDGE_W, 0), (0, 0), (EDGE_W, 0)])
+    floor = _flat("st_floor", [(-60, -6, -0.05), (EDGE_W + 60, -6, -0.05), (EDGE_W + 60, 12, -0.05),
+                               (-60, 12, -0.05)], (0.045, 0.040, 0.026))
+    mres = (1024, int(round(1024 * MANTLE_H / EDGE_W)))
+    sc, cam = bake_setup(True, mres, 24)
+    cam.data.ortho_scale = EDGE_W
+    cam.location = (EDGE_W / 2, -120, MANTLE_H / 2 - 0.3)
+    cam.rotation_euler = (math.pi / 2, 0, 0)
+    render_passes(objs + [floor], f"forest_mantle_{mix}")
+    for o in objs + [floor]:
+        bpy.data.objects.remove(o, do_unlink=True)
+    pack_edge(mix, VEG / f"forest_edge_{mix}.png", VEG / f"forest_edge_{mix}_n.png")
     info["edge"] = {"png": f"forest_edge_{mix}.png", "normal_png": f"forest_edge_{mix}_n.png", "w_m": EDGE_W,
-                    "h_m": EDGE_H, "z0_m": -0.3, "h_median_m": round(h_med, 2), "trees": len(trees)}
+                    "h_m": EDGE_H, "z0_m": -0.3, "h_median_m": round(h_med, 2), "trees": len(trees),
+                    "v_main": EDGE_V_MAIN, "mantle": {"h_m": MANTLE_H, "plants": len(mt)}}
     # canopy: 48 x 48 m tile from above over the forest floor, wrapped copies at the borders
     trees = _stand(mix, seed + 1, CANOPY_W, CANOPY_W, False)
     off = [(dx, dy) for dx in (-CANOPY_W, 0, CANOPY_W) for dy in (-CANOPY_W, 0, CANOPY_W)]
@@ -812,30 +1083,41 @@ def main():
     cached = {}
     if "--reuse-bakes" in argv and (VEG / "trees_meta.json").exists():
         cached = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))
-    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub"):
-        for v in range(3):
+    rebake = set(argv[argv.index("--rebake") + 1].split(",")) if "--rebake" in argv else set()   # species
+    for sp in ("pine", "birch", "alder", "maple", "linden", "shrub") + NEW_SPECIES:
+        for v in range(NVAR.get(sp, 3)):
             name = f"tree_{sp}_{v}"
             if quick and name != quick:
                 continue
             g0, H = grow(sp, v, 0)
             o0 = to_object(name, g0)
             g1, _ = grow(sp, v, 1)
-            g1 = reuse_leaf_lod(g0, g1, sum(map(ord, sp)) * 31 + v)
+            if sp not in NEW_SPECIES:
+                g1 = reuse_leaf_lod(g0, g1, sum(map(ord, sp)) * 31 + v)
             o1 = to_object(name + ".lod1", g1)
             o1.hide_render = True
+            if sp in NO_IMPOSTOR:
+                objs += [o0, o1]
+                src[name] = o0
+                meta[name] = {"species": sp, "variant": v, "href_m": round(H, 2),
+                              "tris_lod0": sum(len(p.vertices) - 2 for p in o0.data.polygons),
+                              "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons)}
+                continue
             png = VEG / f"impostor_{name}.png"
             prior = cached.get("trees", {}).get(name)
-            if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists():
+            res = tuple(int(r * IMP_SCALE.get(sp, 1.0)) for r in IMP_RES)
+            if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists() and sp not in rebake:
                 half_w = max(math.hypot(v[0], v[1]) for v in o0.bound_box)
                 S = max(H * 1.05, 2.0 * half_w * 1.04 * IMP_RES[1] / IMP_RES[0])
             else:
-                S = bake_impostor(o0, name, H)
+                S = bake_impostor(o0, name, H, res)
                 # ADR0088: opening erased 1–2px photographed twig connections,
                 # leaving detached broad green islands. Keep connected pine twigs;
                 # still reject isolated specks. Non-pine and forest HLOD retain
                 # their established opening / component rules (far shimmer guard).
                 pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png",
-                     open_r=0 if sp == "pine" else 1, min_island=16 if sp == "pine" else 0)
+                     open_r=0 if sp in ("pine", "spruce", "pineyoung") else 1,
+                     min_island=16 if sp in ("pine", "spruce", "pineyoung") else 0)
             o2 = impostor_object(name, H, png, S)
             o2.hide_render = True
             objs += [o0, o1, o2]
@@ -847,7 +1129,12 @@ def main():
     if quick:
         return
     href = {k: v["href_m"] for k, v in meta.items()}
-    forest = cached.get("forest_hlod") or {mix: bake_forest(mix, src, href, 1000 + i) for i, mix in enumerate(FOREST_MIX)}
+    # --rebake-forest <mix>[,<mix>]: with --reuse-bakes, bake only these HLOD mixes again (ADR 0170), keep the rest
+    redo = set(argv[argv.index("--rebake-forest") + 1].split(",")) if "--rebake-forest" in argv else set()
+    forest = dict(cached.get("forest_hlod") or {})
+    for i, mix in enumerate(FOREST_MIX):
+        if mix not in forest or mix in redo:
+            forest[mix] = bake_forest(mix, src, href, 1000 + i)
     for fn, sel in (("trees.glb", [o for o in objs if not o.name.endswith(".lod2")]),
                     ("trees_lod2.glb", [o for o in objs if o.name.endswith(".lod2")])):
         for o in bpy.context.scene.objects:

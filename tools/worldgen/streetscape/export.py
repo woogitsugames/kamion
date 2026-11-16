@@ -22,6 +22,7 @@ from . import life_cars as LC
 from . import vehicle_lod_atlas as VLA
 from . import signs as SG
 from . import hedge_textures as HT
+from . import chain_bollards as CB
 from . import furniture_textures as FT
 from . import plot_kit as PKT
 from .materials import M
@@ -143,7 +144,8 @@ def textures():
             "fire_station_alpha": (ART / "textures" / "fire_station_alpha.png").read_bytes(),
             **{k: SG.png_bytes(im) for k, im in HT.textures().items()},
             # house plot kit (ADR 0114): one alpha atlas for fences / gates / garden plants (streetscape.plot_kit)
-            **{k: SG.png_bytes(im) for k, im in PKT.textures().items()}}
+            **{k: SG.png_bytes(im) for k, im in PKT.textures().items()},
+            **{k: SG.png_bytes(im) for k, im in CB.textures().items()}}      # ADR 0183
 
 
 def glb_materials():
@@ -171,6 +173,10 @@ def export(codes, boards, out_dir=None):
         sign_png[c] = SG.png_bytes(SG.weather(im.resize((256, 256), SG.Image.LANCZOS), c))
         mats[f"sign_{c}"] = {"color": [1, 1, 1], "rough": 0.45, "texture_png": sign_png[c], "alpha_cutoff": 0.5}
     for c, (w, h, im) in sorted(boards.items()):
+        if c.startswith("MG"):         # ADR 0189: masonry gate kit atlas (brick, concrete, plaques, faces) - native
+            sign_png[c] = SG.png_bytes(im.convert("RGB"))      # resolution, its own wear, matt like masonry
+            mats[f"sign_{c}"] = {"color": [1, 1, 1], "rough": 0.85, "texture_png": sign_png[c]}
+            continue
         ww = 512
         hh = max(32, int(round(ww * im.size[1] / im.size[0])))
         face = SG.weather(im.resize((ww, hh), SG.Image.LANCZOS), c, 0.7)

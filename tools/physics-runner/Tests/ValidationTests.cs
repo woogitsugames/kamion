@@ -139,7 +139,7 @@ namespace PhysicsRunner.Tests
         {
             var d = ScenarioRunner.Defs;
             Assert.Contains("tractor_4x2_generic", d.Vehicles.Keys);
-            Assert.Equal(12, d.Gearboxes["amt12_od_traxon_class"].ForwardGearCount);
+            Assert.Equal(12, d.Gearboxes["amt12_od_class"].ForwardGearCount);
         }
 
         /// <summary>CLAUDE.md: zero GC allocations in the drive loop (solver step + host integration).</summary>

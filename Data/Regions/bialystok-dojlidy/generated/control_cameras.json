@@ -139,15 +139,15 @@
    "fov_deg": 40.0,
    "id": "photo_P11-063",
    "look_at": [
-    52.527,
-    395.717,
-    178.269
+    31.481,
+    376.135,
+    174.179
    ],
-   "note": "photo match research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg (heading 82.0 deg: Bravilor hall (Kuronia 2, 53.105330 23.187331 -> local 132.2 336.9) bearing 104 deg, seen 22 deg right of centre (x 780/960))",
+   "note": "photo match research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-063.jpg (heading 100.0 deg: ADR 0186: resection from five objects of the frame (x of 1600 px, f = 1255 px for hFOV 65 deg) against the 2024 orthophoto / BDOT10k: west corner of the hall of Kuronia 2 (BDOT10k vertex local 47.8 337.4) x 1160, signal cabinet (-15.3 371.0) x 1102, cantilever mast in the median (-35.5 368.0) x 1492, trunk of the near corner tree (-13.0 372.5) x 1037, pair of trees behind it (-2.0 379.5) x 840 -> position -67.0 393.5, heading 100.0 deg, residuals <= 0.2 deg. The camera stands on the path west of Mickiewicza, 23 m WNW of the Commons GPS point (-46.5 381.8, which lies on the median). ADR 0174 / 0179 kept the GPS point and aimed 82 deg at the centroid of the hall: the frame was turned 18 deg left of the photo and stood among the signals of the U-turn gap (review s19 0179 P1). pitch 8 deg: horizon at y 630 / 900)",
    "pos": [
-    -46.5,
-    381.8,
-    160.636
+    -67.0,
+    393.5,
+    160.125
    ],
    "type": "persp"
   },
@@ -171,15 +171,15 @@
    "fov_deg": 40.0,
    "id": "photo_P11-094",
    "look_at": [
-    686.721,
-    343.363,
-    166.011
+    694.041,
+    350.949,
+    165.612
    ],
-   "note": "photo match research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-094.jpg (heading 244.0 deg: ADR 0179: NE corner of the north hall of Rosti (BDOT10k vertex local 747.2 356.6, between the 133 m east wall and the 83 m north wall) bearing 224 deg from the camera, seen 20 deg left of centre (the vertical building edge left of the wall sign at x 205/960 of the frame, f = 753 px for hFOV 65 deg). ADR 0174 aimed at the centroid of the whole BDOT10k outline (209 deg) and showed the east wall only. Check: the north wall ends at local 670.6 389.5 = bearing 271 deg = 27 deg right of centre (x 867 px); the photo has the end of the tall wall at x ~800-850)",
+   "note": "photo match research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-094.jpg (heading 244.5 deg: ADR 0193 (position moved 10.3 m from the Commons GPS 776.6 387.2, which put the pole of D-6 osm:node/3867824992 2.8 m from the lens; in the photo the pole is ~13 m away at x 325/960 = 11.6 deg left of centre, pole 170 px tall for ~3 m, f = 753 px): intersection of the ray back from that pole (bearing 232.4 deg) at 13 m with the NE-corner bearing 224.7 (corner seen 20 deg left); check: north wall end local 670.6 389.5 now bearing 267.7 = x 802 px (photo 800-850; old position gave 867). ADR 0179: NE corner of the north hall of Rosti (BDOT10k vertex local 747.2 356.6, between the 133 m east wall and the 83 m north wall) bearing 224 deg from the camera, seen 20 deg left of centre (the vertical building edge left of the wall sign at x 205/960 of the frame, f = 753 px for hFOV 65 deg). ADR 0174 aimed at the centroid of the whole BDOT10k outline (209 deg) and showed the east wall only. Check: the north wall ends at local 670.6 389.5 = bearing 271 deg = 27 deg right of centre (x 867 px); the photo has the end of the tall wall at x ~800-850)",
    "pos": [
-    776.6,
-    387.2,
-    151.957
+    784.3,
+    394.0,
+    151.558
    ],
    "type": "persp"
   },
@@ -212,6 +212,70 @@
     334.0,
     812.0,
     147.422
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 36.0,
+   "id": "photo_P11-129c",
+   "look_at": [
+    248.105,
+    774.296,
+    150.81
+   ],
+   "note": "photo match research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-129.jpg (heading 246.0 deg: ADR 0189: gate frame of override zurawia-hospital-gate (anchor 327.1 808.4, drive bearing 242 deg): on the drive axis 14 m before the gate line, heading = drive bearing + 4 deg, so that the wall pillar is ~18 deg left and the porch pier 15-22 deg right of centre (photo: 7.5 deg left, 14-22 deg right; the generated drive is 7.2 m between pillar and pier, the real gate ~4.4 m, so the wall sits further left). Distance from the photo: wall base 156 px under the horizon of the 960 px frame at eye 1.6 m, f = 1030 px for hFOV 50 deg WORKING_VALUE = 10.7 m, plus 3.4 m because the porch is authored 3.4 m toward the street; horizon below the frame centre -> pitch 2 deg)",
+   "pos": [
+    339.46,
+    814.97,
+    147.318
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 14.0,
+   "id": "krywlany_runway",
+   "look_at": [
+    -74.272,
+    -151.071,
+    156.321
+   ],
+   "note": "place camera: pedestrian eye 1.7 m at the fence of the Krywlany aerodrome (0.6 m inside the OSM fence line local -160.8 233.4 -> 24.4 -126.0, 6 m from its corner), looking WSW over asphalt runway 09R/27L: the turn pad is 145 m away (bearing 240 deg), the west edge of the tile 1050 m (265 deg); depression 0.31-0.96 deg -> a 14 deg lens (long tele, as a spotter at the fence would use). 83 % of the runway is in sight over the NMT (10 m grid). Rejected by render: r1 the same spot with a 30 deg lens aimed at 261 deg (runway = a 3 px strip at the frame edge); r2 the east fence on the runway axis (local 205.6 -184.3): the wood between that fence and the turn pad hides the runway",
+   "pos": [
+    21.1,
+    -121.0,
+    157.368
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 40.0,
+   "id": "krywlany_runway_paint",
+   "look_at": [
+    -199.966,
+    -195.218,
+    153.377
+   ],
+   "note": "place camera: QA only (not a place a person stands): 14 m above the east end of runway 09R/27L, on its axis, looking west and 9 deg down - shows the side stripes and the displaced-threshold arrows traced on the 2024 orthophoto (r2 at 1.7 m showed the side stripes only)",
+   "pos": [
+    -100.0,
+    -192.6,
+    169.216
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 40.0,
+   "id": "kuronia2_front",
+   "look_at": [
+    94.864,
+    299.918,
+    167.014
+   ],
+   "note": "place camera: plant at Kuronia 2 from the pose of CC0 photo P11-005 (Commons GPS local 15.0 360.1, camera ~2.5 m per the manifest); heading 127 deg: the west corner of the plant (BDOT10k vertex 47.8 337.4) set 5 deg right of centre as in the frame (x 875/1500) by the r2 render (119 deg from the GPS bearing put it 13 deg right); compare with research/_incoming/mistral-p11-dojlidy-photos-v2/files/P11-005.jpg",
+   "pos": [
+    15.0,
+    360.1,
+    161.773
    ],
    "type": "persp"
   },
