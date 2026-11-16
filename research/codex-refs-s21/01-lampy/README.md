@@ -246,3 +246,5 @@ R55 rozstrzyga źródłową przyczynę120/1200cd: GRE/2023/14II.Justification3 w
 
 
 R58: sześć nowych normR7 z publikacjiUE2014, w regulations.csv. Root obejrzał10/27/28: minima polowe,35%/70% siatki, apertura i warunki niskiego montażu/pomiaru. SiatkaS3 osobno, procenty odnoszą się do minimum osiowego, nie absolutnychcd. Aktualność2026 i kategoria konkretnej fotografii nieustalone.0nowych zdjęć, główny65bez zmian.
+
+16.11.2026 R6 test conditions: pięć nowych norm§6.5/6.6/6.2.2(c) i zał.4§3.3 z publikacji2010. Root osobno obejrzał1/8/9/23. Parametry migającego badania laboratoryjnego nie zastępują rytmu i wypełnienia na drodze. Brak nowych kadrów; aktualność2026 bez pełnego audytu UNVERIFIED. Szczegóły `r6-test-conditions-brud/`.
