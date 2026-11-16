@@ -53,6 +53,84 @@ namespace Game.Tests
             Assert.Less((local - baseline).magnitude, 0.3f, "trailer must sit in the jaw exactly as in the lab spawn, not parked elsewhere");
         }
 
+        /// <summary>ADR 0262: a route start outside a region-edge closure moves behind it; a start inside a static collider
+        /// moves along the route to the first free place (owner report 2026-11-15: truck in the barrier row).</summary>
+        [UnityTest]
+        public IEnumerator RouteS_OutsideAClosureOrInsideACollider_MovesAlongTheRoute()
+        {
+            Physics.simulationMode = SimulationMode.FixedUpdate;
+            SceneManager.LoadScene(DrivingLabLayout.SceneName, LoadSceneMode.Single);
+            yield return null;
+            var boot = Object.FindAnyObjectByType<DrivingLabBootstrap>();
+            var body = Object.FindAnyObjectByType<VehicleBody>();
+            var route = MakeRoute();
+            boot.route = route;
+            boot.Spawn(DrivingLabBootstrap.LabSpawn.Gross40t);
+            yield return new WaitForFixedUpdate();
+
+            // The route enters the region through a closure 60 m from its start (road heading towards the edge = 225 deg).
+            var boundary = new GameObject("TestBoundary").AddComponent<WorldBoundary>();
+            boundary.closures = new[] { new WorldBoundary.Closure { localPos = route.points[6], headingDeg = 225f, widthM = 7f, road = "t" } };
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(@"\[START\] start moved along the route: route_s 12\.0 -> 85\.0 \(region-edge closure"));
+            boot.SetRouteSpawn(12f);
+            yield return new WaitForFixedUpdate();
+            Vector3 d = body.transform.position - route.PointAt(60f + StartClearance.BehindClosureM); d.y = 0f;
+            Assert.Less(d.magnitude, 1.5f, "start 12 m is outside the closure at 60 m: the tractor must stand 25 m behind the row");
+
+            // A barrier element standing on the route at s = 200 m: a start requested there moves on until the trailer is clear of it.
+            var block = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            block.name = "TestBarrier";
+            block.transform.SetPositionAndRotation(route.PointAt(200f) + Vector3.up * 0.4f, Quaternion.LookRotation(route.TangentAt(200f)));
+            block.transform.localScale = new Vector3(6f, 0.81f, 0.6f);
+            Physics.SyncTransforms();
+            Assert.AreEqual("TestBarrier", SpawnSafety.FirstOverlap(route, 200f, new[] { body.transform, Object.FindAnyObjectByType<TrailerBody>().transform }).name);
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(@"\[START\] start moved along the route: route_s 200\.0 -> 21[24]\.0 \(collider 'TestBarrier'\)"));
+            boot.SetRouteSpawn(200f);
+            yield return new WaitForFixedUpdate();
+            float along = Vector3.Dot(body.transform.position - route.PointAt(200f), route.TangentAt(200f));
+            Assert.GreaterOrEqual(along, StartClearance.RearM + StartClearance.MarginM, "the rear end of the trailer must be clear of the barrier");
+            Assert.LessOrEqual(along, StartClearance.RearM + StartClearance.MarginM + 0.3f + 2f * SpawnSafety.StepM, "first free place, not further");
+            Assert.IsTrue(body.Coupled);
+            Object.Destroy(block);
+            Object.Destroy(boundary.gameObject);
+        }
+
+        /// <summary>ADR 0262 / review P2-1: a start requested close to or past the closure the route LEAVES the region through
+        /// moves back in front of it (never outside the exit row, facing the tile edge).</summary>
+        [UnityTest]
+        public IEnumerator RouteS_AtOrPastTheExitClosure_MovesBackInFrontOfIt()
+        {
+            Physics.simulationMode = SimulationMode.FixedUpdate;
+            SceneManager.LoadScene(DrivingLabLayout.SceneName, LoadSceneMode.Single);
+            yield return null;
+            var boot = Object.FindAnyObjectByType<DrivingLabBootstrap>();
+            var body = Object.FindAnyObjectByType<VehicleBody>();
+            var route = MakeRoute();
+            boot.route = route;
+            boot.Spawn(DrivingLabBootstrap.LabSpawn.Gross40t);
+            yield return new WaitForFixedUpdate();
+
+            // The route leaves the region through a closure at s = 240 m (road heading towards the edge = route heading 45 deg).
+            var boundary = new GameObject("TestBoundary").AddComponent<WorldBoundary>();
+            boundary.closures = new[] { new WorldBoundary.Closure { localPos = route.points[24], headingDeg = 45f, widthM = 7f, road = "t" } };
+            float expectS = 240f - StartClearance.BehindClosureM;
+            foreach (float requested in new[] { 230f, 290f })
+            {
+                LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(@"\[START\] start moved along the route: route_s " + requested.ToString("F1", System.Globalization.CultureInfo.InvariantCulture).Replace(".", @"\.") + @" -> 215\.0 \(region-edge closure ahead"));
+                boot.SetRouteSpawn(requested);
+                yield return new WaitForFixedUpdate();
+                Vector3 d = body.transform.position - route.PointAt(expectS); d.y = 0f;
+                Assert.Less(d.magnitude, 1.5f, "start " + requested + " m must move back to 25 m in front of the exit row at 240 m");
+                Vector3 fwd = body.transform.forward; fwd.y = 0f;
+                Assert.Less(Vector3.Angle(fwd, route.TangentAt(expectS)), 2f, "heading stays along the route");
+            }
+            // A start well in front of the exit row is left alone.
+            boot.SetRouteSpawn(120f);
+            yield return new WaitForFixedUpdate();
+            Vector3 e = body.transform.position - route.PointAt(120f); e.y = 0f;
+            Assert.Less(e.magnitude, 1.5f);
+            Object.Destroy(boundary.gameObject);
+        }
         [Test]
         public void PathFollower_SeekToAndEndS()
         {

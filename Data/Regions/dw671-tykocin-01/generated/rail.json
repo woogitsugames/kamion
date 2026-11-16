@@ -1,0 +1,223 @@
+{
+ "bed_qa": {
+  "buried_crown_stations": 0,
+  "crown_edge_above_terrain_m": {
+   "max": 0.121,
+   "min": 0.114,
+   "p50": 0.12
+  },
+  "open_toe_stations": 0,
+  "stations": 543,
+  "step_m": 2.0,
+  "toe_buried_m": {
+   "max": 0.2,
+   "min": 0.171,
+   "p50": 0.185
+  },
+  "visible_width_m": {
+   "model": 3.86,
+   "orthophoto_m": [
+    3.5,
+    4.5
+   ],
+   "p50": 3.86,
+   "status": "ESTIMATED (GUGiK 0.1 m 2025, n = 10)"
+  }
+ },
+ "clearance": {
+  "frame": "(lateral from track axis, height above top of rail)",
+  "min_marker_distance_m": 2.16,
+  "profile_m": [
+   [
+    -1.6,
+    0.0
+   ],
+   [
+    -2.2,
+    0.4
+   ],
+   [
+    -2.2,
+    4.0
+   ],
+   [
+    -1.6,
+    6.0
+   ],
+   [
+    1.6,
+    6.0
+   ],
+   [
+    2.2,
+    4.0
+   ],
+   [
+    2.2,
+    0.4
+   ],
+   [
+    1.6,
+    0.0
+   ]
+  ],
+  "status": "UNVERIFIED simplified structure gauge (ADR 0217)"
+ },
+ "conform": {
+  "abs_p95_m": 1.728,
+  "cut_max_m": 2.171,
+  "fill_max_m": 0.689,
+  "nodes": 11963
+ },
+ "crossings": [
+  {
+   "barrier": "double_half",
+   "bell": false,
+   "e": -732.15,
+   "id": 0,
+   "light": true,
+   "n": -533.39,
+   "override": "rail-crossing-dw671-line38",
+   "panel_triangles": 132,
+   "panel_zone_m": [
+    705.15,
+    715.81
+   ],
+   "road_heading_deg": 206.23,
+   "road_width_m": 7.4,
+   "sign": null,
+   "source": "osm",
+   "src": "osm:node/1778182481",
+   "track_heading_deg": 311.01,
+   "tracks": 1,
+   "z_road": 119.291
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "heading": "compass degrees clockwise from north (Unity: Y rotation)",
+ "markers": [
+  {
+   "approach": 1,
+   "crossing": 0,
+   "e": -734.45,
+   "heading_deg": 26.23,
+   "kind": "light",
+   "n": -527.42,
+   "side": "right",
+   "z": 119.354
+  },
+  {
+   "approach": 1,
+   "crossing": 0,
+   "e": -726.01,
+   "heading_deg": 26.23,
+   "kind": "light",
+   "n": -531.57,
+   "side": "left",
+   "z": 119.353
+  },
+  {
+   "approach": 1,
+   "boom_len_m": 4.2,
+   "crossing": 0,
+   "e": -734.44,
+   "heading_deg": 116.23,
+   "kind": "barrier",
+   "n": -528.53,
+   "role": "entry",
+   "type": "double_half",
+   "z": 119.356
+  },
+  {
+   "approach": 1,
+   "boom_len_m": 4.2,
+   "crossing": 0,
+   "e": -726.9,
+   "heading_deg": 296.23,
+   "kind": "barrier",
+   "n": -532.25,
+   "role": "exit",
+   "type": "double_half",
+   "z": 119.273
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "e": -729.85,
+   "heading_deg": 206.23,
+   "kind": "light",
+   "n": -539.36,
+   "side": "right",
+   "z": 119.216
+  },
+  {
+   "approach": -1,
+   "crossing": 0,
+   "e": -738.29,
+   "heading_deg": 206.23,
+   "kind": "light",
+   "n": -535.21,
+   "side": "left",
+   "z": 119.221
+  },
+  {
+   "approach": -1,
+   "boom_len_m": 4.2,
+   "crossing": 0,
+   "e": -729.86,
+   "heading_deg": 296.23,
+   "kind": "barrier",
+   "n": -538.25,
+   "role": "entry",
+   "type": "double_half",
+   "z": 119.225
+  },
+  {
+   "approach": -1,
+   "boom_len_m": 4.2,
+   "crossing": 0,
+   "e": -737.4,
+   "heading_deg": 116.23,
+   "kind": "barrier",
+   "n": -534.53,
+   "role": "exit",
+   "type": "double_half",
+   "z": 119.225
+  }
+ ],
+ "region": "dw671-tykocin-01",
+ "schema": "truck-sim-pl/rail/1",
+ "skipped": [
+  {
+   "src": "osm:node/11868992041",
+   "why": "railway=milestone"
+  },
+  {
+   "src": "osm:node/11869001689",
+   "why": "railway=milestone"
+  }
+ ],
+ "track_km": 1.097,
+ "tracks": [
+  {
+   "bridge": false,
+   "electrified": "contact_line",
+   "gauge_mm": 1435.0,
+   "gauge_src": "osm",
+   "length_m": 1096.9,
+   "name": "Rail Baltica",
+   "ref": "38",
+   "service": null,
+   "src": "osm:way/166369632:0",
+   "tracks": 1,
+   "usage": "main"
+  }
+ ],
+ "triangles": {
+  "rail_crossing": 132,
+  "rail_lod0": 15084,
+  "rail_lod1": 2256,
+  "rail_lod2": 112
+ },
+ "warnings": []
+}

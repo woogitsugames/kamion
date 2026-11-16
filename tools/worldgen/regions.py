@@ -35,6 +35,7 @@ class Region:
     # LoD1 / LoD2 of every listed powiat; () = single-powiat region, outputs byte-identical to before the field.
     teryt_powiat_extra: tuple[str, ...] = ()
     water: bool = False                     # ADR 0210: surface-water stage (rivers, ponds) opt-in per region
+    rail: bool = False                      # ADR 0217: railway track bed + level crossings, opt-in per region
 
     @property
     def powiaty(self) -> tuple[str, ...]:
@@ -168,6 +169,7 @@ REGIONS: dict[str, Region] = {
         origin=(759563.0, 610559.0),
         teryt_powiat="2008",
         status="WORKING_ASSUMPTION (ADR 0212, owner D64; tile = lattice (-9,7) of the ADR 0203 plan)",
+        rail=True,          # ADR 0217: line 38 + the DW671 level crossing (first and only region with the stage)
     ),
     # ADR 0207 (owner D64): DK65 corridor tile, lattice (-4,1) of the ADR 0203 plan, route variant A km 9.39-11.80. Powiat 2002.
     "dk65-02": Region(

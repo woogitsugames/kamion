@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="61" result="Passed" total="61" passed="61" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:55:11Z" duration="27,1865457">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="679" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:55:11Z" duration="27.186546" total="61" passed="61" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1821" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/spawn-fix-0262/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="679" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:55:11Z" duration="27.172795" total="61" passed="61" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="41156" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1822" name="Game" fullname="Game" runstate="Runnable" testcasecount="679" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:55:11Z" duration="27.147072" total="61" passed="61" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1823" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="679" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:55:11Z" duration="27.114849" total="61" passed="61" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1334" name="RegionSelectTests" fullname="Game.Tests.RegionSelectTests" classname="Game.Tests.RegionSelectTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.103379" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1339" name="BuildRegionsFile_ParsesTokens_RejectsWrongSchema" fullname="Game.Tests.RegionSelectTests.BuildRegionsFile_ParsesTokens_RejectsWrongSchema" methodname="BuildRegionsFile_ParsesTokens_RejectsWrongSchema" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="640118700" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.008144" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1338" name="Catalog_RejectsWrongSchemaAndDuplicateIds" fullname="Game.Tests.RegionSelectTests.Catalog_RejectsWrongSchemaAndDuplicateIds" methodname="Catalog_RejectsWrongSchemaAndDuplicateIds" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="258265005" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.001433" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1347" name="ClampStartS_DefaultAndRouteLimits" fullname="Game.Tests.RegionSelectTests.ClampStartS_DefaultAndRouteLimits" methodname="ClampStartS_DefaultAndRouteLimits" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="1352575190" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.000436" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1342" name="ComposeScenes_AppendsRegions_SkipsDuplicatesAndMissing" fullname="Game.Tests.RegionSelectTests.ComposeScenes_AppendsRegions_SkipsDuplicatesAndMissing" methodname="ComposeScenes_AppendsRegions_SkipsDuplicatesAndMissing" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="1343936797" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.001501" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1343" name="ComposeScenes_NoRegions_KeepsBuildSettingsListExactly" fullname="Game.Tests.RegionSelectTests.ComposeScenes_NoRegions_KeepsBuildSettingsListExactly" methodname="ComposeScenes_NoRegions_KeepsBuildSettingsListExactly" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="31502537" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.000154" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1349" name="FindRoad_NearestNamedEdge_NoneWhenFarOrNoGraph" fullname="Game.Tests.RegionSelectTests.FindRoad_NearestNamedEdge_NoneWhenFarOrNoGraph" methodname="FindRoad_NearestNamedEdge_NoneWhenFarOrNoGraph" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="1027648810" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.002369" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1348" name="LocalPointAt_InterpolatesInRegionFrame" fullname="Game.Tests.RegionSelectTests.LocalPointAt_InterpolatesInRegionFrame" methodname="LocalPointAt_InterpolatesInRegionFrame" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="1871598804" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.000773" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1344" name="RegionScenes_NamesMatchImporterAndBuildSettings" fullname="Game.Tests.RegionSelectTests.RegionScenes_NamesMatchImporterAndBuildSettings" methodname="RegionScenes_NamesMatchImporterAndBuildSettings" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="2015832611" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.000351" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1335" name="Resolve_IdsAliasesPrefixAndEllipsisRange" fullname="Game.Tests.RegionSelectTests.Resolve_IdsAliasesPrefixAndEllipsisRange" methodname="Resolve_IdsAliasesPrefixAndEllipsisRange" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="1009070857" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.000704" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1336" name="Resolve_RangesSetsAllDuplicatesAndSeparators" fullname="Game.Tests.RegionSelectTests.Resolve_RangesSetsAllDuplicatesAndSeparators" methodname="Resolve_RangesSetsAllDuplicatesAndSeparators" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="2051597910" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.000313" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1337" name="Resolve_UnknownNamesAndDanglingEllipsisAreErrors" fullname="Game.Tests.RegionSelectTests.Resolve_UnknownNamesAndDanglingEllipsisAreErrors" methodname="Resolve_UnknownNamesAndDanglingEllipsisAreErrors" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="970049286" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.000243" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1341" name="ShippedBuildRegionsFile_IsTheD67Corridor" fullname="Game.Tests.RegionSelectTests.ShippedBuildRegionsFile_IsTheD67Corridor" methodname="ShippedBuildRegionsFile_IsTheD67Corridor" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="1432557804" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.001955" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1345" name="ShippedCatalog_CoversEveryRegionWithAStartRoute_AndStartIsInsideTheRoute" fullname="Game.Tests.RegionSelectTests.ShippedCatalog_CoversEveryRegionWithAStartRoute_AndStartIsInsideTheRoute" methodname="ShippedCatalog_CoversEveryRegionWithAStartRoute_AndStartIsInsideTheRoute" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="1794558054" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.021550" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1340" name="SpecFromArgs_NoArguments_IsEmpty_FileAndArgumentCombine" fullname="Game.Tests.RegionSelectTests.SpecFromArgs_NoArguments_IsEmpty_FileAndArgumentCombine" methodname="SpecFromArgs_NoArguments_IsEmpty_FileAndArgumentCombine" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="1721386984" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.002939" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1346" name="StartPoint_FromRouteStart_SnapsToTheRegionGraph" fullname="Game.Tests.RegionSelectTests.StartPoint_FromRouteStart_SnapsToTheRegionGraph" methodname="StartPoint_FromRouteStart_SnapsToTheRegionGraph" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="507400499" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.049964" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1350" name="StartRequest_RegionIsConsumedOnce_AndPlainStartsClearIt" fullname="Game.Tests.RegionSelectTests.StartRequest_RegionIsConsumedOnce_AndPlainStartsClearIt" methodname="StartRequest_RegionIsConsumedOnce_AndPlainStartsClearIt" classname="Game.Tests.RegionSelectTests" runstate="Runnable" seed="1313507854" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.001366" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[START] menu choice 'region knyszyn' route_s=12 route_end=-1 lighting=overcast
+[START] menu choice 'region knyszyn' route_s=12 route_end=-1 lighting=
+[START] menu choice 'G3-A' route_s=12 route_end=450 lighting=
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1389" name="StartClearanceTests" fullname="Game.Tests.StartClearanceTests" classname="Game.Tests.StartClearanceTests" runstate="Runnable" testcasecount="45" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:55:11Z" duration="26.991343" total="45" passed="45" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1414" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:45Z" duration="0.320076" total="21" passed="21" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1393" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-industrial-c&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-industrial-c&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1288820475" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.044585" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1394" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-maczka&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-maczka&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1863033317" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.036531" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1395" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-kleeberga&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-kleeberga&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1950839205" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:44Z" duration="0.037529" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1396" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-knyszynska&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-knyszynska&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="684075230" result="Passed" start-time="2026-11-16 02:54:44Z" end-time="2026-11-16 02:54:45Z" duration="0.025040" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1397" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-01&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-01&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="306325740" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.012385" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1398" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-02&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-02&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="2052019755" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.014353" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1399" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-03&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-03&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="673430978" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.006967" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1400" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-04&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-04&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1097603986" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.050772" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1401" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-05&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-05&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="348964822" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.010473" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1402" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-06&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-06&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1947189246" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.006597" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1403" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-07&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-07&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="2085002339" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.004624" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1404" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-08&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-08&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1051409992" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.004421" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1405" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-09&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-09&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1436814081" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.003459" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1406" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-10&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-10&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="480074030" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.004943" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1407" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-11&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-11&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="66985750" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.002397" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1408" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn-s&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn-s&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="889931316" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.004035" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1409" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="544931383" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.010045" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1410" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn-w&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;knyszyn-w&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="999759547" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.005996" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1411" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-monki-01&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dk65-monki-01&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="567913847" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.003311" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1412" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dw671-tykocin-01&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;dw671-tykocin-01&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="527729884" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.006820" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1413" name="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-dojlidy&quot;)" fullname="Game.Tests.StartClearanceTests.CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen(&quot;bialystok-dojlidy&quot;)" methodname="CatalogStart_IsBehindTheEntryClosure_AndTheRouteAheadIsOpen" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1772362034" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.022507" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1391" name="Crossings_EntryAtTheStart_ExitAtTheEnd_AndRowsBesideTheRouteAreIgnored" fullname="Game.Tests.StartClearanceTests.Crossings_EntryAtTheStart_ExitAtTheEnd_AndRowsBesideTheRouteAreIgnored" methodname="Crossings_EntryAtTheStart_ExitAtTheEnd_AndRowsBesideTheRouteAreIgnored" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1784673559" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.001203" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1392" name="Crossings_RouteNodeExactlyOnTheRow_CountsOnce" fullname="Game.Tests.StartClearanceTests.Crossings_RouteNodeExactlyOnTheRow_CountsOnce" methodname="Crossings_RouteNodeExactlyOnTheRow_CountsOnce" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="998445263" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.000204" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1390" name="Footprint_FollowsTheVehicleDefinitions" fullname="Game.Tests.StartClearanceTests.Footprint_FollowsTheVehicleDefinitions" methodname="Footprint_FollowsTheVehicleDefinitions" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1969684295" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:45Z" duration="0.002278" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1436" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:55:11Z" duration="26.666104" total="21" passed="21" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties>
+                <property name="Category" value="WorldScenes" />
+              </properties>
+              <test-case id="1415" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-industrial-c&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-industrial-c&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1898770720" result="Passed" start-time="2026-11-16 02:54:45Z" end-time="2026-11-16 02:54:46Z" duration="1.779504" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1416" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-maczka&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-maczka&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="890975328" result="Passed" start-time="2026-11-16 02:54:46Z" end-time="2026-11-16 02:54:48Z" duration="1.670570" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1417" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-kleeberga&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-kleeberga&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1351593333" result="Passed" start-time="2026-11-16 02:54:48Z" end-time="2026-11-16 02:54:50Z" duration="1.748032" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1418" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-knyszynska&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-knyszynska&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1730667715" result="Passed" start-time="2026-11-16 02:54:50Z" end-time="2026-11-16 02:54:51Z" duration="1.579660" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1419" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-01&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-01&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="651353641" result="Passed" start-time="2026-11-16 02:54:51Z" end-time="2026-11-16 02:54:53Z" duration="1.240791" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1420" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-02&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-02&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="889241076" result="Passed" start-time="2026-11-16 02:54:53Z" end-time="2026-11-16 02:54:54Z" duration="1.254826" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1421" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-03&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-03&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1406820077" result="Passed" start-time="2026-11-16 02:54:54Z" end-time="2026-11-16 02:54:55Z" duration="1.140520" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1422" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-04&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-04&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="2052620033" result="Passed" start-time="2026-11-16 02:54:55Z" end-time="2026-11-16 02:54:56Z" duration="1.291176" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1423" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-05&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-05&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="746757542" result="Passed" start-time="2026-11-16 02:54:56Z" end-time="2026-11-16 02:54:58Z" duration="1.290919" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1424" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-06&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-06&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="682487962" result="Passed" start-time="2026-11-16 02:54:58Z" end-time="2026-11-16 02:54:59Z" duration="1.198439" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1425" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-07&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-07&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="900315705" result="Passed" start-time="2026-11-16 02:54:59Z" end-time="2026-11-16 02:55:00Z" duration="1.196723" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1426" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-08&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-08&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="505233792" result="Passed" start-time="2026-11-16 02:55:00Z" end-time="2026-11-16 02:55:01Z" duration="1.159399" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1427" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-09&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-09&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="87512864" result="Passed" start-time="2026-11-16 02:55:01Z" end-time="2026-11-16 02:55:02Z" duration="1.119194" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1428" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-10&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-10&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1177441470" result="Passed" start-time="2026-11-16 02:55:02Z" end-time="2026-11-16 02:55:03Z" duration="1.059283" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1429" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-11&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-11&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1109014829" result="Passed" start-time="2026-11-16 02:55:03Z" end-time="2026-11-16 02:55:04Z" duration="1.036944" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1430" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn-s&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn-s&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1702232943" result="Passed" start-time="2026-11-16 02:55:04Z" end-time="2026-11-16 02:55:05Z" duration="0.954644" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1431" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1120328776" result="Passed" start-time="2026-11-16 02:55:05Z" end-time="2026-11-16 02:55:07Z" duration="1.293641" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1432" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn-w&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;knyszyn-w&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="580191242" result="Passed" start-time="2026-11-16 02:55:07Z" end-time="2026-11-16 02:55:08Z" duration="1.189412" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1433" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-monki-01&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dk65-monki-01&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1580797372" result="Passed" start-time="2026-11-16 02:55:08Z" end-time="2026-11-16 02:55:09Z" duration="1.029267" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1434" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dw671-tykocin-01&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;dw671-tykocin-01&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="1161209989" result="Passed" start-time="2026-11-16 02:55:09Z" end-time="2026-11-16 02:55:10Z" duration="1.026777" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1435" name="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-dojlidy&quot;)" fullname="Game.Tests.StartClearanceTests.ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead(&quot;bialystok-dojlidy&quot;)" methodname="ImportedScene_StartBoxIsFree_AndNothingStandsOnTheRouteAhead" classname="Game.Tests.StartClearanceTests" runstate="Runnable" seed="5066944" result="Passed" start-time="2026-11-16 02:55:10Z" end-time="2026-11-16 02:55:11Z" duration="1.403423" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

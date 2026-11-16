@@ -86,6 +86,22 @@ namespace Game.World.Import
             && def.Get("texture_set") as string == "car_grime_clean"
             && def.Get("paint") is List<object> paint && paint.Count >= 4;
 
+        /// <summary>ADR 0237: element size (m) of a block / slab paving set - the sets that share the per-element tone
+        /// jitter, joint dirt and yard / footway soiling of the 20 x 10 blocks; 0 for every other set.
+        /// <c>paving_20x10_tint</c> is the grey block scan as a modulation map (red blocks), <c>sidewalk_slab_35</c>
+        /// the 35 x 35 cm footway slabs.</summary>
+        public static float BlockPavingElementSize(string setName)
+        {
+            switch (setName)
+            {
+                case "behaton_i_grey":
+                case "paving_20x10_grey":
+                case "paving_20x10_tint": return 0.17f;
+                case "sidewalk_slab_35": return 0.35f;
+                default: return 0f;
+            }
+        }
+
         /// <summary>Vertex channels the material needs (mesh baking keeps TEXCOORD_0 / TEXCOORD_1 only where read).</summary>
         public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
         {
@@ -114,6 +130,10 @@ namespace Game.World.Import
         /// <summary>ADR 0071 r11: manifest "weather": true = wall material of an authored asset that carries the splash
         /// zone (UV0.y = metres above ground) and run-off space (TEXCOORD_1) of the generated hall walls.</summary>
         static bool Runoff(Dictionary<string, object> def) => def.Get("weather") is bool b && b;
+
+        /// <summary>ADR 0242: manifest "runoff_strength" (0..2) scales the run-off layer of one material; absent = 1.</summary>
+        public static float RunoffStrengthScale(Dictionary<string, object> def) =>
+            def != null && def.Get("runoff_strength") != null ? Mathf.Clamp((float)Num(def.Get("runoff_strength")), 0f, 2f) : 1f;
 
         /// <summary>Procedural stripe sets: (direction in UV metres, period m, colour A, colour B), linear colours.</summary>
         static (Vector2 dir, float period, Color a, Color b)? Stripes(Dictionary<string, object> def)
@@ -273,7 +293,9 @@ namespace Game.World.Import
             string uv = set != null ? Str(set.Get("uv")) ?? "" : "";
             if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") mat.EnableKeyword("_UV_MESH0");
             if (def.Get("uv1") as string == "along_m") mat.EnableKeyword("_UV_MESH1");
-            if (setName == "behaton_i_grey" || setName == "paving_20x10_grey") { mat.SetFloat("_ElementJitter", 0.12f); mat.SetFloat("_ElementSize", 0.17f); }
+            float blockSize = BlockPavingElementSize(setName);                      // ADR 0237: + red blocks, footway slabs
+            bool blockPaving = blockSize > 0f;
+            if (blockPaving) { mat.SetFloat("_ElementJitter", 0.12f); mat.SetFloat("_ElementSize", blockSize); }
             if (setName == "concrete_cast_5m_joints" || setName == "concrete_slab_3x1.5") { mat.SetFloat("_ElementJitter", 0.07f); mat.SetFloat("_ElementSize", 2.0f); }
             if (setName == "large_panel_joints" || setName == "brick") { mat.SetFloat("_ElementJitter", 0.05f); mat.SetFloat("_ElementSize", setName == "brick" ? 0.25f : 2.8f); }
             // CC0 scan sets (ADR 0063): the photo already carries per-element tone; jitter only where the scan was
@@ -334,10 +356,10 @@ namespace Game.World.Import
             }
             // ADR 0060 (review r7 N-2): dirty joints and damp / oily hollows on yards and footways (not on carriageways:
             // their wear comes from _ROADWEAR). WORKING_VALUE, judged against the CC0 Bieżeństwa / Andersa photos.
-            if (setName == "behaton_i_grey" || setName == "paving_20x10_grey" || setName == "concrete_cast_5m_joints"
+            if (blockPaving || setName == "concrete_cast_5m_joints"
                 || setName == "concrete_slab_3x1.5" || (wornAsphalt && id != "road_asphalt"))
             {
-                bool blocks = setName == "behaton_i_grey" || setName == "paving_20x10_grey";
+                bool blocks = blockPaving;
                 mat.EnableKeyword("_GRIME");
                 // x damp darkening, y macro-pool threshold (~0.62 = 16 % of the area), z joint dirt, w damp gloss
                 mat.SetVector("_Grime", new Vector4(blocks ? 0.42f : 0.38f, 0.62f, blocks ? 0.45f : 0.3f, 0.5f));
@@ -421,7 +443,8 @@ namespace Game.World.Import
                     // light cladding shows run-off most; dark graphite / accent sheet hides soot (rust still shows)
                     float lum = 0.2126f * col.x + 0.7152f * col.y + 0.0722f * col.z;
                     // mineral render soaks the dirt in: softer than on coated sheet (WORKING_VALUE, judged on the r10 renders)
-                    mat.SetFloat("_RunoffStrength", Mathf.Lerp(0.55f, 0.9f, Mathf.InverseLerp(0.08f, 0.5f, lum)) * (plasterRunoff ? 0.6f : 1f));
+                    // ADR 0242: manifest "runoff_strength" = per-material multiplier (a new, clean hall; default 1)
+                    mat.SetFloat("_RunoffStrength", Mathf.Lerp(0.55f, 0.9f, Mathf.InverseLerp(0.08f, 0.5f, lum)) * (plasterRunoff ? 0.6f : 1f) * RunoffStrengthScale(def));
                 }
             }
 
@@ -433,7 +456,7 @@ namespace Game.World.Import
                 mat.SetVector("_StripeA", (Vector4)st.Value.a);
                 mat.SetVector("_StripeB", (Vector4)st.Value.b);
             }
-            if (setName == "behaton_i_grey" || setName == "paving_20x10_grey" || setName == "concrete_cast_5m_joints" || setName == "concrete_slab_3x1.5")
+            if (blockPaving || setName == "concrete_cast_5m_joints" || setName == "concrete_slab_3x1.5")
             {
                 // yards and footways: soiling and wear patches stronger than on carriageways (r4 W-H1: "too clean")
                 mat.SetFloat("_MacroStrength", 0.2f);

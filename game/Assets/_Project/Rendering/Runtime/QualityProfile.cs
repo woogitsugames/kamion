@@ -37,6 +37,10 @@ namespace Game.Rendering
             public SoftShadowQuality softShadowQuality;
             public float shadowDepthBias;
             public float shadowNormalBias;
+            [Tooltip("ADR 0240: thin world casters (lamp columns, sign / signal posts, bollards, railings, mesh fences, lattice " +
+                     "gantries - ThinShadowCasterPolicy) cast no main-light shadow on this tier. Inverted flag: profiles saved " +
+                     "before ADR 0240 keep casting. Low: one 1024 px cascade over 35 m cannot resolve them (dashed smears)")]
+            public bool thinCasterShadowsOff;
             [Header("Textures / geometry")]
             [Tooltip("QualitySettings.anisotropicFiltering: 0 off, 1 per texture, 2 forced on")] public int anisotropic;
             [Tooltip("Aniso level written on world surface textures (asphalt, markings, grass)")] public int worldTextureAniso;
@@ -124,7 +128,7 @@ namespace Game.Rendering
         [Tooltip("Migration revision (ProjectSetup.LoadTiers applies the changes of later revisions to an existing asset)")]
         public int revision;
         /// <summary>ADR 0062: High floor 0.70, FSR upscaling, pacing fallback, lamp pools.</summary>
-        public const int CurrentRevision = 191;   // ADR 0080: cloudQuality, ssao; ADR0098: shadow receiver stability and post noise; ADR 0106: glassFast; ADR 0113: forestFast; ADR 0191: lampPoolSpecular (s20: + ADR 0192 nightWindowsOff / lampGlareOff, lampFloorOff - inverted, no migration step)
+        public const int CurrentRevision = 240;   // ADR 0240: Low shadow bias 0.4 / 0.3 + thinCasterShadowsOff; ADR 0080: cloudQuality, ssao; ADR0098: shadow receiver stability and post noise; ADR 0106: glassFast; ADR 0113: forestFast; ADR 0191: lampPoolSpecular (s20: + ADR 0192 nightWindowsOff / lampGlareOff, lampFloorOff - inverted, no migration step)
 
         /// <summary>
         /// First-launch tier by device (no launch argument, nothing saved by the player). Rules are checked in order; a rule
@@ -222,7 +226,9 @@ namespace Game.Rendering
                 postProcessing = false, tonemapping = TonemappingMode.None,
                 shadowDistance = 35f, shadowResolution = 1024, shadowCascades = 1, cascade2Split = 0.25f,
                 cascade4Split = new Vector3(0.067f, 0.2f, 0.467f), softShadows = false, softShadowQuality = SoftShadowQuality.Low,
-                shadowDepthBias = 1.0f, shadowNormalBias = 1.0f,
+                // ADR 0240: 1.0 / 1.0 -> the Medium / High values of ADR 0098. Normal bias 1.0 pulled every caster silhouette
+                // in by one texel per side (~16 cm of width at ~8 cm per texel): a 0.24 m signal arm kept a third of its shadow.
+                shadowDepthBias = 0.4f, shadowNormalBias = 0.3f, thinCasterShadowsOff = true,
                 anisotropic = 1, worldTextureAniso = 2, worldMipBias = 0f, lodBias = 0.5f, cameraFarClip = 900f,
                 worldDetail = false, additionalLightsPerObject = 2,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,

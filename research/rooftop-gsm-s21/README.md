@@ -1,16 +1,18 @@
 # K67 (blok M67) — dachowe instalacje GSM: geometria elementów
 
 Sesja chmurowa s21, 2026-11-15. Gałąź `research/rooftop-gsm-s21` (PR #89). Wersja **FIX r2** — poprawki z
-`docs/reports/REVIEW-2026-11-15-s20-cloudB-rooftop-gsm.md` §5.
+`docs/reports/REVIEW-2026-11-15-s20-cloudB-rooftop-gsm.md` §5. **Uzupełnienie s21b** (K67-083…148): kadry naziemne
+KartaView/Commons/Panoramax, pomiar proporcją do kondygnacji, statusy wysokości LIDAR zmienione z „MEASURED” na
+**ESTIMATED (LIDAR, dolna granica)** — dozwolone statusy to SOURCED / ESTIMATED / UNVERIFIED.
 
-## 0. Kryteria M67 — stan po FIX r2
+## 0. Kryteria M67 — stan po s21b
 
 | kryterium | stan | dowód |
 |---|---|---|
 | katalog ≥ 8 typów z wymiarami i kolorem | **SPEŁNIONE** | §1, K67-001…013 (13 typów, 6 z kart) |
-| ≥ 5 dachów z rozkładem wysokości masztu (min / mediana / max, z metodą) | **SPEŁNIONE** | §2: 5 dachów z pomiarem LIDAR (Skorupska 17, Dobra 3, Zwierzyniecka 4, Kopernika 5A/7, wieżowiec M57 jako kontrola) + Hallera 19 jako zmierzony negatyw; 23 pomiary K67-036…058 |
-| ≥ 15 obejrzanych kadrów | **SPEŁNIONE** (ortofoto 16 + 7 nowych wycinków + 6 map LIDAR + 23 profile boczne LIDAR + 9 naziemnych) | §5 |
-| — w tym kadry naziemne / sylwetka na tle nieba | **CZĘŚCIOWO**: 9 kadrów Commons (5 negatywów dachów, 1 wieża wolnostojąca, 3 ulice Dobra/Kopernika — cel poza kadrem); kadrów z boku dachów z masztami 0 (Zwierzyniecka 2× nadal 429) | §3, §6 |
+| ≥ 5 dachów z rozkładem wysokości masztu (min / mediana / max, z metodą) | **SPEŁNIONE** — 6 dachów (5 z urządzeniami + Hallera 19 negatyw), wszystkie **ESTIMATED** z jawną metodą | §2 i §2a: LIDAR GUGiK 2025-04-18 (23 pomiary K67-036…058) + na wieżowcu druga, niezależna metoda — proporcja do kondygnacji z 2 kadrów naziemnych (K67-094…096) |
+| ≥ 15 obejrzanych kadrów | **SPEŁNIONE** (ortofoto 23 + 6 map LIDAR + 23 profile LIDAR + 9 naziemnych r2 + **60 naziemnych s21b**) | §5 |
+| — w tym kadry naziemne / sylwetka na tle nieba | **CZĘŚCIOWO**: s21b obejrzano 60 kadrów (KartaView 11, Commons 48, Panoramax 1). **Przypisane z widoczną instalacją: 4 — wszystkie wieżowiec M57** (KartaView 2019 i 2021, 248–379 m). Pozostałe 5 dachów: **0 kadrów** — brak pokrycia (Panoramax 0, KartaView 0 lub cel zasłonięty) albo identyfikacja budynku UNVERIFIED (3 kandydaty Commons) | §3a, §6 |
 | odsyłacz do M57 bez powielania | **SPEŁNIONE**, wysokości wg M57-FIX #88: **9–12 m** | §2 |
 | brak nazw producentów/operatorów w opisach | **SPEŁNIONE** (operatorzy A/B/C) | manifest |
 
@@ -81,6 +83,25 @@ i Tysiąclecia 10A potwierdzone też z ziemi (Commons 2013).
 Zwierzyniecka 4 ≈ 196,5 − 150,8 = **45,7 m**, wieżowiec ≈ 193,3 − 141,4 = **51,9 m** — ≥ 45 m, czyli wg § 36 rozp. 2021/264
 światła średniej intensywności; pozostałe < 45 m (§ 35: małej intensywności). Czy światła faktycznie są — UNVERIFIED.
 
+## 2a. Rozkład wysokości masztu nad dachem — zestawienie s21b (wszystko ESTIMATED)
+
+Status każdej liczby: **ESTIMATED**. Metoda A = LIDAR GUGiK 2025-04-18 (h = Z_max w walcu r = 1 m − dominanta dachu,
+dolna granica, ± 0,15 m; K67-036…058). Metoda B = **proporcja do podziałki kondygnacji** na kadrze naziemnym
+(px masztu nad attyką ÷ px kondygnacji × 3,5–3,8 m; kondygnacja 41,8 m / 11 = 3,8 m wg MISTRAL-TASKS-10 §M67 i M57,
+dolna granica 3,5 m = WORKING_VALUE; odczyt ± 3 px ≈ ± 0,5 m; K67-094…096). Metoda C = cień na ortofoto (tylko kontrola).
+
+| dach | n | min / mediana / max [m] | metoda | kontrola |
+|---|---|---|---|---|
+| Skorupska 17 | 4 | 4,3 / 4,5 / 11,6 | A | cień nieczytelny; kadrów naziemnych z dachem 0 |
+| Dobra 3 | 2 | 7,7 / 8,6 / 9,6 | A | cień nieczytelny; kadrów 0 (1 kandydat z bliska, identyfikacja UNVERIFIED) |
+| Zwierzyniecka 4 | 1 | 8,6 | A | C: > 5,6 m ✓. **Uwaga s21b:** OSM opisuje ten maszt jako radiowy (`communication:radio`), nie GSM (K67-148) |
+| Kopernika 5A / 7 | 6 | 2,5 / 2,7 / 3,4 | A | kadrów 0 |
+| wieżowiec M57 | 6 (A) / 4 (B) | A: 4,5 / 5,1 / 10,9; **B (2021, n = 4: 2 krótkie NE + W + środkowy): 4,4–5,1 / 6,4–7,3 / 9,7–11,0** (mediana = średnia 2. i 3. wartości) | A + B | B nad attyką; maszt W: A ≥ 10,95 vs B 8,4–9,5 (+ zasłonięta podstawa); **maszt środkowy: B 9,7–11,0 (2019/2021) vs A 5,25 przy środku krawędzi SE (2025) — KONFLIKT, nie rozstrzygam** (demontaż/obniżenie po 2021 albo inny punkt) |
+| Hallera 19 | 0 | brak > 1,3 m | A | 3 kadry KartaView + 1 Commons — cel zasłonięty / identyfikacja UNVERIFIED |
+
+Rozkład dla gry bez zmian: (a) maszt główny 7,5–11,5 m (4 dachy, w tym wieżowiec), (b) wsporniki/maszty przy attyce 2,5–5,3 m.
+Wysokości nie są SOURCED: dokumentów z wysokością (BIP/zgłoszenia) nie znaleziono; wykaz UKE nie ma wysokości anten (§4).
+
 ## 3. Wygląd na tle nieba
 Kadry Commons (9; CC BY-SA 3.0/4.0, CC BY 3.0, CC0 — atrybucja w manifeście K67-073…081; `files/commons_*.jpg`, opisy w `commons_opisy.json`):
 - Wieża wolnostojąca (Cieszyńska, zmierzch 2014): na jasnym niebie wszystko czyta się jako ciemnoszara sylwetka —
@@ -91,6 +112,22 @@ Kadry Commons (9; CC BY-SA 3.0/4.0, CC BY 3.0, CC0 — atrybucja w manifeście K
 - **Dachów z masztami z boku nie pozyskano** (luka 1). Profile LIDAR (`out/prof_*`) dają sylwetkę geometryczną:
   Skorupska — maszt z głowicą paneli w górnych ~1,5 m; Dobra — maszt z gęstszym skupiskiem punktów w górnych ~1,5 m (głowica anten);
   Zwierzyniecka — pojedyncza rura bez głowicy w chmurze (anteny drobne); wieżowiec W — kratownica z odciągami.
+
+## 3a. Kadry naziemne s21b — co widać (wieżowiec M57, KartaView, CC BY-SA 4.0 — referencja, nie tekstura)
+Kadry z estakady (jazda na NW, kurs 301–303° = tor GPS), wieża po prawej, 248–379 m. Obejrzane w całości i w wycinkach 3–5×
+(`files/kv_1326673605_wyc3x.jpg`, `_pomiar.jpg`, `kv_1326673581_pomiar.jpg`, `kv_993062010_wyc3x.jpg`, `kv_993061738_wyc4x.jpg`):
+- **Elementy (2021, K67-083):** 2 wysokie maszty kratowe — przy końcu W (z 2–3 białymi czaszami po lewej stronie i skośnymi
+  odciągami) i najwyższy w środku długości (pionowe panele w górnej ~1/3, zastrzały u podstawy); między nimi 3 krótkie wsporniki
+  rurowe z 1–2 białymi panelami (0,5–1 kond. nad attyką); przy końcu NE 4–5 krótszych masztów z panelami i czaszami (~1–1,5 kond.);
+  na narożniku przy szczycie SW białe panele przykręcone do elewacji, wystające ponad attykę.
+- **2019 (K67-085):** ten sam układ; czasz łącznie ok. 6–8; panele w 3 grupach po 1–2 — instalacja stabilna 2019→2021.
+- **Kolor i światło:** panele białe/jasnoszare, matowe (bez odblasków przy słońcu z SE); czasze białe — z 300+ m najbardziej
+  widoczne jako białe kropki; kraty masztów szare, pod światło ciemnoszare, z ~330 m przez liście prawie znikają (K67-086).
+- **Mocowanie:** maszty stoją na dachu za attyką (podstawy niewidoczne z ziemi); maszt W z odciągami; panele na narożniku — do ściany.
+- Pozostałe dachy: kadry KartaView (Skorupska 17 z 937–947 m, Hallera 19 z 384–686 m) — cel zasłonięty budynkami/ekranami;
+  Commons 48 kadrów (Skorupska/Dobra/Zwierzyniecka/Kopernika/Hallera) — żaden nie pokazuje dachu celu z instalacją.
+  Kandydaci z identyfikacją UNVERIFIED: akademiki widziane z ul. Kopernika (2 cienkie pręty/maszty na dachu, K67-133),
+  wieżowiec przy Hallera (K67-100), elewacja biurowca 27 m od Skorupskiej 17 (dach poza kadrem, K67-124).
 
 ## 4. Przepisy i UKE
 - **Prawo budowlane art. 29 — POTWIERDZONE w tekście urzędowym**: t.j. **Dz.U. 2026 poz. 524** (obwieszczenie Marszałka
@@ -112,17 +149,23 @@ Kadry Commons (9; CC BY-SA 3.0/4.0, CC BY 3.0, CC0 — atrybucja w manifeście K
   ale jest zastąpiony przez `ortho_dobra_c`.
 - LIDAR: 6 map wysokości + 23 profile boczne (×2 widoki).
 - Naziemne: 9 Commons (jeden tytuł okazał się duplikatem — usunięty, zapis w logu).
+- **s21b:** KartaView 11 (4 przypisane — wieżowiec; 7 negatywów), Commons 48 (0 przypisanych; File:20201102 091949 Dobra
+  Street był już K67-078 — nie liczony drugi raz), Panoramax 1 (wnętrze lokalu — nie zapisany). Razem **60 obejrzanych**.
 
 ## 6. Luki
-1. **Kadry naziemne dachów z masztami: brak.** Commons API zwracało HTTP 429 naprzemiennie z 200
-   (`out/commons_log.json` — wszystkie próby z czasem; przerwy ≥ 6 s, po 429 — 60 s, UA generyczny, tylko domeny
-   Wikimedia), 3 przebiegi 13:32–14:00 UTC. Pobrano 9 z 15 tytułów; 4 nadal 429 (m.in. oba kadry ul. Zwierzynieckiej), 1 brak pliku, 1 duplikat — K67-082.
+1. **Kadry naziemne dachów z masztami poza wieżowcem: brak (s21b).** Panoramax: 0 zdjęć w bbox wokół Skorupskiej, Dobrej,
+   Zwierzynieckiej i wieżowca (K67-145). KartaView: Zwierzyniecka 4 i Kopernika 5A — 0 zdjęć skierowanych na cel w 1,6 km;
+   Skorupska/Hallera — cel zasłonięty (K67-146). Commons: 48 obejrzanych, 0 z dachem celu; geosearch dla Zwierzynieckiej,
+   Hallera, Kopernika i wieżowca — HTTP 429 ok. 40 min (`out/commons_s21b_log.json`, K67-147). Wcześniej (r2): 4 tytuły 429 — K67-082
+   (2 z nich, ul. Zwierzyniecka, pobrane w s21b: K67-098, K67-099 — budynek nr 7, nie cel).
 2. Godzina nalotu ortofoto — tylko z azymutu cienia (± 20 min).
 3. Przynależność telekom. elementów Kopernika i elementu N Zwierzyniecka — z rzutu, bez kadru z boku.
 4. Karty szaf i anten 0,9/1,2 m — niezweryfikowane.
 
 ## 7. Samokontrola
 r1: seed 20261115, 7/35 PASS. r2: `audit_20_percent.json` — próba 10/47 z wierszy K67-036…082 (seed 2026111502 + 2026111503): **10 PASS**; audyt K67-044 wykrył błąd w metodzie kontrolnej (klasa 6 zawiera ściany) — poprawiono metodę audytu, wynik pomiaru bez zmian.
+r3 (s21b): próba 14/66 z K67-083…148 (seed 2026111521, `tools/s21b/audit_r3.py`), pliki ponownie obejrzane, URL ponownie
+sprawdzone: **13 PASS, 1 FIX** (K67-137: usunięto niewidoczny w kadrze „dach dwuspadowy”). Pomiary B — drugi odczyt na innym kadrze, różnica 0,09–0,12 kond.
 
 ## Odtworzenie
 ```
@@ -134,4 +177,9 @@ uv run --no-project --with pyproj --with pillow python -I tools/shadow_crops.py 
 python3 -I tools/sun.py
 python3 -I tools/commons_fetch.py tools files/ out/commons_log.json
 python3 -I build_manifest.py
+# s21b (skrypty: tools/s21b/; dane pośrednie w katalogu roboczym)
+python3 -I tools/s21b/pnx.py pnx_roofs.json                    # Panoramax
+python3 -I tools/s21b/kvgrid.py kvgrid.json; python3 -I tools/s21b/kvseq.py <seq> kvs_<seq>.json; python3 -I tools/s21b/kvpick.py <dach> 900 35 1 dl
+SKIPGEO=1 NMAX=17 python3 -I tools/s21b/cbatch.py <cb_dir> <tytuły.json>   # Commons: geosearch + imageinfo + miniatury
+python3 -I tools/s21b/commons_export.py <cb_dir> .; python3 -I tools/s21b/audit_r3.py
 ```

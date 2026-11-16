@@ -28,6 +28,7 @@ Evidence: `artifacts/cc0-r8/` (worktree of this task; STATUS.md, before/after co
 3. **Polish sizes over the scan's claimed size.** Element periods are measured (autocorrelation) and scaled to the
    standard: holland 20 x 10 cm (row 103.5 mm; scan 140.8 mm -> x 0.735), NF brick course 75 mm (scan 69.7 mm -> x 1.076),
    sidewalk slab 35 x 35 cm (scan 294 mm -> x 1.199). Behaton block (~210 x 140 mm rows) kept as scanned. WORKING_VALUE.
+   (ADR 0237: measured scan pitch 274.7 x 159.9 mm; now scaled per axis to 201 x 144.5 mm, tile 1.405 x 1.736 m.)
 4. **Engine.** No shader change: the sets keep the `materials_spec.json` contract (tile size now from the scan),
    `WorldPbrMaterials` reads it. Element tone jitter is halved on segmented scan sets and off on unsegmented ones
    (the photo already carries per-element tone; without ids it would step per tile).

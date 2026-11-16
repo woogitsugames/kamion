@@ -11,7 +11,9 @@ Run: uv run --project tools/licenses pytest tools/licenses/tests -q
 
 from __future__ import annotations
 
+import json
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -21,23 +23,19 @@ RESOURCES = REPO / "game" / "Assets" / "_Project" / "UI" / "Resources"
 ATTRIBUTIONS = RESOURCES / "About" / "attributions.txt"
 LICENSES_MD = REPO / "docs" / "LICENSES.md"
 
-# Row number in the summary table -> notices that must be visible (exact substrings).
-REQUIRED = {
-    1: ["© OpenStreetMap contributors", "Open Database License (ODbL) 1.0", "www.openstreetmap.org/copyright"],
-    2: ["Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)"],
-    3: ["Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)", "ortofotomapa"],
-    5: ["BDOT10k"],
-    6: ["LoD2", "CC BY 4.0"],
-    7: ["LoD1", "CC BY 4.0"],
-    8: ["© OpenStreetMap contributors", "Główny Urząd Geodezji i Kartografii"],   # second region: same sources
-    18: ["research G3 s8-signs", "OpenStreetMap contributors", "Mapillary contributors", "ODbL 1.0"],
-    28: ["The Inter Project Authors", "SIL OPEN FONT LICENSE Version 1.1", "Reserved Font Name"],
-    32: ["Unity glTFast copyright © 2023 Unity Technologies and the Unity glTFast authors",
-         "TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION"],
-}
+# Row number in the summary table -> notices that must be visible (exact substrings). Data, shared with the plain .NET
+# tests in tools/about-runner (ADR 0230).
+REQUIREMENTS = json.loads((REPO / "tools" / "licenses" / "attribution_requirements.json").read_text(encoding="utf-8"))
+REQUIRED = {int(k): v for k, v in REQUIREMENTS["rows"].items()}
+ALWAYS_VISIBLE = REQUIREMENTS["always_visible"]
 
 # Never on screen: unresolved notes belong in `#` comments (same list as AttributionDocument.ForbiddenVisibleMarkers).
-FORBIDDEN_VISIBLE = ["UNVERIFIED", "WARUNKOWO", "TODO", "[ADRES", "LEGAL_REVIEW", "WORKING_VALUE"]
+FORBIDDEN_VISIBLE = REQUIREMENTS["forbidden_visible"]
+
+# City of Białystok open data (ArcGIS Online) must not feed the build: the BIP re-use terms forbid modifying the content
+# (docs/LICENSES.md, "Dane Miasta Białystok — status licencyjny", ADR 0230).
+CITY_DATA_PATTERNS = r"jN5LJsqeW33UjdlH|bialystok\.maps\.arcgis|bialystok-arcgis|bialystok-open-data|komunikacja\.bialystok"
+BUILD_INPUTS = ["Data/Regions", "tools/worldgen", "tools/ui", "game/Assets"]
 
 
 def visible_text() -> str:
@@ -104,3 +102,27 @@ def test_resources_have_text_importer_meta():
     for p in [ATTRIBUTIONS, RESOURCES / "About" / "gltfast-apache-license.txt"]:
         meta = p.with_name(p.name + ".meta").read_text(encoding="utf-8")
         assert re.search(r"^guid: [0-9a-f]{32}$", meta, re.M) and "TextScriptImporter:" in meta, p.name
+
+
+def test_always_visible_licence_notices():
+    text = visible_text()
+    missing = [n for n in ALWAYS_VISIBLE if n not in text]
+    assert not missing, f"licence notices missing on screen: {missing}"
+
+
+def test_forbidden_markers_match_parser():
+    cs = (REPO / "game/Assets/_Project/Core/About/AttributionDocument.cs").read_text(encoding="utf-8")
+    m = re.search(r"ForbiddenVisibleMarkers = \{([^}]*)\}", cs)
+    assert m and re.findall(r'"([^"]+)"', m.group(1)) == FORBIDDEN_VISIBLE
+
+
+def test_no_city_open_data_in_build_inputs():
+    try:
+        r = subprocess.run(["git", "grep", "-l", "-I", "-E", CITY_DATA_PATTERNS, "--", *BUILD_INPUTS],
+                           cwd=REPO, capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.TimeoutExpired) as e:  # pragma: no cover - no git in the environment
+        pytest.skip(f"git grep unavailable: {e}")
+    if r.returncode not in (0, 1):
+        pytest.skip(f"git grep failed: {r.stderr.strip()}")
+    hits = r.stdout.split()
+    assert not hits, f"City of Białystok open data referenced in build inputs (ADR 0230): {hits}"

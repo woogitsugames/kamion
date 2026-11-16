@@ -180,13 +180,19 @@ def extract(region: dict) -> dict:
     from fetch_osm import download
     b = region["bbox"]
     bbox = (b["xmin"], b["ymin"], b["xmax"], b["ymax"])
-    t = region["teryt_powiat"]
-    z = manifest_files(f"gugik-bdot10k-{t}")[0]
-    gdir = REPO / "Data" / "raw" / "gugik" / f"bdot10k-{t}" / "gpkg"
+    # ADR 0219 (coordination point with 0213): every powiat the tile overlaps, not only region["teryt_powiat"];
+    # one powiat -> the same call and output as before.
+    from powiaty import merge_layers, powiaty_for_bbox
+    pw = powiaty_for_bbox(bbox)
+    bdot = None
+    for t in pw:
+        more = extract_bdot(bbox, manifest_files(f"gugik-bdot10k-{t}")[0],
+                            REPO / "Data" / "raw" / "gugik" / f"bdot10k-{t}" / "gpkg")
+        bdot = more if bdot is None else merge_layers(bdot, more)
     return {"schema": SCHEMA, "crs": "EPSG:2180", "bbox": list(bbox), "margin_m": 60.0,
             "license": {"osm": "ODbL 1.0, © OpenStreetMap contributors",
-                        "bdot10k": "GUGiK BDOT10k (powiat %s), free use, art. 40a ust. 2 pkt 1 Pgik" % t},
-            "osm": extract_osm(bbox, download()), "bdot10k": extract_bdot(bbox, z, gdir)}
+                        "bdot10k": "GUGiK BDOT10k (powiat %s), free use, art. 40a ust. 2 pkt 1 Pgik" % ", ".join(pw)},
+            "osm": extract_osm(bbox, download()), "bdot10k": bdot}
 
 
 def sources_path(region_id: str) -> Path:

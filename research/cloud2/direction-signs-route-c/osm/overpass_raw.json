@@ -1,0 +1,9048 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.4 2390de5a",
+  "osm3s": {
+    "timestamp_osm_base": "2026-11-14T17:08:49Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 2482696231,
+  "lat": 53.1599837,
+  "lon": 23.1422143,
+  "timestamp": "2019-05-23T17:25:41Z",
+  "version": 4,
+  "changeset": 70560093,
+  "user": "Michoo",
+  "uid": 594456,
+  "tags": {
+    "description": "Niedotyczy ALP i użytkowników ogródków działkowych",
+    "traffic_sign": "PL:B-1"
+  }
+},
+{
+  "type": "node",
+  "id": 9447550504,
+  "lat": 53.1697832,
+  "lon": 23.1417759,
+  "timestamp": "2022-01-25T13:46:05Z",
+  "version": 1,
+  "changeset": 116586425,
+  "user": "backoriu",
+  "uid": 13771512,
+  "tags": {
+    "information": "guidepost",
+    "tourism": "information"
+  }
+},
+{
+  "type": "node",
+  "id": 11877183092,
+  "lat": 53.1676547,
+  "lon": 23.1479321,
+  "timestamp": "2024-05-03T18:57:06Z",
+  "version": 1,
+  "changeset": 150852299,
+  "user": "Michoo",
+  "uid": 594456,
+  "tags": {
+    "man_made": "gantry"
+  }
+},
+{
+  "type": "way",
+  "id": 23844386,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 40,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1166108055,
+    1889474193,
+    1859438388,
+    1166108015,
+    1859438391,
+    1832975565,
+    1847263320
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "3",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 23982184,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 39,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847317040,
+    1847317043
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "8;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 23982185,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 40,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1832975577,
+    2504206212,
+    2841552410,
+    2629251382,
+    4825844767
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "destination": "Lublin;Bobrowniki PL/BY",
+    "destination:ref": "19;65",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 25447143,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 30,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1166107972,
+    1852129068,
+    1825424097,
+    1852129031,
+    1166108007,
+    1847263293
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 25447144,
+  "timestamp": "2021-07-05T10:27:18Z",
+  "version": 30,
+  "changeset": 107433042,
+  "user": "TTmechanicalupdates",
+  "uid": 13606340,
+  "nodes": [
+    6311163219,
+    2229796328,
+    2229796548,
+    563878593,
+    1882887357,
+    2076709475,
+    563878591,
+    563878589,
+    2699057756,
+    1882887358,
+    1882887359,
+    5645777593,
+    3954799527,
+    5645777590,
+    3954799531,
+    2229796521,
+    5645815270,
+    3954799549,
+    6268144883,
+    3954799559,
+    1825428967
+  ],
+  "tags": {
+    "bicycle": "use_sidepath",
+    "highway": "tertiary",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Bitwy Białostockiej",
+    "old_name": "I Armii Wojska Polskiego",
+    "oneway": "no",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 173956078,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 27,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847263293,
+    5749429982
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 173956079,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 37,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1832975577,
+    5749429990,
+    2629251380,
+    2504206210,
+    5749429989,
+    2256069814
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "destination": "Augustów Kuźnica;Centrum",
+    "destination:ref": "8;19",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "ref": "8",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "left;through|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 173956080,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 25,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    1847044961,
+    2629251388,
+    1847044959,
+    12962300909,
+    1847044957
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "yes",
+    "destination": "Warszawa;Ełk",
+    "destination:ref": "8;65",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "ref": "8",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "PL:urban"
+  }
+},
+{
+  "type": "way",
+  "id": 173956081,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 16,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847044943,
+    2882674802,
+    4335309644,
+    2882674803,
+    2629251360,
+    1852129028,
+    2882674805,
+    12962300912,
+    1847044945
+  ],
+  "tags": {
+    "bicycle": "no",
+    "destination": "Lublin;Bobrowniki PL/BY",
+    "destination:ref": "19;65",
+    "highway": "trunk_link",
+    "lanes": "1",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "right"
+  }
+},
+{
+  "type": "way",
+  "id": 173956083,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 28,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2840742310,
+    3563106404,
+    1852129066,
+    2882674820,
+    2882674819,
+    12962300910,
+    2629251371
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "left;through|through;right"
+  }
+},
+{
+  "type": "way",
+  "id": 173985169,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 30,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847263320,
+    10076968413,
+    10076968414,
+    4825844766
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "3",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 173985170,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 23,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847263318,
+    10076968412,
+    1151953853,
+    1166107976,
+    1859438387,
+    1166107972
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 173985172,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 17,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847263305,
+    1825424087,
+    1166108055
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 173985177,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 29,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1852129061,
+    2881403132,
+    1847044945
+  ],
+  "tags": {
+    "destination": "Lublin;Bobrowniki PL/BY",
+    "destination:ref": "19;65",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 173990798,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 28,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847317033,
+    1847317040
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "3",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "8;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 173990799,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 20,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847317047,
+    1847317038
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "8;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 173990802,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 23,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2648515278,
+    2629178209,
+    2882674842,
+    2882674841,
+    6258658615
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "destination": "Warszawa;Ełk",
+    "destination:ref": "8;65",
+    "foot": "no",
+    "highway": "trunk_link",
+    "horse": "yes",
+    "lanes": "2",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "turn:lanes": "merge_to_right|"
+  }
+},
+{
+  "type": "way",
+  "id": 173990804,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 35,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2648515261,
+    2629178204,
+    2882674831,
+    2882674832,
+    3563106396
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "destination": "Augustów;Bobrowniki Lublin",
+    "destination:ref": "8;65",
+    "foot": "no",
+    "highway": "trunk_link",
+    "horse": "yes",
+    "lanes": "2",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "turn:lanes": "|merge_to_left"
+  }
+},
+{
+  "type": "way",
+  "id": 173990806,
+  "timestamp": "2021-06-15T18:08:00Z",
+  "version": 18,
+  "changeset": 106417577,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    3642112080,
+    2357588069,
+    731017509,
+    3253383133,
+    3642112078,
+    1892330912,
+    685201745
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "70",
+    "name": "Świętokrzyska",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 175157461,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 28,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883101816,
+    1883469484
+  ],
+  "tags": {
+    "bicycle": "no",
+    "embankment": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 177861600,
+  "timestamp": "2025-02-26T10:01:43Z",
+  "version": 22,
+  "changeset": 162964556,
+  "user": "Marek-M",
+  "uid": 598860,
+  "nodes": [
+    1882953899,
+    1882953918,
+    1882953931,
+    1882954035,
+    4391371827
+  ],
+  "tags": {
+    "destination": "Warszawa;Ełk",
+    "destination:lanes": "Warszawa;Ełk|Giełda Rolna",
+    "destination:ref": "19;65",
+    "highway": "tertiary_link",
+    "lanes": "2",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 177876102,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 19,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1882690750,
+    1882690742,
+    1882690736,
+    1882690730,
+    1990246331,
+    1882954030,
+    5749429981
+  ],
+  "tags": {
+    "destination": "os. Białostoczek",
+    "highway": "trunk_link",
+    "lanes": "1",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 177876107,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 25,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1882887373,
+    1883101816
+  ],
+  "tags": {
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 177895161,
+  "timestamp": "2025-04-11T16:45:25Z",
+  "version": 16,
+  "changeset": 164824999,
+  "user": "Annna20002",
+  "uid": 22739667,
+  "nodes": [
+    1882953794,
+    1882953808,
+    1882953811,
+    1882953814,
+    1882953820,
+    1882953827,
+    1882953848,
+    1882953865
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Pamięci Bieżeństwa 1915 roku",
+    "oneway": "yes",
+    "surface": "paved",
+    "turn:lanes": "through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 177895172,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 19,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    5749429979,
+    1883101827,
+    3563106402,
+    1882953816,
+    3021817549,
+    1882953865
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "lanes": "2",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "left;through|through;right"
+  }
+},
+{
+  "type": "way",
+  "id": 177895177,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 24,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883101822,
+    1883062831
+  ],
+  "tags": {
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 177895178,
+  "timestamp": "2025-05-21T15:18:16Z",
+  "version": 9,
+  "changeset": 166574147,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    1882953869,
+    1882953906,
+    1882953937
+  ],
+  "tags": {
+    "destination": "Centrum handlowe",
+    "highway": "service",
+    "lanes": "2",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 177903961,
+  "timestamp": "2025-02-26T10:01:43Z",
+  "version": 15,
+  "changeset": 162964556,
+  "user": "Marek-M",
+  "uid": 598860,
+  "nodes": [
+    1882953821,
+    3563106549,
+    1882953782,
+    1883043017,
+    1883463878,
+    1882953753,
+    1882953745,
+    2388464999
+  ],
+  "tags": {
+    "bicycle": "use_sidepath",
+    "destination": "os. Białostoczek",
+    "highway": "tertiary",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Bitwy Białostockiej",
+    "old_name": "I Armii Wojska Polskiego",
+    "oneway": "yes",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 177903962,
+  "timestamp": "2025-02-26T10:01:43Z",
+  "version": 14,
+  "changeset": 162964556,
+  "user": "Marek-M",
+  "uid": 598860,
+  "nodes": [
+    2388464999,
+    3563106528,
+    1883463877,
+    1882953770,
+    1883043012,
+    1882953779,
+    3563106547,
+    1882953792
+  ],
+  "tags": {
+    "bicycle": "use_sidepath",
+    "highway": "tertiary",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Bitwy Białostockiej",
+    "old_name": "I Armii Wojska Polskiego",
+    "oneway": "yes",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "turn:lanes": "left;through|through;right"
+  }
+},
+{
+  "type": "way",
+  "id": 177905056,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 15,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883062831,
+    1852155183
+  ],
+  "tags": {
+    "bicycle": "no",
+    "embankment": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 177912085,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 7,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883101800,
+    1883483233,
+    1883483229,
+    1883483227
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 177912087,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 9,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2676895268,
+    1883101784,
+    5645828451,
+    5645828462,
+    1883101791,
+    1883557717,
+    1883101787
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 177912090,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 7,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883101797,
+    1883101795,
+    1883101794,
+    5645828461,
+    1883101790,
+    1883101786,
+    2676895268
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 177948307,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 6,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883483212,
+    1883483214,
+    1883483225,
+    1883101800
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 178208423,
+  "timestamp": "2021-07-05T10:27:33Z",
+  "version": 13,
+  "changeset": 107433042,
+  "user": "TTmechanicalupdates",
+  "uid": 13606340,
+  "nodes": [
+    1825428967,
+    3954799577,
+    5312688436,
+    2284431973,
+    3954799593,
+    5645815273,
+    5312688222,
+    2284431990,
+    2388464999
+  ],
+  "tags": {
+    "bicycle": "use_sidepath",
+    "goods": "delivery",
+    "hgv": "no",
+    "highway": "tertiary",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Bitwy Białostockiej",
+    "old_name": "I Armii Wojska Polskiego",
+    "oneway": "no",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 180144451,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 24,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2629251364,
+    12589809276,
+    12589809275,
+    4075461271
+  ],
+  "tags": {
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "junction": "roundabout",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "name": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
+    "oneway": "yes",
+    "ref": "8;19",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "left|through;left"
+  }
+},
+{
+  "type": "way",
+  "id": 182399965,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 17,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1882953794,
+    1882953780,
+    1883469518,
+    1883469502
+  ],
+  "tags": {
+    "destination": "Lublin;Bobrowniki PL/BY",
+    "destination:ref": "19;65",
+    "highway": "trunk_link",
+    "lanes": "2",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "merge_to_right|"
+  }
+},
+{
+  "type": "way",
+  "id": 182417543,
+  "timestamp": "2023-04-19T20:10:54Z",
+  "version": 32,
+  "changeset": 135120034,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    998471461,
+    2441704035,
+    2641555449,
+    10825171026,
+    2441704040,
+    260019950,
+    10825170700,
+    10825171032,
+    5340857146
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 194536286,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 23,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883469484,
+    1883483260
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|merge_to_left"
+  }
+},
+{
+  "type": "way",
+  "id": 196288714,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 21,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1852155183,
+    3341716402
+  ],
+  "tags": {
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 197904073,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 19,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2081020083,
+    2081020081
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "bridge": "yes",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 197904074,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 15,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2081020082,
+    2081020084
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "bridge": "yes",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "90",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "PL:rural",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 197904077,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 23,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4075461403,
+    2285127439,
+    2081020086,
+    4075461406,
+    2285127441
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 197904079,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 28,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2081020081,
+    4075461401,
+    4075461400,
+    2440731914,
+    4075461397,
+    2081020079,
+    2440731911,
+    2081020077,
+    4075461394,
+    2440731907,
+    4075461391,
+    4075461390,
+    4075461288,
+    2081020075,
+    2440731900,
+    4075461285,
+    2081020073,
+    4075461283,
+    8205694665
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 221240112,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 20,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883101813,
+    1883101822
+  ],
+  "tags": {
+    "bicycle": "no",
+    "destination": "Warszawa;Ełk KAS",
+    "destination:ref": "19;65",
+    "embankment": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 228104605,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 18,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1882690750,
+    1882887373
+  ],
+  "tags": {
+    "bicycle": "no",
+    "destination": "Lublin;Bobrowniki PL/BY",
+    "destination:ref": "19;65",
+    "embankment": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 236107504,
+  "timestamp": "2023-04-19T20:10:54Z",
+  "version": 20,
+  "changeset": 135120034,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    260019949,
+    10825171008,
+    9224916288,
+    3032448284,
+    9224916296
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|yes|designated",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|yes|designated",
+    "turn:lanes": "left|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 237183783,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 23,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2629251371,
+    1859438399,
+    4075461274,
+    2466608897,
+    4075461275,
+    4075461276,
+    2466608891
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "destination": "Augustów;Kuźnica PL/BY",
+    "destination:ref": "8;19",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 238861874,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 19,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    8205694666,
+    4075461284,
+    2081020076,
+    4075461286,
+    4075461287,
+    2440731902,
+    4075461389,
+    2081020078,
+    3536093794,
+    4075461393,
+    2440731909,
+    4075461395,
+    4075461396,
+    2081020080,
+    4075461398,
+    4075461399,
+    2440731916,
+    4075461402,
+    2081020082
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "90",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "PL:rural",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 238861876,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 8,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2466608891,
+    2466608894
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "oneway": "no",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 240542867,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 17,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    1847044963,
+    5749429986,
+    5749429987,
+    2629251389,
+    5749429992,
+    1832991672
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "yes",
+    "foot": "no",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "1",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "8",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 249431348,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 26,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2256069811,
+    5749429988,
+    1847044954,
+    1847263316,
+    2629251367,
+    1847044952,
+    5801511572,
+    2629251364
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "ref": "8",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "left;through|through;left|right"
+  }
+},
+{
+  "type": "way",
+  "id": 249640396,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 20,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1857964359,
+    3563106400,
+    2826290829
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "sidewalk": "separate",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 249640398,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 17,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2562206502,
+    2478100691
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 249640399,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 19,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1881569071,
+    2694399552,
+    2694399554,
+    131612943,
+    1852176912
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 257359891,
+  "timestamp": "2021-06-15T18:08:00Z",
+  "version": 11,
+  "changeset": 106417577,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    2629178200,
+    1859408865,
+    2882674817,
+    2881403168,
+    2716340990,
+    2629178201
+  ],
+  "tags": {
+    "bicycle": "no",
+    "destination:lanes": "Warszawa|Augustów Bobrowniki Kuźnica",
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "70",
+    "name": "Świętokrzyska",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "left;through;right|right"
+  }
+},
+{
+  "type": "way",
+  "id": 257367419,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 18,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    8483208346,
+    7149122199,
+    11942903632,
+    7149122194,
+    2256069833
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 257367420,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 17,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2256069833,
+    2441902616
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 257367421,
+  "timestamp": "2025-06-29T21:39:10Z",
+  "version": 24,
+  "changeset": 168284017,
+  "user": "bartgron",
+  "uid": 13948004,
+  "nodes": [
+    1847044943,
+    2881403126,
+    2882674807,
+    2882674810,
+    12962300911,
+    4075461271
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "turn:lanes": "left|left;through|through"
+  }
+},
+{
+  "type": "way",
+  "id": 257367422,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 19,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847317049,
+    1847317047
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "destination": "Warszawa;Ełk",
+    "destination:ref": "8;65",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "8;65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 257367423,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 22,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847317043,
+    1832975577
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "8;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 257367424,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 17,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2629251371,
+    2629251373,
+    2881403303,
+    2629251377,
+    3890183128
+  ],
+  "tags": {
+    "bicycle": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "junction": "roundabout",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
+    "oneway": "yes",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "left|through"
+  }
+},
+{
+  "type": "way",
+  "id": 257367425,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 21,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    3890183128,
+    2629251372,
+    2560366209,
+    2881403159,
+    1847044949,
+    2629251364
+  ],
+  "tags": {
+    "bicycle": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "junction": "roundabout",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "50",
+    "name": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
+    "oneway": "yes",
+    "ref": "19",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "left|through"
+  }
+},
+{
+  "type": "way",
+  "id": 257367428,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 22,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4075461271,
+    1852129072,
+    2629251365,
+    2629251366,
+    4075461273,
+    2629251371
+  ],
+  "tags": {
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "junction": "roundabout",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "50",
+    "name": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
+    "oneway": "yes",
+    "ref": "8",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "left|left;through|through"
+  }
+},
+{
+  "type": "way",
+  "id": 257367443,
+  "timestamp": "2022-03-18T06:46:07Z",
+  "version": 3,
+  "changeset": 118619150,
+  "user": "Jac__ob",
+  "uid": 13495509,
+  "nodes": [
+    1847044943,
+    2629251356,
+    2629251358,
+    2629251359,
+    2629251357,
+    2629251355,
+    2504206199
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 257367449,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 22,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2256069814,
+    2256069811
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bridge": "viaduct",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "ref": "8",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "left;through|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 257367451,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 18,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    1847044962,
+    1847044963
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "yes",
+    "bridge": "viaduct",
+    "cycleway:right": "no",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "1",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "8",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 257367454,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 16,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    1847044957,
+    1847044960,
+    1847044962
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "yes",
+    "destination": "Warszawa;Ełk",
+    "destination:ref": "8;65",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "8",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "merge_to_right|"
+  }
+},
+{
+  "type": "way",
+  "id": 259439846,
+  "timestamp": "2021-06-15T18:08:00Z",
+  "version": 3,
+  "changeset": 106417577,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    2648515276,
+    2648515279,
+    2648515284,
+    2648515287,
+    2648515285,
+    2648515282,
+    2648515281,
+    2648515278,
+    2648515274,
+    2648515272,
+    2648515270,
+    2648515267,
+    2648515264,
+    2648515260
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "secondary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Jana Nowaka-Jeziorańskiego",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 259439847,
+  "timestamp": "2022-11-29T18:49:28Z",
+  "version": 7,
+  "changeset": 129530707,
+  "user": "farfocel",
+  "uid": 17829529,
+  "nodes": [
+    2648515258,
+    2648515257,
+    2648515253,
+    2648515252,
+    2629178201
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "secondary",
+    "junction": "roundabout",
+    "lanes": "1",
+    "name": "Rondo Jana Nowaka-Jeziorańskiego",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 261467968,
+  "timestamp": "2022-01-31T10:26:17Z",
+  "version": 19,
+  "changeset": 116816092,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    1166108052,
+    1166108012,
+    8483208347
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 261467988,
+  "timestamp": "2022-11-29T18:49:25Z",
+  "version": 5,
+  "changeset": 129530707,
+  "user": "farfocel",
+  "uid": 17829529,
+  "nodes": [
+    2629178201,
+    2670828890,
+    2670828891,
+    2648515261
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "secondary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Jana Nowaka-Jeziorańskiego",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "none|right"
+  }
+},
+{
+  "type": "way",
+  "id": 261467997,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 19,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    1847317056,
+    2882674843,
+    2881482207,
+    2881482224,
+    2648515276
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "yes",
+    "foot": "no",
+    "highway": "trunk_link",
+    "horse": "yes",
+    "lanes": "2",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "left|left;through;right"
+  }
+},
+{
+  "type": "way",
+  "id": 262140922,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 23,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    1832991672,
+    1847317049
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "yes",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "int_ref": "E 67",
+    "lanes": "3",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "8;65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 263729763,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 21,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2478100691,
+    11942903631,
+    1857964342
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 265888514,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 16,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2081020087,
+    4075461407,
+    2285127440,
+    4075461405,
+    2081020085,
+    4075461404,
+    2256069834
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 265888515,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 20,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2285127441,
+    4075461408,
+    4075461410,
+    2081020088,
+    4075461412,
+    2256069809
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt",
+    "turn:lanes": "left||"
+  }
+},
+{
+  "type": "way",
+  "id": 265888516,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 19,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    1154983605,
+    4075461422,
+    4075461420,
+    4075461418,
+    4075461417,
+    2081020093,
+    2440731922,
+    4341013137,
+    3890755370,
+    7203633359
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 266084684,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 20,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1946476472,
+    1852176914,
+    4103450292
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 266084685,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 17,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883483227,
+    1883483242,
+    1883101813
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 266084693,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 22,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    10015785253,
+    3136871040,
+    12620261934,
+    2840742308
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 266084694,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 15,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1852155191,
+    1882690750
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 266084696,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 23,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2440731892,
+    8081364469,
+    2738101544,
+    4075461281,
+    4075461280,
+    4075461279,
+    4075461278,
+    2466608894,
+    4075461277,
+    1847044961
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt",
+    "turn:lanes": "left;through|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 268470356,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 3,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2256069832,
+    2256069809
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 268473387,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 10,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847044945,
+    3536083394,
+    1847263308
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "merge_to_right|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 268473388,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 12,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847263308,
+    1847263303,
+    1852128982,
+    5749429983,
+    2694399565,
+    1847044938
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "merge_to_right|"
+  }
+},
+{
+  "type": "way",
+  "id": 278213208,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 10,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2826290829,
+    1883101785
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "sidewalk": "separate",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 278213211,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 11,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883101785,
+    1990070440,
+    1883101798,
+    1883483212
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 284022563,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 23,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2840742308,
+    10076968415
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "destination": "Warszawa;Ełk",
+    "destination:ref": "65",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 284396204,
+  "timestamp": "2021-06-15T18:08:00Z",
+  "version": 3,
+  "changeset": 106417577,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    2648515261,
+    2648515266,
+    2648515268,
+    2648515269,
+    2648515271,
+    2648515273,
+    2648515275,
+    2648515276
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "secondary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Jana Nowaka-Jeziorańskiego",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 284541843,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 17,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2629251364,
+    1859438371,
+    2881403139,
+    2881403134,
+    2629251361,
+    5801511571,
+    2881403123,
+    2504206199
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "destination": "Centrum",
+    "destination:ref": "675",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "turn:lanes": "|merge_to_left"
+  }
+},
+{
+  "type": "way",
+  "id": 302573219,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 16,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    1847044961,
+    2882674839,
+    12962300908,
+    3890183128
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 436227697,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 3,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4341013137,
+    4341013138
+  ],
+  "tags": {
+    "access": "no",
+    "emergency": "yes",
+    "highway": "trunk_link",
+    "vehicle": "forestry"
+  }
+},
+{
+  "type": "way",
+  "id": 439076941,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 8,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1852155193,
+    1882690793,
+    1852155191
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 490398847,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 14,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4825844767,
+    4825844765
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 490398850,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 15,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4825844765,
+    10076968411,
+    10076968410,
+    1847263318
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 490398851,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 16,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4825844766,
+    4825844768
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "bridge": "viaduct",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "3",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 490398852,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 18,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4825844768,
+    10077445222,
+    2841552411,
+    2504206214,
+    5749429991,
+    1832991672
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Maczka",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 536419675,
+  "timestamp": "2026-02-14T11:43:03Z",
+  "version": 8,
+  "changeset": 178540685,
+  "user": "Yunkers",
+  "uid": 3376721,
+  "nodes": [
+    3341716400,
+    3341716402
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "lanes": "2",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 536419678,
+  "timestamp": "2025-04-11T16:50:40Z",
+  "version": 5,
+  "changeset": 164825339,
+  "user": "Karolina Wójcik",
+  "uid": 22735405,
+  "nodes": [
+    1882953898,
+    12620261944,
+    1882953899
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Pamięci Bieżeństwa 1915 roku",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 536419680,
+  "timestamp": "2025-02-26T10:01:43Z",
+  "version": 4,
+  "changeset": 162964556,
+  "user": "Marek-M",
+  "uid": 598860,
+  "nodes": [
+    1882953821,
+    1882953810,
+    1882953792
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Pamięci Bieżeństwa 1915 roku",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 536419697,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 13,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    2641555454,
+    3032448286,
+    9224916301,
+    9224961524,
+    2441701402,
+    8763628083
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "destination": "Warszawa;Augustów",
+    "destination:ref": "675",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 536419699,
+  "timestamp": "2025-04-11T16:50:00Z",
+  "version": 4,
+  "changeset": 164825294,
+  "user": "Karolina Wójcik",
+  "uid": 22735405,
+  "nodes": [
+    1882953899,
+    1882953894,
+    1882953891,
+    1882953888,
+    1882953884,
+    1882953861,
+    1882953855,
+    1882953844,
+    1882953825
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Pamięci Bieżeństwa 1915 roku",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 552161975,
+  "timestamp": "2022-11-29T18:49:32Z",
+  "version": 3,
+  "changeset": 129530707,
+  "user": "farfocel",
+  "uid": 17829529,
+  "nodes": [
+    2648515260,
+    2648515258
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "secondary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Jana Nowaka-Jeziorańskiego",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 552161976,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 6,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    3341716402,
+    2367445386
+  ],
+  "tags": {
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|merge_to_left"
+  }
+},
+{
+  "type": "way",
+  "id": 552161978,
+  "timestamp": "2025-02-26T10:01:43Z",
+  "version": 5,
+  "changeset": 162964556,
+  "user": "Marek-M",
+  "uid": 598860,
+  "nodes": [
+    1882953825,
+    12620261941,
+    1882953821
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Pamięci Bieżeństwa 1915 roku",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 552161979,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 4,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1852155195,
+    1852155193
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 552161980,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 5,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    277320063,
+    4075461269,
+    1852155195
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 553271179,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 13,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    5340857146,
+    2441723749,
+    2284418794
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 553285004,
+  "timestamp": "2025-04-11T16:53:51Z",
+  "version": 4,
+  "changeset": 164825535,
+  "user": "IngaŚwiecaaa",
+  "uid": 21278507,
+  "nodes": [
+    1882953865,
+    12620261943,
+    1882953869,
+    1882953890,
+    1882953898
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Pamięci Bieżeństwa 1915 roku",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 553285005,
+  "timestamp": "2025-02-26T10:01:43Z",
+  "version": 5,
+  "changeset": 162964556,
+  "user": "Marek-M",
+  "uid": 598860,
+  "nodes": [
+    1882953792,
+    12620261942,
+    1882953794
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "junction": "roundabout",
+    "lanes": "2",
+    "name": "Rondo Pamięci Bieżeństwa 1915 roku",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "through|slight_right"
+  }
+},
+{
+  "type": "way",
+  "id": 560802655,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 7,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1847044938,
+    12620261936,
+    12620261938,
+    12620261937,
+    1946476472
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|merge_to_left"
+  }
+},
+{
+  "type": "way",
+  "id": 560802656,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 5,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4103450292,
+    12620261939,
+    1881569107,
+    277320063
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|merge_to_left"
+  }
+},
+{
+  "type": "way",
+  "id": 560802657,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 4,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1882690822,
+    1881569071
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 560802658,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 6,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2367445386,
+    1882690822
+  ],
+  "tags": {
+    "bicycle": "no",
+    "destination:lanes": "||stacja paliw BP",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 560802660,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 5,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883469502,
+    1883469485,
+    1883469484
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "lanes": "1",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 560802661,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 4,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883483212,
+    1883483227
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 560802662,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 4,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883483260,
+    1883483213,
+    1883101797
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt",
+    "turn:lanes": "through|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 560802664,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 5,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883101797,
+    1883101787
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 606396456,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 4,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883101787,
+    2562206502
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 606396457,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 6,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    1883101813,
+    1883469491,
+    5749429980,
+    1883101818,
+    5749429979
+  ],
+  "tags": {
+    "destination": "Giełda Rolna;os.Białostoczek",
+    "highway": "trunk_link",
+    "lanes": "1",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 606396458,
+  "timestamp": "2026-02-14T11:43:03Z",
+  "version": 10,
+  "changeset": 178540685,
+  "user": "Yunkers",
+  "uid": 3376721,
+  "nodes": [
+    4391371827,
+    3341716400
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "lanes": "1",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 606396459,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 7,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    5749429981,
+    1882954009,
+    3563106401,
+    1882953940,
+    3021817550,
+    1882953825
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "lanes": "2",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "left|through;right"
+  }
+},
+{
+  "type": "way",
+  "id": 606396460,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 11,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    5749429982,
+    1847044938
+  ],
+  "tags": {
+    "access:lanes": "no|yes|yes",
+    "agricultural": "yes",
+    "bicycle": "no",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "3",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 606396463,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 12,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2840742308,
+    12620261935,
+    2840742310
+  ],
+  "tags": {
+    "destination": "Augustów;Kuźnica PL/BY",
+    "destination:ref": "19",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "lanes": "1",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 606396469,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 13,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    1847317049,
+    5749429994,
+    5749429993,
+    1847317056
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "yes",
+    "destination": "Centrum;os. Dziesięciny",
+    "foot": "no",
+    "highway": "trunk_link",
+    "horse": "yes",
+    "lanes": "1",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 606396470,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 11,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    5749429995,
+    3182622558,
+    1847317034,
+    5749429985,
+    5749429984,
+    1847317043
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "trunk_link",
+    "horse": "yes",
+    "lanes": "1",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 606396472,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 13,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    5749429998,
+    2882674827,
+    2882674828,
+    2648515263,
+    2648515260
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "trunk_link",
+    "horse": "yes",
+    "lanes": "2",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "left;through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 613026608,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 12,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    3890183128,
+    2629251379,
+    1847044957
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "yes",
+    "destination": "Warszawa;Ełk",
+    "destination:ref": "8;65",
+    "highway": "trunk_link",
+    "horse": "yes",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 621426418,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 12,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    3563106396,
+    11932685747,
+    5749429995
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "trunk_link",
+    "horse": "yes",
+    "lanes": "2",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "turn:lanes": "|merge_to_left"
+  }
+},
+{
+  "type": "way",
+  "id": 658707016,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 11,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    1166108034,
+    8473985990,
+    260019947
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 668338885,
+  "timestamp": "2021-06-15T18:08:00Z",
+  "version": 4,
+  "changeset": 106417577,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    2648515258,
+    2648515249,
+    1859408878,
+    2881481088,
+    3642112080
+  ],
+  "tags": {
+    "bicycle": "no",
+    "destination": "os. Dziesięciny",
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "70",
+    "name": "Świętokrzyska",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 672172570,
+  "timestamp": "2025-03-01T13:59:53Z",
+  "version": 5,
+  "changeset": 163089301,
+  "user": "Marek-M",
+  "uid": 598860,
+  "nodes": [
+    3890183125,
+    3253382856,
+    4414806268,
+    1892330910,
+    3642112052,
+    3253383129,
+    3253383137,
+    3642112079,
+    731017508,
+    2629178200
+  ],
+  "tags": {
+    "bicycle": "no",
+    "destination": "Warszawa Ełk;Augustów Lublin",
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "70",
+    "name": "Świętokrzyska",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 676746630,
+  "timestamp": "2022-01-31T10:26:17Z",
+  "version": 14,
+  "changeset": 116816092,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    8473985979,
+    8473985978,
+    8473985977,
+    6167972340,
+    2441902614,
+    2441902615,
+    6337303570,
+    7592455343
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 685674626,
+  "timestamp": "2024-01-08T09:55:33Z",
+  "version": 11,
+  "changeset": 146021905,
+  "user": "NorthCrab_upload",
+  "uid": 18387043,
+  "nodes": [
+    8473985985,
+    8483208342,
+    11499637822,
+    8483208343,
+    7069321042,
+    2229796244,
+    6942794457,
+    1166107986
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "turn:lanes": "left|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 741639490,
+  "timestamp": "2023-04-19T20:10:54Z",
+  "version": 13,
+  "changeset": 135120034,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    1166108016,
+    6942794470
+  ],
+  "tags": {
+    "access:lanes": "yes|yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|yes|designated",
+    "turn:lanes": "reverse||"
+  }
+},
+{
+  "type": "way",
+  "id": 744388589,
+  "timestamp": "2024-05-29T19:33:39Z",
+  "version": 13,
+  "changeset": 152004360,
+  "user": "demaniac",
+  "uid": 5118888,
+  "nodes": [
+    7069321044,
+    8498370708
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "destination": "Centrum",
+    "destination:ref": "675",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 744388590,
+  "timestamp": "2022-01-31T10:26:17Z",
+  "version": 7,
+  "changeset": 116816092,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    1166107986,
+    6426064896
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 744388591,
+  "timestamp": "2022-01-31T10:26:17Z",
+  "version": 8,
+  "changeset": 116816092,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    6942794460,
+    6337303563
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 744388592,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 9,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    6942794470,
+    6942794452,
+    7069321043,
+    6942794460
+  ],
+  "tags": {
+    "access:lanes": "yes|yes|no|yes",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|yes|designated|yes",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "4",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|yes|designated|yes",
+    "turn:lanes": "left|through||right"
+  }
+},
+{
+  "type": "way",
+  "id": 756897764,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 8,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    8483208345,
+    8473985985
+  ],
+  "tags": {
+    "access:lanes": "yes|yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "bus:lanes": "yes|yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|yes|designated",
+    "turn:lanes": "left|through|"
+  }
+},
+{
+  "type": "way",
+  "id": 771649419,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 7,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4075461415,
+    2440731919,
+    4341013138,
+    2081020094,
+    2440731924,
+    4075461416,
+    2285127443,
+    4075461419,
+    4075461421,
+    4075461423,
+    2081020095
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 771649420,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 9,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    7203633359,
+    11877183092,
+    2317765756,
+    4075461413,
+    3536093817,
+    2256069832,
+    4075461411,
+    11942903635,
+    2285127442,
+    4075461409,
+    2081020087
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 812852616,
+  "timestamp": "2022-01-31T10:26:17Z",
+  "version": 5,
+  "changeset": 116816092,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    7592455343,
+    6966926499,
+    1166108052
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 812852617,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 9,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2441902616,
+    8473985992,
+    1166108006,
+    1166108034
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "bus:lanes": "yes|designated",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated",
+    "turn:lanes": "through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 882366262,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 7,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    8205694665,
+    2440731898,
+    2460796468,
+    2440731892
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 882366263,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 6,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2256069809,
+    3536093816,
+    2081020090,
+    11942903637,
+    2595397180,
+    4075461415
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 882366264,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 7,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2256069834,
+    2081020083
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 882366265,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 6,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2081020084,
+    4075461403
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "90",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "PL:rural",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 882366266,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 5,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2256069816,
+    2440731895,
+    4075461282,
+    2081020074,
+    8205694666
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "check_date": "2024-05-03",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 882366267,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 5,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    2466608891,
+    2256069816
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "check_date": "2024-05-03",
+    "destination": "Augustów;Kuźnica PL/BY",
+    "destination:ref": "8;19",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "int_ref": "E 67",
+    "lanes": "2",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19",
+    "short_name": "al. 1000-lecia P.P.",
+    "source": "survey",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "source:maxspeed": "sign",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 913217363,
+  "timestamp": "2024-05-29T19:33:39Z",
+  "version": 4,
+  "changeset": 152004360,
+  "user": "demaniac",
+  "uid": 5118888,
+  "nodes": [
+    6337303563,
+    6942794456,
+    11942903634,
+    8473985979
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 913217364,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 4,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    5940539310,
+    6167972358,
+    1166107984
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "bus:lanes": "yes|designated",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated",
+    "turn:lanes": "|right"
+  }
+},
+{
+  "type": "way",
+  "id": 913217365,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 4,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    1166107984,
+    8483208345
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 913217366,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 4,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    260019947,
+    5940539310
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "bus:lanes": "yes|designated",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated",
+    "turn:lanes": "|right"
+  }
+},
+{
+  "type": "way",
+  "id": 913217367,
+  "timestamp": "2026-09-11T20:40:52Z",
+  "version": 4,
+  "changeset": 188890770,
+  "user": "Karol Mocniak",
+  "uid": 10028276,
+  "nodes": [
+    2504206199,
+    3889462130,
+    8483208346
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "yes",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "turn:lanes": "|merge_to_left"
+  }
+},
+{
+  "type": "way",
+  "id": 913217368,
+  "timestamp": "2022-01-31T10:26:17Z",
+  "version": 3,
+  "changeset": 116816092,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    8483208347,
+    1166108084,
+    1847044943
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "no",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "turn:lanes": "left|left;through|through;right"
+  }
+},
+{
+  "type": "way",
+  "id": 913217370,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 9,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    8483208355,
+    8483208354,
+    8483208353,
+    8483208352,
+    8483208351,
+    8483208350,
+    9224916312,
+    8483208349
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 913217371,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 12,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    8892137340,
+    8483208362,
+    8483208361,
+    9224961527,
+    8483208359
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 946729183,
+  "timestamp": "2023-04-19T20:10:54Z",
+  "version": 11,
+  "changeset": 135120034,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    8763628083,
+    1166108053,
+    10825171019,
+    1166108016
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 946729184,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 10,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    9224916310,
+    9224916290,
+    8763628068,
+    2677012128
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|yes|designated",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|yes|designated",
+    "turn:lanes": "left|through|right"
+  }
+},
+{
+  "type": "way",
+  "id": 961263870,
+  "timestamp": "2024-05-29T19:33:39Z",
+  "version": 8,
+  "changeset": 152004360,
+  "user": "demaniac",
+  "uid": 5118888,
+  "nodes": [
+    8498370708,
+    8892137340
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 961263871,
+  "timestamp": "2022-03-22T15:49:09Z",
+  "version": 4,
+  "changeset": 118784357,
+  "user": "Jac__ob",
+  "uid": 13495509,
+  "nodes": [
+    6942794470,
+    9264956454,
+    9264956451,
+    9264956452,
+    9264956453,
+    8892137340
+  ],
+  "tags": {
+    "cycleway:right": "no",
+    "highway": "secondary_link",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 999223584,
+  "timestamp": "2022-02-02T09:44:03Z",
+  "version": 4,
+  "changeset": 116904412,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    6426064896,
+    7069321044
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "destination": "Centrum",
+    "destination:ref": "675",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "1",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 999223599,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 7,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    9224916304,
+    2229796375
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|yes|designated|yes",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "4",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|yes|designated|yes",
+    "turn:lanes": "left|through||right"
+  }
+},
+{
+  "type": "way",
+  "id": 999223600,
+  "timestamp": "2023-04-19T20:10:54Z",
+  "version": 8,
+  "changeset": 135120034,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    2229796375,
+    260019949
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|yes|designated",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|yes|designated",
+    "turn:lanes": "reverse||"
+  }
+},
+{
+  "type": "way",
+  "id": 999223601,
+  "timestamp": "2022-01-31T10:12:12Z",
+  "version": 2,
+  "changeset": 116815576,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    260019949,
+    9224916309,
+    9224916308,
+    9224916307,
+    9224916306,
+    9224916305
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 999223602,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 6,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    2284418794,
+    9224916304
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated|yes",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated|yes",
+    "turn:lanes": "||right"
+  }
+},
+{
+  "type": "way",
+  "id": 999223603,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 8,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    9224961526,
+    9224916310
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 999223604,
+  "timestamp": "2023-04-19T20:10:54Z",
+  "version": 7,
+  "changeset": 135120034,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    9224916311,
+    9224916305,
+    8483208356,
+    8483208355
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated|yes",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated|yes",
+    "turn:lanes": "||right"
+  }
+},
+{
+  "type": "way",
+  "id": 999223605,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 6,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    9224916297,
+    2641555452,
+    9224916260,
+    9224916311
+  ],
+  "tags": {
+    "access:lanes": "yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|designated",
+    "busway": "lane",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|designated"
+  }
+},
+{
+  "type": "way",
+  "id": 999223607,
+  "timestamp": "2022-02-05T20:00:27Z",
+  "version": 8,
+  "changeset": 117059208,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    8483208359,
+    9224961526
+  ],
+  "tags": {
+    "access:lanes": "yes|yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|yes|designated",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "taxi:lanes": "yes|yes|designated",
+    "turn:lanes": "reverse||"
+  }
+},
+{
+  "type": "way",
+  "id": 999223608,
+  "timestamp": "2022-10-17T10:40:03Z",
+  "version": 4,
+  "changeset": 127663376,
+  "user": "qchris137",
+  "uid": 13571830,
+  "nodes": [
+    9224961526,
+    9224961520,
+    9224961523,
+    9224961522,
+    9224961525,
+    9224961521,
+    9224961524
+  ],
+  "tags": {
+    "cycleway:right": "no",
+    "highway": "secondary_link",
+    "lanes": "1",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 1015257297,
+  "timestamp": "2022-02-02T09:44:03Z",
+  "version": 4,
+  "changeset": 116904412,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    9224916296,
+    2641555454
+  ],
+  "tags": {
+    "access:lanes": "yes|yes|no",
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "bus:lanes": "yes|yes|designated",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "3",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt",
+    "turn:lanes": "left|through|"
+  }
+},
+{
+  "type": "way",
+  "id": 1015257298,
+  "timestamp": "2022-01-31T10:26:17Z",
+  "version": 3,
+  "changeset": 116816092,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    2677012128,
+    9224916297
+  ],
+  "tags": {
+    "alt_name": "aleja 1000-lecia Państwa Polskiego",
+    "bicycle": "use_sidepath",
+    "highway": "secondary",
+    "highway:category:pl": "2",
+    "lanes": "2",
+    "lit": "yes",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "675",
+    "short_name": "al. 1000-lecia P.P.",
+    "source:maxspeed": "PL:urban",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 1093579589,
+  "timestamp": "2025-11-07T19:32:50Z",
+  "version": 4,
+  "changeset": 174348985,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    2359253621,
+    10015785253
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 1093579590,
+  "timestamp": "2025-11-07T19:32:50Z",
+  "version": 4,
+  "changeset": 174348985,
+  "user": "Michoo",
+  "uid": 594456,
+  "nodes": [
+    1852176912,
+    2359253621
+  ],
+  "tags": {
+    "bicycle": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "lanes": "3",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 1101181473,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 9,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    10076968415,
+    1847263305
+  ],
+  "tags": {
+    "agricultural": "yes",
+    "bicycle": "no",
+    "destination": "Warszawa;Ełk",
+    "destination:ref": "65",
+    "embankment": "yes",
+    "expressway": "yes",
+    "foot": "no",
+    "highway": "trunk",
+    "highway:category:pl": "1",
+    "horse": "yes",
+    "lanes": "2",
+    "layer": "1",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "65",
+    "sidewalk": "no",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 1360055407,
+  "timestamp": "2025-10-30T10:47:01Z",
+  "version": 2,
+  "changeset": 173969286,
+  "user": "theDM",
+  "uid": 10923513,
+  "nodes": [
+    4075461271,
+    1852129061
+  ],
+  "tags": {
+    "destination": "Lublin;Bobrowniki PL/BY",
+    "destination:ref": "19;65",
+    "highway": "trunk_link",
+    "highway:category:pl": "1",
+    "lanes": "1",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxaxleload": "Dz.U. 2011 nr 222 poz. 1321 Art. 2 pkt. 11",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "node",
+  "id": 2229796328,
+  "lat": 53.1457769,
+  "lon": 23.1599147
+},
+{
+  "type": "node",
+  "id": 2229796548,
+  "lat": 53.1458378,
+  "lon": 23.1602160
+},
+{
+  "type": "node",
+  "id": 6311163219,
+  "lat": 53.1457446,
+  "lon": 23.1596612
+},
+{
+  "type": "node",
+  "id": 9224961527,
+  "lat": 53.1526388,
+  "lon": 23.1537540
+},
+{
+  "type": "node",
+  "id": 260019949,
+  "lat": 53.1497568,
+  "lon": 23.1554590
+},
+{
+  "type": "node",
+  "id": 260019950,
+  "lat": 53.1479256,
+  "lon": 23.1567224
+},
+{
+  "type": "node",
+  "id": 998471461,
+  "lat": 53.1467386,
+  "lon": 23.1571742
+},
+{
+  "type": "node",
+  "id": 2229796375,
+  "lat": 53.1495829,
+  "lon": 23.1555886
+},
+{
+  "type": "node",
+  "id": 2284418794,
+  "lat": 53.1492140,
+  "lon": 23.1558572
+},
+{
+  "type": "node",
+  "id": 2441701402,
+  "lat": 53.1519551,
+  "lon": 23.1542574
+},
+{
+  "type": "node",
+  "id": 2441704035,
+  "lat": 53.1469429,
+  "lon": 23.1571148
+},
+{
+  "type": "node",
+  "id": 2441704040,
+  "lat": 53.1477028,
+  "lon": 23.1568349
+},
+{
+  "type": "node",
+  "id": 2441723749,
+  "lat": 53.1490890,
+  "lon": 23.1559536
+},
+{
+  "type": "node",
+  "id": 2641555449,
+  "lat": 53.1472130,
+  "lon": 23.1570366
+},
+{
+  "type": "node",
+  "id": 2641555452,
+  "lat": 53.1505869,
+  "lon": 23.1547049
+},
+{
+  "type": "node",
+  "id": 2641555454,
+  "lat": 53.1508134,
+  "lon": 23.1547740
+},
+{
+  "type": "node",
+  "id": 2677012128,
+  "lat": 53.1507716,
+  "lon": 23.1546119
+},
+{
+  "type": "node",
+  "id": 3032448284,
+  "lat": 53.1506203,
+  "lon": 23.1548804
+},
+{
+  "type": "node",
+  "id": 3032448286,
+  "lat": 53.1509421,
+  "lon": 23.1547134
+},
+{
+  "type": "node",
+  "id": 5340857146,
+  "lat": 53.1487009,
+  "lon": 23.1562318
+},
+{
+  "type": "node",
+  "id": 8483208349,
+  "lat": 53.1465493,
+  "lon": 23.1570163
+},
+{
+  "type": "node",
+  "id": 8483208350,
+  "lat": 53.1470944,
+  "lon": 23.1568796
+},
+{
+  "type": "node",
+  "id": 8483208351,
+  "lat": 53.1476804,
+  "lon": 23.1566436
+},
+{
+  "type": "node",
+  "id": 8483208352,
+  "lat": 53.1478784,
+  "lon": 23.1565464
+},
+{
+  "type": "node",
+  "id": 8483208353,
+  "lat": 53.1481441,
+  "lon": 23.1563949
+},
+{
+  "type": "node",
+  "id": 8483208354,
+  "lat": 53.1485971,
+  "lon": 23.1560964
+},
+{
+  "type": "node",
+  "id": 8483208355,
+  "lat": 53.1492738,
+  "lon": 23.1556048
+},
+{
+  "type": "node",
+  "id": 8483208356,
+  "lat": 53.1494916,
+  "lon": 23.1554442
+},
+{
+  "type": "node",
+  "id": 8483208359,
+  "lat": 53.1521944,
+  "lon": 23.1539490
+},
+{
+  "type": "node",
+  "id": 8763628068,
+  "lat": 53.1509119,
+  "lon": 23.1545455
+},
+{
+  "type": "node",
+  "id": 8763628083,
+  "lat": 53.1523139,
+  "lon": 23.1540885
+},
+{
+  "type": "node",
+  "id": 9224916260,
+  "lat": 53.1503275,
+  "lon": 23.1548581
+},
+{
+  "type": "node",
+  "id": 9224916288,
+  "lat": 53.1505559,
+  "lon": 23.1549168
+},
+{
+  "type": "node",
+  "id": 9224916290,
+  "lat": 53.1509961,
+  "lon": 23.1545077
+},
+{
+  "type": "node",
+  "id": 9224916296,
+  "lat": 53.1507357,
+  "lon": 23.1548161
+},
+{
+  "type": "node",
+  "id": 9224916297,
+  "lat": 53.1506991,
+  "lon": 23.1546485
+},
+{
+  "type": "node",
+  "id": 9224916301,
+  "lat": 53.1511447,
+  "lon": 23.1546236
+},
+{
+  "type": "node",
+  "id": 9224916304,
+  "lat": 53.1493355,
+  "lon": 23.1557706
+},
+{
+  "type": "node",
+  "id": 9224916305,
+  "lat": 53.1497300,
+  "lon": 23.1552658
+},
+{
+  "type": "node",
+  "id": 9224916306,
+  "lat": 53.1497566,
+  "lon": 23.1552729
+},
+{
+  "type": "node",
+  "id": 9224916307,
+  "lat": 53.1497795,
+  "lon": 23.1553080
+},
+{
+  "type": "node",
+  "id": 9224916308,
+  "lat": 53.1497886,
+  "lon": 23.1553462
+},
+{
+  "type": "node",
+  "id": 9224916309,
+  "lat": 53.1497859,
+  "lon": 23.1553951
+},
+{
+  "type": "node",
+  "id": 9224916310,
+  "lat": 53.1515134,
+  "lon": 23.1542752
+},
+{
+  "type": "node",
+  "id": 9224916311,
+  "lat": 53.1500691,
+  "lon": 23.1550240
+},
+{
+  "type": "node",
+  "id": 9224916312,
+  "lat": 53.1468943,
+  "lon": 23.1569418
+},
+{
+  "type": "node",
+  "id": 9224961520,
+  "lat": 53.1517412,
+  "lon": 23.1541912
+},
+{
+  "type": "node",
+  "id": 9224961521,
+  "lat": 53.1517443,
+  "lon": 23.1543294
+},
+{
+  "type": "node",
+  "id": 9224961522,
+  "lat": 53.1517242,
+  "lon": 23.1542722
+},
+{
+  "type": "node",
+  "id": 9224961523,
+  "lat": 53.1517279,
+  "lon": 23.1542324
+},
+{
+  "type": "node",
+  "id": 9224961524,
+  "lat": 53.1517598,
+  "lon": 23.1543464
+},
+{
+  "type": "node",
+  "id": 9224961525,
+  "lat": 53.1517301,
+  "lon": 23.1543051
+},
+{
+  "type": "node",
+  "id": 9224961526,
+  "lat": 53.1517592,
+  "lon": 23.1541479
+},
+{
+  "type": "node",
+  "id": 10825170700,
+  "lat": 53.1482348,
+  "lon": 23.1565464
+},
+{
+  "type": "node",
+  "id": 10825171008,
+  "lat": 53.1501485,
+  "lon": 23.1551809
+},
+{
+  "type": "node",
+  "id": 10825171026,
+  "lat": 53.1474665,
+  "lon": 23.1569433
+},
+{
+  "type": "node",
+  "id": 10825171032,
+  "lat": 53.1484657,
+  "lon": 23.1563943
+},
+{
+  "type": "node",
+  "id": 563878589,
+  "lat": 53.1463716,
+  "lon": 23.1617325
+},
+{
+  "type": "node",
+  "id": 563878591,
+  "lat": 53.1462350,
+  "lon": 23.1614738
+},
+{
+  "type": "node",
+  "id": 563878593,
+  "lat": 53.1458991,
+  "lon": 23.1604987
+},
+{
+  "type": "node",
+  "id": 1882887357,
+  "lat": 53.1459946,
+  "lon": 23.1608361
+},
+{
+  "type": "node",
+  "id": 2076709475,
+  "lat": 53.1460743,
+  "lon": 23.1610695
+},
+{
+  "type": "node",
+  "id": 1825428967,
+  "lat": 53.1485814,
+  "lon": 23.1642062
+},
+{
+  "type": "node",
+  "id": 1882690730,
+  "lat": 53.1528642,
+  "lon": 23.1643834
+},
+{
+  "type": "node",
+  "id": 1882887358,
+  "lat": 53.1466456,
+  "lon": 23.1621765
+},
+{
+  "type": "node",
+  "id": 1882887359,
+  "lat": 53.1468303,
+  "lon": 23.1624019
+},
+{
+  "type": "node",
+  "id": 1882887373,
+  "lat": 53.1522415,
+  "lon": 23.1662409
+},
+{
+  "type": "node",
+  "id": 1882953745,
+  "lat": 53.1510944,
+  "lon": 23.1667279
+},
+{
+  "type": "node",
+  "id": 1882953753,
+  "lat": 53.1512070,
+  "lon": 23.1668348
+},
+{
+  "type": "node",
+  "id": 1882953940,
+  "lat": 53.1522182,
+  "lon": 23.1659570
+},
+{
+  "type": "node",
+  "id": 1882954009,
+  "lat": 53.1524395,
+  "lon": 23.1653758
+},
+{
+  "type": "node",
+  "id": 1882954030,
+  "lat": 53.1526845,
+  "lon": 23.1647784
+},
+{
+  "type": "node",
+  "id": 1882954035,
+  "lat": 53.1527835,
+  "lon": 23.1655277
+},
+{
+  "type": "node",
+  "id": 1883062831,
+  "lat": 53.1523364,
+  "lon": 23.1663350
+},
+{
+  "type": "node",
+  "id": 1883463878,
+  "lat": 53.1513362,
+  "lon": 23.1669612
+},
+{
+  "type": "node",
+  "id": 1990246331,
+  "lat": 53.1527346,
+  "lon": 23.1646609
+},
+{
+  "type": "node",
+  "id": 2229796521,
+  "lat": 53.1477559,
+  "lon": 23.1633643
+},
+{
+  "type": "node",
+  "id": 2284431973,
+  "lat": 53.1492190,
+  "lon": 23.1648582
+},
+{
+  "type": "node",
+  "id": 2284431990,
+  "lat": 53.1503412,
+  "lon": 23.1660232
+},
+{
+  "type": "node",
+  "id": 2388464999,
+  "lat": 53.1509706,
+  "lon": 23.1666519
+},
+{
+  "type": "node",
+  "id": 2699057756,
+  "lat": 53.1465711,
+  "lon": 23.1620640
+},
+{
+  "type": "node",
+  "id": 3563106401,
+  "lat": 53.1523004,
+  "lon": 23.1657412
+},
+{
+  "type": "node",
+  "id": 3563106528,
+  "lat": 53.1510639,
+  "lon": 23.1668314
+},
+{
+  "type": "node",
+  "id": 3954799527,
+  "lat": 53.1473351,
+  "lon": 23.1629288
+},
+{
+  "type": "node",
+  "id": 3954799531,
+  "lat": 53.1476626,
+  "lon": 23.1632708
+},
+{
+  "type": "node",
+  "id": 3954799549,
+  "lat": 53.1481624,
+  "lon": 23.1637789
+},
+{
+  "type": "node",
+  "id": 3954799559,
+  "lat": 53.1484527,
+  "lon": 23.1640726
+},
+{
+  "type": "node",
+  "id": 3954799577,
+  "lat": 53.1489346,
+  "lon": 23.1645623
+},
+{
+  "type": "node",
+  "id": 3954799593,
+  "lat": 53.1495011,
+  "lon": 23.1651456
+},
+{
+  "type": "node",
+  "id": 5312688222,
+  "lat": 53.1497753,
+  "lon": 23.1654286
+},
+{
+  "type": "node",
+  "id": 5312688436,
+  "lat": 53.1491544,
+  "lon": 23.1647971
+},
+{
+  "type": "node",
+  "id": 5645777590,
+  "lat": 53.1473663,
+  "lon": 23.1629631
+},
+{
+  "type": "node",
+  "id": 5645777593,
+  "lat": 53.1471258,
+  "lon": 23.1627165
+},
+{
+  "type": "node",
+  "id": 5645815270,
+  "lat": 53.1480652,
+  "lon": 23.1636733
+},
+{
+  "type": "node",
+  "id": 5645815273,
+  "lat": 53.1496950,
+  "lon": 23.1653488
+},
+{
+  "type": "node",
+  "id": 5749429981,
+  "lat": 53.1525815,
+  "lon": 23.1650217
+},
+{
+  "type": "node",
+  "id": 6268144883,
+  "lat": 53.1482939,
+  "lon": 23.1639077
+},
+{
+  "type": "node",
+  "id": 1882953770,
+  "lat": 53.1513657,
+  "lon": 23.1671352
+},
+{
+  "type": "node",
+  "id": 1882953779,
+  "lat": 53.1515090,
+  "lon": 23.1672907
+},
+{
+  "type": "node",
+  "id": 1882953780,
+  "lat": 53.1515382,
+  "lon": 23.1677709
+},
+{
+  "type": "node",
+  "id": 1882953782,
+  "lat": 53.1515621,
+  "lon": 23.1671503
+},
+{
+  "type": "node",
+  "id": 1882953792,
+  "lat": 53.1516349,
+  "lon": 23.1674204
+},
+{
+  "type": "node",
+  "id": 1882953794,
+  "lat": 53.1516248,
+  "lon": 23.1675469
+},
+{
+  "type": "node",
+  "id": 1882953808,
+  "lat": 53.1516348,
+  "lon": 23.1676372
+},
+{
+  "type": "node",
+  "id": 1882953810,
+  "lat": 53.1516590,
+  "lon": 23.1673375
+},
+{
+  "type": "node",
+  "id": 1882953811,
+  "lat": 53.1516586,
+  "lon": 23.1677200
+},
+{
+  "type": "node",
+  "id": 1882953814,
+  "lat": 53.1516946,
+  "lon": 23.1677896
+},
+{
+  "type": "node",
+  "id": 1882953816,
+  "lat": 53.1516648,
+  "lon": 23.1685056
+},
+{
+  "type": "node",
+  "id": 1882953820,
+  "lat": 53.1517402,
+  "lon": 23.1678412
+},
+{
+  "type": "node",
+  "id": 1882953821,
+  "lat": 53.1516952,
+  "lon": 23.1672680
+},
+{
+  "type": "node",
+  "id": 1882953825,
+  "lat": 53.1517635,
+  "lon": 23.1672006
+},
+{
+  "type": "node",
+  "id": 1882953827,
+  "lat": 53.1517923,
+  "lon": 23.1678713
+},
+{
+  "type": "node",
+  "id": 1882953844,
+  "lat": 53.1518105,
+  "lon": 23.1671824
+},
+{
+  "type": "node",
+  "id": 1882953848,
+  "lat": 53.1518474,
+  "lon": 23.1678777
+},
+{
+  "type": "node",
+  "id": 1882953855,
+  "lat": 53.1518589,
+  "lon": 23.1671825
+},
+{
+  "type": "node",
+  "id": 1882953861,
+  "lat": 53.1519059,
+  "lon": 23.1672010
+},
+{
+  "type": "node",
+  "id": 1882953865,
+  "lat": 53.1519015,
+  "lon": 23.1678600
+},
+{
+  "type": "node",
+  "id": 1882953869,
+  "lat": 53.1519750,
+  "lon": 23.1677884
+},
+{
+  "type": "node",
+  "id": 1882953884,
+  "lat": 53.1519491,
+  "lon": 23.1672369
+},
+{
+  "type": "node",
+  "id": 1882953888,
+  "lat": 53.1519863,
+  "lon": 23.1672883
+},
+{
+  "type": "node",
+  "id": 1882953890,
+  "lat": 53.1520076,
+  "lon": 23.1677262
+},
+{
+  "type": "node",
+  "id": 1882953891,
+  "lat": 53.1520154,
+  "lon": 23.1673525
+},
+{
+  "type": "node",
+  "id": 1882953894,
+  "lat": 53.1520349,
+  "lon": 23.1674261
+},
+{
+  "type": "node",
+  "id": 1882953898,
+  "lat": 53.1520306,
+  "lon": 23.1676530
+},
+{
+  "type": "node",
+  "id": 1882953899,
+  "lat": 53.1520437,
+  "lon": 23.1675051
+},
+{
+  "type": "node",
+  "id": 1882953906,
+  "lat": 53.1520736,
+  "lon": 23.1678686
+},
+{
+  "type": "node",
+  "id": 1882953918,
+  "lat": 53.1520748,
+  "lon": 23.1674153
+},
+{
+  "type": "node",
+  "id": 1882953931,
+  "lat": 53.1521263,
+  "lon": 23.1672873
+},
+{
+  "type": "node",
+  "id": 1882953937,
+  "lat": 53.1521862,
+  "lon": 23.1679891
+},
+{
+  "type": "node",
+  "id": 1883043012,
+  "lat": 53.1514370,
+  "lon": 23.1672080
+},
+{
+  "type": "node",
+  "id": 1883043017,
+  "lat": 53.1514790,
+  "lon": 23.1670929
+},
+{
+  "type": "node",
+  "id": 1883101813,
+  "lat": 53.1505216,
+  "lon": 23.1711695
+},
+{
+  "type": "node",
+  "id": 1883101816,
+  "lat": 53.1513073,
+  "lon": 23.1687297
+},
+{
+  "type": "node",
+  "id": 1883101818,
+  "lat": 53.1510346,
+  "lon": 23.1701382
+},
+{
+  "type": "node",
+  "id": 1883101822,
+  "lat": 53.1514002,
+  "lon": 23.1688172
+},
+{
+  "type": "node",
+  "id": 1883101827,
+  "lat": 53.1511799,
+  "lon": 23.1698002
+},
+{
+  "type": "node",
+  "id": 1883463877,
+  "lat": 53.1512889,
+  "lon": 23.1670547
+},
+{
+  "type": "node",
+  "id": 1883469484,
+  "lat": 53.1504511,
+  "lon": 23.1710599
+},
+{
+  "type": "node",
+  "id": 1883469485,
+  "lat": 53.1505134,
+  "lon": 23.1707707
+},
+{
+  "type": "node",
+  "id": 1883469491,
+  "lat": 53.1506723,
+  "lon": 23.1709281
+},
+{
+  "type": "node",
+  "id": 1883469502,
+  "lat": 53.1508788,
+  "lon": 23.1695664
+},
+{
+  "type": "node",
+  "id": 1883469518,
+  "lat": 53.1512665,
+  "lon": 23.1685261
+},
+{
+  "type": "node",
+  "id": 1883483227,
+  "lat": 53.1496868,
+  "lon": 23.1734189
+},
+{
+  "type": "node",
+  "id": 1883483242,
+  "lat": 53.1498486,
+  "lon": 23.1729945
+},
+{
+  "type": "node",
+  "id": 1883483260,
+  "lat": 53.1498540,
+  "lon": 23.1726206
+},
+{
+  "type": "node",
+  "id": 3021817549,
+  "lat": 53.1518301,
+  "lon": 23.1680651
+},
+{
+  "type": "node",
+  "id": 3021817550,
+  "lat": 53.1518373,
+  "lon": 23.1669903
+},
+{
+  "type": "node",
+  "id": 3563106402,
+  "lat": 53.1513764,
+  "lon": 23.1692916
+},
+{
+  "type": "node",
+  "id": 3563106547,
+  "lat": 53.1515363,
+  "lon": 23.1673202
+},
+{
+  "type": "node",
+  "id": 3563106549,
+  "lat": 53.1515903,
+  "lon": 23.1671728
+},
+{
+  "type": "node",
+  "id": 5749429979,
+  "lat": 53.1511035,
+  "lon": 23.1699892
+},
+{
+  "type": "node",
+  "id": 5749429980,
+  "lat": 53.1507609,
+  "lon": 23.1707213
+},
+{
+  "type": "node",
+  "id": 12620261941,
+  "lat": 53.1517274,
+  "lon": 23.1672289
+},
+{
+  "type": "node",
+  "id": 12620261942,
+  "lat": 53.1516263,
+  "lon": 23.1674829
+},
+{
+  "type": "node",
+  "id": 12620261943,
+  "lat": 53.1519405,
+  "lon": 23.1678304
+},
+{
+  "type": "node",
+  "id": 12620261944,
+  "lat": 53.1520420,
+  "lon": 23.1675803
+},
+{
+  "type": "node",
+  "id": 685201745,
+  "lat": 53.1547512,
+  "lon": 23.1390664
+},
+{
+  "type": "node",
+  "id": 731017508,
+  "lat": 53.1571807,
+  "lon": 23.1405904
+},
+{
+  "type": "node",
+  "id": 731017509,
+  "lat": 53.1572719,
+  "lon": 23.1404477
+},
+{
+  "type": "node",
+  "id": 1847317033,
+  "lat": 53.1593917,
+  "lon": 23.1398723
+},
+{
+  "type": "node",
+  "id": 1847317038,
+  "lat": 53.1594994,
+  "lon": 23.1398699
+},
+{
+  "type": "node",
+  "id": 1892330910,
+  "lat": 53.1545307,
+  "lon": 23.1391478
+},
+{
+  "type": "node",
+  "id": 1892330912,
+  "lat": 53.1550405,
+  "lon": 23.1392374
+},
+{
+  "type": "node",
+  "id": 2357588069,
+  "lat": 53.1581117,
+  "lon": 23.1407533
+},
+{
+  "type": "node",
+  "id": 2882674827,
+  "lat": 53.1593153,
+  "lon": 23.1407027
+},
+{
+  "type": "node",
+  "id": 2882674828,
+  "lat": 53.1593182,
+  "lon": 23.1407571
+},
+{
+  "type": "node",
+  "id": 3253382856,
+  "lat": 53.1538331,
+  "lon": 23.1387942
+},
+{
+  "type": "node",
+  "id": 3253383129,
+  "lat": 53.1558567,
+  "lon": 23.1398776
+},
+{
+  "type": "node",
+  "id": 3253383133,
+  "lat": 53.1558923,
+  "lon": 23.1396989
+},
+{
+  "type": "node",
+  "id": 3253383137,
+  "lat": 53.1559197,
+  "lon": 23.1399084
+},
+{
+  "type": "node",
+  "id": 3642112052,
+  "lat": 53.1550814,
+  "lon": 23.1394540
+},
+{
+  "type": "node",
+  "id": 3642112078,
+  "lat": 53.1554708,
+  "lon": 23.1394671
+},
+{
+  "type": "node",
+  "id": 3642112079,
+  "lat": 53.1563712,
+  "lon": 23.1401597
+},
+{
+  "type": "node",
+  "id": 3890183125,
+  "lat": 53.1535980,
+  "lon": 23.1386943
+},
+{
+  "type": "node",
+  "id": 4414806268,
+  "lat": 53.1541823,
+  "lon": 23.1389625
+},
+{
+  "type": "node",
+  "id": 5749429998,
+  "lat": 53.1592901,
+  "lon": 23.1389389
+},
+{
+  "type": "node",
+  "id": 1832975577,
+  "lat": 53.1595154,
+  "lon": 23.1466121
+},
+{
+  "type": "node",
+  "id": 1847317034,
+  "lat": 53.1593671,
+  "lon": 23.1438009
+},
+{
+  "type": "node",
+  "id": 1847317040,
+  "lat": 53.1594308,
+  "lon": 23.1424579
+},
+{
+  "type": "node",
+  "id": 1847317043,
+  "lat": 53.1594916,
+  "lon": 23.1452427
+},
+{
+  "type": "node",
+  "id": 1859408865,
+  "lat": 53.1590683,
+  "lon": 23.1412752
+},
+{
+  "type": "node",
+  "id": 1859408878,
+  "lat": 53.1591589,
+  "lon": 23.1411567
+},
+{
+  "type": "node",
+  "id": 2504206212,
+  "lat": 53.1595254,
+  "lon": 23.1471342
+},
+{
+  "type": "node",
+  "id": 2629178200,
+  "lat": 53.1576809,
+  "lon": 23.1407859
+},
+{
+  "type": "node",
+  "id": 2629178201,
+  "lat": 53.1592385,
+  "lon": 23.1414142
+},
+{
+  "type": "node",
+  "id": 2629178204,
+  "lat": 53.1593338,
+  "lon": 23.1417617
+},
+{
+  "type": "node",
+  "id": 2648515249,
+  "lat": 53.1592187,
+  "lon": 23.1411543
+},
+{
+  "type": "node",
+  "id": 2648515252,
+  "lat": 53.1592377,
+  "lon": 23.1413652
+},
+{
+  "type": "node",
+  "id": 2648515253,
+  "lat": 53.1592417,
+  "lon": 23.1412867
+},
+{
+  "type": "node",
+  "id": 2648515257,
+  "lat": 53.1592575,
+  "lon": 23.1412021
+},
+{
+  "type": "node",
+  "id": 2648515258,
+  "lat": 53.1592752,
+  "lon": 23.1411475
+},
+{
+  "type": "node",
+  "id": 2648515260,
+  "lat": 53.1593031,
+  "lon": 23.1410891
+},
+{
+  "type": "node",
+  "id": 2648515261,
+  "lat": 53.1593070,
+  "lon": 23.1416349
+},
+{
+  "type": "node",
+  "id": 2648515263,
+  "lat": 53.1593188,
+  "lon": 23.1409689
+},
+{
+  "type": "node",
+  "id": 2648515264,
+  "lat": 53.1593277,
+  "lon": 23.1410524
+},
+{
+  "type": "node",
+  "id": 2648515266,
+  "lat": 53.1593472,
+  "lon": 23.1416877
+},
+{
+  "type": "node",
+  "id": 2648515267,
+  "lat": 53.1593790,
+  "lon": 23.1410022
+},
+{
+  "type": "node",
+  "id": 2648515268,
+  "lat": 53.1593838,
+  "lon": 23.1417187
+},
+{
+  "type": "node",
+  "id": 2648515269,
+  "lat": 53.1594305,
+  "lon": 23.1417407
+},
+{
+  "type": "node",
+  "id": 2648515270,
+  "lat": 53.1594687,
+  "lon": 23.1409712
+},
+{
+  "type": "node",
+  "id": 2648515271,
+  "lat": 53.1594770,
+  "lon": 23.1417462
+},
+{
+  "type": "node",
+  "id": 2648515272,
+  "lat": 53.1595152,
+  "lon": 23.1409786
+},
+{
+  "type": "node",
+  "id": 2670828890,
+  "lat": 53.1592415,
+  "lon": 23.1414568
+},
+{
+  "type": "node",
+  "id": 2670828891,
+  "lat": 53.1592630,
+  "lon": 23.1415376
+},
+{
+  "type": "node",
+  "id": 2716340990,
+  "lat": 53.1591487,
+  "lon": 23.1413235
+},
+{
+  "type": "node",
+  "id": 2881403168,
+  "lat": 53.1591314,
+  "lon": 23.1413108
+},
+{
+  "type": "node",
+  "id": 2881481088,
+  "lat": 53.1591279,
+  "lon": 23.1411448
+},
+{
+  "type": "node",
+  "id": 2882674817,
+  "lat": 53.1591073,
+  "lon": 23.1412977
+},
+{
+  "type": "node",
+  "id": 2882674831,
+  "lat": 53.1593393,
+  "lon": 23.1419775
+},
+{
+  "type": "node",
+  "id": 2882674832,
+  "lat": 53.1593396,
+  "lon": 23.1420271
+},
+{
+  "type": "node",
+  "id": 3182622558,
+  "lat": 53.1593585,
+  "lon": 23.1436625
+},
+{
+  "type": "node",
+  "id": 3563106396,
+  "lat": 53.1593461,
+  "lon": 23.1422782
+},
+{
+  "type": "node",
+  "id": 3642112080,
+  "lat": 53.1587124,
+  "lon": 23.1409844
+},
+{
+  "type": "node",
+  "id": 5749429984,
+  "lat": 53.1594344,
+  "lon": 23.1446108
+},
+{
+  "type": "node",
+  "id": 5749429985,
+  "lat": 53.1594161,
+  "lon": 23.1444002
+},
+{
+  "type": "node",
+  "id": 5749429990,
+  "lat": 53.1594833,
+  "lon": 23.1470356
+},
+{
+  "type": "node",
+  "id": 5749429995,
+  "lat": 53.1593550,
+  "lon": 23.1434765
+},
+{
+  "type": "node",
+  "id": 11932685747,
+  "lat": 53.1593582,
+  "lon": 23.1428772
+},
+{
+  "type": "node",
+  "id": 2882674841,
+  "lat": 53.1596072,
+  "lon": 23.1406886
+},
+{
+  "type": "node",
+  "id": 2882674842,
+  "lat": 53.1596085,
+  "lon": 23.1407434
+},
+{
+  "type": "node",
+  "id": 6258658615,
+  "lat": 53.1595916,
+  "lon": 23.1398425
+},
+{
+  "type": "node",
+  "id": 1832991672,
+  "lat": 53.1596329,
+  "lon": 23.1466819
+},
+{
+  "type": "node",
+  "id": 1847317047,
+  "lat": 53.1595445,
+  "lon": 23.1424661
+},
+{
+  "type": "node",
+  "id": 1847317049,
+  "lat": 53.1595960,
+  "lon": 23.1450582
+},
+{
+  "type": "node",
+  "id": 1847317056,
+  "lat": 53.1596443,
+  "lon": 23.1432979
+},
+{
+  "type": "node",
+  "id": 2629178209,
+  "lat": 53.1596113,
+  "lon": 23.1409449
+},
+{
+  "type": "node",
+  "id": 2648515273,
+  "lat": 53.1595471,
+  "lon": 23.1417244
+},
+{
+  "type": "node",
+  "id": 2648515274,
+  "lat": 53.1595770,
+  "lon": 23.1410147
+},
+{
+  "type": "node",
+  "id": 2648515275,
+  "lat": 53.1595971,
+  "lon": 23.1416833
+},
+{
+  "type": "node",
+  "id": 2648515276,
+  "lat": 53.1596318,
+  "lon": 23.1416371
+},
+{
+  "type": "node",
+  "id": 2648515278,
+  "lat": 53.1596357,
+  "lon": 23.1410869
+},
+{
+  "type": "node",
+  "id": 2648515279,
+  "lat": 53.1596580,
+  "lon": 23.1415869
+},
+{
+  "type": "node",
+  "id": 2648515281,
+  "lat": 53.1596681,
+  "lon": 23.1411560
+},
+{
+  "type": "node",
+  "id": 2648515282,
+  "lat": 53.1596745,
+  "lon": 23.1411745
+},
+{
+  "type": "node",
+  "id": 2648515284,
+  "lat": 53.1596847,
+  "lon": 23.1415075
+},
+{
+  "type": "node",
+  "id": 2648515285,
+  "lat": 53.1596952,
+  "lon": 23.1412628
+},
+{
+  "type": "node",
+  "id": 2648515287,
+  "lat": 53.1597024,
+  "lon": 23.1413653
+},
+{
+  "type": "node",
+  "id": 2881482207,
+  "lat": 53.1596254,
+  "lon": 23.1419606
+},
+{
+  "type": "node",
+  "id": 2881482224,
+  "lat": 53.1596232,
+  "lon": 23.1417329
+},
+{
+  "type": "node",
+  "id": 2882674843,
+  "lat": 53.1596253,
+  "lon": 23.1420181
+},
+{
+  "type": "node",
+  "id": 5749429991,
+  "lat": 53.1596421,
+  "lon": 23.1471748
+},
+{
+  "type": "node",
+  "id": 5749429992,
+  "lat": 53.1596869,
+  "lon": 23.1472835
+},
+{
+  "type": "node",
+  "id": 5749429993,
+  "lat": 53.1596482,
+  "lon": 23.1436463
+},
+{
+  "type": "node",
+  "id": 5749429994,
+  "lat": 53.1596299,
+  "lon": 23.1441999
+},
+{
+  "type": "node",
+  "id": 2081020093,
+  "lat": 53.1724629,
+  "lon": 23.1467346
+},
+{
+  "type": "node",
+  "id": 2440731922,
+  "lat": 53.1704750,
+  "lon": 23.1472278
+},
+{
+  "type": "node",
+  "id": 2440731924,
+  "lat": 53.1716314,
+  "lon": 23.1471251
+},
+{
+  "type": "node",
+  "id": 4075461416,
+  "lat": 53.1724811,
+  "lon": 23.1469058
+},
+{
+  "type": "node",
+  "id": 1154983605,
+  "lat": 53.1731744,
+  "lon": 23.1466006
+},
+{
+  "type": "node",
+  "id": 2081020095,
+  "lat": 53.1731799,
+  "lon": 23.1467734
+},
+{
+  "type": "node",
+  "id": 2285127443,
+  "lat": 53.1727738,
+  "lon": 23.1468416
+},
+{
+  "type": "node",
+  "id": 4075461417,
+  "lat": 53.1727185,
+  "lon": 23.1466722
+},
+{
+  "type": "node",
+  "id": 4075461418,
+  "lat": 53.1728843,
+  "lon": 23.1466383
+},
+{
+  "type": "node",
+  "id": 4075461419,
+  "lat": 53.1728993,
+  "lon": 23.1468135
+},
+{
+  "type": "node",
+  "id": 4075461420,
+  "lat": 53.1729747,
+  "lon": 23.1466213
+},
+{
+  "type": "node",
+  "id": 4075461421,
+  "lat": 53.1730048,
+  "lon": 23.1467909
+},
+{
+  "type": "node",
+  "id": 4075461422,
+  "lat": 53.1730877,
+  "lon": 23.1466082
+},
+{
+  "type": "node",
+  "id": 4075461423,
+  "lat": 53.1731235,
+  "lon": 23.1467777
+},
+{
+  "type": "node",
+  "id": 260019947,
+  "lat": 53.1563237,
+  "lon": 23.1515676
+},
+{
+  "type": "node",
+  "id": 1151953853,
+  "lat": 53.1591587,
+  "lon": 23.1507552
+},
+{
+  "type": "node",
+  "id": 1166107972,
+  "lat": 53.1588424,
+  "lon": 23.1516448
+},
+{
+  "type": "node",
+  "id": 1166107976,
+  "lat": 53.1590822,
+  "lon": 23.1510191
+},
+{
+  "type": "node",
+  "id": 1166107984,
+  "lat": 53.1559473,
+  "lon": 23.1518104
+},
+{
+  "type": "node",
+  "id": 1166107986,
+  "lat": 53.1548628,
+  "lon": 23.1526261
+},
+{
+  "type": "node",
+  "id": 1166108006,
+  "lat": 53.1566525,
+  "lon": 23.1514666
+},
+{
+  "type": "node",
+  "id": 1166108007,
+  "lat": 53.1582670,
+  "lon": 23.1527100
+},
+{
+  "type": "node",
+  "id": 1166108012,
+  "lat": 53.1573149,
+  "lon": 23.1516628
+},
+{
+  "type": "node",
+  "id": 1166108015,
+  "lat": 53.1591754,
+  "lon": 23.1511873
+},
+{
+  "type": "node",
+  "id": 1166108016,
+  "lat": 53.1537659,
+  "lon": 23.1534422
+},
+{
+  "type": "node",
+  "id": 1166108034,
+  "lat": 53.1565430,
+  "lon": 23.1514847
+},
+{
+  "type": "node",
+  "id": 1166108052,
+  "lat": 53.1570682,
+  "lon": 23.1516456
+},
+{
+  "type": "node",
+  "id": 1166108053,
+  "lat": 53.1531259,
+  "lon": 23.1537361
+},
+{
+  "type": "node",
+  "id": 1166108055,
+  "lat": 53.1589307,
+  "lon": 23.1517975
+},
+{
+  "type": "node",
+  "id": 1166108084,
+  "lat": 53.1580356,
+  "lon": 23.1516409
+},
+{
+  "type": "node",
+  "id": 1825424087,
+  "lat": 53.1587123,
+  "lon": 23.1522258
+},
+{
+  "type": "node",
+  "id": 1825424097,
+  "lat": 53.1586599,
+  "lon": 23.1520098
+},
+{
+  "type": "node",
+  "id": 1832975565,
+  "lat": 53.1593474,
+  "lon": 23.1505711
+},
+{
+  "type": "node",
+  "id": 1847044943,
+  "lat": 53.1581979,
+  "lon": 23.1516692
+},
+{
+  "type": "node",
+  "id": 1847044945,
+  "lat": 53.1583734,
+  "lon": 23.1522630
+},
+{
+  "type": "node",
+  "id": 1847044949,
+  "lat": 53.1589683,
+  "lon": 23.1512980
+},
+{
+  "type": "node",
+  "id": 1847044952,
+  "lat": 53.1590019,
+  "lon": 23.1509187
+},
+{
+  "type": "node",
+  "id": 1847044954,
+  "lat": 53.1592105,
+  "lon": 23.1498883
+},
+{
+  "type": "node",
+  "id": 1847044957,
+  "lat": 53.1594838,
+  "lon": 23.1509014
+},
+{
+  "type": "node",
+  "id": 1847263293,
+  "lat": 53.1581936,
+  "lon": 23.1528507
+},
+{
+  "type": "node",
+  "id": 1847263303,
+  "lat": 53.1577831,
+  "lon": 23.1533548
+},
+{
+  "type": "node",
+  "id": 1847263305,
+  "lat": 53.1582872,
+  "lon": 23.1529950
+},
+{
+  "type": "node",
+  "id": 1847263308,
+  "lat": 53.1579280,
+  "lon": 23.1530852
+},
+{
+  "type": "node",
+  "id": 1847263316,
+  "lat": 53.1591628,
+  "lon": 23.1502307
+},
+{
+  "type": "node",
+  "id": 1847263318,
+  "lat": 53.1592731,
+  "lon": 23.1502546
+},
+{
+  "type": "node",
+  "id": 1847263320,
+  "lat": 53.1593964,
+  "lon": 23.1503226
+},
+{
+  "type": "node",
+  "id": 1852128982,
+  "lat": 53.1576222,
+  "lon": 23.1536177
+},
+{
+  "type": "node",
+  "id": 1852129028,
+  "lat": 53.1583922,
+  "lon": 23.1519603
+},
+{
+  "type": "node",
+  "id": 1852129031,
+  "lat": 53.1585623,
+  "lon": 23.1521898
+},
+{
+  "type": "node",
+  "id": 1852129061,
+  "lat": 53.1585177,
+  "lon": 23.1519889
+},
+{
+  "type": "node",
+  "id": 1852129066,
+  "lat": 53.1586576,
+  "lon": 23.1528835
+},
+{
+  "type": "node",
+  "id": 1852129068,
+  "lat": 53.1587588,
+  "lon": 23.1518237
+},
+{
+  "type": "node",
+  "id": 1852129072,
+  "lat": 53.1588142,
+  "lon": 23.1519031
+},
+{
+  "type": "node",
+  "id": 1859438371,
+  "lat": 53.1587599,
+  "lon": 23.1513293
+},
+{
+  "type": "node",
+  "id": 1859438387,
+  "lat": 53.1589331,
+  "lon": 23.1514415
+},
+{
+  "type": "node",
+  "id": 1859438388,
+  "lat": 53.1590760,
+  "lon": 23.1514582
+},
+{
+  "type": "node",
+  "id": 1859438391,
+  "lat": 53.1592645,
+  "lon": 23.1509037
+},
+{
+  "type": "node",
+  "id": 1859438399,
+  "lat": 53.1594132,
+  "lon": 23.1518309
+},
+{
+  "type": "node",
+  "id": 1889474193,
+  "lat": 53.1589883,
+  "lon": 23.1516736
+},
+{
+  "type": "node",
+  "id": 2229796244,
+  "lat": 53.1551307,
+  "lon": 23.1524757
+},
+{
+  "type": "node",
+  "id": 2256069811,
+  "lat": 53.1593308,
+  "lon": 23.1488458
+},
+{
+  "type": "node",
+  "id": 2256069814,
+  "lat": 53.1593471,
+  "lon": 23.1486666
+},
+{
+  "type": "node",
+  "id": 2256069833,
+  "lat": 53.1572946,
+  "lon": 23.1514717
+},
+{
+  "type": "node",
+  "id": 2441902614,
+  "lat": 53.1562207,
+  "lon": 23.1518225
+},
+{
+  "type": "node",
+  "id": 2441902615,
+  "lat": 53.1563709,
+  "lon": 23.1517539
+},
+{
+  "type": "node",
+  "id": 2441902616,
+  "lat": 53.1569477,
+  "lon": 23.1514534
+},
+{
+  "type": "node",
+  "id": 2504206199,
+  "lat": 53.1581869,
+  "lon": 23.1514352
+},
+{
+  "type": "node",
+  "id": 2504206210,
+  "lat": 53.1594355,
+  "lon": 23.1478817
+},
+{
+  "type": "node",
+  "id": 2560366209,
+  "lat": 53.1592153,
+  "lon": 23.1513134
+},
+{
+  "type": "node",
+  "id": 2629251355,
+  "lat": 53.1582086,
+  "lon": 23.1514638
+},
+{
+  "type": "node",
+  "id": 2629251356,
+  "lat": 53.1582166,
+  "lon": 23.1516354
+},
+{
+  "type": "node",
+  "id": 2629251357,
+  "lat": 53.1582235,
+  "lon": 23.1515026
+},
+{
+  "type": "node",
+  "id": 2629251358,
+  "lat": 53.1582278,
+  "lon": 23.1515932
+},
+{
+  "type": "node",
+  "id": 2629251359,
+  "lat": 53.1582302,
+  "lon": 23.1515473
+},
+{
+  "type": "node",
+  "id": 2629251360,
+  "lat": 53.1583785,
+  "lon": 23.1519059
+},
+{
+  "type": "node",
+  "id": 2629251361,
+  "lat": 53.1584586,
+  "lon": 23.1514078
+},
+{
+  "type": "node",
+  "id": 2629251364,
+  "lat": 53.1588705,
+  "lon": 23.1513036
+},
+{
+  "type": "node",
+  "id": 2629251365,
+  "lat": 53.1589206,
+  "lon": 23.1519166
+},
+{
+  "type": "node",
+  "id": 2629251366,
+  "lat": 53.1590158,
+  "lon": 23.1519169
+},
+{
+  "type": "node",
+  "id": 2629251367,
+  "lat": 53.1590811,
+  "lon": 23.1506466
+},
+{
+  "type": "node",
+  "id": 2629251371,
+  "lat": 53.1592625,
+  "lon": 23.1518743
+},
+{
+  "type": "node",
+  "id": 2629251372,
+  "lat": 53.1592770,
+  "lon": 23.1513238
+},
+{
+  "type": "node",
+  "id": 2629251373,
+  "lat": 53.1593168,
+  "lon": 23.1517322
+},
+{
+  "type": "node",
+  "id": 2629251377,
+  "lat": 53.1593650,
+  "lon": 23.1515736
+},
+{
+  "type": "node",
+  "id": 2629251379,
+  "lat": 53.1594516,
+  "lon": 23.1511865
+},
+{
+  "type": "node",
+  "id": 2629251380,
+  "lat": 53.1594766,
+  "lon": 23.1474332
+},
+{
+  "type": "node",
+  "id": 2629251382,
+  "lat": 53.1594919,
+  "lon": 23.1480574
+},
+{
+  "type": "node",
+  "id": 2841552410,
+  "lat": 53.1595185,
+  "lon": 23.1475636
+},
+{
+  "type": "node",
+  "id": 2881403123,
+  "lat": 53.1583195,
+  "lon": 23.1514272
+},
+{
+  "type": "node",
+  "id": 2881403126,
+  "lat": 53.1584040,
+  "lon": 23.1517413
+},
+{
+  "type": "node",
+  "id": 2881403132,
+  "lat": 53.1584970,
+  "lon": 23.1520282
+},
+{
+  "type": "node",
+  "id": 2881403134,
+  "lat": 53.1585790,
+  "lon": 23.1513819
+},
+{
+  "type": "node",
+  "id": 2881403139,
+  "lat": 53.1587276,
+  "lon": 23.1513377
+},
+{
+  "type": "node",
+  "id": 2881403159,
+  "lat": 53.1590688,
+  "lon": 23.1512979
+},
+{
+  "type": "node",
+  "id": 2881403303,
+  "lat": 53.1593423,
+  "lon": 23.1516614
+},
+{
+  "type": "node",
+  "id": 2882674802,
+  "lat": 53.1582825,
+  "lon": 23.1517300
+},
+{
+  "type": "node",
+  "id": 2882674803,
+  "lat": 53.1583538,
+  "lon": 23.1518383
+},
+{
+  "type": "node",
+  "id": 2882674805,
+  "lat": 53.1584004,
+  "lon": 23.1520132
+},
+{
+  "type": "node",
+  "id": 2882674807,
+  "lat": 53.1584532,
+  "lon": 23.1517597
+},
+{
+  "type": "node",
+  "id": 2882674810,
+  "lat": 53.1584914,
+  "lon": 23.1517751
+},
+{
+  "type": "node",
+  "id": 2882674819,
+  "lat": 53.1591776,
+  "lon": 23.1520518
+},
+{
+  "type": "node",
+  "id": 2882674820,
+  "lat": 53.1591569,
+  "lon": 23.1520858
+},
+{
+  "type": "node",
+  "id": 2882674839,
+  "lat": 53.1595182,
+  "lon": 23.1513985
+},
+{
+  "type": "node",
+  "id": 3536083394,
+  "lat": 53.1582749,
+  "lon": 23.1524448
+},
+{
+  "type": "node",
+  "id": 3563106404,
+  "lat": 53.1584273,
+  "lon": 23.1532321
+},
+{
+  "type": "node",
+  "id": 3889462130,
+  "lat": 53.1581229,
+  "lon": 23.1514402
+},
+{
+  "type": "node",
+  "id": 3890183128,
+  "lat": 53.1594196,
+  "lon": 23.1513594
+},
+{
+  "type": "node",
+  "id": 4075461271,
+  "lat": 53.1586107,
+  "lon": 23.1518296
+},
+{
+  "type": "node",
+  "id": 4075461273,
+  "lat": 53.1591536,
+  "lon": 23.1519015
+},
+{
+  "type": "node",
+  "id": 4335309644,
+  "lat": 53.1583236,
+  "lon": 23.1517815
+},
+{
+  "type": "node",
+  "id": 4825844765,
+  "lat": 53.1594270,
+  "lon": 23.1488719
+},
+{
+  "type": "node",
+  "id": 4825844767,
+  "lat": 53.1594416,
+  "lon": 23.1486923
+},
+{
+  "type": "node",
+  "id": 5749429988,
+  "lat": 53.1592756,
+  "lon": 23.1493755
+},
+{
+  "type": "node",
+  "id": 5749429989,
+  "lat": 53.1593977,
+  "lon": 23.1482174
+},
+{
+  "type": "node",
+  "id": 5801511571,
+  "lat": 53.1583793,
+  "lon": 23.1514189
+},
+{
+  "type": "node",
+  "id": 5801511572,
+  "lat": 53.1588939,
+  "lon": 23.1512351
+},
+{
+  "type": "node",
+  "id": 5940539310,
+  "lat": 53.1560775,
+  "lon": 23.1517153
+},
+{
+  "type": "node",
+  "id": 6167972340,
+  "lat": 53.1560621,
+  "lon": 23.1519202
+},
+{
+  "type": "node",
+  "id": 6167972358,
+  "lat": 53.1560119,
+  "lon": 23.1517598
+},
+{
+  "type": "node",
+  "id": 6337303563,
+  "lat": 53.1549488,
+  "lon": 23.1527592
+},
+{
+  "type": "node",
+  "id": 6337303570,
+  "lat": 53.1565451,
+  "lon": 23.1516887
+},
+{
+  "type": "node",
+  "id": 6426064896,
+  "lat": 53.1547758,
+  "lon": 23.1526745
+},
+{
+  "type": "node",
+  "id": 6942794452,
+  "lat": 53.1545967,
+  "lon": 23.1529694
+},
+{
+  "type": "node",
+  "id": 6942794456,
+  "lat": 53.1550761,
+  "lon": 23.1526832
+},
+{
+  "type": "node",
+  "id": 6942794457,
+  "lat": 53.1550476,
+  "lon": 23.1525257
+},
+{
+  "type": "node",
+  "id": 6942794460,
+  "lat": 53.1548632,
+  "lon": 23.1528103
+},
+{
+  "type": "node",
+  "id": 6942794470,
+  "lat": 53.1540162,
+  "lon": 23.1533221
+},
+{
+  "type": "node",
+  "id": 6966926499,
+  "lat": 53.1567979,
+  "lon": 23.1516416
+},
+{
+  "type": "node",
+  "id": 7069321042,
+  "lat": 53.1552648,
+  "lon": 23.1523969
+},
+{
+  "type": "node",
+  "id": 7069321043,
+  "lat": 53.1546513,
+  "lon": 23.1529368
+},
+{
+  "type": "node",
+  "id": 7069321044,
+  "lat": 53.1546136,
+  "lon": 23.1527660
+},
+{
+  "type": "node",
+  "id": 7149122194,
+  "lat": 53.1574496,
+  "lon": 23.1514686
+},
+{
+  "type": "node",
+  "id": 7149122199,
+  "lat": 53.1576848,
+  "lon": 23.1514570
+},
+{
+  "type": "node",
+  "id": 7592455343,
+  "lat": 53.1566475,
+  "lon": 23.1516666
+},
+{
+  "type": "node",
+  "id": 8473985977,
+  "lat": 53.1559116,
+  "lon": 23.1520356
+},
+{
+  "type": "node",
+  "id": 8473985978,
+  "lat": 53.1557661,
+  "lon": 23.1521711
+},
+{
+  "type": "node",
+  "id": 8473985979,
+  "lat": 53.1554934,
+  "lon": 23.1524004
+},
+{
+  "type": "node",
+  "id": 8473985985,
+  "lat": 53.1556517,
+  "lon": 23.1521067
+},
+{
+  "type": "node",
+  "id": 8473985990,
+  "lat": 53.1564351,
+  "lon": 23.1515193
+},
+{
+  "type": "node",
+  "id": 8473985992,
+  "lat": 53.1568163,
+  "lon": 23.1514482
+},
+{
+  "type": "node",
+  "id": 8483208342,
+  "lat": 53.1555777,
+  "lon": 23.1521743
+},
+{
+  "type": "node",
+  "id": 8483208343,
+  "lat": 53.1554537,
+  "lon": 23.1522737
+},
+{
+  "type": "node",
+  "id": 8483208345,
+  "lat": 53.1558630,
+  "lon": 23.1518892
+},
+{
+  "type": "node",
+  "id": 8483208346,
+  "lat": 53.1579701,
+  "lon": 23.1514463
+},
+{
+  "type": "node",
+  "id": 8483208347,
+  "lat": 53.1578650,
+  "lon": 23.1516461
+},
+{
+  "type": "node",
+  "id": 8483208361,
+  "lat": 53.1532793,
+  "lon": 23.1534645
+},
+{
+  "type": "node",
+  "id": 8483208362,
+  "lat": 53.1536634,
+  "lon": 23.1532960
+},
+{
+  "type": "node",
+  "id": 8498370708,
+  "lat": 53.1543154,
+  "lon": 23.1529380
+},
+{
+  "type": "node",
+  "id": 8892137340,
+  "lat": 53.1540005,
+  "lon": 23.1531291
+},
+{
+  "type": "node",
+  "id": 9264956451,
+  "lat": 53.1540417,
+  "lon": 23.1532103
+},
+{
+  "type": "node",
+  "id": 9264956452,
+  "lat": 53.1540334,
+  "lon": 23.1531721
+},
+{
+  "type": "node",
+  "id": 9264956453,
+  "lat": 53.1540178,
+  "lon": 23.1531452
+},
+{
+  "type": "node",
+  "id": 9264956454,
+  "lat": 53.1540406,
+  "lon": 23.1532586
+},
+{
+  "type": "node",
+  "id": 10076968410,
+  "lat": 53.1593404,
+  "lon": 23.1498059
+},
+{
+  "type": "node",
+  "id": 10076968411,
+  "lat": 53.1593888,
+  "lon": 23.1493460
+},
+{
+  "type": "node",
+  "id": 10076968412,
+  "lat": 53.1592225,
+  "lon": 23.1505046
+},
+{
+  "type": "node",
+  "id": 10076968413,
+  "lat": 53.1594519,
+  "lon": 23.1499516
+},
+{
+  "type": "node",
+  "id": 10076968414,
+  "lat": 53.1594909,
+  "lon": 23.1495724
+},
+{
+  "type": "node",
+  "id": 10825171019,
+  "lat": 53.1535301,
+  "lon": 23.1535540
+},
+{
+  "type": "node",
+  "id": 11499637822,
+  "lat": 53.1555387,
+  "lon": 23.1522056
+},
+{
+  "type": "node",
+  "id": 11942903632,
+  "lat": 53.1575869,
+  "lon": 23.1514618
+},
+{
+  "type": "node",
+  "id": 11942903634,
+  "lat": 53.1554538,
+  "lon": 23.1524272
+},
+{
+  "type": "node",
+  "id": 12589809275,
+  "lat": 53.1587404,
+  "lon": 23.1515955
+},
+{
+  "type": "node",
+  "id": 12589809276,
+  "lat": 53.1588154,
+  "lon": 23.1514356
+},
+{
+  "type": "node",
+  "id": 12962300908,
+  "lat": 53.1594552,
+  "lon": 23.1513707
+},
+{
+  "type": "node",
+  "id": 12962300909,
+  "lat": 53.1594968,
+  "lon": 23.1510667
+},
+{
+  "type": "node",
+  "id": 12962300910,
+  "lat": 53.1592289,
+  "lon": 23.1519446
+},
+{
+  "type": "node",
+  "id": 12962300911,
+  "lat": 53.1585704,
+  "lon": 23.1518112
+},
+{
+  "type": "node",
+  "id": 12962300912,
+  "lat": 53.1583989,
+  "lon": 23.1521417
+},
+{
+  "type": "node",
+  "id": 131612943,
+  "lat": 53.1552617,
+  "lon": 23.1586664
+},
+{
+  "type": "node",
+  "id": 277320063,
+  "lat": 53.1548361,
+  "lon": 23.1592329
+},
+{
+  "type": "node",
+  "id": 1847044938,
+  "lat": 53.1572935,
+  "lon": 23.1545358
+},
+{
+  "type": "node",
+  "id": 1852155195,
+  "lat": 53.1544276,
+  "lon": 23.1603094
+},
+{
+  "type": "node",
+  "id": 1852176912,
+  "lat": 53.1556810,
+  "lon": 23.1578628
+},
+{
+  "type": "node",
+  "id": 1852176914,
+  "lat": 53.1560780,
+  "lon": 23.1568547
+},
+{
+  "type": "node",
+  "id": 1881569107,
+  "lat": 53.1550099,
+  "lon": 23.1588529
+},
+{
+  "type": "node",
+  "id": 1946476472,
+  "lat": 53.1564024,
+  "lon": 23.1562602
+},
+{
+  "type": "node",
+  "id": 2359253621,
+  "lat": 53.1564590,
+  "lon": 23.1564177
+},
+{
+  "type": "node",
+  "id": 2694399552,
+  "lat": 53.1548224,
+  "lon": 23.1596419
+},
+{
+  "type": "node",
+  "id": 2694399554,
+  "lat": 53.1550353,
+  "lon": 23.1591321
+},
+{
+  "type": "node",
+  "id": 2694399565,
+  "lat": 53.1573000,
+  "lon": 23.1543476
+},
+{
+  "type": "node",
+  "id": 2840742308,
+  "lat": 53.1573932,
+  "lon": 23.1546747
+},
+{
+  "type": "node",
+  "id": 2840742310,
+  "lat": 53.1578819,
+  "lon": 23.1540779
+},
+{
+  "type": "node",
+  "id": 3136871040,
+  "lat": 53.1569294,
+  "lon": 23.1555573
+},
+{
+  "type": "node",
+  "id": 4075461269,
+  "lat": 53.1546034,
+  "lon": 23.1598170
+},
+{
+  "type": "node",
+  "id": 4103450292,
+  "lat": 53.1555382,
+  "lon": 23.1578496
+},
+{
+  "type": "node",
+  "id": 5749429982,
+  "lat": 53.1574837,
+  "lon": 23.1541881
+},
+{
+  "type": "node",
+  "id": 5749429983,
+  "lat": 53.1574886,
+  "lon": 23.1538788
+},
+{
+  "type": "node",
+  "id": 10015785253,
+  "lat": 53.1565840,
+  "lon": 23.1561865
+},
+{
+  "type": "node",
+  "id": 10076968415,
+  "lat": 53.1575856,
+  "lon": 23.1543055
+},
+{
+  "type": "node",
+  "id": 12620261934,
+  "lat": 53.1570383,
+  "lon": 23.1553501
+},
+{
+  "type": "node",
+  "id": 12620261935,
+  "lat": 53.1574883,
+  "lon": 23.1546712
+},
+{
+  "type": "node",
+  "id": 12620261936,
+  "lat": 53.1569402,
+  "lon": 23.1551946
+},
+{
+  "type": "node",
+  "id": 12620261937,
+  "lat": 53.1564906,
+  "lon": 23.1560898
+},
+{
+  "type": "node",
+  "id": 12620261938,
+  "lat": 53.1567397,
+  "lon": 23.1555683
+},
+{
+  "type": "node",
+  "id": 12620261939,
+  "lat": 53.1551871,
+  "lon": 23.1585056
+},
+{
+  "type": "node",
+  "id": 1847044959,
+  "lat": 53.1595521,
+  "lon": 23.1512552
+},
+{
+  "type": "node",
+  "id": 1847044960,
+  "lat": 53.1595759,
+  "lon": 23.1498850
+},
+{
+  "type": "node",
+  "id": 1847044961,
+  "lat": 53.1596760,
+  "lon": 23.1514635
+},
+{
+  "type": "node",
+  "id": 1847044962,
+  "lat": 53.1596570,
+  "lon": 23.1489235
+},
+{
+  "type": "node",
+  "id": 1847044963,
+  "lat": 53.1596714,
+  "lon": 23.1487468
+},
+{
+  "type": "node",
+  "id": 2081020073,
+  "lat": 53.1620751,
+  "lon": 23.1518386
+},
+{
+  "type": "node",
+  "id": 2081020074,
+  "lat": 53.1617277,
+  "lon": 23.1520372
+},
+{
+  "type": "node",
+  "id": 2081020075,
+  "lat": 53.1625493,
+  "lon": 23.1517089
+},
+{
+  "type": "node",
+  "id": 2081020076,
+  "lat": 53.1620569,
+  "lon": 23.1520138
+},
+{
+  "type": "node",
+  "id": 2081020077,
+  "lat": 53.1632450,
+  "lon": 23.1513502
+},
+{
+  "type": "node",
+  "id": 2081020078,
+  "lat": 53.1628402,
+  "lon": 23.1517763
+},
+{
+  "type": "node",
+  "id": 2081020079,
+  "lat": 53.1635557,
+  "lon": 23.1511132
+},
+{
+  "type": "node",
+  "id": 2081020080,
+  "lat": 53.1635740,
+  "lon": 23.1513113
+},
+{
+  "type": "node",
+  "id": 2081020081,
+  "lat": 53.1643766,
+  "lon": 23.1502081
+},
+{
+  "type": "node",
+  "id": 2081020082,
+  "lat": 53.1645376,
+  "lon": 23.1502671
+},
+{
+  "type": "node",
+  "id": 2081020083,
+  "lat": 53.1646590,
+  "lon": 23.1498603
+},
+{
+  "type": "node",
+  "id": 2081020084,
+  "lat": 53.1648123,
+  "lon": 23.1499218
+},
+{
+  "type": "node",
+  "id": 2081020085,
+  "lat": 53.1653383,
+  "lon": 23.1490637
+},
+{
+  "type": "node",
+  "id": 2081020086,
+  "lat": 53.1655003,
+  "lon": 23.1491203
+},
+{
+  "type": "node",
+  "id": 2081020087,
+  "lat": 53.1659770,
+  "lon": 23.1485387
+},
+{
+  "type": "node",
+  "id": 2256069816,
+  "lat": 53.1601495,
+  "lon": 23.1518597
+},
+{
+  "type": "node",
+  "id": 2256069834,
+  "lat": 53.1650759,
+  "lon": 23.1493531
+},
+{
+  "type": "node",
+  "id": 2285127439,
+  "lat": 53.1652829,
+  "lon": 23.1493496
+},
+{
+  "type": "node",
+  "id": 2285127440,
+  "lat": 53.1656306,
+  "lon": 23.1487931
+},
+{
+  "type": "node",
+  "id": 2285127441,
+  "lat": 53.1659016,
+  "lon": 23.1487842
+},
+{
+  "type": "node",
+  "id": 2440731892,
+  "lat": 53.1614008,
+  "lon": 23.1518505
+},
+{
+  "type": "node",
+  "id": 2440731895,
+  "lat": 53.1611437,
+  "lon": 23.1519947
+},
+{
+  "type": "node",
+  "id": 2440731898,
+  "lat": 53.1616939,
+  "lon": 23.1518623
+},
+{
+  "type": "node",
+  "id": 2440731900,
+  "lat": 53.1624125,
+  "lon": 23.1517543
+},
+{
+  "type": "node",
+  "id": 2440731902,
+  "lat": 53.1625434,
+  "lon": 23.1518995
+},
+{
+  "type": "node",
+  "id": 2440731907,
+  "lat": 53.1629950,
+  "lon": 23.1515033
+},
+{
+  "type": "node",
+  "id": 2440731909,
+  "lat": 53.1631919,
+  "lon": 23.1515854
+},
+{
+  "type": "node",
+  "id": 2440731911,
+  "lat": 53.1633478,
+  "lon": 23.1512762
+},
+{
+  "type": "node",
+  "id": 2440731914,
+  "lat": 53.1638025,
+  "lon": 23.1508816
+},
+{
+  "type": "node",
+  "id": 2440731916,
+  "lat": 53.1640549,
+  "lon": 23.1508403
+},
+{
+  "type": "node",
+  "id": 2460796468,
+  "lat": 53.1614887,
+  "lon": 23.1518552
+},
+{
+  "type": "node",
+  "id": 2466608891,
+  "lat": 53.1599696,
+  "lon": 23.1518300
+},
+{
+  "type": "node",
+  "id": 2466608894,
+  "lat": 53.1600023,
+  "lon": 23.1516039
+},
+{
+  "type": "node",
+  "id": 2466608897,
+  "lat": 53.1596212,
+  "lon": 23.1517907
+},
+{
+  "type": "node",
+  "id": 2504206214,
+  "lat": 53.1596356,
+  "lon": 23.1476868
+},
+{
+  "type": "node",
+  "id": 2629251388,
+  "lat": 53.1595940,
+  "lon": 23.1513386
+},
+{
+  "type": "node",
+  "id": 2629251389,
+  "lat": 53.1596848,
+  "lon": 23.1477197
+},
+{
+  "type": "node",
+  "id": 2738101544,
+  "lat": 53.1607476,
+  "lon": 23.1517631
+},
+{
+  "type": "node",
+  "id": 2841552411,
+  "lat": 53.1596133,
+  "lon": 23.1481096
+},
+{
+  "type": "node",
+  "id": 3536093794,
+  "lat": 53.1629390,
+  "lon": 23.1517305
+},
+{
+  "type": "node",
+  "id": 4075461274,
+  "lat": 53.1595492,
+  "lon": 23.1518036
+},
+{
+  "type": "node",
+  "id": 4075461275,
+  "lat": 53.1597168,
+  "lon": 23.1517923
+},
+{
+  "type": "node",
+  "id": 4075461276,
+  "lat": 53.1598261,
+  "lon": 23.1518017
+},
+{
+  "type": "node",
+  "id": 4075461277,
+  "lat": 53.1598336,
+  "lon": 23.1515361
+},
+{
+  "type": "node",
+  "id": 4075461278,
+  "lat": 53.1601162,
+  "lon": 23.1516378
+},
+{
+  "type": "node",
+  "id": 4075461279,
+  "lat": 53.1602198,
+  "lon": 23.1516660
+},
+{
+  "type": "node",
+  "id": 4075461280,
+  "lat": 53.1603686,
+  "lon": 23.1516999
+},
+{
+  "type": "node",
+  "id": 4075461281,
+  "lat": 53.1605494,
+  "lon": 23.1517320
+},
+{
+  "type": "node",
+  "id": 4075461282,
+  "lat": 53.1615120,
+  "lon": 23.1520277
+},
+{
+  "type": "node",
+  "id": 4075461283,
+  "lat": 53.1619114,
+  "lon": 23.1518525
+},
+{
+  "type": "node",
+  "id": 4075461284,
+  "lat": 53.1619152,
+  "lon": 23.1520277
+},
+{
+  "type": "node",
+  "id": 4075461285,
+  "lat": 53.1622184,
+  "lon": 23.1518073
+},
+{
+  "type": "node",
+  "id": 4075461286,
+  "lat": 53.1622297,
+  "lon": 23.1519844
+},
+{
+  "type": "node",
+  "id": 4075461287,
+  "lat": 53.1624106,
+  "lon": 23.1519392
+},
+{
+  "type": "node",
+  "id": 4075461288,
+  "lat": 53.1626574,
+  "lon": 23.1516698
+},
+{
+  "type": "node",
+  "id": 4075461389,
+  "lat": 53.1626932,
+  "lon": 23.1518450
+},
+{
+  "type": "node",
+  "id": 4075461390,
+  "lat": 53.1627723,
+  "lon": 23.1516189
+},
+{
+  "type": "node",
+  "id": 4075461391,
+  "lat": 53.1628796,
+  "lon": 23.1515681
+},
+{
+  "type": "node",
+  "id": 4075461393,
+  "lat": 53.1630680,
+  "lon": 23.1516604
+},
+{
+  "type": "node",
+  "id": 4075461394,
+  "lat": 53.1631057,
+  "lon": 23.1514419
+},
+{
+  "type": "node",
+  "id": 4075461395,
+  "lat": 53.1633487,
+  "lon": 23.1514814
+},
+{
+  "type": "node",
+  "id": 4075461396,
+  "lat": 53.1634655,
+  "lon": 23.1513929
+},
+{
+  "type": "node",
+  "id": 4075461397,
+  "lat": 53.1636915,
+  "lon": 23.1509860
+},
+{
+  "type": "node",
+  "id": 4075461398,
+  "lat": 53.1637179,
+  "lon": 23.1511838
+},
+{
+  "type": "node",
+  "id": 4075461399,
+  "lat": 53.1638535,
+  "lon": 23.1510482
+},
+{
+  "type": "node",
+  "id": 4075461400,
+  "lat": 53.1639345,
+  "lon": 23.1507392
+},
+{
+  "type": "node",
+  "id": 4075461401,
+  "lat": 53.1640796,
+  "lon": 23.1505678
+},
+{
+  "type": "node",
+  "id": 4075461402,
+  "lat": 53.1642171,
+  "lon": 23.1506545
+},
+{
+  "type": "node",
+  "id": 4075461403,
+  "lat": 53.1651609,
+  "lon": 23.1494903
+},
+{
+  "type": "node",
+  "id": 4075461404,
+  "lat": 53.1652042,
+  "lon": 23.1492096
+},
+{
+  "type": "node",
+  "id": 4075461405,
+  "lat": 53.1654868,
+  "lon": 23.1489176
+},
+{
+  "type": "node",
+  "id": 4075461406,
+  "lat": 53.1657015,
+  "lon": 23.1489384
+},
+{
+  "type": "node",
+  "id": 4075461407,
+  "lat": 53.1658315,
+  "lon": 23.1486351
+},
+{
+  "type": "node",
+  "id": 4075461408,
+  "lat": 53.1660783,
+  "lon": 23.1486652
+},
+{
+  "type": "node",
+  "id": 4825844766,
+  "lat": 53.1595499,
+  "lon": 23.1488993
+},
+{
+  "type": "node",
+  "id": 4825844768,
+  "lat": 53.1595653,
+  "lon": 23.1487228
+},
+{
+  "type": "node",
+  "id": 5749429986,
+  "lat": 53.1596787,
+  "lon": 23.1484993
+},
+{
+  "type": "node",
+  "id": 5749429987,
+  "lat": 53.1596767,
+  "lon": 23.1481155
+},
+{
+  "type": "node",
+  "id": 8081364469,
+  "lat": 53.1609951,
+  "lon": 23.1517962
+},
+{
+  "type": "node",
+  "id": 8205694665,
+  "lat": 53.1618602,
+  "lon": 23.1518570
+},
+{
+  "type": "node",
+  "id": 8205694666,
+  "lat": 53.1618467,
+  "lon": 23.1520305
+},
+{
+  "type": "node",
+  "id": 10077445222,
+  "lat": 53.1595892,
+  "lon": 23.1484221
+},
+{
+  "type": "node",
+  "id": 1852155183,
+  "lat": 53.1530878,
+  "lon": 23.1643421
+},
+{
+  "type": "node",
+  "id": 1852155191,
+  "lat": 53.1536551,
+  "lon": 23.1624227
+},
+{
+  "type": "node",
+  "id": 1852155193,
+  "lat": 53.1541710,
+  "lon": 23.1610379
+},
+{
+  "type": "node",
+  "id": 1881569071,
+  "lat": 53.1545294,
+  "lon": 23.1604367
+},
+{
+  "type": "node",
+  "id": 1882690736,
+  "lat": 53.1530262,
+  "lon": 23.1640332
+},
+{
+  "type": "node",
+  "id": 1882690742,
+  "lat": 53.1530883,
+  "lon": 23.1639197
+},
+{
+  "type": "node",
+  "id": 1882690750,
+  "lat": 53.1531603,
+  "lon": 23.1638089
+},
+{
+  "type": "node",
+  "id": 1882690793,
+  "lat": 53.1537422,
+  "lon": 23.1621840
+},
+{
+  "type": "node",
+  "id": 1882690822,
+  "lat": 53.1544349,
+  "lon": 23.1606933
+},
+{
+  "type": "node",
+  "id": 2367445386,
+  "lat": 53.1541566,
+  "lon": 23.1614460
+},
+{
+  "type": "node",
+  "id": 3341716400,
+  "lat": 53.1532063,
+  "lon": 23.1641631
+},
+{
+  "type": "node",
+  "id": 3341716402,
+  "lat": 53.1532452,
+  "lon": 23.1639591
+},
+{
+  "type": "node",
+  "id": 4391371827,
+  "lat": 53.1530727,
+  "lon": 23.1645369
+},
+{
+  "type": "node",
+  "id": 2081020088,
+  "lat": 53.1663859,
+  "lon": 23.1484936
+},
+{
+  "type": "node",
+  "id": 2081020090,
+  "lat": 53.1671012,
+  "lon": 23.1482505
+},
+{
+  "type": "node",
+  "id": 2081020094,
+  "lat": 53.1705338,
+  "lon": 23.1473946
+},
+{
+  "type": "node",
+  "id": 2256069809,
+  "lat": 53.1667009,
+  "lon": 23.1483626
+},
+{
+  "type": "node",
+  "id": 2256069832,
+  "lat": 53.1666794,
+  "lon": 23.1481954
+},
+{
+  "type": "node",
+  "id": 2285127442,
+  "lat": 53.1663166,
+  "lon": 23.1483378
+},
+{
+  "type": "node",
+  "id": 2317765756,
+  "lat": 53.1675620,
+  "lon": 23.1479549
+},
+{
+  "type": "node",
+  "id": 2440731919,
+  "lat": 53.1686282,
+  "lon": 23.1478694
+},
+{
+  "type": "node",
+  "id": 2595397180,
+  "lat": 53.1676570,
+  "lon": 23.1481159
+},
+{
+  "type": "node",
+  "id": 3536093816,
+  "lat": 53.1668862,
+  "lon": 23.1483057
+},
+{
+  "type": "node",
+  "id": 3536093817,
+  "lat": 53.1669305,
+  "lon": 23.1481182
+},
+{
+  "type": "node",
+  "id": 3890755370,
+  "lat": 53.1690877,
+  "lon": 23.1475743
+},
+{
+  "type": "node",
+  "id": 4075461409,
+  "lat": 53.1661743,
+  "lon": 23.1484203
+},
+{
+  "type": "node",
+  "id": 4075461410,
+  "lat": 53.1662308,
+  "lon": 23.1485748
+},
+{
+  "type": "node",
+  "id": 4075461411,
+  "lat": 53.1664757,
+  "lon": 23.1482677
+},
+{
+  "type": "node",
+  "id": 4075461412,
+  "lat": 53.1665228,
+  "lon": 23.1484316
+},
+{
+  "type": "node",
+  "id": 4075461413,
+  "lat": 53.1671181,
+  "lon": 23.1480662
+},
+{
+  "type": "node",
+  "id": 4075461415,
+  "lat": 53.1682389,
+  "lon": 23.1479682
+},
+{
+  "type": "node",
+  "id": 4341013137,
+  "lat": 53.1693153,
+  "lon": 23.1475175
+},
+{
+  "type": "node",
+  "id": 4341013138,
+  "lat": 53.1693292,
+  "lon": 23.1476947
+},
+{
+  "type": "node",
+  "id": 7203633359,
+  "lat": 53.1682195,
+  "lon": 23.1477933
+},
+{
+  "type": "node",
+  "id": 11877183092,
+  "lat": 53.1676547,
+  "lon": 23.1479321
+},
+{
+  "type": "node",
+  "id": 11942903635,
+  "lat": 53.1664362,
+  "lon": 23.1482851
+},
+{
+  "type": "node",
+  "id": 11942903637,
+  "lat": 53.1673065,
+  "lon": 23.1481992
+},
+{
+  "type": "node",
+  "id": 1857964342,
+  "lat": 53.1476581,
+  "lon": 23.1784670
+},
+{
+  "type": "node",
+  "id": 1857964359,
+  "lat": 53.1478492,
+  "lon": 23.1783334
+},
+{
+  "type": "node",
+  "id": 1883101784,
+  "lat": 53.1488088,
+  "lon": 23.1748084
+},
+{
+  "type": "node",
+  "id": 1883101785,
+  "lat": 53.1488518,
+  "lon": 23.1756700
+},
+{
+  "type": "node",
+  "id": 1883101786,
+  "lat": 53.1488321,
+  "lon": 23.1747397
+},
+{
+  "type": "node",
+  "id": 1883101787,
+  "lat": 53.1488614,
+  "lon": 23.1752497
+},
+{
+  "type": "node",
+  "id": 1883101790,
+  "lat": 53.1488728,
+  "lon": 23.1747576
+},
+{
+  "type": "node",
+  "id": 1883101791,
+  "lat": 53.1488722,
+  "lon": 23.1749743
+},
+{
+  "type": "node",
+  "id": 1883101794,
+  "lat": 53.1489436,
+  "lon": 23.1747652
+},
+{
+  "type": "node",
+  "id": 1883101795,
+  "lat": 53.1490219,
+  "lon": 23.1747316
+},
+{
+  "type": "node",
+  "id": 1883101797,
+  "lat": 53.1490685,
+  "lon": 23.1747010
+},
+{
+  "type": "node",
+  "id": 1883101798,
+  "lat": 53.1492715,
+  "lon": 23.1745260
+},
+{
+  "type": "node",
+  "id": 1883101800,
+  "lat": 53.1497533,
+  "lon": 23.1737804
+},
+{
+  "type": "node",
+  "id": 1883483212,
+  "lat": 53.1495363,
+  "lon": 23.1738117
+},
+{
+  "type": "node",
+  "id": 1883483213,
+  "lat": 53.1494903,
+  "lon": 23.1735951
+},
+{
+  "type": "node",
+  "id": 1883483214,
+  "lat": 53.1496106,
+  "lon": 23.1737774
+},
+{
+  "type": "node",
+  "id": 1883483225,
+  "lat": 53.1496857,
+  "lon": 23.1737558
+},
+{
+  "type": "node",
+  "id": 1883483229,
+  "lat": 53.1496909,
+  "lon": 23.1735527
+},
+{
+  "type": "node",
+  "id": 1883483233,
+  "lat": 53.1497177,
+  "lon": 23.1736737
+},
+{
+  "type": "node",
+  "id": 1883557717,
+  "lat": 53.1488741,
+  "lon": 23.1750612
+},
+{
+  "type": "node",
+  "id": 1990070440,
+  "lat": 53.1491035,
+  "lon": 23.1749820
+},
+{
+  "type": "node",
+  "id": 2478100691,
+  "lat": 53.1480739,
+  "lon": 23.1773488
+},
+{
+  "type": "node",
+  "id": 2562206502,
+  "lat": 53.1487540,
+  "lon": 23.1755440
+},
+{
+  "type": "node",
+  "id": 2676895268,
+  "lat": 53.1487768,
+  "lon": 23.1747333
+},
+{
+  "type": "node",
+  "id": 2826290829,
+  "lat": 53.1482525,
+  "lon": 23.1772629
+},
+{
+  "type": "node",
+  "id": 3563106400,
+  "lat": 53.1480739,
+  "lon": 23.1777371
+},
+{
+  "type": "node",
+  "id": 5645828451,
+  "lat": 53.1488291,
+  "lon": 23.1748392
+},
+{
+  "type": "node",
+  "id": 5645828461,
+  "lat": 53.1489048,
+  "lon": 23.1747656
+},
+{
+  "type": "node",
+  "id": 5645828462,
+  "lat": 53.1488519,
+  "lon": 23.1748990
+},
+{
+  "type": "node",
+  "id": 11942903631,
+  "lat": 53.1479306,
+  "lon": 23.1777304
+}
+
+  ]
+}

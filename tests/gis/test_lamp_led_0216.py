@@ -10,6 +10,7 @@ from streetscape import furniture as F, props as P
 
 ROOT = Path(__file__).resolve().parents[2]
 LED_REGIONS = ("knyszyn", "knyszyn-s", "knyszyn-w", "bialystok-knyszynska")
+LED_TARGET_REGIONS = ("bialystok-dojlidy",)          # ADR 0216b: LED heads on the city LED tender streets only
 
 
 
@@ -40,7 +41,9 @@ def test_policy_is_authored_only_for_the_owner_regions():
         if not f.exists():
             continue
         pol = F.lamp_policy((yaml.safe_load(f.read_text(encoding="utf-8")) or {}).get("overrides"))
-        assert (pol.get("family") == "led") == (d.name in LED_REGIONS), d.name
+        # region-wide LED (no target): owner regions only; ADR 0216b: Dojlidy has LED on the tender streets only
+        assert (pol.get("family") == "led" and not pol.get("target")) == (d.name in LED_REGIONS), d.name
+        assert (pol.get("family") == "led" and bool(pol.get("target"))) == (d.name in LED_TARGET_REGIONS), d.name
     assert F.lamp_policy(None) == {} and F.lamp_policy([{"kind": "paved_area"}]) == {}
 
 
@@ -50,7 +53,7 @@ def test_lighting_profiles_list_summer_and_led_regions():
     assert summer["season"] == "summer" and summer["duskClockHour"] == 21.0
     assert set(led["regions"]) == set(LED_REGIONS) and led["ledCctK"] == 4000
     assert max(led["ledColour"]) == 1.0 and led["ledColour"][2] >= 0.85          # white, not the warm default 0.82
-    for keep in ("bialystok-industrial-c", "bialystok-dojlidy"):                  # tile C and Dojlidy: unchanged
+    for keep in ("bialystok-industrial-c", "bialystok-dojlidy"):                  # tile C and Dojlidy: own profiles (0216b)
         assert keep not in summer["regions"] and keep not in led["regions"]
 
 
