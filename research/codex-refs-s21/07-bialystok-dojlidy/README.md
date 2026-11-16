@@ -86,3 +86,6 @@ Dwa nowe rekordy odsyłaczowe,0nowych fotografii i0kopii. Agent i root ponownie 
 
 
 R18: dwa nowe kadry dolnej jezdni ronda Pamięci Bieżeństwa, dzienny2020 i nocny2019; root oba obejrzał. Podpory, spód estakady, wyspa, bariera i jezdnia; technologia opraw i wysokość kamery UNVERIFIED. Trzecia ekspozycja odrzucona jako górna estakada, nie dolne rondo. Główny24.
+
+
+R19: dwa nowe MapillaryKuronia, richlv15.07.2017, root oba obejrzał i skierował widok ku przyziemiu. Siatka/cokół/trawa/chodnik/krawężnik oraz dojazd; funkcje małych urządzeń i metryka nieustalone.0nowych mostków/rowów i0dowodów stanu2026. Główny26.

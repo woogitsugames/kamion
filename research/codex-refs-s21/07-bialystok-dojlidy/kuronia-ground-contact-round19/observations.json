@@ -1,0 +1,44 @@
+{
+  "review_date": "2026-11-16",
+  "timezone": "Europe/Brussels",
+  "scope": "B-047/B-132: Kuronia, przyziemie przemysłowego ogrodzenia i przecięcie chodnika dojazdem",
+  "selection_source": "research/plant-gates-s21/sources.md: A_NNE 53.105375 / 23.196035; środek dawnego wycinka ortofoto, nie kamera",
+  "buska": "Nie ponawiano kontroli R15, która obejmowała jeden punkt i oddalenie bez widocznego pokrycia",
+  "ui": {
+    "map": "OpenStreetMap — wizualnie obramowany wybór w menu",
+    "capture_mode": "All captures — wizualnie obramowany wybór w menu",
+    "author": "richlv",
+    "capture_date": "2017-07-15",
+    "method": "Pierwszy punkt pokrycia przy Kuronia; drugi obraz przyciskiem następnego kadru. Każdy osobno powiększony i przesunięty ku przyziemiu; bez zapisów obrazów.",
+    "camera_gps": "UNVERIFIED; lat/lng URL to viewport",
+    "azimuth": "UNVERIFIED",
+    "camera_height": "UNVERIFIED"
+  },
+  "frames": [
+    {
+      "id": "07-KG19-01",
+      "pKey": "285739329929948",
+      "viewed": true,
+      "observation": "Siatkowy płot i słupki na pełnym jasnym cokole; trawa przy płocie, jasny chodnik, drugi pas trawy i krawężnik. Baner Rosti. Wzniesiony zielony teren za płotem i jasna hala z ciemnymi otworami/przyściennymi konstrukcjami. Na jezdni kałuże i białe strzałki. Powtarzalne uliczne słupy dwuramienne, pojedyncze gięte słupy bliżej hali.",
+      "limits": "Nie zidentyfikowano każdej hali ani bramy z baneru. Brak wymiarów, technologii podbudowy i obecnego stanu. Nie stwierdzono mostku ani rowu."
+    },
+    {
+      "id": "07-KG19-02",
+      "pKey": "1094523344376103",
+      "viewed": true,
+      "observation": "Odrębna bliższa ekspozycja przejścia/sąsiedniego skrzyżowania; dojazd z jaśniejszej utwardzonej nawierzchni przecina chodnik i trawę przy przerwie w płocie. Jasna szafka, niski czerwony oraz mały niebiesko-biały element. Cokół i zielony skłon za nim; jasna hala z ciemnymi otworami i zespołem okrągłych pól w jasnej ramie na ścianie.",
+      "limits": "Nie przypisano funkcji szafce i małym elementom. Nie potwierdzono rodzaju zamknięcia bramy, logistycznego zastosowania dojazdu ani przejezdności ciężarówki."
+    }
+  ],
+  "dedup": {
+    "main_rows_at_check": 24,
+    "exact_pkeys_in_previous_07": 0,
+    "search_scope": "rg obu pKey w całym research/codex-refs-s21/07-bialystok-dojlidy przed utworzeniem tego pakietu",
+    "new_exposures": 2,
+    "same_sequence": true
+  },
+  "counts": {"photos_viewed": 2, "new_link_only_frames": 2, "downloaded_media": 0, "new_map_points": 1},
+  "limits": {"state_2026": "UNVERIFIED", "dimensions": "UNVERIFIED", "legal_sign_codes": "UNVERIFIED", "metric_geometry": "UNVERIFIED"},
+  "mutations": "Tylko nowy child round19; parent/main nietknięte, bez Git. Brak Commons/Flickr/OSM/Overpass API.",
+  "cua": "completion_summary wykonane; Chrome jawnie oddany agentowi brud"
+}
