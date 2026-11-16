@@ -32,6 +32,7 @@ param(
     [string]$OutDir = '',
     [string]$Label = '',
     [double]$WaitMinutes = 15,
+    [string[]]$ExtraArgs = @(),
     [switch]$NoSlot
 )
 $ErrorActionPreference = 'Stop'
@@ -65,6 +66,7 @@ try {
             'borderless' { $a += @('-screen-fullscreen', '1', '-window-mode', 'borderless') }
             'exclusive'  { $a += @('-screen-fullscreen', '1', '-window-mode', 'exclusive') }
         }
+        if ($ExtraArgs) { $a += $ExtraArgs }
         if ($Width -and $Mode -ne 'windowed') { $a += @('-screen-width', "$Width", '-screen-height', "$Height") }
         $total = $LiveSeconds + $FocusSeconds
         if ($Exit -eq 'quit') { $a += @('-shot', (Join-Path $OutDir ("run{0:D2}.png" -f $i)), '-shot_t', "$([math]::Max(1, $total - 3))", '-quit_t', "$total") }
@@ -131,5 +133,6 @@ finally {
 }
 $v = @($rows | Where-Object valid); $k = @($v | Where-Object crash).Count
 "RESULT label=$Label valid=$($v.Count)/$($rows.Count) crashes(valid)=$k atExit(valid)=$(@($v | Where-Object crashAtExit).Count) crashes(all)=$(@($rows | Where-Object crash).Count) out=$OutDir"
+
 
 
