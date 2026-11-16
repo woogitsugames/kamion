@@ -1,6 +1,8 @@
 # ADR 0228 — Przegub: kontakt kabina–naczepa zamiast kątowego ogranicznika 90°, jedno źródło geometrii, tłumione lądowanie
 
 Status: Proposed (agent fizyki, chmura E/E1, gałąź `jackknife-0228`), 2026-11-15. Scalenie i pomiar na telefonie: lider.
+Aktualizacja H11 (2026-11-16, chmura H r3): merge `origin/main`, P1 z recenzji s22 #113, zgodność z FFB #132 (ADR 0263) — sekcja
+„Aktualizacja H11” na końcu.
 Dotyczy: BACKLOG-S21 **B-077** (bramka 2, `docs/03` „jackknife możliwy przy błędzie kierowcy, brak eksplozji solvera”),
 ADR 0158 Open 3 (jedno źródło geometrii) i Open 4 (lądowanie prawie sprężyste), ADR 0165 „Otwarte” (brak kontaktu ciągnik–naczepa
 przy złożeniu ≥ 90°), ADR 0201b F2 (stopy bez odbicia), D58/D59.
@@ -155,13 +157,64 @@ wnikanie, siła kontaktu, prędkości kątowe; zrzut 0,5 m: wysokość, ugięcie
 - Unity, PlayMode: kontakt z PhysX (krawężniki, ściany) bez zmian; `External*Force` nadal nie są podawane (ADR 0165 Otwarte).
 
 ## Otwarte
-1. **Prześwit przodu naczepy do kabiny 7 mm** (pudło graybox 1,622 m vs kabina 2,07 m): przy złożeniu ~50° i pochyleniu naczepy
-   górny narożnik ociera kabinę. Decyzja lidera/właściciela: zaokrąglony narożnik/ściana 1,6 m w pudełku (model 2,029 m) albo
-   większy odstęp kabiny (dims.json). Przypięte testem `test_body_box_swing_clearance`.
+1. ~~**Prześwit przodu naczepy do kabiny 7 mm**~~ — H11: obrys kontaktowy = zaokrąglony przód z modelu (2,029 m), prześwit 4,1 cm
+   (niżej). Zostaje: zatrzymanie z 13–20 km/h przy 55–60° (głównie 40 t) daje po zatrzymaniu muśnięcie (≤ 0,61 mm, ≤ 1,33 km/h,
+   ciągnik kołysze się ~1,2° do tyłu). Pełne usunięcie = decyzja o wymiarach (odstęp tyłu kabiny od sworznia 2,07 m, `fifth_wheel_lead`
+   ograniczone długością 16,50 m) albo o tłumieniu kołysania ciągnika — lider/właściciel po feel teście.
 2. Brak kontaktu pionowego (naczepa na błotniku/ramie) i brak geometrii podpór naczepy i szyi — świadomie poza zakresem.
 3. Strata energii opony (lądowanie z 1 m nadal ma 0,16 s lotu) — zmienia złotą telemetrię hamowania; do decyzji z feel testem.
 4. Unity nie było uruchamiane (chmura bez edytora): kompilacja C# 9 sprawdzona tylko kompilatorem .NET 8 z `LangVersion 9`
    (te same źródła). EditMode `BodyBoxGeometryTests`, PlayMode `CombinationLabTests` / `KerbStrikeParityTests` i feel test —
    lider. Po rozpięciu kontakt kabina–naczepa liczy solver; czy `ConnectTrailer` przywraca kolizje PhysX po rozpięciu, nie
    sprawdzano (kod Unity-only, poza własnością fizyki).
-5. Feel test właściciela (B-075): cofanie pod rampę z kontrą, „stuk” w kabinę, zrzut/próg.
+5. Feel test właściciela (B-075): cofanie pod rampę z kontrą, „stuk” w kabinę, zrzut/próg; po H11 także kierownica z FFB przy
+   „stuku” (wygładzenie 0,5 s — WORKING_VALUE, decyzja feelingu).
+6. (H11) `CouplingContact.MaxPoints` = 64 (4 × 4 pudła × 4 punkty); naczepa DLC z większą liczbą pudeł `coupling` zatrzyma się
+   wyjątkiem przy `SetGeometry` — trzeba podnieść stałą (bufory solvera rosną liniowo).
+7. (H11) Normy wolnej przestrzeni siodła przy pochyleniu naczepy (np. ISO 1726) nie zostały przeczytane — tolerancja 1,13° / 1,44°
+   to wynik geometrii WORKING_VALUE, nie wymóg (UNVERIFIED).
+
+## Aktualizacja H11 (2026-11-16)
+**Merge `origin/main` (498 commitów od `fc450006c`).** Bez konfliktów tekstowych. Semantycznie: main nie zmienił rdzenia
+fizyki (`Vehicle/Physics`, `tools/physics-runner`, `tests/physics`, `tests/golden` poza 1 linią `swept_path_gate3.py`); prefaby
+graybox przegenerowane (kolejność fileID), BoxCollidery liczone w builderach — bez wpływu na `bodyBoxes`. Nowe na main i istotne:
+FFB kierownicy PC (#132, ADR 0263: `ForceFeedbackModel` czyta `VehicleModel.AligningTorqueTotal` i naciski osi skrętnej),
+CI `dist-tests`. Po merge'u przed zmianami: .NET 295/295, runner 145/879 PASS (= przed merge'em).
+
+**P1 recenzji (prześwit 7 mm).** Sondy runnera (skręt w przód 55–60°, pełne hamowanie): stary obrys dawał kontakt kabina–naczepa
+0,11–6,8 s, 38–131 kN (przy 20 km/h i 40 t kontakt już w ustalonym skręcie przez przechył naczepy) — „hamowanie” naczepy przez
+kabinę. Decyzja o geometrii, nie o parametrach kontaktu: obrys **kontaktowy** przodu naczepy = zaokrąglony przód modelu
+(promień 2,0294 m zmierzony w eksporcie Blendera, `trailer_manifest.json` `measured.front_swing`, DERIVED; ≤ 2,04 m z 96/53/EC):
+pudła `BodyCoupling` (pełna szerokość do z = 1,578 m) i `Nose` (1,578–1,622 m, szerokość 2,438 m); `Body` zostaje tylko kolizją
+z ziemią (lustro PhysX graybox). Prześwit do tyłu kabiny **4,1 cm**; bez kontaktu do 110° przy |pochyleniu| ≤ 1,13° i |przechyle|
+≤ 1,44° względem ciągnika. Kąt pierwszego kontaktu bez zmian **117,12°**. Nowe scenariusze `jackknife_tight_turn_forward_comb`
+(5 km/h) i `_10_comb` (10 km/h, druga strona), przegub 57–58,5°, pełne hamowanie w 40 s: **0 kontaktu** (pusty i 40 t).
+Pozostałość — „Otwarte 1”.
+
+**Zgodność z FFB #132.** Ścieżka: siła kontaktu → bryły ciągnika i naczepy (nie do `AligningTorqueTotal` wprost) → kontakt w ~0,1 s
+odwraca odchylanie ciągnika i przeciąga oś skrętną w bok → moment samonastawności opon (ślad × Fy) przechodzi przez szczyt
+(40 t, wjazd w kabinę: −0,9 → +2,3 kN m w 80 ms) → `ForceFeedbackModel` (domyślne, slew 20/s) przerzucał wyjście −0,75 → +1,0
+w ~0,1 s = szarpnięcie; to samo trafia do powrotu kierownicy dotykowej. Poprawka w rdzeniu: `CombinationModel` zgłasza kontakt
+(`VehicleModel.NotifyBodyContact`), a `AligningTorqueTotal` jest wtedy i 0,5 s po nim opóźnieniem 1. rzędu (0,5 s) surowej wartości
+(`AligningTorqueRaw`), po czym zbiega i oddaje surową (skok < 1 N m na kołach); siły opon na pojazd bez zmian.
+`steering.contactFeedbackLagS` / `contactFeedbackHoldS` = 0,5 / 0,5 s, WORKING_VALUE (decyzja feelingu).
+
+| miara (krok 10 ms, moment na wieńcu) | bez wygładzenia | H11 | odniesienie |
+|---|---|---|---|
+| zmiana celu FFB w oknie kontaktu, fold_120 40 t / pusty | 4,53 / 3,29 N m | **0,48 / 0,34** | zmiana pasa 80 km/h 0,03; krawężnik 15 cm 1,69; uderzenie w krawężnik 14 cm 50 km/h 3,77 (człon „road feel”) |
+| to samo, fast_fold 40 t / pusty; countersteer pusty | 5,50 / 3,52; 3,81 | **0,49 / 0,38; 0,36** | limit testu 0,6 N m (7,5 % pełnej skali) |
+| zmiana wyjścia FFB na krok (maks.) | 0,200 (= limit slew) | **≤ 0,061** | slew 0,2 |
+
+Testy: xUnit `JackknifeForceFeedbackTests` (prawdziwy `ForceFeedbackModel` + `WheelAxis` kompilowane z `game/Assets/_Project/Input`
+w projekcie testów, krok jak `DrivingLabBootstrap`), mutacja bez wygładzenia łapie kopnięcie (4,53 N m), powrót do surowej wartości po
+kontakcie (countersteer: 0 N m różnicy na końcu). `JackknifeContactTests`: obrys przodu (2,029 m, ≥ 4 cm), brak kontaktu do 110°
+przy ±0,5°, tolerancja pochylenia/przechyłu, odrzucenie zbyt wielu pudeł (P2 recenzji: `CouplingContact.MaxPoints` 64 +
+`FormatException` w `SetGeometry`). EditMode `BodyBoxGeometryTests.TrailerCouplingOutline_AndFeedbackSmoothing_FromParsedDefinitions`
+(ścieżka JsonUtility) — napisany, NIEuruchomiony.
+
+Wyniki: .NET **319/319**; runner **149 scenariuszy / 915 checków PASS** (względem stanu przed H11 zmienił się tylko
+`jackknife_reverse_countersteer_comb@laden40`: wnikanie 1,3 mm → 0); `test_dims_sync.py` OK (pudła `BodyCoupling`/`Nose` liczone z
+manifestu); bench p50 13,4–14,3 µs vs 13,9–14,0 µs (szum, 16 zamiast 12 par pudeł). Brak alokacji na krok
+(`CombinationStep_WithBodyContact_DoesNotAllocate` zielony). Wykresy (obejrzane): `artifacts/jackknife-0228/h11/png/` — `ffb_*`
+(siła kontaktu, moment samonastawności, wyjście FFB przed/po), `turn_*` (skręt + hamowanie przed/po); CSV 20 Hz
+`artifacts/jackknife-0228/h11/{before,after}/`, sondy `h11/probe_scenarios/`.

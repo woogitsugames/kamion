@@ -84,5 +84,31 @@ namespace Game.Tests
             double deg = CouplingContact.FirstContactArticulationDeg(data.Vehicle, data.Trailer);
             Assert.That(deg, Is.InRange(117.0, 117.25));
         }
+
+        /// <summary>
+        /// Review P1 (s22 #113), JsonUtility path: the trailer's coupling outline is the art model's rounded front (coupling-only
+        /// boxes BodyCoupling + Nose, swing radius 2.029 m, 4.1 cm to the cab back), the graybox Body box is ground-only, and the
+        /// steering-feedback contact smoothing (ADR 0228 x ADR 0263) is parsed.
+        /// </summary>
+        [Test]
+        public void TrailerCouplingOutline_AndFeedbackSmoothing_FromParsedDefinitions()
+        {
+            var data = VehicleDataAsset.LoadDefault();
+            Assume.That(data.HasTrailer, "default data asset has no trailer");
+            double swing = 0;
+            int coupling = 0;
+            foreach (var b in data.Trailer.bodyBoxes)
+            {
+                if (b.name == "Body") { Assert.IsTrue(b.ground); Assert.IsFalse(b.coupling); }
+                if (!b.coupling) continue;
+                coupling++;
+                double zf = b.center.z + b.size.z / 2, hx = b.size.x / 2;
+                if (zf > 0) swing = System.Math.Max(swing, System.Math.Sqrt(zf * zf + hx * hx));
+            }
+            Assert.AreEqual(4, coupling, "BodyCoupling, Nose, Beams, RearUnderrun");
+            Assert.That(swing, Is.InRange(2.028, 2.0295));
+            Assert.That(data.Vehicle.steering.contactFeedbackLagS, Is.EqualTo(0.5).Within(1e-9));
+            Assert.That(data.Vehicle.steering.contactFeedbackHoldS, Is.EqualTo(0.5).Within(1e-9));
+        }
     }
 }

@@ -31,3 +31,17 @@ pwsh scripts/test.ps1 -Platform EditMode      # BodyBoxGeometryTests + reszta
 pwsh scripts/test.ps1 -Platform PlayMode      # CombinationLabTests, KerbStrikeParityTests
 pwsh scripts/build-android.ps1 -Install -Run  # potem feel test cofania z kontrą (B-075)
 ```
+
+## H11 (2026-11-16, chmura H r3) — merge main, P1 recenzji, FFB #132
+- Merge `origin/main` bez konfliktów (rdzeń fizyki na main bez zmian); P1: obrys kontaktowy przodu naczepy = model 2,029 m
+  (`BodyCoupling` + `Nose`), prześwit 4,1 cm, scenariusze `jackknife_tight_turn_forward(_10)_comb` 0 kontaktu.
+- FFB: `AligningTorqueTotal` wygładzany 0,5 s podczas kontaktu (`AligningTorqueRaw` surowy); FFB krok 4,5 → 0,48 N m.
+- P2: `CouplingContact.MaxPoints` 64 + wyjątek przy przekroczeniu; numer ADR przy `reverse_dock` w PHYSICS_VALIDATION.
+- .NET 319/319, runner 149/915 PASS, dims sync OK; EditMode napisany, NIEuruchomiony. Dowody: `h11/`.
+### Następny krok (lider)
+```
+pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64   # BodyBoxGeometryTests (4 testy), ForceFeedbackModelTests
+pwsh scripts/test.ps1 -Platform PlayMode                      # CombinationLabTests, KerbStrikeParityTests
+dotnet test tools/physics-runner/PhysicsRunner.sln -c Release ; dotnet run -c Release --project tools/physics-runner/Runner
+```
+Potem build Windows: cofanie z naczepą do ogranicznika (kontra, „stuk” w kabinę) z kierownicą/padem — ocena FFB i powrotu kierownicy.
