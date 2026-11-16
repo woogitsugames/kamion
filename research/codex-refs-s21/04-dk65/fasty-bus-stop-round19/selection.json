@@ -1,0 +1,72 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE — dwa indywidualnie obejrzane kadry; zjazd i pobocze, bez potwierdzonego przystanku",
+  "gap": "Wyposażenie przystanku i styk nawierzchni/pobocza w Fastach; dotychczasowe kwalifikowane zatoki są w rejonie Dobrzyniewa, nie w tym punkcie",
+  "point_source": "Istniejący research/dk65-knyszyn-refs/data/osm_corridor.json, read-only; bez nowego OSM/Overpass",
+  "point": {
+    "osm_node": 7283285540,
+    "lat": 53.1755996,
+    "lon": 23.0312231,
+    "tags_literal": {
+      "bus": "yes",
+      "highway": "bus_stop",
+      "public_transport": "platform"
+    },
+    "name": "UNVERIFIED — brak tagu name w zapisanych danych",
+    "K1_route_distance_km": 10.417,
+    "route_distance_limit": "Metryka trasy badawczej K1, nie państwowy kilometraż DK65"
+  },
+  "tile_selection": {
+    "id": "dk65-02",
+    "bbox_wgs84_west_south_east_north": [
+      23.02321,
+      53.17247,
+      23.05552,
+      53.1898
+    ],
+    "source": "Istniejący research/dk65-knyszyn-refs/data/tiles_wgs84.json",
+    "meaning": "Wybrany węzeł OSM leży w bbox kafla; nie jest to jeszcze georeferencja żadnego zdjęcia"
+  },
+  "dedup": "Punkt i opis nie pokrywają Ełcka214528/1452388 ani Studzienna AV5. Znany historyczny budynek przystanku kolejowego Fasty w05 nie jest dowodem wyposażenia tego przystanku autobusowego.",
+  "limits": {
+    "map_points": 1,
+    "max_viewed_frames": 2,
+    "media_downloads": 0,
+    "new_osm_requests": 0,
+    "commons_requests": 0
+  },
+  "unverified": [
+    "wyposażenie przystanku i istnienie zatoki w omawianych kadrach",
+    "GPS aparatu",
+    "heading i odniesienie do północy",
+    "aktualny numer drogi oraz układ po robotach 2026",
+    "wymiary i materiał czerwonych elementów nawierzchni",
+    "funkcja odwodnieniowa obniżenia i konstrukcja przepustu"
+  ],
+  "result_counts": {
+    "new_frames": 2,
+    "distinct_visible_driveways": 1,
+    "confirmed_bus_stops": 0,
+    "downloaded_media": 0,
+    "new_osm_requests": 0
+  },
+  "dedup_result": "Dokładne ID 1624116571311158 oraz 371472970960534 nie występują w pozostałych plikach s21 ani K1 według lokalnego rg przed zapisaniem manifestu.",
+  "visual_review": {
+    "date": "2026-11-16",
+    "clock_precision": "Tylko data; dokładny czas oglądu nieutrwalony",
+    "basemap": "OpenStreetMap jawnie wybrany w menu; All captures",
+    "frames": [
+      {
+        "id": "1624116571311158",
+        "author": "picturehoover",
+        "capture_date_ui": "2020-06-27"
+      },
+      {
+        "id": "371472970960534",
+        "author": "picturehoover",
+        "capture_date_ui": "2020-06-27"
+      }
+    ],
+    "second_frame_id": "Odczytany z aktualnego publicznego URL po przejściu strzałką sekwencji. Obraz zmienił się i został osobno obejrzany. Nie użyto API ani ukrytego stanu."
+  }
+}

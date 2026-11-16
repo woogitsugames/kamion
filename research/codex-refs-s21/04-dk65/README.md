@@ -1,6 +1,6 @@
 # 04 — DK65: datowany stan inwestycji i organizacja ruchu — WIP
 
-Stan ewidencji głównej na 16.11.2026: **27 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **29 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Wcześniejszy etap manifestu:8 rekordów —6 dokumentacyjnych i2 ponownie obejrzane orto. Brak nowych fotografii naziemnych i brak pobranych obrazów firmowych. Normy i prywatne obserwacje tekstowe opisano osobno.
 
@@ -96,3 +96,8 @@ Główny manifest: 22 rekordy. [Dokument gminny](tree-inventory-round9/README.md
 ## Korony przy dwóch fragmentachK1 — runda17
 
 [tree-crowns-round17](tree-crowns-round17/README.md):2nowe i osobno dwukrotnie obejrzane ortokadryGUGiK800px,240×240m/EPSG2180. Nieregularny las i grupa koron przy łące, bez modelu stałego rozstawu pni. Jeden szacunek środka korony do asfaltu około12m±4mESTIMATED; nie odsunięcie pnia. Gatunki/data obecnego nalotuUNVERIFIED.2pobrania/2kanoniczneplikiGit, duplikatyRAW usunięte poSHA. Główny27.
+
+
+### Fasty — jeden zjazd i dwa historyczne kadry
+
+FB19-01/02, picturehoover27.06.2020, dwa permalinki Mapillary obejrzane indywidualnie także przez root w publicznym UI z OSM,0pobrań. Jeden czerwonołososiowy zjazd z prostokątnych elementów, szare ziarniste pobocze i trawiaste obniżenie. Dwa ujęcia nie oznaczają dwóch zjazdów. Przystanek/wiata/znak niepotwierdzone, funkcja obniżenia i przepust UNVERIFIED. Punkt K1km10.417 wdk65-02 wybrał miejsce, ale nie dowodzi GPS kamery/kafla obu fotografii ani aktualnego numeru drogi2026. [FB19](fasty-bus-stop-round19/README.md).
