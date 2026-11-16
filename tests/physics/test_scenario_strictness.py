@@ -61,16 +61,21 @@ def test_generator_reproduces_committed_scenarios():
                 if _load(f) != _load(committed):
                     diffs.append(f"{committed_dir.name}/{f.name}")
         assert not diffs, f"regeneration differs from committed scenarios (loosened or hand-edited): {diffs}"
-        assert list(pathlib.Path(tmp_xfail).glob("*.json")), "generator emitted no known-failure scenario (ring_96_53_comb)"
+        # D79 / ADR 0280: the turning ring is a regular (must-pass) scenario now, not a known failure
+        assert (pathlib.Path(tmp) / "ring_96_53_comb.json").exists(), "generator no longer emits ring_96_53_comb"
+        assert not (pathlib.Path(tmp_xfail) / "ring_96_53_comb.json").exists(), "ring_96_53_comb went back to known failures"
 
 
 def test_ring_limits_pinned():
     """ADR 0280: the 96/53/EC Annex I 1.5 radii are pinned here, independently of the generator."""
-    for path in (XFAIL / "ring_96_53_comb.json", SCEN / "ring_96_53_comb_rwb760.json"):
-        checks = {c["metric"]: c for c in _load(path)["checks"]}
+    for path in (SCEN / "ring_96_53_comb.json",):
+        sc = _load(path)
+        assert "expectedFailMetrics" not in sc and "expectedFailReason" not in sc, path.name
+        assert not sc.get("overrides"), f"{path.name}: the ring must run on the game geometry (no overrides)"
+        checks = {c["metric"]: c for c in sc["checks"]}
         assert checks["swept_outer_radius_m"]["max"] <= 12.50 + 1e-12, path.name
         assert checks["swept_inner_radius_m"]["min"] >= 5.30 - 1e-12, path.name
-        assert checks["swept_ring_width_m"]["max"] <= 7.20 + 1e-12, path.name
+        assert checks["swept_ring_width_m"]["max"] <= 7.15 + 1e-12, path.name     # 7.20 minus the 5 cm margin (D79)
         env = _load(path)["envelope"]
         assert abs(env["trailerHalfWidth"] * 2 - DIMS["max_width_m"]["value"]) < 1e-9
         assert abs(env["tractorFrontZ"] - DIMS["wheelbase_m"]["value"] - DIMS["front_overhang_m"]["value"]) < 1e-9

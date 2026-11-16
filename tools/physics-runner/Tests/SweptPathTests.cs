@@ -115,21 +115,23 @@ namespace PhysicsRunner.Tests
         [Fact]
         public void GeometryOverrides_ApplyToARunCopyOnly()
         {
-            var sc = Scenario.Load(System.IO.Path.Combine(RepoPaths.ScenariosDir, "ring_96_53_comb_rwb760.json"));
+            // D79 / ADR 0280: the game data has the 7.60 m axles; the override puts the former 7.70 m set on a run copy
+            var sc = Scenario.Load(System.IO.Path.Combine(RepoPaths.ScenariosDir, "ring_96_53_comb.json"));
             sc.combination = "laden40";
+            sc.overrides.trailerAxlePositionsZ = new[] { -6.39, -7.70, -9.01 };
             sc.overrides.fifthWheelZ = 0.70;
             var defs = ScenarioRunner.ApplyGeometry(ScenarioRunner.Defs, sc);
             Assert.NotSame(ScenarioRunner.Defs, defs);
             var t = defs.Trailers[sc.trailer];
-            Assert.Equal(new[] { -6.29, -7.60, -8.91 }, new[] { t.axles[0].positionZ, t.axles[1].positionZ, t.axles[2].positionZ });
+            Assert.Equal(new[] { -6.39, -7.70, -9.01 }, new[] { t.axles[0].positionZ, t.axles[1].positionZ, t.axles[2].positionZ });
             Assert.Equal(0.70, defs.Vehicles[sc.vehicle].fifthWheel.position.z, 12);
             double massZ = 0, prodMassZ = 0;
             foreach (var m in t.massElements) if (m.name == "tridem_axles_wheels_brakes") massZ = m.center.z;
             var prod = ScenarioRunner.Defs.Trailers[sc.trailer];
             foreach (var m in prod.massElements) if (m.name == "tridem_axles_wheels_brakes") prodMassZ = m.center.z;
-            Assert.Equal(prodMassZ + 0.10, massZ, 9);          // axle group mass moves with the mean axle position
+            Assert.Equal(prodMassZ - 0.10, massZ, 9);          // axle group mass moves with the mean axle position
             // production set untouched
-            Assert.Equal(-7.70, prod.axles[1].positionZ, 12);
+            Assert.Equal(-7.60, prod.axles[1].positionZ, 12);
             Assert.Equal(0.68, ScenarioRunner.Defs.Vehicles[sc.vehicle].fifthWheel.position.z, 12);
         }
 
@@ -138,10 +140,11 @@ namespace PhysicsRunner.Tests
         {
             // Same driver radius, only the axle positions differ (7.70 -> 7.60 m): inner radius must grow by roughly
             // dRa/dL = L_eff / Ra ~ 1.1-1.2 cm per cm (ADR 0280 sensitivity), outer unchanged (tractor bumper corner).
-            var after = Scenario.Load(System.IO.Path.Combine(RepoPaths.ScenariosDir, "ring_96_53_comb_rwb760.json"));
+            // (D79: "after" = the game data, "before" = the former 7.70 m set through the run-copy override)
+            var after = Scenario.Load(System.IO.Path.Combine(RepoPaths.ScenariosDir, "ring_96_53_comb.json"));
             after.combination = "laden40"; after.duration = 150;
-            var before = Scenario.Load(System.IO.Path.Combine(RepoPaths.ScenariosDir, "ring_96_53_comb_rwb760.json"));
-            before.combination = "laden40"; before.duration = 150; before.overrides.trailerAxlePositionsZ = null;
+            var before = Scenario.Load(System.IO.Path.Combine(RepoPaths.ScenariosDir, "ring_96_53_comb.json"));
+            before.combination = "laden40"; before.duration = 150; before.overrides.trailerAxlePositionsZ = new[] { -6.39, -7.70, -9.01 };
             var ra = ScenarioRunner.Run(after); var rb = ScenarioRunner.Run(before);
             double ia = ra.Metric("swept_inner_radius_m", 0, 100), ib = rb.Metric("swept_inner_radius_m", 0, 100);
             double oa = ra.Metric("swept_outer_radius_m", 0, 100), ob = rb.Metric("swept_outer_radius_m", 0, 100);
