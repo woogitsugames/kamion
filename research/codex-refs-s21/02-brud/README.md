@@ -4,7 +4,7 @@ Stan ewidencji głównej na 16.11.2026: **24 rekordy** (SOURCED: lokalny `manife
 
 Aktualny manifest:24 rekordy =22 kadry (14 lokalnych/8 link-only)+2 dokumenty, w tym odrzucenia/AUX. Nie24 kwalifikacje. [RejestrA/B/C](qualification-ledger-round18/README.md) rozdziela wymagania bez ich obniżania.
 
-A:≥20łącznie — rozpoznana dolna granica6 treściowych źródeł (3 rdzeniowe158/182/183 +1 Krone z lekkim miejscowym filmem +1 RoadTour source-dependent +1 AutoReview39-A01). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 70/88 rekordów P18 obejrzanych, 18 NOT_REVIEWED. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
+A:≥20łącznie — rozpoznana dolna granica6 treściowych źródeł (3 rdzeniowe158/182/183 +1 Krone z lekkim miejscowym filmem +1 RoadTour source-dependent +1 AutoReview39-A01). B:≥12NOWYCH z≥1000pxdrzwi i ruchem/zarazpotrasie — potwierdzone1źródłoWesternExpress, liczone raz zP18-182/CR6. C-zima-A:1source-dependent, C-Europa-A / zima-B / Europa-B:0potwierdzonych w rozpoznanym podzbiorze, nie globalne zera. 71/88 rekordów P18 obejrzanych, 17 NOT_REVIEWED. Całe20/12/6/6niepotwierdzone; nie przyjmujemy statusówbezoglądu.
 
 Źródłowy typnaczepy, brud zamiast powłoki/rdzy, zimowy kontekst i europejska droga mają osobne dowody. Stare kadry nie stają się nowymiB; mniejszy nowy kadrA nie spełniaB. Wycinki/aliasy jednego zdjęcia nie zwiększają wyniku. Szczegółowe historyczne poszukiwania i erraty poniżej.
 
@@ -257,3 +257,7 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Zimowe kadry — runda40
 
 [editorial-road-doors-round40](editorial-road-doors-round40/README.md):6 osobno obejrzanych nowych ekspozycji link-onlyARR,0 nowychA/B. YleAUX pokazuje biały odkład na ramie/podnośniku, bez pewności typu naczepy i chemii; dwie ekspozycjeDoba jednego zestawu na źródłowo wskazanej drodze, ale film tyłu niepewny. Główny24, dolna granicaA6 z ograniczeniami/B1 bez zmian.
+
+## Kontrolowany powrótCommons — runda44
+
+[commons-access-check-round44](commons-access-check-round44/README.md): po prawie3h1API i1originalGET zwróciły200; CC BY-SA3.0/Xnatedawgx przed pobraniem. P18-168 osobnoobejrzany640×480: przewrócony pojazd i kontener, śnieg, brak tylnychdrzwi. Pokrycie71/88,17NOT_REVIEWED; A6zograniczeniami/B1 bez zmian.1oryginałraw/0kopiiGit. Wznowiona tylko ograniczona kolejka jednego agenta z odstępami iSTOPna429, nie cała usługa naraz.
