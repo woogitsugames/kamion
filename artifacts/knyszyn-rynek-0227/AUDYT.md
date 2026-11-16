@@ -174,3 +174,7 @@ R18 → r19: 70 z 72 kamer ma identyczną liczbę rendererów, draws, shadow dra
 | `rynek-king-profile-0227` | 273 / 270 450 → 450 / 338 213 | 372 / 473 360 → 641 / 796 017 |
 
 Shadow draws nie zmieniły się na żadnej z 72 kamer. Różnice w przestawionych kadrach nie dowodzą zmiany kosztu geometrii przy niezmiennym widoku. Dane są szacunkami CPU edytora przed SRP batchingiem, nie pomiarami GPU ani telefonu; ograniczenia porównania z before pozostają aktualne.
+
+## R19 — próba georeferencji targowicy
+
+Automatyczna próba rejestracji zdjęcia względem ortofoto zakończyła się **FAIL**: mediana błędu sześciu odłożonych kandydatów wyniosła 79,92 m. Pary są automatyczne i niezweryfikowane terenowo; wartość nie jest metrologiczną dokładnością ani podstawą wyznaczenia położenia wiat. Lokalny raport `artifacts/knyszyn-rynek-0227/market-georef-attempt.md` opisuje metodę i ograniczenia. Zdjęć właściciela nie publikować ani nie dodawać do Git.
