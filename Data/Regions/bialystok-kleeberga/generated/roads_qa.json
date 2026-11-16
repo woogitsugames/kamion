@@ -5367,7 +5367,9 @@
    ],
    "length_m": 533.8,
    "max_grade": 0.0523,
-   "overrides": [],
+   "overrides": [
+    "dk8-seam-kerb-od005"
+   ],
    "profile_rms_vs_nmt_m": 1.443,
    "sidewalk_frac": 1.0,
    "width_m": [
@@ -14271,12 +14273,12 @@
   ],
   "crossings_snapped": 152,
   "decals": {
-   "gullies": 1609,
+   "gullies": 1611,
    "oil": 374,
    "patches": 773
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 988461,
+  "footprint_nodes": 988274,
   "fork_abreast": [
    {
     "beside": "c:w257355878:12962166397-2357583390",
@@ -16098,13 +16100,19 @@
   },
   "markings_overlap_removed_tris": 179,
   "median_fills": [],
-  "nmt_nodes_replaced_under_decks": 1728,
+  "nmt_nodes_replaced_under_decks": 1725,
   "overrides_applied": [
    {
     "id": "rondo-szymanskiego-ring-over-dk8-cutting",
     "targets": [
      "w257353773:2629122142-2629122161",
      "w257353774:2629122147-2629122136"
+    ]
+   },
+   {
+    "id": "dk8-seam-kerb-od005",
+    "targets": [
+     "w261104557:2927425559-2504239797"
     ]
    }
   ],
@@ -16114,10 +16122,60 @@
   "painted_zones": [],
   "profile_ties": [],
   "roundabout_junctions": 12,
+  "seam_shoulders": {
+   "in_chain_ramps": 0,
+   "seam_sides": 0
+  },
+  "seam_tapers": [
+   {
+    "chain": "c:w222579345:2315344544-2315344551",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.25,
+    "width_other": 6.0,
+    "width_own": 5.5,
+    "width_seam": 5.75
+   },
+   {
+    "chain": "c:w224161424:2329921567-2329921561",
+    "end": "a",
+    "in_tile_m": 10.42,
+    "length_m": 20.84,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.5,
+    "width_other": 4.0,
+    "width_own": 5.0,
+    "width_seam": 4.5
+   },
+   {
+    "chain": "c:w272531949:7366611274-2774680411",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-maczka",
+    "step_m": 0.25,
+    "width_other": 5.0,
+    "width_own": 5.5,
+    "width_seam": 5.25
+   },
+   {
+    "chain": "c:w301702365:2504239824-3626955270",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "bialystok-knyszynska",
+    "step_m": 0.25,
+    "width_other": 6.0,
+    "width_own": 5.5,
+    "width_seam": 5.75
+   }
+  ],
   "sides_on_carriageway_culled": {
-   "kerb_tris": 6564,
-   "parts": 726,
-   "side_tris": 892
+   "kerb_tris": 6524,
+   "parts": 719,
+   "side_tris": 893
   },
   "signalised_junctions": 4,
   "through_lines": {
@@ -16134,14 +16192,14 @@
   },
   "verge_strips": {
    "chunks": 58,
-   "tris": 73867
+   "tris": 73939
   },
   "walled_ramps": [
    {
     "chain": "c:w242987870:2504239836-2927425559",
     "confidence": "medium",
     "max_wall_h_m": 4.17,
-    "nmt_fill_max_m": 0.35,
+    "nmt_fill_max_m": 0.36,
     "walled_m": 108.5
    },
    {
