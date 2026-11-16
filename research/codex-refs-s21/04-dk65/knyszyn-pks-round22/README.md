@@ -1,0 +1,15 @@
+# Knyszyn — przystanek PKS i plac, runda 22
+
+Własny ogląd: 2026-11-16, bez zapisu dokładnej godziny. Cel: historyczny wygląd rzeczywistego przystanku w Knyszynie, szczególnie wiata, znak i kontakt z jezdnią. Źródło: [reportaż Onetu](https://wiadomosci.onet.pl/bialystok/czyzew-i-knyszyn-kolejne-podlaskie-miasta-z-wybetonowanymi-rynkami/x1k6nsz), Martyna Bielska, publikacja 29.08.2022 o 19:36. To czas publikacji, nie potwierdzony czas ekspozycji.
+
+SOURCED [osobny ogląd pełnoekranowych zdjęć 7/13 i 2/13 oraz podpisów w UI]: obejrzano 2 nowe ekspozycje; przedstawiają kontekst jednego miejsca w centrum Knyszyna, nie 2 różne przystanki. Pobrane zdjęcia: 0; link-only: 2. Brak zapisu screenshotów i kopii obrazów. Fotografie redakcyjne: **link-only, all rights reserved**; nie ustalono otwartej licencji.
+
+SOURCED [kadr 7/13]: rzeczywista wiata ma jasny szkielet, przezroczyste ściany z pionowymi podziałami, otwarty front, wysunięty niski dach oraz długą ławkę o brązowych poziomych listwach i ciemnych podporach. Obok stoi niebieski prostokątny znak z białym polem i czarną sylwetką autobusu — widok odpowiada wzorowi D-15. Małe tabliczki pod nim są nieczytelne. Widoczne są jasne drobne elementy nawierzchni peronu, krawężnik i asfalt z białymi przerywanymi odcinkami przy brzegu. **UNVERIFIED:** pełny obrys wcięcia zatoki; kadr nie wystarcza do odtworzenia jej geometrii. Nie jest to dowód aktualnej organizacji ruchu w 2026 r.
+
+SOURCED [kadr 2/13]: to użyteczny widok placu, lecz wiata nie mieści się w obrazie. Ciemnoszare prostokątne pola posadzki rozdziela wąski pas drobniejszych jasnych elementów; dalej występuje duża powierzchnia o drobnych nieregularnych podziałach. Widać ławki z brązowymi poziomymi listwami i ciemnymi wygiętymi podporami oraz brązowy kosz z pionowymi podziałami. Jest duże drzewo z szeroką koroną oraz trawiaste pola. Ten kadr nie zwiększa liczby potwierdzonych przystanków ani wiat. Nie ustalono technologii materiałów z samego JPEG.
+
+Lokalizacja „Knyszyn, centrum miasta / przystanek PKS” jest SOURCED [podpis 7/13]; nie przypisano nazwy operatora, numeru stanowiska, kierunku kursów, GPS kamery ani kafla dk65-01…11. Offline węzeł K1 3047617089 służył tylko selekcji okolicy. Powiązanie konkretnej wiaty z tym węzłem i z aktualnym numerem drogi pozostaje UNVERIFIED; nie przedstawiamy rynku jako dowiedzionego obecnego odcinka DK65.
+
+Dedup: dokładne adresy obrazów i identyfikatory assetów porównano z `research/codex-refs-s21` i K1 — brak istniejących trafień. Znany z tego reportażu kadr 6/13 fontanny nie był ponownie oglądany ani liczony. Istniejące przystanki Ełckiej o Mapillary ID 214528376891610, 944123099745305 i 1452388251821206 są odrębnymi wcześniejszymi materiałami. Nowe ekspozycje nie dowodzą nowego, wcześniej nigdy niewidocznego obiektu w tle innych zdjęć Rynku.
+
+Przydatność: forma wiaty i ławki, relacja znak–peron–jezdnia oraz podziały placu; bez metrów, gatunków drzew, azymutu i twierdzeń o stanie bieżącym. Priorytet wiata + czytelny znak jest częściowo spełniony jednym kadrem; pełna zatoka w tym samym ujęciu pozostaje luką.

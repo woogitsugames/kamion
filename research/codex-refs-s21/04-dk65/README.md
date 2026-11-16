@@ -109,3 +109,6 @@ Dwa nowe kadry picturehoover27.06.2020 obejrzane także przez root: falująca ni
 
 
 R21: trzy nowe kadry robót DK65 z lipca2026, agent i root osobno obejrzeli. Tablice na stopach, czerwono-białe moduły i kanał ruchu przy rowie. Żółte obrzeża tablic nie są żółtymi liniami poziomymi. Lokalny kilometr galerii nie jest pewnym kilometrażem krajowym/GPS; kontraktS19 nie oznacza, że zdjęcie przedstawia gotowąS19. Główny34.
+
+
+R22 Knyszyn: dwa nowe kadry historycznego centrum z artykułu2022. Jeden pokazuje przeszkloną wiatę, ławkę i znak z autobusem; drugi posadzkę/ławki/słup ogłoszeniowy, bez wiaty. Root oba obejrzał. Jedno miejsce,0potwierdzonych wcięć zatoki i0nowych GPS/kafli. Relacja do obecnej DK65 nieustalona. Główny36. Dla sesji Knyszyn przydatne także nawierzchnie i mała architektura.
