@@ -55,6 +55,14 @@ def ctx_local(ctx, origin):
     return pts, foot
 
 
+def _authored_paved_polygon(override, origin):
+    """Place an authored paved footprint in local coordinates, including voids."""
+    from shapely.geometry import Polygon
+    offset = np.asarray(origin, float)
+    return Polygon(np.asarray(override["polygon_epsg2180"], float) - offset,
+                   [np.asarray(h, float) - offset for h in override.get("holes_epsg2180", [])])
+
+
 def build_network(region_id: str, graph: dict | None = None):
     """The road network with its final centre lines and widths (before sides, junctions and heights): graph +
     overrides + width tapers + fork alignment. Shared by build() and scripts/export-route.py, so the start route
@@ -111,7 +119,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
                  if f["props"].get("materialnawierzchni") != "grunt naturalny"]
         polys += [Polygon(np.array(a["geometry"]["coordinates"][0]) - np.array(origin)) for a in src["osm"]["areas"]
                   if a["tags"].get("amenity") == "parking"]
-        polys += [Polygon(np.array(o["polygon_epsg2180"]) - np.array(origin)) for o in overrides if o.get("kind") == "paved_area"]
+        polys += [_authored_paved_polygon(o, origin) for o in overrides if o.get("kind") == "paved_area"]
         yards = shapely.union_all([shapely.make_valid(p) for p in polys])
         shapely.prepare(yards)
     # ADR 0188: cycle tracks (OSM) planned once on the network; markings (P-11 + red crossing), the kerb drops of

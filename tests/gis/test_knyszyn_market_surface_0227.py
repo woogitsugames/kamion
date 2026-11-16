@@ -7,7 +7,8 @@ from shapely.geometry import Point, Polygon, box
 from shapely import affinity
 from shapely.ops import unary_union
 
-from streetscape import paved
+from roads import pipeline
+from streetscape import paved, stage
 
 
 def _source():
@@ -49,6 +50,19 @@ def test_islands_block_lower_priority_paving_and_band_has_no_overlap():
 def test_invalid_islands_are_rejected(holes):
     with pytest.raises(ValueError, match="invalid or overlapping holes"):
         _collect([_area(holes)])
+
+
+def test_stage_yard_source_preserves_island_and_origin():
+    origin = np.array([760000., 613000.])
+    override = _area([[[760012, 613007], [760018, 613007], [760018, 613013], [760012, 613013]]])
+    override["polygon_epsg2180"] = [[760000, 613000], [760030, 613000], [760030, 613020], [760000, 613020]]
+    items = stage._yard_src({"osm": {"areas": []}, "bdot10k": {"OT_PTPL_A": []}}, origin, [override])
+    assert len(items) == 1
+    assert not items[0].covers(Point(15, 10))
+    assert items[0].covers(Point(4, 10))
+    assert items[0].area == pytest.approx(30 * 20 - 6 * 6)
+    pipeline_footprint = pipeline._authored_paved_polygon(override, origin)
+    assert pipeline_footprint.equals(items[0])
 
 
 def test_real_market_bands_islands_and_spruce_clearance():

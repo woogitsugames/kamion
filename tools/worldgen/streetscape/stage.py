@@ -52,7 +52,9 @@ def _yard_src(src, origin, overrides):
            if f["props"].get("materialnawierzchni") != "grunt naturalny"]
     out += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
             if a["tags"].get("amenity") == "parking"]
-    out += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - np.asarray(origin)) for o in overrides
+    out += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - np.asarray(origin),
+                                     [np.asarray(h, float) - np.asarray(origin) for h in o.get("holes_epsg2180", [])])
+            for o in overrides
             if o.get("kind") == "paved_area"]
     return out
 
@@ -108,12 +110,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     blds = BM.load(fc, w.origin, overrides,
                    hero={**HBD.targets(heroes), **KC.hero_targets(rid, fc), **KT.hero_targets(rid, fc),
                          **KMB.hero_targets(rid, fc)})
-    yard_src = [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_PTPL_A"]
-                if f["props"].get("materialnawierzchni") != "grunt naturalny"]
-    yard_src += [PV._poly_local(a["geometry"]["coordinates"], w.origin) for a in src["osm"]["areas"]
-                 if a["tags"].get("amenity") == "parking"]
-    yard_src += [shapely.geometry.Polygon(np.asarray(o["polygon_epsg2180"], float) - origin) for o in overrides
-                 if o.get("kind") == "paved_area"]
+    yard_src = _yard_src(src, w.origin, overrides)
     yard_union = shapely.union_all([shapely.make_valid(p) for p in yard_src] + [roads_poly])
     brep = {}
     facade_signs = []

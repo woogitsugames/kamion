@@ -2,7 +2,8 @@
 
 Sources (priority order; a higher source wins where polygons overlap):
   1. authored overrides `paved_areas` (Data/Regions/<id>/overrides.yaml) - polygons the data does not describe
-     (`kind: paved_area`, `polygon_epsg2180`). `kind: unpaved_area` (ADR 0161, region-local `polygon_en`) is the
+     (`kind: paved_area`, `polygon_epsg2180`, optional interior rings `holes_epsg2180`). Explicit holes remain ground
+     against lower-priority paving. `kind: unpaved_area` (ADR 0161, region-local `polygon_en`) is the
      opposite: ground that the data paves but the orthophoto shows as lawn - nothing of any source is laid inside
      it, the terrain (grass) stays. An unpaved_area that removes nothing is reported stale.
   2. loading-dock aprons generated in front of dock doors (streetscape.buildings)
