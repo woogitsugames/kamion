@@ -145,3 +145,14 @@ Właściciel: skrócić rozstaw sworzeń–środek tridemu naczepy z 7,70 m do *
 ## D80 — Pad: warstwa „przytrzymaj Back + przycisk” (2026-11-16, s23)
 Właściciel: 6 akcji bez wolnego przycisku pada dostaje warstwę modyfikatora **Back (przytrzymany) + przycisk**; Back przestaje być wstecznym (R) — wsteczny przechodzi na inny przycisk ustalony w implementacji (ADR 0264, propozycja w raporcie sesji P r4 / docs/owner/JAK-GRAC-PC.md). Do oceny w feel teście (D77).
 
+## D81 — Trasa C ↔ Dojlidy przez DK19 Piastowska–Branickiego (2026-11-16, s23)
+Właściciel: trasa ciężarówki C ↔ Dojlidy idzie DK19 przez ul. Piastowską, pl. Antonowicza i Branickiego do ronda Meyera, ze skrętem w Ciołkowskiego (za rondem Meyera zakaz 3,5 t). Podstawa: plan UM Białegostoku (2018, 40 t) + OSM bez ograniczeń tonażowych; brak zdjęcia znaków → WORKING_VALUE do potwierdzenia. Nocne 40 km/h na Piastowskiej jako WORKING_VALUE. Kafle bialystok-mickiewicza, -bojary, -wygoda wg ADR 0278. Research: docs/owner/MAP-DECISIONS-2026-11-16.md (a).
+
+## D82 — Kierunek Podlasia: najpierw pętla S8 ↔ DW671 ↔ Tykocin (2026-11-16, s23)
+Właściciel: po kaflach Białegostoku z ADR 0278 pierwszym kierunkiem Podlasia jest **pętla S8 ↔ DW671 ↔ Tykocin** (15 kafli: S8 z węzłami i MOP, powrót przez Tykocin–Knyszyn, strefa przemysłowa przy dk65-01); zgoda na S8 mimo D64. Mońki → Grajewo później (kafel Grajewa > 2 M High wymaga redukcji). Research: docs/owner/MAP-DECISIONS-2026-11-16.md (b).
+
+## D83 — Budżety kafli dla PC: pomiar per tier zamiast limitu z telefonu (2026-11-16, s23)
+Właściciel: limit 2 mln trójkątów na kamerę High pochodzi z telefonu (A16) i nie jest automatycznie limitem PC. Budżety trójkątów i draw calls ustalamy **pomiarem per tier** (emulacja klas D74 na RTX 5070 wg D76; skalowanie na inne karty tylko z cytowanych porównań, ESTIMATED): Low (GTX 660 / HD 630) ostrożnie, High/Ultra wyżej. Do czasu pomiaru gęste kafle Białegostoku (2,6–3,75 mln) i kafel Grajewa czekają; budżety mobilne zostają jako zabezpieczenie. ADR 0266, 0269, 0278, 0282.
+
+**D79 — korekta (2026-11-16, s23, po raporcie sesji P r5):** brak karty producenta z 7,60 m; najbliższa realna wartość **7,63 m** (7 kart, rozstaw osi 1,31 m) przechodzi pierścień skrętu (zapas ~2,9 cm). Przy 7,60 m wychodziło pełzanie pustej naczepy na 12 % 5,04 mm (> 5 mm), które przechodzi dopiero od ~7,69 m. Właściciel: **7,63 m + uczciwa poprawka modelu hamulca postojowego/tarcia statycznego naczepy** (bez osłabiania testu). Zastępuje 7,60 m.
+
