@@ -925,14 +925,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         mid = p + d * (0.5 * (u0 + u1))
         w.stats["hero_docks"].append({"mid": mid, "d": d, "nout": nout, "z": dk["yard_z"], "n": len(dk["docks"])})
     log(f"terrain conformed: footprint {int(rmask.sum())} road + {int(mask.sum() - rmask.sum())} paved nodes")
-    def on_ground_road(q):
-        i = int(round(q[0] - w.hf.x0))
-        j = int(round(w.hf.y1 - q[1]))
-        if 0 <= j < mask.shape[0] and 0 <= i < mask.shape[1]:
-            return bool(mask[max(0, j - 2):j + 3, max(0, i - 2):i + 3].any())
-        return False
     # hero viaducts (override kind: hero_bridge, ADR 0067): authored asset instead of the generic dressing / supports
     from streetscape import hero_bridge as HB
+    on_ground_road = HB.keepout(w.hf, mask)      # ADR 0198: one definition, shared with qa/check_piers_vs_roads.py
 
     def zc_at(e, n):
         i = min(max(int(round(e - w.hf.x0)), 0), zc.shape[1] - 1)

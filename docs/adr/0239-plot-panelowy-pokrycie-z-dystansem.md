@@ -87,3 +87,7 @@ Kryteria: P11-001 — siatka czytelna jako wypełnienie na 10–100 m (nie same 
   odwrócenie normalnej na tylnej ścianie w tym shaderze dałoby −50 % fragmentów i mniej trójkątów w C; wymaga
   regeneracji regionów, więc nie w tym PR.
 - O-5: brak przejścia DepthNormals — na Ultra SSAO nie widzi siatki (jak `World PlotKit` i roślinność).
+- O-6 (c-regen3-s23, recenzja s23 P1): ścieżka awaryjna „bez shadera zostaje stan s20” sprawdza teraz także błąd
+  kompilacji: `InstanceImporter.FenceShaderOrNull()` (`Shader.Find` + `ShaderUtil.ShaderHasError`) w obu importerach,
+  test `FenceShaderFallbackTests`. UNVERIFIED: czy `ShaderHasError` widzi błąd wariantu, którego edytor jeszcze nie
+  skompilował (recenzja P2) — strażnikiem zostaje przeszukanie logów renderów (`vqa.ps1`).

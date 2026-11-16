@@ -139,3 +139,9 @@ Właściciel robi feel test bramki 2 (ruszanie pod górę z 40 t, hamowanie, ron
 ## D78 — Rynek Knyszyn (#139): przejęcie lokalne, +64 draw calls Low przyjęte (2026-11-16, s23, OD-003)
 Właściciel: lider przejmuje gałąź `knyszyn-rynek-0227` lokalnie (po zakończeniu pracy Codexa) — sprzątanie artefaktów, poprawki z recenzji `REVIEW-2026-11-16-s23-code-139.md`, przebudowa kafla knyszyn, rendery i budżet; wzrost Low na kamerze `dk65-inlet-south` 240 → 304 draw calls przyjęty (telefon drugorzędny, D73). ADR 0227.
 
+## D79 — Naczepa: rozstaw sworzeń–środek tridemu 7,60 m (2026-11-16, s23, ADR 0280)
+Właściciel: skrócić rozstaw sworzeń–środek tridemu naczepy z 7,70 m do **7,60 m**, żeby zestaw mieścił się w pierścieniu skrętu 12,5/5,3 m z dyrektywy 96/53/WE (zał. I pkt 1.5): 7,135 m przy granicy 7,20 m, zapas 6,5 cm (runner fizyki, sesja P r4). Wartość 3 cm poniżej najmniejszej z kart producentów naczep 13,6 m → **WORKING_VALUE** (do potwierdzenia rysunkiem/kartą). Zmiana obejmuje dane naczepy (trailer.json, dims.json), `TrailerAssetBuilder.cs:215`, model Blendera i fizykę — lista w ADR 0280 §5; scenariusz pierścienia skrętu z oczekiwanego błędu na PASS.
+
+## D80 — Pad: warstwa „przytrzymaj Back + przycisk” (2026-11-16, s23)
+Właściciel: 6 akcji bez wolnego przycisku pada dostaje warstwę modyfikatora **Back (przytrzymany) + przycisk**; Back przestaje być wstecznym (R) — wsteczny przechodzi na inny przycisk ustalony w implementacji (ADR 0264, propozycja w raporcie sesji P r4 / docs/owner/JAK-GRAC-PC.md). Do oceny w feel teście (D77).
+

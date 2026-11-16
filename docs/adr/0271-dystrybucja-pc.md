@@ -56,6 +56,23 @@ jak testerzy oddają logi, gdzie wydawać przy budżecie 0 zł. Szczegóły i ź
   włączony `force_zip64`, ale nieprzetestowany na dużych plikach), `collect-logs.ps1` (brak Windows/PowerShell),
   `kamion.iss` (brak Inno Setup), upload butler (brak konta — agenci nie zakładają kont).
 
+## Uzupełnienie s23 (zgodność z kodem), 2026-11-16
+- Stan przed poprawką (origin/main `0d91ee7db`): `scripts/package-windows.py:52-53` wykluczał tylko `Kamion-knyszyn.cmd`,
+  a `scripts/build-windows.ps1:96` zapisuje też `Kamion-knyszyn-w.cmd` → trafiał do zip testera także z buildu bez
+  regionu knyszyn-w (domyślny build = Boot + DrivingLab + WorldC, `game/ProjectSettings/EditorBuildSettings.asset:8-15`;
+  zestaw `d67` z `Data/build_regions.json` nie zawiera knyszyn-w, `region_catalog.json:159-180`).
+- Reguła §2 rozszerzona (gałąź `docs-fixes-s23`): `Kamion-knyszyn.cmd` zostaje skrótem deweloperskim (`DEV_LAUNCHERS`);
+  każdy inny `*.cmd` w katalogu głównym z `-scene <x>` trafia do paczki tylko, gdy `<x>` (id/alias regionu jak
+  `RegionCatalog.ResolveId` albo nazwa sceny) jest w buildzie. Lista scen: (1) linia `[BUILD] Windows x64 … scenes=[…]`
+  z logu buildu wskazanego w `build.json` → `log` (`BuildCommands.cs:195`, `build-windows.ps1:103`) — prawdziwa lista,
+  także przy `-RegionsAllowMissing`; (2) bez logu: `build.json` `regions` + `regionsFile` (`build-windows.ps1:102`)
+  rozwinięte katalogiem `region_catalog.json` (te same reguły co `RegionCatalog.Resolve`) na liście z
+  `EditorBuildSettings.asset` (ostrzeżenie: region pominięty przez `-RegionsAllowMissing` nie jest wtedy widoczny);
+  (3) bez `build.json` — wszystkie launchery z `-scene` poza paczką (ostrzeżenie). `Kamion-okno.cmd` (bez `-scene`)
+  zawsze w paczce. `Kamion.content.json` nie nadaje się do tego: klucze `world/…` gubią id regionu (`BuildCommands.cs:278`).
+- Walidacja: `uv run --no-project --with pytest pytest tests/dist -q` → 20 passed (6 nowych testów launcherów i
+  rozwijania regionów, sztuczny folder buildu). Prawdziwego buildu Windows nie pakowano (brak w chmurze).
+
 ## Otwarte
 - R-P0-2 (właściciel) — bloker publicznego wydania; R-P1-3/4/5 (Unity pakiety, ElevenLabs SFX, Fab EULA) przed sprzedażą.
 - Limit rozmiaru pliku na itch.io (liczba `UNVERIFIED`), stawka Valve, warunki GOG/Epic — `UNVERIFIED`.

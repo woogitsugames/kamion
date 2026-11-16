@@ -123,7 +123,9 @@ def test_fence_mesh_mips_do_not_preserve_coverage():
     assert 'TextureFile = "fence_mesh.png"' in policy
     assert "alphaTested && !(fenceShaderAvailable && IsFenceMeshTexture(file))" in policy
     reg = (REPO / "game/Assets/_Project/World/Import/RegionImporter.cs").read_text(encoding="utf-8")
-    assert "FenceMeshCoverage.Apply(lit, Shader.Find(Game.Rendering.FenceMeshCoverage.ShaderName))" in reg
+    # review s23 P1: the shader must be found AND compile (InstanceImporter.FenceShaderOrNull), not only be found
+    assert "FenceMeshCoverage.Apply(lit, InstanceImporter.FenceShaderOrNull())" in reg
+    assert "ShaderUtil.ShaderHasError(shader)" in src and "FenceShaderOrNull() != null" in src
     # the texture the policy names is the one the generator writes, and the shader's fade assumes its 1 m tile
     import numpy as np
     from streetscape import export as EX

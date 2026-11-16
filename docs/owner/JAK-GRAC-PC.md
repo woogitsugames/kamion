@@ -28,11 +28,14 @@ Tworzy ją lider: `uv run --no-project python scripts/package-windows.py artifac
 | W paczce | Nie ma w paczce |
 |---|---|
 | `Kamion.exe`, `Kamion_Data\`, `Kamion-okno.cmd` | `Kamion-knyszyn.cmd` (skrót deweloperski) |
+| `Kamion-knyszyn-w.cmd` — tylko gdy region knyszyn-w jest w buildzie | launchery `-scene` regionów spoza buildu (np. `Kamion-knyszyn-w.cmd` w buildzie domyślnym lub `d67`) |
 | `README.txt` (wymagania, start, SmartScreen, ścieżki logów) | `build.json`, `Kamion.exe.sha256`, `*.pdb`, foldery `*_DoNotShip` |
 | `THIRD_PARTY_NOTICES.txt`, `SHA256SUMS.txt` | |
 | `collect-logs.ps1` + `Zbierz-logi.cmd` (zbieranie logów) | |
 
-Uwaga: `Kamion-knyszyn-w.cmd` **nie jest** na liście wykluczeń, więc trafia do paczki (patrz „Rozbieżności”).
+Skąd skrypt wie, co jest w buildzie: lista scen z logu buildu (`build.json` → `log`), a bez logu `build.json`
+`regions`/`regionsFile` rozwinięte katalogiem regionów; bez `build.json` żaden launcher regionu nie trafia do paczki
+(ADR 0271, uzupełnienie s23).
 
 Tester:
 1. Rozpakuj **cały** zip do zwykłego folderu (nie uruchamiaj gry z wnętrza zip).
@@ -260,24 +263,24 @@ Nie dołączaj danych osobowych. Przed wysłaniem możesz otworzyć zip i sprawd
 
 ## Rozbieżności z ADR i dokumentami (stan kodu wygrywa)
 
-1. **ADR 0261 §6 / „Otwarte”** — opisuje klawiaturę jako `KeyboardDriverInput` ze stałymi klawiszami („mapowanie nie
-   jest konfigurowalne”). W kodzie `PcInputBridge` wyłącza `KeyboardDriverInput` i wstawia `KeyboardBindingsDriverInput`
-   (te same domyślne klawisze, do zmiany w ustawieniach, ADR 0264).
-2. **ADR 0261** nie wymienia Tab (kamera) ani L (lusterka w okienkach) — w kodzie są (ADR 0264 je ma).
-3. **ADR 0261 §2** — skrypt tworzy „`Kamion-okno.cmd` i `Kamion-knyszyn.cmd`”; w kodzie powstaje też `Kamion-knyszyn-w.cmd`.
-4. **ADR 0271 §2 / `package-windows.py`** — wyklucza z paczki tylko `Kamion-knyszyn.cmd`; `Kamion-knyszyn-w.cmd`
-   trafia do zip testera (prawdopodobnie przeoczenie).
-5. **ADR 0270 §2** — „tier auto = High jak ADR 0261”. W kodzie auto = dobór sprzętowy (ADR 0269: Low/Medium/High wg
-   GPU, VRAM, RAM; nigdy Ultra); High tylko gdy VRAM ≥ 5500 MB i RAM ≥ 11000 MB.
-6. **HANDOVER 16.11 00:0x** — „`Kamion-knyszyn.cmd` startuje knyszyn-w”: w obecnym skrypcie startuje `knyszyn`
-   (zgodnie z wpisem HANDOVER 16.11 04:0x).
-7. **`dist/windows/README.txt.in`** (README paczki) — lista klawiszy niepełna (brak Tab, L, V, B, G), pad tylko 3 akcje.
-   Nie jest błędna, ale ta instrukcja jest pełniejsza.
-8. **ADR 0263** — kreator kalibracji i panel ustawień kierownicy to propozycja (gameplay-ui); w grze ich nie ma,
-   FFB bez wyjścia (`NullForceFeedbackSink`).
-9. **Menu startowe** — teksty regionów mówią „brak w tym APK” / „Region niedostępny w tym APK” także na PC.
-10. **D70** (270° / 900°) dotyczy kierownicy dotykowej; w kodzie jej zakres to 180–900° (D70 nie podaje minimum).
-    Kierownica USB ma osobny zakres 270–900°, domyślnie 540° (ADR 0263).
+Przegląd s23 (2026-11-16, gałąź `docs-fixes-s23`): dokumenty, które kłamały, dostały sekcję „Uzupełnienie s23
+(zgodność z kodem)”; kodu gry (`game/**`) nie zmieniano.
+
+| # | Rozbieżność | Stan |
+|---|---|---|
+| 1 | ADR 0261 §6 / „Otwarte”: klawiatura `KeyboardDriverInput`, „mapowanie nie jest konfigurowalne” | **naprawione** w ADR 0261 (uzupełnienie): `PcInputBridge` wstawia `KeyboardBindingsDriverInput` + `GamepadDriverInput`, przypisania do zmiany (ADR 0264) |
+| 2 | ADR 0261 nie wymienia Tab (kamera) ani L (lusterka) | **naprawione** w ADR 0261 (uzupełnienie) |
+| 3 | ADR 0261 §3: tylko `Kamion-okno.cmd` i `Kamion-knyszyn.cmd` | **naprawione** w ADR 0261 (uzupełnienie: trzy launchery) |
+| 4 | `package-windows.py` pakował `Kamion-knyszyn-w.cmd` także bez regionu knyszyn-w w buildzie | **naprawione** w `scripts/package-windows.py` (launcher `-scene` tylko dla sceny/regionu w buildzie), testy `tests/dist`, ADR 0271 i docs/12 (uzupełnienie) |
+| 5 | ADR 0270 §4: „auto = High jak ADR 0261” (to samo w ADR 0261 §5) | **naprawione** w ADR 0270 i ADR 0261 (uzupełnienie: dobór sprzętowy ADR 0269, progi, nigdy Ultra) |
+| 6 | HANDOVER 16.11 00:0x: „`Kamion-knyszyn.cmd` startuje knyszyn-w” | **zostaje** — to wpis historyczny w dzienniku lidera, poprawiony już wpisem HANDOVER 16.11 04:0x; skrypt startuje `knyszyn` |
+| 7 | `dist/windows/README.txt.in`: niepełna lista klawiszy, pad 3 akcje | **naprawione**: pełna lista klawiszy i pada wg `DrivingActionCatalog` + gdzie zmienić przypisania |
+| 8 | ADR 0263: FFB bez wyjścia, brak kreatora kalibracji i panelu kierownicy | **naprawione** w ADR 0263 (uzupełnienie opisuje stan: `NullForceFeedbackSink`, brak UI, ustawienia tylko w PlayerPrefs `controls.wheel`); sama funkcja **zostaje do zrobienia** (natywny sink FFB, UI — `game/**`) |
+| 9 | Menu startowe: „brak w tym APK” / „Region niedostępny w tym APK” także na PC | **zostaje** — tekst w kodzie gry (`GameBootstrap.cs:199`, `BootMenu.cs:90`), poza zakresem zmian dokumentacji |
+| 10 | D70 (270°/900°) a kod: dotykowa 180–900°, USB 270–900° (domyślnie 540°) | **naprawione** w ADR 0263 (uzupełnienie rozdziela oba zakresy); D70 (decyzja właściciela) bez zmian — nie podaje minimum, 180° to wartość z kodu |
+
+Dodatkowo: argumentu `-stream` (ADR 0235 / 0273, strumieniowanie regionów) **nie ma w `origin/main`** — kod i oba ADR są
+tylko na gałęzi `streaming-0235`. Ta instrukcja go nie opisuje, dopóki nie zostanie scalony.
 
 ## UNVERIFIED (do sprawdzenia przez właściciela/testera)
 
@@ -302,12 +305,12 @@ game/ProjectSettings/ProjectSettings.asset:15 | companyName: woogitsugames
 game/ProjectSettings/ProjectSettings.asset:16 | productName: Kamion
 game/ProjectSettings/ProjectSettings.asset:114 | fullscreenMode: 1
 scripts/package-windows.py:9 | -win64.zip
-scripts/package-windows.py:300 | artifacts/dist
-scripts/package-windows.py:53 | "Kamion-knyszyn.cmd"
-scripts/package-windows.py:52 | "build.json", "Kamion.exe.sha256"
-scripts/package-windows.py:48 | *_DoNotShip
-scripts/package-windows.py:50 | *.pdb
-scripts/package-windows.py:290 | Zbierz-logi.cmd
+scripts/package-windows.py:476 | artifacts/dist
+scripts/package-windows.py:60 | "Kamion-knyszyn.cmd"
+scripts/package-windows.py:57 | "build.json", "Kamion.exe.sha256"
+scripts/package-windows.py:53 | *_DoNotShip
+scripts/package-windows.py:55 | *.pdb
+scripts/package-windows.py:466 | Zbierz-logi.cmd
 dist/windows/README.txt.in:7 | Rozpakuj cały folder
 dist/windows/README.txt.in:9 | SmartScreen
 dist/windows/README.txt.in:11 | Uruchom mimo to

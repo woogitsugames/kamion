@@ -157,6 +157,9 @@ def _facing_gap(A, B, d=6.0):
     return float(np.dot(pb - pa, nl))
 
 
+ISLAND_CURB_R = (2.0, 30.0)   # m, WORKING_VALUE: accepted node override `island_curb_radius` (ADR 0226)
+
+
 def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
     arms = j.arms
     n = len(arms)
@@ -203,6 +206,25 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
                 j.notes.append(f"corner {k}-{k1}: arms touch (gap {_facing_gap(A, B):.2f} m) -> no nose")
         elif alpha_deg <= S.STRAIGHT_MIN_ANGLE_DEG:
             R = corner_radius(net, A, B, r_override)
+            if A.is_ring() and B.is_ring():
+                # ADR 0226: node override `island_curb_radius` - the kerb return between two ring carriageways, i.e.
+                # a corner of the centre island of an elongated roundabout, measured on the orthophoto. Only this
+                # corner: the outer corners of the junction keep the class rule (`curb_radius` moves them all)
+                # Accepted range ISLAND_CURB_R (WORKING_VALUE); anything else is refused with a junction note (the
+                # notes go to roads_qa.json) and the class rule stays - never a silent sharp corner (REVIEW s21 FIX 3)
+                for n_ in j.nodes:
+                    v = net.nodes[n_].get("override", {}).get("island_curb_radius")
+                    if v is None:
+                        continue
+                    try:
+                        v = float(v)
+                    except (TypeError, ValueError):
+                        v = float("nan")
+                    if ISLAND_CURB_R[0] <= v <= ISLAND_CURB_R[1]:
+                        R = v
+                    else:
+                        j.notes.append(f"corner {k}-{k1}: island_curb_radius {v!r} of {n_} outside "
+                                       f"{ISLAND_CURB_R[0]}-{ISLAND_CURB_R[1]} m -> ignored, rule {R:.1f} m")
             while R >= 0.75:
                 ok = hit(R)
                 if ok is not None:

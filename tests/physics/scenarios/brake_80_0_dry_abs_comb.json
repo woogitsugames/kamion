@@ -55,15 +55,15 @@
     },
     {
       "metric": "stop_distance_m",
-      "status": "SOURCED",
-      "source": "upper bound = 0.15 v + v^2/130 at 80 km/h = 61.2 m: UN R13 Annex 4 type-0 N3 (table confirmed via GRRF-56-3, unece.org TRANS-WP29-GRRF-56-inf03e; cells did not extract from the MLIT PDF S5); lower bound ~ v^2/(2 x 0.8 g) + build-up",
+      "status": "DERIVED",
+      "source": "EXTRAPOLATION of UN R13 Annex 4 para 2.1.1, N3 Type-0 engine disconnected (v = 60 km/h, s <= 0.15 v + v^2/130, dm >= 5.0 m/s^2): 0.15 v + v^2/130 evaluated at 80 km/h = 61.2 m (the prescribed test speed is 60 km/h, see brake_60_0_dry_abs_comb); lower bound ~ v^2/(2 x 0.8 g) + build-up (WORKING)",
       "min": 35,
       "max": 61.2
     },
     {
       "metric": "mfdd_ms2",
-      "status": "SOURCED",
-      "source": "MFDD (R13 Annex 4 definition); 5.0 m/s^2 = N3 type-0 minimum dm (same GRRF-56-3 table); <= mu g",
+      "status": "DERIVED",
+      "source": "MFDD (R13 Annex 4 para 1.1.2 definition); 5.0 m/s^2 = N3 type-0 dm minimum of UN R13 Annex 4 para 2.1.1, N3 Type-0 engine disconnected (v = 60 km/h, s <= 0.15 v + v^2/130, dm >= 5.0 m/s^2), prescribed at 60 km/h, applied at 80 km/h (extrapolation); <= mu g",
       "min": 5.0,
       "max": 8.0
     },

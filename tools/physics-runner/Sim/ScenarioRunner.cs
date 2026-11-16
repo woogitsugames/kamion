@@ -151,6 +151,7 @@ namespace PhysicsRunner.Sim
         /// <summary>Creates the models and bodies placed at static equilibrium on the ground. defs = test-provided definition set (comparison tests); null = the production JSONs.</summary>
         public static SimContext Setup(Scenario sc, RunOptions opt, DefinitionSet defs = null)
         {
+            if (sc.overrides.HasGeometry) defs = ApplyGeometry(defs ?? DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir), sc);
             defs ??= Defs;
             var settings = new SolverSettings { substeps = opt.Substeps ?? sc.substeps };
             var tractor = defs.CreateModel(sc.vehicle, settings);
@@ -280,6 +281,34 @@ namespace PhysicsRunner.Sim
                 if ((fm < 0) == (flo < 0)) { lo = mid; flo = fm; } else hi = mid;
             }
             return 0.5 * (lo + hi);
+        }
+
+        /// <summary>
+        /// Geometry what-if overrides (ADR 0280) on a definition set that is private to this run (a fresh load of the
+        /// production JSONs, or a test-provided set). Never touches the cached <see cref="Defs"/> or any file.
+        /// </summary>
+        public static DefinitionSet ApplyGeometry(DefinitionSet defs, Scenario sc)
+        {
+            if (ReferenceEquals(defs, _defs)) defs = DefinitionSet.LoadDirectory(RepoPaths.DefinitionsDir);
+            var o = sc.overrides;
+            if (o.fifthWheelZ.HasValue)
+            {
+                var fw = defs.Vehicles[sc.vehicle].fifthWheel;
+                fw.position = new Vec3(fw.position.x, fw.position.y, o.fifthWheelZ.Value);
+            }
+            if (o.trailerAxlePositionsZ != null && sc.HasTrailer)
+            {
+                var t = defs.Trailers[sc.trailer];
+                if (o.trailerAxlePositionsZ.Length != t.axles.Length)
+                    throw new FormatException($"{sc.id}: overrides.trailerAxlePositionsZ has {o.trailerAxlePositionsZ.Length} values, trailer '{t.id}' has {t.axles.Length} axles");
+                double before = 0, after = 0;
+                for (int i = 0; i < t.axles.Length; i++) { before += t.axles[i].positionZ; after += o.trailerAxlePositionsZ[i]; t.axles[i].positionZ = o.trailerAxlePositionsZ[i]; }
+                double shift = (after - before) / t.axles.Length;
+                foreach (var e in t.massElements)
+                    if (e.name == "tridem_axles_wheels_brakes") e.center = new Vec3(e.center.x, e.center.y, e.center.z + shift);
+                t.Validate();
+            }
+            return defs;
         }
 
         public static IDriver CreateDriver(Scenario sc, SimContext s, out Vec3 center)
@@ -494,6 +523,7 @@ namespace PhysicsRunner.Sim
                         maxFric = Math.Max(maxFric, Math.Sqrt(w.Fx * w.Fx + w.Fy * w.Fy) / (w.Mu * w.Fz));
                 }
                 Vec3 tright = tb.Rotation * Vec3.Right;
+                smp.TrailerFwd = tb.Rotation * Vec3.Forward; smp.TrailerRight = tright;
                 smp.HasTrailer = true; smp.Coupled = fw.Coupled;
                 smp.TrailerPos = tb.Position; smp.TrailerAxlePos = tb.State.LocalToWorld(new Vec3(0, 0, AxleMeanZ(tr))); smp.TrailerComPos = tb.CenterOfMassWorld; smp.TrailerVel = tb.Velocity;
                 smp.Articulation = fw.Articulation; smp.KingpinFz = fw.KingpinLoadLocal.y; smp.KingpinFx = fw.KingpinLoadLocal.z; smp.KingpinFy = fw.KingpinLoadLocal.x;
