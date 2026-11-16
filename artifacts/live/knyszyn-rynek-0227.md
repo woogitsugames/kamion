@@ -266,3 +266,7 @@
 - 2026-11-16 03:38 +01:00 — R17 build/import i 4 warianty renderów OK, 22 pary lokalne; dodano dwie szacunkowe kamery boczną/tylną figury na wysokości 1,7 m, R18 build uruchomiony. Budżet R17 w ocenie, końcowy GIS/EditMode po R18 OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r18.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r18.done` 
 
+
+- 2026-11-16 04:00 +01:00 — R18 render 4 wariantów OK i 22 pary lokalne; kamera boczna zasłonięta masztem, tylna ucina cokół, poprawka póz OPEN. Diagnostyka Low: pełna 303 draws, bez pojazdu 240, bez far-field 299, bez obu 236; before 240, przyczyna różnicy nieudowodniona. Pełny GIS/EditMode R18 trwają.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r18.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/editmode-r18.done` 
+
