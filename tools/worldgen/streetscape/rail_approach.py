@@ -57,6 +57,7 @@ U1_STEP_M = 3.0              # § 79 pkt 5 lit. a: every 3 m
 U1_LAST_M = 19.0             # § 79 pkt 5 lit. a: over 15-20 m of road from the outer rails -> 4, 7, ... 19 m (span 15 m)
 U1_BARRIER_GAP_M = 1.0       # WORKING_VALUE: first post this far outside the devices (§ 79 pkt 5 lit. b: no numbers)
 U1_LATERAL_M = 0.75          # WORKING_VALUE: post axis behind the carriageway edge (Dz.U. 2019 poz. 2311 zał. 4 not read)
+U1_BEHIND_SHOULDER_M = 0.25  # WORKING_VALUE: post axis behind the outer edge of a ground shoulder (ADR 0272 edges)
 G1_BOTTOM_Z_M = 1.00         # WORKING_VALUE: lower edge of a G-1 plate above the ground (UNVERIFIED)
 PLATE_GAP_M = 0.05           # as furniture.sign_assembly
 P4_LEN_M = 50.0              # WORKING_VALUE: P-4 on each approach, from the outer rail (§ 79 pkt 4 lit. b: no length)
@@ -227,6 +228,14 @@ class NetPath:
         t, _ = ch.line.frame(s)
         return np.asarray(ch.line.offset_point(s, lat), float), np.asarray(t, float) * trav
 
+    def guide_off(self, d_centre, side):
+        """Lateral offset of a guide post behind the carriageway edge: U1_LATERAL_M beside a kerb; on a kerbless edge
+        (ADR 0272) behind the paved + ground shoulder, so the post never stands on the shoulder a vehicle may use."""
+        from roads import network as NW
+        ch, s, trav = self._leg(d_centre)
+        sh = NW.side_shoulder(ch, "R" if side * trav > 0 else "L", s)
+        return U1_LATERAL_M if sh is None else float(sh[0]) + float(sh[1]) + U1_BEHIND_SHOULDER_M
+
     def sign_off(self, d_centre, side):
         """Lateral offset of a sign post behind the carriageway edge - the rule of furniture.speed_signs."""
         from roads import standards as S
@@ -331,7 +340,7 @@ def plan(rail_plan, net=None, speed_kmh=None, avail_m=None, devices=None) -> dic
             for d in r.pop("guide_m"):
                 dc = rail_d + d
                 for side in (1, -1):
-                    p, drive = path.at(dc, side, U1_LATERAL_M)
+                    p, drive = path.at(dc, side, getattr(path, "guide_off", lambda _d, _s: U1_LATERAL_M)(dc, side))
                     q = Point(p)
                     # never on another carriageway (side road at the crossing) and never on a crossing device
                     if road is not None and not road.is_empty and road.buffer(-0.05).contains(q):

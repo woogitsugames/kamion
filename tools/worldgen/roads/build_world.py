@@ -226,6 +226,7 @@ def glb_materials():
 
 
 
+RAIL_ZONE_EXCLUDE_MATS = {"shoulder_gravel", "verge_grass"}    # ADR 0272: not part of the road a level crossing spans
 WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
         "sidewalk_paving", "apron_sett", "apron_paving_light", "sidewalk_paving_red", "sidewalk_slabs"}      # + ADR 0237 footway types
 
@@ -791,6 +792,11 @@ def _route_graph_step(region_id: str, enabled: bool, log) -> None:
     log("route graph: rebuilt (KRTG, reachability flags) -> game/Assets/_Project/UI/Resources/CabDisplay/Nav/")
 
 
+def rail_zone_parts(parts):
+    """Road parts a level crossing spans: the `road` layer without the shoulder / verge strips of a kerbless edge."""
+    return [p for p in parts if p.layer == "road" and p.mat not in RAIL_ZONE_EXCLUDE_MATS]
+
+
 def _rail_plan(w, region_id):
     """streetscape.rail.Plan of a built road world (ADR 0217): tracks clipped to the tile, level crossings with the
     ground carriageways, authored `rail_crossing` overrides."""
@@ -811,8 +817,11 @@ def _rail_plan(w, region_id):
         for run in np.split(np.arange(len(on)), np.where(np.diff(on.astype(int)) != 0)[0] + 1):
             if len(run) >= 2 and on[run[0]]:
                 ground_lines.append(_LS(c.line.p[run]))
-    return RL.Plan(rsrc, w.origin, tile_local,
-                   PV_.road_footprint_polygon([p for p in w.buf.parts if p.layer == "road"]), ground_lines,
+    # ADR 0272 (REVIEW #138 P1-4): the crossing zone (panels, boom length, device offsets) follows the paved road, not
+    # the ground shoulder / verge / ditch of a kerbless edge - those strips are footprint too and would widen the
+    # crossing by the whole side profile. Kerbed roads have neither material in the footprint: their zone is unchanged.
+    # Filtered HERE, so pass 1 (kerb cut, markings) and pass 2 (devices) plan the same crossing.
+    return RL.Plan(rsrc, w.origin, tile_local, PV_.road_footprint_polygon(rail_zone_parts(w.buf.parts)), ground_lines,
                    overrides=pipeline.load_overrides(region_id))
 
 

@@ -15,6 +15,7 @@ import shapely
 from shapely.geometry import LineString, Point
 
 from . import standards as S
+from . import xsec as X
 from .closures import CONSTRUCTION_SURFACE_MAT
 from .geom import Polyline, cumlen, smooth_1d, smooth_open
 
@@ -93,6 +94,11 @@ class EdgeSection:
                                             # axis to axis, symmetric about the carriageway centre (measured)
     apron: str | None = None        # authored (ADR 0123): roundabout apron "asphalt" = no mountable sett apron, the ring
                                     # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
+    ref: str | None = None          # OSM ref (road number), for the shoulder rules (ADR 0272)
+    # ADR 0272: authored shoulder per OSM side {"left" / "right" / "both": {kind, paved_m, ground_m, ditch_m, id}} and
+    # the OSM shoulder=* / shoulder:width / shoulder:surface tags of the edge (roads.xsec.resolve)
+    shoulder: dict | None = None
+    osm_shoulder: dict | None = None
     construction: bool = False      # authored (ADR 0215, owner D65 p.6): carriageway not open to traffic - no markings,
                                     # no lamps, no route-graph edge (roads.closures)
     truck_apron: dict | None = None  # authored (ADR 0218 + 0226): {width_m, height_m, material, code} - strip between
@@ -180,7 +186,9 @@ def edge_section(e: dict) -> EdgeSection:
         surface_mat=SURFACE_MAT.get(surf, "road_asphalt"), bridge=bool(_v(a, "bridge")),
         layer=int(_v(a, "layer", 0) or 0), roundabout=roundabout, maxspeed=float(ms) if ms else None,
         turn_fwd=split(tl if oneway else tf), turn_bwd=split(None if oneway else tb), provenance=prov,
-        maxspeed_src=(a.get("maxspeed") or {}).get("src"))
+        maxspeed_src=(a.get("maxspeed") or {}).get("src"),
+        ref=_v(a, "ref"),
+        osm_shoulder={k: _v(a, k) for k in ("shoulder", "shoulder:width", "shoulder:surface") if _v(a, k) is not None} or None)
 
 
 @dataclass
@@ -437,6 +445,19 @@ def apply_edge_overrides(net: Network, edges, overrides):
             for side in ("left", "right"):
                 if f"side_{side}" in st:
                     sec.side_override[side] = st[f"side_{side}"]
+            if any(k in st for k in ("shoulder", "shoulder_left", "shoulder_right")):
+                # ADR 0272: shoulder instead of a kerb (or the reverse) on this edge, read off the orthophoto / photos.
+                # `shoulder: ground | paved | kerb` (both sides) or a mapping {kind, paved_m, ground_m, ditch_m};
+                # `shoulder_left` / `shoulder_right` in the OSM edge direction
+                sec.shoulder = dict(sec.shoulder or {})
+                for key, side in (("shoulder", "both"), ("shoulder_left", "left"), ("shoulder_right", "right")):
+                    if key in st:
+                        v = st[key]
+                        v = dict(v) if isinstance(v, dict) else {"kind": str(v)}
+                        if v.get("kind", "ground") not in ("ground", "paved", "kerb"):
+                            raise ValueError(f"override {ov['id']}: shoulder kind {v.get('kind')!r}")
+                        sec.shoulder[side] = {**v, "id": ov["id"]}
+                sec.provenance["shoulder"] = f"authored_override:{ov['id']}"
             if st.get("construction"):
                 # ADR 0215 (owner D65 p.6): a carriageway that is not open to traffic. Markings / decals / navgraph
                 # read sec.construction; the rule lamps are dropped like `lamps: false`
@@ -1029,7 +1050,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
         # rural cross-section (no kerbs: paved shoulder + verge/ditch, PTB2022 § 23 ust. 10) on fast GP/G roads
         # with no footway within RURAL_FOOT_M on either side (urban kerbed streets keep URBAN). WORKING_VALUE rule.
         sec_mid = net.sec_list[int(c.sec_idx[len(c.sec_idx) // 2])]
-        fast = (built_up and sec_mid.cls in ("GP", "G", "S", "A") and (sec_mid.maxspeed or 50) >= S.RURAL_MIN_SPEED
+        fast = (built_up and X.open_road(sec_mid)        # ADR 0272: classes / speed in roads/xsec_rules.yaml
                 and not c.roundabout and not c.bridge.all())      # ADR 0204: also in a tile with no footway at all
         # A footway / cycle path set back from the carriageway (within RURAL_FOOT_M, e.g. the cycle path
         # along DK8) no longer turns the edge into an urban kerb: at >= 70 km/h the edge stays without a
@@ -1048,6 +1069,30 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 hs = np.array([hits[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) >= 0.2
                 path_d[side_] = np.interp(np.arange(n), idx, hs.astype(float)) > 0.5
                 rural_d[side_] = np.ones(n, bool)
+        # ADR 0272: shoulder per section and side (authored override > OSM shoulder=* > class rule). `force` opens a
+        # kerbed edge (ground / paved shoulder read off the orthophoto) or keeps a kerb on a fast road.
+        sh_code = {"L": np.zeros(n, np.int64), "R": np.zeros(n, np.int64)}
+        sh_ditch = {"L": np.full(n, np.nan), "R": np.full(n, np.nan)}
+        sh_src = {}
+        if not c.roundabout:
+            for i_sec in np.unique(c.sec_idx):
+                sec = net.sec_list[int(i_sec)]
+                m = c.sec_idx == i_sec
+                rev = bool(c.meta["rev"][m][0])
+                for side_ in ("L", "R"):
+                    osm_side = {"L": "left", "R": "right"}[side_]
+                    if rev:
+                        osm_side = {"left": "right", "right": "left"}[osm_side]
+                    sh = X.resolve(sec, osm_side)
+                    sh_code[side_][m] = sh.code
+                    sh_src[sh.src] = sh_src.get(sh.src, 0.0) + round(float(m.sum() * DENSE), 1)
+                    if sh.force == "open":
+                        rural_d[side_][m] = True
+                    elif sh.force == "kerb":
+                        rural_d[side_][m] = False
+                    if sh.ditch_m is not None:
+                        sh_ditch[side_][m] = sh.ditch_m
+        c.meta["shoulder_src"] = sh_src
         c.meta["rural"] = {k: round(float(v.mean()), 2) for k, v in rural_d.items()}
         c.meta["rural_path"] = {k: round(float(v.mean()), 2) for k, v in path_d.items()}
         for side, sgn in (("L", 1.0), ("R", -1.0)):
@@ -1091,6 +1136,8 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             kind = np.where(rural_here | (not built_up), RURAL, URBAN)
             h = np.full(n, S.KERB_HEIGHT)
             h[rural_here] = np.where(path_d[side][rural_here], S.SWALE_DEPTH, S.DITCH_DEPTH)    # RURAL: h = ditch depth
+            dsel = rural_here & ~np.isnan(sh_ditch[side])
+            h[dsel] = sh_ditch[side][dsel]                 # ADR 0272: authored ditch depth (0 -> flat verge)
             w = np.where(walk_d & ~med_d, S.SIDEWALK_W, 0.0)
             mat = np.where(walk_d & ~med_d, 1, 0)
             depth = np.full(n, S.FLANGE_DEPTH)
@@ -1173,6 +1220,10 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 verge[i] = min(verge[i], verge[i - 1] + dv[i - 1])
             for i in range(n - 2, -1, -1):
                 verge[i] = min(verge[i], verge[i + 1] + dv[i])
+            # ADR 0272: shoulder widths of the kerbless stations travel in `mat` (0 = the legacy 1.00 + 0.75 m profile)
+            ssel = (kind == RURAL) & (mat == 0)
+            mat = mat.astype(np.int64)
+            mat[ssel] = sh_code[side][ssel]
             c.side[side] = {"kind": kind, "walk": walk_d, "median": med_d, "raw": {"h": h, "w": w, "depth": depth},
                             "mat": mat, "verge": verge}
         structure_sides(c, c.bridge)
@@ -1315,9 +1366,10 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
                 (ps + 0.5, z0 - 0.03, ps + 2.0, z0 - 0.12, "verge_grass"),
                 (ps + 2.0, z0 - 0.12, ps + 2.0, z0 - 0.12 - depth, "verge_grass")]
     if kind == RURAL:
-        ps = S.PAVED_SHOULDER
+        # ADR 0272: paved + ground widths from roads/xsec_rules.yaml, carried in `mat`; mat 0 = the legacy profile
+        # (PAVED_SHOULDER 1.00 m + the 0.75 m ground part of PTB2022 § 23 ust. 10 pkt 2)
+        ps, sw = X.decode(mat)
         zp = -S.CROSSFALL * ps
-        sw = S.SHOULDER_W["GP"]      # gravel part next to the opaska zewnętrzna (PTB2022 § 23 ust. 10 pkt 2), 0.75 m
         z1 = zp - S.SHOULDER_CROSSFALL * sw
         d = h if 0.05 < h < 1.5 else S.DITCH_DEPTH       # ditch depth per station (swale next to a path)
         u0 = ps + sw
@@ -1347,6 +1399,13 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
             (0.0, h, tw, h, "curb_concrete"),
             (tw, h, tw + w, zw, m if w > 0.05 else "curb_concrete"),
             (tw + w, zw, tw + w, zw - depth, m if w > 0.05 else "curb_concrete")]
+
+
+def side_shoulder(c: Chain, side: str, s: float):
+    """(paved_m, ground_m) of the shoulder at a station, None beside a kerb / island / median (ADR 0272)."""
+    d = c.side[side]
+    i = int(c.idx(s))
+    return X.decode(int(d["mat"][i])) if int(d["kind"][i]) == RURAL else None
 
 
 def side_params(c: Chain, side: str, s: float) -> tuple:
