@@ -175,3 +175,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Definitywne wejście w życie — runda24
 
 [highbeam-entry-force-round24](highbeam-entry-force-round24/README.md):pełna notaONZC.N.513.2025z06.10.2025potwierdza skutki od26.09.2025 i dokładnie wskazujeWP29/2025/36z§69raportu1184. Root+agentosobnoobejrzeli całąstronę;3ustalenia/2źródła/0fotografii. PowiązanieSupp1do09/ref100 jawnie złańcuchemHA22, nota sama nieprzepisujebrzmienia6.1.9.1. Stan całego tekstu2026/przejściowedlastarychDCR nadalUNVERIFIED. R21/R22historyczneniezmienione; późniejszydowód zamykaEIFwoddzielnymkatalogu.
+
+
+## Chereau: rzeczywista emisja — runda23
+
+[lit-rear-closeup-round23](lit-rear-closeup-round23/README.md):2nowe link-onlyARR kadry604×453. FLEX-C zamontowanydużymoduł, emisjaUNVERIFIED. Citylight:rzeczywisty zestaw nazewnętrznymplacu, dolne czerwone lampy świecą i oświetlajągrunt; root+agent osobno obejrzeliCitylight. Białe robocze/odblaski drzwi wydzielone. Pojedyncza obudowaEST10–12%szerokości/60–70px, granica przy poświacieBORDERLINE;0nowychstrictzbliżeń/E,natywne300FAIL. Zmierzchowawyglądemscena, ścisłanocUNVERIFIED; M59dopuszczazmierzch.0pobrań/screenshotów. AUXpoza głównym49, nie liczyć2lamp w1kadrze jako2kadrów.

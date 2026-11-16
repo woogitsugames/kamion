@@ -1,0 +1,46 @@
+{
+  "record_created_date": "2026-11-16",
+  "visual_review_date": "2026-11-16",
+  "timezone": "Europe/Brussels",
+  "exact_visual_time": "UNVERIFIED — nie zmierzono momentu indywidualnych oględzin",
+  "method": "Dwa dokładne publiczne PNG producenta otwarto osobno w natywnym Chrome i obejrzano. Tytuł każdego obrazu standalone podawał604×453. Bez pobrań, zapisanych screenshotów i cropów. Zakończono po dwóch kadrach completion_summary.",
+  "counts": {"individually_viewed_frames":2,"source_manufacturers":1,"clear_emission_candidates":1,"strict_new_on_closeups_before_peer":0,"new_night_closeups":0,"new_E_readings":0,"saved_media":0},
+  "frames": [
+    {
+      "id":"01-LRC23-01",
+      "url":"https://www.chereau.com/wp-content/uploads/2024/09/chereau-flex-c-led-semi-remorque-groupage-degroupage.png",
+      "source_section":"FLEX-C LED",
+      "standalone_px":[604,453],
+      "observation":"Bliskie ujęcie pojedynczej prostokątnej lampy zamocowanej na metalowym uchwycie czerwonej tylnej konstrukcji pojazdu. W kloszu czerwony trójkąt po lewej i bezbarwne/białe pasma w zarysie przypominającym literęG po prawej. Czarny wysięgnik z dodatkowym małym kloszem wystaje w lewo. Nad lampą metaliczny walec, poniżej czarny pas na czerwonej belce. Jasne pasy i połyski klosza nie dają pewnego świecenia.",
+      "physical_context":"Mocowanie i rzeczywista konstrukcja pojazdu są widoczne; nie wolny katalogowy klosz. Technika/retusz poza widocznym obrazem UNVERIFIED.",
+      "colour":"czerwony, bezbarwny/biały, czarny i metaliczny uchwyt",
+      "shape":"poziomy prostokąt z zaokrąglonymi narożami",
+      "chambers":"UNKNOWN — optyczne pola nie dowodzą liczby komór",
+      "ECE":"UNVERIFIED — brak pewnego odczytu",
+      "emission":"UNVERIFIED_REFLECTION_POSSIBLE",
+      "night":"FAIL_NO_NIGHT_EVIDENCE — oświetlone otoczenie, brak nocnego kontekstu",
+      "single_module_size":"ESTIMATED około połowy szerokości obrazu; wystarcza jako duży widok komponentu, ale nie rozwiązuje braku potwierdzenia emisji",
+      "qualification":"CONTEXT_ONLY;0nowych włączonych"
+    },
+    {
+      "id":"01-LRC23-02",
+      "url":"https://www.chereau.com/wp-content/uploads/2024/09/groupage-degroupagecitylightchereau.png",
+      "source_section":"CITYLIGHT",
+      "standalone_px":[604,453],
+      "observation":"Rzeczywisty zestaw z naczepą pokazany skośnie od tyłu na zewnętrznym placu przy budynku. Z tyłu u dołu widoczne jasne czerwone pola/punkty dwóch zespołów lamp i czerwone oświetlenie podłoża za pojazdem. Oddzielnie białe bardzo jasne światła wysoko przy narożach tyłu oraz białe pola światła pod bokiem i z tyłu. Niebo ciemnoniebieskie z chmurami. Odblaskowe żółto-czerwone prostokąty na drzwiach są odrębnymi elementami i nie zostały uznane za świecące lampy.",
+      "physical_context":"Zamontowane lampy, koła, osłony i naczepa z ciągnikiem widoczne w spójnej scenie. Fotografia jako prezentowana; niezależna historia retuszu UNVERIFIED.",
+      "colour":"czerwona emisja dolnych lamp, białe światło robocze; niebieskie niebo",
+      "shape":"dolne zespoły zarysowane prostokątnie; drobne pola soczewek nie pozwalają pewnie opisać pełnej geometrii",
+      "chambers":"UNKNOWN — nie sumowano jasnych punktów jako oddzielnych lamp lub komór",
+      "ECE":"UNVERIFIED — brak czytelnego oznakowania",
+      "emission":"PASS_VISUAL — jasne czerwone pola i czerwone oświetlenie gruntu wspólnie potwierdzają emisję dolnych lamp; białe robocze ocenione oddzielnie",
+      "exact_function":"UNVERIFIED — pozycji, stopu i innych funkcji nie rozdzielono z jednego statycznego zdjęcia",
+      "night":"UNVERIFIED_STRICT_NIGHT — zewnętrzna ciemna scena z błękitnym niebem, możliwy zmierzch; nie ciemny warsztat",
+      "single_module_size":{"status":"BORDERLINE_ESTIMATED_REQUIRES_PEER","target":"bliższy dolny moduł po lewej stronie tylnej belki w obrazie","estimated_width_percent":[10,12],"estimated_native_width_px":[60,70],"native_300px":"FAIL_AVAILABLE_BITMAP","caution":"Szerokość dotyczy pojedynczego widocznego zespołu, nie całego tylnego panelu ani sumy obu lamp. Granica obudowy przy poświacie nie jest dokładnym pomiarem. Nie zaliczono do strict przed niezależną recenzją."},
+      "qualification":"ON_CANDIDATE_SIZE_BORDERLINE; strictdelta0 przed peer; noc0; E0"
+    }
+  ],
+  "application_evidence":"Oficjalna strona Chereau opisuje te sekcje w kategorii europejskich naczep chłodniczych. To dowód przeznaczenia, nie oznakowanie E konkretnego obrazu. Nie przypisano kraju placu z loga/marki.",
+  "date_caution":"2024/09 w ścieżce pliku nie dowodzi daty ekspozycji. Autor fotografii, ekspozycja i stan2026 UNVERIFIED.",
+  "no_double_count":"Dwa obrazy nie dowodzą dwóch różnych egzemplarzy. Citylight liczymy jako jeden kandydat kadru, bez sumowania jasnych punktów i lamp roboczych do quorum tylnych zespolonych."
+}
