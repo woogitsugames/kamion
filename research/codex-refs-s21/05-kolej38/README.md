@@ -104,3 +104,5 @@ R16: osiem uzupełnień przepisów w regulations.csv: §7–10kwalifikacjaA–D,
 16.11.2026 R19: nowa oficjalna instrukcja MILK PLK, s6 funkcja wyszukania przejazdu po numerze/parametrach; root odczytał niezależnie tekst. To mechanizm dalszej kontroli, nie nowy ID ani relacja DW671. Dolne współrzędne kursora nie są automatycznie obiektem. Podkład nieustalony, aplikacji mapowej nie uruchomiono. 1 rekord dokumentacyjny,0zdjęć.
 
 16.11.2026 R20:5 technicznychregułG2/G3/G4, root osobno obejrzał72/73/510/511.1400 wzdłużramienia, nie szerokośćX; liniowejjednostki rysunku nie ustalono, bezSOURCEDmm. Metry5/3 ztekstu mająwarunki/wyjątki. Wersja2019, pełnaaktualność2026UNVERIFIED;0nowychfotografii/dużychPDF. Główny24 (nowydokument),normyosobno.
+
+R21: jeden nowy historyczny kadr PLK ze stacji Ełk, autor Szymon Grochowski, publikacja10.12.2021. Root obejrzał szyny, podkłady, podsypkę ze śniegiem i kratownice. Link-onlyARR,0 kopii, bez przypisania układu/napięcia do Knyszyna; główny manifest25 rekordów.
