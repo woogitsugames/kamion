@@ -65,7 +65,13 @@ namespace Game.Tests
         {
             var def = Def();
             // dims.json trailer_axle_z_m (SOURCED, ADR 0280 §7/§10): kingpin -> centre axle 7.63 m, spacing 1.31 m.
-            Assert.That(def.axles[1].positionZ, Is.EqualTo(-7.63).Within(1e-6));
+            string dims = File.ReadAllText(Path.Combine(EditorTools.RepoRoot, "art-source/truck/dims.json"));
+            var m = Regex.Match(dims, @"""trailer_axle_z_m""\s*:\s*\{\s*""value""\s*:\s*\[([^\]]+)\]");
+            Assert.That(m.Success, "dims.json trailer_axle_z_m");
+            var z = m.Groups[1].Value.Split(',');
+            Assert.That(z.Length, Is.EqualTo(3));
+            for (int i = 0; i < 3; i++)
+                Assert.That(def.axles[i].positionZ, Is.EqualTo(double.Parse(z[i].Trim(), CultureInfo.InvariantCulture)).Within(1e-6), $"axle {i + 1} vs dims.json");
             Assert.That(def.axles[1].positionZ - def.axles[2].positionZ, Is.EqualTo(1.31).Within(1e-6));
             Assert.That(def.axles[0].positionZ - def.axles[1].positionZ, Is.EqualTo(1.31).Within(1e-6));
         }
