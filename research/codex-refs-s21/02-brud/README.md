@@ -237,3 +237,8 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## ZimowaA3 — runda33
 
 [europe-winter-road-round33](europe-winter-road-round33/README.md):2odrębne fotografieagentosobnoobejrzał,0pobrań/screenshotów, ARRlink-only. WNOZ913684 źródłowoA3/Medenbach: odległenocnetyłyEST120–190px, film/typkonkretnejskrzyniUNVERIFIED. Verkehrsrundschau2955582kadr4:śniegtak,przód/bokzestawu,nietylnedrzwi;natywne400×290pomimo945x532URL. Datypublikacji04.02.2026/20.12.2010nieEXIF.0A/B,zima brudnychdrzwi/EUbrudnychdrógbezprzyrostu. Główny23bez zmian, nieglobalnybrakmateriału.
+
+
+## Flickr CC po wstrzymaniu Commons — runda34
+
+[flickr-licensed-winter-round34](flickr-licensed-winter-round34/README.md): root sprawdził indywidualną licencję BY-SA2.0 przed oglądem Traffic/Asgeir S.Nilsen/5605943; UI data28.02.2005, EXIF/strefa niepotwierdzone. Jeden obraz osobno obejrzany: faktyczny śnieg, ale najbliższa ciężarówka przodem, bez diagnostycznych tylnych drzwi.0A/B/0pobrań/zapisanych screenshotów,0Commons. Nie użyto podpisu o łańcuchach jako prawa ani autora jako geolokalizacji. Główny23bez zmian.
