@@ -484,7 +484,7 @@ def print_regions(plan: dict, titles: dict) -> str:
         bbox=({bb[0]}, {bb[1]}, {bb[2]}, {bb[3]}),
         origin=({o[0]}, {o[1]}),
         teryt_powiat="{t['teryt_powiat']}",{extra}
-        status="WORKING_ASSUMPTION (ADR {ADR}, owner D63/D64; tile = lattice ({t['ij'][0]},{t['ij'][1]}) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR {ADR}, owner D63/D64; tile = lattice ({t['ij'][0]},{t['ij'][1]}) of the ADR 0203 plan)",
     ),''')
     return "\n".join(out)
 

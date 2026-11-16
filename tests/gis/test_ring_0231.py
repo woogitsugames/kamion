@@ -27,6 +27,7 @@ NEW = [t["id"] for t in PLAN["tiles"]]
 TILE = {t["id"]: t for t in PLAN["tiles"]}
 # the regions defined before ADR 0231 (ADR 0166-0214); none of them may change or be duplicated
 OLD = sorted(set(regions.REGIONS) - set(NEW))
+SEED_OVERRIDE_IDS = {"dk65-carriageway-width", "dk65-fields-unlit"}   # written by ring_0231_plan.py --init-regions
 CROSS_SECTION_KEYS = ("lanes", "lane_width", "edge_strip", "edge_lines", "lamps")
 
 
@@ -66,7 +67,9 @@ def test_new_entries_generated_from_plan():
         assert r.id == t["id"]
         assert r.bbox == tuple(t["bbox"]) and r.origin == tuple(t["origin"])
         assert r.teryt_powiat == t["teryt_powiat"] and list(r.teryt_powiat_extra) == t["teryt_powiat_extra"]
-        assert r.title == RP.TITLES[r.id] and "ADR 0231" in r.status and "not built" in r.status
+        # the status goes verbatim into region.yaml (build_region): it must not say "not built" - whether a tile is
+        # built is read from the disk (region.yaml), see test_authored_files_present_and_consistent
+        assert r.title == RP.TITLES[r.id] and "ADR 0231" in r.status and "not built" not in r.status
         assert r.water is False                                   # ADR 0210 stays opt-in (open point in ADR 0231)
 
 
@@ -205,14 +208,49 @@ def test_authored_files_present_and_consistent(rid):
     ends = t["through"]["exit"] or t["through"]["other_crossings"]
     assert rt["start_epsg2180"] == [e["x"], e["y"]] and rt["end_epsg2180"] == [ends[0]["x"], ends[0]["y"]]
     ov = yaml.safe_load((d / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    built = (d / "region.yaml").exists()
     for o in ov:
         assert {"id", "target", "reason", "confidence", "verify", "set"} <= set(o), (rid, o.get("id"))
-        assert o["confidence"] == "low"                           # nothing measured in these tiles yet
+        if o["id"] in SEED_OVERRIDE_IDS and not built:
+            assert o["confidence"] == "low"                       # nothing measured in these tiles before the ingest
+        assert o["confidence"] in ("low", "medium", "high")
+    seed = [o for o in ov if o["id"] in SEED_OVERRIDE_IDS]       # the definition overrides; later ones may target more
+    for o in seed:
         assert set(o["target"]["osm_way"]) <= {w["osm_way"] for w in t["through"]["ways"]}
     if t["through"]["ref"] == "671":
-        assert ov == []                                           # DW671: BDOT10k width, no edge lines (ADR 0212)
-    # files of a not yet built region: nothing generated is committed
-    assert not (d / "region.yaml").exists() and not (d / "roads.graph.json").exists()
+        assert seed == []                                         # DW671: BDOT10k width, no edge lines (ADR 0212)
+    if not built:
+        # definition only: no product of build_region is committed half-way
+        assert ov == seed
+        assert not any((d / f).exists() for f in ("roads.graph.json", "terrain.json", "buildings.geojson",
+                                                  "build_manifest.json", "route_start.json", "generated"))
+        return
+    # built by the lead (build_region wrote region.yaml from the regions.py entry; the authored files above survived)
+    y = yaml.safe_load((d / "region.yaml").read_text(encoding="utf-8"))
+    r = regions.get(rid)
+    assert y["id"] == rid and y["title"] == r.title and y["status"] == r.status and "not built" not in y["status"]
+    assert r.bbox == (y["bbox"]["xmin"], y["bbox"]["ymin"], y["bbox"]["xmax"], y["bbox"]["ymax"])
+    assert (y["bbox"]["width_m"], y["bbox"]["height_m"]) == (2048, 2048)
+    assert r.origin == (y["origin"]["x"], y["origin"]["y"]) and isinstance(y["origin"]["z"], float)
+    assert y["crs"]["horizontal"].startswith("EPSG:2180") and "EVRF2007" in y["crs"]["vertical"]
+    assert str(y["teryt_powiat"]) == r.teryt_powiat
+    assert [str(x) for x in y.get("teryt_powiat_extra", [])] == list(r.teryt_powiat_extra)
+    ids = [x["id"] for x in y["sources"]]
+    assert f"gugik-nmt-2022-{rid}" in ids                         # the authored pin was honoured (ADR 0209)
+    for k in [r.teryt_powiat, *r.teryt_powiat_extra]:
+        assert {f"gugik-bdot10k-{k}", f"gugik-lod1-2024-{k}", f"gugik-lod2-2017-{k}"} <= set(ids)
+    for x in y["sources"]:                                        # every source: manifest in git with the pinned hash
+        assert (REPO / x["manifest"]).exists() and len(x["manifest_sha256"]) == 64, (rid, x["id"])
+    assert (d / "roads.graph.json").exists() and (d / "build_manifest.json").exists()
+
+
+def test_built_ring_tiles_are_in_the_region_catalog():
+    """After build_region + export-route.py of a ring tile, the start-menu catalog needs its entry (id + label by hand,
+    then scripts/export-region-catalog.py - ADR 0229 / 0267). Vacuous while no ring tile has a route_start.json."""
+    cat = json.loads((REPO / "game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json").read_text("utf-8"))
+    ids = {r["id"] for r in cat["regions"]}
+    missing = [rid for rid in NEW if (RDIR / rid / "route_start.json").exists() and rid not in ids]
+    assert not missing, f"add to region_catalog.json and run scripts/export-region-catalog.py: {missing}"
 
 
 def test_nmt_2022_covers_every_ring_tile():

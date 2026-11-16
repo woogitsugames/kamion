@@ -309,7 +309,7 @@ REGIONS: dict[str, Region] = {
         bbox=(756491.0, 613631.0, 758539.0, 615679.0),
         origin=(757515.0, 614655.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,9) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,9) of the ADR 0203 plan)",
     ),
     "dk65-monki-03": Region(
         id="dk65-monki-03",
@@ -318,7 +318,7 @@ REGIONS: dict[str, Region] = {
         bbox=(756491.0, 615679.0, 758539.0, 617727.0),
         origin=(757515.0, 616703.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,10) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,10) of the ADR 0203 plan)",
     ),
     "dk65-monki-04": Region(
         id="dk65-monki-04",
@@ -327,7 +327,7 @@ REGIONS: dict[str, Region] = {
         bbox=(754443.0, 615679.0, 756491.0, 617727.0),
         origin=(755467.0, 616703.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,10) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,10) of the ADR 0203 plan)",
     ),
     "dk65-monki-05": Region(
         id="dk65-monki-05",
@@ -336,7 +336,7 @@ REGIONS: dict[str, Region] = {
         bbox=(754443.0, 617727.0, 756491.0, 619775.0),
         origin=(755467.0, 618751.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,11) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,11) of the ADR 0203 plan)",
     ),
     "dk65-monki-06": Region(
         id="dk65-monki-06",
@@ -345,7 +345,7 @@ REGIONS: dict[str, Region] = {
         bbox=(752395.0, 617727.0, 754443.0, 619775.0),
         origin=(753419.0, 618751.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,11) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,11) of the ADR 0203 plan)",
     ),
     "dk65-monki-07": Region(
         id="dk65-monki-07",
@@ -354,7 +354,7 @@ REGIONS: dict[str, Region] = {
         bbox=(752395.0, 619775.0, 754443.0, 621823.0),
         origin=(753419.0, 620799.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,12) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,12) of the ADR 0203 plan)",
     ),
     "monki-e": Region(
         id="monki-e",
@@ -363,7 +363,7 @@ REGIONS: dict[str, Region] = {
         bbox=(752395.0, 621823.0, 754443.0, 623871.0),
         origin=(753419.0, 622847.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,13) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,13) of the ADR 0203 plan)",
     ),
     "monki": Region(
         id="monki",
@@ -372,7 +372,7 @@ REGIONS: dict[str, Region] = {
         bbox=(750347.0, 621823.0, 752395.0, 623871.0),
         origin=(751371.0, 622847.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,13) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,13) of the ADR 0203 plan)",
     ),
     "dw671-tykocin-02": Region(
         id="dw671-tykocin-02",
@@ -381,7 +381,7 @@ REGIONS: dict[str, Region] = {
         bbox=(758539.0, 607487.0, 760587.0, 609535.0),
         origin=(759563.0, 608511.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-9,6) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-9,6) of the ADR 0203 plan)",
     ),
     "dw671-tykocin-03": Region(
         id="dw671-tykocin-03",
@@ -390,7 +390,7 @@ REGIONS: dict[str, Region] = {
         bbox=(756491.0, 607487.0, 758539.0, 609535.0),
         origin=(757515.0, 608511.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,6) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,6) of the ADR 0203 plan)",
     ),
     "dw671-tykocin-04": Region(
         id="dw671-tykocin-04",
@@ -399,7 +399,7 @@ REGIONS: dict[str, Region] = {
         bbox=(756491.0, 605439.0, 758539.0, 607487.0),
         origin=(757515.0, 606463.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,5) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-10,5) of the ADR 0203 plan)",
     ),
     "dw671-tykocin-05": Region(
         id="dw671-tykocin-05",
@@ -408,7 +408,7 @@ REGIONS: dict[str, Region] = {
         bbox=(754443.0, 605439.0, 756491.0, 607487.0),
         origin=(755467.0, 606463.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,5) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,5) of the ADR 0203 plan)",
     ),
     "dw671-tykocin-06": Region(
         id="dw671-tykocin-06",
@@ -417,7 +417,7 @@ REGIONS: dict[str, Region] = {
         bbox=(754443.0, 603391.0, 756491.0, 605439.0),
         origin=(755467.0, 604415.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,4) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-11,4) of the ADR 0203 plan)",
     ),
     "dw671-tykocin-07": Region(
         id="dw671-tykocin-07",
@@ -426,7 +426,7 @@ REGIONS: dict[str, Region] = {
         bbox=(752395.0, 603391.0, 754443.0, 605439.0),
         origin=(753419.0, 604415.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,4) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,4) of the ADR 0203 plan)",
     ),
     "dw671-tykocin-08": Region(
         id="dw671-tykocin-08",
@@ -436,7 +436,7 @@ REGIONS: dict[str, Region] = {
         origin=(753419.0, 602367.0),
         teryt_powiat="2008",
         teryt_powiat_extra=('2002',),
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,3) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-12,3) of the ADR 0203 plan)",
     ),
     "dw671-tykocin-09": Region(
         id="dw671-tykocin-09",
@@ -446,7 +446,7 @@ REGIONS: dict[str, Region] = {
         origin=(751371.0, 602367.0),
         teryt_powiat="2002",
         teryt_powiat_extra=('2008',),
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,3) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,3) of the ADR 0203 plan)",
     ),
     "tykocin": Region(
         id="tykocin",
@@ -455,7 +455,7 @@ REGIONS: dict[str, Region] = {
         bbox=(750347.0, 599295.0, 752395.0, 601343.0),
         origin=(751371.0, 600319.0),
         teryt_powiat="2002",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,2) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-13,2) of the ADR 0203 plan)",
     ),
     "dw671-jasionowka-01": Region(
         id="dw671-jasionowka-01",
@@ -464,7 +464,7 @@ REGIONS: dict[str, Region] = {
         bbox=(760587.0, 613631.0, 762635.0, 615679.0),
         origin=(761611.0, 614655.0),
         teryt_powiat="2008",
-        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-8,9) of the ADR 0203 plan; definition only, not built)",
+        status="WORKING_ASSUMPTION (ADR 0231, owner D63/D64; tile = lattice (-8,9) of the ADR 0203 plan)",
     ),
 }
 

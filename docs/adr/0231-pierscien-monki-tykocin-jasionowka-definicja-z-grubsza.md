@@ -78,6 +78,41 @@ Budowa (`highway=construction|proposed`) w kaflach pierścienia: 0 m.
 6. Granice powiatów z lustra Overpass z 2026-07-24 (UNVERIFIED po tej dacie); próg 5 % `WORKING_VALUE`.
 7. Koniec świata: krawędź W `monki` (DK65 dalej na Grajewo), S `tykocin` (DW671 dalej), N `dw671-jasionowka-01`.
 
+## Po budowie kafli (FIX po recenzji s22 #115)
+1. **`region.yaml`** nie jest plikiem authored: `build_region.py` pisze go w całości z wpisu `regions.py` (id, tytuł,
+   `status`, bbox, origin x/y + z z NMT, powiaty) i z manifestów źródeł; plików authored (`graph_filter.authored.json`,
+   `overrides.yaml`, `route_endpoints.json`, `sources.authored.json`) nie rusza. Sprawdzone w kodzie (`build_region.py`
+   §region.yaml) — **nie uruchomione** (brak Data/raw w chmurze). Manifesty powiatów 2002 i 2008 (BDOT10k, LoD1, LoD2)
+   są w gicie; manifesty `gugik-nmt-2022-<id>` i `gugik-orto-*-<id>` tworzy `ingest.py` (pin `nmt_year: 2022`).
+   Poprawka: `status` wpisów pierścienia nie zawiera już „definition only, not built” — tekst trafiał dosłownie do
+   `region.yaml`, więc po budowie byłby nieprawdziwy. Czy kafel jest zbudowany, wynika z dysku (`region.yaml`).
+2. **Test dwustanowy** `test_authored_files_present_and_consistent`: kafel bez `region.yaml` = definicja (żaden
+   produkt budowy w gicie, override'y `confidence: low`); kafel z `region.yaml` = zbudowany (`region.yaml` == wpis
+   `regions.py`, kafel 2048 m, CRS EPSG:2180 / EVRF2007, źródła z manifestami w gicie, pin NMT 2022 uszanowany, pliki
+   authored przetrwały). Wcześniej test wymagał braku `region.yaml` i padłby po pierwszej budowie. Stan „zbudowany”
+   sprawdzony na syntetycznym `region.yaml` jednego kafla (nie w gicie).
+3. **Katalog regionów (ADR 0229/0267):** `export-region-catalog.py --check` zgłasza każdy region z `route_start.json`
+   bez wpisu w katalogu; wpis (id, label, group) dodaje się ręcznie, pola pochodne przelicza skrypt. Wpisu nie można
+   dodać przed budową (skrypt wymaga `route_start.json` i `roads.graph.json`). Propozycja: `group` = „Mońki” dla
+   `dk65-monki-02…07`, `monki-e`, `monki`; „Tykocin” dla `dw671-tykocin-02…09`, `tykocin`; „Knyszyn” dla
+   `dw671-jasionowka-01`; `label` = część tytułu z `regions.py` przed „ — ”. Zbiory (`d67`, `d67-full`) bez zmian —
+   decyzja właściciela, czy pierścień wchodzi do zbioru. Strażnik: `test_built_ring_tiles_are_in_the_region_catalog`.
+4. **Graf kafli streamingu (ADR 0235, PR #114 — w chwili FIX nie w main):** `tools/worldgen/streaming/tile_graph.py`
+   czyta `Data/Regions/*/region.yaml`, więc kafle pierścienia pojawią się w `tile_graph.json` dopiero po budowie; do tego
+   czasu #114 i #115 są od siebie niezależne (kolejność scalania dowolna). Po budowie: uruchomić `tile_graph.py`
+   (inaczej pada `test_tile_graph_0235::test_committed_graph_is_fresh`) i dopisać zmierzone `WORLD_MEMORY` Low/High
+   kafla do tabel `WORLD_MEMORY_LOW_MB` / `WORLD_MEMORY_HIGH_MB`; bez wpisu kafel liczy się jak najcięższy zmierzony
+   (160,0 / 420,4 MB — wartości z gałęzi `streaming-0235`), co przy budżecie Low 200 MB blokuje wczytanie sąsiada.
+5. **Kafle narożne < 0,5 km drogi** (`dk65-monki-03`, `-05`, `monki-e`, `dw671-tykocin-02`): generator nie ma
+   uproszczonego profilu treści i ten ADR go nie wprowadza. Budować profilem ogólnym, **zmierzyć** `WORLD_MEMORY` Low
+   i wpisać do tabel z p. 4. Jeśli suma dwóch sąsiednich kafli przekroczy budżet streamingu Low (200 MB, #114),
+   uproszczenie (np. bez far-field poza korytarzem) wymaga osobnej decyzji — otwarte, UNVERIFIED do pomiaru.
+6. **Kolej:** od ADR 0217 generator ma etap kolei opt-in (`rail=True` we wpisie regionu). Wpisy pierścienia mają
+   `rail=False`; przejazd w `monki` i tory w `dk65-monki-04/-06/-07`, `dw671-tykocin-02` — włączyć po scaleniu
+   prac kolejowych DK65 (#102), decyzja lidera (zastępuje „Otwarte 3” w części „generator nie ma torów”).
+7. `CLAUDE.md` (plik lidera) — sekcja „Regeneracja mapy” nie wymienia `export-region-catalog.py` ani `tile_graph.py`;
+   do dopisania przez lidera (nie zmieniane w tym PR).
+
 ## Odtworzenie
 ```
 uv run --project tools/worldgen python tools/worldgen/qa/ring_0231_plan.py --png                  # plan + render (bez sieci)
@@ -86,8 +121,17 @@ uv run --project tools/worldgen python tools/worldgen/qa/ring_0231_plan.py --ini
 uv run --project tools/worldgen python -m pytest -q tests/gis/test_ring_0231.py tests/gis/test_knyszynska_0208.py
 # budowa (lider), dla każdego <id> z listy p. 1, w kolejności jazdy:
 uv run --project tools/worldgen tools/worldgen/ingest.py --region <id> --with orto10
-uv run tools/worldgen/build_region.py --region <id>
+uv run tools/worldgen/build_region.py --region <id>                                   # tworzy region.yaml (p. „Po budowie”)
 uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region <id>
+uv run --project tools/worldgen python scripts/export-route.py --region <id>          # route_start.json
+#   ręcznie: wpis kafla (id, label, group) w game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json,
+#   PRZED importem — importer zapisuje startS z katalogu jako spawn sceny (WorldSceneBuilder, ADR 0262)
+python scripts/export-region-catalog.py                                               # routeLengthM / startS + zbiory pochodne
+python scripts/export-region-catalog.py --check
 pwsh scripts/import-region.ps1 -Region <id> -Build
-pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/ring-0231/vqa/<id>
+pwsh scripts/visual-qa.ps1 -Scene World_<id> -Tier Low -Lighting overcast -OutputDir artifacts/ring-0231/vqa/<id>
+# raz, po zbudowaniu partii kafli:
+uv run --project tools/worldgen python tools/worldgen/streaming/tile_graph.py         # tylko po scaleniu #114 (ADR 0235)
+uv run --project tools/worldgen python tools/worldgen/streaming/tile_graph.py --check
+uv run --project tools/worldgen python -m pytest -q tests/gis/test_ring_0231.py tests/gis/test_region_catalog_0267.py tests/gis/test_start_clear_0262.py
 ```
