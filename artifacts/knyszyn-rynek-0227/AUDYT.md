@@ -247,3 +247,12 @@ Lokalne porównania `compare/r28/High-clear/03-owner-render.jpg` i `08-owner-ren
 **Kadr 03:** zdjęcie pokazuje aleję na pierwszym planie i czytelny portyk urzędu między drzewami. Na renderze wejście oraz znaczna część budynku są zasłonięte bryłą i koronami, a położenie ścieżki oraz perspektywa nie odpowiadają zdjęciu: ścieżka jest widoczna głównie po prawej i dalej od kamery. Korony drzew wyglądają zbyt regularnie i sztucznie, z ciemnymi pionowymi powierzchniami; wymagają dalszej pracy i porównania przy lepiej dopasowanej kamerze.
 
 **Kadr 08:** mimo podobnego ustawienia postumentu i bloku przed nim figura jest ciemnym, gładkim i uproszczonym proxy, które nie odwzorowuje sylwetki ani detali rzeczywistej rzeźby. Korony w tle są powtarzalne i sztuczne, a układ widocznych alejek i pierzei różni się od fotografii. Pozycja kamery, widoczność masztu i warunki oświetlenia nie są dokładnie dopasowane. Rozpoznawalność pomnika i odbiór całego miejsca pozostają **OPEN**; model zachowuje status `PROXY_NOT_APPROVED`.
+
+
+## R28 — fontanna i kościół, kadry 04 i 05
+
+Obejrzano lokalne `compare/r28/High-clear/04-owner-render.jpg` oraz `05-owner-render.jpg`. Pozycje kamer, ogniskowa i warunki oświetlenia są szacunkowe; różnice perspektywy utrudniają bezpośrednią ocenę wymiarów, a obrazy nie stanowią akceptacji właściciela.
+
+**Kadr 04:** fontanna jest widoczna jako płaska płyta w posadzce, z obeliskiem w tle; fotografia przedstawia ją w stanie suchym. Na renderze układ i szczegółowość nawierzchni oraz otoczenia są uproszczone, a korony drzew wyglądają regularnie i mają widoczne ciemne płaszczyzny. Umiejscowienie kamery i proporcje płyty wymagają dalszego dopasowania do zdjęcia.
+
+**Kadr 05:** na zdjęciu widoczne są strumienie działającej fontanny; na renderze widoczna jest płyta, ale brak strumieni. Kościół ma białą bryłę i czerwoną wieżę w osi, lecz jego model, szczegóły zabudowy, drzewa i nawierzchnie są uproszczone względem fotografii. Różnice pozycji kamery i światła nie pozwalają uznać proporcji za zweryfikowane. Działanie strumieni i ocena wizualna pozostają **OPEN**.
