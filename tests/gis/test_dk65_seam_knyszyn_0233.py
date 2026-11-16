@@ -119,6 +119,8 @@ def test_lane_follow_is_opt_in():
         for s in net.sec_list:
             if s.edge_id == KS_EDGE:
                 continue
+            if str(s.provenance.get("lanes_follow_width", "")).startswith("derived:seam_taper"):
+                continue      # ADR 0275: sections inside a seam width transition (knyszyn-s: w98071886 towards dw671)
             assert not s.lane_follow
             assert s.lane_w_at(s.width / 2 - 0.4) == s.lane_w
     from roads.network import EdgeSection
