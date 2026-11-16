@@ -17,7 +17,7 @@ EAVES = [
 class Buffer:
     def __init__(self): self.parts = []
     def add(self, layer, mat, vertices, uv, triangles, src, UV1=None):
-        self.parts.append((layer, mat, np.asarray(vertices), np.asarray(triangles), src))
+        self.parts.append((layer, mat, np.asarray(vertices), np.asarray(triangles), src, np.asarray(uv)))
 
 
 def terrain(e, n): return np.zeros_like(e) + 125.
@@ -86,7 +86,7 @@ def test_posts_follow_local_ground_on_sloping_site():
     buf = Buffer()
     market.build(buf, "knyszyn", ORIGIN, overrides(), sloped, {})
     collision = [p for p in buf.parts if p[0] == "collision"]
-    for _, _, vertices, _, _ in collision:
+    for _, _, vertices, _, _, _ in collision:
         # Each box corner is within one post half-width of the sampled centre;
         # bottom vertices sit 5 cm below the local conformed surface.
         floor = sloped(vertices[:,0], vertices[:,1])
@@ -107,16 +107,52 @@ def test_explicit_fences_leave_authored_gate_open():
     assert all(f["posts"] >= 2 and f["bays"] == f["posts"]-1 for f in result["fences"])
     gate_mid = (np.array([760816.8,613311.])+np.array([760820.4,613304.]))/2-np.array(ORIGIN)
     gate = Point(gate_mid).buffer(1.)
-    for layer, mat, vertices, triangles, src in buf.parts:
+    for layer, mat, vertices, triangles, src, _ in buf.parts:
         if ":fence:" not in src:
             continue
-        assert mat in ("steel_painted", "collision_steel")
+        assert mat in ("steel_painted", "hall_flashing", "collision_steel")
         # Test every primitive's horizontal footprint, including rails whose
         # endpoints alone could hide an accidental connection across a gate.
         for tri in triangles:
             footprint = MultiPoint(vertices[tri,:2]).convex_hull
             assert not footprint.intersects(gate)
     assert {p[0] for p in buf.parts if ":fence:" in p[4]} == {"buildings", "buildings_low", "collision"}
+
+
+def test_low_material_trial_keeps_geometry_high_and_collision(monkeypatch):
+    data = overrides()
+    data[0]["fences"] = [
+        {"id":"north", "points_epsg2180":[[760810.,613348.],[760815.85,613316.17]]},
+        {"id":"south", "points_epsg2180":[[760820.4,613304.],[760835.2,613222.]]},
+    ]
+    candidate, baseline = Buffer(), Buffer()
+    market.build(candidate, "knyszyn", ORIGIN, data, terrain, {})
+    monkeypatch.setattr(market, "LOW_STRUCTURE_MAT", "steel_painted")
+    market.build(baseline, "knyszyn", ORIGIN, data, terrain, {})
+
+    # High and collisions are byte-for-byte unchanged, including materials and UV.
+    def selected(buf, layer):
+        return sorted((p for p in buf.parts if p[0] == layer), key=lambda p: (p[4],p[1]))
+    for layer in ("buildings", "collision"):
+        a, b = selected(candidate, layer), selected(baseline, layer)
+        assert len(a) == len(b)
+        for x, y in zip(a, b):
+            assert (x[0],x[1],x[4]) == (y[0],y[1],y[4])
+            for i in (2,3,5): np.testing.assert_array_equal(x[i], y[i])
+
+    # Low triangles, winding and UV stay identical, though they move to the
+    # existing hall_flashing material group with a different appearance.
+    def triangle_signatures(buf):
+        out = []
+        for layer, mat, verts, triangles, src, uv in buf.parts:
+            if layer != "buildings_low": continue
+            for tri in triangles:
+                out.append((src, np.ascontiguousarray(verts[tri]).tobytes(),
+                            np.ascontiguousarray(uv[tri]).tobytes()))
+        return sorted(out)
+    assert triangle_signatures(candidate) == triangle_signatures(baseline)
+    assert not any(p[0] == "buildings_low" and p[1] == "steel_painted" for p in candidate.parts)
+    assert any(p[0] == "buildings_low" and p[1] == "hall_flashing" for p in candidate.parts)
 
 
 @pytest.mark.parametrize("change", ["missing", "duplicate", "bad_polygon", "nan_ground", "bad_solar", "bad_fence"])

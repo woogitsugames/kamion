@@ -33,6 +33,7 @@ COUNTER_HEIGHT_M = .88    # WORKING_VALUE
 EAVE_INSET_M = .25        # WORKING_VALUE within the 0.5–1 m tracing tolerance
 FENCE_HEIGHT_M = 1.40     # WORKING_VALUE from owner photograph, not surveyed
 FENCE_BAY_M = 2.50        # WORKING_VALUE
+LOW_STRUCTURE_MAT = "hall_flashing"  # existing dark metal; visual QA / budget trial
 
 
 def _point(xy, z):
@@ -118,23 +119,24 @@ def _canopy(acc, center, axis, across, length, width, ground, solar, post_height
     positions, transverse, _ = _post_positions(center, axis, across, length, width)
     count = len(positions)
     for layer in LAYERS:
+        structure_mat = LOW_STRUCTURE_MAT if layer == "buildings_low" else "steel_painted"
         _roof(acc, layer, center, axis, across, length, width, base, solar)
         for side_index, side in enumerate((-1, 1)):
             for index, along in enumerate(positions):
                 at = center + axis*along + across*(side*transverse)
-                _box(acc, layer, "steel_painted", at, axis, across,
+                _box(acc, layer, structure_mat, at, axis, across,
                      POST_HALF_M, POST_HALF_M, post_heights[side_index*count+index]-.05, base)
             # Continuous dark support beam under the eave.
             at = center + across*(side*transverse)
-            _box(acc, layer, "steel_painted", at, axis, across,
+            _box(acc, layer, structure_mat, at, axis, across,
                  length/2-.25, .065, base-.14, base)
         # Long counters under each roof; simplified but visible from the street.
         for side in (-1, 1):
             at = center + across*(side*width*.19)
-            _box(acc, layer, "steel_painted", at, axis, across,
+            _box(acc, layer, structure_mat, at, axis, across,
                  length/2-.8, .30, ground+COUNTER_HEIGHT_M, ground+COUNTER_HEIGHT_M+.075)
             for along in positions[::2]:
-                _box(acc, layer, "steel_painted", at+axis*along, axis, across,
+                _box(acc, layer, structure_mat, at+axis*along, axis, across,
                      .035, .035, ground, ground+COUNTER_HEIGHT_M)
     for side_index, side in enumerate((-1, 1)):
         for index, along in enumerate(positions):
@@ -170,7 +172,8 @@ def _fence(acc, points, heights, bays):
     for i, at in enumerate(points):
         # Round-ish square steel posts; no horizontal elements across openings.
         for layer in (*LAYERS, "collision"):
-            mat = "collision_steel" if layer == "collision" else "steel_painted"
+            mat = ("collision_steel" if layer == "collision" else
+                   LOW_STRUCTURE_MAT if layer == "buildings_low" else "steel_painted")
             _box(acc, layer, mat, at, np.array([1., 0.]), np.array([0., 1.]),
                  .035, .035, heights[i]-.05, heights[i]+FENCE_HEIGHT_M)
     for ia, ib in bays:
@@ -184,8 +187,9 @@ def _fence(acc, points, heights, bays):
         _box(acc, "collision", "collision_steel", center, axis, across,
              length/2, .025, z-.05, z+FENCE_HEIGHT_M)
         for layer in LAYERS:
+            structure_mat = LOW_STRUCTURE_MAT if layer == "buildings_low" else "steel_painted"
             for offset in (.15, FENCE_HEIGHT_M-.15):
-                _box(acc, layer, "steel_painted", center, axis, across,
+                _box(acc, layer, structure_mat, center, axis, across,
                      length/2, .018, z+offset-.018, z+offset+.018)
             if layer == "buildings":
                 # Sparse, two-sided wire silhouettes; Low retains posts/rails.

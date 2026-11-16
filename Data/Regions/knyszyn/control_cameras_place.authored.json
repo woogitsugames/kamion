@@ -433,12 +433,21 @@
     },
     {
       "id": "market_owner_13",
-      "pos_en": [-871, 553],
-      "heading_deg": 30,
-      "eye_m": 100,
+      "pos_en": [-711, 563],
+      "heading_deg": 318,
+      "eye_m": 90,
       "fov_deg": 55,
-      "pitch_deg": -38,
+      "pitch_deg": -35,
       "note": "QA only, ESTIMATED oblique drone pose for owner photo 13; no EXIF. Requires image comparison and adjustment; eye-level recognition remains the acceptance criterion."
+    },
+    {
+      "id": "market_owner_14_close",
+      "pos_en": [-799.5, 603],
+      "heading_deg": 15,
+      "eye_m": 1.7,
+      "fov_deg": 60,
+      "pitch_deg": 0,
+      "note": "QA only, ESTIMATED closer eye-level pose for owner photo 14; verify against image and obstacles."
     }
   ]
 }
