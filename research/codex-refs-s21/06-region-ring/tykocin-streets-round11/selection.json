@@ -1,0 +1,39 @@
+{
+  "review_date": "2026-11-16",
+  "scope": "Nowe widoki Tykocina, Bernardyńska / 11 Listopada, bez powtarzania Złotej, rynku i mostu",
+  "selection_source": "../data/osm-selected-roads.json — istniejący plik lokalny, bez nowego API",
+  "points": [
+    {
+      "way": 630270652,
+      "street": "Bernardyńska",
+      "selection_lonlat": [
+        22.77155,
+        53.2063461
+      ],
+      "other_endpoint_lonlat": [
+        22.771345,
+        53.2040755
+      ]
+    },
+    {
+      "way": 421083491,
+      "street": "11 Listopada",
+      "selection_lonlat": [
+        22.7779238,
+        53.2079021
+      ],
+      "other_endpoint_lonlat": [
+        22.7736385,
+        53.2074075
+      ]
+    }
+  ],
+  "dedup": "Brak nazw ulic w manifestach/README/observations naszego06 oraz K1 i p6-next-regions-2; dokładne klucze zdjęć będą sprawdzone po indywidualnym oglądzie",
+  "limits": [
+    "Punkty selekcji drogi nie są GPS kamery",
+    "Nie zapisywać formalnego adresu obiektu lub daty budowy z samej bliskości punktu",
+    "Commons i Flickr nowe pobrania STOP; brak API Mapillary/OSM/Overpass"
+  ],
+  "final_selection": "Po sprawdzeniu braku widocznych sekwencji na wybranych fragmentach Bernardyńskiej i 11 Listopada wybrano dostępną Sokołowską/DW671. Dwa obrazy i ich dokładne źródła w observations.json.",
+  "status": "STABLE — 2 indywidualnie obejrzane nowe kadry, 0 pobrań"
+}

@@ -1,6 +1,6 @@
 # 06 — Pierścień regionów: Mońki, Tykocin, DW671 — WIP
 
-Stan ewidencji głównej na 16.11.2026: **34 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **36 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Cel: rozpoznawalny układ miejsc i planowane zmiany, z rozróżnieniem projektu od stanu wykonanego. Nowy materiał: **2 ortofoto GUGiK + 2 komunikaty tekstowe link-only**, 0 nowych fotografii ulicznych. Każdy ortokadr obejrzany osobno. Wycinki obejmują 400×400m, oryginały1600×1600px przy0.25m/px poza gitem; miniatury800×800. Pełne bbox/URL/SHA i zapytania skorowidza w `data/wms-overviews.json`. Źródło środka to węzeł miejscowości OSM, nie deklarowany geometryczny środek rynku.
 
@@ -84,3 +84,7 @@ Główny manifest29rekordów. [Kościół](monki-landmark-round7/README.md):2now
 ## Krypno przy DW671 — runda10
 
 [krypno-dw671-round10](krypno-dw671-round10/README.md):2 nowe historyczne kadry Mapillary/grobin z20.09.2020 i03.07.2019, każdy osobno obejrzany po powiększeniu. OSM wybrano jawnie. Otoczenie kościoła: żółto-szare poręcze, schody, blokowy mur i ażurowe ogrodzenie, pełna bryła świątyni ucięta. Drugi: kremowy sklep, dom ze skośnym dachem i szczytem, żółtokremowa fasada z balkonem, chodnik z czerwonym pasem i zwykły boczny wlot. Nie opisano ronda. GPS kamery, materiały, metryka, formalne kondygnacje i stan2026UNVERIFIED. Zakres aktualnej kolejki DW671 oddzielono od historycznego bboxR9.2link-only/0pobrań/API/Commons. Główny06ma34 rekordy; root sprawdził artefakty, nie deklaruje drugiego oglądu źródeł.
+
+## Sokołowska / DW671 — runda11
+
+[tykocin-streets-round11](tykocin-streets-round11/README.md):2 nowe indywidualnie obejrzane kadry grobin z02.09.2019, link-onlyCCBYSA4.0. Odrębne miejsca: brukowana pierzeja z łososiowym domem i zielonym ogrodzeniem oraz asfaltowy zakręt z dwuspadowymi dachami. Bez udawania widoku klasztoru, metryki i aktualności2026; GPSkameryUNVERIFIED. Główny manifest36.
