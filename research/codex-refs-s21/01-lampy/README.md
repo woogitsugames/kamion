@@ -1,6 +1,6 @@
 # 01 — Lampy i fotometria — WIP
 
-Stan ewidencji głównej na 16.11.2026: **51 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **54 rekordy** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Cel: uzupełnić lukę M59-FIX zdjęciami lamp ciągników i naczep z czytelną homologacją oraz przepisami. Stan: **NIESPEŁNIONE**.
 
@@ -209,3 +209,7 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Nowy przedniDAF — runda34
 
 [front-approval-round34](front-approval-round34/README.md):2 nowe fotografie1przedniej części, makroE1/3411 zPL,30 i symbolami po dwóch odczytach. Napięcia/mocyMD nie połączono w arbitralny pobór całej lampy, konflikt lewa/prawa w ofercie jawny. Główny51 rekordów. Tylny prógM59 nadal4PASS,1warunkowy,ON0/zmierzch0 wPASS. Historyczne snapshoty49 pozostają datowanymi dowodami wcześniejszego stanu.
+
+## Kolejna fizyczna lampka tablicy — runda36
+
+[heavy-plate-round36](heavy-plate-round36/README.md):3nowe fotografie1używanejHella źródłowoActros/Axor, po dwóch osobnych oglądach.2samodzielne widoki lampki+1etykietaSUPPORT. Dolna granica tablicowa6jasnychkadrów/3urządzenia,5detalipomocniczych; bez nowegoE/ON i bez twierdzenia o5urządzeniach. Główny54. Tylny15M59 nadal4PASS+1warunkowy.
