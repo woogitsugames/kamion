@@ -1,0 +1,10 @@
+# STATUS — P16 M59-FIX (s21)
+
+- 2026-11-15: gałąź research/mistral-p16-truck-lamps-fix-s21 od origin/research/mistral-p16-truck-lamps @ 73ccbe930.
+- Zrobione: (1) 23/23 kadry obejrzane osobno, przeklasyfikowane (11 usuniętych, 5 „inne systemy”); (3) errata E1–E7 i E9 sprawdzone w XHTML Cellar PL i wprowadzone, E8 → UNVERIFIED; (4) audyt seed 20261115, 22/106 (6 kadrów: 5 zgodne / 1 poprawiony; 16 cytatów: 15 zgodnych, P16-303 sklep niepowtarzalny); (5) 12 JPG w files/, bez kart producentów.
+- NIEZACZĘTE: (2) nowe kadry — ≥ 15 zbliżeń lamp ECE i ≥ 5 lampek tablicy ciężarówek (kryterium 4 niespełnione).
+- Następny krok: wyszukać kadry w Commons (kategorie „Rear lights of trucks”, „Semi-trailers (rear views)”, „License plate lights”), Openverse, Panoramax; komenda startowa: `python3 -I tools/commons.py info …` (skrypty w scratchu sesji s21).
+- Integracja samego katalogu: `git checkout origin/research/mistral-p16-truck-lamps-fix-s21 -- research/mistral/p16-truck-lamps`
+- 2026-11-16 (s23, sesja P r2, plan B lidera z `docs/reports/PR-TRIAGE-2026-11-16-s23.md`): merge origin/main do gałęzi; FIX r2 z recenzji `REVIEW-2026-11-15-s21-cloudD-92-p16-truck-lamps-fix.md` §6: **pkt 1 ZROBIONE** (kolumna `wartość` P16-201…223 przepisana z `opis_co_widać`, kadry usunięte = „WYCOFANE (s21)” + status UNVERIFIED; kolumna `punkt` bez starych nazw plików z markami → `files/P16-2xx.jpg` albo `-`), **pkt 2 ZROBIONE** (75 cd warunkowo), **pkt 3 ZROBIONE** (§9 bez ZIP i „tylko pliki tekstowe”), **pkt 5 ZROBIONE** (żółta R48 poza gamutem sRGB).
+- **pkt 4 NIESPEŁNIONE (UNVERIFIED):** brak ≥ 15 zbliżeń tylnych lamp ECE (≥ 4 włączone, ≥ 3 zmierzch/noc) i ≥ 5 lampek tablicy ciężarówek — nowych kadrów nie szukano. Wygląd i kolejność komór typowej lampy ECE, LED vs pryzmaty, wygląd po włączeniu i lampka tablicy ciężarówki zostają UNVERIFIED (README §5.1–5.2, §6). Część tych luk zbiera Codex w PR #100 (`research/codex-refs-s21/01-lampy`, wstrzymany).
+- Integracja samego katalogu (bez reszty gałęzi): `git checkout origin/research/mistral-p16-truck-lamps-fix-s21 -- research/mistral/p16-truck-lamps`

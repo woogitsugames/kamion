@@ -19,13 +19,13 @@ namespace Game.UI
     /// </summary>
     public sealed class AboutPanel : MonoBehaviour
     {
-        static readonly Color k_Dim = new Color(0.02f, 0.025f, 0.03f, 0.72f);
-        static readonly Color k_Panel = new Color(0.06f, 0.065f, 0.07f, 0.97f);
-        static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.95f);
-        static readonly Color k_ButtonOn = new Color(0.30f, 0.36f, 0.30f, 0.95f);
-        static readonly Color k_Text = new Color(0.95f, 0.95f, 0.91f, 1f);
-        static readonly Color k_Muted = new Color(0.70f, 0.70f, 0.67f, 1f);
-        static readonly Color k_Amber = new Color(0.95f, 0.66f, 0.18f, 1f);
+        static readonly Color k_Dim = Game.Controls.UiPalette.Scrim;   // ADR 0283 palette
+        static readonly Color k_Panel = Game.Controls.UiPalette.Panel;   // ADR 0283 palette
+        static readonly Color k_Button = Game.Controls.UiPalette.Button;   // ADR 0283 palette
+        static readonly Color k_ButtonOn = Game.Controls.UiPalette.ButtonActive;   // ADR 0283 palette
+        static readonly Color k_Text = Game.Controls.UiPalette.Ink;   // ADR 0283 palette
+        static readonly Color k_Muted = Game.Controls.UiPalette.InkMuted;   // ADR 0283 palette
+        static readonly Color k_Amber = Game.Controls.UiPalette.Accent;   // ADR 0283 palette
 
         const float MaxW = 1500f, Pad = 40f, Edge = 20f, HeaderH = 86f, FooterH = 108f;
 

@@ -12,9 +12,9 @@ ustalić z kodu, oznaczono **UNVERIFIED**. Liczby wydajności i wymagań to **WO
 
 | Plik | Co robi |
 |---|---|
-| `Kamion.exe` | Gra. Bez argumentów startuje w **pełnym ekranie** (projekt: `fullscreenMode: 1` = okno bez ramki na cały ekran), chyba że plik ustawień mówi inaczej (sekcja 3). |
-| `Kamion-okno.cmd` | Start w oknie 1600 × 900, do menu startowego. |
-| `Kamion-<region>.cmd` | Jeden plik na **każdy region, którego scena jest w buildzie** (lista z logu buildu), np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`, `Kamion-dk65-05.cmd`. Okno 1600 × 900 i od razu `-scene <region>`. Bez strumieniowania. |
+| `Kamion.exe` | Gra. Bez argumentów startuje w **pełnym ekranie bez ramki** w natywnej rozdzielczości monitora (ProjectSetup.ApplyStandaloneWindowSettings), chyba że plik ustawień mówi inaczej (sekcja 3). Alt+Enter przełącza pełny ekran / okno; okno można powiększać myszą. Uwaga: Unity pamięta ostatni tryb okna — jeśli po starszym buildzie gra otwiera się w oknie, naciśnij raz Alt+Enter. |
+| `Kamion-okno.cmd` | Start w oknie 1600 × 900 (jedyny launcher wymuszający okno), do menu startowego. |
+| `Kamion-<region>.cmd` | Jeden plik na **każdy region, którego scena jest w buildzie** (lista z logu buildu), np. `Kamion-knyszyn.cmd`, `Kamion-knyszyn-w.cmd`, `Kamion-dk65-05.cmd`. Tryb ekranu jak `Kamion.exe` (pełny ekran bez ramki) i od razu `-scene <region>`. Bez strumieniowania. |
 | `Kamion-korytarz.cmd` | **Ciągła jazda** (sekcja 1.4): pełny ekran bez ramki, start w regionie knyszyn, `-stream 1`. Powstaje tylko, gdy w buildzie są regiony `knyszyn` **i** `knyszyn-s`. |
 | `build-id.json` | Skrót zawartości `Kamion_Data` — gra pokazuje go w menu, w „Informacjach” i w logu `[BOOT]`; po nim rozpoznaje się build. |
 | `Kamion.exe.sha256`, `build.json` | Metadane buildu (suma exe, liczba plików, rozmiar). Suma exe nie identyfikuje buildu (exe to ten sam launcher Unity w każdym buildzie). |
@@ -204,6 +204,7 @@ wstrzymane (klawisze i pad nawigują po menu).
 | Rozglądanie | — | prawa gałka | przeciągnij po ekranie (który przycisk myszy — UNVERIFIED) |
 | Przybliżenie | — | — | kółko myszy |
 | Lusterka w okienkach na ekranie (wł./wył.) | L | — (do przypisania) | — |
+| HUD: szczegóły minimalne / rozszerzone (ADR 0283) | I | — (do przypisania) | — |
 | Kamera cofania (wymuś) | V | — (do przypisania) | — |
 | Pełna mapa | — | — | klik minimapy (dokładny gest UNVERIFIED); kółko = zoom mapy |
 
@@ -216,7 +217,8 @@ Kamera cofania włącza się też sama na biegu R.
 | Menu / wstecz (w jeździe: zamyka mapę, potem ustawienia, potem wraca do menu startowego) | Esc | środkowy prawy (Start) | przycisk „Menu” w HUD |
 | Ruch po menu | strzałki, Tab | krzyżak, lewa gałka | najechanie |
 | Wybór | Enter | przycisk dolny (A) | klik |
-| Zamknij panel ustawień PC (= Anuluj) | Esc | przycisk prawy (B) | „Anuluj” |
+| Zamknij panel ustawień PC (= Anuluj) | Esc | przycisk prawy (B) | „Anuluj” albo prawy przycisk myszy |
+| Zakładki ustawień (Grafika, Sterowanie, Dźwięk, Rozgrywka, Lusterka; ADR 0283) | Q / E | LB / RB | klik zakładki |
 | Przewijanie ekranu „Informacje” | ↑ / ↓, PgUp / PgDn | prawa gałka, krzyżak góra/dół | kółko |
 
 Esc i Start pada są na stałe (nie da się ich przypisać). K działa jako klakson zawsze, nawet po zmianie przypisania
@@ -226,8 +228,9 @@ Przyciski HUD (np. Menu, Reset) obsługuje tylko mysz — nie łapią fokusu pad
 
 ### 2.5 Zmiana przypisań (rebinding)
 
-Menu startowe → **Ustawienia sterowania** → sekcja „KLAWIATURA I PAD” → **Przypisania i czułość…**
-(przycisk jest widoczny tylko w scenie jazdy, gdy działa wejście PC).
+Menu startowe → **Ustawienia** → zakładka **Sterowanie** → **Kierownica, pedały, kamera…** → sekcja „KLAWIATURA I PAD” →
+**Przypisania i czułość…** (przycisk jest widoczny tylko w scenie jazdy, gdy działa wejście PC). Na telefonie przycisk
+nazywa się dalej „Ustawienia sterowania”. (ADR 0283.)
 
 - Strony **Klawiatura** / **Pad**. Kliknij przypisanie i naciśnij nowy klawisz/przycisk.
 - Anulowanie: Backspace (klawiatura) albo Start pada; po 10 s bez wciśnięcia — anulowane samo. Esc nie da się przypisać.
@@ -255,10 +258,11 @@ Menu startowe → **Ustawienia sterowania** → sekcja „KLAWIATURA I PAD” �
 
 ---
 
-## 3. Ustawienia PC (ekran, grafika, dźwięk)
+## 3. Ustawienia PC (ADR 0270, zakładki ADR 0283)
 
-Menu startowe → **Ekran, grafika, dźwięk** (tylko na PC). Zmiany działają po **Zastosuj**; „Anuluj” / Esc /
-pad B odrzuca; „Przywróć domyślne” wczytuje domyślne. Po zmianie trybu ekranu gra pyta „Zachować nowy tryb
+Menu startowe → **Ustawienia** (tylko na PC; jeden ekran, zakładki **Grafika · Sterowanie · Dźwięk · Rozgrywka ·
+Lusterka**, przełączanie Q / E, LB / RB albo kliknięciem). Zmiany działają po **Zastosuj**; „Anuluj” / Esc / pad B /
+prawy przycisk myszy odrzuca; „Przywróć domyślne” wczytuje domyślne **otwartej zakładki**. Po zmianie trybu ekranu gra pyta „Zachować nowy tryb
 ekranu?” i po **15 s** bez odpowiedzi wraca do poprzedniego.
 
 | Ustawienie | Wybór | Domyślnie |
@@ -271,6 +275,13 @@ ekranu?” i po **15 s** bez odpowiedzi wraca do poprzedniego.
 | Skala HUD | 80–140 % co 10 % | 100 % |
 | Jednostki prędkości | tylko km/h | km/h |
 | Głośność ogólna / Silnik / Otoczenie / Sygnały kabiny | 0–100 % co 5 % | 100 % |
+| Rozgrywka: Szczegóły HUD | minimalne / rozszerzone (też klawisz I w jeździe) | minimalne |
+| Rozgrywka: HUD w widoku z kabiny | auto / pasek / tylko ostrzeżenia (auto: gdy w kabinie działają zegary, zostają ostrzeżenia i kierunkowskazy) | auto |
+| Rozgrywka: Kontrolki dotykowe | auto / zawsze / nigdy | auto |
+| Lusterka: Okienka lusterek | wyłączone / włączone (też klawisz L) | włączone |
+| Lusterka: Rozmiar | 30–60 % wysokości ekranu co 2 % | 42 % (WORKING_VALUE) |
+| Lusterka: Położenie w pionie / Odsunięcie od krawędzi | 0–100 % co 10 % (podgląd układu w zakładce) | 0 % / 0 % |
+| Lusterka: Na zewnątrz / do środka, W dół / w górę | ±6° / ±3° co 0,5° (obraca widok obu lusterek głównych) | 0° / 0° |
 
 Plik: `settings_pc.json` w folderze danych gry. Argumenty `-tier` / `-fps` wygrywają z plikiem tylko na dany przebieg.
 

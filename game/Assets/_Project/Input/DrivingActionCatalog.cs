@@ -43,6 +43,8 @@ namespace Game.Controls
         public const string Couple = "Couple", LandingGear = "LandingGear", BrakeCruise = "BrakeCruise", ReverseCamera = "ReverseCamera";
         public const string IndicatorLeft = "IndicatorLeft", IndicatorRight = "IndicatorRight", Hazard = "Hazard";
         public const string Horn = "Horn", CycleCamera = "CycleCamera", MirrorInsets = "MirrorInsets", Look = "Look";
+        /// <summary>ADR 0283: monitor HUD minimal / extended (default I; rebindable, no pad default).</summary>
+        public const string HudDetail = "HudDetail";
 
         /// <summary>Keyboard steering: 1D-axis composites (negative = left, positive = right), one per pair.</summary>
         public static readonly string[][] KeyboardSteerPairs =
@@ -83,6 +85,7 @@ namespace Game.Controls
             new DrivingActionDef(Horn, DrivingActionKind.Button, "Klakson", K("<Keyboard>/k"), K("<Gamepad>/rightStickPress")),
             new DrivingActionDef(CycleCamera, DrivingActionKind.Button, "Zmiana kamery", K("<Keyboard>/c", "<Keyboard>/tab"), K("<Gamepad>/buttonNorth")),
             new DrivingActionDef(MirrorInsets, DrivingActionKind.Button, "Lusterka w oknach", K("<Keyboard>/l"), None),
+            new DrivingActionDef(HudDetail, DrivingActionKind.Button, "HUD: tryb rozszerzony", K("<Keyboard>/i"), None),
             new DrivingActionDef(ReverseCamera, DrivingActionKind.Button, "Kamera cofania", K("<Keyboard>/v"), None),
             new DrivingActionDef(BrakeCruise, DrivingActionKind.Button, "Tempomat zjazdu", K("<Keyboard>/b"), None),
             new DrivingActionDef(Couple, DrivingActionKind.Button, "Sprzęg naczepy", K("<Keyboard>/t"), None),
