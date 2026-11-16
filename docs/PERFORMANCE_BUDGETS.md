@@ -214,8 +214,10 @@ High tier as a separate package (options, nothing deployed): (a) status quo: two
 ## PC tiers (D74, ADR 0269) — all WORKING_VALUE, UNMEASURED
 Source of the values: `game/Assets/_Project/Rendering/Runtime/PcTierTable.cs` (+ `Resources/PcTiers/URP_PC_*.asset`), table with
 sources in `docs/adr/0269-tiery-grafiki-pc.md`. Content (draws / triangles) = the same Low / `_High` scenes as the phone, so the
-mobile content budgets above stay. Measurement: `scripts/build-windows.ps1 -Run … -Width 1920 -Height 1080` (or
-`scripts/pc-metrics.ps1` once PR #130 is merged); the dev RTX 5070 is NOT a reference (ADR 0260).
+mobile content budgets above stay. Measurement: `scripts/pc-metrics.ps1` (ADR 0266) or `scripts/build-windows.ps1 -Run …
+-Width 1920 -Height 1080`; the dev RTX 5070 is NOT a reference (ADR 0260). **Gate budgets (pass/fail) have one source:
+`tools/pcperf/budgets/pc-budgets.json`** (table in `docs/03`, section "PC (Windows)" at the top of this file); the table below
+is the per-tier design target of ADR 0269 — where they differ, the JSON wins (review #135 P2-6, ADR 0276).
 
 | Tier | Reference class (D74) | Target | Frame-time p95 | Frame-time p99 | VRAM | Status |
 |---|---|---|---|---|---|---|

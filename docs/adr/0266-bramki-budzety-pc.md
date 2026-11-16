@@ -10,8 +10,8 @@ samo co `scripts/device-metrics.ps1` na telefonie.
 1. **`docs/03` przepisany pod PC:** dowodem bramki jest build Windows (player) + liczby z `pc-metrics`. Trzy klasy sprzętu
    **min / zalecany / wysoki** (1080p30 Low / 1080p60 High / 1440p60 Ultra; min i zalecany wg D74 — patrz „Scalenie”) z budżetami: p50/p95/p99, % klatek > 2× budżetu,
    klatki > 100 ms, pamięć prywatna procesu, VRAM dedykowany procesu, czas ładowania regionu, draw calls i trójkąty (p95), GC
-   w oknie. **Każda liczba to `WORKING_VALUE`** do decyzji właściciela; przykłady sprzętu tylko jako kategorie/generacje,
-   bez wyników benchmarków. Wymagania mobilne oznaczone 🔒 „zabezpieczenie mobilne (odroczone, D73)” — zostają (np. tris
+   w oknie. **Każda liczba to `WORKING_VALUE`** do decyzji właściciela; bez wyników benchmarków. Sprzęt klas min/zalecany
+   to modele z D74 (sekcja „Scalenie” niżej, zastąpiła pierwotne kategorie/generacje; ADR 0276, recenzja #130 P2-2). Wymagania mobilne oznaczone 🔒 „zabezpieczenie mobilne (odroczone, D73)” — zostają (np. tris
    High 1,5 M / Ultra 2 M, ADR 0221 < 2 M), dane wspólne nie mogą ich przekroczyć bez ADR.
 2. **Jedno źródło budżetu:** `tools/pcperf/budgets/pc-budgets.json` (`kamion/pc-budgets/1`); tabela w `docs/03` musi się zgadzać
    (test pytest). `referenceMachines: []` → każdy raport jest „informacyjny” (`gate_eligible: false`) dopóki właściciel nie
@@ -72,6 +72,8 @@ premierę, kanał dystrybucji PC i model DLC (`docs/10` §3a), czy wersja telefo
   i5-9600 / Ryzen 5 3600, GTX 1660 / RX 590, 12 GB RAM → High, 1080p, 60 fps; dysk ≤ 25 GB (`diskGB` w JSON). Progi pamięci
   przeliczone pod RAM/VRAM z D74 (min: prywatna ≤ 4 GB, VRAM ≤ 1,75 GB, draw calls ≤ 2 000, trójkąty ≤ 2 M; zalecany:
   prywatna ≤ 7 GB, VRAM ≤ 5 GB). Klasa **wysoki** zostaje jako propozycja spoza D74. Wszystko `WORKING_VALUE`.
+  **Trójkąty ≤ 2 M dla min/Low to sufit bezpieczeństwa, nie cel** (ten sam rząd co cały budżet kamer C na High; wartość
+  bez źródła) — pierwszy pomiar Low na buildzie Windows ustawi właściwą wartość (ADR 0276, recenzja #130 P2-3).
 - **`pc-metrics.ps1` vs `build-windows.ps1`:** przyjmuje exe z `artifacts/win/kamion-<ver>-<sha>[-low][-regions][-dev]/Kamion.exe`
   (przykłady poprawione; region `knyszyn-w` z korytarza 0261). Argumenty `-metrics*` nie kolidują z `DesktopAutoShot`
   (`-shot`, `-shot_t`, `-quit_t`) — nie łączyć ich w jednym przebiegu (oba kończą player). Desktop bez `-tier`/`-fps` startuje
