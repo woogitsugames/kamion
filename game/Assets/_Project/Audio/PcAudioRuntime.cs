@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using Unity.Profiling;
-using Unity.Profiling.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -139,18 +138,12 @@ namespace TruckSim.Audio
 
         void Start()
         {
-            var handles = new List<ProfilerRecorderHandle>();
-            ProfilerRecorderHandle.GetAvailable(handles);
-            m_Sb.Clear();
-            foreach (var h in handles)
+            // audio-thread / main-thread markers (ns per frame); the full Audio category is ~70 markers, these are the totals
+            foreach (var name in new[] { "Audio.Thread", "AudioManager.Update", "AudioManager.FixedUpdate", "Audibility computation" })
             {
-                var d = ProfilerRecorderHandle.GetDescription(h);
-                if (d.Category != ProfilerCategory.Audio) continue;
-                m_Sb.Append(d.Name).Append(" | ");
-                m_Rec.Add(ProfilerRecorder.StartNew(d.Category, d.Name));
-                m_RecNames.Add(d.Name);
+                m_Rec.Add(ProfilerRecorder.StartNew(ProfilerCategory.Audio, name));
+                m_RecNames.Add(name);
             }
-            Debug.Log("[AUDIO-PC] audio counters: " + m_Sb);
         }
 
         void Update()
@@ -237,6 +230,9 @@ namespace TruckSim.Audio
 
         void Finish(string why)
         {
+            // memory and voice peaks also here: the player can stall in shutdown before OnApplicationQuit logs land
+            LogMemory();
+            Debug.Log($"[AUDIO-PC] peaks: playing={m_PeakPlaying} real={m_PeakReal} audibleVirtual={m_PeakAudibleVirtual}");
             m_Done = true;
             s_Recording = false;
             int n = s_Write;
