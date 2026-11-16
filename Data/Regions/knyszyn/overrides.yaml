@@ -392,3 +392,298 @@ overrides:
       each point replaces, rather than duplicates, one instance. Visual and Low/High budget comparison required.
     confidence: medium
     verify: "Same-pose owner comparison and per-camera budget."
+
+
+  # Market at Jagiellonska (GUGiK 2025, manual tracing; do not use photos as textures).
+  - id: market-paving-red-1-0-0227
+    kind: paved_area
+    park_flush: true
+    material: sidewalk_paving_red
+    polygon_epsg2180:
+    - - 760798.0
+      - 613304.6
+    - - 760804.0
+      - 613305.2
+    - - 760802.2
+      - 613311.8
+    - - 760797.0
+      - 613312.0
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-paving-red-2-0-0227
+    kind: paved_area
+    park_flush: true
+    material: sidewalk_paving_red
+    polygon_epsg2180:
+    - - 760790.0
+      - 613275.4
+    - - 760791.2
+      - 613270.0
+    - - 760826.35
+      - 613278.35
+    - - 760825.3
+      - 613283.74
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-paving-red-3-0-0227
+    kind: paved_area
+    park_flush: true
+    material: sidewalk_paving_red
+    polygon_epsg2180:
+    - - 760796.4
+      - 613248.2
+    - - 760797.6
+      - 613242.6
+    - - 760831.78
+      - 613250.45
+    - - 760830.65
+      - 613256.25
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-paving-red-4-0-0227
+    kind: paved_area
+    park_flush: true
+    material: sidewalk_paving_red
+    polygon_epsg2180:
+    - - 760800.8
+      - 613226.0
+    - - 760802.0
+      - 613221.0
+    - - 760836.0
+      - 613226.2
+    - - 760835.0
+      - 613230.6
+    - - 760830.17
+      - 613229.95
+    - - 760830.4
+      - 613228.6
+    - - 760828.0
+      - 613226.2
+    - - 760825.6
+      - 613228.8
+    - - 760825.47
+      - 613229.32
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-paving-base-0227
+    kind: paved_area
+    park_flush: true
+    material: yard_paving
+    polygon_epsg2180:
+    - - 760803.0
+      - 613208.0
+    - - 760813.0
+      - 613200.0
+    - - 760842.0
+      - 613198.0
+    - - 760812.0
+      - 613352.0
+    - - 760772.0
+      - 613349.0
+    - - 760778.0
+      - 613342.0
+    - - 760778.16
+      - 613341.14
+    - - 760780.6
+      - 613341.4
+    - - 760782.8
+      - 613339.4
+    - - 760783.6
+      - 613335.8
+    - - 760779.35
+      - 613334.69
+    - - 760782.66
+      - 613316.79
+    - - 760785.4
+      - 613317.2
+    - - 760787.2
+      - 613312.4
+    - - 760786.2
+      - 613308.4
+    - - 760784.46
+      - 613307.06
+    - - 760785.4
+      - 613302.0
+    - - 760790.6
+      - 613264.0
+    - - 760801.32
+      - 613215.57
+    - - 760801.0
+      - 613220.6
+    - - 760809.2
+      - 613221.2
+    - - 760810.6
+      - 613219.2
+    - - 760811.0
+      - 613214.4
+    - - 760809.2
+      - 613211.4
+    - - 760806.2
+      - 613210.4
+    - - 760802.8
+      - 613211.8
+    - - 760801.71
+      - 613213.82
+    holes_epsg2180:
+    - - - 760809.8
+        - 613341.6
+      - - 760804.0
+        - 613340.2
+      - - 760802.2
+        - 613346.0
+      - - 760806.0
+        - 613348.8
+      - - 760808.4
+        - 613349.0
+    - - - 760811.4
+        - 613310.8
+      - - 760809.4
+        - 613313.2
+      - - 760807.2
+        - 613325.4
+      - - 760811.0
+        - 613326.8
+      - - 760813.0
+        - 613322.0
+      - - 760814.8
+        - 613312.4
+      - - 760813.8
+        - 613310.0
+    - - - 760822.0
+        - 613297.8
+      - - 760818.4
+        - 613296.0
+      - - 760814.8
+        - 613301.0
+      - - 760817.2
+        - 613304.2
+      - - 760819.8
+        - 613305.6
+    - - - 760828.0
+        - 613226.2
+      - - 760825.6
+        - 613228.8
+      - - 760822.2
+        - 613242.0
+      - - 760825.8
+        - 613244.2
+      - - 760828.0
+        - 613242.8
+      - - 760830.4
+        - 613228.6
+    - - - 760823.6
+        - 613209.4
+      - - 760821.8
+        - 613207.8
+      - - 760820.0
+        - 613213.0
+      - - 760822.4
+        - 613213.8
+    reason: 'SOURCED: GUGiK 2025 EPSG:2180, 0.1 m orthophoto; owner photos 12-14. ESTIMATED: hand-traced boundary, tolerance
+      at least 0.5-1 m; no photo used as texture.'
+    confidence: medium
+    verify: compare eye-level render with owner photos and inspect crossings of roads, canopies and landscaped islands
+  - id: market-landscaping-island-1-0227
+    kind: unpaved_area
+    polygon_epsg2180:
+    - - 760775.0
+      - 613340.8
+    - - 760780.6
+      - 613341.4
+    - - 760782.8
+      - 613339.4
+    - - 760783.6
+      - 613335.8
+    - - 760779.0
+      - 613334.6
+    - - 760778.4
+      - 613332.2
+    - - 760776.2
+      - 613332.6
+    reason: 'SOURCED: GUGiK 2025 and owner photos; ESTIMATED: manually traced planted island, boundary at least 0.5-1 m uncertainty.'
+    confidence: medium
+    verify: inspect render and compare against 2025 orthophoto
+  - id: market-landscaping-island-2-0227
+    kind: unpaved_area
+    polygon_epsg2180:
+    - - 760780.0
+      - 613316.4
+    - - 760785.4
+      - 613317.2
+    - - 760787.2
+      - 613312.4
+    - - 760786.2
+      - 613308.4
+    - - 760783.6
+      - 613306.4
+    - - 760780.2
+      - 613306.6
+    reason: 'SOURCED: GUGiK 2025 and owner photos; ESTIMATED: manually traced planted island, boundary at least 0.5-1 m uncertainty.'
+    confidence: medium
+    verify: inspect render and compare against 2025 orthophoto
+  - id: market-landscaping-island-8-0227
+    kind: unpaved_area
+    polygon_epsg2180:
+    - - 760801.0
+      - 613220.6
+    - - 760809.2
+      - 613221.2
+    - - 760810.6
+      - 613219.2
+    - - 760811.0
+      - 613214.4
+    - - 760809.2
+      - 613211.4
+    - - 760806.2
+      - 613210.4
+    - - 760802.8
+      - 613211.8
+    - - 760801.4
+      - 613214.4
+    reason: 'SOURCED: GUGiK 2025 and owner photos; ESTIMATED: manually traced planted island, boundary at least 0.5-1 m uncertainty.'
+    confidence: medium
+    verify: inspect render and compare against 2025 orthophoto
+  - id: market-canopies-0227
+    kind: market_canopies_0227
+    canopies:
+      - id: north-separated
+        polygon_epsg2180: [[760787.0, 613341.7], [760794.0, 613342.4], [760800.7, 613316.7], [760794.2, 613315.0]]
+        solar_panels: false
+      - id: north-group
+        polygon_epsg2180: [[760796.9, 613301.9], [760803.8, 613302.6], [760810.4, 613276.0], [760803.9, 613274.7]]
+        solar_panels: false
+      - id: middle-group
+        polygon_epsg2180: [[760803.8, 613274.3], [760810.5, 613275.1], [760817.3, 613248.3], [760810.8, 613247.0]]
+        solar_panels: false
+      - id: south-solar
+        polygon_epsg2180: [[760810.7, 613246.8], [760817.4, 613247.7], [760824.2, 613221.4], [760817.7, 613219.9]]
+        solar_panels: true
+    fences:
+      - id: north-fence
+        points_epsg2180: [[760810.0, 613348.0], [760816.8, 613311.0]]
+      - id: south-fence
+        points_epsg2180: [[760820.4, 613304.0], [760835.2, 613222.0]]
+    reason: >-
+      SOURCED: eave outlines and entrance gap hand-traced from GUGiK 2025 orthophoto; canopy construction,
+      relative appearance and southern PV from owner reference photos. ESTIMATED: traced roof and fence
+      coordinates, approximately 0.5–1 m uncertainty, no survey of post bases. WORKING_VALUE: heights,
+      roof slope, post spacing, 0.25 m eave inset, counter and fence details. Images are reference only.
+    confidence: medium
+    verify: eye-level owner photo 14, ground contact, crossings, canopy dimensions and draw budget
+  - id: market-spruce-0227
+    kind: tree_groups
+    points_en: [[-807.5, 610.0, 9.0]]
+    species: {spruce: 1.0}
+    reason: >-
+      SOURCED: conifer visible beside the market building in GUGiK 2025 and owner photo. ESTIMATED:
+      crown centre as stem position, approximately 2 m uncertainty. WORKING_VALUE: 9 m height.
+    confidence: medium
+    verify: confirm it is not refused by hard mask and compare the eye-level render

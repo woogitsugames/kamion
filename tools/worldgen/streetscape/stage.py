@@ -27,6 +27,8 @@ from . import hero_building as HBD
 from . import knyszyn_church_0227 as KC
 from . import knyszyn_townhall_0227 as KT
 from . import knyszyn_park_props_0227 as KP
+from . import knyszyn_market_0227 as KM
+from . import knyszyn_market_buildings_0227 as KMB
 from . import knyszyn_fountain_0227 as KF
 from . import hero_depot as HD
 from . import landmarks as LM
@@ -104,7 +106,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # hero buildings (override kind: hero_building, ADR 0070): authored asset instead of the rule facade
     heroes = HBD.plan(rid, overrides, fc, w.origin, lambda e, n: float(np.asarray(zsmooth(e, n)).ravel()[0]), rep, log)
     blds = BM.load(fc, w.origin, overrides,
-                   hero={**HBD.targets(heroes), **KC.hero_targets(rid, fc), **KT.hero_targets(rid, fc)})
+                   hero={**HBD.targets(heroes), **KC.hero_targets(rid, fc), **KT.hero_targets(rid, fc),
+                         **KMB.hero_targets(rid, fc)})
     yard_src = [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_PTPL_A"]
                 if f["props"].get("materialnawierzchni") != "grunt naturalny"]
     yard_src += [PV._poly_local(a["geometry"]["coordinates"], w.origin) for a in src["osm"]["areas"]
@@ -118,6 +121,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs, heroes=depots)
     KC.build(w.buf, rid, blds, zsmooth, rep)
     KT.build(w.buf, rid, blds, zsmooth, rep)
+    KMB.build(w.buf, rid, blds, zsmooth, rep)
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])
@@ -204,6 +208,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         return PV.bilinear(zsurf_g, hf, np.asarray(e, float), np.asarray(n, float))
 
     KP.build(w.buf, rid, w.origin, overrides, zsurf, rep)
+    KM.build(w.buf, rid, w.origin, overrides, zsurf, rep)
     KF.build(w.buf, rid, w.origin, overrides, zsurf, rep)
 
     def zground(e, n):

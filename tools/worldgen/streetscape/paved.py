@@ -71,11 +71,27 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
     # An explicit authored opt-in: park paths and plazas meet lawn without
     # the concrete restraint and deep yard flange. Existing surfaces are unchanged.
     flush_ids = {o["id"] for o in overrides if o.get("kind") == "paved_area" and o.get("park_flush") is True}
+    authored_hole_footprints = {}
     for o in overrides:
         if o.get("kind") != "paved_area":
             continue
         ring = np.asarray(o["polygon_epsg2180"], float) - origin
-        cand.append((o["id"], Polygon(ring), o["material"], "authored_override", bool(o.get("parking"))))
+        holes = [np.asarray(h, float) - origin for h in o.get("holes_epsg2180", [])]
+        poly = Polygon(ring, holes)
+        if holes:
+            outer = Polygon(ring)
+            # Explicit voids must be unambiguous: silently repairing an invalid
+            # inner ring could turn a planting island into solid paving.
+            inner = [Polygon(h) for h in holes]
+            if (not outer.is_valid or not poly.is_valid
+                    or any(not h.is_valid or h.is_empty or h.area <= 0 or not outer.contains(h)
+                           or not outer.boundary.disjoint(h.boundary) for h in inner)
+                    or any(a.intersects(b) for i, a in enumerate(inner) for b in inner[i + 1:])):
+                raise ValueError(f"paved_area {o['id']}: invalid or overlapping holes")
+            # Reserve the full outside footprint against later, lower-priority
+            # OSM/BDOT surfaces so an explicit planting island remains ground.
+            authored_hole_footprints[o["id"]] = outer
+        cand.append((o["id"], poly, o["material"], "authored_override", bool(o.get("parking"))))
     for d in docks:
         # the hero depot's apron (ADR 0071 r11): decades of trailers on the bumpers - darker, cracked, soiled concrete
         cand.append((d["id"], d["apron"], "yard_concrete_worn" if d.get("hero") else "yard_concrete", "dock_apron", False))
@@ -148,7 +164,7 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
             out.append(item)
             kept += p.area
         if kept:
-            taken = shapely.union(taken, poly)
+            taken = shapely.union(taken, authored_hole_footprints.get(cid, poly))
         report.setdefault(srcname, [0, 0.0])
         report[srcname][0] += 1 if kept else 0
         report[srcname][1] = round(report[srcname][1] + kept, 1)
