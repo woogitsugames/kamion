@@ -618,3 +618,8 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 02/baseline-remote-round24:4indywidualnie obejrzane źródłaCC według source-metadata.json; podglądy wyłącznie raw pozaGit. W repo własne obserwacje, metadane i erraty,0nowych fotografiiGit.
 
 02/winter-editorial-round25:1fotografia przypisana ChristianPetrich/SINTEF, publikowana przezAquaHoy/Nofima, tylko link-only, all rights reserved; bez pobrania/cropu/screenshotu. Własne opisy i źródłowy kontekst nie są rozpoznaniem chemicznym nalotu ani otwartą licencją fotografii.
+
+
+### codex-refs-s21: Tykocin, elewacje Złotej (runda8)
+
+Dwie miniatury w research/codex-refs-s21/06-region-ring/tykocin-facades-round8/files: Krzysztof Popławski, CC BY4.0 https://creativecommons.org/licenses/by/4.0/ . ŹródłaCommons w manifest.csv: „Dom z XIX wieku przy ulicy Złotej17 w Tykocinie” i „Drewniany dom z bali przy ulicy Złotej6 w Tykocinie”. Zmiana: pomniejszenie podglądów do≤800px, bez kadrowania;0pobranych pełnych oryginałów. Daty według Commons, własne opisy wizualne; nie tekstury gry.
