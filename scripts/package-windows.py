@@ -21,11 +21,10 @@ allow flag), 3 --release and a licence blocker is still open.
 What does NOT ship (Unity names its debug output so that it says so itself; see docs/12_DYSTRYBUCJA_PC.md §2):
   *_BurstDebugInformation_DoNotShip/, *_BackUpThisFolder_ButDontShipItWithYourGame/, *.pdb, plus the build
   metadata written by build-windows.ps1 / BuildCommands (build.json, Kamion.exe.sha256, Kamion.content.json,
-  Kamion.top.txt, Kamion.variants.txt, Kamion_Data.sha256), the developer region launchers Kamion-<region>.cmd
-  (ADR 0276: the tester picks the region in the start menu; only Kamion-okno.cmd ships, the README names it) and
-  every other root launcher (*.cmd with "-scene <x>") whose scene / region is not in this build (ADR 0271,
-  see build_scenes()).
-What ships from the build root besides the player: build-id.json (content hash read by the game), Kamion-okno.cmd.
+  Kamion.top.txt, Kamion.variants.txt, Kamion_Data.sha256) and every root launcher (*.cmd with "-scene <x>",
+  e.g. Kamion-<region>.cmd from build-windows.ps1) whose scene / region is not in this build (see build_scenes()).
+What ships from the build root besides the player: build-id.json (content hash read by the game), Kamion-okno.cmd and
+the Kamion-<region>.cmd launchers of the regions in this build (int-h3-s23 leader decision, ADR 0276 / 0271).
 What is added: THIRD_PARTY_NOTICES.txt (generated from the in-game "Informacje" text, so both stay one source),
 README.txt (requirements D74, how to start, where logs are), SHA256SUMS.txt, collect-logs.ps1 + Zbierz-logi.cmd.
 """
@@ -75,12 +74,8 @@ EXCLUDED_FILE_GLOBS = ("*.pdb",)
 # Build metadata in the player root (build-windows.ps1 / BuildCommands.WriteContentReport): useful for us, not players.
 EXCLUDED_ROOT_FILES = ("build.json", "Kamion.exe.sha256", "Kamion.content.json", "Kamion.top.txt",
                        "Kamion.variants.txt", "Kamion_Data.sha256")
-# Developer launchers in the root (ADR 0276): every Kamion-<x>.cmd except the windowed menu launcher.
-EXCLUDED_ROOT_GLOBS = ("Kamion-*.cmd",)
-SHIPPED_ROOT_LAUNCHERS = ("Kamion-okno.cmd",)
-# Developer shortcuts (ADR 0271 §2): never ship, whatever the build holds (also covered by EXCLUDED_ROOT_GLOBS).
-DEV_LAUNCHERS = ("Kamion-knyszyn.cmd",)
-# Other root launchers that jump into a scene ("... -scene <x> %*") ship only when that scene is in the build.
+# Root launchers that jump into a scene ("... -scene <x> %*", Kamion-<region>.cmd) ship only when that scene is in the build
+# (int-h3-s23: no developer-only exception any more; Kamion-knyszyn.cmd starts the knyszyn region for testers).
 LAUNCHER_SCENE_RE = re.compile(r"(?:^|\s)-scene\s+\"?([^\s\"%]+)", re.I)
 # BuildCommands.BuildWindows logs the final scene list: "[BUILD] Windows x64 → <exe> (...) scenes=[a, b, c]".
 BUILD_LOG_SCENES_RE = re.compile(r"\[BUILD\] Windows x64 .*? scenes=\[([^\]]*)\]")
@@ -128,11 +123,7 @@ def is_excluded_dir(name: str) -> bool:
 def is_excluded_file(rel: Path) -> bool:
     if any(fnmatch.fnmatchcase(rel.name.lower(), g) for g in EXCLUDED_FILE_GLOBS):
         return True
-    if len(rel.parts) != 1:
-        return False
-    if rel.name in EXCLUDED_ROOT_FILES:
-        return True
-    return rel.name not in SHIPPED_ROOT_LAUNCHERS and any(fnmatch.fnmatchcase(rel.name, g) for g in EXCLUDED_ROOT_GLOBS)
+    return len(rel.parts) == 1 and rel.name in EXCLUDED_ROOT_FILES
 
 
 # ---------------------------------------------------------------- scenes in the build (region launchers)
@@ -375,7 +366,7 @@ def plan_package(build_dir: Path, version: str | None = None, sha: str | None = 
             plan.excluded.append(rel.as_posix())
             continue
         if len(rel.parts) == 1 and rel.suffix.lower() == ".cmd" and (
-                rel.name in DEV_LAUNCHERS or not launcher_ships(rel, build_dir, scenes)):
+                not launcher_ships(rel, build_dir, scenes)):
             plan.excluded.append(rel.as_posix())
             continue
         if len(rel.parts) == 1 and rel.name in DEV_MARKERS:
