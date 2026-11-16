@@ -5,6 +5,7 @@
   pwsh scripts/visual-qa.ps1 -Scene Boot
   pwsh scripts/visual-qa.ps1 -Scene Boot -Width 1920 -Height 1080 -Tier High
   pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -OutputDir artifacts/visual-qa/WorldC/Low-overcast
+  pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Ultra -Pc -Width 1920 -Height 1080   # PC tier (ADR 0269)
 .NOTES
   Output: artifacts/visual-qa/<Scene>/<camera-id>.png. Rendering does not work with -nographics,
   so Unity runs batchmode with the GPU. Look at every PNG yourself (skill visual-qa).
@@ -45,7 +46,9 @@ param(
     # Measurement mask: '<renderer>[:<slot>][;...]' also writes <id>_mask.png with those slots flat magenta.
     [string]$Mask = '',
     # ADR 0056: also write <id>_envcube.png (the vehicle reflection cube of that frame, 6 faces).
-    [switch]$EnvDump
+    [switch]$EnvDump,
+    # ADR 0269 (pc-visual-s23): render the PC tier (URP_PC_<Tier>, PcGraphicsTiers values) instead of the mobile tier.
+    [switch]$Pc
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -73,6 +76,7 @@ if ($Gate3) { $qaArgs += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, (Get-Locat
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
+if ($Pc) { $qaArgs += @('-qaPcTiers', '1') }
 $runStart = Get-Date
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs
 

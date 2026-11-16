@@ -39,7 +39,17 @@ namespace Game.Editor.VisualQA
                 // ADR 0043 option (c) A/B: phone-style white-balance adaptation strength (not a default).
                 string wb = EditorTools.Arg("-qaWbAdapt", null);
                 if (!string.IsNullOrEmpty(wb)) EnvironmentLighting.WhiteBalanceOverride = float.Parse(wb, System.Globalization.CultureInfo.InvariantCulture);
-                int count = Render(scene, w, h, tier, outDir, lighting, only);
+                // ADR 0269 §Propozycje 2 (pc-visual-s23): -qaPcTiers 1 renders the PC tier (URP_PC_<tier> asset, QualitySettings
+                // fields and PcGraphicsTiers.Overlay values) instead of the mobile tier of the same name. The editor's
+                // QualitySettings are restored afterwards (AGENT-RULES §2: QualitySettings.asset stays clean).
+                bool pc = EditorTools.Arg("-qaPcTiers", "0") == "1";
+                int count;
+                if (pc) PcGraphicsTiers.ForceEnabled = true;
+                try { count = Render(scene, w, h, tier, outDir, lighting, only); }
+                finally
+                {
+                    if (pc) { PcGraphicsTiers.RestoreEditorState(); PcGraphicsTiers.ForceEnabled = null; }
+                }
                 exit = count > 0 ? 0 : 1;
                 Debug.Log($"VISUALQA_RESULT: {(exit == 0 ? "OK" : "NO_CAMERAS")} rendered={count} dir={outDir}");
             }
@@ -88,6 +98,11 @@ namespace Game.Editor.VisualQA
             var profile = QualityProfile.Load();
             QualityProfile.Tier tierSettings = default;
             bool hasTier = profile != null && profile.TryGet(tier, out tierSettings);
+            if (hasTier && PcGraphicsTiers.Enabled)
+            {
+                tierSettings = PcGraphicsTiers.Overlay(tierSettings);   // ADR 0269: PC values (-qaPcTiers 1)
+                Debug.Log($"[VISUALQA] PC tier {tier}: urp={(QualitySettings.renderPipeline != null ? QualitySettings.renderPipeline.name : "none")} msaa={tierSettings.msaa} shadows={tierSettings.shadowDistance}m/{tierSettings.shadowCascades}c/{tierSettings.shadowResolution} lodBias={QualitySettings.lodBias} aniso={QualitySettings.anisotropicFiltering}");
+            }
             // Ablation renders in the editor (same keys as the phone launch overrides): -qaRq "rq_hlod=0,rq_trees=0".
             string rq = EditorTools.Arg("-qaRq", null);
 

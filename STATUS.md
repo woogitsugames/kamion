@@ -1,3 +1,7 @@
+# STATUS — pc-visual-s23 (tiery PC High/Ultra: wygląd > telefon; ADR 0269)
+- Krok 1: visual-qa `-Pc` (ADR 0269 §Propozycje 2): `VisualQaRunner` `-qaPcTiers 1` = asset URP_PC_<tier> + Overlay, przywrócenie QualitySettings.
+- NASTĘPNY KROK: `pwsh scripts/visual-qa.ps1 -Scene WorldC_High -Tier High -Pc -Width 1920 -Height 1080 -OutputDir artifacts/pc-visual-s23/before/WorldC-High` (przez unity-slot)
+
 # STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
 - Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
 - Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
