@@ -1,0 +1,13 @@
+{
+ "provenance": "authored_override (ADR 0288): control route for cameras/QA = the through road of this tile in the driving direction of the loop",
+ "description": "From the N tile edge (seam with s8-05, OSM way 536211834) to the W tile edge (OSM way 251431121, ref S8; seam with s8-07); 1306 m over the OSM ways 536211834, 536211830, 536211831, 251431121. Points from the pinned pbf of the pipeline (tools/worldgen/qa/s8_loop_plan.py); build_world snaps them to the nearest graph node.",
+ "start_epsg2180": [
+  759784.9,
+  595199.0
+ ],
+ "end_epsg2180": [
+  758539.0,
+  594808.7
+ ],
+ "confidence": "high (same OSM snapshot as build_region.py)"
+}
