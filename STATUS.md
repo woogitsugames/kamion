@@ -6,7 +6,11 @@
 - [2] navgraph `load_graph()` (effective, raport applied/stale, via-node restrykcji przechodzi na węzeł `split_of`), measure_axis_offset,
   `tools/ui/build_nav_map.py` (`load_graph`, `--out-dir`, teraz przez uv), `scripts/map-audit-cameras.py` (alias graph_nodes).
   KRTG knyszyn: surowy graf → luka węzeł↔geometria do 26,99 m na 6 krawędziach; efektywny → max 0,68 m, 0 krawędzi. KNAV C bajt w bajt.
-- NASTĘPNY KROK: validate/common.py, streetscape/water_banks.py, testy `tests/gis/test_effective_graph_readers.py`.
+- [3] validate/common.py (`graph_edges`), streetscape/water_banks.py na grafie efektywnym; testy navgraph na `load_graph`.
+  `tests/gis/test_effective_graph_readers.py` 18 passed (syntetyczne rondo + knyszyn read-only + klasyfikacja wszystkich czytników).
+  `pytest tests/gis -k "graph or route or nav or 0274 or roundabout or camera"` 174 passed, 4 skipped. navgraph/tests: 51 passed,
+  1 znany czerwony (test_region_file_is_reproducible — czerwony też na bazie bez zmian, plik .bytes nieaktualny).
+- NASTĘPNY KROK: dopisek ADR 0274 „Czytniki grafu”, PR.
 
 # STATUS — D14 roundabout2-0274 (rondo Knyszyn, ADR 0274)
 

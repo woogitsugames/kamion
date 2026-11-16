@@ -36,6 +36,22 @@ LOOK_AHEAD = 30.0
 FOV_CAB = 55.0
 
 
+def graph_and_route(region_id, rdir):
+    """(effective graph, route_start.json) - ADR 0274: the graph with the authored carriageway splits, so the cameras
+    sit on the lanes the world is built with; route_start.json lists ingested node ids (scripts/export-route.py), a
+    split node moved by an override is translated to its effective id."""
+    from roads import carriageway_split as CS
+    from roads import pipeline
+    stale = []
+    graph = pipeline.effective_graph(region_id, stale=stale)
+    if stale:
+        print(f"WARNING: stale carriageway_split overrides (ingested geometry kept there): {stale}")
+    alias = CS.node_aliases(graph)
+    route = json.loads((Path(rdir) / "route_start.json").read_text(encoding="utf-8"))
+    route["graph_nodes"] = [alias.get(n, n) for n in route["graph_nodes"]]
+    return graph, route
+
+
 def load_height(region):
     import importlib.util
     spec = importlib.util.spec_from_file_location("g3s", REPO / "scripts" / "gate3-segment.py")
@@ -62,14 +78,7 @@ def main() -> int:
 
     rdir = REPO / "Data" / "Regions" / a.region
     region = yaml.safe_load((rdir / "region.yaml").read_text(encoding="utf-8"))
-    from roads import carriageway_split as CS
-    from roads import pipeline
-    # ADR 0274: the effective graph (authored carriageway splits) - cameras sit on the lanes the world is built with;
-    # route_start.json lists ingested node ids, a moved split node is translated to its effective id
-    graph = pipeline.effective_graph(a.region)
-    alias = CS.node_aliases(graph)
-    route = json.loads((rdir / "route_start.json").read_text(encoding="utf-8"))
-    route["graph_nodes"] = [alias.get(n, n) for n in route["graph_nodes"]]
+    graph, route = graph_and_route(a.region, rdir)
     ox, oy = region["origin"]["x"], region["origin"]["y"]
     H = load_height(region)
     tr = Transformer.from_crs("EPSG:2180", "EPSG:4326", always_xy=True)
