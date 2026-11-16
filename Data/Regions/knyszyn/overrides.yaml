@@ -189,8 +189,6 @@ overrides:
     kind: tree_groups
     form: kit
     crown_model: garden_trial
-    # WORKING_VALUE: comparative Low-only trial; existing material and geometry.
-    low_center_occlusion: 0.8
     points_en:
     - [-674.0, -171.2, 19.6, 11.8, linden]
     - [-662.0, -182.2, 16.1, 10.7, linden]
@@ -340,7 +338,6 @@ overrides:
     kind: tree_groups
     form: kit
     crown_model: linden_study_r3
-    low_center_occlusion: 0.8 # WORKING_VALUE: Low-only comparison, pending visual QA
     points_en: [[-677.0, -195.2, 17.0, 10.0, linden], [-651.0, -210.2, 17.0, 10.0, linden]]
     species: {linden: 1.0}
     reason: >-
