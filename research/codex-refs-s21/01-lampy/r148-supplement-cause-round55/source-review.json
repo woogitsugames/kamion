@@ -1,0 +1,46 @@
+{
+  "review_date": "2026-11-16",
+  "method": "Official UN symbol/access downloads HTTP200 genericUA; both3page PDFs fully viewed by root as separate bitmaps. PDF/renders raw only; pdftoppm font substitution Symbol/ArialUnicode warnings, exponent correction/justification readable.",
+  "WP29-2024-23": {
+    "url": "https://documents.un.org/api/symbol/access?l=en&s=ECE%2FTRANS%2FWP.29%2F2024%2F23&t=pdf",
+    "http": 200,
+    "bytes": 119194,
+    "sha256": "735712e1c0aeb00fe98695d894a5d8e64fd87409293805012f948d8a49e14062",
+    "date": "2023-12-20",
+    "viewed_pages": [
+      1,
+      2,
+      3
+    ],
+    "pages": 3
+  },
+  "GRE-2023-14": {
+    "url": "https://documents.un.org/api/symbol/access?l=en&s=ECE%2FTRANS%2FWP.29%2FGRE%2F2023%2F14&t=pdf",
+    "http": 200,
+    "bytes": 119073,
+    "sha256": "e0be6033d640020fbfedf81810ba2848cb6a9b74e842fda51bf7abc0d672b04d",
+    "date": "2023-08-07",
+    "viewed_pages": [
+      1,
+      2,
+      3
+    ],
+    "pages": 3
+  },
+  "cause": {
+    "locator": "GRE/2023/14 PDF/printed2, II.Justification paragraph3",
+    "finding": "Author explicitly identifies mistake during conversion to scientific notation: maximum11a/b/c became120cd instead of1200cd. This is sourced cause, not root inference from inconsistent limits."
+  },
+  "implementation_chain": {
+    "locator": "WP29/2024/23 cover, table8 printed2; R48 Rev1Am2 cover+table",
+    "finding": "2024/23 cover bases proposal on GRE/2023/14 and20; table8 replaces single11a/b/c with1.20*10^3=1200cd. Rev1Am2 names2024/23 authentictext and declares supplement2 series01 entry22Sep2024.",
+    "limit": "No independent depositary/adoption report audit or comprehensive current2026status. No retroactive rule inferred for older lamps."
+  },
+  "peer": {
+    "status": "CONFIRMED",
+    "reader": "lampy",
+    "date": "2026-11-16",
+    "method": "Independent local view_image gre-page2 and proposal-page2; no HTTP, no root conclusions read",
+    "finding": "GRE justification3 explicitly states mistaken scientific notation120 versus1200; later table8 single11a/b/c each1200,D600,minimum5 .6. Editorial23 overlap not exponent23. Justification itself is not EIF."
+  }
+}

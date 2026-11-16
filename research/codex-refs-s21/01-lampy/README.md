@@ -240,3 +240,6 @@ R50: autentyczny tekst2022/92, tabela8s23, również drukuje120cd single11a-c; �
 
 
 R54: jeden nowy rzeczywisty tył ciągnika MAN/HELLA z widoczną emisją i odbiciami o zmierzchu, root obejrzał. Pokazowa konfiguracja z zastrzeżeniem producenta, E nieczytelne. Kontekst ON/zmierzch zachowany, strict15 i podzbiór kwalifikowanych4ON bez przyrostu. Nie nazwano zmierzchu nocą ani refleksów fotometrią. Główny65.
+
+
+R55 rozstrzyga źródłową przyczynę120/1200cd: GRE/2023/14II.Justification3 wskazuje błąd konwersji, a WP29/2024/23tabela8 zastępuje komórki1200cd. Dwa niezależne oglądy; dawne kolumny druku120 zachowane. Nie jest to pełny przegląd prawa2026.

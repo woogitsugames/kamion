@@ -12,3 +12,6 @@ Pełny odczytany fragment punktów i tabela zachowane poza gitem w Data/raw/refs
 ## Uzupełnienie16.11.2026 — rzeczywiste bitmapy R48
 
 [R48](../r148-table-bitmap-round48/README.md) rozstrzyga cztery dawne UNVERIFIED wykładniki: minimum5 w obu drukach0.6cd, więc dawny dodatni wykładnik był błędem ekstrakcji. Single11a/b/c wAm5 literalnie120cd, wRev1Am2 literalnie1200cd — rzeczywista różnica druku, nie ustalony powód prawny. Aktywne4wierszeCSV poprawione, dawny plik zachowany wR48. Brak awansu do aktualnego prawa2026 lub dowodu corrigendum. Dawne akapity wyżej opisują etap sprzed bitmap.
+
+
+Aktualizacja16.11.2026 R55: przyczyna rozbieżności już SOURCED [GRE/2023/14,II.Justification pkt3,str2]: błąd konwersji zapisu naukowego120zamiast1200cd. Projekt2024/23tabela8 zawiera poprawione1200cd. Dwa niezależne odczyty bitmap. Starsze120 w kolumnie odczytu druku pozostaje prawdziwym zapisem; nie jest parametrem aktualnym. Szczegóły i granice aktualności w ../r148-supplement-cause-round55/README.md.

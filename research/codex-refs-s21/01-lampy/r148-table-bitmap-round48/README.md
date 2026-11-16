@@ -20,3 +20,6 @@ Nagłówek rozdziela maksimum jednej lampy i lampyD, oba z odsyłaczem4.8.3.1(b)
 Zaktualizowano cztery aktywne wiersze comparison.csv round6, zachowując poprzedni plik w comparison-before-bitmap.csv oraz jawne metadane korekty. Osiem pozostałych wierszy nadal ma dawny zakres porównania ekstraktów; nie podniesiono ich do pełnego audytu zmian. Tabela w tym pakiecie ma tylko4wybrane komórki. Peer transkrybował je bez znajomości wartości root; oba wyniki zgodne. Bitmapy i PDF pozostają pozaGit; bez skanów i fikcyjnejCC w repo.
 
 Aktualność prawna2026, autentyczne dokumenty z okładek i raporty zatwierdzeń nie zostały w tym obiegu przeanalizowane. Granice te pozostają UNVERIFIED. Celem jest jawny, reprodukowalny odczyt dwóch datowanych źródeł.
+
+
+Aktualizacja16.11.2026 R55: przyczyna rozbieżności już SOURCED [GRE/2023/14,II.Justification pkt3,str2]: błąd konwersji zapisu naukowego120zamiast1200cd. Projekt2024/23tabela8 zawiera poprawione1200cd. Dwa niezależne odczyty bitmap. Starsze120 w kolumnie odczytu druku pozostaje prawdziwym zapisem; nie jest parametrem aktualnym. Szczegóły i granice aktualności w ../r148-supplement-cause-round55/README.md.
