@@ -64,6 +64,18 @@ MONO_REACH = 0.8
 # tolerance (drops vertices within 1 mm of the chord) and snapped to a grid of the same size before the
 # triangulation, the fascia and the soffit - far below anything visible, far above floating-point noise at km scale.
 PLAN_TOL_M = 1e-3
+# ADR 0238 (dopisek D32 r2): decimals of the wall-top profile (u, z), m. The profile feeds threshold decisions of the
+# walls (storeys under the eave, attic window `sill + hgt + 0.3 <= zband`), and the eave of a gable came out as
+# 130.65000000000003 on one machine and 130.64999999999998 on another (C `bdot:2BE4B431-B14F`: one attic window more or
+# less, CI vs cloud). Rounded to 1 um the same wall gives the same float everywhere.
+PROFILE_DECIMALS = 6
+# ADR 0238 (dopisek D32 r2): a strip of the plan no face claims and narrower than this (2 x area / perimeter) is
+# floating-point residue of the upper envelope, m (see MultiRoof.faces)
+SLIVER_M = 5e-3
+
+
+def _qprof(prof):
+    return [(round(float(u), PROFILE_DECIMALS), round(float(z), PROFILE_DECIMALS)) for u, z in prof]
 
 
 class Roof:
@@ -133,7 +145,7 @@ class Roof:
                 t = ga / (ga - gb)
                 if 0.02 / max(L, 1e-6) < t < 1 - 0.02 / max(L, 1e-6):
                     ts.add(float(t))
-        return [(t * L, float(self.z(a + (b - a) * t))) for t in sorted(ts)]
+        return _qprof([(t * L, float(self.z(a + (b - a) * t))) for t in sorted(ts)])
 
     def faces(self, ov):
         """Planar faces of the covering over R grown by ov: [(plan polygon, eave direction, d0)] with
@@ -331,7 +343,7 @@ class MultiRoof:
             if abs(zi - zk) > 0.01:
                 keep.append(k)
         keep.append(len(out) - 1)
-        return [(float(out[k][0] * L), float(out[k][1])) for k in keep]
+        return _qprof([(float(out[k][0] * L), float(out[k][1])) for k in keep])
 
     def faces(self, ov):
         """Upper-envelope regions: [(plan polygon, eave direction, d0, z)] - each face of each part (inside the part's
@@ -373,6 +385,23 @@ class MultiRoof:
                 d0 = lambda p, pt=pt, hv=hv, k_sl=k_sl: (hv + pt.uv(p)[1]) * k_sl
             out.append((reg, pt.eu, d0, pt.z))            # pt.z: the face's own plane (not the envelope: on a step
             regions.append((i, reg))                      # line the envelope is the higher roof)
+        # ADR 0238 (dopisek D32 r2): a sliver of the domains that no face claims (two planes almost equal along a
+        # shared line, the +-1e-4 tie rule leaves a strip < 1 mm wide) exists on one machine and not on another (C
+        # `bdot:2BE4B431-B45E`). Such a strip goes to the face it shares the longest boundary with, so the face is the
+        # same with or without the floating-point strip.
+        if regions:
+            gap = shapely.unary_union(doms).difference(shapely.unary_union([r for _, r in regions]))
+            for gp in getattr(gap, "geoms", [gap]):
+                if gp.is_empty or gp.geom_type != "Polygon" or 2.0 * gp.area / max(gp.length, 1e-12) > SLIVER_M:
+                    continue
+                edge = gp.buffer(1e-6)
+                shared = [r.boundary.intersection(edge).length for _, r in regions]
+                n = int(np.argmax(shared))
+                if shared[n] <= 0.0:
+                    continue
+                reg = shapely.unary_union(_clean(shapely.unary_union([regions[n][1], gp])))
+                regions[n] = (regions[n][0], reg)
+                out[n] = (reg, *out[n][1:])
         self._faces[key] = out
         self._regions = regions
         return out

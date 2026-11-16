@@ -362,7 +362,9 @@ UNSTABLE_HOUSES = {
                           "bdot:2BE4B431-9ACC-1BF0-E053-CC2BA8C0D140", "bdot:2BE4B431-A7F1-1BF0-E053-CC2BA8C0D140",
                           "bdot:2BE4B431-98CA-1BF0-E053-CC2BA8C0D140"],
     "bialystok-industrial-c": ["bdot:2BE4B431-AC0F-1BF0-E053-CC2BA8C0D140", "bdot:2BE4B431-AD82-1BF0-E053-CC2BA8C0D140",
-                               "bdot:2BE4B431-B46E-1BF0-E053-CC2BA8C0D140"],
+                               "bdot:2BE4B431-B46E-1BF0-E053-CC2BA8C0D140",
+                               # D32 r2: CI (Linux) != cloud (Linux): attic window on a 130.65 m eave, envelope sliver
+                               "bdot:2BE4B431-B14F-1BF0-E053-CC2BA8C0D140", "bdot:2BE4B431-B45E-1BF0-E053-CC2BA8C0D140"],
 }
 
 
@@ -391,7 +393,7 @@ def test_house_triangles_do_not_depend_on_float_noise(rid):
         b = next(x for x in blds if x["id"] == k)
         assert b["typ"] == "house"
         c0 = counts(b, 0.0)
-        assert c0 and all(counts(b, dx) == c0 for dx in (1e-9, 1e-7)), (rid, k)
+        assert c0 and all(counts(b, dx) == c0 for dx in (1e-12, 1e-9, 1e-7)), (rid, k)
 
 
 # ------------------------------------------------------------------------------------------- buildings.py

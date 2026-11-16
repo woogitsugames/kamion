@@ -97,7 +97,30 @@ Dojlidy 17 ≤ 0 (max `route_s0761` −717). Test nie był luzowany; nowy test r
 `test_house_triangles_do_not_depend_on_float_noise` (8 domów, 1e-9 / 1e-7 m) pada na kodzie sprzed łatki.
 Zmiana `generated/` (C, Dojlidy i każdy region z domami spadzistymi) dopiero przy przebudowie lidera.
 
+### D32 r2 (CI na #159: C `bdot:2BE4B431-B14F` 510 vs 524)
+CI (Linux, CPython 3.12.16 standalone, uv 0.13.8) i chmura (Linux, CPython 3.12.3 systemowy oraz 3.12.13 standalone)
+mają te same pakiety z `uv.lock` (numpy 2.5.4, shapely 2.2.0, scipy 1.18.1), a oba Pythony w chmurze dają 524. Różnica
+nie wynika więc z wersji, tylko z szumu na poziomie ULP (CPU / libm), który trafiał w progi:
+- **B14F:** okap szczytu wychodził jako `zt = 130.65000000000003` albo `130.64999999999998`, a od niego zależy próg okna
+  poddasza (`attic_window`): jedno okno więcej lub mniej (−14 trójkątów = 510). Naprawa: profil górnej krawędzi ściany
+  (`Roof.profile`, `MultiRoof.profile`) zaokrąglany do 1 µm (`PROFILE_DECIMALS = 6`).
+- **B45E:** pas szerokości < 1 mm między płaszczyznami obwiedni, którego nie przejmowała żadna połać, pojawiał się albo
+  znikał (±1 trójkąt). Naprawa: pas węższy niż `SLIVER_M = 5 mm` (2 × pole / obwód) przechodzi do połaci o najdłuższej
+  wspólnej krawędzi (`MultiRoof.faces`).
+
+Wynik: wszystkie 61 domów rozbieżnych na main jest stabilnych przy przesunięciach od 1e-12 do 1e-6 m. W C żaden budynek
+nie zmienia się przy przesunięciach 1e-12, 1e-9, 1e-7 i 1e-6 m. W Dojlidach zostają `…A8BC` (orientacja `_frame`), hala `…BC59` (doki), `rosti-west-wing`
+(wywietrzaki). Test regresji obejmuje teraz także B14F i B45E (10 domów; 1e-12 / 1e-9 / 1e-7 m).
+Baseline przeliczony tą samą procedurą (kod `ade885234` z łatką `roofs.py`, dane `origin/main`). Suma harnessu względem
+kodu sprzed łatki: Dojlidy LOD0 500 659 → 499 578 (−1 081), LOD1 68 391 → 67 636 (−755); C 963 831 → 962 027 (−1 804),
+101 067 → 99 980 (−1 087). Wszystkie 23 kamery C i 17 kamer Dojlid mają Δ ≤ 0: `stretch_04` High −1 071 (szacunek
+1 984 389), Dojlidy `photo_P11-063` −518.
+Sprawdzone i odrzucone: kąt `_angle` hal liczony modulo π naprawia siatkę świetlików (Dojlidy `…BAD2` 600 / 660 przy
+przesunięciu 1e-12 m), ale przestawia świetliki w innych halach: 4 kamery dostają +22…+77 High (C `fire_station_abeam`
++46). Zmiana byłaby więc niezerowa dla budżetu i nie weszła do tego PR.
+
 ## Otwarte (dopisek D32)
 6. Pozostałe progi „na ostrzu” (nie systemowe): orientacja `_frame` przy prawie kwadratowym prostokącie (Dojlidy
-   `…A8BC`), remis płaszczyzn w obwiedni (C `…B45E`, ±1 trójkąt), siatka świetlików i doki hal (`…BAD2`, `…BC59`,
-   C `…C4AC`). Lider: po scaleniu uruchomić `test_typology_0238.py` na Windows — oba środowiska muszą dać 24/24.
+   `…A8BC`); hale: siatka świetlików zależna od `_angle` ±π (`…BAD2`, C `…C4AC`, poprawka gotowa, ale +≤77 High na
+   4 kamerach — decyzja lidera), doki `…BC59`, wywietrzaki `rosti-west-wing`. Lider: po scaleniu uruchomić
+   `test_typology_0238.py` na Windows — oba środowiska muszą dać 24/24.
