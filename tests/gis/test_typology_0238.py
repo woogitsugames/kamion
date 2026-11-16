@@ -354,6 +354,46 @@ def test_authored_and_untouched_buildings_are_bit_identical(budget):
     assert set(res["per_building"]) == set(base["per_building"])
 
 
+# Houses whose triangle counts differed between the Windows build of the lead and Linux CI (main 8401944b6: 18 in
+# Dojlidy, 43 in C, all `dom`, only roof / soffit / wall pieces). Before the PLAN_TOL_M clean-up of roofs.py a 1e-9 m
+# translation of the footprint changed their counts (60 of those 61; 51 of 415 buildings in Dojlidy, 74 of 644 in C).
+UNSTABLE_HOUSES = {
+    "bialystok-dojlidy": ["bdot:2BE4B431-98D2-1BF0-E053-CC2BA8C0D140", "bdot:2BE4B431-994A-1BF0-E053-CC2BA8C0D140",
+                          "bdot:2BE4B431-9ACC-1BF0-E053-CC2BA8C0D140", "bdot:2BE4B431-A7F1-1BF0-E053-CC2BA8C0D140",
+                          "bdot:2BE4B431-98CA-1BF0-E053-CC2BA8C0D140"],
+    "bialystok-industrial-c": ["bdot:2BE4B431-AC0F-1BF0-E053-CC2BA8C0D140", "bdot:2BE4B431-AD82-1BF0-E053-CC2BA8C0D140",
+                               "bdot:2BE4B431-B46E-1BF0-E053-CC2BA8C0D140"],
+}
+
+
+@pytest.mark.parametrize("rid", sorted(UNSTABLE_HOUSES))
+def test_house_triangles_do_not_depend_on_float_noise(rid):
+    """ADR 0238 (dopisek D32): the roof covering pieces and the wall profiles of a house are cleaned on a 1 mm plan
+    grid (roofs.PLAN_TOL_M), so the per-(layer, material) triangle counts do not change when the footprint moves by
+    1e-9 / 1e-7 m - the size of the floating-point differences between machines that broke the bit-identity test."""
+    import typology_budget as TB
+    from shapely import affinity
+    from streetscape import buildings_mesh as BM
+    fc, ov, man, origin, roads_poly, yard = TB.region_inputs(rid)
+    blds = BM.load(fc, origin, ov)
+    hf = SimpleNamespace(sample=TB.ground(blds))
+
+    def counts(b, dx):
+        buf, rep = TB.Buf(), {}
+        BM.build(buf, [dict(b, poly=affinity.translate(b["poly"], dx, 0.7 * dx))], hf, hf.sample, yard, roads_poly,
+                 rep, sign_out=[])
+        out = {}
+        for layer, mat, V, T, src in buf.parts:
+            if layer in TB.LAYERS:
+                out[(layer, mat)] = out.get((layer, mat), 0) + len(T)
+        return out
+    for k in UNSTABLE_HOUSES[rid]:
+        b = next(x for x in blds if x["id"] == k)
+        assert b["typ"] == "house"
+        c0 = counts(b, 0.0)
+        assert c0 and all(counts(b, dx) == c0 for dx in (1e-9, 1e-7)), (rid, k)
+
+
 # ------------------------------------------------------------------------------------------- buildings.py
 def test_base_m_is_the_measured_median():
     import buildings as B

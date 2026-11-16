@@ -56,6 +56,14 @@ LEAN_SLOPE = (math.tan(math.radians(4.0)), math.tan(math.radians(20.0)))
 # instead of under the 1.2 m reach of the tall gable beside it (r1 of ADR 0107: the annexe's side wall and the roof
 # vertices on the shared line rose to the main roof - a roof-coloured sail on the gable).
 MONO_REACH = 0.8
+# ADR 0238 (dopisek D32): tolerance of the plan clean-up of the roof covering pieces, m. A covering face is the overhang
+# outline cut by the upper envelope of the parts; the boolean operations leave vertices that lie ON a straight edge
+# (nodes where another face touched it) or a few micrometres from another vertex. Which of them survive depends on the
+# last bits of the float input, so the triangle count of ~1 / 3 of the houses changed under a 1e-9 m translation and
+# differed between machines (Windows vs Linux CI: 18 houses in Dojlidy, 43 in C). Every piece is simplified with this
+# tolerance (drops vertices within 1 mm of the chord) and snapped to a grid of the same size before the
+# triangulation, the fascia and the soffit - far below anything visible, far above floating-point noise at km scale.
+PLAN_TOL_M = 1e-3
 
 
 class Roof:
@@ -283,7 +291,7 @@ class MultiRoof:
             for j in range(i + 1, len(pl)):
                 fa = float((pl[i][0] - pl[j][0]) @ a + pl[i][1] - pl[j][1])
                 fb = float((pl[i][0] - pl[j][0]) @ b + pl[i][1] - pl[j][1])
-                if fa * fb < 0:
+                if fa * fb < 0 and abs(fa - fb) > PLAN_TOL_M:     # ADR 0238 D32: not along a plane switch
                     ts.add(fa / (fa - fb))
         (ua, va), (ub, vb) = self._fuv(a), self._fuv(b)    # domain edges: a step in the field
         for r in self.rects + self.rects0:
@@ -291,7 +299,9 @@ class MultiRoof:
                 for xa, xb, lines in ((ua, ub, (r[0] - ov, r[1] + ov)), (va, vb, (r[2] - ov, r[3] + ov))):
                     for x0 in lines:
                         fa, fb = float(xa) - x0, float(xb) - x0
-                        if fa * fb < 0:
+                        # ADR 0238 D32: a wall ALONG a domain edge (|fa - fb| < 1 mm) crosses it nowhere - its sign
+                        # flips were floating-point noise and split the wall at random points
+                        if fa * fb < 0 and abs(fa - fb) > PLAN_TOL_M:
                             ts.add(fa / (fa - fb))
         tt = sorted(ts)
         # intervals between the breakpoints; the field is linear inside one, so it is read 3 cm inside both ends
@@ -351,7 +361,7 @@ class MultiRoof:
                 cut = _clip_half([np.asarray(q) for q in cs2], g2 - g, k2 - k + eps)
                 if len(cut) >= 3:
                     reg = reg.difference(Polygon(cut).buffer(0).intersection(doms[j]))
-            reg = shapely.unary_union(_polys(reg)) if not reg.is_empty else reg
+            reg = shapely.unary_union(_clean(reg)) if not reg.is_empty else reg   # PLAN_TOL_M (ADR 0238 D32)
             if reg.is_empty or reg.area < 1e-3 or reg.geom_type not in ("Polygon", "MultiPolygon"):
                 continue
             pt = self.parts[i]
@@ -729,6 +739,13 @@ def _polys(g):
     return [x for x in getattr(g, "geoms", [g]) if x.geom_type == "Polygon" and x.area > 1e-4]
 
 
+def _clean(g):
+    """Polygons of g without collinear / near-duplicate vertices, on a PLAN_TOL_M grid (see PLAN_TOL_M)."""
+    if g.is_empty:
+        return []
+    return _polys(shapely.set_precision(g.simplify(PLAN_TOL_M, preserve_topology=True), PLAN_TOL_M))
+
+
 def covering(poly, roof, ov=OVERHANG):
     """Plan outline of the roof covering: the footprint grown by the overhang; along the walls that face up the
     roof (the height field rises away from the wall) only by OVERHANG_NOTCH. Eaves and verges - also those of a
@@ -762,7 +779,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
     eaves = []
     for face, e, d0, *zf in roof.faces(ov + 0.05):
         zfun = zf[0] if zf else roof.z                       # MultiRoof: the face's own plane (steps between parts)
-        for g in _polys(exp.intersection(face)):
+        for g in _clean(exp.intersection(face)):
             T = _tris(g)
             if not len(T):
                 continue
@@ -783,7 +800,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
                 if (abs(za - zb) < 0.01 and np.hypot(*(b - a)) > 1.5 and float(roof.eave_dist(0.5 * (a + b))) < 0.1 and
                         abs(float((b - a) @ e)) > 0.9 * np.hypot(*(b - a))):
                     eaves.append((a, b, za + T_TOP))
-            for sg in _polys(g.difference(poly)):                    # soffit under the overhang, facing down
+            for sg in _clean(g.difference(poly)):                    # soffit under the overhang, facing down
                 S = _tris(sg)
                 if len(S):
                     sxy = S[:, [0, 2, 1]].reshape(-1, 2)
