@@ -115,3 +115,11 @@ Automatyczna próba rejestracji zdjęcia względem ortofoto: **FAIL**, mediana b
 ## R23 — kontrola szpalerów i parku
 
 Wygenerowane `instances_*.json` zawierają 10 instancji `src=treerow:*`; zero jest wewnątrz lub na granicy poligonu BDOT parku. Najbliższy pień szpaleru jest 582,20 m od obrysu i 618,03 m od najbliższej z 15 lip kit w overrides (13+2). To odległości pozycji pni, nie koron; w R23 szpalery nie dublują tych lip. Metoda w `artifacts/knyszyn-rynek-0227/AUDYT.md`.
+
+## R23 — budżet i rondo po integracji
+
+R23 obejmuje 74 kamery w każdym z czterech wariantów; clear i dusk mają identyczne statystyki geometryczne. High **PASS** limitu 2 mln tris na kamerę: maksimum 1 248 992 z instancjami (`cab-mirror-front`), maksymalnie 848 draws (`tykocka-into-town`). Low względem before nadal **FAIL**: 36 z 50 kamer o wspólnych nazwach ma wzrost draws, maksymalnie 240 → 304 (+64, `dk65-inlet-south`); maksymalny wzrost tris 272 290 → 309 017 (+36 727, `truck-side`).
+
+R23 względem r22: 73 wspólne kamery; Low maksymalnie +6 draws i +5 034 tris (`route-s0145`), High maksymalnie +11 draws (`plate-trailer`) i +11 164 tris (`cab-right`). Nowa kamera `rondo-dk65-top` bez baseline r22: Low 75 draws / 87 197 tris, High 85 / 87 429. To szacunki CPU edytora z instancjami przed SRP batchingiem, nie pomiary GPU; po integracji zmienione dane main i scena ograniczają przypisanie przyczyn różnic.
+
+Lokalne porównania 09–11 pokazują czterowlotowe rondo z jasną opaską i wysepkami, ale nadal odbiegają od zdjęć: środek wyspy jest pusty, wysepki zbyt ostre wizualnie, a otoczenie uboższe w zieleń i detale. Perspektywa i orientacja kamer nie odpowiadają dokładnie fotografiom; wymiary pozostają niepotwierdzone. Szczegóły w `artifacts/knyszyn-rynek-0227/AUDYT.md`.
