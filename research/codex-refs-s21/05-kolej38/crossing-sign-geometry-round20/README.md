@@ -19,3 +19,5 @@ Odczyt: 2026-11-16, bez odtwarzania godziny. **5 nowych reguł, 4 osobiście obe
 To wersja źródłowa 2019, **nie deklaracja pełnej konsolidacji na 2026**. Lokalna metryka ELI wskazuje sprostowanie 2020/862 i nowelizacje 2021/438, 2021/2066, 2022/2377 oraz 2026/132. Sprawdzono ich dostępne teksty w zakresie opisanym w JSON; HTML 2026/132 był niedostępny, następnie publiczny PDF tego aktu pobrano poprawnie. Samo przeszukanie zmian bez trafień G-2/G-3/G-4 nie stanowi pełnej kontroli prawnej wszystkich reguł.
 
 Nie przypisano danych normatywnych do Knyszyna, konkretnego przejazdu LK38 ani kategorii A–D. Znany kadr z rogatką nie jest dowodem zastosowania wzoru. Brak Chrome, nowych zdjęć, Commons/Flickr i zmian parentów. Dokładne lokalizatory oraz ograniczenia reguł są w `rules.csv`; źródła, SHA256 i ścieżki renderów w `source-review.json`.
+
+Dodatkowa kontrola root16.11.2026: tekstPDF8/9 i osobny ogląd renderuPDF9. Tabela1.1 ma jawne mm dlaA/B/C/D; poprzedni akapit odsyłaF/G/T do opisów szczegółowych. Nie rozstrzyga jednostek rysunkówG2/G3/G4, więc UNVERIFIED pozostaje.0nowych norm/PDF/zdjęć.
