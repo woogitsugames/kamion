@@ -310,3 +310,7 @@
 - 2026-11-16 07:13 +01:00 — Po izolowanej regeneracji C 64/64 pliki instancji zgodne SHA z manifestem; podmieniono wyłącznie 12 lokalnych, zachowano kopie. Poprzednio błędny test i 3 powiązane: 4 passed. Pełny GIS R24 uruchomiony; EditMode po merge 955 passed, 2 skipped.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r24.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/gis-r24.done` 
 
+
+- 2026-11-16 07:34 +01:00 — R23 po merge: GIS 1769 passed, 22 skipped, 2 xfailed; EditMode 955 passed, 2 skipped. High max 1 248 992 tris PASS; Low 240→304 draws vs before FAIL. Rondo z main widoczne, pomnik/lipy i targowica nadal OPEN; gotowość do scalenia NIE. Sandbox C pozostał po odmowie kontroli polecenia usunięcia.
+- NASTĘPNY KROK: `gh pr create --base main --head knyszyn-rynek-0227 --title 'Knyszyn: park Rynku i kamery kontrolne' --body-file artifacts/knyszyn-rynek-0227/pr-body.md` 
+
