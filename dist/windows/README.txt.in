@@ -1,5 +1,7 @@
 KAMION — symulator ciężarówki (Windows 64-bit)
-Paczka: {name}   wersja {version}   commit {sha}   spakowano {date}   wariant: {flags}
+Paczka: {name}   wersja {version}   commit {sha}   dane {content}   spakowano {date}   wariant: {flags}
+(„dane” = skrót zawartości folderu Kamion_Data; ta sama wartość jest w menu „Informacje” i w Player.log —
+ po niej rozpoznajemy dokładny build, bo sam Kamion.exe jest w każdym buildzie taki sam.)
 
 To jest wersja testowa. Nie rozpowszechniaj jej dalej bez zgody autora.
 
@@ -30,6 +32,8 @@ GDY COŚ NIE DZIAŁA
 Uruchom Zbierz-logi.cmd z tego folderu. Skrypt spakuje logi gry i podstawowe dane o komputerze
 (system, procesor, karta graficzna, pamięć) do pliku zip na Pulpicie. Przed wysłaniem możesz go otworzyć
 i sprawdzić zawartość. Nazwa użytkownika Windows w logach jest zastępowana tekstem <user>.
+Zrzuty awarii (*.dmp) NIE są anonimizowane i mogą zawierać nazwę użytkownika Windows; bez nich:
+Zbierz-logi.cmd -NoCrashes
 Logi gry: %USERPROFILE%\AppData\LocalLow\woogitsugames\Kamion\Player.log (i Player-prev.log).
 Raporty awarii: %TMP%\woogitsugames\Kamion\Crashes
 

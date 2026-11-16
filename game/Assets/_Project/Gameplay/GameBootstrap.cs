@@ -114,7 +114,7 @@ namespace Game.Gameplay
             AdaptiveFrameDriver.ThermalStatusProvider = Platform.GetThermalStatus;   // ADR 0046 thermal fallback
 
             var build = BuildInfo.Current;
-            Debug.Log($"[BOOT] Kamion {build.ShortLabel} unity={build.unityVersion} platform={Platform.Name} " +
+            Debug.Log($"[BOOT] Kamion {build.ShortLabel} content={(build.ContentHash.Length > 0 ? build.ContentHash : "none")} unity={build.unityVersion} platform={Platform.Name} " +
                       $"device='{SystemInfo.deviceModel}' gpu='{SystemInfo.graphicsDeviceName}' api='{SystemInfo.graphicsDeviceVersion}' " +
                       $"ram={SystemInfo.systemMemorySize}MB screen={Screen.width}x{Screen.height} tier={QualityTiers.Current} targetFps={fps}");
 
