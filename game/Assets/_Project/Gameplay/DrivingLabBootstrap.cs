@@ -448,8 +448,9 @@ namespace Game.Gameplay
             return true;
         }
 
-        /// <summary>Route distance of the polyline point nearest to a world position (horizontal).</summary>
-        static float NearestRouteS(Game.World.WorldRoute r, Vector3 world)
+        /// <summary>Route distance of the polyline point nearest to a world position (horizontal). Public for the tests of the
+        /// baked spawn point (ADR 0277).</summary>
+        public static float NearestRouteS(Game.World.WorldRoute r, Vector3 world)
         {
             Vector3 l = r.transform.InverseTransformPoint(world);
             float best = float.MaxValue, bestS = 0f;
