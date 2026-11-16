@@ -87,7 +87,40 @@ niż ADR 0218, trasa ≥ 1,5 m od wysepek, nasadzenia w budżecie. `test_truck_a
 ## Otwarte
 - Wymiary ze zdjęć 9–11 (lider): promienie, szerokość pasa i wysepek, długości wysepek N / S, odsunięcie przejść,
   liczba i układ krzewów / kamieni; potem ponowny `swept_path.py` (ADR 0218 §3) i przejazd zestawem (PlayMode).
-- `navgraph/build_route_graph.py`, `streetscape` i narzędzia QA czytające `roads.graph.json` wprost widzą graf bez
-  rozdziału DK65 (do ±3 m na 2 × ok. 45 m) — przepiąć na `pipeline.effective_graph`, jeśli wyjdzie w grze.
+- ~~`navgraph/build_route_graph.py`, `streetscape` i narzędzia QA czytające `roads.graph.json` wprost widzą graf bez
+  rozdziału DK65~~ — zamknięte w D27 (sekcja „Czytniki grafu”).
+- Nowy węzeł rozdziału nie przenosi `feature` / `signals_nearby` starego węzła (DK65 N: `highway=crossing` na
+  `n3047667219`). Dziś bez skutku (przejścia idą z `osm_context.json`, sygnalizacja / ustąp tylko na węzłach skrzyżowań),
+  do przeniesienia, jeśli rozdział trafi na węzeł z sygnalizacją.
 - Wysepka E za przejściem ma < 3 m² i zostaje asfaltem; kamienie bez kolizji.
 - Render kamer ronda i porównanie ze zdjęciem 9 (`visual-critic`) — nie wykonane w chmurze.
+
+## Czytniki grafu (D27, s23)
+Jedno źródło: `pipeline.effective_graph(region, graph=None, applied=None, stale=None)` — `roads.graph.json` z
+nałożonymi `carriageway_split` (kopia; plik bez zmian), opcjonalne listy `applied` / `stale` do raportu (stale nie
+jest cichy: czytniki wypisują `WARNING`). `carriageway_split.node_aliases(graph)` = {węzeł z pliku → węzeł efektywny}
+(nowe pole węzła `split_of`); zastępuje heurystykę „id kończy się na s” w `export-route.py`. Logika override'u jest
+tylko w `carriageway_split.apply` (wywołanie idempotentne, znacznik `carriageway_splits_applied`).
+
+**Graf efektywny** (chodzą po geometrii / topologii obok wygenerowanej sieci): `navgraph/build_route_graph.py`
+(`load_graph`; KRTG — węzeł rozdziału przesunięty, restrykcja z OSM `via` starego węzła przechodzi na nowy),
+`navgraph/measure_axis_offset.py`, `tools/ui/build_nav_map.py` (KNAV; teraz przez `uv run --project tools/worldgen`,
+nowe `--out-dir`), `scripts/export-route.py`, `build_world.route_polyline` (kamery kontrolne, QA trasy; już w #144),
+`scripts/map-audit-cameras.py` (`graph_and_route`: `graph_nodes` z `route_start.json` tłumaczone aliasem),
+`validate/common.py` (`graph_edges`: wstęgi jezdni bez pokrywania wysepki), `streetscape/water_banks.py` (maska dróg).
+
+**Graf z pliku — celowo:** `fidelity/run.py`, `qa_report.py`, `qa/roundabout_ortho.py`, `qa/ortho_xsec.py`,
+`qa/median_lamp_row.py`, `qa/junction_lane_*.py`, `qa/region_landmarks.py`, `qa/depot_ortho.py` (porównują dane
+źródłowe z OSM / ortofoto — override jest właśnie odstępstwem od OSM, który mierzą); `streetscape/stage.py`,
+`streetscape/pavements.py`, `roads/tunnels.py`, `build_world.graph_name` (tylko atrybuty / id krawędzi — id krawędzi
+rozdział zachowuje; `sign_gantry.before_node` to id węzła z pliku); `scripts/export-region-catalog.py`,
+`scripts/gate3-segment.py`, `qa/seam_section.py` (kontrakt: `route_start.graph_nodes` = id z pliku; końce krawędzi na
+szwach bez zmian); jednorazowe narzędzia regionu C bez rozdziału (`photolist/*`, `tools/refs/veg0163_cameras.py`,
+`scripts/map-audit-near.py`). `build_region.py` zapisuje plik. Klasyfikację pilnuje
+`tests/gis/test_effective_graph_readers.py::test_every_graph_reader_is_classified` (nowy czytnik = czerwony test).
+
+Zmierzone na knyszyn (dane z gita): KRTG z grafu z pliku ma lukę węzeł ↔ początek geometrii do **26,99 m na 6
+krawędziach** (węzeł w starym miejscu, oś jezdni od nowego); z grafu efektywnego **max 0,68 m, 0 krawędzi > 1 m**.
+`route_start.json` knyszyn i C po zmianie `export-route.py` bajt w bajt; KNAV C bajt w bajt z wersją sprzed zmiany,
+KNAV knyszyn 516 → 521 punktów dróg. Wpływ przy world3: KRTG / KNAV knyszyn, `water_banks` i raport walidatora knyszyn
+(tylko w pasie DK65 ±45 m od ronda); regiony bez `carriageway_split` — bez zmian (`apply` zwraca ten sam obiekt).
