@@ -73,7 +73,12 @@ nie scalony; ta zmiana nie dotyka `TruckLights` ani assetów pojazdu.
   rynek-grodzienska-north (dalsze pule); WorldC High night cab-driver (plama wiązki do ~40 m), driver-andersa (sucho/mokro).
 - Liczby (luma pasa dolnego, p50): knyszyn High night cab-driver 9,1 → 11,0, dk65-inlet-south 10,1 → 13,8; WorldC High
   night cab-driver p90 32,0 → 37,1; zmierzch ±0–1,4; przepalenia bez zmian (≤ 0,11 %).
-- EditMode: `PcNightLightingTests` (punkty R112, strefy III/IV, asymetria, tiery, Overlay, zgodność stałych HLSL/C#) — wynik w raporcie.
+- EditMode (`artifacts/night-pc-s23/editmode-20261116-192935.xml`): 1132, 1109 pass, 22 fail, 1 skip. `PcNightLightingTests`
+  14/14 (punkty R112, strefy III/IV, asymetria, tiery, Overlay, stałe HLSL = C#); HeadlampProjection 9/9, StreetLampOptics
+  10/10, NightIntegration 6/6, DuskCalibration 6/6, NightWindow 7/7, PcGraphicsTier 14/14, FurnitureSign 16/16. Porażki poza
+  diffem: `CarPaintMaterialTests.DepositionChannel_*` (2, znane z ADR 0199/0216) i
+  `StartClearanceTests.ImportedScene_BakedSpawnIsTheImportersStart` (20 regionów: sceny `_Generated` skopiowane z main mają
+  spawn 12 m, importer po ADR 0277 chce 90 m — wymaga reimportu regionów, nie dotyczy oświetlenia).
 
 ## Otwarte
 1. Ekspozycja nocy jest stała (dobrana pod ulice z latarniami, ADR 0199): na nieoświetlonej drodze obraz jest bardzo
