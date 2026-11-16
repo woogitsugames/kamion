@@ -3,12 +3,15 @@
 Run (from the repo root; uses the worldgen venv only for numpy/scipy/pillow, does not touch tools/worldgen):
     uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py
         [--tier High,Medium,Low] [--only set_a,set_b] [--photo <path>]
+        --check --tier Medium      freshness check only (exit 0 fresh / 3 rebuild), used by scripts/import-region.ps1
+        --list-outputs --tier Medium   files this generator writes with the current inputs (no build)
 Outputs are not versioned (art-source/world/materials/.gitignore); see README.md. Deterministic: fixed seeds,
 periodic FFT noise, no time-dependent input, numpy/scipy/pillow pinned by tools/worldgen/uv.lock.
 """
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -235,6 +238,61 @@ def build_detail(photo: Path):
     return info
 
 
+# --- freshness (single source of truth for scripts/import-region.ps1, D43) -------------------------------------
+# A spec file counts for "rebuild needed" only when THIS generator would write it with the inputs present now.
+# Files it cannot (re)write - the photo layer without its owner photo, scan-only sets without fetched scans - are
+# reported as `skipped` and never trigger a rebuild: before D43 their old PNGs (older than _src) made
+# import-region.ps1 run the whole build (~8 min) before every region, and the build left them unchanged.
+
+def producible_sets(photo: Path = DEFAULT_PHOTO, procedural: bool = False) -> dict[str, str | None]:
+    """Set name -> None when build_all writes it with the current inputs, else the reason it is skipped."""
+    out: dict[str, str | None] = {n: None for n in [*SETS, *F.FACADE_SETS, *B.BUILDING_SETS]}
+    for name in SC.SCAN_ONLY_META:
+        if procedural:
+            out[name] = "scan-only set, --procedural"
+        else:
+            ids = SC.SCAN_SETS.get(name, ([], None))[0]
+            out[name] = None if ids and all(SC.available(i) for i in ids) else "CC0 scans not fetched (cc0_fetch.py)"
+    for name in LAYERS:
+        out[name] = None
+    if not Path(photo).exists():
+        out["asphalt_detail_photo"] = f"source photo not found ({photo})"
+    return out
+
+
+def list_outputs(spec: dict, tier: str, producible: dict[str, str | None]) -> tuple[list[str], list[str], list[str]]:
+    """(files written for `tier`, relative to the materials root; producible sets with no spec entry yet;
+    spec files of sets this run would NOT write). Generated files are named at write time (glob), so names come
+    from the previous run's spec; a producible set missing from the spec means the build has never run for it."""
+    sets = spec.get("sets", {})
+    produced: list[str] = []
+    skipped: list[str] = []
+    for name, entry in sorted(sets.items()):
+        f = (entry.get("files") or {}).get(tier)
+        if not f:
+            continue
+        rel = [f"{f['dir']}/{n}" for n in f.get("files", [])]
+        (produced if producible.get(name, "not a build_all set") is None else skipped).extend(rel)
+    unbuilt = sorted(n for n, why in producible.items() if why is None and n not in sets)
+    return produced, unbuilt, skipped
+
+
+def check_fresh(tier: str, root: Path = OUT, src_dir: Path = HERE, photo: Path = DEFAULT_PHOTO,
+                producible: dict[str, str | None] | None = None) -> dict:
+    """Decide whether build_all must run for `tier`: a produced file missing or older than the newest _src/*.py.
+    Skipped (not producible) files are listed but never decide."""
+    spec_path = root / "materials_spec.json"
+    spec = json.loads(spec_path.read_text(encoding="utf-8")) if spec_path.exists() else {}
+    producible = producible_sets(photo) if producible is None else producible
+    produced, unbuilt, skipped = list_outputs(spec, tier, producible)
+    src_time = max((p.stat().st_mtime for p in src_dir.glob("*.py")), default=0.0)
+    missing = [r for r in produced if not (root / r).exists()]
+    stale = [r for r in produced if (root / r).exists() and (root / r).stat().st_mtime < src_time]
+    return {"tier": tier, "rebuild": bool(missing or stale or unbuilt or not spec), "produced": len(produced),
+            "missing": missing, "stale": stale, "unbuilt_sets": unbuilt, "skipped": skipped,
+            "skipped_sets": {n: why for n, why in producible.items() if why is not None}}
+
+
 def _scan_entry(entry: dict, s, scan: bool):
     """Spec fields of a scan-based set: real tile size (scans keep their physical size) and provenance."""
     entry.pop("source", None)
@@ -254,7 +312,28 @@ def main():
     ap.add_argument("--tier", default="High,Medium,Low", help="comma list of High,Medium,Low")
     ap.add_argument("--procedural", action="store_true",
                     help="ignore the CC0 scans (ADR 0063) and build the purely procedural sets (A/B comparison)")
+    ap.add_argument("--list-outputs", action="store_true",
+                    help="print the files this generator writes for --tier (one tier) with the current inputs; no build")
+    ap.add_argument("--check", action="store_true",
+                    help="freshness check for --tier (one tier): print a summary, exit 0 = up to date, 3 = rebuild "
+                         "needed; no build (scripts/import-region.ps1)")
     a = ap.parse_args()
+    if a.list_outputs or a.check:
+        tier = a.tier.split(",")[0] if a.tier != "High,Medium,Low" else "Medium"
+        prod = producible_sets(a.photo, a.procedural)
+        if a.list_outputs:
+            produced, unbuilt, _ = list_outputs(
+                json.loads((OUT / "materials_spec.json").read_text(encoding="utf-8")), tier, prod)
+            print("\n".join(produced + [f"{n}/  (set not built yet)" for n in unbuilt]))
+            return 0
+        r = check_fresh(tier, OUT, HERE, a.photo, prod)
+        print(f"PBR {tier}: {r['produced']} produced files, {len(r['missing'])} missing, {len(r['stale'])} older "
+              f"than _src, {len(r['unbuilt_sets'])} sets not built; {len(r['skipped'])} files skipped "
+              f"(not produced by build_all with current inputs: {', '.join(sorted(r['skipped_sets'])) or '-'})")
+        for k in ("missing", "stale", "unbuilt_sets"):
+            for x in r[k][:10]:
+                print(f"  {k}: {x}")
+        return 3 if r["rebuild"] else 0
     import time
     t_all = time.perf_counter()
     TIERS_SEL[:] = [t for t in a.tier.split(",") if t in K.TIERS]
@@ -262,7 +341,6 @@ def main():
     spec_path = OUT / "materials_spec.json"
     old = {}
     if spec_path.exists():
-        import json
         old = json.loads(spec_path.read_text(encoding="utf-8"))
     sets = dict(old.get("sets", {}))
     for name, meta in SETS.items():
@@ -399,4 +477,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)
