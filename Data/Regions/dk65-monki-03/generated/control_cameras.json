@@ -1,0 +1,69 @@
+{
+ "cameras": [
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0069",
+   "look_at": [
+    -776.519,
+    -960.738,
+    139.083
+   ],
+   "note": "driver eye 2.5 m, control route s = 69 m of 413 m (unnamed)",
+   "pos": [
+    -723.407,
+    -988.702,
+    139.555
+   ],
+   "route_s_m": 68.91,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0207",
+   "look_at": [
+    -896.435,
+    -892.809,
+    139.832
+   ],
+   "note": "driver eye 2.5 m, control route s = 207 m of 413 m (unnamed)",
+   "pos": [
+    -843.432,
+    -920.979,
+    140.953
+   ],
+   "route_s_m": 206.729,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "route_s0345",
+   "look_at": [
+    -1016.254,
+    -824.709,
+    139.799
+   ],
+   "note": "driver eye 2.5 m, control route s = 345 m of 413 m (unnamed)",
+   "pos": [
+    -963.251,
+    -852.878,
+    140.981
+   ],
+   "route_s_m": 344.549,
+   "type": "persp"
+  },
+  {
+   "center": [
+    0.0,
+    0.0
+   ],
+   "height": 288.487,
+   "id": "ortho_tile",
+   "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
+   "size_m": 2048.0,
+   "type": "ortho"
+  }
+ ],
+ "frame": "local E,N,U (U absolute EVRF2007)",
+ "region": "dk65-monki-03",
+ "schema": "truck-sim-pl/control-cameras/1"
+}
