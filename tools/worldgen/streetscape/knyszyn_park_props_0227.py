@@ -201,9 +201,9 @@ def build(buf, region, origin, overrides, zsmooth, report):
     result={"id":ASSET_ID,"status":"skipped","source_point":"OSM node/3047587676",
             "king_silhouette":"PROXY_NOT_APPROVED","eagle":"PROXY_NOT_APPROVED","lighting":"no dynamic emission",
             "benches":[],"lamps":[],"refused":[]}
-    report[ASSET_ID]=result
-    if region != REGION:
+    if region != REGION:  # ADR 0227: other regions get no QA entry (no diff in their streetscape_qa.json)
         return result
+    report[ASSET_ID] = result
     origin=np.asarray(origin,float)
     if origin.shape != (2,) or not np.isfinite(origin).all():
         result["reason"]="invalid region origin"; return result

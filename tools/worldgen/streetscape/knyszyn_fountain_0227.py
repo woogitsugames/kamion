@@ -47,9 +47,9 @@ def build(buf, region, origin, overrides, zsurf, report):
               "summer_behavior":"dry; dynamic jets not implemented", "other_seasons":"dry; policy OPEN",
               "source":"GUGiK K1-124 and owner photos 4–5", "layout":"ESTIMATED / WORKING_VALUE",
               "basin":False, "collision":False}
-    report[ASSET_ID] = result
-    if region != REGION:
+    if region != REGION:  # ADR 0227: other regions get no QA entry (no diff in their streetscape_qa.json)
         return result
+    report[ASSET_ID] = result
     candidates = [o for o in overrides if o.get("id") == PLATE_ID and o.get("kind") == "paved_area"]
     if len(candidates) != 1:
         result["reason"] = "missing or ambiguous authored fountain plate"

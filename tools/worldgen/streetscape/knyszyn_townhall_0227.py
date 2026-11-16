@@ -287,9 +287,9 @@ def _dormer(acc, layer, center, axis, out, eave, rise, window_material="glass", 
 
 def build(buf, region, blds, zsmooth, report):
     result = {"id": ASSET_ID, "status": "skipped", "sources": list(IDS)}
-    report[ASSET_ID] = result
-    if region != REGION:
+    if region != REGION:  # ADR 0227: other regions get no QA entry (no diff in their streetscape_qa.json)
         return result
+    report[ASSET_ID] = result
     selected = {b["id"]: b for b in blds if b["id"] in IDS}
     if set(selected) != set(IDS) or any(b["ovr"].get("hero_asset") != ASSET_ID for b in selected.values()):
         result["reason"] = "both hero targets required; refusing overlap with generic buildings"

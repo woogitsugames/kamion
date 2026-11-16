@@ -151,9 +151,9 @@ def build(buf, region, blds, zsmooth, report):
     Call only with the matching `hero_targets` map applied to BM.load.
     """
     result = {"id": ASSET_ID, "status": "skipped", "source": BUILDING_ID}
-    report[ASSET_ID] = result
-    if region != REGION:
+    if region != REGION:  # ADR 0227: other regions get no QA entry (no diff in their streetscape_qa.json)
         return result
+    report[ASSET_ID] = result
     matches = [b for b in blds if b["id"] == BUILDING_ID]
     if len(matches) != 1:
         result["reason"] = "source footprint missing or ambiguous"

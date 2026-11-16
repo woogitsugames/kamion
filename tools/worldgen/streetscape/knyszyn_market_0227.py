@@ -216,9 +216,9 @@ def build(buf, region, origin, overrides, zsurf, report):
     result = {"id": ASSET_ID, "status": "skipped", "canopies": [], "fences": [],
               "footprints": "GUGiK 2025 eaves: SOURCED/ESTIMATED",
               "details": "WORKING_VALUE; owner photos; visual QA OPEN"}
-    report[ASSET_ID] = result
-    if region != REGION:
+    if region != REGION:  # ADR 0227: other regions get no QA entry (no diff in their streetscape_qa.json)
         return result
+    report[ASSET_ID] = result
     candidates = [o for o in overrides if o.get("kind") == KIND]
     if not candidates:
         result["reason"] = "no authored market canopy override"

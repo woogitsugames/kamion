@@ -467,8 +467,9 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
     report["forest_clearings"] = crep
     srep["stale"] = [{"id": st["id"], "bdot": bid} for bid, st in stands.items() if bid not in shit]
     report["forest_stands"] = srep
-    report["park_replacements"] = {"applied": sorted(parks[k] for k in park_hits),
-                                   "stale": sorted(v for k, v in parks.items() if k not in park_hits)}
+    if parks:  # ADR 0227: key only where `kind: park_replacement` is authored (no QA diff in other regions)
+        report["park_replacements"] = {"applied": sorted(parks[k] for k in park_hits),
+                                       "stale": sorted(v for k, v in parks.items() if k not in park_hits)}
     # ADR 0187: authored `kind: tree_stand` - wooded land that is no BDOT10k forest (allotment gardens, a park
     # wood) but closes the horizon on the photos. `polygons_en` (region-local E/N rings, like open_ground),
     # `height_m` [lo, hi] of its trees, `mix` {species: weight}, `spacing_m`, `category` (HLOD texture mix, default
