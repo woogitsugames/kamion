@@ -47,6 +47,18 @@ BOOM_RAISED_DEG = 86.0        # open crossing: boom almost vertical (no train tr
 BOOM_TAIL_M = 0.60            # counterweight arm behind the pivot
 BOOM_BAND_M = 0.50            # red / white bands of the boom (Mapillary 1569863873404925: ~8 bands on the raised boom)
 BELL_Z_M = 2.75
+MAST_BAND_M = 0.40            # red / white bands of the signal mast (Mapillary 1832769196903759: banded mast; band
+#                               length WORKING_VALUE). REVIEW s22 0217 visual P1-3
+# G-3 / G-4 arms (colour pattern Dz.U. 2019 poz. 2310, PDF p. 51, viewed 2026-11-15): white arms with two red bands
+# on each half, the outer one at the tip. Band positions as fractions of the half arm, WORKING_VALUE read off the
+# pattern (the construction drawing in Dz.U. 2019 poz. 2311 zał. 1 was not read).
+SALTIRE_BANDS = ((0.00, 0.28, "paint_white_reflective"), (0.28, 0.52, "paint_ral3020"),
+                 (0.52, 0.78, "paint_white_reflective"), (0.78, 1.00, "paint_ral3020"))
+G2_TOP_UNDER_LAMPS_M = 2.00   # G-2 on the signal mast "poniżej głowic sygnałowych" (§ 81 ust. 1 pkt 1): top edge, the
+#                               lamp backboards end at SIGNAL_LAMP_Z_M - SIGNAL_DISC_D_M / 2 = 2.10 m (WORKING_VALUE)
+G2_GAP_UNDER_CROSS_M = 0.05   # G-2 under the G-3 / G-4 on its post (§ 81 ust. 1 pkt 2)
+U1_H_M = 1.00                 # guide post U-1a: height / section WORKING_VALUE (Dz.U. 2019 poz. 2311 zał. 4 not read)
+U1_SECTION_M = (0.12, 0.04)
 
 
 def _rot_x(mesh, deg, pivot_z):
@@ -78,7 +90,8 @@ def _arm_quads(m, mat, cx, cz, half_l, half_w, ang_deg, y, flip=False, l0=None):
 
 def saltire(code="G-3", arm_l=1.20, arm_w=0.20, arm_angle=50.0, bottom_z=1.50):
     """St Andrew's cross on its own post: G-3 (one track) = one cross; G-4 (more tracks) = the cross + a half cross
-    under it. White arms with a red border (materials paint_white_reflective / paint_ral3020), grey back."""
+    under it. White arms with red bands (SALTIRE_BANDS; materials paint_white_reflective / paint_ral3020), grey
+    back."""
     m, l1, col = PP.Mesh(), PP.Mesh(), PP.Mesh()
     half = arm_angle / 2.0
     hl, hw = arm_l / 2, arm_w / 2
@@ -92,10 +105,10 @@ def saltire(code="G-3", arm_l=1.20, arm_w=0.20, arm_angle=50.0, bottom_z=1.50):
     for mm, full in ((m, True), (l1, False)):
         mm.tube("steel_galv", [0, 0, -0.03], [0, 0, top + 0.03], POST_D_M / 2, None, 10 if full else 4)
         for z0, ang, l0 in arms:
-            b = SALTIRE_BORDER_M
-            _arm_quads(mm, "paint_ral3020", 0.0, z0, hl, hw, ang, yf, l0=l0)                         # red border sheet
-            _arm_quads(mm, "paint_white_reflective", 0.0, z0, hl - b, hw - b, ang, yf + 0.002,
-                       l0=None if l0 is None else l0)                                                # white field
+            for f0, f1, mat in SALTIRE_BANDS:                  # red / white bands, mirrored about the arm centre
+                for sgn in ((1,) if l0 is not None else (1, -1)):
+                    a_, b_ = sorted((sgn * f0 * hl, sgn * f1 * hl))
+                    _arm_quads(mm, mat, 0.0, z0, b_, hw, ang, yf, l0=a_)
             _arm_quads(mm, "steel_galv", 0.0, z0, hl, hw, ang, yf - 0.003, flip=True, l0=l0)         # back
     col.tube("collision_steel", [0, 0, 0], [0, 0, top], 0.05, None, 4)
     return m, l1, col
@@ -108,7 +121,11 @@ def signal(bell=False):
     r = SIGNAL_MAST_D_M / 2
     z = SIGNAL_LAMP_Z_M
     for mm, seg, n in ((m, 10, 20), (l1, 5, 8)):
-        mm.tube("steel_galv", [0, 0, -0.05], [0, 0, SIGNAL_MAST_H_M], r, r * 0.9, seg)
+        nb = int(round(SIGNAL_MAST_H_M / MAST_BAND_M))
+        for k in range(nb):                                   # red / white banded mast (REVIEW s22 0217 visual P1-3)
+            z0, z1 = SIGNAL_MAST_H_M * k / nb, SIGNAL_MAST_H_M * (k + 1) / nb
+            mm.tube("paint_ral3020" if k % 2 == 0 else "paint_white_reflective", [0, 0, z0 - (0.05 if k == 0 else 0)],
+                    [0, 0, z1], r, None, seg)
         mm.box("signal_housing", [0, r + 0.03, z], SIGNAL_LAMP_GAP_M / 2, 0.025, 0.03)               # cross bar
         for sx in (-1, 1):
             cx = sx * SIGNAL_LAMP_GAP_M / 2
@@ -132,7 +149,7 @@ def barrier(boom_len):
     (the direction it points when lowered), short counterweight arm behind the pivot."""
     m, col = PP.Mesh(), PP.Mesh()
     dx, dy, dz = DRIVE_M
-    m.box("cone_orange", [0, 0, dz / 2], dx / 2, dy / 2, dz / 2)
+    m.box("drive_cabinet_faded", [0, 0, dz / 2], dx / 2, dy / 2, dz / 2)       # sun-faded orange (REVIEW s22 P2-11)
     m.box("steel_painted", [0, 0, dz + 0.02], dx / 2 + 0.02, dy / 2 + 0.02, 0.02)                    # cabinet cap
     m.box("concrete_base", [0, 0, -0.02], dx / 2 + 0.08, dy / 2 + 0.08, 0.06)
     boom = PP.Mesh()
@@ -154,6 +171,30 @@ def barrier(boom_len):
     return m, m, col
 
 
+def guide_post(style="u1a", side="right"):
+    """Guide post beside the approach (Dz.U. 2025 poz. 1105 § 79 pkt 5: U-1a / U-1b). Styles:
+    u1a        white post with a black band carrying the reflector - red on the right of the road, white on the left
+               (UNVERIFIED appearance: Dz.U. 2019 poz. 2311 zał. 4 was not read);
+    red_white  white post with red bands as on Mapillary 1832769196903759 at DW671 x line 38 (authored override
+               `guide_post: red_white`)."""
+    m, col = PP.Mesh(), PP.Mesh()
+    hx, hy = U1_SECTION_M[0] / 2, U1_SECTION_M[1] / 2
+    if style == "red_white":
+        bands = (("paint_white_reflective", 0.0, 0.25), ("paint_ral3020", 0.25, 0.50),
+                 ("paint_white_reflective", 0.50, 0.75), ("paint_ral3020", 0.75, 1.00))
+    else:
+        bands = (("paint_white_reflective", 0.0, 0.68), ("signal_backplate", 0.68, 0.90),
+                 ("paint_white_reflective", 0.90, 1.00))
+    for mat, f0, f1 in bands:
+        z0, z1 = U1_H_M * f0 - (0.03 if f0 == 0.0 else 0.0), U1_H_M * f1
+        m.box(mat, [0, 0, (z0 + z1) / 2], hx, hy, (z1 - z0) / 2)
+    if style != "red_white":                                   # reflector on the face (+y: towards the driver)
+        m.box("paint_ral3020" if side == "right" else "paint_white_reflective", [0, hy + 0.003, U1_H_M * 0.79],
+              0.025, 0.003, 0.07)
+    col.box("collision_steel", [0, 0, U1_H_M / 2], hx, hy, U1_H_M / 2)
+    return m, m, col
+
+
 def _vec(heading_deg):
     a = math.radians(heading_deg)
     return np.array([math.sin(a), math.cos(a)])            # compass degrees clockwise from north -> (E, N)
@@ -162,7 +203,12 @@ def _vec(heading_deg):
 def proto_name(mk):
     """Prototype of one rail.json marker (None: no mesh for this kind)."""
     if mk["kind"] == "sign":
+        if mk["code"] not in ("G-3", "G-4"):
+            return None            # G-2 is a sign plate of the prop library (plate_G-2), see place(): no own mesh here
         return f"signal_rail_saltire_{mk['code'].replace('-', '').lower()}"
+    if mk["kind"] == "guide_post":
+        style = mk.get("style", "u1a")
+        return f"signal_rail_guide_{style}" + ("" if style == "red_white" else "_" + mk.get("side", "right")[0])
     if mk["kind"] == "light":
         return "signal_rail_lamps"
     if mk["kind"] == "barrier":
@@ -182,28 +228,114 @@ def build(name, mk=None):
         return signal(bell=True)
     if name.startswith("signal_rail_barrier_"):
         return barrier(int(name.rsplit("_", 1)[1]) / 10.0)
+    if name.startswith("signal_rail_guide_"):
+        if name.endswith("red_white"):
+            return guide_post("red_white")
+        return guide_post("u1a", "left" if name.endswith("_l") else "right")
     raise KeyError(name)
 
 
-def place(pl, plan, zroad_at, report):
-    """Instances of the crossing markers of `plan` (streetscape.rail.Plan) in the Placer `pl`. Returns the count."""
+def saltire_top_bottom(mk):
+    """(lower edge, top) of the cross of a G-3 / G-4 marker above the ground - as built by saltire()."""
+    half = mk["arm_angle_deg"] / 2.0
+    rise = mk["arm_l_m"] / 2 * math.sin(math.radians(half)) + mk["arm_w_m"] / 2 * math.cos(math.radians(half))
+    drop = SALTIRE_G4_DROP_M if mk["code"] == "G-4" else 0.0
+    return mk["bottom_z_m"], mk["bottom_z_m"] + 2 * rise + drop
+
+
+def plate_stack(plates, bottom_z):
+    """[(code, centre height above the post base)] of plates listed top first, stacked from `bottom_z` upwards with
+    PLATE_GAP_M between them (as furniture.sign_assembly, for the plate shapes of ADR 0268), and the post height."""
+    from roads import standards as S
+    from . import rail_approach as RA
+    from . import signs as SG
+    out, z = [], float(bottom_z)
+    for code in reversed(plates):
+        shape, _ = SG.face(code)
+        if shape == "rect":
+            h = SG.RECT[code][1]
+            out.append((code, z + h / 2))
+        elif shape == "triangle_up":
+            h = S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2
+            out.append((code, z + h / 3))                  # plate origin = centroid, 1/3 above the lower edge
+        else:
+            raise KeyError(f"plate_stack: shape {shape!r} of {code} not supported")
+        z += h + RA.PLATE_GAP_M
+    return out[::-1], z
+
+
+def place(pl, plan, zroad_at, report, net=None, codes=None):
+    """Instances of the crossing markers of `plan` (streetscape.rail.Plan) in the Placer `pl`: the devices at the
+    crossing (ADR 0217 / 0223) and - with the road network `net` - the signs and guide posts of the approaches
+    (ADR 0268, streetscape.rail_approach). `codes`: the set of sign-plate codes of the prop library (filled).
+    Returns the count."""
+    from roads import standards as S
+    from . import rail_approach as RA
+    from . import signs as SG
     from .furniture import yaw_of
     PROTOS.clear()
+    codes = set() if codes is None else codes
     n = {}
-    bells = {m["crossing"] for ci, c in enumerate(plan.crossings) for m in plan.markers(ci, c, zroad_at) if m["kind"] == "bell"}
-    for ci, c in enumerate(plan.crossings):
+
+    def put(name, mk, kind, ci, z=None, sz=1.0):
+        zb = pl.add(name, (mk["e"], mk["n"]), yaw_of(_vec(mk["heading_deg"])), z=z, sz=sz,
+                    src=f"rail:crossing:{ci}:{kind}")
+        n[name] = n.get(name, 0) + 1
+        return zb
+
+    devices = [plan.markers(ci, c, zroad_at) for ci, c in enumerate(plan.crossings)]
+    for ci, mks in enumerate(devices):
         rung = False
-        for mk in plan.markers(ci, c, zroad_at):
+        bell = any(m["kind"] == "bell" for m in mks)
+        base = {}                                              # (e, n) -> base height of the post / mast standing there
+        cross = {(m["e"], m["n"]): m for m in mks if m["kind"] == "sign" and m["code"] in ("G-3", "G-4")}
+        for mk in mks:
             name = proto_name(mk)
             if name is None:
                 continue
-            if name == "signal_rail_lamps" and ci in bells and not rung and mk.get("side", "right") == "right":
+            if name == "signal_rail_lamps" and bell and not rung and mk.get("side", "right") == "right":
                 name, rung = "signal_rail_lamps_bell", True           # the bell rides the first right-hand signal mast
             if name not in PROTOS:
                 PROTOS[name] = build(name, mk)
-            pl.add(name, (mk["e"], mk["n"]), yaw_of(_vec(mk["heading_deg"])), src=f"rail:crossing:{ci}:{mk['kind']}")
-            n[name] = n.get(name, 0) + 1
+            base[(mk["e"], mk["n"])] = put(name, mk, mk["kind"], ci)
+        for mk in mks:                                         # ADR 0223: G-2 "sieć pod napięciem" (§ 81 ust. 1)
+            if mk["kind"] != "sign" or mk["code"] != "G-2":
+                continue
+            key = (mk["e"], mk["n"])
+            zb = base.get(key)
+            if zb is None:
+                continue                                       # no mast / cross post here: nothing to hang it on
+            h = SG.RECT["G-2"][1]
+            if mk.get("mount") == "below_cross" and key in cross:
+                top = saltire_top_bottom(cross[key])[0] - G2_GAP_UNDER_CROSS_M
+            else:
+                top = G2_TOP_UNDER_LAMPS_M
+            put("plate_G-2", mk, "G-2", ci, z=zb + top - h / 2)
+            codes.add("G-2")
     report["rail_crossing_devices"] = dict(sorted(n.items()))
+    # ---- ADR 0268: approach signs (A-9 / A-10, board, G-1) and guide posts (U-1a)
+    ap = RA.plan(plan, net, devices=[m for mks in devices for m in mks]) if net is not None else None
+    if ap is not None:
+        n0 = dict(n)
+        for mk in ap["markers"]:
+            ci = mk["crossing"]
+            if mk["kind"] == "guide_post":
+                name = proto_name(mk)
+                if name not in PROTOS:
+                    PROTOS[name] = build(name, mk)
+                put(name, mk, "guide_post", ci)
+                continue
+            stack, top = plate_stack(mk["plates"], mk["bottom_z_m"] or S.SIGN_H_MIN)
+            zb = put("sign_post", mk, "approach", ci)
+            pl.items[-1]["sz"] = round(top + 0.05, 3)
+            for code, zc in stack:
+                put(f"plate_{code}", mk, "approach", ci, z=zb + zc)
+                codes.add(code)
+            pl.pts.setdefault("sign", []).append((mk["e"], mk["n"]))
+        plan.report["approach"] = ap["markers"]
+        plan.report["approach_rules"] = ap["rules"]
+        plan.report["approach_outside_tile"] = ap["outside_tile"]
+        report["rail_approach"] = {k: v - n0.get(k, 0) for k, v in sorted(n.items()) if v - n0.get(k, 0)}
     return sum(n.values())
 
 

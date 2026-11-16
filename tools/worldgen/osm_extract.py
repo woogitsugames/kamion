@@ -36,6 +36,8 @@ ROAD_TAGS = (
     "width", "sidewalk", "lit", "destination", "destination:ref", "int_ref", "service",
     # ADR 0164: truck limits (kept in sync with roadgraph.TRUCK_LIMIT_TAGS)
     "maxaxleload", "maxlength", "maxweight:hgv", "hgv:conditional", "maxgvweightrating:hgv",
+    # ADR 0272: shoulder of the carriageway (kept in sync with roadgraph.SHOULDER_TAGS)
+    "shoulder", "shoulder:width", "shoulder:surface",
 )
 AREA_KEYS_LANDUSE = {"industrial", "railway", "commercial", "retail", "farmyard", "construction"}
 POINT_KEYS = {

@@ -167,15 +167,21 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     zc = CF.tidy(zc, zjoin, mask, dist)
     bmask = PV.rasterize_polys([b["poly"] for b in blds], hf)
     zc = np.where(bmask & ~mask, np.minimum(zc, sm), zc)        # ground under buildings never above the floor
+    wkeep = np.zeros(mask.shape, bool)
     if getattr(w, "water", None) is not None:      # ADR 0210 (opt-in): river / pond bed, shallow banks, shore lip
+        zc0 = zc
         zc = w.water.carve(zc, mask, log)
+        wkeep = np.abs(np.asarray(zc, float) - np.asarray(zc0, float)) > 1e-3     # bed, banks and shore lip
     from . import rail as RL
     from . import rail_props as RP
     RP.PROTOS.clear()                              # crossing devices are registered only by the rail stage below
     rail_road_z = None
     if getattr(w, "rail", None) is not None:       # ADR 0217 (opt-in): ground levelled under the track bed
         rail_road_z = RL.grid_sampler(road_z, hf, fallback=RL.grid_sampler(zc, hf))
-        zc = w.rail.conform(zc, mask | bmask, hf, rail_road_z, log)
+        # ADR 0223 (REVIEW s21 #102 P1-4): every node the water stage carved is kept - the half-disc of the bed
+        # conform at a railway-bridge abutment (dk65-03, bridge over the Supraśl) must not refill the river
+        zc = w.rail.conform(zc, mask | bmask | wkeep, hf, rail_road_z, log)
+        rep["rail_conform_water_kept_nodes"] = int(wkeep.sum())
     # ADR 0214: expressway construction sites (override kind: construction_site) - sand platform + spoil heaps
     bbx = w.region["bbox"]
     sites = CS.plan(overrides, origin, roads_poly, rep, tile=shapely.box(bbx["xmin"] - origin[0], bbx["ymin"] - origin[1],
@@ -239,7 +245,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     SR.drop_rule_diagrams_near_gantries(pl, boards, frep)       # ADR 0236: the authored portal replaces the rule E-1
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     if getattr(w, "rail", None) is not None:       # ADR 0217: G-3 / G-4 crosses, barriers, signals of level crossings
-        RP.place(pl, w.rail, rail_road_z, frep)
+        RP.place(pl, w.rail, rail_road_z, frep, net=w.net, codes=codes)     # + ADR 0268 approach signs / posts
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep, overrides)
     FU.bridge_median_lamps(pl, w.net, frep)          # ADR 0123: twin-arm lamps between the decks (bridge_style `lamps`)
     lin = FU.Lin(w.buf, zsurf)

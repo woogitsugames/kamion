@@ -35,10 +35,13 @@ DRIVABLE = {
 # navgraph/build_route_graph.py) - dropping them silently made the GPS route a 11.5 t drive axle over maxaxleload=10 roads.
 # Every tag here must also be extracted by osm_extract.ROAD_TAGS (test_truck_tags_0164 keeps both lists in sync).
 TRUCK_LIMIT_TAGS = ("maxaxleload", "maxlength", "maxweight:hgv", "hgv:conditional", "maxgvweightrating:hgv")
+# ADR 0272: OSM shoulder tags -> roads.xsec (no kerb on that side, width, paved / ground). Must also be in
+# osm_extract.ROAD_TAGS (tests/gis/test_rural_xsec_0272.py keeps both in sync).
+SHOULDER_TAGS = ("shoulder", "shoulder:width", "shoulder:surface")
 RAW_TAGS = ("name", "ref", "lanes", "lanes:forward", "lanes:backward", "turn:lanes", "turn:lanes:forward",
             "turn:lanes:backward", "maxspeed", "oneway", "junction", "surface", "bridge", "tunnel", "layer",
             "width", "maxweight", "maxheight", "hgv", "access", "service", "destination", "destination:ref", "int_ref",
-            *TRUCK_LIMIT_TAGS)
+            *TRUCK_LIMIT_TAGS, *SHOULDER_TAGS)
 GRAPH_SCHEMA = "truck-sim-pl/road-graph/1"
 
 # ADR 0219: graph ids, minted only here and parsed only by the helpers below (never `lstrip`, which strips a SET of
@@ -168,7 +171,7 @@ def edge_attrs(tags: dict, length_m: float) -> dict:
     if tags.get("width") and _num(tags["width"]):
         a["width"] = _a(_num(tags["width"]), "osm", "medium")
     for k in ("junction", "maxweight", "maxheight", "hgv", "access", "service", "destination", "destination:ref",
-              *TRUCK_LIMIT_TAGS):
+              *TRUCK_LIMIT_TAGS, *SHOULDER_TAGS):
         if tags.get(k):
             a[k] = _a(tags[k], "osm", "high")
     return a

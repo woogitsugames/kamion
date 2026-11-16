@@ -3133,7 +3133,7 @@
    "patches": 256
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 362177,
+  "footprint_nodes": 359785,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3275,6 +3275,8 @@
    "P-10 crossing in junction": 5,
    "P-11 cycle crossing": 1,
    "P-13": 5,
+   "P-14 level crossing skipped (road end)": 2,
+   "P-14 level crossing skipped (unmarked road)": 2,
    "P-7a edge line span (authored)": 8,
    "P-7b edge line": 20
   },
@@ -3370,8 +3372,8 @@
   "profile_ties": [],
   "roundabout_junctions": 0,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 789,
-   "parts": 73,
+   "kerb_tris": 787,
+   "parts": 71,
    "side_tris": 16
   },
   "signalised_junctions": 0,
@@ -3388,7 +3390,7 @@
   },
   "verge_strips": {
    "chunks": 49,
-   "tris": 21859
+   "tris": 21995
   },
   "walled_ramps": []
  }
