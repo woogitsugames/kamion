@@ -1,0 +1,80 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Sim -> tools/physics-runner/Sim/bin/Release/net8.0/PhysicsRunner.Sim.dll
+  Tests -> tools/physics-runner/Tests/bin/Release/net8.0/Tests.dll
+  Passed PhysicsRunner.Tests.JackknifeContactTests.YawImpact_InFreeSpace_StopsAtCab_NoRebound_NoEnergyGain [152 ms]
+  Standard Output Messages:
+ no-rebound contact: max energy gain/step 0.000 J, max articulation 118.27 deg, rate after 0.128 rad/s, penetration 0.0397 m
+ elastic control: max energy gain/step 696.9 J, max articulation 118.58 deg, rate after 0.000 rad/s
+  Passed PhysicsRunner.Tests.JackknifeContactTests.TrailerFrontSwing_FollowsArtModel [3 ms]
+  Standard Output Messages:
+ trailer coupling front swing 2.0290 m, cab back 2.070 m ahead of the kingpin, clearance 0.0410 m
+  Passed PhysicsRunner.Tests.JackknifeContactTests.TightTurn_NoContactBelowSideWallAngle(pitchDeg: -0.5, rollDeg: 0) [3 ms]
+  Passed PhysicsRunner.Tests.JackknifeContactTests.TightTurn_NoContactBelowSideWallAngle(pitchDeg: 0, rollDeg: 0.5) [3 ms]
+  Passed PhysicsRunner.Tests.JackknifeContactTests.TightTurn_NoContactBelowSideWallAngle(pitchDeg: 0, rollDeg: -0.5) [2 ms]
+  Passed PhysicsRunner.Tests.JackknifeContactTests.TightTurn_NoContactBelowSideWallAngle(pitchDeg: 0, rollDeg: 0) [2 ms]
+  Passed PhysicsRunner.Tests.JackknifeContactTests.TightTurn_NoContactBelowSideWallAngle(pitchDeg: 0.5, rollDeg: 0) [2 ms]
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.WithoutSmoothing_TheContactKicks [258 ms]
+  Standard Output Messages:
+ no smoothing: fold_120@laden40: contact steps 747, peak contact 241 kN; dFFB/step contact 4.527 vs free 0.057 N m; dMz/step contact 672 vs free 33 N m; dOut/step max 0.200; final |Mz - raw| 0.00 N m
+  Passed PhysicsRunner.Tests.JackknifeContactTests.CombinationStep_WithBodyContact_DoesNotAllocate [128 ms]
+  Standard Output Messages:
+ contact points 1, allocated 0 B in 200 steps
+  Passed PhysicsRunner.Tests.JackknifeContactTests.BodyBoxes_GroundSet_EqualsGrayboxColliderMirror [4 ms]
+  Passed PhysicsRunner.Tests.JackknifeContactTests.Drop05_ElasticBefore_DampedAfter [169 ms]
+  Standard Output Messages:
+ before: rebound 0.677, airborne again 0.27 s; after: 0.389, 0.00 s
+  Passed PhysicsRunner.Tests.JackknifeContactTests.Detect_SideWallOnCabCorner(side: -1) [1 ms]
+  Standard Output Messages:
+ side -1: point (1.2450, 1.2400, 2.7500) normal (0.4695, 0.0000, -0.8829) sep -0.0318
+  Passed PhysicsRunner.Tests.JackknifeContactTests.Detect_SideWallOnCabCorner(side: 1) [< 1 ms]
+  Standard Output Messages:
+ side 1: point (-1.2450, 1.2400, 2.7500) normal (-0.4695, 0.0000, -0.8829) sep -0.0318
+  Passed PhysicsRunner.Tests.JackknifeContactTests.SetGeometry_RejectsMoreBoxesThanCapacity [< 1 ms]
+  Standard Output Messages:
+ CouplingContact: 4 tractor x 5 trailer coupling boxes need up to 80 contact points, capacity 64 (ADR 0228): raise CouplingContact.MaxPoints
+  Passed PhysicsRunner.Tests.JackknifeContactTests.NoBodyBoxes_FallsBackToAngularStop [178 ms]
+  Standard Output Messages:
+ fallback: limit 90 deg, max articulation 91.81 deg
+  Passed PhysicsRunner.Tests.JackknifeContactTests.FrontClearance_ToleratesPlatePitchAndRoll [148 ms]
+  Standard Output Messages:
+ no contact up to 110 deg articulation for |relative pitch| <= 1.13 deg, |relative roll| <= 1.44 deg
+  Passed PhysicsRunner.Tests.JackknifeContactTests.FirstContactAngle_FromGeometry [9 ms]
+  Standard Output Messages:
+ first tractor-trailer contact at 117.12 deg
+ analytic 117.12 deg
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.TightForwardTurn_NoContact(id: "jackknife_tight_turn_forward_comb@laden40") [638 ms]
+  Standard Output Messages:
+ jackknife_tight_turn_forward_comb@laden40: contact steps 0, peak contact 0 kN; dFFB/step contact 0.000 vs free 0.079 N m; dMz/step contact 0 vs free 79 N m; dOut/step max 0.010; final |Mz - raw| 0.00 N m
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.TightForwardTurn_NoContact(id: "jackknife_tight_turn_forward_comb@empty") [396 ms]
+  Standard Output Messages:
+ jackknife_tight_turn_forward_comb@empty: contact steps 0, peak contact 0 kN; dFFB/step contact 0.000 vs free 0.048 N m; dMz/step contact 0 vs free 42 N m; dOut/step max 0.006; final |Mz - raw| 0.00 N m
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.Reference_OrdinaryDriving(id: "lane_change_80@laden40") [102 ms]
+  Standard Output Messages:
+ REF lane_change_80@laden40: dFFB/step max 0.033 N m, dMz/step 4 N m, dOut/step 0.004
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.Reference_OrdinaryDriving(id: "curb_strike_14cm_50kmh_comb@laden40") [66 ms]
+  Standard Output Messages:
+ REF curb_strike_14cm_50kmh_comb@laden40: dFFB/step max 3.773 N m, dMz/step 98 N m, dOut/step 0.200
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.Reference_OrdinaryDriving(id: "curb_15cm_left_comb@laden40") [127 ms]
+  Standard Output Messages:
+ REF curb_15cm_left_comb@laden40: dFFB/step max 1.687 N m, dMz/step 221 N m, dOut/step 0.200
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.BodyContact_DoesNotKickTheWheel(id: "jackknife_fold_120_reverse_comb@laden40") [80 ms]
+  Standard Output Messages:
+ jackknife_fold_120_reverse_comb@laden40: contact steps 747, peak contact 241 kN; dFFB/step contact 0.475 vs free 0.057 N m; dMz/step contact 58 vs free 18 N m; dOut/step max 0.059; final |Mz - raw| 7.51 N m
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.BodyContact_DoesNotKickTheWheel(id: "jackknife_fast_fold_impact_comb@empty") [57 ms]
+  Standard Output Messages:
+ jackknife_fast_fold_impact_comb@empty: contact steps 712, peak contact 235 kN; dFFB/step contact 0.377 vs free 0.133 N m; dMz/step contact 40 vs free 20 N m; dOut/step max 0.047; final |Mz - raw| 4.85 N m
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.BodyContact_DoesNotKickTheWheel(id: "jackknife_reverse_countersteer_comb@empty") [107 ms]
+  Standard Output Messages:
+ jackknife_reverse_countersteer_comb@empty: contact steps 221, peak contact 206 kN; dFFB/step contact 0.356 vs free 0.264 N m; dMz/step contact 45 vs free 35 N m; dOut/step max 0.044; final |Mz - raw| 0.00 N m
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.BodyContact_DoesNotKickTheWheel(id: "jackknife_fold_120_reverse_comb@empty") [39 ms]
+  Standard Output Messages:
+ jackknife_fold_120_reverse_comb@empty: contact steps 932, peak contact 226 kN; dFFB/step contact 0.341 vs free 0.070 N m; dMz/step contact 39 vs free 15 N m; dOut/step max 0.043; final |Mz - raw| 1.03 N m
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.BodyContact_DoesNotKickTheWheel(id: "jackknife_fast_fold_impact_comb@laden40") [34 ms]
+  Standard Output Messages:
+ jackknife_fast_fold_impact_comb@laden40: contact steps 728, peak contact 267 kN; dFFB/step contact 0.485 vs free 0.409 N m; dMz/step contact 60 vs free 54 N m; dOut/step max 0.061; final |Mz - raw| 10.20 N m
+  Passed PhysicsRunner.Tests.JackknifeForceFeedbackTests.ContactSmoothing_HandsBackToRawValue [89 ms]
+  Standard Output Messages:
+ countersteer@empty: contact steps 221, peak contact 206 kN; dFFB/step contact 0.356 vs free 0.264 N m; dMz/step contact 45 vs free 35 N m; dOut/step max 0.044; final |Mz - raw| 0.00 N m
+     Passed: 28
+ Total time: 2.7937 Seconds
