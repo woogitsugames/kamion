@@ -16,7 +16,7 @@ import pytest
 import shapely
 from shapely.geometry import LineString
 
-ORIGIN = (777995.0, 596223.0)
+ORIGIN = (761611.0, 612607.0)     # Knyszyn tile origin: outside built_up_places.json (Białystok)
 MINOR_L = 700.0
 
 
@@ -232,3 +232,28 @@ def test_zone_is_cached_and_shared():
     net = _straight()
     src = {"osm": {"nodes": [], "areas": []}, "bdot10k": {}}
     assert BU.zone_for(net, src, np.array(ORIGIN)) is BU.zone_for(net, src, np.array(ORIGIN))
+
+
+def test_city_polygon_is_one_built_up_area():
+    """A tile inside Białystok (built_up_places.json, OSM admin relation 1429268): the BDOT rule must not cut the city
+    into places (forest / industrial land > 300 m) - no rule D-42 / D-43, 50 km/h, no A-7 + T-1."""
+    from streetscape import built_up as BU
+    o = np.array((777995.0, 596223.0))                      # origin of bialystok-industrial-c
+    assert BU.places(o).contains(shapely.Point(0.0, 0.0))
+    assert not BU.places(np.array(ORIGIN)).contains(shapely.Point(0.0, 0.0))     # Knyszyn: outside
+    from roads import network
+    attrs = {"highway": {"v": "secondary"}, "oneway": {"v": "no"}, "lanes": {"v": 2},
+             "maxspeed": {"v": 50, "src": "default"}}
+    g = {"nodes": [{"id": "a", "x": o[0], "y": o[1]}, {"id": "b", "x": o[0] + 1500.0, "y": o[1]}],
+         "edges": [{"id": "e", "from": "a", "to": "b", "geometry": [[o[0], o[1]], [o[0] + 1500.0, o[1]]],
+                    "attrs": attrs}]}
+    net = network.load(g, tuple(o))
+    for c in net.chains:
+        k = len(c.line.s)
+        c.z, c.e = np.zeros(k), np.zeros(k)
+    network.assign_sides(net, [], built_up=False)
+    src = {"osm": {"nodes": [], "areas": []}, "bdot10k": {"OT_PTZB_A": []}}
+    z = BU.zone_for(net, src, o)
+    c = net.chains[0]
+    assert z.runs(c) == [(True, 0.0, c.length)] and z.speed(c, 700.0) == 50.0
+    assert BU.boundaries(net, z) == []

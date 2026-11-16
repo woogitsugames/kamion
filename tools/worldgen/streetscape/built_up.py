@@ -230,14 +230,33 @@ class Zone:
                 "kerbed": kerbed(c, s)}
 
 
+PLACES_FILE = __import__("pathlib").Path(__file__).with_name("built_up_places.json")
+
+
+def places(origin, path=None):
+    """Whole-city built-up areas (built_up_places.json, local metres): a tile deep inside a city has no D-42 of its
+    own - the city's D-42 stand at its entries, outside the tile - so the BDOT rule (forests, rail yards, industrial
+    land > 300 m) must not cut it into places. Empty geometry when the file is missing."""
+    import json
+    f = path or PLACES_FILE
+    try:
+        doc = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return shapely.Polygon()
+    polys = [shapely.Polygon(np.asarray(pl["polygon"], float) - np.asarray(origin, float)[:2])
+             for pl in doc.get("places", []) if len(pl.get("polygon", [])) >= 4]
+    return shapely.union_all([shapely.make_valid(p) for p in polys]) if polys else shapely.Polygon()
+
+
 def zone_for(net, src, origin):
     """The Zone of a network, cached on the network object (one tile = one network)."""
     z = getattr(net, "_built_up_zone", None)
     if z is None:
         res = area_for(net, src, origin)
         osm_res = _osm_landuse_res(src, origin)
-        if osm_res:
-            res = shapely.union_all([res] + [g.buffer(ROADSIDE_M) for g in osm_res])
+        city = places(origin)
+        if osm_res or not city.is_empty:
+            res = shapely.union_all([res, city] + [g.buffer(ROADSIDE_M) for g in osm_res])
             shapely.prepare(res)
         z = Zone(net, res, settlement(src, origin, res), osm_boundary_signs(src, origin))
         try:

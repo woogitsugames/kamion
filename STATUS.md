@@ -1,6 +1,7 @@
 # STATUS signs-a7-s23 (D33, chmura D r8) — ADR 0279 „A-7 z T-1 — klasyfikacja zabudowy” (baza: PR #154 signs-p1-s23 scalony do gałęzi)
 - krok 1: `built_up.Zone` = jedna klasyfikacja (D-42..D-43 z OSM, inaczej reguła BDOT; krawężnik NIE liczy się), `default_speed` wg art. 20 PoRD (t.j. Dz.U. 2024 poz. 1251); A-7+T-1, A-8, D-42/D-43 czytają Zone. Nowe testy tests/gis/test_signs_a7_0279.py: 10 passed; -k "sign or 0279 or built_up or a7": 145 passed.
-- NASTĘPNY KROK: pomiar na kaflach (scratchpad count_a7.py), sekcja ADR, PR.
+- krok 2: `built_up_places.json` (granica adm. Białegostoku, OSM rel. 1429268, ODbL) = jeden obszar zabudowany — bez niej reguła BDOT cięła miasto (fałszywe D-42/D-43 w C, maczka, A-7 w kleeberga). Testy: 156 passed.
+- NASTĘPNY KROK: pomiar kafli `uv run --project tools/worldgen python <scratchpad>/a7/count_a7.py $PWD`, sekcja ADR, PR.
 
 # STATUS signs-p1-s23 (D25, chmura D r7) — ADR 0279 „P1 — wdrożenie” (baza: PR #147 signs-audit-0279 scalony do gałęzi)
 - krok 1: (1) urządzenia przejazdu: `rail.device_stations` — sygnalizator/G-3/G-4 ≥ 5 m od skrajnej szyny (1105 § 77 ust. 2 pkt 1; 2311 zał. 1 pkt 2.2.11), rogatka ≥ 5 m od osi toru po osi drogi (§ 54 ust. 1); było ≈ 3,55 m. Testy -k "rail or p1_0279": 139 passed.

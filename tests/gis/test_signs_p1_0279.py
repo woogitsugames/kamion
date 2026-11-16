@@ -295,8 +295,11 @@ def test_built_up_rule_boundaries_and_300m_gap():
     assert a3.is_empty
 
 
-def test_built_up_rule_signs_placed_and_osm_wins():
+def test_built_up_rule_signs_placed_and_osm_wins(monkeypatch):
     from streetscape import built_up as BU
+    # ADR 0279 D33: ORIGIN lies in Białystok (built_up_places.json = one built-up area, no rule pairs); this test
+    # exercises the BDOT10k rule itself, so the city polygon is switched off here
+    monkeypatch.setattr(BU, "PLACES_FILE", BU.PLACES_FILE.with_name("__none__.json"))
     from streetscape import furniture as FU
     net = _straight_net()
     o = np.array(ORIGIN)
