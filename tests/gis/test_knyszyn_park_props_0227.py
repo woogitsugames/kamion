@@ -34,7 +34,7 @@ def test_anchors_clear_current_paths_and_geometry_is_finite():
     overrides=yaml.safe_load((ROOT/"Data/Regions/knyszyn/overrides.yaml").read_text(encoding="utf8"))["overrides"]
     buf=Buffer(); r=props.build(buf,"knyszyn",ORIGIN,overrides,terrain,{})
     assert r["king_silhouette"]=="PROXY_NOT_APPROVED"
-    assert r["eagle"]=="omitted" and r["lighting"]=="no dynamic emission"
+    assert r["eagle"]=="PROXY_NOT_APPROVED" and r["lighting"]=="no dynamic emission"
     assert len(r["benches"]) == 8 and len(r["lamps"]) == 5 and not r["refused"]
     assert all(1.2 <= x["distance_to_path_m"] <= 5.0 for x in r["benches"]+r["lamps"])
     assert {p[0] for p in buf.parts}==set(props.LAYERS) | {"collision"}
@@ -117,4 +117,22 @@ def test_memorial_forecourt_and_sundial_face_town_hall():
     wanted=np.asarray(props.KING)-ORIGIN+props.KING_FORWARD*props.KING_BLOCK_DISTANCE_M
     assert np.allclose(center,wanted)
     assert plaza.covers(MultiPoint(col[2][40:60,:2]).convex_hull)
+
+
+def test_proxy_bird_and_sundial_are_on_monuments_and_double_sided():
+    for layer in props.LAYERS:
+        acc=Acc(); props._obelisk(acc,layer,[0.,0.],0.)
+        bird=acc.d[(layer,"steel_painted")][-1]
+        v,t=bird[:2]
+        assert v[:,2].min() >= 3.2 and v[:,2].max() <= 3.5
+        assert len(t)==4 and np.isclose(np.ptp(v[:,0]),.64)
+        assert np.allclose(np.cross(v[t[0,1]]-v[t[0,0]],v[t[0,2]]-v[t[0,0]]),
+                           -np.cross(v[t[2,1]]-v[t[2,0]],v[t[2,2]]-v[t[2,0]]))
+        acc=Acc(); props._king(acc,layer,[0.,0.],0.)
+        disc,gnomon=acc.d[(layer,"steel_painted")][-2:]
+        dv,dt=disc[:2]; gv,gt=gnomon[:2]
+        expected=props.KING_FORWARD*props.KING_BLOCK_DISTANCE_M
+        assert len(dt)==8 and np.allclose(dv[:,2],.758)
+        assert np.allclose(dv[0,:2],expected)
+        assert len(gt)==2 and np.allclose(gv[:2,2],.762) and np.isclose(gv[2,2],.96)
 

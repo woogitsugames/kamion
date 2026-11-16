@@ -7,8 +7,8 @@ ESTIMATED). The king, flagpole, benches and lamps are ESTIMATED from owner
 photographs and GUGiK orthophoto. Sizes and individual details are WORKING_VALUE.
 
 These are deliberately simple low-cost meshes, not scans or derived textures.
-The statue is a PROXY requiring visual review; the eagle on the obelisk and the
-wording on both plaques are omitted. Lamps do not yet emit dynamic light.
+The statue and the bird on the obelisk are PROXY shapes requiring visual review;
+the wording on both plaques is omitted. Lamps do not yet emit dynamic light.
 Collision uses simple low-detail boxes, separate from the visual LOD layers.
 Do not claim photo or device acceptance from the tests.
 """
@@ -77,6 +77,11 @@ def _obelisk(acc, layer, at, z):
     # South-west-facing unlettered plaque; not a political symbol or text.
     xy = np.asarray(at) + np.array([-.08,-.68])
     _box(acc,layer,"steel_painted",xy,z+1.35,z+2.1,.25,.035)
+    # WORKING_VALUE: a tiny non-heraldic bird silhouette, visible on both sides.
+    c=np.asarray(at,float)
+    v=np.asarray([_p(c+[-.32,0.],z+3.35), _p(c+[0.,0.],z+3.26),
+                  _p(c+[0.,0.],z+3.48), _p(c+[.32,0.],z+3.35)],float)
+    acc.add(layer,"steel_painted",v,[[0,1,2],[2,1,3],[2,1,0],[3,1,2]])
 
 
 def _king(acc, layer, at, z):
@@ -89,12 +94,12 @@ def _king(acc, layer, at, z):
     bronze = "steel_painted"
     # The open silhouette is intentionally human: wide tapered cloak, a
     # narrower neck and head, and arms visible at either side of the torso.
-    _frustum(acc,layer,bronze,body,z+1.05,z+2.64,1.26,.90)
-    _box(acc,layer,bronze,body,z+2.54,z+2.77,.45,.25,KING_TANGENT)  # shoulders
+    _frustum(acc,layer,bronze,body,z+1.05,z+2.64,1.00,.58)
+    _box(acc,layer,bronze,body,z+2.49,z+2.73,.34,.21,KING_TANGENT)  # shoulders
     for side in (-1, 1):
-        c = pos(side*.46,.22)
+        c = pos(side*.36,.22)
         acc.box(layer,bronze,_p(c,z+2.15),np.r_[KING_TANGENT*.10,0],
-                np.r_[KING_FORWARD*.12,0],np.r_[-side*KING_TANGENT*.055,.42],skip=(0,))
+                np.r_[KING_FORWARD*.09,0],np.r_[-side*KING_TANGENT*.055,.42],skip=(0,))
     _box(acc,layer,bronze,body,z+2.72,z+2.84,.10,.10,KING_TANGENT)  # neck
     _box(acc,layer,bronze,body,z+2.82,z+3.18,.19,.17,KING_TANGENT)  # head
     _box(acc,layer,bronze,body,z+3.16,z+3.25,.22,.19,KING_TANGENT)  # crown band
@@ -104,13 +109,20 @@ def _king(acc, layer, at, z):
         _box(acc,layer,bronze,pos(x,0),z+3.25,z+3.39,.04,.16,KING_TANGENT)
     if layer == "buildings":
         # Small projecting beard and hands add depth in the close High view.
-        _box(acc,layer,bronze,pos(0,.18),z+2.78,z+3.02,.12,.045,KING_TANGENT)
+        _box(acc,layer,bronze,pos(0,.18),z+2.75,z+3.02,.12,.045,KING_TANGENT)
         for side in (-1, 1):
-            _box(acc,layer,bronze,pos(side*.51,.23),z+1.72,z+1.88,.105,.13,KING_TANGENT)
+            _box(acc,layer,bronze,pos(side*.39,.23),z+1.72,z+1.88,.09,.10,KING_TANGENT)
     # Separate sundial/plaque block on paving in front of figure, blank.
     p=body+KING_FORWARD*KING_BLOCK_DISTANCE_M
     _box(acc,layer,"plinth_grey",p,z,z+.75,.65,.40,KING_TANGENT)
     _box(acc,layer,"steel_painted",p+KING_FORWARD*.406,z+.22,z+.55,.45,.012,KING_TANGENT)
+    # WORKING_VALUE: blank octagonal sundial and small gnomon, not text or an emblem.
+    vertices=[_p(p,z+.758)]+[_p(p+np.array([math.cos(a),math.sin(a)])*.29,z+.758)
+                             for a in (2*math.pi*i/8 for i in range(8))]
+    acc.add(layer,"steel_painted",vertices,[[0,i+1,(i+1)%8+1] for i in range(8)])
+    tri=np.asarray([_p(p-KING_FORWARD*.15,z+.762),_p(p+KING_FORWARD*.15,z+.762),
+                    _p(p,z+.96)],float)
+    acc.add(layer,"steel_painted",tri,[[0,1,2],[2,1,0]])
 
 
 def _flagpole(acc, layer, at, z):
@@ -171,7 +183,7 @@ def build(buf, region, origin, overrides, zsmooth, report):
     are absent, benches/lamps are skipped rather than placed at unverified sites.
     """
     result={"id":ASSET_ID,"status":"skipped","source_point":"OSM node/3047587676",
-            "king_silhouette":"PROXY_NOT_APPROVED","eagle":"omitted","lighting":"no dynamic emission",
+            "king_silhouette":"PROXY_NOT_APPROVED","eagle":"PROXY_NOT_APPROVED","lighting":"no dynamic emission",
             "benches":[],"lamps":[],"refused":[]}
     report[ASSET_ID]=result
     if region != REGION:
