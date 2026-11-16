@@ -234,3 +234,7 @@
 - 2026-11-16 02:11 +01:00 — R14 build, import i Low/High clear/dusk OK; 11 par zdjęcie-render w każdym z Low-clear i High-clear lokalnie. Trwa przegląd obrazu i budżetu, uruchomiono pełny GIS oraz EditMode. Wyniki końcowe OPEN.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r14.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/editmode-r14.done` 
 
+
+- 2026-11-16 02:15 +01:00 — R14 High max 1 250 399 tris/kamera PASS; Low vs before FAIL, max +63 draws, przy zmianach main; vs R11 brak wzrostu na 70 kamerach. EditMode 677 passed, 0 failed, 2 skipped. Król/ptak nadal nieczytelne; pełny GIS trwa.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r14.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/gis-r14.done` 
+
