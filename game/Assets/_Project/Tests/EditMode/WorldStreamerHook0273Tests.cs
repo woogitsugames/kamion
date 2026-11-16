@@ -122,9 +122,14 @@ namespace Game.Tests
             Assert.AreEqual(-924f, b.minEN.y, 1e-3f);
             Assert.AreEqual(924f, b.maxEN.y, 1e-3f, "N/S: t1's tile rectangle shrunk by the start's 100 m inset = the same drivable edge");
             Assert.AreEqual((float)(2 * Size - Size / 2) - 100f, b.maxEN.x, 1e-3f, "east: to the drivable far edge of t1 (region-local of t0)");
-            // The streamer's own tile rectangle was taken before (open-seam logic unchanged): 100 m inside the east edge of t0
-            // is inside even with the seam closed.
+            // The streamer's own tile rectangle was taken before (the widening does not move it). Before the first decision
+            // the available t1 counts as Loading, so the t0/t1 seam is not an outer edge (ADR 0273 §10 pkt 5, D36): the
+            // nearest outer edge of a point 100 m inside the east side of t0 is north / south (924 m).
             Assert.IsTrue(s.TryInsideDistance(new Vector3(824f, 0f, 0f), out float inside));
+            Assert.AreEqual(924f, inside, 1e-3f);
+            // t1 not coming (e.g. left behind / unloaded after a decision): the seam is an outer edge again, 100 m away.
+            s.Policy.SetState(1, TileState.Unloading);
+            Assert.IsTrue(s.TryInsideDistance(new Vector3(824f, 0f, 0f), out inside));
             Assert.AreEqual(100f, inside, 1e-3f);
         }
 

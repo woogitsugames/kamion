@@ -113,6 +113,8 @@ namespace Game.World.Streaming
         }
 
         Tile[] m_Tiles;
+        // Outer-edge buffers of the safety-net query (ADR 0273 §10 pkt 5): filled per call, allocated once in Init.
+        TileState[] m_EdgeState; EdgeRect[] m_EdgeDrivable, m_EdgeTile; bool m_Decided;
         double m_Wx, m_Wy, m_Wz;
         readonly StreamCommand[] m_Cmd = new StreamCommand[8];
         readonly List<GameObject> m_Roots = new List<GameObject>(64);
@@ -286,6 +288,7 @@ namespace Game.World.Streaming
             Policy = new StreamingPolicy(graph, settings);
             StartTile = startTile;
             m_Tiles = new Tile[graph.Count];
+            m_EdgeState = new TileState[graph.Count]; m_EdgeDrivable = new EdgeRect[graph.Count]; m_EdgeTile = new EdgeRect[graph.Count];
             for (int i = 0; i < m_Tiles.Length; i++)
                 m_Tiles[i] = new Tile { index = i, sceneName = RegionScenes.TileSceneNameFor(graph.Tiles[i].id, contentTier) };
             // World anchor of the start scene as imported (root at (0, -Az, 0) - originShift).
@@ -353,6 +356,7 @@ namespace Game.World.Streaming
             double x = m_Wx + p.x, y = m_Wy + p.z;
             UpdatePin();
             int n = Policy.Decide(x, y, v.x, v.z, m_Cmd);
+            m_Decided = true;
             for (int k = 0; k < n; k++)
             {
                 if (m_Cmd[k].op == StreamOp.Load) BeginLoad(m_Tiles[m_Cmd[k].tile]);
@@ -805,39 +809,32 @@ namespace Game.World.Streaming
         }
 
         /// <summary>
-        /// Distance from a world position to the edge of the drivable union of Ready tiles [m] (positive inside), for the
-        /// world safety net (ADR 0082) - open seams do not count as an edge. False when no tile is registered.
+        /// Distance from a world position to the OUTER edge of the drivable union of Ready tiles [m] (positive inside), for
+        /// the world safety net (ADR 0082; ADR 0273 §10 pkt 5): a seam with a Ready (or Loading / Activating) cardinal
+        /// neighbour is not an edge, an Unloaded / Unloading neighbour's seam is (<see cref="CorridorEdge"/>). Before the
+        /// first decision an available Unloaded tile counts as Loading (the spawn may stand next to a seam the first decision
+        /// is about to load). False when no tile is Ready.
+        /// No allocations (buffers from <see cref="Init"/>).
         /// </summary>
         public bool TryInsideDistance(Vector3 worldPos, out float inside)
         {
             inside = float.MinValue;
             if (m_Tiles == null) return false;
-            bool any = false;
             for (int i = 0; i < m_Tiles.Length; i++)
             {
                 var t = m_Tiles[i];
-                if (t.root == null || Policy.StateOf(i) != TileState.Ready) continue;
-                Vector3 l = worldPos - t.root.transform.position;
-                bool contains = l.x >= t.min.x && l.x <= t.max.x && l.z >= t.min.y && l.z <= t.max.y;
-                float d;
-                if (contains)
-                {
-                    int missing = 0;
-                    if ((t.openSides & TileSide.NE) == TileSide.NE && !Policy.NeighborReady(i, TileSide.NE)) missing |= EdgeSides.CornerBit(TileSide.NE);
-                    if ((t.openSides & TileSide.SE) == TileSide.SE && !Policy.NeighborReady(i, TileSide.SE)) missing |= EdgeSides.CornerBit(TileSide.SE);
-                    if ((t.openSides & TileSide.SW) == TileSide.SW && !Policy.NeighborReady(i, TileSide.SW)) missing |= EdgeSides.CornerBit(TileSide.SW);
-                    if ((t.openSides & TileSide.NW) == TileSide.NW && !Policy.NeighborReady(i, TileSide.NW)) missing |= EdgeSides.CornerBit(TileSide.NW);
-                    d = EdgeSides.UnionInsideDistance(l.x, l.z, t.min.x, t.min.y, t.max.x, t.max.y, t.openSides, missing);
-                    inside = any ? Mathf.Max(inside, d) : d;
-                    any = true;
-                }
-                else if (!any)
-                {
-                    d = WorldBoundary.InsideDistance(t.min, t.max, l.x, l.z);
-                    if (d > inside) inside = d;
-                }
+                var st = Policy.StateOf(i);
+                if (st == TileState.Ready && t.root == null) st = TileState.Activating;
+                else if (st == TileState.Unloaded && !m_Decided && !Policy.IsUnavailable(i)) st = TileState.Loading;
+                m_EdgeState[i] = st;
+                if (st != TileState.Ready) continue;
+                Vector3 o = t.root.transform.position;   // region-local (0, 0) = the tile's anchor
+                var td = Graph.Tiles[i];
+                m_EdgeDrivable[i] = new EdgeRect(o.x + t.min.x, o.z + t.min.y, o.x + t.max.x, o.z + t.max.y);
+                m_EdgeTile[i] = new EdgeRect(o.x + (float)(td.xmin - td.anchorX), o.z + (float)(td.ymin - td.anchorY),
+                                             o.x + (float)(td.xmax - td.anchorX), o.z + (float)(td.ymax - td.anchorY));
             }
-            return inside > float.MinValue;
+            return CorridorEdge.InsideDistance(Graph, m_EdgeState, m_EdgeDrivable, m_EdgeTile, worldPos.x, worldPos.z, out inside);
         }
 
         /// <summary>World-space start route of a resident tile (null when the tile is not resident or has none).</summary>

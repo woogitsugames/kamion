@@ -164,7 +164,7 @@ Podstawa: `docs/reports/ANALYSIS-2026-11-16-regionpacks-pc.md` §5 (sesja P): na
      (bariery + kolider, ADR 0169) stoją; wyjazd w pustkę łapie detekcja spadku / braku podłoża (`WorldExitMonitor`) i reset
      na przypiętą bezpieczną pozę;
    - po wyładowaniu regionu startowego (`region == null`) sieć działa jak dziś bez granic (tylko spadek / brak podłoża).
-5. **Poprawka dla lidera po int-h3 (opcjonalna, NIE w tym PR):** dokładna krawędź sumy gotowych kafli w `WorldSafetyNet.Check`:
+5. **WDROŻONE w s23 (D36, PR stacked na #157 — patrz §11).** Pierwotny opis: dokładna krawędź sumy gotowych kafli w `WorldSafetyNet.Check`:
    ```csharp
    var streamer = Game.World.Streaming.WorldStreamer.Active;
    if (streamer != null && streamer.TryInsideDistance(p, out float streamed)) inside = streamed;
@@ -203,3 +203,46 @@ pwsh scripts/build-android.ps1 -Regions 'bialystok-industrial-c,bialystok-maczka
 pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -DurationSeconds 180 -Tier Low -Scene WorldC -Autopilot route -Speed 50 -Extra 'stream=1'
 ```
 W logu przy `-stream 1`: `[STREAM] on: …`, `[STREAM] safety-net rectangle of … widened …`, `[STREAM] pinned …`.
+
+## §11 Uzupełnienie s23 (D36, chmura D r9): §10 pkt 5 wdrożone — „Koniec mapy” na zewnętrznej krawędzi korytarza
+Gałąź `safetynet-corridor-s23` = `streaming-pc-s23` (#157) + merge `origin/main` (16.11); PR stacked na #157. Kod
+**nieskompilowany w Unity**.
+
+1. **Problem (§10 pkt 4):** prostokąt `WorldBoundary` regionu startowego poszerzony do obwiedni kafli dostępnych
+   (`LocalUnionBounds`) obejmuje zewnętrzne krawędzie korytarza leżące wewnątrz obwiedni (np. krawędź S `dk65-03`:
+   `dk65-01` sięga dalej na S) — tam nie było ostrzeżenia ani zatrzymania `OutOfBounds`.
+2. **Reguła krawędzi** (`Game.World.Streaming.CorridorEdge`, czysta logika, zero alokacji): świat jezdny = suma
+   prostokątów jezdnych kafli **Ready**. Bok kafla jest krawędzią zewnętrzną („Koniec mapy” + stop przy 3 m), chyba że
+   jest szwem z sąsiadem kardynalnym z `tile_graph.json` w stanie **Ready, Loading albo Activating**. Sąsiad w drodze
+   (streamer go wczytuje, zamknięcia wciąż stoją) to zator wczytywania, nie koniec mapy — bez ostrzeżenia; jego obszar
+   nie należy jednak do świata, póki nie jest Ready. Sąsiad **Unloaded / Unloading** (zostawiony za plecami, spoza
+   buildu, ponad budżet) przywraca krawędź. Narożnik z dwoma otwartymi bokami i brakującym/nieotwartym kaflem po
+   przekątnej (wewnętrzny narożnik litery L) liczy się jako punkt (narożnik prostokąta kafla). Otwarty bok sięga do
+   krawędzi prostokąta kafla + 0,5 m (`SeamToleranceM`, WORKING_VALUE), więc szczelina między prostokątami jezdnymi
+   wciętymi względem kafli nie jest „poza mapą”. Szwy cząstkowe (kafle różnej wielkości) nie występują w grafie
+   (wszystkie kafle 2048 m w siatce) — reguła ich nie obsługuje.
+3. **Start sceny:** przed pierwszą decyzją streamera dostępny kafel Unloaded liczy się jak Loading (spawn trasy
+   `dk65-03` stoi ~1 m od szwu z `dk65-02`; pierwsza decyzja i tak go wczyta). Bez tego pierwszy `Check` mógłby dać
+   `OutOfBounds` na spawnie.
+4. **Kod:** `WorldStreamer.TryInsideDistance` deleguje do `CorridorEdge` (bufory stanów i prostokątów alokowane raz
+   w `Init`, flaga `m_Decided`); `WorldSafetyNet.Check` (jedyny plik Gameplay, +3 linie) bierze odległość ze
+   `WorldStreamer.Active.TryInsideDistance`, a prostokąt `WorldBoundary` zostaje rezerwą (brak streamera / brak kafla
+   Ready). `WidenStartBoundary` zostaje bez zmian (rezerwa). Bez subskrypcji `SafePoses.Offset` w `WorldSafetyNet`
+   (bufor przesuwa streamer, §10 pkt 5). `DrivingLabBootstrap.cs` bez zmian.
+5. **Budżet:** brak zmian w `generated/*`, scenach i danych → 0 tris. Koszt zapytania: pętla po kaflach grafu (21)
+   co 0,1 s czasu fizyki, bez alokacji.
+
+### Testy (D36, chmura)
+- .NET 8 + NUnit (harness z §10 + `CorridorEdge.cs`): `CorridorEdgeTests` 8 (szew vs krawędź, L z narożnikiem
+  wewnętrznym, kafel wyładowany → krawędź, sąsiad Loading/Activating → szew otwarty, wcięcie prostokątów jezdnych,
+  `InsideDistance_AllocatesNothing` = 0 B) + testy z §10 (polityka, kontrakt, `LocalUnionBounds`) — **40/40**.
+- NIEuruchomione (lider): EditMode w Unity (`CorridorEdgeTests`, zmieniona asercja w
+  `WorldStreamerHook0273Tests.WidenStartBoundary_CoversTheConnectedAvailableTiles_Only`: przed pierwszą decyzją 924 m,
+  po `Unloading` 100 m; `SteadyFrameLoop_UpdateAndSafetyQueries_AllocateNothing` pokrywa nowe `TryInsideDistance`),
+  PlayMode `WorldSafetyNetCorridorPlayModeTests` (krawędź S `dk65-03` → ostrzeżenie + reset `OutOfBounds`; szew
+  `dk65-03`→`dk65-04` → brak ostrzeżenia i resetu) i `WorldStreamingPlayModeTests`.
+
+```powershell
+pwsh scripts/test.ps1 -Platform EditMode -Filter 'Game.Tests.CorridorEdgeTests;Game.Tests.WorldStreamerHook0273Tests;Game.Tests.WorldStreamingPolicyTests'
+pwsh scripts/test.ps1 -Platform PlayMode -Filter 'Game.Tests.WorldSafetyNetCorridorPlayModeTests;Game.Tests.WorldStreamingPlayModeTests;Game.Tests.WorldEdgeRecoveryTests'
+```
