@@ -69,8 +69,8 @@ pasach ruchu, azyl 2,3–2,4 m); 7 wysepek (4 noski + ogony W / S / N). Trasa st
 
 ## Budżet (kafel knyszyn, nie region C — kamery C bez zmian)
 Zmierzone `pipeline.build` + `markings` na danych z gita z syntetycznym polem wysokości (NMT jest w `Data/raw`),
-trójkąty warstw `road` + `markings` w promieniu 60 m od środka ronda, main `639da4e54` → ta gałąź: **7 937 → 8 998
-(+1 061)**: asfalt 2 417 → 2 315, krawężniki 3 813 → 4 805 (dłuższe wysepki i narożniki), oznakowanie 277 → 768
+trójkąty warstw `road` + `markings` w promieniu 60 m od środka ronda, main `08c2e21f8` → ta gałąź: **7 937 → 8 999
+(+1 062)**: asfalt 2 417 → 2 315, krawężniki 3 813 → 4 805 (dłuższe wysepki i narożniki), oznakowanie 277 → 768
 (P-13 / P-10 jako drapowane decale: 672), wyspa 325 → 329. Do tego nasadzenia wyspy **+945 tris, 4 materiały**
 (`hedge_privet` ×3, `bed_stones`; najwyżej +4 draw calle, jeśli chunk ich nie ma). Razem ok. **+2,0 tys. tris** w
 kadrach ronda; do potwierdzenia w `streetscape_qa.json` po przebudowie. Płyta ronda w trybie krawężnikowym jest
