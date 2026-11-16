@@ -263,3 +263,14 @@ Obejrzano lokalne `compare/r28/High-clear/04-owner-render.jpg` oraz `05-owner-re
 Pełny GIS R28 zakończył się wynikiem **1797 passed, 22 skipped, 2 xfailed** w **1098,52 s** (`artifacts/knyszyn-rynek-0227/gis-r28.log`, `.done`: OK). Własne zmiany wygenerowanych danych regionu C pozostawione przez testy zostały przywrócone. Ostatni wykonany EditMode R27, po zmianach targowicy, ale przed wycofaniem wyłącznie łaty Python R27, miał **955 passed, 2 skipped** (`editmode-r27.done`, `artifacts/tests/editmode-20261116-093254.xml`). Świeży EditMode R28 zakończył się wynikiem **955 passed, 0 failed, 2 skipped** (`artifacts/tests/editmode-20261116-102739.xml`; `artifacts/knyszyn-rynek-0227/editmode-r28.done`: OK). Własną zmianę materiału `M_Sky` po teście przywrócono.
 
 Low względem before nadal formalnie **FAIL** (`dk65-inlet-south` 240 → 304 draw calls), a odbiór wizualny, poprawa ciemnego wlotu i weryfikacja właściciela pozostają **OPEN**. Gotowe do scalenia po weryfikacji lidera: **NIE**.
+
+
+## R29 — plac targowy i diagnostyka Low
+
+Build świata, import i rendery Low/High × clear/dusk zakończone OK. W lokalnych `compare/r29/Low-clear/` i `compare/r29/High-clear/` znajduje się po 14 par zdjęcie–render. W porównaniu kadru 14 korekta wyspy jest tylko kosmetyczna: nadal wygląda zielonkawo względem ziemi na fotografii. Nie zaobserwowano widocznego spływania, ale wygląd wyspy nie jest rozwiązany; ocena uwzględnia szacunkową kamerę i inne światło, bez potwierdzenia właściciela.
+
+Szacunki CPU edytora z instancjami przed SRP: High maksimum **1 250 321 tris** i **848 draw calls**. Low `dk65-inlet-south` względem before **240 → 304 draw calls**, formalnie **FAIL** wymogu braku pogorszenia.
+
+W diagnostycznym TSV dla bieżącej sceny `dk65-inlet-south` suma jest zgodna z `stats`: **266 draw calls / 158 591 tris** MeshRenderer oraz **38 draw calls / 6 418 tris** instancji. Rozbicie MeshRenderer: `Region` **203** draws, ciągnik **37**, naczepa **26**. W `Region` warstwy `buildings_lod1` i `buildings` mają odpowiednio **135** i **20** draws. To cel dalszej analizy optymalizacji, a nie gwarancja oszczędności lub pomiar GPU; wynik nie zastępuje oceny całej sceny względem before.
+
+Pełny GIS i EditMode R29 trwają; ich końcowe wyniki **OPEN**.
