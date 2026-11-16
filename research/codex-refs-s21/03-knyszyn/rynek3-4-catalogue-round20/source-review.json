@@ -1,0 +1,49 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE — brak galerii na obu konkretnych stronach NID; 0 fotografii",
+  "records": [
+    {
+      "id": "03-RC20-D01",
+      "url": "https://zabytek.pl/pl/obiekty/dom-946971",
+      "address": "Knyszyn, Rynek 3",
+      "inspire_id": "PL.1.9.ZIPOZ.NID_E_20_BK.589683"
+    },
+    {
+      "id": "03-RC20-D02",
+      "url": "https://zabytek.pl/pl/obiekty/dom-947492",
+      "address": "Knyszyn, Rynek 4",
+      "inspire_id": "PL.1.9.ZIPOZ.NID_E_20_BK.589685"
+    }
+  ],
+  "sourced_metadata_common": {
+    "locator": "Nagłówek obiektu oraz pola Rodzaj, Materiał budowy, Styl, Forma ochrony i Inspire id",
+    "building_type": "budynek mieszkalny",
+    "construction_period": "1. poł. XX w. — okres budowy, nie data zdjęcia",
+    "material_field": "drewniane — katalog NID, nie własna obserwacja",
+    "style_field": "ludowy",
+    "protection_field": "Ewidencja zabytków"
+  },
+  "visual_status": {
+    "photos_viewed": 0,
+    "new_roof_views": 0,
+    "new_buildings_from_images": 0,
+    "images_downloaded": 0,
+    "source_statement": "Obie strony mówią o oczekiwaniu na uzupełnienie, braku opisu i zachęcają do dodania zdjęć; brak zakładki Zdjęcia/galerii.",
+    "meaning": "To wynik dla dwóch konkretnych stron, nie dowód nieistnienia fotografii tych domów w innych źródłach."
+  },
+  "dedup": {
+    "main_manifest_snapshot_rows": 44,
+    "pending_own_round19_rows": 2,
+    "read": "Aktualny główny03 miał 44 rekordy w chwili odczytu; dodatkowo uwzględniono dwa własne stabilne kadry lamusa R19.",
+    "K1": "K1-P03/Knyszyn_Rynek_4.jpg jest wcześniejszym detalem tabliczki4 na deskach; nie nowym pełnym widokiem. Wspólne oznaczenie adresowe nie ustala obrysu/GPS ani nie dowodzi braku zmian numeracji.",
+    "exact_sources": "Dokładne dwa URL były nowymi odczytami katalogu; nie zwiększają liczby fotografii."
+  },
+  "limits": [
+    "Nie ustalono dachu, widocznych kondygnacji, okien, cokołu, nawierzchni ani stanu elewacji.",
+    "Brak autora/datowania/licencji nieistniejącej galerii; nie przypisano fotografiom NC/ND tylko dlatego, że inne obiekty NID taką licencję mają.",
+    "Nie dopasowano tych adresów do nieopisanych teł wcześniejszych kadrów.",
+    "Nie wyznaczono GPS, wymiarów ani stanu2026."
+  ],
+  "handling": "Wyłącznie tekstowe odczyty publicznych stron i własne parafrazy. Bez CUA, Google, API/Overpass, Commons/Flickr, kopiowania zdjęć właściciela lub zgadywania URL.",
+  "clock": "Data odczytu bez deklarowania niezmierzonej godziny."
+}
