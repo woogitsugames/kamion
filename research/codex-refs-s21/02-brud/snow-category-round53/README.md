@@ -1,0 +1,11 @@
+# Celowane Commons — kontrola nowego kadru i duplikatów
+
+Ogląd16.11.2026. Cel: nowe tylne drzwi, szczególnie zimowe/europejskie. Ograniczona selekcja wyszukiwarką wróciła do znanych Amazon/Legend/Insulated/CAI/Matson/TrailerTail/Schneider/DotFoods. Porównano nazwy i URL z P18+s21 przed pobieraniem. Nie są nowymi kadrami. Dodatkowy pojedynczy odczyt kategorii Trucks in snow in Switzerland dał13nazw; obiecująca Scania Erlenbach jest już w round10 i ledger18. Pozostałych zdjęć kategorii nie pobrano ani nie opisano z tytułów. Sama kategoria nie dowodzi pary drzwi lub brudu.
+
+Nowy dokładny plik Florida_I10eb_Exit_350AB.jpg zweryfikowano oficjalnym imageinfo: Michael Rivera, CC BY-SA4.0,5184×3456px,5000156B. Następnie pobrano dokładny URL zwrócony przez API, bez wariantów i retry. Trzy żądania bezpośrednie Commons w tej rundzie (kategoria, metadane, obraz), wszystkie200, ponad10s między żądaniami, UA Mozilla/5.0, bez innych pracowników na Commons. Nie ponawiano niedostępnej strony kategorii z web-reader przez wariant hosta; API służyło odczytowi metadanych kategorii.
+
+Osobno rzeczywiście obejrzano pełny podgląd1600px i natywny crop740×1040 z oryginału, bez upscalingu. Niebieskie zamknięte skrzydła mają centralną szczelinę, dwa rygle i boczne zawiasy. Ciemniejsze piony przy ryglach mogą być cieniem; mocniejsze nierówne szarobrązowe ślady występują na poziomej belce poniżej drzwi. Nie potwierdzono filmu na polach skrzydeł. Logo/naklejki nie są zabrudzeniem. Śniegu brak; źródło FloridaUSA, nie Europa.
+
+**Przyrost A0/B0/zimowe0/Europa0.** A PENDING_SURFACE; B ponadto FAIL_GEOMETRY: same drzwi ESTIMATED675–710px, nie3456px całego zdjęcia lub1040px cropu. Mniej niż1000 nie odrzuca automatycznie A, lecz brak pewnego osadu. Skład chemiczny UNVERIFIED. Pozostaje porównaniem, nie nowym pozytywnym brudem.
+
+Oryginał nieco ponad5MB oraz własne podglądy wyłącznie w autoryzowanym Data/raw/refs/codex-s21/02-brud/snow-category-round53. Bez kolejnej miniatury w Git dla nieprzyjętego kandydata. Manifest odsyła do źródła; hashe i konkretne dane pobrania w florida-retrieval.json. Nie zmieniono parenta ani historycznych kwalifikacji. Nie używano Google, Flickr, MapillaryAPI ani generowania obrazów.
