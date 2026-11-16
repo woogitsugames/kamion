@@ -5,14 +5,14 @@ Ciągły zbiór dla generatorów świata i ciężarówki. Izolowany worktree, ga
 | Kolejka | Katalog | Główny manifest — rekordy, nie kwalifikacje |
 |---|---|---:|
 | 1 Lampy M59-FIX | [01-lampy](01-lampy/README.md) | 65 |
-| 2 Brud M61-FIX | [02-brud](02-brud/README.md) | 31 |
-| 3 Knyszyn | [03-knyszyn](03-knyszyn/README.md) | 48 |
+| 2 Brud M61-FIX | [02-brud](02-brud/README.md) | 34 |
+| 3 Knyszyn | [03-knyszyn](03-knyszyn/README.md) | 53 |
 | 4 Korytarz DK65 | [04-dk65](04-dk65/README.md) | 39 |
 | 5 Linia kolejowa38 | [05-kolej38](05-kolej38/README.md) | 22 |
-| 6 Pierścień regionów | [06-region-ring](06-region-ring/README.md) | 43 |
+| 6 Pierścień regionów | [06-region-ring](06-region-ring/README.md) | 45 |
 | 7 Białystok/Dojlidy | [07-bialystok-dojlidy](07-bialystok-dojlidy/README.md) | 26 |
 
-Stan liczb po 5f245675d, 16.11.2026; SOURCED lokalne manifesty. Podkatalogi kolejnych rund zawierają własne README, manifesty, dowody i odrzucenia. Nie sumować ich wierszy z manifestem głównym jako niezależnych zdjęć. Aliasy, porównania i powtórne oglądy nie zwiększają liczby ekspozycji.
+Stan liczb po f7ce31652, 16.11.2026; SOURCED lokalne manifesty. Podkatalogi kolejnych rund zawierają własne README, manifesty, dowody i odrzucenia. Nie sumować ich wierszy z manifestem głównym jako niezależnych zdjęć. Aliasy, porównania i powtórne oglądy nie zwiększają liczby ekspozycji.
 
 SOURCED wymaga konkretnego źródła; ESTIMATED oznacza oszacowanie, UNVERIFIED brak potwierdzenia. Każdy opis wizualny wynika z oglądu, data publikacji nie zastępuje ekspozycji. Fotometria, geometria, stan świecenia, pora dnia i zastosowanie części mają oddzielne dowody.
 

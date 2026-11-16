@@ -1,15 +1,15 @@
 # Status referencji codex-refs-s21
 
-Stan po `5f245675d`, 16.11.2026, około 07:06 w Brukseli. Cel ciągły pozostaje aktywny. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
+Stan po `f7ce31652`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `research/codex-refs-s21`, [PR100](https://github.com/woogitsugames/kamion/pull/100), bez scalania.
 
 | Pakiet | Rekordy głównego manifestu | Co oznacza liczba |
 |---|---:|---|
 | 01 lampy | 65 | Także przednie, pomocnicze i niekwalifikowane referencje. |
-| 02 brud | 31 | 29 kadrów: 14 lokalnych i 15 link-only, oraz 2 dokumenty. |
-| 03 Knyszyn | 48 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
+| 02 brud | 34 | 32 kadry: 14 lokalnych i 18 link-only, oraz 2 dokumenty. |
+| 03 Knyszyn | 53 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
 | 04 DK65 | 39 | Zdjęcia, ortofoto, dokumenty i jeden rekord BDL. |
 | 05 kolej 38 | 22 | Dokumenty i kadry nie tworzą automatycznie mapowania lokalnego przejazdu. |
-| 06 pierścień | 43 | Różne miasta, daty i stopnie identyfikacji obiektów. |
+| 06 pierścień | 45 | Różne miasta, daty i stopnie identyfikacji obiektów. |
 | 07 Białystok/Dojlidy | 26 | Także historyczne odniesienia i powtórne oglądy. |
 
 SOURCED: lokalne główne manifesty. Liczby nie oznaczają spełnienia progów FIX. Wierszy podkatalogów nie sumujemy z głównymi jako nowych ekspozycji.
@@ -28,15 +28,21 @@ Losowy audyt lamp R46: snapshot60, próbka12/60=20%,13 obrazów,0 zastępstw i0 
 
 ## Brud tylnych drzwi
 
-**A13 z ograniczeniami/B1.** A: Knight158, Western182, Premier183, KroneEUR15 lekki film, RoadTourWW17 source-dependent, AutoReview39, RI49, UR54, UR55 miejscowe smugi, RG57 Tonar, FR60-003 dolny nalot S.KO, R64 Wabash miejscowe dolne smugi i R65 Facchini ograniczony film. B: Western, alias CR6 liczony raz. Wysokość≥1000px dotyczy B; nie jest dodatkową bramką A.
+**A16 z ograniczeniami/B1.** A: Knight158, Western182, Premier183, KroneEUR15 lekki film, RoadTourWW17 source-dependent, AutoReview39, RI49, UR54, UR55 miejscowe smugi, RG57 Tonar, FR60-003 dolny nalot S.KO, R64 Wabash miejscowe dolne smugi i R65 Facchini ograniczony film, R71 zimowy S.KO oraz dwa R69 z lokalnymi dolnymi smugami. B: Western, alias CR6 liczony raz. Wysokość≥1000px dotyczy B; nie jest dodatkową bramką A.
 
-Zimowe A2: RoadTour source-dependent i RI49 z widocznym śniegiem. Europejska droga A2: RI49 w Polsce oraz FR60-003. R70 łączy podpis miejsca fotografii w obwodzie twerskim, widoczną scenę drogową i oficjalny opis geograficzny regionu. To jawny wniosek z dwóch źródeł o kontynencie, nie członkostwie wUE ani GPS. Zimowe/europejskie B0 w rozpoznanym podzbiorze, nie globalne twierdzenie o braku. Progi20/12/6/6 nadal otwarte.
+Zimowe A3: RoadTour source-dependent, RI49 i R71 z widocznym śniegiem. R71 ma podpis miejsca obwód omski, nie moskiewski region rejestracji; Europy nie zwiększa. Europejska droga A2: RI49 w Polsce oraz FR60-003. R70 łączy podpis miejsca fotografii w obwodzie twerskim, widoczną scenę drogową i oficjalny opis geograficzny regionu. To jawny wniosek z dwóch źródeł o kontynencie, nie członkostwie wUE ani GPS. Zimowe/europejskie B0 w rozpoznanym podzbiorze, nie globalne twierdzenie o braku. Progi20/12/6/6 nadal otwarte.
 
 R64 ma duże drzwi1320–1450px ESTIMATED, ale brak dowodu ruchu/zaraz po trasie nie pozwala awansować B. R65 ma obraz627×470 i drzwi320–370px ESTIMATED. Rdza, powłoka, odbicie i cień pozostają odrębne od osadu. Chemia soli z fotografii UNVERIFIED. R61 Nofima ogranicza wyłącznie niepewny typ konkretnego pojazdu, nie samo ucięcie góry. R68 to datowany historyczny kontekst materiałów ZUD GDDKiA z2009/2021, bez dawki DK65 i bez przypisywania chemii drzwi.
 
-R63: snapshot11 przyjętych źródeł sprzed R64/R65, zapisany i zahaszowany przed losowaniem. `random.Random(20261115).sample(sorted(ids),3)` dał FR60-003/Knight009/UR54-001. Agent ponownie obejrzał3/3, bez podmian; root odtworzył hash i losowanie. To samokontrola, nie ślepa recenzja ani losowa próba obecnych13. Indeks P18 R47 ma88/88ID i87URL, z aliasami i renderem; nie88 kwalifikowanych fotografii. Kwarantanna154/159 zachowana.
+R63: snapshot11 przyjętych źródeł sprzed R64/R65, zapisany i zahaszowany przed losowaniem. `random.Random(20261115).sample(sorted(ids),3)` dał FR60-003/Knight009/UR54-001. Agent ponownie obejrzał3/3, bez podmian; root odtworzył hash i losowanie. To samokontrola, nie ślepa recenzja ani losowa próba obecnych16. Indeks P18 R47 ma88/88ID i87URL, z aliasami i renderem; nie88 kwalifikowanych fotografii. Kwarantanna154/159 zachowana.
 
 ## Świat
+
+R22/23: jeden ID CityGML porównany w LoD1 i LoD2; własny wykres, nie nowe zdjęcie. Dach obu modeli ma źródło2016, 7,5 m to measuredHeight LoD1, nie kalenica. Dokładny klucz CityGML→BDOT potwierdzony niezależnie przez root; publiczny punkt PRG Rynek1 jest wewnątrz obrysów według analizy agenta. Brak urzędowego pola łączącego adres z budynkiem: adres→model nadal ESTIMATED przestrzennie, formalny join UNVERIFIED.
+
+R18 kolej: sześć norm nawierzchni/niwelety z osobnym oglądem stron8/9/47. 35mm oznacza sumaryczny przyrost żłobków, nie ich podstawową szerokość. Limity8%/3%/20m zachowują warunki/wyjątki i nie stanowią pomiarów Knyszyna.
+
+R16 region: dwa nowe kadry jednego zamku w Tykocinie: sylweta od gruntu i z góry. Bliższy obwód niski względem dalszego korpusu; bez daty ekspozycji, formalnych kondygnacji, metrów i stanu2026. Link-only ARR.
 
 Knyszyn: R19 dwa pełne widoki lamusa z2020, sześć podpór, dach/podcień/przyziemie. KR18 dwa widoki jednego domu Klattów, stan2015; tekstowe cechy NID/UM oddzielone od zdjęć. R21 dwa kadry z Gońca nr11(203), listopad2021, s7, Anna Aneta Molska: pompa na podwyższonym kwadratowym cokole z kratką oraz biały/bordowy słup bez takiego cokołu. Root obejrzał oba przy200% w natywnym PDF. To inna ekspozycja znanego słupa, nie drugi egzemplarz. Piksele źródłowe, GPS, metryka i dokładna ekspozycja nieustalone. Rynek3/4 NID to katalog bez fotografii, nie nowe dachy.
 
@@ -50,8 +56,8 @@ Region: Bernardyni w Tykocinie to jeden kompleks w dwóch kadrach2025, NCND tylk
 
 ## Kontrola i następny krok
 
-Po5f245675d: **570 poprawnych śledzonych JSON,93 rastry≤800px,93 istniejące lokalne ścieżki głównych manifestów,0plików>5MB**. Główne ID unikalne. Zakres diff wobec7f830369c wyłącznie research/codex-refs-s21 i docs/LICENSES.md. Legalne raw pozaGit; media/firmy wyłącznie link-onlyARR; NCND tylko linki; zdjęcia właściciela bez kopii. Bez Unity/adb/kodu gry.
+Kontrola po09380a1da: **581 poprawnych śledzonych JSON,94 rastry≤800px,0plików>5MB**. Późniejsze R59 i R16 zawierają wyłącznie metadane/parafrazy/linki; bez nowych rastrów. Poprzednie93 lokalne ścieżki były sprawdzone w snapshot5f245675d; nie przedstawiamy ich jako ponownego audytu bieżącego manifestu. Główne ID unikalne. Zakres diff wobec7f830369c wyłącznie research/codex-refs-s21 i docs/LICENSES.md. Legalne raw pozaGit; media/firmy wyłącznie link-onlyARR; NCND tylko linki; zdjęcia właściciela bez kopii. Bez Unity/adb/kodu gry.
 
 Commons: dwa ograniczone pojedyncze API200, bez nowych obrazów; Flickr nowe pobraniaSTOP. Jedno zawieszone własne git-HTTPS przerwano po weryfikacji procesu; ponowny push zakończył się poprawnie, bez dotykania innych sesji. Live zapisano07:04:54Bruksela, następny około08:05.
 
-Gotowe do scalenia po recenzji lidera: **NIE**. Następne odbiory: R69 brudu, R18 nawierzchni przejazdu i R22 LoD; następnie zimowe europejskie tyły R71. Wyniki robocze nie zwiększają liczników przed odbiorem.
+Gotowe do scalenia po recenzji lidera: **NIE**. R69/R71 brudu, R18 nawierzchni, R22/23 modeli i R16 zamku odebrane. R59 klosz Krone to negatywny odczyt, bez nowej referencji. Następne: zimowe europejskie tyły, kadry poboczy DK65 i luki Białystok/Dojlidy. Wyniki robocze nie zwiększają liczników przed odbiorem.
