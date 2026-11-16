@@ -488,7 +488,7 @@ def test_knyszyn_islands_have_the_authored_lengths(knyszyn):
         r = [np.hypot(*(np.asarray(pg.exterior.coords) - sp.center).T) for pg in own]
         ext[CR._arm_way(net, a)] = (min(x.min() for x in r) - sp.r_out, max(x.max() for x in r) - sp.r_out, len(own))
     assert 28.0 <= ext[286990127][1] <= 33.0, ext                # DK65 south
-    assert 18.0 <= ext[232511646][1] <= 23.0, ext                # DK65 north
+    assert 33.0 <= ext[232511646][1] <= 38.0, ext                # DK65 north (rynek-s23: photo 9, >= 34 m)
     assert all(lo == pytest.approx(sp.opts["splitter_gap_m"], abs=0.3) for lo, hi, n in ext.values()), ext
     assert all(n in (1, 2) for lo, hi, n in ext.values()) and ext[286990127][2] == ext[232511646][2] == 2
     isl = shapely.union_all([pg for _, pg in sp.splitters])

@@ -63,12 +63,14 @@ overrides:
     kind: carriageway_split
     node: 3047667219
     reason: >-
-      DK65 north arm: as the south arm, 17 m -> island about 20 m long from the ring edge. WORKING_VALUE: the owner
-      describes only the southern island as long and the western / eastern ones as shorter; the northern one is
-      not described (2025 orthophoto: the old carriageway is 9.3 m wide 10-15 m north of the old node, 7.8 m beyond).
+      DK65 north arm: as the south arm. rynek-s23 (lead, D78): owner drone photo 9 scaled by the outer ring
+      diameter (22.6 m = ~137 px): the northern kerbed island starts ~2.7 m from the ring edge and runs past the top
+      of the frame, i.e. >= 34 m from the ring edge (lower bound, ESTIMATED); photo 10 shows it long as well. Same
+      ratio check for the south island: ~29 m from the ring edge on photo 9 = the authored 29.2 m. Set 32 m ->
+      island about 35 m. (2025 orthophoto: the old carriageway is 9.3 m wide 10-15 m north of the old node.)
     confidence: low
-    verify: island length and width on owner photo 9 or on an orthophoto taken after 2025
-    set: {length_m: 17.0, taper_m: 14.0, lane_offset_m: 3.0}
+    verify: island length and width on an orthophoto taken after 2025 (photo 9 crops the northern end)
+    set: {length_m: 32.0, taper_m: 14.0, lane_offset_m: 3.0}
   # ADR 0274 (c): low plants and stones on the centre island (owner photos 9-11, described in
   # docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md: "piasek / zwir i male nasadzenia (krzewy, kamienie), bez drzew").
   - id: knyszyn-roundabout-island-plantings
