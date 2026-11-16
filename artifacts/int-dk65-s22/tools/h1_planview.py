@@ -16,7 +16,7 @@ print(j.id, "arms", [(a.chain.id, a.end, round(float(j.trims[i]), 2)) for i, a i
 print("islands", [(i.id[-30:], i.built, i.note) for i in w.gore_plan.islands if "cr:" in i.id])
 C = j.compact.center; S_ = 16.0; W = 1400
 COL = {"road_asphalt": (70, 70, 74), "curb_concrete": (215, 215, 210), "sidewalk_paving": (150, 146, 138), "verge_grass": (88, 120, 70),
-       "apron_paving_light": (200, 199, 195), "island_gravel": (190, 170, 130), "shoulder_gravel": (140, 130, 110)}
+       "apron_paving_light": (200, 199, 195), "island_gravel": (190, 170, 130), "island_sand": (150, 130, 100), "shoulder_gravel": (140, 130, 110)}
 im = Image.new("RGB", (W, W), (50, 70, 45)); d = ImageDraw.Draw(im)
 def px(p): return (W/2 + (p[0]-C[0])*S_, W/2 - (p[1]-C[1])*S_)
 parts = [p for p in w.buf.parts if p.layer == "road"]
