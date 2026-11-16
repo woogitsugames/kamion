@@ -5,4 +5,14 @@
 # that is missing there shows up as overrides_stale in build_world. No lettering, no brands.
 # DW671 keeps the BDOT10k width and gets no edge lines, as in dw671-tykocin-01 (ADR 0212, measured there).
 # Nothing was checked on the orthophoto of this tile: add overrides after the ingest.
-overrides: []
+overrides:
+  # world2-s23: gravel field road 179127761 crosses the seam with dk65-monki-01, where it is authored unlit
+  # (field-roads-unlit, orthophoto 2025). Same `set` here; not checked on the orthophoto of this tile.
+  - id: seam-field-road-179127761-unlit
+    target: {osm_way: [179127761]}
+    reason: >-
+      Seam continuity with dk65-monki-01 (same OSM way, unclassified gravel road, lamps: false there); the class rule
+      would light the other half of the road.
+    confidence: low
+    verify: GUGiK orthophoto 0.25 m of this tile (lamp columns along the road)
+    set: {lamps: false}

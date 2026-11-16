@@ -33,13 +33,21 @@ SKEW_ALLOWANCE_M = 5.0     # the lane centre meets a skewed row later than the r
 EDGE_START_S_M = CLOSURE_SETBACK_M + BEHIND_CLOSURE_M + SKEW_ALLOWANCE_M
 MIN_AHEAD_M = 100.0    # keep >= 100 m before the tile-end closure (closure 60 m before the edge, ADR 0169) - WORKING_VALUE
 
+# Ring tiles of ADR 0231 in driving order (owner decision 2026-11-16: the ring is part of d67-full).
+RING_0231 = [
+    "dk65-monki-02", "dk65-monki-03", "dk65-monki-04", "dk65-monki-05", "dk65-monki-06", "dk65-monki-07", "monki-e", "monki",
+    "dw671-tykocin-02", "dw671-tykocin-03", "dw671-tykocin-04", "dw671-tykocin-05", "dw671-tykocin-06",
+    "dw671-tykocin-07", "dw671-tykocin-08", "dw671-tykocin-09", "tykocin",
+    "dw671-jasionowka-01",
+]
+
 # Derived sets (ADR 0267, owner decision D71): name -> (base set, extra region ids, note). Written after the base set.
 DERIVED_SETS: dict[str, tuple[str, list[str], str]] = {
     "d67-full": (
         "d67",
-        ["bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01"],
-        "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin. APK size ESTIMATED 1407-1948 MB "
-        "(REVIEW-2026-11-15-s21-code-104, like 'all'); measure on the build (ADR 0267).",
+        ["bialystok-dojlidy", "knyszyn-w", "dk65-monki-01", "dw671-tykocin-01", *RING_0231],
+        "D71: d67 + Dojlidy, Knyszyn-W, Monki, Tykocin; owner decision 2026-11-16: + the 18 ring tiles of ADR 0231 "
+        "(DK65 to Monki, DW671 to Tykocin, DW671 towards Jasionowka). Build size not measured with the ring (ADR 0267).",
     ),
 }
 
