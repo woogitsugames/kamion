@@ -1,0 +1,53 @@
+{
+  "review_date": "2026-11-16",
+  "own_exact_time_recorded": false,
+  "status": "2 nowe rzeczywiste kadry uliczne, ograniczone fragmenty brył",
+  "ids": [
+    "785863345418782",
+    "488410365772782"
+  ],
+  "permalinks": [
+    "https://www.mapillary.com/app/?pKey=785863345418782&focus=photo&mapStyle=OpenStreetMap",
+    "https://www.mapillary.com/app/?pKey=488410365772782&focus=photo&mapStyle=OpenStreetMap"
+  ],
+  "author_ui_literal": "szurek  for Here",
+  "date_ui_literal": "10 sie 2017",
+  "licence_audit_reference": "../../04-dk65/mapillary-browser-round2/licence-check.json",
+  "selection": {
+    "read_brief": "docs/owner/S20-REGION-RING-BRIEF.md",
+    "dedup_main_rows_before": 41,
+    "seed_existing_picture": "775625139992090, znany MC3-001; tylko punkt startowy, nie nowy rekord",
+    "new_street": "Ełcka, Mońki, widoczna etykieta OSM przy obu wybranych punktach",
+    "map_style_checked_visually": "Zaznaczone OpenStreetMap oraz All captures w otwartym przełączniku warstw; nie sam parametr URL.",
+    "camera_gps": "UNVERIFIED — adresy viewportu nie zostały przeniesione do kolumn GPS",
+    "addresses": "UNVERIFIED — mapowe numery budynków nie są dowodem adresu widocznej fasady"
+  },
+  "observations": {
+    "785863345418782": "Po prawej ciąg niskich jasnych kremowożółtych domów, częściowo zasłoniętych dużymi koronami i pniami. W skrajnej bryle widać fragment szarego pochyłego dachu z liniowymi podziałami oraz komin; dalej dachy czerwono-brązowe. Są dolne otwory i fragmenty górnego poziomu okien, bez podstaw do pełnej liczby kondygnacji. Niskie prętowe ogrodzenia, krzewy i stożkowe korony drzew, wąski szary chodnik z podziałami, pasy trawy i zjazd. Przy krawędzi ulicy rosną duże drzewa. Betonowy słup z wydłużonymi otworami, przewody i pojedyncze oprawy na wygiętych wysięgnikach. Jezdnia asfaltowa z białym oznakowaniem; widoczne najechanie cienia na chodnik i fasady. Skrajna bryła i jej dach są ucięte/zasłonięte — nie pełny obrys.",
+    "488410365772782": "Po prawej większy jasnoszary/kremowy dom z prawie poziomą górną krawędzią i ciemnym pasem pod nią. Widać dwa poziomy prostokątnych okien po lewej stronie fasady oraz dwie strefy balkonów/loggii z brązowymi poziomymi balustradami po prawej; część górna i prawy bok wychodzą poza kadr. Podpora z ceglastym wzorem i niski murek z takim wzorem pod pionowymi prętami ogrodzenia. Przy wejściu brama i jasnoszary zjazd o drobnych podziałach, dalej chodnik, trawa, niskie ogrodzenia i duże korony. Widoczny żółty romb z jasną obwódką na osobnym słupku, bez ustalania aktualnego statusu prawnego. Przewody przecinają niebo; oprawy na wygiętych wysięgnikach. Dalsza niska zabudowa ma pochyłe dachy, częściowo widoczne między drzewami."
+  },
+  "counts": {
+    "new_exposures_individually_viewed": 2,
+    "existing_seed_revisited_not_added": 1,
+    "new_confirmed_named_buildings": 0,
+    "newly_downloaded_images": 0,
+    "saved_screenshots": 0,
+    "complete_unoccluded_building_envelopes": 0
+  },
+  "dedup": "rg exact obu nowych pKey we wszystkich CSV/MD/JSON research/codex-refs-s21 oraz K1: brak trafień przed zapisem. Miejsca Ełckiej odrębne od MC3 przy Białostockiej/Słowackiego; nie jest to ponowne liczenie znanych pKey ani inny rozmiar tego samego obrazu.",
+  "limits": [
+    "Dachy i partery rzeczywiście występują w obrazach, lecz są fragmentaryczne i przesłonięte zielenią/ogrodzeniem.",
+    "Nie przypisano formalnych kondygnacji, materiału pokrycia, wysokości, gatunku zieleni i metrów.",
+    "Prawie pozioma krawędź drugiego domu nie dowodzi konstrukcji całego dachu.",
+    "Nie potwierdzono stanu 2026 ani aktualności znaków.",
+    "Nie policzono domu z pierwszego kadru i fragmentu tła drugiego jako dwóch nowych unikalnych obiektów."
+  ],
+  "restrictions": {
+    "api_calls": 0,
+    "commons_requests": 0,
+    "flickr_requests": 0,
+    "google_used": false,
+    "downloads": 0,
+    "parent_files_changed": false
+  }
+}

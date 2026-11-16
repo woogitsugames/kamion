@@ -99,3 +99,6 @@ R13: dwa nowe widoki dawnego zespołu Bernardynów w Tykocinie, Klasztorna1, Kat
 
 
 R14:1nowa panorama UMMonki, root obejrzał. AUX centralnej bryły z dachem/placem; nazwaMediatekaESTIMATED,0nowych potwierdzonych nazwanych budynków i0pełnych naziemnych fasad. Autor/dataekspozycjiUNVERIFIED; ARRtylkolink. Główny41.
+
+
+R15: dwa nowe uliczne kadry Ełckiej w Mońkach, szurek forHere10.08.2017. Root oba obejrzał: kremowe domy, fragmenty dachów, balkony, ogrodzenia/chodnik/trawa/zjazdy. Zasłonięcia i ucięcia jawne; nie pełne bryły ani nowe nazwane obiekty. Główny43.
