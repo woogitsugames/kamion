@@ -204,7 +204,6 @@ pwsh scripts/device-metrics.ps1 -Serial RFGL34SJYDZ -Launch -DurationSeconds 180
 ```
 W logu przy `-stream 1`: `[STREAM] on: …`, `[STREAM] safety-net rectangle of … widened …`, `[STREAM] pinned …`.
 
-<<<<<<< HEAD
 ## §11 Uzupełnienie s23 (D36, chmura D r9): §10 pkt 5 wdrożone — „Koniec mapy” na zewnętrznej krawędzi korytarza
 Gałąź `safetynet-corridor-s23` = `streaming-pc-s23` (#157) + merge `origin/main` (16.11); PR stacked na #157. Kod
 **nieskompilowany w Unity**.
@@ -247,8 +246,8 @@ Gałąź `safetynet-corridor-s23` = `streaming-pc-s23` (#157) + merge `origin/ma
 pwsh scripts/test.ps1 -Platform EditMode -Filter 'Game.Tests.CorridorEdgeTests;Game.Tests.WorldStreamerHook0273Tests;Game.Tests.WorldStreamingPolicyTests'
 pwsh scripts/test.ps1 -Platform PlayMode -Filter 'Game.Tests.WorldSafetyNetCorridorPlayModeTests;Game.Tests.WorldStreamingPlayModeTests;Game.Tests.WorldEdgeRecoveryTests'
 ```
-=======
-## §11 Dopisek D44 (2026-11-16, chmura D r10): treść i budżet streamingu z tieru PC na desktopie
+
+## §12 Dopisek D44 (2026-11-16, chmura D r10): treść i budżet streamingu z tieru PC na desktopie
 
 **Objaw.** Start `Kamion-korytarz.cmd` (`-scene knyszyn -stream 1`, bez `-tier`) na maszynie dev (RTX 5070, ADR 0261) dał
 `[STREAM] on: … budget 800 MB (Low content, desktop)`, a przejazd z `-Tier High` (raport int-stream-s23) — High/1450 MB.
@@ -299,4 +298,3 @@ Select-String -Path "$env:USERPROFILE\AppData\LocalLow\woogitsugames\Kamion\Play
 ```
 Jeśli źródłem jest zapisany wybór Medium — to zgodne z ADR 0269/0270 (jawny wybór gracza wygrywa); „auto” w ustawieniach PC
 przywraca autodetekcję. Jeśli `VRAM unknown` przy D3D11 — osobna poprawka detekcji (ADR 0269, właściciel kodu Rendering).
->>>>>>> origin/stream-desktop-s23
