@@ -62,11 +62,18 @@ namespace Game.Tests
             int vl = UnityGroundQuery.ResolveVehicleLayer();
             m_Mask = Physics.DefaultRaycastLayers;
             if (vl >= 0) m_Mask &= ~(1 << vl);
-            // Safe poses on the start road first (the reset needs one), with the solver running.
+            // Safe poses on the start road first (the reset needs one), with the solver running. The dk65-03 start route runs
+            // E -> N within ~85 m of the east seam with dk65-02, which is not in the test build: with the outer-edge rule that
+            // seam is an outer edge, so no pose would be "well inside" (safeEdgeDistance 120 m). The warm-up lowers the
+            // threshold only to collect poses; the tests below run with the shipped value (int-ui-s23).
+            var netWarm = m_Boot.SafetyNet;
+            float safeEdge = netWarm.safeEdgeDistance;
+            netWarm.safeEdgeDistance = 5f;
             m_Boot.SetRouteSpawn(12f);
             float t0 = Time.time;
-            while (m_Boot.SafetyNet.SafePoses.Count < 3 && Time.time - t0 < 15f) yield return new WaitForFixedUpdate();
-            Assert.GreaterOrEqual(m_Boot.SafetyNet.SafePoses.Count, 3, "safe poses recorded on the route spawn");
+            while (netWarm.SafePoses.Count < 3 && Time.time - t0 < 15f) yield return new WaitForFixedUpdate();
+            netWarm.safeEdgeDistance = safeEdge;
+            Assert.GreaterOrEqual(netWarm.SafePoses.Count, 3, "safe poses recorded on the route spawn");
             Physics.simulationMode = SimulationMode.Script;   // from here the test moves the vehicle
         }
 
