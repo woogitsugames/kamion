@@ -1,0 +1,15 @@
+# S16 Knyszyn–Krynice — datowane parametry projektu przy korytarzu DK65
+
+Odczyt 2026-11-16; bez zmierzonej dokładnej godziny własnego przeglądu. Dwa pełne publiczne komunikaty GDDKiA odczytano tekstowo. Dokładnych URL nie znaleziono w istniejącym s21 i K1 podczas deduplikacji. Nie oglądano ani nie pobierano galerii zdjęć, map lub wizualizacji. To pakiet danych projektu, nie referencja fotograficzna istniejącej DK65.
+
+**SOURCED [GDDKiA, 05.03.2026, „Będą dwie jezdnie”, dwa akapity]:** [Informacja przed wydaniem decyzji](https://www.gov.pl/web/gddkia-bialystok/informacja-przed-wydaniem-decyzji) dotyczy S16 Knyszyn–Krynice. Podaje długość 8,4 km, układ dwóch jezdni po dwa pasy szerokości 3,5 m, pas awaryjny i pas rozdziału co najmniej 5 m. Nawierzchnię określa jako **bitumiczną**, obciążenie 11,5 t/oś, kategorię ruchu **KR6**. Zapowiada 14 obiektów: 4 wiadukty, 6 przejść dla zwierząt i 4 przepusty ekologiczne. Wszystko to zapowiedź parametrów inwestycji przed ZRID, nie pomiar ani odbiór wykonania.
+
+**SOURCED [GDDKiA, 14.05.2024, wprowadzenie i sekcja „S16 Knyszyn – Krynice”]:** [Dwie eski w realizacji](https://www.gov.pl/web/gddkia-bialystok/dwie-eski-w-realizacji) opisuje wcześniejszy stan: rodzaj nawierzchni mieli wybrać wykonawcy; dla S16 wymienia 8,44 km i 12 obiektów, w tym 2 przepusty ekologiczne. Wskazuje projektowane połączenie z obecną DK65 rondem od strony Knyszyna oraz z S19 w rejonie Krynic.
+
+Wniosek z porównania tekstów: komunikat 2026 doprecyzowuje rodzaj nawierzchni i publikuje inną liczbę obiektów niż komunikat 2024. **Przyczyna różnicy 12/14 i 2/4 pozostaje UNVERIFIED**; nie dowiedziono formalnej zmiany projektu ani nie uznano różnicy 8,44/8,4 km za skrócenie trasy. Oba zapisy zachowano ze źródłem i datą zamiast mieszać je w jeden bezdatowy zestaw.
+
+Do generatora: dane mogą sterować osobnym wariantem projektowanej S16 i dokumentować kontekst robót przy DK65. Nie nakładać przekroju 2×2, KR6 ani projektowanego ronda na historyczne zdjęcia jednojezdniowej DK65. Szerokości pobocza i pasa awaryjnego, warstwy konstrukcji, kilometraż krajowy, dokładne położenie ronda, faktyczne wykonanie/otwarcie i stan 16.11.2026 **UNVERIFIED**. Nie przeliczano nacisku osi na dopuszczalną masę pojazdu. Bez źródłowego planu nie przypisano kafla dk65-01…11.
+
+Licencja tekstu: CC BY-SA 4.0 według stopek obu stron. Zdjęcia mają oddzielne warunki BY-NC-ND 4.0, o ile nie wskazano inaczej; nie pobierano ich i nie przeniesiono licencji tekstu na multimedia. W repo tylko własna parafraza i dane. 0 nowych fotografii, 0 rysunków i 0 pobranych dokumentów. Próby znalezienia szczegółów nawierzchni przejazdu LK38 nie dostarczyły nowego pierwotnego dowodu; nie korzystano ze znalezionych mirrorów poza dozwolonym zakresem ani nie powtórzono wcześniejszego obwieszczenia km 29+522.
+
+Kontrola integracyjna root: JSON i manifest poprawne. Odrębne otwarcia obu tekstów przez web zwróciły timeout; root nie deklaruje ich ponownego odczytu. Treść źródłowa powyżej opiera się na odczycie agenta udokumentowanym w source-review.json. Nie ponawiano zapytań.

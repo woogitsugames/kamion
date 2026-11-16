@@ -1,0 +1,80 @@
+{
+  "review_date": "2026-11-16",
+  "exact_review_time": "UNVERIFIED — nie zmierzono dokładnej godziny własnego odczytu",
+  "document_type": "Dwa publiczne komunikaty tekstowe GDDKiA; nie dokumentacja wykonawcza ani odbiór",
+  "dedup": "rg dokładnych dwóch URL w research/codex-refs-s21 i research/dk65-knyszyn-refs: 0 trafień przed zapisem",
+  "sources": [
+    {
+      "id": "04-SP14-D01",
+      "url": "https://www.gov.pl/web/gddkia-bialystok/informacja-przed-wydaniem-decyzji",
+      "title": "Informacja przed wydaniem decyzji",
+      "publication_date": "2026-03-05",
+      "publisher": "GDDKiA Oddział Białystok",
+      "status": "FULL_TEXT_READ",
+      "locator": "Sekcja Będą dwie jezdnie, dwa akapity",
+      "road_segment": "S16 Knyszyn–Krynice",
+      "project_parameters": {
+        "length_km": 8.4,
+        "carriageways": 2,
+        "lanes_per_carriageway": 2,
+        "lane_width_m": 3.5,
+        "emergency_lane": "wymieniony, bez szerokości w tym źródle",
+        "median_width_min_m": 5,
+        "surface_literal": "bitumiczna",
+        "axle_load_t": 11.5,
+        "traffic_category": "KR6",
+        "engineering_structures_total": 14,
+        "viaducts": 4,
+        "animal_crossings_over_or_under": 6,
+        "culverts_small_animals_amphibians": 4
+      },
+      "numbers_status": "SOURCED — zamierzone parametry z odczytanego tekstu, bez potwierdzenia wykonania",
+      "text_licence": "CC BY-SA 4.0 — stopka",
+      "image_licence_separate": "CC BY-NC-ND 4.0 o ile nie wskazano inaczej — stopka",
+      "gallery_read": false
+    },
+    {
+      "id": "04-SP14-D02",
+      "url": "https://www.gov.pl/web/gddkia-bialystok/dwie-eski-w-realizacji",
+      "title": "Dwie eski w realizacji",
+      "publication_date": "2024-05-14",
+      "publisher": "GDDKiA Oddział Białystok",
+      "status": "FULL_TEXT_READ",
+      "locator": "Akapit po wprowadzeniu; S16 Knyszyn – Krynice, akapity 3–4",
+      "road_segment": "S16 Knyszyn–Krynice; część artykułu obejmuje też S19 — nie przeniesiono z niej parametrów na S16",
+      "project_parameters": {
+        "length_km": 8.44,
+        "engineering_structures_total": 12,
+        "viaducts": 4,
+        "animal_crossings": 6,
+        "ecological_culverts": 2,
+        "surface_choice": "Wprowadzenie dla obu kontraktów pozostawia wykonawcom wybór asfalt/cement",
+        "north_connection": "Projektowane rondo do istniejącej DK65 od strony Knyszyna",
+        "south_connection": "Projektowana S19 w rejonie Krynic, planowany węzeł Dobrzyniewo"
+      },
+      "numbers_status": "SOURCED — wcześniejszy datowany opis projektu",
+      "text_licence": "CC BY-SA 4.0 — stopka",
+      "image_licence_separate": "CC BY-NC-ND 4.0 o ile nie wskazano inaczej — stopka",
+      "gallery_read": false
+    }
+  ],
+  "comparison": {
+    "sourced": "Tekst 2026 określa nawierzchnię bitumiczną oraz 14 obiektów/4 przepusty, podczas gdy tekst 2024 pozostawiał wybór i podawał 12/2",
+    "formal_change_or_reason": "UNVERIFIED",
+    "length_difference": "Nie uznano 8,44 vs 8,4 km za dowód skrócenia; możliwej przyczyny nie rozstrzygnięto",
+    "as_built_or_current_2026": "UNVERIFIED"
+  },
+  "limits": [
+    "Nie są to parametry istniejącej jednojezdniowej DK65 ani jej historycznych kadrów Mapillary",
+    "Brak źródłowego przypisania do kafla lub krajowego kilometrażu DK65",
+    "Nie ustalono szerokości pasa awaryjnego/pobocza, warstw konstrukcji ani statusu ronda w dniu audytu",
+    "Żadnej figury lub fotografii nie opisano na podstawie altu; galerie nie były oglądane"
+  ],
+  "selection_log": [
+    "Szukano pierwotnych dokumentów o wyposażeniu/nawierzchni przejazdów LK38 — bez nowego użytecznego dowodu; mirror files.girlc.at nie został otwarty",
+    "Komunikat PUW rozpoczyna-sie-budowa-odcinka-s16-knyszyn-krynice dał timeout; nie oparto na nim wyniku",
+    "Źródło archiwalne Mońki–Knyszyn 2018 wykryto, ale nie włączono do pakietu korytarza Białystok–Knyszyn"
+  ],
+  "counts": {"full_primary_texts_read":2,"new_photographs":0,"figures_reviewed":0,"downloads":0,"browser_interactions":0,"Commons_requests":0,"Flickr_static_requests":0,"OSM_Overpass_requests":0},
+  "result": "SOURCED_DATED_PROJECT_PARAMETERS_NOT_AS_BUILT"
+}
