@@ -156,6 +156,15 @@ load): frames > 40 ms in the first 5 s of G3-A 17 -> 3, the Bieżeństwa roundab
 6b6c1d8003): G3-A p99 33.6 ms without the capture window (official 49.9: `device-metrics.ps1` screencap + meminfo add ~12
 frames > 40 ms at the end of every run), G3-B p99 33.6, GPU p95 31.7 / 32.2 ms. ADR 0113 "Wynik".
 
+## Low shadows: thin casters and bias (ADR 0240, B-088) - UNVERIFIED on the phone
+Low main-light shadow map unchanged (35 m, 1 cascade, 1024 px, hard; texel ~7.8 cm ESTIMATED). Bias 1.0 / 1.0 -> 0.4 / 0.3
+(normal bias 1.0 removed ~16 cm of every caster silhouette: signal arm kept 33 % of its shadow area, 80 % at 0.3 - data
+audit `tools/rendering/thin_shadow_audit.py`). Thin casters (`ThinShadowCasterPolicy`: lamps, sign / signal posts, bollards,
+railings, fence posts, lattice gantries; 46 of 153 prop prototypes) cast nothing on Low (`thinCasterShadowsOff`,
+A/B `rq_thinshadow`). ESTIMATED per G3 frame: -10..-30 instanced caster draws, -2..-10 k caster triangles, GPU -0.0..-0.1 ms
+of the 0.9 ms shadow cost (ADR 0106); memory 0. Rejected by estimate: Low 2048 px (+6 MB, +0.3-0.8 ms), screen-space
+contact shadows (>= 1-2 ms, no depth texture on Low). Measure: visual-qa `stats.txt` `shadowCasterDraws`, A16 G3-A/B.
+
 ## World content v2 (ADR 0012) — build and memory, 2026-11-09
 Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
 report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110 800 instances (2 300 props + 108 500 trees).
@@ -215,3 +224,20 @@ mobile content budgets above stay. Measurement: `scripts/build-windows.ps1 -Run 
 | High | GTX 1660 / RX 590, i5-9600, 12 GB | 1080p 60 fps | ≤ 17 ms | ≤ 20 ms | ≤ 5 GB | WORKING_VALUE, UNMEASURED |
 | Ultra | above recommended (opt-in, never auto) | 1080p 60 fps | ≤ 17 ms | ≤ 20 ms | — | WORKING_VALUE, UNMEASURED |
 VRAM column = budget ≈ 85–90 % of the class card memory (headroom for the driver / OS), not a measurement.
+
+## Fence mesh coverage shader (ADR 0239, B-082) - ESTIMATED, not measured
+
+`Kamion/World FenceMesh` replaces URP Lit on `fence_*_mesh`: about +20 ALU per fragment net (UV derivatives, `fwidth`, screen
+noise, 3-level quantisation; URP `AlphaClip` removed), no extra texture sample, same triangles / textures / forward draw calls.
+The mesh no longer draws into the shadow map (15.7 km of panel fence in region C). Forward overdraw is unchanged (2 layers:
+doubled geometry + Cull Off - follow-up O-4 in the ADR would halve it). To measure on the A16 after reimport:
+`pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90 -Serial RFGL34SJYDZ` on route C Low against the last main run.
+
+## GPU A/B procedure on the A16 (ADR 0241, backlog B-113) — NOT MEASURED YET
+Open gap: A16 Low, 30 FPS cap, APK `77cfd94bf8`: GPU p95 34.3–34.5 ms against the 33.3 ms frame (HANDOVER s20). Candidate
+levers and their expected gains (ESTIMATED / UNVERIFIED, with sources) are data in `tools/perf/gpu-ab-variants.json`; none of
+them is a default. One session = same APK, launch-argument variants, ≥ 3 repeats, battery < 36 °C before each run, keyguard
+checks: `pwsh scripts/gpu-ab-a16.ps1 -Apk <apk> [-Mode Camera -Uncapped | -Segments A,B -Fps 30]` →
+`artifacts/gpu-ab/<ts>/REPORT.md` (`uv run --project tools/perf python -m perfgate.gpuab report <dir>`). Write the measured
+table here once the leader has run it; a tier value changes only after that table, the visual review and (for visible
+changes: render scale, LOD bias, far clip) the owner's decision.

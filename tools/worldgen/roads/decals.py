@@ -101,7 +101,9 @@ def stain(buf, P0, z_of, r, key, src):
 
 
 GULLY_SPACING_M = 35.0        # WORKING_VALUE: street gullies every 30-40 m along kerbed carriageways
-GULLY_SIZE = (0.50, 0.60)     # m; grate 500 x 600 (D400 class, typical; WORKING_VALUE), long side along the kerb
+# ADR 0237 / R6-034 (review of PR #65): frame of a D400 kerb-side gully 620 x 420 mm (manufacturer's data sheet; the
+# sheet's other variant is 500 x 500). Was 0.50 x 0.60 WORKING_VALUE. Parameter only: one quad per gully as before.
+GULLY_SIZE = (0.42, 0.62)     # m; (across, along): long side along the kerb
 
 
 def gullies(buf, net, report):

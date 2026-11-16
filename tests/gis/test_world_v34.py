@@ -136,7 +136,11 @@ def test_route_signs_listed(sqa):
     assert len(checks) >= 2
     for c in checks:
         assert c["A-7"] and c["C-12"], c
-    assert sum(1 for c in checks if c["E-1"]) >= 1, checks
+    # ADR 0236: the rule E-1 beside an authored gantry that carries the diagram is dropped (one E-1, on the portal);
+    # `roundabout_signs.diagrams_replaced` names the rule, the junction and the gantry that took it over
+    replaced = {d["rule"].rsplit(":", 2)[-2] + ":" + d["rule"].rsplit(":", 1)[-1]
+                for d in f["roundabout_signs"].get("diagrams_replaced", []) if d["by"].startswith("override:")}
+    assert sum(1 for c in checks if c["E-1"] or c["junction"] in replaced) >= 1, (checks, replaced)
     codes = {r["code"] for r in rs}
     assert any(c.startswith("B-33_") for c in codes), codes
     rb = f["roundabout_signs"]

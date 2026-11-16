@@ -27,6 +27,7 @@ from scipy import ndimage
 from shapely.geometry import Polygon
 
 from roads import standards as S
+from streetscape import pavements as PVM
 
 # surface -> material (MATERIALS in build_world)
 BDOT_SURFACE = {"kostka prefabrykowana": "yard_paving", "beton": "yard_concrete", "masa bitumiczna": "yard_asphalt",
@@ -35,10 +36,13 @@ OSM_SURFACE = {"asphalt": "yard_asphalt", "paving_stones": "yard_paving", "concr
                "concrete:plates": "yard_slabs", "gravel": "yard_gravel", "compacted": "yard_gravel",
                "fine_gravel": "yard_gravel", "unpaved": "yard_gravel", "ground": "yard_gravel", "dirt": "yard_gravel",
                "sett": "yard_paving", "grass_paver": "yard_gravel"}
+# ADR 0237: a footpath of "płyty betonowe" is laid in 35 x 35 cm sidewalk slabs (`sidewalk_slabs`), not in the
+# 3.0 x 1.5 m road plates of `yard_slabs`
 PATH_SURFACE = {"kostka prefabrykowana": "sidewalk_paving", "masa bitumiczna": "path_asphalt", "beton": "yard_concrete",
-                "płyty betonowe": "yard_slabs"}
+                "płyty betonowe": "sidewalk_slabs"}
 # paving blocks need an edging restraint; asphalt paths and cycle tracks are laid between concrete edgings too (ADR 0188)
-EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red", "cycle_asphalt", "cycle_asphalt_red"}
+EDGED = {"yard_paving", "yard_behaton", "sidewalk_paving", "cycle_red", "cycle_asphalt", "cycle_asphalt_red",
+         "sidewalk_paving_red", "sidewalk_slabs"}
 CELL = 4.0
 
 
@@ -102,7 +106,9 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
         pr = f["props"]
         mat = PATH_SURFACE.get(pr.get("materialnawierzchni"))
         if pr.get("rodzaj") == "droga dla rowerów":
-            mat = "cycle_red" if pr.get("materialnawierzchni") != "grunt naturalny" else None
+            # ADR 0237: with the region's pavement_rules a block-paved one gets `cycle_paver_material` and a
+            # bituminous one the grey DDR asphalt of ADR 0188; without them `cycle_red` as before
+            mat = PVM.bdot_cycle_material(overrides, pr.get("materialnawierzchni"))
         if not mat:
             continue
         w = float(pr.get("szerokosc") or S.SETBACK_PATH_W)

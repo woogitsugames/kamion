@@ -182,15 +182,16 @@ def test_kuronia2_is_a_dark_hall_with_low_light_annexes():
     blds = {b["id"]: b for b in BM.load(fc, ORIGIN, ov)}
     host = blds["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
     assert host["typ"] == "hall" and host["ovr"]["wall_material"] == "hall_wall_graphite"
-    assert host["props"]["height_m"] == pytest.approx(12.72)
+    assert host["props"]["height_m"] == pytest.approx(11.9)               # ADR 0242: Kuronia eave of the NMPT (LoD1 12.72)
     parts = {k: b for k, b in blds.items() if k.startswith("override:kuronia2-")}
     assert len(parts) == 5
     for k in ("override:kuronia2-corner-portal", "override:kuronia2-front-portal"):
         fr = FR.plan(parts[k]["ovr"]["frontage"], MT.M)                    # dark frame round a light face
-        assert parts[k]["typ"] == "office" and fr["fascia"]["material"] == "hall_flashing"
-        assert 7.2 < parts[k]["props"]["height_m"] < host["props"]["height_m"]
+        assert parts[k]["typ"] == "office" and fr["fascia"]["material"] == "plaster_accent_grey"   # ADR 0242
+        assert parts[k]["props"]["height_m"] == pytest.approx(9.9)
     for k in ("override:kuronia2-front-bay", "override:kuronia2-office-wing", "override:kuronia2-street-annex"):
-        assert parts[k]["typ"] == "office" and parts[k]["props"]["height_m"] == pytest.approx(7.2)
+        assert parts[k]["typ"] == "office"
+        assert parts[k]["props"]["height_m"] == pytest.approx(5.35 if k.endswith("annex") else 9.35)   # ADR 0242
         assert FR.plan(parts[k]["ovr"]["frontage"], MT.M)["wall"] == "plaster_white"
     polys = [host["poly"]] + [b["poly"] for b in parts.values()]
     for i, p in enumerate(polys):
