@@ -13,6 +13,10 @@ import json, os, sys
 OUT = sys.argv[1]
 W = "WORKING_VALUE"; D = "DERIVED"; S = "SOURCED"
 R13 = "UN R13 Annex 4"
+# UN R13 Annex 4 para 2.1.1 table, category N3, "Type-0 test with engine disconnected": v = 60 km/h,
+# s <= 0.15 v + v^2/130, dm >= 5.0 m/s^2 (MLIT parallel text UN_R013_02.pdf pp. 27-28, read on the page image 2026-11-16,
+# sha256 51a6c2e3...; same values as S5/S9 R3-139..142; ADR 0280). Only the 60 km/h case is the prescribed test.
+R13_T0 = "UN R13 Annex 4 para 2.1.1, N3 Type-0 engine disconnected (v = 60 km/h, s <= 0.15 v + v^2/130, dm >= 5.0 m/s^2)"
 
 
 def chk(metric, mn=None, mx=None, status=W, source="", arg=0, frm=0, to=0, variant=""):
@@ -171,9 +175,9 @@ for surf, mu in [("dry", "dry_asphalt"), ("wet", "wet_asphalt")]:
         ch = list(stable) if abs_on else [stable[0]]
         if abs_on:
             if surf == "dry":
-                ch += [chk("stop_distance_m", mn=35, mx=61.2, status=S,
-                           source="upper bound = 0.15 v + v^2/130 at 80 km/h = 61.2 m: UN R13 Annex 4 type-0 N3 (table confirmed via GRRF-56-3, unece.org TRANS-WP29-GRRF-56-inf03e; cells did not extract from the MLIT PDF S5); lower bound ~ v^2/(2 x 0.8 g) + build-up"),
-                       chk("mfdd_ms2", mn=5.0, mx=8.0, status=S, source="MFDD (R13 Annex 4 definition); 5.0 m/s^2 = N3 type-0 minimum dm (same GRRF-56-3 table); <= mu g"),
+                ch += [chk("stop_distance_m", mn=35, mx=61.2, status=D,
+                           source=f"EXTRAPOLATION of {R13_T0}: 0.15 v + v^2/130 evaluated at 80 km/h = 61.2 m (the prescribed test speed is 60 km/h, see brake_60_0_dry_abs_comb); lower bound ~ v^2/(2 x 0.8 g) + build-up (WORKING)"),
+                       chk("mfdd_ms2", mn=5.0, mx=8.0, status=D, source=f"MFDD (R13 Annex 4 para 1.1.2 definition); 5.0 m/s^2 = N3 type-0 dm minimum of {R13_T0}, prescribed at 60 km/h, applied at 80 km/h (extrapolation); <= mu g"),
                        ]
             else:
                 ch += [chk("stop_distance_m", mn=45, mx=95, source="mu_wet ~0.5 (WORKING): v^2/(2 x 0.45 g) + build-up"),
@@ -198,14 +202,31 @@ for surf, mu in [("dry", "dry_asphalt"), ("wet", "wet_asphalt")]:
 sc("brake_50_0_dry_abs_comb", "50->0 km/h full service brake, dry asphalt, ABS on", "docs/04 s6.5", 12,
    {"type": "timeline", "keys": [key(0), key(0.5, brake=1)]},
    list(stable) + [
-       chk("stop_distance_m", mn=15, mx=26.7, status=S,
-           source="upper bound = 0.15 v + v^2/130 at 50 km/h = 26.7 m: UN R13 Annex 4 type-0 N3 formula (GRRF-56-3; test speed 60 km/h, 50 km/h is an extrapolation); lower bound ~ v^2/(2 x 0.8 g) = 12.3 m + build-up (WORKING)"),
-       chk("mfdd_ms2", mn=5.0, mx=8.0, status=S, source="MFDD (R13 Annex 4 definition); 5.0 m/s^2 = N3 type-0 minimum dm (GRRF-56-3); <= mu g"),
+       chk("stop_distance_m", mn=15, mx=26.7, status=D,
+           source=f"EXTRAPOLATION of {R13_T0}: 0.15 v + v^2/130 evaluated at 50 km/h = 26.7 m (the prescribed test speed is 60 km/h, see brake_60_0_dry_abs_comb); lower bound ~ v^2/(2 x 0.8 g) = 12.3 m + build-up (WORKING)"),
+       chk("mfdd_ms2", mn=5.0, mx=8.0, status=D, source=f"MFDD (R13 Annex 4 para 1.1.2 definition); 5.0 m/s^2 = N3 type-0 dm minimum of {R13_T0}, prescribed at 60 km/h, applied at 50 km/h (extrapolation); <= mu g"),
        chk("max_lateral_deviation_m", mx=0.5, source="straight-line stability under ABS"),
        chk("max_articulation_deg", mx=2.0, source="no trailer swing under ABS braking on a straight"),
        chk("rear_lock_time_s", mx=0.03, source="no tractor drive-axle lock at brake onset (EBS load sensing + decel-threshold ABS)"),
        chk("trailer_lock_time_s", mx=0.05, source="trailer ABS 2S/2M prevents lock")],
    variants=COMB, ground={"gradePercent": 0, "surface": "dry_asphalt"}, initial={"speedKmh": 50, "gear": 10},
+   overrides={"absEnabled": True})
+
+# 60 -> 0 km/h: the one stopping-distance point prescribed directly by UN R13 for N3 (Type-0, engine disconnected,
+# laden and unladen, para 1.4.1.2.3: both s and dm must be met). The engine is disconnected as in the test: the selector
+# goes to N together with the full service brake (the AMT opens the clutch at once on N). s <= 0.15 x 60 + 60^2/130 = 36.7 m.
+# Gear 11 (1.00 x 3.40, rolling radius 0.524 m) = ~1030 rpm at 60 km/h before the brake.
+sc("brake_60_0_dry_abs_comb", "60->0 km/h full service brake, dry asphalt, ABS on, engine disconnected (R13 Type-0 N3)", "docs/04 s6.5", 12,
+   {"type": "timeline", "keys": [key(0), key(0.5, brake=1, sel="N")]},
+   list(stable) + [
+       chk("stop_distance_m", mn=18, mx=36.7, status=S,
+           source=f"upper bound 0.15 x 60 + 60^2/130 = 36.7 m: {R13_T0}; lower bound ~ v^2/(2 x 0.8 g) = 17.7 m (WORKING)"),
+       chk("mfdd_ms2", mn=5.0, mx=8.0, status=S, source=f"MFDD (R13 Annex 4 para 1.1.2 definition) >= 5.0 m/s^2: {R13_T0}; upper bound <= mu g (WORKING)"),
+       chk("max_lateral_deviation_m", mx=0.5, source="straight-line stability under ABS"),
+       chk("max_articulation_deg", mx=2.0, source="no trailer swing under ABS braking on a straight"),
+       chk("rear_lock_time_s", mx=0.03, source="no tractor drive-axle lock at brake onset (EBS load sensing + decel-threshold ABS)"),
+       chk("trailer_lock_time_s", mx=0.05, source="trailer ABS 2S/2M prevents lock")],
+   variants=COMB, ground={"gradePercent": 0, "surface": "dry_asphalt"}, initial={"speedKmh": 60, "gear": 11},
    overrides={"absEnabled": True})
 
 sc("brake_response_static","Stationary vehicle, full service brake application (response time as in R13, vehicle at rest)", "docs/04 s6.5 / s2.8", 3,
