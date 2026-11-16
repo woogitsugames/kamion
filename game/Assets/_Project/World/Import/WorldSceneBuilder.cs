@@ -115,7 +115,16 @@ namespace Game.World.Import
             var trailerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(TrailerAssetBuilder.PrefabPath) ??
                                 AssetDatabase.LoadAssetAtPath<GameObject>(DrivingLabSceneBuilder.TrailerPrefabPath);
             if (prefab == null || trailerPrefab == null) throw new FileNotFoundException("DrivingLab prefabs missing: run Kamion/Setup/Rebuild DrivingLab first");
-            const float spawnS = 12f;
+            // ADR 0262: the start of the region catalog (scripts/export-region-catalog.py: 12 m, or behind the region-edge
+            // closure when the route starts ON the tile edge - the closure stands up to 60 m inside, ADR 0169), and in
+            // any case behind every closure the route enters the tile through (the closures just built above).
+            var startBoundary = rootGo.GetComponent<WorldBoundary>();
+            var catalogEntry = RegionCatalog.Load()?.Find(r.Region);
+            float wantedS = catalogEntry != null ? RegionStart.ClampStartS(catalogEntry.startS, route.Length) : StartClearance.DefaultStartS;
+            float spawnS = StartClearance.SafeStartS(route.points, route.distances,
+                startBoundary != null ? startBoundary.closures : System.Array.Empty<WorldBoundary.Closure>(), wantedS);
+            if (spawnS > wantedS + 0.01f)
+                Debug.LogWarning($"[IMPORT] spawn moved from route_s {wantedS:F1} to {spawnS:F1} m: the catalog start is not behind the entry closure (python scripts/export-region-catalog.py, ADR 0262)");
             Vector3 spawnPos = route.points.Length > 1 ? route.PointAt(spawnS) : Vector3.zero;
             Vector3 spawnFwd = route.points.Length > 1 ? route.TangentAt(spawnS) : Vector3.forward;
             var spawn = new GameObject("Spawn_DepotGate").transform;

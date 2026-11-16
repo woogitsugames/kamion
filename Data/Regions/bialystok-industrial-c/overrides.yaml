@@ -2746,3 +2746,19 @@ overrides:
       away from the road.
     confidence: high
     verify: none
+  # ---------------------------------------------------------------- ADR 0216b: lamp heads (no source for LED side streets)
+  - id: lamp-policy-unverified-0216b
+    kind: lamp_policy
+    family: unchanged
+    unverified_streets: [Michała Motoszko, Skidelska, Buska, Sokólska, Łańcucka, Olsztyńska, Świsłocka, Władysława Bełzy,
+                         Białostoczek, Grodzieńska, Kombatantów, "(unnamed living_street / service)"]
+    sources: ["research/led-tenders-0216b/ted_notices.json", "research/night-lamps-s21/README.md sections 1 and 4",
+              "research/night-lamps-s21/osm-street-lamps.json"]
+    reason: >-
+      No change (record only). The older side-street poles of tile C (sodium head) stand on the streets listed in
+      `unverified_streets`; none of them is named in a City of Bialystok LED notice (TED search 2022-2026,
+      research/led-tenders-0216b) and the 11 OSM street_lamp nodes of the tile carry no light:method / LED lamp_type
+      (6 x lamp_type=electric). The LED tender of 2023 (ZDM-VII.7021.1.14.2023, 4000 K) covers Andersa,
+      al. 1000-lecia and Maczka, whose rule poles are already the LED family. Sodium head kept, type UNVERIFIED.
+    confidence: low
+    verify: owner - night photo of Sokolska or Kombatantow (LED or sodium)
