@@ -51,6 +51,7 @@ namespace Game.Editor.Setup
         public static void Build()
         {
             var man = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot, Manifest))));
+            DrivingVehiclePrefabs.PinGuid(PrefabPath, DrivingVehiclePrefabs.TrailerGuid);   // D84
             CopySources(man);
             ConfigureImporters();
             var sets = BuildMaterials(man);
