@@ -1,5 +1,5 @@
-# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
-- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
-- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
-- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
-- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
+# stream-gaps-s23 — STATUS
+- 16.11 krok 0: worktree z origin/main 64e54592e, Data/raw/* = JUNCTION do main (sprawdzone dir).
+- Diagnoza (krok 1): sąsiedztwo knyszyn↔knyszyn-w (W) i knyszyn-w↔dw671-tykocin-01 (S) JEST w tile_graph.json; streamer otwiera szwy wg sąsiedztwa + dostępności `_Tile`, nie wg portali. Przerwy = (a) trasa autopilota: knyszyn kończy się na Rynku (761086, 612403), knyszyn-w startuje na E 760587,612074 (DK65 na Mońki) — 596 m, dw671-tykocin-01 startuje na S knyszyn-w (760129, 611583) — 2164 m; DW671 Tykocka przecina szew W knyszyna w (760587, 611964.5) i wychodzi S knyszyn-w w (760129.2, 611583) — węzły brzegowe zgodne po obu stronach; (b) kafel `tykocin` (miasto) nie istnieje w main — dw671-tykocin-01 kończy się na S (-9,6) „not built”; (c) C→maczka 700 m przerwy trasy; (d) Dojlidy: 1 kolumna E i 2 rzędy S od C (4096 m) — brak sąsiedztwa.
+- Plan: Data/Streaming/route_links.yaml (authored) → tools/worldgen/streaming/route_links.py (lane_route jak export-route) → Resources/WorldStreaming/route_links.json; WorldStreamer.ContinueRoute dokleja linki; wybór celu `-route_to tykocin`.
+- NASTĘPNY KROK: uv run --project tools/worldgen python tools/worldgen/streaming/route_links.py
