@@ -1,0 +1,44 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE — nowy odczyt jednej sąsiedniej bryły z istniejących danych",
+  "dedup": "ID 3031 i IDEGIB 2456_BUD nie znalezione we wcześniejszych 03/K1. Punkt Rynek 2 był wcześniej tylko kontrolnym punktem poza modelem 3002. Brak twierdzenia, że obiekt nigdy nie występował w tle fotografii.",
+  "source_records": {
+    "PRG": "Publiczny rekord Rynek 2 z odpowiedzi KINA/PRG odczytanej w R23; brak nowego zapytania.",
+    "BDOT": "SQLite mode=ro, tabela OT_BUBD_A; lokalny poligon wskazany testem punkt-w-poligonie. Odczyt wyłącznie geometrii i kluczy, bez danych właścicieli.",
+    "CityGML": "Dwa istniejące ZIP odczytane w miejscu; dokładny buildingId w obu. Wyciągnięto po jednym małym obiekcie wyłącznie do własnego raw.",
+    "source_urls": [
+      "https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD2/2008_gml.zip",
+      "https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD1/2024/20/2008.zip",
+      "https://mapy.geoportal.gov.pl/wss/ext/wfs/KrajowaIntegracjaNumeracjiAdresowej"
+    ],
+    "model_documentation": "https://www.geoportal.gov.pl/pl/dane/inne-dane/modele-3d-budynkow/ — odczytana w R22, bez nowego HTTP"
+  },
+  "identity": {
+    "CityGML_to_BDOT": "SOURCED — ten sam literalny buildingId/LOKALNYID i przestrzeń nazw",
+    "address_to_model": "ESTIMATED — punkt-w-poligonie, bez formalnego wspólnego klucza",
+    "IDEGIB": "SOURCED wyłącznie literalny identyfikator w BDOT; nie sprawdzano EGiB/aktualności/właścicieli"
+  },
+  "method": "Parser obsługuje gml:pos i gml:posList. Poligony przyziemia wybrano na minimalnym Z; ściany i połacie odczytano z geometrii CityGML. Własny pionowy zakres = max Z minus min Z osobno dla każdego modelu.",
+  "source_values": "LoD1 measuredHeight 5.98 uom=meter SOURCED; LoD2 max-min 7.62 m ESTIMATED z geometrii. Wersja produktu nie jest datą obserwacji dachu.",
+  "figure": {
+    "path": "files/03-RM25-models.png",
+    "pixels": [
+      800,
+      480
+    ],
+    "sha256": "d782a9e0df9caf4146d26596d8b986ea92ab2df445697473dbf76187d1a13857",
+    "individually_viewed": true,
+    "observation": "Lewy panel pokazuje punkt wewnątrz obrysów. LoD2 przedstawia kilka spadzistych połaci i nieregularne przyziemie; LoD1 jest uproszczonym blokiem z poziomą górną powierzchnią. Barwy odróżniają produkty, nie materiały ani rzeczywiste elewacje.",
+    "attribution": "GUGiK CityGML CC BY 4.0; lokalne BDOT/PRG, opracowanie własne."
+  },
+  "counts": {
+    "new_archives": 0,
+    "new_http_requests": 0,
+    "new_photos": 0,
+    "new_building_model_analyses": 1,
+    "own_figures": 1
+  },
+  "shared_sources_modified": false,
+  "parent_files_modified": false,
+  "raw_location": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\03-knyszyn\\rynek2-model-round25"
+}

@@ -1,0 +1,21 @@
+{
+  "review_date": "2026-11-16",
+  "reviewer": "root",
+  "method": "Individual local figure view and independent XML extract/readonlySQLite key review; no new network query",
+  "figure": "files/03-RM25-models.png",
+  "result": "PASS_WITH_LIMITS",
+  "confirmed": [
+    "PRG point lies inside displayed outlines; LoD2 has inclined multiple planes, LoD1 horizontal top, irregular footprints",
+    "XML both buildingId3031 andnamespace match BDOT; IDEGIB literal2456_BUD",
+    "Both XML sourceALS_I/year2016; LoD1 measuredHeight5.98meter"
+  ],
+  "limits": [
+    "Root did not independently recompute full geometry/IoU/vertical range;7.62m is agent geometry computation",
+    "5.98/7.62 not terrain uncertainty interval or proof of rebuilding",
+    "Address join remains ESTIMATED spatial inference",
+    "No actual material/color/storey count/current2026 evidence"
+  ],
+  "new_photographs": 0,
+  "new_analytical_figures": 1,
+  "sha256_figure": "d782a9e0df9caf4146d26596d8b986ea92ab2df445697473dbf76187d1a13857"
+}

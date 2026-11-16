@@ -651,3 +651,7 @@ Dwa wycinki ortofotomapy GUGiK w `research/codex-refs-s21/04-dk65/tree-crowns-ro
 ### Codex refs S21 — R26 dk65-09
 
 `research/codex-refs-s21/04-dk65/tile09-verges-round26/files/04-T09V26-01.jpg`: ortofotomapa GUGiK, publiczny WMS ORTO/HighResolution; dokładny request/bbox/SHA w sources.json. Wykorzystanie według https://www.geoportal.gov.pl/pl/dane/ortofotomapa-orto/ (bezpłatne, dowolne); nie przypisano CC. Nowy zakres280×280m wyrenderowany800×800px, bez dodatkowego retuszu i bez kopii identycznego rastra w raw. Data nalotu nieustalona.
+
+### Codex refs S21 — R25 bryła przy punkcie Rynek2
+
+`research/codex-refs-s21/03-knyszyn/rynek2-model-round25/files/03-RM25-models.png`: własne opracowanie geometrii CityGML GUGiK CC BY4.0 (https://creativecommons.org/licenses/by/4.0/), lokalne publiczne BDOT/PRG bez automatycznego przypisania imCC. Źródła archiwów/metadane w source-review.json; atrybucja na figurze. Każdy model przesunięto do własnej podstawy Z; barwy analityczne, nie rzeczywisty materiał.0nowycharchiwów/zdjęć.
