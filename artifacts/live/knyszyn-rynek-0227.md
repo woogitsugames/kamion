@@ -302,3 +302,7 @@
 - 2026-11-16 06:38 +01:00 — R23 po integracji 74 kamery, High max 1 248 992 tris PASS, Low vs before 240→304 draws FAIL. EditMode 955 passed, 2 skipped; pełny GIS trwa, jedno F prawdopodobnie stare instancje regionu C względem nowego manifestu. Analiza regeneracji C trwa.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/gis-r23.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/gis-r23.done` 
 
+
+- 2026-11-16 06:47 +01:00 — GIS R23: 1768 passed, 22 skipped, 2 xfailed, 1 failed (stara lokalna instancja C sign_gantry_16_66 po merge; 12 plików C niezgodnych z nowym manifestem). EditMode 955 passed, 2 skipped. Rozpoczęta prywatna regeneracja C bez zapisu do współdzielonego raw; SHA wymagane przed podmianą.
+- NASTĘPNY KROK: `git status -sb; Get-Content artifacts/knyszyn-rynek-0227/gis-r23.log -Tail 8` 
+
