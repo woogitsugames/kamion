@@ -5,4 +5,5 @@
   (tylko j.compact): trawa za całym krawężnikiem + soft footprint → spadek ≤ 0,28 m (repro: NMT z WCS GUGiK, tylko liczby).
 - (d) DONE: klucz `outer_diameter_m` (14–40 m, max(2 m, 40 %) od promienia OSM, inaczej stale), scalanie opcji compact_roundabout w network.load, override knyszyn 26,0 m WORKING_VALUE na końcu overrides.yaml; test_roundabout_0274: baseline 0218 bez D41, dolna granica wysepki S 28→27.
 - (a) DONE: pomiar WMS (qa/market_canopy_ortho.py): okapy 27,1 × 7,2 m, prześwity 1,15 / 1,17 m, 14,2 m; override `knyszyn-market-canopy-eaves-d41` (market_canopy_geometry_d41) podmienia obrysy po id, inset 0; JSON+README w docs/reports/rynek-p1/.
-- NASTĘPNY KROK: (b) pawilon namiotowy (override knyszyn-market-pavilion-d41) → `uv run --project tools/worldgen python -m pytest tests/gis/test_rynek_p1_0227.py -q`
+- (b) DONE: pawilon bdot:de62e5a9 dach namiotowy (jeden wierzchołek) + żółte ściany jako dane `kind: market_pavilion_d41` (walidacja, stale→domyślny dach), stage przekazuje overrides do KMB.build.
+- NASTĘPNY KROK: (c) proporcja korony lip jako dane → grep crown w streetscape/vegetation.py i overrides tree_groups

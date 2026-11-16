@@ -255,3 +255,73 @@ def test_traces_alone_touch_and_the_geometry_entry_is_validated():
             MK.build(_Buf(), "knyszyn", ORIGIN, base + [{**geo, **bad}], _flat, {})
     with pytest.raises(ValueError):
         MK.build(_Buf(), "knyszyn", ORIGIN, base + [geo, dict(geo, id="dup")], _flat, {})
+
+
+# ------------------------------------------------------------------------------------------- (b) market pavilion
+from streetscape import buildings_mesh as BM  # noqa: E402
+from streetscape import knyszyn_market_buildings_0227 as KMB  # noqa: E402
+
+
+def _pavilion_build(overrides):
+    import json
+    d = json.loads((ROOT / "Data/Regions/knyszyn/buildings.geojson").read_text(encoding="utf-8"))
+    d["features"] = [f for f in d["features"] if f["id"] in KMB.IDS]
+    blds = BM.load(d, ORIGIN, [], hero=KMB.hero_targets("knyszyn", d))
+    buf = _Buf()
+    rep = KMB.build(buf, "knyszyn", blds, lambda e, n: np.zeros_like(np.asarray(e, float)) + 127.0, {}, overrides)
+    pav = next(b for b in blds if b["id"] == KMB.PAVILION)
+    return rep, buf, pav["poly"]
+
+
+def _pavilion_roof(buf, poly):
+    V = np.vstack([v[t].reshape(-1, 3) for layer, mat, v, t, src in buf.parts
+                   if layer == "buildings" and mat == "roof_metal_graphite"])
+    inside = np.array([poly.buffer(0.01).contains(Polygon([(x, y), (x + 1e-4, y), (x, y + 1e-4)]))
+                       for x, y in V[:, :2]])
+    return V[inside]
+
+
+def _knyszyn_pavilion_override():
+    import yaml
+    ov = yaml.safe_load((ROOT / "Data/Regions/knyszyn/overrides.yaml").read_text(encoding="utf-8"))["overrides"]
+    return [o for o in ov if o.get("kind") == KMB.PAVILION_KIND]
+
+
+def test_pavilion_tent_roof_has_one_apex_and_yellow_walls():
+    ov = _knyszyn_pavilion_override()
+    assert len(ov) == 1 and ov[0]["set"]["roof"] == "tent"
+    rep, buf, poly = _pavilion_build(ov)
+    assert rep["status"] == "applied" and rep["pavilion_roof"] == "tent" and "pavilion_override_stale" not in rep
+    R = _pavilion_roof(buf, poly)
+    top = R[np.isclose(R[:, 2], R[:, 2].max(), atol=1e-6)]
+    # tent: every roof vertex at the top is the same point (no ridge line)
+    assert np.ptp(top[:, 0]) < 0.05 and np.ptp(top[:, 1]) < 0.05, np.ptp(top[:, :2], axis=0)
+    assert R[:, 2].max() == pytest.approx(127.0 + 4.2) and R[:, 2].min() == pytest.approx(127.0 + 2.8)
+    assert top[0, :2] == pytest.approx(np.asarray(poly.centroid.coords[0]), abs=0.6)
+    walls = {mat for layer, mat, v, t, src in buf.parts if layer == "buildings"}
+    assert "plaster_yellow" in walls
+    # no lettering / sign material on the pavilion
+    assert not any("sign" in m or "text" in m or "logo" in m for m in walls)
+
+
+def test_pavilion_without_entry_keeps_the_hip_roof_with_a_ridge():
+    rep, buf, poly = _pavilion_build([])
+    assert rep["pavilion_roof"] == "hip"
+    R = _pavilion_roof(buf, poly)
+    top = R[np.isclose(R[:, 2], R[:, 2].max(), atol=1e-6)]
+    assert np.hypot(*np.ptp(top[:, :2], axis=0)) > 1.0
+
+
+@pytest.mark.parametrize("bad", [{"roof": "dome"}, {"eave_m": 9.0}, {"apex_m": "4"}, {"wall_material": "neon"},
+                                 {"eave_m": 4.0, "apex_m": 4.2}, {"sign": "SHOP"}])
+def test_bad_pavilion_entry_is_stale_and_keeps_the_default(bad):
+    o = dict(_knyszyn_pavilion_override()[0])
+    o["set"] = {**o["set"], **bad}
+    rep, buf, poly = _pavilion_build([o])
+    assert rep["status"] == "applied" and rep["pavilion_roof"] == "hip" and rep["pavilion_override_stale"]
+
+
+def test_pavilion_entry_must_target_the_pavilion():
+    o = dict(_knyszyn_pavilion_override()[0], target={"building": KMB.SHOP})
+    rep, _, _ = _pavilion_build([o])
+    assert rep["pavilion_override_stale"] and rep["pavilion_roof"] == "hip"

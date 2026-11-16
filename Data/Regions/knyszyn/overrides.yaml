@@ -808,3 +808,19 @@ overrides:
       (relief displacement of 4 m high roofs, UNVERIFIED projection centre). Inset 0: the rectangles are the eaves.
     confidence: medium
     verify: render market_owner_12 / market_owner_14_close and check three gaps of about one metre, posts and counters under each roof
+  # (b) the small market pavilion in the south-east corner (by the entrance and its own slab parking): tent roof over
+  # yellow walls (owner photo 13, local only; GUGiK 2025 orthophoto: four hip planes meeting at one apex, no ridge).
+  - id: knyszyn-market-pavilion-d41
+    kind: market_pavilion_d41
+    target: {building: "bdot:de62e5a9-3c83-4023-9e77-03b8844df001"}
+    set: {roof: tent, eave_m: 2.8, apex_m: 4.2, wall_material: plaster_yellow, roof_material: roof_metal_graphite}
+    reason: >-
+      SOURCED: BDOT10k footprint (79 m2, "budynek gospodarczy", 1 storey); tent roof read on the GUGiK ORTO WMS
+      (2025 sheet, 0.1 m: four triangular planes to one apex; numbers only). Owner description: small pavilion,
+      yellow facade, tent roof, in the market corner (docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md, photos 12-13).
+      ESTIMATED: matching this footprint to the photo (the oblique photo 13 looks from the south-east at this corner).
+      WORKING_VALUE: eave 2.8 m and apex 4.2 m (no LoD1/LoD2 here), yellow plaster tone, openings. No sign, lettering,
+      logo or brand. A second, smaller pyramid-roofed kiosk without a BDOT footprint stands by the north-west gate
+      (orthophoto, about 3.5 x 4 m) - not modelled (no footprint, colour unknown).
+    confidence: medium
+    verify: render market_owner_13 next to owner photo 13 (yellow walls readable, tent roof, no ridge)
