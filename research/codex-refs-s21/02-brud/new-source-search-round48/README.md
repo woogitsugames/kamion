@@ -1,0 +1,15 @@
+# Runda 48 — dwa celowane wyszukania nowych źródeł
+
+Cel: nowe zamknięte brudne tyły spoza pierwotnych 75/pełnych 88 P18 i wcześniejszego s21, preferencyjnie zima/Europa. Wykonano dokładnie 2 kwerendy wyszukiwarki ograniczone do stron Commons (pełne treści w screening.json), bez rozszerzania do trzeciej frazy. Pierwsza dotyczyła articulated lorry rear, druga Eric Polk rear trailer. Nie jest to pełny przegląd Commons ani dowód globalnego braku nowych zdjęć.
+
+Dedup tytułu/URL/autora w P18 i s21 usunął Amazon Prime 136, Schneider Container 138, Insulated 140 i znanego Legend. Pozostałe wyniki o autobusie, śmieciarce, vanie i 15-foot moving truck odrzucono z tekstowego rodzaju obiektu, bez udawania indywidualnego oglądu. Wynik Arpingstone car.accident pozostawiono NOT_REVIEWED w tej selekcji. Po doprecyzowaniu koordynatora: rzeczywiste zwolnienie praw przez autora na Commons może być dozwolone, z pełnym dowodem. Nie jest to Flickr PDM. Nie wracano do tego pobocznego tropu ani nie kwalifikowano go wizualnie.
+
+Pozostały 2 konkretne nowe fotografie kontenerów CAI i UASC, zamiast wymaganych docelowo 3–4. Każda ma source-declared Eric Polk i CC BY-SA 4.0 zweryfikowane oficjalnym imageinfo przed pobraniem dokładnego podglądu. Cztery pojedyncze żądania HTTP 200, minimum 10 sekund między nimi, User-Agent Mozilla/5.0, brak 429/ponowień/hostwariantów. Dwa obrazy obejrzano osobno przez view_image. Data oglądu 16 listopada 2026, bez wymyślonej godziny. Oryginałów nie pobrano, bo podglądy nie potwierdziły obiecującego filmu na polach; nie pobrano kolekcji. Raw podglądy poza Git; bez niepotrzebnych miniaturek w Git, bez Chrome i bez Flickr.
+
+Oba pokazują zamknięte dwuskrzydłowe kontenery na podwoziu, ale nie zintegrowany boks. Dla CAI autor wprost podaje semi-trailer; dla UASC opis mówi jedynie shipping container, a typ naczepa vs inne podwozie pozostaje UNVERIFIED z samego tylnego widoku. Czerwony CAI: jasne miejscowe przetarcia i brunatna korozja dolnej ramy; brak pewnego filmu na panelach. Zielony UASC: ostre jasne ubytki/naklejki, wyblakła farba, ciemne pola przy ryglach oraz niebieskawy ton całego obrazu. Mechanizm ciemnych pól pozostaje UNVERIFIED. Nie przenosimy barwy odbić ani uszkodzonej farby do warstwy brudu.
+
+Wymiar obrazu nie zastępuje wysokości drzwi: CAI source 1347 × 1931, obejrzany 960 × 1376; UASC source 1021 × 1374, obejrzany 960 × 1292. Zakresy samych drzwi w manifest.csv są ESTIMATED na podglądzie; natywnego ≥1000 dla B nie potwierdzono. Żaden nowy rozmiar/crop tej samej ekspozycji nie jest kolejnym zdjęciem.
+
+**Przyrost A 0 / B 0 / zima 0 / Europa 0.** Obydwa PENDING, mechanizm powierzchni oraz zakres kontener/boks wymagają recenzji; nie przekazano ich jako nowych pewnych zabrudzonych drzwi. Źródłowe daty i GPS Kalifornii oddzielono od własnej obserwacji; brak śniegu i Europa niespełniona. Nie zwiększono jakościowych liczników za samo większe natywne źródło.
+
+Pakiet dokumentuje ograniczony wynik dwóch zapytań, a nie globalny wynik poszukiwań. Nie zmieniono P18, parenta, historycznych ledgerów ani Git. 88/88 pokrycia audytu z R47 nie oznacza spełnienia 20 / 12 / 6 / 6.
