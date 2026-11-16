@@ -165,3 +165,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Światła drogowe: możliwe kombinacje — runda21
 
 [highbeam-simultaneous-round21](highbeam-simultaneous-round21/README.md):4warunki/interpretacje,0fotografii. R48Rev12/16.10.2014,s32,6.1.9.1–.2:430000cd/ref100 dla reflektorów mogących być jednocześnie załączone, sumowanie znaków odniesienia; literalne stareR/CR→10 nie tylneR1. R149kwantyzacja uniemożliwia dokładne odtworzenieIM z27.5/30, bez nowychpomiarów. UNGRE2024/5 projekt redline usuwa podwójnyfragmentcd/przyref100, PROPOSAL_NOT_ADOPTION_PROOF, bez twierdzeniaEIF/aktualności2026. Agent obejrzał pełne dokumenty i bitmapy, root osobno R48s32/projekts2. Dokumenty/rendery pozaGit; nie zmieniono bazowych24norm ani HR16.
+
+
+## Etap przyjęcia zmiany — runda22
+
+[highbeam-adoption-round22](highbeam-adoption-round22/README.md):3oficjalne dokumenty/4etapy/0fotografii. GRE90odroczeniepoGRE2024/5→WP29/2025/36ref≤100→WP29/1184tabelas21AC1przyjęcieSupp1do09,34/0/0. Pkt69usuwa tylko6.2.6.1.2, nie6.1.9.1; zachowanie limituref100 w przyjętym pakiecie to jawna syntezaźródeł. Root osobnoobejrzałbitmapy§69/s15 i tabelis21, agentpełne3dokumenty. AC1_ADOPTION_CONFIRMED nieEIF; aktualnytekst2026/przejściowedlastarychciężarówek nadalUNVERIFIED. Runda21 pozostajehistoryczna, niepodmienionojejdowodów.2PDFraportówrawpozaGit, trzecidokumentodczytanyfullwebbezlokalnegoPDFpo404STOP.

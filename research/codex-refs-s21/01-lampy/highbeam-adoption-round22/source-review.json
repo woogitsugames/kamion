@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-16",
+  "documents_limit": 3,
+  "documents_read": 3,
+  "photos": 0,
+  "sources": [
+    {
+      "id": "01-HA22-D01",
+      "symbol": "ECE/TRANS/WP.29/GRE/90",
+      "date": "2024-05-31",
+      "url": "https://documents.un.org/api/symbol/access?l=E&s=ECE%2FTRANS%2FWP.29%2FGRE%2F90",
+      "pages": 13,
+      "raw_file": "GRE-90-report.pdf",
+      "bytes": 287641,
+      "sha256": "dbdfc237c23e8cdcdf7064a8cc8177533f1b754e4516cb89a6257e5f36f36971",
+      "read_scope": "Okładka, cały relevantVII.A/pkt13,s4;pkt32,s7;AnnexIwykazGRE-90-10,s10. Pełny13sPDF i ekstrakt dostępne lokalnie.",
+      "result": "2024/5replacedbyGRE-90-10, adoptedinprinciple but submissions postponed.",
+      "status": "GRE_IN_PRINCIPLE_SUBMISSION_POSTPONED",
+      "access": "WebURLnotaccessiblevia tool bez kodu403; jeden zwykły downloadUN200PDF."
+    },
+    {
+      "id": "01-HA22-D02",
+      "symbol": "ECE/TRANS/WP.29/2025/36",
+      "date": "2024-12-20",
+      "url": "https://documents.un.org/access.nsf/get?DS=ECE%2FTRANS%2FWP.29%2F2025%2F36&Lang=E&Open=",
+      "pages": 4,
+      "raw_file": null,
+      "full_web_reference": "turn636view0,155linie",
+      "read_scope": "Pełne4strony tekstu web, nie snippet; s1datowanie/zakres/podstawaGRE91iGRE-90-10;s2nowe6.1.9.1;s3AFS6.22.9.5. Pozostałych parametrów nie dodawano do norm.",
+      "result": "ProposedSupplement1to09series;6.1.9.1referencevalue≤100,possible simultaneousON.",
+      "status": "SOURCE_TEXT_TRANSMITTED_PROPOSAL",
+      "access": "Publicznepełneweb200; późniejszy jedendownloadtegosamegoURL404—STOPbezretry/hostvariant."
+    },
+    {
+      "id": "01-HA22-D03",
+      "symbol": "ECE/TRANS/WP.29/1184",
+      "date": "2025-03-25",
+      "url": "https://documents.un.org/api/symbol/access?l=E&s=ECE%2FTRANS%2FWP.29%2F1184",
+      "pages": 37,
+      "raw_file": "WP29-1184-report.pdf",
+      "bytes": 917283,
+      "sha256": "ee4a6b7561bba7b47db39768a169500841021d73b4fa1327c6464e074a2e33f5",
+      "read_scope": "Okładka; pkt69s15;p107–109s20;pełna tabelaamendmentss21–22 w tym wierszR48 i przypis. Cały37sPDF/ekstrakt lokalnie, bez deklaracji recenzji merytorycznej niepowiązanych agend.",
+      "bitmap_review": [
+        "WP29-report-page15.png",
+        "WP29-report-page21.png"
+      ],
+      "result": "AC1vote05.03.2025,2025/36asamendedbypara69,34for/0against/0abstentions,Supplement1to09. Para69removesonly6.2.6.1.2proposal.",
+      "status": "AC1_ADOPTION_CONFIRMED",
+      "table_footnote": "Gwiazdkas22: UniaEuropejska głosuje w imieniu państwczłonkowskich."
+    }
+  ],
+  "chain_inference": "2025/36nowe6.1.9.1limitref100 + raport69korygujejedynie6.2.6.1.2 + raport109przyjmuje2025/36z69 => limitref100 pozostaje w przyjętym pakiecie. To jawna synteza3źródeł, nie odczyt opublikowanegoAmend1.",
+  "unverified": [
+    "Definitiveentryintoforce",
+    "PublishedfullAmend1andlateramendmentchain",
+    "Currentconsolidatedlegaltext2026",
+    "Transitionalprovisionsandapplicabilitytoanindividual2000struck",
+    "FullGRE-90-10andGRE91notread"
+  ],
+  "discovery_only": {
+    "unece_session_url": "https://unece.org/info/Transport/Vehicle-Regulations/events/387733",
+    "access": "Pierwszeopenpełnestrony1038linii, późniejszefind403. STOPtegoURL/hostvariant, brak następnych prób. Nie merytoryczne źródło wledger.",
+    "search_leads_only": "Wyniki listprovisionalEIF zdatamiwnawiasach nieodczytanepełnie, brakSOURCEDdatyEIF. Nie korzystano ztreściGAR/mirrorów."
+  },
+  "raw_directory": "C:/Users/matma/Documents/Claude/kamion/Data/raw/refs/codex-s21/01-lampy/highbeam-adoption-round22",
+  "render_warning": "Symbol/ArialUnicodefontwarnings; relevanttextandtablecolumnsreadable",
+  "previous_round21": "UNCHANGED; draft2024/5stillPROPOSAL_NOT_ADOPTION_PROOF as sourceindividually",
+  "browser": false,
+  "commons_requests": 0,
+  "git_operations": 0
+}
