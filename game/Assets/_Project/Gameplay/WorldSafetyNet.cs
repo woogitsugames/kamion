@@ -80,7 +80,10 @@ namespace Game.Gameplay
             var tr = vehicle.transform;
             Vector3 p = tr.position;
             float inside = float.MaxValue;
-            if (m_HasBounds && region != null)
+            // Streaming (ADR 0273 §10 pkt 5): the outer edge of the Ready tiles, seams with a Ready neighbour excluded.
+            var streamer = Game.World.Streaming.WorldStreamer.Active;
+            if (streamer != null && streamer.TryInsideDistance(p, out float streamed)) inside = streamed;
+            else if (m_HasBounds && region != null)
             {
                 Vector3 l = region.transform.InverseTransformPoint(p);
                 inside = WorldBoundary.InsideDistance(m_Min, m_Max, l.x, l.z);

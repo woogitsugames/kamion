@@ -3,7 +3,7 @@
 Automatycznie generowany przez `tools/docs/adr_index.py` — nie edytuj ręcznie.
 Ponowne wygenerowanie: `python3 tools/docs/adr_index.py` (z katalogu głównego repo).
 
-Liczba ADR: **250** (numery 0001–None, z lukami — patrz raport audytu).
+Liczba ADR: **254** (numery 0001–None, z lukami — patrz raport audytu).
 
 | Numer | Tytuł | Status | Data | Link |
 |---|---|---|---|---|
@@ -256,4 +256,8 @@ Liczba ADR: **250** (numery 0001–None, z lukami — patrz raport audytu).
 | 0280 | Pierścień skrętu 12,50/5,30 m (96/53/WE): metryka obwiedni w runnerze, rozstaw sworzeń–tridem 7,63 m (D79, ko… | **Accepted (D79, korekta 7,63 m)** — 2026-11-16. Rozstaw sworzeń → środek tridemu **7,63 m** (wartość z 7 kart | 2026-11-16 | [0280-pierscien-skretu-96-53-rozstaw-sworzen-tridem.md](0280-pierscien-skretu-96-53-rozstaw-sworzen-tridem.md) |
 | 0281 | Przyspieszenie `build_world` bez zmiany bajtów wyjścia (K1a, K1b, K1c, K2, K3a, K4a, K4b, K5) | Proposed (agent geo-worldgen, chmura D r7, zadanie D26, gałąź `worldgen-perf2-0281`), 2026-11-16. Do scalenia | 2026-11-16 | [0281-build-world-perf-bez-zmiany-bajtow.md](0281-build-world-perf-bez-zmiany-bajtow.md) |
 | 0282 | Budżet trójkątów gęstych kafli miejskich: estymator zgodny z Unity + reguły LOD w odległościach bliskich | Proposed (agent rendering-perf, chmura D r7, zadanie D28, gałąź `dense-lod-0282`), 2026-11-16. Analiza + prot… | 2026-11-16 | [0282-lod-gestych-kafli-miejskich.md](0282-lod-gestych-kafli-miejskich.md) |
+| 0283 | HUD monitora, menu ustawień i okienka lusterek: przeprojektowanie (D84) | Proposed (chmura D r9, zadanie D40, gałąź `hud-redesign-0283`), 2026-11-16. Do weryfikacji w Unity (EditMode, | 2026-11-16 | [0283-hud-menu-lusterka-pc-redesign.md](0283-hud-menu-lusterka-pc-redesign.md) |
+| 0284 | noc na PC: reflektory mijania wg UN R112 kl. B, 16 pul latarni, highlight na tierach PC | Proposed (agent night-pc-s23, rendering-perf, gałąź `night-pc-s23`), 2026-11-16. Numer nada lider. | 2026-11-16 | [0284-noc-pc-reflektory-r112-pule-16.md](0284-noc-pc-reflektory-r112-pule-16.md) |
+| 0285 | trasy łączące korytarza streamingu (Białystok → Knyszyn → Tykocin bez przerw) | Proposed (agent stream-gaps-s23, 2026-11-16). Numer nadaje lider przy scalaniu (0283 zajęty przez HUD/menu #1… | 2026-11-16 | [0285-trasy-laczace-korytarza-streamingu.md](0285-trasy-laczace-korytarza-streamingu.md) |
+| 0286 | Dźwięk na PC: import PCM dla Standalone, wyjście audio playera Windows, pomiar miksu w playerze | Proposed (agent audio-pc-s23, gałąź `audio-pc-s23`), 2026-11-16. **Numer do potwierdzenia przez lidera** | 2026-11-16 | [0286-audio-pc-pcm-wyjscie.md](0286-audio-pc-pcm-wyjscie.md) |
 | ???? | ADR DRAFT — Direct3D 11 jako domyślne API grafiki playera Windows (D3D12 jako drugie + furtka `-force-d3d12`) | **Proposed** — 2026-11-16, szkic P24 (sesja P r8, gałąź `adr-d3d11-draft` z `origin/main` @ `eebb9813c`). | 2026-11-16 | [DRAFT-d3d11-default.md](DRAFT-d3d11-default.md) |

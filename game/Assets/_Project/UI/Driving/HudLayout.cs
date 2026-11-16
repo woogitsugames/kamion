@@ -40,6 +40,9 @@ namespace Game.UI.Driving
         public bool ShowDevPanel, ShowTelemetry, ShowReverseView, ShowDevText;
         /// <summary>Touch controls (zones 8-13) on screen (ADR 0265: false on a monitor without a touch screen).</summary>
         public bool ShowTouchControls;
+        /// <summary>ADR 0283: monitor HUD (DesktopHudLayout) - <see cref="Nav"/> is the GPS widget zone it solved.</summary>
+        public bool Desktop, ShowNav;
+        public Rect Nav;
 
         public const int ZoneCount = 15;
         static readonly string[] k_Names =

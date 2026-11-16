@@ -80,6 +80,17 @@ namespace Game.World.Streaming
         [Tooltip("Max horizontal gap between the autopilot path end and a tile route start to chain them [m]")]
         public float routeJoinM = 3f;
 
+        /// <summary>
+        /// Destination of the route autopilot across forks of the corridor (stream-gaps-s23): route links
+        /// (Resources/WorldStreaming/route_links.json) of another destination are never appended. Launch argument
+        /// <c>-route_to tykocin|monki</c> (<see cref="TryInstallFromLaunch"/>); default <see cref="RouteLinks.DefaultDestination"/>.
+        /// </summary>
+        public string routeDestination = RouteLinks.DefaultDestination;
+
+        /// <summary>Route links bound to <see cref="Graph"/> (set in <see cref="Init"/>; empty when the json is missing).</summary>
+        public RouteLinks Links { get; private set; }
+        bool[] m_LinkChained;
+
         public TileGraph Graph { get; private set; }
         public StreamingPolicy Policy { get; private set; }
         /// <summary>World anchor: EPSG:2180 x / y and EVRF2007 height of Unity (0, 0, 0).</summary>
@@ -125,6 +136,8 @@ namespace Game.World.Streaming
         }
 
         Tile[] m_Tiles;
+        // Outer-edge buffers of the safety-net query (ADR 0273 §10 pkt 5): filled per call, allocated once in Init.
+        TileState[] m_EdgeState; EdgeRect[] m_EdgeDrivable, m_EdgeTile; bool m_Decided;
         double m_Wx, m_Wy, m_Wz;
         readonly StreamCommand[] m_Cmd = new StreamCommand[8];
         readonly List<GameObject> m_Roots = new List<GameObject>(64);
@@ -189,7 +202,8 @@ namespace Game.World.Streaming
         /// the start region has an available neighbour tile scene; otherwise returns null and the scene is exactly as before
         /// (closed region edge). Everything the bootstrap used to wire by hand is done here, so Game.Gameplay keeps one line:
         /// <list type="bullet">
-        /// <item>content tier from the start scene name (<c>_High</c>), memory budget from the quality tier and platform;</item>
+        /// <item>content tier and memory budget from <see cref="StreamingContentChoice"/> (D44: desktop = PC quality tier,
+        /// phone = start scene name <c>_High</c>);</item>
         /// <item>pinned recovery tile from the safety net's <paramref name="safePoses"/> (ADR 0273 §8), and the same buffer
         /// moved on every origin rebase (the safety net itself does not listen to <see cref="FloatingOrigin.Moved"/>);</item>
         /// <item><paramref name="onOriginMoved"/> (route autopilot path) subscribed to <see cref="FloatingOrigin.Moved"/> for the
@@ -205,16 +219,42 @@ namespace Game.World.Streaming
         {
             if (!IsRequested(streamArgument)) return null;
             if (host == null || start == null || vehicle == null) return null;
-            string tier = start.gameObject.scene.name.EndsWith("_High", System.StringComparison.Ordinal) ? RegionScenes.HighTier : RegionScenes.LowTier;
-            float budget = StreamingSettings.BudgetForTier(Game.Rendering.QualityTiers.Current, !Application.isMobilePlatform);
-            var s = TryInstall(host, start, vehicle, body, tier, budget, null);
+            // D44 (ADR 0273 §6 dopisek): on desktop the PC quality tier picks the content (High / Ultra -> _High_Tile), not the
+            // start scene name; phones unchanged. Explicit Low fallback when no High tile scene is available.
+            var content = ChooseContentForLaunch(start);
+            var s = TryInstall(host, start, vehicle, body, content.contentTier, content.budgetMB, null);
             if (s == null) return null;
             s.UseSafePoses(safePoses, safeMinAge);
             s.AddOriginListener(onOriginMoved);
             s.routePath = onOriginMoved?.Target as IStreamedRoute;   // the hook passes RouteDriver.Offset
             s.m_Tiles[s.StartTile].routeChained = true;               // the start route already is the autopilot path
+            s.routeDestination = RouteLinks.DestinationFromArgs(System.Environment.GetCommandLineArgs());
             s.WidenStartBoundary(start);
             return s;
+        }
+
+        /// <summary>
+        /// Content tier and budget of a launch-time install (D44, <see cref="StreamingContentChoice"/>): quality tier now
+        /// (GameBootstrap applied -tier / saved choice / PC hardware default before the world scene), start scene tier and
+        /// whether a neighbour's High tile scene is in the build. Logs one <c>[STREAM] content</c> line with the tier and where
+        /// it came from (a saved explicit choice wins over the hardware default, ADR 0269/0270). Install time only.
+        /// </summary>
+        static StreamingContent ChooseContentForLaunch(WorldRegionRoot start)
+        {
+            bool desktop = !Application.isMobilePlatform;
+            string quality = Game.Rendering.QualityTiers.Current;
+            bool startHigh = StreamingContentChoice.IsHighScene(start.gameObject.scene.name);
+            // Review #168 P1-1/P1-2: High only when it covers every tile available in Low (start region included).
+            string highMissing = null;
+            bool highTiles = desktop && StreamingContentChoice.HighCoversLow(TileGraph.LoadDefault(), start.regionId, new BuildTileSource(), out highMissing);
+            var c = StreamingContentChoice.Choose(desktop, quality, startHigh, highTiles, highMissing);
+            string saved = Game.Rendering.QualityTiers.SavedTier;
+            string origin = string.IsNullOrEmpty(saved) ? "no saved choice (launch -tier or PC hardware default)"
+                : string.Equals(saved, quality, System.StringComparison.OrdinalIgnoreCase) ? "saved choice " + saved + " (menu / PC settings)"
+                : "launch -tier (saved choice " + saved + ")";
+            string line = $"[STREAM] content {c.contentTier}, budget {c.budgetMB:F0} MB: {c.reason}; quality tier {quality} from {origin}, start scene {start.gameObject.scene.name}";
+            if (c.highFallback) Debug.LogWarning(line); else Debug.Log(line);
+            return c;
         }
 
         /// <summary>Streaming switch: <see cref="EnabledOverride"/> when set, else launch argument <c>stream</c> == "1".</summary>
@@ -300,6 +340,7 @@ namespace Game.World.Streaming
             Policy = new StreamingPolicy(graph, settings);
             StartTile = startTile;
             m_Tiles = new Tile[graph.Count];
+            m_EdgeState = new TileState[graph.Count]; m_EdgeDrivable = new EdgeRect[graph.Count]; m_EdgeTile = new EdgeRect[graph.Count];
             for (int i = 0; i < m_Tiles.Length; i++)
                 m_Tiles[i] = new Tile { index = i, sceneName = RegionScenes.TileSceneNameFor(graph.Tiles[i].id, contentTier) };
             // World anchor of the start scene as imported (root at (0, -Az, 0) - originShift).
@@ -316,6 +357,14 @@ namespace Game.World.Streaming
                 if (i != startTile && !source.IsAvailable(graph.Tiles[i].id, contentTier)) Policy.SetUnavailable(i);
             Policy.SetPinned(startTile);
             Place(t);
+            SetRouteLinks(RouteLinks.LoadDefault(graph));
+        }
+
+        /// <summary>Route links to continue the autopilot with (Init loads the shipped ones; tests replace them after Init).</summary>
+        public void SetRouteLinks(RouteLinks links)
+        {
+            Links = links;
+            m_LinkChained = new bool[links != null ? links.Count : 0];
         }
 
         void OnEnable()
@@ -367,6 +416,7 @@ namespace Game.World.Streaming
             double x = m_Wx + p.x, y = m_Wy + p.z;
             UpdatePin();
             int n = Policy.Decide(x, y, v.x, v.z, m_Cmd);
+            m_Decided = true;
             for (int k = 0; k < n; k++)
             {
                 if (m_Cmd[k].op == StreamOp.Load) BeginLoad(m_Tiles[m_Cmd[k].tile]);
@@ -387,19 +437,35 @@ namespace Game.World.Streaming
 
         /// <summary>
         /// Appends the start route of every Ready tile that begins at the autopilot path end (chained, so a tile that became
-        /// Ready earlier is picked up after the one before it). No allocation unless a route is appended (a tile event).
+        /// Ready earlier is picked up after the one before it), or a route link of the chosen destination
+        /// (<see cref="routeDestination"/>) whose tile is Ready and whose first point meets the path end. A link with
+        /// <c>replacesRoute</c> = tile X is appended instead of X's start route (same first point; e.g. the knyszyn control
+        /// route ends at Rynek, the Tykocin link leaves the roundabout on DW671). No allocation unless a route is appended.
         /// </summary>
         void ContinueRoute()
         {
             if (routePath == null || !routePath.TryGetPathEnd(out Vector3 end)) return;
             float join2 = routeJoinM * routeJoinM;
-            for (int guard = 0; guard < m_Tiles.Length; guard++)
+            for (int guard = 0; guard < m_Tiles.Length + (Links != null ? Links.Count : 0); guard++)
             {
+                int link = FindLinkAt(end, join2);
+                if (link >= 0)
+                {
+                    m_LinkChained[link] = true;
+                    int rt = Links.ReplacesTile[link];
+                    if (rt >= 0) m_Tiles[rt].routeChained = true;   // its start route is not appended any more
+                    routePath.AppendPath(Links.WorldPoints(link, Graph, m_Wx, m_Wy), Links.Links[link].maxspeedKmh);
+                    Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] route continued by link {0} in {1} (to {2}): +{3:F0} m",
+                        Links.Links[link].id, Links.Links[link].tile, routeDestination, Links.Links[link].lengthM));
+                    if (!routePath.TryGetPathEnd(out end)) return;
+                    continue;
+                }
                 int hit = -1;
                 for (int i = 0; i < m_Tiles.Length; i++)
                 {
                     var t = m_Tiles[i];
                     if (t.routeChained || t.routeComp == null || t.route == null || Policy.StateOf(i) != TileState.Ready) continue;
+                    if (Links != null && Links.IsRouteReplaced(i, routeDestination)) continue;
                     var pts = t.routeComp.points;
                     if (pts == null || pts.Length < 2) continue;
                     Vector3 a = t.route.TransformPoint(pts[0]);
@@ -413,6 +479,23 @@ namespace Game.World.Streaming
                 Debug.Log(string.Format(CultureInfo.InvariantCulture, "[STREAM] route continued into {0}: +{1:F0} m", Graph.Tiles[hit].id, h.routeComp.Length));
                 if (!routePath.TryGetPathEnd(out end)) return;
             }
+        }
+
+        /// <summary>First not yet appended link of the chosen destination whose tile is Ready and whose first point is within
+        /// sqrt(<paramref name="join2"/>) of <paramref name="end"/>; -1 = none. No allocation.</summary>
+        int FindLinkAt(Vector3 end, float join2)
+        {
+            if (Links == null || m_LinkChained == null) return -1;
+            for (int i = 0; i < Links.Count; i++)
+            {
+                int ti = Links.TileOf[i];
+                if (m_LinkChained[i] || ti < 0 || Links.Links[i].e.Length < 2 || !Links.Applies(i, routeDestination)) continue;
+                if (Policy.StateOf(ti) != TileState.Ready) continue;
+                Vector3 a = Links.WorldPoint(i, 0, Graph, m_Wx, m_Wy);
+                float dx = a.x - end.x, dz = a.z - end.z;
+                if (dx * dx + dz * dz <= join2) return i;
+            }
+            return -1;
         }
 
         int m_LoggedPin = -2;
@@ -851,39 +934,32 @@ namespace Game.World.Streaming
         }
 
         /// <summary>
-        /// Distance from a world position to the edge of the drivable union of Ready tiles [m] (positive inside), for the
-        /// world safety net (ADR 0082) - open seams do not count as an edge. False when no tile is registered.
+        /// Distance from a world position to the OUTER edge of the drivable union of Ready tiles [m] (positive inside), for
+        /// the world safety net (ADR 0082; ADR 0273 §10 pkt 5): a seam with a Ready (or Loading / Activating) cardinal
+        /// neighbour is not an edge, an Unloaded / Unloading neighbour's seam is (<see cref="CorridorEdge"/>). Before the
+        /// first decision an available Unloaded tile counts as Loading (the spawn may stand next to a seam the first decision
+        /// is about to load). False when no tile is Ready.
+        /// No allocations (buffers from <see cref="Init"/>).
         /// </summary>
         public bool TryInsideDistance(Vector3 worldPos, out float inside)
         {
             inside = float.MinValue;
             if (m_Tiles == null) return false;
-            bool any = false;
             for (int i = 0; i < m_Tiles.Length; i++)
             {
                 var t = m_Tiles[i];
-                if (t.root == null || Policy.StateOf(i) != TileState.Ready) continue;
-                Vector3 l = worldPos - t.root.transform.position;
-                bool contains = l.x >= t.min.x && l.x <= t.max.x && l.z >= t.min.y && l.z <= t.max.y;
-                float d;
-                if (contains)
-                {
-                    int missing = 0;
-                    if ((t.openSides & TileSide.NE) == TileSide.NE && !Policy.NeighborReady(i, TileSide.NE)) missing |= EdgeSides.CornerBit(TileSide.NE);
-                    if ((t.openSides & TileSide.SE) == TileSide.SE && !Policy.NeighborReady(i, TileSide.SE)) missing |= EdgeSides.CornerBit(TileSide.SE);
-                    if ((t.openSides & TileSide.SW) == TileSide.SW && !Policy.NeighborReady(i, TileSide.SW)) missing |= EdgeSides.CornerBit(TileSide.SW);
-                    if ((t.openSides & TileSide.NW) == TileSide.NW && !Policy.NeighborReady(i, TileSide.NW)) missing |= EdgeSides.CornerBit(TileSide.NW);
-                    d = EdgeSides.UnionInsideDistance(l.x, l.z, t.min.x, t.min.y, t.max.x, t.max.y, t.openSides, missing);
-                    inside = any ? Mathf.Max(inside, d) : d;
-                    any = true;
-                }
-                else if (!any)
-                {
-                    d = WorldBoundary.InsideDistance(t.min, t.max, l.x, l.z);
-                    if (d > inside) inside = d;
-                }
+                var st = Policy.StateOf(i);
+                if (st == TileState.Ready && t.root == null) st = TileState.Activating;
+                else if (st == TileState.Unloaded && !m_Decided && !Policy.IsUnavailable(i)) st = TileState.Loading;
+                m_EdgeState[i] = st;
+                if (st != TileState.Ready) continue;
+                Vector3 o = t.root.transform.position;   // region-local (0, 0) = the tile's anchor
+                var td = Graph.Tiles[i];
+                m_EdgeDrivable[i] = new EdgeRect(o.x + t.min.x, o.z + t.min.y, o.x + t.max.x, o.z + t.max.y);
+                m_EdgeTile[i] = new EdgeRect(o.x + (float)(td.xmin - td.anchorX), o.z + (float)(td.ymin - td.anchorY),
+                                             o.x + (float)(td.xmax - td.anchorX), o.z + (float)(td.ymax - td.anchorY));
             }
-            return inside > float.MinValue;
+            return CorridorEdge.InsideDistance(Graph, m_EdgeState, m_EdgeDrivable, m_EdgeTile, worldPos.x, worldPos.z, out inside);
         }
 
         /// <summary>World-space start route of a resident tile (null when the tile is not resident or has none).</summary>

@@ -105,6 +105,34 @@ namespace Game.Vehicle.Runtime
         public static bool GlobalEnabled = true;
         /// <summary>Render even when the glass is not on screen (the HUD shows the textures as mirror insets).</summary>
         public static bool ForceRender;
+        /// <summary>
+        /// ADR 0283 (D84 "lusterka złe"): player adjustment of both main (class II) mirrors - the reflected view turned
+        /// outward / downward by these angles [deg] (set from the HUD preferences). Like turning the glass by half the
+        /// angle: less of the own cab / trailer side in the image. 0 / 0 = the built aim (TruckAssetBuilder, graybox).
+        /// The 3D glass in the cab shows the same texture (no extra render).
+        /// </summary>
+        public static float AdjustYawOutDeg, AdjustPitchDownDeg;
+
+        /// <summary>Local Euler offset (x = pitch down, y = yaw) of a main-mirror camera that looks back along the vehicle
+        /// side. <paramref name="phase"/> 0 = left mirror (outward = vehicle -X), otherwise right (+X). The camera faces -Z,
+        /// so its own +X is the vehicle -X: +yaw turns the view to the vehicle's left. Pure (EditMode test).</summary>
+        public static Vector3 AdjustEuler(int phase, float yawOutDeg, float pitchDownDeg) =>
+            new Vector3(pitchDownDeg, phase == 0 ? yawOutDeg : -yawOutDeg, 0f);
+
+        Quaternion m_BaseLocalRotation;
+        bool m_HasBaseRotation;
+        float m_AppliedYaw = float.NaN, m_AppliedPitch = float.NaN;
+
+        /// <summary>Applies <see cref="AdjustYawOutDeg"/> / <see cref="AdjustPitchDownDeg"/> to a main mirror (only on change).</summary>
+        void ApplyAdjustment()
+        {
+            if (!main) return;
+            if (!m_HasBaseRotation) { m_BaseLocalRotation = transform.localRotation; m_HasBaseRotation = true; }
+            if (AdjustYawOutDeg == m_AppliedYaw && AdjustPitchDownDeg == m_AppliedPitch) return;
+            m_AppliedYaw = AdjustYawOutDeg; m_AppliedPitch = AdjustPitchDownDeg;
+            transform.localRotation = m_BaseLocalRotation * Quaternion.Euler(AdjustEuler(phase, AdjustYawOutDeg, AdjustPitchDownDeg));
+        }
+
         /// <summary>Total mirror renders scheduled since start (telemetry: renders per frame).</summary>
         public static long RendersScheduled { get; private set; }
         /// <summary>The truck stands (ADR 0068 due-based intervals): speed &lt; 0.5 m/s and yaw rate &lt; 3 deg/s for 0.5 s.</summary>
@@ -244,6 +272,7 @@ namespace Game.Vehicle.Runtime
 
         void EnsureTarget()
         {
+            ApplyAdjustment();
             int h = Mathf.Max(16, Mathf.RoundToInt(VehicleCameraBudget.MirrorHeight * resolutionScale));
             var cam = Cam;
             // Also applies to existing generated prefabs, before their next TruckAssetBuilder rebuild.

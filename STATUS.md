@@ -22,3 +22,13 @@
 - Krok 2b/3: merge origin/main 07f4ed61a (konflikty pipeline.py, STATUS.md), katalog --check 0; derived 25 kafli skopiowane do main (robocopy exit=1, zgodne). NASTĘPNY KROK: wynik pytest (artifacts/world2-s23/logs/pytest.log) → git push -u origin world2-s23
 - Krok 4: pytest tests/gis: 2218 passed, 9 failed, 1 skipped, 2 xfailed (30:49); celowany -k seam/taper/0275/0224/0231/ring/catalog/route: 253 passed. Faile: generator po merge (stale: fidelity, far_field sha, export_is_deterministic, forest fc 26_13, sign_gantry_16_66 prototyp) = regeneracja; REALNE w pierscieniu: start_clear dk65-monki-05 (startS 63,23 na trasie 163,23 m) i dw671-tykocin-02 (startS 7,78 < 72,55); powiaty tykocin '2008'; tile_graph stale -> zregenerowany (39 kafli, 34 portale, 7 passed). qa.seams po merge: 20 szwow, 103 drogi, FAIL 17, PRZEJSCIE 11. Kopia derived: /MIR mogl usunac pliki w 7 istniejacych kaflach main (nielogowane). Unity EditMode po merge nieuruchomione.
 - NASTEPNY KROK (lider): naprawic route/startS dk65-monki-05 i dw671-tykocin-02, potem build_world 25 kafli generatorem po merge + import + EditMode.
+# STATUS — trailer-763-s23 (ADR 0280 §9: model 3D naczepy pod 7,63 m) — GOTOWE do weryfikacji lidera
+- Blender: eksport z osiami z dims.json (koła/AXLE_n −6,32/−7,63/−8,94, chlapacze −9,622, lampa boczna 3 −6,975);
+  check_export PASS (89000/24499/7847), regs 158/158, pytest dims_sync 9/9 + truck_regs 5/5; nowy render `gora` (przekrój 1,20 m).
+- Unity: prefab graybox zregenerowany (`DrivingLabSceneBuilder.RebuildTrailerPrefabBatch`), prefab art (`TrailerAssetBuilder.BuildBatch`)
+  bez ostrzeżeń, shader `_CurtainAxles` 7,63; visual-qa WorldC trailer-34/trailer-side przed/po.
+- EditMode Win64 (po merge origin/main #171): 1126 / 1103 passed / 22 failed / 1 skipped; TrailerAxleSyncTests 8/8;
+  22 porażki = StartClearance (20) + CarPaint (2), identyczne w cabin-pc-s23 → środowisko worktree.
+- Otwarte: artefakt obręczy kół (atlas Metal, sprzed zmiany) — osobne zadanie; visual-critic renderów.
+- NASTĘPNY KROK (lider): przegląd `git diff origin/main...trailer-763-s23`, visual-critic na `artifacts/trailer-763-s23/`, scalenie;
+  po scaleniu w main: `TrailerAssetBuilder.BuildBatch` + `WorldTruckInstaller.InstallBatch` (artefakty _Generated poza gitem).
