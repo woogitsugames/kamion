@@ -14,9 +14,10 @@ namespace Game.Tests
     /// </summary>
     public class MenuOverlayLayoutTests
     {
-        /// <summary>BootMenu block: 1600 wide (2 x 760 + 80), title top at +496; bottom -302 with 3 starts + region picker
-        /// + the PC settings row (footer of the right column is the lowest item).</summary>
-        public static readonly Rect MenuBlock3Starts = Rect.MinMaxRect(-800f, -302f, 800f, 496f);
+        /// <summary>BootMenu block: 1600 wide (2 x 760 + 80), title top at +496; bottom -272 with 3 starts + region picker on a PC.
+        /// ADR 0283 removed the separate PC settings row (one tabbed "Ustawienia" button): bottom measured by
+        /// MenuOverlayUiTests at -272 (was -302 with the footer under the PC settings row; int-ui-s23).</summary>
+        public static readonly Rect MenuBlock3Starts = Rect.MinMaxRect(-800f, -272f, 800f, 496f);
         /// <summary>Phone (no PC settings row): the region start button of the left column is the lowest item (-288).</summary>
         public static readonly Rect MenuBlockPhone = Rect.MinMaxRect(-800f, -288f, 800f, 496f);
 

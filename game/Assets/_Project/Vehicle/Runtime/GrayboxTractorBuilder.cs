@@ -221,13 +221,15 @@ namespace Game.Vehicle.Runtime
 
         /// <summary>
         /// Mirror head: housing + glass quad oriented so that the line of sight from the design eye point reflects
-        /// to look back along the vehicle side (3 % outward, 5 % down: trailer wheels and road in view), plus the mirror camera on that reflected
+        /// to look back along the vehicle side (7.5 % outward since ADR 0283, 5 % down: trailer wheels and road in view), plus the mirror camera on that reflected
         /// axis. Glass 0.21 x 0.38 m (WORKING_VALUE, class II main mirror size).
         /// </summary>
         static void BuildMirror(Transform pivot, Vector3 o, string name, Vector3 head, Vector3 eye, int side, int phase, GrayboxMaterials m)
         {
             Vector3 d = (head - eye).normalized;
-            Vector3 b = new Vector3(side * 0.03f, -0.05f, -1f).normalized;
+            // ADR 0283 (D84 "lusterka zasłonięte korpusem"): 7.5 % outward (4.3 deg, the TRAKT class II right aim of ADR 0042)
+            // instead of 3 %: the trailer side takes ~5-14 % of the window width at 5-15 m behind instead of ~25-33 %.
+            Vector3 b = new Vector3(side * 0.075f, -0.05f, -1f).normalized;
             Vector3 n = (d - b).normalized;                  // glass back normal (away from the driver)
             Quaternion q = Quaternion.LookRotation(n, Vector3.up);
             MeshObj(pivot, name + "Head", head - o, new Vector3(0.25f, 0.42f, 0.08f), q, m.dark, CubeMesh);
