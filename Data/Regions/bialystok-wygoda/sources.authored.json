@@ -1,0 +1,8 @@
+{
+ "provenance": "authored_override (ADR 0278, mechanism of ADR 0209/0212): source pins of region bialystok-wygoda, read by ingest.py and build_region.py",
+ "pins": {
+  "nmt_year": "2025"
+ },
+ "reason": "The seams of the truck route C <-> Dojlidy are shared with bialystok-industrial-c and bialystok-dojlidy, both built from NMT 2025 (gugik-nmt-2025-bialystok-industrial-c, gugik-nmt-2025-bialystok-dojlidy); the three tiles of the route keep that series. GUGiK sheet index: docs/reports/map/map_plan_0278_gugik.json (2025 fully covers the tile).",
+ "verify": "none (move together with the pin of the neighbours named in the reason)"
+}
