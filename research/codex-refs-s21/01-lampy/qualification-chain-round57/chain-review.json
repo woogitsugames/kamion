@@ -1,0 +1,42 @@
+{
+  "review_date": "2026-11-16",
+  "timezone": "Europe/Brussels",
+  "method": "Odczyt istniejących obserwacji/peer oraz dwóch pełnych nowych stron tekstowych przez web. Bez nowych oględzin zdjęć, Chrome i pobierania mediów.",
+  "RC39": {
+    "existing_evidence": ["../rear-approval-round39/observations.json", "../rear-approval-round39/root-peer-review.json", "../rear-approval-round39/manifest.csv"],
+    "existing_image_source": "https://autoline.info/-/sale/tail-lights/truck/Scania--24060812275774920500",
+    "existing_tractor_source": "https://autoline.info/-/sale/tail-lights/truck-tractor--25111809265539634400",
+    "existing_confirmed": "RC39-01: fizyczne E2 i geometria wcześniej niezależnie obejrzane; bez nowego odczytu w tej rundzie",
+    "missing_link": "BURGPOL lista wielu PN/pary nie przypisuje dokładnego numeru do wybranego klosza. Istniejące 2860829→ciągnik nie rozstrzyga tożsamości z tym kloszem.",
+    "decision": "CONDITIONAL_UNCHANGED",
+    "not_required": "Nie wymagano udowodnionego demontażu, pełnego numeru aprobaty ani montażu sfotografowanego egzemplarza."
+  },
+  "UP4": {
+    "existing_evidence": ["../used-parts-round4/observations.json", "../used-parts-round4/peer-review.json", "../qualification-census-round30/candidates.csv", "../manifest.csv: 01-UP4-03/04"],
+    "physical_numbers_as_previously_recorded": ["1875580", "155131"],
+    "new_visual_reading": false,
+    "decision": "CONDITIONAL_UNCHANGED",
+    "reason": "Nowe źródła nie dają odczytanego mocnego powiązania dokładnego numeru z ciągnikiem/naczepą."
+  },
+  "new_full_text_sources": [
+    {
+      "url": "https://autoline.info/-/tail-lights/truck-tractors/Netherlands--c532fc42cntNL",
+      "tool_ref": "turn1086view0",
+      "source_type": "Bieżący indeks ogłoszeń, nie katalog producenta",
+      "read": "Pełna lista 610 linii; 26 ofert. Find1875580 nie znalazł tekstu.",
+      "result": "Brak1875580 w pełnej bieżącej treści. Starszy indeksowany fragment z wyniku wyszukiwania nie przyjęty jako dowód.",
+      "supports_tractor_chain": false
+    },
+    {
+      "url": "https://vra-truckparts.co.uk/daf-cf-xf-rear-combination-tail-light-1875580-1875581-155130-155131-lh-24v-used/",
+      "tool_ref": "turn1091view0 / turn1092view0",
+      "source_type": "Deklaracja handlowa; tekst wskazuje także opieranie crossrefs na wynikach internetowych",
+      "locators": "Part Number / Description; Features: Manufacturer Part Number, Reference OE/OEM Number, Model Compatibility, Other Part Numbers",
+      "sourced_text_facts": "1875580 jako tylna lampa DAF CF/XF. 1875580/155130 przy LH, 1875581/155131 przy RH. Tytuł zawiera wszystkie numery, nie jeden fizyczny PN.",
+      "supports_tractor_chain": false,
+      "limit": "Brak jawnej konfiguracji ciągnika. Niezgodność crossref ze starą transkrypcją1875580+155131 jest powodem ostrożności, nie dowodem błędu obrazu i nie nowym odczytem."
+    }
+  ],
+  "counts": {"new_full_text_sources": 2, "new_images_viewed": 0, "new_reference_photos": 0, "quota_promotions": 0, "AUX_added": 0, "downloaded_media": 0},
+  "changes": "Tylko nowy child; parent/main/Git nietknięte; Commons/Flickr bez żądań."
+}
