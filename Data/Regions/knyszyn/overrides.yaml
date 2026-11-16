@@ -69,6 +69,29 @@ overrides:
     confidence: low
     verify: island length and width on owner photo 9 or on an orthophoto taken after 2025
     set: {length_m: 17.0, taper_m: 14.0, lane_offset_m: 3.0}
+  # ADR 0274 (c): low plants and stones on the centre island (owner photos 9-11, described in
+  # docs/owner/KNYSZYN-OWNER-FEEDBACK-S21.md: "piasek / zwir i male nasadzenia (krzewy, kamienie), bez drzew").
+  - id: knyszyn-roundabout-island-plantings
+    kind: plantings
+    reason: >-
+      Centre island of the DK65 x DW671 roundabout: sand with a few low shrubs and field stones, no trees, nothing
+      tall (owner photos 9-11; the photos are not in git and were not measured). Number, positions, sizes and the
+      species are ESTIMATED from that description only: 3 shrubs 0.35-0.45 m high (generic green leaf set
+      `privet`), 5 stones 0.15-0.30 m above the sand. Every item is at least 0.5 m + its own radius inside the
+      island kerb face (r 2.95 m about EPSG:2180 760623.71, 611996.27): the body of a semitrailer sweeps over the
+      kerb (ADR 0218 section 6). Budget: about 950 triangles, 4 materials (tests/gis/test_roundabout_0274.py).
+    confidence: low
+    verify: count and place shrubs / stones on owner photos 9-11 (Data/raw/refs/owner-knyszyn-2026-11-15)
+    clumps: [
+      {at: [760624.57, 611996.67], r_m: 0.35, height_m: 0.40, plant: privet},
+      {at: [760622.54, 611996.95], r_m: 0.40, height_m: 0.45, plant: privet},
+      {at: [760623.55, 611995.13], r_m: 0.30, height_m: 0.35, plant: privet}]
+    stones: [
+      {at: [760623.87, 611998.06], r_m: 0.32, height_m: 0.26},
+      {at: [760622.03, 611995.49], r_m: 0.26, height_m: 0.20},
+      {at: [760623.94, 611996.08], r_m: 0.38, height_m: 0.30},
+      {at: [760625.27, 611995.18], r_m: 0.22, height_m: 0.16},
+      {at: [760625.64, 611996.79], r_m: 0.20, height_m: 0.15}]
   - id: knyszyn-roundabout-dk65-feeders-width
     target: {osm_way: [1464342634, 1464342635, 1464342638, 1464342640]}
     reason: >-

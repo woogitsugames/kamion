@@ -575,3 +575,76 @@ def test_knyszyn_overrides_and_probe_are_consistent():
     probe = json.loads((ROOT / "docs/reports/roundabout-0274/knyszyn_ortho_probe.json").read_text(encoding="utf-8"))
     assert probe["roundabout_visible"] is False, "when a newer orthophoto shows the roundabout, measure and re-author"
     assert max(s["date"] for s in probe["source"]["sheets_at_centre"]) == "2025-05-27"
+
+
+# ------------------------------------------------------------------------------------------- (c) plants and stones
+def _island_buf(center=(0.0, 0.0), r=3.0, z=0.3):
+    buf = M.MeshBuf()
+    V, T = CR.island_fill_mesh(center, r, np.full(48, z))
+    buf.add("road", "island_sand", V, V[:, :2].copy(), T, src="island:test:fill")
+    return buf
+
+
+def _plant(buf, ov, origin=(0.0, 0.0)):
+    from streetscape import plantings as PT
+    rep = {}
+    before = len(buf.parts)
+    PT.build(buf, [ov], origin, Polygon(), buf.parts[:before], lambda e, n: np.zeros(len(np.atleast_1d(e))),
+             lambda e, n: False, rep)
+    return rep["plantings"], buf.parts[before:]
+
+
+def test_authored_clumps_and_stones_stand_on_the_island_top():
+    buf = _island_buf()
+    ov = {"id": "isl", "kind": "plantings",
+          "clumps": [{"at": [1.0, 0.5], "r_m": 0.35, "height_m": 0.4, "plant": "privet"}],
+          "stones": [{"at": [-1.0, 0.2], "r_m": 0.3, "height_m": 0.25}, {"at": [0.0, -1.5], "r_m": 0.2, "height_m": 0.15}]}
+    rep, parts = _plant(buf, ov)
+    assert rep["stale"] == [] and rep["clumps"] == 1 and rep["stones"] == 2
+    stones = [p for p in parts if p.mat == "bed_stones"]
+    assert len(stones) == 2 and all(len(p.T) == 49 for p in stones)
+    for p in stones:
+        assert p.V[:, 2].min() < 0.3 < p.V[:, 2].max() <= 0.3 + 0.25 * 1.07, "half sunk in the bed, authored height"
+        t = p.V[p.T]
+        c = p.V.mean(0)
+        assert (np.einsum("ij,ij->i", np.cross(t[:, 1] - t[:, 0], t[:, 2] - t[:, 0]), t.mean(1) - c) > 0).all()
+    shrub = [p for p in parts if p.mat.startswith("hedge")]
+    top = max(p.V[:, 2].max() for p in shrub)
+    assert shrub and 0.3 + 0.25 <= top <= 0.3 + 0.65, "a low shrub on the island top, not on the terrain"
+    assert all(np.hypot(*(p.V[:, :2] - [1.0, 0.5]).T).max() < 1.0 for p in shrub)
+
+
+@pytest.mark.parametrize("item,kind", [({"at": [9.0, 9.0], "r_m": 0.3, "height_m": 0.3}, "stones"),      # off the island
+                                       ({"at": [0.0, 0.0], "r_m": 5.0, "height_m": 0.3}, "stones"),
+                                       ({"at": [0.0, 0.0], "r_m": 0.3, "height_m": 2.5}, "clumps"),
+                                       ({"at": [0.0], "r_m": 0.3, "height_m": 0.3}, "clumps"),
+                                       ({"at": [0.0, 0.0], "r_m": "x", "height_m": 0.3}, "stones"),
+                                       ({"r_m": 0.3, "height_m": 0.3}, "clumps")])
+def test_bad_island_item_is_stale(item, kind):
+    rep, parts = _plant(_island_buf(), {"id": "isl", "kind": "plantings", kind: [item]})
+    assert rep["stale"] == [f"isl:{kind[:-1]}0"] and parts == []
+
+
+def test_knyszyn_island_plantings_are_low_clear_of_the_kerb_and_in_budget(knyszyn):
+    import yaml
+    net, j, buf, rep, mrep, overrides = knyszyn
+    sp = j.compact
+    ov = next(o for o in overrides if o["id"] == "knyszyn-roundabout-island-plantings")
+    origin = net.origin
+    r_island = sp.r_in - sp.apron[2]                           # island kerb face
+    items = [(it, "clump") for it in ov["clumps"]] + [(it, "stone") for it in ov["stones"]]
+    assert 3 <= len(ov["clumps"]) <= 6 and 3 <= len(ov["stones"]) <= 8
+    P = np.array([[it["at"][0] - origin[0], it["at"][1] - origin[1]] for it, _ in items])
+    for (it, kind), p in zip(items, P):
+        d = float(np.hypot(*(p - sp.center)))
+        assert d + it["r_m"] * 1.3 <= r_island - 0.5, (kind, d, "0.5 m inside the kerb face: trailer overhang")
+        assert it["height_m"] <= (0.6 if kind == "clump" else 0.35), "low: nothing hides a car across the island"
+    dd = np.hypot(*(P[:, None] - P[None]).transpose(2, 0, 1)) + np.eye(len(P)) * 9
+    rr = np.array([it["r_m"] for it, _ in items])
+    assert (dd >= (rr[:, None] + rr[None]) * 0.9).all(), "no two items in each other"
+    prep, parts = _plant(buf, ov, origin)                       # on the island fill built from the git data
+    assert prep["stale"] == [] and prep["clumps"] == len(ov["clumps"]) and prep["stones"] == len(ov["stones"])
+    tris = sum(len(p.T) for p in parts)
+    assert tris <= 1300, tris
+    assert len({p.mat for p in parts}) <= 4
+    assert ov["confidence"] == "low" and "ESTIMATED" in ov["reason"]

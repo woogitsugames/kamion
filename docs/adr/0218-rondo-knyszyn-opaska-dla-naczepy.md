@@ -221,6 +221,8 @@ wysepki poza pasami; pełny pierścień opaski (promienie, próg, spadek), wyspa
 nie na pierścieniu = stale; klucz tylko w kaflu knyszyn.
 
 **Otwarte (lider zaakceptował geometrię r3 do scalenia, 2026-11-16; dopracowanie w osobnym zadaniu).**
+Punkty (a)–(d) podjęte w **ADR 0274** (tryb krawężnikowy, rozdział DK65, siatka wyspy i nasadzenia, P-13 / P-10 przy
+pierścieniu); wymiary nadal WORKING_VALUE — ortofoto GUGiK 2025-05-27 jest sprzed budowy ronda.
 - (a) Szerokie płaty asfaltu między ramionami (wyokrąglenia wylot → wlot z domknięcia 6 m; na zdjęciu 9 ciaśniej).
 - (b) Wysepka na wlocie S krótka (~8 m): OSM rozdziela jezdnie 17 m przed pierścieniem; długa wysepka z azylem ze
   zdjęcia 9 wymaga override poszerzenia jezdni DK65 przed rondem.
