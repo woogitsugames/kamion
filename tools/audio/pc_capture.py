@@ -1,4 +1,4 @@
-"""ADR 0284: loudness / peak / spectrogram report of a Windows player output capture.
+"""ADR 0285: loudness / peak / spectrogram report of a Windows player output capture.
 
 The player records the AudioListener mix with ``-audio_capture out.wav`` (game/Assets/_Project/Audio/PcAudioRuntime.cs,
 32-bit float, interleaved, the output rate). This script measures it per segment:
@@ -83,6 +83,32 @@ def true_peak(x: np.ndarray) -> float:
     return float(np.max(np.abs(up)))
 
 
+def clicks(x: np.ndarray, fs: int, rise_db: float = 20.0, floor_db: float = -70.0) -> list[float]:
+    """Discontinuity scan: a click is broadband, so the mono sum is high-passed at 12 kHz (4th-order Butterworth, where the
+    truck mix has little energy) and cut into 128-sample frames; a frame whose RMS is ``rise_db`` above the median of the
+    surrounding 1 s and above ``floor_db`` dBFS is a hit; hits closer than 20 ms are one event. Returns event times [s].
+    A real broadband transient (air valve, door) can trigger it too - every hit is listed for listening, not counted
+    as a defect."""
+    m = x.mean(axis=1)
+    h = signal.sosfilt(signal.butter(4, 12000 / (fs / 2), "highpass", output="sos"), m)
+    fr = 128
+    n = len(h) // fr
+    if n < 10:
+        return []
+    e = np.sqrt(np.mean(h[: n * fr].reshape(n, fr) ** 2, axis=1) + 1e-20)
+    w = max(3, int(fs / fr))
+    pad = np.pad(e, w // 2, mode="edge")
+    from numpy.lib.stride_tricks import sliding_window_view
+    med = np.median(sliding_window_view(pad, w)[: n], axis=1)
+    hit = np.flatnonzero((20 * np.log10(e / (med + 1e-20)) > rise_db) & (20 * np.log10(e) > floor_db))
+    ev: list[float] = []
+    for i in hit:
+        t = i * fr / fs
+        if not ev or t - ev[-1] > 0.02:
+            ev.append(round(t, 3))
+    return ev
+
+
 def measure(x: np.ndarray, fs: int) -> dict:
     y = k_weight(x, fs)
     st = _lk(_blocks(y, fs, 3.0, 1.0))
@@ -102,6 +128,7 @@ def measure(x: np.ndarray, fs: int) -> dict:
         "samples_over_m0_1dbfs": int(np.sum(np.abs(x) > 10 ** (-0.1 / 20))),
         "dc": [round(float(v), 6) for v in np.mean(x, axis=0)],
         "lr_correlation": round(corr, 3),
+        "click_events_s": clicks(x, fs)[:50],
     }
 
 

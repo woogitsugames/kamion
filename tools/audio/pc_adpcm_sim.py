@@ -1,4 +1,4 @@
-"""ADR 0284: SIMULATION of the mobile ADPCM import on representative vehicle clips (why Standalone gets PCM).
+"""ADR 0285: SIMULATION of the mobile ADPCM import on representative vehicle clips (why Standalone gets PCM).
 
     uv run python pc_adpcm_sim.py <out_dir>
 

@@ -303,7 +303,7 @@ namespace Game.Editor.Audio
     /// Loops: ADPCM, Compressed In Memory (cheap decode for ~12 engine voices on the Helio G99, ADR 0007).
     /// One-shots: ADPCM Decompress On Load (procedural), Vorbis q 0.7 Decompress On Load (ElevenLabs events: longer,
     /// broadband, decoded once at load so no runtime Vorbis cost; ADR 0137).
-    /// Standalone (Windows, the main platform since D73; ADR 0284): every clip PCM Decompress On Load - no ADPCM
+    /// Standalone (Windows, the main platform since D73; ADR 0285): every clip PCM Decompress On Load - no ADPCM
     /// quantisation noise on the engine grid, no Vorbis seam/decode cost on short phase-aligned loops; ≈ 105 MB RAM for
     /// both sound sets (well inside the PC memory budget). The default (Android) settings stay as they were.
     /// </summary>
@@ -312,7 +312,7 @@ namespace Game.Editor.Audio
         /// <summary>Platform name of the PC override (BuildTargetGroup.Standalone).</summary>
         public const BuildTargetGroup PcGroup = BuildTargetGroup.Standalone;
 
-        // 2: Standalone PCM override (ADR 0284) - bumping the version reimports the clips in an existing Library.
+        // 2: Standalone PCM override (ADR 0285) - bumping the version reimports the clips in an existing Library.
         public override uint GetVersion() => 2;
 
         /// <summary>True for assets under the two vehicle clip roots this postprocessor owns.</summary>
@@ -342,7 +342,7 @@ namespace Game.Editor.Audio
             imp.SetOverrideSampleSettings(PcGroup, PcSettings(s));
         }
 
-        /// <summary>Standalone override: PCM, Decompress On Load, original sample rate, preloaded (ADR 0284).</summary>
+        /// <summary>Standalone override: PCM, Decompress On Load, original sample rate, preloaded (ADR 0285).</summary>
         public static AudioImporterSampleSettings PcSettings(AudioImporterSampleSettings d)
         {
             d.loadType = AudioClipLoadType.DecompressOnLoad;

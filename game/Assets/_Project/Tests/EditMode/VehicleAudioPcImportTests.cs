@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Game.Tests
 {
     /// <summary>
-    /// ADR 0284: vehicle audio import settings per platform. Windows (Standalone) = PCM Decompress On Load for every clip
+    /// ADR 0285: vehicle audio import settings per platform. Windows (Standalone) = PCM Decompress On Load for every clip
     /// of both sound sets; the default (Android) settings keep the mobile compression (ADPCM loops, ADPCM / Vorbis 0.7
     /// one-shots) so the phone build is unchanged.
     /// </summary>

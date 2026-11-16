@@ -10,7 +10,7 @@ using UnityEngine.Profiling;
 namespace TruckSim.Audio
 {
     /// <summary>
-    /// PC audio output (ADR 0284). The project AudioManager is shared with Android (DSP buffer 1024, 32 real voices);
+    /// PC audio output (ADR 0285). The project AudioManager is shared with Android (DSP buffer 1024, 32 real voices);
     /// on a Windows/desktop player this resets the output once at boot, before any AudioSource exists:
     /// DSP buffer <see cref="PcDspBuffer"/>, <see cref="PcRealVoices"/> real voices (the truck keeps ~20 PerspectiveLoops
     /// x 2 sources plus four engine grids playing, so 32 voices virtualise low-priority layers such as the ambient bed).
