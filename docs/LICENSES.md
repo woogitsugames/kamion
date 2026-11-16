@@ -633,3 +633,8 @@ Dwie miniatury w research/codex-refs-s21/06-region-ring/tykocin-facades-round8/f
 ### codex-refs-s21: Fasty, budynek przystanku (runda9)
 
 05-kolej38/fasty-ground-round9/files:FG9-01 Maliniak (PolishWikipedia), CC BY-SA2.5 https://creativecommons.org/licenses/by-sa/2.5/ ; FG9-02 HenrykBorawski, CC BY-SA3.0 https://creativecommons.org/licenses/by-sa/3.0/ . Indywidualne źródłaCommons i opisy zmian wmanifest.csv, hashe źródła/miniatury wretrieval.json. RekompresjaJPEG i pomniejszenie drugiego podglądu do800px, bez kadrowania. Pierwsza data to upload, nie ekspozycja.
+
+
+### codex-refs-s21: DworzecMońki (runda9)
+
+06-region-ring/monki-civic-round9/files/06-MC9-01.jpg: HenrykBorawski, CC BY-SA3.0 https://creativecommons.org/licenses/by-sa/3.0/ . ŹródłoCommons Dworzec_kolejowy_w_Mońkach_1.jpg, pełnyURLwmanifest.csv. Podgląd960×720pomniejszony do800×600, bezcropu/korektbarw.0pełnychoryginałów. Hashminiatury jawnieoddzielony odoryginału, data18.04.2014 zCommons.

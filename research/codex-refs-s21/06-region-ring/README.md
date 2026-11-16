@@ -72,3 +72,8 @@ Główny manifest29rekordów. [Kościół](monki-landmark-round7/README.md):2now
 ## Elewacje Złotej — runda8
 
 [tykocin-facades-round8](tykocin-facades-round8/README.md):2nowe kadry CC BY4.0 Krzysztofa Popławskiego,2026-08-05 według Commons; każdy obejrzany osobno. Dwa różne budynki: jasna uszkodzona elewacja z balkonem i dwoma poziomami otworów oraz drewniany dom ze szczytem/podestem. Bruk i chodnik opisane z obrazu; formalne kondygnacje, materiał falistego dachu, RAL/metraż/GPS/DW671 UNVERIFIED.2pobrane podglądy pozaGit,0oryginałów,2miniatury≤800px. Główny manifest31rekordów. Sprawdzenie pełnych nazw plików w śledzonych s21/K1 nie wykazało duplikatów; nie deklaruje audytu całego zewnętrznego archiwum.
+
+
+## DworzecMońki — runda9
+
+[monki-civic-round9](monki-civic-round9/README.md):1nowa fotografia18.04.2014HenrykBorawskiCCBYSA3, każdyagent/rootosobnoobejrzeli. Ochrowożółtafasada, łukowowygiętyszczyt, centrum2głównepoziomyotworów, boczneoknawdachu, schody/utwardzenie/trawa. Formalne kondygnacje/materiałdachu/metryka/stan2026UNVERIFIED.2pobrane podglądy/1zachowanykadr, drugi odrzucony powtarzaGartychaskwer;0oryginałów/0link-only,1Gitmini800×600. APIdeklarowało800aleJPEG960×720, jawnyzapis. Główny06ma32rekordy.

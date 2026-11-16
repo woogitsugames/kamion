@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-16",
+  "requested_api_width": 800,
+  "api_reported_thumb_size": [
+    800,
+    600
+  ],
+  "actual_response": [
+    960,
+    720
+  ],
+  "warning": "API thumburl ma960px; zmniejszono lokalnie tylko kwalifikowany kadr do800×600.",
+  "files": [
+    {
+      "raw_preview": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\06-region-ring\\monki-civic-round9\\MC9-A01-civic.jpg",
+      "actual_pixels": [
+        960,
+        720
+      ],
+      "retained": false
+    },
+    {
+      "raw_preview": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\06-region-ring\\monki-civic-round9\\MC9-A02-station.jpg",
+      "actual_pixels": [
+        960,
+        720
+      ],
+      "retained": true,
+      "git_file": "files/06-MC9-01.jpg",
+      "git_pixels": [
+        800,
+        600
+      ],
+      "change": "proporcjonalne zmniejszenie; bez cropu/korekt barw",
+      "sha256": "e23da7bcdb627a06ea7177898d2ee09909f882e18e071b39cfe14db71161d641"
+    }
+  ]
+}
