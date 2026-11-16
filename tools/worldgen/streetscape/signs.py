@@ -626,11 +626,13 @@ def c9():
 # Dz.U. 2019 poz. 2310 (PDF p. 41: A-9, A-10; p. 51: G-1a-f, G-2), viewed 2026-11-15; simplified pictograms from
 # primitives, no traced artwork. Plate sizes: RECT below.
 TRI_UP_TOP = (S - (S - 16) * math.sqrt(3) / 2) / 2      # px: apex row of the upright warning triangle (side S - 16)
-# code -> (width m, height m) of rectangular plates. WORKING_VALUE: proportions measured on the colour patterns
-# (G-1: 80 x 265 px, G-2: 185 x 265 px); absolute sizes UNVERIFIED (Dz.U. 2019 poz. 2311 zał. 1 rozdz. 8 not read:
-# the PDF is > 10 MB). "T-SA" = tablica "Sygnalizacja automatyczna" (§ 79 pkt 6): the regulation gives no pattern -
-# white board, black frame and lettering, UNVERIFIED design and size.
-RECT = {**{f"G-1{k}": (0.30, 1.00) for k in "abcdef"}, "G-2": (0.35, 0.50), "T-SA": (0.90, 0.36)}
+# code -> (width m, height m) of rectangular plates. ADR 0279: G-1 and G-2 SOURCED from the construction drawings of
+# Dz.U. 2019 poz. 2311 zał. 1, rys. 9.8.1-9.8.6 (PDF s. 507-509: G-1 300 x 1000 mm) and rys. 9.8.7 (s. 510: G-2
+# 440 x 600 mm; was WORKING_VALUE 0.35 x 0.50 from the colour pattern) = sign_norms.G1_MM / G2_MM. "T-SA" = tablica
+# "Sygnalizacja automatyczna" (Dz.U. 2025 poz. 1105 § 79 pkt 6): neither act gives a pattern - white board, black
+# frame and lettering, UNVERIFIED design and size.
+RECT = {**{f"G-1{k}": (SN.G1_MM[0] / 1000.0, SN.G1_MM[1] / 1000.0) for k in "abcdef"},
+        "G-2": (SN.G2_MM[0] / 1000.0, SN.G2_MM[1] / 1000.0), "T-SA": (0.90, 0.36)}
 
 
 def _tri_up():
@@ -704,7 +706,7 @@ def g1(code):
 def g2():
     """G-2 "sieć pod napięciem": white plate with a black frame, yellow warning triangle with a black lightning bolt,
     yellow panel with the black legend of the pattern."""
-    w, h = 358, S
+    w, h = 376, S                                   # 440 x 600 mm (rys. 9.8.7) at 512 px height
     im = _img(w, h)
     d = ImageDraw.Draw(im)
     d.rounded_rectangle([0, 0, w - 1, h - 1], radius=18, fill=BLACK)

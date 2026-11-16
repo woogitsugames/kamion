@@ -1,5 +1,3 @@
-# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
-- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
-- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
-- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
-- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
+# STATUS signs-audit-0279 (D21, chmura D r6)
+- 2026-11-16 krok 1: przeczytane Dz.U. 2019/2311 cz.1 (sha f94925ec) + zał. 2 (plik ELI typ I, sha 8abcce24), 2310, 1105, nowelizacje; katalog: sign_norms (tabele A-D/G, montaż, odległości), signs.RECT G-2 0,44x0,60, rail.py G-3 1,40x0,15, standards P-6/P-14 8 m. Testy: -k "sign or marking or 0236 or 0279 or rail_approach" 172 passed; -k "rail or v34 or furniture" 198 passed.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis -k "sign or marking or 0236 or 0279" -q` + ADR 0279 + raport docs/reports/SIGNS-AUDIT-2026-11-16.md
