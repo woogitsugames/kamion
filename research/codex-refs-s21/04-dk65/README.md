@@ -1,6 +1,6 @@
 # 04 — DK65: datowany stan inwestycji i organizacja ruchu — WIP
 
-Stan ewidencji głównej na 16.11.2026: **29 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **31 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Wcześniejszy etap manifestu:8 rekordów —6 dokumentacyjnych i2 ponownie obejrzane orto. Brak nowych fotografii naziemnych i brak pobranych obrazów firmowych. Normy i prywatne obserwacje tekstowe opisano osobno.
 
@@ -101,3 +101,8 @@ Główny manifest: 22 rekordy. [Dokument gminny](tree-inventory-round9/README.md
 ### Fasty — jeden zjazd i dwa historyczne kadry
 
 FB19-01/02, picturehoover27.06.2020, dwa permalinki Mapillary obejrzane indywidualnie także przez root w publicznym UI z OSM,0pobrań. Jeden czerwonołososiowy zjazd z prostokątnych elementów, szare ziarniste pobocze i trawiaste obniżenie. Dwa ujęcia nie oznaczają dwóch zjazdów. Przystanek/wiata/znak niepotwierdzone, funkcja obniżenia i przepust UNVERIFIED. Punkt K1km10.417 wdk65-02 wybrał miejsce, ale nie dowodzi GPS kamery/kafla obu fotografii ani aktualnego numeru drogi2026. [FB19](fasty-bus-stop-round19/README.md).
+
+
+### Południowe podejście do Knyszyna — KS20
+
+Dwa nowe kadry picturehoover27.06.2020 obejrzane także przez root: falująca niweleta, wąski ziarnisty pas przy białej krawędzi, trawa/wyższa roślinność przed lasem po prawej i szereg dużych nieregularnych pni po lewej. Bez gatunków, rozstawów, wymiarów rowu lub przepustu z domysłu. Dwa widoki tego samego odcinka, nie dwa odrębne szpalery. K1km24.6 służy selekcji, przypisanie do dk65-11 ESTIMATED, GPS aparatu UNVERIFIED. [KS20](knyszyn-south-verges-round20/README.md).

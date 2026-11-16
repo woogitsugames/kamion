@@ -1,0 +1,53 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE — dwa nowe kadry indywidualnie obejrzane",
+  "goal": "Naziemny widok pobocza, trawiastego obniżenia lub zjazdu w słabiej pokrytym kaflu dk65-11. Bez wymuszania identyfikacji przystanku.",
+  "source": "research/dk65-knyszyn-refs/data/km_points.json — istniejący zapis, read-only",
+  "selection": {
+    "K1_route_km": 24.6,
+    "lat": 53.286648,
+    "lon": 22.944057,
+    "way": 27718745,
+    "ref_literal": "65",
+    "tile": "dk65-11"
+  },
+  "limits": [
+    "K1 km nie jest państwowym pikietażem.",
+    "Punkt selekcji nie jest GPS kamery.",
+    "Maksymalnie jeden punkt i dwa faktycznie obejrzane kadry.",
+    "Data historyczna z UI; stan 2026 UNVERIFIED.",
+    "Brak pobrań, nowych zapytań OSM/Overpass, Commons lub Flickr."
+  ],
+  "dedup": "Dokładne dwa ID nie występowały w lokalnym research/codex-refs-s21 ani research/dk65-knyszyn-refs przed zapisem tej rundy.",
+  "counts": {
+    "new_exposures": 2,
+    "media_downloads": 0,
+    "confirmed_bus_stops": 0,
+    "confirmed_culverts": 0,
+    "new_osm_requests": 0
+  },
+  "viewer": {
+    "basemap": "OpenStreetMap jawnie obramowany jako wybrany w menu",
+    "captures": "All captures jawnie wybrane",
+    "author": "picturehoover",
+    "capture_date_ui": "2020-06-27",
+    "frame_ids": [
+      "298229298433624",
+      "776881906319866"
+    ],
+    "viewport_only": {
+      "lat": 53.286602300001,
+      "lon": 22.944113099998
+    },
+    "viewport_limit": "Publiczny URL mapy, nie GPS aparatu; identyczny środek pozostał po przejściu do drugiego kadru.",
+    "source_current_osm_label": "65 na drodze w podkładzie, bez deklaracji prawnej aktualności tagu"
+  },
+  "georeference": "Położenie zaznaczonego punktu przy osi z etykietą65 w UI jest zgodne z wyborem K1 km24,6. To ESTIMATED przypisanie kontekstowe do dk65-11, nie pomiar GPS kamery ani państwowy kilometraż.",
+  "observed_limits": [
+    "Brak czytelnego przepustu lub zjazdu w tych kadrach.",
+    "Obniżenie trawy nie dowodzi konkretnej budowy odwodnienia.",
+    "Nie rozpoznano gatunków, wieku ani rozstawu pni.",
+    "Nie odczytano metrów, headingu ani geograficznego/magnetycznego azymutu.",
+    "Data własnej recenzji bez dokładnej godziny; stan2026 UNVERIFIED."
+  ]
+}
