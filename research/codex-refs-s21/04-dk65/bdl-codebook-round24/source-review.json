@@ -1,0 +1,83 @@
+{
+  "review_date": "2026-11-16",
+  "own_exact_time_recorded": false,
+  "status": "LIMITED — BDL TAKSATOR nie definiuje nazw pól usługi i nie potwierdza przeliczeń",
+  "subject": {
+    "r23_source_review": "../bdl-forest-context-round23/source-review.json",
+    "layer": "Wydzielenia poza PGL LP wg PUL, WMS_BDL REST layer6",
+    "raw_values_read_only": {
+      "adress_forest": "B020320009-104   -a   -00",
+      "species_age": 100,
+      "a_year": 2017,
+      "part_cd": "5  "
+    }
+  },
+  "documents": [
+    {
+      "id": "04-BC24-D01",
+      "url": "https://www4.bdl.lasy.gov.pl/portal/Media/UPUL/taksatorpu_instr_uzytk_2023.pdf",
+      "title": "TAKSATOR — Plany Uproszczone. Instrukcja użytkownika",
+      "publisher": "PGL Lasy Państwowe, DGLP",
+      "publication": "Warszawa 2023, strona tytułowa",
+      "local_existing_pdf": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\04-dk65\\bdl-forest-context-round23\\taksator-pu-2023.pdf",
+      "sha256": "a65358f39f62f9c2a24abeaeb68a51a2e1bd27a2d7ef6206c262746795d000ee",
+      "locators": [
+        {
+          "pdf_page": 11,
+          "printed_page": 11,
+          "render": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\04-dk65\\bdl-codebook-round24\\taksator-page-11.png",
+          "viewed": true,
+          "finding": "Ustawienia pierwszego roku i zakresu obowiązywania planu; ilustracyjny interfejs ma lata 2017–2026. Nie jest to mapowanie a_year ani identyfikacja planu konkretnego rekordu."
+        },
+        {
+          "pdf_page": 17,
+          "printed_page": 17,
+          "render": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\04-dk65\\bdl-codebook-round24\\taksator-page-17.png",
+          "viewed": true,
+          "finding": "Kolumny udziału i wieku gatunku są oddzielne. Ilustracyjny przykład ma Udział 10 / Wiek 65. Niższe 100% dotyczy powierzchni wskazania gospodarczego, nie składu gatunkowego."
+        }
+      ]
+    }
+  ],
+  "decisions": {
+    "current_layer6.species_age_semantics": "UNVERIFIED dokładna definicja i rok odniesienia; literalna wartość 100 zachowana",
+    "current_layer6.a_year_semantics": "UNVERIFIED",
+    "current_layer6.part_cd_semantics_and_unit": "UNVERIFIED",
+    "species_age100_at_year2017": "UNVERIFIED — nie obliczono wieku na 2026",
+    "part_cd5_as_50percent": "UNVERIFIED — nie przeliczono"
+  },
+  "evidence_limits": [
+    "Instrukcja BDL TAKSATOR przedstawia odrębne pola udziału i wieku oraz okres planu, lecz bez mapowania nazw pól REST.",
+    "Instrukcyjny przykład 2017–2026 nie wiąże rekordu R23 z okresem planu.",
+    "100% powierzchni zabiegu nie jest legendą udziału gatunku.",
+    "Odczyt ogólnego podręcznika LP został wykluczony z core jako źródło spoza dozwolonego zakresu.",
+    "Brak wyprowadzenia roku powstania lasu lub cech alei."
+  ],
+  "network_scope": {
+    "new_point_queries": 0,
+    "new_wms_queries": 0,
+    "osm_or_overpass": 0,
+    "commons_or_flickr": 0,
+    "new_pdf_downloads": 1,
+    "reused_existing_pdfs": 1,
+    "new_ground_images": 0,
+    "chrome_used": false,
+    "accepted_source_documents": 1,
+    "out_of_scope_document_downloads": 1,
+    "new_pdf_downloads_retained": 0
+  },
+  "source_files_changed": false,
+  "excluded_source": {
+    "status": "OUT_OF_ALLOWED_SCOPE — nie używać do SOURCED/core",
+    "url": "https://www.lasy.gov.pl/pl/publikacje/copy_of_gospodarka-lesna/urzadzanie/geomatyka-w-lasach-panstwowych/geomatyka-w-lasach-panstwowych-czesc-ii/%40%40download/file/Geomatyka%20w%20Lasach%20Panstwowych.%20Czesc%20II.pdf",
+    "sha256": "c276a106cb20fbd42057de715dd8bed273d3bf6a5771a14a1697128d9394d1e5",
+    "bytes": 15448562,
+    "reason": "Ogólna publikacja LP; nie wykazano powiązania publikacyjnego przez BDL. Koordynator wykluczył ją z core przed stabilizacją. Nie wykonano kolejnych HTTP w poszukiwaniu łańcucha.",
+    "core_claims_removed": true,
+    "deleted_original_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\04-dk65\\bdl-codebook-round24\\geomatyka-lp-ii.pdf",
+    "deleted_render_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\04-dk65\\bdl-codebook-round24\\geomatyka-pdf250-printed253.png",
+    "removed_after_parent_instruction": true,
+    "removed_date": "2026-11-16",
+    "verified_absent": true
+  }
+}
