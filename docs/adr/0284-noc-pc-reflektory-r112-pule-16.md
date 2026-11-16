@@ -1,4 +1,4 @@
-# ADR XXXX — noc na PC: reflektory mijania wg UN R112 kl. B, 16 pul latarni, highlight na tierach PC
+# ADR 0284 — noc na PC: reflektory mijania wg UN R112 kl. B, 16 pul latarni, highlight na tierach PC
 Status: Proposed (agent night-pc-s23, rendering-perf, gałąź `night-pc-s23`), 2026-11-16. Numer nada lider.
 Powiązane: ADR 0062 / 0191 (pule), 0199 (kalibracja zmierzchu), 0216 (LED), 0108 r2 (eksperymentalny rzut reflektorów),
 0269 (tiery PC), D73 (Windows główną platformą). ADR 0197 (światła pojazdu) nie istnieje w main — PR #79 `lights-0197`
