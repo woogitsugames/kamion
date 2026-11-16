@@ -131,3 +131,8 @@ Główny manifest36rekordów. [Cztery nowe kadry2024](church-surfaces-round10/RE
 ## Tablica i wejście — runda11
 
 [street-furniture-round11](street-furniture-round11/README.md):2nowe historyczne kadry Henryka Borawskiego CC BY-SA3.0 z9/10czerwca2012, każdy obejrzany przez agenta i koordynatora. Tablica informacyjna na2nogach oraz sklepowe schody/balustrada/pasowa nawierzchnia i dalsza pierzeja. Mapa na tablicy nie służy do geometrii świata. Formalne kondygnacje, kierunekGrodzieńska/Szkolna, GPS i stan2026 UNVERIFIED.2podglądy pozaGit/2miniatury≤800px/0oryginałów/0link-only. Główny03ma38rekordów, nie38budynków.
+
+
+## Detale istniejących zdjęć Rynku — runda12
+
+[public-furniture-details-round12](public-furniture-details-round12/README.md):ponowny osobny oglądFA7-001/003 przezagenta,0nowych ekspozycji/0pobrań/0kopiiowner. Ławki:brązowoczerwone listwy, cienkie ciemne podpory, łukowaty podłokietnik; niski ciemny prostokątny pojemnik z kwiatami; duże płytyfontanny/proste spoiny/ciemny pas drobnych elementów/wąski ruszt z falistymi otworami; dalej wachlarzowe rzędy kostki/jasne obrzeża trawnika. Materiały/liczba listew/metraż/stan2026UNVERIFIED, nie sumowanoławek z różnychzdjęć. Główny38bez duplikatów;2wierszechild to noweopisyjużistniejącychkadrów. Koordynator odczytałartefakty, nie deklaruje drugiego ogląduźródeł w tejrundzie.
