@@ -227,7 +227,7 @@ def glb_materials():
 
 
 WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
-        "sidewalk_paving", "apron_sett", "apron_paving_light"}
+        "sidewalk_paving", "apron_sett", "apron_paving_light", "sidewalk_paving_red", "sidewalk_slabs"}      # + ADR 0237 footway types
 
 
 def sha(b: bytes) -> str:
@@ -268,7 +268,9 @@ def assemble(parts, layers, half):
             # ADR 0123: kerbs on a deck are exported as `bridge_kerb` (same kerb set, darker: road film, REVIEW
             # s10-0117 P1-3) - a rename at export only, so every QA / fidelity rule keyed on curb_concrete still
             # sees them; the bridge mesh had a curb_concrete primitive for exactly these triangles (no extra draw)
-            mat_out = "bridge_kerb" if (p.layer == "bridge" and p.mat == "curb_concrete") else p.mat
+            # ADR 0237: the same for the surface type of a footway (streetscape.pavements sets `export_mat`)
+            mat_out = ("bridge_kerb" if (p.layer == "bridge" and p.mat == "curb_concrete")
+                       else getattr(p, "export_mat", None) or p.mat)
             g = groups.setdefault((key, p.layer, mat_out), [])
             g.append((pi, p.V, N, p.UV, p.T[sel], p.UV1, p.COL))
     out = {}
@@ -929,6 +931,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     w.stats["gores"]["kerb_tris_in_fill"] = GO.kerbs_in_fills(w.buf, w.gore_plan)
     log("kerb triangles inside paved gore fills:", w.stats["gores"]["kerb_tris_in_fill"])
     log("hero bridges", {k: [x["id"] if isinstance(x, dict) else x for x in v] for k, v in w.stats["hero_bridges"].items()})
+    from streetscape import pavements as PVM              # ADR 0237: sidewalk surface types (export material only)
+    st["report"]["pavements"] = PVM.run(w, region_id, log)
 
     # ADR 0211 (replaces ADR 0206 keep_tunnel_cut): cut-and-cover slab, tunnel / retaining walls, ground on the slab;
     # holds the terrain down under it (zc in place). Regions without a tunnel road: ({}, None), nothing changes.

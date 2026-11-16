@@ -858,14 +858,21 @@ def direction_boards(pl, net, graph_attrs, report, boards):
         hw = float(c.hw_at(s))
         side = "R" if fwd else "L"
         kind, h, w, ext = side_surface_offset(c, side, s)
-        p = c.line.offset_point(s, sgn * (hw + (S.KERB_TOP_W + 1.2 if kind != RURAL else ext + 1.0)))
         t, _ = c.line.frame(s)
         key = f"E-2_{_h(dest + ref) % 100000:05d}"
         refs = [r.strip() for r in ref.split(";") if r.strip()]
+        from . import brand_filter as BF
+        names, _dropped = BF.neutral_destinations([x.strip() for x in dest.split(";") if x.strip()])
+        if not names:                       # ADR 0236: no company / brand on a board (as signs_route._arm_label)
+            continue
         if key not in boards:
-            im, wm, hm = SG.direction_board(dest.split(";"), refs, green=bool(refs))
+            im, wm, hm = SG.direction_board(names, refs, green=bool(refs))
             boards[key] = (round(wm, 3), round(hm, 3), im)
         wm, hm, _ = boards[key]
+        # ADR 0236: the boards have the norm's letter size now (wider): the board edge keeps >= 0.50 m from the
+        # carriageway edge (pkt 1.5.3 of Dz.U. 2019 poz. 2311 zał. 1)
+        clear = max(1.2, wm / 2 + 0.5)
+        p = c.line.offset_point(s, sgn * (hw + (S.KERB_TOP_W + clear if kind != RURAL else ext + clear - 0.2)))
         z = pl.add("sign_post", p - t * dn * 0 + np.array([0, 0]), yaw_of(-t * dn), sz=S.SIGN_H_MIN + hm,
                    src=f"rule:destination:{c.id}")
         pl.add(f"board_{key}", p, yaw_of(-t * dn), z=z + S.SIGN_H_MIN + hm / 2, src=f"rule:destination:{c.id}")

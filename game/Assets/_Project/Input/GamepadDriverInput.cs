@@ -1,67 +1,70 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Game.Controls
 {
     /// <summary>
-    /// Gamepad driving (ADR 0261, Windows player): left stick X = steering wheel target (dead zone + progressive curve;
-    /// the steering column still limits the hand speed), RT = accelerator, LT = service brake, A = parking brake,
-    /// RB / LB = shift up / down, X = D, B = N, Back (Select) = R, d-pad left / right = turn signals, d-pad up = hazard,
-    /// d-pad down / left-stick click = retarder stalk one detent more / less.
-    /// Y (next camera), Start (menu) and the right stick (look around) are read by the scene bootstrap - not driver commands.
-    /// Allocation-free; inactive (no steering authority, pedals 0) when no pad is connected.
+    /// Full gamepad driving (ADR 0264) through the <see cref="DrivingActionCatalog.GamepadMap"/> map: analog gas and
+    /// brake on the triggers, the cab wheel on the left stick (dead zone, curve, amplitude and rate limited by speed,
+    /// release = self-centring from the physics), gears / selector / indicators / parking brake / retarder / camera /
+    /// mirrors on buttons, look-around on the right stick. Rebindable (settings screen); generic &lt;Gamepad&gt; layout
+    /// (Xbox- and PlayStation-style pads). Allocation-free per frame.
     /// </summary>
-    public sealed class GamepadDriverInput : IDriverInput
+    public sealed class GamepadDriverInput : IDriverInput, IMenuGatedInput
     {
         public string Name => "pad";
         public bool Enabled { get; set; } = true;
 
-        /// <summary>Stick dead zone (WORKING_VALUE: worn pads rest at up to ~0.1).</summary>
-        public float DeadZone = 0.12f;
-        /// <summary>Exponent of the stick curve: 1 = linear, 2 = fine control around the centre (WORKING_VALUE).</summary>
-        public float Curve = 1.8f;
-        /// <summary>Trigger travel ignored at rest (WORKING_VALUE).</summary>
-        public float TriggerDeadZone = 0.04f;
+        readonly DrivingActionSet m_Actions;
+        public PadKeyboardFeel Feel;
+        public PadUserTuning Tuning;
+        PadSteerFilter m_Steer;
 
-        /// <summary>Stick deflection -1..1 → steering command -1..1: dead zone removed, rescaled to full range, progressive.</summary>
-        public static float ShapeAxis(float raw, float deadZone, float curve)
+        /// <summary>View commands of the last <see cref="Sample"/> (camera, mirrors, look, horn).</summary>
+        public ViewCommands View;
+        /// <summary>Shaped stick and triggers of the last frame (HUD / logs / tests).</summary>
+        public float LastStick, LastThrottle, LastBrake;
+
+        public GamepadDriverInput(DrivingActionSet actions, PadKeyboardFeel feel, PadUserTuning tuning)
         {
-            float a = Mathf.Abs(raw);
-            if (a <= deadZone) return 0f;
-            float t = Mathf.Clamp01((a - deadZone) / Mathf.Max(1e-4f, 1f - deadZone));
-            return Mathf.Sign(raw) * Mathf.Pow(t, Mathf.Max(1f, curve));
+            m_Actions = actions;
+            Feel = feel ?? PadKeyboardFeel.Defaults();
+            Tuning = tuning;
         }
 
-        /// <summary>Trigger 0..1 → pedal 0..1 with a small dead zone at rest.</summary>
-        public static float ShapeTrigger(float raw, float deadZone)
+        /// <summary>Menu open (review #131 P1-1): no view commands, stick filter and shaped values at rest.</summary>
+        public void SampleBlocked(float dt, in VehicleFeedback fb)
         {
-            if (raw <= deadZone) return 0f;
-            return Mathf.Clamp01((raw - deadZone) / Mathf.Max(1e-4f, 1f - deadZone));
+            View.Clear();
+            m_Steer.Reset();
+            LastStick = 0f; LastThrottle = 0f; LastBrake = 0f;
         }
 
         public void Sample(float dt, in VehicleFeedback fb, ref DriverIntent intent)
         {
-            var pad = Gamepad.current;
-            if (pad == null) { intent.SteerActive = false; intent.Throttle = 0; intent.Brake = 0; return; }
+            View.Clear();
+            if (UnityEngine.InputSystem.Gamepad.current == null)
+            {
+                m_Steer.Reset();
+                intent.SteerActive = false; intent.Throttle = 0f; intent.Brake = 0f;
+                return;
+            }
+            var a = m_Actions;
+            LastStick = a.Steer.ReadValue<float>();
+            m_Steer.Step(Feel, Tuning, LastStick, fb.ForwardSpeed, fb.RoadWheelAngleNormalized, dt);
+            intent.Steer = m_Steer.Steer;
+            intent.SteerActive = m_Steer.Active;
+            intent.HandsOn = m_Steer.Active;
 
-            float steer = ShapeAxis(pad.leftStick.x.ReadValue(), DeadZone, Curve);
-            intent.Steer = steer;
-            intent.SteerActive = steer != 0f;
-            intent.HandsOn = intent.SteerActive;   // released stick = released wheel (self-centring, ADR 0058)
-            intent.Throttle = ShapeTrigger(pad.rightTrigger.ReadValue(), TriggerDeadZone);
-            intent.Brake = ShapeTrigger(pad.leftTrigger.ReadValue(), TriggerDeadZone);
+            LastThrottle = PadSteeringMath.Shape(a.Throttle.ReadValue<float>(), Feel.triggerDeadZone, Feel.triggerOuterDeadZone, Feel.throttleExponent);
+            LastBrake = PadSteeringMath.Shape(a.Brake.ReadValue<float>(), Feel.triggerDeadZone, Feel.triggerOuterDeadZone, Feel.brakeExponent);
+            intent.Throttle = Mathf.Clamp01(LastThrottle);
+            intent.Brake = Mathf.Clamp01(LastBrake);
 
-            if (pad.buttonSouth.wasPressedThisFrame) intent.ToggleParkingBrake = true;
-            if (pad.rightShoulder.wasPressedThisFrame) intent.ShiftDelta += 1;
-            if (pad.leftShoulder.wasPressedThisFrame) intent.ShiftDelta -= 1;
-            if (pad.buttonWest.wasPressedThisFrame) intent.Selector = SelectorRequest.Drive;
-            if (pad.buttonEast.wasPressedThisFrame) intent.Selector = SelectorRequest.Neutral;
-            if (pad.selectButton.wasPressedThisFrame) intent.Selector = SelectorRequest.Reverse;
-            if (pad.dpad.left.wasPressedThisFrame) intent.TurnSignal = TurnSignalRequest.Left;
-            if (pad.dpad.right.wasPressedThisFrame) intent.TurnSignal = TurnSignalRequest.Right;
-            if (pad.dpad.up.wasPressedThisFrame) intent.TurnSignal = TurnSignalRequest.Hazard;
-            if (pad.dpad.down.wasPressedThisFrame) intent.RetarderDelta += 1;
-            if (pad.leftStickButton.wasPressedThisFrame) intent.RetarderDelta -= 1;
+            a.ReadCommands(ref intent, ref View);
+            Vector2 look = a.Look.ReadValue<Vector2>();
+            View.LookDegS = new Vector2(
+                PadSteeringMath.Shape(look.x, Feel.lookDeadZone, 0.02f, Feel.lookExponent),
+                PadSteeringMath.Shape(look.y, Feel.lookDeadZone, 0.02f, Feel.lookExponent)) * Feel.lookRateDegS;
         }
     }
 }
