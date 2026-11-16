@@ -1,3 +1,4 @@
 # STATUS signs-audit-0279 (D21, chmura D r6)
 - 2026-11-16 krok 1: przeczytane Dz.U. 2019/2311 cz.1 (sha f94925ec) + zał. 2 (plik ELI typ I, sha 8abcce24), 2310, 1105, nowelizacje; katalog: sign_norms (tabele A-D/G, montaż, odległości), signs.RECT G-2 0,44x0,60, rail.py G-3 1,40x0,15, standards P-6/P-14 8 m. Testy: -k "sign or marking or 0236 or 0279 or rail_approach" 172 passed; -k "rail or v34 or furniture" 198 passed.
 - NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tests/gis -k "sign or marking or 0236 or 0279" -q` + ADR 0279 + raport docs/reports/SIGNS-AUDIT-2026-11-16.md
+- krok 2: ADR 0279 + raport docs/reports/SIGNS-AUDIT-2026-11-16.md. NASTĘPNY KROK: PR do main
