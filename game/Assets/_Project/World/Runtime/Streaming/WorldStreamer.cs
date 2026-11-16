@@ -189,7 +189,8 @@ namespace Game.World.Streaming
         /// the start region has an available neighbour tile scene; otherwise returns null and the scene is exactly as before
         /// (closed region edge). Everything the bootstrap used to wire by hand is done here, so Game.Gameplay keeps one line:
         /// <list type="bullet">
-        /// <item>content tier from the start scene name (<c>_High</c>), memory budget from the quality tier and platform;</item>
+        /// <item>content tier and memory budget from <see cref="StreamingContentChoice"/> (D44: desktop = PC quality tier,
+        /// phone = start scene name <c>_High</c>);</item>
         /// <item>pinned recovery tile from the safety net's <paramref name="safePoses"/> (ADR 0273 §8), and the same buffer
         /// moved on every origin rebase (the safety net itself does not listen to <see cref="FloatingOrigin.Moved"/>);</item>
         /// <item><paramref name="onOriginMoved"/> (route autopilot path) subscribed to <see cref="FloatingOrigin.Moved"/> for the
@@ -205,9 +206,10 @@ namespace Game.World.Streaming
         {
             if (!IsRequested(streamArgument)) return null;
             if (host == null || start == null || vehicle == null) return null;
-            string tier = start.gameObject.scene.name.EndsWith("_High", System.StringComparison.Ordinal) ? RegionScenes.HighTier : RegionScenes.LowTier;
-            float budget = StreamingSettings.BudgetForTier(Game.Rendering.QualityTiers.Current, !Application.isMobilePlatform);
-            var s = TryInstall(host, start, vehicle, body, tier, budget, null);
+            // D44 (ADR 0273 §6 dopisek): on desktop the PC quality tier picks the content (High / Ultra -> _High_Tile), not the
+            // start scene name; phones unchanged. Explicit Low fallback when no High tile scene is available.
+            var content = ChooseContentForLaunch(start);
+            var s = TryInstall(host, start, vehicle, body, content.contentTier, content.budgetMB, null);
             if (s == null) return null;
             s.UseSafePoses(safePoses, safeMinAge);
             s.AddOriginListener(onOriginMoved);
@@ -215,6 +217,28 @@ namespace Game.World.Streaming
             s.m_Tiles[s.StartTile].routeChained = true;               // the start route already is the autopilot path
             s.WidenStartBoundary(start);
             return s;
+        }
+
+        /// <summary>
+        /// Content tier and budget of a launch-time install (D44, <see cref="StreamingContentChoice"/>): quality tier now
+        /// (GameBootstrap applied -tier / saved choice / PC hardware default before the world scene), start scene tier and
+        /// whether a neighbour's High tile scene is in the build. Logs one <c>[STREAM] content</c> line with the tier and where
+        /// it came from (a saved explicit choice wins over the hardware default, ADR 0269/0270). Install time only.
+        /// </summary>
+        static StreamingContent ChooseContentForLaunch(WorldRegionRoot start)
+        {
+            bool desktop = !Application.isMobilePlatform;
+            string quality = Game.Rendering.QualityTiers.Current;
+            bool startHigh = StreamingContentChoice.IsHighScene(start.gameObject.scene.name);
+            bool highTiles = desktop && StreamingContentChoice.AnyNeighbourAvailable(TileGraph.LoadDefault(), start.regionId, new BuildTileSource(), RegionScenes.HighTier);
+            var c = StreamingContentChoice.Choose(desktop, quality, startHigh, highTiles);
+            string saved = Game.Rendering.QualityTiers.SavedTier;
+            string origin = string.IsNullOrEmpty(saved) ? "no saved choice (launch -tier or PC hardware default)"
+                : string.Equals(saved, quality, System.StringComparison.OrdinalIgnoreCase) ? "saved choice " + saved + " (menu / PC settings)"
+                : "launch -tier (saved choice " + saved + ")";
+            string line = $"[STREAM] content {c.contentTier}, budget {c.budgetMB:F0} MB: {c.reason}; quality tier {quality} from {origin}, start scene {start.gameObject.scene.name}";
+            if (c.highFallback) Debug.LogWarning(line); else Debug.Log(line);
+            return c;
         }
 
         /// <summary>Streaming switch: <see cref="EnabledOverride"/> when set, else launch argument <c>stream</c> == "1".</summary>
