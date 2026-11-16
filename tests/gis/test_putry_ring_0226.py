@@ -76,7 +76,9 @@ def test_one_mechanism_for_the_island_strip():
     net, sec = _net({"apron_width": 0.4})
     assert sec.truck_apron is None, "`apron_width` is not a key any more"
     net, sec = _net({"truck_apron": {"width_m": 3.2, "height_m": 0.04, "material": "kostka_jasna"}})   # #97 form
-    assert sec.truck_apron["material"] == "sidewalk_paving" and sec.truck_apron["code"] == 8 and not net.overrides_stale
+    # code 8 = apron_paving_light (owner D75, ADR 0218 5b; main's material, not the PR's first `sidewalk_paving`)
+    assert sec.truck_apron["material"] == Nw.APRON_LIGHT == "apron_paving_light" and sec.truck_apron["code"] == 8
+    assert not net.overrides_stale
     from pathlib import Path
     root = Path(__file__).resolve().parents[2]
     hits = [str(p.relative_to(root)) for p in sorted((root / "Data/Regions").glob("*/overrides.yaml"))
