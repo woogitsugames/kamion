@@ -1,6 +1,4 @@
-# STATUS — D42 physics-determinism-s23
+# STATUS — alt-ui-polish-s23 (D85, D87, §7 int-ui-s23)
 
-- Przyczyna flake'a: `TouchSteeringTests.Residual_PlateFrictionSweep_Diagnostic` zmieniał wspólny `ScenarioRunner.Defs` (fifthWheel.plateFrictionCreepRateDegS), a xUnit równolegle uruchamiał kombinacje laden40. Naprawa: każdy przebieg ma prywatny DefinitionSet, Defs jako Lazy, 2 testy regresji.
-- Naczepa: `park_brake_hold_no_interlock` 55,2 mm to przeciek relaksacji (4 mm/s bez końca), nie 7,63 m. Poprawka w TrailerModel: 14,4 mm (ustala się).
-- Pętle: provoke 198/200 → 0/200; Robustness 0/200 → 0/200; pełny zestaw 0/30 → 0/30 (289/289).
-- NASTĘPNY KROK: lider: `pwsh scripts/test.ps1 -Platform EditMode` (TrailerModel.cs współdzielony z Unity), potem scalenie PR.
+- [1] D85: migracja `ui.touchControls` zawsze→auto raz na PC bez ekranu dotykowego (`ui.touchControls.migration`=1), testy EditMode w `PcHudLayoutTests` (TouchMigration_D85_*).
+- NASTĘPNY KROK: D87 tło menu (`BootMenu.cs`, Resources `UI/MenuBackground/menu_bg`).
