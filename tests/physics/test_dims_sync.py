@@ -8,6 +8,9 @@ DATA = ROOT / "game/Assets/_Project/Vehicle/Physics/Definitions/Data"
 dims = json.loads((ROOT / "art-source/truck/dims.json").read_text(encoding="utf-8"))["values"]
 veh = json.loads((DATA / "tractor_4x2_generic.vehicle.json").read_text(encoding="utf-8"))
 trl = json.loads((DATA / "curtainsider_tridem_13_6.trailer.json").read_text(encoding="utf-8"))
+# Art model measurements of the trailer (Blender export manifest): measured.front_swing = horizontal kingpin -> farthest point
+# of the rounded trailer front (ADR 0228 review P1: the coupling outline follows it, not the flat graybox box).
+ART_TRL = json.loads((ROOT / "art-source/truck/trailer/export/trailer_manifest.json").read_text(encoding="utf-8"))["measured"]
 TIRES = {n: json.loads((DATA / (n + ".tire.json")).read_text(encoding="utf-8")) for n in ("tire_385_65_r22_5",)}
 TOL = 0.0005
 
@@ -135,20 +138,37 @@ def test_body_boxes_trailer():
     rz = fz - d("trailer_body_length_m")
     h, w = d("trailer_overall_height_m"), d("max_width_m")
     floor_bottom = cb["floorHeight"] - 0.10
-    _check_box(b["Body"], (0, (1.15 + 0.07 + h) / 2, (fz + rz) / 2), (w, h - 1.15 - 0.07, d("trailer_body_length_m")), True, True)
+    yc, hy = (1.15 + 0.07 + h) / 2, h - 1.15 - 0.07
+    _check_box(b["Body"], (0, yc, (fz + rz) / 2), (w, hy, d("trailer_body_length_m")), True, False)
+    # Coupling outline of the body (review P1, s22 #113): the art model's rounded front, swing radius R = 2.0294 m.
+    # BodyCoupling: full width up to z1 = sqrt(R^2 - (w/2)^2); Nose: z1 .. graybox front fz at half width sqrt(R^2 - fz^2)
+    # (both rounded down to the mm, so every corner stays inside R).
+    R = ART_TRL["front_swing"]
+    z1 = int((R * R - (w / 2) ** 2) ** 0.5 * 1000) / 1000
+    nose_hw = int((R * R - fz * fz) ** 0.5 * 1000) / 1000
+    _check_box(b["BodyCoupling"], (0, yc, (z1 + rz) / 2), (w, hy, z1 - rz), False, True)
+    _check_box(b["Nose"], (0, yc, (z1 + fz) / 2), (2 * nose_hw, hy, fz - z1), False, True)
     _check_box(b["Beams"], (0, (0.92 + floor_bottom) / 2, (lg - 0.4 + rz + 0.1) / 2), (1.2, floor_bottom - 0.92, lg - 0.4 - rz - 0.1), True, True)
     _check_box(b["RearUnderrun"], (0, (0.40 + 0.55) / 2, rz + 0.25), (2.35, 0.15, 0.12), True, True)
-    assert len(b) == 3
+    assert len(b) == 5
 
 
 def test_body_box_swing_clearance():
-    """ADR 0228 finding: the graybox front corner (cargo front + 0.05 m wall, half width 1.275 m) swings at 2.063 m, the cab
-    back is 2.07 m ahead of the kingpin: 7 mm clearance, so a slightly pitched trailer front touches the cab at ~45-55 deg.
-    Pinned here so a dims change that closes the gap fails loudly (the legal 2.04 m swing radius has 3 cm)."""
-    fz = trl["cargoBay"]["frontZ"] + 0.05
-    swing = (fz ** 2 + (d("max_width_m") / 2) ** 2) ** 0.5
+    """ADR 0228 finding: the flat graybox front corner (cargo front + 0.05 m wall, half width 1.275 m) swings at 2.063 m, 7 mm
+    from the cab back (2.07 m ahead of the kingpin), and touched it in tight turns with plate pitch / roll. Review P1 (s22 #113):
+    the coupling boxes follow the art model's rounded front (2.029 m): >= 4 cm clearance, inside the legal 2.04 m.
+    Pinned here so a dims or box change that closes the gap fails loudly."""
+    swing = 0.0
+    for b in trl["bodyBoxes"]:
+        if not b["coupling"]:
+            continue
+        zf, hx = b["center"]["z"] + b["size"]["z"] / 2, b["size"]["x"] / 2
+        if zf > 0:
+            swing = max(swing, (zf * zf + hx * hx) ** 0.5)
     cab_back = d("wheelbase_m") - d("cab_back_behind_front_axle_m") - veh["fifthWheel"]["position"]["z"]
-    assert cab_back - swing > 0, f"graybox trailer front corner ({swing:.3f} m) reaches the cab back ({cab_back:.3f} m) when level"
+    assert swing <= ART_TRL["front_swing"] + 1e-9, f"coupling outline swing {swing:.4f} m > art model {ART_TRL['front_swing']} m"
+    assert swing <= d("semitrailer_front_swing_radius_m"), f"coupling outline swing {swing:.4f} m > 96/53/EC limit"
+    assert cab_back - swing >= 0.04, f"trailer front ({swing:.3f} m) within 4 cm of the cab back ({cab_back:.3f} m)"
 
 
 if __name__ == "__main__":

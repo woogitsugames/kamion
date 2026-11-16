@@ -129,6 +129,26 @@ sc("jackknife_reverse_countersteer_comb",
        chk("max_body_rate_dps", mx=60, source="no spin-up"),
    ])
 
+# 6. Review P1 (REVIEW-2026-11-15-s22-code-113): a tight forward turn (55-60 deg articulation, the ordinary yard manoeuvre)
+#    must not touch the cab, also when the driver stops hard and the trailer pitches on the plate. With the flat-fronted
+#    graybox box (corner 2.063 m, 7 mm to the cab) a stop from a tight turn gave false contact (trailer "braked" by the cab);
+#    the coupling geometry now follows the art model's rounded front (swing 2.029 m, BodyCoupling + Nose boxes).
+NOSE = ("trailer front swing radius 2.029 m (art model trailer_manifest.json measured.front_swing 2.0294; coupling boxes "
+        "BodyCoupling + Nose) vs cab back 2.07 m ahead of the kingpin: 4.1 cm clearance when level")
+for sid, kmh, steer in (("jackknife_tight_turn_forward_comb", 5, 0.57), ("jackknife_tight_turn_forward_10_comb", 10, -0.57)):
+    sc(sid,
+       f"ADR 0228, review P1: forward at {kmh} km/h with a steady {abs(steer):.2f} lock ({'left' if steer > 0 else 'right'}) until the "
+       "articulation settles at ~57-60 deg, then a full service-brake stop with the lock held (trailer pitches on the plate, "
+       "tractor rocks back after the stop). Nothing may touch: no false cab contact braking the trailer in a yard turn.",
+       50, [], robust() + [
+           chk("max_articulation_deg", mn=55, mx=61, frm=30, to=40, source="steady tight turn: 55-60 deg articulation (review P1 range)"),
+           chk("max_speed_kmh", mn=kmh - 0.5, mx=kmh + 0.5, frm=30, to=40, source=f"steady {kmh} km/h before the stop"),
+           chk("coupling_contact_s", mx=0, source=f"no tractor-trailer contact ({NOSE})"),
+           chk("max_coupling_penetration_m", mx=0, source="no tractor-trailer penetration"),
+           chk("max_coupling_contact_force_kn", mx=0, source="no contact force"),
+       ], articulation=0,
+       extra={"driver": {"type": "speedhold", "targetKmh": kmh, "steer": steer, "selector": "D", "brakeAt": 40, "brakeLevel": 1}})
+
 # 5. Heavy landing: 0.5 m drop at standstill.
 sc("drop_05m_comb",
    "ADR 0228 (B-077, ADR 0158 Open 4): the coupled combination lifted 0.5 m above its equilibrium pose and released at "

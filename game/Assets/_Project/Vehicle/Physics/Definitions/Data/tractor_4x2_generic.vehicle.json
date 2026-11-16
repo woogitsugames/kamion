@@ -208,7 +208,9 @@
     "maxRoadWheelAngleDeg": 40,
     "maxSteerRateDegS": 30,
     "ackermannFactor": 1.0,
-    "steeringRatio": 20
+    "steeringRatio": 20,
+    "contactFeedbackLagS": 0.5,
+    "contactFeedbackHoldS": 0.5
   },
   "brakes": {
     "applyTimeConstant": 0.25,

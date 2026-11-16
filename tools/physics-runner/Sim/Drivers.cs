@@ -111,6 +111,8 @@ namespace PhysicsRunner.Sim
                 // Brake pumping: full pedal half of the period, released the other half.
                 br = (t % _d.pumpPeriod) < 0.5 * _d.pumpPeriod ? 0.6 : 0;
             }
+            // brakeAt (as in circle / lanechange): from then on the driver brakes with brakeLevel and keeps the steering.
+            if (_d.brakeAt >= 0 && t >= _d.brakeAt) { th = 0; br = _d.brakeLevel; cruise = 0; }
             return new DriverInput { Throttle = th, Brake = br, Steer = _d.steer, Selector = _sel, RetarderLever = lever, BrakeCruiseKmh = cruise };
         }
     }

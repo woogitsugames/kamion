@@ -505,8 +505,11 @@ namespace Game.Vehicle.Physics
     /// </summary>
     public sealed class CouplingContact
     {
-        /// <summary>Capacity: 4 tractor x 3 trailer coupling boxes x 2 height slices x 2 points.</summary>
-        public const int MaxPoints = 48;
+        /// <summary>Points per box pair: 2 height slices x 2 points.</summary>
+        public const int PointsPerPair = 4;
+        /// <summary>Capacity: 4 tractor x 4 trailer coupling boxes x <see cref="PointsPerPair"/>. <see cref="SetGeometry"/> rejects
+        /// geometry that could need more (a DLC trailer with more coupling boxes must raise this, not lose points silently).</summary>
+        public const int MaxPoints = 64;
         Vec3[] _aC = new Vec3[0], _aH = new Vec3[0], _bC = new Vec3[0], _bH = new Vec3[0];
         int _na, _nb;
 
@@ -527,15 +530,25 @@ namespace Game.Vehicle.Physics
         /// <summary>Copies the coupling-flagged boxes (null / empty trailer = no contact). Allocates: call on setup / trailer swap only.</summary>
         public void SetGeometry(BodyBoxDefinition[] tractor, BodyBoxDefinition[] trailer)
         {
+            int na = CountCoupling(tractor), nb = CountCoupling(trailer);
+            if (na * nb * PointsPerPair > MaxPoints)
+                throw new FormatException($"CouplingContact: {na} tractor x {nb} trailer coupling boxes need up to {na * nb * PointsPerPair} contact points, capacity {MaxPoints} (ADR 0228): raise CouplingContact.MaxPoints");
             _na = Fill(tractor, ref _aC, ref _aH);
             _nb = Fill(trailer, ref _bC, ref _bH);
             Count = 0;
         }
 
-        static int Fill(BodyBoxDefinition[] src, ref Vec3[] c, ref Vec3[] h)
+        /// <summary>Number of coupling-flagged boxes (null = 0).</summary>
+        public static int CountCoupling(BodyBoxDefinition[] src)
         {
             int n = 0;
             if (src != null) foreach (var b in src) if (b != null && b.coupling) n++;
+            return n;
+        }
+
+        static int Fill(BodyBoxDefinition[] src, ref Vec3[] c, ref Vec3[] h)
+        {
+            int n = CountCoupling(src);
             c = new Vec3[n]; h = new Vec3[n];
             int k = 0;
             if (src != null)

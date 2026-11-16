@@ -241,6 +241,36 @@
         "z": 13.6
       },
       "ground": true,
+      "coupling": false
+    },
+    {
+      "name": "BodyCoupling",
+      "center": {
+        "x": 0,
+        "y": 2.61,
+        "z": -5.2
+      },
+      "size": {
+        "x": 2.55,
+        "y": 2.78,
+        "z": 13.556
+      },
+      "ground": false,
+      "coupling": true
+    },
+    {
+      "name": "Nose",
+      "center": {
+        "x": 0,
+        "y": 2.61,
+        "z": 1.6
+      },
+      "size": {
+        "x": 2.438,
+        "y": 2.78,
+        "z": 0.044
+      },
+      "ground": false,
       "coupling": true
     },
     {

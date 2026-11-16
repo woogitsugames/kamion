@@ -167,6 +167,8 @@ namespace Game.Vehicle.Physics
             {
                 fB += FifthWheel.ContactForceOnTrailer; tB += FifthWheel.ContactTorqueOnTrailer;
                 fA -= FifthWheel.ContactForceOnTrailer; tA += FifthWheel.ContactTorqueOnTractor;
+                // ADR 0228 x ADR 0263: no steering-wheel kick from the contact (smoothed feedback estimate, tyre forces unchanged).
+                Tractor.NotifyBodyContact();
             }
             TractorForce = fA; TractorTorque = tA;
             TrailerForce = fB; TrailerTorque = tB;

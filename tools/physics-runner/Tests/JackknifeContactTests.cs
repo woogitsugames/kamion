@@ -52,6 +52,103 @@ namespace PhysicsRunner.Tests
             Assert.InRange(deg, expected - 0.05, expected + 0.05);
         }
 
+        /// <summary>
+        /// Review P1 (s22 #113): the coupling outline of the trailer front follows the art model's rounded front (measured swing
+        /// radius 2.0294 m, art-source/truck/trailer/export/trailer_manifest.json) instead of the flat graybox box (2.063 m, 7 mm
+        /// to the cab): every coupling-box corner ahead of the kingpin stays within 2.04 m (96/53/EC) and >= 4 cm from the cab back.
+        /// </summary>
+        [Fact]
+        public void TrailerFrontSwing_FollowsArtModel()
+        {
+            double swing = 0;
+            foreach (var bx in Trailer.bodyBoxes)
+            {
+                if (!bx.coupling) continue;
+                double zf = bx.center.z + bx.size.z / 2, hx = bx.size.x / 2;
+                if (zf > 0) swing = Math.Max(swing, Math.Sqrt(zf * zf + hx * hx));
+            }
+            double cabBack = 1e9;
+            foreach (var bx in Tractor.bodyBoxes) if (bx.coupling && bx.name == "Cab") cabBack = bx.center.z - bx.size.z / 2 - Tractor.fifthWheel.position.z;
+            _out.WriteLine($"trailer coupling front swing {swing:F4} m, cab back {cabBack:F3} m ahead of the kingpin, clearance {cabBack - swing:F4} m");
+            Assert.InRange(swing, 2.0280, 2.0295);
+            Assert.True(swing <= 2.04, "96/53/EC Annex I 1.6: front swing radius <= 2.04 m");
+            Assert.True(cabBack - swing >= 0.04, $"clearance {cabBack - swing:F4} m");
+            // The ground set keeps the full graybox Body box (PhysX collider mirror); only the coupling set is rounded.
+            Assert.Contains(Trailer.bodyBoxes, bx => bx.name == "Body" && bx.ground && !bx.coupling);
+        }
+
+        static bool TouchesUpTo110(CouplingContact c, double pitchDeg, double rollDeg, out string where)
+        {
+            where = "";
+            for (int side = -1; side <= 1; side += 2)
+                for (double yaw = 0; yaw <= 110; yaw += 1)
+                {
+                    Quat q = Quat.AngleAxis(side * yaw * MathUtil.Deg2Rad, Vec3.Up) * Quat.AngleAxis(pitchDeg * MathUtil.Deg2Rad, Vec3.Right)
+                             * Quat.AngleAxis(rollDeg * MathUtil.Deg2Rad, Vec3.Forward);
+                    var a = new ChassisState { Rotation = Quat.Identity };
+                    var b = new ChassisState { Rotation = q, Position = Tractor.fifthWheel.position - q * new Vec3(0, Trailer.kingpinHeight, 0) };
+                    c.Detect(a, b);
+                    for (int k = 0; k < c.Count; k++)
+                        if (c.Separation[k] < 0) { where = $"yaw {side * yaw} pitch {pitchDeg:F2} roll {rollDeg:F2}: penetration {c.Separation[k]:F4} m (tractor box {c.TractorBox[k]}, trailer box {c.TrailerBox[k]})"; return true; }
+                }
+            return false;
+        }
+
+        /// <summary>The combination clears the cab at every articulation up to 110 deg, level and a little pitched / rolled on the plate.</summary>
+        [Theory]
+        [InlineData(0.0, 0.0)]
+        [InlineData(0.5, 0.0)]
+        [InlineData(-0.5, 0.0)]
+        [InlineData(0.0, 0.5)]
+        [InlineData(0.0, -0.5)]
+        public void TightTurn_NoContactBelowSideWallAngle(double pitchDeg, double rollDeg)
+        {
+            var c = new CouplingContact { Margin = 0 };
+            c.SetGeometry(Tractor.bodyBoxes, Trailer.bodyBoxes);
+            Assert.False(TouchesUpTo110(c, pitchDeg, rollDeg, out string where), where);
+        }
+
+        /// <summary>
+        /// How much relative plate pitch / roll the 4.1 cm front clearance tolerates before the trailer front's top corner reaches
+        /// the cab back (any articulation up to 110 deg). Pinned so a geometry change that eats the margin fails; the remaining
+        /// sensitivity (post-stop rocking of the 40 t combination) is ADR 0228 "Otwarte".
+        /// </summary>
+        [Fact]
+        public void FrontClearance_ToleratesPlatePitchAndRoll()
+        {
+            var c = new CouplingContact { Margin = 0 };
+            c.SetGeometry(Tractor.bodyBoxes, Trailer.bodyBoxes);
+            double Limit(bool roll)
+            {
+                double lo = 0, hi = 3;
+                for (int it = 0; it < 14; it++)
+                {
+                    double mid = 0.5 * (lo + hi);
+                    bool hit = TouchesUpTo110(c, roll ? 0 : mid, roll ? mid : 0, out _) || TouchesUpTo110(c, roll ? 0 : -mid, roll ? -mid : 0, out _);
+                    if (hit) hi = mid; else lo = mid;
+                }
+                return lo;
+            }
+            double pitch = Limit(false), roll = Limit(true);
+            _out.WriteLine($"no contact up to 110 deg articulation for |relative pitch| <= {pitch:F2} deg, |relative roll| <= {roll:F2} deg");
+            Assert.True(pitch >= 0.7, $"pitch tolerance {pitch:F2} deg");
+            Assert.True(roll >= 0.7, $"roll tolerance {roll:F2} deg");
+        }
+
+        /// <summary>Review P2 (s22 #113): more coupling boxes than the fixed point buffers hold fail loudly at setup instead of losing points.</summary>
+        [Fact]
+        public void SetGeometry_RejectsMoreBoxesThanCapacity()
+        {
+            var many = new BodyBoxDefinition[5];
+            for (int i = 0; i < many.Length; i++) many[i] = new BodyBoxDefinition { name = "B" + i, center = new Vec3(0, 2, -i), size = new Vec3(2, 2, 1) };
+            var c = new CouplingContact();
+            Assert.Equal(4, CouplingContact.CountCoupling(Tractor.bodyBoxes));
+            var ex = Assert.Throws<FormatException>(() => c.SetGeometry(Tractor.bodyBoxes, many));
+            _out.WriteLine(ex.Message);
+            c.SetGeometry(Tractor.bodyBoxes, Trailer.bodyBoxes); // 4 x 4 x 4 = 64 = capacity
+            Assert.True(c.HasGeometry);
+        }
+
         static void LevelPose(double yawDeg, out ChassisState a, out ChassisState b)
         {
             a = new ChassisState { Rotation = Quat.Identity };
@@ -69,7 +166,7 @@ namespace PhysicsRunner.Tests
             c.SetGeometry(Tractor.bodyBoxes, Trailer.bodyBoxes);
             Assert.True(c.HasGeometry);
             Assert.Equal(4, c.TractorBoxCount); // Frame, Cab, Mudguard_L/R (Bumper is ground-only)
-            Assert.Equal(3, c.TrailerBoxCount);
+            Assert.Equal(4, c.TrailerBoxCount); // BodyCoupling, Nose, Beams, RearUnderrun (Body is ground-only)
             LevelPose(side * 116.0, out var a, out var b);
             c.Detect(a, b);
             for (int k = 0; k < c.Count; k++) Assert.True(c.Separation[k] >= 0, $"116 deg: unexpected penetration {c.Separation[k]:F4}");
@@ -81,7 +178,7 @@ namespace PhysicsRunner.Tests
             Vec3 p = c.Point[deep], n = c.Normal[deep];
             _out.WriteLine($"side {side}: point {p} normal {n} sep {c.Separation[deep]:F4}");
             Assert.Equal(1, c.TractorBox[deep]); // Cab
-            Assert.Equal(0, c.TrailerBox[deep]); // Body
+            Assert.Equal(0, c.TrailerBox[deep]); // BodyCoupling
             Assert.InRange(Math.Abs(p.x), 1.20, 1.25);          // cab rear corner, x = 2.49 / 2
             Assert.InRange(p.z, 2.74, 2.80);                     // cab rear face z = 3.70 - 0.95
             // The trailer is pushed along its own lateral axis (away from the cab).

@@ -186,6 +186,18 @@ namespace Game.Vehicle.Physics
         public double ackermannFactor = 1.0;
         /// <summary>Overall steering ratio (handwheel angle / road-wheel angle) [-], used for handwheel telemetry and feedback.</summary>
         public double steeringRatio = 20;
+        /// <summary>
+        /// ADR 0228 x ADR 0263: first-order lag [s] of the steering-feedback estimate <c>VehicleModel.AligningTorqueTotal</c> while
+        /// the tractor and trailer bodies touch (jackknife limit) and for <see cref="contactFeedbackHoldS"/> after. The contact
+        /// reverses the tractor's yaw in ~0.1 s and drags the steered axle sideways, so the tyres' aligning torque swings through
+        /// its peak (measured: -0.9 to +2.3 kN m in 80 ms, 40 t fold into the cab); passed on unfiltered, the wheel force
+        /// feedback and the touch-wheel return turn that into a full-scale kick. The tyre forces on the vehicle are not
+        /// filtered. WORKING_VALUE (feel decision, owner feel test B-075); 0 = off.
+        /// </summary>
+        public double contactFeedbackLagS = 0.5;
+        /// <summary>How long after the last tractor-trailer contact step the lag stays on [s]; then the estimate converges back
+        /// to the raw value with the same lag (no step). WORKING_VALUE.</summary>
+        public double contactFeedbackHoldS = 0.5;
     }
 
     [Serializable]
