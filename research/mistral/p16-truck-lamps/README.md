@@ -50,7 +50,7 @@ Punkty szczególne (pełne cytaty w `manifest.csv`):
 - Pozycyjne sprzężone ze stopem: dopuszczone **60 cd** poniżej płaszczyzny 5° w dół — pkt 5.2.3.
 - Minima w polu (zał. 2 część A): pozycyjne/obrysowe **0,05 cd**; stop **0,3 cd** (S2/S4 nocą 0,07); kierunkowskazy 2a **0,3 cd** (1b: 0,7; 2b nocą 0,07); boczne pozycyjne SM1 poza osią **0,6 cd**.
 - Cofania: przy montażu wyłącznie parami badanie tylko do 30° do wewnątrz pod warunkiem **25 cd** — pkt 5.8.2.
-- Przeciwmgłowe tylne: min **75 cd** w rombie rozsyłu (zał. 3 pkt 2.6), powierzchnia świetlna ≤ **140 cm²** (pkt 5.9.4), po badaniu cieplnym ≥ **90%** wartości (pkt 5.9.6 + zał. 6).
+- Przeciwmgłowe tylne: **75 cd WARUNKOWO** w rombie rozsyłu (zał. 3 pkt 2.6; pkt 5.9.2 odsyła do zał. 3 — wartość obowiązuje tylko w warunkach tego punktu, recenzja s21 r2-2), powierzchnia świetlna ≤ **140 cm²** (pkt 5.9.4), po badaniu cieplnym ≥ **90%** wartości (pkt 5.9.6 + zał. 6).
 - Jednorodność: rozkład „**zasadniczo jednorodny**” — w każdym kierunku ≥ najniższa wartość otaczających pól siatki (zał. 3 pkt 1.2); cofanie: ≥ 50% niższej z wartości sąsiednich punktów (zał. 3 pkt 2.5). *Dla gry: klosz nie może mieć martwych plam, ale też ostrych „punktów gorących”.*
 - SM1 czerwone (zespolone z tylnymi): w sektorze 60°–90° H w przód maks. **0,25 cd** (pkt 5.7.1) — boczne pozycyjne na naczepie nie mogą „świecić” w stronę kierowcy z tyłu.
 
@@ -58,6 +58,7 @@ Punkty szczególne (pełne cytaty w `manifest.csv`):
 
 - **Czerwona** (emitowana; pozycyjne, stop, przeciwmgłowe, obrysowe): granice `y = 0,335`, locus widma, `y = 0,980 − x`; punkty (0,645; 0,335), (0,665; 0,335), (0,735; 0,265), (0,721; 0,259).
 - **Żółta samochodowa** (kierunkowskazy, boczne pozycyjne): granice `y = x − 0,120`, locus, `y = 0,390`, `y = 0,790 − 0,670x`; punkty (0,545; 0,425), (0,560; 0,440), (0,609; 0,390), (0,597; 0,390).
+- Obszar żółtej samochodowej R48 §2.11.1.3 leży **w całości poza gamutem sRGB** (pomiar recenzenta s21, `docs/reports/REVIEW-2026-11-15-s21-cloudD-92-p16-truck-lamps-fix.md` §4) — w grze osiągalny jest tylko punkt najbliższy obszarowi na krawędzi R–G sRGB; dobór barwy należy do ADR 0178 (lider/agent pojazdu), nie do tego pakietu.
 - **Biała** (cofania): granice `y = 0,150 + 0,640x`, `y = 0,440`, `x = 0,500`, `y = 0,382`, `y = 0,050 + 0,750x`, `x = 0,310`; punkty (0,310; 0,348), (0,453; 0,440), (0,500; 0,440), (0,500; 0,382), (0,443; 0,382), (0,310; 0,283).
 - Barwy **odbite** (odblaski, barwa nocna): biała: `y = 0,843 − 1,182x`, `y = 0,489x + 0,146`, `y = 0,968 − 1,010x`, `y = 1,442x − 0,136`; punkty (0,373; 0,402), (0,417; 0,350), (0,548; 0,414), (0,450; 0,513). Żółta: `y = x − 0,040`, locus, `y = 0,200x + 0,268`, `y = 0,970 − x`; punkty (0,505; 0,465), (0,520; 0,480), (0,610; 0,390), (0,585; 0,385). Czerwona: `y = 0,335`, locus, `y = 0,978 − x`; punkty (0,643; 0,335), (0,665; 0,335), (0,735; 0,265), (0,720; 0,258).
 
@@ -164,6 +165,7 @@ Pliki zachowanych kadrów: `files/P16-2xx.jpg` (12 JPG, ≤ 1600 px, sha256 w `u
 - Zdjęcia: wyłącznie licencje CC0/CC BY/CC BY-SA (Wikimedia Commons; Openverse/Panoramax/KartaView sprawdzono jako źródła pomocnicze); każdy kadr pobrano jako JPG ≤1600 px i **obejrzano modelem wizyjnym** (opis w kolumnie `opis_co_widać`); jeśli widoczna marka — oznaczono „marka widoczna, tylko referencja kształtu”.
 - Zakaz Google Maps/Street View/Earth/3D Tiles — nie wykorzystano żadnych treści Google.
 - Samokontrola: losowe ≥20% wierszy manifestu (jawny seed) — sprawdzenie: link działa, cytat zgadza się z PDF, wersja regulaminu poprawna; kadry ponownie obejrzane. Wynik: `audit_20_percent.json`.
-- Archiwum zdjęć i dokumentów: `mistral-p16-truck-lamps-files.zip` (nazwa/rozmiar/sha256 w opisie PR); w repo tylko pliki tekstowe (pliki binarne przechodzą przez GitHub API zniekształcone — jak w p4).
+- Kadry: 12 zachowanych JPG w `files/P16-2xx.jpg` (sha256 w kolumnie `uwagi` manifestu). Dokumenty urzędowe (PDF > 5 MB) i karty producentów — tylko URL w manifeście, bez kopii w repo.
+- Marki: materiały producentów lamp i pojazdów są wyłącznie badawcze — nazwy plików w repo nie zawierają marek (kolumna `punkt` = lokalny plik albo `-`); marki występują tylko w URL i atrybucji źródeł (wymóg licencji CC), nigdy w grze ani w nazwach zasobów gry.
 
 *Wygenerowano: 2026-11-13. Autor pakietu: Vibe (Mistral) na zlecenie Mateusza Kapicy (woogitsugames).*
