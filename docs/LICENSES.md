@@ -623,3 +623,8 @@ KartaView — kontrola źródła15.11.2026: indeks oficjalnej sekcji4 [Terms](ht
 ### codex-refs-s21: Tykocin, elewacje Złotej (runda8)
 
 Dwie miniatury w research/codex-refs-s21/06-region-ring/tykocin-facades-round8/files: Krzysztof Popławski, CC BY4.0 https://creativecommons.org/licenses/by/4.0/ . ŹródłaCommons w manifest.csv: „Dom z XIX wieku przy ulicy Złotej17 w Tykocinie” i „Drewniany dom z bali przy ulicy Złotej6 w Tykocinie”. Zmiana: pomniejszenie podglądów do≤800px, bez kadrowania;0pobranych pełnych oryginałów. Daty według Commons, własne opisy wizualne; nie tekstury gry.
+
+
+### codex-refs-s21: Knyszyn, tablica i wejście (runda11)
+
+2miniatury w research/codex-refs-s21/03-knyszyn/street-furniture-round11/files: Henryk Borawski, CC BY-SA3.0 https://creativecommons.org/licenses/by-sa/3.0/ . Źródła City_map_Knyszyn_(Rynek_Street).jpg i Knyszyn_sklep_mięsny_Podlasie_2.JPG naCommons, pełneURLwmanifest.csv. Pomniejszono podglądy do≤800px, bez kadrowania/korektbarw.0pełnychoryginałów. Referencje fizycznej tablicy/stopni/balustrady/nawierzchni; mapa tablicy nie używana do geometrii.

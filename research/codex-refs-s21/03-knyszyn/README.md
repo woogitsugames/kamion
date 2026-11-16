@@ -126,3 +126,8 @@ Datowanie zachowuje dwa odrębne komunikaty: UM4246 jest oznaczony30.06.2020 i o
 ## Kościół i powierzchnie — obieg10
 
 Główny manifest36rekordów. [Cztery nowe kadry2024](church-surfaces-round10/README.md),ZalaCCBY-SA4.0:fasada, długi bok zplacem, bliższe wejście i wielobocznytył.4pobrane podglądy/4miniatury≤800,0pełnychoryginałów; każdy obraz obejrzany także osobno przez koordynatora. Wyraźny kontrast gładkich jasnych płaszczyzn i ziarnistej wieży, czerwone obróbki, szorstki ciemny mur, szara modułowa kostka/czerwone pasy, stopnie i spusty. Są to4fotografie1kościoła, nie4obiekty. DedupK1/03:02/05/08/17nowe, znane01/11/15pominięte. Materiałdachu,RAL,metryka i aktualność2026UNVERIFIED; daty/GPS zmetadanych, nie pomiar zobrazu.
+
+
+## Tablica i wejście — runda11
+
+[street-furniture-round11](street-furniture-round11/README.md):2nowe historyczne kadry Henryka Borawskiego CC BY-SA3.0 z9/10czerwca2012, każdy obejrzany przez agenta i koordynatora. Tablica informacyjna na2nogach oraz sklepowe schody/balustrada/pasowa nawierzchnia i dalsza pierzeja. Mapa na tablicy nie służy do geometrii świata. Formalne kondygnacje, kierunekGrodzieńska/Szkolna, GPS i stan2026 UNVERIFIED.2podglądy pozaGit/2miniatury≤800px/0oryginałów/0link-only. Główny03ma38rekordów, nie38budynków.
