@@ -23,6 +23,7 @@ from shapely.geometry import LineString, Point, Polygon
 
 from . import gen as G
 from . import imaging as I
+import roadgraph as RG  # noqa: E402  (tools/worldgen is on sys.path via gen)
 
 DRIVABLE = {"motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary",
             "secondary_link", "tertiary", "tertiary_link", "unclassified", "residential", "living_street", "service",
@@ -85,7 +86,8 @@ class Ctx:
 
 
 def way_of(eid):
-    return int(eid.split(":")[0].lstrip("w"))
+    """OSM way of a graph edge id (ADR 0219: one parser, roadgraph.edge_osm_way; lstrip stripped a character set)."""
+    return RG.edge_osm_way(eid)
 
 
 # ------------------------------------------------------------------ (a) axis
@@ -625,11 +627,19 @@ def node_arm_check(ctx: Ctx, node_ids):
             jn[n] = j
     out = []
     for n in node_ids:
-        nid = int(str(n).lstrip("n"))
-        j = jn.get(n) or jn.get(f"n{nid}")
+        ref = RG.parse_node_id(n)
+        if ref.kind == "boundary":
+            # ADR 0219: a synthetic tile-boundary cut (B<edge>:<k>s|e, e.g. the route's first / last node in every
+            # tile except C) has no OSM node, so there is no OSM degree to compare: reported, explicitly skipped.
+            out.append({"node": n, "osm_degree": None, "gen_arms_at_node": None, "junction": None,
+                        "skipped": "tile_boundary", "osm_way": ref.osm_way})
+            continue
+        nid = ref.osm_node
+        key = RG.osm_node_id(nid)
+        j = jn.get(n) or jn.get(key)
         gen_arms = None
         if j is not None:
-            gen_arms = sum(1 for a in j.arms if a.node in (n, f"n{nid}"))
+            gen_arms = sum(1 for a in j.arms if a.node in (n, key))
         out.append({"node": n, "osm_degree": inc.get(nid, 0), "gen_arms_at_node": gen_arms,
                     "junction": j.id if j else None})
     return out

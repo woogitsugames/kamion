@@ -26,6 +26,7 @@ namespace Game.Rendering
     /// camera culling mask AND), rq_props (0 = no instanced props/vehicles, trees kept), rq_hud (0 = no screen-space
     /// canvases); rq_ab keys lod, scale, far, props, trees, truck, hud (ExtraViewCostMonitor.Describe).
     /// ADR 0113: rq_forestfast (0/1 forest fast path), rq_ab keys forestfast, vegfast, hlod1pass, canopyfast, veganiso.
+    /// ADR 0240: rq_thinshadow (1 = thin casters cast on every tier, 0 = off on every tier; ThinShadowCasterPolicy).
     /// </summary>
     public static class RenderOverrides
     {
@@ -63,6 +64,7 @@ namespace Game.Rendering
         public static int? ShadowCascades;
         public static int? ShadowResolution;
         public static float? ShadowDepthBias, ShadowNormalBias, ShadowSplit1, ShadowSplit2;
+        public static bool? ThinShadows;   // ADR 0240: rq_thinshadow
         public static int? Clouds;       // ADR 0080: rq_clouds -1 flat dome, 0..2 quality
         public static bool? GroundHaze;  // rq_haze
         public static bool? Ssao;        // rq_ssao
@@ -103,10 +105,12 @@ namespace Game.Rendering
                                   VehicleLook.HasValue || EnvCapture.HasValue || ScaleMin.HasValue || Upscale != null ||
                                   FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue || LampPoolSpec.HasValue || GlareAb.HasValue || NightWindowsAb.HasValue || LampFloorAb.HasValue || EnvCaptureInterval.HasValue ||
                                   EnvCaptureLod.HasValue || ShadowCascades.HasValue || ShadowResolution.HasValue || ShadowDepthBias.HasValue || ShadowNormalBias.HasValue || ShadowSplit1.HasValue || ShadowSplit2.HasValue || Ab != null ||
+                                  ThinShadows.HasValue ||
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
                                   Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue ||
-                                  LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || Grime.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue;
+                                  LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || Grime.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue ||
+                                  GpuAbOverrides.Any;   // ADR 0241
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
@@ -125,6 +129,7 @@ namespace Game.Rendering
             ShadowCascades = I(arg("rq_shadowcasc")); ShadowResolution = I(arg("rq_shadowres"));
             ShadowDepthBias = F(arg("rq_shadowbias")); ShadowNormalBias = F(arg("rq_shadownormal"));
             ShadowSplit1 = F(arg("rq_shadowsplit")); ShadowSplit2 = F(arg("rq_shadowsplit2"));
+            ThinShadows = B(arg("rq_thinshadow"));   // ADR 0240
             // ADR 0080: sky / atmosphere switches and the owner A/B look overrides (rq_look 0|1|2 contrast variant A|B|C,
             // rq_ev exposure bias in stops, rq_wet wetness 0..1, rq_grassvar lawn variation 0..1).
             Clouds = I(arg("rq_clouds")); GroundHaze = B(arg("rq_haze")); Ssao = B(arg("rq_ssao"));
@@ -150,6 +155,7 @@ namespace Game.Rendering
             VehicleCull = F(arg("rq_vehcull"));      // ADR 0136 r2
             Grime = B(arg("rq_grime"));
             Landscape = B(arg("rq_landscape")) == true;   // ADR 0136 r2: measurement runs in landscape (DiagLandscape)
+            GpuAbOverrides.Parse(arg);   // ADR 0241: rq_depthtex, rq_opaquetex, rq_impostors, rq_hlodpart, rq_abtag
             PsoWarmup.Init(arg);   // ADR 0113: PSO warm-up / trace, spike probe (player only)
             string ab = arg("rq_ab");
             Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();
@@ -171,7 +177,7 @@ namespace Game.Rendering
                          $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
                          $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun} " +
                          $"clouds={Clouds} haze={GroundHaze} ssao={Ssao} look={WorldAtmosphere.LookVariant} ev={LightingPreset.ExposureBiasOverride} wet={WorldAtmosphere.WetOverride} " +
-                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull} grime={Grime}" : null;
+                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull} grime={Grime} thinshadow={ThinShadows}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>
@@ -208,6 +214,7 @@ namespace Game.Rendering
             if (ShadowNormalBias.HasValue) t.shadowNormalBias = ShadowNormalBias.Value;
             if (ShadowSplit1.HasValue) { t.cascade2Split = ShadowSplit1.Value; t.cascade4Split.x = ShadowSplit1.Value; }
             if (ShadowSplit2.HasValue) t.cascade4Split.y = ShadowSplit2.Value;
+            if (ThinShadows.HasValue) t.thinCasterShadowsOff = !ThinShadows.Value;   // ADR 0240
             if (Upscale != null)
             {
                 switch (Upscale)

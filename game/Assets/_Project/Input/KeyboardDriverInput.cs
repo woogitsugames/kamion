@@ -8,7 +8,7 @@ namespace Game.Controls
     /// 1/2/3 = D/N/R, E/Q = shift +/-, M = auto/manual, Space = parking brake; Stage 2: X/Z = retarder stalk more/less,
     /// T = couple (arm jaw) / uncouple (C until ADR 0261; C = next camera, K = horn, Esc = menu are read by the scene bootstrap), G = landing gear, B = brake cruise, V = reversing camera, ',' / '.' = left / right turn signal, H = hazard. Analog values ramp so keys behave like pedals.
     /// </summary>
-    public sealed class KeyboardDriverInput : IDriverInput
+    public sealed class KeyboardDriverInput : IDriverInput, IMenuGatedInput
     {
         public string Name => "klawiatura";
         public bool Enabled { get; set; } = true;
@@ -25,6 +25,9 @@ namespace Game.Controls
             float r = Mathf.Sign(current) != direction && current != 0f ? Mathf.Max(rate, returnRate) : rate;
             return Mathf.Clamp(current + direction * r * dt, -1f, 1f);
         }
+
+        /// <summary>Menu open (review #131 P1-1): key ramps at rest (the arrows navigate the menu).</summary>
+        public void SampleBlocked(float dt, in VehicleFeedback fb) { m_Steer = 0f; m_Throttle = 0f; m_Brake = 0f; }
 
         public void Sample(float dt, in VehicleFeedback fb, ref DriverIntent intent)
         {

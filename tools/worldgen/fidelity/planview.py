@@ -15,7 +15,7 @@ from fidelity import ortho as O
 COL = {"road_asphalt": (70, 70, 74), "road_asphalt_new": (60, 60, 64), "road_concrete": (150, 150, 145),
        "road_paving": (170, 160, 150), "road_sett": (150, 130, 115), "curb_concrete": (205, 205, 200),
        "sidewalk_paving": (176, 170, 160), "verge_grass": (88, 120, 70), "shoulder_gravel": (140, 130, 110),
-       "apron_sett": (160, 120, 100), "bridge_concrete": (120, 120, 118)}
+       "apron_sett": (160, 120, 100), "apron_paving_light": (205, 204, 200), "bridge_concrete": (120, 120, 118)}
 
 
 def load(region, cache, rebuild):

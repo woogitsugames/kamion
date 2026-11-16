@@ -33,6 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from roads import decals as DC           # noqa: E402
 from roads import markings as MK          # noqa: E402
 from roads import meshing as M            # noqa: E402
+from roads.network import lane_w_of       # noqa: E402
 from roads import pipeline                # noqa: E402
 from roads import standards as S          # noqa: E402
 from roads import tunnels as TN           # noqa: E402
@@ -114,6 +115,22 @@ MATERIALS = {
     "bridge_kerb": {"color": [0.19, 0.186, 0.176], "rough": 0.9, "surface": "concrete_kerb",
                     "texture_set": "kerb_concrete_1m"},
     "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
+    # ADR 0218 / owner D71 + D75: truck apron of the Knyszyn roundabout = light concrete block paving, clearly lighter
+    # than the asphalt. Block pattern = the generated set paving_20x10_grey (ADR 0022; the engine tint is
+    # color / set mean = 1.6, like bridge_kerb re-tints kerb_concrete_1m); albedo 0.42 WORKING_VALUE: new concrete
+    # blocks in the range of concrete 0.3-0.4 and above (table header), set so that on the owner's drone photo 9 the
+    # apron reads lighter than the sidewalk paving (0.26) and the aged kerb (0.28); the JPEG is tone-mapped, so the
+    # photo ratio apron / ring asphalt (2.1-2.4 in linear luminance) is only a lower bound. Game: 0.42 / 0.081 = 5.2.
+    # ground_grime (render knyszyn r2): the importer default for block sets (damp pools darkened by 0.42 over 16 % of
+    # the area) read as grey blotches on the light apron of a NEW roundabout; pools almost off, joints kept. WORKING_VALUE
+    "apron_paving_light": {"color": [0.42, 0.42, 0.415], "rough": 0.85, "surface": "paving_stones",
+                           "texture_set": "paving_20x10_grey",
+                           "ground_grime": {"damp_darkening": 0.05, "damp_threshold": 0.85, "joint_dirt": 0.35,
+                                            "damp_gloss": 0.1}},
+    # ADR 0218 5c: inside of the centre island of a compact roundabout - sand / fine gravel, clearly darker than the
+    # light apron (owner photo 9: sandy bed with small plantings; lead review r2: island_gravel 0.41 read as light as
+    # the apron). Albedo WORKING_VALUE (damp sand 0.2-0.3), generated set gravel_compacted, tint 0.27 / 0.20.
+    "island_sand": {"color": [0.30, 0.265, 0.21], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     # viaducts: precast-concrete modulation map projected in world metres (the deck / pier meshes have no metric UV);
     # albedo from the CC0 Bieżeństwa photo (piers mid grey, soffit in its own shadow, REVIEW r3 W4). WORKING_VALUE
     # sky_occ (ADR 0060): the soffit and the deck underside face a road the deck itself shades
@@ -210,7 +227,7 @@ def glb_materials():
 
 
 WELD = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel", "collision_asphalt",
-        "sidewalk_paving", "apron_sett"}
+        "sidewalk_paving", "apron_sett", "apron_paving_light", "sidewalk_paving_red", "sidewalk_slabs"}      # + ADR 0237 footway types
 
 
 def sha(b: bytes) -> str:
@@ -251,7 +268,9 @@ def assemble(parts, layers, half):
             # ADR 0123: kerbs on a deck are exported as `bridge_kerb` (same kerb set, darker: road film, REVIEW
             # s10-0117 P1-3) - a rename at export only, so every QA / fidelity rule keyed on curb_concrete still
             # sees them; the bridge mesh had a curb_concrete primitive for exactly these triangles (no extra draw)
-            mat_out = "bridge_kerb" if (p.layer == "bridge" and p.mat == "curb_concrete") else p.mat
+            # ADR 0237: the same for the surface type of a footway (streetscape.pavements sets `export_mat`)
+            mat_out = ("bridge_kerb" if (p.layer == "bridge" and p.mat == "curb_concrete")
+                       else getattr(p, "export_mat", None) or p.mat)
             g = groups.setdefault((key, p.layer, mat_out), [])
             g.append((pi, p.V, N, p.UV, p.T[sel], p.UV1, p.COL))
     out = {}
@@ -450,7 +469,7 @@ def cameras_generic(region_id, w):
         hw = float(c.hw_at(cs))
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
-        lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)
+        lat_l = -trav * (hw - sec.edge_strip - float(lane_w_of(sec, hw)) / 2)
         if getattr(sec, "lane_edges", None):
             lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)
@@ -535,7 +554,7 @@ def cameras_industrial_c(region_id, w):
         # rightmost lane centre in travel direction
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
-        lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)     # rightmost lane of travel
+        lat_l = -trav * (hw - sec.edge_strip - float(lane_w_of(sec, hw)) / 2)     # rightmost lane of travel
         if getattr(sec, "lane_edges", None):
             lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)
@@ -934,6 +953,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     w.stats["gores"]["kerb_tris_in_fill"] = GO.kerbs_in_fills(w.buf, w.gore_plan)
     log("kerb triangles inside paved gore fills:", w.stats["gores"]["kerb_tris_in_fill"])
     log("hero bridges", {k: [x["id"] if isinstance(x, dict) else x for x in v] for k, v in w.stats["hero_bridges"].items()})
+    from streetscape import pavements as PVM              # ADR 0237: sidewalk surface types (export material only)
+    st["report"]["pavements"] = PVM.run(w, region_id, log)
 
     # ADR 0211 (replaces ADR 0206 keep_tunnel_cut): cut-and-cover slab, tunnel / retaining walls, ground on the slab;
     # holds the terrain down under it (zc in place). Regions without a tunnel road: ({}, None), nothing changes.

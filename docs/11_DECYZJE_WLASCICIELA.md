@@ -126,3 +126,6 @@ Właściciel: „zobacz wymagania Euro i American Truck Simulator 2 i zrób podo
 - **Zalecane:** Intel Core i5-9600 / AMD Ryzen 5 3600, NVIDIA GTX 1660 / AMD RX 590, 12 GB RAM. Cel: tier High, 1080p, **60 fps** (WORKING_VALUE).
 - Dysk: jak u nich ≤ 25 GB na grę bazową (WORKING_VALUE).
 Progi FPS i dysk to propozycja lidera (SCS nie publikuje FPS) — do potwierdzenia przy pierwszym pomiarze. Ryzyko: Intel HD 630 przy obecnym świecie (do 2 M tris High) — pomiar Low na iGPU konieczny przed obietnicą. Pomiar na maszynie deweloperskiej (RTX 5070) nie zastępuje klas minimalnej/zalecanej. ADR 0260 (uzupełnienie), chmura H zadanie H4 (0266).
+
+## D75 — Rondo Knyszyn: nowy jasny materiał i przejezdność (2026-11-15, s22)
+Właściciel: (1) opaska ronda DK65×Tykocka = **nowy jasny materiał kostki betonowej z fakturą** (nie istniejący materiał chodnika, albedo ok. 0,26 ≈ odrzucony brąz); (2) wymiary: **przejezdność przed wiernością** — asfalt pierścienia 5,0 m + opaska 3,2 m (zawracanie zestawu 16,5 m), choć na zdjęciu ok. 3,1 + 2,4 m (ESTIMATED). ADR 0218.

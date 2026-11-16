@@ -126,3 +126,112 @@ przed SRP batching), narzędzie `artifacts/summer-led-0216/tools/budget.py`. War
    zdjęcie nocne od właściciela. Latarnie stylizowane przy kościele (P14/P15) — nie zrobione.
 4. Przejścia dla pieszych 5700 K (K69) i redukcja 70 % po 22:00 — poza zakresem.
 5. Telefon: nie mierzono (lider). Zmiana nie dodaje draw calli ani tekstur; koszt shaderów bez zmian.
+
+## Rozszerzenie 0216b — lato i LED w kaflu C i na Dojlidach (D68), 2026-11-15
+Status: Proposed (agent rendering-perf G5, chmura, gałąź `summer-cd-0216b`; bez Unity, bez Data/raw — świat NIE
+przebudowany). Owner D68: (1) azymut zmierzchu 300° zostaje, (2) lato także w C i na Dojlidach, (3) LED 4000 K zostaje.
+
+**Dane** (`Data/Regions/lighting_profiles.json`, dwa nowe profile; profile Knyszyna bez zmian):
+- `summer-bialystok-cd` → `bialystok-industrial-c`, `bialystok-dojlidy`: `season: summer`, `duskClockHour: 21.0`.
+  `LP_Dusk` bez zmian (−6°, az. 300°). Zegar 21:00 = wartość właściciela (D65 p.7), WORKING_VALUE.
+- `led-white-4000k-bialystok` → te same dwa regiony: `ledCctK: 4000`, `ledColour` (1; 0,96; 0,90) = wartość Knyszyna
+  (WORKING_VALUE z kamer zmierzchu 0216). 4000 K SOURCED dla ulic z przetargów miasta: C — Andersa, al. 1000-lecia,
+  Maczka (ZDM-VII.7021.1.14.2023, e-zamówienia 93688, TED 658997-2023; K69 §4); Dojlidy — Kuronia, Dywizjonu 303,
+  Mickiewicza i 7 innych (ZDM-VII.7021.1.7.2024 / 122716, TED 769998-2024). Stan montażu 2026 UNVERIFIED.
+
+**Astronomia** (`tools/worldgen/qa/sun_noaa.py`: równania kalkulatora słonecznego NOAA GML / Meeus, Białystok
+53,13° N 23,16° E, rok 2026, CEST; środek tarczy −6° bez refrakcji; zachód = −0,833°). Odtwarza tabelę 0216 z
+dokładnością ≤ 1 min / ≤ 0,5° (test):
+
+| data | zachód / az. | koniec zmierzchu cywilnego (−6°) / az. |
+|---|---|---|
+| 21 VI | 20:57 / 313,0° | 21:49 / 323,8° |
+| 15 VII | 20:46 / 308,9° | 21:34 / 318,8° |
+| 31 VII | 20:23 / 302,5° | 21:06 / 311,4° |
+| 3 VIII | — | 21:00 / 309,8° |
+| 15 VIII | 19:54 / 294,8° | 20:34 / 302,8° |
+| 20 VIII | 19:44 / 291,9° | 20:22 / 299,7° |
+
+Para „21:00 i 300°” nie występuje jednocześnie: 21:00 przy −6° to 3 VIII (309,8°), 300° przy −6° to 19–20 VIII
+(20:22–20:25). Zostaje decyzja właściciela (D68 p.1: 300°) i zegar 21:00 — WORKING_VALUE, rozjazd ≤ 38 min / ≤ 10°.
+Zegar kabiny (`SolarClock`, bez równania czasu) dla −6°/300° pokazuje 20:20 (port w teście; zgodny z NOAA ≤ 18 min).
+
+**Latarnie — źródło dla każdej głowicy LED** (`research/led-tenders-0216b/`: wyciąg 19 ogłoszeń TED Miasta Białystok
+o „dostawie i montażu energooszczędnych opraw ledowych” 2024–2026, API TED v3, bez nazw wykonawców i produktów).
+- OSM nie daje sygnału: w C 11 węzłów `street_lamp` (6 × `lamp_type=electric`, bez `light:method`), na Dojlidach 0
+  (`research/night-lamps-s21/osm-street-lamps.json`, 15.11.2026; tagi `lamp_type=sodium`/`light:method=led` są tylko
+  poza tymi kaflami).
+- Reguła generatora (`tools/worldgen/qa/lamp_family_audit.py`, liczona na danych w repo — szacunek, nie pomiar)
+  stawia starą rodzinę słupów z głowicą sodową w C na ok. 205 pozycjach (QA z main: 199), na Dojlidach ok. 187 (QA: 179).
+- **Dojlidy** — nowy override `lamp-policy-led-tender-0216b` (`kind: lamp_policy, family: led, target: {osm_way}`):
+  głowica LED tylko na 10 ulicach z ogłoszenia o udzieleniu zamówienia TED 769998-2024 (17.12.2024, cz. II; poz. 14
+  Myśliwska, 15 Sępia, 16 Kormoranów, 18 Mickiewicza, 19 Karpińskiego, 22 Kuronia, 23 Dywizjonu 303,
+  24 Spadochroniarzy, 25 Hake, 28 Ciołkowskiego) — 64 way grafu o tych nazwach (test: dokładnie ten zbiór). Szacunek
+  audytu: 56 z 187 starych głowic → LED (Mickiewicza 29, Kormoranów 6, Myśliwska 6, Karpińskiego 6,
+  Spadochroniarzy 6, Sępia 3). Bez źródła (głowica sodowa zostaje, UNVERIFIED): Borsucza, Grabowa, Jaskółcza, Krecia,
+  Królicza, Praw Kobiet, Szpacza, Wiewiórcza, Zajęcza, Żurawia i ulice bez nazwy (ok. 131).
+- **Kafel C** — override `lamp-policy-unverified-0216b` (`family: unchanged`, tylko zapis): żadna z ulic ze starymi
+  słupami (Motoszko, Skidelska, Buska, Sokólska, Łańcucka, Olsztyńska, Świsłocka, Bełzy, Białostoczek, Grodzieńska,
+  Kombatantów, bez nazwy) nie występuje w ogłoszeniach LED miasta → sód zostaje, UNVERIFIED. Andersa/Maczka/1000-lecia
+  mają słupy LED reguły (zmienia się tylko barwa z profilu).
+- Ogłoszenie podaje ulicę, nie odcinek ani datę montażu: Mickiewicza jest też w cz. III (TED 32657-2025) — który
+  odcinek dotyczy Dojlid, UNVERIFIED.
+- Generator (`streetscape/furniture.py`): reguła wyboru prototypu wydzielona do `chain_lamp_proto` (wspólna z audytem),
+  `lamp_led_scope`; polityka z `target` zamienia głowicę tylko na łańcuchach, których środkowy odcinek leży na
+  wskazanym way; raport `lamps.policy = led-target`, `led_target_ways`, `led_target_stale`. Bez `target` — jak w 0216;
+  bez polityki — wynik identyczny.
+
+**Budżet (oczekiwanie, NIE pomiar):** C — bez zmian geometrii i prototypów; Dojlidy — te same słupy w tych samych
+miejscach, ale w scenie oba warianty starej rodziny (sód + LED, prototypy z biblioteki 0216) → do +2 draws instancji
+na kamerę, gdzie widać oba (w `knyszyn` 0216: +1). Barwa i zegar: 0 draw calli, 0 tekstur. Telefon: nie mierzono.
+Uwaga dla bramki 3 (C): zmierzch C dostaje zegar 21:00 → udział świecących okien biurowych 0,40 → 0,05 (jak 0216);
+kadry zmierzchu C sprzed zmiany (0182) przestają być odniesieniem 1:1.
+
+**Walidacja w tej gałęzi:** `uv run --project tools/worldgen python -m pytest tests/gis/test_summer_cd_0216b.py
+tests/gis/test_lamp_led_0216.py -q` — 19 passed (schemat i zakresy profili, ApplyTo-bliźniak w Pythonie, NOAA vs
+tabela 0216, zegar kabiny, każda ulica LED w ogłoszeniu o udzieleniu zamówienia i w grafie, wyciąg TED bez nazw firm,
+reguła: LED tylko na ulicach z przetargu, te same słupy). EditMode `RegionLightingProfileTests` zaktualizowany
+(nowy test C/Dojlidy; Maczka/Kleeberga bez profilu) — NIE uruchomiony (chmura bez Unity).
+
+**Walidacja po regeneracji (c-regen-s22, 2026-11-15; raport `docs/reports/INTEGRATION-2026-11-15-c-regen-s22.md`):**
+build_world C i Dojlid exit 0. Dojlidy `streetscape_qa.json`: `lamps.policy = led-target`, `led_target_ways = 64`,
+`led_target_stale = []`, `lamp_old_concrete_led_9m` 21 + `lamp_old_steel_led_8m` 35 (sód: 50 + 73); C `by_family` bez
+`*_led_*`. Import obu regionów loguje `lighting profiles … summer-bialystok-cd,led-white-4000k-bialystok`.
+Budżet (`frame_estimate`): C 23 kamery bez zmian (max High 1 986 314); Dojlidy max High 1 768 028, Low −0,8…−4,8 %
+(skutek 0221 w `roads`, nie tej zmiany). EditMode 629 = 626 pass / 2 fail (CarPaint DepositionChannel, niezwiązane) /
+1 skip — `RegionLightingProfileTests` zielone. Rendery Low/High × clear/dusk before/after
+(`artifacts/c-regen-s22/view/ab_*.jpg`): o zmierzchu mniej świecących okien biur (zegar 21:00), dzień bez zmian,
+brak regresji. Głowice LED starych słupów Dojlid nie są widoczne w żadnej kamerze kontrolnej (potwierdzone tylko
+liczbami); telefon niemierzony.
+
+**Komendy dla lidera (po scaleniu budget-fix 0221; jedna regeneracja C+D):**
+```
+uv run --project tools/worldgen python -m pytest tests/gis/test_summer_cd_0216b.py tests/gis/test_lamp_led_0216.py -q
+uv run tools/worldgen/build_region.py --region bialystok-industrial-c
+uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+uv run tools/worldgen/build_region.py --region bialystok-dojlidy
+uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-dojlidy
+uv run --project tools/worldgen python tools/worldgen/qa/lamp_family_audit.py --region bialystok-dojlidy   # porównać z generated/streetscape_qa.json
+pwsh scripts/import-region.ps1 -Region bialystok-dojlidy
+foreach ($t in 'Low','High') { foreach ($l in 'clear','dusk','night') { pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $t -Lighting $l -OutputDir artifacts/summer-cd-0216b/after/bialystok-dojlidy/$t-$l } }
+pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
+foreach ($t in 'Low','High') { foreach ($l in 'clear','dusk','night') { pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $t -Lighting $l -OutputDir artifacts/summer-cd-0216b/after/bialystok-industrial-c/$t-$l } }
+uv run --project tools/worldgen python -m pytest tests/gis -q
+pwsh scripts/test.ps1 -Platform EditMode
+pwsh scripts/build-android.ps1 -Install -Run -Tier Low -Fps 30 -LogcatSeconds 60
+pwsh scripts/device-metrics.ps1 -Launch -DurationSeconds 90
+```
+Oczekiwane w `generated/streetscape_qa.json` Dojlid: `lamps.policy = led-target`, `led_target_ways = 64`,
+`led_target_stale = []`, `lamp_old_*_led_*` > 0 i `lamp_old_concrete_9m` + `lamp_old_steel_8m` > 0; w C `by_family`
+bez `*_led_*`. Import loguje `[IMPORT] lighting profiles for <id>: summer-bialystok-cd,led-white-4000k-bialystok`.
+
+**Ryzyko konfliktów:** `bialystok-dojlidy/overrides.yaml` — `dojlidy-0242` (F9) zmienia linie ≤ 700, ten blok jest na
+końcu pliku: `git merge-tree` czysty. `budget-fix-s21` (0221) i `fences-0239` — bez wspólnych plików (konflikt tylko w
+`STATUS.md`). Region `knyszyn` (Codex 0227) i generator dróg C nietknięte.
+
+**Otwarte (0216b):**
+1. Montaż w terenie (2025–2026) i odcinek Mickiewicza — nocne zdjęcie właściciela: Mickiewicza/Kormoranów oraz jedna
+   ulica spoza przetargu (Żurawia, Krecia); w C Sokólska lub Kombatantów.
+2. D68 „lato wszędzie”: `bialystok-maczka` i `bialystok-kleeberga` nie są w profilu (zadanie obejmowało C i Dojlidy) —
+   dopisać id, gdy lider zechce (te same dane).
+3. Przejścia dla pieszych 5700 K i redukcja 70 % po 22:00 (ZDM) — nadal poza zakresem (0216 p. 4).
