@@ -124,3 +124,11 @@ R14 → r15: na 70 wspólnych kamerach draws i szacowane shadow draws bez zmian;
 ## Tykocka — sprawdzenie ortofoto GUGiK
 
 Skorowidz GUGiK wskazuje w punkcie (760671, 612032) arkusz `N-34-106-B-b-1-4` z 27.05.2025, piksel 0,1 m: [źródłowy arkusz](https://opendata.geoportal.gov.pl/ortofotomapa/83186/83186_1484208_N-34-106-B-b-1-4.tif). Sprawdzono lokalnie fragment EPSG:2180 bbox `[760645, 612005, 760705, 612065]`; szare pasy utwardzenia przy Tykockiej są widoczne, ale granice chodnika zlewają się miejscami ze zjazdami i posesjami. Ciągły obrys chodnika i stan po przebudowie ronda pozostają **OPEN**, bez zgadywania geometrii. Arkusz i wycinek są lokalnie w `artifacts/knyszyn-rynek-0227/ortho-tykocka/`, poza Git.
+
+## Iteracja r16 — ocena i budżet
+
+Eksperyment obwodowych koron nie przeszedł oceny i został wycofany. Rendery `r16/` oraz lokalne pary `compare/r16/` pokazują próbę przed wycofaniem, a nie obecny stan; konieczna jest nowa przebudowa i ocena. Poprawiono styk korony pomnika króla, lecz figura pozostaje PROXY_NOT_APPROVED, a łańcuch jest OPEN.
+
+Szacunki CPU edytora przed SRP batchingiem obejmują siatki i instancje; clear i dusk mają identyczne wyniki geometryczne. High **PASS** limitu 2 mln tris na kamerę: maksimum 1 250 401 (`cab-mirror-front`), maksimum 848 draws (`tykocka-into-town`). Low **FAIL** względem pierwotnego before: na 34 z 50 kamer o tych samych nazwach wzrosła suma draws, maksymalnie 240 → 303 (+63, `dk65-inlet-south`); największy wzrost tris 272 290 → 310 078 (+37 788, `truck-side`).
+
+R15 → r16: wszystkie 70 wspólnych kamer mają draws i shadow draws bez zmian; Low ma na jednej kamerze wzrost o 1 tris (`route-s0726`), High na dziewięciu kamerach o maksymalnie 1 tris. `rynek-owner-08` Low pozostaje na 351 draws i 295 904 tris. Przyczyna zmian ±1 tris nie została zmierzona. Warunki porównania z before opisane dla r14 pozostają aktualne; dane nie są pomiarem GPU ani telefonu.

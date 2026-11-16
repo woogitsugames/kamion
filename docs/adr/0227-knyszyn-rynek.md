@@ -75,3 +75,11 @@ Próba rozjaśnienia koron nie przeszła przeglądu i została wycofana. Rendery
 W r15 **High PASS** limitu 2 mln tris na kamerę: maksimum 1 250 401 z instancjami (`cab-mirror-front`). **Low FAIL** względem before: największy wzrost sumy szacowanych draws siatek i instancji 240 → 303 (+63, `dk65-inlet-south`), na 34 z 50 kamer o tych samych nazwach wystąpił wzrost. Największy wzrost sumy tris 272 290 → 310 078 (+37 788, `truck-side`).
 
 R14 → r15: 70 wspólnych kamer, draws i szacowane shadow draws bez zmian; tris wzrosły na 37 kamerach, maksymalnie o 22 w Low i High. Przyczyna nie została osobno zmierzona. Clear i dusk mają te same wyniki geometryczne. Jak w r14 są to szacunki CPU edytora, nie pomiary GPU; ograniczenia porównania z before pozostają aktualne. Szczegóły w `artifacts/knyszyn-rynek-0227/AUDYT.md`.
+
+## Iteracja r16 — wynik i ograniczenia
+
+Eksperyment obwodowych koron wycofano po nieudanej ocenie; rendery r16 pokazują stan przed wycofaniem i nie potwierdzają obecnego stanu. Poprawiono styk korony pomnika, ale łańcuch pozostaje OPEN, a sylwetka króla PROXY_NOT_APPROVED. Potrzebna nowa przebudowa i ocena wizualna.
+
+High **PASS** limitu 2 mln tris na kamerę: maksimum 1 250 401 z instancjami (`cab-mirror-front`). Low **FAIL** względem pierwotnego before: maksymalny wzrost sumy szacowanych draw calls 240 → 303 (+63, `dk65-inlet-south`); wzrost na 34 z 50 kamer o tych samych nazwach. Maksymalny wzrost tris 272 290 → 310 078 (+37 788, `truck-side`).
+
+R15 → r16: dla 70 wspólnych kamer draws i szacowane shadow draws bez zmian, a największy wzrost to 1 tris w Low i High; przyczyny różnic nie zmierzono. Clear i dusk mają identyczne dane geometryczne. To szacunki CPU edytora, nie pomiary GPU; ograniczenia porównania z before opisane dla r14 nadal obowiązują.
