@@ -322,3 +322,7 @@
 - 2026-11-16 07:38 +01:00 — Korekta targowicy po zdjęciach: szerszy arkusz GUGiK 2025 pokazuje rzeczywiste 4 dachy na południe od wcześniej błędnie wskazanego placu OSM 704368699. Trwa pomiar EPSG i implementacja nawierzchni/wiat; wysokości szacowane, render i testy OPEN.
 - NASTĘPNY KROK: `git status -sb; Get-PSDrive C` 
 
+
+- 2026-11-16 07:51 +01:00 — Właściwa targowica odnaleziona na GUGiK 2025 na południe od dawnego błędnego placu. Wiaty 3+1, PV, płot z wjazdem, wyspy/pasy, dwa budynki BDOT i świerk; 69 testów kierunkowych passed. R24 build/import/visual QA trwa; pozycje odczytane z orto, wysokości i detale WORKING_VALUE.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r24.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r24.done` 
+
