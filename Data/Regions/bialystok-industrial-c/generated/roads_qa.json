@@ -4918,7 +4918,9 @@
    ],
    "length_m": 27.6,
    "max_grade": 0.0299,
-   "overrides": [],
+   "overrides": [
+    "dk8-seam-kerb-od005-c"
+   ],
    "profile_rms_vs_nmt_m": 0.017,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -10396,6 +10398,7 @@
    "S": 5.0,
    "Z": 4.5
   },
+  "compact_roundabouts": [],
   "crossings_in_junction": [
    1166108041,
    2881403110,
@@ -10471,7 +10474,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 572215,
+  "footprint_nodes": 572140,
   "fork_abreast": [
    {
     "alongside_run_m": 125.0,
@@ -11889,7 +11892,7 @@
    "P-11 cycle crossing in junction": 18,
    "P-11 red surfacing": 13,
    "P-13": 15,
-   "P-14": 27,
+   "P-14": 25,
    "P-7b edge line": 133,
    "P-8 arrow": 75,
    "P-8 skipped (lane too narrow)": 13,
@@ -12149,6 +12152,12 @@
     "id": "kwadrat-exit-carriageway-width",
     "targets": [
      "w194536287:1882887381-1882954023"
+    ]
+   },
+   {
+    "id": "dk8-seam-kerb-od005-c",
+    "targets": [
+     "w257367422:1847317049-1847317047"
     ]
    },
    {
@@ -13031,8 +13040,8 @@
   "roundabout_junctions": 12,
   "sides_on_carriageway_culled": {
    "kerb_tris": 4748,
-   "parts": 624,
-   "side_tris": 818
+   "parts": 621,
+   "side_tris": 814
   },
   "signalised_junctions": 11,
   "through_lines": {
@@ -13048,7 +13057,7 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 49607
+   "tris": 49615
   },
   "walled_ramps": [
    {
