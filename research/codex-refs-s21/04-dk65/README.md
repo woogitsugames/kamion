@@ -115,3 +115,5 @@ R22 Knyszyn: dwa nowe kadry historycznego centrum z artykułu2022. Jeden pokazuj
 
 
 R23BDL: punkt w gęściej zadrzewionym fragmencie istniejącegoTC17-02 zwrócił1rekord warstwy pozaPGL6: kodSO, species_age100,a_year2017. Bez automatycznego rozwinięcia kodu/datowania wieku i bez przeniesienia na pojedyncze drzewa przy jezdni.0nowych zdjęć. Główny37.
+
+R23 uzupełnienie słownika: root obejrzał stronę20 instrukcjiTAKSATORPU2023 opublikowanejBDL: SO=sosna zwyczajna. Kod rozwinięty dla rekordu wydzielenia; nie pojedynczych drzew przy DK65. Datowanie wieku i kod udziału nadal bez interpretacji.

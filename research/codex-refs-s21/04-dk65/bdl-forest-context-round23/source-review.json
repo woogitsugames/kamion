@@ -56,11 +56,20 @@
     "REST_nonPGL_layer6": "one feature, no geometry or owner fields requested"
   },
   "limits": [
-    "SO retained as literal code; species name not independently decoded",
+    "SO decoded using published TaksatorPU dictionarypage20; not visual species identification or all-trees claim",
     "species_age100 and a_year2017 retained as separate raw fields; reference date/units not independently established, do not age forward to2026",
     "part_cd5 not translated to50percent without dictionary",
     "Selected roadside crown377,310 got no feature in WMS; forest-context point200,600 different",
     "No transfer to individual roadside trees, spacing, trunk offset or current management status"
   ],
-  "licence": "Publicly exposed BDL data; own field reading and links only, no CC assigned or geometry copied"
+  "licence": "Publicly exposed BDL data; own field reading and links only, no CC assigned or geometry copied",
+  "dictionary_verification": {
+    "url": "https://www4.bdl.lasy.gov.pl/portal/Media/UPUL/taksatorpu_instr_uzytk_2023.pdf",
+    "http": 200,
+    "bytes": 3513945,
+    "sha256": "a65358f39f62f9c2a24abeaeb68a51a2e1bd27a2d7ef6206c262746795d000ee",
+    "locator": "TAKSATOR PlanyUproszczone instruction2023 printed/PDF20; dropdown code1 SO sosna zwyczajna; text says same dictionary as inventorydescription",
+    "method": "Root individually viewed local PDFpage20 bitmap",
+    "result": "SOURCED SO = sosna zwyczajna; no transfer to selected roadside crown or all stems"
+  }
 }
