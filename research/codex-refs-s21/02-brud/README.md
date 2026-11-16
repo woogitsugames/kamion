@@ -242,3 +242,8 @@ Flickr-europe-round12:3indywidualnie obejrzane źródłaCC,0nowych;329380100=P18
 ## Flickr CC po wstrzymaniu Commons — runda34
 
 [flickr-licensed-winter-round34](flickr-licensed-winter-round34/README.md): root sprawdził indywidualną licencję BY-SA2.0 przed oglądem Traffic/Asgeir S.Nilsen/5605943; UI data28.02.2005, EXIF/strefa niepotwierdzone. Jeden obraz osobno obejrzany: faktyczny śnieg, ale najbliższa ciężarówka przodem, bez diagnostycznych tylnych drzwi.0A/B/0pobrań/zapisanych screenshotów,0Commons. Nie użyto podpisu o łańcuchach jako prawa ani autora jako geolokalizacji. Główny23bez zmian.
+
+
+## Atlas stref — runda35
+
+[qualified-zone-atlas-round35](qualified-zone-atlas-round35/README.md):17 stref z5 istniejących fotografii, każda ponownie osobno obejrzana przez agenta:3 lokalne oryginały CC oraz2 obrazy ARR w przeglądarce. h0 oznacza dół panelu, h1 górę; zakresy są ESTIMATED, bez metrów. Film/smugi/wytarcia oddzielono od cieni, napisów, rdzy i globalnego zafarbu. Niepoliczalne smugi mają UNVERIFIED. Zachowane A5 z ograniczeniami/B1 dla rozpoznanego podzbioru,0 nowych fotografii/A/B/pobrań/Commons. Główny manifest23 bez duplikowania źródeł.
