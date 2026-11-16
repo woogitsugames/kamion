@@ -260,6 +260,6 @@ Obejrzano lokalne `compare/r28/High-clear/04-owner-render.jpg` oraz `05-owner-re
 
 ## R28 — wynik GIS
 
-Pełny GIS R28 zakończył się wynikiem **1797 passed, 22 skipped, 2 xfailed** w **1098,52 s** (`artifacts/knyszyn-rynek-0227/gis-r28.log`, `.done`: OK). Własne zmiany wygenerowanych danych regionu C pozostawione przez testy zostały przywrócone. Ostatni wykonany EditMode R27, po zmianach targowicy, ale przed wycofaniem wyłącznie łaty Python R27, miał **955 passed, 2 skipped** (`editmode-r27.done`, `artifacts/tests/editmode-20261116-093254.xml`). Świeży EditMode na stanie R28 uruchomiono; wynik OPEN.
+Pełny GIS R28 zakończył się wynikiem **1797 passed, 22 skipped, 2 xfailed** w **1098,52 s** (`artifacts/knyszyn-rynek-0227/gis-r28.log`, `.done`: OK). Własne zmiany wygenerowanych danych regionu C pozostawione przez testy zostały przywrócone. Ostatni wykonany EditMode R27, po zmianach targowicy, ale przed wycofaniem wyłącznie łaty Python R27, miał **955 passed, 2 skipped** (`editmode-r27.done`, `artifacts/tests/editmode-20261116-093254.xml`). Świeży EditMode R28 zakończył się wynikiem **955 passed, 0 failed, 2 skipped** (`artifacts/tests/editmode-20261116-102739.xml`; `artifacts/knyszyn-rynek-0227/editmode-r28.done`: OK). Własną zmianę materiału `M_Sky` po teście przywrócono.
 
 Low względem before nadal formalnie **FAIL** (`dk65-inlet-south` 240 → 304 draw calls), a odbiór wizualny, poprawa ciemnego wlotu i weryfikacja właściciela pozostają **OPEN**. Gotowe do scalenia po weryfikacji lidera: **NIE**.
