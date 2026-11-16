@@ -156,3 +156,6 @@ Właściciel: limit 2 mln trójkątów na kamerę High pochodzi z telefonu (A16)
 
 **D79 — korekta (2026-11-16, s23, po raporcie sesji P r5):** brak karty producenta z 7,60 m; najbliższa realna wartość **7,63 m** (7 kart, rozstaw osi 1,31 m) przechodzi pierścień skrętu (zapas ~2,9 cm). Przy 7,60 m wychodziło pełzanie pustej naczepy na 12 % 5,04 mm (> 5 mm), które przechodzi dopiero od ~7,69 m. Właściciel: **7,63 m + uczciwa poprawka modelu hamulca postojowego/tarcia statycznego naczepy** (bez osłabiania testu). Zastępuje 7,60 m.
 
+## D84 — Feel test bramki 2: zaliczony 5/5 + uwagi do PC (2026-11-16, s23)
+Właściciel zrobił feel test (D77) na exe `kamion-0.1.0-e28533ca31-regions`, klawiatura, plac testowy (`-scene DrivingLab -trailer 40`): ruszanie pod górę 7 %/12 % — 5, hamowanie — 5, okrąg R50/rondo — 5, cofanie pod rampę — 5 („jak prawdziwe”). **Odczucie jazdy bramki 2 zaliczone** (pad i kierownica FFB nietestowane; geometria naczepy sprzed D79). Uwagi poza próbami: (1) **wnętrze kabiny na PC brzydkie, na telefonie było ładne** — właściciel przyśle zrzuty (do diagnozy: materiały/tekstury/oświetlenie kabiny w tierach PC); (2) **HUD i menu „zbyt AI slop”** — przeprojektować na poziom jakości gier symulacyjnych ciężarówek (styl własny, bez kopiowania cudzego wyglądu, marek i elementów), menu niewygodne w obsłudze; (3) **lusterka za małe / złe**.
+
