@@ -103,7 +103,8 @@ namespace Game.Controls
         // ---- HUD (over the 3D view)
         /// <summary>HUD strip / mirror bezel. 96 % opaque: the text keeps AA over a white sky (linear-light blend).</summary>
         public static readonly Color HudPanel = C(17, 19, 21, 0.96f);
-        public static readonly Color MirrorBezel = C(11, 12, 13, 1f);
+        /// <summary>Mirror window edge: matte dark-grey housing plastic, not a black picture-in-picture frame (§7 p.6).</summary>
+        public static readonly Color MirrorBezel = C(40, 42, 45, 1f);
         public static readonly Color GaugeTrack = C(58, 61, 66);
         public static readonly Color GaugeFill = C(184, 181, 172);
 
