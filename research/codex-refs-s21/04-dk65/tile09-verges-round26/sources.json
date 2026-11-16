@@ -1,0 +1,81 @@
+{
+  "review_date": "2026-11-16",
+  "own_exact_time_recorded": false,
+  "source_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolution?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=Raster&STYLES=&SRS=EPSG%3A2180&BBOX=764457.1%2C607186.7%2C764737.1%2C607466.7&WIDTH=800&HEIGHT=800&FORMAT=image%2Fjpeg",
+  "http": 200,
+  "content_type": "image/jpeg",
+  "bbox_epsg2180_en": [
+    764457.1,
+    607186.7,
+    764737.1,
+    607466.7
+  ],
+  "dimensions": [
+    800,
+    800
+  ],
+  "scale_m_per_px": 0.35,
+  "scale_limit": "Skala żądanego rastra mapy, nie rozdzielczość zdjęcia źródłowego ani dokładność terenowa.",
+  "source_flight_date": "UNVERIFIED — aktualna mozaika WMS",
+  "selection": {
+    "K1_point": "km trasy 21.65",
+    "K1_record": "K1-020",
+    "tile": "dk65-09",
+    "offline_osm_way": 27718745,
+    "offline_ref": "65",
+    "center_epsg2180_en": [
+      764597.1,
+      607326.7
+    ],
+    "point_source": "existing km_points.json; nie państwowy kilometraż ani GPS aparatu",
+    "index_counts": {
+      "dk65-03": 2,
+      "dk65-09": 2,
+      "dk65-11": 2
+    },
+    "tile09_existing_records": {
+      "K1-020": "wycinek orto 80×80 m",
+      "K1-054": "sprawdzenie pokrycia ulicznego, bez zaakceptowanego zdjęcia ulicznego"
+    },
+    "main_s21_explicit_tile09_or_km21_65_matches": 0,
+    "coverage_count_limit": "Nie jest pełnym przestrzennym audytem rekordów bez tagu kafla."
+  },
+  "output": "research\\codex-refs-s21\\04-dk65\\tile09-verges-round26\\files\\04-T09V26-01.jpg",
+  "bytes": 195563,
+  "sha256": "50c52ee9c45698963bc5d0a49d31df3b604063cfcfc24e2e79dce4bdafe53766",
+  "canonical_file_in_git_only": true,
+  "raw_image_duplicate": false,
+  "crop_wgs84_corners_lonlat": [
+    [
+      22.96692864517839,
+      53.26379382892114
+    ],
+    [
+      22.967161467629282,
+      53.26630547473337
+    ],
+    [
+      22.971117680772686,
+      53.26365417167211
+    ],
+    [
+      22.97135074750564,
+      53.266165804790695
+    ]
+  ],
+  "tile_limit": "Środek w dk65-09; wschodni skraj wycinka wychodzi w stronę dk65-08.",
+  "individually_viewed": true,
+  "new_distance_measurements": 0,
+  "observations": "Jezdnia NW–SE; SW jasny pas przy asfaltowej krawędzi i szersze otwarte pokrycie przed zwartym lasem; NE nieregularny pas koron oddziela jezdnię od pola. Prosta linia w polu kończy się wizualnie przy koronach, połączenie z jezdnią niewidoczne.",
+  "unverified": [
+    "rów/przekrój/głębokość",
+    "przepust",
+    "funkcja i połączenie śladu w polu",
+    "gatunki i pnie",
+    "materiał pasa przy asfaltowej krawędzi",
+    "wymiary terenowe",
+    "data nalotu i stan2026"
+  ],
+  "licence_source": "https://www.geoportal.gov.pl/pl/dane/ortofotomapa-orto/ — darmowe pobranie i dowolne wykorzystanie; nie przypisano CC.",
+  "ground_photographs": 0
+}

@@ -647,3 +647,7 @@ Dwa wycinki ortofotomapy GUGiK w `research/codex-refs-s21/04-dk65/tree-crowns-ro
 ### Codex refs S21 — R22 porównanie modeli GUGiK
 
 `research/codex-refs-s21/03-knyszyn/gugik-lod-source-round22/files/03-GL22-model-comparison.png`: własna analiza CityGML GUGiK, dane CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); © OpenStreetMap contributors, ODbL 1.0 (https://www.openstreetmap.org/copyright). Źródła produktów i potwierdzenie licencji w source-review.json pakietu. Zmieniono sposób prezentacji: rzut obrysów i bryły z osobnymi podstawami Z; kolory analityczne, bez twierdzenia o rzeczywistych materiałach. Bez nowych kopii wspólnych ZIP i bez fotografii właściciela.
+
+### Codex refs S21 — R26 dk65-09
+
+`research/codex-refs-s21/04-dk65/tile09-verges-round26/files/04-T09V26-01.jpg`: ortofotomapa GUGiK, publiczny WMS ORTO/HighResolution; dokładny request/bbox/SHA w sources.json. Wykorzystanie według https://www.geoportal.gov.pl/pl/dane/ortofotomapa-orto/ (bezpłatne, dowolne); nie przypisano CC. Nowy zakres280×280m wyrenderowany800×800px, bez dodatkowego retuszu i bez kopii identycznego rastra w raw. Data nalotu nieustalona.
