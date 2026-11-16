@@ -2,7 +2,8 @@
 compact roundabout, read off the generated chunk GLBs (repeatable on any build, no Data/raw needed beyond derived).
 
 Stations every 1 m from 2 to 24 m from the (moved) split node of `knyszyn-roundabout-dk65-split-s` towards the ring
-centre; at each station a perpendicular cross-section on both sides, 0..16 m from the axis, 0.05 m step:
+centre (axis = the chord from the split node to the far end of OSM way 286990127, so the east hard edge reads
+0-4.4 m from it); at each station a perpendicular cross-section on both sides, 0..16 m from the axis, 0.05 m step:
   hard   = triangles of node `road` / `paved` whose material is not grass (carriageway, kerb, sidewalk, paving),
   ground = the highest of `terrain_lod0`, `plot_ground` and grass materials of `road`.
 The hard edge is the outermost lateral with `hard` within EDGE_MAX_M of the axis (skips the grass median of the split arm); the step is

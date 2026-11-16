@@ -257,5 +257,7 @@ Przebudowa knyszyn na kodzie #147 #154 #158 #153 #150 #164 #165 #169 + main; VQA
 - (e) uskok DK65 płd.: sonda na GLB `tools/worldgen/qa/knyszyn_s_kerb_step.py` (stacje 2–24 m od węzła rozdziału,
   spadek krawędź twarda → grunt 1,5 m dalej): przed #169 W 0,506 / E 0,652 m, po integracji W 0,499 / E 0,654 m;
   w kadrze `rondo-dk65-from-south` betonowa ściana po prawej nadal widoczna. Poprawka (e) w integracji nie działa
-  (próg 0,15 m niespełniony) — OTWARTE; podejrzenie: po #165 narożnik S→E nie jest już „mieszany” (recenzja §uwagi).
+  (próg 0,15 m niespełniony) — OTWARTE, przyczyna UNVERIFIED (DK65 to `primary`, więc #165 nie daje ramieniu S
+  chodników). Uwaga do sondy: oś stacji to cięciwa drogi OSM 286990127, stąd krawędź E na 0–4,4 m od osi.
+  Test `test_knyszyn_route_graph_…` zielony po wyłączeniu `knyszyn-roundabout-outer-diameter-d41` (sprawdzone na danych z gita).
 - P2-7 / #153: luka KRTG 1,73 m na pierścieniu — ADR 0274, test `test_knyszyn_route_graph_…` czerwony.
