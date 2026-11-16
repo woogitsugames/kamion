@@ -113,6 +113,41 @@ namespace Game.Tests
         }
 
         [Test]
+        public void SsaoFlagOff_SelectsThePlainRendererOnAnSsaoAsset()
+        {
+            // pc-visual-s23: Tier.ssao used to be read nowhere (rq_ssao=0 was a no-op). On an asset whose default renderer has
+            // SSAO, ssao=false must render the camera through renderer 1 (plain); ssao=true keeps the asset default.
+            var profile = QualityProfile.Load();
+            Assert.IsNotNull(profile);
+            Assert.IsTrue(profile.TryGet("Ultra", out var ultra));
+            int level = QualitySettings.GetQualityLevel();
+            var go = new GameObject("SsaoSwitchTestCam");
+            try
+            {
+                Assert.IsTrue(QualityTiers.Apply("Ultra"));
+                var asset = QualitySettings.renderPipeline as UniversalRenderPipelineAsset;
+                Assume.That(asset != null && asset.rendererDataList.Length > 1, "mobile Ultra asset = [SSAO, plain]");
+                var cam = go.AddComponent<Camera>();
+                var data = cam.GetUniversalAdditionalCameraData();
+                UnityEngine.Rendering.Universal.Tonemapping tm = null;
+                ultra.ssao = false;
+                QualityProfileApplier.Apply(ultra, cam, null, null, ref tm);
+                Assert.AreEqual(1, RendererIndexOf(data), "ssao off -> plain renderer (index 1)");
+                ultra.ssao = true;
+                QualityProfileApplier.Apply(ultra, cam, null, null, ref tm);
+                Assert.AreEqual(-1, RendererIndexOf(data), "ssao on -> asset default (SSAO renderer)");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+                QualitySettings.SetQualityLevel(level, false);
+            }
+        }
+
+        static int RendererIndexOf(UniversalAdditionalCameraData d) =>
+            (int)typeof(UniversalAdditionalCameraData).GetField("m_RendererIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(d);
+
+        [Test]
         public void EditorAndPhones_AreNotSwitchedToPcTiers()
         {
             Assert.IsFalse(PcGraphicsTiers.Enabled, "editor: PC tiers only with ForceEnabled");
