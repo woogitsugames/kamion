@@ -57,7 +57,7 @@ C = regions.REGIONS["bialystok-industrial-c"]
 X0, Y0 = C.bbox[0], C.bbox[1]
 T = regions.TILE_SIZE_M
 GENERIC_UA = "osm-research-client/1.0"
-EXTRA_POWIAT_MIN_SHARE = 0.05      # WORKING_VALUE, as ADR 0231
+EXTRA_POWIAT_MIN_SHARE = 0.0       # ADR 0219: every powiat the tile overlaps (powiaty.powiaty_for_bbox)
 API = "https://api.openstreetmap.org/api/0.6"
 
 # Tiles of the ring of ADR 0231 (PR #115; owner: part of d67-full). Not in main when this ADR was written, so listed
@@ -638,7 +638,7 @@ def build_plan(extract: dict, gugik: dict, budget: dict) -> dict:
         tiles.append({
             "id": tid, "group": CANDIDATES[tid]["group"], "ij": list(ij), "bbox": list(bb),
             "origin": [(bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2], "teryt_powiat": pw[0],
-            "teryt_powiat_extra": [p for p in pw[1:] if sh[p] >= EXTRA_POWIAT_MIN_SHARE], "powiat_area_share": sh,
+            "teryt_powiat_extra": [p for p in pw[1:] if sh[p] > EXTRA_POWIAT_MIN_SHARE], "powiat_area_share": sh,
             "places": x["places"], "counts": k, "target_score": round(score, 1), "budget_estimate": est,
             "data": gugik["tiles"].get(tid), "neighbours": neigh,
         })
@@ -693,7 +693,7 @@ def build_plan(extract: dict, gugik: dict, budget: dict) -> dict:
         "rules": {
             "target_score": "halls >= 1000 m2 + warehouses + works + 2 x fuel_hgv + 2 x truck_parking + industrial ha / 10 (WORKING_VALUE weights)",
             "budget_class": "city = largest powiat share 2061; else suburban >= 250 OSM buildings, rural fewer (built tiles: buildings.geojson)",
-            "teryt_powiat": "largest area share of the tile in PRG powiaty (Data/Admin/powiaty_prg.geojson); second from 5 % (WORKING_VALUE)",
+            "teryt_powiat": "largest area share of the tile in PRG powiaty (Data/Admin/powiaty_prg.geojson); every other overlapped powiat in teryt_powiat_extra (ADR 0219, tools/worldgen/powiaty.py)",
         },
     }
 
@@ -914,7 +914,8 @@ def print_regions(plan: dict) -> str:
     for o in plan["order"][:DEFINE_FIRST]:
         t = by[o["id"]]
         i, j = t["ij"]
-        extra = f"\n        teryt_powiat_extra={tuple(t['teryt_powiat_extra'])!r}," if t["teryt_powiat_extra"] else ""
+        extra = ("\n        teryt_powiat_extra=(" + "".join(f'"{p}", ' for p in t["teryt_powiat_extra"]).rstrip() + "),"
+                 if t["teryt_powiat_extra"] else "")
         out.append(f'''    "{t['id']}": Region(
         id="{t['id']}",
         title="{TITLES[t['id']]}",

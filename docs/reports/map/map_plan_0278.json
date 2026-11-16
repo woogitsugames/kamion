@@ -1376,7 +1376,9 @@
    },
    "target_score": 20.5,
    "teryt_powiat": "2061",
-   "teryt_powiat_extra": []
+   "teryt_powiat_extra": [
+    "2002"
+   ]
   },
   {
    "bbox": [
@@ -2186,7 +2188,9 @@
    },
    "target_score": 9.2,
    "teryt_powiat": "2061",
-   "teryt_powiat_extra": []
+   "teryt_powiat_extra": [
+    "2002"
+   ]
   },
   {
    "bbox": [
@@ -5514,7 +5518,7 @@
  "rules": {
   "budget_class": "city = largest powiat share 2061; else suburban >= 250 OSM buildings, rural fewer (built tiles: buildings.geojson)",
   "target_score": "halls >= 1000 m2 + warehouses + works + 2 x fuel_hgv + 2 x truck_parking + industrial ha / 10 (WORKING_VALUE weights)",
-  "teryt_powiat": "largest area share of the tile in PRG powiaty (Data/Admin/powiaty_prg.geojson); second from 5 % (WORKING_VALUE)"
+  "teryt_powiat": "largest area share of the tile in PRG powiaty (Data/Admin/powiaty_prg.geojson); every other overlapped powiat in teryt_powiat_extra (ADR 0219, tools/worldgen/powiaty.py)"
  },
  "seams_defined": [
   {
