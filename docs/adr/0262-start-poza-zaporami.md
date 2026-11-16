@@ -109,14 +109,32 @@ runtime daje wjazd + 25 = 85 m, katalog/menu 90 m.
 **Uwaga do logów:** w pozostałych sześciu logach linia `[START] region=… route_s=12.0 en=…` NIE jest pozycją startu:
 `DrivingLabBootstrap.LogRegionStart` przy starcie z zapieczonego spawnu (bez `route_s`, bez przesunięcia) wypisuje
 `DefaultStartS` = 12 m i z niego liczy `en`. Dowodem pozycji są zrzuty, nie ta linia.
+
+**Po scaleniu `origin/main` (`1311c25de`), 2026-11-16** — w worktree, z poprawkami z punktu niżej:
+EditMode `StartClearanceTests` + `RegionSelectTests` 61/61, skipped 0 (`artifacts/spawn-fix-0262/editmode-post-merge.xml`,
+w tym kategoria `WorldScenes` na 21 scenach zaimportowanych w worktree); PlayMode `RouteSpawnTests` 5/5
+(`editmode-playmode-post-merge.xml`); pytest `tests/gis/test_start_clear_0262.py` 44 passed (`pytest-post-merge.log`).
+Sceny dk65-11 i knyszyn-s w worktree były importowane przed scaleniem (trasa sprzed zmiany 1 linii).
+
+**Poprawki po recenzji (commit po `5f51007ee`, do scalenia przez lidera):**
+- P2-1 (wąsko, tylko `SpawnSafety.ResolveStartS`; `StartClearance.SafeStartS`, importer i katalog bez zmian): start żądany
+  bliżej niż `BehindClosureM` = 25 m przed rzędem wyjazdowym albo za nim cofa się na `stacja wyjazdu − 25 m`, a szukanie
+  wolnego miejsca nie wychodzi poza tę granicę; powód w logu `region-edge closure ahead on the route`. Test PlayMode
+  `RouteS_AtOrPastTheExitClosure_MovesBackInFrontOfIt` (230 m i 290 m przy wyjeździe 240 m → 215 m; 120 m bez zmian).
+- Log `[START] region=…` przy starcie z zapieczonego spawnu wypisuje stację spawnu (`NearestRouteS`), nie domyślne 12 m.
+  Bez osobnego testu (kompilacja + zielone przebiegi wyżej); do potwierdzenia w logu następnego exe.
+
 ## Otwarte
-1. **300 m wolnej trasy**: dk65-09 (trasa 352 m) i dk65-11 (378 m) mają po starcie 90 m tylko ~262 / ~288 m trasy;
+1. **300 m wolnej trasy**: dk65-09 (trasa 352 m) i dk65-11 (378 m) mają po starcie 90 m tylko 262 / 288 m trasy;
    na tym odcinku nie ma zamknięcia, ale wymóg „≥ 300 m” jest tam spełniony tylko jako „do końca trasy”.
-2. Sceny w APK d67-full są zapieczone ze spawnem 12 m; poprawny start daje katalog (menu) i bezpiecznik (każda ścieżka).
-   Kamery kontrolne `truck-at-gate` / `cab-gate` przesuną się dopiero po reimporcie regionu.
-3. Regiony przebudowywane równolegle (dk65-06…11, knyszyn-s — `dk65-r4-s21`; C, Dojlidy — `c-regen-s22`;
-   dw671-tykocin-01 — `rail-fix-s21`): po ich scaleniu `python scripts/export-region-catalog.py` (zmiana
-   `route_start.json` zmienia `routeLengthM`) i testy z tego ADR. Możliwy konflikt w `region_catalog.json` — rozwiązać
-   przez ponowne uruchomienie eksportera.
-4. `BehindClosureM` = 25 m i 90 m startu to WORKING_VALUE — ocena właściciela na telefonie.
-5. Telefon: niemierzone.
+2. **Binaria**: APK d67-full i exe zbudowane przed `5f51007ee` nie są naprawione — potrzebny nowy build (recenzja P2-7).
+   Nowy build ze starymi scenami naprawia runtime (menu: katalog 90 m; start bez menu: bezpiecznik → wjazd + 25 m, jak
+   tykocin 12 → 85). Kamery kontrolne `truck-at-gate` / `cab-gate` i zapieczony spawn 90 m wymagają reimportu regionu.
+3. Po każdej zmianie `route_start.json`: `python scripts/export-region-catalog.py`, pytest i EditMode z tego ADR.
+4. `BehindClosureM` = 25 m i 90 m startu to WORKING_VALUE — ocena właściciela (PC / telefon).
+5. Telefon: niemierzone (D73; zadanie bez adb). Exe: pozycja startu potwierdzona zrzutami, wydajność niemierzona tutaj.
+6. Uwagi z oględzin, poza zakresem tego ADR (dane tras): dk65-06 start na wlocie ronda; bialystok-kleeberga i
+   -knyszynska trasa nie biegnie skrajnym prawym pasem; knyszyn-w obiekt w kadrze kamery `truck-at-gate`.
+7. Z recenzji, nie zrobione: P2-2 (brak wolnego miejsca = start w kolizji z `LogError`, brak szukania wstecz), P2-3
+   (`SafeStartS` bierze maksimum po wszystkich wjazdach), P2-4 (trasy < 190 m), P2-5 (test ścieżki starej sceny bez
+   menu), P2-6 (test zapieczonego spawnu importera), P2-8 (pudło proste na łuku), P2-9 (bufor 128).

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-16 02:55:49Z" end-time="2026-11-16 02:55:51Z" duration="2,1557821">
+  <test-suite type="TestSuite" id="1233" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="182" result="Passed" start-time="2026-11-16 02:55:49Z" end-time="2026-11-16 02:55:51Z" duration="2.155782" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1227" name="Game.Tests.PlayMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/spawn-fix-0262/game/Library/ScriptAssemblies/Game.Tests.PlayMode.dll" runstate="Runnable" testcasecount="182" result="Passed" start-time="2026-11-16 02:55:49Z" end-time="2026-11-16 02:55:51Z" duration="2.149968" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="73352" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1228" name="Game" fullname="Game" runstate="Runnable" testcasecount="182" result="Passed" start-time="2026-11-16 02:55:49Z" end-time="2026-11-16 02:55:51Z" duration="2.148729" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1229" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="182" result="Passed" start-time="2026-11-16 02:55:49Z" end-time="2026-11-16 02:55:51Z" duration="2.147583" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1169" name="RouteSpawnTests" fullname="Game.Tests.RouteSpawnTests" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-16 02:55:49Z" end-time="2026-11-16 02:55:51Z" duration="2.145038" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1174" name="Gate3Cameras_ParseAndNormalise" fullname="Game.Tests.RouteSpawnTests.Gate3Cameras_ParseAndNormalise" methodname="Gate3Cameras_ParseAndNormalise" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" seed="1525079947" result="Passed" start-time="2026-11-16 02:55:49Z" end-time="2026-11-16 02:55:49Z" duration="0.008187" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1173" name="PathFollower_SeekToAndEndS" fullname="Game.Tests.RouteSpawnTests.PathFollower_SeekToAndEndS" methodname="PathFollower_SeekToAndEndS" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" seed="1229253522" result="Passed" start-time="2026-11-16 02:55:49Z" end-time="2026-11-16 02:55:49Z" duration="0.004907" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1172" name="RouteS_AtOrPastTheExitClosure_MovesBackInFrontOfIt" fullname="Game.Tests.RouteSpawnTests.RouteS_AtOrPastTheExitClosure_MovesBackInFrontOfIt" methodname="RouteS_AtOrPastTheExitClosure_MovesBackInFrontOfIt" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" seed="1052742292" result="Passed" start-time="2026-11-16 02:55:49Z" end-time="2026-11-16 02:55:50Z" duration="1.277141" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Detected one or more triangles where the distance between any 2 vertices is greater than 500 units. The resulting Triangle Mesh can impact simulation and query stability. It is recommended to tessellate meshes that have large triangles. Source mesh name: HillRamp
+[DIAG] sensor poll mode=Background (diag_poll main|bg|off, ADR 0177)
+[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 69 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=1s tier=Low target=60 fps=0.8 p50=1228.72 p95=1228.72 p99=1228.72 max=1228.72ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[START] start moved along the route: route_s 230.0 -> 215.0 (region-edge closure ahead on the route); regenerate the region start (ADR 0262)
+[START] start moved along the route: route_s 290.0 -> 215.0 (region-edge closure ahead on the route); regenerate the region start (ADR 0262)
+]]></output>
+            </test-case>
+            <test-case id="1171" name="RouteS_OutsideAClosureOrInsideACollider_MovesAlongTheRoute" fullname="Game.Tests.RouteSpawnTests.RouteS_OutsideAClosureOrInsideACollider_MovesAlongTheRoute" methodname="RouteS_OutsideAClosureOrInsideACollider_MovesAlongTheRoute" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" seed="831405396" result="Passed" start-time="2026-11-16 02:55:50Z" end-time="2026-11-16 02:55:51Z" duration="0.441578" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[DIAG] sensor poll mode=Background (diag_poll main|bg|off, ADR 0177)
+[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 69 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=0s tier=Low target=60 fps=2.8 p50=358.84 p95=358.84 p99=358.84 max=358.84ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[START] start moved along the route: route_s 12.0 -> 85.0 (region-edge closure on the route); regenerate the region start (ADR 0262)
+[START] start moved along the route: route_s 200.0 -> 214.0 (collider 'TestBarrier'); regenerate the region start (ADR 0262)
+]]></output>
+            </test-case>
+            <test-case id="1170" name="RouteS_SpawnsCoupledCombinationOnRouteWithHeading" fullname="Game.Tests.RouteSpawnTests.RouteS_SpawnsCoupledCombinationOnRouteWithHeading" methodname="RouteS_SpawnsCoupledCombinationOnRouteWithHeading" classname="Game.Tests.RouteSpawnTests" runstate="Runnable" seed="856635149" result="Passed" start-time="2026-11-16 02:55:51Z" end-time="2026-11-16 02:55:51Z" duration="0.405034" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[DIAG] sensor poll mode=Background (diag_poll main|bg|off, ADR 0177)
+[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 69 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=0s tier=Low target=60 fps=3.0 p50=338.44 p95=338.44 p99=338.44 max=338.44ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
