@@ -1,0 +1,22 @@
+{
+  "review_date": "2026-11-16",
+  "exact_review_time": "UNVERIFIED — nie zmierzono dokładnego momentu",
+  "purpose": "Nowa para kadrów przejazdu LK38 poza DW671 i wcześniejszymi trzema punktami Fast",
+  "selection_source": "Read-only istniejący regionalny PBF, szczegóły w selection.json",
+  "browser_method": "Natywny Chrome, Mapillary. OSM i All captures wizualnie potwierdzone w rozwiniętym menu pierwszego punktu. Kolejne punkty w tej samej sesji z jawnym OSM. Nie otwierano API ani ukrytego stanu.",
+  "points": [
+    {"node":1778182465,"ref_OSM":"038 023 994","node_lat":53.2506213,"node_lon":22.9252354,"safe_public_view":"https://www.mapillary.com/app/?lat=53.2506213&lng=22.9252354&z=18&mapStyle=OpenStreetMap","visible_map":"Przecięcie toru i drogi","coverage":"Brak widocznej sekwencji przez przecięcie w sprawdzonym widoku","photograph_opened":false},
+    {"node":2335163874,"ref_OSM":"038 019 441","node_lat":53.2151315,"node_lon":22.9496047,"safe_public_view":"https://www.mapillary.com/app/?lat=53.2151315&lng=22.9496047&z=18&mapStyle=OpenStreetMap","visible_map":"Przecięcie toru i drogi przy zabudowie","coverage":"Brak widocznej sekwencji przez przecięcie w sprawdzonym widoku","photograph_opened":false},
+    {"node":1778182447,"ref_OSM":"038 017 657","node_lat":53.2043969,"node_lon":22.9693368,"safe_public_view":"https://www.mapillary.com/app/?lat=53.2043969&lng=22.9693368&z=18&mapStyle=OpenStreetMap","visible_map":"Przecięcie toru i drogi opisanej Brzozowa","coverage":"Brak widocznej sekwencji przez przecięcie w sprawdzonym widoku i po rozszerzeniu widoku","photograph_opened":false}
+  ],
+  "limits": [
+    "Trzy sprawdzenia mapy nie oznaczają trzech obejrzanych fotografii",
+    "To nowe punkty wobec mapillary-crossings-round3 i knyszyn-crossing-round4, ale nie dowód globalnej nieobecności obrazów",
+    "Współrzędne węzłów służą selekcji i nie są GPS kamer; brak pKey dla fotografii",
+    "Tag source:ref nie jest własnym odczytem żółtej naklejki PLK",
+    "Nawierzchnia, słupy, rogatki, sygnalizacja, znaki, formalna kategoria i stan 2026 pozostają UNVERIFIED"
+  ],
+  "counts": {"new_map_points_checked":3,"individually_viewed_photographs":0,"accepted_new_photographs":0,"downloads":0,"saved_screenshots":0,"Mapillary_API_calls":0,"OSM_Overpass_requests":0,"Commons_requests":0,"Flickr_static_requests":0},
+  "cua_closeout": "Sprawdzono pokrycie trzech nowych przejazdów",
+  "result": "NO_PHOTOGRAPH_OBTAINED_IN_BOUNDED_UI_CHECK"
+}

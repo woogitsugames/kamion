@@ -1,0 +1,45 @@
+{
+  "review_date": "2026-11-16",
+  "method": "Read-only pyosmium odczyt istniejącego lokalnego PBF; bez zapytań sieciowych i bez modyfikacji źródła",
+  "source_pbf": "C:/Users/matma/Documents/Claude/kamion/Data/raw/osm/podlaskie-261108.osm.pbf",
+  "source_attribution": "© OpenStreetMap contributors, ODbL 1.0; pochodzenie i wcześniejszy hash w ../../06-region-ring/data/osm-source.json",
+  "selection_nodes": [
+    {
+      "id": 1778182465,
+      "lat": 53.2506213,
+      "lon": 22.9252354,
+      "tags": {
+        "railway": "level_crossing",
+        "ref": "038 023 994",
+        "source:ref": "#ŻółtaNaklejkaPLK"
+      }
+    },
+    {
+      "id": 2335163874,
+      "lat": 53.2151315,
+      "lon": 22.9496047,
+      "tags": {
+        "railway": "level_crossing",
+        "ref": "038 019 441",
+        "source:ref": "#ŻółtaNaklejkaPLK"
+      }
+    },
+    {
+      "id": 1778182447,
+      "lat": 53.2043969,
+      "lon": 22.9693368,
+      "tags": {
+        "railway": "level_crossing",
+        "ref": "038 017 657",
+        "source:ref": "#ŻółtaNaklejkaPLK"
+      }
+    }
+  ],
+  "dedup": "Nowe trzy punkty wobec wcześniejszych trzech Fast i DW671; nie uzyskano żadnego pKey fotografii",
+  "limits": [
+    "Tag ref to źródło OSM, nie urzędowy pomiar/przypisanie prawnej kategorii",
+    "Współrzędne węzła przejazdu nie są GPS aparatu",
+    "Snapshot nazwy 261108 nie jest datą wykonania fotografii ani potwierdzeniem stanu urządzeń2026"
+  ],
+  "status": "STABLE — trzy punkty sprawdzone w UI, 0 fotografii"
+}
