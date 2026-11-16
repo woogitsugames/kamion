@@ -11,7 +11,7 @@ Gałąź `spawn-safety-0277` od `origin/main` 639da4e54. Agent w chmurze (bez Un
 - [x] 2. Importer: `StartSearch.BakedSpawnS`. dotnet `tools/spawn-runner`: **13/13 PASS**.
 - [x] 3. Testy EditMode/PlayMode napisane (NIEuruchomione — brak Unity). Roslyn: 0 błędów składni; shim fizyki: kompilacja OK.
 - [x] 4. ADR `docs/adr/0277-bezpiecznik-startu.md` (tabela P2-2…P2-9).
-- [ ] 5. PR do main.
+- [x] 5. PR #141 do main (nie scalony).
 
 ## Następny krok (komenda dla lidera)
 `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` (filtr `StartSearchTests;StartClearanceTests`), potem
