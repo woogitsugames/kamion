@@ -4,8 +4,8 @@ Gałąź `int-dk65-s22` (worktree `.claude/worktrees/int-dk65-s22`), baza main 6
 04:2x (72 commity, m.in. spawn-fix-0262 r2). Format: `docs/09` §4.
 
 ## 1. Wynik
-**PARTIAL — gotowe do scalenia: PATRZ §8** (werdykt zależy od pełnego `pytest tests/gis` i EditMode, które biegną
-odłączone: `artifacts/int-dk65-s22/logs/final.status`).
+**DONE — gotowe do scalenia: TAK, z zastrzeżeniami z §8** (rondo: geometria r3 zaakceptowana przez lidera,
+dopracowanie w „Otwarte” ADR 0218 §5c).
 
 ## 2. Ustalenia
 1. **Scalone PR-y:** #98 dk65-k1-0220 (przekrój K1, linie krawędziowe przerywane, zatoki), #97 roundabout-0218
@@ -88,5 +88,34 @@ odłączone: `artifacts/int-dk65-s22/logs/final.status`).
 Scalić do main (jeśli §8 = TAK) → scalić rail-dk65-s22 → #138 → jedna przebudowa wszystkich kafli DK65 / Knyszyn →
 oględziny dk65-* i ronda na świeżych danych; osobne zadanie na dopracowanie ronda (ADR 0218 §5c „Otwarte”).
 
-## 8. Gotowe do scalenia
-DO UZUPEŁNIENIA po `FINAL DONE` (pełny pytest tests/gis + EditMode).
+## 8. Gotowe do scalenia: TAK (warunkowo — dwa kroki po scaleniu po stronie lidera)
+
+**Wyniki (po pierwszym merge main, przed drugim):**
+- `pytest tests/gis -q` pod slotem heavy: **1682 passed, 3 failed, 3 xfailed** (16:45 min; `artifacts/int-dk65-s22/logs/pytest-gis.log`).
+- EditMode: **679 total, 678 passed, 0 failed, 1 skipped** (`artifacts/tests/editmode-20261116-043940.xml`);
+  StartClearanceTests: 48 przypadków Passed, 0 Failed.
+
+**3 faile pytest — żaden nie jest regresją tej gałęzi w kaflach DK65 / Knyszyn:**
+| test | przyczyna | klasa |
+|---|---|---|
+| `test_road_fidelity.py::test_report_not_stale` | `bialystok-industrial-c/generated/fidelity_qa.json` ma hashe plików generatora dróg; gałąź zmienia `roads/{build_world, consistency, junctions, markings, meshing, network, pipeline}.py` | oczekiwane po każdej zmianie generatora — wymaga `fidelity/run.py --region bialystok-industrial-c` po scaleniu (nie uruchamiane tutaj; testy „ratchet” tego pliku przeszły na starym raporcie) |
+| `test_far_field.py::test_generated_far_field_qa_and_manifests` | sha256 `far_field.low.glb` kafla C we wspólnym `Data/raw/derived` (plik z 15.11 16:54) ≠ `far_field_qa.json`; **ten sam rozjazd jest na `origin/main`** (qa eb070b32… vs dysk c8bf95bf…) | stan wspólnego katalogu `Data/raw` (junction), nie ta gałąź |
+| `test_far_field_boundary.py::test_regenerated_building_rectangles_do_not_intersect_region` | cache `far_field_gis_cache.json` w `Data/raw` w schemacie 11, kod po pierwszym merge oczekiwał 12 | stan wspólnego `Data/raw`; **po drugim merge main przechodzi** |
+
+Uwaga: pełny bieg pytest zmienia w drzewie roboczym `Data/Regions/bialystok-industrial-c/generated/{far_field_qa,
+world_manifest}.json`, `landmarks/viaduct_putry_underdeck.spec.json` i manifest far-field (efekt uboczny któregoś
+testu; cofnięte `git checkout --`, nie commitowane).
+
+**Drugi merge `origin/main` (113 commitów: int-pc-s23, c-regen2-s23, lamp-test-s23 i in.)** — commit 368b7ba0f.
+Jeden konflikt: `tools/worldgen/roads/build_world.py`, zbiór `WELD` (suma: `apron_paving_light` + `sidewalk_paving_red`,
+`sidewalk_slabs` z ADR 0237). Brak konfliktów w `generated/` (kafle DK65 / Knyszyn nie były zmieniane na main).
+Po merge ponowione tylko dotknięte testy: `test_compact_roundabout_0218`, `test_truck_apron_0218`,
+`test_road_fidelity`, `test_far_field`, `test_far_field_boundary` → **59 passed, 2 failed, 1 xfailed** (te same dwa:
+fidelity stale i far-field sha). **Pełny pytest i EditMode NIE były powtarzane po drugim merge.**
+
+**Zastrzeżenia (do zrobienia przez lidera po scaleniu):**
+1. `fidelity/run.py --region bialystok-industrial-c` (i Dojlidy, jeśli test tego wymaga) — odświeżenie hashy; to też
+   jedyny dowód liczbowy, że zmiany generatora nie ruszyły kafla C (logicznie nie powinny: tryb ronda działa tylko
+   z kluczem override, ale nie było to sprawdzane przebudową C).
+2. `generated/` 14 kafli DK65 / Knyszyn pochodzi sprzed obu merge'y main (zmiany streetscape: lampy, far-field, woda,
+   typy chodników ADR 0237) — przebudowa razem z #138.
