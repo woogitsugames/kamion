@@ -231,3 +231,10 @@ Fidelity regionu C przeliczono po wycofaniu R27; wyniki lokalne `artifacts/knysz
 Dla wspólnej kamery `dk65-inlet-south` porównanie before → R28 daje **199 → 266** szacowanych draw calls MeshRenderer (+67) oraz **41 → 38** dla instancji (−3), razem **240 → 304** (+64). Są to estymaty CPU edytora przed SRP batchingiem, nie pomiary GPU. Skok obserwowany między R10 a R11 zbiega się w czasie z integracją dalekiego planu i zmianą położenia ciężarówki, lecz brakuje porównywalnego rozbicia według rendererów dla historycznego baseline; nie można przypisać przyczyny wzrostu wyłącznie jednej zmianie. Wymóg Low bez pogorszenia względem before pozostaje formalnie **FAIL**.
 
 Pełny GIS R28 trwa; końcowy wynik pozostaje **OPEN**.
+
+
+## R28 — przegląd targowicy z wysokości oczu
+
+Lokalne zestawienie `compare/r28/High-clear/14-owner-render.jpg` pokazuje czytelny rząd wiat; w modelu odtworzono cztery wiaty w układzie 3+1. Dach najbliższej wiaty sprawia wrażenie bardziej płaskiego niż na zdjęciu, a wyspa przy pierwszym planie jest zbyt zielona względem widocznej na fotografii ziemi. To ocena przy szacunkowej pozycji kamery i innym oświetleniu, nie pomiar nachylenia ani potwierdzenie akceptacji właściciela.
+
+Pełny GIS R28 trwa; wynik końcowy pozostaje **OPEN**.
