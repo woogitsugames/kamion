@@ -1,53 +1,59 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Game.Controls;
 using Game.Core.Settings;
 using Game.UI.Layout;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
+using P = Game.Controls.UiPalette;
 using T = Game.UI.Settings.PcSettingsTexts;
 
 namespace Game.UI.Settings
 {
     /// <summary>
-    /// PC settings screen (ADR 0270): resolution, window mode, vsync, frame cap, graphics tier, HUD scale, units, volumes.
-    /// Same flat dark-panel language as <see cref="ControlSettingsPanel"/> (steppers and segments, no icons, no glow).
-    /// Edits a pending copy; "Zastosuj" saves + applies (a display change opens a 15 s keep / revert countdown),
-    /// "Anuluj" / Esc / pad B discards, "Przywróć domyślne" loads the defaults into the pending copy.
-    /// Mouse, keyboard and pad: every control is a <see cref="Selectable"/> with explicit up / down / left / right
-    /// navigation (rows in reading order, left / right inside a row); the selected item gets a frame and scrolls into view.
-    /// After #131 (ADR 0265) is merged: replace <see cref="Decorate"/> with <c>UiFocus.Decorate(b, Cancel)</c> and
-    /// <see cref="WireNavigation"/> with <c>UiFocus.ApplyGrid</c> (same row lists). Menu only, never in the driving loop.
+    /// PC settings screen (ADR 0270; tabs and new groups ADR 0283, D84 "menu niewygodne"): one screen, five tabs -
+    /// Grafika (display + quality), Sterowanie (links to the wheel / pedal / camera panel and the bindings), Dźwięk,
+    /// Rozgrywka (HUD scale, HUD detail, HUD in the cab, touch controls, units), Lusterka (windows on / off, size, height,
+    /// inset, adjustment, live layout preview). Edits pending copies (<see cref="PcSettingsData"/>, <see cref="HudPrefsData"/>,
+    /// touch-control mode, mirror windows); "Zastosuj" saves + applies (a display change opens the 15 s keep / revert
+    /// countdown), "Anuluj" / Esc / pad B / right mouse discards, "Przywróć domyślne" loads the defaults of the open tab.
+    /// Keyboard, mouse and pad (<see cref="MenuCommandMap"/>): tabs with Q / E or LB / RB (or a click), rows with the
+    /// arrows / d-pad / stick, Enter / A to press; the focused item has the amber frame (<see cref="UiFocus"/>) and scrolls
+    /// into view. While open it owns the focus (<see cref="UiFocus.Push"/>), so the driving scene gates every PC driving
+    /// source (review #131 P1-1). Flat matte panels from <see cref="UiPalette"/> (WCAG AA), Inter Regular / SemiBold,
+    /// no icons, gradients or glow (docs/06 section 7). Menu only, never in the driving loop.
     /// </summary>
     public sealed class PcSettingsPanel : MonoBehaviour
     {
-        static readonly Color k_Dim = new Color(0.02f, 0.025f, 0.03f, 0.72f);
-        static readonly Color k_Panel = new Color(0.06f, 0.065f, 0.07f, 0.97f);
-        static readonly Color k_Row = new Color(1f, 1f, 1f, 0.045f);
-        static readonly Color k_Button = new Color(0.16f, 0.17f, 0.18f, 0.95f);
-        static readonly Color k_ButtonOn = new Color(0.30f, 0.36f, 0.30f, 0.95f);
-        static readonly Color k_Text = new Color(0.95f, 0.95f, 0.91f, 1f);
-        static readonly Color k_Muted = new Color(0.70f, 0.70f, 0.67f, 1f);
-        static readonly Color k_Amber = new Color(0.95f, 0.66f, 0.18f, 1f);
+        const float Pad = 40f, Edge = 20f, HeaderH = 96f, TabsH = 64f, HelpH = 40f, FooterH = 108f, RowH = 68f, LabelW = 420f;
+        const float MaxPanelW = 1240f, MaxPanelH = 1240f;
 
-        const float RowH = 66f, ColW = 700f, Pad = 40f, Edge = 20f, HeaderH = 86f, FooterH = 108f, LabelW = 300f;
+        /// <summary>Opens the wheel / pedal / camera panel (set by the start menu before it opens this screen; null = not available).</summary>
+        public static Action OpenControlSettings;
+
+        /// <summary>Tab opened last (the screen reopens there in this session).</summary>
+        static int s_LastTab;
 
         /// <summary>Settings shown in the controls (not applied yet).</summary>
         public PcSettingsData Pending { get; private set; }
         /// <summary>Settings in force (= saved file).</summary>
         public PcSettingsData Applied { get; private set; }
+        public HudPrefsData HudPending => m_HudPending;
         public DisplayConfirmTimer Confirm { get; } = new DisplayConfirmTimer();
         public RectTransform PanelRect { get; private set; }
-        public bool TwoColumns { get; private set; }
-        public bool Dirty => !Pending.SameAs(Applied);
+        /// <summary>Open tab (<see cref="PcSettingsTexts.Tabs"/>).</summary>
+        public int Tab { get; private set; }
+        public bool Dirty => !Pending.SameAs(Applied) || !m_HudPending.SameAs(m_HudApplied) || m_TouchPending != m_TouchApplied || m_MirrorsPending != m_MirrorsApplied;
         /// <summary>First selected item (tests).</summary>
         public GameObject FirstItem { get; private set; }
+        /// <summary>Kept for the ADR 0270 tests / captures: the tabbed screen is always one column.</summary>
+        public bool TwoColumns => false;
 
         Action m_OnClose;
-        Font m_Font;
+        Font m_Font, m_Strong;
         RectTransform m_Safe, m_Content, m_Viewport;
         ScrollRect m_Scroll;
         UiViewport m_View;
@@ -60,7 +66,10 @@ namespace Game.UI.Settings
         Text m_DialogCountdown;
         PcDisplaySettings m_RevertWindow;     // window as it was before "Zastosuj" (runtime state)
         PcDisplaySettings m_RevertSettings;   // display part of the file before "Zastosuj"
-        GameObject m_LastSelected;
+        HudPrefsData m_HudPending, m_HudApplied;
+        TouchControlsMode m_TouchPending, m_TouchApplied;
+        bool m_MirrorsPending, m_MirrorsApplied;
+        float m_ColW;
 
         public static PcSettingsPanel Create(Camera cam, Action onClose = null)
         {
@@ -69,7 +78,11 @@ namespace Game.UI.Settings
             p.m_OnClose = onClose;
             p.Applied = PcSettingsRuntime.Current.Clone();
             p.Pending = p.Applied.Clone();
+            p.m_HudApplied = p.m_HudPending = HudPreferences.Current;
+            p.m_TouchApplied = p.m_TouchPending = UiPreferences.TouchControls;
+            p.m_MirrorsApplied = p.m_MirrorsPending = ControlSettings.Load().mirrorInsets;
             p.m_Modes = PcSettingsRuntime.AvailableModes();
+            p.Tab = Mathf.Clamp(s_LastTab, 0, T.Tabs.Length - 1);
             p.Build(cam);
             return p;
         }
@@ -84,9 +97,28 @@ namespace Game.UI.Settings
             Destroy(gameObject);
         }
 
+        /// <summary>Defaults of the open tab into the pending copies (the other tabs keep their edits).</summary>
         public void ResetToDefaults()
         {
-            Pending = PcSettingsData.Defaults();
+            var d = PcSettingsData.Defaults();
+            var h = HudPrefsData.Defaults;
+            switch (Tab)
+            {
+                case T.TabGraphics:
+                    Pending.display = d.display; Pending.vsync = d.vsync; Pending.fpsCap = d.fpsCap; Pending.graphicsTier = d.graphicsTier;
+                    break;
+                case T.TabAudio:
+                    Pending.volumes = d.volumes;
+                    break;
+                case T.TabGameplay:
+                    Pending.hudScale = d.hudScale; m_HudPending.Detail = h.Detail; m_HudPending.Cab = h.Cab; m_TouchPending = TouchControlsMode.Auto;
+                    break;
+                case T.TabMirrors:
+                    m_MirrorsPending = ControlSettings.Defaults().mirrorInsets;
+                    m_HudPending.MirrorSize = h.MirrorSize; m_HudPending.MirrorDrop = h.MirrorDrop; m_HudPending.MirrorInset = h.MirrorInset;
+                    m_HudPending.MirrorYawOut = h.MirrorYawOut; m_HudPending.MirrorPitchDown = h.MirrorPitchDown;
+                    break;
+            }
             RefreshAll();
         }
 
@@ -99,6 +131,17 @@ namespace Game.UI.Settings
             PcSettingsRuntime.Commit(Pending, applyDisplay: displayChanged);
             Applied = PcSettingsRuntime.Current.Clone();
             Pending = Applied.Clone();
+            HudPreferences.Set(m_HudPending);
+            m_HudApplied = m_HudPending = HudPreferences.Current;
+            UiPreferences.TouchControls = m_TouchPending;
+            m_TouchApplied = m_TouchPending = UiPreferences.TouchControls;
+            if (m_MirrorsPending != m_MirrorsApplied)
+            {
+                var c = ControlSettings.Load();
+                c.mirrorInsets = m_MirrorsPending;
+                c.Save();
+                m_MirrorsApplied = m_MirrorsPending;
+            }
             if (displayChanged && PcSettingsRuntime.IsDesktopPlayer) OpenConfirm();
             RefreshAll();
         }
@@ -125,6 +168,16 @@ namespace Game.UI.Settings
             RefreshAll();
         }
 
+        /// <summary>Opens tab <paramref name="index"/> (pending edits of every tab are kept).</summary>
+        public void ShowTab(int index)
+        {
+            index = Mathf.Clamp(index, 0, T.Tabs.Length - 1);
+            if (index == Tab && m_Content != null) return;
+            Tab = index;
+            s_LastTab = index;
+            BuildContent();
+        }
+
         // ------------------------------------------------------------------ frame
 
         void Update()
@@ -136,41 +189,28 @@ namespace Game.UI.Settings
                 if (m_DialogCountdown != null) m_DialogCountdown.text = string.Format(CultureInfo.InvariantCulture, T.ConfirmCountdown, Confirm.SecondsLeft);
             }
             if (BackPressed()) { Cancel(); return; }
-            var es = EventSystem.current;
-            if (es == null) return;
-            var sel = es.currentSelectedGameObject;
-            if (sel == null || !sel.activeInHierarchy)
+            if (m_Dialog == null)
             {
-                // Pad / keyboard must never be left without a selection (mouse clicks on empty space clear it).
-                if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame || Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame)
-                    es.SetSelectedGameObject(m_Dialog != null ? m_Dialog.GetComponentInChildren<Selectable>().gameObject : FirstItem);
+                int tab = TabStep();
+                if (tab != 0) { ShowTab(MenuCommandMap.StepTab(Tab, tab, T.Tabs.Length)); return; }
             }
-            else if (sel != m_LastSelected)
-            {
-                m_LastSelected = sel;
-                ScrollIntoView(sel.transform as RectTransform);
-            }
+            UiFocus.RestoreIfLost(this, m_Dialog != null ? m_Dialog.GetComponentInChildren<Selectable>().gameObject : FirstItem);
         }
 
+        /// <summary>Esc / pad B / right mouse button (MenuCommand.Back).</summary>
         static bool BackPressed() =>
             (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) ||
-            (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame);
+            (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
+            (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame);
 
-        void ScrollIntoView(RectTransform item)
+        /// <summary>Q / E, LB / RB (MenuCommand.PrevTab / NextTab): -1, +1 or 0.</summary>
+        static int TabStep()
         {
-            if (item == null || m_Scroll == null || !m_Scroll.vertical || !item.IsChildOf(m_Content)) return;
-            var corners = new Vector3[4];
-            item.GetWorldCorners(corners);
-            Vector2 lo = m_Viewport.InverseTransformPoint(corners[0]), hi = m_Viewport.InverseTransformPoint(corners[2]);
-            var r = m_Viewport.rect;
-            float dy = 0f;
-            if (hi.y > r.yMax) dy = hi.y - r.yMax + 12f;
-            else if (lo.y < r.yMin) dy = lo.y - r.yMin - 12f;
-            if (Mathf.Abs(dy) < 0.5f) return;
-            var p = m_Content.anchoredPosition;
-            float maxY = Mathf.Max(0f, m_Content.rect.height - r.height);
-            p.y = Mathf.Clamp(p.y - dy, 0f, maxY);
-            m_Content.anchoredPosition = p;
+            var k = Keyboard.current;
+            var g = Gamepad.current;
+            if ((k != null && k.eKey.wasPressedThisFrame) || (g != null && g.rightShoulder.wasPressedThisFrame)) return 1;
+            if ((k != null && k.qKey.wasPressedThisFrame) || (g != null && g.leftShoulder.wasPressedThisFrame)) return -1;
+            return 0;
         }
 
         void OnRectTransformDimensionsChange() { m_View?.Invalidate(); }
@@ -186,18 +226,18 @@ namespace Game.UI.Settings
             canvas.sortingOrder = 1200;
             gameObject.AddComponent<GraphicRaycaster>();
             m_Font = UiFonts.Default;
+            m_Strong = UiFonts.Strong;
 
             var dim = Rect("Dim", transform);
             Stretch(dim);
-            dim.gameObject.AddComponent<Image>().color = k_Dim;   // swallows clicks behind the panel
+            dim.gameObject.AddComponent<Image>().color = P.Scrim;   // swallows clicks behind the panel
 
             m_View = new UiViewport(canvas);
             m_Safe = m_View.SafeArea;
-            if (FindAnyObjectByType<EventSystem>() == null)
-                new GameObject("EventSystem", typeof(EventSystem)).AddComponent<InputSystemUIInputModule>().AssignDefaultActions();
+            UiFocus.EnsureEventSystem();
             m_View.Refresh();
             BuildContent();
-            Debug.Log("[SETTINGS] pc open modes=" + m_Modes.Count);
+            Debug.Log("[SETTINGS] pc open modes=" + m_Modes.Count + " tab=" + T.Tabs[Tab]);
         }
 
         void BuildContent()
@@ -213,85 +253,73 @@ namespace Game.UI.Settings
             FirstItem = null;
             m_Dialog = null;
             m_Hint = null;
-            m_LastSelected = null;
 
             Vector2 avail = m_View.SizeUnits - new Vector2(2f * Edge, 2f * Edge);
-            float twoW = 2f * ColW + 3f * Pad;
-            TwoColumns = avail.x >= twoW;
-            float panelW = TwoColumns ? twoW : Mathf.Min(ColW + 2f * Pad, avail.x);
+            float panelW = Mathf.Min(MaxPanelW, avail.x);
+            float panelH = Mathf.Min(MaxPanelH, avail.y);
+            m_ColW = panelW - 2f * Pad;
 
             var panel = Rect("Panel", m_Safe);
             PanelRect = panel;
             panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
             panel.anchoredPosition = Vector2.zero;
-            panel.gameObject.AddComponent<Image>().color = k_Panel;
+            panel.sizeDelta = new Vector2(panelW, panelH);
+            panel.gameObject.AddComponent<Image>().color = P.Panel;
 
+            // ---- title + hint
+            var title = Label(panel, "Title", T.Title, 40, TextAnchor.MiddleLeft, P.Ink, Vector2.zero, Vector2.zero, m_Strong);
+            TopBand(title.rectTransform, Pad, Pad + 520f, 18f, 60f);
+            m_Hint = Label(panel, "Hint", "", 24, TextAnchor.MiddleRight, P.InkMuted, Vector2.zero, Vector2.zero);
+            TopBand(m_Hint.rectTransform, panelW - Pad - 500f, Pad, 18f, 60f);
+
+            // ---- tabs (inverted fill = open tab)
+            var tabRow = new Selectable[T.Tabs.Length];
+            float gap = 8f, tw = (m_ColW - gap * (T.Tabs.Length - 1)) / T.Tabs.Length;
+            for (int i = 0; i < T.Tabs.Length; i++)
+            {
+                int idx = i;
+                var b = TextButton(panel, T.Tabs[i], new Vector2(Pad + i * (tw + gap), panelH - HeaderH - TabsH), new Vector2(tw, TabsH), () => ShowTab(idx), 26);
+                bool open = i == Tab;
+                b.GetComponent<Image>().color = open ? P.SegmentOn : P.Button;
+                var t = b.GetComponentInChildren<Text>();
+                t.color = open ? P.InkOnLight : P.Ink;
+                t.font = open ? m_Strong : m_Font;
+                tabRow[i] = b.GetComponent<Selectable>();
+            }
+            var keys = Label(panel, "Keys", T.HintKeys, 20, TextAnchor.MiddleLeft, P.InkMuted, new Vector2(Pad, panelH - HeaderH - TabsH - HelpH), new Vector2(m_ColW, HelpH));
+            keys.horizontalOverflow = HorizontalWrapMode.Wrap; keys.resizeTextForBestFit = true; keys.resizeTextMinSize = 14; keys.resizeTextMaxSize = 20;
+            m_Rows.Add(tabRow);
+
+            // ---- content viewport
             m_Viewport = Rect("Viewport", panel);
             m_Viewport.anchorMin = Vector2.zero; m_Viewport.anchorMax = Vector2.one;
-            m_Viewport.offsetMin = new Vector2(0f, FooterH); m_Viewport.offsetMax = new Vector2(0f, -HeaderH);
+            m_Viewport.offsetMin = new Vector2(0f, FooterH); m_Viewport.offsetMax = new Vector2(0f, -(HeaderH + TabsH + HelpH + 8f));
             m_Viewport.gameObject.AddComponent<Image>().color = new Color(0, 0, 0, 0);
             m_Viewport.gameObject.AddComponent<RectMask2D>();
             m_Content = Rect("Content", m_Viewport);
             m_Content.anchorMin = new Vector2(0f, 1f); m_Content.anchorMax = new Vector2(1f, 1f); m_Content.pivot = new Vector2(0.5f, 1f);
 
-            float left = Pad, right = TwoColumns ? Pad + ColW + Pad : Pad;
-            var content = m_Content;
-
-            // ---- left: display + graphics
-            float y = 0f;
-            Header(content, T.SectionDisplay, left, ref y);
-            Stepper(content, left, ref y, T.Resolution, ResolutionLabel, StepResolution, null);
-            Segments(content, left, ref y, T.WindowMode, T.WindowModeLabels,
-                () => Array.IndexOf(WindowModes.All, Pending.display.mode), i => Pending.display.mode = WindowModes.All[i]);
-            Segments(content, left, ref y, T.Vsync, T.OffOn, () => Pending.vsync ? 1 : 0, i => Pending.vsync = i == 1);
-            Stepper(content, left, ref y, T.FpsCap, FpsLabel,
-                d => Pending.fpsCap = PcSettingsData.FpsCaps[PcSettingsData.StepIndex(Math.Max(0, Array.IndexOf(PcSettingsData.FpsCaps, Pending.fpsCap)), d, PcSettingsData.FpsCaps.Length)],
-                () => !Pending.vsync);
-            y += 18f;
-            Header(content, T.SectionGraphics, left, ref y);
-            Stepper(content, left, ref y, T.Tier, TierLabel,
-                d => Pending.graphicsTier = TierChoices.All[PcSettingsData.StepIndex(Math.Max(0, Array.IndexOf(TierChoices.All, Pending.graphicsTier)), d, TierChoices.All.Length)], null);
-            float leftEnd = y;
-
-            // ---- right (or below): interface + audio
-            y = TwoColumns ? 0f : leftEnd + 18f;
-            Header(content, T.SectionInterface, right, ref y);
-            Stepper(content, right, ref y, T.HudScale, () => Pct(Pending.hudScale),
-                d => Pending.hudScale = PcSettingsData.Step(Pending.hudScale, d, PcSettingsData.HudScaleStep, PcSettingsData.HudScaleMin, PcSettingsData.HudScaleMax), null);
-            // Units: the HUD and the cab displays render km/h only (ADR 0270 §Jednostki) - shown, not editable.
-            Stepper(content, right, ref y, T.Units, () => T.UnitsMetric, null, null);
-            y += 18f;
-            Header(content, T.SectionAudio, right, ref y);
-            VolumeRow(content, right, ref y, T.VolumeMaster, () => Pending.volumes.master, v => Pending.volumes.master = v);
-            VolumeRow(content, right, ref y, T.VolumeEngine, () => Pending.volumes.engine, v => Pending.volumes.engine = v);
-            VolumeRow(content, right, ref y, T.VolumeAmbient, () => Pending.volumes.ambient, v => Pending.volumes.ambient = v);
-            VolumeRow(content, right, ref y, T.VolumeUi, () => Pending.volumes.ui, v => Pending.volumes.ui = v);
-
-            float contentH = Mathf.Max(leftEnd, y) + 8f;
-            float panelH = Mathf.Min(avail.y, HeaderH + contentH + FooterH);
-            panel.sizeDelta = new Vector2(panelW, panelH);
+            float y = 8f;
+            switch (Tab)
+            {
+                case T.TabGraphics: BuildGraphics(ref y); break;
+                case T.TabControls: BuildControls(ref y); break;
+                case T.TabAudio: BuildAudio(ref y); break;
+                case T.TabGameplay: BuildGameplay(ref y); break;
+                default: BuildMirrors(ref y); break;
+            }
+            float contentH = y + 8f;
+            float viewH = panelH - FooterH - (HeaderH + TabsH + HelpH + 8f);
             m_Content.sizeDelta = new Vector2(0f, contentH);
             m_Content.anchoredPosition = Vector2.zero;
-            bool scrolls = contentH > panelH - HeaderH - FooterH + 0.5f;
             m_Scroll = m_Viewport.gameObject.AddComponent<ScrollRect>();
             m_Scroll.viewport = m_Viewport; m_Scroll.content = m_Content;
-            m_Scroll.horizontal = false; m_Scroll.vertical = scrolls;
+            m_Scroll.horizontal = false; m_Scroll.vertical = contentH > viewH + 0.5f;
             m_Scroll.movementType = ScrollRect.MovementType.Clamped;
             m_Scroll.scrollSensitivity = 40f;
 
-            // ---- title + hint
-            var title = Label(panel, "Title", T.Title, 38, TextAnchor.MiddleLeft, k_Text, Vector2.zero, Vector2.zero);
-            TopBand(title.rectTransform, Pad, TwoColumns ? Pad + 460f : Pad, 14f, 60f);
-            title.horizontalOverflow = HorizontalWrapMode.Wrap; title.resizeTextForBestFit = true; title.resizeTextMinSize = 24; title.resizeTextMaxSize = 38;
-            if (TwoColumns)
-            {
-                m_Hint = Label(panel, "Hint", "", 24, TextAnchor.MiddleRight, k_Muted, Vector2.zero, Vector2.zero);
-                TopBand(m_Hint.rectTransform, panelW - Pad - 440f, Pad, 14f, 60f);
-            }
-
             // ---- footer: defaults | cancel | apply
-            float inner = panelW - 2f * Pad;
-            float bw = Mathf.Min(300f, (inner - 2f * 20f) / 3f), resetW = Mathf.Min(420f, inner - 2f * bw - 2f * 20f);
+            float bw = Mathf.Min(300f, (m_ColW - 2f * 20f) / 3f), resetW = Mathf.Min(420f, m_ColW - 2f * bw - 2f * 20f);
             var reset = TextButton(panel, T.Defaults, new Vector2(Pad, 20f), new Vector2(resetW, 72f), ResetToDefaults);
             var cancel = TextButton(panel, T.Cancel, new Vector2(panelW - Pad - 2f * bw - 20f, 20f), new Vector2(bw, 72f), Cancel);
             var apply = TextButton(panel, T.Apply, new Vector2(panelW - Pad - bw, 20f), new Vector2(bw, 72f), Apply);
@@ -301,19 +329,170 @@ namespace Game.UI.Settings
             {
                 bool dirty = Dirty;
                 m_ApplyButton.interactable = dirty;
-                m_ApplyButton.GetComponent<Image>().color = dirty ? k_ButtonOn : k_Button;
-                if (m_Hint != null) { m_Hint.text = dirty ? T.HintDirty : T.HintClean; m_Hint.color = dirty ? k_Amber : k_Muted; }
+                var img = m_ApplyButton.GetComponent<Image>();
+                var lbl = m_ApplyButton.GetComponentInChildren<Text>();
+                img.color = dirty ? P.SegmentOn : P.Button;
+                lbl.color = dirty ? P.InkOnLight : P.InkDisabled;
+                if (m_Hint != null) { m_Hint.text = dirty ? T.HintDirty : T.HintClean; m_Hint.color = dirty ? P.Accent : P.InkMuted; }
             });
 
             WireNavigation(m_Rows);
-            if (FirstItem == null) FirstItem = cancel;
-            // ADR 0265 (review #136 P2-2): this screen is the top focus owner while open, so the start menu below does not
-            // take the pad / keyboard selection back (UiFocus.RestoreIfLost) and start a scene behind it. The selection
-            // itself is still handled here (dialog, scroll into view).
+            if (FirstItem == null) FirstItem = tabRow[Tab].gameObject;
+            // The first item of the tab content (or the open tab) gets the selection: the pad / keyboard user lands where the
+            // settings are. This screen owns the focus while open (start menu below does not take it back, review #136 P2-2).
             UiFocus.Push(this, FirstItem, false);
             RefreshAll();
             if (Confirm.Pending) OpenConfirm();   // rebuilt while the countdown runs (window resized by the new mode)
             else if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(FirstItem);
+        }
+
+        void BuildGraphics(ref float y)
+        {
+            var c = m_Content;
+            Header(c, T.SectionDisplay, ref y);
+            Stepper(c, ref y, T.Resolution, ResolutionLabel, StepResolution, null);
+            Segments(c, ref y, T.WindowMode, T.WindowModeLabels,
+                () => Array.IndexOf(WindowModes.All, Pending.display.mode), i => Pending.display.mode = WindowModes.All[i]);
+            Segments(c, ref y, T.Vsync, T.OffOn, () => Pending.vsync ? 1 : 0, i => Pending.vsync = i == 1);
+            Stepper(c, ref y, T.FpsCap, FpsLabel,
+                d => Pending.fpsCap = PcSettingsData.FpsCaps[PcSettingsData.StepIndex(Math.Max(0, Array.IndexOf(PcSettingsData.FpsCaps, Pending.fpsCap)), d, PcSettingsData.FpsCaps.Length)],
+                () => !Pending.vsync);
+            y += 18f;
+            Header(c, T.SectionGraphics, ref y);
+            Stepper(c, ref y, T.Tier, TierLabel,
+                d => Pending.graphicsTier = TierChoices.All[PcSettingsData.StepIndex(Math.Max(0, Array.IndexOf(TierChoices.All, Pending.graphicsTier)), d, TierChoices.All.Length)], null);
+        }
+
+        void BuildControls(ref float y)
+        {
+            var c = m_Content;
+            Header(c, T.SectionControls, ref y);
+            Note(c, ref y, T.ControlsNote);
+            if (OpenControlSettings != null)
+            {
+                var b = TextButton(c, T.ControlsWheel, Vector2.zero, new Vector2(m_ColW, RowH - 8f), OpenControls);
+                PlaceTop((RectTransform)b.transform, Pad, y, new Vector2(m_ColW, RowH - 8f));
+                y += RowH;
+                AddRow(b.GetComponent<Selectable>());
+            }
+            else Note(c, ref y, T.ControlsUnavailable);
+            if (ControlSettingsPanel.OpenInputBindings != null)
+            {
+                var b = TextButton(c, T.ControlsBindings, Vector2.zero, new Vector2(m_ColW, RowH - 8f), () => ControlSettingsPanel.OpenInputBindings?.Invoke(transform));
+                PlaceTop((RectTransform)b.transform, Pad, y, new Vector2(m_ColW, RowH - 8f));
+                y += RowH;
+                AddRow(b.GetComponent<Selectable>());
+            }
+        }
+
+        /// <summary>Leaves for the wheel / pedal / camera panel: pending edits are applied first (never lost silently); a
+        /// display change waits for its keep / revert answer.</summary>
+        void OpenControls()
+        {
+            var open = OpenControlSettings;
+            if (Dirty) Apply();
+            if (Confirm.Pending) return;
+            m_OnClose?.Invoke();
+            Destroy(gameObject);
+            open?.Invoke();
+        }
+
+        void BuildAudio(ref float y)
+        {
+            var c = m_Content;
+            Header(c, T.SectionAudio, ref y);
+            VolumeRow(c, ref y, T.VolumeMaster, () => Pending.volumes.master, v => Pending.volumes.master = v);
+            VolumeRow(c, ref y, T.VolumeEngine, () => Pending.volumes.engine, v => Pending.volumes.engine = v);
+            VolumeRow(c, ref y, T.VolumeAmbient, () => Pending.volumes.ambient, v => Pending.volumes.ambient = v);
+            VolumeRow(c, ref y, T.VolumeUi, () => Pending.volumes.ui, v => Pending.volumes.ui = v);
+        }
+
+        void BuildGameplay(ref float y)
+        {
+            var c = m_Content;
+            Header(c, T.SectionHud, ref y);
+            Stepper(c, ref y, T.HudScale, () => Pct(Pending.hudScale),
+                d => Pending.hudScale = PcSettingsData.Step(Pending.hudScale, d, PcSettingsData.HudScaleStep, PcSettingsData.HudScaleMin, PcSettingsData.HudScaleMax), null);
+            Segments(c, ref y, T.HudDetail, T.HudDetailLabels, () => (int)m_HudPending.Detail, i => m_HudPending.Detail = (HudDetail)i);
+            Note(c, ref y, T.HudDetailNote);
+            Segments(c, ref y, T.CabHud, T.CabHudLabels, () => (int)m_HudPending.Cab, i => m_HudPending.Cab = (CabHudMode)i);
+            Note(c, ref y, T.CabHudNote);
+            y += 18f;
+            Header(c, T.SectionInterface, ref y);
+            Segments(c, ref y, T.TouchControls, T.TouchControlsLabels, () => (int)m_TouchPending, i => m_TouchPending = UiPreferences.ParseTouchControls(i));
+            // Units: the HUD and the cab displays render km/h only (ADR 0270 section Jednostki) - shown, not editable.
+            Stepper(c, ref y, T.Units, () => T.UnitsMetric, null, null);
+        }
+
+        void BuildMirrors(ref float y)
+        {
+            var c = m_Content;
+            Header(c, T.SectionMirrorWindows, ref y);
+            Segments(c, ref y, T.MirrorWindows, T.OffOnPlural, () => m_MirrorsPending ? 1 : 0, i => m_MirrorsPending = i == 1);
+            Func<bool> on = () => m_MirrorsPending;
+            Stepper(c, ref y, T.MirrorSize, () => Pct(m_HudPending.MirrorSize),
+                d => m_HudPending.MirrorSize = HudPrefsData.Step(m_HudPending.MirrorSize, d, HudPreferences.MirrorSizeStep, HudPreferences.MirrorSizeMin, HudPreferences.MirrorSizeMax), on);
+            Stepper(c, ref y, T.MirrorDrop, () => Pct(m_HudPending.MirrorDrop),
+                d => m_HudPending.MirrorDrop = HudPrefsData.Step(m_HudPending.MirrorDrop, d, 0.1f, 0f, 1f), on);
+            Stepper(c, ref y, T.MirrorInset, () => Pct(m_HudPending.MirrorInset),
+                d => m_HudPending.MirrorInset = HudPrefsData.Step(m_HudPending.MirrorInset, d, 0.1f, 0f, 1f), on);
+            Preview(c, ref y);
+            y += 18f;
+            Header(c, T.SectionMirrorAdjust, ref y);
+            Stepper(c, ref y, T.MirrorYaw, () => Deg(m_HudPending.MirrorYawOut),
+                d => m_HudPending.MirrorYawOut = HudPrefsData.Step(m_HudPending.MirrorYawOut, d, HudPreferences.MirrorAngleStep, -HudPreferences.MirrorYawMax, HudPreferences.MirrorYawMax), null);
+            Stepper(c, ref y, T.MirrorPitch, () => Deg(m_HudPending.MirrorPitchDown),
+                d => m_HudPending.MirrorPitchDown = HudPrefsData.Step(m_HudPending.MirrorPitchDown, d, HudPreferences.MirrorAngleStep, -HudPreferences.MirrorPitchMax, HudPreferences.MirrorPitchMax), null);
+            Note(c, ref y, T.MirrorNote);
+        }
+
+        /// <summary>Schematic 16:9 monitor with the strip and the two mirror windows where <see cref="DesktopHudLayout"/>
+        /// puts them for the pending values (outline only, no picture).</summary>
+        void Preview(RectTransform parent, ref float y)
+        {
+            const float pw = 480f, ph = 270f;
+            var cap = Label(parent, "PreviewCaption", T.Preview, 20, TextAnchor.LowerLeft, P.InkMuted, Vector2.zero, new Vector2(m_ColW, 28f));
+            PlaceTop(cap.rectTransform, Pad, y, new Vector2(m_ColW, 28f));
+            y += 34f;
+            var box = Rect("Preview", parent);
+            PlaceTop(box, Pad + LabelW, y, new Vector2(pw, ph));
+            box.gameObject.AddComponent<Image>().color = P.Row;
+            var strip = PreviewRect(box, "Strip", P.GaugeTrack);
+            var tell = PreviewRect(box, "Telltales", P.GaugeTrack);
+            var ml = PreviewRect(box, "MirrorL", P.InkMuted);
+            var mr = PreviewRect(box, "MirrorR", P.InkMuted);
+            y += ph + 12f;
+            m_Refresh.Add(() =>
+            {
+                var s = new DesktopHudInput
+                {
+                    Width = 2560f, Height = 1440f, Strip = true, Extended = m_HudPending.Detail == HudDetail.Extended,
+                    MirrorLeft = m_MirrorsPending, MirrorRight = m_MirrorsPending, MirrorAspect = DesktopHudLayout.DefaultMirrorAspect,
+                    MirrorSize = m_HudPending.MirrorSize, MirrorDrop = m_HudPending.MirrorDrop, MirrorInset = m_HudPending.MirrorInset,
+                };
+                DesktopHudLayout.Solve(s, out var r);
+                float k = pw / 2560f;
+                SetPreview(strip, r.Strip, k, r.ShowStrip);
+                SetPreview(tell, r.Telltales, k, true);
+                SetPreview(ml, r.MirrorLeft, k, r.ShowMirrorLeft);
+                SetPreview(mr, r.MirrorRight, k, r.ShowMirrorRight);
+            });
+        }
+
+        static RectTransform PreviewRect(RectTransform parent, string name, Color c)
+        {
+            var rt = Rect(name, parent);
+            rt.anchorMin = rt.anchorMax = rt.pivot = Vector2.zero;
+            var img = rt.gameObject.AddComponent<Image>();
+            img.color = c; img.raycastTarget = false;
+            return rt;
+        }
+
+        static void SetPreview(RectTransform rt, UnityEngine.Rect r, float k, bool on)
+        {
+            rt.anchoredPosition = new Vector2(r.x * k, r.y * k);
+            rt.sizeDelta = new Vector2(r.width * k, r.height * k);
+            if (rt.gameObject.activeSelf != on) rt.gameObject.SetActive(on);
         }
 
         void OnDestroy() => UiFocus.Pop(this, true);   // the pad selection goes back to the start menu below
@@ -368,77 +547,108 @@ namespace Game.UI.Settings
 
         static string Pct(float v) => Mathf.RoundToInt(v * 100f).ToString(CultureInfo.InvariantCulture) + " %";
 
-        void VolumeRow(RectTransform parent, float x, ref float y, string label, Func<float> get, Action<float> set) =>
-            Stepper(parent, x, ref y, label, () => Pct(get()), d => set(PcSettingsData.Step(get(), d, PcSettingsData.VolumeStep, 0f, 1f)), null);
+        /// <summary>Signed degrees with the Polish decimal comma ("+1,5°").</summary>
+        static string Deg(float v) => (v > 0.001f ? "+" : "") + v.ToString("0.0", CultureInfo.InvariantCulture).Replace('.', ',') + "°";
+
+        void VolumeRow(RectTransform parent, ref float y, string label, Func<float> get, Action<float> set) =>
+            Stepper(parent, ref y, label, () => Pct(get()), d => set(PcSettingsData.Step(get(), d, PcSettingsData.VolumeStep, 0f, 1f)), null);
 
         // ------------------------------------------------------------------ rows
 
-        void Header(RectTransform parent, string text, float x, ref float y)
+        /// <summary>Section head: SemiBold, warm white, with a short amber mark - readable, not a pale caption.</summary>
+        void Header(RectTransform parent, string text, ref float y)
         {
-            var l = Label(parent, "Header", text, 24, TextAnchor.LowerLeft, k_Amber, Vector2.zero, new Vector2(ColW, 40f));
-            PlaceTop(l.rectTransform, x, y, new Vector2(ColW, 40f));
-            y += 52f;
+            var mark = Rect("Mark " + text, parent);
+            PlaceTop(mark, Pad, y + 10f, new Vector2(6f, 26f));
+            var mi = mark.gameObject.AddComponent<Image>(); mi.color = P.Accent; mi.raycastTarget = false;
+            var l = Label(parent, "Header " + text, text, 24, TextAnchor.MiddleLeft, P.Ink, Vector2.zero, new Vector2(m_ColW - 18f, 44f), m_Strong);
+            PlaceTop(l.rectTransform, Pad + 18f, y, new Vector2(m_ColW - 18f, 44f));
+            y += 54f;
         }
 
-        RectTransform Row(RectTransform parent, string label, float x, ref float y)
+        void Note(RectTransform parent, ref float y, string text)
+        {
+            var l = Label(parent, "Note", text, 21, TextAnchor.UpperLeft, P.InkMuted, Vector2.zero, new Vector2(m_ColW, 56f));
+            l.horizontalOverflow = HorizontalWrapMode.Wrap;
+            PlaceTop(l.rectTransform, Pad, y, new Vector2(m_ColW, 56f));
+            y += 60f;
+        }
+
+        RectTransform Row(RectTransform parent, string label, ref float y)
         {
             var row = Rect("Row " + label, parent);
-            PlaceTop(row, x, y, new Vector2(ColW, RowH - 8f));
-            row.gameObject.AddComponent<Image>().color = k_Row;
-            var l = Label(row, "Label", label, 28, TextAnchor.MiddleLeft, k_Text, new Vector2(20f, 0f), new Vector2(LabelW - 20f, RowH - 8f));
-            l.horizontalOverflow = HorizontalWrapMode.Wrap; l.resizeTextForBestFit = true; l.resizeTextMinSize = 20; l.resizeTextMaxSize = 28;
+            PlaceTop(row, Pad, y, new Vector2(m_ColW, RowH - 8f));
+            row.gameObject.AddComponent<Image>().color = P.Row;
+            var l = Label(row, "Label", label, 26, TextAnchor.MiddleLeft, P.Ink, new Vector2(20f, 0f), new Vector2(LabelW - 20f, RowH - 8f));
+            l.horizontalOverflow = HorizontalWrapMode.Wrap; l.resizeTextForBestFit = true; l.resizeTextMinSize = 18; l.resizeTextMaxSize = 26;
             y += RowH;
             return row;
         }
 
-        /// <summary>"Label   [−]  value  [+]"; <paramref name="step"/> null = read-only value; <paramref name="enabled"/> null = always.</summary>
-        void Stepper(RectTransform parent, float x, ref float y, string label, Func<string> value, Action<int> step, Func<bool> enabled)
+        void AddRow(params Selectable[] items)
         {
-            var row = Row(parent, label, x, ref y);
-            float bx = LabelW + 20f, bw = 72f, vw = ColW - bx - 2f * bw - 20f;
-            var v = Label(row, "Value", "", 27, TextAnchor.MiddleCenter, k_Text, new Vector2(bx + bw, 0f), new Vector2(vw, RowH - 8f));
-            v.horizontalOverflow = HorizontalWrapMode.Wrap; v.resizeTextForBestFit = true; v.resizeTextMinSize = 18; v.resizeTextMaxSize = 27;
+            m_Rows.Add(items);
+            if (FirstItem == null && items.Length > 0) FirstItem = items[0].gameObject;
+        }
+
+        /// <summary>"Label   [−]  value  [+]"; <paramref name="step"/> null = read-only value; <paramref name="enabled"/> null = always.</summary>
+        void Stepper(RectTransform parent, ref float y, string label, Func<string> value, Action<int> step, Func<bool> enabled)
+        {
+            var row = Row(parent, label, ref y);
+            float bx = LabelW + 20f, bw = 76f, vw = m_ColW - bx - 2f * bw - 20f;
+            var v = Label(row, "Value", "", 26, TextAnchor.MiddleCenter, P.Ink, new Vector2(bx + bw, 0f), new Vector2(vw, RowH - 8f), m_Strong);
+            v.horizontalOverflow = HorizontalWrapMode.Wrap; v.resizeTextForBestFit = true; v.resizeTextMinSize = 18; v.resizeTextMaxSize = 26;
             if (step == null)
             {
-                v.color = k_Muted; v.alignment = TextAnchor.MiddleRight;
-                Place(v.rectTransform, Vector2.zero, new Vector2(bx, 0f), new Vector2(ColW - bx - 20f, RowH - 8f));
+                v.color = P.InkMuted; v.alignment = TextAnchor.MiddleRight; v.font = m_Font;
+                Place(v.rectTransform, Vector2.zero, new Vector2(bx, 0f), new Vector2(m_ColW - bx - 20f, RowH - 8f));
                 m_Refresh.Add(() => v.text = value());
                 return;
             }
             var minus = TextButton(row, "−", new Vector2(bx, 6f), new Vector2(bw, RowH - 20f), () => { step(-1); RefreshAll(); }).GetComponent<Button>();
-            var plus = TextButton(row, "+", new Vector2(ColW - bw - 12f, 6f), new Vector2(bw, RowH - 20f), () => { step(+1); RefreshAll(); }).GetComponent<Button>();
-            m_Rows.Add(new Selectable[] { minus, plus });
-            if (FirstItem == null) FirstItem = minus.gameObject;
+            var plus = TextButton(row, "+", new Vector2(m_ColW - bw - 12f, 6f), new Vector2(bw, RowH - 20f), () => { step(+1); RefreshAll(); }).GetComponent<Button>();
+            AddRow(minus, plus);
             m_Refresh.Add(() =>
             {
                 bool on = enabled == null || enabled();
                 minus.interactable = plus.interactable = on;
-                v.text = value(); v.color = on ? k_Text : k_Muted;
+                v.text = value(); v.color = on ? P.Ink : P.InkDisabled;
             });
         }
 
-        void Segments(RectTransform parent, float x, ref float y, string label, string[] names, Func<int> current, Action<int> set)
+        void Segments(RectTransform parent, ref float y, string label, string[] names, Func<int> current, Action<int> set)
         {
-            var row = Row(parent, label, x, ref y);
-            float gap = 6f, x0 = LabelW + 20f, w = (ColW - x0 - 12f - gap * (names.Length - 1)) / names.Length;
+            var row = Row(parent, label, ref y);
+            float gap = 6f, x0 = LabelW + 20f, w = (m_ColW - x0 - 12f - gap * (names.Length - 1)) / names.Length;
             var imgs = new Image[names.Length];
+            var texts = new Text[names.Length];
             var sel = new Selectable[names.Length];
             for (int i = 0; i < names.Length; i++)
             {
                 int idx = i;
-                var b = TextButton(row, names[i], new Vector2(x0 + i * (w + gap), 6f), new Vector2(w, RowH - 20f), () => { set(idx); RefreshAll(); }, 24);
+                var b = TextButton(row, names[i], new Vector2(x0 + i * (w + gap), 6f), new Vector2(w, RowH - 20f), () => { set(idx); RefreshAll(); }, 23);
                 imgs[i] = b.GetComponent<Image>();
+                texts[i] = b.GetComponentInChildren<Text>();
                 sel[i] = b.GetComponent<Button>();
             }
-            m_Rows.Add(sel);
-            if (FirstItem == null) FirstItem = sel[0].gameObject;
-            m_Refresh.Add(() => { int c = current(); for (int i = 0; i < imgs.Length; i++) imgs[i].color = i == c ? k_ButtonOn : k_Button; });
+            AddRow(sel);
+            m_Refresh.Add(() =>
+            {
+                int c = current();
+                for (int i = 0; i < imgs.Length; i++)
+                {
+                    bool on = i == c;
+                    imgs[i].color = on ? P.SegmentOn : P.Button;
+                    texts[i].color = on ? P.InkOnLight : P.Ink;
+                    texts[i].font = on ? m_Strong : m_Font;
+                }
+            });
         }
 
         // ------------------------------------------------------------------ navigation + focus
 
         /// <summary>Explicit navigation: up / down to the nearest item of the previous / next row (by position in the row),
-        /// left / right inside the row. Same row lists as <c>UiFocus.ApplyGrid</c> of ADR 0265 (#131).</summary>
+        /// left / right inside the row (tabs row first, footer last). No wrap.</summary>
         public static void WireNavigation(IReadOnlyList<Selectable[]> rows)
         {
             for (int r = 0; r < rows.Count; r++)
@@ -464,15 +674,6 @@ namespace Game.UI.Settings
             return row[Mathf.Clamp(j, 0, row.Length - 1)];
         }
 
-        static void Decorate(Button b)
-        {
-            var cb = b.colors;
-            cb.normalColor = Color.white; cb.highlightedColor = new Color(0.88f, 0.88f, 0.86f, 1f); cb.selectedColor = Color.white;
-            cb.pressedColor = new Color(0.75f, 0.75f, 0.72f, 1f); cb.disabledColor = new Color(0.6f, 0.6f, 0.6f, 0.5f);
-            b.colors = cb;
-            b.gameObject.AddComponent<PcFocusOutline>().Init(k_Amber);
-        }
-
         // ------------------------------------------------------------------ confirm dialog
 
         void OpenConfirm()
@@ -481,20 +682,19 @@ namespace Game.UI.Settings
             if (m_Dialog != null) Destroy(m_Dialog);
             var root = Rect("ConfirmDisplay", m_Safe);
             Stretch(root);
-            root.gameObject.AddComponent<Image>().color = k_Dim;
+            root.gameObject.AddComponent<Image>().color = P.Scrim;
             m_Dialog = root.gameObject;
             var box = Rect("Box", root);
             box.anchorMin = box.anchorMax = box.pivot = new Vector2(0.5f, 0.5f);
             box.sizeDelta = new Vector2(820f, 300f);
-            box.gameObject.AddComponent<Image>().color = k_Panel;
-            var t = Label(box, "Title", T.ConfirmTitle, 34, TextAnchor.MiddleLeft, k_Text, new Vector2(Pad, 200f), new Vector2(820f - 2f * Pad, 70f));
+            box.gameObject.AddComponent<Image>().color = P.Panel;
+            var t = Label(box, "Title", T.ConfirmTitle, 34, TextAnchor.MiddleLeft, P.Ink, new Vector2(Pad, 200f), new Vector2(820f - 2f * Pad, 70f), m_Strong);
             t.horizontalOverflow = HorizontalWrapMode.Wrap;
-            m_DialogCountdown = Label(box, "Countdown", "", 26, TextAnchor.MiddleLeft, k_Amber, new Vector2(Pad, 140f), new Vector2(820f - 2f * Pad, 50f));
+            m_DialogCountdown = Label(box, "Countdown", "", 26, TextAnchor.MiddleLeft, P.Accent, new Vector2(Pad, 140f), new Vector2(820f - 2f * Pad, 50f));
             m_DialogCountdown.text = string.Format(CultureInfo.InvariantCulture, T.ConfirmCountdown, Confirm.SecondsLeft);
             float bw = 300f;
             var revert = TextButton(box, T.ConfirmRevert, new Vector2(820f - Pad - 2f * bw - 20f, 30f), new Vector2(bw, 72f), RevertDisplay).GetComponent<Button>();
             var keep = TextButton(box, T.ConfirmKeep, new Vector2(820f - Pad - bw, 30f), new Vector2(bw, 72f), KeepDisplay).GetComponent<Button>();
-            keep.GetComponent<Image>().color = k_ButtonOn;
             WireNavigation(new[] { new Selectable[] { revert, keep } });
             // Default = revert: Enter / pad A pressed out of habit must not keep a mode the monitor may not show.
             if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(revert.gameObject);
@@ -508,7 +708,7 @@ namespace Game.UI.Settings
             if (EventSystem.current != null && m_ApplyButton != null) EventSystem.current.SetSelectedGameObject(FirstItem);
         }
 
-        // ------------------------------------------------------------------ helpers (same as ControlSettingsPanel)
+        // ------------------------------------------------------------------ helpers
 
         static RectTransform Rect(string name, Transform parent)
         {
@@ -539,28 +739,28 @@ namespace Game.UI.Settings
             rt.offsetMin = new Vector2(leftInset, -topInset - height); rt.offsetMax = new Vector2(-rightInset, -topInset);
         }
 
-        Text Label(Transform parent, string name, string text, int size, TextAnchor align, Color color, Vector2 bottomLeft, Vector2 box)
+        Text Label(Transform parent, string name, string text, int size, TextAnchor align, Color color, Vector2 bottomLeft, Vector2 box, Font font = null)
         {
             var rt = Rect(name, parent);
             Place(rt, Vector2.zero, bottomLeft, box);
             var t = rt.gameObject.AddComponent<Text>();
-            t.font = m_Font; t.fontSize = size; t.color = color; t.alignment = align; t.text = text;
+            t.font = font != null ? font : m_Font; t.fontSize = size; t.color = color; t.alignment = align; t.text = text;
             t.horizontalOverflow = HorizontalWrapMode.Overflow; t.verticalOverflow = VerticalWrapMode.Overflow;
             t.raycastTarget = false;
             return t;
         }
 
-        GameObject TextButton(Transform parent, string text, Vector2 bottomLeft, Vector2 size, UnityEngine.Events.UnityAction onClick, int fontSize = 28)
+        GameObject TextButton(Transform parent, string text, Vector2 bottomLeft, Vector2 size, UnityEngine.Events.UnityAction onClick, int fontSize = 26)
         {
             var rt = Rect(text, parent);
             Place(rt, Vector2.zero, bottomLeft, size);
             var img = rt.gameObject.AddComponent<Image>();
-            img.color = k_Button;
+            img.color = P.Button;
             var b = rt.gameObject.AddComponent<Button>();
             b.targetGraphic = img;
             b.onClick.AddListener(onClick);
-            Decorate(b);
-            var l = Label(rt, "Label", text, fontSize, TextAnchor.MiddleCenter, k_Text, Vector2.zero, size);
+            UiFocus.Decorate(b);   // amber frame = pad / keyboard focus, muted frame = mouse hover (ADR 0265)
+            var l = Label(rt, "Label", text, fontSize, TextAnchor.MiddleCenter, P.Ink, Vector2.zero, size);
             l.horizontalOverflow = HorizontalWrapMode.Wrap; l.resizeTextForBestFit = true; l.resizeTextMinSize = 16; l.resizeTextMaxSize = fontSize;
             return rt.gameObject;
         }

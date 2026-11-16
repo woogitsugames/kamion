@@ -77,7 +77,7 @@ namespace Game.Rendering
             [Tooltip("Cab-view local shadow lift strength (CabInteriorLighting, review r4 L1; 0 = off)")] public float cabShadowLift;
             [Tooltip("Real point lights at the nearest street lamps at dusk (0 = emission only); they light vehicles and props")] public int streetLights;
             [Tooltip("ADR 0062: analytic light pools of the N lamps nearest the view on Kamion/World Surface at dusk (no lights, " +
-                     "a uniform-branch loop in the world shader; 0 = off, max 8)")] public int lampPools;
+                     "a uniform-branch loop in the world shader; 0 = off, max StreetLamps.MaxPools = 16)")] public int lampPools;
             [Tooltip("ADR 0191: GGX highlight of each lamp pool on the world surfaces (the long streak of a lamp on asphalt " +
                      "towards the viewer; ~12 ALU per pool on lit pixels at dusk / night only)")] public bool lampPoolSpecular;
             [Tooltip("ADR 0192: Off = no lit windows at dusk / night (facade atlas, LOD1 rows, far facades). Inverted so tiers saved " +
@@ -88,6 +88,10 @@ namespace Game.Rendering
             [Tooltip("s20 night-int (review 0191 P1-2): Off = no night floor near lamps (light of the lamps outside the analytic set, " +
                      "inter-reflections, urban sky glow; ~4 ALU per lit pixel, dusk / night only). Inverted so older tiers keep it")]
             public bool lampFloorOff;
+            [Tooltip("night-pc-s23: the player truck's dipped beam lights the world surfaces (analytic UN R112 class B-shaped " +
+                     "beam, KamionLampPools.hlsl) independent of the lighting preset's projectedHeadlamps opt-in. Default off " +
+                     "(phones); set by PcNightLighting on the PC tiers. Specular term follows lampPoolSpecular")]
+            public bool projectedHeadlamps;
             [Header("Baked world lighting (ADR 0064)")]
             [Tooltip("Off = no baked sky visibility (ambient / reflection occlusion) on the world surfaces. Inverted so tiers saved before ADR 0064 keep it on")]
             public bool worldSkyVisOff;

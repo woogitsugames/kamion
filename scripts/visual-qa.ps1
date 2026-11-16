@@ -48,7 +48,9 @@ param(
     [switch]$EnvDump,
     # Unity -buildTarget of the batch run (Windows primary, ADR 0261): Win64 avoids a platform switch after
     # import-region.ps1 -BuildTarget Win64 in the same checkout.
-    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android'
+    [ValidateSet('Android', 'Win64')] [string]$BuildTarget = 'Android',
+    # ADR 0269 propozycja 2: render the PC tier (URP_PC_<tier> + PcGraphicsTiers.Overlay) instead of the phone tier.
+    [switch]$Pc
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -76,6 +78,7 @@ if ($Gate3) { $qaArgs += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, (Get-Locat
 if ($TimeFrames -gt 0) { $qaArgs += @('-qaTimeFrames', $TimeFrames) }
 if ($Mask) { $qaArgs += @('-qaMask', $Mask) }
 if ($EnvDump) { $qaArgs += @('-qaEnvDump', '1') }
+if ($Pc) { $qaArgs += @('-qaPcTiers', '1') }
 $runStart = Get-Date
 $code = Invoke-UnityBatch -LogFile $log -Arguments $qaArgs -BuildTarget $BuildTarget
 
