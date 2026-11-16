@@ -300,9 +300,14 @@ def test_sign_meshes_cost_less_than_before():
     meta = json.loads((REPO / "art-source/world/props/props_meta.json").read_text(encoding="utf-8"))["prototypes"]
     # the library in git is rebuilt by the leader (build_world C); until then it holds the pre-0236 counts
     old = {"sign_gantry_14_61_b6": (1008, 480), "sign_gantry_10_72": (1072, 480), "sign_cantilever_L8_86": (528, 240)}
-    for k, v in old.items():
-        if (meta[k]["tris_lod0"], meta[k]["tris_lod1"]) != v:
-            pytest.skip("props library rebuilt after ADR 0236")
+    if any(k not in meta or (meta[k]["tris_lod0"], meta[k]["tris_lod1"]) != v for k, v in old.items()):
+        # library rebuilt with ADR 0236 (c-regen2-s23): the prototypes are renamed by their new size, so the comparison
+        # is against the committed library itself - gantry 14 m and 10 m, the 8 m cantilever
+        new = {k: (m["tris_lod0"], m["tris_lod1"]) for k, m in meta.items() if k.startswith(("sign_gantry_", "sign_cantilever_"))}
+        assert new["sign_gantry_14_62_b6"] == (792, 208) and new["sign_gantry_10_72"] == (840, 208)
+        assert all(a < 1008 and b <= 256 for a, b in new.values()), new
+        assert new["sign_cantilever_L8_72"][0] < 528 and new["sign_cantilever_L8_72"][1] < 240
+        return
     l0, l1, _ = LP.sign_gantry(14.0, 6.1, 0.6)
     assert (_tris(l0), _tris(l1)) == (792, 208)
     l0, l1, _ = LP.sign_cantilever(8.0, 7.2, mirror=True)

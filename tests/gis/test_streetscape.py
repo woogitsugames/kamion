@@ -291,7 +291,9 @@ def test_photo_matched_overrides_applied(qa):
                                                  "andersa-putry-cantilever-p37", "andersa-putry-portal-p40",
                                                  # ADR 0162 (G3 2024 photos): al. Tysiąclecia S of rondo Putry
                                                  "tysiaclecia-s-putry-portal", "tysiaclecia-its-vms-gantry",
-                                                 "tysiaclecia-s-putry-e1-portal"}
+                                                 "tysiaclecia-s-putry-e1-portal",
+                                                 # ADR 0236 (research R2): advance E-1 gantry before rondo Putry
+                                                 "andersa-putry-e1-advance-gantry"}
     assert len(lm["landmarks"]) == 2
     man = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
     ids = {o["id"] for o in man["overrides_applied"]}
