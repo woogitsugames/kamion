@@ -294,10 +294,10 @@ def roundabout_signs(pl, net, juncs, graph_attrs, report, codes, boards, src=Non
                 if cls in ("GP", "G") and radius >= MIN_RING_R_DIAGRAM and a.L > DIAGRAM_MIN_M + 10:
                     has_e1 = bool(_diagram(pl, net, graph_attrs, j, a, _ring_arms(net, juncs, j), boards, rep))
                 if src is not None:
-                    _a8(pl, net, j, a, has_e1, BU.area_for(net, src, origin), rep, codes)
+                    _a8(pl, net, j, a, has_e1, BU.zone_for(net, src, origin), rep, codes)
             elif dn < 0 or dn == 0:
                 if dn == 0 and src is not None:        # two-way arm = an entry too (junction_signs: A-7 + C-12)
-                    _a8(pl, net, j, a, False, BU.area_for(net, src, origin), rep, codes)
+                    _a8(pl, net, j, a, False, BU.zone_for(net, src, origin), rep, codes)
                 dests, refs, name = _arm_label(net, graph_attrs, a)
                 lines = dests[:2] if dests else ([_short(name)] if name else [])
                 if not lines or cls in ("D", "L") and not dests:
@@ -383,20 +383,20 @@ def _diagram(pl, net, graph_attrs, j, entry, arms, boards, rep):
     return True
 
 
-def _a8(pl, net, j, entry, has_e1, area, rep, codes):
+def _a8(pl, net, j, entry, has_e1, zone, rep, codes):
     """ADR 0279 P1: A-8 "skrzyżowanie o ruchu okrężnym" before a roundabout entry (also the compact roundabout of
     roads.compact_roundabout) - rule of Dz.U. 2026 poz. 132 (pkt 2.2.9), distance pkt 2.1.2; see built_up.needs_a8."""
     c = entry.chain
     trim = c.t_a if entry.end == "a" else c.t_b
     s0 = float(entry.s(min(trim + 5.0, entry.L)))
     sec = c.section(s0, net.sec_list)
-    need, why = BU.needs_a8(c.line.point(s0), sec, area, has_e1, kerbed=BU.kerbed(c, s0))
+    bu = zone.at(c, s0)                              # ADR 0279 D33: D-42..D-43, not the kerb
+    need, why = BU.needs_a8(bu, sec, has_e1)
     out = rep.setdefault("a8", [])
     item = {"junction": str(j.id), "entry": str(c.id), "why": why, "placed": False}
     out.append(item)
     if not need:
         return
-    bu = BU.kerbed(c, s0) or BU.is_built_up(area, c.line.point(s0))
     v = BU.legal_speed(sec, bu)
     dist = BU.a8_distance_m(v)
     d = trim + dist
