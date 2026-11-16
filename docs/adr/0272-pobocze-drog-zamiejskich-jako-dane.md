@@ -50,13 +50,18 @@ Powiązane: ADR 0204 (profil szlakowy w kaflu bez chodników), 0205 (linie kraw�
   linii jest tylko na rys. 2.2.2.1 (rysunek, bez liczby w tekście) → **odsunięcie 0,20 m zostaje WORKING_VALUE**; pomiar
   niżej daje 0,25–0,30 m od krawędzi asfaltu do osi linii.
 
-### Pomiary własne (ortofoto GUGiK WMS `StandardResolution`, 15.11; profil ⟂ do osi grafu, mediana z ±6 m, ±0,2 m)
-| droga (waye) | przekroje | asfalt [m] | linie krawędziowe [m] | pobocze |
+### Pomiary własne (ortofoto GUGiK WMS `StandardResolution`, 15.11)
+Narzędzie w gicie: `tools/worldgen/qa/ortho_xsec.py` (profil ⟂ do osi grafu, mediana z ±6 m; linia ±0,2 m, krawędź asfaltu
+±0,3 m). Wiersze przekrojów i podsumowanie: `docs/reports/ortho-xsec-0272/` (`*.json`, `README.md`); test
+`test_ortho_measurements_in_git_give_the_numbers_of_the_adr` liczy z nich poniższe mediany. Rozdzielczość natywna i data
+arkuszy: UNVERIFIED (usługa ich nie zwraca; pobranie 0,05 m/px). „Czysty” przekrój = asfalt 6,0–7,6 m.
+| droga (waye) | przekroje / czyste | asfalt [m] | linie krawędziowe [m] | pobocze (z pasków, wzrokowo — ESTIMATED) |
 |---|---|---|---|---|
-| Ełcka / Studzienna, dk65-04/05 (1024956365, 41533343, 1243220441, 1024956364, 1399803717) | 10 czystych z 21 | 6,2–7,35, **mediana 6,75** | 6,0–6,35, mediana 6,2 | piasek / żwir 0,7–1,2 m, bez krawężnika |
-| Szosa Knyszyńska, dk65-01/02 (234919333, 396566354) | 9 | 6,65–7,4, mediana 6,95 | 6,2–6,35 | żwir 0,5–1 m (K1 podawał „asfalt 7,9–8,4” — z jasnym żwirem) |
-| DW671, dw671-tykocin-01 (145989268, 286989055) | 10 czystych z 14 (3 w cieniu) | 6,7–7,25, **mediana 6,85** (BDOT 6,5 / 7,0) | 6,85–6,9 przy przejeździe; widoczne w 6 z 10 | trawa / grunt od krawędzi asfaltu, bez krawężnika, bez wpustów; przy przejeździe bariery 0,5–1 m za krawędzią |
-Narzędzia i paski: `artifacts/rural-xsec-0272/` (`xsec.py`, `orto_*_strips.jpg`, `*.json`; poza gitem).
+| Ełcka / Studzienna, dk65-04/05 (1024956365, 41533343, 1243220441, 1024956364, 1399803717) | 21 / 17 | 6,20–7,45, **mediana 6,75** | 10 przekrojów z obiema: 6,00–6,35, mediana 6,2 | piasek / żwir 0,7–1,2 m, bez krawężnika |
+| Szosa Knyszyńska, dk65-01/02 (234919333, 396566354 i sąsiednie) | 11 / 11 | 6,65–7,40 (mediany 7,15 i 6,80) | 6: 6,0–6,35 | żwir 0,5–1 m (K1 podawał „asfalt 7,9–8,4” — z jasnym żwirem) |
+| DW671, dw671-tykocin-01 (145989268, 286989055) | 14 / 11 (3 w cieniu) | 6,15–7,25, **mediana 6,85** (BDOT 6,5 / 7,0) | 2: 6,85–6,9 (przy przejeździe); na paskach cienkie linie w kilku innych | trawa / grunt od krawędzi asfaltu, bez krawężnika, bez wpustów; przy przejeździe bariery 0,5–1 m za krawędzią |
+| Szosa Ełcka, bialystok-knyszynska (303739903) | 5 / 0 | 5,95–14,05 (zatoki, wloty); na pasku s 175 ok. 9 m | — | — |
+Paski kontrolne (obrazy) zostają w `artifacts/rural-xsec-0272/` poza gitem.
 
 ## Decyzja
 1. **Reguła jako dane: `tools/worldgen/roads/xsec_rules.yaml`** (czyta `roads/xsec.py`). Kolejność dla każdej strony
@@ -66,7 +71,7 @@ Narzędzia i paski: `artifacts/rural-xsec-0272/` (`xsec.py`, `orto_*_strips.jpg`
    - `shoulder_rules` (pierwsze dopasowanie; klucze `class`, `carriageway: single|dual`, `highway`, `ref` regex):
      | reguła | pobocze | asfalt poza `width` | część gruntowa | status |
      |---|---|---|---|---|
-     | G jednojezdniowa | gruntowe | 0,08 m | 1,00 m | MEASURED (Ełcka, Knyszyńska; § 23 ust. 3 pkt 3, ust. 10 pkt 3) |
+     | G jednojezdniowa | gruntowe | 0,08 m | 1,00 m | WORKING_VALUE z pomiaru Ełckiej (0,08 m < dokładność odczytu; § 23 ust. 3 pkt 3, ust. 10 pkt 3) |
      | Z jednojezdniowa | gruntowe | 0,05 m | 1,00 m | SOURCED (§ 23 ust. 10 pkt 4), dziś tylko przez override/tag |
      | L, D | gruntowe | 0,05 m | 0,75 m | SOURCED (§ 23 ust. 10 pkt 5), dziś tylko przez override/tag |
      | pozostałe (A, S, GP, G dwujezdniowa) | utwardzone | 1,00 m | 0,75 m | WORKING_VALUE — bez zmiany |
@@ -113,13 +118,56 @@ Narzędzia i paski: `artifacts/rural-xsec-0272/` (`xsec.py`, `orto_*_strips.jpg`
   profil (`confidence: low`, do pomiaru).
 
 ## Walidacja
-- `tests/gis/test_rural_xsec_0272.py` (30): klasa → pobocze; zakresy § 23 ust. 10; tagi OSM; override; profil bez
+- `tests/gis/test_rural_xsec_0272.py` (39): klasa → pobocze; zakresy § 23 ust. 10; tagi OSM; override; profil bez
   krawężnika o tej samej topologii; sieć syntetyczna (G 90 km/h: asfalt 6,76 m; droga 50 km/h z krawężnikiem do czasu
   override / tagu); Ełcka w dk65-02…05 z grafów w gicie (mediana 6,76 m, w 6,5–7,1); DW671: > 93 % stacji bez krawężnika,
   krawędź przejazdu płaska, żaden wpust przy poboczu, strefa toru = jezdnia + 0,16 m; C i Dojlidy bez zmian; Szosa Ełcka w bialystok-knyszynska bez zmian.
 - Podgląd z góry siatki (płaski NMT) obok ortofoto: `artifacts/rural-xsec-0272/xing_triptych.jpg`,
   `elcka_triptych.jpg`. To nie jest render kamer kontrolnych — Unity w chmurze nie ma; kamery do obejrzenia przez lidera
   i `visual-critic` niżej.
+
+## Poprawki po recenzji #138 (`docs/reports/REVIEW-2026-11-15-s23-code-138.md`)
+- **P1-1 bariery**: `furniture.guardrails` (nasyp, przy obiekcie, przejście z mostu) brało `PAVED_SHOULDER` 1,00 m. Teraz
+  `furniture.rural_barrier_line` czyta pobocze stacji z `mat`: profil dotychczasowy — linia i wysokość jak przed 0272
+  (1,60 m od krawędzi jezdni); pobocze z kodem — `GUARDRAIL_OFFSET` za częścią twardą, nie bliżej niż 0,25 m
+  (`GUARDRAIL_GROUND_EDGE_M`, WORKING_VALUE) od zewnętrznej krawędzi żwiru, podstawa na powierzchni pobocza. Ełcka:
+  słupki 0,68 m od krawędzi jezdni zamiast 1,60 m w skarpie rowu. Sprawdzone na profilu (test), nie na siatce z NMT.
+- **P1-2 pomiar**: narzędzie i wiersze w gicie (wyżej); status 0,08 m obniżony do WORKING_VALUE.
+- **P2-1 klin**: przebieg bez krawężnika zaczyna się własnym kodem pobocza także na stacji pożyczonej
+  (`meshing.build_side_strip`). **P2-6**: `paved_m` / `ground_m` / `ditch_m` w override poza 0–3,5 m → `ValueError`;
+  `shoulder:width` z OSM przycinane do 3,5 m.
+- **P1-3** (scalanie z int-dk65-s22): na tej gałęzi `side_profile` ma jedno `m = walk_mat(mat)`; przy scalaniu druga linia
+  `m = WALK_MATS[mat]` z INT (pod gałęzią RURAL) też musi stać się `walk_mat(mat)`. **P1-4** (rail-dk65-s22): funkcji
+  `_rail_plan` nie ma na main, więc filtr `p.mat not in RAIL_ZONE_EXCLUDE_MATS` trzeba wpisać w niej przy scalaniu
+  (+ test na `BW._rail_plan`: `road_w ≈ 2·hw + 0,16`). Obu nie robiłem — kod jest na tamtych gałęziach.
+- **P1-5**: regeneracja jednym przebiegiem wszystkich 17 kafli z listy recenzji (szwy 01|02, 05|06, 06…11|knyszyn-s).
+
+## Szerokość DK65 w dk65-06…11 — do decyzji lidera (plików tych kafli nie zmieniam)
+Reguła da tam 6,6 + 2 × 0,08 = **6,76 m** asfaltu, a pomiar K1 / ADR 0214 r3 (waye 208187096, 27718745) to **7,1–7,5 m**
+przy liniach 6,0–6,4 m. To bliżej niż dziś (8,6 m: +1,1…1,5 m → −0,34…−0,74 m), ale nie zgodność. Dwie drogi:
+- **A. Override w kaflach** (zalecane; liczba z pomiaru tych właśnie dróg). Ten sam wpis w `dk65-06` … `dk65-11`
+  (way-level, powtórzony w każdym kaflu, który ma dany way — jak `dk65-elcka-xsec`):
+  ```yaml
+  - id: dk65-opaska-k1
+    target: {osm_way: [208187096, 27718745]}
+    source: "ADR 0214 r3 / research K1 (research/dk65-knyszyn-refs/README.md): asfalt 7,1-7,5 m, linie krawędziowe 6,0-6,4 m"
+    reason: >-
+      Stara DK65 ma za linią krawędziową pas asfaltu ok. 0,45-0,65 m (asfalt 7,1-7,5 m przy liniach 6,2 m) - opaska
+      zewnętrzna klasy G, Dz.U. 2022 poz. 1518 § 23 ust. 7 pkt 3 (0,50 m). Przy width 6,6 m (linie 0,20 m od krawędzi)
+      daje to 0,35 m asfaltu poza szerokością: 6,6 + 2 x 0,35 = 7,3 m (środek pomiaru). Część gruntowa 0,75 m
+      (§ 23 ust. 10 pkt 2; K1: żwir ok. 1 m - WORKING_VALUE).
+    confidence: medium
+    verify: przekroje ortofoto tools/worldgen/qa/ortho_xsec.py measure dk65-08 27718745 200 <prefiks>
+    set: {shoulder: {kind: ground, paved_m: 0.35, ground_m: 0.75}}
+  ```
+  `kind: ground` trzyma brak włazów (część twarda > 0,25 m liczy się już jako utwardzona — przy 0,35 m włazy wrócą;
+  jeśli mają nie wracać, podnieść `drainage.ground_max_paved_m` do 0,40). Way 1560819273 (Studzienna, szew 05|06)
+  zostaje na regule 0,08 m jak w dk65-05.
+- **B. Wariant reguły** w `xsec_rules.yaml` przed `g-single-ground`:
+  `{id: g-primary-opaska, match: {class: [G], carriageway: single, highway: [primary]}, set: {kind: ground, paved_m: 0.35, ground_m: 0.75}}`
+  — obejmie każdą jednojezdniową drogę `primary` ≥ 70 km/h (także DK65 w knyszyn*, monki, gdzie `width` 7,5 m ma już
+  opaskę w sobie: 7,5 + 0,7 = 8,2 m przy pomiarze 7,3–7,6 m). Dlatego A jest bezpieczniejsze.
+Podobnie `dk65-01` (`width: 6.0`, pomiar 6,65–7,4 m): poprawić `width` do 6,6 m jak D66 (Otwarte 7).
 
 ## Otwarte
 1. Rendery kamer kontrolnych i zrzut z telefonu po regeneracji (lider): `rail_xing_from_ne`, `rail_xing_close_ne`,

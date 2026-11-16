@@ -22,7 +22,8 @@
 #              paved shoulder or opaska, roads with an international number and dual carriageways; elsewhere P-7c/P-7d
 #              0.12 m are allowed. The position of the line is given only on rys. 2.2.2.1 (figure, no number in the
 #              text) -> standards.EDGE_LINE_INSET_MINOR stays WORKING_VALUE.
-#   [ORTO]     GUGiK orthophoto WMS (open data), measured 2026-11-15, ADR 0272 "Pomiary".
+#   [ORTO]     GUGiK orthophoto WMS (open data), measured 2026-11-15: tools/worldgen/qa/ortho_xsec.py, rows and
+#              summary in docs/reports/ortho-xsec-0272/.
 #   [K1]       research/dk65-knyszyn-refs/README.md (orthophoto cross-sections of the corridor, +-0.4 m at the edge).
 schema: truck-sim-pl/xsec-rules/1
 
@@ -44,11 +45,12 @@ shoulder_rules:
   - id: g-single-ground
     match: {class: [G], carriageway: single}
     set: {kind: ground, paved_m: 0.08, ground_m: 1.00}
-    status: MEASURED
+    status: WORKING_VALUE (pomiar Ełcka)
     source: >-
       [PTB2022] § 23 ust. 3 pkt 3 allows a ground-only shoulder on G; ust. 10 pkt 3: 1.25 m standard, >= 0.50 m.
-      [ORTO] Ełcka / Studzienna (dk65-04, dk65-05), 10 clean sections: asphalt 6.2-7.35 m (median 6.75), edge lines
-      6.0-6.35 m apart (median 6.2), sand / gravel strip 0.7-1.2 m -> 6.6 m + 2 x 0.08 m asphalt, 1.0 m ground.
+      [ORTO] Ełcka / Studzienna (dk65-04, dk65-05), 17 clean sections: asphalt 6.2-7.45 m (median 6.75), edge lines
+      6.0-6.35 m apart (median 6.2, 10 sections), sand / gravel strip 0.7-1.2 m (read by eye, ESTIMATED) -> 6.6 m +
+      2 x 0.08 m asphalt, 1.0 m ground. 0.08 m is below the reading accuracy (+-0.3 m) and comes from one road.
       [K1] DK65 km 16.5-25: asphalt 7.1-7.5 m, lines 6.0-6.4 m, gravel ~1 m; Knyszyn DK65: asphalt 7.3-7.6 m.
   - id: z-single-ground
     match: {class: [Z], carriageway: single}

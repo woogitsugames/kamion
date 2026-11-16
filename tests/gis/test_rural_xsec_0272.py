@@ -366,3 +366,101 @@ def test_szosa_elcka_in_bialystok_knyszynska_keeps_its_paved_shoulder():
                 n += 1
                 assert int(c.side[sd]["mat"][i]) == 0
     assert n > 300
+
+
+# ------------------------------------------------------------------------------------------------ REVIEW #138 fixes
+def test_guardrail_stands_on_the_shoulder_of_the_station():
+    """P1-1: the W-beam of a kerbless edge used `PAVED_SHOULDER` (1.00 m): 1.60 m from the carriageway edge, base at
+    the paved-edge height. With the ground shoulder (0.08 + 1.00 m) that is in the ditch slope, 0.3-0.4 m in the air."""
+    from streetscape import furniture as FU
+    code = X.resolve(_sec("G"), "left").code
+    hw, zg = np.array([3.3, 3.3]), np.array([10.0, 10.0])
+    off, zb = FU.rural_barrier_line(np.array([0, code]), hw, zg)
+    # legacy station: exactly the pre-0272 line
+    assert off[0] == pytest.approx(3.3 + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET)
+    assert zb[0] == pytest.approx(10.0 - S.CROSSFALL * S.PAVED_SHOULDER)
+    # ground shoulder: on the gravel, inside its outer edge, at the height of the profile surface there
+    prof = Nw.side_profile(Nw.RURAL, S.DITCH_DEPTH, 0.0, 0.5, code)
+    gravel = next(seg for seg in prof if seg[4] == "shoulder_gravel")
+    u = off[1] - 3.3
+    assert gravel[0] < u <= gravel[2] - FU.GUARDRAIL_GROUND_EDGE_M + 1e-9
+    z_surface = gravel[1] + (gravel[3] - gravel[1]) * (u - gravel[0]) / (gravel[2] - gravel[0])
+    assert zb[1] - 10.0 == pytest.approx(z_surface, abs=1e-6)
+    # the old line on the new profile: past the shoulder, on the ditch slope well below the old base height
+    u_old = S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET
+    assert u_old > gravel[2]
+    slope = next(seg for seg in prof if seg[0] <= u_old <= seg[2] and seg[4] == "verge_grass")
+    z_old_ground = slope[1] + (slope[3] - slope[1]) * (u_old - slope[0]) / (slope[2] - slope[0])
+    assert (-S.CROSSFALL * S.PAVED_SHOULDER) - z_old_ground > 0.3
+    # a narrow ground part: the post never leaves it
+    narrow = X.Shoulder("ground", 0.05, 0.5, "t").code
+    off_n, _ = FU.rural_barrier_line(np.array([narrow]), hw[:1], zg[:1])
+    assert off_n[0] - 3.3 == pytest.approx(0.05 + 0.25)
+
+
+def test_guardrail_rule_no_longer_reads_the_paved_shoulder_constant():
+    src = (REPO / "tools/worldgen/streetscape/furniture.py").read_text(encoding="utf-8")
+    body = src[src.index("def guardrails(lin, net, zground, report):"):]
+    assert "S.PAVED_SHOULDER " not in body and "S.PAVED_SHOULDER\n" not in body and "S.PAVED_SHOULDER)" not in body
+    assert body.count("r_off[") == 3 and body.count("r_zb[") == 3      # embankment, beside a structure, deck approach
+
+
+@pytest.mark.parametrize("st", [{"kind": "ground", "ground_m": 12.0}, {"kind": "ground", "ground_m": -0.5},
+                                {"kind": "paved", "paved_m": 4.0}, {"kind": "ground", "ditch_m": -1.0}])
+def test_shoulder_override_widths_are_range_checked(st):
+    """P2-6: >= 10 m would overflow the side code, a negative width inverts the profile."""
+    with pytest.raises(ValueError):
+        X.resolve(_sec("G", shoulder={"both": {**st, "id": "bad"}}), "left")
+
+
+def test_osm_shoulder_width_is_clamped_and_codes_round_trip():
+    sh = X.resolve(_sec("Z", osm={"shoulder": "both", "shoulder:width": "25"}), "left")
+    assert sh.paved_m == X.MAX_SHOULDER_M and X.decode(sh.code) == (X.MAX_SHOULDER_M, sh.ground_m)
+    assert X.decode(X.Shoulder("ground", 0.05, X.MAX_SHOULDER_M, "t").code) == (0.05, X.MAX_SHOULDER_M)
+
+
+def test_rural_run_after_a_kerbed_run_starts_with_its_own_shoulder(monkeypatch):
+    """P2-1: the station a run borrows from the previous profile family carried that family's `mat` (legacy 1.00 m of
+    asphalt), a 0.92 m wedge over one station."""
+    from roads import meshing as M
+    net = _net(_graph("secondary", 90))
+    (c,) = net.chains
+    code = int(c.side["L"]["mat"][0])
+    assert code >= X.SHOULDER_CODE
+    n = len(c.line.s)
+    half = n // 2
+    d = c.side["L"]
+    d["kind"][:half] = Nw.URBAN                     # first half kerbed (a village), second half open road
+    d["mat"][:half] = 0
+    d["raw"]["h"][:half] = S.KERB_HEIGHT
+    for k in ("h", "w", "depth"):
+        d.setdefault(k, d["raw"][k].copy())
+    seen = []
+    monkeypatch.setattr(M, "_emit_strip", lambda buf, G, OUT, zg, params, *a, **kw: seen.append(list(params)))
+    monkeypatch.setattr(M, "_emit_verge", lambda *a, **kw: None)
+    c.crossfall_z = lambda s, lat: np.zeros(len(np.atleast_1d(s)))
+    st = c.line.s[::4]
+    P = np.array([c.line.point(float(s)) for s in st])
+    N = np.array([c.line.n[c.idx(float(s))] for s in st])
+    M.build_side_strip(None, c, st, "L", 1.0, P, N, np.full(len(st), 3.3), None, True)
+    rural = [run for run in seen if run[-1][0] == Nw.RURAL]
+    assert len(seen) == 2 and len(rural) == 1
+    assert {p[4] for p in rural[0]} == {code}        # the borrowed first station too
+
+
+def test_ortho_measurements_in_git_give_the_numbers_of_the_adr():
+    """P1-2: the rows behind 'Ełcka: asphalt median 6.75 m, lines 6.2 m' and 'DW671 6.85 m' are in the repository."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("ortho_xsec", REPO / "tools/worldgen/qa/ortho_xsec.py")
+    ox = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ox)
+    d = REPO / "docs/reports/ortho-xsec-0272"
+    rows = lambda *names: [r for nm in names for r in json.loads((d / nm).read_text(encoding="utf-8"))]  # noqa: E731
+    elcka = ox.summarise(rows("dk65-04_elcka.json", "dk65-05_elcka.json"))
+    assert (elcka["stations"], elcka["clean"], elcka["edge_lines_both"]) == (21, 17, 10)
+    assert elcka["asphalt_median_m"] == 6.75 and elcka["edge_line_spacing_median_m"] == 6.2
+    assert ELCKA_ASPHALT_M[0] <= elcka["asphalt_median_m"] <= ELCKA_ASPHALT_M[1]
+    assert (elcka["asphalt_median_m"] - 6.6) / 2 == pytest.approx(0.08, abs=0.006)        # paved_m of g-single-ground
+    dw = ox.summarise(rows("dw671-tykocin-01_dw671.json"))
+    assert (dw["clean"], dw["asphalt_median_m"]) == (11, 6.85)
+    assert "mapy.geoportal.gov.pl" in ox.WMS_URL and "google" not in ox.WMS_URL.lower()

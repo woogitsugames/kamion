@@ -81,6 +81,18 @@ def class_rule(sec, data: dict | None = None) -> Shoulder:
     raise AssertionError("no shoulder rule matched")
 
 
+MAX_SHOULDER_M = 3.5     # widest part the side code carries sensibly (PTB2022 § 23 ust. 6: pas awaryjny up to 3.00 m)
+
+
+def _width(v, what: str) -> float:
+    """A shoulder width from an override / OSM tag: 0 ... MAX_SHOULDER_M, else ValueError (REVIEW #138 P2-6: a value
+    >= 10 m would overflow the ground part of the side code into the paved part, a negative one inverts the profile)."""
+    f = float(v)
+    if not 0.0 <= f <= MAX_SHOULDER_M:
+        raise ValueError(f"shoulder {what} {v!r} outside 0-{MAX_SHOULDER_M} m")
+    return f
+
+
 def _num(v):
     try:
         return float(str(v).split(";")[0].strip().replace(",", ".").removesuffix("m").strip())
@@ -101,17 +113,18 @@ def resolve(sec, side: str, data: dict | None = None) -> Shoulder:
             return Shoulder(base.kind, base.paved_m, base.ground_m, src, force="kerb")
         dflt = base if kind == base.kind else Shoulder(kind, float(data["min_paved_m"]) if kind == "ground" else LEGACY[0],
                                                         base.ground_m, "")
-        paved = float(a.get("paved_m", dflt.paved_m))
+        paved = _width(a.get("paved_m", dflt.paved_m), "paved_m")
         if kind == "ground":
             paved = max(paved, float(data["min_paved_m"]))
         d = a.get("ditch_m")
-        return Shoulder(kind, paved, float(a.get("ground_m", dflt.ground_m)), src, force="open",
-                        ditch_m=None if d is None else max(float(d), FLAT_DITCH_M))
+        return Shoulder(kind, paved, _width(a.get("ground_m", dflt.ground_m), "ground_m"), src, force="open",
+                        ditch_m=None if d is None else max(min(_width(d, "ditch_m"), 1.4), FLAT_DITCH_M))
     o = getattr(sec, "osm_shoulder", None) or {}
     val = str(o.get("shoulder") or "")
     if val in ("yes", "both", side):
         cfg = data["osm_shoulder"]
         w = _num(o.get("shoulder:width")) or float(cfg["default_width_m"])
+        w = min(max(w, 0.0), MAX_SHOULDER_M)          # an OSM typo must not stop the build: clamped
         if str(o.get("shoulder:surface") or "") in cfg["ground_surfaces"]:
             return Shoulder("ground", float(data["min_paved_m"]), w, "osm:shoulder", force="open")
         return Shoulder("paved", w, base.ground_m, "osm:shoulder", force="open")

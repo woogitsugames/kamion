@@ -13,18 +13,20 @@ overrides:
     confidence: low
     verify: none
     set: {lamps: false}
-  # ADR 0272 (REVIEW s22-0217 P1-4): DW671 south-west of the village has no kerbs. GUGiK orthophoto WMS (2025, 0.1 m),
-  # 10 clean cross-sections of ways 145989268 / 286989055 (tools: ADR 0272 "Pomiary"): asphalt 6.7-7.25 m (median 6.85;
-  # BDOT10k 6.5 / 7.0 kept), grass / ground right at the asphalt edge on both sides, no kerb, no gully; thin edge lines
-  # at 6 of 10 sections (6.85-6.9 m apart at the crossing), no cut ditch visible -> shallow swale (WORKING_VALUE).
+  # ADR 0272 (REVIEW s22-0217 P1-4): DW671 south-west of the village has no kerbs. GUGiK orthophoto WMS StandardResolution
+  # (sheet date / native resolution UNVERIFIED), 11 clean cross-sections of ways 145989268 / 286989055
+  # (docs/reports/ortho-xsec-0272/dw671-tykocin-01_dw671.json): asphalt 6.15-7.25 m (median 6.85; BDOT10k 6.5 / 7.0
+  # kept); read by eye on the strips: grass / ground right at the asphalt edge on both sides, no kerb, no gully, thin
+  # edge lines (both detected at 2 sections, 6.85-6.9 m apart at the crossing), no cut ditch -> shallow swale
+  # (WORKING_VALUE).
   # The OSM maxspeed is missing (graph default 50 km/h), so the class / speed rule kept the kerbed street profile.
   # Way 70329870 (north of the village, shared with knyszyn-w) is not measured and stays as it was.
   - id: dw671-ground-shoulder
     target: {osm_way: [145989268, 286989055]}
-    source: "GUGiK orthophoto WMS 2025 (gugik-orto-2025-rgb-0p10-dw671-tykocin-01), measured 2026-11-15"
+    source: "GUGiK orthophoto WMS StandardResolution, measured 2026-11-15 (docs/reports/ortho-xsec-0272/)"
     reason: >-
-      Ground shoulder instead of the rule kerb: 10 of 10 readable orthophoto sections show grass / ground at the
-      asphalt edge (3 more sections are in tree shadow). Widths: the class G rule of roads/xsec_rules.yaml
+      Ground shoulder instead of the rule kerb: every readable orthophoto section shows grass / ground at the
+      asphalt edge (3 of 14 sections are in tree shadow). Widths: the class G rule of roads/xsec_rules.yaml
       (asphalt = BDOT width + 2 x 0.08 m, ground part 1.0 m). Edge lines both sides (narrow, 0.20 m inside the edge,
       ADR 0205): seen at the crossing and south of it, worn or missing at 4 sections north of it.
     confidence: medium
@@ -34,7 +36,7 @@ overrides:
   # after the way-level entry, so it wins on this edge.
   - id: dw671-ground-shoulder-crossing
     target: {edge: "w286989055:1845461231-839431484"}
-    source: "GUGiK orthophoto WMS 2025, 60 m crop at the crossing (758830.85, 610025.61), measured 2026-11-15"
+    source: "GUGiK orthophoto WMS StandardResolution, 60 m crop at the crossing (758830.85, 610025.61), read 2026-11-15"
     reason: >-
       At the crossing the orthophoto shows asphalt 7.1-7.15 m with edge lines, guard rails 0.5-1 m behind the edge on
       both sides and flat mown ground up to the ballast: no kerb, no ditch. Only the road cross-section is authored
