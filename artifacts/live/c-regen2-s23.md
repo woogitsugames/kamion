@@ -20,5 +20,15 @@ Worktree `.claude/worktrees/c-regen2-s23`, gałąź `c-regen2-s23`, baza main `7
 
 - [23:4x] Po uwagach recenzenta: bramki między krokami (gałąź, exit= z regen.status), ponowienie przy 0xC0000142 także z logu, prep kopiuje całe derived, dowód side-effectów Unity dla #110; `test_streetscape.py` 58 passed / 1 skip.
 
-ETAP 1 KONIEC — czekam na polecenie lidera.
-NASTĘPNY KROK (etap 2, po zwolnieniu slotów): `Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile','-File','C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\c-regen2-s23\artifacts\c-regen2-s23\tools\00-prep.ps1'` → potem 10-before → 20-regen → 40-unity → 50-pytest (statusy `artifacts/c-regen2-s23/<krok>/*.status`, czytać `exit=`)
+
+## ETAP 2 (16.11)
+- Łańcuch lidera: regen exit 0 (budżet zielony), unity DONE, pytest 1. przebieg 3 faile. Poprawka 00-prep lidera zacommitowana (`ae761cca4`).
+- **Budżet C `stretch_04` High 1 985 807 (< 2 M, zapas 14 193), Low 938 274; Dojlidy max High 1 768 010.**
+- P0 znaleziony na renderach: płot z siatki magenta (shader #109 nie kompilował się: `IsAlphaToMaskAvailable` tylko pod `_ALPHATEST_ON`) → poprawka `a2a5dfa64`, macierz VQA wyrenderowana ponownie (12 komórek exit 0, 0 błędów shadera). Stare rendery: `after-r1-magenta/`.
+- 3 testy #124 czerwone po przebudowie → dostosowane (`6a337b125`). Generated C + Dojlidy zacommitowane (`4ff1cfb3f`).
+- Merge origin/main `6e6fe972f` → `4129c4297` (bez kodu świata). pytest 2. przebieg: **1653 passed, 0 failed**; perf 61 passed.
+- EditMode po imporcie: 786/788, 1 fail `StreetLampOpticsTests.SodiumTint_HasTheLedLuminance` (gałąź nie rusza kodu latarni; hipoteza: stan statyczny LED po 0216b).
+- Oględziny par w `artifacts/c-regen2-s23/view/` (bez visual-critic): płot OK po poprawce, cienie Low OK, E-1 na wysięgniku p37 nieczytelna na Low — do oceny.
+
+ETAP 2 KONIEC. Gotowe do scalenia: TAK (kod/testy/budżet), zastrzeżenia w raporcie §Gotowość.
+NASTĘPNY KROK (lider): `git -C C:\Users\matma\Documents\Claude\kamion merge --no-ff origin/c-regen2-s23` → `pwsh scripts/setup-project.ps1` (oczekiwany brak diffu) → visual-critic na `artifacts/c-regen2-s23/view/*.jpg`

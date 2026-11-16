@@ -169,7 +169,7 @@ przed usunięciem worktree; junctions odpiąć `cmd /c rmdir`.
 
 # ETAP 2 — wykonany (16.11, łańcuch lidera `stage2-chain.ps1`, potem poprawki i ponowne rendery)
 
-Stan gałęzi: `HEAD_PLACEHOLDER`, zawiera main `6e6fe972f` (merge `4129c4297`; z main przyszły tylko dokumenty, `rail_bed.png`
+Gałąź `c-regen2-s23` zawiera main `6e6fe972f` (merge `4129c4297`; z main przyszły tylko dokumenty, `rail_bed.png`
 i 3 pliki C# spawn-fix r2 — zero kodu świata, więc `60-postmerge.ps1` nie był potrzebny). #123 i #119 nadal poza gałęzią.
 
 ## Przebieg (wszystkie kroki z `exit=` w plikach statusu)
@@ -181,8 +181,8 @@ i 3 pliki C# spawn-fix r2 — zero kodu świata, więc `60-postmerge.ps1` nie by
 | `40-unity` | EditMode 788: 785 passed, 2 failed (oba znane `CarPaintMaterialTests.DepositionChannel_*`), 1 skipped; import C exit 0 (12 min 18 s), Dojlidy exit 0 (9 min 54 s); 12 komórek VQA exit 0 | 30 min |
 | `50-pytest` (1. przebieg) | 1650 passed, **3 failed**, 3 skipped, 2 xfailed (985 s); `tools/perf/tests` exit 0 | 16,5 min |
 | ponowne rendery po poprawce shadera | 12 komórek exit 0, 0 błędów shadera w logach | 5 min 16 s |
-| `50-pytest` (2. przebieg, po poprawkach i merge main) | PYTEST2_PLACEHOLDER | |
-| `45-editmode` (po poprawce shadera i merge main) | EDITMODE2_PLACEHOLDER | |
+| `50-pytest` (2. przebieg, po poprawkach i merge main) | **1653 passed, 0 failed**, 3 skipped, 2 xfailed; `tools/perf/tests` 61 passed | 17 min 26 s |
+| `45-editmode` (po poprawce shadera i merge main) | 788: 786 passed, **1 failed** (`StreetLampOpticsTests.SodiumTint_HasTheLedLuminance`), 1 skipped; oba testy CarPaint tym razem zielone | 2 min 28 s |
 
 Nowe testy EditMode z PR-ów (pierwsza kompilacja tego C#): `FenceMeshCoverageTests` 23/23, `ThinShadowCasterTests` 57/57,
 `GpuAbOverridesTests` 19/19, `LightPostPolicyTests` 12/12, `WorldPbr*` 19/19. Efekty uboczne Unity: brak diffu w
@@ -253,4 +253,14 @@ Cofnięte jako efekty uboczne: `materials_spec.json` (inne `png_bytes` lokalnego
 Dojlid (hash `region.yaml` z CRLF), `viaduct_putry_underdeck.spec.json` (same końce linii).
 
 ## Gotowość
-GOTOWOSC_PLACEHOLDER
+**Gotowe do scalenia: TAK pod względem kodu, testów i budżetu** (pytest 1653/0, budżet zielony, katalog regionów
+`--check` 0, drzewo czyste). Zastrzeżenia, o których decyduje lider:
+1. **EditMode po imporcie: 1 fail** `StreetLampOpticsTests.SodiumTint_HasTheLedLuminance` (oczekiwane 0,93694, jest
+   0,94206). W pierwszym przebiegu (przed importem regionów w tym worktree) ten sam test przeszedł, a gałąź nie zmienia
+   kodu latarni. Test porównuje ze stałym kolorem LED, a `StreetLamps.SetLedColour` zmienia stan statyczny — wygląda
+   na zależność od profilu oświetlenia 0216b / kolejności testów (hipoteza, niesprawdzona na czystym main).
+2. **Bez `visual-critic` i bez zestawienia ze zdjęciami właściciela.** Do oceny przede wszystkim czytelność E-1 na
+   wysięgniku p37 na Low (#124) i ziarno siatki płotu na Low (#109).
+3. Before = rendery s22 (tryb Reuse): brak pary dla Low overcast i kamer G3; cienie #110 porównane przełącznikami.
+4. `setup-project` (#110), APK i pomiar A16 — kroki lidera, niewykonane.
+5. #123 (FIX) i #119 nie weszły — następna przebudowa C zmieni budynki (`BASE_M` 1,5) i las; zapas `stretch_04` to 14 193.
