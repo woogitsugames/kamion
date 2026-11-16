@@ -105,7 +105,7 @@ A1 brief + referencje + wymiary → A2 **3 koncepcje sylwetki** (rendery kontrol
 Stan: **zaliczona 13.11.2026 na telefonie (D57, A16 Low)**. Na PC: pomiar kontrolny klasy „zalecany” + pakiet par zdjęcie|render z playera Windows (tier High), żeby sprawdzić, że wyższy tier nie wprowadza slopu (`docs/06`).
 
 ## Etap 4 — Pipeline świata na 2×2 km
-**Zakres:** `tools/worldgen` (Python) + importer Unity (`docs/05`): ingest z manifestem → graf dróg → przekroje i skrzyżowania → teren z NMT → budynki LoD1/LoD2 + fasady → roślinność (BDOT10k + modele drzew GUGiK) → oznakowanie z tagów → kolizje osobno → chunki → Addressables. Raport QA danych.
+**Zakres:** `tools/worldgen` (Python) + importer Unity (`docs/05`): ingest z manifestem → graf dróg → przekroje i skrzyżowania → teren z NMT → budynki LoD1/LoD2 + fasady → roślinność (BDOT10k + modele drzew GUGiK) → oznakowanie z tagów → kolizje osobno → chunki → sceny regionu (import glTFast, ADR 0011) → build z `-Regions` (`docs/10` §3; Addressables wycofane w s23). Raport QA danych.
 **Bramka:** regeneracja 2×2 km jedną komendą, ręczne poprawki przeżywają reimport, zestaw przejeżdża całość bez wpadnięcia pod teren, zero dziur w kolizjach, odchyłka osi drogi od źródła w zadanej tolerancji, raport `low_confidence`; **czas ładowania regionu w playerze Windows zmierzony** (`run.json: regionLoad`) i w budżecie klasy.
 
 ## Etap 5 — Vertical slice: strefa przemysłowa + wylot (2–3 km)
@@ -118,7 +118,7 @@ Stan: **zaliczona 13.11.2026 na telefonie (D57, A16 Low)**. Na PC: pomiar kontro
 
 ## Etap 7 — Obrzeża + pierwsza trasa skrócona + test DLC
 **Zakres:** miejscowości wokół Białegostoku 1:1, pierwszy odcinek trasy między miastami w skali skróconej (ADR skali po teście 2–3 wariantów współczynnika), strefy przejściowe miasto↔trasa, drugi region pack technicznie odrębny (dowód systemu DLC na PC: instalacja/usunięcie bez reinstalacji gry, granica regionów, zapis w usuniętym regionie → bezpieczny fallback).
-**Bramka:** przejazd Białystok → miejscowość obok przez granicę paczek bez przycięcia (0 klatek > 100 ms na granicy w `pc-metrics`); testy DLC z `docs/10` zielone. Kanał dystrybucji paczek na PC — decyzja właściciela (pytania w `docs/10` §3a).
+**Bramka:** przejazd Białystok → miejscowość obok przez granicę paczek bez przycięcia (0 klatek > 100 ms na granicy w `pc-metrics`); testy DLC z `docs/10` zielone. Kanał dystrybucji paczek na PC — decyzja właściciela (pytania w `docs/10` §3a). Uwaga s23: na PC paczki są odroczone (`docs/10` §3.5–3.6); dopóki właściciel nie wybierze wariantu C, „drugi region pack” = drugi zestaw regionów w buildzie + przejazd przez szew ze streamingiem (§3.3), a test instalacji/usunięcia paczki czeka na tę decyzję.
 
 ## Etap 8 — Polerowanie i testy zamknięte
 Profile jakości per klasa PC (strojenie High/Ultra, rozdzielczości, skalowanie rozdzielczości), test 30 min na każdej dostępnej klasie, pełne wsparcie kierownic (FFB, pedały, skrzynia H — D56), crash reporting, lokalizacja PL/EN, onboarding sterowania, instalator/paczka dystrybucyjna Windows (zip `scripts/package-windows.py`, itch.io najpierw, Steam po decyzji właściciela — ADR 0271, `docs/12`; `--release` zablokowany do zamknięcia R-P0-2; bez publikacji bez zgody). 🔒 Android: AAB + Play Asset Delivery, testy wewnętrzne w Play Console — dopiero w wersji mobilnej.

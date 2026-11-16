@@ -182,7 +182,7 @@ report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110
 v1 for comparison: 220.8 MB uncompressed meshes, APK 159.7–167.4 MB, WorldC PSS 790 MB on the A16.
 Next levers for the last ~11 MB (not done, need a decision): run-time collision cooking instead of prebaked
 (`bakeCollisionMeshes`, ≈ −17 MB raw, costs load time on the A16), 32-byte instance records instead of 64-byte matrices
-(−4.6 MB raw), Play Asset Delivery / Addressables for the High tier.
+(−4.6 MB raw), Play Asset Delivery / Addressables for the High tier (s23: Addressables withdrawn, see `docs/10` §3).
 
 Frame estimates (visual-QA `stats.txt`, CPU-side, before SRP batching; world renderers + instanced props/trees):
 
@@ -209,7 +209,7 @@ Not done: the world goal <= 60 MB is still not met (133.5 MB packed uncompressed
 
 ProjectSettings patch for the lead (not committed): (1) `managedStrippingLevel: Android: 1 -> 3` (High), test with a device run (reflection users: glTFast, Json); -2.6 MB. (2) `m_ShowUnitySplashLogo: 1 -> 0`, -1.2 MB, only if the licence allows; (3) `il2cppCompilerConfiguration` stays Release; consider `il2cppCodeGeneration: OptimizeSize` (not measured). (4) mipmap limit groups per quality (Unity 6 `mipmapLimitGroupName`) would let one APK drop top mips on Low at load time - saves RAM, not APK size.
 
-High tier as a separate package (options, nothing deployed): (a) status quo: two APKs, `-WorldHigh` ships WorldC_High + High sets (sideload/test; Play needs one artifact). (b) AAB + Play Asset Delivery install-time/fast-follow packs: High world + High truck/trailer textures as an asset pack, loaded via Addressables (Unity 6 supports Android asset packs through Addressables Play Asset Delivery); needs `buildAppBundle`, an Addressables group per tier, and the High sets taken out of Resources; Play delivers only to devices matching a texture-compression/device-tier targeting rule (device tier targeting can send the pack only to flagships). (c) Addressables remote groups on a CDN: no Play dependency, adds hosting and a download UI. Recommended: (b) once streaming chunks (ADR 0003) lands; until then the build flag (this change) is the cheap equivalent.
+High tier as a separate package (options, nothing deployed; **s23: options (b)/(c) via Addressables withdrawn — content model in `docs/10` §3, phone packs = AssetBundles per ADR 0234**): (a) status quo: two APKs, `-WorldHigh` ships WorldC_High + High sets (sideload/test; Play needs one artifact). (b) AAB + Play Asset Delivery install-time/fast-follow packs: High world + High truck/trailer textures as an asset pack, loaded via Addressables (Unity 6 supports Android asset packs through Addressables Play Asset Delivery); needs `buildAppBundle`, an Addressables group per tier, and the High sets taken out of Resources; Play delivers only to devices matching a texture-compression/device-tier targeting rule (device tier targeting can send the pack only to flagships). (c) Addressables remote groups on a CDN: no Play dependency, adds hosting and a download UI. Recommended: (b) once streaming chunks (ADR 0003) lands; until then the build flag (this change) is the cheap equivalent.
 
 ## PC tiers (D74, ADR 0269) — all WORKING_VALUE, UNMEASURED
 Source of the values: `game/Assets/_Project/Rendering/Runtime/PcTierTable.cs` (+ `Resources/PcTiers/URP_PC_*.asset`), table with
