@@ -1,0 +1,15 @@
+# R58 — R7: kierunkowe minima i warunki pomiaru
+
+16.11.2026. **6 nowych ustaleń dokumentacyjnych, 0 fotografii.** Dedup objął bazowe 24 wpisy oraz `norms.csv`/`regulations.csv` poprzednich rund. Nie powtórzono minimum osiowego S1 ani jego maksimum, R4 B ≥ 2,5 cd/m² i gradientu, R6 2a/2b ani R148. Wypełniono szczegóły starszego **R7**, których dotychczasowe wiersze L02-09…11 nie rozwijały.
+
+Źródło: [urzędowy PDF R7, Dz.U. UE L 285 z 30.09.2014, s. 1–34](https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=uriserv%3AOJ.L_.2014.285.01.0001.01.ENG). Okładka podaje **Supplement 23 to the 02 series**, z datą wejścia wskazaną **9.10.2014**. Jest to odrębny datowany snapshot od wcześniejszego UNECE Rev.6 z 22.11.2012; **nie stwierdzono aktualności prawnej 2026** ani zgodności całego łańcucha zmian. Zastosowanie tego tekstu do konkretnej fotografowanej lampy bez identyfikacji jej homologacji pozostaje UNVERIFIED.
+
+Pełny PDF ma 34 strony i został pobrany raz do autoryzowanego raw poza Git. Obejrzano osobno bitmapy okładki, s. 10, tabeli/siatki s. 27 i s. 28; istotne punkty odczytano także tekstowo. Próba wcześniejszego UNECE R7 Rev.6 zwróciła 403 — bez ponawiania tego URL lub wariantów hosta. Równoległe zwykłe otwarcie PDF UE w web pokazało ekran wymagający JS, natomiast pojedynczy normalny transfer tego samego publicznego URL dostarczył poprawny PDF. Nie wykonywano challenge, CAPTCHA, logowania ani kolejnej próby dostępu. Rozpoznanie pobranego dokumentu opiera się na jego treści i bitmapie, nie snippecie.
+
+Najważniejsze dla generatora: siatka podaje **procenty minimum osiowego**, a nie cd ani procent maksimum. H = ±10°, V = 0° ma minimum 35%; H = 0°, V = ±5° ma 70% w standardowej siatce s. 27. Obok jest odrębna tabela S3 na s. 28 — nie użyto jej w zamian. Pomiędzy liniami obowiązuje dolna granica z otaczających linii, co zapobiega dowolnemu zerowaniu rozsyłu poza węzłami.
+
+Minima całego pola z §6.2.4.1 są dodatkowym warunkiem: 0,05 cd dla pozycyjnych/obrysowych; 0,3 cd dla S1/S3 oraz dziennych S2/S4; nocne S2/S4 0,07 cd. Nie są globalnym zakresem minimum–maksimum ani zamiennikiem siatki. Warunek ≤750 mm / 5° dotyczy zakresu weryfikacji przy przewidzianym niskim montażu, nie nakazu wysokości lampy; znak ≤ jest istotny i nie został skopiowany z R150 (<750 mm).
+
+Szczegóły i ograniczenia wszystkich sześciu pozycji: `norms.csv`. Nie przeliczono ich na ustawienia shadera, moc elektryczną ani luminancję klosza. R7 opisuje światłość emitowaną w cd; nie mylić jej z odblaskiem R150 w mcd/lx. Dla sygnalizacyjnych lamp bez żarówek wymagane są minima i maksima po 1 oraz 30 minutach; źródło dopuszcza obliczenie rozsyłu po 1 minucie z rozsyłu po 30 minutach przez stosunek HV. Nie oznacza to czasu narastania światła do 90%, który jest innym badaniem.
+
+Raw: `C:/Users/matma/Documents/Claude/kamion/Data/raw/refs/codex-s21/01-lampy/legacy-photometry-round58/` — PDF, tekst i cztery rendery. W Git wyłącznie własne parafrazy/CSV/JSON i manifest dokumentacyjny. Brak nowych żądań Commons/Flickr, obrazów firmowych, Chrome oraz zmian parenta/Git.

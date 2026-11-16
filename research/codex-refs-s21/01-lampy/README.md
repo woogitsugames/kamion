@@ -243,3 +243,6 @@ R54: jeden nowy rzeczywisty tył ciągnika MAN/HELLA z widoczną emisją i odbic
 
 
 R55 rozstrzyga źródłową przyczynę120/1200cd: GRE/2023/14II.Justification3 wskazuje błąd konwersji, a WP29/2024/23tabela8 zastępuje komórki1200cd. Dwa niezależne oglądy; dawne kolumny druku120 zachowane. Nie jest to pełny przegląd prawa2026.
+
+
+R58: sześć nowych normR7 z publikacjiUE2014, w regulations.csv. Root obejrzał10/27/28: minima polowe,35%/70% siatki, apertura i warunki niskiego montażu/pomiaru. SiatkaS3 osobno, procenty odnoszą się do minimum osiowego, nie absolutnychcd. Aktualność2026 i kategoria konkretnej fotografii nieustalone.0nowych zdjęć, główny65bez zmian.

@@ -1,0 +1,21 @@
+{
+  "review_date": "2026-11-16",
+  "timezone": "Europe/Brussels",
+  "document": "R7, OJ L285/1–34, 30.09.2014; up to Supplement 23 to 02 series; stated EIF 09.10.2014",
+  "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=uriserv%3AOJ.L_.2014.285.01.0001.01.ENG",
+  "official_celex_from_index": "42014X0930(01)",
+  "status_2026": "UNVERIFIED; datowany snapshot, nie weryfikacja bieżącej mocy całego łańcucha",
+  "raw_directory": "C:/Users/matma/Documents/Claude/kamion/Data/raw/refs/codex-s21/01-lampy/legacy-photometry-round58/",
+  "raw_pdf": "R7-EU-2014.pdf",
+  "sha256": "af38d8eac078d329d1457b9bab75b0d79b7054df5281c0444b6a90b5279ac46e",
+  "pages": 34,
+  "new_fetch": "Jeden curl publicznego URL równolegle ze zwykłym web open. Curl dostarczył poprawny PDF; web pokazał JS verification. Nie wykonano challenge ani żadnego kolejnego żądania tego URL/wariantów.",
+  "UNECE_attempt": {"url": "https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/2015/R007r6e.pdf", "result": "403", "action": "STOP, bez ponowienia i wariantów hosta"},
+  "read_text_pages": [1,10,27,28],
+  "individually_viewed_renders": ["page-1.png", "page-10.png", "page-27.png", "page-28.png"],
+  "bitmap_table_mapping": {"standard_grid_page": 27, "H_plus_minus_10_V0_percent": 35, "H0_V_plus_minus_5_percent": 70, "unit": "procent minimum osiowego, nie cd", "separate_S3_table_page": 28},
+  "dedup": "Przeczytano bazowe 24 regulations, legacy-round2, r6-round3, PG8; rg norm/regulations CSV po0.05/750/35/70/receiver/1 min30 min. Nowe R7 szczegóły; nie duplikowano R4 luminancji i osiowych R7 min/max. R150 niskiego montażu jest odrębnym regulaminem z innym znakiem<.",
+  "counts": {"new_facts": 6, "photographs": 0, "new_commercial_images": 0},
+  "application": "Brak przypisania R7/2014 do jakiejkolwiek konkretnej fotografii, E2 ani numeru aprobaty. Bez parametrów shadera i bez utożsamienia cd z mcd/lx.",
+  "shared_changes": "Własny child wyłącznie; brak parent/Git/Chrome/Commons/Flickr. Publiczny PDF i rendery wyłącznie raw poza Git."
+}
