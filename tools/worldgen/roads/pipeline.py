@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
+from . import compact_roundabout as CR
 from . import gores as GO
 from . import junctions as J
 from . import meshing as M
@@ -133,6 +134,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
     prof["walled_ramps"] = P.mark_walled_ramps(net, hf)
     # gaps between carriageways: island only where OSM / the orthophoto says so, otherwise paved (ADR 0077)
     gore_plan = GO.plan(net, juncs, overrides, origin)
+    CR.plan_islands(net, juncs, gore_plan)           # ADR 0218 5c: splitter islands of compact roundabouts
     net.overrides_applied += gore_plan.overrides_applied
     net.overrides_stale += gore_plan.overrides_stale
 
@@ -148,6 +150,7 @@ def build(region_id: str, built_up: bool = True, hf: P.Heightfield | None = None
         M.build_patch(buf, net, j, stats=stats["patch"])
         M.build_patch(buf, net, j, coarse=True)
     GO.build(buf, net, gore_plan)                                    # paved gores / P-21 (ADR 0077)
+    stats["compact_roundabouts"] = CR.build(buf, net, juncs)         # ADR 0218 5c: apron annulus + centre island
     stats["sides_on_carriageway_culled"] = M.cull_sides_on_carriageway(buf)
     stats["kerb_tris_dropped_in_fills"] = GO.drop_kerbs_in_fills(buf, gore_plan)     # ADR 0093: removed, not sunk
     w = World(region=region, origin=origin, net=net, junctions=juncs, hf=hf, ctx={"points": pts, "foot": foot},

@@ -1,0 +1,11 @@
+{
+ "provenance": "authored_override (ADR 0214 mechanism, ADR 0215 r2): ways left out of the drivable road graph of this region",
+ "drop_service": [],
+ "drop_osm_ways": [
+  1151531612,
+  1151531613,
+  1151531608
+ ],
+ "reason": "Owner D65 p.6: the new DK65 carriageway (OSM primary ref 65, two one-way ways + the merge stub at the north edge, 2 x ~1.2 km NE of the route) is not open - construction site, the route stays on the old road (Ełcka / Studzienna). Same mechanism as dk65-06 (ADR 0214), so the site is continuous across the seam y = 603391: tools/worldgen/qa/construction_sites.py --ways turns the three ways into site corridor instead. Replaces the `set: {construction: true}` gravel ribbon of ADR 0215 r1 (PR #80), which ended at the seam.",
+ "verify": "owner photo of the building site from Studzienna"
+}

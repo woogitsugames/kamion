@@ -19,14 +19,26 @@ namespace Game.Controls
         /// wheel is released and self-centres (ADR 0058, <see cref="SteeringColumn"/>).
         /// </summary>
         public bool HandsOn;
+        /// <summary>
+        /// The source is an absolute physical wheel (PC wheel, ADR 0263): the cab wheel follows <see cref="Steer"/> 1:1
+        /// in the fixed step, without the hand-rate model of <see cref="SteeringColumn"/> (the player's own hands and the
+        /// device already have mass and speed limits; a second limit would be felt as lag).
+        /// </summary>
+        public bool DirectSteer;
         /// <summary>Accelerator 0..1.</summary>
         public float Throttle;
         /// <summary>Service brake 0..1.</summary>
         public float Brake;
+        /// <summary>Clutch pedal 0..1 (PC pedals, ADR 0263; 0 = released / not present). Not consumed by the AMT yet —
+        /// manual clutch is a vehicle-physics proposal in ADR 0263.</summary>
+        public float Clutch;
         /// <summary>One-shot: selector change request.</summary>
         public SelectorRequest Selector;
         /// <summary>One-shot: manual shift request (+1 up, -1 down).</summary>
         public int ShiftDelta;
+        /// <summary>One-shot: absolute forward gear requested by an H-shifter (1..n; 0 = no request). ADR 0263: the
+        /// AMT has no absolute request yet, <see cref="ShiftDelta"/> carries the same change relatively.</summary>
+        public int TargetGear;
         /// <summary>One-shot: toggle the spring parking brake.</summary>
         public bool ToggleParkingBrake;
         /// <summary>One-shot: toggle AMT automatic / manual mode.</summary>
@@ -48,6 +60,7 @@ namespace Game.Controls
         {
             Selector = SelectorRequest.None;
             ShiftDelta = 0;
+            TargetGear = 0;
             ToggleParkingBrake = false;
             ToggleManual = false;
             RetarderDelta = 0;
@@ -75,7 +88,7 @@ namespace Game.Controls
     }
 
     /// <summary>
-    /// A source of driver commands (keyboard, touch wheel + pedals, gyro, autopilot; gamepad/wheel later).
+    /// A source of driver commands (keyboard, touch wheel + pedals, gyro, autopilot, PC wheel (ADR 0263); gamepad later).
     /// Sample is called once per rendered frame from the gameplay bridge; the source writes into its own intent,
     /// the <see cref="DriverInputMixer"/> combines them.
     /// </summary>
@@ -84,5 +97,20 @@ namespace Game.Controls
         string Name { get; }
         bool Enabled { get; set; }
         void Sample(float dt, in VehicleFeedback feedback, ref DriverIntent intent);
+    }
+
+    /// <summary>
+    /// A driver input whose device also navigates menus (pad, keyboard, PC wheel buttons). While a settings panel or
+    /// another modal is open the <see cref="DriverInputMixer"/> calls <see cref="SampleBlocked"/> instead of
+    /// <see cref="IDriverInput.Sample"/> and uses an empty intent for the source (review #131 P1-1).
+    /// </summary>
+    public interface IMenuGatedInput
+    {
+        /// <summary>
+        /// One frame with the menu open: produce nothing. Drop ramps / filters and view commands (no gas or camera
+        /// command left over when the menu closes) and keep the button-edge state in step with the device, so a button
+        /// that is held while the menu closes is not seen as a new press afterwards. Allocation-free.
+        /// </summary>
+        void SampleBlocked(float dt, in VehicleFeedback feedback);
     }
 }

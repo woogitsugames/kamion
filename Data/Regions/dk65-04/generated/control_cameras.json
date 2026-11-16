@@ -6,13 +6,13 @@
    "look_at": [
     903.699,
     -818.649,
-    118.521
+    118.527
    ],
    "note": "driver eye 2.5 m, control route s = 149 m of 2079 m (Ełcka)",
    "pos": [
-    915.884,
-    -877.425,
-    118.975
+    915.638,
+    -877.469,
+    118.985
    ],
    "route_s_m": 148.53,
    "type": "persp"
@@ -23,13 +23,13 @@
    "look_at": [
     851.936,
     -526.133,
-    121.675
+    121.68
    ],
    "note": "driver eye 2.5 m, control route s = 446 m of 2079 m (Ełcka)",
    "pos": [
-    864.086,
-    -584.916,
-    122.592
+    863.84,
+    -584.96,
+    122.601
    ],
    "route_s_m": 445.591,
    "type": "persp"
@@ -44,9 +44,9 @@
    ],
    "note": "driver eye 2.5 m, control route s = 743 m of 2079 m (Ełcka)",
    "pos": [
-    812.557,
-    -292.358,
-    126.345
+    812.311,
+    -292.401,
+    126.355
    ],
    "route_s_m": 742.652,
    "type": "persp"
@@ -57,13 +57,13 @@
    "look_at": [
     749.041,
     59.009,
-    132.781
+    132.786
    ],
    "note": "driver eye 2.5 m, control route s = 1040 m of 2079 m (Ełcka)",
    "pos": [
-    761.233,
-    0.235,
-    132.88
+    760.987,
+    0.191,
+    132.892
    ],
    "route_s_m": 1039.713,
    "type": "persp"
@@ -74,13 +74,13 @@
    "look_at": [
     697.631,
     351.585,
-    139.681
+    139.693
    ],
    "note": "driver eye 2.5 m, control route s = 1337 m of 2079 m (Ełcka)",
    "pos": [
-    709.829,
-    292.811,
-    140.641
+    709.583,
+    292.768,
+    140.655
    ],
    "route_s_m": 1336.773,
    "type": "persp"
@@ -91,13 +91,13 @@
    "look_at": [
     646.334,
     644.183,
-    148.951
+    148.957
    ],
    "note": "driver eye 2.5 m, control route s = 1634 m of 2079 m (Ełcka)",
    "pos": [
-    658.494,
-    585.401,
-    148.046
+    658.248,
+    585.357,
+    148.059
    ],
    "route_s_m": 1633.834,
    "type": "persp"
@@ -108,13 +108,13 @@
    "look_at": [
     594.714,
     936.724,
-    149.911
+    149.916
    ],
    "note": "driver eye 2.5 m, control route s = 1931 m of 2079 m (Ełcka)",
    "pos": [
-    606.848,
-    877.939,
-    151.227
+    606.602,
+    877.896,
+    151.239
    ],
    "route_s_m": 1930.895,
    "type": "persp"
@@ -248,11 +248,43 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "k1_bay_1298_top",
+   "look_at": [
+    802.535,
+    -236.019,
+    -57127.894
+   ],
+   "note": "place camera: ADR 0220: bus bay L km 12.948-13.010 + broken L edge line; pair = artifacts/dk65-k1-0220/evidence/dk65-04_km12.93-13.04_bay-L.jpg (top view, route up)",
+   "pos": [
+    819.9,
+    -334.5,
+    167.827
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "k1_bay_1298_drive",
+   "look_at": [
+    816.335,
+    -314.819,
+    116.923
+   ],
+   "note": "place camera: ADR 0220: driver view towards the bus bay L km 12.95-13.01 (broken edge lines both sides before it)",
+   "pos": [
+    833.7,
+    -413.3,
+    123.916
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0
    ],
-   "height": 280.416,
+   "height": 280.423,
    "id": "ortho_tile",
    "note": "orthographic top view of the whole tile for overlay on the GUGiK orthophoto",
    "size_m": 2048.0,

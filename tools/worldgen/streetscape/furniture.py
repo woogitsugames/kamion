@@ -526,15 +526,53 @@ def clear_narrow_islands(pl, parts, net, report):
 def lamp_policy(overrides):
     """ADR 0216: the region's authored `kind: lamp_policy` override ({} when absent). `family: led` = every street
     luminaire of the region is LED (owner D65 p.8): the older side-street poles keep their shape and stand where the
-    rule puts them, with the LED retrofit head (props.lamp_old(led=True)) instead of the sodium one."""
+    rule puts them, with the LED retrofit head (props.lamp_old(led=True)) instead of the sodium one.
+    ADR 0216b: with `target: {osm_way: [...]}` only the streets of those ways are LED (Bialystok: streets named in a
+    city LED tender); other families (`unchanged`) change nothing."""
     for o in overrides or []:
         if o.get("kind") == "lamp_policy":
             return o
     return {}
 
 
+def _edge_way(edge_id):
+    """OSM way id (str) of a roads.graph edge id `w<way>:<from>-<to>`."""
+    return str(edge_id).split(":")[0].lstrip("w")
+
+
+def lamp_led_scope(overrides):
+    """(led_all, led_ways) of the region's lamp policy: every older-family head LED, or only on these OSM ways."""
+    pol = lamp_policy(overrides)
+    led = pol.get("family") == "led"
+    return led and not pol.get("target"), {str(w) for w in (pol.get("target") or {}).get("osm_way", [])} if led else set()
+
+
+def chain_lamp_proto(c, net, led_all=False, led_ways=frozenset()):
+    """(street-lamp prototype, mid section) of chain c for the rule placement, or (None, sec) when the rule puts no
+    lamps on it. One family per street; shared by lamps() and qa/lamp_family_audit.py (ADR 0216b)."""
+    if c.meta.get("absorbed") or c.roundabout:
+        return None, None
+    sec = c.section(c.length / 2, net.sec_list)
+    if sec.cls not in S.LAMP or sec.highway in ("service",) and c.length < 60:
+        return None, sec
+    if sec.provenance.get("no_lamps"):           # ADR 0204: authored `set: {lamps: false}` - unlit rural road
+        return None, sec
+    spec = S.LAMP[sec.cls]
+    # older side-street family (critic R2 #10): one family per street (hash of the chain), never on G/GP;
+    # residential streets 65 % old (spun-concrete poles dominate), other L/D roads 30 % (grey steel)
+    proto = f"lamp_{int(spec['h'])}m"
+    if sec.cls in ("L", "D", "Z") and sec.highway not in ("primary", "secondary", "trunk"):
+        u = _h(c.id + ":lampfamily") % 100
+        res = sec.highway in ("residential", "living_street")
+        if u < (65 if res else 30):
+            proto = "lamp_old_concrete_9m" if (res and u < 50) or (not res and u < 8) else "lamp_old_steel_8m"
+            if led_all or _edge_way(sec.edge_id) in led_ways:   # ADR 0216 / 0216b: same pole, LED head
+                proto = proto.replace("lamp_old_concrete_", "lamp_old_concrete_led_").replace("lamp_old_steel_", "lamp_old_steel_led_")
+    return proto, sec
+
+
 def lamps(pl, net, osm_nodes, origin, report, overrides=None):
-    led = lamp_policy(overrides).get("family") == "led"
+    led_all, led_ways = lamp_led_scope(overrides)
     n0 = 0
     for nd in osm_nodes:
         if nd["tags"].get("highway") == "street_lamp":
@@ -543,24 +581,10 @@ def lamps(pl, net, osm_nodes, origin, report, overrides=None):
             n0 += 1
     n = 0
     for c in net.chains:
-        if c.meta.get("absorbed") or c.roundabout:
-            continue
-        sec = c.section(c.length / 2, net.sec_list)
-        if sec.cls not in S.LAMP or sec.highway in ("service",) and c.length < 60:
-            continue
-        if sec.provenance.get("no_lamps"):       # ADR 0204: authored `set: {lamps: false}` - unlit rural road
+        proto, sec = chain_lamp_proto(c, net, led_all, led_ways)
+        if proto is None:
             continue
         spec = S.LAMP[sec.cls]
-        # older side-street family (critic R2 #10): one family per street (hash of the chain), never on G/GP;
-        # residential streets 65 % old (spun-concrete poles dominate), other L/D roads 30 % (grey steel)
-        proto = f"lamp_{int(spec['h'])}m"
-        if sec.cls in ("L", "D", "Z") and sec.highway not in ("primary", "secondary", "trunk"):
-            u = _h(c.id + ":lampfamily") % 100
-            res = sec.highway in ("residential", "living_street")
-            if u < (65 if res else 30):
-                proto = "lamp_old_concrete_9m" if (res and u < 50) or (not res and u < 8) else "lamp_old_steel_8m"
-                if led:                                  # ADR 0216: same pole, LED head
-                    proto = proto.replace("lamp_old_concrete_", "lamp_old_concrete_led_").replace("lamp_old_steel_", "lamp_old_steel_led_")
         oneway = sec.oneway
         sides = ["R"] if (oneway and (c.dirn > 0).mean() >= 0.5) or not oneway else ["L"]
         s0, s1 = c.t_a + 4, c.length - c.t_b - 4
@@ -589,7 +613,12 @@ def lamps(pl, net, osm_nodes, origin, report, overrides=None):
                 pl.add(proto if z is None else f"lamp_{int(spec['h'])}m", p, yaw_of(face), z=z, src=f"rule:{c.id}",
                        group="lamp")
                 n += 1
-    report["lamps"] = {"osm": n0, "rule": n, **({"policy": "led"} if led else {}),
+    pol_rep = {"policy": "led"} if led_all else {}
+    if led_ways:                                 # ADR 0216b: LED heads on the tender streets only
+        known = {_edge_way(e) for e in net.sections}
+        pol_rep = {"policy": "led-target", "led_target_ways": len(led_ways),
+                   "led_target_stale": sorted(led_ways - known)}
+    report["lamps"] = {"osm": n0, "rule": n, **pol_rep,
                        "support_adjustments": pl.support_moves,
                        "by_family": {k: sum(1 for it in pl.items if it["p"] == k) for k in
                                      sorted({it["p"] for it in pl.items if it["p"].startswith("lamp_")})}}
@@ -829,14 +858,21 @@ def direction_boards(pl, net, graph_attrs, report, boards):
         hw = float(c.hw_at(s))
         side = "R" if fwd else "L"
         kind, h, w, ext = side_surface_offset(c, side, s)
-        p = c.line.offset_point(s, sgn * (hw + (S.KERB_TOP_W + 1.2 if kind != RURAL else ext + 1.0)))
         t, _ = c.line.frame(s)
         key = f"E-2_{_h(dest + ref) % 100000:05d}"
         refs = [r.strip() for r in ref.split(";") if r.strip()]
+        from . import brand_filter as BF
+        names, _dropped = BF.neutral_destinations([x.strip() for x in dest.split(";") if x.strip()])
+        if not names:                       # ADR 0236: no company / brand on a board (as signs_route._arm_label)
+            continue
         if key not in boards:
-            im, wm, hm = SG.direction_board(dest.split(";"), refs, green=bool(refs))
+            im, wm, hm = SG.direction_board(names, refs, green=bool(refs))
             boards[key] = (round(wm, 3), round(hm, 3), im)
         wm, hm, _ = boards[key]
+        # ADR 0236: the boards have the norm's letter size now (wider): the board edge keeps >= 0.50 m from the
+        # carriageway edge (pkt 1.5.3 of Dz.U. 2019 poz. 2311 zał. 1)
+        clear = max(1.2, wm / 2 + 0.5)
+        p = c.line.offset_point(s, sgn * (hw + (S.KERB_TOP_W + clear if kind != RURAL else ext + clear - 0.2)))
         z = pl.add("sign_post", p - t * dn * 0 + np.array([0, 0]), yaw_of(-t * dn), sz=S.SIGN_H_MIN + hm,
                    src=f"rule:destination:{c.id}")
         pl.add(f"board_{key}", p, yaw_of(-t * dn), z=z + S.SIGN_H_MIN + hm / 2, src=f"rule:destination:{c.id}")
@@ -2400,7 +2436,7 @@ def pier_guardrails(lin, net, piers, parts, report):
         # ADR 0123: the truck apron of a roundabout is driven on too - the edge beside a pier on the centre island is
         # the inner kerb of the apron (Mapillary 177786140912399: W-beam right behind the island kerb), not the
         # asphalt 2.5 m further out (the run stood on the apron or was not built at all)
-        if (p.mat.startswith("road_asphalt") or p.mat == "apron_sett") and not p.src.endswith(":vg"):
+        if (p.mat.startswith("road_asphalt") or p.mat in ("apron_sett", "apron_paving_light")) and not p.src.endswith(":vg"):
             tri.append(p.V[p.T])
         elif p.mat == "curb_concrete":
             kerb.append(p.V[:, :2])

@@ -20,6 +20,7 @@ from shapely import affinity
 from shapely.geometry import Polygon, box
 
 from . import standards as S
+from .network import lane_w_of
 from .geom import ear_clip, polygon_area
 from .meshing import MeshBuf
 
@@ -49,6 +50,8 @@ def _paint_uv1(c, s, lat, kind):
     else:
         lw, edge, ring = 3.5, 0.0, False
     hw = np.asarray(c.hw_at(s), float)
+    if _SECS and getattr(sec, "lane_follow", False):
+        lw = np.maximum(lane_w_of(sec, hw), 2.0)
     lanec = (lat + hw - edge) / lw if ring else np.abs(lat) / lw
     if _SECS and getattr(sec, "lane_edges", None):
         lanec = sec.lane_coord(lat, hw, int(c.dirn[c.idx(sm)]) or 1)
@@ -148,7 +151,7 @@ def arrow_glyph(turns: list, long: bool):
 
 def lane_layout(sec, hw, dirn):
     """Return (centre_line_lat or None, [lane boundary lats], lane centres by travel dir)."""
-    lw, e = sec.lane_w, sec.edge_strip
+    lw, e = lane_w_of(sec, hw), sec.edge_strip        # ADR 0233: local lane width on `lanes_follow_width` sections
     le = getattr(sec, "lane_edges", None)
     if le and sec.oneway:
         # ADR 0095: measured lane edges, distances from the left edge in the direction of travel
@@ -178,7 +181,7 @@ def edge_lines(sec, hw, dirn):
     """[(lat, kind)] of the painted edge lines of a section at half-width hw (scalar or array). Default rule:
     P-7b on both sides of class A / S / GP roads with an edge strip. `edge_lines` (override, direction of travel)
     narrows it; a section with measured `lane_edges` paints only what `edge_lines` names (ADR 0095)."""
-    if sec.roundabout:
+    if sec.roundabout or unmarked(sec):
         return []
     el = getattr(sec, "edge_lines", None)
     le = getattr(sec, "lane_edges", None)
@@ -200,10 +203,132 @@ def edge_lines(sec, hw, dirn):
     elif el in ("left", "right", "both"):
         # ADR 0205: edge lines read off the orthophoto on a road below class GP (rural G road, no edge strip):
         # only by authored override; narrow line (see edge_line_width) just inside the carriageway edge
+        off = hw - S.EDGE_LINE_INSET_MINOR
+        sp = getattr(sec, "edge_line_spacing", None)
+        if sp:
+            # ADR 0220: measured line-to-line distance; the line stays on the carriageway (EDGE_LINE_MIN_INSET)
+            off = np.minimum(0.5 * float(sp), hw - EDGE_LINE_MIN_INSET)
         for sg, name in ((1, "left"), (-1, "right")):
             if el in ("both", name):
-                out.append(((d if sec.oneway else 1) * sg * (hw - S.EDGE_LINE_INSET_MINOR), "P-7b"))
+                out.append(((d if sec.oneway else 1) * sg * off, "P-7b"))
     return out
+
+
+def unmarked(sec) -> bool:
+    """ADR 0215 (owner D65 p.6): a carriageway under construction / not open to traffic carries no horizontal
+    markings at all (authored `set: {construction: true}`, roads.closures)."""
+    return bool(getattr(sec, "construction", False))
+
+
+EDGE_DASHED_KIND = "edge_line_dashed"
+EDGE_DASHED_SNAP_M = 1.5     # a span sample may lie this far outside the carriageway half-width (axis traced off data)
+EDGE_DASHED_STEP_M = 2.0     # resampling of line_en
+EDGE_LINE_MIN_INSET = 0.12   # WORKING_VALUE (ADR 0220): an authored edge_line_spacing keeps the line axis this far
+                             # inside the carriageway edge (half the 0.12 m line + 0.06 m of asphalt)
+
+
+def _other_chain(owner, i, c):
+    """True when sample i exists and lies on a chain other than c (the authored line goes on through a junction)."""
+    return 0 <= i < len(owner) and owner[i] is not None and owner[i][0] is not c
+
+
+def edge_dashed_spans(net, authored, report=None):
+    """ADR 0220: authored spans where an override edge line is broken instead of solid (a bus bay, a junction mouth
+    the OSM graph does not have, a section painted with short dashes):
+
+      kind: edge_line_dashed   line_en: [[E, N], ...] (the carriageway axis from the start to the end of the span,
+                                        >= 2 points; may run through junctions: every chain it follows is broken)
+                               side: left | right   (of the carriageway, looking along line_en)
+                               line: P-7a (dash / gap of S.DASH) or dash_m: [dash, gap] (measured)
+
+    The line is resampled every EDGE_DASHED_STEP_M; a sample belongs to the nearest chain whose carriageway it lies on
+    (|lat| <= half-width + EDGE_DASHED_SNAP_M) running the same way (|cos| >= 0.8). Each run of >= 2 consecutive samples
+    on one chain is a span; where the line goes on to ANOTHER chain (through a junction) the span reaches that chain end.
+    Samples that match no chain are a hole: the span ends at the last matched sample on either side of it, the hole
+    stays solid and the dash / gap rhythm restarts behind it like at any span start (`dashed`).
+    Returns {chain_id: [(s_lo, s_hi, lat_sign, dash, gap, id)]}. Nothing matched = stale (reported, never dropped)."""
+    out, applied, stale = {}, [], []
+    chains = [c for c in net.chains if not c.meta.get("absorbed") and len(c.line.p) >= 2]
+    for o in authored or []:
+        if o.get("kind") != EDGE_DASHED_KIND:
+            continue
+        pts = np.asarray(o.get("line_en") or [], float).reshape(-1, 2)
+        side = o.get("side")
+        dash, gap = o.get("dash_m") or S.DASH[o.get("line", "P-7a")]
+        runs = []
+        if len(pts) >= 2 and side in ("left", "right"):
+            seg = np.hypot(*np.diff(pts, axis=0).T)
+            cum = np.concatenate([[0.0], np.cumsum(seg)])
+            u = np.unique(np.append(np.arange(0.0, cum[-1], EDGE_DASHED_STEP_M), cum[-1]))
+            Q = np.column_stack([np.interp(u, cum, pts[:, 0]), np.interp(u, cum, pts[:, 1])])
+            D = np.gradient(Q, axis=0)
+            D /= np.maximum(np.hypot(*D.T), 1e-9)[:, None]
+            owner = [None] * len(Q)
+            for k, q in enumerate(Q):
+                best = None
+                for c in chains:
+                    s, lat = c.line.project(q)
+                    if abs(lat) > float(c.hw_at(s)) + EDGE_DASHED_SNAP_M:
+                        continue
+                    t, _ = c.line.frame(s)
+                    cos = float(np.dot(t, D[k]))
+                    if abs(cos) < 0.8:
+                        continue
+                    if best is None or abs(lat) < best[0]:
+                        best = (abs(lat), c, s)
+                owner[k] = None if best is None else (best[1], best[2])
+            k = 0
+            while k < len(Q):
+                if owner[k] is None:
+                    k += 1
+                    continue
+                c = owner[k][0]
+                k1 = k
+                while k1 + 1 < len(Q) and owner[k1 + 1] is not None and owner[k1 + 1][0] is c:
+                    k1 += 1
+                if k1 > k:
+                    sa, sb = owner[k][1], owner[k1][1]
+                    fwd = sb > sa
+                    # the span reaches the chain end only where the line really goes on to ANOTHER chain (through a
+                    # junction); samples that matched no chain (a hole: the traced axis strays off the carriageway,
+                    # the graph changed under the override) end the span at the last matched sample - the hole and
+                    # the rest of the chain stay solid (review of PR #98, FIX 1)
+                    if _other_chain(owner, k - 1, c):
+                        sa = 0.0 if fwd else c.length
+                    if _other_chain(owner, k1 + 1, c):
+                        sb = c.length if fwd else 0.0
+                    sign = (1.0 if side == "left" else -1.0) * (1.0 if fwd else -1.0)
+                    runs.append((c.id, (min(sa, sb), max(sa, sb), sign, float(dash), float(gap), o["id"])))
+                k = k1 + 1
+        if not runs:
+            stale.append(o["id"])
+            continue
+        for cid, span in runs:
+            out.setdefault(cid, []).append(span)
+            applied.append({"id": o["id"], "chain": cid, "s": [round(span[0], 2), round(span[1], 2)],
+                            "lat_sign": span[2]})
+    if report is not None:
+        report["edge_line_dashed"] = {"applied": applied, "stale": stale}
+    if hasattr(net, "overrides_stale"):
+        net.overrides_stale.extend(s for s in stale if s not in net.overrides_stale)
+        net.overrides_applied.extend({"id": a["id"], "targets": [a["chain"]]} for a in applied)
+    return out
+
+
+def _solid_with_dashes(buf, c, sa, sb, lat, w, spans, sign, kind):
+    """Edge line from sa to sb: solid, broken (dash / gap) inside the authored spans on its side (ADR 0220)."""
+    iv = sorted((max(sa, a), min(sb, b), d, g) for a, b, sg, d, g, _ in spans if sg == sign and min(sb, b) > max(sa, a))
+    cur = sa
+    for a, b, d, g in iv:
+        if a > cur:
+            strip(buf, c, cur, a, lat, w, kind)
+        if b > max(a, cur):
+            # same paint kind as the solid line (QA: consistency.PAINT, fidelity overlays), broken pattern
+            dashed(buf, c, max(a, cur), b, lat, w, d, g, kind)
+        cur = max(cur, b)
+    if sb > cur:
+        strip(buf, c, cur, sb, lat, w, kind)
+    return len(iv)
 
 
 def edge_line_width(sec):
@@ -296,6 +421,7 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         for i, a in enumerate(j.arms):
             arm_info[a.key] = (j, i, maxrank)
     counts = {}
+    dashed_spans = edge_dashed_spans(net, getattr(net, "authored", None), report)
 
     def cnt(k, n=1):
         counts[k] = counts.get(k, 0) + n
@@ -466,6 +592,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                 sb = s1
             if sb - sa < 1.0:
                 continue
+            if unmarked(sec):
+                cnt("construction section (no markings)")     # ADR 0215: not open to traffic, no horizontal signs
+                continue
             marked = sec.highway in MARKED or sec.roundabout
             hw = float(c.hw_at(0.5 * (sa + sb)))
             dirn = int(c.dirn[a_]) or 1
@@ -490,9 +619,16 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                     else:
                         _segmented(buf, c, sa, sb, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
                         cnt("P-1 centre line")
-                for k_e, _ in enumerate(edge_lines(sec, hw, dirn)):
-                    strip(buf, c, sa, sb, (lambda ss_, k_e=k_e, sec=sec, dirn=dirn:
-                                           edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0]), edge_line_width(sec), "P-7b")
+                for k_e, (lat_e, _) in enumerate(edge_lines(sec, hw, dirn)):
+                    lat_fn = (lambda ss_, k_e=k_e, sec=sec, dirn=dirn: edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0])
+                    spans = dashed_spans.get(c.id)
+                    if spans:       # ADR 0220: authored broken spans of the edge line on this side
+                        n_iv = _solid_with_dashes(buf, c, sa, sb, lat_fn, edge_line_width(sec), spans,
+                                                  1.0 if float(lat_e) > 0 else -1.0, "P-7b")
+                        if n_iv:
+                            cnt("P-7a edge line span (authored)", n_iv)
+                    else:
+                        strip(buf, c, sa, sb, lat_fn, edge_line_width(sec), "P-7b")
                     cnt("P-7b edge line")
             # arrows from turn:lanes at the downstream end of this section
             for tl, tdir in ((sec.turn_fwd, 1), (sec.turn_bwd, -1)):
@@ -542,6 +678,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         cnt("P-8 arrow")
         # crossings on this chain
         for s_c, osm, ckind, cwid in crossings.get(c.id, []):
+            if unmarked(c.section(s_c, secs)):
+                cnt("crossing skipped (construction)")
+                continue
             hw = float(c.hw_at(s_c))
             if ckind == "P-11":
                 clear = cwid - 2 * S.P11_SQUARE            # 2.0 m (ADR 0093) or 3.0 m two-way (ADR 0188)

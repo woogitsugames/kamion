@@ -16,6 +16,10 @@ namespace Game.UI
     /// Choosing a start logs one <c>[CONTROLS] menu-start ...</c> line with the whole choice.
     /// Scale and safe area: <see cref="UiViewport"/> (ADR 0079) - the 1600-unit block always fits, also on a
     /// near-square foldable screen, and follows rotation / folding.
+    /// ADR 0265 (monitor): scale by the window height, 16:9 content on ultrawide (<see cref="UiViewport"/>); mouse and
+    /// pad / keyboard navigation with an explicit order (left column top-down, right column top-down, left / right
+    /// between the columns), the first start selected and a visible focus frame (<see cref="UiFocus"/>). Only the
+    /// look and the navigation changed - the start actions are the same delegates as before.
     /// </summary>
     public sealed class BootMenu : MonoBehaviour
     {
@@ -33,6 +37,14 @@ namespace Game.UI
         Font m_Font;
         RectTransform m_Safe;
         UiViewport m_View;
+        // ADR 0265: navigation rows per column (left = starts + region picker, right = options).
+        readonly List<List<Selectable[]>> m_Nav = new List<List<Selectable[]>> { new List<Selectable[]>(), new List<Selectable[]>() };
+        GameObject m_FirstItem;
+
+        /// <summary>The item selected first (pad / keyboard); tests.</summary>
+        public GameObject FirstItem => m_FirstItem;
+        /// <summary>Monitor form factor in the last layout (ADR 0265).</summary>
+        public bool Desktop => m_View != null && m_View.Desktop;
 
         /// <summary>The safe-area rect all menu items live in (tests).</summary>
         public RectTransform SafeAreaRect => m_Safe;
@@ -40,9 +52,20 @@ namespace Game.UI
         /// <summary>Tests / captures: lay out for a device screen (pixels, safe area in pixels, DPI; 0 = unknown).</summary>
         public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi); m_View.Refresh(); }
 
-        void Update() { m_View?.Refresh(); }   // rotation, fold / unfold: scale + safe area follow, the block stays centred
+        /// <summary>Tests / captures: lay out for a screen of the given form factor (ADR 0265: monitors 16:9 .. 32:9).</summary>
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop) { m_View.OverrideScreen(pixelSize, safeAreaPx, dpi, desktop); m_View.Refresh(); }
+
+        void Update()
+        {
+            m_View?.Refresh();   // rotation, fold / unfold: scale + safe area follow, the block stays centred
+            UiFocus.RestoreIfLost(this, m_FirstItem);   // ADR 0265: the pad never gets stuck without a selection
+        }
 
         void OnRectTransformDimensionsChange() { m_View?.Invalidate(); }
+
+        /// <summary>Opens the PC settings screen (ADR 0270); null = button hidden (phones).</summary>
+        Action m_OpenPcSettings;
+        public const string PcSettingsName = "PcSettings";
 
         /// <summary>Label of the button that opens the attributions / licences screen (<see cref="AboutPanel"/>).</summary>
         public const string AboutLabel = "Informacje";
@@ -50,16 +73,117 @@ namespace Game.UI
         /// <summary>Builds the menu. <paramref name="cam"/> null = screen-space overlay; a camera = capture/test.
         /// <paramref name="openAbout"/> null = the menu opens its own <see cref="AboutPanel"/> (screen-space overlay).</summary>
         public static BootMenu Create(Camera cam, StartMenuOptions options, IReadOnlyList<(string label, Action action)> starts, Action openSettings,
-                                      Action openAbout = null)
+                                      Action openAbout = null, IReadOnlyList<BootRegionChoice> regions = null, Action openPcSettings = null)
         {
             var go = new GameObject("BootMenu");
             var menu = go.AddComponent<BootMenu>();
             menu.Options = options;
-            menu.Build(cam, starts, openSettings, openAbout ?? (() => AboutPanel.Create(null, null)));
+            menu.m_OpenPcSettings = openPcSettings;
+            menu.Build(cam, starts, openSettings, openAbout ?? (() => AboutPanel.Create(null, null)), regions);
             return menu;
         }
 
-        void Build(Camera cam, IReadOnlyList<(string label, Action action)> starts, Action openSettings, Action openAbout)
+        // ---- region picker (ADR 0229): one row "< region >" + start button; regions missing from the APK are greyed out
+        /// <summary>PlayerPrefs key of the last picked region id.</summary>
+        public const string PrefRegion = "menu.region";
+        public const string RegionPrevName = "RegionPrev", RegionNextName = "RegionNext", RegionStartName = "RegionStart";
+        public const string RegionStartLabel = "Jedź w wybranym regionie", RegionMissingLabel = "Region niedostępny w tym APK";
+        IReadOnlyList<BootRegionChoice> m_Regions;
+        int m_RegionIndex = -1;
+        Text m_RegionLabel, m_RegionDetail, m_RegionStartText;
+        Button m_RegionStart;
+
+        /// <summary>Index of the region shown in the picker (-1 = no picker).</summary>
+        public int RegionIndex => m_RegionIndex;
+        public BootRegionChoice CurrentRegion => m_RegionIndex >= 0 ? m_Regions[m_RegionIndex] : default;
+
+        /// <summary>First index to show: the stored pick when it is in this APK, else the first region in this APK.</summary>
+        public static int InitialRegionIndex(IReadOnlyList<BootRegionChoice> regions, string storedId)
+        {
+            if (regions == null || regions.Count == 0) return -1;
+            int first = -1;
+            for (int i = 0; i < regions.Count; i++)
+            {
+                if (!regions[i].Available) continue;
+                if (regions[i].Id == storedId) return i;
+                if (first < 0) first = i;
+            }
+            return first;
+        }
+
+        /// <summary>Shows the previous / next region (wraps; greyed regions included so the owner sees what is missing).</summary>
+        public void StepRegion(int delta)
+        {
+            if (m_Regions == null || m_Regions.Count == 0) return;
+            int n = m_Regions.Count;
+            m_RegionIndex = ((m_RegionIndex + delta) % n + n) % n;
+            RefreshRegion();
+        }
+
+        void StartRegion()
+        {
+            if (m_RegionIndex < 0) return;
+            var r = m_Regions[m_RegionIndex];
+            if (!r.Available || r.Start == null) return;
+            PlayerPrefs.SetString(PrefRegion, r.Id);
+            PlayerPrefs.Save();
+            Debug.Log(Options.StartLine("region " + r.Id));
+            r.Start();
+        }
+
+        void RefreshRegion()
+        {
+            if (m_RegionIndex < 0 || m_RegionLabel == null) return;
+            var r = m_Regions[m_RegionIndex];
+            m_RegionLabel.text = r.Label;
+            m_RegionLabel.color = r.Available ? k_Text : k_Muted;
+            m_RegionDetail.text = (m_RegionIndex + 1) + "/" + m_Regions.Count + " · " + r.Detail;
+            m_RegionStart.interactable = r.Available;
+            m_RegionStartText.text = r.Available ? RegionStartLabel : RegionMissingLabel;
+            m_RegionStartText.color = r.Available ? k_Text : k_Muted;
+        }
+
+        float BuildRegionPicker(IReadOnlyList<BootRegionChoice> regions, float left, float y)
+        {
+            m_Regions = regions;
+            m_RegionIndex = InitialRegionIndex(regions, PlayerPrefs.GetString(PrefRegion, ""));
+            if (m_RegionIndex < 0) return y;   // no region of the catalog in this APK: no picker
+            const float arrowW = 96f, rowH = 88f;
+            y -= 8f;
+            Label(m_Safe, "HeaderRegion", "REGION — START NA POCZĄTKU TRASY", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(left, y - 36f), new Vector2(ColW, 36f));
+            y -= 44f;
+            var prev = Button(m_Safe, "<", new Vector2(left, y - rowH), new Vector2(arrowW, rowH), 40, TextAnchor.MiddleCenter, () => StepRegion(-1));
+            prev.name = RegionPrevName;
+            var next = Button(m_Safe, ">", new Vector2(left + ColW - arrowW, y - rowH), new Vector2(arrowW, rowH), 40, TextAnchor.MiddleCenter, () => StepRegion(1));
+            next.name = RegionNextName;
+            m_Nav[0].Add(new[] { prev.GetComponent<Selectable>(), next.GetComponent<Selectable>() });
+            float bw = ColW - 2f * (arrowW + Gap);
+            var box = Rect("RegionBox", m_Safe);
+            Place(box, new Vector2(left + arrowW + Gap, y - rowH), new Vector2(bw, rowH));
+            var bg = box.gameObject.AddComponent<Image>();
+            bg.color = k_Panel; bg.raycastTarget = false;
+            m_RegionLabel = Label(box, "RegionLabel", "", 28, TextAnchor.MiddleLeft, k_Text, new Vector2(-bw * 0.5f + 16f, 0f), new Vector2(bw - 32f, rowH * 0.5f));
+            m_RegionDetail = Label(box, "RegionDetail", "", 21, TextAnchor.MiddleLeft, k_Muted, new Vector2(-bw * 0.5f + 16f, -rowH * 0.5f + 4f), new Vector2(bw - 32f, rowH * 0.5f - 4f));
+            foreach (var t in new[] { m_RegionLabel, m_RegionDetail })
+            {
+                // Long street names shrink instead of running under the arrows.
+                t.horizontalOverflow = HorizontalWrapMode.Wrap; t.verticalOverflow = VerticalWrapMode.Truncate;
+                t.resizeTextForBestFit = true; t.resizeTextMinSize = 16; t.resizeTextMaxSize = t.fontSize;
+            }
+            y -= rowH + Gap;
+            var go = Button(m_Safe, RegionStartLabel, new Vector2(left, y - BtnH), new Vector2(ColW, BtnH), 31, TextAnchor.MiddleLeft, StartRegion);
+            go.name = RegionStartName;
+            m_RegionStart = go.GetComponent<Button>();
+            m_Nav[0].Add(new Selectable[] { m_RegionStart });
+            m_RegionStartText = go.GetComponentInChildren<Text>();
+            m_RegionStartText.rectTransform.offsetMin = new Vector2(32f, 0f);
+            y -= BtnH + Gap;
+            m_Refresh.Add(RefreshRegion);
+            return y;
+        }
+
+        void Build(Camera cam, IReadOnlyList<(string label, Action action)> starts, Action openSettings, Action openAbout,
+                   IReadOnlyList<BootRegionChoice> regions)
         {
             var canvas = gameObject.AddComponent<Canvas>();
             canvas.renderMode = cam != null ? RenderMode.ScreenSpaceCamera : RenderMode.ScreenSpaceOverlay;
@@ -93,8 +217,11 @@ namespace Game.UI
                     action();
                 });
                 b.GetComponentInChildren<Text>().rectTransform.offsetMin = new Vector2(32f, 0f);
+                m_Nav[0].Add(new[] { b.GetComponent<Selectable>() });
+                if (m_FirstItem == null) m_FirstItem = b;
                 y -= BtnH + Gap;
             }
+            if (regions != null && regions.Count > 0) y = BuildRegionPicker(regions, left, y);
 
             // ---- right: options
             Label(m_Safe, "HeaderOptions", "OPCJE", 24, TextAnchor.LowerLeft, k_Muted, new Vector2(right, top - 8f), new Vector2(ColW, 36f));
@@ -111,15 +238,30 @@ namespace Game.UI
             oy -= 8f;
             // Settings and "Informacje" (attributions + licences, LICENSES-AUDIT-S20 R-P0-1) share one row: the block height is unchanged.
             const float aboutW = 250f;
-            Button(m_Safe, "Ustawienia sterowania", new Vector2(right, oy - 80f), new Vector2(ColW - aboutW - Gap, 80f), 32, TextAnchor.MiddleCenter, () => openSettings?.Invoke());
-            Button(m_Safe, AboutLabel, new Vector2(right + ColW - aboutW, oy - 80f), new Vector2(aboutW, 80f), 32, TextAnchor.MiddleCenter, () => openAbout?.Invoke());
+            var settingsBtn = Button(m_Safe, "Ustawienia sterowania", new Vector2(right, oy - 80f), new Vector2(ColW - aboutW - Gap, 80f), 32, TextAnchor.MiddleCenter, () => openSettings?.Invoke());
+            var aboutBtn = Button(m_Safe, AboutLabel, new Vector2(right + ColW - aboutW, oy - 80f), new Vector2(aboutW, 80f), 32, TextAnchor.MiddleCenter, () => openAbout?.Invoke());
+            m_Nav[1].Add(new[] { settingsBtn.GetComponent<Selectable>(), aboutBtn.GetComponent<Selectable>() });
+            if (m_OpenPcSettings != null)
+            {
+                // ADR 0270: display / graphics / audio screen, one full-width row under the settings row; part of the
+                // pad / keyboard grid of ADR 0265 (review #136 P2-2).
+                oy -= 80f + Gap;
+                var pcBtn = Button(m_Safe, Game.UI.Settings.PcSettingsTexts.MenuButton, new Vector2(right, oy - 80f), new Vector2(ColW, 80f), 32, TextAnchor.MiddleCenter,
+                    () => m_OpenPcSettings?.Invoke());
+                pcBtn.name = PcSettingsName;
+                m_Nav[1].Add(new[] { pcBtn.GetComponent<Selectable>() });
+            }
             Label(m_Safe, "Footer", "DrivingLab ma stałe światło. W jeździe: przycisk Menu wraca tutaj bez restartu aplikacji.\nWersja: " + BuildInfo.Current.ShortLabel,
                 22, TextAnchor.UpperLeft, k_Muted, new Vector2(right, oy - 80f - 12f - 70f), new Vector2(ColW, 70f)).horizontalOverflow = HorizontalWrapMode.Wrap;
 
-            if (FindAnyObjectByType<EventSystem>() == null)
-                new GameObject("EventSystem", typeof(EventSystem)).AddComponent<InputSystemUIInputModule>().AssignDefaultActions();
+            UiFocus.EnsureEventSystem();
+            UiFocus.ApplyGrid(m_Nav);
+            if (m_FirstItem == null && m_RegionStart != null) m_FirstItem = m_RegionStart.gameObject;
+            UiFocus.Push(this, m_FirstItem, m_View.Desktop);   // monitor: Enter / pad A starts at once; touch: no frame until a pad moves
             foreach (var r in m_Refresh) r();
         }
+
+        void OnDestroy() => UiFocus.Pop(this, false);
 
         /// <summary>Re-reads tier / fps / lighting (the options can also change from outside, e.g. a launch argument).</summary>
         public void RefreshNow() { foreach (var r in m_Refresh) r(); }
@@ -130,12 +272,15 @@ namespace Game.UI
             y -= 40f;
             float gap = 8f, w = (ColW - gap * (names.Length - 1)) / names.Length, h = 66f;
             var images = new Image[names.Length];
+            var row = new Selectable[names.Length];
             for (int i = 0; i < names.Length; i++)
             {
                 int idx = i;
                 var b = Button(m_Safe, names[i], new Vector2(x + i * (w + gap), y - h), new Vector2(w, h), 28, TextAnchor.MiddleCenter, () => { set(idx); RefreshNow(); });
                 images[i] = b.GetComponent<Image>();
+                row[i] = b.GetComponent<Selectable>();
             }
+            m_Nav[1].Add(row);
             m_Refresh.Add(() => { int c = current(); for (int i = 0; i < images.Length; i++) images[i].color = i == c ? k_ButtonOn : k_Button; });
             y -= h + 22f;
         }
@@ -175,10 +320,24 @@ namespace Game.UI
             var b = rt.gameObject.AddComponent<Button>();
             b.targetGraphic = img;
             b.onClick.AddListener(onClick);
+            UiFocus.Decorate(b);
             var t = Label(rt, "Label", text, fontSize, align, k_Text, Vector2.zero, size);
             t.rectTransform.anchorMin = Vector2.zero; t.rectTransform.anchorMax = Vector2.one;
             t.rectTransform.offsetMin = t.rectTransform.offsetMax = Vector2.zero;
             return rt.gameObject;
+        }
+    }
+
+    /// <summary>One region of the start menu's region picker (ADR 0229). <see cref="Available"/> = its scene is in this APK.</summary>
+    public readonly struct BootRegionChoice
+    {
+        public readonly string Id, Label, Detail;
+        public readonly bool Available;
+        public readonly Action Start;
+
+        public BootRegionChoice(string id, string label, string detail, bool available, Action start)
+        {
+            Id = id ?? ""; Label = label ?? Id; Detail = detail ?? ""; Available = available; Start = start;
         }
     }
 }

@@ -1,0 +1,5 @@
+{
+  "schema": "truck-sim-pl/build-regions/1",
+  "note": "ADR 0229: region scenes for an APK, used only with build-android.ps1 -RegionsFile Data/build_regions.json (the default build ignores this file). Tokens as for -Regions: region ids, aliases (c), ids without 'bialystok-', set names from game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json (d67 = corridor Bialystok -> DK65 -> Knyszyn, owner decision D67), 'all', ranges a..b.",
+  "regions": ["d67"]
+}

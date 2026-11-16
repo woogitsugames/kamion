@@ -37,7 +37,7 @@
     2
    ],
    "length_m": 826.0,
-   "max_grade": 0.0546,
+   "max_grade": 0.0544,
    "overrides": [
     "rural-roads-unlit"
    ],
@@ -47,7 +47,7 @@
     7.5
    ],
    "width_src": [
-    "authored_override:dk65-carriageway-width"
+    "authored_override:dk65-k1-section-to-km25.32 (profile)"
    ]
   },
   {
@@ -116,7 +116,7 @@
    "patches": 29
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 67809,
+  "footprint_nodes": 67369,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [],
@@ -166,6 +166,12 @@
      "w286990127:2906549567-4898926854",
      "w286990128:2408591526-2906549567",
      "w305910042:10168944517-2408591526"
+    ]
+   },
+   {
+    "id": "dk65-k1-section-to-km25.32",
+    "targets": [
+     "w27718745:897574813-1134817563"
     ]
    },
    {

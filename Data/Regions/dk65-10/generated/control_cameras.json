@@ -281,6 +281,38 @@
    "type": "persp"
   },
   {
+   "fov_deg": 50.0,
+   "id": "seam_n_top40",
+   "look_at": [
+    -766.1,
+    1124.0,
+    -57122.853
+   ],
+   "note": "place camera: QA seam top view (north up, 66.3 m x 37.3 m, ADR 0233): DK65 on the seam with dk65-11 (this tile = south half); pair = artifacts/dk65-r4-s21/seam/ortho/pair_seam_n_top40.jpg",
+   "pos": [
+    -766.1,
+    1024.0,
+    172.868
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "seam_n_drive",
+   "look_at": [
+    -793.627,
+    1055.716,
+    131.722
+   ],
+   "note": "place camera: driver eye 2.5 m, along the route, route s = 2556 m (ADR 0233): last 60 m before the dk65-11 seam",
+   "pos": [
+    -725.3,
+    982.7,
+    134.341
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

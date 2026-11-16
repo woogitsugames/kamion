@@ -7,9 +7,15 @@
   pwsh scripts/build-android.ps1 -Install -AllDevices -Run -LogcatSeconds 60
   pwsh scripts/build-android.ps1 -SkipBuild -Install -Serial RFGL34SJYDZ -Run -Tier Low -Fps 60
   pwsh scripts/build-android.ps1 -WorldHigh                # also ship the High world content (WorldC_High, ADR 0012)
+  pwsh scripts/build-android.ps1 -Regions d67 -Install -Run                       # + region scenes of the D67 corridor (ADR 0229)
+  pwsh scripts/build-android.ps1 -Regions 'c,dojlidy,dk65-01..dk65-11,knyszyn'    # ids, aliases, set names, ranges
+  pwsh scripts/build-android.ps1 -RegionsFile Data/build_regions.json [-RegionsAllowMissing]
 .NOTES
   Exit code 0 = everything requested succeeded. Build log: artifacts/logs/build-<ts>.log.
   APK: artifacts/apk/kamion-<version>-<sha>.apk (+ .sha256). Missing devices are skipped with a warning.
+  -Regions / -RegionsFile (ADR 0229): region scenes added for this build only (EditorBuildSettings in git unchanged);
+  names from game/Assets/_Project/Gameplay/Resources/Regions/region_catalog.json; the APK name gets '-regions'.
+  A listed region whose scene was not imported fails the build (exit 4 in the log) unless -RegionsAllowMissing.
   -Run fails (exit 4) if the Unity logcat contains exceptions / fatal errors.
 #>
 param(
@@ -24,7 +30,10 @@ param(
     [string]$Apk = '',   # with -SkipBuild: install exactly this APK (default: newest file in artifacts/apk, ambiguous between Low and -high)
     [int]$LogcatSeconds = 20,
     [ValidateSet('', 'Low', 'Medium', 'High', 'Ultra')] [string]$Tier = '',
-    [int]$Fps = 0
+    [int]$Fps = 0,
+    [string[]]$Regions = @(),   # ADR 0229: -Regions d67  or  -Regions c,dojlidy,dk65-01..dk65-11,knyszyn
+    [string]$RegionsFile = '',  # ADR 0229: -RegionsFile Data/build_regions.json
+    [switch]$RegionsAllowMissing
 )
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/env.ps1"
@@ -35,7 +44,18 @@ $apkArg = $Apk  # PowerShell names are case-insensitive: $apk below would overwr
 $version = (Select-String -Path "$ProjectPath/ProjectSettings/ProjectSettings.asset" -Pattern '^\s*bundleVersion:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
 $sha = Get-GitShortSha
 if (& git -C $RepoRoot status --porcelain --untracked-files=no) { $sha = "$sha-dirty" }
-$apk = Join-Path $ArtifactsDir "apk/kamion-$version-$sha$(if ($WorldHigh) { '-high' })$(if ($Development) { '-dev' }).apk"
+# "-Regions a,b" binds as an array in PowerShell. Spaces and semicolons are separators too (ADR 0229 §2): normalise them
+# to commas here, because Start-Process passes an element with a space as two Unity arguments (ADR 0267, review #104 FIX 4).
+$regionSpec = ((((@($Regions) | Where-Object { $_ }) -join ',') -replace '[\s;]+', ',') -replace ',{2,}', ',').Trim(',')
+if ($PSBoundParameters.ContainsKey('Regions') -and -not $regionSpec) { throw "-Regions given but empty after normalisation ('$($Regions -join ',')')" }
+if ($RegionsFile) {
+    # Relative to the current directory (review #104 FIX 5); the repo root is still tried for the documented
+    # 'Data/build_regions.json'. Unity gets an absolute path, so its own repo-root rule does not apply any more.
+    $rf = @($RegionsFile, (Join-Path $RepoRoot $RegionsFile)) | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+    if (-not $rf) { throw "-RegionsFile not found: $RegionsFile (current directory $(Get-Location), repo root $RepoRoot)" }
+    $RegionsFile = (Resolve-Path -LiteralPath $rf).Path
+}
+$apk = Join-Path $ArtifactsDir "apk/kamion-$version-$sha$(if ($WorldHigh) { '-high' })$(if ($regionSpec -or $RegionsFile) { '-regions' })$(if ($Development) { '-dev' }).apk"
 
 # ---------------------------------------------------------------- build
 if (-not $SkipBuild) {
@@ -55,6 +75,9 @@ if (-not $SkipBuild) {
     $unityArgs = @('-executeMethod', 'Game.Editor.Build.BuildCommands.BuildAndroidApk', '-buildOutput', $apk)
     if ($Development) { $unityArgs += '-development' }
     if ($WorldHigh) { $unityArgs += '-worldHigh' }
+    if ($regionSpec) { $unityArgs += @('-regions', $regionSpec) }
+    if ($RegionsFile) { $unityArgs += @('-regionsFile', $RegionsFile) }
+    if ($RegionsAllowMissing) { $unityArgs += '-regionsAllowMissing' }
     if ($ExtraUnityArgs) { $unityArgs += $ExtraUnityArgs }
     $sw = [Diagnostics.Stopwatch]::StartNew()
     $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArgs
