@@ -3,7 +3,7 @@
 Status: Proposed (chmura D r9, zadanie D40, gałąź `hud-redesign-0283`), 2026-11-16. Do weryfikacji w Unity (EditMode,
 PlayMode, build Windows, visual-qa + krytyk) i scalenia przez lidera. **Kod C# nieskompilowany w Unity** (chmura bez Unity);
 czysta logika sprawdzona w .NET (`tools/hud-runner`, 11/11), składnia wszystkich zmienionych plików C# sprawdzona Roslynem
-(26 plików, 0 błędów). Dokument projektowy z makietami: `docs/design/HUD-MENU-PC-0283.md`.
+(28 plików, 0 błędów). Dokument projektowy z makietami: `docs/design/HUD-MENU-PC-0283.md`.
 
 Powiązane: D84 (`docs/11_DECYZJE_WLASCICIELA.md`), D70 (lusterka = okienka), ADR 0079 (HUD dotykowy — bez zmian),
 ADR 0243 (okienka lusterek, schemat 5), ADR 0264 (przypisania PC), ADR 0265 (HUD/menu PC, `HudScaleModel`, `UiFocus`),
