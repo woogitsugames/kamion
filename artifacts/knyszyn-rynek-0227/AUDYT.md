@@ -210,3 +210,8 @@ Porównania R26 Low-clear zdjęć 12–14: `compare/r26/Low-clear/12-owner-rende
 R26 High: maksimum **1 250 321 tris** z instancjami, poniżej limitu 2 mln na kamerę. Low vs before: **FAIL**, `dk65-inlet-south` 240 → 304 draw calls. R25 → R26: na 9 kamerach liczba draw calls spadła maksymalnie o 1, żadna z 75 kamer nie pogorszyła się. Wartości są szacunkami edytora, nie pomiarem GPU/telefonu.
 
 R27: wykonano opt-in wizualny podział łaty wlotu bez zmiany kolizji; cztery warianty renderów zakończone. Lokalne porównania 12 i 14 pokazują zbyt jasny, sztucznie odcięty pasek nawierzchni, odbiegający od zdjęć; **rekomendacja: odrzucić próbę**. High maksimum **1 250 121 tris** z instancjami, poniżej limitu 2 mln; Low względem before nadal **FAIL**, `dk65-inlet-south` 240 → 304 draw calls. To szacunki edytora, nie GPU. Szerszy wielokąt wyznaczony z ortofoto pozostaje wyłącznie propozycją bez renderu i nie potwierdza poprawy; testy po ewentualnej zmianie i akceptacja wizualna **OPEN**.
+
+
+## R28 — wycofanie próby R27
+
+Wizualna łata wlotu z R27 została wycofana w commicie `96df3b6cf` po ocenie zbyt jasnego, sztucznego pasa; nie oznacza to usunięcia przyczyny ciemnego wlotu. Przebudowa i rendery R28 są w toku, więc ich wygląd, budżet i wynik testów pozostają **OPEN**. Pełny GIS R27 przerwano po pojawieniu się jednego `F`; nie powstał raport końcowy, więc nie można podać łącznego wyniku ani przypisywać mu przyczyny bez dalszej weryfikacji. Szerszy wielokąt z ortofoto nadal pozostaje wyłącznie propozycją bez renderu.
