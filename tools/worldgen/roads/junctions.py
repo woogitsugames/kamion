@@ -373,7 +373,8 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
 
     # ADR 0237 D38: a node where only a minor way (parking aisle, yard road, track) leaves a public road is not merged
     # into the neighbouring junction along that road (see MINOR_TEE_*); it stays its own T with its own patch
-    keep_apart = {n for n in jn if _minor_tee(net, n, ends)}
+    keep_notes = []
+    keep_apart = _keep_apart(net, jn, ends, keep_notes)
 
     # iterative clustering
     for _it in range(8):
@@ -397,7 +398,7 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
                 if c.length < ta + tb + 1.0:
                     if (c.node_a in keep_apart or c.node_b in keep_apart) and c.length >= MINOR_TEE_MIN_M \
                             and _road_highway(net, c) not in MINOR_HIGHWAYS:
-                        continue
+                        continue            # ADR 0237 D38: authored `cluster: separate`
                     ga = [n for n in jn if find(n) == find(c.node_a)]
                     gb = [n for n in jn if find(n) == find(c.node_b)]
                     pts = np.array([net.nodes[n]["xy"] for n in ga + gb])
@@ -414,6 +415,7 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
     juncs = []
     for root in sorted(groups):
         j = make(groups[root])
+        j.notes += [t for t in keep_notes if t.split(":")[0] in j.nodes]
         juncs.append(j)
     # final corners with shared-chain trim limits (two junctions on one chain split it)
     key2j = {}
@@ -482,12 +484,15 @@ def build_junctions(net, ctx_points=None) -> list[Junction]:
 
 # ADR 0237 D38 (Knyszyn, Poludniowa x Szkolna, OSM node 7015352011): a parking aisle leaving Poludniowa 23 m from the
 # crossroads was merged into the crossroads cluster. Its first leg (13 m) runs almost parallel to the Szkolna arm, so
-# the corner between them became a median "nose" (R 21.8 m semicircle across the mouth of the aisle) and the aisle arm
-# was trimmed past its bend (28 m): a teardrop of asphalt that joins nothing (docs/reports/knyszyn-szkolna/).
-# A minor way is a driveway into a yard, not an arm of the crossroads: the node keeps its own T junction and the
-# public-road chain between the two is shared by `max_trims` (half each), as for any two junctions >= 30 m apart.
+# the corner between them became a median "nose" (R 21.8 m semicircle across the mouth of the aisle), the aisle arm
+# was trimmed past its bend (28 m) - a teardrop of asphalt that joins nothing - and the 23 m Poludniowa stub was
+# absorbed, so its OSM crossing got no P-10 (docs/reports/knyszyn-szkolna/). A minor way is a driveway into a yard,
+# not an arm of the crossroads: with the authored node override `cluster: separate` the node keeps its own T junction
+# and the public-road chain between the two is shared by `max_trims` (half each), as between any two junctions.
+# Opt-in per node: as a global rule the same test splits 12 clusters of bialystok-industrial-c, 1 of Dojlidy and ~45
+# elsewhere (list in the report) - not reviewed, so not switched on.
 MINOR_HIGHWAYS = ("service", "track", "path", "footway", "cycleway")   # OSM highway of a minor (yard / field) way
-MINOR_TEE_MIN_M = 15.0     # WORKING_VALUE: a shorter public-road stub is merged as before (two T patches would touch)
+MINOR_TEE_MIN_M = 15.0     # WORKING_VALUE: a shorter public-road stub is merged anyway (two T patches would touch)
 
 
 def _road_highway(net, c, end=None):
@@ -496,15 +501,25 @@ def _road_highway(net, c, end=None):
     return net.sec_list[int(c.sec_idx[i])].highway
 
 
-def _minor_tee(net, n, ends) -> bool:
-    """Node where a public road passes straight through (exactly two public-road chain ends) and only minor ways
-    (MINOR_HIGHWAYS) leave it. Node override `cluster: merge` keeps the old behaviour, `cluster: separate` forces it."""
-    ov = net.nodes[n].get("override", {}).get("cluster")
-    if ov in ("merge", "separate"):
-        return ov == "separate"
+def minor_tee(net, n, ends) -> bool:
+    """Node where a public road passes straight through (exactly two public-road chain ends, no ring) and only minor
+    ways (MINOR_HIGHWAYS) leave it."""
     lst = ends.get(n, [])
     minor = sum(1 for c, e in lst if _road_highway(net, c, e) in MINOR_HIGHWAYS)
     return minor >= 1 and len(lst) - minor == 2 and not any(c.roundabout for c, _ in lst)
+
+
+def _keep_apart(net, jn, ends, notes) -> set:
+    """Nodes with the authored override `cluster: separate` that are minor tees; any other use is reported."""
+    out = set()
+    for n in jn:
+        if net.nodes[n].get("override", {}).get("cluster") != "separate":
+            continue
+        if minor_tee(net, n, ends):
+            out.add(n)
+        else:
+            notes.append(f"{n}: cluster: separate ignored (not a public road with only minor ways leaving it)")
+    return out
 
 
 def _radius_override(net, j):

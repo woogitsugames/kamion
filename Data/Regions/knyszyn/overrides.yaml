@@ -120,6 +120,23 @@ overrides:
     confidence: high
     verify: none
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  # ADR 0237 D38: Poludniowa x Szkolna - the parking aisle of the school (OSM way 750267067, highway=service) leaves
+  # Poludniowa 23 m north of the crossroads and must not be merged into the crossroads junction.
+  - id: knyszyn-szkolna-parking-tee-d38
+    target: {node: n7015352011}
+    reason: >-
+      OSM node 7015352011 (Poludniowa, 23.1 m from the crossroads node 1134846746) where the untagged service way
+      750267067 leaves to the school parking (amenity=school 750267069). Merged into the crossroads cluster, the first
+      13 m leg of the service way ran almost parallel to the Szkolna E arm: median "nose" R 21.8 m across its mouth,
+      service arm trimmed 28.3 m (past its bend) = a teardrop of asphalt joining nothing (owner, s23), and the 23 m
+      stub absorbed, so OSM crossing 11514832009 (crossing:markings=zebra) got no P-10; 11514832007 was skipped too.
+      GUGiK orthophoto (WMS StandardResolution, 120 x 120 m at 0.125 m/px): a plain 4-arm crossroads with four
+      zebras within 0.4-1.5 m of the OSM crossing nodes and a separate parking mouth ~20 m north on the east side
+      (docs/reports/knyszyn-szkolna/). Kept apart, the crossroads has 4 fillets (R 8 / 8 / 8 / 3.9 m) and 4 P-10,
+      the aisle a T of its own (trims 11.1 / 9.7 / 8.0 m).
+    confidence: high
+    verify: plan view + control camera knyszyn_szkolna_junction after build_world
+    set: {cluster: separate}
   # ---------------------------------------------------------------- Rynek (orthophoto 0.1 m 2025-05-27, owner frames)
   - id: rynek-king-plaza-0227
     kind: paved_area
