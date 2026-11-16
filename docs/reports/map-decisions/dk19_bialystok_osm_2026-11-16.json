@@ -1,0 +1,4026 @@
+{
+ "relation": {
+  "id": 122101,
+  "ref": "19",
+  "timestamp": "2026-11-10T09:38:22Z",
+  "version": 1724
+ },
+ "sign_nodes": [
+  {
+   "id": 5994210344,
+   "lat": 53.1195816,
+   "lon": 23.1975038,
+   "tags": {
+    "hgv": "no"
+   },
+   "timestamp": "2026-01-03T20:19:59Z",
+   "version": 4
+  },
+  {
+   "id": 6634908300,
+   "lat": 53.1256682,
+   "lon": 23.182024,
+   "tags": {
+    "agricultural": "no",
+    "hgv": "no",
+    "maxgvweightrating:hgv": "8",
+    "maxgvweightrating:hgv:conditional": "none @ delivery",
+    "note:maxgvweightrating:hgv": "Nie dotyczy służb komunalnych",
+    "source:maxgvweightrating:hgv": "PL:sign_B-5",
+    "traffic_sign": "PL:B-5"
+   },
+   "timestamp": "2022-07-21T14:26:32Z",
+   "version": 3
+  },
+  {
+   "id": 13429238121,
+   "lat": 53.1197906,
+   "lon": 23.1967061,
+   "tags": {
+    "direction": "forward",
+    "hgv": "no",
+    "note": "Nie dotyczy zaopatrzenia, mieszkańów oraz służb komunalnych",
+    "side": "right",
+    "traffic_sign": "PL:B-5"
+   },
+   "timestamp": "2026-01-03T20:19:59Z",
+   "version": 1
+  }
+ ],
+ "source": "OSM API 0.6 ways.json/nodes.json, pobrane 2026-11-16, ODbL 1.0 (c) OpenStreetMap contributors; UA osm-research-client/1.0",
+ "ways": [
+  {
+   "id": 23800159,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 54
+  },
+  {
+   "id": 23982082,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 40
+  },
+  {
+   "id": 23982083,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Plac Witolda Antonowicza",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 21
+  },
+  {
+   "id": 25447094,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 42
+  },
+  {
+   "id": 80184955,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-08-04T12:58:49Z",
+   "version": 31
+  },
+  {
+   "id": 99899564,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 31
+  },
+  {
+   "id": 99899687,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 26
+  },
+  {
+   "id": 99899945,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 28
+  },
+  {
+   "id": 99900031,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 27
+  },
+  {
+   "id": 99900618,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 26
+  },
+  {
+   "id": 100913084,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 38
+  },
+  {
+   "id": 137540631,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "70",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 36
+  },
+  {
+   "id": 145631572,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 27
+  },
+  {
+   "id": 145631573,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 27
+  },
+  {
+   "id": 145631574,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 37
+  },
+  {
+   "id": 145631575,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 32
+  },
+  {
+   "id": 147455047,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 19
+  },
+  {
+   "id": 173446727,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 19
+  },
+  {
+   "id": 173446729,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 22
+  },
+  {
+   "id": 173956083,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 28
+  },
+  {
+   "id": 173985177,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 29
+  },
+  {
+   "id": 175055334,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 31
+  },
+  {
+   "id": 175157461,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 28
+  },
+  {
+   "id": 175157471,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 17
+  },
+  {
+   "id": 175157475,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 26
+  },
+  {
+   "id": 177876107,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 25
+  },
+  {
+   "id": 177895177,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 24
+  },
+  {
+   "id": 177905056,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 15
+  },
+  {
+   "id": 180144451,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "name": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 24
+  },
+  {
+   "id": 187523371,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 14
+  },
+  {
+   "id": 188844673,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "60",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 16
+  },
+  {
+   "id": 188844674,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 30
+  },
+  {
+   "id": 188844675,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 31
+  },
+  {
+   "id": 188844676,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 30
+  },
+  {
+   "id": 194176775,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 18
+  },
+  {
+   "id": 194536286,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 23
+  },
+  {
+   "id": 194922744,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "50",
+    "name": "Rondo Żołnierzy Wyklętych",
+    "oneway": "yes",
+    "ref": "19;676"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 39
+  },
+  {
+   "id": 194922745,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 22
+  },
+  {
+   "id": 196288714,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 21
+  },
+  {
+   "id": 197904073,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 19
+  },
+  {
+   "id": 197904074,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "90",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 15
+  },
+  {
+   "id": 197904077,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 23
+  },
+  {
+   "id": 197904078,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 21
+  },
+  {
+   "id": 197904079,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 28
+  },
+  {
+   "id": 203936139,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T19:22:18Z",
+   "version": 22
+  },
+  {
+   "id": 208063122,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "90",
+    "maxspeed:hgv": "70",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T19:22:18Z",
+   "version": 21
+  },
+  {
+   "id": 210488455,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxweight": "3.5",
+    "name": "Księdza Stanisława Suchowolca",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 27
+  },
+  {
+   "id": 210488456,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Zabłudowska",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 24
+  },
+  {
+   "id": 211148000,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "90",
+    "maxspeed:hgv": "70",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 21
+  },
+  {
+   "id": 211148003,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "maxspeed:hgv": "70",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 16
+  },
+  {
+   "id": 211148006,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 19
+  },
+  {
+   "id": 211148007,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 17
+  },
+  {
+   "id": 211148030,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 24
+  },
+  {
+   "id": 211148031,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 25
+  },
+  {
+   "id": 211148032,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 28
+  },
+  {
+   "id": 211148033,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 22
+  },
+  {
+   "id": 211358811,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-12T08:06:18Z",
+   "version": 25
+  },
+  {
+   "id": 211358813,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-10-28T10:39:11Z",
+   "version": 21
+  },
+  {
+   "id": 211514893,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 35
+  },
+  {
+   "id": 221207572,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxweight": "3.5",
+    "name": "Księdza Stanisława Suchowolca",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 17
+  },
+  {
+   "id": 221207573,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxweight": "3.5",
+    "name": "Księdza Stanisława Suchowolca",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 16
+  },
+  {
+   "id": 221207574,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "name": "Rondo Artura Hasbacha",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 23
+  },
+  {
+   "id": 221209008,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 18
+  },
+  {
+   "id": 221209010,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 19
+  },
+  {
+   "id": 221209016,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 15
+  },
+  {
+   "id": 221209017,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 17
+  },
+  {
+   "id": 221240112,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 20
+  },
+  {
+   "id": 228104605,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 18
+  },
+  {
+   "id": 229101445,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 23
+  },
+  {
+   "id": 229136624,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 14
+  },
+  {
+   "id": 229144486,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 21
+  },
+  {
+   "id": 230330896,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Rondo Żołnierzy Wyklętych",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 31
+  },
+  {
+   "id": 230330903,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 34
+  },
+  {
+   "id": 230330905,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 24
+  },
+  {
+   "id": 236002857,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 20
+  },
+  {
+   "id": 236885860,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 15
+  },
+  {
+   "id": 236886850,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 13
+  },
+  {
+   "id": 237044052,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 31
+  },
+  {
+   "id": 237183783,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 23
+  },
+  {
+   "id": 237915062,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 12
+  },
+  {
+   "id": 237917982,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "19;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 22
+  },
+  {
+   "id": 237917985,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "ref": "19;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 28
+  },
+  {
+   "id": 237966278,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 26
+  },
+  {
+   "id": 237966280,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxgvweightrating:hgv": "8",
+    "maxgvweightrating:hgv:conditional": "none @ delivery",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-10-30T21:31:40Z",
+   "version": 14
+  },
+  {
+   "id": 238861874,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "90",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 19
+  },
+  {
+   "id": 239748583,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 27
+  },
+  {
+   "id": 239748584,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "name": "Białostocka",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-05-13T14:22:10Z",
+   "version": 24
+  },
+  {
+   "id": 239748585,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "name": "Białostocka",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 28
+  },
+  {
+   "id": 239748586,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 23
+  },
+  {
+   "id": 242518398,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 21
+  },
+  {
+   "id": 249640396,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 20
+  },
+  {
+   "id": 249640398,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 17
+  },
+  {
+   "id": 249640399,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 19
+  },
+  {
+   "id": 249649655,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 34
+  },
+  {
+   "id": 249690263,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "70",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 22
+  },
+  {
+   "id": 249690266,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 23
+  },
+  {
+   "id": 249690269,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 33
+  },
+  {
+   "id": 249825960,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-24T12:53:55Z",
+   "version": 13
+  },
+  {
+   "id": 251697746,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 29
+  },
+  {
+   "id": 253839996,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-08-04T12:58:49Z",
+   "version": 21
+  },
+  {
+   "id": 257367425,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "50",
+    "name": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 21
+  },
+  {
+   "id": 258975873,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 15
+  },
+  {
+   "id": 258975874,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 22
+  },
+  {
+   "id": 258975875,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 19
+  },
+  {
+   "id": 258975876,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Plac Witolda Antonowicza",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 19
+  },
+  {
+   "id": 258975877,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Plac Witolda Antonowicza",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 20
+  },
+  {
+   "id": 258975878,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Plac Witolda Antonowicza",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 22
+  },
+  {
+   "id": 261469208,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 29
+  },
+  {
+   "id": 261469213,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-24T13:14:30Z",
+   "version": 14
+  },
+  {
+   "id": 263729760,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 16
+  },
+  {
+   "id": 263729762,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 13
+  },
+  {
+   "id": 263729763,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxheight": "default",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 21
+  },
+  {
+   "id": 264215486,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 26
+  },
+  {
+   "id": 264215488,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 22
+  },
+  {
+   "id": 264215492,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 21
+  },
+  {
+   "id": 265888192,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-24T13:06:34Z",
+   "version": 8
+  },
+  {
+   "id": 265888511,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 13
+  },
+  {
+   "id": 265888512,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 10
+  },
+  {
+   "id": 265888513,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 18
+  },
+  {
+   "id": 265888514,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 16
+  },
+  {
+   "id": 265888515,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 20
+  },
+  {
+   "id": 265888516,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 19
+  },
+  {
+   "id": 265888518,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 20
+  },
+  {
+   "id": 265888982,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 28
+  },
+  {
+   "id": 265995640,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "ref": "19;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 25
+  },
+  {
+   "id": 266084684,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 20
+  },
+  {
+   "id": 266084685,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 17
+  },
+  {
+   "id": 266084693,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 22
+  },
+  {
+   "id": 266084694,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 15
+  },
+  {
+   "id": 266084696,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 23
+  },
+  {
+   "id": 267381742,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 18
+  },
+  {
+   "id": 267381743,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 18
+  },
+  {
+   "id": 267388106,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 16
+  },
+  {
+   "id": 267388107,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 15
+  },
+  {
+   "id": 267388108,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 13
+  },
+  {
+   "id": 267388109,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 17
+  },
+  {
+   "id": 267388110,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 13
+  },
+  {
+   "id": 267388112,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "19;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 10
+  },
+  {
+   "id": 267388113,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "19;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 9
+  },
+  {
+   "id": 268456695,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 12
+  },
+  {
+   "id": 268456696,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 13
+  },
+  {
+   "id": 268456699,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 14
+  },
+  {
+   "id": 268456700,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 14
+  },
+  {
+   "id": 268470401,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 22
+  },
+  {
+   "id": 268470403,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 21
+  },
+  {
+   "id": 268470410,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 20
+  },
+  {
+   "id": 268473387,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 10
+  },
+  {
+   "id": 268473388,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 12
+  },
+  {
+   "id": 272167642,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 18
+  },
+  {
+   "id": 275238286,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 9
+  },
+  {
+   "id": 275244655,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 8
+  },
+  {
+   "id": 275244657,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 9
+  },
+  {
+   "id": 275244659,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 10
+  },
+  {
+   "id": 275244661,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 12
+  },
+  {
+   "id": 275244665,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 8
+  },
+  {
+   "id": 275244666,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 11
+  },
+  {
+   "id": 278213208,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 10
+  },
+  {
+   "id": 278213211,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 11
+  },
+  {
+   "id": 279864412,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "name": "Księdza Stanisława Suchowolca",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 7
+  },
+  {
+   "id": 279864414,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "name": "Księdza Stanisława Suchowolca",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 8
+  },
+  {
+   "id": 279864415,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxweight": "3.5",
+    "name": "Księdza Stanisława Suchowolca",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 19
+  },
+  {
+   "id": 279864416,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "name": "Księdza Stanisława Suchowolca",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 7
+  },
+  {
+   "id": 279864417,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "name": "Księdza Stanisława Suchowolca",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-08-04T12:58:49Z",
+   "version": 15
+  },
+  {
+   "id": 279864418,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Księdza Stanisława Suchowolca",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-08-04T12:58:49Z",
+   "version": 13
+  },
+  {
+   "id": 279864419,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxweight": "3.5",
+    "name": "Księdza Stanisława Suchowolca",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 16
+  },
+  {
+   "id": 279864420,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Księdza Stanisława Suchowolca",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 14
+  },
+  {
+   "id": 279890330,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 17
+  },
+  {
+   "id": 279890332,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 21
+  },
+  {
+   "id": 296004840,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 15
+  },
+  {
+   "id": 302573219,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 16
+  },
+  {
+   "id": 302573220,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 11
+  },
+  {
+   "id": 302573221,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 15
+  },
+  {
+   "id": 349657601,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 16
+  },
+  {
+   "id": 349657603,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 16
+  },
+  {
+   "id": 349657605,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "name": "Rondo Artura Hasbacha",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 15
+  },
+  {
+   "id": 349657607,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "name": "Rondo Artura Hasbacha",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 15
+  },
+  {
+   "id": 349657609,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "name": "Rondo Artura Hasbacha",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 15
+  },
+  {
+   "id": 355151582,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 13
+  },
+  {
+   "id": 355151583,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 13
+  },
+  {
+   "id": 396566345,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-24T13:06:34Z",
+   "version": 7
+  },
+  {
+   "id": 405335405,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 19
+  },
+  {
+   "id": 405335406,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 14
+  },
+  {
+   "id": 423548196,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 27
+  },
+  {
+   "id": 432917764,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Nowowarszawska",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 13
+  },
+  {
+   "id": 439074077,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-16T13:22:59Z",
+   "version": 6
+  },
+  {
+   "id": 439076941,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 8
+  },
+  {
+   "id": 440321719,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 27
+  },
+  {
+   "id": 440321720,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 18
+  },
+  {
+   "id": 440321721,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 17
+  },
+  {
+   "id": 448008378,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 16
+  },
+  {
+   "id": 448008379,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "60",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T19:22:18Z",
+   "version": 13
+  },
+  {
+   "id": 448011883,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "maxspeed:hgv": "80",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T19:22:18Z",
+   "version": 16
+  },
+  {
+   "id": 453813367,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 16
+  },
+  {
+   "id": 453813368,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 15
+  },
+  {
+   "id": 529733099,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 14
+  },
+  {
+   "id": 537413448,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-10T16:00:28Z",
+   "version": 5
+  },
+  {
+   "id": 540735099,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 11
+  },
+  {
+   "id": 548181621,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 18
+  },
+  {
+   "id": 548181626,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 18
+  },
+  {
+   "id": 552161976,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 6
+  },
+  {
+   "id": 552161979,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 4
+  },
+  {
+   "id": 552161980,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 5
+  },
+  {
+   "id": 552379031,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Rondo Andrzeja Bronisława Meyera",
+    "oneway": "yes",
+    "ref": "19;678"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 23
+  },
+  {
+   "id": 552379032,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 25
+  },
+  {
+   "id": 552383011,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 30
+  },
+  {
+   "id": 552394570,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-25T08:22:18Z",
+   "version": 10
+  },
+  {
+   "id": 560802655,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 7
+  },
+  {
+   "id": 560802656,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 5
+  },
+  {
+   "id": 560802657,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 4
+  },
+  {
+   "id": 560802658,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 6
+  },
+  {
+   "id": 560802661,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 4
+  },
+  {
+   "id": 560802662,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 4
+  },
+  {
+   "id": 560802664,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 5
+  },
+  {
+   "id": 560802666,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 10
+  },
+  {
+   "id": 560802667,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 11
+  },
+  {
+   "id": 560802668,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 10
+  },
+  {
+   "id": 560802669,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 10
+  },
+  {
+   "id": 561598268,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 14
+  },
+  {
+   "id": 561598269,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 13
+  },
+  {
+   "id": 561598270,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 15
+  },
+  {
+   "id": 561598271,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 17
+  },
+  {
+   "id": 561598272,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 13
+  },
+  {
+   "id": 561598273,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 13
+  },
+  {
+   "id": 564770249,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 15
+  },
+  {
+   "id": 569433543,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "maxspeed:hgv": "80",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T19:22:18Z",
+   "version": 12
+  },
+  {
+   "id": 569433544,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "maxspeed:hgv": "80",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T19:22:18Z",
+   "version": 12
+  },
+  {
+   "id": 569433545,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T19:22:18Z",
+   "version": 11
+  },
+  {
+   "id": 572651591,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-12T08:08:04Z",
+   "version": 7
+  },
+  {
+   "id": 572651592,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-24T13:14:30Z",
+   "version": 7
+  },
+  {
+   "id": 572651593,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-12T08:07:55Z",
+   "version": 6
+  },
+  {
+   "id": 572651594,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-24T13:14:30Z",
+   "version": 7
+  },
+  {
+   "id": 572651595,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-25T08:43:51Z",
+   "version": 6
+  },
+  {
+   "id": 572651596,
+   "tags": {
+    "highway": "secondary",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-11-23T23:11:01Z",
+   "version": 10
+  },
+  {
+   "id": 581608908,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 12
+  },
+  {
+   "id": 590438751,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 14
+  },
+  {
+   "id": 590442716,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 13
+  },
+  {
+   "id": 606396456,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 4
+  },
+  {
+   "id": 606396463,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 12
+  },
+  {
+   "id": 614205241,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-10T16:00:04Z",
+   "version": 4
+  },
+  {
+   "id": 616181083,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Rondo Andrzeja Bronisława Meyera",
+    "oneway": "yes",
+    "ref": "19;678"
+   },
+   "timestamp": "2025-11-12T23:53:18Z",
+   "version": 18
+  },
+  {
+   "id": 616181085,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Rondo Andrzeja Bronisława Meyera",
+    "oneway": "yes",
+    "ref": "19;678"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 18
+  },
+  {
+   "id": 619884703,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 17
+  },
+  {
+   "id": 621450759,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 12
+  },
+  {
+   "id": 621450764,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Rondo Andrzeja Bronisława Meyera",
+    "oneway": "yes",
+    "ref": "19;678"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 17
+  },
+  {
+   "id": 621450778,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Rondo Andrzeja Bronisława Meyera",
+    "oneway": "yes",
+    "ref": "19;678"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 16
+  },
+  {
+   "id": 623410839,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Rondo Andrzeja Bronisława Meyera",
+    "oneway": "yes",
+    "ref": "19;678"
+   },
+   "timestamp": "2025-11-12T23:53:18Z",
+   "version": 18
+  },
+  {
+   "id": 623410840,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Rondo Andrzeja Bronisława Meyera",
+    "oneway": "yes",
+    "ref": "19;678"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 18
+  },
+  {
+   "id": 623410842,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 9
+  },
+  {
+   "id": 637530291,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 12
+  },
+  {
+   "id": 665619500,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 14
+  },
+  {
+   "id": 665619503,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 8
+  },
+  {
+   "id": 665625574,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 11
+  },
+  {
+   "id": 672161257,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 12
+  },
+  {
+   "id": 672162900,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 11
+  },
+  {
+   "id": 672162901,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 10
+  },
+  {
+   "id": 672162902,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 13
+  },
+  {
+   "id": 672162903,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 12
+  },
+  {
+   "id": 691713789,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 12
+  },
+  {
+   "id": 691713790,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 10
+  },
+  {
+   "id": 691803615,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-24T12:53:55Z",
+   "version": 5
+  },
+  {
+   "id": 691821013,
+   "tags": {
+    "highway": "trunk",
+    "maxspeed": "50",
+    "name": "Jacka Kuronia",
+    "oneway": "yes"
+   },
+   "timestamp": "2026-07-19T15:59:42Z",
+   "version": 4
+  },
+  {
+   "id": 701419770,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 13
+  },
+  {
+   "id": 703484277,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "maxspeed:hgv": "70",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 12
+  },
+  {
+   "id": 703487194,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 13
+  },
+  {
+   "id": 703487195,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 11
+  },
+  {
+   "id": 703487196,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 11
+  },
+  {
+   "id": 703487197,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 11
+  },
+  {
+   "id": 771649419,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 7
+  },
+  {
+   "id": 771649420,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 9
+  },
+  {
+   "id": 817923064,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 13
+  },
+  {
+   "id": 831364563,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-16T13:23:06Z",
+   "version": 5
+  },
+  {
+   "id": 831364564,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-16T13:23:03Z",
+   "version": 4
+  },
+  {
+   "id": 842151183,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 11
+  },
+  {
+   "id": 842151186,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-12T08:05:52Z",
+   "version": 5
+  },
+  {
+   "id": 849472828,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-10T16:00:24Z",
+   "version": 5
+  },
+  {
+   "id": 849472829,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-12T08:05:59Z",
+   "version": 5
+  },
+  {
+   "id": 876126465,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 10
+  },
+  {
+   "id": 876126466,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 11
+  },
+  {
+   "id": 876126467,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 9
+  },
+  {
+   "id": 876126468,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 11
+  },
+  {
+   "id": 876126469,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 11
+  },
+  {
+   "id": 876126470,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 7
+  },
+  {
+   "id": 876126471,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 7
+  },
+  {
+   "id": 882366262,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 7
+  },
+  {
+   "id": 882366263,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 6
+  },
+  {
+   "id": 882366264,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 7
+  },
+  {
+   "id": 882366265,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "90",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 6
+  },
+  {
+   "id": 882366266,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 5
+  },
+  {
+   "id": 882366267,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Aleja Tysiąclecia Państwa Polskiego",
+    "oneway": "yes",
+    "overtaking:hgv": "no",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 5
+  },
+  {
+   "id": 985226457,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 7
+  },
+  {
+   "id": 985226458,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "maxweight": "3.5",
+    "name": "Dojlidy Fabryczne",
+    "ref": "19",
+    "source:maxweight": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 7
+  },
+  {
+   "id": 987107368,
+   "tags": {
+    "hgv": "no",
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "40",
+    "name": "Nowowarszawska",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 7
+  },
+  {
+   "id": 1022405626,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "maxspeed:hgv": "70",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 10
+  },
+  {
+   "id": 1022405627,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "maxspeed:hgv": "70",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 11
+  },
+  {
+   "id": 1041803461,
+   "tags": {
+    "highway": "secondary",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-12T08:09:05Z",
+   "version": 4
+  },
+  {
+   "id": 1093579589,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-11-07T19:32:50Z",
+   "version": 4
+  },
+  {
+   "id": 1093579590,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Władysława Andersa",
+    "oneway": "yes",
+    "ref": "19;65"
+   },
+   "timestamp": "2025-11-07T19:32:50Z",
+   "version": 4
+  },
+  {
+   "id": 1123136545,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2024-08-12T08:08:00Z",
+   "version": 5
+  },
+  {
+   "id": 1123136546,
+   "tags": {
+    "highway": "secondary",
+    "maxweight": "8",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-02-24T13:06:34Z",
+   "version": 4
+  },
+  {
+   "id": 1123136547,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 8
+  },
+  {
+   "id": 1151440463,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 9
+  },
+  {
+   "id": 1151440464,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-11-17T18:11:20Z",
+   "version": 9
+  },
+  {
+   "id": 1220009818,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 9
+  },
+  {
+   "id": 1220009819,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 8
+  },
+  {
+   "id": 1220009820,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "100",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 8
+  },
+  {
+   "id": 1227609323,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "name": "Generała Stanisława Sosabowskiego",
+    "oneway": "yes",
+    "ref": "19;65;676"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 3
+  },
+  {
+   "id": 1292607555,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "70",
+    "oneway": "yes",
+    "ref": "8;19"
+   },
+   "timestamp": "2026-09-11T20:40:52Z",
+   "version": 3
+  },
+  {
+   "id": 1329465432,
+   "tags": {
+    "highway": "secondary",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "maxspeed:hgv:conditional": "40 @ (20:00-06:00)",
+    "name": "Piastowska",
+    "oneway": "yes",
+    "ref": "19",
+    "source:maxspeed:hgv": "sign"
+   },
+   "timestamp": "2026-11-08T20:24:23Z",
+   "version": 6
+  },
+  {
+   "id": 1360055407,
+   "tags": {
+    "highway": "trunk_link",
+    "maxaxleload": "11.5",
+    "oneway": "yes",
+    "ref": "19"
+   },
+   "timestamp": "2025-10-30T10:47:01Z",
+   "version": 2
+  },
+  {
+   "id": 1363058823,
+   "tags": {
+    "highway": "trunk",
+    "maxaxleload": "11.5",
+    "maxspeed": "50",
+    "name": "Księdza Stanisława Suchowolca",
+    "ref": "19"
+   },
+   "timestamp": "2026-08-04T12:58:49Z",
+   "version": 3
+  },
+  {
+   "id": 1420451421,
+   "tags": {
+    "highway": "secondary",
+    "maxspeed": "30",
+    "name": "Jana Klemensa Branickiego",
+    "oneway": "yes"
+   },
+   "timestamp": "2025-08-06T16:01:20Z",
+   "version": 3
+  }
+ ]
+}

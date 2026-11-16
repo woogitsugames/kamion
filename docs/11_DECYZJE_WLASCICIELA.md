@@ -139,3 +139,18 @@ Właściciel robi feel test bramki 2 (ruszanie pod górę z 40 t, hamowanie, ron
 ## D78 — Rynek Knyszyn (#139): przejęcie lokalne, +64 draw calls Low przyjęte (2026-11-16, s23, OD-003)
 Właściciel: lider przejmuje gałąź `knyszyn-rynek-0227` lokalnie (po zakończeniu pracy Codexa) — sprzątanie artefaktów, poprawki z recenzji `REVIEW-2026-11-16-s23-code-139.md`, przebudowa kafla knyszyn, rendery i budżet; wzrost Low na kamerze `dk65-inlet-south` 240 → 304 draw calls przyjęty (telefon drugorzędny, D73). ADR 0227.
 
+## D79 — Naczepa: rozstaw sworzeń–środek tridemu 7,60 m (2026-11-16, s23, ADR 0280)
+Właściciel: skrócić rozstaw sworzeń–środek tridemu naczepy z 7,70 m do **7,60 m**, żeby zestaw mieścił się w pierścieniu skrętu 12,5/5,3 m z dyrektywy 96/53/WE (zał. I pkt 1.5): 7,135 m przy granicy 7,20 m, zapas 6,5 cm (runner fizyki, sesja P r4). Wartość 3 cm poniżej najmniejszej z kart producentów naczep 13,6 m → **WORKING_VALUE** (do potwierdzenia rysunkiem/kartą). Zmiana obejmuje dane naczepy (trailer.json, dims.json), `TrailerAssetBuilder.cs:215`, model Blendera i fizykę — lista w ADR 0280 §5; scenariusz pierścienia skrętu z oczekiwanego błędu na PASS.
+
+## D80 — Pad: warstwa „przytrzymaj Back + przycisk” (2026-11-16, s23)
+Właściciel: 6 akcji bez wolnego przycisku pada dostaje warstwę modyfikatora **Back (przytrzymany) + przycisk**; Back przestaje być wstecznym (R) — wsteczny przechodzi na inny przycisk ustalony w implementacji (ADR 0264, propozycja w raporcie sesji P r4 / docs/owner/JAK-GRAC-PC.md). Do oceny w feel teście (D77).
+
+## D81 — Trasa C ↔ Dojlidy przez DK19 Piastowska–Branickiego (2026-11-16, s23)
+Właściciel: trasa ciężarówki C ↔ Dojlidy idzie DK19 przez ul. Piastowską, pl. Antonowicza i Branickiego do ronda Meyera, ze skrętem w Ciołkowskiego (za rondem Meyera zakaz 3,5 t). Podstawa: plan UM Białegostoku (2018, 40 t) + OSM bez ograniczeń tonażowych; brak zdjęcia znaków → WORKING_VALUE do potwierdzenia. Nocne 40 km/h na Piastowskiej jako WORKING_VALUE. Kafle bialystok-mickiewicza, -bojary, -wygoda wg ADR 0278. Research: docs/owner/MAP-DECISIONS-2026-11-16.md (a).
+
+## D82 — Kierunek Podlasia: najpierw pętla S8 ↔ DW671 ↔ Tykocin (2026-11-16, s23)
+Właściciel: po kaflach Białegostoku z ADR 0278 pierwszym kierunkiem Podlasia jest **pętla S8 ↔ DW671 ↔ Tykocin** (15 kafli: S8 z węzłami i MOP, powrót przez Tykocin–Knyszyn, strefa przemysłowa przy dk65-01); zgoda na S8 mimo D64. Mońki → Grajewo później (kafel Grajewa > 2 M High wymaga redukcji). Research: docs/owner/MAP-DECISIONS-2026-11-16.md (b).
+
+## D83 — Budżety kafli dla PC: pomiar per tier zamiast limitu z telefonu (2026-11-16, s23)
+Właściciel: limit 2 mln trójkątów na kamerę High pochodzi z telefonu (A16) i nie jest automatycznie limitem PC. Budżety trójkątów i draw calls ustalamy **pomiarem per tier** (emulacja klas D74 na RTX 5070 wg D76; skalowanie na inne karty tylko z cytowanych porównań, ESTIMATED): Low (GTX 660 / HD 630) ostrożnie, High/Ultra wyżej. Do czasu pomiaru gęste kafle Białegostoku (2,6–3,75 mln) i kafel Grajewa czekają; budżety mobilne zostają jako zabezpieczenie. ADR 0266, 0269, 0278, 0282.
+
