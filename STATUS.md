@@ -1,4 +1,4 @@
 # STATUS — D30 streaming-pc-s23 (chmura D r8; ADR 0235/0234/0273)
 - Krok 1: merge main (konflikt DrivingLabBootstrap: main + 1 hak `WorldStreamer.TryInstallFromLaunch`, WorldSafetyNet = main); runtime paczek (#112) usunięty, zostaje `ITileSceneSource` + `BuildTileSource` + `TileSceneSourceContractTests`; zabezpieczenie sieci przez poszerzenie prostokąta regionu startowego; testy GC (`GcAllocCounter`).
 - Testy: .NET 8 harness 32/32 (polityka + kontrakt + LocalUnionBounds, GC 0 B); pytest `-k "tile_graph or stream or 0235 or 0273"` 11 passed. Nieskompilowane w Unity.
-- NASTĘPNY KROK: dopisać ADR 0235/0234/0273 §9 i otworzyć PR (agent); lider: `pwsh scripts/test.ps1 -Platform EditMode`.
+- PR #157 otwarty. NASTĘPNY KROK (lider): `pwsh scripts/test.ps1 -Platform EditMode`, potem PlayMode `-Filter Game.Tests.WorldStreamingPlayModeTests`.
