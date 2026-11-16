@@ -221,11 +221,12 @@ def test_knyszyn_route_start_translates_onto_the_effective_graph():
 # ------------------------------------------------------------------ every reader classified
 EFFECTIVE = {   # walk graph geometry / topology next to the generated network -> pipeline.effective_graph
     "scripts/export-route.py", "scripts/map-audit-cameras.py", "tools/ui/build_nav_map.py",
-    "tools/worldgen/navgraph/build_route_graph.py", "tools/worldgen/navgraph/measure_axis_offset.py",
+    "tools/worldgen/navgraph/build_route_graph.py", "tools/worldgen/streaming/route_links.py", "tools/worldgen/navgraph/measure_axis_offset.py",
     "tools/worldgen/roads/build_world.py",            # route_polyline (control cameras, route QA)
     "tools/worldgen/roads/pipeline.py", "tools/worldgen/streetscape/water_banks.py", "tools/worldgen/validate/common.py",
 }
 RAW_OK = {      # ingested graph on purpose (reason in ADR 0274 "Czytniki grafu")
+    "tools/worldgen/streaming/link_seams.py": "boundary nodes / end edges at tile seams: ids and seam ends unchanged",
     "tools/worldgen/roads/build_world.py": "graph_name (names by edge id) and tunnels (edge ids): ids unchanged",
     "tools/worldgen/streetscape/stage.py": "edge attrs by id + sign_gantry before_node (authored ingested node ids)",
     "tools/worldgen/streetscape/pavements.py": "osm_way -> highway only",
