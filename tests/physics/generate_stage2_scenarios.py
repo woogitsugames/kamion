@@ -192,7 +192,23 @@ for surf, mu in [("dry", "dry_asphalt"), ("wet", "wet_asphalt")]:
            ground={"gradePercent": 0, "surface": mu}, initial={"speedKmh": 80, "gear": 11},
            overrides={"absEnabled": abs_on})
 
-sc("brake_response_static", "Stationary vehicle, full service brake application (response time as in R13, vehicle at rest)", "docs/04 s6.5 / s2.8", 3,
+# 50 -> 0 km/h (urban speed limit for HGVs in Poland), dry, ABS on: same R13 type-0 N3 formula as the 80 km/h case,
+# evaluated at 50 km/h (an extrapolation below the 60 km/h test speed, like the 61.2 m bound at 80 km/h).
+# Gear 10 = ~1120 rpm at 50 km/h (ratio 1.30 x final 3.40, rolling radius 0.524 m), inside the S1 economy band.
+sc("brake_50_0_dry_abs_comb", "50->0 km/h full service brake, dry asphalt, ABS on", "docs/04 s6.5", 12,
+   {"type": "timeline", "keys": [key(0), key(0.5, brake=1)]},
+   list(stable) + [
+       chk("stop_distance_m", mn=15, mx=26.7, status=S,
+           source="upper bound = 0.15 v + v^2/130 at 50 km/h = 26.7 m: UN R13 Annex 4 type-0 N3 formula (GRRF-56-3; test speed 60 km/h, 50 km/h is an extrapolation); lower bound ~ v^2/(2 x 0.8 g) = 12.3 m + build-up (WORKING)"),
+       chk("mfdd_ms2", mn=5.0, mx=8.0, status=S, source="MFDD (R13 Annex 4 definition); 5.0 m/s^2 = N3 type-0 minimum dm (GRRF-56-3); <= mu g"),
+       chk("max_lateral_deviation_m", mx=0.5, source="straight-line stability under ABS"),
+       chk("max_articulation_deg", mx=2.0, source="no trailer swing under ABS braking on a straight"),
+       chk("rear_lock_time_s", mx=0.03, source="no tractor drive-axle lock at brake onset (EBS load sensing + decel-threshold ABS)"),
+       chk("trailer_lock_time_s", mx=0.05, source="trailer ABS 2S/2M prevents lock")],
+   variants=COMB, ground={"gradePercent": 0, "surface": "dry_asphalt"}, initial={"speedKmh": 50, "gear": 10},
+   overrides={"absEnabled": True})
+
+sc("brake_response_static","Stationary vehicle, full service brake application (response time as in R13, vehicle at rest)", "docs/04 s6.5 / s2.8", 3,
    {"type": "timeline", "keys": [key(0, sel="N"), key(0.5, brake=1, sel="N")]},
    [chk("brake_response_s", arg=0, mx=0.6, status=S, source=f"{R13} 4.1.1: braking force on the least favourable axle within 0.6 s (criterion here: 75 % of the final chamber pressure; Annex 6 method not verified)"),
     chk("brake_response_s", arg=1, mx=0.6, status=S, source=f"{R13} 4.1.1"),
