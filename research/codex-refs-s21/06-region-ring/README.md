@@ -1,6 +1,6 @@
 # 06 — Pierścień regionów: Mońki, Tykocin, DW671 — WIP
 
-Stan ewidencji głównej na 16.11.2026: **36 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **38 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Cel: rozpoznawalny układ miejsc i planowane zmiany, z rozróżnieniem projektu od stanu wykonanego. Nowy materiał: **2 ortofoto GUGiK + 2 komunikaty tekstowe link-only**, 0 nowych fotografii ulicznych. Każdy ortokadr obejrzany osobno. Wycinki obejmują 400×400m, oryginały1600×1600px przy0.25m/px poza gitem; miniatury800×800. Pełne bbox/URL/SHA i zapytania skorowidza w `data/wms-overviews.json`. Źródło środka to węzeł miejscowości OSM, nie deklarowany geometryczny środek rynku.
 
@@ -88,3 +88,8 @@ Główny manifest29rekordów. [Kościół](monki-landmark-round7/README.md):2now
 ## Sokołowska / DW671 — runda11
 
 [tykocin-streets-round11](tykocin-streets-round11/README.md):2 nowe indywidualnie obejrzane kadry grobin z02.09.2019, link-onlyCCBYSA4.0. Odrębne miejsca: brukowana pierzeja z łososiowym domem i zielonym ogrodzeniem oraz asfaltowy zakręt z dwuspadowymi dachami. Bez udawania widoku klasztoru, metryki i aktualności2026; GPSkameryUNVERIFIED. Główny manifest36.
+
+
+### Mońki — dworzec, tył i bok, maj2025
+
+Dwa nowe kadry Katarzyny Niedźwieckiej/NID uzupełniają znany dworzec o elewację od torów i bok oraz chodnik, ulicę i ogrodzenie. Oba niezależnie obejrzane przez root; nie są nowymi budynkami. Rytm otworów, ubytki, łamany spadek dachu i rdzawobrązowa barwa opisane z kadru. Nazwa dachu mansardowego i użytkowe poddasze to osobny opis źródłowy NID. Formalna liczba kondygnacji nie wynika z liczenia okien. Licencja CC BY-NC-ND3.0PL, tylko link-only,0kopii i0pobrań. Szczegóły oraz daty w [MS12](monki-station-rear-round12/README.md).
