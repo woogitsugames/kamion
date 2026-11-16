@@ -1,5 +1,5 @@
 # ADR 0216 — lato jako domyślna pora roku i białe latarnie LED w regionach DK65 / Knyszyn
-Status: Proposed (agent rendering-perf, s20, gałąź `summer-led-0216`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `5432820e3`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent rendering-perf, s20, gałąź `summer-led-0216`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: D63, D65 p.7–8 (`docs/11`), ADR 0182/0199 (LP_Dusk, zegar), 0191/0192 (pule i glare latarni), 0204/0208/0209
 (regiony), research K1 (`research/dk65-knyszyn-refs`), K69/M69 (`research/night-lamps-s21`).
 

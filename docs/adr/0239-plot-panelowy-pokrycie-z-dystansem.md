@@ -1,6 +1,6 @@
 # ADR 0239 — Płot panelowy: pokrycie siatki z dystansem zamiast wyboru „mora albo zanik” (B-082)
 
-Status: Proposed (agent rendering-perf, s21 chmura D runda 2, gałąź `fences-0239`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `e4fad6868`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent rendering-perf, s21 chmura D runda 2, gałąź `fences-0239`), 2026-11-15. Do scalenia przez lidera.
 **Kod C#/shader NIEskompilowany w chmurze, nic nie wyrenderowano ani nie zmierzono na telefonie.**
 Poprzednicy: ADR 0120 (płot panelowy), ADR 0185 (wyłączenie `mipMapsPreserveCoverage` dla `fence_*`, cofnięte przez lidera
 s20), recenzje `docs/reports/REVIEW-2026-11-14-s20-0185.md` (werdykt, P1-3) i 0179 (P11-094). Backlog: B-082.

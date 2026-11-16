@@ -1,6 +1,6 @@
 # ADR 0171 — follow-up budynków po 0167: kolory okładzin (cm109685822, EC cm92458760, wieżowiec 177786/178689)
 
-Status: PROPOSED na gałęzi `bldg2-0171` (2026-11-13, s17); nie scalone; ocena `visual-critic` wymagana.
+Status: przyjęty (scalony do main 2026-11-13, `6230a9a6d`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED na gałęzi `bldg2-0171` (2026-11-13, s17); nie scalone; ocena `visual-critic` wymagana.
 Źródło: `docs/reports/visual/REVIEW-2026-11-13-s17-0167.md` (P1 cm109 ściana boczna, P2 EC za ciemny / okna bez
 białych ram, P2 wieżowiec szary zamiast bladożółtego).
 

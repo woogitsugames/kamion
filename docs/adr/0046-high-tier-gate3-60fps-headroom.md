@@ -1,6 +1,6 @@
 # ADR 0046 - High tier headroom for 60 FPS (gate 3, Galaxy S24+)
 
-Status: proposed (rendering-perf), 2026-11-10. Phone verification UNVERIFIED (no phone used; S24+ is the owner's phone).
+Status: Accepted (merged to main 2026-11-10, `7612b1b0f`; status updated 2026-11-16); originally: proposed (rendering-perf), 2026-11-10. Phone verification UNVERIFIED (no phone used; S24+ is the owner's phone).
 Changes only High. Low/Medium unchanged. Extends ADR 0010 (tiers), 0013 (MSAA), 0042 (mirror budget).
 
 ## Context

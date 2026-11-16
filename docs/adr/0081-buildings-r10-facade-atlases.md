@@ -1,6 +1,6 @@
 # ADR 0081: Zabudowa r10 — atlasy fasad (LOD0), rzędy kondygnacji (LOD1), prefabrykowany płot betonowy
 
-Status: propozycja (world-builder, gałąź `worktree-agent-ac404823e7d8b56e7`), 2026-11-10. Uzupełnia ADR 0012/0015 (LOD1
+Status: przyjęty (scalony do main 2026-11-11, `24964e954`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (world-builder, gałąź `worktree-agent-ac404823e7d8b56e7`), 2026-11-10. Uzupełnia ADR 0012/0015 (LOD1
 zabudowy, „far facade”), ADR 0022 (zestawy PBR), ADR 0063 (skany CC0), ADR 0067 (`set_tile`, atlasy-pasy).
 
 ## Kontekst

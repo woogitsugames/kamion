@@ -1,6 +1,6 @@
 # ADR 0170 — horyzont i las (pas 6BC0), zieleń przy kamerze (follow-up recenzji 0163)
 
-Status: PROPOSED na gałęzi `horizon-0170` (2026-11-13, s17); nie scalone. Baza: `main` 3a60019ff, świat bazowy i „po”
+Status: przyjęty (scalony do main 2026-11-13, `a4d2a1782`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED na gałęzi `horizon-0170` (2026-11-13, s17); nie scalone. Baza: `main` 3a60019ff, świat bazowy i „po”
 zbudowane w tym samym worktree. Telefon: NIE mierzony (lider). Recenzja `visual-critic`: do wykonania przez lidera
 (subagent nie uruchamia subagentów).
 Źródła: recenzja `docs/reports/visual/REVIEW-2026-11-13-s17-0163.md` (P1 horyzont, P1 karty przy kamerze, P2 tuja,

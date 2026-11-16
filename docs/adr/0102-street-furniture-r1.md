@@ -1,6 +1,6 @@
 # ADR 0102 — Meble uliczne r1, wynik rundy 2
 
-Status: gotowe do recenzji i integracji przez lidera. Data: 2026-11-11.
+Status: przyjęty (scalony do main 2026-11-11, `85e19ebf8`; status zaktualizowany 2026-11-16); pierwotnie: gotowe do recenzji i integracji przez lidera. Data: 2026-11-11.
 Gałąź `gpt-furniture-r1`, baza `9e6e9fde`. Zakres: strumień I pakietu S10-B.
 
 ## Problem i źródła

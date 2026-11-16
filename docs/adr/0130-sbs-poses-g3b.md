@@ -1,6 +1,6 @@
 # ADR 0130 — SBS G3-B pose calibration: 3281350, 297817, 1801374, 494288
 
-Status: implemented on branch `sbs-poses` (base main `587adc32`, 2026-11-12, s12); not merged. Data only: no world,
+Status: Accepted (merged to main 2026-11-12, `abf15f9ef`; status updated 2026-11-16); originally: implemented on branch `sbs-poses` (base main `587adc32`, 2026-11-12, s12); not merged. Data only: no world,
 no SBS tool, no C# change. Gate 3 is not re-judged here; the D51 grades below are the author's, a visual-critic review
 is still required.
 Source: `docs/reports/visual/REVIEW-2026-11-12-s12-gpt-batch-d.md` (pose table, "uwagi do sbs r4" 2), ADR 0103/0111

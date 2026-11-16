@@ -1,6 +1,6 @@
 # ADR 0126 — G3-B trade frontage (recognisability): authored facades of the showroom row
 
-Status: implemented on branch `g3b-frontage` (base main `1d4674ab`, main `76b3fb76` merged in, 2026-11-12); not merged. Gate 3 is NOT re-judged
+Status: Accepted (merged to main 2026-11-12, `543f9be3d`; status updated 2026-11-16); originally: implemented on branch `g3b-frontage` (base main `1d4674ab`, main `76b3fb76` merged in, 2026-11-12); not merged. Gate 3 is NOT re-judged
 here (visual-critic's job).
 Source: `docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md` blocker 6 ("pierzeja handlowo-usługowa wzdłuż G3-B",
 frames #21 `sbs-g3-b-150280503737744`, #22 `-297817221966185`, partly #19 `-3281350541967811`), owner decision D51.

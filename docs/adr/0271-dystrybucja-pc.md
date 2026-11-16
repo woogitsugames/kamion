@@ -1,5 +1,5 @@
 # ADR 0271 — dystrybucja PC: paczka zip, itch.io najpierw, Steam później, bez podpisu kodu na start
-Status: Proposed (chmura H r2, zadanie H9, gałąź `pc-dist-0271`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-16, `3e9ef52fc`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (chmura H r2, zadanie H9, gałąź `pc-dist-0271`), 2026-11-15. Do weryfikacji i scalenia przez lidera.
 Powiązane: ADR 0260 (D73), ADR 0261 (build Windows), D74 (wymagania), ADR 0230 (atrybucje, R-P0-2), D8 (Suno), docs/12.
 
 ## Kontekst

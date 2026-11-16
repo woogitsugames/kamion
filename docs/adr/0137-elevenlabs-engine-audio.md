@@ -1,5 +1,5 @@
 # ADR 0137 — Silnik z nagrań ElevenLabs obok syntezy (przełącznik w ustawieniach)
-Status: Proposed (agent audio, s12), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
+Status: przyjęty (scalony do main 2026-11-12, `e37569842`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent audio, s12), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki).
 
 ## Kontekst
 Właściciel wygenerował 248 plików WAV (62 ID × 4 warianty, 48 kHz stereo 16-bit) w ElevenLabs Sound Effects v3, według

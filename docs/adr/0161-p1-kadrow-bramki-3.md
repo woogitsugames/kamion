@@ -1,6 +1,6 @@
 # ADR 0161 — P1 kadrów bramki 3 (Putry, EC, wyjazd Kwadrat): świat + pozy
 
-Status: Proposed (agent p1-0161, s16–s17, gałąź `p1-0161`), 2026-11-13. Do scalenia przez lidera; gałąź wyszła
+Status: przyjęty (scalony do main 2026-11-13, `9ce107f1f`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent p1-0161, s16–s17, gałąź `p1-0161`), 2026-11-13. Do scalenia przez lidera; gałąź wyszła
 z `origin/main` ff9777e2d (przed ADR 0164) — scalenie trywialne poza plikami `generated/` (przebudować świat po scaleniu).
 
 ## Kontekst

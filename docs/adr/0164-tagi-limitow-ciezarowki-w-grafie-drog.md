@@ -1,5 +1,5 @@
 # ADR 0164 — tagi limitów ciężarówki w grafie dróg
-Status: Proposed (agent geo-worldgen, s16, gałąź `tags-0164`), 2026-11-13. Do scalenia przez lidera; po scaleniu lider
+Status: przyjęty (scalony do main 2026-11-13, `4ea7a6c11`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent geo-worldgen, s16, gałąź `tags-0164`), 2026-11-13. Do scalenia przez lidera; po scaleniu lider
 regeneruje dane (sekcja „Co musi zrobić lider”).
 
 ## Kontekst

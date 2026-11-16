@@ -1,6 +1,6 @@
 # ADR 0177: Regresja p99 bramki 3 na A16 Low — telemetria na wątku głównym, nieaktualne kolekcje PSO, metryka „klatki > 40 ms”
 
-Status: propozycja (rendering-perf, gałąź `perf-p99-0177`), 2026-11-13.
+Status: przyjęty (scalony do main 2026-11-13, `3e62962c5`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (rendering-perf, gałąź `perf-p99-0177`), 2026-11-13.
 Powiązane: ADR 0113 (prewarm PSO, `GraphicsStateCollection`, sonda `[SPIKE]`), 0106, D49 (A16 = Low 30 FPS).
 
 ## Kontekst

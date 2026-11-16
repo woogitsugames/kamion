@@ -1,5 +1,5 @@
 # ADR 0162 — meble uliczne i tablice kierunkowe wg badań G5 / G3
-Status: Proposed (agent furn-0162, s16, gałąź `furn-0162`), 2026-11-13. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-13, `68d2b5dd6`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent furn-0162, s16, gałąź `furn-0162`), 2026-11-13. Do scalenia przez lidera.
 
 ## Kontekst
 Badanie G5 (`research/g5-street-furniture`, dokumenty BKM / ZDM Białystok) pokazało, że generator mebli odbiega od
