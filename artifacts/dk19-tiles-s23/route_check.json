@@ -1,0 +1,350 @@
+{
+ "restrictions": {
+  "Generała Władysława Andersa": {
+   "{\"maxaxleload\": \"11.5\"}": {
+    "edges": 12,
+    "length_m": 1199.0,
+    "tiles": [
+     "bialystok-bojary",
+     "bialystok-wygoda"
+    ],
+    "ways": 10
+   }
+  },
+  "Generała Stanisława Sosabowskiego": {
+   "{\"maxaxleload\": \"11.5\"}": {
+    "edges": 34,
+    "length_m": 2708.6,
+    "tiles": [
+     "bialystok-bojary"
+    ],
+    "ways": 28
+   }
+  },
+  "Piastowska": {
+   "{\"maxaxleload\": \"11.5\"}": {
+    "edges": 48,
+    "length_m": 4141.4,
+    "tiles": [
+     "bialystok-bojary",
+     "bialystok-mickiewicza"
+    ],
+    "ways": 40
+   }
+  },
+  "Jana Klemensa Branickiego": {
+   "{\"maxweight\": \"8\"}": {
+    "edges": 15,
+    "length_m": 726.8,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 11
+   },
+   "{\"maxaxleload\": \"11.5\"}": {
+    "edges": 14,
+    "length_m": 1682.2,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 13
+   },
+   "{}": {
+    "edges": 12,
+    "length_m": 785.1,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 9
+   },
+   "{\"hgv\": \"no\", \"maxgvweightrating:hgv\": \"8\", \"maxweight\": \"8\"}": {
+    "edges": 1,
+    "length_m": 58.1,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 1
+   }
+  },
+  "Konstantego Ciołkowskiego": {
+   "{\"maxaxleload\": \"11.5\"}": {
+    "edges": 14,
+    "length_m": 906.9,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 11
+   },
+   "{}": {
+    "edges": 51,
+    "length_m": 4605.1,
+    "tiles": [
+     "bialystok-dojlidy",
+     "bialystok-mickiewicza"
+    ],
+    "ways": 33
+   }
+  },
+  "Nowowarszawska": {
+   "{}": {
+    "edges": 17,
+    "length_m": 746.7,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 8
+   },
+   "{\"hgv\": \"no\", \"maxaxleload\": \"11.5\", \"maxweight\": \"3.5\"}": {
+    "edges": 6,
+    "length_m": 363.6,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 5
+   },
+   "{\"maxaxleload\": \"11.5\"}": {
+    "edges": 7,
+    "length_m": 397.0,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 5
+   },
+   "{\"hgv\": \"no\", \"maxgvweightrating:hgv\": \"3.5\"}": {
+    "edges": 2,
+    "length_m": 100.2,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 1
+   },
+   "{\"hgv\": \"no\", \"maxaxleload\": \"11.5\"}": {
+    "edges": 1,
+    "length_m": 15.0,
+    "tiles": [
+     "bialystok-mickiewicza"
+    ],
+    "ways": 1
+   }
+  },
+  "Dywizjonu 303": {
+   "{}": {
+    "edges": 10,
+    "length_m": 2057.1,
+    "tiles": [
+     "bialystok-dojlidy"
+    ],
+    "ways": 5
+   }
+  }
+ },
+ "places": {
+  "rondo: Rondo Świętych Cyryla i Metodego": {
+   "tiles": [
+    "bialystok-wygoda"
+   ],
+   "centroid": [
+    780817.2,
+    597062.9
+   ],
+   "extent": [
+    780801.2,
+    597047.5,
+    780832.3,
+    597078.5
+   ]
+  },
+  "Piastowska": {
+   "tiles": [
+    "bialystok-bojary",
+    "bialystok-mickiewicza"
+   ],
+   "centroid": [
+    780266.0,
+    593346.8
+   ],
+   "extent": [
+    779694.5,
+    592624.1,
+    780860.3,
+    594355.9
+   ]
+  },
+  "rondo: Rondo Pułkownika Leona Mitkiewicza-Żółłtka": {
+   "tiles": [
+    "bialystok-bojary"
+   ],
+   "centroid": [
+    779556.6,
+    593292.9
+   ],
+   "extent": [
+    779549.1,
+    593286.0,
+    779564.9,
+    593301.6
+   ]
+  },
+  "rondo: Rondo Korony Królestwa Polskiego i Wielkiego Księstwa Litewskiego": {
+   "tiles": [
+    "bialystok-bojary"
+   ],
+   "centroid": [
+    779719.4,
+    593819.9
+   ],
+   "extent": [
+    779707.3,
+    593807.8,
+    779732.3,
+    593832.7
+   ]
+  },
+  "rondo: Rondo Andrzeja Strumiłły": {
+   "tiles": [
+    "bialystok-mickiewicza"
+   ],
+   "centroid": [
+    780420.2,
+    592754.8
+   ],
+   "extent": [
+    780405.2,
+    592741.2,
+    780434.1,
+    592770.0
+   ]
+  },
+  "rondo: Rondo Andrzeja Bronisława Meyera": {
+   "tiles": [
+    "bialystok-mickiewicza"
+   ],
+   "centroid": [
+    780661.1,
+    592090.0
+   ],
+   "extent": [
+    780639.1,
+    592066.3,
+    780685.9,
+    592113.1
+   ]
+  }
+ },
+ "route": {
+  "dojlidy_route_start_keys": [
+   "edge",
+   "frame",
+   "graph_nodes",
+   "length_m",
+   "maxspeed_kmh",
+   "note",
+   "points_en",
+   "region",
+   "route",
+   "schema",
+   "step_m"
+  ],
+  "start_candidates": [
+   [
+    779019.0,
+    595256.85
+   ],
+   [
+    779019.0,
+    595242.45
+   ]
+  ],
+  "dojlidy_n_seam_nodes": [
+   [
+    779114.41,
+    591103.0
+   ],
+   [
+    779092.4,
+    591103.0
+   ]
+  ],
+  "to_dojlidy_n_seam": {
+   "length_m": 7075.9,
+   "per_tile_m": {
+    "bialystok-wygoda": 90.4,
+    "bialystok-bojary": 3265.4,
+    "bialystok-mickiewicza": 3720.1
+   },
+   "streets": [
+    [
+     "Generała Władysława Andersa",
+     595.4,
+     "19;65"
+    ],
+    [
+     "(way 237915062)",
+     77.8,
+     "19;65"
+    ],
+    [
+     "Generała Stanisława Sosabowskiego",
+     1034.0,
+     "19;65"
+    ],
+    [
+     "(way 237917985)",
+     115.2,
+     "19;676"
+    ],
+    [
+     "(way 265995640)",
+     181.7,
+     "19;676"
+    ],
+    [
+     "Piastowska",
+     2072.5,
+     "19"
+    ],
+    [
+     "Plac Witolda Antonowicza",
+     117.1,
+     "19"
+    ],
+    [
+     "Jana Klemensa Branickiego",
+     827.8,
+     "19"
+    ],
+    [
+     "Nowowarszawska",
+     205.9,
+     "19"
+    ],
+    [
+     "Rondo Andrzeja Bronisława Meyera",
+     15.8,
+     "19;678"
+    ],
+    [
+     "Konstantego Ciołkowskiego",
+     1832.7,
+     "678"
+    ]
+   ],
+   "start": [
+    779019.0,
+    595242.45
+   ],
+   "end": [
+    779092.4,
+    591103.0
+   ]
+  },
+  "dojlidy_reachable_nodes_from_n_seam": 3,
+  "dojlidy_graph_nodes_total": 379
+ },
+ "attr_keys_restriction_like": [
+  "hgv",
+  "maxaxleload",
+  "maxgvweightrating:hgv",
+  "maxweight"
+ ]
+}

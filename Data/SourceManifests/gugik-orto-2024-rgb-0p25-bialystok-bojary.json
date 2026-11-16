@@ -1,0 +1,78 @@
+{
+  "id": "gugik-orto-2024-rgb-0p25-bialystok-bojary",
+  "name": "GUGiK orthophoto RGB 0.25 m, 2024-05-27, sheets covering bialystok-bojary",
+  "provider": "Główny Urząd Geodezji i Kartografii",
+  "product": "ORTO",
+  "region": "bialystok-bojary",
+  "index_service": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze",
+  "format": "GeoTIFF",
+  "crs": "EPSG:2180 (PL-1992)",
+  "resolution_m": 0.25,
+  "extent": "sheets intersecting bbox [779019.0, 593151.0, 781067.0, 595199.0]",
+  "usage_restriction": "visual reference + alignment QA only; not a game texture (docs/05 §3)",
+  "license": "GUGiK open data: free of charge, download without application (ustawa Prawo geodezyjne i kartograficzne art. 40a ust. 2 pkt 1, as amended by Dz.U. 2020 poz. 782, in force since 2020-07-31)",
+  "license_status": "LEGAL_REVIEW_REQUIRED (statutory basis cited from secondary sources, not from ISAP text)",
+  "attribution": "Źródło danych: Główny Urząd Geodezji i Kartografii (www.geoportal.gov.pl)",
+  "used_by": [
+    "tools/worldgen/build_region.py --region bialystok-bojary"
+  ],
+  "in_git": false,
+  "files": [
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393447_N-34-107-C-b-1-2.tif",
+      "godlo": "N-34-107-C-b-1-2",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-bialystok-bojary/81427_1393447_N-34-107-C-b-1-2.tif",
+      "sha256": "bd53b8a56522f8c622a3e396ef35acfca1d6b12169624f1b45635558b83c14ed",
+      "size_bytes": 46108526,
+      "downloaded_utc": "2026-11-16T18:18:57+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393449_N-34-107-C-b-1-4.tif",
+      "godlo": "N-34-107-C-b-1-4",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-bialystok-bojary/81427_1393449_N-34-107-C-b-1-4.tif",
+      "sha256": "6a0e17f4894ebced1f4401e644dfa7bf834a9acabb937e2964821465015753f0",
+      "size_bytes": 48602902,
+      "downloaded_utc": "2026-11-16T18:19:15+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393450_N-34-107-C-b-2-1.tif",
+      "godlo": "N-34-107-C-b-2-1",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-bialystok-bojary/81427_1393450_N-34-107-C-b-2-1.tif",
+      "sha256": "2c81c4966172329109c287e99f975b7379a434f44e2026328b476650b7929087",
+      "size_bytes": 47661364,
+      "downloaded_utc": "2026-11-16T18:19:32+00:00"
+    },
+    {
+      "url": "https://opendata.geoportal.gov.pl/ortofotomapa/81427/81427_1393452_N-34-107-C-b-2-3.tif",
+      "godlo": "N-34-107-C-b-2-3",
+      "akt_data": "2024-05-27",
+      "akt_rok": "2024",
+      "piksel": "0.25",
+      "kolor": "RGB",
+      "uklad_xy": "PL-1992",
+      "dt_pzgik": "2025-04-09",
+      "local_path": "Data/raw/gugik/gugik-orto-2024-rgb-0p25-bialystok-bojary/81427_1393452_N-34-107-C-b-2-3.tif",
+      "sha256": "32782337b4d1ca2419e5286c1c4684a69f314f10d245d8c6d0205a03ea41e50e",
+      "size_bytes": 47016560,
+      "downloaded_utc": "2026-11-16T18:19:48+00:00"
+    }
+  ]
+}
