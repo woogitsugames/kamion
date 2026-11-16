@@ -37,3 +37,21 @@ Powiązane: ADR 0236 (znaki E, `sign_norms.py`), 0268 (dojazdy do przejazdów), 
   (w regionie C brak przejazdów kolejowych i G-2).
 - Testy: `tests/gis/test_signs_audit_0279.py` (8 testów na zmienione liczby, w tym zgodność `rail_approach` z tab. 2.2).
 - Kod nie był uruchamiany w Unity; regeneracja `generated/*` — lider (jedna przebudowa).
+
+## P1 — wdrożenie (D25, chmura D r7, gałąź `signs-p1-s23`, 2026-11-16)
+Status: Proposed. Baza: PR #147 (`signs-audit-0279`, scalona do tej gałęzi). Źródła sprawdzone ponownie w PDF z API ELI
+(sha256 jak wyżej; dodatkowo Dz.U. 2026 poz. 132 `text.pdf` sha256 `6b62d655…c3a6`, Prawo o ruchu drogowym t.j.
+Dz.U. 2024 poz. 1251 `text.pdf` sha256 `de6c1f33…fccb`). Strony = strony Dz.U. (= strony pliku c1).
+
+| # | Zmiana | Przepis (dosłownie sprawdzony) | Kod |
+|---|---|---|---|
+| 1 | Sygnalizator, G-3/G-4, dzwon ≥ 5 m od skrajnej szyny (odległość prostopadła do krawędzi główki szyny), rogatka ≥ 5 m od osi toru po osi drogi, sygnalizator przed rogatką; było ≈ 3,55 m | Dz.U. 2025 poz. 1105 **§ 77 ust. 2 pkt 1** („nie może wynosić mniej niż: 1) 5 m – dla przejazdu kolejowo-drogowego”), § 77 ust. 1 („bezpośrednio przed rogatką”), **§ 54 ust. 1** (rogatka, 5 m po osi drogi); Dz.U. 2019 poz. 2311 zał. 1 **pkt 2.2.11, s. 73** (G-3/G-4 „nie bliżej niż 5 m od skrajnej szyny”, bliżej tylko za zgodą zarządu kolei) | `rail.device_stations`, `rail_approach.device_line_m` (P-14 przejazdu, słupki U-1a, A-9/A-10 liczą się od niej) |
+| 2 | P-14 na wlocie z sygnalizacją ≥ 2,0 m przed głowicą obok jezdni, ≥ 8,0 m przed głowicą nad jezdnią (wysięgnik); było trim + 0,6 m = przy maszcie (trim + 1,0) | zał. 2 **pkt 4.2.5, s. 573** (odległości mierzone od zewnętrznej krawędzi linii do płaszczyzny czołowej sygnalizatora) | `standards.p14_before_signal_d`, `signal_overhead` (wspólne z `furniture.signals`) |
+| 3 | P-12 (linia ciągła 0,50 m) zamiast P-13 na wlocie z B-20 | zał. 2 **pkt 4.2.3, s. 571–572**; zał. 1 **pkt 3.2.21, s. 126** (B-20 na nawierzchni bitumicznej uzupełnia się linią P-12) | `junctions.Junction.stop` (ten sam test 25 m co `furniture.junction_signs`), `markings.approach_line_kind` |
+| 4 | OSM: `traffic_sign=maxspeed`+`maxspeed` → B-33; `PL:B-5` → B-5; `PL:B-18[t]` / `maxweight` węzła → B-18 z wartością; `city_limit` → D-42 (+ D-43 w tym samym przekroju dla kierunku przeciwnego) | B-18: zał. 1 **pkt 3.2.19, s. 123** „Na znaku podaje się wartość wynikającą z rzeczywistej nośności” → B-18 bez liczby nie istnieje: **pomijany**, wpis `osm_signs.needs_value` w QA (nie zmyślamy tonażu); B-5 pkt 3.2.6 s. 109; D-43 pkt 5.2.49 s. 245 | `signs_route.parse_traffic_sign(v, tags)`, `signs.is_known/rect_size`, lica B-5, B-18_n, D-42/43, A-8, T-1; `sources.KEEP_TAGS` += `maxweight`, `traffic_sign:direction` |
+| 5a | D-42/D-43 z reguły danych, gdy brak znaku OSM w promieniu 300 m: stacje drogi (GP/G/Z) w ≤ 60 m od BDOT10k OT_PTZB_A mieszkaniowej (jednorodzinna/wielorodzinna/zagrodowa) albo z krawężnikiem/chodnikiem = obszar; luka < 300 m bez pary; izolowany odcinek < 100 m nie jest obszarem | zał. 1 **pkt 5.2.48.1–5.2.48.2, s. 244–245** (300 m SOURCED; zabudowa mieszkaniowa, „początek chodnika”; nie handlowo-usługowa); 1200 × 700 mm | `streetscape/built_up.py` (`runs`, `boundaries`, `rule_signs`); 60 m / 100 m / klasy = WORKING_VALUE; granica ESTIMATED |
+| 5b | A-7 + T-1 („150 m”) 150–300 m przed skrzyżowaniem na wlocie podporządkowanym (A-7), A-7 + tabliczka „Stop … m” przed B-20, gdy v_dop > 60 km/h (v z OSM, inaczej art. 20 PoRD: 50 w obszarze, 90 poza) | zał. 1 **pkt 2.2.8, s. 64**, **pkt 3.2.21, s. 126**, T-1 pkt 2.1.3 s. 50 (do 10 m), tabliczka h = 250 mm (Tabela 9.7.1, s. 487; szerokość WORKING_VALUE) | `built_up.advance_signs` (z `j.minor_signs` zapisanych przez `junction_signs`) |
+| 5c | A-8 przed każdym rondem (także kompaktowym `compact_roundabout`), chyba że jest E-1 albo rondo w obszarze zabudowanym i widoczne; brak danych widoczności → widoczność przyjmowana tylko przy v ≤ 50 (UNVERIFIED); odległość: dolna granica zalecanej (pkt 2.1.2) | zał. 1 pkt 2.2.9 w brzmieniu **Dz.U. 2026 poz. 132** | `signs_route._a8`, `built_up.needs_a8` |
+
+Niezmienione dane kafli (w tym knyszyn). Lider przy world3: przebudowa `streetscape_sources` (build_region — nowe
+`maxweight`), potem build_world; render `rail-x0-*` (dw671), `junctions_cameras` (C), kamery DK65.
