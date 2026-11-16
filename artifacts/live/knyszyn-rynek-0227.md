@@ -334,3 +334,7 @@
 - 2026-11-16 08:14 +01:00 — R24: wiaty/budynki/świerk wygenerowane; kadr 14 zasłaniała ściana. Kamera przesunięta na plac, płot przycięty przy service (2 testy passed), dodane szacunkowe kamery 12/13. R25 build trwa; wstępne High max 1 250 321 tris PASS, Low before FAIL i koszt targowicy w analizie.
 - NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r25.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r25.done` 
 
+
+- 2026-11-16 09:12 +01:00 — R26 4 warianty OK, 14 zestawień lokalnych Low/High; High max 1 250 321 tris PASS, Low vs before nadal FAIL. Po analizie zdjęć wprowadzono opt-in podział wizualnej łaty wjazdu, bez zmian kolizji; 87 testów kierunkowych passed, przecięcie z nominalną jezdnią 0. R27 build trwa; wizualny szew i testy końcowe OPEN.
+- NASTĘPNY KROK: `Get-Content artifacts/knyszyn-rynek-0227/r27.log -Tail 5; Get-Content artifacts/knyszyn-rynek-0227/r27.done` 
+
