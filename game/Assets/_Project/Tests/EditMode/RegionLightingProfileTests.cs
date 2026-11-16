@@ -105,5 +105,39 @@ namespace Game.Tests
             finally { StreetLamps.SetLedColour(new Color(0f, 0f, 0f, 0f)); }
             Assert.AreEqual(StreetLamps.DefaultLedColour, StreetLamps.LedColour);
         }
+
+        /// <summary>
+        /// lamp-test-s23: an imported region scene (Dojlidy, tile C, Knyszyn: ADR 0216b LED (1, 0.96, 0.9)) closed by
+        /// StartClearanceTests left its LED colour in StreetLamps, and StreetLampOpticsTests.SodiumTint_HasTheLedLuminance
+        /// failed in the full run (0.94206 instead of 0.93694). The region's environment gives the colour back when it goes
+        /// away; an older environment disabled after a newer one leaves the newer region's colour alone.
+        /// </summary>
+        [Test]
+        public void RegionLedColour_IsGivenBack_WhenTheEnvironmentGoesAway()
+        {
+            var preset = LightingPreset.CreateClear();
+            var a = NewEnv(out var ga); var b = NewEnv(out var gb);
+            try
+            {
+                Assert.AreEqual(StreetLamps.DefaultLedColour, StreetLamps.LedColour, "precondition: default LED");
+                a.presets = new[] { preset }; a.ledColour = new Color(1f, 0.96f, 0.9f, 1f);
+                b.presets = new[] { preset }; b.ledColour = new Color(1f, 0.95f, 0.88f, 1f);
+                ga.SetActive(true);
+                Assert.AreEqual(new Color(1f, 0.96f, 0.9f, 1f), StreetLamps.LedColour, "region A applied");
+                gb.SetActive(true);
+                Assert.AreEqual(new Color(1f, 0.95f, 0.88f, 1f), StreetLamps.LedColour, "region B applied");
+                Object.DestroyImmediate(ga); ga = null;
+                Assert.AreEqual(new Color(1f, 0.95f, 0.88f, 1f), StreetLamps.LedColour, "older env going away keeps B's colour");
+                Object.DestroyImmediate(gb); gb = null;
+                Assert.AreEqual(StreetLamps.DefaultLedColour, StreetLamps.LedColour, "last env going away restores the default");
+            }
+            finally
+            {
+                if (ga != null) Object.DestroyImmediate(ga);
+                if (gb != null) Object.DestroyImmediate(gb);
+                Object.DestroyImmediate(preset);
+                StreetLamps.SetLedColour(new Color(0f, 0f, 0f, 0f));
+            }
+        }
     }
 }
