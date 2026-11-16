@@ -668,14 +668,16 @@ overrides:
         solar_panels: true
     fences:
       - id: north-fence
-        points_epsg2180: [[760810.0, 613348.0], [760816.8, 613311.0]]
+        points_epsg2180: [[760810.0, 613348.0], [760815.85, 613316.17]]
       - id: south-fence
         points_epsg2180: [[760820.4, 613304.0], [760835.2, 613222.0]]
     reason: >-
       SOURCED: eave outlines and entrance gap hand-traced from GUGiK 2025 orthophoto; canopy construction,
       relative appearance and southern PV from owner reference photos. ESTIMATED: traced roof and fence
       coordinates, approximately 0.5–1 m uncertainty, no survey of post bases. WORKING_VALUE: heights,
-      roof slope, post spacing, 0.25 m eave inset, counter and fence details. Images are reference only.
+      roof slope, post spacing, 0.25 m eave inset, counter and fence details. The northern fence end is
+      clipped to at least 3.5 m from a service axis of default 5 m width; truck swept-path remains OPEN.
+      Images are reference only.
     confidence: medium
     verify: eye-level owner photo 14, ground contact, crossings, canopy dimensions and draw budget
   - id: market-spruce-0227
