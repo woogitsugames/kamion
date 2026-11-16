@@ -43,7 +43,9 @@ Przebiegi pełne EditMode:
   z PR-ów H ani pc-fix** (nie dotykają lamp ani `lighting_profiles.json`); przed scaleniem main test przechodził, a main
   wniósł `346654291` (lighting-0216b: `lighting_profiles.json`, `RegionLightingProfiles.cs`). Do naprawy u autora
   lighting-0216b; nie naprawiane tutaj. Klasa uruchomiona osobno przechodzi 10/10 (`editmode-20261116-035729.xml`) — błąd zależy od kolejności testów
-  (stan statyczny). **Otwarte, nie z PR-ów H.**
+  (stan statyczny). **Otwarte, nie z PR-ów H ani pc-fix — zmierzone:** pełny EditMode na `8701306fd` (6 PR-ów H + main,
+  bez pc-fix) = 777 / 775 / 1 niezaliczony (ten sam test) — `artifacts/tests/editmode-20261116-041822.xml`; na `d92699bd9`
+  (6 PR-ów H bez main) było 0 niezaliczonych. Fail wniosło więc scalenie main (`5f51007ee`..`c6160684a`).
 - PlayMode: PR-y H nie dodają testów PlayMode; pc-fix dodaje `PcHudSolverTests` (3/3).
 
 `dotnet` z PATH nie ma SDK — potrzebne `DOTNET_ROOT=%LOCALAPPDATA%\Microsoft\dotnet` (jak w `docs/PHYSICS_VALIDATION.md`).
@@ -93,7 +95,7 @@ warianty shaderów assetów ładowanych z Resources). Dowody: `artifacts/int-pc-
 
 ## 6. Build końcowy (z pc-fix: #131 + #136)
 - **Exe: `C:\Users\matma\Documents\Claude\kamion\artifacts\win\kamion-0.1.0-e28533ca31-regions\Kamion.exe`**
-  (kod `e28533ca3`; `BUILD_RESULT: Succeeded errors=0 warnings=7`, 507 s, folder 4 941 MB, 189 plików, 21 regionów
+  (kod `e28533ca3`; `BUILD_RESULT: Succeeded errors=0 warnings=7`, 507 s, folder 4 941 MB, 189 plików, 42 sceny regionów w logu buildu = 21 regionów × Low/High,
   `d67-full`, treść High). Log `artifacts/logs/build-win-20261116-035803.log`. Etykieta w playerze `e28533ca31-dirty`.
 - **Start w Knyszynie dla właściciela: `…\kamion-0.1.0-e28533ca31-regions\Kamion-knyszyn.cmd`** (okno 1600×900,
   `-scene knyszyn`). Obok: `Kamion-okno.cmd` (menu w oknie), `Kamion-knyszyn-w.cmd` (region knyszyn-w).
@@ -106,7 +108,7 @@ warianty shaderów assetów ładowanych z Resources). Dowody: `artifacts/int-pc-
     lista regionów 1/21. **Usterka wizualna (P2): nakładka diagnostyczna (KAMION / Device / GPU / FPS…) nachodzi na tytuł
     i pierwszy przycisk menu** — tekst na tekście.
 - Logi: `[SETTINGS] pc load source=Defaults … pc apply startup … tier=auto` oraz `[BOOT] desktop default tier High: VRAM
-  11943 MB` — „auto” z #136 nie nadpisuje autodetekcji #135 (poprawka P1 działa); `-tier Low` → `URP_PC_Low`. Brak wyjątków.
+  11943 MB` — na tej maszynie błąd P1 #136 i poprawna autodetekcja dają ten sam High, więc log tego nie rozróżnia (w playerze UNVERIFIED; pokrywa to `PcAutoTierTests`); `-tier Low` → `URP_PC_Low`. Brak wyjątków.
 - Menu klikane myszą/padem w playerze: nie sprawdzane ręcznie (UNVERIFIED); bramka wejścia — test `MenuInputGateTests`.
 - **Ten exe nie zawiera spawn-fix r2** (main `6e6fe972f`, scalony do gałęzi po buildzie jako `d8ec3751c`; zmienia
   `SpawnSafety`, `DrivingLabBootstrap`, `RouteSpawnTests`). Testy po tym merge: §6a.
