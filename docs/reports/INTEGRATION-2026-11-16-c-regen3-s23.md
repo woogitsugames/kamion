@@ -55,6 +55,20 @@ Before = Reuse jest uzasadnione tym, że `generated/` C i Dojlid w main różni�
 tylko `fidelity_qa.json`, a sceny `_Generated` w main są z 15.11 16:59 (sprzed c-regen2) — świeże before wymagałoby
 budowy i importu obu regionów (ok. 55 min wg c-regen2).
 
+Jedyny błąd 1. przebiegu: `test_dojbld_0185.py::test_fence_mesh_mips_do_not_preserve_coverage` czytał źródło
+`RegionImporter.cs` i oczekiwał starego wywołania `Shader.Find(...)` — skutek poprawki P1, test dostosowany do
+`InstanceImporter.FenceShaderOrNull()`. Skipy: 1 × 0236 (oczekiwany po przebudowie), 2 × `test_dk65_seam_knyszyn_0233`
+(GLB dk65-11 starsze niż overrides — inny region, stan kopii `Data/raw` w tym worktree).
+
+## OD-005 — wpis dodany PO przebudowie (wymaga przebudowy C przy następnej okazji)
+Decyzja lidera: `Data/Regions/bialystok-industrial-c/overrides.yaml`, wpis `dk8-seam-kerb-od005-c`
+(`target: {osm_way: [257367422]}`, `set: {shoulder: {kind: kerb}}`, `confidence: low`), składnia jak
+`dk8-seam-kerb-od005` w `origin/world2-s23` (kleeberga). **Nie ma go w zbudowanym świecie**: `generated/`, budżet,
+rendery i determinizm w tym raporcie opisują C bez tego wpisu. Odczyt ortofoto jest world2, w tym kaflu nie mierzyłem.
+Po dopisaniu przeliczone tylko fidelity C (hash wejść obejmuje `overrides.yaml`) i powtórzony pełny pytest.
+Do zrobienia przy następnej przebudowie C: `build_world` + budżet + `qa/seams.py` dla szwu industrial-c | maczka
+(strona maczka dostaje wpis od world2).
+
 ## Budżet (zmierzone, `artifacts/c-regen3-s23/regen/budget.log`)
 | | przed (main) | po | zapas / limit |
 |---|---|---|---|
