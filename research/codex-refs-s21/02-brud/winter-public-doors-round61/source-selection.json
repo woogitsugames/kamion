@@ -1,0 +1,26 @@
+{
+  "review_date": "2026-11-16",
+  "time_precision": "date-only",
+  "selected_sources": [
+    {
+      "id": "61-001",
+      "url": "https://partner.sciencenorway.no/fish-nofima-traffic/meltwater-flows-from-trucks-transporting-fresh-fish-it-is-dangerous-for-traffic-and-unnecessary/2186544",
+      "source_metadata": "Publikacja 24.04.2023 04:30; materiał przygotowany przez Nofima; Photo Christian Petrich / SINTEF. Brak daty i GPS zdjęcia. Artykuł omawia odpływ wody przy transporcie ryb, nie stanowi dowodu składu wszystkich widocznych osadów.",
+      "initial_state": "NOT_REVIEWED"
+    },
+    {
+      "id": "61-002",
+      "url": "https://www.polupricep.com/catalog/moskva/refrizheratory/polupritsep-refrizherator-krone-83801/",
+      "source_metadata": "Tytuł wprost podaje naczepę chłodnię Krone 83801; rok 2010 dotyczy pojazdu, magazyn Moskwa nie dowodzi drogi ani GPS.",
+      "initial_state": "NOT_REVIEWED"
+    },
+    {
+      "id": "61-003",
+      "url": "https://www.rbauction.com/pdp/2024-manac-942535e11-53-ft-x-102-in-t-a-refrigerated-trailer/14519314",
+      "source_metadata": "Manac 942535E11 refrigerated trailer, VIN 2M5921612R1220988, Amaranth ON CAN, oferta 14519314. Rok 2024 dotyczy pojazdu, brak daty fotografii. Nazwy Left Rear Corner/Right Rear Corner były wyłącznie wskazówką selekcyjną; brak oglądu.",
+      "initial_state": "NOT_REVIEWED"
+    }
+  ],
+  "dedup": "Meatrails 04412_4 istnieje w R40 — pominięto. Wybrane 2186554/83801/14519314 bez trafień w P18 i s21 przed nowym zapisem. Fototruck.org 334645 web403 odłożony bez mirror/retry.",
+  "access_caution": "Webreader dwóch konkretnych linków fotograficznych zwrócił timeout; nie był podstawą obserwacji. Rzeczywiste stany po oglądzie zapisano w observations.json i manifest.csv. 0 pobrań."
+}
