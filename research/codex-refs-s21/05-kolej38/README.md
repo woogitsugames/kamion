@@ -1,6 +1,6 @@
 # 05 — Linia38: elektryfikacja i stan zastany kontra projekt — WIP
 
-Stan ewidencji głównej na 16.11.2026: **17 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
+Stan ewidencji głównej na 16.11.2026: **19 rekordów** (SOURCED: lokalny `manifest.csv`). Rekordy obejmują także dokumenty, AUX i odrzucenia; nie są licznikiem zaakceptowanych fotografii. Bieżące kwalifikacje i ograniczenia: [STATUS](../STATUS.md). Starsze opisy poniżej są datowanymi etapami pracy.
 
 Wcześniejszy etap:15 rekordów —6 dokumentacyjnych,4 danychOSM,1orto,2 lokalne fotografie stacji oraz2link-only kadry1przejazdu DW671 z2019. KategoriaB jest udokumentowana dla km29+522 w obwieszczeniu2025; przypisanie do konkretnych fotografii i stan wyposażenia2026 nadalUNVERIFIED. Źródłowe3kV DC uzupełniono z dwóch dokumentówPKP, nie wyłącznie z OSM.
 
@@ -83,3 +83,7 @@ Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr pręd
 ## Dalszy trop mapowania — runda11
 
 [crossing-document-map-round11](crossing-document-map-round11/README.md):odczytano wyłącznie nagłówek publicznego dokumentu RDOŚ, docelowa strona nie załadowała się wweb ani przy pojedynczym zwykłym otwarciu wChrome. Jeden download skończył się timeoutem bez pliku, bez dalszych pobrań i wariantów hosta. Fragment indeksu wymienia kilka dróg/obiektów, lecz nie dowodzi relacjiDW671→29+522. Nie przyjęto mapowania ani nowego materiału do generatora; zakres odcinka2od25+204 jest właściwy do dalszej weryfikacji29km.0mediów/0pobrań zachowanych/0OSM-Overpass/Commons. Główny17 bez zmian; PENDING nie oznacza braku dokumentów.
+
+## Starosielce — publiczna galeriaPLK, runda13
+
+[plk-starosielce-ground-round13](plk-starosielce-ground-round13/README.md):2 nowe indywidualnie obejrzane fotografie MateuszaOstrzyżka, źródłowy marzec2020 przed przebudową. Tory/podkłady w kruszywie, płyty i żółta linia peronu, podpory/przewody. JawnaBY-NC-ND4.0, wyłącznie link-only bez kopii. Nie Fasty/Knyszyn, nie przejazd drogowy, bez napięcia/metrów/obecnegostanu. Główny19.
