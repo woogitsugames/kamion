@@ -260,6 +260,86 @@
    "type": "persp"
   },
   {
+   "fov_deg": 60.0,
+   "id": "rail_x0_far_a",
+   "look_at": [
+    504.728,
+    852.614,
+    127.787
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 165 m before level crossing osm:node/2559254736, approach a - approach signs / posts",
+   "pos": [
+    447.8,
+    770.4,
+    130.406
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_near_a",
+   "look_at": [
+    581.628,
+    963.514,
+    121.375
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 30 m before level crossing osm:node/2559254736, approach a - approach signs / posts",
+   "pos": [
+    524.7,
+    881.3,
+    128.367
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_near_b",
+   "look_at": [
+    499.272,
+    850.186,
+    118.661
+   ],
+   "note": "place camera: rail-dk65-s22 (ADR 0268): driver eye 30 m before level crossing osm:node/2559254736, approach b - approach signs / posts",
+   "pos": [
+    556.2,
+    932.4,
+    125.654
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 55.0,
+   "id": "rail_x0_side_eye",
+   "look_at": [
+    501.801,
+    982.801,
+    122.714
+   ],
+   "note": "place camera: rail-dk65-s22 (REVIEW s22 0217 visual P2-12): pedestrian eye 1.6 m, 13 m beside the road, looking at level crossing osm:node/2559254736 - scale of devices, kerb cut",
+   "pos": [
+    547.2,
+    893.7,
+    126.206
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "rail_x0_top",
+   "look_at": [
+    540.5,
+    1006.4,
+    -5565.603
+   ],
+   "note": "place camera: rail-dk65-s22: top view of level crossing osm:node/2559254736 (panels, kerb cut, P-4, P-14)",
+   "pos": [
+    540.5,
+    906.4,
+    163.393
+   ],
+   "type": "persp"
+  },
+  {
    "center": [
     0.0,
     0.0

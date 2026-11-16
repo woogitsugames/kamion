@@ -86,6 +86,16 @@ def derived(region_id: str) -> dict:
     data = json.loads(route.read_text(encoding="utf-8"))
     length = float(data["length_m"])
     wanted = EDGE_START_S_M if starts_on_region_edge(region_id, data) else SPAWN_S_M
+    # authored start (owner decision, survives regeneration): Data/Regions/<id>/route_endpoints.json "start_s_m" moves
+    # the start further along the route (e.g. dk65-06: past the roundabout the rule start fell on); never closer to
+    # the route start than the rule, so the start stays behind the region-edge closure
+    endpoints = REGIONS / region_id / "route_endpoints.json"
+    if endpoints.exists():
+        authored = json.loads(endpoints.read_text(encoding="utf-8")).get("start_s_m")
+        if authored is not None:
+            if float(authored) < wanted:
+                raise SystemExit(f"{region_id}: route_endpoints.json start_s_m {authored} < rule start {wanted} m")
+            wanted = float(authored)
     start = max(0.0, min(wanted, length - MIN_AHEAD_M))
     return {"routeLengthM": round(length, 2), "startS": round(start, 2)}
 
