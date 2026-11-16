@@ -104,6 +104,9 @@ M = {
     "roof_tiles_red": {"color": [0.20, 0.075, 0.05], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
     "roof_tiles_brown": {"color": [0.11, 0.065, 0.045], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
     "roof_metal_graphite": {"color": [0.055, 0.057, 0.06], "rough": 0.5, "texture_set": "roof_tiles", "set_tile": True},
+    # knyszyn-look-s23: light grey roof sheet (fibre cement / galvanised sheet), by override only (orthophoto-read
+    # roofs, buildings_mesh.ROOF_OVERRIDES). Colour WORKING_VALUE, kept in the dark-to-mid range of the other roofs
+    "roof_sheet_grey": {"color": [0.30, 0.31, 0.32], "rough": 0.6, "texture_set": "roof_tiles", "set_tile": True},
 
     "glass": {"color": [0.03, 0.035, 0.04], "rough": 0.05},
     "window_frame": {"color": [0.6, 0.6, 0.58], "rough": 0.5},

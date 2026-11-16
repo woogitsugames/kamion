@@ -44,7 +44,17 @@ def load_overrides(region_id: str) -> list:
     if not p.exists():
         return []
     data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
-    return data.get("overrides", []) or []
+    return generated_overrides(region_id) + (data.get("overrides", []) or [])
+
+
+def generated_overrides(region_id: str) -> list[dict]:
+    """Override entries written by a tool from data (knyszyn-look-s23: overrides.ortho_roofs.json = roof tones read off
+    the orthophoto by qa/roof_tones_ortho.py). They come BEFORE the hand-authored entries of overrides.yaml, so for
+    the same target the authored `set` wins (buildings_mesh.target_sets merges in order). No file = no entries."""
+    p = REGIONS / region_id / "overrides.ortho_roofs.json"
+    if not p.exists():
+        return []
+    return json.loads(p.read_text(encoding="utf-8")).get("overrides", []) or []
 
 
 def effective_graph(region_id: str, graph: dict | None = None) -> dict:

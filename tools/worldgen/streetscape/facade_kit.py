@@ -37,7 +37,7 @@ L1 = "buildings_low"
 # material of the same tone that LOD1 already draws: gutter, canopy and leveller steel share the downpipe grey
 # (lin. 0.20-0.30), the black dock shelter (0.025) and the dock door reveals take the graphite coping (0.045)
 L1_MAT = {"gutter": "downpipe", "canopy_steel": "downpipe", "steel_checker": "downpipe",
-          "roof_metal_graphite": "hall_flashing", "dock_shelter": "hall_flashing", "reveal_hall": "hall_flashing"}
+          "roof_metal_graphite": "hall_flashing", "roof_sheet_grey": "downpipe", "dock_shelter": "hall_flashing", "reveal_hall": "hall_flashing"}
 
 
 def hfloat(*key):

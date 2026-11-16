@@ -70,11 +70,20 @@ HOUSE_TONES = [("plaster_light", 0.30, "n"), ("plaster_grey", 0.25, "n"), ("plas
 HOUSE_ROOFS = [("roof_tiles_red", 0.40), ("roof_tiles_brown", 0.32), ("roof_metal_graphite", 0.28)]
 
 
+# roofs an authored / orthophoto-read override may name (knyszyn-look-s23): the palette of the rule plus the light
+# grey sheet (fibre cement, galvanised sheet) that the rule never picks, so regions without overrides do not change
+ROOF_OVERRIDES = {name for name, _ in HOUSE_ROOFS} | {"roof_sheet_grey"}
+# overrides that leave the facade to the rules (a building that only has these still gets e.g. the rule shopfront)
+OVR_ROOF_ONLY = {"roof_material"}
+# house walls an authored override may name (read off a licensed street-level photo): the rule tones plus boarding
+HOUSE_WALL_OVERRIDES = {m for m, _, _ in HOUSE_TONES} | {"plaster_white", "plaster_yellow", "plaster_peach",
+                                                      "plaster_sage", "brick_red", "wood_planks", "wood_planks_green"}
+
+
 def house_roof_material(building, default):
-    """Opt-in roof colour for a sourced house; preserve the neighbour palette."""
+    """Opt-in roof colour for a sourced building with a pitched roof; preserve the rule palette otherwise."""
     material = building.get("ovr", {}).get("roof_material", default)
-    allowed = {name for name, _ in HOUSE_ROOFS}
-    if material not in allowed:
+    if material not in ROOF_OVERRIDES:
         raise ValueError(f"building {building['id']}: unsupported roof_material {material!r}")
     return material
 HOUSE_NEAR_M = 40.0
@@ -1342,7 +1351,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         elif typ == "block":
             wall = b["ovr"].get("wall_material") or hpick(key, TY.KAMIENICA_WALLS if sub == "kamienica" else BLOCK_WALLS)
         elif typ == "house":
-            wall = house_pal[key][0]
+            wall = b["ovr"].get("wall_material") or house_pal[key][0]
+            if wall not in HOUSE_WALL_OVERRIDES:
+                raise ValueError(f"building {b['id']}: unsupported house wall_material {wall!r}")
         elif typ == "shed":
             wall = hpick(key, ["plaster_grey", "plaster_light", "brick_red", "hall_wall_silver"])
         else:
@@ -1363,6 +1374,11 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             all_docks += docks
         storeys, sh, zbase = storey_plan(typ, h, p, sub)
         wooden = typ == "house" and storeys == 1 and poly.area < 120 and FK.hfloat(key, "wood") < 0.12
+        if typ == "house" and (b["ovr"].get("typology") or b["ovr"].get("wall_material")):
+            # authored (knyszyn-look-s23): `typology: dom_drewniany` or a boarding wall = wooden; any other authored
+            # house subtype / wall = not wooden, whatever the footprint rule says
+            wooden = (b["ovr"].get("typology") == "dom_drewniany"
+                      or str(b["ovr"].get("wall_material", "")).startswith("wood_planks"))
         if wooden:
             sub = "dom_drewniany"
         subtypes[sub] = subtypes.get(sub, 0) + 1
@@ -1388,7 +1404,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             storeys, sh, zbase = storey_plan(typ, roof.zeave - zref + 0.5, p, sub)
         # ADR 0238: rule shopfront of a pavilion on the wall nearest to a road - only for buildings with no authored
         # set (an override keeps the facade its review approved)
-        pav = sub == "pawilon" and not front and not facades and not b["ovr"] and not pitched
+        pav = sub == "pawilon" and not front and not facades and not (set(b["ovr"]) - OVR_ROOF_ONLY) and not pitched
         rect = poly.minimum_rotated_rectangle
         rc_ = np.asarray(rect.exterior.coords)[:4]
         re_ = [float(np.linalg.norm(rc_[(i + 1) % 4] - rc_[i])) for i in range(4)]
@@ -1459,7 +1475,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         accent = FK.hpick(FK.ACCENT_PLASTER, key, "accent")
         plinth = FK.hpick(PLINTHS, key, "plinth") if typ in ("block", "office") else "plinth_dark"   # draws (Low)
         if wooden:
-            wall = "wood_planks" if FK.hfloat(key, "woodc") < 0.6 else "wood_planks_green"
+            wall = (b["ovr"]["wall_material"] if str(b["ovr"].get("wall_material", "")).startswith("wood_planks")
+                    else "wood_planks" if FK.hfloat(key, "woodc") < 0.6 else "wood_planks_green")
         u_acc = 0.0
         ro_blocks = (runoff_blocks(key, float(sum(lens)) + 1.0)
                      if b.get("runoff_shuffle") and typ == "hall" and not front else None)
@@ -1799,7 +1816,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                          uv1=runoff_uv1(hole_ro, uh, uh + L, zbot, zeave))
                 uh += L
         if pitched:
-            rmat = house_roof_material(b, house_pal[key][1]) if typ == "house" else hpick(key, ROOFS_PITCHED, "roof")
+            rmat = house_roof_material(b, house_pal[key][1] if typ == "house" else hpick(key, ROOFS_PITCHED, "roof"))
             # ADR 0094 (review s9 P1-4): the soffit is light boarding (`soffit_boards`), not the graphite flashing
             # (0.045) that read 24-26 sRGB under the verge of r10_house_2 next to a wall of 140. Measured there
             # (High overcast): white `reveal_plaster` 72, the wall material 70-73, `plinth_dark` (0.20) 38 - the engine
