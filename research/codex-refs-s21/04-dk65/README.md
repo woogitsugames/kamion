@@ -106,3 +106,6 @@ FB19-01/02, picturehoover27.06.2020, dwa permalinki Mapillary obejrzane indywidu
 ### Południowe podejście do Knyszyna — KS20
 
 Dwa nowe kadry picturehoover27.06.2020 obejrzane także przez root: falująca niweleta, wąski ziarnisty pas przy białej krawędzi, trawa/wyższa roślinność przed lasem po prawej i szereg dużych nieregularnych pni po lewej. Bez gatunków, rozstawów, wymiarów rowu lub przepustu z domysłu. Dwa widoki tego samego odcinka, nie dwa odrębne szpalery. K1km24.6 służy selekcji, przypisanie do dk65-11 ESTIMATED, GPS aparatu UNVERIFIED. [KS20](knyszyn-south-verges-round20/README.md).
+
+
+R21: trzy nowe kadry robót DK65 z lipca2026, agent i root osobno obejrzeli. Tablice na stopach, czerwono-białe moduły i kanał ruchu przy rowie. Żółte obrzeża tablic nie są żółtymi liniami poziomymi. Lokalny kilometr galerii nie jest pewnym kilometrażem krajowym/GPS; kontraktS19 nie oznacza, że zdjęcie przedstawia gotowąS19. Główny34.
