@@ -370,6 +370,16 @@ test `Tests/EditMode/TrailerAxleSyncTests.cs` (osie fizyki vs `dims.json`, piwot
 środki kół w FBX z art-source i w kopii `_Generated` użytej przez prefab, spinnery prefabu graybox i art, domyślna wartość
 shadera; tolerancja 1 cm).
 
+Wyniki Unity 6000.3.28f1 (batch, Win64): `RebuildTrailerPrefabBatch` OK — prefab graybox z kołami na −6,32 / −7,63 / −8,94
+(fileID komponentów zregenerowane, cele nadpisań w `DrivingLab.unity` zachowane: 3/3 istnieją); `TrailerAssetBuilder.BuildBatch`
+OK (LOD 88 848 / 24 347 / 7 823 tr., bez ostrzeżeń „m from the nearest physics wheel” i `KINGPIN`); visual-qa `WorldC` High
+pochmurno, kamery `trailer-34`, `trailer-side` przed/po (`artifacts/trailer-763-s23/unity-{before,after}/`): tridem z
+błotnikami i chlapaczem przesunięty razem w stronę sworznia. EditMode (`test.ps1 -Platform EditMode -BuildTarget Win64`,
+po `git merge origin/main` z #171 `TrailerModel.cs` — kompiluje się): **1126 testów, 1103 passed, 22 failed, 1 skipped**;
+`TrailerAxleSyncTests` 8/8 PASS. 22 porażki to `StartClearanceTests.ImportedScene_BakedSpawnIsTheImportersStart` (20 regionów,
+kopie `_Generated` w worktree) i `CarPaintMaterialTests.DepositionChannel_*` (2) — ten sam zestaw 2 + 20 padł w worktree
+`cabin-pc-s23` (19:58, bez zmian naczepy), więc to środowisko worktree, nie ta zmiana. Rendery czekają na `visual-critic`.
+
 ## 10. Korekta D79: 7,63 m i przyczyna pełzania (P16, gałąź `trailer-763-d79`, 2026-11-16)
 
 Gałąź z `origin/trailer-760-d79` @ `5fe05662c` + `git merge origin/main` (@ `8133dfd7f`). Runner: `dotnet run -c Release
