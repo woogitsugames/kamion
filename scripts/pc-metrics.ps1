@@ -7,6 +7,7 @@
   pwsh scripts/pc-metrics.ps1 -Exe artifacts/win/kamion-<ver>-<sha>-regions/Kamion.exe                  # Boot scene, 90 s, no budget
   pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene knyszyn-w -Tier High -Fps 60 -Width 1920 -Height 1080 -Class zalecany
   pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene knyszyn-w -Tier Low -Fps 30 -Class min -DurationSeconds 1800      # 30 min (Etap 5), D74 min = Low 1080p30
+  pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene knyszyn-w -Tier Low -Fps 30 -VSync 0 -Width 1920 -Height 1080 -Class min       # D76 emulation on RTX 5070
   pwsh scripts/pc-metrics.ps1 -Exe <exe> -Scene DrivingLab -Extra autopilot=circle50,speed=40,trailer=40 -Fps 240 -VSync 0   # uncapped headroom
 .NOTES
   Output: artifacts/pc/<machine>/<ts>/ (pc-report.md / .json; exit code of the parser: 0 in budget, 1 over budget, 2 invalid).
@@ -17,7 +18,10 @@
   for the "min" class pass -Tier Low -Fps 30 or the parser reports a context mismatch.
   Rules (docs/03): player only (never the editor), window in focus for the whole run, nothing else rendering on the machine,
   same machine + same route for before/after comparisons. The developer RTX 5070 machine is a measuring machine, NOT the
-  reference PC (ADR 0260) - its reports say "informacyjny" until the owner names reference hardware.
+  reference PC (ADR 0260). D76: for classes min / zalecany it counts as an EMULATION (tools/pcperf/budgets/pc-machines.json,
+  read by the parser by default) when the run matches the method: 1920x1080 fullscreen (borderless/exclusive), tier Low/High,
+  -Fps 30/60, -VSync 0. Then pc-report says measurement_kind=emulation and can pass the gate with the "EMULACJA (D76)" note;
+  any other setup is "informational".
 #>
 param(
     [Parameter(Mandatory = $true)] [string]$Exe,
