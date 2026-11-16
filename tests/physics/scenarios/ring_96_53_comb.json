@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "ring_96_53_comb",
-  "description": "Turning ring 12.50 / 5.30 m (96/53/EC Annex I 1.5), current trailer geometry (kingpin -> tridem centre 7.70 m)",
-  "spec": "docs/04 s6.7; ADR 0280",
+  "description": "Turning ring 12.50 / 5.30 m (96/53/EC Annex I 1.5), game trailer geometry (kingpin -> tridem centre 7.63 m, D79 correction)",
+  "spec": "docs/04 s6.7; ADR 0280; D79",
   "variants": [
     "empty",
     "laden40"
@@ -20,11 +20,6 @@
     "trailerRearZ": -12.0,
     "trailerHalfWidth": 1.275
   },
-  "expectedFailReason": "ADR 0280: kingpin -> tridem centre 7.70 m (curtainsider_tridem_13_6.trailer.json, WORKING_VALUE) with the tridem scrub (effective wheelbase ~7.88 m) puts the trailer side ~4-6 cm inside 5.30 m when the bumper corner is on 12.50 m. Proposal 7.60 m: ring_96_53_comb_rwb760. Decision of the leader/owner (game data).",
-  "expectedFailMetrics": [
-    "swept_inner_radius_m",
-    "swept_ring_width_m"
-  ],
   "duration": 240,
   "driver": {
     "type": "circle",
@@ -49,9 +44,9 @@
     },
     {
       "metric": "swept_ring_width_m",
-      "status": "DERIVED",
-      "source": "12.50 - 5.30 = 7.20 m (DERIVED from the SOURCED radii; necessary condition at any placement)",
-      "max": 7.2,
+      "status": "WORKING_VALUE",
+      "source": "margin guard, not the regulation: 12.50 - 5.30 = 7.20 m (DERIVED from the SOURCED radii) minus 0.02 m. History: 7.15 (5 cm) with the 7.60 m axles (D79); 7.18 (2 cm) since the owner's D79 correction to the datasheet value 7.63 m (measured 7.177 / 7.170 m, ADR 0280 section 10)",
+      "max": 7.18,
       "from": 120
     },
     {

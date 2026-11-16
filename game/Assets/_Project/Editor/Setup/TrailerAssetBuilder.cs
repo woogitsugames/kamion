@@ -212,7 +212,8 @@ namespace Game.Editor.Setup
                     // dims.json), not from the baked mask (dark blotches on the rear third). Posts every 3.4 m from the rear
                     // portal: WORKING_VALUE.
                     m.SetVector("_CurtainGrime", slot == "Curtain" ? new Vector4(1f, 1.31f, 3.88f, -12.0f) : Vector4.zero);
-                    m.SetVector("_CurtainAxles", new Vector4(-6.39f, -7.70f, -9.01f, 0f));
+                    // Axle z = dims.json trailer_axle_z_m (D79 / ADR 0280: kingpin -> tridem centre 7.63 m, was 7.70 m).
+                    m.SetVector("_CurtainAxles", new Vector4(-6.32f, -7.63f, -8.94f, 0f));
                     m.SetVector("_CurtainPosts", new Vector4(3.4f, 0f, 0.22f, 0.7f));
                     // ADR 0182 (review s18 0175 P2): the rear doors, portal posts and contour tapes take their dirt from the
                     // rear-face soiling model (wake film, hinge posts / centre seal, header and hinge runoff, per-leaf seeds)
