@@ -60,7 +60,8 @@ namespace Game.Tests
         public void BuildIdFile_LivesNextToTheExe_OutsideTheDataFolder()
         {
             string p = BuildInfo.BuildIdPathFor("C:/Games/kamion-0.1.0-abc/Kamion_Data");
-            Assert.AreEqual(System.IO.Path.Combine("C:/Games/kamion-0.1.0-abc", "build-id.json"), p);
+            // int-h3-s23: GetDirectoryName gives "\" on Windows - compare normalised paths, not separators.
+            Assert.AreEqual(System.IO.Path.GetFullPath(System.IO.Path.Combine("C:/Games/kamion-0.1.0-abc", "build-id.json")), System.IO.Path.GetFullPath(p));
             Assert.AreEqual(p, BuildInfo.BuildIdPathFor("C:/Games/kamion-0.1.0-abc/Kamion_Data/"));
             Assert.IsNull(BuildInfo.BuildIdPathFor(null));
             Assert.AreEqual("", BuildInfo.ReadContentHash(System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName(), "Kamion_Data")),
