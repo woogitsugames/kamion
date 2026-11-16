@@ -1,0 +1,73 @@
+{
+  "review_date": "2026-11-16",
+  "status": "STABLE — dwa nowe kadry AUX detali fasad; pełny dach bliskich brył niepotwierdzony",
+  "goal": "Mniej pokryta fasada we wschodniej pierzei Rynku, na południe od znanej ceglanej poczty MT6-002. Widoczne dachy, rytm otworów i kontakt z chodnikiem.",
+  "selection_viewport_only": {
+    "lat": 53.3118,
+    "lon": 22.9206
+  },
+  "dedup_read": [
+    "03-knyszyn/manifest.csv — 40 rekordów",
+    "03-knyszyn/README.md — aktualny opis wszystkich rund",
+    "research/dk65-knyszyn-refs/manifest.csv — Rynek/Grodzieńska/Szkolna"
+  ],
+  "excluded_subjects": [
+    "urząd",
+    "Rynek1",
+    "Rynek6 biblioteka",
+    "Kościelna4",
+    "sklep mięsny Podlasie",
+    "ceglana poczta MT6-002 i jej drewniany sąsiad",
+    "fontanna i ławki"
+  ],
+  "limits": {
+    "max_new_frames": 2,
+    "downloads": 0,
+    "new_OSM_requests": 0,
+    "Commons_requests": 0,
+    "Flickr_requests": 0
+  },
+  "unverified": [
+    "adres nowej fasady",
+    "data i autor przed oglądem",
+    "GPS aparatu i azymut",
+    "formalna liczba kondygnacji",
+    "stan2026"
+  ],
+  "selection_change": "Na południowo-wschodniej ulicy Rynku nie było widocznej zielonej sekwencji. Wybrano widoczny odcinek północno-wschodniego boku Rynku, bez kolejnej serii punktów poza placem.",
+  "viewer": {
+    "basemap": "OpenStreetMap jawnie wybrane w menu",
+    "capture_mode": "All captures jawnie wybrane w menu",
+    "frames": [
+      {
+        "id": "348983949901966",
+        "author": "picturehoover",
+        "date_ui": "2020-06-27"
+      },
+      {
+        "id": "285925019874345",
+        "author": "picturehoover",
+        "date_ui": "2020-06-27"
+      }
+    ],
+    "viewport_only": {
+      "lat": 53.3123756,
+      "lon": 22.920555555556
+    },
+    "camera_GPS": "UNVERIFIED — nie utożsamiono ze środkiem viewportu"
+  },
+  "result": {
+    "new_exposures": 2,
+    "confirmed_new_unique_buildings": 0,
+    "complete_new_roof_geometries": 0,
+    "downloaded_media": 0,
+    "status": "AUX dla detali pierzei, nie pełne domknięcie luki dachów"
+  },
+  "dedup_result": "Oba dokładne ID nie występowały wcześniej w lokalnych s21/K1. Znany urząd w tle nie jest nowym obiektem. Nie potwierdzono adresowej tożsamości bliskich fasad ani ich nowości względem wszystkich odległych teł K1.",
+  "visual_limits": [
+    "Pierwszy kadr: czerwone pochyłe partie dachu brązowej fasady są widoczne, ale górny obrys jest ucięty.",
+    "Drugi kadr: górna część jasnoszarego budynku z balkonem jest ucięta; brak podstaw do określenia pełnego dachu i formalnych kondygnacji.",
+    "Nie ustalono liczby wszystkich otworów, wymiarów, materiału tynku ani dokładnego materiału pokryć.",
+    "Nie przypisano adresów z samej etykiety OSM lub sąsiedztwa."
+  ]
+}
