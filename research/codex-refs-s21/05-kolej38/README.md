@@ -71,3 +71,8 @@ Typu sieci nie przeliczano z kodu na wysokość/rozstaw słupów. Parametr pręd
 ## Historyczny budynek Fasty — runda9
 
 [fasty-ground-round9](fasty-ground-round9/README.md):2osobno obejrzane kadry1budynku, MaliniakCCBYSA2.5 iHenrykBorawskiCCBYSA3.0. Pierwsza data2006-06-04 to upload, ekspozycjaUNVERIFIED; druga26.07.2013. Podcień/ławka/schody/falisty dach/tablica informacyjna;0widocznych przejazdów/szyn/podsypki. Materiał dachu i stan2026nieustalone.1małyoryginał+1podgląd pozaGit,2miniatury≤800px. Główny05ma17rekordów.
+
+
+## Komunikaty wykonawców — runda10
+
+[contractor-ground-round10](contractor-ground-round10/README.md):3pełne teksty komunikatów INTOP/Unibep/PUW,0kandydatów zdjęciowych z pewnym podpisemFasty/Knyszyn,0obrazów obejrzanych/pobranych. Umowa/wybór oferty/pozwolenie i data publikacji nie lokalizują ilustracji ani nie dowodzą wykonania lub uruchomienia infrastruktury. Ograniczony przegląd, bez globalnego wniosku o nieistnieniu zdjęć. Główny17bez zmian.
