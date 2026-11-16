@@ -231,12 +231,27 @@ class Chain:
     def zc(self, s):
         return self.interp(self.z, s)
 
+    def _crossfall_arrays(self):
+        """(nan_to_num(e), isnan(e) as float) of the current e, cached per e array (ADR 0281 K1c: crossfall_z is
+        called ~700 k times per build_world). e is only ever replaced (profile.crossfall / match_crossfall_at_nodes
+        assign a new array); the cached source is made read-only so an in-place write fails loudly instead of
+        leaving the cache stale."""
+        src = getattr(self, "_xf_src", None)
+        if src is None or src is not self.e:
+            e = self.e
+            if isinstance(e, np.ndarray) and e.flags.writeable and e.flags.owndata:
+                e.flags.writeable = False
+            self._xf_src = e
+            self._xf = (np.nan_to_num(e, nan=0.0), np.isnan(e).astype(float))
+        return self._xf
+
     def crossfall_z(self, s, lat):
         """Surface height on the carriageway at station s, lateral lat (left +)."""
         s = np.asarray(s, float)
         lat = np.asarray(lat, float)
-        e = self.interp(np.nan_to_num(self.e, nan=0.0), s)
-        roof = self.interp(np.isnan(self.e).astype(float), s) > 0.5
+        e0, nan_e = self._crossfall_arrays()
+        e = self.interp(e0, s)
+        roof = self.interp(nan_e, s) > 0.5
         hw = self.hw_at(s)
         latc = np.clip(lat, -hw, hw)
         return self.zc(s) + np.where(roof, -S.CROSSFALL * np.abs(latc), e * latc)
@@ -246,6 +261,13 @@ class Chain:
 
     def section(self, s, sections):
         return sections[int(self.sec_idx[self.idx(s)])]
+
+
+def _qbox(q, r):
+    """Query box of a point: the envelope of q.buffer(r) (bounds of a GEOS point buffer are exactly x -+ r, y -+ r -
+    tests/test_perf_0281.py), so STRtree.query returns the same candidates in the same order, without building the
+    33-vertex circle per station (ADR 0281 K1b)."""
+    return shapely.box(q.x - r, q.y - r, q.x + r, q.y + r)
 
 
 @dataclass
@@ -1065,7 +1087,7 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 hits = np.zeros(len(idx))
                 for j, i in enumerate(idx):
                     q = Point(*(c.line.p[i] + c.line.n[i] * sg * (c.hw[i] + S.RURAL_FOOT_M / 2)))
-                    hits[j] = 1.0 if wk_tree is not None and len(wk_tree.query(q.buffer(S.RURAL_FOOT_M / 2 + 1.0))) else 0.0
+                    hits[j] = 1.0 if wk_tree is not None and len(wk_tree.query(_qbox(q, S.RURAL_FOOT_M / 2 + 1.0))) else 0.0
                 hs = np.array([hits[max(0, j - win):j + win + 1].mean() for j in range(len(idx))]) >= 0.2
                 path_d[side_] = np.interp(np.arange(n), idx, hs.astype(float)) > 0.5
                 rural_d[side_] = np.ones(n, bool)
@@ -1104,14 +1126,14 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 hw = c.hw[i]
                 if ft_tree is not None:
                     q = Point(*(p + nrm * (hw + S.KERB_TOP_W + 1.1)))
-                    near = ft_tree.query(q.buffer(1.4))
+                    near = ft_tree.query(_qbox(q, 1.4))
                     walk[j] = 1.0 if len(near) and min(footways[k].distance(q) for k in near) <= 1.4 else 0.0
                 if c.dirn[i] != 0 and ow_tree is not None:
                     tdir = c.line.t[i] * c.dirn[i]
                     for dist in (3.0, 6.0, 10.0, 15.0, 22.0):
                         q = Point(*(p + nrm * (hw + dist)))
                         hit = False
-                        for k in ow_tree.query(q.buffer(3.0)):
+                        for k in ow_tree.query(_qbox(q, 3.0)):
                             oc = ow_meta[int(k)]
                             if oc is c:
                                 continue

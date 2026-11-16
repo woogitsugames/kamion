@@ -1,5 +1,5 @@
-# STATUS — G5 summer-cd-0216b (chmura G, rozszerzenie ADR 0216, D68)
-- Krok 1: profile `summer-bialystok-cd` + `led-white-4000k-bialystok` (C, Dojlidy) w `Data/Regions/lighting_profiles.json`; NOAA `tools/worldgen/qa/sun_noaa.py` (31 VII −6° 21:06/311,4°; 20 VIII 20:22/299,7°).
-- Krok 2: LED głowice tylko na 10 ulicach Dojlid z TED 769998-2024 (override `lamp-policy-led-tender-0216b`, 64 way); C bez zmian (`lamp-policy-unverified-0216b`); generator `furniture.chain_lamp_proto` + `lamp_led_scope`; audyt `tools/worldgen/qa/lamp_family_audit.py`.
-- Krok 3: pytest `tests/gis/test_summer_cd_0216b.py` + `test_lamp_led_0216.py` 19 passed; EditMode zaktualizowany (nieuruchomiony); ADR 0216 §0216b.
-- NASTĘPNY KROK (lider, po 0221): komendy w `docs/adr/0216-lato-i-biale-led-dk65-knyszyn.md` §0216b „Komendy dla lidera” (build_region → build_world → import-region → visual-qa → EditMode → APK A16).
+# STATUS — D26 worldgen-perf2-0281 (ADR 0281)
+
+- K1b (STRtree po prostokącie), K1c (cache nan_to_num w crossfall_z), K2 (memo road_footprint_polygon), K4a (nan_to_num raz na build_meshes), K5 (cache textures()) — wdrożone + `tools/worldgen/tests/test_perf_0281.py` (10 passed).
+- W toku: bieg bazowy C (`--nmt flat --skip-far-field`) na origin/main w scratchpad; potem bieg „po” i porównanie sha256.
+- NASTĘPNY KROK: `uv run --project tools/worldgen python -m pytest tools/worldgen/tests/test_perf_0281.py -q` + build przed/po (`qa/profile_build_world.py --nmt flat --skip-far-field --out-root <scratch>`).
