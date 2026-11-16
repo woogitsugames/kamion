@@ -122,3 +122,5 @@ R23 uzupełnienie słownika: root obejrzał stronę20 instrukcjiTAKSATORPU2023 o
 R25: dwa nowe kadry rzeczywistej żółtej farby na asfalcie DK65, podpisy27/26.08.2026. Root oba obejrzał: przerywane odcinki/zygzak oraz cienka ciągła prawa krawędź. To nie same żółte obrzeża tablic. Bez kodówP/U, metrów i transferu do listopada2026. Główny39.
 
 16.11.2026 R26: nowy szerszy widok orto dk65-09 (280×280m w żądaniu, raster800×800px), root obejrzał. Jasny pas przy SW krawędzi i szerokie otwarte pokrycie; po NE nieregularne korony przed polami. Bez potwierdzenia rowu/przepustu/zjazdu/gatunku/pni; 0,35m/px nie jest dokładnością ani GSD. Data nalotu UNVERIFIED.
+
+R29 pogłębia znany04-TI9-D01:4 wiersze parametrów projektowanych zatokDK65/DZ1 i ramp chodnikowych, osobny oglądPDF44/druk45. Bez nowego dokumentu/zdjęcia i bez join do istniejących przystanków; główny manifest40.
