@@ -74,3 +74,64 @@ Razem ≈ 35 nowych zestawów (15 słupków reguł + ~20 z OSM). Budżet: zestaw
 (LoD0); +1 materiał/draw na nowy kod w kaflu (instancjonowanie). Region C: 0 nowych znaków, P-14 przesunięte
 (trójkąty bez zmian) → budżet C neutralny (stretch_04 bez zmian). A-7 + T-1: reguła działa (testy), ale na kaflach
 0 wystąpień — drogi podporządkowane mają krawężniki z generatora (= zabudowa → 50 km/h) i brak OSM `maxspeed` > 60.
+
+## A-7 z T-1 — klasyfikacja zabudowy (D33, chmura D r8, gałąź `signs-a7-s23`, 2026-11-16)
+Status: Proposed. Baza: PR #154 (`signs-p1-s23`, scalony do gałęzi). Problem z P1: A-7 + T-1 = 0 na wszystkich kaflach,
+bo `built_up.kerbed()` (krawężnik/chodnik wygenerowany przez NASZE reguły przekroju, ADR 0272) liczył się jako obszar
+zabudowany → 50 km/h.
+
+**Przepisy (sprawdzone w PDF z API ELI):**
+- Prawo o ruchu drogowym — najnowszy t.j. wg ELI (`DU/1997/602/references`, 2026-11-16) = **Dz.U. 2024 poz. 1251**
+  (`text.pdf` sha256 `de6c1f33…fccb`). Art. 2 pkt 15 (s. 11): „obszar zabudowany – obszar oznaczony odpowiednimi znakami
+  drogowymi” (D-42/D-43). **Art. 20 (s. 24–25):** ust. 1 — 50 km/h w obszarze zabudowanym; ust. 2 — 20 km/h w strefie
+  zamieszkania; ust. 3 pkt 1 — poza obszarem: lit. a autostrada 140, lit. b ekspresowa dwujezdniowa 120, lit. c ekspresowa
+  jednojezdniowa i dwujezdniowa ≥ 2 pasy/kierunek 100, lit. d pozostałe 90; pkt 2 — zespoły / > 3,5 t 80/70 (ciężarówka gry,
+  ale reguły znaków Z1 mówią o „dopuszczalnej prędkości” drogi = limit ogólny). Zmiany ustawy po t.j. 2024 (akty zmieniające
+  2025–2026) dla art. 20 — UNVERIFIED (nie przeglądane po kolei).
+- Z1 (Dz.U. 2019 poz. 2311 zał. 1) **pkt 2.2.8, s. 64** (dosłownie): „Znak A-7 … umieszcza się na drodze podporządkowanej
+  przed skrzyżowaniem z drogą z pierwszeństwem”; „nie dalej niż: – 50 m – na drogach o dopuszczalnej prędkości powyżej
+  60 km/h”; „Na drogach o dopuszczalnej prędkości powyżej 60 km/h znak A-7 należy poprzedzić w odległości od 150 do 300 m
+  znakiem A-7 z tabliczką T-1”. Rys. 2.2.8.2: oba słupki uprzedzające (A-7 + „200 m”, A-7 + „Stop 200 m”) stoją na drogach
+  podporządkowanych, na drodze z pierwszeństwem tylko A-6.
+  → **A-7 bierze prędkość drogi PODPORZĄDKOWANEJ** (tej, na której stoi znak), a nie głównej — tak było w P1 i tak zostaje;
+  test `test_a7_t1_uses_minor_road_speed_not_major` (główna 50 / podporządkowana 90 → jest; główna 90 / podp. 50 → brak).
+
+**Decyzja — jedna funkcja `streetscape/built_up.py: Zone` (cache na sieci, `zone_for(net, src, origin)`):**
+1. `Zone.at(c, s)` = obszar zabudowany = między D-42 i D-43: (a) węzły OSM `traffic_sign=city_limit` / `PL:D-42` /
+   `PL:D-43` (kierunek z `direction`/`traffic_sign:direction`, inaczej strona mapowania) przesuwają granicę reguły w ≤ 300 m
+   albo dzielą odcinek; `city_name` tylko przesuwa; (b) reguła BDOT10k: OT_PTZB_A **dowolnego** rodzaju + OSM `landuse`
+   residential/industrial/commercial/retail/garages w ≤ 60 m od osi, tylko spójne części zawierające zabudowę mieszkaniową
+   (sam park przemysłowy nie jest miejscowością), koniec obszaru cofnięty do ostatniej stacji mieszkaniowej (pkt 5.2.48.2:
+   „nie przemysłowe obrzeża”), luka < 300 m bez pary (5.2.48.1), izolowany < 100 m — nie; (c) **krawężnik NIE jest
+   dowodem** (`kerbed()` zostaje tylko w raporcie QA).
+2. `built_up_places.json` (nowy, ODbL): granica administracyjna Białegostoku (OSM rel. 1429268, Nominatim, uproszczona 5 m)
+   = jeden obszar zabudowany. Bez tego reguła BDOT cięła miasto (las, tory, hale > 300 m): pomiar dał fałszywe pary D-42/D-43
+   w C (2), maczka (2), knyszynska (1) i A-7 + T-1 w kleeberga. WORKING_VALUE: D-42 „Białystok” stoją przy wjazdach do miasta.
+3. `default_speed(sec, built_up)` = art. 20 (20 / 50 / 90 / 100 / 140; ekspresowe nierozróżniane — brak `motorroad` w grafie,
+   mają OSM `maxspeed`); `legal_speed` = OSM `maxspeed`, inaczej art. 20; `Zone.speed(c, s)`.
+4. Użytkownicy: `rule_signs`/`boundaries` (D-42/D-43), `advance_signs` (A-7 + T-1 / „Stop”), `signs_route._a8` + `needs_a8(built_up,
+   sec, has_e1)` (A-8). Oświetlenie (`furniture.lamps`), B-33 z reguły (`speed_signs`) i przekroje (`network.assign_sides`)
+   nie używały tej klasyfikacji i są niezmienione (testy lamp/furniture/streetscape/junction/marking/rail: 427 passed).
+
+**Wpływ przy przebudowie (pomiar tylko-odczyt: `junction_signs` → `osm_signs`/`rule_signs` → `roundabout_signs` na
+`roads.graph.json` + `streetscape_sources.json` z gita, wysokość płaska; przed = PR #154, po = ta gałąź):**
+
+| Kafel | A-7 + T-1 (EPSG:2180 E, N słupka) | A-7 pominięte (dojazd < 150 m) | Pary D-42/D-43 reguły przed → po |
+|---|---|---|---|
+| bialystok-* (5 kafli, w tym C) | 0 | 0 | 0 → 0 |
+| dk65-01 / 02 / 03 / 08 / 09 / 11 | 0 | 0 | 0→1 / 1→1 / 0→0 / 3→3 / 0 / 0 |
+| dk65-04 | 1 (767803, 600864) | 0 | 0 → 0 (OSM `city_limit`) |
+| dk65-05 | 1 (768109, 602960) | 1 | 0 → 2 |
+| dk65-06 | 0 | 0 | 0 → 2 |
+| dk65-07 | 1 (766616, 605057) | 0 | 0 → 1 |
+| dk65-10 | 2 (763900, 608191), (763610, 608947) | 2 | 0 → 2 |
+| dk65-monki-01 | 3 (758851, 613942), (759098, 614104), (758960, 614271) | 0 | 0 → 0 |
+| dw671-tykocin-01 | 2 (758966, 609935), (759035, 610798) | 0 | 1 → 2 |
+| knyszyn | 0 | 1 | 0 → 1 |
+| knyszyn-s | 1 (761899, 610391) | 0 | 2 → 2 |
+| knyszyn-w | 3 (760045, 613275), (759824, 613060), (760453, 612033) | 2 | 0 → 1 |
+Razem **14 słupków A-7 + T-1 „150 m”** (wszystkie v = 90 km/h z art. 20, wszystkie na podporządkowanych z krawężnikiem
+generatora), 7 pominiętych (zgłoszone w `report["built_up"]["advance_dropped"]`), pary D-42/D-43 reguły 7 → 18. A-8 bez
+zmian (knyszyn 1). Region C: 0 zmian → budżet C neutralny (stretch_04 bez zmian). Poza C: +14 słupków × (30 + 2 tarcze)
+tris + 11 par D-42/D-43; nowe kody `T-1_150` / `A-7` już instancjonowane (bez nowych materiałów poza `T-1_150` w kaflu).
+Granice D-42/D-43 reguły są ESTIMATED — lider przy world3 ogląda je na kamerach DK65; korekta = authored override (później).
