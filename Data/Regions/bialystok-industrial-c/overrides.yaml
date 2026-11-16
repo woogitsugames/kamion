@@ -697,13 +697,21 @@ overrides:
     osm_way: 173956083
     before_node: n1852129066
     distance_m: 100.0
+    # ADR 0236 (research R2-081, KartaView 3686129 / 313, 2021-06-23, CC BY-SA 4.0: content only, our own face): the
+    # board on this arm is an E-1 with a crossroads diagram - 8 E67 Warszawa / 65 Ełk above the vertical road, 675
+    # Centrum on the left arm (crossed out with tape in 2021, signed again on the 2024 portal p40: kept), 8 E67
+    # Augustów / 19 Kuźnica PL BY on the right arm. Until now a 5-row list board from the OSM destination tags at the
+    # WORKING_VALUE 0.62 m row (4.6 x 3.3 m). size_m WORKING_VALUE: width as before (2020 frame), height from the
+    # 2.5 : 1 proportion of the R2-068 frame (seen ~35 deg off axis); letters then 173 mm (group V-VI, Tabela 1.9).
     boards:
       - lanes: [0, 1]
-        from_osm:
-          - {way: 1101181473, refs_extra: ["8", E67]}
-          - {way: 606396463, refs_extra: ["8", E67]}
-          - {way: 284541843}
+        size_m: [4.6, 1.85]
+        style: e1_cross
+        top: [[["8", E67], Warszawa], [["65"], Ełk]]
+        left: [[["675"], Centrum]]
+        right: [[["8", E67], Augustów], [["19"], Kuźnica PL BY]]
     mapillary: ["995780104564541", "1240467703063612"]
+    r2: [R2-081, R2-068]
     reason: >-
       Mapillary 995780104564541 (richlv, 2020-08-15) shows one lattice column in the gore left of the link to Rondo
       Putry (after the ramp to the viaduct splits off) and a lattice arm over both lanes carrying one direction board
@@ -825,6 +833,87 @@ overrides:
       orthophoto 15.6 m apart (N 117.6-121.2).
     confidence: medium
     verify: lane assignment of the boards on site
+  # ---------------------------------------------------------------- ADR 0236: direction signs of route C (research R2)
+  # Research R2 (research/cloud2/direction-signs-route-c, PR #62; review REVIEW-2026-11-15-s21-cloudD-62): KartaView
+  # sequence 3686129 (2021-06-23) and Panoramax (2019-08-15), both CC BY-SA 4.0 - content and positions read off the
+  # frames, no pixels; faces are our own drawings laid out by Dz.U. 2019 poz. 2311 zał. 1 (streetscape.sign_norms).
+  - id: andersa-putry-e1-advance-gantry
+    kind: sign_gantry
+    osm_way: 1093579590
+    before_node: n2359253621
+    distance_m: 32.2
+    # Column feet on the GUGiK WMS ORTO HighResolution orthophoto (EPSG:2180 bbox 777780,595945,777828,595981 at
+    # 0.03 m/px, read 2026-11-15): the lattice beam crosses the north-west bound carriageway from the median foot at
+    # E 777799.6 N 595953.2 to the verge foot at E 777807.9 N 595963.7 (+-1 m: the beam top leans on the orthophoto),
+    # 13.4 m apart; the board's shadow lies on the two left lanes. The R2-066 frame (E -157.4 N -288.7) is 42 m before it.
+    columns_en: [[-195.4, -269.8], [-187.1, -259.3]]
+    beam_depth_m: 0.6
+    boards:
+      - lanes: [0, 1]
+        # R2-066 frame: board 103 x 57 px between column axes 422 px apart (= the 13.4 m beam) -> 3.3 x 1.8 m (+-10 %),
+        # centre 5.2 m from the median column. Five rows in two groups: letters come to 184 mm (between groups V
+        # and VI of Tabela 1.8; one group of five rows at d = 210 mm would be 1.90 m by Tabela 9.5.4). WORKING_VALUE.
+        size_m: [3.3, 1.8]
+        lat_shift_m: -0.8
+        frame: single
+        panels:
+          - {arrow: none, rows: [[["8", E67], Warszawa], [["65"], Ełk]]}
+          - {arrow: fork_right, rows: [[["8", E67], Augustów], [["19"], Kuźnica PL BY], [["675"], Centrum]]}
+    r2: [R2-079, R2-066]
+    kartaview: ["3686129/303"]
+    orthophoto: "GUGiK WMS ORTO HighResolution, bbox 777780,595945,777828,595981 (EPSG:2180), 2026-11-15"
+    reason: >-
+      Review of PR #62 (P2): the E-1 advance board ~500 m before Rondo Putry hangs on a lattice portal across the
+      north-west bound carriageway of Andersa, 91 m before the E-2 portal `andersa-putry-approach-gantry`; nothing
+      stood there. Content R2-079 (2021): 8 E67 Warszawa / 65 Ełk straight on; 8 E67 Augustów / 19 Kuźnica PL BY /
+      675 Centrum on the branch to the right (the 675 number and the white field are small on the frame: read with
+      the next portal, which repeats them). State 2026 UNVERIFIED (newest frame 2021).
+    confidence: medium
+    verify: board on site (2026), column feet
+  - id: tysiaclecia-n-putry-e15-right
+    kind: gate3_sign
+    along: {osm_way: 237183783, before_node: n2466608891, distance_m: 38.0, side: R}
+    parts: [{face: E-15, text: "8|19"}, {face: E-16, text: "E67"}]
+    r2: [R2-017, R2-008]
+    photo: ["panoramax:6ded8ec0"]
+    reason: >-
+      ADR 0236, research R2-017 (Panoramax 6ded8ec0, 2019-08-15): route numbers "8" and "19" (red) side by side over
+      "E 67" (green) on one post on both sides of the northbound exit of Rondo Putry. Station: the "E 67" plate
+      (0.60 m by rys. 9.5.47) is 26-28 px wide on the 1280 px frame -> ~24 m ahead of the frame at an assumed 62 deg
+      lens (ESTIMATED, +-20 %), i.e. ~40 m after the ring node 2629251371 - within the 50 m of pkt 6.3.7.8.
+    confidence: low
+    verify: station on site / orthophoto
+  - id: tysiaclecia-n-putry-e15-left
+    kind: gate3_sign
+    along: {osm_way: 237183783, before_node: n2466608891, distance_m: 38.0, side: L}
+    parts: [{face: E-15, text: "8|19"}, {face: E-16, text: "E67"}]
+    r2: [R2-017, R2-008]
+    photo: ["panoramax:6ded8ec0"]
+    reason: Same assembly on the left (median) side, R2-017.
+    confidence: low
+    verify: station on site / orthophoto
+  - id: andersa-biezenstwa-e15-right
+    kind: gate3_sign
+    along: {osm_way: 552161976, before_node: n2367445386, distance_m: 170.0, side: R}
+    parts: [{face: E-15, text: "19"}, {face: E-15, text: "65"}]
+    r2: [R2-077, R2-064]
+    photo: ["kartaview:3686129/281"]
+    reason: >-
+      ADR 0236, research R2-077 (KartaView 3686129 / 281, 2021-06-23): "19" over "65" (red) on single posts on both
+      sides of the north-west bound carriageway just after the slip from Rondo Bieżeństwa joins. Station: the "19"
+      plate (0.41 m) is 37 px wide on the 1280 px frame -> ~11 m ahead of the frame (E 295.4 N -567.3) at an assumed
+      68 deg lens (ESTIMATED), i.e. ~26 m after the merge node 3341716402 (<= 50 m, pkt 6.3.7.8).
+    confidence: low
+    verify: station on site / orthophoto
+  - id: andersa-biezenstwa-e15-left
+    kind: gate3_sign
+    along: {osm_way: 552161976, before_node: n2367445386, distance_m: 170.0, side: L}
+    parts: [{face: E-15, text: "19"}, {face: E-15, text: "65"}]
+    r2: [R2-077, R2-064]
+    photo: ["kartaview:3686129/281"]
+    reason: Same assembly on the median side (behind the guardrail), R2-077.
+    confidence: low
+    verify: station on site / orthophoto
   - id: andersa-ne-noise-barrier-glazed
     kind: noise_barrier_style
     zones:
@@ -2762,3 +2851,20 @@ overrides:
       al. 1000-lecia and Maczka, whose rule poles are already the LED family. Sodium head kept, type UNVERIFIED.
     confidence: low
     verify: owner - night photo of Sokolska or Kombatantow (LED or sodium)
+  # ================================================================ ADR 0237 (kerbs-0237, research R6): footways, kerbs
+  - id: pavements-0237
+    kind: pavement_rules
+    sidewalk_bdot: true
+    estate_slabs: false
+    crossing_kerb_drops: true
+    cycle_paver_material: cycle_red
+    reason: >-
+      Research R6 pavements-kerbs (PR #65, review REVIEW-2026-11-15-s21-cloudD-65-pavements-kerbs.md). Footway
+      surface per piece from BDOT10k OT_SKRP_L materialnawierzchni (kostka prefabrykowana -> grey 20 x 10 blocks,
+      masa bitumiczna -> asphalt footway, płyty betonowe -> 35 x 35 slabs); kerbs lowered to 2 cm at marked
+      pedestrian crossings (Dz.U. 2016 poz. 124 § 127 ust. 10, R6-004; the act of 2022 names no number, R6-005).
+      estate_slabs stays off: R6 has no frame of a slab footway beside blocks of flats (R6-109: 3 of 31 frames, all on
+      Andersa). No sidewalk_surface override: frame F16 (bus stop on Andersa, "płyty") does not resolve the surface
+      at 1600 px.
+    confidence: medium
+    verify: lead - visual-qa WorldC, cameras with footways / crossings (see ADR 0237)

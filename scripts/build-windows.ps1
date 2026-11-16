@@ -9,7 +9,7 @@
 .NOTES
   Exit code 0 = everything requested succeeded. Build log: artifacts/logs/build-win-<ts>.log.
   Output: artifacts/win/kamion-<version>-<sha>[-low][-regions][-dev]/Kamion.exe + Kamion.exe.sha256 + build.json
-  (file count, total size) + Kamion-okno.cmd / Kamion-knyszyn.cmd launchers (windowed; the project default is fullscreen).
+  (file count, total size) + Kamion-okno.cmd / Kamion-knyszyn.cmd / Kamion-knyszyn-w.cmd launchers (windowed; the project default is fullscreen).
   PC content: High world scenes and High vehicle material sets ship unless -WorldLow.
   -Slot takes a machine-wide Unity slot (scripts/unity-slot.ps1, waits for PHONE_RUN) and releases it afterwards.
   The first run in a checkout whose Library was imported for Android re-imports every asset for Win64 (long).
@@ -92,7 +92,8 @@ if (-not $SkipBuild) {
     "$hash  Kamion.exe" | Set-Content "$exePath.sha256" -Encoding ascii
     # Windowed launchers: ProjectSettings default is fullscreen (not changed here, ADR 0261).
     "@echo off`r`nstart `"`" `"%~dp0Kamion.exe`" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 %*`r`n" | Set-Content (Join-Path $outDir 'Kamion-okno.cmd') -Encoding ascii -NoNewline
-    "@echo off`r`nstart `"`" `"%~dp0Kamion.exe`" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 -scene knyszyn-w %*`r`n" | Set-Content (Join-Path $outDir 'Kamion-knyszyn.cmd') -Encoding ascii -NoNewline
+    "@echo off`r`nstart `"`" `"%~dp0Kamion.exe`" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 -scene knyszyn %*`r`n" | Set-Content (Join-Path $outDir 'Kamion-knyszyn.cmd') -Encoding ascii -NoNewline
+    "@echo off`r`nstart `"`" `"%~dp0Kamion.exe`" -screen-fullscreen 0 -screen-width 1600 -screen-height 900 -scene knyszyn-w %*`r`n" | Set-Content (Join-Path $outDir 'Kamion-knyszyn-w.cmd') -Encoding ascii -NoNewline
     $files = @(Get-ChildItem $outDir -Recurse -File)
     $bytes = ($files | Measure-Object Length -Sum).Sum
     [ordered]@{

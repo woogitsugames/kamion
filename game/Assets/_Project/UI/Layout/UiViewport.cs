@@ -1,3 +1,4 @@
+using Game.Controls;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,9 @@ namespace Game.UI.Layout
     /// screen. <see cref="Refresh"/> is cheap and allocation-free; call it every frame - it returns true only when
     /// the pixel size, the safe area or the DPI changed (rotation, folding/unfolding, split screen), which is the
     /// moment to lay the canvas out again.
+    /// ADR 0265: two form factors (<see cref="HudScaleModel"/>). Touch = ADR 0079 unchanged. Monitor (no touch controls,
+    /// <see cref="TouchControlsPolicy"/>) = scale by the window height, the "SafeArea" rect narrowed to 16:9 and centred
+    /// on ultrawide monitors (every layout lives in it, so the HUD and the menus never reach the far corners).
     /// </summary>
     public sealed class UiViewport
     {
@@ -18,11 +22,14 @@ namespace Game.UI.Layout
         Rect? m_SafeOverride;
         Vector2? m_PixelOverride;
         float? m_DpiOverride;
+        bool? m_DesktopOverride;
 
         bool m_Applied;
         Vector2 m_AppliedPx;
         Rect m_AppliedSafe;
         float m_AppliedDpi;
+        bool m_AppliedDesktop;
+        float m_AppliedUserScale;
 
         /// <summary>Safe-area size in canvas units (the coordinate space of every layout).</summary>
         public Vector2 SizeUnits { get; private set; } = new Vector2(1920f, 1080f);
@@ -31,6 +38,13 @@ namespace Game.UI.Layout
         public RectTransform SafeArea => m_Safe;
         /// <summary>Canvas size in pixels as last applied (the override in tests / captures).</summary>
         public Vector2 PixelSize => m_AppliedPx;
+        /// <summary>Monitor form factor applied (no touch controls; ADR 0265).</summary>
+        public bool Desktop => m_AppliedDesktop;
+        /// <summary>True when the content was narrowed on an ultrawide monitor.</summary>
+        public bool Clamped { get; private set; }
+
+        /// <summary>Forces the form factor (tests, captures); null = from <see cref="TouchControlsPolicy.Current"/>.</summary>
+        public void OverrideDesktop(bool? desktop) { m_DesktopOverride = desktop; m_Applied = false; }
 
         /// <summary>Adds the scaler to the canvas object and creates the stretched "SafeArea" child.</summary>
         public UiViewport(Canvas canvas)
@@ -55,9 +69,14 @@ namespace Game.UI.Layout
         }
 
         /// <summary>Tests / captures: lay out for a device screen (pixel size, safe area in pixels, DPI; 0 = unknown).
-        /// The canvas must render at the same pixel size (camera target texture) for the picture to match.</summary>
-        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi)
+        /// The canvas must render at the same pixel size (camera target texture) for the picture to match.
+        /// A device screen is a touch device (ADR 0079 tests); use the overload with <c>desktop</c> for a monitor.</summary>
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi) => OverrideScreen(pixelSize, safeAreaPx, dpi, false);
+
+        /// <summary>Tests / captures: lay out for a screen of the given form factor (ADR 0265: monitors 16:9 .. 32:9).</summary>
+        public void OverrideScreen(Vector2 pixelSize, Rect safeAreaPx, float dpi, bool desktop)
         {
+            m_DesktopOverride = desktop;
             m_PixelOverride = pixelSize;
             m_SafeOverride = new Rect(safeAreaPx.x / pixelSize.x, safeAreaPx.y / pixelSize.y, safeAreaPx.width / pixelSize.x, safeAreaPx.height / pixelSize.y);
             m_DpiOverride = dpi;
@@ -87,17 +106,26 @@ namespace Game.UI.Layout
             }
             else n = new Rect(0f, 0f, 1f, 1f);   // rendering to a texture: no device cutouts
             float dpi = m_DpiOverride ?? Screen.dpi;
+            bool desktop = m_DesktopOverride ?? !TouchControlsPolicy.Current;
+            float user = desktop ? UiPreferences.HudScale : 1f;
 
-            if (m_Applied && px == m_AppliedPx && n == m_AppliedSafe && Mathf.Approximately(dpi, m_AppliedDpi)) return false;
-            m_Applied = true; m_AppliedPx = px; m_AppliedSafe = n; m_AppliedDpi = dpi;
+            if (m_Applied && px == m_AppliedPx && n == m_AppliedSafe && Mathf.Approximately(dpi, m_AppliedDpi)
+                && desktop == m_AppliedDesktop && Mathf.Approximately(user, m_AppliedUserScale)) return false;
+            m_Applied = true; m_AppliedPx = px; m_AppliedSafe = n; m_AppliedDpi = dpi; m_AppliedDesktop = desktop; m_AppliedUserScale = user;
 
-            float safeW = Mathf.Max(1f, n.width * px.x), safeH = Mathf.Max(1f, n.height * px.y);
-            PixelsPerUnit = UiScale.PixelsPerUnit(safeW, safeH, dpi);
-            SizeUnits = new Vector2(safeW / PixelsPerUnit, safeH / PixelsPerUnit);
+            var input = new HudScaleInput
+            {
+                SafePx = new Rect(n.x * px.x, n.y * px.y, Mathf.Max(1f, n.width * px.x), Mathf.Max(1f, n.height * px.y)),
+                Dpi = dpi, Desktop = desktop, UserScale = user,
+            };
+            HudScaleModel.Solve(input, out var r);
+            PixelsPerUnit = r.PixelsPerUnit;
+            SizeUnits = r.SizeUnits;
+            Clamped = r.Clamped;
             m_Scaler.scaleFactor = PixelsPerUnit;
             m_Canvas.scaleFactor = PixelsPerUnit;   // at once; the scaler would only apply it on its next Update
-            m_Safe.anchorMin = n.min;
-            m_Safe.anchorMax = n.max;
+            m_Safe.anchorMin = new Vector2(r.ContentPx.xMin / px.x, r.ContentPx.yMin / px.y);
+            m_Safe.anchorMax = new Vector2(r.ContentPx.xMax / px.x, r.ContentPx.yMax / px.y);
             m_Safe.offsetMin = m_Safe.offsetMax = Vector2.zero;
             return true;
         }

@@ -107,6 +107,8 @@ def storey_plan(typ, h, p):
     nb = p.get("storeys")
     if typ in ("office", "block") and nb:
         shb = (h - zb - 0.8) / float(nb)
+        if p.get("storeys_fixed"):        # ADR 0242: authored count kept whatever the storey height (tall plant offices)
+            return int(nb), shb, zb
         lo, hi = (2.6, 3.8) if typ == "block" else (2.8, 4.6)
         if lo <= shb <= hi:
             return int(nb), shb, zb
@@ -990,6 +992,9 @@ def load(fc, origin, overrides, hero=None):
                 out[-1]["lod1_datum"] = True
     out = out + building_parts(out, overrides, ovr, datum)
     wall_gates(out, overrides)
+    if hall_openings_at_ground(overrides):        # ADR 0242, opt-in per region
+        for b in out:
+            b["hall_openings_ground"] = True
     if any(o.get("kind") == "facade_rules" and o.get("runoff_shuffle") for o in overrides):
         for b in out:
             b["runoff_shuffle"] = True
@@ -1040,6 +1045,35 @@ def gate_openings(gates, a, d, L, zref, zt, ops):
         ops[:] = [o_ for o_ in ops if o_[1] < u - w / 2 - 0.8 or o_[0] > u + w / 2 + 0.8]
         ops.append((u - w / 2, u + w / 2, zref + 0.02, zref + h, 0.2, "gate", "dock_door"))
         g["done"] = True
+
+
+def hall_openings_at_ground(overrides):
+    """ADR 0242, override `kind: building_rules` / `hall_openings_at_ground: true` (opt-in per region; regions without
+    the key keep their output byte for byte)."""
+    return any(o.get("kind") == "building_rules" and o.get("hall_openings_at_ground") for o in overrides)
+
+
+HALL_DOOR_SILL_M = 0.15        # personnel door sill above the ground under it (the rule's zref + 0.15)
+HALL_GATE_SILL_M = 0.02        # drive door / sectional gate (the rule's zref + 0.02)
+
+
+def openings_to_ground(ops, ground, zt):
+    """ADR 0242 (review s20-0185 P1-5, "drzwi 1,2-1,7 m nad gruntem"): the doors and gates of a hall wall stand on the
+    ground UNDER THEM instead of the median ground of the whole outline (zref) - on a sloping plot the doors of the
+    low side hung in the wall and those of the high side were buried. ground(u) = terrain level at u along the edge;
+    the sill is the highest of the two jambs and the middle (never buried). An opening that would come within 0.6 m
+    of the wall top is cut down; one left under 2.0 m keeps its rule position. Windows, docks (yard level) and
+    louvres are not touched."""
+    out = []
+    for o in ops:
+        if o[5] not in ("door", "gate"):
+            out.append(o)
+            continue
+        g = max(float(ground(u)) for u in (o[0], (o[0] + o[1]) / 2, o[1]))
+        z0 = g + (HALL_DOOR_SILL_M if o[5] == "door" and o[6] != "garage_door" else HALL_GATE_SILL_M)
+        h = min(o[3] - o[2], zt - 0.6 - z0)
+        out.append((o[0], o[1], z0, z0 + h, *o[4:]) if h >= 2.0 else o)
+    return out
 
 
 def target_sets(overrides):
@@ -1113,6 +1147,8 @@ def building_parts(blds, overrides, target=None, datum=False):
             p["height_m"] = float(s["height_m"])
         if s.get("storeys"):
             p["storeys"] = int(s["storeys"])
+        if s.get("storeys_fixed"):            # ADR 0242 (opt-in per part): storey_plan keeps the authored count
+            p["storeys_fixed"] = True
         if o.get("ground_z_evrf2007") is not None:
             p["ground_z_evrf2007"] = float(o["ground_z_evrf2007"])
         out.append({"id": f"override:{o['id']}", "poly": pl, "props": p, "ovr": s, "typ": classify(p, pl.area, s)})
@@ -1416,6 +1452,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                                            door_z=door_z), sh=sh, zbase=zbase)
             if typ == "hall" and not front and b.get("gates"):       # ADR 0196: authored sectional gates
                 gate_openings(b["gates"], a, d, L, zref, zt, ops)
+            if typ == "hall" and not front and b.get("hall_openings_ground"):     # ADR 0242: sills on the ground
+                ops = openings_to_ground(
+                    ops, lambda u, a=a, d=d: hf.sample(np.array([a[0] + d[0] * u]), np.array([a[1] + d[1] * u]))[0], zt)
             if dk:
                 zf = dk["yard_z"] + S.DOCK_FLOOR_H
                 for dock in dk["docks"]:

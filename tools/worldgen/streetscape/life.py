@@ -293,7 +293,9 @@ TYRE_MIN_LEN_M = 4.0         # WORKING_VALUE (ADR 0179): a shorter stub in front
 STALL_LINE_W = 0.12          # P-1e-like solid line 0.12 m (stand boundaries on private yards, WORKING_VALUE)
 STALL_DEPTH_M = 17.5         # stand depth: tractor + 13.6 m trailer + clearance (WORKING_VALUE)
 DRAIN_GRID_M = 24.0          # WORKING_VALUE: yard gullies / slot drains on a ~24 m grid (fall 0.5-1 %)
-GULLY_SIZE = (0.50, 0.60)    # m, cast-iron gully grate (D400 class, typical 500 x 600, WORKING_VALUE)
+# ADR 0237 / R6-034: frame of a D400 kerb-side gully 620 x 420 mm (manufacturer's data sheet; the other variant in
+# the sheet is 500 x 500). Was 0.50 x 0.60 WORKING_VALUE. Same size as roads.decals.GULLY_SIZE.
+GULLY_SIZE = (0.42, 0.62)    # m, cast-iron gully grate (across, along)
 
 
 def _quad_strip(buf, mat, C0, C1, w, zsurf, lift, src, uv1=None):

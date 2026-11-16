@@ -44,7 +44,17 @@ $apkArg = $Apk  # PowerShell names are case-insensitive: $apk below would overwr
 $version = (Select-String -Path "$ProjectPath/ProjectSettings/ProjectSettings.asset" -Pattern '^\s*bundleVersion:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
 $sha = Get-GitShortSha
 if (& git -C $RepoRoot status --porcelain --untracked-files=no) { $sha = "$sha-dirty" }
-$regionSpec = (@($Regions) | Where-Object { $_ }) -join ','   # "-Regions a,b" binds as an array in PowerShell
+# "-Regions a,b" binds as an array in PowerShell. Spaces and semicolons are separators too (ADR 0229 §2): normalise them
+# to commas here, because Start-Process passes an element with a space as two Unity arguments (ADR 0267, review #104 FIX 4).
+$regionSpec = ((((@($Regions) | Where-Object { $_ }) -join ',') -replace '[\s;]+', ',') -replace ',{2,}', ',').Trim(',')
+if ($PSBoundParameters.ContainsKey('Regions') -and -not $regionSpec) { throw "-Regions given but empty after normalisation ('$($Regions -join ',')')" }
+if ($RegionsFile) {
+    # Relative to the current directory (review #104 FIX 5); the repo root is still tried for the documented
+    # 'Data/build_regions.json'. Unity gets an absolute path, so its own repo-root rule does not apply any more.
+    $rf = @($RegionsFile, (Join-Path $RepoRoot $RegionsFile)) | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+    if (-not $rf) { throw "-RegionsFile not found: $RegionsFile (current directory $(Get-Location), repo root $RepoRoot)" }
+    $RegionsFile = (Resolve-Path -LiteralPath $rf).Path
+}
 $apk = Join-Path $ArtifactsDir "apk/kamion-$version-$sha$(if ($WorldHigh) { '-high' })$(if ($regionSpec -or $RegionsFile) { '-regions' })$(if ($Development) { '-dev' }).apk"
 
 # ---------------------------------------------------------------- build

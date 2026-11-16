@@ -39,15 +39,25 @@ namespace Game.Gameplay
             if (route == null || route.points == null || route.points.Length < 2) return requestedS;
             float length = route.Length;
             float s = Mathf.Clamp(requestedS, 0f, length);
+            // Last place a start may stand: BehindClosureM before a closure the route LEAVES the region through (review P2-1:
+            // a start requested near / past the exit row must not end up outside it, facing the tile edge).
+            float limit = length;
             if (boundary != null && boundary.closures != null && boundary.closures.Length > 0)
             {
                 // Route and closures are both stored in the region-root frame (WorldSceneBuilder parents nothing between them).
                 StartClearance.Crossings(route.points, route.distances, boundary.closures, s_Crossings);
                 float safe = StartClearance.SafeStartS(s_Crossings, s, length);
                 if (safe > s + 0.01f) { reason = "region-edge closure on the route"; s = safe; }
+                float entry = StartClearance.SafeStartS(s_Crossings, 0f, length);   // the entry rule wins on a very short route
+                for (int i = 0; i < s_Crossings.Count; i++)
+                {
+                    var c = s_Crossings[i];
+                    if (!c.entry && c.s > entry) limit = Mathf.Min(limit, Mathf.Max(entry, c.s - StartClearance.BehindClosureM));
+                }
+                if (s > limit + 0.01f) { reason = (reason != null ? reason + " + " : "") + "region-edge closure ahead on the route"; s = limit; }
             }
             float from = s;
-            for (float d = 0f; d <= MaxSearchM && from + d <= length; d += StepM)
+            for (float d = 0f; d <= MaxSearchM && from + d <= limit; d += StepM)
             {
                 Collider hit = FirstOverlap(route, from + d, ignore);
                 if (hit == null)

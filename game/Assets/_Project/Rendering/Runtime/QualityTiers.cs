@@ -5,7 +5,8 @@ namespace Game.Rendering
 {
     /// <summary>
     /// Quality tiers = Unity quality levels named Low/Medium/High/Ultra, each bound to its own
-    /// URP asset (Assets/_Project/Rendering/Settings/URP_*.asset). Frame-rate target is separate.
+    /// URP asset (Assets/_Project/Rendering/Settings/URP_*.asset). Frame-rate target is separate. On a desktop player the
+    /// level additionally gets its PC values (PcGraphicsTiers, ADR 0269).
     /// </summary>
     public static class QualityTiers
     {
@@ -34,6 +35,7 @@ namespace Game.Rendering
             {
                 if (!string.Equals(names[i], tier, StringComparison.OrdinalIgnoreCase)) continue;
                 QualitySettings.SetQualityLevel(i, true);
+                PcGraphicsTiers.OnQualityLevelApplied(names[i]);   // ADR 0269: PC URP asset + QualitySettings (desktop only)
                 if (persist) { PlayerPrefs.SetString(PrefTier, names[i]); PlayerPrefs.Save(); }
                 return true;
             }
@@ -64,6 +66,21 @@ namespace Game.Rendering
         }
 
         public static string SavedTier => PlayerPrefs.GetString(PrefTier, null);
+
+        /// <summary>PlayerPrefs key of the saved tier (an explicit choice: start menu, settings, diagnostics button). Tests.</summary>
+        public const string SavedTierKey = PrefTier;
+
+        /// <summary>True when the player chose a tier explicitly (it wins over the device / hardware default at startup).</summary>
+        public static bool HasSavedTier => !string.IsNullOrEmpty(PlayerPrefs.GetString(PrefTier, ""));
+
+        /// <summary>Forgets the saved tier: the next start picks the device / hardware default again (PC settings "auto",
+        /// review #136 P1-1). The active quality level is not changed.</summary>
+        public static void ClearSavedTier()
+        {
+            if (!PlayerPrefs.HasKey(PrefTier)) return;
+            PlayerPrefs.DeleteKey(PrefTier);
+            PlayerPrefs.Save();
+        }
         public static int SavedFrameRate => PlayerPrefs.GetInt(PrefFps, 0);
     }
 }

@@ -386,6 +386,10 @@ def plan(data: dict | None, origin, overrides: list, bdot_skrp: list, road_lines
                     best, bw, bmat = ln, bwid, bm
         if cls["kind"] == "segregated" and "footway:surface" not in w["tags"] and bmat == "masa bitumiczna":
             cls = dict(cls, mat_foot="path_asphalt")       # BDOT10k: the whole path is bituminous
+        if ov is not None and ov.get("foot_surface") and cls.get("mat_foot"):
+            # ADR 0237: surface type of the footway half (paving_grey | paving_red | slabs | asphalt)
+            from streetscape import pavements as PVM
+            cls = dict(cls, mat_foot=PVM.material_of(ov["foot_surface"]))
         w_ov = dict(ov) if ov else {}
         if wid in M65_WIDTHS:
             m_cw, m_tw = M65_WIDTHS[wid]

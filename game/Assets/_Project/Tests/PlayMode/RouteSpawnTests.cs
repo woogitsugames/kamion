@@ -95,6 +95,42 @@ namespace Game.Tests
             Object.Destroy(boundary.gameObject);
         }
 
+        /// <summary>ADR 0262 / review P2-1: a start requested close to or past the closure the route LEAVES the region through
+        /// moves back in front of it (never outside the exit row, facing the tile edge).</summary>
+        [UnityTest]
+        public IEnumerator RouteS_AtOrPastTheExitClosure_MovesBackInFrontOfIt()
+        {
+            Physics.simulationMode = SimulationMode.FixedUpdate;
+            SceneManager.LoadScene(DrivingLabLayout.SceneName, LoadSceneMode.Single);
+            yield return null;
+            var boot = Object.FindAnyObjectByType<DrivingLabBootstrap>();
+            var body = Object.FindAnyObjectByType<VehicleBody>();
+            var route = MakeRoute();
+            boot.route = route;
+            boot.Spawn(DrivingLabBootstrap.LabSpawn.Gross40t);
+            yield return new WaitForFixedUpdate();
+
+            // The route leaves the region through a closure at s = 240 m (road heading towards the edge = route heading 45 deg).
+            var boundary = new GameObject("TestBoundary").AddComponent<WorldBoundary>();
+            boundary.closures = new[] { new WorldBoundary.Closure { localPos = route.points[24], headingDeg = 45f, widthM = 7f, road = "t" } };
+            float expectS = 240f - StartClearance.BehindClosureM;
+            foreach (float requested in new[] { 230f, 290f })
+            {
+                LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(@"\[START\] start moved along the route: route_s " + requested.ToString("F1", System.Globalization.CultureInfo.InvariantCulture).Replace(".", @"\.") + @" -> 215\.0 \(region-edge closure ahead"));
+                boot.SetRouteSpawn(requested);
+                yield return new WaitForFixedUpdate();
+                Vector3 d = body.transform.position - route.PointAt(expectS); d.y = 0f;
+                Assert.Less(d.magnitude, 1.5f, "start " + requested + " m must move back to 25 m in front of the exit row at 240 m");
+                Vector3 fwd = body.transform.forward; fwd.y = 0f;
+                Assert.Less(Vector3.Angle(fwd, route.TangentAt(expectS)), 2f, "heading stays along the route");
+            }
+            // A start well in front of the exit row is left alone.
+            boot.SetRouteSpawn(120f);
+            yield return new WaitForFixedUpdate();
+            Vector3 e = body.transform.position - route.PointAt(120f); e.y = 0f;
+            Assert.Less(e.magnitude, 1.5f);
+            Object.Destroy(boundary.gameObject);
+        }
         [Test]
         public void PathFollower_SeekToAndEndS()
         {
