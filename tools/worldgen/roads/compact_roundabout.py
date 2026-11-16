@@ -477,11 +477,8 @@ def _legs(spec: Spec, n=80):
 
 
 def _kerb_outline(net, spec: Spec, arms, disc, stubs):
-    """ADR 0274: paved area = ring disc + the designed lanes (lay_lanes) + the arm ends, with the kerb returns as
-    fillets (see the module docstring). Right-hand traffic: arms are
-    sorted counter-clockwise, the lane entering from arm i is on its counter-clockwise side, so the corner between
-    arm i and arm i + 1 starts with the entry return of arm i and ends with the exit return of arm i + 1."""
-    o = spec.opts
+    """ADR 0274: paved area = ring disc + the designed lanes (lay_lanes, full width) + the arm ends; sets
+    spec.mouths (middle line and half width of every pair of lanes, split node -> ring)."""
     legs = _legs(spec)
     spec.mouths, strips = {}, []
     for a in arms:
