@@ -122,7 +122,7 @@ namespace Game.Rendering
             Shader.SetGlobalVector(k_Forward, frame.forward);
             Shader.SetGlobalVector(k_Color, new Vector4(1f, 0.97f, 0.92f, 0f)*(Mathf.Min(peakCd, 60000f)*model.Exposure/Mathf.PI));
             Shader.SetGlobalFloat(k_On, 1f); Enabled = true;
-            Diagnostics = "actual anchors; low beam on; uncalibrated diffuse cone; no occlusion";
+            Diagnostics = "actual anchors; low beam on; R112 class B-shaped beam (HeadlampBeam); no occlusion";
         }
 
         static bool Finite(Vector3 v) => !float.IsNaN(v.x) && !float.IsNaN(v.y) && !float.IsNaN(v.z) &&

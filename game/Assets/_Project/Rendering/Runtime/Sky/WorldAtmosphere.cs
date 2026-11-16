@@ -106,7 +106,10 @@ namespace Game.Rendering
             Shader.SetGlobalFloat(k_DimColourDesat,Mathf.Clamp01(p.dimColourDesaturation));   // ADR 0244: cached id
             bool hasTier = QualityProfileApplier.HasCurrent;
             var t = hasTier ? QualityProfileApplier.Current : default;
-            KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd, env.gameObject.scene);
+            // night-pc-s23: a tier may switch the beam on regardless of the preset (PC tiers, PcNightLighting); phones keep
+            // the preset's opt-in (off in every preset).
+            KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? (p.projectedHeadlamps || (hasTier && t.projectedHeadlamps)),
+                p.projectedHeadlampPeakCd, env.gameObject.scene);
             float skyGain = SkyDisplayGain(p), skyDesat = Mathf.Clamp01(p.skyDisplayDesaturation);
             Shader.SetGlobalVector(k_SkyDisplay, new Vector4(skyGain, skyDesat,
                 skyGain < 1f || skyDesat > 0f ? 1f : 0f, 0f));

@@ -88,6 +88,10 @@ namespace Game.Rendering
             [Tooltip("s20 night-int (review 0191 P1-2): Off = no night floor near lamps (light of the lamps outside the analytic set, " +
                      "inter-reflections, urban sky glow; ~4 ALU per lit pixel, dusk / night only). Inverted so older tiers keep it")]
             public bool lampFloorOff;
+            [Tooltip("night-pc-s23: the player truck's dipped beam lights the world surfaces (analytic UN R112 class B-shaped " +
+                     "beam, KamionLampPools.hlsl) independent of the lighting preset's projectedHeadlamps opt-in. Default off " +
+                     "(phones); set by PcNightLighting on the PC tiers. Specular term follows lampPoolSpecular")]
+            public bool projectedHeadlamps;
             [Header("Baked world lighting (ADR 0064)")]
             [Tooltip("Off = no baked sky visibility (ambient / reflection occlusion) on the world surfaces. Inverted so tiers saved before ADR 0064 keep it on")]
             public bool worldSkyVisOff;
