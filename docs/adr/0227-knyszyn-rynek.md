@@ -17,7 +17,7 @@ Baseline i r2: `artifacts/knyszyn-rynek-0227/before/` i `r2/`; zestawienia 01–
 
 ## Otwarte
 - Rozpoznawalność z oczu, pary zdjęcie–render i weryfikacja lidera/właściciela; minimum trzy iteracje.
-- Targowica: lokalny OSM marketplace way 704368699 około 1 km od wschodniego placu, ortofoto 2025 pokazuje tam grunt i wyspy bez czterech wiat; lokalizacja i wymiary nowszych zadaszeń niepotwierdzone.
+- Targowica: korekta po ponownej analizie — wcześniejsze przypisanie do `OSM way/704368699` było błędne. Arkusz GUGiK 2025 `83186_1484206_N-34-106-B-b-1-2.tif` pokazuje rzeczywiste cztery wiaty dalej na południe; ich obrysy dachów są ręcznie oszacowane z ortofoto (szczegóły i tolerancje w `artifacts/knyszyn-rynek-0227/TYPOLOGIA.md`).
 - Rondo: PR #97 nie w main; ortofoto 2025 sprzed przebudowy, wymiary aktualnej wyspy/opaski niezmierzone. Nie przedstawiać wartości roboczych jako pomiarów.
 - Pomnik króla i obelisk to prawdopodobnie osobne obiekty; geolokalizacje ESTIMATED.
 - Telefon i niezależny przegląd wizualny: do lidera, bez adb w tym zadaniu.
@@ -31,7 +31,7 @@ Trzecia przebudowa i cztery warianty renderów zakończone; lokalne pary zdjęci
 R4 z lokalną próbą dwóch koron, wejściami urzędu i placykiem pomnika: cztery warianty ukończone, pary zdjęć lokalnie. Wizualnie FAIL: dach portyku niewidoczny w obu profilach; plac ciągły i kamera na osi, ale park nadal odbiega od zdjęć. Low na wspólnej kamerze +6 szacowanych draw calls i +1704 tris z instancjami; High max 1 229 693 tris. Pełny GIS 1410 passed, 2 failed: test nazwy poprawiony kierunkowo, raport fidelity po zmianach main przeliczany. EditMode otwarty.
 
 ## Iteracja r5 i walidacja
-Dach skrzydła kultury jest widoczny po poprawce geometrii; jego kształt i lukarny nadal wymagają pracy. Ocena całości FAIL. Low bez pogorszenia FAIL: max wzrost na wspólnych kamerach +6 szacowanych draw calls z instancjami, +1825 tris; High max 1 229 814 tris. EditMode 626 passed, 2 skipped; pełny GIS wymaga ponowienia po usunięciu dwóch błędów wykrytych w poprzednim przebiegu. Targowica: właściciel potwierdził plac po drugiej stronie Jagiellońskiej od nr 50, kandydat OSM way 704368699; lokalne zdjęcia 12–14 pokazują trzy blisko ustawione wiaty i czwartą z większym odstępem; georeferencja i wymiary pozostają OPEN. Niepodłączony prototyp wiat i jego test usunięto z gałęzi jako niezgodne z nowymi zdjęciami.
+Dach skrzydła kultury jest widoczny po poprawce geometrii; jego kształt i lukarny nadal wymagają pracy. Ocena całości FAIL. Low bez pogorszenia FAIL: max wzrost na wspólnych kamerach +6 szacowanych draw calls z instancjami, +1825 tris; High max 1 229 814 tris. EditMode 626 passed, 2 skipped; pełny GIS wymaga ponowienia po usunięciu dwóch błędów wykrytych w poprzednim przebiegu. Targowica: historycznie błędnie przypisano obiekt do `OSM way/704368699`; niepodłączony prototyp usunięto jako niezgodny ze zdjęciami. Aktualna korekta z ortofoto 2025 i inwentarz znajdują się w części „Targowica — korekta R24” poniżej.
 
 ## Iteracja r6
 R6: lukarny osadzone niżej; cztery warianty i lokalne porównania wykonane. Wizualnie FAIL: kalenica i lukarny nadal odbiegają od zdjęć. Low bez pogorszenia FAIL (max wzrost wspólnej kamery +6 draws z instancjami i +1825 tris), High max 1 229 814 tris.
@@ -110,7 +110,7 @@ R18 → r19: 70 z 72 kamer bez zmian liczby rendererów, draws, shadow draws i t
 
 ## R19 — próba georeferencji targowicy
 
-Automatyczna próba rejestracji zdjęcia względem ortofoto: **FAIL**, mediana błędu sześciu odłożonych kandydatów 79,92 m. Pary są automatyczne i niezweryfikowane; ta liczba nie jest metrologiczną dokładnością ani podstawą wyznaczenia położenia wiat. Metodę i ograniczenia opisuje lokalny `artifacts/knyszyn-rynek-0227/market-georef-attempt.md`. Zdjęć właściciela nie publikować ani nie dodawać do Git.
+Historyczna automatyczna próba rejestracji zdjęcia względem nieprawidłowego północnego wycinka ortofoto: **FAIL**, mediana błędu sześciu odłożonych kandydatów 79,92 m. Nie jest to ocena późniejszego poprawnego wycinka targowicy. Pary są automatyczne i niezweryfikowane; ta liczba nie jest metrologiczną dokładnością ani podstawą wyznaczenia położenia wiat. Metodę i ograniczenia opisuje lokalny `artifacts/knyszyn-rynek-0227/market-georef-attempt.md`. Zdjęć właściciela nie publikować ani nie dodawać do Git.
 
 ## R23 — kontrola szpalerów i parku
 
@@ -127,3 +127,12 @@ Lokalne porównania 09–11 pokazują czterowlotowe rondo z jasną opaską i wys
 ## Testy końcowe po scaleniu main
 
 Pełny GIS: **1769 passed, 22 skipped, 2 xfailed** po lokalnej regeneracji danych regionu C i potwierdzeniu zgodności SHA 64/64 plików instancji. EditMode: **955 passed, 2 skipped**. Regeneracja była lokalna dla worktree.
+
+
+## Targowica — korekta R24 i pochodzenie geometrii
+
+SOURCED: ortofoto GUGiK 2025, arkusz `83186_1484206_N-34-106-B-b-1-2.tif`, EPSG:2180, piksel 0,1 m, oraz BDOT10k. Wcześniejszy wycinek `market-ortho-crop.jpg` kończył się w rejonie północnej wiaty i pokazywał głównie sąsiedni plac gruntowy; przypisanie go do całej targowicy przez `OSM way/704368699` było błędne. Rozszerzony lokalny wycinek `market-south-ortho-check.jpg` obejmuje całą targowicę i odpowiada zdjęciom 12–14: trzy bliskie dachy, czwarty z większym odstępem, pawilon, długi budynek i pasy nawierzchni.
+
+ESTIMATED: ręcznie odczytane naroża czterech dachów i fragmenty nawierzchni z georeferencyjnego ortofoto; szczegółowe cztery obrysy EPSG:2180 i szacowana tolerancja w `TYPOLOGIA.md`. Identyfikacja długiego obiektu `bdot:2002917F-465A-5C99-E053-CC2BA8C01CFC` i pawilonu `bdot:de62e5a9-3c83-4023-9e77-03b8844df001` względem zdjęć jest ESTIMATED; obrysy BDOT są SOURCED. Środek korony świerka jest ESTIMATED, a pień zasłonięty.
+
+WORKING_VALUE: wysokości i przekroje słupów wiat, sposób ich posadowienia, wysokość pawilonu, detale elewacji i stołów, proporcje modelu drzewa oraz pozycja kamery względem zdjęcia 14. Pomiar dachu nie jest geodezyjną pozycją słupów; należy uwzględnić nieznane przesunięcie rzutu. R24: wykonanie kodu, obraz po imporcie, zgodność zdjęcie–render, maski kolizji i budżet kamer **OPEN** — nie są zatwierdzeniem wizualnym. Zdjęcia wyłącznie lokalna referencja, bez tekstur i bez Git.

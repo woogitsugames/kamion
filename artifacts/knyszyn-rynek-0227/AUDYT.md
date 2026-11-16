@@ -40,7 +40,7 @@ Pary adres OSM → obrys BDOT (położenie SOURCED, wygląd poszczególnych fasa
 | 10 | Rondo i otoczenie z drona | `rondo_owner_10` | Brak renderu; punkt, wysokość i kierunek ESTIMATED. |
 | 11 | Rondo i DK65 z drona | `rondo_owner_11` | Brak renderu; punkt, wysokość i kierunek ESTIMATED. |
 
-Pary są przygotowywane wyłącznie lokalnie przez `compare.py`; nie zamieszczać zdjęć ani wyników par w Git. Lokalne zdjęcia targowicy `Data/raw/refs/owner-knyszyn-2026-11-15/12-targowica-pion.jpg`, `13-targowica-ukos.jpg`, `14-targowica-wiaty-poziom.jpg` pokazują trzy blisko ustawione wiaty i czwartą z większym odstępem; georeferencja oraz wymiary pozostają niepotwierdzone. Zdjęcia służą wyłącznie jako referencja, poza Git.
+Pary są przygotowywane wyłącznie lokalnie przez `compare.py`; nie zamieszczać zdjęć ani wyników par w Git. Lokalne zdjęcia targowicy `Data/raw/refs/owner-knyszyn-2026-11-15/12-targowica-pion.jpg`, `13-targowica-ukos.jpg`, `14-targowica-wiaty-poziom.jpg` pokazują trzy blisko ustawione wiaty i czwartą z większym odstępem; ich dachy zostały następnie zidentyfikowane w ortofoto 2025 (zob. korektę R24), a słupy i wysokości pozostają szacunkowe. Zdjęcia służą wyłącznie jako referencja, poza Git.
 
 ## Wierzba płacząca — analiza techniczna
 Istniejące `tree_shrub` w module brzegowym nie jest dorosłą wierzbą płaczącą. Osobny prototyp wymaga LOD0/LOD1, impostora i materiału drobnych liści oraz weryfikacji wizualnej; koszt i pozycja UNVERIFIED. Ścieżka authored `points_en` losuje obecnie wariant 0–2 bez ograniczenia `NVAR`, więc jeden wariant wymaga poprawki doboru indeksu; dodanie gatunku do globalnych mieszanek zmieniłoby dotychczasowe losowania i nie jest potrzebne. Nowy zasób wymaga wpisu licencyjnego i pomiaru Low/High.
@@ -72,7 +72,7 @@ Cztery warianty zbudowane i wyrenderowane; 62 kadry/wariant. Lokalne zestawienia
 Cztery warianty ukończone, 62 kadry/wariant; lokalne pary 01–11 `compare/r4/High-clear/` i `Low-clear/`. FAIL: plac pomnika jest ciągły i kamera 07 na osi alejki, ale w 02 dach skrzydła portyku nie jest widoczny w High ani Low; figura, drzewa, fontanna i rozpoznawalność nadal wymagają pracy. Wariant dwóch koron częściowo wypełnia ujęcie 04, inne drzewa w 05 nadal przypominają sosny. Low: max suma szacowanych draw calls 500→485, na wspólnej kamerze max wzrost +6, trójkątów z instancjami +1704; FAIL. High: maksimum trójkątów z instancjami 1 258 099→1 229 693 (<2 mln), suma draw calls max 838→843. To szacunki edytora. GIS: 1410 passed, 43 skipped, 4 xfailed, 2 failed; test nazwy kamer poprawiony i kierunkowo przechodzi, raport fidelity regionu C przeliczany.
 
 ## Iteracja r5 — ocena 15.11, editor
-Cztery warianty ukończone; pary 01–11 lokalnie `compare/r5/High-clear/` i `Low-clear/`. Dach portyku widoczny w obu profilach, wcześniej odrzucany przez culling; pozostaje pofalowana kalenica, pudełkowe lukarny i ciemna loggia. Całość FAIL. Low: max suma szacowanych draw calls 500→485, max wzrost wspólnej kamery +6 i trójkątów z instancjami +1825; High max trójkątów z instancjami 1 258 099→1 229 814 (<2 mln), max suma draw calls 838→843. EditMode 626 passed, 2 skipped. Pełny GIS przed poprawką kamery i przeliczeniem fidelity: 1410 passed, 2 failed; oba testy kierunkowe przechodzą, wymagane ponowienie pełnego zestawu. Właściciel potwierdził targowicę po drugiej stronie Jagiellońskiej od nr 50; poligon OSM way 704368699, GUGiK punkt adresowy poza nim. Lokalne zdjęcia 12–14 pokazują trzy blisko ustawione wiaty i czwartą z większym odstępem, ale ich georeferencja i wymiary pozostają niepotwierdzone; niepodłączony prototyp wiat i jego test usunięto z gałęzi jako niezgodne z nowymi zdjęciami. Georeferencja pozostaje OPEN.
+Cztery warianty ukończone; pary 01–11 lokalnie `compare/r5/High-clear/` i `Low-clear/`. Dach portyku widoczny w obu profilach, wcześniej odrzucany przez culling; pozostaje pofalowana kalenica, pudełkowe lukarny i ciemna loggia. Całość FAIL. Low: max suma szacowanych draw calls 500→485, max wzrost wspólnej kamery +6 i trójkątów z instancjami +1825; High max trójkątów z instancjami 1 258 099→1 229 814 (<2 mln), max suma draw calls 838→843. EditMode 626 passed, 2 skipped. Pełny GIS przed poprawką kamery i przeliczeniem fidelity: 1410 passed, 2 failed; oba testy kierunkowe przechodzą, wymagane ponowienie pełnego zestawu. Historycznie przypisano targowicę do sąsiedniego `OSM way/704368699` i usunięto niepodłączony prototyp; przypisanie okazało się błędne po poszerzeniu wycinka ortofoto — zob. korektę R24.
 
 ## Iteracja r6 — ocena 15.11, editor
 Cztery warianty ukończone; porównania 01–11 lokalnie w `compare/r6/High-clear/` i `Low-clear/`. Lukarny niższe niż r5, ale w obu profilach wciąż wyglądają jak białe pudełka, daszki mało czytelne, kalenica faluje; FAIL wizualny. Low max suma szacowanych draw calls 500→485, na wspólnej kamerze wzrost do +6 i trójkątów z instancjami +1825; High max tris z instancjami 1 258 099→1 229 814, suma draw calls max 838→843. Szacunki edytora.
@@ -177,7 +177,7 @@ Shadow draws nie zmieniły się na żadnej z 72 kamer. Różnice w przestawionyc
 
 ## R19 — próba georeferencji targowicy
 
-Automatyczna próba rejestracji zdjęcia względem ortofoto zakończyła się **FAIL**: mediana błędu sześciu odłożonych kandydatów wyniosła 79,92 m. Pary są automatyczne i niezweryfikowane terenowo; wartość nie jest metrologiczną dokładnością ani podstawą wyznaczenia położenia wiat. Lokalny raport `artifacts/knyszyn-rynek-0227/market-georef-attempt.md` opisuje metodę i ograniczenia. Zdjęć właściciela nie publikować ani nie dodawać do Git.
+Historyczna próba rejestracji zdjęcia względem błędnego północnego wycinka zakończyła się **FAIL** (nie dotyczy późniejszego poprawnego wycinka): mediana błędu sześciu odłożonych kandydatów wyniosła 79,92 m. Pary są automatyczne i niezweryfikowane terenowo; wartość nie jest metrologiczną dokładnością ani podstawą wyznaczenia położenia wiat. Lokalny raport `artifacts/knyszyn-rynek-0227/market-georef-attempt.md` opisuje metodę i ograniczenia. Zdjęć właściciela nie publikować ani nie dodawać do Git.
 
 ## R23 — kontrola szpalerów względem parku
 
@@ -194,3 +194,10 @@ Porównania zdjęć właściciela 09–11 z `compare/r23/Low-clear/` pokazują c
 ## Testy końcowe po scaleniu main
 
 Pełny GIS: **1769 passed, 22 skipped, 2 xfailed** po lokalnej regeneracji danych regionu C; zgodność 64/64 plików instancji potwierdzona SHA. EditMode: **955 passed, 2 skipped**. Regeneracja była lokalna dla worktree.
+
+
+## R24 — korekta położenia targowicy
+
+Wcześniej błędnie utożsamiono targowicę z sąsiednim placem `OSM way/704368699`; `market-ortho-crop.jpg` ucinał właściwy obszar przy północnej wiacie. Poszerzony lokalny wycinek `market-south-ortho-check.jpg` z arkusza GUGiK 2025 `83186_1484206_N-34-106-B-b-1-2.tif` (EPSG:2180, 0,1 m/piksel) ujawnia cztery dachy w układzie 3+1, pasy, pawilon i długi budynek, wizualnie zgodne ze zdjęciami właściciela. Arkusz i zdjęcia są referencjami, nie teksturami.
+
+SOURCED: ortofoto 2025 i obrysy BDOT dwóch budynków. ESTIMATED: ręczny odczyt okapów (tolerancja odczytu około 0,5–1 m plus nieustalone przesunięcie rzutu dachu), obrysy nawierzchni, identyfikacja obiektów i kamera. WORKING_VALUE: szczegóły, wysokości wiat i pawilonu, słupy oraz elementy wyposażenia. Cztery obrysy i ID BDOT są zapisane w `TYPOLOGIA.md`. Ocena obrazu R24, kolizji i budżetu **OPEN** do ukończenia przebudowy i sprawdzenia kadrów.

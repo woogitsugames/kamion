@@ -95,3 +95,24 @@ Te cztery obrysy są poza buforem, lecz mieściły się w dawnym zasięgu 85 m o
 | Pierzeje, szyldy i oznakowanie | ESTIMATED ogólne typy i barwy ze zdjęć właściciela; powiązanie każdej konkretnej elewacji ze zdjęciem, kształt otworów i indywidualne szyldy OPEN. Szyldy bez marek, nazw firm i godeł. |
 
 Stan inwentarza nie jest akceptacją wizualną ani potwierdzeniem budżetu; `generated/streetscape_qa.json` opisuje tylko ostatnią przebudowę, nie gwarantuje jakości widoku.
+
+
+## Targowica przy Jagiellońskiej — korekta R24
+
+Źródło planu: **SOURCED** ortofoto GUGiK 2025 `83186_1484206_N-34-106-B-b-1-2.tif`, EPSG:2180, rozdzielczość 0,1 m. Cztery obrysy poniżej to ręczny odczyt **ESTIMATED** naroży okapów, w kolejności północno-zachodni, północno-wschodni, południowo-wschodni, południowo-zachodni. Szacowana tolerancja odczytu 0,5–1 m nie obejmuje nieznanego przesunięcia rzutu dachu; współrzędne nie są pomiarem podstaw słupów.
+
+| Wiata | Obrys dachu EPSG:2180 (E, N) w metrach | Typologia |
+|---|---|---|
+| Północna, oddzielona | (760787.0, 613341.7), (760794.0, 613342.4), (760800.7, 613316.7), (760794.2, 613315.0) | ESTIMATED 27,1 × 6,9 m; czterospadowy dach, WORKING_VALUE wysokości słupów |
+| Północna z trójki | (760796.9, 613301.9), (760803.8, 613302.6), (760810.4, 613276.0), (760803.9, 613274.7) | ESTIMATED 27,7 × 6,8 m; czterospadowy dach, WORKING_VALUE szczegółów |
+| Środkowa | (760803.8, 613274.3), (760810.5, 613275.1), (760817.3, 613248.3), (760810.8, 613247.0) | ESTIMATED 27,9 × 6,7 m; czterospadowy dach, WORKING_VALUE szczegółów |
+| Południowa z panelami | (760810.7, 613246.8), (760817.4, 613247.7), (760824.2, 613221.4), (760817.7, 613219.9) | ESTIMATED 27,5 × 6,7 m; panele widoczne na zdjęciu i ortofoto, WORKING_VALUE rozmieszczenia i wymiarów |
+
+| Obiekt | Źródło i niepewność |
+|---|---|
+| Długi parterowy budynek | SOURCED obrys `bdot:2002917F-465A-5C99-E053-CC2BA8C01CFC`, wysokości GUGiK LoD1 4,72 m i okap LoD2 4,47 m; identyfikacja ze zdjęciem ESTIMATED, podział fasady i okien WORKING_VALUE. |
+| Żółty pawilon | SOURCED obrys `bdot:de62e5a9-3c83-4023-9e77-03b8844df001`; BDOT określa go jako gospodarczy, a identyfikacja żółtego pawilonu ze zdjęcia jest ESTIMATED. Wysokość i detale WORKING_VALUE. |
+| Świerk przed budynkiem | SOURCED obecność na zdjęciach i ortofoto; środek korony / kandydat pnia (760803,5; 613217,0) ESTIMATED ±2 m, pień zasłania korona. Wysokość WORKING_VALUE, maski i widoczność wymagają kontroli. |
+| Plac i kamera | SOURCED ortofoto i obecność szarej nawierzchni z czerwonymi pasami; ręczny obrys i kamera `market_jagiellonska_qa` ESTIMATED, kadr zdjęcia 14 i granice nawierzchni wymagają weryfikacji. |
+
+Historyczny `OSM way/704368699` dotyczy sąsiedniego placu na północ, nie należy go utożsamiać z rzędem wiat. R24 — wynik generacji, obraz, kolizje i budżet **OPEN**. Fotografie właściciela są wyłącznie lokalną referencją i nie są teksturami.
