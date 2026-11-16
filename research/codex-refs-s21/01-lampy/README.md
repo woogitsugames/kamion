@@ -231,3 +231,6 @@ Jeden kadr AUX pokazuje własne światło dużej tylnej lampy oraz sąsiedniej c
 ### Przednia Scania — FA51
 
 Dwa kadry jednej części, także niezależny rootpeer: fizyczne makroE1/4147 oraz przód optyki. PL/25 iHC/HR/RL/A/1a czytelne, osobne10R tylkoEMC. Dalsze małe symbole/serie, funkcjonalne komory iON/nocUNVERIFIED. Nie przeniesionoE z etykiety na odczyt przedniej powierzchni. Główny manifest62; losowy audytR46 dotyczy wcześniejszego snapshotu60, nie jest automatycznym audytem nowych2wierszy. Dwa nowe kadryFA51 mają własny celowy rootpeer. Tylny15 bez przyrostu. [FA51](front-approval-round51/README.md).
+
+
+R52: dwa kadry jednego przedniego reflektora MAN/ZKW. Root niezależnie obejrzał makro 1:1 i cały przód: fizyczne E12/112029, HCR/A/1a. Główny manifest64; tylny limit bez przyrostu, ON i noc niepotwierdzone. Szczegóły w front-approval-round52.
