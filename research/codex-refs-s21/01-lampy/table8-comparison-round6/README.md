@@ -7,3 +7,8 @@ comparison.csv zestawia 12 kategorii między pełnym Amendment 5 i pełnym Rev.1
 To wąski audyt wskazanych kolumn oraz podstawy warunków. Nie sprawdzono całego łańcucha zmian ani osobnej konsolidacji Rev.1. Brak deklaracji stanu prawnego 2026.
 
 Pełny odczytany fragment punktów i tabela zachowane poza gitem w Data/raw/refs/codex-s21/01-lampy/conditions-round5/tool-extracted.txt jako ekstrakt narzędzia, nie PDF. Manifest zawiera dwa rekordy dokumentacyjne; oba mają licznik zdjęć 0. Brak nowych obrazów i operacji git.
+
+
+## Uzupełnienie16.11.2026 — rzeczywiste bitmapy R48
+
+[R48](../r148-table-bitmap-round48/README.md) rozstrzyga cztery dawne UNVERIFIED wykładniki: minimum5 w obu drukach0.6cd, więc dawny dodatni wykładnik był błędem ekstrakcji. Single11a/b/c wAm5 literalnie120cd, wRev1Am2 literalnie1200cd — rzeczywista różnica druku, nie ustalony powód prawny. Aktywne4wierszeCSV poprawione, dawny plik zachowany wR48. Brak awansu do aktualnego prawa2026 lub dowodu corrigendum. Dawne akapity wyżej opisują etap sprzed bitmap.

@@ -1,0 +1,163 @@
+{
+  "date": "2026-11-16",
+  "reviewer": "lampy",
+  "method": "Dwa oddzielne wywołania view_image, najpierw am5-page23.png, potem table-page2.png. Bez odczytu wniosków root, CSV norms lub jego recenzji przed oglądem. Transkrypcja literalnych potęg z bitmap, bez poprawiania według sensu.",
+  "shared_columns": {
+    "minimum": "Minimum luminous intensity in cd",
+    "single": "A single lamp",
+    "D": "A lamp marked D",
+    "distribution": "Standard light distribution",
+    "geometric_visibility": "Angles of geometric visibility",
+    "references": {
+      "minimum": "Par. 4.8.3.1. (a)",
+      "maximum_shared": "Par. 4.8.3.1. (b)",
+      "D_specific": "Par. 3.3.2.5.2.",
+      "distribution": "Par. 4.8.3.1. (c)",
+      "geometric_visibility": "Par. 4.8.3.1. (d)"
+    },
+    "hierarchy": "Minimum z (a) to osobna kolumna. Wspólny nagłówek maksimum w cd dla użycia według (b) dzieli się na single i D. D nie jest tytułem kolumny rozsyłu ani minimalnej światłości widoczności geometrycznej.",
+    "limits": "Z samej tabeli nie odtworzono pełnych warunków lamp sprzężonych ani zasady agregowania; zachowano odesłanie do 3.3.2.5.2."
+  },
+  "snapshots": [
+    {
+      "image_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\01-lampy\\r148-table-bitmap-round48\\am5-page23.png",
+      "sha256": "cf8b24928ffedeec7d410908ee3985e3d1f28816bbd9cb5342659a5e8a42e642",
+      "visible_document_header": "E/ECE/TRANS/505/Rev.3/Add.147/Amend.5",
+      "visible_page": 23,
+      "table": 8,
+      "status": "PASS_VISUAL_LITERAL_TRANSCRIPTION",
+      "cells": [
+        {
+          "category": "5",
+          "column": "minimum",
+          "literal": "6·10⁻¹",
+          "exponent": -1,
+          "numeric_cd": 0.6
+        },
+        {
+          "category": "11a",
+          "column": "max_single",
+          "literal": "1.20·10²",
+          "exponent": 2,
+          "numeric_cd": 120
+        },
+        {
+          "category": "11b",
+          "column": "max_single",
+          "literal": "1.20·10²",
+          "exponent": 2,
+          "numeric_cd": 120
+        },
+        {
+          "category": "11c",
+          "column": "max_single",
+          "literal": "1.20·10²",
+          "exponent": 2,
+          "numeric_cd": 120
+        }
+      ],
+      "D_cells": [
+        {
+          "category": "11a",
+          "literal": "6.00·10²",
+          "numeric_cd": 600
+        },
+        {
+          "category": "11b",
+          "literal": "6.00·10²",
+          "numeric_cd": 600
+        },
+        {
+          "category": "11c",
+          "literal": "6.00·10²",
+          "numeric_cd": 600
+        }
+      ],
+      "category5_other_columns": {
+        "single_max_literal": "2.80·10²",
+        "D_max_literal": "1.40·10²",
+        "distribution": "Table A2-2",
+        "geometric_definition": "Table A2-2",
+        "geometric_min_literal": "6·10⁻¹"
+      },
+      "version_date": "Nie potwierdzono daty okładki z tej bitmapy jednej strony; identyfikacja dokumentu według widocznego nagłówka."
+    },
+    {
+      "image_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\01-lampy\\r148-table-bitmap-round48\\table-page2.png",
+      "sha256": "34f12750df94b2f3adf5079f0badb03048e381fe954e6a3b84f1953e943beb48",
+      "visible_document_header": "E/ECE/TRANS/505/Rev.3/Add.147/Rev.1/Amend.2",
+      "visible_page": 2,
+      "table": 8,
+      "status": "PASS_VISUAL_LITERAL_TRANSCRIPTION",
+      "cells": [
+        {
+          "category": "5",
+          "column": "minimum",
+          "literal": "6·10⁻¹",
+          "exponent": -1,
+          "numeric_cd": 0.6
+        },
+        {
+          "category": "11a",
+          "column": "max_single",
+          "literal": "1.20·10³",
+          "exponent": 3,
+          "numeric_cd": 1200
+        },
+        {
+          "category": "11b",
+          "column": "max_single",
+          "literal": "1.20·10³",
+          "exponent": 3,
+          "numeric_cd": 1200
+        },
+        {
+          "category": "11c",
+          "column": "max_single",
+          "literal": "1.20·10³",
+          "exponent": 3,
+          "numeric_cd": 1200
+        }
+      ],
+      "D_cells": [
+        {
+          "category": "11a",
+          "literal": "6.00·10²",
+          "numeric_cd": 600
+        },
+        {
+          "category": "11b",
+          "literal": "6.00·10²",
+          "numeric_cd": 600
+        },
+        {
+          "category": "11c",
+          "literal": "6.00·10²",
+          "numeric_cd": 600
+        }
+      ],
+      "category5_other_columns": {
+        "single_max_literal": "2.80·10²",
+        "D_max_literal": "1.40·10²",
+        "distribution": "Table A2-2",
+        "geometric_definition": "Table A2-2",
+        "geometric_min_literal": "6·10⁻¹"
+      },
+      "version_date": "Nie potwierdzono daty okładki z tej bitmapy jednej strony; identyfikacja dokumentu według widocznego nagłówka."
+    }
+  ],
+  "comparison": {
+    "category5_minimum": "IDENTICAL_PRINTED_EXPONENT: 6·10⁻¹ cd w obu bitmapach.",
+    "category11a_single_max": "DIFFERENT_PRINTED_EXPONENTS: Am5 ma 1.20·10², Rev1Am2 ma 1.20·10³.",
+    "category11b_single_max": "DIFFERENT_PRINTED_EXPONENTS: Am5 ma 1.20·10², Rev1Am2 ma 1.20·10³.",
+    "category11c_single_max": "DIFFERENT_PRINTED_EXPONENTS: Am5 ma 1.20·10², Rev1Am2 ma 1.20·10³.",
+    "category11abc_D_max": "IDENTICAL_PRINTED_EXPONENT: 6.00·10² w obu bitmapach.",
+    "decision": "Nie ujednolicono wartości. To widoczna różnica druku tabel, nie tylko utrata indeksu podczas ekstrakcji. Nie ustalano genezy, corrigendum ani kompletnego łańcucha zmian."
+  },
+  "limits": [
+    "Ogląd nie dowodzi aktualnej mocy prawnej 2026.",
+    "Rev1 nie jest automatycznie serią poprawek; nie utożsamiono rewizji z serią.",
+    "Nie edytowano parenta, norms ani round 6.",
+    "Nie pobierano dokumentów lub obrazów. Oficjalne pochodzenie plików jest deklaracją koordynatora; peer potwierdza widoczny nagłówek i komórki bitmap."
+  ]
+}
