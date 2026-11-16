@@ -663,3 +663,7 @@ Dwa wycinki ortofotomapy GUGiK w `research/codex-refs-s21/04-dk65/tree-crowns-ro
 ### Codex refs S21 — Rynek3, R29
 
 `research/codex-refs-s21/03-knyszyn/rynek3-4-model-round29/files/03-RM29-models.png`: GUGiK CityGML LoD2/LoD1, CC BY4.0 https://creativecommons.org/licenses/by/4.0/ według metadanych źródeł wR22. Własny rzut/bryły z osobnymi podstawamiZ i barwami analitycznymi; nie fotografia2026. PRG/BDOT: publiczne źródła, bez automatycznego przypisaniaCC; linki i dokładneklucze wpakiecie.0nowycharchiwów/zdjęć.
+
+### Codex refs S21 — Rynek4, R30
+
+`research/codex-refs-s21/03-knyszyn/rynek4-model-round30/files/03-RM30-models.png`: GUGiK CityGML LoD2/LoD1, CC BY4.0 https://creativecommons.org/licenses/by/4.0/ według metadanych źródeł wR22. Własny rzut/bryły, osobnepodstawyZ i analitycznebarwy. PRG/BDOT bez automatycznego przypisaniaCC, źródła i klucze wpakiecie.0nowycharchiwów/zdjęć.

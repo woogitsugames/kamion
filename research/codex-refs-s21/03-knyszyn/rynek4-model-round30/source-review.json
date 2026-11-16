@@ -1,0 +1,62 @@
+{
+  "review_date": "2026-11-16",
+  "new_http_requests": 0,
+  "new_archives": 0,
+  "new_photos": 0,
+  "new_models_analysed": 1,
+  "prior_prg_request": "03-knyszyn/rynek3-4-model-round29/source-review.json",
+  "prg_response_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\refs\\codex-s21\\03-knyszyn\\rynek3-4-model-round29\\kina-addresses.gml",
+  "prg_response_sha256": "611a8da8a6fe092c608efd24623d579cbac0a8fd3a57776f0c1ca8e23c93e4e8",
+  "source_numberMatched": 51,
+  "source_numberReturned": 51,
+  "literal_prg_pos_NE": "612326.58 760910.8",
+  "calculation_point_EN": [
+    760910.8,
+    612326.58
+  ],
+  "coordinate_order": "Istniejące WFS 2.0 URN EPSG:2180: N,E; własny rzut i obliczenia E,N.",
+  "identity": {
+    "LOKALNYID": "2002917F-2D30-5C99-E053-CC2BA8C01CFC",
+    "PRZESTRZENNAZW": "PL.PZGiK.335.BDOT10k",
+    "WERSJA": "2025-10-16T00:00:00.000",
+    "IDEGIB": "200804_4.0054.2462_BUD"
+  },
+  "identity_status": "SOURCED: identyczny lokalny klucz i namespace w BDOT i obu CityGML. IDEGIB tylko literalny wskaźnik, bez odczytu EGiB.",
+  "address_join_status": "ESTIMATED punkt wewnątrz poligonu; formalny join UNVERIFIED.",
+  "dedup": "2D30 różni się od 3002/3031/3066. Literalny pełny klucz nie występował we wcześniejszym 03/K1; nie twierdzimy, że bryła nie pojawiła się w tle fotografii.",
+  "method": "SQLite mode=ro, archiwa ZIP odczytane w miejscu; gml:pos i gml:posList, rzut poligonów przy minimalnym Z; zakres max-min osobno dla produktu.",
+  "archive_checks": [
+    {
+      "archive": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\gugik\\lod2-2017-2008\\2008_lod2_gml.zip",
+      "sha256": "cd65ee91e327e37e4ca567a3b25e817e139bbd9974d4f0182ada94b2dff23a09",
+      "read_only": true
+    },
+    {
+      "archive": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\raw\\gugik\\lod1-2024-2008\\2008_lod1_2024.zip",
+      "sha256": "02e9139142864bcb63ab3a781281cbd3f87eb58a54dfad0306f67bf8175f7f80",
+      "read_only": true
+    }
+  ],
+  "figure": {
+    "path": "files/03-RM30-models.png",
+    "pixels": [
+      800,
+      480
+    ],
+    "sha256": "17e0d35304152bc2aff1025a36351eb8e1e8e4645b044e727d2209ac7ac8b013",
+    "individually_viewed": true,
+    "observation": "Punkt Rynek 4 leży wewnątrz niemal zgodnych nieregularnych obrysów. LoD2 pokazuje spadzisty dach i mniejsze części przyziemia, LoD1 uproszczoną bryłę z poziomą górą. Kolory rozróżniają produkty, nie materiał.",
+    "orientation": "Północ siatkowa ku górze rzutu; widok 3D symboliczny; Z każdego modelu od własnej podstawy."
+  },
+  "model_license": "GUGiK CC BY 4.0 według istniejącego indeksu R22; nie przeniesiono tej licencji na PRG i BDOT.",
+  "limitations": [
+    "Adres do modelu: wyłącznie przestrzenny wniosek ESTIMATED; formalny wspólny klucz adresowy UNVERIFIED.",
+    "Oba produkty wskazują źródło dachu ALS_I z 2016 r.; nazwa produktu nie jest datą pomiaru ani stanem 2026.",
+    "Różne pionowe układy odniesienia; nie odejmowano bezwzględnych Z między produktami.",
+    "LoD1 measuredHeight i pionowy zakres LoD2 to różne miary modelu, a nie przedział tolerancji wysokości rzeczywistej.",
+    "Brak wniosków o kondygnacjach, materiałach, kolorze i przebudowie."
+  ],
+  "shared_sources_modified": false,
+  "parent_files_modified": false,
+  "chrome_used": false
+}

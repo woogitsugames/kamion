@@ -170,3 +170,5 @@ R21: dwa nowe ujęcia z gminnego Gońca nr11(203), listopad2021, s7, Anna Aneta 
 R27: nowy link-only szczegół donicy, k11.jpg z gminnego artykułu publikowanego21.07.2022. Root obejrzał skrzynię z poziomych desek i łukowy bruk; dół ucięty, bez metrów/podparcia. Tekst03-D02 już istniał, nie policzono go ponownie. Główny manifest56 rekordów.
 
 R29: nowa bryła3066 przy punkciePRGRynek3 (adresESTIMATED),jedno zapytanie51punktów,1własnafigura800×480,0fotografii/ZIP. Root obejrzał figurę i niezależnie odczytałkluczePRG/BDOT/CityGML. SOURCED LoD1measuredHeight6,77m vs ESTIMATEDzasięgLoD2 8,10m,obieźródłoALS2016. Manifest57.
+
+R30: odrębna bryła2D30 przy punkciePRGRynek4 (adresESTIMATED),1własnafigura800×480,0HTTP/ZIP/fotografii. Root obejrzał i odczytałkluczePRG/BDOT/CityGML. SOURCED LoD1measuredHeight7,79m vs ESTIMATEDzasięgLoD2 9,68m;obieALS2016. Nie rzeczywistyprzedział wysokości. Manifest58.
