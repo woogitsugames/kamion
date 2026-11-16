@@ -91,6 +91,29 @@ def test_vegetation_two_runs_identical():
     assert json.dumps(_place(g)) == json.dumps(_place(g))
 
 
+def test_vegetation_with_floor_identical_across_processes():
+    """ADR 0245 after the merge with ADR 0222 (one `keep=` mask in `emit`): a forest with a road (floor + mantle
+    active) is identical in two fresh interpreters with different hash seeds, and identical to an in-process run."""
+    import hashlib
+    import os
+    import subprocess
+
+    import numpy as np
+
+    g = np.zeros((131, 131), bool)
+    g[:, 100:103] = True
+    here = _place(g)
+    assert sum(t["src"].endswith(":floor") for t in here) > 20 and sum(t["src"].endswith(":edge") for t in here) > 20
+    want = hashlib.sha256(json.dumps(here).encode()).hexdigest()
+    code = ("import hashlib, json, sys, numpy as np; sys.path.insert(0, sys.argv[1]); "
+            "import test_determinism_0173 as T; g = np.zeros((131, 131), bool); g[:, 100:103] = True; "
+            "print(hashlib.sha256(json.dumps(T._place(g)).encode()).hexdigest())")
+    for seed in ("0", "12345"):
+        out = subprocess.run([sys.executable, "-c", code, str(Path(__file__).resolve().parent)], check=True,
+                             capture_output=True, text=True, env={**os.environ, "PYTHONHASHSEED": seed})
+        assert out.stdout.strip() == want, f"PYTHONHASHSEED={seed}"
+
+
 def test_compare_world_classifies(tmp_path):
     a, b = tmp_path / "a", tmp_path / "b"
     a.mkdir()

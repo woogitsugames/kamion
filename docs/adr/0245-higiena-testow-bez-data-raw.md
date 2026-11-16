@@ -38,7 +38,7 @@ niż tu opisany — komunikat asercji (`mix`, wartość) wskaże który.
    (`test_stale_check_rules`, `test_stale_check_ignores_untracked_modules`, `test_report_lists_every_tracked_generator_module`).
    Zacommitowanego `fidelity_qa.json` NIE edytowałem ręcznie (to byłaby fałszywa proweniencja); wpis `tunnels.py`
    z hashem pustego pliku zostaje i jest poprawnie uznany za równoważny brakowi.
-2. **Run leśny losuje atrybuty dla wszystkich kandydatów**, a test „blisko drogi” odrzuca dopiero potem (`emit(..., mask=)`,
+2. **Run leśny losuje atrybuty dla wszystkich kandydatów**, a test „blisko drogi” odrzuca dopiero potem (`emit(..., keep=)` — po scaleniu z main ta sama maska co szpalery ADR 0222,
    ta sama zasada co zablokowane komórki w ADR 0173). Siatka bez zablokowanego węzła → odległość do drogi = ∞ (brak runa).
 3. **Test lokalności** sprawdza to, co miał, plus jawną regułę runa z ADR 0187: drzewa wszystkich warstw poza
    promieniem przerzedzania identyczne; run obecny w obu przebiegach identyczny; nowy run tylko w promieniu
@@ -61,6 +61,24 @@ Z pobranym LFS (`git lfs pull --include="art-source/world/vegetation/forest_edge
   `:floor`; pozostałe warstwy bez zmian. Zacommitowane `generated/*` są do tej pory spójne z poprzednim generatorem,
   dopóki lider nie przebuduje. Liczba trójkątów stretch_04 (C, ADR 0221) może drgnąć o szum losowy płaszcza —
   **zmierzyć** po przebudowie; nie zgaduję kierunku. Regionu knyszyn (0227) nie dotykałem.
+- **Zakres regeneracji (FIX po recenzji s22, P2):** zmiana strumienia płaszcza = **regeneracja wszystkich regionów z
+  lasami BDOT (`OT_PTLZ_A`) przy ich następnej przebudowie**; do tego czasu `generated/*` w gicie opisuje poprzedni
+  generator. Lista z zacommitowanych `Data/Regions/<id>/generated/streetscape_qa.json` (`vegetation.forest_mantle` /
+  `forest_floor`, stan main `639da4e54`): `bialystok-industrial-c` (13 317 / 14 450), `bialystok-dojlidy`
+  (11 128 / 16 526), `bialystok-kleeberga` (3 804 / 11 885), `dk65-01` … `dk65-11` (980…15 569 / 1 842…25 829),
+  `dw671-tykocin-01` (1 538 / 844), `knyszyn-s` (4 694 / 3 282), `knyszyn-w` (1 377 / 23), `knyszyn` (1 088 / 147).
+  `bialystok-knyszynska`, `bialystok-maczka` i `dk65-monki-01` mają las (`forest_hlod.forest_trees` 12 462 / 84 129 /
+  95 724), ale ich raport jest sprzed ADR 0187 (brak pól `forest_mantle`/`forest_floor`) — przy następnej przebudowie
+  dostaną płaszcz i run już z nowego strumienia. Kafle pierścienia ADR 0231 będą budowane od razu nowym generatorem.
+- **Kolejność:** scalić **przed** jedyną przebudową C, żeby `mesh_budget.frame_estimate` objął tę zmianę. Po
+  przebudowie C porównać `trees_lod*` i `forest_hlod` kamery stretch_04 przed/po (przed, main `639da4e54`, `streetscape_qa.json`:
+  stretch_04 `tris_high` 1 985 807, `forest_hlod` 30 033, `trees_lod1` 420, `trees_lod2` 6 670). Kierunek zmiany UNVERIFIED (szum losowy, nie nowe obiekty: liczba kandydatów `:floor`
+  i maska bez zmian; liczba `:edge` może drgnąć, bo inne pozycje trafiają w inne komórki `blocked`).
+- **Determinizm po scaleniu z main (0222 + 0245 w jednym `emit(keep=)`):** sprawdzony na danych syntetycznych
+  (`test_vegetation_with_floor_identical_across_processes`: las z drogą, run i płaszcz aktywne, dwa świeże
+  interpretery z różnym `PYTHONHASHSEED` = ten sam SHA-256 wyniku; `test_treerows_0222` bez zmian zielony).
+  Na realnych C/Dojlidach **nie sprawdzony w chmurze** — `build_world` wymaga `Data/raw` (BDOT, NMT); lider:
+  dwa przebiegi + `compare_world.py` (komendy niżej).
 - Po scaleniu 0211 (`roads/tunnels.py` śledzony) raport C stanie się stale z prawdziwego powodu → przebudować
   `fidelity/run.py` lokalnie (Data/raw).
 - Uzasadnione `UNVERIFIED`: wpływ punktu 2 na liczbę drzew/trójkątów w realnych regionach (nie ma Data/raw w chmurze).
@@ -75,4 +93,8 @@ uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialysto
 uv run tools/worldgen/build_region.py --region bialystok-industrial-c
 uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
 uv run --project tools/worldgen python tools/worldgen/qa/compare_world.py <stary_out> <nowy_out>   # oczekiwane różnice tylko w :edge i :floor
+# determinizm (C, potem to samo dla bialystok-dojlidy): kopia wyniku, drugi przebieg, porównanie (oczekiwane: brak różnic)
+Copy-Item -Recurse Data/raw/derived/bialystok-industrial-c/world artifacts/tests-hygiene-0245/world_run1
+uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+uv run --project tools/worldgen python tools/worldgen/qa/compare_world.py artifacts/tests-hygiene-0245/world_run1 Data/raw/derived/bialystok-industrial-c/world
 ```
