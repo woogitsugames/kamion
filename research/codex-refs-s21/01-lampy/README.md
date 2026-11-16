@@ -221,3 +221,8 @@ Główny manifest:49kadrów (8lokalnych/41link-only). [EcopointII](rear-mark-clo
 ## Scania — piąty tylny kadrPASS, runda38
 
 [rear-approval-round38](rear-approval-round38/README.md): fizyczneE2 na dużym uszkodzonym kloszu po dwóch odczytach; źródłoweOE2860827 do ciągnika odczytane osobno. RA38-01 spełnia udokumentowany filtrE/typu/geometrii, bez dopisywania pełnego numeru czy sprawności. Etykieta10R jako osobnySUPPORT/EMC. Tylny bilans5PASS+1warunkowy,ON0/zmierzch0 wPASS; nie zamknięcie15/4/3. Główny60.
+
+
+### Nowe zbliżenie emisji — Transbud R47
+
+Jeden kadr AUX pokazuje własne światło dużej tylnej lampy oraz sąsiedniej czerwonej lampki, potwierdzone także przez root w natywnej skali. Sam duży klosz około550–590px ESTIMATED przy obrazie2134×1423; E, funkcje i pora dnia UNVERIFIED. Nie zwiększa wspólnej kwalifikowanej grupy15/4/3. Nie dopisano go do głównego manifestu60, zachowano osobny jawny [manifest AUX R47](rear-lens-emission-round47/manifest.csv). Żadne jasne pole nie stało się samo w sobie normatywną barwą lub dowodem funkcji.

@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-16",
+  "id": "01-RE47-01",
+  "url": "https://www.transbud.com.pl/wp-content/uploads/oferta-myjni-naczep-1.webp",
+  "source": "https://www.transbud.com.pl/myjnia-tir/myjnia-naczep/",
+  "discovery": "Trop przekazał agent brud po własnym oglądzie w R56; ten opis oparto na osobnym własnym oglądzie, nie tylko na jego transkrypcji. Peer nie jest ślepy, ponieważ znałem ogólną sugestię świecenia.",
+  "method": "Dokładny publiczny URL otwarto osobno w Chrome, potem obejrzano także w natywnej skali 2134×1423 po kliknięciu obrazu. Naturalne i wyświetlane rozmiary odczytane z DOM. Źródłowy link 13 pełnej strony Transbud niezależnie prowadzi do tego samego URL. Nie zapisano obrazu, screenshotów, cropów ani wersji po obróbce.",
+  "natural_px": [
+    2134,
+    1423
+  ],
+  "display_native_px": [
+    2134,
+    1423
+  ],
+  "observation": "Niskie ujęcie tylnego narożnika czerwonego ciężkiego pojazdu: długa lampa zespolona w ciemnej ramce, czerwone środkowe pola i bezbarwne pola na końcach. W centralnym wielokątnym polu jasne żółtawobiałe punkty i rozświetlona struktura; obok po prawej osobna mała czerwona lampa z jasnym środkiem i czerwoną poświatą. Prawy bezbarwny obszar głównego klosza ma różowe odbicia, których nie uznano za osobną emisję. Pod lampą srebrzysta belka z czerwonym pasem i białym napisem MATEC-Trailer Oy, na końcu okrągły bursztynowy element. Z prawej duże koła i błotniki, wzdłuż boku szereg jasnych żółtych punktów; tło i dalsze części rozmyte. Widoczne szare podłoże i jasny plener. Nie odczytano E, numeru ani kodów funkcji.",
+  "emission": {
+    "status": "VISIBLE_FROM_IMAGE",
+    "evidence": "Wielokątne centrum głównej lampy zawiera skupisko silnie jasnych żółtawobiałych punktów, odróżnionych od ciemniejszych struktur sąsiednich pól. Osobna mała czerwona ma jasny środek i czerwoną poświatę na sąsiednim otoczeniu.",
+    "not_counted": "Różowy wygląd prawego bezbarwnego obszaru pozostaje odbiciem/rozświetleniem UNVERIFIED, nie osobną potwierdzoną funkcją. Okrągły bursztynowy element na końcu belki nie został uznany za świecącą lampę.",
+    "limits": "Nie przypisano centrum funkcji kierunkowskazu/stopu ani jego prawnej barwy z jednego prześwietlonego kadru. Nie potwierdzono cyklu błyskowego, stanu instalacji elektrycznej ani pomiaru światłości. Mniejsza osobna lampka nie daje drugiego kadru lub dodatkowego zaliczenia geometrii."
+  },
+  "geometry": {
+    "status": "ESTIMATED",
+    "main_lens_width_native_px": [
+      550,
+      590
+    ],
+    "image_width_px": 2134,
+    "main_lens_width_percent": [
+      25.8,
+      27.6
+    ],
+    "basis": "Szacunek samego dużego klosza ze stanu natywnego, bez sumowania małej czerwonej lampki lub całego zderzaka. Wyraźnie przekracza 10% i 300px, nie jest wymiarem fizycznym.",
+    "small_red_lamp": "Mała osobna czerwona pozostaje znacznie mniejsza; nie kwalifikowano jej osobno progiem geometrii."
+  },
+  "vehicle_type": {
+    "source_label": "Strona myjni naczep podpisuje ten obraz jako tył czerwonej naczepy.",
+    "visual_limits": "Kadr pokazuje tylny narożnik i kilka kół, nie siodło, podpory ani dyszel. Nie rozstrzyga samodzielnie naczepa/przyczepa/solówka. Nie dopisano modelu ani rodziny lampy na podstawie podobieństwa do Europoint.",
+    "status": "SOURCE_LABEL_SEMITRAILER; VISUAL_SUBTYPE_UNVERIFIED"
+  },
+  "european_context": {
+    "physical_brand": "MATEC-Trailer Oy — literalny napis na belce.",
+    "primary_text_url": "https://konnegroup.fi/ota-yhteytta/",
+    "primary_text_read": "Pełna strona firmy, sekcja Matec-Trailer: Soini, Teollisuustie 7, 63800; nazwa Matec-Trailer Oy i adres korespondencyjny FI-01301 VANTAA.",
+    "status": "FINNISH_COMPANY_CONTEXT_ONLY",
+    "limits": "To kontekst firmy z napisu, nie GPS kraju fotografii, data produkcji tego pojazdu, potwierdzenie typu sprzęgu ani certyfikat ECE."
+  },
+  "time_of_day": {
+    "status": "UNVERIFIED",
+    "reason": "Widoczny jasny plener i jasnoszare tło. Nie wywnioskowano zmierzchu/nocy z załączonych lamp lub ciemnego podwozia."
+  },
+  "approval": {
+    "E": "UNVERIFIED",
+    "number": "UNVERIFIED",
+    "functions": "UNVERIFIED",
+    "chambers": "UNKNOWN"
+  },
+  "technique": {
+    "observation": "Wygląd fotografii fizycznej zabudowy/optyki: ślady powierzchni, nity, gumowe koła, różne odbicia i płytka głębia ostrości.",
+    "limits": "Brak metadanych ekspozycji i dokumentacji obróbki. Nie nazywamy materiału pomiarem laboratoryjnym ani dowodem całego łańcucha pochodzenia."
+  },
+  "rejected_single_lens": {
+    "source": "https://ap.works/en/vignal-059000-lc9-light-disc-compatible-with-renault-volvo-left-right/",
+    "image": "https://ap.works/media/43777/catalog/059000%20vignal%20LC9%20f%C3%BCr%20Renault%20Volvo.bmp?size=600",
+    "natural_px": [
+      281,
+      140
+    ],
+    "method": "Jeden mały podgląd na publicznej stronie, częściowo pod niezamkniętą osłoną zgody cookies. Nie szukano kolejnych całych lamp tej galerii ani wariantów rozmiaru.",
+    "observation": "Mały podłużny czerwony klosz z jasnym prostokątnym polem; brak warunków do odczytu E.",
+    "E": "UNVERIFIED",
+    "catalogue_only": "E2 04075 jest deklaracją tekstu oferty, nie odczytem tego obrazu.",
+    "counts": "0 kolekcji /0E /0ON"
+  },
+  "dedup": "rg całego 01 po transbud.com.pl/oferta-myjni-naczep-1/Matec i dokładnym adresem APWorks 059000 bez wcześniejszego kadru w 01. Może pokazywać znaną rodzinę lamp, ale numer/model i tożsamość egzemplarza UNVERIFIED; nie zadeklarowano nowej rodziny.",
+  "counts": {
+    "retained_photo_frames": 1,
+    "large_closeup_with_visible_emission_context": 1,
+    "main_combination_lamp_focus": 1,
+    "new_lamp_families_verified": 0,
+    "new_qualified_rear15": 0,
+    "new_qualified_ON4": 0,
+    "new_qualified_dusk_night3": 0,
+    "approval_E_readable": 0,
+    "screening_small_preview": 1,
+    "ARR_downloads": 0,
+    "saved_screenshots": 0,
+    "Commons_requests": 0,
+    "Flickr_downloads": 0,
+    "parent_edits": 0
+  },
+  "decision": "Zachować 1 użyteczny kontekst emisji z wyraźną geometrią, bez awansu ścisłych progów 15/4/3. Makro fotometrycznego E pozostaje luką."
+}
