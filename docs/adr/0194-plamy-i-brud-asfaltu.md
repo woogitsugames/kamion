@@ -1,6 +1,6 @@
 # 0194 — Plamy i brud na asfalcie sterowane ruchem (olej, łaty, koleiny na płytach, brud placów)
 
-Status: PROPOSED (gałąź `stains-0194`, po merge `origin/main` `8313ed9ba`). Data: 2026-11-15. Dotyczy: ADR 0019 (decale), 0060 (_GRIME), 0110 (UV1 płyt),
+Status: przyjęty (scalony do main 2026-11-15, `5d64bcd92`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED (gałąź `stains-0194`, po merge `origin/main` `8313ed9ba`). Data: 2026-11-15. Dotyczy: ADR 0019 (decale), 0060 (_GRIME), 0110 (UV1 płyt),
 0118 (asphalt_wear / szew łat), 0062/0191 (pule latarni — konflikt opisany niżej).
 
 ## Kontekst (REVIEW-2026-11-13-s19-0179, P2)

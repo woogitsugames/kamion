@@ -1,5 +1,5 @@
 # ADR 0196 — Dojlidy: zakład przy Kuronia 2 jako bryły, bramy segmentowe, zacieki bez powtórzeń, pas 09R/27L w kadrze
-Status: Proposed (agent world-builder, s20, gałąź `dojind-0196`), 2026-11-13. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-14, `5eb18d59e`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `dojind-0196`), 2026-11-13. Do scalenia przez lidera.
 Poprzednik: ADR 0179 + recenzja `docs/reports/REVIEW-2026-11-13-s19-0179.md` (P2: dominanta P11-063, bramy P11-094,
 zacieki co moduł, brak kadru pasa startowego). Zakres: tylko region `bialystok-dojlidy`; region C bez zmian.
 Sąsiednie zadania (nie ruszane): `dojbld-0185` (bryła/okładzina hali północnej, Kuronia 3, ogrodzenia),

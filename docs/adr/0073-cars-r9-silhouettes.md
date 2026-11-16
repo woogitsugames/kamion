@@ -1,6 +1,6 @@
 # ADR 0073: Zaparkowane auta r9 — sylwetki zamiast „mydelniczek”
 
-- Status: proposed (truck-artist, 2026-11-10); ocena wizualna należy do `visual-critic`
+- Status: przyjęty (scalony do main 2026-11-10, `fd0e25388`; status zaktualizowany 2026-11-16); pierwotnie: proposed (truck-artist, 2026-11-10); ocena wizualna należy do `visual-critic`
 - Kontekst: REVIEW-2026-11-10-r8 („auta-mydelniczki… ciągną obraz w stronę gry mobilnej z 2016 r.”, „matowe jak
   podkład”, „przody to mydło z kreską”). Uzupełnia ADR 0041 (addendum r9) i ADR 0050.
 

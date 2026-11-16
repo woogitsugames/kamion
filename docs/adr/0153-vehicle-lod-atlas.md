@@ -1,6 +1,6 @@
 # ADR 0153 — LOD1/LOD2 aut
 
-Status: implementacja, testy i statyczna recenzja edytora PASS; do recenzji lidera.
+Status: przyjęty (scalony do main 2026-11-13, `87ffeb301`; status zaktualizowany 2026-11-16); pierwotnie: implementacja, testy i statyczna recenzja edytora PASS; do recenzji lidera.
 Gałąź gpt-s16-r1. Baza: origin/main 421f1b4fb (12.11.2026).
 
 ## Problem i granice

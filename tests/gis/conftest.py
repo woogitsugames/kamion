@@ -44,6 +44,15 @@ def buildings_fc():
     return json.loads(p.read_text(encoding="utf-8"))
 
 
+@pytest.fixture(scope="session")
+def piers_check():
+    """(report, world) of tools/worldgen/qa/check_piers_vs_roads.py for the default region: the road stage of the
+    generator on a flat ground model. No Data/raw, no Unity; about 100 s, once per session (ADR 0198 / 0226)."""
+    sys.path.insert(0, str(REPO / "tools" / "worldgen" / "qa"))
+    import check_piers_vs_roads as K
+    return K.check(REGION_ID)
+
+
 def raw_available() -> bool:
     import sources
     for ds in ("gugik-nmt-2025-" + REGION_ID, "gugik-bdot10k-2061", "gugik-lod1-2024-2061", "gugik-lod2-2017-2061",
@@ -72,16 +81,31 @@ def is_lfs_pointer(path) -> bool:
         return False
 
 
+def _lfs_required(path) -> bool:
+    """True when `path` matches KAMION_LFS_REQUIRED (comma-separated repo-relative globs, the same list CI gives to
+    `git lfs pull --include`). There a pointer means the pull failed or the list is out of date: fail, do not skip."""
+    import fnmatch
+    import os
+    globs = [g.strip() for g in os.environ.get("KAMION_LFS_REQUIRED", "").split(",") if g.strip()]
+    try:
+        rel = Path(path).resolve().relative_to(REPO).as_posix()
+    except ValueError:
+        return False
+    return any(fnmatch.fnmatch(rel, g) for g in globs)
+
+
 def require_lfs(*paths) -> None:
     """Skip the test when any given file is a git-lfs pointer instead of the real binary.
 
-    CI runs with lfs: false (LFS transfer budget), so tracked binaries (.glb, .png, ...) are
-    pointer files there; tests that read their bytes must skip, not fail. Locally, with real
-    LFS content pulled, the tests run unchanged.
+    CI checks out with lfs: false (LFS transfer budget) and then pulls only the ~18 MB the gis tests read
+    (`.github/workflows/ci.yml`, job gis, LFS_GIS); everything else stays a pointer there and tests reading it
+    skip. For paths in KAMION_LFS_REQUIRED a pointer is a failure. Locally, with LFS pulled, tests run unchanged.
     """
     for path in paths:
         if is_lfs_pointer(path):
-            pytest.skip(f"{path} is a git-lfs pointer, not the real file (checkout without lfs)")
+            if _lfs_required(path):
+                pytest.fail(f"plik LFS miał być pobrany w CI (KAMION_LFS_REQUIRED), a jest wskaźnikiem: {path}")
+            pytest.skip(f"plik LFS niepobrany (wskaźnik): {path} - run `git lfs pull --include <path>`")
 
 
 def pytest_configure(config):

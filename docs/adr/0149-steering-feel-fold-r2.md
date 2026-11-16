@@ -1,6 +1,6 @@
 # ADR 0149: czułość przesuwu kciukiem 24–60 km/h — stałe przyspieszenie poprzeczne na milimetr (Fold r2)
 
-Status: proponowany (2026-11-12, gałąź `steer-r2`). Źródło: nagranie właściciela z Samsunga Fold, ekran wewnętrzny,
+Status: przyjęty (scalony do main 2026-11-12, `34940850f`; status zaktualizowany 2026-11-16); pierwotnie: proponowany (2026-11-12, gałąź `steer-r2`). Źródło: nagranie właściciela z Samsunga Fold, ekran wewnętrzny,
 12.11 ok. 20:03 (`artifacts/owner-feedback/2026-11-12-fold-video/Screen_Recording_20261112_200336_Kamion.mp4`,
 1080×1200, 120 fps, 27,0 s): „dalej ciężko się kieruje, nieprzyjemnie, szybko się traci kontrolę”. „Dalej” = po
 ADR 0135 (gest „przesuw”, 10,8°/mm, 5°/mm od 60 km/h) i ADR 0058 (kolumna, limit rąk).

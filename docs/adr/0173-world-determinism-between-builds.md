@@ -1,6 +1,6 @@
 # ADR 0173 — World determinism between builds: line-ending-free source hashes, no wall clock in derived data, per-candidate tree attributes
 
-Status: implemented on branch `determ-0173` (base main `3a60019ff`, 2026-11-13, s17); not merged. Unity import +
+Status: Accepted (merged to main 2026-11-13, `b880fc6a1`; status updated 2026-11-16); originally: implemented on branch `determ-0173` (base main `3a60019ff`, 2026-11-13, s17); not merged. Unity import +
 renders re-run twice on identical data (main world) after PHONE_RUN cleared; the new world (run4) NOT imported/rendered. Supersedes nothing; extends ADR 0096
 (PYTHONHASHSEED independence of the road stage).
 Source: reviews `docs/reports/visual/REVIEW-2026-11-13-s17-0161.md` / `-0167.md` ("rozkład drzew/impostorów różni

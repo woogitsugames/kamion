@@ -1,6 +1,6 @@
 # ADR 0230 — Legalność: dane Miasta Białystok poza grą, atrybucje BDL i referencji, wymagania ekranu „Informacje” jako dane
 
-Status: Proposed (agent E3 chmury E, gałąź `legal-0230`), 2026-11-15. Scalenie: lider.
+Status: przyjęty (scalony do main 2026-11-15, `db3678f60`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent E3 chmury E, gałąź `legal-0230`), 2026-11-15. Scalenie: lider.
 Dotyczy: ADR 0002 (zakaz Google), 0065 (zdjęcia CC BY-SA tylko referencja), 0066 (otwarte źródła referencji), 0073, 0187 (las
 Krywlany z BDL), 0201 (marki w danych ciężarówki); BACKLOG-S21 B-131, B-065; `docs/reports/LICENSES-AUDIT-S20.md`,
 `docs/reports/BRAND-SWEEP-S20.md`.

@@ -1,6 +1,6 @@
 # ADR 0092: Kwadrat Park r12 — plandeka, zamknięcie bramy, moduł płyty na ścianie hali
 
-Status: propozycja (world-builder, gałąź `worktree-kwadrat-r12`), 2026-11-11. Kontynuacja ADR 0071 (r10, r11); odpowiedź
+Status: przyjęty (scalony do main 2026-11-11, `8cbc92640`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (world-builder, gałąź `worktree-kwadrat-r12`), 2026-11-11. Kontynuacja ADR 0071 (r10, r11); odpowiedź
 na `docs/reports/visual/REVIEW-2026-11-11-s9.md` §4 (0071 r11 — PASS warunkowy, P1 × 3, P2 × 3).
 
 ## Kontekst

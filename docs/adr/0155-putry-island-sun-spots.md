@@ -1,6 +1,6 @@
 # ADR 0155 — plamy słońca na wyspie pod wiaduktem Putry
 
-Status: wariant B po docelowym imporcie, pełnej QA i EditMode; pełny GIS i EditMode PASS, recenzja statyczna PASS; kandydat do integracji lidera. Gałąź `gpt-s16-r3` od r2 `1f81e87ee`, po merge main `e638abf31`.
+Status: przyjęty (scalony do main 2026-11-13, `2051104f5`; status zaktualizowany 2026-11-16); pierwotnie: wariant B po docelowym imporcie, pełnej QA i EditMode; pełny GIS i EditMode PASS, recenzja statyczna PASS; kandydat do integracji lidera. Gałąź `gpt-s16-r3` od r2 `1f81e87ee`, po merge main `e638abf31`.
 
 ## Problem i zakres
 

@@ -19,7 +19,7 @@ import math
 import re
 import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -82,7 +82,8 @@ def discover_apk_info(phone_dir: Path, apk_arg: str | None, repo: Path) -> dict:
                 r = json.loads(rj.read_text(encoding="utf-8-sig"))
             except Exception:
                 continue
-            name = r.get("apkFile") or Path((r.get("apk") or {}).get("path", "") or "").name
+            # PureWindowsPath splits on both \ and / (results written on Windows, read on Linux CI; ADR 0245)
+            name = r.get("apkFile") or PureWindowsPath((r.get("apk") or {}).get("path", "") or "").name
             if not name:
                 continue
             legacy = not r.get("apkFile")

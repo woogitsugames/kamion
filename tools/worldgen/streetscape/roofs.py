@@ -641,13 +641,19 @@ def _party_side(poly, c, eu, hu, hv, others):
     return best
 
 
-def plan(poly, props, h, zref, key_float, others=(), wooden=False):
+def plan(poly, props, h, zref, key_float, others=(), wooden=False, shape=None, max_area=400.0):
     """Roof of a house footprint, or None = flat roof (LoD2 type 1000, footprints with courtyards or far from
     their rectangle). props: buildings.geojson properties; h: LoD1 height; key_float(salt) -> [0, 1) per building;
-    others: neighbouring footprints (party-wall test of mono-pitch halves)."""
+    others: neighbouring footprints (party-wall test of mono-pitch halves).
+    shape (ADR 0238): flat / gable / hip / mono from an authored override or OSM roof:shape (streetscape.typology
+    .roof_shape) - it replaces the LoD2 roof TYPE; the LoD2 eave / ridge heights are still used when present."""
     rt = props.get("roof_type_lod2")
+    if shape is not None:
+        if shape == "flat":
+            return None
+        rt = {"gable": "1030", "hip": "1040", "mono": "1010"}[shape]
     rect = poly.minimum_rotated_rectangle
-    if rt == "1000" or poly.interiors or poly.area > 400:
+    if rt == "1000" or poly.interiors or poly.area > max_area:
         return None
     c, eu, hu, hv = _frame(poly)
     ev = np.array([-eu[1], eu[0]])
@@ -660,6 +666,8 @@ def plan(poly, props, h, zref, key_float, others=(), wooden=False):
     kind = "gable"
     if rt == "1010":
         ps = _party_side(poly, c, eu, hu, hv, others)
+        if ps is None and shape == "mono":       # ADR 0238: an authored / OSM skillion roof without a party wall
+            kind = "mono"                        # slopes across the short axis
         if ps is not None:                       # the half of a semi-detached pair: high side at the party wall
             kind = "mono"
             n = ps[0]

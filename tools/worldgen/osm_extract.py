@@ -117,6 +117,7 @@ def _parse(pbf: Path) -> dict[str, list[dict]]:
             if b is not None:
                 buildings.append({**base, "building": b, "levels": t.get("building:levels"),
                                   "height": t.get("height"), "industrial": t.get("industrial"),
+                                  "roof_shape": t.get("roof:shape"),          # ADR 0238 (BUILDING_TAGS: cache key)
                                   "shop": t.get("shop"), "landuse": lu})
             if lu in AREA_KEYS_LANDUSE:
                 landuse.append({**base, "landuse": lu, "industrial": t.get("industrial"),
@@ -124,12 +125,15 @@ def _parse(pbf: Path) -> dict[str, list[dict]]:
     return {"roads": roads, "landuse": landuse, "buildings": buildings, "points": points}
 
 
+BUILDING_TAGS = ("roof:shape",)      # building tags added after the first cache format; part of the cache key
+
+
 def load_layers() -> dict[str, gpd.GeoDataFrame]:
     pbf = download()
     sha = load_manifest()["sha256"]
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     # the kept tag list is part of the key (ADR 0069 added destination:ref; a stale pickle silently dropped it)
-    tags_key = hashlib.sha1(repr(ROAD_TAGS).encode()).hexdigest()[:8]
+    tags_key = hashlib.sha1(repr((ROAD_TAGS, BUILDING_TAGS) if BUILDING_TAGS else ROAD_TAGS).encode()).hexdigest()[:8]
     bbox_key = hashlib.sha1(repr(BBOX_WGS84).encode()).hexdigest()[:8]
     cache = CACHE_DIR / f"bialystok_layers_{sha[:16]}_{tags_key}_{bbox_key}.pkl"
     if cache.exists():

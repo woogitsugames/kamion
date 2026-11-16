@@ -1,6 +1,6 @@
 # ADR 0147: orientacja ekranu — telefony zawsze w poziomie, Fold bez regresji
 
-Status: proponowany (2026-11-12, gałąź `orientation`). Kontynuacja ADR 0135 r3. Zakres: tylko logika orientacji
+Status: przyjęty (scalony do main 2026-11-12, `fee0d9405`; status zaktualizowany 2026-11-16); pierwotnie: proponowany (2026-11-12, gałąź `orientation`). Kontynuacja ADR 0135 r3. Zakres: tylko logika orientacji
 (`game/Assets/_Project/Gameplay/ScreenOrientationPolicy.cs`); bez zmian ProjectSettings/manifestu.
 
 ## Błąd

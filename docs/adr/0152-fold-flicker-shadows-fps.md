@@ -1,6 +1,6 @@
 # ADR 0152: Fold — „przeskakujący” obraz, migające cienie, niski FPS
 
-Status: propozycja (rendering-perf, gałąź `fold-flicker`, z main `41e6fd89f`), 2026-11-12.
+Status: przyjęty (scalony do main 2026-11-12, `fbb610dd3`; status zaktualizowany 2026-11-16); pierwotnie: propozycja (rendering-perf, gałąź `fold-flicker`, z main `41e6fd89f`), 2026-11-12.
 Powiązane: ADR 0046/0062 (adaptacyjna skala, fallbacki High), 0056 (przechwyt odbić), 0135/0147 (Fold), 0136 (A16 Low).
 
 ## Zgłoszenie

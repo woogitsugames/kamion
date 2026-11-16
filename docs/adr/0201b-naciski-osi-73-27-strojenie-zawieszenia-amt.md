@@ -1,6 +1,6 @@
 # ADR 0201b — Naciski osi ciągnika 73/27 % (karta S9), strojenie zawieszenia, dwie poprawki logiki AMT
 
-Status: Proposed (agent vehicle-physics, gałąź `axleloads-tuning-0201b`, baza `truckdata-0201` = PR #77), 2026-11-15. Scalenie: lider.
+Status: przyjęty (scalony do main 2026-11-15, `f9781a32b`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent vehicle-physics, gałąź `axleloads-tuning-0201b`, baza `truckdata-0201` = PR #77), 2026-11-15. Scalenie: lider.
 Dotyczy: ADR 0201 (pkt 2 „naciski — osobne zadanie”), ADR 0134 (kiwnięcie oka przy zmianie biegu), ADR 0024 (strategia AMT),
 `docs/VEHICLE_REFERENCE_DATA.md` (VRD), `docs/PHYSICS_VALIDATION.md` (PV §6g). Decyzja właściciela 2026-11-15: „osobne zadanie strojenia”.
 Forma: osobny plik `0201b`, nie sekcja „R4” w 0201 — 0201 dokumentuje dane R3 (promienie, marki, errata) i jest w recenzji PR #77;

@@ -1,6 +1,6 @@
 # ADR 0062 - High render-scale floor 0.70 + FSR 1.0, frame-pacing fallback; dusk = civil twilight with lamp pools
 
-Status: proposed (rendering-perf), 2026-11-10. Owner decision D36 (docs/11). Phone verification UNVERIFIED (no phone used
+Status: Accepted (merged to main 2026-11-10, `c0a03d08d`; status updated 2026-11-16); originally: proposed (rendering-perf), 2026-11-10. Owner decision D36 (docs/11). Phone verification UNVERIFIED (no phone used
 by this agent; the A/B is the lead's). Extends ADR 0046 (High adaptive scale + thermal fallback), ADR 0010/0016 (sky,
 exposure), review r4 L3 (street lamps). Answers review r8 N-24 (S24+ High 43-47 FPS) and N-20 (dusk without lamps).
 

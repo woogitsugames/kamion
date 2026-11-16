@@ -1,6 +1,6 @@
 # ADR 0175 — Wygląd zestawu TRAKT + naczepa firanka a przepisy (R48, R46, R58, R70, R73, R104, 96/53/WE, WT)
 
-Status: wykonane na gałęzi `truck-regs-0175` (baza main `3a60019ff`, 2026-11-13, s17); niescalone. Ocena wizualna należy do
+Status: przyjęty (scalony do main 2026-11-13, `e0aee8560`; status zaktualizowany 2026-11-16); pierwotnie: wykonane na gałęzi `truck-regs-0175` (baza main `3a60019ff`, 2026-11-13, s17); niescalone. Ocena wizualna należy do
 `visual-critic` — poniższe opisy renderów są autorskie, nie są werdyktem PASS.
 
 Źródło wymagań: tabela dla artysty w `docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p4.md` §5 (kontrola krzyżowa GPT P4 +

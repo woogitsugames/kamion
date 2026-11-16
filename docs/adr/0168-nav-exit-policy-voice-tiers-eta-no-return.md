@@ -1,6 +1,6 @@
 # ADR 0168 — Navigation: roundabout exit counting, three voice tiers, ETA at 1 Hz, no-return zone
 
-Status: implemented on branch `nav-0168` (2026-11-13, s17); not merged. Tests: nav-runner (xUnit) and Unity EditMode;
+Status: Accepted (merged to main 2026-11-13, `668b027b7`; status updated 2026-11-16); originally: implemented on branch `nav-0168` (2026-11-13, s17); not merged. Tests: nav-runner (xUnit) and Unity EditMode;
 phone NOT measured (the change is CPU-light and allocation-free, see "Evidence").
 Source: open points of the Mistral r6 review of the GPS (exit numbering, repeated announcements, ETA cost, GC proof)
 and the dead-end audit of ADR 0169 (`tools/worldgen/navgraph/dead_ends.py`).

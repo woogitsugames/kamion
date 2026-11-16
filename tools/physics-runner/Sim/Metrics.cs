@@ -117,6 +117,13 @@ namespace PhysicsRunner.Sim
                 case "trailer_offtracking_m":
                     // Rear-axle-group path radius of the trailer minus the tractor rear-axle radius (positive = inside).
                     return Mean(s, i0, i1, x => HorizDist(x.Pos, r.CircleCenter)) - Mean(s, i0, i1, x => HorizDist(x.TrailerAxlePos, r.CircleCenter));
+                // ---------------- swept path / turning ring (Directive 96/53/EC Annex I 1.5, ADR 0280) ----------------
+                // Circle centre = least-squares (Kasa) fit of the tractor rear-axle path over the window (steady state),
+                // body = scenario "envelope" rectangles of tractor and trailer in plan view.
+                case "swept_outer_radius_m": return Swept(r, i0, i1).outer;
+                case "swept_inner_radius_m": return Swept(r, i0, i1).inner;
+                case "swept_ring_width_m": { var w = Swept(r, i0, i1); return w.outer - w.inner; }
+                case "swept_fit_rms_m": return Swept(r, i0, i1).rms;
                 case "steer_angle_deg": return Mean(s, i0, i1, x => x.SteerAngle) * MathUtil.Rad2Deg;
                 case "steer_vs_ackermann":
                 {
@@ -416,6 +423,68 @@ namespace PhysicsRunner.Sim
                 default:
                     throw new ArgumentException($"Unknown metric '{name}'");
             }
+        }
+
+        /// <summary>Least-squares circle (Kasa) through the horizontal tractor-origin path, samples a..b.</summary>
+        public static (double cx, double cz, double radius, double rms) FitCircle(List<Sample> s, int a, int b)
+        {
+            // Solve [x z 1] [p q c]^T = x^2 + z^2 (normal equations, centred for conditioning).
+            double mx = 0, mz = 0; int n = 0;
+            for (int i = a; i <= b; i++) { mx += s[i].Pos.x; mz += s[i].Pos.z; n++; }
+            if (n < 3) return (double.NaN, double.NaN, double.NaN, double.NaN);
+            mx /= n; mz /= n;
+            double sxx = 0, sxz = 0, szz = 0, sxw = 0, szw = 0;
+            for (int i = a; i <= b; i++)
+            {
+                double x = s[i].Pos.x - mx, z = s[i].Pos.z - mz, w = x * x + z * z;
+                sxx += x * x; sxz += x * z; szz += z * z; sxw += x * w; szw += z * w;
+            }
+            double det = sxx * szz - sxz * sxz;
+            if (Math.Abs(det) < 1e-12) return (double.NaN, double.NaN, double.NaN, double.NaN);
+            double p = (sxw * szz - szw * sxz) / det, q = (szw * sxx - sxw * sxz) / det;
+            double cx = mx + p / 2, cz = mz + q / 2, rs = 0;
+            for (int i = a; i <= b; i++) rs += Math.Sqrt((s[i].Pos.x - cx) * (s[i].Pos.x - cx) + (s[i].Pos.z - cz) * (s[i].Pos.z - cz));
+            double radius = rs / n, e2 = 0;
+            for (int i = a; i <= b; i++)
+            {
+                double d = Math.Sqrt((s[i].Pos.x - cx) * (s[i].Pos.x - cx) + (s[i].Pos.z - cz) * (s[i].Pos.z - cz)) - radius;
+                e2 += d * d;
+            }
+            return (cx, cz, radius, Math.Sqrt(e2 / n));
+        }
+
+        /// <summary>
+        /// Swept annulus of the combination about the fitted centre: outer = farthest footprint corner, inner = nearest
+        /// footprint point (exact point-to-rectangle distance, 0 if the centre lies under the body), over samples a..b.
+        /// </summary>
+        public static (double outer, double inner, double rms) Swept(RunResult r, int a, int b)
+        {
+            var s = r.Samples;
+            var fit = FitCircle(s, a, b);
+            if (double.IsNaN(fit.cx)) return (double.NaN, double.NaN, double.NaN);
+            var e = r.Scenario.envelope;
+            double outer = 0, inner = double.MaxValue;
+            for (int i = a; i <= b; i++)
+            {
+                Rect(s[i].Pos, s[i].Fwd, e.tractorFrontZ, e.tractorRearZ, e.tractorHalfWidth, fit.cx, fit.cz, ref outer, ref inner);
+                if (s[i].HasTrailer && s[i].Coupled)
+                    Rect(s[i].TrailerPos, s[i].TrailerFwd, e.trailerFrontZ, e.trailerRearZ, e.trailerHalfWidth, fit.cx, fit.cz, ref outer, ref inner);
+            }
+            return (outer, inner, fit.rms);
+        }
+
+        static void Rect(Vec3 o, Vec3 fwd, double front, double rear, double hw, double cx, double cz, ref double outer, ref double inner)
+        {
+            double fx = fwd.x, fz = fwd.z, fl = Math.Sqrt(fx * fx + fz * fz);
+            if (fl < 1e-9) return;
+            fx /= fl; fz /= fl;
+            // right of forward in the plan view (X east, Z north, Y up): (fz, -fx)
+            double dx = cx - o.x, dz = cz - o.z;
+            double lz = dx * fx + dz * fz, lx = dx * fz - dz * fx;
+            double nz = lz - MathUtil.Clamp(lz, rear, front), nx = lx - MathUtil.Clamp(lx, -hw, hw);
+            inner = Math.Min(inner, Math.Sqrt(nz * nz + nx * nx));
+            double farZ = Math.Max(Math.Abs(front - lz), Math.Abs(lz - rear)), farX = Math.Abs(lx) + hw;
+            outer = Math.Max(outer, Math.Sqrt(farZ * farZ + farX * farX));
         }
 
         static double MaxCabRate(List<Sample> s, int a, int b, double dtS, Func<Sample, double> f)

@@ -1,5 +1,5 @@
 # ADR 0233 — DK65: jeden przekrój K1 przez szwy `dk65-10` | `dk65-11` | `knyszyn-s`, poszerzenie na km 25,32 (`lanes_follow_width`)
-Status: Proposed (agent world-builder `dk65-r4-s21`, s21, gałąź `dk65-r4-s21`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `fb9cd8318`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder `dk65-r4-s21`, s21, gałąź `dk65-r4-s21`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: ADR 0214 (kafle 06…11, „Otwarte 1”: skok 0,45 m/stronę na szwie 10/11), 0204 / 0212 (przekrój DK65 w `knyszyn*`:
 7,5 m, linie 7,1 m), 0220 (K1 w kaflach 01–05, `edge_line_spacing` — nie na main), 0095 (profil `width` wzdłuż krawędzi),
 research K1 `research/dk65-knyszyn-refs/README.md`, D63–D67 (`docs/11`).

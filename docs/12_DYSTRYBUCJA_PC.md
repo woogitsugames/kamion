@@ -79,7 +79,8 @@ Backend skryptów: **Mono** (`scriptingBackend` w ProjectSettings ma tylko wpis 
 | `Kamion_BackUpThisFolder_ButDontShipItWithYourGame/` | **nie** | powstaje przy IL2CPP (kod C++ i symbole); oficjalnej strony brak — tylko nazwa i forum Unity (https://discussions.unity.com/t/why-this-folder-generated-backupthisfolder-butdontshipitwithyourgame/901854). Zachować w `artifacts/` do symbolizacji awarii |
 | `build.json`, `Kamion.exe.sha256`, `Kamion.content.json`, `Kamion.top.txt`, `Kamion.variants.txt` | **nie** | nasze metadane buildu (ADR 0261) — zostają w `artifacts/` |
 | `Kamion-okno.cmd` | tak | start w oknie 1600×900 (ProjectSettings domyślnie pełny ekran) |
-| `Kamion-knyszyn.cmd` | **nie** | skrót deweloperski (`-scene knyszyn-w`) |
+| `Kamion-knyszyn.cmd` | **nie** | skrót deweloperski (`DEV_LAUNCHERS`; dziś `-scene knyszyn`, `scripts/build-windows.ps1:95`) |
+| inne `*.cmd` z `-scene <x>` (np. `Kamion-knyszyn-w.cmd`) | tylko gdy scena/region `<x>` jest w buildzie | uzupełnienie s23 ADR 0271: lista scen z logu buildu (`build.json` → `log`, linia `[BUILD] Windows x64 … scenes=[…]`), inaczej `build.json` `regions`/`regionsFile` rozwinięte katalogiem regionów na liście `EditorBuildSettings`; nieznana treść buildu = launcher poza paczką |
 
 Paczka dokłada: `THIRD_PARTY_NOTICES.txt` (generowany z `game/Assets/_Project/UI/Resources/About/attributions.txt`, czyli
 **ten sam tekst co ekran „Informacje”** — jedno źródło prawdy), `README.txt` (z `dist/windows/README.txt.in`: wymagania D74,

@@ -1,6 +1,6 @@
 # ADR 0163 — zieleń ulic domów wg pomiarów G7 (korekta ADR 0154)
 
-Status: PROPOSED na gałęzi `veg-0163` (2026-11-13, s16/s17); nie scalone. Tabela generatora z buildu 3; rendery,
+Status: przyjęty (scalony do main 2026-11-13, `0fa8d7362`; status zaktualizowany 2026-11-16); pierwotnie: PROPOSED na gałęzi `veg-0163` (2026-11-13, s16/s17); nie scalone. Tabela generatora z buildu 3; rendery,
 budżet i testy z buildu 6 (sekcja „Rendery i budżet”). Liczby zmierzone na świecie
 zregenerowanym na tej gałęzi (build 3, baza `origin/main` ff9777e2d). Telefon: NIE mierzony (robi lider). Recenzja
 `visual-critic` jeszcze wymagana (subagent nie uruchamia subagentów).

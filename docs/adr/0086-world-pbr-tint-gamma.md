@@ -1,6 +1,6 @@
 # ADR 0086: one linear WorldPBR tint contract and measured local recalibration
 
-Status: implemented on gpt-tint-gamma, 2026-11-11; independent root review PASS for this scope.
+Status: Accepted (merged to main 2026-11-11, `0e73211ad`; status updated 2026-11-16); originally: implemented on gpt-tint-gamma, 2026-11-11; independent root review PASS for this scope.
 
 ## Evidence and decision
 

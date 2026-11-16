@@ -129,3 +129,19 @@ Progi FPS i dysk to propozycja lidera (SCS nie publikuje FPS) — do potwierdzen
 
 ## D75 — Rondo Knyszyn: nowy jasny materiał i przejezdność (2026-11-15, s22)
 Właściciel: (1) opaska ronda DK65×Tykocka = **nowy jasny materiał kostki betonowej z fakturą** (nie istniejący materiał chodnika, albedo ok. 0,26 ≈ odrzucony brąz); (2) wymiary: **przejezdność przed wiernością** — asfalt pierścienia 5,0 m + opaska 3,2 m (zawracanie zestawu 16,5 m), choć na zdjęciu ok. 3,1 + 2,4 m (ESTIMATED). ADR 0218.
+
+## D76 — Pomiar klas PC: emulacja na maszynie deweloperskiej (2026-11-16, s23, OD-001)
+Właściciel: klasy „min” i „zalecany” z D74 mierzymy teraz **emulacją na RTX 5070** (ograniczenie rozdzielczości, tieru i limitu FPS) jako metodą zastępczą; raporty PC mogą zaliczać bramki z adnotacją „emulacja”. Przed publiczną obietnicą wymagań sprzętowych — pomiar na prawdziwym słabszym sprzęcie (iGPU HD 630 / GTX 660 i GTX 1660). ADR 0266.
+
+## D77 — Feel test bramki 2 na exe PC (2026-11-16, s23, OD-002)
+Właściciel robi feel test bramki 2 (ruszanie pod górę z 40 t, hamowanie, rondo, cofanie pod rampę) **na najnowszym exe PC z padem/klawiaturą** (`docs/owner/FEEL-TEST.md`); uwagi idą do strojenia 0201b, 0228, 0264. Kierownica z FFB później (nie blokuje bramki 2).
+
+## D78 — Rynek Knyszyn (#139): przejęcie lokalne, +64 draw calls Low przyjęte (2026-11-16, s23, OD-003)
+Właściciel: lider przejmuje gałąź `knyszyn-rynek-0227` lokalnie (po zakończeniu pracy Codexa) — sprzątanie artefaktów, poprawki z recenzji `REVIEW-2026-11-16-s23-code-139.md`, przebudowa kafla knyszyn, rendery i budżet; wzrost Low na kamerze `dk65-inlet-south` 240 → 304 draw calls przyjęty (telefon drugorzędny, D73). ADR 0227.
+
+## D79 — Naczepa: rozstaw sworzeń–środek tridemu 7,60 m (2026-11-16, s23, ADR 0280)
+Właściciel: skrócić rozstaw sworzeń–środek tridemu naczepy z 7,70 m do **7,60 m**, żeby zestaw mieścił się w pierścieniu skrętu 12,5/5,3 m z dyrektywy 96/53/WE (zał. I pkt 1.5): 7,135 m przy granicy 7,20 m, zapas 6,5 cm (runner fizyki, sesja P r4). Wartość 3 cm poniżej najmniejszej z kart producentów naczep 13,6 m → **WORKING_VALUE** (do potwierdzenia rysunkiem/kartą). Zmiana obejmuje dane naczepy (trailer.json, dims.json), `TrailerAssetBuilder.cs:215`, model Blendera i fizykę — lista w ADR 0280 §5; scenariusz pierścienia skrętu z oczekiwanego błędu na PASS.
+
+## D80 — Pad: warstwa „przytrzymaj Back + przycisk” (2026-11-16, s23)
+Właściciel: 6 akcji bez wolnego przycisku pada dostaje warstwę modyfikatora **Back (przytrzymany) + przycisk**; Back przestaje być wstecznym (R) — wsteczny przechodzi na inny przycisk ustalony w implementacji (ADR 0264, propozycja w raporcie sesji P r4 / docs/owner/JAK-GRAC-PC.md). Do oceny w feel teście (D77).
+

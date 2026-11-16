@@ -1,6 +1,6 @@
 # ADR 0143 — SBS poses r3: Putry deck 494288 re-resected, 810896 off the median, 482392 / 320326 (G3-A), 837235 pose vs world
 
-Status: implemented on branch `sbs-poses-r3` (base main `9a1961db`, 2026-11-12, s14); not merged. Ready to merge. Data + analysis tools only:
+Status: Accepted (merged to main 2026-11-12, `70b67fc7b`; status updated 2026-11-16); originally: implemented on branch `sbs-poses-r3` (base main `9a1961db`, 2026-11-12, s14); not merged. Ready to merge. Data + analysis tools only:
 no world geometry, no generator, no C#. Gate 3 is not re-judged here (visual-critic + `sbs_recognition.json` re-grade).
 Source: `docs/reports/visual/REVIEW-2026-11-12-s14-0133.md` P1-1..3 (494288 bends right, wide light strip, 810896 behind a
 retaining wall), `REVIEW-2026-11-12-s14-0128.md` P1-1 (320326 production pose shows only a cut edge of D-3) and P1-3

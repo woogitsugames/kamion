@@ -1,5 +1,5 @@
 # ADR 0204 — regiony `knyszyn` i `knyszyn-s`: miasto Knyszyn, wlot DK65 i strefa budowy ekspresówki (z grubsza, D63/D64)
-Status: Proposed (agent world-builder, s20, gałąź `knyszyn-0204`), 2026-11-15. Do scalenia przez lidera.
+Status: przyjęty (scalony do main 2026-11-15, `c8afe5a7a`; status zaktualizowany 2026-11-16); pierwotnie: Proposed (agent world-builder, s20, gałąź `knyszyn-0204`), 2026-11-15. Do scalenia przez lidera.
 Powiązane: D63, D64 (`docs/11`), ADR 0203 (plan trasy i kafli), ADR 0166/0174 (region ≠ C, import), brief
 `docs/owner/S20-REGION-RING-BRIEF.md` (aktualizacje 1–3), `docs/owner/OWNER-PHOTOS-KNYSZYN.md`.
 
