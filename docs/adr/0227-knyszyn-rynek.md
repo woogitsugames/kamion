@@ -186,10 +186,17 @@ Low względem before nadal formalnie **FAIL** (`dk65-inlet-south` 240 → 304 dr
 
 Build świata, import i rendery Low/High × clear/dusk zakończone OK. W lokalnych `compare/r29/Low-clear/` i `compare/r29/High-clear/` znajduje się po 14 par zdjęcie–render. W porównaniu kadru 14 korekta wyspy jest tylko kosmetyczna: nadal wygląda zielonkawo względem ziemi na fotografii. Nie zaobserwowano widocznego spływania, ale wygląd wyspy nie jest rozwiązany; ocena uwzględnia szacunkową kamerę i inne światło, bez potwierdzenia właściciela.
 
-Szacunki CPU edytora z instancjami przed SRP: High maksimum **1 250 321 tris** i **848 draw calls**. Low `dk65-inlet-south` względem before **240 → 304 draw calls**, formalnie **FAIL** wymogu braku pogorszenia.
+Szacunki CPU edytora z instancjami przed SRP: High maksimum **1 250 321 tris** i **848 draw calls**. Low `dk65-inlet-south` względem before **240 → 304 draw calls** przekracza pierwotny wymóg braku pogorszenia; właściciel zaakceptował ten wzrost w **D78**.
 
 W diagnostycznym TSV dla bieżącej sceny `dk65-inlet-south` suma jest zgodna z `stats`: **266 draw calls / 158 591 tris** MeshRenderer oraz **38 draw calls / 6 418 tris** instancji. Rozbicie MeshRenderer: `Region` **203** draws, ciągnik **37**, naczepa **26**. W `Region` warstwy `buildings_lod1` i `buildings` mają odpowiednio **135** i **20** draws. To cel dalszej analizy optymalizacji, a nie gwarancja oszczędności lub pomiar GPU; wynik nie zastępuje oceny całej sceny względem before.
 
-EditMode R29 zakończył się wynikiem **955 passed, 0 failed, 2 skipped** (`artifacts/tests/editmode-20261116-105141.xml`; `editmode-r29.done`: OK). Własną zmianę materiału `M_Sky` po teście przywrócono. Pełny GIS R29 trwa; jego końcowy wynik **OPEN**.
+EditMode R29 zakończył się wynikiem **955 passed, 0 failed, 2 skipped** (`artifacts/tests/editmode-20261116-105141.xml`; `editmode-r29.done`: OK). Własną zmianę materiału `M_Sky` po teście przywrócono. Pełny GIS R29 zakończył się wynikiem **1797 passed, 22 skipped, 2 xfailed** (`gis-r29.done`: OK), przed późniejszym scaleniem main; nie jest to walidacja aktualnego stanu po merge.
 
 Analiza materiałów wskazuje na potencjał zmniejszenia liczby szacowanych draw calls o **12**: pięć unikalnych par materiałów Unity `far_office` / `ribbon` ma identyczną zawartość poza nazwą. To hipoteza diagnostyczna, nie potwierdzona oszczędność; konieczny pomiar A/B bez pogorszenia obrazu i funkcji, a wynik nie jest gwarantowany.
+
+
+## D78 — przekazanie liderowi po scaleniu main
+
+Decyzją właściciela **D78** lider przejmuje lokalnie gałąź `knyszyn-rynek-0227` i PR #139 po zakończeniu pracy Codexa. Wzrost Low na `dk65-inlet-south` z **240 do 304 draw calls** został przyjęty; wartość nadal przekracza pierwotny warunek bez regresji, ale nie należy przedstawiać jej jako niezaakceptowanej przez właściciela. Pozostałe uwagi wizualne, poprawki z recenzji, sprawdzenie obrazu i budżetu nadal wymagają pracy lidera.
+
+Po merge main `a2f62a442` pliki `generated/knyszyn*` pochodzą z main i czekają na przebudowę regionu przez lidera. Wcześniejsze rendery, GIS i EditMode R29 dotyczą stanu **sprzed** tego merge; brak świeżej walidacji scalonego stanu. W overrides starsze ID fontanny i drzew zastąpiono nowszą funkcjonalną reprezentacją, bez dokładania duplikatów. Gotowość do scalenia po weryfikacji lidera: **NIE**.
