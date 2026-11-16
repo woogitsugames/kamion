@@ -6,7 +6,7 @@ Stan po `f9dbf2b94`, 16.11.2026. Cel ciągły pozostaje aktywny. Gałąź `resea
 |---|---:|---|
 | 01 lampy | 65 | Także przednie, pomocnicze i niekwalifikowane referencje. |
 | 02 brud | 36 | 34 kadry: 14 lokalnych i 20 link-only, oraz 2 dokumenty. |
-| 03 Knyszyn | 58 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
+| 03 Knyszyn | 59 | Różne daty; zdjęcia właściciela wyłącznie jako obserwacje tekstowe. |
 | 04 DK65 | 42 | Zdjęcia, ortofoto, dokumenty i jeden rekord BDL. |
 | 05 kolej 38 | 25 | Dokumenty i kadry nie tworzą automatycznie mapowania lokalnego przejazdu. |
 | 06 pierścień | 51 | Różne miasta, daty i stopnie identyfikacji obiektów. |
@@ -103,3 +103,5 @@ M61: **A17/B1, zimaA3, europejska drogaA2**. Nowy02-AFF-001 FruehaufZM53290 ma z
 04R30:1nowy kadr rowu z wodą/skarpami/krawężnikami i dojazdem, podpis24.08.2026/kmokoło0+400lokalny. Rootobejrzał; brak widocznego przepustu, metrów lub GPS.06R20:1nowy kadr ścieżkiTykocin,MonikaKalicka, publikacja30.07.2022; bruk/obrzeża/oprawazpanelem/podporydrzew,bez funkcjipanelu/gatunków/metryki/mostu. Rootobejrzał. Oba ARRlink-only,0kopii.
 
 R4: wskazana uprzednio P4-001 to R48; brak potwierdzonej lokalnejbitmapyR4 wsprawdzonymzakresie. Nie dodano nowych norm bez oglądu. Ograniczony pojedynczy searchUNECE nie dał nowegopełnegoźródła, nie ponawiano blokowanychendpointów. Trzej agenci pracują dalej nad brudnymi tyłami, Dojlidami i relacją kościół–ogrodzenie–ulica. Live08:29:29, następny zwykły około09:30Bruksela. Gotowe do scalenia po recenzji lidera:NIE.
+
+R31odebrany16.11.2026: główny03=59. Nowa ekspozycja znanegokościoła, NIDstan2015, NCNDwyłącznielink, relacja mur–brama–chodnik–krawężnik–jezdnia, rootpeer. Cokółsamychścian zasłonięty.0nowychbudynków/metryki/headinguznazwyelewacji. WciążA17/B1i pozostałemanifestybezprzyrostu.

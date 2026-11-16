@@ -6,7 +6,7 @@ Ciągły zbiór dla generatorów świata i ciężarówki. Izolowany worktree, ga
 |---|---|---:|
 | 1 Lampy M59-FIX | [01-lampy](01-lampy/README.md) | 65 |
 | 2 Brud M61-FIX | [02-brud](02-brud/README.md) | 36 |
-| 3 Knyszyn | [03-knyszyn](03-knyszyn/README.md) | 58 |
+| 3 Knyszyn | [03-knyszyn](03-knyszyn/README.md) | 59 |
 | 4 Korytarz DK65 | [04-dk65](04-dk65/README.md) | 42 |
 | 5 Linia kolejowa38 | [05-kolej38](05-kolej38/README.md) | 25 |
 | 6 Pierścień regionów | [06-region-ring](06-region-ring/README.md) | 51 |
