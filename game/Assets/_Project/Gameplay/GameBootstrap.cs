@@ -169,10 +169,36 @@ namespace Game.Gameplay
 
             // Launch argument "scene" (adb: -e scene DrivingLab) jumps straight into a scene; the remaining
             // arguments (autopilot, speed) are read by that scene's bootstrap.
-            DesktopAutoShot.StartFromArguments(Platform.GetLaunchArgument);   // shot=<png> shot_t=<s> quit_t=<s> (ADR 0261 evidence run)
-            string scene = Platform.GetLaunchArgument("scene");
-            if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : LaunchSceneFor(scene);
+            // Both are one-shot per process (int-h3-s23, review H3 P1-141-1): the platform reads the arguments again on every
+            // Boot load, so without the guard a failed -scene start (ADR 0277 → Boot) reloads the region forever and "Menu"
+            // after a Kamion-<region>.cmd start jumps straight back; DesktopAutoShot (DontDestroyOnLoad) would be duplicated.
+            if (TakeLaunchArguments())
+            {
+                DesktopAutoShot.StartFromArguments(Platform.GetLaunchArgument);   // shot=<png> shot_t=<s> quit_t=<s> (ADR 0261 evidence run)
+                string scene = Platform.GetLaunchArgument("scene");
+                if (!string.IsNullOrEmpty(scene)) m_PendingScene = scene == WorldCSceneName ? WorldCSceneForTier() : LaunchSceneFor(scene);
+            }
+            else if (!string.IsNullOrEmpty(Platform.GetLaunchArgument("scene")))
+                Debug.Log("[BOOT] launch argument scene already used this run: staying in the menu");
         }
+
+        static bool s_LaunchArgumentsUsed;
+
+        /// <summary>
+        /// True only for the first Boot of the process: the one-shot launch actions (scene=, shot=/quit_t=) run once, later
+        /// returns to Boot (menu button, failed start, ADR 0277) show the menu. Reset only at process start
+        /// (<see cref="ResetLaunchArguments"/>, also with domain reload off in the editor).
+        /// </summary>
+        public static bool TakeLaunchArguments()
+        {
+            if (s_LaunchArgumentsUsed) return false;
+            s_LaunchArgumentsUsed = true;
+            return true;
+        }
+
+        /// <summary>Process start (and tests): the launch arguments are unused again.</summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void ResetLaunchArguments() => s_LaunchArgumentsUsed = false;
 
         RegionCatalog m_Catalog;
 
